@@ -95,7 +95,7 @@ try {
   assert.ok(attackDelta > releaseDelta,
     'FOV release was not gentler than its attack');
 
-  assert.equal(TUNING_VERSION, 17);
+  assert.ok(TUNING_VERSION >= 17);
   assert.equal(TUNING.camSpeedFovBoost, 6);
   assert.deepEqual(TUNING_RANGES.camSpeedFovBoost, {
     min: 0,
@@ -116,7 +116,7 @@ try {
   assert.doesNotMatch(mainSource, /camera2\.fov = camera\.fov/,
     'P2 still inherits P1 speed FOV');
   assert.match(mainSource,
-    /authoredFov \+ camSpeedFovBoost,\s*BOULDER_FOV,\s*boulderF/s,
+    /authoredFov \+ camSpeedFovBoost,\s*BOULDER_FOV \+ TUNING.camFov - 49,\s*boulderF/s,
   'speed FOV is not composed below the authored boulder shot');
   assert.match(mainSource, /camSpeedFovBoost = 0;\s*cam2SpeedFovBoost = 0;/,
     'fixed review cameras do not clear the speed lens');

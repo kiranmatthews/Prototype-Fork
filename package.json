@@ -19,7 +19,7 @@
     "check:run-facing": "node tools/test-run-facing.mjs && node tools/test-locomotion-replays.mjs",
     "check:carve-grip": "node tools/test-carve-grip.mjs",
     "check:surface-friction": "node tools/test-surface-friction.mjs",
-    "check:camera-speed": "node tools/test-camera-speed-effect.mjs && node tools/test-camera-look.mjs",
+    "check:camera-speed": "node tools/test-camera-speed-effect.mjs && node tools/test-camera-look.mjs && node tools/test-camera-rig.mjs",
     "check:bail-recovery": "node tools/test-ragdoll-recovery.mjs",
     "check:air-rescue": "node tools/test-air-rescue.mjs",
     "check:crate-types": "node tools/test-life-multihit-crates.mjs && node tools/test-nitro-clear-switch.mjs",

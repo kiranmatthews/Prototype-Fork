@@ -182,17 +182,16 @@ export const TUNING = {
   nitroRadius: 2.75, // nitro explosion kill/break radius
   tntRadius: 2.75, // TNT explosion kill/break radius
   boulderSpeed: 10, // Boulder Dash: the chase boulder's base roll speed (rubber-bands around it)
-  // CAMERA defaults (the latest hand-tuned chase framing).
-  // camTilt aims AT the character; camOffset TRANSLATES the whole rig
-  // down-course, so framing moves without the tilt changing. Decoupled knobs.
+  // CAMERA: position (metres), orientation (degrees), and lens are separate.
+  // The old 3.8 distance / -1.25 rig offset becomes 5.05 actual distance;
+  // the old 5.1 eye / 3.3 aim triangle becomes 25.35 degrees down.
   camFov: 49, // zoom / focal length: lower = telephoto punch-in, higher = wide angle
   camSpeedFovBoost: 6, // extra lens width at maxSpeed while the board is live; eases in above cruiseSpeed
   chaseCam: 0, // 1 = third-person follow: camera swings behind the travel direction, skater always faces forward
-  camDist: 3.8, // trailing distance behind the character
+  camDist: 5.05, // horizontal trailing distance; translating never changes pitch
   camHeight: 5.1, // camera elevation above the character
   camAirLift: 0, // how much the rig rises WITH an airborne jump: 1 = classic full-follow (jumps read small/snappy on screen), 0 = ground-anchored Crash rig (skater does all the rising on screen). Default 0: with the small playtested jump pops the anchored rig reads clean and keeps the landing framed
-  camTilt: 3.3, // aim height on the character: higher = camera tilts UP (sees more sky)
-  camOffset: -1.25, // rig translation down-course: + = skater rests LOWER in frame (more road ahead), tilt untouched
+  camPitch: 25.35, // actual tilt in degrees: 0 = horizon, positive = down, negative = up
   camBalanceRoll: 7, // degrees the horizon rolls with the grind balance needle at a full lean (0 = off)
 };
 
@@ -203,7 +202,8 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 17; // v17: captured Chrome carve grip and balance defaults
+export const TUNING_VERSION = 18; // v18: independent camera position and pitch; retire redundant rig offset
+// v17: captured Chrome carve grip and balance defaults
 // v16: tunable high-speed skating FOV push
 // v15: independent low/high skate carve grip replaces the coupled ratio
 // v14: wider ledge catch plus the latest close, telephoto camera framing
@@ -379,12 +379,22 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   camFov: { min: 30, max: 100, step: 1 },
   camSpeedFovBoost: { min: 0, max: 25, step: 0.5 },
   chaseCam: { min: 0, max: 1, step: 1 },
-  camDist: { min: 2, max: 14, step: 0.1 },
+  camDist: { min: -2, max: 24, step: 0.05 },
   camHeight: { min: 0.5, max: 10, step: 0.1 },
   camAirLift: { min: 0, max: 1, step: 0.05 },
-  camTilt: { min: -6, max: 10, step: 0.05 },
+  camPitch: { min: -85, max: 85, step: 0.05 },
   camBalanceRoll: { min: 0, max: 25, step: 0.5 },
-  camOffset: { min: -8, max: 4, step: 0.25 },
+};
+
+export const TUNING_LABELS: Partial<Record<TuningKey, string>> = {
+  chaseCam: 'Chase camera',
+  camHeight: 'Height (m)',
+  camDist: 'Distance (m)',
+  camPitch: 'Tilt (° down)',
+  camFov: 'Lens FOV (°)',
+  camSpeedFovBoost: 'Speed FOV (°)',
+  camAirLift: 'Jump follow',
+  camBalanceRoll: 'Roll (°)',
 };
 
 // Hover text for the tuning panel: what each slider actually does in play.
@@ -672,17 +682,15 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   boulderSpeed:
     'Boulder Dash chase speed. The boulder rubber-bands around this base — faster when it has passed you or lags too far, a touch slower when right on your heels. Higher = a tighter, scarier chase.',
   camFov:
-    'ZOOM (focal length): the camera lens angle. Lower = telephoto punch-in (tighter, flatter, more cinematic); higher = wide angle (more of the world, more distortion). Side-scroll zones and the boulder chase still add their own push.',
+    'LENS: vertical field of view in degrees. Lower zooms in; higher shows more of the world. Does not move or rotate the camera. Beachfront and the boulder chase retain their authored lens offsets; fixed review shots keep their reference lens.',
   camSpeedFovBoost:
     'HIGH-SPEED SKATE lens push in extra FOV degrees. It is 0 at cruiseSpeed, eases up to this full amount at maxSpeed, and holds through downhill/vert overspeed. It only applies while the board is live; walking and stopping ease back to camFov. 0 disables the trick.',
-  camTilt:
-    'TILT: the height on the character the camera aims at — around 2.1 is just over her head, so the current 3.3 aims above it. Higher tilts the view UP toward the horizon/sky; lower buries it into the ground. Pure angle — the framing position knob is camOffset.',
-  camDist: 'DISTANCE: how far the camera trails behind the character. Side-scroll zones scale with it.',
+  camPitch:
+    'TILT in degrees below the horizon: 0 looks level, positive looks down, negative looks up. Rotates the camera without moving it. Height and distance never change this angle. Side, reverse, boulder and split-screen shots add their authored angle offsets; the right stick can still peek.',
+  camDist: 'DISTANCE in metres behind the character along the course. Changes position without changing tilt or height. Negative moves ahead of the character. Special shots add their authored distance offsets. The old camOffset has been combined into this one position control.',
   camBalanceRoll:
     'How far the horizon ROLLS with the grind balance needle, in degrees at a full lean. The shot leans the way you are falling off the rail, so a grind you are losing reads in the frame itself and not only in the meter. 0 turns it off.',
-  camOffset:
-    'OFFSET: slides the WHOLE rig (camera + aim together) down-course — moves where the skater rests in the frame WITHOUT changing the tilt. Positive = she sits lower in frame with more road ahead; negative = she rides higher/closer.',
-  camHeight: 'ELEVATION: how high above the character the camera rides. Higher = more top-down.',
+  camHeight: 'HEIGHT in metres above the vertical follow anchor. Raises or lowers the camera without rotating it or changing its distance. Use Tilt to change the viewing angle. Special shots add their authored height offsets.',
   camAirLift:
     'AIR LIFT: how much the camera rises WITH you during a jump. 1 = full follow — the rig tracks your height, so jumps read small and snappy on screen (the classic feel). 0 = ground-anchored — the camera holds at floor level and the skater does ALL the on-screen rising: the exact same jump arc reads much bigger and floatier, but your landing spot stays perfectly in shot. Values between blend the two.',
   chaseCam:
@@ -774,7 +782,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
     ],
   },
   { title: 'CRATES', keys: ['crateBounce', 'crateHopSpeed', 'crateHopGravity', 'arrowBounce', 'arrowBoostMult', 'nitroRadius', 'tntRadius'] },
-  { title: 'CAMERA', keys: ['chaseCam', 'camFov', 'camSpeedFovBoost', 'camTilt', 'camDist', 'camOffset', 'camHeight', 'camAirLift', 'camBalanceRoll'] },
+  { title: 'CAMERA', keys: ['chaseCam', 'camHeight', 'camDist', 'camPitch', 'camFov', 'camSpeedFovBoost', 'camAirLift', 'camBalanceRoll'] },
   { title: 'WORLD', keys: ['boulderSpeed'] },
 ];
 

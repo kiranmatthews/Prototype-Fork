@@ -54,6 +54,7 @@ import {
   stepSpeedSkateFov,
 } from "./cameraSpeedEffect";
 import { CameraLookOffset } from "./cameraLook";
+import { cameraRigFraming, setCameraRigAim } from "./cameraRig";
 import { sfx } from "./audio";
 import { Recorder, Replayer, ReplayFile, camYawOf, isReplayFile } from "./replay";
 import { Editor } from "./editor";
@@ -1916,10 +1917,10 @@ function updateCamera2(dt: number): void {
     dt,
     snapped,
   );
-  const p2AuthoredFov = current.id === "beachfront" ? 43 : TUNING.camFov;
+  const p2AuthoredFov = TUNING.camFov + (current.id === "beachfront" ? -6 : 0);
   const p2TargetFov = THREE.MathUtils.lerp(
     p2AuthoredFov + cam2SpeedFovBoost,
-    BOULDER_FOV,
+    BOULDER_FOV + TUNING.camFov - 49,
     boulderF,
   );
   if (
@@ -1942,18 +1943,15 @@ function updateCamera2(dt: number): void {
   cam2F.y = 0;
   if (cam2F.lengthSq() < 1e-4) cam2F.set(0, 0, -1);
   cam2F.normalize();
-  const tx = subject.x - cam2F.x * TUNING.camDist;
-  const tz = subject.z - cam2F.z * TUNING.camDist;
-  const ty = subject.y + TUNING.camHeight * 0.85;
+  const framing = cameraRigFraming(TUNING, 0, 0, 0, true);
+  const tx = subject.x - cam2F.x * framing.distance;
+  const tz = subject.z - cam2F.z * framing.distance;
+  const ty = subject.y + framing.height;
   const k = snapped ? 1 : Math.min(1, 9 * dt);
   camera2.position.x += (tx - camera2.position.x) * k;
   camera2.position.y += (ty - camera2.position.y) * k;
   camera2.position.z += (tz - camera2.position.z) * k;
-  cam2Aim.set(
-    subject.x + cam2F.x * 3,
-    subject.y + 1.2,
-    subject.z + cam2F.z * 3,
-  );
+  setCameraRigAim(cam2Aim, camera2.position, cam2F, framing.pitch);
   camera2.lookAt(cam2Aim);
   if (fixedReviewShot) cam2Look.reset();
   else cam2Look.step(input2.lookX, input2.lookY, dt);
@@ -3750,18 +3748,17 @@ player.onGameOver = () => {
 // Idle-reference calibration (Crash 3 Toad Village clip): camera pitched
 // ~18° down so crate TOPS read, hero's feet near the bottom of frame,
 // hero ~30% of frame height.
-// Base framing now lives on TUNING sliders (CAMERA section): camDist,
-// camHeight, camTilt, camOffset, camFov. Special shots (side-scroll, boulder)
-// scale relative to the current shipped baseline.
+// Position, orientation and lens have independent TUNING controls. Special
+// shots add fixed offsets from the shipped framing; they never derive pitch
+// from the live height/distance controls.
 const camTarget = new THREE.Vector3();
-const lookPoint = new THREE.Vector3();
 // Canonical, un-peeked view direction. Gameplay/replays consume this while
 // the visible camera may carry a small presentation-only right-stick offset.
 const camControlDir = new THREE.Vector3(0, 0, -1);
 const cameraLook = new CameraLookOffset();
 let camAnchorY = 0; // the rig's vertical anchor: the ground under the skater, eased
 let camRoll = 0; // eased dutch roll tracking the grind balance needle (radians)
-const aimSmooth = new THREE.Vector3(NaN, 0, 0); // lightly-damped look target (NaN = seed on first frame)
+const aimSmooth = new THREE.Vector3(); // aim built from the current eye + explicit orientation
 let camBack = 0; // 0 = facing down-course, eases to 1 while travelling at the camera
 let sideF = 0; // eases to 1 on turned (X-running) stretches: wider framing only
 let boulderF = 0; // eases to 1 on boulder-chase levels: tipped-down framing
@@ -3865,10 +3862,10 @@ function updateCamera(dt: number): void {
     dt,
     snapped,
   );
-  const authoredFov = current.id === "beachfront" ? 43 : TUNING.camFov;
+  const authoredFov = TUNING.camFov + (current.id === "beachfront" ? -6 : 0);
   const targetFov = THREE.MathUtils.lerp(
     authoredFov + camSpeedFovBoost,
-    BOULDER_FOV,
+    BOULDER_FOV + TUNING.camFov - 49,
     boulderF,
   );
   if (Math.abs(camera.fov - targetFov) > 0.005) {
@@ -3938,30 +3935,17 @@ function updateCamera(dt: number): void {
     (snapped ? 1 : Math.min(1, 3 * dt));
   const back = camBack * (1 - sideF) * (1 - boulderF); // corridor thing only
 
-  // side-scroll stretches scale off the sliders (9.2/5.2 and 3.7/4.1 were the
-  // authored ratios) so a re-tuned base carries its feel into the turns
-  const dist =
-    THREE.MathUtils.lerp(TUNING.camDist, TUNING.camDist * 1.77, sideF) +
-    back * 3.8 +
-    boulderF * 18.8;
-  const height =
-    THREE.MathUtils.lerp(TUNING.camHeight, TUNING.camHeight * 0.9, sideF) +
-    back * 1.1 +
-    boulderF * 1.7;
-  // camOffset TRANSLATES the whole rig down-course — camera AND aim move
-  // together, so the skater's resting spot in frame shifts while the tilt
-  // stays put. The boulder shot authors its own framing; fade the knob out.
-  const off = TUNING.camOffset * (1 - boulderF);
+  const framing = cameraRigFraming(TUNING, sideF, back, boulderF);
   // CRASH RIG VERTICAL: the camera's height anchors to the GROUND under the
-  // skater, not the skater — a jump rises THROUGH the frame (gentle tilt
-  // tracks it) instead of yanking the whole rig skyward and pulling the
+  // skater, not the skater — a jump rises THROUGH the frame
+  // instead of yanking the whole rig skyward and pulling the
   // landing spot out of shot. FRAME-AWARE: how far a jump may rise before
   // the rig starts lifting scales with the lens — a telephoto zoom-in has a
   // tiny frame, so the rig gives sooner and an ollie never rockets across
   // the whole screen. The anchor eases along slopes/steps, follows the
   // player when there's no floor below (pits), and big verts stay framed.
   // The boulder shot keeps its authored full-follow.
-  const frameHalf = Math.tan((camera.fov * Math.PI) / 360) * TUNING.camDist;
+  const frameHalf = Math.tan((camera.fov * Math.PI) / 360) * Math.max(0.5, Math.abs(TUNING.camDist));
   const maxRise = THREE.MathUtils.clamp(frameHalf * 1.5, 1.5, 7);
   // No floor below = this fall ends in the void: the rig HOLDS its height
   // instead of chasing the body down (and clipping through the level floor).
@@ -3980,21 +3964,16 @@ function updateCamera(dt: number): void {
   // rising — same physics, but every air reads much bigger and floatier).
   const airLift = Math.max(TUNING.camAirLift, boulderF);
   const effY = THREE.MathUtils.lerp(camAnchorY, subject.y, airLift);
-  // the gentle jump tilt also softens on tight lenses (magnified on screen);
-  // kept small overall — the ground stays in shot, the skater does the rising
-  const tiltTrack = 0.22 * Math.min(1, frameHalf / 4.5);
-
   camTarget.set(
-    subject.x - camF.x * (dist - off),
-    effY + height,
-    subject.z - camF.z * (dist - off),
+    subject.x - camF.x * framing.distance,
+    effY + framing.height,
+    subject.z - camF.z * framing.distance,
   );
 
   // Snap after respawn teleports; damp otherwise.
   if (snapped || camera.position.distanceTo(camTarget) > 30) {
     camera.position.copy(camTarget);
     camAnchorY = anchorGoal;
-    aimSmooth.set(NaN, 0, 0); // re-seed the aim at the new shot
   } else {
     // CRASH RIG TRANSLATION: HARD along the travel axis — down-course
     // normally, the turned axis through side-scroll zones, the chase heading
@@ -4018,38 +3997,10 @@ function updateCamera(dt: number): void {
     camera.position.y += (camTarget.y - camera.position.y) * kY;
   }
 
-  // camTilt aims AT the body (2.1 = just over her head — the old 21° default
-  // pitch, re-derived). Side / reverse / boulder keep their authored absolute
-  // aims, converted from the old look-ahead shots so defaults are identical.
-  // Vertically the aim tracks a jump at 35% — the gentle Crash tilt — while
-  // the XZ pan follows through a light smoothing.
-  const aimY = THREE.MathUtils.lerp(
-    TUNING.camTilt,
-    TUNING.camTilt - 0.2,
-    sideF,
-  );
-  const aimK = THREE.MathUtils.lerp(
-    THREE.MathUtils.lerp(-off, 3.5, back), // reversing: aim swings behind you
-    12, // boulder: aim well down-course, hero floats high with lead room below
-    boulderF,
-  );
-  // the tilt glances down at a body below the anchor but never dives after a
-  // long kill-plane fall — past a couple units the aim just lets them drop out
-  lookPoint.set(
-    subject.x - camF.x * aimK,
-    effY +
-      Math.max(-2.5, (subject.y - effY) * tiltTrack) +
-      THREE.MathUtils.lerp(aimY, 1.6, boulderF),
-    subject.z - camF.z * aimK,
-  );
-  if (Number.isNaN(aimSmooth.x)) aimSmooth.copy(lookPoint);
-  // pan (xz) keeps the gentle smoothing; the vertical aim stiffens with
-  // camAirLift — the classic rig looked straight at the body with no lag
-  const kAim = 1 - Math.exp(-11 * dt);
-  const kAimY = 1 - Math.exp(-THREE.MathUtils.lerp(11, 45, airLift) * dt);
-  aimSmooth.x += (lookPoint.x - aimSmooth.x) * kAim;
-  aimSmooth.z += (lookPoint.z - aimSmooth.z) * kAim;
-  aimSmooth.y += (lookPoint.y - aimSmooth.y) * kAimY;
+  // camF already owns heading easing. Build the aim relative to the actual
+  // damped eye so height/distance edits cannot rotate the camera, even for a
+  // single transition frame. Jump follow translates the rig without auto-tilt.
+  setCameraRigAim(aimSmooth, camera.position, camF, framing.pitch);
 
   // Publish the authored view before adding manual look. Right-stick/touch
   // peeking is intentionally presentation-only: it must not rotate movement,

@@ -10,7 +10,11 @@ const server = await createServer({
 });
 try {
   const { TUNING } = await server.ssrLoadModule('/src/tuning.ts');
-  assert.deepEqual(TUNING, expected.tuning);
+  // Camera v18 expresses this same captured shot as actual distance + angle.
+  const expectedTuning = { ...expected.tuning, camDist: 5.05, camPitch: 25.35 };
+  delete expectedTuning.camTilt;
+  delete expectedTuning.camOffset;
+  assert.deepEqual(TUNING, expectedTuning);
   const { CrtGuestSettings } = await server.ssrLoadModule('/src/crt-guest/settings.ts');
   const crt = new CrtGuestSettings({ storage: null });
   assert.deepEqual(crt.exportPreset(), expected.crt);

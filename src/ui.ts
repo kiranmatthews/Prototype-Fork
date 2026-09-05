@@ -27,11 +27,13 @@ import {
   TUNING,
   TUNING_RANGES,
   TUNING_INFO,
+  TUNING_LABELS,
   TUNING_SECTIONS,
   TUNING_VERSION,
   TuningKey,
 } from "./tuning";
 import { migrateLegacySavedCarveGrip } from "./carveGrip";
+import { migrateLegacySavedCameraRig } from "./cameraRig";
 import {
   HudVisibilityState,
   type HudVisibility,
@@ -1540,6 +1542,8 @@ export class UI {
         merged.carveGripLow = migrated.low;
         merged.carveGripHigh = migrated.high;
       }
+      const cameraRig = migrateLegacySavedCameraRig(raw.tuning, raw.defaults);
+      if (cameraRig) Object.assign(merged, cameraRig);
       return merged;
     } catch {
       return null;
@@ -1996,9 +2000,11 @@ export class UI {
   private sliderRow(key: TuningKey): HTMLElement {
     const range = TUNING_RANGES[key];
     const wrap = div("hud-slider");
+    wrap.dataset.tuningKey = key;
     wrap.title = TUNING_INFO[key]; // hover for what this number does in play
     const label = document.createElement("label");
-    label.textContent = key;
+    const name = TUNING_LABELS[key] ?? key;
+    label.textContent = name;
     // Click the name to bookmark it (green) — pure attention bookkeeping for
     // tuning sessions, remembered like the values are, zero gameplay effect.
     if (this.tunerMarks.has(key)) label.classList.add("hud-marked");
@@ -2018,6 +2024,7 @@ export class UI {
     if (range.min === 0 && range.max === 1 && range.step === 1) {
       const box = document.createElement("input");
       box.type = "checkbox";
+      box.setAttribute("aria-label", name);
       box.className = "hud-tunercheck";
       box.checked = TUNING[key] > 0.5;
       box.addEventListener("change", () => {
@@ -2036,6 +2043,7 @@ export class UI {
     // It accepts anything and clamps to the slider's range on commit.
     const value = document.createElement("input");
     value.type = "number";
+    value.setAttribute("aria-label", `${name} value`);
     value.className = "hud-tunernum";
     value.min = String(range.min);
     value.max = String(range.max);
@@ -2043,6 +2051,7 @@ export class UI {
     value.value = String(TUNING[key]);
     const input = document.createElement("input");
     input.type = "range";
+    input.setAttribute("aria-label", name);
     input.min = String(range.min);
     input.max = String(range.max);
     input.step = String(range.step);
@@ -2051,17 +2060,18 @@ export class UI {
       TUNING[key] = Number(input.value);
       value.value = input.value;
     });
-    // Typing commits live; clamp to range only on blur/Enter so an in-progress
-    // number (e.g. "1" before "12") isn't yanked to the min mid-keystroke.
+    // Preview complete, in-range numbers. Empty/out-of-range partial input
+    // must not temporarily move the rig (or feed invalid values to the sim).
     value.addEventListener("input", () => {
+      if (value.value === "") return;
       const v = Number(value.value);
-      if (Number.isFinite(v)) {
+      if (Number.isFinite(v) && v >= range.min && v <= range.max) {
         TUNING[key] = v;
         input.value = String(v);
       }
     });
     const commit = (): void => {
-      let v = Number(value.value);
+      let v = value.value === "" ? TUNING[key] : Number(value.value);
       if (!Number.isFinite(v)) v = TUNING[key];
       v = Math.min(range.max, Math.max(range.min, v));
       TUNING[key] = v;
@@ -2071,10 +2081,18 @@ export class UI {
     value.addEventListener("change", commit);
     // Keep field keystrokes (digits, WASD, arrows) out of the game's global key
     // handlers, and slider drags from stealing focus.
-    for (const ev of ["keydown", "keyup", "keypress"])
+    for (const ev of ["keydown", "keyup", "keypress"]) {
       value.addEventListener(ev, (e) => e.stopPropagation());
+      input.addEventListener(ev, (e) => e.stopPropagation());
+    }
+    value.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        commit();
+        value.blur();
+      }
+    });
     value.addEventListener("blur", commit);
-    input.addEventListener("change", () => input.blur());
+    input.addEventListener("pointerup", () => input.blur());
     wrap.appendChild(label);
     wrap.appendChild(input);
     wrap.appendChild(value);

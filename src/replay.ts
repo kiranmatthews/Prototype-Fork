@@ -32,6 +32,7 @@ import {
   setLegacyCarveGripReplayCurve,
 } from './carveGrip';
 import { setLegacyVisualSurfaceFrictionReplay } from './surfaceFriction';
+import { legacyCameraRigTuning } from './cameraRig';
 
 // the button channels the sim reads, packed into one bitmask per frame.
 // APPEND-ONLY: bit positions are the file format — old replays simply never
@@ -231,6 +232,7 @@ export class Replayer {
   private nextChange = 0;
   private savedTuning: Record<string, number> | null = null;
   private legacyCarveGripValues: Record<string, number> | null = null;
+  private legacyCameraValues: Record<string, number> | null = null;
 
   get active(): boolean {
     return this.data !== null;
@@ -248,6 +250,7 @@ export class Replayer {
     this.nextChange = 0;
     this.savedTuning = { ...(TUNING as unknown as Record<string, number>) };
     const replayTuning = { ...data.tuning };
+    this.legacyCameraValues = legacyCameraRigTuning(replayTuning) ? { ...replayTuning } : null;
     const hasDirectCarveGrip =
       Number.isFinite(replayTuning.carveGripLow) &&
       Number.isFinite(replayTuning.carveGripHigh);
@@ -261,8 +264,11 @@ export class Replayer {
     // the shadow above, translated into direct endpoints below.
     delete replayTuning.carveGrip;
     delete replayTuning.carveGripRatio;
+    delete replayTuning.camTilt;
+    delete replayTuning.camOffset;
     Object.assign(TUNING, replayTuning);
     this.refreshLegacyCarveGrip();
+    this.refreshLegacyCamera();
   }
 
   // Overwrite the live Input with the recorded frame. false = take is over
@@ -276,6 +282,7 @@ export class Replayer {
     }
     const t = TUNING as unknown as Record<string, number>;
     let refreshLegacyCarveGrip = false;
+    let refreshLegacyCamera = false;
     while (this.nextChange < d.tuningChanges.length && d.tuningChanges[this.nextChange][0] === this.frame) {
       const [, k, v] = d.tuningChanges[this.nextChange++];
       if (this.legacyCarveGripValues) {
@@ -287,9 +294,15 @@ export class Replayer {
           k === 'maxSpeed'
         ) refreshLegacyCarveGrip = true;
       }
-      if (k !== 'carveGrip' && k !== 'carveGripRatio') t[k] = v;
+      if (this.legacyCameraValues) {
+        this.legacyCameraValues[k] = v;
+        if (k === 'camDist' || k === 'camHeight' || k === 'camTilt' || k === 'camOffset')
+          refreshLegacyCamera = true;
+      }
+      if (k !== 'carveGrip' && k !== 'carveGripRatio' && k !== 'camTilt' && k !== 'camOffset') t[k] = v;
     }
     if (refreshLegacyCarveGrip) this.refreshLegacyCarveGrip();
+    if (refreshLegacyCamera) this.refreshLegacyCamera();
     input.moveX = d.mx[this.frame];
     input.moveY = d.my[this.frame];
     const mask = d.b[this.frame];
@@ -308,9 +321,16 @@ export class Replayer {
     if (this.savedTuning) Object.assign(TUNING, this.savedTuning);
     this.savedTuning = null;
     this.legacyCarveGripValues = null;
+    this.legacyCameraValues = null;
     setLegacyCarveGripReplayCurve(null);
     setLegacyVisualSurfaceFrictionReplay(false);
     this.data = null;
+  }
+
+  private refreshLegacyCamera(): void {
+    if (!this.legacyCameraValues) return;
+    const cameraRig = legacyCameraRigTuning(this.legacyCameraValues);
+    if (cameraRig) Object.assign(TUNING, cameraRig);
   }
 
   private refreshLegacyCarveGrip(): void {
