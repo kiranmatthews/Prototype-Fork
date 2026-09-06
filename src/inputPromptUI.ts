@@ -25,7 +25,7 @@ function updateGlyph(host: HTMLElement): void {
     if(host.dataset.touchLabel){const text=document.createElement('span');text.dataset.promptWord='';text.textContent=host.dataset.touchLabel;host.appendChild(text);host.setAttribute('aria-label',text.textContent);}
     return;
   }
-  host.hidden=false;host.setAttribute('aria-label',glyph.label);host.title=glyph.label;
+  host.hidden=false;host.setAttribute('aria-label',glyph.label);
   const image=imageFor(glyph), visible=document.createElement('img');
   visible.alt='';visible.setAttribute('aria-hidden','true');visible.draggable=false;visible.src=glyph.url;
   const fallback=document.createElement('span');fallback.className='input-glyph-fallback';fallback.textContent=glyph.label;fallback.hidden=true;
