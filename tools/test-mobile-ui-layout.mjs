@@ -11,6 +11,15 @@ const main = await text("src/main.ts");
 const hud = await text("src/gameHudSurface.ts");
 const ui = await text("src/ui.ts");
 const worldMapUi = await text("src/worldMapUI.ts");
+const secondaryText = await text("src/secondary-text.css");
+assert.match(secondaryText, /CCGeekSpeakTweak-Bold-staging\.ttf/);
+const secondaryLabel = await text("src/secondaryText.ts");
+assert.match(secondaryLabel, /step = steps; step >= 0; step--/, "extrusion must sweep all the way to the face");
+assert.match(secondaryLabel, /Math\.ceil\(Math\.hypot\(s.shadowX, s.shadowY\) \* 2\)/, "extrusion samples must overlap");
+assert.match(secondaryLabel, /linearGradient/);
+assert.match(worldMapUi, /silverSecondaryLabel\(label\)/);
+assert.match(worldMapUi, /\.world-map-actions \{[^}]*background: none; border: 0;/, "map hints must not regain a container");
+assert.match(worldMapUi, /grid-template-columns: repeat\(2, max-content\)/, "portrait labels need intrinsic-width columns");
 
 for (const contract of [
   "--tc-size: clamp(136px, 40dvh, 168px)",
@@ -172,6 +181,23 @@ assert.match(
   /orientation: landscape[\s\S]{0,500}grid-template-columns: minmax\(0, 1\.35fr\) minmax\(190px, \.65fr\)[\s\S]{0,500}min-height: 44px/,
   "short landscape phones must keep pause actions in the first row",
 );
+
+const { createServer } = await import("vite");
+const secondaryServer = await createServer({ appType: "custom", logLevel: "silent", server: { middlewareMode: true } });
+try {
+  const { sanitizeSecondaryText, SECONDARY_TEXT_DEFAULTS, secondaryTextSettings } = await secondaryServer.ssrLoadModule("/src/secondaryTextSettings.ts");
+  assert.deepEqual(sanitizeSecondaryText(null), SECONDARY_TEXT_DEFAULTS);
+  const clamped = sanitizeSecondaryText({ size: 999, weight: -99, shadowX: -999, stroke: NaN, top: "url(bad)", dark: "#123456" });
+  assert.equal(clamped.size, 56); assert.equal(clamped.weight, -.8); assert.equal(clamped.shadowX, -14);
+  assert.equal(clamped.stroke, SECONDARY_TEXT_DEFAULTS.stroke); assert.equal(clamped.top, SECONDARY_TEXT_DEFAULTS.top); assert.equal(clamped.dark, "#123456");
+  let notifications = 0;
+  const unsubscribe = secondaryTextSettings.subscribe(() => notifications++);
+  secondaryTextSettings.update({ weight: 1.2 });
+  assert.equal(secondaryTextSettings.value.weight, 1.2);
+  secondaryTextSettings.reset();
+  assert.deepEqual(secondaryTextSettings.value, SECONDARY_TEXT_DEFAULTS);
+  assert.equal(notifications, 2); unsubscribe();
+} finally { await secondaryServer.close(); }
 
 console.log(
   "Validated mobile native-HUD/Render bypass, rotation-safe HUD texture allocation, safe-area touch geometry, life-ring clearance, and coordinated presentation tools.",

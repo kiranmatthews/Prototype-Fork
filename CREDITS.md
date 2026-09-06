@@ -3,6 +3,13 @@
 Everything else in this repository is written here. These are not, and this is
 where they came from.
 
+## Staging-only secondary UI font
+
+CCGeekSpeakTweak Bold is a user-supplied, non-commercial placeholder for the
+current low-traffic staging site, not an Apache-licensed project asset.
+See [the font notice](public/fonts/SECONDARY-FONT-NOTICE.md). Replace it or obtain
+appropriate rights before commercial or production distribution.
+
 ## Scenery library
 
 The sixty-two scenery meshes behind the SCENERY palette's six "library"

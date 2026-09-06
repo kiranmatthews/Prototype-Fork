@@ -116,3 +116,20 @@ For a diagnostic pass, add `?renderdiag`, enter the map, and inspect the hidden
 `#render-diagnostics` payload. Ocean quality must be `full`; reflection and
 prepass dimensions and render counts must be non-zero. Also check 844×390 and
 390×844 with `?touch`, then finish at 1920×1080 with a clean console.
+
+The bottom menu hints use the user-supplied CCGeekSpeakTweak Bold placeholder
+through `--font-secondary`. Their SVG silver gradient face sits over a black
+stroke and a solid black extrusion swept in overlapping half-pixel steps back
+to the face, without a shared panel or backdrop
+blur. Portrait touch uses two readable rows above the controls. The font is
+restricted to the current non-commercial, low-traffic staging use; see
+[the font notice](../public/fonts/SECONDARY-FONT-NOTICE.md) before release.
+
+Open **TEXT TUNING** at the map's top-left for live size, face weight, outline,
+block-shadow X/Y, gradient angle/band position and six color controls. The
+fixed Bold font's weight is adjusted geometrically, not via a nonexistent
+variable-font axis. Size is a responsive 1080p reference. Settings persist at
+`solProtoSecondaryText.v1`; Reset restores source defaults, and Copy settings
+exports JSON (with a selectable fallback if clipboard access is unavailable).
+The panel stops control keystrokes from navigating the map and remains local
+to this browser; it does not silently change shipped defaults.

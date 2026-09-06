@@ -1,0 +1,30 @@
+/* Temporary, user-supplied non-commercial staging font. Not Apache-licensed.
+ * Replace or obtain production/web rights before commercial distribution.
+ * See public/fonts/SECONDARY-FONT-NOTICE.md. */
+@font-face {
+  font-family: "Staging Secondary";
+  src: url("/fonts/CCGeekSpeakTweak-Bold-staging.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root { --font-secondary: "Staging Secondary", Impact, sans-serif; }
+
+.secondary-silver {
+  position: relative;
+  font-family: var(--font-secondary);
+  font-weight: 700;
+  font-synthesis: none;
+  /* Real text owns intrinsic layout and accessibility; SVG owns the finish. */
+  color: transparent;
+}
+.secondary-silver svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  font: inherit;
+}
