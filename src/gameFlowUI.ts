@@ -276,6 +276,11 @@ export class GameFlowUI {
     return this.screen;
   }
 
+  /** Map utilities cover a live scenic background, not a paused gameplay run. */
+  get liveMapBackground(): boolean {
+    return this.mapDirect && this.screen !== null && !this.transitionActive;
+  }
+
   get revealingDestination(): boolean { return this.destinationRevealing; }
 
   get loadingPhase(): LoadingTransitionPhase | null { return this.transitionPhase; }

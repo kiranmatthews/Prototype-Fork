@@ -71,8 +71,15 @@ for (const screen of [null, "launch", "pause", "results", "gameover"]) {
 assert.match(
   main,
   /if \(gameFlow\.consumeGameplayFrameRequest\(\)\)/,
-  "modal screens must not redraw the frozen gameplay world every frame",
+  "ordinary gameplay pause screens must retain their frozen-world path",
 );
+const liveMap = main.match(/if \(current.id === "warproom" && gameFlow.liveMapBackground\) \{([\s\S]*?)\n    \}/)?.[1] ?? "";
+assert.match(liveMap, /level\.updateCampaignMapPresentation\(dt\)/);
+assert.match(liveMap, /updateWaterPresentation\(dt\)/);
+assert.match(liveMap, /renderGameplayWithGameFlow\(dt\)/);
+assert.doesNotMatch(liveMap, /player\.step|worldMapController\.step|level\.update\(dt\)|captureGameplay/, "live scenery must not resume map navigation or gameplay simulation");
+assert.match(flow, /get liveMapBackground\(\): boolean \{\s*return this\.mapDirect && this\.screen !== null && !this\.transitionActive;/);
+assert.match(level, /updateCampaignMapPresentation\(dt: number\): void \{\s*this\.campaignWorldMap\?\.update\(dt\);\s*\}/, "menu scenic updates must be isolated from general Level simulation");
 assert.match(
   main,
   /renderGameplayScene\(dt, false, level\.hudMode !== "hub"\)/,

@@ -6813,10 +6813,15 @@ export class Level {
     return rl > 1e-4 ? { x: rx / rl, z: rz / rl } : cur;
   }
 
+  /** Map scenery only: no actors, crates, discarded-board physics or run clock. */
+  updateCampaignMapPresentation(dt: number): void {
+    this.campaignWorldMap?.update(dt);
+  }
+
   update(dt: number): void {
     this.tropicalPlants?.update(dt);
     this.discardedBoards.update(dt, this);
-    this.campaignWorldMap?.update(dt);
+    this.updateCampaignMapPresentation(dt);
     this.updateCampaignPortalAnimation();
     this.updateVfx(dt);
     this.islandShoreFoam?.update(dt);

@@ -387,7 +387,7 @@ try {
     "the Canvas mirror must capture both timing labels and timing values",
   );
   const liveStart = mainSource.indexOf('if (resultsPresentation && gameFlow.currentScreen === "results")');
-  const liveEnd = mainSource.indexOf('// Pause/menu worlds', liveStart);
+  const liveEnd = mainSource.indexOf('if (current.id === "warproom" && gameFlow.liveMapBackground)', liveStart);
   const liveFrame = mainSource.slice(liveStart, liveEnd);
   assert.ok(liveStart > 0 && liveEnd > liveStart);
   assert.match(liveFrame, /resultsPresentation\.update\(dt\)/);

@@ -4528,7 +4528,20 @@ function frame(nowMs: number): void {
       writeRenderDiagnostics();
       return;
     }
-    // Pause/menu worlds are intentionally frozen. Render one fresh frame on entry
+    if (current.id === "warproom" && gameFlow.liveMapBackground) {
+      // Keep water, plants, shore wetness and hub effects alive under map
+      // utilities. Navigation/player simulation remains blocked above, and
+      // the menu keeps reusing its cached pre-CRT texture until its ink changes.
+      gameFlow.consumeGameplayFrameRequest();
+      level.updateCampaignMapPresentation(dt);
+      updateWaterPresentation(dt);
+      puffs.update(dt, camera);
+      renderGameplayWithGameFlow(dt);
+      writeRenderDiagnostics();
+      return;
+    }
+    // Pause/menu worlds are intentionally frozen outside the map-utility case above.
+    // Render one fresh frame on entry
     // (and after a fade swaps worlds), then let the browser hold that canvas.
     // This also avoids a WebGL -> Canvas2D pause-thumbnail copy every RAF.
     if (gameFlow.consumeGameplayFrameRequest()) {

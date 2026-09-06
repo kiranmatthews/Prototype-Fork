@@ -92,6 +92,12 @@ pre-CRT menu, and the X has its own matching Canvas rendering so it stays
 visible and usable while the filtered content scrolls underneath it. Desktop
 menu layout and gameplay touch controls are unchanged.
 
+Map utilities keep the ocean, plants, shoreline wetness, waterfalls and hub
+effects animating behind the panel. This advances only the map's scenic runtime
+and water presentation; map navigation, travel progress, player simulation and
+gameplay clocks remain blocked. The menu still reuses its cached pre-CRT ink.
+Ordinary in-level pause screens retain their frozen-world behavior.
+
 The map renders the player at three times their ordinary scale. Both animation
 overlay snapshots and render interpolation are cleared before entering or
 leaving this presentation so the scale cannot carry into gameplay. Hub discs
