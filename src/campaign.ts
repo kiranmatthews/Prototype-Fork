@@ -32,7 +32,7 @@ export interface CampaignLevelDefinition {
   boss?: boolean;
 }
 
-export type CampaignIslandId = "motu-aroha" | "rangi-atoll";
+export type CampaignIslandId = "island-1" | "island-2";
 
 export interface CampaignIslandDefinition {
   id: CampaignIslandId;
@@ -44,29 +44,35 @@ export interface CampaignIslandDefinition {
 
 export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
   {
-    id: "motu-aroha",
-    name: "Motu Aroha",
-    subtitle: "THE FIRST CURRENT",
+    id: "island-1",
+    name: "Island 1",
+    subtitle: "REGION 01",
     centre: [-27, 0, 14],
     levelKeys: ["jungle", "test-course", "sky-bridge", "slipstream", "nightworks"],
   },
   {
-    id: "rangi-atoll",
-    name: "Rangi Atoll",
-    subtitle: "BEYOND THE REEF",
+    id: "island-2",
+    name: "Island 2",
+    subtitle: "REGION 02",
     centre: [31, 0, 3],
     levelKeys: ["beachside-run", "coastal", "island-hopper", "jungle-gate"],
   },
 ] as const;
 
 export type CampaignMapTravelStyle = "trail" | "boardslide";
+export type CampaignMapDirection = "up" | "down" | "left" | "right";
 
 export interface CampaignMapEdgeDefinition {
   from: string;
   to: string;
   travel: CampaignMapTravelStyle;
+  /** Discrete input used to leave each endpoint. Keep slots unique per hub. */
+  fromDirection: CampaignMapDirection;
+  toDirection: CampaignMapDirection;
   /** Optional authored lift at the route midpoint, in world metres. */
   lift?: number;
+  /** Map-only curve guides; level reordering never changes runtime geometry code. */
+  waypoints?: readonly (readonly [number, number, number])[];
 }
 
 /**
@@ -74,15 +80,78 @@ export interface CampaignMapEdgeDefinition {
  * are traversable in both directions once both endpoint hubs are unlocked.
  */
 export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
-  { from: "jungle", to: "test-course", travel: "trail" },
-  { from: "test-course", to: "sky-bridge", travel: "trail", lift: 1.1 },
-  { from: "test-course", to: "slipstream", travel: "trail" },
-  { from: "sky-bridge", to: "nightworks", travel: "trail" },
-  { from: "slipstream", to: "nightworks", travel: "boardslide", lift: 2.2 },
-  { from: "nightworks", to: "beachside-run", travel: "boardslide", lift: 5.8 },
-  { from: "beachside-run", to: "coastal", travel: "trail" },
-  { from: "coastal", to: "island-hopper", travel: "boardslide", lift: 2.4 },
-  { from: "island-hopper", to: "jungle-gate", travel: "trail", lift: 1.2 },
+  {
+    from: "jungle",
+    to: "test-course",
+    travel: "trail",
+    fromDirection: "right",
+    toDirection: "left",
+    waypoints: [[-38, 1.7, 24]],
+  },
+  {
+    from: "test-course",
+    to: "sky-bridge",
+    travel: "trail",
+    fromDirection: "down",
+    toDirection: "left",
+    waypoints: [[-22, 2.6, 20], [-17, 3, 24]],
+  },
+  {
+    from: "test-course",
+    to: "slipstream",
+    travel: "trail",
+    fromDirection: "up",
+    toDirection: "down",
+    waypoints: [[-24, 2.25, 12], [-18, 2.5, 8]],
+  },
+  {
+    from: "sky-bridge",
+    to: "nightworks",
+    travel: "trail",
+    fromDirection: "up",
+    toDirection: "down",
+    waypoints: [[-8, 3.8, 18], [-10, 4.3, 5], [-20, 5, -2]],
+  },
+  {
+    from: "slipstream",
+    to: "nightworks",
+    travel: "boardslide",
+    fromDirection: "up",
+    toDirection: "left",
+    waypoints: [[-18, 4.2, 2], [-35, 5.4, -1]],
+  },
+  {
+    from: "nightworks",
+    to: "beachside-run",
+    travel: "boardslide",
+    fromDirection: "right",
+    toDirection: "left",
+    waypoints: [[-19, 8.5, -8], [0, 9.5, -10], [9, 4.5, -2]],
+  },
+  {
+    from: "beachside-run",
+    to: "coastal",
+    travel: "trail",
+    fromDirection: "down",
+    toDirection: "up",
+    waypoints: [[18, 1.6, 8], [23, 1.75, 13]],
+  },
+  {
+    from: "coastal",
+    to: "island-hopper",
+    travel: "boardslide",
+    fromDirection: "right",
+    toDirection: "left",
+    waypoints: [[36, 4.2, 19], [43, 4.4, 13]],
+  },
+  {
+    from: "island-hopper",
+    to: "jungle-gate",
+    travel: "trail",
+    fromDirection: "up",
+    toDirection: "down",
+    waypoints: [[51, 4.2, -2], [45, 4.8, -10], [38, 5.1, -14]],
+  },
 ] as const;
 
 export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
@@ -91,7 +160,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     levelId: "jungle",
     name: "Jungle Ruins",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
-    islandId: "motu-aroha",
+    islandId: "island-1",
     mapPosition: [-45, 1.35, 27],
     unlockAfter: [],
   },
@@ -101,7 +170,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     fallbackLevelId: "flats",
     name: "Test Course",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
-    islandId: "motu-aroha",
+    islandId: "island-1",
     mapPosition: [-30, 1.75, 18],
     unlockAfter: ["jungle"],
   },
@@ -110,7 +179,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     levelId: "sky",
     name: "Sky Bridge",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
-    islandId: "motu-aroha",
+    islandId: "island-1",
     mapPosition: [-14, 3.1, 28],
     unlockAfter: ["test-course"],
   },
@@ -119,7 +188,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     levelId: "slip",
     name: "Slipstream",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
-    islandId: "motu-aroha",
+    islandId: "island-1",
     mapPosition: [-13, 2.55, 7],
     unlockAfter: ["test-course"],
   },
@@ -128,10 +197,10 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     levelId: "dark",
     name: "Nightworks",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
-    islandId: "motu-aroha",
+    islandId: "island-1",
     mapPosition: [-29, 5.25, -3],
     unlockAfter: ["sky-bridge", "slipstream"],
-    unlockMode: "any",
+    unlockMode: "all",
     boss: true,
   },
   {
@@ -139,7 +208,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     levelId: "beachfront",
     name: "Beachside Run",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
-    islandId: "rangi-atoll",
+    islandId: "island-2",
     mapPosition: [13, 1.35, 2],
     unlockAfter: ["nightworks"],
   },
@@ -148,7 +217,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     levelId: "coastal-street-run",
     name: "Coastal",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
-    islandId: "rangi-atoll",
+    islandId: "island-2",
     mapPosition: [27, 1.75, 16],
     unlockAfter: ["beachside-run"],
   },
@@ -157,7 +226,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     levelId: "island-hopper",
     name: "Island Hopper",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
-    islandId: "rangi-atoll",
+    islandId: "island-2",
     mapPosition: [46, 3.05, 5],
     unlockAfter: ["coastal"],
   },
@@ -166,7 +235,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     levelId: "jungle-gate-run",
     name: "Jungle Gate",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
-    islandId: "rangi-atoll",
+    islandId: "island-2",
     mapPosition: [32, 5.1, -13],
     unlockAfter: ["island-hopper"],
     boss: true,
@@ -179,6 +248,38 @@ for (const level of CAMPAIGN_LEVELS) {
   if (level.fallbackLevelId) LEVEL_BY_ID.set(level.fallbackLevelId, level);
 }
 const LEVEL_BY_KEY = new Map(CAMPAIGN_LEVELS.map((level) => [level.progressKey, level]));
+
+export function validateCampaignMapGraph(): string[] {
+  const errors: string[] = [];
+  const directionSlots = new Set<string>();
+  const edgePairs = new Set<string>();
+  const connectedKeys = new Set<string>();
+  for (const edge of CAMPAIGN_MAP_EDGES) {
+    if (!LEVEL_BY_KEY.has(edge.from)) errors.push(`unknown map edge source ${edge.from}`);
+    if (!LEVEL_BY_KEY.has(edge.to)) errors.push(`unknown map edge destination ${edge.to}`);
+    if (edge.from === edge.to) errors.push(`self-connected map edge ${edge.from}`);
+    const pair = [edge.from, edge.to].sort().join("|");
+    if (edgePairs.has(pair)) errors.push(`duplicate map edge ${pair}`);
+    edgePairs.add(pair);
+    for (const [key, direction] of [
+      [edge.from, edge.fromDirection],
+      [edge.to, edge.toDirection],
+    ] as const) {
+      const slot = `${key}:${direction}`;
+      if (directionSlots.has(slot)) errors.push(`duplicate map direction slot ${slot}`);
+      directionSlots.add(slot);
+      connectedKeys.add(key);
+    }
+  }
+  for (const level of CAMPAIGN_LEVELS)
+    if (!connectedKeys.has(level.progressKey))
+      errors.push(`campaign hub has no map edge ${level.progressKey}`);
+  return errors;
+}
+
+const CAMPAIGN_MAP_GRAPH_ERRORS = validateCampaignMapGraph();
+if (CAMPAIGN_MAP_GRAPH_ERRORS.length)
+  throw new Error(`Invalid campaign map graph: ${CAMPAIGN_MAP_GRAPH_ERRORS.join("; ")}`);
 
 export function campaignLevelById(id: string): CampaignLevelDefinition | null {
   return LEVEL_BY_ID.get(id) ?? null;
@@ -208,6 +309,8 @@ export interface CampaignSaveV1 {
   updatedAt: number;
   lives: number;
   fruit: number;
+  /** Last settled world-map hub. Optional so every existing V1 save migrates. */
+  mapFocus?: string;
   levels: Record<string, CampaignLevelProgress>;
 }
 
@@ -315,6 +418,7 @@ function createSave(slot: number, now = Date.now()): CampaignSaveV1 {
     updatedAt: now,
     lives: DEFAULT_CAMPAIGN_LIVES,
     fruit: 0,
+    mapFocus: CAMPAIGN_LEVELS[0].progressKey,
     levels: emptyLevels(),
   };
 }
@@ -387,6 +491,10 @@ function normalizeSave(value: unknown, slot: number): CampaignSaveV1 | null {
       !invalidLives && typeof raw.fruit === "number" && Number.isFinite(raw.fruit)
         ? Math.max(0, Math.min(99, Math.floor(raw.fruit)))
         : 0,
+    mapFocus:
+      typeof raw.mapFocus === "string" && campaignLevelByKey(raw.mapFocus)
+        ? raw.mapFocus
+        : undefined,
     levels,
   };
 }
@@ -653,6 +761,8 @@ export class CampaignStore {
    * hub, or the furthest currently unlocked hub when the frontier is new.
    */
   recommendedMapLevelKey(): string {
+    const remembered = this.activeValue?.mapFocus;
+    if (remembered && this.levelUnlocked(remembered)) return remembered;
     let candidate = CAMPAIGN_LEVELS[0].progressKey;
     for (const definition of CAMPAIGN_LEVELS) {
       if (!this.levelUnlocked(definition.progressKey)) continue;
@@ -660,6 +770,19 @@ export class CampaignStore {
       if (!this.activeValue?.levels[definition.progressKey]?.cleared) break;
     }
     return candidate;
+  }
+
+  setMapFocus(progressKey: string): void {
+    const save = this.activeValue;
+    if (
+      !save ||
+      !campaignLevelByKey(progressKey) ||
+      !this.levelUnlocked(progressKey) ||
+      save.mapFocus === progressKey
+    )
+      return;
+    save.mapFocus = progressKey;
+    this.noteWorkingChange();
   }
 
   commitClear(

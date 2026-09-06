@@ -281,6 +281,17 @@ try {
   assert.ok(findClass(normalPanel, "game-results-title"));
   assert.equal(findClass(normalPanel, "game-results-actions")?.children.length, 2);
 
+  gameFlow.showResults({
+    ...resultState(false),
+    firstClear: false,
+    timeTrialUnlocked: false,
+  });
+  assert.equal(
+    findClass(gameFlow.panel, "game-results-trial-unlocked"),
+    null,
+    "replaying a cleared level announced the time trial as newly unlocked again",
+  );
+
   gameFlow.showResults(resultState(true));
   const trialPanel = gameFlow.panel;
   const trialTally = findClass(trialPanel, "game-results-tally");

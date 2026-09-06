@@ -58,7 +58,7 @@ assert.equal(select("?coastphysics", { coast: true }).current.id, "descent");
 
 const clear = new Function(
   "player", "level", "current", "campaignLevelById", "campaign", "runStartRewards",
-  "presentCampaignResults", "ui",
+  "presentCampaignResults", "ui", "CAMPAIGN_LEVELS", "pendingMapUnlockReveal",
   `${compile(functionSource("showCampaignResults"))}\nshowCampaignResults();`,
 );
 function finish({ canonical = false, before = null, runMode = false, totalBoxes = 12,
@@ -77,12 +77,15 @@ function finish({ canonical = false, before = null, runMode = false, totalBoxes 
       : null,
     {
       levelProgress(id) { calls.progress.push(id); return before; },
+      levelUnlocked() { return true; },
       commitClear(id, rewards) { calls.commits.push({ id, rewards }); },
       updateInventory(lives, fruit) { calls.inventory.push({ lives, fruit }); },
     },
     { crystal: false, boxGem: false, comboGem: false, ...starting },
     (result) => calls.results.push(result),
     { showMessage() { assert.fail("Noncanonical finishes must not fall back to a full-screen text popup"); } },
+    [{ progressKey: "jungle" }],
+    [],
   );
   assert.equal(calls.bank, 1);
   assert.deepEqual(calls.inventory, [{ lives: 6, fruit: 30 }]);
@@ -123,5 +126,10 @@ assert.equal(repeat.result.firstClear, false);
 assert.equal(repeat.result.crystal, false);
 assert.equal(repeat.result.boxGem, false);
 assert.equal(repeat.result.comboGem, false);
+assert.equal(
+  repeat.result.timeTrialUnlocked,
+  false,
+  "repeat clears must not re-announce the time-trial unlock",
+);
 
 console.log("Playtest level flow checks passed: opt-in validated links, safe startup fallbacks, and normal results without canonical progress pollution.");

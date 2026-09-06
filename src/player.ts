@@ -782,6 +782,7 @@ export class Player {
   // (riding, ollie airs, non-boardslide grinds); stance flips the side.
   private sidePose = 0;
   private slopePose = 0; // body pitches to match the ground under the board
+  private worldMapRailPitch = 0; // presentation-only pitch along authored map rails
   private starTimer = 0; // Crash star-jump beat after crouch/slide jumps
   private starPose = 0;
   private slopeRoll = 0; // ...and rolls to match the cross-slope (bank/wall)
@@ -2562,7 +2563,13 @@ export class Player {
     this.vVel = 0;
     this.grounded = mode !== "boardslide";
     this.surfaceName = mode === "boardslide" ? "map boardslide rail" : "world map path";
-    this.axisF.copy(tangent).setY(0);
+    const horizontalTangent = Math.hypot(tangent.x, tangent.z);
+    const railPitchTarget = mode === "boardslide"
+      ? -Math.atan2(tangent.y, Math.max(horizontalTangent, 1e-5))
+      : 0;
+    this.worldMapRailPitch +=
+      (railPitchTarget - this.worldMapRailPitch) * Math.min(1, 12 * dt);
+    this.axisF.set(tangent.x, 0, tangent.z);
     if (this.axisF.lengthSq() < 1e-6) this.axisF.set(0, 0, -1);
     else this.axisF.normalize();
     this.axisL.set(-this.axisF.z, 0, this.axisF.x);
@@ -2589,6 +2596,9 @@ export class Player {
     if (mode !== "idle" && measuredSpeed > 0.01)
       this.visualYaw = wrapAngle(Math.atan2(this.axisF.x, this.axisF.z) - Math.PI);
     this.finishVisualStep({ moveX: 0 } as Input, dt);
+    // The map route is a 3D rail rather than collision ground. Apply its pitch
+    // after the ordinary pose pass so both deck and rider follow the tube.
+    this.bodyGroup.rotation.x += this.worldMapRailPitch;
   }
 
   /** A semantic teleport: collapse pose history and snap the camera subject. */

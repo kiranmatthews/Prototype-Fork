@@ -10,6 +10,7 @@ const input = await text("src/input.ts");
 const main = await text("src/main.ts");
 const hud = await text("src/gameHudSurface.ts");
 const ui = await text("src/ui.ts");
+const worldMapUi = await text("src/worldMapUI.ts");
 
 for (const contract of [
   "--tc-size: clamp(136px, 40dvh, 168px)",
@@ -66,6 +67,29 @@ assert.match(main, /ui\.setPresentationTools\(\[/);
 assert.match(input, /new TouchControls\(\(\) => \{[\s\S]{0,160}this\.pausePressed = true;/);
 assert.match(input, /touchJumpPressed = tc\.consumeButtonPress\('x'\)/);
 assert.match(input, /const mapDirection = tc\.consumeDirectionTap\(\)/);
+assert.match(input, /ArrowRight[^\n]*KeyD[^\n]*mapDirectionX = 1/);
+assert.match(input, /ArrowUp[^\n]*KeyW[^\n]*mapDirectionY = 1/);
+assert.match(worldMapUi, /body\.tc-on \.world-map-island-card \{ display: none; \}/);
+assert.match(
+  worldMapUi,
+  /@media \(max-height: 520px\) and \(pointer: fine\)[\s\S]*?\.world-map-navigation \{[^}]*display: flex;/,
+  "short mouse/keyboard windows must retain arrow and Enter navigation",
+);
+assert.match(
+  worldMapUi,
+  /@media \(orientation: portrait\)[\s\S]*?top: calc\(11vh \+ 210px\); bottom: auto;/,
+  "portrait map utilities must sit above the bottom D-pad/face-control zones",
+);
+assert.match(
+  worldMapUi,
+  /@media \(orientation: portrait\)[\s\S]*?\.world-map-unlock-notice \{ top: calc\(11vh \+ 285px\);/,
+  "portrait unlock notices must clear the level card and utility row",
+);
+assert.match(
+  worldMapUi,
+  /this\.unlockNotice\.classList\.remove\("show"\);[\s\S]{0,180}this\.unlockNotice\.hidden = true;[\s\S]{0,100}this\.unlockNotice\.textContent = "";/,
+  "the faded unlock status must leave the accessibility tree",
+);
 assert.match(main, /if \(input\.pausePressed\)[\s\S]{0,120}gameFlow\.handlePauseToggle\(\)/);
 assert.match(main, /new MutationObserver\(syncToolPanelState\)/);
 assert.match(ui, /setPresentationTools\(/);

@@ -61,6 +61,11 @@ assert.deepEqual(
   [5, 4],
   "the prototype map must exercise multiple 4-7 hub islands",
 );
+assert.deepEqual(
+  campaign.CAMPAIGN_ISLANDS.map(({ id, name }) => [id, name]),
+  [["island-1", "Island 1"], ["island-2", "Island 2"]],
+  "temporary island naming must stay generic until the setting is authored",
+);
 assert.ok(
   campaign.CAMPAIGN_LEVELS.filter(({ boss }) => boss).length === 2,
   "each prototype island needs a boss hub",
@@ -68,6 +73,11 @@ assert.ok(
 assert.ok(
   campaign.CAMPAIGN_MAP_EDGES.some(({ travel }) => travel === "boardslide"),
   "the campaign graph has no canned boardslide connection",
+);
+assert.deepEqual(
+  campaign.validateCampaignMapGraph(),
+  [],
+  "campaign map edge endpoints and direction slots must stay valid",
 );
 
 const graph = new campaign.CampaignStore();
@@ -88,9 +98,16 @@ assert.equal(graph.levelUnlocked("nightworks"), false);
 graph.commitClear("sky", { crystal: false, boxGem: false, comboGem: false });
 assert.equal(
   graph.levelUnlocked("nightworks"),
-  true,
-  "the any-cleared branch join did not unlock its boss hub",
+  false,
+  "the boss bypassed an uncleared branch",
 );
+graph.commitClear("slip", { crystal: false, boxGem: false, comboGem: false });
+assert.equal(
+  graph.levelUnlocked("nightworks"),
+  true,
+  "the all-cleared branch join did not unlock its finale hub",
+);
+graph.setMapFocus("slipstream");
 assert.equal(graph.recommendedMapLevelKey(), "slipstream");
 
 const store = new campaign.CampaignStore();
@@ -117,6 +134,8 @@ assert.equal(
   "an ordinary clear polluted time-trial best time",
 );
 store.updateInventory(7, 63);
+store.setMapFocus("test-course");
+assert.equal(store.recommendedMapLevelKey(), "test-course");
 
 const totals = store.totals();
 assert.equal(totals.cleared, 1);
@@ -131,6 +150,7 @@ const loaded = restored.load(1);
 assert.equal(loaded?.lives, 7);
 assert.equal(loaded?.fruit, 63);
 assert.equal(restored.runModesUnlocked("jungle"), true);
+assert.equal(restored.recommendedMapLevelKey(), "test-course");
 
 restored.resetInventory();
 assert.equal(restored.active?.lives, 4);

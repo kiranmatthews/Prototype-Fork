@@ -6242,6 +6242,10 @@ export class Level {
     this.campaignWorldMap?.sync(selectedKey, progressAt, unlockedAt);
   }
 
+  revealCampaignMapNodes(progressKeys: readonly string[]): void {
+    this.campaignWorldMap?.reveal(progressKeys);
+  }
+
   campaignPortalReturnPose(progressKey: string): CampaignPortalReturnPose | null {
     const mapPose = this.campaignWorldMap?.pose(progressKey);
     if (mapPose) return mapPose;

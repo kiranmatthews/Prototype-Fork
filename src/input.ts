@@ -107,6 +107,10 @@ export class Input {
         if (e.code === 'KeyI') this.mapProgressPressed = true;
         if (e.code === 'KeyL') this.mapSaveLoadPressed = true;
         if (e.code === 'KeyQ') this.mapQuitPressed = true;
+        if (e.code === 'ArrowRight' || e.code === 'KeyD') this.mapDirectionX = 1;
+        if (e.code === 'ArrowLeft' || e.code === 'KeyA') this.mapDirectionX = -1;
+        if (e.code === 'ArrowUp' || e.code === 'KeyW') this.mapDirectionY = 1;
+        if (e.code === 'ArrowDown' || e.code === 'KeyS') this.mapDirectionY = -1;
       }
     });
     window.addEventListener('keyup', (e) => {

@@ -9,13 +9,25 @@ import type { Input } from "./input";
 import type { Level } from "./level";
 import type { Player } from "./player";
 import { sfx } from "./audio";
+import { puffs } from "./puffs";
 
 const UP = new THREE.Vector3(0, 1, 0);
 
 export type WorldMapSection = "progress" | "options" | "save-load" | "quit";
 
+export interface WorldMapDirections {
+  up: boolean;
+  down: boolean;
+  left: boolean;
+  right: boolean;
+}
+
 export interface WorldMapControllerCallbacks {
-  onSelection: (progressKey: string, moving: boolean) => void;
+  onSelection: (
+    progressKey: string,
+    moving: boolean,
+    directions: WorldMapDirections,
+  ) => void;
   onEnterLevel: (levelId: string) => void;
   onOpenSection: (section: WorldMapSection) => void;
 }
@@ -25,6 +37,9 @@ interface ActiveTravel {
   to: string;
   elapsed: number;
   duration: number;
+  style: "trail" | "boardslide";
+  boardEngaged: boolean;
+  sparkClock: number;
 }
 
 export class WorldMapController {
@@ -69,13 +84,14 @@ export class WorldMapController {
     this.travel = null;
     this.directionLatched = false;
     this.cameraReady = false;
+    this.campaign.setMapFocus(selected);
     const pose = level.campaignMapPose(selected);
     if (pose) {
       this.player.stepWorldMapPresentation(pose.position, pose.heading, 1 / 60, "idle");
       this.player.snapRenderInterpolation();
     }
     this.syncVisuals();
-    this.callbacks.onSelection(selected, false);
+    this.callbacks.onSelection(selected, false, this.availableDirections());
   }
 
   deactivate(): void {
@@ -88,7 +104,15 @@ export class WorldMapController {
   refresh(): void {
     if (!this.level) return;
     this.syncVisuals();
-    this.callbacks.onSelection(this.selectedKeyValue, this.moving);
+    this.callbacks.onSelection(
+      this.selectedKeyValue,
+      this.moving,
+      this.moving ? this.noDirections() : this.availableDirections(),
+    );
+  }
+
+  revealUnlocks(progressKeys: readonly string[]): void {
+    this.level?.revealCampaignMapNodes(progressKeys);
   }
 
   navigate(screenX: number, screenY: number): boolean {
@@ -111,10 +135,17 @@ export class WorldMapController {
       to: next,
       elapsed: 0,
       duration: initial.duration,
+      style: initial.style,
+      boardEngaged: false,
+      sparkClock: 0,
     };
     this.syncVisuals();
-    this.callbacks.onSelection(next, true);
-    sfx.play(initial.style === "boardslide" ? "railLand" : "footstep1", 0.32, 1.08);
+    this.callbacks.onSelection(next, true, this.noDirections());
+    sfx.play(
+      initial.style === "boardslide" ? "skateTransition" : "footstep1",
+      initial.style === "boardslide" ? 0.5 : 0.32,
+      1.08,
+    );
     return true;
   }
 
@@ -151,21 +182,59 @@ export class WorldMapController {
         eased,
       );
       if (sample) {
+        let presentation: "walk" | "boardslide" = "walk";
+        if (sample.style === "boardslide") {
+          const mountEnd = 0.12;
+          const landStart = 0.88;
+          if (raw >= mountEnd && raw <= landStart) {
+            presentation = "boardslide";
+            if (!this.travel.boardEngaged) {
+              this.travel.boardEngaged = true;
+              sfx.play("railLand", 0.72, 1.08);
+              puffs.burst("spark", sample.position.x, sample.position.y, sample.position.z, {
+                count: 6,
+                strength: 0.8,
+                dir: sample.tangent.clone().negate().setY(0.45),
+              });
+            }
+            this.travel.sparkClock -= dt;
+            if (this.travel.sparkClock <= 0) {
+              this.travel.sparkClock = 0.075;
+              puffs.burst("spark", sample.position.x, sample.position.y, sample.position.z, {
+                count: 2,
+                strength: 0.3,
+                dir: sample.tangent.clone().negate().setY(0.2),
+              });
+            }
+          } else {
+            const phase = raw < mountEnd
+              ? raw / mountEnd
+              : (raw - landStart) / (1 - landStart);
+            sample.position.y += Math.sin(phase * Math.PI) * 0.28;
+          }
+        }
         this.player.stepWorldMapPresentation(
           sample.position,
           sample.tangent,
           dt,
-          sample.style === "boardslide" ? "boardslide" : "walk",
+          presentation,
         );
       }
       if (raw >= 1) {
+        const boardTravel = this.travel.style === "boardslide";
         this.selectedKeyValue = this.travel.to;
         this.travel = null;
+        this.campaign.setMapFocus(this.selectedKeyValue);
         const pose = level.campaignMapPose(this.selectedKeyValue);
         if (pose)
           this.player.stepWorldMapPresentation(pose.position, pose.heading, dt, "idle");
         this.syncVisuals();
-        this.callbacks.onSelection(this.selectedKeyValue, false);
+        this.callbacks.onSelection(
+          this.selectedKeyValue,
+          false,
+          this.availableDirections(),
+        );
+        if (boardTravel) sfx.play("skateHalt", 0.4, 1.2);
         sfx.play("crystalGet", 0.2, 1.65);
       }
       return;
@@ -193,7 +262,8 @@ export class WorldMapController {
   }
 
   frameCamera(camera: THREE.PerspectiveCamera, dt: number): void {
-    if (!this.level) return;
+    const level = this.level;
+    if (!level) return;
     const definition = campaignLevelByKey(this.travel?.to ?? this.selectedKeyValue);
     const island = CAMPAIGN_ISLANDS.find(
       (candidate) => candidate.id === definition?.islandId,
@@ -201,15 +271,39 @@ export class WorldMapController {
     const islandCentre = island
       ? new THREE.Vector3(...island.centre)
       : this.player.renderPosition.clone();
-    const bridgeTravel = this.travel && this.isCrossIsland(this.travel.from, this.travel.to);
-    if (bridgeTravel) {
-      this.desiredTarget.copy(this.player.renderPosition);
-      this.desiredTarget.y = 1.8;
+    const targetPose = level.campaignMapPose(this.travel?.to ?? this.selectedKeyValue);
+    const portrait = camera.aspect < 0.75;
+    const travelSample = this.travel
+      ? level.campaignMapTravel(
+          this.travel.from,
+          this.travel.to,
+          THREE.MathUtils.clamp(this.travel.elapsed / this.travel.duration, 0, 1),
+        )
+      : null;
+    const boardTravel = travelSample?.style === "boardslide";
+    const crossIsland = this.travel
+      ? this.isCrossIsland(this.travel.from, this.travel.to)
+      : false;
+    if (this.travel) {
+      this.desiredTarget.copy(this.player.renderPosition).lerp(islandCentre, 0.12);
+      this.desiredTarget.y = this.player.renderPosition.y + (boardTravel ? 2.2 : 3.1);
     } else {
       this.desiredTarget.copy(islandCentre);
-      this.desiredTarget.y = 2.5;
+      if (targetPose)
+        this.desiredTarget.lerp(targetPose.position, portrait ? 0.9 : 0.52);
+      this.desiredTarget.y = (targetPose?.position.y ?? 1.5) + 3.25;
     }
-    this.desiredEye.copy(this.desiredTarget).add(new THREE.Vector3(0, 50, 61));
+    const travelProgress = this.travel
+      ? THREE.MathUtils.clamp(this.travel.elapsed / this.travel.duration, 0, 1)
+      : 0;
+    const bridgePullback = crossIsland ? Math.sin(travelProgress * Math.PI) : 0;
+    this.desiredEye.copy(this.desiredTarget).add(
+      new THREE.Vector3(
+        0,
+        (boardTravel ? 27 : portrait ? 28 : 31) + bridgePullback * 10,
+        (boardTravel ? 39 : portrait ? 39 : 43) + bridgePullback * 13,
+      ),
+    );
     if (!this.cameraReady) {
       this.cameraEye.copy(this.desiredEye);
       this.cameraTarget.copy(this.desiredTarget);
@@ -220,7 +314,7 @@ export class WorldMapController {
       this.cameraEye.lerp(this.desiredEye, eyeEase);
       this.cameraTarget.lerp(this.desiredTarget, targetEase);
     }
-    camera.fov = 39;
+    camera.fov = boardTravel ? 45 : portrait ? 46 : 42;
     camera.near = 0.1;
     camera.far = 900;
     camera.up.copy(UP);
@@ -235,6 +329,28 @@ export class WorldMapController {
       (levelId) => this.campaign.levelProgress(levelId),
       (key) => this.campaign.levelUnlocked(key),
     );
+  }
+
+  private availableDirections(): WorldMapDirections {
+    const level = this.level;
+    if (!level) return this.noDirections();
+    const can = (x: number, y: number): boolean =>
+      level.campaignMapNeighbor(
+        this.selectedKeyValue,
+        x,
+        y,
+        (key) => this.campaign.levelUnlocked(key),
+      ) !== null;
+    return {
+      up: can(0, 1),
+      down: can(0, -1),
+      left: can(-1, 0),
+      right: can(1, 0),
+    };
+  }
+
+  private noDirections(): WorldMapDirections {
+    return { up: false, down: false, left: false, right: false };
   }
 
   private isCrossIsland(from: string, to: string): boolean {

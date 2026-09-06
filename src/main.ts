@@ -46,6 +46,7 @@ import { ResultsPresentation } from "./resultsPresentation";
 import { GameFlowVortexHost } from "./gameFlowVortex";
 import {
   CampaignStore,
+  CAMPAIGN_LEVELS,
   CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
   DEFAULT_CAMPAIGN_LIVES,
   campaignLevelById,
@@ -197,6 +198,7 @@ scene.add(sun.target);
 sun.castShadow = true;
 sun.shadow.mapSize.set(2048, 2048);
 const SHADOW_HALF = 23;
+const MAP_SHADOW_HALF = 58;
 sun.shadow.camera.left = -SHADOW_HALF;
 sun.shadow.camera.right = SHADOW_HALF;
 sun.shadow.camera.top = SHADOW_HALF;
@@ -212,6 +214,15 @@ const SUN_OFFSET = new THREE.Vector3(38, 74, 26);
 // a Three light-position offset opposite its forward ray.
 const COAST_SUN_OFFSET = new THREE.Vector3(-68, 58, -11);
 function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
+  const shadowHalf = document.body.classList.contains("game-world-map")
+    ? MAP_SHADOW_HALF
+    : SHADOW_HALF;
+  if (sun.shadow.camera.right !== shadowHalf) {
+    sun.shadow.camera.left = -shadowHalf;
+    sun.shadow.camera.right = shadowHalf;
+    sun.shadow.camera.top = shadowHalf;
+    sun.shadow.camera.bottom = -shadowHalf;
+  }
   const offset = activeSky === "coast" ? COAST_SUN_OFFSET : SUN_OFFSET;
   sun.target.position.set(focusX, focusY, focusZ);
   sun.target.updateMatrixWorld();
@@ -2091,8 +2102,8 @@ worldMapUI = new WorldMapUI(campaign, {
   },
 });
 worldMapController = new WorldMapController(campaign, player, {
-  onSelection: (progressKey, moving) => {
-    worldMapUI?.setSelection(progressKey, moving);
+  onSelection: (progressKey, moving, directions) => {
+    worldMapUI?.setSelection(progressKey, moving, directions);
   },
   onEnterLevel: enterCampaignLevel,
   onOpenSection: openWorldMapSection,
@@ -2163,6 +2174,7 @@ let pendingCompletion:
   | { kind: "normal" | "bonus" }
   | { kind: "time-trial"; time: number }
   | null = null;
+let pendingMapUnlockReveal: string[] = [];
 
 function syncCampaignPortalProgress(): void {
   if (current.id !== "warproom") return;
@@ -2355,6 +2367,7 @@ function guardGameplayFromMenu(): void {
 }
 
 function startNewCampaign(slot: number): void {
+  pendingMapUnlockReveal = [];
   guardGameplayFromMenu();
   void gameFlow.transition(async () => {
     const save = campaign.newGame(slot);
@@ -2367,6 +2380,7 @@ function startNewCampaign(slot: number): void {
 }
 
 function loadCampaign(slot: number): void {
+  pendingMapUnlockReveal = [];
   guardGameplayFromMenu();
   void gameFlow.transition(async () => {
     // Warp-origin loads have already passed through the explicit destructive
@@ -2572,6 +2586,8 @@ function retryFromResults(): void {
 
 function continueFromResults(): void {
   const originLevelId = current.id;
+  const unlockReveal = pendingMapUnlockReveal;
+  pendingMapUnlockReveal = [];
   guardGameplayFromMenu();
   campaign.updateInventory(player.lives, player.fruit);
   void gameFlow.transition(async () => {
@@ -2579,6 +2595,9 @@ function continueFromResults(): void {
     returnToWarpRoom(originLevelId);
     await prepareActivePresentationAssets();
     gameFlow.hide();
+  }).then(() => {
+    worldMapController?.revealUnlocks(unlockReveal);
+    worldMapUI?.announceUnlock(unlockReveal);
   });
 }
 
@@ -2598,6 +2617,11 @@ function showCampaignResults(): void {
   const definition = campaignLevelById(current.id);
   const before = definition ? campaign.levelProgress(current.id) : null;
   const firstClear = definition !== null && !before?.cleared;
+  const unlockedBefore = new Set(
+    CAMPAIGN_LEVELS
+      .filter((candidate) => campaign.levelUnlocked(candidate.progressKey))
+      .map((candidate) => candidate.progressKey),
+  );
   const boxes = player.cratesBroken + (level.runMode ? 0 : player.bonusCrates);
   if (!level.runMode && level.totalCrates > 0 && boxes >= level.totalCrates)
     player.gemEarned = true;
@@ -2609,6 +2633,14 @@ function showCampaignResults(): void {
       boxGem: player.gemEarned,
       comboGem: player.comboGemEarned,
     });
+  if (definition && firstClear)
+    pendingMapUnlockReveal = CAMPAIGN_LEVELS
+      .filter(
+        (candidate) =>
+          !unlockedBefore.has(candidate.progressKey) &&
+          campaign.levelUnlocked(candidate.progressKey),
+      )
+      .map((candidate) => candidate.progressKey);
   campaign.updateInventory(player.lives, player.fruit);
   const result: ResultsScreenState = {
     kind: "normal",
@@ -2622,7 +2654,7 @@ function showCampaignResults(): void {
     ...(definition
       ? {
           // commitClear above has just satisfied the clear-only run-mode gate.
-          timeTrialUnlocked: true,
+          timeTrialUnlocked: firstClear,
           relicTarget: definition.relicTime,
         }
       : {}),

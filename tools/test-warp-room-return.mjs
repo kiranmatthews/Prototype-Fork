@@ -358,8 +358,16 @@ let warpLevel = null;
 try {
   const { BUILTIN_LEVELS, Level } = await server.ssrLoadModule("/src/level.ts");
   const { Player } = await server.ssrLoadModule("/src/player.ts");
-  const { CAMPAIGN_LEVELS, campaignLevelById } = await server.ssrLoadModule(
+  const {
+    CAMPAIGN_LEVELS,
+    CAMPAIGN_MAP_EDGES,
+    CampaignStore,
+    campaignLevelById,
+  } = await server.ssrLoadModule(
     "/src/campaign.ts",
+  );
+  const { WorldMapController } = await server.ssrLoadModule(
+    "/src/worldMapController.ts",
   );
   const { swirls } = await server.ssrLoadModule("/src/swirls.ts");
 
@@ -369,6 +377,17 @@ try {
     CAMPAIGN_LEVELS.length,
     "campaign progress keys are not unique",
   );
+  const directionSlots = new Set();
+  for (const edge of CAMPAIGN_MAP_EDGES) {
+    for (const [key, direction] of [
+      [edge.from, edge.fromDirection],
+      [edge.to, edge.toDirection],
+    ]) {
+      const slot = `${key}:${direction}`;
+      assert.ok(!directionSlots.has(slot), `duplicate map direction slot ${slot}`);
+      directionSlots.add(slot);
+    }
+  }
 
   const warpEntry = BUILTIN_LEVELS.find(({ id }) => id === "warproom");
   assert.ok(warpEntry, "Warp Room entry is missing");
@@ -384,6 +403,117 @@ try {
     "every campaign destination needs one supported map hub",
   );
   assert.ok(warpLevel.water, "world map did not reuse the campaign ocean shader");
+  assert.ok(warpLevel.water.params.causticsFade >= 120);
+  assert.ok(warpLevel.water.params.causticsStrength > 1);
+  assert.ok(warpLevel.water.params.depthDistance >= 0.7);
+  assert.ok(warpLevel.water.params.reflectionFresnel <= 3);
+  assert.ok(warpLevel.water.reflectionScale >= 0.4);
+
+  const mapNames = [];
+  warpLevel.root.traverse(({ name }) => mapNames.push(name));
+  assert.equal(
+    mapNames.filter((name) => name === "world map shallow caustic shelf").length,
+    13,
+    "the archipelago does not expose broad opaque seabeds to the ocean prepass",
+  );
+  assert.equal(
+    mapNames.filter((name) => name === "world map hub foundation").length,
+    CAMPAIGN_LEVELS.length,
+    "elevated hubs are missing visual terrain support",
+  );
+  assert.equal(
+    mapNames.filter((name) => name === "world map route bed").length,
+    9,
+    "a graph edge is missing its supported trail/rail bed",
+  );
+  const islandLobes = [];
+  let reefHeads = null;
+  let coralFingers = null;
+  warpLevel.root.traverse((object) => {
+    if (object.name === "procedural tropical island") islandLobes.push(object);
+    else if (object.name === "world map shallow reef heads") reefHeads = object;
+    else if (object.name === "world map shallow coral fingers") coralFingers = object;
+  });
+  for (const definition of CAMPAIGN_LEVELS) {
+    assert.ok(
+      islandLobes.some((lobe) =>
+        Math.hypot(
+          lobe.position.x - definition.mapPosition[0],
+          lobe.position.z - definition.mapPosition[2],
+        ) < 1e-6,
+      ),
+      `${definition.progressKey} hub moved without its generated island lobe`,
+    );
+  }
+  assert.equal(reefHeads.count, CAMPAIGN_LEVELS.length * 9 + 4 * 5);
+  assert.ok(coralFingers.count >= reefHeads.count * 2);
+  assert.ok(coralFingers.instanceMatrix.count >= reefHeads.count * 4);
+
+  const directionVector = {
+    up: [0, 1],
+    down: [0, -1],
+    left: [-1, 0],
+    right: [1, 0],
+  };
+  for (const edge of CAMPAIGN_MAP_EDGES) {
+    assert.equal(
+      warpLevel.campaignMapNeighbor(
+        edge.from,
+        ...directionVector[edge.fromDirection],
+        () => true,
+      ),
+      edge.to,
+      `${edge.from} cannot traverse ${edge.fromDirection} to ${edge.to}`,
+    );
+    assert.equal(
+      warpLevel.campaignMapNeighbor(
+        edge.to,
+        ...directionVector[edge.toDirection],
+        () => true,
+      ),
+      edge.from,
+      `${edge.to} cannot traverse ${edge.toDirection} to ${edge.from}`,
+    );
+  }
+
+  // Native Three shorelines use FrontSide. The map's -Z ocean must author its
+  // first triangle upward, or only the flat DoubleSide horizon remains visible.
+  const ribbonGeometry = warpLevel.water.ribbon.geometry;
+  const ribbonPosition = ribbonGeometry.getAttribute("position");
+  const ribbonIndex = ribbonGeometry.getIndex();
+  assert.ok(ribbonIndex);
+  const a = new THREE.Vector3().fromBufferAttribute(ribbonPosition, ribbonIndex.getX(0));
+  const b = new THREE.Vector3().fromBufferAttribute(ribbonPosition, ribbonIndex.getX(1));
+  const c = new THREE.Vector3().fromBufferAttribute(ribbonPosition, ribbonIndex.getX(2));
+  const facing = b.clone().sub(a).cross(c.clone().sub(a));
+  assert.ok(facing.y > 0, "MatrixRex map ribbon is backface-culled from above");
+
+  const shelves = [];
+  warpLevel.root.traverse((object) => {
+    if (object.name === "world map shallow caustic shelf") shelves.push(object);
+  });
+  for (const shelf of shelves) {
+    shelf.geometry.computeBoundingBox();
+    assert.ok(
+      shelf.position.y + shelf.geometry.boundingBox.max.y < warpLevel.water.seaLevel,
+      "a caustic shelf rises above the water instead of feeding opaque depth",
+    );
+  }
+
+  const mountains = [];
+  warpLevel.root.traverse((object) => {
+    if (object.name === "world map mountain") mountains.push(object);
+  });
+  for (const definition of CAMPAIGN_LEVELS.filter(({ boss }) => boss)) {
+    const [x, , z] = definition.mapPosition;
+    for (const mountain of mountains) {
+      const bounds = new THREE.Box3().setFromObject(mountain);
+      assert.ok(
+        x < bounds.min.x || x > bounds.max.x || z < bounds.min.z || z > bounds.max.z,
+        `${definition.name} boss hub is embedded inside a mountain`,
+      );
+    }
+  }
 
   const positionKeys = new Set();
 
@@ -480,6 +610,15 @@ try {
   assert.ok(boardSample);
   assert.equal(boardSample.style, "boardslide");
   assert.ok(boardSample.position.y > 5, "inter-island boardslide has no authored lift");
+  const steepBoardSample = Array.from({ length: 101 }, (_, index) =>
+    warpLevel.campaignMapTravel("nightworks", "beachside-run", index / 100),
+  ).reduce((steepest, sample) =>
+    Math.abs(sample.tangent.y) > Math.abs(steepest.tangent.y) ? sample : steepest,
+  );
+  assert.ok(
+    Math.abs(steepBoardSample.tangent.y) > 0.2,
+    "authored map rail lost its vertical tangent",
+  );
 
   // Returning from a course still uses the semantic respawn snap, then the map
   // controller can author a canned rail pose without invoking gameplay input.
@@ -509,16 +648,100 @@ try {
   assert.equal(player.renderSnapVersion, snapVersion + 1);
   assert.ok(player.renderPosition.distanceTo(placement.position) < 1e-10);
   player.stepWorldMapPresentation(
-    boardSample.position,
-    boardSample.tangent,
+    steepBoardSample.position,
+    steepBoardSample.tangent,
     1 / 60,
     "boardslide",
   );
   assert.equal(player.state, "grind");
   assert.equal(player.surfaceName, "map boardslide rail");
+  assert.ok(
+    Math.abs(player.bodyGroup.rotation.x) > 0.03,
+    "map boardslide deck and rider stayed horizontal on a steep rail",
+  );
+
+  const controllerStore = new CampaignStore();
+  controllerStore.startEphemeral();
+  const controllerModes = [];
+  const selections = [];
+  const entered = [];
+  const sections = [];
+  const fakePlayer = {
+    renderPosition: new THREE.Vector3(),
+    stepWorldMapPresentation(position, _tangent, _dt, mode) {
+      this.renderPosition.copy(position);
+      controllerModes.push(mode);
+    },
+    snapRenderInterpolation() {},
+  };
+  const controller = new WorldMapController(controllerStore, fakePlayer, {
+    onSelection: (key, moving, directions) => selections.push({ key, moving, directions }),
+    onEnterLevel: (id) => entered.push(id),
+    onOpenSection: (section) => sections.push(section),
+  });
+  controller.activate(warpLevel, null);
+  assert.equal(controller.selectedKey, "jungle");
+  assert.deepEqual(selections.at(-1).directions, {
+    up: false,
+    down: false,
+    left: false,
+    right: false,
+  });
+  controllerStore.commitClear("jungle", {
+    crystal: false,
+    boxGem: false,
+    comboGem: false,
+  });
+  controller.refresh();
+  assert.equal(selections.at(-1).directions.right, true);
+  assert.equal(controller.navigate(1, 0), true);
+  const neutralInput = {
+    moveX: 0,
+    moveY: 0,
+    mapDirectionX: 0,
+    mapDirectionY: 0,
+    confirmPressed: false,
+    jumpPressed: false,
+    mapProgressPressed: false,
+    grindPressed: false,
+    mapSaveLoadPressed: false,
+    spinPressed: false,
+    mapQuitPressed: false,
+    grabPressed: false,
+  };
+  for (let frame = 0; frame < 180 && controller.moving; frame++)
+    controller.step(1 / 60, neutralInput);
+  assert.equal(controller.selectedKey, "test-course");
+  assert.equal(controllerStore.recommendedMapLevelKey(), "test-course");
+  assert.ok(controllerModes.includes("walk"));
+
+  for (const id of ["test", "sky", "slip"])
+    controllerStore.commitClear(id, {
+      crystal: false,
+      boxGem: false,
+      comboGem: false,
+    });
+  controller.activate(warpLevel, "slipstream");
+  controllerModes.length = 0;
+  assert.equal(controller.navigate(0, 1), true);
+  for (let frame = 0; frame < 240 && controller.moving; frame++)
+    controller.step(1 / 60, neutralInput);
+  assert.equal(controller.selectedKey, "nightworks");
+  assert.ok(controllerModes.includes("walk"), "boardslide has no canned mount/landing beat");
+  assert.ok(controllerModes.includes("boardslide"), "boardslide rail pose was never presented");
+  controller.revealUnlocks(["nightworks"]);
+  const revealedNode = warpLevel.campaignWorldMap.nodeByKey.get("nightworks");
+  assert.ok(revealedNode.unlockReveal > 2, "new path reveal did not arm its hub pulse");
+  const revealBeforeTick = revealedNode.unlockReveal;
+  warpLevel.update(0.25);
+  assert.ok(revealedNode.unlockReveal < revealBeforeTick, "hub reveal animation did not advance");
+  controller.enterSelected();
+  controller.openSection("progress");
+  assert.deepEqual(entered, ["dark"]);
+  assert.deepEqual(sections, ["progress"]);
 
   console.log(
-    "Validated map hub return focus/support, locked branching navigation, trail/boardslide sampling, fallback identity, exit routing, and snap-facing order.",
+    "Validated visible MatrixRex ribbon/shallow shelves, unobstructed supported hubs, locked branching, controller travel, canned boardslide staging, persistent focus, fallback identity, exit routing, and snap-facing order.",
   );
   swirls.clear();
 } finally {

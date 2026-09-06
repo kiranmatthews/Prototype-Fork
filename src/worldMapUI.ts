@@ -4,7 +4,10 @@ import {
   campaignLevelByKey,
   type CampaignStore,
 } from "./campaign";
-import type { WorldMapSection } from "./worldMapController";
+import type {
+  WorldMapDirections,
+  WorldMapSection,
+} from "./worldMapController";
 
 export interface WorldMapUICallbacks {
   onNavigate: (screenX: number, screenY: number) => void;
@@ -40,8 +43,17 @@ export class WorldMapUI {
   private readonly trial = node("div", "world-map-trial");
   private readonly collectibleRow = node("div", "world-map-collectibles");
   private readonly enterButton = node("button", "world-map-enter");
+  private readonly unlockNotice = node("div", "world-map-unlock-notice");
+  private readonly navButtons = new Map<keyof WorldMapDirections, HTMLButtonElement>();
   private selectedKey = "jungle";
   private moving = false;
+  private directions: WorldMapDirections = {
+    up: false,
+    down: false,
+    left: false,
+    right: false,
+  };
+  private unlockNoticeTimer: number | null = null;
 
   constructor(
     private readonly campaign: CampaignStore,
@@ -85,7 +97,10 @@ export class WorldMapUI {
       this.actionButton("○", "QUIT GAME", "Q", "quit"),
     );
 
-    this.root.append(islandCard, levelCard, navigation, actionBar);
+    this.unlockNotice.setAttribute("role", "status");
+    this.unlockNotice.setAttribute("aria-live", "polite");
+    this.unlockNotice.hidden = true;
+    this.root.append(islandCard, levelCard, navigation, actionBar, this.unlockNotice);
     document.body.appendChild(this.root);
     this.injectStyle();
     (window as unknown as Record<string, unknown>).__worldMapUI = this;
@@ -101,12 +116,43 @@ export class WorldMapUI {
 
   hide(): void {
     this.root.hidden = true;
+    this.unlockNotice.classList.remove("show");
+    this.unlockNotice.hidden = true;
+    this.unlockNotice.textContent = "";
+    if (this.unlockNoticeTimer !== null) window.clearTimeout(this.unlockNoticeTimer);
+    this.unlockNoticeTimer = null;
     document.body.classList.remove("world-map-active");
   }
 
-  setSelection(progressKey: string, moving: boolean): void {
+  announceUnlock(progressKeys: readonly string[]): void {
+    const names = progressKeys
+      .map((key) => campaignLevelByKey(key)?.name)
+      .filter((name): name is string => !!name);
+    if (!names.length) return;
+    if (this.unlockNoticeTimer !== null) window.clearTimeout(this.unlockNoticeTimer);
+    this.unlockNotice.hidden = false;
+    this.unlockNotice.textContent = `NEW PATH OPEN · ${names.join(" / ").toUpperCase()}`;
+    this.unlockNotice.classList.remove("show");
+    void this.unlockNotice.offsetWidth;
+    this.unlockNotice.classList.add("show");
+    this.unlockNoticeTimer = window.setTimeout(() => {
+      this.unlockNotice.classList.remove("show");
+      this.unlockNoticeTimer = window.setTimeout(() => {
+        this.unlockNotice.hidden = true;
+        this.unlockNotice.textContent = "";
+        this.unlockNoticeTimer = null;
+      }, 240);
+    }, 3600);
+  }
+
+  setSelection(
+    progressKey: string,
+    moving: boolean,
+    directions: WorldMapDirections = this.directions,
+  ): void {
     this.selectedKey = progressKey;
     this.moving = moving;
+    this.directions = directions;
     if (!this.root.hidden) this.render();
   }
 
@@ -132,7 +178,7 @@ export class WorldMapUI {
     this.eyebrow.textContent = this.moving
       ? "FOLLOWING THE CURRENT"
       : definition.boss
-        ? `ISLAND GUARDIAN · ${island.name.toUpperCase()}`
+        ? `ISLAND FINALE · ${island.name.toUpperCase()}`
         : `LEVEL ${CAMPAIGN_LEVELS.indexOf(definition) + 1} · ${island.name.toUpperCase()}`;
     this.levelName.textContent = definition.name.toUpperCase();
     this.status.textContent = this.moving
@@ -143,12 +189,14 @@ export class WorldMapUI {
           ? "COMPLETE · PLAY AGAIN"
           : "READY";
     this.enterButton.disabled = !unlocked || this.moving;
+    for (const [direction, button] of this.navButtons)
+      button.disabled = this.moving || !this.directions[direction];
     this.enterButton.querySelector("strong")!.textContent = this.moving
       ? "TRAVELLING"
       : progress?.cleared
         ? "PLAY AGAIN"
         : definition.boss
-          ? "FACE BOSS"
+          ? "ENTER FINALE"
           : "ENTER LEVEL";
 
     const rewards = [
@@ -179,13 +227,14 @@ export class WorldMapUI {
     label: string,
     screenX: number,
     screenY: number,
-    direction: string,
+    direction: keyof WorldMapDirections,
   ): HTMLButtonElement {
     const button = node("button", `world-map-arrow world-map-arrow-${direction}`);
     button.type = "button";
     button.textContent = glyph;
     button.setAttribute("aria-label", label);
     button.addEventListener("click", () => this.callbacks.onNavigate(screenX, screenY));
+    this.navButtons.set(direction, button);
     return button;
   }
 
@@ -212,8 +261,8 @@ export class WorldMapUI {
       }
       .world-map-ui[hidden], body.game-shell-modal .world-map-ui { display: none !important; }
       .world-map-island-card, .world-map-level-card {
-        background: linear-gradient(145deg, rgba(35,94,82,.92), rgba(18,57,66,.9));
-        border: 2px solid rgba(239,244,198,.68); box-shadow: 0 10px 24px rgba(6,28,38,.3), inset 0 1px rgba(255,255,255,.22);
+        background: linear-gradient(145deg, rgba(69,78,54,.94), rgba(24,55,57,.93));
+        border: 2px solid rgba(250,220,151,.74); box-shadow: 0 10px 24px rgba(6,28,38,.3), inset 0 1px rgba(255,255,255,.22);
         backdrop-filter: blur(9px); -webkit-backdrop-filter: blur(9px);
       }
       .world-map-island-card {
@@ -225,13 +274,13 @@ export class WorldMapUI {
       .world-map-island-name { font-size: clamp(22px, 2.4vw, 34px); line-height: 1; letter-spacing: .025em; }
       .world-map-island-progress { color: #ffd568; font: 800 11px/1.2 ui-monospace, monospace; margin-top: 5px; }
       .world-map-level-card {
-        position: absolute; top: max(20px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%);
-        width: min(570px, 43vw); min-height: 114px; padding: 14px 22px 12px; box-sizing: border-box;
+        position: absolute; top: max(20px, env(safe-area-inset-top)); right: max(26px, env(safe-area-inset-right));
+        width: min(600px, 47vw); min-height: 96px; padding: 11px 18px 10px; box-sizing: border-box;
         border-radius: 26px 8px 26px 8px;
       }
       .world-map-level-title-row { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
       .world-map-level-copy { min-width: 0; display: grid; }
-      .world-map-level-name { margin: 2px 0 0; font-size: clamp(28px, 3.2vw, 48px); line-height: .96; color: #fff0b6; text-shadow: 0 3px #173c3f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .world-map-level-name { margin: 2px 0 0; font-size: clamp(27px, 2.6vw, 40px); line-height: .96; color: #fff0b6; text-shadow: 0 3px #173c3f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .world-map-level-status { color: #ffd568; font: 900 11px/1.2 ui-monospace, monospace; letter-spacing: .08em; margin-top: 5px; }
       .world-map-ui.is-locked .world-map-level-status { color: #b7c3c4; }
       .world-map-ui.is-boss .world-map-level-name { color: #ffd456; }
@@ -249,6 +298,7 @@ export class WorldMapUI {
       .world-map-arrow-grid { pointer-events: auto; display: grid; grid-template-columns: repeat(3, 34px); grid-template-rows: repeat(2, 34px); gap: 3px; }
       .world-map-arrow, .world-map-enter, .world-map-action { border: 0; color: #fff8db; font-family: inherit; cursor: pointer; touch-action: manipulation; }
       .world-map-arrow { border-radius: 9px; background: rgba(16,58,64,.82); box-shadow: inset 0 0 0 2px rgba(226,246,210,.48); font: 900 20px/1 system-ui; }
+      .world-map-arrow:disabled { opacity: .28; filter: grayscale(1); cursor: default; }
       .world-map-arrow:hover, .world-map-arrow:focus-visible, .world-map-action:hover, .world-map-action:focus-visible, .world-map-enter:hover, .world-map-enter:focus-visible { outline: 3px solid #ffd45d; outline-offset: 2px; }
       .world-map-arrow-up { grid-column: 2; grid-row: 1; } .world-map-arrow-left { grid-column: 1; grid-row: 2; } .world-map-arrow-down { grid-column: 2; grid-row: 2; } .world-map-arrow-right { grid-column: 3; grid-row: 2; }
       .world-map-enter { pointer-events: auto; display: flex; align-items: center; gap: 9px; min-height: 48px; padding: 8px 17px; border-radius: 24px; background: linear-gradient(#f3a83f, #d76b27); box-shadow: inset 0 2px rgba(255,255,255,.38), 0 7px 16px rgba(31,39,27,.28); }
@@ -260,16 +310,18 @@ export class WorldMapUI {
       .world-map-action span { color: #ffd45d; font: 900 17px/1 system-ui; } .world-map-action strong { font-size: clamp(13px, 1.25vw, 19px); white-space: nowrap; }
       .world-map-action kbd { color: #9be0c1; border: 1px solid rgba(155,224,193,.5); border-radius: 4px; padding: 2px 4px; font: 800 9px/1 ui-monospace, monospace; }
       .world-map-ui.is-moving .world-map-arrow-grid, .world-map-ui.is-moving .world-map-enter { opacity: .38; pointer-events: none; }
+      .world-map-unlock-notice { position: absolute; left: 50%; top: 21%; transform: translate(-50%, -18px) scale(.92); opacity: 0; padding: 10px 22px; border: 2px solid #fff0a3; border-radius: 22px; background: linear-gradient(135deg, rgba(237,131,41,.96), rgba(198,72,30,.96)); color: #fff8d5; box-shadow: 0 8px 25px rgba(36,19,7,.36); font-size: clamp(20px, 2.2vw, 31px); letter-spacing: .035em; text-align: center; transition: opacity .22s, transform .32s cubic-bezier(.2,1.4,.4,1); }
+      .world-map-unlock-notice.show { opacity: 1; transform: translate(-50%, 0) scale(1); }
       @media (max-width: 980px) {
         .world-map-island-card { min-width: 0; max-width: 25vw; }
         .world-map-level-card { width: 54vw; }
         .world-map-action kbd { display: none; }
         .world-map-actions { gap: 5px; }
       }
-      @media (pointer: coarse), (max-height: 520px) {
+      @media (pointer: coarse) {
         .world-map-island-card { display: none; }
         .world-map-island-name { font-size: 21px; }
-        .world-map-level-card { top: max(8px, env(safe-area-inset-top)); width: min(58vw, 520px); min-height: 0; padding: 9px 14px; }
+        .world-map-level-card { top: max(8px, env(safe-area-inset-top)); right: auto; left: 50%; transform: translateX(-50%); width: min(58vw, 520px); min-height: 0; padding: 9px 14px; }
         .world-map-level-name { font-size: clamp(24px, 7vh, 34px); }
         .world-map-collectibles { grid-template-columns: repeat(4, 31px); }
         .world-map-collectible small { display: none; }
@@ -280,13 +332,31 @@ export class WorldMapUI {
         .world-map-action strong { display: block; font: 800 8px/1 ui-monospace, monospace; letter-spacing: -.03em; }
         .world-map-action span { font-size: 15px; }
       }
+      @media (max-height: 520px) and (pointer: fine) {
+        .world-map-island-card { display: none; }
+        .world-map-level-card { top: max(8px, env(safe-area-inset-top)); right: auto; left: 50%; transform: translateX(-50%); width: min(58vw, 520px); min-height: 0; padding: 9px 14px; }
+        .world-map-level-name { font-size: clamp(24px, 7vh, 34px); }
+        .world-map-collectibles { grid-template-columns: repeat(4, 31px); }
+        .world-map-collectible small { display: none; }
+        .world-map-trial { margin-top: 5px; padding-top: 4px; }
+        .world-map-navigation { left: max(16px, env(safe-area-inset-left)); bottom: max(12px, env(safe-area-inset-bottom)); display: flex; transform: scale(.86); transform-origin: left bottom; }
+        .world-map-actions { top: max(8px, env(safe-area-inset-top)); right: max(8px, env(safe-area-inset-right)); bottom: auto; left: auto; transform: none; display: grid; grid-template-columns: repeat(2, 72px); gap: 5px; padding: 6px; border-radius: 14px; }
+        .world-map-action { min-width: 72px; min-height: 40px; justify-content: center; padding: 0; flex-direction: column; gap: 2px; }
+        .world-map-action strong { display: block; font: 800 8px/1 ui-monospace, monospace; letter-spacing: -.03em; }
+        .world-map-action span { font-size: 15px; }
+      }
+      body.tc-on .world-map-island-card { display: none; }
+      body.tc-on .world-map-navigation { display: none; }
       @media (orientation: portrait) {
         .world-map-island-card { max-width: 36vw; }
-        .world-map-level-card { top: 13vh; width: 88vw; }
-        .world-map-level-name { font-size: 34px; }
-        .world-map-actions { left: 50%; right: auto; top: auto; bottom: max(20px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: grid; grid-template-columns: repeat(4, 48px); }
+        .world-map-level-card { top: 11vh; right: auto; left: 50%; transform: translateX(-50%); width: 88vw; }
+        .world-map-level-title-row { display: grid; gap: 7px; }
+        .world-map-level-name { font-size: 32px; }
+        .world-map-collectibles { width: 100%; grid-template-columns: repeat(4, 1fr); }
+        .world-map-actions { left: 50%; right: auto; top: calc(11vh + 210px); bottom: auto; transform: translateX(-50%); display: grid; grid-template-columns: repeat(4, 48px); }
         .world-map-action { min-width: 48px; }
         .world-map-action strong { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+        .world-map-unlock-notice { top: calc(11vh + 285px); width: max-content; max-width: 82vw; }
       }
     `;
     document.head.appendChild(style);
