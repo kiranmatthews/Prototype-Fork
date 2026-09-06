@@ -1,0 +1,8 @@
+.input-glyph { display:inline-flex; align-items:center; justify-content:center; flex:0 0 auto; width:var(--prompt-icon-size,1.65em); height:var(--prompt-icon-size,1.65em); vertical-align:middle; pointer-events:none; }
+.input-glyph[hidden], .input-glyph img[hidden], .input-glyph-fallback[hidden] { display:none !important; }
+.input-glyph img { display:block; width:100%; height:100%; object-fit:contain; }
+.input-glyph-fallback { display:grid; place-items:center; width:90%; height:75%; padding:2px; box-sizing:border-box; border:1px solid #555; border-radius:8px; background:#292929; color:white; font:700 10px/1 Arial,sans-serif; }
+.input-prompt-row { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; column-gap:.28em; row-gap:.2em; }
+.input-prompt-row [data-prompt-word] { white-space:nowrap; }
+.input-prompt-row .input-glyph { --prompt-icon-size:2.2em; }
+.input-glyph.input-glyph-touch-text { width:auto; height:auto; font:inherit; }

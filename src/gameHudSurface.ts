@@ -1098,7 +1098,7 @@ export class GameHudSurface {
       align: "center",
       tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.word, 84 * sy),
     });
-    if (sub) {
+    if (sub && (explicit || !this.elements.messageSub?.classList.contains("input-prompt-row"))) {
       const subRect = this.rect(this.elements.messageSub, layout) ?? {
         x: width * 0.1,
         y: titleRect.y + titleRect.height + 6 * sy,
@@ -1202,7 +1202,7 @@ export class GameHudSurface {
       }
     }
     const sub = explicit?.sub ?? readRooHudText(this.elements.resultsSub);
-    if (sub) {
+    if (sub && (explicit || !this.elements.resultsSub?.classList.contains("input-prompt-row"))) {
       const sr = this.rect(this.elements.resultsSub, layout) ?? {
         x: card.x + 10 * sy,
         y: card.y + card.height - 30 * sy,

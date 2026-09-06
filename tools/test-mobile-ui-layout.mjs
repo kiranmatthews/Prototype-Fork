@@ -85,7 +85,7 @@ assert.match(
   "touch map actions belong at the bottom without a virtual controller gap",
 );
 assert.match(touch, /body\.world-map-active \.tc-zone,[\s\S]*?body\.world-map-active \.tc-pause \{ display:none !important; \}/);
-assert.match(worldMapUi, /body\.tc-on \.world-map-action > span, body\.tc-on \.world-map-action kbd \{ display:none; \}/);
+assert.match(worldMapUi, /createInputGlyph\(action\)/, "map glyph visibility must use the shared device policy");
 assert.match(worldMapUi, /this\.enterButton\.disabled = this\.moving \|\| !unlocked/);
 assert.match(worldMapUi, /tap\.canceled/);
 assert.match(

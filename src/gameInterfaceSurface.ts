@@ -3,8 +3,9 @@
 import * as THREE from "three";
 import { GameHudSurface } from "./gameHudSurface";
 import { paintSilverSecondaryText } from "./secondaryText";
+import { paintInputPrompts } from "./inputPromptUI";
 
-const INK = ".world-map-ui, .tc-zone, .tc-pause, .game-cartoon-cursor, .game-transition-curtain";
+const INK = ".world-map-ui, .tc-zone, .tc-pause, .game-cartoon-cursor, .game-transition-curtain, .input-glyph, .input-prompt-row";
 
 export class GameInterfaceSurface {
   private surface: GameHudSurface | null = null;
@@ -31,7 +32,7 @@ export class GameInterfaceSurface {
     this.surface.render(renderer, size, { drawExtra: ctx => {
       this.cursorDrawn = false;
       ctx.scale(size.width / window.innerWidth, size.height / window.innerHeight);
-      this.paintMap(ctx); this.paintTouch(ctx); this.paintCursor(ctx); this.paintCurtain(ctx);
+      this.paintMap(ctx); this.paintTouch(ctx); paintInputPrompts(ctx); this.paintCursor(ctx); this.paintCurtain(ctx);
     } }, target);
   }
 
@@ -104,6 +105,7 @@ export class GameInterfaceSurface {
         ctx.restore();
       }
       for (const element of button.querySelectorAll<HTMLElement>(":scope > span, kbd")) {
+        if (element.classList.contains("input-glyph")) continue;
         if (!this.visible(element)) continue;
         if (element.tagName === "KBD") this.box(ctx,element);
         this.text(ctx,element);

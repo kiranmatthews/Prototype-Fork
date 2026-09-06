@@ -461,31 +461,31 @@ export const DECK_TRICKS = [
     kind: "kick",
     label: "Kickflip",
     recipe: "NEUTRAL + □ / F",
-    hint: "release direction, then Square / F while airborne on the board",
+    hint: "release direction, then {spin} while airborne on the board",
   },
   {
     kind: "heel",
     label: "Heelflip",
     recipe: "LEFT ONLY + □ / F",
-    hint: "release forward/back, hold left + Square / F while airborne on the board",
+    hint: "release forward/back, hold {left} + {spin} while airborne on the board",
   },
   {
     kind: "shove",
     label: "Pop Shove-It",
     recipe: "RIGHT ONLY + □ / F",
-    hint: "release forward/back, hold right + Square / F while airborne on the board",
+    hint: "release forward/back, hold {right} + {spin} while airborne on the board",
   },
   {
     kind: "imposs",
     label: "Impossible",
     recipe: "UP + □ / F",
-    hint: "hold forward + Square / F while airborne on the board",
+    hint: "hold {up} + {spin} while airborne on the board",
   },
   {
     kind: "varial",
     label: "Varial Flip",
     recipe: "DOWN + □ / F",
-    hint: "hold back + Square / F while airborne on the board",
+    hint: "hold {down} + {spin} while airborne on the board",
   },
 ] as const;
 

@@ -4,6 +4,7 @@
 import * as THREE from "three";
 import { BonusPayout } from "./bonusPayout";
 import { sfx } from "./audio";
+import { setPromptText } from "./inputPromptUI";
 import { localDataResetUrl } from "./localGameStorage";
 import {
   GameHudSurface,
@@ -740,7 +741,7 @@ export class UI {
     this.ttResTimeEl = div("hud-ttres-time");
     this.ttResListEl = div("hud-ttres-list");
     const ttResSub = div("hud-ttres-sub");
-    ttResSub.textContent = "press R / Options to go again";
+    setPromptText(ttResSub, "{restart} TRY AGAIN");
     this.ttResSubEl = ttResSub;
     this.ttResultsEl.appendChild(this.ttResTitleEl);
     this.ttResultsEl.appendChild(this.ttResTimeEl);
@@ -1827,7 +1828,7 @@ export class UI {
   showMessage(title: string, sub: string, durationMs: number): void {
     // Open the plate BEFORE handing over the title: the label measures a real
     // glyph box, and a box inside a display:none plate measures nothing.
-    this.msgSub.textContent = sub;
+    setPromptText(this.msgSub, sub);
     this.msgWrap.style.display = "block";
     this.rooMsgTitle.set(title);
     if (this.msgTimer !== undefined) window.clearTimeout(this.msgTimer);

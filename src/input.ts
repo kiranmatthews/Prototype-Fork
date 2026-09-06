@@ -8,6 +8,8 @@
 
 import { TouchControls } from './touch';
 import { shapeLookStick } from './cameraLook';
+import { INPUT_BINDINGS, actionButtonDown } from './inputBindings';
+import { inputPrompts } from './inputPrompts';
 
 export class Input {
   // Keyboard/D-pad movement is digital; analog sticks retain radial magnitude
@@ -84,6 +86,7 @@ export class Input {
       // cannot be missed by the fixed-step edge accumulator.
       this.pausePressed = true;
     });
+    inputPrompts.update(this.pollGamepad(), this.touch.enabled);
     window.addEventListener('keydown', (e) => {
       // typing in a panel field (tuner numbers, editor coordinates) must not
       // drive the game — 'p' in an input used to pause, 'r' restarted…
@@ -96,17 +99,17 @@ export class Input {
       // Edge flags are set straight from the event so even a press shorter
       // than one frame is never dropped.
       if (!e.repeat) {
-        if (e.code === 'Space') this.jumpPressed = true;
-        if (e.code === 'KeyE') this.grindPressed = true;
-        if (e.code === 'KeyF') this.spinPressed = true;
-        if (e.code === 'KeyQ') this.grabPressed = true;
-        if (e.code === 'KeyT') this.transferPressed = true;
-        if (e.code === 'KeyR') this.restartPressed = true;
-        if (e.code === 'KeyP' || e.code === 'Escape') this.pausePressed = true;
-        if (e.code === 'Enter') this.confirmPressed = true;
-        if (e.code === 'KeyI') this.mapProgressPressed = true;
-        if (e.code === 'KeyL') this.mapSaveLoadPressed = true;
-        if (e.code === 'KeyQ') this.mapQuitPressed = true;
+        if (e.code === INPUT_BINDINGS.jump.key) this.jumpPressed = true;
+        if (e.code === INPUT_BINDINGS.grind.key) this.grindPressed = true;
+        if (e.code === INPUT_BINDINGS.spin.key) this.spinPressed = true;
+        if (e.code === INPUT_BINDINGS.grab.key) this.grabPressed = true;
+        if (e.code === INPUT_BINDINGS.transfer.key) this.transferPressed = true;
+        if (e.code === INPUT_BINDINGS.restart.key) this.restartPressed = true;
+        if (e.code === INPUT_BINDINGS.pause.key || e.code === 'Escape') this.pausePressed = true;
+        if (e.code === INPUT_BINDINGS.confirm.key) this.confirmPressed = true;
+        if (e.code === INPUT_BINDINGS.mapProgress.key) this.mapProgressPressed = true;
+        if (e.code === INPUT_BINDINGS.mapSaveLoad.key) this.mapSaveLoadPressed = true;
+        if (e.code === INPUT_BINDINGS.mapQuit.key) this.mapQuitPressed = true;
         if (e.code === 'ArrowRight' || e.code === 'KeyD') this.mapDirectionX = 1;
         if (e.code === 'ArrowLeft' || e.code === 'KeyA') this.mapDirectionX = -1;
         if (e.code === 'ArrowUp' || e.code === 'KeyW') this.mapDirectionY = 1;
@@ -115,7 +118,7 @@ export class Input {
     });
     window.addEventListener('keyup', (e) => {
       this.keys.delete(e.code);
-      if (e.code === 'Space') this.jumpReleased = true;
+      if (e.code === INPUT_BINDINGS.jump.key) this.jumpReleased = true;
     });
     window.addEventListener('blur', () => this.keys.clear());
     window.addEventListener('gamepadconnected', (e) => {
@@ -135,20 +138,21 @@ export class Input {
     let lookX = 0;
     let lookY = 0;
 
-    let jump = !solo && k.has('Space');
-    let grind = !solo && k.has('KeyE');
-    let spin = !solo && k.has('KeyF');
-    let grab = !solo && k.has('KeyQ');
-    let transfer = !solo && k.has('KeyT');
-    let inventory = !solo && k.has('KeyI');
-    let restart = !solo && k.has('KeyR');
-    let pause = !solo && (k.has('KeyP') || k.has('Escape'));
+    let jump = !solo && k.has(INPUT_BINDINGS.jump.key);
+    let grind = !solo && k.has(INPUT_BINDINGS.grind.key);
+    let spin = !solo && k.has(INPUT_BINDINGS.spin.key);
+    let grab = !solo && k.has(INPUT_BINDINGS.grab.key);
+    let transfer = !solo && k.has(INPUT_BINDINGS.transfer.key);
+    let inventory = !solo && k.has(INPUT_BINDINGS.inventory.key);
+    let restart = !solo && k.has(INPUT_BINDINGS.restart.key);
+    let pause = !solo && (k.has(INPUT_BINDINGS.pause.key) || k.has('Escape'));
     let touchJumpPressed = false;
     let touchGrindPressed = false;
     let touchSpinPressed = false;
     let touchGrabPressed = false;
 
     const pad = this.pollGamepad();
+    if (!this.padOnly) inputPrompts.update(pad, this.touch?.enabled ?? false);
     if (pad) {
       // ANALOG stick: radial deadzone, then rescaled so a full push is 1.
       // Passing the true direction through (not snapping to 8 ways) is what
@@ -171,14 +175,14 @@ export class Input {
       lookX = look.x;
       lookY = look.y;
 
-      jump = jump || !!pad.buttons[0]?.pressed; // Cross
-      grab = grab || !!pad.buttons[1]?.pressed; // Circle
-      spin = spin || !!pad.buttons[2]?.pressed; // Square
-      grind = grind || !!pad.buttons[3]?.pressed; // Triangle
-      inventory = inventory || !!pad.buttons[6]?.pressed; // L2 = collection inventory
-      transfer = transfer || !!pad.buttons[7]?.pressed; // R2 = transfer/revert modifier
-      restart = restart || !!pad.buttons[8]?.pressed; // Share = reset
-      pause = pause || !!pad.buttons[9]?.pressed; // Options = pause
+      jump = jump || actionButtonDown(pad, 'jump');
+      grab = grab || actionButtonDown(pad, 'grab');
+      spin = spin || actionButtonDown(pad, 'spin');
+      grind = grind || actionButtonDown(pad, 'grind');
+      inventory = inventory || actionButtonDown(pad, 'inventory');
+      transfer = transfer || actionButtonDown(pad, 'transfer');
+      restart = restart || actionButtonDown(pad, 'restart');
+      pause = pause || actionButtonDown(pad, 'pause');
     }
 
     // Touch overlay merges like a second gamepad: the D-pad only speaks when
@@ -336,7 +340,8 @@ export class Input {
 
   private pollGamepad(): Gamepad | null {
     if (!navigator.getGamepads) return null;
-    const pads = navigator.getGamepads();
+    let pads: (Gamepad | null)[];
+    try { pads = navigator.getGamepads(); } catch { return null; }
     if (this.claimedSlot !== null) {
       const pad = pads[this.claimedSlot];
       if (pad && pad.connected) {

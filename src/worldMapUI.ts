@@ -1,5 +1,7 @@
 import { silverSecondaryLabel } from "./secondaryText";
 import { createSecondaryTextPanel } from "./secondaryTextPanel";
+import { createInputGlyph } from "./inputPromptUI";
+import type { InputAction } from "./inputBindings";
 import {
   CAMPAIGN_ISLANDS,
   CAMPAIGN_LEVELS,
@@ -69,10 +71,10 @@ export class WorldMapUI {
     const actionBar = node("nav", "world-map-actions");
     actionBar.setAttribute("aria-label", "World map actions");
     actionBar.append(
-      this.actionButton("△", "VIEW PROGRESS", "I", "progress"),
-      this.actionButton("⚙", "OPTIONS", "P", "options"),
-      this.actionButton("□", "SAVE / LOAD", "L", "save-load"),
-      this.actionButton("○", "QUIT GAME", "Q", "quit"),
+      this.actionButton("mapProgress", "VIEW PROGRESS", "progress"),
+      this.actionButton("mapOptions", "OPTIONS", "options"),
+      this.actionButton("mapSaveLoad", "SAVE / LOAD", "save-load"),
+      this.actionButton("mapQuit", "QUIT GAME", "quit"),
     );
 
     this.unlockNotice.setAttribute("role", "status");
@@ -176,7 +178,7 @@ export class WorldMapUI {
 
     if (progress?.cleared) {
       this.trial.hidden = false;
-      this.trial.innerHTML = `<span>⏱ TIME TRIAL UNLOCKED</span><strong>BEST ${formatTime(progress.bestTime)}</strong><small>TARGET ${formatTime(definition.relicTime)}</small>`;
+      this.trial.innerHTML = `<span>TIME TRIAL UNLOCKED</span><strong>BEST ${formatTime(progress.bestTime)}</strong><small>TARGET ${formatTime(definition.relicTime)}</small>`;
     } else {
       this.trial.hidden = true;
       this.trial.replaceChildren();
@@ -184,17 +186,13 @@ export class WorldMapUI {
   }
 
   private actionButton(
-    glyph: string,
+    action: InputAction,
     label: string,
-    key: string,
     section: WorldMapSection,
   ): HTMLButtonElement {
     const button = node("button", "world-map-action");
     button.type = "button";
-    button.innerHTML = `<span aria-hidden="true">${glyph}</span>`;
-    const keyHint = node("kbd", "");
-    keyHint.textContent = key;
-    button.append(silverSecondaryLabel(label), keyHint);
+    button.append(createInputGlyph(action), silverSecondaryLabel(label));
     button.addEventListener("click", () => this.callbacks.onOpenSection(section));
     return button;
   }
@@ -266,14 +264,12 @@ export class WorldMapUI {
       .world-map-actions { position: absolute; left: 50%; bottom: max(28px, env(safe-area-inset-bottom)); transform: translateX(-50%); pointer-events: auto; display: flex; gap: clamp(16px, 2.4vw, 46px); padding: 0; background: none; border: 0; }
       .world-map-actions { width: max-content; max-width: calc(100vw - 24px); }
       .world-map-action { display: flex; align-items: center; gap: 9px; padding: 4px 5px; min-height: 44px; background: transparent; flex-shrink: 0; }
-      .world-map-action span { color: #b7c7d5; font: 900 clamp(17px, 1.3vw, 25px)/1 system-ui; -webkit-text-stroke: 1px #101820; paint-order: stroke fill; text-shadow: 1px 1px #08090b, 2px 2px #08090b; }
       .world-map-action strong { font-size: clamp(calc(19px * var(--secondary-size-scale, 1)), calc(1.65vw * var(--secondary-size-scale, 1)), calc(32px * var(--secondary-size-scale, 1))); line-height: 1.15; white-space: nowrap; }
-      .world-map-action kbd { color: #d9e1e6; border: 1px solid #70818b; border-radius: 4px; padding: 3px 4px; background: #17212aba; font: 700 11px/1 var(--font-secondary); box-shadow: 1px 2px #08090b; }
+      .world-map-action .input-glyph { --prompt-icon-size:clamp(34px,2.5vw,48px); }
       .world-map-unlock-notice { position: absolute; left: 50%; top: 21%; transform: translate(-50%, -18px) scale(.92); opacity: 0; padding: 10px 22px; border: 2px solid #fff0a3; border-radius: 22px; background: linear-gradient(135deg, rgba(237,131,41,.96), rgba(198,72,30,.96)); color: #fff8d5; box-shadow: 0 8px 25px rgba(36,19,7,.36); font-size: clamp(20px, 2.2vw, 31px); letter-spacing: .035em; text-align: center; transition: opacity .22s, transform .32s cubic-bezier(.2,1.4,.4,1); }
       .world-map-unlock-notice.show { opacity: 1; transform: translate(-50%, 0) scale(1); }
       @media (max-width: 980px) {
         .world-map-level-card { width: 54vw; }
-        .world-map-action kbd { display: none; }
         .world-map-actions { gap: 5px; }
       }
       @media (pointer: coarse) {
@@ -284,7 +280,6 @@ export class WorldMapUI {
         .world-map-trial { margin-top: 5px; padding-top: 4px; }
         .world-map-actions { bottom: max(14px, env(safe-area-inset-bottom)); gap: 8px; }
         .world-map-action { justify-content: center; gap: 6px; }
-        .world-map-action kbd { display: none; }
       }
       @media (max-height: 520px) and (pointer: fine) {
         .world-map-level-card { top: max(8px, env(safe-area-inset-top)); right: auto; left: 50%; transform: translateX(-50%); width: min(58vw, 520px); min-height: 0; padding: 9px 14px; }
@@ -307,13 +302,14 @@ export class WorldMapUI {
       body.tc-on .world-map-touch-surface { display:block; pointer-events:auto; }
       body.tc-on .world-map-level-card { pointer-events:auto; z-index:1; }
       body.tc-on .world-map-actions { z-index:1; bottom:max(16px, env(safe-area-inset-bottom)); }
-      body.tc-on .world-map-action > span, body.tc-on .world-map-action kbd { display:none; }
       body.tc-on .world-map-action { min-height:48px; padding:6px 10px; touch-action:manipulation; }
       body.tc-on .world-map-enter-touch { display:grid; place-items:center; flex:0 0 48px; width:48px; height:48px; padding:9px; border:1px solid #daf8e3; border-radius:50%; background:#1d5546; color:#effff4; cursor:pointer; touch-action:manipulation; }
       body.tc-on .world-map-enter-touch svg { width:100%; height:100%; fill:none; stroke:currentColor; stroke-width:3.5; stroke-linecap:round; stroke-linejoin:round; }
       body.tc-on .world-map-enter-touch:disabled { opacity:.35; cursor:default; }
       body.tc-on .world-map-enter-touch:focus-visible { outline:3px solid white; outline-offset:3px; }
       @media (orientation:portrait) {
+        body.tc-on .world-map-action .input-glyph { --prompt-icon-size:28px; }
+        body.tc-on:not([data-prompt-family="touch"]) .world-map-action { padding-inline:4px; gap:4px; }
         body.tc-on .world-map-level-title-row { grid-template-columns:minmax(0,1fr) 48px; align-items:center; }
         body.tc-on .world-map-level-copy { grid-column:1; }
         body.tc-on .world-map-enter-touch { grid-column:2; grid-row:1/3; }

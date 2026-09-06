@@ -39,7 +39,7 @@ multi-touch gestures do not navigate. Travel keeps the existing walking and
 boardslide presentation; new navigation waits until it finishes.
 
 Touch utility actions are directly tappable text without controller-symbol or
-keyboard hints. An arrow in the selected-level card enters the level only when
+keyboard hints when no hardware controller is active. An arrow in the selected-level card enters the level only when
 settled and unlocked. Menu sections remain accessible during travel and pause
 it normally. Tapping a hub never auto-enters its level.
 
@@ -152,3 +152,9 @@ when its summary/button has focus. Editing an input retains the shared M-key
 typing guard. It is excluded from CRT composition, like the other debug tools.
 The map's actual level card, labels, utilities, enter arrow and unlock notice
 are composited before CRT; their semantic DOM remains in place for hit testing.
+
+Map action symbols are resolved by the [shared input-prompt system](INPUT_PROMPTS.md),
+not separate controller/keyboard labels. Connecting a controller switches the
+entire row to its family; disconnecting restores keyboard-only prompts (or the
+touch map's direct text buttons). Options → Prompt Style handles generic device
+IDs without changing any action binding.

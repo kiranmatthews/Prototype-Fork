@@ -42,6 +42,7 @@ import {
   type WorldMapSection,
 } from "./worldMapController";
 import { WorldMapUI } from "./worldMapUI";
+import { inputPrompts } from "./inputPrompts";
 import { GameInterfaceSurface } from "./gameInterfaceSurface";
 import { ResultsPresentation } from "./resultsPresentation";
 import { GameFlowVortexHost } from "./gameFlowVortex";
@@ -1920,7 +1921,7 @@ function set2P(on: boolean, force = false): void {
     ui.set2P(true);
     ui.showMessage(
       "2-PLAYER SPLIT",
-      "P2 (blue, bottom): press ✕ on the OTHER pad to join",
+      "P2 (blue, bottom): press a button on the other controller to join",
       4200,
     );
   } else {
@@ -4795,6 +4796,7 @@ requestAnimationFrame(frame);
 
 // Smoke-test / console-poking hook.
 (window as unknown as Record<string, unknown>).__game = {
+  inputPrompts,
   puffs,
   PUFF_PRESETS,
   swirls,

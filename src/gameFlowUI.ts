@@ -6,6 +6,8 @@ import type * as THREE from "three";
 import type { ResultsViewport } from "./resultsPresentation";
 import { runLoadingTransition, type LoadingTransitionPhase } from "./presentationLoading";
 import { rooReady } from "./roofont";
+import { inputPrompts, CONTROLLER_FAMILIES, PROMPT_FAMILY_NAMES } from "./inputPrompts";
+import { actionButtonDown } from "./inputBindings";
 import {
   CAMPAIGN_ISLANDS,
   CAMPAIGN_LEVELS,
@@ -252,6 +254,7 @@ export class GameFlowUI {
       }
     });
     window.addEventListener("keydown", (event) => this.onKey(event));
+    window.addEventListener("input-prompts-changed", () => this.requestGameplayFrame());
     window.addEventListener("resize", () => this.invalidatePreCrt());
     window.visualViewport?.addEventListener("resize", () => this.invalidatePreCrt());
     window.visualViewport?.addEventListener("scroll", () => this.invalidatePreCrt());
@@ -1094,6 +1097,19 @@ export class GameFlowUI {
     const title = element("h2", "game-panel-title");
     title.textContent = "OPTIONS";
     const toggles = element("div", "game-menu-list game-toggle-list");
+    const promptStyle = this.button("", () => {
+      const index = inputPrompts.controllerOverride === null ? -1 : CONTROLLER_FAMILIES.indexOf(inputPrompts.controllerOverride);
+      inputPrompts.setControllerOverride(CONTROLLER_FAMILIES[index + 1] ?? null);
+      syncPromptStyle(); this.invalidatePreCrt();
+    });
+    promptStyle.classList.add("game-toggle", "game-prompt-style");
+    promptStyle.innerHTML = '<span>PROMPT STYLE</span><strong></strong>';
+    const syncPromptStyle = () => {
+      const selected = inputPrompts.controllerOverride;
+      promptStyle.querySelector("strong")!.textContent = selected ? ({ps4:'PS4',ps5:'PS5',xbox:'XBOX',steamdeck:'DECK',switch:'SWITCH'}[selected]) : "AUTO";
+      promptStyle.setAttribute("aria-label", `Controller prompts: ${selected ? PROMPT_FAMILY_NAMES[selected] : 'Automatic'}. Activate to change.`);
+    };
+    syncPromptStyle();
     if (this.pauseState?.inWarpRoom) {
       const description = element('p', 'game-panel-subtitle');
       const modeButton = this.button('', () => {
@@ -1125,6 +1141,7 @@ export class GameFlowUI {
         this.options.musicMuted = !enabled;
         return enabled;
       }),
+      promptStyle,
       this.button("BACK", () => {
         this.callbacks.onAudioOptions({ ...this.options });
         if (this.mapDirect) this.callbacks.onResume();
@@ -1344,9 +1361,10 @@ export class GameFlowUI {
   }
 
   private readGamepad(): typeof this.previousPad {
-    let pad: Gamepad | null = null;
-    if (navigator.getGamepads) {
-      const pads = navigator.getGamepads();
+    let pad: Gamepad | null = inputPrompts.gamepad;
+    if (!pad && navigator.getGamepads) {
+      let pads: (Gamepad | null)[] = [];
+      try { pads = navigator.getGamepads(); } catch { /* keyboard-only browser policy */ }
       for (let i = 0; i < pads.length; i++) {
         if (pads[i]?.connected) {
           pad = pads[i];
@@ -1359,8 +1377,8 @@ export class GameFlowUI {
       down: (pad?.axes[1] ?? 0) > 0.55 || pad?.buttons[13]?.pressed === true,
       left: (pad?.axes[0] ?? 0) < -0.55 || pad?.buttons[14]?.pressed === true,
       right: (pad?.axes[0] ?? 0) > 0.55 || pad?.buttons[15]?.pressed === true,
-      accept: pad?.buttons[0]?.pressed === true,
-      back: pad?.buttons[1]?.pressed === true,
+      accept: actionButtonDown(pad, 'confirm'),
+      back: actionButtonDown(pad, 'back'),
     };
   }
 

@@ -171,10 +171,10 @@ const frame = (overrides = {}) => ({
 
 {
   const input = await text("src/input.ts");
-  assert.match(input, /k\.has\('KeyI'\)/, "keyboard inventory fallback is missing");
+  assert.match(input, /k\.has\(INPUT_BINDINGS.inventory.key\)/, "keyboard inventory binding is missing");
   assert.match(
     input,
-    /pad\.buttons\[6\]\?\.pressed;\s*\/\/ L2 = collection inventory/,
+    /actionButtonDown\(pad, 'inventory'\)/,
     "standard-gamepad L2 is not mapped to inventory",
   );
   const replay = await text("src/replay.ts");

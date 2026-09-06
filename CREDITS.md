@@ -3,6 +3,14 @@
 Everything else in this repository is written here. These are not, and this is
 where they came from.
 
+## Input prompt artwork
+
+The user-supplied controller/keyboard pack provides the selected Dark,
+Stylized and Default PNG variants. Original files and variant provenance are
+retained in `public/input-prompts`; see [the asset notice](public/input-prompts/NOTICE.md).
+These third-party images are not relicensed under Apache. Small missing Menu
+and Steam Deck shoulder/trigger glyphs are project-owned SVG supplements.
+
 ## Staging-only secondary UI font
 
 CCGeekSpeakTweak Bold is a user-supplied, non-commercial placeholder for the
