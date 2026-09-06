@@ -458,15 +458,24 @@ try {
     }
   }
   assert.equal(markerRims.length, CAMPAIGN_LEVELS.length);
+  for(const definition of CAMPAIGN_LEVELS){
+    const hub=warpLevel.root.getObjectByName(`world map hub ${definition.progressKey}`);
+    assert.equal(hub.children.length,6,"map hubs must contain only their base/rim/pad/ring/beacon geometry");
+    assert.ok(hub.children.every(child=>child.isMesh && child.userData.rewardKind===undefined),"padlock or miniature reward returned to a map hub");
+    const node=warpLevel.campaignWorldMap.nodeByKey.get(definition.progressKey);
+    assert.equal('lock' in node,false);assert.equal('rewards' in node,false);
+  }
+  const leafyGrove=warpLevel.root.getObjectByName("tropical birdofparadise grove");
+  assert.ok(leafyGrove,"map foliage was removed with its colourful blooms");
+  assert.deepEqual(leafyGrove.children.map(mesh=>mesh.userData.plantPart),["trunk","leaf"]);
   assert.equal(routeDashes.length, CAMPAIGN_MAP_EDGES.length);
   for (const route of routeDashes) {
     route.geometry.computeBoundingBox();
     const size = route.geometry.boundingBox.getSize(new THREE.Vector3());
     assert.ok(size.x > 0.6 && size.z > 1.1, "route dashes lost their chunky Crash 4 read");
   }
-  assert.equal(reefHeads.count, CAMPAIGN_ISLANDS.length * 18 + 4 * 5);
-  assert.ok(coralFingers.count >= reefHeads.count * 2);
-  assert.ok(coralFingers.instanceMatrix.count >= reefHeads.count * 4);
+  assert.equal(reefHeads,null,"colourful reef heads returned to the map");
+  assert.equal(coralFingers,null,"colourful reef fingers returned to the map");
 
   const directionVector = {
     up: [0, 1],

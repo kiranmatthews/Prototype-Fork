@@ -13,6 +13,7 @@ import { CoastWater } from "./water";
 import { createUnitySandMaterial, applyUnitySandMetricUvs } from "./unitySandMaterial";
 import { createIslandShoreFoam, type IslandShoreFoam } from "./islandShoreFoam";
 import { TropicalPlantKit, TROPICAL_PLANT_KINDS, type TropicalPlantKind } from "./tropicalPlants";
+import { createMapOceanDefaults } from "./mapOceanPreset";
 
 export interface CampaignMapPose {
   position: THREE.Vector3;
@@ -33,8 +34,6 @@ interface MapNodeVisual {
   rimMaterial: THREE.MeshStandardMaterial;
   ring: THREE.Mesh<THREE.TorusGeometry, THREE.MeshBasicMaterial>;
   beacon: THREE.Mesh<THREE.CylinderGeometry, THREE.MeshBasicMaterial>;
-  lock: THREE.Group;
-  rewards: THREE.Object3D[];
   cleared: boolean;
   unlocked: boolean;
   unlockReveal: number;
@@ -570,129 +569,12 @@ function addPalm(
   }
 }
 
-function makeReefBatches(root: THREE.Group, clusterCapacity: number): {
-  heads: THREE.InstancedMesh;
-  fingers: THREE.InstancedMesh;
-  headIndex: number;
-  fingerIndex: number;
-} {
-  const heads = new THREE.InstancedMesh(
-    new THREE.IcosahedronGeometry(0.42, 1),
-    new THREE.MeshStandardMaterial({
-      color: 0xffffff,
-      roughness: 0.86,
-    }),
-    clusterCapacity,
-  );
-  const fingers = new THREE.InstancedMesh(
-    new THREE.ConeGeometry(0.12, 0.7, 6, 2),
-    new THREE.MeshStandardMaterial({
-      color: 0xffffff,
-      roughness: 0.78,
-    }),
-    clusterCapacity * 4,
-  );
-  heads.name = "world map shallow reef heads";
-  fingers.name = "world map shallow coral fingers";
-  heads.userData.oceanOpaqueBackdrop = true;
-  fingers.userData.oceanOpaqueBackdrop = true;
-  root.add(heads, fingers);
-  return { heads, fingers, headIndex: 0, fingerIndex: 0 };
-}
-
-function addReefCluster(
-  batches: ReturnType<typeof makeReefBatches>,
-  x: number,
-  z: number,
-  scale: number,
-  color: number,
-  yaw: number,
-): void {
-  if (batches.headIndex >= batches.heads.count)
-    throw new Error("World-map reef head capacity exhausted");
-  const headMatrix = new THREE.Matrix4().compose(
-    new THREE.Vector3(x, MAP_SEA_LEVEL - 0.23, z),
-    new THREE.Quaternion().setFromEuler(new THREE.Euler(0, yaw, 0)),
-    new THREE.Vector3(scale * 1.2, scale * 0.55, scale),
-  );
-  batches.heads.setMatrixAt(batches.headIndex, headMatrix);
-  batches.heads.setColorAt(batches.headIndex++, new THREE.Color(color));
-  const fingerCount = 2 + (Math.abs(Math.round(x + z)) % 3);
-  for (let index = 0; index < fingerCount; index++) {
-    if (batches.fingerIndex >= batches.fingers.count)
-      throw new Error("World-map coral finger capacity exhausted");
-    const angle = yaw + (index / fingerCount) * Math.PI * 2;
-    const fingerMatrix = new THREE.Matrix4().compose(
-      new THREE.Vector3(
-        x + Math.cos(angle) * 0.28 * scale,
-        MAP_SEA_LEVEL - 0.36 + 0.34 * scale,
-        z + Math.sin(angle) * 0.28 * scale,
-      ),
-      new THREE.Quaternion().setFromEuler(
-        new THREE.Euler(Math.sin(angle) * 0.2, angle, Math.cos(angle) * 0.2),
-      ),
-      new THREE.Vector3(scale, scale, scale * (0.8 + index * 0.08)),
-    );
-    batches.fingers.setMatrixAt(batches.fingerIndex, fingerMatrix);
-    batches.fingers.setColorAt(
-      batches.fingerIndex++,
-      new THREE.Color(index % 2 === 0 ? color : 0xf28a7e),
-    );
-  }
-}
 
 function finalizeInstances(mesh: THREE.InstancedMesh, count: number): void {
   mesh.count = count;
   mesh.instanceMatrix.needsUpdate = true;
   if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
   mesh.computeBoundingSphere();
-}
-
-function makeLock(): THREE.Group {
-  const group = new THREE.Group();
-  const material = new THREE.MeshStandardMaterial({
-    color: 0x4f5363,
-    emissive: 0x111521,
-    roughness: 0.7,
-    metalness: 0.25,
-  });
-  const body = new THREE.Mesh(new THREE.BoxGeometry(1.18, 0.95, 0.42), material);
-  body.position.y = 0.45;
-  const shackle = new THREE.Mesh(
-    new THREE.TorusGeometry(0.42, 0.12, 7, 14, Math.PI),
-    material,
-  );
-  shackle.position.y = 1;
-  group.add(body, shackle);
-  group.userData.noShadow = true;
-  return group;
-}
-
-function makeReward(kind: number): THREE.Object3D {
-  const material = new THREE.MeshStandardMaterial({
-    color: 0x394657,
-    emissive: 0x070a0d,
-    roughness: 0.35,
-    metalness: 0.08,
-  });
-  let geometry: THREE.BufferGeometry;
-  if (kind === 0) {
-    geometry = new THREE.OctahedronGeometry(0.34, 0);
-    geometry.scale(0.58, 1.48, 0.58);
-  } else if (kind === 1) {
-    geometry = new THREE.DodecahedronGeometry(0.31, 0);
-    geometry.scale(1, 0.78, 1);
-  } else if (kind === 2) {
-    geometry = new THREE.OctahedronGeometry(0.31, 0);
-    geometry.rotateZ(Math.PI / 4);
-    geometry.scale(1.08, 0.82, 0.72);
-  } else {
-    geometry = new THREE.TorusGeometry(0.28, 0.1, 7, 14);
-  }
-  const mesh = new THREE.Mesh(geometry, material);
-  mesh.userData.rewardKind = kind;
-  mesh.userData.noShadow = true;
-  return mesh;
 }
 
 function edgeKey(from: string, to: string): string {
@@ -877,22 +759,6 @@ export class CampaignWorldMapRuntime {
       node.ring.material.opacity = node.unlocked ? (selected ? 1 : 0.82) : 0.48;
       node.beacon.material.color.setHex(color);
       node.beacon.material.opacity = node.unlocked ? (selected ? 0.14 : 0.035) : 0;
-      node.lock.visible = !node.unlocked;
-      const rewardFlags = [
-        progress?.crystal,
-        progress?.boxGem,
-        progress?.comboGem,
-        progress?.timeRelic,
-      ];
-      const rewardColors = [0xd967ff, 0xeefaff, 0x69ef83, 0x59baff];
-      node.rewards.forEach((reward, index) => {
-        const material = (reward as THREE.Mesh).material as THREE.MeshStandardMaterial;
-        const earned = rewardFlags[index] === true;
-        reward.visible = earned && !selected;
-        material.color.setHex(earned ? rewardColors[index] : 0x3c4650);
-        material.emissive.setHex(earned ? new THREE.Color(rewardColors[index]).multiplyScalar(0.25).getHex() : 0x050709);
-        reward.scale.setScalar(earned ? 0.72 : 0.48);
-      });
     }
     for (const edge of this.edgeByKey.values()) {
       edge.unlocked =
@@ -951,10 +817,6 @@ export class CampaignWorldMapRuntime {
       node.beacon.material.opacity = node.unlockReveal > 0
         ? Math.max(beaconBase, 0.24 + (1 - revealProgress) * 0.38)
         : beaconBase;
-      node.rewards.forEach((reward, index) => {
-        reward.rotation.y += dt * (0.65 + index * 0.12);
-        reward.position.y = 0.24 + Math.sin(this.elapsed * 2.1 + index) * 0.025;
-      });
     }
     for (const edge of this.edgeByKey.values()) {
       const selected =
@@ -1013,24 +875,7 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
   // Keep the audited shader/passes, but tune its public parameters for the
   // elevated map lens: broader colour separation and readable rolling glints
   // survive the high, toy-diorama camera better than the gameplay-coast preset.
-  water.params.shallow = { r: 0.026, g: 0.58, b: 0.57, a: 0.78 };
-  water.params.deep = { r: 0.008, g: 0.18, b: 0.3, a: 1 };
-  water.params.peak = { r: 0.57, g: 0.85, b: 0.89, a: 0.35 };
-  water.params.wave1Height = 0.08;
-  water.params.wave2Height = 0.045;
-  water.params.normalStrength = 3.2;
-  water.params.normalDistanceStrength = 2.4;
-  water.params.normalScale = 0.48;
-  water.params.reflectionStrength = 0.28;
-  water.params.reflectionDistortion = 0.28;
-  water.params.reflectionFresnel = 2.6;
-  water.params.depthDistance = 0.72;
-  water.params.causticsStart = 38;
-  water.params.causticsFade = 150;
-  water.params.causticsScale = 1.05;
-  water.params.causticsStrength = 1.55;
-  water.params.intersectionWidth = 0.42;
-  water.params.intersectionScale = 2.1;
+  Object.assign(water.params, createMapOceanDefaults());
   water.reflectionScale = 0.42;
   water.markWavesDirty();
   water.group.name = "world map ocean";
@@ -1259,11 +1104,6 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
   groundLeaves.name = "world map tropical understory";
   root.add(groundLeaves);
   let groundLeafCount = 0;
-  const reefClusterCapacity = islandSpecs.reduce(
-    (total, island) => total + (island.scenic ? 5 : 18),
-    0,
-  );
-  const reefs = makeReefBatches(root, reefClusterCapacity);
   const random = seeded(7727);
   for (const island of islandSpecs) {
     const palmAttempts = island.scenic ? 2 : 58;
@@ -1307,19 +1147,8 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
     }
     const reefClusters = island.scenic ? 5 : 18;
     for (let index = 0; index < reefClusters; index++) {
-      const angle = (index / reefClusters) * Math.PI * 2 + random() * 0.35;
-      const radius = 1.11 + random() * 0.2;
-      const x = island.x + Math.cos(angle) * island.rx * radius;
-      const z = island.z + Math.sin(angle) * island.rz * radius;
-      const reefColors = [0xf07d6e, 0xd55bb6, 0x6aaf83, 0xe3a35f] as const;
-      addReefCluster(
-        reefs,
-        x,
-        z,
-        0.55 + random() * 0.55,
-        reefColors[(index + island.seed) % reefColors.length],
-        angle,
-      );
+      // Keep the later vegetation/boulder placements identical without reefs.
+      random(); random(); random();
     }
   }
   for (const mountain of mountainSpecs) {
@@ -1341,14 +1170,12 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
   finalizeInstances(palms.coconuts, palms.coconutIndex);
   finalizeInstances(rocks, rockCount);
   finalizeInstances(groundLeaves, groundLeafCount);
-  finalizeInstances(reefs.heads, reefs.headIndex);
-  finalizeInstances(reefs.fingers, reefs.fingerIndex);
   plants.decorate(palms.trunks,"trunk");
   plants.decorate(palms.fronds,"leaf");
   plants.decorate(palms.coconuts,"flower");
   plants.decorate(groundLeaves,"leaf");
   for(const [kind,transforms] of tropicalPlacements)
-    if(transforms.length)root.add(plants.batch(kind,transforms));
+    if(transforms.length)root.add(plants.batch(kind,transforms,{flowers:kind!=="birdofparadise"}));
 
   const edgeVisuals: MapEdgeVisual[] = [];
   for (const definition of CAMPAIGN_MAP_EDGES) {
@@ -1593,22 +1420,6 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
     beacon.position.y = 0.58;
     beacon.userData.noShadow = true;
     group.add(beacon);
-    const lock = makeLock();
-    lock.position.y = 0.4;
-    lock.scale.setScalar(definition.boss ? 1.18 : 1);
-    group.add(lock);
-    const rewards: THREE.Object3D[] = [];
-    for (let rewardIndex = 0; rewardIndex < 4; rewardIndex++) {
-      const reward = makeReward(rewardIndex);
-      const angle = THREE.MathUtils.lerp(-0.95, 0.95, rewardIndex / 3);
-      reward.position.set(
-        Math.sin(angle) * radius * 0.56,
-        0.24,
-        Math.cos(angle) * radius * 0.56,
-      );
-      group.add(reward);
-      rewards.push(reward);
-    }
     nodeVisuals.push({
       key: definition.progressKey,
       position,
@@ -1616,8 +1427,6 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
       rimMaterial,
       ring,
       beacon,
-      lock,
-      rewards,
       cleared: false,
       unlocked: false,
       unlockReveal: 0,

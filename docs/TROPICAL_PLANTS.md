@@ -30,6 +30,11 @@ plants.dispose();
 geometry. The map uses this for all five new species. Each level owns a
 separate kit and wind clock; paused levels do not advance their leaves.
 
+The map batches bird-of-paradise plants with `{ flowers: false }`, omitting
+their orange/blue flower geometry while retaining stems/leaves and identical
+placements. Default `create`/`batch` plants still include their blooms. Omitted
+part geometry remains kit-owned and is released during disposal.
+
 Leaf veins, light patches, ribs and tip gradients are geometry and vertex
 colors. Monstera splits and fenestrations are actual holes in the mesh, with
 no alpha-cutout texture. The Gouraud material evaluates diffuse lighting per

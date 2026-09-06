@@ -41,6 +41,8 @@ import {
   type WorldMapSection,
 } from "./worldMapController";
 import { WorldMapUI } from "./worldMapUI";
+import { oceanTuning } from "./oceanTuning";
+import type { WaterStudioHandle } from "./waterstudio";
 import { inputPrompts } from "./inputPrompts";
 import { GameInterfaceSurface } from "./gameInterfaceSurface";
 import { ResultsPresentation } from "./resultsPresentation";
@@ -1088,6 +1090,7 @@ function updateWaterPresentation(dt: number): void {
     level.water.clearPreCrtRenderSize();
   }
   level.water.setQuality(level.skyPreset === "coast" && !split2p && !LITE_RENDER && !NO_OCEAN_PASSES ? "full" : "lite");
+  oceanTuning.apply(level.water, current.id === "warproom" ? "map" : "level");
   level.water.setSkyUrl(import.meta.env.BASE_URL + SKY_PRESETS[activeSky].file,
     SKY_PRESETS[activeSky].fog, presetHorizonV(activeSky));
   level.water.update(dt, camera);
@@ -1493,6 +1496,7 @@ const toggleCharacterTailVisibility = (): void => {
 };
 if (TOUCH_PRESENTATION) {
   ui.setPresentationTools([
+    { label: "WATER", open: () => { closePresentationPanels(); void openWaterStudioTool(); } },
     {
       label: "ANIMATION",
       open: () => {
@@ -1566,6 +1570,7 @@ if (TOUCH_PRESENTATION) {
 } else {
   // Character and animation authoring stay reachable in every browser build.
   ui.setPresentationTools([
+    { label: "WATER", open: () => void openWaterStudioTool() },
     {
       label: "ANIMATION",
       open: () => void openAnimationStudioTool(),
@@ -3346,12 +3351,14 @@ async function openFieldStudioTool(): Promise<void> {
   (window as unknown as { __game: Record<string, unknown> }).__game.fieldStudio = fieldStudio;
 }
 // The WATER studio: fine-tunes the coast water live. #waterstudio on the URL.
-let waterStudio: { frame: (dt: number) => void } | null = null;
+let waterStudio: WaterStudioHandle | null = null;
 async function openWaterStudioTool(): Promise<void> {
   if (waterStudio) return;
   const mod = await import("./waterstudio");
   waterStudio = mod.openWaterStudio({
     getWater: () => level.water,
+    getContext: () => current.id === "warproom" ? "map" : "level",
+    onChange: () => gameFlow.requestGameplayFrame(),
     onClose: () => (waterStudio = null),
   });
   (window as unknown as { __game: Record<string, unknown> }).__game.waterStudio = waterStudio;
@@ -4774,6 +4781,8 @@ requestAnimationFrame(frame);
 // Smoke-test / console-poking hook.
 (window as unknown as Record<string, unknown>).__game = {
   inputPrompts,
+  oceanTuning,
+  openWaterStudio: openWaterStudioTool,
   puffs,
   PUFF_PRESETS,
   swirls,

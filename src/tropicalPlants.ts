@@ -338,7 +338,7 @@ export class TropicalPlantKit {
     return root;
   }
 
-  batch(kind:TropicalPlantKind, transforms:readonly THREE.Matrix4[]):THREE.Group {
+  batch(kind:TropicalPlantKind, transforms:readonly THREE.Matrix4[], options:{flowers?:boolean}={}):THREE.Group {
     if(this.disposed)throw new Error("Cannot use a disposed tropical plant kit");
     let parts=this.models.get(kind);
     if(!parts){parts=plantGeometry(kind);this.models.set(kind,parts);}
@@ -346,7 +346,11 @@ export class TropicalPlantKit {
     root.name=`tropical ${kind} grove`;
     root.userData.plantKind=kind;
     for(const part of parts){
+      // Retain ownership even when a map-only decorative part is omitted.
+      this.geometries.add(part.geometry);
+      if(part.flex==="flower" && options.flowers===false)continue;
       const mesh=new THREE.InstancedMesh(part.geometry,this.shade(),transforms.length);
+      mesh.userData.plantPart=part.flex;
       transforms.forEach((transform,index)=>mesh.setMatrixAt(index,transform));
       this.decorate(mesh,part.flex);
       mesh.instanceMatrix.needsUpdate=true;

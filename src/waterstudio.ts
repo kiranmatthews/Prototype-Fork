@@ -1,12 +1,11 @@
 // THE UNITY OCEAN STUDIO — #waterstudio. Live controls for every audited
 // MatrixRex ocean value plus the render-pass/debug switches. Settings use a
 // versioned key so retired CoastWater tunings can never leak into this port.
-import { readForkStudioDraft } from './localGameStorage';
 import {
   CoastWater,
-  UNITY_OCEAN_DEFAULTS,
   type UnityOceanParams,
 } from "./unityOcean";
+import { oceanTuning, defaultOceanDebug, type OceanContext } from './oceanTuning';
 import {
   btn,
   el,
@@ -17,13 +16,13 @@ import {
   toT,
 } from "./studiokit";
 
-const STORE = "solProtoUnityOceanStudioV1";
-const STORE_VERSION = 1;
-
 interface Opts {
   getWater: () => CoastWater | null;
+  getContext: () => OceanContext;
+  onChange?: () => void;
   onClose: () => void;
 }
+export interface WaterStudioHandle { element: HTMLElement; frame: (dt:number) => void; close: () => void }
 
 type ColorKey = "shallow" | "deep" | "peak" | "shadow" | "specular" | "intersection";
 type ColorChannel = "r" | "g" | "b" | "a";
@@ -166,8 +165,6 @@ const GROUPS: Group[] = [
   },
 ];
 
-const ALL_FIELDS = GROUPS.flatMap((group) => group.fields);
-
 const DEBUG_KEYS = [
   "water",
   "horizon",
@@ -193,50 +190,11 @@ const DEBUG_LABELS: Record<DebugKey, string> = {
   wireframe: "WIRE",
 };
 
-type DebugOverrides = Partial<Record<DebugKey, boolean>>;
-
-function cloneParams(source: UnityOceanParams): UnityOceanParams {
-  return {
-    ...source,
-    shallow: { ...source.shallow },
-    deep: { ...source.deep },
-    peak: { ...source.peak },
-    shadow: { ...source.shadow },
-    specular: { ...source.specular },
-    intersection: { ...source.intersection },
-  };
-}
-
 function fieldValue(params: UnityOceanParams, field: Field): number {
   const data = params as unknown as Record<string, unknown>;
   if (field.path.length === 1) return data[field.path[0]] as number;
   const color = data[field.path[0]] as Record<string, number>;
   return color[field.path[1]];
-}
-
-function setFieldValue(params: UnityOceanParams, field: Field, value: number): void {
-  const data = params as unknown as Record<string, unknown>;
-  if (field.path.length === 1) {
-    data[field.path[0]] = value;
-    return;
-  }
-  const color = data[field.path[0]] as Record<string, number>;
-  color[field.path[1]] = value;
-}
-
-function valueAtPath(source: unknown, path: FieldPath): unknown {
-  if (!source || typeof source !== "object") return undefined;
-  const data = source as Record<string, unknown>;
-  const first = data[path[0]];
-  if (path.length === 1) return first;
-  if (!first || typeof first !== "object") return undefined;
-  return (first as Record<string, unknown>)[path[1]];
-}
-
-function defaultDebug(water: CoastWater, key: DebugKey): boolean {
-  if (key === "water" || key === "horizon") return true;
-  if (key === "freeze" || key === "wireframe") return false;
-  return water.stats.quality === "full";
 }
 
 function copyText(text: string): Promise<void> {
@@ -252,199 +210,150 @@ function copyText(text: string): Promise<void> {
   return Promise.resolve();
 }
 
-export function openWaterStudio(opts: Opts): { frame: (dt: number) => void } {
+export function openWaterStudio(opts: Opts): WaterStudioHandle {
   injectStudioCss();
+  const contextName = (context: OceanContext) => context === 'map' ? 'Map Ocean' : 'In-Level Ocean';
+  let context = opts.getContext();
+  const activeWater = () => opts.getContext() === context ? opts.getWater() : null;
+  const initial = opts.getWater();
+  if (initial) oceanTuning.apply(initial, opts.getContext());
+  let params = oceanTuning.params(context);
 
-  const params = cloneParams(UNITY_OCEAN_DEFAULTS);
-  let debugOverrides: DebugOverrides = {};
-  try {
-    const saved = JSON.parse(readForkStudioDraft(localStorage, STORE, 'unityOceanStudioV1') ?? "null") as unknown;
-    if (saved && typeof saved === "object") {
-      const record = saved as Record<string, unknown>;
-      if (record.version === STORE_VERSION) {
-        for (const field of ALL_FIELDS) {
-          const value = valueAtPath(record.params, field.path);
-          if (typeof value === "number" && Number.isFinite(value)) {
-            setFieldValue(params, field, value);
-          }
-        }
-        if (record.debug && typeof record.debug === "object") {
-          const debug = record.debug as Record<string, unknown>;
-          for (const key of DEBUG_KEYS) {
-            if (typeof debug[key] === "boolean") debugOverrides[key] = debug[key] as boolean;
-          }
-        }
-      }
-    }
-  } catch {
-    // Malformed or obsolete state is ignored; audited Unity defaults win.
-  }
-
-  const save = (): void => {
-    localStorage.setItem(STORE, JSON.stringify({
-      version: STORE_VERSION,
-      params,
-      debug: debugOverrides,
-    }));
-  };
-
-  const applyParams = (water = opts.getWater()): void => {
-    if (!water) return;
-    Object.assign(water.params, cloneParams(params));
-    water.markWavesDirty();
-  };
-
-  const applyDebug = (water = opts.getWater()): void => {
-    if (!water) return;
-    for (const key of DEBUG_KEYS) {
-      const override = debugOverrides[key];
-      if (override !== undefined) water.debug[key] = override;
-    }
-    // Debug-backed uniforms and visibility are synchronized by the same API
-    // used for parameter changes, so toggles respond before the next frame.
-    water.markWavesDirty();
-  };
-
-  const panel = el("div", "pst");
-  panel.append(sec("UNITY OCEAN STUDIO"));
-  const hint = note("open The Descent — audited MatrixRex values apply live");
-  panel.append(hint);
-
-  panel.append(sec("RENDER / DEBUG"));
-  const debugRow = el("div", "pst-btns");
-  const debugButtons = new Map<DebugKey, HTMLElement>();
-  const refreshDebugButtons = (water = opts.getWater()): void => {
-    for (const key of DEBUG_KEYS) {
-      const on = debugOverrides[key] ?? (water ? water.debug[key] : key === "water" || key === "horizon");
-      debugButtons.get(key)?.classList.toggle("pst-on", on);
-    }
-  };
-  for (const key of DEBUG_KEYS) {
-    const button = btn(DEBUG_LABELS[key], () => {
-      const water = opts.getWater();
-      const current = debugOverrides[key]
-        ?? (water ? water.debug[key] : key === "water" || key === "horizon");
-      debugOverrides[key] = !current;
-      if (water) {
-        water.debug[key] = !current;
-        water.markWavesDirty();
-      }
-      refreshDebugButtons(water);
-      save();
-    });
-    debugButtons.set(key, button);
-    debugRow.append(button);
-  }
-  panel.append(debugRow);
-
+  const panel = el("div", "pst water-studio");
+  const close = (): void => { panel.remove(); opts.onClose(); };
+  panel.dataset.waterStudio = '';
+  panel.append(sec("OCEAN TUNING"));
+  const tabs = el("div", "pst-btns");
+  tabs.setAttribute('role', 'tablist');
+  tabs.setAttribute('aria-label', 'Ocean context');
+  const tabButtons = new Map<OceanContext, HTMLElement>();
+  const controls = el('div', 'water-studio-controls');
+  controls.id = 'water-studio-controls';
+  controls.setAttribute('role', 'tabpanel');
+  const hint = note("");
   const stats = note("");
   stats.classList.add("pst-stat");
-  panel.append(stats);
-
   const controlSetters: (() => void)[] = [];
-  for (const group of GROUPS) {
-    panel.append(sec(group.title));
+  const debugButtons = new Map<DebugKey, HTMLElement>();
+
+  const refresh = (): void => {
+    params = oceanTuning.params(context);
+    panel.dataset.oceanContext = context;
+    controls.setAttribute('aria-label', contextName(context));
+    for (const [key, button] of tabButtons) {
+      button.classList.toggle('pst-on', key === context);
+      button.setAttribute('aria-selected', String(key === context));
+      button.tabIndex = key === context ? 0 : -1;
+    }
+    const water = activeWater(), debug = oceanTuning.debug(context);
+    hint.textContent = water
+      ? contextName(context) + ' · live · changes save to this profile only'
+      : contextName(context) + ' · saved only; visit ' + (context === 'map' ? 'the map' : 'an ocean level') + ' to preview';
+    if (oceanTuning.persistenceError) hint.textContent = contextName(context) + ' · storage unavailable; Copy JSON to keep these edits';
+    for (const key of DEBUG_KEYS)
+      debugButtons.get(key)?.classList.toggle('pst-on', debug[key] ?? (water ? water.debug[key] : defaultOceanDebug(null, key)));
+    for (const setter of controlSetters) setter();
+  };
+  const applySelected = (): void => {
+    const water = activeWater();
+    if (water) { oceanTuning.apply(water, context); opts.onChange?.(); }
+    refresh();
+  };
+  for (const key of ['map', 'level'] as const) {
+    const button = btn(contextName(key), () => { context = key; refresh(); });
+    button.setAttribute('role', 'tab');
+    button.setAttribute('aria-controls', controls.id);
+    button.dataset.oceanTab = key;
+    button.addEventListener('keydown', event => {
+      if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+      event.preventDefault(); event.stopPropagation();
+      context = context === 'map' ? 'level' : 'map';
+      refresh(); tabButtons.get(context)?.focus();
+    });
+    tabButtons.set(key, button); tabs.append(button);
+  }
+  tabs.append(btn("Close", close));
+  panel.append(tabs, hint, stats, controls);
+  // Control keys must not drive the map/player. M remains the shared debug toggle.
+  for (const type of ['keydown', 'keyup'])
+    panel.addEventListener(type, event => {
+      const key = event as KeyboardEvent;
+      if (key.code !== 'KeyM' || (event.target as HTMLElement)?.matches('input,textarea,select')) event.stopPropagation();
+    });
+  for (const type of ['pointerdown', 'touchstart']) panel.addEventListener(type, event => event.stopPropagation());
+
+  controls.append(sec("RENDER / DEBUG"));
+  const debugRow = el("div", "pst-btns");
+  for (const key of DEBUG_KEYS) {
+    const button = btn(DEBUG_LABELS[key], () => {
+      const water = activeWater();
+      const current = oceanTuning.debug(context)[key] ?? (water ? water.debug[key] : defaultOceanDebug(null, key));
+      oceanTuning.setDebug(context, key, !current); applySelected();
+    });
+    button.dataset.oceanDebug = key;
+    debugButtons.set(key, button); debugRow.append(button);
+  }
+  controls.append(debugRow);
+
+  // Surface appearance first: colours/depth, caustics and reflections matter
+  // most for the map view. Both tabs still expose the full audited shader.
+  const ordered = [GROUPS[2], GROUPS[6], GROUPS[5], GROUPS[3], GROUPS[4], GROUPS[0], GROUPS[1], GROUPS[7]];
+  for (const group of ordered) {
+    controls.append(sec(group.title));
     for (const field of group.fields) {
-      const row = sliderRow(
-        field.label,
-        fieldValue(params, field),
-        field.lo,
-        field.hi,
-        field.step,
-        (value) => {
-          setFieldValue(params, field, value);
-          applyParams();
-          save();
-        },
-      );
+      const row = sliderRow(field.label, fieldValue(params, field), field.lo, field.hi, field.step, value => {
+        oceanTuning.setField(context, field.path, value); applySelected();
+      });
+      row.dataset.oceanField = field.path.join('.');
       const range = row.querySelector<HTMLInputElement>('input[type="range"]');
       const number = row.querySelector<HTMLInputElement>('input[type="number"]');
       controlSetters.push(() => {
         const value = fieldValue(params, field);
+        const label = contextName(context) + ': ' + group.title + ' ' + field.label;
+        range?.setAttribute('aria-label', label); number?.setAttribute('aria-label', label + ' value');
         if (number) number.value = String(value);
-        if (range) {
-          const curve = field.step >= 1 ? 1 : 3;
-          range.value = String(toT(value, field.lo, field.hi, curve) * 1000);
-        }
+        if (range) range.value = String(toT(value, field.lo, field.hi, field.step >= 1 ? 1 : 3) * 1000);
       });
-      panel.append(row);
+      controls.append(row);
     }
   }
-
-  panel.append(sec("PRESET"));
+  controls.append(sec("SELECTED PROFILE"));
   const actions = el("div", "pst-btns");
   actions.append(
-    btn("Copy JSON", (button) => {
-      void copyText(JSON.stringify(params, null, 2)).then(() => {
-        const old = button.textContent;
-        button.textContent = "COPIED";
+    btn("Copy JSON", button => {
+      void copyText(oceanTuning.serialize(context)).then(() => {
+        const old = button.textContent; button.textContent = "COPIED";
         window.setTimeout(() => { button.textContent = old; }, 900);
       });
     }),
-    btn("Reset defaults", () => {
-      const defaults = cloneParams(UNITY_OCEAN_DEFAULTS);
-      for (const field of ALL_FIELDS) {
-        setFieldValue(params, field, fieldValue(defaults, field));
-      }
-      debugOverrides = {};
-      localStorage.removeItem(STORE);
-      const water = opts.getWater();
-      if (water) {
-        for (const key of DEBUG_KEYS) water.debug[key] = defaultDebug(water, key);
-      }
-      applyParams(water);
-      applyDebug(water);
-      for (const refresh of controlSetters) refresh();
-      refreshDebugButtons(water);
-    }),
-    btn("Close", () => {
-      panel.remove();
-      opts.onClose();
-    }),
+    btn("Reset this ocean", () => { oceanTuning.reset(context); applySelected(); }),
+    btn("Close", close),
   );
-  panel.append(actions);
-  document.body.appendChild(panel);
-
-  let last: CoastWater | null = null;
-  let statTime = 0;
-  let smoothFps = 60;
-  refreshDebugButtons();
-
+  controls.append(actions);
+  const style = document.createElement('style');
+  style.textContent = '.water-studio [role=tablist] { position:sticky; top:0; z-index:2; padding:8px 0; margin-top:0; background:#12151e; } .water-studio [role=tab] { flex:1; min-height:40px; } .water-studio { max-width:100vw; }';
+  panel.append(style); document.body.appendChild(panel);
+  let last = opts.getWater(), lastContext = opts.getContext(), statTime = 0, smoothFps = 60;
+  refresh();
   return {
+    element: panel, close,
     frame(dt: number): void {
-      const water = opts.getWater();
-      if (water !== last) {
-        last = water;
-        hint.textContent = water
-          ? "live — versioned autosave enabled; Copy JSON to bake"
-          : "no Unity ocean in this level — open The Descent";
-        if (water) {
-          applyParams(water);
-          applyDebug(water);
-        }
-        refreshDebugButtons(water);
+      const water = opts.getWater(), active = opts.getContext();
+      if (water !== last || active !== lastContext) {
+        if (active !== lastContext) context = active;
+        last = water; lastContext = active;
+        if (water) oceanTuning.apply(water, active);
+        refresh();
       }
-
       if (dt > 0) smoothFps += (1 / dt - smoothFps) * Math.min(1, dt * 3);
       statTime += dt;
-      if (water && statTime >= 0.35) {
+      if (activeWater() && statTime >= 0.35) {
         statTime = 0;
-        const s = water.stats;
-        const reflection = water.debug.reflection
-          ? `${s.reflectionWidth}×${s.reflectionHeight} / ${s.reflectionRenders}`
-          : "off";
-        const prepass = water.debug.prepass
-          ? `${s.prepassWidth}×${s.prepassHeight} / ${s.prepassRenders}`
-          : "off";
-        stats.textContent =
-          `${s.quality} · ${Math.round(smoothFps)} fps · `
-          + `${s.verts.toLocaleString()} verts / ${s.tris.toLocaleString()} tris · `
-          + `${s.shoreSamples} shore samples\n`
-          + `reflection ${reflection} · prepass ${prepass}`;
-        refreshDebugButtons(water);
-      } else if (!water) {
-        stats.textContent = "waiting for a coastline ocean instance";
-      }
+        const s = water!.stats;
+        stats.textContent = contextName(context) + ' · ' + s.quality + ' · ' + Math.round(smoothFps) + ' fps · ' +
+          s.verts.toLocaleString() + ' verts · reflection ' + s.reflectionWidth + '×' + s.reflectionHeight +
+          ' · prepass ' + s.prepassWidth + '×' + s.prepassHeight;
+      } else if (!activeWater()) stats.textContent = 'This tab cannot modify the ocean currently on screen.';
     },
   };
 }

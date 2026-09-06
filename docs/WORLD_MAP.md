@@ -58,6 +58,15 @@ radius. At rest the character turns toward the map camera; the camera orbits
 the rear hubs to keep the mountains from obscuring the player. Portrait touch
 actions occupy two rows at the bottom, with no virtual-controller clearance gap.
 
+Hubs have no miniature collectible models or 3D padlocks. Locked hubs keep
+their muted colour and navigation guard; collectibles remain in the selected
+level's UI card. The map omits both the colourful shallow-water reef props and
+the orange/blue bird-of-paradise blooms that resembled fish, while keeping the
+foliage and reusable level assets.
+
+Open **TUNER → WATER → Map Ocean** for map-only shader sliders; **In-Level Ocean**
+has an independent profile. See [OCEAN_TUNING.md](OCEAN_TUNING.md).
+
 Quit Level, Game Over No, and Results Continue pass the originating progress
 key back through the shared return helper. The controller seats the character
 on that exact hub and persists it as map focus. A first clear animates newly

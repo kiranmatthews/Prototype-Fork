@@ -63,6 +63,14 @@ try {
   kit.update(1/60);assert.ok(kit.time.value>time);
   const batch=kit.batch("fanpalm",[new THREE.Matrix4(),new THREE.Matrix4().makeTranslation(8,0,0)]);
   assert.equal(batch.children[0].count,2);
+  const leafyBatch=kit.batch("birdofparadise",[new THREE.Matrix4()],{flowers:false});
+  assert.deepEqual(leafyBatch.children.map(mesh=>mesh.userData.plantPart),["trunk","leaf"]);
+  assert.equal(kit.create("birdofparadise").children.length,3,"map-only flower exclusion changed the reusable plant");
+  const omittedKit=new TropicalPlantKit();
+  omittedKit.batch("birdofparadise",[new THREE.Matrix4()],{flowers:false});
+  const omittedFlower=omittedKit.models.get("birdofparadise").find(part=>part.flex==="flower").geometry;
+  let omittedDisposed=0;omittedFlower.addEventListener("dispose",()=>omittedDisposed++);
+  omittedKit.dispose();assert.equal(omittedDisposed,1,"omitted flower geometry leaked");
   const disposal=new Map();
   for(const resource of [...geometries,...materials])resource.addEventListener("dispose",()=>disposal.set(resource,(disposal.get(resource)||0)+1));
   kit.dispose();kit.dispose();
