@@ -1200,6 +1200,7 @@ function renderGameplayScene(dt = 0, prepareOcean = true, showHud = true): void 
             ui.drawIcons(context.renderer, dt, size);
             ui.drawGameHud(context.renderer, size, context.target);
           }
+          worldMapUI?.draw(context.renderer, dt, size, context.target);
           gameInterface.draw(context.renderer, size, context.target);
           overlayRan = true;
         }
@@ -1211,6 +1212,7 @@ function renderGameplayScene(dt = 0, prepareOcean = true, showHud = true): void 
   // pre-existing WebGL overlay helpers still draw over the world.
   ui.setGameHudComposited(false);
   gameInterface.setComposited(false);
+  worldMapUI?.draw(renderer, dt);
   if (!showHud) return;
   player.drawFlyingFruit(renderer);
   ui.drawIcons(renderer, dt);

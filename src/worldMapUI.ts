@@ -2,8 +2,9 @@ import { silverSecondaryLabel } from "./secondaryText";
 import { createSecondaryTextPanel } from "./secondaryTextPanel";
 import { createInputGlyph } from "./inputPromptUI";
 import type { InputAction } from "./inputBindings";
+import type * as THREE from "three";
+import { MapLevelPresentation, mapTrialTime } from "./mapLevelPresentation";
 import {
-  CAMPAIGN_ISLANDS,
   CAMPAIGN_LEVELS,
   campaignLevelByKey,
   type CampaignStore,
@@ -28,24 +29,16 @@ function node<K extends keyof HTMLElementTagNameMap>(
   return element;
 }
 
-function formatTime(value: number | undefined): string {
-  if (value === undefined || !Number.isFinite(value)) return "—";
-  const minutes = Math.floor(value / 60);
-  const seconds = Math.floor(value % 60);
-  const milliseconds = Math.floor((value - Math.floor(value)) * 1000);
-  return `${minutes}:${String(seconds).padStart(2, "0")}.${String(milliseconds).padStart(3, "0")}`;
-}
-
 export class WorldMapUI {
   private readonly root = node("section", "world-map-ui");
-  private readonly eyebrow = node("span", "world-map-level-eyebrow");
+  private readonly levelCard = node("div", "world-map-level-card");
   private readonly levelName = node("h1", "world-map-level-name");
-  private readonly status = node("span", "world-map-level-status");
   private readonly trial = node("div", "world-map-trial");
   private readonly collectibleRow = node("div", "world-map-collectibles");
   private readonly enterButton = node("button", "world-map-enter-touch");
   private selectedKey = "jungle";
   private moving = false;
+  private presentation: MapLevelPresentation | null = null;
 
   constructor(
     private readonly campaign: CampaignStore,
@@ -54,17 +47,15 @@ export class WorldMapUI {
     this.root.setAttribute("aria-label", "Island world map");
     this.root.hidden = true;
 
-    const levelCard = node("div", "world-map-level-card");
-    const titleRow = node("div", "world-map-level-title-row");
-    const titleCopy = node("div", "world-map-level-copy");
-    titleCopy.append(this.eyebrow, this.levelName, this.status);
+    const titleCopy = node("div", "world-map-semantic");
+    titleCopy.append(this.levelName, this.collectibleRow);
     this.collectibleRow.setAttribute("aria-label", "Level collectibles");
     this.enterButton.type = "button";
     this.enterButton.setAttribute("aria-label", "Enter selected level");
     this.enterButton.innerHTML = '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 16h21M18 7l9 9-9 9"/></svg>';
     this.enterButton.addEventListener("click", () => { if (!this.moving && !this.enterButton.disabled) this.callbacks.onEnter(); });
-    titleRow.append(titleCopy, this.collectibleRow, this.enterButton);
-    levelCard.append(titleRow, this.trial);
+    this.levelCard.append(titleCopy, this.enterButton);
+    this.trial.setAttribute("aria-label", "Time trial records");
 
     const actionBar = node("nav", "world-map-actions");
     actionBar.setAttribute("aria-label", "World map actions");
@@ -75,7 +66,7 @@ export class WorldMapUI {
       this.actionButton("mapQuit", "QUIT GAME", "quit"),
     );
 
-    this.root.append(this.createTouchSurface(), levelCard, actionBar);
+    this.root.append(this.createTouchSurface(), this.levelCard, this.trial, actionBar);
     document.body.appendChild(this.root);
     this.injectStyle();
     createSecondaryTextPanel();
@@ -87,7 +78,7 @@ export class WorldMapUI {
     this.moving = moving;
     this.root.hidden = false;
     document.body.classList.add("world-map-active");
-    this.render();
+    this.render(true);
   }
 
   hide(): void {
@@ -105,11 +96,15 @@ export class WorldMapUI {
     if (!this.root.hidden) this.render();
   }
 
-  private render(): void {
+  get presentationDiagnostics() { return this.presentation?.diagnostics ?? null; }
+
+  draw(renderer: THREE.WebGLRenderer, dt: number, size?: { width: number; height: number }, target?: THREE.WebGLRenderTarget | null): void {
+    if (this.root.hidden || document.body.classList.contains("game-shell-modal") || document.body.classList.contains("game-shell-transitioning")) return;
+    this.presentation?.draw(renderer, dt, size, target);
+  }
+
+  private render(immediate = false): void {
     const definition = campaignLevelByKey(this.selectedKey) ?? CAMPAIGN_LEVELS[0];
-    const island = CAMPAIGN_ISLANDS.find(
-      (candidate) => candidate.id === definition.islandId,
-    ) ?? CAMPAIGN_ISLANDS[0];
     const progress = this.campaign.levelProgress(definition.levelId);
     const unlocked = this.campaign.levelUnlocked(definition.progressKey);
     this.enterButton.disabled = this.moving || !unlocked;
@@ -118,40 +113,33 @@ export class WorldMapUI {
     this.root.classList.toggle("is-moving", this.moving);
     this.root.classList.toggle("is-locked", !unlocked);
     this.root.classList.toggle("is-boss", definition.boss === true);
-    this.eyebrow.textContent = this.moving
-      ? "FOLLOWING THE CURRENT"
-      : definition.boss
-        ? `ISLAND FINALE · ${island.name.toUpperCase()}`
-        : `LEVEL ${CAMPAIGN_LEVELS.indexOf(definition) + 1} · ${island.name.toUpperCase()}`;
     this.levelName.textContent = definition.name.toUpperCase();
-    this.status.textContent = this.moving
-      ? "TRAVELLING…"
-      : !unlocked
-        ? "LOCKED"
-        : progress?.cleared
-          ? "COMPLETE · PLAY AGAIN"
-          : "READY";
     const rewards = [
-      ["◆", "CRYSTAL", progress?.crystal === true],
-      ["◇", "BOX GEM", progress?.boxGem === true],
-      ["⬙", "COMBO GEM", progress?.comboGem === true],
-      ["◉", "TIME RELIC", progress?.timeRelic === true],
+      ["CRYSTAL", progress?.crystal === true],
+      ["BOX GEM", progress?.boxGem === true],
+      ["COMBO GEM", progress?.comboGem === true],
+      ["TIME RELIC", progress?.timeRelic === true],
     ] as const;
     this.collectibleRow.replaceChildren();
-    for (const [glyph, label, earned] of rewards) {
+    for (const [label, earned] of rewards) {
       const reward = node("span", `world-map-collectible${earned ? " earned" : ""}`);
       reward.setAttribute("aria-label", `${label}: ${earned ? "collected" : "missing"}`);
-      reward.innerHTML = `<b aria-hidden="true">${glyph}</b><small>${label}</small>`;
+      reward.textContent = `${label}: ${earned ? "collected" : "missing"}`;
       this.collectibleRow.appendChild(reward);
     }
 
-    if (progress?.cleared) {
-      this.trial.hidden = false;
-      this.trial.innerHTML = `<span>TIME TRIAL UNLOCKED</span><strong>BEST ${formatTime(progress.bestTime)}</strong><small>TARGET ${formatTime(definition.relicTime)}</small>`;
-    } else {
-      this.trial.hidden = true;
-      this.trial.replaceChildren();
+    const trialUnlocked = this.campaign.runModesUnlocked(definition.levelId);
+    const times = progress?.trialTimes ?? (progress?.bestTime ? [progress.bestTime] : []);
+    this.trial.setAttribute("aria-hidden", String(!trialUnlocked));
+    this.trial.replaceChildren();
+    if (trialUnlocked) {
+      const records = node("div", "world-map-semantic");
+      records.textContent = `Time trial. Personal bests: ${[0, 1, 2].map(i => `${i + 1}: ${mapTrialTime(times[i])}`).join(", ")}. Time to beat: ${mapTrialTime(definition.relicTime)}`;
+      this.trial.append(records);
     }
+    this.presentation ??= new MapLevelPresentation(this.levelCard, this.trial);
+    this.presentation.select({ key: definition.progressKey, name: definition.name,
+      earned: rewards.map(([, earned]) => earned), trialUnlocked, times: [...times], target: definition.relicTime }, immediate);
   }
 
   private actionButton(
@@ -194,92 +182,49 @@ export class WorldMapUI {
   private injectStyle(): void {
     const style = document.createElement("style");
     style.textContent = `
-      .world-map-ui {
-        position: fixed; inset: 0; z-index: 72; pointer-events: none;
-        color: #fff8db; font-family: Roo, Impact, system-ui, sans-serif;
-      }
-      .world-map-ui[hidden], body.game-shell-modal .world-map-ui, body.game-shell-transitioning .world-map-ui { display: none !important; }
+      .world-map-ui { position:fixed; inset:0; z-index:72; pointer-events:none; color:#fff8db; font-family:Roo, Impact, system-ui, sans-serif; }
+      .world-map-ui[hidden], body.game-shell-modal .world-map-ui, body.game-shell-transitioning .world-map-ui { display:none !important; }
+      .world-map-semantic { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
       .world-map-touch-surface { display:none; position:absolute; inset:0; touch-action:none; user-select:none; }
+      .world-map-level-card { position:absolute; left:max(28px,env(safe-area-inset-left)); top:max(25px,env(safe-area-inset-top)); width:min(650px,43vw); aspect-ratio:2.45; }
+      .world-map-trial { position:absolute; right:max(30px,env(safe-area-inset-right)); top:max(30px,env(safe-area-inset-top)); width:min(350px,26vw); aspect-ratio:.96; }
       .world-map-enter-touch { display:none; }
-      .world-map-level-card {
-        background: linear-gradient(145deg, rgba(69,78,54,.94), rgba(24,55,57,.93));
-        border: 2px solid rgba(250,220,151,.74); box-shadow: 0 10px 24px rgba(6,28,38,.3), inset 0 1px rgba(255,255,255,.22);
-        backdrop-filter: blur(9px); -webkit-backdrop-filter: blur(9px);
-      }
-      .world-map-level-eyebrow { color: #9be0c1; font: 800 11px/1.1 ui-monospace, monospace; letter-spacing: .14em; }
-      .world-map-level-card {
-        position: absolute; top: max(20px, env(safe-area-inset-top)); right: max(26px, env(safe-area-inset-right));
-        width: min(600px, 47vw); min-height: 96px; padding: 11px 18px 10px; box-sizing: border-box;
-        border-radius: 26px 8px 26px 8px;
-      }
-      .world-map-level-title-row { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
-      .world-map-level-copy { min-width: 0; display: grid; }
-      .world-map-level-name { margin: 2px 0 0; font-size: clamp(27px, 2.6vw, 40px); line-height: .96; color: #fff0b6; text-shadow: 0 3px #173c3f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-      .world-map-level-status { color: #ffd568; font: 900 11px/1.2 ui-monospace, monospace; letter-spacing: .08em; margin-top: 5px; }
-      .world-map-ui.is-locked .world-map-level-status { color: #b7c3c4; }
-      .world-map-ui.is-boss .world-map-level-name { color: #ffd456; }
-      .world-map-collectibles { display: grid; grid-template-columns: repeat(4, 40px); gap: 5px; flex: 0 0 auto; }
-      .world-map-collectible { display: grid; place-items: center; color: rgba(153,177,176,.46); }
-      .world-map-collectible b { font: 900 25px/1 system-ui, sans-serif; }
-      .world-map-collectible small { margin-top: 2px; color: inherit; font: 700 7px/1 ui-monospace, monospace; white-space: nowrap; }
-      .world-map-collectible.earned { color: #f8e3ff; text-shadow: 0 0 10px #d75fff; }
-      .world-map-collectible:nth-child(3).earned { color: #86f29a; text-shadow: 0 0 10px #43ce66; }
-      .world-map-collectible:nth-child(4).earned { color: #7fd3ff; text-shadow: 0 0 10px #389be7; }
-      .world-map-trial { display: flex; gap: 13px; align-items: center; margin-top: 9px; padding-top: 7px; border-top: 1px solid rgba(229,248,214,.24); font: 800 10px/1.1 ui-monospace, monospace; }
-      .world-map-trial span { color: #a7efc9; } .world-map-trial strong { color: #fff; } .world-map-trial small { color: #ffd568; }
-      .world-map-action { border: 0; color: #fff8db; font-family: inherit; cursor: pointer; touch-action: manipulation; }
-      .world-map-action:focus-visible { outline: 2px solid #e8f0f4; outline-offset: 4px; border-radius: 3px; }
-      .world-map-action:hover strong { filter: brightness(1.2); }
+      .world-map-action { border:0; color:#fff8db; font-family:inherit; cursor:pointer; touch-action:manipulation; }
+      .world-map-action:focus-visible { outline:2px solid #e8f0f4; outline-offset:4px; border-radius:3px; }
+      .world-map-action:hover strong { filter:brightness(1.2); }
       .world-map-actions { position: absolute; left: 50%; bottom: max(28px, env(safe-area-inset-bottom)); transform: translateX(-50%); pointer-events: auto; display: flex; gap: clamp(16px, 2.4vw, 46px); padding: 0; background: none; border: 0; }
-      .world-map-actions { width: max-content; max-width: calc(100vw - 24px); }
-      .world-map-action { display: flex; align-items: center; gap: 9px; padding: 4px 5px; min-height: 44px; background: transparent; flex-shrink: 0; }
-      .world-map-action strong { font-size: clamp(calc(19px * var(--secondary-size-scale, 1)), calc(1.65vw * var(--secondary-size-scale, 1)), calc(32px * var(--secondary-size-scale, 1))); line-height: 1.15; white-space: nowrap; }
+      .world-map-actions { width:max-content; max-width:calc(100vw - 24px); }
+      .world-map-action { display:flex; align-items:center; gap:9px; padding:4px 5px; min-height:44px; background:transparent; flex-shrink:0; }
+      .world-map-action strong { font-size:clamp(calc(19px * var(--secondary-size-scale, 1)), calc(1.65vw * var(--secondary-size-scale, 1)), calc(32px * var(--secondary-size-scale, 1))); line-height:1.15; white-space:nowrap; }
       .world-map-action .input-glyph { --prompt-icon-size:clamp(34px,2.5vw,48px); }
-      @media (max-width: 980px) {
-        .world-map-level-card { width: 54vw; }
-        .world-map-actions { gap: 5px; }
+      @media (max-width:980px) {
+        .world-map-actions { gap:5px; }
+        .world-map-level-card { left:max(14px,env(safe-area-inset-left)); top:max(10px,env(safe-area-inset-top)); width:46vw; }
+        .world-map-trial { right:max(14px,env(safe-area-inset-right)); top:max(10px,env(safe-area-inset-top)); width:min(240px,29vw); }
       }
-      @media (pointer: coarse) {
-        .world-map-level-card { top: max(8px, env(safe-area-inset-top)); right: auto; left: 50%; transform: translateX(-50%); width: min(58vw, 520px); min-height: 0; padding: 9px 14px; }
-        .world-map-level-name { font-size: clamp(24px, 7vh, 34px); }
-        .world-map-collectibles { grid-template-columns: repeat(4, 31px); }
-        .world-map-collectible small { display: none; }
-        .world-map-trial { margin-top: 5px; padding-top: 4px; }
-        .world-map-actions { bottom: max(14px, env(safe-area-inset-bottom)); gap: 8px; }
-        .world-map-action { justify-content: center; gap: 6px; }
+      @media (max-height:520px) {
+        .world-map-actions { bottom:max(10px,env(safe-area-inset-bottom)); }
+        .world-map-trial { width:min(230px,45vh); }
       }
-      @media (max-height: 520px) and (pointer: fine) {
-        .world-map-level-card { top: max(8px, env(safe-area-inset-top)); right: auto; left: 50%; transform: translateX(-50%); width: min(58vw, 520px); min-height: 0; padding: 9px 14px; }
-        .world-map-level-name { font-size: clamp(24px, 7vh, 34px); }
-        .world-map-collectibles { grid-template-columns: repeat(4, 31px); }
-        .world-map-collectible small { display: none; }
-        .world-map-trial { margin-top: 5px; padding-top: 4px; }
-        .world-map-actions { bottom: max(10px, env(safe-area-inset-bottom)); }
-      }
-      @media (orientation: portrait) {
-        .world-map-level-card { top: 11vh; right: auto; left: 50%; transform: translateX(-50%); width: 88vw; }
-        .world-map-level-title-row { display: grid; gap: 7px; }
-        .world-map-level-name { font-size: 32px; }
-        .world-map-collectibles { width: 100%; grid-template-columns: repeat(4, 1fr); }
-        .world-map-actions { left: 50%; right: auto; top: auto; bottom: calc(var(--tc-size, 168px) + max(10px, env(safe-area-inset-bottom)) + 14px); transform: translateX(-50%); display: grid; grid-template-columns: repeat(2, max-content); column-gap: 16px; row-gap: 4px; }
-        .world-map-action { min-width: 44px; }
-        .world-map-action strong { font-size: calc(20px * var(--secondary-size-scale, 1)); }
+      @media (orientation:portrait) {
+        .world-map-level-card { top:max(24px,env(safe-area-inset-top)); left:5vw; width:90vw; }
+        .world-map-trial { top:calc(max(24px,env(safe-area-inset-top)) + 38vw); right:5vw; width:min(230px,46vw); }
+        .world-map-actions { display: grid; grid-template-columns: repeat(2, max-content); column-gap:16px; row-gap:4px; }
+        .world-map-action { min-width:44px; }
+        .world-map-action strong { font-size:calc(20px * var(--secondary-size-scale, 1)); }
       }
       body.tc-on .world-map-touch-surface { display:block; pointer-events:auto; }
-      body.tc-on .world-map-level-card { pointer-events:auto; z-index:1; }
+      body.tc-on .world-map-level-card { z-index:1; pointer-events:auto; }
+      body.tc-on .world-map-trial[aria-hidden="false"] { pointer-events:auto; }
       body.tc-on .world-map-actions { z-index:1; bottom:max(16px, env(safe-area-inset-bottom)); }
       body.tc-on .world-map-action { min-height:48px; padding:6px 10px; touch-action:manipulation; }
-      body.tc-on .world-map-enter-touch { display:grid; place-items:center; flex:0 0 48px; width:48px; height:48px; padding:9px; border:1px solid #daf8e3; border-radius:50%; background:#1d5546; color:#effff4; cursor:pointer; touch-action:manipulation; }
+      body.tc-on .world-map-enter-touch { position:absolute; right:0; top:65%; pointer-events:auto; display:grid; place-items:center; width:48px; height:48px; padding:9px; border:2px solid #d3ccc0; border-radius:50%; background:#20272b; box-shadow:0 3px 0 #080c10; color:#fff3d2; cursor:pointer; touch-action:manipulation; }
       body.tc-on .world-map-enter-touch svg { width:100%; height:100%; fill:none; stroke:currentColor; stroke-width:3.5; stroke-linecap:round; stroke-linejoin:round; }
       body.tc-on .world-map-enter-touch:disabled { opacity:.35; cursor:default; }
       body.tc-on .world-map-enter-touch:focus-visible { outline:3px solid white; outline-offset:3px; }
       @media (orientation:portrait) {
         body.tc-on .world-map-action .input-glyph { --prompt-icon-size:28px; }
         body.tc-on:not([data-prompt-family="touch"]) .world-map-action { padding-inline:4px; gap:4px; }
-        body.tc-on .world-map-level-title-row { grid-template-columns:minmax(0,1fr) 48px; align-items:center; }
-        body.tc-on .world-map-level-copy { grid-column:1; }
-        body.tc-on .world-map-enter-touch { grid-column:2; grid-row:1/3; }
-        body.tc-on .world-map-collectibles { grid-column:1; }
         body.tc-on .world-map-actions { grid-template-columns:repeat(2,max-content); column-gap:12px; }
       }
     `;

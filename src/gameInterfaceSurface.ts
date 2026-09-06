@@ -80,11 +80,9 @@ export class GameInterfaceSurface {
     if (!this.visible(root)) return;
     const card = root.querySelector<HTMLElement>(".world-map-level-card");
     if (card && this.visible(card)) {
-      const rect = card.getBoundingClientRect();
-      const fill = ctx.createLinearGradient(rect.x,rect.y,rect.right,rect.bottom);
-      fill.addColorStop(0,"rgba(69,78,54,.94)"); fill.addColorStop(1,"rgba(24,55,57,.93)");
-      this.box(ctx, card, fill);
-      for (const element of card.querySelectorAll<HTMLElement>(".world-map-level-eyebrow, .world-map-level-name, .world-map-level-status, .world-map-collectible b, .world-map-collectible small, .world-map-trial span, .world-map-trial strong, .world-map-trial small")) this.text(ctx,element);
+      // Deck printing, trophies and trial records are real scene geometry,
+      // already drawn at the same pre-CRT seam. Only the touch hit target has
+      // a Canvas-native ink mirror here.
       const enter = card.querySelector<HTMLElement>(".world-map-enter-touch");
       if (this.visible(enter)) {
         this.box(ctx,enter);

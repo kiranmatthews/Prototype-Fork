@@ -300,6 +300,8 @@ export interface CampaignLevelProgress {
   comboGem: boolean;
   timeRelic: boolean;
   bestTime?: number;
+  /** Three fastest completed trials; old saves seed this from bestTime. */
+  trialTimes?: number[];
 }
 
 export interface CampaignSaveV1 {
@@ -430,7 +432,7 @@ function cloneSave(save: Readonly<CampaignSaveV1>): CampaignSaveV1 {
     levels: Object.fromEntries(
       Object.entries(save.levels).map(([key, progress]) => [
         key,
-        { ...progress },
+        { ...progress, ...(progress.trialTimes ? { trialTimes: [...progress.trialTimes] } : {}) },
       ]),
     ),
   };
@@ -446,17 +448,22 @@ function normalizeLevelProgress(value: unknown): CampaignLevelProgress {
   const raw = value && typeof value === "object"
     ? value as Partial<CampaignLevelProgress>
     : {};
+  const trialTimes = normalizeTrialTimes(raw.trialTimes, raw.bestTime);
   return {
     cleared: raw.cleared === true,
     crystal: raw.crystal === true,
     boxGem: raw.boxGem === true,
     comboGem: raw.comboGem === true,
     timeRelic: raw.timeRelic === true,
-    bestTime:
-      typeof raw.bestTime === "number" && Number.isFinite(raw.bestTime) && raw.bestTime > 0
-        ? raw.bestTime
-        : undefined,
+    bestTime: trialTimes[0],
+    ...(trialTimes.length ? { trialTimes } : {}),
   };
+}
+
+function normalizeTrialTimes(value: unknown, bestTime?: number): number[] {
+  const times = (Array.isArray(value) ? value : []).filter((time): time is number => typeof time === "number" && Number.isFinite(time) && time > 0);
+  if (typeof bestTime === "number" && Number.isFinite(bestTime) && bestTime > 0 && !times.includes(bestTime)) times.push(bestTime);
+  return times.sort((a, b) => a - b).slice(0, 3);
 }
 
 function normalizeSave(value: unknown, slot: number): CampaignSaveV1 | null {
@@ -822,13 +829,17 @@ export class CampaignStore {
     if (!progress) return null;
     const beforeBestTime = progress.bestTime;
     const beforeTimeRelic = progress.timeRelic;
+    const beforeTimes = JSON.stringify(progress.trialTimes);
     progress.timeRelic = progress.timeRelic || rewards.timeRelic;
-    if (Number.isFinite(rewards.time) && rewards.time > 0)
-      progress.bestTime = progress.bestTime === undefined
-        ? rewards.time
-        : Math.min(progress.bestTime, rewards.time);
+    if (Number.isFinite(rewards.time) && rewards.time > 0) {
+      progress.trialTimes = normalizeTrialTimes([
+        ...normalizeTrialTimes(progress.trialTimes, progress.bestTime), rewards.time,
+      ]);
+      progress.bestTime = progress.trialTimes[0];
+    }
     if (
       progress.bestTime !== beforeBestTime ||
+      JSON.stringify(progress.trialTimes) !== beforeTimes ||
       progress.timeRelic !== beforeTimeRelic
     )
       this.noteWorkingChange();

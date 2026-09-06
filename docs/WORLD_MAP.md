@@ -50,6 +50,38 @@ The launch screen presents “Boolie Roo” directly on its vortex, without a
 timber container, tagline or input hint. Map overlays remain hidden throughout
 the loading vortex and reappear only beneath the destination reveal.
 
+### Skateboard level card and trial records
+
+The selected level is printed on a real 3D skateboard at the upper left.
+`MapLevelPresentation` reuses the game's procedural deck, plywood, grip,
+underside artwork, trucks and wheels with a menu-only wider deck profile.
+Changing hubs performs a 0.64-second kickflip; name/reward data swaps halfway
+through while the grip is facing away. Repeated progress refreshes do not
+restart the animation, and later selections queue without exposing wrong text.
+
+Four screen-printed sockets show crystal, box gem, combo gem and time relic.
+Uncollected slots use dark flat silhouettes. Collected slots use
+`Level.crystalMesh`, `Level.gemMesh` (including the green combo tint), and
+`Level.timeRelicMesh`, with world halo sprites removed and continuous idle
+rotation. No reward models have been restored to the level hubs themselves.
+
+Only cleared levels show the right-side race card: three personal bests and
+the level's authored relic target, labelled Time to Beat. Empty records are
+dashes, never invented zero times. Optional `CampaignLevelProgress.trialTimes`
+stores the fastest three completed trial times; old saves seed one record from
+`bestTime`. Save/load, autosave and discard preserve independent array snapshots.
+The card is informational; normal level entry and the in-level trial-start
+mechanism are unchanged.
+
+Both pieces render through the existing WebGL renderer before CRT, alongside
+the existing Canvas/DOM interface seam; lite/direct rendering uses the same
+3D objects. There is no second renderer or animation loop. Canvas printing is
+uploaded only on data/font changes. Semantic DOM retains level/reward/record
+descriptions, responsive safe-area anchors and the 48px touch enter arrow.
+Modal and loading screens suppress the presentation; map return snaps to the
+correct hub before the reveal. Portrait places the trial card below the deck,
+on the right, without changing map navigation or utility controls.
+
 The map renders the player at three times their ordinary scale. Both animation
 overlay snapshots and render interpolation are cleared before entering or
 leaving this presentation so the scale cannot carry into gameplay. Hub discs

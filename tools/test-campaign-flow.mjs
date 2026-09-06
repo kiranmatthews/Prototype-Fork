@@ -398,6 +398,28 @@ trialOnly.commitTimeTrial("jungle", { time: 60, timeRelic: true });
 trialOnly.commitTimeTrial("jungle", { time: 75, timeRelic: false });
 assert.equal(trialOnly.levelProgress("jungle")?.bestTime, 60);
 assert.equal(trialOnly.levelProgress("jungle")?.timeRelic, true);
+assert.deepEqual(trialOnly.levelProgress("jungle")?.trialTimes, [60, 61, 75]);
+trialOnly.commitTimeTrial("jungle", { time: 65, timeRelic: false });
+trialOnly.commitTimeTrial("jungle", { time: NaN, timeRelic: false });
+assert.deepEqual(trialOnly.levelProgress("jungle")?.trialTimes, [60, 61, 65], "only the fastest valid three trials belong on the map");
+const recordsReloaded = new campaign.CampaignStore();
+recordsReloaded.load(1);
+assert.deepEqual(recordsReloaded.levelProgress("jungle")?.trialTimes, [60, 61, 65], "trial ranks did not persist");
+trialOnly.setAutosave(false);
+trialOnly.commitTimeTrial("jungle", { time: 50, timeRelic: true });
+trialOnly.discardActiveChanges();
+assert.deepEqual(trialOnly.levelProgress("jungle")?.trialTimes, [60, 61, 65], "working trial history mutated the durable snapshot");
+const savedRecords = memory.get("solProtoCampaignSavesV1");
+const legacySlots = JSON.parse(savedRecords);
+delete legacySlots[0].levels.jungle.trialTimes;
+memory.set("solProtoCampaignSavesV1", JSON.stringify(legacySlots));
+const legacyRecords = new campaign.CampaignStore(); legacyRecords.load(1);
+assert.deepEqual(legacyRecords.levelProgress("jungle")?.trialTimes, [60], "old best time must seed one real record, not invented extra places");
+legacySlots[0].levels.jungle.trialTimes = [null, -5, "45", 90, 65, 61, 70];
+memory.set("solProtoCampaignSavesV1", JSON.stringify(legacySlots));
+const malformedRecords = new campaign.CampaignStore(); malformedRecords.load(1);
+assert.deepEqual(malformedRecords.levelProgress("jungle")?.trialTimes, [60, 61, 65], "save normalization must retain the legacy best and reject invalid times");
+memory.set("solProtoCampaignSavesV1", savedRecords);
 
 assert.deepEqual(
   campaign.mergeCompletedBonusInventory(
