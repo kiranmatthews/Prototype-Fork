@@ -39,7 +39,7 @@ multi-touch gestures do not navigate. Travel keeps the existing walking and
 boardslide presentation; new navigation waits until it finishes.
 
 Touch utility actions are directly tappable text without controller-symbol or
-keyboard hints when no hardware controller is active. An arrow in the selected-level card enters the level only when
+keyboard hints when no hardware controller is active. A Play button on the selected-level card enters the level only when
 settled and unlocked. Menu sections remain accessible during travel and pause
 it normally. Tapping a hub never auto-enters its level.
 
@@ -77,10 +77,20 @@ Both pieces render through the existing WebGL renderer before CRT, alongside
 the existing Canvas/DOM interface seam; lite/direct rendering uses the same
 3D objects. There is no second renderer or animation loop. Canvas printing is
 uploaded only on data/font changes. Semantic DOM retains level/reward/record
-descriptions, responsive safe-area anchors and the 48px touch enter arrow.
+descriptions, responsive safe-area anchors and the 48px-high touch Play button.
 Modal and loading screens suppress the presentation; map return snaps to the
 correct hub before the reveal. Portrait places the trial card below the deck,
 on the right, without changing map navigation or utility controls.
+
+All four map utilities (Progress, Options, Save/Load and Quit) have a fixed,
+safe-area 48px close X. It uses the existing Back/cancel route: closing Quit
+never quits the game, and closing a save/load confirmation does not perform
+the operation. Touch map panels are native vertical scroll surfaces, including
+their blank gutters, with no vertically centred overflowing content. Opening
+another panel resets scroll to the top. Scroll events invalidate the cached
+pre-CRT menu, and the X has its own matching Canvas rendering so it stays
+visible and usable while the filtered content scrolls underneath it. Desktop
+menu layout and gameplay touch controls are unchanged.
 
 The map renders the player at three times their ordinary scale. Both animation
 overlay snapshots and render interpolation are cleared before entering or

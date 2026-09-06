@@ -658,6 +658,7 @@ export class GameFlowUI {
     );
     document.body.classList.remove("game-shell-results");
     this.panel.className = `game-shell-panel game-screen-${this.screen ?? "none"}`;
+    this.panel.classList.toggle("game-map-menu-panel", this.mapDirect);
     this.root.setAttribute("aria-label", this.screenLabel());
     this.panel.replaceChildren();
     this.pointerSelectionArmed = false;
@@ -682,6 +683,13 @@ export class GameFlowUI {
     else if (this.screen === "progress") this.renderProgress();
     else if (this.screen === "options") this.renderOptions();
     else if (this.screen === "gameover") this.renderGameOver();
+    if (this.mapDirect) {
+      const close = this.button("X", () => this.goBack());
+      close.classList.add("game-map-close");
+      close.setAttribute("aria-label", "Close menu");
+      this.panel.appendChild(close);
+      this.panel.scrollTop = 0;
+    }
     this.observePreCrtLayout();
     this.syncVortexBodyClass();
     this.syncSelection();
@@ -1829,6 +1837,24 @@ export class GameFlowUI {
       @media (prefers-reduced-motion: reduce) {
         .game-transition-curtain { transition-duration: .01ms !important; }
       }
+      /* Map utilities are real scroll surfaces, including their blank gutters.
+         Keep the cancel affordance outside document flow so it cannot scroll
+         off-screen. The pre-CRT surface mirrors both scrolling and this X. */
+      body.tc-on .game-shell-panel.game-map-menu-panel {
+        display:block; pointer-events:auto; overflow-y:auto; overflow-x:hidden;
+        touch-action:pan-y; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
+        padding:calc(max(12px, env(safe-area-inset-top)) + 60px) max(18px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+      }
+      body.tc-on .game-map-menu-panel > :not(.game-map-close) { max-width:100%; margin-inline:auto; }
+      body.tc-on .game-map-menu-panel .game-progress-layout { margin-block:0; }
+      .game-menu-button.game-map-close {
+        position:fixed; z-index:5; right:max(16px, env(safe-area-inset-right)); top:max(12px, env(safe-area-inset-top));
+        width:48px; height:48px; min-height:48px; margin:0; padding:0; border:2px solid #e5e0cd; border-radius:10px;
+        background:#243138; color:#fff7da; font:700 30px/1 Arial, sans-serif; text-align:center;
+        pointer-events:auto; touch-action:manipulation; filter:none; text-shadow:none;
+      }
+      .game-menu-button.game-map-close.selected { background:#36515d; box-shadow:none; color:#fff7da; filter:none; }
+      .game-menu-button.game-map-close::before { display:none; }
     `;
     document.head.appendChild(style);
   }

@@ -86,10 +86,7 @@ export class GameInterfaceSurface {
       const enter = card.querySelector<HTMLElement>(".world-map-enter-touch");
       if (this.visible(enter)) {
         this.box(ctx,enter);
-        const r = enter.getBoundingClientRect(), style = getComputedStyle(enter);
-        ctx.save(); ctx.globalAlpha *= Number(style.opacity); ctx.translate(r.x+9,r.y+9); ctx.scale((r.width-18)/32,(r.height-18)/32);
-        ctx.strokeStyle = style.color; ctx.lineWidth = 3.5; ctx.lineCap = ctx.lineJoin = "round";
-        ctx.stroke(new Path2D("M5 16h21M18 7l9 9-9 9")); ctx.restore();
+        this.text(ctx,enter);
       }
     }
     for (const button of root.querySelectorAll<HTMLElement>(".world-map-action")) {

@@ -58,7 +58,7 @@ export interface GameFlowSurfaceText {
 
 export interface GameFlowSurfaceButton {
   rect: GameFlowSurfaceRect;
-  kind: "action" | "slot" | "toggle";
+  kind: "action" | "slot" | "toggle" | "close";
   label: string;
   valueLabel: string;
   color: string;
@@ -398,7 +398,7 @@ export function snapshotGameFlowSurface(
     buttons.push(
       Object.freeze({
         rect,
-        kind: slot ? "slot" : toggle ? "toggle" : "action",
+        kind: button.classList.contains("game-map-close") ? "close" : slot ? "slot" : toggle ? "toggle" : "action",
         launch: source.screen === "launch",
         label: slot
           ? ""
@@ -781,6 +781,15 @@ export class GameFlowSurface {
     // compound background. Slot child text receives that ancestor opacity in
     // its own snapshot, so rgba color alpha is never multiplied a second time.
     ctx.globalAlpha = button.opacity;
+    if (button.kind === "close") {
+      roundedRect(ctx, rect, 10);
+      ctx.fillStyle = button.selected ? "#36515d" : "#243138"; ctx.fill();
+      ctx.strokeStyle = "#e5e0cd"; ctx.lineWidth = 2; ctx.stroke();
+      ctx.fillStyle = "#fff7da"; ctx.font = "700 30px Arial, sans-serif";
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText("X", rect.x + rect.width / 2, rect.y + rect.height / 2);
+      ctx.restore(); this.primitiveCount++; return;
+    }
     if (button.kind === "slot") {
       roundedRect(ctx, rect, 10);
       ctx.fillStyle = button.selected

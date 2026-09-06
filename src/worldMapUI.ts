@@ -51,8 +51,8 @@ export class WorldMapUI {
     titleCopy.append(this.levelName, this.collectibleRow);
     this.collectibleRow.setAttribute("aria-label", "Level collectibles");
     this.enterButton.type = "button";
-    this.enterButton.setAttribute("aria-label", "Enter selected level");
-    this.enterButton.innerHTML = '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 16h21M18 7l9 9-9 9"/></svg>';
+    this.enterButton.setAttribute("aria-label", "Play selected level");
+    this.enterButton.textContent = "Play";
     this.enterButton.addEventListener("click", () => { if (!this.moving && !this.enterButton.disabled) this.callbacks.onEnter(); });
     this.levelCard.append(titleCopy, this.enterButton);
     this.trial.setAttribute("aria-label", "Time trial records");
@@ -108,7 +108,7 @@ export class WorldMapUI {
     const progress = this.campaign.levelProgress(definition.levelId);
     const unlocked = this.campaign.levelUnlocked(definition.progressKey);
     this.enterButton.disabled = this.moving || !unlocked;
-    this.enterButton.setAttribute("aria-label", `Enter ${definition.name}`);
+    this.enterButton.setAttribute("aria-label", `Play ${definition.name}`);
     this.root.dataset.selectedKey = definition.progressKey;
     this.root.classList.toggle("is-moving", this.moving);
     this.root.classList.toggle("is-locked", !unlocked);
@@ -218,8 +218,7 @@ export class WorldMapUI {
       body.tc-on .world-map-trial[aria-hidden="false"] { pointer-events:auto; }
       body.tc-on .world-map-actions { z-index:1; bottom:max(16px, env(safe-area-inset-bottom)); }
       body.tc-on .world-map-action { min-height:48px; padding:6px 10px; touch-action:manipulation; }
-      body.tc-on .world-map-enter-touch { position:absolute; right:0; top:65%; pointer-events:auto; display:grid; place-items:center; width:48px; height:48px; padding:9px; border:2px solid #d3ccc0; border-radius:50%; background:#20272b; box-shadow:0 3px 0 #080c10; color:#fff3d2; cursor:pointer; touch-action:manipulation; }
-      body.tc-on .world-map-enter-touch svg { width:100%; height:100%; fill:none; stroke:currentColor; stroke-width:3.5; stroke-linecap:round; stroke-linejoin:round; }
+      body.tc-on .world-map-enter-touch { position:absolute; right:0; top:76%; pointer-events:auto; display:grid; place-items:center; width:92px; height:48px; padding:7px 12px; border:2px solid #d3ccc0; border-radius:12px; background:#20272b; box-shadow:0 3px 0 #080c10; color:#fff3d2; font:26px/1 "Staging Secondary", Impact, sans-serif; text-align:center; cursor:pointer; touch-action:manipulation; }
       body.tc-on .world-map-enter-touch:disabled { opacity:.35; cursor:default; }
       body.tc-on .world-map-enter-touch:focus-visible { outline:3px solid white; outline-offset:3px; }
       @media (orientation:portrait) {
