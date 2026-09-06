@@ -24,15 +24,28 @@ replay, and tooling compatibility. Its runtime is the fixed-rail island map in
 
 ## Input and flow
 
-Keyboard, D-pad/stick, and touch direction changes all become one discrete map
-step. Quick keyboard and touch down/up pairs are latched even when both events
-occur between render frames. Movement is ignored until the current canned
-travel finishes. Cross/Enter enters a hub; the map exposes Progress, Options,
-Save/Load, and Quit directly.
+Keyboard and physical D-pad/stick directions become one discrete map step.
+Quick keyboard down/up pairs are latched even between render frames. Cross/Enter
+enters a hub; the map exposes Progress, Options, Save/Load, and Quit directly.
+
+Touch uses the map itself, not an emulated controller. Gameplay D-pad, face
+buttons, look surface and pause button are hidden on the map and restored in
+levels. Their held/pending input is cleared at the boundary. Tap an unlocked
+green hub to follow the shortest connected unlocked route to it, or tap in a
+neighbour's projected screen direction to travel toward an off-screen hub or
+island. Camera projection, not keyboard direction slots, owns touch direction.
+Locked hubs consume the tap without redirecting it. Drags, long holds and
+multi-touch gestures do not navigate. Travel keeps the existing walking and
+boardslide presentation; new navigation waits until it finishes.
+
+Touch utility actions are directly tappable text without controller-symbol or
+keyboard hints. An arrow in the selected-level card enters the level only when
+settled and unlocked. Menu sections remain accessible during travel and pause
+it normally. Tapping a hub never auto-enters its level.
 
 The desktop map shows the selected-level card and utility menu. The separate
 region card, direction hints, arrow buttons and Enter Level panel are omitted;
-keyboard/gamepad input and the touch controls still drive navigation and entry.
+keyboard/gamepad input continues to drive navigation and entry unchanged.
 The launch screen presents “Boolie Roo” directly on its vortex, without a
 timber container, tagline or input hint. Map overlays remain hidden throughout
 the loading vortex and reappear only beneath the destination reveal.
@@ -42,8 +55,8 @@ overlay snapshots and render interpolation are cleared before entering or
 leaving this presentation so the scale cannot carry into gameplay. Hub discs
 are 70% of their previous diameter, with route endpoints trimmed to the same
 radius. At rest the character turns toward the map camera; the camera orbits
-the rear hubs to keep the mountains from obscuring the player. Portrait actions
-sit above the touch controls to leave the larger character unobstructed.
+the rear hubs to keep the mountains from obscuring the player. Portrait touch
+actions occupy two rows at the bottom, with no virtual-controller clearance gap.
 
 Quit Level, Game Over No, and Results Continue pass the originating progress
 key back through the shared return helper. The controller seats the character
@@ -121,7 +134,7 @@ The bottom menu hints use the user-supplied CCGeekSpeakTweak Bold placeholder
 through `--font-secondary`. Their SVG silver gradient face sits over a black
 stroke and a solid black extrusion swept in overlapping half-pixel steps back
 to the face, without a shared panel or backdrop
-blur. Portrait touch uses two readable rows above the controls. The font is
+blur. Portrait touch uses two readable rows at the bottom. The font is
 restricted to the current non-commercial, low-traffic staging use; see
 [the font notice](../public/fonts/SECONDARY-FONT-NOTICE.md) before release.
 

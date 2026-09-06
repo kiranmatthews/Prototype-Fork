@@ -80,9 +80,13 @@ assert.match(input, /ArrowRight[^\n]*KeyD[^\n]*mapDirectionX = 1/);
 assert.match(input, /ArrowUp[^\n]*KeyW[^\n]*mapDirectionY = 1/);
 assert.match(
   worldMapUi,
-  /@media \(orientation: portrait\)[\s\S]*?top: auto; bottom: calc\(var\(--tc-size, 168px\) \+ max\(10px, env\(safe-area-inset-bottom\)\) \+ 14px\);/,
-  "portrait map utilities must sit above the bottom D-pad/face-control zones",
+  /body\.tc-on \.world-map-actions \{[^}]*bottom:max\(16px, env\(safe-area-inset-bottom\)\)/,
+  "touch map actions belong at the bottom without a virtual controller gap",
 );
+assert.match(touch, /body\.world-map-active \.tc-zone,[\s\S]*?body\.world-map-active \.tc-pause \{ display:none !important; \}/);
+assert.match(worldMapUi, /body\.tc-on \.world-map-action > span, body\.tc-on \.world-map-action kbd \{ display:none; \}/);
+assert.match(worldMapUi, /this\.enterButton\.disabled = this\.moving \|\| !unlocked/);
+assert.match(worldMapUi, /tap\.canceled/);
 assert.match(
   worldMapUi,
   /@media \(orientation: portrait\)[\s\S]*?\.world-map-unlock-notice \{ top: calc\(11vh \+ 185px\);/,

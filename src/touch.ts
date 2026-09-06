@@ -88,6 +88,7 @@ export class TouchControls {
   private prevBtn = { x: false, o: false, sq: false, tri: false };
   private pressedBtn = { x: false, o: false, sq: false, tri: false };
   private directionTap: [number, number] | null = null;
+  private mapMode = false;
   // every live right-hand pointer: which button it holds + swipe bookkeeping
   private rightTouches = new Map<
     number,
@@ -132,6 +133,19 @@ export class TouchControls {
     const tap = this.directionTap;
     this.directionTap = null;
     return tap;
+  }
+
+  /** The touch map owns its input; do not carry a held gameplay button across. */
+  setMapMode(on: boolean): void {
+    if (on === this.mapMode) return;
+    this.mapMode = on;
+    this.padPointer = null; this.dirIdx = -1;
+    this.moveX = this.moveY = 0;
+    this.paintArrows(); this.clearLook();
+    this.rightTouches.clear(); this.refreshButtons();
+    this.pressedBtn = { x: false, o: false, sq: false, tri: false };
+    this.directionTap = null;
+    this.transferUntil = this.inventoryUntil = 0;
   }
 
   // ---------- GENTLE LOOK (free upper screen) ----------
@@ -201,6 +215,7 @@ export class TouchControls {
     const body = document.body.classList;
     return (
       body.contains('game-shell-modal') ||
+      body.contains('world-map-active') ||
       body.contains('ed-active') ||
       body.contains('tool-panel-open') ||
       body.contains('character-lab-open') ||
@@ -466,6 +481,9 @@ export class TouchControls {
         -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
         -webkit-tap-highlight-color: transparent;
       }
+      body.world-map-active .tc-zone,
+      body.world-map-active .tc-look,
+      body.world-map-active .tc-pause { display:none !important; }
       .tc-look {
         position: fixed; top: 0; left: 0; width: 100vw; height: 38%; z-index: 9;
         touch-action: none; -webkit-user-select: none; user-select: none;

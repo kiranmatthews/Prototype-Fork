@@ -185,6 +185,7 @@ export class Input {
     // touched, and edge flags fall out of the shared prev* comparison below.
     const tc = this.touch;
     if (tc && tc.enabled) {
+      tc.setMapMode(document.body.classList.contains('world-map-active'));
       if (tc.moveX !== 0 || tc.moveY !== 0) {
         moveX = tc.moveX;
         moveY = tc.moveY;

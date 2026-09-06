@@ -2105,8 +2105,10 @@ gameFlow = new GameFlowUI(
   gameAudioOptions,
 );
 worldMapUI = new WorldMapUI(campaign, {
-  onNavigate: (screenX, screenY) => {
-    worldMapController?.navigate(screenX, screenY);
+  onMapTap: (clientX, clientY) => {
+    if (gameFlow.blocksGameplay || current.id !== "warproom") return;
+    const rect = renderer.domElement.getBoundingClientRect();
+    worldMapController?.touchMap(clientX - rect.left, clientY - rect.top, rect.width, rect.height, camera);
   },
   onEnter: () => {
     worldMapController?.enterSelected();

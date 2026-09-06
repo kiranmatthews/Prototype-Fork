@@ -760,6 +760,7 @@ try {
   controller.activate(warpLevel, null);
   assert.deepEqual(fakePlayer.group.scale.toArray(), [3, 3, 3]);
   assert.equal(controller.selectedKey, "jungle");
+  assert.equal(controller.travelTo("nightworks"), false, "touch must not bypass locked progression");
   assert.deepEqual(selections.at(-1).directions, {
     up: false,
     down: false,
@@ -818,7 +819,38 @@ try {
   controller.openSection("progress");
   assert.deepEqual(entered, ["dark"]);
   assert.deepEqual(sections, ["progress"]);
+  controller.activate(warpLevel, "jungle");
+  assert.equal(controller.travelTo("nightworks"), true);
+  assert.equal(controller.enterSelected(), false, "a queued touch route entered a level mid-travel");
+  for (let frame = 0; frame < 1200 && controller.moving; frame++) controller.step(1 / 60, neutralInput);
+  assert.equal(controller.selectedKey, "nightworks", "direct hub tap did not follow multiple unlocked edges");
+  assert.equal(controllerStore.recommendedMapLevelKey(), "nightworks");
+  const touchCamera = new THREE.PerspectiveCamera(42, 844 / 390, .1, 900);
+  controller.activate(warpLevel, "test-course");
+  controller.frameCamera(touchCamera, 1 / 60);
+  touchCamera.updateMatrixWorld();
+  const projected = warpLevel.campaignMapPose("slipstream").position.clone().project(touchCamera);
+  assert.equal(controller.touchMap((projected.x + 1) * 422, (1 - projected.y) * 195, 844, 390, touchCamera), true);
+  for (let frame = 0; frame < 600 && controller.moving; frame++) controller.step(1 / 60, neutralInput);
+  assert.equal(controller.selectedKey, "slipstream", "projected hub picking selected the wrong branch");
+  controllerStore.commitClear("dark", { crystal: false, boxGem: false, comboGem: false });
+  controller.activate(warpLevel, "nightworks");
+  controller.frameCamera(touchCamera, 1 / 60);
+  touchCamera.updateMatrixWorld();
+  // The cross-island endpoint is well off-screen in this portrait framing.
+  touchCamera.aspect = 390 / 844;
+  controller.frameCamera(touchCamera, 1 / 60); touchCamera.updateMatrixWorld();
+  const origin = warpLevel.campaignMapPose("nightworks").position.clone().project(touchCamera);
+  const destination = warpLevel.campaignMapPose("beachside-run").position.clone().project(touchCamera);
+  const ox = (origin.x + 1) * 195, oy = (1 - origin.y) * 422;
+  const vx = (destination.x - origin.x) * 195, vy = (origin.y - destination.y) * 422;
+  const edgeScale = Math.min(vx > 0 ? (382-ox)/vx : (8-ox)/vx, vy > 0 ? (836-oy)/vy : (8-oy)/vy);
+  assert.equal(controller.touchMap(ox + vx * edgeScale, oy + vy * edgeScale, 390, 844, touchCamera), true, "off-screen island direction was ignored");
+  for (let frame = 0; frame < 600 && controller.moving; frame++) controller.step(1 / 60, neutralInput);
+  assert.equal(controller.selectedKey, "beachside-run");
+  assert.equal(controller.travelTo("jungle"), true);
   controller.deactivate();
+  assert.equal(controller.pendingRoute.length, 0, "leaving the map retained a queued route");
   assert.deepEqual(fakePlayer.group.scale.toArray(), [1, 1, 1], "map scale leaked into gameplay");
   controller.activate(warpLevel, "jungle");
   controller.activate(warpLevel, "jungle");

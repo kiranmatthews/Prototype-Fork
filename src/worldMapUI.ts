@@ -12,7 +12,7 @@ import type {
 } from "./worldMapController";
 
 export interface WorldMapUICallbacks {
-  onNavigate: (screenX: number, screenY: number) => void;
+  onMapTap: (clientX: number, clientY: number) => void;
   onEnter: () => void;
   onOpenSection: (section: WorldMapSection) => void;
 }
@@ -42,6 +42,7 @@ export class WorldMapUI {
   private readonly trial = node("div", "world-map-trial");
   private readonly collectibleRow = node("div", "world-map-collectibles");
   private readonly unlockNotice = node("div", "world-map-unlock-notice");
+  private readonly enterButton = node("button", "world-map-enter-touch");
   private selectedKey = "jungle";
   private moving = false;
   private unlockNoticeTimer: number | null = null;
@@ -58,7 +59,11 @@ export class WorldMapUI {
     const titleCopy = node("div", "world-map-level-copy");
     titleCopy.append(this.eyebrow, this.levelName, this.status);
     this.collectibleRow.setAttribute("aria-label", "Level collectibles");
-    titleRow.append(titleCopy, this.collectibleRow);
+    this.enterButton.type = "button";
+    this.enterButton.setAttribute("aria-label", "Enter selected level");
+    this.enterButton.innerHTML = '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 16h21M18 7l9 9-9 9"/></svg>';
+    this.enterButton.addEventListener("click", () => { if (!this.moving && !this.enterButton.disabled) this.callbacks.onEnter(); });
+    titleRow.append(titleCopy, this.collectibleRow, this.enterButton);
     levelCard.append(titleRow, this.trial);
 
     const actionBar = node("nav", "world-map-actions");
@@ -73,7 +78,7 @@ export class WorldMapUI {
     this.unlockNotice.setAttribute("role", "status");
     this.unlockNotice.setAttribute("aria-live", "polite");
     this.unlockNotice.hidden = true;
-    this.root.append(levelCard, actionBar, this.unlockNotice);
+    this.root.append(this.createTouchSurface(), levelCard, actionBar, this.unlockNotice);
     document.body.appendChild(this.root);
     this.injectStyle();
     createSecondaryTextPanel();
@@ -136,6 +141,8 @@ export class WorldMapUI {
     ) ?? CAMPAIGN_ISLANDS[0];
     const progress = this.campaign.levelProgress(definition.levelId);
     const unlocked = this.campaign.levelUnlocked(definition.progressKey);
+    this.enterButton.disabled = this.moving || !unlocked;
+    this.enterButton.setAttribute("aria-label", `Enter ${definition.name}`);
     this.root.dataset.selectedKey = definition.progressKey;
     this.root.classList.toggle("is-moving", this.moving);
     this.root.classList.toggle("is-locked", !unlocked);
@@ -192,6 +199,31 @@ export class WorldMapUI {
     return button;
   }
 
+  private createTouchSurface(): HTMLElement {
+    const surface = node("div", "world-map-touch-surface");
+    surface.setAttribute("aria-hidden", "true");
+    let pointer: { id: number; x: number; y: number; time: number; canceled: boolean } | null = null;
+    surface.addEventListener("pointerdown", event => {
+      if (pointer) { pointer.canceled = true; return; }
+      if (!event.isPrimary || event.button !== 0 || this.moving) return;
+      pointer = { id: event.pointerId, x: event.clientX, y: event.clientY, time: performance.now(), canceled: false };
+      surface.setPointerCapture(event.pointerId);
+      event.preventDefault();
+    });
+    surface.addEventListener("pointermove", event => {
+      if (pointer?.id === event.pointerId && Math.hypot(event.clientX - pointer.x, event.clientY - pointer.y) > 14) pointer.canceled = true;
+    });
+    surface.addEventListener("pointerup", event => {
+      if (pointer?.id !== event.pointerId) return;
+      const tap = pointer; pointer = null;
+      if (!tap.canceled && !this.moving && !this.root.hidden && performance.now() - tap.time < 1000 && Math.hypot(event.clientX - tap.x, event.clientY - tap.y) <= 14)
+        this.callbacks.onMapTap(event.clientX, event.clientY);
+    });
+    for (const type of ["pointercancel", "lostpointercapture"])
+      surface.addEventListener(type, () => { pointer = null; });
+    return surface;
+  }
+
   private injectStyle(): void {
     const style = document.createElement("style");
     style.textContent = `
@@ -200,6 +232,8 @@ export class WorldMapUI {
         color: #fff8db; font-family: Roo, Impact, system-ui, sans-serif;
       }
       .world-map-ui[hidden], body.game-shell-modal .world-map-ui, body.game-shell-transitioning .world-map-ui { display: none !important; }
+      .world-map-touch-surface { display:none; position:absolute; inset:0; touch-action:none; user-select:none; }
+      .world-map-enter-touch { display:none; }
       .world-map-level-card {
         background: linear-gradient(145deg, rgba(69,78,54,.94), rgba(24,55,57,.93));
         border: 2px solid rgba(250,220,151,.74); box-shadow: 0 10px 24px rgba(6,28,38,.3), inset 0 1px rgba(255,255,255,.22);
@@ -269,6 +303,22 @@ export class WorldMapUI {
         .world-map-action { min-width: 44px; }
         .world-map-action strong { font-size: calc(20px * var(--secondary-size-scale, 1)); }
         .world-map-unlock-notice { top: calc(11vh + 185px); width: max-content; max-width: 82vw; }
+      }
+      body.tc-on .world-map-touch-surface { display:block; pointer-events:auto; }
+      body.tc-on .world-map-level-card { pointer-events:auto; z-index:1; }
+      body.tc-on .world-map-actions { z-index:1; bottom:max(16px, env(safe-area-inset-bottom)); }
+      body.tc-on .world-map-action > span, body.tc-on .world-map-action kbd { display:none; }
+      body.tc-on .world-map-action { min-height:48px; padding:6px 10px; touch-action:manipulation; }
+      body.tc-on .world-map-enter-touch { display:grid; place-items:center; flex:0 0 48px; width:48px; height:48px; padding:9px; border:1px solid #daf8e3; border-radius:50%; background:#1d5546; color:#effff4; cursor:pointer; touch-action:manipulation; }
+      body.tc-on .world-map-enter-touch svg { width:100%; height:100%; fill:none; stroke:currentColor; stroke-width:3.5; stroke-linecap:round; stroke-linejoin:round; }
+      body.tc-on .world-map-enter-touch:disabled { opacity:.35; cursor:default; }
+      body.tc-on .world-map-enter-touch:focus-visible { outline:3px solid white; outline-offset:3px; }
+      @media (orientation:portrait) {
+        body.tc-on .world-map-level-title-row { grid-template-columns:minmax(0,1fr) 48px; align-items:center; }
+        body.tc-on .world-map-level-copy { grid-column:1; }
+        body.tc-on .world-map-enter-touch { grid-column:2; grid-row:1/3; }
+        body.tc-on .world-map-collectibles { grid-column:1; }
+        body.tc-on .world-map-actions { grid-template-columns:repeat(2,max-content); column-gap:12px; }
       }
     `;
     document.head.appendChild(style);

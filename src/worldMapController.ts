@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import {
   CAMPAIGN_ISLANDS,
+  CAMPAIGN_LEVELS,
+  CAMPAIGN_MAP_EDGES,
   campaignLevelByKey,
   type CampaignIslandId,
   type CampaignStore,
@@ -47,6 +49,7 @@ export class WorldMapController {
   private level: Level | null = null;
   private selectedKeyValue = "";
   private travel: ActiveTravel | null = null;
+  private pendingRoute: string[] = [];
   private directionLatched = false;
   private cameraReady = false;
   private readonly cameraEye = new THREE.Vector3();
@@ -84,6 +87,7 @@ export class WorldMapController {
     this.level = level;
     this.selectedKeyValue = selected;
     this.travel = null;
+    this.pendingRoute = [];
     this.directionLatched = false;
     this.cameraReady = false;
     this.campaign.setMapFocus(selected);
@@ -103,6 +107,7 @@ export class WorldMapController {
     }
     this.level = null;
     this.travel = null;
+    this.pendingRoute = [];
     this.directionLatched = false;
     this.cameraReady = false;
   }
@@ -134,6 +139,12 @@ export class WorldMapController {
       sfx.play("enemyDown", 0.22, 1.25);
       return false;
     }
+    return this.beginTravel(next);
+  }
+
+  private beginTravel(next: string): boolean {
+    const level = this.level;
+    if (!level || this.travel || !this.campaign.levelUnlocked(next)) return false;
     const initial = level.campaignMapTravel(this.selectedKeyValue, next, 0);
     if (!initial) return false;
     this.travel = {
@@ -155,6 +166,78 @@ export class WorldMapController {
     return true;
   }
 
+  /** Direct hub selection still follows the unlocked graph, never teleports. */
+  travelTo(target: string): boolean {
+    if (!this.level || this.travel || !this.campaign.levelUnlocked(target)) return false;
+    if (target === this.selectedKeyValue) return true;
+    const routes = [[this.selectedKeyValue]], visited = new Set([this.selectedKeyValue]);
+    for (let cursor = 0; cursor < routes.length; cursor++) {
+      const path = routes[cursor], key = path[path.length - 1];
+      for (const next of this.neighbors(key)) {
+        if (visited.has(next)) continue;
+        const route = [...path, next];
+        if (next === target) {
+          this.pendingRoute = route.slice(2);
+          return this.beginTravel(route[1]);
+        }
+        visited.add(next); routes.push(route);
+      }
+    }
+    return false;
+  }
+
+  /** CSS-pixel picking and directional travel in the actual rendered camera. */
+  touchMap(x: number, y: number, width: number, height: number, camera: THREE.PerspectiveCamera): boolean {
+    const level = this.level;
+    if (!level || this.travel || width <= 0 || height <= 0 || x < 0 || y < 0 || x > width || y > height) return false;
+    camera.updateMatrixWorld();
+    const project = (key: string) => {
+      const pose = level.campaignMapPose(key);
+      if (!pose) return null;
+      const point = pose.position.clone().project(camera);
+      return { x: (point.x + 1) * width / 2, y: (1 - point.y) * height / 2, z: point.z };
+    };
+    let nearest: string | null = null, nearestDistance = 34;
+    for (const definition of CAMPAIGN_LEVELS) {
+      const point = project(definition.progressKey);
+      if (!point || point.z < -1 || point.z > 1 || point.x < 0 || point.x > width || point.y < 0 || point.y > height) continue;
+      const distance = Math.hypot(point.x - x, point.y - y);
+      if (distance < nearestDistance) { nearest = definition.progressKey; nearestDistance = distance; }
+    }
+    // A locked marker consumes the tap; it must not select some other path.
+    if (nearest) return this.travelTo(nearest);
+    const origin = project(this.selectedKeyValue), originPose = level.campaignMapPose(this.selectedKeyValue);
+    if (!origin || !originPose) return false;
+    const dx = x - THREE.MathUtils.clamp(origin.x, 24, width - 24);
+    const dy = y - THREE.MathUtils.clamp(origin.y, 24, height - 24);
+    const length = Math.hypot(dx, dy);
+    if (length < 40) return false;
+    let candidate: string | null = null, best = 0.45;
+    for (const key of this.neighbors(this.selectedKeyValue)) {
+      const point = project(key), pose = level.campaignMapPose(key);
+      if (!point || !pose) continue;
+      let vx = point.x - origin.x, vy = point.y - origin.y;
+      if (point.z < -1 || point.z > 1) {
+        // Projection mirrors points behind the lens. Use the camera-plane
+        // displacement instead, so an off-screen island never reverses intent.
+        const direction = pose.position.clone().sub(originPose.position).transformDirection(camera.matrixWorldInverse);
+        vx = direction.x; vy = -direction.y;
+      }
+      const distance = Math.hypot(vx, vy);
+      if (distance < 1e-6) continue;
+      const score = (vx * dx + vy * dy) / (distance * length);
+      if (score > best) { best = score; candidate = key; }
+    }
+    return candidate !== null && this.beginTravel(candidate);
+  }
+
+  private neighbors(key: string): string[] {
+    return CAMPAIGN_MAP_EDGES.flatMap(edge => {
+      const next = edge.from === key ? edge.to : edge.to === key ? edge.from : null;
+      return next && this.campaign.levelUnlocked(next) && this.level?.campaignMapHas(next) ? [next] : [];
+    });
+  }
+
   enterSelected(): boolean {
     if (!this.level || this.travel) return false;
     const definition = campaignLevelByKey(this.selectedKeyValue);
@@ -167,7 +250,7 @@ export class WorldMapController {
   }
 
   openSection(section: WorldMapSection): void {
-    if (!this.level || this.travel) return;
+    if (!this.level) return;
     this.callbacks.onOpenSection(section);
   }
 
@@ -231,6 +314,9 @@ export class WorldMapController {
         this.selectedKeyValue = this.travel.to;
         this.travel = null;
         this.campaign.setMapFocus(this.selectedKeyValue);
+        const next = this.pendingRoute.shift();
+        if (next && this.beginTravel(next)) return;
+        this.pendingRoute = [];
         const pose = level.campaignMapPose(this.selectedKeyValue);
         if (pose)
           this.player.stepWorldMapPresentation(pose.position, pose.heading, dt, "idle");
