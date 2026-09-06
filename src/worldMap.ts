@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import {
   CAMPAIGN_ISLANDS,
   CAMPAIGN_LEVELS,
@@ -62,6 +63,8 @@ export interface CampaignWorldMapBuild {
 
 const MAP_FORWARD = new THREE.Vector3(0, 0, -1);
 const MAP_SEA_LEVEL = -1.15;
+const MAP_HUB_SCALE = 0.7;
+const hubRadius = (boss?: boolean): number => (boss ? 2.9 : 2.35) * MAP_HUB_SCALE;
 
 function seeded(seed: number): () => number {
   let state = seed | 0;
@@ -110,35 +113,51 @@ function islandGeometry(
   radiusX: number,
   radiusZ: number,
   seed: number,
+  supports: readonly THREE.Vector3[] = [],
 ): THREE.BufferGeometry {
-  const random = seeded(seed);
-  const segments = 64;
-  const rings = [
-    { radius: 1.08, y: -3.7, color: 0x514842 },
-    { radius: 1.025, y: -1.28, color: 0x9a6d4d },
-    { radius: 1, y: -0.27, color: 0xf4cb79 },
-    { radius: 0.82, y: 0.27, color: 0x8fd05a },
-    { radius: 0.65, y: 0.92, color: 0x31894b },
-  ] as const;
+  const segments = 128;
+  const rings = 36;
   const outline = organicIslandOutline(segments, seed);
   const positions: number[] = [];
   const colors: number[] = [];
   const indices: number[] = [];
-  for (let ring = 0; ring < rings.length; ring++) {
-    const band = rings[ring];
-    const color = new THREE.Color(band.color);
+  for (let ring = 0; ring < rings; ring++) {
+    const radius = 1.1 * (1 - ring / rings);
     for (let index = 0; index < segments; index++) {
       const angle = (index / segments) * Math.PI * 2;
-      const ripple = outline[index] * (1 + Math.sin(angle * 7 - seed) * 0.012);
-      positions.push(
-        Math.cos(angle) * radiusX * band.radius * ripple,
-        band.y + (random() - 0.5) * 0.08,
-        Math.sin(angle) * radiusZ * band.radius * ripple,
-      );
+      const x = Math.cos(angle) * radiusX * radius * outline[index];
+      const z = Math.sin(angle) * radiusZ * radius * outline[index];
+      const interior = 1 - THREE.MathUtils.smoothstep(radius, 0.72, 0.99);
+      let y = radius > 1
+        ? -0.36 - Math.pow((radius - 1) / 0.1, 1.35) * 3.1
+        : -0.36 + THREE.MathUtils.smoothstep(1 - radius, 0, 0.3) * 1.25;
+      const hills = Math.sin(x * 0.17 + 0.7) * Math.cos(z * 0.2 - 1.2) * 0.42 +
+        Math.sin(x * 0.34 + z * 0.16) * 0.16;
+      y += interior * (hills + 0.35);
+      const baseY = y;
+      let nearestDistance = Infinity;
+      let nearestY = y;
+      for (const support of supports) {
+        const distanceSq = (x - support.x) ** 2 + (z - support.z) ** 2;
+        const weight = Math.exp(-distanceSq / 14);
+        y = Math.max(y, baseY + Math.max(0, support.y - 0.38 - baseY) * weight);
+        if (distanceSq < nearestDistance) {
+          nearestDistance = distanceSq;
+          nearestY = support.y - 0.38;
+        }
+      }
+      if (nearestDistance < 12)
+        y = THREE.MathUtils.lerp(y, nearestY, 1 - THREE.MathUtils.smoothstep(nearestDistance, 1, 12));
+      const beachEdge = 0.81 + Math.sin(angle * 3 + 1) * 0.035;
+      const grass = 1 - THREE.MathUtils.smoothstep(radius, beachEdge - 0.07, beachEdge + 0.02);
+      const sand = mixColor(0xd59d65, 0xffe5ad, THREE.MathUtils.smoothstep(y, -0.8, 0.25));
+      const meadow = mixColor(0x3f8c57, 0x92c96c, 0.48 + hills * 0.6);
+      const color = sand.lerp(meadow, grass);
+      positions.push(x, y, z);
       colors.push(color.r, color.g, color.b);
     }
   }
-  for (let ring = 0; ring < rings.length - 1; ring++) {
+  for (let ring = 0; ring < rings - 1; ring++) {
     for (let index = 0; index < segments; index++) {
       const next = (index + 1) % segments;
       const a = ring * segments + index;
@@ -149,10 +168,10 @@ function islandGeometry(
     }
   }
   const centre = positions.length / 3;
-  positions.push(0, 0.92, 0);
-  const top = new THREE.Color(0x45934d);
+  positions.push(0, 1.15, 0);
+  const top = new THREE.Color(0x6fa45d);
   colors.push(top.r, top.g, top.b);
-  const lastRing = (rings.length - 1) * segments;
+  const lastRing = (rings - 1) * segments;
   for (let index = 0; index < segments; index++) {
     indices.push(lastRing + index, centre, lastRing + ((index + 1) % segments));
   }
@@ -226,37 +245,35 @@ function shallowShelfGeometry(
 
 function mountainGeometry(radius: number, height: number, seed: number): THREE.BufferGeometry {
   const random = seeded(seed * 1879);
-  const segments = 22;
-  const rings = 12;
-  const radialNoise = Array.from({ length: segments }, () => 0.78 + random() * 0.38);
+  const segments = 64;
+  const rings = 36;
+  const phase = random() * Math.PI * 2;
+  const profile = [1, 0.98, 0.84, 0.85, 0.65, 0.66, 0.5, 0.48, 0.34, 0.27, 0.045];
   const positions: number[] = [];
   const colors: number[] = [];
   const indices: number[] = [];
   for (let ring = 0; ring <= rings; ring++) {
     const t = ring / rings;
-    const taper = Math.max(
-      0.045,
-      Math.pow(1 - t, 0.72) *
-        (1 + Math.sin(t * Math.PI * 5 + seed * 0.17) * 0.045 * (1 - t)),
+    const profileT = t * (profile.length - 1);
+    const band = Math.min(profile.length - 2, Math.floor(profileT));
+    const taper = THREE.MathUtils.lerp(
+      profile[band], profile[band + 1],
+      THREE.MathUtils.smoothstep(profileT - band, 0, 1),
     );
-    const centreX = Math.sin(t * 4.4 + seed) * radius * 0.1 * t;
-    const centreZ = Math.cos(t * 3.7 + seed * 0.31) * radius * 0.08 * t;
-    const color = t < 0.22
-      ? mixColor(0x347b48, 0x55694f, t / 0.22)
-      : t < 0.76
-        ? mixColor(0x5d6555, 0x8f765e, (t - 0.22) / 0.54)
-        : mixColor(0x8f765e, 0x5d4c43, (t - 0.76) / 0.24);
+    const centreX = Math.sin(t * 3.7 + phase) * radius * 0.2 * t;
+    const centreZ = Math.cos(t * 4 + phase) * radius * 0.14 * t;
+    const color = t < 0.25
+      ? mixColor(0x557953, 0x82968e, t / 0.25)
+      : mixColor(0x82968e, 0xb9b49d, (t - 0.25) / 0.75);
     for (let index = 0; index < segments; index++) {
       const angle = (index / segments) * Math.PI * 2;
-      const ridge =
-        radialNoise[index] *
-        (1 + Math.sin(angle * 3 + t * 5 + seed) * 0.14 * (1 - t));
-      const faceLight = 0.82 +
-        Math.max(0, Math.sin(angle - 0.7)) * 0.2 +
-        Math.sin(angle * 5 + seed) * 0.035;
+      const ridge = 1 + Math.sin(angle * 5 + phase) * 0.09 +
+        Math.sin(angle * 3 - phase + t * 3.8) * 0.07 +
+        Math.sin(angle * 9 + t * 5) * 0.022;
+      const faceLight = 0.9 + Math.sin(angle * 5 + phase) * 0.07;
       positions.push(
         centreX + Math.cos(angle) * radius * taper * ridge,
-        t * height,
+        t * height + Math.sin(angle * 3 + phase) * Math.sin(t * Math.PI) * height * 0.018,
         centreZ + Math.sin(angle) * radius * taper * ridge,
       );
       colors.push(
@@ -287,30 +304,127 @@ function mountainGeometry(radius: number, height: number, seed: number): THREE.B
 
 function palmFrondGeometry(): THREE.BufferGeometry {
   const positions: number[] = [];
-  const uvs: number[] = [];
+  const colors: number[] = [];
   const indices: number[] = [];
-  const segments = 7;
+  const segments = 18;
   for (let index = 0; index <= segments; index++) {
     const t = index / segments;
-    const width = Math.sin(Math.pow(1 - t, 0.7) * Math.PI * 0.48) * 0.48;
-    const z = t * 3.5;
-    const y = -0.72 * t * t + Math.sin(t * Math.PI) * 0.16;
-    positions.push(-width, y, z, width, y, z);
-    uvs.push(0, t, 1, t);
+    const width = Math.pow(Math.sin(t * Math.PI), 0.68) * 0.68 * (index % 2 ? 0.89 : 1);
+    const z = t * 3.7;
+    const y = Math.sin(t * Math.PI) * 0.9 - t * t * 1.05;
+    for (const side of [-1, 0, 1]) {
+      positions.push(side * width, y + (side === 0 ? width * 0.24 : 0), z);
+      const color = mixColor(0x296c4e, 0x84ba5c, Math.sin(t * Math.PI * 0.85) * 0.8 + (side === 0 ? 0.15 : 0));
+      colors.push(color.r, color.g, color.b);
+    }
   }
   for (let index = 0; index < segments; index++) {
-    const a = index * 2;
-    const b = a + 1;
-    const c = a + 2;
-    const d = a + 3;
-    indices.push(a, c, b, b, c, d);
+    for (let side = 0; side < 2; side++) {
+      const a = index * 3 + side;
+      indices.push(a, a + 3, a + 1, a + 1, a + 3, a + 4);
+    }
   }
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
-  geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
+  geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
   geometry.setIndex(indices);
   geometry.computeVertexNormals();
   return geometry;
+}
+
+function palmTrunkGeometry(): THREE.BufferGeometry {
+  const geometry = new THREE.CylinderGeometry(0.14, 0.29, 4.7, 12, 22);
+  geometry.translate(0, 2.35, 0);
+  const points = geometry.getAttribute("position");
+  const colors: number[] = [];
+  for (let i = 0; i < points.count; i++) {
+    const t = points.getY(i) / 4.7;
+    points.setX(i, points.getX(i) + 0.85 * t * t - Math.sin(t * Math.PI) * 0.2);
+    const rib = Math.cos(t * Math.PI * 38) * 0.08;
+    const color = mixColor(0x8d6044, 0xdbb878, THREE.MathUtils.clamp(t * 0.7 + 0.18 + rib, 0, 1));
+    colors.push(color.r, color.g, color.b);
+  }
+  geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
+function foliageGeometry(): THREE.BufferGeometry {
+  const pieces: THREE.BufferGeometry[] = [];
+  for (let i = 0; i < 5; i++) {
+    const angle = i * 2.4;
+    const piece = new THREE.SphereGeometry(0.55, 12, 8);
+    piece.scale(1, 0.86 + (i % 2) * 0.35, 0.85);
+    piece.translate(Math.cos(angle) * 0.34, (i % 2) * 0.28, Math.sin(angle) * 0.34);
+    pieces.push(piece);
+  }
+  const geometry = mergeGeometries(pieces)!;
+  pieces.forEach((piece) => piece.dispose());
+  const points = geometry.getAttribute("position");
+  const colors: number[] = [];
+  for (let i = 0; i < points.count; i++) {
+    const brightness = THREE.MathUtils.smoothstep(points.getY(i), -0.5, 0.9);
+    const color = mixColor(0x65866a, 0xc6e1bb, brightness);
+    colors.push(color.r, color.g, color.b);
+  }
+  geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+  return geometry;
+}
+
+function rockGeometry(): THREE.BufferGeometry {
+  const geometry = new THREE.SphereGeometry(1, 20, 14);
+  const points = geometry.getAttribute("position");
+  const colors: number[] = [];
+  for (let i = 0; i < points.count; i++) {
+    const x = points.getX(i), y = points.getY(i), z = points.getZ(i);
+    const bulge = 1 + Math.sin(x * 3.7 + z * 2.3) * Math.sin(y * 4) * 0.08;
+    points.setXYZ(i, x * bulge, y * (0.91 + Math.cos(z * 4) * 0.06), z * bulge);
+    const color = mixColor(0x687e79, 0xc0c4a4, THREE.MathUtils.smoothstep(y, -0.8, 0.9));
+    colors.push(color.r, color.g, color.b);
+  }
+  geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
+function flowerGeometry(): THREE.BufferGeometry {
+  const petals: THREE.BufferGeometry[] = [];
+  for (let i = 0; i < 5; i++) {
+    const angle = i * Math.PI * 2 / 5;
+    const petal = new THREE.SphereGeometry(1, 8, 6);
+    petal.scale(0.16, 0.075, 0.27);
+    petal.translate(0, 0, 0.19);
+    petal.rotateY(angle);
+    petals.push(petal);
+  }
+  const geometry = mergeGeometries(petals)!;
+  petals.forEach((petal) => petal.dispose());
+  return geometry;
+}
+
+function waterfallTexture(seed: number): THREE.DataTexture {
+  const width = 64, height = 256;
+  const data = new Uint8Array(width * height * 4);
+  const random = seeded(seed);
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const edge = Math.pow(Math.sin(x / (width - 1) * Math.PI), 0.7);
+      const streak = Math.pow(Math.max(0, Math.sin(x * 1.2 + Math.sin(y * 0.04) * 0.6)), 8);
+      const pulse = 0.74 + Math.sin(y / height * Math.PI * 8 + x * 0.12) * 0.2;
+      const i = (y * width + x) * 4;
+      data[i] = 205 + Math.floor(streak * 50);
+      data[i + 1] = 242;
+      data[i + 2] = 255;
+      data[i + 3] = Math.floor(edge * (0.24 + streak * 0.62 + random() * 0.09) * pulse * 255);
+    }
+  }
+  const texture = new THREE.DataTexture(data, width, height, THREE.RGBAFormat);
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.magFilter = THREE.LinearFilter;
+  texture.minFilter = THREE.LinearFilter;
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.needsUpdate = true;
+  return texture;
 }
 
 function makePalmBatches(root: THREE.Group): {
@@ -322,18 +436,18 @@ function makePalmBatches(root: THREE.Group): {
   coconutIndex: number;
 } {
   const trunks = new THREE.InstancedMesh(
-    new THREE.CylinderGeometry(0.16, 0.27, 4.4, 7, 3),
-    new THREE.MeshStandardMaterial({ color: 0xa96e3e, roughness: 0.92 }),
+    palmTrunkGeometry(),
+    new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.86 }),
     96,
   );
   const fronds = new THREE.InstancedMesh(
     palmFrondGeometry(),
     new THREE.MeshStandardMaterial({
-      color: 0x43a94f,
-      roughness: 0.85,
+      vertexColors: true,
+      roughness: 0.68,
       side: THREE.DoubleSide,
     }),
-    96 * 6,
+    96 * 8,
   );
   const coconuts = new THREE.InstancedMesh(
     new THREE.IcosahedronGeometry(0.18, 1),
@@ -363,21 +477,23 @@ function addPalm(
   yaw: number,
 ): void {
   const trunkMatrix = new THREE.Matrix4().compose(
-    new THREE.Vector3(x, y + 2.05 * scale, z),
-    new THREE.Quaternion().setFromEuler(new THREE.Euler(0.07, yaw, 0.06)),
+    new THREE.Vector3(x, y, z),
+    new THREE.Quaternion().setFromEuler(new THREE.Euler(0, yaw, 0)),
     new THREE.Vector3(scale, scale, scale),
   );
   batches.trunks.setMatrixAt(batches.trunkIndex++, trunkMatrix);
-  for (let index = 0; index < 6; index++) {
-    const angle = yaw + (index / 6) * Math.PI * 2;
+  const crownX = x + Math.cos(yaw) * 0.85 * scale;
+  const crownZ = z - Math.sin(yaw) * 0.85 * scale;
+  for (let index = 0; index < 8; index++) {
+    const angle = yaw + (index / 8) * Math.PI * 2;
     const leafMatrix = new THREE.Matrix4().compose(
       new THREE.Vector3(
-        x + Math.sin(angle) * 0.66 * scale,
-        y + 4.24 * scale - (index % 2) * 0.12,
-        z + Math.cos(angle) * 0.66 * scale,
+        crownX,
+        y + 4.68 * scale - (index % 2) * 0.1,
+        crownZ,
       ),
       new THREE.Quaternion().setFromEuler(
-        new THREE.Euler(-0.24 - (index % 2) * 0.09, angle, 0),
+        new THREE.Euler(-0.05 - (index % 2) * 0.14, angle, 0),
       ),
       new THREE.Vector3(scale, scale, scale),
     );
@@ -387,9 +503,9 @@ function addPalm(
     const angle = yaw + (index / 3) * Math.PI * 2;
     const coconutMatrix = new THREE.Matrix4().compose(
       new THREE.Vector3(
-        x + Math.cos(angle) * 0.22 * scale,
-        y + 4.03 * scale - index * 0.05,
-        z + Math.sin(angle) * 0.22 * scale,
+        crownX + Math.cos(angle) * 0.22 * scale,
+        y + 4.49 * scale - index * 0.05,
+        crownZ + Math.sin(angle) * 0.22 * scale,
       ),
       new THREE.Quaternion(),
       new THREE.Vector3(scale, scale, scale),
@@ -405,15 +521,16 @@ function makeFoliageBatches(root: THREE.Group): {
   flowerIndex: number;
 } {
   const shrubs = new THREE.InstancedMesh(
-    new THREE.IcosahedronGeometry(0.72, 1),
+    foliageGeometry(),
     new THREE.MeshStandardMaterial({
       color: 0xffffff,
-      roughness: 0.96,
+      vertexColors: true,
+      roughness: 0.88,
     }),
-    220,
+    600,
   );
   const flowers = new THREE.InstancedMesh(
-    new THREE.OctahedronGeometry(0.13, 0),
+    flowerGeometry(),
     new THREE.MeshStandardMaterial({
       color: 0xffffff,
       emissive: 0x18070f,
@@ -769,6 +886,7 @@ export class CampaignWorldMapRuntime {
       node.rewards.forEach((reward, index) => {
         const material = (reward as THREE.Mesh).material as THREE.MeshStandardMaterial;
         const earned = rewardFlags[index] === true;
+        reward.visible = earned && !selected;
         material.color.setHex(earned ? rewardColors[index] : 0x3c4650);
         material.emissive.setHex(earned ? new THREE.Color(rewardColors[index]).multiplyScalar(0.25).getHex() : 0x050709);
         reward.scale.setScalar(earned ? 0.72 : 0.48);
@@ -845,13 +963,23 @@ export class CampaignWorldMapRuntime {
       ribbon.mesh.position.x = ribbon.baseX +
         Math.sin(this.elapsed * 2.7 + ribbon.phase) * 0.075;
       ribbon.mesh.material.opacity =
-        0.34 + Math.sin(this.elapsed * 3.4 + ribbon.phase) * 0.1;
+        0.76 + Math.sin(this.elapsed * 3.4 + ribbon.phase) * 0.08;
+      if (ribbon.mesh.material.map)
+        ribbon.mesh.material.map.offset.y += dt * 0.65;
     }
   }
 }
 
 export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild {
   const groundMeshes: THREE.Mesh[] = [];
+  const landMeshes: THREE.Mesh[] = [];
+  const terrainSupports = CAMPAIGN_LEVELS.map((level) => new THREE.Vector3(...level.mapPosition));
+  const edgeCurves = new Map(CAMPAIGN_MAP_EDGES.map((edge) => [edge, makeEdgeCurve(edge)]));
+  for (const [edge, curve] of edgeCurves) {
+    if (edge.travel !== "trail") continue;
+    const count = Math.ceil(curve.getLength() / 2);
+    for (let i = 0; i <= count; i++) terrainSupports.push(curve.getPointAt(i / count));
+  }
   const water = new CoastWater({
     shore: [
       { x: 130, z: 76, sx: 0, sz: -1, beachSlope: 0, bedSlope: 0 },
@@ -874,14 +1002,16 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
   // Keep the audited shader/passes, but tune its public parameters for the
   // elevated map lens: broader colour separation and readable rolling glints
   // survive the high, toy-diorama camera better than the gameplay-coast preset.
-  water.params.shallow = { r: 0.025, g: 0.78, b: 0.86, a: 0.68 };
-  water.params.deep = { r: 0.004, g: 0.19, b: 0.36, a: 1 };
-  water.params.peak = { r: 0.68, g: 0.94, b: 1, a: 0.58 };
+  water.params.shallow = { r: 0.026, g: 0.58, b: 0.57, a: 0.78 };
+  water.params.deep = { r: 0.008, g: 0.18, b: 0.3, a: 1 };
+  water.params.peak = { r: 0.57, g: 0.85, b: 0.89, a: 0.35 };
   water.params.wave1Height = 0.08;
   water.params.wave2Height = 0.045;
-  water.params.normalStrength = 8.4;
-  water.params.normalScale = 0.64;
-  water.params.reflectionStrength = 0.82;
+  water.params.normalStrength = 3.2;
+  water.params.normalDistanceStrength = 2.4;
+  water.params.normalScale = 0.48;
+  water.params.reflectionStrength = 0.28;
+  water.params.reflectionDistortion = 0.28;
   water.params.reflectionFresnel = 2.6;
   water.params.depthDistance = 0.72;
   water.params.causticsStart = 38;
@@ -949,7 +1079,8 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
     shelf.receiveShadow = true;
     root.add(shelf);
     const mesh = new THREE.Mesh(
-      islandGeometry(spec.rx, spec.rz, spec.seed),
+      islandGeometry(spec.rx, spec.rz, spec.seed, spec.scenic ? [] :
+        terrainSupports.map((point) => point.clone().sub(new THREE.Vector3(spec.x, 0, spec.z)))),
       islandMaterial.clone(),
     );
     mesh.position.set(spec.x, -0.05, spec.z);
@@ -959,15 +1090,15 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
     mesh.userData.edgeGrinding = false;
     mesh.userData.visualOnly = true;
     root.add(mesh);
+    landMeshes.push(mesh);
   }
 
   const mountainMaterial = new THREE.MeshStandardMaterial({
     vertexColors: true,
-    flatShading: true,
-    roughness: 0.84,
+    roughness: 0.82,
     metalness: 0,
-    emissive: 0x493a2d,
-    emissiveIntensity: 0.46,
+    emissive: 0x101810,
+    emissiveIntensity: 0.18,
   });
   const mountainSpecs = [
     { x: -28, z: 7, r: 7.5, h: 18.5, s: 31 },
@@ -977,6 +1108,7 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
     { x: 25, z: 3, r: 5, h: 13.2, s: 83 },
     { x: 37, z: 0, r: 4.5, h: 11.8, s: 97 },
   ] as const;
+  const mountainMeshes: THREE.Mesh[] = [];
   for (const mountain of mountainSpecs) {
     const mesh = new THREE.Mesh(
       mountainGeometry(mountain.r, mountain.h, mountain.s),
@@ -987,6 +1119,7 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
     mesh.userData.edgeGrinding = false;
     mesh.userData.visualOnly = true;
     root.add(mesh);
+    mountainMeshes.push(mesh);
   }
   for (const islet of scenicIslandSpecs) {
     const stack = new THREE.Mesh(
@@ -1000,14 +1133,26 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
     root.add(stack);
   }
 
+  // Scatter against the actual sculpt so plants meet sand, hills and shelves.
+  root.updateMatrixWorld(true);
+  const landRay = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 80);
+  const terrainY = (x: number, z: number): number => {
+    landRay.ray.origin.set(x, 50, z);
+    return landRay.intersectObjects(landMeshes, false)[0]?.point.y ?? 0;
+  };
+  const routeSamples = [...edgeCurves.values()].flatMap((curve) => curve.getSpacedPoints(45));
+  const clearsRoute = (x: number, z: number, clearance: number): boolean =>
+    !routeSamples.some((point) => Math.hypot(point.x - x, point.z - z) < clearance) &&
+    !CAMPAIGN_LEVELS.some((level) => Math.hypot(level.mapPosition[0] - x, level.mapPosition[2] - z) < clearance + 1.8);
+
   const waterfallRibbons: MapWaterfallRibbon[] = [];
   for (const [x, y, z, height] of [
-    [-36.6, 4.9, -5.8, 8.6],
-    [37.6, 4.8, -15.7, 8.2],
+    [-31.2, 4.1, 13.6, 5.6],
+    [33.1, 4.1, 7.5, 5.4],
   ] as const) {
     for (let layer = 0; layer < 3; layer++) {
       const geometry = new THREE.PlaneGeometry(
-        0.42 + layer * 0.18,
+        0.58 + layer * 0.23,
         height * (0.94 + layer * 0.03),
         3,
         12,
@@ -1021,36 +1166,38 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
           position.getX(vertex) +
             Math.sin(t * Math.PI * 3 + layer * 1.7) * (0.07 + t * 0.08),
         );
+        position.setZ(vertex, -(t - 0.5) * 3.8);
       }
       geometry.computeVertexNormals();
       const material = new THREE.MeshBasicMaterial({
-        color: layer === 0 ? 0xb9ffff : layer === 1 ? 0x5ce6ed : 0x2bbccf,
+        color: layer === 0 ? 0xf2ffff : layer === 1 ? 0x91e8e4 : 0x53b8c3,
+        map: waterfallTexture(layer * 97 + Math.round(x * 12)),
         transparent: true,
-        opacity: 0.42 - layer * 0.05,
+        opacity: 0.76,
         side: THREE.DoubleSide,
         depthWrite: false,
         blending: layer === 0 ? THREE.AdditiveBlending : THREE.NormalBlending,
       });
       const fall = new THREE.Mesh(geometry, material);
       fall.position.set(x + (layer - 1) * 0.17, y, z + layer * 0.025);
-      fall.rotation.y = Math.PI;
+      fall.rotation.y = 0;
       fall.name = "world map waterfall ribbon";
       fall.userData.noShadow = true;
       root.add(fall);
       waterfallRibbons.push({ mesh: fall, baseX: fall.position.x, phase: layer * 2.1 + x });
     }
     const pool = new THREE.Mesh(
-      new THREE.TorusGeometry(1.05, 0.16, 7, 24),
+      new THREE.CircleGeometry(1.05, 40),
       new THREE.MeshBasicMaterial({
-        color: 0xc9ffff,
+        color: 0x64c1c4,
         transparent: true,
         opacity: 0.62,
-        blending: THREE.AdditiveBlending,
         depthWrite: false,
       }),
     );
-    pool.rotation.x = Math.PI / 2;
-    pool.position.set(x, 0.32, z + 0.4);
+    pool.rotation.x = -Math.PI / 2;
+    pool.scale.set(1.1, 0.68, 1);
+    pool.position.set(x, terrainY(x, z + 2) + 0.08, z + 2);
     pool.name = "world map waterfall pool";
     pool.userData.noShadow = true;
     root.add(pool);
@@ -1058,6 +1205,20 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
 
   const palms = makePalmBatches(root);
   const foliage = makeFoliageBatches(root);
+  const rocks = new THREE.InstancedMesh(
+    rockGeometry(), new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.78 }), 96,
+  );
+  rocks.name = "world map rounded coastal boulders";
+  root.add(rocks);
+  let rockCount = 0;
+  const groundLeaves = new THREE.InstancedMesh(
+    palmFrondGeometry(),
+    new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.72, side: THREE.DoubleSide }),
+    600,
+  );
+  groundLeaves.name = "world map tropical understory";
+  root.add(groundLeaves);
+  let groundLeafCount = 0;
   const reefClusterCapacity = islandSpecs.reduce(
     (total, island) => total + (island.scenic ? 5 : 18),
     0,
@@ -1065,39 +1226,46 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
   const reefs = makeReefBatches(root, reefClusterCapacity);
   const random = seeded(7727);
   for (const island of islandSpecs) {
-    const palmAttempts = island.scenic ? 3 : 26;
+    const palmAttempts = island.scenic ? 2 : 58;
     for (let index = 0; index < palmAttempts; index++) {
       const angle = random() * Math.PI * 2;
       const radius = 0.35 + random() * 0.42;
       const x = island.x + Math.cos(angle) * island.rx * radius;
       const z = island.z + Math.sin(angle) * island.rz * radius;
-      const tooClose = CAMPAIGN_LEVELS.some((level) =>
-        Math.hypot(x - level.mapPosition[0], z - level.mapPosition[2]) < 6.2,
+      const coversHub = CAMPAIGN_LEVELS.some((level) =>
+        Math.abs(x - level.mapPosition[0]) < 4.3 &&
+        z > level.mapPosition[2] - 1 && z < level.mapPosition[2] + 10,
       );
-      if (tooClose) continue;
-      addPalm(palms, x, 0.78, z, 0.66 + random() * 0.4, angle + Math.PI);
+      if (coversHub || !clearsRoute(x, z, 4.2) || palms.trunkIndex >= palms.trunks.count) continue;
+      addPalm(palms, x, terrainY(x, z), z, 0.78 + random() * 0.5, angle + Math.PI);
     }
-    const shrubAttempts = island.scenic ? 5 : 46;
+    const shrubAttempts = island.scenic ? 8 : 180;
     for (let index = 0; index < shrubAttempts; index++) {
       const angle = random() * Math.PI * 2;
       const radius = 0.28 + random() * 0.55;
       const x = island.x + Math.cos(angle) * island.rx * radius;
       const z = island.z + Math.sin(angle) * island.rz * radius;
-      const tooClose = CAMPAIGN_LEVELS.some((level) =>
-        Math.hypot(x - level.mapPosition[0], z - level.mapPosition[2]) < 4.1,
-      );
-      if (tooClose) continue;
-      const greens = [0x3a8f49, 0x53a94d, 0x6fbd54, 0x2f7650] as const;
+      if (!clearsRoute(x, z, 1.8)) continue;
+      const greens = [0x82c976, 0xa4d96d, 0x95c868, 0x75bb8d] as const;
       const flowers = [0xf35e8f, 0xff8a55, 0xaa6cf2, 0xffd65c] as const;
       addShrub(
         foliage,
         x,
-        0.74,
+        terrainY(x, z),
         z,
-        0.5 + random() * 0.72,
+        0.72 + random() * 1.3,
         greens[(index + island.seed) % greens.length],
         index % 4 === 0 ? flowers[(index + island.seed) % flowers.length] : null,
       );
+      if (index % 5 === 0 && groundLeafCount + 5 <= groundLeaves.count) {
+        for (let leaf = 0; leaf < 5; leaf++) {
+          groundLeaves.setMatrixAt(groundLeafCount++, new THREE.Matrix4().compose(
+            new THREE.Vector3(x + 0.8, terrainY(x + 0.8, z), z),
+            new THREE.Quaternion().setFromEuler(new THREE.Euler(-0.5, leaf * 2.4 + angle, 0)),
+            new THREE.Vector3(0.46, 0.6, 0.5),
+          ));
+        }
+      }
     }
     const reefClusters = island.scenic ? 5 : 18;
     for (let index = 0; index < reefClusters; index++) {
@@ -1116,7 +1284,19 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
       );
     }
   }
-  for (const mountain of mountainSpecs) {
+  for (const [mountainIndex, mountain] of mountainSpecs.entries()) {
+    for (let i = 0; i < 12; i++) {
+      const angle = i * 2.399 + mountain.s;
+      const x = mountain.x + Math.cos(angle) * mountain.r * (0.62 + random() * 0.35);
+      const z = mountain.z + Math.sin(angle) * mountain.r * (0.62 + random() * 0.35);
+      if (!clearsRoute(x, z, 2.7)) continue;
+      const size = 1 + random() * 1.5;
+      rocks.setMatrixAt(rockCount++, new THREE.Matrix4().compose(
+        new THREE.Vector3(x, terrainY(x, z) + size * 0.48, z),
+        new THREE.Quaternion().setFromEuler(new THREE.Euler(0.12, angle, 0.15)),
+        new THREE.Vector3(size * 1.2, size * (1 + random()), size),
+      ));
+    }
     for (let index = 0; index < 7; index++) {
       const angle = (index / 7) * Math.PI * 2 + mountain.s * 0.13;
       addShrub(
@@ -1129,18 +1309,19 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
         index % 3 === 0 ? 0xee6b91 : null,
       );
     }
-    for (let index = 0; index < 5; index++) {
-      const t = 0.25 + (index % 2) * 0.12;
-      const angle = (index / 5) * Math.PI * 2 + mountain.s * 0.21;
-      const ledgeRadius = mountain.r * Math.pow(1 - t, 0.72) * 0.82;
+    const rockSurface = mountainMeshes[mountainIndex].geometry.getAttribute("position");
+    for (let index = 0; index < 24; index++) {
+      const row = [5, 12, 21, 29][index % 4];
+      const segment = (index * 11 + mountain.s) % 64;
+      const vertex = row * 64 + segment;
       addShrub(
         foliage,
-        mountain.x + Math.cos(angle) * ledgeRadius,
-        mountain.h * t,
-        mountain.z + Math.sin(angle) * ledgeRadius,
-        0.62 + (index % 2) * 0.18,
-        index % 2 === 0 ? 0x3e914d : 0x5dab50,
-        index === 1 || index === 4 ? 0xd85c91 : null,
+        mountain.x + rockSurface.getX(vertex),
+        rockSurface.getY(vertex) - 0.12,
+        mountain.z + rockSurface.getZ(vertex),
+        (1 - row / 48) * (0.9 + (index % 3) * 0.4),
+        index % 2 === 0 ? 0x8cbd75 : 0xa3cd74,
+        index % 9 === 0 ? 0xec9b95 : null,
       );
     }
   }
@@ -1149,12 +1330,14 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
   finalizeInstances(palms.coconuts, palms.coconutIndex);
   finalizeInstances(foliage.shrubs, foliage.shrubIndex);
   finalizeInstances(foliage.flowers, foliage.flowerIndex);
+  finalizeInstances(rocks, rockCount);
+  finalizeInstances(groundLeaves, groundLeafCount);
   finalizeInstances(reefs.heads, reefs.headIndex);
   finalizeInstances(reefs.fingers, reefs.fingerIndex);
 
   const edgeVisuals: MapEdgeVisual[] = [];
   for (const definition of CAMPAIGN_MAP_EDGES) {
-    const curve = makeEdgeCurve(definition);
+    const curve = edgeCurves.get(definition)!;
     const length = curve.getLength();
     const bedMaterial = new THREE.MeshStandardMaterial({
       color: 0x4b5357,
@@ -1198,8 +1381,8 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
       opacity: 0.14,
       depthWrite: false,
     });
-    const fromRadius = campaignLevelByKey(definition.from)?.boss ? 2.9 : 2.35;
-    const toRadius = campaignLevelByKey(definition.to)?.boss ? 2.9 : 2.35;
+    const fromRadius = hubRadius(campaignLevelByKey(definition.from)?.boss);
+    const toRadius = hubRadius(campaignLevelByKey(definition.to)?.boss);
     const startU = Math.min(0.22, (fromRadius + 0.55) / length);
     const endU = Math.min(0.22, (toRadius + 0.55) / length);
     const usableLength = length * Math.max(0.25, 1 - startU - endU);
@@ -1306,7 +1489,7 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
     group.position.copy(position).add(new THREE.Vector3(0, -0.1, 0));
     group.name = `world map hub ${definition.progressKey}`;
     root.add(group);
-    const radius = definition.boss ? 2.9 : 2.35;
+    const radius = hubRadius(definition.boss);
     const foundationHeight = Math.max(0.3, position.y - 1.05);
     const foundation = new THREE.Mesh(
       new THREE.CylinderGeometry(
@@ -1370,7 +1553,7 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
     group.add(pad);
     groundMeshes.push(pad);
     const ring = new THREE.Mesh(
-      new THREE.TorusGeometry(radius * 0.87, 0.18, 10, 40),
+      new THREE.TorusGeometry(radius * 0.87, 0.18 * MAP_HUB_SCALE, 12, 64),
       new THREE.MeshBasicMaterial({
         color: 0x68747d,
         transparent: true,

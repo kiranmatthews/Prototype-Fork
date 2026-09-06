@@ -77,12 +77,12 @@ assert.match(
 );
 assert.match(
   worldMapUi,
-  /@media \(orientation: portrait\)[\s\S]*?top: calc\(11vh \+ 210px\); bottom: auto;/,
+  /@media \(orientation: portrait\)[\s\S]*?top: auto; bottom: calc\(var\(--tc-size, 168px\) \+ max\(10px, env\(safe-area-inset-bottom\)\) \+ 14px\);/,
   "portrait map utilities must sit above the bottom D-pad/face-control zones",
 );
 assert.match(
   worldMapUi,
-  /@media \(orientation: portrait\)[\s\S]*?\.world-map-unlock-notice \{ top: calc\(11vh \+ 285px\);/,
+  /@media \(orientation: portrait\)[\s\S]*?\.world-map-unlock-notice \{ top: calc\(11vh \+ 185px\);/,
   "portrait unlock notices must clear the level card and utility row",
 );
 assert.match(

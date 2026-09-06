@@ -551,6 +551,13 @@ try {
 
     const support = assertSupported(warpLevel, pose, definition.name);
     assert.equal(support.object.name, "world map level hub");
+    const terrainRay = new THREE.Raycaster(
+      pose.position.clone().add(new THREE.Vector3(0, 10, 0)),
+      new THREE.Vector3(0, -1, 0),
+    );
+    const terrain = terrainRay.intersectObjects(campaignIslands, false)[0];
+    assert.ok(terrain && terrain.point.y < pose.position.y - 0.18,
+      `${definition.name} marker is buried in the island sculpt`);
     assert.deepEqual(
       pose.position.toArray(),
       [...definition.mapPosition],
@@ -677,6 +684,17 @@ try {
     Math.abs(player.bodyGroup.rotation.x) > 0.03,
     "map boardslide deck and rider stayed horizontal on a steep rail",
   );
+  const removeScaleOverlay = player.setAuthoredPoseOverlay(() => {});
+  const originalScale = player.group.scale.clone();
+  player.setWorldMapPresentationScale(3);
+  player.stepWorldMapPresentation(placement.position, placement.heading, 1 / 60, "idle");
+  player.commitRenderStep(warpLevel);
+  player.applyRenderInterpolation(0.5);
+  player.setWorldMapPresentationScale(null);
+  player.stepWorldMapPresentation(placement.position, placement.heading, 1 / 60, "idle");
+  assert.deepEqual(player.group.scale.toArray(), originalScale.toArray(),
+    "an authored animation snapshot reapplied map scale after leaving the menu");
+  removeScaleOverlay();
 
   const controllerStore = new CampaignStore();
   controllerStore.startEphemeral();
@@ -685,6 +703,10 @@ try {
   const entered = [];
   const sections = [];
   const fakePlayer = {
+    group: new THREE.Group(),
+    setWorldMapPresentationScale(scale) {
+      this.group.scale.setScalar(scale ?? 1);
+    },
     renderPosition: new THREE.Vector3(),
     stepWorldMapPresentation(position, _tangent, _dt, mode) {
       this.renderPosition.copy(position);
@@ -698,6 +720,7 @@ try {
     onOpenSection: (section) => sections.push(section),
   });
   controller.activate(warpLevel, null);
+  assert.deepEqual(fakePlayer.group.scale.toArray(), [3, 3, 3]);
   assert.equal(controller.selectedKey, "jungle");
   assert.deepEqual(selections.at(-1).directions, {
     up: false,
@@ -757,6 +780,12 @@ try {
   controller.openSection("progress");
   assert.deepEqual(entered, ["dark"]);
   assert.deepEqual(sections, ["progress"]);
+  controller.deactivate();
+  assert.deepEqual(fakePlayer.group.scale.toArray(), [1, 1, 1], "map scale leaked into gameplay");
+  controller.activate(warpLevel, "jungle");
+  controller.activate(warpLevel, "jungle");
+  assert.deepEqual(fakePlayer.group.scale.toArray(), [3, 3, 3], "repeated map activation compounded scale");
+  controller.deactivate();
 
   console.log(
     "Validated cohesive island masses, Crash-style marker routes, visible MatrixRex shelves, supported hubs, reversible branching, controller travel, boardslide staging, persistent focus, exit routing, and snap-facing order.",

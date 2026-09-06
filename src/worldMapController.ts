@@ -12,6 +12,7 @@ import { sfx } from "./audio";
 import { puffs } from "./puffs";
 
 const UP = new THREE.Vector3(0, 1, 0);
+const MAP_PLAYER_SCALE = 3;
 
 export type WorldMapSection = "progress" | "options" | "save-load" | "quit";
 
@@ -72,6 +73,7 @@ export class WorldMapController {
   }
 
   activate(level: Level, preferredKey: string | null): void {
+    this.player.setWorldMapPresentationScale(MAP_PLAYER_SCALE);
     const fallback = this.campaign.recommendedMapLevelKey();
     const selected =
       preferredKey && level.campaignMapHas(preferredKey) && this.campaign.levelUnlocked(preferredKey)
@@ -95,6 +97,10 @@ export class WorldMapController {
   }
 
   deactivate(): void {
+    if (this.level) {
+      this.player.setWorldMapPresentationScale(null);
+      this.player.snapRenderInterpolation();
+    }
     this.level = null;
     this.travel = null;
     this.directionLatched = false;
@@ -273,6 +279,10 @@ export class WorldMapController {
       : this.player.renderPosition.clone();
     const targetPose = level.campaignMapPose(this.travel?.to ?? this.selectedKeyValue);
     const portrait = camera.aspect < 0.75;
+    const northView = !this.travel && targetPose
+      ? THREE.MathUtils.smoothstep(islandCentre.z - targetPose.position.z, 8, 16)
+      : 0;
+    const orbitSide = (targetPose?.position.x ?? islandCentre.x) < islandCentre.x ? -1 : 1;
     const travelSample = this.travel
       ? level.campaignMapTravel(
           this.travel.from,
@@ -290,7 +300,7 @@ export class WorldMapController {
     } else {
       this.desiredTarget.copy(islandCentre);
       if (targetPose)
-        this.desiredTarget.lerp(targetPose.position, portrait ? 0.9 : 0.52);
+        this.desiredTarget.lerp(targetPose.position, portrait ? 0.9 : 0.52 + northView * 0.3);
       this.desiredTarget.y = (targetPose?.position.y ?? 1.5) + 3.25;
     }
     const travelProgress = this.travel
@@ -299,9 +309,9 @@ export class WorldMapController {
     const bridgePullback = crossIsland ? Math.sin(travelProgress * Math.PI) : 0;
     this.desiredEye.copy(this.desiredTarget).add(
       new THREE.Vector3(
-        0,
-        (boardTravel ? 27 : portrait ? 28 : 31) + bridgePullback * 10,
-        (boardTravel ? 39 : portrait ? 39 : 43) + bridgePullback * 13,
+        northView * orbitSide * 36,
+        (boardTravel ? 27 : portrait ? 28 : 31) + bridgePullback * 10 + northView * 4,
+        (boardTravel ? 39 : portrait ? 39 : 43) + bridgePullback * 13 - northView * 12,
       ),
     );
     if (!this.cameraReady) {

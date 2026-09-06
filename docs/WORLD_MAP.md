@@ -30,6 +30,14 @@ occur between render frames. Movement is ignored until the current canned
 travel finishes. Cross/Enter enters a hub; the map exposes Progress, Options,
 Save/Load, and Quit directly.
 
+The map renders the player at three times their ordinary scale. Both animation
+overlay snapshots and render interpolation are cleared before entering or
+leaving this presentation so the scale cannot carry into gameplay. Hub discs
+are 70% of their previous diameter, with route endpoints trimmed to the same
+radius. At rest the character turns toward the map camera; the camera orbits
+the rear hubs to keep the mountains from obscuring the player. Portrait actions
+sit above the touch controls to leave the larger character unobstructed.
+
 Quit Level, Game Over No, and Results Continue pass the originating progress
 key back through the shared return helper. The controller seats the character
 on that exact hub and persists it as map focus. A first clear announces and
@@ -73,6 +81,13 @@ imposing clustered central peak, while the Crash 4-style navigation read comes
 from large luminous green discs and chunky, evenly spaced white route dashes.
 Floating number labels and ornamental boss crowns are deliberately omitted so
 the marker language stays clean.
+
+The island surface follows the trail elevations with gentle hills and broad
+sand gradients. Palms have curved trunks and folded, shaded fronds; foliage,
+flowers and rounded boulders are instanced and placed against the actual land
+surface. Rock ledge foliage uses the mountain's own vertices. Map lighting
+uses a warm front key, cool fill and reduced shadow contrast, and the shared
+ocean retains its full passes with quieter surface normals and reflections.
 
 For a diagnostic pass, add `?renderdiag`, enter the map, and inspect the hidden
 `#render-diagnostics` payload. Ocean quality must be `full`; reflection and

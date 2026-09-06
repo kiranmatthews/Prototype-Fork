@@ -783,6 +783,7 @@ export class Player {
   private sidePose = 0;
   private slopePose = 0; // body pitches to match the ground under the board
   private worldMapRailPitch = 0; // presentation-only pitch along authored map rails
+  private worldMapBaseScale: THREE.Vector3 | null = null;
   private starTimer = 0; // Crash star-jump beat after crouch/slide jumps
   private starPose = 0;
   private slopeRoll = 0; // ...and rolls to match the cross-slope (bank/wall)
@@ -2548,6 +2549,24 @@ export class Player {
    * trick inputs stay dormant while the existing character rig still authors
    * its run/idle/boardslide silhouettes.
    */
+  setWorldMapPresentationScale(scale: number | null): void {
+    // Both the animation overlay and RAF interpolation keep transform
+    // snapshots. Retire those before changing scale or they restore the old
+    // menu scale on the first gameplay tick after leaving the map.
+    this.restoreRenderPose();
+    this.clearCharacterAppearance();
+    this.playerAnimationBridge.prepareLegacyPose();
+    this.resetRenderInterpolation();
+    if (scale === null) {
+      if (this.worldMapBaseScale) this.group.scale.copy(this.worldMapBaseScale);
+      this.worldMapBaseScale = null;
+      this.worldMapRailPitch = 0;
+    } else {
+      this.worldMapBaseScale ??= this.group.scale.clone();
+      this.group.scale.copy(this.worldMapBaseScale).multiplyScalar(scale);
+    }
+  }
+
   stepWorldMapPresentation(
     position: THREE.Vector3,
     tangent: THREE.Vector3,
@@ -2595,6 +2614,12 @@ export class Player {
     }
     if (mode !== "idle" && measuredSpeed > 0.01)
       this.visualYaw = wrapAngle(Math.atan2(this.axisF.x, this.axisF.z) - Math.PI);
+    else if (mode === "idle") {
+      const cameraYaw = this.cam
+        ? Math.atan2(this.cam.position.x - position.x, this.cam.position.z - position.z)
+        : 0;
+      this.visualYaw += wrapAngle(cameraYaw - Math.PI + 0.2 - this.visualYaw) * (1 - Math.exp(-7 * dt));
+    }
     this.finishVisualStep({ moveX: 0 } as Input, dt);
     // The map route is a 3D rail rather than collision ground. Apply its pitch
     // after the ordinary pose pass so both deck and rider follow the tube.

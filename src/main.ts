@@ -213,6 +213,7 @@ const SUN_OFFSET = new THREE.Vector3(38, 74, 26);
 // Unity Beachfront directional light rotation (40.1, 98.9, 0), converted to
 // a Three light-position offset opposite its forward ray.
 const COAST_SUN_OFFSET = new THREE.Vector3(-68, 58, -11);
+const MAP_SUN_OFFSET = new THREE.Vector3(-32, 72, 42);
 function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
   const shadowHalf = document.body.classList.contains("game-world-map")
     ? MAP_SHADOW_HALF
@@ -223,7 +224,9 @@ function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
     sun.shadow.camera.top = shadowHalf;
     sun.shadow.camera.bottom = -shadowHalf;
   }
-  const offset = activeSky === "coast" ? COAST_SUN_OFFSET : SUN_OFFSET;
+  const offset = document.body.classList.contains("game-world-map")
+    ? MAP_SUN_OFFSET
+    : activeSky === "coast" ? COAST_SUN_OFFSET : SUN_OFFSET;
   sun.target.position.set(focusX, focusY, focusZ);
   sun.target.updateMatrixWorld();
   sun.position.set(
@@ -972,6 +975,16 @@ function applyTheme(): void {
   fill.color.set(t.hemiSky);
   tint(fill.color, P.fillTint, P.fillK);
   fill.intensity = hemi.intensity * P.fillMul;
+  if (level.isCampaignMap) {
+    hemi.color.setHex(0xd9f0ff);
+    hemi.groundColor.setHex(0xaebc87);
+    hemi.intensity = 1.8;
+    sun.color.setHex(0xffecd0);
+    sun.intensity = 1.85;
+    sun.shadow.intensity = 0.36;
+    fill.color.setHex(0xc0eaff);
+    fill.intensity = 0.8;
+  }
 
   // THE DOME. A loaded painting wins; otherwise the procedural gradient, painted
   // in the preset's colours so day and night still read right without the art.

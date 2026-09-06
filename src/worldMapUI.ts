@@ -353,10 +353,10 @@ export class WorldMapUI {
         .world-map-level-title-row { display: grid; gap: 7px; }
         .world-map-level-name { font-size: 32px; }
         .world-map-collectibles { width: 100%; grid-template-columns: repeat(4, 1fr); }
-        .world-map-actions { left: 50%; right: auto; top: calc(11vh + 210px); bottom: auto; transform: translateX(-50%); display: grid; grid-template-columns: repeat(4, 48px); }
+        .world-map-actions { left: 50%; right: auto; top: auto; bottom: calc(var(--tc-size, 168px) + max(10px, env(safe-area-inset-bottom)) + 14px); transform: translateX(-50%); display: grid; grid-template-columns: repeat(4, 48px); }
         .world-map-action { min-width: 48px; }
         .world-map-action strong { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-        .world-map-unlock-notice { top: calc(11vh + 285px); width: max-content; max-width: 82vw; }
+        .world-map-unlock-notice { top: calc(11vh + 185px); width: max-content; max-width: 82vw; }
       }
     `;
     document.head.appendChild(style);
