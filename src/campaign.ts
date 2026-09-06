@@ -102,7 +102,7 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     travel: "trail",
     fromDirection: "up",
     toDirection: "down",
-    waypoints: [[-24, 2.25, 12], [-18, 2.5, 8]],
+    waypoints: [[-24, 2.25, 20], [-17, 2.5, 15]],
   },
   {
     from: "sky-bridge",

@@ -359,6 +359,7 @@ try {
   const { BUILTIN_LEVELS, Level } = await server.ssrLoadModule("/src/level.ts");
   const { Player } = await server.ssrLoadModule("/src/player.ts");
   const {
+    CAMPAIGN_ISLANDS,
     CAMPAIGN_LEVELS,
     CAMPAIGN_MAP_EDGES,
     CampaignStore,
@@ -413,7 +414,7 @@ try {
   warpLevel.root.traverse(({ name }) => mapNames.push(name));
   assert.equal(
     mapNames.filter((name) => name === "world map shallow caustic shelf").length,
-    13,
+    CAMPAIGN_ISLANDS.length + 4,
     "the archipelago does not expose broad opaque seabeds to the ocean prepass",
   );
   assert.equal(
@@ -426,26 +427,43 @@ try {
     9,
     "a graph edge is missing its supported trail/rail bed",
   );
-  const islandLobes = [];
+  const campaignIslands = [];
+  const markerRims = [];
+  const routeDashes = [];
   let reefHeads = null;
   let coralFingers = null;
   warpLevel.root.traverse((object) => {
-    if (object.name === "procedural tropical island") islandLobes.push(object);
+    if (object.name.startsWith("world map campaign island ")) campaignIslands.push(object);
+    else if (object.name === "world map luminous marker rim") markerRims.push(object);
+    else if (object.name === "world map glowing route") routeDashes.push(object);
     else if (object.name === "world map shallow reef heads") reefHeads = object;
     else if (object.name === "world map shallow coral fingers") coralFingers = object;
   });
-  for (const definition of CAMPAIGN_LEVELS) {
-    assert.ok(
-      islandLobes.some((lobe) =>
-        Math.hypot(
-          lobe.position.x - definition.mapPosition[0],
-          lobe.position.z - definition.mapPosition[2],
-        ) < 1e-6,
-      ),
-      `${definition.progressKey} hub moved without its generated island lobe`,
-    );
+  assert.equal(campaignIslands.length, CAMPAIGN_ISLANDS.length);
+  for (const island of CAMPAIGN_ISLANDS) {
+    const mesh = campaignIslands.find(({ name }) => name.endsWith(island.id));
+    assert.ok(mesh, `${island.id} has no cohesive campaign island mass`);
+    const bounds = new THREE.Box3().setFromObject(mesh);
+    for (const key of island.levelKeys) {
+      const definition = CAMPAIGN_LEVELS.find((level) => level.progressKey === key);
+      assert.ok(definition);
+      assert.ok(
+        bounds.min.x < definition.mapPosition[0] &&
+          bounds.max.x > definition.mapPosition[0] &&
+          bounds.min.z < definition.mapPosition[2] &&
+          bounds.max.z > definition.mapPosition[2],
+        `${key} lies outside its cohesive ${island.id} silhouette`,
+      );
+    }
   }
-  assert.equal(reefHeads.count, CAMPAIGN_LEVELS.length * 9 + 4 * 5);
+  assert.equal(markerRims.length, CAMPAIGN_LEVELS.length);
+  assert.equal(routeDashes.length, CAMPAIGN_MAP_EDGES.length);
+  for (const route of routeDashes) {
+    route.geometry.computeBoundingBox();
+    const size = route.geometry.boundingBox.getSize(new THREE.Vector3());
+    assert.ok(size.x > 0.6 && size.z > 1.1, "route dashes lost their chunky Crash 4 read");
+  }
+  assert.equal(reefHeads.count, CAMPAIGN_ISLANDS.length * 18 + 4 * 5);
   assert.ok(coralFingers.count >= reefHeads.count * 2);
   assert.ok(coralFingers.instanceMatrix.count >= reefHeads.count * 4);
 
@@ -741,7 +759,7 @@ try {
   assert.deepEqual(sections, ["progress"]);
 
   console.log(
-    "Validated visible MatrixRex ribbon/shallow shelves, unobstructed supported hubs, locked branching, controller travel, canned boardslide staging, persistent focus, fallback identity, exit routing, and snap-facing order.",
+    "Validated cohesive island masses, Crash-style marker routes, visible MatrixRex shelves, supported hubs, reversible branching, controller travel, boardslide staging, persistent focus, exit routing, and snap-facing order.",
   );
   swirls.clear();
 } finally {

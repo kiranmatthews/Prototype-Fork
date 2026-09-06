@@ -11,9 +11,10 @@ replay, and tooling compatibility. Its runtime is the fixed-rail island map in
 - `CAMPAIGN_MAP_EDGES` owns graph connectivity, a unique directional input at
   each endpoint, map-only curve guides, and the `trail` or `boardslide` travel
   presentation. Every edge is regression-tested in both directions.
-- Playable island lobes are generated from `CAMPAIGN_LEVELS.mapPosition`; only
-  decorative cays and mountain ranges are scenery-authored. Moving or adding a
-  hub therefore moves or creates its supporting island without geometry edits.
+- Each `CAMPAIGN_ISLANDS` entry generates one cohesive, compact landmass. Its
+  organic beach outline expands from the island centre to contain every linked
+  `CAMPAIGN_LEVELS.mapPosition`; decorative islets and mountain ranges remain
+  scenery-authored.
 - Normal clears unlock time trial and any newly satisfied outgoing hubs. The
   first island fork is a true join: both branches are required for its finale.
 - `CampaignSaveV1.mapFocus` is optional for backward compatibility. New and
@@ -47,8 +48,9 @@ Important map-specific requirements:
 - The straight shore is authored from positive X to negative X with seaward
   `-Z`. Reversing that order back-face culls the detailed `FrontSide` ribbon
   and leaves only the flat, double-sided horizon visible.
-- Caustics require real opaque scene depth. Every dry island lobe therefore has
-  an outward submerged sand/reef shelf roughly 0.1–0.7 m below sea level.
+- Caustics require real opaque scene depth. Every campaign island and offshore
+  islet therefore has an outward submerged sand/reef shelf roughly 0.1–0.7 m
+  below sea level.
   `terrainHeight` is sampler compatibility only; it does not create a seabed.
 - The elevated map camera needs a longer caustic distance range and a lower
   reflection Fresnel exponent than the close gameplay coast. These are
@@ -64,6 +66,13 @@ normal/specular motion and bright moving caustics over the shallow shelves must
 be obvious without opening debug tools. The selected character should remain
 readable and every hub must clear mountain footprints and have visible terrain
 support.
+
+The temporary art direction intentionally separates two reference jobs: the
+Crash 1-style read comes from a single broad beach-ringed island mass with an
+imposing clustered central peak, while the Crash 4-style navigation read comes
+from large luminous green discs and chunky, evenly spaced white route dashes.
+Floating number labels and ornamental boss crowns are deliberately omitted so
+the marker language stays clean.
 
 For a diagnostic pass, add `?renderdiag`, enter the map, and inspect the hidden
 `#render-diagnostics` payload. Ocean quality must be `full`; reflection and
