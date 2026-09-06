@@ -7,7 +7,12 @@ export function createSecondaryTextPanel(): void {
   root.innerHTML = `<summary>TEXT TUNING</summary><div class="secondary-text-tuner-body"><header><b>Secondary text</b><button type="button" aria-label="Close text tuning">×</button></header><p>Live map preview · saved in this browser</p><div class="secondary-text-controls"></div><p>Weight adjusts the glyph face thickness; the supplied font is a fixed Bold face.</p><footer><button type="button" data-action="reset">Reset</button><button type="button" data-action="copy">Copy settings</button></footer><textarea aria-label="Text settings JSON" readonly hidden></textarea><p role="status"></p></div>`;
   const body = root.querySelector<HTMLElement>(".secondary-text-tuner-body")!;
   for (const event of ["keydown", "keyup", "pointerdown", "pointerup", "touchstart", "touchend", "wheel"])
-    root.addEventListener(event, event => event.stopPropagation());
+    root.addEventListener(event, event => {
+      // M remains the shared debug-chrome toggle outside text/number editing.
+      if (event instanceof KeyboardEvent && event.code === "KeyM" &&
+          !(event.target instanceof HTMLInputElement) && !(event.target instanceof HTMLTextAreaElement)) return;
+      event.stopPropagation();
+    });
   root.querySelector("header button")!.addEventListener("click", () => { root.open = false; });
   const controls = root.querySelector(".secondary-text-controls")!;
   const sync: (() => void)[] = [];
@@ -50,7 +55,7 @@ export function createSecondaryTextPanel(): void {
   const style = document.createElement("style");
   style.textContent = `
     .secondary-text-tuner { display:none; position:fixed; z-index:130; left:16px; top:16px; color:#e9eff3; font:13px/1.4 system-ui,sans-serif; }
-    body.world-map-active:not(.game-shell-modal):not(.game-shell-transitioning) .secondary-text-tuner { display:block; }
+    body.world-map-active:not(.game-shell-modal):not(.game-shell-transitioning):not(.game-debug-hidden) .secondary-text-tuner { display:block; }
     .secondary-text-tuner summary { cursor:pointer; width:max-content; padding:7px 11px; border:1px solid #a6b6c4; border-radius:5px; background:#15212bea; font-size:11px; font-weight:800; }
     .secondary-text-tuner-body { width:310px; max-width:calc(100vw - 32px); max-height:calc(100dvh - 150px); overflow:auto; box-sizing:border-box; padding:12px; background:#15212bf5; border:1px solid #8194a2; border-radius:0 8px 8px; }
     .secondary-text-tuner header,.secondary-text-tuner footer { display:flex; align-items:center; justify-content:space-between; gap:8px; }

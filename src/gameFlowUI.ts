@@ -119,6 +119,7 @@ function formatDate(timestamp: number): string {
 // Developer chrome deliberately sits outside the semantic GameFlow tree. When
 // M exposes it, these are the only body surfaces exempted from modal inerting.
 const DEBUG_CHROME_SELECTOR = [
+  ".secondary-text-tuner",
   ".side-wrap",
   ".hud-build",
   ".hud-capbadge",
@@ -173,6 +174,7 @@ export class GameFlowUI {
   private pointerSelectionArmed = false;
   private pointerClientX: number | null = null;
   private pointerClientY: number | null = null;
+  private cursorFadeUntil = 0;
   private maskReady = document.body.classList.contains("game-flow-mask-ready");
 
   constructor(
@@ -231,11 +233,11 @@ export class GameFlowUI {
         this.transitionActive ||
         this.isDeveloperChromeTarget(event.target)
       ) {
-        this.cursor.classList.remove("visible");
+        this.setCursorVisible(false);
         return;
       }
       this.cursor.style.transform = `translate3d(${event.clientX - 6}px, ${event.clientY - 4}px, 0)`;
-      this.cursor.classList.add("visible");
+      this.setCursorVisible(true);
       if (moved) {
         this.pointerSelectionArmed = true;
         const target = event.target instanceof Element
@@ -245,7 +247,9 @@ export class GameFlowUI {
       }
     });
     window.addEventListener("pointerout", (event) => {
-      if (!event.relatedTarget) this.cursor.classList.remove("visible");
+      if (!event.relatedTarget) {
+        this.setCursorVisible(false);
+      }
     });
     window.addEventListener("keydown", (event) => this.onKey(event));
     window.addEventListener("resize", () => this.invalidatePreCrt());
@@ -306,6 +310,13 @@ export class GameFlowUI {
 
   get vortexGameOverMaskActive(): boolean {
     return this.vortexContext === "gameover";
+  }
+
+  private setCursorVisible(visible: boolean): void {
+    const changed = this.cursor.classList.contains("visible") !== visible;
+    if (changed) this.cursorFadeUntil = performance.now() + 160;
+    this.cursor.classList.toggle("visible", visible);
+    if (this.preCrtComposited && (changed || visible)) this.requestGameplayFrame();
   }
 
   get developerChromeVisible(): boolean {
@@ -547,6 +558,7 @@ export class GameFlowUI {
   }
 
   update(now = performance.now()): void {
+    if (this.preCrtComposited && now < this.cursorFadeUntil) this.requestGameplayFrame();
     void now;
     // Input already polls gamepads for gameplay. Do not repeat that scan and
     // allocate an Array/state object on every ordinary gameplay frame.

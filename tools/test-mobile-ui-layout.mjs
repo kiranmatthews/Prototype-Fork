@@ -64,9 +64,10 @@ for (const host of [
 assert.match(main, /const TOUCH_PRESENTATION = touchControlsRequested\(\)/);
 assert.match(
   main,
-  /const wantsPreCrtHud =\s*showHud && !TOUCH_PRESENTATION/,
-  "touch must keep the responsive DOM HUD outside the pre-CRT mirror",
+  /const wantsPreCrtHud = showHud && wantsPreCrtUi/,
+  "touch HUD must share pre-CRT ownership with the other game UI",
 );
+assert.doesNotMatch(main, /showHud && !TOUCH_PRESENTATION/);
 assert.match(
   main,
   /renderQualitySettings\.enabled &&\s*!TOUCH_PRESENTATION/,

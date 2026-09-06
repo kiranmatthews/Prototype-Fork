@@ -57,3 +57,35 @@ export function silverSecondaryLabel(label: string): HTMLElement {
   host.appendChild(svg);
   return host;
 }
+
+/** Synchronous Canvas twin for the pre-CRT pass; never rasterizes DOM/SVG. */
+export function paintSilverSecondaryText(ctx: CanvasRenderingContext2D, label: string, x: number, y: number, fontSize: number): void {
+  const s = secondaryTextSettings.value;
+  ctx.save();
+  ctx.font = `700 ${fontSize}px "Staging Secondary", Impact, sans-serif`;
+  ctx.textAlign = "left"; ctx.textBaseline = "alphabetic"; ctx.lineJoin = "round";
+  const metrics = ctx.measureText(label);
+  const baseline = y + (metrics.fontBoundingBoxAscent || fontSize * .85);
+  const top = baseline - metrics.actualBoundingBoxAscent;
+  const left = x - metrics.actualBoundingBoxLeft;
+  const width = metrics.actualBoundingBoxLeft + metrics.actualBoundingBoxRight;
+  const height = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+  const angle = s.gradientAngle * Math.PI / 180;
+  const gx = Math.cos(angle) * .5, gy = Math.sin(angle) * .5, mid = s.gradientMid / 100;
+  const gradient = ctx.createLinearGradient(left + width * (.5-gx), top + height * (.5-gy), left + width * (.5+gx), top + height * (.5+gy));
+  for (const [at, color] of [[0,s.top],[mid*.5,s.upper],[mid-.06,s.middle],[mid,s.dark],[mid+(1-mid)*.5,s.lower],[1,s.bottom]] as const)
+    gradient.addColorStop(at, color);
+  const steps = Math.max(1, Math.ceil(Math.hypot(s.shadowX, s.shadowY) * 2));
+  ctx.fillStyle = ctx.strokeStyle = "#050608";
+  const outline = s.stroke * 2 + Math.max(0, s.weight) * 2;
+  for (let step = steps; step >= 0; step--) {
+    const sx = x + s.shadowX * step / steps, sy = baseline + s.shadowY * step / steps;
+    if (outline > 0) { ctx.lineWidth = outline; ctx.strokeText(label, sx, sy); }
+    ctx.fillText(label, sx, sy);
+  }
+  ctx.fillStyle = gradient;
+  if (s.weight > 0) { ctx.strokeStyle = gradient; ctx.lineWidth = s.weight * 2; ctx.strokeText(label, x, baseline); }
+  ctx.fillText(label, x, baseline);
+  if (s.weight < 0) { ctx.strokeStyle = "#050608"; ctx.lineWidth = -s.weight * 2; ctx.strokeText(label, x, baseline); }
+  ctx.restore();
+}

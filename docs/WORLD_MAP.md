@@ -146,3 +146,9 @@ variable-font axis. Size is a responsive 1080p reference. Settings persist at
 exports JSON (with a selectable fallback if clipboard access is unavailable).
 The panel stops control keystrokes from navigating the map and remains local
 to this browser; it does not silently change shipped defaults.
+
+Text Tuning is developer chrome: it is map-only and follows **M**, including
+when its summary/button has focus. Editing an input retains the shared M-key
+typing guard. It is excluded from CRT composition, like the other debug tools.
+The map's actual level card, labels, utilities, enter arrow and unlock notice
+are composited before CRT; their semantic DOM remains in place for hit testing.

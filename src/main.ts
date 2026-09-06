@@ -42,6 +42,7 @@ import {
   type WorldMapSection,
 } from "./worldMapController";
 import { WorldMapUI } from "./worldMapUI";
+import { GameInterfaceSurface } from "./gameInterfaceSurface";
 import { ResultsPresentation } from "./resultsPresentation";
 import { GameFlowVortexHost } from "./gameFlowVortex";
 import {
@@ -1154,6 +1155,7 @@ function renderPrimaryScene(
   prepareOcean = true,
   preCrtOverlay?: CoastPostPreCrtOverlay,
 ): void {
+  if (!preCrtOverlay) gameInterface.setComposited(false);
   configureCoastPost(
     levelPostEnabled ||
       (visualTreatmentActivity(visualTreatmentSettings.value).any &&
@@ -1173,17 +1175,16 @@ function renderPrimaryScene(
  * Developer/tool DOM stays outside this function and therefore remains sharp.
  */
 function renderGameplayScene(dt = 0, prepareOcean = true, showHud = true): void {
-  // The Canvas HUD mirror follows the desktop 720p typography contract. Phone
-  // landscape already has a tuned DOM HUD; sending that through Render/CRT
-  // reintroduced desktop sizing and unstable corner distortion.
-  const wantsPreCrtHud =
-    showHud && !TOUCH_PRESENTATION && !split2p && (coastPost?.active ?? false);
+  // Touch remains native-resolution, but its UI belongs before CRT too.
+  const wantsPreCrtUi = !split2p && (coastPost?.active ?? false);
+  const wantsPreCrtHud = showHud && wantsPreCrtUi;
   let overlayRan = false;
   ui.setGameHudComposited(wantsPreCrtHud);
+  gameInterface.setComposited(wantsPreCrtUi);
   renderPrimaryScene(
     dt,
     prepareOcean,
-    wantsPreCrtHud
+    wantsPreCrtUi
       ? (context) => {
           const size = {
             width: context.inputWidth,
@@ -1191,9 +1192,12 @@ function renderGameplayScene(dt = 0, prepareOcean = true, showHud = true): void 
           };
           // Preserve the old visual stack: collected fruit behind the 3D
           // counter models, with all 2D HUD furniture on top of both.
-          player.drawFlyingFruit(context.renderer, undefined, size);
-          ui.drawIcons(context.renderer, dt, size);
-          ui.drawGameHud(context.renderer, size, context.target);
+          if (showHud) {
+            player.drawFlyingFruit(context.renderer, undefined, size);
+            ui.drawIcons(context.renderer, dt, size);
+            ui.drawGameHud(context.renderer, size, context.target);
+          }
+          gameInterface.draw(context.renderer, size, context.target);
           overlayRan = true;
         }
       : undefined,
@@ -1203,6 +1207,7 @@ function renderGameplayScene(dt = 0, prepareOcean = true, showHud = true): void 
   // Direct/lite/split fallback: the DOM copy remains visible, while the two
   // pre-existing WebGL overlay helpers still draw over the world.
   ui.setGameHudComposited(false);
+  gameInterface.setComposited(false);
   if (!showHud) return;
   player.drawFlyingFruit(renderer);
   ui.drawIcons(renderer, dt);
@@ -1251,6 +1256,8 @@ function drawGameFlowPreCrt(context: Parameters<CoastPostPreCrtOverlay>[0]): voi
     { width: context.inputWidth, height: context.inputHeight },
     context.target,
   );
+  gameInterface.setComposited(true);
+  gameInterface.draw(context.renderer, { width: context.inputWidth, height: context.inputHeight }, context.target);
 }
 
 /**
@@ -1311,6 +1318,7 @@ function renderVortexWithGameFlow(
   }
 
   gameFlow.setPreCrtComposited(false);
+  gameInterface.setComposited(false);
   if (!gameFlowVortex.resident) releaseGameplayPostForGameFlow();
   gameFlowVortex.render(renderer, dt, nowMs, context);
 }
@@ -1416,6 +1424,7 @@ const input = new Input();
 input.rival = input2;
 input2.rival = input;
 const ui = new UI();
+const gameInterface = new GameInterfaceSurface();
 const campaign = new CampaignStore();
 let worldMapController: WorldMapController | null = null;
 let worldMapUI: WorldMapUI | null = null;
@@ -4416,6 +4425,7 @@ function writeRenderDiagnostics(): void {
     },
     gameFlowVortex: gameFlowVortex.diagnostics,
     gameFlowSurface: gameFlow.gameFlowSurfaceDiagnostics,
+    interfaceSurface: gameInterface.diagnostics,
     frameLimiter: renderFrameLimiter.stats,
     renderedFrames: frameStats.frame,
   });
@@ -4728,6 +4738,7 @@ function frame(nowMs: number): void {
 
   if (current.id !== "warproom" && split2p && p2) {
     ui.setGameHudComposited(false);
+    gameInterface.setComposited(false);
     const dw = renderer.domElement.width;
     const dh = renderer.domElement.height;
     renderer.setScissorTest(true);
@@ -4790,6 +4801,7 @@ requestAnimationFrame(frame);
   fieldSwirls,
   getGameFlowVortexDiagnostics: () => gameFlowVortex.diagnostics,
   getGameFlowSurfaceDiagnostics: () => gameFlow.gameFlowSurfaceDiagnostics,
+  getInterfaceSurfaceDiagnostics: () => gameInterface.diagnostics,
   player,
   level,
   getLevel: () => level,

@@ -297,6 +297,16 @@ assert.ok(
   "direct/editor/studio paths must restore the sharp DOM fallback",
 );
 
+const interfaceSurface = await text("src/gameInterfaceSurface.ts");
+for (const token of [".world-map-ui", ".tc-zone", ".tc-pause", ".game-cartoon-cursor", ".game-transition-curtain", "paintSilverSecondaryText", "filter:opacity(0)"])
+  assert.ok(interfaceSurface.includes(token), `missing game-owned pre-CRT surface ${token}`);
+assert.doesNotMatch(interfaceSurface, /html2canvas|foreignObject|XMLSerializer|secondary-text-tuner|side-wrap/);
+assert.match(main, /gameInterface\.draw\(context\.renderer, size, context\.target\)/);
+assert.match(main, /function drawGameFlowPreCrt[\s\S]{0,500}gameInterface\.draw/);
+const textPanel = await text("src/secondaryTextPanel.ts");
+assert.match(textPanel, /world-map-active:not\(\.game-shell-modal\):not\(\.game-shell-transitioning\):not\(\.game-debug-hidden\)/);
+assert.match(textPanel, /event\.code === "KeyM"/);
+
 console.log(
   "Validated gameplay HUD ownership, split box hierarchy, radial SPECIAL, bonus title, earned-only relics, and pre-CRT ordering.",
 );
