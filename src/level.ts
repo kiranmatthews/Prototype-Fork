@@ -5,6 +5,7 @@
 // finish gate at the far end.
 
 import * as THREE from "three";
+import { createCollectibleShell } from "./collectibleSpecular";
 import { trackPresentationImage } from "./presentationLoading";
 import { Rail } from "./rails";
 import { DiscardedBoards } from "./skateboard/discarded";
@@ -15782,76 +15783,6 @@ export class Level {
     return this.flareTex;
   }
 
-  // CANNED REFLECTION (matcap): a painted "photo of a lit sphere" that the
-  // material samples by the surface normal — so the bright highlight is baked
-  // INTO the surface and sweeps across the facets as the crystal/gem spins,
-  // with zero dependence on the scene's real lights (the PS1 studio-reflection
-  // look). kind picks the purple crystal vs the silver gem palette.
-  private static matcapTex: {
-    crystal?: THREE.CanvasTexture;
-    gem?: THREE.CanvasTexture;
-  } = {};
-  private static matcapTexture(
-    kind: "crystal" | "gem",
-  ): THREE.CanvasTexture {
-    const cached = Level.matcapTex[kind];
-    if (cached) return cached;
-    const S = 128;
-    const canvas = document.createElement("canvas");
-    canvas.width = S;
-    canvas.height = S;
-    const ctx = canvas.getContext("2d")!;
-    const c = S / 2;
-    const blob = (x: number, y: number, r: number, col: string) => {
-      const gr = ctx.createRadialGradient(x, y, 0, x, y, r);
-      gr.addColorStop(0, col);
-      gr.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = gr;
-      ctx.beginPath();
-      ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fill();
-    };
-    if (kind === "crystal") {
-      // BRIGHT white-lavender crystal: the front face reads near-white and only
-      // the rim/side facets go saturated purple → magenta (matches the ref,
-      // which glows white-hot with purple edges, not a dark purple stone).
-      const base = ctx.createRadialGradient(c - 12, c - 14, 4, c, c, c);
-      base.addColorStop(0, "#ffffff");
-      base.addColorStop(0.3, "#f0e2ff");
-      base.addColorStop(0.55, "#d3a6f2");
-      base.addColorStop(0.78, "#a848e0");
-      base.addColorStop(0.92, "#6a1cb0");
-      base.addColorStop(1, "#3c0c72");
-      ctx.fillStyle = base;
-      ctx.fillRect(0, 0, S, S);
-      // hot core + a lavender bloom so the facing face blazes
-      blob(c - 12, c - 16, 30, "rgba(255,255,255,0.9)");
-      blob(c - 16, c - 20, 12, "rgba(255,255,255,1)");
-      blob(c + 34, c + 30, 30, "rgba(200,60,215,0.55)"); // magenta rim bounce
-    } else {
-      // silver-white sphere: bright silver centre, cool slate at the rim
-      const base = ctx.createRadialGradient(c - 10, c - 12, 4, c, c, c);
-      base.addColorStop(0, "#ffffff");
-      base.addColorStop(0.42, "#c6d4e2");
-      base.addColorStop(0.72, "#7d8d9d");
-      base.addColorStop(0.9, "#4c5c6c");
-      base.addColorStop(1, "#2c3742");
-      ctx.fillStyle = base;
-      ctx.fillRect(0, 0, S, S);
-      // diamonds throw multiple hard glints: bright streaks + spots that sweep
-      ctx.save();
-      ctx.translate(c - 16, c - 26);
-      ctx.rotate(-0.5);
-      ctx.scale(0.42, 1.4);
-      blob(0, 0, 40, "rgba(255,255,255,1)");
-      ctx.restore();
-      blob(c + 28, c + 8, 18, "rgba(255,255,255,0.9)");
-      blob(c - 32, c + 32, 13, "rgba(225,238,250,0.8)");
-    }
-    const tex = Level.finishTex(new THREE.CanvasTexture(canvas), false);
-    Level.matcapTex[kind] = tex;
-    return tex;
-  }
 
   // Soft round halo — the pink/cyan glow that hangs around the pickups. White,
   // tinted by the sprite material.
@@ -15970,60 +15901,14 @@ export class Level {
     }
   }
 
-  // ---- collectible geometry (reference-accurate) ----------------------------
+  // ---- shared world/HUD collectible geometry -------------------------------
 
-  // Tall white-lavender crystal shard: an ASYMMETRIC bipyramid — a short blunt
-  // top over a long tapering bottom point (matches the ref proportions) — with
-  // a canned matcap sweep and a pink glow that blazes at the bottom tip.
+  // One low-poly asymmetric shell with per-vertex specular. Halo sprites stay
+  // world-only; HUD/map consumers remove them and use the same shell material.
   static crystalMesh(scale = 1): THREE.Group {
     const g = new THREE.Group();
-    const R = 0.52 * scale;
-    const HTOP = 0.72 * scale; // short upper pyramid
-    const HBOT = 1.5 * scale; // long lower point
-    // CANNED reflection: matcap, not scene lighting. Each flat facet samples
-    // the painted highlight by its normal, so the bright face sweeps as the
-    // crystal spins — independent of the world's real lights.
-    const shellMat = new THREE.MeshMatcapMaterial({
-      matcap: Level.matcapTexture("crystal"),
-      flatShading: true,
-      transparent: true,
-      opacity: 0.96,
-    });
-    const SIDES = 5; // few big facets = a sharp shard
-    const top = new THREE.Mesh(
-      new THREE.ConeGeometry(R, HTOP, SIDES),
-      shellMat,
-    );
-    top.position.y = HTOP / 2; // belt (widest ring) sits at y=0
-    g.add(top);
-    const bot = new THREE.Mesh(
-      new THREE.ConeGeometry(R, HBOT, SIDES),
-      shellMat,
-    );
-    bot.rotation.z = Math.PI;
-    bot.position.y = -HBOT / 2;
-    g.add(bot);
-    // hot inner streak: a slim bright core following the same asymmetric shape
-    const coreMat = new THREE.MeshBasicMaterial({
-      color: 0xffe6ff,
-      transparent: true,
-      opacity: 0.55,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    });
-    const ctop = new THREE.Mesh(
-      new THREE.ConeGeometry(R * 0.4, HTOP * 0.95, SIDES),
-      coreMat,
-    );
-    ctop.position.y = HTOP / 2;
-    g.add(ctop);
-    const cbot = new THREE.Mesh(
-      new THREE.ConeGeometry(R * 0.4, HBOT * 0.95, SIDES),
-      coreMat,
-    );
-    cbot.rotation.z = Math.PI;
-    cbot.position.y = -HBOT / 2;
-    g.add(cbot);
+    const HBOT = 1.5 * scale;
+    g.add(createCollectibleShell("crystal", scale));
     // pink glow halo (billboard), taller and offset DOWN so it blazes at the
     // long bottom tip like the reference
     const halo = new THREE.Sprite(
@@ -16056,50 +15941,10 @@ export class Level {
     return g;
   }
 
-  // Clear brilliant-cut diamond: octagonal table + crown facets over a pointed
-  // pavilion, silvery-white with a cool glow (Crash clear-gem look).
+  // Clear or coloured octagonal gem; untinted highlights sweep its cut facets.
   static gemMesh(scale = 1, tint?: number): THREE.Group {
     const g = new THREE.Group();
-    const girdle = 0.72 * scale;
-    const table = 0.4 * scale;
-    const crownH = 0.42 * scale;
-    const pavH = 0.8 * scale;
-    // canned reflection (matcap) so the silver glints sweep the crown facets
-    // as the gem spins, no scene lighting
-    const mat = new THREE.MeshMatcapMaterial({
-      matcap: Level.matcapTexture("gem"),
-      flatShading: true,
-      transparent: true,
-      opacity: 0.9,
-    });
-    // tint runs the clear gem through coloured glass — the combo prize is the
-    // same cut in green
-    if (tint !== undefined) mat.color.setHex(tint);
-    // crown: 8-sided frustum, wide girdle at the bottom, narrow table on top
-    const crown = new THREE.Mesh(
-      new THREE.CylinderGeometry(table, girdle, crownH, 8),
-      mat,
-    );
-    crown.position.y = crownH / 2;
-    g.add(crown);
-    // pavilion: 8-sided cone to a point below the girdle
-    const pav = new THREE.Mesh(new THREE.ConeGeometry(girdle, pavH, 8), mat);
-    pav.rotation.z = Math.PI; // apex down
-    pav.position.y = -pavH / 2;
-    g.add(pav);
-    // faint white sparkle core
-    const core = new THREE.Mesh(
-      new THREE.OctahedronGeometry(0.3 * scale),
-      new THREE.MeshBasicMaterial({
-        color: 0xffffff,
-        transparent: true,
-        opacity: 0.4,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-      }),
-    );
-    core.scale.y = 1.4;
-    g.add(core);
+    g.add(createCollectibleShell("gem", scale, tint));
     const halo = new THREE.Sprite(
       new THREE.SpriteMaterial({
         map: Level.glowTexture(),
@@ -16163,8 +16008,7 @@ export class Level {
     };
   }
 
-  // The crystal: Crash 2/3 style pickup on the main route. Faceted octahedron
-  // wearing the scrolling chrome, magic ring at its base, glints in update.
+  // Main-route crystal: faceted specular shell, with pickup glints in update.
   private crystal(x: number, y: number, z: number): void {
     const g = Level.crystalMesh(1);
     // belt sits at the group origin; the long bottom point reaches ~1.5 below,

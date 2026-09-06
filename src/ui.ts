@@ -1134,9 +1134,8 @@ export class UI {
     // Unit frustum: the camera spans 1.0 world unit vertically and the host's
     // aspect horizontally, so fitting art to a box is one scale factor.
     this.iconCam = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, -500, 500);
-    // The relics are matcap-lit — their highlights are painted into the
-    // material and sampled by surface normal — and ignore these entirely. The
-    // crate and the fruit are Lambert, like everything in the world, so they
+    // Gems/crystals use their own cheap vertex-specular studio rig and ignore
+    // these lights. The crate and fruit are Lambert, like the world, so they
     // need lighting or they would render as silhouettes.
     //
     // Lit HOTTER than the world, deliberately. These icons have no drop
