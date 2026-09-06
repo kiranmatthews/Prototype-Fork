@@ -4,6 +4,7 @@
 // as fake boost/slowdown numbers derived from the surface normal.
 
 import * as THREE from 'three';
+import { softSkateRebound, sampleSoftSkateImpact, SOFT_SKATE_IMPACT_SECONDS } from './skateImpact';
 import { BONUS_FRUIT_FLIGHT_SECONDS } from './bonusPayout';
 import { TUNING, CONST } from './tuning';
 import { liveCarveGripAtSpeed } from './carveGrip';
@@ -1169,6 +1170,9 @@ export class Player {
   private grabPaid = 0; // what this air's grab actually paid — repriced when the variant resolves to a different trick's decay pool
   private comboUses = new Map<string, number>(); // per-combo trick use counts — repeats pay a declining share (THPS4/THUG)
   private sketchyT = 0; // off-balance shimmy after a SKETCHY landing (kept it, barely)
+  private softSkateImpactT = 0;
+  private softSkateImpactSide = 1;
+  private readonly softSkateImpactNormal = new THREE.Vector3();
   private flipT = 0; // deck flip trick in progress: time left of CONST.flipTime
   private flipKind: DeckTrickKind = 'kick';
   private flipName = 'Kickflip';
@@ -2997,6 +3001,8 @@ export class Player {
   // now four hundred units behind you.
   private settle(level: Level, facing?: THREE.Vector3): void {
     this.endResultsPose();
+    this.softSkateImpactT = 0;
+    this.softSkateImpactNormal.set(0, 0, 0);
     this.speed = 0;
     this.vVel = 0;
     this.state = 'ride';
@@ -3859,6 +3865,7 @@ export class Player {
       this.balanceVel = 0; // no needle momentum survives a gap between balance tricks
     }
     this.sketchyT = Math.max(0, this.sketchyT - dt);
+    this.softSkateImpactT = Math.max(0, this.softSkateImpactT - dt);
     if (this.uberTimer > 0 && Math.random() < 0.5) this.emitSparks(1, 0xffd700, 1.2);
     if (this.grindBoostT > 0 && Math.random() < 0.7) this.emitSparks(1, 0xff4fd8, 1.6);
     // Actual planar speed from last step's displacement (any direction) —
@@ -5057,7 +5064,7 @@ export class Player {
     // dead stop — so re-holding a direction ramps you back to cruise instead
     // of dumping you to feet, and the wheels/pose persist to zero. Only a
     // true stop or the deliberate pull-back dismount steps off.
-    const rollingOut = this.freeSkate && Math.abs(this.speed) > 0.08 && !this.stepOff;
+    const rollingOut = this.freeSkate && (Math.abs(this.speed) > 0.08 || (this.softSkateImpactT > 0 && !input.grabHeld)) && !this.stepOff;
     this.stepOff = false;
     const looseDeck = !!(this.flyBoard && this.flyBoard.visible);
     // A thrown deck is never recovered by proximity or carried speed. Only
@@ -5135,6 +5142,7 @@ export class Player {
       this.walkTurnaround = false;
       this.walkIntent.set(0, 0, 0);
     } else if (!free && this.freeSkate) {
+      this.softSkateImpactT = 0;
       this.stance = 1; // feet down: the next push starts regular
       // back onto the course grid: keep the along-course velocity component
       const vx = this.axisF.x * this.speed;
@@ -5397,7 +5405,11 @@ export class Player {
           // This distinction is resolved in the same camera/lane frame as the
           // target direction, so it survives bends and chase-camera rotation.
           const ang = steering.angle;
-          if (
+          if (this.softSkateImpactT > 0 &&
+              steering.targetX * this.softSkateImpactNormal.x + steering.targetZ * this.softSkateImpactNormal.z < -0.05) {
+            // Stale approach input must not erase the rebound or turn it into
+            // an automatic pull-back dismount. Steering away still works.
+          } else if (
             Math.abs(ang) > CONST.carveBrakeAngle &&
             (this.pipeLandGraceT > 0 || (steepGround && Math.abs(this.speed) < 4))
           ) {
@@ -7425,6 +7437,7 @@ export class Player {
   // The v^2 wind term is universal and only bites up top. Texture swaps outside
   // the Beach levels therefore cannot rewrite movement physics.
   private frictionBleed(dt: number, steep: boolean): void {
+    if (this.softSkateImpactT > 0 && this.freeSkate && !this.isBailing) return;
     const s = Math.abs(this.speed);
     if (s < 1e-4) return;
     // Steep ground keeps the old linear bleed: it decelerates harder than the
@@ -8622,6 +8635,7 @@ export class Player {
   }
 
   private bail(masked = false): void {
+    this.softSkateImpactT = 0;
     // capture BEFORE the flags change hands: a bail out of skating throws the
     // deck; the same crash on foot has no deck to throw
     const hadBoard = this.freeSkate || this.airFromSkate;
@@ -10315,11 +10329,11 @@ export class Player {
         this.pos.z = coastHit.z;
 
         // The swept solver already projects the remaining displacement onto
-        // the tangent. Only a square hit kills authored drive; a shoreline
-        // graze keeps flowing around the spline at the contact point.
-        if (coastHit.frontal) {
-          // A square hit is still a stop, but never a bail, wallride, ledge
-          // grab or axis-aligned rebound from an invisible box.
+        // the tangent. A slow square board hit rebounds; a shoreline graze
+        // keeps flowing around the spline at the contact point.
+        if (coastHit.frontal && !this.softSkateImpact(coastHit.nx, coastHit.nz, this.speed)) {
+          // Other square hits retain the authored stop, never a bail,
+          // wallride or ledge grab from an invisible boundary.
           if (Math.abs(this.speed) > 18 && this.haltCd <= 0) {
             sfx.play('skateHalt', 0.7);
             this.haltCd = 0.5;
@@ -10415,6 +10429,8 @@ export class Player {
         this.airFromSkate = false;
         this.airGrav = 'foot';
         this.airMomentum = true;
+      } else if (this.softSkateImpact(trickGate.normal.x, trickGate.normal.z, this.speed)) {
+        // Low-speed board contact keeps rolling away from the closed gate.
       } else {
         if (this.slideTimer > 0 || this.slideContactLatch) {
           this.cancelSlideTraversal();
@@ -12210,6 +12226,26 @@ export class Player {
       THREE.MathUtils.lerp(lo, hi, this.simRand());
   }
 
+  private softSkateImpact(nx: number, nz: number, entrySpeed: number, threshold = TUNING.wallBailSpeed): boolean {
+    if (this.hubMode || !this.freeSkate || !this.grounded || this.state !== 'ride' ||
+        this.isBailing || this.sliding || Math.abs(entrySpeed) >= threshold) return false;
+    const vx = this.axisF.x * entrySpeed, vz = this.axisF.z * entrySpeed;
+    const rebound = softSkateRebound(vx, vz, nx, nz, this.rawInput.moveX || 1);
+    if (!rebound) return false;
+    this.speed = Math.hypot(rebound.x, rebound.z);
+    this.axisF.set(rebound.x / this.speed, 0, rebound.z / this.speed);
+    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+    this.softSkateImpactNormal.set(rebound.nx, 0, rebound.nz);
+    this.softSkateImpactSide = Math.sign(vx * rebound.z - vz * rebound.x) || 1;
+    // Distinct contacts can steer again, without machine-gunning the pose/sound.
+    if (this.softSkateImpactT < SOFT_SKATE_IMPACT_SECONDS - 0.16) this.softSkateImpactT = SOFT_SKATE_IMPACT_SECONDS;
+    if (this.haltCd <= 0 && this.trickGateImpactT <= 0) {
+      sfx.play('skateHalt', 0.35, 1.12);
+      this.haltCd = 0.25;
+    }
+    return true;
+  }
+
   private wallSmack(beforeX: number, beforeZ: number, s0: number, box?: THREE.Box3): void {
     if (this.hubMode) return;
     if (this.isBailing || this.state === 'dead') return;
@@ -12411,6 +12447,7 @@ export class Player {
       this.prevPos.z += shiftZ;
       return true;
     }
+    if (this.softSkateImpact(contact.nx, contact.nz, this.speed)) return false;
     const head = Math.abs(this.axisF.x * contact.nx + this.axisF.z * contact.nz);
     if (head > 0.6 && Math.abs(this.speed) > 0.1) {
       if (Math.abs(this.speed) > 18 && this.haltCd <= 0) {
@@ -12476,7 +12513,9 @@ export class Player {
     else this.pos.z = dz > 0 ? minZ - 0.01 : maxZ + 0.01;
     this.translateCollisionBoxes(this.pos.x - beforeX, 0, this.pos.z - beforeZ);
 
-    // Head-on (heading mostly into the clamped face) = Crash full stop.
+    if (this.softSkateImpact(this.pos.x - beforeX, this.pos.z - beforeZ, this.speed)) return false;
+
+    // Contacts outside the grounded soft-skate response retain the old stop.
     const head = axis === 'x' ? Math.abs(this.axisF.x) : Math.abs(this.axisF.z);
     if (head > 0.6 && Math.abs(this.speed) > 0.1) {
       if (Math.abs(this.speed) > 18 && this.haltCd <= 0) {
@@ -13625,6 +13664,8 @@ export class Player {
           this.startRagdoll('back'); // clotheslined: head snaps back, body drops
         }
         this.emitSparks(6, 0xffd166, 1.6);
+      } else if (this.softSkateImpact(perpX * side, perpZ * side, signedEntrySpeed, TUNING.railTripSpeed)) {
+        // Slow rail contact is a board-preserving rebound, not a curb stop.
       } else if (Math.abs(this.speed) > 0.1) {
         // Curb stop: kill the into-rail component of travel.
         if (Math.abs(this.axisF.x * perpX + this.axisF.z * perpZ) > 0.35) this.speed = 0;
@@ -15709,6 +15750,14 @@ export class Player {
     // complete legacy result first and restores it before the next fixed step,
     // so authored writes are absolute and can never accumulate into gameplay.
     this.playerAnimationBridge.applyOverlay(dt);
+    if (this.softSkateImpactT > 0 && this.freeSkate && this.grounded && this.state === 'ride' && !this.isBailing) {
+      const hit = sampleSoftSkateImpact(this.softSkateImpactT);
+      this.bodyGroup.rotation.x += 0.16 * hit.brace;
+      this.bodyGroup.rotation.z += 0.1 * hit.wobble * this.softSkateImpactSide;
+      this.bodyGroup.position.y -= 0.075 * hit.brace;
+      if (this.armL) this.armL.rotation.z += 0.24 * hit.brace;
+      if (this.armR) this.armR.rotation.z -= 0.19 * hit.brace;
+    }
     this.applyResultsPose();
     this.syncCharacterAppearance({ upperArmRestAngleWeight: this.resultsPose ? 0 : undefined });
     if (this.authoredCrawlContactPhase !== null) {

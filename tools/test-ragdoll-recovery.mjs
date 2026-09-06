@@ -265,12 +265,12 @@ try {
     ],
   };
 
-  const createFixture = () => {
+  const createFixture = (components = []) => {
     const scene = new THREE.Scene();
     const level = new Level(scene, {
       id: "ragdoll-recovery-test",
       name: levelData.name,
-      data: levelData,
+      data: { ...levelData, components: [...levelData.components, ...components] },
     });
     level.update(0);
     scene.updateMatrixWorld(true);
@@ -567,8 +567,71 @@ try {
   assert.ok(rebound.player.speed >= 0, "rebound recovery kept negative speed");
   assert.ok(rebound.player.axisF.z > 0.9, "rebound recovery reversed toward the obstacle");
 
+  const { softSkateRebound, sampleSoftSkateImpact, SOFT_SKATE_IMPACT_SECONDS } = await server.ssrLoadModule('/src/skateImpact.ts');
+  for (const [vx,vz,nx,nz] of [[0,-8,0,1],[8,0,-1,0],[-8,0,1,0],[5,-2,0,1],[0,-.2,0,1]]) {
+    const response=softSkateRebound(vx,vz,nx,nz);
+    assert.ok(response);
+    assert.ok(response.x*nx+response.z*nz>0,'soft contact did not rebound outward');
+    const ratio=Math.hypot(response.x,response.z)/Math.hypot(vx,vz);
+    assert.ok(ratio>=.45-1e-8&&ratio<=.97+1e-8,'soft contact created energy or discarded all motion');
+  }
+  assert.equal(softSkateRebound(0,8,0,1),null,'moving away retriggered impact');
+  assert.equal(softSkateRebound(0,0,0,1),null);
+  assert.equal(softSkateRebound(0,-8,0,0),null);
+  assert.deepEqual(sampleSoftSkateImpact(0),{brace:0,wobble:0});
+  assert.deepEqual(sampleSoftSkateImpact(SOFT_SKATE_IMPACT_SECONDS),{brace:0,wobble:0});
+  assert.ok(sampleSoftSkateImpact(.25).brace>.5,'impact pose has no readable brace');
+
+  const wall={t:'wall',p:[0,0,-2],s:[10,3,.4]};
+  const soft=createFixture([wall]);
+  soft.player.freeSkate=true;soft.player.speed=8;
+  for(let frame=0;frame<90&&soft.player.softSkateImpactT<=0;frame++)soft.player.step(CONST.fixedStep,makeInput({moveY:1}),soft.level);
+  assert.ok(soft.player.softSkateImpactT>0,'real low-speed wall collision missed the soft response');
+  assert.equal(soft.player.isBailing,false);assert.equal(soft.player.boardRolling,true);
+  assert.ok(soft.player.speed>0&&soft.player.axisF.z>0,'wall did not leave outward skating velocity');
+  const afterImpact=soft.player.pos.clone();
+  for(let frame=0;frame<15;frame++)soft.player.step(CONST.fixedStep,makeInput({moveY:1}),soft.level);
+  assert.equal(soft.player.boardRolling,true,'held approach input auto-dismounted after the bump');
+  assert.ok(soft.player.pos.z>afterImpact.z+.1,'rider did not actually roll away');
+  assert.equal(soft.player.flyBoard?.visible??false,false,'soft impact discarded the board');
+  for(let frame=0;frame<180;frame++)soft.player.step(CONST.fixedStep,makeInput({grabHeld:true}),soft.level);
+  assert.equal(soft.player.boardRolling,false,'impact grace prevented an intentional brake/dismount');
+
+  const fast=createFixture([wall]);fast.player.freeSkate=true;fast.player.speed=TUNING.wallBailSpeed+5;
+  for(let frame=0;frame<90&&!fast.player.isBailing;frame++)fast.player.step(CONST.fixedStep,makeInput(),fast.level);
+  assert.equal(fast.player.isBailing,true,'high-speed wall bail was replaced with a soft hit');
+  assert.equal(fast.player.softSkateImpactT,0);
+
+  const foot=createFixture([wall]);
+  for(let frame=0;frame<60;frame++)foot.player.step(CONST.fixedStep,makeInput({moveY:1}),foot.level);
+  assert.equal(foot.player.boardRolling,false);assert.equal(foot.player.softSkateImpactT,0,'walking acquired a skate rebound');
+
+  const repair=createFixture();repair.player.freeSkate=true;repair.player.speed=8;
+  assert.equal(repair.player.pushOutOf(new THREE.Box3(new THREE.Vector3(-1,0,-1),new THREE.Vector3(1,3,1))),true);
+  assert.equal(repair.player.speed,8);assert.equal(repair.player.softSkateImpactT,0,'start-inside repair became a collision impulse');
+
+  const crawlSpeed = createFixture();
+  crawlSpeed.player.freeSkate = true;
+  crawlSpeed.player.speed = 0.11;
+  crawlSpeed.player.rawInput = makeInput();
+  assert.equal(crawlSpeed.player.softSkateImpact(0, 1, 0.11), true);
+  for (let frame = 0; frame < 15; frame++) crawlSpeed.player.step(CONST.fixedStep, makeInput(), crawlSpeed.level);
+  assert.equal(crawlSpeed.player.boardRolling, true, 'near-stop impact dismounted during its recovery');
+  assert.ok(crawlSpeed.player.speed > 0 && crawlSpeed.player.pos.z > 0, 'near-stop rebound lost all motion');
+
+  for (const component of [
+    {t:'wallpath',p:[0,0,-2],pts:[[-5,0,0],[5,0,0]],w:.4,rise:3},
+    {t:'rail',p:[0,.7,-2],len:10,yaw:90},
+  ]) {
+    const f=createFixture([component]);f.player.freeSkate=true;f.player.speed=8;
+    for(let frame=0;frame<90&&f.player.softSkateImpactT<=0;frame++)f.player.step(CONST.fixedStep,makeInput({moveY:1}),f.level);
+    assert.ok(f.player.softSkateImpactT>0,component.t+' skipped soft impact');
+    assert.equal(f.player.boardRolling,true);assert.equal(f.player.isBailing,false);
+    f.player.respawn(f.level,true);assert.equal(f.player.softSkateImpactT,0,'respawn retained impact state');
+  }
+
   console.log(
-    "Validated forward-roll sampling, post-impact flaky jump/steer limits, recovery exclusion, and neutral run-out integration.",
+    "Validated ragdoll recovery, soft skating rebounds, mounted run-out, braking, and unchanged high-speed bails.",
   );
 } finally {
   restoreTuning?.();

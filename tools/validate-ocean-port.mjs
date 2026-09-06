@@ -95,7 +95,7 @@ if (level.includes("softWalls"))
 const player = readFileSync(path.join(root, "src/player.ts"), "utf8");
 for (const required of [
   "level.resolveCoastBoundary(",
-  "if (coastHit.frontal)",
+  "if (coastHit.frontal && !this.softSkateImpact(coastHit.nx, coastHit.nz, this.speed))",
 ]) {
   if (!player.includes(required))
     throw new Error(`Continuous coast player response missing: ${required}`);
