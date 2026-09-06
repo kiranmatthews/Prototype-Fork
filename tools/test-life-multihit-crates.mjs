@@ -155,16 +155,17 @@ try {
     return { level, player, crate: level.crates[0] };
   };
 
-  // Life crates: exactly one life, never fruit; no life economy in endless or run modes.
+  // Life crates award a reserve in Classic and recover a death in Modern.
   for (const mode of ["normal", "endless", "time", "combo"]) {
     const f = create("life");
-    if (mode === "endless") f.player.endlessDeaths = true;
+    if (mode === "endless") { f.player.endlessDeaths = true; f.player.totalDeaths = 2; }
     if (mode === "time") { f.level.setTimeTrial(true); f.player.ttActive = true; }
     if (mode === "combo") { f.level.setComboRun(true); f.player.comboRun = true; }
     const before = f.player.lives;
     f.player.smashCrate(f.level, f.crate);
     assert.equal(f.player.lives, before + (mode === "normal" ? 1 : 0), `${mode} life reward`);
     assert.equal(activeFruit(f.player), 0, `${mode} life crate emitted fruit`);
+    if (mode === "endless") assert.equal(f.player.totalDeaths,1,"Modern life crate did not remove a death");
   }
 
   // The third mask owns a temporary full/ready SPECIAL override without
@@ -196,8 +197,18 @@ try {
   assert.equal(fruitEvent.fruitCollectionRevision, 1, "rollover fruit missed its HUD event");
   fruitEvent.endlessDeaths = true;
   fruitEvent.collectFruit();
-  assert.equal(fruitEvent.fruit, 0, "endless-mode fruit unexpectedly entered a purse");
+  assert.equal(fruitEvent.fruit, 1, "Modern fruit did not build toward death recovery");
   assert.equal(fruitEvent.fruitCollectionRevision, 2, "endless fruit missed its HUD event");
+  fruitEvent.totalDeaths = 2;
+  fruitEvent.fruit = 99;
+  const modernReserves = fruitEvent.lives;
+  fruitEvent.collectFruit();
+  assert.equal(fruitEvent.fruit, 0);
+  assert.equal(fruitEvent.totalDeaths, 1, "Modern 100-fruit award did not recover a death");
+  fruitEvent.gainLife();
+  fruitEvent.gainLife();
+  assert.equal(fruitEvent.totalDeaths, 0, "Modern life awards went below zero");
+  assert.equal(fruitEvent.lives, modernReserves, "Modern awards changed Classic reserves");
 
   const prepareStomp = (player) => {
     player.state = "air"; player.grounded = false; player.spinTimer = 0;

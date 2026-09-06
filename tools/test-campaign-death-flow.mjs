@@ -323,7 +323,7 @@ try {
   assert.equal(endless.player.points, 51, "endless death penalty changed");
   resolveDeath(endless);
   assert.equal(endless.player.state, "ride");
-  assert.equal(endless.player.fruit, 0, "endless respawn did not clear fruit");
+  assert.equal(endless.player.fruit, 63, "Modern respawn lost fruit progress toward death recovery");
   assert.equal(endless.respawnCalls(), 1);
   assert.deepEqual(endless.events, ["death", "respawn"]);
 

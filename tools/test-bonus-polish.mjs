@@ -74,11 +74,23 @@ try {
   player.prepareStartPresentation(level);
   assert.equal(player.groundBelowY, 0, 'bonus first-frame camera retained the parent floor');
   assert.deepEqual(player.pos.toArray(), spawnBefore, 'camera preparation changed physics');
-  player.masks = 2; player.uberTimer = 4;
+  player.masks = 2; player.uberTimer = 4; player.totalDeaths = 3;
   const state = player.captureRunState();
   assert.equal(state.uberTimer, 4);
+  player.totalDeaths = 0;
   player.resumeSuspendedLevel(level, level.spawnPos, { ...state, masks: 1, uberTimer: 2 });
   assert.equal(player.masks, 1); assert.equal(player.uberTimer, 2, 'settling erased carried protection');
+  assert.equal(player.totalDeaths, 3, 'bonus return lost parent deaths');
+  const inventoryBeforeFlight = [player.fruit, player.lives, player.points, player.fruitCollectionRevision];
+  player.showBonusFruitPayout(5);
+  assert.equal(player.fruits.filter(f => f.payoutFlight).length, 5);
+  player.bankFlyingFruit();
+  assert.deepEqual([player.fruit, player.lives, player.points, player.fruitCollectionRevision], inventoryBeforeFlight, 'cosmetic payout credited inventory twice');
+  assert.equal(player.fruits.filter(f => f.payoutFlight).length, 0);
+  player.showBonusFruitPayout(5);
+  player.updateFruit(BonusPayout.flightDuration);
+  assert.equal(player.fruits.filter(f => f.payoutFlight).length, 0, 'payout flights did not arrive');
+  assert.deepEqual([player.fruit, player.lives, player.points, player.fruitCollectionRevision], inventoryBeforeFlight, 'arriving payout fruit credited inventory twice');
   const input = patch => Object.assign({ moveX: 0, moveY: 0, lookX: 0, lookY: 0, jumpHeld: false, jumpPressed: false, jumpReleased: false, spinHeld: false, spinPressed: false, grindHeld: false, grindPressed: false, grabHeld: false, grabPressed: false, transferHeld: false, transferPressed: false, restartPressed: false, consumeEdges: noop }, patch);
   for (const [x, y, landingX] of [[0.25, 0.04, 4.6], [18.7, 0.39, 22.6]]) {
     player.respawn(level, true);
@@ -100,11 +112,22 @@ try {
   assert.deepEqual(actual, { lives: 6, fruit: 15 });
   const payout = new BonusPayout(bonus.lives, bonus.fruit);
   assert.deepEqual(payout.update(actual, 0), parent, 'revealed totals did not begin at parent inventory');
-  const middle = payout.update(actual, 1);
+  const middle = payout.update(actual, 1.4);
   assert.ok(middle.fruit !== 90 && middle.fruit !== 15);
   assert.equal(middle.lives, 5, '100-fruit rollover is not visible during payout');
   assert.deepEqual(payout.update(actual, 10), actual);
   assert.equal(payout.complete, true);
+  const modernPayout = new BonusPayout(1, 25, 2);
+  modernPayout.update({ lives: 4, fruit: 15 }, 0.2);
+  assert.ok(modernPayout.fruitLaunched > 0);
+  assert.equal(modernPayout.fruitPaid, 0, 'fruit counted before arriving');
+  assert.equal(modernPayout.displayDeaths(1), 3);
+  modernPayout.update({ lives: 4, fruit: 15 }, 1.2);
+  assert.equal(modernPayout.displayDeaths(1), 2);
+  modernPayout.update({ lives: 4, fruit: 15 }, 10);
+  assert.equal(modernPayout.displayDeaths(1), 1);
+  assert.equal(modernPayout.lifeAwardsShown, 2);
+  assert.equal(modernPayout.fruitPaid, 25);
   const concurrent = new BonusPayout(1, 25);
   assert.deepEqual(concurrent.update({ lives: 5, fruit: 17 }, 0), { lives: 3, fruit: 92 }, 'live pickup/life loss was overwritten by payout');
   const { readFile } = await import('node:fs/promises');
@@ -115,7 +138,9 @@ try {
   }
   assert.match(main, /masks: player.masks/);
   assert.match(main, /player.masks = parentState.masks/);
-  assert.match(main, /startBonusPayout\(bonusLives, bonusFruit\)/);
+  assert.match(main, /startBonusPayout\(bonusLives, bonusFruit,/);
+  const ui = await readFile(new URL('../src/ui.ts', import.meta.url), 'utf8');
+  assert.doesNotMatch(ui, /BONUS BANKED|bonusPayoutAnnounced/);
   console.log('PASS easier default bonus: permanent reward support, 2 real-Player short jumps, preserved original course, mask/uber carry, visible rollover-safe payout and black-only routing');
 } finally {
   await server.close();

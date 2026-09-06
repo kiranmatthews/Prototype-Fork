@@ -4,6 +4,7 @@
 // as fake boost/slowdown numbers derived from the surface normal.
 
 import * as THREE from 'three';
+import { BONUS_FRUIT_FLIGHT_SECONDS } from './bonusPayout';
 import { TUNING, CONST } from './tuning';
 import { liveCarveGripAtSpeed } from './carveGrip';
 import { solveSkateSteering } from './skateSteering';
@@ -237,6 +238,7 @@ export type MoveState = 'ride' | 'air' | 'grind' | 'hang' | 'rope' | 'dead' | 'g
 export interface PlayerRunState {
   lives: number;
   fruit: number;
+  totalDeaths?: number;
   cratesBroken: number;
   bonusCrates: number;
   masks: number;
@@ -704,6 +706,7 @@ export class Player {
     return {
       lives: this.lives,
       fruit: this.fruit,
+      totalDeaths: this.totalDeaths,
       cratesBroken: this.cratesBroken,
       bonusCrates: this.bonusCrates,
       masks: this.masks,
@@ -1385,6 +1388,7 @@ export class Player {
     home: THREE.Vector3; // where it hangs, before the idle bob
     sx: number; // overlay position, screen fractions (0..1)
     sy: number;
+    payoutFlight?: { x: number; y: number };
   }[] = [];
   cam: THREE.PerspectiveCamera | null = null; // set by main: wumpa fly to the HUD counter, which lives on the lens
   /** Set by main: where the HUD fruit counter is, in 0..1 screen fractions. */
@@ -2887,7 +2891,6 @@ export class Player {
       : preservedFruit;
     this.masks = level.activeCheckpoint ? level.activeCheckpoint.savedMasks : 0;
     this.points = level.activeCheckpoint ? level.activeCheckpoint.savedPoints : 0;
-    if (this.endlessDeaths) this.fruit = 0;
     if (hard && preserveInventory) {
       this.lives = preservedLives;
       this.fruit = preservedFruit;
@@ -2908,6 +2911,7 @@ export class Player {
     this.bonusMode = false;
     this.lives = state.lives;
     this.fruit = state.fruit;
+    this.totalDeaths = state.totalDeaths ?? this.totalDeaths;
     this.cratesBroken = state.cratesBroken;
     this.bonusCrates = state.bonusCrates;
     this.masks = state.masks;
@@ -11650,10 +11654,8 @@ export class Player {
   }
 
   private gainLife(): void {
-    // Endless mode has no life economy; explicit/rolled life awards are inert
-    // there just like the retired 100-fruit threshold.
-    if (this.endlessDeaths) return;
-    this.lives++;
+    if (this.endlessDeaths) this.totalDeaths = Math.max(0, this.totalDeaths - 1);
+    else this.lives++;
     sfx.play('lifeGet', 1.0);
     this.emitSparks(10, 0x9fe07a, 2);
   }
@@ -11662,21 +11664,15 @@ export class Player {
   private collectFruit(): void {
     this.fruitCollectionRevision++;
     if (this.endlessDeaths) {
-      // No purse and no 100-fruit life threshold: every arrival is a permanent
-      // face-value award, outside the pending combo multiplier.
+      // Modern keeps its face-value score while also building toward a
+      // 100-fruit death-counter reduction.
       this.points += CONST.ptsFruit;
-      const note = Math.floor(this.points / Math.max(1, CONST.ptsFruit)) % 3;
-      sfx.play(['wumpa1', 'wumpa2', 'wumpa3'][note], 0.6);
-      return;
-    }
+    } else this.score(CONST.ptsFruit);
     this.fruit++;
-    this.score(CONST.ptsFruit);
+    sfx.play(['wumpa1', 'wumpa2', 'wumpa3'][this.fruit % 3], 0.6);
     if (this.fruit >= 100) {
       this.fruit -= 100;
-      this.lives++;
-      sfx.play('lifeGet', 1.0);
-    } else {
-      sfx.play(['wumpa1', 'wumpa2', 'wumpa3'][this.fruit % 3], 0.6);
+      this.gainLife();
     }
   }
 
@@ -11688,6 +11684,7 @@ export class Player {
     let banked = 0;
     for (const fruit of this.fruits) {
       if (fruit.phase !== 'fly') continue;
+      if (fruit.payoutFlight) { this.retireFruit(fruit); continue; }
       this.collectFruit();
       this.retireFruit(fruit);
       banked++;
@@ -11833,10 +11830,6 @@ export class Player {
   // One already-earned wumpa (a touched pickup, or fruit just walked into)
   // leaves `pos` for the HUD counter on the flat overlay layer.
   private flyFruit(pos: THREE.Vector3): void {
-    if (this.endlessDeaths) {
-      this.collectFruit();
-      return;
-    }
     const f = this.freeFruit();
     if (!f) {
       this.collectFruit(); // pool exhausted: count it rather than lose it
@@ -11849,11 +11842,7 @@ export class Player {
   // the flight starts exactly where the world body was and the swap between
   // layers is invisible.
   private beginFruitFlight(f: (typeof this.fruits)[number], pos: THREE.Vector3): void {
-    if (this.endlessDeaths) {
-      this.collectFruit();
-      this.retireFruit(f);
-      return;
-    }
+    f.payoutFlight = undefined;
     f.phase = 'fly';
     f.t = 0;
     f.mesh.visible = true;
@@ -11876,6 +11865,20 @@ export class Player {
     // counter ticks at the end of the flight. Playing one at both ends would
     // just double it.
     this.fruitLayer?.add(f.mesh);
+  }
+
+  /** Already banked bonus fruit: animation only, never a second award. */
+  showBonusFruitPayout(count: number): void {
+    for (let index = 0; index < count; index++) {
+      // Cosmetic traffic must never cash in an untouched world fruit when
+      // the pool is full, as the gameplay freeFruit fallback is allowed to do.
+      const fruit = this.fruits.find(candidate => candidate.phase === 'off') ??
+        (this.fruits.length < FRUIT_MAX ? this.addFruitBody() : null);
+      if (!fruit) continue;
+      this.beginFruitFlight(fruit, this.pos.clone().add(new THREE.Vector3(0, 1.4, 0)));
+      fruit.sx += (index % 3 - 1) * 0.012;
+      fruit.payoutFlight = { x: fruit.sx, y: fruit.sy };
+    }
   }
 
   /**
@@ -11938,6 +11941,14 @@ export class Player {
         // it lives in is still the right direction.
         const tx = hud ? hud.x : 0.06;
         const ty = hud ? hud.y : 0.06;
+        if (f.payoutFlight) {
+          const t = Math.min(1, f.t / BONUS_FRUIT_FLIGHT_SECONDS);
+          f.sx = THREE.MathUtils.lerp(f.payoutFlight.x, tx, t) + Math.sin(t * Math.PI) * 0.035;
+          f.sy = THREE.MathUtils.lerp(f.payoutFlight.y, ty, t) - Math.sin(t * Math.PI) * 0.08;
+          f.mesh.rotation.y += dt * 5;
+          if (t >= 1) this.retireFruit(f);
+          continue;
+        }
         // Screen fractions are not square — x spans an `aspect`-times-wider
         // slice of the world than y — so measure the gap in the overlay's own
         // units, or the fruit would travel faster sideways than it does down.
@@ -12007,6 +12018,7 @@ export class Player {
 
   /** Back to the pool, off whichever layer it was on. */
   private retireFruit(f: (typeof this.fruits)[number]): void {
+    f.payoutFlight = undefined;
     f.phase = 'off';
     f.hop = 0;
     f.mesh.visible = false;

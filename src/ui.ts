@@ -3,6 +3,7 @@
 
 import * as THREE from "three";
 import { BonusPayout } from "./bonusPayout";
+import { sfx } from "./audio";
 import { localDataResetUrl } from "./localGameStorage";
 import {
   GameHudSurface,
@@ -221,7 +222,7 @@ export class UI {
   private comboCashInHoldEnd = 0;
   private comboCashInExpires = 0;
   private bonusPayout: BonusPayout | null = null;
-  private bonusPayoutAnnounced = false;
+  onBonusFruitFlight: (count: number) => void = () => {};
   private comboCashInWasHolding = false;
   private lastComboActionRevision = -1;
   private lastComboPreviewSequence = -1;
@@ -375,8 +376,8 @@ export class UI {
     this.setRunModes(true);
 
     // STANDARD-RUN RULE: classic lives remains the default. Endless Deaths is
-    // an explicit, persisted selection: Wumpa pays score immediately, deaths
-    // halve score and increment the HUD counter, and game-over is disabled.
+    // an explicit, persisted selection: fruit earns score and life awards
+    // recover deaths; deaths halve score and game-over is disabled.
     const endlessBtn = document.createElement("button");
     endlessBtn.className = "hud-levelbtn hud-editbtn";
     endlessBtn.title = "switch standard play between classic lives and endless deaths";
@@ -1397,14 +1398,20 @@ export class UI {
     const hudNow = performance.now();
     const payout = this.bonusPayout;
     if (payout) {
+      const launchedBefore = payout.fruitLaunched;
+      const paidBefore = payout.fruitPaid;
+      const lifeAwardsBefore = payout.lifeAwardsShown;
       const display = payout.update({ lives: s.lives, fruit: s.fruit }, deltaSeconds);
       // Gameplay/campaign already own the final totals. Only the readout counts
       // up, so interrupted reveals and new pickups cannot lose or duplicate loot.
-      s = { ...s, ...display, inventoryHeld: true, endlessDeaths: false };
-      if (!this.bonusPayoutAnnounced && deltaSeconds > 0) {
-        this.bonusPayoutAnnounced = true;
-        this.showMessage("BONUS BANKED", `+${payout.fruit} FRUIT  +${payout.lives} ${payout.lives === 1 ? "LIFE" : "LIVES"}`, 2800);
-      }
+      s = { ...s, ...display, lives: s.endlessDeaths ? s.lives : display.lives,
+        deaths: payout.displayDeaths(s.deaths), inventoryHeld: true };
+      const launches = payout.fruitLaunched - launchedBefore;
+      if (launches > 0) this.onBonusFruitFlight(launches);
+      for (let fruit = paidBefore; fruit < payout.fruitPaid; fruit++)
+        sfx.play(["wumpa1", "wumpa2", "wumpa3"][fruit % 3], 0.6);
+      for (let life = lifeAwardsBefore; life < payout.lifeAwardsShown; life++)
+        sfx.play("lifeGet", 1);
       if (payout.complete) this.bonusPayout = null;
     }
     if (s.bonusMode !== this.bonusMode) {
@@ -1465,7 +1472,7 @@ export class UI {
       this.prevHud.crates = crateKey;
     }
     if (s.fruit !== this.prevHud.fruit) {
-      this.rooWumpa.set(s.endlessDeaths ? "" : String(s.fruit));
+      this.rooWumpa.set(String(s.fruit));
       pop(this.wumpaEl);
       this.prevHud.fruit = s.fruit;
     }
@@ -1646,7 +1653,7 @@ export class UI {
       this.livesRowEl.style.pointerEvents = !on && this.lifeCheatEnabled ? "auto" : "none";
     }
     this.prevHud.lives = -1; // the same numeral may now mean a different rule
-    this.prevHud.fruit = -1; // endless pickups use an icon-only transient
+    this.prevHud.fruit = -1;
     this.syncRunRows();
   }
 
@@ -1683,7 +1690,6 @@ export class UI {
     this.lastComboPreviewSequence = -1;
     this.prevHud.points = -1;
     this.bonusPayout = null;
-    this.bonusPayoutAnnounced = false;
     this.hudVisibility.reset(fruitCollectionRevision, inventoryHeld);
     this.hudVisibilityFrame = this.hudVisibility.update({
       mode: this.hudMode,
@@ -1695,9 +1701,8 @@ export class UI {
     this.syncHudVisibility();
   }
 
-  startBonusPayout(lives: number, fruit: number): void {
-    this.bonusPayout = lives > 0 || fruit > 0 ? new BonusPayout(lives, fruit) : null;
-    this.bonusPayoutAnnounced = false;
+  startBonusPayout(lives: number, fruit: number, deathsRemoved = 0): void {
+    this.bonusPayout = lives > 0 || fruit > 0 ? new BonusPayout(lives, fruit, deathsRemoved) : null;
   }
 
   /** Rebuild the level list from the registry. Call whenever it changes. */
@@ -1906,6 +1911,9 @@ export class UI {
   private syncHudVisibility(): void {
     if (!this.gameHudLayer) return;
     const bonus = this.bonusMode;
+    // A bonus-only label must not animate out over the returned level.
+    // display:none also excludes it from the shader-composited HUD mirror.
+    this.bonusTitleEl.style.display = bonus ? "" : "none";
     const contextual = !this.runRowsHidden || bonus;
     const wasBonusLayout = this.gameHudLayer.classList.contains("hud-bonus");
     this.gameHudLayer.classList.toggle("hud-bonus", bonus);

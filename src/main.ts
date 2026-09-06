@@ -2066,6 +2066,7 @@ player.cam = camera; // collected wumpa fly to the HUD counter — the flight ne
 // box rather than a guessed corner: the HUD is sized in vh and the counter
 // hides entirely during a run mode.
 player.hudFruitAt = () => ui.fruitIconAt();
+ui.onBonusFruitFlight = (count) => player.showBonusFruitPayout(count);
 if (shellBypass) campaign.startEphemeral();
 player.enterLevel(current.id);
 player.hubMode = current.id === "warproom";
@@ -2788,8 +2789,11 @@ function returnFromBonus(completed: boolean): void {
     ...session.parentState,
     masks: player.masks,
     uberTimer: player.uberTimer,
-    lives: inventory.lives,
+    lives: endlessDeathsOn ? session.parentState.lives : inventory.lives,
     fruit: inventory.fruit,
+    totalDeaths: endlessDeathsOn
+      ? Math.max(0, (session.parentState.totalDeaths ?? 0) - (inventory.lives - session.parentState.lives))
+      : session.parentState.totalDeaths,
     bonusCrates: completed ? bonusBoxes : session.parentState.bonusCrates,
   };
   void gameFlow.transition(async () => {
@@ -2826,7 +2830,8 @@ function returnFromBonus(completed: boolean): void {
       player.fruitCollectionRevision,
       input.inventoryHeld,
     );
-    if (completed) ui.startBonusPayout(bonusLives, bonusFruit);
+    if (completed) ui.startBonusPayout(bonusLives, bonusFruit,
+      (session.parentState.totalDeaths ?? 0) - (state.totalDeaths ?? 0));
     ui.setHUD(currentHudState(), 0);
     recorder.start(current.id, endlessDeathsOn);
     gameFlow.hide();
@@ -3814,7 +3819,7 @@ ui.onToggleEndlessDeaths = () => {
   ui.showMessage(
     endlessDeathsOn ? "ENDLESS DEATHS" : "CLASSIC LIVES",
     endlessDeathsOn
-      ? "wumpa pays score · death count rises · score halves"
+      ? "life rewards remove deaths · 100 wumpa earns a life"
       : "100 wumpa earns a life · game over returns",
     2200,
   );
