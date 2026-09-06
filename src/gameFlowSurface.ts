@@ -70,6 +70,7 @@ export interface GameFlowSurfaceButton {
   selected: boolean;
   disabled: boolean;
   danger: boolean;
+  launch?: boolean;
 }
 
 export interface GameFlowSurfaceProgress {
@@ -228,6 +229,7 @@ function stableButtonColor(
   // These are discrete authored states. Reading their transitioning computed
   // color would cache an arbitrary in-between frame until the next input.
   if (gameOver) return selected ? "#ff9b20" : "#ffffff";
+  if (button.closest(".game-launch-card")) return selected ? "#ffe786" : "#fff4d6";
   if (button.classList.contains("danger")) return "#9a281b";
   if (selected) return "#f05a20";
   return "#63230e";
@@ -397,6 +399,7 @@ export function snapshotGameFlowSurface(
       Object.freeze({
         rect,
         kind: slot ? "slot" : toggle ? "toggle" : "action",
+        launch: source.screen === "launch",
         label: slot
           ? ""
           : ((label?.textContent ?? button.textContent) || "")
@@ -788,7 +791,7 @@ export class GameFlowSurface {
       ctx.lineWidth = 3;
       ctx.stroke();
     }
-    if (button.selected && button.kind !== "slot") {
+    if (button.selected && button.kind !== "slot" && !button.launch) {
       // A warm, stable highlight replaces the DOM's layout-changing scale and
       // filter transition. It uses the same paper/orange palette without ever
       // moving the semantic hit rectangle underneath the pointer.
@@ -827,7 +830,7 @@ export class GameFlowSurface {
     if (button.kind !== "slot") {
       ctx.font = `${button.fontWeight} ${button.fontSize}px ${button.fontFamily}`;
       ctx.textBaseline = "middle";
-      ctx.shadowColor = "rgba(255,235,151,.6)";
+      ctx.shadowColor = button.launch ? "#172536" : "rgba(255,235,151,.6)";
       ctx.shadowOffsetY = 2;
       if (button.kind === "toggle") {
         // The Canvas mirror does not inherit flexbox shrinking/wrapping.

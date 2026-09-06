@@ -674,11 +674,9 @@ export class GameFlowUI {
   }
 
   private renderLaunch(): void {
-    const card = element("div", "game-launch-card timber-card");
-    const eyebrow = element("div", "game-eyebrow");
-    eyebrow.textContent = "A WARPED BOARD ADVENTURE";
+    const card = element("div", "game-launch-card");
     const title = element("h1", "game-logo");
-    title.innerHTML = `<span>BOARD</span><strong>SOL</strong>`;
+    title.innerHTML = `<span>Boolie</span> <strong>Roo</strong>`;
     const menu = element("div", "game-menu-list");
     const actions: HTMLButtonElement[] = [];
     const continueSlot = this.campaign.continueSlot();
@@ -708,9 +706,7 @@ export class GameFlowUI {
       }),
     );
     menu.append(...actions);
-    const hint = element("p", "game-input-hint");
-    hint.textContent = "ARROWS / STICK TO CHOOSE  ·  PRIMARY BUTTON / ENTER TO SELECT";
-    card.append(eyebrow, title, menu, hint);
+    card.append(title, menu);
     this.panel.appendChild(card);
   }
 
@@ -1618,6 +1614,8 @@ export class GameFlowUI {
       .game-menu-button:focus-visible { outline: none; }
       .game-menu-button.danger { color: #9a281b; }
       .game-menu-button:disabled { color: #462416; opacity: .34; filter: none; }
+      .game-launch-card .game-menu-button { color: #fff4d6; text-shadow: 0 2px 3px #172536; }
+      .game-launch-card .game-menu-button.selected { color: #ffe786; filter: drop-shadow(0 2px 0 #68200e); background: transparent; box-shadow: none; }
       .game-input-hint { margin: 20px 0 0; text-align: center; color: #6e3a20; font: 700 12px/1.4 ui-monospace, Menlo, monospace; letter-spacing: .06em; }
       .game-slot-card { width: min(700px, 92vw); padding: 30px clamp(22px, 5vw, 54px); }
       .game-panel-title { margin: 0; text-align: center; color: #f05a20; font: 400 clamp(40px, 7vw, 70px)/1 Roo, Impact, sans-serif; -webkit-text-stroke: 2px #6c2512; paint-order: stroke fill; }

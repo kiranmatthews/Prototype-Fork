@@ -30,6 +30,13 @@ occur between render frames. Movement is ignored until the current canned
 travel finishes. Cross/Enter enters a hub; the map exposes Progress, Options,
 Save/Load, and Quit directly.
 
+The desktop map shows the selected-level card and utility menu. The separate
+region card, direction hints, arrow buttons and Enter Level panel are omitted;
+keyboard/gamepad input and the touch controls still drive navigation and entry.
+The launch screen presents “Boolie Roo” directly on its vortex, without a
+timber container, tagline or input hint. Map overlays remain hidden throughout
+the loading vortex and reappear only beneath the destination reveal.
+
 The map renders the player at three times their ordinary scale. Both animation
 overlay snapshots and render interpolation are cleared before entering or
 leaving this presentation so the scale cannot carry into gameplay. Hub discs

@@ -69,12 +69,6 @@ assert.match(input, /touchJumpPressed = tc\.consumeButtonPress\('x'\)/);
 assert.match(input, /const mapDirection = tc\.consumeDirectionTap\(\)/);
 assert.match(input, /ArrowRight[^\n]*KeyD[^\n]*mapDirectionX = 1/);
 assert.match(input, /ArrowUp[^\n]*KeyW[^\n]*mapDirectionY = 1/);
-assert.match(worldMapUi, /body\.tc-on \.world-map-island-card \{ display: none; \}/);
-assert.match(
-  worldMapUi,
-  /@media \(max-height: 520px\) and \(pointer: fine\)[\s\S]*?\.world-map-navigation \{[^}]*display: flex;/,
-  "short mouse/keyboard windows must retain arrow and Enter navigation",
-);
 assert.match(
   worldMapUi,
   /@media \(orientation: portrait\)[\s\S]*?top: auto; bottom: calc\(var\(--tc-size, 168px\) \+ max\(10px, env\(safe-area-inset-bottom\)\) \+ 14px\);/,
