@@ -42,8 +42,8 @@ wind function and time uniform. Mesh bounds include deformation clearance.
 The kit disposes its geometries, materials and custom shadow materials once
 and removes the objects it owns.
 
-The map also applies this shading and wind to its original palms, shrubs,
-flowers and ground leaves. Other levels' existing legacy plants retain their
+The map also applies this shading and wind to its original palms and ground
+leaves. Other levels' existing legacy plants retain their
 current authored presentation until explicitly replaced with these variants.
 
 `tools/test-tropical-plants.mjs` checks geometry validity, real monstera holes,

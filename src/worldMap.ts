@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import {
   CAMPAIGN_ISLANDS,
   CAMPAIGN_LEVELS,
@@ -66,6 +65,7 @@ export interface CampaignWorldMapBuild {
 
 const MAP_FORWARD = new THREE.Vector3(0, 0, -1);
 const MAP_SEA_LEVEL = -1.15;
+const MAP_COAST_SEGMENTS = 128;
 const MAP_HUB_SCALE = 0.7;
 const hubRadius = (boss?: boolean): number => (boss ? 2.9 : 2.35) * MAP_HUB_SCALE;
 
@@ -118,7 +118,7 @@ function islandGeometry(
   seed: number,
   supports: readonly THREE.Vector3[] = [],
 ): THREE.BufferGeometry {
-  const segments = 128;
+  const segments = MAP_COAST_SEGMENTS;
   const rings = 36;
   const outline = organicIslandOutline(segments, seed);
   const positions: number[] = [];
@@ -139,11 +139,12 @@ function islandGeometry(
         Math.sin(x * 0.34 + z * 0.16) * 0.16;
       y += interior * (hills + 0.35);
       const baseY = y;
+      const supportInfluence = 1 - THREE.MathUtils.smoothstep(radius, 0.985, 1.075);
       let nearestDistance = Infinity;
       let nearestY = y;
       for (const support of supports) {
         const distanceSq = (x - support.x) ** 2 + (z - support.z) ** 2;
-        const weight = Math.exp(-distanceSq / 14);
+        const weight = Math.exp(-distanceSq / 14) * supportInfluence;
         y = Math.max(y, baseY + Math.max(0, support.y - 0.38 - baseY) * weight);
         if (distanceSq < nearestDistance) {
           nearestDistance = distanceSq;
@@ -151,7 +152,7 @@ function islandGeometry(
         }
       }
       if (nearestDistance < 12)
-        y = THREE.MathUtils.lerp(y, nearestY, 1 - THREE.MathUtils.smoothstep(nearestDistance, 1, 12));
+        y = THREE.MathUtils.lerp(y, nearestY, (1 - THREE.MathUtils.smoothstep(nearestDistance, 1, 12)) * supportInfluence);
       const beachEdge = 0.81 + Math.sin(angle * 3 + 1) * 0.035;
       const grass = 1 - THREE.MathUtils.smoothstep(radius, beachEdge - 0.07, beachEdge + 0.02);
       const sand = mixColor(0xd59d65, 0xffe5ad, THREE.MathUtils.smoothstep(y, -0.8, 0.25));
@@ -196,16 +197,17 @@ function shallowShelfGeometry(
   radiusZ: number,
   seed: number,
 ): THREE.BufferGeometry {
-  const random = seeded(seed ^ 0x5f3759df);
-  const segments = 64;
-  const rings = [
-    { radius: 2.2, y: -3.8, color: 0x286e7e },
-    { radius: 2.1, y: -1.45, color: 0x368f91 },
-    { radius: 1.95, y: -0.65, color: 0x74b5a5 },
-    { radius: 1.65, y: -0.42, color: 0xafc99b },
-    { radius: 1.3, y: -0.22, color: 0xe5ca82 },
-    { radius: 1.01, y: -0.11, color: 0xf8dfa1 },
-  ] as const;
+  const segments = MAP_COAST_SEGMENTS;
+  // The exponential depth shader needs a long, gradual bed slope. The old
+  // three-metre drop across the outer two rings made a hard turquoise edge.
+  const rings = Array.from({length:65},(_,index)=>{
+    const radius=THREE.MathUtils.lerp(4,1.01,index/64);
+    const offshore=THREE.MathUtils.clamp((radius-1.3)/2.6,0,1);
+    const depth=0.11+0.11*THREE.MathUtils.smoothstep(radius,1.01,1.3)+6.8*Math.pow(offshore,2.05);
+    const color=mixColor(0xf8dfa1,0x529da2,THREE.MathUtils.smoothstep(radius,1.15,2.4))
+      .lerp(new THREE.Color(0x254e69),THREE.MathUtils.smoothstep(radius,2.2,4));
+    return {radius,y:-depth,color};
+  });
   const outline = organicIslandOutline(segments, seed);
   const positions: number[] = [];
   const colors: number[] = [];
@@ -213,13 +215,13 @@ function shallowShelfGeometry(
   const indices: number[] = [];
   for (let ring = 0; ring < rings.length; ring++) {
     const band = rings[ring];
-    const color = new THREE.Color(band.color);
+    const color = band.color;
     for (let index = 0; index < segments; index++) {
       const angle = (index / segments) * Math.PI * 2;
       const radius = band.radius * outline[index];
       const x = Math.cos(angle) * radiusX * radius;
       const z = Math.sin(angle) * radiusZ * radius;
-      positions.push(x, band.y + (random() - 0.5) * 0.035, z);
+      positions.push(x, band.y, z);
       colors.push(color.r, color.g, color.b);
       uvs.push(x / 12, z / 12);
     }
@@ -252,27 +254,73 @@ function shallowShelfGeometry(
   return geometry;
 }
 
-function mapSandMaterial(): THREE.MeshStandardMaterial {
+/** Derive every coast sample from the rendered terrain's sea-level crossing. */
+function bindBeachCoordinates(
+  geometry: THREE.BufferGeometry,
+  localSeaLevel: number,
+  worldX: number,
+  worldZ: number,
+): THREE.Vector3[] {
+  const positions=geometry.getAttribute("position");
+  const segments=MAP_COAST_SEGMENTS;
+  const rows=(positions.count-1)/segments;
+  const coast:THREE.Vector3[]=[];
+  for(let column=0;column<segments;column++){
+    let below=new THREE.Vector3().fromBufferAttribute(positions,column);
+    for(let row=1;row<rows;row++){
+      const above=new THREE.Vector3().fromBufferAttribute(positions,row*segments+column);
+      if(above.y>=localSeaLevel){
+        const crossing=below.clone().lerp(above,(localSeaLevel-below.y)/(above.y-below.y));
+        coast.push(crossing);
+        break;
+      }
+      below=above;
+    }
+  }
+  if(coast.length!==segments)throw new Error("Map island needs a closed submerged perimeter");
+  const values=new Float32Array(positions.count*2);
+  for(let i=0;i<positions.count;i++){
+    const edge=coast[i%segments];
+    values[i*2]=Math.hypot(edge.x,edge.z)-Math.hypot(positions.getX(i),positions.getZ(i));
+    values[i*2+1]=(positions.getX(i)+worldX)*0.16+(positions.getZ(i)+worldZ)*0.11;
+  }
+  geometry.setAttribute("aMapBeach",new THREE.BufferAttribute(values,2));
+  return coast;
+}
+
+function mapSandMaterial(beachTime:{value:number}): THREE.MeshStandardMaterial {
   const owner = createUnitySandMaterial({name:"World map fine sand and pebbles"});
   const material = owner.material;
   material.vertexColors = true;
   material.normalScale.set(0.24, 0.24);
   material.aoMapIntensity = 0.3;
   material.userData.unitySandTileMetres = 2.7;
+  material.userData.mapBeachClock = beachTime;
   for (const map of Object.values(owner.maps)) {
     map.anisotropy = 8;
     map.minFilter = THREE.LinearMipmapLinearFilter;
   }
   material.onBeforeCompile = (shader) => {
-    shader.vertexShader = "attribute float aSandBlend;\nvarying float vMapSand;\n" +
-      shader.vertexShader.replace("#include <begin_vertex>", "#include <begin_vertex>\nvMapSand = aSandBlend;");
-    shader.fragmentShader = "varying float vMapSand;\n" + shader.fragmentShader
+    shader.uniforms.uMapBeachTime=beachTime;
+    shader.vertexShader = "attribute float aSandBlend;\nattribute vec2 aMapBeach;\nvarying vec2 vMapBeach;\nvarying float vMapSand;\n" +
+      shader.vertexShader.replace("#include <begin_vertex>", "#include <begin_vertex>\nvMapSand = aSandBlend;\nvMapBeach = aMapBeach;");
+    shader.fragmentShader = "uniform float uMapBeachTime;\nvarying vec2 vMapBeach;\nvarying float vMapSand;\n" + shader.fragmentShader
       .replace("#include <map_fragment>", `
+        float mapLap = 0.5 + 0.5 * sin(uMapBeachTime * 1.130973 + vMapBeach.y);
+        float mapLapFront = 0.35 + pow(mapLap, 1.5) * 1.45;
+        float mapFreshWet = 1.0 - smoothstep(mapLapFront - 0.2, mapLapFront + 0.4, vMapBeach.x);
+        float mapDampSand = (1.0 - smoothstep(1.7, 3.6, vMapBeach.x)) * 0.42;
+        float mapWetness = max(mapFreshWet, mapDampSand) * vMapSand;
         #ifdef USE_MAP
           vec3 sandSample = texture2D(map, vMapUv).rgb;
           float sandDetail = dot(sandSample, vec3(0.2126, 0.7152, 0.0722)) * 1.72;
           diffuseColor.rgb *= mix(vec3(1.0), vec3(clamp(sandDetail, 0.66, 1.36)), vMapSand * 0.88);
         #endif
+        diffuseColor.rgb *= mix(vec3(1.0), vec3(0.52, 0.63, 0.68), mapWetness * 0.82);
+      `)
+      .replace("#include <roughnessmap_fragment>", `
+        #include <roughnessmap_fragment>
+        roughnessFactor = mix(roughnessFactor, 0.17, mapWetness);
       `)
       .replace("#include <normal_fragment_maps>", `
         vec3 sandBaseNormal = normal;
@@ -284,7 +332,7 @@ function mapSandMaterial(): THREE.MeshStandardMaterial {
         "mix(1.0, texture2D( aoMap, vAoMapUv ).g, vMapSand)",
       ));
   };
-  material.customProgramCacheKey = () => "world-map-masked-fine-matrixrex-sand-v1";
+  material.customProgramCacheKey = () => "world-map-matrixrex-lapping-wet-sand-v2";
   return material;
 }
 
@@ -394,28 +442,6 @@ function palmTrunkGeometry(): THREE.BufferGeometry {
   return geometry;
 }
 
-function foliageGeometry(): THREE.BufferGeometry {
-  const pieces: THREE.BufferGeometry[] = [];
-  for (let i = 0; i < 5; i++) {
-    const angle = i * 2.4;
-    const piece = new THREE.SphereGeometry(0.55, 12, 8);
-    piece.scale(1, 0.86 + (i % 2) * 0.35, 0.85);
-    piece.translate(Math.cos(angle) * 0.34, (i % 2) * 0.28, Math.sin(angle) * 0.34);
-    pieces.push(piece);
-  }
-  const geometry = mergeGeometries(pieces)!;
-  pieces.forEach((piece) => piece.dispose());
-  const points = geometry.getAttribute("position");
-  const colors: number[] = [];
-  for (let i = 0; i < points.count; i++) {
-    const brightness = THREE.MathUtils.smoothstep(points.getY(i), -0.5, 0.9);
-    const color = mixColor(0x65866a, 0xc6e1bb, brightness);
-    colors.push(color.r, color.g, color.b);
-  }
-  geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
-  return geometry;
-}
-
 function rockGeometry(): THREE.BufferGeometry {
   const geometry = new THREE.SphereGeometry(1, 20, 14);
   const points = geometry.getAttribute("position");
@@ -429,21 +455,6 @@ function rockGeometry(): THREE.BufferGeometry {
   }
   geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
   geometry.computeVertexNormals();
-  return geometry;
-}
-
-function flowerGeometry(): THREE.BufferGeometry {
-  const petals: THREE.BufferGeometry[] = [];
-  for (let i = 0; i < 5; i++) {
-    const angle = i * Math.PI * 2 / 5;
-    const petal = new THREE.SphereGeometry(1, 8, 6);
-    petal.scale(0.16, 0.075, 0.27);
-    petal.translate(0, 0, 0.19);
-    petal.rotateY(angle);
-    petals.push(petal);
-  }
-  const geometry = mergeGeometries(petals)!;
-  petals.forEach((petal) => petal.dispose());
   return geometry;
 }
 
@@ -557,63 +568,6 @@ function addPalm(
     );
     batches.coconuts.setMatrixAt(batches.coconutIndex++, coconutMatrix);
   }
-}
-
-function makeFoliageBatches(root: THREE.Group): {
-  shrubs: THREE.InstancedMesh;
-  flowers: THREE.InstancedMesh;
-  shrubIndex: number;
-  flowerIndex: number;
-} {
-  const shrubs = new THREE.InstancedMesh(
-    foliageGeometry(),
-    new THREE.MeshStandardMaterial({
-      color: 0xffffff,
-      vertexColors: true,
-      roughness: 0.88,
-    }),
-    600,
-  );
-  const flowers = new THREE.InstancedMesh(
-    flowerGeometry(),
-    new THREE.MeshStandardMaterial({
-      color: 0xffffff,
-      emissive: 0x18070f,
-      roughness: 0.74,
-    }),
-    180,
-  );
-  shrubs.name = "world map lush shrubs";
-  flowers.name = "world map tropical flowers";
-  root.add(shrubs, flowers);
-  return { shrubs, flowers, shrubIndex: 0, flowerIndex: 0 };
-}
-
-function addShrub(
-  batches: ReturnType<typeof makeFoliageBatches>,
-  x: number,
-  y: number,
-  z: number,
-  scale: number,
-  color: number,
-  flowerColor: number | null,
-): void {
-  if (batches.shrubIndex >= batches.shrubs.count) return;
-  const shrubMatrix = new THREE.Matrix4().compose(
-    new THREE.Vector3(x, y + 0.32 * scale, z),
-    new THREE.Quaternion().setFromEuler(new THREE.Euler(0, x * 0.17 + z * 0.11, 0)),
-    new THREE.Vector3(scale * 1.18, scale * 0.72, scale),
-  );
-  batches.shrubs.setMatrixAt(batches.shrubIndex, shrubMatrix);
-  batches.shrubs.setColorAt(batches.shrubIndex++, new THREE.Color(color));
-  if (flowerColor === null || batches.flowerIndex >= batches.flowers.count) return;
-  const flowerMatrix = new THREE.Matrix4().compose(
-    new THREE.Vector3(x + scale * 0.18, y + scale * 0.78, z - scale * 0.08),
-    new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), x + z),
-    new THREE.Vector3(scale, scale, scale),
-  );
-  batches.flowers.setMatrixAt(batches.flowerIndex, flowerMatrix);
-  batches.flowers.setColorAt(batches.flowerIndex++, new THREE.Color(flowerColor));
 }
 
 function makeReefBatches(root: THREE.Group, clusterCapacity: number): {
@@ -820,6 +774,7 @@ export class CampaignWorldMapRuntime {
     private readonly waterfallRibbons: MapWaterfallRibbon[],
     private readonly plants: TropicalPlantKit,
     readonly shoreline: IslandShoreFoam,
+    readonly beachTime:{value:number},
   ) {
     for (const node of nodes) this.nodeByKey.set(node.key, node);
     for (const edge of edges)
@@ -975,6 +930,7 @@ export class CampaignWorldMapRuntime {
 
   update(dt: number): void {
     this.elapsed += dt;
+    this.beachTime.value=this.elapsed;
     this.plants.update(dt);
     this.shoreline.update(dt);
     for (const node of this.nodeByKey.values()) {
@@ -1080,7 +1036,9 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
   water.group.name = "world map ocean";
   root.add(water.group);
 
-  const islandMaterial = mapSandMaterial();
+  const beachTime={value:0};
+  const islandMaterial = mapSandMaterial(beachTime);
+  const coastlines:THREE.Vector3[][]=[];
   const shelfMaterial = new THREE.MeshStandardMaterial({
     vertexColors: true,
     roughness: 0.9,
@@ -1131,6 +1089,7 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
     root.add(shelf);
     const geometry = islandGeometry(spec.rx, spec.rz, spec.seed, spec.scenic ? [] :
       terrainSupports.map((point) => point.clone().sub(new THREE.Vector3(spec.x, 0, spec.z))));
+    coastlines.push(bindBeachCoordinates(geometry,MAP_SEA_LEVEL+0.05,spec.x,spec.z));
     applyUnitySandMetricUvs(geometry, {tileMetres:2.7,offsetMetres:[spec.x,-spec.z]});
     const mesh = new THREE.Mesh(geometry, islandMaterial);
     mesh.position.set(spec.x, -0.05, spec.z);
@@ -1150,15 +1109,13 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
   })), {segments:128,sourceZSign:1,color:[1,1,1,0.97],pulseSpeed:0.18,pulseAmount:0.18,edgePower:0.5});
   const shorePositions = shoreline.geometry.getAttribute("position");
   islandSpecs.forEach((spec,islandIndex) => {
-    const outline = organicIslandOutline(128,spec.seed);
     const width = Math.max(0.42,Math.min(spec.rx,spec.rz)*0.032);
     for(let i=0;i<128;i++) {
-      const angle=i/128*Math.PI*2;
+      const edge=coastlines[islandIndex][i];
+      const length=Math.hypot(edge.x,edge.z);
       for(let band=0;band<2;band++) {
-        const x=Math.cos(angle)*spec.rx*outline[i];
-        const z=Math.sin(angle)*spec.rz*outline[i];
-        const radial=1.03+(band?width/Math.hypot(x,z):0);
-        shorePositions.setXYZ(islandIndex*256+i*2+band,spec.x+x*radial,MAP_SEA_LEVEL+0.09,spec.z+z*radial);
+        const radial=1+(0.16+(band?width:0))/length;
+        shorePositions.setXYZ(islandIndex*256+i*2+band,spec.x+edge.x*radial,MAP_SEA_LEVEL+0.09,spec.z+edge.z*radial);
       }
     }
   });
@@ -1183,7 +1140,6 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
     { x: 25, z: 3, r: 5, h: 13.2, s: 83 },
     { x: 37, z: 0, r: 4.5, h: 11.8, s: 97 },
   ] as const;
-  const mountainMeshes: THREE.Mesh[] = [];
   for (const mountain of mountainSpecs) {
     const mesh = new THREE.Mesh(
       mountainGeometry(mountain.r, mountain.h, mountain.s),
@@ -1194,7 +1150,6 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
     mesh.userData.edgeGrinding = false;
     mesh.userData.visualOnly = true;
     root.add(mesh);
-    mountainMeshes.push(mesh);
   }
   for (const islet of scenicIslandSpecs) {
     const stack = new THREE.Mesh(
@@ -1279,7 +1234,6 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
   }
 
   const palms = makePalmBatches(root);
-  const foliage = makeFoliageBatches(root);
   const plants = new TropicalPlantKit(root);
   const tropicalPlacements = new Map<TropicalPlantKind,THREE.Matrix4[]>(
     TROPICAL_PLANT_KINDS.map((kind)=>[kind,[]]),
@@ -1329,8 +1283,8 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
         placeTropical(kind,x,z,scale,angle+Math.PI);
       } else addPalm(palms, x, terrainY(x, z), z, scale, angle + Math.PI);
     }
-    const shrubAttempts = island.scenic ? 8 : 180;
-    for (let index = 0; index < shrubAttempts; index++) {
+    const understoryAttempts = island.scenic ? 8 : 180;
+    for (let index = 0; index < understoryAttempts; index++) {
       const angle = random() * Math.PI * 2;
       const radius = 0.28 + random() * 0.55;
       const x = island.x + Math.cos(angle) * island.rx * radius;
@@ -1340,17 +1294,7 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
         placeTropical(index%2===0?'monstera':'birdofparadise',x,z,0.8+random()*0.25,angle);
         continue;
       }
-      const greens = [0x82c976, 0xa4d96d, 0x95c868, 0x75bb8d] as const;
-      const flowers = [0xf35e8f, 0xff8a55, 0xaa6cf2, 0xffd65c] as const;
-      addShrub(
-        foliage,
-        x,
-        terrainY(x, z),
-        z,
-        0.72 + random() * 1.3,
-        greens[(index + island.seed) % greens.length],
-        index % 4 === 0 ? flowers[(index + island.seed) % flowers.length] : null,
-      );
+      random(); // Preserve the authored tree/reef distribution after removing bushes.
       if (index % 5 === 0 && groundLeafCount + 5 <= groundLeaves.count) {
         for (let leaf = 0; leaf < 5; leaf++) {
           groundLeaves.setMatrixAt(groundLeafCount++, new THREE.Matrix4().compose(
@@ -1378,7 +1322,7 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
       );
     }
   }
-  for (const [mountainIndex, mountain] of mountainSpecs.entries()) {
+  for (const mountain of mountainSpecs) {
     for (let i = 0; i < 12; i++) {
       const angle = i * 2.399 + mountain.s;
       const x = mountain.x + Math.cos(angle) * mountain.r * (0.62 + random() * 0.35);
@@ -1391,39 +1335,10 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
         new THREE.Vector3(size * 1.2, size * (1 + random()), size),
       ));
     }
-    for (let index = 0; index < 7; index++) {
-      const angle = (index / 7) * Math.PI * 2 + mountain.s * 0.13;
-      addShrub(
-        foliage,
-        mountain.x + Math.cos(angle) * mountain.r * 0.78,
-        0.58 + (index % 3) * 0.16,
-        mountain.z + Math.sin(angle) * mountain.r * 0.78,
-        0.7 + (index % 2) * 0.2,
-        index % 2 === 0 ? 0x3f9149 : 0x56a44e,
-        index % 3 === 0 ? 0xee6b91 : null,
-      );
-    }
-    const rockSurface = mountainMeshes[mountainIndex].geometry.getAttribute("position");
-    for (let index = 0; index < 24; index++) {
-      const row = [5, 12, 21, 29][index % 4];
-      const segment = (index * 11 + mountain.s) % 64;
-      const vertex = row * 64 + segment;
-      addShrub(
-        foliage,
-        mountain.x + rockSurface.getX(vertex),
-        rockSurface.getY(vertex) - 0.12,
-        mountain.z + rockSurface.getZ(vertex),
-        (1 - row / 48) * (0.9 + (index % 3) * 0.4),
-        index % 2 === 0 ? 0x8cbd75 : 0xa3cd74,
-        index % 9 === 0 ? 0xec9b95 : null,
-      );
-    }
   }
   finalizeInstances(palms.trunks, palms.trunkIndex);
   finalizeInstances(palms.fronds, palms.frondIndex);
   finalizeInstances(palms.coconuts, palms.coconutIndex);
-  finalizeInstances(foliage.shrubs, foliage.shrubIndex);
-  finalizeInstances(foliage.flowers, foliage.flowerIndex);
   finalizeInstances(rocks, rockCount);
   finalizeInstances(groundLeaves, groundLeafCount);
   finalizeInstances(reefs.heads, reefs.headIndex);
@@ -1431,8 +1346,6 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
   plants.decorate(palms.trunks,"trunk");
   plants.decorate(palms.fronds,"leaf");
   plants.decorate(palms.coconuts,"flower");
-  plants.decorate(foliage.shrubs,"canopy");
-  plants.decorate(foliage.flowers,"flower");
   plants.decorate(groundLeaves,"leaf");
   for(const [kind,transforms] of tropicalPlacements)
     if(transforms.length)root.add(plants.batch(kind,transforms));
@@ -1718,6 +1631,7 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
       waterfallRibbons,
       plants,
       shoreline,
+      beachTime,
     ),
     water,
     groundMeshes,

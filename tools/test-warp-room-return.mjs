@@ -527,6 +527,34 @@ try {
     assert.equal(island.material.map.name,"MatrixRex sand-color.png");
   }
   assert.equal(warpLevel.campaignWorldMap.shoreline.diagnostics.ovalCount,CAMPAIGN_ISLANDS.length+4);
+  const coastLand=[];
+  warpLevel.root.traverse(object=>{
+    if(object.name.startsWith("world map campaign island ")||object.name==="world map offshore islet")coastLand.push(object);
+  });
+  const foamPositions=warpLevel.campaignWorldMap.shoreline.geometry.getAttribute("position");
+  const coastRay=new THREE.Raycaster(new THREE.Vector3(),new THREE.Vector3(0,-1,0));
+  for(let i=1;i<foamPositions.count;i+=2){
+    coastRay.ray.origin.set(foamPositions.getX(i),50,foamPositions.getZ(i));
+    const ground=coastRay.intersectObjects(coastLand,false)[0];
+    assert.ok(!ground||ground.point.y<foamPositions.getY(i),`shoreline sample ${i} is hidden under raised terrain`);
+  }
+  assert.equal(warpLevel.root.getObjectByName("world map lush shrubs"),undefined,"removed round bushes reappeared");
+  for(const island of coastLand){
+    const beach=island.geometry.getAttribute("aMapBeach");
+    assert.ok(beach,"shoreline-relative wetness coordinates are missing");
+    let wet=false,dry=false;
+    for(let i=0;i<beach.count;i++){
+      wet ||= beach.getX(i)>0&&beach.getX(i)<2;
+      dry ||= beach.getX(i)>4;
+    }
+    assert.ok(wet&&(dry||island.name==="world map offshore islet"));
+  }
+  const beachClock=warpLevel.campaignWorldMap.beachTime;
+  const beachTimeBefore=beachClock.value;
+  warpLevel.update(0.25);
+  assert.equal(beachClock.value,beachTimeBefore+0.25,"lapping sand clock did not advance with the map");
+  warpLevel.update(0);
+  assert.equal(beachClock.value,beachTimeBefore+0.25,"paused sand animation advanced");
 
   const mountains = [];
   warpLevel.root.traverse((object) => {

@@ -59,8 +59,9 @@ Important map-specific requirements:
 - Caustics require real opaque scene depth. Every campaign island and offshore
   islet therefore has an outward submerged sand/reef shelf. The broad bright
   plateau is roughly 0.1–0.7 m below sea level, with a deeper outer falloff.
-  It extends to 1.95 times the island's nominal radius before tapering to
-  deep water at 2.2 times the radius. Caustic scale remains 1.05.
+  A densely sampled, gradual seabed slope spreads the turquoise-to-blue
+  transition from the broad lagoon across several dozen metres, ending at
+  four times the nominal island radius. Caustic scale remains 1.05.
   `terrainHeight` is sampler compatibility only; it does not create a seabed.
 - The elevated map camera needs a longer caustic distance range and a lower
   reflection Fresnel exponent than the close gameplay coast. These are
@@ -85,16 +86,22 @@ Floating number labels and ornamental boss crowns are deliberately omitted so
 the marker language stays clean.
 
 The island surface follows the trail elevations with gentle hills and broad
-sand gradients. Palms have curved trunks and folded, shaded fronds; foliage,
-flowers and rounded boulders are instanced and placed against the actual land
-surface. Rock ledge foliage uses the mountain's own vertices. Map lighting
+sand gradients. Palms have curved trunks and folded, shaded fronds; tropical
+plants, ground leaves and rounded boulders are instanced and placed against the
+actual land surface. Rounded bush clusters have been removed. Map lighting
 uses a warm front key, cool fill and reduced shadow contrast, and the shared
 ocean retains its full passes with quieter surface normals and reflections.
 
 The beach layers the existing MatrixRex sand/pebble color, normal and mask
 textures at a 2.7 m repeat, using a vertex mask to exclude the grass. White
-shore foam follows the island's own organic outline; all six shorelines share
-the existing Island Hopper foam renderer in one draw. The reusable tropical
+shore foam follows the actual sea-level crossing of the island mesh; all six
+shorelines share the existing Island Hopper foam renderer in one draw. Raised
+path support fades out before the submerged perimeter, and the foam sits just
+seaward of that contour so terrain cannot hide sections of the white edge.
+The same contour supplies metric beach coordinates to a lapping wetness layer:
+the incoming wash darkens the sand and lowers its roughness, then retreats to
+a softer residual damp band. Its clock advances only with the map update.
+The reusable tropical
 plant kit adds five species and Gouraud vertex shading with gentle leaf wind;
 see [TROPICAL_PLANTS.md](TROPICAL_PLANTS.md) for the editor and code contracts.
 
