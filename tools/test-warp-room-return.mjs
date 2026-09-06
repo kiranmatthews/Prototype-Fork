@@ -406,6 +406,7 @@ try {
   assert.ok(warpLevel.water, "world map did not reuse the campaign ocean shader");
   assert.ok(warpLevel.water.params.causticsFade >= 120);
   assert.ok(warpLevel.water.params.causticsStrength > 1);
+  assert.equal(warpLevel.water.params.causticsScale,1.05,"widening shallows must preserve the authored caustic size");
   assert.ok(warpLevel.water.params.depthDistance >= 0.7);
   assert.ok(warpLevel.water.params.reflectionFresnel <= 3);
   assert.ok(warpLevel.water.reflectionScale >= 0.4);
@@ -517,6 +518,15 @@ try {
       "a caustic shelf rises above the water instead of feeding opaque depth",
     );
   }
+  for(const island of campaignIslands){
+    const shelf=shelves.find((mesh)=>mesh.position.x===island.position.x&&mesh.position.z===island.position.z);
+    const drySize=new THREE.Box3().setFromObject(island).getSize(new THREE.Vector3());
+    const wetSize=new THREE.Box3().setFromObject(shelf).getSize(new THREE.Vector3());
+    assert.ok(wetSize.x>drySize.x*1.75&&wetSize.z>drySize.z*1.75,"caustic shelf no longer broadly surrounds the island");
+    assert.ok(island.geometry.hasAttribute("aSandBlend")&&island.geometry.hasAttribute("uv1"));
+    assert.equal(island.material.map.name,"MatrixRex sand-color.png");
+  }
+  assert.equal(warpLevel.campaignWorldMap.shoreline.diagnostics.ovalCount,CAMPAIGN_ISLANDS.length+4);
 
   const mountains = [];
   warpLevel.root.traverse((object) => {
@@ -786,6 +796,24 @@ try {
   controller.activate(warpLevel, "jungle");
   assert.deepEqual(fakePlayer.group.scale.toArray(), [3, 3, 3], "repeated map activation compounded scale");
   controller.deactivate();
+
+  const plantKinds=["fanpalm","bananatree","seagrape","monstera","birdofparadise"];
+  const plantData={
+    v:1,name:"Tropical props roundtrip",spawn:[0,0.2,0],killY:-20,
+    components:[
+      {t:"platform",p:[0,-0.5,0],s:[50,1,30]},
+      {t:"gate",p:[0,0,-12]},
+      ...plantKinds.map((dkind,index)=>({t:"decor",dkind,p:[index*7-14,0,-3],w:0.8+index*0.1,yaw:index*21,amp:index-2})),
+    ],
+  };
+  const plantLevel=new Level(new THREE.Scene(),{id:"tropical-props-test",name:plantData.name,data:plantData});
+  const placed=[];
+  plantLevel.root.traverse((object)=>{if(object.userData.plantKind)placed.push(object.userData.plantKind);});
+  assert.deepEqual(placed,plantKinds,"new tropical props did not build through level data");
+  assert.deepEqual(plantLevel.captureData().components.filter(c=>c.t==="decor"),plantData.components.filter(c=>c.t==="decor"),"tropical palette data changed during capture");
+  plantLevel.update(0.25);
+  assert.ok(plantLevel.tropicalPlants.time.value>0,"level-authored plants never animate");
+  plantLevel.dispose();
 
   console.log(
     "Validated cohesive island masses, Crash-style marker routes, visible MatrixRex shelves, supported hubs, reversible branching, controller travel, boardslide staging, persistent focus, exit routing, and snap-facing order.",

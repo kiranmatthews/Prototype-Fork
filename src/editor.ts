@@ -54,6 +54,7 @@ import {
   propRoll,
   propSize,
 } from "./props";
+import { TROPICAL_PLANT_KINDS } from "./tropicalPlants";
 
 interface Hooks {
   preflight: () => boolean;
@@ -163,6 +164,24 @@ const manyDots = (x: CanvasRenderingContext2D): void => {
   }
 };
 const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
+  fanpalm: (x) => {
+    x.fillStyle="#9b7d52"; x.fillRect(8,8,2,10);
+    x.fillStyle="#94c970"; x.beginPath(); x.moveTo(9,11); x.arc(9,6,7,Math.PI,0); x.closePath(); x.fill();
+  },
+  bananatree: (x) => leafSpray(x,"#95c95d",5,15,3.2),
+  seagrape: (x) => {
+    x.fillStyle="#8c7359"; x.fillRect(8,9,2,8);
+    x.fillStyle="#77b583";
+    for(const [cx,cy] of [[4,7],[9,5],[14,7],[9,10]]) {x.beginPath();x.ellipse(cx,cy,4,3,0,0,7);x.fill();}
+  },
+  monstera: (x) => {
+    leafSpray(x,"#58ac80",3,14,4);
+    x.strokeStyle="#bbe6a5";x.lineWidth=1;x.beginPath();x.moveTo(9,15);x.lineTo(9,4);x.stroke();
+  },
+  birdofparadise: (x) => {
+    leafSpray(x,"#62a67f",4,14,2.2);
+    x.fillStyle="#ffad52";x.beginPath();x.moveTo(8,7);x.lineTo(14,3);x.lineTo(12,8);x.closePath();x.fill();
+  },
   fern: (x) => leafSpray(x, "#4a9a40", 6, 12, 1.6),
   broadleaf: (x) => leafSpray(x, "#3e8e46", 4, 13, 3.2),
   flowers: (x) => {
@@ -426,6 +445,11 @@ const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
 // What a freshly dropped prop looks like: the same numbers the hand-coded
 // levels plant with, so a new one matches the ones already standing there.
 const DECOR_DEFAULTS: Record<DecorKind, Partial<CustomComponent>> = {
+  fanpalm: {w:1},
+  bananatree: {w:1},
+  seagrape: {w:1},
+  monstera: {w:1},
+  birdofparadise: {w:1},
   fern: { w: 1.2 },
   broadleaf: { w: 1.2 },
   flowers: {},
@@ -4386,6 +4410,7 @@ export class Editor {
       const kind = c.dkind ?? "fern";
       if (
         [
+          ...TROPICAL_PLANT_KINDS,
           "fern", "broadleaf", "toadstool", "toadstools", "idol", "tree",
           "plants", "boulder", "rocks", "trunk", "slab",
         ].includes(kind)
@@ -8198,6 +8223,7 @@ export class Editor {
       // so they simply render nothing for one. Only the closing note has to
       // know, or a library prop would carry two.
       const SCALED: DecorKind[] = [
+        ...TROPICAL_PLANT_KINDS,
         "fern",
         "broadleaf",
         "toadstool",
@@ -8233,6 +8259,11 @@ export class Editor {
           (v) => (c.amp = v),
           0.02,
         );
+      if ((TROPICAL_PLANT_KINDS as readonly string[]).includes(dk)) {
+        num("yaw °", () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
+        num("lean °", () => c.amp ?? 0,
+          (v) => (c.amp = THREE.MathUtils.clamp(v,-40,40)), 2);
+      }
       if (dk === "vines")
         num(
           "strands",

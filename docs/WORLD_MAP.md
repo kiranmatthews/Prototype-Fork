@@ -57,8 +57,10 @@ Important map-specific requirements:
   `-Z`. Reversing that order back-face culls the detailed `FrontSide` ribbon
   and leaves only the flat, double-sided horizon visible.
 - Caustics require real opaque scene depth. Every campaign island and offshore
-  islet therefore has an outward submerged sand/reef shelf roughly 0.1–0.7 m
-  below sea level.
+  islet therefore has an outward submerged sand/reef shelf. The broad bright
+  plateau is roughly 0.1–0.7 m below sea level, with a deeper outer falloff.
+  It extends to 1.95 times the island's nominal radius before tapering to
+  deep water at 2.2 times the radius. Caustic scale remains 1.05.
   `terrainHeight` is sampler compatibility only; it does not create a seabed.
 - The elevated map camera needs a longer caustic distance range and a lower
   reflection Fresnel exponent than the close gameplay coast. These are
@@ -88,6 +90,13 @@ flowers and rounded boulders are instanced and placed against the actual land
 surface. Rock ledge foliage uses the mountain's own vertices. Map lighting
 uses a warm front key, cool fill and reduced shadow contrast, and the shared
 ocean retains its full passes with quieter surface normals and reflections.
+
+The beach layers the existing MatrixRex sand/pebble color, normal and mask
+textures at a 2.7 m repeat, using a vertex mask to exclude the grass. White
+shore foam follows the island's own organic outline; all six shorelines share
+the existing Island Hopper foam renderer in one draw. The reusable tropical
+plant kit adds five species and Gouraud vertex shading with gentle leaf wind;
+see [TROPICAL_PLANTS.md](TROPICAL_PLANTS.md) for the editor and code contracts.
 
 For a diagnostic pass, add `?renderdiag`, enter the map, and inspect the hidden
 `#render-diagnostics` payload. Ocean quality must be `full`; reflection and

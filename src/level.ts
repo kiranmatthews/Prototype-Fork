@@ -43,6 +43,7 @@ import { BEACHFRONT_RUN_LEVEL } from "./levels/beachfront-run";
 import { JUNGLE_CLIFF_LEVEL } from "./levels/jungle-cliff";
 import { UNITY_PORT_LEVELS } from "./levels/unity-ports";
 import { EASY_BONUS_LEVEL, DEFAULT_BONUS_CRATE_COUNT } from "./levels/bonus-easy";
+import { TropicalPlantKit, TROPICAL_PLANT_KINDS, TROPICAL_PLANT_LABELS } from "./tropicalPlants";
 import {
   CAMPAIGN_LEVELS,
   isCampaignLevel,
@@ -763,6 +764,7 @@ export function setEditorBuild(on: boolean): boolean {
 // editor builds its FOLIAGE palette straight off this list, so a new one shows
 // up in the add panel the moment it is added here and wired in decorProp().
 export const DECOR_KINDS = [
+  ...TROPICAL_PLANT_KINDS,
   "fern",
   "broadleaf",
   "flowers",
@@ -793,6 +795,7 @@ export const DECOR_KINDS = [
 export type DecorKind = (typeof DECOR_KINDS)[number];
 /** Human labels for the palette + the props dropdown. */
 export const DECOR_LABELS: Record<DecorKind, string> = {
+  ...TROPICAL_PLANT_LABELS,
   fern: "fern",
   broadleaf: "broadleaf",
   flowers: "flowers",
@@ -3122,6 +3125,7 @@ export class Level {
   private pops: { obj: THREE.Object3D; t: number }[] = [];
   private time = 0;
   private thornClusters: ProceduralThornCluster[] = [];
+  private tropicalPlants: TropicalPlantKit | null = null;
   private meshyCourtyards: THREE.Group[] = [];
   private arrowTex: THREE.CanvasTexture | null = null;
   private tntTexCache = new Map<string, THREE.CanvasTexture>();
@@ -6037,6 +6041,10 @@ export class Level {
   }
 
   dispose(preserveResourcesFrom?: Level): void {
+    this.campaignWorldMap?.dispose();
+    this.campaignWorldMap = null;
+    this.tropicalPlants?.dispose();
+    this.tropicalPlants = null;
     this.discardedBoards.dispose(); // remove borrowed board resources before the level traversal
     for (const courtyard of this.meshyCourtyards)
       releaseMeshyCourtyard(courtyard);
@@ -6806,6 +6814,7 @@ export class Level {
   }
 
   update(dt: number): void {
+    this.tropicalPlants?.update(dt);
     this.discardedBoards.update(dt, this);
     this.campaignWorldMap?.update(dt);
     this.updateCampaignPortalAnimation();
@@ -14174,6 +14183,20 @@ export class Level {
     const [x, y, z] = c.p;
     const s = c.w ?? 1;
     switch (c.dkind) {
+      case "fanpalm":
+      case "bananatree":
+      case "seagrape":
+      case "monstera":
+      case "birdofparadise": {
+        this.noteDecor(c.dkind,x,y,z,{w:s,yaw:c.yaw,amp:c.amp});
+        this.tropicalPlants ??= new TropicalPlantKit(this.root);
+        const plant=this.tropicalPlants.create(c.dkind);
+        plant.position.set(x,y,z);
+        plant.scale.setScalar(s);
+        plant.rotation.set(0,THREE.MathUtils.degToRad(c.yaw??0),THREE.MathUtils.degToRad(c.amp??0));
+        this.root.add(plant);
+        return;
+      }
       case "fern":
         return this.fern(x, y, z, s);
       case "broadleaf":
