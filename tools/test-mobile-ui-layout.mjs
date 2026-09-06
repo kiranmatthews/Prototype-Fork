@@ -88,16 +88,11 @@ assert.match(touch, /body\.world-map-active \.tc-zone,[\s\S]*?body\.world-map-ac
 assert.match(worldMapUi, /createInputGlyph\(action\)/, "map glyph visibility must use the shared device policy");
 assert.match(worldMapUi, /this\.enterButton\.disabled = this\.moving \|\| !unlocked/);
 assert.match(worldMapUi, /tap\.canceled/);
-assert.match(
-  worldMapUi,
-  /@media \(orientation: portrait\)[\s\S]*?\.world-map-unlock-notice \{ top: calc\(11vh \+ 185px\);/,
-  "portrait unlock notices must clear the level card and utility row",
-);
-assert.match(
-  worldMapUi,
-  /this\.unlockNotice\.classList\.remove\("show"\);[\s\S]{0,180}this\.unlockNotice\.hidden = true;[\s\S]{0,100}this\.unlockNotice\.textContent = "";/,
-  "the faded unlock status must leave the accessibility tree",
-);
+assert.doesNotMatch(worldMapUi, /unlockNotice|announceUnlock|NEW PATH OPEN/, "automatic map unlock popups must not return");
+assert.doesNotMatch(main, /player\.on(?:Checkpoint|Relic|TrickGateBlocked|ComboGraceLow)\s*=/, "gameplay events must not install stock title popups");
+assert.doesNotMatch(main, /"TIME TRIAL!"|"COMBO RUN!"|"COMBO BROKEN"|"COMBO GEM!"|"START A COMBO!"/);
+assert.match(main, /player\.onTTStart = \(\) => \{\s*ui\.setTimeTrial\(true\)/);
+assert.match(main, /worldMapController\?\.revealUnlocks\(unlockReveal\)/);
 assert.match(main, /if \(input\.pausePressed\)[\s\S]{0,120}gameFlow\.handlePauseToggle\(\)/);
 assert.match(main, /new MutationObserver\(syncToolPanelState\)/);
 assert.match(ui, /setPresentationTools\(/);

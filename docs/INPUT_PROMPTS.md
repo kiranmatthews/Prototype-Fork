@@ -41,8 +41,10 @@ reserve their layout size, and fall back to labelled shapes if an image fails.
 Live DOM nodes refresh together on device changes without retaining discarded
 menu nodes. The same family and loaded image cache are used before CRT; no
 sharp DOM duplicate is drawn. Asset-load events invalidate frozen menu frames.
-Existing map hints, trick-gate messages and time-trial retry prompts use this
-system. Ordinary menu text and unrelated typography are unchanged.
+Existing map hints and time-trial retry prompts use this system. Trick-gate
+hint templates remain available to authored presentation, but no automatic
+trick-gate popup is installed. Ordinary menu text and unrelated typography are
+unchanged.
 
 ## Profiles and extension
 

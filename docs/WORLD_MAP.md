@@ -60,9 +60,10 @@ actions occupy two rows at the bottom, with no virtual-controller clearance gap.
 
 Quit Level, Game Over No, and Results Continue pass the originating progress
 key back through the shared return helper. The controller seats the character
-on that exact hub and persists it as map focus. A first clear announces and
-animates newly opened routes; replaying the level does not repeat the
-time-trial unlock banner.
+on that exact hub and persists it as map focus. A first clear animates newly
+opened routes without a text popup. Gameplay checkpoint, collectible, run-mode
+and trick-gate events have no stock announcement banners; specific messaging
+is left to authored presentation. Normal HUD and results displays remain.
 
 ## MatrixRex ocean contract
 
@@ -150,7 +151,7 @@ to this browser; it does not silently change shipped defaults.
 Text Tuning is developer chrome: it is map-only and follows **M**, including
 when its summary/button has focus. Editing an input retains the shared M-key
 typing guard. It is excluded from CRT composition, like the other debug tools.
-The map's actual level card, labels, utilities, enter arrow and unlock notice
+The map's actual level card, labels, utilities and enter arrow
 are composited before CRT; their semantic DOM remains in place for hit testing.
 
 Map action symbols are resolved by the [shared input-prompt system](INPUT_PROMPTS.md),

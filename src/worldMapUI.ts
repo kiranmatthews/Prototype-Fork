@@ -43,11 +43,9 @@ export class WorldMapUI {
   private readonly status = node("span", "world-map-level-status");
   private readonly trial = node("div", "world-map-trial");
   private readonly collectibleRow = node("div", "world-map-collectibles");
-  private readonly unlockNotice = node("div", "world-map-unlock-notice");
   private readonly enterButton = node("button", "world-map-enter-touch");
   private selectedKey = "jungle";
   private moving = false;
-  private unlockNoticeTimer: number | null = null;
 
   constructor(
     private readonly campaign: CampaignStore,
@@ -77,10 +75,7 @@ export class WorldMapUI {
       this.actionButton("mapQuit", "QUIT GAME", "quit"),
     );
 
-    this.unlockNotice.setAttribute("role", "status");
-    this.unlockNotice.setAttribute("aria-live", "polite");
-    this.unlockNotice.hidden = true;
-    this.root.append(this.createTouchSurface(), levelCard, actionBar, this.unlockNotice);
+    this.root.append(this.createTouchSurface(), levelCard, actionBar);
     document.body.appendChild(this.root);
     this.injectStyle();
     createSecondaryTextPanel();
@@ -97,33 +92,7 @@ export class WorldMapUI {
 
   hide(): void {
     this.root.hidden = true;
-    this.unlockNotice.classList.remove("show");
-    this.unlockNotice.hidden = true;
-    this.unlockNotice.textContent = "";
-    if (this.unlockNoticeTimer !== null) window.clearTimeout(this.unlockNoticeTimer);
-    this.unlockNoticeTimer = null;
     document.body.classList.remove("world-map-active");
-  }
-
-  announceUnlock(progressKeys: readonly string[]): void {
-    const names = progressKeys
-      .map((key) => campaignLevelByKey(key)?.name)
-      .filter((name): name is string => !!name);
-    if (!names.length) return;
-    if (this.unlockNoticeTimer !== null) window.clearTimeout(this.unlockNoticeTimer);
-    this.unlockNotice.hidden = false;
-    this.unlockNotice.textContent = `NEW PATH OPEN · ${names.join(" / ").toUpperCase()}`;
-    this.unlockNotice.classList.remove("show");
-    void this.unlockNotice.offsetWidth;
-    this.unlockNotice.classList.add("show");
-    this.unlockNoticeTimer = window.setTimeout(() => {
-      this.unlockNotice.classList.remove("show");
-      this.unlockNoticeTimer = window.setTimeout(() => {
-        this.unlockNotice.hidden = true;
-        this.unlockNotice.textContent = "";
-        this.unlockNoticeTimer = null;
-      }, 240);
-    }, 3600);
   }
 
   setSelection(
@@ -266,8 +235,6 @@ export class WorldMapUI {
       .world-map-action { display: flex; align-items: center; gap: 9px; padding: 4px 5px; min-height: 44px; background: transparent; flex-shrink: 0; }
       .world-map-action strong { font-size: clamp(calc(19px * var(--secondary-size-scale, 1)), calc(1.65vw * var(--secondary-size-scale, 1)), calc(32px * var(--secondary-size-scale, 1))); line-height: 1.15; white-space: nowrap; }
       .world-map-action .input-glyph { --prompt-icon-size:clamp(34px,2.5vw,48px); }
-      .world-map-unlock-notice { position: absolute; left: 50%; top: 21%; transform: translate(-50%, -18px) scale(.92); opacity: 0; padding: 10px 22px; border: 2px solid #fff0a3; border-radius: 22px; background: linear-gradient(135deg, rgba(237,131,41,.96), rgba(198,72,30,.96)); color: #fff8d5; box-shadow: 0 8px 25px rgba(36,19,7,.36); font-size: clamp(20px, 2.2vw, 31px); letter-spacing: .035em; text-align: center; transition: opacity .22s, transform .32s cubic-bezier(.2,1.4,.4,1); }
-      .world-map-unlock-notice.show { opacity: 1; transform: translate(-50%, 0) scale(1); }
       @media (max-width: 980px) {
         .world-map-level-card { width: 54vw; }
         .world-map-actions { gap: 5px; }
@@ -297,7 +264,6 @@ export class WorldMapUI {
         .world-map-actions { left: 50%; right: auto; top: auto; bottom: calc(var(--tc-size, 168px) + max(10px, env(safe-area-inset-bottom)) + 14px); transform: translateX(-50%); display: grid; grid-template-columns: repeat(2, max-content); column-gap: 16px; row-gap: 4px; }
         .world-map-action { min-width: 44px; }
         .world-map-action strong { font-size: calc(20px * var(--secondary-size-scale, 1)); }
-        .world-map-unlock-notice { top: calc(11vh + 185px); width: max-content; max-width: 82vw; }
       }
       body.tc-on .world-map-touch-surface { display:block; pointer-events:auto; }
       body.tc-on .world-map-level-card { pointer-events:auto; z-index:1; }

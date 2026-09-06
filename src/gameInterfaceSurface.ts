@@ -114,8 +114,6 @@ export class GameInterfaceSurface {
         const r = button.getBoundingClientRect(); ctx.save(); ctx.strokeStyle="#e8f0f4"; ctx.lineWidth=2; ctx.strokeRect(r.x-4,r.y-4,r.width+8,r.height+8); ctx.restore();
       }
     }
-    const notice = root.querySelector<HTMLElement>(".world-map-unlock-notice");
-    if (this.visible(notice)) { this.box(ctx,notice,"#cf6222"); this.text(ctx,notice); }
   }
   private paintTouch(ctx: CanvasRenderingContext2D): void {
     for (const pad of document.querySelectorAll<HTMLElement>(".tc-pad, .tc-btn, .tc-pause")) {

@@ -25,7 +25,6 @@ import {
   userLevelStorageHealthy,
   isEditUnlocked,
   checkEditPass,
-  deckTrickInfo,
   DEFAULT_SKY,
   type SkyPreset,
 } from "./level";
@@ -1896,10 +1895,6 @@ function set2P(on: boolean, force = false): void {
       // vanish. Its own lens; the one shared HUD counter.
       p2.cam = camera2;
       p2.hudFruitAt = () => ui.fruitIconAt();
-      p2.onTrickGateBlocked = (trick) => {
-        const info = deckTrickInfo(trick);
-        ui.showMessage(`P2 · ${info.label.toUpperCase()} REQUIRED`, info.hint, 1800);
-      };
       tintP2();
     }
     p2.enterLevel(current.id);
@@ -2623,7 +2618,6 @@ function continueFromResults(): void {
     gameFlow.hide();
   }).then(() => {
     worldMapController?.revealUnlocks(unlockReveal);
-    worldMapUI?.announceUnlock(unlockReveal);
   });
 }
 
@@ -3882,11 +3876,8 @@ window.addEventListener("keydown", (e) => {
 });
 
 player.onDeath = () => ui.deathFade(true);
-player.onRelic = (title, sub) => ui.showMessage(title, sub, 1400);
-player.onTrickGateBlocked = (trick) => {
-  const info = deckTrickInfo(trick);
-  ui.showMessage(`${info.label.toUpperCase()} REQUIRED`, info.hint, 1800);
-};
+// Gameplay event hooks remain available for authored presentation. Do not
+// attach generic checkpoint, collectible or trick-instruction title popups.
 player.onFinish = () => {
   pendingCompletion = { kind: bonusSession ? "bonus" : "normal" };
 };
@@ -3933,11 +3924,6 @@ function recordTT(
 
 player.onTTStart = () => {
   ui.setTimeTrial(true);
-  ui.showMessage(
-    "TIME TRIAL!",
-    "race to the gate — numbered crates freeze the clock",
-    1800,
-  );
 };
 player.onTTEnd = () => ui.setTimeTrial(false);
 
@@ -3945,21 +3931,13 @@ player.onTTEnd = () => ui.setTimeTrial(false);
 player.onComboRunStart = () => {
   ui.setRunRows(true);
   ui.comboHalo("on");
-  ui.showMessage(
-    "COMBO RUN!",
-    "start a combo NOW — one chain, all the way to the gem",
-    2000,
-  );
 };
-player.onComboGraceLow = () => ui.showMessage("START A COMBO!", "", 700);
 player.onComboRunFail = () => {
   ui.comboHalo("dissipate");
-  ui.showMessage("COMBO BROKEN", "", 1100);
 };
 player.onComboRunWin = () => {
   ui.comboHalo("dissipate");
   ui.setRunRows(false);
-  ui.showMessage("COMBO GEM!", "the green gem is yours", 2200);
 };
 player.onComboRunEnd = () => {
   ui.comboHalo("off");
@@ -3968,7 +3946,6 @@ player.onComboRunEnd = () => {
 player.onTTFinish = (time) => {
   pendingCompletion = { kind: "time-trial", time };
 };
-player.onCheckpoint = () => ui.showMessage("CHECKPOINT", "", 900);
 player.onGameOver = () => {
   campaign.resetInventory();
   player.lives = DEFAULT_CAMPAIGN_LIVES;
