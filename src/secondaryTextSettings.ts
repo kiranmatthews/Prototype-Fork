@@ -1,8 +1,8 @@
 export const SECONDARY_TEXT_KEY = "solProtoSecondaryText.v1";
 export const SECONDARY_TEXT_DEFAULTS = {
-  size: 32, weight: 0, stroke: 1.25, shadowX: 4, shadowY: 5,
-  gradientAngle: 90, gradientMid: 56,
-  top: "#f3f6f7", upper: "#c8d1d6", middle: "#82919d",
+  size: 41, weight: -0.5, stroke: 0.5, shadowX: -1.5, shadowY: 1.5,
+  gradientAngle: 90, gradientMid: 81,
+  top: "#ffffff", upper: "#b6cbd2", middle: "#7e98ae",
   dark: "#667985", lower: "#bcc8d0", bottom: "#e0e6ea",
 };
 export type SecondaryTextSettings = typeof SECONDARY_TEXT_DEFAULTS;

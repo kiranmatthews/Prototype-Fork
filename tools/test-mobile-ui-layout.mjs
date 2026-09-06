@@ -191,6 +191,12 @@ const { createServer } = await import("vite");
 const secondaryServer = await createServer({ appType: "custom", logLevel: "silent", server: { middlewareMode: true } });
 try {
   const { sanitizeSecondaryText, SECONDARY_TEXT_DEFAULTS, secondaryTextSettings } = await secondaryServer.ssrLoadModule("/src/secondaryTextSettings.ts");
+  assert.deepEqual(SECONDARY_TEXT_DEFAULTS, {
+    size: 41, weight: -0.5, stroke: 0.5, shadowX: -1.5, shadowY: 1.5,
+    gradientAngle: 90, gradientMid: 81,
+    top: "#ffffff", upper: "#b6cbd2", middle: "#7e98ae",
+    dark: "#667985", lower: "#bcc8d0", bottom: "#e0e6ea",
+  }, "menu text defaults must match the user-approved preset");
   assert.deepEqual(sanitizeSecondaryText(null), SECONDARY_TEXT_DEFAULTS);
   const clamped = sanitizeSecondaryText({ size: 999, weight: -99, shadowX: -999, stroke: NaN, top: "url(bad)", dark: "#123456" });
   assert.equal(clamped.size, 56); assert.equal(clamped.weight, -.8); assert.equal(clamped.shadowX, -14);
