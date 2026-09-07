@@ -12,9 +12,10 @@
 // Everything autosaves to this browser; EXPORT shares the level as a file.
 
 import * as THREE from "three";
+import { EditorEnvironment } from "./editorEnvironment";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { TUNING } from "./tuning";
-import { resolveMedalTimes, editMedalTime, TIME_MEDALS, type TimeMedal, MAX_RELIC_TIME_SECONDS } from "./campaign";
+import { CAMPAIGN_LEVELS, resolveMedalTimes, editMedalTime, TIME_MEDALS, type TimeMedal, MAX_RELIC_TIME_SECONDS } from "./campaign";
 import {
   Level,
   CustomComponent,
@@ -27,6 +28,11 @@ import {
   starterCustomLevel,
   migrateCustomLevel,
   normalizeCustomLevelData,
+  MAX_LEVEL_FILE_BYTES,
+  MAX_USER_LEVELS,
+  getUserLevels,
+  parseCustomLevelJson,
+  cleanLevelName,
   groupChainOf,
   TEX_KINDS,
   DECOR_KINDS,
@@ -46,6 +52,7 @@ import {
   restoreBuiltin,
   findLevel,
   setEditorBuild,
+  worldMapComponentPoints,
 } from "./level";
 import {
   PROP_FAMILIES,
@@ -1991,6 +1998,40 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
     ],
   },
   {
+    title: "WORLD",
+    items: [
+      {
+        label: "campaign map",
+        icon: x => glyph(x, "◎", "#86e3ae"),
+        make: at => ({ t: "worldmap", p: [at.x, at.y, at.z] }),
+      },
+      {
+        label: "bonus entrance",
+        icon: x => glyph(x, "?", "#ffbd67"),
+        make: at => ({ t: "bonusplatform", p: [at.x, at.y, at.z], to: [at.x, at.y, at.z + 4] }),
+      },
+      {
+        label: "ragdoll zone",
+        icon: x => glyph(x, "↯", "#e7a5ff"),
+        make: at => ({ t: "tumblezone", p: [at.x, at.y, at.z], s: [6, 4, 6] }),
+      },
+      {
+        label: "coast safety wall",
+        icon: x => glyph(x, "∣", "#86d9ee"),
+        make: at => ({ t: "coastwall", p: [at.x, at.y, at.z], pts: [[0, 0], [0, -12]], w: 0.5, rise: 12 }),
+      },
+      {
+        label: "editable mesh",
+        icon: x => glyph(x, "△", "#b4e9c7"),
+        make: at => ({
+          t: "mesh", p: [at.x, at.y, at.z],
+          vertices: [-3, 0, 3, 3, 0, 3, -3, 1, -3, 3, 2, -3],
+          indices: [0, 1, 2, 2, 1, 3], doubleSided: true, color: "#7baa65",
+        }),
+      },
+    ],
+  },
+  {
     title: "SCENERY",
     // Built straight off DECOR_KINDS, so a prop added to the game shows up in
     // the add panel the same day. Defaults match what the hand-coded levels
@@ -2033,6 +2074,7 @@ const FOE_KINDS: { k: EnemyKind; label: string }[] = [
   { k: "floater", label: "floater — flies; SPIN it down" },
   { k: "sentry", label: "sentry — turret, fires orbs" },
   { k: "spinner", label: "spinner — hit it when blades retract" },
+  { k: "car", label: "traffic car — follows the road, cannot be defeated" },
 ];
 
 // components that grow draggable resize handles on double-click
@@ -2060,6 +2102,10 @@ const RESIZABLE = new Set([
   "trickgate",
   "returnportal",
   "woodpath",
+  "terrain",
+  "worldmap",
+  "tumblezone",
+  "coastwall",
 ]);
 
 // A resize handle: lives at `pos`, drags along `dir` (world space, outward),
@@ -2125,6 +2171,25 @@ const MOVE_GIZMO_PX = 96; // on-screen length of an arrow, held constant with di
 // grid rounding + structural copies, used all over the editor
 const snapHalf = (v: number): number => Math.round(v * 2) / 2;
 const deepClone = <T>(v: T): T => JSON.parse(JSON.stringify(v)) as T;
+
+// These fields are world anchors owned by the piece, not independent objects.
+// Keep them attached through every move path, including copies and cancellation.
+export function setComponentPosition(c: CustomComponent, p: CustomComponent["p"]): void {
+  const delta = p.map((v, i) => v - c.p[i]);
+  if ((c.t === "returnportal" || c.t === "bonusplatform") && c.to)
+    c.to = c.to.map((v, i) => v + delta[i]) as CustomComponent["p"];
+  if (c.t === "woodpath" && c.supportBaseY !== undefined) c.supportBaseY += delta[1];
+  if (c.t === "platform" && c.shoreSeaLevel !== undefined) c.shoreSeaLevel += delta[1];
+  c.p = [...p];
+}
+
+// Preferences must never prevent editing or exporting when storage is blocked/full.
+const editorStorage = {
+  getItem(key: string): string | null { try { return localStorage.getItem(key); } catch { return null; } },
+  setItem(key: string, value: string): void { try { localStorage.setItem(key, value); } catch { /* optional preference */ } },
+  removeItem(key: string): void { try { localStorage.removeItem(key); } catch { /* optional preference */ } },
+};
+
 
 /**
  * Horizontal affine-scale metrics for a path authored as relative X/Z knots.
@@ -2295,6 +2360,12 @@ export class Editor {
   private medalTimeInputs: Partial<Record<TimeMedal, HTMLInputElement>> = {};
   private resetBtn: HTMLButtonElement | null = null;
   private delBtn: HTMLButtonElement | null = null;
+  private importSerial = 0;
+  private statusEl: HTMLElement | null = null;
+  private undoButton: HTMLButtonElement | null = null;
+  private redoButton: HTMLButtonElement | null = null;
+  private environment: EditorEnvironment | null = null;
+  private numberGetters = new WeakMap<HTMLInputElement, () => number>();
   data: CustomLevelData;
   // SELECTION is an ordered set of component indices; the LAST one is the
   // primary (it drives the props panel, snapping, and align actions).
@@ -2359,6 +2430,7 @@ export class Editor {
   private marqueeEl: HTMLDivElement | null = null;
   // copy/paste — survives entering/leaving the editor within a session
   private clipboard: CustomComponent[] = [];
+  private clipboardGroups: CustomGroup[] = [];
   private pasteBump = 0;
   private lastPasteKey = "";
   private hoverAt = 0;
@@ -2390,6 +2462,7 @@ export class Editor {
     pts: THREE.Vector3[];
   } | null = null;
   private selVtxs = new Set<number>(); // nodes picked in resize mode (shift/cmd adds, marquee sweeps) — props batch-edit their shared values
+  private meshVertexIndex = 0;
   private drawVis: THREE.Group | null = null;
   // pop-out side panels (item picker / layers) + view cluster + space-pan
   private popWrap: HTMLElement | null = null;
@@ -2421,7 +2494,7 @@ export class Editor {
   // SURFACE SNAP: plain drags rest the grabbed piece on the real geometry
   // under the cursor (raycast), resolving the 2D→3D depth ambiguity. Off =
   // the old fixed-Y ground-plane drag. Persisted per browser.
-  private surfaceSnap = localStorage.getItem("solProtoEdSurfaceSnap") !== "0";
+  private surfaceSnap = editorStorage.getItem("solProtoEdSurfaceSnap") !== "0";
   private dragBottomOffset = 0; // grab-time distance from the grabbed piece's origin down to its base
   // group-scale gizmo (multi-selection bounding-box handles)
   // ---- move gizmo ----
@@ -2494,7 +2567,7 @@ export class Editor {
     this.targetId = target.id;
     this.targetName = target.name;
     if (this.nameInput) this.nameInput.value = target.name;
-    localStorage.setItem("solProtoEditorTarget", target.id); // refresh lands on the same level
+    editorStorage.setItem("solProtoEditorTarget", target.id); // refresh lands on the same level
     this.data = migrateCustomLevel(
       deepClone(initialData ?? getEditData(target.id)),
     );
@@ -2513,6 +2586,7 @@ export class Editor {
     this.redoStack.length = 0;
     this.lastCoalesce = "";
     this.lastCommitT = 0;
+    this.syncHistoryButtons();
     this.playCamera = {
       position: this.camera.position.clone(),
       quaternion: this.camera.quaternion.clone(),
@@ -2539,14 +2613,16 @@ export class Editor {
     let restored = false;
     try {
       const cam = JSON.parse(
-        localStorage.getItem(`solProtoEditorCam:${target.id}`) ??
-          localStorage.getItem("solProtoEditorCam") ??
+        editorStorage.getItem(`solProtoEditorCam:${target.id}`) ??
+          editorStorage.getItem("solProtoEditorCam") ??
           "null",
       ) as {
         p: number[];
         t: number[];
       } | null;
-      if (cam && cam.p?.length === 3 && cam.t?.length === 3) {
+      const validVector = (v: unknown): v is number[] => Array.isArray(v) && v.length === 3 &&
+        v.every(n => typeof n === "number" && Number.isFinite(n) && Math.abs(n) <= 100_000);
+      if (cam && validVector(cam.p) && validVector(cam.t) && cam.p.some((v, i) => v !== cam.t[i])) {
         this.camera.position.set(cam.p[0], cam.p[1], cam.p[2]);
         this.controls.target.set(cam.t[0], cam.t[1], cam.t[2]);
         restored = true;
@@ -2567,12 +2643,12 @@ export class Editor {
       );
     }
     this.cameraDirty = false;
-    localStorage.setItem("solProtoEditorOpen", "1"); // refresh lands back in the editor
+    editorStorage.setItem("solProtoEditorOpen", "1"); // refresh lands back in the editor
     document.body.classList.add("ed-active"); // hides the play HUD under the tools
     this.panel.style.display = "block";
     if (this.popWrap) this.popWrap.style.display = "block";
     this.setPop(
-      (localStorage.getItem(`solProtoEditorPop:${target.id}`) as
+      (editorStorage.getItem(`solProtoEditorPop:${target.id}`) as
         | "add"
         | "layers"
         | "") ??
@@ -2584,10 +2660,19 @@ export class Editor {
     this.refreshSpawnMarker();
     this.setGhostsVisible(true);
     this.hooks.setView(true); // no fog, far plane pushed out — see the whole level
-    this.hooks.showMsg(
+    this.showMessage(
       `EDITING: ${target.name.toUpperCase()}`,
       "drag = select & move · RIGHT-drag = orbit · space = pan",
     );
+  }
+
+  /** Editor feedback must remain visible while the gameplay HUD is hidden. */
+  showMessage(title: string, detail = ""): void {
+    if (this.statusEl) {
+      this.statusEl.textContent = detail ? `${title} — ${detail}` : title;
+      this.statusEl.dataset.error = /FAILED|REJECTED|BAD |LIMIT|TOO LARGE/.test(title) ? "1" : "0";
+    }
+    this.hooks.showMsg(title, detail);
   }
 
   /** Exact in-memory source for editor rebuilds, including uncommitted drags. */
@@ -2632,11 +2717,11 @@ export class Editor {
     this.forkedLevelId = id;
     this.forkOnFirstCommit = false;
     this.registryChanged = true;
-    localStorage.setItem("solProtoEditorTarget", id);
+    editorStorage.setItem("solProtoEditorTarget", id);
     if (this.nameInput) this.nameInput.value = this.targetName;
     this.syncFileButtons();
     this.hooks.levelsChanged(id);
-    this.hooks.showMsg(
+    this.showMessage(
       "EDITABLE COPY CREATED",
       `${originalName} stays untouched · now editing ${this.targetName}`,
     );
@@ -2652,7 +2737,7 @@ export class Editor {
       this.dragging;
     for (const original of this.moveDrag?.orig ?? []) {
       const component = this.data.components[original.idx];
-      if (component) component.p = [...original.p];
+      if (component) setComponentPosition(component, [...original.p]);
     }
     if (this.gizmoDrag)
       for (const [idx, original] of this.gizmoDrag.orig)
@@ -2664,7 +2749,7 @@ export class Editor {
     if (this.dragging)
       for (const original of this.dragSel) {
         const component = this.data.components[original.idx];
-        if (component) component.p = [...original.p];
+        if (component) setComponentPosition(component, [...original.p]);
       }
     if (this.dragAddedFrom !== null) {
       this.data.components.splice(this.dragAddedFrom);
@@ -2714,6 +2799,7 @@ export class Editor {
 
   exit(): void {
     if (!this.active) return;
+    this.importSerial++;
     this.cancelScrub?.();
     const focused = document.activeElement as HTMLElement | null;
     if (focused && this.panel.contains(focused)) focused.blur();
@@ -2739,8 +2825,8 @@ export class Editor {
     }
     this.active = false;
     this.hooks.setView(false, this.changedThisSession); // exact restore on no-op; apply committed atmosphere changes
-    localStorage.removeItem("solProtoEditorOpen");
-    localStorage.removeItem("solProtoEditorTarget");
+    editorStorage.removeItem("solProtoEditorOpen");
+    editorStorage.removeItem("solProtoEditorTarget");
     this.controls?.dispose();
     this.controls = null;
     document.body.classList.remove("ed-active");
@@ -2815,7 +2901,7 @@ export class Editor {
   private saveCam(): void {
     if (!this.controls) return;
     try {
-      localStorage.setItem(
+      editorStorage.setItem(
         `solProtoEditorCam:${this.targetId}`,
         JSON.stringify({
           // while a 2D view is up, persist the saved FREE view — a refresh
@@ -2860,9 +2946,10 @@ export class Editor {
   // Adopt a level file as a NEW level in the menu, then edit it. Never
   // overwrites the level that happens to be open.
   importLevel(d: CustomLevelData, name?: string): void {
+    if (!this.active) return;
     const data = normalizeCustomLevelData(d);
     if (!data) {
-      this.hooks.showMsg("BAD LEVEL FILE", "invalid component data");
+      this.showMessage("BAD LEVEL FILE", "unsupported fields, invalid values or excessive geometry");
       return;
     }
     let probe: Level | null = null;
@@ -2873,24 +2960,37 @@ export class Editor {
         data,
       });
     } catch {
-      this.hooks.showMsg("BAD LEVEL FILE", "the level could not be built safely");
+      this.showMessage("BAD LEVEL FILE", "the level could not be built safely");
       return;
     } finally {
       probe?.dispose(this.getLevel());
     }
     const id = saveUserLevel({ id: "", name: name ?? data.name, data });
-    if (!userLevelStorageHealthy())
-      this.hooks.showMsg(
-        "SAVE FAILED",
-        "import is session-only · export before reloading",
-      );
+    if (!findLevel(id)?.data) { this.showMessage("LEVEL LIMIT REACHED", "export and remove an unused level first"); return; }
+    const persisted = userLevelStorageHealthy();
     this.retarget(id);
     this.hooks.levelsChanged(id);
-    this.hooks.showMsg("LEVEL IMPORTED", findLevel(id)?.name ?? "");
+    this.showMessage(persisted ? "LEVEL IMPORTED" : "IMPORTED · SAVE FAILED",
+      persisted ? findLevel(id)?.name ?? "" : "session only · export before reloading");
   }
 
   /** Point the time-of-day dropdown at whatever this.data now says. */
+  private syncHistoryButtons(): void {
+    if (this.undoButton) this.undoButton.disabled = this.undoStack.length === 0;
+    if (this.redoButton) this.redoButton.disabled = this.redoStack.length === 0;
+  }
+
+  private syncProjectFields(): void {
+    this.environment?.sync();
+    for (const input of this.panel?.querySelectorAll<HTMLInputElement>('input[type="number"]') ?? []) {
+      const get = this.numberGetters.get(input);
+      if (get) input.value = String(get());
+    }
+  }
+
   private syncSkySelect(): void {
+    this.environment?.render();
+    this.syncProjectFields();
     if (this.skySelect) this.skySelect.value = asSkyPreset(this.data.sky);
     for (const tier of TIME_MEDALS) {
       const input = this.medalTimeInputs[tier];
@@ -2920,6 +3020,7 @@ export class Editor {
 
   // Re-bind this editor session to another user level (import / duplicate).
   private retarget(id: string): void {
+    this.importSerial++;
     const e = findLevel(id);
     if (!e) return;
     this.targetId = e.id;
@@ -2927,8 +3028,16 @@ export class Editor {
     this.registryChanged = true;
     this.closedGroups.clear();
     if (this.nameInput) this.nameInput.value = e.name;
-    localStorage.setItem("solProtoEditorTarget", e.id);
+    editorStorage.setItem("solProtoEditorTarget", e.id);
+    this.cancelScrub?.();
+    this.rollbackActiveGesture(false);
+    this.cancelDraw();
     this.data = migrateCustomLevel(getEditData(e.id));
+    this.initialTargetId = e.id;
+    this.initialJson = JSON.stringify(this.data);
+    this.pristineBuiltin = false;
+    this.forkOnFirstCommit = false;
+    this.forkedLevelId = null;
     this.syncSkySelect();
     this.syncFileButtons();
     this.lastCommitted = JSON.stringify(this.data);
@@ -2936,6 +3045,7 @@ export class Editor {
     this.redoStack.length = 0;
     this.lastCoalesce = "";
     this.lastCommitT = 0;
+    this.syncHistoryButtons();
     this.select(-1);
     this.renderLayers();
     this.refreshSpawnMarker();
@@ -2966,6 +3076,16 @@ export class Editor {
   private redoStack: string[] = [];
   private lastCommitted = "";
 
+  private trimHistory(): void {
+    // Strings occupy up to two bytes/code unit. Keep at least the nearest undo.
+    const maxChars = 16 * 1024 * 1024;
+    let chars = [...this.undoStack, ...this.redoStack].reduce((n, v) => n + v.length, 0);
+    while (chars > maxChars && this.undoStack.length + this.redoStack.length > 1) {
+      const stack = this.undoStack.length > 1 ? this.undoStack : this.redoStack;
+      chars -= stack.shift()!.length;
+    }
+  }
+
   // `coalesce`: edits sharing a key within a second merge into ONE undo step
   // (arrow-key nudge bursts, held number spinners)
   private commit(rebuild = true, coalesce = ""): boolean {
@@ -2984,8 +3104,27 @@ export class Editor {
       this.hooks.resetPreview();
       this.renderLayers();
       this.renderProps();
+      this.syncSkySelect();
       return false;
     }
+    if (this.forkOnFirstCommit && getUserLevels().length >= MAX_USER_LEVELS) {
+      this.data = migrateCustomLevel(JSON.parse(this.lastCommitted) as CustomLevelData);
+      this.hooks.resetPreview(); this.renderProps(); this.syncSkySelect();
+      this.showMessage("LEVEL LIMIT REACHED", "export and remove an unused level before creating an editable copy");
+      return false;
+    }
+    const selectedObjects = this.sel.map(index => this.data.components[index]).filter(Boolean);
+    const resizedObject = this.data.components[this.resizeIdx];
+    const previousSelection = [...this.sel];
+    this.data = migrateCustomLevel(this.data);
+    const indices = new Map(this.data.components.map((component, index) => [component, index]));
+    this.sel = selectedObjects.flatMap(component => {
+      const index = indices.get(component); return index === undefined ? [] : [index];
+    });
+    this.resizeIdx = resizedObject ? indices.get(resizedObject) ?? -1 : -1;
+    if (this.resizeIdx < 0) this.selVtxs.clear();
+    const selectionAdjusted = previousSelection.length !== this.sel.length ||
+      previousSelection.some((index, position) => index !== this.sel[position]);
     this.pruneGroups();
     let forkPersisted: boolean | null = null;
     if (
@@ -3006,10 +3145,13 @@ export class Editor {
       if (this.undoStack.length > 100) this.undoStack.shift();
     }
     this.redoStack.length = 0; // every real edit forks history, coalesced or not
+    this.trimHistory();
     this.lastCoalesce = coalesce;
     this.lastCommitT = t;
     this.lastCommitted = now;
+    this.syncHistoryButtons();
     this.renderLayers();
+    this.syncProjectFields();
     let persisted = forkPersisted ?? true;
     if (forkPersisted === null &&
       this.pristineBuiltin &&
@@ -3020,9 +3162,9 @@ export class Editor {
     else if (forkPersisted === null)
       persisted = persistEditData(this.targetId, now); // autosave straight into the level list
     if (!persisted || !userLevelStorageHealthy())
-      this.hooks.showMsg(
+      this.showMessage(
         "SAVE FAILED",
-        "browser storage is full · this session is live, export before reloading",
+        "browser storage unavailable or full · this session is live, export before reloading",
       );
     if (rebuild) this.hooks.rebuild(true);
     // keep the selection outline + scale gizmo on the new geometry (field
@@ -3037,6 +3179,11 @@ export class Editor {
     ) {
       this.refreshSelectionBox();
     }
+    if (persisted && userLevelStorageHealthy() && this.statusEl) {
+      this.statusEl.textContent = "Saved in this browser · export to share or back up";
+      this.statusEl.dataset.error = "0";
+    }
+    if (selectionAdjusted) this.renderProps();
     return persisted && userLevelStorageHealthy();
   }
 
@@ -3053,7 +3200,7 @@ export class Editor {
       this.forkedLevelId = null;
       this.forkOnFirstCommit = true;
       this.registryChanged = false;
-      localStorage.setItem("solProtoEditorTarget", this.targetId);
+      editorStorage.setItem("solProtoEditorTarget", this.targetId);
       this.syncFileButtons();
       persisted = userLevelStorageHealthy();
     } else if (
@@ -3074,7 +3221,7 @@ export class Editor {
     this.lastCoalesce = "";
     this.lastCommitT = 0;
     if (!persisted || !userLevelStorageHealthy())
-      this.hooks.showMsg(
+      this.showMessage(
         "SAVE FAILED",
         "browser storage is full · export before reloading",
       );
@@ -3086,61 +3233,71 @@ export class Editor {
     this.hooks.levelsChanged();
     this.select(-1);
     this.hooks.rebuild(true);
+    if (persisted && userLevelStorageHealthy() && this.statusEl) {
+      this.statusEl.textContent = "History restored · saved in this browser";
+      this.statusEl.dataset.error = "0";
+    }
   }
 
   undo(): void {
+    this.cancelScrub?.();
+    this.rollbackActiveGesture(true);
     const prev = this.undoStack.pop();
     if (!prev) return;
     this.redoStack.push(JSON.stringify(this.data));
     this.applyState(prev);
+    this.trimHistory();
+    this.syncHistoryButtons();
   }
 
   redo(): void {
+    this.cancelScrub?.();
+    this.rollbackActiveGesture(true);
     const next = this.redoStack.pop();
     if (!next) return;
     this.undoStack.push(JSON.stringify(this.data));
     this.applyState(next);
+    this.trimHistory();
+    this.syncHistoryButtons();
   }
 
   private addComponent(c: CustomComponent): void {
-    // ONE crystal / gate / clock / combo orb per level: a new one replaces the old
-    if (
-      c.t === "crystal" ||
-      c.t === "gate" ||
-      c.t === "clock" ||
-      c.t === "comboorb"
-    ) {
-      this.data.components = this.data.components.filter((o) => o.t !== c.t);
-    }
-    this.data.components.push(c);
-    this.commit();
-    this.select(this.data.components.length - 1);
+    this.addBatch([c]);
   }
 
   // append a batch (duplicate/paste) as ONE undo step and select the copies.
   // The one-crystal / one-gate rules hold: one in the batch replaces the level's.
-  private addBatch(batch: CustomComponent[], commit = true): void {
-    if (batch.length === 0) return;
+  private addBatch(
+    batch: CustomComponent[],
+    commit = true,
+    sourceGroups: CustomGroup[] = this.data.groups ?? [],
+  ): boolean {
+    if (batch.length === 0) return false;
     let clean = batch;
-    for (const t of ["crystal", "gate", "clock", "comboorb"] as const) {
+    const replacing = new Set<string>();
+    for (const t of ["crystal", "gate", "clock", "comboorb", "worldmap", "bonusplatform"] as const) {
       const last = clean.map((c) => c.t).lastIndexOf(t);
       if (last >= 0) {
         clean = clean.filter((c, i) => c.t !== t || i === last);
-        this.data.components = this.data.components.filter((o) => o.t !== t);
+        replacing.add(t);
       }
     }
-    if (clean.length === 0) return;
-    if (this.data.components.length + clean.length > 10_000) {
-      this.hooks.showMsg(
+    if (clean.length === 0) return false;
+    const retained = this.data.components.filter((o) => !replacing.has(o.t));
+    if (retained.length + clean.length > 10_000) {
+      this.showMessage(
         "LEVEL LIMIT REACHED",
         "10,000 components is the safe editor maximum",
       );
-      return;
+      return false;
     }
-    const start = this.data.components.length;
-    this.data.components.push(...clean);
+    // Stage the entire batch before changing singleton furniture or group
+    // wiring. A rejected paste must leave the level byte-for-byte unchanged.
+    this.remapGroups(clean, sourceGroups);
+    this.data.components = [...retained, ...clean];
     if (commit) this.commit();
-    this.setSelection(clean.map((_, i) => start + i));
+    this.setSelection(clean.map(component => this.data.components.indexOf(component)));
+    return true;
   }
 
   private deleteSelected(): void {
@@ -3152,7 +3309,7 @@ export class Editor {
       .filter((i) => !KEEP.has(this.data.components[i].t))
       .sort((a, b) => b - a);
     if (dying.length < this.sel.length)
-      this.hooks.showMsg(
+      this.showMessage(
         "GATE & ACTIVATORS STAY",
         "every level keeps its gate, stopwatch and combo orb — move them instead",
       );
@@ -3166,10 +3323,9 @@ export class Editor {
     if (this.sel.length === 0) return;
     const copies = this.sel.map((i) => {
       const copy = deepClone(this.data.components[i]);
-      copy.p = [copy.p[0] + 3, copy.p[1], copy.p[2] + 3];
+      setComponentPosition(copy, [copy.p[0] + 3, copy.p[1], copy.p[2] + 3]);
       return copy;
     });
-    this.remapGroups(copies); // fresh group wiring for the copies
     this.addBatch(copies);
   }
 
@@ -3178,9 +3334,10 @@ export class Editor {
   copySelected(): void {
     if (this.sel.length === 0) return;
     this.clipboard = this.sel.map((i) => deepClone(this.data.components[i]));
+    this.clipboardGroups = deepClone(this.data.groups ?? []);
     this.pasteBump = 0;
     this.lastPasteKey = "";
-    this.hooks.showMsg(
+    this.showMessage(
       `COPIED ${this.clipboard.length}`,
       "paste with ⌘V — lands at the camera focus",
     );
@@ -3220,11 +3377,10 @@ export class Editor {
     }
     const copies = this.clipboard.map((c) => {
       const copy = deepClone(c);
-      copy.p = [copy.p[0] + dx, copy.p[1], copy.p[2] + dz];
+      setComponentPosition(copy, [copy.p[0] + dx, copy.p[1], copy.p[2] + dz]);
       return copy;
     });
-    this.remapGroups(copies); // fresh group wiring for the batch
-    this.addBatch(copies);
+    this.addBatch(copies, true, this.clipboardGroups);
   }
 
   // ---- locks (per component; the outliner toggles them) ----
@@ -3301,7 +3457,7 @@ export class Editor {
     }
     this.data.groups.push({ id: G });
     this.commit();
-    this.hooks.showMsg(
+    this.showMessage(
       `GROUPED ${this.sel.length}`,
       'a "!" crate in a group wires its outline crates',
     );
@@ -3323,7 +3479,7 @@ export class Editor {
       this.data.groups = this.data.groups.filter((g) => g.id !== r);
     }
     this.commit();
-    this.hooks.showMsg("UNGROUPED");
+    this.showMessage("UNGROUPED");
   }
 
   // drop group entries no component chain references (post delete/ungroup)
@@ -3347,17 +3503,22 @@ export class Editor {
 
   // pasted/duplicated components get a FRESH copy of their group structure
   // (same wiring within the batch, no leash back to the originals)
-  private remapGroups(copies: CustomComponent[]): void {
-    if (!this.data.groups) return;
+  private remapGroups(
+    copies: CustomComponent[],
+    sourceGroups: CustomGroup[] = this.data.groups ?? [],
+  ): void {
+    if (sourceGroups.length === 0) return;
+    const source = { ...this.data, groups: sourceGroups };
     const referenced = new Set<number>();
     for (const c of copies)
-      for (const id of groupChainOf(c, this.data)) referenced.add(id);
+      for (const id of groupChainOf(c, source)) referenced.add(id);
     if (referenced.size === 0) return;
+    this.data.groups ??= [];
     const map = new Map<number, number>();
     let next = this.nextGroupId();
     for (const id of referenced) map.set(id, next++);
     for (const id of referenced) {
-      const src = this.data.groups.find((g) => g.id === id);
+      const src = sourceGroups.find((g) => g.id === id);
       const parent =
         src?.parent !== undefined && map.has(src.parent)
           ? map.get(src.parent)
@@ -3626,10 +3787,37 @@ export class Editor {
     const sLocX = Math.hypot(cs * sx, sn * sz);
     const sLocZ = Math.hypot(sn * sx, cs * sz);
     const horizontal = (sLocX + sLocZ) / 2;
+    if (c.t === "mesh" && c.vertices) {
+      const originalScale = c.s ?? [1, 1, 1];
+      const nextScale: [number, number, number] = [
+        originalScale[0] * sLocX, originalScale[1] * sy, originalScale[2] * sLocZ,
+      ];
+      // A world-axis stretch of a freely rotated mesh can shear its local
+      // vertices. Preserve that exact affine shape rather than approximating
+      // it with three scale factors and quietly changing collision.
+      const local = new THREE.Matrix4().makeScale(1 / nextScale[0], 1 / nextScale[1], 1 / nextScale[2])
+        .multiply(new THREE.Matrix4().makeRotationY(-yawRad))
+        .multiply(new THREE.Matrix4().makeScale(sx, sy, sz))
+        .multiply(new THREE.Matrix4().makeRotationY(yawRad))
+        .multiply(new THREE.Matrix4().makeScale(...originalScale));
+      const point = new THREE.Vector3();
+      c.vertices = c.vertices.slice();
+      for (let index = 0; index < c.vertices.length; index += 3) {
+        point.fromArray(c.vertices, index).applyMatrix4(local).toArray(c.vertices, index);
+      }
+      if (c.normals) {
+        const normalMatrix = new THREE.Matrix3().getNormalMatrix(local);
+        c.normals = c.normals.slice();
+        for (let index = 0; index < c.normals.length; index += 3)
+          point.fromArray(c.normals, index).applyNormalMatrix(normalMatrix).toArray(c.normals, index);
+      }
+      c.s = nextScale;
+      return;
+    }
     // Widths must be derived from the ORIGINAL path, before the knots below are
     // rewritten by the affine scale.
     const pathMetrics =
-      (c.t === "woodpath" || c.t === "wallpath") &&
+      (c.t === "woodpath" || c.t === "wallpath" || c.t === "coastwall") &&
       c.pts &&
       c.pts.length >= 2
         ? pathScaleMetrics(
@@ -3645,7 +3833,7 @@ export class Editor {
       // drawn nodes are authored in world XZ around p; radius + per-node height ride along
       c.pts = c.pts.map((pt) => {
         const q = [...pt] as number[];
-        if (c.t === "vertramp" && yaw !== 0) {
+        if ((c.t === "vertramp" || c.t === "worldmap" || c.t === "terrain") && yaw !== 0) {
           const a = THREE.MathUtils.degToRad(yaw);
           const cs = Math.cos(a);
           const sn = Math.sin(a);
@@ -3721,9 +3909,10 @@ export class Editor {
       case "terrain":
         // Terrain's displaced strip is parameterized by world Z and its rows
         // always span world X (see Level.jungle), so X is its exact cross-axis.
-        if (c.w != null) c.w = Math.max(1, c.w * Math.abs(sx));
+        if (c.w != null) c.w = Math.max(1, c.w * sLocX);
         if (c.amp != null) c.amp *= sy;
         break;
+      case "coastwall":
       case "wallpath": {
         const normalMean = pathMetrics
           ? pathMetrics.normalAt.reduce((sum, factor) => sum + factor, 0) /
@@ -3825,12 +4014,16 @@ export class Editor {
       const c = this.data.components[idx];
       if (!c) continue;
       this.materializeDims(c);
-      if (c.t === "returnportal" && c.to)
+      if ((c.t === "returnportal" || c.t === "bonusplatform") && c.to)
         c.to = [
           anchor.x + (c.to[0] - anchor.x) * sx,
           anchor.y + (c.to[1] - anchor.y) * sy,
           anchor.z + (c.to[2] - anchor.z) * sz,
         ];
+      if (c.t === "woodpath" && c.supportBaseY !== undefined)
+        c.supportBaseY = anchor.y + (c.supportBaseY - anchor.y) * sy;
+      if (c.t === "platform" && c.shoreSeaLevel !== undefined)
+        c.shoreSeaLevel = anchor.y + (c.shoreSeaLevel - anchor.y) * sy;
       c.p = [
         anchor.x + (c.p[0] - anchor.x) * sx,
         anchor.y + (c.p[1] - anchor.y) * sy,
@@ -3838,18 +4031,6 @@ export class Editor {
       ];
       this.scaleComponentSize(c, sx, sy, sz);
     }
-  }
-
-  // scale + commit (fields, one-shot). coalesce merges a spinner burst.
-  private scaleSelection(
-    sx: number,
-    sy: number,
-    sz: number,
-    anchor: THREE.Vector3,
-    coalesce = "",
-  ): void {
-    this.applyScaleNoCommit(sx, sy, sz, anchor);
-    this.commit(true, coalesce);
   }
 
   // ---- move gizmo (Maya-style translate manipulator) ----
@@ -4022,7 +4203,7 @@ export class Editor {
       if (!dx && !dy && !dz) continue;
       for (const ob of this.objectsFor(o.idx))
         ob.position.add(new THREE.Vector3(dx, dy, dz));
-      c.p = t;
+      setComponentPosition(c, t);
     }
     this.separateCrates(d.orig.map((o) => o.idx));
     this.refreshSelectionBox();
@@ -4094,7 +4275,7 @@ export class Editor {
     for (const i of moved) {
       const c = this.data.components[i];
       if (!c) continue;
-      c.p = [c.p[0] + push.x, c.p[1] + push.y, c.p[2] + push.z];
+      setComponentPosition(c, [c.p[0] + push.x, c.p[1] + push.y, c.p[2] + push.z]);
       for (const ob of this.objectsFor(i)) ob.position.add(push);
     }
   }
@@ -4139,7 +4320,7 @@ export class Editor {
     this.gizmoGroup = g;
     if (!this.gizmoHintShown) {
       this.gizmoHintShown = true;
-      this.hooks.showMsg(
+      this.showMessage(
         "GROUP SCALE",
         "drag the blue box handles · or type group W/H/D · corner = proportional, Shift = free",
       );
@@ -4296,7 +4477,7 @@ export class Editor {
       .setY(up * step);
     for (const idx of this.sel) {
       const c = this.data.components[idx];
-      c.p = [c.p[0] + d.x, c.p[1] + d.y, c.p[2] + d.z];
+      setComponentPosition(c, [c.p[0] + d.x, c.p[1] + d.y, c.p[2] + d.z]);
     }
     this.commit(true, "nudge");
   }
@@ -4354,10 +4535,13 @@ export class Editor {
   // display read these without writing them into sparse source data.
   private defaultSizeFor(c: CustomComponent): [number, number, number] | null {
     if (c.t === "platform") return [8, 1, 8];
+    if (c.t === "tumblezone") return [6, 4, 6];
+    if (c.t === "mesh") return [1, 1, 1];
     if (c.t === "decor") {
       if (isJungleAsset(c.dkind)) return [...JUNGLE_ASSETS[c.dkind].size];
       if (c.dkind === "block") return [6, 6, 6];
       if (c.dkind === "ruinblock") return [2.4, 1.6, 2.4];
+      if (c.dkind === "coastalhouse") return [11.5, 8, 39];
       return null;
     }
     if (c.t === "rock") return [3, 2, 3];
@@ -4377,6 +4561,8 @@ export class Editor {
   // Fill defaults only in an explicit mutation snapshot (handle drag/group
   // scale), never merely because a component was selected or inspected.
   private materializeDims(c: CustomComponent): void {
+    c.pts ??= this.defaultPointsFor(c);
+    if (c.t === "coastwall") { c.w ??= 0.5; c.rise ??= 12; }
     const size = this.defaultSizeFor(c);
     if (size && !c.s) c.s = [...size];
     if (c.t === "ramp") {
@@ -4405,7 +4591,7 @@ export class Editor {
       c.spacing = c.spacing ?? 0.55;
       c.baySpacing = c.baySpacing ?? 4.5;
       if (c.supports ?? c.scaffold)
-        c.supportDepth = c.supportDepth ?? c.rise ?? 3;
+        c.supportDepth = c.supportDepth ?? c.rise ?? 3.5;
     } else if (c.t === "trickgate") c.radius = c.radius ?? 2.2;
     else if (c.t === "grindosaurus") c.range = c.range ?? 4;
     else if (c.t === "angryball") {
@@ -4425,7 +4611,7 @@ export class Editor {
       if (
         [
           ...TROPICAL_PLANT_KINDS,
-          "fern", "broadleaf", "toadstool", "toadstools", "idol", "tree",
+          "fern", "broadleaf", "flowers", "planter", "toadstool", "toadstools", "idol", "tree",
           "plants", "boulder", "rocks", "trunk", "slab",
         ].includes(kind)
       )
@@ -4449,7 +4635,84 @@ export class Editor {
     return copy;
   }
 
+  private defaultPointsFor(c: CustomComponent): CustomComponent["pts"] {
+    if (c.t === "worldmap") return worldMapComponentPoints();
+    if (c.t === "terrain") return [[0, 0], [0, -40]];
+    if (c.t === "woodpath") return [[0, 0], [0, -24]];
+    if (c.t === "coastwall") return [[0, 0], [0, -12]];
+    return undefined;
+  }
+
+  private meshVertexWorldPosition(c: CustomComponent, index: number): THREE.Vector3 {
+    return new THREE.Vector3().fromArray(c.vertices!, index * 3)
+      .multiply(new THREE.Vector3(...(c.s ?? [1, 1, 1])))
+      .applyAxisAngle(new THREE.Vector3(0, 1, 0), THREE.MathUtils.degToRad(c.yaw ?? 0))
+      .add(new THREE.Vector3(...c.p));
+  }
+
+  private setMeshVertexWorldPosition(c: CustomComponent, index: number, world: THREE.Vector3): void {
+    if (!c.vertices || index < 0 || index * 3 + 2 >= c.vertices.length) return;
+    world.clone().sub(new THREE.Vector3(...c.p))
+      .applyAxisAngle(new THREE.Vector3(0, 1, 0), -THREE.MathUtils.degToRad(c.yaw ?? 0))
+      .divide(new THREE.Vector3(...(c.s ?? [1, 1, 1])))
+      .toArray(c.vertices, index * 3);
+    // Stored normals describe the old triangles; the runtime regenerates
+    // them from the edited surface when this optional array is absent.
+    delete c.normals;
+  }
+
+  // Most drawn knots use world-aligned offsets. Vert spines are the one
+  // exception: their local X/Z route also rotates with the component yaw.
+  private nodeWorldPosition(c: CustomComponent, point: number[]): THREE.Vector3 {
+    const offset = new THREE.Vector3(point[0], point[3] ?? 0, point[1]);
+    if (c.t === "vertramp" || c.t === "worldmap" || c.t === "terrain")
+      offset.applyAxisAngle(new THREE.Vector3(0, 1, 0), THREE.MathUtils.degToRad(c.yaw ?? 0));
+    return offset.add(new THREE.Vector3(...c.p));
+  }
+
+  private nodeLocalOffset(c: CustomComponent, world: THREE.Vector3): THREE.Vector3 {
+    const offset = world.clone().sub(new THREE.Vector3(...c.p));
+    if (c.t === "vertramp" || c.t === "worldmap" || c.t === "terrain")
+      offset.applyAxisAngle(new THREE.Vector3(0, 1, 0), -THREE.MathUtils.degToRad(c.yaw ?? 0));
+    return offset;
+  }
+
+  private deleteSelectedNodes(): boolean {
+    const c = this.data.components[this.resizeIdx];
+    if (!c || this.selVtxs.size === 0) return false;
+    if (c.t === "worldmap") {
+      this.showMessage("CAMPAIGN HUBS STAY", "move the hubs to edit the route; each one keeps its campaign destination");
+      return true;
+    }
+    const points = c.pts ?? this.defaultPointsFor(c);
+    if (!points) return false;
+    const picked = new Set([...this.selVtxs].filter(i => i >= 0 && i < points.length));
+    if (picked.size === 0) return false;
+    const minimum = c.closed || ["platform", "wall", "pit"].includes(c.t) ? 3 : 2;
+    if (points.length - picked.size < minimum) {
+      this.showMessage(`KEEP ${minimum}+ NODES`, "the shape needs enough nodes to remain playable");
+      return true;
+    }
+    c.pts = points.filter((_, i) => !picked.has(i));
+    if (c.widths) c.widths = c.widths.filter((_, i) => !picked.has(i));
+    this.selVtxs.clear();
+    this.commit();
+    this.renderProps();
+    return true;
+  }
+
   private handleDefsFor(c: CustomComponent): HandleDef[] {
+    const defs: HandleDef[] = [];
+    if (!c.pts) {
+      const points = this.defaultPointsFor(c);
+      if (points) return this.handleDefsFor({ ...c, pts: points });
+    }
+    if (c.t === "worldmap")
+      return (c.pts ?? worldMapComponentPoints()).map((point, vtx) => ({
+        pos: this.nodeWorldPosition(c, point),
+        dir: new THREE.Vector3(0, 1, 0),
+        vtx,
+      }));
     // drawn shapes: every node is a handle, dragged freely on the ground
     // plane (the axis machinery below is for box faces). Rails are open
     // 2+ node paths; polygons need 3+.
@@ -4463,7 +4726,9 @@ export class Editor {
       (c.t === "rail" ||
         c.t === "trickrail" ||
         c.t === "terrain" ||
+        c.t === "vertramp" ||
         c.t === "woodpath" ||
+        c.t === "coastwall" ||
         c.t === "wallpath");
     if (c.pts && (isPoly || isPath)) {
       const y =
@@ -4473,23 +4738,16 @@ export class Editor {
             ? c.p[1] + (c.s?.[1] ?? 1) / 2
             : c.p[1] + 0.15;
       // rail nodes ride their own height offsets (climbing grind lines)
-      return c.pts.map((pt, i) => ({
-        pos: new THREE.Vector3(
-          c.p[0] + pt[0],
-          c.t === "rail" ||
-          c.t === "trickrail" ||
-          c.t === "terrain" ||
-          c.t === "woodpath" ||
-          c.t === "wallpath"
-            ? c.p[1] + (pt[3] ?? 0) + (c.t === "wallpath" ? c.rise ?? 5 : 0.1)
-            : y,
-          c.p[2] + pt[1],
-        ),
-        dir: new THREE.Vector3(0, 1, 0),
-        vtx: i,
+      defs.push(...c.pts.map((pt, i) => {
+        const pos = this.nodeWorldPosition(c, pt);
+        pos.y = isPath
+          ? c.t === "coastwall" ? c.p[1] + (c.rise ?? 12)
+            : pos.y + (c.t === "wallpath" ? c.rise ?? 5 : 0.1)
+          : y;
+        return { pos, dir: new THREE.Vector3(0, 1, 0), vtx: i };
       }));
+      if (c.t !== "vertramp") return defs;
     }
-    const defs: HandleDef[] = [];
     const P = new THREE.Vector3(c.p[0], c.p[1], c.p[2]);
     const UP = new THREE.Vector3(0, 1, 0);
     const yaw = THREE.MathUtils.degToRad(c.yaw ?? 0);
@@ -4546,7 +4804,7 @@ export class Editor {
         },
       });
     };
-    if (c.t === "platform" || c.t === "rock") {
+    if (c.t === "platform" || c.t === "rock" || c.t === "tumblezone") {
       const s = c.s ?? this.defaultSizeFor(c)!;
       face(
         loc(1, 0, 0),
@@ -4889,15 +5147,18 @@ export class Editor {
       this.setResize(hit);
       if (!this.resizeHintShown) {
         this.resizeHintShown = true;
-        this.hooks.showMsg(
+        this.showMessage(
           "RESIZE MODE",
           "drag the gold handles · esc or click away = done",
         );
       }
     } else {
       this.setResize(-1);
-      if (hit >= 0)
-        this.hooks.showMsg(
+      if (hit >= 0 && this.data.components[hit].t === "mesh") {
+        this.select(hit);
+        this.showMessage("EDIT MESH", "scale and individual vertex coordinates are in the selection panel");
+      } else if (hit >= 0)
+        this.showMessage(
           "FIXED SIZE",
           `a ${this.data.components[hit].t} can't be resized`,
         );
@@ -4978,10 +5239,15 @@ export class Editor {
             lineO,
             lineD,
             t0: 0,
-            orig: deepClone(this.data.components[this.resizeIdx]),
+            orig: this.concreteClone(this.data.components[this.resizeIdx]),
             source: deepClone(this.data.components[this.resizeIdx]),
             vtx: def.vtx,
-            plane: new THREE.Plane(new THREE.Vector3(0, 1, 0), -def.pos.y),
+            plane: new THREE.Plane().setFromNormalAndCoplanarPoint(
+              this.viewMode === "x" ? new THREE.Vector3(1, 0, 0)
+                : this.viewMode === "z" ? new THREE.Vector3(0, 0, 1)
+                  : new THREE.Vector3(0, 1, 0),
+              def.pos,
+            ),
           };
           if (this.controls) this.controls.enabled = false;
           try {
@@ -5055,10 +5321,14 @@ export class Editor {
         this.dragGroupsBefore = deepClone(this.data.groups ?? []);
         this.dragSourceJson = JSON.stringify(this.data);
         this.dragSelectionBefore = [...this.sel];
-        this.remapGroups(copies); // clones get their own group wiring
-        grabbed = start + order.indexOf(hit);
-        this.addBatch(copies, false); // commit only if the drag lands
-        if (grabbed >= this.data.components.length) grabbed = this.selected; // crystal filtered
+        if (!this.addBatch(copies, false)) {
+          this.rollbackActiveGesture(true);
+          return;
+        }
+        // Replacing singleton furniture can shift every appended index.
+        // Follow the actual grabbed copy, not the old component count.
+        grabbed = this.data.components.indexOf(copies[order.indexOf(hit)]);
+        if (grabbed < 0) grabbed = this.selected;
       }
       const c = this.data.components[grabbed];
       this.dragPlane =
@@ -5121,7 +5391,7 @@ export class Editor {
     const y = this.controls ? snapHalf(this.controls.target.y) : 0;
     this.drawing = { t, y, pts: [] };
     this.dom.style.cursor = "crosshair";
-    this.hooks.showMsg(
+    this.showMessage(
       `DRAW ${t.toUpperCase()}`,
       t === "rail" || t === "terrain" || t === "woodpath" || t === "wallpath"
         ? "click to drop nodes · Enter or double-click to finish · esc = cancel"
@@ -5219,7 +5489,7 @@ export class Editor {
       d.t === "wallpath";
     const minPts = openPath ? 2 : 3;
     if (pts.length < minPts) {
-      this.hooks.showMsg(`NEED ${minPts}+ POINTS`, "shape cancelled");
+      this.showMessage(`NEED ${minPts}+ POINTS`, "shape cancelled");
       this.cancelDraw();
       return;
     }
@@ -5401,10 +5671,9 @@ export class Editor {
         if (!this.groundPoint(e, this.hdlDrag.plane, hit)) return;
         const c = this.data.components[this.resizeIdx];
         const orig = this.hdlDrag.orig;
-        if (!c.pts || !orig.pts) return;
-        const o = orig.pts[this.hdlDrag.vtx];
-        const dx = hit.x - c.p[0] - o[0];
-        const dz = hit.z - c.p[2] - o[1];
+        if (!orig.pts) return;
+        c.pts ??= deepClone(orig.pts);
+        const delta = hit.clone().sub(this.hdlDrag.lineO);
         const targets =
           this.selVtxs.has(this.hdlDrag.vtx) && this.selVtxs.size > 1
             ? [...this.selVtxs]
@@ -5412,9 +5681,21 @@ export class Editor {
         for (const vi of targets) {
           const op = orig.pts[vi];
           if (!op) continue;
-          const nt = [...op] as [number, number, number, number]; // radius + height ride along
-          nt[0] = this.snap ? snapHalf(op[0] + dx) : op[0] + dx;
-          nt[1] = this.snap ? snapHalf(op[1] + dz) : op[1] + dz;
+          const nt = [...op] as typeof op;
+          const world = this.nodeWorldPosition(orig, op).add(delta);
+          if (this.snap) {
+            if (this.viewMode !== "x") world.x = snapHalf(world.x);
+            if (this.viewMode !== "z") world.z = snapHalf(world.z);
+            if (this.viewMode === "x" || this.viewMode === "z") world.y = snapHalf(world.y);
+          }
+          const local = this.nodeLocalOffset(c, world);
+          nt[0] = local.x;
+          nt[1] = local.z;
+          if ((this.viewMode === "x" || this.viewMode === "z") &&
+              ["rail", "trickrail", "terrain", "woodpath", "wallpath", "vertramp", "worldmap"].includes(c.t)) {
+            nt[2] ??= 0;
+            nt[3] = local.y;
+          }
           c.pts[vi] = nt;
         }
         const defs2 = this.handleDefsFor(c);
@@ -5559,7 +5840,7 @@ export class Editor {
         // live-preview: shift the tagged visuals; physics catches up on release
         for (const o of this.objectsFor(entry.idx))
           o.position.add(new THREE.Vector3(dx, dy, dz));
-        c.p = [tx, ty, tz];
+        setComponentPosition(c, [tx, ty, tz]);
         moved = true;
       }
     }
@@ -5684,12 +5965,14 @@ export class Editor {
     if (!this.active) return;
     const typing =
       (e.target as HTMLElement)?.tagName === "INPUT" ||
-      (e.target as HTMLElement)?.tagName === "SELECT";
+      (e.target as HTMLElement)?.tagName === "SELECT" ||
+      (e.target as HTMLElement)?.tagName === "TEXTAREA" ||
+      (e.target as HTMLElement)?.isContentEditable;
     if (typing) return;
     // HOLD SPACE: grabby hand — left-drag pans the canvas (Figma rules)
     if (e.code === "Space") {
       e.preventDefault();
-      if (!this.spaceHeld && !this.dragging && !this.hdlDrag) {
+      if (!this.spaceHeld && !this.dragging && !this.hdlDrag && !this.moveDrag && !this.gizmoDrag) {
         this.spaceHeld = true;
         if (this.controls) this.controls.mouseButtons.LEFT = THREE.MOUSE.PAN;
         this.dom.style.cursor = "grab";
@@ -5697,6 +5980,9 @@ export class Editor {
       return;
     }
     const cmd = e.metaKey || e.ctrlKey;
+    if (cmd && ["KeyD", "KeyX", "KeyV", "KeyG", "KeyA"].includes(e.code)) {
+      this.cancelScrub?.(); this.rollbackActiveGesture(true);
+    }
     // pen tool: Enter closes the shape, Escape abandons it
     if (this.drawing) {
       if (e.code === "Enter") this.finishDraw();
@@ -5709,7 +5995,10 @@ export class Editor {
       if (this.resizeIdx >= 0) this.setResize(-1);
       else this.select(-1);
     }
-    if (e.code === "Delete" || e.code === "Backspace") this.deleteSelected();
+    if (e.code === "Delete" || e.code === "Backspace") {
+      e.preventDefault(); this.rollbackActiveGesture(true);
+      if (!this.deleteSelectedNodes()) this.deleteSelected();
+    }
     if (e.code === "KeyD" && cmd) {
       e.preventDefault();
       this.duplicateSelected();
@@ -5822,6 +6111,19 @@ export class Editor {
     ptabs.appendChild(this.tabSelBtn);
     ptabs.appendChild(this.tabProjBtn);
     panel.appendChild(ptabs);
+    const history = h('<div class="ed-grid ed-history"></div>');
+    const historyButton = (label: string, action: () => void): HTMLButtonElement => {
+      const b = document.createElement("button"); b.className = "ed-btn"; b.textContent = label; b.disabled = true;
+      b.addEventListener("click", () => { action(); b.blur(); }); history.appendChild(b); return b;
+    };
+    this.undoButton = historyButton("undo ⌘Z", () => this.undo());
+    this.redoButton = historyButton("redo ⌘⇧Z", () => this.redo());
+    panel.appendChild(history);
+    this.statusEl = document.createElement("div");
+    this.statusEl.className = "ed-status";
+    this.statusEl.setAttribute("role", "status");
+    this.statusEl.setAttribute("aria-live", "polite");
+    panel.appendChild(this.statusEl);
     const selPane = h('<div class="ed-pane"></div>');
     const projPane = h('<div class="ed-pane" style="display:none"></div>');
     this.selPane = selPane;
@@ -5859,9 +6161,32 @@ export class Editor {
     // item picker pop-out: grouped, icon + label per component
     const popAdd = h('<div class="ed-pop" style="display:none"></div>');
     popAdd.appendChild(h('<div class="ed-title">ADD</div>'));
+    const search = document.createElement("input");
+    search.type = "search"; search.placeholder = "Find a piece…"; search.setAttribute("aria-label", "Find a piece");
+    search.className = "ed-search";
+    popAdd.appendChild(search);
+    const paletteRows: { heading: HTMLElement; grid: HTMLElement; items: { button: HTMLButtonElement; text: string }[] }[] = [];
+    const empty = h('<div class="ed-dim" hidden>No matching pieces.</div>');
+    search.addEventListener("input", () => {
+      const terms = search.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+      let matches = 0;
+      for (const row of paletteRows) {
+        let shown = 0;
+        for (const item of row.items) {
+          const match = terms.every(term => item.text.includes(term));
+          item.button.style.display = match ? "" : "none"; if (match) shown++;
+        }
+        row.heading.style.display = row.grid.style.display = shown ? "" : "none";
+        matches += shown;
+      }
+      empty.hidden = matches > 0;
+    });
     for (const sect of PALETTE_SECTIONS) {
-      popAdd.appendChild(h(`<div class="ed-sect">${sect.title}</div>`));
+      const heading = h(`<div class="ed-sect">${sect.title}</div>`);
+      popAdd.appendChild(heading);
       const pal = h('<div class="ed-grid"></div>');
+      const items: { button: HTMLButtonElement; text: string }[] = [];
+      paletteRows.push({ heading, grid: pal, items });
       for (const p of sect.items) {
         const b = h(
           '<button class="ed-btn ed-palbtn"></button>',
@@ -5891,9 +6216,11 @@ export class Editor {
           b.blur();
         });
         pal.appendChild(b);
+        items.push({ button: b, text: `${sect.title} ${p.label}`.toLowerCase() });
       }
       popAdd.appendChild(pal);
     }
+    popAdd.appendChild(empty);
     this.popAdd = popAdd;
     wrap.appendChild(popAdd);
 
@@ -5952,13 +6279,15 @@ export class Editor {
     nameLab.textContent = "name";
     const nameIn = document.createElement("input");
     nameIn.type = "text";
+    nameIn.maxLength = 80;
+    nameIn.setAttribute("aria-label", "Level name");
     nameIn.title = "the name this level shows in the menu";
     nameIn.addEventListener("keydown", (ev) => {
       if (ev.code === "Enter") nameIn.blur();
       ev.stopPropagation(); // typing guard: editor hotkeys stay out
     });
     const applyName = (): void => {
-      const v = nameIn.value.trim();
+      const v = cleanLevelName(nameIn.value);
       if (!v || v === this.targetName) {
         nameIn.value = this.targetName;
         return;
@@ -5966,11 +6295,8 @@ export class Editor {
       this.data.name = v; // keep the exported file's name in step with the menu
       // Commit first: a hand-built source may fork here, so rename the actual
       // target selected by that transaction rather than the protected source.
-      if (!this.commit(false)) {
-        this.data.name = this.targetName;
-        nameIn.value = this.targetName;
-        return;
-      }
+      this.commit(false);
+      if (this.data.name !== v) { nameIn.value = this.targetName; return; }
       renameUserLevel(this.targetId, v);
       this.targetName = findLevel(this.targetId)?.name ?? v;
       nameIn.value = this.targetName;
@@ -6088,12 +6414,23 @@ export class Editor {
       "dragging rests the piece on whatever is under the cursor (fixes depth). OFF = flat ground-plane drag";
     surfBtn.addEventListener("click", () => {
       this.surfaceSnap = !this.surfaceSnap;
-      localStorage.setItem("solProtoEdSurfaceSnap", this.surfaceSnap ? "1" : "0");
+      editorStorage.setItem("solProtoEdSurfaceSnap", this.surfaceSnap ? "1" : "0");
       surfBtn.textContent = `drop on surface: ${this.surfaceSnap ? "ON" : "OFF"}`;
       surfBtn.blur();
     });
     lvl.appendChild(surfBtn);
     projPane2.appendChild(lvl);
+    this.environment = new EditorEnvironment({
+      data: () => this.data,
+      number: (label, get, set, step) => this.numRow(label, get, set, step),
+      commit: () => { this.commit(); },
+      cameraFocus: () => (this.controls?.target.toArray() ?? this.data.spawn).map(v => +v.toFixed(4)) as [number, number, number],
+      focus: point => {
+        const center = new THREE.Vector3(point[0], point[1], point[2]);
+        this.focusOnBox(new THREE.Box3().setFromCenterAndSize(center, new THREE.Vector3(12, 2, 12)));
+      },
+    });
+    projPane2.appendChild(this.environment.element);
 
     // file ops
     projPane2.appendChild(h('<div class="ed-sect">FILE</div>'));
@@ -6110,15 +6447,20 @@ export class Editor {
       return b;
     };
     mk("export", () => {
-      const blob = new Blob([JSON.stringify(this.data, null, 1)], {
+      const data = normalizeCustomLevelData(this.data);
+      if (!data) { this.showMessage("EXPORT FAILED", "finish or undo the invalid edit first"); return; }
+      const pretty = JSON.stringify(data, null, 1);
+      const json = new TextEncoder().encode(pretty).byteLength <= MAX_LEVEL_FILE_BYTES
+        ? pretty : JSON.stringify(data);
+      const blob = new Blob([json], {
         type: "application/json",
       });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = `level-${this.targetName.replace(/\s+/g, "")}.json`;
+      a.download = `level-${this.targetName.replace(/[^\p{L}\p{N}_.-]+/gu, "-").slice(0, 60) || "untitled"}.json`;
       a.click();
       setTimeout(() => URL.revokeObjectURL(a.href), 5000);
-      this.hooks.showMsg(
+      this.showMessage(
         "LEVEL EXPORTED",
         "drop the file into the chat to share it",
       );
@@ -6128,27 +6470,27 @@ export class Editor {
     filePick.accept = ".json,application/json";
     filePick.style.display = "none";
     filePick.addEventListener("change", () => {
-      const f = filePick.files && filePick.files[0];
-      if (f)
-        void f.text().then((txt) => {
-          try {
-            // accepts the bare component data AND a whole {name,data} entry
-            const o = JSON.parse(txt) as CustomLevelData & {
-              data?: CustomLevelData;
-            };
-            const d = Array.isArray(o.components) ? o : o.data;
-            if (!d || d.v !== 1 || !Array.isArray(d.components))
-              throw new Error("bad");
-            // an imported file becomes its OWN level, never an overwrite
-            this.importLevel(
-              d,
-              o.name ?? d.name ?? f.name.replace(/\.json$/i, ""),
-            );
-          } catch {
-            this.hooks.showMsg("BAD LEVEL FILE");
-          }
-        });
+      const f = filePick.files?.[0];
       filePick.value = "";
+      if (!f) return;
+      const request = ++this.importSerial;
+      if (f.size > MAX_LEVEL_FILE_BYTES) {
+        this.showMessage("FILE TOO LARGE", "level files must be 5 MB or smaller");
+        return;
+      }
+      this.showMessage("READING LEVEL…", f.name);
+      void f.text().then((txt) => {
+        if (!this.active || request !== this.importSerial) return;
+        const data = parseCustomLevelJson(txt);
+        if (!data) {
+          this.showMessage("BAD LEVEL FILE", "expected a supported level JSON · invalid fields or excessive geometry");
+          return;
+        }
+        this.importLevel(data);
+      }).catch(() => {
+        if (this.active && request === this.importSerial)
+          this.showMessage("READ FAILED", "could not read that file · try selecting it again");
+      });
     });
     file.appendChild(filePick);
     mk("import", () => filePick.click());
@@ -6189,7 +6531,7 @@ export class Editor {
         restoreBuiltin(this.targetId);
         this.hooks.levelsChanged(this.targetId);
         this.hooks.exitToPlay();
-        this.hooks.showMsg("ORIGINAL RESTORED", name);
+        this.showMessage("ORIGINAL RESTORED", name);
         return;
       }
       this.data = starterCustomLevel();
@@ -6206,14 +6548,12 @@ export class Editor {
         name: `${this.targetName} copy`,
         data: JSON.parse(JSON.stringify(this.data)) as CustomLevelData,
       });
-      if (!userLevelStorageHealthy())
-        this.hooks.showMsg(
-          "SAVE FAILED",
-          "copy is session-only · export before reloading",
-        );
+      if (!findLevel(id)?.data) { this.showMessage("LEVEL LIMIT REACHED", "export and remove an unused level first"); return; }
+      const persisted = userLevelStorageHealthy();
       this.retarget(id);
       this.hooks.levelsChanged(id);
-      this.hooks.showMsg("DUPLICATED", findLevel(id)?.name ?? "");
+      this.showMessage(persisted ? "DUPLICATED" : "DUPLICATED · SAVE FAILED",
+        persisted ? findLevel(id)?.name ?? "" : "session only · export before reloading");
     });
     // DELETE: drop it from the menu and leave the editor. Built-in levels
     // can't be deleted — they are part of the game — so this hides for them,
@@ -6224,19 +6564,17 @@ export class Editor {
       const gone = this.targetName;
       this.registryChanged = true;
       deleteUserLevel(this.targetId);
-      localStorage.removeItem("solProtoEditorOpen");
-      localStorage.removeItem("solProtoEditorTarget");
+      editorStorage.removeItem("solProtoEditorOpen");
+      editorStorage.removeItem("solProtoEditorTarget");
       this.hooks.levelsChanged(DEFAULT_LEVEL_ID);
       this.hooks.exitToPlay();
-      this.hooks.showMsg("LEVEL DELETED", gone);
+      this.showMessage("LEVEL DELETED", gone);
     });
-    mk("undo ⌘Z", () => this.undo());
-    mk("redo ⌘⇧Z", () => this.redo());
     projPane2.appendChild(file);
 
     projPane2.appendChild(
       h(
-        '<div class="ed-dim">add pieces + layers: tabs on the LEFT edge<br>select: click · drag empty space = box select<br>move: just drag a piece (shift = height)<br>drop on surface: pieces rest on geometry under the cursor<br>fields: shift+↑/↓ = ±10 · drag up/down to scrub<br>alt-drag = drag out a copy · shift-click = add<br>orbit: RIGHT-drag · pan: middle or SPACE-drag<br>zoom: wheel · X/Y/Z (bottom-left) = view snaps<br>⌘A = all · ⌘G = group · ⌘⇧G = ungroup<br>⌘C copy · ⌘V paste at focus · ⌘X cut<br>arrows = nudge (shift↑↓ = height) · F = frame<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate · ⌘Z/⌘⇧Z = undo/redo<br>layer panel: 2+ selected shows scale handles · double-click a row = fly to it · ✎ = rename<br>PROJECT tab: <b>name</b> renames this level in the menu · <b>time of day</b> swaps skybox + fog + lighting<br>opening is read-only until a real edit; hand-built courses create a separate editable copy on first change<br>outline crates: ghost boxes that a "!" crate in the SAME GROUP turns real when hit</div>',
+        '<div class="ed-dim">add pieces + layers: tabs on the LEFT edge<br>select: click · drag empty space = box select<br>move: drag a piece · green arrow = height · shift = whole-unit snap<br>drop on surface: pieces rest on geometry under the cursor<br>fields: shift+↑/↓ = ±10 · drag up/down to scrub<br>alt-drag = drag out a copy · shift-click = add<br>orbit: RIGHT-drag · pan: middle or SPACE-drag<br>zoom: wheel · X/Y/Z (bottom-left) = view snaps<br>⌘A = all · ⌘G = group · ⌘⇧G = ungroup<br>⌘C copy · ⌘V paste at focus · ⌘X cut<br>arrows = nudge (shift↑↓ = height) · F = frame<br>double-click = resize handles (esc = done)<br>del = delete · ⌘D = duplicate · ⌘Z/⌘⇧Z = undo/redo<br>layer panel: 2+ selected shows scale handles · double-click a row = fly to it · ✎ = rename<br>PROJECT tab: <b>name</b> renames this level in the menu · <b>time of day</b> swaps skybox + fog + lighting<br>opening is read-only until a real edit; hand-built courses create a separate editable copy on first change<br>outline crates: ghost boxes that a "!" crate in the SAME GROUP turns real when hit</div>',
       ),
     );
 
@@ -6265,7 +6603,7 @@ export class Editor {
     this.tabLayers?.classList.toggle("ed-tab-on", which === "layers");
     if (persist)
       try {
-        localStorage.setItem(`solProtoEditorPop:${this.targetId}`, which);
+        editorStorage.setItem(`solProtoEditorPop:${this.targetId}`, which);
       } catch {
         /* ignore */
       }
@@ -6322,7 +6660,7 @@ export class Editor {
     this.camera.lookAt(t);
     this.controls.enableRotate = false; // 2D: pan + zoom only, no orbiting out of plane
     this.markViewButtons();
-    this.hooks.showMsg(
+    this.showMessage(
       `${axis.toUpperCase()} VIEW · 2D`,
       `drag moves in the ${axis === "y" ? "X/Z" : axis === "x" ? "Z/Y" : "X/Y"} plane · ${axis.toUpperCase()} again = other side · 3D = back`,
     );
@@ -6705,6 +7043,7 @@ export class Editor {
       deg === 90 ? [z, -x] : [-z, x];
     const yawable = new Set([
       "platform",
+      "mesh",
       "ramp",
       "wall",
       "wallpath",
@@ -6730,6 +7069,8 @@ export class Editor {
     for (const c of comps) {
       if (
         c.t === "crusher" ||
+        c.t === "tumblezone" ||
+        c.t === "coastwall" ||
         c.t === "mover" ||
         c.t === "phasepad" ||
         c.t === "zone"
@@ -6741,7 +7082,9 @@ export class Editor {
         c.p[1],
         Math.round((cz + rz) * 100) / 100,
       ];
-      if (c.pts) {
+      if (c.t === "worldmap" || c.t === "terrain") {
+        c.yaw = ((((c.yaw ?? 0) + deg) % 360) + 360) % 360;
+      } else if (c.pts) {
         c.pts = c.pts.map((pt) => {
           const [nx, nz] = rot(pt[0], pt[1]);
           const out = [...pt] as typeof pt;
@@ -6756,7 +7099,7 @@ export class Editor {
             ? { W: "N", N: "E", E: "S", S: "W" }
             : { E: "N", N: "W", W: "S", S: "E" };
         c.dir = map[c.dir ?? "E"];
-      } else if (c.t === "crusher") {
+      } else if (c.t === "crusher" || c.t === "tumblezone") {
         if (c.s) c.s = [c.s[2], c.s[1], c.s[0]];
       } else if (c.t === "mover") {
         if (c.s) c.s = [c.s[2], c.s[1], c.s[0]];
@@ -6775,7 +7118,7 @@ export class Editor {
       )
         c.axis = c.axis === "x" ? "z" : "x";
       if (c.t === "stone") c.axis = c.axis === "x" ? "z" : "x";
-      if (c.t === "returnportal") {
+      if (c.t === "returnportal" || c.t === "bonusplatform") {
         if (c.to) {
           const [tx, tz] = rot(c.to[0] - cx, c.to[2] - cz);
           c.to = [
@@ -6787,6 +7130,7 @@ export class Editor {
         // exitYaw uses -Z as zero. Rotate the actual heading vector, then
         // convert it back, rather than assuming its sign convention matches
         // component yaw.
+        if (c.t === "bonusplatform") continue;
         const exit = THREE.MathUtils.degToRad(c.exitYaw ?? 0);
         const [hx, hz] = rot(Math.sin(exit), -Math.cos(exit));
         c.exitYaw =
@@ -6810,6 +7154,8 @@ export class Editor {
     lab.textContent = label;
     const input = document.createElement("input");
     input.type = "number";
+    input.setAttribute("aria-label", label);
+    this.numberGetters.set(input, get);
     input.step = String(step);
     input.value = String(get());
     input.title = "shift+↑/↓ = ±10 · drag up/down to scrub";
@@ -6817,15 +7163,30 @@ export class Editor {
     const apply = (commitChange = true): void => {
       const v = parseFloat(input.value);
       if (isFinite(v)) {
-        set(THREE.MathUtils.clamp(v, -100_000, 100_000));
-        if (commitChange) this.commit(true, `num:${label}`);
-        else this.hooks.rebuild();
+        const next = THREE.MathUtils.clamp(v, -100_000, 100_000);
+        if (next !== get()) {
+          set(next);
+          if (commitChange) this.commit(true, `num:${label}`);
+          else this.hooks.rebuild();
+        } else if (commitChange && scrub?.moved) {
+          // The final scrub value may already be visible from its last
+          // preview; it still needs its one transaction on release.
+          this.commit(true, `num:${label}`);
+        }
       }
       input.value = String(get());
     };
     input.addEventListener("change", () => apply());
+    input.addEventListener("blur", () => { if (!scrub?.moved) apply(); });
     // SHIFT+ARROW = coarse ±10 steps (plain arrows keep the field's fine step)
     input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") { e.preventDefault(); input.blur(); return; }
+      if (e.key === "Escape") {
+        e.preventDefault(); e.stopPropagation();
+        if (scrub?.moved) endScrub(true);
+        else { input.value = String(get()); input.blur(); }
+        return;
+      }
       if (e.shiftKey && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
         e.preventDefault();
         const cur = parseFloat(input.value) || 0;
@@ -6960,7 +7321,10 @@ export class Editor {
       mkBtn("match height", () => {
         // align the group to the PRIMARY's y — the fast way to level a row
         const y = this.data.components[this.selected].p[1];
-        for (const i of this.sel) this.data.components[i].p[1] = y;
+        for (const i of this.sel) {
+          const c = this.data.components[i];
+          setComponentPosition(c, [c.p[0], y, c.p[2]]);
+        }
         this.commit();
       });
       mkBtn("delete", () => this.deleteSelected(), true);
@@ -6985,7 +7349,10 @@ export class Editor {
             () => prim.p[axis],
             (v) => {
               const d = v - prim.p[axis];
-              if (d) for (const cc of all) cc.p[axis] += d;
+              if (d) for (const cc of all) {
+                const p: CustomComponent["p"] = [...cc.p]; p[axis] += d;
+                setComponentPosition(cc, p);
+              }
             },
           ),
         );
@@ -7025,14 +7392,13 @@ export class Editor {
               if (cur < 1e-3 || v <= 0) return;
               const f = v / cur;
               const anchor = b.min.clone();
-              if (this.scaleProp) this.scaleSelection(f, f, f, anchor, "gsize");
+              if (this.scaleProp) this.applyScaleNoCommit(f, f, f, anchor);
               else
-                this.scaleSelection(
+                this.applyScaleNoCommit(
                   comp === 0 ? f : 1,
                   comp === 1 ? f : 1,
                   comp === 2 ? f : 1,
                   anchor,
-                  `gsize${comp}`,
                 );
             }),
           );
@@ -7056,7 +7422,7 @@ export class Editor {
         void this.propsEl.appendChild(
           this.numRow(label, get, (v) => all.forEach((cc) => set(cc, v)), step),
         );
-      if (all.every((cc) => cc.s)) {
+      if (all.every((cc) => cc.s && cc.t !== "mesh")) {
         brow(
           "width",
           () => prim.s![0],
@@ -7074,6 +7440,7 @@ export class Editor {
         );
       }
       const yawable = new Set([
+        "mesh",
         "platform",
         "ramp",
         "wall",
@@ -7149,6 +7516,7 @@ export class Editor {
         );
       }
       const colorable = new Set([
+        "mesh",
         "platform",
         "ramp",
         "wall",
@@ -7204,17 +7572,17 @@ export class Editor {
     num(
       "x",
       () => c.p[0],
-      (v) => (c.p[0] = v),
+      (v) => { const p: CustomComponent["p"] = [...c.p]; p[0] = v; setComponentPosition(c, p); },
     );
     num(
       "y",
       () => c.p[1],
-      (v) => (c.p[1] = v),
+      (v) => { const p: CustomComponent["p"] = [...c.p]; p[1] = v; setComponentPosition(c, p); },
     );
     num(
       "z",
       () => c.p[2],
-      (v) => (c.p[2] = v),
+      (v) => { const p: CustomComponent["p"] = [...c.p]; p[2] = v; setComponentPosition(c, p); },
     );
     const sizeRow = (idx: number, label: string): void => {
       const defaults = this.defaultSizeFor(c) ?? [8, 1, 8];
@@ -7275,9 +7643,10 @@ export class Editor {
     // selects it and its CORNER RADIUS is editable here. Rounds the visual,
     // the collision, the kill footprint, and the grind line alike.
     const nodeRows = (): void => {
-      if (!c.pts) return;
+      const points = (): NonNullable<CustomComponent["pts"]> => c.pts ?? this.defaultPointsFor(c) ?? [];
+      if (!points().length) return;
       const picked = [...this.selVtxs].filter(
-        (i) => i >= 0 && i < c.pts!.length,
+        (i) => i >= 0 && i < points().length,
       );
       if (this.resizeIdx === this.selected && picked.length > 0) {
         // one field batch-edits every selected node (Figma). Values shown are
@@ -7287,33 +7656,43 @@ export class Editor {
         const tag =
           picked.length > 1
             ? `${picked.length} nodes`
-            : `node ${picked[0] + 1}`;
+            : c.t === "worldmap" ? CAMPAIGN_LEVELS[picked[0]]?.name ?? `hub ${picked[0] + 1}`
+              : `node ${picked[0] + 1}`;
         const mutate = (
           vi: number,
           mut: (nt: [number, number, number, number, number]) => void,
         ): void => {
-          const nt = [...c.pts![vi]] as [number, number, number, number, number];
+          c.pts ??= points();
+          const nt = [...c.pts[vi]] as [number, number, number, number, number];
           if (nt[2] === undefined) nt[2] = 0; // radius slot (0 = square corner)
           mut(nt);
           c.pts![vi] = nt;
         };
+        const setWorldAxis = (vi: number, axis: "x" | "z", value: number): void => {
+          const world = this.nodeWorldPosition(c, points()[vi]);
+          world[axis] = value;
+          const local = this.nodeLocalOffset(c, world);
+          mutate(vi, (nt) => { nt[0] = local.x; nt[1] = local.z; });
+        };
         num(
           `${tag} · x`,
-          () => c.p[0] + c.pts![picked[0]][0],
+          () => this.nodeWorldPosition(c, points()[picked[0]]).x,
           (v) => {
-            for (const vi of picked) mutate(vi, (nt) => (nt[0] = v - c.p[0]));
+            for (const vi of picked) setWorldAxis(vi, "x", v);
           },
         );
         if (
           c.t === "rail" ||
           c.t === "trickrail" ||
           c.t === "terrain" ||
+          c.t === "vertramp" ||
+          c.t === "worldmap" ||
           c.t === "woodpath" ||
           c.t === "wallpath"
         ) {
           num(
             `${tag} · y`,
-            () => c.p[1] + (c.pts![picked[0]][3] ?? 0),
+            () => c.p[1] + (points()[picked[0]][3] ?? 0),
             (v) => {
               for (const vi of picked) mutate(vi, (nt) => (nt[3] = v - c.p[1]));
             },
@@ -7321,15 +7700,15 @@ export class Editor {
         }
         num(
           `${tag} · z`,
-          () => c.p[2] + c.pts![picked[0]][1],
+          () => this.nodeWorldPosition(c, points()[picked[0]]).z,
           (v) => {
-            for (const vi of picked) mutate(vi, (nt) => (nt[1] = v - c.p[2]));
+            for (const vi of picked) setWorldAxis(vi, "z", v);
           },
         );
-        if (c.t !== "woodpath" && c.t !== "terrain")
+        if (c.t !== "woodpath" && c.t !== "terrain" && c.t !== "worldmap")
           num(
             `${tag} · radius`,
-            () => c.pts![picked[0]][2] ?? 0,
+            () => points()[picked[0]][2] ?? 0,
             (v) => {
               for (const vi of picked)
                 mutate(vi, (nt) => (nt[2] = Math.max(0, v)));
@@ -7338,7 +7717,7 @@ export class Editor {
         if (c.t === "woodpath" || c.t === "vertramp") {
           num(
             `${tag} · bank °`,
-            () => c.pts![picked[0]][4] ?? 0,
+            () => points()[picked[0]][4] ?? 0,
             (v) => {
               for (const vi of picked) mutate(vi, (nt) => (nt[4] = v));
             },
@@ -7350,7 +7729,7 @@ export class Editor {
             `${tag} · width`,
             () => c.widths?.[picked[0]] ?? c.w ?? 6,
             (v) => {
-              if (!c.widths) c.widths = c.pts!.map(() => c.w ?? 6);
+              if (!c.widths) c.widths = points().map(() => c.w ?? 6);
               for (const vi of picked) c.widths[vi] = Math.max(0.8, v);
             },
             0.25,
@@ -7371,9 +7750,43 @@ export class Editor {
             : "double-click, then grab a node (shift adds · drag empty space = box-select nodes): edit its position + corner radius here";
         this.propsEl.appendChild(tip);
       }
+      if (c.t === "worldmap") return; // destinations have a fixed campaign order
+      const insert = document.createElement("button");
+      insert.className = "ed-btn";
+      insert.textContent = "+ insert node";
+      insert.addEventListener("click", () => {
+        const points = c.pts ??= this.defaultPointsFor(c)!;
+        const index = picked.length ? Math.max(...picked) : points.length - 1;
+        const a = points[index];
+        const closed = c.closed || ["platform", "wall", "pit"].includes(c.t);
+        const next = index + 1 < points.length ? index + 1 : closed ? 0 : -1;
+        const b = next >= 0 ? points[next] : points[Math.max(0, index - 1)];
+        const point = Array.from({ length: Math.max(a.length, b.length) }, (_, axis) =>
+          next >= 0 ? ((a[axis] ?? 0) + (b[axis] ?? 0)) / 2
+            : (axis === 0 || axis === 1 || axis === 3)
+              ? 2 * (a[axis] ?? 0) - (b[axis] ?? 0) : a[axis] ?? 0,
+        ) as typeof a;
+        if (c.widths) c.widths.splice(index + 1, 0,
+          next >= 0 ? ((c.widths[index] ?? c.w ?? 6) + (c.widths[next] ?? c.w ?? 6)) / 2
+            : c.widths[index] ?? c.w ?? 6);
+        points.splice(index + 1, 0, point);
+        this.resizeIdx = this.selected;
+        this.selVtxs = new Set([index + 1]);
+        this.commit();
+        this.renderProps();
+      });
+      this.propsEl.appendChild(insert);
+      if (this.resizeIdx === this.selected && picked.length) {
+        const remove = document.createElement("button");
+        remove.className = "ed-btn";
+        remove.textContent = "delete selected nodes";
+        remove.addEventListener("click", () => this.deleteSelectedNodes());
+        this.propsEl.appendChild(remove);
+      }
     };
     if (
       c.t === "platform" ||
+      c.t === "mesh" ||
       c.t === "ramp" ||
       c.t === "wall" ||
       c.t === "terrain" ||
@@ -7395,7 +7808,71 @@ export class Editor {
         },
       );
     }
-    if (c.t === "wallpath") {
+    if (c.t === "platform" && c.pts) {
+      boolRow("island shore profile", () => c.shoreProfile === true, value => {
+        if (value) c.shoreProfile = true;
+        else delete c.shoreProfile;
+      });
+      num("shore waterline y", () => c.shoreSeaLevel ?? c.p[1] - 1.41, v => { c.shoreSeaLevel = v; }, 0.1);
+      num("shore variation phase", () => c.shorePhase ?? 0, v => { c.shorePhase = v; }, 0.1);
+    }
+    if (c.t === "mesh") {
+      const count = Math.floor((c.vertices?.length ?? 0) / 3);
+      const note = document.createElement("div");
+      note.className = "ed-dim";
+      note.textContent = `${count} vertices · ${Math.floor((c.indices?.length ?? count) / 3)} triangles · scale factors keep the exact authored surface`;
+      this.propsEl.appendChild(note);
+      for (const [axis, label] of [[0, "scale x"], [1, "scale y"], [2, "scale z"]] as const)
+        num(label, () => c.s?.[axis] ?? 1, value => {
+          const scale: [number, number, number] = [...(c.s ?? [1, 1, 1])];
+          scale[axis] = Math.max(0.001, value); c.s = scale;
+        }, 0.1);
+      num("yaw °", () => c.yaw ?? 0, value => { c.yaw = value; }, 15);
+      boolRow("slippery surface", () => c.slip === true, value => { c.slip = value; });
+      boolRow("beach sand friction", () => c.beachSand === true, value => { c.beachSand = value; });
+      boolRow("double-sided surface", () => c.doubleSided === true, value => { c.doubleSided = value; });
+      boolRow("invisible in play", () => c.invisible === true, value => { c.invisible = value; });
+      colorRow();
+      if (count > 0) {
+        this.meshVertexIndex = Math.min(count - 1, Math.max(0, this.meshVertexIndex || 0));
+        const row = document.createElement("div"); row.className = "ed-row";
+        const label = document.createElement("label"); label.textContent = `vertex (1–${count})`;
+        const selector = document.createElement("input");
+        selector.type = "number"; selector.min = "1"; selector.max = String(count); selector.step = "1";
+        selector.value = String(this.meshVertexIndex + 1);
+        selector.setAttribute("aria-label", "mesh vertex index");
+        const selectVertex = (): void => {
+          const value = Number(selector.value);
+          if (!Number.isFinite(value)) return;
+          const index = Math.min(count - 1, Math.max(0, Math.round(value) - 1));
+          if (index !== this.meshVertexIndex) { this.meshVertexIndex = index; this.renderProps(); }
+          else selector.value = String(index + 1);
+        };
+        selector.addEventListener("change", selectVertex);
+        selector.addEventListener("blur", selectVertex);
+        row.append(label, selector); this.propsEl.appendChild(row);
+        for (const axis of ["x", "y", "z"] as const)
+          num(`vertex world ${axis}`, () => this.meshVertexWorldPosition(c, this.meshVertexIndex)[axis], value => {
+            const world = this.meshVertexWorldPosition(c, this.meshVertexIndex);
+            world[axis] = value;
+            this.setMeshVertexWorldPosition(c, this.meshVertexIndex, world);
+          }, 0.1);
+      }
+    } else if (c.t === "tumblezone") {
+      sizeRow(0, "width"); sizeRow(1, "height"); sizeRow(2, "depth");
+      const note = document.createElement("div");
+      note.className = "ed-dim";
+      note.textContent = "invisible ragdoll trigger volume — its ghost shows the full affected region";
+      this.propsEl.appendChild(note);
+    } else if (c.t === "coastwall") {
+      nodeRows();
+      num("thickness", () => c.w ?? 0.5, v => { c.w = Math.max(0.1, v); }, 0.1);
+      num("height", () => c.rise ?? 12, v => { c.rise = Math.max(0.2, v); }, 0.5);
+      const note = document.createElement("div");
+      note.className = "ed-dim";
+      note.textContent = "invisible coast safety barrier — move its nodes to steer the exact collision path";
+      this.propsEl.appendChild(note);
+    } else if (c.t === "wallpath") {
       if (c.pts && c.pts.length >= 2) {
         const note = document.createElement("div");
         note.className = "ed-dim";
@@ -7441,7 +7918,7 @@ export class Editor {
         () => {
           const path = c.pts;
           if (!c.closed && (!path || path.length < 3)) {
-            this.hooks.showMsg("NEED 3+ KNOTS", "add a knot before closing the wall");
+            this.showMessage("NEED 3+ KNOTS", "add a knot before closing the wall");
             return;
           }
           c.closed = !c.closed;
@@ -7504,16 +7981,23 @@ export class Editor {
         c.closed = true;
       });
       if (!c.invisible) colorRow();
-    } else if (
-      c.pts &&
-      c.pts.length >= 2 &&
-      (c.t === "woodpath" || c.t === "trickrail")
-    ) {
+    } else if (c.t === "woodpath" || (c.t === "trickrail" && c.pts && c.pts.length >= 2)) {
       const note = document.createElement("div");
       note.className = "ed-dim";
-      note.textContent = `${c.t === "woodpath" ? "wood path" : "trick rail"} · ${c.pts.length} nodes — double-click to edit its route`;
+      note.textContent = `${c.t === "woodpath" ? "wood path" : "trick rail"} · ${c.pts?.length ?? 2} nodes — double-click to edit its route`;
       this.propsEl.appendChild(note);
       nodeRows();
+      if (!c.pts) {
+        const edit = document.createElement("button");
+        edit.className = "ed-btn";
+        edit.textContent = "edit route nodes";
+        edit.addEventListener("click", () => {
+          c.pts = [[0, 0], [0, -24]];
+          this.resizeIdx = this.selected;
+          this.commit(); this.renderProps();
+        });
+        this.propsEl.appendChild(edit);
+      }
       if (c.t === "woodpath") {
         num("default width", () => c.w ?? 6, (v) => (c.w = Math.max(0.8, v)), 0.25);
         num(
@@ -7524,10 +8008,17 @@ export class Editor {
         );
         num(
           "support depth",
-          () => c.supportDepth ?? c.rise ?? 3,
+          () => c.supportDepth ?? c.rise ?? 3.5,
           (v) => (c.supportDepth = Math.max(0.8, v)),
           0.25,
         );
+        boolRow("fixed support foot height", () => c.supportBaseY !== undefined, value => {
+          if (value) c.supportBaseY = c.p[1] - (c.supportDepth ?? c.rise ?? 3.5);
+          else delete c.supportBaseY;
+          this.renderProps();
+        });
+        if (c.supportBaseY !== undefined)
+          num("support foot y", () => c.supportBaseY!, v => { c.supportBaseY = v; }, 0.25);
         num(
           "deck thickness",
           () => c.s?.[1] ?? 0.32,
@@ -7589,6 +8080,7 @@ export class Editor {
           button.className = "ed-btn";
           button.textContent = label;
           button.addEventListener("click", () => {
+            c.pts ??= [[0, 0], [0, -24]];
             action();
             this.commit();
             this.renderProps();
@@ -7790,6 +8282,7 @@ export class Editor {
           (v) => (c.yaw = v),
           15,
         );
+      }
         if (c.t === "rail") {
           // travel > 0 sends the whole line ferrying on a cycle — a moving rail
           const axisBtn = document.createElement("button");
@@ -7807,7 +8300,6 @@ export class Editor {
           num("speed", () => c.speed ?? 0.6, (v) => (c.speed = Math.max(0, v)), 0.1);
           num("phase", () => c.phase ?? 0, (v) => (c.phase = v), 0.2);
         }
-      }
       if (c.t === "rail")
         boolRow("invisible grind line", () => c.invisible === true, (value) => {
           if (value) c.invisible = true;
@@ -7835,11 +8327,20 @@ export class Editor {
       num("opening radius", () => c.radius ?? 2.2, (v) => (c.radius = Math.max(0.8, v)), 0.1);
       num("yaw °", () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
       this.appendTrickPicker(c);
-    } else if (c.t === "returnportal") {
-      sizeRow(0, "width");
-      sizeRow(1, "height");
-      sizeRow(2, "depth");
-      num("entrance yaw °", () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
+    } else if (c.t === "worldmap") {
+      num("map yaw °", () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
+      nodeRows();
+      const note = document.createElement("div");
+      note.className = "ed-dim";
+      note.textContent = "double-click to move each campaign hub and its destination portal; the hub names and destination order stay fixed";
+      this.propsEl.appendChild(note);
+    } else if (c.t === "returnportal" || c.t === "bonusplatform") {
+      if (c.t === "returnportal") {
+        sizeRow(0, "width");
+        sizeRow(1, "height");
+        sizeRow(2, "depth");
+        num("entrance yaw °", () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
+      }
       const destination = (): [number, number, number] => c.to ?? c.p;
       const setDestination = (axis: 0 | 1 | 2, value: number): void => {
         const to = c.to ? [...c.to] : [...c.p];
@@ -7849,6 +8350,7 @@ export class Editor {
       num("exit x", () => destination()[0], (v) => setDestination(0, v), 0.5);
       num("exit y", () => destination()[1], (v) => setDestination(1, v), 0.5);
       num("exit z", () => destination()[2], (v) => setDestination(2, v), 0.5);
+      if (c.t === "returnportal") {
       num("exit yaw °", () => c.exitYaw ?? 0, (v) => (c.exitYaw = v), 15);
       const row = document.createElement("div");
       row.className = "ed-row";
@@ -7863,6 +8365,7 @@ export class Editor {
       });
       row.append(label, checkbox);
       this.propsEl.appendChild(row);
+      }
     } else if (c.t === "gate") {
       num(
         "yaw °",
@@ -7948,6 +8451,9 @@ export class Editor {
         "a grindable rope strung between posts: it sags under a grind, snaps after the break time, and restrings itself";
       this.propsEl.appendChild(note);
     } else if (c.t === "vertramp") {
+      boolRow("traffic route", () => c.trafficRoad === true, value => {
+        if (value) c.trafficRoad = true; else delete c.trafficRoad;
+      });
       num("yaw °", () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
       if (!c.pts)
         num(
@@ -8140,7 +8646,8 @@ export class Editor {
       });
       this.propsEl.appendChild(chain);
     } else if (c.t === "terrain") {
-      if (c.pts) nodeRows();
+      nodeRows();
+      num("yaw °", () => c.yaw ?? 0, v => { c.yaw = v; }, 15);
       num(
         "width",
         () => c.w ?? 12,
@@ -8181,8 +8688,8 @@ export class Editor {
       note.className = "ed-dim";
       note.textContent =
         "the nodes are its CENTRELINE: drag one sideways to bend the path, " +
-        "up or down to roll it. They are read in z order, so it runs " +
-        "down-course and cannot fold back on itself.";
+        "up or down to roll it. Nodes stay ordered along the strip's local Z axis; " +
+        "yaw turns the whole strip and its collision together.";
       this.propsEl.appendChild(note);
     } else if (c.t === "decor") {
       // One panel for every prop, showing only the knobs that prop has. The
@@ -8269,6 +8776,8 @@ export class Editor {
         ...TROPICAL_PLANT_KINDS,
         "fern",
         "broadleaf",
+        "flowers",
+        "planter",
         "toadstool",
         "toadstools",
         "mossrock",
@@ -8307,6 +8816,24 @@ export class Editor {
         num("yaw °", () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
         num(stone ? "roll °" : "lean °", () => c.amp ?? 0,
           (v) => (c.amp = THREE.MathUtils.clamp(v,stone?-180:-40,stone?180:40)), 2);
+      }
+      if (["fern", "broadleaf", "flowers", "toadstool", "toadstools", "mossrock", "jungletree", "palm", "vines", "planter", "log", "coastalhouse"].includes(dk))
+        num("yaw °", () => c.yaw ?? 0, v => { c.yaw = v; }, 15);
+      if (isJungleAsset(dk)) {
+        boolRow("invisible in play", () => c.invisible === true, value => {
+          if (value) c.invisible = true; else delete c.invisible;
+        });
+        if (dk === "carvedlog" || dk === "thornroots")
+          boolRow(dk === "thornroots" ? "hazard collision" : "solid collision", () => c.solid ?? dk === "carvedlog", value => { c.solid = value; });
+      }
+      if (dk === "coastalhouse") {
+        sizeRow(0, "width"); sizeRow(1, "height"); sizeRow(2, "depth");
+        num("district colour", () => c.tn ?? 0, v => { c.tn = THREE.MathUtils.clamp(Math.round(v), 0, 6); }, 1);
+        num("roof variation", () => c.vr ?? 0, v => { c.vr = Math.max(0, Math.round(v)); }, 1);
+      }
+      if (dk === "roadarrow") {
+        num("yaw °", () => c.yaw ?? 0, v => { c.yaw = v; }, 15);
+        num("road pitch °", () => c.amp ?? 0, v => { c.amp = THREE.MathUtils.clamp(v, -90, 90); }, 1);
       }
       if (dk === "vines")
         num(
@@ -8647,7 +9174,7 @@ export class Editor {
       "rock", "pendulum", "ropeswing", "enemy", "gate", "vertramp", "rope",
       "trampoline", "speedpad", "trickgate", "returnportal", "grindosaurus",
       "angryball", "decor", "crusher", "mover", "phasepad", "zone", "stone",
-      "terrain", "woodpath", "wallpath",
+      "terrain", "woodpath", "wallpath", "worldmap", "bonusplatform", "tumblezone", "coastwall", "mesh",
     ]);
     if (rotatable.has(c.t)) {
       const rot = document.createElement("button");
@@ -8706,6 +9233,20 @@ export class Editor {
       .ed-palbtn canvas { flex: 0 0 18px; image-rendering: pixelated; }
       .ed-row input[type=color] { padding: 0; height: 22px; }
       .ed-danger { color: #ff8484; }
+      .ed-btn:disabled { opacity: .4; cursor: default; }
+      .ed-history { margin-bottom: 8px; }
+      .ed-status { font-size: 10px; line-height: 1.5; color: #b2d9c1; overflow-wrap: anywhere; padding: 6px; margin-bottom: 6px; border-left: 2px solid #58a978; background: #17251f; }
+      .ed-status:empty { display: none; }
+      .ed-status[data-error="1"] { color: #ffc8af; border-color: #ff9870; background: #30211d; }
+
+      .ed-search { box-sizing: border-box; width: 100%; padding: 6px; background: #101622; color: #e6edf8; border: 1px solid #3a4152; border-radius: 5px; }
+
+      .ed-environment { margin: 10px 0; border: 1px solid #3a4152; border-radius: 6px; padding: 6px; }
+      .ed-environment summary { cursor: pointer; color: #9edab7; line-height: 1.5; }
+      .ed-environment > .ed-btn { margin: 3px 2px 3px 0; }
+      .ed-environment select { min-width: 0; max-width: 135px; }
+      .ed-row label { cursor: default; }
+
       .ed-test { width: 100%; margin-top: 10px; color: #58e08a; font-weight: bold; padding: 8px; }
       .ed-row { display: grid; grid-template-columns: 80px 1fr; gap: 6px; align-items: center; margin: 3px 0; }
       .ed-row label { color: #9fb0c8; }

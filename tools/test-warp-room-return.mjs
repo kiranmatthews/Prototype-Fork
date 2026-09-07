@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import * as THREE from "three";
 import ts from "typescript";
 import { createServer } from "vite";
+import { runInNewContext } from "node:vm";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const noop = () => {};
@@ -295,7 +296,50 @@ assert.match(
 );
 const helperSwitches = callsNamed(returnHelper, "switchLevel");
 assert.equal(helperSwitches.length, 1);
-assert.equal(helperSwitches[0].arguments[0]?.text, "warproom");
+const returnHelperCode = ts.transpileModule(returnHelper.getText(mainAst), {
+  compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.ESNext },
+}).outputText;
+for (const [mapId, available, origin, expectedTarget, expectedKey] of [
+  ["warproom", true, "jungle", "warproom", "jungle"],
+  ["u-edited-map", true, "flats", "u-edited-map", "test-course"],
+  ["deleted-map", false, "sky", "warproom", "sky-bridge"],
+  ["u-edited-map", true, "u-level", "u-edited-map", null],
+]) {
+  const events = [];
+  const context = {
+    campaignMapOriginId: mapId,
+    findLevel: id => id === mapId && available ? { id } : null,
+    campaignLevelById: id => ({ jungle: { progressKey: "jungle" },
+      flats: { progressKey: "test-course" }, sky: { progressKey: "sky-bridge" } })[id],
+    switchLevel: (...args) => events.push(args),
+  };
+  runInNewContext(returnHelperCode, context);
+  context.returnToWarpRoom(origin);
+  assert.deepEqual(events, [[expectedTarget, false, true, expectedKey]],
+    `return from ${origin} must restore ${expectedTarget} at its canonical gate`);
+}
+const enterHelper = functionNamed(mainAst, "enterCampaignLevel");
+const enterHelperCode = ts.transpileModule(enterHelper.getText(mainAst), {
+  compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.ESNext },
+}).outputText;
+for (const [id, isCampaignMap, unlocked, expected] of [
+  ["u-edited-map", true, true, "u-edited-map"],
+  ["warproom", true, true, "warproom"],
+  ["jungle", false, true, "prior-map"],
+  ["u-locked-map", true, false, "prior-map"],
+]) {
+  const context = {
+    current: { id }, level: { isCampaignMap }, campaignMapOriginId: "prior-map",
+    campaignLevelById: () => ({ progressKey: "jungle" }),
+    campaign: { levelUnlocked: () => unlocked, updateInventory() {} },
+    player: { lives: 4, fruit: 0 },
+    gameFlow: { transition() {} },
+  };
+  runInNewContext(enterHelperCode, context);
+  context.enterCampaignLevel("jungle");
+  assert.equal(context.campaignMapOriginId, expected,
+    `entering a campaign level from ${id} recorded the wrong map origin`);
+}
 assert.equal(helperSwitches[0].arguments[3]?.getText(mainAst), "returnFromKey");
 
 for (const name of ["startNewCampaign", "loadCampaign"]) {
@@ -308,6 +352,9 @@ for (const name of ["startNewCampaign", "loadCampaign"]) {
   const switches = callsNamed(fn, "switchLevel");
   assert.equal(switches.length, 1, `${name} does not enter one generic Warp Room`);
   assert.equal(switches[0].arguments[0]?.text, "warproom");
+  const resetAt = fn.getText(mainAst).indexOf('campaignMapOriginId = "warproom"');
+  const switchAt = fn.getText(mainAst).indexOf('switchLevel("warproom"');
+  assert.ok(resetAt >= 0 && resetAt < switchAt, `${name} retained a prior custom map origin`);
   assert.equal(
     switches[0].arguments.length,
     3,

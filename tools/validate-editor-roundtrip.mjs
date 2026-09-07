@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
+import { assertEditorRuntimeAuthoring } from "./editor-runtime-regressions.mjs";
 
 // This is deliberately a runtime test, not a second implementation of the
 // editor schema. Vite loads the real TypeScript modules and the small DOM shim
@@ -1507,6 +1508,7 @@ try {
     setUserLevels,
     starterCustomLevel,
   } = levelModule;
+  assertEditorRuntimeAuthoring(levelModule, THREE);
   const benchmarkData = { ...starterCustomLevel(), relicTime: 83.75 };
   assert.equal(normalizeCustomLevelData(benchmarkData)?.relicTime, 83.75);
   for (const relicTime of [0, -1, Infinity, NaN, '90', null, 86401])
@@ -1972,6 +1974,11 @@ try {
       setEditorBuild(false);
       original = new Level(new THREE.Scene(), entry);
       const captured = migrateCustomLevel(clone(original.captureData()));
+      const validCapture = normalizeCustomLevelData(captured);
+      if (!validCapture && process.env.EDITOR_CAPTURE_DIAGNOSTICS)
+        await writeFile(path.join(process.env.EDITOR_CAPTURE_DIAGNOSTICS, `editor-capture-${entry.id}.json`), JSON.stringify(captured));
+      assert.ok(validCapture,
+        "captured source level cannot pass the same validation used for sharing/import");
       if (entry.id === "beachfront") {
         const beachDecks = original.groundMeshes.filter(
           (mesh) => mesh.userData.woodPathComp,

@@ -102,7 +102,7 @@ export class WorldMapUI {
   get presentationDiagnostics() { return this.presentation?.diagnostics ?? null; }
 
   draw(renderer: THREE.WebGLRenderer, dt: number, size?: { width: number; height: number }, target?: THREE.WebGLRenderTarget | null): void {
-    if (this.root.hidden || document.body.classList.contains("game-shell-modal") || document.body.classList.contains("game-shell-transitioning")) return;
+    if (this.root.hidden || document.body.classList.contains("ed-active") || document.body.classList.contains("game-shell-modal") || document.body.classList.contains("game-shell-transitioning")) return;
     this.presentation?.draw(renderer, dt, size, target);
   }
 
@@ -189,7 +189,7 @@ export class WorldMapUI {
     const style = document.createElement("style");
     style.textContent = `
       .world-map-ui { position:fixed; inset:0; z-index:72; pointer-events:none; color:#fff8db; font-family:Roo, Impact, system-ui, sans-serif; }
-      .world-map-ui[hidden], body.game-shell-modal .world-map-ui, body.game-shell-transitioning .world-map-ui { display:none !important; }
+      .world-map-ui[hidden], body.ed-active .world-map-ui, body.game-shell-modal .world-map-ui, body.game-shell-transitioning .world-map-ui { display:none !important; }
       .world-map-semantic { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
       .world-map-touch-surface { display:none; position:absolute; inset:0; touch-action:none; user-select:none; }
       .world-map-level-card { position:absolute; left:max(28px,env(safe-area-inset-left)); top:max(25px,env(safe-area-inset-top)); width:min(650px,43vw); aspect-ratio:2.45; }

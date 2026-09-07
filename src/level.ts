@@ -198,6 +198,7 @@ interface SlideRibbon {
   len: number; // arc length of the spine
   width: number;
   frame: (t: number, off: number, h: number) => THREE.Vector3;
+  path?: VertRampPath;
 }
 
 interface Projectile {
@@ -633,6 +634,11 @@ export interface CustomComponent {
     | "camnode" // camera-lane node: nodes chain in order into the lane the camera + controls steer along
     | "outline" // LEGACY ghost crate (old saves) — loads as a wood crate with outline: true
     | "checkpoint"
+    | "bonusplatform" // bonus-stage entrance: p = deck feet point, to = return feet point
+    | "worldmap" // campaign diorama: p/yaw move its frame; pts are local hub feet coordinates in campaign order
+    | "tumblezone" // invisible ragdoll trigger: p center, s bounds
+    | "coastwall" // invisible continuous safety wall: p base, pts XZ path, w thickness, rise height
+    | "mesh" // bounded authored triangle surface: local metre vertices, optional indices/normals/uvs/colors; s is a scale factor
     | "enemy" // patrols along X around p, range each way
     | "crusher" // stomping block: p = [x, deckY, z], s = [w,-,d], cycle seconds, phase
     | "mover" // moving platform: p = [x, topY, z], s = [w,-,d], axis x/y/z, amp = travel each way, speed, phase
@@ -664,6 +670,14 @@ export interface CustomComponent {
   collisionHeight?: number; // wall/wallpath: optional collider height when visual height differs
   slip?: boolean; // platform only: an icy/slick deck (friction cut, you can't stop short)
   edgeGrinding?: boolean; // solid surface boundary grind paths (default true; false = explicit opt-out)
+  trafficRoad?: boolean; // vertramp: this swept road owns the route followed by car enemies
+  vertices?: number[];
+  indices?: number[];
+  normals?: number[];
+  uvs?: number[];
+  colors?: number[];
+  doubleSided?: boolean;
+  beachSand?: boolean;
   len?: number;
   rise?: number;
   w?: number;
@@ -887,7 +901,10 @@ export interface CustomLevelData {
   spawn: [number, number, number];
   killY: number;
   /** Bonus stages opt into their distinct persistent collection HUD. */
-  hudMode?: "bonus";
+  hudMode?: "bonus" | "hub";
+  allBalanceCrates?: boolean;
+  perfectGrindBoost?: boolean;
+  keepPlayFog?: boolean;
   /** 0..1 level-authored widening of ledge reach/timing; absent keeps global feel. */
   ledgeAssist?: number;
   /** Legacy gold-medal benchmark; retained for existing level JSON. */
@@ -916,12 +933,20 @@ export interface CustomOceanData {
   longitudinalSegments?: number;
   lateralSegments?: number;
   sourceCoordinates?: "unity" | "three";
+  /** Local Three-space shoreline positions and outward XZ normals. */
+  shore?: [number, number, number, number][];
+  extendTails?: boolean;
 }
 
 export interface CustomUnitySandData {
   p: [number, number, number];
   s: [number, number, number];
   yaw?: number;
+}
+
+/** Stable hub order and local feet positions for the editor's world-map knots. */
+export function worldMapComponentPoints(): NonNullable<CustomComponent["pts"]> {
+  return CAMPAIGN_LEVELS.map(({ mapPosition: [x, y, z] }) => [x, z, 0, y]);
 }
 
 // the full ancestor chain of group ids for a component (innermost first)
@@ -1012,6 +1037,10 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
     }
     return c;
   });
+  // The map owns hub behavior. Removing it restores the ordinary playable
+  // level contract instead of leaving an invisible hub with no finish gate.
+  if (d.components.some(component => component.t === "worldmap")) d.hudMode = "hub";
+  else if (d.hudMode === "hub") delete d.hudMode;
   // A historical Test Course section move translated the rendered enemy
   // groups by -22m but left their reset baseY scalars behind. The next editor
   // capture baked those stale heights into the shared JSON. Two older calls
@@ -1077,6 +1106,9 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
     >();
     let next = Math.max(0, ...used) + 1;
     for (const layer of d.layers) {
+      // Sparse legacy ids near the format ceiling must not create an
+      // out-of-range id (or lose integer precision during a later migration).
+      if (next > 1_000_000) next = 1;
       while (used.has(next)) next++;
       const groupId = next++;
       used.add(groupId);
@@ -1158,7 +1190,7 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   // before gates existed get one on their furthest down-course deck (move it
   // wherever afterwards); duplicate gates collapse to the last one placed.
   const lastGate = d.components.map((c) => c.t).lastIndexOf("gate");
-  if (lastGate === -1) d.components.push(defaultGateFor(d));
+  if (lastGate === -1 && d.hudMode !== "hub") d.components.push(defaultGateFor(d));
   else
     d.components = d.components.filter(
       (c, i) => c.t !== "gate" || i === lastGate,
@@ -1166,7 +1198,7 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   // RUN-MODE ACTIVATORS: the stopwatch and the combo orb are level furniture
   // the same way the spawn and the gate are — old saves get them beside the
   // spawn (move them wherever afterwards); duplicates collapse to the last.
-  if (d.hudMode !== "bonus") {
+  if (d.hudMode !== "bonus" && d.hudMode !== "hub") {
     for (const t of ["clock", "comboorb"] as const) {
       const last = d.components.map((c) => c.t).lastIndexOf(t);
       if (last === -1)
@@ -2201,6 +2233,7 @@ export const CUSTOM_COMPONENT_TYPES = new Set<CustomComponent["t"]>([
   "ropeswing", "gate", "clock", "comboorb", "zone", "rope", "terrain",
   "woodpath", "trampoline", "speedpad", "trickgate", "trickrail",
   "returnportal", "grindosaurus", "angryball", "thorn", "decor", "wumpa", "crystal",
+  "bonusplatform", "worldmap", "tumblezone", "coastwall", "mesh",
 ]);
 const VALID_CRATE_KINDS = new Set<NonNullable<CustomComponent["kind"]>>([
   "wood", "bouncy", "metalbounce", "metal", "nitro", "tnt", "mask",
@@ -2217,19 +2250,196 @@ const finiteTuple = (
   value.length <= maximum &&
   value.every((number) => typeof number === "number" && Number.isFinite(number));
 
+/** Public interchange limits apply before parsing, migration or geometry work. */
+export const MAX_LEVEL_FILE_BYTES = 5 * 1024 * 1024;
+export const MAX_LEVEL_PACK_BYTES = 16 * 1024 * 1024;
+export const MAX_USER_LEVELS = 128;
+const MAX_LEVEL_LABEL_LENGTH = 120;
+const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
+const LEVEL_DATA_KEYS = new Set([
+  "v", "name", "spawn", "killY", "hudMode", "ledgeAssist", "relicTime",
+  "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere",
+  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog",
+]);
+const COMPONENT_DATA_KEYS = new Set([
+  "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip",
+  "edgeGrinding", "len", "rise", "w", "yaw", "axis", "vkind", "arc", "deck",
+  "closed", "bank", "curve", "vert", "shake", "kind", "dkind", "vr", "tn",
+  "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid",
+  "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "spacing",
+  "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
+  "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
+  "trick", "exitYaw", "airOnly", "coverage", "radius", "color", "tex", "dir",
+  "layer", "grp", "lk", "nm", "trafficRoad", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand",
+]);
+const hasOnlyKeys = (value: object, keys: ReadonlySet<string>): boolean =>
+  Object.keys(value).every((key) => keys.has(key));
+
+/** Polygon imports must describe one simple, nonzero-area boundary. */
+function simpleLevelPolygon(points: readonly (readonly number[])[]): boolean {
+  let count = points.length;
+  const same = (a: readonly number[], b: readonly number[]): boolean =>
+    Math.hypot(a[0] - b[0], a[1] - b[1]) < 1e-6;
+  if (count > 3 && same(points[0], points[count - 1])) count--;
+  const cross = (a: readonly number[], b: readonly number[], c: readonly number[]): number =>
+    (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]);
+  const on = (a: readonly number[], b: readonly number[], p: readonly number[]): boolean =>
+    p[0] >= Math.min(a[0], b[0]) - 1e-8 && p[0] <= Math.max(a[0], b[0]) + 1e-8 &&
+    p[1] >= Math.min(a[1], b[1]) - 1e-8 && p[1] <= Math.max(a[1], b[1]) + 1e-8;
+  for (let i = 0; i < count; i++) {
+    const a = points[i];
+    const b = points[(i + 1) % count];
+    if (same(a, b)) return false;
+    for (let j = i + 2; j < count; j++) {
+      if (i === 0 && j === count - 1) continue;
+      const c = points[j];
+      const d = points[(j + 1) % count];
+      const ac = cross(a, b, c), ad = cross(a, b, d);
+      const ca = cross(c, d, a), cb = cross(c, d, b);
+      if ((ac * ad < 0 && ca * cb < 0) ||
+          (Math.abs(ac) < 1e-8 && on(a, b, c)) ||
+          (Math.abs(ad) < 1e-8 && on(a, b, d)) ||
+          (Math.abs(ca) < 1e-8 && on(c, d, a)) ||
+          (Math.abs(cb) < 1e-8 && on(c, d, b))) return false;
+    }
+  }
+  return count >= 3;
+}
+
+/**
+ * Copy JSON data without invoking accessors/toJSON, accepting prototype-bearing
+ * objects, recursing without a bound, or retaining opaque payloads in saves.
+ * Undefined object properties are omitted just as JSON.stringify omits them in
+ * source-authored levels; holes/undefined array elements are invalid.
+ */
+function cloneBoundedLevelJson(value: unknown): unknown {
+  const active = new WeakSet<object>();
+  let nodes = 0;
+  let bytes = 0;
+  const copy = (input: unknown, depth: number): unknown => {
+    if (++nodes > 400_000 || depth > 12) throw new Error("Level JSON is too complex");
+    if (input === null || typeof input === "boolean") return input;
+    if (typeof input === "number") {
+      if (!Number.isFinite(input)) throw new Error("Non-finite level number");
+      bytes += 24;
+      return input;
+    }
+    if (typeof input === "string") {
+      if (input.length > 256) throw new Error("Level string is too long");
+      bytes += input.length * 3 + 2;
+      return input;
+    }
+    if (!input || typeof input !== "object") throw new Error("Expected plain JSON");
+    const array = Array.isArray(input);
+    const prototype = Object.getPrototypeOf(input);
+    if (prototype !== (array ? Array.prototype : Object.prototype) && prototype !== null)
+      throw new Error("Expected plain JSON object");
+    if (active.has(input)) throw new Error("Cyclic level JSON");
+    active.add(input);
+    const keys = Reflect.ownKeys(input);
+    if (keys.length > (array ? 50_001 : 128)) throw new Error("Too many JSON fields");
+    if (array && input.length > 50_000) throw new Error("Level array is too long");
+    const out: unknown[] | Record<string, unknown> = array ? [] : {};
+    let arrayItems = 0;
+    for (const key of keys) {
+      if (array && key === "length") continue;
+      if (typeof key !== "string" || FORBIDDEN_JSON_KEYS.has(key) || key.length > 80)
+        throw new Error("Unsafe JSON key");
+      if (array && (!/^(0|[1-9]\d*)$/.test(key) || Number(key) >= input.length))
+        throw new Error("Unexpected array property");
+      const property = Object.getOwnPropertyDescriptor(input, key)!;
+      if (!("value" in property) || !property.enumerable)
+        throw new Error("Expected JSON data property");
+      if (property.value === undefined && !array) continue;
+      bytes += key.length * 3 + 4;
+      if (bytes > MAX_LEVEL_PACK_BYTES) throw new Error("Level JSON is too large");
+      (out as Record<string, unknown>)[key] = copy(property.value, depth + 1);
+      arrayItems++;
+    }
+    if (array && arrayItems !== input.length) throw new Error("Sparse level array");
+    active.delete(input);
+    return out;
+  };
+  const result = copy(value, 0);
+  if (new TextEncoder().encode(JSON.stringify(result)).byteLength > MAX_LEVEL_FILE_BYTES)
+    throw new Error("Level JSON is too large");
+  return result;
+}
+
+/** Bound parser allocation as well as the decoded object's later work budget. */
+export function levelJsonTextWithinLimits(
+  text: string,
+  maxBytes = MAX_LEVEL_FILE_BYTES,
+  maxDepth = 12,
+): boolean {
+  if (typeof text !== "string" || text.length > maxBytes ||
+      new TextEncoder().encode(text).byteLength > maxBytes) return false;
+  let depth = 0, containers = 0, separators = 0, stringLength = 0;
+  let quoted = false, escaped = false;
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    if (quoted) {
+      if (!escaped && char === '"') { quoted = false; continue; }
+      if (++stringLength > 1536) return false; // 256 fully escaped JSON characters
+      if (escaped) escaped = false;
+      else if (char === "\\") escaped = true;
+      continue;
+    }
+    if (char === '"') { quoted = true; stringLength = 0; }
+    else if (char === "{" || char === "[") {
+      if (++depth > maxDepth || ++containers > 100_000) return false;
+    } else if (char === "}" || char === "]") {
+      if (--depth < 0) return false;
+    } else if ((char === "," || char === ":") && ++separators > 800_000) return false;
+  }
+  return !quoted && depth === 0;
+}
+
+/** Accept a bare level or a strict shared-file entry wrapper, never its identity. */
+export function parseCustomLevelJson(text: string): CustomLevelData | null {
+  if (!levelJsonTextWithinLimits(text)) return null;
+  try {
+    const value = cloneBoundedLevelJson(JSON.parse(text));
+    if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+    if (!("data" in value)) return normalizeLevelDataFields(value);
+    if (!hasOnlyKeys(value, new Set(["id", "name", "data"]))) return null;
+    const entry = value as Partial<LevelEntry>;
+    if ((entry.id !== undefined && !validLevelId(entry.id)) ||
+        (entry.name !== undefined && (typeof entry.name !== "string" ||
+          entry.name.length > MAX_LEVEL_LABEL_LENGTH))) return null;
+    const data = normalizeLevelDataFields(entry.data);
+    if (data && entry.name !== undefined) data.name = cleanLevelName(entry.name);
+    return data;
+  } catch {
+    return null;
+  }
+}
+
 export function normalizeCustomLevelData(value: unknown): CustomLevelData | null {
+  try {
+    return normalizeLevelDataFields(cloneBoundedLevelJson(value));
+  } catch {
+    return null;
+  }
+}
+
+function normalizeLevelDataFields(value: unknown): CustomLevelData | null {
   const MAX_ABS = 100_000;
   const MAX_COMPONENTS = 10_000;
   const MAX_POINTS = 4_096;
   const MAX_GROUPS = 512;
+  const MAX_EDITOR_ID = 1_000_000;
   const MAX_AGGREGATE_NODES = 50_000;
-  const MAX_GENERATED_SAMPLES = 120_000;
+  const MAX_GENERATED_SAMPLES = 500_000;
   const MAX_PATH_LENGTH = 20_000;
   const source = value as CustomLevelData | null;
   if (
     !source ||
     source.v !== 1 ||
+    Array.isArray(source) ||
+    !hasOnlyKeys(source, LEVEL_DATA_KEYS) ||
     typeof source.name !== "string" ||
+    source.name.length > MAX_LEVEL_LABEL_LENGTH ||
     !finiteTuple(source.spawn, 3) ||
     typeof source.killY !== "number" ||
     !Number.isFinite(source.killY) ||
@@ -2246,7 +2456,14 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
     "collisionHeight", "supportBaseY", "shoreSeaLevel", "shorePhase",
   ];
   if (source.sky !== undefined && !SKY_PRESETS.includes(source.sky)) return null;
-  if (source.hudMode !== undefined && source.hudMode !== "bonus") return null;
+  if (source.jungleAtmosphere !== undefined && typeof source.jungleAtmosphere !== "boolean")
+    return null;
+  if (source.medalTimes !== undefined &&
+      (!source.medalTimes || !hasOnlyKeys(source.medalTimes, new Set(["gold", "silver", "bronze"]))))
+    return null;
+  if (source.hudMode !== undefined && source.hudMode !== "bonus" && source.hudMode !== "hub") return null;
+  for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog"] as const)
+    if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
   if (source.relicTime !== undefined && !validRelicTime(source.relicTime)) return null;
   if (source.medalTimes !== undefined && !validMedalTimes(source.medalTimes)) return null;
   if (
@@ -2261,6 +2478,8 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
     const ocean = source.ocean;
     if (
       !ocean ||
+      !hasOnlyKeys(ocean, new Set(["p", "length", "yaw", "seaward", "width", "overlap",
+        "longitudinalSegments", "lateralSegments", "sourceCoordinates", "shore", "extendTails"])) ||
       !finiteTuple(ocean.p, 3) ||
       ocean.p.some((number) => Math.abs(number) > MAX_ABS) ||
       !Number.isFinite(ocean.length) ||
@@ -2269,10 +2488,10 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
       !Number.isFinite(ocean.width) ||
       ocean.width < 1 ||
       ocean.width > MAX_ABS ||
-      (ocean.yaw !== undefined && !Number.isFinite(ocean.yaw)) ||
+      (ocean.yaw !== undefined && (!Number.isFinite(ocean.yaw) || Math.abs(ocean.yaw) > MAX_ABS)) ||
       (ocean.seaward !== -1 && ocean.seaward !== 1) ||
       (ocean.overlap !== undefined &&
-        (!Number.isFinite(ocean.overlap) || ocean.overlap < 0)) ||
+        (!Number.isFinite(ocean.overlap) || ocean.overlap < 0 || ocean.overlap > MAX_ABS)) ||
       (ocean.longitudinalSegments !== undefined &&
         (!Number.isSafeInteger(ocean.longitudinalSegments) ||
           ocean.longitudinalSegments < 1 ||
@@ -2284,11 +2503,24 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
       ((ocean.longitudinalSegments ?? 128) + 1) *
           ((ocean.lateralSegments ?? 128) + 1) >
         MAX_GENERATED_SAMPLES ||
+      (ocean.extendTails !== undefined && typeof ocean.extendTails !== "boolean") ||
+      (ocean.shore !== undefined &&
+        (!Array.isArray(ocean.shore) || ocean.shore.length < 2 || ocean.shore.length > MAX_POINTS ||
+          ocean.shore.some(point => !finiteTuple(point, 4) ||
+            Math.abs(point[0]) > MAX_ABS || Math.abs(point[1]) > MAX_ABS ||
+            Math.abs(point[2]) > 1 || Math.abs(point[3]) > 1 || Math.hypot(point[2], point[3]) < 1e-6))) ||
       (ocean.sourceCoordinates !== undefined &&
         ocean.sourceCoordinates !== "unity" &&
         ocean.sourceCoordinates !== "three")
     )
       return null;
+    if (ocean.shore) {
+      let shoreLength = 0;
+      for (let i = 1; i < ocean.shore.length; i++)
+        shoreLength += Math.hypot(ocean.shore[i][0] - ocean.shore[i - 1][0],
+          ocean.shore[i][1] - ocean.shore[i - 1][1]);
+      if (shoreLength < 0.02 || shoreLength + (ocean.extendTails ? 800 : 0) > MAX_PATH_LENGTH) return null;
+    }
   }
   if (
     source.unitySand !== undefined &&
@@ -2298,11 +2530,12 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
       !source.unitySand.every(
         (sand) =>
           sand &&
+          hasOnlyKeys(sand, new Set(["p", "s", "yaw"])) &&
           finiteTuple(sand.p, 3) &&
           finiteTuple(sand.s, 3) &&
           sand.s.every((value) => value > 0) &&
           [...sand.p, ...sand.s].every((value) => Math.abs(value) <= MAX_ABS) &&
-          (sand.yaw === undefined || Number.isFinite(sand.yaw)),
+          (sand.yaw === undefined || (Number.isFinite(sand.yaw) && Math.abs(sand.yaw) <= MAX_ABS)),
       ))
   )
     return null;
@@ -2314,6 +2547,7 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
       !source.shoreFoam.every(
         (oval) =>
           oval &&
+          hasOnlyKeys(oval, new Set(["center", "right", "forward", "axes", "phase"])) &&
           finiteTuple(oval.center, 3) &&
           finiteTuple(oval.right, 3) &&
           finiteTuple(oval.forward, 3) &&
@@ -2323,7 +2557,10 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
             (value) => Math.abs(value) <= MAX_ABS,
           ) &&
           typeof oval.phase === "number" &&
-          Number.isFinite(oval.phase),
+          Number.isFinite(oval.phase) && Math.abs(oval.phase) <= MAX_ABS &&
+          Math.abs(Math.hypot(...oval.right) - 1) <= 0.02 &&
+          Math.abs(Math.hypot(...oval.forward) - 1) <= 0.02 &&
+          Math.abs(oval.right.reduce((dot, value, i) => dot + value * oval.forward[i], 0)) <= 0.02,
       ))
   )
     return null;
@@ -2343,21 +2580,38 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
   const booleanKeys: (keyof CustomComponent)[] = [
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "lk",
-    "shoreProfile", "edgeGrinding",
+    "shoreProfile", "edgeGrinding", "trafficRoad", "doubleSided", "beachSand",
   ];
-  let aggregateNodes = 0;
-  let aggregateSamples = 0;
+  let aggregateNodes = source.ocean?.shore?.length ?? 0;
+  let aggregateSamples = source.ocean
+    ? ((source.ocean.longitudinalSegments ?? 128) + 1) *
+      ((source.ocean.lateralSegments ?? 128) + 1)
+    : 0;
+  aggregateSamples += (source.ocean?.shore?.length ?? 0) * 4;
+  aggregateSamples += (source.unitySand?.length ?? 0) * 24 + (source.shoreFoam?.length ?? 0) * 64;
+  let polygonWork = 0;
+  let dynamicCount = 0;
+  let carCount = 0;
+  let checkpointCount = 0;
+  let crateCount = 0;
+  let supportProbeCount = 0;
+  let meshVertices = 0;
+  let meshTriangles = 0;
+  const singletonKinds = new Set<string>();
+  const dynamicKinds = new Set(["enemy", "crusher", "mover", "torch", "phasepad",
+    "stone", "pendulum", "ropeswing", "grindosaurus", "angryball"]);
   for (const component of source.components) {
     if (
       !component ||
+      !hasOnlyKeys(component, COMPONENT_DATA_KEYS) ||
       !CUSTOM_COMPONENT_TYPES.has(component.t) ||
       !finiteTuple(component.p, 3) ||
       (component.s !== undefined && !finiteTuple(component.s, 3)) ||
       (component.to !== undefined && !finiteTuple(component.to, 3)) ||
-      (component.widths !== undefined && !finiteTuple(component.widths, 0, Infinity)) ||
+      (component.widths !== undefined && !finiteTuple(component.widths, 0, MAX_POINTS)) ||
       (component.pts !== undefined &&
         (!Array.isArray(component.pts) ||
-          component.pts.length > MAX_POINTS ||
+          component.pts.length < 2 || component.pts.length > MAX_POINTS ||
           !component.pts.every((point) => finiteTuple(point, 2, 5))))
     )
       return null;
@@ -2368,6 +2622,7 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
       component.p.some((number) => Math.abs(number) > MAX_ABS) ||
       component.s?.some((number) => Math.abs(number) > MAX_ABS) ||
       component.to?.some((number) => Math.abs(number) > MAX_ABS) ||
+      component.widths?.some((number) => Math.abs(number) > MAX_ABS) ||
       component.pts?.some((point) =>
         point.some((number) => Math.abs(number) > MAX_ABS),
       )
@@ -2398,62 +2653,142 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
       (component.color !== undefined &&
         (typeof component.color !== "string" ||
           !/^#[0-9a-f]{6}$/i.test(component.color))) ||
-      (component.nm !== undefined && typeof component.nm !== "string") ||
+      (component.nm !== undefined &&
+        (typeof component.nm !== "string" || component.nm.length > MAX_LEVEL_LABEL_LENGTH)) ||
       (component.plankPalette !== undefined &&
-        (typeof component.plankPalette !== "string" || component.plankPalette.length > 80)) ||
+        (typeof component.plankPalette !== "string" || !/^[a-z0-9_-]{1,80}$/i.test(component.plankPalette))) ||
       (component.polePalette !== undefined &&
-        (typeof component.polePalette !== "string" || component.polePalette.length > 80)) ||
+        (typeof component.polePalette !== "string" || !/^[a-z0-9_-]{1,80}$/i.test(component.polePalette))) ||
       (component.grp !== undefined &&
-        (!Number.isSafeInteger(component.grp) || component.grp < 0))
+        (!Number.isSafeInteger(component.grp) || component.grp < 0 || component.grp > MAX_EDITOR_ID))
     )
       return null;
     if (
       component.layer !== undefined &&
-      (!Number.isSafeInteger(component.layer) || component.layer < 0)
+      (!Number.isSafeInteger(component.layer) || component.layer < 0 || component.layer > MAX_EDITOR_ID)
     )
       return null;
-    if (
-      component.pts &&
-      ["woodpath", "terrain", "vertramp", "wallpath", "rail", "trickrail"].includes(
-        component.t,
-      )
-    ) {
-      let length = 0;
-      for (let index = 1; index < component.pts.length; index++)
-        length += Math.hypot(
-          component.pts[index][0] - component.pts[index - 1][0],
-          component.pts[index][1] - component.pts[index - 1][1],
-          (component.pts[index][3] ?? 0) -
-            (component.pts[index - 1][3] ?? 0),
-        );
+    const meshFields = ["vertices", "indices", "normals", "uvs", "colors"] as const;
+    if (component.t !== "mesh" && meshFields.some(key => component[key] !== undefined)) return null;
+    if (component.t === "mesh") {
+      if (!finiteTuple(component.vertices, 9, 12_288) || component.vertices.length % 3 !== 0 ||
+          component.vertices.some(value => Math.abs(value) > MAX_ABS)) return null;
+      const vertexCount = component.vertices.length / 3;
+      if (component.indices !== undefined &&
+          (!finiteTuple(component.indices, 3, 12_288) || component.indices.length % 3 !== 0 ||
+            component.indices.some(index => !Number.isSafeInteger(index) || index < 0 || index >= vertexCount)))
+        return null;
+      if (component.indices === undefined && component.vertices.length % 9 !== 0) return null;
+      if (component.normals !== undefined &&
+          (!finiteTuple(component.normals, component.vertices.length) || component.normals.some(value => Math.abs(value) > 1))) return null;
+      if (component.uvs !== undefined &&
+          (!finiteTuple(component.uvs, vertexCount * 2) || component.uvs.some(value => Math.abs(value) > MAX_ABS))) return null;
+      if (component.colors !== undefined &&
+          (!finiteTuple(component.colors, component.vertices.length) || component.colors.some(value => value < 0 || value > 1))) return null;
+      const triangles = (component.indices?.length ?? vertexCount) / 3;
+      meshVertices += vertexCount;
+      meshTriangles += triangles;
+      if (meshVertices > 100_000 || meshTriangles > 100_000) return null;
+      aggregateSamples += vertexCount + triangles;
+    }
+    if (component.trafficRoad) {
+      if (component.t !== "vertramp" || singletonKinds.has("trafficRoad")) return null;
+      singletonKinds.add("trafficRoad");
+    }
+    if (component.t === "worldmap" || component.t === "bonusplatform") {
+      if (singletonKinds.has(component.t)) return null;
+      singletonKinds.add(component.t);
+      if (component.t === "worldmap") {
+        if (source.ocean || (component.pts &&
+            (component.pts.length !== CAMPAIGN_LEVELS.length || component.pts.some(point =>
+              Math.abs(point[0]) > 256 || Math.abs(point[1]) > 256 || Math.abs(point[3] ?? 0) > 128))))
+          return null;
+        if (component.pts) for (let i = 0; i < component.pts.length; i++) {
+          for (let j = i + 1; j < component.pts.length; j++) {
+            const a = component.pts[i], b = component.pts[j];
+            if (Math.hypot(a[0] - b[0], a[1] - b[1], (a[3] ?? 0) - (b[3] ?? 0)) < 0.05)
+              return null;
+          }
+        }
+        aggregateSamples += 10_000;
+      }
+    }
+    if (dynamicKinds.has(component.t) && ++dynamicCount > 1024) return null;
+    if (component.t === "enemy" && component.foe === "car" && ++carCount > 128) return null;
+    if (component.t === "checkpoint" && ++checkpointCount > 128) return null;
+    if (["crate", "outline", "metal"].includes(component.t) && ++crateCount > 2048) return null;
+    if (checkpointCount * crateCount > 250_000) return null;
+    aggregateSamples += component.t === "decor" ? 64 : dynamicKinds.has(component.t)
+      ? 128 : ["crate", "outline", "metal"].includes(component.t) ? 32 : 8;
+
+    const pathKind = ["woodpath", "terrain", "vertramp", "wallpath", "rail", "trickrail", "pipe", "coastwall"].includes(component.t);
+    let length = 0;
+    if (component.pts) {
+      for (let index = 1; index < component.pts.length; index++) {
+        const before = component.pts[index - 1];
+        const point = component.pts[index];
+        length += Math.hypot(point[0] - before[0], point[1] - before[1],
+          (point[3] ?? 0) - (before[3] ?? 0));
+      }
+      if (component.closed && component.pts.length > 2) {
+        const first = component.pts[0];
+        const last = component.pts[component.pts.length - 1];
+        length += Math.hypot(first[0] - last[0], first[1] - last[1],
+          (first[3] ?? 0) - (last[3] ?? 0));
+      }
+      if (pathKind && (length < 0.02 || length > MAX_PATH_LENGTH)) return null;
+      // Every component currently evaluates its filleted outline during build,
+      // and polygon triangulation can be quadratic for adversarial outlines.
+      const denseNodes = component.pts.reduce((sum, point) => sum + ((point[2] ?? 0) > 0.01 ? 7 : 1), 0);
+      aggregateSamples += denseNodes;
+      if (["platform", "wall", "pit"].includes(component.t)) {
+        if (component.pts.length < 3 || component.pts.length > (component.t === "pit" ? MAX_POINTS : 512)) return null;
+        polygonWork += denseNodes * denseNodes;
+        if (polygonWork > 20_000_000) return null;
+        const area = component.pts.reduce((sum, point, index, points) => {
+          const next = points[(index + 1) % points.length];
+          return sum + point[0] * next[1] - next[0] * point[1];
+        }, 0);
+        if (Math.abs(area) < 1e-6 || !simpleLevelPolygon(component.pts)) return null;
+        aggregateSamples += denseNodes * (component.t === "pit" ? 4 : 16);
+      }
+    } else if (pathKind) {
+      length = component.t === "woodpath" ? 24
+        : component.t === "terrain" ? 40 : component.len ?? 30;
       if (length > MAX_PATH_LENGTH) return null;
-      aggregateSamples +=
-        component.t === "woodpath"
-          ? Math.min(8192, Math.max(2, Math.ceil(length / 0.65)))
-          : component.t === "terrain"
-            ? Math.max(2, Math.ceil(length / 2))
-            : component.t === "vertramp" || component.t === "wallpath"
-              ? Math.max(8, Math.ceil(length / 1.6))
-              : component.pts.length;
-      if (aggregateSamples > MAX_GENERATED_SAMPLES) return null;
     }
-    if (!component.pts) {
-      if (component.t === "woodpath") aggregateSamples += 37;
-      else if (component.t === "vertramp")
-        aggregateSamples += Math.max(
-          8,
-          Math.ceil(Math.abs(component.len ?? 30) / 1.6),
-        );
-      else if (component.t === "wallpath") aggregateSamples += 2;
-      else if (component.t === "rail" || component.t === "trickrail")
-        aggregateSamples += 2;
-      if (aggregateSamples > MAX_GENERATED_SAMPLES) return null;
+    // Match the actual generators, including fallback paths, spline overshoot,
+    // closing edges, both berms, scaffold pieces and collision subdivisions.
+    if (pathKind) {
+      const curvedLength = length * (component.curve === "spline" ? 2 : 1);
+      const nodes = component.pts?.length ?? 2;
+      if (component.t === "woodpath") {
+        aggregateSamples += Math.min(8192, Math.ceil(length / 0.35)) * 8;
+        aggregateSamples += Math.ceil(curvedLength / Math.max(0.18, component.spacing ?? 0.55)) * 2;
+        if (component.supports ?? component.scaffold) {
+          const bays = Math.ceil(curvedLength / Math.max(1.5, component.baySpacing ?? 3.8));
+          aggregateSamples += bays * 32;
+          if (component.terrainSupports) supportProbeCount += (bays + 1) * 2;
+        }
+        if (supportProbeCount * source.components.length > 2_000_000) return null;
+        if (component.rails ?? component.scaffold) aggregateSamples += Math.ceil(curvedLength / 0.35) * 6;
+      } else if (component.t === "terrain") {
+        aggregateSamples += Math.max(8, Math.ceil(length / 1.5)) * 5;
+        if (component.berms) aggregateSamples += Math.ceil(length / 0.25) * 8;
+      } else if (component.t === "vertramp" || component.t === "pipe") {
+        aggregateSamples += Math.max(nodes * 7, Math.ceil(curvedLength / 1.6)) * 24;
+      } else if (component.t === "wallpath" || component.t === "coastwall") {
+        aggregateSamples += Math.max(nodes * 7, Math.ceil(curvedLength / 0.6)) * 8;
+      } else {
+        aggregateSamples += nodes * 7 * 8;
+      }
     }
+    if (aggregateSamples > MAX_GENERATED_SAMPLES) return null;
     for (const key of booleanKeys)
       if (component[key] !== undefined && typeof component[key] !== "boolean")
         return null;
     if (
-      (component.s && component.s.some((number) => number <= 0)) ||
+      (component.s && component.s.some((number) => number < 0.0001)) ||
       (component.widths && component.widths.some((number) => number <= 0)) ||
       (component.radius !== undefined && component.radius < 0) ||
       (component.coverage !== undefined &&
@@ -2464,10 +2799,11 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
       case "ramp":
         if ((component.len ?? 10) < 1 || (component.w ?? 8) < 1) return null;
         break;
+      case "pipe":
       case "vertramp":
         if (
           (!component.pts && (component.len ?? 30) < 4) ||
-          (component.rise ?? 6) < 0.5 ||
+          (component.rise ?? 6) < (component.vert === false ? 0.1 : 0.5) ||
           (component.w ?? 3) < 0 ||
           (component.arc !== undefined &&
             (component.arc < 5 || component.arc > 90)) ||
@@ -2476,6 +2812,7 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
         )
           return null;
         break;
+      case "coastwall":
       case "wallpath":
         if (
           (component.pts !== undefined && component.pts.length < 2) ||
@@ -2613,11 +2950,13 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
       !source.groups.every(
         (group) =>
           group &&
+          hasOnlyKeys(group, new Set(["id", "parent", "nm", "editorOnly"])) &&
           Number.isSafeInteger(group.id) &&
-          group.id >= 0 &&
+          group.id >= 0 && group.id <= MAX_EDITOR_ID &&
           (group.parent === undefined ||
-            (Number.isSafeInteger(group.parent) && group.parent >= 0)) &&
-          (group.nm === undefined || typeof group.nm === "string") &&
+            (Number.isSafeInteger(group.parent) && group.parent >= 0 && group.parent <= MAX_EDITOR_ID)) &&
+          (group.nm === undefined ||
+            (typeof group.nm === "string" && group.nm.length <= MAX_LEVEL_LABEL_LENGTH)) &&
           (group.editorOnly === undefined || typeof group.editorOnly === "boolean"),
       ))
   )
@@ -2629,22 +2968,23 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
       !source.layers.every(
         (layer) =>
           layer &&
+          hasOnlyKeys(layer, new Set(["id", "name", "locked"])) &&
           Number.isSafeInteger(layer.id) &&
-          layer.id >= 0 &&
-          typeof layer.name === "string" &&
+          layer.id >= 0 && layer.id <= MAX_EDITOR_ID &&
+          typeof layer.name === "string" && layer.name.length <= MAX_LEVEL_LABEL_LENGTH &&
           (layer.locked === undefined || typeof layer.locked === "boolean"),
       ))
   )
     return null;
   if (
-    source.layers &&
-    new Set(source.layers.map((layer) => layer.id)).size !== source.layers.length
+    (source.layers?.length ?? 0) + (source.groups?.length ?? 0) > MAX_GROUPS ||
+    (source.layers &&
+      new Set(source.layers.map((layer) => layer.id)).size !== source.layers.length)
   )
     return null;
   try {
-    const normalized = migrateCustomLevel(
-      JSON.parse(JSON.stringify(source)) as CustomLevelData,
-    );
+    // source is already an isolated, bounded plain-data copy.
+    const normalized = migrateCustomLevel(source);
     const groups = groupIndex(normalized);
     for (const start of normalized.groups ?? []) {
       let depth = 0;
@@ -2660,18 +3000,41 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
   }
 }
 
-function sane(e: unknown): e is LevelEntry {
-  const l = e as LevelEntry | null;
+const validLevelId = (id: unknown): id is string =>
+  typeof id === "string" && /^[a-z0-9_-]{1,80}$/i.test(id) &&
+  !FORBIDDEN_JSON_KEYS.has(id);
+
+/** Validate the entire replacement first; invalid packs never erase local work. */
+export function normalizeUserLevelEntries(value: unknown): LevelEntry[] | null {
+  if (!Array.isArray(value) || value.length > MAX_USER_LEVELS ||
+      Object.getPrototypeOf(value) !== Array.prototype) return null;
+  const ownKeys = Reflect.ownKeys(value);
+  if (ownKeys.length !== value.length + 1) return null;
+  for (let i = 0; i < value.length; i++) {
+    const descriptor = Object.getOwnPropertyDescriptor(value, String(i));
+    if (!descriptor || !("value" in descriptor) || !descriptor.enumerable) return null;
+  }
+  const out: LevelEntry[] = [];
+  const ids = new Set<string>();
+  let bytes = 0;
   try {
-    return (
-      !!l &&
-      typeof l.id === "string" &&
-      l.id.length > 0 &&
-      typeof l.name === "string" &&
-      normalizeCustomLevelData(l.data) !== null
-    );
+    for (const input of value) {
+      const entry = cloneBoundedLevelJson(input) as LevelEntry | null;
+      if (!entry || Array.isArray(entry) ||
+          !hasOnlyKeys(entry, new Set(["id", "name", "data"])) ||
+          !validLevelId(entry.id) || typeof entry.name !== "string" ||
+          entry.name.length > MAX_LEVEL_LABEL_LENGTH || ids.has(entry.id)) return null;
+      const data = normalizeLevelDataFields(entry.data);
+      if (!data) return null;
+      const normalized = { id: entry.id, name: cleanLevelName(entry.name), data };
+      bytes += new TextEncoder().encode(JSON.stringify(normalized)).byteLength;
+      if (bytes > MAX_LEVEL_PACK_BYTES) return null;
+      ids.add(entry.id);
+      out.push(normalized);
+    }
+    return out;
   } catch {
-    return false;
+    return null;
   }
 }
 
@@ -2679,34 +3042,42 @@ export function getUserLevels(): LevelEntry[] {
   if (USER_CACHE) return USER_CACHE;
   let list: LevelEntry[] = [];
   try {
-    const raw = JSON.parse(localStorage.getItem(USER_KEY) ?? "[]") as unknown;
-    if (Array.isArray(raw))
-      list = raw.filter(sane).map((entry) => ({
-        ...entry,
-        data: normalizeCustomLevelData(entry.data)!,
-      }));
+    const text = localStorage.getItem(USER_KEY) ?? "[]";
+    if (levelJsonTextWithinLimits(text, MAX_LEVEL_PACK_BYTES, 14)) {
+      const raw: unknown = JSON.parse(text);
+      if (Array.isArray(raw) && raw.length <= MAX_USER_LEVELS) {
+        // Recover valid entries from older/corrupt local stores individually.
+        // Whole-pack imports use the atomic path below instead.
+        const ids = new Set<string>();
+        for (const item of raw) {
+          const entry = normalizeUserLevelEntries([item])?.[0];
+          if (entry && !ids.has(entry.id)) {
+            ids.add(entry.id);
+            list.push(entry);
+          }
+        }
+      }
+    }
   } catch {
-    /* corrupt store reads as "no user levels" rather than breaking boot */
+    /* corrupt/unavailable store cannot break boot */
   }
-  // An entry under a BUILT-IN's id is that level's edited version — it takes
-  // the built-in's place in the menu (see levelList). Duplicate ids would make
-  // findLevel ambiguous, so drop the later of any clash.
-  const seen = new Set<string>();
-  list = list.filter((l) => !seen.has(l.id) && (seen.add(l.id), true));
   USER_CACHE = list;
   return list;
 }
 
 export function setUserLevels(list: LevelEntry[]): boolean {
-  USER_CACHE = list.filter(sane).map((entry) => ({
-    ...entry,
-    data: normalizeCustomLevelData(entry.data)!,
-  }));
+  const normalized = normalizeUserLevelEntries(list);
+  if (!normalized) {
+    LAST_USER_WRITE_OK = false;
+    return false;
+  }
+  // Storage quota failures still leave a valid session copy available to export.
+  USER_CACHE = normalized;
   try {
     localStorage.setItem(USER_KEY, JSON.stringify(USER_CACHE));
     LAST_USER_WRITE_OK = true;
   } catch {
-    LAST_USER_WRITE_OK = false; // session remains live, caller can surface/export it
+    LAST_USER_WRITE_OK = false;
   }
   return LAST_USER_WRITE_OK;
 }
@@ -2777,7 +3148,7 @@ export function cleanLevelName(name: string): string {
 /** Insert or replace a user level. Returns the id actually stored. */
 export function saveUserLevel(entry: LevelEntry): string {
   const normalized = normalizeCustomLevelData(entry.data);
-  if (!normalized) {
+  if (!normalized || (entry.id !== "" && !validLevelId(entry.id))) {
     LAST_USER_WRITE_OK = false;
     return entry.id;
   }
@@ -2847,7 +3218,9 @@ export function persistEditData(id: string, json: string): boolean {
   const e = findLevel(id);
   if (!e) return false;
   try {
-    saveUserLevel({ ...e, data: JSON.parse(json) as CustomLevelData });
+    const data = parseCustomLevelJson(json);
+    if (!data) return false;
+    saveUserLevel({ ...e, data });
     return LAST_USER_WRITE_OK;
   } catch {
     return false;
@@ -2882,10 +3255,7 @@ export function adoptLegacyLevels(): number {
     if (localStorage.getItem("solProtoLevelsAdopted") === "1") return 0;
     const read = (k: string): CustomLevelData | null => {
       try {
-        const raw = JSON.parse(
-          localStorage.getItem(k) ?? "null",
-        ) as CustomLevelData | null;
-        return raw && Array.isArray(raw.components) ? raw : null;
+        return parseCustomLevelJson(localStorage.getItem(k) ?? "null");
       } catch {
         return null;
       }
@@ -2905,9 +3275,11 @@ export function adoptLegacyLevels(): number {
           name: `${LEGACY_NAMES[old] ?? `Level ${old}`} (saved)`,
           data: migrateCustomLevel(d),
         });
-        n++;
+        if (LAST_USER_WRITE_OK) {
+          n++;
+          localStorage.removeItem(k);
+        }
       }
-      localStorage.removeItem(k);
     }
     const sandbox = read("solProtoCustomLevel");
     if (sandbox) {
@@ -2916,11 +3288,13 @@ export function adoptLegacyLevels(): number {
         name: "Custom (saved)",
         data: migrateCustomLevel(sandbox),
       });
-      n++;
+      if (LAST_USER_WRITE_OK) {
+        n++;
+        localStorage.removeItem("solProtoCustomLevel");
+        localStorage.removeItem("solProtoCustomLevelBackup");
+        localStorage.removeItem("solProtoLevelDirty");
+      }
     }
-    localStorage.removeItem("solProtoCustomLevel");
-    localStorage.removeItem("solProtoCustomLevelBackup");
-    localStorage.removeItem("solProtoLevelDirty");
     // Best times were keyed by list INDEX. Re-key the ones whose level still
     // exists; without this every recorded time is silently unreachable.
     try {
@@ -3120,6 +3494,9 @@ export class Level {
     Record<"crystal" | "boxGem" | "comboGem" | "timeRelic", THREE.Matrix4>
   >();
   private campaignWorldMap: CampaignWorldMapRuntime | null = null;
+  private worldMapSpec: CustomComponent | null = null;
+  private capturedOceanSpec: CustomOceanData | null = null;
+  private capturedCollisionComponents: CustomComponent[] = [];
   private bonusPlatform: {
     group: THREE.Group;
     ground: THREE.Mesh;
@@ -4403,11 +4780,118 @@ export class Level {
   // Levels built from data return their own data verbatim. Hand-coded levels
   // are HARVESTED from the live scene after building — positions are read off
   // the final meshes/entities, so anything a builder moved after creating it
-  // comes through correct by construction. Bespoke set pieces with no component
-  // language (boulder chase, movers, decor foliage, finish gates) are
-  // skipped: the copy is the editable geometry. Travel zones and sagging
-  // ropes DO come through — they have components now.
+  // comes through correct by construction. Authored geometry, scenery and
+  // motion retain their component identities so an edit rebuilds their logic.
   private builtFromData: CustomLevelData | null = null;
+
+  private captureSurfaceMesh(m: THREE.Mesh, style: Partial<CustomComponent>): CustomComponent[] {
+    m.updateWorldMatrix(true, false);
+    const geometry = m.geometry;
+    const position = geometry.getAttribute("position");
+    if (!position || position.count < 3) return [];
+    const index = geometry.index;
+    const normal = geometry.getAttribute("normal");
+    const uv = geometry.getAttribute("uv");
+    const material = (Array.isArray(m.material) ? m.material[0] : m.material) as THREE.MeshLambertMaterial;
+    const reverseWinding = (m.matrixWorld.determinant() < 0) !== (material.side === THREE.BackSide);
+    const color = material.vertexColors ? geometry.getAttribute("color") : undefined;
+    const center = new THREE.Box3().setFromObject(m).getCenter(new THREE.Vector3());
+    const normalMatrix = new THREE.Matrix3().getNormalMatrix(m.matrixWorld);
+    const chunks: CustomComponent[] = [];
+    let component: CustomComponent;
+    let remap = new Map<number, number>();
+    const precise = (value: number): number => Math.round(value * 1e6) / 1e6;
+    const begin = (): void => {
+      component = { t: "mesh", p: center.toArray() as [number, number, number],
+        vertices: [], indices: [], ...(normal ? { normals: [] } : {}),
+        ...(uv ? { uvs: [] } : {}), ...(color ? { colors: [] } : {}),
+        ...style,
+        ...(m.name ? { nm: m.name.slice(0, 100) } : {}),
+        ...(material.side === THREE.DoubleSide ? { doubleSided: true } : {}),
+        ...(m.userData.beachSandFriction ? { beachSand: true, tex: "sand" } : {}),
+        ...(m.userData.slippy ? { slip: true } : {}),
+      };
+      remap = new Map();
+      chunks.push(component);
+    };
+    begin();
+    const count = index?.count ?? position.count;
+    const vertex = new THREE.Vector3();
+    for (let offset = 0; offset + 2 < count; offset += 3) {
+      const ids = [0, 1, 2].map((corner) => index ? index.getX(offset + corner) : offset + corner);
+      if (reverseWinding) [ids[1], ids[2]] = [ids[2], ids[1]];
+      if (remap.size + ids.filter((id) => !remap.has(id)).length > 4096 || component!.indices!.length >= 4096 * 3) begin();
+      for (const id of ids) {
+        let mapped = remap.get(id);
+        if (mapped === undefined) {
+          mapped = remap.size;
+          remap.set(id, mapped);
+          vertex.fromBufferAttribute(position, id).applyMatrix4(m.matrixWorld).sub(center);
+          component!.vertices!.push(...vertex.toArray().map(precise));
+          if (normal) {
+            vertex.fromBufferAttribute(normal, id).applyNormalMatrix(normalMatrix);
+            if (material.side === THREE.BackSide) vertex.negate();
+            component!.normals!.push(...vertex.toArray().map(precise));
+          }
+          if (uv) component!.uvs!.push(precise(uv.getX(id)), precise(uv.getY(id)));
+          if (color) component!.colors!.push(precise(color.getX(id)), precise(color.getY(id)), precise(color.getZ(id)));
+        }
+        component!.indices!.push(mapped);
+      }
+    }
+    if (chunks.length > 1) for (const chunk of chunks) {
+      const bounds = new THREE.Box3();
+      for (let offset = 0; offset < chunk.vertices!.length; offset += 3)
+        bounds.expandByPoint(new THREE.Vector3(...chunk.vertices!.slice(offset, offset + 3) as [number, number, number]));
+      const offset = bounds.getCenter(new THREE.Vector3());
+      chunk.p = [chunk.p[0] + offset.x, chunk.p[1] + offset.y, chunk.p[2] + offset.z];
+      for (let vertex = 0; vertex < chunk.vertices!.length; vertex += 3) {
+        chunk.vertices![vertex] = precise(chunk.vertices![vertex] - offset.x);
+        chunk.vertices![vertex + 1] = precise(chunk.vertices![vertex + 1] - offset.y);
+        chunk.vertices![vertex + 2] = precise(chunk.vertices![vertex + 2] - offset.z);
+      }
+    }
+    return chunks;
+  }
+
+  private buildSurfaceMesh(c: CustomComponent): void {
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.Float32BufferAttribute(c.vertices ?? [0, 0, 0, 4, 0, 0, 0, 0, -4], 3));
+    if (c.indices) geometry.setIndex(c.indices);
+    if (c.normals) geometry.setAttribute("normal", new THREE.Float32BufferAttribute(c.normals, 3));
+    else geometry.computeVertexNormals();
+    if (c.uvs) geometry.setAttribute("uv", new THREE.Float32BufferAttribute(c.uvs, 2));
+    else {
+      const vertices = geometry.getAttribute("position");
+      const uvs: number[] = [];
+      for (let index = 0; index < vertices.count; index++) uvs.push(vertices.getX(index) / 4, vertices.getZ(index) / 4);
+      geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
+    }
+    if (c.colors) geometry.setAttribute("color", new THREE.Float32BufferAttribute(c.colors, 3));
+    geometry.computeBoundingBox();
+    geometry.computeBoundingSphere();
+    const material = new THREE.MeshLambertMaterial({
+      color: c.color ?? "#ffffff", vertexColors: !!c.colors,
+      side: c.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
+      map: this.surfaceTexture(c.tex ?? "checker"),
+    });
+    material.userData.texKind = c.tex ?? "checker";
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(...c.p);
+    mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0);
+    mesh.scale.set(...(c.s ?? [1, 1, 1]));
+    mesh.name = c.nm ?? "triangle surface";
+    if (c.slip) mesh.userData.slippy = true;
+    if (c.beachSand) mesh.userData.beachSandFriction = true;
+    if (c.edgeGrinding === false) mesh.userData.edgeGrinding = false;
+    if (c.invisible) {
+      mesh.visible = false;
+      mesh.userData.editorGhost = true;
+    }
+    this.root.add(mesh);
+    this.groundMeshes.push(mesh);
+  }
+
   captureData(): CustomLevelData {
     if (this.builtFromData) {
       return migrateCustomLevel(
@@ -4415,8 +4899,18 @@ export class Level {
       );
     }
     const r2 = (n: number): number => Math.round(n * 100) / 100;
+    if (this.worldMapSpec) {
+      return {
+        v: 1, name: `${this.name} (copy)`,
+        spawn: this.spawnPos.toArray() as [number, number, number],
+        killY: this.killY, hudMode: "hub", sky: this.skyPreset,
+        components: [JSON.parse(JSON.stringify(this.worldMapSpec)) as CustomComponent],
+      };
+    }
     const C: CustomComponent[] = [];
     const groups: CustomGroup[] = this.sceneryCaptureGroups.map(group => ({...group}));
+    let nextCaptureGroup = Math.max(0, ...groups.map((group) => group.id),
+      ...this.crates.flatMap((crate) => crate.groupIds ?? [])) + 1;
     const matInfo = (m: THREE.Mesh): { color?: string; tex?: string } => {
       const mat = m.material as THREE.MeshLambertMaterial;
       const color = mat?.color ? "#" + mat.color.getHexString() : undefined;
@@ -4451,6 +4945,7 @@ export class Level {
         padSolids.has(m) ||
         moverMeshes.has(m) ||
         phasePadMeshes.has(m) ||
+        m === this.bonusPlatform?.ground ||
         m.userData.decorComponent === true
       )
         continue;
@@ -4549,19 +5044,15 @@ export class Level {
           });
         }
       } else {
-        // exotic standable: capture its world AABB, never a child-local box.
-        const bb = new THREE.Box3().setFromObject(m);
-        const size = bb.getSize(new THREE.Vector3());
-        const center = bb.getCenter(new THREE.Vector3());
-        const sy = Math.max(0.5, size.y);
-        C.push({
-          t: "platform",
-          p: [r2(center.x), r2(center.y), r2(center.z)],
-          s: [r2(size.x), r2(sy), r2(size.z)],
-          color,
-          tex,
-          ...edgeInfo(m),
-        });
+        // Keep the actual triangles of bespoke standable geometry. A bounding
+        // slab filled valleys, bridged gaps and erased the coastline gradient.
+        const chunks = this.captureSurfaceMesh(m, { color, tex, ...edgeInfo(m) });
+        if (chunks.length > 1) {
+          const id = nextCaptureGroup++;
+          groups.push({ id, nm: (m.name || "surface mesh").slice(0, 100), editorOnly: true });
+          for (const chunk of chunks) chunk.grp = id;
+        }
+        C.push(...chunks);
       }
     }
     // SCENERY. Logged by the decor helpers as they draw (see noteDecor), so
@@ -4633,9 +5124,11 @@ export class Level {
     // swept vert parts (bowls, corners, spines, banked troughs) come back as
     // the component that drew them — they carry it on the mesh
     const sweptCopings: THREE.Vector3[][] = [];
+    const capturedSweeps = new Set<CustomComponent>();
     for (const o of this.root.children) {
       const vc = o.userData.vertComp as CustomComponent | undefined;
-      if (!vc) continue;
+      if (!vc || capturedSweeps.has(vc)) continue;
+      capturedSweeps.add(vc);
       C.push(JSON.parse(JSON.stringify(vc)) as CustomComponent);
       for (const line of (o.userData.vertCopings as
         | THREE.Vector3[][]
@@ -4688,6 +5181,15 @@ export class Level {
         amp: r2(mr.amp),
         speed: r2(mr.speed),
         phase: r2(mr.phase),
+        ...(mr.rail.points.length > 2 || Math.abs(a.y - b.y) > 1e-6
+          ? { pts: mr.rail.points.map((point) => [
+              r2(point.x - (a.x + b.x) / 2),
+              r2(point.z - (a.z + b.z) / 2),
+              0,
+              r2(point.y - (a.y + b.y) / 2),
+            ] as [number, number, number, number]) }
+          : {}),
+        invisible: mr.rail.object.children.length === 0 ? true : undefined,
       });
     }
     for (const rail of this.rails) {
@@ -4809,6 +5311,15 @@ export class Level {
       });
     }
     for (const e of this.enemies) {
+      if (e.kind === "car") {
+        const position = e.homePosition ?? e.group.position;
+        C.push({
+          t: "enemy", foe: "car", p: [position.x, position.y - (this.roadRibbon ? 0.08 : 0), position.z],
+          speed: e.speed,
+          color: `#${(e.body.material as THREE.MeshLambertMaterial).color.getHexString()}`,
+        });
+        continue;
+      }
       const range = r2(Math.abs((e.x1 - e.x0) / 2));
       const foe = e.kind !== "grunt" ? e.kind : undefined;
       C.push(
@@ -4843,6 +5354,37 @@ export class Level {
         t: "checkpoint",
         p: [r2(cp.spawnPos.x), r2(cp.spawnPos.y - 0.1), r2(cp.spawnPos.z)],
       });
+    }
+    if (this.bonusPlatform) {
+      const bonus = this.bonusPlatform;
+      C.push({
+        t: "bonusplatform",
+        p: bonus.group.position.toArray() as [number, number, number],
+        to: bonus.returnPoint.toArray() as [number, number, number],
+      });
+    }
+    for (const component of this.capturedCollisionComponents)
+      C.push(JSON.parse(JSON.stringify(component)) as CustomComponent);
+    for (const box of this.tumbleBoxes) {
+      C.push({ t: "tumblezone",
+        p: box.getCenter(new THREE.Vector3()).toArray() as [number, number, number],
+        s: box.getSize(new THREE.Vector3()).toArray() as [number, number, number],
+      });
+    }
+    if (this.coastBoundary) {
+      const boundary = this.coastBoundary;
+      let current: CustomComponent | null = null;
+      let last: ContinuousCoastSegment | null = null;
+      for (const segment of boundary.segments) {
+        if (!current || !last || Math.hypot(last.bx - segment.ax, last.bz - segment.az) > 1e-4) {
+          current = { t: "coastwall", p: [segment.ax, boundary.minY, segment.az],
+            pts: [[0, 0]], w: boundary.halfThickness * 2,
+            rise: boundary.maxY - boundary.minY };
+          C.push(current);
+        }
+        current.pts!.push([segment.bx - current.p[0], segment.bz - current.p[2]]);
+        last = segment;
+      }
     }
     for (const pk of this.pickups) {
       const y = (pk.mesh.userData.baseY as number) ?? pk.mesh.position.y;
@@ -5057,6 +5599,11 @@ export class Level {
       name: `${this.name} (copy)`,
       spawn: [r2(this.spawnPos.x), r2(this.spawnPos.y), r2(this.spawnPos.z)],
       killY: r2(this.killY),
+      hudMode: this.hudMode === "bonus" ? "bonus" : undefined,
+      allBalanceCrates: this.allBalanceCrates || undefined,
+      perfectGrindBoost: this.perfectGrindBoost || undefined,
+      keepPlayFog: this.keepPlayFog || undefined,
+      ...(this.capturedOceanSpec ? { ocean: JSON.parse(JSON.stringify(this.capturedOceanSpec)) as CustomOceanData } : {}),
       ledgeAssist: this.ledgeAssist > 0 ? r2(this.ledgeAssist) : undefined,
       relicTime: this.relicTime !== CAMPAIGN_TIME_RELIC_TARGET_SECONDS ? this.relicTime : undefined,
       ...(JSON.stringify(this.medalTimes) !== JSON.stringify(defaultMedalTimes(this.relicTime)) ? { medalTimes: { ...this.medalTimes } } : {}),
@@ -5072,6 +5619,19 @@ export class Level {
   // seat themselves on the ground (crates, enemies, checkpoints) see the
   // geometry pass's floors. Every scene object a component creates gets
   // tagged with its component index for editor picking.
+  private rememberSourceOcean(shore: readonly ShoreSample[], seaLevel: number, coordinates: "three" | "unity"): void {
+    let length = 0;
+    for (let index = 1; index < shore.length; index++)
+      length += Math.hypot(shore[index].x - shore[index - 1].x, shore[index].z - shore[index - 1].z);
+    const sign = coordinates === "unity" ? -1 : 1;
+    this.capturedOceanSpec = {
+      p: [0, seaLevel, 0], length, width: 120, overlap: 6, seaward: 1,
+      longitudinalSegments: Math.min(900, Math.max(1, Math.ceil(length / 2))),
+      sourceCoordinates: coordinates, extendTails: true,
+      shore: shore.map((point) => [point.x, point.z * sign, point.sx, point.sz * sign]),
+    };
+  }
+
   private buildCustomWaterPresentation(data: CustomLevelData): void {
     const spec = data.ocean;
     if (spec) {
@@ -5083,7 +5643,19 @@ export class Level {
       const sx = rightX * spec.seaward;
       const sz = rightZ * spec.seaward;
       const half = spec.length * 0.5;
-      const shore: ShoreSample[] = [
+      const shore: ShoreSample[] = spec.shore ? spec.shore.map(([x, z, nx, nz]) => {
+        // Authoring stays in the same world frame as every editor object;
+        // only the literal Unity material's input coordinates are reflected.
+        const sign = spec.sourceCoordinates === "unity" ? -1 : 1;
+        const cosine = Math.cos(yaw), sine = Math.sin(yaw);
+        return {
+          x: spec.p[0] + x * cosine + z * sine,
+          z: (spec.p[2] - x * sine + z * cosine) * sign,
+          sx: nx * cosine + nz * sine,
+          sz: (-nx * sine + nz * cosine) * sign,
+          beachSlope: 0, bedSlope: 0,
+        };
+      }) : [
         {
           x: spec.p[0] - tx * half,
           z: spec.p[2] - tz * half,
@@ -5117,6 +5689,7 @@ export class Level {
         shoreOverlap: spec.overlap ?? 6,
         shoreSampleMetres: spec.length / longitudinalSegments,
         lateralSegments: spec.lateralSegments ?? 128,
+        extendUnityTails: spec.extendTails,
       });
       this.root.add(this.water.group);
     }
@@ -5157,6 +5730,9 @@ export class Level {
     if (this.jungleAtmosphere) this.bermTint = 0xd9c5a6;
     this.skyPreset = asSkyPreset(data.sky); // unknown/absent -> sunset
     this.hudMode = data.hudMode ?? "standard";
+    this.allBalanceCrates = data.allBalanceCrates === true;
+    this.perfectGrindBoost = data.perfectGrindBoost === true;
+    this.keepPlayFog = data.keepPlayFog === true;
     this.killY = data.killY;
     this.ledgeAssist = data.ledgeAssist ?? 0;
     this.finishZ = -1e9; // endless playground: no finish gate
@@ -5220,6 +5796,10 @@ export class Level {
       "speedpad",
       "grindosaurus",
       "angryball",
+      "worldmap",
+      "bonusplatform",
+      "coastwall",
+      "mesh",
     ]);
     const laneVis: THREE.Vector3[] = []; // camnode positions, in chain order
     const laneRaw: [number, number, number, number][] = []; // [x, z, corner radius, y] per node
@@ -5758,6 +6338,10 @@ export class Level {
               );
               this.rails.push(rail);
               this.root.add(rail.object);
+              if (c.amp)
+                this.attachRailMotion(
+                  rail, c.axis ?? "x", c.amp, c.speed ?? 0.6, c.phase ?? 0,
+                );
             } else if (c.amp) {
               // amp on a straight rail = the whole line TRAVELS on a cycle
               this.movingRail(
@@ -5770,6 +6354,7 @@ export class Level {
                 c.amp,
                 c.speed ?? 0.6,
                 c.phase ?? 0,
+                !c.invisible,
               );
             } else {
               const len = c.len ?? 12;
@@ -5808,6 +6393,16 @@ export class Level {
             // finish gate: crossing its plane ends the run (and the time trial)
             this.finishZ = c.p[2];
             this.finishGate(c.p[1], c.p[2], c.p[0], c.yaw ?? 0);
+          } else if (c.t === "bonusplatform") {
+            this.buildBonusPlatform(c);
+          } else if (c.t === "worldmap") {
+            this.buildWorldMapComponent(c);
+          } else if (c.t === "tumblezone") {
+            this.buildTumbleZone(c);
+          } else if (c.t === "coastwall") {
+            this.buildCoastWall(c);
+          } else if (c.t === "mesh") {
+            this.buildSurfaceMesh(c);
           } else if (c.t === "clock" || c.t === "comboorb") {
             // run-mode activators: just remember the authored spot — the
             // pickups build after every level's geometry (placeClock /
@@ -5901,6 +6496,10 @@ export class Level {
           } else if (c.t === "checkpoint") {
             this.checkpoint(c.p[1], c.p[2], c.p[0]);
           } else if (c.t === "enemy") {
+            if (c.foe === "car") {
+              this.buildTrafficCar(c);
+              return;
+            }
             const r = c.range ?? 5;
             const foe = (c.foe ?? "grunt") as EnemyKind;
             // yaw 90/270 turns the patrol onto the Z axis (the walk is
@@ -6530,6 +7129,66 @@ export class Level {
   // slide around the beach instead of catching on cardinal seams, while a
   // fast frame cannot tunnel through.
   private coastBoundary: ContinuousCoastBoundary | null = null;
+  private customCoastBoundaries: ContinuousCoastBoundary[] = [];
+
+  private buildTumbleZone(c: CustomComponent): void {
+    const size = c.s ?? [6, 4, 6];
+    this.tumbleBoxes.push(new THREE.Box3().setFromCenterAndSize(
+      new THREE.Vector3(...c.p), new THREE.Vector3(...size),
+    ));
+    const ghost = new THREE.Mesh(new THREE.BoxGeometry(...size), new THREE.MeshBasicMaterial({
+      color: 0xffb54b, transparent: true, opacity: 0.18, depthWrite: false,
+    }));
+    ghost.position.set(...c.p);
+    ghost.visible = false;
+    ghost.userData.editorGhost = true;
+    this.root.add(ghost);
+  }
+
+  private buildCoastWall(c: CustomComponent): void {
+    const points = roundCorners(c.pts ?? [[0, 0], [0, -12]], false);
+    const segments: ContinuousCoastSegment[] = [];
+    const width = c.w ?? 0.5;
+    const height = c.rise ?? 12;
+    const parts: { geo: THREE.BufferGeometry; m: THREE.Matrix4 }[] = [];
+    for (let index = 1; index < points.length; index++) {
+      const a = points[index - 1];
+      const b = points[index];
+      const ax = c.p[0] + a.x, az = c.p[2] + a.z;
+      const bx = c.p[0] + b.x, bz = c.p[2] + b.z;
+      const dx = bx - ax, dz = bz - az;
+      const length = Math.hypot(dx, dz);
+      if (length < 1e-6) continue;
+      const tx = dx / length, tz = dz / length;
+      segments.push({ ax, az, bx, bz, dx, dz, tx, tz, length, lengthSq: length * length,
+        minX: Math.min(ax, bx), maxX: Math.max(ax, bx), minZ: Math.min(az, bz), maxZ: Math.max(az, bz),
+        fallbackNx: -tz, fallbackNz: tx });
+      parts.push({ geo: new THREE.BoxGeometry(width, height, length),
+        m: Level.trs((ax + bx) / 2, c.p[1] + height / 2, (az + bz) / 2, Math.atan2(dx, dz)) });
+    }
+    const ghost = new THREE.Mesh(Level.mergeGeos(parts), new THREE.MeshBasicMaterial({
+      color: 0x64d8ff, transparent: true, opacity: 0.18, depthWrite: false,
+    }));
+    for (const part of parts) part.geo.dispose();
+    ghost.visible = false;
+    ghost.userData.editorGhost = true;
+    this.root.add(ghost);
+    this.customCoastBoundaries.push({ segments, halfThickness: width / 2,
+      minY: c.p[1], maxY: c.p[1] + height });
+  }
+
+  private registerSourcePit(box: THREE.Box3): void {
+    this.pitBoxes.push(box);
+    const polygon = this.pitPolyByBox.get(box);
+    const center = box.getCenter(new THREE.Vector3());
+    this.capturedCollisionComponents.push({
+      t: "pit", invisible: true,
+      p: [polygon?.cx ?? center.x, box.max.y - 0.25, polygon?.cz ?? center.z],
+      s: [box.max.x - box.min.x, 1, box.max.z - box.min.z],
+      ...(polygon ? { pts: polygon.pts.map(([x, z]) => [x, z] as [number, number]) } : {}),
+    });
+  }
+
   resolveCoastBoundary(
     previous: THREE.Vector3,
     current: THREE.Vector3,
@@ -6537,9 +7196,24 @@ export class Level {
     halfY: number,
     halfZ: number,
   ): CoastBoundaryHit | null {
-    const boundary = this.coastBoundary;
+    let best: CoastBoundaryHit | null = null;
+    for (const boundary of [this.coastBoundary, ...this.customCoastBoundaries]) {
+      if (!boundary) continue;
+      const hit = this.resolveOneCoastBoundary(boundary, previous, current, halfX, halfY, halfZ);
+      if (hit && (!best || Math.hypot(hit.x - previous.x, hit.z - previous.z) < Math.hypot(best.x - previous.x, best.z - previous.z))) best = hit;
+    }
+    return best;
+  }
+
+  private resolveOneCoastBoundary(
+    boundary: ContinuousCoastBoundary,
+    previous: THREE.Vector3,
+    current: THREE.Vector3,
+    halfX: number,
+    halfY: number,
+    halfZ: number,
+  ): CoastBoundaryHit | null {
     if (
-      !boundary ||
       current.y > boundary.maxY ||
       current.y + halfY * 2 < boundary.minY
     )
@@ -8305,7 +8979,7 @@ export class Level {
         point.z - center.z,
       ]),
     });
-    this.pitBoxes.push(deepWater);
+    this.registerSourcePit(deepWater);
 
     for (const [index, nextIndex] of [
       [0, 1],
@@ -8373,6 +9047,7 @@ export class Level {
     this.buildBeachsideGameplayOverlay();
 
     const firstShore = reference.shore[0];
+    this.rememberSourceOcean(reference.shore, -0.36, "unity");
     this.water = new CoastWater({
       shore: reference.shore,
       seaLevel: -0.36,
@@ -8506,7 +9181,7 @@ export class Level {
       rollDeg.push(THREE.MathUtils.clamp(kappa * 620, -13, 13));
     }
     const groundBefore = this.groundMeshes.length;
-    const road = this.slideRibbon(pts, W, 0x565b61, rollDeg, 0, "asphalt", false);
+    const road = this.slideRibbon(pts, W, 0x565b61, rollDeg, 0, "asphalt", false, true);
     this.roadRibbon = road;
     // THE LAG FIX. The ribbon arrives as ONE ~50k-triangle mesh, and three's
     // raycaster has no BVH: every ground ray brute-forced the whole 2.4km of
@@ -8804,6 +9479,11 @@ export class Level {
       box.min.y = Math.min(a0.y, a1.y) - 2;
       box.max.y = Math.max(a0.y, a1.y) + 8;
       this.walls.push(box);
+      this.capturedCollisionComponents.push({
+        t: "wall", invisible: true, edgeGrinding: false,
+        p: [(box.min.x + box.max.x) / 2, box.min.y, (box.min.z + box.max.z) / 2],
+        s: box.getSize(new THREE.Vector3()).toArray() as [number, number, number],
+      });
     }
     // ---- the cliff does NOT --------------------------------------------
     // Tumble volumes hug the bluff face from just under the scrub lip down
@@ -9468,7 +10148,7 @@ export class Level {
         point.z - hazardCenter.z,
       ]),
     });
-    this.pitBoxes.push(deepWater);
+    this.registerSourcePit(deepWater);
     // End caps complete the same closed swept prism Unity authors. Their
     // outward normal follows beyond the route endpoint, while the segment
     // spans from the cliff-side bank through the shallow-water face.
@@ -9497,6 +10177,7 @@ export class Level {
       minY: -12,
       maxY: 16,
     };
+    this.rememberSourceOcean(shore, SEA_LEVEL, "three");
     this.water = new CoastWater({
       shore,
       seaLevel: SEA_LEVEL,
@@ -9903,7 +10584,24 @@ export class Level {
       return;
     }
     const { x, z, deckY } = placement;
+    const returnDistance = Math.abs(placement.lateral) > 0.1 ? 2.4 : 3.4;
+    const returnSample = this.sampleBonusRoute(
+      route,
+      placement.s + courseDirection * returnDistance,
+    );
+    const returnX = returnSample.point.x;
+    const returnZ = returnSample.point.z;
+    const returnDeckY = this.bonusRouteGroundY(
+      returnX, returnZ, returnSample.point.y,
+    ) ?? deckY;
+    this.buildBonusPlatform({
+      t: "bonusplatform", p: [x, deckY, z],
+      to: [returnX, returnDeckY + 0.1, returnZ],
+    }, placement.laneFraction);
+  }
 
+  private buildBonusPlatform(c: CustomComponent, laneFraction = 0.5): void {
+    const [x, deckY, z] = c.p;
     const group = new THREE.Group();
     group.name = "bonus platform";
     group.position.set(x, deckY, z);
@@ -9947,18 +10645,6 @@ export class Level {
     label.position.set(0, 2.35, 0);
     group.add(label);
     this.root.add(group);
-    const returnDistance = Math.abs(placement.lateral) > 0.1 ? 2.4 : 3.4;
-    const returnSample = this.sampleBonusRoute(
-      route,
-      placement.s + courseDirection * returnDistance,
-    );
-    const returnX = returnSample.point.x;
-    const returnZ = returnSample.point.z;
-    const returnDeckY = this.bonusRouteGroundY(
-      returnX,
-      returnZ,
-      returnSample.point.y,
-    ) ?? deckY;
     this.bonusPlatform = {
       group,
       ground: base,
@@ -9967,9 +10653,9 @@ export class Level {
         new THREE.Vector3(x, deckY + 0.42, z),
         new THREE.Vector3(3.1, 1.25, 3.1),
       ),
-      returnPoint: new THREE.Vector3(returnX, returnDeckY + 0.1, returnZ),
+      returnPoint: new THREE.Vector3(...(c.to ?? [x, deckY + 0.1, z + 3.4])),
       locked: false,
-      laneFraction: placement.laneFraction,
+      laneFraction,
     };
     this.bonusCrateTotal = DEFAULT_BONUS_CRATE_COUNT;
   }
@@ -9977,6 +10663,20 @@ export class Level {
   // THE WORLD MAP. The public level id remains `warproom` so old saves and
   // tools continue to resolve, but the runtime is a graph-driven island
   // diorama rather than a free-roam portal gallery.
+  private buildWorldMapComponent(c: CustomComponent): void {
+    this.worldMapSpec = JSON.parse(JSON.stringify(c)) as CustomComponent;
+    const points = c.pts ?? worldMapComponentPoints();
+    const built = createCampaignWorldMap(this.root, {
+      p: c.p,
+      yaw: c.yaw,
+      hubs: points.map((point) => [point[0], point[3] ?? 0, point[1]]),
+    });
+    this.campaignWorldMap = built.runtime;
+    this.water = built.water;
+    this.groundMeshes.push(...built.groundMeshes);
+    this.hudMode = "hub";
+  }
+
   private buildWarpRoom(): void {
     this.skyPreset = "coast";
     this.hudMode = "hub";
@@ -10000,6 +10700,7 @@ export class Level {
       sunI: 1.62,
     };
     const built = createCampaignWorldMap(this.root);
+    this.worldMapSpec = { t: "worldmap", p: [0, 0, 0], pts: worldMapComponentPoints() };
     this.campaignWorldMap = built.runtime;
     this.water = built.water;
     this.groundMeshes.push(...built.groundMeshes);
@@ -11124,6 +11825,9 @@ export class Level {
     const z0 = nodes[0].z;
     const z1 = nodes[nodes.length - 1].z;
     if (Math.abs(z0 - z1) < 1) return; // degenerate: nothing to sweep
+    const firstChild = this.root.children.length;
+    const firstWall = this.walls.length;
+    const firstRail = this.rails.length;
     this.jungle(
       c.nm ?? "terrain",
       z0,
@@ -11142,6 +11846,37 @@ export class Level {
       },
       c.p[0],
     );
+    // Terrain is a strip in its authored local Z direction. Rotate the
+    // completed strip as a unit so a course turn cannot collapse its stations
+    // to one world-Z coordinate. Rendering, support rays, grind paths and
+    // precise berm collision must all share this transform.
+    const yaw = THREE.MathUtils.degToRad(c.yaw ?? 0);
+    const transform = new THREE.Matrix4()
+      .makeTranslation(...c.p)
+      .multiply(new THREE.Matrix4().makeRotationY(yaw))
+      .multiply(new THREE.Matrix4().makeTranslation(-c.p[0], -c.p[1], -c.p[2]));
+    for (const child of this.root.children.slice(firstChild)) {
+      if (child.userData.terrainComp)
+        child.userData.terrainComp = JSON.parse(JSON.stringify(c)) as CustomComponent;
+      if (yaw !== 0) child.applyMatrix4(transform);
+    }
+    if (yaw !== 0) {
+      const paths = new Set<WallPathRuntime>();
+      for (const box of this.walls.slice(firstWall)) {
+        box.applyMatrix4(transform);
+        const path = this.wallPathByBox.get(box);
+        if (path) paths.add(path);
+      }
+      for (const path of paths)
+        for (const point of path.spine) {
+          const world = new THREE.Vector3(point.x, point.y, point.z).applyMatrix4(transform);
+          point.x = world.x; point.y = world.y; point.z = world.z;
+        }
+      for (const rail of this.rails.slice(firstRail)) {
+        for (const point of rail.points) point.applyMatrix4(transform);
+        rail.rebake();
+      }
+    }
   }
 
   wallPathForBox(box: THREE.Box3): WallPathRuntime | null {
@@ -12992,16 +13727,30 @@ export class Level {
     amp: number,
     speed: number,
     phase = 0,
+    visible = true,
   ): void {
     const a = THREE.MathUtils.degToRad(yawDeg);
     const dx = (Math.sin(a) * len) / 2;
     const dz = (Math.cos(a) * len) / 2;
-    const rail = new Rail([
-      new THREE.Vector3(x - dx, y, z - dz),
-      new THREE.Vector3(x + dx, y, z + dz),
-    ]);
+    const rail = new Rail(
+      [
+        new THREE.Vector3(x - dx, y, z - dz),
+        new THREE.Vector3(x + dx, y, z + dz),
+      ],
+      visible,
+    );
     this.rails.push(rail);
     this.root.add(rail.object);
+    this.attachRailMotion(rail, axis, amp, speed, phase);
+  }
+
+  private attachRailMotion(
+    rail: Rail,
+    axis: "x" | "y" | "z",
+    amp: number,
+    speed: number,
+    phase: number,
+  ): void {
     this.movingRails.push({
       rail,
       object: rail.object,
@@ -13264,6 +14013,11 @@ export class Level {
     // ---- swept mesh: any path, any bank, any arc ----
     const spine = vertRampSpine(c);
     if (spine.length < 2) return null;
+    if (c.trafficRoad) {
+      const path = vertRampPath(spine, closed);
+      this.roadRibbon = { len: path.len, width: 2 * (F + R), path,
+        frame: (t, off, h) => path.frame(t, -off, h) };
+    }
     const vr = buildVertRampGeometry(spine, {
       radius: R,
       flatHalf: F,
@@ -13964,6 +14718,43 @@ export class Level {
 
   /** Build one decor component — the other half of noteDecor. */
   private decorProp(c: CustomComponent): void {
+    // These older helpers draw directly in world space and predate authored
+    // yaw. Apply the missing component transform to both loose editor meshes
+    // and pending play batches, about the same base point the editor moves.
+    const legacy = [
+      "fern", "broadleaf", "flowers", "toadstool", "toadstools", "mossrock",
+      "jungletree", "palm", "vines", "planter", "coastalhouse",
+    ].includes(c.dkind ?? "");
+    const yaw = legacy ? c.yaw ?? 0 : 0;
+    const scale = c.dkind === "flowers" || c.dkind === "planter" ? c.w ?? 1 : 1;
+    const dimensions = c.dkind === "coastalhouse" ? c.s ?? [11.5, 8, 39] : null;
+    const scale3 = dimensions
+      ? new THREE.Vector3(dimensions[0] / 11.5, dimensions[1] / 8, dimensions[2] / 39)
+      : new THREE.Vector3(scale, scale, scale);
+    if (yaw === 0 && scale3.equals(new THREE.Vector3(1, 1, 1))) return this.buildDecorProp(c);
+    const firstChild = this.root.children.length;
+    const firstLog = this.decorLog.length;
+    const firstParts = new Map(
+      [...this.decorParts].map(([key, batch]) => [key, batch.parts.length]),
+    );
+    this.buildDecorProp(dimensions ? { ...c, s: [11.5, 8, 39] } : c);
+    const transform = new THREE.Matrix4()
+      .makeTranslation(...c.p)
+      .multiply(new THREE.Matrix4().makeRotationY(THREE.MathUtils.degToRad(yaw)))
+      .multiply(new THREE.Matrix4().makeScale(scale3.x, scale3.y, scale3.z))
+      .multiply(new THREE.Matrix4().makeTranslation(-c.p[0], -c.p[1], -c.p[2]));
+    for (const child of this.root.children.slice(firstChild)) child.applyMatrix4(transform);
+    for (const [key, batch] of this.decorParts)
+      for (let index = firstParts.get(key) ?? 0; index < batch.parts.length; index++)
+        // A multi-part prop can share its source matrix: never mutate it twice.
+        batch.parts[index].m = transform.clone().multiply(batch.parts[index].m);
+    if (this.decorLog.length === firstLog + 1) {
+      if (c.yaw !== undefined) this.decorLog[firstLog].yaw = c.yaw;
+      if (c.w !== undefined) this.decorLog[firstLog].w = c.w;
+    }
+  }
+
+  private buildDecorProp(c: CustomComponent): void {
     if (isJungleAsset(c.dkind)) return this.jungleAsset(c);
     const [x, y, z] = c.p;
     const s = c.w ?? 1;
@@ -16597,6 +17388,73 @@ export class Level {
   // Patrols a0..a1 along `axis` at the given cross coordinate (the Enemy
   // struct's x0/x1 are axis-generic bounds — see its comment). `kind` picks
   // the foe's look, movement pattern, and which attacks defeat it.
+  private trafficCarGroup(color: number): { group: THREE.Group; body: THREE.Mesh } {
+    const scale = 1.69;
+    const group = new THREE.Group();
+    const body = new THREE.Mesh(new THREE.BoxGeometry(2.1 * scale, 0.75 * scale, 4.2 * scale),
+      new THREE.MeshLambertMaterial({ color }));
+    body.position.y = 0.75 * scale;
+    group.add(body);
+    const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.7 * scale, 0.62 * scale, 2 * scale),
+      new THREE.MeshLambertMaterial({ color: 0xcfe0ea }));
+    cabin.position.set(0, 1.35 * scale, 0.25 * scale);
+    group.add(cabin);
+    const wheelMaterial = new THREE.MeshLambertMaterial({ color: 0x1c1c20 });
+    for (const [x, z] of [[-1, -1.35], [1, -1.35], [-1, 1.35], [1, 1.35]]) {
+      const wheel = new THREE.Mesh(new THREE.BoxGeometry(0.34 * scale, 0.62 * scale, 0.62 * scale), wheelMaterial);
+      wheel.position.set(x * 1.02 * scale, 0.31 * scale, z * scale);
+      group.add(wheel);
+    }
+    const lightMaterial = new THREE.MeshLambertMaterial({ color: 0xfff4c0, emissive: 0x8a7a30 });
+    for (const x of [-0.6, 0.6]) {
+      const lamp = new THREE.Mesh(new THREE.BoxGeometry(0.4 * scale, 0.22 * scale, 0.1 * scale), lightMaterial);
+      lamp.position.set(x * scale, 0.82 * scale, -2.12 * scale);
+      group.add(lamp);
+    }
+    return { group, body };
+  }
+
+  private buildTrafficCar(c: CustomComponent): void {
+    const { group, body } = this.trafficCarGroup(c.color ? new THREE.Color(c.color).getHex() : 0xb03a2e);
+    group.position.set(...c.p);
+    this.root.add(group);
+    const axis = Math.abs(Math.sin(THREE.MathUtils.degToRad(c.yaw ?? 0))) > 0.5 ? "x" : "z";
+    let route = c.p[axis === "x" ? 0 : 2] - (c.range ?? 12);
+    let lane = c.p[axis === "x" ? 2 : 0];
+    const road = this.roadRibbon;
+    const path = road?.path;
+    if (road && path) {
+      const target = new THREE.Vector3(...c.p);
+      let bestDistance = Infinity;
+      let distance = 0;
+      for (let index = 1; index < path.spine.length; index++) {
+        const a = path.spine[index - 1], b = path.spine[index];
+        const start = new THREE.Vector3(a.x, a.y, a.z);
+        const delta = new THREE.Vector3(b.x - a.x, b.y - a.y, b.z - a.z);
+        const length = delta.length();
+        if (length < 1e-6) continue;
+        const fraction = THREE.MathUtils.clamp(target.clone().sub(start).dot(delta) / (length * length), 0, 1);
+        const candidate = distance + fraction * length;
+        const center = start.addScaledVector(delta, fraction);
+        const score = center.distanceToSquared(target);
+        if (score < bestDistance) {
+          bestDistance = score;
+          route = candidate;
+        }
+        distance += length;
+      }
+      const center = road.frame(route / road.len, 0, 0);
+      const right = road.frame(route / road.len, 1, 0).sub(center);
+      lane = target.clone().sub(center).dot(right) / Math.max(1e-8, right.lengthSq());
+    }
+    this.enemies.push({ group, body, box: new THREE.Box3(), alive: true,
+      x0: route, x1: road ? 0 : c.p[axis === "x" ? 0 : 2] + (c.range ?? 12),
+      dir: 1, speed: c.speed ?? 10, axis, kind: "car", state: "drive", stateT: 0,
+      baseY: c.p[1], cross: lane, vy: 0,
+      spinKill: false, stompKill: false, meleeKill: false, touchHurt: true, spinRecoil: false,
+    });
+  }
+
   private enemy(
     a0: number,
     a1: number,
@@ -16721,9 +17579,16 @@ export class Level {
   // so the supply of traffic never runs out.
   private carStep(e: Enemy, dt: number): void {
     const r = this.roadRibbon;
-    if (!r) return;
+    if (!r) {
+      this.patrolStep(e, dt);
+      return;
+    }
     e.x0 -= e.speed * dt;
-    if (e.x0 < 40) e.x0 += r.len - 90;
+    const start = Math.min(40, r.len * 0.1);
+    const end = r.len - Math.min(50, r.len * 0.1);
+    const span = Math.max(0.01, end - start);
+    if (e.x0 < start || e.x0 > end)
+      e.x0 = start + ((e.x0 - start) % span + span) % span;
     const t = e.x0 / r.len;
     const p = r.frame(t, e.cross, 0);
     const q = r.frame(Math.max(0, (e.x0 - 4) / r.len), e.cross, 0);
@@ -18017,6 +18882,7 @@ export class Level {
     bank = 42, // auto-lean gain: how hard the deck rolls into its own turns
     tex = "stone", // surface texture kind — The Descent runs on asphalt
     lip = true, // slide gutters at the edges; false = a flat ROAD deck
+    trafficRoad = false,
   ): SlideRibbon {
     const r2v = (n: number): number => Math.round(n * 100) / 100;
     const o = pts[0];
@@ -18043,6 +18909,7 @@ export class Level {
       vert: false, // a banked ROAD, not a trough — no pumping, no auto-copings
       color: "#" + color.toString(16).padStart(6, "0"),
       tex,
+      ...(trafficRoad ? { trafficRoad: true, edgeGrinding: false } : {}),
     };
     const spine = this.buildVertRamp(comp);
     const path = vertRampPath(spine ?? [], false);
@@ -18051,6 +18918,7 @@ export class Level {
     return {
       len: path.len,
       width,
+      path,
       frame: (t, off, h) => path.frame(t, -off, h),
     };
   }
@@ -18340,6 +19208,10 @@ export class Level {
     // The old two-triangle plasma sea is retired with CoastWater. Slipstream
     // now uses the same audited Unity two-band material and GPU displacement;
     // its low placement remains scenery only and killY still owns gameplay.
+    this.capturedOceanSpec = {
+      p: [-620, -34, -420], length: 2400, width: 120,
+      seaward: 1, overlap: 6,
+    };
     this.water = new CoastWater({
       shore: [
         {

@@ -1,17 +1,22 @@
 import { readFile } from "node:fs/promises";
+import ts from "typescript";
 
 const file = new URL("../public/levels.json", import.meta.url);
 const payload = JSON.parse(await readFile(file, "utf8"));
 const errors = [];
 const rows = [];
-const componentTypes = new Set([
-  "platform", "ramp", "wall", "wallpath", "rail", "pipe", "vertramp", "crumble",
-  "pit", "crate", "metal", "rock", "camnode", "outline", "checkpoint",
-  "enemy", "crusher", "mover", "torch", "phasepad", "stone", "pendulum",
-  "ropeswing", "gate", "clock", "comboorb", "zone", "rope", "terrain",
-  "woodpath", "trampoline", "speedpad", "trickgate", "trickrail",
-  "returnportal", "grindosaurus", "angryball", "decor", "wumpa", "crystal",
-]);
+// Reuse the runtime's declared allowlist; native editor primitives must not
+// become unpublishable because a second handwritten enum falls behind.
+const contractSource = await readFile(new URL("../src/level.ts", import.meta.url), "utf8");
+const contract = ts.createSourceFile("level.ts", contractSource, ts.ScriptTarget.Latest, true);
+const typesDeclaration = contract.statements.filter(ts.isVariableStatement)
+  .flatMap(statement => [...statement.declarationList.declarations])
+  .find(declaration => declaration.name.getText(contract) === "CUSTOM_COMPONENT_TYPES");
+const declaredTypes = typesDeclaration?.initializer?.arguments?.[0];
+if (!declaredTypes || !ts.isArrayLiteralExpression(declaredTypes) ||
+    declaredTypes.elements.some(element => !ts.isStringLiteral(element)))
+  throw new Error("Cannot inspect the runtime component type allowlist");
+const componentTypes = new Set(declaredTypes.elements.map(element => element.text));
 const deckTricks = new Set(["kick", "heel", "shove", "imposs", "varial"]);
 const crateKinds = new Set([
   "wood", "bouncy", "metalbounce", "metal", "nitro", "tnt", "mask",
@@ -33,8 +38,9 @@ for (const [levelIndex, level] of (payload.levels ?? []).entries()) {
     errors.push(`${label} must be an object`);
     continue;
   }
-  if (typeof level.id !== "string" || !/^[a-z0-9-]+$/.test(level.id))
-    errors.push(`${label}.id must be a lowercase slug`);
+  if (typeof level.id !== "string" || !/^[a-z0-9_-]{1,80}$/i.test(level.id) ||
+      ["__proto__", "prototype", "constructor"].includes(level.id))
+    errors.push(`${label}.id must be a safe 1–80 character slug`);
   else if (ids.has(level.id)) errors.push(`${label}.id duplicates ${level.id}`);
   else ids.add(level.id);
   if (typeof level.name !== "string" || !level.name.trim())
@@ -201,7 +207,7 @@ for (const [levelIndex, level] of (payload.levels ?? []).entries()) {
         errors.push(`${path}.${key} must be boolean when present`);
     }
   }
-  if (gates !== 1) errors.push(`${label} must contain exactly one finish gate (found ${gates})`);
+  if (data.hudMode !== "hub" && gates !== 1) errors.push(`${label} must contain exactly one finish gate (found ${gates})`);
   rows.push({
     id: level.id,
     components: data.components.length,

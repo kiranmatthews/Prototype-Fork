@@ -186,7 +186,18 @@ const frame = (overrides = {}) => ({
   );
 
   const level = await text("src/level.ts");
-  assert.match(level, /hudMode\?: "bonus";/, "custom level bonus HUD tag is missing");
+  const levelAst = ts.createSourceFile("level.ts", level, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+  const dataContract = levelAst.statements.find(node => ts.isInterfaceDeclaration(node) && node.name.text === "CustomLevelData");
+  const hudField = dataContract?.members.find(member => member.name?.getText(levelAst) === "hudMode");
+  assert.ok(hudField?.questionToken && ts.isUnionTypeNode(hudField.type), "optional authored HUD modes are missing");
+  assert.deepEqual(hudField.type.types.map(type => type.literal?.text).sort(), ["bonus", "hub"],
+    "copied native hubs and bonus stages need explicit authored HUD semantics");
+  const validator = levelAst.statements.find(node => ts.isFunctionDeclaration(node) && node.name?.text === "normalizeLevelDataFields");
+  const hudGuard = validator?.body.statements.find(node => ts.isIfStatement(node) && node.expression.getText(levelAst).includes("source.hudMode"));
+  assert.ok(hudGuard, "custom HUD validation guard is missing");
+  const rejectsHud = new Function("source", `return ${hudGuard.expression.getText(levelAst)};`);
+  for (const [hudMode, rejected] of [[undefined, false], ["bonus", false], ["hub", false], ["standard", true], ["invented", true], [1, true]])
+    assert.equal(rejectsHud({ hudMode }), rejected, `authored HUD mode ${hudMode}`);
   assert.match(
     level,
     /hudMode: "standard" \| "bonus" \| "hub" = "standard";/,

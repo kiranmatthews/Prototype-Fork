@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { runInNewContext } from "node:vm";
+import ts from "typescript";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const [main, flow, level, swirls, player] = await Promise.all([
@@ -73,11 +74,32 @@ assert.match(
   /if \(gameFlow\.consumeGameplayFrameRequest\(\)\)/,
   "ordinary gameplay pause screens must retain their frozen-world path",
 );
-const liveMap = main.match(/if \(current.id === "warproom" && gameFlow.liveMapBackground\) \{([\s\S]*?)\n    \}/)?.[1] ?? "";
+const mainAst = ts.createSourceFile("main.ts", main, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+let mapBackgroundBranch;
+const findMapBranch = (node) => {
+  if (ts.isIfStatement(node) && node.expression.getText(mainAst).includes("gameFlow.liveMapBackground"))
+    mapBackgroundBranch = node;
+  ts.forEachChild(node, findMapBranch);
+};
+findMapBranch(mainAst);
+assert.ok(mapBackgroundBranch, "live map scenery branch is missing");
+const liveMap = mapBackgroundBranch.thenStatement.getText(mainAst);
 assert.match(liveMap, /level\.updateCampaignMapPresentation\(dt\)/);
 assert.match(liveMap, /updateWaterPresentation\(dt\)/);
 assert.match(liveMap, /renderGameplayWithGameFlow\(dt\)/);
 assert.doesNotMatch(liveMap, /player\.step|worldMapController\.step|level\.update\(dt\)|captureGameplay/, "live scenery must not resume map navigation or gameplay simulation");
+// Execute the actual guard for native, copied and ordinary levels. A copied
+// campaign map has a user id, but must retain the native map's scenic behavior.
+for (const [id, isCampaignMap, background, expected] of [
+  ["warproom", false, true, true], ["custom-map", true, true, true],
+  ["jungle", false, true, false], ["custom-map", true, false, false],
+  ["warproom", true, false, false],
+]) {
+  const actual = runInNewContext(mapBackgroundBranch.expression.getText(mainAst), {
+    current: { id }, level: { isCampaignMap }, gameFlow: { liveMapBackground: background },
+  });
+  assert.equal(actual, expected, `live map guard for ${id}/${isCampaignMap}/${background}`);
+}
 assert.match(flow, /get liveMapBackground\(\): boolean \{\s*return this\.mapDirect && this\.screen !== null && !this\.transitionActive;/);
 assert.match(level, /updateCampaignMapPresentation\(dt: number\): void \{\s*this\.campaignWorldMap\?\.update\(dt\);\s*\}/, "menu scenic updates must be isolated from general Level simulation");
 assert.match(

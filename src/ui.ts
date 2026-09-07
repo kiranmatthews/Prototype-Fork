@@ -12,7 +12,7 @@ import {
   type GameHudSpecialState,
   type GameHudSurfaceDiagnostics,
 } from "./gameHudSurface";
-import { COMBO_GEM_TINT, Level, levelList } from "./level";
+import { COMBO_GEM_TINT, Level, levelList, MAX_LEVEL_FILE_BYTES } from "./level";
 import { RooLabel, ROO_HUD, ROO_TT } from "./rootext";
 import { wumpaMesh } from "./wumpa";
 import {
@@ -336,10 +336,12 @@ export class UI {
     lvlPick.style.display = "none";
     lvlPick.addEventListener("change", () => {
       const f = lvlPick.files?.[0];
-      if (f)
+      if (f && f.size > MAX_LEVEL_FILE_BYTES)
+        this.showMessage("FILE TOO LARGE", "level files must be 5 MB or smaller", 3000);
+      else if (f)
         void f.text().then((txt) => {
           if (this.onLevelImport) this.onLevelImport(txt, f.name);
-        });
+        }).catch(() => this.showMessage("READ FAILED", "could not read that level file", 3000));
       lvlPick.value = ""; // same file twice in a row still fires
     });
     actions.appendChild(lvlPick);

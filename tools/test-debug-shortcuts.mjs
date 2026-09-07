@@ -55,11 +55,12 @@ for (const shellBypass of [false, true]) for (const visible of [false, true]) {
   assert.deepEqual(calls, visible && !blocked ? [code==='KeyL'?1:-1] : [], `whole listener: playtest=${shellBypass}, debug=${visible}, blocked=${blocked}, key=${code}`);
  }
 }
-const canWarp=new Function('current','gameFlow','editor','e',`return ${warpIf.expression.getText(file)}`);
+const canWarp=new Function('current','gameFlow','editor','e','level = {}',`return ${warpIf.expression.getText(file)}`);
 for(const code of ['KeyK','KeyL']) {
  assert.equal(canWarp({id:'jungle'},{developerChromeVisible:false},{active:false},{code}),false);
  assert.equal(canWarp({id:'jungle'},{developerChromeVisible:true},{active:false},{code}),true);
  assert.equal(canWarp({id:'warproom'},{developerChromeVisible:true},{active:false},{code}),false);
+ assert.equal(canWarp({id:'custom-map'},{developerChromeVisible:true},{active:false},{code},{isCampaignMap:true}),false,'copied maps must retain checkpoint-warp guard');
  assert.equal(canWarp({id:'jungle'},{developerChromeVisible:true},{active:true},{code}),false);
 }
 assert.equal((main.match(/new Input\((?:true|false), \(\) => gameFlow\?\.developerChromeVisible \?\? false\)/g)??[]).length,2,'both riders must follow live debug visibility');

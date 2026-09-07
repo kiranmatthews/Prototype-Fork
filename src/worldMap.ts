@@ -8,6 +8,7 @@ import {
   type CampaignMapDirection,
   type CampaignMapEdgeDefinition,
   type CampaignMapTravelStyle,
+  type CampaignLevelDefinition,
 } from "./campaign";
 import { CoastWater } from "./water";
 import { createUnitySandMaterial, applyUnitySandMetricUvs } from "./unitySandMaterial";
@@ -583,9 +584,12 @@ function edgeKey(from: string, to: string): string {
   return from < to ? `${from}|${to}` : `${to}|${from}`;
 }
 
-function makeEdgeCurve(definition: CampaignMapEdgeDefinition): THREE.CatmullRomCurve3 {
-  const from = campaignLevelByKey(definition.from)!;
-  const to = campaignLevelByKey(definition.to)!;
+function makeEdgeCurve(
+  definition: CampaignMapEdgeDefinition,
+  levels: readonly CampaignLevelDefinition[] = CAMPAIGN_LEVELS,
+): THREE.CatmullRomCurve3 {
+  const from = levels.find((level) => level.progressKey === definition.from)!;
+  const to = levels.find((level) => level.progressKey === definition.to)!;
   const a = new THREE.Vector3(...from.mapPosition);
   const b = new THREE.Vector3(...to.mapPosition);
   if (definition.waypoints?.length)
@@ -659,6 +663,7 @@ export class CampaignWorldMapRuntime {
     private readonly plants: TropicalPlantKit,
     readonly shoreline: IslandShoreFoam,
     readonly beachTime:{value:number},
+    private readonly frame?: THREE.Group,
   ) {
     for (const node of nodes) this.nodeByKey.set(node.key, node);
     for (const edge of edges)
@@ -676,9 +681,10 @@ export class CampaignWorldMapRuntime {
   pose(key: string): CampaignMapPose | null {
     const node = this.nodeByKey.get(key);
     if (!node) return null;
+    this.frame?.updateWorldMatrix(true, false);
     return {
-      position: node.position.clone(),
-      heading: MAP_FORWARD.clone(),
+      position: this.frame ? node.position.clone().applyMatrix4(this.frame.matrixWorld) : node.position.clone(),
+      heading: this.frame ? MAP_FORWARD.clone().transformDirection(this.frame.matrixWorld) : MAP_FORWARD.clone(),
     };
   }
 
@@ -692,8 +698,14 @@ export class CampaignWorldMapRuntime {
     if (tangent.lengthSq() < 1e-6) tangent.copy(MAP_FORWARD);
     else tangent.normalize();
     const speed = edge.definition.travel === "boardslide" ? 23 : 12;
+    const position = edge.curve.getPointAt(THREE.MathUtils.clamp(u, 0, 1));
+    if (this.frame) {
+      this.frame.updateWorldMatrix(true, false);
+      position.applyMatrix4(this.frame.matrixWorld);
+      tangent.transformDirection(this.frame.matrixWorld);
+    }
     return {
-      position: edge.curve.getPointAt(THREE.MathUtils.clamp(u, 0, 1)),
+      position,
       tangent,
       style: edge.definition.travel,
       duration: THREE.MathUtils.clamp(edge.length / speed, 0.62, 1.65),
@@ -846,29 +858,61 @@ export class CampaignWorldMapRuntime {
   }
 }
 
-export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild {
+export interface CampaignWorldMapAuthoring {
+  p: readonly [number, number, number];
+  yaw?: number;
+  hubs?: readonly (readonly [number, number, number])[];
+}
+
+export function createCampaignWorldMap(
+  parentRoot: THREE.Group,
+  authoring?: CampaignWorldMapAuthoring,
+): CampaignWorldMapBuild {
+  const frame = authoring ? new THREE.Group() : undefined;
+  const root = frame ?? parentRoot;
+  if (frame && authoring) {
+    frame.name = "editable campaign world map";
+    frame.position.set(...authoring.p);
+    frame.rotation.y = THREE.MathUtils.degToRad(authoring.yaw ?? 0);
+    frame.updateMatrix();
+    parentRoot.add(frame);
+  }
+  const levels = CAMPAIGN_LEVELS.map((level, index) => ({
+    ...level, mapPosition: authoring?.hubs?.[index] ?? level.mapPosition,
+  }));
+  const byKey = (key: string) => levels.find((level) => level.progressKey === key) ?? null;
+  const worldPoint = (x: number, y: number, z: number): THREE.Vector3 => {
+    const point = new THREE.Vector3(x, y, z);
+    return frame ? point.applyMatrix4(frame.matrix) : point;
+  };
+  const worldShore = (x: number, z: number) => {
+    const point = worldPoint(x, 0, z);
+    const direction = new THREE.Vector3(0, 0, -1);
+    if (frame) direction.transformDirection(frame.matrix);
+    return { x: point.x, z: point.z, sx: direction.x, sz: direction.z, beachSlope: 0, bedSlope: 0 };
+  };
   const groundMeshes: THREE.Mesh[] = [];
   const landMeshes: THREE.Mesh[] = [];
-  const terrainSupports = CAMPAIGN_LEVELS.map((level) => new THREE.Vector3(...level.mapPosition));
-  const edgeCurves = new Map(CAMPAIGN_MAP_EDGES.map((edge) => [edge, makeEdgeCurve(edge)]));
+  const terrainSupports = levels.map((level) => new THREE.Vector3(...level.mapPosition));
+  const edgeCurves = new Map(CAMPAIGN_MAP_EDGES.map((edge) => [edge, makeEdgeCurve(edge, levels)]));
   for (const [edge, curve] of edgeCurves) {
     if (edge.travel !== "trail") continue;
-    const count = Math.ceil(curve.getLength() / 2);
+    const count = Math.max(1, Math.ceil(curve.getLength() / 2));
     for (let i = 0; i <= count; i++) terrainSupports.push(curve.getPointAt(i / count));
   }
   const water = new CoastWater({
     shore: [
-      { x: 130, z: 76, sx: 0, sz: -1, beachSlope: 0, bedSlope: 0 },
-      { x: -130, z: 76, sx: 0, sz: -1, beachSlope: 0, bedSlope: 0 },
+      worldShore(130, 76),
+      worldShore(-130, 76),
     ],
-    seaLevel: -1.15,
+    seaLevel: -1.15 + (authoring?.p[1] ?? 0),
     shoreDirX: 0,
     shoreDirZ: -1,
-    course: CAMPAIGN_LEVELS.map((level) => ({
-      x: level.mapPosition[0],
-      z: level.mapPosition[2],
-    })),
-    terrainHeight: () => -4,
+    course: levels.map((level) => {
+      const point = worldPoint(...level.mapPosition);
+      return { x: point.x, z: point.z };
+    }),
+    terrainHeight: () => -4 + (authoring?.p[1] ?? 0),
     sourceCoordinates: "three",
     oceanWidth: 230,
     shoreOverlap: 42,
@@ -882,7 +926,7 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
   water.reflectionScale = 0.42;
   water.markWavesDirty();
   water.group.name = "world map ocean";
-  root.add(water.group);
+  parentRoot.add(water.group);
 
   const beachTime={value:0};
   const islandMaterial = mapSandMaterial(beachTime);
@@ -896,7 +940,7 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
   });
   const playableIslandSpecs = CAMPAIGN_ISLANDS.map((island) => {
     const hubs = island.levelKeys
-      .map((key) => campaignLevelByKey(key))
+      .map(byKey)
       .filter((level) => level !== null);
     const x = island.centre[0];
     const z = island.centre[2];
@@ -1024,7 +1068,7 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
   const routeSamples = [...edgeCurves.values()].flatMap((curve) => curve.getSpacedPoints(45));
   const clearsRoute = (x: number, z: number, clearance: number): boolean =>
     !routeSamples.some((point) => Math.hypot(point.x - x, point.z - z) < clearance) &&
-    !CAMPAIGN_LEVELS.some((level) => Math.hypot(level.mapPosition[0] - x, level.mapPosition[2] - z) < clearance + 1.8);
+    !levels.some((level) => Math.hypot(level.mapPosition[0] - x, level.mapPosition[2] - z) < clearance + 1.8);
 
   const waterfallRibbons: MapWaterfallRibbon[] = [];
   for (const [x, y, z, height] of [
@@ -1118,7 +1162,7 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
       const radius = 0.35 + random() * 0.42;
       const x = island.x + Math.cos(angle) * island.rx * radius;
       const z = island.z + Math.sin(angle) * island.rz * radius;
-      const coversHub = CAMPAIGN_LEVELS.some((level) =>
+      const coversHub = levels.some((level) =>
         Math.abs(x - level.mapPosition[0]) < 4.3 &&
         z > level.mapPosition[2] - 1 && z < level.mapPosition[2] + 10,
       );
@@ -1335,7 +1379,7 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
   }
 
   const nodeVisuals: MapNodeVisual[] = [];
-  for (const definition of CAMPAIGN_LEVELS) {
+  for (const definition of levels) {
     const position = new THREE.Vector3(...definition.mapPosition);
     const group = new THREE.Group();
     // mapPosition is a feet pose. The pad top sits exactly 10 cm below it,
@@ -1453,6 +1497,7 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
       plants,
       shoreline,
       beachTime,
+      frame,
     ),
     water,
     groundMeshes,

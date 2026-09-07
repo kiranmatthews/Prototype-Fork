@@ -1,3 +1,5 @@
+import { MAX_LEVEL_PACK_BYTES, normalizeUserLevelEntries, levelJsonTextWithinLimits } from "./level";
+
 // CROSS-DEVICE LEVEL SYNC
 // Your level list lives in one JSON file committed to the repo and served by
 // GitHub Pages (public/levels.json -> ./levels.json in the build). SYNC UP
@@ -35,15 +37,42 @@ function toB64(json: string): string {
 }
 
 // Read the deployed levels file from the Pages origin (cache-busted, no auth).
-// Returns the parsed { "<id>": levelData } map, or null if none is published.
+// Returns an entirely validated version-2 level pack, or null without changing local data.
 export async function fetchRemoteLevels(): Promise<Record<string, unknown> | null> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15_000);
   try {
-    const r = await fetch(`./levels.json?t=${Date.now()}`, { cache: 'no-store' });
-    if (!r.ok) return null;
-    return (await r.json()) as Record<string, unknown>;
+    const r = await fetch(`./levels.json?t=${Date.now()}`, { cache: 'no-store', signal: controller.signal });
+    if (!r.ok || !r.body) return null;
+    const declared = Number(r.headers.get('content-length'));
+    if (Number.isFinite(declared) && declared > MAX_LEVEL_PACK_BYTES) { controller.abort(); return null; }
+    const reader = r.body.getReader();
+    const decoder = new TextDecoder('utf-8', { fatal: true });
+    const chunks: string[] = [];
+    let bytes = 0;
+    let reads = 0;
+    try {
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        if (++reads > 65_536) { await reader.cancel(); return null; }
+        bytes += value.byteLength;
+        if (bytes > MAX_LEVEL_PACK_BYTES) { await reader.cancel(); return null; }
+        chunks.push(decoder.decode(value, { stream: true }));
+      }
+      chunks.push(decoder.decode());
+    } finally { reader.releaseLock(); }
+    const text = chunks.join('');
+    if (!levelJsonTextWithinLimits(text, MAX_LEVEL_PACK_BYTES, 14)) return null;
+    const parsed = JSON.parse(text) as unknown;
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return null;
+    const pack = parsed as Record<string, unknown>;
+    if (pack.v !== 2 || Object.keys(pack).some(key => key !== 'v' && key !== 'levels')) return null;
+    const levels = normalizeUserLevelEntries(pack.levels);
+    return levels ? { v: 2, levels } : null;
   } catch {
     return null;
-  }
+  } finally { clearTimeout(timeout); }
 }
 
 interface PushResult {

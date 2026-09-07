@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { createServer } from "vite";
+import ts from "typescript";
+import { runInNewContext } from "node:vm";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const noop = () => {};
@@ -388,10 +390,22 @@ try {
     /"\.game-results-tally span"[\s\S]{0,100}"\.game-results-tally strong"/,
     "the Canvas mirror must capture both timing labels and timing values",
   );
-  const liveStart = mainSource.indexOf('if (resultsPresentation && gameFlow.currentScreen === "results")');
-  const liveEnd = mainSource.indexOf('if (current.id === "warproom" && gameFlow.liveMapBackground)', liveStart);
-  const liveFrame = mainSource.slice(liveStart, liveEnd);
-  assert.ok(liveStart > 0 && liveEnd > liveStart);
+  const mainAst = ts.createSourceFile("main.ts", mainSource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+  let resultsBranch;
+  const findResultsBranch = (node) => {
+    if (ts.isIfStatement(node) &&
+        node.expression.getText(mainAst).includes('resultsPresentation && gameFlow.currentScreen === "results"'))
+      resultsBranch = node;
+    ts.forEachChild(node, findResultsBranch);
+  };
+  findResultsBranch(mainAst);
+  assert.ok(resultsBranch, "dedicated live results branch is missing");
+  const liveFrame = resultsBranch.thenStatement.getText(mainAst);
+  for (const [presentation, screen, expected] of [
+    [null, "results", false], [{}, "results", true], [{}, "pause", false], [{}, "map", false],
+  ]) assert.equal(Boolean(runInNewContext(resultsBranch.expression.getText(mainAst), {
+    resultsPresentation: presentation, gameFlow: { currentScreen: screen },
+  })), expected, `results animation guard for ${screen}`);
   assert.match(liveFrame, /resultsPresentation\.update\(dt\)/);
   assert.match(liveFrame, /renderGameplayWithGameFlow\(dt\)/);
   assert.doesNotMatch(liveFrame, /player\.step|level\.update|captureGameplay/, 'results animate without simulation or per-frame thumbnail copies');

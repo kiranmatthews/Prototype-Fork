@@ -22,6 +22,7 @@ import {
   adoptLegacyLevels,
   starterCustomLevel,
   normalizeCustomLevelData,
+  parseCustomLevelJson,
   newLaneCursor,
   userLevelStorageHealthy,
   isEditUnlocked,
@@ -1100,7 +1101,7 @@ function updateWaterPresentation(dt: number): void {
     level.water.clearPreCrtRenderSize();
   }
   level.water.setQuality(level.skyPreset === "coast" && !split2p && !LITE_RENDER && !NO_OCEAN_PASSES ? "full" : "lite");
-  oceanTuning.apply(level.water, current.id === "warproom" ? "map" : "level");
+  oceanTuning.apply(level.water, (current.id === "warproom" || level.isCampaignMap) ? "map" : "level");
   level.water.setSkyUrl(import.meta.env.BASE_URL + SKY_PRESETS[activeSky].file,
     SKY_PRESETS[activeSky].fog, presetHorizonV(activeSky));
   level.water.update(dt, camera);
@@ -2098,7 +2099,7 @@ player.hudFruitAt = () => ui.fruitIconAt();
 ui.onBonusFruitFlight = (count) => player.showBonusFruitPayout(count);
 if (shellBypass) campaign.startEphemeral();
 player.enterLevel(current.id);
-player.hubMode = current.id === "warproom";
+player.hubMode = (current.id === "warproom" || level.isCampaignMap);
 applyEndlessDeaths();
 player.respawn(level, true);
 applyRunModes(); // the saved MENU switch decides whether the pickups are there
@@ -2139,7 +2140,7 @@ worldMapUI = new WorldMapUI(campaign, {
   getRelicTarget: (id) => resolveRelicTime(id, findLevel(id)?.data),
   getMedalTargets: (id) => resolveMedalTimes(id, findLevel(id)?.data),
   onMapTap: (clientX, clientY) => {
-    if (gameFlow.blocksGameplay || current.id !== "warproom") return;
+    if (editor.active || gameFlow.blocksGameplay || (current.id !== "warproom" && !level.isCampaignMap)) return;
     const rect = renderer.domElement.getBoundingClientRect();
     worldMapController?.touchMap(clientX - rect.left, clientY - rect.top, rect.width, rect.height, camera);
   },
@@ -2157,7 +2158,7 @@ worldMapController = new WorldMapController(campaign, player, {
   onEnterLevel: enterCampaignLevel,
   onOpenSection: openWorldMapSection,
 });
-if (current.id === "warproom") {
+if ((current.id === "warproom" || level.isCampaignMap)) {
   worldMapController.activate(level, null);
   worldMapUI.show(worldMapController.selectedKey);
 }
@@ -2168,7 +2169,7 @@ ui.setLevel(
   input.inventoryHeld,
 );
 ui.setHUD(currentHudState(), 0);
-gameFlow.setWarpRoom(current.id === "warproom");
+gameFlow.setWarpRoom((current.id === "warproom" || level.isCampaignMap));
 if (shellBypass) gameFlow.hide();
 else gameFlow.showLaunch();
 
@@ -2219,9 +2220,10 @@ let pendingCompletion:
   | { kind: "time-trial"; time: number }
   | null = null;
 let pendingMapUnlockReveal: string[] = [];
+let campaignMapOriginId = "warproom";
 
 function syncCampaignPortalProgress(): void {
-  if (current.id !== "warproom") return;
+  if ((current.id !== "warproom" && !level.isCampaignMap)) return;
   if (worldMapController?.active) {
     worldMapController.refresh();
     return;
@@ -2317,13 +2319,13 @@ function switchLevel(
   loadedLevelId = entry.id;
   puffs.attach(scene);
   const warpReturnPose =
-    entry.id === "warproom" && warpReturnFromKey
+    (entry.id === "warproom" || level.isCampaignMap) && warpReturnFromKey
       ? level.campaignPortalReturnPose(warpReturnFromKey)
       : null;
   // Bank the old shelf and select the target before resetting its run state.
   player.enterLevel(entry.id);
   player.bonusMode = false;
-  player.hubMode = entry.id === "warproom";
+  player.hubMode = (entry.id === "warproom" || level.isCampaignMap);
   currentRunBonusBoxes = 0;
   player.respawn(level, true, preserveInventory, warpReturnPose ?? undefined);
   syncCampaignPortalProgress();
@@ -2361,8 +2363,8 @@ function switchLevel(
     input.inventoryHeld,
   );
   ui.setHUD(currentHudState(), 0);
-  gameFlow?.setWarpRoom(entry.id === "warproom");
-  if (entry.id === "warproom" && worldMapController && worldMapUI) {
+  gameFlow?.setWarpRoom((entry.id === "warproom" || level.isCampaignMap));
+  if ((entry.id === "warproom" || level.isCampaignMap) && worldMapController && worldMapUI) {
     const focusKey = warpReturnFromKey ?? campaign.recommendedMapLevelKey();
     worldMapController.activate(level, focusKey);
     worldMapUI.show(worldMapController.selectedKey);
@@ -2393,7 +2395,7 @@ function applyGameAudioOptions(options: GameAudioOptions): void {
 function applyGamePlayMode(mode: GamePlayMode): void {
   // A hub option, never a mid-course rules/economy switch. Applying it must
   // not respawn the player, reset progress, or consume/replenish stored lives.
-  if (current.id !== 'warproom') return;
+  if ((current.id !== 'warproom' && !level.isCampaignMap)) return;
   if (replayer.active) {
     replayer.end();
     restoreReplayRunRule();
@@ -2411,6 +2413,7 @@ function guardGameplayFromMenu(): void {
 }
 
 function startNewCampaign(slot: number): void {
+  campaignMapOriginId = "warproom";
   pendingMapUnlockReveal = [];
   guardGameplayFromMenu();
   void gameFlow.transition(async () => {
@@ -2424,6 +2427,7 @@ function startNewCampaign(slot: number): void {
 }
 
 function loadCampaign(slot: number): void {
+  campaignMapOriginId = "warproom";
   pendingMapUnlockReveal = [];
   guardGameplayFromMenu();
   void gameFlow.transition(async () => {
@@ -2446,13 +2450,13 @@ function syncCampaignInventoryForSave(): void {
 }
 
 function saveCampaignFromWarp(): boolean {
-  if (current.id !== "warproom" || campaign.activeSlot === null) return false;
+  if ((current.id !== "warproom" && !level.isCampaignMap) || campaign.activeSlot === null) return false;
   syncCampaignInventoryForSave();
   return campaign.saveActive().ok;
 }
 
 function setCampaignAutosave(enabled: boolean): boolean {
-  if (current.id !== "warproom") return false;
+  if ((current.id !== "warproom" && !level.isCampaignMap)) return false;
   // With autosave currently off this marks the final live inventory dirty,
   // then enabling flushes it. Disabling preserves the already-synced baseline.
   syncCampaignInventoryForSave();
@@ -2460,7 +2464,7 @@ function setCampaignAutosave(enabled: boolean): boolean {
 }
 
 function quitCampaignToMain(saveFirst: boolean): boolean {
-  if (current.id !== "warproom") return false;
+  if ((current.id !== "warproom" && !level.isCampaignMap)) return false;
   if (saveFirst && !saveCampaignFromWarp()) return false;
   if (!campaign.closeActive({ discardDirty: !saveFirst })) return false;
 
@@ -2484,7 +2488,8 @@ function resumeFromPause(): void {
 
 function openWorldMapSection(section: WorldMapSection): void {
   if (
-    current.id !== "warproom" ||
+    editor.active ||
+    (current.id !== "warproom" && !level.isCampaignMap) ||
     !worldMapController?.active ||
     gameFlow.blocksGameplay
   )
@@ -2562,7 +2567,8 @@ function discardSuspendedBonus(): void {
 
 function returnToWarpRoom(originLevelId: string): void {
   const returnFromKey = campaignLevelById(originLevelId)?.progressKey ?? null;
-  switchLevel("warproom", false, true, returnFromKey);
+  const target = findLevel(campaignMapOriginId) ? campaignMapOriginId : "warproom";
+  switchLevel(target, false, true, returnFromKey);
 }
 
 function quitCurrentLevel(): void {
@@ -2735,6 +2741,7 @@ function showTimeTrialResults(time: number): void {
 function enterCampaignLevel(targetId: string): void {
   const destination = campaignLevelById(targetId);
   if (!destination || !campaign.levelUnlocked(destination.progressKey)) return;
+  if (level.isCampaignMap) campaignMapOriginId = current.id;
   campaign.updateInventory(player.lives, player.fruit);
   void gameFlow.transition(async () => {
     switchLevel(targetId, false, true);
@@ -2744,7 +2751,7 @@ function enterCampaignLevel(targetId: string): void {
 }
 
 function enterBonusRound(): void {
-  if (bonusSession || player.ttActive || level.timeTrial || !isCampaignLevel(current.id)) return;
+  if (bonusSession || player.ttActive || level.timeTrial || (!isCampaignLevel(current.id) && !level.bonusPlatformDiagnostics)) return;
   ui.hideMessage();
   player.bankFlyingFruit();
   const parentEntry = current;
@@ -2873,14 +2880,14 @@ function returnFromBonus(completed: boolean): void {
 function checkCampaignEntrances(): void {
   if (gameFlow.blocksGameplay || paused || editor.active || player.state === "dead" || player.state === "gameover" || player.state === "finished")
     return;
-  if (current.id === "warproom") {
+  if ((current.id === "warproom" || level.isCampaignMap)) {
     const target = level.campaignPortalAt(player.pos);
     if (target) enterCampaignLevel(target);
     return;
   }
   if (
     !bonusSession &&
-    isCampaignLevel(current.id) &&
+    (isCampaignLevel(current.id) || !!level.bonusPlatformDiagnostics) &&
     !player.ttActive &&
     !level.timeTrial &&
     !player.comboRun &&
@@ -3079,10 +3086,9 @@ function preflightEditorWorking(): boolean {
   const working = editor.workingEntry();
   if (!working) return false;
   if (working.data && !normalizeCustomLevelData(working.data)) {
-    ui.showMessage(
+    editor.showMessage(
       "CHANGE REJECTED",
       "values or geometry exceed safe authoring limits",
-      2600,
     );
     return false;
   }
@@ -3134,7 +3140,15 @@ function rebuildLevel(): void {
   loadedLevelId = current.id;
   localStorage.setItem("solProtoLevelId", current.id);
   if (changedLevelId) player.enterLevel(current.id);
+  player.hubMode = level.isCampaignMap;
+  worldMapController?.deactivate();
+  worldMapUI?.hide();
   player.respawn(level, true);
+  gameFlow?.setWarpRoom(player.hubMode);
+  if (level.isCampaignMap && worldMapController && worldMapUI) {
+    worldMapController.activate(level, campaign.recommendedMapLevelKey());
+    worldMapUI.show(worldMapController.selectedKey);
+  }
   if (split2p && p2) {
     if (changedLevelId) p2.enterLevel(current.id);
     p2.respawn(level, true);
@@ -3379,7 +3393,7 @@ async function openWaterStudioTool(): Promise<void> {
   const mod = await import("./waterstudio");
   waterStudio = mod.openWaterStudio({
     getWater: () => level.water,
-    getContext: () => current.id === "warproom" ? "map" : "level",
+    getContext: () => (current.id === "warproom" || level.isCampaignMap) ? "map" : "level",
     onChange: () => gameFlow.requestGameplayFrame(),
     onClose: () => (waterStudio = null),
   });
@@ -3489,7 +3503,9 @@ ui.onLevelNew = () => {
   const data = starterCustomLevel();
   data.name = "New Level";
   const id = saveUserLevel({ id: "", name: data.name, data });
-  if (!userLevelStorageHealthy())
+  if (!findLevel(id)?.data) { ui.showMessage("LEVEL LIMIT REACHED", "export and remove an unused level first", 3000); return; }
+  const persisted = userLevelStorageHealthy();
+  if (!persisted)
     ui.showMessage(
       "SAVE FAILED",
       "new level is session-only · export before reloading",
@@ -3498,27 +3514,14 @@ ui.onLevelNew = () => {
   switchLevel(id);
   ui.refreshLevels(id);
   openEditor(id);
-  ui.showMessage("NEW LEVEL", "rename it in the editor's PROJECT tab", 2400);
+  ui.showMessage(persisted ? "NEW LEVEL" : "NEW LEVEL · SAVE FAILED", persisted ? "rename it in the editor's PROJECT tab" : "session only · export before reloading", 3000);
 };
 // IMPORT: a downloaded level file becomes a new menu row. Accepts both the
 // bare component data the editor exports and a whole {id,name,data} entry.
 function importLevelFile(txt: string, fallbackName: string): boolean {
-  let data: CustomLevelData | null = null;
-  let name = fallbackName.replace(/\.json$/i, "");
-  try {
-    const obj = JSON.parse(txt) as {
-      components?: unknown;
-      name?: string;
-      data?: CustomLevelData;
-    };
-    if (Array.isArray(obj.components)) data = obj as unknown as CustomLevelData;
-    else if (obj.data && Array.isArray(obj.data.components)) data = obj.data;
-    if (data) name = obj.name ?? data.name ?? name;
-  } catch {
-    return false;
-  }
-  const normalized = normalizeCustomLevelData(data);
+  const normalized = parseCustomLevelJson(txt);
   if (!normalized) return false;
+  const name = normalized.name || fallbackName.replace(/\.json$/i, "");
   let probe: Level | null = null;
   try {
     probe = new Level(new THREE.Scene(), {
@@ -3532,20 +3535,17 @@ function importLevelFile(txt: string, fallbackName: string): boolean {
     probe?.dispose(level);
   }
   const id = saveUserLevel({ id: "", name, data: normalized });
-  if (!userLevelStorageHealthy())
-    ui.showMessage(
-      "SAVE FAILED",
-      "level is session-only · export it before reloading",
-      3000,
-    );
+  if (!findLevel(id)?.data) { ui.showMessage("LEVEL LIMIT REACHED", "export and remove an unused level before importing", 3000); return false; }
+  const persisted = userLevelStorageHealthy();
   switchLevel(id);
   ui.refreshLevels(id);
-  ui.showMessage("LEVEL IMPORTED", `${findLevel(id)?.name ?? name}`, 2000);
+  ui.showMessage(persisted ? "LEVEL IMPORTED" : "IMPORTED · SAVE FAILED",
+    persisted ? findLevel(id)?.name ?? name : "session only · export before reloading", 3000);
   return true;
 }
 ui.onLevelImport = (txt: string, filename: string) => {
   if (!importLevelFile(txt, filename))
-    ui.showMessage("BAD LEVEL FILE", "", 1600);
+    ui.showMessage("BAD LEVEL FILE", "unsupported format, invalid fields or excessive geometry", 3000);
 };
 // UNLOCK: the passcode gate for direct editing + phone sync.
 ui.onUnlockEditing = async (pass: string): Promise<boolean> => {
@@ -3587,7 +3587,11 @@ ui.onForceResync = async (): Promise<void> => {
     return;
   }
   const before = getUserLevels().length;
-  setUserLevels(remote.levels);
+  if (!setUserLevels(remote.levels)) {
+    ui.setSyncStatus("restore failed · invalid pack or browser storage unavailable", "err");
+    ui.showMessage("RESTORE FAILED", "check the level pack and browser storage", 3000);
+    return;
+  }
   localStorage.setItem("solProtoCloudPulled", "1");
   const after = getUserLevels().length;
   if (editor.active) editor.exit();
@@ -3653,7 +3657,7 @@ const firstRunLevelSync = (async () => {
     localStorage.setItem("solProtoCloudPulled", "1");
     return;
   }
-  setUserLevels(remote.levels);
+  if (!setUserLevels(remote.levels)) return;
   localStorage.setItem("solProtoCloudPulled", "1");
   ui.refreshLevels(current.id);
   ui.refreshEditControls();
@@ -3883,6 +3887,7 @@ window.addEventListener("keydown", (e) => {
   if (gameFlow.blocksGameplay || bonusSession) return;
   if (
     current.id !== "warproom" &&
+    !level.isCampaignMap &&
     gameFlow.developerChromeVisible &&
     !editor.active &&
     (e.code === "KeyK" || e.code === "KeyL")
@@ -3913,7 +3918,7 @@ player.onFinish = () => {
 };
 player.onBonusDeath = () => returnFromBonus(false);
 player.onRespawn = () => {
-  if (!bonusSession && isCampaignLevel(current.id))
+  if (!bonusSession && (isCampaignLevel(current.id) || !!level.bonusPlatformDiagnostics))
     player.bonusCrates = currentRunBonusBoxes;
   ui.resetHudTransients(player.fruitCollectionRevision, input.inventoryHeld);
   ui.setHUD(currentHudState(), 0);
@@ -4023,7 +4028,7 @@ let chaseSteadyT = 0; // seconds of continuous steady travel (filters pipe swing
 
 function updateCamera(dt: number): void {
   const subject = player.renderPosition;
-  if (current.id === "warproom" && worldMapController?.active) {
+  if ((current.id === "warproom" || level.isCampaignMap) && worldMapController?.active) {
     worldMapController.frameCamera(camera, dt);
     camControlDir
       .set(
@@ -4533,7 +4538,7 @@ function frame(nowMs: number): void {
   if (input.pausePressed) {
     const handled = gameFlow.handlePauseToggle();
     if (!handled && !gameFlow.blocksGameplay) {
-      if (current.id === "warproom") openWorldMapSection("options");
+      if ((current.id === "warproom" || level.isCampaignMap)) openWorldMapSection("options");
       else {
         paused = true;
         player.collapseRenderInterpolation();
@@ -4574,7 +4579,7 @@ function frame(nowMs: number): void {
       writeRenderDiagnostics();
       return;
     }
-    if (current.id === "warproom" && gameFlow.liveMapBackground) {
+    if ((current.id === "warproom" || level.isCampaignMap) && gameFlow.liveMapBackground) {
       // Keep water, plants, shore wetness and hub effects alive under map
       // utilities. Navigation/player simulation remains blocked above, and
       // the menu keeps reusing its cached pre-CRT texture until its ink changes.
@@ -4640,17 +4645,17 @@ function frame(nowMs: number): void {
       !shellBypass &&
       !split2p &&
       input.restartPressed &&
-      (bonusSession !== null || current.id === "warproom" || isCampaignLevel(current.id))
+      (bonusSession !== null || (current.id === "warproom" || level.isCampaignMap) || isCampaignLevel(current.id))
     ) {
       input.restartPressed = false;
       restartCurrentRun();
       break;
     }
-    if (current.id === "warproom" && worldMapController?.active)
+    if ((current.id === "warproom" || level.isCampaignMap) && worldMapController?.active)
       worldMapController.step(CONST.fixedStep, input);
     else
       player.step(CONST.fixedStep, input, level);
-    if (current.id !== "warproom" && split2p && p2) {
+    if ((current.id !== "warproom" && !level.isCampaignMap) && split2p && p2) {
       p2.step(CONST.fixedStep, input2 as unknown as typeof input, level);
       stepPvp(CONST.fixedStep);
     }
@@ -4661,7 +4666,7 @@ function frame(nowMs: number): void {
     // Player.step authors the fixed pose; PVP may then move either root. Only
     // now is the simulation tick complete and safe to publish to rendering.
     player.commitRenderStep(level);
-    if (current.id !== "warproom" && split2p && p2) p2.commitRenderStep(level);
+    if ((current.id !== "warproom" && !level.isCampaignMap) && split2p && p2) p2.commitRenderStep(level);
     // record exactly what the sim consumed (edges intact, pre-consume)
     if (!replayer.active && !split2p) recorder.record(input, player.camDir);
     input.consumeEdges(); // one press = one step
@@ -4709,7 +4714,7 @@ function frame(nowMs: number): void {
     // hold the last shot through the death blackout — no drifting after the
     // corpse; the respawn teleport re-snaps the rig when play resumes
     if (player.state !== "dead" && player.state !== "gameover") updateCamera(dt);
-    if (current.id !== "warproom" && split2p) updateCamera2(dt);
+    if ((current.id !== "warproom" && !level.isCampaignMap) && split2p) updateCamera2(dt);
   // Puffs integrate on the RENDER clock, not the fixed step: they are pure
   // decoration with no gameplay authority, and they must billboard against the
   // camera basis that was settled a line ago or they lag the shot by a frame.
@@ -4782,7 +4787,7 @@ function frame(nowMs: number): void {
   // ocean's quality switch makes these hooks a cheap feature-disable path.
   level.water?.renderPasses(renderer, scene, camera);
 
-  if (current.id !== "warproom" && split2p && p2) {
+  if ((current.id !== "warproom" && !level.isCampaignMap) && split2p && p2) {
     ui.setGameHudComposited(false);
     gameInterface.setComposited(false);
     const dw = renderer.domElement.width;
@@ -4801,12 +4806,12 @@ function frame(nowMs: number): void {
   }
   // Single-player fruit/icons/HUD were composed together above. Split screen
   // retains its direct fallback, with each fruit flight confined to its half.
-  if (current.id !== "warproom" && split2p && p2) {
+  if ((current.id !== "warproom" && !level.isCampaignMap) && split2p && p2) {
     player.drawFlyingFruit(renderer, 'top');
     p2.drawFlyingFruit(renderer, 'bottom');
   }
   // One shared set of 3D counter icons remains above both split viewports.
-  if (current.id !== "warproom" && split2p && p2) ui.drawIcons(renderer, dt);
+  if ((current.id !== "warproom" && !level.isCampaignMap) && split2p && p2) ui.drawIcons(renderer, dt);
     frameStats.cameraTargetX = camTarget.x;
     frameStats.cameraTargetY = camTarget.y;
     frameStats.cameraTargetZ = camTarget.z;
