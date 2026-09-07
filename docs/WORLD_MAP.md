@@ -70,7 +70,7 @@ Four screen-printed sockets show crystal, box gem, combo gem and the highest
 earned time-trial medal (bronze, silver or gold).
 Uncollected slots use dark flat silhouettes. Collected slots use
 `Level.crystalMesh`, `Level.gemMesh` (including the green combo tint), and
-the coin-and-ribbon medal factory, with world halo sprites removed and continuous idle
+the round medal factory (no ribbon or loop), with world halo sprites removed and continuous idle
 rotation. No reward models have been restored to the level hubs themselves.
 
 The in-level L2 inventory shows only rewards newly carried in the current run,
@@ -80,8 +80,8 @@ respawns and results, but a retry or later visit starts without banked rewards
 in the inventory. Saved ownership still suppresses duplicate world pickups and
 continues to drive the map's collected models; no save data is removed.
 
-Only cleared levels show the right-side race card: three personal bests and
-the level's gold, silver and bronze medal targets. Author them in editor
+Only cleared levels show the right-side race card: a single gold/silver/bronze
+list with target times replaced by EARNED as medals are won. Author targets in editor
 PROJECT → LEVEL → gold/silver/bronze medal (s). The old relic benchmark becomes
 gold; uncustomized silver and bronze start at 115% and 130% of it. Ordered
 `medalTimes` metadata overrides those defaults; legacy `relicTime` files remain

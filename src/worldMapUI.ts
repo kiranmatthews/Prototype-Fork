@@ -140,7 +140,7 @@ export class WorldMapUI {
     this.trial.replaceChildren();
     if (trialUnlocked) {
       const records = node("div", "world-map-semantic");
-      records.textContent = `Time trial. Personal bests: ${[0, 1, 2].map(i => `${i + 1}: ${mapTrialTime(times[i])}`).join(", ")}. Medal targets: ${TIME_MEDALS.map(tier => `${tier}: ${mapTrialTime(targets[tier])}`).join(", ")}.`;
+      records.textContent = `Time trial. ${TIME_MEDALS.map((tier, i) => `${tier}: ${medal && i >= TIME_MEDALS.indexOf(medal) ? 'earned' : mapTrialTime(targets[tier])}`).join(", ")}.`;
       this.trial.append(records);
     }
     this.presentation ??= new MapLevelPresentation(this.levelCard, this.trial);

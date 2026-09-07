@@ -67,9 +67,7 @@ function silhouette(ctx: CanvasRenderingContext2D, index: number, x: number, y: 
     ctx.moveTo(0, -53); ctx.lineTo(24, -25); ctx.lineTo(20, 13);
     ctx.lineTo(0, 56); ctx.lineTo(-20, 13); ctx.lineTo(-24, -25); ctx.closePath();
   } else if (index === 3) {
-    ctx.moveTo(-26, -51); ctx.lineTo(-8, -51); ctx.lineTo(11, -8); ctx.lineTo(-5, 1); ctx.closePath();
-    ctx.moveTo(26, -51); ctx.lineTo(8, -51); ctx.lineTo(-11, -8); ctx.lineTo(5, 1); ctx.closePath();
-    ctx.moveTo(31, 17); ctx.arc(0, 17, 31, 0, Math.PI * 2);
+    ctx.arc(0, 0, 38, 0, Math.PI * 2);
   } else {
     ctx.moveTo(-42, -16); ctx.lineTo(-24, -38); ctx.lineTo(24, -38);
     ctx.lineTo(42, -16); ctx.lineTo(0, 42); ctx.closePath();
@@ -226,21 +224,15 @@ export class MapLevelPresentation {
     ctx.fillStyle = "#eee9da"; ctx.fillRect(134, 51, 38, 15);
     ctx.textAlign = "left"; ctx.textBaseline = "middle";
     ctx.font = '74px "Staging Secondary", Impact, sans-serif'; ctx.fillText("TIME TRIAL", 254, 133, 440);
-    ctx.font = '30px "Staging Secondary", sans-serif'; ctx.fillStyle = "#bebeb4"; ctx.fillText("PERSONAL BESTS", 82, 250);
-    for (let i = 0; i < 3; i++) {
-      const y = 305 + i * 76;
-      ctx.font = '57px "Staging Secondary", Impact, sans-serif'; ctx.fillStyle = "#ffbd35"; ctx.fillText(["1st", "2nd", "3rd"][i], 83, y);
-      ctx.textAlign = "right"; ctx.fillStyle = "#f8f5e9"; ctx.font = '55px "Staging Secondary", monospace'; ctx.fillText(mapTrialTime(data.times[i]), 680, y);
-      ctx.textAlign = "left"; ctx.strokeStyle = "#666861"; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(75, y + 37); ctx.lineTo(693, y + 37); ctx.stroke();
-    }
-    ctx.fillStyle = "#dfd9c8"; ctx.font = '30px "Staging Secondary", sans-serif'; ctx.fillText("MEDAL TARGETS", 82, 530);
     const targets = data.targets ?? defaultMedalTimes(data.target);
     for (const [i, tier] of TIME_MEDALS.entries()) {
-      const y = 588 + i * 67;
+      const y = 330 + i * 155;
+      const earned = !!data.medal && i >= TIME_MEDALS.indexOf(data.medal);
       ctx.textAlign = 'left'; ctx.fillStyle = '#' + TIME_MEDAL_COLORS[tier].toString(16).padStart(6,'0');
-      ctx.font = '45px "Staging Secondary", sans-serif'; ctx.fillText(tier.toUpperCase(), 83, y);
-      ctx.textAlign = 'right'; ctx.fillStyle = '#f8f5e9'; ctx.font = '50px "Staging Secondary", monospace'; ctx.fillText(mapTrialTime(targets[tier]), 680, y);
+      ctx.font = '57px "Staging Secondary", sans-serif'; ctx.fillText(tier.toUpperCase(), 83, y);
+      ctx.textAlign = 'right'; ctx.fillStyle = '#f8f5e9'; ctx.font = '55px "Staging Secondary", monospace'; ctx.fillText(earned ? 'EARNED' : mapTrialTime(targets[tier]), 680, y);
+      ctx.strokeStyle = '#666861'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(75, y + 62); ctx.lineTo(693, y + 62); ctx.stroke();
     }
     this.trialTexture.needsUpdate = true;
   }

@@ -37,14 +37,16 @@ as a compatibility “has a medal” flag, but a saved bronze/silver `timeMedal`
 takes precedence over it on reload. Saved awards are not recalculated or removed
 when an editor target changes. Old best times alone do not invent an award.
 
-The map's fourth socket shows the best earned medal as a rotating embossed coin
-and blue ribbon; missing awards use a dark flat medal silhouette. A tier change
+The map's fourth socket shows the best earned medal as a rotating embossed round coin
+without a ribbon or loop; missing awards use a dark filled circle. A tier change
 recolours the existing model without rebuilding it or restarting the deck flip.
-The race card and Progress show all three benchmarks. Results show the medal
+The race card has just three gold/silver/bronze rows, replacing personal-best rankings
+and the duplicate target list. Earned tiers show EARNED instead of their target time.
+Progress shows all three benchmarks. Results show the medal
 earned by that attempt (not necessarily the player's saved best), with the same
 3D model and all targets. No additional popup or full-screen sequence is added.
 
-The models use two owned meshes/materials each and no new texture assets. They
+The models use one owned mesh/material each and no new texture assets. They
 follow existing shared-renderer/pre-CRT routing and disposal. The time-trial
 results grid is compacted so the new target rows fit short landscape screens.
 Gameplay touch controls are hidden during results, including their CRT mirror,

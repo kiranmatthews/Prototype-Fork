@@ -13,7 +13,6 @@ function merge(parts: THREE.BufferGeometry[]): THREE.BufferGeometry {
 export function timeMedalGeometry(): THREE.BufferGeometry {
   const parts: THREE.BufferGeometry[] = [new THREE.CylinderGeometry(.32, .32, .10, 32).rotateX(Math.PI / 2).translate(0, -.12, 0)];
   for (const z of [-.055, .055]) parts.push(new THREE.TorusGeometry(.293, .023, 4, 32).translate(0, -.12, z));
-  parts.push(new THREE.TorusGeometry(.06, .018, 5, 16).translate(0, .24, 0));
   const star = new THREE.Shape();
   for (let i = 0; i < 10; i++) {
     const angle = Math.PI / 2 + i * Math.PI / 5, radius = i % 2 ? .066 : .16;
@@ -39,13 +38,5 @@ export function createTimeMedal(tier: TimeMedal = 'gold'): THREE.Group {
   const group = new THREE.Group(); group.name = 'time-trial medal';
   const metal = new THREE.Mesh(timeMedalGeometry(), new THREE.MeshPhongMaterial({ shininess: 85, specular: 0xffffff }));
   metal.name = 'medal metal'; metal.userData.medalMetal = true;
-  const ribbons: THREE.BufferGeometry[] = [];
-  for (const sign of [-1, 1]) {
-    const shape = new THREE.Shape();
-    [[-.27,.68],[-.065,.68],[.09,.24],[-.08,.15]].forEach(([x,y],i) => i ? shape.lineTo(x*sign,y) : shape.moveTo(x*sign,y));
-    shape.closePath();
-    ribbons.push(new THREE.ExtrudeGeometry(shape, { depth: .025, bevelEnabled: false, steps: 1 }).translate(0, 0, -.035));
-  }
-  const ribbon = new THREE.Mesh(merge(ribbons), new THREE.MeshPhongMaterial({ color: 0x244a92, shininess: 18, side: THREE.DoubleSide }));
-  ribbon.name = 'medal ribbon'; group.add(ribbon, metal); setTimeMedalTier(group, tier); return group;
+  group.add(metal); setTimeMedalTier(group, tier); return group;
 }

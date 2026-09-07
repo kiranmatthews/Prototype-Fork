@@ -6,7 +6,18 @@ const source = await readFile(new URL('../src/mapLevelPresentation.ts', import.m
 // Exercise the dependency-free transition and clock without constructing the
 // renderer-owned presentation (its actual GPU path is browser-smoke-tested).
 const output = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.ES2020 } }).outputText.replace(/^import .*;\n/gm, '');
-const { MapDeckFlip, MAP_DECK_FLIP_SECONDS: duration, mapTrialTime } = await import(`data:text/javascript;base64,${Buffer.from(output).toString('base64')}`);
+const { MapDeckFlip, MapLevelPresentation, MAP_DECK_FLIP_SECONDS: duration, mapTrialTime } = await import(`data:text/javascript;base64,${Buffer.from(output).toString('base64')}`);
+globalThis.TIME_MEDALS = ['gold', 'silver', 'bronze'];
+globalThis.TIME_MEDAL_COLORS = {gold: 0xf8c64e, silver: 0xc6d5e2, bronze: 0xc98246};
+for (const [medal, expected] of [[null, 0], ['bronze', 1], ['silver', 2], ['gold', 3]]) {
+  const labels = [];
+  const ctx = new Proxy({ fillText: text => labels.push(text) }, {get: (obj, key) => obj[key] ?? (() => {})});
+  const trialTexture = {image: {width: 768, height: 800, getContext: () => ctx}};
+  MapLevelPresentation.prototype.paintTrial.call({trialTexture}, {medal, targets: {gold:60, silver:69, bronze:78}});
+  assert.deepEqual(labels.filter(label => ['GOLD','SILVER','BRONZE'].includes(label)), ['GOLD','SILVER','BRONZE']);
+  assert.equal(labels.filter(label => label === 'EARNED').length, expected);
+  assert.equal(labels.length, 7, 'exactly one heading and three label/value rows');
+}
 const data = key => ({ key, name: key, earned: [false, false, false, false], trialUnlocked: false, times: [], target: 60 });
 const flip = new MapDeckFlip();
 flip.select(data('a')); assert.equal(flip.active, false);
@@ -28,6 +39,8 @@ assert.equal(mapTrialTime(undefined), '—:——.——');
 assert.equal(mapTrialTime(NaN), '—:——.——');
 for (const factory of ['createSkateboardPresentation(', 'Level.crystalMesh()', 'Level.gemMesh()', 'Level.gemMesh(1, COMBO_GEM_TINT)', 'Level.timeRelicMesh()']) assert.ok(source.includes(factory), `missing game-owned asset: ${factory}`);
 assert.doesNotMatch(source, /new THREE.WebGLRenderer/, 'map cards must share the existing renderer');
+assert.doesNotMatch(source, /PERSONAL BESTS|MEDAL TARGETS|"1st"|"2nd"|"3rd"/, 'race card must contain only one medal list');
+assert.match(source, /earned \? 'EARNED' : mapTrialTime\(targets\[tier\]\)/, 'earned medals replace obsolete target times');
 assert.match(source, /renderer\.setRenderTarget\(oldTarget, oldFace, oldMip\)/);
 assert.match(source, /renderer\.setScissorTest\(scissorTest\); renderer\.autoClear = autoClear/);
 const main = await readFile(new URL('../src/main.ts', import.meta.url), 'utf8');
