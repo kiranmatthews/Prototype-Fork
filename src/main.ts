@@ -218,6 +218,7 @@ const SUN_OFFSET = new THREE.Vector3(38, 74, 26);
 // a Three light-position offset opposite its forward ray.
 const COAST_SUN_OFFSET = new THREE.Vector3(-68, 58, -11);
 const MAP_SUN_OFFSET = new THREE.Vector3(-32, 72, 42);
+const JUNGLE_SUN_OFFSET = new THREE.Vector3(-36, 62, 28);
 function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
   const shadowHalf = document.body.classList.contains("game-world-map")
     ? MAP_SHADOW_HALF
@@ -230,7 +231,7 @@ function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
   }
   const offset = document.body.classList.contains("game-world-map")
     ? MAP_SUN_OFFSET
-    : activeSky === "coast" ? COAST_SUN_OFFSET : SUN_OFFSET;
+    : level.jungleAtmosphere ? JUNGLE_SUN_OFFSET : activeSky === "coast" ? COAST_SUN_OFFSET : SUN_OFFSET;
   sun.target.position.set(focusX, focusY, focusZ);
   sun.target.updateMatrixWorld();
   sun.position.set(
@@ -949,11 +950,12 @@ function applyTheme(): void {
   // without fogging the walkable level (the mist owns the horizon).
   const fogFar = Math.min(t.fogFar, P.fogFarCap);
   // editor view: no fog at all, so distant geometry stays crisp and visible
-  scene.fog = editorViewActive ? null : new THREE.Fog(P.fog, fogNear, fogFar);
-  scene.background = new THREE.Color(P.fog);
+  const sceneFogColor = level.jungleAtmosphere ? t.fog : P.fog;
+  scene.fog = editorViewActive ? null : new THREE.Fog(sceneFogColor, fogNear, fogFar);
+  scene.background = new THREE.Color(sceneFogColor);
   // per-preset draw distance (the editor owns the far plane while editing)
   if (!editorViewActive) {
-    const far = P.farPlane ?? 400;
+    const far = level.jungleAtmosphere ? 175 : P.farPlane ?? 400;
     if (camera.far !== far) {
       camera.far = far;
       camera.updateProjectionMatrix();
@@ -1075,6 +1077,7 @@ async function prepareActivePresentationAssets(): Promise<void> {
     loadSky(activeSky),
     bonusParallax?.prepare() ?? Promise.resolve(),
     player.preparePresentationAssets(),
+    level.prepareJungleAssets(),
     p2?.preparePresentationAssets(),
     document.fonts?.ready,
     sfx.prepare(),
@@ -2039,7 +2042,7 @@ function updateCamera2(dt: number): void {
     dt,
     snapped,
   );
-  const p2AuthoredFov = TUNING.camFov + (current.id === "beachfront" ? -6 : 0);
+  const p2AuthoredFov = TUNING.camFov + (level.jungleAtmosphere ? 5 : current.id === "beachfront" ? -6 : 0);
   const p2TargetFov = THREE.MathUtils.lerp(
     p2AuthoredFov + cam2SpeedFovBoost,
     BOULDER_FOV + TUNING.camFov - 49,
@@ -2066,6 +2069,7 @@ function updateCamera2(dt: number): void {
   if (cam2F.lengthSq() < 1e-4) cam2F.set(0, 0, -1);
   cam2F.normalize();
   const framing = cameraRigFraming(TUNING, 0, 0, 0, true);
+  if (level.jungleAtmosphere) { framing.height += 1.8; framing.distance += 2; framing.pitch -= 4.5; }
   const tx = subject.x - cam2F.x * framing.distance;
   const tz = subject.z - cam2F.z * framing.distance;
   const ty = subject.y + framing.height;
@@ -4112,7 +4116,7 @@ function updateCamera(dt: number): void {
     dt,
     snapped,
   );
-  const authoredFov = TUNING.camFov + (current.id === "beachfront" ? -6 : 0);
+  const authoredFov = TUNING.camFov + (level.jungleAtmosphere ? 5 : current.id === "beachfront" ? -6 : 0);
   const targetFov = THREE.MathUtils.lerp(
     authoredFov + camSpeedFovBoost,
     BOULDER_FOV + TUNING.camFov - 49,
@@ -4186,6 +4190,9 @@ function updateCamera(dt: number): void {
   const back = camBack * (1 - sideF) * (1 - boulderF); // corridor thing only
 
   const framing = cameraRigFraming(TUNING, sideF, back, boulderF);
+  // Give the canopy, hanging arches and roof silhouettes room above the lane.
+  // These are level presentation offsets; the saved movement/camera tuning stays authored.
+  if (level.jungleAtmosphere) { framing.height += 1.8; framing.distance += 2; framing.pitch -= 4.5; }
   // CRASH RIG VERTICAL: the camera's height anchors to the GROUND under the
   // skater, not the skater — a jump rises THROUGH the frame
   // instead of yanking the whole rig skyward and pulling the
@@ -4389,8 +4396,18 @@ function currentHudState(): HudState {
 
 let paused = false;
 
+const renderTimingHistory: number[] = [];
+let renderTimingFrame = -1;
+let renderTimingSnap = -1;
 function writeRenderDiagnostics(): void {
   if (!renderDiagnosticsProbe) return;
+  if (renderTimingSnap !== frameStats.snapVersion) { renderTimingHistory.length = 0; renderTimingSnap = frameStats.snapVersion; }
+  if (renderTimingFrame !== frameStats.frame && !gameFlow.blocksGameplay) {
+    renderTimingHistory.push(frameStats.rawDt * 1000);
+    renderTimingFrame = frameStats.frame;
+  }
+  if (renderTimingHistory.length > 240) renderTimingHistory.shift();
+  const sortedTiming = [...renderTimingHistory].sort((a, b) => a - b);
   renderer.getDrawingBufferSize(renderDiagnosticsSize);
   renderDiagnosticsProbe.textContent = JSON.stringify({
     levelId: current.id,
@@ -4404,6 +4421,15 @@ function writeRenderDiagnostics(): void {
     },
     presentation: coastPost?.resolution ?? null,
     ocean: level.water?.stats ?? null,
+    jungle: level.jungleAssetDiagnostics,
+    sceneDraw: { ...renderer.info.render },
+    frameTiming: {
+      gameplay: !gameFlow.blocksGameplay,
+      samples: sortedTiming.length,
+      averageMs: renderTimingHistory.reduce((a, b) => a + b, 0) / Math.max(1, sortedTiming.length),
+      medianMs: sortedTiming[Math.floor(sortedTiming.length * 0.5)],
+      p95Ms: sortedTiming[Math.floor(sortedTiming.length * 0.95)],
+    },
     islandFoam: level.shoreFoamDiagnostics,
     hud: ui.gameHudDiagnostics,
     assets: {

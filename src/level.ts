@@ -15,7 +15,6 @@ import {
   PropFamily,
   PropRoleName,
   propRoll,
-  propVariant,
   propSurfaces,
   propTint,
 } from "./props";
@@ -46,6 +45,8 @@ import { JUNGLE_CLIFF_LEVEL } from "./levels/jungle-cliff";
 import { UNITY_PORT_LEVELS } from "./levels/unity-ports";
 import { EASY_BONUS_LEVEL, DEFAULT_BONUS_CRATE_COUNT } from "./levels/bonus-easy";
 import { TropicalPlantKit, TROPICAL_PLANT_KINDS, TROPICAL_PLANT_LABELS } from "./tropicalPlants";
+import { JungleAssetKit, JUNGLE_ASSET_KINDS, JUNGLE_ASSET_LABELS, isJungleAsset, addJungleDapple, jungleAssetMatrix } from "./jungleAssets";
+import { jungleRuinsDressing } from "./levels/jungle-ruins-art";
 import {
   CAMPAIGN_LEVELS,
   CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
@@ -771,6 +772,7 @@ export function setEditorBuild(on: boolean): boolean {
 // editor builds its FOLIAGE palette straight off this list, so a new one shows
 // up in the add panel the moment it is added here and wired in decorProp().
 export const DECOR_KINDS = [
+  ...JUNGLE_ASSET_KINDS,
   ...TROPICAL_PLANT_KINDS,
   "fern",
   "broadleaf",
@@ -802,6 +804,7 @@ export const DECOR_KINDS = [
 export type DecorKind = (typeof DECOR_KINDS)[number];
 /** Human labels for the palette + the props dropdown. */
 export const DECOR_LABELS: Record<DecorKind, string> = {
+  ...JUNGLE_ASSET_LABELS,
   ...TROPICAL_PLANT_LABELS,
   fern: "fern",
   broadleaf: "broadleaf",
@@ -837,6 +840,7 @@ export const TEX_KINDS = [
   "moss",
   "dirt",
   "sand",
+  "sunsoil",
   "stone",
   "wood",
   "plank",
@@ -893,6 +897,7 @@ export interface CustomLevelData {
   unitySand?: CustomUnitySandData[];
   shoreFoam?: IslandShoreFoamOval[];
   sky?: SkyPreset; // time of day; absent = sunset (what every level was before)
+  jungleAtmosphere?: boolean; // authored enclosed jungle lighting + canopy shade
   components: CustomComponent[];
   layers?: CustomLayer[];
   groups?: CustomGroup[];
@@ -3143,6 +3148,9 @@ export class Level {
   private time = 0;
   private thornClusters: ProceduralThornCluster[] = [];
   private tropicalPlants: TropicalPlantKit | null = null;
+  private jungleAssets: JungleAssetKit | null = null;
+  jungleAtmosphere = false;
+  private jungleTime = { value: 0 };
   private meshyCourtyards: THREE.Group[] = [];
   private arrowTex: THREE.CanvasTexture | null = null;
   private tntTexCache = new Map<string, THREE.CanvasTexture>();
@@ -3291,12 +3299,17 @@ export class Level {
   // match. Same art, four times the texels: the pattern keeps its designed
   // scale on the surface while the edges resolve instead of staircasing.
   private static readonly TEX_SS = 4;
-  private surfTexCache = new Map<string, THREE.CanvasTexture>();
+  private surfTexCache = new Map<string, THREE.Texture>();
   private trickGateTexCache = new Map<DeckTrickKind, THREE.CanvasTexture>();
-  private surfaceTexture(kind: string): THREE.CanvasTexture {
+  private surfaceTexture(kind: string): THREE.Texture {
     if (kind === "checker") return this.checkerTexture();
     const cached = this.surfTexCache.get(kind);
     if (cached) return cached;
+    if (kind === "sunsoil") {
+      const texture = Level.finishTex(new THREE.TextureLoader().load(import.meta.env.BASE_URL + "jungle-kit/sunsoil.jpg"));
+      this.surfTexCache.set(kind, texture);
+      return texture;
+    }
     const soft =
       kind === "grass" ||
       kind === "jungle" ||
@@ -3669,6 +3682,7 @@ export class Level {
     plank: { spec: 0x22201c, shine: 12 },
     wood: { spec: 0x1e1c18, shine: 10 },
     sand: { spec: 0x141414, shine: 4 },
+    sunsoil: { spec: 0x10100b, shine: 3 },
     dirt: { spec: 0x121212, shine: 3 },
     grass: { spec: 0x101410, shine: 3 },
     jungle: { spec: 0x101410, shine: 3 },
@@ -3717,7 +3731,7 @@ export class Level {
             ? 3.2
             : kind === "plank"
               ? 3.4
-              : kind === "sand"
+              : kind === "sand" || kind === "sunsoil"
                 ? 7.5
                 : kind === "dirt"
                   ? 7
@@ -3859,6 +3873,20 @@ export class Level {
       this.placeComboOrb(); // combo-run orb, the other side of the racing line
     }
     this.bakeDecor(); // any batched decor the builder didn't flush itself
+    this.jungleAssets?.flush();
+    if (this.jungleAtmosphere) {
+      this.keepPlayFog = true;
+      Object.assign(this.theme, { fog: 0x537d70, fogNear: 38, fogFar: 150,
+        hemiSky: 0xaed8c2, hemiGround: 0x634a2e, hemiI: 1.04,
+        sunColor: 0xffdea0, sunI: 1.65 });
+      for (const mesh of this.groundMeshes) {
+        for (const material of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
+          if (material.userData.jungleDapple) continue;
+          material.userData.jungleDapple = true;
+          addJungleDapple(material, this.jungleTime);
+        }
+      }
+    }
     if (this.noFogLevel) this.stripFog();
     this.buildTorchLights(); // every torch is placed by now — the pool is sized once
     this.clearPlayFog(); // ...and the course you run on comes back out of it
@@ -4381,8 +4409,10 @@ export class Level {
         tex: tex === "checker" ? undefined : tex,
       };
     };
-    const edgeInfo = (m: THREE.Mesh): { edgeGrinding?: boolean } =>
-      m.userData.edgeGrinding === false ? { edgeGrinding: false } : {};
+    const edgeInfo = (m: THREE.Mesh): { edgeGrinding?: boolean; invisible?: boolean } => ({
+      ...(m.userData.edgeGrinding === false ? { edgeGrinding: false } : {}),
+      ...(m.userData.jungleSupport ? { invisible: true, edgeGrinding: true } : {}),
+    });
     const hpWalls = new Set(this.halfpipes.flatMap((hp) => hp.walls));
     const crumbleMeshes = new Set(this.crumbles.map((c) => c.mesh));
     // The warp pad's masonry stands in groundMeshes so you can ride onto it,
@@ -5015,6 +5045,7 @@ export class Level {
       ...(JSON.stringify(this.medalTimes) !== JSON.stringify(defaultMedalTimes(this.relicTime)) ? { medalTimes: { ...this.medalTimes } } : {}),
       // only when it isn't the default, so the saved JSON stays quiet
       sky: this.skyPreset === DEFAULT_SKY ? undefined : this.skyPreset,
+      jungleAtmosphere: this.jungleAtmosphere || undefined,
       components: C,
       groups,
     };
@@ -5099,6 +5130,8 @@ export class Level {
 
   private buildCustom(data: CustomLevelData): void {
     this.builtFromData = data; // captureData: a data-built level IS its own capture
+    this.jungleAtmosphere = data.jungleAtmosphere === true;
+    if (this.jungleAtmosphere) this.bermTint = 0x987245;
     this.skyPreset = asSkyPreset(data.sky); // unknown/absent -> sunset
     this.hudMode = data.hudMode ?? "standard";
     this.killY = data.killY;
@@ -5137,6 +5170,10 @@ export class Level {
       for (let c = before; c < this.root.children.length; c++) {
         this.root.children[c].traverse((o) => (o.userData.editorIdx = idx));
         this.root.children[c].userData.editorIdx = idx;
+        if (data.components[idx].invisible && data.components[idx].t === "platform") {
+          this.root.children[c].visible = false;
+          this.root.children[c].userData.editorGhost = true;
+        }
       }
     };
     const geomPass = new Set([
@@ -6062,6 +6099,8 @@ export class Level {
   }
 
   dispose(preserveResourcesFrom?: Level): void {
+    this.jungleAssets?.dispose();
+    this.jungleAssets = null;
     this.campaignWorldMap?.dispose();
     this.campaignWorldMap = null;
     this.tropicalPlants?.dispose();
@@ -6841,6 +6880,8 @@ export class Level {
 
   update(dt: number): void {
     this.tropicalPlants?.update(dt);
+    this.jungleAssets?.update(dt);
+    this.jungleTime.value += Math.max(0, Math.min(dt, 0.1));
     this.discardedBoards.update(dt, this);
     this.updateCampaignMapPresentation(dt);
     this.updateCampaignPortalAnimation();
@@ -10272,10 +10313,12 @@ export class Level {
   }
 
   private buildJungle(): void {
+    this.jungleAtmosphere = true;
+    this.keepPlayFog = true;
     this.wallTint = 0xa79f7e; // ruin masonry, sandstone rather than slate
     this.blockTint = 0xb3ab89; // temple courses
     this.curbTint = 0xd8b45c; // painted lips
-    this.bermTint = 0x3d7a2c; // mossy path shoulders
+    this.bermTint = 0x987245; // warm earth beneath the large leaves
     this.batchDecor = true; // hundreds of plants, baked one stretch at a time
     // Full daylight. Under the sunset dome the corridor's greens fought a pink
     // horizon and the canopy read as silhouette; the day painting puts the
@@ -10302,8 +10345,8 @@ export class Level {
       sunI: 1.5,
     };
 
-    const matA = new THREE.MeshLambertMaterial({ color: 0x4f9a42 });
-    const matB = new THREE.MeshLambertMaterial({ color: 0x5cab4c });
+    const matA = new THREE.MeshLambertMaterial({ color: 0xfff0cf });
+    const matB = new THREE.MeshLambertMaterial({ color: 0xf4e8c7 });
     const matStone = new THREE.MeshLambertMaterial({ color: 0xaea684 });
     const matRamp = new THREE.MeshLambertMaterial({ color: 0x9e9678 });
     const matFinish = new THREE.MeshLambertMaterial({ color: 0xa9b072 });
@@ -10346,13 +10389,6 @@ export class Level {
         straight(z) +
       dip(z);
     const spine: Spine = (z) => ({ dx: gx(z), dy: gy(z) });
-    // deterministic jitter: the jungle must plant itself the same way every
-    // load, or a captured copy would not match what you were just looking at
-    const rnd = (i: number): number => {
-      const s = Math.sin(i * 12.9898 + 4.1414) * 43758.5453;
-      return s - Math.floor(s);
-    };
-
     // ---- THE EARTH BANK ----------------------------------------------------
     // Solid ground either side of the path and under it, so a gap reads as a
     // cut THROUGH the jungle instead of a hole in the sky, and so the wall of
@@ -10421,317 +10457,12 @@ export class Level {
       }
     };
 
-    // ---- THE FAR TREELINE --------------------------------------------------
-    // Past the last rank of trunks the jungle used to stop, and from a low
-    // camera you could see straight out of the world at knee height — 17 of
-    // 108 sampled sightlines did. What closes it is not more trees: it is a
-    // band of deep-green massing standing behind them, which under this
-    // level's green haze reads as jungle going on forever and costs twelve
-    // triangles a chunk where another three hundred trees would have cost
-    // sixty thousand.
-    //
-    // The TOP EDGE is the whole trick. A band of even height is a wall; this
-    // one steps every chunk and overlaps its neighbours, so what you see over
-    // the canopy is a ragged treeline against the sky. Two ranks, the further
-    // one taller and darker, because one flat silhouette has no depth in it.
-    const treeline = (
-      zNear: number,
-      zFar: number,
-      base = 0,
-      inset = 27,
-    ): void => {
-      const depth = Math.abs(zNear - zFar);
-      const n = Math.max(2, Math.round(depth / 8));
-      const d = depth / n;
-      for (let i = 0; i < n; i++) {
-        const zm = zNear - d * (i + 0.5);
-        const cy = base + gy(zm);
-        for (const side of [-1, 1]) {
-          const k = (i * 2 + (side > 0 ? 1 : 0)) * 13;
-          // near rank: broken, mid green, tops between 15 and 23
-          const h1 = 15 + rnd(k) * 8;
-          this.decorBlock(
-            gx(zm) + side * (inset + rnd(k + 3) * 3),
-            cy + h1 / 2 - 2,
-            zm,
-            9 + rnd(k + 7) * 4,
-            h1,
-            d * 1.25,
-            0x2f6b2c,
-            "jungle",
-          );
-          // far rank: taller, darker, set back — the depth cue that stops the
-          // near one reading as a painted flat
-          const h2 = 22 + rnd(k + 11) * 10;
-          this.decorBlock(
-            gx(zm) + side * (inset + 11 + rnd(k + 17) * 4),
-            cy + h2 / 2 - 2,
-            zm + (rnd(k + 23) - 0.5) * d,
-            12 + rnd(k + 29) * 6,
-            h2,
-            d * 1.4,
-            0x1d4a26,
-            "jungle",
-          );
-        }
-      }
-    };
-
-    // ---- THE COLONNADE -----------------------------------------------------
-    // An avenue of masonry the forest has grown up through, standing just
-    // outside the undergrowth on both flanks. The point is RHYTHM: scattered
-    // stones read as debris, but a repeating beat reads as something that was
-    // BUILT here and then lost, which is the story the level is telling. So
-    // the uprights land on a fixed interval, every third pair squares off
-    // directly opposite to make a gateway, and the beat is dressed with
-    // fallen pieces at the feet so it never looks like fenceposts.
-    const UPRIGHT = [
-      "statue_column",
-      "statue_columnDamaged",
-      "pillar-square",
-      "pillar-obelisk",
-      "ruins#Column_Round_Short",
-      "statue_obelisk",
-    ].map((id) => propVariant("slab", id));
-    // the plants with mass in them, for anything that has to hang over the path
-    const ARCHING = [
-      "plant_bushDetailed",
-      "plant_bushLargeTriangle",
-      "plant_bushLarge",
-      "grass_leafsLarge",
-      "bigleaf",
-    ].map((id) => propVariant("plants", id));
-    const FALLEN = [
-      "debris",
-      "ruins#Bricks",
-      "ruins#Floor_Diamond",
-      "cobble",
-      "platform_stone",
-      "path_stoneCircle",
-    ].map((id) => propVariant("slab", id));
-    const colonnade = (
-      zNear: number,
-      zFar: number,
-      base = 0,
-      inset = 12.5,
-      step = 16,
-    ): void => {
-      const n = Math.max(1, Math.round(Math.abs(zNear - zFar) / step));
-      for (let i = 0; i < n; i++) {
-        const z = zNear - (Math.abs(zNear - zFar) * (i + 0.5)) / n;
-        const cy = base + gy(z) + 0.2;
-        const paired = i % 3 === 0; // every third beat is a gateway
-        for (const side of [-1, 1]) {
-          const k = i * 197 + (side > 0 ? 61 : 0);
-          if (!paired && (i + (side > 0 ? 1 : 0)) % 2 === 0) continue;
-          const off = inset + rnd(k) * 2.2;
-          this.propAt(
-            "slab",
-            gx(z) + side * off,
-            cy,
-            z + (rnd(k + 5) - 0.5) * 3,
-            k,
-            0.85 + rnd(k + 9) * 0.5,
-            UPRIGHT,
-            side * (rnd(k + 13) * 7 - 2), // most lean out, a few lean in
-          );
-          // something down at its foot, so the upright has a story
-          if (rnd(k + 17) > 0.35)
-            this.propAt(
-              "slab",
-              gx(z) + side * (off - 1.6 - rnd(k + 21) * 2.4),
-              cy - 0.15,
-              z + (rnd(k + 25) - 0.5) * 5,
-              k + 3,
-              0.8 + rnd(k + 29) * 0.6,
-              FALLEN,
-            );
-        }
-      }
-    };
-
-    // ---- THE WALL OF JUNGLE ------------------------------------------------
-    // Undergrowth crowding the berm line, canopy standing behind it on the
-    // bank, vines dropping through. Planted along the spine, so the greenery
-    // bends with the path; '?lite' drops all of it (each helper self-skips).
-    let slot = 0;
-    const thicket = (
-      zNear: number,
-      zFar: number,
-      base = 0,
-      inset = 6.3, // where the undergrowth starts, just outside the berm
-      ruins = false, // the temple stretch: masonry among the trees
-    ): void => {
-      const depth = Math.abs(zNear - zFar);
-      const n = Math.max(2, Math.round(depth / 4.2));
-      for (let i = 0; i < n; i++) {
-        const z = zNear - (depth * (i + 0.5)) / n;
-        const cx = gx(z);
-        const y = base + gy(z) + 0.35;
-        for (const side of [-1, 1]) {
-          const k = slot++;
-          const a = rnd(k);
-          const b = rnd(k + 101);
-          const c = rnd(k + 211);
-          const d = rnd(k + 331);
-          const jz = z + c * 3.4 - 1.7;
-          // ROW 1 — undergrowth crowding the kerb, one of three characters
-          if (a < 0.44)
-            this.broadleaf(cx + side * (inset + b * 1.6), y, jz, 1 + b * 0.9);
-          else if (a < 0.74)
-            this.fern(cx + side * (inset + b * 1.4), y, jz, 1.2 + b * 1);
-          else
-            this.toadstools(
-              cx + side * (inset + 0.3 + b * 1.5),
-              y,
-              jz,
-              0.7 + b * 0.6,
-            );
-          // ...and a second plant behind it, so the floor is never bare dirt
-          if (d < 0.62)
-            this.fern(cx + side * (inset + 1.9 + d * 2.6), y, z + d * 4 - 2, 0.9 + d);
-          else if (d < 0.86)
-            this.broadleaf(cx + side * (inset + 2.2 + c * 2.4), y, z - d * 3, 1.1 + c * 0.8);
-          // ROW 2 — the canopy that closes the corridor overhead.
-          // ROW 3 — a taller, deeper rank: without it the greenery reads as a
-          // painted fringe with sky behind it instead of as a jungle.
-          //
-          // Both ranks used to be the hand-built jungleTree and nothing else,
-          // which is four hundred and forty-one copies of ONE silhouette
-          // standing in a row — and no amount of scale jitter hides that. They
-          // now come out of the library nine times in twelve, so the canopy is
-          // palms and figs and flat-tops and slender trunks, and the original
-          // tree is one voice in it rather than the whole choir.
-          const libTree = (
-            ox: number,
-            oy: number,
-            oz: number,
-            h: number,
-            slot2: number,
-          ): void => {
-            if (rnd(k + slot2) < 0.25) {
-              this.jungleTree(cx + side * ox, y + oy, z + oz, h, side * (0.03 + a * 0.08));
-            } else {
-              this.propAt(
-                "tree",
-                cx + side * ox,
-                y + oy,
-                z + oz,
-                k * 977 + slot2,
-                h / 11, // the family stands ~11u tall at scale 1
-                undefined,
-                side * (1.5 + rnd(k + slot2 + 7) * 4), // canopies lean off the bank
-              );
-            }
-          };
-          if (b < 0.66) libTree(inset + 3.2 + c * 6, 0, a * 4 - 2, 8 + c * 5, 401);
-          if (a > 0.3) libTree(inset + 9.4 + b * 8, -0.35, c * 6 - 3, 11 + a * 7, 409);
-          if (c > 0.62)
-            this.vines(
-              cx + side * (inset + 1.1 + a * 2),
-              y + 7.4 + b * 2.4,
-              z + b * 3 - 1.5,
-              3 + a * 3.4,
-              3,
-            );
-          if (b > 0.8)
-            this.rock(cx + side * (inset + a * 1.8), y - 0.25, jz, 1 + a * 1.1);
-          if (a > 0.86) this.flowers(cx + side * (inset + c * 1.2), y, jz);
-          // ---- THE LIBRARY LAYER ----------------------------------------
-          // The same stretch again, drawn from the external kit. A hand-built
-          // fern is always the same fern; these roll a model, a colour, a
-          // size, a spin and a lean out of where they stand, so the second
-          // pass never repeats the first — that is the whole point of it.
-          if (d > 0.28)
-            this.propAt(
-              "plants",
-              cx + side * (inset + 0.4 + b * 3.4),
-              y,
-              jz + 0.9,
-              k * 977 + 11,
-              0.85 + c * 0.6,
-            );
-          // FOREGROUND OVERHANG. A big frond up on the bank, leaning IN over
-          // the path. This is what frames the corridor top-left and top-right
-          // the way the reference does — without it the greenery is a wall you
-          // run between rather than a canopy you run under, however dense it
-          // gets. Leans toward -x on the right flank and +x on the left, so
-          // both sides reach across.
-          // Only the BUSHY models: a couple of these plants are flat fans, and
-          // a flat fan tipped forty degrees is a signboard, not a frond.
-          if (c > 0.5)
-            this.propAt(
-              "plants",
-              cx + side * (inset + 0.9 + a * 1.9),
-              y + 3.0 + b * 2.2,
-              jz - 1.1,
-              k * 977 + 131,
-              0.95 + a * 0.45,
-              ARCHING,
-              side * (15 + b * 15),
-            );
-          if (a > 0.52)
-            this.propAt(
-              "tree",
-              cx + side * (inset + 6.5 + c * 9),
-              y - 0.3,
-              z + b * 5 - 2.5,
-              k * 977 + 23,
-              0.85 + b * 0.45,
-            );
-          // Boulders and fallen trunks were the two families barely getting
-          // used — fifty-four and thirty-two across six hundred metres of
-          // course, which is not a jungle floor, it is a garnish. A fallen
-          // trunk in particular is one of the shapes this level was asked for.
-          if (c > 0.68)
-            this.propAt(
-              "boulder",
-              cx + side * (inset + 2.6 + a * 3.2),
-              y - 0.25,
-              z - c * 3,
-              k * 977 + 37,
-              0.8 + b * 0.5,
-            );
-          if (b > 0.7)
-            this.propAt(
-              "rocks",
-              cx + side * (inset + 1.2 + c * 2.8),
-              y - 0.1,
-              jz - 1.3,
-              k * 977 + 53,
-            );
-          if (a > 0.66)
-            this.propAt(
-              "trunk",
-              cx + side * (inset + 3 + b * 2.6),
-              y - 0.1,
-              z + c * 4 - 2,
-              k * 977 + 71,
-              0.9 + a * 0.5,
-            );
-          // ...and where the temple stands, its masonry lying about in the
-          // undergrowth: columns, stelae, broken wall, rubble
-          if (ruins && d > 0.42)
-            this.propAt(
-              "slab",
-              cx + side * (inset + 1.4 + a * 6),
-              y - 0.15,
-              z + d * 5 - 2.5,
-              k * 977 + 97,
-              0.75 + c * 0.55,
-            );
-        }
-      }
-      // one mesh per shape for THIS stretch, so the jungle still frustum-culls
-      this.bakeDecor();
-    };
-
     // ---- GROUND ------------------------------------------------------------
     // A. the clearing you wake up in — wide, soft, nothing to fall off
     this.jungle("clearing", 14, -34, 0, 14, matB, {
       amp: 0.3,
       spine,
-      tex: "grass",
+      tex: "sunsoil",
     });
     bank(14, -34);
     this.spawnPos.set(gx(6), gy(6) + 0.2, 6);
@@ -10742,11 +10473,13 @@ export class Level {
     this.jungle("corridor A", -39.5, -104, 0, 12, matA, {
       amp: 0.45,
       spine,
+      tex: "sunsoil",
     });
     bank(-39.5, -104);
     this.jungle("corridor B", -110, -176, 0, 12, matB, {
       amp: 0.45,
       spine,
+      tex: "sunsoil",
     });
     bank(-110, -176);
 
@@ -10757,6 +10490,7 @@ export class Level {
     this.jungle("corridor C", -236, -300, 0, 12, matA, {
       amp: 0.45,
       spine,
+      tex: "sunsoil",
     });
     bank(-236, -300);
 
@@ -10783,6 +10517,7 @@ export class Level {
         w: 1.2,
         rise: 16,
         collisionHeight: 16,
+        invisible: true,
         color: "#a79f7e",
         tex: "stone",
         nm: `${side < 0 ? "left" : "right"} ruin wall`,
@@ -10791,14 +10526,15 @@ export class Level {
     // through it, which is why the climb exists. Planting up there is also the
     // only way the canopy clears a 16-tall parapet; at ground level you look
     // off the terrace into blank sky.
-    bank(-300, -486, 5, 9.6, 0); // no under-mass: the temple floor is solid
+    bank(-300, -486, 16, 9.6, 0); // no under-mass: the temple floor is solid
 
     // E. back into the jungle, two more cuts, then the landing
-    this.jungle("corridor D", -492.5, -566, 0, 12, matB, { amp: 0.45, spine });
+    this.jungle("corridor D", -492.5, -566, 0, 12, matB, { amp: 0.45, spine, tex: "sunsoil" });
     bank(-492.5, -566);
     this.jungle("corridor E", -572, -676, 0, 12, matA, {
       amp: 0.45,
       spine,
+      tex: "sunsoil",
     });
     bank(-572, -676);
     this.slab("finish landing", -676, -718, 0, 14, matFinish, true, 0, "stone");
@@ -10813,6 +10549,7 @@ export class Level {
         w: 1.2,
         rise: 6,
         collisionHeight: 6,
+        invisible: true,
         color: "#a79f7e",
         tex: "stone",
         nm: `${side < 0 ? "left" : "right"} finish wall`,
@@ -10842,18 +10579,29 @@ export class Level {
       const base = -12.5;
       const hN = lip0 - 0.5 - base;
       const hF = lip1 - 0.5 - base;
-      this.wall(gx(z0), z0 + 0.6, 15, 1.2, base, hN, hN + 0.45);
-      this.wall(gx(z1), z1 - 0.6, 15, 1.2, base, hF, hF + 0.45);
+      this.wall(gx(z0), z0 + 0.6, 15, 1.2, base, hN, hN + 0.45, -1);
+      this.wall(gx(z1), z1 - 0.6, 15, 1.2, base, hF, hF + 0.45, 1);
       const zm = (z0 + z1) / 2;
       const d = Math.abs(z0 - z1);
       const hS = Math.min(hN, hF);
       this.wall(gx(zm) - sideX - 0.6, zm, 1.2, d, base, hS, hS + 0.45);
       this.wall(gx(zm) + sideX + 0.6, zm, 1.2, d, base, hS, hS + 0.45);
     };
+    pitWalls(-34, -39.5, 6.1);
     pitWalls(-104, -110, 5.2); // hop 1
     pitWalls(-176, -236, 5.1); // THE RAVINE: 60 units of pit with real walls
     pitWalls(-486, -492.5, 5.2, 0.4); // below the temple descent (ramp ends at y 0.4)
     pitWalls(-566, -572, 5.2); // hop 2 on the run home
+
+    for (const [near, far] of [[-34, -39.5], [-104, -110], [-176, -236], [-486, -492.5], [-566, -572]]) {
+      const count = Math.max(1, Math.ceil((near - far) / 5));
+      for (let i = 0; i < count; i++) {
+        const z = near - (i + 0.5) * (near - far) / count;
+        for (const side of [-1, 1]) this.jungleAsset({ t: "decor", dkind: "thornroots",
+          p: [gx(z) + side * 2.25, -10.4, z], s: [5, 3, (near - far) / count + 0.25],
+          yaw: (i % 2) * 180, solid: true, nm: "Thorn bed inside death pit" });
+      }
+    }
 
     // ---- THE FALLEN TRUNK --------------------------------------------------
     // The ravine crossing. The trunk IS the rail: the grind line is sampled
@@ -10867,26 +10615,22 @@ export class Level {
         const z = THREE.MathUtils.lerp(-172, -240, i / N);
         pts.push(new THREE.Vector3(gx(z), gy(z) + 0.62, z));
       }
-      const barkMat = this.baseMat("fallenLog", 0x7a5533, "wood", 1, 6);
-      const up = new THREE.Vector3(0, 1, 0);
       for (let i = 0; i < N; i++) {
-        const a = pts[i];
-        const b = pts[i + 1];
-        const seg = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.62, 0.62, a.distanceTo(b) + 0.12, 8),
-          barkMat,
-        );
-        seg.position.copy(a).lerp(b, 0.5).setY(seg.position.y - 0.62);
-        seg.quaternion.setFromUnitVectors(
-          up,
-          b.clone().sub(a).normalize(),
-        );
-        this.root.add(seg);
+        const a = pts[i], b = pts[i + 1];
+        const delta = b.clone().sub(a);
+        const horizontal = Math.hypot(delta.x, delta.z);
+        this.jungleAsset({ t: "decor", dkind: "carvedlog", solid: false,
+          p: [(a.x + b.x) / 2, (a.y + b.y) / 2 - 1.24, (a.z + b.z) / 2],
+          s: [a.distanceTo(b) + 0.18, 1.24, 1.4],
+          yaw: THREE.MathUtils.radToDeg(Math.atan2(-delta.z, delta.x)),
+          amp: THREE.MathUtils.radToDeg(Math.atan2(delta.y, horizontal)),
+          nm: "Ravine trunk segment",
+        });
       }
       this.rails.push(new Rail(pts, false)); // the trunk is the visual
       // the stump it fell from, and the root plate at the far side
-      this.jungleTree(gx(-168) - 7.4, 0.35, -168, 5.2, 0.06);
-      this.rock(gx(-244) + 6.6, 0.1, -244, 2.1);
+      this.jungleAsset({t:"decor",dkind:"junglepalmtree",p:[gx(-168)-9,gy(-168),-168],s:[13,16,13]});
+
     }
 
     // a grind line down the temple descent, for anyone who would rather ride
@@ -10898,82 +10642,8 @@ export class Level {
     this.rails.push(rampRail);
     this.root.add(rampRail.object);
 
-    // ---- DRESSING THE RUIN -------------------------------------------------
-    // Idols frame the temple mouth (they are solid, so they narrow the way in),
-    // mossy masonry stacks against the walls, vines pour off the parapet.
-    this.idol(-6.1, 0, -306, 1.5, 0.22);
-    this.idol(6.1, 0, -306, 1.5, -0.22);
-    this.idol(-5.4, 11.5, -436, 1.3, 0.5);
-    this.idol(5.4, 11.5, -436, 1.3, -0.5);
-    for (let i = 0; i < 9; i++) {
-      const z = -304 - i * 20;
-      const h = 1.4 + rnd(i * 7) * 2.6;
-      this.ruinBlock(-7.4, 0, z, 2.4, h, 3.4, rnd(i) * 0.2 - 0.1);
-      this.ruinBlock(7.4, 0, z - 9, 2.4, 1.2 + rnd(i * 3) * 2.4, 3.4, 0.08);
-      this.vines(-8.2, 15.4, z - 4, 5 + rnd(i * 11) * 4, 3);
-      this.vines(8.2, 15.4, z - 13, 5 + rnd(i * 13) * 4, 3);
-    }
-    // the jungle taking the ruin back: growth out of every wall base, moss and
-    // creepers down the faces, caps in the damp corners
-    for (let i = 0; i < 14; i++) {
-      const z = -302 - i * 13;
-      const e = rnd(i * 5 + 3);
-      const f = rnd(i * 9 + 17);
-      const onTerrace = z < -386 && z > -444;
-      const y = onTerrace ? 11.5 : z < -444 ? 11.5 - ((-444 - z) / 42) * 11.1 : 0;
-      this.fern(-7.2 + e * 0.9, y, z, 1.1 + e * 0.8);
-      this.fern(7.2 - f * 0.9, y, z - 6, 1 + f * 0.9);
-      if (e > 0.45) this.broadleaf(-6.9, y, z - 3, 1.1 + f * 0.7);
-      if (f > 0.5) this.broadleaf(6.9, y, z - 9, 1 + e * 0.8);
-      if (e > 0.68) this.toadstools(-6.6, y, z - 10, 0.75 + f * 0.5);
-      if (f > 0.72) this.toadstools(6.6, y, z - 2, 0.7 + e * 0.5);
-      this.vines(-7.9, y + 9.5 + (onTerrace ? 3 : 0), z - 5, 3.5 + e * 4, 3);
-      this.vines(7.9, y + 9.5 + (onTerrace ? 3 : 0), z - 11, 3.5 + f * 4, 3);
-    }
-
-    // toppled courses lying on the temple floor and the terrace
-    this.ruinBlock(-4.6, 0, -318, 3.2, 0.9, 2.2, 0.34);
-    this.ruinBlock(4.9, 0, -368, 2.6, 0.7, 2.6, -0.22);
-    this.ruinBlock(-5.8, 11.5, -400, 3.4, 1.1, 2.4, 0.16);
-    this.ruinBlock(5.6, 11.5, -418, 2.8, 1.6, 2.8, -0.3);
-    this.toadstools(-6.4, 11.5, -408, 1.1);
-    this.toadstools(6.2, 0, -344, 0.95);
-    this.broadleaf(-6.6, 11.5, -428, 1.4);
-    this.broadleaf(6.7, 11.5, -394, 1.2);
-    this.fern(-6.8, 0, -382, 1.3);
-    this.fern(6.5, 0, -310, 1.2);
-
-    // ---- PLANTING ----------------------------------------------------------
-    // Four depths, every stretch, and they are four different jobs. UNDERGROWTH
-    // and canopy crowd the kerb; the COLONNADE stands behind that and gives the
-    // corridor its architecture; the TREELINE closes every sightline that gets
-    // past both. Read outward from the path: leaves, trunks, stone, forest.
-    const stretches: [number, number, number, number, boolean][] = [
-      // zNear, zFar, base, inset, ruins lying in the undergrowth
-      [14, -34, 0, 6.3, false],
-      [-39.5, -104, 0, 6.3, false],
-      [-110, -176, 0, 6.3, false],
-      // the ravine gets a canopy too — it is a cut, not a void
-      [-176, -236, 0, 6.3, false],
-      // the approach: masonry starts showing up in the undergrowth BEFORE the
-      // temple, because once you are inside the climb its own walls are all you
-      // can see and the ruins on the high ground outside never read
-      [-236, -300, 0, 6.3, true],
-      // on the high ground outside the ruin walls
-      [-300, -486, 5, 10.2, true],
-      [-492.5, -566, 0, 6.3, false],
-      [-572, -676, 0, 6.3, false],
-      [-676, -718, 0, 6.3, false],
-    ];
-    for (const [zn, zf, base, inset, ruins] of stretches) {
-      // the treeline OVERLAPS its neighbours by 9 units. Butt-joined, the seam
-      // between two stretches opened a slot you could see straight through —
-      // and the worst of them was exactly where the temple steps back down to
-      // the run home, because there the two bands are at different heights too
-      treeline(zn + 9, zf - 9, base, inset + 21);
-      colonnade(zn, zf, base, inset + 6.2);
-      thicket(zn, zf, base, inset, ruins); // flushes the batch for the stretch
-    }
+    // Source-owned placements are also ordinary editor components.
+    for (const c of jungleRuinsDressing(gx, gy)) this.decorProp(c);
 
     // ---- FURNITURE ---------------------------------------------------------
     // Every seat below raycasts the terrain through floorY, and a mesh built
@@ -11621,6 +11291,11 @@ export class Level {
       this.walls.push(box);
       this.wallPathByBox.set(box, runtime);
       this.wallPathSegmentByBox.set(box, built.collisionSegments[index]);
+    }
+    if (this.jungleAtmosphere && !this.builtFromData && c.tex === "stone" && c.solid !== false) {
+      const a = built.spine[0], b = built.spine[built.spine.length - 1];
+      this.cladJungleWall((a.x + b.x) / 2, c.p[1], (a.z + b.z) / 2,
+        Math.abs(b.x - a.x) + (c.w ?? 1.2), visualHeight, Math.abs(b.z - a.z) + (c.w ?? 1.2));
     }
     return mesh;
   }
@@ -12664,7 +12339,7 @@ export class Level {
       // one draw call. The draw call was cheap, but the silhouette was still a
       // row of teeth and every box restarted its UVs. Build one true swept
       // prism instead; collision remains the forgiving invisible slab chain.
-      const curveMat = this.baseMat("bermCurve", this.bermTint, "jungle", 1, 1);
+      const curveMat = this.baseMat("bermCurve", this.bermTint, this.jungleAtmosphere ? "sunsoil" : "jungle", 1, 1);
       for (const side of [-1, 1] as const) {
         const pts: THREE.Vector3[] = [];
         const sections: {
@@ -13690,6 +13365,11 @@ export class Level {
 
   // A fallen log across (part of) the path: hop it. Solid, never breaks.
   private log(x0: number, x1: number, y: number, z: number, yawDeg = 0): void {
+    if (this.jungleAtmosphere) {
+      this.jungleAsset({ t: "decor", dkind: "carvedlog", p: [(x0 + x1) / 2, this.floorY((x0 + x1) / 2, z, y), z],
+        s: [Math.abs(x1 - x0), 1.1, 1.1], yaw: yawDeg });
+      return;
+    }
     this.noteDecor("log", (x0 + x1) / 2, y, z, {
       len: Math.abs(x1 - x0),
       yaw: yawDeg || undefined,
@@ -14182,32 +13862,74 @@ export class Level {
    * point of the library that a scatter does not have to choose a model, a
    * colour, a size, a spin and a lean for every single plant.
    */
-  private propAt(
-    family: PropFamily,
-    x: number,
-    y: number,
-    z: number,
-    seed: number,
-    scale = 1,
-    pick?: number[], // choose only from these models, e.g. the columns
-    lean = 0, // extra tilt, for foliage that hangs IN over the path
-  ): void {
-    const roll = propRoll(family, seed);
-    const r = (n: number): number => Math.round(n * 100) / 100;
-    this.prop(family, {
-      t: "decor",
-      dkind: family,
-      p: [r(x), r(y), r(z)],
-      vr: pick ? pick[roll.variant % pick.length] : roll.variant,
-      tn: roll.tint,
-      w: r(roll.w * scale),
-      yaw: Math.round(roll.yaw),
-      amp: Math.round((roll.tilt + lean) * 10) / 10,
-    });
+  get jungleAssetDiagnostics() { return this.jungleAssets?.diagnostics ?? null; }
+  async prepareJungleAssets(): Promise<void> { await this.jungleAssets?.ready(); }
+
+  private jungleAsset(c: CustomComponent): void {
+    if (!isJungleAsset(c.dkind)) return;
+    const { t: _type, p: _position, dkind, ...extra } = c;
+    this.noteDecor(dkind, ...c.p, extra);
+    if (!this.jungleAssets) {
+      this.jungleAssets = new JungleAssetKit(!EDITOR_BUILD, this.liteDecor);
+      this.root.add(this.jungleAssets.root);
+    }
+    const placement = { ...c, dkind, s: c.s ?? (dkind === "carvedlog" && c.len ? [c.len, 1.1, 1.3] as [number, number, number] : undefined) };
+    const holder = this.jungleAssets.add(placement);
+    // Individual editor props belong directly to root so buildTagged can
+    // attach their index before the asynchronous GLB children arrive.
+    if (holder) this.root.add(holder);
+    if (dkind === "carvedlog" && c.solid !== false) {
+      const box = new THREE.Box3(new THREE.Vector3(-0.5, 0, -0.5), new THREE.Vector3(0.5, 1, 0.5));
+      box.applyMatrix4(jungleAssetMatrix(placement));
+      this.walls.push(box);
+    }
+    if (dkind === "thornroots" && c.solid === true) {
+      this.pitBoxes.push(new THREE.Box3(new THREE.Vector3(-0.47, 0, -0.47), new THREE.Vector3(0.47, 1, 0.47))
+        .applyMatrix4(jungleAssetMatrix(placement)));
+    }
+  }
+
+  /** Retain the authored collider; the generated cladding supplies its picture. */
+  private hideJungleSupport(mesh: THREE.Mesh): void {
+    mesh.visible = false;
+    mesh.userData.editorGhost = true;
+    mesh.userData.jungleSupport = true;
+    mesh.userData.edgeGrinding = true;
+  }
+
+  private cladJunglePlatform(mesh: THREE.Mesh): void {
+    this.hideJungleSupport(mesh);
+    const { width, height, depth } = (mesh.geometry as THREE.BoxGeometry).parameters;
+    const nx = Math.max(1, Math.ceil(width / 8)), nz = Math.max(1, Math.ceil(depth / 9));
+    for (let ix = 0; ix < nx; ix++) for (let iz = 0; iz < nz; iz++) {
+      const local = new THREE.Vector3(-width / 2 + (ix + 0.5) * width / nx,
+        -height / 2, -depth / 2 + (iz + 0.5) * depth / nz);
+      local.applyEuler(mesh.rotation).add(mesh.position);
+      const ramp = Math.abs(mesh.rotation.x) > 0.001;
+      this.jungleAsset({ t: "decor", dkind: "templeplatform", p: [local.x, local.y, local.z],
+        s: ramp ? [depth / nz + 0.015, height, width / nx + 0.015] : [width / nx + 0.015, height, depth / nz + 0.015],
+        yaw: ramp ? 90 : 0, amp: ramp ? THREE.MathUtils.radToDeg(mesh.rotation.x) : 0,
+        solid: false, nm: `${mesh.name} cladding`,
+      });
+    }
+  }
+
+  private cladJungleWall(x: number, y: number, z: number, w: number, h: number, d: number, facing = 0): void {
+    const alongZ = d > w, length = Math.max(w, d), thickness = Math.min(w, d);
+    const count = Math.ceil(length / 12), courses = Math.ceil(h / 8);
+    for (let i = 0; i < count; i++) for (let j = 0; j < courses; j++) {
+      const along = -length / 2 + (i + 0.5) * length / count;
+      this.jungleAsset({ t: "decor", dkind: "templewall",
+        p: [x + (alongZ ? -Math.sign(x) * 0.2 : along), y + j * h / courses, z + (alongZ ? along : facing * 0.52)],
+        s: [length / count + 0.05, h / courses + 0.025, thickness],
+        yaw: alongZ ? (x < 0 ? 90 : -90) : facing > 0 ? 180 : 0, solid: false,
+      });
+    }
   }
 
   /** Build one decor component — the other half of noteDecor. */
   private decorProp(c: CustomComponent): void {
+    if (isJungleAsset(c.dkind)) return this.jungleAsset(c);
     const [x, y, z] = c.p;
     const s = c.w ?? 1;
     switch (c.dkind) {
@@ -14909,7 +14631,8 @@ export class Level {
         new THREE.Vector3(cx + width / 2, topY - 0.2, Math.max(z0, z1)),
       ),
     );
-    this.curbs(z0, z1, topY, width, cx);
+    if (this.jungleAtmosphere && !this.builtFromData) this.cladJunglePlatform(mesh);
+    else this.curbs(z0, z1, topY, width, cx);
     if (grindEdges) this.edgeRails(z0, topY, z1, topY, width, cx);
     return mesh;
   }
@@ -14976,6 +14699,7 @@ export class Level {
     mesh.userData.vert = false;
     this.root.add(mesh);
     this.groundMeshes.push(mesh);
+    if (this.jungleAtmosphere && !this.builtFromData) this.cladJunglePlatform(mesh);
   }
 
   // Solid barrier: visual box + collider. Bump = full stop, never breaks.
@@ -14990,6 +14714,7 @@ export class Level {
     baseY: number,
     h = 5,
     visH = h,
+    jungleFacing = 0,
   ): void {
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(w, visH, d),
@@ -15005,6 +14730,10 @@ export class Level {
         new THREE.Vector3(w, h, d),
       ),
     );
+    if (this.jungleAtmosphere && !this.builtFromData) {
+      this.hideJungleSupport(mesh);
+      this.cladJungleWall(cx, baseY, cz, w, visH, d, jungleFacing);
+    }
   }
 
   // Solid raised platform: walkable top, solid sides (jump up onto it).
@@ -15025,6 +14754,7 @@ export class Level {
     mesh.name = "step block";
     this.root.add(mesh);
     this.groundMeshes.push(mesh);
+    if (this.jungleAtmosphere && !this.builtFromData) this.cladJunglePlatform(mesh);
     // Side collider stops a hair below the top so standing on it doesn't shove.
     this.walls.push(
       new THREE.Box3(
@@ -18605,6 +18335,10 @@ export class Level {
   }
 
   private endWall(deckY: number, cx = 0): void {
+    if (this.jungleAtmosphere) {
+      this.cladJungleWall(cx, deckY, this.endWallZ - 1, 14, 4, 1);
+      return;
+    }
     const wall = new THREE.Mesh(
       new THREE.BoxGeometry(14, 4, 1),
       this.baseMat("wall", this.wallTint, "stone", 3, 1),

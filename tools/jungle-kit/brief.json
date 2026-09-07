@@ -1,0 +1,16 @@
+{
+  "startedAt": "2026-09-07T13:27:02.883Z",
+  "budgetCredits": 650,
+  "startingBalance": 676,
+  "generator": "built-in image_gen",
+  "goalStartedAt": "2026-09-07T13:23:28Z",
+  "creditsSpent": 150,
+  "finalBalance": 526,
+  "prompts": [
+    "plant-prompts.json",
+    "stone-prompts.json",
+    "prop-prompts.json",
+    "soil-prompt.json"
+  ],
+  "note": "Plant designs were revised to five broad leaves/fronds with simple colour planes. One earlier broadleaf Meshy draft cost 15 credits and was discarded. Nine selected textured T2 meshes cost 135 credits."
+}

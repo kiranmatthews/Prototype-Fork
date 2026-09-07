@@ -1,0 +1,67 @@
+{
+  "budget": 650,
+  "startingBalance": 676,
+  "reservedCredits": 150,
+  "tasks": {
+    "broadleaf-discarded": {
+      "id": "01a07c0d-4619-75b8-be15-fd0a89f2c756",
+      "credits": 15,
+      "note": "Superseded by user request for simpler plant geometry."
+    },
+    "broadleaf": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 1200,
+      "id": "01a07c12-2e85-76f8-aa24-d7808ecfdfa1"
+    },
+    "palm": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 1800,
+      "id": "01a07c12-3d3d-7475-ab50-2bb0933fd9c4"
+    },
+    "fern": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 1600,
+      "id": "01a07c12-5024-7111-8302-3400e5028293"
+    },
+    "platform": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 2400,
+      "id": "01a07c12-5e75-7407-bc2f-e45884d96cf3"
+    },
+    "wall": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 2400,
+      "id": "01a07c12-6fad-7399-8dc6-cdd0f4b83cd3"
+    },
+    "temple": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 6500,
+      "id": "01a07c12-816c-7382-a8a6-d5ca5c7b7d1f"
+    },
+    "arch": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 4200,
+      "id": "01a07c14-5f22-7116-83a8-1252f637f140"
+    },
+    "log": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 1600,
+      "id": "01a07c14-6ed6-76ba-ac83-9ef84c3f2c61"
+    },
+    "thorns": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 1400,
+      "id": "01a07c14-7de9-7382-b411-3da7039d9dd9"
+    }
+  },
+  "lastBalance": 526
+}

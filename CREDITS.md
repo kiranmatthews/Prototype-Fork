@@ -270,5 +270,10 @@ archived reference uses the same conservative owner-supplied Meshy attribution:
 
 ## Everything else
 
+The Jungle Ruins Sunstone kit in `public/jungle-kit/` was generated with
+[Meshy](https://www.meshy.ai/) from original OpenAI image-generation references
+for this project. Its models, texture budgets, hashes and generation provenance
+are documented in `public/jungle-kit/README.md` and `tools/jungle-kit/`.
+
 The remaining levels, physics, character rig, surface textures, editor and UI
 are original to this project.

@@ -1,0 +1,17 @@
+[
+  {
+    "name": "arch",
+    "prompt": "Use case: stylized-concept. Asset type: single 3D model reference for a polished cartoon tropical jungle platformer. Bold simplified low poly forms, warm golden ochre and teal palette, strong curves and large bevels, restrained hand-painted texture. No photorealism or fine microdetail. Complete isolated prop on plain pale grey backdrop, no scenery, no text, no logo, no base plane. Three-quarter orthographic view with all extremities inside frame and clear margin. A broad ancient jungle stone hanging arch gateway, two stocky teal sandstone pillars support one large curved ochre lintel, huge open space underneath that is 2/3 of the height and width. 12m wide, 9m tall and 1.5m deep. Wide carved sun medallion centered above the arch, simple bold spirals on pillars. Three thick climbing vine ropes loop down from the arch top, with a few large smooth bright green leaves, tips stop high above ground. Moss caps the pillars and arch. Stylized friendly monumental proportions. No wall in the central opening, no stairs, no floor, no door. Very simple shapes with convincing volume and minimal ornamental detail.",
+    "reference": "references/arch.png"
+  },
+  {
+    "name": "log",
+    "prompt": "Use case: stylized-concept. Asset type: single 3D model reference for a polished cartoon tropical jungle platformer. Bold simplified low poly forms, warm golden ochre and teal palette, strong curves and large bevels, restrained hand-painted texture. No photorealism or fine microdetail. Complete isolated prop on plain pale grey backdrop, no scenery, no text, no logo, no base plane. Three-quarter orthographic view with all extremities inside frame and clear margin. A single long straight fallen tropical tree log, laid horizontally from left to right. About 8m long and 1.6m thick. Exaggerated 8-sided rounded warm cinnamon brown bark with only six deep broad lengthwise grooves, no small texture. One cut end shows a simple pale golden wood spiral. Middle top is a smooth shallow flattened worn golden riding surface. Two short snapped branch stubs point to the sides, moss patches cling to lower edges, a few small broad simple green leaves at one end. Big clean chunky game asset. No branches rising above riding surface. No ground or rocks.",
+    "reference": "references/log.png"
+  },
+  {
+    "name": "thorns",
+    "prompt": "Use case: stylized-concept. Asset type: single 3D model reference for a polished cartoon tropical jungle platformer. Bold simplified low poly forms, warm golden ochre and teal palette, strong curves and large bevels, restrained hand-painted texture. No photorealism or fine microdetail. Complete isolated prop on plain pale grey backdrop, no scenery, no text, no logo, no base plane. Three-quarter orthographic view with all extremities inside frame and clear margin. One cluster of menacing stylized jungle thorn roots for a death pit, five thick dark aubergine-purple roots curl and intertwine close to the ground, rising into EIGHT big smooth curved conical thorns with reddish coral tips. Low wide roughly circular cluster, 3m across and 1.2m tall, clear pointed silhouettes. Roots have one broad bevel and two color planes each, no tiny spines, no holes, no fine wrinkles. The center has a dark teal moss patch. No surrounding pit or terrain, just the isolated thorn root cluster. Chunky expressive shapes, polished stylized 3D game prop.",
+    "reference": "references/thorns.png"
+  }
+]

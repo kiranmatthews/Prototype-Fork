@@ -56,6 +56,7 @@ import {
   propSize,
 } from "./props";
 import { TROPICAL_PLANT_KINDS } from "./tropicalPlants";
+import { JUNGLE_ASSETS, JUNGLE_ASSET_KINDS, isJungleAsset, type JungleAssetKind } from "./jungleAssets";
 
 interface Hooks {
   preflight: () => boolean;
@@ -165,6 +166,10 @@ const manyDots = (x: CanvasRenderingContext2D): void => {
   }
 };
 const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
+  ...Object.fromEntries(JUNGLE_ASSET_KINDS.map(kind => [kind, (x: CanvasRenderingContext2D) => {
+    if (kind.startsWith("jungle")) leafSpray(x, "#a1ce45", 3, 14, 3.4);
+    else { x.fillStyle = "#d3a653"; x.fillRect(2, 5, 14, 12); x.fillStyle = "#387b70"; x.fillRect(5, 8, 8, 7); }
+  }])) as Record<JungleAssetKind, Draw>,
   fanpalm: (x) => {
     x.fillStyle="#9b7d52"; x.fillRect(8,8,2,10);
     x.fillStyle="#94c970"; x.beginPath(); x.moveTo(9,11); x.arc(9,6,7,Math.PI,0); x.closePath(); x.fill();
@@ -446,6 +451,8 @@ const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
 // What a freshly dropped prop looks like: the same numbers the hand-coded
 // levels plant with, so a new one matches the ones already standing there.
 const DECOR_DEFAULTS: Record<DecorKind, Partial<CustomComponent>> = {
+  ...Object.fromEntries(JUNGLE_ASSET_KINDS.map(kind => [kind, { s: [...JUNGLE_ASSETS[kind].size], w: 1, yaw: 0,
+    ...(kind === "carvedlog" ? {} : { solid: false }) }])) as Record<JungleAssetKind, Partial<CustomComponent>>,
   fanpalm: {w:1},
   bananatree: {w:1},
   seagrape: {w:1},
@@ -4348,6 +4355,7 @@ export class Editor {
   private defaultSizeFor(c: CustomComponent): [number, number, number] | null {
     if (c.t === "platform") return [8, 1, 8];
     if (c.t === "decor") {
+      if (isJungleAsset(c.dkind)) return [...JUNGLE_ASSETS[c.dkind].size];
       if (c.dkind === "block") return [6, 6, 6];
       if (c.dkind === "ruinblock") return [2.4, 1.6, 2.4];
       return null;
@@ -8257,6 +8265,7 @@ export class Editor {
       // so they simply render nothing for one. Only the closing note has to
       // know, or a library prop would carry two.
       const SCALED: DecorKind[] = [
+        ...JUNGLE_ASSET_KINDS,
         ...TROPICAL_PLANT_KINDS,
         "fern",
         "broadleaf",
@@ -8293,7 +8302,7 @@ export class Editor {
           (v) => (c.amp = v),
           0.02,
         );
-      if ((TROPICAL_PLANT_KINDS as readonly string[]).includes(dk)) {
+      if ((TROPICAL_PLANT_KINDS as readonly string[]).includes(dk) || isJungleAsset(dk)) {
         num("yaw °", () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
         num("lean °", () => c.amp ?? 0,
           (v) => (c.amp = THREE.MathUtils.clamp(v,-40,40)), 2);
@@ -8312,7 +8321,7 @@ export class Editor {
           (v) => (c.len = Math.max(1, v)),
           1,
         );
-      if (dk === "ruinblock" || dk === "block") {
+      if (dk === "ruinblock" || dk === "block" || isJungleAsset(dk)) {
         sizeRow(0, "width");
         sizeRow(1, "height");
         sizeRow(2, "depth");
