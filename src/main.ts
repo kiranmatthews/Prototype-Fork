@@ -1744,6 +1744,12 @@ puffs.setQuality(LITE_RENDER ? "low" : "high");
 // sine-field visualizer discs (src/swirlfield.ts) — separate systems.
 swirls.attach(scene);
 fieldSwirls.attach(scene);
+// The first HUD projection also runs during startup, before campaign adoption.
+let runStartRewards = {
+  crystal: false,
+  boxGem: false,
+  comboGem: false,
+};
 const player = new Player(scene);
 const playerAnimationBinding = RigBinding.fromSculptRuntime(
   player.animationRig.root,
@@ -2195,11 +2201,6 @@ function clearResultsPresentation(): void {
   camera.clearViewOffset();
 }
 let currentRunBonusBoxes = 0;
-let runStartRewards = {
-  crystal: false,
-  boxGem: false,
-  comboGem: false,
-};
 let pendingCompletion:
   | { kind: "normal" | "bonus" }
   | { kind: "time-trial"; time: number }

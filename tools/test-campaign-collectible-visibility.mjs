@@ -275,6 +275,12 @@ assert.match(
 // Inventory means newly carried this run, not the durable map collection.
 // Exercise the real HUD projection without changing pickup/ownership rules.
 const hudProjection = topLevelFunction(mainFile, "currentHudState");
+const baselineDeclaration = mainFile.statements.find(node => ts.isVariableStatement(node)
+  && node.declarationList.declarations.some(declaration => declaration.name.getText(mainFile) === "runStartRewards"));
+const firstHudProjection = mainFile.statements.find(node => ts.isExpressionStatement(node)
+  && node.getText(mainFile).includes("ui.setHUD(currentHudState()"));
+assert.ok(baselineDeclaration && firstHudProjection && baselineDeclaration.pos < firstHudProjection.pos,
+  "inventory baseline must be initialized before the startup HUD reads it");
 assert.match(adoption, /runStartRewards = \{\s*crystal: progress\.crystal,\s*boxGem: progress\.boxGem,\s*comboGem: progress\.comboGem/, "new-run boundary must snapshot the banked map collection");
 const { inventory } = evaluateTypeScript(`
   export function inventory(player, runStartRewards) {
