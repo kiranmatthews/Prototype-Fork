@@ -47,6 +47,7 @@ import { EASY_BONUS_LEVEL, DEFAULT_BONUS_CRATE_COUNT } from "./levels/bonus-easy
 import { TropicalPlantKit, TROPICAL_PLANT_KINDS, TROPICAL_PLANT_LABELS } from "./tropicalPlants";
 import { JungleAssetKit, JUNGLE_ASSET_KINDS, JUNGLE_ASSET_LABELS, isJungleAsset, addJungleDapple, jungleAssetMatrix } from "./jungleAssets";
 import { jungleRuinsDressing } from "./levels/jungle-ruins-art";
+import { createJungleShoulder } from "./jungleGround";
 import {
   CAMPAIGN_LEVELS,
   CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
@@ -3151,6 +3152,7 @@ export class Level {
   private jungleAssets: JungleAssetKit | null = null;
   jungleAtmosphere = false;
   private jungleTime = { value: 0 };
+  private sceneryCaptureGroups: CustomGroup[] = [];
   private meshyCourtyards: THREE.Group[] = [];
   private arrowTex: THREE.CanvasTexture | null = null;
   private tntTexCache = new Map<string, THREE.CanvasTexture>();
@@ -3305,8 +3307,8 @@ export class Level {
     if (kind === "checker") return this.checkerTexture();
     const cached = this.surfTexCache.get(kind);
     if (cached) return cached;
-    if (kind === "sunsoil") {
-      const texture = Level.finishTex(new THREE.TextureLoader().load(import.meta.env.BASE_URL + "jungle-kit/sunsoil.jpg"));
+    if (kind === "sunsoil" || (this.jungleAtmosphere && kind === "dirt")) {
+      const texture = Level.finishTex(new THREE.TextureLoader().load(import.meta.env.BASE_URL + `jungle-kit/${this.jungleAtmosphere ? "dirt" : "sunsoil"}.jpg`));
       this.surfTexCache.set(kind, texture);
       return texture;
     }
@@ -3751,6 +3753,11 @@ export class Level {
     tex.needsUpdate = true;
     m.map = tex;
     m.userData.texKind = kind; // capture: editing a copy of a level reads this back
+    if (this.jungleAtmosphere && (kind === "dirt" || kind === "sunsoil")) {
+      m.userData.jungleDapple = true;
+      m.userData.jungleDirt = true;
+      addJungleDapple(m, this.jungleTime);
+    }
     return m;
   }
 
@@ -3783,6 +3790,11 @@ export class Level {
       m.userData.texKind = kind; // capture reads this back
     }
     this.baseMats.set(key, m);
+    if (this.jungleAtmosphere && (kind === "dirt" || kind === "sunsoil")) {
+      m.userData.jungleDapple = true;
+      m.userData.jungleDirt = true;
+      addJungleDapple(m, this.jungleTime);
+    }
     return m;
   }
 
@@ -3883,6 +3895,7 @@ export class Level {
         for (const material of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
           if (material.userData.jungleDapple) continue;
           material.userData.jungleDapple = true;
+          material.userData.jungleDirt = material.userData.texKind === "dirt" || material.userData.texKind === "sunsoil";
           addJungleDapple(material, this.jungleTime);
         }
       }
@@ -4399,7 +4412,7 @@ export class Level {
     }
     const r2 = (n: number): number => Math.round(n * 100) / 100;
     const C: CustomComponent[] = [];
-    const groups: CustomGroup[] = [];
+    const groups: CustomGroup[] = this.sceneryCaptureGroups.map(group => ({...group}));
     const matInfo = (m: THREE.Mesh): { color?: string; tex?: string } => {
       const mat = m.material as THREE.MeshLambertMaterial;
       const color = mat?.color ? "#" + mat.color.getHexString() : undefined;
@@ -5129,9 +5142,15 @@ export class Level {
   }
 
   private buildCustom(data: CustomLevelData): void {
+    if (data.jungleAtmosphere) for (const c of data.components) {
+      if (c.t === "terrain" && ["grass", "jungle", "sunsoil"].includes(c.tex ?? "")) {
+        c.tex = "dirt";
+        c.color = "#fff0d6";
+      }
+    }
     this.builtFromData = data; // captureData: a data-built level IS its own capture
     this.jungleAtmosphere = data.jungleAtmosphere === true;
-    if (this.jungleAtmosphere) this.bermTint = 0x987245;
+    if (this.jungleAtmosphere) this.bermTint = 0xd9c5a6;
     this.skyPreset = asSkyPreset(data.sky); // unknown/absent -> sunset
     this.hudMode = data.hudMode ?? "standard";
     this.killY = data.killY;
@@ -10318,7 +10337,7 @@ export class Level {
     this.wallTint = 0xa79f7e; // ruin masonry, sandstone rather than slate
     this.blockTint = 0xb3ab89; // temple courses
     this.curbTint = 0xd8b45c; // painted lips
-    this.bermTint = 0x987245; // warm earth beneath the large leaves
+    this.bermTint = 0xd9c5a6; // brown soil map supplies the bank's colour
     this.batchDecor = true; // hundreds of plants, baked one stretch at a time
     // Full daylight. Under the sunset dome the corridor's greens fought a pink
     // horizon and the canopy read as silhouette; the day painting puts the
@@ -10430,7 +10449,7 @@ export class Level {
           rise: BANK_H,
           curve: "spline",
           solid: false,
-          color: "#6b5232",
+          color: "#d9bf9f",
           tex: "dirt",
           nm: `${side < 0 ? "left" : "right"} earth bank ${zNear}..${zFar}`,
         });
@@ -10462,7 +10481,7 @@ export class Level {
     this.jungle("clearing", 14, -34, 0, 14, matB, {
       amp: 0.3,
       spine,
-      tex: "sunsoil",
+      tex: "dirt",
     });
     bank(14, -34);
     this.spawnPos.set(gx(6), gy(6) + 0.2, 6);
@@ -10473,15 +10492,17 @@ export class Level {
     this.jungle("corridor A", -39.5, -104, 0, 12, matA, {
       amp: 0.45,
       spine,
-      tex: "sunsoil",
+      tex: "dirt",
     });
     bank(-39.5, -104);
+    bank(-34, -39.5, 0, 5.1, 0);
     this.jungle("corridor B", -110, -176, 0, 12, matB, {
       amp: 0.45,
       spine,
-      tex: "sunsoil",
+      tex: "dirt",
     });
     bank(-110, -176);
+    bank(-104, -110, 0, 5.1, 0);
 
     // C. THE RAVINE: 60 units of nothing, one fallen trunk laid across it
     // the ravine keeps its SIDES — the walls of the cut are what make it read
@@ -10490,7 +10511,7 @@ export class Level {
     this.jungle("corridor C", -236, -300, 0, 12, matA, {
       amp: 0.45,
       spine,
-      tex: "sunsoil",
+      tex: "dirt",
     });
     bank(-236, -300);
 
@@ -10529,14 +10550,16 @@ export class Level {
     bank(-300, -486, 16, 9.6, 0); // no under-mass: the temple floor is solid
 
     // E. back into the jungle, two more cuts, then the landing
-    this.jungle("corridor D", -492.5, -566, 0, 12, matB, { amp: 0.45, spine, tex: "sunsoil" });
+    this.jungle("corridor D", -492.5, -566, 0, 12, matB, { amp: 0.45, spine, tex: "dirt" });
     bank(-492.5, -566);
+    bank(-486, -492.5, 0, 5.1, 0);
     this.jungle("corridor E", -572, -676, 0, 12, matA, {
       amp: 0.45,
       spine,
-      tex: "sunsoil",
+      tex: "dirt",
     });
     bank(-572, -676);
+    bank(-566, -572, 0, 5.1, 0);
     this.slab("finish landing", -676, -718, 0, 14, matFinish, true, 0, "stone");
     bank(-676, -718);
     // the landing is straight masonry, so it gets masonry sides rather than
@@ -10643,7 +10666,15 @@ export class Level {
     this.root.add(rampRail.object);
 
     // Source-owned placements are also ordinary editor components.
-    for (const c of jungleRuinsDressing(gx, gy)) this.decorProp(c);
+    const jungleArt=jungleRuinsDressing(gx,gy);
+    this.sceneryCaptureGroups=jungleArt.groups;
+    for (const c of jungleArt.components) {
+      if (c.t === "wall" && c.s) {
+        this.buildBendyWall({t:"wallpath",p:[c.p[0],c.p[1],c.p[2]-c.s[2]/2],
+          pts:[[0,0],[0,c.s[2]]],w:c.s[0],rise:c.s[1],collisionHeight:c.s[1],
+          invisible:true,tex:"solid",nm:c.nm,grp:c.grp});
+      } else this.decorProp(c);
+    }
 
     // ---- FURNITURE ---------------------------------------------------------
     // Every seat below raycasts the terrain through floorY, and a mesh built
@@ -12339,7 +12370,7 @@ export class Level {
       // one draw call. The draw call was cheap, but the silhouette was still a
       // row of teeth and every box restarted its UVs. Build one true swept
       // prism instead; collision remains the forgiving invisible slab chain.
-      const curveMat = this.baseMat("bermCurve", this.bermTint, this.jungleAtmosphere ? "sunsoil" : "jungle", 1, 1);
+      const curveMat = this.baseMat("bermCurve", this.bermTint, this.jungleAtmosphere ? "dirt" : "jungle", 1, 1);
       for (const side of [-1, 1] as const) {
         const pts: THREE.Vector3[] = [];
         const sections: {
@@ -12582,7 +12613,9 @@ export class Level {
         geometry.setIndex(indices);
         geometry.computeVertexNormals();
         geometry.computeBoundingSphere();
-        const kerb = new THREE.Mesh(geometry, curveMat);
+        const renderGeometry = this.jungleAtmosphere ? createJungleShoulder(z0,z1,baseY,width,cx,spine,side) : geometry;
+        if (renderGeometry !== geometry) geometry.dispose();
+        const kerb = new THREE.Mesh(renderGeometry, curveMat);
         kerb.name = "continuous berm";
         this.root.add(kerb);
         const lip = new Rail(pts, false); // the grindable lip, bent to match
@@ -13900,31 +13933,18 @@ export class Level {
   private cladJunglePlatform(mesh: THREE.Mesh): void {
     this.hideJungleSupport(mesh);
     const { width, height, depth } = (mesh.geometry as THREE.BoxGeometry).parameters;
-    const nx = Math.max(1, Math.ceil(width / 8)), nz = Math.max(1, Math.ceil(depth / 9));
-    for (let ix = 0; ix < nx; ix++) for (let iz = 0; iz < nz; iz++) {
-      const local = new THREE.Vector3(-width / 2 + (ix + 0.5) * width / nx,
-        -height / 2, -depth / 2 + (iz + 0.5) * depth / nz);
-      local.applyEuler(mesh.rotation).add(mesh.position);
-      const ramp = Math.abs(mesh.rotation.x) > 0.001;
-      this.jungleAsset({ t: "decor", dkind: "templeplatform", p: [local.x, local.y, local.z],
-        s: ramp ? [depth / nz + 0.015, height, width / nx + 0.015] : [width / nx + 0.015, height, depth / nz + 0.015],
-        yaw: ramp ? 90 : 0, amp: ramp ? THREE.MathUtils.radToDeg(mesh.rotation.x) : 0,
-        solid: false, nm: `${mesh.name} cladding`,
-      });
-    }
+    const local = new THREE.Vector3(0,-height/2,0).applyEuler(mesh.rotation).add(mesh.position);
+    const ramp = Math.abs(mesh.rotation.x) > .001;
+    this.jungleAsset({t:"decor",dkind:"templeplatform",p:[local.x,local.y,local.z],
+      s:ramp?[depth,height,width]:[width,height,depth],yaw:ramp?90:0,
+      amp:ramp?THREE.MathUtils.radToDeg(mesh.rotation.x):0,solid:false,nm:mesh.name+" masonry"});
   }
 
-  private cladJungleWall(x: number, y: number, z: number, w: number, h: number, d: number, facing = 0): void {
-    const alongZ = d > w, length = Math.max(w, d), thickness = Math.min(w, d);
-    const count = Math.ceil(length / 12), courses = Math.ceil(h / 8);
-    for (let i = 0; i < count; i++) for (let j = 0; j < courses; j++) {
-      const along = -length / 2 + (i + 0.5) * length / count;
-      this.jungleAsset({ t: "decor", dkind: "templewall",
-        p: [x + (alongZ ? -Math.sign(x) * 0.2 : along), y + j * h / courses, z + (alongZ ? along : facing * 0.52)],
-        s: [length / count + 0.05, h / courses + 0.025, thickness],
-        yaw: alongZ ? (x < 0 ? 90 : -90) : facing > 0 ? 180 : 0, solid: false,
-      });
-    }
+  private cladJungleWall(x:number,y:number,z:number,w:number,h:number,d:number,facing=0):void {
+    const alongZ=d>w,length=Math.max(w,d),thickness=Math.min(w,d);
+    this.jungleAsset({t:"decor",dkind:"templewall",
+      p:[x+(alongZ?-Math.sign(x)*.2:0),y,z+(alongZ?0:facing*.52)],s:[length,h,thickness],
+      yaw:alongZ?(x<0?90:-90):facing>0?180:0,solid:false});
   }
 
   /** Build one decor component — the other half of noteDecor. */

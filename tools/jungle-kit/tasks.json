@@ -1,7 +1,7 @@
 {
   "budget": 650,
   "startingBalance": 676,
-  "reservedCredits": 150,
+  "reservedCredits": 415,
   "tasks": {
     "broadleaf-discarded": {
       "id": "01a07c0d-4619-75b8-be15-fd0a89f2c756",
@@ -30,25 +30,29 @@
       "credits": 15,
       "state": "SUCCEEDED",
       "targetTriangles": 2400,
-      "id": "01a07c12-5e75-7407-bc2f-e45884d96cf3"
+      "id": "01a07c12-5e75-7407-bc2f-e45884d96cf3",
+      "note": "Superseded by the modular stone kit; no longer shipped as a whole mesh."
     },
     "wall": {
       "credits": 15,
       "state": "SUCCEEDED",
       "targetTriangles": 2400,
-      "id": "01a07c12-6fad-7399-8dc6-cdd0f4b83cd3"
+      "id": "01a07c12-6fad-7399-8dc6-cdd0f4b83cd3",
+      "note": "Superseded by the modular stone kit; no longer shipped as a whole mesh."
     },
     "temple": {
       "credits": 15,
       "state": "SUCCEEDED",
       "targetTriangles": 6500,
-      "id": "01a07c12-816c-7382-a8a6-d5ca5c7b7d1f"
+      "id": "01a07c12-816c-7382-a8a6-d5ca5c7b7d1f",
+      "note": "Superseded by the modular stone kit; no longer shipped as a whole mesh."
     },
     "arch": {
       "credits": 15,
       "state": "SUCCEEDED",
       "targetTriangles": 4200,
-      "id": "01a07c14-5f22-7116-83a8-1252f637f140"
+      "id": "01a07c14-5f22-7116-83a8-1252f637f140",
+      "note": "Superseded by the modular stone kit; no longer shipped as a whole mesh."
     },
     "log": {
       "credits": 15,
@@ -61,7 +65,117 @@
       "state": "SUCCEEDED",
       "targetTriangles": 1400,
       "id": "01a07c14-7de9-7382-b411-3da7039d9dd9"
+    },
+    "ashlar": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 600,
+      "id": "01a07c70-3065-77f5-b830-7b3d80f47fb2"
+    },
+    "broken-ashlar": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 850,
+      "id": "01a07c70-3eed-7380-85d3-6f6121920eee"
+    },
+    "paving-slab": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 500,
+      "id": "01a07c70-4e0d-7553-85d1-9e9b1c5b36bb"
+    },
+    "column-base": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 1100,
+      "id": "01a07c73-5634-700c-be7b-54ee0380e8a3"
+    },
+    "column-shaft": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 900,
+      "id": "01a07c73-651e-740d-b6c0-9a5a51e5be7f"
+    },
+    "column-capital": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 1100,
+      "id": "01a07c73-7530-70f1-b837-25a719512b59"
+    },
+    "cornice": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 850,
+      "id": "01a07c79-f816-70e2-8c99-6f8cc9a0a5ca"
+    },
+    "corner-cornice": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 1100,
+      "id": "01a07c7a-07ae-75a0-aec8-4a92b69ed1a3"
+    },
+    "roof-wedge": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 850,
+      "id": "01a07c7a-1657-7099-b04c-58496e5e3ee2"
+    },
+    "carved-block": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 1300,
+      "id": "01a07c7f-f23c-708d-8789-56e92678adec"
+    },
+    "lintel": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 1600,
+      "id": "01a07c80-018e-7500-b4fd-41cae441b691"
+    },
+    "ridge-cap": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 800,
+      "id": "01a07c80-107f-706a-b37a-0c0bc433b166"
+    },
+    "ashlar-clean": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 700,
+      "id": "01a07c84-5912-70b4-904e-9633185d6fae"
+    },
+    "arch-stone": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 700,
+      "id": "01a07c84-67b6-732f-8c99-759cc02f5dae"
+    },
+    "temple-stair": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 1400,
+      "id": "01a07c84-767e-7337-a5f4-4c553f06df58"
+    },
+    "roof-hip": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 1000,
+      "id": "01a07cab-23e1-7460-85e1-017991210cba"
+    },
+    "canopy-tree": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 2200,
+      "id": "01a07cda-7876-7626-a6dc-a32b7959d7e2"
+    },
+    "roof-wedge-texture2": {
+      "credits": 10,
+      "resource": "retexture",
+      "state": "SUCCEEDED",
+      "note": "Fresh UVs and textures for the cleaned modular roof; original panel contained an unpainted UV region.",
+      "id": "01a07d19-d0ba-7607-b4c9-d5e786afffef"
     }
   },
-  "lastBalance": 526
+  "lastBalance": 261,
+  "verifiedAtUtc": "2026-09-07T18:48:41Z"
 }

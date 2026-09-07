@@ -270,10 +270,14 @@ archived reference uses the same conservative owner-supplied Meshy attribution:
 
 ## Everything else
 
-The Jungle Ruins Sunstone kit in `public/jungle-kit/` was generated with
+The Jungle Ruins modular Sunstone kit in `public/jungle-kit/` was generated with
 [Meshy](https://www.meshy.ai/) from original OpenAI image-generation references
-for this project. Its models, texture budgets, hashes and generation provenance
-are documented in `public/jungle-kit/README.md` and `tools/jungle-kit/`.
+for this project. Sixteen masonry modules assemble the temples and gateways;
+six foliage/log/thorn models complete the kit. Its models, texture budgets,
+hashes and generation provenance are documented in `public/jungle-kit/README.md`
+and `tools/jungle-kit/`. The Basis Universal texture transcoder distributed in
+`public/jungle-kit/basis/` is Apache-2.0 licensed; its license and source notice
+are retained in that directory.
 
 The remaining levels, physics, character rig, surface textures, editor and UI
 are original to this project.

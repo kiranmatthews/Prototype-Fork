@@ -1,0 +1,17 @@
+[
+  {
+    "name": "ashlar-clean",
+    "prompt": "Use case: stylized-concept. ONE INDIVIDUAL modular stone piece for constructing a premium stylized tropical ruined temple in a game. Muted warm limestone with sage-grey shadows and pale warm rubbed edges, extremely restrained material detail, broad sculpted bevels. No shiny gold, no microscopic noise. Neutral soft studio illumination. Whole isolated object on pale grey, no base plane, no scenery, no building, no text, no diagram labels, no watermark. Three-quarter orthographic view with generous margin. A completely PLAIN structural masonry block, 2m wide x 1m high x 1m deep. Six broad flat unbroken faces, thick shallow rounded chamfer on all twelve edges, four corners each subtly worn in a different way. The center of every face is intact, smooth and calm: ABSOLUTELY NO holes, craters, cracks, carved lines, symbols or depressions. Gentle broad tonal patches of warm grey stone are the only face detail. A little dark patina only right against two bottom edges. The beautiful edge profile and clear volume should do all the work. Solid professional environment-kit building block.",
+    "reference": "references/modular/ashlar-clean.png"
+  },
+  {
+    "name": "arch-stone",
+    "prompt": "Use case: stylized-concept. ONE INDIVIDUAL modular stone piece for constructing a premium stylized tropical ruined temple in a game. Muted warm limestone with sage-grey shadows and pale warm rubbed edges, extremely restrained material detail, broad sculpted bevels. No shiny gold, no microscopic noise. Neutral soft studio illumination. Whole isolated object on pale grey, no base plane, no scenery, no building, no text, no diagram labels, no watermark. Three-quarter orthographic view with generous margin. One individual VOUSSOIR stone for a broad arch. Front silhouette is a simple symmetrical trapezoid: 1.4m wide at the top, 1.0m wide at the bottom, 1.2m high; depth 1.2m. The side faces slope inward toward the bottom. Flat top, flat bottom, square extruded depth, broad hand-worn bevels. No complete arch and no surrounding stones. One very plain wedge-shaped stone with a tiny chipped corner and calm limestone faces, no carvings. Its wide top will face the outside of an arch when rotated during assembly.",
+    "reference": "references/modular/arch-stone.png"
+  },
+  {
+    "name": "temple-stair",
+    "prompt": "Use case: stylized-concept. ONE INDIVIDUAL modular stone piece for constructing a premium stylized tropical ruined temple in a game. Muted warm limestone with sage-grey shadows and pale warm rubbed edges, extremely restrained material detail, broad sculpted bevels. No shiny gold, no microscopic noise. Neutral soft studio illumination. Whole isolated object on pale grey, no base plane, no scenery, no building, no text, no diagram labels, no watermark. Three-quarter orthographic view with generous margin. One INDIVIDUAL STAIR TREAD block, 3m wide left-right, 1.05m deep and 0.45m thick. A broad perfectly flat top with a gently rounded projecting front nosing, a flat vertical front riser and square ends. One small worn chip at a front corner; no crack across the middle. Quiet plain limestone, one shallow recessed horizontal groove on the front riser and almost no moss. This is ONE step block to repeat into a flight of stairs, not a staircase or multiple steps.",
+    "reference": "references/modular/temple-stair.png"
+  }
+]

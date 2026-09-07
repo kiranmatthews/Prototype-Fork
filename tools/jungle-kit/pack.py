@@ -71,7 +71,7 @@ def pack(name):
         'sourceSha256': hashlib.sha256(raw).hexdigest(), 'sha256': hashlib.sha256(glb).hexdigest()}
 
 if __name__ == '__main__':
-    names = sys.argv[1:] or ['broadleaf','palm','fern','platform','wall','temple','arch','log','thorns']
+    names = sys.argv[1:] or ['broadleaf','palm','fern','log','thorns']
     report = [pack(n) for n in names]
     (OUT/'manifest.json').write_text(json.dumps(report, indent=2)+'\n')
     print(json.dumps(report, indent=2))

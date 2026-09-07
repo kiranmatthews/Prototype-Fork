@@ -2039,13 +2039,26 @@ try {
         const wallPaths = captured.components.filter(
           (component) => component.t === "wallpath",
         );
-        assert.equal(wallPaths.length, 22, "Jungle wallpaths were dropped or duplicated");
+        assert.equal(wallPaths.length, 40, "Jungle wallpaths were dropped or duplicated");
         assert.equal(
           wallPaths.filter((component) => component.solid === false).length,
-          18,
+          26,
           "Jungle earth banks lost visual-only wallpath identity",
         );
-        const structural = wallPaths.filter((component) => component.solid !== false);
+        const piers = wallPaths.filter((component) => component.nm?.endsWith("pier collision"));
+        assert.equal(piers.length, 10, "The two roofed rooms lost their column collisions");
+        assert.deepStrictEqual(
+          piers.map((component) => [component.p, component.pts, component.w,
+            component.rise, component.collisionHeight, component.invisible]),
+          [
+            ...[-8.3, 8.3].flatMap(x => [-310.8, -305.2].map(z =>
+              [[x, 0, Math.round((z - 1.3) * 100) / 100], [[0, 0], [0, 2.6]], 2.6, 7.5, 7.5, true])),
+            ...[-8.3, 8.3].flatMap(x => [-430.3, -423, -415.7].map(z =>
+              [[x, 11.5, Math.round((z - 1.3) * 100) / 100], [[0, 0], [0, 2.6]], 2.6, 7.5, 7.5, true])),
+          ],
+          "Roofed-room column collision footprints drifted",
+        );
+        const structural = wallPaths.filter((component) => component.solid !== false && !piers.includes(component));
         assert.deepStrictEqual(
           structural.map((component) => [
             component.p,

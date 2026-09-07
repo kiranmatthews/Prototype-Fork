@@ -2,6 +2,7 @@
 // fixed-step game loop.
 
 import * as THREE from "three";
+import { configureJungleAssetRenderer } from "./jungleAssets";
 import { afterPresentationPaint, presentationAssets } from "./presentationLoading";
 import { installLocalResetListener } from "./localGameStorage";
 import { Input } from "./input";
@@ -134,6 +135,7 @@ const LITE_RENDER = window.location.search.includes("lite");
 const NO_COAST_POST = window.location.search.includes("nopost");
 const NO_OCEAN_PASSES = window.location.search.includes("nopasses");
 const renderer = new THREE.WebGLRenderer({ antialias: !LITE_RENDER });
+configureJungleAssetRenderer(renderer);
 // A zero-resource host. The actual Gouraud scene/render target exists only
 // while title/loading/Game Over owns the framebuffer.
 const gameFlowVortex = new GameFlowVortexHost();
@@ -1084,6 +1086,10 @@ async function prepareActivePresentationAssets(): Promise<void> {
     animationPreparation,
   ]);
   await presentationAssets.waitUntilSettled();
+  if (level.jungleAtmosphere) {
+    scene.updateMatrixWorld(true);
+    await renderer.compileAsync(scene, camera);
+  }
 }
 
 function updateWaterPresentation(dt: number): void {

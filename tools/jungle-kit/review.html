@@ -1,13 +1,13 @@
 <!doctype html><meta charset="utf-8"><title>Jungle Ruins review</title>
 <style>body{margin:0;background:#17352e;color:#fff;font:14px system-ui}nav{padding:8px;display:flex;gap:8px;flex-wrap:wrap}button{padding:6px 10px;background:#ebc57b;color:#18372d;border:0;border-radius:4px;cursor:pointer}iframe{border:0;width:100%;height:calc(100vh - 94px)}pre{margin:0 8px;font-size:12px}a{color:#ffe2a3}</style>
-<nav id="poses"></nav><pre id="status">Loading game…</pre>
+<nav id="poses"></nav><label><input id="art-protection" type="checkbox"> Protect player during art review</label><pre id="status">Loading game…</pre>
 <iframe id="game" src="/?playtest&level=jungle&frameprobe&renderdiag"></iframe>
 <script type="module">
 const frame=document.querySelector('#game'), bar=document.querySelector('#poses'), status=document.querySelector('#status');
 const get=()=>frame.contentWindow.__game;
 function button(label, fn){const b=document.createElement('button');b.textContent=label;b.onclick=fn;bar.append(b);}
-const names=['Spawn','Pit hop','Ravine log','Temple climb','Temple terrace','Descent','Finish'];
-const poses=[[3.73,1.78,6],[-2,0,-100],[-5,0,-172],[0,0,-318],[0,11.5,-398],[0,4.5,-470],[0,0,-688]];
+const names=['Spawn','Pit hop','Ravine log','Temple climb','Temple terrace','Descent','Finish','Inside hall'];
+const poses=[[3.73,1.78,6],[-2,0,-100],[-5,0,-172],[0,0,-318],[0,11.5,-398],[0,4.5,-470],[0,0,-688],[3.5,11.5,-418]];
 function place(i){const g=get();if(!g)return;const l=g.getLevel();const [x,y,z]=poses[i];
   let px=x,py=y;
   if(i<3){const lane=l.lanePts.reduce((a,b)=>Math.abs(b.z-z)<Math.abs(a.z-z)?b:a);px=lane.x;py=lane.y;}
@@ -24,8 +24,9 @@ button('Grind crossing',()=>{hold('KeyE',6500);hold('ArrowUp',6500);hold('Space'
 button('Fall into pit',()=>{const g=get(),l=g.getLevel();l.clearProjectiles();g.player.pos.set(-2,-8,-107);g.player.vVel=-4;g.player.speed=0;g.player.grounded=false;g.player.snapRenderPose?.();});
 button('Checkpoint',()=>get().player.warpCheckpoint(get().getLevel(),1));
 button('Restart',()=>{frame.src='/?playtest&level=jungle&frameprobe&renderdiag';});
-button('Editor',()=>get().openEditor());
+button('Editor',()=>{const g=get();if(!g.gameFlow.developerChromeVisible)key('KeyM','keydown');g.openEditor();});
 setInterval(()=>{const w=frame.contentDocument,g=get();if(!w||!g)return;const d=JSON.parse(w.querySelector('#render-diagnostics')?.textContent||'{}');
+ if(document.querySelector('#art-protection').checked){g.player.invulnTimer=.6;g.player.invulnSilent=true;}
  const f=JSON.parse(w.querySelector('#frame-probe')?.textContent||'{}');
  status.textContent=JSON.stringify({pos:[f.simX,f.simY,f.simZ],grounded:f.grounded,state:f.state,lives:g.player.lives,wind:d.jungle?.windTime,assets:d.jungle,frameTiming:d.frameTiming,draw:d.sceneDraw,buffer:d.drawingBuffer});
 },250);

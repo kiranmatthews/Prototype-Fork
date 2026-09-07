@@ -1,0 +1,50 @@
+{
+  "revision": "Jungle Ruins modular stone and dirt pass",
+  "validatedAtUtc": "2026-09-07T19:04:43Z",
+  "assetCounts": {
+    "retainedMeshyModels": 5,
+    "newStoneModules": 16,
+    "newCanopyTrees": 1,
+    "pavilionParts": 182
+  },
+  "meshCredits": {
+    "originalPass": 150,
+    "newGenerations": 255,
+    "roofRetexture": 10,
+    "cumulative": 415,
+    "authorizedMaximum": 650,
+    "remainingAccountBalance": 261
+  },
+  "validation": {
+    "productionBuild": "passed after the final 32m stone LOD adjustment",
+    "levelAndAssetChecks": "passed; actual GLB geometry, hashes, textures, LODs, roof/arch coverage, instancing/wind, editor picking and source capture/rebuild",
+    "editorRoundTrip": "passed; original structural walls plus 10 roofed-room piers and 26 visual soil banks",
+    "traversal": "four short gaps landed, 68m ravine grind completed, thorn pit respawned at checkpoint, finish reached",
+    "neutralAssemblyRender": "inspected: continuous roof and separate fitted masonry",
+    "browserReview": "Full-render spawn, path and temple interior inspected before the Mac locked; final live browser/editor verification is pending an unlocked Mac."
+  },
+  "performanceObservations": {
+    "drawingBuffer": [
+      2560,
+      1252
+    ],
+    "spawn": {
+      "samples": 240,
+      "averageMs": 16.67,
+      "approximateFps": 60
+    },
+    "templeInteriorBeforeFinalLodAdjustment": {
+      "samples": 240,
+      "averageMs": 17.92,
+      "p95Ms": 23.1
+    },
+    "finalLod": "Stone transition reduced from 48m to 32m; canopy remains 48m. Final interior frame-time sample pending unlocked browser.",
+    "scope": "One local device; no universal 60fps claim.",
+    "kitEstimatedTextureMiB": 135
+  },
+  "artifact": {
+    "path": "docs/art-reviews/jungle-ruins-modular-temple.png",
+    "sha256": "8a8b46a2101a2c21412d998a7c81d9be3305b2282d5dca729df65dba083df4bd",
+    "description": "Actual runtime pavilion geometry under neutral Blender studio lighting; not a gameplay screenshot."
+  }
+}

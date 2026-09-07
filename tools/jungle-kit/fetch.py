@@ -3,16 +3,16 @@ import json
 from pathlib import Path
 import sys
 import urllib.request
-from generate import cli, ledger, save, WORK
+from generate import cli, ledger, WORK
 
 for name in sys.argv[1:]:
     task = ledger()['tasks'][name]
-    result = cli('image-to-3d', 'wait', task['id'], '--timeout', '600')
+    resource = task.get('resource', 'image-to-3d')
+    result = cli(resource, 'wait', task['id'], '--timeout', '600')
     # The CLI's wait wrapper returns the task under data in some releases.
     if 'model_urls' not in result:
-        result = cli('image-to-3d', 'get', task['id'])
+        result = cli(resource, 'get', task['id'])
     (WORK / (name + '-result.json')).write_text(json.dumps(result, indent=2))
-    data = ledger(); data['tasks'][name]['state'] = result.get('status'); save(data)
     if result.get('status') != 'SUCCEEDED':
         print(name, result.get('status'), flush=True)
         continue

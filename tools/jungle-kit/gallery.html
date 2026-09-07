@@ -1,0 +1,40 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Jungle masonry inspection</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#27332f;color:#f1ebdd;font:14px system-ui}aside{position:fixed;left:14px;top:14px;width:250px;padding:16px;border-radius:10px;background:#20302eee;z-index:2}h1{font-size:18px;margin:0 0 14px}select,button{font:inherit;border:1px solid #7e8e82;border-radius:5px;padding:7px;background:#d9d4c4;color:#25382f}select{width:100%}button{margin:5px 4px 0 0;cursor:pointer}label{display:block;margin:10px 0}pre{white-space:pre-wrap;font-size:12px;color:#ced8ce}canvas{display:block;width:100vw;height:100vh}.help{font-size:12px;color:#b4c9bb;margin-top:12px}
+</style></head><body>
+<aside><h1>Masonry inspection</h1><select id="asset" aria-label="Stone module"></select>
+<div><button id="temple">Temple assembly</button><button id="arch">Arch assembly</button></div><div><button data-view="three">Three-quarter</button><button data-view="front">Front</button><button data-view="back">Back</button><button data-view="side">Side</button><button data-view="top">Top</button></div>
+<label><input type="checkbox" id="low"> Distant geometry</label><label><input type="checkbox" id="maps" checked> Surface maps</label>
+<label><input type="checkbox" id="normal" checked> Normal detail</label><label><input type="checkbox" id="shadows" checked> Cast shadows</label><label><input type="checkbox" id="wire"> Wireframe</label><label><input type="checkbox" id="turn"> Turntable</label>
+<pre id="stats">Loading kit…</pre><div class="help">Drag to orbit. Scroll to inspect bevels. The grid is one metre.</div></aside>
+<script type="module">
+import * as THREE from '/node_modules/three/build/three.module.js';
+import {GLTFLoader} from '/node_modules/three/examples/jsm/loaders/GLTFLoader.js';
+import {KTX2Loader} from '/node_modules/three/examples/jsm/loaders/KTX2Loader.js';
+import {OrbitControls} from '/node_modules/three/examples/jsm/controls/OrbitControls.js';
+import {JungleAssetKit,configureJungleAssetRenderer} from '/src/jungleAssets.ts';
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;document.body.append(renderer.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color('#c9cfca');
+const ktx=new KTX2Loader().setTranscoderPath('/jungle-kit/basis/').setWorkerLimit(2).detectSupport(renderer);configureJungleAssetRenderer(renderer,ktx);
+const camera=new THREE.PerspectiveCamera(40,innerWidth/innerHeight,0.05,100);
+const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.target.set(0,.5,0);
+const sun=new THREE.DirectionalLight(0xffeed6,2.7);sun.position.set(-4,7,5);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-8;sun.shadow.camera.right=8;sun.shadow.camera.top=8;sun.shadow.camera.bottom=-8;sun.shadow.normalBias=.015;scene.add(sun);
+scene.add(new THREE.HemisphereLight(0xd0dee3,0x6b6759,1.25));const fill=new THREE.DirectionalLight(0xc6d9de,.7);fill.position.set(4,3,-4);scene.add(fill);
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(60,60),new THREE.MeshStandardMaterial({color:0xbac2b9,roughness:1}));floor.rotation.x=-Math.PI/2;floor.position.y=-.02;floor.receiveShadow=true;scene.add(floor);
+const grid=new THREE.GridHelper(20,20,0xa1b0a6,0xb5c1b7);grid.position.y=-.01;scene.add(grid);
+const root=new THREE.Group();scene.add(root);
+const select=document.querySelector('#asset'),stats=document.querySelector('#stats');
+const manifest=await fetch('/jungle-kit/modular/manifest.json').then(r=>r.json());
+for(const spec of manifest){const option=document.createElement('option');option.value=spec.file;option.textContent=spec.label;select.append(option);}
+let models=[],current=null,request=0,assembly=null;const resources=new Set();
+function shot(view){if(!current)return;const h=current.size[1],d=Math.max(...current.size);controls.target.set(0,h*.48,0);const target=controls.target;const positions={three:[1.3,.8,1.7],front:[0,.15,2.2],back:[0,.15,-2.2],side:[2.2,.15,0],top:[0,2.2,.001]};const p=positions[view];camera.position.set(target.x+p[0]*d,target.y+p[1]*d,target.z+p[2]*d);camera.lookAt(target);controls.update();}
+function settings(){if(assembly){root.traverse(o=>{if(o.isLOD){o.autoUpdate=false;o.levels[0].object.visible=!document.querySelector('#low').checked;o.levels[1].object.visible=document.querySelector('#low').checked;}if(o.isMesh)o.material.wireframe=document.querySelector('#wire').checked;});return;}const low=document.querySelector('#low').checked;for(const m of models){m.visible=m.name.endsWith(low?'LOD1':'LOD0');m.material.wireframe=document.querySelector('#wire').checked;const maps=m.userData.maps;for(const key of ['map','normalMap','roughnessMap'])m.material[key]=document.querySelector('#maps').checked&&(key!=='normalMap'||document.querySelector('#normal').checked)?maps[key]:null;m.material.needsUpdate=true;}}
+async function load(){assembly?.dispose();assembly=null;root.rotation.y=0;const rev=++request;current=manifest.find(s=>s.file===select.value);root.clear();for(const r of resources)r.dispose?.();resources.clear();stats.textContent='Loading '+current.label+'…';const gltf=await new GLTFLoader().setKTX2Loader(ktx).loadAsync('/jungle-kit/modular/'+current.file+'.glb');if(rev!==request)return;models=[];gltf.scene.traverse(o=>{if(!o.isMesh)return;o.castShadow=true;o.receiveShadow=true;o.material=o.material.clone();o.material.roughness=.92;o.material.normalScale.setScalar(current.normal);o.userData.maps={map:o.material.map,normalMap:o.material.normalMap,roughnessMap:o.material.roughnessMap};resources.add(o.geometry);resources.add(o.material);for(const t of Object.values(o.userData.maps))if(t)resources.add(t);models.push(o);});root.add(gltf.scene);settings();shot('three');stats.textContent=JSON.stringify({asset:current.file,metres:current.size,nearTriangles:current.triangles,farTriangles:current.lodTriangles,bytes:current.bytes,materials:new Set(models.map(m=>m.material.uuid)).size,ready:true},null,2);}
+async function assemble(kind){++request;assembly?.dispose();root.clear();root.rotation.y=0;current={size:kind==='roofedtemple'?[14,13,12]:[20,13,3]};assembly=new JungleAssetKit(true,false);assembly.add({dkind:kind,p:[0,0,0],s:current.size});assembly.flush();root.add(assembly.root);await assembly.ready();shot('three');stats.textContent=JSON.stringify({assembly:kind,...assembly.diagnostics},null,2);}
+document.querySelector('#temple').onclick=()=>assemble('roofedtemple');document.querySelector('#arch').onclick=()=>assemble('hangingarch');
+document.querySelector('#shadows').onchange=()=>{renderer.shadowMap.enabled=document.querySelector('#shadows').checked;scene.traverse(o=>{if(o.isMesh)o.material.needsUpdate=true;});};
+select.onchange=load;for(const b of document.querySelectorAll('[data-view]'))b.onclick=()=>shot(b.dataset.view);for(const id of ['low','wire','maps','normal'])document.querySelector('#'+id).onchange=settings;
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
+const clock=new THREE.Clock();function frame(){const dt=clock.getDelta();assembly?.update(dt);if(document.querySelector('#turn').checked)root.rotation.y+=dt*.35;controls.update();renderer.render(scene,camera);requestAnimationFrame(frame);}frame();await load();
+</script></body></html>

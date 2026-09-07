@@ -24,38 +24,6 @@
     "sha256": "4a11f57329a50d941882ca71541b407567068f03bda27d74c7473d86ac0a1cc6"
   },
   {
-    "name": "platform",
-    "triangles": 2177,
-    "bytes": 593940,
-    "textureSize": 1024,
-    "sourceSha256": "ea9b7b73c8ab3672fc3f0d9a8ab8b2ac1ab26881ad8a0256376605cba6234f1f",
-    "sha256": "4b2a7220fdbc5e5f149d83e4326d9b589bb2c4e63a3525478673bc4a59959a37"
-  },
-  {
-    "name": "wall",
-    "triangles": 2057,
-    "bytes": 512616,
-    "textureSize": 1024,
-    "sourceSha256": "50eedb0503f368bcb3514e73b533f39c247c55457774666e9041536ef8f2646d",
-    "sha256": "44b13c53a30038be572622921ffc4f8fd5c69e49d11550b2809e8b895b4a1550"
-  },
-  {
-    "name": "temple",
-    "triangles": 6201,
-    "bytes": 788532,
-    "textureSize": 1024,
-    "sourceSha256": "d6eec39c1d0811a7f0c7299dd04fefc1602988b0532b477814b19fb2d22924f1",
-    "sha256": "ad1bfcc731296c036b1e0fce8ba71d1476bd2d4a1fe953ab676919f3ab84cdf9"
-  },
-  {
-    "name": "arch",
-    "triangles": 4139,
-    "bytes": 616636,
-    "textureSize": 1024,
-    "sourceSha256": "f4887da5edd1005976d77e1a832338ce0bba5e6e72c323d005edd2bc95699b00",
-    "sha256": "f5c0b589917713964d37a7dfae7c7788633b0ce5113217c48ebd0f1f97e95754"
-  },
-  {
     "name": "log",
     "triangles": 1655,
     "bytes": 355776,

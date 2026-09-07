@@ -1,0 +1,227 @@
+[
+  {
+    "kind": "stoneblock",
+    "file": "ashlar-clean",
+    "label": "cut stone block",
+    "size": [
+      2,
+      1,
+      1
+    ],
+    "texture": 512,
+    "normal": 0.28,
+    "lod": 0.28
+  },
+  {
+    "kind": "wornstoneblock",
+    "file": "ashlar",
+    "label": "worn stone block",
+    "size": [
+      2,
+      1,
+      1
+    ],
+    "texture": 512,
+    "normal": 0.28,
+    "lod": 0.3
+  },
+  {
+    "kind": "fracturedstoneblock",
+    "file": "broken-ashlar",
+    "label": "fractured stone block",
+    "size": [
+      2,
+      1,
+      1
+    ],
+    "texture": 512,
+    "normal": 0.3,
+    "lod": 0.3
+  },
+  {
+    "kind": "stonepaver",
+    "file": "paving-slab",
+    "label": "stone paving slab",
+    "size": [
+      2,
+      0.28,
+      2
+    ],
+    "texture": 512,
+    "normal": 0.24,
+    "lod": 0.28
+  },
+  {
+    "kind": "stonebase",
+    "file": "column-base",
+    "label": "column base",
+    "size": [
+      2.6,
+      0.85,
+      2.6
+    ],
+    "texture": 512,
+    "normal": 0.28,
+    "lod": 0.3
+  },
+  {
+    "kind": "stoneshaft",
+    "file": "column-shaft",
+    "label": "column shaft block",
+    "size": [
+      1.65,
+      1.8,
+      1.65
+    ],
+    "texture": 512,
+    "normal": 0.28,
+    "lod": 0.4
+  },
+  {
+    "kind": "stonecapital",
+    "file": "column-capital",
+    "label": "column capital",
+    "size": [
+      2.8,
+      1.15,
+      2.8
+    ],
+    "texture": 512,
+    "normal": 0.26,
+    "lod": 0.35
+  },
+  {
+    "kind": "stonecornice",
+    "file": "cornice",
+    "label": "straight cornice",
+    "size": [
+      3,
+      0.75,
+      1.15
+    ],
+    "texture": 1024,
+    "normal": 0.24,
+    "lod": 0.32
+  },
+  {
+    "kind": "stonecorner",
+    "file": "corner-cornice",
+    "label": "corner cornice",
+    "size": [
+      3,
+      0.75,
+      3
+    ],
+    "texture": 512,
+    "normal": 0.24,
+    "lod": 0.35
+  },
+  {
+    "kind": "stonelintel",
+    "file": "lintel",
+    "label": "carved lintel",
+    "size": [
+      4,
+      1,
+      1.1
+    ],
+    "texture": 1024,
+    "normal": 0.32,
+    "lod": 0.4
+  },
+  {
+    "kind": "stonefrieze",
+    "file": "carved-block",
+    "label": "spiral relief block",
+    "size": [
+      2,
+      1.5,
+      1
+    ],
+    "texture": 512,
+    "normal": 0.32,
+    "lod": 0.4
+  },
+  {
+    "kind": "stoneroof",
+    "file": "roof-wedge",
+    "label": "sloping roof block",
+    "size": [
+      2,
+      1.1,
+      2
+    ],
+    "texture": 512,
+    "normal": 0.24,
+    "lod": 0.3,
+    "doubleSided": true,
+    "sourceFile": "roof-wedge-texture2.glb"
+  },
+  {
+    "kind": "stoneridge",
+    "file": "ridge-cap",
+    "label": "roof ridge block",
+    "size": [
+      2,
+      0.65,
+      0.85
+    ],
+    "texture": 512,
+    "normal": 0.22,
+    "lod": 0.3
+  },
+  {
+    "kind": "stonearch",
+    "file": "arch-stone",
+    "label": "arch wedge stone",
+    "size": [
+      1.4,
+      1.2,
+      1.2
+    ],
+    "texture": 512,
+    "normal": 0.22,
+    "lod": 0.3
+  },
+  {
+    "kind": "stonestep",
+    "file": "temple-stair",
+    "label": "stone stair tread",
+    "size": [
+      3,
+      0.45,
+      1.05
+    ],
+    "texture": 512,
+    "normal": 0.22,
+    "lod": 0.3
+  },
+  {
+    "kind": "stonehip",
+    "file": "roof-hip",
+    "label": "hip roof corner",
+    "size": [
+      2,
+      1.1,
+      2
+    ],
+    "texture": 512,
+    "normal": 0.24,
+    "lod": 0.3,
+    "doubleSided": true
+  },
+  {
+    "kind": "junglecanopy",
+    "file": "canopy-tree",
+    "label": "jungle canopy tree",
+    "size": [
+      15,
+      14,
+      13.5
+    ],
+    "texture": 1024,
+    "normal": 0.12,
+    "lod": 0.27,
+    "wind": true
+  }
+]

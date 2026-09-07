@@ -1,0 +1,29 @@
+{
+  "requestedAtUtc": "2026-09-07T15:05:39Z",
+  "minimumWorkHours": 4,
+  "earliestHandoffUtc": "2026-09-07T19:05:39Z",
+  "scope": "Raise Jungle Ruins art quality substantially: unmistakable dirt ground and temple construction assembled from multiple distinct Meshy masonry/block assets, replacing the whole-temple monolith and repeated facade approach. Continue the original foliage, wind, lighting, editor reuse and 60fps objectives.",
+  "cumulativeMeshyCreditLimit": 650,
+  "creditsAlreadySpent": 150,
+  "maximumAdditionalCredits": 500,
+  "startingAccountBalance": 526,
+  "artDirection": {
+    "plants": "Keep the user's simpler broad leaf geometry and restrained detail. Improve placement, clusters, scale hierarchy and integration.",
+    "architecture": "Modular, dimensioned masonry: separate plain/chipped stones, carved accent blocks, bases/capitals, lintels, roof wedges/cornices and paving slabs. Visible depth, purposeful wear, consistent physical texel scale, few ornamental focal points and authored silhouettes.",
+    "ground": "Dry compacted earth, exposed soil banks and dirt-filled joints. No grassy traversal material. Earth must read as dirt in the live game and editor rebuild.",
+    "lighting": "Warm directional sunlight, cool shaded stone, softer local contact and coherent canopy shade. Evaluate with gameplay framing and neutral asset views.",
+    "performance": "Instance repeated blocks and plants in cullable cells, use bounded texture memory and appropriate LOD, and measure several actual gameplay sections at full render quality."
+  },
+  "reviewRequirements": [
+    "Inspect module silhouettes, bevels, proportions, textures, seams and useful back/side surfaces before assembly.",
+    "Compare complete scene compositions against the supplied references, not just an asset thumbnail.",
+    "Review the spawn, dirt corridors, pits/log crossing, temple approach, climb, terrace, rooflines and finish.",
+    "Preserve authored movement tuning and validate traversal, collisions, checkpoints and finish.",
+    "Verify editor reuse, save/reload and the published source version.",
+    "Work for at least four additional hours, using the time for construction, art refinement, performance work and review; do not hand off early."
+  ],
+  "implementationValidatedAtUtc": "2026-09-07T19:06:20Z",
+  "additionalElapsedMinutes": 240.7,
+  "minimumWorkHoursSatisfied": true,
+  "reviewRecord": "revision-2-review.json"
+}

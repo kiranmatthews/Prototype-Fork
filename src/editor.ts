@@ -8303,9 +8303,10 @@ export class Editor {
           0.02,
         );
       if ((TROPICAL_PLANT_KINDS as readonly string[]).includes(dk) || isJungleAsset(dk)) {
+        const stone = isJungleAsset(dk) && !JUNGLE_ASSETS[dk].wind;
         num("yaw °", () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
-        num("lean °", () => c.amp ?? 0,
-          (v) => (c.amp = THREE.MathUtils.clamp(v,-40,40)), 2);
+        num(stone ? "roll °" : "lean °", () => c.amp ?? 0,
+          (v) => (c.amp = THREE.MathUtils.clamp(v,stone?-180:-40,stone?180:40)), 2);
       }
       if (dk === "vines")
         num(

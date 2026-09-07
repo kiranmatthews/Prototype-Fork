@@ -1,120 +1,108 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readFile, access } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { runInThisContext } from 'node:vm';
 import { createServer } from 'vite';
 import * as THREE from 'three';
 
-const root = new URL('../', import.meta.url);
-const manifest = JSON.parse(await readFile(new URL('public/jungle-kit/manifest.json', root), 'utf8'));
-let total = 0;
-for (const entry of manifest) {
-  const bytes = await readFile(new URL(`public/jungle-kit/${entry.name}.glb`, root));
-  assert.equal(bytes.toString('ascii', 0, 4), 'glTF');
-  assert.equal(bytes.readUInt32LE(8), bytes.length);
-  const doc = JSON.parse(bytes.toString('utf8', 20, 20 + bytes.readUInt32LE(12)).trimEnd());
-  assert.equal(doc.materials.length, 1);
-  assert.equal(doc.images.length, 1, 'one texture per mesh');
-  assert.equal(doc.images[0].mimeType, 'image/jpeg');
-  assert.equal(doc.extensionsRequired, undefined, 'no external decoder');
-  let triangles = 0;
-  for (const mesh of doc.meshes) for (const p of mesh.primitives) {
-    triangles += doc.accessors[p.indices].count / 3;
-    const a = doc.accessors[p.attributes.POSITION];
-    assert.ok(a.count > 0 && a.min.every(Number.isFinite) && a.max.every(Number.isFinite));
-  }
-  assert.equal(triangles, entry.triangles);
-  assert.equal(createHash('sha256').update(bytes).digest('hex'), entry.sha256);
-  assert.ok(triangles <= (['broadleaf','palm','fern'].includes(entry.name) ? 2000 : 6600));
-  total += bytes.length;
+const root=new URL('../',import.meta.url);
+const retained=JSON.parse(await readFile(new URL('public/jungle-kit/manifest.json',root),'utf8'));
+const modular=JSON.parse(await readFile(new URL('public/jungle-kit/modular/manifest.json',root),'utf8'));
+const files=new Map();let transfer=0;
+function parse(bytes){const n=bytes.readUInt32LE(12);return {doc:JSON.parse(bytes.toString('utf8',20,20+n).trimEnd()),bin:bytes.subarray(28+n)};}
+function accessor(doc,bin,id){
+ const a=doc.accessors[id],v=doc.bufferViews[a.bufferView],n={SCALAR:1,VEC2:2,VEC3:3,VEC4:4}[a.type],bytes={5126:4,5123:2,5125:4}[a.componentType];
+ const out=[];const start=(v.byteOffset??0)+(a.byteOffset??0),stride=v.byteStride??n*bytes;
+ for(let i=0;i<a.count;i++)for(let k=0;k<n;k++){const at=start+i*stride+k*bytes;out.push(a.componentType===5126?bin.readFloatLE(at):a.componentType===5123?bin.readUInt16LE(at):bin.readUInt32LE(at));}
+ return out;
 }
-assert.equal(manifest.length, 9);
-assert.ok(total < 4 * 1024 * 1024, 'whole model kit transfer budget');
-const budget = JSON.parse(await readFile(new URL('tools/jungle-kit/tasks.json', root), 'utf8'));
-assert.ok(budget.reservedCredits <= 650);
+for(const entry of [...retained.map(e=>({...e,file:e.name,path:e.name+'.glb'})),...modular.map(e=>({...e,path:'modular/'+e.file+'.glb'}))]){
+ const bytes=await readFile(new URL('public/jungle-kit/'+entry.path,root));const {doc,bin}=parse(bytes);
+ assert.equal(bytes.toString('ascii',0,4),'glTF');assert.equal(bytes.readUInt32LE(8),bytes.length);
+ assert.equal(createHash('sha256').update(bytes).digest('hex'),entry.sha256);
+ assert.equal(doc.materials.length,1,'one material shared by both LODs');
+ for(const p of doc.meshes.flatMap(m=>m.primitives)){
+  for(const name of ['POSITION','NORMAL','TEXCOORD_0'])assert.ok(accessor(doc,bin,p.attributes[name]).every(Number.isFinite),entry.file+' finite '+name);
+  const positions=doc.accessors[p.attributes.POSITION];
+  const indices=accessor(doc,bin,p.indices);assert.ok(indices.every(i=>i>=0&&i<positions.count),entry.file+' indices in range');
+ }
+ if(entry.path.startsWith('modular/')){
+  assert.equal(doc.meshes.length,2,'each module has a real near/far mesh');
+  assert.ok(doc.nodes.some(n=>n.name?.endsWith('LOD0'))&&doc.nodes.some(n=>n.name?.endsWith('LOD1')));
+  assert.ok(entry.lodTriangles<entry.triangles*.55,'useful distant geometry reduction');
+  assert.ok(entry.triangles<2700,'bounded individual module');
+  const texture=doc.textures[doc.materials[0].pbrMetallicRoughness.baseColorTexture.index];
+  const gpu=doc.images[texture.extensions.KHR_texture_basisu.source],fallback=doc.images[texture.source];
+  assert.equal(gpu.mimeType,'image/ktx2');assert.equal(fallback.mimeType,'image/jpeg');
+  const view=doc.bufferViews[gpu.bufferView],ktx=bin.subarray(view.byteOffset,view.byteOffset+view.byteLength);
+  assert.deepEqual([...ktx.subarray(0,12)],[171,75,84,88,32,50,48,187,13,10,26,10]);
+  assert.equal(ktx.readUInt32LE(20),2048,'sharp source albedo');assert.ok(ktx.readUInt32LE(40)>1,'precomputed mip chain');
+  assert.equal(doc.extensionsRequired,undefined,'JPEG remains a portable fallback');
+ }
+ transfer+=bytes.length;files.set(entry.file,{...entry,doc,bin});
+}
+assert.equal(modular.length,17);assert.ok(transfer<26*1048576,'bounded complete runtime kit transfer');
+const budget=JSON.parse(await readFile(new URL('tools/jungle-kit/tasks.json',root),'utf8'));
+assert.ok(budget.reservedCredits<=650);
 
-// Use the repository's existing small DOM shim, then serve the actual GLBs.
-const harness = await readFile(new URL('tools/validate-editor-roundtrip.mjs', root), 'utf8');
-const dom = harness.slice(harness.indexOf('function installHeadlessDom()'), harness.indexOf('\nfunction round('));
-const nativeFetch = globalThis.fetch;
-runInThisContext(dom + '\ninstallHeadlessDom();');
-globalThis.self = globalThis;
-globalThis.createImageBitmap = async () => ({ width: 1024, height: 1024, close() {} });
-globalThis.ProgressEvent ??= class { constructor(type, data) { this.type = type; Object.assign(this, data); } };
-globalThis.fetch = async input => {
-  const url = typeof input === 'string' ? input : input.url;
-  if (url.startsWith('blob:')) return nativeFetch(input);
-  const match = url.match(/\/jungle-kit\/([\w-]+\.glb)$/);
-  return match ? new Response(await readFile(new URL(`public/jungle-kit/${match[1]}`, root))) : new Response('', { status: 404 });
-};
-const server = await createServer({ logLevel: 'silent', server: { middlewareMode: true }, appType: 'custom' });
-try {
-  const { JungleAssetKit, JUNGLE_ASSET_KINDS, jungleAssetMatrix } = await server.ssrLoadModule('/src/jungleAssets.ts');
-  const kit = new JungleAssetKit(true, false);
-  for (const kind of JUNGLE_ASSET_KINDS) {
-    for (let i = 0; i < 6; i++) kit.add({ dkind: kind, p: [0, 0, -i * 10] });
+const harness=await readFile(new URL('tools/validate-editor-roundtrip.mjs',root),'utf8');
+const dom=harness.slice(harness.indexOf('function installHeadlessDom()'),harness.indexOf('\nfunction round('));
+const nativeFetch=globalThis.fetch;runInThisContext(dom+'\ninstallHeadlessDom();');globalThis.self=globalThis;
+globalThis.createImageBitmap=async()=>({width:1024,height:1024,close(){}});
+globalThis.ProgressEvent??=class{constructor(type,data){this.type=type;Object.assign(this,data);}};
+globalThis.fetch=async input=>{const url=typeof input==='string'?input:input.url;if(url.startsWith('blob:'))return nativeFetch(input);const match=url.match(/\/jungle-kit\/((?:modular\/)?[\w-]+\.glb)$/);return match?new Response(await readFile(new URL('public/jungle-kit/'+match[1],root))):new Response('',{status:404});};
+const server=await createServer({logLevel:'silent',server:{middlewareMode:true},appType:'custom'});
+try{
+ const {JungleAssetKit,JUNGLE_ASSETS,JUNGLE_ASSET_KINDS,jungleAssetMatrix}=await server.ssrLoadModule('/src/jungleAssets.ts');
+ const {templePavilionParts,templeArchParts}=await server.ssrLoadModule('/src/jungleAssemblies.ts');
+ const {JUNGLE_MODULES}=await server.ssrLoadModule('/src/jungleModules.ts');
+ for(const kind of ['roofedtemple','hangingarch','templewall','templeplatform'])assert.equal(JUNGLE_ASSETS[kind].file,'','assemblies cannot load a whole-building/facade GLB');
+ // Read actual fitted mesh bytes for a geometry-level roof and arch audit.
+ const shapes=new Map();
+ function shape(kind){
+  if(shapes.has(kind))return shapes.get(kind);
+  let geometry;
+  if(kind==='joint'||kind==='earth')geometry=new THREE.BoxGeometry(1,1,1).translate(0,.5,0);
+  else {
+   const spec=JUNGLE_MODULES[kind],f=files.get(spec.file.split('/').at(-1));
+   const node=f.doc.nodes.find(n=>n.name?.endsWith('LOD0')),p=f.doc.meshes[node.mesh].primitives[0];
+   geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(accessor(f.doc,f.bin,p.attributes.POSITION),3));geometry.setIndex(accessor(f.doc,f.bin,p.indices));
+   geometry.computeBoundingBox();const b=geometry.boundingBox,size=b.getSize(new THREE.Vector3()),center=b.getCenter(new THREE.Vector3());geometry.translate(-center.x,-b.min.y,-center.z);geometry.scale(1/size.x,1/size.y,1/size.z);
   }
-  kit.flush(); await kit.ready();
-  assert.deepEqual(kit.errors, []);
-  assert.equal(kit.diagnostics.ready, 54);
-  assert.ok(kit.diagnostics.draws < 54, 'nearby placements are instanced');
-  const mats = new Map(), geos = new Map();
-  kit.root.traverse(o => {
-    if (!o.isMesh) return;
-    assert.ok(o.geometry.userData.shared && o.material.map.userData.shared);
-    assert.ok(o.boundingSphere?.radius > 0 && o.geometry.boundingBox.min.y < 0);
-    if (mats.has(o.userData.jungleAsset)) assert.equal(o.material, mats.get(o.userData.jungleAsset));
-    mats.set(o.userData.jungleAsset, o.material);
-    geos.set(o.userData.jungleAsset, o.geometry);
-    if (o.userData.jungleAsset.startsWith('jungle')) assert.ok(o.customDepthMaterial, 'animated shadow geometry');
-  });
-  kit.update(1/60); const time = kit.time.value;
-  kit.update(0); assert.equal(kit.time.value, time, 'paused wind');
-  kit.update(1/60); assert.ok(kit.time.value > time);
-  const m = jungleAssetMatrix({ dkind: 'templeplatform', p: [2, 3, 4], s: [8, 2, 10] });
-  assert.deepEqual(new THREE.Vector3(0, 1, 0).applyMatrix4(m).toArray(), [2, 5, 4]);
-  const pending = new JungleAssetKit(false, false);
-  pending.add({ dkind: 'jungleleaf', p: [0, 0, 0] }); pending.dispose();
-  await pending.ready(); assert.equal(pending.root.children.length, 0, 'no late attachment after disposal');
+  shapes.set(kind,geometry);return geometry;
+ }
+ function partMeshes(parts){return parts.filter(p=>p.kind!=='vine').map(p=>{const m=new THREE.Mesh(shape(p.kind),new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));m.matrix.copy(p.matrix);m.matrixAutoUpdate=false;m.updateMatrixWorld(true);m.userData.kind=p.kind;return m;});}
+ const roofMeshes=partMeshes(templePavilionParts(14,13,12,0,false));let holes=0,samples=0;
+ const ray=new THREE.Raycaster();
+ for(let x=-6.8;x<=6.8;x+=.45)for(let z=-5.8;z<=5.8;z+=.45){ray.set(new THREE.Vector3(x,25,z),new THREE.Vector3(0,-1,0));const hit=ray.intersectObjects(roofMeshes,false)[0];samples++;if(!hit||hit.point.y<8.8)holes++;}
+ assert.ok(holes/samples<.025,`roof has uncovered areas: ${holes}/${samples}`);
+ const archMeshes=partMeshes(templeArchParts(20,13,2.8,0));let hits=0;
+ for(let i=0;i<200;i++){const phi=Math.PI*(i+.5)/200;ray.set(new THREE.Vector3(Math.cos(phi)*8,4.4+Math.sin(phi)*8,5),new THREE.Vector3(0,0,-1));if(ray.intersectObjects(archMeshes,false).length)hits++;}
+ assert.ok(hits>=190,`arch joints too wide: ${hits}/200 samples covered`);
 
-  const { Level, setEditorBuild } = await server.ssrLoadModule('/src/level.ts');
-  const level = new Level(new THREE.Scene(), { id: 'jungle', name: 'Jungle Ruins' });
-  await level.prepareJungleAssets();
-  level.pickRoot.updateMatrixWorld(true);
-  if (process.env.JUNGLE_PICK) {
-    const from = new THREE.Vector3(-2.292, 2.774, -94.96), target = new THREE.Vector3(-1.4, -5, -110);
-    const meshes=[];level.pickRoot.traverse(o=>{if(o.isMesh)meshes.push(o);});
-    const hits = new THREE.Raycaster(from, target.sub(from).normalize()).intersectObjects(meshes, false).filter(h => {
-      for (let o = h.object; o; o = o.parent) if (!o.visible) return false;
-      return true;
-    });
-    console.log(hits.slice(0,5).map(h=>({name:h.object.name,position:h.point.toArray(),material:h.object.material.name,asset:h.object.userData.jungleAsset})));
-  }
-  const capture = JSON.parse(JSON.stringify(level.captureData()));
-  assert.equal(capture.jungleAtmosphere, true);
-  assert.equal(capture.components.filter(c => c.t === 'gate').length, 1);
-  assert.ok(capture.components.some(c => c.dkind === 'roofedtemple'));
-  assert.ok(capture.components.some(c => c.dkind === 'hangingarch'));
-  assert.ok(capture.components.some(c => c.dkind === 'thornroots' && c.solid));
-  for (const old of ['fern','broadleaf','jungletree','palm','plants','tree','vines','log'])
-    assert.equal(capture.components.filter(c => c.dkind === old).length, 0, `${old} was replaced`);
-  const support = (value, point) => new THREE.Raycaster(new THREE.Vector3(point[0], point[1] + 1, point[2]), new THREE.Vector3(0,-1,0), 0, 3).intersectObjects(value.groundMeshes)[0]?.point.y;
-  assert.ok(Math.abs(support(level, level.spawnPos.toArray()) - level.spawnPos.y) < 0.5, 'supported spawn');
-  for (let i = 0; i < 5; i++) {
-    const height = (i+1)*2.3, x = [-2.6,2.6,-2.6,2.6,0][i], z = -332-i*12;
-    assert.ok(Math.abs(support(level, [x,height,z]) - height) < 0.001, 'temple tier collision');
-  }
-  const copy = new Level(new THREE.Scene(), { id: 'jungle-copy', name: 'Jungle copy', data: capture });
-  assert.deepEqual(copy.captureData(), capture, 'new props survive editor capture/load');
-  assert.equal(copy.pitBoxes.length, level.pitBoxes.length, 'thorn hazards are reconstructed once');
-  setEditorBuild(true);
-  const editable = new Level(new THREE.Scene(), {id:'jungle-editor',name:'Jungle editor',data:capture});
-  await editable.prepareJungleAssets();
-  let editorAssets = 0;
-  editable.pickRoot.traverse(o => {
-    if (o.isMesh && o.userData.jungleAsset) { editorAssets++; assert.ok(Number.isInteger(o.userData.editorIdx), 'async model remains pickable'); }
-  });
-  assert.ok(editorAssets > 100);
-  editable.dispose(); setEditorBuild(false); copy.dispose(); level.dispose(); kit.dispose(); kit.dispose();
-  console.log(`Validated 9 actual GLBs (${(total/1048576).toFixed(2)} MiB), texture/triangle budgets, instancing, wind and shadows, disposal, supported spawn, five temple tiers, hazards, and editor round trip/picking.`);
-} finally { await server.close(); }
+ const kit=new JungleAssetKit(true,false);
+ for(const kind of JUNGLE_ASSET_KINDS)for(let i=0;i<2;i++)kit.add({dkind:kind,p:[0,0,-i*12]});
+ kit.flush();await kit.ready();assert.deepEqual(kit.errors,[]);assert.equal(kit.diagnostics.ready,kit.diagnostics.placements);
+ assert.ok(kit.diagnostics.placements>kit.diagnostics.components,'assemblies really expand into multiple modules');
+ let lods=0;kit.root.traverse(o=>{if(o.isLOD)lods++;if(o.isMesh){assert.ok(o.geometry.userData.shared);if(o.userData.jungleAsset.startsWith('jungle')||o.userData.jungleAsset==='vine')assert.ok(o.customDepthMaterial);}});assert.ok(lods>5);
+ kit.update(1/60);const time=kit.time.value;kit.update(0);assert.equal(kit.time.value,time);kit.update(1/60);assert.ok(kit.time.value>time);
+ const m=jungleAssetMatrix({dkind:'stoneblock',p:[2,3,4],s:[2,1,1]});assert.deepEqual(new THREE.Vector3(0,1,0).applyMatrix4(m).toArray(),[2,4,4]);
+ const late=new JungleAssetKit(false,false);late.add({dkind:'jungleleaf',p:[0,0,0]});late.dispose();await late.ready();assert.equal(late.root.children.length,0);
+
+ const {Level,setEditorBuild}=await server.ssrLoadModule('/src/level.ts');
+ const level=new Level(new THREE.Scene(),{id:'jungle',name:'Jungle Ruins'});await level.prepareJungleAssets();level.pickRoot.updateMatrixWorld(true);
+ const capture=JSON.parse(JSON.stringify(level.captureData()));assert.equal(capture.jungleAtmosphere,true);
+ assert.equal(capture.components.filter(c=>c.t==='gate').length,1);
+ const paths=capture.components.filter(c=>c.t==='terrain');assert.ok(paths.length>4&&paths.every(c=>c.tex==='dirt'),'all jungle traversal strips use dirt');
+ assert.equal(capture.components.filter(c=>c.dkind==='roofedtemple'||c.dkind==='hangingarch').length,0,'landmarks are authored as individual blocks');
+ for(const kind of ['stoneblock','stonepaver','stoneshaft','stonecapital','stonecornice','stoneroof','stonehip','junglecanopy'])assert.ok(capture.components.some(c=>c.dkind===kind),kind+' used in the actual level');
+ for(const old of ['fern','broadleaf','jungletree','palm','plants','tree','vines','log'])assert.equal(capture.components.filter(c=>c.dkind===old).length,0,old+' was replaced');
+ const support=(value,p)=>new THREE.Raycaster(new THREE.Vector3(p[0],p[1]+1,p[2]),new THREE.Vector3(0,-1,0),0,3).intersectObjects(value.groundMeshes)[0]?.point.y;
+ assert.ok(Math.abs(support(level,level.spawnPos.toArray())-level.spawnPos.y)<.5);
+ for(let i=0;i<5;i++){const h=(i+1)*2.3,x=[-2.6,2.6,-2.6,2.6,0][i],z=-332-i*12;assert.ok(Math.abs(support(level,[x,h,z])-h)<.001,'temple tier collision');}
+ const copy=new Level(new THREE.Scene(),{id:'jungle-copy',name:'Copy',data:capture});assert.deepEqual(copy.captureData(),capture);assert.equal(copy.pitBoxes.length,level.pitBoxes.length);
+ setEditorBuild(true);const editable=new Level(new THREE.Scene(),{id:'jungle-editor',name:'Editor',data:capture});await editable.prepareJungleAssets();let pickable=0;
+ editable.pickRoot.traverse(o=>{if(o.isMesh&&o.userData.jungleAsset){pickable++;assert.ok(Number.isInteger(o.userData.editorIdx),'asynchronous module remains pickable');}});assert.ok(pickable>1000);
+ editable.dispose();setEditorBuild(false);copy.dispose();level.dispose();kit.dispose();kit.dispose();
+ console.log(`Validated 17 modular Meshy assets, GPU-compressed albedo/fallbacks, real LODs, ${samples} roof coverage rays, arch joints, dirt-only paths, individual temple blocks, wind, collision, disposal, and editor reconstruction.`);
+}finally{await server.close();}

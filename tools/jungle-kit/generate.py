@@ -4,6 +4,7 @@ No credentials enter this repository. Meshy resolves its local OAuth profile.
 Raw signed responses stay in the ignored .img2threejs authoring directory.
 """
 import json
+import fcntl
 import os
 from pathlib import Path
 import subprocess
@@ -16,6 +17,23 @@ NODE = os.environ.get('JUNGLE_NODE', '/Users/kiki/.cache/codex-runtimes/codex-pr
 CLI = os.environ.get('JUNGLE_MESHY_CLI', '/tmp/codex-meshy-cli/node_modules/@meshy-ai/cli/dist/index.js')
 LEDGER = ROOT / 'tools/jungle-kit/tasks.json'
 SPECS = {
+    'canopy-tree': ('modular/canopy-tree.png', 2200),
+    'roof-hip': ('modular/roof-hip.png', 1000),
+    'ashlar-clean': ('modular/ashlar-clean.png', 700),
+    'ashlar': ('modular/ashlar.png', 600),
+    'broken-ashlar': ('modular/broken-ashlar.png', 850),
+    'paving-slab': ('modular/paving-slab.png', 500),
+    'carved-block': ('modular/carved-block.png', 1300),
+    'column-base': ('modular/column-base.png', 1100),
+    'column-shaft': ('modular/column-shaft.png', 900),
+    'column-capital': ('modular/column-capital.png', 1100),
+    'cornice': ('modular/cornice.png', 850),
+    'corner-cornice': ('modular/corner-cornice.png', 1100),
+    'lintel': ('modular/lintel.png', 1600),
+    'roof-wedge': ('modular/roof-wedge.png', 850),
+    'ridge-cap': ('modular/ridge-cap.png', 800),
+    'arch-stone': ('modular/arch-stone.png', 700),
+    'temple-stair': ('modular/temple-stair.png', 1400),
     'broadleaf': ('broadleaf-simple.png', 1200),
     'palm': ('palm-simple.png', 1800),
     'fern': ('fern-simple.png', 1600),
@@ -40,9 +58,17 @@ def ledger():
     }
 
 def save(data):
-    LEDGER.write_text(json.dumps(data, indent=2) + '\n')
+    temporary = LEDGER.with_suffix('.tmp')
+    temporary.write_text(json.dumps(data, indent=2) + '\n')
+    temporary.replace(LEDGER)
 
 def create(name):
+    # One submitter at a time, even when separate tool sessions are alive.
+    with (WORK / 'ledger.lock').open('w') as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        _create(name)
+
+def _create(name):
     data = ledger()
     if name in data['tasks']:
         print(name, 'already submitted:', data['tasks'][name], flush=True)

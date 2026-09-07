@@ -1,0 +1,329 @@
+[
+  {
+    "kind": "stoneblock",
+    "file": "ashlar-clean",
+    "label": "cut stone block",
+    "size": [
+      2,
+      1,
+      1
+    ],
+    "texture": 2048,
+    "normal": 0.28,
+    "lod": 0.28,
+    "fallbackTexture": 1024,
+    "bytes": 1021300,
+    "triangles": 708,
+    "lodTriangles": 198,
+    "sha256": "2b80b980e05b7d53cbb6aa6c05a7dc33bed868a6c6d30f32c74ebdd8326ca3a8",
+    "sourceSha256": "e6de181aa3d4493980eea2567409c8824ae5822aabb30323f6fda72e21ca641a"
+  },
+  {
+    "kind": "wornstoneblock",
+    "file": "ashlar",
+    "label": "worn stone block",
+    "size": [
+      2,
+      1,
+      1
+    ],
+    "texture": 2048,
+    "normal": 0.28,
+    "lod": 0.3,
+    "fallbackTexture": 1024,
+    "bytes": 952296,
+    "triangles": 662,
+    "lodTriangles": 198,
+    "sha256": "69887f6115a008e1fcaeaa5711bcf534974cf13388e67a33eb551bb4c165aee0",
+    "sourceSha256": "5933e6b6f0e60b5fe2522c92e439e1f3461871faeb27e9054503021275a8a195"
+  },
+  {
+    "kind": "fracturedstoneblock",
+    "file": "broken-ashlar",
+    "label": "fractured stone block",
+    "size": [
+      2,
+      1,
+      1
+    ],
+    "texture": 2048,
+    "normal": 0.3,
+    "lod": 0.3,
+    "fallbackTexture": 1024,
+    "bytes": 891388,
+    "triangles": 940,
+    "lodTriangles": 282,
+    "sha256": "3435539f9ad70a9b61e611f89f5f31bc07da554dcba1180642e24f87bd6f197d",
+    "sourceSha256": "f03773862cee00ae4dc4aedc7a2505eace26b7560b0ff38128f0255fc0bdea4b"
+  },
+  {
+    "kind": "stonepaver",
+    "file": "paving-slab",
+    "label": "stone paving slab",
+    "size": [
+      2,
+      0.28,
+      2
+    ],
+    "texture": 2048,
+    "normal": 0.24,
+    "lod": 0.28,
+    "fallbackTexture": 1024,
+    "bytes": 1029144,
+    "triangles": 552,
+    "lodTriangles": 154,
+    "sha256": "ceef92f1999b9233287dc2446098930d2313bd1bcde688070f7204d68f73928d",
+    "sourceSha256": "44236a5393767e7694b3445b29ee6d2d7963051ba6796944f776a97e091f1bb2"
+  },
+  {
+    "kind": "stonebase",
+    "file": "column-base",
+    "label": "column base",
+    "size": [
+      2.6,
+      0.85,
+      2.6
+    ],
+    "texture": 2048,
+    "normal": 0.28,
+    "lod": 0.3,
+    "fallbackTexture": 1024,
+    "bytes": 1263652,
+    "triangles": 1139,
+    "lodTriangles": 341,
+    "sha256": "0dda70dbb04a3fe5d630160561ae654e7dcafff00384cee9a022437babcbf924",
+    "sourceSha256": "ea27b66b8fefe3b1e4fd8108c4dd6ec97a0aa9c15333fe42b4c6bb17d9c73760"
+  },
+  {
+    "kind": "stoneshaft",
+    "file": "column-shaft",
+    "label": "column shaft block",
+    "size": [
+      1.65,
+      1.8,
+      1.65
+    ],
+    "texture": 2048,
+    "normal": 0.28,
+    "lod": 0.4,
+    "fallbackTexture": 1024,
+    "bytes": 1196160,
+    "triangles": 662,
+    "lodTriangles": 264,
+    "sha256": "d96b490a197740dbc879d402e224be70b1a09d9e8110c3770e82f3f6b0339f8e",
+    "sourceSha256": "dcbd1b2d146798058e4033cb7d512cecb4bfe302a46014bad64aff3975fbfaac"
+  },
+  {
+    "kind": "stonecapital",
+    "file": "column-capital",
+    "label": "column capital",
+    "size": [
+      2.8,
+      1.15,
+      2.8
+    ],
+    "texture": 2048,
+    "normal": 0.26,
+    "lod": 0.35,
+    "fallbackTexture": 1024,
+    "bytes": 1264912,
+    "triangles": 1161,
+    "lodTriangles": 406,
+    "sha256": "e73a64d34c1ac8f9ffbddfb8a1dc686547d205ef6ce394a1d3f8cac35b0571e2",
+    "sourceSha256": "7d58c6645f80747c2cc9b32dde0186ba5c7a09a13ac83b70b427b4c9867f4c82"
+  },
+  {
+    "kind": "stonecornice",
+    "file": "cornice",
+    "label": "straight cornice",
+    "size": [
+      3,
+      0.75,
+      1.15
+    ],
+    "texture": 2048,
+    "normal": 0.24,
+    "lod": 0.32,
+    "fallbackTexture": 1024,
+    "bytes": 1248248,
+    "triangles": 919,
+    "lodTriangles": 294,
+    "sha256": "14dd6a9aafb171ab02a8f4eb69c4b20b5ba3943254f1c21cac453d2444398447",
+    "sourceSha256": "52eca47570550c1969f286343d784bed18f400c786132703eadd2f4feb312a67"
+  },
+  {
+    "kind": "stonecorner",
+    "file": "corner-cornice",
+    "label": "corner cornice",
+    "size": [
+      3,
+      0.75,
+      3
+    ],
+    "texture": 2048,
+    "normal": 0.24,
+    "lod": 0.35,
+    "fallbackTexture": 1024,
+    "bytes": 1242260,
+    "triangles": 1150,
+    "lodTriangles": 402,
+    "sha256": "98d453ce77c609c9ac711cb7072049033c82b11ad2d019db02b968b6eefc35eb",
+    "sourceSha256": "6015270ab452eeadefca33dce51e3e20f73e9d9a1aa5250c400352906781073f"
+  },
+  {
+    "kind": "stonelintel",
+    "file": "lintel",
+    "label": "carved lintel",
+    "size": [
+      4,
+      1,
+      1.1
+    ],
+    "texture": 2048,
+    "normal": 0.32,
+    "lod": 0.4,
+    "fallbackTexture": 1024,
+    "bytes": 1259028,
+    "triangles": 1403,
+    "lodTriangles": 561,
+    "sha256": "2df5c08cafe8e1b2ee1bdddbc81390106873308847dd20560ffdc3ce0a5091eb",
+    "sourceSha256": "5a32379194eaca0a8e1136981d888e839e8ec711c22427c5be0b1baa8f4fcc0f"
+  },
+  {
+    "kind": "stonefrieze",
+    "file": "carved-block",
+    "label": "spiral relief block",
+    "size": [
+      2,
+      1.5,
+      1
+    ],
+    "texture": 2048,
+    "normal": 0.32,
+    "lod": 0.4,
+    "fallbackTexture": 1024,
+    "bytes": 1417424,
+    "triangles": 1288,
+    "lodTriangles": 515,
+    "sha256": "fd4f5063490f86149c184a469fd5388363abec4f3027f87c887b98ab4c4464f2",
+    "sourceSha256": "11f5e5f260e7471c86db816717080574016f09499b2b599aedafaa100b4f8c7a"
+  },
+  {
+    "kind": "stoneroof",
+    "file": "roof-wedge",
+    "label": "sloping roof block",
+    "size": [
+      2,
+      1.1,
+      2
+    ],
+    "texture": 2048,
+    "normal": 0.24,
+    "lod": 0.3,
+    "doubleSided": true,
+    "sourceFile": "roof-wedge-texture2.glb",
+    "fallbackTexture": 1024,
+    "bytes": 1253700,
+    "triangles": 766,
+    "lodTriangles": 228,
+    "sha256": "81203ecc524590781881025822c9de109f30966737cad93a9e4e759e14f0d988",
+    "sourceSha256": "f40d11d09025aef61809bc822faa5be232cf455660fd8b9d2145dc06428adfa8"
+  },
+  {
+    "kind": "stoneridge",
+    "file": "ridge-cap",
+    "label": "roof ridge block",
+    "size": [
+      2,
+      0.65,
+      0.85
+    ],
+    "texture": 2048,
+    "normal": 0.22,
+    "lod": 0.3,
+    "fallbackTexture": 1024,
+    "bytes": 1208520,
+    "triangles": 854,
+    "lodTriangles": 256,
+    "sha256": "abbf915ca6619a74c070a2807bbbbac8e37cc41c559fd0f7e26e1ade76a236df",
+    "sourceSha256": "663d9ced74dc5c87f2650a4a90a9b7d59902ae4b2765fdca18cf6442a665b473"
+  },
+  {
+    "kind": "stonearch",
+    "file": "arch-stone",
+    "label": "arch wedge stone",
+    "size": [
+      1.4,
+      1.2,
+      1.2
+    ],
+    "texture": 2048,
+    "normal": 0.22,
+    "lod": 0.3,
+    "fallbackTexture": 1024,
+    "bytes": 889456,
+    "triangles": 754,
+    "lodTriangles": 226,
+    "sha256": "efb239716c083c254bcdf8b8c06cd7e9cadb6b9c14c871c7eb5483e818b3af7c",
+    "sourceSha256": "f24c09468330fdb2ec63fccf4ba131e4ccb7a048907c69f9d53b8e2ca86193ff"
+  },
+  {
+    "kind": "stonestep",
+    "file": "temple-stair",
+    "label": "stone stair tread",
+    "size": [
+      3,
+      0.45,
+      1.05
+    ],
+    "texture": 2048,
+    "normal": 0.22,
+    "lod": 0.3,
+    "fallbackTexture": 1024,
+    "bytes": 950348,
+    "triangles": 1510,
+    "lodTriangles": 453,
+    "sha256": "43c4d75835b1b382d5f303b721137d6ea6a8afbf62fa40ce10308650fa5f68f2",
+    "sourceSha256": "ad3f815e20bee89e06fb04dc07ad80cb1b8d6cdd493cb3cc71a039e07c3d4375"
+  },
+  {
+    "kind": "stonehip",
+    "file": "roof-hip",
+    "label": "hip roof corner",
+    "size": [
+      2,
+      1.1,
+      2
+    ],
+    "texture": 2048,
+    "normal": 0.24,
+    "lod": 0.3,
+    "doubleSided": true,
+    "fallbackTexture": 1024,
+    "bytes": 1207384,
+    "triangles": 740,
+    "lodTriangles": 221,
+    "sha256": "ffd5862aa58a68f2968836dc67f5e66cdb4508833e801aacf3c2f25ae64213cb",
+    "sourceSha256": "9c20028cac78408c891586195a7de47a1b77f99a6b313fe91add0fdc90903530"
+  },
+  {
+    "kind": "junglecanopy",
+    "file": "canopy-tree",
+    "label": "jungle canopy tree",
+    "size": [
+      15,
+      14,
+      13.5
+    ],
+    "texture": 2048,
+    "normal": 0.12,
+    "lod": 0.27,
+    "wind": true,
+    "fallbackTexture": 1024,
+    "bytes": 1558260,
+    "triangles": 2025,
+    "lodTriangles": 546,
+    "sha256": "4d4cab7eb28fc49ea718fd8805f795c3c395a8d24d2ba3af1b0b7f63411034d6",
+    "sourceSha256": "516ea93459044fde7ec3d0f189ce64a59534266bb1e5f9bc820dd9012db0d119"
+  }
+]
