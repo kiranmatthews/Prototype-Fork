@@ -30,7 +30,7 @@ const campaign = await import(
   `data:text/javascript;base64,${Buffer.from(output).toString("base64")}`
 );
 
-assert.equal(campaign.CAMPAIGN_LEVELS.length, 9);
+assert.equal(campaign.CAMPAIGN_LEVELS.length, 11);
 assert.equal(campaign.resolveRelicTime('jungle'), 60);
 assert.equal(campaign.resolveRelicTime('editor-course', { relicTime: 83.75 }), 83.75);
 assert.equal(campaign.resolveRelicTime('jungle', { relicTime: 45.125 }), 45.125);
@@ -50,22 +50,24 @@ assert.deepEqual(
     ["coastal-street-run", "Coastal"],
     ["island-hopper", "Island Hopper"],
     ["jungle-gate-run", "Jungle Gate"],
+    ["codex-lab", "Codex Switchback"],
+    ["astra-chimeworks", "Chimeworks"],
   ],
   "canonical portal order or labels drifted",
 );
 assert.equal(
   new Set(campaign.CAMPAIGN_LEVELS.map((level) => level.progressKey)).size,
-  9,
+  11,
   "campaign progress keys must remain unique",
 );
 assert.equal(campaign.CAMPAIGN_TIME_RELIC_TARGET_SECONDS, 60);
 assert.ok(
   campaign.CAMPAIGN_LEVELS.every((level) => level.relicTime === 60),
-  "all nine placeholder relic targets must be exactly one minute",
+  "all placeholder relic targets must be exactly one minute",
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ levelKeys }) => levelKeys.length),
-  [5, 4],
+  [6, 5],
   "the prototype map must exercise multiple 4-7 hub islands",
 );
 assert.deepEqual(
@@ -86,6 +88,15 @@ assert.deepEqual(
   [],
   "campaign map edge endpoints and direction slots must stay valid",
 );
+const mainPath = ['jungle','test-course','sky-bridge','nightworks','beachside-run','coastal','island-hopper','jungle-gate'];
+for(let i=1;i<mainPath.length;i++) {
+  const edge=campaign.CAMPAIGN_MAP_EDGES.find(e=>e.from===mainPath[i-1]&&e.to===mainPath[i]);
+  assert.ok(edge);assert.equal(edge.fromDirection,'right');assert.equal(edge.toDirection,'left');
+}
+assert.deepEqual(campaign.CAMPAIGN_MAP_EDGES.filter(e=>campaign.campaignLevelByKey(e.from).mapPath!==campaign.campaignLevelByKey(e.to).mapPath)
+  .map(e=>[e.from,e.to,e.fromDirection,e.toDirection]),[
+  ['test-course','slipstream','up','down'],['codex-switchback','sky-bridge','down','up'],['coastal','chimeworks','down','up'],
+]);
 
 const graph = new campaign.CampaignStore();
 graph.startEphemeral();
@@ -105,10 +116,20 @@ assert.equal(graph.levelUnlocked("nightworks"), false);
 graph.commitClear("sky", { crystal: false, boxGem: false, comboGem: false });
 assert.equal(
   graph.levelUnlocked("nightworks"),
-  false,
-  "the boss bypassed an uncleared branch",
+  true,
+  "optional side levels must not block main-path progression",
 );
+assert.equal(graph.levelUnlocked("codex-switchback"), false);
 graph.commitClear("slip", { crystal: false, boxGem: false, comboGem: false });
+assert.equal(graph.levelUnlocked("codex-switchback"), true);
+graph.commitClear("codex-lab", { crystal: true });
+assert.equal(graph.levelProgress("codex-lab").crystal, true);
+graph.commitClear("dark", {}); graph.commitClear("beachfront", {});
+assert.equal(graph.levelUnlocked("chimeworks"), false);
+graph.commitClear("coastal-street-run", {});
+assert.equal(graph.levelUnlocked("chimeworks"), true);
+graph.commitClear("astra-chimeworks", { crystal: true });
+assert.equal(graph.levelProgress("astra-chimeworks").crystal, true);
 assert.equal(
   graph.levelUnlocked("nightworks"),
   true,
@@ -477,4 +498,19 @@ for (const [modern,bonus,expected] of [[true,false,true],[false,false,false],[tr
   applyRule(player,p2,{setEndlessDeaths:value=>{hud=value;}},modern,false);
   assert.equal(player.endlessDeaths,expected);assert.equal(p2.endlessDeaths,expected);assert.equal(hud,expected);
 }
-console.log("Validated campaign slots, working snapshots, autosave, progress and persistent Modern/Classic rules.");
+const branches=new campaign.CampaignStore();branches.newGame(3);
+for(const id of ['jungle','test','sky','dark','beachfront','coastal-street-run'])branches.commitClear(id,{});
+for(const id of ['codex-lab','astra-chimeworks']) {
+  branches.commitClear(id,{crystal:true,boxGem:true});
+  branches.commitTimeTrial(id,{time:55,medal:'gold'});
+}
+branches.setMapFocus('chimeworks');branches.saveActive();
+const branchReload=new campaign.CampaignStore();branchReload.load(3);
+for(const id of ['codex-lab','astra-chimeworks']) {
+  assert.equal(branchReload.levelProgress(id).crystal,true);
+  assert.equal(branchReload.levelProgress(id).boxGem,true);
+  assert.equal(branchReload.levelProgress(id).timeMedal,'gold');
+  assert.equal(branchReload.runModesUnlocked(id),true);
+}
+assert.equal(branchReload.recommendedMapLevelKey(),'chimeworks');
+console.log("Validated campaign slots, branch identities/awards, working snapshots, autosave, progress and persistent Modern/Classic rules.");

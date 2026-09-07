@@ -1740,7 +1740,7 @@ try {
     warpLevel.root.traverse(({ name }) => names.push(name));
     assert.equal(
       names.filter((name) => name === "world map glowing route").length,
-      9,
+      11,
       "campaign graph routes did not survive the shared Level build pipeline",
     );
     assert.equal(

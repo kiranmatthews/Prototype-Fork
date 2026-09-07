@@ -15,8 +15,8 @@ replay, and tooling compatibility. Its runtime is the fixed-rail island map in
   organic beach outline expands from the island centre to contain every linked
   `CAMPAIGN_LEVELS.mapPosition`; decorative islets and mountain ranges remain
   scenery-authored.
-- Normal clears unlock time trial and any newly satisfied outgoing hubs. The
-  first island fork is a true join: both branches are required for its finale.
+- Normal clears unlock time trial and newly satisfied outgoing hubs. Side
+  routes are optional; clearing Sky Bridge unlocks Nightworks independently.
 - `CampaignSaveV1.mapFocus` is optional for backward compatibility. New and
   migrated saves remember the last settled hub.
 - Finale markers currently reserve and dress the end-of-island hubs. They do
@@ -25,6 +25,27 @@ replay, and tooling compatibility. Its runtime is the fixed-rail island map in
 ## Input and flow
 
 Keyboard and physical D-pad/stick directions become one discrete map step.
+Left is previous and Right is next within a path, including the inter-island
+crossing. Up/Down only switch paths at authored junctions and are reciprocal.
+Island 1 main: Jungle Ruins → Test Course → Sky Bridge → Nightworks. Test Course
+has an upper Slipstream → Codex Switchback branch; Down returns from Slipstream
+to Test Course or from Codex Switchback to Sky Bridge. Island 2 main: Beachside
+Run → Coastal → Island Hopper → Jungle Gate. Coastal has Chimeworks below it,
+with Up returning to Coastal. These are canonical levels with normal saves,
+collectibles, medals and exit-to-the-same-hub behavior.
+
+The camera does not orbit sideways at branch nodes. Mountains sit behind the
+routes; island outlines fit the actual organic boundary around hub positions.
+Portrait framing keeps the selected rider below the trial card; the short lower
+branch leaves a safe touch gap above the landscape utility buttons.
+New hub identities append to the editor's array order so existing nine-point
+maps retain their destinations. Unmodified old-default captures upgrade to the
+new layout; custom coordinates are preserved and the new hub points append.
+
+Jungle Cliff is retired from the registry/build. Its source and dedicated test
+were removed; history retains them. Stale editor overrides remain exportable
+but cannot restore its menu entry.
+
 Quick keyboard down/up pairs are latched even between render frames. Cross/Enter
 enters a hub; the map exposes Progress, Options, Save/Load, and Quit directly.
 
@@ -40,8 +61,9 @@ Touch uses the map itself, not an emulated controller. Gameplay D-pad, face
 buttons, look surface and pause button are hidden on the map and restored in
 levels. Their held/pending input is cleared at the boundary. Tap an unlocked
 green hub to follow the shortest connected unlocked route to it, or tap in a
-neighbour's projected screen direction to travel toward an off-screen hub or
-island. Camera projection, not keyboard direction slots, owns touch direction.
+cardinal direction to travel toward an off-screen hub or island. Empty-space
+taps use the same Left/Right progression and Up/Down junction slots as keys;
+direct hub picks use the actual camera projection.
 Locked hubs consume the tap without redirecting it. Drags, long holds and
 multi-touch gestures do not navigate. Travel keeps the existing walking and
 boardslide presentation; new navigation waits until it finishes.

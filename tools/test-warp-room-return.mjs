@@ -419,7 +419,7 @@ try {
   );
   const { swirls } = await server.ssrLoadModule("/src/swirls.ts");
 
-  assert.equal(CAMPAIGN_LEVELS.length, 9);
+  assert.equal(CAMPAIGN_LEVELS.length, 11);
   assert.equal(
     new Set(CAMPAIGN_LEVELS.map(({ progressKey }) => progressKey)).size,
     CAMPAIGN_LEVELS.length,
@@ -481,7 +481,7 @@ try {
   );
   assert.equal(
     mapNames.filter((name) => name === "world map route bed").length,
-    9,
+    CAMPAIGN_MAP_EDGES.length,
     "a graph edge is missing its supported trail/rail bed",
   );
   const campaignIslands = [];
@@ -606,7 +606,7 @@ try {
     assert.ok(!peakGround||peakGround.point.y<foamPositions.getY(i),`outline brightness peak ${i} is buried by the inward offset`);
     coastRay.ray.origin.set(foamPositions.getX(i),50,foamPositions.getZ(i));
     const ground=coastRay.intersectObjects(coastLand,false)[0];
-    assert.ok(!ground||ground.point.y<foamPositions.getY(i),`shoreline sample ${i} is hidden under raised terrain`);
+    assert.ok(!ground||ground.point.y<foamPositions.getY(i),`shoreline sample ${i} at ${foamPositions.getX(i)},${foamPositions.getZ(i)} is hidden under ${ground?.object.name}`);
   }
   assert.equal(warpLevel.root.getObjectByName("world map lush shrubs"),undefined,"removed round bushes reappeared");
   for(const island of coastLand){
@@ -719,9 +719,9 @@ try {
     "up did not select the upper-screen branch",
   );
   assert.equal(
-    warpLevel.campaignMapNeighbor("test-course", 0, -1, (key) => branch.has(key)),
+    warpLevel.campaignMapNeighbor("test-course", 1, 0, (key) => branch.has(key)),
     "sky-bridge",
-    "down did not select the lower-screen branch",
+    "right did not stay on the main path",
   );
 
   const trailStart = warpLevel.campaignMapTravel("jungle", "test-course", 0);
@@ -873,10 +873,10 @@ try {
     });
   controller.activate(warpLevel, "slipstream");
   controllerModes.length = 0;
-  assert.equal(controller.navigate(0, 1), true);
+  assert.equal(controller.navigate(1, 0), true);
   for (let frame = 0; frame < 240 && controller.moving; frame++)
     controller.step(1 / 60, neutralInput);
-  assert.equal(controller.selectedKey, "nightworks");
+  assert.equal(controller.selectedKey, "codex-switchback");
   assert.ok(controllerModes.includes("walk"), "boardslide has no canned mount/landing beat");
   assert.ok(controllerModes.includes("boardslide"), "boardslide rail pose was never presented");
   controller.revealUnlocks(["nightworks"]);
@@ -887,7 +887,7 @@ try {
   assert.ok(revealedNode.unlockReveal < revealBeforeTick, "hub reveal animation did not advance");
   controller.enterSelected();
   controller.openSection("progress");
-  assert.deepEqual(entered, ["dark"]);
+  assert.deepEqual(entered, ["codex-lab"]);
   assert.deepEqual(sections, ["progress"]);
   controller.activate(warpLevel, "jungle");
   assert.equal(controller.travelTo("nightworks"), true);
@@ -895,6 +895,16 @@ try {
   for (let frame = 0; frame < 1200 && controller.moving; frame++) controller.step(1 / 60, neutralInput);
   assert.equal(controller.selectedKey, "nightworks", "direct hub tap did not follow multiple unlocked edges");
   assert.equal(controllerStore.recommendedMapLevelKey(), "nightworks");
+  // Side route: horizontal traversal stays within the branch; vertical slots
+  // return only at the authored junctions. No accidental diagonal fallback.
+  controller.activate(warpLevel, 'test-course');
+  for (const [x,y,key] of [[0,1,'slipstream'],[1,0,'codex-switchback'],[0,-1,'sky-bridge'],
+    [0,1,'codex-switchback'],[-1,0,'slipstream'],[0,-1,'test-course']]) {
+    assert.equal(controller.navigate(x,y),true);
+    for(let frame=0;frame<240&&controller.moving;frame++)controller.step(1/60,neutralInput);
+    assert.equal(controller.selectedKey,key);
+  }
+  assert.equal(controller.navigate(0,-1),false,'vertical navigation must not invent a branch');
   const touchCamera = new THREE.PerspectiveCamera(42, 844 / 390, .1, 900);
   controller.activate(warpLevel, "test-course");
   controller.frameCamera(touchCamera, 1 / 60);
@@ -909,7 +919,8 @@ try {
   touchCamera.updateMatrixWorld();
   // The cross-island endpoint is well off-screen in this portrait framing.
   touchCamera.aspect = 390 / 844;
-  controller.frameCamera(touchCamera, 1 / 60); touchCamera.updateMatrixWorld();
+  for (let frame = 0; frame < 240; frame++) controller.frameCamera(touchCamera, 1 / 60);
+  touchCamera.updateMatrixWorld();
   const origin = warpLevel.campaignMapPose("nightworks").position.clone().project(touchCamera);
   const destination = warpLevel.campaignMapPose("beachside-run").position.clone().project(touchCamera);
   const ox = (origin.x + 1) * 195, oy = (1 - origin.y) * 422;
@@ -925,6 +936,26 @@ try {
   controller.activate(warpLevel, "jungle");
   controller.activate(warpLevel, "jungle");
   assert.deepEqual(fakePlayer.group.scale.toArray(), [3, 3, 3], "repeated map activation compounded scale");
+  controller.deactivate();
+
+  // Each authored axis must match its screen-space layout at both endpoints.
+  for(const definition of CAMPAIGN_LEVELS)controllerStore.commitClear(definition.levelId,{});
+  for(const edge of CAMPAIGN_MAP_EDGES) for(const key of [edge.from,edge.to]) {
+    controller.activate(warpLevel,key);
+    touchCamera.aspect=16/9;controller.frameCamera(touchCamera,1/60);touchCamera.updateMatrixWorld();
+    const from=warpLevel.campaignMapPose(edge.from).position.clone().project(touchCamera);
+    const to=warpLevel.campaignMapPose(edge.to).position.clone().project(touchCamera);
+    if(edge.fromDirection==='right')assert.ok(to.x>from.x,`${edge.from} next is not screen-right at ${key}`);
+    else assert.ok((to.y-from.y)*(edge.fromDirection==='up'?1:-1)>0,`${edge.from} junction has the wrong screen direction`);
+  }
+  controller.activate(warpLevel,'coastal');touchCamera.aspect=844/390;
+  controller.frameCamera(touchCamera,1/60);touchCamera.updateMatrixWorld();
+  const sideTarget=warpLevel.campaignMapPose('chimeworks').position.clone().project(touchCamera);
+  assert.ok((1-sideTarget.y)/2<0.74,'lower side-hub touch target overlaps the short-landscape utility hit area');
+  controller.activate(warpLevel,'codex-switchback');touchCamera.aspect=390/844;
+  controller.frameCamera(touchCamera,1/60);touchCamera.updateMatrixWorld();
+  const head=warpLevel.campaignMapPose('codex-switchback').position.clone().add(new THREE.Vector3(0,5.8,0)).project(touchCamera);
+  assert.ok((1-head.y)/2>0.42,'portrait branch rider is hidden behind the trial card');
   controller.deactivate();
 
   const plantKinds=["fanpalm","bananatree","seagrape","monstera","birdofparadise"];

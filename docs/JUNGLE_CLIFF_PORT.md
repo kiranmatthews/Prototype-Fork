@@ -1,5 +1,9 @@
 # Jungle Cliff authorized layout port
 
+Historical record: Jungle Cliff was removed from the game at the owner's
+request on 8 September 2026. Its level source and dedicated test remain
+recoverable in Git history; the reusable archive-inspection tools are retained.
+
 This port is a procedural reconstruction of Kraftpaper's
 [Level 1 - Jungle Cliff](https://www.nexusmods.com/crashbandicootnsanetrilogy/mods/164)
 for Crash Bandicoot N. Sane Trilogy. On 31 August 2026, the project owner

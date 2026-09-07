@@ -206,29 +206,16 @@ export class WorldMapController {
     }
     // A locked marker consumes the tap; it must not select some other path.
     if (nearest) return this.travelTo(nearest);
-    const origin = project(this.selectedKeyValue), originPose = level.campaignMapPose(this.selectedKeyValue);
-    if (!origin || !originPose) return false;
+    const origin = project(this.selectedKeyValue);
+    if (!origin) return false;
     const dx = x - THREE.MathUtils.clamp(origin.x, 24, width - 24);
     const dy = y - THREE.MathUtils.clamp(origin.y, 24, height - 24);
     const length = Math.hypot(dx, dy);
     if (length < 40) return false;
-    let candidate: string | null = null, best = 0.45;
-    for (const key of this.neighbors(this.selectedKeyValue)) {
-      const point = project(key), pose = level.campaignMapPose(key);
-      if (!point || !pose) continue;
-      let vx = point.x - origin.x, vy = point.y - origin.y;
-      if (point.z < -1 || point.z > 1) {
-        // Projection mirrors points behind the lens. Use the camera-plane
-        // displacement instead, so an off-screen island never reverses intent.
-        const direction = pose.position.clone().sub(originPose.position).transformDirection(camera.matrixWorldInverse);
-        vx = direction.x; vy = -direction.y;
-      }
-      const distance = Math.hypot(vx, vy);
-      if (distance < 1e-6) continue;
-      const score = (vx * dx + vy * dy) / (distance * length);
-      if (score > best) { best = score; candidate = key; }
-    }
-    return candidate !== null && this.beginTravel(candidate);
+    // Empty-space taps follow the same stable axis slots as keys/the stick.
+    // Only direct hub picks use projected geometry; camera motion cannot turn
+    // a Right/next gesture into a branch choice.
+    return this.navigate(dx, -dy);
   }
 
   private neighbors(key: string): string[] {
@@ -365,10 +352,6 @@ export class WorldMapController {
       : this.player.renderPosition.clone();
     const targetPose = level.campaignMapPose(this.travel?.to ?? this.selectedKeyValue);
     const portrait = camera.aspect < 0.75;
-    const northView = !this.travel && targetPose
-      ? THREE.MathUtils.smoothstep(islandCentre.z - targetPose.position.z, 8, 16)
-      : 0;
-    const orbitSide = (targetPose?.position.x ?? islandCentre.x) < islandCentre.x ? -1 : 1;
     const travelSample = this.travel
       ? level.campaignMapTravel(
           this.travel.from,
@@ -386,8 +369,19 @@ export class WorldMapController {
     } else {
       this.desiredTarget.copy(islandCentre);
       if (targetPose)
-        this.desiredTarget.lerp(targetPose.position, portrait ? 0.9 : 0.52 + northView * 0.3);
-      this.desiredTarget.y = (targetPose?.position.y ?? 1.5) + 3.25;
+        this.desiredTarget.lerp(targetPose.position, portrait ? 0.9 : 0.68);
+      // Leave room for the vertical junction, particularly a lower side hub:
+      // it must not sit underneath the TV-safe bottom menu hints.
+      const junction = CAMPAIGN_MAP_EDGES.find(edge => {
+        const direction = edge.from === this.selectedKeyValue ? edge.fromDirection
+          : edge.to === this.selectedKeyValue ? edge.toDirection : null;
+        return direction === "up" || direction === "down";
+      });
+      const sidePose = junction && level.campaignMapPose(junction.from === this.selectedKeyValue ? junction.to : junction.from);
+      if (sidePose && !portrait) this.desiredTarget.z = THREE.MathUtils.lerp(this.desiredTarget.z, sidePose.position.z, 0.25);
+      // Portrait reserves its upper region for the existing deck/trial card.
+      // Aim above the selected rider so their head remains below that region.
+      this.desiredTarget.y = (targetPose?.position.y ?? 1.5) + (portrait ? 9 : 3.25);
     }
     const travelProgress = this.travel
       ? THREE.MathUtils.clamp(this.travel.elapsed / this.travel.duration, 0, 1)
@@ -395,9 +389,9 @@ export class WorldMapController {
     const bridgePullback = crossIsland ? Math.sin(travelProgress * Math.PI) : 0;
     this.desiredEye.copy(this.desiredTarget).add(
       new THREE.Vector3(
-        northView * orbitSide * 36,
-        (boardTravel ? 27 : portrait ? 28 : 31) + bridgePullback * 10 + northView * 4,
-        (boardTravel ? 39 : portrait ? 39 : 43) + bridgePullback * 13 - northView * 12,
+        0, // Keep screen-right aligned with next on every path, including branches.
+        (boardTravel ? 27 : portrait ? 28 : 34) + bridgePullback * 10,
+        (boardTravel ? 39 : portrait ? 39 : 46) + bridgePullback * 13,
       ),
     );
     if (!this.cameraReady) {

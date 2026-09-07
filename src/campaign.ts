@@ -74,6 +74,8 @@ export interface CampaignLevelDefinition {
   relicTime: number;
   /** Stable island identity used by the world-map camera and progress ledger. */
   islandId: CampaignIslandId;
+  /** Horizontal sequence identity; Up/Down only connects different paths. */
+  mapPath: "main" | "upper-branch" | "lower-branch";
   /** World-map hub position. Y is the character's supported feet height. */
   mapPosition: readonly [number, number, number];
   /** Progress keys that can reveal this hub. Empty means available at New Game. */
@@ -99,15 +101,15 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     id: "island-1",
     name: "Island 1",
     subtitle: "REGION 01",
-    centre: [-27, 0, 14],
-    levelKeys: ["jungle", "test-course", "sky-bridge", "slipstream", "nightworks"],
+    centre: [-39, 0, 12],
+    levelKeys: ["jungle", "test-course", "sky-bridge", "slipstream", "codex-switchback", "nightworks"],
   },
   {
     id: "island-2",
     name: "Island 2",
     subtitle: "REGION 02",
-    centre: [31, 0, 3],
-    levelKeys: ["beachside-run", "coastal", "island-hopper", "jungle-gate"],
+    centre: [50, 0, 13],
+    levelKeys: ["beachside-run", "coastal", "chimeworks", "island-hopper", "jungle-gate"],
   },
 ] as const;
 
@@ -138,15 +140,15 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     travel: "trail",
     fromDirection: "right",
     toDirection: "left",
-    waypoints: [[-38, 1.7, 24]],
+    waypoints: [[-54, 1.6, 20]],
   },
   {
     from: "test-course",
     to: "sky-bridge",
     travel: "trail",
-    fromDirection: "down",
+    fromDirection: "right",
     toDirection: "left",
-    waypoints: [[-22, 2.6, 20], [-17, 3, 24]],
+    waypoints: [[-35, 1.9, 19]],
   },
   {
     from: "test-course",
@@ -154,23 +156,31 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     travel: "trail",
     fromDirection: "up",
     toDirection: "down",
-    waypoints: [[-24, 2.25, 20], [-17, 2.5, 15]],
+    waypoints: [[-45, 2.2, 7]],
   },
   {
     from: "sky-bridge",
     to: "nightworks",
     travel: "trail",
-    fromDirection: "up",
-    toDirection: "down",
-    waypoints: [[-8, 3.8, 18], [-10, 4.3, 5], [-20, 5, -2]],
+    fromDirection: "right",
+    toDirection: "left",
+    waypoints: [[-18, 2.5, 18]],
   },
   {
     from: "slipstream",
-    to: "nightworks",
+    to: "codex-switchback",
     travel: "boardslide",
-    fromDirection: "up",
+    fromDirection: "right",
     toDirection: "left",
-    waypoints: [[-18, 4.2, 2], [-35, 5.4, -1]],
+    waypoints: [[-35, 4.2, -3]],
+  },
+  {
+    from: "codex-switchback",
+    to: "sky-bridge",
+    travel: "trail",
+    fromDirection: "down",
+    toDirection: "up",
+    waypoints: [[-25, 2.5, 7]],
   },
   {
     from: "nightworks",
@@ -178,15 +188,23 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     travel: "boardslide",
     fromDirection: "right",
     toDirection: "left",
-    waypoints: [[-19, 8.5, -8], [0, 9.5, -10], [9, 4.5, -2]],
+    waypoints: [[0, 8.5, 14], [11, 8.5, 14]],
   },
   {
     from: "beachside-run",
     to: "coastal",
     travel: "trail",
+    fromDirection: "right",
+    toDirection: "left",
+    waypoints: [[33, 1.6, 16]],
+  },
+  {
+    from: "coastal",
+    to: "chimeworks",
+    travel: "trail",
     fromDirection: "down",
     toDirection: "up",
-    waypoints: [[18, 1.6, 8], [23, 1.75, 13]],
+    waypoints: [[42, 2.1, 20]],
   },
   {
     from: "coastal",
@@ -194,15 +212,15 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     travel: "boardslide",
     fromDirection: "right",
     toDirection: "left",
-    waypoints: [[36, 4.2, 19], [43, 4.4, 13]],
+    waypoints: [[52, 4.2, 14]],
   },
   {
     from: "island-hopper",
     to: "jungle-gate",
     travel: "trail",
-    fromDirection: "up",
-    toDirection: "down",
-    waypoints: [[51, 4.2, -2], [45, 4.8, -10], [38, 5.1, -14]],
+    fromDirection: "right",
+    toDirection: "left",
+    waypoints: [[70, 2.8, 13]],
   },
 ] as const;
 
@@ -213,7 +231,8 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     name: "Jungle Ruins",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-1",
-    mapPosition: [-45, 1.35, 27],
+    mapPath: "main",
+    mapPosition: [-63, 1.35, 18],
     unlockAfter: [],
   },
   {
@@ -223,7 +242,8 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     name: "Test Course",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-1",
-    mapPosition: [-30, 1.75, 18],
+    mapPath: "main",
+    mapPosition: [-44, 1.75, 18],
     unlockAfter: ["jungle"],
   },
   {
@@ -232,7 +252,8 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     name: "Sky Bridge",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-1",
-    mapPosition: [-14, 3.1, 28],
+    mapPath: "main",
+    mapPosition: [-26, 2.1, 18],
     unlockAfter: ["test-course"],
   },
   {
@@ -241,7 +262,8 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     name: "Slipstream",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-1",
-    mapPosition: [-13, 2.55, 7],
+    mapPath: "upper-branch",
+    mapPosition: [-44, 2.55, -3],
     unlockAfter: ["test-course"],
   },
   {
@@ -250,9 +272,9 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     name: "Nightworks",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-1",
-    mapPosition: [-29, 5.25, -3],
-    unlockAfter: ["sky-bridge", "slipstream"],
-    unlockMode: "all",
+    mapPath: "main",
+    mapPosition: [-9, 2.85, 18],
+    unlockAfter: ["sky-bridge"],
     boss: true,
   },
   {
@@ -261,7 +283,8 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     name: "Beachside Run",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-2",
-    mapPosition: [13, 1.35, 2],
+    mapPath: "main",
+    mapPosition: [23, 1.35, 16],
     unlockAfter: ["nightworks"],
   },
   {
@@ -270,7 +293,8 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     name: "Coastal",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-2",
-    mapPosition: [27, 1.75, 16],
+    mapPath: "main",
+    mapPosition: [42, 1.75, 14],
     unlockAfter: ["beachside-run"],
   },
   {
@@ -279,7 +303,8 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     name: "Island Hopper",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-2",
-    mapPosition: [46, 3.05, 5],
+    mapPath: "main",
+    mapPosition: [61, 2.4, 14],
     unlockAfter: ["coastal"],
   },
   {
@@ -288,9 +313,32 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     name: "Jungle Gate",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-2",
-    mapPosition: [32, 5.1, -13],
+    mapPath: "main",
+    mapPosition: [79, 3.1, 14],
     unlockAfter: ["island-hopper"],
     boss: true,
+  },
+  // Append new identities: existing editable worldmap.pts arrays use these
+  // indices. Island display order lives in CAMPAIGN_ISLANDS.levelKeys.
+  {
+    progressKey: "codex-switchback",
+    levelId: "codex-lab",
+    name: "Codex Switchback",
+    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+    islandId: "island-1",
+    mapPath: "upper-branch",
+    mapPosition: [-26, 2.85, -3],
+    unlockAfter: ["slipstream"],
+  },
+  {
+    progressKey: "chimeworks",
+    levelId: "astra-chimeworks",
+    name: "Chimeworks",
+    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+    islandId: "island-2",
+    mapPath: "lower-branch",
+    mapPosition: [42, 2.3, 26],
+    unlockAfter: ["coastal"],
   },
 ] as const;
 
@@ -307,6 +355,17 @@ export function validateCampaignMapGraph(): string[] {
   const edgePairs = new Set<string>();
   const connectedKeys = new Set<string>();
   for (const edge of CAMPAIGN_MAP_EDGES) {
+    const from = LEVEL_BY_KEY.get(edge.from), to = LEVEL_BY_KEY.get(edge.to);
+    const opposite = { left: "right", right: "left", up: "down", down: "up" } as const;
+    if (edge.toDirection !== opposite[edge.fromDirection])
+      errors.push(`non-reciprocal map directions ${edge.from}:${edge.to}`);
+    if (from && to) {
+      const horizontal = from.mapPath === to.mapPath;
+      if (horizontal && (edge.fromDirection !== "right" || edge.toDirection !== "left" || to.mapPosition[0] <= from.mapPosition[0]))
+        errors.push(`path progression must run left-to-right ${edge.from}:${edge.to}`);
+      if (!horizontal && (edge.fromDirection !== (to.mapPosition[2] < from.mapPosition[2] ? "up" : "down") || Math.abs(to.mapPosition[0] - from.mapPosition[0]) > 2))
+        errors.push(`branch junction must run vertically ${edge.from}:${edge.to}`);
+    }
     if (!LEVEL_BY_KEY.has(edge.from)) errors.push(`unknown map edge source ${edge.from}`);
     if (!LEVEL_BY_KEY.has(edge.to)) errors.push(`unknown map edge destination ${edge.to}`);
     if (edge.from === edge.to) errors.push(`self-connected map edge ${edge.from}`);

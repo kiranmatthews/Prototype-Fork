@@ -41,7 +41,6 @@ import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
 import { ASTRA_CHIMEWORKS_LEVEL } from "./levels/astra-chimeworks";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
 import { BEACHFRONT_RUN_LEVEL } from "./levels/beachfront-run";
-import { JUNGLE_CLIFF_LEVEL } from "./levels/jungle-cliff";
 import { UNITY_PORT_LEVELS } from "./levels/unity-ports";
 import { EASY_BONUS_LEVEL, DEFAULT_BONUS_CRATE_COUNT } from "./levels/bonus-easy";
 import { TropicalPlantKit, TROPICAL_PLANT_KINDS, TROPICAL_PLANT_LABELS } from "./tropicalPlants";
@@ -1015,6 +1014,22 @@ function defaultGateFor(d: CustomLevelData): CustomComponent {
 // metadata remains visible in the modern group outliner.
 export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   d.components = d.components.map((c) => {
+    if (c.t === "worldmap" && c.pts?.length === 9) {
+      // Pre-branch map files keep the first nine stable hub identities.
+      const oldDefaults = [[-45,27,0,1.35],[-30,18,0,1.75],[-14,28,0,3.1],[-13,7,0,2.55],
+        [-29,-3,0,5.25],[13,2,0,1.35],[27,16,0,1.75],[46,5,0,3.05],[32,-13,0,5.1]];
+      const unchanged = c.pts.every((point,i) => point.length === 4 && point.every((value,j) => value === oldDefaults[i][j]));
+      const defaults = worldMapComponentPoints();
+      if (unchanged) return { ...c, pts: defaults };
+      const points = [...c.pts];
+      for (const point of defaults.slice(9)) {
+        // A custom old hub may already occupy the new default spot. Preserve
+        // it and place only the newly added hub in the next clear slot.
+        while (points.some(other => Math.hypot(point[0]-other[0], point[1]-other[1], (point[3]??0)-(other[3]??0)) < 0.05)) point[1] += 4;
+        points.push(point);
+      }
+      return { ...c, pts: points };
+    }
     if (c.t === "outline")
       return {
         ...c,
@@ -2196,11 +2211,6 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   ...UNITY_PORT_LEVELS,
   { id: "bonus-easy", name: EASY_BONUS_LEVEL.name, data: EASY_BONUS_LEVEL },
   {
-    id: "jungle-cliff",
-    name: JUNGLE_CLIFF_LEVEL.name,
-    data: JUNGLE_CLIFF_LEVEL,
-  }, // authorized clean-room reconstruction from KraftpaperMan's NST Maker mod
-  {
     id: "codex-lab",
     name: CODEX_LAB_LEVEL.name,
     data: CODEX_LAB_LEVEL,
@@ -2700,7 +2710,7 @@ function normalizeLevelDataFields(value: unknown): CustomLevelData | null {
       singletonKinds.add(component.t);
       if (component.t === "worldmap") {
         if (source.ocean || (component.pts &&
-            (component.pts.length !== CAMPAIGN_LEVELS.length || component.pts.some(point =>
+            (![9, CAMPAIGN_LEVELS.length].includes(component.pts.length) || component.pts.some(point =>
               Math.abs(point[0]) > 256 || Math.abs(point[1]) > 256 || Math.abs(point[3] ?? 0) > 128))))
           return null;
         if (component.pts) for (let i = 0; i < component.pts.length; i++) {
@@ -3109,7 +3119,9 @@ export function levelList(): LevelEntry[] {
       };
     return override;
   });
-  for (const u of user) if (!isBuiltin(u.id)) out.push(u);
+  // Retired built-in overrides may remain in local/exported editor archives,
+  // but must not resurrect a deleted game level as a new custom menu row.
+  for (const u of user) if (!isBuiltin(u.id) && u.id !== "jungle-cliff") out.push(u);
   return out;
 }
 

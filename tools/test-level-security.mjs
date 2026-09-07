@@ -37,6 +37,24 @@ try {
   copy.components[0].p[0] = 100;
   assert.equal(original.components[0].p[0], 0, "validation must isolate caller-owned data");
   assert.deepEqual(normalize(normalize(base())), normalize(base()), "migration must stay idempotent");
+  const oldMap={...base(),components:[{t:'worldmap',p:[0,0,0],pts:api.worldMapComponentPoints().slice(0,9)}]};
+  const expanded=normalize(oldMap);
+  assert.equal(expanded.components[0].pts.length,11,'legacy editable map lost its new branch hubs');
+  assert.deepEqual(expanded.components[0].pts.slice(0,9),oldMap.components[0].pts,'legacy hub identities shifted');
+  assert.deepEqual(normalize(expanded),expanded,'map expansion must be idempotent');
+  assert.equal(oldMap.components[0].pts.length,9,'normalizing mutated the original map');
+  const unchangedMap={...oldMap,components:[{t:'worldmap',p:[0,0,0],pts:[[-45,27,0,1.35],[-30,18,0,1.75],[-14,28,0,3.1],[-13,7,0,2.55],[-29,-3,0,5.25],[13,2,0,1.35],[27,16,0,1.75],[46,5,0,3.05],[32,-13,0,5.1]]}]};
+  assert.deepEqual(normalize(unchangedMap).components[0].pts,api.worldMapComponentPoints(),'unchanged old defaults masked the new layout');
+  const occupied=structuredClone(oldMap);occupied.components[0].pts[0]=api.worldMapComponentPoints()[9];
+  const occupiedMigrated=normalize(occupied);
+  assert.deepEqual(occupiedMigrated.components[0].pts.slice(0,9),occupied.components[0].pts);
+  assert.deepEqual(normalize(occupiedMigrated),occupiedMigrated,'new hubs collided with custom old positions');
+  assert.ok(!api.BUILTIN_LEVELS.some(e=>e.id==='jungle-cliff'));
+  assert.equal(setUserLevels([{id:'jungle-cliff',name:'Jungle Cliff',data:base()}]),true);
+  assert.equal(api.findLevel('jungle-cliff'),null,'stored override resurrected retired level');
+  assert.ok(!api.levelList().some(e=>e.id==='jungle-cliff'));
+  assert.equal(getUserLevels()[0].id,'jungle-cliff','retirement erased recoverable user data');
+  setUserLevels([]);
 
   // Prototype pollution, stored payloads and hooks cannot survive the boundary.
   for (const key of ["__proto__", "prototype", "constructor"]) {

@@ -902,8 +902,8 @@ export function createCampaignWorldMap(
   }
   const water = new CoastWater({
     shore: [
-      worldShore(130, 76),
-      worldShore(-130, 76),
+      worldShore(200, 76),
+      worldShore(-200, 76),
     ],
     seaLevel: -1.15 + (authoring?.p[1] ?? 0),
     shoreDirX: 0,
@@ -944,27 +944,32 @@ export function createCampaignWorldMap(
       .filter((level) => level !== null);
     const x = island.centre[0];
     const z = island.centre[2];
+    const rx = Math.max(22, ...hubs.map(level => Math.abs(level.mapPosition[0] - x) + 8.5));
+    const rz = Math.max(20, ...hubs.map(level => Math.abs(level.mapPosition[2] - z) + 8.5));
+    const outline = organicIslandOutline(MAP_COAST_SEGMENTS, stableSeed(island.id));
+    // Fit hubs inside the actual irregular outline, not just its rectangular
+    // bounds. Side-path corner hubs otherwise overhang the beach.
+    const fit = Math.max(1, ...hubs.map(level => {
+      const dx = (level.mapPosition[0] - x) / rx, dz = (level.mapPosition[2] - z) / rz;
+      const angle = (Math.atan2(dz, dx) + Math.PI * 2) % (Math.PI * 2);
+      const index = Math.round(angle / (Math.PI * 2) * outline.length) % outline.length;
+      return Math.hypot(dx, dz) / (outline[index] * 0.82);
+    }));
     return {
       x,
       z,
-      rx: Math.max(
-        22,
-        ...hubs.map((level) => Math.abs(level.mapPosition[0] - x) + 8.5),
-      ),
-      rz: Math.max(
-        20,
-        ...hubs.map((level) => Math.abs(level.mapPosition[2] - z) + 8.5),
-      ),
+      rx: rx * fit,
+      rz: rz * fit,
       seed: stableSeed(island.id),
       scenic: false,
       campaignIslandId: island.id,
     };
   });
   const scenicIslandSpecs = [
-    { x: -59, z: 2, rx: 3.2, rz: 2.5, seed: 1009, scenic: true, campaignIslandId: null },
-    { x: 1, z: 33, rx: 2.8, rz: 2.2, seed: 1031, scenic: true, campaignIslandId: null },
-    { x: 63, z: 23, rx: 3.5, rz: 2.7, seed: 1061, scenic: true, campaignIslandId: null },
-    { x: 2, z: -20, rx: 3, rz: 2.3, seed: 1091, scenic: true, campaignIslandId: null },
+    { x: -91, z: 0, rx: 3.2, rz: 2.5, seed: 1009, scenic: true, campaignIslandId: null },
+    { x: 3, z: 40, rx: 2.8, rz: 2.2, seed: 1031, scenic: true, campaignIslandId: null },
+    { x: 100, z: 34, rx: 3.5, rz: 2.7, seed: 1061, scenic: true, campaignIslandId: null },
+    { x: 5, z: -23, rx: 3, rz: 2.3, seed: 1091, scenic: true, campaignIslandId: null },
   ] as const;
   const islandSpecs = [...playableIslandSpecs, ...scenicIslandSpecs];
   for (const spec of islandSpecs) {
@@ -1028,12 +1033,12 @@ export function createCampaignWorldMap(
     emissiveIntensity: 0.18,
   });
   const mountainSpecs = [
-    { x: -28, z: 7, r: 7.5, h: 18.5, s: 31 },
-    { x: -34, z: 8, r: 4.8, h: 13.5, s: 47 },
-    { x: -23, z: 5, r: 4.3, h: 11.5, s: 59 },
-    { x: 31, z: 1, r: 7.7, h: 18, s: 71 },
-    { x: 25, z: 3, r: 5, h: 13.2, s: 83 },
-    { x: 37, z: 0, r: 4.5, h: 11.8, s: 97 },
+    { x: -55, z: -8, r: 7.5, h: 18.5, s: 31 },
+    { x: -49, z: -11, r: 4.8, h: 13.5, s: 47 },
+    { x: -19, z: -8, r: 4.3, h: 11.5, s: 59 },
+    { x: 55, z: -4, r: 7.7, h: 18, s: 71 },
+    { x: 46, z: -7, r: 5, h: 13.2, s: 83 },
+    { x: 64, z: -5, r: 4.5, h: 11.8, s: 97 },
   ] as const;
   for (const mountain of mountainSpecs) {
     const mesh = new THREE.Mesh(
@@ -1072,8 +1077,8 @@ export function createCampaignWorldMap(
 
   const waterfallRibbons: MapWaterfallRibbon[] = [];
   for (const [x, y, z, height] of [
-    [-31.2, 4.1, 13.6, 5.6],
-    [33.1, 4.1, 7.5, 5.4],
+    [-55.2, 4.1, -1.4, 5.6],
+    [55.1, 4.1, 2.5, 5.4],
   ] as const) {
     for (let layer = 0; layer < 3; layer++) {
       const geometry = new THREE.PlaneGeometry(
