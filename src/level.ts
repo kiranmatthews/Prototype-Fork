@@ -15916,7 +15916,7 @@ export class Level {
 
   // ---- shared world/HUD collectible geometry -------------------------------
 
-  // One low-poly asymmetric shell with per-vertex specular. Halo sprites stay
+  // One low-poly asymmetric shell with vertex-lit facet sweeps. Halo sprites stay
   // world-only; HUD/map consumers remove them and use the same shell material.
   static crystalMesh(scale = 1): THREE.Group {
     const g = new THREE.Group();

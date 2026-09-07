@@ -21,82 +21,101 @@ those implementation details separately for Crash 3. This is an independently
 authored, PS1-budget-inspired approximation, **not a bit-exact reconstruction
 of Naughty Dog's renderer**. No original game code, meshes or textures ship.
 
-## Implementation
+## Geometry-first reconstruction
 
-`src/collectibleSpecular.ts` replaces the painted matcaps and translucent inner
-cores with one closed, front-facing shell. The crystal retains its five-sided,
-asymmetric silhouette; gems retain the octagonal table, crown and pavilion.
-Hidden internal caps are gone. Small face-centre fans provide enough vertices
-for a readable highlight gradient without adding a dense mesh.
+The July 11 crystal recording was decoded into 375 frames at 60 Hz. The
+earlier clear-gem clip and the supplied clear-gem still were reviewed separately.
+The still resolved crown cuts that the small recording obscured. These are
+independent low-poly reconstructions, not recovered original game meshes.
 
-Facet normals provide the broad body shading. A separately authored optical
-normal rolls toward each corner's averaged normal inside a cut, but stays
-discontinuous across cuts. Separate crystal/gem profiles use fixed camera-space
-studio lights. The crystal has a tall strip reflection that travels from a
-narrow sliver into a broad long-face flash; its belt normals roll sideways
-without softening the crown/pavilion crease. The gem concentrates its flashes
-on the crown and pavilion edges, with charcoal cuts between them. View-relative
-lighting keeps small rewards readable in world, HUD and map cameras.
+The old crystal was two five-sided pyramids: ten triangular faces subdivided
+through synthetic face centres. The replacement has four staggered shoulder
+sectors: four upper quadrilaterals, four long pentagons and a small quadrilateral
+foot. It uses radius 0.40, shoulder-radius ratio 1.15 and preserves the original
+Y extent (-1.5 to 0.72). A bounded fit of visible junctions in frame 94 favoured
+four sectors over three/five (about 8.5 px RMS versus about 20 px in that frame).
+This supports the chosen reconstruction; it does not prove hidden source topology.
 
-All specular evaluation runs **per vertex**. Eighth/thirty-second/sixty-fourth-power lobes
-use repeated multiplication, with no texture lookup, transcendental `pow`,
-light loop, cube map, reflection render target or per-fragment normal math.
-Untinted white/cool highlights are added after body colour, so the green gem
-can flash white without losing its green identity.
+The gem keeps an eight-sided table but replaces the simple octagonal frustum
+with a brilliant-style cut: eight star triangles, eight bezel quadrilaterals,
+sixteen upper-girdle triangles, eight pavilion quadrilaterals and sixteen
+lower-girdle triangles. The girdle radius is 0.72, table radius 0.46, crown height
+0.28 and pavilion depth 0.45. This is a wider/shallower profile with real
+alternating cut planes, rather than the old deep, sparsely faceted pyramid.
 
-The body starts at **86% opacity**, rising smoothly to **100% for the white
-highlight**. Coverage is clamped after interpolation so bright face interiors
-do not inherit translucent coverage from darker corner vertices. The material's
-ordinary opacity still scales the entire result for HUD reveals/fades. This
-uses normal alpha blending in the same front-facing, depth-writing shell pass,
-not a second specular layer, rear shell or refraction pass. Clones preserve the
-profile and use distinct shader cache keys. Fog, colour management, modern depth
-and anti-aliasing remain; PS1 precision artifacts are not imitated.
+`collectiblePolygons()` owns physical face boundaries. Every rendered vertex is
+a real perimeter corner; no centre vertices or smoothed optical normals remain.
+The GPU still receives triangles, but all triangles within one cut share a
+single plane normal and affine face coordinates.
 
-Only rotation/view changes move the highlights: there is no artificial glint
-clock, per-frame CPU vertex update or texture upload. The existing world-only
-halo sprites and collection bursts remain; HUD/map consumers still strip the
-halos. Time relics, missing-reward silhouettes, progression and pickup rules
-are unchanged.
+## Highlight reconstruction
 
-### Reference-video refinement
+`src/collectibleSpecular.ts` retains one front-facing shell per collectible.
+Camera-space light incidence, highlight strength/width/position and body
+lighting are evaluated per vertex using fixed directions and multiply-based
+power lobes. The fragment shader evaluates a small one-dimensional strip
+envelope in affine face space. It does **not** calculate per-pixel normals,
+reflection vectors, texture lookups or additional render passes.
 
-The owner's July 11 recordings informed the richer violet crystal body, darker
-gem cuts and more concentrated moving white reflections. The subtle body
-transmission is the owner's requested approximation of the visible background
-hints, not a claim that the original renderer used exactly 86% alpha. No source
-video pixels were copied into the runtime. Geometry silhouettes, spin/bob timing
-and world halo treatment are unchanged by this refinement.
+The crystal has two distinct responses observed in the recording: a narrow
+lower-edge sliver and a broader strip that crosses and floods a long face.
+Its short crown is subdued independently. Body lighting uses an affine
+longitudinal gradient, not a three-way gradient converging at a centre vertex.
+The gem uses broader reflections across its physical crown cuts plus small
+girdle glints; it does not use a separate narrow stripe on every tiny facet.
+
+The broad crystal light was phase-aligned against the recorded face sweep.
+The diagnostic comparison uses matched orientations, not a claim that the
+reference camera, bobbing and playback timing were recovered exactly.
+Existing game/HUD spin and bob rates are unchanged.
+
+Untinted white/cool highlights are added after body colour, so coloured rewards
+can flash white. Body coverage starts at **86%**, rising to **100% for white
+highlights**. Native material opacity still scales the whole icon for reveals
+and fades. Coverage is clamped after interpolation; white face interiors cannot
+inherit translucent alpha from darker corners. The shell remains front-side,
+depth-tested and depth-writing, without a rear shell or refraction pass.
+Material clones retain their crystal/gem profile and distinct shader cache key.
+
+World halo sprites, collection bursts, pickup rules, map presentation and
+run-local HUD inventory are unchanged. No reference pixels ship as textures.
 
 ## Measured cost
 
-Isolated Chrome test, one crystal + clear gem + green gem, world halos removed
-as in the HUD/map, identical renderer/camera and rotation:
+Isolated Chrome render of one crystal, one clear gem and one green gem,
+without their world-only halos:
 
-| Geometry pass | Before | After |
-| --- | ---: | ---: |
-| Draw calls | 10 | 3 |
-| Submitted triangles | 188 | 158 |
-| Shell materials sampling matcaps | Yes | No |
-| Translucent inner meshes | 4 total | 0 |
+| | Original matcaps | First vertex version | Reconstructed cuts |
+| --- | ---: | ---: | ---: |
+| Draw calls | 10 | 3 | 3 |
+| Triangles | 188 | 158 | 178 |
+| Specular textures | Yes | No | No |
+| Inner meshes | 4 | 0 | 0 |
 
-The crystal is 30 triangles; each gem is 64. This is a **70% reduction in draw
-calls for these three assets**, not a claim of a 70% whole-game FPS gain or a
-measurement of PS1 cycle cost. The browser and original console are different
-execution environments.
+The new crystal is 22 triangles; each gem is 78. Extra gem triangles represent
+physical cut planes, not shading tessellation. There are no per-frame vertex
+uploads or generated textures. This is not a PS1 cycle-cost claim, nor a claim
+that alpha blending and fragment envelopes cost nothing.
 
-The video-driven refinement retains **3 draws / 158 triangles**, with no new
-textures, meshes or lighting passes. Alpha composition adds only scalar fragment
-work; it does not move specular lighting into the fragment shader. These counts
-do not imply that alpha blending has zero GPU cost.
+## Validation and limitations
 
-## Validation
+- Closed/manifold, convex shells; outward winding, planar cuts, expected polygon
+  side counts, correct scale/extents and no synthetic interior vertices.
+- Affine U/V fields across each physical face. A GPU test re-triangulates the
+  crystal from different perimeter corners: over six poses the largest channel
+  difference is 1/255, with no pixels differing by more than 2/255.
+- A 123-frame matched-orientation phase sequence, reference frame measurements
+  across all 375 decoded frames, multi-angle renders and source/before/after
+  comparisons. CRT noise, halo and unknown source camera remain limitations.
+- RGBA readback confirms body alpha 219/255, white highlights 255/255 and whole
+  fades at 0.35 producing alpha 77–89/255.
+- Real pickup/HUD and map views on desktop/touch, lite/full and CRT paths; shader
+  compilation, clone/fade isolation and the production build suite.
 
-`tools/test-collectible-specular.mjs` checks closed/manifold geometry, outward
-winding, preserved heights/scaling, bounded optical normals and crystal belt
-creases, shader injection/profile caching, material cloning/HUD fade isolation,
-and the absence of runtime specular texture lookups. Browser reviews cover full
-rotations at three camera pitches and the real world, map/HUD, touch and CRT
-routes. Offscreen RGBA readback measures body alpha at 219/255, opaque white
-highlights at 255/255, and correctly scaled whole-icon fades. The full 93-command
-production build passed.
+The img2threejs geometry-first review discipline guided the separate shape and
+lighting passes. Its generic factory does not expose explicit polyhedron faces,
+so the existing repository mesh factory was used instead. Its whole-frame
+silhouette admission also rejects the crystal's busy background; those pixels
+were not treated as an automatic fidelity score. The isolated gem reference
+passes admission. No completed generic Forge pipeline or exact original shader
+reconstruction is claimed.
