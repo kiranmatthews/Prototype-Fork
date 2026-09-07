@@ -35,6 +35,8 @@ Optional level metadata includes atmosphere/sky, ocean, sand blocks and shorelin
 
 Legacy `outline` and `pipe` primitives migrate to modern crate/vertramp data before building. Legacy layers migrate into named groups while preserving locks. Group duplicates, dangling parents, and cycles are normalized safely; nesting beyond 64 levels is rejected. Migration preserves component data and is idempotent. Ordinary courses gain missing finish/run-mode objects; bonus and hub HUD modes omit run-mode activators, and hubs do not gain an automatic finish gate.
 
+Ocean `geometryVersion: 2` uses world Three coordinates and editor yaw consistently. Older ocean data migrates once while preserving its rendered footprint; changing between straight and node-based shorelines preserves the endpoint positions and sea side.
+
 ## Resource limits
 
 These are upper ceilings; combined work limits can reject a file below an individual ceiling. They are defensive bounds, not a promise of smooth performance on every device.
@@ -45,7 +47,7 @@ These are upper ceilings; combined work limits can reject a file below an indivi
 | Published pack / local store | 16 MiB |
 | Levels in a pack | 128 |
 | Components in one level | 10,000 |
-| Dynamic hazard/enemy components combined | 1,024 |
+| Dynamic hazard/enemy/animated mechanism components combined | 1,024 |
 | Cars projected onto an authored traffic road | 128 |
 | Crates / legacy outlines / metal crates combined | 2,048 |
 | Checkpoints | 128 |
@@ -55,6 +57,8 @@ These are upper ceilings; combined work limits can reject a file below an indivi
 | Polygon points | 512 (4,096 for pit footprints) |
 | Combined triangulation work estimate | 20,000,000 squared filleted points |
 | Generated geometry/collision/decor work estimate | 500,000 units |
+| Masonry assembly layout work across the level | 12,000 units |
+| Polygon/rotated-slab collision scan estimate | 2,000,000 edge visits; also charged at 4 units per visit to the combined work budget |
 | Vertices / triangles on one native mesh component | 4,096 / 4,096 |
 | Native mesh vertices / triangles across the level | 100,000 / 100,000 |
 | Terrain-support ray probes × component count | 2,000,000 |
@@ -72,11 +76,19 @@ These are upper ceilings; combined work limits can reject a file below an indivi
 
 Additional primitive-specific minima prevent invalid geometry and zero/negative timing periods. Spline estimates allow for overshoot; fallback paths, both terrain berms, scaffold planks/supports/rails, wall collision subdivisions and ocean vertex products contribute to the combined budget. A lexical preflight rejects nesting deeper than 12 (14 for packs), more than 100,000 containers or 800,000 separators, and raw string bodies beyond 1,536 characters before parser allocation. Braces and escaped quotes inside strings do not affect nesting counts. The plain-data copier separately bounds depth (12), visited values (400,000), object fields (128), and estimated memory (16 MiB), followed by an exact serialized 5 MiB limit. Names in the menu are trimmed and limited to 28 characters after validation.
 
+The dynamic cap also includes crumbling platforms, sagging ropes, moving rails, trick gates, return portals and thorn clusters because these have per-frame runtime updates. Stationary rails retain their ordinary path budget.
+
+`templeplatform`, `templewall`, `roofedtemple` and `hangingarch` expand their `s` dimensions into individual masonry parts. A constant-time conservative estimator beside those builders accounts for every wall course, paving cell, column and roof member, including damaged paving cells visited but omitted. Each layout unit also costs 8 units in the combined budget; the final `w` scale does not add parts. The native Jungle Ruins capture was measured at 48 assemblies, 6,822 emitted parts and 7,460 estimated layout units. Regression tests compare the estimator against actual builder output over 144 combinations of dimensions, damage and floor options, and the complete native capture remains importable.
+
+Drawn walls and rotated slabs generate collision across their entire footprint. The old 240-slab cutoff and omission of spans narrower than 0.2 m are removed. Scan strips stop at polygon vertex heights, have at most 1 m of Z depth, and subdivide diagonal edges to at most 0.25 m of X movement. Their AABBs cover both strip endpoints, preserving thin branches without broad boxes across empty diagonal space. The import budget accounts for all strips, subdivisions and edge visits before construction; excessive footprints fail validation instead of silently losing collision.
+
 ## Trust boundaries and failure behavior
 
 `parseCustomLevelJson` is the single-file parsing entry point. It checks encoded byte size and lexically bounds nesting, container count, separators and string length before `JSON.parse`, then makes a bounded plain-data copy and validates the schema before migration or geometry construction. Reserved keys `__proto__`, `prototype`, and `constructor` are rejected anywhere. Non-plain objects, accessors, `toJSON` functions, cycles, sparse arrays, hidden properties and arbitrary metadata are rejected by the object-level API. Validation does not evaluate imported code or fetch imported URLs.
 
-`normalizeUserLevelEntries` validates a complete pack before replacement. Invalid entries, duplicate IDs or oversized packs reject the entire operation and keep existing local work. Startup recovery can salvage individually valid entries from an older/corrupt local store. Legacy single-slot adoption uses the same parser and retains invalid or unpersisted source slots for recovery. A browser storage quota failure retains the validated session copy so it can still be exported; it must be surfaced as unsaved by the UI.
+Migration is followed by a second complete validation of the canonical result, including clone work and serialized size. Added gates/mode objects, layer groups and expanded per-node widths cannot push an accepted file beyond its component, coordinate or resource ceilings. A shared-file wrapper title is normalized through the same migration path, including historical name-specific repairs, so importing and reopening it does not defer another data change.
+
+`normalizeUserLevelEntries` validates a complete pack before replacement. Its serialized byte budget includes array brackets and separators. Invalid entries, duplicate IDs or oversized packs reject the entire operation and keep existing local work. Startup recovery can salvage individually valid entries from an older/corrupt local store. Legacy single-slot adoption uses the same parser and retains invalid or unpersisted source slots for recovery. A browser storage quota failure retains the validated session copy so it can still be exported; it must be surfaced as unsaved by the UI.
 
 Published pack downloads are streamed with a byte cap, a timeout and strict UTF-8 decoding before parsing. Restore applies only a completely validated version-2 pack. Single-file UI reads also check `File.size` before loading the file into memory. Level names and labels remain text: display them through `textContent` or escaped markup, never as raw HTML.
 
@@ -84,7 +96,7 @@ These checks cover the format and resource-expansion paths exercised by the regr
 
 ## Editor audit and conversion limits
 
-The editor exposes native components, indexed mesh vertices, path knots and level-owned ocean/sand/foam controls. Moving an owner also moves its portal return point, timber support floor and shelf waterline. Search, persistent save/error feedback, bounded history and canonical working data keep editing state aligned with the preview and export. Numeric edits commit on change, blur or Enter; Escape and pointer interruption cancel unfinished gestures.
+The editor exposes native components, indexed mesh vertices, path knots and level-owned ocean/sand/foam controls. Moving an owner also moves its portal return point, timber support floor and shelf waterline. Search, responsive exclusive docks, persistent save/error feedback, bounded history and canonical working data keep editing state aligned with the preview and export. Numeric edits commit on change, blur or Enter; Escape and pointer interruption cancel unfinished gestures.
 
 The audit adds gameplay-preserving representations for campaign maps, bonus entrances, traffic roads, continuous coast blockers, tumble volumes, irregular ground triangles and curved oceans. Runtime tests cover collisions, gaps, transforms and the supported gameplay relationships. The diagnostic `--strict-hand-built` object comparison still reports differences for legacy hand-coded scenes: some custom material/theme effects and manually emitted visual-only scenery do not have complete capture parity. Opening and closing without editing retains the original built level exactly. Do not interpret the ordinary round-trip suite as proof of pixel-identical conversion of every legacy scene.
 

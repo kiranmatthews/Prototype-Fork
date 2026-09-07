@@ -28,9 +28,11 @@ import {
   starterCustomLevel,
   migrateCustomLevel,
   normalizeCustomLevelData,
+  normalizeUserLevelEntries,
   MAX_LEVEL_FILE_BYTES,
   MAX_USER_LEVELS,
   getUserLevels,
+  newLevelId,
   parseCustomLevelJson,
   cleanLevelName,
   groupChainOf,
@@ -2401,6 +2403,27 @@ export class Editor {
   private tabSelBtn: HTMLButtonElement | null = null;
   private tabProjBtn: HTMLButtonElement | null = null;
   private panelTab: "sel" | "proj" = "sel";
+  private activePop: "add" | "layers" | "" = "";
+  private inspectorVisible = true;
+  private tabInspector: HTMLButtonElement | null = null;
+  private compactViewport(): boolean { return (window.innerWidth || this.dom?.clientWidth || 1024) <= 720; }
+
+  private syncDockLayout(): void {
+    const visible = this.active && this.inspectorVisible && !(this.compactViewport() && this.activePop);
+    this.panel.style.display = visible ? "flex" : "none";
+    this.tabInspector?.setAttribute("aria-expanded", String(!!visible));
+    this.tabInspector?.classList.toggle("ed-tab-on", !!visible);
+    if (this.tabInspector) this.tabInspector.title = visible ? "Hide inspector to work on the canvas" : `Show ${this.panelTab === "proj" ? "project" : "selection"} inspector`;
+  }
+
+  private toggleInspector(): void {
+    this.cancelScrub?.();
+    this.rollbackActiveGesture(true);
+    const wasVisible = this.inspectorVisible && !(this.compactViewport() && this.activePop);
+    this.inspectorVisible = !wasVisible;
+    if (this.inspectorVisible && this.compactViewport()) this.setPop("");
+    this.syncDockLayout();
+  }
   private raycaster = new THREE.Raycaster();
   // 2D work views: X/Y/Z lock the camera flat down an axis (pan/zoom only)
   // and drags move in the two visible axes; '3d' is the free orbit view.
@@ -2447,6 +2470,7 @@ export class Editor {
   private camSaveAt = 0;
   private cameraDirty = false;
   private cancelScrub: (() => void) | null = null;
+  private releasingCapture = false;
   // PEN TOOL: click-to-draw polygon platforms / pits / walls
   private drawing: {
     t:
@@ -2559,6 +2583,11 @@ export class Editor {
     window.addEventListener("keydown", this.onKey);
     window.addEventListener("keyup", this.onKeyUp);
     window.addEventListener("blur", this.onPointerCancel);
+    window.addEventListener("resize", () => {
+      if (!this.active) return;
+      this.onPointerCancel();
+      this.syncDockLayout();
+    });
   }
 
   enter(target: LevelEntry, initialData?: CustomLevelData): void {
@@ -2704,13 +2733,32 @@ export class Editor {
     );
   }
 
-  private forkHandBuiltDraft(): boolean {
+  private canStoreDraft(id: string, name: string, data: CustomLevelData): boolean {
+    const entries = [...getUserLevels()];
+    const entry = { id: id || newLevelId(), name, data };
+    const at = entries.findIndex(item => item.id === entry.id);
+    if (at < 0) entries.push(entry);
+    else entries[at] = entry;
+    if (normalizeUserLevelEntries(entries)) return true;
+    this.showMessage(
+      entries.length > MAX_USER_LEVELS ? "LEVEL LIMIT REACHED" : "LIBRARY LIMIT REACHED",
+      "export and remove unused levels before saving more geometry",
+    );
+    return false;
+  }
+
+  private forkHandBuiltDraft(): { persisted: boolean } | null {
     const originalName = findLevel(this.initialTargetId)?.name ?? this.targetName;
     const forkName =
       this.data.name && this.data.name !== originalName
         ? this.data.name
         : `${originalName} edit`;
+    const previousName = this.data.name;
     this.data.name = forkName;
+    if (!this.canStoreDraft("", forkName, this.data)) {
+      this.data.name = previousName;
+      return null;
+    }
     const id = saveUserLevel({ id: "", name: forkName, data: this.data });
     this.targetId = id;
     this.targetName = findLevel(id)?.name ?? forkName;
@@ -2725,7 +2773,7 @@ export class Editor {
       "EDITABLE COPY CREATED",
       `${originalName} stays untouched · now editing ${this.targetName}`,
     );
-    return userLevelStorageHealthy();
+    return { persisted: userLevelStorageHealthy() };
   }
 
   private rollbackActiveGesture(rebuildPreview = false): boolean {
@@ -2792,7 +2840,7 @@ export class Editor {
   }
 
   private onPointerCancel = (): void => {
-    if (!this.active) return;
+    if (!this.active || this.releasingCapture) return;
     this.cancelScrub?.();
     this.rollbackActiveGesture(true);
   };
@@ -3023,15 +3071,17 @@ export class Editor {
     this.importSerial++;
     const e = findLevel(id);
     if (!e) return;
+    // Cancellation callbacks belong to the old level and may rebuild it.
+    // Keep its identity intact until every old gesture has been unwound.
+    this.cancelScrub?.();
+    this.rollbackActiveGesture(false);
+    this.cancelDraw();
     this.targetId = e.id;
     this.targetName = e.name;
     this.registryChanged = true;
     this.closedGroups.clear();
     if (this.nameInput) this.nameInput.value = e.name;
     editorStorage.setItem("solProtoEditorTarget", e.id);
-    this.cancelScrub?.();
-    this.rollbackActiveGesture(false);
-    this.cancelDraw();
     this.data = migrateCustomLevel(getEditData(e.id));
     this.initialTargetId = e.id;
     this.initialJson = JSON.stringify(this.data);
@@ -3076,6 +3126,21 @@ export class Editor {
   private redoStack: string[] = [];
   private lastCommitted = "";
 
+  private restoreCommittedData(selection = this.sel, resizeIdx = this.resizeIdx): void {
+    this.data = migrateCustomLevel(JSON.parse(this.lastCommitted) as CustomLevelData);
+    this.sel = selection.filter(index => Number.isInteger(index) && index >= 0 &&
+      index < this.data.components.length && !this.isLockedIdx(index));
+    this.resizeIdx = this.sel.length === 1 && this.sel[0] === resizeIdx ? resizeIdx : -1;
+    this.selVtxs.clear();
+    this.hooks.resetPreview();
+    this.renderLayers();
+    this.renderProps();
+    this.syncSkySelect();
+    this.refreshSelectionBox();
+    this.refreshHandles();
+    this.refreshSpawnMarker();
+  }
+
   private trimHistory(): void {
     // Strings occupy up to two bytes/code unit. Keep at least the nearest undo.
     const maxChars = 16 * 1024 * 1024;
@@ -3095,27 +3160,13 @@ export class Editor {
     const beforePrune = JSON.stringify(this.data);
     if (beforePrune === this.lastCommitted) return true;
     if (!this.hooks.preflight()) {
-      this.data = migrateCustomLevel(
-        JSON.parse(this.lastCommitted) as CustomLevelData,
-      );
-      this.sel = this.sel.filter(
-        (index) => index >= 0 && index < this.data.components.length,
-      );
-      this.hooks.resetPreview();
-      this.renderLayers();
-      this.renderProps();
-      this.syncSkySelect();
-      return false;
-    }
-    if (this.forkOnFirstCommit && getUserLevels().length >= MAX_USER_LEVELS) {
-      this.data = migrateCustomLevel(JSON.parse(this.lastCommitted) as CustomLevelData);
-      this.hooks.resetPreview(); this.renderProps(); this.syncSkySelect();
-      this.showMessage("LEVEL LIMIT REACHED", "export and remove an unused level before creating an editable copy");
+      this.restoreCommittedData();
       return false;
     }
     const selectedObjects = this.sel.map(index => this.data.components[index]).filter(Boolean);
     const resizedObject = this.data.components[this.resizeIdx];
     const previousSelection = [...this.sel];
+    const previousResize = this.resizeIdx;
     this.data = migrateCustomLevel(this.data);
     const indices = new Map(this.data.components.map((component, index) => [component, index]));
     this.sel = selectedObjects.flatMap(component => {
@@ -3126,15 +3177,23 @@ export class Editor {
     const selectionAdjusted = previousSelection.length !== this.sel.length ||
       previousSelection.some((index, position) => index !== this.sel[position]);
     this.pruneGroups();
-    let forkPersisted: boolean | null = null;
+    let fork: { persisted: boolean } | null = null;
     if (
       this.forkOnFirstCommit &&
       this.targetId === this.initialTargetId &&
       JSON.stringify(this.data) !== this.initialJson
-    )
-      forkPersisted = this.forkHandBuiltDraft();
+    ) {
+      fork = this.forkHandBuiltDraft();
+      if (!fork) { this.restoreCommittedData(previousSelection, previousResize); return false; }
+    }
     const now = JSON.stringify(this.data);
     if (now === this.lastCommitted) return true;
+    const restoringBuiltin = this.pristineBuiltin &&
+      this.targetId === this.initialTargetId && now === this.initialJson;
+    if (!fork && !restoringBuiltin && !this.canStoreDraft(this.targetId, this.targetName, this.data)) {
+      this.restoreCommittedData(previousSelection, previousResize);
+      return false;
+    }
     const t = performance.now();
     const chained =
       coalesce !== "" &&
@@ -3152,14 +3211,10 @@ export class Editor {
     this.syncHistoryButtons();
     this.renderLayers();
     this.syncProjectFields();
-    let persisted = forkPersisted ?? true;
-    if (forkPersisted === null &&
-      this.pristineBuiltin &&
-      this.targetId === this.initialTargetId &&
-      now === this.initialJson
-    )
+    let persisted = fork?.persisted ?? true;
+    if (!fork && restoringBuiltin)
       restoreBuiltin(this.targetId);
-    else if (forkPersisted === null)
+    else if (!fork)
       persisted = persistEditData(this.targetId, now); // autosave straight into the level list
     if (!persisted || !userLevelStorageHealthy())
       this.showMessage(
@@ -3184,13 +3239,15 @@ export class Editor {
       this.statusEl.dataset.error = "0";
     }
     if (selectionAdjusted) this.renderProps();
-    return persisted && userLevelStorageHealthy();
+    // Quota failures retain an accepted in-memory draft. Callers must only
+    // roll back rejected edits, never erase an exportable session change.
+    return true;
   }
 
   // swap in a history state WITHOUT recording it as a new edit
-  private applyState(json: string): void {
+  private applyState(json: string): boolean {
+    const previousData = this.data;
     this.data = migrateCustomLevel(JSON.parse(json) as CustomLevelData);
-    this.syncSkySelect(); // undo/redo can change the time of day
     let canonical = JSON.stringify(this.data);
     let persisted = true;
     if (this.forkedLevelId && canonical === this.initialJson) {
@@ -3208,7 +3265,9 @@ export class Editor {
       this.targetId === this.initialTargetId &&
       canonical !== this.initialJson
     ) {
-      persisted = this.forkHandBuiltDraft();
+      const fork = this.forkHandBuiltDraft();
+      if (!fork) { this.data = previousData; return false; }
+      persisted = fork.persisted;
       canonical = JSON.stringify(this.data);
     } else if (
       this.pristineBuiltin &&
@@ -3216,7 +3275,14 @@ export class Editor {
       canonical === this.initialJson
     )
       restoreBuiltin(this.targetId);
-    else persisted = persistEditData(this.targetId, canonical);
+    else {
+      if (!this.canStoreDraft(this.targetId, this.targetName, this.data)) {
+        this.data = previousData;
+        return false;
+      }
+      persisted = persistEditData(this.targetId, canonical);
+    }
+    this.syncSkySelect(); // undo/redo can change the time of day
     this.lastCommitted = canonical;
     this.lastCoalesce = "";
     this.lastCommitT = 0;
@@ -3237,15 +3303,18 @@ export class Editor {
       this.statusEl.textContent = "History restored · saved in this browser";
       this.statusEl.dataset.error = "0";
     }
+    return true;
   }
 
   undo(): void {
     this.cancelScrub?.();
     this.rollbackActiveGesture(true);
-    const prev = this.undoStack.pop();
+    const prev = this.undoStack[this.undoStack.length - 1];
     if (!prev) return;
-    this.redoStack.push(JSON.stringify(this.data));
-    this.applyState(prev);
+    const current = JSON.stringify(this.data);
+    if (!this.applyState(prev)) return;
+    this.undoStack.pop();
+    this.redoStack.push(current);
     this.trimHistory();
     this.syncHistoryButtons();
   }
@@ -3253,10 +3322,12 @@ export class Editor {
   redo(): void {
     this.cancelScrub?.();
     this.rollbackActiveGesture(true);
-    const next = this.redoStack.pop();
+    const next = this.redoStack[this.redoStack.length - 1];
     if (!next) return;
-    this.undoStack.push(JSON.stringify(this.data));
-    this.applyState(next);
+    const current = JSON.stringify(this.data);
+    if (!this.applyState(next)) return;
+    this.redoStack.pop();
+    this.undoStack.push(current);
     this.trimHistory();
     this.syncHistoryButtons();
   }
@@ -3283,6 +3354,10 @@ export class Editor {
       }
     }
     if (clean.length === 0) return false;
+    if (this.data.components.some(component => replacing.has(component.t) && component.lk)) {
+      this.showMessage("COMPONENT LOCKED", "unlock the existing unique component before replacing it");
+      return false;
+    }
     const retained = this.data.components.filter((o) => !replacing.has(o.t));
     if (retained.length + clean.length > 10_000) {
       this.showMessage(
@@ -3293,9 +3368,19 @@ export class Editor {
     }
     // Stage the entire batch before changing singleton furniture or group
     // wiring. A rejected paste must leave the level byte-for-byte unchanged.
+    const previousSelection = [...this.sel];
+    const previousResize = this.resizeIdx;
+    const previousNodes = new Set(this.selVtxs);
     this.remapGroups(clean, sourceGroups);
     this.data.components = [...retained, ...clean];
-    if (commit) this.commit();
+    if (commit && !this.commit()) {
+      this.setSelection(previousSelection);
+      this.resizeIdx = previousResize;
+      this.selVtxs = previousNodes;
+      this.refreshHandles();
+      this.renderProps();
+      return false;
+    }
     this.setSelection(clean.map(component => this.data.components.indexOf(component)));
     return true;
   }
@@ -3306,9 +3391,10 @@ export class Editor {
     // point — move them, never delete them (a load would regrow them anyway)
     const KEEP = new Set(["gate", "clock", "comboorb"]);
     const dying = [...this.sel]
-      .filter((i) => !KEEP.has(this.data.components[i].t))
+      .filter((i) => this.data.components[i] && !this.isLockedIdx(i) &&
+        !KEEP.has(this.data.components[i].t))
       .sort((a, b) => b - a);
-    if (dying.length < this.sel.length)
+    if (this.sel.some(i => KEEP.has(this.data.components[i]?.t)))
       this.showMessage(
         "GATE & ACTIVATORS STAY",
         "every level keeps its gate, stopwatch and combo orb — move them instead",
@@ -3364,13 +3450,9 @@ export class Editor {
     cx /= this.clipboard.length;
     cz /= this.clipboard.length;
     const key = `${Math.round(t.x)},${Math.round(t.z)}`;
-    if (key === this.lastPasteKey) this.pasteBump += 2;
-    else {
-      this.pasteBump = 0;
-      this.lastPasteKey = key;
-    }
-    let dx = t.x - cx + this.pasteBump;
-    let dz = t.z - cz + this.pasteBump;
+    const bump = key === this.lastPasteKey ? this.pasteBump + 2 : 0;
+    let dx = t.x - cx + bump;
+    let dz = t.z - cz + bump;
     if (this.snap) {
       dx = snapHalf(dx);
       dz = snapHalf(dz);
@@ -3380,7 +3462,10 @@ export class Editor {
       setComponentPosition(copy, [copy.p[0] + dx, copy.p[1], copy.p[2] + dz]);
       return copy;
     });
-    this.addBatch(copies, true, this.clipboardGroups);
+    if (this.addBatch(copies, true, this.clipboardGroups)) {
+      this.pasteBump = bump;
+      this.lastPasteKey = key;
+    }
   }
 
   // ---- locks (per component; the outliner toggles them) ----
@@ -3440,7 +3525,7 @@ export class Editor {
       if (
         r !== undefined &&
         !fullRoots.has(r) &&
-        this.groupMembers(r).every((m) => selSet.has(m) || this.isLockedIdx(m))
+        this.groupMembers(r).every((m) => selSet.has(m) && !this.isLockedIdx(m))
       ) {
         fullRoots.add(r);
       }
@@ -3456,7 +3541,7 @@ export class Editor {
       if (g) g.parent = G;
     }
     this.data.groups.push({ id: G });
-    this.commit();
+    if (!this.commit()) return;
     this.showMessage(
       `GROUPED ${this.sel.length}`,
       'a "!" crate in a group wires its outline crates',
@@ -3472,13 +3557,17 @@ export class Editor {
       if (r !== undefined) roots.add(r);
     }
     if (roots.size === 0) return;
+    if ([...roots].some(root => this.groupMembers(root).some(index => this.isLockedIdx(index)))) {
+      this.showMessage("GROUP LOCKED", "unlock every member before dissolving its group");
+      return;
+    }
     for (const r of roots) {
       for (const c of this.data.components) if (c.grp === r) c.grp = undefined;
       for (const g of this.data.groups)
         if (g.parent === r) g.parent = undefined;
       this.data.groups = this.data.groups.filter((g) => g.id !== r);
     }
-    this.commit();
+    if (!this.commit()) return;
     this.showMessage("UNGROUPED");
   }
 
@@ -3554,7 +3643,8 @@ export class Editor {
     const seen = new Set<number>();
     const valid: number[] = [];
     for (const i of list) {
-      if (i >= 0 && i < this.data.components.length && !seen.has(i)) {
+      if (Number.isInteger(i) && i >= 0 && i < this.data.components.length &&
+        !this.isLockedIdx(i) && !seen.has(i)) {
         seen.add(i);
         valid.push(i);
       }
@@ -3572,7 +3662,7 @@ export class Editor {
     this.refreshSelectionBox();
     this.renderProps();
     this.renderLayers(); // outliner rows highlight the live selection
-    if (valid.length > 0 && this.panelTab !== "sel") this.setPanelTab("sel"); // jump to the fields you just picked
+    if (valid.length > 0) this.setPanelTab("sel"); // reveal the fields you just picked
   }
 
   private objectsFor(idx: number): THREE.Object3D[] {
@@ -5853,12 +5943,13 @@ export class Editor {
 
   private onUp = (e: PointerEvent): void => {
     if (!this.active) return;
+    this.releasingCapture = true;
     try {
       if (this.dom.hasPointerCapture(e.pointerId))
         this.dom.releasePointerCapture(e.pointerId);
     } catch {
       /* capture optional */
-    }
+    } finally { this.releasingCapture = false; }
     if (this.drawing) return; // pen tool owns the pointer (vertices drop on down)
     if (this.spaceHeld) {
       this.dom.style.cursor = "grab";
@@ -6089,6 +6180,8 @@ export class Editor {
   private buildPanel(): void {
     const panel = document.createElement("div");
     panel.className = "ed-panel";
+    panel.id = "level-editor-inspector";
+    panel.setAttribute("aria-label", "Level editor inspector");
     panel.style.display = "none";
     const h = (html: string): HTMLElement => {
       const d = document.createElement("div");
@@ -6156,10 +6249,17 @@ export class Editor {
     );
     tabs.appendChild(this.tabAdd);
     tabs.appendChild(this.tabLayers);
+    this.tabInspector = h('<button class="ed-tab">▤<span>EDIT</span></button>') as HTMLButtonElement;
+    this.tabInspector.setAttribute("aria-label", "Toggle editor inspector");
+    this.tabInspector.setAttribute("aria-controls", "level-editor-inspector");
+    this.tabInspector.addEventListener("click", () => { this.toggleInspector(); this.tabInspector?.blur(); });
+    tabs.appendChild(this.tabInspector);
     wrap.appendChild(tabs);
 
     // item picker pop-out: grouped, icon + label per component
     const popAdd = h('<div class="ed-pop" style="display:none"></div>');
+    popAdd.id = "level-editor-add";
+    this.tabAdd.setAttribute("aria-controls", popAdd.id);
     popAdd.appendChild(h('<div class="ed-title">ADD</div>'));
     const search = document.createElement("input");
     search.type = "search"; search.placeholder = "Find a piece…"; search.setAttribute("aria-label", "Find a piece");
@@ -6203,6 +6303,7 @@ export class Editor {
         b.addEventListener("click", () => {
           if (p.penDraw) {
             this.startDraw(p.penDraw);
+            if (this.compactViewport()) { this.inspectorVisible = false; this.setPop(""); }
             b.blur();
             return;
           }
@@ -6234,6 +6335,8 @@ export class Editor {
         '<div class="ed-dim">every piece is a row · groups expand with ▸<br>click a name to select it in the world<br>🔒 = click-through (safe from edits)<br>⌘G groups the selection · ✎ renames</div>',
       ),
     );
+    popLayers.id = "level-editor-layers";
+    this.tabLayers.setAttribute("aria-controls", popLayers.id);
     this.popLayers = popLayers;
     wrap.appendChild(popLayers);
 
@@ -6447,6 +6550,7 @@ export class Editor {
       return b;
     };
     mk("export", () => {
+      this.cancelScrub?.(); this.rollbackActiveGesture(true);
       const data = normalizeCustomLevelData(this.data);
       if (!data) { this.showMessage("EXPORT FAILED", "finish or undo the invalid edit first"); return; }
       const pretty = JSON.stringify(data, null, 1);
@@ -6525,6 +6629,7 @@ export class Editor {
     const resetBtn = mk("start over", () => {});
     this.resetBtn = resetBtn;
     arm(resetBtn, "tap again to reset", () => {
+      this.cancelScrub?.(); this.rollbackActiveGesture(true);
       if (isBuiltin(this.targetId)) {
         const name = this.targetName;
         this.registryChanged = true;
@@ -6542,6 +6647,7 @@ export class Editor {
     // DUPLICATE: fork the open level into a new menu row and edit that one, so
     // a risky change never costs you the version that worked.
     mk("duplicate", () => {
+      this.cancelScrub?.(); this.rollbackActiveGesture(true);
       if (!this.hooks.preflight()) return;
       const id = saveUserLevel({
         id: "",
@@ -6561,6 +6667,7 @@ export class Editor {
     const delBtn = mk("delete level", () => {});
     this.delBtn = delBtn;
     arm(delBtn, "tap again to delete", () => {
+      this.cancelScrub?.(); this.rollbackActiveGesture(true);
       const gone = this.targetName;
       this.registryChanged = true;
       deleteUserLevel(this.targetId);
@@ -6595,12 +6702,16 @@ export class Editor {
 
   // one pop-out at a time (photoshop-dock rules); '' closes both
   private setPop(which: "add" | "layers" | "", persist = true): void {
+    this.activePop = which;
     if (this.popAdd)
       this.popAdd.style.display = which === "add" ? "block" : "none";
     if (this.popLayers)
       this.popLayers.style.display = which === "layers" ? "block" : "none";
     this.tabAdd?.classList.toggle("ed-tab-on", which === "add");
     this.tabLayers?.classList.toggle("ed-tab-on", which === "layers");
+    this.tabAdd?.setAttribute("aria-expanded", String(which === "add"));
+    this.tabLayers?.setAttribute("aria-expanded", String(which === "layers"));
+    this.syncDockLayout();
     if (persist)
       try {
         editorStorage.setItem(`solProtoEditorPop:${this.targetId}`, which);
@@ -6613,6 +6724,9 @@ export class Editor {
   // right-panel tab: selection fields vs project (level/file/help)
   private setPanelTab(which: "sel" | "proj"): void {
     this.panelTab = which;
+    this.inspectorVisible = true;
+    if (this.compactViewport() && this.activePop) this.setPop("");
+    this.syncDockLayout();
     if (this.selPane)
       this.selPane.style.display = which === "sel" ? "" : "none";
     if (this.projPane)
@@ -7160,7 +7274,7 @@ export class Editor {
     input.value = String(get());
     input.title = "shift+↑/↓ = ±10 · drag up/down to scrub";
     // read the field, apply it, coalesce bursts into one undo step, resync
-    const apply = (commitChange = true): void => {
+    const apply = (commitChange = true, finishingScrub = false): void => {
       const v = parseFloat(input.value);
       if (isFinite(v)) {
         const next = THREE.MathUtils.clamp(v, -100_000, 100_000);
@@ -7168,7 +7282,7 @@ export class Editor {
           set(next);
           if (commitChange) this.commit(true, `num:${label}`);
           else this.hooks.rebuild();
-        } else if (commitChange && scrub?.moved) {
+        } else if (commitChange && (scrub?.moved || finishingScrub)) {
           // The final scrub value may already be visible from its last
           // preview; it still needs its one transaction on release.
           this.commit(true, `num:${label}`);
@@ -7243,23 +7357,24 @@ export class Editor {
       }
     });
     const endScrub = (cancel = false): void => {
-      if (scrub?.moved) {
+      const ending = scrub;
+      scrub = null;
+      this.cancelScrub = null;
+      if (ending?.moved) {
         try {
-          input.releasePointerCapture(scrub.id);
+          input.releasePointerCapture(ending.id);
         } catch {
           /* ignore */
         }
         input.style.cursor = "";
         if (cancel) {
           this.data = migrateCustomLevel(
-            JSON.parse(scrub.source) as CustomLevelData,
+            JSON.parse(ending.source) as CustomLevelData,
           );
           this.hooks.resetPreview();
           this.renderProps();
-        } else apply(); // land the final value
+        } else apply(true, true); // finish after releasing the capture owner
       }
-      scrub = null;
-      this.cancelScrub = null;
     };
     input.addEventListener("pointerup", () => endScrub(false));
     input.addEventListener("pointercancel", () => endScrub(true));
@@ -9206,11 +9321,14 @@ export class Editor {
     css.textContent = `
       .ed-panel {
         position: fixed; right: 10px; top: 10px; bottom: 10px; width: 228px;
-        overflow-y: auto; z-index: 60; padding: 10px;
+        overflow: hidden; flex-direction: column; z-index: 60; padding: 10px;
         font: 11px ui-monospace, Menlo, Consolas, monospace; color: #cdd6e4;
         background: rgba(16, 20, 30, 0.92); border: 1px solid #3a4152;
         border-radius: 10px;
       }
+      .ed-panel > * { flex-shrink: 0; }
+      .ed-panel > .ed-pane { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; padding-right: 4px; }
+      .ed-panel .ed-row > input, .ed-panel .ed-row > select, .ed-select { box-sizing: border-box; min-width: 0; }
       .ed-title { font-weight: bold; letter-spacing: 1px; color: #58e08a; margin-bottom: 8px; }
       .ed-ptabs { display: flex; gap: 4px; margin-bottom: 6px; }
       .ed-ptab {
@@ -9235,7 +9353,7 @@ export class Editor {
       .ed-danger { color: #ff8484; }
       .ed-btn:disabled { opacity: .4; cursor: default; }
       .ed-history { margin-bottom: 8px; }
-      .ed-status { font-size: 10px; line-height: 1.5; color: #b2d9c1; overflow-wrap: anywhere; padding: 6px; margin-bottom: 6px; border-left: 2px solid #58a978; background: #17251f; }
+      .ed-status { font-size: 10px; line-height: 1.5; max-height: 4.5em; overflow-y: auto; color: #b2d9c1; overflow-wrap: anywhere; padding: 6px; margin-bottom: 6px; border-left: 2px solid #58a978; background: #17251f; }
       .ed-status:empty { display: none; }
       .ed-status[data-error="1"] { color: #ffc8af; border-color: #ff9870; background: #30211d; }
 
@@ -9259,6 +9377,12 @@ export class Editor {
       .ed-dim { color: #6b7890; margin-top: 8px; line-height: 1.5; }
       .ed-sellist { margin: 0 0 6px; }
       /* editing: the play HUD gets out of the tools' way (build stamp stays) */
+      body.ed-active .side-wrap,
+      body.ed-active [data-crt-guest-panel-host],
+      body.ed-active [data-render-quality-panel-host],
+      body.ed-active [data-skateboard-panel-host],
+      body.ed-active [data-spin-panel-host],
+      body.ed-active visual-treatment-panel { display: none !important; }
       body.ed-active [class^="hud-"]:not(.hud-build),
       body.ed-active [class*=" hud-"]:not(.hud-build) { display: none !important; }
       .ed-tabs {
@@ -9326,6 +9450,22 @@ export class Editor {
       /* ---- mouse-only states ---------------------------------------------
          Gated for the same reason as the HUD's: a tap on iOS leaves a faked
          hover behind, which read as every button in here staying selected. */
+      @media (max-width: 720px) {
+        .ed-panel, .ed-pop {
+          left: 62px; right: 10px; bottom: 64px; top: auto; width: auto;
+          max-height: 52vh; max-height: 52dvh;
+        }
+        .ed-panel { height: 52vh; height: 52dvh; }
+        .ed-tabs { top: 10px; }
+        .ed-viewbtn { min-width: 34px; min-height: 32px; }
+      }
+      @media (max-height: 500px) and (max-width: 720px) {
+        .ed-panel, .ed-pop { top: 10px; bottom: 56px; height: auto; max-height: none; }
+      }
+      @media (pointer: coarse) {
+        .ed-row input, .ed-row select, .ed-select, .ed-search { font-size: 16px; }
+        .ed-btn, .ed-layername, .ed-lbtn { min-height: 32px; }
+      }
       @media (hover: hover) {
         .ed-ptab:hover { color: #cdd6e4; }
         .ed-btn:hover { background: #262e42; color: #d5e0f0; }

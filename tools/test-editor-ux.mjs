@@ -82,7 +82,7 @@ try {
     Object.assign(editor, {
       data: clone(data), sel: [], selVtxs: new Set(), resizeIdx: -1,
       clipboard: [], clipboardGroups: [], pasteBump: 0, lastPasteKey: "",
-      targetId: "__editor_ux", initialTargetId: "__editor_ux", initialJson: JSON.stringify(data),
+      targetId: "__editor_ux", targetName: data.name, initialTargetId: "__editor_ux", initialJson: JSON.stringify(data),
       lastCommitted: JSON.stringify(data), undoStack: [], redoStack: [], commits: 0,
       panel: new Element(), propsEl: new Element(), scaleProp: false, snap: false,
       closedGroups: new Set(), medalTimeInputs: {}, importSerial: 0,
@@ -410,6 +410,40 @@ try {
     const edited = editor.meshVertexWorldPosition(scaled, 0);
     assert.ok(edited.distanceTo(selected.clone().add(new THREE.Vector3(4, 0, 0))) < 1e-8);
     assert.equal(scaled.normals, undefined, "edited triangles retained stale supplied normals");
+  });
+  check("narrow editor docks are exclusive, reversible and do not edit the level", () => {
+    const editor = editorFor(base([{ t: "platform", p: [0, 0, 0] }]));
+    editor.active = true; editor.inspectorVisible = true; editor.activePop = "";
+    editor.popAdd = new Element(); editor.popLayers = new Element();
+    editor.selPane = new Element(); editor.projPane = new Element();
+    editor.tabAdd = new Element(); editor.tabLayers = new Element(); editor.tabInspector = new Element();
+    const before = JSON.stringify(editor.data);
+    window.innerWidth = 390;
+    editor.setPop("add");
+    assert.equal(editor.panel.style.display, "none");
+    assert.equal(editor.popAdd.style.display, "block");
+    editor.setPanelTab("sel");
+    assert.equal(editor.panel.style.display, "flex");
+    assert.equal(editor.popAdd.style.display, "none");
+    editor.toggleInspector(); assert.equal(editor.panel.style.display, "none");
+    editor.toggleInspector(); assert.equal(editor.panel.style.display, "flex");
+    editor.setPop("layers"); assert.equal(editor.panel.style.display, "none");
+    window.innerWidth = 1280; editor.syncDockLayout();
+    assert.equal(editor.panel.style.display, "flex"); assert.equal(editor.popLayers.style.display, "block");
+    assert.equal(JSON.stringify(editor.data), before); assert.equal(editor.commits, 0);
+    delete window.innerWidth;
+  });
+  check("reentrant pointer capture loss cannot cancel a completed numeric scrub", () => {
+    const editor = editorFor(base([{ t: "platform", p: [0, 0, 0] }]));
+    editor.sel = [0]; editor.renderProps();
+    const input = inputFor(editor, "x");
+    let releases = 0;
+    input.releasePointerCapture = () => { releases++; input.dispatch("lostpointercapture"); };
+    input.dispatch("pointerdown", { clientY: 100 });
+    input.dispatch("pointermove", { clientY: 80 });
+    input.dispatch("pointerup");
+    assert.equal(releases, 1); assert.equal(editor.data.components[0].p[0], 5);
+    assert.equal(editor.commits, 1); assert.equal(editor.undoStack.length, 1);
   });
   check("every scenery inspector and sparse wood-path inspector renders without modifying data", () => {
     for (const c of [...DECOR_KINDS.map(dkind => ({ t: "decor", dkind, p: [0, 0, 0] })), { t: "woodpath", p: [0, 0, 0] }]) {

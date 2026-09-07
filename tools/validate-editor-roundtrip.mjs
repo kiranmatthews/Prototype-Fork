@@ -1126,6 +1126,7 @@ const fail = (label, error) => {
 
 function assertIslandHopper(data, level) {
   assert.deepEqual(data.ocean, {
+    geometryVersion: 2,
     p: [106, -0.36, -168],
     length: 500,
     yaw: 0,
@@ -1278,6 +1279,7 @@ function assertCoastalStreet(data, level) {
       .every((component) => component.tex === "solid"),
   );
   assert.deepEqual(data.ocean, {
+    geometryVersion: 2,
     p: [9.2, -0.36, -1500],
     length: 3400,
     yaw: 0,
@@ -1508,7 +1510,9 @@ try {
     setUserLevels,
     starterCustomLevel,
   } = levelModule;
-  assertEditorRuntimeAuthoring(levelModule, THREE);
+  const environmentModule = await server.ssrLoadModule("/src/editorEnvironment.ts");
+  const { UnityOcean } = await server.ssrLoadModule("/src/unityOcean.ts");
+  assertEditorRuntimeAuthoring(levelModule, THREE, { ...environmentModule, UnityOcean });
   const benchmarkData = { ...starterCustomLevel(), relicTime: 83.75 };
   assert.equal(normalizeCustomLevelData(benchmarkData)?.relicTime, 83.75);
   for (const relicTime of [0, -1, Infinity, NaN, '90', null, 86401])
