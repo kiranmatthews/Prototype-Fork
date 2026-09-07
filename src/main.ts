@@ -1098,7 +1098,7 @@ function updateWaterPresentation(dt: number): void {
 // 2P split state (functions live further down, past the player):
 let split2p = false;
 let p2: Player | null = null;
-const input2 = new Input(true); // pad-only: claims its own gamepad, no keyboard/touch
+const input2 = new Input(true, () => gameFlow?.developerChromeVisible ?? false); // pad-only
 const camera2 = new THREE.PerspectiveCamera(TUNING.camFov, 1, 0.1, 400);
 const cam2F = new THREE.Vector3(0, 0, -1);
 const cam2Aim = new THREE.Vector3();
@@ -1422,7 +1422,7 @@ setTimeout(resize, 400);
 setTimeout(resize, 1200);
 resize();
 
-const input = new Input();
+const input = new Input(false, () => gameFlow?.developerChromeVisible ?? false);
 // Each player's input refuses the other's claimed pad — and P2 additionally
 // rejects any slot that mirrors P1's pad (one DualShock on USB + Bluetooth
 // at once shows up as TWO slots streaming identical state).
@@ -3875,6 +3875,7 @@ window.addEventListener("keydown", (e) => {
   }
   if (
     current.id !== "warproom" &&
+    gameFlow.developerChromeVisible &&
     !editor.active &&
     (e.code === "KeyK" || e.code === "KeyL")
   ) {

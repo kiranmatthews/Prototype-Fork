@@ -79,7 +79,7 @@ export class Input {
 
   // padOnly: the split-screen P2 input — one claimed gamepad only, no
   // keyboard, no touch overlay, no listeners.
-  constructor(private padOnly = false) {
+  constructor(private padOnly = false, private debugShortcutsEnabled: () => boolean = () => false) {
     if (this.padOnly) return; // pad-only: polling does everything
     this.touch = new TouchControls(() => {
       // Event-latched like keyboard pause: a quick tap between render polls
@@ -104,7 +104,12 @@ export class Input {
         if (e.code === INPUT_BINDINGS.spin.key) this.spinPressed = true;
         if (e.code === INPUT_BINDINGS.grab.key) this.grabPressed = true;
         if (e.code === INPUT_BINDINGS.transfer.key) this.transferPressed = true;
-        if (e.code === INPUT_BINDINGS.restart.key) this.restartPressed = true;
+        if (e.code === INPUT_BINDINGS.restart.key) {
+          if (this.debugShortcutsEnabled()) this.restartPressed = true;
+          // Do not turn a hidden-debug key press into a fresh poll edge if M
+          // exposes the tools before the next render frame.
+          else this.prevRestart = true;
+        }
         if (e.code === INPUT_BINDINGS.pause.key || e.code === 'Escape') this.pausePressed = true;
         if (e.code === INPUT_BINDINGS.confirm.key) this.confirmPressed = true;
         if (e.code === INPUT_BINDINGS.mapProgress.key) this.mapProgressPressed = true;
@@ -133,6 +138,7 @@ export class Input {
   update(): void {
     const solo = this.padOnly;
     const k = this.keys;
+    const allowRestart = this.debugShortcutsEnabled();
     let moveX = solo ? 0 : (k.has('ArrowRight') || k.has('KeyD') ? 1 : 0) - (k.has('ArrowLeft') || k.has('KeyA') ? 1 : 0);
     let moveY = solo ? 0 : (k.has('ArrowUp') || k.has('KeyW') ? 1 : 0) - (k.has('ArrowDown') || k.has('KeyS') ? 1 : 0);
     let lookX = 0;
@@ -228,7 +234,7 @@ export class Input {
         grab ||
         transfer ||
         inventory ||
-        restart ||
+        (restart && allowRestart) ||
         pause;
       this.moveX = 0;
       this.moveY = 0;
@@ -245,7 +251,7 @@ export class Input {
       this.prevSpin = false;
       this.prevGrab = false;
       this.prevTransfer = false;
-      this.prevRestart = false;
+      this.prevRestart = restart;
       this.prevPause = false;
       this.consumeEdges();
       if (!stillHeld) this.menuReleaseGuard = false;
@@ -285,7 +291,10 @@ export class Input {
     this.spinPressed = this.spinPressed || touchSpinPressed || (spin && !this.prevSpin);
     this.grabPressed = this.grabPressed || touchGrabPressed || (grab && !this.prevGrab);
     this.transferPressed = this.transferPressed || (transfer && !this.prevTransfer);
-    this.restartPressed = this.restartPressed || (restart && !this.prevRestart);
+    // Drop disabled edges, but track the raw held state below. Enabling debug
+    // while Share/R is held must require release + a new press, not reset.
+    this.restartPressed = allowRestart &&
+      (this.restartPressed || (restart && !this.prevRestart));
     this.pausePressed = this.pausePressed || (pause && !this.prevPause);
 
     this.prevJump = jump;
