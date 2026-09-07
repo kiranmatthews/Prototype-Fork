@@ -14,9 +14,51 @@ export function validRelicTime(value: unknown): value is number {
 }
 
 /** Authored level metadata wins; existing courses keep their campaign/default target. */
-export function resolveRelicTime(levelId: string, data?: { relicTime?: number }): number {
-  return validRelicTime(data?.relicTime) ? data.relicTime
+export function resolveRelicTime(levelId: string, data?: { relicTime?: number; medalTimes?: MedalTimes }): number {
+  return validMedalTimes(data?.medalTimes) ? data.medalTimes.gold : validRelicTime(data?.relicTime) ? data.relicTime
     : campaignLevelById(levelId)?.relicTime ?? CAMPAIGN_TIME_RELIC_TARGET_SECONDS;
+}
+
+export const TIME_MEDALS = ['gold', 'silver', 'bronze'] as const;
+export type TimeMedal = typeof TIME_MEDALS[number];
+export type MedalTimes = Record<TimeMedal, number>;
+export function validTimeMedal(value: unknown): value is TimeMedal {
+  return value === 'gold' || value === 'silver' || value === 'bronze';
+}
+export function validMedalTimes(value: unknown): value is MedalTimes {
+  if (!value || typeof value !== 'object') return false;
+  const t = value as MedalTimes;
+  return validRelicTime(t.gold) && validRelicTime(t.silver) && validRelicTime(t.bronze)
+    && t.gold <= t.silver && t.silver <= t.bronze;
+}
+export function defaultMedalTimes(gold = CAMPAIGN_TIME_RELIC_TARGET_SECONDS): MedalTimes {
+  const silver = Math.min(MAX_RELIC_TIME_SECONDS, Math.max(gold, Math.round(gold * 115) / 100));
+  return { gold, silver, bronze: Math.min(MAX_RELIC_TIME_SECONDS, Math.max(silver, Math.round(gold * 130) / 100)) };
+}
+export function resolveMedalTimes(levelId: string, data?: { relicTime?: number; medalTimes?: MedalTimes }): MedalTimes {
+  return validMedalTimes(data?.medalTimes) ? { ...data.medalTimes } : defaultMedalTimes(resolveRelicTime(levelId, data));
+}
+export function medalForTime(time: number, targets: MedalTimes): TimeMedal | null {
+  if (!Number.isFinite(time) || time <= 0 || !validMedalTimes(targets)) return null;
+  return TIME_MEDALS.find(tier => time <= targets[tier]) ?? null;
+}
+/** Legacy relic ownership represents gold; never infer/downgrade awards from edited targets. */
+export function earnedTimeMedal(progress?: { timeMedal?: TimeMedal; timeRelic?: boolean } | null): TimeMedal | null {
+  return validTimeMedal(progress?.timeMedal) ? progress.timeMedal : progress?.timeRelic === true ? 'gold' : null;
+}
+export function higherTimeMedal(a: TimeMedal | null, b: TimeMedal | null): TimeMedal | null {
+  if (!a) return b; if (!b) return a;
+  return TIME_MEDALS.indexOf(a) <= TIME_MEDALS.indexOf(b) ? a : b;
+}
+/** Keep each live editor transaction ordered, moving neighbouring targets only when necessary. */
+export function editMedalTime(times: MedalTimes, tier: TimeMedal, value: number): MedalTimes {
+  const next = { ...times };
+  if (!Number.isFinite(value)) return next;
+  next[tier] = Math.max(0.01, Math.min(MAX_RELIC_TIME_SECONDS, value));
+  if (tier === 'gold') { next.silver = Math.max(next.silver, next.gold); next.bronze = Math.max(next.bronze, next.silver); }
+  if (tier === 'silver') { next.gold = Math.min(next.gold, next.silver); next.bronze = Math.max(next.bronze, next.silver); }
+  if (tier === 'bronze') { next.silver = Math.min(next.silver, next.bronze); next.gold = Math.min(next.gold, next.silver); }
+  return next;
 }
 
 export interface CampaignLevelDefinition {
@@ -28,7 +70,7 @@ export interface CampaignLevelDefinition {
   fallbackLevelId?: string;
   /** Player-facing name, independent of editor/debug naming. */
   name: string;
-  /** Initial sapphire-style time relic target, in seconds. */
+  /** Legacy field: the gold-medal benchmark, in seconds. */
   relicTime: number;
   /** Stable island identity used by the world-map camera and progress ledger. */
   islandId: CampaignIslandId;
@@ -309,6 +351,8 @@ export interface CampaignLevelProgress {
   boxGem: boolean;
   comboGem: boolean;
   timeRelic: boolean;
+  /** Highest earned tier. Missing on old saves: timeRelic=true means gold. */
+  timeMedal?: TimeMedal;
   bestTime?: number;
   /** Three fastest completed trials; old saves seed this from bestTime. */
   trialTimes?: number[];
@@ -459,12 +503,14 @@ function normalizeLevelProgress(value: unknown): CampaignLevelProgress {
     ? value as Partial<CampaignLevelProgress>
     : {};
   const trialTimes = normalizeTrialTimes(raw.trialTimes, raw.bestTime);
+  const timeMedal = earnedTimeMedal(raw);
   return {
     cleared: raw.cleared === true,
     crystal: raw.crystal === true,
     boxGem: raw.boxGem === true,
     comboGem: raw.comboGem === true,
-    timeRelic: raw.timeRelic === true,
+    timeRelic: timeMedal !== null,
+    ...(timeMedal ? { timeMedal } : {}),
     bestTime: trialTimes[0],
     ...(trialTimes.length ? { trialTimes } : {}),
   };
@@ -833,15 +879,20 @@ export class CampaignStore {
    */
   commitTimeTrial(
     levelId: string,
-    rewards: { time: number; timeRelic: boolean },
+    rewards: { time: number; medal?: TimeMedal | null; timeRelic?: boolean },
   ): CampaignLevelProgress | null {
     const progress = this.levelProgress(levelId);
     if (!progress) return null;
     const beforeBestTime = progress.bestTime;
     const beforeTimeRelic = progress.timeRelic;
+    const beforeMedal = progress.timeMedal;
     const beforeTimes = JSON.stringify(progress.trialTimes);
-    progress.timeRelic = progress.timeRelic || rewards.timeRelic;
     if (Number.isFinite(rewards.time) && rewards.time > 0) {
+      const award = rewards.medal === undefined ? (rewards.timeRelic === true ? 'gold' : null)
+        : validTimeMedal(rewards.medal) ? rewards.medal : null;
+      const medal = higherTimeMedal(earnedTimeMedal(progress), award);
+      if (medal) progress.timeMedal = medal;
+      progress.timeRelic = medal !== null;
       progress.trialTimes = normalizeTrialTimes([
         ...normalizeTrialTimes(progress.trialTimes, progress.bestTime), rewards.time,
       ]);
@@ -850,7 +901,7 @@ export class CampaignStore {
     if (
       progress.bestTime !== beforeBestTime ||
       JSON.stringify(progress.trialTimes) !== beforeTimes ||
-      progress.timeRelic !== beforeTimeRelic
+      progress.timeRelic !== beforeTimeRelic || progress.timeMedal !== beforeMedal
     )
       this.noteWorkingChange();
     return progress;
@@ -870,7 +921,7 @@ export class CampaignStore {
         if (progress.crystal) { crystals++; earned++; }
         if (progress.boxGem) { gems++; earned++; }
         if (progress.comboGem) { gems++; earned++; }
-        if (progress.timeRelic) { relics++; earned++; }
+        if (earnedTimeMedal(progress)) { relics++; earned++; }
       }
     }
     return {

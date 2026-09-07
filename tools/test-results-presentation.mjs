@@ -57,13 +57,14 @@ try {
   const trial = { kind: 'time-trial', levelName: 'Results check', actualTime: 60, relicTarget: 60, boxes: 0, totalBoxes: 1, bestTimes: [60] };
   const variants = [normal, { ...normal, crystal: true }, { ...normal, boxGem: true },
     { ...normal, crystal: true, boxGem: true }, { ...normal, boxGem: true, comboGem: true },
-    { ...normal, crystal: true, boxGem: true, comboGem: true }, trial, { ...trial, actualTime: 60.01 }];
-  const counts = [0, 1, 1, 2, 2, 3, 1, 0];
+    { ...normal, crystal: true, boxGem: true, comboGem: true }, trial, { ...trial, actualTime: 60.01 }, { ...trial, actualTime: 75 }, { ...trial, actualTime: 79 }];
+  const counts = [0, 1, 1, 2, 2, 3, 1, 1, 1, 0];
   const switchCrate = level.crates.find(crate => crate.systemicEndNitroBang);
   assert.ok(switchCrate);
   for (const [index, result] of variants.entries()) {
     const shot = new ResultsPresentation(scene, player, level, result);
     assert.equal(shot.rewards.children.length, counts[index]);
+    if(index>=6&&counts[index])assert.equal(shot.rewards.children[0].userData.timeMedal,['gold','silver','bronze'][index-6]);
     assert.equal(player.resultsPose, counts[index] ? 'celebrate' : 'rest');
     assert.equal(player.pos.y, 0, 'presentation must use the floor, not the hidden pad top');
     assert.equal(switchCrate.mesh.visible, false);
@@ -128,7 +129,7 @@ try {
     stage.restore();
     course.dispose();
   }
-  console.log('PASS live results: 8 reward combinations, independent looping poses, frozen run state, supported staging, responsive framing, reversible prop hiding and shared-safe disposal');
+  console.log('PASS live results: 10 reward combinations including all medal tiers, independent looping poses, frozen run state, supported staging, responsive framing, reversible prop hiding and shared-safe disposal');
 } finally {
   await server.close();
   console.warn = originalWarn; console.error = originalError;

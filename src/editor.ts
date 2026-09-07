@@ -14,7 +14,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { TUNING } from "./tuning";
-import { resolveRelicTime, MAX_RELIC_TIME_SECONDS } from "./campaign";
+import { resolveMedalTimes, editMedalTime, TIME_MEDALS, type TimeMedal, MAX_RELIC_TIME_SECONDS } from "./campaign";
 import {
   Level,
   CustomComponent,
@@ -2285,7 +2285,7 @@ export class Editor {
   private forkedLevelId: string | null = null;
   private nameInput: HTMLInputElement | null = null;
   private skySelect: HTMLSelectElement | null = null;
-  private relicTimeInput: HTMLInputElement | null = null;
+  private medalTimeInputs: Partial<Record<TimeMedal, HTMLInputElement>> = {};
   private resetBtn: HTMLButtonElement | null = null;
   private delBtn: HTMLButtonElement | null = null;
   data: CustomLevelData;
@@ -2885,7 +2885,10 @@ export class Editor {
   /** Point the time-of-day dropdown at whatever this.data now says. */
   private syncSkySelect(): void {
     if (this.skySelect) this.skySelect.value = asSkyPreset(this.data.sky);
-    if (this.relicTimeInput) this.relicTimeInput.value = String(resolveRelicTime(this.targetId, this.data));
+    for (const tier of TIME_MEDALS) {
+      const input = this.medalTimeInputs[tier];
+      if (input) input.value = String(resolveMedalTimes(this.targetId, this.data)[tier]);
+    }
   }
 
   /** Reset/delete read differently on a built-in than on a level you made. */
@@ -5993,29 +5996,34 @@ export class Editor {
     skyRow.appendChild(skySel);
     lvl.appendChild(skyRow);
     this.skySelect = skySel;
-    const relicRow = this.numRow(
-      "relic time (s)",
-      () => resolveRelicTime(this.targetId, this.data),
-      (value) => { this.data.relicTime = THREE.MathUtils.clamp(value, 0.01, MAX_RELIC_TIME_SECONDS); },
-      0.01,
-    );
-    const relicInput = relicRow.querySelector("input")!;
-    relicInput.min = "0.01";
-    relicInput.max = String(MAX_RELIC_TIME_SECONDS);
-    relicInput.setAttribute("aria-label", "Relic benchmark time (seconds)");
-    relicInput.title = "Time to beat for the time-trial relic, in seconds (e.g. 90.5 = 1:30.50). Saved with this level.";
-    this.relicTimeInput = relicInput;
-    lvl.appendChild(relicRow);
-    const defaultRelic = h('<button class="ed-btn">use default relic time</button>') as HTMLButtonElement;
-    defaultRelic.addEventListener("click", () => {
-      if (this.data.relicTime !== undefined) {
-        delete this.data.relicTime;
-        this.commit();
-        this.syncSkySelect();
+    this.medalTimeInputs = {};
+    for (const tier of TIME_MEDALS) {
+      const row = this.numRow(
+        `${tier} medal (s)`,
+        () => resolveMedalTimes(this.targetId, this.data)[tier],
+        value => {
+          this.data.medalTimes = editMedalTime(resolveMedalTimes(this.targetId, this.data), tier, value);
+          delete this.data.relicTime;
+          for (const key of TIME_MEDALS) if (this.medalTimeInputs[key])
+            this.medalTimeInputs[key]!.value = String(this.data.medalTimes[key]);
+        },
+        0.01,
+      );
+      const input = row.querySelector("input")!;
+      input.min = "0.01"; input.max = String(MAX_RELIC_TIME_SECONDS);
+      input.setAttribute("aria-label", `${tier[0].toUpperCase() + tier.slice(1)} medal time (seconds)`);
+      input.title = "Gold ≤ silver ≤ bronze. Adjacent targets adjust only when needed to preserve this order. Saved with this level.";
+      this.medalTimeInputs[tier] = input; lvl.appendChild(row);
+    }
+    const defaultMedals = h('<button class="ed-btn">use default medal times</button>') as HTMLButtonElement;
+    defaultMedals.addEventListener("click", () => {
+      if (this.data.medalTimes !== undefined || this.data.relicTime !== undefined) {
+        delete this.data.medalTimes; delete this.data.relicTime;
+        this.commit(); this.syncSkySelect();
       }
-      defaultRelic.blur();
+      defaultMedals.blur();
     });
-    lvl.appendChild(defaultRelic);
+    lvl.appendChild(defaultMedals);
     lvl.appendChild(
       this.numRow(
         "spawn x",

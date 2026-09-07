@@ -298,7 +298,9 @@ try {
   assert.ok(trialTally, "time-trial results lost their timing comparison");
   assert.match(trialTally.innerHTML, /YOUR TIME/i);
   assert.match(trialTally.innerHTML, /0:59\.25/);
-  assert.match(trialTally.innerHTML, /RELIC TARGET/i);
+  assert.match(trialTally.innerHTML, /GOLD TARGET/i);
+  assert.match(trialTally.innerHTML, /SILVER TARGET/i);
+  assert.match(trialTally.innerHTML, /BRONZE TARGET/i);
   assert.match(trialTally.innerHTML, /1:00\.00/);
   assert.match(trialTally.innerHTML, /BOXES/i);
   assert.match(trialTally.innerHTML, /8 \/ 20/);
@@ -308,13 +310,13 @@ try {
   assert.match(trialTally.innerHTML, /class="game-results-run-time"/);
   assert.equal(
     (trialTally.innerHTML.match(/<div[ >]/g) ?? []).length,
-    4,
-    "time trials need the prominent run time, relic target, boxes, and best times",
+    7,
+    "time trials need run time, earned medal, three targets, boxes, and best times",
   );
   assert.doesNotMatch(
     trialTally.innerHTML,
-    /VERDICT|EARNED|MISSED|SAPPHIRE|GOLD|PLATINUM/i,
-    "time-trial results must not add a relic verdict row",
+    /VERDICT|MISSED|SAPPHIRE|PLATINUM|RELIC/i,
+    "time-trial results must not retain relic labels or add a stock verdict banner",
   );
   assert.equal(
     findClass(trialPanel, "game-results-awards"),
@@ -352,13 +354,13 @@ try {
   );
   assert.match(
     mainSource,
-    /function showTimeTrialResults\([\s\S]{0,800}kind:\s*"time-trial"[\s\S]{0,200}actualTime:\s*time[\s\S]{0,120}relicTarget/,
+    /function showTimeTrialResults\([\s\S]{0,1400}kind:\s*"time-trial"[\s\S]{0,200}actualTime:\s*time[\s\S]{0,120}relicTarget/,
     "time-trial presentation must receive actual time and its relic target",
   );
   assert.match(
     mainSource,
-    /commitTimeTrial\([\s\S]{0,180}timeRelic:\s*time <= relicTarget/,
-    "matching the one-minute target exactly must earn the relic",
+    /medalForTime\(time, medalTimes\)[\s\S]{0,150}commitTimeTrial\([\s\S]{0,100}medal,/,
+    "completed trials must use the common medal evaluator",
   );
   assert.equal(campaignApi.CAMPAIGN_LEVELS.length, 9);
   assert.ok(

@@ -133,14 +133,15 @@ assert.equal(
   "repeat clears must not re-announce the time-trial unlock",
 );
 
-const trial = new Function('player','level','current','recordTT','campaign','campaignLevelById','presentCampaignResults','time',
+const medalApi = await import(`data:text/javascript;base64,${Buffer.from(ts.transpileModule(await readFile(new URL('../src/campaign.ts',import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.ES2020}}).outputText).toString('base64')}`);
+const trial = new Function('player','level','current','recordTT','campaign','campaignLevelById','presentCampaignResults','defaultMedalTimes','medalForTime','time',
   `${compile(functionSource('showTimeTrialResults'))}\nshowTimeTrialResults(time);`);
 for (const time of [83.75,83.751]) {
   let award, result;
   trial({bankFlyingFruit(){},lives:4,fruit:0,cratesBroken:0}, {relicTime:83.75,totalCrates:0}, {id:'jungle',name:'Trial'},
     () => ({list:[]}), {levelProgress(){return null},commitTimeTrial(_id,rewards){award=rewards},updateInventory(){}},
-    () => ({name:'Jungle Ruins',relicTime:60}), value => {result=value}, time);
+    () => ({name:'Jungle Ruins',relicTime:60}), value => {result=value}, medalApi.defaultMedalTimes, medalApi.medalForTime, time);
   assert.equal(result.relicTarget,83.75,'trial results used the campaign fallback over level metadata');
-  assert.equal(award.timeRelic,time<=83.75,'authored threshold comparison is not inclusive and exact');
+  assert.equal(award.medal,time<=83.75?'gold':'silver','authored medal comparison is not inclusive and exact');
 }
-console.log("Playtest level flow checks passed: safe startup, normal results and authored relic thresholds.");
+console.log("Playtest level flow checks passed: safe startup, normal results and authored medal thresholds.");

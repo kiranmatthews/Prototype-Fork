@@ -51,6 +51,7 @@ import {
   CampaignStore,
   CAMPAIGN_LEVELS,
   resolveRelicTime,
+  resolveMedalTimes, defaultMedalTimes, medalForTime,
   DEFAULT_CAMPAIGN_LIVES,
   campaignLevelById,
   isCampaignLevel,
@@ -2114,6 +2115,7 @@ gameFlow = new GameFlowUI(
     onAudioOptions: applyGameAudioOptions,
     getPlayMode: () => endlessDeathsOn ? 'modern' : 'classic',
     getRelicTarget: (id) => resolveRelicTime(id, findLevel(id)?.data),
+    getMedalTargets: (id) => resolveMedalTimes(id, findLevel(id)?.data),
     onPlayMode: applyGamePlayMode,
     prepareLoadingVortex: prepareLoadingVortexPresentation,
     waitForLevelData: () => firstRunLevelSync,
@@ -2125,6 +2127,7 @@ gameFlow = new GameFlowUI(
 );
 worldMapUI = new WorldMapUI(campaign, {
   getRelicTarget: (id) => resolveRelicTime(id, findLevel(id)?.data),
+  getMedalTargets: (id) => resolveMedalTimes(id, findLevel(id)?.data),
   onMapTap: (clientX, clientY) => {
     if (gameFlow.blocksGameplay || current.id !== "warproom") return;
     const rect = renderer.domElement.getBoundingClientRect();
@@ -2686,6 +2689,7 @@ function showCampaignResults(): void {
           // commitClear above has just satisfied the clear-only run-mode gate.
           timeTrialUnlocked: firstClear,
           relicTarget: level.relicTime,
+          medalTimes: level.medalTimes,
         }
       : {}),
   };
@@ -2699,9 +2703,11 @@ function showTimeTrialResults(time: number): void {
   if (savedBest != null && !bestTimes.includes(savedBest)) bestTimes.push(savedBest);
   const definition = campaignLevelById(current.id);
   const relicTarget = level.relicTime;
+  const medalTimes = { ...(level.medalTimes ?? defaultMedalTimes(relicTarget)) };
+  const medal = medalForTime(time, medalTimes);
   campaign.commitTimeTrial(current.id, {
     time,
-    timeRelic: time <= relicTarget,
+    medal,
   });
   campaign.updateInventory(player.lives, player.fruit);
   presentCampaignResults({
@@ -2709,6 +2715,7 @@ function showTimeTrialResults(time: number): void {
     levelName: definition?.name ?? current.name,
     actualTime: time,
     relicTarget,
+    medalTimes, medal,
     boxes: player.cratesBroken,
     totalBoxes: level.totalCrates,
     bestTimes,

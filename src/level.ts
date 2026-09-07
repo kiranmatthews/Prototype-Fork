@@ -6,6 +6,7 @@
 
 import * as THREE from "three";
 import { createCollectibleShell } from "./collectibleSpecular";
+import { createTimeMedal, timeMedalGeometry } from "./timeMedalModel";
 import { trackPresentationImage } from "./presentationLoading";
 import { Rail } from "./rails";
 import { DiscardedBoards } from "./skateboard/discarded";
@@ -50,6 +51,8 @@ import {
   CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
   resolveRelicTime,
   validRelicTime,
+  resolveMedalTimes, validMedalTimes, defaultMedalTimes,
+  type MedalTimes, type TimeMedal,
   isCampaignLevel,
   type CampaignLevelProgress,
 } from "./campaign";
@@ -882,8 +885,10 @@ export interface CustomLevelData {
   hudMode?: "bonus";
   /** 0..1 level-authored widening of ledge reach/timing; absent keeps global feel. */
   ledgeAssist?: number;
-  /** Time-trial relic benchmark in seconds; absent keeps the existing default. */
+  /** Legacy gold-medal benchmark; retained for existing level JSON. */
   relicTime?: number;
+  /** Ordered, independently authored gold/silver/bronze targets in seconds. */
+  medalTimes?: MedalTimes;
   ocean?: CustomOceanData;
   unitySand?: CustomUnitySandData[];
   shoreFoam?: IslandShoreFoamOval[];
@@ -2237,6 +2242,7 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
   if (source.sky !== undefined && !SKY_PRESETS.includes(source.sky)) return null;
   if (source.hudMode !== undefined && source.hudMode !== "bonus") return null;
   if (source.relicTime !== undefined && !validRelicTime(source.relicTime)) return null;
+  if (source.medalTimes !== undefined && !validMedalTimes(source.medalTimes)) return null;
   if (
     source.ledgeAssist !== undefined &&
     (typeof source.ledgeAssist !== "number" ||
@@ -3120,6 +3126,7 @@ export class Level {
   /** Main-level tally extension supplied by its linked bonus stage. */
   bonusCrateTotal = 0;
   relicTime = CAMPAIGN_TIME_RELIC_TARGET_SECONDS;
+  medalTimes: MedalTimes = defaultMedalTimes();
 
   // safe = triggered by the player's own spin/slam: breaks the world, not them
   explosions: {
@@ -3807,6 +3814,7 @@ export class Level {
     };
     this.name = entry.name;
     this.relicTime = resolveRelicTime(entry.id, entry.data);
+    this.medalTimes = resolveMedalTimes(entry.id, entry.data);
     // A user level carries its own component data and builds through the same
     // pipeline the editor writes. A built-in has none, so its id picks the
     // hand-coded builder — built-ins stay pristine, editing one forks a copy.
@@ -5004,6 +5012,7 @@ export class Level {
       killY: r2(this.killY),
       ledgeAssist: this.ledgeAssist > 0 ? r2(this.ledgeAssist) : undefined,
       relicTime: this.relicTime !== CAMPAIGN_TIME_RELIC_TARGET_SECONDS ? this.relicTime : undefined,
+      ...(JSON.stringify(this.medalTimes) !== JSON.stringify(defaultMedalTimes(this.relicTime)) ? { medalTimes: { ...this.medalTimes } } : {}),
       // only when it isn't the default, so the saved JSON stays quiet
       sky: this.skyPreset === DEFAULT_SKY ? undefined : this.skyPreset,
       components: C,
@@ -10073,8 +10082,8 @@ export class Level {
       ),
       timeRelic: makeAwardBatch(
         Level.timeRelicGeometry(),
-        0x64b9ff,
-        0x193f73,
+        0xf8c64e,
+        0x3a2708,
       ),
     };
     const sockets = new THREE.InstancedMesh(
@@ -15973,19 +15982,13 @@ export class Level {
     return g;
   }
 
-  static timeRelicGeometry(): THREE.TorusGeometry {
-    return new THREE.TorusGeometry(0.31, 0.105, 6, 12);
+  static timeRelicGeometry(): THREE.BufferGeometry {
+    return timeMedalGeometry();
   }
 
-  /** The same blue relic trophy used in the Warp Room's earned-award sockets. */
-  static timeRelicMesh(): THREE.Group {
-    const group = new THREE.Group();
-    const mesh = new THREE.Mesh(Level.timeRelicGeometry(), new THREE.MeshPhongMaterial({
-      color: 0x64b9ff, emissive: 0x193f73, shininess: 72, flatShading: true,
-    }));
-    mesh.scale.set(1.05, 1.18, 1.05);
-    group.add(mesh);
-    return group;
+  /** Legacy factory name retained for old tooling; trophies are now medals. */
+  static timeRelicMesh(tier: TimeMedal = 'gold'): THREE.Group {
+    return createTimeMedal(tier);
   }
 
   /** Hide only finish-pad art and find real support below the results skater. */

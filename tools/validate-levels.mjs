@@ -50,6 +50,11 @@ for (const [levelIndex, level] of (payload.levels ?? []).entries()) {
   if (!Number.isFinite(data.killY)) errors.push(`${label}.data.killY must be finite`);
   if (data.relicTime !== undefined && (typeof data.relicTime !== "number" || !Number.isFinite(data.relicTime) || data.relicTime < 0.01 || data.relicTime > 86400))
     errors.push(`${label}.data.relicTime must be 0.01–86400 seconds when present`);
+  if (data.medalTimes !== undefined) {
+    const t = data.medalTimes;
+    if (!t || !['gold','silver','bronze'].every(key => typeof t[key] === 'number' && Number.isFinite(t[key]) && t[key] >= .01 && t[key] <= 86400)
+      || !(t.gold <= t.silver && t.silver <= t.bronze)) errors.push(`${label}.data.medalTimes must be ordered gold <= silver <= bronze, in 0.01–86400 seconds`);
+  }
   if (!Array.isArray(data.components)) {
     errors.push(`${label}.data.components must be an array`);
     continue;

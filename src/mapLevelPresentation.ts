@@ -2,6 +2,8 @@ import * as THREE from "three";
 import { Level, COMBO_GEM_TINT } from "./level";
 import { createSkateboardPresentation } from "./skateboard/model";
 import { DEFAULT_SKATEBOARD_SETTINGS } from "./skateboard/settings";
+import { TIME_MEDALS, defaultMedalTimes, type MedalTimes, type TimeMedal } from "./campaign";
+import { setTimeMedalTier, TIME_MEDAL_COLORS } from "./timeMedalModel";
 
 export interface MapLevelCardData {
   key: string;
@@ -10,6 +12,8 @@ export interface MapLevelCardData {
   trialUnlocked: boolean;
   times: readonly number[];
   target: number;
+  targets?: MedalTimes;
+  medal?: TimeMedal | null;
 }
 
 export function mapTrialTime(seconds: number | undefined): string {
@@ -63,8 +67,9 @@ function silhouette(ctx: CanvasRenderingContext2D, index: number, x: number, y: 
     ctx.moveTo(0, -53); ctx.lineTo(24, -25); ctx.lineTo(20, 13);
     ctx.lineTo(0, 56); ctx.lineTo(-20, 13); ctx.lineTo(-24, -25); ctx.closePath();
   } else if (index === 3) {
-    ctx.ellipse(0, 0, 38, 44, 0, 0, Math.PI * 2);
-    ctx.ellipse(0, 0, 20, 25, 0, 0, Math.PI * 2, true);
+    ctx.moveTo(-26, -51); ctx.lineTo(-8, -51); ctx.lineTo(11, -8); ctx.lineTo(-5, 1); ctx.closePath();
+    ctx.moveTo(26, -51); ctx.lineTo(8, -51); ctx.lineTo(-11, -8); ctx.lineTo(5, 1); ctx.closePath();
+    ctx.moveTo(31, 17); ctx.arc(0, 17, 31, 0, Math.PI * 2);
   } else {
     ctx.moveTo(-42, -16); ctx.lineTo(-24, -38); ctx.lineTo(24, -38);
     ctx.lineTo(42, -16); ctx.lineTo(0, 42); ctx.closePath();
@@ -118,7 +123,7 @@ export class MapLevelPresentation {
 
   get diagnostics() {
     return { shownKey: this.flip.shown?.key, flipping: this.flip.active, phase: this.flip.phase,
-      earned: this.flip.shown?.earned, trialVisible: this.trial.visible, draws: this.draws,
+      earned: this.flip.shown?.earned, medal: this.flip.shown?.medal, targets: this.flip.shown?.targets, trialVisible: this.trial.visible, draws: this.draws,
       rotations: this.rewards.map(p => p.children[0].rotation.y) };
   }
 
@@ -168,6 +173,7 @@ export class MapLevelPresentation {
   }
 
   private paint(data: MapLevelCardData): void {
+    setTimeMedalTier(this.rewards[3], data.medal ?? 'gold');
     const ctx = this.faceTexture.image.getContext("2d")!;
     ctx.clearRect(0, 0, 1536, 512);
     // Warm screen-printed reward sockets; missing shapes stay flat and dark.
@@ -222,15 +228,20 @@ export class MapLevelPresentation {
     ctx.font = '74px "Staging Secondary", Impact, sans-serif'; ctx.fillText("TIME TRIAL", 254, 133, 440);
     ctx.font = '30px "Staging Secondary", sans-serif'; ctx.fillStyle = "#bebeb4"; ctx.fillText("PERSONAL BESTS", 82, 250);
     for (let i = 0; i < 3; i++) {
-      const y = 335 + i * 105;
-      ctx.font = '68px "Staging Secondary", Impact, sans-serif'; ctx.fillStyle = "#ffbd35"; ctx.fillText(["1st", "2nd", "3rd"][i], 83, y);
-      ctx.textAlign = "right"; ctx.fillStyle = "#f8f5e9"; ctx.font = '62px "Staging Secondary", monospace'; ctx.fillText(mapTrialTime(data.times[i]), 680, y);
+      const y = 305 + i * 76;
+      ctx.font = '57px "Staging Secondary", Impact, sans-serif'; ctx.fillStyle = "#ffbd35"; ctx.fillText(["1st", "2nd", "3rd"][i], 83, y);
+      ctx.textAlign = "right"; ctx.fillStyle = "#f8f5e9"; ctx.font = '55px "Staging Secondary", monospace'; ctx.fillText(mapTrialTime(data.times[i]), 680, y);
       ctx.textAlign = "left"; ctx.strokeStyle = "#666861"; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(75, y + 50); ctx.lineTo(693, y + 50); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(75, y + 37); ctx.lineTo(693, y + 37); ctx.stroke();
     }
-    ctx.fillStyle = "#dfd9c8"; ctx.fillRect(33, 648, 702, 99);
-    ctx.fillStyle = "#242626"; ctx.font = '42px "Staging Secondary", Impact, sans-serif'; ctx.fillText("TIME TO BEAT", 69, 698);
-    ctx.textAlign = "right"; ctx.font = '54px "Staging Secondary", monospace'; ctx.fillText(mapTrialTime(data.target), 691, 698);
+    ctx.fillStyle = "#dfd9c8"; ctx.font = '30px "Staging Secondary", sans-serif'; ctx.fillText("MEDAL TARGETS", 82, 530);
+    const targets = data.targets ?? defaultMedalTimes(data.target);
+    for (const [i, tier] of TIME_MEDALS.entries()) {
+      const y = 588 + i * 67;
+      ctx.textAlign = 'left'; ctx.fillStyle = '#' + TIME_MEDAL_COLORS[tier].toString(16).padStart(6,'0');
+      ctx.font = '45px "Staging Secondary", sans-serif'; ctx.fillText(tier.toUpperCase(), 83, y);
+      ctx.textAlign = 'right'; ctx.fillStyle = '#f8f5e9'; ctx.font = '50px "Staging Secondary", monospace'; ctx.fillText(mapTrialTime(targets[tier]), 680, y);
+    }
     this.trialTexture.needsUpdate = true;
   }
 }

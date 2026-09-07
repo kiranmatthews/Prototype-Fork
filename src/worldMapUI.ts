@@ -7,6 +7,7 @@ import { MapLevelPresentation, mapTrialTime } from "./mapLevelPresentation";
 import {
   CAMPAIGN_LEVELS,
   campaignLevelByKey,
+  defaultMedalTimes, earnedTimeMedal, TIME_MEDALS, type MedalTimes,
   type CampaignStore,
 } from "./campaign";
 import type {
@@ -16,6 +17,7 @@ import type {
 
 export interface WorldMapUICallbacks {
   getRelicTarget?: (levelId: string) => number;
+  getMedalTargets?: (levelId: string) => MedalTimes;
   onMapTap: (clientX: number, clientY: number) => void;
   onEnter: () => void;
   onOpenSection: (section: WorldMapSection) => void;
@@ -115,11 +117,12 @@ export class WorldMapUI {
     this.root.classList.toggle("is-locked", !unlocked);
     this.root.classList.toggle("is-boss", definition.boss === true);
     this.levelName.textContent = definition.name.toUpperCase();
+    const medal = earnedTimeMedal(progress);
     const rewards = [
       ["CRYSTAL", progress?.crystal === true],
       ["BOX GEM", progress?.boxGem === true],
       ["COMBO GEM", progress?.comboGem === true],
-      ["TIME RELIC", progress?.timeRelic === true],
+      [medal ? `${medal.toUpperCase()} MEDAL` : "TIME MEDAL", medal !== null],
     ] as const;
     this.collectibleRow.replaceChildren();
     for (const [label, earned] of rewards) {
@@ -131,17 +134,18 @@ export class WorldMapUI {
 
     const trialUnlocked = this.campaign.runModesUnlocked(definition.levelId);
     const relicTarget = this.callbacks.getRelicTarget?.(definition.levelId) ?? definition.relicTime;
+    const targets = this.callbacks.getMedalTargets?.(definition.levelId) ?? defaultMedalTimes(relicTarget);
     const times = progress?.trialTimes ?? (progress?.bestTime ? [progress.bestTime] : []);
     this.trial.setAttribute("aria-hidden", String(!trialUnlocked));
     this.trial.replaceChildren();
     if (trialUnlocked) {
       const records = node("div", "world-map-semantic");
-      records.textContent = `Time trial. Personal bests: ${[0, 1, 2].map(i => `${i + 1}: ${mapTrialTime(times[i])}`).join(", ")}. Time to beat: ${mapTrialTime(relicTarget)}`;
+      records.textContent = `Time trial. Personal bests: ${[0, 1, 2].map(i => `${i + 1}: ${mapTrialTime(times[i])}`).join(", ")}. Medal targets: ${TIME_MEDALS.map(tier => `${tier}: ${mapTrialTime(targets[tier])}`).join(", ")}.`;
       this.trial.append(records);
     }
     this.presentation ??= new MapLevelPresentation(this.levelCard, this.trial);
     this.presentation.select({ key: definition.progressKey, name: definition.name,
-      earned: rewards.map(([, earned]) => earned), trialUnlocked, times: [...times], target: relicTarget }, immediate);
+      earned: rewards.map(([, earned]) => earned), trialUnlocked, times: [...times], target: targets.gold, targets, medal }, immediate);
   }
 
   private actionButton(

@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { Level, COMBO_GEM_TINT } from "./level";
 import type { Player } from "./player";
 import type { ResultsScreenState } from "./gameFlowUI";
+import { defaultMedalTimes, medalForTime } from "./campaign";
 
 export interface ResultsViewport { x: number; y: number; width: number; height: number }
 
@@ -34,7 +35,8 @@ export class ResultsPresentation {
   constructor(scene: THREE.Scene, private readonly player: Player, level: Level, result: ResultsScreenState) {
     this.rewards.name = "results-rewards";
     if (result.kind === "time-trial") {
-      if (result.actualTime <= result.relicTarget) this.rewards.add(Level.timeRelicMesh());
+      const medal = medalForTime(result.actualTime, result.medalTimes ?? defaultMedalTimes(result.relicTarget));
+      if (medal) this.rewards.add(Level.timeRelicMesh(medal));
     } else {
       if (result.crystal) this.rewards.add(Level.crystalMesh(0.46));
       if (result.boxGem) this.rewards.add(Level.gemMesh(0.68));

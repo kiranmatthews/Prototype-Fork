@@ -14,6 +14,8 @@ import {
   CAMPAIGN_SAVE_SLOTS,
   CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
   CampaignStore,
+  TIME_MEDALS, defaultMedalTimes, medalForTime, earnedTimeMedal,
+  type MedalTimes, type TimeMedal,
   campaignLevelByKey,
   type CampaignSaveV1,
   type GameAudioOptions,
@@ -59,12 +61,15 @@ export type ResultsScreenState =
       firstClear: boolean;
       timeTrialUnlocked?: boolean;
       relicTarget?: number;
+      medalTimes?: MedalTimes;
     }
   | {
       kind: "time-trial";
       levelName: string;
       actualTime: number;
       relicTarget: number;
+      medalTimes?: MedalTimes;
+      medal?: TimeMedal | null;
       boxes: number;
       totalBoxes: number;
       bestTimes: number[];
@@ -90,6 +95,7 @@ export interface GameFlowUICallbacks {
   getPlayMode: () => GamePlayMode;
   onPlayMode: (mode: GamePlayMode) => void;
   getRelicTarget?: (levelId: string) => number;
+  getMedalTargets?: (levelId: string) => MedalTimes;
   prepareLoadingVortex?: () => Promise<void>;
   waitForLevelData?: () => Promise<void>;
   waitForDestinationAssets?: () => Promise<void>;
@@ -1086,11 +1092,12 @@ export class GameFlowUI {
         name.textContent = `${definition.boss ? "★ " : ""}${definition.name.toUpperCase()}`;
         const rewards = element("span", "game-progress-level-rewards");
         rewards.textContent = unlocked
-          ? `${progress?.crystal ? "◆" : "·"} ${progress?.boxGem ? "◇" : "·"} ${progress?.comboGem ? "⬙" : "·"} ${progress?.timeRelic ? "◉" : "·"}`
+          ? `${progress?.crystal ? "◆" : "·"} ${progress?.boxGem ? "◇" : "·"} ${progress?.comboGem ? "⬙" : "·"} · ${earnedTimeMedal(progress)?.toUpperCase() ?? "NO"} MEDAL`
           : "LOCKED";
         const timing = element("small", "game-progress-level-time");
+        const targets = this.callbacks.getMedalTargets?.(definition.levelId) ?? defaultMedalTimes(this.callbacks.getRelicTarget?.(definition.levelId) ?? definition.relicTime);
         timing.textContent = progress?.cleared
-          ? `BEST ${progress.bestTime === undefined ? "—" : this.formatTime(progress.bestTime)}  ·  TARGET ${this.formatTime(this.callbacks.getRelicTarget?.(definition.levelId) ?? definition.relicTime)}`
+          ? `BEST ${progress.bestTime === undefined ? "—" : this.formatTime(progress.bestTime)} · ${TIME_MEDALS.map(tier => `${tier.toUpperCase()} ${this.formatTime(targets[tier])}`).join(" · ")}`
           : unlocked
             ? "NOT YET CLEARED"
             : "CLEAR THE CONNECTED PATH";
@@ -1227,9 +1234,12 @@ export class GameFlowUI {
     );
     if (state.kind === "time-trial") {
       const bestTimes = state.bestTimes.filter((time) => Number.isFinite(time) && time >= 0).sort((a, b) => a - b).slice(0, 3);
+      const targets = state.medalTimes ?? defaultMedalTimes(state.relicTarget);
+      const medal = medalForTime(state.actualTime, targets);
       tally.innerHTML = `
         <div class="game-results-run-time"><span>YOUR TIME</span><strong>${this.formatTime(state.actualTime)}</strong></div>
-        <div><span>RELIC TARGET</span><strong>${this.formatTime(state.relicTarget)}</strong></div>
+        <div class="game-results-medal"><span>MEDAL</span><strong>${medal ? medal.toUpperCase() : "NONE"}</strong></div>
+        ${TIME_MEDALS.map(tier => `<div><span>${tier.toUpperCase()} TARGET</span><strong>${this.formatTime(targets[tier])}</strong></div>`).join("")}
         <div><span>BOXES</span><strong>${state.boxes} / ${state.totalBoxes}</strong></div>
         <div class="game-results-bests"><span>YOUR BEST TIMES</span><strong>${bestTimes.map((time) => this.formatTime(time)).join(" · ") || "—"}</strong></div>`;
     } else {
@@ -1237,12 +1247,12 @@ export class GameFlowUI {
         <div><span>BOXES</span><strong>${state.boxes} / ${state.totalBoxes}</strong></div>`;
       if (state.timeTrialUnlocked) {
         const trial = element("div", "game-results-trial-unlocked");
-        trial.innerHTML = `<span>TIME TRIAL UNLOCKED</span><strong>TARGET ${this.formatTime(state.relicTarget ?? CAMPAIGN_TIME_RELIC_TARGET_SECONDS)}</strong>`;
+        trial.innerHTML = `<span>TIME TRIAL UNLOCKED</span><strong>GOLD TARGET ${this.formatTime(state.medalTimes?.gold ?? state.relicTarget ?? CAMPAIGN_TIME_RELIC_TARGET_SECONDS)}</strong>`;
         tally.appendChild(trial);
       }
     }
     const rewardNames = state.kind === "time-trial"
-      ? (state.actualTime <= state.relicTarget ? ["Time relic"] : [])
+      ? (() => { const medal = medalForTime(state.actualTime, state.medalTimes ?? defaultMedalTimes(state.relicTarget)); return medal ? [`${medal} medal`] : []; })()
       : [state.crystal && "Crystal", state.boxGem && "Box gem", state.comboGem && "Combo gem"].filter(Boolean);
     card.setAttribute("aria-label", rewardNames.length ? `Rewards earned: ${rewardNames.join(", ")}` : "No new collectibles earned");
     const actions = element("div", "game-menu-list game-results-actions");
@@ -1276,7 +1286,7 @@ export class GameFlowUI {
     grid.innerHTML = `
       <div><span>◆</span><strong>${totals.crystals}/${totals.maxLevels}</strong><small>CRYSTALS</small></div>
       <div><span>◇</span><strong>${totals.gems}/${totals.maxGems}</strong><small>GEMS</small></div>
-      <div><span>◉</span><strong>${totals.relics}/${totals.maxLevels}</strong><small>RELICS</small></div>
+      <div><span>◉</span><strong>${totals.relics}/${totals.maxLevels}</strong><small>MEDALS</small></div>
       <div><span>✦</span><strong>${totals.cleared}/${totals.maxLevels}</strong><small>LEVELS</small></div>`;
     const cleared = element("p", "game-progress-cleared");
     cleared.textContent = `${totals.cleared} OF ${CAMPAIGN_LEVELS.length} LEVELS CLEARED`;
@@ -1724,6 +1734,7 @@ export class GameFlowUI {
       .game-over-actions .game-menu-button { color: #fff; text-shadow: 0 3px 0 #111; }
       .game-over-actions .game-menu-button.selected { color: #ff9b20; }
       .game-screen-results { place-items: center end; background: linear-gradient(90deg, transparent 0 38%, rgba(3,5,10,.24) 52%, rgba(3,5,10,.85) 100%); backdrop-filter: none; }
+      body.game-shell-results .tc-zone, body.game-shell-results .tc-pause { display: none !important; }
       .game-results-card { width: min(540px, 46vw); min-width: 390px; padding: 26px 34px 30px; margin-right: 4vw; }
       .game-results-title { margin: 7px 0 17px; text-align: center; color: #f05a20; font-size: clamp(32px, 4vw, 52px); line-height: 1; }
       .game-results-tally { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
@@ -1740,6 +1751,12 @@ export class GameFlowUI {
       .game-results-trial-unlocked strong { color: #218d3c; font-size: 23px; }
       .game-results-time-trial .game-results-run-time strong { color: #ee571d; font-size: clamp(45px, 6vw, 72px); line-height: 1.1; }
       .game-results-time-trial .game-results-bests strong { margin-top: 5px; font: 800 clamp(12px, 1.35vw, 17px)/1.3 ui-monospace, Menlo, monospace; }
+      .game-results-time-trial .game-results-tally { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .game-results-time-trial .game-results-run-time, .game-results-time-trial .game-results-bests { grid-column: span 2; }
+      .game-results-time-trial .game-results-tally strong { font-size: clamp(16px, 2.5vw, 26px); }
+      .game-results-time-trial .game-results-medal strong { font-size: clamp(16px, 2.1vw, 28px); }
+      .game-results-time-trial .game-results-run-time strong { font-size: clamp(34px, 4.5vw, 60px); }
+      .game-results-time-trial .game-results-bests strong { font-size: clamp(12px, 1.35vw, 17px); white-space: normal; }
       .game-results-actions { margin-top: 6px; }
       .game-cartoon-cursor { position: fixed; z-index: 90; top: 0; left: 0; width: 42px; height: 50px; pointer-events: none; opacity: 0; transform: translate3d(-100px,-100px,0); transition: opacity .12s; filter: drop-shadow(4px 5px 0 rgba(31,10,5,.65)); }
       .game-cartoon-cursor.visible { opacity: 1; }

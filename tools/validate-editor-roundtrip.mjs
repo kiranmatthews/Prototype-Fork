@@ -1516,8 +1516,15 @@ try {
   assert.equal(benchmarkLevel.captureData().relicTime, 83.75, 'capture dropped authored benchmark');
   const benchmarkCopy = new Level(new THREE.Scene(), { id:'benchmark-copy', name:benchmarkData.name, data:clone(benchmarkLevel.captureData()) });
   assert.equal(benchmarkCopy.relicTime, 83.75, 'copied/exported benchmark changed');
+  assert.deepEqual(benchmarkLevel.medalTimes,{gold:83.75,silver:96.31,bronze:108.88});
   benchmarkCopy.dispose(); benchmarkLevel.dispose();
   assert.equal(starterCustomLevel().relicTime, undefined, 'legacy defaults must remain sparse');
+  const medalData={...starterCustomLevel(),medalTimes:{gold:40,silver:50,bronze:70}};
+  const normalizedMedals=normalizeCustomLevelData(medalData);assert.deepEqual(normalizedMedals.medalTimes,medalData.medalTimes);
+  normalizedMedals.medalTimes.gold=1;assert.equal(medalData.medalTimes.gold,40,'normalized medal times alias input data');
+  for(const medalTimes of [{gold:70,silver:50,bronze:40},{gold:0,silver:1,bronze:2},{gold:40,silver:NaN,bronze:70}])assert.equal(normalizeCustomLevelData({...medalData,medalTimes}),null);
+  const medalLevel=new Level(new THREE.Scene(),{id:'medal-sentinel',name:medalData.name,data:medalData});
+  assert.equal(medalLevel.relicTime,40);assert.deepEqual(medalLevel.medalTimes,medalData.medalTimes);assert.deepEqual(medalLevel.captureData().medalTimes,medalData.medalTimes);medalLevel.dispose();
   assertBendyWallBuilder(buildBendyWallGeometry, THREE);
   const splitQuad = new THREE.BufferGeometry();
   splitQuad.setAttribute(

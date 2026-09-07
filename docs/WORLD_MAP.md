@@ -66,10 +66,11 @@ Changing hubs performs a 0.64-second kickflip; name/reward data swaps halfway
 through while the grip is facing away. Repeated progress refreshes do not
 restart the animation, and later selections queue without exposing wrong text.
 
-Four screen-printed sockets show crystal, box gem, combo gem and time relic.
+Four screen-printed sockets show crystal, box gem, combo gem and the highest
+earned time-trial medal (bronze, silver or gold).
 Uncollected slots use dark flat silhouettes. Collected slots use
 `Level.crystalMesh`, `Level.gemMesh` (including the green combo tint), and
-`Level.timeRelicMesh`, with world halo sprites removed and continuous idle
+the coin-and-ribbon medal factory, with world halo sprites removed and continuous idle
 rotation. No reward models have been restored to the level hubs themselves.
 
 The in-level L2 inventory shows only rewards newly carried in the current run,
@@ -80,9 +81,11 @@ in the inventory. Saved ownership still suppresses duplicate world pickups and
 continues to drive the map's collected models; no save data is removed.
 
 Only cleared levels show the right-side race card: three personal bests and
-the level's authored relic target, labelled Time to Beat. Author the target in
-editor PROJECT → LEVEL → relic time (s);
-its optional `relicTime` metadata overrides the campaign's existing fallback.
+the level's gold, silver and bronze medal targets. Author them in editor
+PROJECT → LEVEL → gold/silver/bronze medal (s). The old relic benchmark becomes
+gold; uncustomized silver and bronze start at 115% and 130% of it. Ordered
+`medalTimes` metadata overrides those defaults; legacy `relicTime` files remain
+valid gold benchmarks. See [TIME_TRIAL_MEDALS.md](TIME_TRIAL_MEDALS.md).
 Empty records are
 dashes, never invented zero times. Optional `CampaignLevelProgress.trialTimes`
 stores the fastest three completed trial times; old saves seed one record from
