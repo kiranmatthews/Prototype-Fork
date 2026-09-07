@@ -7,7 +7,8 @@ class Element {
   constructor(tag) { this.tagName = tag; }
   append(...children) { this.children.push(...children); }
   replaceChildren(...children) { this.children = children; }
-  setAttribute() {}
+  attributes = {};
+  setAttribute(key, value) { this.attributes[key] = value; }
   addEventListener(type, callback) { this.listeners[type] = callback; }
   blur() {}
 }
@@ -16,7 +17,7 @@ const code = ts.transpileModule(await readFile(new URL('../src/editorEnvironment
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
 }).outputText;
 new Function('exports', 'document', code)(exports, { createElement: tag => new Element(tag) });
-const { EditorEnvironment } = exports;
+const { EditorEnvironment, straightenOceanShoreline } = exports;
 let data = { v: 1, name: 'Environment regression', spawn: [0, 1, 0], killY: -30, components: [{ t: 'gate', p: [0, 0, -20] }] };
 const clone = value => JSON.parse(JSON.stringify(value));
 const history = [];
@@ -42,6 +43,7 @@ const edit = (label, value) => {
   assert.ok(row, `field ${label}`); row.edit(value); assert.equal(row.get(), value);
 };
 button('add ocean at focus');
+assert.equal(data.ocean.geometryVersion, 2, 'new oceans need canonical editor coordinates');
 edit('ocean y', -2); edit('ocean yaw °', 45); edit('ocean width', 90);
 assert.deepEqual(data.ocean.p, [12, -2, -25]);
 button('add sand at focus');
@@ -70,4 +72,21 @@ data = beforeRemove; env.render();
 for (const row of env.element.children.filter(e => e.get)) assert.ok(Number.isFinite(row.get()), 'undo must bind fields to restored data');
 data = clone(history[0]); env.sync();
 assert.ok(!env.element.children.some(e => e.textContent === 'ocean width'), 'reset must remove stale fields');
-console.log('PASS environment add/move/resize/rotate/remove, independent patch selection, undo/reset field rebinding');
+// Scalar/select changes do not alter the form's structure, but must still
+// follow restored or canonicalized data instead of retaining render defaults.
+const select = label => env.element.children.flatMap(row => row.children).find(input => input.attributes?.['aria-label'] === label);
+data.hudMode = 'bonus'; data.jungleAtmosphere = true; env.sync();
+assert.equal(select('collection HUD').value, 'bonus');
+assert.equal(select('jungle atmosphere').value, 'on');
+data = { ...data, hudMode: 'standard', jungleAtmosphere: false }; env.sync();
+assert.equal(select('collection HUD').value, 'standard');
+assert.equal(select('jungle atmosphere').value, 'off');
+data.components = [{ t: 'worldmap', p: [0, 0, 0] }]; env.sync();
+assert.ok(!env.element.children.some(e => e.textContent === 'add ocean at focus'), 'map editor must not offer an invalid second ocean');
+for (const shore of [[[0, 0, 1, 0], [2, 2, 1, 0], [0, 0, 1, 0]], [[0, 0, 1, 0], [0, .5, 1, 0]]]) {
+  const ocean = { geometryVersion: 2, p: [1, 2, 3], length: 20, width: 20, seaward: 1, shore };
+  const before = clone(ocean);
+  assert.equal(straightenOceanShoreline(ocean), false, 'closed/short shoreline has no legal straight chord');
+  assert.deepEqual(ocean, before, 'failed straightening must not mutate the ocean');
+}
+console.log('PASS environment add/move/resize/rotate/remove, independent patch selection, undo/reset bindings, live choices, map ownership and safe shoreline conversion');

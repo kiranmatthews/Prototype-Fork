@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { createServer } from "vite";
+import { Vector3 } from "three";
 
 // Exercise the real parser/storage boundary; no WebGL or network is needed.
 const storage = new Map();
@@ -56,6 +57,24 @@ try {
   assert.equal(getUserLevels()[0].id,'jungle-cliff','retirement erased recoverable user data');
   setUserLevels([]);
 
+  // Accept/reopen must obey one contract. Legacy migration adds mandatory
+  // furniture and per-node widths; validate its result, not only its input.
+  for (const spawn of [[100_000, 1, 0], [-100_000, 1, 0], [0, 1, -100_000]])
+    reject({ ...base(), spawn }, "migration placed required furniture outside coordinate limits");
+  reject({ ...base(), components: [{ t: "platform", p: [0, 100_000, 0], s: [8, 2, 8] }] },
+    "migration placed default gate above coordinate limits");
+  reject({ ...base(), components: Array.from({ length: 10_000 }, () => ({ t: "platform", p: [0, 0, 0] })) },
+    "migration exceeded component count");
+  const nearComponentLimit = { ...base(), components: Array.from({ length: 9997 }, () => ({ t: "platform", p: [0, 0, 0] })) };
+  const canonicalLimit = normalize(nearComponentLimit);
+  assert.ok(canonicalLimit, "limit must still allow the three required objects");
+  assert.equal(canonicalLimit.components.length, 10_000);
+  assert.deepEqual(normalize(canonicalLimit), canonicalLimit, "accepted limit cannot fail on reopen");
+  const retitledLegacy = parse(JSON.stringify({ name: "Test Course", data: { ...base(),
+    components: [{ t: "enemy", p: [0, -252, 4] }] } }));
+  assert.ok(retitledLegacy);
+  assert.deepEqual(normalize(retitledLegacy), retitledLegacy, "wrapper title must not defer source repairs until the next open");
+
   // Prototype pollution, stored payloads and hooks cannot survive the boundary.
   for (const key of ["__proto__", "prototype", "constructor"]) {
     for (const target of ["level", "component", "group", "environment"]) {
@@ -74,6 +93,31 @@ try {
   reject({ ...base(), jungleAtmosphere: "false" }, "mistyped atmosphere flag");
   reject({ ...base(), name: "x".repeat(121) }, "unbounded level title");
   rejectComponent({ t: "decor", dkind: "vines", p: [0, 0, 0], n: 100_000 }, "strand expansion");
+  for (const [dkind, s] of [
+    ["templeplatform", [100_000, 1, 100_000]],
+    ["templewall", [100_000, 100_000, 1]],
+    ["templewall", [100_000, 0.0001, 1]],
+    ["roofedtemple", [100_000, 100_000, 100_000]],
+    ["hangingarch", [100_000, 100_000, 1]],
+  ]) rejectComponent({ t: "decor", dkind, p: [0, 0, 0], s }, "masonry assembly expansion");
+  reject({ ...base(), components: Array.from({ length: 1000 }, () => ({
+    t: "decor", dkind: "roofedtemple", p: [0, 0, 0],
+  })) }, "aggregate masonry assembly expansion");
+  // Bound estimates are checked against real builder output over varied
+  // dimensions, damage variants and floor choices; no WebGL is involved.
+  const assemblies = await server.ssrLoadModule("/src/jungleAssemblies.ts");
+  for (const dkind of assemblies.JUNGLE_ASSEMBLY_KINDS) {
+    for (const s of [undefined, [0.1, 0.1, 0.1], [2.25, 0.8, 2], [9, 10, 8],
+      [21, 12, 13], [40, 0.9, 28], [18, 35, 32], [0.4, 40, 1], [80, 0.2, 0.4]]) {
+      for (const vr of [0, 1]) for (const openFloor of [false, true]) {
+        const spec = { dkind, p: [0, 0, 0], s, vr, openFloor, seed: 17 };
+        assert.ok(assemblies.jungleAssemblyParts(spec).length <= assemblies.jungleAssemblyWork(spec),
+          `masonry budget undercounted ${JSON.stringify(spec)}`);
+      }
+    }
+    assert.ok(normalize({ ...base(), components: [{ t: "decor", dkind, p: [0, 0, 0] }] }),
+      `ordinary ${dkind} must remain importable`);
+  }
   rejectComponent({ t: "woodpath", p: [0, 0, 0], widths: [1e300] }, "width overflow");
   rejectComponent({ t: "woodpath", p: [0, 0, 0], plankPalette: "https://evil.example/model.glb" }, "palette URL");
   rejectComponent({ t: "woodpath", p: [0, 0, 0], polePalette: "../../private-model" }, "palette traversal");
@@ -86,6 +130,29 @@ try {
   rejectComponent({ t: "platform", p: [0, 0, 0], pts: [[0, 0], [0, 1], [0, 2]] }, "zero-area polygon");
   rejectComponent({ t: "platform", p: [0, 0, 0], pts: [[0, 0], [4, 4], [0, 2], [3, 0]] }, "self-intersecting polygon with nonzero signed area");
   rejectComponent({ t: "platform", p: [0, 0, 0], s: [1e-100, 1, 1] }, "Float32 geometry underflow");
+  rejectComponent({ t: "wall", p: [0, 0, 0],
+    pts: [[0, -100_000], [0.1, -100_000], [0.1, 100_000], [0, 100_000]] },
+    "thin wall must not bypass scan work by producing no old-style slabs");
+  for (const t of ["platform", "wall", "trampoline", "speedpad"])
+    rejectComponent({ t, p: [0, 0, 0], s: [100_000, 2, 100_000], yaw: 45 }, "rotated slab expansion");
+  rejectComponent({ t: "speedpad", p: [0, 0, 0], s: [100_000, 2, 100_000], yaw: 90 },
+    "quarter-turn mechanic pad scan budget");
+  const collider = { walls: [] };
+  api.Level.prototype.fillWallSlabs.call(collider, [[-2, 0], [2, 0], [2, 600], [-2, 600]], 0, 0, 0, 3);
+  assert.ok(collider.walls.length > 240, "long walls must not truncate at the old slab cap");
+  for (const z of [0.01, 239.5, 400, 599.99])
+    assert.ok(collider.walls.some(box => box.containsPoint(new Vector3(0, 1, z))), `missing collision at Z=${z}`);
+  const narrow = { walls: [] };
+  api.Level.prototype.fillWallSlabs.call(narrow, [[0, 0.1], [0.1, 0.1], [0.1, 0.2], [0, 0.2]], 0, 0, 0, 3);
+  assert.ok(narrow.walls.some(box => box.containsPoint(new Vector3(0.05, 1, 0.15))),
+    "short thin wall fell between scanline samples");
+  const diagonal = { walls: [] };
+  api.Level.prototype.fillWallSlabs.call(diagonal, [[0, 0], [20, 0.1], [20, 0.2], [0, 0.1]], 0, 0, 0, 3);
+  for (let step = 1; step < 20; step++)
+    assert.ok(diagonal.walls.some(box => box.containsPoint(new Vector3(step, 1, step / 200 + 0.05))),
+      "steep diagonal contains collision gaps");
+  assert.ok(!diagonal.walls.some(box => box.containsPoint(new Vector3(1, 1, 0.15))),
+    "diagonal collider filled broad empty space");
   reject({ ...base(), components: Array.from({ length: 2049 }, () => ({ t: "crate", p: [0, 0, 0] })) }, "crate runtime budget");
   const { CAMPAIGN_LEVELS } = await server.ssrLoadModule("/src/campaign.ts");
   rejectComponent({ t: "worldmap", p: [0, 0, 0], pts: CAMPAIGN_LEVELS.map(() => [0, 0, 0, 0]) }, "coincident campaign hubs");
@@ -94,10 +161,18 @@ try {
   reject({ ...base(), components: [0, 1].map(() => ({ t: "vertramp", p: [0, 0, 0], trafficRoad: true })) }, "multiple traffic paths");
   reject({ ...base(), groups: [{ id: Number.MAX_SAFE_INTEGER }], layers: [{ id: 1, name: "legacy" }] }, "group migration integer overflow");
   reject({ ...base(), components: Array.from({ length: 1025 }, () => ({ t: "enemy", p: [0, 0, 0] })) }, "dynamic entity budget");
+  for (const component of [
+    { t: "crumble" }, { t: "rope" }, { t: "trickgate" }, { t: "returnportal" },
+    { t: "thorn" }, { t: "rail", amp: 4 },
+  ]) reject({ ...base(), components: Array.from({ length: 1025 }, () => ({ ...component, p: [0, 0, 0] })) },
+    `per-frame ${component.t} work must share the dynamic entity budget`);
   reject({ ...base(), ocean: { p: [0, 0, 0], length: 10, width: 20, seaward: 1, longitudinalSegments: 1024, lateralSegments: 512 } }, "ocean product limit");
   const coast = { p: [0, 0, 0], length: 20, width: 20, seaward: 1,
     shore: [[0, 0, 1, 0], [0, -20, 1, 0]], extendTails: true };
   assert.ok(normalize({ ...base(), ocean: coast }), "authored shoreline profile");
+  assert.ok(normalize({ ...base(), ocean: { ...coast, geometryVersion: 2 } }), "canonical ocean version");
+  for (const geometryVersion of [1, 3, "2", null])
+    reject({ ...base(), ocean: { ...coast, geometryVersion } }, "invalid ocean geometry version");
   for (const shore of [[[0, 0, 1, 0]], [[0, 0, 0, 0], [0, 20, 0, 0]],
     [[0, 0, 2, 0], [0, 20, 1, 0]], [[0, 0, 1, 0], [0, 30_000, 1, 0]]])
     reject({ ...base(), ocean: { ...coast, shore } }, "invalid shoreline profile");

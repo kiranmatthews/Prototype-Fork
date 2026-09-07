@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 
 // Called by the real Vite/headless Level harness in validate-editor-roundtrip.
-export function assertEditorRuntimeAuthoring({ Level, setEditorBuild, worldMapComponentPoints, normalizeCustomLevelData }, THREE) {
+export function assertEditorRuntimeAuthoring({ Level, setEditorBuild, worldMapComponentPoints, normalizeCustomLevelData, migrateCustomLevel }, THREE, { editOceanShoreline, straightenOceanShoreline, UnityOcean }) {
   const search = window.location.search;
   const clone = (value) => JSON.parse(JSON.stringify(value));
   const makeData = (components) => ({
@@ -195,7 +195,7 @@ export function assertEditorRuntimeAuthoring({ Level, setEditorBuild, worldMapCo
 
     for (const sourceCoordinates of ["three", "unity"]) {
       const oceanData = { ...makeData([]), ocean: {
-        p: [10, -3, -20], yaw: 90, length: 21, width: 24, seaward: 1,
+        geometryVersion: 2, p: [10, -3, -20], yaw: 90, length: 21, width: 24, seaward: 1,
         longitudinalSegments: 16, lateralSegments: 8, sourceCoordinates,
         shore: [[0, 0, 1, 0], [4, -10, 1, 0], [2, -20, 1, 0]],
       } };
@@ -204,15 +204,111 @@ export function assertEditorRuntimeAuthoring({ Level, setEditorBuild, worldMapCo
       try {
         const first = coast.water.shore[0];
         const last = coast.water.shore.at(-1);
-        const sign = sourceCoordinates === "unity" ? -1 : 1;
-        assert.ok(Math.abs(first.x - 10) < 1e-8 && Math.abs(first.z * sign + 20) < 1e-8);
-        assert.ok(Math.abs(last.x + 10) < 1e-8 && Math.abs(last.z * sign + 22) < 1e-8,
+        assert.ok(Math.abs(first.x - 10) < 1e-8 && Math.abs(first.z + 20) < 1e-8);
+        assert.ok(Math.abs(last.x + 10) < 1e-8 && Math.abs(last.z + 22) < 1e-8,
           "ocean shape did not follow editor translation/yaw");
         const expectedNormal = new THREE.Vector2(-2, -10).normalize();
-        assert.ok(Math.abs(last.sx - expectedNormal.x) < 1e-8 && Math.abs(last.sz * sign - expectedNormal.y) < 1e-8,
+        assert.ok(Math.abs(last.sx - expectedNormal.x) < 1e-8 && Math.abs(last.sz - expectedNormal.y) < 1e-8,
           "ocean rotated geometry without its shore-facing direction");
         assert.equal(coast.water.seaLevel, -3);
       } finally { coast.dispose(); }
+    }
+
+    const oceanVertices = water => water.group.children.map(mesh => Array.from(mesh.geometry.attributes.position.array));
+    const assertVertices = (actual, expected, label) => {
+      assert.equal(actual.length, expected.length, label);
+      actual.forEach((mesh, i) => {
+        assert.equal(mesh.length, expected[i].length, label);
+        mesh.forEach((value, j) => assert.ok(Math.abs(value - expected[i][j]) < 0.0001, `${label}: mesh ${i} value ${j}: ${value} vs ${expected[i][j]}`));
+      });
+    };
+    const assertWaterFacingUp = water => {
+      for (const mesh of water.group.children) {
+        const p = mesh.geometry.attributes.position, indices = mesh.geometry.index;
+        for (let i = 0; i < indices.count; i += 3) {
+          const a = new THREE.Vector3().fromBufferAttribute(p, indices.getX(i));
+          const b = new THREE.Vector3().fromBufferAttribute(p, indices.getX(i + 1));
+          const c = new THREE.Vector3().fromBufferAttribute(p, indices.getX(i + 2));
+          assert.ok(b.sub(a).cross(c.sub(a)).y >= -0.00001, "editable ocean is backface-culled from above");
+        }
+      }
+    };
+    for (const quality of ["?lite", ""]) for (const sourceCoordinates of ["three", "unity"])
+      for (const seaward of [-1, 1]) for (const curved of [false, true]) {
+        window.location.search = quality;
+        const old = { p: [10, -3, -20], yaw: 37, length: 40, width: 24, seaward,
+          longitudinalSegments: 16, lateralSegments: 8, sourceCoordinates,
+          ...(curved ? { shore: [[3, 20, seaward, 0], [7, 2, seaward, 0], [2, -20, seaward, 0]] } : {}),
+        };
+        // Build the published v1 geometry directly through the real ocean
+        // renderer. Migration may fix transforms, never move existing files.
+        const a = old.yaw * Math.PI / 180, cosine = Math.cos(a), sine = Math.sin(a);
+        const sign = sourceCoordinates === "unity" ? -1 : 1;
+        const shore = curved ? old.shore.map(([x, z, nx, nz]) => ({
+          x: old.p[0] + x * cosine + z * sine, z: (old.p[2] - x * sine + z * cosine) * sign,
+          sx: nx * cosine + nz * sine, sz: (-nx * sine + nz * cosine) * sign, beachSlope: 0, bedSlope: 0,
+        })) : [1, -1].map(end => ({
+          x: old.p[0] - end * sine * old.length / 2, z: old.p[2] + end * cosine * old.length / 2,
+          sx: cosine * seaward, sz: sine * seaward, beachSlope: 0, bedSlope: 0,
+        }));
+        const published = new UnityOcean({ shore, seaLevel: old.p[1], shoreDirX: cosine * seaward,
+          shoreDirZ: sine * seaward, course: [], terrainHeight: () => old.p[1], sourceCoordinates,
+          oceanWidth: old.width, shoreSampleMetres: old.length / old.longitudinalSegments,
+          lateralSegments: old.lateralSegments,
+        });
+        const canonical = normalizeCustomLevelData({ ...makeData([]), ocean: old });
+        assert.ok(canonical, "legacy ocean failed coordinate migration");
+        assert.equal(canonical.ocean.geometryVersion, 2);
+        assert.deepEqual(migrateCustomLevel(clone(canonical)), canonical, "ocean migration is not idempotent");
+        const migrated = create(canonical);
+        try {
+          assertVertices(oceanVertices(migrated.water), oceanVertices(published), "legacy ocean changed its world footprint");
+          assertWaterFacingUp(migrated.water);
+          const movedData = clone(canonical);
+          movedData.ocean.p = movedData.ocean.p.map((value, axis) => value + [5, 2, -7][axis]);
+          const moved = create(movedData);
+          try {
+            const expected = oceanVertices(migrated.water).map(mesh => mesh.map((value, index) => value + [5, 2, -7][index % 3]));
+            assertVertices(oceanVertices(moved.water), expected, "ocean ignored ordinary world translation");
+          } finally { moved.dispose(); }
+          if (!curved) {
+            const editedData = clone(canonical);
+            editOceanShoreline(editedData.ocean);
+            const edited = create(editedData);
+            try {
+              assertVertices(oceanVertices(edited.water), oceanVertices(migrated.water), "entering shoreline node editing moved the ocean");
+              assertWaterFacingUp(edited.water);
+              assert.ok(straightenOceanShoreline(editedData.ocean));
+              const straight = create(editedData);
+              try { assertVertices(oceanVertices(straight.water), oceanVertices(migrated.water), "leaving shoreline node editing moved the ocean"); }
+              finally { straight.dispose(); }
+            } finally { edited.dispose(); }
+          } else {
+            const straightData = clone(canonical);
+            const start = migrated.water.shore[0], end = migrated.water.shore.at(-1);
+            assert.ok(straightenOceanShoreline(straightData.ocean));
+            const straight = create(straightData);
+            try {
+              const actualStart = straight.water.shore[0], actualEnd = straight.water.shore.at(-1);
+              assert.ok(Math.hypot(start.x - actualStart.x, start.z - actualStart.z) < 1e-8);
+              assert.ok(Math.hypot(end.x - actualEnd.x, end.z - actualEnd.z) < 1e-8,
+                "straightening reset the shoreline's endpoint placement");
+              assertWaterFacingUp(straight.water);
+            } finally { straight.dispose(); }
+          }
+        } finally { migrated.dispose(); published.dispose(); }
+      }
+
+    for (const quality of ["?lite", ""]) for (const id of ["beachfront", "descent"]) {
+      window.location.search = quality;
+      const native = new Level(new THREE.Scene(), { id, name: id });
+      try {
+        const ocean = native.captureData().ocean;
+        assert.equal(ocean.geometryVersion, 2, "source capture did not use editor ocean coordinates");
+        const rebuilt = create({ ...makeData([]), ocean });
+        try { assertVertices(oceanVertices(rebuilt.water), oceanVertices(native.water), `${id} ${quality} native ocean capture changed geometry`); }
+        finally { rebuilt.dispose(); }
+      } finally { native.dispose(); }
     }
 
     window.location.search = "";

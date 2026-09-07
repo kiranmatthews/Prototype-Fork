@@ -16,6 +16,64 @@ export const JUNGLE_ASSEMBLY_SIZES: Record<JungleAssemblyKind, [number,number,nu
 export function isJungleAssembly(kind: string): kind is JungleAssemblyKind {
   return (JUNGLE_ASSEMBLY_KINDS as readonly string[]).includes(kind);
 }
+
+/**
+ * Constant-time upper bound on the masonry layout loops below. Dimensions,
+ * unlike the final `w` transform, add individual stones. Count even omitted
+ * damaged paving cells: their loop work still happens before they are skipped.
+ * Keep this beside the builders and check it against their actual part output.
+ */
+export function jungleAssemblyWork(spec: Pick<JungleAssemblySpec, "dkind" | "s" | "openFloor">): number {
+  const [width, height, depth] = spec.s ?? JUNGLE_ASSEMBLY_SIZES[spec.dkind];
+  const wall = (width: number, height: number, cap = true): number => {
+    const w = Math.max(0.3, width), h = Math.max(0.2, height);
+    const capH = cap ? Math.min(0.38, h * 0.12) : 0;
+    const courses = Math.max(1, Math.round(h - capH));
+    // Alternating rows can begin with a half-stone, adding one final piece.
+    const stones = courses * (Math.ceil(w / Math.min(2.25, w)) + 1);
+    return 1 + stones + (capH > 0 ? Math.max(1, Math.round(w / (4 * capH))) : 0);
+  };
+  const platform = (width: number, height: number, depth: number): number => {
+    const w = Math.max(0.5, width), h = Math.max(0.25, height), d = Math.max(0.5, depth);
+    const bodyH = h - Math.min(0.28, h * 0.5);
+    let work = 1 + Math.max(1, Math.round(w / 2)) * Math.max(1, Math.round(d / 2));
+    if (bodyH > 0.2) {
+      work += wall(w, bodyH, false) * (d > 2 ? 2 : 1);
+      if (d > 2 && w > 2) work += 2 * wall(d - 2, bodyH, false);
+    }
+    return work;
+  };
+  const column = (y: number, top: number): number =>
+    3 + Math.max(1, Math.floor(Math.max(0.5, top - y - 2) / 1.8));
+  const roof = (width: number, depth: number): number => {
+    const wx = Math.max(0, width - 6), dz = Math.max(0, depth - 6);
+    let work = 4 + (wx > 0.1 ? 2 * Math.max(1, Math.round(wx / 3)) : 0) +
+      (dz > 0.1 ? 2 * Math.max(1, Math.round(dz / 3)) : 0);
+    const levels = Math.max(1, Math.min(3, Math.floor(Math.min(width, depth) / 3.6)));
+    for (let row = 0; row < levels; row++) {
+      const w = width - row * 3.6, d = depth - row * 3.6;
+      if (w < 3 || d < 3) break;
+      work += 4 + 2 * Math.max(1, Math.round(Math.max(0.2, w - 4) / 2));
+      if (d > 4.1) work += 2 * Math.max(1, Math.round(Math.max(0.2, d - 4) / 2));
+    }
+    return work + 1 + Math.max(1, Math.round(Math.max(2, width - (levels - 1) * 3.6 - 3.9) / 2));
+  };
+  if (spec.dkind === "templewall") return wall(width, height);
+  if (spec.dkind === "templeplatform") return platform(width, height, depth);
+  if (spec.dkind === "roofedtemple") {
+    const w = Math.max(9, width), h = Math.max(10, height), d = Math.max(8, depth);
+    return (spec.openFloor ? 0 : platform(w, 0.9, d)) +
+      2 * (d > 10 ? 3 : 2) * column(spec.openFloor ? 0 : 0.9, h - 4.95) +
+      2 * (Math.max(2, Math.round((w - 1.1) / 4)) + Math.max(1, Math.round((d - 2.3) / 4))) +
+      roof(w + 0.8, d + 0.8) + (spec.openFloor ? 3 : 6);
+  }
+  const radius = Math.max(4, width / 2 - 2);
+  const centerY = Math.max(3, height - radius - 0.6);
+  let arch = Math.max(13, Math.round(Math.PI * (radius + 0.6) / 1.36) + 1);
+  if (arch % 2 === 0) arch++;
+  return 2 * column(0, centerY - 0.65) + arch + 3;
+}
+
 export const masonryRandom = (n: number): number => {
   const x = Math.sin(n * 12.9898 + 8.233) * 43758.5453; return x - Math.floor(x);
 };

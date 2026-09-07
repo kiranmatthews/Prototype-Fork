@@ -1,4 +1,30 @@
-import type { CustomLevelData } from "./level";
+import type { CustomLevelData, CustomOceanData } from "./level";
+
+/** Enter node editing without changing any ocean geometry. */
+export function editOceanShoreline(ocean: CustomOceanData): void {
+  ocean.shore ??= [[0, ocean.length / 2, ocean.seaward, 0], [0, -ocean.length / 2, ocean.seaward, 0]];
+}
+
+/** Replace a curved shoreline with its endpoint chord, retaining its world
+ * endpoints and seaward side. Closed/coincident endpoints have no chord. */
+export function straightenOceanShoreline(ocean: CustomOceanData): boolean {
+  if (!ocean.shore) return true;
+  const a = ocean.shore[0], b = ocean.shore[ocean.shore.length - 1];
+  const dx = b[0] - a[0], dz = b[1] - a[1], length = Math.hypot(dx, dz);
+  if (length < 1) return false;
+  const localYaw = Math.atan2(-dx, -dz);
+  const yaw = (ocean.yaw ?? 0) * Math.PI / 180;
+  const midX = (a[0] + b[0]) / 2, midZ = (a[1] + b[1]) / 2;
+  ocean.p = [ocean.p[0] + midX * Math.cos(yaw) + midZ * Math.sin(yaw), ocean.p[1],
+    ocean.p[2] - midX * Math.sin(yaw) + midZ * Math.cos(yaw)];
+  const nx = a[2] + b[2], nz = a[3] + b[3];
+  const reference = Math.hypot(nx, nz) > 0.001 ? [nx, nz] : [a[2], a[3]];
+  ocean.seaward = Math.cos(localYaw) * reference[0] - Math.sin(localYaw) * reference[1] < 0 ? -1 : 1;
+  ocean.yaw = (yaw + localYaw) * 180 / Math.PI;
+  ocean.length = length;
+  delete ocean.shore;
+  return true;
+}
 
 type Point = [number, number, number];
 interface EnvironmentHooks {
@@ -17,6 +43,7 @@ export class EditorEnvironment {
   private foamIndex = 0;
   private shoreIndex = 0;
   private structure = "";
+  private choices: { element: HTMLSelectElement; get: () => string }[] = [];
   constructor(private hooks: EnvironmentHooks) {
     this.element.className = "ed-environment";
     this.render();
@@ -29,6 +56,7 @@ export class EditorEnvironment {
 
   sync(): void {
     if (this.structureKey() !== this.structure) this.render();
+    else for (const choice of this.choices) choice.element.value = choice.get();
   }
 
   render(): void {
@@ -36,6 +64,7 @@ export class EditorEnvironment {
     const { data, number, focus, cameraFocus } = this.hooks;
     const d = data();
     this.element.replaceChildren();
+    this.choices = [];
     const summary = document.createElement("summary");
     summary.textContent = `Environment · ${d.ocean ? 1 : 0} ocean · ${d.unitySand?.length ?? 0} sand · ${d.shoreFoam?.length ?? 0} foam`;
     this.element.append(summary);
@@ -51,12 +80,13 @@ export class EditorEnvironment {
     const num = (label: string, get: () => number, set: (v: number) => void, step = 0.5): void => {
       this.element.append(number(label, get, set, step));
     };
-    const choice = (label: string, values: readonly string[], current: string, set: (v: string) => void): void => {
+    const choice = (label: string, values: readonly string[], current: () => string, set: (v: string) => void): void => {
       const row = document.createElement("label"); row.className = "ed-row";
       const text = document.createElement("span"); text.textContent = label;
       const select = document.createElement("select"); select.setAttribute("aria-label", label);
       for (const v of values) { const o = document.createElement("option"); o.value = v; o.textContent = v; select.append(o); }
-      select.value = current; select.addEventListener("change", () => change(() => set(select.value)));
+      select.value = current(); this.choices.push({ element: select, get: current });
+      select.addEventListener("change", () => change(() => set(select.value)));
       row.append(text, select); this.element.append(row);
     };
     const pointRows = (prefix: string, get: () => readonly number[], set: (p: Point) => void): void => {
@@ -80,20 +110,24 @@ export class EditorEnvironment {
     if (d.components.some(c => c.t === "worldmap")) {
       const note = document.createElement("div"); note.className = "ed-dim";
       note.textContent = "The campaign map uses the map HUD and navigation."; this.element.append(note);
-    } else choice("collection HUD", ["standard", "bonus"], d.hudMode ?? "standard", v => {
+    } else choice("collection HUD", ["standard", "bonus"], () => data().hudMode ?? "standard", v => {
       if (v === "bonus") data().hudMode = "bonus"; else delete data().hudMode;
     });
-    choice("jungle atmosphere", ["off", "on"], d.jungleAtmosphere ? "on" : "off", v => { data().jungleAtmosphere = v === "on"; });
+    choice("jungle atmosphere", ["off", "on"], () => data().jungleAtmosphere ? "on" : "off", v => { data().jungleAtmosphere = v === "on"; });
     for (const [key, label] of [
       ["allBalanceCrates", "crates on balance paths"],
       ["perfectGrindBoost", "perfect grind boost"],
       ["keepPlayFog", "keep authored fog"],
     ] as const)
-      choice(label, ["off", "on"], d[key] ? "on" : "off", v => { data()[key] = v === "on"; });
+      choice(label, ["off", "on"], () => data()[key] ? "on" : "off", v => { data()[key] = v === "on"; });
     num("ledge assist", () => data().ledgeAssist ?? 0, v => { data().ledgeAssist = Math.min(1, Math.max(0, v)); }, 0.05);
 
     heading("OCEAN");
-    if (d.ocean) {
+    if (d.components.some(c => c.t === "worldmap")) {
+      const note = document.createElement("div"); note.className = "ed-dim";
+      note.textContent = "The campaign map owns its ocean. Move the map component to move them together.";
+      this.element.append(note);
+    } else if (d.ocean) {
       const ocean = () => data().ocean!;
       pointRows("ocean", () => ocean().p, p => { ocean().p = p; });
       num("ocean length", () => ocean().length, v => {
@@ -106,14 +140,14 @@ export class EditorEnvironment {
       num("shore overlap", () => ocean().overlap ?? 6, v => { ocean().overlap = Math.max(0, v); });
       num("length segments", () => ocean().longitudinalSegments ?? 128, v => { ocean().longitudinalSegments = Math.max(1, Math.round(v)); }, 1);
       num("width segments", () => ocean().lateralSegments ?? 128, v => { ocean().lateralSegments = Math.max(1, Math.round(v)); }, 1);
-      choice("seaward side", ["left", "right"], ocean().seaward === -1 ? "left" : "right", v => {
+      choice("seaward side", ["left", "right"], () => ocean().seaward === -1 ? "left" : "right", v => {
         const next = v === "left" ? -1 : 1;
         if (next !== ocean().seaward && ocean().shore)
           ocean().shore = ocean().shore!.map(([x,z,nx,nz]) => [x,z,-nx,-nz]);
         ocean().seaward = next;
       });
-      choice("ocean coordinates", ["three", "unity"], ocean().sourceCoordinates ?? "three", v => { ocean().sourceCoordinates = v as "three" | "unity"; });
-      choice("extend coast tails", ["off", "on"], ocean().extendTails ? "on" : "off", v => { ocean().extendTails = v === "on"; });
+      choice("wave coordinates", ["three", "unity"], () => ocean().sourceCoordinates ?? "three", v => { ocean().sourceCoordinates = v as "three" | "unity"; });
+      choice("extend coast tails", ["off", "on"], () => ocean().extendTails ? "on" : "off", v => { ocean().extendTails = v === "on"; });
       if (ocean().shore) {
         const shore = () => ocean().shore!;
         this.shoreIndex = Math.min(this.shoreIndex, shore().length - 1);
@@ -139,13 +173,25 @@ export class EditorEnvironment {
           this.shoreIndex = i + 1;
         }));
         if (shore().length > 2) button("remove shore node", () => change(() => { shore().splice(this.shoreIndex,1); }));
-        button("use straight shoreline", () => change(() => { delete ocean().shore; }));
-      } else button("edit shoreline nodes", () => change(() => {
-        ocean().shore = [[0,ocean().length/2,ocean().seaward,0],[0,-ocean().length/2,ocean().seaward,0]];
-      }));
+        button("frame shore node", () => {
+          const [x, z] = knot(), yaw = (ocean().yaw ?? 0) * Math.PI / 180;
+          focus([ocean().p[0] + x * Math.cos(yaw) + z * Math.sin(yaw), ocean().p[1],
+            ocean().p[2] - x * Math.sin(yaw) + z * Math.cos(yaw)]);
+        });
+        const a = shore()[0], b = shore()[shore().length - 1];
+        // A straight ocean is at least one metre long in the interchange
+        // contract; leave short/closed coasts editable as nodes.
+        if (Math.hypot(b[0] - a[0], b[1] - a[1]) >= 1)
+          button("use straight shoreline", () => change(() => { straightenOceanShoreline(ocean()); }));
+        else {
+          const note = document.createElement("div"); note.className = "ed-dim";
+          note.textContent = "Separate the first and last nodes by at least 1 m to use a straight shoreline.";
+          this.element.append(note);
+        }
+      } else button("edit shoreline nodes", () => change(() => { editOceanShoreline(ocean()); }));
       button("remove ocean", () => change(() => { delete data().ocean; }));
     } else button("add ocean at focus", () => change(() => {
-      data().ocean = { p: cameraFocus(), length: 100, width: 80, seaward: 1, sourceCoordinates: "three" };
+      data().ocean = { geometryVersion: 2, p: cameraFocus(), length: 100, width: 80, seaward: 1, sourceCoordinates: "three" };
     }));
 
     heading("SAND PATCHES");

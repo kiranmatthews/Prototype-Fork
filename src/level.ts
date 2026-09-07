@@ -46,6 +46,7 @@ import { EASY_BONUS_LEVEL, DEFAULT_BONUS_CRATE_COUNT } from "./levels/bonus-easy
 import { TropicalPlantKit, TROPICAL_PLANT_KINDS, TROPICAL_PLANT_LABELS } from "./tropicalPlants";
 import { JungleAssetKit, JUNGLE_ASSET_KINDS, JUNGLE_ASSET_LABELS, isJungleAsset, addJungleDapple, jungleAssetMatrix } from "./jungleAssets";
 import { jungleRuinsDressing } from "./levels/jungle-ruins-art";
+import { isJungleAssembly, jungleAssemblyWork } from "./jungleAssemblies";
 import { createJungleShoulder, addJungleDepthFade } from "./jungleGround";
 import {
   CAMPAIGN_LEVELS,
@@ -921,6 +922,8 @@ export interface CustomLevelData {
 }
 
 export interface CustomOceanData {
+  /** Version 2 uses the editor's world Three positions and positive-Y yaw. */
+  geometryVersion?: 2;
   /** Nominal shoreline midpoint and sea level. */
   p: [number, number, number];
   length: number;
@@ -1013,6 +1016,19 @@ function defaultGateFor(d: CustomLevelData): CustomComponent {
 // already-current level cannot keep rewriting it, while old organizational
 // metadata remains visible in the modern group outliner.
 export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
+  const ocean = d.ocean;
+  if (ocean && ocean.geometryVersion !== 2) {
+    // The first ocean format used clockwise yaw for straight coasts and
+    // reflected the complete world Z coordinate of authored Unity curves.
+    // Preserve their rendered positions once, then use the editor's ordinary
+    // Three-space transforms for every subsequent move and shape conversion.
+    if (ocean.shore && ocean.sourceCoordinates === "unity") {
+      ocean.p[2] = -ocean.p[2] || 0;
+      ocean.shore = ocean.shore.map(([x, z, nx, nz]) => [x, -z || 0, nx, -nz || 0]);
+      if (ocean.yaw !== undefined) ocean.yaw = -ocean.yaw || 0;
+    } else if (!ocean.shore && ocean.yaw !== undefined) ocean.yaw = -ocean.yaw || 0;
+    ocean.geometryVersion = 2;
+  }
   d.components = d.components.map((c) => {
     if (c.t === "worldmap" && c.pts?.length === 9) {
       // Pre-branch map files keep the first nine stable hub identities.
@@ -2285,6 +2301,21 @@ const COMPONENT_DATA_KEYS = new Set([
 const hasOnlyKeys = (value: object, keys: ReadonlySet<string>): boolean =>
   Object.keys(value).every((key) => keys.has(key));
 
+const WALL_SLAB_MAX_DEPTH = 1;
+const WALL_SLAB_MAX_SHIFT = 0.25;
+/** Upper bound for fillWallSlabs, including narrow diagonals and vertex cuts. */
+function wallSlabWork(points: readonly (readonly number[])[]): number {
+  let minZ = Infinity, maxZ = -Infinity, horizontalTravel = 0;
+  for (let i = 0; i < points.length; i++) {
+    const point = points[i], next = points[(i + 1) % points.length];
+    minZ = Math.min(minZ, point[1]); maxZ = Math.max(maxZ, point[1]);
+    horizontalTravel += Math.abs(next[0] - point[0]);
+  }
+  const rows = Math.ceil((maxZ - minZ) / WALL_SLAB_MAX_DEPTH) + points.length +
+    Math.ceil(horizontalTravel / WALL_SLAB_MAX_SHIFT);
+  return rows * points.length;
+}
+
 /** Polygon imports must describe one simple, nonzero-area boundary. */
 function simpleLevelPolygon(points: readonly (readonly number[])[]): boolean {
   let count = points.length;
@@ -2418,8 +2449,13 @@ export function parseCustomLevelJson(text: string): CustomLevelData | null {
         (entry.name !== undefined && (typeof entry.name !== "string" ||
           entry.name.length > MAX_LEVEL_LABEL_LENGTH))) return null;
     const data = normalizeLevelDataFields(entry.data);
-    if (data && entry.name !== undefined) data.name = cleanLevelName(entry.name);
-    return data;
+    if (!data || entry.name === undefined) return data;
+    const name = cleanLevelName(entry.name);
+    if (data.name === name) return data;
+    // Name-specific legacy repairs must also run for an exported wrapper's
+    // title, so a successful import cannot change again on its next open.
+    data.name = name;
+    return normalizeLevelDataFields(data);
   } catch {
     return null;
   }
@@ -2433,7 +2469,7 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
   }
 }
 
-function normalizeLevelDataFields(value: unknown): CustomLevelData | null {
+function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelData | null {
   const MAX_ABS = 100_000;
   const MAX_COMPONENTS = 10_000;
   const MAX_POINTS = 4_096;
@@ -2489,7 +2525,8 @@ function normalizeLevelDataFields(value: unknown): CustomLevelData | null {
     if (
       !ocean ||
       !hasOnlyKeys(ocean, new Set(["p", "length", "yaw", "seaward", "width", "overlap",
-        "longitudinalSegments", "lateralSegments", "sourceCoordinates", "shore", "extendTails"])) ||
+        "longitudinalSegments", "lateralSegments", "sourceCoordinates", "shore", "extendTails", "geometryVersion"])) ||
+      (ocean.geometryVersion !== undefined && ocean.geometryVersion !== 2) ||
       !finiteTuple(ocean.p, 3) ||
       ocean.p.some((number) => Math.abs(number) > MAX_ABS) ||
       !Number.isFinite(ocean.length) ||
@@ -2600,16 +2637,19 @@ function normalizeLevelDataFields(value: unknown): CustomLevelData | null {
   aggregateSamples += (source.ocean?.shore?.length ?? 0) * 4;
   aggregateSamples += (source.unitySand?.length ?? 0) * 24 + (source.shoreFoam?.length ?? 0) * 64;
   let polygonWork = 0;
+  let wallScanWork = 0;
   let dynamicCount = 0;
   let carCount = 0;
   let checkpointCount = 0;
   let crateCount = 0;
   let supportProbeCount = 0;
+  let masonryWork = 0;
   let meshVertices = 0;
   let meshTriangles = 0;
   const singletonKinds = new Set<string>();
   const dynamicKinds = new Set(["enemy", "crusher", "mover", "torch", "phasepad",
-    "stone", "pendulum", "ropeswing", "grindosaurus", "angryball"]);
+    "stone", "pendulum", "ropeswing", "grindosaurus", "angryball", "crumble",
+    "rope", "trickgate", "returnportal", "thorn"]);
   for (const component of source.components) {
     if (
       !component ||
@@ -2723,13 +2763,28 @@ function normalizeLevelDataFields(value: unknown): CustomLevelData | null {
         aggregateSamples += 10_000;
       }
     }
-    if (dynamicKinds.has(component.t) && ++dynamicCount > 1024) return null;
+    const dynamic = dynamicKinds.has(component.t) ||
+      (component.t === "rail" && (component.amp ?? 0) > 0);
+    if (dynamic && ++dynamicCount > 1024) return null;
     if (component.t === "enemy" && component.foe === "car" && ++carCount > 128) return null;
     if (component.t === "checkpoint" && ++checkpointCount > 128) return null;
     if (["crate", "outline", "metal"].includes(component.t) && ++crateCount > 2048) return null;
     if (checkpointCount * crateCount > 250_000) return null;
-    aggregateSamples += component.t === "decor" ? 64 : dynamicKinds.has(component.t)
+    aggregateSamples += component.t === "decor" ? 64 : dynamic
       ? 128 : ["crate", "outline", "metal"].includes(component.t) ? 32 : 8;
+    const decorKind = component.dkind;
+    if (component.t === "decor" && decorKind && isJungleAssembly(decorKind)) {
+      const work = jungleAssemblyWork({
+        dkind: decorKind,
+        s: component.s,
+      });
+      // Masonry instances share geometry; their layout work is bounded
+      // separately from standalone prop meshes. The native Jungle Ruins
+      // capture emits 6,822 parts (7,460 conservative layout units).
+      masonryWork += work;
+      if (masonryWork > 12_000) return null;
+      aggregateSamples += work * 8;
+    }
 
     const pathKind = ["woodpath", "terrain", "vertramp", "wallpath", "rail", "trickrail", "pipe", "coastwall"].includes(component.t);
     let length = 0;
@@ -2794,6 +2849,25 @@ function normalizeLevelDataFields(value: unknown): CustomLevelData | null {
       }
     }
     if (aggregateSamples > MAX_GENERATED_SAMPLES) return null;
+    // Polygon walls and spun slabs use the complete scanline collider below.
+    // Charge every tested edge and generated interval, even when a footprint
+    // is so thin that the old builder skipped all its spans.
+    let wallFootprint: [number, number][] | undefined;
+    if (component.t === "wall" && component.pts)
+      wallFootprint = roundCorners(component.pts, true).map(point => [point.x, point.z]);
+    else if (!component.pts && (
+        (["platform", "wall"].includes(component.t) && (component.yaw ?? 0) % 90 !== 0) ||
+        (["trampoline", "speedpad"].includes(component.t) && Math.abs((component.yaw ?? 0) % 180) >= 0.001))) {
+      const size = component.s ?? (component.t === "wall" ? [8, 4, 1] :
+        component.t === "platform" ? [8, 1, 8] : [5, 0.45, 5]);
+      wallFootprint = rectCorners(size[0], size[2], component.yaw ?? 0);
+    }
+    if (wallFootprint) {
+      const scanWork = wallSlabWork(wallFootprint);
+      wallScanWork += scanWork;
+      aggregateSamples += scanWork * 4;
+      if (wallScanWork > 2_000_000 || aggregateSamples > MAX_GENERATED_SAMPLES) return null;
+    }
     for (const key of booleanKeys)
       if (component[key] !== undefined && typeof component[key] !== "boolean")
         return null;
@@ -2993,8 +3067,13 @@ function normalizeLevelDataFields(value: unknown): CustomLevelData | null {
   )
     return null;
   try {
-    // source is already an isolated, bounded plain-data copy.
-    const normalized = migrateCustomLevel(source);
+    // A legal legacy input can grow during migration (required furniture,
+    // layer groups and per-node widths) or generate coordinates outside the
+    // format bounds. The canonical result must satisfy the same complete
+    // contract as the next import, including serialized size and clone work.
+    if (migrate)
+      return normalizeLevelDataFields(cloneBoundedLevelJson(migrateCustomLevel(source)), false);
+    const normalized = source;
     const groups = groupIndex(normalized);
     for (const start of normalized.groups ?? []) {
       let depth = 0;
@@ -3026,7 +3105,7 @@ export function normalizeUserLevelEntries(value: unknown): LevelEntry[] | null {
   }
   const out: LevelEntry[] = [];
   const ids = new Set<string>();
-  let bytes = 0;
+  let bytes = 2; // JSON array brackets, plus separators below
   try {
     for (const input of value) {
       const entry = cloneBoundedLevelJson(input) as LevelEntry | null;
@@ -3037,7 +3116,7 @@ export function normalizeUserLevelEntries(value: unknown): LevelEntry[] | null {
       const data = normalizeLevelDataFields(entry.data);
       if (!data) return null;
       const normalized = { id: entry.id, name: cleanLevelName(entry.name), data };
-      bytes += new TextEncoder().encode(JSON.stringify(normalized)).byteLength;
+      bytes += new TextEncoder().encode(JSON.stringify(normalized)).byteLength + (out.length ? 1 : 0);
       if (bytes > MAX_LEVEL_PACK_BYTES) return null;
       ids.add(entry.id);
       out.push(normalized);
@@ -5635,12 +5714,15 @@ export class Level {
     let length = 0;
     for (let index = 1; index < shore.length; index++)
       length += Math.hypot(shore[index].x - shore[index - 1].x, shore[index].z - shore[index - 1].z);
-    const sign = coordinates === "unity" ? -1 : 1;
+    const longitudinalSegments = Math.min(900, Math.max(1, Math.ceil(length / 2)));
     this.capturedOceanSpec = {
-      p: [0, seaLevel, 0], length, width: 120, overlap: 6, seaward: 1,
-      longitudinalSegments: Math.min(900, Math.max(1, Math.ceil(length / 2))),
+      geometryVersion: 2,
+      // Native shores sample every two metres. Keep that exact interval:
+      // rounding only the segment count subtly resampled captured curves.
+      p: [0, seaLevel, 0], length: longitudinalSegments * 2, width: 120, overlap: 6, seaward: 1,
+      longitudinalSegments,
       sourceCoordinates: coordinates, extendTails: true,
-      shore: shore.map((point) => [point.x, point.z * sign, point.sx, point.sz * sign]),
+      shore: shore.map((point) => [point.x, point.z, point.sx, point.sz]),
     };
   }
 
@@ -5648,43 +5730,22 @@ export class Level {
     const spec = data.ocean;
     if (spec) {
       const yaw = THREE.MathUtils.degToRad(spec.yaw ?? 0);
-      const tx = Math.sin(yaw);
-      const tz = -Math.cos(yaw);
-      const rightX = -tz;
-      const rightZ = tx;
-      const sx = rightX * spec.seaward;
-      const sz = rightZ * spec.seaward;
-      const half = spec.length * 0.5;
-      const shore: ShoreSample[] = spec.shore ? spec.shore.map(([x, z, nx, nz]) => {
-        // Authoring stays in the same world frame as every editor object;
-        // only the literal Unity material's input coordinates are reflected.
-        const sign = spec.sourceCoordinates === "unity" ? -1 : 1;
-        const cosine = Math.cos(yaw), sine = Math.sin(yaw);
-        return {
-          x: spec.p[0] + x * cosine + z * sine,
-          z: (spec.p[2] - x * sine + z * cosine) * sign,
-          sx: nx * cosine + nz * sine,
-          sz: (-nx * sine + nz * cosine) * sign,
-          beachSlope: 0, bedSlope: 0,
-        };
-      }) : [
-        {
-          x: spec.p[0] - tx * half,
-          z: spec.p[2] - tz * half,
-          sx,
-          sz,
-          beachSlope: 0,
-          bedSlope: 0,
-        },
-        {
-          x: spec.p[0] + tx * half,
-          z: spec.p[2] + tz * half,
-          sx,
-          sz,
-          beachSlope: 0,
-          bedSlope: 0,
-        },
+      const cosine = Math.cos(yaw), sine = Math.sin(yaw);
+      const sx = cosine * spec.seaward;
+      const sz = -sine * spec.seaward;
+      // All authored geometry is world Three space. sourceCoordinates changes
+      // only the literal ocean shader's wave/texture/reflection convention.
+      const knots = spec.shore ?? [
+        [0, spec.length / 2, spec.seaward, 0],
+        [0, -spec.length / 2, spec.seaward, 0],
       ];
+      const shore: ShoreSample[] = knots.map(([x, z, nx, nz]) => ({
+        x: spec.p[0] + x * cosine + z * sine,
+        z: spec.p[2] - x * sine + z * cosine,
+        sx: nx * cosine + nz * sine,
+        sz: -nx * sine + nz * cosine,
+        beachSlope: 0, bedSlope: 0,
+      }));
       const longitudinalSegments = Math.max(
         1,
         Math.round(spec.longitudinalSegments ?? 128),
@@ -5703,6 +5764,21 @@ export class Level {
         lateralSegments: spec.lateralSegments ?? 128,
         extendUnityTails: spec.extendTails,
       });
+      // Authored coast order and side are independent of shader coordinates.
+      // Orient each water triangle upwards so either seaward side remains
+      // visible, including winding changes along an edited shoreline.
+      for (const mesh of this.water.group.children) {
+        if (!(mesh instanceof THREE.Mesh)) continue;
+        const position = mesh.geometry.getAttribute("position");
+        const indices = mesh.geometry.getIndex()!;
+        for (let i = 0; i < indices.count; i += 3) {
+          const a = indices.getX(i), b = indices.getX(i + 1), c = indices.getX(i + 2);
+          const facing = (position.getZ(b) - position.getZ(a)) * (position.getX(c) - position.getX(a))
+            - (position.getX(b) - position.getX(a)) * (position.getZ(c) - position.getZ(a));
+          if (facing < 0) { indices.setX(i + 1, c); indices.setX(i + 2, b); }
+        }
+        indices.needsUpdate = true;
+      }
       this.root.add(this.water.group);
     }
     for (const [index, sand] of (data.unitySand ?? []).entries()) {
@@ -7082,9 +7158,9 @@ export class Level {
     return null;
   }
 
-  // Fill a polygon footprint with 1-unit-deep axis-aligned collision slabs
-  // (scanline, even-odd) — how drawn walls and spun rectangles get solid
-  // sides out of an AABB-only collision engine. pts are relative to cx/cz.
+  // Cover the whole footprint with bounded scanline slabs. Rows stop at every
+  // polygon vertex and subdivide steep diagonals, so thin branches survive
+  // without giant false-positive boxes. pts are relative to cx/cz.
   private fillWallSlabs(
     pts: [number, number][],
     cx: number,
@@ -7092,31 +7168,46 @@ export class Level {
     y0: number,
     h: number,
   ): void {
+    if (pts.length < 3 || h <= 0) return;
+    if (wallSlabWork(pts) > 2_000_000)
+      throw new Error("Wall footprint exceeds the collision work limit");
     let minZ = Infinity;
     let maxZ = -Infinity;
     for (const [, pz] of pts) {
       minZ = Math.min(minZ, pz);
       maxZ = Math.max(maxZ, pz);
     }
-    let slabs = 0;
-    for (let z = Math.floor(minZ) + 0.5; z < maxZ && slabs < 240; z += 1) {
-      const xs: number[] = [];
+    if (maxZ <= minZ) return;
+    const cuts = new Set(pts.map(point => point[1]));
+    for (let z = minZ + WALL_SLAB_MAX_DEPTH; z < maxZ; z += WALL_SLAB_MAX_DEPTH) cuts.add(z);
+    const rows = [...cuts].sort((a, b) => a - b);
+    for (let row = 1; row < rows.length; row++) {
+      const near = rows[row - 1], far = rows[row], z = (near + far) / 2;
+      const edges: { near: number; far: number }[] = [];
       for (let k = 0, j = pts.length - 1; k < pts.length; j = k++) {
         const [xa, za] = pts[k];
         const [xb, zb] = pts[j];
-        if (za > z !== zb > z) xs.push(xa + ((xb - xa) * (z - za)) / (zb - za));
+        if (za > z !== zb > z) {
+          const slope = (xb - xa) / (zb - za);
+          edges.push({ near: xa + slope * (near - za), far: xa + slope * (far - za) });
+        }
       }
-      xs.sort((a, b) => a - b);
-      for (let k = 0; k + 1 < xs.length; k += 2) {
-        const span = xs[k + 1] - xs[k];
-        if (span < 0.2) continue;
-        slabs++;
-        this.walls.push(
-          new THREE.Box3().setFromCenterAndSize(
-            new THREE.Vector3(cx + (xs[k] + xs[k + 1]) / 2, y0 + h / 2, cz + z),
-            new THREE.Vector3(span, h, 1),
-          ),
-        );
+      edges.sort((a, b) => a.near + a.far - b.near - b.far);
+      const shift = edges.reduce((max, edge) => Math.max(max, Math.abs(edge.far - edge.near)), 0);
+      const steps = Math.max(1, Math.ceil(shift / WALL_SLAB_MAX_SHIFT));
+      for (let step = 0; step < steps; step++) {
+        const t0 = step / steps, t1 = (step + 1) / steps;
+        const z0 = near + (far - near) * t0, z1 = near + (far - near) * t1;
+        for (let k = 0; k + 1 < edges.length; k += 2) {
+          const left = edges[k], right = edges[k + 1];
+          const minX = Math.min(THREE.MathUtils.lerp(left.near, left.far, t0), THREE.MathUtils.lerp(left.near, left.far, t1));
+          const maxX = Math.max(THREE.MathUtils.lerp(right.near, right.far, t0), THREE.MathUtils.lerp(right.near, right.far, t1));
+          if (maxX <= minX) continue;
+          this.walls.push(new THREE.Box3(
+            new THREE.Vector3(cx + minX, y0, cz + z0),
+            new THREE.Vector3(cx + maxX, y0 + h, cz + z1),
+          ));
+        }
       }
     }
   }

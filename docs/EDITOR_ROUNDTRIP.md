@@ -25,6 +25,18 @@ being inserted into JSON; a concrete field is materialized only when the user
 changes or transforms it. Pointer cancellation, Escape, window blur, and editor
 exit roll back every live move/scale/resize gesture.
 
+The level registry is part of the transaction. If a fork, paste, edit or history
+operation would exceed the library count/byte limits, neither the current draft
+nor its undo/redo stacks advance. A storage quota failure is different: the
+validated session copy remains accepted and exportable, and the editor reports
+that it is unsaved. Locked components are excluded from selection and protected
+from indirect replacement or group rewiring.
+
+The inspector and palette use exclusive docks below 720 pixels of viewport
+width. The EDIT toggle reveals the canvas without changing the working level.
+The active inspector pane scrolls independently while history, status and TEST
+remain accessible. Non-editor side tools are hidden only while editing.
+
 Non-uniform group transforms use the runtime's own component axes. Procedural
 wood paths mirror the runtime's linear/Catmull-Rom tangents, banked frames, arc
 sampling density, and sample cap when scaling widths and plank/support spacing.
@@ -32,6 +44,7 @@ sampling density, and sample cap when scaling widths and plank/support spacing.
 ## Regression checks
 
 ```sh
+npm run check:editor-security
 npm run check:editor-roundtrip
 npm run check:editor-capture
 ```
