@@ -65,6 +65,13 @@ Uncollected slots use dark flat silhouettes. Collected slots use
 `Level.timeRelicMesh`, with world halo sprites removed and continuous idle
 rotation. No reward models have been restored to the level hubs themselves.
 
+The in-level L2 inventory shows only rewards newly carried in the current run,
+not this banked map collection. HUD ownership is filtered against the rewards
+already saved at run entry. A new pickup stays in that run's haul through soft
+respawns and results, but a retry or later visit starts without banked rewards
+in the inventory. Saved ownership still suppresses duplicate world pickups and
+continues to drive the map's collected models; no save data is removed.
+
 Only cleared levels show the right-side race card: three personal bests and
 the level's authored relic target, labelled Time to Beat. Author the target in
 editor PROJECT → LEVEL → relic time (s);

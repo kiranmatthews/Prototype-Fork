@@ -4367,9 +4367,12 @@ function currentHudState(): HudState {
     cratesBroken:
       player.cratesBroken + (level.runMode ? 0 : player.bonusCrates),
     cratesTotal: level.totalCrates,
-    hasCrystal: player.hasCrystal,
-    hasGem: player.gemEarned,
-    hasComboGem: player.comboGemEarned,
+    // L2 shows this run's carried rewards, not the banked map collection.
+    // Keep the start-of-run snapshot: committing results must not erase the
+    // pickup from this run's presentation before its exit/retry boundary.
+    hasCrystal: player.hasCrystal && !runStartRewards.crystal,
+    hasGem: player.gemEarned && !runStartRewards.boxGem,
+    hasComboGem: player.comboGemEarned && !runStartRewards.comboGem,
     inventoryHeld: input.inventoryHeld,
     bonusMode: level.hudMode === "bonus",
   };

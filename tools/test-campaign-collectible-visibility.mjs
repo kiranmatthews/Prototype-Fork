@@ -272,6 +272,31 @@ assert.match(
   "a normal clear must unlock replay objectives without consuming them",
 );
 
+// Inventory means newly carried this run, not the durable map collection.
+// Exercise the real HUD projection without changing pickup/ownership rules.
+const hudProjection = topLevelFunction(mainFile, "currentHudState");
+assert.match(adoption, /runStartRewards = \{\s*crystal: progress\.crystal,\s*boxGem: progress\.boxGem,\s*comboGem: progress\.comboGem/, "new-run boundary must snapshot the banked map collection");
+const { inventory } = evaluateTypeScript(`
+  export function inventory(player, runStartRewards) {
+    const input = { inventoryHeld: true };
+    const level = { runMode: false, hudMode: "normal", totalCrates: 12 };
+    const sourceComboLabelLine = () => "";
+    ${hudProjection}
+    const hud = currentHudState();
+    return [hud.hasCrystal, hud.hasGem, hud.hasComboGem];
+  }
+`);
+const carrying = { hasCrystal: true, gemEarned: true, comboGemEarned: true, lives: 4 };
+const emptyStart = { crystal: false, boxGem: false, comboGem: false };
+const bankedStart = { crystal: true, boxGem: true, comboGem: true };
+assert.deepEqual(inventory(carrying, emptyStart), [true, true, true], "new pickups disappeared during the collecting run");
+assert.deepEqual(inventory(carrying, bankedStart), [false, false, false], "retry inventory contains banked map rewards");
+assert.deepEqual(inventory(carrying, { ...bankedStart, boxGem: false }), [false, true, false], "saved rewards masked a different newly collected reward");
+assert.deepEqual(inventory({ ...carrying, hasCrystal: false, gemEarned: false, comboGemEarned: false }, emptyStart), [false, false, false]);
+assert.deepEqual(inventory(carrying, emptyStart), [true, true, true], "inventory projection mutated the current run");
+assert.equal(carrying.hasCrystal, true, "HUD must not change durable ownership used to suppress duplicate pickups");
+assert.doesNotMatch(hudProjection, /campaign\.levelProgress/, "results commit must not hide rewards before the run boundary");
+
 console.log(
-  "Validated committed collectible visibility, reset semantics, and replay objectives.",
+  "Validated committed collectible visibility, run-local HUD inventory, reset semantics, and replay objectives.",
 );
