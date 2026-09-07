@@ -66,7 +66,10 @@ Uncollected slots use dark flat silhouettes. Collected slots use
 rotation. No reward models have been restored to the level hubs themselves.
 
 Only cleared levels show the right-side race card: three personal bests and
-the level's authored relic target, labelled Time to Beat. Empty records are
+the level's authored relic target, labelled Time to Beat. Author the target in
+editor PROJECT → LEVEL → relic time (s);
+its optional `relicTime` metadata overrides the campaign's existing fallback.
+Empty records are
 dashes, never invented zero times. Optional `CampaignLevelProgress.trialTimes`
 stores the fastest three completed trial times; old saves seed one record from
 `bestTime`. Save/load, autosave and discard preserve independent array snapshots.

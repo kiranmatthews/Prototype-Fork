@@ -62,7 +62,7 @@ const clear = new Function(
   `${compile(functionSource("showCampaignResults"))}\nshowCampaignResults();`,
 );
 function finish({ canonical = false, before = null, runMode = false, totalBoxes = 12,
-  crates = 9, bonus = 3, collected = true, starting = {} } = {}) {
+  crates = 9, bonus = 3, collected = true, starting = {}, relicTime = 60 } = {}) {
   const calls = { bank: 0, progress: [], commits: [], inventory: [], results: [] };
   const current = registry.get(canonical ? "jungle" : "astra-chimeworks");
   const player = {
@@ -71,7 +71,7 @@ function finish({ canonical = false, before = null, runMode = false, totalBoxes 
     bankFlyingFruit() { calls.bank++; this.fruit += 2; },
   };
   clear(
-    player, { runMode, totalCrates: totalBoxes }, current,
+    player, { runMode, totalCrates: totalBoxes, relicTime }, current,
     (id) => canonical && id === "jungle"
       ? { name: "Canonical Jungle Name", relicTime: 60 }
       : null,
@@ -114,6 +114,7 @@ assert.equal(canonical.result.levelName, "Canonical Jungle Name");
 assert.equal(canonical.result.firstClear, true);
 assert.equal(canonical.result.timeTrialUnlocked, true);
 assert.equal(canonical.result.relicTarget, 60);
+assert.equal(finish({ canonical:true, relicTime:83.75 }).result.relicTarget,83.75,'normal-clear UI ignored the authored target');
 assert.deepEqual(canonical.calls.progress, ["jungle"]);
 assert.deepEqual(canonical.calls.commits, [{
   id: "jungle", rewards: { crystal: true, boxGem: true, comboGem: true },
@@ -132,4 +133,14 @@ assert.equal(
   "repeat clears must not re-announce the time-trial unlock",
 );
 
-console.log("Playtest level flow checks passed: opt-in validated links, safe startup fallbacks, and normal results without canonical progress pollution.");
+const trial = new Function('player','level','current','recordTT','campaign','campaignLevelById','presentCampaignResults','time',
+  `${compile(functionSource('showTimeTrialResults'))}\nshowTimeTrialResults(time);`);
+for (const time of [83.75,83.751]) {
+  let award, result;
+  trial({bankFlyingFruit(){},lives:4,fruit:0,cratesBroken:0}, {relicTime:83.75,totalCrates:0}, {id:'jungle',name:'Trial'},
+    () => ({list:[]}), {levelProgress(){return null},commitTimeTrial(_id,rewards){award=rewards},updateInventory(){}},
+    () => ({name:'Jungle Ruins',relicTime:60}), value => {result=value}, time);
+  assert.equal(result.relicTarget,83.75,'trial results used the campaign fallback over level metadata');
+  assert.equal(award.timeRelic,time<=83.75,'authored threshold comparison is not inclusive and exact');
+}
+console.log("Playtest level flow checks passed: safe startup, normal results and authored relic thresholds.");

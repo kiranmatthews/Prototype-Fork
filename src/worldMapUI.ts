@@ -15,6 +15,7 @@ import type {
 } from "./worldMapController";
 
 export interface WorldMapUICallbacks {
+  getRelicTarget?: (levelId: string) => number;
   onMapTap: (clientX: number, clientY: number) => void;
   onEnter: () => void;
   onOpenSection: (section: WorldMapSection) => void;
@@ -129,17 +130,18 @@ export class WorldMapUI {
     }
 
     const trialUnlocked = this.campaign.runModesUnlocked(definition.levelId);
+    const relicTarget = this.callbacks.getRelicTarget?.(definition.levelId) ?? definition.relicTime;
     const times = progress?.trialTimes ?? (progress?.bestTime ? [progress.bestTime] : []);
     this.trial.setAttribute("aria-hidden", String(!trialUnlocked));
     this.trial.replaceChildren();
     if (trialUnlocked) {
       const records = node("div", "world-map-semantic");
-      records.textContent = `Time trial. Personal bests: ${[0, 1, 2].map(i => `${i + 1}: ${mapTrialTime(times[i])}`).join(", ")}. Time to beat: ${mapTrialTime(definition.relicTime)}`;
+      records.textContent = `Time trial. Personal bests: ${[0, 1, 2].map(i => `${i + 1}: ${mapTrialTime(times[i])}`).join(", ")}. Time to beat: ${mapTrialTime(relicTarget)}`;
       this.trial.append(records);
     }
     this.presentation ??= new MapLevelPresentation(this.levelCard, this.trial);
     this.presentation.select({ key: definition.progressKey, name: definition.name,
-      earned: rewards.map(([, earned]) => earned), trialUnlocked, times: [...times], target: definition.relicTime }, immediate);
+      earned: rewards.map(([, earned]) => earned), trialUnlocked, times: [...times], target: relicTarget }, immediate);
   }
 
   private actionButton(

@@ -47,6 +47,9 @@ import { EASY_BONUS_LEVEL, DEFAULT_BONUS_CRATE_COUNT } from "./levels/bonus-easy
 import { TropicalPlantKit, TROPICAL_PLANT_KINDS, TROPICAL_PLANT_LABELS } from "./tropicalPlants";
 import {
   CAMPAIGN_LEVELS,
+  CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+  resolveRelicTime,
+  validRelicTime,
   isCampaignLevel,
   type CampaignLevelProgress,
 } from "./campaign";
@@ -879,6 +882,8 @@ export interface CustomLevelData {
   hudMode?: "bonus";
   /** 0..1 level-authored widening of ledge reach/timing; absent keeps global feel. */
   ledgeAssist?: number;
+  /** Time-trial relic benchmark in seconds; absent keeps the existing default. */
+  relicTime?: number;
   ocean?: CustomOceanData;
   unitySand?: CustomUnitySandData[];
   shoreFoam?: IslandShoreFoamOval[];
@@ -2231,6 +2236,7 @@ export function normalizeCustomLevelData(value: unknown): CustomLevelData | null
   ];
   if (source.sky !== undefined && !SKY_PRESETS.includes(source.sky)) return null;
   if (source.hudMode !== undefined && source.hudMode !== "bonus") return null;
+  if (source.relicTime !== undefined && !validRelicTime(source.relicTime)) return null;
   if (
     source.ledgeAssist !== undefined &&
     (typeof source.ledgeAssist !== "number" ||
@@ -3104,6 +3110,8 @@ export class Level {
   private campaignWorldMap: CampaignWorldMapRuntime | null = null;
   private bonusPlatform: {
     group: THREE.Group;
+    ground: THREE.Mesh;
+    groundIndex: number;
     box: THREE.Box3;
     returnPoint: THREE.Vector3;
     locked: boolean;
@@ -3111,6 +3119,7 @@ export class Level {
   } | null = null;
   /** Main-level tally extension supplied by its linked bonus stage. */
   bonusCrateTotal = 0;
+  relicTime = CAMPAIGN_TIME_RELIC_TARGET_SECONDS;
 
   // safe = triggered by the player's own spin/slam: breaks the world, not them
   explosions: {
@@ -3797,6 +3806,7 @@ export class Level {
       sfx.play('skateHalt', 0.4, removed ? 1.6 : 0.65);
     };
     this.name = entry.name;
+    this.relicTime = resolveRelicTime(entry.id, entry.data);
     // A user level carries its own component data and builds through the same
     // pipeline the editor writes. A built-in has none, so its id picks the
     // hand-coded builder — built-ins stay pristine, editing one forks a copy.
@@ -4993,6 +5003,7 @@ export class Level {
       spawn: [r2(this.spawnPos.x), r2(this.spawnPos.y), r2(this.spawnPos.z)],
       killY: r2(this.killY),
       ledgeAssist: this.ledgeAssist > 0 ? r2(this.ledgeAssist) : undefined,
+      relicTime: this.relicTime !== CAMPAIGN_TIME_RELIC_TARGET_SECONDS ? this.relicTime : undefined,
       // only when it isn't the default, so the saved JSON stays quiet
       sky: this.skyPreset === DEFAULT_SKY ? undefined : this.skyPreset,
       components: C,
@@ -6343,7 +6354,7 @@ export class Level {
 
   bonusPlatformAt(position: THREE.Vector3): boolean {
     const platform = this.bonusPlatform;
-    return !!platform && !platform.locked && platform.box.containsPoint(position);
+    return !this.timeTrial && !!platform && platform.group.visible && !platform.locked && platform.box.containsPoint(position);
   }
 
   bonusReturnPoint(): THREE.Vector3 {
@@ -9877,6 +9888,8 @@ export class Level {
     ) ?? deckY;
     this.bonusPlatform = {
       group,
+      ground: base,
+      groundIndex: this.groundMeshes.indexOf(base),
       box: new THREE.Box3().setFromCenterAndSize(
         new THREE.Vector3(x, deckY + 0.42, z),
         new THREE.Vector3(3.1, 1.25, 3.1),
@@ -16281,6 +16294,17 @@ export class Level {
   setTimeTrial(on: boolean): void {
     if (this.timeTrial === on) return;
     this.timeTrial = on;
+    const bonus = this.bonusPlatform;
+    if (bonus) {
+      bonus.group.visible = !on;
+      const index = this.groundMeshes.indexOf(bonus.ground);
+      if (on && index >= 0) {
+        bonus.groundIndex = index;
+        this.groundMeshes.splice(index, 1);
+      } else if (!on && index < 0) {
+        this.groundMeshes.splice(Math.min(bonus.groundIndex, this.groundMeshes.length), 0, bonus.ground);
+      }
+    }
     this.applyRunDress(on, true);
   }
 

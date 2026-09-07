@@ -89,6 +89,7 @@ export interface GameFlowUICallbacks {
   onAudioOptions: (options: GameAudioOptions) => void;
   getPlayMode: () => GamePlayMode;
   onPlayMode: (mode: GamePlayMode) => void;
+  getRelicTarget?: (levelId: string) => number;
   prepareLoadingVortex?: () => Promise<void>;
   waitForLevelData?: () => Promise<void>;
   waitForDestinationAssets?: () => Promise<void>;
@@ -1089,7 +1090,7 @@ export class GameFlowUI {
           : "LOCKED";
         const timing = element("small", "game-progress-level-time");
         timing.textContent = progress?.cleared
-          ? `BEST ${progress.bestTime === undefined ? "—" : this.formatTime(progress.bestTime)}  ·  TARGET ${this.formatTime(definition.relicTime)}`
+          ? `BEST ${progress.bestTime === undefined ? "—" : this.formatTime(progress.bestTime)}  ·  TARGET ${this.formatTime(this.callbacks.getRelicTarget?.(definition.levelId) ?? definition.relicTime)}`
           : unlocked
             ? "NOT YET CLEARED"
             : "CLEAR THE CONNECTED PATH";

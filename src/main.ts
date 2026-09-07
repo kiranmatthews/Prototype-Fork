@@ -50,7 +50,7 @@ import { GameFlowVortexHost } from "./gameFlowVortex";
 import {
   CampaignStore,
   CAMPAIGN_LEVELS,
-  CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+  resolveRelicTime,
   DEFAULT_CAMPAIGN_LIVES,
   campaignLevelById,
   isCampaignLevel,
@@ -2107,6 +2107,7 @@ gameFlow = new GameFlowUI(
     onResultsContinue: continueFromResults,
     onAudioOptions: applyGameAudioOptions,
     getPlayMode: () => endlessDeathsOn ? 'modern' : 'classic',
+    getRelicTarget: (id) => resolveRelicTime(id, findLevel(id)?.data),
     onPlayMode: applyGamePlayMode,
     prepareLoadingVortex: prepareLoadingVortexPresentation,
     waitForLevelData: () => firstRunLevelSync,
@@ -2117,6 +2118,7 @@ gameFlow = new GameFlowUI(
   gameAudioOptions,
 );
 worldMapUI = new WorldMapUI(campaign, {
+  getRelicTarget: (id) => resolveRelicTime(id, findLevel(id)?.data),
   onMapTap: (clientX, clientY) => {
     if (gameFlow.blocksGameplay || current.id !== "warproom") return;
     const rect = renderer.domElement.getBoundingClientRect();
@@ -2682,7 +2684,7 @@ function showCampaignResults(): void {
       ? {
           // commitClear above has just satisfied the clear-only run-mode gate.
           timeTrialUnlocked: firstClear,
-          relicTarget: definition.relicTime,
+          relicTarget: level.relicTime,
         }
       : {}),
   };
@@ -2695,8 +2697,7 @@ function showTimeTrialResults(time: number): void {
   const savedBest = campaign.levelProgress(current.id)?.bestTime;
   if (savedBest != null && !bestTimes.includes(savedBest)) bestTimes.push(savedBest);
   const definition = campaignLevelById(current.id);
-  const relicTarget =
-    definition?.relicTime ?? CAMPAIGN_TIME_RELIC_TARGET_SECONDS;
+  const relicTarget = level.relicTime;
   campaign.commitTimeTrial(current.id, {
     time,
     timeRelic: time <= relicTarget,
@@ -2725,7 +2726,7 @@ function enterCampaignLevel(targetId: string): void {
 }
 
 function enterBonusRound(): void {
-  if (bonusSession || !isCampaignLevel(current.id)) return;
+  if (bonusSession || player.ttActive || level.timeTrial || !isCampaignLevel(current.id)) return;
   ui.hideMessage();
   player.bankFlyingFruit();
   const parentEntry = current;
@@ -2863,6 +2864,7 @@ function checkCampaignEntrances(): void {
     !bonusSession &&
     isCampaignLevel(current.id) &&
     !player.ttActive &&
+    !level.timeTrial &&
     !player.comboRun &&
     player.grounded &&
     level.bonusPlatformAt(player.pos)

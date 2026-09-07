@@ -132,6 +132,8 @@ assert.doesNotMatch(
 const bonusEntryFlow =
   main.match(/function enterBonusRound\([\s\S]*?\n}\n\nfunction returnFromBonus/)?.[0] ?? "";
 assert.ok(bonusEntryFlow, "bonus-entry flow could not be inspected");
+assert.match(bonusEntryFlow, /player\.ttActive \|\| level\.timeTrial/, 'bonus entry needs a mode-level guard even after the player clock stops');
+assert.match(main, /!player\.ttActive &&\s*!level\.timeTrial &&/, 'bonus polling must exclude trial mode');
 assert.doesNotMatch(
   bonusEntryFlow,
   /BONUS ROUND!|break every box — falls return you safely/,

@@ -1507,6 +1507,17 @@ try {
     setUserLevels,
     starterCustomLevel,
   } = levelModule;
+  const benchmarkData = { ...starterCustomLevel(), relicTime: 83.75 };
+  assert.equal(normalizeCustomLevelData(benchmarkData)?.relicTime, 83.75);
+  for (const relicTime of [0, -1, Infinity, NaN, '90', null, 86401])
+    assert.equal(normalizeCustomLevelData({ ...benchmarkData, relicTime }), null, 'invalid relic benchmark was accepted');
+  const benchmarkLevel = new Level(new THREE.Scene(), { id:'benchmark-sentinel', name:benchmarkData.name, data:benchmarkData });
+  assert.equal(benchmarkLevel.relicTime, 83.75);
+  assert.equal(benchmarkLevel.captureData().relicTime, 83.75, 'capture dropped authored benchmark');
+  const benchmarkCopy = new Level(new THREE.Scene(), { id:'benchmark-copy', name:benchmarkData.name, data:clone(benchmarkLevel.captureData()) });
+  assert.equal(benchmarkCopy.relicTime, 83.75, 'copied/exported benchmark changed');
+  benchmarkCopy.dispose(); benchmarkLevel.dispose();
+  assert.equal(starterCustomLevel().relicTime, undefined, 'legacy defaults must remain sparse');
   assertBendyWallBuilder(buildBendyWallGeometry, THREE);
   const splitQuad = new THREE.BufferGeometry();
   splitQuad.setAttribute(

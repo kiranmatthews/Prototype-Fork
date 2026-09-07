@@ -8,6 +8,16 @@ export const DEFAULT_CAMPAIGN_LIVES = 4;
 export const CAMPAIGN_SAVE_SLOTS = 3;
 /** Placeholder target shared by every canonical trial until authored per-level. */
 export const CAMPAIGN_TIME_RELIC_TARGET_SECONDS = 60;
+export const MAX_RELIC_TIME_SECONDS = 86_400;
+export function validRelicTime(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value) && value >= 0.01 && value <= MAX_RELIC_TIME_SECONDS;
+}
+
+/** Authored level metadata wins; existing courses keep their campaign/default target. */
+export function resolveRelicTime(levelId: string, data?: { relicTime?: number }): number {
+  return validRelicTime(data?.relicTime) ? data.relicTime
+    : campaignLevelById(levelId)?.relicTime ?? CAMPAIGN_TIME_RELIC_TARGET_SECONDS;
+}
 
 export interface CampaignLevelDefinition {
   /** Stable save identity. Keep this when replacing the backing level. */

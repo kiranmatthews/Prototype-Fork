@@ -14,6 +14,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { TUNING } from "./tuning";
+import { resolveRelicTime, MAX_RELIC_TIME_SECONDS } from "./campaign";
 import {
   Level,
   CustomComponent,
@@ -2284,6 +2285,7 @@ export class Editor {
   private forkedLevelId: string | null = null;
   private nameInput: HTMLInputElement | null = null;
   private skySelect: HTMLSelectElement | null = null;
+  private relicTimeInput: HTMLInputElement | null = null;
   private resetBtn: HTMLButtonElement | null = null;
   private delBtn: HTMLButtonElement | null = null;
   data: CustomLevelData;
@@ -2883,6 +2885,7 @@ export class Editor {
   /** Point the time-of-day dropdown at whatever this.data now says. */
   private syncSkySelect(): void {
     if (this.skySelect) this.skySelect.value = asSkyPreset(this.data.sky);
+    if (this.relicTimeInput) this.relicTimeInput.value = String(resolveRelicTime(this.targetId, this.data));
   }
 
   /** Reset/delete read differently on a built-in than on a level you made. */
@@ -5990,6 +5993,29 @@ export class Editor {
     skyRow.appendChild(skySel);
     lvl.appendChild(skyRow);
     this.skySelect = skySel;
+    const relicRow = this.numRow(
+      "relic time (s)",
+      () => resolveRelicTime(this.targetId, this.data),
+      (value) => { this.data.relicTime = THREE.MathUtils.clamp(value, 0.01, MAX_RELIC_TIME_SECONDS); },
+      0.01,
+    );
+    const relicInput = relicRow.querySelector("input")!;
+    relicInput.min = "0.01";
+    relicInput.max = String(MAX_RELIC_TIME_SECONDS);
+    relicInput.setAttribute("aria-label", "Relic benchmark time (seconds)");
+    relicInput.title = "Time to beat for the time-trial relic, in seconds (e.g. 90.5 = 1:30.50). Saved with this level.";
+    this.relicTimeInput = relicInput;
+    lvl.appendChild(relicRow);
+    const defaultRelic = h('<button class="ed-btn">use default relic time</button>') as HTMLButtonElement;
+    defaultRelic.addEventListener("click", () => {
+      if (this.data.relicTime !== undefined) {
+        delete this.data.relicTime;
+        this.commit();
+        this.syncSkySelect();
+      }
+      defaultRelic.blur();
+    });
+    lvl.appendChild(defaultRelic);
     lvl.appendChild(
       this.numRow(
         "spawn x",

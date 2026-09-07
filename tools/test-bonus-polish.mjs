@@ -42,6 +42,29 @@ try {
   const { EASY_BONUS_LEVEL: data, DEFAULT_BONUS_CRATE_COUNT: count } = await server.ssrLoadModule('/src/levels/bonus-easy.ts');
   const { BONUS_LEVEL: original } = await server.ssrLoadModule('/src/levels/bonus-level.ts');
   const { Level, findLevel } = await server.ssrLoadModule('/src/level.ts');
+  const parentLevel = new Level(new THREE.Scene(), { id:'jungle', name:'Trial bonus sentinel', data:{
+    v:1, name:'Trial bonus sentinel', spawn:[0,.1,0], killY:-20,
+    components:[{t:'platform',p:[0,-.5,-40],s:[40,1,120]},{t:'gate',p:[0,.5,-80]}],
+  }});
+  try {
+    const platform = parentLevel.bonusPlatform;
+    assert.ok(platform, 'fixture did not place a bonus entrance');
+    const trigger = platform.box.getCenter(new THREE.Vector3()), ground = [...parentLevel.groundMeshes];
+    assert.equal(parentLevel.bonusPlatformAt(trigger), true);
+    parentLevel.setTimeTrial(true); parentLevel.setTimeTrial(true);
+    assert.equal(parentLevel.bonusPlatformAt(trigger), false, 'trial still accepts bonus entry');
+    assert.equal(platform.group.visible, false, 'trial still advertises the bonus');
+    assert.equal(parentLevel.groundMeshes.includes(platform.ground), false, 'disabled bonus left invisible collision');
+    parentLevel.reset(true);
+    assert.equal(parentLevel.bonusPlatformAt(trigger), false, 'trial reset reenabled the bonus');
+    parentLevel.setBonusPlatformLocked(true);
+    parentLevel.setTimeTrial(false); parentLevel.setTimeTrial(false);
+    assert.equal(platform.group.visible, true);
+    assert.deepEqual(parentLevel.groundMeshes, ground, 'mode changes lost/reordered/duplicated ground');
+    assert.equal(parentLevel.bonusPlatformAt(trigger), false, 'mode change cleared the completed-bonus lock');
+    parentLevel.setBonusPlatformLocked(false);
+    assert.equal(parentLevel.bonusPlatformAt(trigger), true);
+  } finally { parentLevel.dispose(); }
   const { Player } = await server.ssrLoadModule('/src/player.ts');
   const { BonusPayout } = await server.ssrLoadModule('/src/bonusPayout.ts');
   const { mergeCompletedBonusInventory } = await server.ssrLoadModule('/src/campaign.ts');

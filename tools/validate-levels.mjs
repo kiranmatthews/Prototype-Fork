@@ -48,6 +48,8 @@ for (const [levelIndex, level] of (payload.levels ?? []).entries()) {
   if (data.v !== 1) errors.push(`${label}.data.v must be 1`);
   if (!finiteTuple(data.spawn, 3)) errors.push(`${label}.data.spawn must be three finite numbers`);
   if (!Number.isFinite(data.killY)) errors.push(`${label}.data.killY must be finite`);
+  if (data.relicTime !== undefined && (typeof data.relicTime !== "number" || !Number.isFinite(data.relicTime) || data.relicTime < 0.01 || data.relicTime > 86400))
+    errors.push(`${label}.data.relicTime must be 0.01–86400 seconds when present`);
   if (!Array.isArray(data.components)) {
     errors.push(`${label}.data.components must be an array`);
     continue;
