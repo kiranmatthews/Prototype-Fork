@@ -216,6 +216,12 @@ class SfxEngine {
       const src = ctx.createBufferSource();
       src.buffer = buf;
       src.loop = true;
+      src.loopStart = 0;
+      // Some browser full-buffer loop paths repeat the final 128-frame render
+      // block after the first pass. An explicit end at duration still hits
+      // that path. Wrap one decoded sample earlier (about 23us at 44.1kHz).
+      // Use the decoded buffer rate, not the WAV's original sample rate.
+      src.loopEnd = (buf.length > 1 ? buf.length - 1 : buf.length) / buf.sampleRate;
       src.playbackRate.value = rate;
       const gain = ctx.createGain();
       gain.gain.value = vol;
