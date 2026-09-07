@@ -1,6 +1,8 @@
 import { UNITY_OCEAN_DEFAULTS, type CoastWater, type UnityOceanParams, type OceanColor } from './unityOcean';
 import { createMapOceanDefaults } from './mapOceanPreset';
 import { readForkStudioDraft } from './localGameStorage';
+import { applyMapOutline, cleanMapOutline, mapOutlineParams, type MapOutlineKey, type MapOutlineParams } from './mapIslandOutline';
+import type { IslandShoreFoam } from './islandShoreFoam';
 
 export type OceanContext = 'map' | 'level';
 export const OCEAN_TUNING_KEY = 'solProtoOceanTuning.v2';
@@ -10,16 +12,17 @@ export type OceanColorKey = 'shallow'|'deep'|'peak'|'shadow'|'specular'|'interse
 export type OceanNumericKey = { [K in keyof UnityOceanParams]: UnityOceanParams[K] extends number ? K : never }[keyof UnityOceanParams];
 export type OceanFieldPath = readonly [OceanNumericKey] | readonly [OceanColorKey, keyof OceanColor];
 type ParamsPatch = { [K in keyof UnityOceanParams]?: UnityOceanParams[K] extends number ? number : Partial<OceanColor> };
-interface Profile { params: ParamsPatch; debug: Partial<Record<OceanDebugKey, boolean>> }
+interface Profile { params: ParamsPatch; debug: Partial<Record<OceanDebugKey, boolean>>; outline: Partial<MapOutlineParams> }
 interface StorageLike { getItem(key:string):string|null; setItem(key:string,value:string):void }
 
 export function cloneOceanParams(source: UnityOceanParams): UnityOceanParams {
   return { ...source, shallow:{...source.shallow},deep:{...source.deep},peak:{...source.peak},shadow:{...source.shadow},specular:{...source.specular},intersection:{...source.intersection} };
 }
 function cleanProfile(raw: unknown): Profile {
-  const result: Profile={params:{},debug:{}};
+  const result: Profile={params:{},debug:{},outline:{}};
   if(!raw||typeof raw!=='object')return result;
   const value=raw as Record<string,unknown>;
+  result.outline=cleanMapOutline(value.outline);
   if(value.params&&typeof value.params==='object') {
     const params=value.params as Record<string,unknown>, out=result.params as Record<string,unknown>;
     for(const [key,base] of Object.entries(UNITY_OCEAN_DEFAULTS)) {
@@ -55,6 +58,7 @@ export class OceanTuningStore {
   private defaults: Record<OceanContext,UnityOceanParams>={map:createMapOceanDefaults(),level:cloneOceanParams(UNITY_OCEAN_DEFAULTS)};
   private instances=new WeakMap<CoastWater,{base:UnityOceanParams;context:OceanContext;revision:number;quality:string}>();
   private saveFailed=false;
+  private outlines=new WeakMap<IslandShoreFoam,number>();
   constructor(private storage?:StorageLike) {
     try {
       const saved=JSON.parse(storage?.getItem(OCEAN_TUNING_KEY)??'null');
@@ -75,8 +79,18 @@ export class OceanTuningStore {
     this.changed(context);
   }
   setDebug(context:OceanContext,key:OceanDebugKey,value:boolean):void { this.profiles[context].debug[key]=value;this.changed(context); }
+  outline():MapOutlineParams { return mapOutlineParams(this.profiles.map.outline); }
+  setOutline(key:MapOutlineKey,value:number):void {
+    const clean=cleanMapOutline({[key]:value});
+    if(clean[key]===undefined)return;
+    Object.assign(this.profiles.map.outline,clean);this.changed('map');
+  }
+  applyOutline(shore:IslandShoreFoam):void {
+    if(this.outlines.get(shore)===this.revisions.map)return;
+    applyMapOutline(shore,this.outline());this.outlines.set(shore,this.revisions.map);
+  }
   reset(context:OceanContext):void { this.profiles[context]=cleanProfile(null);this.changed(context); }
-  serialize(context:OceanContext):string { return JSON.stringify({context,params:this.params(context),debug:this.debug(context)},null,2); }
+  serialize(context:OceanContext):string { return JSON.stringify({context,params:this.params(context),debug:this.debug(context),...(context==='map'?{outline:this.outline()}:{})},null,2); }
   apply(water:CoastWater,context:OceanContext):void {
     let entry=this.instances.get(water);
     if(!entry){entry={base:cloneOceanParams(water.params),context,revision:-1,quality:''};this.instances.set(water,entry);this.defaults[context]=cloneOceanParams(entry.base);}

@@ -1,0 +1,23 @@
+{
+  "wave1Length": 59.3, "wave1Height": 0.033, "wave1Speed": 0.1,
+  "wave1DirX": 1, "wave1DirZ": 0, "wave1Sharpness": 1,
+  "wave2Length": 45.8, "wave2Height": 0.045, "wave2Speed": 0.15,
+  "wave2DirX": -0.49, "wave2DirZ": 1, "wave2Sharpness": 1,
+  "shallow": {"r": 0.026, "g": 0.597, "b": 0.57, "a": 1},
+  "deep": {"r": 0.008, "g": 0.18, "b": 0.3, "a": 1},
+  "depthDistance": 0.72, "distanceStart": 0, "distanceFade": 10, "shoreFadeSmoothness": 0.033,
+  "peak": {"r": 0.57, "g": 0.85, "b": 0.89, "a": 0.35},
+  "normalStrength": 0, "normalPan": 0.442, "normalScale": 0.571, "normalDistanceStrength": 5.67,
+  "shadow": {"r": 0, "g": 0, "b": 0, "a": 0.649},
+  "specular": {"r": 0, "g": 0, "b": 0, "a": 0},
+  "specularSpread": 0, "specularHardness": 0, "specularSize": 0,
+  "refractionStrength": 0.544, "refractionDistance": 3.4, "refractionFade": 1.36,
+  "reflectionStrength": 3, "reflectionFresnel": 5.32, "reflectionDistortion": 1.26,
+  "causticsDepth": -20, "causticsPan": -0.581, "causticsScale": 0.64, "causticsStrength": 0.32,
+  "causticsDistortion": 0, "causticsDistortionScale": 3, "causticsStart": 38, "causticsFade": 150,
+  "intersection": {"r": 1, "g": 1, "b": 1, "a": 0.391},
+  "intersectionWidth": 0, "intersectionDissolve": 0, "intersectionScale": 2.1, "intersectionTile": 1,
+  "intersectionPanX": 0.4, "intersectionPanY": 0.02, "intersectionDistortion": 0,
+  "intersectionSmoothness": 1, "intersectionInvert": 0, "intersectionGradient": 1,
+  "intersectionEdgeFade": 0.736, "shorelineEnabled": 1, "shorelineAlpha": 0
+}

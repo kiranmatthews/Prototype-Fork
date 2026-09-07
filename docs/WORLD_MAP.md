@@ -142,7 +142,8 @@ Important map-specific requirements:
   plateau is roughly 0.1–0.7 m below sea level, with a deeper outer falloff.
   A densely sampled, gradual seabed slope spreads the turquoise-to-blue
   transition from the broad lagoon across several dozen metres, ending at
-  four times the nominal island radius. Caustic scale remains 1.05.
+  four times the nominal island radius. The September 7 user preset sets
+  caustic scale to 0.64 and strength to 0.32 without changing that geometry.
   `terrainHeight` is sampler compatibility only; it does not create a seabed.
 - The elevated map camera needs a longer caustic distance range and a lower
   reflection Fresnel exponent than the close gameplay coast. These are
@@ -153,9 +154,9 @@ Important map-specific requirements:
 
 ## Visual QA
 
-At 16:9, water should occupy roughly a third or more of the frame. Both deep
-normal/specular motion and bright moving caustics over the shallow shelves must
-be obvious without opening debug tools. The selected character should remain
+At 16:9, water should occupy roughly a third or more of the frame. Check against
+the current user-authored ocean preset (which intentionally disables specular
+and near normal strength), with caustics reviewed in full-render mode. The selected character should remain
 readable and every hub must clear mountain footprints and have visible terrain
 support.
 

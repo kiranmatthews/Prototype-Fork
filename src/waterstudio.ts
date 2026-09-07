@@ -6,6 +6,7 @@ import {
   type UnityOceanParams,
 } from "./unityOcean";
 import { oceanTuning, defaultOceanDebug, type OceanContext } from './oceanTuning';
+import { MAP_OUTLINE_FIELDS, type MapOutlineKey } from './mapIslandOutline';
 import {
   btn,
   el,
@@ -235,10 +236,12 @@ export function openWaterStudio(opts: Opts): WaterStudioHandle {
   stats.classList.add("pst-stat");
   const controlSetters: (() => void)[] = [];
   const debugButtons = new Map<DebugKey, HTMLElement>();
+  const outlineControls = el('div', 'map-outline-controls');
 
   const refresh = (): void => {
     params = oceanTuning.params(context);
     panel.dataset.oceanContext = context;
+    outlineControls.hidden = context !== 'map';
     controls.setAttribute('aria-label', contextName(context));
     for (const [key, button] of tabButtons) {
       button.classList.toggle('pst-on', key === context);
@@ -294,6 +297,27 @@ export function openWaterStudio(opts: Opts): WaterStudioHandle {
     debugButtons.set(key, button); debugRow.append(button);
   }
   controls.append(debugRow);
+
+  outlineControls.append(sec('MAP ISLAND WHITE OUTLINE'));
+  outlineControls.append(note('Separate map accent, not the ocean shader shoreline. Width is relative to each island; offset is from the authored beach edge.'));
+  for (const key of Object.keys(MAP_OUTLINE_FIELDS) as MapOutlineKey[]) {
+    const field = MAP_OUTLINE_FIELDS[key];
+    const row = sliderRow(field.label, oceanTuning.outline()[key], field.lo, field.hi, field.step, value => {
+      oceanTuning.setOutline(key, value); applySelected();
+    });
+    row.dataset.mapOutlineField = key;
+    const range = row.querySelector<HTMLInputElement>('input[type="range"]');
+    const number = row.querySelector<HTMLInputElement>('input[type="number"]');
+    range?.setAttribute('aria-label', 'Map island outline: ' + field.label);
+    number?.setAttribute('aria-label', 'Map island outline: ' + field.label + ' value');
+    controlSetters.push(() => {
+      const value = oceanTuning.outline()[key];
+      if (number) number.value = String(value);
+      if (range) range.value = String(toT(value, field.lo, field.hi, field.step >= 1 ? 1 : 3) * 1000);
+    });
+    outlineControls.append(row);
+  }
+  controls.append(outlineControls);
 
   // Surface appearance first: colours/depth, caustics and reflections matter
   // most for the map view. Both tabs still expose the full audited shader.

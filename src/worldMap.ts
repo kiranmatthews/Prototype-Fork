@@ -14,6 +14,7 @@ import { createUnitySandMaterial, applyUnitySandMetricUvs } from "./unitySandMat
 import { createIslandShoreFoam, type IslandShoreFoam } from "./islandShoreFoam";
 import { TropicalPlantKit, TROPICAL_PLANT_KINDS, type TropicalPlantKind } from "./tropicalPlants";
 import { createMapOceanDefaults } from "./mapOceanPreset";
+import { oceanTuning } from "./oceanTuning";
 
 export interface CampaignMapPose {
   position: THREE.Vector3;
@@ -798,6 +799,7 @@ export class CampaignWorldMapRuntime {
     this.elapsed += dt;
     this.beachTime.value=this.elapsed;
     this.plants.update(dt);
+    oceanTuning.applyOutline(this.shoreline);
     this.shoreline.update(dt);
     for (const node of this.nodeByKey.values()) {
       const selected = node.key === this.selectedKey;
@@ -968,6 +970,7 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
   shoreline.geometry.computeBoundingSphere();
   shoreline.geometry.computeBoundingBox();
   shoreline.mesh.name="world map white shoreline";
+  oceanTuning.applyOutline(shoreline);
   root.add(shoreline.group);
 
   const mountainMaterial = new THREE.MeshStandardMaterial({
@@ -1210,6 +1213,7 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
         bedMaterial,
       );
       underlay.name = "world map route bed";
+      underlay.renderOrder = shoreline.mesh.renderOrder + 1;
       underlay.userData.noShadow = true;
       root.add(underlay);
     }
@@ -1279,6 +1283,10 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
         railMaterial,
       );
       rail.name = "world map boardslide rail";
+      // Both are translucent/depth-write-free. Draw above the shoreline
+      // accent (order 1), retaining depth tests against solid island scenery.
+      rail.renderOrder = shoreline.mesh.renderOrder + 1;
+      glow.renderOrder = rail.renderOrder;
       root.add(rail);
       const supportCount = Math.max(2, Math.floor(length / 6));
       supportMaterial = new THREE.MeshStandardMaterial({
@@ -1308,6 +1316,7 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
       supports.instanceMatrix.needsUpdate = true;
       supports.computeBoundingSphere();
       supports.name = "world map boardslide supports";
+      supports.renderOrder = rail.renderOrder;
       root.add(supports);
     }
     edgeVisuals.push({

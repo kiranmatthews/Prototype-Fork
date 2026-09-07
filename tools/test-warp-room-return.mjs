@@ -405,14 +405,23 @@ try {
   );
   assert.ok(warpLevel.water, "world map did not reuse the campaign ocean shader");
   assert.ok(warpLevel.water.params.causticsFade >= 120);
-  assert.ok(warpLevel.water.params.causticsStrength > 1);
-  assert.equal(warpLevel.water.params.causticsScale,1.05,"widening shallows must preserve the authored caustic size");
+  assert.equal(warpLevel.water.params.causticsStrength,0.32);
+  assert.equal(warpLevel.water.params.causticsScale,0.64,"map must use the updated authored caustic size");
   assert.ok(warpLevel.water.params.depthDistance >= 0.7);
-  assert.ok(warpLevel.water.params.reflectionFresnel <= 3);
+  assert.equal(warpLevel.water.params.reflectionFresnel,5.32);
   assert.ok(warpLevel.water.reflectionScale >= 0.4);
 
   const mapNames = [];
   warpLevel.root.traverse(({ name }) => mapNames.push(name));
+  const whiteOutline=warpLevel.root.getObjectByName('world map white shoreline');
+  assert.ok(whiteOutline.material.depthTest && !whiteOutline.material.depthWrite);
+  warpLevel.root.traverse(object=>{
+    if(['world map boardslide rail','world map boardslide supports'].includes(object.name)
+      || (object.name==='world map route bed' && object.geometry?.type==='TubeGeometry')) {
+      assert.ok(object.renderOrder>whiteOutline.renderOrder,'shoreline must render behind inter-island rail/supports');
+      assert.equal(object.material.depthTest,true,'rail must still respect solid island depth');
+    }
+  });
   assert.equal(
     mapNames.filter((name) => name === "world map shallow caustic shelf").length,
     CAMPAIGN_ISLANDS.length + 4,
