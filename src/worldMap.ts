@@ -14,6 +14,7 @@ import { createUnitySandMaterial, applyUnitySandMetricUvs } from "./unitySandMat
 import { createIslandShoreFoam, type IslandShoreFoam } from "./islandShoreFoam";
 import { TropicalPlantKit, TROPICAL_PLANT_KINDS, type TropicalPlantKind } from "./tropicalPlants";
 import { createMapOceanDefaults } from "./mapOceanPreset";
+import { MAP_OUTLINE_BASE_WIDTH_METRES } from "./mapIslandOutline";
 import { oceanTuning } from "./oceanTuning";
 
 export interface CampaignMapPose {
@@ -956,7 +957,9 @@ export function createCampaignWorldMap(root: THREE.Group): CampaignWorldMapBuild
   })), {segments:128,sourceZSign:1,color:[1,1,1,0.97],pulseSpeed:0.18,pulseAmount:0.18,edgePower:0.5});
   const shorePositions = shoreline.geometry.getAttribute("position");
   islandSpecs.forEach((spec,islandIndex) => {
-    const width = Math.max(0.42,Math.min(spec.rx,spec.rz)*0.032);
+    // One world-space width: a fixed inward tuner offset must not swallow
+    // a smaller islet's entire bright band while leaving mainland foam wide.
+    const width = MAP_OUTLINE_BASE_WIDTH_METRES;
     for(let i=0;i<128;i++) {
       const edge=coastlines[islandIndex][i];
       const length=Math.hypot(edge.x,edge.z);

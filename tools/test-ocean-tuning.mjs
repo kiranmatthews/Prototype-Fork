@@ -10,6 +10,8 @@ try {
   const data=new Map(),storage={getItem:key=>data.get(key)??null,setItem:(key,value)=>data.set(key,value)};
   const water=base=>({params:cloneOceanParams(base),debug:{},stats:{quality:'full'},marks:0,markWavesDirty(){this.marks++}});
   const store=new OceanTuningStore(storage), map=water(createMapOceanDefaults()),level=water(UNITY_OCEAN_DEFAULTS);
+  const outlinePreset={enabled:1,opacity:1,width:2.9,offset:-1.04,edgePower:1.97,pulseSpeed:.247,pulseAmount:.665,detailFrequency:0};
+  assert.deepEqual(store.outline(),outlinePreset,'outline defaults differ from the supplied preset');
   store.apply(map,'map');store.apply(level,'level');
   assert.deepEqual(map.params,createMapOceanDefaults(),'opening/registering the map changed its authored look');
   assert.deepEqual(level.params,UNITY_OCEAN_DEFAULTS);
@@ -30,7 +32,11 @@ try {
   const {createIslandShoreFoam}=await server.ssrLoadModule('/src/islandShoreFoam.ts');
   const shore=createIslandShoreFoam([{center:[0,0,0],right:[1,0,0],forward:[0,0,1],axes:[10,15],phase:0}]);
   const positions=shore.geometry.getAttribute('position'), original=Array.from(positions.array);
-  store.applyOutline(shore);assert.deepEqual(Array.from(positions.array),original,'default outline moved the shoreline');
+  store.applyOutline(shore);const presetGeometry=Array.from(positions.array);
+  assert.ok(Math.abs(positions.getX(0)-original[0]+1.04)<1e-5,'preset offset not applied');
+  assert.ok(Math.abs((positions.getX(1)-positions.getX(0))-2.9*(original[3]-original[0]))<1e-5,'preset width not applied');
+  store.setOutline('width',1);store.setOutline('offset',0);store.applyOutline(shore);
+  assert.deepEqual(Array.from(positions.array),original,'neutral controls must recover the original coastline');
   store.setOutline('width',2);store.setOutline('offset',.25);store.setOutline('opacity',.4);store.setOutline('pulseSpeed',.6);
   store.applyOutline(shore);
   assert.ok(Math.abs(positions.getX(0)-original[0]-.25)<1e-5);
@@ -42,7 +48,7 @@ try {
   store.setOutline('enabled',0);store.applyOutline(shore);assert.equal(shore.mesh.visible,false);
   store.setOutline('width',NaN);assert.equal(store.outline().width,2);store.setOutline('opacity',99);assert.equal(store.outline().opacity,1);
   store.reset('level');assert.equal(store.outline().width,2,'level reset changed map outline');
-  store.reset('map');store.applyOutline(shore);assert.equal(shore.mesh.visible,true);assert.deepEqual(Array.from(positions.array),original,'reset drifted from authored coastline');
-  assert.equal(shore.material.uniforms.uBaseColor.value.w,.97);shore.dispose();
+  store.reset('map');store.applyOutline(shore);assert.equal(shore.mesh.visible,true);assert.deepEqual(Array.from(positions.array),presetGeometry,'reset drifted from the current preset');
+  assert.deepEqual(store.outline(),outlinePreset);assert.equal(shore.material.uniforms.uBaseColor.value.w,1);shore.dispose();
   console.log('PASS isolated map/level ocean parameters and debug flags, authored baselines, sparse inheritance, reload, reset, legacy migration and blocked storage');
 } finally {await server.close()}

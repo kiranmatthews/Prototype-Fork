@@ -11,8 +11,9 @@ refraction, both Gerstner wave sets and ocean intersection/shoreline parameters.
 The **Map Island White Outline** section appears only in the Map Ocean tab.
 It controls the separate white beach accent: enabled, opacity, width multiplier,
 shore offset (metres), edge falloff, pulse speed/amount and detail frequency.
-Width is relative to each island's original outline. Offset zero preserves the
-authored placement; positive values move it seaward. Island land geometry and
+Width multiplies a common **0.8 m world-space strip** on every map island,
+including offshore islets. It no longer scales down with island radius. Offset
+zero preserves the authored placement; positive values move it seaward. Island land geometry and
 wet-sand geometry are not retuned by this panel. In-level shoreline accents keep
 their original source settings.
 
@@ -34,6 +35,14 @@ including caustic scale 0.64/strength 0.32 and reflection strength 3. Existing
 personal overrides are preserved; use Map Ocean → Reset this ocean to discard
 them and adopt the new baseline in full.
 
+The current outline preset is enabled, opacity 1, width 2.9, offset -1.04 m,
+edge falloff 1.97, pulse speed 0.247, pulse amount 0.665 and detail frequency 0.
+Its full strip is 2.32 m wide. Previously the islets used a 0.42 m base, so
+this inward offset buried their brightness peak under the sand while the main
+islands retained a broad visible edge. The common base matches the mean of
+the two main-island widths; with this preset its peak lies 0.28 m seaward of
+the traced coastline. Island terrain and in-level shoreline geometry are unchanged.
+
 Outline overrides share the map profile's persistence and apply with the tuner
 closed. Width/offset rebuild only the existing strip's positions on edit, from
 an immutable original coastline; reset does not accumulate geometry drift.
@@ -50,4 +59,6 @@ Validation: `tools/test-ocean-tuning.mjs` covers isolation, sparse inheritance,
 debug flags, reload, reset, migration, storage failure, exact supplied defaults
 and outline geometry/material/reset behaviour. Browser QA covers desktop,
 touch and lite, CRT, inactive-tab edits, Copy JSON, M and closed-panel persistence.
+Map geometry tests compare the strip width on all islands and ray-test its
+bright midpoint as well as its outer edge against the actual terrain.
 The rail review also checks actual render submission order from an overview.

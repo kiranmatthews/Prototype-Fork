@@ -552,6 +552,11 @@ try {
   const foamPositions=warpLevel.campaignWorldMap.shoreline.geometry.getAttribute("position");
   const coastRay=new THREE.Raycaster(new THREE.Vector3(),new THREE.Vector3(0,-1,0));
   for(let i=1;i<foamPositions.count;i+=2){
+    const width=Math.hypot(foamPositions.getX(i)-foamPositions.getX(i-1),foamPositions.getZ(i)-foamPositions.getZ(i-1));
+    assert.ok(Math.abs(width-0.8*2.9)<1e-4,'map islets and main islands must share the same world-space outline width');
+    coastRay.ray.origin.set((foamPositions.getX(i)+foamPositions.getX(i-1))*.5,50,(foamPositions.getZ(i)+foamPositions.getZ(i-1))*.5);
+    const peakGround=coastRay.intersectObjects(coastLand,false)[0];
+    assert.ok(!peakGround||peakGround.point.y<foamPositions.getY(i),`outline brightness peak ${i} is buried by the inward offset`);
     coastRay.ray.origin.set(foamPositions.getX(i),50,foamPositions.getZ(i));
     const ground=coastRay.intersectObjects(coastLand,false)[0];
     assert.ok(!ground||ground.point.y<foamPositions.getY(i),`shoreline sample ${i} is hidden under raised terrain`);

@@ -6,7 +6,7 @@ import {
   type UnityOceanParams,
 } from "./unityOcean";
 import { oceanTuning, defaultOceanDebug, type OceanContext } from './oceanTuning';
-import { MAP_OUTLINE_FIELDS, type MapOutlineKey } from './mapIslandOutline';
+import { MAP_OUTLINE_FIELDS, MAP_OUTLINE_BASE_WIDTH_METRES, type MapOutlineKey } from './mapIslandOutline';
 import {
   btn,
   el,
@@ -299,7 +299,7 @@ export function openWaterStudio(opts: Opts): WaterStudioHandle {
   controls.append(debugRow);
 
   outlineControls.append(sec('MAP ISLAND WHITE OUTLINE'));
-  outlineControls.append(note('Separate map accent, not the ocean shader shoreline. Width is relative to each island; offset is from the authored beach edge.'));
+  outlineControls.append(note(`Separate map accent, not the ocean shader shoreline. Width multiplies the same ${MAP_OUTLINE_BASE_WIDTH_METRES} m band on every island; offset is from the authored beach edge.`));
   for (const key of Object.keys(MAP_OUTLINE_FIELDS) as MapOutlineKey[]) {
     const field = MAP_OUTLINE_FIELDS[key];
     const row = sliderRow(field.label, oceanTuning.outline()[key], field.lo, field.hi, field.step, value => {

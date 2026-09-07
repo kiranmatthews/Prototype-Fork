@@ -1,15 +1,17 @@
 import type { IslandShoreFoam } from './islandShoreFoam';
 
 /** Map accent only; never changes the ported in-level shoreline material. */
+// Match the mean original main-island width, without shrinking offshore islets.
+export const MAP_OUTLINE_BASE_WIDTH_METRES = 0.8;
 export const MAP_OUTLINE_FIELDS = {
   enabled: { label: 'enabled', value: 1, lo: 0, hi: 1, step: 1 },
-  opacity: { label: 'opacity', value: 0.97, lo: 0, hi: 1, step: 0.001 },
-  width: { label: 'width multiplier', value: 1, lo: 0, hi: 4, step: 0.01 },
-  offset: { label: 'shore offset (m)', value: 0, lo: -2, hi: 2, step: 0.01 },
-  edgePower: { label: 'edge falloff', value: 0.5, lo: 0.25, hi: 4, step: 0.01 },
-  pulseSpeed: { label: 'pulse speed', value: 0.18, lo: 0, hi: 2, step: 0.01 },
-  pulseAmount: { label: 'pulse amount', value: 0.18, lo: 0, hi: 1, step: 0.01 },
-  detailFrequency: { label: 'detail frequency', value: 4.8, lo: 0, hi: 20, step: 0.1 },
+  opacity: { label: 'opacity', value: 1, lo: 0, hi: 1, step: 0.001 },
+  width: { label: 'width multiplier', value: 2.9, lo: 0, hi: 4, step: 0.01 },
+  offset: { label: 'shore offset (m)', value: -1.04, lo: -2, hi: 2, step: 0.01 },
+  edgePower: { label: 'edge falloff', value: 1.97, lo: 0.25, hi: 4, step: 0.01 },
+  pulseSpeed: { label: 'pulse speed', value: 0.247, lo: 0, hi: 2, step: 0.01 },
+  pulseAmount: { label: 'pulse amount', value: 0.665, lo: 0, hi: 1, step: 0.01 },
+  detailFrequency: { label: 'detail frequency', value: 0, lo: 0, hi: 20, step: 0.1 },
 } as const;
 export type MapOutlineKey = keyof typeof MAP_OUTLINE_FIELDS;
 export type MapOutlineParams = Record<MapOutlineKey, number>;
