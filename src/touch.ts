@@ -104,6 +104,7 @@ export class TouchControls {
     this.buildButtons();
     this.buildLookSurface();
     this.buildPauseButton();
+    this.installReleaseSafety();
     // iOS zoom killers: pinch (gesture*) and double-tap (dblclick) must never
     // scale the game. touch-action handles modern Safari; these catch the rest.
     const kill = (e: Event): void => e.preventDefault();
@@ -139,13 +140,72 @@ export class TouchControls {
   setMapMode(on: boolean): void {
     if (on === this.mapMode) return;
     this.mapMode = on;
+    this.releaseAll(true);
+  }
+
+  /** Interruptions discard intent; ordinary lifts retain between-frame taps. */
+  private releaseAll(discardPresses: boolean): void {
     this.padPointer = null; this.dirIdx = -1;
     this.moveX = this.moveY = 0;
     this.paintArrows(); this.clearLook();
     this.rightTouches.clear(); this.refreshButtons();
-    this.pressedBtn = { x: false, o: false, sq: false, tri: false };
-    this.directionTap = null;
-    this.transferUntil = this.inventoryUntil = 0;
+    document.querySelector('.tc-pause')?.classList.remove('on');
+    if (discardPresses) {
+      this.pressedBtn = { x: false, o: false, sq: false, tri: false };
+      this.directionTap = null;
+      this.transferUntil = this.inventoryUntil = 0;
+    }
+  }
+
+  private releasePointer(id: number, cancelled: boolean): void {
+    if (id === this.padPointer) {
+      this.padPointer = null; this.dirIdx = -1;
+      this.moveX = this.moveY = 0; this.paintArrows();
+      if (cancelled) this.directionTap = null;
+    }
+    if (id === this.lookPointer) this.clearLook();
+    const touch = this.rightTouches.get(id);
+    if (touch) {
+      this.rightTouches.delete(id); this.refreshButtons();
+      if (cancelled && touch.btn && !this.prevBtn[touch.btn]) this.pressedBtn[touch.btn] = false;
+      if (cancelled && touch.swiped) this.transferUntil = this.inventoryUntil = 0;
+    }
+  }
+
+  private installReleaseSafety(): void {
+    // Capture-phase window listeners also see releases outside a control when
+    // Safari fails to retain pointer capture, or a panel stops propagation.
+    window.addEventListener('pointerup', e => this.releasePointer(e.pointerId, false), true);
+    window.addEventListener('pointercancel', e => this.releasePointer(e.pointerId, true), true);
+    window.addEventListener('lostpointercapture', e => this.releasePointer(e.pointerId, true), true);
+    // A new primary touch proves the previous touch sequence has ended. Do not
+    // time out held fingers: long steering/grind holds are valid input.
+    window.addEventListener('pointerdown', e => {
+      if (e.pointerType === 'touch' && e.isPrimary) this.releaseAll(false);
+    }, true);
+    // Touch.identifier is NOT PointerEvent.pointerId. Only use the authoritative
+    // zero-contact state as a fallback; lifting one thumb must not drop another.
+    document.addEventListener('touchend', e => {
+      if (e.touches.length === 0) this.releaseAll(false);
+    }, { capture: true, passive: true });
+    document.addEventListener('touchcancel', e => {
+      if (e.touches.length === 0) this.releaseAll(true);
+    }, { capture: true, passive: true });
+    window.addEventListener('blur', () => this.releaseAll(true));
+    window.addEventListener('pagehide', () => this.releaseAll(true));
+    window.addEventListener('orientationchange', () => this.releaseAll(true));
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) this.releaseAll(true);
+    });
+    new MutationObserver(() => {
+      if (this.controlsBlocked()) this.releaseAll(true);
+    }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  }
+
+  private controlsBlocked(): boolean {
+    const body = document.body.classList;
+    return this.mapMode || body.contains('world-map-active') ||
+      body.contains('game-shell-modal') || body.contains('ed-active');
   }
 
   // ---------- GENTLE LOOK (free upper screen) ----------
@@ -271,7 +331,7 @@ export class TouchControls {
     // visible pad's centre, so the invisible hit area is far bigger than the
     // drawn arrows and the thumb can slide between directions without lifting.
     const down = (e: PointerEvent): void => {
-      if (this.padPointer !== null) return; // first touch drives, extras ignored
+      if (this.controlsBlocked() || this.padPointer !== null) return; // first touch drives, extras ignored
       this.padPointer = e.pointerId;
       this.capture(zone, e);
       this.steer(e.clientX, e.clientY);
@@ -364,6 +424,7 @@ export class TouchControls {
     document.body.appendChild(zone);
 
     const down = (e: PointerEvent): void => {
+      if (this.controlsBlocked()) return;
       this.rightTouches.set(e.pointerId, {
         btn: this.nearestBtn(e.clientX, e.clientY, 2.1),
         x0: e.clientX,
