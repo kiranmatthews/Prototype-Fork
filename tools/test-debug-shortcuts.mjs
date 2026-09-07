@@ -41,6 +41,20 @@ const file=ts.createSourceFile('main.ts',main,ts.ScriptTarget.Latest,true);
 let warpIf;
 function visit(node){if(ts.isIfStatement(node)&&node.thenStatement.getText(file).includes('player.warpCheckpoint(')&&(!warpIf||node.getWidth(file)<warpIf.getWidth(file)))warpIf=node;ts.forEachChild(node,visit)}
 visit(file);assert.ok(warpIf);
+// Exercise the enclosing listener too: testing only the inner if missed the
+// old playtest-only early return that disabled K/L in normal campaign play.
+let handler = warpIf;
+while (handler && !ts.isArrowFunction(handler)) handler = handler.parent;
+assert.ok(handler);
+const handlerCode = compile(`const handler = ${handler.getText(file)};`);
+for (const shellBypass of [false, true]) for (const visible of [false, true]) {
+ for (const code of ['KeyK', 'KeyL']) for (const blocked of [false, true]) {
+  const calls=[];
+  const run = new Function('shellBypass','gameFlow','bonusSession','editor','current','player','level','ui','levelList','switchLevel','saveReplay','toggleVideo',`${handlerCode}; return handler;`)(shellBypass,{blocksGameplay:blocked,developerChromeVisible:visible},null,{active:false},{id:'jungle'},{warpCheckpoint:(_level,dir)=>{calls.push(dir);return true}}, {}, {showMessage(){}},()=>[],()=>{},()=>{},()=>{});
+  run({code,target:null});
+  assert.deepEqual(calls, visible && !blocked ? [code==='KeyL'?1:-1] : [], `whole listener: playtest=${shellBypass}, debug=${visible}, blocked=${blocked}, key=${code}`);
+ }
+}
 const canWarp=new Function('current','gameFlow','editor','e',`return ${warpIf.expression.getText(file)}`);
 for(const code of ['KeyK','KeyL']) {
  assert.equal(canWarp({id:'jungle'},{developerChromeVisible:false},{active:false},{code}),false);

@@ -30,7 +30,8 @@ enters a hub; the map exposes Progress, Options, Save/Load, and Quit directly.
 
 Keyboard R and controller Share reset are debug-only: they require the debug
 menus to be visible (M). K/L checkpoint skipping has the same visibility gate,
-in addition to its existing playtest/gameplay restrictions. Hidden reset presses
+in normal campaign gameplay as well as playtest URLs. Editor, map, bonus, modal
+menus and trial/combo-run restrictions still apply. Hidden reset presses
 are discarded; holding Share/R while showing debug does not fire a delayed
 reset. Both riders follow the gate. Normal menu Restart/Retry and the map's L
 Save/Load action remain available independently of debug visibility.

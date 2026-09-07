@@ -3870,26 +3870,26 @@ window.addEventListener("keydown", (e) => {
       t.tagName === "SELECT")
   )
     return;
-  if (!shellBypass || gameFlow.blocksGameplay || bonusSession) return;
-  if (!editor.active) {
-    // level hotkeys are gameplay-only — inside the editor they'd yank the
-    // level out from under you
-    // number row -> level, in menu order; the list is unbounded, keys are 1-9
-    const rows = levelList();
-    for (let i = 0; i < Math.min(9, rows.length); i++) {
-      if (e.code === `Digit${i + 1}`) switchLevel(rows[i].id);
-    }
-  }
+  if (gameFlow.blocksGameplay || bonusSession) return;
   if (
     current.id !== "warproom" &&
     gameFlow.developerChromeVisible &&
     !editor.active &&
     (e.code === "KeyK" || e.code === "KeyL")
   ) {
-    // playtest warp: skip up and down the course by checkpoint so a section
+    // Visible-debug warp works in normal gameplay as well as playtest URLs.
+    // Skip up and down the course by checkpoint so a section
     // halfway in doesn't cost a full run to reach
     if (player.warpCheckpoint(level, e.code === "KeyL" ? 1 : -1))
       ui.showMessage(e.code === "KeyL" ? "WARP →" : "← WARP", "", 700);
+  }
+  if (!shellBypass) return;
+  if (!editor.active) {
+    // Preserve playtest-only direct level selection and capture shortcuts.
+    const rows = levelList();
+    for (let i = 0; i < Math.min(9, rows.length); i++) {
+      if (e.code === `Digit${i + 1}`) switchLevel(rows[i].id);
+    }
   }
   if (e.code === "F8") saveReplay(); // playtest capture: input take -> .json
   if (e.code === "F9") toggleVideo(); // playtest capture: canvas -> .webm
