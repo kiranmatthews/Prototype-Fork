@@ -18,6 +18,8 @@ for (const [kind, triangles, minY, maxY] of [['crystal',30,-1.5,.72],['gem',64,-
     assert.ok(Number.isFinite(normal.length()) && Math.abs(normal.length() - 1) < 1e-5);
     assert.ok(normal.dot(facet) > .7, 'optical edge roll erased the hard facet');
     if (normal.distanceTo(facet) > .01) gradients++;
+    if (kind === 'crystal' && Math.abs(p.getY(i)) < 1e-6)
+      assert.ok(Math.abs(normal.y - facet.y) < 1e-5, 'crystal belt roll crossed the crown/pavilion crease');
   }
   assert.ok(gradients > p.count / 3, 'specular cannot vary within the facets');
   for (let i = 0; i < p.count; i += 3) {
@@ -38,20 +40,35 @@ for (const [kind, triangles, minY, maxY] of [['crystal',30,-1.5,.72],['gem',64,-
 const material = new CollectibleSpecularMaterial(0x46e882), copy = material.clone();
 assert.ok(copy instanceof CollectibleSpecularMaterial);
 assert.equal(copy.color.getHex(),0x46e882);
-assert.equal(copy.transparent,false); assert.equal(copy.depthWrite,true);
+assert.equal(copy.transparent,true); assert.equal(copy.depthWrite,true);
+assert.equal(copy.side,THREE.FrontSide,'subtle body transmission must not add a rear-shell pass');
 assert.equal(copy.map,null); assert.equal(copy.envMap,null);
 copy.opacity=.25; assert.equal(material.opacity,1,'HUD fade mutated the world material');
 assert.equal(copy.customProgramCacheKey(),material.customProgramCacheKey());
+const crystalMaterial = new CollectibleSpecularMaterial(0xc83afa, 'crystal');
+const crystalCopy = crystalMaterial.clone();
+assert.equal(crystalCopy.userData.collectibleProfile,'crystal','HUD clone lost its crystal optics');
+assert.equal(crystalCopy.customProgramCacheKey(),crystalMaterial.customProgramCacheKey());
+assert.notEqual(crystalCopy.customProgramCacheKey(),material.customProgramCacheKey(),'gem and crystal shaders shared the wrong cached profile');
+for (const m of [crystalMaterial,crystalCopy]) {
+  const shader = { vertexShader:THREE.ShaderLib.basic.vertexShader,fragmentShader:THREE.ShaderLib.basic.fragmentShader,uniforms:{} };
+  m.onBeforeCompile(shader,null);
+  assert.match(shader.vertexShader,/#define COLLECTIBLE_CRYSTAL 1/);
+  m.dispose();
+}
 for (const m of [material,copy]) {
   const shader = { vertexShader:THREE.ShaderLib.basic.vertexShader,fragmentShader:THREE.ShaderLib.basic.fragmentShader,uniforms:{} };
   m.onBeforeCompile(shader, null);
+  assert.match(shader.vertexShader,/#define COLLECTIBLE_CRYSTAL 0/);
   assert.match(shader.vertexShader,/lightCollectible\(\);/);
   assert.match(shader.fragmentShader,/vec3 outgoingLight = vCollectibleLight;/);
+  assert.match(shader.fragmentShader,/float highlightCoverage = max\(vCollectibleSpecular, min\(min\(outgoingLight.r, outgoingLight.g\), outgoingLight.b\)\)/,'clipped white faces must be opaque too');
+  assert.match(shader.fragmentShader,/diffuseColor.a = opacity \* mix\(0.86, 1.0, clamp\(highlightCoverage, 0.0, 1.0\)\)/,'white glints must reach opaque independently of the body');
   assert.doesNotMatch(shader.fragmentShader,/vec3 outgoingLight = reflectedLight.indirectDiffuse;/);
   m.dispose();
 }
 assert.doesNotMatch(COLLECTIBLE_SPECULAR_VERTEX,/texture2D|textureCube|pow\(|sin\(|cos\(/,'runtime specular must stay bounded multiply/dot work');
-assert.match(COLLECTIBLE_SPECULAR_VERTEX,/vec3\(1.0, 0.97, 0.93\) \* power32\(key\)/,'colour must not tint the white specular');
+assert.match(COLLECTIBLE_SPECULAR_VERTEX,/vec3\(1.0, 0.97, 0.93\) \* flash/,'colour must not tint the white specular');
 const level = await readFile(new URL('../src/level.ts', import.meta.url),'utf8');
 assert.doesNotMatch(level,/matcapTexture|matcapTex|MeshMatcapMaterial/);
 assert.match(level,/createCollectibleShell\("crystal", scale\)/);
