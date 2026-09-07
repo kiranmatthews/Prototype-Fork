@@ -10,6 +10,7 @@ import bmesh
 import json
 import math
 import sys
+import argparse
 from pathlib import Path
 from mathutils import Matrix, Vector
 from mathutils.geometry import intersect_ray_tri
@@ -18,9 +19,12 @@ ROOT = Path(__file__).resolve().parents[2]
 WORK = ROOT / '.img2threejs/jungle-kit'
 OUT = WORK / 'modular-baked'
 OUT.mkdir(parents=True, exist_ok=True)
-specs = json.loads((ROOT/'tools/jungle-kit/module-specs.json').read_text())
-args = sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else []
-if args: specs = [s for s in specs if s['file'] in args]
+parser = argparse.ArgumentParser()
+parser.add_argument('--spec', default='tools/jungle-kit/module-specs.json')
+parser.add_argument('names', nargs='*')
+args = parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
+specs = json.loads((ROOT/args.spec).read_text())
+if args.names: specs = [s for s in specs if s['file'] in args.names]
 report = []
 flat_top = {'ashlar-clean','ashlar','broken-ashlar','paving-slab','column-base','column-shaft','column-capital','cornice','corner-cornice','lintel','temple-stair'}
 

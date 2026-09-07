@@ -1,0 +1,14 @@
+[
+  {
+    "name": "ancient-brick-material-study",
+    "prompt": "Use case: stylized-concept. Asset type: precise material-style reference for texturing an existing modular ancient jungle temple brick. Show ONE single thick rectangular hand-moulded ancient brick, proportions length 2, height 1, depth 1, isolated in a close three-quarter orthographic view on a pale warm neutral background. Primary direction: a beautiful soft matte clay-like 3D game asset, large simple planes and gently rounded worn edges, extremely soft broad gradient illumination and quiet contact shading. Surface: aged earthen masonry in mellow sandy ochre and warm buff, with subtle dusty terracotta undertones, chalky pale mineral deposits and natural broad mottling. Believable centuries-old wear: a few shallow thumb-sized pits, gently eroded corners, tiny sparse chips and restrained porous grain. Most faces remain calm and readable at game distance. No glossy or metallic response, no photoreal micro-noise, no deep black cracks, no engraved lines, no grout lines or extra bricks painted onto this single brick, no moss carpet, no giant fracture. Top is softly lighter, sides gently shaded, never harsh or black. Art-directed material variation should feel naturally weathered and sculpted, not distressed with random noise. Entire brick in frame. No lettering, no watermark, no grid. This will guide albedo and material response, not change an existing mesh silhouette.",
+    "reference": "references/clay/brick-study.png",
+    "selected": false
+  },
+  {
+    "name": "soft-clay-ancient-brick",
+    "prompt": "Use case: style-transfer. Edit this brick material study toward a stylized clay game asset. Preserve the single brick, its proportions, warm ochre/buff earthen palette, ancient weathering and natural broad colour variation. Make the surfaces much calmer: reduce the amount and contrast of fine grain and micro-pitting by about 70 percent, retaining only sparse shallow larger pores and a few softly eroded chips. Use big soft colour planes with gentle creamy gradients; flat matte chalky clay, softly rounded edges, very broad diffuse light and lifted cool-beige shadow sides. Keep believable uneven sun bleaching and a few muted terracotta/mineral patches. No shine, no sharp dark cracks, no noisy grunge, no surface outlines, no outlines on the silhouette, no extra objects or text. The result should read like a carefully sculpted and hand-painted ancient brick for a high-quality stylized platform game, clearly a 3D asset but visually soft and clean.",
+    "reference": "references/clay/brick-clay.png",
+    "selected": true
+  }
+]

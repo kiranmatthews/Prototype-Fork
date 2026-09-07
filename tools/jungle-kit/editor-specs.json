@@ -1,0 +1,72 @@
+[
+  {
+    "kind": "claybrick",
+    "file": "clay-brick",
+    "label": "smooth clay brick",
+    "sourceFile": "clay-ashlar-clean.glb",
+    "size": [
+      2,
+      1,
+      1
+    ],
+    "normal": 0.2,
+    "lod": 0.28,
+    "editorOnly": true
+  },
+  {
+    "kind": "wornclaybrick",
+    "file": "worn-clay-brick",
+    "label": "worn clay brick",
+    "sourceFile": "clay-ashlar.glb",
+    "size": [
+      2,
+      1,
+      1
+    ],
+    "normal": 0.2,
+    "lod": 0.3,
+    "editorOnly": true
+  },
+  {
+    "kind": "fracturedclaybrick",
+    "file": "fractured-clay-brick",
+    "label": "fractured clay brick",
+    "sourceFile": "clay-broken-ashlar.glb",
+    "size": [
+      2,
+      1,
+      1
+    ],
+    "normal": 0.2,
+    "lod": 0.3,
+    "editorOnly": true
+  },
+  {
+    "kind": "claypaver",
+    "file": "clay-paver",
+    "label": "clay paving slab",
+    "sourceFile": "clay-paving-slab.glb",
+    "size": [
+      2,
+      0.28,
+      2
+    ],
+    "normal": 0.2,
+    "lod": 0.28,
+    "editorOnly": true
+  },
+  {
+    "kind": "agedclaybrick",
+    "file": "aged-clay-brick",
+    "label": "aged earthen brick",
+    "sourceFile": "clay-surface-ashlar-clean.glb",
+    "size": [
+      2,
+      1,
+      1
+    ],
+    "normal": 0.2,
+    "lod": 0.28,
+    "editorOnly": true
+  }
+]

@@ -3,7 +3,9 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader.js";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { JUNGLE_MODULES } from "./jungleModules";
+import { JUNGLE_EDITOR_ASSETS } from "./jungleEditorAssets";
 import { isJungleAssembly, jungleAssemblyParts, type JunglePartKind } from "./jungleAssemblies";
+import { addJungleDepthFade } from "./jungleGround";
 
 export interface JungleAssetSpec {
   file: string; label: string; size: readonly [number,number,number]; wind: boolean;
@@ -12,6 +14,7 @@ export interface JungleAssetSpec {
 }
 const ASSETS = {
   ...JUNGLE_MODULES,
+  ...JUNGLE_EDITOR_ASSETS,
   jungleleaf: {file:"broadleaf",label:"jungle broadleaf",size:[4.2,2.6,4.2],wind:true},
   junglefern: {file:"fern",label:"jungle fern",size:[4.4,1.8,4],wind:true},
   junglepalmtree: {file:"palm",label:"jungle palm",size:[8.5,11,8.2],wind:true},
@@ -144,10 +147,12 @@ export function addJungleDapple(material: THREE.Material, time: { value: number 
   const previous = material.onBeforeCompile;
   material.onBeforeCompile = (shader, renderer) => {
     previous.call(material, shader, renderer);
+    const trail=material.userData.jungleTrail===true;
+    if(trail)shader.uniforms.uJungleGrass={value:material.userData.jungleGrassTexture};
     shader.uniforms.uJungleTime = time;
-    shader.vertexShader = `uniform float uJungleTime;\n${wind ? 'attribute float aJungleFlex;' : ''}\nvarying vec3 vJungleWorld;\n` + shader.vertexShader;
-    shader.vertexShader = shader.vertexShader.replace("#include <begin_vertex>", `#include <begin_vertex>\n${wind ? WIND : ''}\n${WORLD}`);
-    shader.fragmentShader = 'uniform float uJungleTime;\nvarying vec3 vJungleWorld;\n' + shader.fragmentShader;
+    shader.vertexShader = `uniform float uJungleTime;\n${wind ? 'attribute float aJungleFlex;' : ''}\n${trail?'attribute vec2 aJungleTrail; varying vec2 vJungleTrail;':''}\nvarying vec3 vJungleWorld;\n` + shader.vertexShader;
+    shader.vertexShader = shader.vertexShader.replace("#include <begin_vertex>", `#include <begin_vertex>\n${trail?'vJungleTrail = aJungleTrail;':''}\n${wind ? WIND : ''}\n${WORLD}`);
+    shader.fragmentShader = 'uniform float uJungleTime;\nvarying vec3 vJungleWorld;\n'+(trail?'uniform sampler2D uJungleGrass; varying vec2 vJungleTrail;\n':'') + shader.fragmentShader;
     if (dirt) shader.fragmentShader = shader.fragmentShader.replace("#include <map_fragment>", /* glsl */ `
       #ifdef USE_MAP
         vec3 soilNormal = abs(normalize(cross(dFdx(vJungleWorld), dFdy(vJungleWorld))));
@@ -156,14 +161,27 @@ export function addJungleDapple(material: THREE.Material, time: { value: number 
         vec3 soilA = texture2D(map, soilUV).rgb;
         vec3 soilB = texture2D(map, vec2(-soilUV.y, soilUV.x) * 1.31 + vec2(0.21, 0.37)).rgb;
         float soilPatch = smoothstep(-0.6, 0.6, sin(vJungleWorld.x * 0.09 + sin(vJungleWorld.z * 0.06)) * cos(vJungleWorld.z * 0.075));
-        diffuseColor.rgb *= mix(soilA, soilB, soilPatch * 0.55);
+        vec3 soil = mix(soilA, soilB, soilPatch * 0.55);
+        soil = mix(vec3(0.98, 0.72, 0.36), soil * 3.0, 0.30);
+        ${trail ? `
+          vec2 grassUV = vJungleWorld.xz * 0.24;
+          vec3 grass = texture2D(uJungleGrass, grassUV).rgb;
+          float edgeNoise = sin(vJungleWorld.z * 0.83 + sin(vJungleWorld.z * 1.47)) * 0.07
+            + sin(vJungleWorld.z * 4.6 + vJungleWorld.x * 2.8) * 0.018
+            + (grass.g - grass.r) * 0.055;
+          float edgeDistance = abs(vJungleTrail.x) / max(0.5, vJungleTrail.y);
+          float grassBlend = smoothstep(0.42 + edgeNoise, 0.79 + edgeNoise, edgeDistance)
+            * smoothstep(0.40, 0.76, soilNormal.y);
+          soil = mix(soil, grass * vec3(0.18, 0.42, 0.12), grassBlend);
+        ` : ''}
+        diffuseColor.rgb *= soil;
       #endif
     `);
     shader.fragmentShader = shader.fragmentShader.replace("#include <color_fragment>", `#include <color_fragment>
       float shadeWave = sin(vJungleWorld.x * 0.48 + vJungleWorld.z * 0.33 + sin(uJungleTime * 0.21) * 0.15)
         * sin(vJungleWorld.z * 0.68 - vJungleWorld.x * 0.23);
       float lightPool = smoothstep(-0.34, 0.6, shadeWave);
-      diffuseColor.rgb *= mix(vec3(0.60, 0.75, 0.70), vec3(1.06, 1.02, 0.90), lightPool);
+      diffuseColor.rgb *= mix(${dirt?'vec3(0.87, 0.84, 0.76)':'vec3(0.60, 0.75, 0.70)'}, vec3(1.06, 1.02, 0.90), lightPool);
     `);
     if (wind) shader.fragmentShader = shader.fragmentShader.replace("#include <lights_fragment_end>", `#include <lights_fragment_end>
       #if NUM_DIR_LIGHTS > 0
@@ -172,7 +190,7 @@ export function addJungleDapple(material: THREE.Material, time: { value: number 
       #endif
     `);
   };
-  material.customProgramCacheKey = () => `jungle-dapple-v2-${wind}-${dirt}`;
+  material.customProgramCacheKey = () => `jungle-dapple-v4-${wind}-${dirt}-${material.userData.jungleTrail===true}`;
 }
 
 interface Bucket {kind:RenderKind;transforms:THREE.Matrix4[];colors:THREE.Color[];}
@@ -183,7 +201,7 @@ export class JungleAssetKit {
   private depths=new Map<RenderKind,THREE.MeshDepthMaterial>();
   private loose=new Set<THREE.Group>();private disposed=false;
   private sourceCount=0;private count=0;private readyCount=0;private skipped=0;
-  constructor(private batched:boolean,private lite:boolean){this.root.name="Jungle Ruins modular kit";}
+  constructor(private batched:boolean,private lite:boolean,private depthFade=false){this.root.name="Jungle Ruins modular kit";}
   private material(kind:RenderKind,template:Template):THREE.MeshStandardMaterial {
     const cached=this.materials.get(kind);if(cached)return cached;
     const spec=renderSpec(kind),isVine=kind==="vine"||kind==="junglevine";
@@ -194,6 +212,7 @@ export class JungleAssetKit {
     m.name=spec.label;m.userData.jungleAsset=true;
     if(kind==="earth")m.userData.jungleDirt=true;
     addJungleDapple(m,this.time,spec.wind);
+    if(this.depthFade)addJungleDepthFade(m);
     this.materials.set(kind,m);return m;
   }
   private configure(mesh:THREE.Mesh,kind:RenderKind):void {

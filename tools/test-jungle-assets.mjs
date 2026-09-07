@@ -8,6 +8,7 @@ import * as THREE from 'three';
 const root=new URL('../',import.meta.url);
 const retained=JSON.parse(await readFile(new URL('public/jungle-kit/manifest.json',root),'utf8'));
 const modular=JSON.parse(await readFile(new URL('public/jungle-kit/modular/manifest.json',root),'utf8'));
+const editorAssets=JSON.parse(await readFile(new URL('public/jungle-kit/editor/manifest.json',root),'utf8'));
 const files=new Map();let transfer=0;
 function parse(bytes){const n=bytes.readUInt32LE(12);return {doc:JSON.parse(bytes.toString('utf8',20,20+n).trimEnd()),bin:bytes.subarray(28+n)};}
 function accessor(doc,bin,id){
@@ -16,7 +17,7 @@ function accessor(doc,bin,id){
  for(let i=0;i<a.count;i++)for(let k=0;k<n;k++){const at=start+i*stride+k*bytes;out.push(a.componentType===5126?bin.readFloatLE(at):a.componentType===5123?bin.readUInt16LE(at):bin.readUInt32LE(at));}
  return out;
 }
-for(const entry of [...retained.map(e=>({...e,file:e.name,path:e.name+'.glb'})),...modular.map(e=>({...e,path:'modular/'+e.file+'.glb'}))]){
+for(const entry of [...retained.map(e=>({...e,file:e.name,path:e.name+'.glb'})),...modular.map(e=>({...e,path:'modular/'+e.file+'.glb'})),...editorAssets.map(e=>({...e,path:'editor/'+e.file+'.glb'}))]){
  const bytes=await readFile(new URL('public/jungle-kit/'+entry.path,root));const {doc,bin}=parse(bytes);
  assert.equal(bytes.toString('ascii',0,4),'glTF');assert.equal(bytes.readUInt32LE(8),bytes.length);
  assert.equal(createHash('sha256').update(bytes).digest('hex'),entry.sha256);
@@ -26,7 +27,7 @@ for(const entry of [...retained.map(e=>({...e,file:e.name,path:e.name+'.glb'})),
   const positions=doc.accessors[p.attributes.POSITION];
   const indices=accessor(doc,bin,p.indices);assert.ok(indices.every(i=>i>=0&&i<positions.count),entry.file+' indices in range');
  }
- if(entry.path.startsWith('modular/')){
+ if(entry.path.startsWith('modular/')||entry.editorOnly){
   assert.equal(doc.meshes.length,2,'each module has a real near/far mesh');
   assert.ok(doc.nodes.some(n=>n.name?.endsWith('LOD0'))&&doc.nodes.some(n=>n.name?.endsWith('LOD1')));
   assert.ok(entry.lodTriangles<entry.triangles*.55,'useful distant geometry reduction');
@@ -41,7 +42,7 @@ for(const entry of [...retained.map(e=>({...e,file:e.name,path:e.name+'.glb'})),
  }
  transfer+=bytes.length;files.set(entry.file,{...entry,doc,bin});
 }
-assert.equal(modular.length,17);assert.ok(transfer<26*1048576,'bounded complete runtime kit transfer');
+assert.equal(modular.length,17);assert.equal(editorAssets.length,5);assert.ok(transfer<32*1048576,'bounded kit and optional editor asset transfer');
 const budget=JSON.parse(await readFile(new URL('tools/jungle-kit/tasks.json',root),'utf8'));
 assert.ok(budget.reservedCredits<=650);
 
@@ -50,7 +51,7 @@ const dom=harness.slice(harness.indexOf('function installHeadlessDom()'),harness
 const nativeFetch=globalThis.fetch;runInThisContext(dom+'\ninstallHeadlessDom();');globalThis.self=globalThis;
 globalThis.createImageBitmap=async()=>({width:1024,height:1024,close(){}});
 globalThis.ProgressEvent??=class{constructor(type,data){this.type=type;Object.assign(this,data);}};
-globalThis.fetch=async input=>{const url=typeof input==='string'?input:input.url;if(url.startsWith('blob:'))return nativeFetch(input);const match=url.match(/\/jungle-kit\/((?:modular\/)?[\w-]+\.glb)$/);return match?new Response(await readFile(new URL('public/jungle-kit/'+match[1],root))):new Response('',{status:404});};
+globalThis.fetch=async input=>{const url=typeof input==='string'?input:input.url;if(url.startsWith('blob:'))return nativeFetch(input);const match=url.match(/\/jungle-kit\/((?:(?:modular|editor)\/)?[\w-]+\.glb)$/);return match?new Response(await readFile(new URL('public/jungle-kit/'+match[1],root))):new Response('',{status:404});};
 const server=await createServer({logLevel:'silent',server:{middlewareMode:true},appType:'custom'});
 try{
  const {JungleAssetKit,JUNGLE_ASSETS,JUNGLE_ASSET_KINDS,jungleAssetMatrix}=await server.ssrLoadModule('/src/jungleAssets.ts');
@@ -94,6 +95,26 @@ try{
  const capture=JSON.parse(JSON.stringify(level.captureData()));assert.equal(capture.jungleAtmosphere,true);
  assert.equal(capture.components.filter(c=>c.t==='gate').length,1);
  const paths=capture.components.filter(c=>c.t==='terrain');assert.ok(paths.length>4&&paths.every(c=>c.tex==='dirt'),'all jungle traversal strips use dirt');
+ const optionalKinds=new Set(editorAssets.map(a=>a.kind));
+ assert.ok(capture.components.every(c=>!optionalKinds.has(c.dkind)),'new clay models are optional; the existing brick selection stays in the level');
+ const hiddenPitVolumes=capture.components.filter(c=>c.dkind==='thornroots');
+ assert.equal(hiddenPitVolumes.length,40,'retain all authored death volumes');
+ assert.ok(hiddenPitVolumes.every(c=>c.invisible===true&&c.solid===true));
+ let visibleThorns=0;
+ level.root.traverse(o=>{if(o.isMesh&&o.userData.jungleAsset==='thornroots')visibleThorns++;});
+ assert.equal(visibleThorns,0,'no thorn geometry is rendered at the bottom of pits');
+ for(const mesh of level.groundMeshes.filter(m=>m.userData.terrainComp)){
+  const trail=mesh.geometry.attributes.aJungleTrail;
+  assert.equal(trail.count,mesh.geometry.attributes.position.count);
+  assert.ok(Array.from(trail.array).every(Number.isFinite));
+  assert.ok(Array.from({length:trail.count},(_,i)=>trail.getX(i)).some(x=>Math.abs(x)<.001),'the curved trail retains a dirt centre');
+  const shader={uniforms:{},vertexShader:THREE.ShaderLib.lambert.vertexShader,fragmentShader:THREE.ShaderLib.lambert.fragmentShader};
+  mesh.material.onBeforeCompile(shader,{});
+  assert.ok(shader.uniforms.uJungleGrass?.value,'grass texture is bound to the real ground material');
+  assert.ok(shader.vertexShader.includes('vJungleTrail = aJungleTrail'));
+  assert.ok(shader.fragmentShader.includes('grassBlend'));
+  assert.ok(shader.fragmentShader.indexOf('gl_FragColor.rgb *= smoothstep(-10.0')>shader.fragmentShader.indexOf('#include <fog_fragment>'),'fog cannot recolour the black pit floor');
+ }
  assert.equal(capture.components.filter(c=>c.dkind==='roofedtemple'||c.dkind==='hangingarch').length,0,'landmarks are authored as individual blocks');
  for(const kind of ['stoneblock','stonepaver','stoneshaft','stonecapital','stonecornice','stoneroof','stonehip','junglecanopy'])assert.ok(capture.components.some(c=>c.dkind===kind),kind+' used in the actual level');
  for(const old of ['fern','broadleaf','jungletree','palm','plants','tree','vines','log'])assert.equal(capture.components.filter(c=>c.dkind===old).length,0,old+' was replaced');
@@ -104,5 +125,5 @@ try{
  setEditorBuild(true);const editable=new Level(new THREE.Scene(),{id:'jungle-editor',name:'Editor',data:capture});await editable.prepareJungleAssets();let pickable=0;
  editable.pickRoot.traverse(o=>{if(o.isMesh&&o.userData.jungleAsset){pickable++;assert.ok(Number.isInteger(o.userData.editorIdx),'asynchronous module remains pickable');}});assert.ok(pickable>1000);
  editable.dispose();setEditorBuild(false);copy.dispose();level.dispose();kit.dispose();kit.dispose();
- console.log(`Validated 17 modular Meshy assets, GPU-compressed albedo/fallbacks, real LODs, ${samples} roof coverage rays, arch joints, dirt-only paths, individual temple blocks, wind, collision, disposal, and editor reconstruction.`);
+ console.log(`Validated 17 original modules and 5 optional editor assets, compressed textures/LODs, ${samples} roof rays, arch joints, grass-edged dirt, invisible death volumes, black depth fade, wind, collision, disposal and editor reconstruction.`);
 }finally{await server.close();}

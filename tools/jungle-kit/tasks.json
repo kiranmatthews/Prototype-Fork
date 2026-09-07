@@ -1,7 +1,7 @@
 {
   "budget": 650,
   "startingBalance": 676,
-  "reservedCredits": 415,
+  "reservedCredits": 465,
   "tasks": {
     "broadleaf-discarded": {
       "id": "01a07c0d-4619-75b8-be15-fd0a89f2c756",
@@ -174,8 +174,89 @@
       "state": "SUCCEEDED",
       "note": "Fresh UVs and textures for the cleaned modular roof; original panel contained an unpainted UV region.",
       "id": "01a07d19-d0ba-7607-b4c9-d5e786afffef"
+    },
+    "clay-ashlar-clean": {
+      "resource": "retexture",
+      "credits": 10,
+      "state": "SUCCEEDED",
+      "sourceModule": "ashlar-clean",
+      "note": "Ancient brick with soft clay response; fitted geometry retained.",
+      "stylePrompt": null,
+      "styleReference": "references/clay/brick-clay.png",
+      "id": "01a07d59-e8d3-7760-9cb6-34c9eb9e32d4",
+      "selected": false,
+      "disposition": "Available as an optional editor asset. The approved Jungle Ruins build retains its original masonry.",
+      "selectedForEditor": true,
+      "selectedForJungleRuins": false
+    },
+    "clay-ashlar": {
+      "resource": "retexture",
+      "credits": 10,
+      "state": "SUCCEEDED",
+      "sourceModule": "ashlar",
+      "note": "Ancient brick with soft clay response; fitted geometry retained.",
+      "stylePrompt": null,
+      "styleReference": "references/clay/brick-clay.png",
+      "id": "01a07d59-f9ae-7026-828d-78eb3cdeb1b3",
+      "selected": false,
+      "disposition": "Available as an optional editor asset. The approved Jungle Ruins build retains its original masonry.",
+      "selectedForEditor": true,
+      "selectedForJungleRuins": false
+    },
+    "clay-broken-ashlar": {
+      "resource": "retexture",
+      "credits": 10,
+      "state": "SUCCEEDED",
+      "sourceModule": "broken-ashlar",
+      "note": "Ancient brick with soft clay response; fitted geometry retained.",
+      "stylePrompt": null,
+      "styleReference": "references/clay/brick-clay.png",
+      "id": "01a07d5a-0bae-760a-8a80-0a8b9b790e14",
+      "selected": false,
+      "disposition": "Available as an optional editor asset. The approved Jungle Ruins build retains its original masonry.",
+      "selectedForEditor": true,
+      "selectedForJungleRuins": false
+    },
+    "clay-paving-slab": {
+      "resource": "retexture",
+      "credits": 10,
+      "state": "SUCCEEDED",
+      "sourceModule": "paving-slab",
+      "note": "Ancient brick with soft clay response; fitted geometry retained.",
+      "stylePrompt": null,
+      "styleReference": "references/clay/brick-clay.png",
+      "id": "01a07d5a-1c8a-72b7-a6d4-d4d1cc99c65f",
+      "selected": false,
+      "disposition": "Available as an optional editor asset. The approved Jungle Ruins build retains its original masonry.",
+      "selectedForEditor": true,
+      "selectedForJungleRuins": false
+    },
+    "clay-surface-ashlar-clean-rejected-prompt": {
+      "resource": "retexture",
+      "credits": 0,
+      "state": "REJECTED",
+      "sourceModule": "ashlar-clean",
+      "note": "Provider rejected the prompt length before creating a task. Balance remained 221; the 10-credit reservation was released.",
+      "stylePrompt": "Ancient hand-moulded earthen temple masonry, visibly weathered and centuries old. Warm buff and sandy ochre body with dusty terracotta undertones, uneven pale chalk mineral washing, subtle broad mottled patches, shallow natural pores, small worn pits and a little dusty grey-brown residue in crevices. The surface must have believable brick grain and natural weathering variation, not a uniform solid colour. Matte soft sculpted clay appearance, medium-scale painterly material detail and gently worn edges. Quiet broad colour gradients; keep the texture contrast restrained and readable at game distance. No glossy or metallic areas, no deep black cracks, no dense high-frequency noise, no extra brick joints painted on the module. Even neutral illumination in the albedo with no baked cast shadows or hard painted highlights. ",
+      "styleReference": "references/clay/brick-clay.png (art-direction study)",
+      "selected": false,
+      "disposition": "Parked after the user clarified that the clay message was earlier steering. Not shipped."
+    },
+    "clay-surface-ashlar-clean": {
+      "resource": "retexture",
+      "credits": 10,
+      "state": "SUCCEEDED",
+      "sourceModule": "ashlar-clean",
+      "note": "Ancient brick with soft clay response; fitted geometry retained.",
+      "stylePrompt": "Ancient hand-moulded earthen temple masonry, centuries old. Warm buff and sandy ochre with dusty terracotta undertones, uneven pale mineral washing, broad mottled patches, shallow pores and small worn pits. Clearly visible brick grain and natural weathering, not a uniform colour. Matte soft clay, painterly medium-scale detail, gently worn edges and subtle dusty residue. Quiet colour gradients and restrained contrast. No gloss, metal, deep black cracks, dense noise or extra painted brick joints. Neutral albedo without baked shadows or highlights. ",
+      "styleReference": "references/clay/brick-clay.png (art-direction study)",
+      "id": "01a07d66-8c1d-7420-9bd9-5a94bbcf43a9",
+      "selected": false,
+      "disposition": "Available as an optional editor asset. The approved Jungle Ruins build retains its original masonry.",
+      "selectedForEditor": true,
+      "selectedForJungleRuins": false
     }
   },
-  "lastBalance": 261,
-  "verifiedAtUtc": "2026-09-07T18:48:41Z"
+  "lastBalance": 211,
+  "verifiedAtUtc": "2026-09-07T21:27:18Z"
 }

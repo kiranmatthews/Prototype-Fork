@@ -1,0 +1,107 @@
+[
+  {
+    "kind": "claybrick",
+    "file": "clay-brick",
+    "label": "smooth clay brick",
+    "sourceFile": "clay-ashlar-clean.glb",
+    "size": [
+      2,
+      1,
+      1
+    ],
+    "normal": 0.2,
+    "lod": 0.28,
+    "editorOnly": true,
+    "texture": 2048,
+    "fallbackTexture": 1024,
+    "bytes": 930276,
+    "triangles": 708,
+    "lodTriangles": 198,
+    "sha256": "7c6cdb153cac7f191b9b09d82f898469b76bb53fa64ecd7bf84c535307c25f9a",
+    "sourceSha256": "7abdd1048f4b505c1882bde788aa894c1560d38b96201b170662f9d43be1f508"
+  },
+  {
+    "kind": "wornclaybrick",
+    "file": "worn-clay-brick",
+    "label": "worn clay brick",
+    "sourceFile": "clay-ashlar.glb",
+    "size": [
+      2,
+      1,
+      1
+    ],
+    "normal": 0.2,
+    "lod": 0.3,
+    "editorOnly": true,
+    "texture": 2048,
+    "fallbackTexture": 1024,
+    "bytes": 976148,
+    "triangles": 662,
+    "lodTriangles": 198,
+    "sha256": "0fb3586a809015a0509510bb3f9209c703afd3c49ad9db4e1fa29f23538ca4ae",
+    "sourceSha256": "c8d7bb76063ab21cfb5e32626a30c95e2f1ebdcfbf1aea15def8b9ea2adc411f"
+  },
+  {
+    "kind": "fracturedclaybrick",
+    "file": "fractured-clay-brick",
+    "label": "fractured clay brick",
+    "sourceFile": "clay-broken-ashlar.glb",
+    "size": [
+      2,
+      1,
+      1
+    ],
+    "normal": 0.2,
+    "lod": 0.3,
+    "editorOnly": true,
+    "texture": 2048,
+    "fallbackTexture": 1024,
+    "bytes": 961232,
+    "triangles": 940,
+    "lodTriangles": 282,
+    "sha256": "ae2535bc594fe6cc7d700151df7c0f657fa90cf7ba4818326f365e011146f87a",
+    "sourceSha256": "e0d57270bd9b7281d62203aa6aae3c7e4db6e15b23e5ff7f359f60599bac65f1"
+  },
+  {
+    "kind": "claypaver",
+    "file": "clay-paver",
+    "label": "clay paving slab",
+    "sourceFile": "clay-paving-slab.glb",
+    "size": [
+      2,
+      0.28,
+      2
+    ],
+    "normal": 0.2,
+    "lod": 0.28,
+    "editorOnly": true,
+    "texture": 2048,
+    "fallbackTexture": 1024,
+    "bytes": 974156,
+    "triangles": 552,
+    "lodTriangles": 154,
+    "sha256": "dd1f7fea3557a4b4d67a959f418267437da02de622a2120c89bda43b23a2f61a",
+    "sourceSha256": "69c8ef8ad64c2c21207ff56ade0eb81b9478edc7e15c7298b7f4eebba1c0a8de"
+  },
+  {
+    "kind": "agedclaybrick",
+    "file": "aged-clay-brick",
+    "label": "aged earthen brick",
+    "sourceFile": "clay-surface-ashlar-clean.glb",
+    "size": [
+      2,
+      1,
+      1
+    ],
+    "normal": 0.2,
+    "lod": 0.28,
+    "editorOnly": true,
+    "texture": 2048,
+    "fallbackTexture": 1024,
+    "bytes": 931636,
+    "triangles": 708,
+    "lodTriangles": 198,
+    "sha256": "5f9cc55ba19991339e7ab92d93a6554dd8622c69d54228eb1090ab6b70dfe866",
+    "sourceSha256": "01a37794e8c6949a07224ebc8ff50db366c15559e5c103c9efb4dae93ee95c94"
+  }
+]

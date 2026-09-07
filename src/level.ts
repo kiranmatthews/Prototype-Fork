@@ -47,7 +47,7 @@ import { EASY_BONUS_LEVEL, DEFAULT_BONUS_CRATE_COUNT } from "./levels/bonus-easy
 import { TropicalPlantKit, TROPICAL_PLANT_KINDS, TROPICAL_PLANT_LABELS } from "./tropicalPlants";
 import { JungleAssetKit, JUNGLE_ASSET_KINDS, JUNGLE_ASSET_LABELS, isJungleAsset, addJungleDapple, jungleAssetMatrix } from "./jungleAssets";
 import { jungleRuinsDressing } from "./levels/jungle-ruins-art";
-import { createJungleShoulder } from "./jungleGround";
+import { createJungleShoulder, addJungleDepthFade } from "./jungleGround";
 import {
   CAMPAIGN_LEVELS,
   CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
@@ -3899,6 +3899,10 @@ export class Level {
           addJungleDapple(material, this.jungleTime);
         }
       }
+      this.root.traverse(object=>{
+        const mesh=object as THREE.Mesh;
+        if(mesh.isMesh)for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material])addJungleDepthFade(material);
+      });
     }
     if (this.noFogLevel) this.stripFog();
     this.buildTorchLights(); // every torch is placed by now — the pool is sized once
@@ -10580,7 +10584,7 @@ export class Level {
 
     // the ravine floor, far enough down to be scenery: killY catches you 1.2
     // above it, so it is something to look into and never something to land on
-    this.decorBlock(0, -13.7, -352, 140, 1, 940, 0x1e3521, "moss");
+    this.decorBlock(0, -13.7, -352, 140, 1, 940, 0x000000, "solid");
 
     // ---- HARD PIT INTERIORS ------------------------------------------------
     // Every cut used to be open air between two displaced planes: nothing to
@@ -10622,7 +10626,7 @@ export class Level {
         const z = near - (i + 0.5) * (near - far) / count;
         for (const side of [-1, 1]) this.jungleAsset({ t: "decor", dkind: "thornroots",
           p: [gx(z) + side * 2.25, -10.4, z], s: [5, 3, (near - far) / count + 0.25],
-          yaw: (i % 2) * 180, solid: true, nm: "Thorn bed inside death pit" });
+          yaw: (i % 2) * 180, solid: true, invisible: true, nm: "Death volume inside black pit" });
       }
     }
 
@@ -10931,9 +10935,11 @@ export class Level {
     const geo = new THREE.PlaneGeometry(width, depth, segX, segZ);
     geo.rotateX(-Math.PI / 2);
     const pos = geo.attributes.position as THREE.BufferAttribute;
+    const trail = this.jungleAtmosphere ? new Float32Array(pos.count*2) : null;
     const phase = (Math.abs(z0) * 0.37) % (Math.PI * 2); // deterministic
     for (let i = 0; i < pos.count; i++) {
       const lx = pos.getX(i);
+      if(trail){trail[i*2]=lx;trail[i*2+1]=width/2;}
       const lz = pos.getZ(i);
       const wz = cz + lz;
       // fade the wave to zero near both strip ends: flush joins, clean jumps
@@ -10955,11 +10961,16 @@ export class Level {
       pos.setY(i, h);
     }
     geo.computeVertexNormals();
+    if(trail)geo.setAttribute('aJungleTrail',new THREE.BufferAttribute(trail,2));
     const mesh = new THREE.Mesh(
       geo,
       this.patterned(mat, width, depth, opts.tex ?? "jungle"),
     );
     mesh.position.set(cx, baseY, cz);
+    if(this.jungleAtmosphere){
+      mesh.material.userData.jungleTrail=true;
+      mesh.material.userData.jungleGrassTexture=this.surfaceTexture('grass');
+    }
     mesh.name = name;
     // THE STRIP IS ITS OWN COMPONENT. Capture used to flatten a displaced
     // plane to its bounding box, so editing a level traded every roll, bend
@@ -12371,6 +12382,10 @@ export class Level {
       // row of teeth and every box restarted its UVs. Build one true swept
       // prism instead; collision remains the forgiving invisible slab chain.
       const curveMat = this.baseMat("bermCurve", this.bermTint, this.jungleAtmosphere ? "dirt" : "jungle", 1, 1);
+      if(this.jungleAtmosphere){
+        curveMat.userData.jungleTrail=true;
+        curveMat.userData.jungleGrassTexture=this.surfaceTexture('grass');
+      }
       for (const side of [-1, 1] as const) {
         const pts: THREE.Vector3[] = [];
         const sections: {
@@ -13902,12 +13917,12 @@ export class Level {
     if (!isJungleAsset(c.dkind)) return;
     const { t: _type, p: _position, dkind, ...extra } = c;
     this.noteDecor(dkind, ...c.p, extra);
-    if (!this.jungleAssets) {
-      this.jungleAssets = new JungleAssetKit(!EDITOR_BUILD, this.liteDecor);
+    if (!this.jungleAssets && !c.invisible) {
+      this.jungleAssets = new JungleAssetKit(!EDITOR_BUILD, this.liteDecor, this.jungleAtmosphere);
       this.root.add(this.jungleAssets.root);
     }
     const placement = { ...c, dkind, s: c.s ?? (dkind === "carvedlog" && c.len ? [c.len, 1.1, 1.3] as [number, number, number] : undefined) };
-    const holder = this.jungleAssets.add(placement);
+    const holder = c.invisible ? null : this.jungleAssets!.add(placement);
     // Individual editor props belong directly to root so buildTagged can
     // attach their index before the asynchronous GLB children arrive.
     if (holder) this.root.add(holder);

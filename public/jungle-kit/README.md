@@ -11,8 +11,9 @@ no whole-temple or facade GLB in the runtime. Gateways and temples are named
 editor groups whose blocks can be picked and edited independently. The reusable
 wall, platform, arch and pavilion palette entries expand into the same kit.
 
-The ground is brown dirt, including the path, soil banks and missing-paver
-patches. Simplified broadleaf plants, palms and ferns use a small number of
+The walking path has a lighter sandy dirt centre that blends into grass at its
+edges. The blend follows the curved terrain and rounded shoulders. Soil remains
+visible on steep banks and between surviving paving patches. Simplified broadleaf plants, palms and ferns use a small number of
 large leaves. A new canopy tree supplies the upper enclosure; foreground
 plantings are spaced into larger clusters. Leaves and hanging vines sway in
 wind, with matching shadow deformation and animated canopy shade.
@@ -53,7 +54,7 @@ download records remain local under `.img2threejs/jungle-kit/`.
 Runtime templates share geometry and maps. Modular instances use 20 m cells
 and near/far geometry with a 32 m stone / 48 m canopy transition; other plants use 32 m cells.
 Assets and shaders warm behind the loading transition. The measured full
-Jungle kit used 17 compressed albedo textures and approximately 135 MiB of
+Jungle kit used 17 compressed albedo textures and approximately 134 MiB of
 estimated texture memory on the tested browser/device. This does not include
 other level, character, shadow or post-processing resources.
 
@@ -84,3 +85,23 @@ The regression checks inspect real packed geometry, finite attributes, UVs,
 LOD reduction, compression/fallbacks, roof/arch coverage, instancing and wind,
 async editor picking, capture/rebuild, dirt terrain and supported traversal.
 Original collision surfaces, checkpoints, pits and movement tuning are retained.
+The forty death volumes still work, but their thorn geometry is hidden. Deep
+scenery fades to black after fog is applied, so pit bottoms stay a black void.
+
+## Optional editor models
+
+Five additional Meshy studies live in `editor/`: smooth clay brick, worn clay
+brick, fractured clay brick, clay paving slab and aged earthen brick. They are
+separate SCENERY palette choices and are not placed in the approved Jungle
+Ruins build. All seventeen original module files and the temple assembly
+recipes remain unchanged. The optional models total 4.55 MiB and load only
+when used. `editor/manifest.json` records their hashes, sizes and two LODs.
+
+These studies used 50 credits during the preceding material experiment, bringing
+the recorded cumulative spend to **465/650**, with last verified balance 211.
+This path/pit/editor integration consumed no new Meshy generation credits.
+`tools/jungle-kit/tasks.json` retains both the selected editor studies and the
+zero-credit rejected prompt.
+
+Rebuild optional models using `bake_modular.py -- --spec tools/jungle-kit/editor-specs.json`
+under Blender, followed by `python3 tools/jungle-kit/pack_editor_assets.py`.

@@ -16,7 +16,7 @@ export function jungleShoulderHeight(distanceFromInner: number, z: number): numb
 export function createJungleShoulder(z0:number,z1:number,baseY:number,width:number,cx:number,
     spine:(z:number)=>{dx:number;dy:number},side:number):THREE.BufferGeometry {
   const near=Math.max(z0,z1),depth=Math.abs(z1-z0),rows=Math.max(2,Math.ceil(depth/1.75));
-  const pos:number[]=[],uv:number[]=[],idx:number[]=[];
+  const pos:number[]=[],uv:number[]=[],idx:number[]=[],trail:number[]=[];
   for(let row=0;row<=rows;row++) {
     const z=near-depth*row/rows,sp=spine(z);
     const edge=Math.min(1,Math.min(row,rows-row)*.5);
@@ -24,6 +24,7 @@ export function createJungleShoulder(z0:number,z1:number,baseY:number,width:numb
       const rounded=jungleShoulderHeight(offset,z);
       pos.push(cx+sp.dx+side*(width/2-.9+offset),baseY+sp.dy+THREE.MathUtils.lerp(height,rounded,edge),z);
       uv.push(offset/7,z/7);
+      trail.push(side*(width/2-.9+offset),width/2);
     }
   }
   const columns=PROFILE.length;
@@ -35,11 +36,39 @@ export function createJungleShoulder(z0:number,z1:number,baseY:number,width:numb
   for(const row of [0,rows]) {
     const start=row*columns,z=pos[start*3+2],sp=spine(z),anchor=pos.length/3;
     pos.push(cx+sp.dx+side*(width/2+3.3),baseY+sp.dy-.2,z);uv.push(0,0);
+    trail.push(side*(width/2+3.3),width/2);
     for(let c=0;c<columns-1;c++) {
       if((row===0)===(side>0))idx.push(anchor,start+c,start+c+1);else idx.push(anchor,start+c+1,start+c);
     }
   }
   const geometry=new THREE.BufferGeometry();
   geometry.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));
+  geometry.setAttribute('aJungleTrail',new THREE.Float32BufferAttribute(trail,2));
   geometry.setIndex(idx);geometry.computeVertexNormals();geometry.computeBoundingBox();geometry.computeBoundingSphere();return geometry;
+}
+
+/** Fade the deep scenery after fog so the bottom of a death pit stays black. */
+export function addJungleDepthFade(material: THREE.Material): void {
+  if(material.userData.jungleDepthFade)return;
+  material.userData.jungleDepthFade=true;
+  const previous=material.onBeforeCompile;
+  const previousKey=material.customProgramCacheKey.bind(material);
+  material.onBeforeCompile=(shader,renderer)=>{
+    previous.call(material,shader,renderer);
+    shader.vertexShader='varying float vJungleDepthY;\n'+shader.vertexShader;
+    shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`
+      vec4 jungleDepthPosition = vec4(transformed, 1.0);
+      #ifdef USE_INSTANCING
+        jungleDepthPosition = instanceMatrix * jungleDepthPosition;
+      #endif
+      vJungleDepthY = (modelMatrix * jungleDepthPosition).y;
+      #include <project_vertex>
+    `);
+    shader.fragmentShader='varying float vJungleDepthY;\n'+shader.fragmentShader;
+    shader.fragmentShader=shader.fragmentShader.replace('#include <fog_fragment>',`
+      #include <fog_fragment>
+      gl_FragColor.rgb *= smoothstep(-10.0, -4.2, vJungleDepthY);
+    `);
+  };
+  material.customProgramCacheKey=()=>previousKey()+'|jungle-depth-v1';
 }
