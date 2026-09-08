@@ -1,0 +1,50 @@
+{
+  "budget": 1000,
+  "startingBalance": 2151,
+  "reservedCredits": 105,
+  "tasks": {
+    "plateau": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 2400,
+      "id": "01a07e8e-b38b-717d-acbb-684c6fdc96d2"
+    },
+    "stepping-rock": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 1800,
+      "id": "01a07e8f-b90b-75c0-a594-02d15d64bbad"
+    },
+    "long-island": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 2400,
+      "id": "01a07e91-78d2-730b-8530-8313e2587699"
+    },
+    "phase-rock": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 1800,
+      "id": "01a07e92-bbdd-756b-8fdd-dc3fcf863e16"
+    },
+    "rock-ridge": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 1800,
+      "id": "01a07e94-3a7a-7510-ad77-06c9badeefc7"
+    },
+    "anchor-rock": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 1800,
+      "id": "01a07e96-a3a7-7798-8fef-6b080e1db96b"
+    },
+    "distant-arch": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 2200,
+      "id": "01a07e97-c149-76c4-b7ef-f4648efbb1c5"
+    }
+  },
+  "lastBalance": 2046
+}

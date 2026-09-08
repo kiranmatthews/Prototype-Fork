@@ -119,3 +119,9 @@ The audit adds gameplay-preserving representations for campaign maps, bonus entr
 ## Validation
 
 Run `npm run check:editor-security`, `npm run check:editor-roundtrip`, and the full `npm run build` before publishing. `tools/test-level-security.mjs` exercises malicious keys, schema/type errors, numerical extremes, geometric work amplification, self-intersecting polygons, executable object hooks, malformed wrappers, pack replacement atomicity, streamed remote size/UTF-8/version failures, quota recovery, and compatibility with all source-authored and published level data. The editor roundtrip suite builds accepted data and compares gameplay/capture contracts in both lite and full modes. Finish with a real-browser editor/import smoke test and a console-error check.
+
+## Floating rock terrain and flexible ropes
+
+Nightworks uses existing `platform`, `mover`, `phasepad`, `rail`, `ropeswing` and `decor` components. The built-in `dkind` values `nightplateau`, `nightlongisland`, `nightsteppingrock`, `nightphaserock` and `nightrockridge` select fitted rock surfaces. Platforms retain centre-based `p`; mover and phase-pad `p` remains the top. Their `s` gives width, hanging depth and length. Collision and visible geometry share the fitted mesh, including the irregular planar rim. A `rail` with `nightrockridge` has a physical moving rock body along its grind path. `nightanchorrock` and `nightdistantarch` are decorative assets.
+
+`ropeswing.travelPhase` optionally sets the travelling anchor's phase in radians independently of its swing `phase`. Omission retains the existing shared-phase behavior. The editor exposes this as “ferry phase”. Flexible rope rendering is global; no additional generated scripts, URLs or material definitions enter level data.

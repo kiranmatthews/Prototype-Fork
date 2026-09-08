@@ -1,0 +1,142 @@
+[
+  {
+    "file": "plateau",
+    "kind": "nightplateau",
+    "label": "plateau",
+    "size": [
+      10,
+      7,
+      9
+    ],
+    "lod": 0.28,
+    "normal": 0.18,
+    "flatTop": true,
+    "texture": 2048,
+    "fallbackTexture": 1024,
+    "bytes": 854796,
+    "triangles": 2527,
+    "lodTriangles": 707,
+    "sha256": "ce8b2d3fb6d7dfa3141aa712bacf5e44366f219b644799b0d241466b60e125c8",
+    "sourceSha256": "8095e9acc07dce6d36510acb78b40a4d2c2400a3fa883fc7b00f82bbc5ae6ffe"
+  },
+  {
+    "file": "stepping-rock",
+    "kind": "nightsteppingrock",
+    "label": "stepping rock",
+    "size": [
+      4.5,
+      4,
+      4.5
+    ],
+    "lod": 0.3,
+    "normal": 0.18,
+    "flatTop": true,
+    "texture": 2048,
+    "fallbackTexture": 1024,
+    "bytes": 693564,
+    "triangles": 1856,
+    "lodTriangles": 555,
+    "sha256": "6b81677dd61042ba198a4e2c9c218cd1e8bed77f4c04025f21bb5df73320cc2a",
+    "sourceSha256": "28bd08824a80e6f5569117068c7da1520a53deda85f748edbd7671e308916702"
+  },
+  {
+    "file": "long-island",
+    "kind": "nightlongisland",
+    "label": "long island",
+    "size": [
+      15,
+      8,
+      7
+    ],
+    "lod": 0.3,
+    "normal": 0.18,
+    "flatTop": true,
+    "texture": 2048,
+    "fallbackTexture": 1024,
+    "bytes": 573156,
+    "triangles": 2081,
+    "lodTriangles": 623,
+    "sha256": "d739839216d3c8f44aaaf8b32633d547d711e7db5862bcc585c8c2abb788cd0f",
+    "sourceSha256": "f046d2088d85b593eb599bd58f01630b944ba462f605420156dba98962eb3a6b"
+  },
+  {
+    "file": "phase-rock",
+    "kind": "nightphaserock",
+    "label": "phase rock",
+    "size": [
+      4.5,
+      4,
+      4.5
+    ],
+    "lod": 0.3,
+    "normal": 0.18,
+    "flatTop": true,
+    "texture": 2048,
+    "fallbackTexture": 1024,
+    "bytes": 832324,
+    "triangles": 1863,
+    "lodTriangles": 556,
+    "sha256": "af1ae8052149fe77a8fcbb74de2f01186e5921310a976b45002e0871a145518e",
+    "sourceSha256": "cadac378fc164a5ba6351c9f109d4753d6da986f847a10ced71367efb068309a"
+  },
+  {
+    "file": "rock-ridge",
+    "kind": "nightrockridge",
+    "label": "rock ridge",
+    "size": [
+      12,
+      3,
+      0.6
+    ],
+    "lod": 0.35,
+    "normal": 0.18,
+    "flatTop": true,
+    "texture": 2048,
+    "fallbackTexture": 1024,
+    "bytes": 627572,
+    "triangles": 1659,
+    "lodTriangles": 580,
+    "sha256": "8e304ddf745cb608bf6c6d0562f9d70b86904ccabb51f9080841e76b757e6edb",
+    "sourceSha256": "d7d409d589512a06531bd6a316e2098e461f30b058698309ccc9d40b4cb229d1"
+  },
+  {
+    "file": "anchor-rock",
+    "kind": "nightanchorrock",
+    "label": "anchor rock",
+    "size": [
+      4,
+      3,
+      3
+    ],
+    "lod": 0.3,
+    "normal": 0.18,
+    "flatTop": false,
+    "texture": 2048,
+    "fallbackTexture": 1024,
+    "bytes": 1540984,
+    "triangles": 1850,
+    "lodTriangles": 553,
+    "sha256": "0f84c802ee306349a72e23b50fd7852526652fd1b0a81ce1bcadcd91b7f0a1b5",
+    "sourceSha256": "f5fedbde1a29f0d2e080e7c3e0dfe89e4b9f1d30f6c3f2b1b4d338282fdf351c"
+  },
+  {
+    "file": "distant-arch",
+    "kind": "nightdistantarch",
+    "label": "distant arch",
+    "size": [
+      22,
+      30,
+      8
+    ],
+    "lod": 0.24,
+    "normal": 0.18,
+    "flatTop": false,
+    "texture": 2048,
+    "fallbackTexture": 1024,
+    "bytes": 1371660,
+    "triangles": 2402,
+    "lodTriangles": 573,
+    "sha256": "c4bb4fd632d555d2a65bd25127de4b7751d6cf17740dba0aace5c4dd3785b233",
+    "sourceSha256": "82dd662718cbb8a207806b46a93c06a610afeda3e9e37b9b5f57d1534d06b752"
+  }
+]

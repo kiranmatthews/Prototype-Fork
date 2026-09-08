@@ -9492,6 +9492,8 @@ export class Editor {
         (v) => (c.cycle = Math.max(0, v)),
         0.05,
       );
+      num("ferry phase", () => c.travelPhase ?? c.phase ?? 0,
+        (v) => (c.travelPhase = v), 0.2);
     }
     const row = document.createElement("div");
     row.className = "ed-grid";

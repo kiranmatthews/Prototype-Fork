@@ -1,0 +1,93 @@
+[
+  {
+    "file": "plateau",
+    "kind": "nightplateau",
+    "label": "plateau",
+    "size": [
+      10,
+      7,
+      9
+    ],
+    "lod": 0.28,
+    "normal": 0.18,
+    "flatTop": true
+  },
+  {
+    "file": "stepping-rock",
+    "kind": "nightsteppingrock",
+    "label": "stepping rock",
+    "size": [
+      4.5,
+      4,
+      4.5
+    ],
+    "lod": 0.3,
+    "normal": 0.18,
+    "flatTop": true
+  },
+  {
+    "file": "long-island",
+    "kind": "nightlongisland",
+    "label": "long island",
+    "size": [
+      15,
+      8,
+      7
+    ],
+    "lod": 0.3,
+    "normal": 0.18,
+    "flatTop": true
+  },
+  {
+    "file": "phase-rock",
+    "kind": "nightphaserock",
+    "label": "phase rock",
+    "size": [
+      4.5,
+      4,
+      4.5
+    ],
+    "lod": 0.3,
+    "normal": 0.18,
+    "flatTop": true
+  },
+  {
+    "file": "rock-ridge",
+    "kind": "nightrockridge",
+    "label": "rock ridge",
+    "size": [
+      12,
+      3,
+      0.6
+    ],
+    "lod": 0.35,
+    "normal": 0.18,
+    "flatTop": true
+  },
+  {
+    "file": "anchor-rock",
+    "kind": "nightanchorrock",
+    "label": "anchor rock",
+    "size": [
+      4,
+      3,
+      3
+    ],
+    "lod": 0.3,
+    "normal": 0.18,
+    "flatTop": false
+  },
+  {
+    "file": "distant-arch",
+    "kind": "nightdistantarch",
+    "label": "distant arch",
+    "size": [
+      22,
+      30,
+      8
+    ],
+    "lod": 0.24,
+    "normal": 0.18,
+    "flatTop": false
+  }
+]

@@ -1,0 +1,42 @@
+{
+  "kitCredits": 105,
+  "budgetCredits": 1000,
+  "models": 7,
+  "publicMiB": 6.2,
+  "playableIslands": 57,
+  "physicalGrindRidges": 5,
+  "islandEdgeSamples": 456,
+  "sweptSideAndCornerChecks": 456,
+  "realPlayerLedgeCatches": 453,
+  "continuousSupportedJoins": 3,
+  "renderCollisionRayComparisons": 1764,
+  "tested": [
+    "supported spawn",
+    "actual irregular rims and sides",
+    "moving platform support",
+    "moving ledge grip and mantle",
+    "phase collision removal",
+    "asset completion while a phase pad is off",
+    "curved rope nearest grip, analytic velocity and visual endpoint agreement",
+    "global grind-rope sag matches its physical polyline",
+    "editor JSON round trip and separate ferry phase",
+    "void death",
+    "summit finish",
+    "landing-marker replay"
+  ],
+  "browser": {
+    "render": "full",
+    "drawingBuffer": [
+      2966,
+      1440
+    ],
+    "averageFrameMs": 16.67,
+    "p95FrameMs": 18.4,
+    "assetErrors": 0,
+    "consoleErrors": 0,
+    "liteAverageFrameMs": 16.664
+  },
+  "releaseValidation": "npm run build passed after integration with c902b81",
+  "editorCatalogVerified": true,
+  "finalAccountBalance": 2046
+}
