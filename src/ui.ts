@@ -2043,13 +2043,13 @@ export class UI {
 
   // Death curtain: fade to black on the way out; on respawn hold the black a
   // beat (the world teleports behind it), then reveal the checkpoint.
-  deathFade(out: boolean): void {
+  deathFade(out: boolean, delay = 0): void {
     if (this.fadeTimer !== null) {
       clearTimeout(this.fadeTimer);
       this.fadeTimer = null;
     }
     if (out) {
-      this.fadeEl.style.transition = "opacity 0.4s ease";
+      this.fadeEl.style.transition = `opacity 0.4s ease ${delay}s`;
       this.fadeEl.style.opacity = "1";
     } else {
       this.fadeTimer = window.setTimeout(() => {

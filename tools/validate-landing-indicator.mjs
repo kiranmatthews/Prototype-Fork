@@ -228,7 +228,12 @@ try {
   while (replayer.active && replayer.frame <= 8807) {
     const frame = replayer.frame;
     if (!replayer.feed(input, player.camDir)) break;
+    const wasDead = player.state === "dead";
     player.step(CONST.fixedStep, input, level);
+    // Preserve this legacy take's fixed-frame inputs across its earlier deaths.
+    // The longer presentation interval is covered by test-campaign-death-flow.
+    if (!wasDead && player.state === "dead")
+      player.respawnTimer = CONST.respawnDelay;
     level.update(CONST.fixedStep);
     player.commitRenderStep(level);
     if (frame >= 8803) {

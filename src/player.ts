@@ -1895,6 +1895,10 @@ export class Player {
     } as const;
   }
 
+  get deathPresentationDelay(): number {
+    return this.bailing ? CONST.deathWatchTime : 0;
+  }
+
   get bailRecoveryK(): number {
     return this.bailRecoveryPose;
   }
@@ -4022,6 +4026,7 @@ export class Player {
 
     switch (this.state) {
       case 'dead':
+        if (this.bailing) this.stepDeathRagdoll(dt, level);
         this.respawnTimer -= dt;
         if (this.respawnTimer <= 0) {
           if (this.ttDied || this.comboDied) {
@@ -13698,6 +13703,38 @@ export class Player {
     }
   }
 
+  // Corpse-only motion: no pickups, attacks, recovery or repeated damage.
+  private stepDeathRagdoll(dt: number, level: Level): void {
+    const oldY = this.pos.y;
+    this.pos.addScaledVector(this.axisF, this.speed * dt);
+    this.vVel = Math.max(-CONST.maxFallSpeed, this.vVel - TUNING.fallGravity * dt);
+    this.pos.y += this.vVel * dt;
+    for (const wall of level.walls) {
+      if (this.pos.y > wall.max.y || this.pos.y + this.hitboxHalf.y * 2 < wall.min.y) continue;
+      const hx = CONST.playerHalf.x + 0.02;
+      const hz = CONST.playerHalf.z + 0.02;
+      if (this.pos.x < wall.min.x - hx || this.pos.x > wall.max.x + hx ||
+          this.pos.z < wall.min.z - hz || this.pos.z > wall.max.z + hz) continue;
+      const x = this.pos.x, z = this.pos.z, speed = this.speed;
+      this.pushOutOf(wall);
+      if (this.pos.x !== x) this.axisF.x *= -1;
+      if (this.pos.z !== z) this.axisF.z *= -1;
+      this.speed = speed * 0.65;
+      this.ragAngVel.multiplyScalar(-0.7);
+    }
+    const hit = this.queryGround(level, 0, 0, oldY + 0.05);
+    this.grounded = false;
+    if (hit && this.vVel <= 0 && this.pos.y <= hit.y && oldY >= hit.y - 0.05) {
+      this.pos.y = hit.y;
+      this.groundHit = hit;
+      if (!this.resolveRagdollGroundBounce(hit)) {
+        this.vVel = 0;
+        this.grounded = true;
+        this.speed *= Math.exp(-TUNING.bailFriction * dt);
+      }
+    }
+  }
+
   private die(): void {
     if (this.state === 'dead' || this.state === 'gameover') return;
     if (this.hubMode) {
@@ -13729,10 +13766,12 @@ export class Player {
         this.gameOverPending = true;
       } else this.lives--;
     }
-    this.respawnTimer = CONST.respawnDelay;
+    this.respawnTimer = CONST.respawnDelay + CONST.deathWatchTime;
+    this.armBailRecovery(this.respawnTimer + 1);
+    this.bailing = true;
+    this.startRagdoll('air');
+    this.grounded = false;
     sfx.play('death', 0.9);
-    this.speed = 0;
-    this.vVel = 0;
     // the pending combo dies with you; banked points survive
     this.comboPoints = 0;
     this.comboMult = 0;

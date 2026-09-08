@@ -3767,7 +3767,7 @@ window.addEventListener("keydown", (e) => {
   if (e.code === "F9") toggleVideo(); // playtest capture: canvas -> .webm
 });
 
-player.onDeath = () => ui.deathFade(true);
+player.onDeath = () => ui.deathFade(true, player.deathPresentationDelay);
 // Gameplay event hooks remain available for authored presentation. Do not
 // attach generic checkpoint, collectible or trick-instruction title popups.
 player.onFinish = () => {

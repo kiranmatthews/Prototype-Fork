@@ -792,6 +792,7 @@ export const CONST = {
   carveBrakeAngle: 2.7, // rad (~155 deg): stick pulled this far from the heading = brake/dismount, not a carve
   fixedStep: 1 / 60, // deterministic chunky update rate
   bailDownTime: 1.1, // knocked-down beat after a mask-less bail before getting up
+  deathWatchTime: 1.5, // visible corpse motion before the existing death fade
   respawnDelay: 0.7, // quick Crash-style respawn
   playerHalf: { x: 0.5, y: 0.46, z: 0.5 }, // baseline capsule-ish AABB; Character Lab stature scales only the live Y half-height
   spinReach: 0.8, // extra horizontal hit reach while spinning (arm+board span)

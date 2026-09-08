@@ -224,13 +224,41 @@ try {
   function resolveDeath(fixture) {
     const { player, level } = fixture;
     const input = makeInput();
-    const maxSteps = Math.ceil(CONST.respawnDelay / CONST.fixedStep) + 3;
+    const maxSteps = Math.ceil((CONST.respawnDelay + CONST.deathWatchTime) / CONST.fixedStep) + 3;
     for (let step = 0; step < maxSteps; step++) {
       player.step(CONST.fixedStep, input, level);
       if (player.state !== "dead") return step + 1;
     }
     assert.fail("death never resolved after the authored respawn delay");
   }
+
+  const watch = createPlayer({ lives: 2 });
+  watch.player.pos.set(0, 5, 0);
+  watch.player.vVel = -2;
+  watch.player.die();
+  assert.equal(watch.player.deathPresentationDelay, 1.5);
+  assert.equal(watch.player.respawnTimer, CONST.respawnDelay + 1.5);
+  const deathY = watch.player.pos.y;
+  for (let i = 0; i < Math.floor(1.5 / CONST.fixedStep); i++)
+    watch.player.step(CONST.fixedStep, makeInput(), watch.level);
+  assert.equal(watch.player.state, "dead", "respawn cut short the visible death beat");
+  assert.equal(watch.respawnCalls(), 0);
+  assert.ok(watch.player.pos.y < deathY, "corpse froze instead of falling");
+  assert.equal(watch.player.group.visible, true, "corpse was hidden during the watch interval");
+  resolveDeath(watch);
+  assert.equal(watch.player.deathPresentationDelay, 0);
+
+  const rebound = createPlayer({ lives: 2 });
+  rebound.player.pos.set(-0.6, 3, 0);
+  rebound.player.axisF.set(1, 0, 0);
+  rebound.player.speed = 12;
+  rebound.player.walkVelocity.set(0, 0, 0);
+  rebound.player.die();
+  rebound.level.walls.push(new THREE.Box3(new THREE.Vector3(0, -10, -2), new THREE.Vector3(0.2, 10, 2)));
+  for (let i = 0; i < 5; i++) rebound.player.step(CONST.fixedStep, makeInput(), rebound.level);
+  assert.ok(rebound.player.axisF.x < 0, "dead body did not rebound from the pit wall");
+  assert.ok(rebound.player.speed > 0, "wall contact erased corpse momentum");
+  assert.equal(rebound.player.lives, 1, "corpse contact charged another life");
 
   // Zero is the final playable campaign life. A death from one spends it and
   // still respawns; only the following death, begun at zero, latches Game Over.

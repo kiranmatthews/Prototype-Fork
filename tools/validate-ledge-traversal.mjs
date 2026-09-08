@@ -744,7 +744,12 @@ try {
           input.moveX = 0;
           input.moveY = 0;
         }
+        const wasDead = player.state === "dead";
         player.step(CONST.fixedStep, input, level);
+        // This fixed-frame legacy take predates the extra corpse-viewing beat.
+        // Keep its input timestamps aligned; death timing has its own runtime test.
+        if (!wasDead && player.state === "dead")
+          player.respawnTimer = CONST.respawnDelay;
         level.update(CONST.fixedStep);
         if (checkpoints.has(frame)) rows.set(frame, capture(player));
         input.consumeEdges();
