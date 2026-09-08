@@ -711,7 +711,7 @@ export class GameFlowUI {
   private renderLaunch(): void {
     const card = element("div", "game-launch-card");
     const title = element("h1", "game-logo");
-    title.innerHTML = `<span>Boolie</span> <strong>Roo</strong>`;
+    title.innerHTML = `<span>BONEMAN</span>`;
     const menu = element("div", "game-menu-list");
     const actions: HTMLButtonElement[] = [];
     const continueSlot = this.campaign.continueSlot();
@@ -1662,7 +1662,7 @@ export class GameFlowUI {
       .game-eyebrow { color: #703315; font: 400 clamp(14px, 1.6vw, 21px)/1 Roo, Impact, sans-serif; letter-spacing: .12em; text-align: center; }
       .game-launch-card { width: min(520px, 90vw); padding: clamp(24px, 5vh, 48px) clamp(25px, 6vw, 64px) 24px; }
       .game-logo { margin: 5px 0 24px; display: grid; text-align: center; line-height: .72; filter: drop-shadow(0 6px 0 #68200e); }
-      .game-logo span { font-size: clamp(66px, 12vw, 122px); color: var(--game-yellow); -webkit-text-stroke: 4px #b83a13; paint-order: stroke fill; }
+      .game-logo span { font-size: clamp(36px, 8vw, 72px); color: var(--game-yellow); -webkit-text-stroke: 4px #b83a13; paint-order: stroke fill; }
       .game-logo strong { font-size: clamp(52px, 9vw, 90px); color: #ef4b2c; -webkit-text-stroke: 3px #651d12; paint-order: stroke fill; }
       .game-menu-list { display: flex; flex-direction: column; align-items: stretch; gap: 7px; }
       .game-menu-button { position: relative; min-height: 48px; border: 0; background: transparent; color: #63230e; font: 400 clamp(24px, 3.5vw, 38px)/1 Roo, Impact, sans-serif; letter-spacing: .035em; text-shadow: 0 2px 0 rgba(255,235,151,.6); cursor: none; pointer-events: auto; transition: none; transform: none; }

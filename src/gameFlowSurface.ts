@@ -318,8 +318,7 @@ export function snapshotGameFlowSurface(
     const text = (node.textContent ?? "").replace(/\s+/g, " ").trim();
     const measuredRect = rectFrom(node, origin);
     // Roo's Canvas2D middle baseline has a taller ascender than its CSS line
-    // box. Nudge the two logo rows together so BOARD does not climb back into
-    // the launch eyebrow after rasterisation.
+    // box. Keep the menu logo aligned with its CSS layout after rasterisation.
     const launchEyebrow = node.matches(".game-launch-card .game-eyebrow");
     const logoRow = node.matches(".game-logo > span, .game-logo > strong");
     const rect = measuredRect && (launchEyebrow || logoRow)
