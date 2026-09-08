@@ -85,7 +85,7 @@ try{
  for(const kind of JUNGLE_ASSET_KINDS)for(let i=0;i<2;i++)kit.add({dkind:kind,p:[0,0,-i*12]});
  kit.flush();await kit.ready();assert.deepEqual(kit.errors,[]);assert.equal(kit.diagnostics.ready,kit.diagnostics.placements);
  assert.ok(kit.diagnostics.placements>kit.diagnostics.components,'assemblies really expand into multiple modules');
- let lods=0;kit.root.traverse(o=>{if(o.isLOD)lods++;if(o.isMesh){assert.ok(o.geometry.userData.shared);if(o.userData.jungleAsset.startsWith('jungle')||o.userData.jungleAsset==='vine')assert.ok(o.customDepthMaterial);}});assert.ok(lods>5);
+ let lods=0;kit.root.traverse(o=>{if(o.isLOD)lods++;if(o.isMesh){assert.ok(o.geometry.userData.shared);if(JUNGLE_ASSETS[o.userData.jungleAsset]?.wind||o.userData.jungleAsset==='vine')assert.ok(o.customDepthMaterial);}});assert.ok(lods>5);
  kit.update(1/60);const time=kit.time.value;kit.update(0);assert.equal(kit.time.value,time);kit.update(1/60);assert.ok(kit.time.value>time);
  const m=jungleAssetMatrix({dkind:'stoneblock',p:[2,3,4],s:[2,1,1]});assert.deepEqual(new THREE.Vector3(0,1,0).applyMatrix4(m).toArray(),[2,4,4]);
  const late=new JungleAssetKit(false,false);late.add({dkind:'jungleleaf',p:[0,0,0]});late.dispose();await late.ready();assert.equal(late.root.children.length,0);

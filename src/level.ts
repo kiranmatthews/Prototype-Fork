@@ -719,6 +719,7 @@ export interface CustomComponent {
   speed?: number;
   foe?: EnemyKind; // enemy variant (grunt/spiker/turtle/charger/hopper/floater/sentry/spinner)
   invisible?: boolean; // wall/pit/ramp: collider or ride surface only; editor reveals a ghost
+  containment?: boolean; // wallpath: course boundary resolved after ordinary contacts; cannot be ridden or grabbed
   solid?: boolean; // wallpath: false makes a visual-only scenery sweep (earth banks/backdrops)
   cycle?: number;
   phase?: number;
@@ -2288,7 +2289,7 @@ const LEVEL_DATA_KEYS = new Set([
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
-  "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip",
+  "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "containment",
   "edgeGrinding", "len", "rise", "w", "yaw", "axis", "vkind", "arc", "deck",
   "closed", "bank", "curve", "vert", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid",
@@ -2625,7 +2626,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   const structureStyles = new Set(["light", "island", "beach"]);
   const textureKinds = new Set<string>(TEX_KINDS);
   const booleanKeys: (keyof CustomComponent)[] = [
-    "slip", "closed", "vert", "lit", "berms", "outline", "invisible",
+    "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "lk",
     "shoreProfile", "edgeGrinding", "trafficRoad", "doubleSided", "beachSand",
   ];
@@ -3475,6 +3476,7 @@ export class Level {
   currentSpawn = new THREE.Vector3(0, 0.1, 0); // last activated checkpoint
   activeCheckpoint: Checkpoint | null = null; // owns the respawn snapshot
   walls: THREE.Box3[] = []; // solid barriers: bump = full stop, never break
+  containmentWalls: THREE.Box3[] = []; // closed-course safety barriers; resolved together at corners
   vertBacks: THREE.Box3[] = []; // accepted analytic-pipe backing slabs
   vertBacksSkipped = 0; // exact swept-transition intersections rejected at build time
   private wallPathByBox = new Map<THREE.Box3, WallPathRuntime>();
@@ -11477,7 +11479,8 @@ export class Level {
     const jungleArt=jungleRuinsDressing(gx,gy);
     this.sceneryCaptureGroups=jungleArt.groups;
     for (const c of jungleArt.components) {
-      if (c.t === "wall" && c.s) {
+      if (c.t === "wallpath") this.buildBendyWall(c);
+      else if (c.t === "wall" && c.s) {
         this.buildBendyWall({t:"wallpath",p:[c.p[0],c.p[1],c.p[2]-c.s[2]/2],
           pts:[[0,0],[0,c.s[2]]],w:c.s[0],rise:c.s[1],collisionHeight:c.s[1],
           invisible:true,tex:"solid",nm:c.nm,grp:c.grp});
@@ -12140,6 +12143,7 @@ export class Level {
           transparent: true,
           opacity: 0.22,
           depthWrite: false,
+          wireframe: c.containment === true,
         })
       : new THREE.MeshLambertMaterial({
           color: c.color ? new THREE.Color(c.color) : 0x9a8a7a,
@@ -12168,7 +12172,7 @@ export class Level {
       built.closed,
     );
     for (const [index, box] of built.collision.entries()) {
-      this.walls.push(box);
+      (c.containment === true ? this.containmentWalls : this.walls).push(box);
       this.wallPathByBox.set(box, runtime);
       this.wallPathSegmentByBox.set(box, built.collisionSegments[index]);
     }

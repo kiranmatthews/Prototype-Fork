@@ -11,10 +11,13 @@ export interface JungleAssetSpec {
   file: string; label: string; size: readonly [number,number,number]; wind: boolean;
   normalStrength?: number; lod?: boolean;
   doubleSided?: boolean;
+  backdrop?: boolean;
 }
 const ASSETS = {
   ...JUNGLE_MODULES,
   ...JUNGLE_EDITOR_ASSETS,
+  junglecliff: {file:"",label:"jungle cliff face",size:[28,32,30],wind:false,backdrop:true},
+  junglebackdrop: {file:"",label:"outer jungle canopy",size:[42,44,40],wind:false,backdrop:true},
   jungleleaf: {file:"broadleaf",label:"jungle broadleaf",size:[4.2,2.6,4.2],wind:true},
   junglefern: {file:"fern",label:"jungle fern",size:[4.4,1.8,4],wind:true},
   junglepalmtree: {file:"palm",label:"jungle palm",size:[8.5,11,8.2],wind:true},
@@ -94,6 +97,26 @@ function finishGeometry(geometry:THREE.BufferGeometry,kind:RenderKind):THREE.Buf
 function loadTemplate(kind:RenderKind):Promise<Template> {
   const cached=templates.get(kind);if(cached)return cached;
   const spec=renderSpec(kind);
+  if(kind==="junglebackdrop") {
+    const pending=loadTemplate("junglecanopy").then(source=>({...source,
+      geometry:source.lodGeometry??source.geometry,lodGeometry:undefined}));
+    templates.set(kind,pending);return pending;
+  }
+  if(kind==="junglecliff") {
+    const geometry=new THREE.IcosahedronGeometry(1,1);
+    const pos=geometry.attributes.position,colors=new Float32Array(pos.count*3);
+    for(let i=0;i<pos.count;i++) {
+      const x=pos.getX(i),y=pos.getY(i),z=pos.getZ(i);
+      pos.setXYZ(i,x*(.9+.1*Math.cos(y*5))+.065*y,(y+1)*.5,z*(.9+.08*Math.sin(y*4+.7)));
+      new THREE.Color('#69816c').lerp(new THREE.Color('#a8b39c'),(y+1)*.5).toArray(colors,i*3);
+    }
+    geometry.computeBoundingBox();
+    const bounds=geometry.boundingBox!,size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
+    geometry.translate(-center.x,-bounds.min.y,-center.z);geometry.scale(1/size.x,1/size.y,1/size.z);
+    geometry.computeVertexNormals();geometry.setAttribute('color',new THREE.BufferAttribute(colors,3));
+    const pending=Promise.resolve({geometry:finishGeometry(geometry,kind),map:null});
+    templates.set(kind,pending);return pending;
+  }
   if(kind==="joint"||kind==="earth"||kind==="vine"||kind==="junglevine") {
     const geometry=kind==="joint"||kind==="earth"?new THREE.BoxGeometry(1,1,1).translate(0,.5,0):vineGeometry();
     const map=kind==="earth"?new THREE.TextureLoader().load(import.meta.env.BASE_URL+"jungle-kit/dirt.jpg"):null;
@@ -197,15 +220,17 @@ interface Bucket {kind:RenderKind;transforms:THREE.Matrix4[];colors:THREE.Color[
 export class JungleAssetKit {
   readonly root=new THREE.Group();readonly time={value:0};readonly errors:string[]=[];
   private buckets=new Map<string,Bucket>();private jobs:Promise<void>[]=[];
-  private materials=new Map<RenderKind,THREE.MeshStandardMaterial>();
+  private materials=new Map<RenderKind,THREE.MeshStandardMaterial|THREE.MeshLambertMaterial>();
   private depths=new Map<RenderKind,THREE.MeshDepthMaterial>();
   private loose=new Set<THREE.Group>();private disposed=false;
   private sourceCount=0;private count=0;private readyCount=0;private skipped=0;
   constructor(private batched:boolean,private lite:boolean,private depthFade=false){this.root.name="Jungle Ruins modular kit";}
-  private material(kind:RenderKind,template:Template):THREE.MeshStandardMaterial {
+  private material(kind:RenderKind,template:Template):THREE.MeshStandardMaterial|THREE.MeshLambertMaterial {
     const cached=this.materials.get(kind);if(cached)return cached;
     const spec=renderSpec(kind),isVine=kind==="vine"||kind==="junglevine";
-    const m=new THREE.MeshStandardMaterial({map:template.map,normalMap:template.normalMap??null,
+    const m=spec.backdrop?new THREE.MeshLambertMaterial({map:template.map,vertexColors:kind==="junglecliff",
+      emissive:kind==="junglecliff"?0x64765f:0x25462e,emissiveIntensity:kind==="junglecliff"?.35:.18,
+      side:kind==="junglebackdrop"?THREE.DoubleSide:THREE.FrontSide}):new THREE.MeshStandardMaterial({map:template.map,normalMap:template.normalMap??null,
       roughnessMap:template.roughnessMap??null,normalScale:new THREE.Vector2().setScalar(spec.normalStrength??.28),
       roughness:spec.lod ? .94 : .96,metalness:0,vertexColors:isVine,
       side:spec.wind||spec.doubleSided?THREE.DoubleSide:THREE.FrontSide});
@@ -217,8 +242,8 @@ export class JungleAssetKit {
   }
   private configure(mesh:THREE.Mesh,kind:RenderKind):void {
     const spec=renderSpec(kind);mesh.name=spec.label;mesh.userData.jungleAsset=kind;
-    mesh.castShadow=!this.lite&&kind!=="joint"&&kind!=="earth";
-    mesh.receiveShadow=!this.lite;
+    mesh.castShadow=!this.lite&&!spec.backdrop&&kind!=="joint"&&kind!=="earth";
+    mesh.receiveShadow=!this.lite&&!spec.backdrop;
     if(!spec.wind)return;
     let depth=this.depths.get(kind);
     if(!depth){
