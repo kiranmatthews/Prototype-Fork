@@ -30,7 +30,7 @@ try {
  const p=pad('Xbox');for(const action of Object.keys(INPUT_BINDINGS)){p.buttons.forEach(b=>b.pressed=false);p.buttons[INPUT_BINDINGS[action].button].pressed=true;assert.equal(actionButtonDown(p,action),true);}
  const map=await readFile(new URL('../src/worldMapUI.ts',import.meta.url),'utf8');
  assert.match(map,/createInputGlyph\(action\)/);assert.doesNotMatch(map,/actionButton\("[△□○⚙]/);assert.doesNotMatch(map,/button\.append\([^\n]*keyHint/);
- const surface=await readFile(new URL('../src/gameInterfaceSurface.ts',import.meta.url),'utf8');assert.match(surface,/paintInputPrompts\(ctx\)/);
+ const surface=await readFile(new URL('../src/gameInterfaceSurface.ts',import.meta.url),'utf8');assert.match(surface,/paintInputPrompts\(ctx(?:,|\))/);
  const input=await readFile(new URL('../src/input.ts',import.meta.url),'utf8');assert.match(input,/if \(!this.padOnly\) inputPrompts.update\(pad/,'P2 must not overwrite P1 prompt selection');
  console.log('PASS semantic prompt bindings, every asset path, five controller profiles, Switch positions, hot-plug fallback, raw-device safety, host adapters, and CRT wiring');
 } finally {await server.close()}

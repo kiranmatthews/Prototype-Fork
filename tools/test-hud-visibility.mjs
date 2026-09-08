@@ -170,6 +170,24 @@ const frame = (overrides = {}) => ({
 }
 
 {
+  const state = new hud.HudVisibilityState();
+  for (const [inventoryHeld, nowMs] of [[false,0],[true,100],[false,200],[true,300],[true,6_000_000]]) {
+    assert.deepEqual(state.update(frame({mode:"competition",inventoryHeld,nowMs})), {
+      showLife:true,showBonusTitle:false,showFruit:false,showBoxes:false,showEarnedRelics:false,showScore:true,
+    }, "competition must retain its avatar/SPECIAL and original score, even in extended overtime or after L2");
+  }
+  state.clearTransient();
+  assert.equal(state.update(frame({mode:"competition",inventoryHeld:true})).showScore,true,
+    "a bail/reset hid the competition score");
+  assert.equal(state.update(frame({inventoryHeld:true})).showScore,false,
+    "leaving competition while holding L2 opened the normal inventory");
+  const ui = await text('src/ui.ts');
+  assert.match(ui,/this.hudMode === "competition" \? this.hudMode/,"per-frame UI must retain competition mode");
+  const main = await text('src/main.ts');
+  assert.match(main,/ui.setLevel\(current.id, "competition"/,"Jungle Cup must use the competition HUD");
+}
+
+{
   const input = await text("src/input.ts");
   assert.match(input, /k\.has\(INPUT_BINDINGS.inventory.key\)/, "keyboard inventory binding is missing");
   assert.match(

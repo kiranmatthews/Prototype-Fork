@@ -3,7 +3,7 @@
  * Player; this class only decides which already-known values are on screen.
  */
 
-export type HudPresentationMode = "standard" | "bonus" | "hub";
+export type HudPresentationMode = "standard" | "bonus" | "hub" | "competition";
 
 export const HUD_FRUIT_POP_MS = 1_700;
 
@@ -72,6 +72,21 @@ export class HudVisibilityState {
         showBoxes: true,
         showEarnedRelics: false,
         showScore: false,
+      };
+    }
+
+    if (input.mode === "competition") {
+      // The avatar owns SPECIAL; keep it and the existing banked score visible
+      // for the entire run, including bails and final-combo overtime.
+      this.inventoryOpen = false;
+      this.inventoryWasHeld = input.inventoryHeld;
+      return {
+        showLife: true,
+        showBonusTitle: false,
+        showFruit: false,
+        showBoxes: false,
+        showEarnedRelics: false,
+        showScore: true,
       };
     }
 

@@ -211,7 +211,7 @@ export class UI {
     showScore: false,
   };
   private bonusMode = false;
-  private hudMode: "standard" | "bonus" | "hub" = "standard";
+  private hudMode: "standard" | "bonus" | "hub" | "competition" = "standard";
   private hudBonusExitTimer: number | null = null;
   // Score cash-in keeps the arcade chase; live timed combo awards use a
   // constant-rate buffer so quarter-second gameplay packets read continuously.
@@ -1421,7 +1421,7 @@ export class UI {
       this.hudVisibility.reset(s.fruitCollectionRevision, s.inventoryHeld);
     }
     let nextVisibility = this.hudVisibility.update({
-      mode: this.hudMode === "hub" ? "hub" : s.bonusMode ? "bonus" : "standard",
+      mode: this.hudMode === "hub" || this.hudMode === "competition" ? this.hudMode : s.bonusMode ? "bonus" : "standard",
       fruitCollectionRevision: s.fruitCollectionRevision,
       inventoryHeld: s.inventoryHeld,
       hasEarnedRelic: s.hasCrystal || s.hasGem || s.hasComboGem,
@@ -1669,7 +1669,7 @@ export class UI {
 
   setLevel(
     id: string,
-    hudMode: "standard" | "bonus" | "hub" = "standard",
+    hudMode: "standard" | "bonus" | "hub" | "competition" = "standard",
     fruitCollectionRevision = 0,
     inventoryHeld = false,
   ): void {

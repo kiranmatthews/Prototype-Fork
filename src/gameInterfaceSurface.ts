@@ -4,14 +4,15 @@ import * as THREE from "three";
 import { GameHudSurface } from "./gameHudSurface";
 import { paintSilverSecondaryText } from "./secondaryText";
 import { paintInputPrompts } from "./inputPromptUI";
+import type { CompetitionPresentation } from "./competition/presentation";
 
-const INK = ".world-map-ui, .tc-zone, .tc-pause, .game-cartoon-cursor, .game-transition-curtain, .input-glyph, .input-prompt-row";
+const INK = ".world-map-ui, .tc-zone, .tc-pause, .game-cartoon-cursor, .game-transition-curtain, .input-glyph, .input-prompt-row, .competition-host";
 
 export class GameInterfaceSurface {
   private surface: GameHudSurface | null = null;
   private composited = false;
   private cursorDrawn = false;
-  constructor() {
+  constructor(private competition?: CompetitionPresentation) {
     const style = document.createElement("style");
     // Filter opacity preserves source CSS opacity (including fades), layout,
     // pointer capture and hit testing. Never hide via display/visibility here.
@@ -21,8 +22,9 @@ export class GameInterfaceSurface {
   setComposited(value: boolean): void {
     this.composited = value;
     document.body.classList.toggle("game-interface-composited", value);
+    this.competition?.setComposited(value);
   }
-  get diagnostics() { return { composited: this.composited, cursorDrawn: this.cursorDrawn, surface: this.surface?.diagnostics ?? null }; }
+  get diagnostics() { return { composited: this.composited, cursorDrawn: this.cursorDrawn, competition: this.competition?.diagnostics ?? null, surface: this.surface?.diagnostics ?? null }; }
   draw(renderer: THREE.WebGLRenderer, size: { width: number; height: number }, target: THREE.WebGLRenderTarget | null): void {
     this.cursorDrawn = false;
     // Ordinary desktop gameplay has no map/touch/cursor ink. Do not upload
@@ -32,7 +34,8 @@ export class GameInterfaceSurface {
     this.surface.render(renderer, size, { drawExtra: ctx => {
       this.cursorDrawn = false;
       ctx.scale(size.width / window.innerWidth, size.height / window.innerHeight);
-      this.paintMap(ctx); this.paintTouch(ctx); paintInputPrompts(ctx); this.paintCursor(ctx); this.paintCurtain(ctx);
+      this.paintMap(ctx); this.paintTouch(ctx); this.competition?.paint(ctx,size);
+      paintInputPrompts(ctx,document,'.competition-host'); this.paintCursor(ctx); this.paintCurtain(ctx);
     } }, target);
   }
 

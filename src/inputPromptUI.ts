@@ -72,8 +72,9 @@ function opacityOf(element: HTMLElement): number {
   return opacity;
 }
 /** CSS-pixel coordinates in the shared pre-CRT interface renderer. */
-export function paintInputPrompts(ctx: CanvasRenderingContext2D): void {
-  for(const host of document.querySelectorAll<HTMLElement>('.input-glyph')){
+export function paintInputPrompts(ctx: CanvasRenderingContext2D, scope: ParentNode = document, exclude?: string): void {
+  for(const host of scope.querySelectorAll<HTMLElement>('.input-glyph')){
+    if(exclude&&host.closest(exclude))continue;
     const opacity=opacityOf(host);if(opacity<.001)continue;
     const rect=host.getBoundingClientRect();if(rect.width<1||rect.height<1)continue;
     const glyph=inputPrompts.resolve(host.dataset.inputAction as InputAction);if(!glyph)continue;
@@ -82,7 +83,8 @@ export function paintInputPrompts(ctx: CanvasRenderingContext2D): void {
     else {ctx.fillStyle='#292929';ctx.beginPath();ctx.roundRect(rect.x+2,rect.y+2,rect.width-4,rect.height-4,rect.height/4);ctx.fill();ctx.fillStyle='#fff';ctx.font=`700 ${Math.max(8,rect.height*.28)}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(glyph.label,rect.x+rect.width/2,rect.y+rect.height/2,rect.width-6);}
     ctx.restore();
   }
-  for(const word of document.querySelectorAll<HTMLElement>('[data-prompt-word]')){
+  for(const word of scope.querySelectorAll<HTMLElement>('[data-prompt-word]')){
+    if(exclude&&word.closest(exclude))continue;
     const opacity=opacityOf(word);if(opacity<.001)continue;
     const rect=word.getBoundingClientRect(),style=getComputedStyle(word);
     ctx.save();ctx.globalAlpha*=opacity;ctx.font=`${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;ctx.fillStyle=style.color;ctx.textBaseline='middle';ctx.textAlign='left';ctx.fillText((word.textContent??'').trimEnd(),rect.x,rect.y+rect.height/2,rect.width);ctx.restore();

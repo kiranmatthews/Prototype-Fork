@@ -1267,7 +1267,7 @@ input2.rival = input;
 const ui = new UI();
 let competition: JungleCupEvent | null = null;
 const competitionUI = new CompetitionPresentation(handleCompetitionAction);
-const gameInterface = new GameInterfaceSurface();
+const gameInterface = new GameInterfaceSurface(competitionUI);
 const campaign = new CampaignStore();
 let worldMapController: WorldMapController | null = null;
 let worldMapUI: WorldMapUI | null = null;
@@ -2238,7 +2238,7 @@ function syncCompetitionLevel(editing = false): void {
   competition = player.competitionMode ? new JungleCupEvent() : null;
   competitionUI.render(competition, gameFlow.blocksGameplay || editing);
   if (competition) {
-    ui.setLevel(current.id, "hub", player.fruitCollectionRevision, input.inventoryHeld);
+    ui.setLevel(current.id, "competition", player.fruitCollectionRevision, input.inventoryHeld);
   }
 }
 
@@ -4505,7 +4505,9 @@ function frame(nowMs: number): void {
       else { camera.position.set(90, 85, 54); camera.lookAt(0, 1, -46); }
       sky.position.copy(camera.position); skyMist.position.copy(camera.position);
       updateSunShadow(0, 0, -35);
-      renderGameplayScene(dt, true, false);
+      // Keep the avatar/score in the same pass too: otherwise their fallback
+      // DOM ink would sit above the competition card and bypass CRT.
+      renderGameplayScene(dt, true, true);
       return;
     }
   }
