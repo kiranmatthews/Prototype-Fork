@@ -1,13 +1,21 @@
-"""Reuse the existing KTX2 + JPEG fallback GLB packer; separate map manifest."""
-import importlib.util
+"""Record the measured, closed clay meshes; never re-publish retired raw models."""
+import hashlib
 import json
+import struct
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
-spec=importlib.util.spec_from_file_location('pack_modular',ROOT/'tools/jungle-kit/pack_modular.py')
-engine=importlib.util.module_from_spec(spec);spec.loader.exec_module(engine)
-engine.WORK=ROOT/'.img2threejs/map-kit';engine.OUT=ROOT/'public/map-kit';engine.OUT.mkdir(parents=True,exist_ok=True)
-specs=[s for s in json.loads((ROOT/'tools/map-kit/module-specs.json').read_text()) if not s.get('rejected')]
-report=[engine.pack(s) for s in specs]
-assert all(0<r['triangles']<15000 and r['lodTriangles']<r['triangles'] for r in report)
-(engine.OUT/'manifest.json').write_text(json.dumps(report,indent=2)+'\n')
+OUT=ROOT/'public/map-kit'
+audit=json.loads((ROOT/'tools/map-kit/clay-geometry-audit.json').read_text())
+report=[]
+for row in audit:
+    raw=(OUT/(row['file']+'.glb')).read_bytes()
+    length=struct.unpack_from('<I',raw,12)[0];gltf=json.loads(raw[20:20+length])
+    counts=[sum(gltf['accessors'][p['indices']]['count']//3 for p in mesh['primitives']) for mesh in gltf['meshes']]
+    assert counts==[row['near']['triangles'],row['far']['triangles']]
+    assert all(0<n<15000 for n in counts)
+    assert not gltf.get('textures') and all(not m.get('doubleSided',False) for m in gltf['materials'])
+    report.append({'file':row['file'],'size':row['size'],'triangles':counts[0],'lodTriangles':counts[1],
+        'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest(),'colour':'opaque vertex colour','textures':0,
+        'closedSolid':True,'nearTopology':row['near'],'farTopology':row['far']})
+(OUT/'manifest.json').write_text(json.dumps(report,indent=2)+'\n')
 print(json.dumps(report,indent=2))

@@ -13,6 +13,9 @@ engine.LEDGER=ROOT/'tools/map-kit/tasks.json'
 engine.REFERENCES=ROOT/'tools/map-kit/references'
 brief=json.loads((ROOT/'tools/map-kit/brief.json').read_text())
 engine.SPECS={a['name']:(a['name']+'.png',a['triangles']) for a in brief['assets']}
+clay_brief=ROOT/'tools/map-kit/clay-brief.json'
+if clay_brief.exists():
+    engine.SPECS.update({a['name']:(a['name']+'.png',a['triangles']) for a in json.loads(clay_brief.read_text())['assets']})
 if not engine.LEDGER.exists():
     engine.save({'budget':brief['budgetCredits'],'startingBalance':brief['startingBalance'],'reservedCredits':0,'tasks':{}})
 if sys.argv[1]=='fetch':

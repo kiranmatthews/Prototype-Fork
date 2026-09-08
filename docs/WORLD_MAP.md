@@ -19,11 +19,17 @@ replay, and tooling compatibility. Its runtime is the fixed-rail island map in
   screen widths. `mapTopography.ts` supplies the caldera, ridged flanks, valleys
   and island-specific minimum footprint; the camera follows the selected hub
   instead of zooming out to fit the whole island. Island 2 is separated farther
-  east and has its own connected highlands and coastal arch.
-- Three individual sub-7k Meshy rock assets decorate the procedural landforms;
-  no generated island monolith is used. Forests reuse the existing clean canopy
-  and palm assets. The rejected noisy tree is neither shipped nor in the catalog.
-  See `public/map-kit/README.md` for geometry/texture budgets, prompts and costs.
+  east and has its own connected highlands and coastal outcrops.
+- Two clay-style Meshy modules replace the perforated imported rocks. Their
+  repaired exported meshes are single genus-zero solids at both detail levels,
+  with opaque vertex colours and no texture pattern. Broad terraced landforms
+  provide the backing; module bases are embedded in the actual terrain.
+- Map trees, palms and understory are now code-owned closed forms with 3–9
+  large solid leaves per plant. Neither the imported canopy/palm models nor
+  cutout foliage are used by this map. Other levels' scenery is unchanged.
+  See `public/map-kit/README.md` for geometry audits, prompts and costs.
+- Waterfalls and their pool pieces are removed. The ocean and crater lake
+  remain; no replacement waterfall system has been added.
 - Dense land ray queries use the existing BVH adapter. Nearby terrain is graded
   beneath walking paths and same-island board rails, including the upper branch.
   Shared instanced geometry, wind, near/far meshes and map-owned disposal keep

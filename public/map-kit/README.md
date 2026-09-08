@@ -1,55 +1,71 @@
-# Modular island-map landscape kit
+# Solid clay island-map kit
 
-Three original Meshy T2 rock modules, generated and textured individually from
-original built-in image-generation concepts. No whole-island model is used.
+The map no longer renders the perforated imported canopy trees, the original
+three rock GLBs, the painted cliff pattern, or any waterfall strips/pools.
+The ocean shader/tuning and crater lake are unchanged. Other levels' scenery
+has not been replaced.
 
-| Module | Near triangles | Far triangles |
-| --- | ---: | ---: |
-| Cliff buttress | 6,494 | 1,428 |
-| Ridge spine | 6,709 | 1,475 |
-| Sea arch | 6,630 | 1,657 |
+## Rock modules
 
-Each asset is below the requested 15,000-triangle ceiling, including both LODs.
-The three GLBs total 5.19 MiB. They have shared near/far materials, 2048² KTX2
-albedo with mipmaps, 1024² JPEG fallback, 512² normals and 256² roughness.
-The manifest records sizes, triangle counts and SHA-256 hashes. They reuse the
-existing renderer, texture transcoder, spatially culled instancing and loading
-transition. The assets are also available through the existing scenery catalog.
+Two new individual Meshy T2 cliff pieces were generated from original clay-style
+reference images using the built-in image-generation workflow. Their raw meshes
+were **not** considered shippable: the buttress had 69 boundary edges and the
+terrace had 181. Offline voxel union, bounded morphological closing, removal of
+tiny disconnected repair fragments, and a colour bake produce closed solids.
 
-The noisy rainforest-tree experiment was rejected by the user. It is absent
-from this directory and the runtime/catalog. The map instead reuses the game's
-established clean canopy and palm assets, with restrained density, root embedding
-on slopes and the existing wind deformation/shadow system. No replacement tree
-generation was charged.
+| Module | Near triangles | Far triangles | Topology at both levels |
+| --- | ---: | ---: | --- |
+| Clay buttress | 6,500 | 1,950 | One component, no boundary edges, genus zero |
+| Clay terrace | 6,494 | 1,948 | One component, no boundary edges, genus zero |
 
-Meshy spending for this brief: **60 / 300 credits**—45 for the three selected
-rocks and 15 for the rejected tree. Account balance was verified at 2,211 before
-submissions and 2,151 afterward. There were no retries or additional Meshy calls.
-The budget ledger includes rejected work rather than hiding its cost.
+Both assets together transfer about 400 KiB. Their broad clay colours are baked
+to vertices; there are no runtime image textures or alpha masks. The actual
+exported GLB buffers are independently checked for duplicate/degenerate faces,
+edge counts, opposite winding, connectivity, Euler characteristic and positive
+volume. Materials use opaque front-face rendering, not double-sided camouflage.
+The modules are seated into the island surface and kept clear of foliage.
 
-Authoring sources and full prompts:
+## Foliage
 
-- `tools/map-kit/brief.json`: original concept prompt set and invariants.
-- `tools/map-kit/cliff-texture-prompt.json`: built-in image-generation prompt for
-  the low-contrast painted cliff albedo (1024² JPEG runtime copy).
-- `tools/map-kit/references/`: selected original concept images.
-- `tools/map-kit/tasks.json`: provider task IDs and credit accounting.
-- `tools/map-kit/module-specs.json`: fitted dimensions, LOD ratios and rejection.
+`src/mapClayGeometry.ts` creates the map's trees, palms, banana plants and
+understory directly in code. Each plant has **3–9 large, thick, closed leaves**,
+plus closed trunks/branches and roots. Palm crowns have three solid coconuts.
+The lower-detail versions preserve all leaf silhouettes and thickness instead
+of decimating them into cutouts. Leaf flex weights keep trunks and attachments
+stable; the established renderer applies gentle movement to the leaf bodies.
 
-The small map adapter reuses `tools/jungle-kit/generate.py` and its official
-Meshy CLI fetching workflow. Blender fitting uses the existing
-`bake_modular.py -- --spec tools/map-kit/module-specs.json` with
-`JUNGLE_ASSET_WORK` pointing to the local `.img2threejs/map-kit` directory.
-`tools/map-kit/pack.py` reuses the original KTX2/fallback packer. Raw signed
-responses and rejected binaries remain local/ignored, never in the game bundle.
+All components pass the same closed-edge/winding/volume tests at both detail
+levels. Existing instancing, spatial culling, loading and disposal are reused.
+The native arch remains an optional closed scenery asset; the old damaged sea
+arches in the default map were replaced by the new rock outcrops.
 
-Island landforms are procedural: a closed caldera, ridged flanks, valleys,
-terraces, slope-coloured/tiled cliffs and sand edges. First-island dry width was
-measured at 201.56 m, approximately **2.75 screen widths** at the normal 16:9 map
-camera. The camera pans with the selected node without widening its normal zoom.
-The ocean shader and all ocean/outline tuner values are unchanged; its existing
-surface was extended laterally to cover the enlarged world without an edge gap.
+## Landscape
 
-Validation includes per-asset budgets/hashes/LODs, rejection exclusion, renderer
-lifecycle, actual terrain support below routes, closed shoreline samples, graph
-navigation/return focus, editor migration and desktop/touch screenshots.
+The mainland shape uses large rounded polygonal cliff planes and deliberate
+terraces, rather than smooth Gaussian mounds with a rock image pasted on.
+Terrain around navigation is graded, including its centre triangle fan; an
+uncut centre vertex must never form a spike through a route. Map size, stable
+progress keys, Left/Right traversal and vertical branches are preserved.
+
+Waterfalls and their pool pieces have been removed as requested. No substitute
+waterfalls, source streams or new pools have been added.
+
+## Authoring and costs
+
+This revision used **30 Meshy credits**, bringing this map brief to **90/300**
+including the earlier 60 credits of rejected work. No new tree generation was
+charged. Raw provider responses and retired binaries remain local/ignored;
+historical shipped files are recoverable through Git.
+
+- `tools/map-kit/clay-brief.json`: complete built-in image-generation prompts.
+- `tools/map-kit/references/clay-buttress.png` and `clay-terrace.png`: references.
+- `tools/map-kit/tasks.json`: task IDs and cumulative credit accounting.
+- `tools/map-kit/repair_clay.py`: closed-solid repair and colour bake.
+- `tools/map-kit/clay-geometry-audit.json`: before/after topology measurements.
+- `tools/map-kit/pack.py`: validates the repaired outputs and records their hashes.
+- `tools/map-kit/clay-review.html`: close-up browser review of individual pieces.
+- `tools/mesh-topology.mjs`: independent audit of render buffers.
+
+Rebuild the models with Blender in background mode running `repair_clay.py`,
+then run `pack.py`. The existing official Meshy CLI adapter submits/fetches only
+the recorded tasks. Regeneration is never implicit.

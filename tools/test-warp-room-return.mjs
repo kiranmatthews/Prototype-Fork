@@ -527,9 +527,9 @@ try {
     const node=warpLevel.campaignWorldMap.nodeByKey.get(definition.progressKey);
     assert.equal('lock' in node,false);assert.equal('rewards' in node,false);
   }
-  const leafyGrove=warpLevel.root.getObjectByName("tropical birdofparadise grove");
-  assert.ok(leafyGrove,"map foliage was removed with its colourful blooms");
-  assert.deepEqual(leafyGrove.children.map(mesh=>mesh.userData.plantPart),["trunk","leaf"]);
+  assert.ok(warpLevel.campaignWorldMap.scenery.diagnostics.placements>100,'map lost its solid foliage dressing');
+  assert.ok(!mapNames.some(name=>name.includes('waterfall')),'removed waterfalls returned');
+  assert.ok(!mapNames.includes('jungle canopy tree'),'perforated imported trees returned');
   assert.equal(routeDashes.length, CAMPAIGN_MAP_EDGES.length);
   for (const route of routeDashes) {
     route.geometry.computeBoundingBox();

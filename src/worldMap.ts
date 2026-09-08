@@ -14,7 +14,6 @@ import {
 import { CoastWater } from "./water";
 import { createUnitySandMaterial, applyUnitySandMetricUvs } from "./unitySandMaterial";
 import { createIslandShoreFoam, type IslandShoreFoam } from "./islandShoreFoam";
-import { TropicalPlantKit, TROPICAL_PLANT_KINDS, type TropicalPlantKind } from "./tropicalPlants";
 import { createMapOceanDefaults } from "./mapOceanPreset";
 import { MAP_OUTLINE_BASE_WIDTH_METRES } from "./mapIslandOutline";
 import { oceanTuning } from "./oceanTuning";
@@ -57,11 +56,6 @@ interface MapEdgeVisual {
   unlocked: boolean;
 }
 
-interface MapWaterfallRibbon {
-  mesh: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>;
-  baseX: number;
-  phase: number;
-}
 
 export interface CampaignWorldMapBuild {
   runtime: CampaignWorldMapRuntime;
@@ -126,7 +120,7 @@ function islandGeometry(
   landscape?: {id:CampaignIslandId;x:number;z:number},
 ): THREE.BufferGeometry {
   const segments = landscape ? 256 : MAP_COAST_SEGMENTS;
-  const rings = landscape ? 96 : 36;
+  const rings = landscape ? 128 : 36;
   const outline = organicIslandOutline(segments, seed);
   const positions: number[] = [];
   const colors: number[] = [];
@@ -182,11 +176,14 @@ function islandGeometry(
     }
   }
   const centre = positions.length / 3;
-  positions.push(0, landscape ? 1.15+mapReliefHeight(landscape.x,landscape.z,landscape.id) : 1.15, 0);
+  const lastRing = (rings - 1) * segments;
+  let centreY=0;for(let i=0;i<segments;i++)centreY+=positions[(lastRing+i)*3+1]/segments;
+  // The centre must use the already graded terrain, not an uncut peak that
+  // would turn the final triangle fan into a spike beside a route.
+  positions.push(0, centreY, 0);
   const top = new THREE.Color(0x6fa45d);
   colors.push(top.r, top.g, top.b);
   sandBlend.push(0);
-  const lastRing = (rings - 1) * segments;
   for (let index = 0; index < segments; index++) {
     indices.push(lastRing + index, centre, lastRing + ((index + 1) % segments));
   }
@@ -203,9 +200,9 @@ function islandGeometry(
     for(let i=0;i<position.count;i++) {
       const y=position.getY(i),steep=1-THREE.MathUtils.smoothstep(normals.getY(i),.48,.82);
       if(y<2.5||steep<.001)continue;
-      const stratum=.5+.28*Math.sin(y*.85+position.getX(i)*.06);
+      const stratum=THREE.MathUtils.clamp(.22+y*.013+normals.getX(i)*.08,0,1);
       rockBlend[i]=steep;
-      const rock=mixColor(0x5e6963,0xc0a875,stratum);
+      const rock=mixColor(0x5c716a,0xafb49a,stratum);
       const base=new THREE.Color().fromBufferAttribute(color,i).lerp(rock,steep*.88);
       color.setXYZ(i,base.r,base.g,base.b);
     }
@@ -311,13 +308,7 @@ function bindBeachCoordinates(
   return coast;
 }
 
-let mapRockTexture:THREE.Texture|null=null;
 function mapSandMaterial(beachTime:{value:number}): THREE.MeshStandardMaterial {
-  if(!mapRockTexture){
-    mapRockTexture=new THREE.TextureLoader().load(import.meta.env.BASE_URL+'map-kit/cliff-albedo.jpg');
-    mapRockTexture.colorSpace=THREE.SRGBColorSpace;mapRockTexture.wrapS=mapRockTexture.wrapT=THREE.RepeatWrapping;
-    mapRockTexture.anisotropy=8;mapRockTexture.userData.shared=true;
-  }
   const owner = createUnitySandMaterial({name:"World map fine sand and pebbles"});
   const material = owner.material;
   material.vertexColors = true;
@@ -331,12 +322,11 @@ function mapSandMaterial(beachTime:{value:number}): THREE.MeshStandardMaterial {
   }
   material.onBeforeCompile = (shader) => {
     shader.uniforms.uMapBeachTime=beachTime;
-    shader.uniforms.uMapRock={value:mapRockTexture};
-    shader.vertexShader='attribute float aRockBlend; varying float vMapRock; varying vec3 vMapRockPos; varying float vMapRockX;\n'+shader.vertexShader;
-    shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvMapRock=aRockBlend; vMapRockPos=position; vMapRockX=abs(normal.x)/max(.001,abs(normal.x)+abs(normal.z));');
+    shader.vertexShader='attribute float aRockBlend; varying float vMapRock;\n'+shader.vertexShader;
+    shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvMapRock=aRockBlend;');
     shader.vertexShader = "attribute float aSandBlend;\nattribute vec2 aMapBeach;\nvarying vec2 vMapBeach;\nvarying float vMapSand;\n" +
       shader.vertexShader.replace("#include <begin_vertex>", "#include <begin_vertex>\nvMapSand = aSandBlend;\nvMapBeach = aMapBeach;");
-    shader.fragmentShader = "uniform sampler2D uMapRock; varying float vMapRock; varying vec3 vMapRockPos; varying float vMapRockX;\nuniform float uMapBeachTime;\nvarying vec2 vMapBeach;\nvarying float vMapSand;\n" + shader.fragmentShader
+    shader.fragmentShader = "varying float vMapRock;\nuniform float uMapBeachTime;\nvarying vec2 vMapBeach;\nvarying float vMapSand;\n" + shader.fragmentShader
       .replace("#include <map_fragment>", `
         float mapLap = 0.5 + 0.5 * sin(uMapBeachTime * 1.130973 + vMapBeach.y);
         float mapLapFront = 0.35 + pow(mapLap, 1.5) * 1.45;
@@ -348,14 +338,11 @@ function mapSandMaterial(beachTime:{value:number}): THREE.MeshStandardMaterial {
           float sandDetail = dot(sandSample, vec3(0.2126, 0.7152, 0.0722)) * 1.72;
           diffuseColor.rgb *= mix(vec3(1.0), vec3(clamp(sandDetail, 0.66, 1.36)), vMapSand * 0.88);
         #endif
-        if(vMapRock>.01){
-          vec3 stone=mix(texture2D(uMapRock,vMapRockPos.xy*.16).rgb,texture2D(uMapRock,vMapRockPos.zy*.16).rgb,vMapRockX);
-          diffuseColor.rgb*=mix(vec3(1.0),clamp(stone*2.8,vec3(.65),vec3(1.3)),vMapRock*.7);
-        }
         diffuseColor.rgb *= mix(vec3(1.0), vec3(0.52, 0.63, 0.68), mapWetness * 0.82);
       `)
       .replace("#include <roughnessmap_fragment>", `
         #include <roughnessmap_fragment>
+        roughnessFactor = mix(roughnessFactor, 0.74, vMapRock);
         roughnessFactor = mix(roughnessFactor, 0.17, mapWetness);
       `)
       .replace("#include <normal_fragment_maps>", `
@@ -368,115 +355,10 @@ function mapSandMaterial(beachTime:{value:number}): THREE.MeshStandardMaterial {
         "mix(1.0, texture2D( aoMap, vAoMapUv ).g, vMapSand)",
       ));
   };
-  material.customProgramCacheKey = () => "world-map-landscape-cliff-and-wet-sand-v3";
+  material.customProgramCacheKey = () => "world-map-sculpted-clay-and-wet-sand-v4";
   return material;
 }
 
-function mountainGeometry(radius: number, height: number, seed: number): THREE.BufferGeometry {
-  const random = seeded(seed * 1879);
-  const segments = 64;
-  const rings = 36;
-  const phase = random() * Math.PI * 2;
-  const profile = [1, 0.98, 0.84, 0.85, 0.65, 0.66, 0.5, 0.48, 0.34, 0.27, 0.045];
-  const positions: number[] = [];
-  const colors: number[] = [];
-  const indices: number[] = [];
-  for (let ring = 0; ring <= rings; ring++) {
-    const t = ring / rings;
-    const profileT = t * (profile.length - 1);
-    const band = Math.min(profile.length - 2, Math.floor(profileT));
-    const taper = THREE.MathUtils.lerp(
-      profile[band], profile[band + 1],
-      THREE.MathUtils.smoothstep(profileT - band, 0, 1),
-    );
-    const centreX = Math.sin(t * 3.7 + phase) * radius * 0.2 * t;
-    const centreZ = Math.cos(t * 4 + phase) * radius * 0.14 * t;
-    const color = t < 0.25
-      ? mixColor(0x557953, 0x82968e, t / 0.25)
-      : mixColor(0x82968e, 0xb9b49d, (t - 0.25) / 0.75);
-    for (let index = 0; index < segments; index++) {
-      const angle = (index / segments) * Math.PI * 2;
-      const ridge = 1 + Math.sin(angle * 5 + phase) * 0.09 +
-        Math.sin(angle * 3 - phase + t * 3.8) * 0.07 +
-        Math.sin(angle * 9 + t * 5) * 0.022;
-      const faceLight = 0.9 + Math.sin(angle * 5 + phase) * 0.07;
-      positions.push(
-        centreX + Math.cos(angle) * radius * taper * ridge,
-        t * height + Math.sin(angle * 3 + phase) * Math.sin(t * Math.PI) * height * 0.018,
-        centreZ + Math.sin(angle) * radius * taper * ridge,
-      );
-      colors.push(
-        Math.min(1, color.r * faceLight),
-        Math.min(1, color.g * faceLight),
-        Math.min(1, color.b * faceLight),
-      );
-    }
-  }
-  for (let ring = 0; ring < rings; ring++) {
-    for (let index = 0; index < segments; index++) {
-      const next = (index + 1) % segments;
-      const a = ring * segments + index;
-      const b = ring * segments + next;
-      const c = (ring + 1) * segments + index;
-      const d = (ring + 1) * segments + next;
-      indices.push(a, c, b, b, c, d);
-    }
-  }
-  const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
-  geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
-  geometry.setIndex(indices);
-  geometry.computeVertexNormals();
-  geometry.computeBoundingSphere();
-  return geometry;
-}
-
-function palmFrondGeometry(): THREE.BufferGeometry {
-  const positions: number[] = [];
-  const colors: number[] = [];
-  const indices: number[] = [];
-  const segments = 18;
-  for (let index = 0; index <= segments; index++) {
-    const t = index / segments;
-    const width = Math.pow(Math.sin(t * Math.PI), 0.68) * 0.68 * (index % 2 ? 0.89 : 1);
-    const z = t * 3.7;
-    const y = Math.sin(t * Math.PI) * 0.9 - t * t * 1.05;
-    for (const side of [-1, 0, 1]) {
-      positions.push(side * width, y + (side === 0 ? width * 0.24 : 0), z);
-      const color = mixColor(0x296c4e, 0x84ba5c, Math.sin(t * Math.PI * 0.85) * 0.8 + (side === 0 ? 0.15 : 0));
-      colors.push(color.r, color.g, color.b);
-    }
-  }
-  for (let index = 0; index < segments; index++) {
-    for (let side = 0; side < 2; side++) {
-      const a = index * 3 + side;
-      indices.push(a, a + 3, a + 1, a + 1, a + 3, a + 4);
-    }
-  }
-  const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
-  geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
-  geometry.setIndex(indices);
-  geometry.computeVertexNormals();
-  return geometry;
-}
-
-function palmTrunkGeometry(): THREE.BufferGeometry {
-  const geometry = new THREE.CylinderGeometry(0.14, 0.29, 4.7, 12, 22);
-  geometry.translate(0, 2.35, 0);
-  const points = geometry.getAttribute("position");
-  const colors: number[] = [];
-  for (let i = 0; i < points.count; i++) {
-    const t = points.getY(i) / 4.7;
-    points.setX(i, points.getX(i) + 0.85 * t * t - Math.sin(t * Math.PI) * 0.2);
-    const rib = Math.cos(t * Math.PI * 38) * 0.08;
-    const color = mixColor(0x8d6044, 0xdbb878, THREE.MathUtils.clamp(t * 0.7 + 0.18 + rib, 0, 1));
-    colors.push(color.r, color.g, color.b);
-  }
-  geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
-  geometry.computeVertexNormals();
-  return geometry;
-}
 
 function rockGeometry(): THREE.BufferGeometry {
   const geometry = new THREE.DodecahedronGeometry(1, 0);
@@ -494,117 +376,7 @@ function rockGeometry(): THREE.BufferGeometry {
   return geometry;
 }
 
-function waterfallTexture(seed: number): THREE.DataTexture {
-  const width = 64, height = 256;
-  const data = new Uint8Array(width * height * 4);
-  const random = seeded(seed);
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-      const edge = Math.pow(Math.sin(x / (width - 1) * Math.PI), 0.7);
-      const streak = Math.pow(Math.max(0, Math.sin(x * 1.2 + Math.sin(y * 0.04) * 0.6)), 8);
-      const pulse = 0.74 + Math.sin(y / height * Math.PI * 8 + x * 0.12) * 0.2;
-      const i = (y * width + x) * 4;
-      data[i] = 205 + Math.floor(streak * 50);
-      data[i + 1] = 242;
-      data[i + 2] = 255;
-      data[i + 3] = Math.floor(edge * (0.24 + streak * 0.62 + random() * 0.09) * pulse * 255);
-    }
-  }
-  const texture = new THREE.DataTexture(data, width, height, THREE.RGBAFormat);
-  texture.wrapT = THREE.RepeatWrapping;
-  texture.magFilter = THREE.LinearFilter;
-  texture.minFilter = THREE.LinearFilter;
-  texture.colorSpace = THREE.SRGBColorSpace;
-  texture.needsUpdate = true;
-  return texture;
-}
 
-function makePalmBatches(root: THREE.Group): {
-  trunks: THREE.InstancedMesh;
-  fronds: THREE.InstancedMesh;
-  coconuts: THREE.InstancedMesh;
-  trunkIndex: number;
-  frondIndex: number;
-  coconutIndex: number;
-} {
-  const trunks = new THREE.InstancedMesh(
-    palmTrunkGeometry(),
-    new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.86 }),
-    96,
-  );
-  const fronds = new THREE.InstancedMesh(
-    palmFrondGeometry(),
-    new THREE.MeshStandardMaterial({
-      vertexColors: true,
-      roughness: 0.68,
-      side: THREE.DoubleSide,
-    }),
-    96 * 8,
-  );
-  const coconuts = new THREE.InstancedMesh(
-    new THREE.IcosahedronGeometry(0.18, 1),
-    new THREE.MeshStandardMaterial({ color: 0x6e492e, roughness: 0.9 }),
-    96 * 3,
-  );
-  trunks.name = "world map palms";
-  fronds.name = "world map palm fronds";
-  coconuts.name = "world map coconuts";
-  root.add(trunks, fronds, coconuts);
-  return {
-    trunks,
-    fronds,
-    coconuts,
-    trunkIndex: 0,
-    frondIndex: 0,
-    coconutIndex: 0,
-  };
-}
-
-function addPalm(
-  batches: ReturnType<typeof makePalmBatches>,
-  x: number,
-  y: number,
-  z: number,
-  scale: number,
-  yaw: number,
-): void {
-  const trunkMatrix = new THREE.Matrix4().compose(
-    new THREE.Vector3(x, y, z),
-    new THREE.Quaternion().setFromEuler(new THREE.Euler(0, yaw, 0)),
-    new THREE.Vector3(scale, scale, scale),
-  );
-  batches.trunks.setMatrixAt(batches.trunkIndex++, trunkMatrix);
-  const crownX = x + Math.cos(yaw) * 0.85 * scale;
-  const crownZ = z - Math.sin(yaw) * 0.85 * scale;
-  for (let index = 0; index < 8; index++) {
-    const angle = yaw + (index / 8) * Math.PI * 2;
-    const leafMatrix = new THREE.Matrix4().compose(
-      new THREE.Vector3(
-        crownX,
-        y + 4.68 * scale - (index % 2) * 0.1,
-        crownZ,
-      ),
-      new THREE.Quaternion().setFromEuler(
-        new THREE.Euler(-0.05 - (index % 2) * 0.14, angle, 0),
-      ),
-      new THREE.Vector3(scale, scale, scale),
-    );
-    batches.fronds.setMatrixAt(batches.frondIndex++, leafMatrix);
-  }
-  for (let index = 0; index < 3; index++) {
-    const angle = yaw + (index / 3) * Math.PI * 2;
-    const coconutMatrix = new THREE.Matrix4().compose(
-      new THREE.Vector3(
-        crownX + Math.cos(angle) * 0.22 * scale,
-        y + 4.49 * scale - index * 0.05,
-        crownZ + Math.sin(angle) * 0.22 * scale,
-      ),
-      new THREE.Quaternion(),
-      new THREE.Vector3(scale, scale, scale),
-    );
-    batches.coconuts.setMatrixAt(batches.coconutIndex++, coconutMatrix);
-  }
-}
 
 
 function finalizeInstances(mesh: THREE.InstancedMesh, count: number): void {
@@ -693,8 +465,6 @@ export class CampaignWorldMapRuntime {
   constructor(
     nodes: MapNodeVisual[],
     edges: MapEdgeVisual[],
-    private readonly waterfallRibbons: MapWaterfallRibbon[],
-    private readonly plants: TropicalPlantKit,
     readonly shoreline: IslandShoreFoam,
     readonly beachTime:{value:number},
     readonly scenery:JungleAssetKit,
@@ -847,7 +617,6 @@ export class CampaignWorldMapRuntime {
   update(dt: number): void {
     this.elapsed += dt;
     this.beachTime.value=this.elapsed;
-    this.plants.update(dt);
     this.scenery.update(dt);
     oceanTuning.applyOutline(this.shoreline);
     this.shoreline.update(dt);
@@ -878,20 +647,11 @@ export class CampaignWorldMapRuntime {
       edge.glowMaterial.opacity = base +
         (edge.unlocked ? Math.sin(this.elapsed * 3.1 + edge.length) * 0.055 : 0);
     }
-    for (const ribbon of this.waterfallRibbons) {
-      ribbon.mesh.position.x = ribbon.baseX +
-        Math.sin(this.elapsed * 2.7 + ribbon.phase) * 0.075;
-      ribbon.mesh.material.opacity =
-        0.76 + Math.sin(this.elapsed * 3.4 + ribbon.phase) * 0.08;
-      if (ribbon.mesh.material.map)
-        ribbon.mesh.material.map.offset.y += dt * 0.65;
-    }
   }
 
   dispose(): void {
     this.scenery.dispose();
     disposeGroundAcceleration(this.landAcceleration.ownedGeometries,new Set());
-    this.plants.dispose();
     this.shoreline.group.removeFromParent();
     this.shoreline.dispose();
   }
@@ -1068,28 +828,10 @@ export function createCampaignWorldMap(
   oceanTuning.applyOutline(shoreline);
   root.add(shoreline.group);
 
-  const mountainMaterial = new THREE.MeshStandardMaterial({
-    vertexColors: true,
-    roughness: 0.82,
-    metalness: 0,
-    emissive: 0x101810,
-    emissiveIntensity: 0.18,
-  });
   const scenery = new JungleAssetKit(true,false,false,1.45);
   scenery.root.name='world map modular landscape kit';root.add(scenery.root);
-  for(const part of MAP_ROCK_PLACEMENTS)scenery.add({dkind:part.kind,p:[...part.p],s:[...part.s],yaw:part.yaw});
-  const mountainSpecs=MAP_ROCK_PLACEMENTS.filter(p=>p.kind!=='maparch').map((p,i)=>({x:p.p[0],z:p.p[2],r:p.s[0]*.4,s:31+i*17}));
-  for (const islet of scenicIslandSpecs) {
-    const stack = new THREE.Mesh(
-      mountainGeometry(Math.min(islet.rx, islet.rz) * 0.72, 4.5 + (islet.seed % 4), islet.seed),
-      mountainMaterial.clone(),
-    );
-    stack.position.set(islet.x, MAP_SEA_LEVEL - 0.5, islet.z);
-    stack.name = "world map offshore sea stack";
-    stack.userData.edgeGrinding = false;
-    stack.userData.visualOnly = true;
-    root.add(stack);
-  }
+  const mountainSpecs=MAP_ROCK_PLACEMENTS.map((p,i)=>({x:p.p[0],z:p.p[2],r:p.s[0]*.4,s:31+i*17}));
+  for(const islet of scenicIslandSpecs)scenery.add({dkind:'mapcliff',p:[islet.x,MAP_SEA_LEVEL-.5,islet.z],s:[islet.rx*1.1,4.5+(islet.seed%4),islet.rz*1.1],yaw:islet.seed%360});
 
   // Scatter against the actual sculpt so plants meet sand, hills and shelves.
   root.updateMatrixWorld(true);
@@ -1099,70 +841,19 @@ export function createCampaignWorldMap(
     landRay.ray.origin.set(x, 50, z);
     return landRay.intersectObjects(landMeshes, false)[0]?.point.y ?? 0;
   };
+  for(const part of MAP_ROCK_PLACEMENTS){
+    const p:[number,number,number]=[part.p[0],terrainY(part.p[0],part.p[2])-part.s[1]*.52,part.p[2]];
+    scenery.add({dkind:part.kind,p,s:[...part.s],yaw:part.yaw});
+  }
   const routeSamples = [...edgeCurves.values()].flatMap((curve) => curve.getSpacedPoints(45));
   const clearsRoute = (x: number, z: number, clearance: number): boolean =>
     !routeSamples.some((point) => Math.hypot(point.x - x, point.z - z) < clearance) &&
     !levels.some((level) => Math.hypot(level.mapPosition[0] - x, level.mapPosition[2] - z) < clearance + 1.8);
+  const clearsCliffs=(x:number,z:number,pad:number):boolean=>!MAP_ROCK_PLACEMENTS.some(part=>{
+    const a=part.yaw*Math.PI/180,dx=x-part.p[0],dz=z-part.p[2];
+    return Math.pow((dx*Math.cos(a)-dz*Math.sin(a))/(part.s[0]*.5+pad),2)+Math.pow((dx*Math.sin(a)+dz*Math.cos(a))/(part.s[2]*.5+pad),2)<1;
+  });
 
-  const waterfallRibbons: MapWaterfallRibbon[] = [];
-  for (const [x, y, z, height] of [
-    [-84, 10, 15, 15],
-    [83, 11, 6, 13],
-  ] as const) {
-    for (let layer = 0; layer < 3; layer++) {
-      const geometry = new THREE.PlaneGeometry(
-        1.0 + layer * 0.3,
-        height * (0.94 + layer * 0.03),
-        3,
-        12,
-      );
-      const position = geometry.getAttribute("position");
-      for (let vertex = 0; vertex < position.count; vertex++) {
-        const localY = position.getY(vertex);
-        const t = localY / height + 0.5;
-        position.setX(
-          vertex,
-          position.getX(vertex) +
-            Math.sin(t * Math.PI * 3 + layer * 1.7) * (0.07 + t * 0.08),
-        );
-        position.setZ(vertex, -(t - 0.5) * 3.8);
-      }
-      geometry.computeVertexNormals();
-      const material = new THREE.MeshBasicMaterial({
-        color: layer === 0 ? 0xf2ffff : layer === 1 ? 0x91e8e4 : 0x53b8c3,
-        map: waterfallTexture(layer * 97 + Math.round(x * 12)),
-        transparent: true,
-        opacity: 0.76,
-        side: THREE.DoubleSide,
-        depthWrite: false,
-        blending: layer === 0 ? THREE.AdditiveBlending : THREE.NormalBlending,
-      });
-      const fall = new THREE.Mesh(geometry, material);
-      fall.position.set(x + (layer - 1) * 0.17, y, z + layer * 0.025);
-      fall.rotation.y = 0;
-      fall.name = "world map waterfall ribbon";
-      fall.userData.noShadow = true;
-      root.add(fall);
-      waterfallRibbons.push({ mesh: fall, baseX: fall.position.x, phase: layer * 2.1 + x });
-    }
-    const poolGeometry=new THREE.CircleGeometry(2.2,48).rotateX(-Math.PI/2);
-    const poolPositions=poolGeometry.attributes.position;
-    for(let i=0;i<poolPositions.count;i++)poolPositions.setY(i,terrainY(x+poolPositions.getX(i),z+2+poolPositions.getZ(i))+.055);
-    poolGeometry.computeVertexNormals();
-    const pool = new THREE.Mesh(
-      poolGeometry,
-      new THREE.MeshBasicMaterial({
-        color: 0x64c1c4,
-        transparent: true,
-        opacity: 0.62,
-        depthWrite: false,
-      }),
-    );
-    pool.position.set(x, 0, z + 2);
-    pool.name = "world map waterfall pool";
-    pool.userData.noShadow = true;
-    root.add(pool);
-  }
 
   // The caldera is part of the island, with a small elevated crater pool. It
   // does not replace, retune or add a pass to the existing ocean renderer.
@@ -1170,32 +861,12 @@ export function createCampaignWorldMap(
   const lake=new THREE.Mesh(new THREE.CircleGeometry(7.2,64),new THREE.MeshPhongMaterial({color:0x36aab0,emissive:0x06252a,shininess:65,specular:0xc4ffff,transparent:true,opacity:.91}));
   lake.rotation.x=-Math.PI/2;lake.position.set(crater[0],crater[3],crater[1]);lake.name='world map crater lake';root.add(lake);
 
-  const palms = makePalmBatches(root);
-  const plants = new TropicalPlantKit(root);
-  const tropicalPlacements = new Map<TropicalPlantKind,THREE.Matrix4[]>(
-    TROPICAL_PLANT_KINDS.map((kind)=>[kind,[]]),
-  );
-  const placeTropical = (kind:TropicalPlantKind,x:number,z:number,scale:number,yaw:number):void => {
-    tropicalPlacements.get(kind)!.push(new THREE.Matrix4().compose(
-      new THREE.Vector3(x,terrainY(x,z),z),
-      new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),yaw),
-      new THREE.Vector3(scale,scale,scale),
-    ));
-  };
   const rocks = new THREE.InstancedMesh(
     rockGeometry(), new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.78 }), 256,
   );
   rocks.name = "world map rounded coastal boulders";
   root.add(rocks);
   let rockCount = 0;
-  const groundLeaves = new THREE.InstancedMesh(
-    palmFrondGeometry(),
-    new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.72, side: THREE.DoubleSide }),
-    600,
-  );
-  groundLeaves.name = "world map tropical understory";
-  root.add(groundLeaves);
-  let groundLeafCount = 0;
   const random = seeded(7727);
   for (const island of islandSpecs) {
     const palmAttempts = island.scenic ? 2 : island.campaignIslandId==='island-1'?140:85;
@@ -1208,16 +879,11 @@ export function createCampaignWorldMap(
         Math.abs(x - level.mapPosition[0]) < 4.3 &&
         z > level.mapPosition[2] - 1 && z < level.mapPosition[2] + 10,
       );
-      if (coversHub || !clearsRoute(x, z, 4.2) || palms.trunkIndex >= palms.trunks.count) continue;
+      if (coversHub || !clearsRoute(x, z, 4.2) || !clearsCliffs(x,z,1.5)) continue;
       const palmY=terrainY(x,z);
       if(palmY<.2||palmY>12||Math.abs(terrainY(x+1,z)-palmY)>1||Math.abs(terrainY(x,z+1)-palmY)>1)continue;
       const scale=0.78+random()*0.5;
-      if(!island.scenic&&index%3===0) {
-        scenery.add({dkind:'junglepalmtree',p:[x,terrainY(x,z)-.08,z],s:[5.4*scale,7.3*scale,5.4*scale],yaw:angle*180/Math.PI});
-      } else if(!island.scenic&&index%4!==0) {
-        const kind=(['fanpalm','bananatree'] as const)[index%2];
-        placeTropical(kind,x,z,scale,angle+Math.PI);
-      } else addPalm(palms, x, terrainY(x, z), z, scale, angle + Math.PI);
+      scenery.add({dkind:index%4===0?'mapbanana':'mappalm',p:[x,palmY-.12,z],s:[5.8*scale,7.2*scale,5.8*scale],yaw:angle*180/Math.PI});
     }
     if(!island.scenic) {
       const treeCount=island.campaignIslandId==='island-1'?340:200;
@@ -1225,7 +891,7 @@ export function createCampaignWorldMap(
         const angle=random()*Math.PI*2,radius=Math.sqrt(random())*.88;
         const x=island.x+Math.cos(angle)*island.rx*radius,z=island.z+Math.sin(angle)*island.rz*radius;
         const canopy=2.4+random()*2.6;
-        if(!clearsRoute(x,z,canopy+2.6))continue;
+        if(!clearsRoute(x,z,canopy+2.6)||!clearsCliffs(x,z,Math.min(2,canopy*.6)))continue;
         if(levels.some(level=>Math.abs(x-level.mapPosition[0])<canopy+3&&z>level.mapPosition[2]-1&&z<level.mapPosition[2]+14))continue;
         const y=terrainY(x,z);
         if(y<.35||y>29)continue;
@@ -1233,35 +899,15 @@ export function createCampaignWorldMap(
         if(slopeX>2.2||slopeZ>2.2)continue;
         const tint=new THREE.Color().setHSL(.22+random()*.035,.18+random()*.13,.72+random()*.16);
         const rootEmbed=Math.min(1.8,.25+Math.max(slopeX,slopeZ)*canopy*.45);
-        scenery.add({dkind:'junglecanopy',p:[x,y-rootEmbed,z],s:[canopy*1.9,canopy*1.55,canopy*1.75],yaw:angle*180/Math.PI,color:'#'+tint.getHexString()});
+        scenery.add({dkind:'mapbroadleaf',p:[x,y-rootEmbed,z],s:[canopy*1.9,canopy*1.75,canopy*1.75],yaw:angle*180/Math.PI,color:'#'+tint.getHexString()});
       }
     }
-    const understoryAttempts = island.scenic ? 8 : 300;
-    for (let index = 0; index < understoryAttempts; index++) {
-      const angle = random() * Math.PI * 2;
-      const radius = 0.28 + random() * 0.55;
-      const x = island.x + Math.cos(angle) * island.rx * radius;
-      const z = island.z + Math.sin(angle) * island.rz * radius;
-      if (!clearsRoute(x, z, 1.8)) continue;
-      if (!island.scenic && index % 7 === 0) {
-        placeTropical(index%2===0?'monstera':'birdofparadise',x,z,0.8+random()*0.25,angle);
-        continue;
-      }
-      random(); // Preserve the authored tree/reef distribution after removing bushes.
-      if (index % 5 === 0 && groundLeafCount + 5 <= groundLeaves.count) {
-        for (let leaf = 0; leaf < 5; leaf++) {
-          groundLeaves.setMatrixAt(groundLeafCount++, new THREE.Matrix4().compose(
-            new THREE.Vector3(x + 0.8, terrainY(x + 0.8, z), z),
-            new THREE.Quaternion().setFromEuler(new THREE.Euler(-0.5, leaf * 2.4 + angle, 0)),
-            new THREE.Vector3(0.46, 0.6, 0.5),
-          ));
-        }
-      }
-    }
-    const reefClusters = island.scenic ? 5 : 18;
-    for (let index = 0; index < reefClusters; index++) {
-      // Keep the later vegetation/boulder placements identical without reefs.
-      random(); random(); random();
+    const understoryAttempts = island.scenic ? 4 : 95;
+    for(let i=0;i<understoryAttempts;i++){
+      const a=random()*Math.PI*2,r=.3+random()*.52,x=island.x+Math.cos(a)*island.rx*r,z=island.z+Math.sin(a)*island.rz*r;
+      if(!clearsRoute(x,z,2.5)||!clearsCliffs(x,z,1))continue;
+      const y=terrainY(x,z);if(y<.3||y>26)continue;
+      scenery.add({dkind:'mapgroundleaf',p:[x,y-.08,z],s:[2.1,1.2,2.1],yaw:a*180/Math.PI});
     }
   }
   for (const mountain of mountainSpecs) {
@@ -1278,17 +924,7 @@ export function createCampaignWorldMap(
       ));
     }
   }
-  finalizeInstances(palms.trunks, palms.trunkIndex);
-  finalizeInstances(palms.fronds, palms.frondIndex);
-  finalizeInstances(palms.coconuts, palms.coconutIndex);
   finalizeInstances(rocks, rockCount);
-  finalizeInstances(groundLeaves, groundLeafCount);
-  plants.decorate(palms.trunks,"trunk");
-  plants.decorate(palms.fronds,"leaf");
-  plants.decorate(palms.coconuts,"flower");
-  plants.decorate(groundLeaves,"leaf");
-  for(const [kind,transforms] of tropicalPlacements)
-    if(transforms.length)root.add(plants.batch(kind,transforms,{flowers:kind!=="birdofparadise"}));
   scenery.flush();
 
   const edgeVisuals: MapEdgeVisual[] = [];
@@ -1557,8 +1193,6 @@ export function createCampaignWorldMap(
     runtime: new CampaignWorldMapRuntime(
       nodeVisuals,
       edgeVisuals,
-      waterfallRibbons,
-      plants,
       shoreline,
       beachTime,
       scenery,

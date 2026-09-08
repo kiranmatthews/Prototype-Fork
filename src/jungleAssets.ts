@@ -4,6 +4,7 @@ import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader.js";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { JUNGLE_MODULES } from "./jungleModules";
 import { MAP_MODULES } from "./mapModules";
+import { clayArchGeometry, createClayPlantGeometry, isClayPlant } from "./mapClayGeometry";
 import { NIGHTWORKS_MODULES } from "./nightworksModules";
 import { JUNGLE_EDITOR_ASSETS } from "./jungleEditorAssets";
 import { isJungleAssembly, jungleAssemblyParts, type JunglePartKind } from "./jungleAssemblies";
@@ -14,6 +15,7 @@ export interface JungleAssetSpec {
   normalStrength?: number; lod?: boolean;
   doubleSided?: boolean;
   backdrop?: boolean;
+  clay?: boolean;
 }
 const ASSETS = {
   ...JUNGLE_MODULES,
@@ -88,7 +90,7 @@ function finishGeometry(geometry:THREE.BufferGeometry,kind:RenderKind):THREE.Buf
   const positions=geometry.attributes.position,flex=new Float32Array(positions.count);
   if(renderSpec(kind).wind)for(let i=0;i<positions.count;i++) {
     const y=positions.getY(i),radial=Math.hypot(positions.getX(i),positions.getZ(i));
-    flex[i]=kind==="vine"||kind==="junglevine"?Math.max(0,1-y):kind==="junglepalmtree"
+    flex[i]=geometry.hasAttribute('aClayLeaf')?geometry.attributes.aClayLeaf.getX(i):kind==="vine"||kind==="junglevine"?Math.max(0,1-y):kind==="junglepalmtree"
       ?Math.pow(THREE.MathUtils.smoothstep(y,.48,1),1.2)*.6+y*y*.08
       :Math.min(1,Math.pow(radial*1.6+y*.45,1.5))*THREE.MathUtils.smoothstep(y,0,.12);
   }
@@ -101,6 +103,14 @@ function finishGeometry(geometry:THREE.BufferGeometry,kind:RenderKind):THREE.Buf
 function loadTemplate(kind:RenderKind):Promise<Template> {
   const cached=templates.get(kind);if(cached)return cached;
   const spec=renderSpec(kind);
+  if(isClayPlant(kind)){
+    const pending=Promise.resolve({geometry:finishGeometry(createClayPlantGeometry(kind),kind),lodGeometry:finishGeometry(createClayPlantGeometry(kind,true),kind),map:null});
+    templates.set(kind,pending);return pending;
+  }
+  if(kind==='maparch'){
+    const pending=Promise.resolve({geometry:finishGeometry(clayArchGeometry(),kind),lodGeometry:finishGeometry(clayArchGeometry(true),kind),map:null});
+    templates.set(kind,pending);return pending;
+  }
   if(kind==="junglebackdrop") {
     const pending=loadTemplate("junglecanopy").then(source=>({...source,
       geometry:source.lodGeometry??source.geometry,lodGeometry:undefined}));
@@ -139,7 +149,7 @@ function loadTemplate(kind:RenderKind):Promise<Template> {
     const lodGeometry=low?low.geometry.clone().applyMatrix4(low.matrixWorld).applyMatrix4(normalize):undefined;
     const material=high.material as THREE.MeshStandardMaterial;
     const map=material.map!,normalMap=material.normalMap,roughnessMap=material.roughnessMap;
-    map.colorSpace=THREE.SRGBColorSpace;
+    if(map)map.colorSpace=THREE.SRGBColorSpace;
     for(const texture of [map,normalMap,roughnessMap])if(texture){texture.userData.shared=true;texture.anisotropy=8;assetRenderer?.initTexture(texture);}
     for(const g of new Set(meshes.map(m=>m.geometry)))g.dispose();
     for(const m of new Set(meshes.flatMap(m=>Array.isArray(m.material)?m.material:[m.material])))m.dispose();
@@ -243,8 +253,8 @@ export class JungleAssetKit {
       emissive:kind==="junglecliff"?0x64765f:0x25462e,emissiveIntensity:kind==="junglecliff"?.35:.18,
       side:kind==="junglebackdrop"?THREE.DoubleSide:THREE.FrontSide}):new THREE.MeshStandardMaterial({map:template.map,normalMap:template.normalMap??null,
       roughnessMap:template.roughnessMap??null,normalScale:new THREE.Vector2().setScalar(spec.normalStrength??.28),
-      roughness:spec.lod ? .94 : .96,metalness:0,vertexColors:isVine,
-      side:spec.wind||spec.doubleSided?THREE.DoubleSide:THREE.FrontSide});
+      roughness:spec.clay ? .65 : spec.lod ? .94 : .96,metalness:0,vertexColors:isVine||spec.clay===true,
+      side:spec.clay?THREE.FrontSide:spec.wind||spec.doubleSided?THREE.DoubleSide:THREE.FrontSide});
     m.name=spec.label;m.userData.jungleAsset=true;
     if(kind==="earth")m.userData.jungleDirt=true;
     addJungleDapple(m,this.time,spec.wind);

@@ -1,21 +1,27 @@
 {
   "budget": 300,
   "startingBalance": 2211,
-  "reservedCredits": 60,
+  "reservedCredits": 90,
   "tasks": {
     "cliff-buttress": {
+      "selected": false,
+      "note": "Retired after user rejected perforations and stylistic mismatch.",
       "credits": 15,
       "state": "SUCCEEDED",
       "targetTriangles": 6000,
       "id": "01a07e43-c32c-7792-b8bd-4131f95f409d"
     },
     "ridge-spine": {
+      "selected": false,
+      "note": "Retired after user rejected perforations and stylistic mismatch.",
       "credits": 15,
       "state": "SUCCEEDED",
       "targetTriangles": 6500,
       "id": "01a07e43-d1f6-754b-818b-e249a6a783ca"
     },
     "sea-arch": {
+      "selected": false,
+      "note": "Replaced by a code-owned closed clay arch.",
       "credits": 15,
       "state": "SUCCEEDED",
       "targetTriangles": 6500,
@@ -28,7 +34,23 @@
       "note": "Rejected by user: noisy foliage and unacceptable style departure. Not in runtime or asset catalog; replaced by existing clean junglecanopy/palm assets with no further spend.",
       "targetTriangles": 5000,
       "id": "01a07e43-f0d2-7538-88a5-9085ad6a22b0"
+    },
+    "clay-buttress": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "selected": true,
+      "note": "Closed-solid repair and vertex-colour bake validated on both LODs before shipping.",
+      "targetTriangles": 5000,
+      "id": "01a07fa8-abc1-7657-80e6-33b83a5e0c78"
+    },
+    "clay-terrace": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "selected": true,
+      "note": "Closed-solid repair and vertex-colour bake validated on both LODs before shipping.",
+      "targetTriangles": 5000,
+      "id": "01a07fa8-ba09-77af-a3cd-332c62d1ea41"
     }
   },
-  "lastBalance": 2151
+  "lastBalance": 2016
 }

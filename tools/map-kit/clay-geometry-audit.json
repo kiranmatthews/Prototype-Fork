@@ -1,0 +1,144 @@
+[
+  {
+    "file": "clay-buttress",
+    "size": [
+      12,
+      18,
+      10
+    ],
+    "source": {
+      "boundaryEdges": 69,
+      "nonManifoldEdges": 85,
+      "components": [
+        {
+          "vertices": 2188,
+          "faces": 4371,
+          "euler": -22
+        },
+        {
+          "vertices": 502,
+          "faces": 1000,
+          "euler": 2
+        }
+      ],
+      "volume": 93.91828829310025,
+      "vertices": 2690,
+      "faces": 5371,
+      "triangles": 5371
+    },
+    "near": {
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "components": [
+        {
+          "vertices": 3252,
+          "faces": 6500,
+          "euler": 2
+        }
+      ],
+      "volume": 698.4109794491521,
+      "vertices": 3252,
+      "faces": 6500,
+      "triangles": 6500
+    },
+    "far": {
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "components": [
+        {
+          "vertices": 977,
+          "faces": 1950,
+          "euler": 2
+        }
+      ],
+      "volume": 697.7659392879677,
+      "vertices": 977,
+      "faces": 1950,
+      "triangles": 1950
+    },
+    "closingRadii": [
+      0.12,
+      0.25,
+      0.5
+    ],
+    "discardedTinyVertices": [
+      0,
+      0
+    ],
+    "colour": "opaque vertex gradients, sampled from the generated clay palette"
+  },
+  {
+    "file": "clay-terrace",
+    "size": [
+      22,
+      11,
+      12
+    ],
+    "source": {
+      "boundaryEdges": 181,
+      "nonManifoldEdges": 182,
+      "components": [
+        {
+          "vertices": 2353,
+          "faces": 4634,
+          "euler": -54
+        },
+        {
+          "vertices": 132,
+          "faces": 260,
+          "euler": 2
+        },
+        {
+          "vertices": 192,
+          "faces": 380,
+          "euler": 2
+        }
+      ],
+      "volume": 381.08472118299824,
+      "vertices": 2677,
+      "faces": 5274,
+      "triangles": 5274
+    },
+    "near": {
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "components": [
+        {
+          "vertices": 3249,
+          "faces": 6494,
+          "euler": 2
+        }
+      ],
+      "volume": 872.354962852488,
+      "vertices": 3249,
+      "faces": 6494,
+      "triangles": 6494
+    },
+    "far": {
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "components": [
+        {
+          "vertices": 976,
+          "faces": 1948,
+          "euler": 2
+        }
+      ],
+      "volume": 871.7935953396377,
+      "vertices": 976,
+      "faces": 1948,
+      "triangles": 1948
+    },
+    "closingRadii": [
+      0.12,
+      0.25,
+      0.5,
+      0.85
+    ],
+    "discardedTinyVertices": [
+      9,
+      0
+    ],
+    "colour": "opaque vertex gradients, sampled from the generated clay palette"
+  }
+]

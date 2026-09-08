@@ -1,0 +1,13 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="icon" href="data:,"><title>Clay map geometry review</title><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#d6d8ce}canvas{display:block}#caption{position:absolute;left:22px;top:18px;font:16px system-ui;color:#23352b}</style></head><body><div id="caption"></div><script type="module">
+import * as THREE from '/node_modules/three/build/three.module.js';
+import {JungleAssetKit,JUNGLE_ASSETS} from '/src/jungleAssets.ts';
+const q=new URLSearchParams(location.search),kind=q.get('kind')||'mapbroadleaf';
+const renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});renderer.setPixelRatio(devicePixelRatio);renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1;document.body.append(renderer.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color('#d6d8ce');scene.add(new THREE.HemisphereLight(0xd8edff,0x747558,2));
+const sun=new THREE.DirectionalLight(0xfff0da,3);sun.position.set(-8,12,10);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-9;sun.shadow.camera.right=9;sun.shadow.camera.top=12;sun.shadow.camera.bottom=-6;sun.shadow.normalBias=.025;scene.add(sun);
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(100,100),new THREE.MeshStandardMaterial({color:0xd6d8ce,roughness:1}));ground.rotation.x=-Math.PI/2;ground.position.y=-.02;ground.receiveShadow=true;scene.add(ground);
+const kit=new JungleAssetKit(false,false);scene.add(kit.root);const size=JUNGLE_ASSETS[kind].size;kit.add({dkind:kind,p:[0,0,0],s:size.map(n=>n*7/size[1])});await kit.ready();
+const camera=new THREE.PerspectiveCamera(34,innerWidth/innerHeight,.1,100);const angle=Number(q.get('angle')||20)*Math.PI/180,distance=Math.max(18,size[0]/size[1]*7*1.9);camera.position.set(Math.sin(angle)*distance,3.5+distance*.29,Math.cos(angle)*distance);camera.lookAt(0,3.5,0);
+const label=document.querySelector('#caption');label.textContent=kind+' · solid geometry · front-face rendering';
+window.review={kit,renderer,scene,camera,ready:true};function frame(){requestAnimationFrame(frame);kit.update(1/60);renderer.render(scene,camera)}frame();
+</script></body></html>
