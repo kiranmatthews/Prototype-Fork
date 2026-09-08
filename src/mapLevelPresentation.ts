@@ -1,7 +1,8 @@
 import * as THREE from "three";
 import { Level, COMBO_GEM_TINT } from "./level";
-import { createSkateboardPresentation } from "./skateboard/model";
-import { DEFAULT_SKATEBOARD_SETTINGS } from "./skateboard/settings";
+import { createSkateboardPresentation, rebuildSkateboardPresentation } from "./skateboard/model";
+import { type SkateboardSettings } from "./skateboard/settings";
+import { mapSkateboardSettings, DEFAULT_MAP_SKATEBOARD_SETTINGS } from "./skateboard/mapSettings";
 import { TIME_MEDALS, defaultMedalTimes, type MedalTimes, type TimeMedal } from "./campaign";
 import { setTimeMedalTier, TIME_MEDAL_COLORS } from "./timeMedalModel";
 
@@ -91,18 +92,21 @@ export class MapLevelPresentation {
   private inkKey = "";
   private time = 0;
   private draws = 0;
+  private readonly board: THREE.Group;
+  private readonly face: THREE.Mesh;
+  private boardDirty = false;
 
-  constructor(private readonly deckHost: HTMLElement, private readonly trialHost: HTMLElement) {
+  constructor(private readonly deckHost: HTMLElement, private readonly trialHost: HTMLElement,
+    private readonly boardSettings: SkateboardSettings = mapSkateboardSettings) {
     this.anchor.add(this.deckPivot);
     this.scene.add(this.anchor, this.trial, new THREE.AmbientLight(0xffffff, 2));
     const light = new THREE.DirectionalLight(0xffeddb, 3);
     light.position.set(-1, 2, 4); this.scene.add(light);
     const mount = new THREE.Group();
     mount.quaternion.setFromEuler(new THREE.Euler(Math.PI / 2, 0, Math.PI / 2, "ZXY"));
-    const board = createSkateboardPresentation({ ...DEFAULT_SKATEBOARD_SETTINGS, deckHalfWidth: 0.34, topWear: 0.6 });
-    board.position.y = -DEFAULT_SKATEBOARD_SETTINGS.boardToGroundDistance;
+    const board = this.board = createSkateboardPresentation(this.boardSettings.value);
     mount.add(board); this.deckPivot.add(mount);
-    const face = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 0.534), new THREE.MeshStandardMaterial({ map: this.faceTexture, roughness: 0.95, transparent: true, depthWrite: false }));
+    const face = this.face = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 0.534), new THREE.MeshStandardMaterial({ map: this.faceTexture, roughness: 0.95, transparent: true, depthWrite: false }));
     face.position.z = 0.075; this.deckPivot.add(face);
     const factories = [() => Level.crystalMesh(), () => Level.gemMesh(), () => Level.gemMesh(1, COMBO_GEM_TINT), () => Level.timeRelicMesh()];
     for (const [i, make] of factories.entries()) {
@@ -118,19 +122,45 @@ export class MapLevelPresentation {
       pivot.rotation.x = 0.12;
       this.deckPivot.add(pivot); this.rewards.push(pivot);
     }
+    this.updateBoard(false);
+    this.boardSettings.subscribe(() => { this.boardDirty = true; });
     void document.fonts?.ready.then(() => { this.inkKey = ""; });
   }
 
   get diagnostics() {
     return { shownKey: this.flip.shown?.key, flipping: this.flip.active, phase: this.flip.phase,
       earned: this.flip.shown?.earned, medal: this.flip.shown?.medal, targets: this.flip.shown?.targets, trialVisible: this.trial.visible, draws: this.draws,
-      rotations: this.rewards.map(p => p.children[0].rotation.y) };
+      rotations: this.rewards.map(p => p.children[0].rotation.y),
+      boardSettings: this.boardSettings.value, boardReady: this.board.userData.assetReady,
+      boardGeometry: this.board.userData.geometryStats };
+  }
+
+  private updateBoard(rebuild = true): void {
+    const value = this.boardSettings.value;
+    if (rebuild) rebuildSkateboardPresentation(this.board, value);
+    const scale = value.overallScale;
+    this.board.position.y = -value.boardToGroundDistance * scale;
+    const lengthRatio = (value.deckTailLength + value.deckNoseLength) /
+      (DEFAULT_MAP_SKATEBOARD_SETTINGS.deckTailLength + DEFAULT_MAP_SKATEBOARD_SETTINGS.deckNoseLength);
+    const widthRatio = value.deckHalfWidth / DEFAULT_MAP_SKATEBOARD_SETTINGS.deckHalfWidth;
+    // Keep the typography and reward sockets uniformly scaled within the deck.
+    const printScale = Math.min(lengthRatio, widthRatio) * scale;
+    const centre = (value.deckNoseLength - value.deckTailLength) * 0.5 * scale;
+    const printZ = Math.max(0.075, value.tailKickRise + 0.01, value.noseKickRise + 0.01, value.concaveDepth + 0.01) * scale;
+    this.face.scale.setScalar(printScale);
+    this.face.position.set(centre, 0, printZ);
+    this.rewards.forEach((pivot, i) => {
+      pivot.position.set(centre + (-0.51 + i * 0.34) * printScale, -0.115 * printScale, printZ + 0.145 * scale);
+      pivot.scale.setScalar(printScale);
+    });
+    this.boardDirty = false;
   }
 
   select(data: MapLevelCardData, immediate = false): void { this.flip.select(data, immediate); }
 
   draw(renderer: THREE.WebGLRenderer, dt: number, size?: { width: number; height: number }, target = renderer.getRenderTarget()): void {
     const rect = this.deckHost.getBoundingClientRect();
+    if (this.boardDirty) this.updateBoard();
     if (rect.width < 2 || rect.height < 2) return;
     this.flip.step(dt); this.time += Math.max(0, dt);
     const data = this.flip.shown;

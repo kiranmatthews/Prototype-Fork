@@ -780,7 +780,7 @@ function createWheels(
   return root;
 }
 
-let truckTemplatePromise: Promise<THREE.Group> | null = null;
+const truckTemplatePromises = new Map<string, Promise<THREE.Group>>();
 let truckAtlas: THREE.Texture | null = null;
 
 function getTruckAtlas(): THREE.Texture {
@@ -798,10 +798,12 @@ function getTruckAtlas(): THREE.Texture {
 }
 
 function getTruckTemplate(path: string): Promise<THREE.Group> {
-  if (truckTemplatePromise) return truckTemplatePromise;
-  truckTemplatePromise = new Promise((resolve, reject) => {
+  const url = assetUrl(path || SKATEBOARD_DEFAULT_TRUCK);
+  const cached = truckTemplatePromises.get(url);
+  if (cached) return cached;
+  const promise = new Promise<THREE.Group>((resolve, reject) => {
     new GLTFLoader().load(
-      assetUrl(path || SKATEBOARD_DEFAULT_TRUCK),
+      url,
       (gltf) => {
         const template = gltf.scene;
         template.name = "SkateboardTruck_Prefab_Web";
@@ -822,7 +824,8 @@ function getTruckTemplate(path: string): Promise<THREE.Group> {
       reject,
     );
   });
-  return truckTemplatePromise;
+  truckTemplatePromises.set(url, promise);
+  return promise;
 }
 
 function addSockets(

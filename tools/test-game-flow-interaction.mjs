@@ -243,35 +243,6 @@ expect(
     /(?:debug|developer)[A-Za-z]*\(child\)/i.test(claimModal),
   "claimModalFocus must exempt visible developer chrome from inert/aria-hidden",
 );
-// The menu-owned skateboard panel must be interactive without exposing all
-// developer chrome, and controller presses must not activate the menu behind it.
-expect(claimModal.includes('[data-skateboard-panel-host][data-menu-open]'),
-  'main-menu skateboard controls remain modal-inert');
-expect(blockAfter(flow, 'private renderLaunch(').includes('SKATEBOARD TUNING'),
-  'main menu lost the skateboard tuning entry');
-let boardMenuOpen = true;
-const toolEvents = [];
-const pad = { up: true, down: false, left: false, right: false, accept: true, back: false };
-const toolFlow = {
-  preCrtComposited: false, screen: 'launch', transitionActive: false,
-  previousPad: { up: false, down: false, left: false, right: false, accept: false, back: false },
-  readGamepad: () => pad,
-  callbacks: { onSkateboardTuning: open => toolEvents.push(open) },
-  moveSelection: () => toolEvents.push('move'),
-  activateSelection: () => toolEvents.push('activate'),
-  goBack: () => toolEvents.push('back'),
-};
-const runToolInput = new Function('now', 'document', blockAfter(flow, '  update(now = performance.now()): void'));
-const toolDocument = { body: { classList: { contains: () => boardMenuOpen } } };
-runToolInput.call(toolFlow, 0, toolDocument);
-expect(toolEvents.length === 0, 'controller operated the covered menu');
-pad.back = true;
-runToolInput.call(toolFlow, 0, toolDocument);
-boardMenuOpen = false;
-runToolInput.call(toolFlow, 0, toolDocument);
-expect(toolEvents.length === 1 && toolEvents[0] === false,
-  'controller Back failed to close only the tool or leaked a held press into the menu');
-
 const zOf = (selector) => {
   for (const rule of exactRules(selector)) {
     const value = declaration(rule.body, "z-index");

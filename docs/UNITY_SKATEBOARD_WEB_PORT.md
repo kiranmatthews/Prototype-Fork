@@ -1,14 +1,15 @@
 # Surf Cruiser skateboard web port
 
-The browser uses the approved Surf Cruiser presentation in normal play and
-exposes **SKATEBOARD TUNING** directly on the main menu and in Options.
-The dedicated appearance panel controls shape, curves, wheels, trucks, artwork,
-wear and plywood colours, with browser autosave and reset/import/export. It is
-available without enabling developer tools; Close, Escape or controller Back
-returns to the menu. The full inspection lab remains at `skateboard-lab.html`
-and through **Open full lab**, with **BOARD** also available in the debug tuner. This is a presentation-only port: movement, tricks,
-grinds, collision, replay state, and the fixed-step simulation were not
-retuned.
+Open `skateboard-lab.html` for two separate tuning tabs:
+
+- **GAMEPLAY BOARD** controls the rider's skateboard and the existing inspection gallery.
+- **MAP UI BOARD** controls the skateboard-shaped level card displayed on the island map. Its preview uses the actual map presentation, including the title, collectible sockets, lighting and flip animation.
+
+Use `skateboard-lab.html?tab=map-ui` to open the map tab directly. Shape, curves, wheels, trucks, artwork, wear and plywood colours are available for each profile. **Reset this board**, Copy/Download JSON and Load JSON operate on the selected profile. Imports retain the selected target even if tabs change while the file is being read.
+
+The map profile starts from its previous appearance: deck half width 0.34 and top wear 0.6, with the rest of the approved board defaults. It saves under `solProtoMapSkateboardTuning.v1`; the rider keeps `solProtoSkateboardTuning.v1`. Existing rider tuning is preserved. Storage events update another open game/map tab, and the next visible map draw rebuilds the card. Typography and collectible icons scale together to fit the deck without distortion.
+
+The mistakenly added main-menu/Options entry has been removed. The existing in-game **BOARD** developer panel still edits the rider profile and links to the full lab. Movement, tricks, collision and replay state remain unchanged.
 
 ## Board authority
 
@@ -16,7 +17,7 @@ The canonical tuning is the approved version-1 Board Lab export at
 `public/skateboard/surf-cruiser-board.json`, mirrored exactly by
 `DEFAULT_SKATEBOARD_SETTINGS`. It supersedes the older browser defaults while
 retaining the same schema and storage key. Existing deliberately saved boards
-continue to override the shipped preset; a new browser or **Reset approved
+continue to override the shipped preset; a new browser or **Reset this
 board** uses this JSON. Older version-1 files with one `artworkScale` value
 remain valid and migrate that value to both artwork axes.
 
@@ -33,7 +34,7 @@ Unity commit `3da0720`, specifically:
 Those sources agree on the current production board. A few older Unity editor
 tests still describe a superseded 0.82 m deck and are not parity authority.
 
-## Production contract
+## Gameplay-board production contract
 
 - X is deck width, Y is up, and local +Z is the nose.
 - The root is the ground/wheel-contact pivot.

@@ -92,7 +92,6 @@ export interface GameFlowUICallbacks {
   onResultsRetry: () => void;
   onResultsContinue: () => void;
   onAudioOptions: (options: GameAudioOptions) => void;
-  onSkateboardTuning?: (open: boolean) => void;
   getPlayMode: () => GamePlayMode;
   onPlayMode: (mode: GamePlayMode) => void;
   getRelicTarget?: (levelId: string) => number;
@@ -449,10 +448,6 @@ export class GameFlowUI {
 
   /** Options/Escape/P routing is polled by the gameplay Input owner. */
   handlePauseToggle(): boolean {
-    if (document.body.classList.contains("game-skateboard-tuning-open")) {
-      this.callbacks.onSkateboardTuning?.(false);
-      return true;
-    }
     if (this.transitionActive) return true;
     if (this.screen === "confirm-new") {
       this.screen = "new-slots";
@@ -591,11 +586,6 @@ export class GameFlowUI {
       }
     }
     const { up, down, left, right, accept, back } = this.readGamepad();
-    if (document.body.classList.contains("game-skateboard-tuning-open")) {
-      if (back && !this.previousPad.back) this.callbacks.onSkateboardTuning?.(false);
-      Object.assign(this.previousPad, { up, down, left, right, accept, back });
-      return;
-    }
     if (this.transitionActive) {
       Object.assign(this.previousPad, { up, down, left, right, accept, back });
       return;
@@ -750,8 +740,6 @@ export class GameFlowUI {
         this.render();
       }),
     );
-    if (this.callbacks.onSkateboardTuning)
-      actions.push(this.button("SKATEBOARD TUNING", () => this.callbacks.onSkateboardTuning?.(true)));
     menu.append(...actions);
     card.append(title, menu);
     this.panel.appendChild(card);
@@ -1169,8 +1157,6 @@ export class GameFlowUI {
       syncMode();
       toggles.append(modeButton, description);
     }
-    if (this.callbacks.onSkateboardTuning)
-      toggles.append(this.button("SKATEBOARD TUNING", () => this.callbacks.onSkateboardTuning?.(true)));
     toggles.append(
       this.toggleButton("SOUND EFFECTS", !this.options.sfxMuted, (enabled) => {
         this.options.sfxMuted = !enabled;
@@ -1365,13 +1351,6 @@ export class GameFlowUI {
   }
 
   private onKey(event: KeyboardEvent): void {
-    if (document.body.classList.contains("game-skateboard-tuning-open")) {
-      if (event.code === "Escape" || event.code === "KeyQ") {
-        event.preventDefault();
-        this.callbacks.onSkateboardTuning?.(false);
-      }
-      return;
-    }
     const target = event.target as HTMLElement | null;
     const editing = target && ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName);
     if (editing) return;
@@ -1565,10 +1544,6 @@ export class GameFlowUI {
     }
   }
 
-  refreshModalTools(): void {
-    if (this.screen) this.claimModalFocus();
-  }
-
   private claimModalFocus(): void {
     if (!this.focusBeforeModal)
       this.focusBeforeModal = document.activeElement instanceof HTMLElement
@@ -1582,8 +1557,7 @@ export class GameFlowUI {
         child === this.transitionCurtain
       )
         continue;
-      if ((this.debugVisible && this.isDeveloperChromeHost(child)) ||
-          child.matches("[data-skateboard-panel-host][data-menu-open]")) {
+      if (this.debugVisible && this.isDeveloperChromeHost(child)) {
         this.restoreModalElement(child);
         continue;
       }
@@ -1831,7 +1805,7 @@ export class GameFlowUI {
       body.game-debug-hidden .hud-capbadge,
       body.game-debug-hidden [data-crt-guest-panel-host],
       body.game-debug-hidden [data-render-quality-panel-host],
-      body.game-debug-hidden [data-skateboard-panel-host]:not([data-menu-open]),
+      body.game-debug-hidden [data-skateboard-panel-host],
       body.game-debug-hidden [data-spin-panel-host],
       body.game-debug-hidden visual-treatment-panel,
       body.game-debug-hidden .ed-panel,

@@ -179,8 +179,8 @@ function clampedColor(
 /** Apply the same safety ranges as SourceSkateboardSettings.Clamp(). */
 export function clampSkateboardSettings(
   input: Partial<SkateboardSettingsValue>,
+  d: Readonly<SkateboardSettingsValue> = DEFAULT_SKATEBOARD_SETTINGS,
 ): SkateboardSettingsValue {
-  const d = DEFAULT_SKATEBOARD_SETTINGS;
   const n = (key: keyof SkateboardSettingsValue): number => {
     const candidate = input[key];
     return typeof candidate === "number" && Number.isFinite(candidate)
@@ -264,41 +264,54 @@ export function clampSkateboardSettings(
   return out;
 }
 
-function readStoredSettings(): SkateboardSettingsValue {
+function readStoredSettings(storageKey: string, defaults: Readonly<SkateboardSettingsValue>): SkateboardSettingsValue {
   if (typeof localStorage === "undefined")
-    return copySkateboardSettings(DEFAULT_SKATEBOARD_SETTINGS);
+    return copySkateboardSettings(defaults);
   try {
-    const source = localStorage.getItem(SKATEBOARD_STORAGE_KEY);
-    if (!source) return copySkateboardSettings(DEFAULT_SKATEBOARD_SETTINGS);
+    const source = localStorage.getItem(storageKey);
+    if (!source) return copySkateboardSettings(defaults);
     const parsed = JSON.parse(source) as Partial<SavedSkateboardTuning>;
     if (parsed.version !== 1 || !parsed.settings) throw new Error("unsupported tuning file");
-    return clampSkateboardSettings(parsed.settings);
+    return clampSkateboardSettings(parsed.settings, defaults);
   } catch (error) {
     console.warn("Ignoring invalid skateboard tuning", error);
-    return copySkateboardSettings(DEFAULT_SKATEBOARD_SETTINGS);
+    return copySkateboardSettings(defaults);
   }
 }
 
 export class SkateboardSettings {
-  private current = readStoredSettings();
+  private current: SkateboardSettingsValue;
   private readonly listeners = new Set<Listener>();
+  private readonly storageKey: string;
+  private readonly defaults: Readonly<SkateboardSettingsValue>;
+
+  constructor(options: { storageKey?: string; defaults?: Readonly<SkateboardSettingsValue> } = {}) {
+    this.storageKey = options.storageKey ?? SKATEBOARD_STORAGE_KEY;
+    this.defaults = copySkateboardSettings(options.defaults ?? DEFAULT_SKATEBOARD_SETTINGS);
+    this.current = readStoredSettings(this.storageKey, this.defaults);
+    if (typeof window !== "undefined") window.addEventListener("storage", event => {
+      if (event.key !== this.storageKey && event.key !== null) return;
+      this.current = readStoredSettings(this.storageKey, this.defaults);
+      for (const listener of this.listeners) listener(this.current);
+    });
+  }
 
   get value(): Readonly<SkateboardSettingsValue> {
     return this.current;
   }
 
   patch(patch: Partial<SkateboardSettingsValue>): void {
-    this.current = clampSkateboardSettings({ ...this.current, ...patch });
+    this.current = clampSkateboardSettings({ ...this.current, ...patch }, this.defaults);
     this.persistAndNotify();
   }
 
   replace(value: Partial<SkateboardSettingsValue>): void {
-    this.current = clampSkateboardSettings(value);
+    this.current = clampSkateboardSettings(value, this.defaults);
     this.persistAndNotify();
   }
 
   reset(): void {
-    this.current = copySkateboardSettings(DEFAULT_SKATEBOARD_SETTINGS);
+    this.current = copySkateboardSettings(this.defaults);
     this.persistAndNotify();
   }
 
@@ -325,7 +338,7 @@ export class SkateboardSettings {
 
   private persistAndNotify(): void {
     try {
-      localStorage.setItem(SKATEBOARD_STORAGE_KEY, this.serialize(false));
+      localStorage.setItem(this.storageKey, this.serialize(false));
     } catch {
       /* Private browsing can deny storage; live tuning still works. */
     }

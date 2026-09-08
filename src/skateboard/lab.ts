@@ -3,6 +3,8 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { createSkateboardPresentation, rebuildSkateboardPresentation } from "./model";
 import { createSkateboardTuningPanel } from "./panel";
 import { skateboardSettings } from "./settings";
+import { mapSkateboardSettings } from "./mapSettings";
+import { MapLevelPresentation, type MapLevelCardData } from "../mapLevelPresentation";
 
 const app = document.getElementById("app")!;
 const diagnostics = document.getElementById("lab-diagnostics")!;
@@ -15,6 +17,8 @@ app.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x70947c);
+const gallery = new THREE.Group();
+scene.add(gallery);
 const camera = new THREE.PerspectiveCamera(57, 1, 0.05, 120);
 // Keep Unity's 57° review lens but begin on the inspection gallery. Unity's
 // serialized camera starts back at the playable spawn; this standalone page
@@ -64,7 +68,7 @@ const arena = new THREE.Mesh(
 arena.name = "SkateboardTuningArena";
 arena.position.y = -0.5;
 arena.receiveShadow = true;
-scene.add(arena);
+gallery.add(arena);
 
 interface BoardView {
   readonly board: THREE.Group;
@@ -85,10 +89,10 @@ function addBoard(
   board.position.set(...position);
   board.rotation.set(...rotationDegrees.map(THREE.MathUtils.degToRad) as [number, number, number]);
   board.scale.setScalar(scale);
-  scene.add(board);
+  gallery.add(board);
   const labelSprite = worldLabel(label);
   labelSprite.position.set(position[0], labelHeight, position[2] - 0.18);
-  scene.add(labelSprite);
+  gallery.add(labelSprite);
   views.push({ board, label });
   return board;
 }
@@ -143,32 +147,59 @@ const reference = new THREE.Mesh(
 );
 reference.name = "SurfCruiser_VisualReference";
 reference.position.set(-5, 2.45, 6);
-scene.add(reference);
+gallery.add(reference);
 const referenceLabel = worldLabel("OWNER REFERENCE — VISUAL ONLY");
 referenceLabel.position.set(-5, 4.42, 5.82);
-scene.add(referenceLabel);
+gallery.add(referenceLabel);
 
+// The map tab uses the actual map-card renderer, including its print and
+// collectible sockets. It never edits campaign progress or the rider profile.
+const mapFrame = document.createElement("div");
+mapFrame.className = "map-board-preview"; mapFrame.hidden = true;
+const mapDeckHost = document.createElement("div"); mapDeckHost.className = "map-board-preview-deck";
+const mapTrialHost = document.createElement("div"); mapTrialHost.hidden = true;
+const flipButton = document.createElement("button"); flipButton.textContent = "FLIP MAP BOARD";
+flipButton.className = "map-board-preview-flip";
+mapFrame.append(mapDeckHost, mapTrialHost, flipButton); document.body.append(mapFrame);
+const previewStyle = document.createElement("style");
+previewStyle.textContent = `
+  .map-board-preview { position:fixed; left:24px; right:500px; top:90px; bottom:85px; pointer-events:none; }
+  .map-board-preview[hidden] { display:none; }
+  .map-board-preview-deck { position:absolute; width:90%; max-width:720px; aspect-ratio:3; left:50%; top:45%; transform:translate(-50%,-50%); }
+  .map-board-preview-flip { position:absolute; left:50%; top:70%; transform:translateX(-50%); pointer-events:auto; padding:10px 18px; border:1px solid #ffbd76; color:#ffe4b7; background:#172b24; font:700 12px ui-monospace,monospace; cursor:pointer; }
+  @media(max-width:1000px) { .map-board-preview { left:12px; right:12px; top:45px; bottom:55vh; } }
+`;
+document.head.append(previewStyle);
+const mapPresentation = new MapLevelPresentation(mapDeckHost, mapTrialHost);
+const mapSample: MapLevelCardData = {key:"lab-map",name:"Jungle Ruins",earned:[true,true,true,true],
+  trialUnlocked:false,times:[],target:60,medal:"gold"};
+mapPresentation.select(mapSample,true);
+let flipCount=0;
+flipButton.addEventListener("click",()=>mapPresentation.select({...mapSample,key:`lab-map-${++flipCount}`}));
+let targetProfile: "gameplay" | "map-ui" = "gameplay";
 const panel = createSkateboardTuningPanel({
   settings: skateboardSettings,
+  mapSettings: mapSkateboardSettings,
   initiallyOpen: true,
   labMode: true,
+  initialTarget: new URL(location.href).searchParams.get("tab") === "map-ui" ? "map-ui" : "gameplay",
+  onTargetChange: target => {
+    targetProfile=target;
+    const map=target==="map-ui";
+    gallery.visible=!map;mapFrame.hidden=!map;controls.enabled=!map;
+    scene.background=new THREE.Color(map?0x39594d:0x70947c);
+    document.getElementById("lab-title")!.textContent=map
+      ? "MAP UI BOARD · live map-card preview · use Flip to inspect the underside"
+      : "GAMEPLAY BOARD · drag to orbit · wheel/pinch to zoom";
+  },
 });
-
 let rebuildQueued = false;
-skateboardSettings.subscribe((value) => {
+skateboardSettings.subscribe(() => {
   if (rebuildQueued) return;
   rebuildQueued = true;
   requestAnimationFrame(() => {
     rebuildQueued = false;
-    for (const view of views) rebuildSkateboardPresentation(view.board, value);
-    const stats = hero.userData.geometryStats as
-      | { vertices: number; triangles: number; materialGroups: number }
-      | undefined;
-    panel.setStatus(
-      stats
-        ? `Live mesh · ${stats.vertices.toLocaleString()} vertices · ${stats.triangles.toLocaleString()} triangles · ${stats.materialGroups} materials`
-        : "Live mesh rebuilt.",
-    );
+    for (const view of views) rebuildSkateboardPresentation(view.board, skateboardSettings.value);
   });
 });
 
@@ -182,15 +213,21 @@ function resize(): void {
 window.addEventListener("resize", resize);
 resize();
 
-function frame(): void {
-  controls.update();
-  const stats = hero.userData.geometryStats as
-    | { vertices: number; triangles: number; materialGroups: number }
-    | undefined;
-  diagnostics.textContent = stats
-    ? `Surf Cruiser — approved board JSON\n${stats.vertices.toLocaleString()} vertices · ${stats.triangles.toLocaleString()} triangles · ${stats.materialGroups} material groups\ntruck asset ${hero.userData.assetReady ? "ready" : "loading / procedural fallback"}`
-    : "Surf Cruiser: building approved board mesh…";
+let lastFrame = performance.now();
+function frame(now: number): void {
+  const dt = Math.min(0.05,Math.max(0,(now-lastFrame)/1000)); lastFrame=now;
+  if (targetProfile === "gameplay") controls.update();
   renderer.render(scene, camera);
+  if (targetProfile === "map-ui") {
+    mapPresentation.draw(renderer,dt);
+    const stats=mapPresentation.diagnostics.boardGeometry as {vertices:number;triangles:number}|undefined;
+    diagnostics.textContent=`MAP UI BOARD — independent profile\n${stats?.vertices.toLocaleString()??"…"} vertices · ${stats?.triangles.toLocaleString()??"…"} triangles\nPrinting and collectibles use the real map presentation`;
+  } else {
+    const stats=hero.userData.geometryStats as {vertices:number;triangles:number;materialGroups:number}|undefined;
+    diagnostics.textContent=stats
+      ? `GAMEPLAY BOARD — rider profile\n${stats.vertices.toLocaleString()} vertices · ${stats.triangles.toLocaleString()} triangles · ${stats.materialGroups} material groups\ntruck asset ${hero.userData.assetReady?"ready":"loading / procedural fallback"}`
+      : "Surf Cruiser: building approved board mesh…";
+  }
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
@@ -202,5 +239,8 @@ requestAnimationFrame(frame);
   controls,
   views,
   settings: skateboardSettings,
+  mapSettings: mapSkateboardSettings,
+  mapPresentation,
+  panel,
   hero,
 };

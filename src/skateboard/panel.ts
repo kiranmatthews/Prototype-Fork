@@ -20,12 +20,15 @@ interface SectionDefinition {
   readonly controls: readonly SliderDefinition[];
 }
 
+export type SkateboardTuningTarget = "gameplay" | "map-ui";
 export interface SkateboardTuningPanelOptions {
   readonly settings?: SkateboardSettings;
   readonly parent?: HTMLElement;
   readonly initiallyOpen?: boolean;
   readonly labMode?: boolean;
-  readonly onMenuChange?: () => void;
+  readonly mapSettings?: SkateboardSettings;
+  readonly initialTarget?: SkateboardTuningTarget;
+  readonly onTargetChange?: (target: SkateboardTuningTarget) => void;
 }
 
 const SECTIONS: readonly SectionDefinition[] = [
@@ -121,8 +124,6 @@ const CSS = `
     border: 1px solid #ff9438; border-right: 0; background: #130b06; color: #ffbd76;
     font-weight: 900; letter-spacing: .8px; cursor: pointer; box-shadow: -4px 4px 0 #0008; }
   :host([data-open]) .launcher { display: none; }
-  :host([data-menu-open][data-open]) { pointer-events: auto; background: #0008; }
-  :host([data-menu-open]) .panel { right: max(12px, calc((100vw - 470px) / 2)); }
   .panel { display: none; position: fixed; top: 12px; right: 12px; bottom: 12px;
     width: min(470px, calc(100vw - 24px)); pointer-events: auto; overflow: hidden;
     border: 2px solid #ff9438; background: #090c11; box-shadow: -10px 10px 0 #000b; }
@@ -130,6 +131,9 @@ const CSS = `
   .title { flex: 0 0 auto; display: flex; align-items: center; gap: 8px; padding: 10px 12px;
     border-bottom: 2px solid #ff9438; background: #21140c; font-weight: 900; letter-spacing: 1px; }
   .title span { flex: 1; } .close { width: 30px; padding: 3px; }
+  .tabs { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid #704329; }
+  .tabs button { border: 0; min-height: 38px; font-weight: 900; }
+  .tabs button[aria-selected='true'] { color: #ffe0ac; background: #3d2515; box-shadow: inset 0 -3px #ff9438; }
   .intro { flex: 0 0 auto; padding: 9px 11px; color: #c2af9b; border-bottom: 1px solid #51311c;
     font-size: 10px; }
   .actions { flex: 0 0 auto; display: flex; flex-wrap: wrap; gap: 5px; padding: 8px 10px;
@@ -157,6 +161,9 @@ const CSS = `
     color: #f6f1e8; cursor: pointer; }
   button:hover, button:focus-visible { border-color: #fff; background: #322015; outline: none; }
   .hidden { display: none; }
+  @media (max-width: 1000px) {
+    :host([data-lab-profiles][data-target='map-ui']) .panel { top: auto; bottom: 0; left: 0; right: 0; width: 100vw; height: 55vh; }
+  }
   @media (max-width: 560px) {
     .panel { inset: 0; width: 100vw; }
     .control { grid-template-columns: minmax(112px, 1fr) 90px 70px; gap: 5px; padding-inline: 6px; }
@@ -190,32 +197,23 @@ export class SkateboardTuningPanel {
   private readonly lightColor: HTMLInputElement;
   private readonly darkColor: HTMLInputElement;
   private readonly status: HTMLDivElement;
-  private readonly unsubscribe: () => void;
+  private readonly unsubscribes: (() => void)[] = [];
+  private readonly mapSettings?: SkateboardSettings;
+  private readonly tabButtons = new Map<SkateboardTuningTarget, HTMLButtonElement>();
+  private readonly intro: HTMLDivElement;
+  private activeTarget: SkateboardTuningTarget = "gameplay";
   private openState = false;
-  private menuRoot: HTMLElement | null = null;
-  private menuRootWasInert = false;
-  private returnFocus: HTMLElement | null = null;
 
   constructor(private readonly options: SkateboardTuningPanelOptions = {}) {
     this.settings = options.settings ?? skateboardSettings;
+    this.mapSettings = options.mapSettings;
     const documentRef = options.parent?.ownerDocument ?? document;
     this.element = documentRef.createElement("div");
     this.element.setAttribute("data-skateboard-panel-host", "");
+    if (this.mapSettings) this.element.setAttribute("data-lab-profiles", "");
     this.shadow = this.element.attachShadow({ mode: "open" });
     for (const name of ["keydown", "keyup", "keypress"] as const)
       this.shadow.addEventListener(name, (event) => event.stopPropagation());
-    this.shadow.addEventListener("keydown", (event) => {
-      if (!this.element.hasAttribute("data-menu-open")) return;
-      const key = event as KeyboardEvent;
-      if (key.code === "Escape") { key.preventDefault(); this.setOpen(false); }
-      if (key.code === "Tab") {
-        const controls = [...this.shadow.querySelectorAll<HTMLElement>("button, input, summary")]
-          .filter(control => !control.hasAttribute("disabled") && control.getClientRects().length > 0);
-        const first = controls[0], last = controls[controls.length - 1];
-        if (key.shiftKey && this.shadow.activeElement === first) { key.preventDefault(); last?.focus(); }
-        else if (!key.shiftKey && this.shadow.activeElement === last) { key.preventDefault(); first?.focus(); }
-      }
-    });
     const style = documentRef.createElement("style");
     style.textContent = CSS;
     this.shadow.appendChild(style);
@@ -230,21 +228,32 @@ export class SkateboardTuningPanel {
     panel.setAttribute("role", "dialog");
     panel.setAttribute("aria-label", "Skateboard tuning panel");
     const title = this.make("header", "title");
-    title.append(this.make("span", "", options.labMode ? "SURF CRUISER — SHAPE LAB" : "SKATEBOARD APPEARANCE"));
+    title.append(this.make("span", "", options.labMode ? "SKATEBOARD LAB" : "SURF CRUISER — SHAPE LAB"));
     const close = this.button("×", "close");
     close.setAttribute("aria-label", "Close skateboard tuning panel");
     close.addEventListener("click", () => this.setOpen(false));
     title.append(close);
     panel.append(title);
-    panel.append(
-      this.make(
-        "div",
-        "intro",
-        options.labMode
-          ? "Approved Board JSON · edits rebuild every inspection board and autosave in this browser."
-          : "Shape, wheels, trucks, artwork and wear. Changes apply to your skateboard and save automatically in this browser.",
-      ),
-    );
+    if (this.mapSettings) {
+      const tabs = this.make("div", "tabs");
+      tabs.setAttribute("role", "tablist"); tabs.setAttribute("aria-label", "Skateboard profile");
+      for (const [target, label] of [["gameplay", "GAMEPLAY BOARD"], ["map-ui", "MAP UI BOARD"]] as const) {
+        const tab = this.button(label); tab.id = `skateboard-tab-${target}`;
+        tab.setAttribute("role", "tab"); tab.setAttribute("aria-controls", "skateboard-profile-controls");
+        tab.addEventListener("click", () => this.setActiveTarget(target));
+        tab.addEventListener("keydown", event => {
+          if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+          event.preventDefault();
+          const next = event.key === "Home" ? "gameplay" : event.key === "End" ? "map-ui"
+            : this.activeTarget === "gameplay" ? "map-ui" : "gameplay";
+          this.setActiveTarget(next); this.tabButtons.get(next)?.focus();
+        });
+        this.tabButtons.set(target, tab); tabs.append(tab);
+      }
+      panel.append(tabs);
+    }
+    this.intro = this.make("div", "intro");
+    panel.append(this.intro);
 
     const actions = this.make("div", "actions");
     const route = this.button(options.labMode ? "Back to game" : "Open full lab");
@@ -254,10 +263,10 @@ export class SkateboardTuningPanel {
         document.baseURI,
       ).href;
     });
-    const reset = this.button("Reset approved board");
+    const reset = this.button("Reset this board");
     reset.addEventListener("click", () => {
-      this.settings.reset();
-      this.setStatus("Restored the approved Board Lab JSON.");
+      this.activeSettings.reset();
+      this.setStatus(this.activeTarget === "map-ui" ? "Restored the map board defaults." : "Restored the approved gameplay board.");
     });
     const copy = this.button("Copy JSON");
     copy.addEventListener("click", () => void this.copyJson());
@@ -274,6 +283,8 @@ export class SkateboardTuningPanel {
     panel.append(actions);
 
     const sections = this.make("div", "sections");
+    sections.id = "skateboard-profile-controls";
+    if (this.mapSettings) sections.setAttribute("role", "tabpanel");
     SECTIONS.forEach((definition, sectionIndex) => {
       const details = documentRef.createElement("details");
       details.open = sectionIndex < 2;
@@ -297,38 +308,40 @@ export class SkateboardTuningPanel {
     panel.append(this.status);
     this.shadow.append(panel);
     (options.parent ?? documentRef.body).append(this.element);
-    this.unsubscribe = this.settings.subscribe((value) => this.refresh(value), true);
+    this.unsubscribes.push(this.settings.subscribe(value => {
+      if (this.activeTarget === "gameplay") this.refresh(value);
+    }));
+    if (this.mapSettings) this.unsubscribes.push(this.mapSettings.subscribe(value => {
+      if (this.activeTarget === "map-ui") this.refresh(value);
+    }));
+    this.setActiveTarget(options.initialTarget ?? "gameplay");
     this.setOpen(options.initiallyOpen ?? false);
   }
 
-  openFromMenu(): void {
-    if (!this.element.hasAttribute("data-menu-open")) {
-      this.returnFocus = document.activeElement as HTMLElement | null;
-      this.menuRoot = document.querySelector<HTMLElement>(".game-shell");
-      this.menuRootWasInert = this.menuRoot?.inert ?? false;
-      if (this.menuRoot) this.menuRoot.inert = true;
+  get target(): SkateboardTuningTarget { return this.activeTarget; }
+  get activeSettings(): SkateboardSettings {
+    return this.activeTarget === "map-ui" ? this.mapSettings! : this.settings;
+  }
+  setActiveTarget(target: SkateboardTuningTarget): void {
+    this.activeTarget = target === "map-ui" && this.mapSettings ? target : "gameplay";
+    for (const [id, button] of this.tabButtons) {
+      const selected = id === this.activeTarget;
+      button.setAttribute("aria-selected", String(selected)); button.tabIndex = selected ? 0 : -1;
     }
-    this.element.setAttribute("data-menu-open", "");
-    document.body.classList.add("game-skateboard-tuning-open");
-    this.shadow.querySelector(".panel")?.setAttribute("aria-modal", "true");
-    this.setOpen(true);
-    this.options.onMenuChange?.();
-    this.shadow.querySelector<HTMLButtonElement>(".close")?.focus();
+    this.element.dataset.target = this.activeTarget;
+    if (this.mapSettings) this.shadow.querySelector(".sections")?.setAttribute("aria-labelledby", `skateboard-tab-${this.activeTarget}`);
+    this.intro.textContent = this.activeTarget === "map-ui"
+      ? "Customize the map's skateboard level card. This profile saves independently and updates the map preview."
+      : this.options.labMode ? "Customize the rider's board. Changes rebuild the inspection boards and autosave in this browser."
+      : "Customize the rider's board. Changes apply live and autosave in this browser.";
+    this.refresh(this.activeSettings.value);
+    this.setStatus(this.activeTarget === "map-ui" ? "MAP UI BOARD · independent saved profile" : "GAMEPLAY BOARD · approved Surf Cruiser profile");
+    this.options.onTargetChange?.(this.activeTarget);
   }
 
   setOpen(open: boolean): void {
     this.openState = open;
     this.element.toggleAttribute("data-open", open);
-    if (!open && this.element.hasAttribute("data-menu-open")) {
-      this.element.removeAttribute("data-menu-open");
-      document.body.classList.remove("game-skateboard-tuning-open");
-      this.shadow.querySelector(".panel")?.removeAttribute("aria-modal");
-      if (this.menuRoot) this.menuRoot.inert = this.menuRootWasInert;
-      this.options.onMenuChange?.();
-      if (this.returnFocus?.isConnected) this.returnFocus.focus();
-      this.menuRoot = null;
-      this.returnFocus = null;
-    }
   }
 
   toggle(): void {
@@ -336,8 +349,7 @@ export class SkateboardTuningPanel {
   }
 
   dispose(): void {
-    this.setOpen(false);
-    this.unsubscribe();
+    for (const unsubscribe of this.unsubscribes) unsubscribe();
     this.element.remove();
   }
 
@@ -367,7 +379,7 @@ export class SkateboardTuningPanel {
       const patch = definition.write
         ? definition.write(value)
         : ({ [definition.key!]: value } as Partial<SkateboardSettingsValue>);
-      this.settings.patch(patch);
+      this.activeSettings.patch(patch);
     };
     slider.addEventListener("input", () => commit(slider));
     numeric.addEventListener("change", () => commit(numeric));
@@ -386,7 +398,7 @@ export class SkateboardTuningPanel {
     input.type = "color";
     input.setAttribute("aria-label", labelText);
     input.addEventListener("input", () =>
-      this.settings.patch({ [key]: hexToColor(input.value) }),
+      this.activeSettings.patch({ [key]: hexToColor(input.value) }),
     );
     label.append(input, document.createTextNode(labelText));
     parent.append(label);
@@ -407,7 +419,7 @@ export class SkateboardTuningPanel {
   }
 
   private async copyJson(): Promise<void> {
-    const source = this.settings.serialize(true);
+    const source = this.activeSettings.serialize(true);
     try {
       await navigator.clipboard.writeText(source);
       this.setStatus("Copied version 1 tuning JSON.");
@@ -420,20 +432,21 @@ export class SkateboardTuningPanel {
   private downloadJson(): void {
     const link = document.createElement("a");
     link.href = URL.createObjectURL(
-      new Blob([this.settings.serialize(true)], { type: "application/json" }),
+      new Blob([this.activeSettings.serialize(true)], { type: "application/json" }),
     );
-    link.download = "skateboard-presentation-tuning.json";
+    link.download = this.activeTarget === "map-ui" ? "map-ui-skateboard-tuning.json" : "skateboard-presentation-tuning.json";
     link.click();
     URL.revokeObjectURL(link.href);
-    this.setStatus("Downloaded skateboard-presentation-tuning.json.");
+    this.setStatus(`Downloaded ${link.download}.`);
   }
 
   private async loadJson(input: HTMLInputElement): Promise<void> {
     const selected = input.files?.[0];
     input.value = "";
     if (!selected) return;
+    const targetSettings = this.activeSettings;
     try {
-      this.settings.importJson(await selected.text());
+      targetSettings.importJson(await selected.text());
       this.setStatus(`Loaded ${selected.name}.`);
     } catch (error) {
       this.setStatus(`Could not load tuning: ${String(error)}`);
