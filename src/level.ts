@@ -1,3 +1,4 @@
+import { createJungleCupTrophy } from "./competition/trophy";
 import { cameraViewDirection, type CameraView } from "./cameraViews";
 // Every level in the game, plus the toolkit they are all assembled from.
 // Built-ins are hand-coded builders picked by id; user levels carry component
@@ -45,6 +46,7 @@ import {
 import { BraidedRope, ropeLocalPoint, flexibleRopePoint, flexibleRopeVelocity, closestRopeDistance } from "./ropeGeometry";
 import { NightworksRocks, nightworksGeometry, isNightworksSurface } from "./nightworksRocks";
 import { NIGHTWORKS_LEVEL } from "./levels/nightworks";
+import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
 import { ASTRA_CHIMEWORKS_LEVEL } from "./levels/astra-chimeworks";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
@@ -830,6 +832,7 @@ export const DECOR_KINDS = [
   "vines",
   "planter",
   "idol",
+  "junglecup",
   "ruinblock",
   "log",
   "block", // plain textured box, visual only: earth banks, backdrops, massing
@@ -863,6 +866,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
   vines: "hanging vines",
   planter: "planter",
   idol: "carved idol",
+  junglecup: "Jungle Cup trophy",
   ruinblock: "ruin block",
   log: "fallen log",
   block: "scenery block",
@@ -1069,6 +1073,17 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
     if(c.t==='worldmap'&&c.pts?.length===11) {
       const prior=[[-63,18,0,1.35],[-44,18,0,1.75],[-26,18,0,2.1],[-44,-3,0,2.55],[-9,18,0,2.85],[23,16,0,1.35],[42,14,0,1.75],[61,14,0,2.4],[79,14,0,3.1],[-26,-3,0,2.85],[42,26,0,2.3]];
       if(c.pts.every((p,i)=>p.length===4&&p.every((v,j)=>v===prior[i][j])))return {...c,pts:worldMapComponentPoints()};
+    }
+    if (c.t === "worldmap" && c.pts?.length === 11) {
+      const defaults = worldMapComponentPoints();
+      const previousDefaults = defaults.slice(0, 11).map(p => [...p]);
+      previousDefaults[4][0] = -31; // Nightworks' old island-end slot becomes the cup.
+      if (c.pts.every((p,i) => p.length === 4 && p.every((v,j) => v === previousDefaults[i][j])))
+        return {...c,pts:defaults};
+      const points = c.pts.map(p => [...p] as typeof p);
+      const added = [...worldMapComponentPoints()[11]] as typeof points[number];
+      while (points.some(p => Math.hypot(p[0]-added[0],p[1]-added[1]) < 10)) added[1] += 12;
+      return {...c,pts:[...points,added]};
     }
     if (c.t === "worldmap" && c.pts?.length === 9) {
       // Pre-branch map files keep the first nine stable hub identities.
@@ -2271,6 +2286,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
     name: CODEX_LAB_LEVEL.name,
     data: CODEX_LAB_LEVEL,
   }, // source-owned long course for fast, isolated geometry iterations
+  { id: "jungle-cup", name: JUNGLE_CUP_LEVEL.name, data: JUNGLE_CUP_LEVEL },
   { id: "astra-chimeworks", name: ASTRA_CHIMEWORKS_LEVEL.name, data: ASTRA_CHIMEWORKS_LEVEL },
   {
     id: "backport-lab",
@@ -2841,7 +2857,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       singletonKinds.add(component.t);
       if (component.t === "worldmap") {
         if (source.ocean || (component.pts &&
-            (![9, CAMPAIGN_LEVELS.length].includes(component.pts.length) || component.pts.some(point =>
+            (![9, 11, CAMPAIGN_LEVELS.length].includes(component.pts.length) || component.pts.some(point =>
               Math.abs(point[0]) > 256 || Math.abs(point[1]) > 256 || Math.abs(point[3] ?? 0) > 128))))
           return null;
         if (component.pts) for (let i = 0; i < component.pts.length; i++) {
@@ -2863,6 +2879,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     aggregateSamples += component.t === "decor" ? 64 : dynamic
       ? 128 : ["crate", "outline", "metal"].includes(component.t) ? 32 : 8;
     const decorKind = component.dkind;
+    if (component.t === "decor" && decorKind === "junglecup") aggregateSamples += 1100;
     if (component.t === "decor" && decorKind && isJungleAssembly(decorKind)) {
       const work = jungleAssemblyWork({
         dkind: decorKind,
@@ -4523,7 +4540,7 @@ export class Level {
       this.theme.fogNear = SKY_BRIDGE_FOG_NEAR;
       this.theme.fogFar = SKY_BRIDGE_FOG_FAR;
     }
-    if (isCampaignLevel(entry.id)) {
+    if (isCampaignLevel(entry.id) && entry.id !== "jungle-cup") {
       if (!this.crystalPickup) this.placeCampaignCrystal();
       if (!this.bonusPlatform) this.placeDefaultBonusPlatform();
     }
@@ -4536,7 +4553,7 @@ export class Level {
     this.buildSystemicSurfaceEdgeRails(); // ordinary solid boundaries grind by default
     this.dressRails(); // every builder is done adding rails by now
     this.syncTrickPrimitives(new Set<DeckTrickKind>(), false);
-    if (this.hudMode !== "bonus" && this.hudMode !== "hub") {
+    if (this.hudMode !== "bonus" && this.hudMode !== "hub" && entry.id !== "jungle-cup") {
       this.placeClock(); // time-trial stopwatch near spawn (only where a finish gate exists)
       this.placeComboOrb(); // combo-run orb, the other side of the racing line
     }
@@ -15059,6 +15076,15 @@ export class Level {
     const [x, y, z] = c.p;
     const s = c.w ?? 1;
     switch (c.dkind) {
+      case "junglecup": {
+        this.noteDecor("junglecup",x,y,z,{s:c.s,w:c.w,yaw:c.yaw});
+        const cup = createJungleCupTrophy();
+        cup.position.set(x,y,z);
+        cup.scale.set(...(c.s ?? [1,1,1])).multiplyScalar(s);
+        cup.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0);
+        this.root.add(cup);
+        return;
+      }
       case "pine": return this.pine(x, y, z, s, c.yaw ?? 0);
       case "fanpalm":
       case "bananatree":

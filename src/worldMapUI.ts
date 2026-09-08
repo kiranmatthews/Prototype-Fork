@@ -132,6 +132,12 @@ export class WorldMapUI {
       this.collectibleRow.appendChild(reward);
     }
 
+    if (definition.competition) {
+      this.collectibleRow.replaceChildren();
+      const cup = node("span", `world-map-collectible${progress?.cup ? " earned" : ""}`);
+      cup.textContent = progress?.cup ? "🏆 JUNGLE CUP EARNED" : "WIN THE JUNGLE CUP";
+      this.collectibleRow.append(cup);
+    }
     const trialUnlocked = this.campaign.runModesUnlocked(definition.levelId);
     const relicTarget = this.callbacks.getRelicTarget?.(definition.levelId) ?? definition.relicTime;
     const targets = this.callbacks.getMedalTargets?.(definition.levelId) ?? defaultMedalTimes(relicTarget);
@@ -145,7 +151,7 @@ export class WorldMapUI {
     }
     this.presentation ??= new MapLevelPresentation(this.levelCard, this.trial);
     this.presentation.select({ key: definition.progressKey, name: definition.name,
-      earned: rewards.map(([, earned]) => earned), trialUnlocked, times: [...times], target: targets.gold, targets, medal }, immediate);
+      earned: rewards.map(([, earned]) => earned), competition: definition.competition, cup: progress?.cup === true, trialUnlocked, times: [...times], target: targets.gold, targets, medal }, immediate);
   }
 
   private actionButton(

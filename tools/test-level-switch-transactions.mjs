@@ -90,6 +90,7 @@ try {
         transition(action) { context.transition = Promise.resolve().then(action); return context.transition; },
         hide() { this.hidden = true; mark("flow.hide")(); } },
       recorder: { start: mark("record.start") }, window: { __game: { level } },
+      JUNGLE_CUP_ID: "jungle-cup", syncCompetitionLevel: mark("competition.sync"),
       endlessDeathsOn: false, syncCampaignPortalProgress: mark("campaign.portals"),
       adoptCommittedCampaignProgress: mark("campaign.adopt"), applyRunModes: mark("modes"),
       applyTheme: mark("theme"), applyShadowFlags: mark("shadows"), currentHudState: () => ({}),

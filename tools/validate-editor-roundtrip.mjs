@@ -1679,6 +1679,10 @@ try {
     });
     try {
       const placement = campaignLevel.bonusPlatformDiagnostics;
+      if (definition.competition) {
+        assert.equal(placement, null, "competition must stay in its three-run event");
+        continue;
+      }
       assert.ok(placement, `${definition.name} has no supported bonus platform`);
       assert.ok(
         placement.laneFraction >= 0.4 && placement.laneFraction <= 0.6,
@@ -1727,7 +1731,7 @@ try {
     warpLevel.root.traverse(({ name }) => names.push(name));
     assert.equal(
       names.filter((name) => name === "world map glowing route").length,
-      11,
+      12,
       "campaign graph routes did not survive the shared Level build pipeline",
     );
     assert.equal(

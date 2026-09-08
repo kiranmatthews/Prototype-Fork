@@ -30,7 +30,7 @@ const campaign = await import(
   `data:text/javascript;base64,${Buffer.from(output).toString("base64")}`
 );
 
-assert.equal(campaign.CAMPAIGN_LEVELS.length, 11);
+assert.equal(campaign.CAMPAIGN_LEVELS.length, 12);
 assert.equal(campaign.resolveRelicTime('jungle'), 60);
 assert.equal(campaign.resolveRelicTime('editor-course', { relicTime: 83.75 }), 83.75);
 assert.equal(campaign.resolveRelicTime('jungle', { relicTime: 45.125 }), 45.125);
@@ -52,12 +52,13 @@ assert.deepEqual(
     ["jungle-gate-run", "Jungle Gate"],
     ["codex-lab", "Codex Switchback"],
     ["astra-chimeworks", "Chimeworks"],
+    ["jungle-cup", "Jungle Cup"],
   ],
   "canonical portal order or labels drifted",
 );
 assert.equal(
   new Set(campaign.CAMPAIGN_LEVELS.map((level) => level.progressKey)).size,
-  11,
+  12,
   "campaign progress keys must remain unique",
 );
 assert.equal(campaign.CAMPAIGN_TIME_RELIC_TARGET_SECONDS, 60);
@@ -67,7 +68,7 @@ assert.ok(
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ levelKeys }) => levelKeys.length),
-  [6, 5],
+  [7, 5],
   "the prototype map must exercise multiple 4-7 hub islands",
 );
 assert.deepEqual(
@@ -88,7 +89,7 @@ assert.deepEqual(
   [],
   "campaign map edge endpoints and direction slots must stay valid",
 );
-const mainPath = ['jungle','test-course','sky-bridge','nightworks','beachside-run','coastal','island-hopper','jungle-gate'];
+const mainPath = ['jungle','test-course','sky-bridge','nightworks','jungle-cup','beachside-run','coastal','island-hopper','jungle-gate'];
 for(let i=1;i<mainPath.length;i++) {
   const edge=campaign.CAMPAIGN_MAP_EDGES.find(e=>e.from===mainPath[i-1]&&e.to===mainPath[i]);
   assert.ok(edge);assert.equal(edge.fromDirection,'right');assert.equal(edge.toDirection,'left');

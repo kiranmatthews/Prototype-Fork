@@ -14,6 +14,8 @@ export interface MapLevelCardData {
   target: number;
   targets?: MedalTimes;
   medal?: TimeMedal | null;
+  competition?: boolean;
+  cup?: boolean;
 }
 
 export function mapTrialTime(seconds: number | undefined): string {
@@ -145,7 +147,7 @@ export class MapLevelPresentation {
     this.deckPivot.rotation.x = -0.08 + Math.PI * 2 * (phase * phase * (3 - 2 * phase));
     this.deckPivot.rotation.y = Math.sin(phase * Math.PI * 2) * 0.07;
     this.rewards.forEach((pivot, i) => {
-      pivot.visible = data.earned[i] === true;
+      pivot.visible = !data.competition && data.earned[i] === true;
       pivot.children[0].rotation.y = this.time * 0.8 + i * 0.45;
     });
     // The poster changes with the same hidden-face swap as the deck printing.
@@ -175,10 +177,15 @@ export class MapLevelPresentation {
     const ctx = this.faceTexture.image.getContext("2d")!;
     ctx.clearRect(0, 0, 1536, 512);
     // Warm screen-printed reward sockets; missing shapes stay flat and dark.
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < (data.competition ? 0 : 4); i++) {
       const x = 278 + i * 326.4;
       ctx.fillStyle = "#9e9b8b"; ctx.beginPath(); ctx.ellipse(x, 366, 109, 105, -0.08, 0, Math.PI * 2); ctx.fill();
       if (!data.earned[i]) silhouette(ctx, i, x, 366);
+    }
+    if (data.competition) {
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillStyle = "#f7d06f"; ctx.font = '75px "Staging Secondary", Arial, sans-serif';
+      ctx.fillText(data.cup ? "🏆 JUNGLE CUP EARNED" : "3 RUNS · FINISH 1ST", 768, 360);
     }
     ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.lineJoin = "round";
     let fontSize = 156;

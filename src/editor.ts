@@ -179,6 +179,7 @@ const manyDots = (x: CanvasRenderingContext2D): void => {
   }
 };
 const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
+  junglecup: x => { x.fillStyle="#eabb58"; x.fillRect(5,2,8,8); x.fillRect(8,9,2,6); x.fillRect(4,15,10,3); x.strokeStyle="#eabb58"; x.strokeRect(2,4,14,5); },
   pine: x => { x.fillStyle = "#856044"; x.fillRect(8, 9, 2, 8); x.fillStyle = "#58a66a";
     for (const [y, width] of [[2, 5], [7, 7]]) { x.beginPath(); x.moveTo(9, y); x.lineTo(9 + width, y + 7); x.lineTo(9 - width, y + 7); x.closePath(); x.fill(); } },
   ...Object.fromEntries(JUNGLE_ASSET_KINDS.map(kind => [kind, (x: CanvasRenderingContext2D) => {
@@ -466,6 +467,7 @@ const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
 // What a freshly dropped prop looks like: the same numbers the hand-coded
 // levels plant with, so a new one matches the ones already standing there.
 const DECOR_DEFAULTS: Record<DecorKind, Partial<CustomComponent>> = {
+  junglecup: {s:[2,2,2],yaw:0},
   pine: { w: 1, yaw: 0 },
   ...Object.fromEntries(JUNGLE_ASSET_KINDS.map(kind => [kind, { s: [...JUNGLE_ASSETS[kind].size], w: 1, yaw: 0,
     ...(kind === "carvedlog" ? {} : { solid: false }) }])) as Record<JungleAssetKind, Partial<CustomComponent>>,

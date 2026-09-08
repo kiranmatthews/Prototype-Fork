@@ -1,3 +1,5 @@
+import { JungleCupEvent, JUNGLE_CUP_ID, COMPETITION_TUNING, COMPETITORS, JUDGES } from "./competition/event";
+import { CompetitionPresentation, type CompetitionAction } from "./competition/presentation";
 // Entry point: renderer, Crash-style corridor camera, and the deterministic
 // fixed-step game loop.
 
@@ -1261,6 +1263,8 @@ const input = new Input(false, () => gameFlow?.developerChromeVisible ?? false);
 input.rival = input2;
 input2.rival = input;
 const ui = new UI();
+let competition: JungleCupEvent | null = null;
+const competitionUI = new CompetitionPresentation(handleCompetitionAction);
 const gameInterface = new GameInterfaceSurface();
 const campaign = new CampaignStore();
 let worldMapController: WorldMapController | null = null;
@@ -1585,6 +1589,7 @@ let runStartRewards = {
   comboGem: false,
 };
 const player = new Player(scene);
+player.onWipeout = () => competition?.bail();
 const playerAnimationBinding = RigBinding.fromSculptRuntime(
   player.animationRig.root,
   { strict: false },
@@ -1711,6 +1716,7 @@ function applyRunModes(): void {
 }
 
 function set2P(on: boolean, force = false): void {
+  if (on && current.id === JUNGLE_CUP_ID) return;
   if (on === split2p) return;
   if (on) {
     const pads = navigator.getGamepads
@@ -1998,6 +2004,7 @@ ui.setHUD(currentHudState(), 0);
 gameFlow.setWarpRoom((current.id === "warproom" || level.isCampaignMap));
 if (shellBypass) gameFlow.hide();
 else gameFlow.showLaunch();
+syncCompetitionLevel(false);
 
 // Every solid mesh in the world both casts and receives. It's a whole-scene
 // traverse rather than per-builder flags because the builders are hundreds of
@@ -2172,6 +2179,7 @@ function switchLevel(
   player.enterLevel(entry.id);
   player.bonusMode = false;
   player.hubMode = (entry.id === "warproom" || level.isCampaignMap);
+  player.competitionMode = entry.id === JUNGLE_CUP_ID;
   currentRunBonusBoxes = 0;
   player.respawn(level, true, preserveInventory, warpReturnPose ?? undefined);
   syncCampaignPortalProgress();
@@ -2224,7 +2232,47 @@ function switchLevel(
       >
     ).level = level);
   if (preserveEditor) editor.onLevelRebuilt();
+  syncCompetitionLevel(preserveEditor);
   return true;
+}
+
+function syncCompetitionLevel(editing = false): void {
+  player.competitionMode = current.id === JUNGLE_CUP_ID && !editing;
+  if (player.competitionMode && split2p) set2P(false);
+  competition = player.competitionMode ? new JungleCupEvent() : null;
+  competitionUI.render(competition, gameFlow.blocksGameplay || editing);
+  if (competition) {
+    ui.setLevel(current.id, "hub", player.fruitCollectionRevision, input.inventoryHeld);
+  }
+}
+
+function commitCompetitionVictory(): void {
+  if (!competition?.won || competition.resultCommitted) return;
+  competition.resultCommitted = true;
+  const unlockedBefore = new Set(CAMPAIGN_LEVELS.filter(d => campaign.levelUnlocked(d.progressKey)).map(d => d.progressKey));
+  competition.cupAwarded = campaign.commitCompetitionWin(current.id);
+  pendingMapUnlockReveal = CAMPAIGN_LEVELS.filter(d => !unlockedBefore.has(d.progressKey) && campaign.levelUnlocked(d.progressKey)).map(d => d.progressKey);
+}
+
+function handleCompetitionAction(action: CompetitionAction): void {
+  if (!competition || current.id !== JUNGLE_CUP_ID) return;
+  if (action === "retry") { competition = new JungleCupEvent(); action = "start"; }
+  if (action === "start" && competition.startRun()) {
+    player.respawn(level, true, true);
+    player.competitionMode = true;
+    scene.updateMatrixWorld(true);
+    player.commitRenderStep(level);
+    ui.deathFade(false);
+    ui.resetHudTransients(player.fruitCollectionRevision, false);
+    input.consumeEdges(); acc = 0;
+  } else if (action === "standings" && competition.showStandings()) {
+    commitCompetitionVictory();
+  } else if (action === "exit") {
+    // The successful level switch retires the event. A rejected map build
+    // must leave this scorecard available, just like other level transitions.
+    continueFromResults();
+  }
+  competitionUI.render(competition);
 }
 
 function currentCampaignName(): string {
@@ -2393,6 +2441,7 @@ function restartCurrentRun(): void {
       applyRunModes();
       ui.setHUD(currentHudState(), 0);
     }
+    if (current.id === JUNGLE_CUP_ID) syncCompetitionLevel(false);
     await prepareActivePresentationAssets();
     gameFlow.hide();
   });
@@ -2522,6 +2571,7 @@ function showCampaignResults(): void {
     player.gemEarned = true;
   // Source-owned labs and editor courses share the polished results flow,
   // without manufacturing a canonical save/progress entry for a debug level.
+  if (definition?.competition) return;
   if (definition)
     campaign.commitClear(current.id, {
       crystal: player.hasCrystal,
@@ -2724,6 +2774,7 @@ function returnFromBonus(completed: boolean): void {
 }
 
 function checkCampaignEntrances(): void {
+  if (current.id === JUNGLE_CUP_ID) return;
   if (gameFlow.blocksGameplay || paused || editor.active || player.state === "dead" || player.state === "gameover" || player.state === "finished")
     return;
   if ((current.id === "warproom" || level.isCampaignMap)) {
@@ -4362,6 +4413,8 @@ function frame(nowMs: number): void {
     }
   }
   gameFlow.update(nowMs);
+  competitionUI.render(competition, gameFlow.blocksGameplay || editor.active);
+  competitionUI.updateInput();
 
   // Controller-only players fire no keydown/pointer gesture, so the audio
   // context would stay suspended until they touched the keyboard. Nudge it from
@@ -4466,6 +4519,20 @@ function frame(nowMs: number): void {
   gameFlowVortex.deactivate();
   paused = false;
 
+  if (competition && competition.phase !== "running") {
+    competition.stepPresentation(dt);
+    competitionUI.render(competition);
+    if ((competition.phase as string) !== "running") {
+      input.consumeEdges(); acc = 0; sfx.stopLoops();
+      if (competition.phase === "countdown") updateCamera(dt);
+      else { camera.position.set(58, 55, 38); camera.lookAt(0, 0, -37); }
+      sky.position.copy(camera.position); skyMist.position.copy(camera.position);
+      updateSunShadow(0, 0, -35);
+      renderGameplayScene(dt, true, false);
+      return;
+    }
+  }
+
   // Tell the player where the AUTHORED camera is aiming (XZ) — the small
   // presentation-only peek must never rotate simulation controls or replays.
   if (camControlDir.lengthSq() > 1e-6) {
@@ -4495,6 +4562,11 @@ function frame(nowMs: number): void {
       switchLevel(current.id);
       break;
     }
+    if (competition && input.restartPressed) {
+      input.restartPressed = false;
+      handleCompetitionAction("retry");
+      break;
+    }
     // 2P: a reset from EITHER side resets both riders to the start
     if (split2p && (input.restartPressed || input2.restartPressed)) {
       input.restartPressed = true;
@@ -4519,6 +4591,14 @@ function frame(nowMs: number): void {
       stepPvp(CONST.fixedStep);
     }
     level.update(CONST.fixedStep);
+    const runScore = competition && competition.remaining <= CONST.fixedStep + 1e-7
+      ? player.competitionScoreAtBuzzer() : player.points;
+    if (competition?.stepRun(CONST.fixedStep, runScore)) {
+      commitCompetitionVictory();
+      ui.deathFade(false);
+      player.collapseRenderInterpolation();
+      sfx.stopLoops();
+    }
     player.flushLevelCrateRewards(level);
     flushPendingCompletion();
     checkCampaignEntrances();
@@ -4533,8 +4613,9 @@ function frame(nowMs: number): void {
     acc = Math.max(0, acc - CONST.fixedStep);
     simSteps++;
     frameStats.totalFixedSteps++;
-    if (gameFlow.blocksGameplay) break;
+    if (gameFlow.blocksGameplay || (competition && competition.phase !== "running")) break;
   }
+  competitionUI.render(competition);
 
   if (!bonusSession && campaign.active)
     campaign.updateInventory(player.lives, player.fruit);
@@ -4717,6 +4798,12 @@ requestAnimationFrame(frame);
   getInterfaceSurfaceDiagnostics: () => gameInterface.diagnostics,
   player,
   level,
+  getCompetition: () => competition,
+  competitionUI,
+  competitionTuning: COMPETITION_TUNING,
+  competitionRoster: COMPETITORS,
+  competitionJudges: JUDGES,
+  competitionAction: handleCompetitionAction,
   getLevel: () => level,
   input,
   input2,

@@ -419,7 +419,7 @@ try {
   );
   const { swirls } = await server.ssrLoadModule("/src/swirls.ts");
 
-  assert.equal(CAMPAIGN_LEVELS.length, 11);
+  assert.equal(CAMPAIGN_LEVELS.length, 12);
   assert.equal(
     new Set(CAMPAIGN_LEVELS.map(({ progressKey }) => progressKey)).size,
     CAMPAIGN_LEVELS.length,
@@ -752,7 +752,7 @@ try {
     trailEnd.position.distanceTo(warpLevel.campaignMapPose("test-course").position) < 1e-10,
   );
   const boardSample = warpLevel.campaignMapTravel(
-    "nightworks",
+    "jungle-cup",
     "beachside-run",
     0.5,
   );
@@ -760,7 +760,7 @@ try {
   assert.equal(boardSample.style, "boardslide");
   assert.ok(boardSample.position.y > 5, "inter-island boardslide has no authored lift");
   const steepBoardSample = Array.from({ length: 101 }, (_, index) =>
-    warpLevel.campaignMapTravel("nightworks", "beachside-run", index / 100),
+    warpLevel.campaignMapTravel("jungle-cup", "beachside-run", index / 100),
   ).reduce((steepest, sample) =>
     Math.abs(sample.tangent.y) > Math.abs(steepest.tangent.y) ? sample : steepest,
   );
@@ -930,14 +930,15 @@ try {
   for (let frame = 0; frame < 600 && controller.moving; frame++) controller.step(1 / 60, neutralInput);
   assert.equal(controller.selectedKey, "slipstream", "projected hub picking selected the wrong branch");
   controllerStore.commitClear("dark", { crystal: false, boxGem: false, comboGem: false });
-  controller.activate(warpLevel, "nightworks");
+  controllerStore.commitCompetitionWin("jungle-cup");
+  controller.activate(warpLevel, "jungle-cup");
   controller.frameCamera(touchCamera, 1 / 60);
   touchCamera.updateMatrixWorld();
   // The cross-island endpoint is well off-screen in this portrait framing.
   touchCamera.aspect = 390 / 844;
   for (let frame = 0; frame < 240; frame++) controller.frameCamera(touchCamera, 1 / 60);
   touchCamera.updateMatrixWorld();
-  const origin = warpLevel.campaignMapPose("nightworks").position.clone().project(touchCamera);
+  const origin = warpLevel.campaignMapPose("jungle-cup").position.clone().project(touchCamera);
   const destination = warpLevel.campaignMapPose("beachside-run").position.clone().project(touchCamera);
   const ox = (origin.x + 1) * 195, oy = (1 - origin.y) * 422;
   const vx = (destination.x - origin.x) * 195, vy = (origin.y - destination.y) * 422;

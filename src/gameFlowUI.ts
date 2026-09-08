@@ -1103,12 +1103,16 @@ export class GameFlowUI {
         const name = element("strong", "game-progress-level-name");
         name.textContent = `${definition.boss ? "★ " : ""}${definition.name.toUpperCase()}`;
         const rewards = element("span", "game-progress-level-rewards");
-        rewards.textContent = unlocked
+        rewards.textContent = definition.competition
+          ? progress?.cup ? "🏆 JUNGLE CUP" : "CUP NOT YET WON"
+          : unlocked
           ? `${progress?.crystal ? "◆" : "·"} ${progress?.boxGem ? "◇" : "·"} ${progress?.comboGem ? "⬙" : "·"} · ${earnedTimeMedal(progress)?.toUpperCase() ?? "NO"} MEDAL`
           : "LOCKED";
         const timing = element("small", "game-progress-level-time");
         const targets = this.callbacks.getMedalTargets?.(definition.levelId) ?? defaultMedalTimes(this.callbacks.getRelicTarget?.(definition.levelId) ?? definition.relicTime);
-        timing.textContent = progress?.cleared
+        timing.textContent = definition.competition
+          ? progress?.cup ? "1ST OVERALL · UNIQUE CUP EARNED" : "3 × 60 SECOND RUNS · FINISH 1ST"
+          : progress?.cleared
           ? `BEST ${progress.bestTime === undefined ? "—" : this.formatTime(progress.bestTime)} · ${TIME_MEDALS.map(tier => `${tier.toUpperCase()} ${this.formatTime(targets[tier])}`).join(" · ")}`
           : unlocked
             ? "NOT YET CLEARED"
@@ -1298,10 +1302,11 @@ export class GameFlowUI {
     bar.appendChild(fill);
     const grid = element("div", "game-progress-grid");
     grid.innerHTML = `
-      <div><span>◆</span><strong>${totals.crystals}/${totals.maxLevels}</strong><small>CRYSTALS</small></div>
+      <div><span>◆</span><strong>${totals.crystals}/${totals.maxCrystals}</strong><small>CRYSTALS</small></div>
       <div><span>◇</span><strong>${totals.gems}/${totals.maxGems}</strong><small>GEMS</small></div>
-      <div><span>◉</span><strong>${totals.relics}/${totals.maxLevels}</strong><small>MEDALS</small></div>
-      <div><span>✦</span><strong>${totals.cleared}/${totals.maxLevels}</strong><small>LEVELS</small></div>`;
+      <div><span>◉</span><strong>${totals.relics}/${totals.maxRelics}</strong><small>MEDALS</small></div>
+      <div><span>✦</span><strong>${totals.cleared}/${totals.maxLevels}</strong><small>LEVELS</small></div>
+      ${totals.cups ? `<div><span>🏆</span><strong>${totals.cups}/${totals.maxCups}</strong><small>JUNGLE CUP</small></div>` : ""}`;
     const cleared = element("p", "game-progress-cleared");
     cleared.textContent = `${totals.cleared} OF ${CAMPAIGN_LEVELS.length} LEVELS CLEARED`;
     card.append(head, bar, grid, cleared);

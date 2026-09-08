@@ -50,7 +50,7 @@ try {
   assert.deepEqual(normalize(normalize(base())), normalize(base()), "migration must stay idempotent");
   const oldMap={...base(),components:[{t:'worldmap',p:[0,0,0],pts:api.worldMapComponentPoints().slice(0,9)}]};
   const expanded=normalize(oldMap);
-  assert.equal(expanded.components[0].pts.length,11,'legacy editable map lost its new branch hubs');
+  assert.equal(expanded.components[0].pts.length,12,'legacy editable map lost its new branch hubs');
   assert.deepEqual(expanded.components[0].pts.slice(0,9),oldMap.components[0].pts,'legacy hub identities shifted');
   assert.deepEqual(normalize(expanded),expanded,'map expansion must be idempotent');
   assert.equal(oldMap.components[0].pts.length,9,'normalizing mutated the original map');
@@ -59,7 +59,7 @@ try {
   const priorBranchMap={...oldMap,components:[{t:'worldmap',p:[0,0,0],pts:[[-63,18,0,1.35],[-44,18,0,1.75],[-26,18,0,2.1],[-44,-3,0,2.55],[-9,18,0,2.85],[23,16,0,1.35],[42,14,0,1.75],[61,14,0,2.4],[79,14,0,3.1],[-26,-3,0,2.85],[42,26,0,2.3]]}]};
   assert.deepEqual(normalize(priorBranchMap).components[0].pts,api.worldMapComponentPoints(),'old default map capture masked the island expansion');
   const authoredBranchMap=structuredClone(priorBranchMap);authoredBranchMap.components[0].pts[0][0]+=1;
-  assert.deepEqual(normalize(authoredBranchMap).components[0].pts,authoredBranchMap.components[0].pts,'island expansion overwrote custom hub positions');
+  assert.deepEqual(normalize(authoredBranchMap).components[0].pts.slice(0,11),authoredBranchMap.components[0].pts,'island expansion overwrote custom hub positions');
   const occupied=structuredClone(oldMap);occupied.components[0].pts[0]=api.worldMapComponentPoints()[9];
   const occupiedMigrated=normalize(occupied);
   assert.deepEqual(occupiedMigrated.components[0].pts.slice(0,9),occupied.components[0].pts);

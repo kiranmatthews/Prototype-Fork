@@ -563,6 +563,8 @@ export class Player {
   lives = 4;
   endlessDeaths = false; // selectable standard-run rule: deaths replace lives and never game-over
   totalDeaths = 0;
+  competitionMode = false;
+  onWipeout: () => void = () => {};
   points = 0; // banked score
   comboPoints = 0; // pending combo: sum of base values...
   comboMult = 0; // ...times the number of actions strung together
@@ -2850,7 +2852,7 @@ export class Player {
     // Checkpoints restore the authored world/counters, but an endless-mode
     // death penalty is permanent for this run and must not be overwritten by
     // the checkpoint's older score snapshot.
-    const endlessScore = this.endlessDeaths && !hard ? this.points : null;
+    const endlessScore = (this.endlessDeaths || this.competitionMode) && !hard ? this.points : null;
     // A respawn teleports you: the camera lane must forget where it thought
     // you were, or the continuity bias pins the frame to the stretch you just
     // left. -1 means "take the global best next query".
@@ -3239,7 +3241,7 @@ export class Player {
   // crate snapshot it takes is the honest one for having got here without
   // breaking anything on the way.
   warpCheckpoint(level: Level, dir: number): boolean {
-    if (level.runMode) return false; // no checkpoints in a trial/combo run
+    if (level.runMode || this.competitionMode) return false; // no checkpoints in a trial/combo run
     const stops = [{ cp: null as Checkpoint | null, at: level.spawnPos }];
     for (const cp of level.checkpoints) stops.push({ cp, at: cp.spawnPos });
     if (stops.length < 2) return false;
@@ -4307,6 +4309,12 @@ export class Player {
       }
     }
     this.comboLabels.push(label);
+  }
+
+  /** A landed combo gets its normal cash-in at the competition buzzer. */
+  competitionScoreAtBuzzer(): number {
+    if (this.grounded && this.state === 'ride' && !this.isBailing) this.bankCombo();
+    return this.points;
   }
 
   private bankCombo(): void {
@@ -8576,6 +8584,7 @@ export class Player {
   }
 
   private armBailRecovery(duration: number): void {
+    if (!this.isBailing) this.onWipeout();
     // On-foot inertia, sideways slide-jumps, exact slides, and vert hang carry
     // live in world-vector channels rather than the course speed projection.
     const vectorOwned = this.captureWipeoutVelocity(BAIL_V);
@@ -11361,7 +11370,7 @@ export class Player {
     // no touchdown required. The column's box starts above head height for
     // someone on the deck, so rolling past its shoulder still does nothing.
     const onPad = this.grounded && !!this.groundHit?.finishPad;
-    if (onPad || this.playerBox.intersectsBox(level.finishGlow)) {
+    if (!this.competitionMode && (onPad || this.playerBox.intersectsBox(level.finishGlow))) {
       this.bankCombo(); // whatever is pending counts as you arrive
       sfx.play('lifeGet', 1.0);
       this.state = 'finished';
@@ -13748,7 +13757,8 @@ export class Player {
     this.uberTimer = 0;
     this.state = 'dead';
     this.gameOverPending = false;
-    if (this.ttActive) this.ttDied = true; // trials never cost a life — the restart is the price
+    if (this.competitionMode) this.totalDeaths++;
+    else if (this.ttActive) this.ttDied = true; // trials never cost a life — the restart is the price
     else if (this.comboRun) {
       this.comboDied = true; // same deal for combo runs
       this.comboFailT = 0; // dying IS the despair — skip the beat

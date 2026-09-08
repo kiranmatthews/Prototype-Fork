@@ -84,6 +84,8 @@ export interface CampaignLevelDefinition {
   unlockMode?: "all" | "any";
   /** Boss hubs use a larger silhouette and island-end presentation. */
   boss?: boolean;
+  /** Handcrafted three-run boss; its only collectible is the cup. */
+  competition?: boolean;
 }
 
 export type CampaignIslandId = "island-1" | "island-2";
@@ -102,7 +104,7 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     name: "Island 1",
     subtitle: "REGION 01",
     centre: [-95, 0, 0],
-    levelKeys: ["jungle", "test-course", "sky-bridge", "slipstream", "codex-switchback", "nightworks"],
+    levelKeys: ["jungle", "test-course", "sky-bridge", "slipstream", "codex-switchback", "nightworks", "jungle-cup"],
   },
   {
     id: "island-2",
@@ -184,6 +186,14 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
   },
   {
     from: "nightworks",
+    to: "jungle-cup",
+    travel: "trail",
+    fromDirection: "right",
+    toDirection: "left",
+    waypoints: [[-39, 3.4, 22]],
+  },
+  {
+    from: "jungle-cup",
     to: "beachside-run",
     travel: "boardslide",
     fromDirection: "right",
@@ -273,9 +283,8 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-1",
     mapPath: "main",
-    mapPosition: [-31, 3, 22],
+    mapPosition: [-47, 3, 22],
     unlockAfter: ["sky-bridge"],
-    boss: true,
   },
   {
     progressKey: "beachside-run",
@@ -285,7 +294,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     islandId: "island-2",
     mapPath: "main",
     mapPosition: [48, 1.35, 16],
-    unlockAfter: ["nightworks"],
+    unlockAfter: ["jungle-cup"],
   },
   {
     progressKey: "coastal",
@@ -318,6 +327,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     unlockAfter: ["island-hopper"],
     boss: true,
   },
+  // Append-only identity order keeps existing editor hub indices stable.
   // Append new identities: existing editable worldmap.pts arrays use these
   // indices. Island display order lives in CAMPAIGN_ISLANDS.levelKeys.
   {
@@ -339,6 +349,12 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     mapPath: "lower-branch",
     mapPosition: [67, 2.3, 26],
     unlockAfter: ["coastal"],
+  },
+  {
+    progressKey: "jungle-cup", levelId: "jungle-cup", name: "Jungle Cup",
+    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+    islandId: "island-1", mapPath: "main", mapPosition: [-31, 3.8, 22],
+    unlockAfter: ["nightworks"], boss: true, competition: true,
   },
 ] as const;
 
@@ -410,6 +426,8 @@ export interface CampaignLevelProgress {
   boxGem: boolean;
   comboGem: boolean;
   timeRelic: boolean;
+  /** Unique Jungle Cup trophy; only an overall competition win awards it. */
+  cup?: boolean;
   /** Highest earned tier. Missing on old saves: timeRelic=true means gold. */
   timeMedal?: TimeMedal;
   bestTime?: number;
@@ -437,6 +455,10 @@ export interface CampaignTotals {
   relics: number;
   maxLevels: number;
   maxGems: number;
+  maxCrystals: number;
+  maxRelics: number;
+  cups: number;
+  maxCups: number;
 }
 
 export interface GameAudioOptions {
@@ -569,6 +591,7 @@ function normalizeLevelProgress(value: unknown): CampaignLevelProgress {
     boxGem: raw.boxGem === true,
     comboGem: raw.comboGem === true,
     timeRelic: timeMedal !== null,
+    ...(raw.cup === true ? { cup: true } : {}),
     ...(timeMedal ? { timeMedal } : {}),
     bestTime: trialTimes[0],
     ...(trialTimes.length ? { trialTimes } : {}),
@@ -861,7 +884,7 @@ export class CampaignStore {
 
   runModesUnlocked(levelId: string): boolean {
     const progress = this.levelProgress(levelId);
-    return progress?.cleared === true;
+    return campaignLevelById(levelId)?.competition !== true && progress?.cleared === true;
   }
 
   /** True when the active save has satisfied this hub's graph prerequisites. */
@@ -917,6 +940,7 @@ export class CampaignStore {
   ): CampaignLevelProgress | null {
     const progress = this.levelProgress(levelId);
     if (!progress) return null;
+    if (campaignLevelById(levelId)?.competition) return progress;
     const before = { ...progress };
     progress.cleared = true;
     progress.crystal = progress.crystal || rewards.crystal;
@@ -966,17 +990,35 @@ export class CampaignStore {
     return progress;
   }
 
+  commitCompetitionWin(levelId: string): boolean {
+    if (!campaignLevelById(levelId)?.competition) return false;
+    const progress = this.levelProgress(levelId);
+    if (!progress) return false;
+    const first = progress.cup !== true;
+    const changed = first || !progress.cleared;
+    progress.cup = true;
+    progress.cleared = true;
+    if (changed) this.noteWorkingChange();
+    return first;
+  }
+
   totals(save: CampaignSaveV1 | null = this.activeValue): CampaignTotals {
     let cleared = 0;
     let crystals = 0;
     let gems = 0;
     let relics = 0;
-    let earned = 0;
-    const maxMilestones = CAMPAIGN_LEVELS.length * 5;
+    let earned = 0, cups = 0;
+    const maxCups = CAMPAIGN_LEVELS.filter(level => level.competition).length;
+    const ordinaryLevels = CAMPAIGN_LEVELS.length - maxCups;
+    const maxMilestones = ordinaryLevels * 5 + maxCups * 2;
     if (save) {
       for (const level of CAMPAIGN_LEVELS) {
         const progress = save.levels[level.progressKey] ?? emptyLevelProgress();
         if (progress.cleared) { cleared++; earned++; }
+        if (level.competition) {
+          if (progress.cup) { cups++; earned++; }
+          continue;
+        }
         if (progress.crystal) { crystals++; earned++; }
         if (progress.boxGem) { gems++; earned++; }
         if (progress.comboGem) { gems++; earned++; }
@@ -990,7 +1032,8 @@ export class CampaignStore {
       gems,
       relics,
       maxLevels: CAMPAIGN_LEVELS.length,
-      maxGems: CAMPAIGN_LEVELS.length * 2,
+      maxGems: ordinaryLevels * 2,
+      maxCrystals: ordinaryLevels, maxRelics: ordinaryLevels, cups, maxCups,
     };
   }
 
