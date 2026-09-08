@@ -1031,6 +1031,10 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
     ocean.geometryVersion = 2;
   }
   d.components = d.components.map((c) => {
+    if(c.t==='worldmap'&&c.pts?.length===11) {
+      const prior=[[-63,18,0,1.35],[-44,18,0,1.75],[-26,18,0,2.1],[-44,-3,0,2.55],[-9,18,0,2.85],[23,16,0,1.35],[42,14,0,1.75],[61,14,0,2.4],[79,14,0,3.1],[-26,-3,0,2.85],[42,26,0,2.3]];
+      if(c.pts.every((p,i)=>p.length===4&&p.every((v,j)=>v===prior[i][j])))return {...c,pts:worldMapComponentPoints()};
+    }
     if (c.t === "worldmap" && c.pts?.length === 9) {
       // Pre-branch map files keep the first nine stable hub identities.
       const oldDefaults = [[-45,27,0,1.35],[-30,18,0,1.75],[-14,28,0,3.1],[-13,7,0,2.55],
@@ -14772,7 +14776,7 @@ export class Level {
    * colour, a size, a spin and a lean for every single plant.
    */
   get jungleAssetDiagnostics() { return this.jungleAssets?.diagnostics ?? null; }
-  async prepareJungleAssets(): Promise<void> { await this.jungleAssets?.ready(); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([this.jungleAssets?.ready(),this.campaignWorldMap?.prepareAssets()]); }
 
   private jungleAsset(c: CustomComponent): void {
     if (!isJungleAsset(c.dkind)) return;

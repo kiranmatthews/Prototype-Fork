@@ -1,0 +1,6 @@
+[
+  {"file":"cliff-buttress","kind":"mapcliff","label":"island cliff buttress","size":[13,18,10],"lod":0.22,"normal":0.45},
+  {"file":"ridge-spine","kind":"mapridge","label":"island volcanic ridge","size":[23,13,10],"lod":0.22,"normal":0.4},
+  {"file":"sea-arch","kind":"maparch","label":"island sea arch","size":[20,15,10],"lod":0.25,"normal":0.4},
+  {"file":"rainforest-tree","kind":"mapcanopy","label":"rejected rainforest tree","size":[10,12,10],"lod":0.18,"normal":0.22,"wind":true,"doubleSided":true,"rejected":true}
+]

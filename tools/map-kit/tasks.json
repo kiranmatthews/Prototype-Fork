@@ -1,0 +1,34 @@
+{
+  "budget": 300,
+  "startingBalance": 2211,
+  "reservedCredits": 60,
+  "tasks": {
+    "cliff-buttress": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 6000,
+      "id": "01a07e43-c32c-7792-b8bd-4131f95f409d"
+    },
+    "ridge-spine": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 6500,
+      "id": "01a07e43-d1f6-754b-818b-e249a6a783ca"
+    },
+    "sea-arch": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 6500,
+      "id": "01a07e43-e15c-7586-bb90-d7ec971ad618"
+    },
+    "rainforest-tree": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "selected": false,
+      "note": "Rejected by user: noisy foliage and unacceptable style departure. Not in runtime or asset catalog; replaced by existing clean junglecanopy/palm assets with no further spend.",
+      "targetTriangles": 5000,
+      "id": "01a07e43-f0d2-7538-88a5-9085ad6a22b0"
+    }
+  },
+  "lastBalance": 2151
+}

@@ -16,6 +16,7 @@ WORK.mkdir(parents=True, exist_ok=True)
 NODE = os.environ.get('JUNGLE_NODE', '/Users/kiki/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node')
 CLI = os.environ.get('JUNGLE_MESHY_CLI', '/tmp/codex-meshy-cli/node_modules/@meshy-ai/cli/dist/index.js')
 LEDGER = ROOT / 'tools/jungle-kit/tasks.json'
+REFERENCES = ROOT / 'tools/jungle-kit/references'
 SPECS = {
     'canopy-tree': ('modular/canopy-tree.png', 2200),
     'roof-hip': ('modular/roof-hip.png', 1000),
@@ -82,7 +83,7 @@ def _create(name):
     data['reservedCredits'] += 15
     data['tasks'][name] = {'credits': 15, 'state': 'submitting', 'targetTriangles': triangles}
     save(data)
-    result = cli('image-to-3d', 'create', '--image-url', str(ROOT / 'tools/jungle-kit/references' / image),
+    result = cli('image-to-3d', 'create', '--image-url', str(REFERENCES / image),
         '--model-type', 'smart-topology', '--target-polycount', str(triangles),
         '--should-texture', 'true', '--enable-pbr', 'true', '--texture-resolution', '2k',
         '--target-formats', 'glb', '--async')

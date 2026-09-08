@@ -11,10 +11,26 @@ replay, and tooling compatibility. Its runtime is the fixed-rail island map in
 - `CAMPAIGN_MAP_EDGES` owns graph connectivity, a unique directional input at
   each endpoint, map-only curve guides, and the `trail` or `boardslide` travel
   presentation. Every edge is regression-tested in both directions.
-- Each `CAMPAIGN_ISLANDS` entry generates one cohesive, compact landmass. Its
+- Each `CAMPAIGN_ISLANDS` entry generates one cohesive landmass. Its
   organic beach outline expands from the island centre to contain every linked
   `CAMPAIGN_LEVELS.mapPosition`; decorative islets and mountain ranges remain
   scenery-authored.
+- Island 1 spans about 201.56 m of dry land, measured at 2.75 normal 16:9 map
+  screen widths. `mapTopography.ts` supplies the caldera, ridged flanks, valleys
+  and island-specific minimum footprint; the camera follows the selected hub
+  instead of zooming out to fit the whole island. Island 2 is separated farther
+  east and has its own connected highlands and coastal arch.
+- Three individual sub-7k Meshy rock assets decorate the procedural landforms;
+  no generated island monolith is used. Forests reuse the existing clean canopy
+  and palm assets. The rejected noisy tree is neither shipped nor in the catalog.
+  See `public/map-kit/README.md` for geometry/texture budgets, prompts and costs.
+- Dense land ray queries use the existing BVH adapter. Nearby terrain is graded
+  beneath walking paths and same-island board rails, including the upper branch.
+  Shared instanced geometry, wind, near/far meshes and map-owned disposal keep
+  the dressing bounded and warm it during the existing loading transition.
+- Ocean shader/tuner values and the white-edge preset remain unchanged. Only
+  lateral water-surface coverage expanded so the larger landscape cannot expose
+  a hard edge of the existing sea mesh.
 - Normal clears unlock time trial and newly satisfied outgoing hubs. Side
   routes are optional; clearing Sky Bridge unlocks Nightworks independently.
 - `CampaignSaveV1.mapFocus` is optional for backward compatibility. New and
