@@ -8968,6 +8968,11 @@ export class Editor {
       });
       this.propsEl.appendChild(shuffle);
       colorRow();
+    } else if (c.t === "camnode" && c.cameraView && c.s) {
+      num("view yaw °",()=>c.yaw??0,v=>c.yaw=v,15);
+      num("blend distance",()=>c.radius??4,v=>c.radius=Math.max(.01,v));
+      for(const [i,label] of ["view width","view height","view depth"].entries())
+        num(label,()=>c.s![i],v=>c.s![i]=Math.max(.1,v));
     } else if (c.t === "camnode") {
       num(
         "corner radius",
@@ -8986,7 +8991,7 @@ export class Editor {
         // continue the lane: step onward along the last segment's direction
         const nodes: number[] = [];
         this.data.components.forEach((o, i) => {
-          if (o.t === "camnode") nodes.push(i);
+          if (o.t === "camnode" && !o.cameraView) nodes.push(i);
         });
         const lastIdx = nodes[nodes.length - 1];
         const last = this.data.components[lastIdx];

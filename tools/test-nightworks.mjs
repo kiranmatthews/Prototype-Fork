@@ -34,6 +34,30 @@ try {
      assert.ok(view&&Math.abs(view.x)<1e-8&&Math.abs(view.z+1)<1e-8,'stable camera and input frame through a corner');cameraSamples++;
    }
  assert.equal(cameraSamples,500);
+ // The two travelling rails retain exactly the same front view throughout
+ // their full antiphase sideways sweep, including grind/hang heights.
+ assert.equal(level.cameraViews.length,1);
+ const invalidView=JSON.parse(JSON.stringify(NIGHTWORKS_LEVEL));
+ delete invalidView.components.find(c=>c.cameraView).s;
+ assert.equal(normalizeCustomLevelData(invalidView),null,'view volumes require dimensions');
+ const invalidFlag=JSON.parse(JSON.stringify(NIGHTWORKS_LEVEL));
+ invalidFlag.components.find(c=>c.cameraView).cameraView='true';
+ assert.equal(normalizeCustomLevelData(invalidFlag),null,'view flag is a boolean');
+
+ for(let x=-40;x<=4;x+=2)for(const z of [-118.5,-112,-105.5])for(const y of [8,13.7,24,34]){
+   const view=level.cameraDirAt(x,y,z);assert.ok(Math.abs(view.x-1)<1e-8&&Math.abs(view.z)<1e-8,'steady forward rail view');
+ }
+ for(const p of [[0,0,4],[-47,12,-72],[10,26,-202],[-48,34,-278],[9,56,-324]]){
+   const view=level.cameraDirAt(...p);assert.ok(Math.abs(view.x)<1e-8&&Math.abs(view.z+1)<1e-8,'other sections retain their fixed view');
+ }
+ const {CameraInputFrame}=await server.ssrLoadModule('/src/cameraViews.ts');
+ const held=new CameraInputFrame();held.sample(1,0,{x:0,z:-1});
+ for(let i=0;i<=90;i++){
+   const a=i*Math.PI/180,frame=held.sample(1,0,{x:Math.sin(a),z:-Math.cos(a)});
+   assert.ok(Math.abs(frame.x)<1e-8&&Math.abs(frame.z+1)<1e-8,'held direction survives camera blend');
+ }
+ held.sample(0,0,{x:1,z:0});assert.deepEqual(held.sample(0,1,{x:1,z:0}),{x:1,z:0});
+
 
  // Actual held-input traversal across the former camera handoffs.
  const cs=new THREE.Scene(),cl=new Level(cs,{id:'night-camera',name:'Night camera',data:{v:1,name:'Night camera',spawn:[0,101,0],killY:-30,components:[
@@ -47,6 +71,13 @@ try {
    assert.ok(sideways?cp.pos.x>start.x+3:cp.pos.z<start.z-3,'held input crosses the old transition');
    assert.ok(Math.abs(sideways?cp.pos.z-start.z:cp.pos.x-start.x)<.001,'camera cannot hijack held run direction');
  }
+ // Drive the real Player with a turning camera while right remains held.
+ cp.pos.set(-40,100.5,-112);cp.prevPos.copy(cp.pos);cp.state='ride';cp.freeSkate=false;cp.speed=0;cp.walkVelocity.set(0,0,0);cp.viewInput.reset();cp.camDir.set(0,0,-1);cp.settle(cl);
+ ci.moveX=1;ci.moveY=0;const heldStart=cp.pos.clone();
+ for(let i=0;i<90;i++){const a=i/89*Math.PI/2;cp.camDir.set(Math.sin(a),0,-Math.cos(a));cl.update(CONST.fixedStep);cp.step(CONST.fixedStep,ci,cl);}
+ assert.ok(cp.pos.x>heldStart.x+3&&Math.abs(cp.pos.z-heldStart.z)<.001,'camera blend cannot steer held running input');
+ ci.moveX=0;cp.step(CONST.fixedStep,ci,cl);ci.moveY=1;cp.step(CONST.fixedStep,ci,cl);
+ assert.ok(cp.axisF.x>.999&&Math.abs(cp.axisF.z)<.001,'fresh forward input uses the front-looking view');
  cl.dispose();
  const normal=new THREE.Vector3();let ledges=0,sideProbes=0,groundProbes=0,joinedEdges=0;
  const player=new Player(scene),input={moveX:0,moveY:0,consumeEdges(){}};

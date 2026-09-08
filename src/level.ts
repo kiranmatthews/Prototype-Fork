@@ -1,3 +1,4 @@
+import { cameraViewDirection, type CameraView } from "./cameraViews";
 // Every level in the game, plus the toolkit they are all assembled from.
 // Built-ins are hand-coded builders picked by id; user levels carry component
 // data and build through the same pipeline the editor writes. Courses run
@@ -780,6 +781,7 @@ export interface CustomComponent {
   exitYaw?: number; // returnportal outgoing heading in degrees (0 = -Z)
   airOnly?: boolean; // returnportal only accepts an airborne player
   coverage?: number; // grindosaurus: fraction of spine that must be ridden to defeat it
+  cameraView?: boolean; // camnode: s/yaw define a fixed-view volume; radius feathers its boundary
   radius?: number; // camnode: lane corner radius · stone: the boulder's radius
   materialStyle?: "unity-sand"; // mesh only: registered MatrixRex sand factory, never external assets
   emissive?: string; // bounded surface emission on EMISSIVE_COMPONENT_TYPES
@@ -2360,7 +2362,7 @@ const LEVEL_DATA_KEYS = new Set([
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "containment",
-  "edgeGrinding", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "deck",
+  "edgeGrinding", "cameraView", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "deck",
   "closed", "bank", "curve", "vert", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid",
   "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "spacing",
@@ -2700,7 +2702,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     "fog",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "lk",
-    "shoreProfile", "edgeGrinding", "trafficRoad", "doubleSided", "beachSand",
+    "shoreProfile", "cameraView", "edgeGrinding", "trafficRoad", "doubleSided", "beachSand",
   ];
   let aggregateNodes = source.ocean?.shore?.length ?? 0;
   let aggregateSamples = source.ocean
@@ -2978,6 +2980,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
         (component.coverage < 0.1 || component.coverage > 1))
     )
       return null;
+    if (component.cameraView && (component.t !== "camnode" || !component.s)) return null;
     switch (component.t) {
       case "ramp":
         if ((component.len ?? 10) < 1 || (component.w ?? 8) < 1) return null;
@@ -7010,6 +7013,11 @@ export class Level {
             );
           } else if (c.t === "wumpa") {
             this.pickup(c.p[0], c.p[1], c.p[2]);
+          } else if (c.t === "camnode" && c.cameraView && c.s) {
+            this.cameraViews.push({p:[...c.p],s:[...c.s],yaw:c.yaw??0,feather:c.radius??4});
+            const marker=new THREE.Mesh(new THREE.BoxGeometry(...c.s),new THREE.MeshBasicMaterial({color:0x52d7ed,wireframe:true,transparent:true,opacity:.3}));
+            marker.position.fromArray(c.p);marker.rotation.y=THREE.MathUtils.degToRad(c.yaw??0);
+            marker.visible=false;marker.userData.editorGhost=true;this.root.add(marker);
           } else if (c.t === "camnode") {
             // camera-lane node: pure editor object — a floating diamond you
             // drag around; invisible (and non-physical) in play. lanePts is
@@ -7869,6 +7877,7 @@ export class Level {
   // CAMERA LANE (Crash 3 camera rails): camnode components chain into a
   // polyline; the tangent of the nearest segment is the local "down-course"
   // direction the camera and the controls steer along.
+  readonly cameraViews: CameraView[] = [];
   private lanePts: { x: number; y: number; z: number }[] = [];
   // The Descent's road spine, kept for the oncoming cars to drive along.
   private roadRibbon: SlideRibbon | null = null;
@@ -7919,6 +7928,11 @@ export class Level {
    *     the frame follows the road you are actually riding. Pass a cursor per
    *     player; omit it for one-off queries that have no history.
    */
+  cameraDirAt(x:number,y:number,z:number,cursor?:LaneCursor):{x:number;z:number}|null {
+    const base=this.laneDirAt(x,y,z,cursor);
+    return this.cameraViews.length?cameraViewDirection(this.cameraViews,x,y,z,base??{x:0,z:-1}):base;
+  }
+
   laneDirAt(
     x: number,
     y: number,
