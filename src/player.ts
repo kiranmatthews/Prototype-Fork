@@ -4,6 +4,7 @@
 // as fake boost/slowdown numbers derived from the surface normal.
 
 import * as THREE from 'three';
+import { CameraInputFrame } from "./cameraViews";
 import { softSkateRebound, sampleSoftSkateImpact, SOFT_SKATE_IMPACT_SECONDS } from './skateImpact';
 import { BONUS_FRUIT_FLIGHT_SECONDS } from './bonusPayout';
 import { TUNING, CONST } from './tuning';
@@ -544,6 +545,7 @@ export class Player {
   // this rider's place on the camera lane — private, so split-screen players
   // don't drag each other's frame around (see Level.laneDirAt)
   readonly laneCursor: LaneCursor = newLaneCursor();
+  private viewInput = new CameraInputFrame();
   speed = 0; // signed along-course velocity (+ = forward, - = toward camera)
   vVel = 0;
   state: MoveState = 'ride';
@@ -2848,7 +2850,7 @@ export class Player {
     // A respawn teleports you: the camera lane must forget where it thought
     // you were, or the continuity bias pins the frame to the stretch you just
     // left. -1 means "take the global best next query".
-    this.laneCursor.s = -1;
+    this.laneCursor.s = -1; this.viewInput.reset();
     // any respawn drops a live trial or combo run: back to normal dress
     if (this.ttActive || level.timeTrial) {
       this.ttActive = false;
@@ -2926,7 +2928,7 @@ export class Player {
     this.comboGemEarned = state.comboGem;
     this.gemSpawned = state.gemSpawned;
     this.simSeed = state.simSeed;
-    this.laneCursor.s = -1;
+    this.laneCursor.s = -1; this.viewInput.reset();
     this.pos.copy(position);
     level.playerPos.copy(this.pos);
     this.settle(level);
@@ -3181,7 +3183,7 @@ export class Player {
     const zn = level.zoneAt(this.pos.x, this.pos.z);
     this.setTravelDir(zn ? zn.dir : 'S');
     // a camera lane owns the course frame: spawn facing straight down it
-    const lf0 = level.laneDirAt(this.pos.x, this.pos.y, this.pos.z, this.laneCursor);
+    const lf0 = this.courseInputDirection(level);
     if (lf0) {
       this.axisF.set(lf0.x, 0, lf0.z);
       this.axisL.set(-this.axisF.z, 0, this.axisF.x);
@@ -3249,7 +3251,7 @@ export class Player {
     const i = near + (dir < 0 ? -1 : 1);
     if (i < 0 || i >= stops.length) return false;
     const stop = stops[i];
-    this.laneCursor.s = -1; // a teleport invalidates the lane's continuity bias
+    this.laneCursor.s = -1; this.viewInput.reset(); // a teleport invalidates the lane's continuity bias
     this.pos.copy(stop.at);
     level.playerPos.copy(this.pos);
     level.clearProjectiles(); // no orange orb may follow a debug warp from the old section
@@ -3498,11 +3500,11 @@ export class Player {
     const chaseMode = TUNING.chaseCam > 0.5 && !level.boulder;
     const laneDir =
       this.state !== 'grind' && !this.freeSkate
-        ? (level.laneDirAt(this.pos.x, this.pos.y, this.pos.z, this.laneCursor) ??
+        ? (this.courseInputDirection(level) ??
           (chaseMode ? { x: this.camDir.x, z: this.camDir.z } : null))
         : null;
     if (laneDir) {
-      const k = Math.min(1, 6 * dt);
+      const k = level.cameraViews.length && !chaseMode ? 1 : Math.min(1, 6 * dt);
       this.axisF.x += (laneDir.x - this.axisF.x) * k;
       this.axisF.z += (laneDir.z - this.axisF.z) * k;
       this.axisF.y = 0;
@@ -3575,7 +3577,7 @@ export class Player {
         // lane levels, the live camera aim in chase mode (the rig turns to
         // match all three). screen-right is its perpendicular (-f.z, f.x).
         const cf =
-          level.laneDirAt(this.pos.x, this.pos.y, this.pos.z, this.laneCursor) ??
+          this.courseInputDirection(level) ??
           (chaseMode ? { x: this.camDir.x, z: this.camDir.z } : { x: 0, z: -1 });
         const inv = 1 / Math.hypot(rx, ry);
         const wx = (cf.x * ry - cf.z * rx) * inv;
@@ -4799,15 +4801,21 @@ export class Player {
     this.speed = velocity;
   }
 
+  private courseInputDirection(level:Level):{x:number;z:number}|null {
+    if(!level.cameraViews.length || TUNING.chaseCam>.5) {
+      this.viewInput.reset();
+      return level.laneDirAt(this.pos.x,this.pos.y,this.pos.z,this.laneCursor);
+    }
+    const camera=this.viewInput.needsSeed
+      ? level.cameraDirAt(this.pos.x,this.pos.y,this.pos.z,this.laneCursor)??this.camDir
+      : this.camDir;
+    return this.viewInput.sample(this.rawInput?.moveX??0,this.rawInput?.moveY??0,camera);
+  }
+
   /** Stable input frame for a recovery whose physical heading is still free. */
   private resolveBailControlFrame(level: Level): void {
     const chaseMode = TUNING.chaseCam > 0.5 && !level.boulder;
-    const laneDir = level.laneDirAt(
-      this.pos.x,
-      this.pos.y,
-      this.pos.z,
-      this.laneCursor,
-    );
+    const laneDir = this.courseInputDirection(level);
     if (laneDir || chaseMode) {
       const fx = laneDir?.x ?? this.camDir.x;
       const fz = laneDir?.z ?? this.camDir.z;
@@ -5118,7 +5126,7 @@ export class Player {
         // +Z the error exceeded carveBrakeAngle, so mounting the board fired
         // the pull-back brake instead of a carve.
         const cfc =
-          level.laneDirAt(this.pos.x, this.pos.y, this.pos.z, this.laneCursor) ??
+          this.courseInputDirection(level) ??
           (TUNING.chaseCam > 0.5 && !level.boulder
             ? { x: this.camDir.x, z: this.camDir.z }
             : { x: 0, z: -1 });
@@ -5386,7 +5394,7 @@ export class Player {
           // world -Z here is what made "forward" stop meaning forward the
           // moment the spine turned the course.
           const cfc =
-            level.laneDirAt(this.pos.x, this.pos.y, this.pos.z, this.laneCursor) ??
+            this.courseInputDirection(level) ??
             (TUNING.chaseCam > 0.5 && !level.boulder
               ? { x: this.camDir.x, z: this.camDir.z }
               : { x: 0, z: -1 });
@@ -10300,7 +10308,7 @@ export class Player {
         this.launchVy = this.vVel;
         this.airFromSkate = portalBoard;
         this.airMomentum = portalBoard;
-        this.laneCursor.s = -1;
+        this.laneCursor.s = -1; this.viewInput.reset();
         this.returnPortalCoolT = 0.35;
         this.emitSparks(12, 0x9f72ff, 2);
         sfx.play('woosh2', 0.85, 1.2);

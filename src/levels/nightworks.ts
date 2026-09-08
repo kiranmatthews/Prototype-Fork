@@ -175,13 +175,16 @@ export function createNightworksLevel(): CustomLevelData {
     b.crystal(-43, 70.6, -350);
     b.finishGate(70, -353, -43);
 
-    // One view/input frame across every switchback. Following the route's
+    // Stable default view/input frame across switchbacks. Following the route's
     // X bends made the camera steer held input, then side-scroll zones snapped
     // it back again at the same landing. The player supplies the turn instead.
     const laneNodes: [number, number, number, number][] = [
       [0, 10, 0, 0],
       [0, -363, 0, 70],
     ];
+  // Forward view along both travelling rails, including their full sideways
+  // cycle. Boundary blends sit over the approach/landing rock islands.
+  add({t:"camnode",cameraView:true,nm:"Moving rails: forward view",p:[-18.25,15,-112],s:[23,60,52.5],yaw:-90,radius:4});
   for (const x of [-8,-22,-36]) add({t:"decor",dkind:"nightanchorrock",p:[x,30.2,-204.6],s:[2,2,2]});
   for (const [x,z,radius,y] of laneNodes) add({t:"camnode",p:[x,y,z],radius});
   // Far silhouettes frame each height band without occupying traversal space.

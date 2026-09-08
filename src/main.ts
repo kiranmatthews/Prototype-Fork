@@ -1884,7 +1884,7 @@ function updateCamera2(dt: number): void {
     camera2.aspect = camera.aspect;
     camera2.updateProjectionMatrix();
   }
-  const lf = level.laneDirAt(
+  const lf = level.cameraDirAt(
     subject.x,
     subject.y,
     subject.z,
@@ -4002,7 +4002,7 @@ function updateCamera(dt: number): void {
   // sustain window filters what's left. Held while stopped: idling never
   // spins the frame.
   if (snapped && chaseOn) {
-    const seed = level.laneDirAt(
+    const seed = level.cameraDirAt(
       subject.x,
       subject.y,
       subject.z,
@@ -4029,7 +4029,7 @@ function updateCamera(dt: number): void {
   // side is a wide arc, not a spin-top.
   const lf = chaseOn
     ? chaseF
-    : level.laneDirAt(
+    : level.cameraDirAt(
         subject.x,
         subject.y,
         subject.z,

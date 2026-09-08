@@ -208,6 +208,7 @@ try {
   // marker timing rather than requiring the live course to retain old steering.
   const legacyCamera = JSON.parse(await readFile(`${root}tools/fixtures/nightworks-legacy-camera.json`, "utf8"));
   const level = new Level(scene, entry);
+  level.cameraViews.length=0; // the historical recording predates view volumes
   level.lanePts = roundCorners(legacyCamera.filter(c=>c.t==="camnode").map(c=>[c.p[0],c.p[2],c.radius,c.p[1]]),false).map(p=>({x:p.x,y:p.y,z:p.z}));
   level.measureLane();
   level.zones = legacyCamera.filter(c=>c.t==="zone").map(c=>({xMin:c.p[0]-c.s[0]/2,xMax:c.p[0]+c.s[0]/2,zMin:c.p[2]-c.s[2]/2,zMax:c.p[2]+c.s[2]/2,dir:c.dir}));

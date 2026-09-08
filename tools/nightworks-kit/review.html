@@ -7,7 +7,7 @@ const frame=document.querySelector('#game'), bar=document.querySelector('#poses'
 const get=()=>frame.contentWindow.__game;
 function button(label, fn){const b=document.createElement('button');b.textContent=label;b.onclick=fn;bar.append(b);}
 const names=['Spawn','Lift bank','Phase pads','Grand rails','Lift stair','Rope ferries','Metronome II','Tower','Finale','Finish'];
-const poses=[[0,.1,4],[0,.1,-46],[-47,12.1,-51],[-43,12.1,-112],[10,12.1,-170],[8,26.1,-202],[-48,26.1,-202],[-48,34.1,-278],[9,56.1,-324],[-43,70.1,-352]];
+const poses=[[0,.1,4],[0,.1,-46],[-47,12.1,-51],[-40,12.1,-112],[10,12.1,-170],[8,26.1,-202],[-48,26.1,-202],[-48,34.1,-278],[9,56.1,-324],[-43,70.1,-352]];
 function place(i){const g=get();if(!g)return;const l=g.getLevel();g.player.pos.fromArray(poses[i]);g.player.speed=0;g.player.vVel=0;g.player.freeSkate=false;
   g.player.laneCursor.s=-1;g.player.settle(l);g.player.lives=20;g.player.snapRenderPose?.();frame.contentWindow.focus();}
 names.forEach((n,i)=>button(n,()=>place(i)));
