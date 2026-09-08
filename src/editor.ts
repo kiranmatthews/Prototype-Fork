@@ -13,6 +13,7 @@
 
 import * as THREE from "three";
 import { EditorEnvironment } from "./editorEnvironment";
+import { withPortableAtmosphere } from "./levelAtmosphere";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { TUNING } from "./tuning";
 import { CAMPAIGN_LEVELS, resolveMedalTimes, editMedalTime, TIME_MEDALS, type TimeMedal, MAX_RELIC_TIME_SECONDS } from "./campaign";
@@ -38,6 +39,7 @@ import {
   cleanLevelName,
   groupChainOf,
   TEX_KINDS,
+  EMISSIVE_COMPONENT_TYPES,
   DECOR_KINDS,
   DECOR_LABELS,
   DecorKind,
@@ -6713,6 +6715,7 @@ export class Editor {
     lvl.appendChild(surfBtn);
     projPane2.appendChild(lvl);
     this.environment = new EditorEnvironment({
+      levelId: () => this.targetId,
       data: () => this.data,
       number: (label, get, set, step) => this.numRow(label, get, set, step),
       commit: () => { this.commit(); },
@@ -6740,7 +6743,9 @@ export class Editor {
     };
     mk("export", () => {
       this.cancelScrub?.(); this.rollbackActiveGesture(true);
-      const data = normalizeCustomLevelData(this.data);
+      const checked = normalizeCustomLevelData(this.data);
+      const portable = checked && withPortableAtmosphere(checked, this.targetId);
+      const data = portable === checked ? checked : normalizeCustomLevelData(portable);
       if (!data) { this.showMessage("EXPORT FAILED", "finish or undo the invalid edit first"); return; }
       const pretty = JSON.stringify(data, null, 1);
       const json = new TextEncoder().encode(pretty).byteLength <= MAX_LEVEL_FILE_BYTES
@@ -6841,7 +6846,7 @@ export class Editor {
       const id = saveUserLevel({
         id: "",
         name: `${this.targetName} copy`,
-        data: JSON.parse(JSON.stringify(this.data)) as CustomLevelData,
+        data: withPortableAtmosphere(this.data, this.targetId),
       });
       if (!findLevel(id)?.data) { this.showMessage("LEVEL LIMIT REACHED", "export and remove an unused level first"); return; }
       const persisted = userLevelStorageHealthy();
@@ -7408,20 +7413,25 @@ export class Editor {
         if (c.s) c.s = [c.s[2], c.s[1], c.s[0]];
       } else if (c.t === "mover") {
         if (c.s) c.s = [c.s[2], c.s[1], c.s[0]];
-        if (c.axis === "x") c.axis = "z";
-        else if (c.axis === "z") c.axis = "x"; // a lift ("y") stays a lift
       } else if (c.t === "phasepad") {
         if (c.s) c.s = [c.s[2], c.s[1], c.s[0]];
       } else if (yawable.has(c.t)) {
         c.yaw = ((((c.yaw ?? 0) + deg) % 360) + 360) % 360;
       }
-      // Symmetric travel axes rotate with their owner. Direction sign is not
-      // authored (motion is ±range), so a quarter turn is exactly an X/Z swap.
-      if (
-        (c.t === "rail" || c.t === "ropeswing") &&
-        (c.axis === "x" || c.axis === "z")
-      )
-        c.axis = c.axis === "x" ? "z" : "x";
+      // Transform the signed travel vector, including an omitted default X.
+      // Merely swapping X/Z changes which side of the course a ferry occupies
+      // at a given time. Keep its clock intact, especially for ropes whose
+      // swing and anchor travel may have separate phases.
+      if (c.t === "mover" || c.t === "rail" || c.t === "ropeswing") {
+        const axis = c.axis ?? "x";
+        if (axis !== "y") {
+          const reverse = (axis === "x" && deg === 90) || (axis === "z" && deg === -90);
+          const sign = (c.travelSign ?? 1) * (reverse ? -1 : 1);
+          c.axis = axis === "x" ? "z" : "x";
+          if (sign < 0) c.travelSign = -1;
+          else delete c.travelSign;
+        }
+      }
       if (c.t === "stone") c.axis = c.axis === "x" ? "z" : "x";
       if (c.t === "returnportal" || c.t === "bonusplatform") {
         if (c.to) {
@@ -7947,7 +7957,7 @@ export class Editor {
       this.propsEl.appendChild(row);
       // TEXTURE: every paintable surface picks from the shared kind list —
       // the tint above colors the texture, so the two knobs compose
-      this.propsEl.appendChild(
+      if (c.materialStyle !== "unity-sand") this.propsEl.appendChild(
         this.texRow(
           () => c.tex,
           (v) => (c.tex = v),
@@ -8131,16 +8141,28 @@ export class Editor {
       num("shore waterline y", () => c.shoreSeaLevel ?? c.p[1] - 1.41, v => { c.shoreSeaLevel = v; }, 0.1);
       num("shore variation phase", () => c.shorePhase ?? 0, v => { c.shorePhase = v; }, 0.1);
     }
-    if (c.t === "mesh") {
-      boolRow("walkable collision", () => c.solid !== false, value => { c.solid = value; });
-      boolRow("material fog", () => c.fog ?? c.solid === false, value => { c.fog = value; });
-      num("opacity", () => c.opacity ?? 1, value => { c.opacity = Math.max(0, Math.min(1, value)); }, .05);
+    if (c.t === "mover" || c.t === "rail" || c.t === "ropeswing")
+      boolRow("reverse travel", () => c.travelSign === -1, value => {
+        if (value) c.travelSign = -1;
+        else delete c.travelSign;
+      });
+    if (EMISSIVE_COMPONENT_TYPES.includes(c.t) && !(c.t === "wall" && c.invisible)) {
       const emissionRow = document.createElement("label"); emissionRow.className = "ed-row";
-      const emissionLabel = document.createElement("span"); emissionLabel.textContent = "emissive";
+      const emissionLabel = document.createElement("span"); emissionLabel.textContent = "surface glow";
       const emission = document.createElement("input"); emission.type = "color"; emission.value = c.emissive ?? "#000000";
       emission.setAttribute("aria-label", "emissive color");
       emission.addEventListener("change", () => { c.emissive = emission.value; this.commit(); });
       emissionRow.append(emissionLabel, emission); this.propsEl.appendChild(emissionRow);
+    }
+    if (c.t === "mesh") {
+      this.propsEl.appendChild(this.pickRow("material style", [["unity-sand", "Unity shoreline sand"]],
+        () => c.materialStyle ?? "", value => {
+          if (value === "unity-sand") { c.materialStyle = value; c.tex = "sand"; }
+          else delete c.materialStyle;
+        }, "Surface texture"));
+      boolRow("walkable collision", () => c.solid !== false, value => { c.solid = value; });
+      boolRow("material fog", () => c.fog ?? c.solid === false, value => { c.fog = value; });
+      num("opacity", () => c.opacity ?? 1, value => { c.opacity = Math.max(0, Math.min(1, value)); }, .05);
       const count = Math.floor((c.vertices?.length ?? 0) / 3);
       const note = document.createElement("div");
       note.className = "ed-dim";
@@ -8619,7 +8641,8 @@ export class Editor {
           axisBtn.title =
             "which way the whole rail slides — X / Z slide, Y lifts (travel 0 = a fixed rail)";
           axisBtn.addEventListener("click", () => {
-            c.axis = c.axis === "x" ? "z" : c.axis === "z" ? "y" : "x";
+            const axis = c.axis ?? "x";
+            c.axis = axis === "x" ? "z" : axis === "z" ? "y" : "x";
             this.commit();
             this.renderProps();
           });
@@ -9319,7 +9342,8 @@ export class Editor {
       axisBtn.textContent = axLabel();
       axisBtn.title = "which way the platform slides — X / Z slide, Y lifts";
       axisBtn.addEventListener("click", () => {
-        c.axis = c.axis === "x" ? "z" : c.axis === "z" ? "y" : "x";
+        const axis = c.axis ?? "x";
+        c.axis = axis === "x" ? "z" : axis === "z" ? "y" : "x";
         this.commit();
         this.renderProps();
       });
@@ -9475,7 +9499,8 @@ export class Editor {
       ferryBtn.title =
         "which way the anchor travels (ferry range 0 = a fixed swing)";
       ferryBtn.addEventListener("click", () => {
-        c.axis = c.axis === "x" ? "z" : c.axis === "z" ? "y" : "x";
+        const axis = c.axis ?? "x";
+        c.axis = axis === "x" ? "z" : axis === "z" ? "y" : "x";
         this.commit();
         this.renderProps();
       });
@@ -9492,6 +9517,8 @@ export class Editor {
         (v) => (c.cycle = Math.max(0, v)),
         0.05,
       );
+      num("ferry phase", () => c.travelPhase ?? c.phase ?? 0,
+        value => { c.travelPhase = value; }, 0.2);
     }
     const row = document.createElement("div");
     row.className = "ed-grid";

@@ -41,7 +41,37 @@ Every component has an allowlisted `t` and a three-number `p`. Optional fields a
 
 Path points use `[dx, dz, radius?, dy?, bankDegrees?]` relative to `p`. Per-node woodpath widths use `widths`; omitted widths inherit `w`. Polygon platforms, walls and pits require a simple, nonzero-area boundary. Crossing edges, repeated adjacent points, and collapsed polygons are rejected. A repeated final point closing the first point is accepted. Open and closed paths include their actual closing segment in the work budget.
 
-Optional level metadata includes atmosphere/sky, ocean, sand blocks and shoreline foam, medal targets, ledge assist, and HUD mode. Shoreline foam direction vectors must be approximately orthonormal. An ocean may retain its authored `shore` as 2–4,096 local `[x,z,normalX,normalZ]` samples with bounded nonzero normals; `extendTails` preserves source shoreline tails. The full shoreline, including 400 m tails at each end when enabled, shares the 20,000 m path limit. Runtime-authored `allBalanceCrates`, `perfectGrindBoost`, and `keepPlayFog` flags survive editing. `bonusplatform` describes a movable bonus-stage entrance with an optional `to` return point. `worldmap` owns a movable campaign map and its ocean; it cannot coexist with a separate level ocean. Its optional points correspond to the fixed campaign hub order, so files cannot introduce arbitrary navigation targets. Hub local X/Z coordinates are limited to ±256 and height to ±128, and hubs must remain at least 0.05 m apart. At most one bonus platform and one world map are accepted. `tumblezone` retains a movable roadside death/recovery volume; `coastwall` retains an editable coastal boundary using bounded swept-path data. One `vertramp` may set `trafficRoad: true` to retain its authored traffic path and car behavior. A bounded `mesh` stores native ground that cannot be represented exactly by other primitives: local XYZ `vertices`, optional triangle `indices`, and optional matching `normals`, `uvs`, and RGB `colors`. It uses existing materials and collision behavior; it cannot carry external asset references. `doubleSided` and `beachSand` preserve the corresponding surface flags. `solid: false` makes a mesh visual-only; it stays pickable in the editor but does not add support, wall or grind collision. Mesh-only `emissive` uses `#rrggbb`, `opacity` is finite 0–1, and `fog` is a boolean. Procedural `pine` scenery retains its native geometry through position/yaw/scale edits.
+Optional level metadata includes atmosphere/sky, ocean, sand blocks and shoreline foam, medal targets, ledge assist, and HUD mode. Shoreline foam direction vectors must be approximately orthonormal. An ocean may retain its authored `shore` as 2–4,096 local `[x,z,normalX,normalZ]` samples with bounded nonzero normals; `extendTails` preserves source shoreline tails. The full shoreline, including 400 m tails at each end when enabled, shares the 20,000 m path limit. Runtime-authored `allBalanceCrates`, `perfectGrindBoost`, and `keepPlayFog` flags survive editing. `bonusplatform` describes a movable bonus-stage entrance with an optional `to` return point. `worldmap` owns a movable campaign map and its ocean; it cannot coexist with a separate level ocean. Its optional points correspond to the fixed campaign hub order, so files cannot introduce arbitrary navigation targets. Hub local X/Z coordinates are limited to ±256 and height to ±128, and hubs must remain at least 0.05 m apart. At most one bonus platform and one world map are accepted. `tumblezone` retains a movable roadside death/recovery volume; `coastwall` retains an editable coastal boundary using bounded swept-path data. One `vertramp` may set `trafficRoad: true` to retain its authored traffic path and car behavior. A bounded `mesh` stores native ground that cannot be represented exactly by other primitives: local XYZ `vertices`, optional triangle `indices`, and optional matching `normals`, `uvs`, and RGB `colors`. It uses existing materials and collision behavior; it cannot carry external asset references. `doubleSided` and `beachSand` preserve the corresponding surface flags. `solid: false` makes a mesh visual-only; it stays pickable in the editor but does not add support, wall or grind collision. `emissive` uses `#rrggbb` on implemented surface types: mesh, platform, ramp, wall, wallpath, rock, terrain, vertramp and crumble. Mesh-only `opacity` is finite 0–1, and `fog` is a boolean. Procedural `pine` scenery retains its native geometry through position/yaw/scale edits.
+
+
+`materialStyle: "unity-sand"` on a mesh selects the built-in MatrixRex shoreline
+material with its color, normal and AO maps. It accepts absent `tex` or
+`tex: "sand"`; other combinations and material-style identifiers are rejected.
+The three maps are shared across styled meshes and environment sand patches
+within the Level, while tint, glow and transparency remain
+editable. Captured metric UVs and normals survive transforms. `tex: "solid"`
+explicitly requests an untextured surface; leaving `tex` absent retains each
+primitive's existing default.
+
+Moving platforms, moving rails and rope ferries accept `travelSign: -1` to
+reverse their axis direction without changing their clock. Omitted or `1`
+means the positive axis. Group quarter-turns rotate that signed direction along
+with the geometry. A ropeswing's optional `travelPhase` controls the anchor's
+ferry cycle independently of swing `phase`; absent values follow `phase` for
+older files. Natural rope speed remains `speed: 0`, so length edits continue to
+recompute the natural swing frequency.
+
+The optional `atmosphere` object contains partial overrides of the **resolved**
+fog, lighting, backdrop and draw-distance settings. Overrides apply after sky,
+jungle and map defaults. Supported keys and bounds are defined in
+`src/levelAtmosphere.ts`; unknown keys are rejected. Fog distances are bounded
+by 5,000 m, intensities by 0–8, shadow strength by 0–1, and draw distance by
+25–2,000 m. Colors are `#rrggbb` or three finite linear RGB values in 0–1; tuples
+preserve native blended colors without quantization. Both authored fog
+endpoints must be ordered. `backdrop` is `"sky"` or `"fog"`; `fogEnabled` and
+`fallbackStars` are booleans. Fallback sky colors and sun placement apply only
+when a painted sky is unavailable. `fallbackSunColor: null` removes its disc.
+These settings contain no external assets or executable material definitions.
 
 Legacy `outline` and `pipe` primitives migrate to modern crate/vertramp data before building. Legacy layers migrate into named groups while preserving locks. Group duplicates, dangling parents, and cycles are normalized safely; nesting beyond 64 levels is rejected. Migration preserves component data and is idempotent. Ordinary courses gain missing finish/run-mode objects; bonus and hub HUD modes omit run-mode activators, and hubs do not gain an automatic finish gate.
 
@@ -84,6 +114,7 @@ These are upper ceilings; combined work limits can reject a file below an indivi
 | Palette strings | 80 code units |
 | Ocean longitudinal/lateral segments | 1,024 / 512, also limited by their product |
 | Sand blocks / shoreline foam ovals | 256 / 512 |
+| Unity sand texture maps across all styled meshes and sand blocks | 3 per Level |
 | Vine strands per component | 64 |
 
 Additional primitive-specific minima prevent invalid geometry and zero/negative timing periods. Spline estimates allow for overshoot; fallback paths, both terrain berms, scaffold planks/supports/rails, wall collision subdivisions and ocean vertex products contribute to the combined budget. A lexical preflight rejects nesting deeper than 12 (14 for packs), more than 100,000 containers or 800,000 separators, and raw string bodies beyond 1,536 characters before parser allocation. Braces and escaped quotes inside strings do not affect nesting counts. The plain-data copier separately bounds depth (12), visited values (400,000), object fields (128), and estimated memory (16 MiB), followed by an exact serialized 5 MiB limit. Names in the menu are trimmed and limited to 28 characters after validation.

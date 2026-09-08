@@ -1,4 +1,6 @@
 import type { CustomLevelData, CustomOceanData } from "./level";
+import { ATMOSPHERE_NUMBERS, ATMOSPHERE_COLORS, atmosphereColorHex, resolveDataAtmosphere,
+  type AtmosphereColor, type CustomAtmosphereData } from "./levelAtmosphere";
 
 /** Enter node editing without changing any ocean geometry. */
 export function editOceanShoreline(ocean: CustomOceanData): void {
@@ -29,6 +31,7 @@ export function straightenOceanShoreline(ocean: CustomOceanData): boolean {
 type Point = [number, number, number];
 interface EnvironmentHooks {
   data: () => CustomLevelData;
+  levelId?: () => string;
   number: (label: string, get: () => number, set: (v: number) => void, step?: number) => HTMLElement;
   commit: () => void;
   focus: (point: readonly number[]) => void;
@@ -43,7 +46,7 @@ export class EditorEnvironment {
   private foamIndex = 0;
   private shoreIndex = 0;
   private structure = "";
-  private choices: { element: HTMLSelectElement; get: () => string }[] = [];
+  private choices: { element: HTMLSelectElement | HTMLInputElement; get: () => string }[] = [];
   constructor(private hooks: EnvironmentHooks) {
     this.element.className = "ed-environment";
     this.render();
@@ -51,7 +54,7 @@ export class EditorEnvironment {
 
   private structureKey(): string {
     const d = this.hooks.data();
-    return `${d.components.some(c => c.t === "worldmap")}: ${!!d.ocean}:${d.ocean?.shore?.length ?? 0}:${d.unitySand?.length ?? 0}:${d.shoreFoam?.length ?? 0}`;
+    return `${d.components.some(c => c.t === "worldmap")}: ${!!d.ocean}:${d.ocean?.shore?.length ?? 0}:${d.unitySand?.length ?? 0}:${d.shoreFoam?.length ?? 0}:${!!d.atmosphere}:${d.atmosphere?.fallbackSunColor === null}:${d.sky ?? ""}:${!!d.jungleAtmosphere}`;
   }
 
   sync(): void {
@@ -119,8 +122,62 @@ export class EditorEnvironment {
       ["perfectGrindBoost", "perfect grind boost"],
       ["keepPlayFog", "keep authored fog"],
     ] as const)
-      choice(label, ["off", "on"], () => data()[key] ? "on" : "off", v => { data()[key] = v === "on"; });
+      choice(label, ["off", "on"], () => (data()[key] ?? (key === "keepPlayFog" && (this.hooks.levelId?.() === "sky" || !!data().jungleAtmosphere))) ? "on" : "off", v => { data()[key] = v === "on"; });
     num("ledge assist", () => data().ledgeAssist ?? 0, v => { data().ledgeAssist = Math.min(1, Math.max(0, v)); }, 0.05);
+
+    heading("ATMOSPHERE");
+    const resolved = () => resolveDataAtmosphere(data(), this.hooks.levelId?.());
+    choice("atmosphere settings", ["level defaults", "custom"], () => data().atmosphere ? "custom" : "level defaults", value => {
+      if (value === "custom") data().atmosphere = resolved(); else delete data().atmosphere;
+    });
+    const atmosphereNote = document.createElement("div"); atmosphereNote.className = "ed-dim";
+    atmosphereNote.textContent = "Fog and draw distance apply in play; the editor keeps its clear inspection view. Custom values override sky and map lighting.";
+    this.element.append(atmosphereNote);
+    if (d.atmosphere) {
+      const setAtmosphere = <K extends keyof CustomAtmosphereData>(key: K, value: CustomAtmosphereData[K]): void => {
+        (data().atmosphere ??= {})[key] = value;
+      };
+      choice("backdrop", ["sky", "fog"], () => resolved().backdrop, value => setAtmosphere("backdrop", value as "sky" | "fog"));
+      choice("scene fog", ["on", "off"], () => resolved().fogEnabled ? "on" : "off", value => setAtmosphere("fogEnabled", value === "on"));
+      const color = (key: keyof typeof ATMOSPHERE_COLORS): void => {
+        const row = document.createElement("label"); row.className = "ed-row";
+        const label = document.createElement("span"); label.textContent = ATMOSPHERE_COLORS[key];
+        const input = document.createElement("input"); input.type = "color";
+        input.setAttribute("aria-label", ATMOSPHERE_COLORS[key]);
+        const get = () => atmosphereColorHex(resolved()[key] as AtmosphereColor);
+        input.value = get(); this.choices.push({ element: input, get });
+        input.addEventListener("change", () => {
+          if (/^#[0-9a-fA-F]{6}$/.test(input.value) && input.value.toLowerCase() !== get())
+            change(() => setAtmosphere(key, input.value));
+          else input.value = get();
+        });
+        row.append(label, input); this.element.append(row);
+      };
+      const numeric = (key: keyof typeof ATMOSPHERE_NUMBERS): void => {
+        const limits = ATMOSPHERE_NUMBERS[key];
+        // Display round-off tails without changing the captured value. The
+        // numeric editor compares against this same getter before committing.
+        num(limits.label, () => Number(resolved()[key].toPrecision(12)), value => {
+          let next = Math.min(limits.max, Math.max(limits.min, value));
+          if (key === "fogNear") next = Math.min(next, resolved().fogFar - 0.01);
+          if (key === "fogFar") next = Math.max(next, resolved().fogNear + 0.01);
+          setAtmosphere(key, next);
+        }, limits.step);
+      };
+      numeric("fogNear"); numeric("fogFar"); color("fogColor"); numeric("drawDistance");
+      color("ambientSky"); color("ambientGround"); numeric("ambientIntensity");
+      color("sunColor"); numeric("sunIntensity"); color("fillColor"); numeric("fillIntensity"); numeric("shadowStrength");
+      heading("FALLBACK SKY");
+      const fallbackNote = document.createElement("div"); fallbackNote.className = "ed-dim";
+      fallbackNote.textContent = "These colors and sun settings are used only when the painted sky is unavailable.";
+      this.element.append(fallbackNote);
+      color("fallbackTop"); color("fallbackBottom"); color("fallbackFog");
+      choice("fallback stars", ["off", "on"], () => resolved().fallbackStars ? "on" : "off", value => setAtmosphere("fallbackStars", value === "on"));
+      choice("fallback sun", ["off", "on"], () => resolved().fallbackSunColor === null ? "off" : "on", value => setAtmosphere("fallbackSunColor", value === "off" ? null : "#fffdf2"));
+      if (resolved().fallbackSunColor !== null) {
+        color("fallbackSunColor"); numeric("fallbackSunU"); numeric("fallbackSunV");
+      }
+    }
 
     heading("OCEAN");
     if (d.components.some(c => c.t === "worldmap")) {

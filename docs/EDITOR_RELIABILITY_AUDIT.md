@@ -54,27 +54,59 @@ release gate, not proof that every remaining fidelity or resource issue is solve
   groups link their beams/posts to grind paths. Explicit terrain material edits
   are no longer overwritten by the jungle atmosphere setting.
 
+## Verified hardening after c902b81
+
+- Native atmosphere is represented by bounded final fog/light/backdrop values;
+  copied IDs retain Sky Bridge's whiteout and Nightworks/coastal lighting.
+  Legacy data-backed Sky exports/duplicates preserve their effective defaults
+  without saving a no-op editor open. Explicit custom settings apply after
+  sky/jungle/map defaults, with honest fallback-sky controls. 392 actual
+  renderer/security/history checks compare against the pre-change native
+  baseline and exercise every override; control tests preserve exact data
+  behind rounded numeric/color displays.
+- Native Beachfront sand meshes retain the trusted Standard material, normal/AO
+  maps, metric UVs and regenerated tangent frames. Descent oil remains
+  untextured, and Nightworks static platforms retain glow. Nine implemented
+  surface types support bounded emission. Material styles cannot load user URLs.
+  All 256 allowed environment sand patches and styled meshes share three maps
+  per Level, preventing small files from multiplying the 2K textures per patch.
+- Signed-axis transforms preserve moving platform/rail/ferry direction at each
+  point in time. Independent rope swing/ferry clocks and natural rope speed
+  survive native capture; actual collider, grind and release velocities are
+  tested through rotations and nonuniform group transforms.
+- A real-browser large-draft fixture exposed six leaked ocean textures per
+  rebuild: uniform merging cloned rendered textures while disposal released
+  originals. Owned sampler bindings fix the leak. Nine repeated operations in
+  lite/full geometry modes hold 13–14 textures and return to one shared texture
+  after cleanup. See [browser measurements](EDITOR_BROWSER_PERFORMANCE.md) for
+  timings and the distinction between this fixture and the full game pipeline.
+
 ## Remaining audit work
 
-1. **Legacy conversion fidelity:** actual remaining differences were measured
-   through the real atmosphere/material code, beyond object-tree warnings.
-   Sky Bridge forks lose their id-bound whiteout (fog 5–24 m becomes 90–260 m,
-   sky/mist reappear). Nightworks and coastal fog/light values change because
-   native themes are not captured. Beachfront's Standard sand material loses
-   normal/AO maps; oil slicks gain checker textures; static Nightworks platform
-   emission is lost. Preserve these through bounded authored theme/material
-   controls and verify rendered/effective values. Jungle atmosphere itself
-   already matches after capture; do not add unused flags based on warnings.
-   Descent's listed static scenery is covered, not every legacy builder.
-2. **Large active-draft rendering:** active Descent has approximately 3 MB /
-   1,940 components. Its CPU transaction and rebuild are now about 0.8–0.9 s
-   combined before browser storage, DOM and WebGL. Measure the browser costs
-   and repeated scene/resource churn independently if input remains sluggish;
-   do not weaken import validation or rely on identity-caching mutable drafts.
-3. **Device gesture coverage:** synthetic browser and actual OrbitControls
+1. **Thorn authoring and hazard alignment:** a selected elongated thorn and pit
+   rotate differently. The pit turns while the thorn visual stays on its old
+   axis; an actual lethal point lies outside the visible bounds afterward.
+   Thorn `s/yaw/seed/color` fields also lack single-item controls. Fix this first,
+   preserving the deliberately separate visual/collision owners and sparse
+   defaults, then compare actual geometry and pit membership through edits.
+2. **Car inspector/runtime agreement:** a sparse car displays range 5, speed 3
+   and X patrol, while runtime uses range 12, speed 10 and Z. Road-following cars
+   ignore the exposed range/yaw controls. Correct effective defaults and make
+   route/free-patrol authoring truthful; verify actual movement and collision.
+3. **Remaining legacy presentation:** normal Beachfront camera framing still
+   uses a native-ID-only six-degree FOV offset, lost by copies for P1 and P2.
+   Preserve that authored offset without retuning the user's global lens.
+   Continue the broader source-only inventory; the listed scenery/material
+   fixes do not establish full conversion parity for every legacy builder.
+4. **Large active-draft responsiveness:** the real browser fixture measures
+   roughly 0.8–0.94 s synchronous transactions for Descent. Geometry construction
+   remains the largest stage. It omits player/campaign UI/postprocessing and
+   does not measure completed GPU work; investigate these separately before
+   claiming full game or mobile performance.
+5. **Device gesture coverage:** synthetic browser and actual OrbitControls
    event coverage is established, but physical touch/pen input and mobile
    virtual-keyboard viewport transitions still need device-specific QA.
-4. **Cross-feature authoring audit:** continue checking component controls,
+6. **Cross-feature authoring audit:** continue checking component controls,
    authored field semantics, runtime ownership and import/build failure paths
    against the full original edit/move invariant. Existing passing tests do not
    establish that all possible editor interactions are covered.

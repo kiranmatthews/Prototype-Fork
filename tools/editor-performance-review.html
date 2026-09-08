@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Editor browser performance review</title>
+  <style>
+    body { margin:0; background:#192738; color:#eaf3fa; font:14px/1.4 system-ui,sans-serif; }
+    #canvas { display:block; width:100vw; height:100vh; touch-action:none; }
+    #review { position:fixed; z-index:100000; left:20px; right:360px; top:16px; padding:12px 16px; max-height:44vh; overflow:auto; background:#101b2fee; border:1px solid #537291; border-radius:8px; }
+    #review h1 { font-size:18px; margin:0 0 6px; }
+    #review p { margin:6px 0; }
+    #review button,#review a { font:inherit; padding:6px 9px; color:#dcfbea; background:#225c47; border:1px solid #649e87; border-radius:4px; }
+    #report { white-space:pre-wrap; font:12px/1.45 ui-monospace,monospace; }
+    @media(max-width:720px) { #review { left:12px; right:12px; } }
+  </style>
+</head>
+<body>
+  <canvas id="canvas" aria-label="Live Descent editor rendering"></canvas>
+  <section id="review">
+    <h1>Large-draft browser review</h1>
+    <p>Real Editor, level construction, local storage, DOM and WebGL submission. Uses an isolated Descent copy and restores this origin's saved data afterward.</p>
+    <p>Measures nine edit/undo/redo operations and renderer resource counts. This fixture omits the game player, postprocessing and campaign UI; render submission is CPU timing, not completed GPU work.</p>
+    <p><button id="run" disabled>Run browser measurements</button> <a href="?lite">Lite geometry</a> <a href="?full">Full geometry</a></p>
+    <div id="status" role="status">Loading modules…</div>
+    <pre id="report"></pre>
+  </section>
+  <script type="module" src="./editor-performance-review.js"></script>
+</body>
+</html>
