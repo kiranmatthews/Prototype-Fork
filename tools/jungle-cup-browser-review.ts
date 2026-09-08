@@ -65,6 +65,15 @@ button('Overtime manual',()=>{
 button('Bank final combo',()=>{if(!route)return;g.player.manualing=0;g.player.comboTimer=.05;route.input=blank;route.frames=frame+20;freeze=false;});
 button('Bail final combo',()=>{if(!route)return;g.player.bail();route.input=blank;route.frames=frame+20;freeze=false;});
 button('Auto remount',()=>{start('Auto remount',[5,.1,14],[0,0,-1],blank,360,12);route.firstLanding=false;route.recovery=true;route.setup=()=>g.player.bail();});
+button('Deck bail',()=>{start('Deck bail',[0,4.4,30],[0,0,1],blank,360,20);route.firstLanding=false;route.recovery=true;route.setup=()=>g.player.bail();});
+button('Corner bail',()=>{start('Corner bail',[46,4.4,25],[1,0,1],blank,360,20);route.firstLanding=false;route.recovery=true;route.setup=()=>g.player.bail();});
+button('Bank bail',()=>{start('Bank bail',[47.5,2,-25],[0,0,-1],blank,360,8);route.firstLanding=false;route.recovery=true;route.setup=()=>{g.player.pos.y=g.player.groundHit.y;g.player.prevPos.copy(g.player.pos);g.player.bail();};});
+button('Rail follow',()=>{
+ const rail=g.level.grindRails[3],p=rail.pointAt(1).add(new THREE.Vector3(.1,.3,.1));
+ const h=rail.tangentAt(1).applyAxisAngle(new THREE.Vector3(0,1,0),Math.PI/4);
+ start('Rail follow',p.toArray(),h.toArray(),f=>({grindHeld:true,grindPressed:f===0,moveX:f===0?.7:0}),45,14);
+ route.firstLanding=false;route.setup=()=>{g.player.state='air';g.player.grounded=false;g.player.airFromSkate=true;g.player.airGrav='board';g.player.vVel=0;g.player.balanceBoostT=20;};
+});
 button('Hide panel',()=>{panel.style.opacity=panel.style.opacity==='0.15'?'1':'0.15';});
 function render(){
  const p=g.player,c=g.camera;lastDrawMs=drawMs;drawMs=0;

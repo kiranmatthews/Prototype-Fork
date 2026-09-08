@@ -4013,7 +4013,7 @@ function updateCamera(dt: number): void {
       position: subject, heading: player.skateCameraHeading,
       up: player.skateCameraUp,
       vertAir: player.vertAir, vertNormal: player.vertNormal,
-      verticalSpeed: player.vVel, speed, grounded: player.grounded,
+      verticalSpeed: player.vVel, speed, grounded: player.skateCameraSupported,
       bailing: player.skateCameraBailing,
     }, dt, snapped, level.groundMeshes, TUNING);
     camControlDir.copy(skateChaseCamera.forward);

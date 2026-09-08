@@ -1667,10 +1667,17 @@ export class Player {
 
   /** Heading is simulation-owned; trick/body rotations never steer the lens. */
   get skateCameraHeading(): Readonly<THREE.Vector3> {
+    // The rail owns motion during a grind; axisF still describes the approach
+    // until exitGrind. Read the current signed tangent so the lens follows
+    // both directions and every bend without following a boardslide pose.
+    if (this.state === 'grind' && this.grindRail)
+      return this.parkCameraForward.copy(this.grindRail.tangentAt(this.grindT))
+        .multiplyScalar(this.grindDir);
     if (this.parkControls && this.grounded)
       return skateSurfaceDirection(this.parkCameraForward, this.axisF, this.skateCameraUp);
     return this.axisF;
   }
+  get skateCameraSupported(): boolean { return this.grounded || this.state === 'grind'; }
   get skateCameraBailing(): boolean { return this.isBailing; }
   private readonly skateCameraUpVector = new THREE.Vector3(0, 1, 0);
   get skateCameraUp(): Readonly<THREE.Vector3> {
@@ -3791,7 +3798,11 @@ export class Player {
         this.groundHit !== null &&
         !this.slipping &&
         this.rideNormal.y >= TUNING.footGrip - 0.03 &&
-        !(this.onTransition && Math.abs(this.speed) > 3);
+        // A moving tumble must settle before rolling up on a bank. Once the
+        // roll has started, its own run-out can exceed that entry speed;
+        // only losing usable support may interrupt the recovery.
+        !(this.bailRecoverT < 0 && this.onTransition &&
+          this.rideNormal.y < 0.97 && Math.abs(this.speed) > 3);
       this.bailGroundT = stableGround
         ? Math.min(BAIL_STABLE_TIME, this.bailGroundT + dt)
         : 0;
@@ -5283,7 +5294,12 @@ export class Player {
       // down the face instead of sticking to a near-vertical wall:
       // the body swings down the fall line and slides into the flat (the
       // lying-flat pose riding downhill with dust IS the tumble).
-      const steepBail = this.bailDownT > 0 && this.grounded && this.onTransition;
+      // A vert mesh also owns its flat coping deck. Its tag describes the
+      // skating feature, not whether a fallen body has a downhill direction.
+      // Treating that deck as steep erased axisF and accelerated a stationary
+      // ragdoll forever, keeping the stable-contact gate closed.
+      const steepBail = this.bailDownT > 0 && this.grounded && this.onTransition &&
+        this.groundHit!.normal.y < TUNING.footGrip - 0.03;
       if (this.bailDownT > 0 && this.bailRecoverT >= 0) {
         this.stepBailRecoveryMotion(dt, input, level);
       } else if (steepBail) {
@@ -9544,7 +9560,22 @@ export class Player {
   }
 
   private enterGrind(rail: Rail, sample: RailSample, level?: Level): void {
+    // Locked park vert carries coping motion separately from axisF*speed.
+    // Capture that real incoming velocity before ending the flight so either
+    // catch direction retains its speed rather than reversing at the rail.
+    const fromParkVert = this.parkControls && this.vertAir && !this.grounded;
+    const worldVx = fromParkVert ? -this.vertNormal.z * this.vertLatVel : this.axisF.x * this.speed;
+    const worldVz = fromParkVert ? this.vertNormal.x * this.vertLatVel : this.axisF.z * this.speed;
+    const planarIn = fromParkVert ? Math.hypot(worldVx, worldVz) : Math.abs(this.speed);
     this.retireHeldVertRelease();
+    // A rail catch ends the flight immediately, including the first rendered
+    // catch frame. The next step's general non-air cleanup is too late for
+    // surface alignment and the camera, which otherwise retain the vert shot.
+    this.vertAir = this.pipeHang = this.vertTracked = false;
+    this.vertLatVel = this.vertLossT = 0;
+    this.hangPipe = null;
+    this.parkAutoTurn = this.parkAutoTurnTarget = this.parkSpinHold = this.parkBreakHold = 0;
+    this.parkFlightGravity = SKATE_PARK.airGravity;
     this.clearCoyoteJumpWindow();
     this.boardOllieAir = false;
     this.emergencyEjectCharging = false;
@@ -9565,8 +9596,6 @@ export class Player {
     // How much of our actual velocity runs ALONG the rail. Free-heading skate
     // lets you meet a rail at any angle — a perpendicular clip should give a
     // gentle grind, never rocket you down the rail at full cross-speed.
-    const worldVx = this.axisF.x * this.speed;
-    const worldVz = this.axisF.z * this.speed;
     const alongVel = worldVx * sample.tangent.x + worldVz * sample.tangent.z;
     this.grindDir = alongVel >= 0 ? 1 : -1;
     this.state = 'grind';
@@ -9678,7 +9707,6 @@ export class Player {
     // grind, and only DOWNHILL rails add speed (slope gravity in stepGrind).
     // railSpeedBoost survives as a 0-default slider for anyone who wants the
     // old gear-change gift back.
-    const planarIn = Math.abs(this.speed);
     const alongFrac = planarIn > 0.01 ? Math.min(1, Math.abs(alongVel) / planarIn) : 1;
     this.grindVel = THREE.MathUtils.clamp(
       planarIn * (0.72 + 0.28 * alongFrac) + TUNING.railSpeedBoost,
