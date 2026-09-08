@@ -60,15 +60,6 @@ export function createNightworksLevel(): CustomLevelData {
       speed: number,
       phase = 0,
     ): void => b.mover(x, y, z, w, d, axis, amp, speed, phase, true);
-    const sideScroll = (
-      xMin: number,
-      xMax: number,
-      zMin: number,
-      zMax: number,
-      dir: "E" | "W",
-    ): void => {
-      add({t:"zone",p:[(xMin+xMax)/2,0,(zMin+zMax)/2],s:[xMax-xMin,1,zMax-zMin],dir});
-    };
 
     isle(2, 11, 12, 0, 0, 2.6);
 
@@ -84,7 +75,6 @@ export function createNightworksLevel(): CustomLevelData {
     isle(-41, 16, 20, 0, 0, 2.6);
     b.checkpoint(0, -44);
 
-    sideScroll(-47, 0, -54, -42, "W");
     fmover(-11, 1, -45, 4.5, 4.5, "y", 3.2, 0.7, 0);
     fmover(-19, 4, -51, 4.5, 4.5, "y", 3.4, 0.7, Math.PI);
     fmover(-27, 7, -45, 4.5, 4.5, "y", 3.2, 0.75, Math.PI / 2);
@@ -126,7 +116,6 @@ export function createNightworksLevel(): CustomLevelData {
     isle(-202, 20, 10, 8, 26);
     b.checkpoint(26, -202, 10);
 
-    sideScroll(-48, 10, -208, -197, "W");
     b.ropeSwing(-8, 34.6, -202, 7, 0.7, 0, 0, 0, "x", 5.5, 0.45, 0);
     b.ropeSwing(-22, 34.6, -202, 7, 0.7, 0, Math.PI, 0, "x", 5.5, 0.45, Math.PI);
     b.ropeSwing(-36, 34.6, -202, 7, 0.75, 0, 0, 0, "x", 5.5, 0.4, Math.PI / 2);
@@ -150,7 +139,6 @@ export function createNightworksLevel(): CustomLevelData {
     isle(-278, 12, 12, -48, 34);
     b.checkpoint(34, -278, -48);
 
-    sideScroll(-48, 9, -284, -272, "E");
     fmover(-41, 36, -275, 4.5, 4.5, "y", 2.75, 0.7, 0);
     fmover(-35, 38.75, -281, 4.5, 4.5, "y", 2.75, 0.7, Math.PI);
     fmover(-29, 41.5, -275, 4.5, 4.5, "y", 2.75, 0.75, Math.PI / 2);
@@ -169,7 +157,6 @@ export function createNightworksLevel(): CustomLevelData {
     isle(-324, 12, 10, 9, 56);
     b.checkpoint(56, -324, 9);
 
-    sideScroll(-43, 9, -330, -318, "W");
     padB(-2, 56, -324);
     fmover(-9.5, 56, -324, 4.5, 4.5, "x", 4, 0.6, 0);
     b.movingRail(-19, 57.7, -324, 10, 90, "z", 4, 0.6, Math.PI / 2);
@@ -188,19 +175,12 @@ export function createNightworksLevel(): CustomLevelData {
     b.crystal(-43, 70.6, -350);
     b.finishGate(70, -353, -43);
 
+    // One view/input frame across every switchback. Following the route's
+    // X bends made the camera steer held input, then side-scroll zones snapped
+    // it back again at the same landing. The player supplies the turn instead.
     const laneNodes: [number, number, number, number][] = [
       [0, 10, 0, 0],
-      [0, -48, 5, 0],
-      [-47, -48, 5, 12],
-      [-47, -112, 5, 12],
-      [10, -112, 5, 12],
-      [10, -202, 5, 26],
-      [-48, -202, 5, 26],
-      [-48, -278, 5, 34],
-      [9, -278, 5, 56],
-      [9, -324, 5, 56],
-      [-43, -324, 5, 64],
-      [-43, -363, 0, 70],
+      [0, -363, 0, 70],
     ];
   for (const x of [-8,-22,-36]) add({t:"decor",dkind:"nightanchorrock",p:[x,30.2,-204.6],s:[2,2,2]});
   for (const [x,z,radius,y] of laneNodes) add({t:"camnode",p:[x,y,z],radius});
