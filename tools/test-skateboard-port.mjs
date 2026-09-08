@@ -264,10 +264,28 @@ for (const name of [
 const worldScaled = new THREE.Group();
 modelApi.rebuildSkateboardPresentation(worldScaled, scaledSettings);
 for (const surface of worldScaled.getObjectByName('Deck_ContinuousRoundedKick').material.slice(0, 2)) {
-  assert.ok(surface.isShaderMaterial);
-  assert.match(surface.vertexShader, /#ifdef USE_INSTANCING[\s\S]*instanceMatrix \* boardPosition/,
-    'batched debris lost its textured deck surface');
+  assert.ok(surface.isMeshStandardMaterial, 'deck bypassed scene lighting');
+  const shader = {
+    uniforms: {},
+    vertexShader: THREE.ShaderLib.standard.vertexShader,
+    fragmentShader: THREE.ShaderLib.standard.fragmentShader,
+  };
+  surface.onBeforeCompile(shader, null);
+  assert.match(shader.vertexShader, /#include <project_vertex>/,
+    'batched debris lost standard instancing transforms');
+  assert.match(shader.fragmentShader, /#include <lights_fragment_begin>/,
+    'deck lost standard light/shadow evaluation');
+  assert.match(shader.fragmentShader, /wearStroke\(vWearUv\)/, 'deck lost its wear treatment');
+  assert.ok(shader.uniforms.baseMapTransform, 'artwork crop was dropped');
 }
+worldScaled.traverse(object => {
+  if (!object.isMesh) return;
+  for (const material of Array.isArray(object.material) ? object.material : [object.material])
+    assert.ok(material.isMeshStandardMaterial, `${object.name} retained an unlit material`);
+  assert.equal(object.castShadow, true);
+  assert.equal(object.receiveShadow, true);
+  assert.notEqual(object.userData.noShadow, true);
+});
 worldScaled.updateMatrixWorld(true);
 const deckWorld = worldScaled
   .getObjectByName("Deck_ContinuousRoundedKick")

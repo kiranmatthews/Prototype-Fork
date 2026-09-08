@@ -47,8 +47,10 @@ tests still describe a superseded 0.82 m deck and are not parity authority.
 - Artwork crop scale X (width) and Y (length): independently adjustable and
   both `1.37` by default (`0.7299270072992701` tiling and
   `0.13503649635036497` centred offset on each axis)
-- Rendering: opaque, unlit, shadowless; underside perimeter wear is evaluated
-  from the same silhouette-relative UV channel and shader equations as Unity
+- Rendering: opaque, scene-lit Standard materials with cast/receive shadows in
+  gameplay, the world map and discarded-board piles. Grip/artwork crop and
+  perimeter wear remain albedo details using the original silhouette-relative
+  UV channel; the Unity-derived unlit/shadowless override has been removed.
 
 `src/player.ts` only swaps the old cosmetic box/cylinder hierarchy for this
 complete cloneable presentation. It retains all existing mounted, loose,

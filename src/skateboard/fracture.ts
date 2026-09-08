@@ -62,7 +62,7 @@ export class BoardFractures {
         THREE.BufferGeometry
     ]>();
     private owned = new Set<THREE.BufferGeometry>();
-    private wood = new THREE.MeshBasicMaterial({ color: 0xc79958, side: THREE.DoubleSide });
+    private wood = new THREE.MeshStandardMaterial({ roughness: 0.9, color: 0xc79958, side: THREE.DoubleSide });
     split(source: THREE.Group): [
         THREE.Group,
         THREE.Group
@@ -142,6 +142,12 @@ export class BoardFractures {
                 halves[i].add(new THREE.Mesh(edges[i + 1], this.wood));
             }
         }
+        for (const half of halves) half.traverse(object => {
+            if (object instanceof THREE.Mesh) {
+                object.castShadow = true;
+                object.receiveShadow = true;
+            }
+        });
         return halves;
     }
     dispose(): void {

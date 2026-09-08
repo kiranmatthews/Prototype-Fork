@@ -529,24 +529,7 @@ function getArtworkTexture(path: string): THREE.Texture {
   return texture;
 }
 
-const SURFACE_VERTEX = `
-  attribute vec2 wearUv;
-  varying vec2 vUv;
-  varying vec2 vWearUv;
-  void main() {
-    vUv = uv;
-    vWearUv = wearUv;
-    vec4 boardPosition = vec4(position, 1.0);
-    #ifdef USE_INSTANCING
-      boardPosition = instanceMatrix * boardPosition;
-    #endif
-    gl_Position = projectionMatrix * modelViewMatrix * boardPosition;
-  }
-`;
-
-const SURFACE_FRAGMENT = `
-  uniform sampler2D baseMap;
-  uniform vec3 baseColor;
+const SURFACE_WEAR = `
   uniform vec3 wearColor;
   uniform vec4 baseMapTransform;
   uniform float deckAspect;
@@ -555,7 +538,6 @@ const SURFACE_FRAGMENT = `
   uniform float wearRoughness;
   uniform float wearFrequency;
   uniform float wearOpacity;
-  varying vec2 vUv;
   varying vec2 vWearUv;
 
   float hash21(vec2 value) {
@@ -586,15 +568,7 @@ const SURFACE_FRAGMENT = `
     );
     return clamp(primary + secondary * 0.38, 0.0, 1.0) * wearOpacity;
   }
-  void main() {
-    vec2 baseUv = vUv * baseMapTransform.xy + baseMapTransform.zw;
-    vec3 color = texture2D(baseMap, baseUv).rgb * baseColor;
-    float wear = wearStroke(vWearUv);
-    color = mix(color, wearColor, wear);
-    gl_FragColor = vec4(color, 1.0);
-    #include <tonemapping_fragment>
-    #include <colorspace_fragment>
-  }
+
 `;
 
 function colorVector(color: SkateboardColor): THREE.Vector3 {
@@ -618,40 +592,54 @@ function surfaceMaterial(
   texture: THREE.Texture,
   settings: Readonly<SkateboardSettingsValue>,
   bottom: boolean,
-): THREE.ShaderMaterial {
+): THREE.MeshStandardMaterial {
   const artworkTransform = skateboardArtworkUvTransform(
     settings.artworkScaleX,
     settings.artworkScaleY,
     bottom,
   );
-  return new THREE.ShaderMaterial({
+  const material = new THREE.MeshStandardMaterial({
     name,
-    uniforms: {
-      baseMap: { value: texture },
-      baseColor: { value: new THREE.Vector3(1, 1, 1) },
-      baseMapTransform: {
-        value: new THREE.Vector4(...artworkTransform),
-      },
-      deckAspect: {
-        value:
-          (settings.deckTailLength + settings.deckNoseLength) /
-          (settings.deckHalfWidth * 2),
-      },
-      wearColor: { value: colorVector(settings.plywoodLightColor) },
-      wearInset: { value: bottom ? 0.035 : 0.032 },
-      wearWidth: { value: bottom ? 0.016 : 0.013 },
-      wearRoughness: {
-        value: bottom
-          ? settings.bottomWearRoughness
-          : settings.topWearRoughness,
-      },
-      wearFrequency: { value: bottom ? 88 : 112 },
-      wearOpacity: { value: bottom ? settings.bottomWear : settings.topWear },
-    },
-    vertexShader: SURFACE_VERTEX,
-    fragmentShader: SURFACE_FRAGMENT,
-    side: THREE.FrontSide,
+    map: texture,
+    roughness: bottom ? 0.65 : 0.95,
+    metalness: 0,
   });
+  const uniforms = {
+    baseMapTransform: {
+      value: new THREE.Vector4(...artworkTransform),
+    },
+    deckAspect: {
+      value:
+        (settings.deckTailLength + settings.deckNoseLength) /
+        (settings.deckHalfWidth * 2),
+    },
+    wearColor: { value: colorVector(settings.plywoodLightColor) },
+    wearInset: { value: bottom ? 0.035 : 0.032 },
+    wearWidth: { value: bottom ? 0.016 : 0.013 },
+    wearRoughness: {
+      value: bottom
+        ? settings.bottomWearRoughness
+        : settings.topWearRoughness,
+    },
+    wearFrequency: { value: bottom ? 88 : 112 },
+    wearOpacity: { value: bottom ? settings.bottomWear : settings.topWear },
+  };
+  // Apply artwork crop and worn plywood to the albedo, then let Three's
+  // standard lighting, fog and shadow pipeline shade the whole surface.
+  material.onBeforeCompile = shader => {
+    Object.assign(shader.uniforms, uniforms);
+    shader.vertexShader = 'attribute vec2 wearUv; varying vec2 vWearUv;\n' + shader.vertexShader;
+    shader.vertexShader = shader.vertexShader.replace('#include <uv_vertex>',
+      '#include <uv_vertex>\nvWearUv = wearUv;');
+    shader.fragmentShader = SURFACE_WEAR + shader.fragmentShader;
+    shader.fragmentShader = shader.fragmentShader.replace('#include <map_fragment>', `
+      vec2 artworkUv = vMapUv * baseMapTransform.xy + baseMapTransform.zw;
+      diffuseColor *= texture2D(map, artworkUv);
+      diffuseColor.rgb = mix(diffuseColor.rgb, wearColor, wearStroke(vWearUv));
+    `);
+  };
+  material.customProgramCacheKey = () => 'skateboard-lit-wear-v1';
+  return material;
 }
 
 function deckMaterials(
@@ -659,13 +647,13 @@ function deckMaterials(
 ): THREE.Material[] {
   const materials: THREE.Material[] = [
     surfaceMaterial(
-      "SkateboardDeck_TopGrip_Flat_Web",
+      "SkateboardDeck_TopGrip_Lit_Web",
       getGripTexture(),
       settings,
       false,
     ),
     surfaceMaterial(
-      "SkateboardDeck_BottomArt_Flat_Web",
+      "SkateboardDeck_BottomArt_Lit_Web",
       getArtworkTexture(settings.bottomArtworkPath),
       settings,
       true,
@@ -677,8 +665,8 @@ function deckMaterials(
         ? settings.plywoodLightColor
         : settings.plywoodDarkColor;
     materials.push(
-      new THREE.MeshBasicMaterial({
-        name: `SkateboardDeck_PlyBand_${index + 1}_Flat_Web`,
+      new THREE.MeshStandardMaterial({
+        name: `SkateboardDeck_PlyBand_${index + 1}_Lit_Web`,
         color: new THREE.Color(color.r, color.g, color.b),
       }),
     );
@@ -686,12 +674,12 @@ function deckMaterials(
   return materials;
 }
 
-function markUnlit(root: THREE.Object3D): void {
+function markLit(root: THREE.Object3D): void {
   root.traverse((object) => {
-    object.userData.noShadow = true;
+    delete object.userData.noShadow;
     if (object instanceof THREE.Mesh) {
-      object.castShadow = false;
-      object.receiveShadow = false;
+      object.castShadow = true;
+      object.receiveShadow = true;
     }
   });
 }
@@ -704,9 +692,11 @@ function createFallbackTruck(
 ): THREE.Group {
   const root = new THREE.Group();
   root.name = name;
-  const material = new THREE.MeshBasicMaterial({
-    name: "SkateboardTruck_Fallback_Flat",
+  const material = new THREE.MeshStandardMaterial({
+    name: "SkateboardTruck_Fallback_Lit",
     color: 0xb9bfc9,
+    roughness: 0.45,
+    metalness: 0.55,
   });
   const underside = settings.boardToGroundDistance - settings.deckThickness;
   root.position.set(0, underside, z);
@@ -751,7 +741,7 @@ function createFallbackTruck(
     0,
   );
   root.add(kingpin);
-  markUnlit(root);
+  markLit(root);
   return root;
 }
 
@@ -760,8 +750,8 @@ function createWheels(
 ): THREE.Group {
   const root = new THREE.Group();
   root.name = "Wheels_Procedural";
-  const material = new THREE.MeshBasicMaterial({
-    name: "SkateboardWheel_Purple_Flat",
+  const material = new THREE.MeshStandardMaterial({
+    name: "SkateboardWheel_Purple_Lit",
     color: new THREE.Color(117 / 255, 96 / 255, 128 / 255),
   });
   const geometry = new THREE.CylinderGeometry(
@@ -786,7 +776,7 @@ function createWheels(
       root.add(wheel);
     }
   }
-  markUnlit(root);
+  markLit(root);
   return root;
 }
 
@@ -817,13 +807,15 @@ function getTruckTemplate(path: string): Promise<THREE.Group> {
         template.name = "SkateboardTruck_Prefab_Web";
         template.traverse((object) => {
           if (!(object instanceof THREE.Mesh)) return;
-          object.material = new THREE.MeshBasicMaterial({
-            name: "SkateboardTruck_FlatUnlit_Web",
+          object.material = new THREE.MeshStandardMaterial({
+            name: "SkateboardTruck_Lit_Web",
             map: getTruckAtlas(),
             color: 0xffffff,
+            roughness: 0.45,
+            metalness: 0.55,
           });
         });
-        markUnlit(template);
+        markLit(template);
         resolve(template);
       },
       undefined,
@@ -899,8 +891,8 @@ export function rebuildSkateboardPresentation(
   const deck = new THREE.Mesh(geometry, deckMaterials(settings));
   deck.name = "Deck_ContinuousRoundedKick";
   deck.position.y = settings.boardToGroundDistance;
-  deck.castShadow = false;
-  deck.receiveShadow = false;
+  deck.castShadow = true;
+  deck.receiveShadow = true;
   assembly.add(deck);
 
   const fallback = new THREE.Group();
@@ -921,7 +913,7 @@ export function rebuildSkateboardPresentation(
   );
   assembly.add(fallback, createWheels(settings));
   addSockets(assembly, settings);
-  markUnlit(root);
+  markLit(root);
 
   getTruckTemplate(settings.truckModelPath).then(
     (template) => {
@@ -966,7 +958,7 @@ export function rebuildSkateboardPresentation(
       fallback.removeFromParent();
       assembly.add(trucks);
       root.userData.assetReady = true;
-      markUnlit(trucks);
+      markLit(trucks);
     },
     (error) => {
       root.userData.assetError = String(error);

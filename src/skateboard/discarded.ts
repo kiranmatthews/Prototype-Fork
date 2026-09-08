@@ -336,7 +336,8 @@ export class DiscardedBoards {
                 const capacity = batch ? batch.capacity * 2 : 16;
                 const mesh = new THREE.InstancedMesh(source.geometry, source.material, capacity);
                 mesh.name = 'resting-board-pieces';
-                mesh.userData.noShadow = true;
+                mesh.castShadow = true;
+                mesh.receiveShadow = true;
                 mesh.raycast = () => { };
                 mesh.count = batch?.mesh.count ?? 0;
                 if (batch) {

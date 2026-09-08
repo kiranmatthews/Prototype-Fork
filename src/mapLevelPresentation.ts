@@ -100,7 +100,7 @@ export class MapLevelPresentation {
     const board = createSkateboardPresentation({ ...DEFAULT_SKATEBOARD_SETTINGS, deckHalfWidth: 0.34, topWear: 0.6 });
     board.position.y = -DEFAULT_SKATEBOARD_SETTINGS.boardToGroundDistance;
     mount.add(board); this.deckPivot.add(mount);
-    const face = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 0.534), new THREE.MeshBasicMaterial({ map: this.faceTexture, transparent: true, toneMapped: false, depthWrite: false }));
+    const face = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 0.534), new THREE.MeshStandardMaterial({ map: this.faceTexture, roughness: 0.95, transparent: true, depthWrite: false }));
     face.position.z = 0.075; this.deckPivot.add(face);
     const factories = [() => Level.crystalMesh(), () => Level.gemMesh(), () => Level.gemMesh(1, COMBO_GEM_TINT), () => Level.timeRelicMesh()];
     for (const [i, make] of factories.entries()) {
