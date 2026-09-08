@@ -24,6 +24,30 @@ try {
  const ray=new THREE.Raycaster();const down=new THREE.Vector3(0,-1,0);
  const floor=(x,z,y=120)=>{ray.set(new THREE.Vector3(x,y,z),down);ray.near=0;ray.far=200;return ray.intersectObjects(level.groundMeshes,false)[0];};
  assert.ok(Math.abs(floor(0,4).point.y)<.001,'supported spawn');
+ // Sweep both sides of every old handoff, including airborne approaches.
+ // Camera and player have independent cursors: neither may choose a cross-leg.
+ assert.equal(level.zones.length,0,'no competing side-scroll input remaps');
+ let cameraSamples=0;
+ for(const [x,y,z] of [[0,0,-48],[-47,12,-48],[-47,12,-112],[10,12,-112],[10,26,-202],[-48,26,-202],[-48,34,-278],[9,56,-278],[9,56,-324],[-43,64,-324]])
+   for(const dx of [-8,-.1,0,.1,8])for(const dz of [-8,-.1,0,.1,8])for(const dy of [0,4]){
+     const view=level.laneDirAt(x+dx,y+dy,z+dz);
+     assert.ok(view&&Math.abs(view.x)<1e-8&&Math.abs(view.z+1)<1e-8,'stable camera and input frame through a corner');cameraSamples++;
+   }
+ assert.equal(cameraSamples,500);
+
+ // Actual held-input traversal across the former camera handoffs.
+ const cs=new THREE.Scene(),cl=new Level(cs,{id:'night-camera',name:'Night camera',data:{v:1,name:'Night camera',spawn:[0,101,0],killY:-30,components:[
+   ...NIGHTWORKS_LEVEL.components.filter(c=>c.t==='camnode'||c.t==='zone'),
+   {t:'platform',p:[-20,100,-190],s:[160,1,500]},{t:'gate',p:[0,100,-430]}]}});
+ const cp=new Player(cs),ci={moveX:0,moveY:0,consumeEdges(){}};
+ for(const [x,z] of [[0,-48],[-47,-48],[-47,-112],[10,-112],[10,-202],[-48,-202],[-48,-278],[9,-278],[9,-324],[-43,-324]])for(const sideways of [false,true]){
+   cp.pos.set(x-2,100.5,z+2);cp.prevPos.copy(cp.pos);cp.state='ride';cp.freeSkate=false;cp.speed=0;cp.walkVelocity.set(0,0,0);cp.laneCursor.s=-1;cp.settle(cl);
+   ci.moveX=sideways?1:0;ci.moveY=sideways?0:1;cp.rawInput=ci;const start=cp.pos.clone();
+   for(let frame=0;frame<90;frame++){cl.update(CONST.fixedStep);cp.step(CONST.fixedStep,ci,cl);}
+   assert.ok(sideways?cp.pos.x>start.x+3:cp.pos.z<start.z-3,'held input crosses the old transition');
+   assert.ok(Math.abs(sideways?cp.pos.z-start.z:cp.pos.x-start.x)<.001,'camera cannot hijack held run direction');
+ }
+ cl.dispose();
  const normal=new THREE.Vector3();let ledges=0,sideProbes=0,groundProbes=0,joinedEdges=0;
  const player=new Player(scene),input={moveX:0,moveY:0,consumeEdges(){}};
  for(const k of ['jumpHeld','grindHeld','spinHeld','grabHeld','transferHeld','jumpPressed','jumpReleased','grindPressed','spinPressed','grabPressed','restartPressed','transferPressed'])input[k]=false;

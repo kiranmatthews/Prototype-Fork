@@ -196,14 +196,21 @@ console.error = (...args) => {
 };
 
 try {
-  const { Level, findLevel } = await server.ssrLoadModule("/src/level.ts");
+  const { Level, findLevel, roundCorners } = await server.ssrLoadModule("/src/level.ts");
   const { Player } = await server.ssrLoadModule("/src/player.ts");
   const { Replayer } = await server.ssrLoadModule("/src/replay.ts");
   const { CONST } = await server.ssrLoadModule("/src/tuning.ts");
   const entry = findLevel(replay.level);
   assert.ok(entry);
   const scene = new THREE.Scene();
+  // This historical replay recorded camera-relative inputs before the fixed
+  // Nightworks camera. Pin its camera fixture so it continues testing landing
+  // marker timing rather than requiring the live course to retain old steering.
+  const legacyCamera = JSON.parse(await readFile(`${root}tools/fixtures/nightworks-legacy-camera.json`, "utf8"));
   const level = new Level(scene, entry);
+  level.lanePts = roundCorners(legacyCamera.filter(c=>c.t==="camnode").map(c=>[c.p[0],c.p[2],c.radius,c.p[1]]),false).map(p=>({x:p.x,y:p.y,z:p.z}));
+  level.measureLane();
+  level.zones = legacyCamera.filter(c=>c.t==="zone").map(c=>({xMin:c.p[0]-c.s[0]/2,xMax:c.p[0]+c.s[0]/2,zMin:c.p[2]-c.s[2]/2,zMax:c.p[2]+c.s[2]/2,dir:c.dir}));
   const player = new Player(scene);
   if (player.special) {
     player.special.value = 0;
