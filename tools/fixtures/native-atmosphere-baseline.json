@@ -1,0 +1,2002 @@
+{
+  "jungle": {
+    "painted": {
+      "fog": {
+        "near": 38,
+        "far": 150,
+        "color": [
+          0.08650046202808521,
+          0.20507873637973145,
+          0.16202937562896222
+        ]
+      },
+      "background": [
+        0.08650046202808521,
+        0.20507873637973145,
+        0.16202937562896222
+      ],
+      "drawDistance": 175,
+      "secondDrawDistance": 175,
+      "ambientSky": [
+        0.5548592937120609,
+        0.7515233663828247,
+        0.7467137189518562
+      ],
+      "ambientGround": [
+        0.21486634817524602,
+        0.18622849962831442,
+        0.1648857788307322
+      ],
+      "ambientIntensity": 1.196,
+      "sunColor": [
+        1,
+        0.774010848660792,
+        0.45000050200114183
+      ],
+      "sunIntensity": 1.8974999999999997,
+      "shadowStrength": 1,
+      "fillColor": [
+        0.5236140308218011,
+        0.7236049085495533,
+        0.7697397445016874
+      ],
+      "fillIntensity": 0.31096,
+      "skyVisible": true,
+      "mistVisible": true,
+      "fallback": null
+    },
+    "fallback": {
+      "fog": {
+        "near": 38,
+        "far": 150,
+        "color": [
+          0.08650046202808521,
+          0.20507873637973145,
+          0.16202937562896222
+        ]
+      },
+      "background": [
+        0.08650046202808521,
+        0.20507873637973145,
+        0.16202937562896222
+      ],
+      "drawDistance": 175,
+      "secondDrawDistance": 175,
+      "ambientSky": [
+        0.5548592937120609,
+        0.7515233663828247,
+        0.7467137189518562
+      ],
+      "ambientGround": [
+        0.21486634817524602,
+        0.18622849962831442,
+        0.1648857788307322
+      ],
+      "ambientIntensity": 1.196,
+      "sunColor": [
+        1,
+        0.774010848660792,
+        0.45000050200114183
+      ],
+      "sunIntensity": 1.8974999999999997,
+      "shadowStrength": 1,
+      "fillColor": [
+        0.5236140308218011,
+        0.7236049085495533,
+        0.7697397445016874
+      ],
+      "fillIntensity": 0.31096,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": {
+        "skyTop": "#3f8fd8",
+        "skyBottom": "#e9f0f4",
+        "fog": 14674418,
+        "stars": false,
+        "sunColorHex": "#fffdf2",
+        "sunU": 0.36,
+        "sunV": 0.34
+      }
+    }
+  },
+  "flats": {
+    "painted": {
+      "fog": {
+        "near": 110,
+        "far": 340,
+        "color": [
+          0.7379104087672317,
+          0.8148465722120952,
+          0.8879231178794776
+        ]
+      },
+      "background": [
+        0.7379104087672317,
+        0.8148465722120952,
+        0.8879231178794776
+      ],
+      "drawDistance": 400,
+      "secondDrawDistance": 400,
+      "ambientSky": [
+        0.7745942401410982,
+        0.9092413542657308,
+        1
+      ],
+      "ambientGround": [
+        0.3433911881023071,
+        0.4058499570805729,
+        0.36649881319600863
+      ],
+      "ambientIntensity": 1.38,
+      "sunColor": [
+        1,
+        0.9173516858039055,
+        0.7231211777591862
+      ],
+      "sunIntensity": 1.7825,
+      "shadowStrength": 1,
+      "fillColor": [
+        0.723373073030017,
+        0.8669848975340133,
+        1
+      ],
+      "fillIntensity": 0.3588,
+      "skyVisible": true,
+      "mistVisible": true,
+      "fallback": null
+    },
+    "fallback": {
+      "fog": {
+        "near": 110,
+        "far": 340,
+        "color": [
+          0.7379104087672317,
+          0.8148465722120952,
+          0.8879231178794776
+        ]
+      },
+      "background": [
+        0.7379104087672317,
+        0.8148465722120952,
+        0.8879231178794776
+      ],
+      "drawDistance": 400,
+      "secondDrawDistance": 400,
+      "ambientSky": [
+        0.7745942401410982,
+        0.9092413542657308,
+        1
+      ],
+      "ambientGround": [
+        0.3433911881023071,
+        0.4058499570805729,
+        0.36649881319600863
+      ],
+      "ambientIntensity": 1.38,
+      "sunColor": [
+        1,
+        0.9173516858039055,
+        0.7231211777591862
+      ],
+      "sunIntensity": 1.7825,
+      "shadowStrength": 1,
+      "fillColor": [
+        0.723373073030017,
+        0.8669848975340133,
+        1
+      ],
+      "fillIntensity": 0.3588,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": {
+        "skyTop": "#3f8fd8",
+        "skyBottom": "#e9f0f4",
+        "fog": 14674418,
+        "stars": false,
+        "sunColorHex": "#fffdf2",
+        "sunU": 0.68,
+        "sunV": 0.14
+      }
+    }
+  },
+  "sky": {
+    "painted": {
+      "fog": {
+        "near": 5,
+        "far": 24,
+        "color": [
+          0.6307571363387763,
+          0.2541520943200296,
+          0.20863687013464577
+        ]
+      },
+      "background": [
+        0.6307571363387763,
+        0.2541520943200296,
+        0.20863687013464577
+      ],
+      "drawDistance": 400,
+      "secondDrawDistance": 400,
+      "ambientSky": [
+        0.7379104087672317,
+        0.8713671191959567,
+        1
+      ],
+      "ambientGround": [
+        0.5109424068696314,
+        0.49224101671825266,
+        0.47341390583336307
+      ],
+      "ambientIntensity": 1.25,
+      "sunColor": [
+        1,
+        0.837536360423072,
+        0.5812378653088816
+      ],
+      "sunIntensity": 1.6500000000000001,
+      "shadowStrength": 1,
+      "fillColor": [
+        0.7379104087672317,
+        0.8713671191959567,
+        1
+      ],
+      "fillIntensity": 0.275,
+      "skyVisible": false,
+      "mistVisible": false,
+      "fallback": null
+    },
+    "fallback": {
+      "fog": {
+        "near": 5,
+        "far": 24,
+        "color": [
+          0.6307571363387763,
+          0.2541520943200296,
+          0.20863687013464577
+        ]
+      },
+      "background": [
+        0.6307571363387763,
+        0.2541520943200296,
+        0.20863687013464577
+      ],
+      "drawDistance": 400,
+      "secondDrawDistance": 400,
+      "ambientSky": [
+        0.7379104087672317,
+        0.8713671191959567,
+        1
+      ],
+      "ambientGround": [
+        0.5109424068696314,
+        0.49224101671825266,
+        0.47341390583336307
+      ],
+      "ambientIntensity": 1.25,
+      "sunColor": [
+        1,
+        0.837536360423072,
+        0.5812378653088816
+      ],
+      "sunIntensity": 1.6500000000000001,
+      "shadowStrength": 1,
+      "fillColor": [
+        0.7379104087672317,
+        0.8713671191959567,
+        1
+      ],
+      "fillIntensity": 0.275,
+      "skyVisible": false,
+      "mistVisible": false,
+      "fallback": {
+        "skyTop": "#0fa3c2",
+        "skyBottom": "#ffe6ae",
+        "fog": 13666942,
+        "stars": false,
+        "sunColorHex": "#fff4d8",
+        "sunU": 0.6,
+        "sunV": 0.2
+      }
+    }
+  },
+  "slip": {
+    "painted": {
+      "fog": {
+        "near": 60,
+        "far": 260,
+        "color": [
+          0.6307571363387763,
+          0.2541520943200296,
+          0.20863687013464577
+        ]
+      },
+      "background": [
+        0.6307571363387763,
+        0.2541520943200296,
+        0.20863687013464577
+      ],
+      "drawDistance": 400,
+      "secondDrawDistance": 400,
+      "ambientSky": [
+        0.5209955731953768,
+        0.8069522576650873,
+        0.8879231178794776
+      ],
+      "ambientGround": [
+        0.18754480515825156,
+        0.1978328923243954,
+        0.18774398173831683
+      ],
+      "ambientIntensity": 1.05,
+      "sunColor": [
+        1,
+        0.837536360423072,
+        0.5125626449854659
+      ],
+      "sunIntensity": 1.2100000000000002,
+      "shadowStrength": 1,
+      "fillColor": [
+        0.5209955731953768,
+        0.8069522576650873,
+        0.8879231178794776
+      ],
+      "fillIntensity": 0.231,
+      "skyVisible": true,
+      "mistVisible": true,
+      "fallback": null
+    },
+    "fallback": {
+      "fog": {
+        "near": 60,
+        "far": 260,
+        "color": [
+          0.6307571363387763,
+          0.2541520943200296,
+          0.20863687013464577
+        ]
+      },
+      "background": [
+        0.6307571363387763,
+        0.2541520943200296,
+        0.20863687013464577
+      ],
+      "drawDistance": 400,
+      "secondDrawDistance": 400,
+      "ambientSky": [
+        0.5209955731953768,
+        0.8069522576650873,
+        0.8879231178794776
+      ],
+      "ambientGround": [
+        0.18754480515825156,
+        0.1978328923243954,
+        0.18774398173831683
+      ],
+      "ambientIntensity": 1.05,
+      "sunColor": [
+        1,
+        0.837536360423072,
+        0.5125626449854659
+      ],
+      "sunIntensity": 1.2100000000000002,
+      "shadowStrength": 1,
+      "fillColor": [
+        0.5209955731953768,
+        0.8069522576650873,
+        0.8879231178794776
+      ],
+      "fillIntensity": 0.231,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": {
+        "skyTop": "#0fa3c2",
+        "skyBottom": "#ffe6ae",
+        "fog": 13666942,
+        "stars": false,
+        "sunColorHex": "#fff6d8",
+        "sunU": 0.68,
+        "sunV": 0.24
+      }
+    }
+  },
+  "dark": {
+    "painted": {
+      "fog": {
+        "near": 18,
+        "far": 88,
+        "color": [
+          0.010960094003125918,
+          0.018500220124016652,
+          0.05126945836711539
+        ]
+      },
+      "background": [
+        0.010960094003125918,
+        0.018500220124016652,
+        0.05126945836711539
+      ],
+      "drawDistance": 400,
+      "secondDrawDistance": 400,
+      "ambientSky": [
+        0.05623547134241173,
+        0.10696800897564493,
+        0.27278078934137856
+      ],
+      "ambientGround": [
+        0.01196733387478999,
+        0.016513801222234465,
+        0.04437704184343712
+      ],
+      "ambientIntensity": 0.46,
+      "sunColor": [
+        0.3393189627054928,
+        0.4976210587352395,
+        0.9698654107015132
+      ],
+      "sunIntensity": 0.2132,
+      "shadowStrength": 1,
+      "fillColor": [
+        0.10842354136131427,
+        0.1991900592202716,
+        0.5080994284698508
+      ],
+      "fillIntensity": 0.1564,
+      "skyVisible": true,
+      "mistVisible": true,
+      "fallback": null
+    },
+    "fallback": {
+      "fog": {
+        "near": 18,
+        "far": 88,
+        "color": [
+          0.010960094003125918,
+          0.018500220124016652,
+          0.05126945836711539
+        ]
+      },
+      "background": [
+        0.010960094003125918,
+        0.018500220124016652,
+        0.05126945836711539
+      ],
+      "drawDistance": 400,
+      "secondDrawDistance": 400,
+      "ambientSky": [
+        0.05623547134241173,
+        0.10696800897564493,
+        0.27278078934137856
+      ],
+      "ambientGround": [
+        0.01196733387478999,
+        0.016513801222234465,
+        0.04437704184343712
+      ],
+      "ambientIntensity": 0.46,
+      "sunColor": [
+        0.3393189627054928,
+        0.4976210587352395,
+        0.9698654107015132
+      ],
+      "sunIntensity": 0.2132,
+      "shadowStrength": 1,
+      "fillColor": [
+        0.10842354136131427,
+        0.1991900592202716,
+        0.5080994284698508
+      ],
+      "fillIntensity": 0.1564,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": {
+        "skyTop": "#080f28",
+        "skyBottom": "#22345c",
+        "fog": 1779008,
+        "stars": true,
+        "sunColorHex": "",
+        "sunU": 0.68,
+        "sunV": 0.14
+      }
+    }
+  },
+  "warproom": {
+    "painted": {
+      "fog": {
+        "near": 105,
+        "far": 310,
+        "color": [
+          0.29613827078752575,
+          0.5840784178830671,
+          0.7454042095350284
+        ]
+      },
+      "background": [
+        0.29613827078752575,
+        0.5840784178830671,
+        0.7454042095350284
+      ],
+      "drawDistance": 900,
+      "secondDrawDistance": 900,
+      "ambientSky": [
+        0.6938717612856897,
+        0.8713671191959567,
+        1
+      ],
+      "ambientGround": [
+        0.4232676699760063,
+        0.5028864580233624,
+        0.24228112245478564
+      ],
+      "ambientIntensity": 1.8,
+      "sunColor": [
+        1,
+        0.8387990117372213,
+        0.6307571363387763
+      ],
+      "sunIntensity": 1.85,
+      "shadowStrength": 0.36,
+      "fillColor": [
+        0.5271151256969157,
+        0.8227857543924378,
+        1
+      ],
+      "fillIntensity": 0.8,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": null
+    },
+    "fallback": {
+      "fog": {
+        "near": 105,
+        "far": 310,
+        "color": [
+          0.29613827078752575,
+          0.5840784178830671,
+          0.7454042095350284
+        ]
+      },
+      "background": [
+        0.29613827078752575,
+        0.5840784178830671,
+        0.7454042095350284
+      ],
+      "drawDistance": 900,
+      "secondDrawDistance": 900,
+      "ambientSky": [
+        0.6938717612856897,
+        0.8713671191959567,
+        1
+      ],
+      "ambientGround": [
+        0.4232676699760063,
+        0.5028864580233624,
+        0.24228112245478564
+      ],
+      "ambientIntensity": 1.8,
+      "sunColor": [
+        1,
+        0.8387990117372213,
+        0.6307571363387763
+      ],
+      "sunIntensity": 1.85,
+      "shadowStrength": 0.36,
+      "fillColor": [
+        0.5271151256969157,
+        0.8227857543924378,
+        1
+      ],
+      "fillIntensity": 0.8,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": {
+        "skyTop": "#3f8fd8",
+        "skyBottom": "#e9f0f4",
+        "fog": 9751008,
+        "stars": false,
+        "sunColorHex": "#fffdf2",
+        "sunU": 0.34,
+        "sunV": 0.26
+      }
+    }
+  },
+  "descent": {
+    "painted": {
+      "fog": {
+        "near": 190,
+        "far": 780,
+        "color": [
+          0.29613827078752575,
+          0.5840784178830671,
+          0.7454042095350284
+        ]
+      },
+      "background": [
+        0.29613827078752575,
+        0.5840784178830671,
+        0.7454042095350284
+      ],
+      "drawDistance": 900,
+      "secondDrawDistance": 900,
+      "ambientSky": [
+        0.19461783043107173,
+        0.43415363616478553,
+        0.6375968739867731
+      ],
+      "ambientGround": [
+        0.04666508633021928,
+        0.07421356837213867,
+        0.09530746662221588
+      ],
+      "ambientIntensity": 1,
+      "sunColor": [
+        1,
+        0.8069522576650873,
+        0.508881320845802
+      ],
+      "sunIntensity": 1.12,
+      "shadowStrength": 0.62,
+      "fillColor": [
+        0.19461783043107173,
+        0.3049873140591091,
+        0.29613827078752575
+      ],
+      "fillIntensity": 0.32,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": null
+    },
+    "fallback": {
+      "fog": {
+        "near": 190,
+        "far": 780,
+        "color": [
+          0.29613827078752575,
+          0.5840784178830671,
+          0.7454042095350284
+        ]
+      },
+      "background": [
+        0.29613827078752575,
+        0.5840784178830671,
+        0.7454042095350284
+      ],
+      "drawDistance": 900,
+      "secondDrawDistance": 900,
+      "ambientSky": [
+        0.19461783043107173,
+        0.43415363616478553,
+        0.6375968739867731
+      ],
+      "ambientGround": [
+        0.04666508633021928,
+        0.07421356837213867,
+        0.09530746662221588
+      ],
+      "ambientIntensity": 1,
+      "sunColor": [
+        1,
+        0.8069522576650873,
+        0.508881320845802
+      ],
+      "sunIntensity": 1.12,
+      "shadowStrength": 0.62,
+      "fillColor": [
+        0.19461783043107173,
+        0.3049873140591091,
+        0.29613827078752575
+      ],
+      "fillIntensity": 0.32,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": {
+        "skyTop": "#3f8fd8",
+        "skyBottom": "#e9f0f4",
+        "fog": 9751008,
+        "stars": false,
+        "sunColorHex": "#fffdf2",
+        "sunU": 0.55,
+        "sunV": 0.26
+      }
+    }
+  },
+  "beachfront": {
+    "painted": {
+      "fog": {
+        "near": 190,
+        "far": 780,
+        "color": [
+          0.29613827078752575,
+          0.5840784178830671,
+          0.7454042095350284
+        ]
+      },
+      "background": [
+        0.29613827078752575,
+        0.5840784178830671,
+        0.7454042095350284
+      ],
+      "drawDistance": 900,
+      "secondDrawDistance": 900,
+      "ambientSky": [
+        0.19461783043107173,
+        0.43415363616478553,
+        0.6375968739867731
+      ],
+      "ambientGround": [
+        0.04666508633021928,
+        0.07421356837213867,
+        0.09530746662221588
+      ],
+      "ambientIntensity": 1,
+      "sunColor": [
+        1,
+        0.8069522576650873,
+        0.508881320845802
+      ],
+      "sunIntensity": 1.12,
+      "shadowStrength": 0.62,
+      "fillColor": [
+        0.19461783043107173,
+        0.3049873140591091,
+        0.29613827078752575
+      ],
+      "fillIntensity": 0.32,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": null
+    },
+    "fallback": {
+      "fog": {
+        "near": 190,
+        "far": 780,
+        "color": [
+          0.29613827078752575,
+          0.5840784178830671,
+          0.7454042095350284
+        ]
+      },
+      "background": [
+        0.29613827078752575,
+        0.5840784178830671,
+        0.7454042095350284
+      ],
+      "drawDistance": 900,
+      "secondDrawDistance": 900,
+      "ambientSky": [
+        0.19461783043107173,
+        0.43415363616478553,
+        0.6375968739867731
+      ],
+      "ambientGround": [
+        0.04666508633021928,
+        0.07421356837213867,
+        0.09530746662221588
+      ],
+      "ambientIntensity": 1,
+      "sunColor": [
+        1,
+        0.8069522576650873,
+        0.508881320845802
+      ],
+      "sunIntensity": 1.12,
+      "shadowStrength": 0.62,
+      "fillColor": [
+        0.19461783043107173,
+        0.3049873140591091,
+        0.29613827078752575
+      ],
+      "fillIntensity": 0.32,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": {
+        "skyTop": "#3f8fd8",
+        "skyBottom": "#e9f0f4",
+        "fog": 9751008,
+        "stars": false,
+        "sunColorHex": "#fffdf2",
+        "sunU": 0.55,
+        "sunV": 0.26
+      }
+    }
+  },
+  "default:ordinary:day": {
+    "painted": {
+      "fog": {
+        "near": 90,
+        "far": 340,
+        "color": [
+          0.7379104087672317,
+          0.8148465722120952,
+          0.8879231178794776
+        ]
+      },
+      "background": [
+        0.7379104087672317,
+        0.8148465722120952,
+        0.8879231178794776
+      ],
+      "drawDistance": 400,
+      "secondDrawDistance": 400,
+      "ambientSky": [
+        0.7745942401410982,
+        0.9092413542657308,
+        1
+      ],
+      "ambientGround": [
+        0.3433911881023071,
+        0.4058499570805729,
+        0.36649881319600863
+      ],
+      "ambientIntensity": 1.38,
+      "sunColor": [
+        1,
+        0.9173516858039055,
+        0.7231211777591862
+      ],
+      "sunIntensity": 1.7825,
+      "shadowStrength": 1,
+      "fillColor": [
+        0.723373073030017,
+        0.8669848975340133,
+        1
+      ],
+      "fillIntensity": 0.3588,
+      "skyVisible": true,
+      "mistVisible": true,
+      "fallback": null
+    },
+    "fallback": {
+      "fog": {
+        "near": 90,
+        "far": 340,
+        "color": [
+          0.7379104087672317,
+          0.8148465722120952,
+          0.8879231178794776
+        ]
+      },
+      "background": [
+        0.7379104087672317,
+        0.8148465722120952,
+        0.8879231178794776
+      ],
+      "drawDistance": 400,
+      "secondDrawDistance": 400,
+      "ambientSky": [
+        0.7745942401410982,
+        0.9092413542657308,
+        1
+      ],
+      "ambientGround": [
+        0.3433911881023071,
+        0.4058499570805729,
+        0.36649881319600863
+      ],
+      "ambientIntensity": 1.38,
+      "sunColor": [
+        1,
+        0.9173516858039055,
+        0.7231211777591862
+      ],
+      "sunIntensity": 1.7825,
+      "shadowStrength": 1,
+      "fillColor": [
+        0.723373073030017,
+        0.8669848975340133,
+        1
+      ],
+      "fillIntensity": 0.3588,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": {
+        "skyTop": "#3f8fd8",
+        "skyBottom": "#e9f0f4",
+        "fog": 14674418,
+        "stars": false,
+        "sunColorHex": "#fffdf2",
+        "sunU": 0.68,
+        "sunV": 0.14
+      }
+    }
+  },
+  "default:jungle:day": {
+    "painted": {
+      "fog": {
+        "near": 38,
+        "far": 150,
+        "color": [
+          0.08650046202808521,
+          0.20507873637973145,
+          0.16202937562896222
+        ]
+      },
+      "background": [
+        0.08650046202808521,
+        0.20507873637973145,
+        0.16202937562896222
+      ],
+      "drawDistance": 175,
+      "secondDrawDistance": 175,
+      "ambientSky": [
+        0.5548592937120609,
+        0.7515233663828247,
+        0.7467137189518562
+      ],
+      "ambientGround": [
+        0.21486634817524602,
+        0.18622849962831442,
+        0.1648857788307322
+      ],
+      "ambientIntensity": 1.196,
+      "sunColor": [
+        1,
+        0.774010848660792,
+        0.45000050200114183
+      ],
+      "sunIntensity": 1.8974999999999997,
+      "shadowStrength": 1,
+      "fillColor": [
+        0.5236140308218011,
+        0.7236049085495533,
+        0.7697397445016874
+      ],
+      "fillIntensity": 0.31096,
+      "skyVisible": true,
+      "mistVisible": true,
+      "fallback": null
+    },
+    "fallback": {
+      "fog": {
+        "near": 38,
+        "far": 150,
+        "color": [
+          0.08650046202808521,
+          0.20507873637973145,
+          0.16202937562896222
+        ]
+      },
+      "background": [
+        0.08650046202808521,
+        0.20507873637973145,
+        0.16202937562896222
+      ],
+      "drawDistance": 175,
+      "secondDrawDistance": 175,
+      "ambientSky": [
+        0.5548592937120609,
+        0.7515233663828247,
+        0.7467137189518562
+      ],
+      "ambientGround": [
+        0.21486634817524602,
+        0.18622849962831442,
+        0.1648857788307322
+      ],
+      "ambientIntensity": 1.196,
+      "sunColor": [
+        1,
+        0.774010848660792,
+        0.45000050200114183
+      ],
+      "sunIntensity": 1.8974999999999997,
+      "shadowStrength": 1,
+      "fillColor": [
+        0.5236140308218011,
+        0.7236049085495533,
+        0.7697397445016874
+      ],
+      "fillIntensity": 0.31096,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": {
+        "skyTop": "#3f8fd8",
+        "skyBottom": "#e9f0f4",
+        "fog": 14674418,
+        "stars": false,
+        "sunColorHex": "#fffdf2",
+        "sunU": 0.68,
+        "sunV": 0.14
+      }
+    }
+  },
+  "default:map:day": {
+    "painted": {
+      "fog": {
+        "near": 90,
+        "far": 340,
+        "color": [
+          0.7379104087672317,
+          0.8148465722120952,
+          0.8879231178794776
+        ]
+      },
+      "background": [
+        0.7379104087672317,
+        0.8148465722120952,
+        0.8879231178794776
+      ],
+      "drawDistance": 400,
+      "secondDrawDistance": 400,
+      "ambientSky": [
+        0.6938717612856897,
+        0.8713671191959567,
+        1
+      ],
+      "ambientGround": [
+        0.4232676699760063,
+        0.5028864580233624,
+        0.24228112245478564
+      ],
+      "ambientIntensity": 1.8,
+      "sunColor": [
+        1,
+        0.8387990117372213,
+        0.6307571363387763
+      ],
+      "sunIntensity": 1.85,
+      "shadowStrength": 0.36,
+      "fillColor": [
+        0.5271151256969157,
+        0.8227857543924378,
+        1
+      ],
+      "fillIntensity": 0.8,
+      "skyVisible": true,
+      "mistVisible": true,
+      "fallback": null
+    },
+    "fallback": {
+      "fog": {
+        "near": 90,
+        "far": 340,
+        "color": [
+          0.7379104087672317,
+          0.8148465722120952,
+          0.8879231178794776
+        ]
+      },
+      "background": [
+        0.7379104087672317,
+        0.8148465722120952,
+        0.8879231178794776
+      ],
+      "drawDistance": 400,
+      "secondDrawDistance": 400,
+      "ambientSky": [
+        0.6938717612856897,
+        0.8713671191959567,
+        1
+      ],
+      "ambientGround": [
+        0.4232676699760063,
+        0.5028864580233624,
+        0.24228112245478564
+      ],
+      "ambientIntensity": 1.8,
+      "sunColor": [
+        1,
+        0.8387990117372213,
+        0.6307571363387763
+      ],
+      "sunIntensity": 1.85,
+      "shadowStrength": 0.36,
+      "fillColor": [
+        0.5271151256969157,
+        0.8227857543924378,
+        1
+      ],
+      "fillIntensity": 0.8,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": {
+        "skyTop": "#3f8fd8",
+        "skyBottom": "#e9f0f4",
+        "fog": 14674418,
+        "stars": false,
+        "sunColorHex": "#fffdf2",
+        "sunU": 0.68,
+        "sunV": 0.14
+      }
+    }
+  },
+  "default:ordinary:sunset": {
+    "painted": {
+      "fog": {
+        "near": 90,
+        "far": 260,
+        "color": [
+          0.6307571363387763,
+          0.2541520943200296,
+          0.20863687013464577
+        ]
+      },
+      "background": [
+        0.6307571363387763,
+        0.2541520943200296,
+        0.20863687013464577
+      ],
+      "drawDistance": 400,
+      "secondDrawDistance": 400,
+      "ambientSky": [
+        0.8227857543924378,
+        0.9734452903978066,
+        1
+      ],
+      "ambientGround": [
+        0.3786342383882436,
+        0.34985770857174914,
+        0.24393842121731393
+      ],
+      "ambientIntensity": 1.2,
+      "sunColor": [
+        1,
+        0.8661462880597197,
+        0.6299587460527135
+      ],
+      "sunIntensity": 1.7050000000000003,
+      "shadowStrength": 1,
+      "fillColor": [
+        0.8227857543924378,
+        0.9734452903978066,
+        1
+      ],
+      "fillIntensity": 0.264,
+      "skyVisible": true,
+      "mistVisible": true,
+      "fallback": null
+    },
+    "fallback": {
+      "fog": {
+        "near": 90,
+        "far": 260,
+        "color": [
+          0.6307571363387763,
+          0.2541520943200296,
+          0.20863687013464577
+        ]
+      },
+      "background": [
+        0.6307571363387763,
+        0.2541520943200296,
+        0.20863687013464577
+      ],
+      "drawDistance": 400,
+      "secondDrawDistance": 400,
+      "ambientSky": [
+        0.8227857543924378,
+        0.9734452903978066,
+        1
+      ],
+      "ambientGround": [
+        0.3786342383882436,
+        0.34985770857174914,
+        0.24393842121731393
+      ],
+      "ambientIntensity": 1.2,
+      "sunColor": [
+        1,
+        0.8661462880597197,
+        0.6299587460527135
+      ],
+      "sunIntensity": 1.7050000000000003,
+      "shadowStrength": 1,
+      "fillColor": [
+        0.8227857543924378,
+        0.9734452903978066,
+        1
+      ],
+      "fillIntensity": 0.264,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": {
+        "skyTop": "#0fa3c2",
+        "skyBottom": "#ffe6ae",
+        "fog": 13666942,
+        "stars": false,
+        "sunColorHex": "#fff8dc",
+        "sunU": 0.68,
+        "sunV": 0.14
+      }
+    }
+  },
+  "default:jungle:sunset": {
+    "painted": {
+      "fog": {
+        "near": 38,
+        "far": 150,
+        "color": [
+          0.08650046202808521,
+          0.20507873637973145,
+          0.16202937562896222
+        ]
+      },
+      "background": [
+        0.08650046202808521,
+        0.20507873637973145,
+        0.16202937562896222
+      ],
+      "drawDistance": 175,
+      "secondDrawDistance": 175,
+      "ambientSky": [
+        0.4232676699760063,
+        0.6866853124288864,
+        0.5394794890033748
+      ],
+      "ambientGround": [
+        0.2586777211229866,
+        0.14487768161630787,
+        0.05576625580972258
+      ],
+      "ambientIntensity": 1.04,
+      "sunColor": [
+        1,
+        0.7036933392975244,
+        0.3204219801935965
+      ],
+      "sunIntensity": 1.815,
+      "shadowStrength": 1,
+      "fillColor": [
+        0.4232676699760063,
+        0.6866853124288864,
+        0.5394794890033748
+      ],
+      "fillIntensity": 0.2288,
+      "skyVisible": true,
+      "mistVisible": true,
+      "fallback": null
+    },
+    "fallback": {
+      "fog": {
+        "near": 38,
+        "far": 150,
+        "color": [
+          0.08650046202808521,
+          0.20507873637973145,
+          0.16202937562896222
+        ]
+      },
+      "background": [
+        0.08650046202808521,
+        0.20507873637973145,
+        0.16202937562896222
+      ],
+      "drawDistance": 175,
+      "secondDrawDistance": 175,
+      "ambientSky": [
+        0.4232676699760063,
+        0.6866853124288864,
+        0.5394794890033748
+      ],
+      "ambientGround": [
+        0.2586777211229866,
+        0.14487768161630787,
+        0.05576625580972258
+      ],
+      "ambientIntensity": 1.04,
+      "sunColor": [
+        1,
+        0.7036933392975244,
+        0.3204219801935965
+      ],
+      "sunIntensity": 1.815,
+      "shadowStrength": 1,
+      "fillColor": [
+        0.4232676699760063,
+        0.6866853124288864,
+        0.5394794890033748
+      ],
+      "fillIntensity": 0.2288,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": {
+        "skyTop": "#0fa3c2",
+        "skyBottom": "#ffe6ae",
+        "fog": 13666942,
+        "stars": false,
+        "sunColorHex": "#fff8dc",
+        "sunU": 0.68,
+        "sunV": 0.14
+      }
+    }
+  },
+  "default:map:sunset": {
+    "painted": {
+      "fog": {
+        "near": 90,
+        "far": 260,
+        "color": [
+          0.6307571363387763,
+          0.2541520943200296,
+          0.20863687013464577
+        ]
+      },
+      "background": [
+        0.6307571363387763,
+        0.2541520943200296,
+        0.20863687013464577
+      ],
+      "drawDistance": 400,
+      "secondDrawDistance": 400,
+      "ambientSky": [
+        0.6938717612856897,
+        0.8713671191959567,
+        1
+      ],
+      "ambientGround": [
+        0.4232676699760063,
+        0.5028864580233624,
+        0.24228112245478564
+      ],
+      "ambientIntensity": 1.8,
+      "sunColor": [
+        1,
+        0.8387990117372213,
+        0.6307571363387763
+      ],
+      "sunIntensity": 1.85,
+      "shadowStrength": 0.36,
+      "fillColor": [
+        0.5271151256969157,
+        0.8227857543924378,
+        1
+      ],
+      "fillIntensity": 0.8,
+      "skyVisible": true,
+      "mistVisible": true,
+      "fallback": null
+    },
+    "fallback": {
+      "fog": {
+        "near": 90,
+        "far": 260,
+        "color": [
+          0.6307571363387763,
+          0.2541520943200296,
+          0.20863687013464577
+        ]
+      },
+      "background": [
+        0.6307571363387763,
+        0.2541520943200296,
+        0.20863687013464577
+      ],
+      "drawDistance": 400,
+      "secondDrawDistance": 400,
+      "ambientSky": [
+        0.6938717612856897,
+        0.8713671191959567,
+        1
+      ],
+      "ambientGround": [
+        0.4232676699760063,
+        0.5028864580233624,
+        0.24228112245478564
+      ],
+      "ambientIntensity": 1.8,
+      "sunColor": [
+        1,
+        0.8387990117372213,
+        0.6307571363387763
+      ],
+      "sunIntensity": 1.85,
+      "shadowStrength": 0.36,
+      "fillColor": [
+        0.5271151256969157,
+        0.8227857543924378,
+        1
+      ],
+      "fillIntensity": 0.8,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": {
+        "skyTop": "#0fa3c2",
+        "skyBottom": "#ffe6ae",
+        "fog": 13666942,
+        "stars": false,
+        "sunColorHex": "#fff8dc",
+        "sunU": 0.68,
+        "sunV": 0.14
+      }
+    }
+  },
+  "default:ordinary:night": {
+    "painted": {
+      "fog": {
+        "near": 90,
+        "far": 200,
+        "color": [
+          0.010960094003125918,
+          0.018500220124016652,
+          0.05126945836711539
+        ]
+      },
+      "background": [
+        0.010960094003125918,
+        0.018500220124016652,
+        0.05126945836711539
+      ],
+      "drawDistance": 400,
+      "secondDrawDistance": 400,
+      "ambientSky": [
+        0.16699690277091372,
+        0.23093071256216546,
+        0.3729130588910545
+      ],
+      "ambientGround": [
+        0.06799572936000586,
+        0.08706153205380773,
+        0.10024322085119744
+      ],
+      "ambientIntensity": 0.6,
+      "sunColor": [
+        0.43658907278201586,
+        0.5656907677611881,
+        0.9573540250750858
+      ],
+      "sunIntensity": 0.403,
+      "shadowStrength": 1,
+      "fillColor": [
+        0.2561054499326503,
+        0.36447366400229886,
+        0.6416091212027519
+      ],
+      "fillIntensity": 0.20400000000000001,
+      "skyVisible": true,
+      "mistVisible": true,
+      "fallback": null
+    },
+    "fallback": {
+      "fog": {
+        "near": 90,
+        "far": 200,
+        "color": [
+          0.010960094003125918,
+          0.018500220124016652,
+          0.05126945836711539
+        ]
+      },
+      "background": [
+        0.010960094003125918,
+        0.018500220124016652,
+        0.05126945836711539
+      ],
+      "drawDistance": 400,
+      "secondDrawDistance": 400,
+      "ambientSky": [
+        0.16699690277091372,
+        0.23093071256216546,
+        0.3729130588910545
+      ],
+      "ambientGround": [
+        0.06799572936000586,
+        0.08706153205380773,
+        0.10024322085119744
+      ],
+      "ambientIntensity": 0.6,
+      "sunColor": [
+        0.43658907278201586,
+        0.5656907677611881,
+        0.9573540250750858
+      ],
+      "sunIntensity": 0.403,
+      "shadowStrength": 1,
+      "fillColor": [
+        0.2561054499326503,
+        0.36447366400229886,
+        0.6416091212027519
+      ],
+      "fillIntensity": 0.20400000000000001,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": {
+        "skyTop": "#080f28",
+        "skyBottom": "#22345c",
+        "fog": 1779008,
+        "stars": true,
+        "sunColorHex": "",
+        "sunU": 0.68,
+        "sunV": 0.14
+      }
+    }
+  },
+  "default:jungle:night": {
+    "painted": {
+      "fog": {
+        "near": 38,
+        "far": 150,
+        "color": [
+          0.08650046202808521,
+          0.20507873637973145,
+          0.16202937562896222
+        ]
+      },
+      "background": [
+        0.08650046202808521,
+        0.20507873637973145,
+        0.16202937562896222
+      ],
+      "drawDistance": 175,
+      "secondDrawDistance": 175,
+      "ambientSky": [
+        0.10706919010844901,
+        0.1879167158668274,
+        0.30383498224156075
+      ],
+      "ambientGround": [
+        0.033722438712789585,
+        0.028495810066538847,
+        0.046479745020457076
+      ],
+      "ambientIntensity": 0.52,
+      "sunColor": [
+        0.43658907278201586,
+        0.5370226003325654,
+        0.9027298899234769
+      ],
+      "sunIntensity": 0.429,
+      "shadowStrength": 1,
+      "fillColor": [
+        0.176201833049364,
+        0.30712166840851485,
+        0.549505019003427
+      ],
+      "fillIntensity": 0.1768,
+      "skyVisible": true,
+      "mistVisible": true,
+      "fallback": null
+    },
+    "fallback": {
+      "fog": {
+        "near": 38,
+        "far": 150,
+        "color": [
+          0.08650046202808521,
+          0.20507873637973145,
+          0.16202937562896222
+        ]
+      },
+      "background": [
+        0.08650046202808521,
+        0.20507873637973145,
+        0.16202937562896222
+      ],
+      "drawDistance": 175,
+      "secondDrawDistance": 175,
+      "ambientSky": [
+        0.10706919010844901,
+        0.1879167158668274,
+        0.30383498224156075
+      ],
+      "ambientGround": [
+        0.033722438712789585,
+        0.028495810066538847,
+        0.046479745020457076
+      ],
+      "ambientIntensity": 0.52,
+      "sunColor": [
+        0.43658907278201586,
+        0.5370226003325654,
+        0.9027298899234769
+      ],
+      "sunIntensity": 0.429,
+      "shadowStrength": 1,
+      "fillColor": [
+        0.176201833049364,
+        0.30712166840851485,
+        0.549505019003427
+      ],
+      "fillIntensity": 0.1768,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": {
+        "skyTop": "#080f28",
+        "skyBottom": "#22345c",
+        "fog": 1779008,
+        "stars": true,
+        "sunColorHex": "",
+        "sunU": 0.68,
+        "sunV": 0.14
+      }
+    }
+  },
+  "default:map:night": {
+    "painted": {
+      "fog": {
+        "near": 90,
+        "far": 200,
+        "color": [
+          0.010960094003125918,
+          0.018500220124016652,
+          0.05126945836711539
+        ]
+      },
+      "background": [
+        0.010960094003125918,
+        0.018500220124016652,
+        0.05126945836711539
+      ],
+      "drawDistance": 400,
+      "secondDrawDistance": 400,
+      "ambientSky": [
+        0.6938717612856897,
+        0.8713671191959567,
+        1
+      ],
+      "ambientGround": [
+        0.4232676699760063,
+        0.5028864580233624,
+        0.24228112245478564
+      ],
+      "ambientIntensity": 1.8,
+      "sunColor": [
+        1,
+        0.8387990117372213,
+        0.6307571363387763
+      ],
+      "sunIntensity": 1.85,
+      "shadowStrength": 0.36,
+      "fillColor": [
+        0.5271151256969157,
+        0.8227857543924378,
+        1
+      ],
+      "fillIntensity": 0.8,
+      "skyVisible": true,
+      "mistVisible": true,
+      "fallback": null
+    },
+    "fallback": {
+      "fog": {
+        "near": 90,
+        "far": 200,
+        "color": [
+          0.010960094003125918,
+          0.018500220124016652,
+          0.05126945836711539
+        ]
+      },
+      "background": [
+        0.010960094003125918,
+        0.018500220124016652,
+        0.05126945836711539
+      ],
+      "drawDistance": 400,
+      "secondDrawDistance": 400,
+      "ambientSky": [
+        0.6938717612856897,
+        0.8713671191959567,
+        1
+      ],
+      "ambientGround": [
+        0.4232676699760063,
+        0.5028864580233624,
+        0.24228112245478564
+      ],
+      "ambientIntensity": 1.8,
+      "sunColor": [
+        1,
+        0.8387990117372213,
+        0.6307571363387763
+      ],
+      "sunIntensity": 1.85,
+      "shadowStrength": 0.36,
+      "fillColor": [
+        0.5271151256969157,
+        0.8227857543924378,
+        1
+      ],
+      "fillIntensity": 0.8,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": {
+        "skyTop": "#080f28",
+        "skyBottom": "#22345c",
+        "fog": 1779008,
+        "stars": true,
+        "sunColorHex": "",
+        "sunU": 0.68,
+        "sunV": 0.14
+      }
+    }
+  },
+  "default:ordinary:coast": {
+    "painted": {
+      "fog": {
+        "near": 90,
+        "far": 380,
+        "color": [
+          0.29613827078752575,
+          0.5840784178830671,
+          0.7454042095350284
+        ]
+      },
+      "background": [
+        0.29613827078752575,
+        0.5840784178830671,
+        0.7454042095350284
+      ],
+      "drawDistance": 900,
+      "secondDrawDistance": 900,
+      "ambientSky": [
+        0.19461783043107173,
+        0.43415363616478553,
+        0.6375968739867731
+      ],
+      "ambientGround": [
+        0.04666508633021926,
+        0.07421356837213866,
+        0.0953074666222159
+      ],
+      "ambientIntensity": 1.2,
+      "sunColor": [
+        1,
+        0.8069522576650873,
+        0.508881320845802
+      ],
+      "sunIntensity": 1.55,
+      "shadowStrength": 0.62,
+      "fillColor": [
+        0.19461783043107173,
+        0.30498731405910906,
+        0.29613827078752575
+      ],
+      "fillIntensity": 0.384,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": null
+    },
+    "fallback": {
+      "fog": {
+        "near": 90,
+        "far": 380,
+        "color": [
+          0.29613827078752575,
+          0.5840784178830671,
+          0.7454042095350284
+        ]
+      },
+      "background": [
+        0.29613827078752575,
+        0.5840784178830671,
+        0.7454042095350284
+      ],
+      "drawDistance": 900,
+      "secondDrawDistance": 900,
+      "ambientSky": [
+        0.19461783043107173,
+        0.43415363616478553,
+        0.6375968739867731
+      ],
+      "ambientGround": [
+        0.04666508633021926,
+        0.07421356837213866,
+        0.0953074666222159
+      ],
+      "ambientIntensity": 1.2,
+      "sunColor": [
+        1,
+        0.8069522576650873,
+        0.508881320845802
+      ],
+      "sunIntensity": 1.55,
+      "shadowStrength": 0.62,
+      "fillColor": [
+        0.19461783043107173,
+        0.30498731405910906,
+        0.29613827078752575
+      ],
+      "fillIntensity": 0.384,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": {
+        "skyTop": "#3f8fd8",
+        "skyBottom": "#e9f0f4",
+        "fog": 9751008,
+        "stars": false,
+        "sunColorHex": "#fffdf2",
+        "sunU": 0.68,
+        "sunV": 0.14
+      }
+    }
+  },
+  "default:jungle:coast": {
+    "painted": {
+      "fog": {
+        "near": 38,
+        "far": 150,
+        "color": [
+          0.08650046202808521,
+          0.20507873637973145,
+          0.16202937562896222
+        ]
+      },
+      "background": [
+        0.08650046202808521,
+        0.20507873637973145,
+        0.16202937562896222
+      ],
+      "drawDistance": 175,
+      "secondDrawDistance": 175,
+      "ambientSky": [
+        0.19461783043107173,
+        0.43415363616478553,
+        0.6375968739867731
+      ],
+      "ambientGround": [
+        0.04666508633021928,
+        0.07421356837213867,
+        0.09530746662221587
+      ],
+      "ambientIntensity": 1.04,
+      "sunColor": [
+        1,
+        0.8069522576650873,
+        0.508881320845802
+      ],
+      "sunIntensity": 1.65,
+      "shadowStrength": 0.62,
+      "fillColor": [
+        0.19461783043107173,
+        0.3049873140591091,
+        0.29613827078752575
+      ],
+      "fillIntensity": 0.33280000000000004,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": null
+    },
+    "fallback": {
+      "fog": {
+        "near": 38,
+        "far": 150,
+        "color": [
+          0.08650046202808521,
+          0.20507873637973145,
+          0.16202937562896222
+        ]
+      },
+      "background": [
+        0.08650046202808521,
+        0.20507873637973145,
+        0.16202937562896222
+      ],
+      "drawDistance": 175,
+      "secondDrawDistance": 175,
+      "ambientSky": [
+        0.19461783043107173,
+        0.43415363616478553,
+        0.6375968739867731
+      ],
+      "ambientGround": [
+        0.04666508633021928,
+        0.07421356837213867,
+        0.09530746662221587
+      ],
+      "ambientIntensity": 1.04,
+      "sunColor": [
+        1,
+        0.8069522576650873,
+        0.508881320845802
+      ],
+      "sunIntensity": 1.65,
+      "shadowStrength": 0.62,
+      "fillColor": [
+        0.19461783043107173,
+        0.3049873140591091,
+        0.29613827078752575
+      ],
+      "fillIntensity": 0.33280000000000004,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": {
+        "skyTop": "#3f8fd8",
+        "skyBottom": "#e9f0f4",
+        "fog": 9751008,
+        "stars": false,
+        "sunColorHex": "#fffdf2",
+        "sunU": 0.68,
+        "sunV": 0.14
+      }
+    }
+  },
+  "default:map:coast": {
+    "painted": {
+      "fog": {
+        "near": 90,
+        "far": 380,
+        "color": [
+          0.29613827078752575,
+          0.5840784178830671,
+          0.7454042095350284
+        ]
+      },
+      "background": [
+        0.29613827078752575,
+        0.5840784178830671,
+        0.7454042095350284
+      ],
+      "drawDistance": 900,
+      "secondDrawDistance": 900,
+      "ambientSky": [
+        0.6938717612856897,
+        0.8713671191959567,
+        1
+      ],
+      "ambientGround": [
+        0.4232676699760063,
+        0.5028864580233624,
+        0.24228112245478564
+      ],
+      "ambientIntensity": 1.8,
+      "sunColor": [
+        1,
+        0.8387990117372213,
+        0.6307571363387763
+      ],
+      "sunIntensity": 1.85,
+      "shadowStrength": 0.36,
+      "fillColor": [
+        0.5271151256969157,
+        0.8227857543924378,
+        1
+      ],
+      "fillIntensity": 0.8,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": null
+    },
+    "fallback": {
+      "fog": {
+        "near": 90,
+        "far": 380,
+        "color": [
+          0.29613827078752575,
+          0.5840784178830671,
+          0.7454042095350284
+        ]
+      },
+      "background": [
+        0.29613827078752575,
+        0.5840784178830671,
+        0.7454042095350284
+      ],
+      "drawDistance": 900,
+      "secondDrawDistance": 900,
+      "ambientSky": [
+        0.6938717612856897,
+        0.8713671191959567,
+        1
+      ],
+      "ambientGround": [
+        0.4232676699760063,
+        0.5028864580233624,
+        0.24228112245478564
+      ],
+      "ambientIntensity": 1.8,
+      "sunColor": [
+        1,
+        0.8387990117372213,
+        0.6307571363387763
+      ],
+      "sunIntensity": 1.85,
+      "shadowStrength": 0.36,
+      "fillColor": [
+        0.5271151256969157,
+        0.8227857543924378,
+        1
+      ],
+      "fillIntensity": 0.8,
+      "skyVisible": true,
+      "mistVisible": false,
+      "fallback": {
+        "skyTop": "#3f8fd8",
+        "skyBottom": "#e9f0f4",
+        "fog": 9751008,
+        "stars": false,
+        "sunColorHex": "#fffdf2",
+        "sunU": 0.68,
+        "sunV": 0.14
+      }
+    }
+  }
+}

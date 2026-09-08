@@ -41,7 +41,7 @@ try {
   for(const opacity of [-1,1.01,NaN,Infinity,"0.5",null])
     rejectComponent({...visualMesh,opacity},"invalid opacity input");
   for(const fog of [0,"false",null]) rejectComponent({...visualMesh,fog},"invalid fog input");
-  rejectComponent({t:"platform",p:[0,0,0],emissive:"#223344"},"mesh-only material field on another primitive");
+  rejectComponent({t:"gate",p:[0,0,0],emissive:"#223344"},"unsupported emissive field on a compound prop");
 
   const original = base();
   const copy = normalize(original);

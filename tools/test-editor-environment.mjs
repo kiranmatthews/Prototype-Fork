@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import ts from 'typescript';
+import * as THREE from 'three';
 
 class Element {
   children = []; listeners = {}; value = ''; textContent = '';
@@ -16,16 +17,29 @@ const exports = {};
 const code = ts.transpileModule(await readFile(new URL('../src/editorEnvironment.ts', import.meta.url), 'utf8'), {
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
 }).outputText;
-new Function('exports', 'document', code)(exports, { createElement: tag => new Element(tag) });
+const atmosphereExports = {};
+const atmosphereCode = ts.transpileModule(await readFile(new URL('../src/levelAtmosphere.ts', import.meta.url), 'utf8'), {
+  compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
+}).outputText;
+const nightworksShapes = JSON.parse(await readFile(new URL('../src/nightworksShapes.json', import.meta.url), 'utf8'));
+new Function('exports', 'require', atmosphereCode)(atmosphereExports, name => {
+  if (name === './nightworksRocks') return { isNightworksSurface: kind => !!kind && Object.hasOwn(nightworksShapes, kind) };
+  assert.equal(name, 'three'); return THREE;
+});
+new Function('exports', 'document', 'require', code)(exports, { createElement: tag => new Element(tag) }, name => {
+  assert.equal(name, './levelAtmosphere'); return atmosphereExports;
+});
 const { EditorEnvironment, straightenOceanShoreline } = exports;
 let data = { v: 1, name: 'Environment regression', spawn: [0, 1, 0], killY: -30, components: [{ t: 'gate', p: [0, 0, -20] }] };
 const clone = value => JSON.parse(JSON.stringify(value));
 const history = [];
 let last = clone(data);
 let env;
+let levelId = "environment-test";
 const commits = () => { history.push(last); last = clone(data); env.sync(); };
 env = new EditorEnvironment({
   data: () => data,
+  levelId: () => levelId,
   cameraFocus: () => [12, 3, -25],
   focus: point => assert.ok(point.every(Number.isFinite)),
   commit: commits,
@@ -89,4 +103,58 @@ for (const shore of [[[0, 0, 1, 0], [2, 2, 1, 0], [0, 0, 1, 0]], [[0, 0, 1, 0], 
   assert.equal(straightenOceanShoreline(ocean), false, 'closed/short shoreline has no legal straight chord');
   assert.deepEqual(ocean, before, 'failed straightening must not mutate the ocean');
 }
+data = { v: 1, name: 'Atmosphere controls', spawn: [0, 1, 0], killY: -30, components: [{ t: 'gate', p: [0, 0, -20] }] };
+env.render();
+const choose = (label, value) => { const input = select(label); assert.ok(input, label); input.value = value; input.listeners.change(); };
+assert.equal(select('atmosphere settings').value, 'level defaults');
+const beforeDefault = clone(data); env.sync(); assert.deepEqual(data, beforeDefault, 'inspection materialized atmosphere defaults');
+choose('atmosphere settings', 'custom');
+assert.ok(data.atmosphere);
+const numberValues = { fogNear: 100, fogFar: 650, ambientIntensity: 1.125, sunIntensity: 2.25, fillIntensity: .75,
+  shadowStrength: .4, drawDistance: 800, fallbackSunU: .321, fallbackSunV: .654 };
+for (const [key, value] of Object.entries(numberValues)) {
+  edit(atmosphereExports.ATMOSPHERE_NUMBERS[key].label, value);
+  assert.equal(data.atmosphere[key], value, `numeric atmosphere control ${key} has no authored value`);
+}
+for (const [key, label] of Object.entries(atmosphereExports.ATMOSPHERE_COLORS)) {
+  choose(label, '#123abc'); assert.equal(data.atmosphere[key], '#123abc', `color control ${key} has no authored value`);
+}
+choose('backdrop', 'fog'); assert.equal(data.atmosphere.backdrop, 'fog');
+choose('scene fog', 'off'); assert.equal(data.atmosphere.fogEnabled, false);
+choose('fallback stars', 'on'); assert.equal(data.atmosphere.fallbackStars, true);
+choose('fallback sun', 'off'); assert.equal(data.atmosphere.fallbackSunColor, null);
+assert.ok(!env.element.children.some(row => row.textContent === 'fallback sun vertical'), 'hidden sun left misleading numeric controls');
+choose('fallback sun', 'on'); assert.ok(data.atmosphere.fallbackSunColor);
+const rawIntensity = 1.7050000000000002;
+data.atmosphere.sunIntensity = rawIntensity;
+data.atmosphere.ambientSky = [.123456789012345, .456789012345678, .789012345678901];
+const precise = clone(data), historyCount = history.length; env.render(); env.sync();
+const intensity = env.element.children.find(row => row.textContent === 'sun intensity');
+assert.equal(intensity.get(), 1.705, 'numeric atmosphere display exposes floating-point tails');
+assert.deepEqual(data, precise, 'formatting mutated captured precision');
+const sameColor = select('ambient sky'); sameColor.listeners.change();
+assert.deepEqual(data, precise, 'opening the color picker quantized a captured linear color');
+assert.equal(history.length, historyCount, 'no-op color/display inspection committed an edit');
+choose('scene fog', 'on'); data = clone(history.at(-1)); env.sync();
+assert.equal(select('scene fog').value, 'off', 'history restoration left a stale atmosphere selection');
+choose('atmosphere settings', 'level defaults'); assert.equal(data.atmosphere, undefined);
+assert.ok(!env.element.children.some(row => row.textContent === 'sun intensity'));
+levelId = 'sky'; delete data.keepPlayFog; env.render();
+assert.equal(select('keep authored fog').value, 'on', 'legacy Sky default is invisible in the inspector');
+choose('keep authored fog', 'off'); assert.equal(data.keepPlayFog, false);
+levelId = 'ordinary'; data.jungleAtmosphere = true; delete data.keepPlayFog; env.render();
+assert.equal(select('keep authored fog').value, 'on', 'Jungle default is invisible in the inspector');
+choose('keep authored fog', 'off'); assert.equal(data.keepPlayFog, false);
+delete data.jungleAtmosphere; delete data.keepPlayFog;
+data.sky = 'night'; data.components = [{t:'platform',dkind:'nightplateau',p:[0,-3,0],s:[8,6,8]},{t:'gate',p:[0,0,-20]}];
+env.render();
+assert.equal(select('keep authored fog').value, 'on', 'Nightworks inherited material fog is invisible in the inspector');
+const nightBefore = clone(data);
+choose('atmosphere settings', 'custom');
+assert.equal(data.atmosphere.fogNear, 18); assert.equal(data.atmosphere.fogFar, 88);
+assert.equal(data.atmosphere.ambientIntensity, .46); assert.equal(data.atmosphere.sunIntensity, .82 * .26);
+assert.deepEqual(atmosphereExports.resolveDataAtmosphere(data), atmosphereExports.resolveDataAtmosphere(nightBefore),
+  'enabling custom atmosphere changed inherited Nightworks appearance');
+choose('keep authored fog', 'off'); assert.equal(data.keepPlayFog, false);
+console.log('PASS atmosphere controls, effective defaults, bounded fields, fallback visibility, precise display and history rebinding');
 console.log('PASS environment add/move/resize/rotate/remove, independent patch selection, undo/reset bindings, live choices, map ownership and safe shoreline conversion');

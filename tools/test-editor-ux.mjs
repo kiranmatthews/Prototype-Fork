@@ -454,6 +454,70 @@ try {
       assert.equal(JSON.stringify(editor.data), before, `${c.dkind ?? c.t} inspector materialized data`);
     }
   });
+  check("surface glow and shoreline style edits persist, undo and rebuild the chosen material", () => {
+    for (const component of [
+      { t: "platform", p: [0, 0, 0], tex: "stone", emissive: "#10131c" },
+      { t: "mesh", p: [0, 0, 0], vertices: [-4, 0, 2, 4, 0, 2, 0, 0, -4] },
+    ]) {
+      const data = migrateCustomLevel(base([component]));
+      const id = saveUserLevel({ id: "", name: data.name, data });
+      const editor = editorFor(data); editor.targetId = id; editor.initialTargetId = id;
+      editor.commit = Editor.prototype.commit.bind(editor);
+      editor.hooks.preflight = () => !!normalizeCustomLevelData(editor.data);
+      editor.sel = [0]; editor.renderProps();
+      const before = JSON.stringify(editor.data);
+      const glow = inputFor(editor, "surface glow"); glow.value = "#223344"; glow.dispatch("change");
+      assert.equal(findLevel(id).data.components[0].emissive, "#223344");
+      editor.undo(); assert.equal(JSON.stringify(editor.data), before);
+      editor.redo(); assert.equal(editor.data.components[0].emissive, "#223344");
+      if (component.t === "mesh") {
+        editor.sel = [0]; editor.renderProps();
+        const style = () => editor.propsEl.children.find(row => row.children?.[0]?.textContent === "material style").querySelector("select");
+        style().value = "unity-sand"; style().dispatch("change");
+        assert.equal(editor.data.components[0].materialStyle, "unity-sand", "style selection did not commit");
+        assert.equal(editor.data.components[0].tex, "sand");
+        assert.equal(findLevel(id).data.components[0].materialStyle, "unity-sand", "style selection was not saved");
+        const level = new Level(new THREE.Scene(), { id, name: data.name, data: editor.data });
+        assert.equal(level.groundMeshes[0].material.type, "MeshStandardMaterial");
+        assert.equal(level.groundMeshes[0].material.emissive.getHex(), 0x223344); level.dispose();
+        editor.undo(); assert.equal(editor.data.components[0].materialStyle, undefined);
+        editor.redo(); assert.equal(editor.data.components[0].materialStyle, "unity-sand", "redo lost material style");
+        editor.sel = [0]; editor.renderProps();
+        style().value = ""; style().dispatch("change");
+        assert.equal(editor.data.components[0].materialStyle, undefined);
+        assert.ok(normalizeCustomLevelData(editor.data));
+      }
+    }
+    const unsupported = editorFor(base([{ t: "crate", p: [0, 0, 0] }]));
+    unsupported.sel = [0]; unsupported.renderProps();
+    assert.ok(!unsupported.propsEl.children.some(row => row.children?.[0]?.textContent === "surface glow"));
+  });
+  check("rock texture selector preserves the asset default and commits explicit checker with undo", () => {
+    const data = migrateCustomLevel(base([{ t: "platform", dkind: "nightplateau", p: [0, 0, 0], s: [8, 4, 8] }]));
+    const id = saveUserLevel({ id: "", name: data.name, data });
+    const editor = editorFor(data); editor.targetId = id; editor.initialTargetId = id;
+    editor.commit = Editor.prototype.commit.bind(editor);
+    editor.hooks.preflight = () => !!normalizeCustomLevelData(editor.data);
+    const select = () => editor.propsEl.children.find(row => row.children?.[0]?.textContent === "texture").querySelector("select");
+    editor.sel = [0]; editor.renderProps();
+    assert.equal(select().value, "");
+    assert.ok(select().children.some(option => option.value === "" && option.textContent === "asset material"));
+    assert.equal(editor.data.components[0].tex, undefined);
+    select().value = "checker"; select().dispatch("change");
+    assert.equal(editor.data.components[0].tex, "checker");
+    assert.equal(findLevel(id).data.components[0].tex, "checker");
+    const level = new Level(new THREE.Scene(), { id, name: data.name, data: editor.data });
+    const rock = level.groundMeshes.find(mesh => mesh.userData.nightworksRock);
+    assert.ok(rock.material.map && rock.geometry.attributes.uv); level.dispose();
+    editor.undo(); assert.equal(editor.data.components[0].tex, undefined);
+    editor.redo(); assert.equal(editor.data.components[0].tex, "checker");
+    editor.sel = [0]; editor.renderProps(); select().value = ""; select().dispatch("change");
+    assert.equal(editor.data.components[0].tex, undefined); assert.equal(findLevel(id).data.components[0].tex, undefined);
+    const ordinary = editorFor(base([{ t: "platform", p: [0, 0, 0] }]));
+    ordinary.sel = [0]; ordinary.renderProps();
+    const regular = ordinary.propsEl.children.find(row => row.children?.[0]?.textContent === "texture").querySelector("select");
+    assert.equal(regular.value, "checker"); assert.ok(!regular.children.some(option => option.value === ""));
+  });
 } finally {
   await server.close();
 }

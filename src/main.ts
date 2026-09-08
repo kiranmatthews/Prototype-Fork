@@ -2,6 +2,7 @@
 // fixed-step game loop.
 
 import * as THREE from "three";
+import { SKY_PRESETS, resolveLevelAtmosphere, atmosphereColor, atmosphereColorHex } from "./levelAtmosphere";
 import { configureJungleAssetRenderer } from "./jungleAssets";
 import { afterPresentationPaint, presentationAssets } from "./presentationLoading";
 import { installLocalResetListener } from "./localGameStorage";
@@ -296,162 +297,8 @@ const SKY_HORIZON_PX = 600; // the painting's own horizon, in image pixels
 const SKY_HORIZON_V = 1 - SKY_HORIZON_PX / SKY_IMG_H; // ...as a texture-V coord
 
 // ---- TIME OF DAY -----------------------------------------------------------
-// Everything that made the world read as a sunset used to be hardcoded here.
-// It is now one row of a table, so day and night are the same code with
-// different numbers. The tints are pulls toward a colour (lerp amount `k`),
-// not replacements, so each level's own theme still shows through — a jungle
-// stays greener than a beach at every time of day.
-//
-// `top`/`bottom` only matter when the painting is missing: the procedural
-// gradient sky is the fallback, and it has to read as the right time of day
-// on its own (see applyTheme).
-interface SkyPresetDef {
-  file: string; // painted backdrop in public/
-  label: string; // what the editor dropdown shows
-  fog: number; // the colour the world fades into
-  fogFarCap: number; // clamp on the level's own fogFar — how far you can see
-  sunTint: number;
-  sunK: number; // key light pulled this far toward sunTint
-  sunMul: number; // ...then scaled
-  groundTint: number;
-  groundK: number; // hemisphere bounce off the ground
-  hemiTint: number;
-  hemiK: number; // hemisphere sky colour
-  hemiMul: number;
-  fillTint: number;
-  fillK: number; // the cool counter-light opposite the key
-  fillMul: number; // as a fraction of the hemisphere intensity
-  top: string;
-  bottom: string; // procedural fallback gradient
-  stars: boolean; // fallback only: scatter a starfield
-  // fallback only: the disc in the sky. A hex overrides the level's own sun,
-  // undefined keeps it, null paints NONE — the disc drags a 185px halo behind
-  // it, which is exactly what a night sky must not have.
-  sunHex: string | null | undefined;
-  // Paintings that DON'T share the classic 887px/600px geometry declare their
-  // own; absent = the shared constants.
-  imgH?: number;
-  horizonPx?: number;
-  // COAST TREATMENT: pin the painted horizon to the WORLD's sea level (y=0)
-  // instead of the camera's eye level. The dome still follows the camera —
-  // the horizon row is depressed by the angle down to the water at the dome
-  // wall, so from 400m up you look DOWN at the sea line; at beach height the
-  // drop vanishes and it behaves like every other sky.
-  seaHorizon?: boolean;
-  // Play-mode draw distance override (default 400). The coast pushes it way
-  // out so the bay's water is actually DRAWN when you look down from the
-  // road 430m up — with fog stripped off the level itself (level.ts), only
-  // the sea fades, so the long view stays crisp.
-  farPlane?: number;
-}
-const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
-  // Bright and open: neutral key, cool skylight, air you can see a long way
-  // through. The haze is the pale blue-white of the cloud sea at noon.
-  day: {
-    file: "sky-day.png",
-    label: "day",
-    fog: 0xdfe9f2,
-    fogFarCap: 340,
-    sunTint: 0xfff4e0,
-    sunK: 0.25,
-    sunMul: 1.15,
-    groundTint: 0xb9c2c8,
-    groundK: 0.25,
-    hemiTint: 0xdcebff,
-    hemiK: 0.45,
-    hemiMul: 1.15,
-    fillTint: 0xcfe2ff,
-    fillK: 0.5,
-    fillMul: 0.26,
-    top: "#3f8fd8",
-    bottom: "#e9f0f4",
-    stars: false,
-    sunHex: "#fffdf2", // high white noon sun
-  },
-  // EXACTLY the look the game shipped with — these numbers are the constants
-  // that used to sit inline in applyTheme, moved not changed. Switching to
-  // sunset must be pixel-identical to the old build.
-  sunset: {
-    file: "skybox.png",
-    label: "sunset",
-    fog: 0xd08a7e,
-    fogFarCap: 260,
-    sunTint: 0xffc46a,
-    sunK: 0.15,
-    sunMul: 1.1,
-    groundTint: 0xc79a62,
-    groundK: 0.3,
-    hemiTint: 0xffffff,
-    hemiK: 0, // sunset left the sky colour to the level's own theme
-    hemiMul: 1,
-    fillTint: 0xffffff,
-    fillK: 0,
-    fillMul: 0.22,
-    top: "#0fa3c2",
-    bottom: "#ffe6ae",
-    stars: false,
-    sunHex: undefined, // sunset keeps the level theme's own sun, as it always did
-  },
-  // Moonlight. The trap here is making it pretty and unplayable: this is a
-  // platformer, so a deck edge and a crate face still have to read. Measured
-  // against the sunset build, a lit deck lands near half its brightness — dark
-  // enough to be unmistakably night, bright enough to platform on. Most of the
-  // work is done by COLOUR (deep navy haze, hard blue tints on every light)
-  // rather than by darkness, which is what keeps it readable. The key stays
-  // brighter than a pure-ambient scene would allow so cast shadows survive:
-  // without them the world goes flat and edges stop reading at all.
-  night: {
-    file: "sky-night.png",
-    label: "night",
-    fog: 0x1b2540,
-    fogFarCap: 200,
-    sunTint: 0x9dbcff,
-    sunK: 0.85,
-    sunMul: 0.26,
-    groundTint: 0x1b2540,
-    groundK: 0.8,
-    hemiTint: 0x40598c,
-    hemiK: 0.85,
-    hemiMul: 0.5,
-    fillTint: 0x5f7fc4,
-    fillK: 0.8,
-    fillMul: 0.34,
-    top: "#080f28",
-    bottom: "#22345c",
-    stars: true,
-    sunHex: null, // no disc: its halo washes the whole sky out, and the
-    // painted night reference has no moon in it either
-  },
-  // The Descent's own painting: a daytime tropical bay (islands, cumulus,
-  // turquoise sea) with its horizon on row 626 — and the seaHorizon
-  // treatment, so that painted horizon sits at the WATER, not at eye level.
-  coast: {
-    file: "sky-coast.png",
-    label: "coast",
-    fog: 0x94c9e0,
-    fogFarCap: 780,
-    sunTint: 0xffe8bd,
-    sunK: 1,
-    sunMul: 1,
-    groundTint: 0x3d4d57,
-    groundK: 1,
-    hemiTint: 0x7ab0d1,
-    hemiK: 1,
-    hemiMul: 1,
-    fillTint: 0x7a9694, // Unity's equator ambient term
-    fillK: 1,
-    fillMul: 0.32,
-    top: "#3f8fd8",
-    bottom: "#e9f0f4",
-    stars: false,
-    sunHex: "#fffdf2",
-    imgH: 941,
-    horizonPx: 630,
-    seaHorizon: true,
-    farPlane: 900,
-  },
-};
-
+// Preset lighting and fallback colors resolve in levelAtmosphere.ts. Painted
+// sky geometry still uses each preset's authored horizon row below.
 // a preset's painted-horizon row as a texture-V coordinate
 const presetHorizonV = (p: SkyPreset): number => {
   const d = SKY_PRESETS[p];
@@ -876,17 +723,17 @@ function makeSkyTexture(t: Level["theme"]): THREE.CanvasTexture {
 let editorViewActive = false;
 let editorPlayFog: THREE.Scene["fog"] = null;
 function syncSkyBackdropVisibility(): void {
+  const fogBackdrop = resolveLevelAtmosphere(level).backdrop === "fog" && !editorViewActive;
   const bonusBackdropActive =
-    (current.data?.hudMode === "bonus" || current.id === "bonus-level" || current.id.startsWith("bonus:")) && !LITE;
-  const skyBridgeFogOnly = current.id === "sky" && !editorViewActive;
+    (current.data?.hudMode === "bonus" || current.id === "bonus-level" || current.id.startsWith("bonus:")) && !LITE && !fogBackdrop;
   const preset = SKY_PRESETS[activeSky] ?? SKY_PRESETS[DEFAULT_SKY];
-  sky.visible = !LITE && !bonusBackdropActive && !skyBridgeFogOnly;
+  sky.visible = !LITE && !bonusBackdropActive && !fogBackdrop;
   skyMist.visible =
     skyCache.has(activeSky) &&
     !LITE &&
     !preset.seaHorizon &&
     !bonusBackdropActive &&
-    !skyBridgeFogOnly;
+    !fogBackdrop;
 }
 function setEditorView(editing: boolean, changed = false): void {
   editorViewActive = editing;
@@ -914,9 +761,9 @@ let levelPostEnabled = false;
 
 function applyTheme(): void {
   const t = level.theme;
-  const P = SKY_PRESETS[level.skyPreset] ?? SKY_PRESETS[DEFAULT_SKY];
+  const atmosphere = resolveLevelAtmosphere(level);
   const bonusBackdropActive =
-    (current.data?.hudMode === "bonus" || current.id === "bonus-level" || current.id.startsWith("bonus:")) && !LITE;
+    (current.data?.hudMode === "bonus" || current.id === "bonus-level" || current.id.startsWith("bonus:")) && !LITE && !(atmosphere.backdrop === "fog" && !editorViewActive);
   if (bonusBackdropActive) {
     const backdrop = ensureBonusParallax();
     if (!backdrop.visible) backdrop.reset(player.pos, loadedLevelId);
@@ -946,56 +793,26 @@ function applyTheme(): void {
     );
   void loadSky(activeSky); // no-op once cached or known missing
 
-  // TIME OF DAY drives the atmosphere; the level's theme still colours it.
-  // The haze is the preset's, not the level's: the painting's alpha-faded base
-  // has to melt into the far distance, and that only works if the world fades
-  // to the same colour the horizon band is painted in.
-  const fogNear = t.fogNear;
-  // ...with a far cap so the deep distance warms into the sky behind the mist
-  // without fogging the walkable level (the mist owns the horizon).
-  const fogFar = Math.min(t.fogFar, P.fogFarCap);
-  // editor view: no fog at all, so distant geometry stays crisp and visible
-  const sceneFogColor = level.jungleAtmosphere ? t.fog : P.fog;
-  scene.fog = editorViewActive ? null : new THREE.Fog(sceneFogColor, fogNear, fogFar);
-  scene.background = new THREE.Color(sceneFogColor);
-  // per-preset draw distance (the editor owns the far plane while editing)
-  if (!editorViewActive) {
-    const far = level.jungleAtmosphere ? 175 : P.farPlane ?? 400;
-    if (camera.far !== far) {
-      camera.far = far;
-      camera.updateProjectionMatrix();
-      camera2.far = far;
-      camera2.updateProjectionMatrix();
-    }
+  // The resolver applies authored values after preset, map and jungle
+  // defaults. The editor keeps its temporary fog-free inspection lens.
+  const sceneFogColor = atmosphereColor(atmosphere.fogColor);
+  scene.fog = editorViewActive || !atmosphere.fogEnabled ? null :
+    new THREE.Fog(sceneFogColor, atmosphere.fogNear, atmosphere.fogFar);
+  scene.background = sceneFogColor.clone();
+  if (!editorViewActive && camera.far !== atmosphere.drawDistance) {
+    camera.far = atmosphere.drawDistance;
+    camera.updateProjectionMatrix();
+    camera2.far = atmosphere.drawDistance;
+    camera2.updateProjectionMatrix();
   }
-
-  const tint = (c: THREE.Color, hex: number, k: number): THREE.Color =>
-    k > 0 ? c.lerp(new THREE.Color(hex), k) : c;
-  // sky light + the ground bounce under it
-  hemi.color.set(t.hemiSky);
-  tint(hemi.color, P.hemiTint, P.hemiK);
-  hemi.groundColor.set(t.hemiGround);
-  tint(hemi.groundColor, P.groundTint, P.groundK);
-  hemi.intensity = t.hemiI * P.hemiMul;
-  // key light: pulled toward the preset's own light colour, then scaled
-  sun.color.set(t.sunColor);
-  tint(sun.color, P.sunTint, P.sunK);
-  sun.intensity = t.sunI * P.sunMul;
-  sun.shadow.intensity = activeSky === "coast" ? 0.62 : 1;
-  // the counter-light stays a fraction of the sky light so it never competes
-  fill.color.set(t.hemiSky);
-  tint(fill.color, P.fillTint, P.fillK);
-  fill.intensity = hemi.intensity * P.fillMul;
-  if (level.isCampaignMap) {
-    hemi.color.setHex(0xd9f0ff);
-    hemi.groundColor.setHex(0xaebc87);
-    hemi.intensity = 1.8;
-    sun.color.setHex(0xffecd0);
-    sun.intensity = 1.85;
-    sun.shadow.intensity = 0.36;
-    fill.color.setHex(0xc0eaff);
-    fill.intensity = 0.8;
-  }
+  hemi.color.copy(atmosphereColor(atmosphere.ambientSky));
+  hemi.groundColor.copy(atmosphereColor(atmosphere.ambientGround));
+  hemi.intensity = atmosphere.ambientIntensity;
+  sun.color.copy(atmosphereColor(atmosphere.sunColor));
+  sun.intensity = atmosphere.sunIntensity;
+  sun.shadow.intensity = atmosphere.shadowStrength;
+  fill.color.copy(atmosphereColor(atmosphere.fillColor));
+  fill.intensity = atmosphere.fillIntensity;
 
   // THE DOME. A loaded painting wins; otherwise the procedural gradient, painted
   // in the preset's colours so day and night still read right without the art.
@@ -1029,14 +846,16 @@ function applyTheme(): void {
   skyMist.visible = false; // no painting, no cloud sea to hang in front
   const gradientTheme = {
     ...t,
-    skyTop: P.top,
-    skyBottom: P.bottom,
-    fog: P.fog,
-    stars: P.stars,
+    skyTop: atmosphereColorHex(atmosphere.fallbackTop),
+    skyBottom: atmosphereColorHex(atmosphere.fallbackBottom),
+    fog: atmosphereColor(atmosphere.fallbackFog).getHex(),
+    stars: atmosphere.fallbackStars,
+    sunU: atmosphere.fallbackSunU,
+    sunV: atmosphere.fallbackSunV,
     // sunset keeps the level's own sun; day swaps in a white noon one; night
     // has none, or the sky ends up with a noon sun blazing in it
     // "" reads falsy in makeSkyTexture, which is its "no disc" test
-    sunColorHex: P.sunHex === null ? "" : (P.sunHex ?? t.sunColorHex),
+    sunColorHex: atmosphere.fallbackSunColor === null ? "" : atmosphereColorHex(atmosphere.fallbackSunColor),
   };
   const gradientKey = JSON.stringify(gradientTheme);
   if (proceduralSky && proceduralSkyKey === gradientKey) {

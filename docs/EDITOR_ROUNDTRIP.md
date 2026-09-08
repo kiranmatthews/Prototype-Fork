@@ -56,6 +56,24 @@ Non-uniform group transforms use the runtime's own component axes. Procedural
 wood paths mirror the runtime's linear/Catmull-Rom tangents, banked frames, arc
 sampling density, and sample cap when scaling widths and plank/support spacing.
 
+Surface appearance travels with authored geometry: captured shoreline meshes
+retain the trusted sand material, untextured native surfaces stay untextured,
+and implemented surface types retain editable emission. Native captures carry
+resolved atmosphere settings so a new user ID preserves the playable view.
+Environment overrides apply after sky/map/jungle defaults; the editor still
+uses its temporary clear inspection view.
+
+Motion transforms preserve time as well as spatial extent. A group quarter-turn
+rotates signed default/explicit travel axes for moving platforms, rails and rope
+ferries. Independent rope swing/ferry clocks and natural length-dependent swing
+speed survive capture. Collider movement, grind points and rider release
+velocities are compared through actual runtime updates.
+
+Repeated real-browser rebuilds are measured separately from headless tests; see
+[the browser performance report](EDITOR_BROWSER_PERFORMANCE.md). The ocean's
+shader samplers refer directly to owned textures so disposing a rebuilt level
+releases the GPU allocations that were actually rendered.
+
 ## Regression checks
 
 ```sh

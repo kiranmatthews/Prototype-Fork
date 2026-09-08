@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { Octree } from "three/examples/jsm/math/Octree.js";
 import { Capsule } from "three/examples/jsm/math/Capsule.js";
-import { loadJungleAssetTemplate } from "./jungleAssets";
+import { loadJungleAssetTemplate, type Template } from "./jungleAssets";
 import { NIGHTWORKS_MODULES, type NightworksKind } from "./nightworksModules";
 import shapes from "./nightworksShapes.json";
 
@@ -26,6 +26,13 @@ export interface NightworksSolid {
   delta: THREE.Vector3;
   active: () => boolean;
 }
+export interface NightworksAppearance {
+  color?: string;
+  emissive?: string;
+  /** Resolved by Level from its existing texture allowlist; undefined keeps the kit map. */
+  map?: THREE.Texture | null;
+  tex?: string;
+}
 const capsule=new Capsule(),sample=new THREE.Vector3(),step=new THREE.Vector3(),local=new THREE.Vector3();
 const sweep=new THREE.Box3(),origin=new THREE.Vector3(),contact=new THREE.Vector3();
 
@@ -34,10 +41,11 @@ export class NightworksRocks {
   readonly solids: NightworksSolid[]=[];
   readonly errors:string[]=[];
   private disposed=false;
-  private materials=new Map<NightworksKind,THREE.MeshLambertMaterial>();
+  private materials=new Map<string,THREE.MeshLambertMaterial>();
   private jobs:Promise<void>[]=[];
   private pending=0;
   private readyCount=0;
+  constructor(private loadTemplate:(kind:NightworksKind)=>Promise<Template>=loadJungleAssetTemplate) {}
   addSolid(mesh:THREE.Mesh,delta:THREE.Vector3,active=()=>true):void {
     // Translation is owned by the mover. Bake dimensions/yaw into the local geometry.
     const proxy=new THREE.Mesh(mesh.geometry);
@@ -45,16 +53,25 @@ export class NightworksRocks {
     this.solids.push({mesh,octree:new Octree().fromGraphNode(proxy),bounds:mesh.geometry.boundingBox!.clone(),delta,active});
     (proxy.material as THREE.Material).dispose();
   }
-  attach(parent:THREE.Object3D,kind:NightworksKind,size:readonly number[],offset:THREE.Vector3,yaw=0,proxy?:THREE.Mesh):THREE.Group {
-    const fallback=proxy?.material as THREE.Material|undefined;
+  attach(parent:THREE.Object3D,kind:NightworksKind,size:readonly number[],offset:THREE.Vector3,yaw=0,proxy?:THREE.Mesh,appearance:NightworksAppearance={}):THREE.Group {
+    const fallback=proxy?.material as THREE.MeshLambertMaterial|undefined;
+    const requested={...appearance};
     const holder=new THREE.Group();holder.name=NIGHTWORKS_MODULES[kind].label;
     holder.position.copy(offset);holder.rotation.y=THREE.MathUtils.degToRad(yaw);holder.scale.set(size[0],size[1],size[2]);
     parent.add(holder);this.pending++;
-    this.jobs.push(loadJungleAssetTemplate(kind).then(template=>{
+    this.jobs.push(this.loadTemplate(kind).then(template=>{
       if(this.disposed)return;
-      let material=this.materials.get(kind);
-      if(!material){material=new THREE.MeshLambertMaterial({map:template.map,emissive:0x293c60,emissiveIntensity:.24});
-        material.name=`Nightworks ${kind}`;this.materials.set(kind,material);}
+      // Level/editor fog policy may resolve after attach() started loading.
+      // Read the live proxy when the material becomes visible, not its stale
+      // construction-time flag. Include it in the shared appearance identity.
+      const fog=fallback?.fog??true,map=requested.map===undefined?template.map:requested.map;
+      const key=JSON.stringify([kind,requested.color,requested.emissive,map?.uuid,fog]);
+      let material=this.materials.get(key);
+      if(!material){material=new THREE.MeshLambertMaterial({color:requested.color??0xffffff,map,
+        emissive:requested.emissive??0x293c60,emissiveIntensity:requested.emissive===undefined?.24:1,fog});
+        material.name=`Nightworks ${kind}`;
+        if(requested.tex!==undefined)material.userData.texKind=requested.tex;
+        this.materials.set(key,material);}
       const lod=new THREE.LOD();
       const near=new THREE.Mesh(template.geometry,material);near.receiveShadow=true;near.castShadow=true;lod.addLevel(near,0);
       if(template.lodGeometry){const far=new THREE.Mesh(template.lodGeometry,material);far.receiveShadow=true;lod.addLevel(far,42,.15);}

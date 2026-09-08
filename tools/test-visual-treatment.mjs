@@ -516,19 +516,21 @@ assert.ok(main.includes("visualTreatmentActivity"));
 assert.ok(main.includes('lookDiagnosticsProbe.id = "look-diagnostics"'));
 assert.ok(main.includes("coastPost?.lookDiagnostics ?? null"));
 assert.ok(main.includes("getLookDiagnostics: () => coastPost?.lookDiagnostics ?? null"));
+// Effective native/default/copy renderer behavior is exercised separately by
+// test-editor-atmosphere.mjs; these checks retain LOOK lifecycle integration.
 assert.match(
   main,
-  /function syncSkyBackdropVisibility\(\): void \{[\s\S]*?const skyBridgeFogOnly = current\.id === "sky" && !editorViewActive/,
-  "Sky Bridge needs one lifecycle-aware painted-sky visibility policy",
+  /function syncSkyBackdropVisibility\(\): void \{[\s\S]*?const fogBackdrop = resolveLevelAtmosphere\(level\)\.backdrop === "fog" && !editorViewActive/,
+  "authored fog backdrops need one lifecycle-aware painted-sky visibility policy",
 );
 assert.match(
   main,
-  /syncSkyBackdropVisibility\(\)[\s\S]*?sky\.visible = !LITE && !bonusBackdropActive && !skyBridgeFogOnly/,
+  /syncSkyBackdropVisibility\(\)[\s\S]*?sky\.visible = !LITE && !bonusBackdropActive && !fogBackdrop/,
   "Sky Bridge still exposes the painted distance dome",
 );
 assert.match(
   main,
-  /skyMist\.visible =[\s\S]{0,180}!skyBridgeFogOnly/,
+  /skyMist\.visible =[\s\S]{0,180}!fogBackdrop/,
   "Sky Bridge still exposes the painted horizon mist",
 );
 assert.match(

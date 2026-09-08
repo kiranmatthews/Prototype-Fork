@@ -5,6 +5,10 @@
 // finish gate at the far end.
 
 import * as THREE from "three";
+import { resolveLevelAtmosphere, validAtmosphere, CUSTOM_LEVEL_THEME, JUNGLE_THEME_OVERRIDES, NIGHTWORKS_THEME_OVERRIDES,
+  SKY_BRIDGE_FOG_NEAR, SKY_BRIDGE_FOG_FAR, type CustomAtmosphereData } from "./levelAtmosphere";
+export type { CustomAtmosphereData } from "./levelAtmosphere";
+export { SKY_BRIDGE_FOG_NEAR, SKY_BRIDGE_FOG_FAR } from "./levelAtmosphere";
 import { createCollectibleShell } from "./collectibleSpecular";
 import { createTimeMedal, timeMedalGeometry } from "./timeMedalModel";
 import { trackPresentationImage } from "./presentationLoading";
@@ -106,6 +110,9 @@ import { buildIslandShelfGeometry } from "./islandShelf";
 import {
   applyUnitySandMetricUvs,
   createUnitySandMaterial,
+  UNITY_SAND_TILE_METRES,
+  unitySandAssetUrls,
+  type UnitySandMaps,
   type UnitySandMaterialOwner,
 } from "./unitySandMaterial";
 
@@ -413,6 +420,7 @@ export interface RopeSwing {
   len: number;
   amp: number; // max swing angle (radians)
   speed: number; // drive frequency (rad/s)
+  naturalSpeed?: boolean; // keep length-dependent authored speed=0 when capturing a native rope
   phase: number;
   yaw: number; // radians: spins the swing plane
   theta: number; // current angle (animated)
@@ -454,8 +462,6 @@ export interface Theme {
   sunI: number;
 }
 
-export const SKY_BRIDGE_FOG_NEAR = 5;
-export const SKY_BRIDGE_FOG_FAR = 24;
 
 // Rolling stone hazard: patrols along the course, flattens careless riders.
 export interface Stone {
@@ -695,6 +701,8 @@ export interface CustomComponent {
   w?: number;
   yaw?: number;
   axis?: "z" | "x" | "y"; // mover: which way it slides ("y" = a lift)
+  travelSign?: 1 | -1; // mover/rail/ropeswing: signed axis direction; absent preserves positive-axis motion
+  travelPhase?: number; // ropeswing: independent anchor cycle phase; absent follows phase for legacy files
   vkind?: "quarter" | "half"; // vertramp: one wall, or two facing each other with a flat between
   arc?: number; // vertramp: degrees round the transition (90 = vertical lip, ~60 = a crestable bowl wall)
   deck?: number; // vertramp: flat platform past the lip, with a skirt to the floor (0 = bare coping)
@@ -735,7 +743,6 @@ export interface CustomComponent {
   solid?: boolean; // wallpath: false makes a visual-only scenery sweep (earth banks/backdrops)
   cycle?: number;
   phase?: number;
-  travelPhase?: number; // ropeswing: independent phase of the travelling anchor
   amp?: number;
   seed?: number; // rock: shapes the jitter deterministically
   // VECTOR SHAPE: node outline in XZ relative to p. 3+ points turns
@@ -774,7 +781,8 @@ export interface CustomComponent {
   airOnly?: boolean; // returnportal only accepts an airborne player
   coverage?: number; // grindosaurus: fraction of spine that must be ridden to defeat it
   radius?: number; // camnode: lane corner radius · stone: the boulder's radius
-  emissive?: string; // mesh: bounded emissive tint, no custom shader code
+  materialStyle?: "unity-sand"; // mesh only: registered MatrixRex sand factory, never external assets
+  emissive?: string; // bounded surface emission on EMISSIVE_COMPONENT_TYPES
   opacity?: number; // mesh: 0..1; lower values enable transparency
   fog?: boolean; // mesh: explicit material fog participation
   color?: string; // '#rrggbb' tint for surfaces, rocks, pits and procedural thorns
@@ -785,6 +793,11 @@ export interface CustomComponent {
   lk?: boolean; // editor lock: click-through, marquee-proof, edit-proof
   nm?: string; // editor display name (outliner rename)
 }
+
+/** Only surfaces whose builders implement this material property expose it. */
+export const EMISSIVE_COMPONENT_TYPES: readonly CustomComponent["t"][] = Object.freeze([
+  "mesh", "platform", "ramp", "wall", "wallpath", "rock", "terrain", "vertramp", "crumble",
+]);
 
 // EDITOR BUILD MODE. Scenery batches into one mesh per shape for play, which
 // is what keeps a jungle inside a phone's draw-call budget — but a batch has
@@ -935,6 +948,7 @@ export interface CustomLevelData {
   shoreFoam?: IslandShoreFoamOval[];
   sky?: SkyPreset; // time of day; absent = sunset (what every level was before)
   jungleAtmosphere?: boolean; // authored enclosed jungle lighting + canopy shade
+  atmosphere?: CustomAtmosphereData; // bounded final fog/light/backdrop overrides
   components: CustomComponent[];
   layers?: CustomLayer[];
   groups?: CustomGroup[];
@@ -2341,19 +2355,19 @@ const MAX_LEVEL_LABEL_LENGTH = 120;
 const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const LEVEL_DATA_KEYS = new Set([
   "v", "name", "spawn", "killY", "hudMode", "ledgeAssist", "relicTime",
-  "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere",
+  "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "atmosphere",
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "containment",
-  "edgeGrinding", "len", "rise", "w", "yaw", "axis", "vkind", "arc", "deck",
+  "edgeGrinding", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "deck",
   "closed", "bank", "curve", "vert", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid",
-  "cycle", "phase", "travelPhase", "amp", "seed", "scaffold", "supports", "rails", "spacing",
+  "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "spacing",
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
   "trick", "exitYaw", "airOnly", "coverage", "radius", "color", "tex", "dir",
-  "layer", "grp", "lk", "nm", "trafficRoad", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand",
+  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand",
 ]);
 const hasOnlyKeys = (value: object, keys: ReadonlySet<string>): boolean =>
   Object.keys(value).every((key) => keys.has(key));
@@ -2559,6 +2573,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     "collisionHeight", "supportBaseY", "shoreSeaLevel", "shorePhase",
   ];
   if (source.sky !== undefined && !SKY_PRESETS.includes(source.sky)) return null;
+  if (source.atmosphere !== undefined && !validAtmosphere(source.atmosphere)) return null;
   if (source.jungleAtmosphere !== undefined && typeof source.jungleAtmosphere !== "boolean")
     return null;
   if (source.medalTimes !== undefined &&
@@ -2747,6 +2762,10 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     }
     if (
       (component.axis !== undefined && !axes.has(component.axis)) ||
+      (component.travelSign !== undefined &&
+        ((component.travelSign !== 1 && component.travelSign !== -1) ||
+          !["mover", "rail", "ropeswing"].includes(component.t))) ||
+      (component.travelPhase !== undefined && component.t !== "ropeswing") ||
       (component.curve !== undefined && !curves.has(component.curve)) ||
       (component.vkind !== undefined && !vertKinds.has(component.vkind)) ||
       (component.kind !== undefined && !kinds.has(component.kind)) ||
@@ -2761,7 +2780,10 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     if (
       (component.tex !== undefined &&
         (typeof component.tex !== "string" || !textureKinds.has(component.tex))) ||
-      (component.t !== "mesh" && (component.emissive !== undefined || component.opacity !== undefined || component.fog !== undefined)) ||
+      (component.t !== "mesh" && (component.opacity !== undefined || component.fog !== undefined || component.materialStyle !== undefined)) ||
+      (component.materialStyle !== undefined && (component.materialStyle !== "unity-sand" ||
+        (component.tex !== undefined && component.tex !== "sand"))) ||
+      (component.emissive !== undefined && !EMISSIVE_COMPONENT_TYPES.includes(component.t)) ||
       (component.emissive !== undefined &&
         (typeof component.emissive !== "string" || !/^#[0-9a-f]{6}$/i.test(component.emissive))) ||
       (component.opacity !== undefined &&
@@ -2806,6 +2828,10 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       meshTriangles += triangles;
       if (meshVertices > 100_000 || meshTriangles > 100_000) return null;
       aggregateSamples += vertexCount + triangles;
+      // AO UV channels share the existing 100k mesh-vertex allocation bound
+      // (at most 1.6 MB for both extra Float32 buffers). Budget the three map
+      // bindings per styled owner; the actual maps are shared once per Level.
+      if (component.materialStyle === "unity-sand") aggregateSamples += 3;
     }
     if (component.trafficRoad) {
       if (component.t !== "vertramp" || singletonKinds.has("trafficRoad")) return null;
@@ -3684,6 +3710,8 @@ export class Level {
   // Time of day for THIS level. Hand-coded levels are all sunset (the look the
   // game shipped with); a data-built level takes it from its authored data.
   skyPreset: SkyPreset = DEFAULT_SKY;
+  skyBackdrop: "sky" | "fog" = "sky";
+  atmosphere?: CustomAtmosphereData;
   // Keep the fog ON the course surfaces (see clearPlayFog): the dark level's
   // sightline discipline depends on the haze eating its own geometry.
   private keepPlayFog = false;
@@ -4331,6 +4359,11 @@ export class Level {
     kind = "checker",
   ): THREE.MeshPhongMaterial {
     const m = this.surfaceMat(mat, kind);
+    if (kind === "solid") {
+      m.map = null;
+      m.userData.texKind = "solid";
+      return m;
+    }
     const tex = this.surfaceTexture(kind).clone();
     const density =
       kind === "grass"
@@ -4482,12 +4515,12 @@ export class Level {
     else if (entry.id === "descent") this.buildDescent();
     else if (entry.id === "beachfront") this.buildUnityBeachfront();
     else this.buildJungle(); // "jungle": the enclosed corridor course
-    // The published level pack can supply Sky Bridge as component data rather
-    // than calling buildSkyBridge(). Its sightline rule belongs to the level
-    // identity, so enforce it after either build path and before play-fog is
-    // stripped from ordinary course materials.
+    // Older published Sky Bridge data inherits the native sightline defaults.
+    // Explicit atmosphere/material-fog fields can override them; copy/export
+    // materializes the effective defaults before assigning a different ID.
     if (entry.id === "sky") {
-      this.keepPlayFog = true;
+      this.skyBackdrop = "fog";
+      if (this.builtFromData?.keepPlayFog === undefined) this.keepPlayFog = true;
       this.theme.fogNear = SKY_BRIDGE_FOG_NEAR;
       this.theme.fogFar = SKY_BRIDGE_FOG_FAR;
     }
@@ -4511,10 +4544,8 @@ export class Level {
     this.bakeDecor(); // any batched decor the builder didn't flush itself
     this.jungleAssets?.flush();
     if (this.jungleAtmosphere) {
-      this.keepPlayFog = true;
-      Object.assign(this.theme, { fog: 0x537d70, fogNear: 38, fogFar: 150,
-        hemiSky: 0xaed8c2, hemiGround: 0x634a2e, hemiI: 1.04,
-        sunColor: 0xffdea0, sunI: 1.65 });
+      if (this.builtFromData?.keepPlayFog === undefined) this.keepPlayFog = true;
+      Object.assign(this.theme, JUNGLE_THEME_OVERRIDES);
       for (const mesh of this.groundMeshes) {
         for (const material of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
           if (material.userData.jungleDapple) continue;
@@ -4529,10 +4560,8 @@ export class Level {
       });
     }
     if (this.nightworksRocks) {
-      this.keepPlayFog=true;
-      Object.assign(this.theme,{skyTop:"#03060f",skyBottom:"#0b1226",stars:true,
-        fog:0x081123,fogNear:18,fogFar:88,hemiSky:0x526b9c,hemiGround:0x221723,
-        hemiI:.92,sunColor:0xa0b6e7,sunI:.82});
+      if (this.builtFromData?.keepPlayFog === undefined) this.keepPlayFog = true;
+      Object.assign(this.theme, NIGHTWORKS_THEME_OVERRIDES);
     }
     if (this.noFogLevel) this.stripFog();
     this.buildTorchLights(); // every torch is placed by now — the pool is sized once
@@ -5047,6 +5076,34 @@ export class Level {
   // motion retain their component identities so an edit rebuilds their logic.
   private builtFromData: CustomLevelData | null = null;
   private capturedSceneryMeshes: THREE.Mesh[] = [];
+  private meshSandMaterials = new Map<string, THREE.MeshStandardMaterial>();
+  private sharedUnitySandMaps: UnitySandMaps | null = null;
+  private ownedUnitySandTextures = new Set<THREE.Texture>();
+
+  /** Three registered texture objects for this entire Level, independent of
+   * the number of patch owners or editable shoreline material variants. */
+  private createLevelSandMaterial(name?: string): UnitySandMaterialOwner {
+    const maps = this.sharedUnitySandMaps;
+    const urls = unitySandAssetUrls();
+    const loader = maps ? null : new THREE.TextureLoader();
+    const owner = createUnitySandMaterial({
+      name,
+      ownsTextures: false,
+      loadTexture: (url: string): THREE.Texture => {
+        for (const role of ["color", "normal", "mask"] as const) if (url === urls[role]) {
+          if (maps) return maps[role];
+          const texture = loader!.load(url);
+          // Retain each returned wrapper immediately: a later synchronous
+          // image-loader failure must also clean up this incomplete pool.
+          this.ownedUnitySandTextures.add(texture);
+          return texture;
+        }
+        throw new Error("Unregistered Unity sand texture");
+      },
+    });
+    if (!maps) this.sharedUnitySandMaps = owner.maps;
+    return owner;
+  }
 
   private captureSurfaceMesh(m: THREE.Mesh, style: Partial<CustomComponent>): CustomComponent[] {
     m.updateWorldMatrix(true, false);
@@ -5077,7 +5134,8 @@ export class Level {
         ...(material.fog === false ? { fog: false } : {}),
         ...(m.name ? { nm: m.name.slice(0, 100) } : {}),
         ...(material.side === THREE.DoubleSide ? { doubleSided: true } : {}),
-        ...(m.userData.beachSandFriction ? { beachSand: true, tex: "sand" } : {}),
+        ...(m.userData.beachSandFriction ? { beachSand: true } : {}),
+        ...(material.userData.unitySandTileMetres === UNITY_SAND_TILE_METRES ? { materialStyle: "unity-sand", tex: "sand" } : {}),
         ...(m.userData.slippy ? { slip: true } : {}),
       };
       remap = new Map();
@@ -5130,6 +5188,8 @@ export class Level {
     if (c.normals) geometry.setAttribute("normal", new THREE.Float32BufferAttribute(c.normals, 3));
     else geometry.computeVertexNormals();
     if (c.uvs) geometry.setAttribute("uv", new THREE.Float32BufferAttribute(c.uvs, 2));
+    else if (c.materialStyle === "unity-sand")
+      applyUnitySandMetricUvs(geometry, { offsetMetres: [c.p[0], -c.p[2]] });
     else {
       const vertices = geometry.getAttribute("position");
       const uvs: number[] = [];
@@ -5139,14 +5199,43 @@ export class Level {
     if (c.colors) geometry.setAttribute("color", new THREE.Float32BufferAttribute(c.colors, 3));
     geometry.computeBoundingBox();
     geometry.computeBoundingSphere();
-    const material = new THREE.MeshLambertMaterial({
+    let material: THREE.MeshLambertMaterial | THREE.MeshStandardMaterial;
+    if (c.materialStyle === "unity-sand") {
+      const uv = geometry.getAttribute("uv");
+      geometry.setAttribute("uv1", uv.clone());
+      geometry.setAttribute("uv2", uv.clone());
+      if (geometry.index) geometry.computeTangents();
+      const key = JSON.stringify([c.color, c.emissive, c.opacity, c.fog, !!c.colors, !!c.doubleSided]);
+      const cached = this.meshSandMaterials.get(key);
+      if (cached) material = cached;
+      else {
+        const base = this.meshSandMaterials.values().next().value;
+        const sand = base ? base.clone() : this.createLevelSandMaterial().material;
+        if (base) {
+          // Three's clone copies PBR values/maps but deliberately omits hooks.
+          sand.onBeforeCompile = base.onBeforeCompile;
+          sand.customProgramCacheKey = base.customProgramCacheKey;
+        }
+        sand.color.set(c.color ?? "#ffffff");
+        sand.emissive.set(c.emissive ?? "#000000");
+        sand.emissiveIntensity = c.emissive ? 1 : 0;
+        sand.vertexColors = !!c.colors;
+        sand.opacity = c.opacity ?? 1;
+        sand.transparent = (c.opacity ?? 1) < 1;
+        sand.fog = c.fog !== false;
+        sand.side = c.doubleSided ? THREE.DoubleSide : THREE.FrontSide;
+        sand.userData.texKind = "sand";
+        this.meshSandMaterials.set(key, sand);
+        material = sand;
+      }
+    } else material = new THREE.MeshLambertMaterial({
       color: c.color ?? "#ffffff", vertexColors: !!c.colors,
       emissive: c.emissive ?? "#000000", opacity: c.opacity ?? 1,
       transparent: (c.opacity ?? 1) < 1, fog: c.fog !== false,
       side: c.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
-      map: this.surfaceTexture(c.tex ?? "checker"),
+      map: c.tex === "solid" ? null : this.surfaceTexture(c.tex ?? "checker"),
     });
-    material.userData.texKind = c.tex ?? "checker";
+    material.userData.texKind = c.materialStyle === "unity-sand" ? "sand" : c.tex ?? "checker";
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(...c.p);
     mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0);
@@ -5177,6 +5266,7 @@ export class Level {
         v: 1, name: `${this.name} (copy)`,
         spawn: this.spawnPos.toArray() as [number, number, number],
         killY: this.killY, hudMode: "hub", sky: this.skyPreset,
+        atmosphere: resolveLevelAtmosphere(this),
         components: [JSON.parse(JSON.stringify(this.worldMapSpec)) as CustomComponent],
       };
     }
@@ -5184,13 +5274,14 @@ export class Level {
     const groups: CustomGroup[] = this.sceneryCaptureGroups.map(group => ({...group}));
     let nextCaptureGroup = Math.max(0, ...groups.map((group) => group.id),
       ...this.crates.flatMap((crate) => crate.groupIds ?? [])) + 1;
-    const matInfo = (m: THREE.Mesh): { color?: string; tex?: string } => {
+    const matInfo = (m: THREE.Mesh): Pick<CustomComponent, "color" | "tex" | "emissive"> => {
       const mat = m.material as THREE.MeshLambertMaterial;
       const color = mat?.color ? "#" + mat.color.getHexString() : undefined;
       const tex = (mat?.userData?.texKind as string) || undefined;
       return {
         color: color === "#ffffff" ? undefined : color,
-        tex: tex === "checker" ? undefined : tex,
+        tex: !mat.map ? "solid" : tex === "checker" ? undefined : tex,
+        ...(mat.emissive?.getHex() ? { emissive: `#${mat.emissive.getHexString()}` } : {}),
       };
     };
     const edgeInfo = (m: THREE.Mesh): { edgeGrinding?: boolean; invisible?: boolean } => ({
@@ -5263,7 +5354,7 @@ export class Level {
         continue;
       }
       const geo = m.geometry as THREE.BoxGeometry;
-      const { color, tex } = matInfo(m);
+      const { color, tex, emissive } = matInfo(m);
       if (geo.type === "BoxGeometry" && (geo as THREE.BoxGeometry).parameters) {
         const gp = (geo as THREE.BoxGeometry).parameters;
         if (Math.abs(worldEuler.x) > 0.01) {
@@ -5294,6 +5385,7 @@ export class Level {
                 : undefined,
             color,
             tex,
+            emissive,
             ...edgeInfo(m),
           });
         } else {
@@ -5309,6 +5401,7 @@ export class Level {
             yaw: yaw !== 0 ? yaw : undefined,
             color,
             tex,
+            emissive,
             // the Sky Bridge's icy planks are a HAZARD, not a colour: without
             // this a captured copy of that level turned every slippy plank
             // into ordinary wood and the level lost its whole point
@@ -5463,8 +5556,9 @@ export class Level {
               ? "y"
               : "z",
         amp: r2(mr.amp),
-        speed: r2(mr.speed),
-        phase: r2(mr.phase),
+        speed: mr.speed,
+        phase: mr.phase,
+        ...(mr.axisV.x + mr.axisV.y + mr.axisV.z < 0 ? { travelSign: -1 as const } : {}),
         ...(mr.rail.points.length > 2 || Math.abs(a.y - b.y) > 1e-6
           ? { pts: mr.rail.points.map((point) => [
               r2(point.x - (a.x + b.x) / 2),
@@ -5695,8 +5789,9 @@ export class Level {
               ? "y"
               : "z",
         amp: r2(mv.amp),
-        speed: r2(mv.speed),
-        phase: r2(mv.phase),
+        speed: mv.speed,
+        phase: mv.phase,
+        ...(mv.axisV.x + mv.axisV.y + mv.axisV.z < 0 ? { travelSign: -1 as const } : {}),
         lit: mv.torch ? true : undefined,
       });
     }
@@ -5803,8 +5898,8 @@ export class Level {
           : [r2(rs.anchor.x), r2(rs.anchor.y), r2(rs.anchor.z)],
         len: r2(rs.len),
         amp: r2(rs.amp),
-        speed: r2(rs.speed),
-        phase: r2(rs.phase),
+        speed: rs.naturalSpeed ? 0 : rs.speed,
+        phase: rs.phase,
         yaw: rs.yaw ? Math.round(THREE.MathUtils.radToDeg(rs.yaw)) : undefined,
         // `range` + `axis` + `cycle` are the anchor's own travel
         range: rs.travel ? r2(rs.travel.amp) : undefined,
@@ -5815,8 +5910,11 @@ export class Level {
               ? "y"
               : "z"
           : undefined,
-        cycle: rs.travel ? r2(rs.travel.speed) : undefined,
-        travelPhase: rs.travel ? r2(rs.travel.phase) : undefined,
+        cycle: rs.travel?.speed,
+        ...(rs.travel && rs.travel.axisV.x + rs.travel.axisV.y + rs.travel.axisV.z < 0
+          ? { travelSign: -1 as const } : {}),
+        ...(rs.travel && Math.abs(rs.travel.phase - rs.phase) > 1e-6
+          ? { travelPhase: rs.travel.phase } : {}),
       });
     }
     // sagging ropes: endpoints off the taut rest nodes
@@ -5896,6 +5994,7 @@ export class Level {
       // only when it isn't the default, so the saved JSON stays quiet
       sky: this.skyPreset === DEFAULT_SKY ? undefined : this.skyPreset,
       jungleAtmosphere: this.jungleAtmosphere || undefined,
+      atmosphere: resolveLevelAtmosphere(this),
       components: C,
       groups,
     };
@@ -5981,9 +6080,7 @@ export class Level {
         new THREE.BoxGeometry(sand.s[0], sand.s[1], sand.s[2]),
         { offsetMetres: [sand.p[0], -sand.p[2]] },
       );
-      const owner = createUnitySandMaterial({
-        name: `Custom MatrixRex sand ${index + 1}`,
-      });
+      const owner = this.createLevelSandMaterial(`Custom MatrixRex sand ${index + 1}`);
       const mesh = new THREE.Mesh(geometry, owner.material);
       mesh.name = `Custom MatrixRex sand ${index + 1}`;
       mesh.position.set(sand.p[0], sand.p[1], sand.p[2]);
@@ -6016,22 +6113,9 @@ export class Level {
     this.ledgeAssist = data.ledgeAssist ?? 0;
     this.finishZ = -1e9; // endless playground: no finish gate
     this.endWallZ = -1e9;
-    this.theme = {
-      skyTop: "#159ecd",
-      skyBottom: "#c9f0e4",
-      sunColorHex: "#fff8dc",
-      sunU: 0.68,
-      sunV: 0.14,
-      stars: false,
-      fog: 0xbee8dd,
-      fogNear: 90,
-      fogFar: 380,
-      hemiSky: 0xeafcff,
-      hemiGround: 0x94a294,
-      hemiI: 1.2,
-      sunColor: 0xfff6dc,
-      sunI: 1.55,
-    };
+    this.theme = { ...CUSTOM_LEVEL_THEME };
+    this.atmosphere = data.atmosphere;
+
     this.spawnPos.set(data.spawn[0], data.spawn[1], data.spawn[2]);
     this.currentSpawn.copy(this.spawnPos);
     this.buildCustomWaterPresentation(data);
@@ -6106,9 +6190,10 @@ export class Level {
           const tinted = (
             fallback: THREE.MeshLambertMaterial,
           ): THREE.MeshLambertMaterial =>
-            c.color
+            c.color || c.emissive
               ? new THREE.MeshLambertMaterial({
-                  color: new THREE.Color(c.color),
+                  color: c.color ? new THREE.Color(c.color) : fallback.color.clone(),
+                  emissive: c.emissive ?? fallback.emissive,
                 })
               : fallback;
           if (isNightworksSurface(c.dkind) && (c.t === "platform" || c.t === "mover" || c.t === "phasepad")) {
@@ -6365,7 +6450,8 @@ export class Level {
               geo,
               new THREE.MeshLambertMaterial({
                 color: rockColor,
-                map: this.surfaceTexture(c.tex ?? "stone"),
+                emissive: c.emissive ?? "#000000",
+                map: c.tex === "solid" ? null : this.surfaceTexture(c.tex ?? "stone"),
               }),
             );
             mesh.position.set(c.p[0], c.p[1], c.p[2]);
@@ -6476,7 +6562,7 @@ export class Level {
               ghost.userData.editorGhost = true;
               this.root.add(ghost);
               this.obstacleEdgeMeshes.push(ghost);
-            } else if (c.color || c.tex || yawQ % 90 !== 0) {
+            } else if (c.color || c.tex || c.emissive || yawQ % 90 !== 0) {
               // tinted / textured / spun wall: own mesh so the yaw can rotate it
               const mesh = new THREE.Mesh(
                 new THREE.BoxGeometry(s[0], s[1], s[2]),
@@ -6485,6 +6571,7 @@ export class Level {
                     color: c.color
                       ? new THREE.Color(c.color)
                       : new THREE.Color(0x9a8a7a),
+                    emissive: c.emissive ?? "#000000",
                   }),
                   s[0],
                   s[1],
@@ -6623,7 +6710,7 @@ export class Level {
               this.root.add(rail.object);
               if (c.amp)
                 this.attachRailMotion(
-                  rail, c.axis ?? "x", c.amp, c.speed ?? 0.6, c.phase ?? 0,
+                  rail, c.axis ?? "x", c.amp, c.speed ?? 0.6, c.phase ?? 0, c.travelSign ?? 1,
                 );
             } else if (c.amp) {
               // amp on a straight rail = the whole line TRAVELS on a cycle
@@ -6638,6 +6725,7 @@ export class Level {
                 c.speed ?? 0.6,
                 c.phase ?? 0,
                 !c.invisible,
+                c.travelSign ?? 1,
               );
             } else {
               const len = c.len ?? 12;
@@ -6659,7 +6747,10 @@ export class Level {
               rail.object.clear();rail.object.userData.nightworksRock=true;
               // The thin stone crest remains grindable, and its hanging body
               // is a real moving solid. Both sample the same authored cycle.
-              this.buildNightworksRock({...c,t:"mover",s:[c.len??12,2.4,.48],yaw:90-(c.yaw??0),lit:false});
+              // Rails run (sin(yaw), cos(yaw)); a long-X hull at yaw+90
+              // shares that line. 90-yaw only aligned at quarter turns and
+              // sent an edited 45-degree crest across its own collision hull.
+              this.buildNightworksRock({...c,t:"mover",s:[c.len??12,2.4,.48],yaw:(c.yaw??0)+90,lit:false});
             }
           } else if (c.t === "vertramp") {
             this.buildVertRamp(c);
@@ -6757,6 +6848,7 @@ export class Level {
               c.yaw ?? 0,
               c.tex ?? "wood",
               c.speed ?? 30,
+              c.emissive,
             );
           } else if (c.t === "crate") {
             const gids = gameplayGroupChainOf(c, data);
@@ -6834,6 +6926,7 @@ export class Level {
               c.phase ?? 0,
               !!c.lit,
               s[1],
+              c.travelSign ?? 1,
             );
           } else if (c.t === "torch") {
             this.torch(c.p[0], c.p[1], c.p[2], c.rise ?? 2.2, c.w ?? 1);
@@ -6897,6 +6990,7 @@ export class Level {
               c.range ?? 0,
               c.cycle ?? 0.5,
               c.travelPhase ?? c.phase ?? 0,
+              c.travelSign ?? 1,
             );
             if (c.dkind === "nightanchorrock") {
               const rope=this.ropeSwings[this.ropeSwings.length-1];
@@ -7065,8 +7159,8 @@ export class Level {
     }
     for (const sand of this.customUnitySand) {
       this.root.remove(sand.mesh);
-      sand.mesh.geometry.dispose();
-      sand.owner.dispose();
+      if (!preservedGeometry.has(sand.mesh.geometry)) sand.mesh.geometry.dispose();
+      if (!preservedMaterials.has(sand.owner.material)) sand.owner.dispose();
     }
     this.customUnitySand.length = 0;
     // Preserved trees now belong to the successor; skipping disposal without
@@ -7087,8 +7181,10 @@ export class Level {
     // icon are still drawing after this level is gone. Freeing it here would
     // yank the GPU buffers out from under them on every level switch.
     const disposedTextures = new Set<THREE.Texture>();
+    const disposedMaterials = new Set<THREE.Material>();
     const disposeMat = (x: THREE.Material): void => {
-      if (x.userData.shared || preservedMaterials.has(x)) return;
+      if (x.userData.shared || preservedMaterials.has(x) || disposedMaterials.has(x)) return;
+      disposedMaterials.add(x);
       // Standard/physical shoreline materials own more than `map` (normal,
       // AO, roughness). Dispose every direct texture slot once; water shader
       // uniforms and render targets are owned by its explicit dispose above.
@@ -7119,6 +7215,18 @@ export class Level {
       if (Array.isArray(mat)) mat.forEach(disposeMat);
       else if (mat) disposeMat(mat);
     });
+    // Environment owners were removed before generic traversal; styled meshes
+    // may already have released these same maps through their texture slots.
+    // A retained successor keeps them alive and releases them on its own turn.
+    for (const texture of this.ownedUnitySandTextures) {
+      if (preservedTextures.has(texture) || disposedTextures.has(texture) || texture.userData.shared) continue;
+      disposedTextures.add(texture);
+      texture.userData.disposed = true;
+      texture.dispose();
+    }
+    this.ownedUnitySandTextures.clear();
+    this.sharedUnitySandMaps = null;
+    this.meshSandMaterials.clear();
     this.scene.remove(this.root);
   }
 
@@ -12032,6 +12140,8 @@ export class Level {
       color:
         "#" +
         (mat as THREE.MeshLambertMaterial).color.getHexString(),
+      ...((mat as THREE.MeshLambertMaterial).emissive?.getHex()
+        ? { emissive: `#${(mat as THREE.MeshLambertMaterial).emissive.getHexString()}` } : {}),
       pts: nodes,
       curve: opts.curve,
       nm: name,
@@ -12165,6 +12275,7 @@ export class Level {
       Math.max(1, c.w ?? 12),
       new THREE.MeshLambertMaterial({
         color: c.color ? new THREE.Color(c.color) : 0x4f9a42,
+        emissive: c.emissive ?? "#000000",
       }),
       {
         amp: c.amp ?? 0.45,
@@ -12370,6 +12481,7 @@ export class Level {
         })
       : new THREE.MeshLambertMaterial({
           color: c.color ? new THREE.Color(c.color) : 0x9a8a7a,
+          emissive: c.emissive ?? "#000000",
         });
     // Geometry UVs run 0..1 over the whole path/height. patterned() turns that
     // into world-density repeats, so stone courses stay one size without a seam
@@ -13851,6 +13963,7 @@ export class Level {
     // navy sky is invisible exactly when you need to land on it.
     fire = false,
     height = 0.8,
+    travelSign = 1,
   ): void {
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(w, height, d),
@@ -13874,6 +13987,7 @@ export class Level {
         : axis === "y"
           ? new THREE.Vector3(0, 1, 0)
           : new THREE.Vector3(0, 0, 1);
+    axisV.multiplyScalar(travelSign);
     this.movers.push({
       mesh,
       base: mesh.position.clone(),
@@ -14054,6 +14168,7 @@ export class Level {
     speed: number,
     phase = 0,
     visible = true,
+    travelSign = 1,
   ): void {
     const a = THREE.MathUtils.degToRad(yawDeg);
     const dx = (Math.sin(a) * len) / 2;
@@ -14067,7 +14182,7 @@ export class Level {
     );
     this.rails.push(rail);
     this.root.add(rail.object);
-    this.attachRailMotion(rail, axis, amp, speed, phase);
+    this.attachRailMotion(rail, axis, amp, speed, phase, travelSign);
   }
 
   private attachRailMotion(
@@ -14076,17 +14191,17 @@ export class Level {
     amp: number,
     speed: number,
     phase: number,
+    travelSign = 1,
   ): void {
     this.movingRails.push({
       rail,
       object: rail.object,
       base: new THREE.Vector3(0, 0, 0), // offsets are tracked from zero
-      axisV:
-        axis === "x"
-          ? new THREE.Vector3(1, 0, 0)
-          : axis === "y"
-            ? new THREE.Vector3(0, 1, 0)
-            : new THREE.Vector3(0, 0, 1),
+      axisV: new THREE.Vector3(
+        axis === "x" ? travelSign : 0,
+        axis === "y" ? travelSign : 0,
+        axis === "z" ? travelSign : 0,
+      ),
       amp,
       speed,
       phase,
@@ -14107,10 +14222,11 @@ export class Level {
     yawDeg = 0,
     tex = "wood",
     fallSpeed = 30,
+    emissive = "#000000",
   ): Crumble {
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(w, 0.5, d),
-      this.patterned(new THREE.MeshLambertMaterial({ color }), w, d, tex),
+      this.patterned(new THREE.MeshLambertMaterial({ color, emissive }), w, d, tex),
     );
     mesh.position.set(x, topY - 0.25, z);
     mesh.rotation.y = THREE.MathUtils.degToRad(yawDeg); // stand-detection is the ground raycast: free spin is fine
@@ -14286,7 +14402,7 @@ export class Level {
     const straight = !c.pts || c.pts.length < 2;
     const col = c.color ? new THREE.Color(c.color).getHex() : 0xaab4ba;
     const mat = this.patterned(
-      new THREE.MeshLambertMaterial({ color: col, side: THREE.DoubleSide }),
+      new THREE.MeshLambertMaterial({ color: col, emissive: c.emissive ?? "#000000", side: THREE.DoubleSide }),
       6,
       6,
       c.tex ?? "pavement",
@@ -14399,6 +14515,7 @@ export class Level {
     travelAmp = 0,
     travelSpeed = 0.5,
     travelPhase = 0,
+    travelSign = 1,
   ): void {
     len=Math.max(1.2,len);
     const yaw = THREE.MathUtils.degToRad(yawDeg);
@@ -14424,6 +14541,7 @@ export class Level {
       len,
       amp,
       speed: speed > 0 ? speed : Math.sqrt(11 / Math.max(1, len)),
+      naturalSpeed: speed <= 0,
       phase,
       yaw,
       theta: 0,
@@ -14432,12 +14550,11 @@ export class Level {
         travelAxis && travelAmp !== 0
           ? {
               base: new THREE.Vector3(x, anchorY, z),
-              axisV:
-                travelAxis === "x"
-                  ? new THREE.Vector3(1, 0, 0)
-                  : travelAxis === "y"
-                    ? new THREE.Vector3(0, 1, 0)
-                    : new THREE.Vector3(0, 0, 1),
+              axisV: new THREE.Vector3(
+                travelAxis === "x" ? travelSign : 0,
+                travelAxis === "y" ? travelSign : 0,
+                travelAxis === "z" ? travelSign : 0,
+              ),
               amp: travelAmp,
               speed: travelSpeed,
               phase: travelPhase,
@@ -18852,19 +18969,26 @@ export class Level {
     if (!isNightworksSurface(c.dkind)) return;
     this.nightworksRocks ??= new NightworksRocks();
     const s=c.s??[5,4,5],top=c.t==="platform"?c.p[1]+s[1]/2:c.p[1];
+    const yaw=THREE.MathUtils.degToRad(c.yaw??0),origin=new THREE.Vector3(c.p[0],top,c.p[2]);
+    const rotateTorch=(torch:Torch):void=>{
+      torch.group.position.sub(origin).applyAxisAngle(THREE.Object3D.DEFAULT_UP,yaw).add(origin);
+      torch.group.rotation.y+=yaw;
+      torch.lightAt.sub(origin).applyAxisAngle(THREE.Object3D.DEFAULT_UP,yaw).add(origin);
+    };
     let mesh:THREE.Mesh,delta=new THREE.Vector3(),active=()=>true;
     if(c.t==="mover") {
-      this.mover(c.p[0],top,c.p[2],s[0],s[2],c.axis??"x",c.amp??4,c.speed??.6,c.phase??0,!!c.lit,s[1]);
+      this.mover(c.p[0],top,c.p[2],s[0],s[2],c.axis??"x",c.amp??4,c.speed??.6,c.phase??0,!!c.lit,s[1],c.travelSign??1);
       const mover=this.movers[this.movers.length-1];mesh=mover.mesh;delta=mover.lastDelta;
       const previous=mesh.material as THREE.MeshLambertMaterial;previous.map?.dispose();previous.dispose();
       mesh.material=new THREE.MeshLambertMaterial({color:0xa98258,emissive:0x1e2638});
-      if(mover.torch){const shift=new THREE.Vector3(-s[0]*.24+.55,0,-s[2]*.24+.55);mover.torch.group.position.add(shift);mover.torch.lightAt.add(shift);}
+      if(mover.torch){const shift=new THREE.Vector3(-s[0]*.24+.55,0,-s[2]*.24+.55);mover.torch.group.position.add(shift);mover.torch.lightAt.add(shift);rotateTorch(mover.torch);}
     } else if(c.t==="phasepad") {
       this.phasePad(c.p[0],top,c.p[2],s[0],s[2],c.cycle??4,c.phase??0,c.amp??.5,s[1]);
       const pad=this.phasePads[this.phasePads.length-1];mesh=pad.mesh;active=()=>pad.on;
       for(const [i,torch] of pad.torches.entries()) {
         const sign=i===0?-1:1,shift=new THREE.Vector3(sign*(-s[0]*.27+.45),0,sign*(-s[2]*.27+.45));
         torch.group.position.add(shift);torch.lightAt.add(shift);
+        rotateTorch(torch);
       }
       const lit=pad.litMat as THREE.MeshLambertMaterial;lit.map=null;lit.color.setHex(0xa98258);lit.emissive.setHex(0x1e2638);
     } else {
@@ -18873,8 +18997,19 @@ export class Level {
     }
     mesh.geometry.dispose();mesh.geometry=nightworksGeometry(c.dkind,s,c.yaw??0);
     mesh.name="floating rock island";mesh.userData.nightworksRock=c.dkind;mesh.userData.edgeGrinding=false;
+    const fallback=mesh.material as THREE.MeshLambertMaterial;
+    if(c.color!==undefined)fallback.color.set(c.color);
+    if(c.emissive!==undefined){fallback.emissive.set(c.emissive);fallback.emissiveIntensity=1;}
+    const map=c.tex===undefined?undefined:c.tex==="solid"?null:this.surfaceTexture(c.tex);
+    if(map!==undefined){
+      fallback.map=map;fallback.userData.texKind=c.tex;
+      if(map){const position=mesh.geometry.getAttribute("position"),uv=new Float32Array(position.count*2);
+        for(let i=0;i<position.count;i++){uv[i*2]=position.getX(i)/4;uv[i*2+1]=position.getZ(i)/4;}
+        mesh.geometry.setAttribute("uv",new THREE.BufferAttribute(uv,2));}
+    }
     this.nightworksRocks.addSolid(mesh,delta,active);
-    this.nightworksRocks.attach(mesh,c.dkind,s,new THREE.Vector3(0,-s[1]/2,0),c.yaw??0,mesh);
+    this.nightworksRocks.attach(mesh,c.dkind,s,new THREE.Vector3(0,-s[1]/2,0),c.yaw??0,mesh,
+      {color:c.color,emissive:c.emissive,map,tex:c.tex});
   }
 
   private buildNightworks(): void {
