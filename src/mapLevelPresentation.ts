@@ -224,15 +224,26 @@ export class MapLevelPresentation {
     ctx.fillStyle = "#eee9da"; ctx.fillRect(134, 51, 38, 15);
     ctx.textAlign = "left"; ctx.textBaseline = "middle";
     ctx.font = '74px "Staging Secondary", Impact, sans-serif'; ctx.fillText("TIME TRIAL", 254, 133, 440);
+    ctx.fillStyle = '#c9c5b8'; ctx.font = '32px "Staging Secondary", sans-serif';
+    ctx.fillText('YOUR BEST TIMES', 83, 243);
+    for (const [i, rank] of ['1ST', '2ND', '3RD'].entries()) {
+      const y = 310 + i * 91;
+      ctx.textAlign = 'left'; ctx.fillStyle = '#c9c5b8'; ctx.font = '46px "Staging Secondary", sans-serif';
+      ctx.fillText(rank, 83, y);
+      ctx.textAlign = 'right'; ctx.fillStyle = '#f8f5e9'; ctx.font = '55px "Staging Secondary", monospace';
+      ctx.fillText(mapTrialTime(data.times[i]), 680, y);
+    }
+    ctx.strokeStyle = '#666861'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(75, 546); ctx.lineTo(693, 546); ctx.stroke();
+    ctx.textAlign = 'left'; ctx.fillStyle = '#c9c5b8'; ctx.font = '29px "Staging Secondary", sans-serif';
+    ctx.fillText('MEDALS', 83, 585);
     const targets = data.targets ?? defaultMedalTimes(data.target);
     for (const [i, tier] of TIME_MEDALS.entries()) {
-      const y = 330 + i * 155;
+      const y = 635 + i * 52;
       const earned = !!data.medal && i >= TIME_MEDALS.indexOf(data.medal);
       ctx.textAlign = 'left'; ctx.fillStyle = '#' + TIME_MEDAL_COLORS[tier].toString(16).padStart(6,'0');
-      ctx.font = '57px "Staging Secondary", sans-serif'; ctx.fillText(tier.toUpperCase(), 83, y);
-      ctx.textAlign = 'right'; ctx.fillStyle = '#f8f5e9'; ctx.font = '55px "Staging Secondary", monospace'; ctx.fillText(earned ? 'EARNED' : mapTrialTime(targets[tier]), 680, y);
-      ctx.strokeStyle = '#666861'; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(75, y + 62); ctx.lineTo(693, y + 62); ctx.stroke();
+      ctx.font = '33px "Staging Secondary", sans-serif'; ctx.fillText(tier.toUpperCase(), 83, y);
+      ctx.textAlign = 'right'; ctx.fillStyle = '#f8f5e9'; ctx.font = '34px "Staging Secondary", monospace'; ctx.fillText(earned ? 'EARNED' : mapTrialTime(targets[tier]), 680, y);
     }
     this.trialTexture.needsUpdate = true;
   }
