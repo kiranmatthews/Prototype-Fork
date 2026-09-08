@@ -8218,6 +8218,10 @@ export class Editor {
         if (value) delete c.solid;
         else c.solid = false;
       });
+      boolRow("contain player", () => c.containment === true, (value) => {
+        if (value) c.containment = true;
+        else delete c.containment;
+      });
       boolRow("invisible in play", () => c.invisible === true, (value) => {
         if (value) c.invisible = true;
         else delete c.invisible;

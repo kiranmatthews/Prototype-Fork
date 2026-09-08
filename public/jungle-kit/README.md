@@ -105,3 +105,25 @@ zero-credit rejected prompt.
 
 Rebuild optional models using `bake_modular.py -- --spec tools/jungle-kit/editor-specs.json`
 under Blender, followed by `python3 tools/jungle-kit/pack_editor_assets.py`.
+
+## Outer enclosure
+
+The original foreground planting and temple modules are retained. A second
+layer adds 72 broad, code-built cliff placements (80 triangles per template)
+and 36 enlarged canopy placements using the existing tree's 546-triangle far
+mesh. Both backdrop types use inexpensive diffuse materials and cast no new
+shadows onto the path. They share existing texture resources; the complete
+new layer adds 25,416 triangles before view culling and no model downloads.
+
+A closed editor-owned perimeter follows the actual floor widths, including
+the narrower descent, the start cap and the wall beyond the finish. The
+2.4 m thick shell spans Y=-18 to Y=64. It preserves the visible berms and their
+grind rails while preventing jumps, corner approaches and end-wall escapes
+from reaching unsupported scenery. Its dedicated collision pass resolves
+adjacent faces together, without changing movement tuning or ordinary wall
+ride/ledge behavior. The intentional gaps and black death pits remain open.
+
+`node tools/test-jungle-enclosure.mjs` tests the closed shell, imported copies,
+low-detail background meshes, and 112 actual-player side, air, fast-skate,
+width-transition, start-corner and finish-corner probes. The existing traversal
+harness separately checks all four gaps, the log grind, respawn and finish.

@@ -1,0 +1,9 @@
+{
+  "screenWidthMeasurement": {"viewport":[1920,1080],"selectedHub":"test-course","dryIslandWidthMetres":201.55572509765625,"visibleWidthMetres":73.31021329467153,"relativeScreenWidths":2.7493539581927},
+  "finalScenery": {"placements":355,"ready":355,"errors":[],"compressedTextures":4,"textureMiB":29.33},
+  "performanceSample": {"host":"Local desktop Chrome, not physical iOS hardware","desktopBuffer":[2560,1440],"desktopAverageMs":16.6671,"desktopP95Ms":17.4,"touchBuffer":[780,1688],"touchAverageMs":16.6675,"touchP95Ms":17.0,"framesPerSample":240},
+  "validation": ["all 102 production build commands", "desktop/portrait/landscape screenshots at seven hub viewpoints", "actual touch branch selection, returns and off-screen next", "canonical level launch/quit focus", "same-island rail terrain clearance", "sub-15k models with real LODs and compressed/fallback textures"],
+  "styleReview": "The new rainforest-tree was rejected by the user and removed from shipping assets and the catalog. Existing clean canopy and palm models are used instead. Preserved the full rejected cost in the ledger.",
+  "ocean": "No shader, preset, caustic, colour, wave or outline tuning changes; only lateral geometry coverage extended to prevent an exposed mesh edge.",
+  "meshyCredits": {"budget":300,"spent":60,"selectedAssets":45,"rejectedTree":15}
+}

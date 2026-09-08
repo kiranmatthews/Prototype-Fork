@@ -11332,6 +11332,21 @@ export class Player {
       this.onComboRunWin();
     }
 
+    // Resolve adjacent safety faces together, so a side contact cannot skip
+    // an end cap in the same tick. These barriers are not wallride surfaces.
+    for (let pass=0;pass<3 && level.containmentWalls?.length;pass++) {
+      let moved=false;
+      for (const box of level.containmentWalls) {
+        if (!this.playerBox.intersectsBox(box)) continue;
+        const path=level.wallPathForBox(box);
+        if (!path) continue;
+        const x=this.pos.x,z=this.pos.z;
+        this.pushOutOfWallPath(box,path,level,true);
+        moved ||= Math.abs(this.pos.x-x)+Math.abs(this.pos.z-z)>1e-6;
+      }
+      if (!moved) break;
+    }
+
     // LAND ON THE PAD. This used to be playerBox vs level.finishBox — a 14-wide,
     // 30-tall slab spanning the whole gate, so anything that broke the plane
     // finished the run: rolling past the pad's shoulder, or sailing over it
@@ -12399,6 +12414,7 @@ export class Player {
     box: THREE.Box3,
     path: WallPathRuntime,
     level: Level,
+    containment = false,
   ): boolean | null {
     const segment = level.wallPathSegmentForBox(box);
     const contact = level.closestWallPath(path, this.pos.x, this.pos.z, segment);
@@ -12442,6 +12458,16 @@ export class Player {
     this.pos.x += shiftX;
     this.pos.z += shiftZ;
     this.translateCollisionBoxes(shiftX, 0, shiftZ);
+    if (containment) {
+      const into=this.walkVelocity.x*contact.nx+this.walkVelocity.z*contact.nz;
+      if (into<0) {
+        this.walkVelocity.x-=contact.nx*into;
+        this.walkVelocity.z-=contact.nz*into;
+      }
+      const heading=this.axisF.x*contact.nx+this.axisF.z*contact.nz;
+      if (heading<0 && this.speed>0) this.speed*=Math.sqrt(Math.max(0,1-heading*heading));
+      return true;
+    }
     if (insideBefore) {
       this.prevPos.x += shiftX;
       this.prevPos.z += shiftZ;

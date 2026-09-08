@@ -101,14 +101,14 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     id: "island-1",
     name: "Island 1",
     subtitle: "REGION 01",
-    centre: [-39, 0, 12],
+    centre: [-95, 0, 0],
     levelKeys: ["jungle", "test-course", "sky-bridge", "slipstream", "codex-switchback", "nightworks"],
   },
   {
     id: "island-2",
     name: "Island 2",
     subtitle: "REGION 02",
-    centre: [50, 0, 13],
+    centre: [75, 0, 9],
     levelKeys: ["beachside-run", "coastal", "chimeworks", "island-hopper", "jungle-gate"],
   },
 ] as const;
@@ -140,7 +140,7 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     travel: "trail",
     fromDirection: "right",
     toDirection: "left",
-    waypoints: [[-54, 1.6, 20]],
+    waypoints: [[-131, 2.8, 25]],
   },
   {
     from: "test-course",
@@ -148,7 +148,7 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     travel: "trail",
     fromDirection: "right",
     toDirection: "left",
-    waypoints: [[-35, 1.9, 19]],
+    waypoints: [[-91, 5.2, 24]],
   },
   {
     from: "test-course",
@@ -156,7 +156,7 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     travel: "trail",
     fromDirection: "up",
     toDirection: "down",
-    waypoints: [[-45, 2.2, 7]],
+    waypoints: [[-112, 6.5, 11]],
   },
   {
     from: "sky-bridge",
@@ -164,7 +164,7 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     travel: "trail",
     fromDirection: "right",
     toDirection: "left",
-    waypoints: [[-18, 2.5, 18]],
+    waypoints: [[-51, 4.4, 24]],
   },
   {
     from: "slipstream",
@@ -172,7 +172,7 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     travel: "boardslide",
     fromDirection: "right",
     toDirection: "left",
-    waypoints: [[-35, 4.2, -3]],
+    waypoints: [[-91, 13.5, -2]],
   },
   {
     from: "codex-switchback",
@@ -180,7 +180,7 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     travel: "trail",
     fromDirection: "down",
     toDirection: "up",
-    waypoints: [[-25, 2.5, 7]],
+    waypoints: [[-70, 8.6, 11]],
   },
   {
     from: "nightworks",
@@ -188,7 +188,7 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     travel: "boardslide",
     fromDirection: "right",
     toDirection: "left",
-    waypoints: [[0, 8.5, 14], [11, 8.5, 14]],
+    waypoints: [[-5, 10, 14], [24, 10, 14]],
   },
   {
     from: "beachside-run",
@@ -196,7 +196,7 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     travel: "trail",
     fromDirection: "right",
     toDirection: "left",
-    waypoints: [[33, 1.6, 16]],
+    waypoints: [[58, 1.6, 16]],
   },
   {
     from: "coastal",
@@ -204,7 +204,7 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     travel: "trail",
     fromDirection: "down",
     toDirection: "up",
-    waypoints: [[42, 2.1, 20]],
+    waypoints: [[67, 2.1, 20]],
   },
   {
     from: "coastal",
@@ -212,7 +212,7 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     travel: "boardslide",
     fromDirection: "right",
     toDirection: "left",
-    waypoints: [[52, 4.2, 14]],
+    waypoints: [[77, 4.2, 14]],
   },
   {
     from: "island-hopper",
@@ -220,7 +220,7 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     travel: "trail",
     fromDirection: "right",
     toDirection: "left",
-    waypoints: [[70, 2.8, 13]],
+    waypoints: [[95, 2.8, 13]],
   },
 ] as const;
 
@@ -232,7 +232,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-1",
     mapPath: "main",
-    mapPosition: [-63, 1.35, 18],
+    mapPosition: [-151, 1.35, 22],
     unlockAfter: [],
   },
   {
@@ -243,7 +243,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-1",
     mapPath: "main",
-    mapPosition: [-44, 1.75, 18],
+    mapPosition: [-111, 4, 22],
     unlockAfter: ["jungle"],
   },
   {
@@ -253,7 +253,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-1",
     mapPath: "main",
-    mapPosition: [-26, 2.1, 18],
+    mapPosition: [-71, 6, 22],
     unlockAfter: ["test-course"],
   },
   {
@@ -263,7 +263,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-1",
     mapPath: "upper-branch",
-    mapPosition: [-44, 2.55, -3],
+    mapPosition: [-111, 9, -1],
     unlockAfter: ["test-course"],
   },
   {
@@ -273,7 +273,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-1",
     mapPath: "main",
-    mapPosition: [-9, 2.85, 18],
+    mapPosition: [-31, 3, 22],
     unlockAfter: ["sky-bridge"],
     boss: true,
   },
@@ -284,7 +284,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-2",
     mapPath: "main",
-    mapPosition: [23, 1.35, 16],
+    mapPosition: [48, 1.35, 16],
     unlockAfter: ["nightworks"],
   },
   {
@@ -294,7 +294,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-2",
     mapPath: "main",
-    mapPosition: [42, 1.75, 14],
+    mapPosition: [67, 1.75, 14],
     unlockAfter: ["beachside-run"],
   },
   {
@@ -304,7 +304,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-2",
     mapPath: "main",
-    mapPosition: [61, 2.4, 14],
+    mapPosition: [86, 2.4, 14],
     unlockAfter: ["coastal"],
   },
   {
@@ -314,7 +314,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-2",
     mapPath: "main",
-    mapPosition: [79, 3.1, 14],
+    mapPosition: [104, 3.1, 14],
     unlockAfter: ["island-hopper"],
     boss: true,
   },
@@ -327,7 +327,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-1",
     mapPath: "upper-branch",
-    mapPosition: [-26, 2.85, -3],
+    mapPosition: [-71, 11, -1],
     unlockAfter: ["slipstream"],
   },
   {
@@ -337,7 +337,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-2",
     mapPath: "lower-branch",
-    mapPosition: [42, 2.3, 26],
+    mapPosition: [67, 2.3, 26],
     unlockAfter: ["coastal"],
   },
 ] as const;

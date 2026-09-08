@@ -497,6 +497,12 @@ try {
     else if (object.name === "world map shallow coral fingers") coralFingers = object;
   });
   assert.equal(campaignIslands.length, CAMPAIGN_ISLANDS.length);
+  for(const island of campaignIslands){
+    const box=new THREE.Box3().setFromObject(island);
+    assert.ok(box.max.y>22,'island topography collapsed back to a flat meadow');
+    assert.ok(island.geometry.attributes.position.count>20000,'highland sculpt lost its mesh resolution');
+    assert.ok(island.geometry.hasAttribute('aRockBlend'));
+  }
   for (const island of CAMPAIGN_ISLANDS) {
     const mesh = campaignIslands.find(({ name }) => name.endsWith(island.id));
     assert.ok(mesh, `${island.id} has no cohesive campaign island mass`);
@@ -603,7 +609,7 @@ try {
     assert.ok(Math.abs(width-0.8*2.9)<1e-4,'map islets and main islands must share the same world-space outline width');
     coastRay.ray.origin.set((foamPositions.getX(i)+foamPositions.getX(i-1))*.5,50,(foamPositions.getZ(i)+foamPositions.getZ(i-1))*.5);
     const peakGround=coastRay.intersectObjects(coastLand,false)[0];
-    assert.ok(!peakGround||peakGround.point.y<foamPositions.getY(i),`outline brightness peak ${i} is buried by the inward offset`);
+    assert.ok(!peakGround||peakGround.point.y<foamPositions.getY(i),`outline brightness peak ${i} at ${coastRay.ray.origin.x},${coastRay.ray.origin.z} is buried by ${peakGround?.object.name}`);
     coastRay.ray.origin.set(foamPositions.getX(i),50,foamPositions.getZ(i));
     const ground=coastRay.intersectObjects(coastLand,false)[0];
     assert.ok(!ground||ground.point.y<foamPositions.getY(i),`shoreline sample ${i} at ${foamPositions.getX(i)},${foamPositions.getZ(i)} is hidden under ${ground?.object.name}`);
@@ -642,6 +648,16 @@ try {
   }
 
   const positionKeys = new Set();
+  for(const edge of CAMPAIGN_MAP_EDGES){
+    if(campaignLevelById(CAMPAIGN_LEVELS.find(l=>l.progressKey===edge.from).levelId).islandId!==
+      CAMPAIGN_LEVELS.find(l=>l.progressKey===edge.to).islandId)continue;
+    for(let i=1;i<20;i++){
+      const pose=warpLevel.campaignMapTravel(edge.from,edge.to,i/20).position;
+      const ray=new THREE.Raycaster(pose.clone().add(new THREE.Vector3(0,60,0)),new THREE.Vector3(0,-1,0));
+      const hit=ray.intersectObjects(campaignIslands,false)[0];
+      assert.ok(hit&&hit.point.y<pose.y-.1,`terrain buries ${edge.from} → ${edge.to} at ${i}/20`);
+    }
+  }
 
   for (const definition of CAMPAIGN_LEVELS) {
     const pose = warpLevel.campaignPortalReturnPose(definition.progressKey);

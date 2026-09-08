@@ -2,6 +2,7 @@ import type { CustomComponent, CustomGroup } from "../level";
 import type { JungleAssetKind } from "../jungleAssets";
 import { jungleAssemblyComponents } from "../jungleAssemblies";
 import { jungleShoulderHeight } from "../jungleGround";
+import { jungleContainment } from "./jungle-ruins-bounds";
 
 /** Deliberately sparse, large plants. Two depths and an overhead canopy close the lane. */
 export function jungleRuinsDressing(gx: (z: number) => number, gy: (z: number) => number): {components:CustomComponent[];groups:CustomGroup[]} {
@@ -106,5 +107,22 @@ export function jungleRuinsDressing(gx: (z: number) => number, gy: (z: number) =
       if (z > -325 || z < -390) add("templeplatform", [side * 7.6, top - 0.1, z - 6], [2.8, 1.3, 2.8], side * 8);
     }
   }
+  // A second, simpler wall of scenery closes the sky gaps behind the existing
+  // planting. The cliff modules are 80 triangles; the trees share the far mesh.
+  const outerGroup=group("Outer jungle and rock faces");
+  for(let z=22,i=0;z>-746;z-=22,i++)for(const side of [-1,1]) {
+    const r=rnd(i*137+(side<0?11:71));
+    const temple=z<-300&&z>-486,base=temple?16:0,inset=temple?48:41;
+    out.push({t:"decor",dkind:"junglecliff",p:[gx(z)+side*(inset+r*3),base+gy(z)-4,z],
+      s:[27+r*5,(i%5===2?24:32)+r*8,33+r*4],yaw:side*12+(r-.5)*12,
+      color:["#b9c5b5","#a4b8a9","#b9c0aa"][i%3],solid:false,grp:outerGroup,nm:"Outer rock face"});
+    if(i%2===0)out.push({t:"decor",dkind:"junglebackdrop",
+      p:[gx(z)+side*(temple?56:48),base+gy(z)-9,z-8+side*3],
+      s:[43+r*5,39+r*6,46+r*4],yaw:r*360,color:side<0?"#89a796":"#98af93",
+      solid:false,grp:outerGroup,nm:"Outer jungle canopy"});
+  }
+  for(const z of [38,-748])out.push({t:"decor",dkind:"junglecliff",p:[gx(z),gy(z)-5,z],
+    s:[98,39,28],yaw:7,color:"#acbba9",solid:false,grp:outerGroup,nm:"Jungle end rock face"});
+  out.push(jungleContainment(gx,group("Jungle perimeter")));
   return {components:out,groups};
 }

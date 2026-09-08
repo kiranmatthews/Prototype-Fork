@@ -2050,7 +2050,7 @@ try {
         const wallPaths = captured.components.filter(
           (component) => component.t === "wallpath",
         );
-        assert.equal(wallPaths.length, 40, "Jungle wallpaths were dropped or duplicated");
+        assert.equal(wallPaths.length, 41, "Jungle wallpaths were dropped or duplicated");
         assert.equal(
           wallPaths.filter((component) => component.solid === false).length,
           26,
@@ -2069,7 +2069,10 @@ try {
           ],
           "Roofed-room column collision footprints drifted",
         );
-        const structural = wallPaths.filter((component) => component.solid !== false && !piers.includes(component));
+        const perimeter=wallPaths.filter(component=>component.containment===true);
+        assert.equal(perimeter.length,1,"Jungle closed safety perimeter was lost");
+        assert.ok(perimeter[0].closed && perimeter[0].invisible);
+        const structural = wallPaths.filter((component) => component.solid !== false && !piers.includes(component) && !component.containment);
         assert.deepStrictEqual(
           structural.map((component) => [
             component.p,

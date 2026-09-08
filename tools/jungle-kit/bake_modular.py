@@ -9,6 +9,7 @@ import bpy
 import bmesh
 import json
 import math
+import os
 import sys
 import argparse
 from pathlib import Path
@@ -16,7 +17,7 @@ from mathutils import Matrix, Vector
 from mathutils.geometry import intersect_ray_tri
 
 ROOT = Path(__file__).resolve().parents[2]
-WORK = ROOT / '.img2threejs/jungle-kit'
+WORK = Path(os.environ.get('JUNGLE_ASSET_WORK', ROOT / '.img2threejs/jungle-kit'))
 OUT = WORK / 'modular-baked'
 OUT.mkdir(parents=True, exist_ok=True)
 parser = argparse.ArgumentParser()

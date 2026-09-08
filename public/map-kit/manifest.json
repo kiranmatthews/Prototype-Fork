@@ -1,0 +1,59 @@
+[
+  {
+    "file": "cliff-buttress",
+    "kind": "mapcliff",
+    "label": "island cliff buttress",
+    "size": [
+      13,
+      18,
+      10
+    ],
+    "lod": 0.22,
+    "normal": 0.45,
+    "texture": 2048,
+    "fallbackTexture": 1024,
+    "bytes": 1830884,
+    "triangles": 6494,
+    "lodTriangles": 1428,
+    "sha256": "58ab78056c8258c208239c8c065e13b576169184c12dcf7e3a6ba89911a3854a",
+    "sourceSha256": "c4bdc7ea233ce2d42f634c643b6c42b45c5074a7a1549053f77ae1ad2c3bc6e8"
+  },
+  {
+    "file": "ridge-spine",
+    "kind": "mapridge",
+    "label": "island volcanic ridge",
+    "size": [
+      23,
+      13,
+      10
+    ],
+    "lod": 0.22,
+    "normal": 0.4,
+    "texture": 2048,
+    "fallbackTexture": 1024,
+    "bytes": 1795844,
+    "triangles": 6709,
+    "lodTriangles": 1475,
+    "sha256": "7daca7bf3b35b83d82091c8eca8c13f57b6c02e431cd82514e2cb4035c2993b3",
+    "sourceSha256": "f067bdad04b4bbfe34c5e9f2340000b294b9e4189178a1e5169c7261b20484ed"
+  },
+  {
+    "file": "sea-arch",
+    "kind": "maparch",
+    "label": "island sea arch",
+    "size": [
+      20,
+      15,
+      10
+    ],
+    "lod": 0.25,
+    "normal": 0.4,
+    "texture": 2048,
+    "fallbackTexture": 1024,
+    "bytes": 1819840,
+    "triangles": 6630,
+    "lodTriangles": 1657,
+    "sha256": "bdb0786542522f28e1866e9cf1c017b6a8e370e44a852020c35d54602f2fbb3c",
+    "sourceSha256": "cecd0c699dd3b5dff8a7375382a51c1d522c750ac589cafd7ea8bdbfa4b772af"
+  }
+]

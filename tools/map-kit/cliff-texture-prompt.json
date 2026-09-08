@@ -1,0 +1,6 @@
+{
+  "generator": "built-in image_gen",
+  "prompt": "Use case: stylized-concept. Asset type: seamless tileable albedo texture for a tropical island game's volcanic cliff faces. Square texture, flat orthographic surface scan with NO directional lighting, no perspective, no objects. Broad clean softly bevelled angular basalt strata, warm taupe and sandstone-grey stone planes with occasional muted olive moss seams. Large simplified geometric color regions and sparse wide cracks. Soft clay-like hand-painted adventure-game material. Keep the variation low-contrast and low-frequency, no tiny gritty noise, no photorealistic photographic texture, no black baked shadows, no dramatic highlights, no leaf objects. Tile seamlessly on all four edges. No text or watermark.",
+  "reference": "references/cliff-albedo.png",
+  "runtime": "public/map-kit/cliff-albedo.jpg"
+}

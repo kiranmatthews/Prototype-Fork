@@ -23,6 +23,16 @@ A single-file import also accepts `{ "id": "u1", "name": "My course", "data": <l
 
 Published packs use `{ "v": 2, "levels": [<entry>, ...] }`; each entry requires a unique `id`, `name`, and version-1 `data`. A pack version is distinct from a level version. Unknown versions and unknown fields are rejected, including nested fields. Introduce a new field by updating the contract, validation, editor controls, runtime capture/build behavior, and regression fixtures together. A breaking format change needs explicit versioning and migration. Newer unsupported files should fail visibly rather than silently lose content.
 
+## Closed course boundaries
+
+A `wallpath` may set `containment: true` to act as a course boundary. Its contacts
+resolve together after ordinary collisions, including adjoining corner faces.
+Containment walls cannot be grabbed or acquired as wallrides. Use `closed: true`
+for a complete perimeter, and `invisible: true` to keep the collision shell out
+of gameplay rendering. The editor displays such a shell as a wireframe ghost;
+its **contain player** checkbox controls this field. The wall still uses the
+normal `pts`, `w`, `rise`, `collisionHeight` and `solid` fields.
+
 ## Authored values
 
 Coordinates use metres in Three.js's right-handed, Y-up world. The normal corridor travels toward negative Z. Component `p` is its authored anchor; anchors vary by primitive, so consult the comments on `CustomComponent` before generating files. For a box platform, `p` is its centre and the supported top is `p[1] + s[1] / 2`.

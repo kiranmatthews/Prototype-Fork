@@ -369,7 +369,7 @@ export class WorldMapController {
     } else {
       this.desiredTarget.copy(islandCentre);
       if (targetPose)
-        this.desiredTarget.lerp(targetPose.position, portrait ? 0.9 : 0.68);
+        this.desiredTarget.lerp(targetPose.position, portrait ? 0.98 : 0.94);
       // Leave room for the vertical junction, particularly a lower side hub:
       // it must not sit underneath the TV-safe bottom menu hints.
       const junction = CAMPAIGN_MAP_EDGES.find(edge => {

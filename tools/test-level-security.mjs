@@ -56,6 +56,10 @@ try {
   assert.equal(oldMap.components[0].pts.length,9,'normalizing mutated the original map');
   const unchangedMap={...oldMap,components:[{t:'worldmap',p:[0,0,0],pts:[[-45,27,0,1.35],[-30,18,0,1.75],[-14,28,0,3.1],[-13,7,0,2.55],[-29,-3,0,5.25],[13,2,0,1.35],[27,16,0,1.75],[46,5,0,3.05],[32,-13,0,5.1]]}]};
   assert.deepEqual(normalize(unchangedMap).components[0].pts,api.worldMapComponentPoints(),'unchanged old defaults masked the new layout');
+  const priorBranchMap={...oldMap,components:[{t:'worldmap',p:[0,0,0],pts:[[-63,18,0,1.35],[-44,18,0,1.75],[-26,18,0,2.1],[-44,-3,0,2.55],[-9,18,0,2.85],[23,16,0,1.35],[42,14,0,1.75],[61,14,0,2.4],[79,14,0,3.1],[-26,-3,0,2.85],[42,26,0,2.3]]}]};
+  assert.deepEqual(normalize(priorBranchMap).components[0].pts,api.worldMapComponentPoints(),'old default map capture masked the island expansion');
+  const authoredBranchMap=structuredClone(priorBranchMap);authoredBranchMap.components[0].pts[0][0]+=1;
+  assert.deepEqual(normalize(authoredBranchMap).components[0].pts,authoredBranchMap.components[0].pts,'island expansion overwrote custom hub positions');
   const occupied=structuredClone(oldMap);occupied.components[0].pts[0]=api.worldMapComponentPoints()[9];
   const occupiedMigrated=normalize(occupied);
   assert.deepEqual(occupiedMigrated.components[0].pts.slice(0,9),occupied.components[0].pts);
