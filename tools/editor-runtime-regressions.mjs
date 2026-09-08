@@ -128,26 +128,22 @@ export function assertEditorRuntimeAuthoring({ Level, setEditorBuild, worldMapCo
     ]);
     const roadLevel = create(roadData);
     try {
-      const car = roadLevel.enemies.find((enemy) => enemy.kind === "car");
-      assert.ok(car, "traffic enemy did not build");
-      const carStart = car.group.position.clone();
+      assert.equal(roadLevel.enemies.length, 0, "legacy imported traffic was rebuilt");
       for (let index = 0; index < 60; index++) roadLevel.update(1 / 60);
-      assert.ok(car.group.position.distanceTo(carStart) > 2, "car froze on an editable short road");
-      assert.ok(car.x0 >= 0 && car.x0 <= roadLevel.roadRibbon.len, "short-road wrap put car outside its route");
+      assert.equal(roadLevel.enemies.length, 0, "update reintroduced retired traffic");
       assert.equal(roadLevel.tumbleBoxes.some((box) => box.containsPoint(new THREE.Vector3(20, -5, -12))), true);
       const contact = roadLevel.resolveCoastBoundary(new THREE.Vector3(12, 1, -10), new THREE.Vector3(18, 1, -10), 0.5, 1, 0.5);
       assert.ok(contact && contact.x < 15, "editable coast wall no longer blocks high-speed crossings");
-      const deck = roadLevel.root.children.find((object) => object.userData.vertComp?.trafficRoad);
+      const deck = roadLevel.root.children.find((object) => object.userData.vertComp);
       const chunk = new THREE.Mesh(deck.geometry, deck.material);
       chunk.userData = deck.userData;
       roadLevel.root.add(chunk);
       roadLevel.builtFromData = null;
       const captured = roadLevel.captureData();
-      assert.equal(captured.components.filter((component) => component.trafficRoad).length, 1,
+      assert.equal(captured.components.filter(component => component.t === "vertramp").length, 1,
         "chunked source road captured duplicate complete roads");
-      const capturedCar = captured.components.find((component) => component.foe === "car");
-      assert.ok(new THREE.Vector3(...capturedCar.p).distanceTo(carStart) < 0.1,
-        "source capture converted traffic route cursor into a world position");
+      assert.ok(!captured.components.some(component => component.foe === "car" || component.trafficRoad !== undefined),
+        "export reintroduced retired vehicle data");
       assert.equal(captured.components.filter((component) => component.t === "tumblezone").length, 1);
     } finally { roadLevel.dispose(); }
 
@@ -364,7 +360,7 @@ export function assertEditorRuntimeAuthoring({ Level, setEditorBuild, worldMapCo
         } finally { changed.dispose(); base.dispose(); }
       }
     }
-    console.log("PASS editor runtime authoring: moving rails, map hubs, bonus returns, coast hazards, traffic, triangle surfaces, oceans and scenery transforms");
+    console.log("PASS editor runtime authoring: moving rails, map hubs, bonus returns, coast hazards, retired-car migration, triangle surfaces, oceans and scenery transforms");
   } finally {
     window.location.search = search;
     setEditorBuild(false);

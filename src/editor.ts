@@ -13,6 +13,7 @@
 
 import * as THREE from "three";
 import { EditorEnvironment } from "./editorEnvironment";
+import { THORN_DEFAULT_SIZE, THORN_DEFAULT_COLOR } from "./proceduralThorns";
 import { withPortableAtmosphere } from "./levelAtmosphere";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { TUNING } from "./tuning";
@@ -2082,12 +2083,12 @@ const FOE_KINDS: { k: EnemyKind; label: string }[] = [
   { k: "floater", label: "floater — flies; SPIN it down" },
   { k: "sentry", label: "sentry — turret, fires orbs" },
   { k: "spinner", label: "spinner — hit it when blades retract" },
-  { k: "car", label: "traffic car — follows the road, cannot be defeated" },
 ];
 
 // components that grow draggable resize handles on double-click
 const RESIZABLE = new Set([
   "platform",
+  "thorn",
   "rock",
   "wall",
   "wallpath",
@@ -4755,6 +4756,7 @@ export class Editor {
       return null;
     }
     if (c.t === "rock") return [3, 2, 3];
+    if (c.t === "thorn") return [...THORN_DEFAULT_SIZE];
     if (c.t === "wall") return [8, 4, 1];
     if (c.t === "pit") return [6, 1, 6];
     if (c.t === "crumble") return [3, 1, 3];
@@ -5014,7 +5016,22 @@ export class Editor {
         },
       });
     };
-    if (c.t === "platform" || c.t === "rock" || c.t === "tumblezone") {
+    if (c.t === "thorn") {
+      const s = c.s ?? this.defaultSizeFor(c)!;
+      for (const [axis, index] of [[new THREE.Vector3(1, 0, 0), 0], [new THREE.Vector3(0, 0, 1), 2]] as const)
+        for (const sign of [-1, 1]) {
+          const direction = axis.clone().applyAxisAngle(UP, yaw).multiplyScalar(sign);
+          face(direction, P.clone().addScaledVector(direction, s[index] / 2), index, 0.2);
+        }
+      // A thorn's Y anchor is its base, unlike a centre-anchored box.
+      face(UP, P.clone().setY(P.y + s[1]), 1, 0.2, false);
+      defs.push({ pos: P.clone(), dir: new THREE.Vector3(0, -1, 0),
+        apply: (orig, cc, distance) => {
+          const height = Math.max(0.2, orig.s![1] + distance);
+          cc.s = [orig.s![0], height, orig.s![2]];
+          cc.p = [orig.p[0], orig.p[1] - (height - orig.s![1]), orig.p[2]];
+        } });
+    } else if (c.t === "platform" || c.t === "rock" || c.t === "tumblezone") {
       const s = c.s ?? this.defaultSizeFor(c)!;
       face(
         loc(1, 0, 0),
@@ -7361,6 +7378,7 @@ export class Editor {
       deg === 90 ? [z, -x] : [-z, x];
     const yawable = new Set([
       "platform",
+      "thorn",
       "mesh",
       "ramp",
       "wall",
@@ -7778,6 +7796,7 @@ export class Editor {
       }
       const yawable = new Set([
         "mesh",
+        "thorn",
         "platform",
         "ramp",
         "wall",
@@ -8167,7 +8186,39 @@ export class Editor {
       emission.addEventListener("change", () => { c.emissive = emission.value; this.commit(); });
       emissionRow.append(emissionLabel, emission); this.propsEl.appendChild(emissionRow);
     }
-    if (c.t === "mesh") {
+    if (c.t === "thorn") {
+      sizeRow(0, "width"); sizeRow(1, "height"); sizeRow(2, "depth");
+      num("yaw °", () => c.yaw ?? 0, value => { c.yaw = value; }, 15);
+      const color = document.createElement("input"); color.type = "color";
+      color.value = c.color ?? THORN_DEFAULT_COLOR; color.setAttribute("aria-label", "thorn color");
+      color.addEventListener("change", () => { c.color = color.value; this.commit(); });
+      const colorLabel = document.createElement("label"); colorLabel.className = "ed-row";
+      const colorText = document.createElement("span"); colorText.textContent = "glow color";
+      colorLabel.append(colorText, color); this.propsEl.appendChild(colorLabel);
+      const seedRow = document.createElement("label"); seedRow.className = "ed-row";
+      const seedLabel = document.createElement("span"); seedLabel.textContent = "variation seed";
+      const seed = document.createElement("input"); seed.type = "text"; seed.inputMode = "numeric";
+      seed.placeholder = "original"; seed.value = c.seed === undefined ? "" : String(c.seed);
+      seed.setAttribute("aria-label", "thorn variation seed");
+      const applySeed = (): void => {
+        const text = seed.value.trim(), value = Number(text);
+        if (text === (c.seed === undefined ? "" : String(c.seed))) return;
+        if (!text) delete c.seed;
+        else if (Number.isInteger(value) && Math.abs(value) <= 100_000) c.seed = value;
+        else { this.showMessage("BAD SEED", "use an integer from -100000 to 100000, or clear for the original variation"); seed.value = c.seed === undefined ? "" : String(c.seed); return; }
+        this.commit(); seed.value = c.seed === undefined ? "" : String(c.seed);
+      };
+      seed.addEventListener("change", applySeed);
+      seed.addEventListener("blur", applySeed);
+      seed.addEventListener("keydown", event => {
+        if (event.key === "Enter") { event.preventDefault(); seed.blur(); }
+        if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); seed.value = c.seed === undefined ? "" : String(c.seed); seed.blur(); }
+      });
+      seedRow.append(seedLabel, seed); this.propsEl.appendChild(seedRow);
+      const note = document.createElement("div"); note.className = "ed-dim";
+      note.textContent = "Visual warning only. Select its pit too when moving or rotating the complete hazard.";
+      this.propsEl.appendChild(note);
+    } else if (c.t === "mesh") {
       this.propsEl.appendChild(this.pickRow("material style", [["unity-sand", "Unity shoreline sand"]],
         () => c.materialStyle ?? "", value => {
           if (value === "unity-sand") { c.materialStyle = value; c.tex = "sand"; }
@@ -8815,9 +8866,6 @@ export class Editor {
         "a grindable rope strung between posts: it sags under a grind, snaps after the break time, and restrings itself";
       this.propsEl.appendChild(note);
     } else if (c.t === "vertramp") {
-      boolRow("traffic route", () => c.trafficRoad === true, value => {
-        if (value) c.trafficRoad = true; else delete c.trafficRoad;
-      });
       num("yaw °", () => c.yaw ?? 0, (v) => (c.yaw = v), 15);
       if (!c.pts)
         num(
@@ -9543,7 +9591,7 @@ export class Editor {
     // yaw, travel axes, portal destinations, zones and sparse size defaults
     // must all obey the same transform contract.
     const rotatable = new Set<CustomComponent["t"]>([
-      "platform", "ramp", "rail", "trickrail", "wall", "pit", "crumble",
+      "platform", "thorn", "ramp", "rail", "trickrail", "wall", "pit", "crumble",
       "rock", "pendulum", "ropeswing", "enemy", "gate", "vertramp", "rope",
       "trampoline", "speedpad", "trickgate", "returnportal", "grindosaurus",
       "angryball", "decor", "crusher", "mover", "phasepad", "zone", "stone",

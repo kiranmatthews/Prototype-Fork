@@ -172,7 +172,9 @@ try {
   rejectComponent({ t: "worldmap", p: [0, 0, 0], pts: CAMPAIGN_LEVELS.map(() => [0, 0, 0, 0]) }, "coincident campaign hubs");
   reject({ ...base(), ocean: { p: [0, 0, 0], length: 20, width: 20, seaward: 1 },
     components: [{ t: "worldmap", p: [0, 0, 0] }] }, "duplicate ocean ownership");
-  reject({ ...base(), components: [0, 1].map(() => ({ t: "vertramp", p: [0, 0, 0], trafficRoad: true })) }, "multiple traffic paths");
+  const oldRoads = normalize({ ...base(), components: [0, 1].map(() => ({ t: "vertramp", p: [0, 0, 0], trafficRoad: true })) });
+  assert.ok(oldRoads && oldRoads.components.every(c => c.trafficRoad === undefined), "retired traffic flags must migrate out");
+  rejectComponent({ t: "vertramp", p: [0, 0, 0], trafficRoad: "true" }, "malformed legacy traffic flag");
   reject({ ...base(), groups: [{ id: Number.MAX_SAFE_INTEGER }], layers: [{ id: 1, name: "legacy" }] }, "group migration integer overflow");
   reject({ ...base(), components: Array.from({ length: 1025 }, () => ({ t: "enemy", p: [0, 0, 0] })) }, "dynamic entity budget");
   for (const component of [
@@ -211,7 +213,14 @@ try {
     ["doubleSided", "true", "mesh boolean coercion"],
   ]) rejectComponent({ ...triangle, [field]: value }, reason);
   rejectComponent({ t: "crate", p: [0, 0, 0], vertices: triangle.vertices }, "mesh payload on another primitive");
-  reject({ ...base(), components: Array.from({ length: 129 }, () => ({ t: "enemy", foe: "car", p: [0, 0, 0] })) }, "traffic projection count");
+  const oldCars = { ...base(), components: [...base().components, ...Array.from({ length: 129 }, () => ({ t: "enemy", foe: "car", p: [0, 0, 0] }))] };
+  const retiredCars = normalize(oldCars);
+  assert.ok(retiredCars && retiredCars.components.every(c => c.foe !== "car"), "old cars must be removed without discarding the course");
+  assert.equal(oldCars.components.length, 131, "migration mutated caller-owned input");
+  assert.deepEqual(normalize(retiredCars), retiredCars, "retired vehicle migration must be idempotent");
+  assert.deepEqual(parse(JSON.stringify(oldCars)), retiredCars, "file import bypassed vehicle retirement");
+  assert.ok(normalizeUserLevelEntries([{ id: "old-cars", name: oldCars.name, data: oldCars }])[0].data.components.every(c => c.foe !== "car"));
+  rejectComponent({ t: "enemy", foe: "car", p: [Infinity, 0, 0] }, "retired fields still require safe input");
 
 
   let invoked = 0;

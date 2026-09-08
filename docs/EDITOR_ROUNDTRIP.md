@@ -74,6 +74,13 @@ Repeated real-browser rebuilds are measured separately from headless tests; see
 shader samplers refer directly to owned textures so disposing a rebuilt level
 releases the GPU allocations that were actually rendered.
 
+Thorn rotation and scaling use the same component-local axes as their visible
+geometry. A selected thorn and pit remain separate owners transformed together;
+no extra lethal volume is inferred from the warning artwork. Sparse defaults,
+optional variation seeds, base-anchored height handles and paired undo/redo are
+covered by the editor UX and actual geometry tests. Retired cars and their route
+metadata are removed by migration before any build or re-export.
+
 ## Regression checks
 
 ```sh

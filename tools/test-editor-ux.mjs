@@ -518,6 +518,67 @@ try {
     const regular = ordinary.propsEl.children.find(row => row.children?.[0]?.textContent === "texture").querySelector("select");
     assert.equal(regular.value, "checker"); assert.ok(!regular.children.some(option => option.value === ""));
   });
+  check("thorn controls preserve sparse data and commit geometry, color and optional seed with undo", () => {
+    const data = migrateCustomLevel(base([{ t: "thorn", p: [0, 0, 0] }]));
+    const id = saveUserLevel({ id: "", name: data.name, data });
+    const editor = editorFor(data); editor.targetId = id; editor.initialTargetId = id;
+    editor.commit = Editor.prototype.commit.bind(editor);
+    editor.hooks.preflight = () => !!normalizeCustomLevelData(editor.data);
+    editor.sel = [0]; editor.renderProps();
+    const before = JSON.stringify(editor.data);
+    for (const [label, value] of [["width", "2.14"], ["height", "1.01"], ["depth", "2.26"], ["yaw °", "0"], ["glow color", "#62ff29"], ["variation seed", ""]])
+      assert.equal(inputFor(editor, label).value, value);
+    inputFor(editor, "variation seed").blur(); inputFor(editor, "width").blur();
+    assert.equal(JSON.stringify(editor.data), before, "inspection/focus materialized thorn defaults");
+    assert.equal(editor.undoStack.length, 0);
+    assert.ok(editor.propsEl.children.some(row => row.children.some(button => button.textContent === "rotate 90°")));
+    for (const [label, value, key, expected] of [
+      ["width", "7", "s", [7, 1.01, 2.26]], ["yaw °", "90", "yaw", 90],
+      ["glow color", "#aabbcc", "color", "#aabbcc"], ["variation seed", "17", "seed", 17],
+    ]) {
+      editor.sel = [0]; editor.renderProps();
+      const input = inputFor(editor, label); input.value = value; input.dispatch("change");
+      assert.deepEqual(findLevel(id).data.components[0][key], expected);
+      editor.undo(); assert.equal(JSON.stringify(editor.data), before);
+      editor.redo(); assert.deepEqual(editor.data.components[0][key], expected);
+      editor.undo();
+    }
+    editor.sel = [0]; editor.renderProps();
+    const seed = inputFor(editor, "variation seed");
+    for (const invalid of ["javascript:alert(1)", "Infinity", "100001", "1.5"]) {
+      seed.value = invalid; seed.dispatch("change");
+      assert.equal(JSON.stringify(editor.data), before, "invalid seed changed the level");
+    }
+    seed.value = "21"; seed.dispatch("keydown", { key: "Escape" });
+    assert.equal(JSON.stringify(editor.data), before, "Escape committed a seed preview");
+    seed.value = "17"; seed.dispatch("change");
+    editor.sel = [0]; editor.renderProps();
+    inputFor(editor, "variation seed").value = ""; inputFor(editor, "variation seed").dispatch("change");
+    assert.equal(editor.data.components[0].seed, undefined, "clearing did not restore original variation");
+    editor.undo(); assert.equal(editor.data.components[0].seed, 17);
+  });
+  check("a thorn and its pit rotate in one saved transaction and undo together", () => {
+    const data = migrateCustomLevel(base([
+      { t: "thorn", p: [0, 0, 0], s: [12, 2, 2], seed: 17 },
+      { t: "pit", p: [0, 0, 0], s: [11, 1, 1], invisible: true },
+    ]));
+    const id = saveUserLevel({ id: "", name: data.name, data });
+    const editor = editorFor(data); editor.targetId = id; editor.initialTargetId = id;
+    editor.commit = Editor.prototype.commit.bind(editor);
+    editor.hooks.preflight = () => !!normalizeCustomLevelData(editor.data);
+    const original = JSON.stringify(editor.data); editor.sel = [0, 1];
+    editor.rotateSelection(90);
+    assert.equal(editor.undoStack.length, 1);
+    for (const component of findLevel(id).data.components.slice(0, 2)) assert.equal(component.yaw, 90);
+    editor.undo(); assert.equal(JSON.stringify(editor.data), original);
+    editor.redo();
+    const level = new Level(new THREE.Scene(), { id, name: data.name, data: editor.data });
+    try {
+      const point = new THREE.Vector3(0, 0, -4);
+      assert.ok(level.pitBoxes.some(box => box.containsPoint(point)));
+      assert.ok(new THREE.Box3().setFromObject(level.thornClusters[0].group).containsPoint(point));
+    } finally { level.dispose(); }
+  });
 } finally {
   await server.close();
 }

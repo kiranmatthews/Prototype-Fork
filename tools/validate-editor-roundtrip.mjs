@@ -373,21 +373,6 @@ const GAMEPLAY_COLLECTIONS = [
   "angryBalls",
 ];
 
-function roadRibbonContract(road) {
-  if (!road) return null;
-  const samples = [];
-  for (const t of [0, 0.125, 0.5, 0.875, 1]) {
-    for (const [offset, height] of [
-      [0, 0],
-      [1.25, 0.75],
-    ]) {
-      const point = road.frame(t, offset, height);
-      samples.push([t, offset, height, ...numericArray(point.toArray())]);
-    }
-  }
-  return { len: round(road.len), samples, width: round(road.width) };
-}
-
 function waterContract(water) {
   if (!water) return null;
   return {
@@ -432,7 +417,6 @@ function levelContract(level) {
     orbSpot: contractValue(level.orbSpot),
     perfectGrindBoost: level.perfectGrindBoost,
     pitPolyByBox: contractValue(level.pitPolyByBox),
-    roadRibbon: roadRibbonContract(level.roadRibbon),
     root: sceneGraphContract(level.pickRoot),
     skyPreset: level.skyPreset,
     spawnPos: contractValue(level.spawnPos),
@@ -1378,7 +1362,6 @@ function assertTestEnemyReset(data, level) {
   const down = new THREE.Vector3(0, -1, 0);
   const ray = new THREE.Raycaster();
   for (const enemy of level.enemies) {
-    if (enemy.kind === "car") continue;
     ray.set(
       new THREE.Vector3(
         enemy.group.position.x,
@@ -1807,24 +1790,21 @@ try {
 
   const descentEntry = BUILTIN_LEVELS.find((entry) => entry.id === "descent");
   assert.ok(descentEntry, "Descent entry is missing");
-  const trafficLevel = new Level(new THREE.Scene(), descentEntry);
+  const descentLevel = new Level(new THREE.Scene(), descentEntry);
   try {
-    const car = trafficLevel.enemies.find((enemy) => enemy.kind === "car");
-    assert.ok(car?.homePosition, "Descent car has no immutable home");
-    assert.ok(Number.isFinite(car.homeRoute), "Descent car has no route home");
-    const homePosition = car.homePosition.clone();
-    const homeRoute = car.homeRoute;
-    for (let frame = 0; frame < 180; frame++) trafficLevel.update(1 / 60);
-    assert.notEqual(car.x0, homeRoute, "traffic route did not advance");
-    trafficLevel.reset(true);
-    assert.equal(car.x0, homeRoute, "traffic reset retained its live route cursor");
-    assert.ok(
-      car.group.position.distanceTo(homePosition) < 1e-9,
-      "traffic reset did not restore its exact road transform",
-    );
-  } finally {
-    trafficLevel.dispose();
-  }
+    assert.equal(descentLevel.enemies.length, 0, "retired traffic returned in native Descent");
+    for (let frame = 0; frame < 180; frame++) descentLevel.update(1 / 60);
+    descentLevel.reset(true);
+    assert.equal(descentLevel.enemies.length, 0, "reset respawned retired traffic");
+    assert.ok(!descentLevel.captureData().components.some(c => c.foe === "car" || c.trafficRoad !== undefined));
+    let vehicleBodies = 0;
+    descentLevel.root.traverse(object => {
+      const p = object.geometry?.parameters;
+      if (p && Math.abs(p.width - 2.1 * 1.69) < 1e-8 &&
+          Math.abs(p.height - .75 * 1.69) < 1e-8 && Math.abs(p.depth - 4.2 * 1.69) < 1e-8) vehicleBodies++;
+    });
+    assert.equal(vehicleBodies, 0, "parked vehicle geometry survived removal");
+  } finally { descentLevel.dispose(); }
 
   let serial = 0;
   for (const testCase of cases) {

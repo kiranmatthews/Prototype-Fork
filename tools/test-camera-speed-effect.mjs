@@ -107,6 +107,17 @@ try {
 
   const playerSource = await readFile(new URL('../src/player.ts', import.meta.url), 'utf8');
   const mainSource = await readFile(new URL('../src/main.ts', import.meta.url), 'utf8');
+  for (const declaration of ['authoredFov', 'p2AuthoredFov']) {
+    const expression = mainSource.match(new RegExp(`const ${declaration} = ([^;]+);`))?.[1];
+    assert.ok(expression, `missing ${declaration} camera path`);
+    const resolve = new Function('TUNING', 'level', 'current', `return ${expression}`);
+    for (const lens of [35, 49, 75]) for (const id of ['beachfront', 'shared-beach-copy', 'flats']) {
+      near(resolve({ camFov: lens }, { jungleAtmosphere: false }, { id }), lens,
+        `${declaration}: Beachfront or its copy retained a level-only lens adjustment`);
+      near(resolve({ camFov: lens }, { jungleAtmosphere: true }, { id }), lens + 5,
+        `${declaration}: unrelated Jungle lens adjustment changed`);
+    }
+  }
   assert.match(playerSource, /get cameraSkateSpeed\(\): number/,
     'Player does not expose deterministic board-owned camera speed');
   assert.match(mainSource, /const cameraSkateSpeed = player\.cameraSkateSpeed/,

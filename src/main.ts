@@ -1870,7 +1870,7 @@ function updateCamera2(dt: number): void {
     dt,
     snapped,
   );
-  const p2AuthoredFov = TUNING.camFov + (level.jungleAtmosphere ? 5 : current.id === "beachfront" ? -6 : 0);
+  const p2AuthoredFov = TUNING.camFov + (level.jungleAtmosphere ? 5 : 0);
   const p2TargetFov = THREE.MathUtils.lerp(
     p2AuthoredFov + cam2SpeedFovBoost,
     BOULDER_FOV + TUNING.camFov - 49,
@@ -3984,7 +3984,7 @@ function updateCamera(dt: number): void {
     dt,
     snapped,
   );
-  const authoredFov = TUNING.camFov + (level.jungleAtmosphere ? 5 : current.id === "beachfront" ? -6 : 0);
+  const authoredFov = TUNING.camFov + (level.jungleAtmosphere ? 5 : 0);
   const targetFov = THREE.MathUtils.lerp(
     authoredFov + camSpeedFovBoost,
     BOULDER_FOV + TUNING.camFov - 49,

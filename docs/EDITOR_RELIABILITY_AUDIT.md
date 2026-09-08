@@ -90,35 +90,30 @@ fidelity or resource issue is solved.
   after cleanup. See [browser measurements](EDITOR_BROWSER_PERFORMANCE.md) for
   timings and the distinction between this fixture and the full game pipeline.
 
-## Follow-up findings retained at closeout
+## Requested follow-up completed
 
-1. **Thorn authoring and hazard alignment:** a selected elongated thorn and pit
-   rotate differently. The pit turns while the thorn visual stays on its old
-   axis; an actual lethal point lies outside the visible bounds afterward.
-   Thorn `s/yaw/seed/color` fields also lack single-item controls. Fix this first,
-   preserving the deliberately separate visual/collision owners and sparse
-   defaults, then compare actual geometry and pit membership through edits.
-2. **Car inspector/runtime agreement:** a sparse car displays range 5, speed 3
-   and X patrol, while runtime uses range 12, speed 10 and Z. Road-following cars
-   ignore the exposed range/yaw controls. Correct effective defaults and make
-   route/free-patrol authoring truthful; verify actual movement and collision.
-3. **Remaining legacy presentation:** normal Beachfront camera framing still
-   uses a native-ID-only six-degree FOV offset, lost by copies for P1 and P2.
-   Preserve that authored offset without retuning the user's global lens.
-   Continue the broader source-only inventory; the listed scenery/material
-   fixes do not establish full conversion parity for every legacy builder.
-4. **Large active-draft responsiveness:** the real browser fixture measures
-   roughly 0.8–0.94 s synchronous transactions for Descent. Geometry construction
-   remains the largest stage. It omits player/campaign UI/postprocessing and
-   does not measure completed GPU work; investigate these separately before
-   claiming full game or mobile performance.
-5. **Device gesture coverage:** synthetic browser and actual OrbitControls
-   event coverage is established, but physical touch/pen input and mobile
-   virtual-keyboard viewport transitions still need device-specific QA.
-6. **Cross-feature authoring audit:** continue checking component controls,
-   authored field semantics, runtime ownership and import/build failure paths
-   against the full original edit/move invariant. Existing passing tests do not
-   establish that all possible editor interactions are covered.
+- Thorn visuals and selected pit cores now share the same rotation. The thorn
+  inspector includes dimensions, yaw, glow color and optional variation seed;
+  six resize handles respect its base anchor. Runtime checks compare actual
+  vertices, pit membership and glow phase through 24 turn scenarios in lite/
+  full and play/editor builds, plus repeated turns, scaling and movement.
+  Real editor transactions verify paired undo/redo and pure sparse defaults.
+- Cars were removed rather than extending their controls: native traffic,
+  parked models, enemy runtime/contact code and editor options are gone.
+  Shared/local legacy files migrate out car entries and traffic-route flags
+  after safe input validation, preserving the course and other enemy types.
+- Beachfront's six-degree gameplay lens adjustment was removed for both
+  cameras. Original and copied courses now use the same global lens setting;
+  unrelated Jungle and boulder framing and speed-FOV behavior remain intact.
+
+## Deferred by user direction
+
+- **Large-level responsiveness:** previous validated wins are already applied.
+  The remaining construction cost has no additional established optimization
+  ready to use, so this follow-up adds no speculative performance work.
+- **Physical touch/pen QA:** ultra-low priority; no additional device work.
+- **Broader editor audit:** not resumed. Existing reports describe measured
+  coverage rather than a guarantee about every possible combination.
 
 Use `npm run check:editor-security`, `npm run check:editor-roundtrip`, and
 `npm run build`, followed by real-browser lite/full checks. The dev-only

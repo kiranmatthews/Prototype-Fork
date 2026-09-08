@@ -116,7 +116,6 @@ import {
   type UnitySandMaterialOwner,
 } from "./unitySandMaterial";
 
-const CAR_AIM = new THREE.Vector3(); // carStep lookAt scratch
 import { releaseWumpaMesh, wumpaMesh, WUMPA_SIZE } from "./wumpa";
 
 export interface Crate {
@@ -165,8 +164,7 @@ export type EnemyKind =
   | "hopper" // frog: leaps in arcs; stompable only while grounded
   | "floater" // drone: hovers above stomp range, swoops; spin it down
   | "sentry" // turret: stationary, tracks + fires slow orbs on a cycle
-  | "spinner" // sawblade: blades OUT = untouchable touch-kill, IN = vulnerable
-  | "car"; // oncoming traffic: follows the road ribbon, touch hurts, cannot be killed
+  | "spinner"; // sawblade: blades OUT = untouchable touch-kill, IN = vulnerable
 
 export interface Enemy {
   group: THREE.Group;
@@ -183,7 +181,6 @@ export interface Enemy {
   homeX?: number; // authored world position, so a respawn can undo a fling
   homeZ?: number; // (the patrol axis is re-derived from x0/x1 as before)
   homePosition?: THREE.Vector3; // immutable full spawn transform for every reset
-  homeRoute?: number; // cars reuse x0 as a live road-arc cursor; preserve its start
   // ---- typed foes ----
   kind: EnemyKind;
   state: string; // per-kind FSM state
@@ -688,7 +685,7 @@ export interface CustomComponent {
   collisionHeight?: number; // wall/wallpath: optional collider height when visual height differs
   slip?: boolean; // platform only: an icy/slick deck (friction cut, you can't stop short)
   edgeGrinding?: boolean; // solid surface boundary grind paths (default true; false = explicit opt-out)
-  trafficRoad?: boolean; // vertramp: this swept road owns the route followed by car enemies
+  trafficRoad?: boolean; // LEGACY only: removed by migration along with retired car enemies
   vertices?: number[];
   indices?: number[];
   normals?: number[];
@@ -1049,6 +1046,9 @@ function defaultGateFor(d: CustomLevelData): CustomComponent {
 // already-current level cannot keep rewriting it, while old organizational
 // metadata remains visible in the modern group outliner.
 export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
+  // Retired vehicles must not return through saved libraries or shared files.
+  // Leave the road geometry, groups and other enemies available for editing.
+  d.components = d.components.filter(c => c.t !== "enemy" || (c as { foe?: string }).foe !== "car");
   const ocean = d.ocean;
   if (ocean && ocean.geometryVersion !== 2) {
     // The first ocean format used clockwise yaw for straight coasts and
@@ -1063,6 +1063,7 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
     ocean.geometryVersion = 2;
   }
   d.components = d.components.map((c) => {
+    delete c.trafficRoad;
     if(c.t==='worldmap'&&c.pts?.length===11) {
       const prior=[[-63,18,0,1.35],[-44,18,0,1.75],[-26,18,0,2.1],[-44,-3,0,2.55],[-9,18,0,2.85],[23,16,0,1.35],[42,14,0,1.75],[61,14,0,2.4],[79,14,0,3.1],[-26,-3,0,2.85],[42,26,0,2.3]];
       if(c.pts.every((p,i)=>p.length===4&&p.every((v,j)=>v===prior[i][j])))return {...c,pts:worldMapComponentPoints()};
@@ -2688,9 +2689,9 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   const vertKinds = new Set(["quarter", "half"]);
   const kinds = VALID_CRATE_KINDS;
   const decorKinds = new Set(DECOR_KINDS);
-  const foes = new Set<EnemyKind>([
+  const foes = new Set<string>([
     "grunt", "spiker", "turtle", "charger", "hopper", "floater", "sentry",
-    "spinner", "car",
+    "spinner", ...(migrate ? ["car"] : []), // accepted only for legacy removal
   ]);
   const tricks = new Set<DeckTrickKind>(DECK_TRICKS.map((entry) => entry.kind));
   const directions = new Set(["E", "W", "N", "S"]);
@@ -2712,7 +2713,6 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   let polygonWork = 0;
   let wallScanWork = 0;
   let dynamicCount = 0;
-  let carCount = 0;
   let checkpointCount = 0;
   let crateCount = 0;
   let supportProbeCount = 0;
@@ -2833,10 +2833,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       // bindings per styled owner; the actual maps are shared once per Level.
       if (component.materialStyle === "unity-sand") aggregateSamples += 3;
     }
-    if (component.trafficRoad) {
-      if (component.t !== "vertramp" || singletonKinds.has("trafficRoad")) return null;
-      singletonKinds.add("trafficRoad");
-    }
+    if (component.trafficRoad !== undefined && (!migrate || component.t !== "vertramp")) return null;
     if (component.t === "worldmap" || component.t === "bonusplatform") {
       if (singletonKinds.has(component.t)) return null;
       singletonKinds.add(component.t);
@@ -2858,7 +2855,6 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     const dynamic = dynamicKinds.has(component.t) ||
       (component.t === "rail" && (component.amp ?? 0) > 0);
     if (dynamic && ++dynamicCount > 1024) return null;
-    if (component.t === "enemy" && component.foe === "car" && ++carCount > 128) return null;
     if (component.t === "checkpoint" && ++checkpointCount > 128) return null;
     if (["crate", "outline", "metal"].includes(component.t) && ++crateCount > 2048) return null;
     if (checkpointCount * crateCount > 250_000) return null;
@@ -4904,18 +4900,11 @@ export class Level {
   private snapshotHome(): void {
     for (const c of this.crates) c.homeY = c.mesh.position.y;
     for (const e of this.enemies) {
-      // Traffic is authored as a road-arc cursor rather than a world point.
-      // Materialise that cursor once before taking the immutable snapshot.
-      if (e.kind === "car") this.carStep(e, 0);
       e.homePosition = e.group.position.clone();
-      e.homeRoute = e.kind === "car" ? e.x0 : undefined;
-      if (e.kind !== "car") {
-        // The final built transform is the authority. Historical section
-        // shifts moved the group but forgot these parallel scalar fields;
-        // resetEnemyVisual then reapplied the stale Y/cross on first death.
-        e.baseY = e.group.position.y;
-        e.cross = e.axis === "z" ? e.group.position.x : e.group.position.z;
-      }
+      // Historical section shifts sometimes changed the group without these
+      // parallel fields. Reset from the final authored transform.
+      e.baseY = e.group.position.y;
+      e.cross = e.axis === "z" ? e.group.position.x : e.group.position.z;
       e.homeX = e.group.position.x;
       e.homeZ = e.group.position.z;
     }
@@ -5690,15 +5679,6 @@ export class Level {
       });
     }
     for (const e of this.enemies) {
-      if (e.kind === "car") {
-        const position = e.homePosition ?? e.group.position;
-        C.push({
-          t: "enemy", foe: "car", p: [position.x, position.y - (this.roadRibbon ? 0.08 : 0), position.z],
-          speed: e.speed,
-          color: `#${(e.body.material as THREE.MeshLambertMaterial).color.getHexString()}`,
-        });
-        continue;
-      }
       const range = r2(Math.abs((e.x1 - e.x0) / 2));
       const foe = e.kind !== "grunt" ? e.kind : undefined;
       C.push(
@@ -6878,10 +6858,6 @@ export class Level {
           } else if (c.t === "checkpoint") {
             this.checkpoint(c.p[1], c.p[2], c.p[0]);
           } else if (c.t === "enemy") {
-            if (c.foe === "car") {
-              this.buildTrafficCar(c);
-              return;
-            }
             const r = c.range ?? 5;
             const foe = (c.foe ?? "grunt") as EnemyKind;
             // yaw 90/270 turns the patrol onto the Z axis (the walk is
@@ -7053,7 +7029,7 @@ export class Level {
             this.buildBendyWall(c);
           } else if (c.t === "thorn") {
             const thorn = createProceduralThornCluster({
-              size: c.s ?? [2.14, 1.01, 2.26],
+              size: c.s,
               color: c.color,
               seed: c.seed,
             });
@@ -7870,8 +7846,6 @@ export class Level {
   // polyline; the tangent of the nearest segment is the local "down-course"
   // direction the camera and the controls steer along.
   private lanePts: { x: number; y: number; z: number }[] = [];
-  // The Descent's road spine, kept for the oncoming cars to drive along.
-  private roadRibbon: SlideRibbon | null = null;
   water: CoastWater | null = null; // the coast's procedural sea (main drives its update with the camera)
   private beachfrontReferenceDispose: (() => void) | null = null;
   private islandShoreFoam: IslandShoreFoam | null = null;
@@ -9082,8 +9056,7 @@ export class Level {
       e.flungT = undefined;
       e.flungVel = undefined;
       // Restore one immutable full spawn point. Reconstructing it from live
-      // patrol values was incomplete (Y was separate) and outright wrong for
-      // cars, whose x0 field advances as their road-arc cursor every frame.
+      // patrol values alone loses the authored height and cross-axis offset.
       if (e.homePosition) e.group.position.copy(e.homePosition);
       else {
         if (e.homeX !== undefined) e.group.position.x = e.homeX;
@@ -9091,9 +9064,7 @@ export class Level {
         if (e.axis === "z") e.group.position.z = (e.x0 + e.x1) / 2;
         else e.group.position.x = (e.x0 + e.x1) / 2;
       }
-      if (e.homeRoute !== undefined) e.x0 = e.homeRoute;
       this.resetEnemyVisual(e); // pose + FSM back to start (handles y/rotation/scale)
-      if (e.kind === "car") this.carStep(e, 0); // restore road height + facing too
       e.box.makeEmpty();
     }
     this.clearProjectiles();
@@ -9242,7 +9213,7 @@ export class Level {
   // long, very curvy, mainly downhill with flats, gentle rises and a few
   // outright -20%+ dives, hemmed by tall hillsides and roadside pines that
   // hide and reveal the course, metal barriers down both edges, and far
-  // snow ranges over the valley. Oncoming cars run the left lane.
+  // snow ranges over the valley.
   //
   // Construction notes, learned the hard way:
   //  - the road is one slideRibbon spline with lip=false: a FLAT deck edge
@@ -9616,8 +9587,7 @@ export class Level {
       rollDeg.push(THREE.MathUtils.clamp(kappa * 620, -13, 13));
     }
     const groundBefore = this.groundMeshes.length;
-    const road = this.slideRibbon(pts, W, 0x565b61, rollDeg, 0, "asphalt", false, true);
-    this.roadRibbon = road;
+    const road = this.slideRibbon(pts, W, 0x565b61, rollDeg, 0, "asphalt", false, false);
     // THE LAG FIX. The ribbon arrives as ONE ~50k-triangle mesh, and three's
     // raycaster has no BVH: every ground ray brute-forced the whole 2.4km of
     // deck every frame (44.7ms a step, measured). Split its index by triangle
@@ -10015,90 +9985,9 @@ export class Level {
       this.capturedSceneryMeshes.push(isle);
     }
 
-    // ---- oncoming traffic -------------------------------------------------
-    const carCols = [0xb03a2e, 0x3a62b0, 0xd8c090, 0x4a8a4a, 0x8a4a8a, 0xc07838];
-    // Base traffic holds the left lane; three OVERTAKERS run head-on in the
-    // player's own lane, faster, each closing on a slower partner ahead of
-    // it — the pass plays out right in front of you and YOUR lane is the
-    // one that is briefly not yours.
-    // Cars build ~70% OVERSIZED (1.3 twice), baked into the geometry — group
-    // scale would not survive resetEnemyVisual, which snaps every foe back to
-    // scale 1. The enemy box in updateEnemies ("car" case) matches this factor.
-    const CAR_S = 1.69;
-    const makeCar = (col: number): { group: THREE.Group; body: THREE.Mesh } => {
-      const group = new THREE.Group();
-      const body = new THREE.Mesh(
-        new THREE.BoxGeometry(2.1 * CAR_S, 0.75 * CAR_S, 4.2 * CAR_S),
-        new THREE.MeshLambertMaterial({ color: col }),
-      );
-      body.position.y = 0.75 * CAR_S;
-      group.add(body);
-      const cabin = new THREE.Mesh(
-        new THREE.BoxGeometry(1.7 * CAR_S, 0.62 * CAR_S, 2.0 * CAR_S),
-        new THREE.MeshLambertMaterial({ color: 0xcfe0ea }),
-      );
-      cabin.position.set(0, 1.35 * CAR_S, 0.25 * CAR_S);
-      group.add(cabin);
-      const wheelMat = new THREE.MeshLambertMaterial({ color: 0x1c1c20 });
-      for (const [wx, wz] of [[-1, -1.35], [1, -1.35], [-1, 1.35], [1, 1.35]] as const) {
-        const wheel = new THREE.Mesh(
-          new THREE.BoxGeometry(0.34 * CAR_S, 0.62 * CAR_S, 0.62 * CAR_S),
-          wheelMat,
-        );
-        wheel.position.set(wx * 1.02 * CAR_S, 0.31 * CAR_S, wz * CAR_S);
-        group.add(wheel);
-      }
-      const lampMat = new THREE.MeshLambertMaterial({
-        color: 0xfff4c0,
-        emissive: 0x8a7a30,
-      });
-      for (const lx of [-0.6, 0.6]) {
-        const lamp = new THREE.Mesh(
-          new THREE.BoxGeometry(0.4 * CAR_S, 0.22 * CAR_S, 0.1 * CAR_S),
-          lampMat,
-        );
-        lamp.position.set(lx * CAR_S, 0.82 * CAR_S, -2.12 * CAR_S);
-        group.add(lamp);
-      }
-      return { group, body };
-    };
-    const traffic: { s0: number; lane: number; speed: number }[] = [];
-    for (let i = 0; i < 8; i++)
-      traffic.push({ s0: 280 + i * 280, lane: -5.6, speed: 9.5 + (i % 3) * 1.6 });
-    for (const os of [700, 1400, 2050]) traffic.push({ s0: os + 16, lane: 5.6, speed: 14.5 });
-    for (let i = 0; i < traffic.length; i++) {
-      const { group, body } = makeCar(carCols[i % carCols.length]);
-      this.root.add(group);
-      this.enemies.push({
-        group,
-        box: new THREE.Box3(),
-        alive: true,
-        x0: traffic[i].s0,
-        x1: 0,
-        dir: 1,
-        speed: traffic[i].speed,
-        axis: "z",
-        kind: "car",
-        state: "drive",
-        stateT: 0,
-        baseY: 0,
-        cross: traffic[i].lane,
-        body,
-        vy: 0,
-        spinKill: false,
-        stompKill: false,
-        meleeKill: false,
-        touchHurt: true,
-        spinRecoil: false,
-      });
-    }
-
     // ---- road furniture: crates, nitros, oil slicks ----------------------
-    // Everything smashable or lethal lives on the strips traffic never uses
-    // (the lanes run at cross ±5.6): the centre line and the two shoulders.
-    // Wood crates are the fun — a smash-speed roll pops straight through —
-    // and every nitro is avoidable on purpose: green means DON'T, and it is
-    // never parked where dodging a car would push you into one.
+    // Crates and nitros sit on the centre line and shoulders, leaving clear
+    // routes along both sides of the downhill road.
     const put = (
       t: number,
       cross: number,
@@ -10134,8 +10023,6 @@ export class Level {
     put(0.9, -8.4);
     put(0.925, -0.6); put(0.925, 0.6);
     // nitros: landmines with lots of warning, all on the safe strips
-    // shoulder nitros sit at |cross| >= 9.1: the 1.69x car box reaches out to
-    // cross 7.9, and a shoulder dodge past a car must still clear the mine
     put(0.07, 1.8, "nitro");
     put(0.11, -1.5, "nitro");
     put(0.145, 9.2, "nitro");
@@ -10152,8 +10039,7 @@ export class Level {
     put(0.885, 9.1, "nitro");
     // oil slicks: dark rainbow-sheen blobs smeared down the tarmac — ride one
     // and the wheels go greasy (steering and brakes cut, see the slippy
-    // handling player-side). Some sit in the traffic lanes: dodging a car
-    // through an oil patch is the intended chaos.
+    // handling player-side). Their positions leave room to steer around them.
     const oilMat = new THREE.MeshLambertMaterial({
       color: 0x0d0f13,
       emissive: 0x14202a, // cold blue-teal sheen: wet oil, not purple carpet
@@ -10212,7 +10098,7 @@ export class Level {
 
     // ---- THE ARRIVAL: the beach car park ---------------------------------
     // The road empties onto a tarmac apron by the sand: painted bays, a kerb
-    // wall on the sea side, parked cars, palms — and the warp pad waiting at
+    // wall on the sea side, palms — and the warp pad waiting at
     // the entrance.
     const end = F(0.997, 0, 0);
     const back = F(0.985, 0, 0);
@@ -10264,16 +10150,8 @@ export class Level {
         yawQ,
         new THREE.Vector3(1, 1, 1),
       ));
-    // parked cars nosed into the bays (plain scenery, nobody home)
-    // slot 3.6 (not 3.5): at 1.69x a 3.55m-wide car needs more than one bay
-    // of spacing from its 2.5 neighbour or the two would clip
-    for (const [slot, ci] of [[-3.5, 1], [-1.5, 4], [0.5, 2], [2.5, 5], [3.6, 0]] as const) {
-      const { group } = makeCar(carCols[ci]);
-      const p = lotAt(slot * 3.4 + 1.7, 14);
-      group.position.set(p.x, lotTop, p.z);
-      group.rotation.y = yawEnd + (rnd() - 0.5) * 0.12;
-      this.root.add(group);
-    }
+    // Preserve the later shoreline scenery's seeded layout.
+    for (let i = 0; i < 5; i++) rnd();
     // ---- THE BEACH, expanded -------------------------------------------
     // A ~190m crescent of sand built from the same shoreline spline the
     // water system runs on, so the swash, wet sand and moving waterline all
@@ -14455,11 +14333,6 @@ export class Level {
     // ---- swept mesh: any path, any bank, any arc ----
     const spine = vertRampSpine(c);
     if (spine.length < 2) return null;
-    if (c.trafficRoad) {
-      const path = vertRampPath(spine, closed);
-      this.roadRibbon = { len: path.len, width: 2 * (F + R), path,
-        frame: (t, off, h) => path.frame(t, -off, h) };
-    }
     const vr = buildVertRampGeometry(spine, {
       radius: R,
       flatHalf: F,
@@ -17829,73 +17702,6 @@ export class Level {
   // Patrols a0..a1 along `axis` at the given cross coordinate (the Enemy
   // struct's x0/x1 are axis-generic bounds — see its comment). `kind` picks
   // the foe's look, movement pattern, and which attacks defeat it.
-  private trafficCarGroup(color: number): { group: THREE.Group; body: THREE.Mesh } {
-    const scale = 1.69;
-    const group = new THREE.Group();
-    const body = new THREE.Mesh(new THREE.BoxGeometry(2.1 * scale, 0.75 * scale, 4.2 * scale),
-      new THREE.MeshLambertMaterial({ color }));
-    body.position.y = 0.75 * scale;
-    group.add(body);
-    const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.7 * scale, 0.62 * scale, 2 * scale),
-      new THREE.MeshLambertMaterial({ color: 0xcfe0ea }));
-    cabin.position.set(0, 1.35 * scale, 0.25 * scale);
-    group.add(cabin);
-    const wheelMaterial = new THREE.MeshLambertMaterial({ color: 0x1c1c20 });
-    for (const [x, z] of [[-1, -1.35], [1, -1.35], [-1, 1.35], [1, 1.35]]) {
-      const wheel = new THREE.Mesh(new THREE.BoxGeometry(0.34 * scale, 0.62 * scale, 0.62 * scale), wheelMaterial);
-      wheel.position.set(x * 1.02 * scale, 0.31 * scale, z * scale);
-      group.add(wheel);
-    }
-    const lightMaterial = new THREE.MeshLambertMaterial({ color: 0xfff4c0, emissive: 0x8a7a30 });
-    for (const x of [-0.6, 0.6]) {
-      const lamp = new THREE.Mesh(new THREE.BoxGeometry(0.4 * scale, 0.22 * scale, 0.1 * scale), lightMaterial);
-      lamp.position.set(x * scale, 0.82 * scale, -2.12 * scale);
-      group.add(lamp);
-    }
-    return { group, body };
-  }
-
-  private buildTrafficCar(c: CustomComponent): void {
-    const { group, body } = this.trafficCarGroup(c.color ? new THREE.Color(c.color).getHex() : 0xb03a2e);
-    group.position.set(...c.p);
-    this.root.add(group);
-    const axis = Math.abs(Math.sin(THREE.MathUtils.degToRad(c.yaw ?? 0))) > 0.5 ? "x" : "z";
-    let route = c.p[axis === "x" ? 0 : 2] - (c.range ?? 12);
-    let lane = c.p[axis === "x" ? 2 : 0];
-    const road = this.roadRibbon;
-    const path = road?.path;
-    if (road && path) {
-      const target = new THREE.Vector3(...c.p);
-      let bestDistance = Infinity;
-      let distance = 0;
-      for (let index = 1; index < path.spine.length; index++) {
-        const a = path.spine[index - 1], b = path.spine[index];
-        const start = new THREE.Vector3(a.x, a.y, a.z);
-        const delta = new THREE.Vector3(b.x - a.x, b.y - a.y, b.z - a.z);
-        const length = delta.length();
-        if (length < 1e-6) continue;
-        const fraction = THREE.MathUtils.clamp(target.clone().sub(start).dot(delta) / (length * length), 0, 1);
-        const candidate = distance + fraction * length;
-        const center = start.addScaledVector(delta, fraction);
-        const score = center.distanceToSquared(target);
-        if (score < bestDistance) {
-          bestDistance = score;
-          route = candidate;
-        }
-        distance += length;
-      }
-      const center = road.frame(route / road.len, 0, 0);
-      const right = road.frame(route / road.len, 1, 0).sub(center);
-      lane = target.clone().sub(center).dot(right) / Math.max(1e-8, right.lengthSq());
-    }
-    this.enemies.push({ group, body, box: new THREE.Box3(), alive: true,
-      x0: route, x1: road ? 0 : c.p[axis === "x" ? 0 : 2] + (c.range ?? 12),
-      dir: 1, speed: c.speed ?? 10, axis, kind: "car", state: "drive", stateT: 0,
-      baseY: c.p[1], cross: lane, vy: 0,
-      spinKill: false, stompKill: false, meleeKill: false, touchHurt: true, spinRecoil: false,
-    });
-  }
-
   private enemy(
     a0: number,
     a1: number,
@@ -18014,30 +17820,6 @@ export class Level {
 
   // Drive every foe's FSM + movement, and publish the per-frame combat flags
   // (spinKill/stompKill/meleeKill/touchHurt/spinRecoil) the player reads.
-  // ONCOMING TRAFFIC. A car owns an arc position (x0, in units) on the road
-  // ribbon and drives UP-course — toward the player — in the left lane
-  // (cross holds the lane offset). Off the far end it wraps back downhill,
-  // so the supply of traffic never runs out.
-  private carStep(e: Enemy, dt: number): void {
-    const r = this.roadRibbon;
-    if (!r) {
-      this.patrolStep(e, dt);
-      return;
-    }
-    e.x0 -= e.speed * dt;
-    const start = Math.min(40, r.len * 0.1);
-    const end = r.len - Math.min(50, r.len * 0.1);
-    const span = Math.max(0.01, end - start);
-    if (e.x0 < start || e.x0 > end)
-      e.x0 = start + ((e.x0 - start) % span + span) % span;
-    const t = e.x0 / r.len;
-    const p = r.frame(t, e.cross, 0);
-    const q = r.frame(Math.max(0, (e.x0 - 4) / r.len), e.cross, 0);
-    e.group.position.set(p.x, p.y + 0.08, p.z);
-    CAR_AIM.set(q.x, q.y + 0.08, q.z);
-    e.group.lookAt(CAR_AIM);
-  }
-
   private updateEnemies(dt: number): void {
     for (const e of this.enemies) {
       if (!e.alive) continue;
@@ -18087,19 +17869,6 @@ export class Level {
           this.spinnerStep(e, dt);
           boxW = e.state === "out" ? 2.1 : 0.8;
           cy = 0.55;
-          break;
-        case "car":
-          this.carStep(e, dt);
-          // a car is a car: nothing kills it, everything about it hurts —
-          // except the roof (player.ts skims a top touch off with a pop).
-          // Dims match CAR_S in buildDescent's makeCar (30% oversized).
-          e.spinKill = false;
-          e.stompKill = false;
-          e.meleeKill = false;
-          e.touchHurt = true;
-          boxW = 2.7 * 1.69;
-          boxH = 1.5 * 1.69;
-          cy = 0.75 * 1.69;
           break;
       }
       e.box.setFromCenterAndSize(
@@ -19050,7 +18819,7 @@ export class Level {
     bank = 42, // auto-lean gain: how hard the deck rolls into its own turns
     tex = "stone", // surface texture kind — The Descent runs on asphalt
     lip = true, // slide gutters at the edges; false = a flat ROAD deck
-    trafficRoad = false,
+    edgeGrinding = true,
   ): SlideRibbon {
     const r2v = (n: number): number => Math.round(n * 100) / 100;
     const o = pts[0];
@@ -19077,7 +18846,7 @@ export class Level {
       vert: false, // a banked ROAD, not a trough — no pumping, no auto-copings
       color: "#" + color.toString(16).padStart(6, "0"),
       tex,
-      ...(trafficRoad ? { trafficRoad: true, edgeGrinding: false } : {}),
+      ...(!edgeGrinding ? { edgeGrinding: false } : {}),
     };
     const spine = this.buildVertRamp(comp);
     const path = vertRampPath(spine ?? [], false);

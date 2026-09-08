@@ -1,5 +1,8 @@
 import * as THREE from "three";
 
+export const THORN_DEFAULT_SIZE: readonly [number, number, number] = Object.freeze([2.14, 1.01, 2.26]);
+export const THORN_DEFAULT_COLOR = "#62ff29";
+
 export interface ProceduralThornOptions {
   size?: readonly [number, number, number];
   color?: string;
@@ -38,13 +41,13 @@ function orientY(object: THREE.Object3D, direction: THREE.Vector3): void {
 export function createProceduralThornCluster(
   options: ProceduralThornOptions = {},
 ): ProceduralThornCluster {
-  const size = options.size ?? [2.14, 1.01, 2.26];
+  const size = options.size ?? THORN_DEFAULT_SIZE;
   const random = seeded(options.seed ?? 0x7a0b_2026);
   const group = new THREE.Group();
   group.name = "procedural glowing thorn cluster";
   group.userData.noShadow = true;
 
-  const glowColor = new THREE.Color(options.color ?? "#62ff29");
+  const glowColor = new THREE.Color(options.color ?? THORN_DEFAULT_COLOR);
   const darkColor = glowColor.clone().multiplyScalar(0.12);
   const core = new THREE.MeshStandardMaterial({
     color: darkColor,
