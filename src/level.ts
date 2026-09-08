@@ -705,6 +705,7 @@ export interface CustomComponent {
   travelPhase?: number; // ropeswing: independent anchor cycle phase; absent follows phase for legacy files
   vkind?: "quarter" | "half"; // vertramp: one wall, or two facing each other with a flat between
   arc?: number; // vertramp: degrees round the transition (90 = vertical lip, ~60 = a crestable bowl wall)
+  lipRise?: number; // vertramp: straight vertical section above the curved transition
   deck?: number; // vertramp: flat platform past the lip, with a skirt to the floor (0 = bare coping)
   closed?: boolean; // vertramp: loop the spine end to end — a rounded-rect path becomes a pool
   bank?: number; // vertramp: auto-lean into turns, in world units of curvature gain (0 = never lean)
@@ -935,7 +936,7 @@ export interface CustomLevelData {
   name: string;
   spawn: [number, number, number];
   killY: number;
-  /** Continuous park: rider-relative skating/chase camera, no course finish or run-mode pickups. */
+  /** Continuous park: always-mounted rider-relative skating/chase camera, no course finish or run-mode pickups. */
   skatepark?: boolean;
   /** Bonus stages opt into their distinct persistent collection HUD. */
   hudMode?: "bonus" | "hub";
@@ -1387,6 +1388,7 @@ export interface VertRampOpts {
   deck?: number; // flat deck past the lip (0 = bare coping edge)
   closed?: boolean; // loop the spine end-to-end
   arcSteps?: number;
+  lipRise?: number;
 }
 export interface VertRampResult {
   geometry: THREE.BufferGeometry;
@@ -1521,7 +1523,9 @@ export function buildVertRampGeometry(
     THREE.MathUtils.clamp(o.arcDeg ?? 90, 5, 90),
   );
   const lipLat = flatHalf + radius * Math.sin(arcRad);
-  const lipY = radius * (1 - Math.cos(arcRad));
+  const arcY = radius * (1 - Math.cos(arcRad));
+  const lipRise = Math.max(0, Math.min(8, o.lipRise ?? 0));
+  const lipY = arcY + lipRise;
 
   // Half the cross-section, centre outward: transition arc, then deck + skirt.
   const half: { lat: number; y: number }[] = [];
@@ -1532,6 +1536,7 @@ export function buildVertRampGeometry(
       y: radius * (1 - Math.cos(phi)),
     });
   }
+  if (lipRise > 0) half.push({ lat: lipLat, y: lipY });
   const lipK = half.length - 1; // the coping, within `half`
   if (deck > 0) {
     half.push({ lat: lipLat + deck, y: lipY }); // deck out to its edge
@@ -2382,7 +2387,7 @@ const LEVEL_DATA_KEYS = new Set([
 const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "containment",
   "edgeGrinding", "cameraView", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "deck",
-  "closed", "bank", "curve", "vert", "shake", "kind", "dkind", "vr", "tn",
+  "closed", "bank", "curve", "vert", "lipRise", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid",
   "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "spacing",
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
@@ -2588,7 +2593,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   )
     return null;
   const numericKeys: (keyof CustomComponent)[] = [
-    "len", "rise", "w", "yaw", "arc", "deck", "bank", "shake", "range",
+    "len", "rise", "w", "yaw", "arc", "deck", "lipRise", "bank", "shake", "range",
     "speed", "cycle", "phase", "travelPhase", "amp", "seed", "n", "vr", "tn", "spacing",
     "baySpacing", "supportDepth", "exitYaw", "coverage", "radius",
     "collisionHeight", "supportBaseY", "shoreSeaLevel", "shorePhase",
@@ -2872,6 +2877,8 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
         aggregateSamples += 10_000;
       }
     }
+    if (component.lipRise !== undefined &&
+        (component.t !== 'vertramp' || component.lipRise < 0 || component.lipRise > 8)) return null;
     const dynamic = dynamicKinds.has(component.t) ||
       (component.t === "rail" && (component.amp ?? 0) > 0);
     if (dynamic && ++dynamicCount > 1024) return null;
@@ -14313,6 +14320,7 @@ export class Level {
     const vkind = c.vkind ?? "quarter";
     const arc = THREE.MathUtils.clamp(c.arc ?? 90, 5, 90);
     const deck = Math.max(0, c.deck ?? 0);
+    const lipRise = Math.max(0, Math.min(8, c.lipRise ?? 0));
     const closed = c.closed === true;
     const yawQ = (((c.yaw ?? 0) % 360) + 360) % 360;
     const straight = !c.pts || c.pts.length < 2;
@@ -14329,6 +14337,7 @@ export class Level {
       vkind === "half" &&
       arc === 90 &&
       deck === 0 &&
+      lipRise === 0 &&
       yawQ % 90 === 0
     ) {
       // ---- analytic backing: full lip-trick / pendulum / transfer physics ----
@@ -14379,6 +14388,7 @@ export class Level {
       deck,
       closed,
       arcSteps: this.skatepark ? 24 : 8,
+      lipRise,
     });
     const mesh = new THREE.Mesh(vr.geometry, mat);
     mesh.name = c.vert === false ? "slide deck" : "vertramp";

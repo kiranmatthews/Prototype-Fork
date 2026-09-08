@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import * as THREE from "three";
+import ts from "typescript";
 import { createServer } from "vite";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
@@ -286,10 +287,27 @@ try {
   assert.ok(Math.abs(touchdown.pos.z - level.movers[3].mesh.position.z) < 2.25);
 
   const main = await readFile(`${root}src/main.ts`, "utf8");
-  assert.match(
-    main,
-    /level\.update\(CONST\.fixedStep\);[\s\S]{0,600}player\.commitRenderStep\(level\)/,
-  );
+  // Check statement order inside the actual fixed-step loop. A character
+  // count between calls makes an unrelated comment break this invariant.
+  const ast = ts.createSourceFile('main.ts', main, ts.ScriptTarget.Latest, true);
+  let fixedLoopChecked = false;
+  const inspect = node => {
+    if (ts.isWhileStatement(node) && ts.isBlock(node.statement)) {
+      const calls = node.statement.statements
+        .filter(n => ts.isExpressionStatement(n) && ts.isCallExpression(n.expression))
+        .map(n => n.expression.expression.getText(ast));
+      const update = calls.indexOf('level.update');
+      if (update >= 0) {
+        const commit = calls.indexOf('player.commitRenderStep');
+        assert.ok(commit > update, 'publish the render pose after updating the level');
+        assert.ok(calls.indexOf('input.consumeEdges') > commit, 'publish before consuming the tick');
+        fixedLoopChecked = true;
+      }
+    }
+    ts.forEachChild(node, inspect);
+  };
+  inspect(ast);
+  assert.equal(fixedLoopChecked, true, 'fixed simulation loop was not inspected');
   assert.match(main, /p2\.commitRenderStep\(level\)/);
   const playerSource = await readFile(`${root}src/player.ts`, "utf8");
   assert.doesNotMatch(

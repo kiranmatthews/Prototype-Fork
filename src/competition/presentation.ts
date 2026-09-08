@@ -71,7 +71,7 @@ export class CompetitionPresentation {
     this.event=event;this.element.hidden=!event||suppressed;
     document.body.classList.toggle('competition-active',!!event);
     if(!event)return;
-    const key=[event.phase,event.runs.length,Math.ceil(event.remaining),Math.ceil(event.countdown),event.revealedJudges,event.bails,event.liveScore,event.cupAwarded].join(':');
+    const key=[event.phase,event.runs.length,Math.ceil(event.remaining),Math.ceil(event.countdown),event.revealedJudges,event.bails,event.liveScore,event.cupAwarded,event.overtime].join(':');
     if(key===this.key)return;this.key=key;
     this.element.classList.toggle('is-running',event.phase==='running');
     this.element.setAttribute('role',event.phase==='running'?'status':'dialog');
@@ -83,11 +83,11 @@ export class CompetitionPresentation {
     const reveals: {id:string;score:number}[]=[];
     if(event.phase==='running') {
       const seconds=Math.ceil(event.remaining);
-      html=`<div class="comp-run-hud${seconds<=10?' urgent':''}"><span>RUN ${event.runNumber}/3</span><strong>${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}</strong><span>${event.liveScore.toLocaleString()} PTS<small>${event.bails} BAIL${event.bails===1?'':'S'}</small></span></div>`;
+      html=`<div class="comp-run-hud${seconds<=10?' urgent':''}${event.overtime?' overtime':''}"><span>RUN ${event.runNumber}/3${event.overtime?'<small>FINAL COMBO</small>':''}</span><strong>${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}</strong><span>${event.liveScore.toLocaleString()} PTS<small>${event.bails} BAIL${event.bails===1?'':'S'}</small></span></div>`;
     } else if(event.phase==='countdown') {
       html=`<div class="comp-countdown"><span>RUN ${event.runNumber} / 3</span><strong>${Math.max(1,Math.ceil(event.countdown))}</strong><p>MAKE IT COUNT</p></div>`;
     } else if(event.phase==='intro') {
-      html=`<section class="comp-card comp-intro">${header}<div class="comp-intro-body"><div class="comp-cup">${CUP_TROPHY_SVG}</div><div><h2>BEAT YOUR RIVAL. TAKE THE CUP.</h2><div class="comp-rules"><b>3 RUNS</b><b>60 SECONDS EACH</b><b>BEST 2 COUNT</b></div><p>Link grinds, airs and manuals through the temple park. Land your combos before the buzzer. Every bail costs judge points.</p><p>Only <strong>1st overall</strong> wins the Jungle Cup.</p></div></div><div class="comp-actions">${button('START RUN 1','start')}${button('RETURN TO MAP','exit')}</div></section>`;
+      html=`<section class="comp-card comp-intro">${header}<div class="comp-intro-body"><div class="comp-cup">${CUP_TROPHY_SVG}</div><div><h2>BEAT YOUR RIVAL. TAKE THE CUP.</h2><div class="comp-rules"><b>3 RUNS</b><b>60 SECONDS EACH</b><b>BEST 2 COUNT</b></div><p>Link grinds, airs and manuals through the temple park. Your board returns automatically after a bail. The clock holds at 0:00 until your final combo lands or breaks. Every bail costs judge points.</p><p>Only <strong>1st overall</strong> wins the Jungle Cup.</p></div></div><div class="comp-actions">${button('START RUN 1','start')}${button('RETURN TO MAP','exit')}</div></section>`;
     } else if(event.phase==='judges') {
       const run=event.runs[event.runs.length-1]!, all=event.revealedJudges===3;
       if(this.revealRun!==event.runs.length){this.revealRun=event.runs.length;this.revealed=0;}
@@ -106,8 +106,8 @@ export class CompetitionPresentation {
     if(event.phase==='intro') {
       const body=this.element.querySelector('.comp-intro-body>div:last-child');
       if(body) for(const text of [
-        '{left} / {right} steer · {up} push · {down} brake',
-        'Hold {jump} to pump. Release to ollie. {grind} grinds.',
+        '{left} / {right} steer · {down} brake · {up} transfers over vert',
+        'Hold {jump} to crouch and accelerate; release to ollie. {grind} grinds.',
       ]) {
         const row=document.createElement('p');row.className='comp-controls';
         setPromptText(row,text);body.appendChild(row);

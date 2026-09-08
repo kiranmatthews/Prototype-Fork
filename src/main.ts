@@ -79,7 +79,7 @@ import {
 } from "./cameraSpeedEffect";
 import { CameraLookOffset } from "./cameraLook";
 import { cameraRigFraming, setCameraRigAim } from "./cameraRig";
-import { SkateChaseCamera } from "./skateChaseCamera";
+import { SkateChaseCamera, SKATE_CAMERA } from "./skateChaseCamera";
 import { sfx } from "./audio";
 import { Recorder, Replayer, ReplayFile, camYawOf, isReplayFile } from "./replay";
 import { Editor } from "./editor";
@@ -3772,9 +3772,14 @@ ui.onToggleEndlessDeaths = () => {
     2200,
   );
 };
-player.onComboBank = (amount, labels) => ui.comboBank(amount, labels);
-player.onComboBail = (labels, points, multiplier) =>
+player.onComboBank = (amount, labels) => {
+  competition?.comboResolved();
+  ui.comboBank(amount, labels);
+};
+player.onComboBail = (labels, points, multiplier) => {
+  competition?.comboResolved();
   ui.comboBail(labels, points, multiplier);
+};
 // Debug cheat: clicking the HUD face banks an extra life.
 ui.onLifeCheat = () => {
   if (!shellBypass || player.endlessDeaths) return;
@@ -4002,7 +4007,7 @@ function updateCamera(dt: number): void {
     camSpeedFovBoost = stepSpeedSkateFov(camSpeedFovBoost,
       speedSkateFovTarget(speed, speed > 0, TUNING.cruiseSpeed, TUNING.maxSpeed, TUNING.camSpeedFovBoost),
       dt, snapped);
-    camera.fov = TUNING.camFov + 7 + camSpeedFovBoost;
+    camera.fov = level.skatepark ? SKATE_CAMERA.verticalFov : TUNING.camFov + 7 + camSpeedFovBoost;
     camera.updateProjectionMatrix();
     skateChaseCamera.update(camera, {
       position: subject, heading: player.skateCameraHeading,
@@ -4563,9 +4568,9 @@ function frame(nowMs: number): void {
       stepPvp(CONST.fixedStep);
     }
     level.update(CONST.fixedStep);
-    const runScore = competition && competition.remaining <= CONST.fixedStep + 1e-7
-      ? player.competitionScoreAtBuzzer() : player.points;
-    if (competition?.stepRun(CONST.fixedStep, runScore)) {
+    // The buzzer never forces a bank. Keep the same live combo at 0:00 until
+    // its ordinary cash-in or loss; the terminal tick includes its final score.
+    if (competition?.stepRun(CONST.fixedStep, player.points, player.competitionComboActive)) {
       commitCompetitionVictory();
       ui.deathFade(false);
       player.collapseRenderInterpolation();

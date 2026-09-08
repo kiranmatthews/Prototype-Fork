@@ -40,7 +40,7 @@ platform('Continuous park foundation', [0, -2, -46], [120, 4, 172], '#8d9a7a');
 add({
   t: 'vertramp', nm: 'Jade perimeter bowl', p: [0, 0, -46],
   pts: roundedRing(12),
-  closed: true, vkind: 'quarter', w: 0.5, rise: 6, arc: 90, deck: 5,
+  closed: true, vkind: 'quarter', w: 0.5, rise: 3.6, arc: 90, lipRise: 0.8, deck: 7.4,
   color: jade, tex: 'jungle',
 });
 // The barrier is OUTSIDE the deck, with the full foundation beneath it.
@@ -48,7 +48,7 @@ add({
 add({
   t: 'wallpath', nm: 'Outer deck parapet', p: [0, -6, -46],
   pts: roundedRing(24.5),
-  closed: true, w: 1.5, rise: 13.2, collisionHeight: 44,
+  closed: true, w: 1.5, rise: 11.6, collisionHeight: 44,
   containment: true, color: '#72866d', tex: 'moss',
 });
 // Wide, four-way funbox: every main approach has a bank and a landing apron.
@@ -76,7 +76,7 @@ for (const z of [46, -138]) for (const x of [-44, -22, 0, 22, 44]) {
   add({ t: 'decor', dkind: 'junglecliff', p: [x, -7, z + (z > 0 ? 10 : -10)], s: [25, 28, 16], yaw: 5 });
 }
 for (const x of [-56, 56]) for (const z of [-16, -76])
-  add({ t: 'torch', nm: 'Deck brazier', p: [x, 6, z], rise: 2.3, w: 0.7 });
+  add({ t: 'torch', nm: 'Deck brazier', p: [x, 4.4, z], rise: 2.3, w: 0.7 });
 
 export const JUNGLE_CUP_LEVEL: CustomLevelData = {
   v: 1, name: 'Jungle Cup', spawn: [0, 0.1, 14], killY: -18,

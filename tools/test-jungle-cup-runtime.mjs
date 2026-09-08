@@ -13,8 +13,12 @@ await withSkateRuntime(async ({ THREE, server, level, player, step, Level }) => 
     near(ground(-14,-31-i*.5),2.4*i/16,'continuous funbox approach');
     near(ground(0,-76-i*.4375),1.8*i/16,'continuous transfer approach');
   }
-  for(const [x,z] of [[28,-116.5-6*Math.SQRT1_2],[0,24.5+6*Math.SQRT1_2],[-45.5-6*Math.SQRT1_2,-42],[45.5+6*Math.SQRT1_2,-42]])
-    near(ground(x,z),6*(1-Math.SQRT1_2),'perimeter transition');
+  for(const [x,z] of [[28,-116.5-3.6*Math.SQRT1_2],[0,24.5+3.6*Math.SQRT1_2],[-45.5-3.6*Math.SQRT1_2,-42],[45.5+3.6*Math.SQRT1_2,-42]])
+    near(ground(x,z),3.6*(1-Math.SQRT1_2),'perimeter transition');
+  near(ground(0,31),4.4,'lip/deck height');
+  const faceRay=new THREE.Raycaster(new THREE.Vector3(0,4.1,27),new THREE.Vector3(0,0,1),0,3);
+  const lip=faceRay.intersectObjects(level.groundMeshes,false)[0];
+  assert.ok(lip&&lip.face.normal.y===0,'missing the actual vertical top section');
   // Dense coverage of the accessible flat: no voids between composed pieces.
   for(let x=-42;x<=42;x+=3)for(let z=-112;z<=20;z+=3)
     assert.ok(ground(x,z)>=-.001,`unsupported park floor at ${x},${z}`);
@@ -33,9 +37,11 @@ await withSkateRuntime(async ({ THREE, server, level, player, step, Level }) => 
   const neutral=makeInput();for(let i=0;i<180&&player.state==='dead';i++)step(neutral);
   assert.equal(player.state,'ride');assert.equal(player.points,1234);assert.equal(player.lives,8);
   player.comboPoints=120;player.comboMult=3;player.comboHasTrick=true;
-  assert.equal(player.competitionScoreAtBuzzer(),1594,'landed buzzer combo missing');
-  player.comboPoints=120;player.comboMult=3;player.grounded=false;player.state='air';
-  assert.equal(player.competitionScoreAtBuzzer(),1594,'unlanded buzzer combo awarded');
+  assert.equal(player.competitionComboActive,true,'landed link window must remain live at the buzzer');
+  assert.equal(player.points,1234,'buzzer query forced a bank');
+  player.grounded=false;player.state='air';
+  assert.equal(player.competitionComboActive,true,'airborne combo must extend the run');
+  assert.equal(player.points,1234,'unlanded combo was awarded early');
   // The safety shell reaches BELOW deck height, including a thrown rider.
   for(const y of [.1,6.1,16]){
     place(55,y,-42,[1,0,0]);player.speed=32;
@@ -53,6 +59,8 @@ await withSkateRuntime(async ({ THREE, server, level, player, step, Level }) => 
   assert.equal(data.skatepark,true);
   assert.ok(!data.components.some(c=>['gate','checkpoint','crate','clock','comboorb'].includes(c.t)||c.dkind==='junglecup'));
   const roundtrip=parseCustomLevelJson(JSON.stringify(data));assert.ok(roundtrip);
+  assert.equal(roundtrip.components.find(c=>c.t==='vertramp').lipRise,.8);
+  assert.equal(parseCustomLevelJson(JSON.stringify({...data,components:[{t:'vertramp',p:[0,0,0],lipRise:-1}]})),null);
   assert.ok(!roundtrip.components.some(c=>['gate','clock','comboorb'].includes(c.t)),'migration resurrected course furniture');
   const rebuilt=new Level(new THREE.Scene(),{id:'practice-park',name:data.name,data:roundtrip});
   assert.equal(rebuilt.skatepark,true);assert.ok(rebuilt.finishGlow.isEmpty());assert.equal(rebuilt.clockPickup,null);rebuilt.dispose();

@@ -4084,6 +4084,7 @@ export class Editor {
         if (!c.pts && c.len != null) c.len = Math.max(4, c.len * sLocZ);
         if (c.w != null) c.w = Math.max(0, c.w * sLocX);
         if (c.rise != null) c.rise = Math.max(0.5, c.rise * sy);
+        if (c.lipRise != null) c.lipRise = Math.min(8, Math.max(0, c.lipRise * sy));
         if (c.deck != null)
           c.deck = Math.max(0, c.deck * ((sLocX + sLocZ) / 2));
         break;
@@ -5188,7 +5189,7 @@ export class Editor {
       const R = c.rise ?? 6;
       const F = c.w ?? 3;
       const lipLat = F + R * Math.sin(THREE.MathUtils.degToRad(c.arc ?? 90));
-      const lipY = R * (1 - Math.cos(THREE.MathUtils.degToRad(c.arc ?? 90)));
+      const lipY = R * (1 - Math.cos(THREE.MathUtils.degToRad(c.arc ?? 90))) + (c.lipRise ?? 0);
       const xl = loc(1, 0, 0);
       if (!c.pts) {
         const zl = loc(0, 0, 1);
@@ -8886,6 +8887,7 @@ export class Editor {
         () => c.rise ?? 6,
         (v) => (c.rise = Math.max(0.5, v)),
       );
+      num('vertical top', () => c.lipRise ?? 0, (v) => (c.lipRise = Math.max(0, Math.min(8, v))), 0.1);
       num(
         "arc °",
         () => c.arc ?? 90,

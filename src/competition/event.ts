@@ -67,6 +67,8 @@ export class JungleCupEvent {
   countdown = 3;
   bails = 0;
   liveScore = 0;
+  overtime = false;
+  private overtimeComboEnded = false;
   runs: JudgedRun[] = [];
   cupAwarded = false;
   resultCommitted = false;
@@ -88,21 +90,32 @@ export class JungleCupEvent {
   startRun(): boolean {
     if (this.runs.length >= 3 || !['intro','standings'].includes(this.phase)) return false;
     this.phase = 'countdown'; this.countdown = 3; this.remaining = COMPETITION_TUNING.runSeconds;
-    this.liveScore = 0; this.bails = 0; return true;
+    this.liveScore = 0; this.bails = 0;
+    this.overtime = false; this.overtimeComboEnded = false; return true;
   }
   bail(): void { if (this.phase === 'running') this.bails++; }
+  /** A bank/break closes THIS extension even if a new combo starts in the
+   * same simulation tick. Before the buzzer this signal has no effect. */
+  comboResolved(): void {
+    if (this.phase === 'running' && this.overtime) this.overtimeComboEnded = true;
+  }
   stepPresentation(dt: number): void {
     if (this.phase === 'countdown') {
       this.countdown = Math.max(0, this.countdown - dt);
       if (this.countdown === 0) this.phase = 'running';
     } else if (this.phase === 'judges') this.presentationTime += dt;
   }
-  stepRun(dt: number, bankedScore: number): boolean {
+  stepRun(dt: number, bankedScore: number, comboActive = false): boolean {
     if (this.phase !== 'running') return false;
     this.liveScore = Math.max(0, bankedScore);
     this.remaining = Math.max(0, this.remaining - dt);
     if (this.remaining > 1e-7) return false;
     this.remaining = 0;
+    if (comboActive && !this.overtimeComboEnded) {
+      this.overtime = true;
+      return false;
+    }
+    this.overtime = false;
     const run = judgeRun(this.liveScore, this.bails, this.rng);
     this.runs.push(run);
     this.field[0].runs.push(run.score);
