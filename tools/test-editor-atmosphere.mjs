@@ -10,6 +10,30 @@ import { atmosphereRenderer } from './atmosphere-runtime-harness.mjs';
 // data-backed course. The other nineteen scenarios retain their old baseline.
 // This prevents source/copy tests from sharing the same accidental drift.
 const baseline = JSON.parse(await readFile(new URL('./fixtures/native-atmosphere-baseline.json', import.meta.url),'utf8'));
+// The stored baseline crosses CPU/OS/Node versions. Math.pow in Three's sRGB
+// conversion can differ by a few double-precision ULPs on Linux and macOS.
+// Keep structure, flags and strings exact, with a tolerance far below GPU
+// precision for these historical numeric values. Same-run copy/history
+// comparisons below remain exact so serialization must preserve real values.
+function assertRenderBaseline(actual, expected, at = 'renderer') {
+  assert.equal(typeof actual, typeof expected, `${at}: value type changed`);
+  if (typeof expected === 'number') {
+    assert.ok(Number.isFinite(actual) && Math.abs(actual - expected) <= 1e-12,
+      `${at}: expected ${expected}, received ${actual}`);
+  } else if (expected === null || typeof expected !== 'object') {
+    assert.equal(actual, expected, `${at}: value changed`);
+  } else {
+    assert.ok(actual !== null, `${at}: object missing`);
+    assert.equal(Array.isArray(actual), Array.isArray(expected), `${at}: container changed`);
+    assert.deepEqual(Object.keys(actual).sort(), Object.keys(expected).sort(), `${at}: fields changed`);
+    for (const key of Object.keys(expected)) assertRenderBaseline(actual[key], expected[key], `${at}.${key}`);
+  }
+}
+assertRenderBaseline({ color: [.0865004620280852], sky: false },
+  { color: [.08650046202808521], sky: false });
+assert.throws(() => assertRenderBaseline({ color: [.08651] }, { color: [.08650] }));
+assert.throws(() => assertRenderBaseline({ sky: true }, { sky: false }));
+assert.throws(() => assertRenderBaseline({ color: [NaN] }, { color: [0] }));
 const harness = await readFile(new URL('./validate-editor-roundtrip.mjs', import.meta.url),'utf8');
 new Function(harness.slice(harness.indexOf('function installHeadlessDom()'),harness.indexOf('\nfunction round('))+'\ninstallHeadlessDom();')();
 const server = await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true,hmr:false,ws:false}});
@@ -45,7 +69,7 @@ try{
         const copied={id:`copied_${entry.id}`,name:entry.name+' copy',data:normalized};copy=build(normalized,copied.id);
         for(const painted of [true,false])check(`${entry.id} ${query} ${painted}: native and copied effective renderer state`,()=>{
           const actual=renderLevel(source,entry,painted), restored=renderLevel(copy,copied,painted);
-          assert.deepEqual(actual,baseline[entry.id][painted?'painted':'fallback'],'native default renderer state changed');
+          assertRenderBaseline(actual,baseline[entry.id][painted?'painted':'fallback']);
           assert.deepEqual(restored,actual,'capture changed effective fog, lights or backdrop under a different ID');
         });
         if(query)check(`${entry.id}: lite renderer preserves copied atmosphere`,()=>{
@@ -65,7 +89,7 @@ try{
   for(const sky of ['day','sunset','night','coast'])for(const kind of ['ordinary','jungle','map']){
     const data=dataFor(kind,sky),entry={id:'defaults',name:data.name,data},level=build(data,entry.id);
     try{for(const painted of [true,false])check(`absent overrides preserve ${kind}/${sky}/${painted} defaults`,()=>{
-      assert.deepEqual(renderLevel(level,entry,painted),baseline[`default:${kind}:${sky}`][painted?'painted':'fallback']);
+      assertRenderBaseline(renderLevel(level,entry,painted),baseline[`default:${kind}:${sky}`][painted?'painted':'fallback']);
       assert.equal(level.captureData().atmosphere,undefined,'opening authored default data materialized overrides');
     });}finally{level.dispose();}
   }
