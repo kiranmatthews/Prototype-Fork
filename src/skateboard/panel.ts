@@ -25,6 +25,7 @@ export interface SkateboardTuningPanelOptions {
   readonly parent?: HTMLElement;
   readonly initiallyOpen?: boolean;
   readonly labMode?: boolean;
+  readonly onMenuChange?: () => void;
 }
 
 const SECTIONS: readonly SectionDefinition[] = [
@@ -120,6 +121,8 @@ const CSS = `
     border: 1px solid #ff9438; border-right: 0; background: #130b06; color: #ffbd76;
     font-weight: 900; letter-spacing: .8px; cursor: pointer; box-shadow: -4px 4px 0 #0008; }
   :host([data-open]) .launcher { display: none; }
+  :host([data-menu-open][data-open]) { pointer-events: auto; background: #0008; }
+  :host([data-menu-open]) .panel { right: max(12px, calc((100vw - 470px) / 2)); }
   .panel { display: none; position: fixed; top: 12px; right: 12px; bottom: 12px;
     width: min(470px, calc(100vw - 24px)); pointer-events: auto; overflow: hidden;
     border: 2px solid #ff9438; background: #090c11; box-shadow: -10px 10px 0 #000b; }
@@ -189,8 +192,11 @@ export class SkateboardTuningPanel {
   private readonly status: HTMLDivElement;
   private readonly unsubscribe: () => void;
   private openState = false;
+  private menuRoot: HTMLElement | null = null;
+  private menuRootWasInert = false;
+  private returnFocus: HTMLElement | null = null;
 
-  constructor(options: SkateboardTuningPanelOptions = {}) {
+  constructor(private readonly options: SkateboardTuningPanelOptions = {}) {
     this.settings = options.settings ?? skateboardSettings;
     const documentRef = options.parent?.ownerDocument ?? document;
     this.element = documentRef.createElement("div");
@@ -198,6 +204,18 @@ export class SkateboardTuningPanel {
     this.shadow = this.element.attachShadow({ mode: "open" });
     for (const name of ["keydown", "keyup", "keypress"] as const)
       this.shadow.addEventListener(name, (event) => event.stopPropagation());
+    this.shadow.addEventListener("keydown", (event) => {
+      if (!this.element.hasAttribute("data-menu-open")) return;
+      const key = event as KeyboardEvent;
+      if (key.code === "Escape") { key.preventDefault(); this.setOpen(false); }
+      if (key.code === "Tab") {
+        const controls = [...this.shadow.querySelectorAll<HTMLElement>("button, input, summary")]
+          .filter(control => !control.hasAttribute("disabled") && control.getClientRects().length > 0);
+        const first = controls[0], last = controls[controls.length - 1];
+        if (key.shiftKey && this.shadow.activeElement === first) { key.preventDefault(); last?.focus(); }
+        else if (!key.shiftKey && this.shadow.activeElement === last) { key.preventDefault(); first?.focus(); }
+      }
+    });
     const style = documentRef.createElement("style");
     style.textContent = CSS;
     this.shadow.appendChild(style);
@@ -212,7 +230,7 @@ export class SkateboardTuningPanel {
     panel.setAttribute("role", "dialog");
     panel.setAttribute("aria-label", "Skateboard tuning panel");
     const title = this.make("header", "title");
-    title.append(this.make("span", "", "SURF CRUISER — SHAPE LAB"));
+    title.append(this.make("span", "", options.labMode ? "SURF CRUISER — SHAPE LAB" : "SKATEBOARD APPEARANCE"));
     const close = this.button("×", "close");
     close.setAttribute("aria-label", "Close skateboard tuning panel");
     close.addEventListener("click", () => this.setOpen(false));
@@ -224,7 +242,7 @@ export class SkateboardTuningPanel {
         "intro",
         options.labMode
           ? "Approved Board JSON · edits rebuild every inspection board and autosave in this browser."
-          : "Approved Surf Cruiser · edits rebuild the attached player board live and autosave in this browser.",
+          : "Shape, wheels, trucks, artwork and wear. Changes apply to your skateboard and save automatically in this browser.",
       ),
     );
 
@@ -283,9 +301,34 @@ export class SkateboardTuningPanel {
     this.setOpen(options.initiallyOpen ?? false);
   }
 
+  openFromMenu(): void {
+    if (!this.element.hasAttribute("data-menu-open")) {
+      this.returnFocus = document.activeElement as HTMLElement | null;
+      this.menuRoot = document.querySelector<HTMLElement>(".game-shell");
+      this.menuRootWasInert = this.menuRoot?.inert ?? false;
+      if (this.menuRoot) this.menuRoot.inert = true;
+    }
+    this.element.setAttribute("data-menu-open", "");
+    document.body.classList.add("game-skateboard-tuning-open");
+    this.shadow.querySelector(".panel")?.setAttribute("aria-modal", "true");
+    this.setOpen(true);
+    this.options.onMenuChange?.();
+    this.shadow.querySelector<HTMLButtonElement>(".close")?.focus();
+  }
+
   setOpen(open: boolean): void {
     this.openState = open;
     this.element.toggleAttribute("data-open", open);
+    if (!open && this.element.hasAttribute("data-menu-open")) {
+      this.element.removeAttribute("data-menu-open");
+      document.body.classList.remove("game-skateboard-tuning-open");
+      this.shadow.querySelector(".panel")?.removeAttribute("aria-modal");
+      if (this.menuRoot) this.menuRoot.inert = this.menuRootWasInert;
+      this.options.onMenuChange?.();
+      if (this.returnFocus?.isConnected) this.returnFocus.focus();
+      this.menuRoot = null;
+      this.returnFocus = null;
+    }
   }
 
   toggle(): void {
@@ -293,6 +336,7 @@ export class SkateboardTuningPanel {
   }
 
   dispose(): void {
+    this.setOpen(false);
     this.unsubscribe();
     this.element.remove();
   }

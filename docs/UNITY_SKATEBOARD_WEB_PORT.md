@@ -1,8 +1,12 @@
 # Surf Cruiser skateboard web port
 
 The browser uses the approved Surf Cruiser presentation in normal play and
-exposes its shape lab at `skateboard-lab.html` (or through the
-in-game **BOARD** tab). This is a presentation-only port: movement, tricks,
+exposes **SKATEBOARD TUNING** directly on the main menu and in Options.
+The dedicated appearance panel controls shape, curves, wheels, trucks, artwork,
+wear and plywood colours, with browser autosave and reset/import/export. It is
+available without enabling developer tools; Close, Escape or controller Back
+returns to the menu. The full inspection lab remains at `skateboard-lab.html`
+and through **Open full lab**, with **BOARD** also available in the debug tuner. This is a presentation-only port: movement, tricks,
 grinds, collision, replay state, and the fixed-step simulation were not
 retuned.
 

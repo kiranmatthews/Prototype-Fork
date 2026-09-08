@@ -1297,6 +1297,7 @@ renderQualitySettings.subscribe(() => {
 });
 const skateboardPanel = createSkateboardTuningPanel({
   settings: skateboardSettings,
+  onMenuChange: () => gameFlow.refreshModalTools(),
 });
 const spinPanel = createSpinTuningPanel({
   settings: spinRingSettings,
@@ -1404,6 +1405,7 @@ if (TOUCH_PRESENTATION) {
 } else {
   // Character and animation authoring stay reachable in every browser build.
   ui.setPresentationTools([
+    { label: "BOARD", open: () => { closePresentationPanels(); skateboardPanel.setOpen(true); } },
     { label: "WATER", open: () => void openWaterStudioTool() },
     {
       label: "ANIMATION",
@@ -1944,6 +1946,10 @@ gameFlow = new GameFlowUI(
     onResultsRetry: retryFromResults,
     onResultsContinue: continueFromResults,
     onAudioOptions: applyGameAudioOptions,
+    onSkateboardTuning: (open) => {
+      if (open) { closePresentationPanels(); skateboardPanel.openFromMenu(); }
+      else skateboardPanel.setOpen(false);
+    },
     getPlayMode: () => endlessDeathsOn ? 'modern' : 'classic',
     getRelicTarget: (id) => resolveRelicTime(id, findLevel(id)?.data),
     getMedalTargets: (id) => resolveMedalTimes(id, findLevel(id)?.data),
