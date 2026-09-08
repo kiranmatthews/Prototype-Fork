@@ -8,6 +8,8 @@ import { CameraInputFrame } from "./cameraViews";
 import { softSkateRebound, sampleSoftSkateImpact, SOFT_SKATE_IMPACT_SECONDS } from './skateImpact';
 import { BONUS_FRUIT_FLIGHT_SECONDS } from './bonusPayout';
 import { TUNING, CONST } from './tuning';
+import { GRIND_TRICKS, grabTrickInfo, grabTrickFromInput, sampleDeckTrick, type GrabTrickKind, type GrindStyle } from './skateTricks';
+import { trickRepeatFactor, extendHeldTrick, type HeldTrickScore } from './trickScoring';
 import { liveCarveGripAtSpeed } from './carveGrip';
 import { solveSkateSteering } from './skateSteering';
 import { SKATE_PARK, skateSurfaceDirection, skateSurfaceHeading, redirectSkateVelocity } from './skateParkPhysics';
@@ -253,6 +255,7 @@ export interface PlayerRunState {
   comboGem: boolean;
   gemSpawned: boolean;
   simSeed: number;
+  trickHistory?: [string, number][];
 }
 
 export interface PlayerWorldFruitSnapshot {
@@ -398,36 +401,18 @@ function convexHullXZ(pts: THREE.Vector3[]): THREE.Vector3[] {
   const hull = lower.concat(upper);
   return hull.length > 0 ? hull : pts.slice();
 }
-// Grind trick table (THPS3+ vocabulary): the stick at snap — or at a fresh
-// Triangle press MID-grind — picks the trick. Names/scores per style; the
-// lipslide is the sideways catch where you came over the TOP of the rail.
-type GrindStyle = 'normal' | 'nose' | 'five0' | 'board' | 'lip' | 'smith' | 'feeble' | 'crook';
-const GRIND_NAMES: Record<GrindStyle, string> = {
-  normal: '50-50',
-  nose: 'Nosegrind',
-  five0: '5-0',
-  board: 'Boardslide',
-  lip: 'Lipslide',
-  smith: 'Smith Grind',
-  feeble: 'Feeble Grind',
-  crook: 'Crooked Grind',
-};
-const GRIND_MULTS: Record<GrindStyle, number> = {
-  normal: 1,
-  nose: 1.25,
-  five0: 1.25,
-  board: 1.5,
-  lip: 1.6,
-  smith: 1.4,
-  feeble: 1.4,
-  crook: 1.35,
-};
 const _plantInv = new THREE.Matrix4();
 const _plantMR = new THREE.Matrix4();
 const _plantML = new THREE.Matrix4();
 const _plantV = new THREE.Vector3();
 const _plantO = new THREE.Vector3();
 const _plantC = new THREE.Vector3();
+const _trickOffset = new THREE.Vector3();
+const _trickPivot = new THREE.Vector3();
+const _trickRight = new THREE.Vector3(1,0,0);
+const _trickFrameQ = new THREE.Quaternion();
+const _trickRotationQ = new THREE.Quaternion();
+const _trickPitchQ = new THREE.Quaternion();
 
 interface GroundHit {
   y: number;
@@ -725,6 +710,7 @@ export class Player {
       comboGem: this.comboGemEarned,
       gemSpawned: this.gemSpawned,
       simSeed: this.simSeed,
+      trickHistory: [...this.runTrickUses],
     };
   }
 
@@ -750,7 +736,7 @@ export class Player {
   private grabT = 0;
   private grabGraceTimer = 0;
   private grabPose = 0;
-  private grabPitch = 0; // smoothed pose-variant params (up/left/right grabs)
+  private grabPitch = 0; // smoothed parameters of the latched grab pose
   private grabRoll = 0;
   private armRPose = 0;
   private armLPose = 0;
@@ -1179,13 +1165,20 @@ export class Player {
   private grindCrossDir = 1; // latched rail-perpendicular sign that matches screen input
   private grabTrickName = 'Grab'; // variant name for the combo readout
   private airGrabShown: string | null = null; // exact plate label this air's grab was pushed under (renamed live; merged with a landed spin)
-  private grabPaid = 0; // what this air's grab actually paid — repriced when the variant resolves to a different trick's decay pool
-  private comboUses = new Map<string, number>(); // per-combo trick use counts — repeats pay a declining share (THPS4/THUG)
+ // what this air's grab actually paid — repriced when the variant resolves to a different trick's decay pool
+  private comboUses = new Map<string, number>();
+  private runTrickUses = new Map<string, number>();
+  private heldTrickScores = new Map<'grab'|'grind'|'manual'|'lip'|'wallride', HeldTrickScore>();
   private sketchyT = 0; // off-balance shimmy after a SKETCHY landing (kept it, barely)
   private softSkateImpactT = 0;
   private softSkateImpactSide = 1;
   private readonly softSkateImpactNormal = new THREE.Vector3();
-  private flipT = 0; // deck flip trick in progress: time left of CONST.flipTime
+  private flipT = 0;
+  private queuedFlip: {x:number;y:number;time:number;special:SpecialTrick|null} | null = null;
+  private queuedGrab: {kind:GrabTrickKind;time:number;special:SpecialTrick|null} | null = null;
+  private grabBlockedUntilRelease = false;
+  private grabKind: GrabTrickKind = 'indy';
+  private deckYawOffset = 0; // deck flip trick in progress: time left of CONST.flipTime
   private flipKind: DeckTrickKind = 'kick';
   private flipName = 'Kickflip';
   // Read-only gameplay evidence for trick gates/rails. The air set resets on
@@ -1196,13 +1189,14 @@ export class Player {
   private ollieDeckTrickBufferT = 0; // recent Square edge during a held ground ollie charge
   private pendingSpecialFlip: SpecialTrick | null = null;
   private specialFlip: SpecialTrick | null = null;
-  private flipDuration = CONST.flipTime;
+  private flipDuration: number = CONST.flipTime;
   private revertT = 0; // beat after a vert-air touchdown where R2 = Revert (the THPS3+/THUG combo bridge)
   private pipeEndFly = false; // flew off a pipe's END mid-hang: the landing judges it — a vert/rail/wall catch saves it, flat ground is the bail
   private rollOffT = 0; // rode out a pipe's open END partway up the wall: seconds left of the gradual level-out — land before the wheels are down and the tilt is judged like a fly-off
   private grindExitAir = false; // this air left a RAIL: held R2 may add transfer strafe; left/right alone only rotates
   private floatAir = false; // this air left the ground off a ramp/kicker/slope: fall at rampFallGravity (ballistic), not the flat-ollie snap
   private grabTickT = 0; // THPS accrual while the grab is held
+  private grindStyleT = 0;
   private grindTickT = 0; // THPS accrual while grinding
   private regrindCd = 0;
   // The rail we most recently left, and whether Triangle has been held down
@@ -1633,10 +1627,8 @@ export class Player {
       this.grounded ||
       this.isBailing
     ) return null;
-    const base = this.specialFlip?.points ?? CONST.ptsFlip;
-    const uses = this.comboUses.get(this.flipName) ?? 0;
-    const curve = CONST.repeatDecay;
-    let pay = Math.round(base * curve[Math.min(uses, curve.length - 1)]);
+    const base = this.specialFlip?.points ?? deckTrickInfo(this.flipKind).points;
+    let pay = Math.round(base * this.trickRepeat(this.flipName));
     if (this.uberTimer > 0) pay *= CONST.uberScoreMult;
     const shown = `${this.uberTimer > 0 ? 'Tiki ' : ''}${this.flipName}`;
     return {
@@ -2878,6 +2870,7 @@ export class Player {
     preserveInventory = false,
     placement?: CampaignPortalReturnPose,
   ): void {
+    if (hard) this.runTrickUses.clear();
     const preservedLives = this.lives;
     const preservedFruit = this.fruit;
     // Checkpoints restore the authored world/counters, but an endless-mode
@@ -2949,6 +2942,7 @@ export class Player {
     position: THREE.Vector3,
     state: PlayerRunState,
   ): void {
+    this.runTrickUses = new Map(state.trickHistory ?? []);
     this.ttActive = false;
     this.comboRun = false;
     this.bonusMode = false;
@@ -3073,13 +3067,16 @@ export class Player {
     this.comboLabels = [];
     this.comboHasTrick = false;
     this.comboTimer = 0;
-    this.comboUses.clear();
+    this.clearComboTrickHistory();
     this.special.reset();
     this.clearSpecialMoves();
     this.specialActivationCount = 0;
     this.airGrabShown = null;
     this.sketchyT = 0;
     this.flipT = 0;
+    this.queuedFlip = this.queuedGrab = null;
+    this.grabBlockedUntilRelease = false;
+    this.deckYawOffset = 0;
     this.deckTricksThisAir.clear();
     this.deckTricksThisCombo.clear();
     this.ollieDeckTrickBufferT = 0;
@@ -4249,6 +4246,8 @@ export class Player {
   }
 
   private clearSpecialMoves(): void {
+    this.queuedFlip=this.queuedGrab=null;
+    this.grabBlockedUntilRelease=false;
     this.pendingSpecialFlip = null;
     this.pendingSpecialGrab = null;
     this.pendingSpecialGrind = null;
@@ -4261,14 +4260,33 @@ export class Player {
   }
 
   private grindTrickName(): string {
-    return this.specialGrind?.label ?? GRIND_NAMES[this.grindStyle];
+    return this.specialGrind?.label ?? GRIND_TRICKS[this.grindStyle].label;
   }
 
   // Score an action. Combos live in the AIR and on rails/slides only: those
   // actions stack base + multiplier, THPS-style, and bank on a clean landing.
   // Plain ground actions (spinning a box while standing there) just pay flat
   // points — they never start or feed a combo. Bail or die = the combo dies.
-  private score(base: number, label?: string): { shown: string | undefined; pay: number } {
+  private trickRepeat(label: string): number {
+    return trickRepeatFactor((this.runTrickUses.get(label) ?? 0) + (this.comboUses.get(label) ?? 0));
+  }
+
+  private clearComboTrickHistory(): void {
+    this.comboUses.clear();
+    this.heldTrickScores.clear();
+  }
+
+  private awardHeldScore(kind: 'grab'|'grind'|'manual'|'lip'|'wallride', seconds: number, rate: number): void {
+    const held=this.heldTrickScores.get(kind);
+    if(held){
+      const pay=extendHeldTrick(held,rate,seconds);
+      this.comboPoints+=pay;
+      this.special.award(pay);
+    }
+    this.comboTimer=CONST.comboWindow;
+  }
+
+  private score(base: number, label?: string, held?: 'grab'|'grind'|'manual'|'lip'|'wallride'): { shown: string | undefined; pay: number } {
     const inTrick =
       this.landingScoring ||
       this.state === 'air' ||
@@ -4282,13 +4300,14 @@ export class Player {
     const isTrick = !!label && !/Boing|Flattened|Takedown|Bonk|^Box$|Slam Smash|Crystal|Gem/.test(label);
     let pay = base;
     let shown = label;
+    let repeat = 1;
     if (inTrick && isTrick && label) {
-      // THPS4/THUG anti-farming: the Nth use of the same trick in ONE combo
-      // pays a declining share of its base (the plate still shows it).
+      // Landed combos retain their uses for this run. Bailed attempts only
+      // discard the pending uses, so a bail never refreshes landed history.
+      repeat = this.trickRepeat(label);
       const uses = this.comboUses.get(label) ?? 0;
       this.comboUses.set(label, uses + 1);
-      const curve = CONST.repeatDecay;
-      pay = Math.round(base * curve[Math.min(uses, curve.length - 1)]);
+      pay = Math.round(base * repeat);
     }
     // Three masks banked = the special state: every trick is renamed on the
     // plate and pays extra — the THPS special-meter payoff, earned Crash-style.
@@ -4297,6 +4316,10 @@ export class Player {
       shown = 'Tiki ' + label;
     }
     if (inTrick && isTrick) this.special.award(pay);
+    if (inTrick && isTrick && held) {
+      this.heldTrickScores.set(held, {raw:base,paid:pay,factor:repeat,
+        power:this.uberTimer>0?CONST.uberScoreMult:1,seconds:0});
+    }
     if (inTrick) {
       this.comboPoints += pay;
       // THE MULTIPLIER COUNTS TRICKS, not scoring events. World rewards —
@@ -4365,6 +4388,8 @@ export class Player {
   }
 
   private bankCombo(): void {
+    for (const [name,count] of this.comboUses)
+      this.runTrickUses.set(name,(this.runTrickUses.get(name)??0)+count);
     if (this.comboPoints > 0) {
       // World rewards collected mid-air with no trick still land their points
       // — multiplied by the TRICK count when there is one, at face value when
@@ -4381,7 +4406,7 @@ export class Player {
     this.comboTimer = 0;
     this.comboLabels = [];
     this.comboHasTrick = false;
-    this.comboUses.clear();
+    this.clearComboTrickHistory();
     this.deckTricksThisCombo.clear();
   }
 
@@ -5043,9 +5068,7 @@ export class Player {
       this.lipTickT += dt;
       while (this.lipTickT >= 0.25) {
         this.lipTickT -= 0.25;
-        this.comboPoints += CONST.ptsLipTick;
-        this.special.award(CONST.ptsLipTick);
-        this.comboTimer = CONST.comboWindow;
+        this.awardHeldScore('lip',.25,CONST.ptsLipTick*4);
       }
       this.emitSparks(Math.random() < 0.3 ? 1 : 0, 0xffe08a, 0.6);
       // R2 from the stall: a DELIBERATE exit out the back — onto the deck
@@ -5869,9 +5892,7 @@ export class Player {
         this.manualTickT += dt;
         while (this.manualTickT >= 0.25) {
           this.manualTickT -= 0.25;
-          this.comboPoints += CONST.ptsManualTick;
-          this.special.award(CONST.ptsManualTick);
-          this.comboTimer = CONST.comboWindow;
+          this.awardHeldScore('manual',.25,CONST.ptsManualTick*4);
         }
       }
     }
@@ -7366,6 +7387,9 @@ export class Player {
       // Touching down while the deck is still mid-flip: the trick is eaten and
       // the landing goes sketchy (forgiving where THPS would bail — the crate
       // loop leans on quick spin-attacks, so a late flip stings, not flattens).
+      // This fixed step includes the final catch frame. Settle it before the
+      // landing check rather than throwing away a completed trick by order.
+      if(this.flipT>0 && this.flipT<=dt+1e-7)this.completeDeckTrick();
       const flipLate = this.flipT > 0;
       const lateSpecialFlip = flipLate && this.specialFlip !== null;
       if (flipLate) {
@@ -7373,7 +7397,7 @@ export class Player {
         this.specialFlip = null;
         this.flipDuration = CONST.flipTime;
       }
-      const funny = (spun && offLine > sketchNet) || lateSpecialFlip;
+      const funny = (spun && offLine > sketchNet) || lateSpecialFlip || (this.parkControls && flipLate);
       const sketchy = (spun && !funny && offLine > tol) || (flipLate && !funny);
       if (this.grabPhase !== 'none' || funny) {
         if (this.uberTimer > 0) {
@@ -7450,10 +7474,8 @@ export class Player {
             // and no second multiplier is minted. The spin share still pays
             // the repeat-decay rule, though — folding it must not exempt the
             // biggest air trick from the anti-farming curve.
-            const uses = this.comboUses.get(spinName) ?? 0;
-            this.comboUses.set(spinName, uses + 1);
-            const curve = CONST.repeatDecay;
-            let fold = Math.round(spinBase * curve[Math.min(uses, curve.length - 1)]);
+            let fold = Math.round(spinBase * this.trickRepeat(spinName));
+            this.comboUses.set(spinName, (this.comboUses.get(spinName) ?? 0) + 1);
             if (this.uberTimer > 0) fold *= CONST.uberScoreMult;
             const pfx = this.airGrabShown.startsWith('Tiki ') ? 'Tiki ' : '';
             this.renameLabel(this.airGrabShown, `${pfx}${spinName} ${this.grabTrickName}`);
@@ -8417,7 +8439,7 @@ export class Player {
     this.noisePhase = this.simRand() * Math.PI * 2;
     this.manualArmed = 0;
     this.manualArmT = 0;
-    this.score(CONST.ptsManualBase, type === 1 ? 'Manual' : 'Nose Manual');
+    this.score(CONST.ptsManualBase, type === 1 ? 'Manual' : 'Nose Manual', 'manual');
     sfx.play('skateTransition', 0.35);
   }
 
@@ -8594,7 +8616,7 @@ export class Player {
             ? 'Tail Stall'
             : 'Axle Stall';
     const lipMult = lipName === 'Axle Stall' ? 1 : lipName === 'Rock to Fakie' ? 1.15 : 1.25;
-    this.score(Math.round(CONST.ptsLip * lipMult), lipName);
+    this.score(Math.round(CONST.ptsLip * lipMult), lipName, 'lip');
     sfx.play('railLand', 0.7);
     this.emitSparks(5, 0xffe08a, 1.2);
   }
@@ -8801,7 +8823,7 @@ export class Player {
     this.comboTimer = 0;
     this.comboLabels = [];
     this.comboHasTrick = false;
-    this.comboUses.clear();
+    this.clearComboTrickHistory();
     this.deckTricksThisAir.clear();
     this.deckTricksThisCombo.clear();
     this.airGrabShown = null;
@@ -9147,12 +9169,13 @@ export class Player {
   private stepGrind(dt: number, input: Input, level: Level): void {
     const rail = this.grindRail!;
     this.grindTime += dt;
+    this.grindStyleT += dt;
     level.grindRope(rail); // sky-bridge ropes: grinding one makes it sag, wobble, and eventually snap
     this.snapEase = Math.min(1, this.snapEase + dt / CONST.railSnapEase);
     // THPS3+ TRICK SWITCHING: a fresh Triangle press mid-grind re-reads the
     // stick and swaps the trick in place — a new plate entry (repeat decay
     // keeps it honest), a jolt through the needle, and the pose follows.
-    if (input.grindPressed && this.grindTime > 0.2 && this.lipStallT <= 0) {
+    if (input.grindPressed && this.grindStyleT > 0.25 && this.lipStallT <= 0) {
       const prev = this.grindStyle;
       const prevYaw = this.grindYawDir;
       const prevCross = this.grindCrossDir;
@@ -9171,11 +9194,12 @@ export class Player {
         if (nextSpecial) {
           this.pendingSpecialGrind = null;
           this.confirmSpecial(nextSpecial);
-        }
+        } else this.special.consumeInput();
         this.score(
-          nextSpecial?.points ?? Math.round(CONST.ptsGrindBase * GRIND_MULTS[this.grindStyle]),
-          this.grindTrickName(),
+          nextSpecial?.points ?? GRIND_TRICKS[this.grindStyle].points,
+          this.grindTrickName(), 'grind',
         );
+        this.grindStyleT = 0; this.grindTickT = 0;
         this.surfaceName = 'rail (' + this.grindTrickName() + ')';
         this.balanceVel += (this.simRand() < 0.5 ? -1 : 1) * 0.3; // the swap rocks the needle
         this.emitSparks(4, 0xffb545, 1.2);
@@ -9387,9 +9411,9 @@ export class Player {
     this.grindTickT += dt;
     while (this.grindTickT >= 0.25) {
       this.grindTickT -= 0.25;
-      this.comboPoints += CONST.ptsGrindTick;
-      this.special.award(CONST.ptsGrindTick);
-      this.comboTimer = CONST.comboWindow;
+      const travel=Math.min(1,Math.abs(this.grindVel)/4);
+      const rate=this.specialGrind?500:GRIND_TRICKS[this.grindStyle].rate;
+      this.awardHeldScore('grind',.25,rate*travel);
     }
     this.groundHit = this.queryGround(level); // keeps the blob shadow honest
     // (grind sparks now stream from the puff system's distance trail — see
@@ -9654,7 +9678,7 @@ export class Player {
       this.grindCrossDir = this.resolveCrossGrindDirection(this.grindYawDir);
       this.confirmSpecial(entrySpecial);
     }
-    this.grindTickT = 0;
+    this.grindTickT = 0; this.grindStyleT = 0;
     this.railUnder = false; // every grind starts on top (the switch cooldown carries over)
     this.underK = 0;
     this.grindUsedUnder = false;
@@ -9672,9 +9696,10 @@ export class Player {
     // The trick is scored the moment you lock in — the rail then RACKS UP
     // points for as long as you hold it (see stepGrind), THPS-style.
     this.score(
-      entrySpecial?.points ?? Math.round(CONST.ptsGrindBase * GRIND_MULTS[this.grindStyle]),
-      this.grindTrickName(),
+      entrySpecial?.points ?? GRIND_TRICKS[this.grindStyle].points,
+      this.grindTrickName(), 'grind',
     );
+    if(!entrySpecial)this.special.consumeInput();
     // Start the needle slightly off-center in a random direction, at rest, with
     // a fresh sketch phase so the wander never repeats across attempts.
     this.balance = (this.simRand() < 0.5 ? -1 : 1) * CONST.balanceStart;
@@ -10039,7 +10064,7 @@ export class Player {
 
   // ------------------------------------------------------------------ spin --
 
-  private tryStartDeckTrick(intent: boolean): boolean {
+  private tryStartDeckTrick(intent: boolean, x=this.rawInput.moveX, y=this.rawInput.moveY): boolean {
     if (
       !intent ||
       this.state !== 'air' ||
@@ -10053,13 +10078,11 @@ export class Player {
       return false;
 
     this.specialFlip = null;
-    this.flipDuration = CONST.flipTime;
-    this.flipKind = deckTrickFromInput(
-      this.rawInput.moveX,
-      this.rawInput.moveY,
-    );
-    this.flipName = deckTrickInfo(this.flipKind).label;
-    this.flipT = CONST.flipTime;
+    this.flipKind = deckTrickFromInput(x,y);
+    const trick=deckTrickInfo(this.flipKind);
+    this.flipName = trick.label;
+    this.flipDuration = this.flipT = trick.duration;
+    this.special.consumeInput();
     this.deckTrickPreviewSequence++;
     this.deckTricksThisAir.add(this.flipKind);
     this.deckTricksThisCombo.add(this.flipKind);
@@ -10081,6 +10104,7 @@ export class Player {
       return false;
     this.pendingSpecialFlip = null;
     this.specialFlip = trick;
+    this.grabSpinAngle=Math.round(this.grabSpinAngle/Math.PI)*Math.PI;
     this.flipDuration = trick.duration;
     this.flipKind = 'kick'; // gate evidence remains ordinary-only; this is visual metadata
     this.flipName = trick.label;
@@ -10089,6 +10113,17 @@ export class Player {
     this.ollieDeckTrickBufferT = 0;
     this.confirmSpecial(trick);
     return true;
+  }
+
+  private completeDeckTrick(): void {
+    const completedSpecial=this.specialFlip;
+    this.score(completedSpecial?.points??deckTrickInfo(this.flipKind).points,this.flipName);
+    if(completedSpecial){
+      this.grabSpinAngle+=Math.PI;
+      this.specialGrabLanding=true;
+    } else
+      this.deckYawOffset=wrapAngle(this.deckYawOffset+deckTrickInfo(this.flipKind).yaw*Math.PI*2);
+    this.flipT=0;this.specialFlip=null;this.flipDuration=CONST.flipTime;
   }
 
   private updateSpin(dt: number, input: Input): void {
@@ -10100,20 +10135,35 @@ export class Player {
     const canSpin =
       !this.isBailing &&
       (this.state === 'ride' || this.state === 'air' || this.state === 'grind' || this.state === 'rope');
-    const specialFlipStarted = input.spinPressed && this.tryStartSpecialFlip();
+    const boardAir = this.state === 'air' && this.airFromSkate && !this.isBailing;
     this.ollieDeckTrickBufferT = Math.max(0, this.ollieDeckTrickBufferT - dt);
-    const bufferOllieDeckTrick =
-      !specialFlipStarted &&
-      input.spinPressed &&
-      this.state === 'ride' &&
-      this.grounded &&
-      this.freeSkate &&
-      this.charging;
-    if (bufferOllieDeckTrick)
-      this.ollieDeckTrickBufferT = OLLIE_DECK_TRICK_CHORD;
+    if(this.queuedFlip){this.queuedFlip.time-=dt;if(this.queuedFlip.time<=0)this.queuedFlip=null;}
+    const bufferOllieDeckTrick = input.spinPressed && this.state==='ride' &&
+      this.grounded && this.freeSkate && this.charging;
+    if(input.spinPressed && (boardAir || bufferOllieDeckTrick)) {
+      const releasingGrab = boardAir && this.grabPhase!=='none' && !this.specialGrab;
+      this.queuedFlip = {x:this.rawInput.moveX,y:this.rawInput.moveY,
+        time:bufferOllieDeckTrick?OLLIE_DECK_TRICK_CHORD:releasingGrab?Math.max(.18,TUNING.grabRelease+.04):.18,special:this.pendingSpecialFlip};
+      this.queuedGrab=null;
+      if(releasingGrab){
+        if(this.grabPhase!=='exit'){this.grabPhase='exit';this.grabT=0;}
+        this.grabBlockedUntilRelease=true;
+      }
+      if(bufferOllieDeckTrick)this.ollieDeckTrickBufferT=OLLIE_DECK_TRICK_CHORD;
+    }
+    let specialFlipStarted=false;
+    if(boardAir && this.queuedFlip){
+      const queued=this.queuedFlip;
+      this.pendingSpecialFlip=this.specialReady?queued.special:null;
+      specialFlipStarted=this.tryStartSpecialFlip();
+      if(specialFlipStarted || this.tryStartDeckTrick(true,queued.x,queued.y)){
+        this.queuedFlip=null;this.ollieDeckTrickBufferT=0;
+      }
+    } else if(!bufferOllieDeckTrick && this.state!=='ride')this.queuedFlip=null;
     if (
       input.spinPressed &&
       !specialFlipStarted &&
+      !(this.parkControls && this.freeSkate) &&
       !this.spinning &&
       this.spinCd <= 0 &&
       canSpin
@@ -10121,13 +10171,12 @@ export class Player {
       this.spinTimer = TUNING.spinDuration;
       this.debrisSpinToken = {};
       sfx.play(['spin1', 'spin2', 'spin3'][Math.floor(Math.random() * 3)], 0.5);
-      if (this.state === 'air' && this.vVel < 7) {
+      if (this.state === 'air' && !this.airFromSkate && this.vVel < 7) {
         // Tiny Crash-style stall. Never boosts an already-rising jump.
         this.vVel = Math.min(this.vVel + TUNING.spinAirCorrection, 7);
       }
-      // The same Square edge in a board air throws the deck while the normal
-      // Crash spin attack keeps its own hitbox/animation.
-      this.tryStartDeckTrick(true);
+      // Outside skate parks the hybrid game retains its ordinary attack.
+      // Deck tricks above have independent input timing and no flight impulse.
       // SLIDE-SPIN CANCEL (Crash 4 rules): a spin timed to the slide's END —
       // its last beat, or the unresolved grace/get-up right after — wipes the
       // re-fire blockers, so slide -> spin -> slide chains on timing instead
@@ -10154,18 +10203,9 @@ export class Player {
         this.slideCd = 0;
       }
     }
-    // A Square edge just before X releases is treated as the player smooshing
-    // both buttons at takeoff. The 0.10s edge buffer survives a quick Square
-    // tap/release, but an early spin — even if Square stays held — expires and
-    // cannot silently become a deck trick seconds later.
-    const ollieReleaseChord =
-      input.jumpReleased &&
-      this.ollieDeckTrickBufferT > 0 &&
-      this.state === 'air' &&
-      this.boardOllieAir;
-    this.tryStartDeckTrick(ollieReleaseChord);
-    if (input.jumpReleased || (!this.charging && this.state !== 'air'))
-      this.ollieDeckTrickBufferT = 0;
+    if (!boardAir && !this.charging) {
+      this.ollieDeckTrickBufferT=0;this.queuedFlip=null;
+    }
     if (this.spinTimer > 0) {
       this.spinTimer -= dt;
       const progress = 1 - Math.max(this.spinTimer, 0) / TUNING.spinDuration;
@@ -10181,7 +10221,6 @@ export class Player {
     if (this.flipT > 0) {
       this.flipT -= dt;
       if (this.flipT <= 0) {
-        const completedSpecial = this.specialFlip;
         this.flipT = 0;
         if (
           this.state === 'air' &&
@@ -10190,10 +10229,9 @@ export class Player {
           !this.wallriding &&
           !this.slamActive
         ) {
-          this.score(completedSpecial?.points ?? CONST.ptsFlip, this.flipName);
-          // The generic spin ends before the slower deck flip. Once the deck
-          // really completes, retain only a one-fixed-tick debounce so a fresh
-          // Square edge next tick may start another trick in this same air.
+          this.completeDeckTrick();
+          // Preserve the hybrid attack cadence outside parks. Deck input
+          // itself is independent of this legacy attack cooldown.
           this.spinCd = Math.min(this.spinCd, dt);
         }
         this.specialFlip = null;
@@ -10238,17 +10276,39 @@ export class Player {
     this.grabPhase = 'enter';
     this.grabT = 0;
     this.grabTrickName = trick.label;
+    this.grabKind='indy';
     this.grabTickT = 0;
-    const scored = this.score(trick.points, trick.label);
+    const scored = this.score(trick.points, trick.label, 'grab');
     this.airGrabShown = scored.shown ?? null;
-    this.grabPaid = scored.pay;
     this.confirmSpecial(trick);
     return true;
   }
 
+  private startGrab(kind:GrabTrickKind):void {
+    const trick=grabTrickInfo(kind);
+    this.grabKind=kind;this.grabTrickName=trick.label;
+    this.special.consumeInput();
+    this.grabPhase='enter';this.grabT=0;this.grabTickT=0;
+    const scored=this.score(trick.points,trick.label,'grab');
+    this.airGrabShown=scored.shown??null;
+    sfx.play('woosh2',.4);
+  }
+
   private updateGrab(dt: number, input: Input): void {
     this.grabGraceTimer = Math.max(0, this.grabGraceTimer - dt);
-    if (input.grabPressed) this.tryStartSpecialGrab();
+    if(!input.grabHeld){this.grabBlockedUntilRelease=false;this.queuedGrab=null;}
+    if(this.queuedGrab){this.queuedGrab.time-=dt;if(this.queuedGrab.time<=0)this.queuedGrab=null;}
+    const boardAir=this.state==='air'&&this.airFromSkate&&!this.isBailing&&!this.slamActive&&!this.wallriding;
+    if(input.grabPressed&&input.grabHeld&&boardAir){
+      this.queuedGrab={kind:grabTrickFromInput(this.rawInput.moveX,this.rawInput.moveY),time:.18,special:this.pendingSpecialGrab};
+    }
+    if(this.queuedGrab&&boardAir&&this.flipT<=0&&!this.specialGrab&&
+        (this.grabPhase==='none'||this.grabPhase==='exit')&&!this.grabBlockedUntilRelease){
+      const queued=this.queuedGrab;this.pendingSpecialGrab=this.specialReady?queued.special:null;
+      if(!this.tryStartSpecialGrab())this.startGrab(queued.kind);
+      this.queuedGrab=null;
+    }
+    if(!boardAir)this.queuedGrab=null;
     if (this.specialGrab) {
       const trick = this.specialGrab;
       if (
@@ -10283,10 +10343,8 @@ export class Player {
       }
     }
     if (this.state === 'air') {
-      // A grab needs a DIRECTION to start (the stick picks the variant): Circle
-      // alone in the air does nothing, so braking with Circle off a lip doesn't
-      // fire an accidental no-input grab. Once a grab is committed it holds even
-      // if you re-center the stick.
+      // Park grabs start from a fresh buffered Circle press. Once started,
+      // they retain the entry variant when the stick re-centers or rotates.
       const grabActive = this.grabPhase === 'enter' || this.grabPhase === 'held';
       const grabDir = Math.abs(this.rawInput.moveX) > 0.3 || Math.abs(this.rawInput.moveY) > 0.3;
       // (The old vert AUTO-CORRECT — force-completing any live rotation to the
@@ -10295,14 +10353,9 @@ export class Player {
       // the release-snap below plus the landing tolerance, and coming down
       // mid-rotation is now judged clean / sketchy / bail on VERT airs the
       // same as street ones. Big spins are earned again.)
-      // STREET GRABS ARE BACK: any board air takes Circle + a direction
-      // (up = Nosegrab, left = Melon, right = Indy), or a FRESH mid-air
-      // Circle press with no direction for the plain Grab. Two guards keep
-      // the chords honest: Circle carried over from the ground brake still
-      // needs a direction before it reads as a grab, and Circle + hard DOWN
-      // on the board stays the pancake slam — though a grab already
-      // committed holds through a down-roll instead of handing its air to
-      // the slam.
+      // Outside parks, board air retains the authored down + Circle slam.
+      // The park loadout uses Tailgrab there and always requires a fresh
+      // entry command; carrying the ground brake into air cannot start one.
       const streetGrabAir =
         this.airGrav === 'board' &&
         !this.wallriding &&
@@ -10310,34 +10363,16 @@ export class Player {
         (this.parkControls || grabActive || this.rawInput.moveY >= -0.5);
       if (
         input.grabHeld &&
+        !this.grabBlockedUntilRelease &&
+        this.flipT <= 0 &&
         !this.slamActive &&
         this.airFromSkate &&
         (this.vertAir || this.pipeHang || streetGrabAir) &&
-        (grabActive || grabDir || input.grabPressed)
+        (grabActive || (!this.parkControls && (grabDir || input.grabPressed)))
       ) {
         // Reach into the pose over grabTransition, then hold it.
         if (this.grabPhase === 'none' || this.grabPhase === 'exit') {
-          this.grabPhase = 'enter';
-          this.grabT = 0;
-          // A grab needs a direction to start, so the VARIANT is usually
-          // knowable right here — score under its own name from the first
-          // frame (each variant is its own trick with its own decay pool).
-          const rIn0 = this.rawInput;
-          this.grabTrickName =
-            rIn0.moveY > 0.4
-              ? 'Nosegrab'
-              : rIn0.moveX < -0.4
-                ? 'Melon'
-                : rIn0.moveX > 0.4
-                  ? 'Indy'
-                  : 'Grab';
-          this.grabTickT = 0;
-          // Timed trick: register it NOW so the combo plate shows straight away
-          // and ticks up while held (a botched landing bails the whole thing).
-          const sr = this.score(CONST.ptsGrab, this.grabTrickName);
-          this.airGrabShown = sr.shown ?? null;
-          this.grabPaid = sr.pay;
-          sfx.play('woosh2', 0.4);
+          this.startGrab(grabTrickFromInput(this.rawInput.moveX,this.rawInput.moveY));
         } else if (this.grabPhase === 'enter') {
           this.grabT += dt;
           if (this.grabT >= CONST.grabTransition) this.grabPhase = 'held';
@@ -10350,46 +10385,13 @@ export class Player {
           if (!this.parkControls || this.parkSpinHold >= SKATE_PARK.spinDelay)
             this.grabSpinAngle -= (this.parkControls ? SKATE_PARK.spinRate : TUNING.grabSpinRate) * Math.sign(gsp) * dt;
         }
-        // variant name for the combo readout — and the PLATE follows it: the
-        // entry pushed at grab start is renamed in place, so holding a
-        // direction turns "Grab" into the trick you're actually doing.
-        const vName =
-          this.rawInput.moveY > 0.4
-            ? 'Nosegrab'
-            : this.rawInput.moveX < -0.4
-              ? 'Melon'
-              : this.rawInput.moveX > 0.4
-                ? 'Indy'
-                : this.grabTrickName;
-        if (vName !== this.grabTrickName) {
-          // The trick this air turns out to be is the RESOLVED variant: move
-          // the decay count off the old name and reprice the points already
-          // paid at the new name's own pool — an Indy after a Melon is a
-          // fresh trick, only repeating the SAME grab decays.
-          const oc = this.comboUses.get(this.grabTrickName) ?? 0;
-          if (oc > 0) this.comboUses.set(this.grabTrickName, oc - 1);
-          const nUses = this.comboUses.get(vName) ?? 0;
-          this.comboUses.set(vName, nUses + 1);
-          const curve = CONST.repeatDecay;
-          let newPay = Math.round(CONST.ptsGrab * curve[Math.min(nUses, curve.length - 1)]);
-          if (this.uberTimer > 0) newPay *= CONST.uberScoreMult;
-          this.comboPoints += newPay - this.grabPaid;
-          this.comboHudActionRevision++;
-          this.grabPaid = newPay;
-          if (this.airGrabShown) {
-            const pfx = this.airGrabShown.startsWith('Tiki ') ? 'Tiki ' : '';
-            this.renameLabel(this.airGrabShown, pfx + vName);
-            this.airGrabShown = pfx + vName;
-          }
-          this.grabTrickName = vName;
-        }
+        // The entry direction owns the grab; steering/spinning cannot
+        // rename it, refund history or move the grabbing hand mid-trick.
         // THPS accrual: held grabs are worth more
         this.grabTickT += dt;
         while (this.grabTickT >= 0.25) {
           this.grabTickT -= 0.25;
-          this.comboPoints += CONST.ptsGrabTick;
-          this.special.award(CONST.ptsGrabTick);
-          this.comboTimer = CONST.comboWindow;
+          this.awardHeldScore('grab',.25,grabTrickInfo(this.grabKind).rate);
         }
       } else {
         // Released: reach back OUT of the pose. Only once that motion
@@ -10416,7 +10418,7 @@ export class Player {
         const hsp = this.spinStick();
         const streetSpin =
           this.airFromSkate && this.airGrav === 'board' && !this.wallriding && !this.isBailing;
-        if ((this.vertAir || streetSpin) && !this.slamActive && hsp !== 0) {
+        if ((this.vertAir || streetSpin) && !this.specialFlip && !this.slamActive && hsp !== 0) {
           if (!this.parkControls || this.parkSpinHold >= SKATE_PARK.spinDelay)
             this.grabSpinAngle -= (this.parkControls ? SKATE_PARK.spinRate : TUNING.grabSpinRate) * Math.sign(hsp) * dt;
         } else if (this.grabSpinAngle !== 0 && !this.parkControls) {
@@ -13025,7 +13027,7 @@ export class Player {
     this.flipT = 0; // the wheels just pressed onto the wall — no mid-flip corkscrew
     this.pipeEndFly = false; // a wall catch SAVES a pipe-end fly-off
     this.rollOffT = 0;
-    this.score(CONST.ptsWallride, 'Wallride'); // timed trick: shows the combo plate straight away, then ticks up
+    this.score(CONST.ptsWallride, 'Wallride', 'wallride'); // timed trick: shows the combo plate straight away, then ticks up
     this.vVel = Math.max(this.vVel, 3); // a little upward pop as you catch the wall (ollie OUT with jump — the wallie)
     this.airFromSkate = true;
     this.airGrav = 'board'; // riding a wall puts you on the board, however you arrived
@@ -13899,9 +13901,7 @@ export class Player {
     this.wallTickT += dt;
     while (this.wallTickT >= 0.25) {
       this.wallTickT -= 0.25;
-      this.comboPoints += CONST.ptsWallrideTick;
-      this.special.award(CONST.ptsWallrideTick);
-      this.comboTimer = CONST.comboWindow;
+      this.awardHeldScore('wallride',.25,CONST.ptsWallrideTick*4);
     }
     this.emitSparks(1, 0xffd0a0, 0.7); // trail of sparks off the trucks
 
@@ -14140,7 +14140,7 @@ export class Player {
     this.comboMult = 0;
     this.comboTimer = 0;
     this.comboLabels = [];
-    this.comboUses.clear();
+    this.clearComboTrickHistory();
     this.special.wipe();
     this.clearSpecialMoves();
     this.deckTricksThisAir.clear();
@@ -14580,6 +14580,22 @@ export class Player {
    * Only local matrices are touched, and the correction is applied to the
    * PARENT of everything measured, so there is no feedback and no jitter.
    */
+  private applyMcTwistPose(progress:number):void {
+    const t=THREE.MathUtils.smoothstep(progress,0,1);
+    const side=-this.stance*Math.PI/2*this.sidePose;
+    _trickFrameQ.setFromAxisAngle(VERT_UP,side);
+    _trickRotationQ.setFromAxisAngle(VERT_UP,Math.PI*t);
+    _trickPitchQ.setFromAxisAngle(_trickRight,-Math.PI*2*t);
+    _trickRotationQ.multiply(_trickPitchQ);
+    _trickRotationQ.premultiply(_trickFrameQ).multiply(_trickFrameQ.invert());
+    // Rotate around the tucked hips, not the physics origin at the feet.
+    _trickPivot.set(0,.68,0).multiply(this.bodyGroup.scale);
+    _trickOffset.copy(_trickPivot).applyQuaternion(_trickRotationQ);
+    _trickOffset.subVectors(_trickPivot,_trickOffset).applyQuaternion(this.bodyGroup.quaternion);
+    this.bodyGroup.position.add(_trickOffset);
+    this.bodyGroup.quaternion.multiply(_trickRotationQ);
+  }
+
   private plantOnDeck(underW: number, mounting = false): void {
     const rg = this.riderG;
     if (!rg) return;
@@ -14950,12 +14966,6 @@ export class Player {
     // below so the deck stays along the line of travel.
     const sideYaw = this.stance * (Math.PI / 2) * this.sidePose;
     const appliedGrindYaw = this.grindYawPose;
-    const specialFlipProgress =
-      this.specialFlip && this.flipT > 0
-        ? THREE.MathUtils.clamp(1 - this.flipT / Math.max(this.flipDuration, 0.001), 0, 1)
-        : 0;
-    const specialTwist =
-      specialFlipProgress * specialFlipProgress * (3 - 2 * specialFlipProgress) * Math.PI * 2;
     // Only an actual airborne deck trick owns the board's yaw. Merely routing
     // spin VFX away from an attached board must not suppress the rider's native
     // grounded/grind spin animation.
@@ -14966,8 +14976,7 @@ export class Player {
       (boardRoutedSpin ? 0 : this.spinAngle) +
       this.grabSpinAngle + (this.parkControls && this.vertAir && !this.grounded ? this.parkAutoTurn : 0) +
       appliedGrindYaw +
-      sideYaw +
-      specialTwist;
+      sideYaw;
 
     // Grab pose, skate-photo style: knees tucked high, one hand pulls the
     // board, the other arm throws up. Direction held picks the variant —
@@ -15476,30 +15485,10 @@ export class Player {
       this.ponyB.rotation.x = 0.5 + 0.05 * breathe;
     }
 
-    const raw = this.rawInput;
-    // Grab variants, skate-photo poses (arms pivot at the SHOULDER: 0 = arm
-    // hanging, positive = swinging forward/up, negative = back/up).
-    let pitchT = 0.9;
-    let rollT = 0;
-    let armRT = 1.1; // right hand pulls the board at the tucked knees
-    let armLT = -2.2; // left arm thrown high behind
-    if (this.grabbing) {
-      if (raw.moveY > 0.4) {
-        pitchT = 1.25; // nosegrab: pitched hard over the nose
-        armRT = 1.5;
-        armLT = -2.4;
-      } else if (raw.moveX < -0.4) {
-        pitchT = 0.6; // melon: leading hand swaps, lean left
-        rollT = -0.5;
-        armRT = -2.0;
-        armLT = 1.2;
-      } else if (raw.moveX > 0.4) {
-        pitchT = 0.6; // indy: lean right
-        rollT = 0.5;
-        armRT = 1.2;
-        armLT = -1.7;
-      }
-    }
+    // Read the latched trick, not the current rotation/balance input.
+    const grabDefinition=grabTrickInfo(this.specialGrab?'indy':this.grabKind);
+    const pitchT=grabDefinition.pitch,rollT=grabDefinition.roll;
+    const armRT=grabDefinition.rightArm,armLT=grabDefinition.leftArm;
     const poseBlend = Math.min(1, 12 * dt);
     this.grabPitch += (pitchT - this.grabPitch) * poseBlend;
     this.grabRoll += (rollT - this.grabRoll) * poseBlend;
@@ -15646,7 +15635,7 @@ export class Player {
       // The deck does NOT turn with the side-on body: counter-rotate the
       // stance yaw so the board stays along the line of travel (spins and
       // boardslides still carry it — those live in the body yaw terms).
-      this.boardG.rotation.y = -this.stance * (Math.PI / 2) * this.sidePose;
+      this.boardG.rotation.y = -this.stance * (Math.PI / 2) * this.sidePose + this.deckYawOffset;
       // THE BOARD IS OUT WHEN YOU ARE SKATING. Nothing else. freeSkate is the
       // skate state — the same flag the movement model uses to decide you are
       // riding rather than walking — so the deck now says exactly what the
@@ -15762,24 +15751,7 @@ export class Player {
       // pose set above (which is authored fresh every frame, so a total-angle
       // rotation here is stable). Board-local axes per the wall basis: +Z nose,
       // +Y griptape, +X width.
-      if (this.state === 'grind' && this.specialGrind?.id === 'darkslide')
-        this.boardG.rotateZ(Math.PI);
-      if (this.flipT > 0) {
-        const fprog = 1 - this.flipT / Math.max(this.flipDuration, 0.001);
-        const fang = fprog * Math.PI * 2;
-        if (this.specialFlip) {
-          this.boardG.rotateZ(fang);
-          this.boardG.rotateY(fang);
-        } else if (this.flipKind === 'kick') this.boardG.rotateZ(fang);
-        else if (this.flipKind === 'heel') this.boardG.rotateZ(-fang);
-        else if (this.flipKind === 'shove') this.boardG.rotateY(fang);
-        else if (this.flipKind === 'imposs') this.boardG.rotateX(fang);
-        else {
-          // varial: roll + shove together
-          this.boardG.rotateZ(fang);
-          this.boardG.rotateY(fang);
-        }
-      }
+      // Animated deck rotations are applied after sole seating below.
       if (this.boardSnapT > 0) this.boardG.visible = false; // snapped: no deck until the get-up ends
     }
     if (this.upperG) this.upperG.rotation.z = this.grabRoll * this.grabPose;
@@ -15907,7 +15879,7 @@ export class Player {
       // forward lean builds with real running speed (sprint posture)
       const runLean = 0.14 * this.walkAmp * Math.min(1, planar / Math.max(TUNING.walkSpeed, 1));
       this.bodyGroup.rotation.x =
-        flip * (1 - this.grabPose) + specialTwist +
+        flip * (1 - this.grabPose) +
         this.grabPitch * this.grabPose -
         0.6 * this.slidePose + // baseball slide: leaned back on the hip
         (0.75 * crawlMove + 0.16 * crouchW) * legacyLowPoseOuterWeight -
@@ -16225,7 +16197,28 @@ export class Player {
     // Plant only after both layers so feet cannot slide away from the deck.
     // The hop needs a fully seated reference from its first frame; the old
     // partial mount blend could start a charged shoe underneath the new deck.
+    const deckTrickPose=this.flipT>0&&this.state==='air'
+      ?sampleDeckTrick(this.flipKind,1-this.flipT/this.flipDuration):null;
+    if(deckTrickPose){
+      if(this.kneeL)this.kneeL.rotation.x+=.45*deckTrickPose.tuck;
+      if(this.kneeR)this.kneeR.rotation.x+=.45*deckTrickPose.tuck;
+      const front=this.stance>0?this.legL:this.legR;
+      if(front)front.rotation.z+=.24*deckTrickPose.flick;
+    }
     this.plantOnDeck(underW, this.skateMountT >= 0);
+    // Seat against the stable catch plane, then let the feet leave it. A
+    // rotating board must never drag the rider through the contact solver.
+    if(deckTrickPose&&this.boardG){
+      if(this.riderG)this.riderG.position.y+=deckTrickPose.riderLift;
+      this.boardG.position.y-=deckTrickPose.deckDrop;
+      _trickOffset.set(0,deckTrickPose.orbitY,deckTrickPose.orbitZ).applyQuaternion(this.boardG.quaternion);
+      this.boardG.position.add(_trickOffset);
+      this.boardG.rotateZ(deckTrickPose.roll);
+      this.boardG.rotateY(this.specialFlip?(1-this.flipT/this.flipDuration)*Math.PI*2:deckTrickPose.yaw);
+      this.boardG.rotateX(deckTrickPose.pitch);
+    }
+    if(this.specialFlip&&this.flipT>0)this.applyMcTwistPose(1-this.flipT/this.flipDuration);
+    if(this.state==='grind'&&this.specialGrind?.id==='darkslide')this.boardG?.rotateZ(Math.PI);
     this.seatOnFoot();
     // Apply lift AFTER deck planting; otherwise the contact solver cancels
     // the hop. The skateboard and physics point remain on their exact path.

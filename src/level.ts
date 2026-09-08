@@ -1,3 +1,4 @@
+import { DECK_TRICKS, deckTrickInfo, type DeckTrickKind } from './skateTricks';
 import { createJungleCupTrophy } from "./competition/trophy";
 import { cameraViewDirection, type CameraView } from "./cameraViews";
 // Every level in the game, plus the toolkit they are all assembled from.
@@ -480,61 +481,8 @@ export interface Stone {
   chase?: boolean; // boulder-chase mode: rolls after the player instead of patrolling
 }
 
-// One shared deck-trick vocabulary for gameplay, trick primitives and the
-// editor. In particular, the input recipe must not drift from the selector in
-// Player.tryStartDeckTrick(): the gate is only fair if the lock tells you the
-// exact move that will open it.
-export const DECK_TRICKS = [
-  {
-    kind: "kick",
-    label: "Kickflip",
-    recipe: "NEUTRAL + □ / F",
-    hint: "release direction, then {spin} while airborne on the board",
-  },
-  {
-    kind: "heel",
-    label: "Heelflip",
-    recipe: "LEFT ONLY + □ / F",
-    hint: "release forward/back, hold {left} + {spin} while airborne on the board",
-  },
-  {
-    kind: "shove",
-    label: "Pop Shove-It",
-    recipe: "RIGHT ONLY + □ / F",
-    hint: "release forward/back, hold {right} + {spin} while airborne on the board",
-  },
-  {
-    kind: "imposs",
-    label: "Impossible",
-    recipe: "UP + □ / F",
-    hint: "hold {up} + {spin} while airborne on the board",
-  },
-  {
-    kind: "varial",
-    label: "Varial Flip",
-    recipe: "DOWN + □ / F",
-    hint: "hold {down} + {spin} while airborne on the board",
-  },
-] as const;
-
-export type DeckTrickKind = (typeof DECK_TRICKS)[number]["kind"];
-
-export function deckTrickInfo(
-  kind: DeckTrickKind,
-): (typeof DECK_TRICKS)[number] {
-  return DECK_TRICKS.find((entry) => entry.kind === kind) ?? DECK_TRICKS[0];
-}
-
-export function deckTrickFromInput(moveX: number, moveY: number): DeckTrickKind {
-  // Vertical has priority: a diagonal-forward press is an Impossible, not a
-  // Heelflip/Pop Shove-It. The shared recipes say LEFT/RIGHT ONLY for exactly
-  // this reason.
-  if (moveY > 0.4) return "imposs";
-  if (moveY < -0.4) return "varial";
-  if (moveX < -0.3) return "heel";
-  if (moveX > 0.3) return "shove";
-  return "kick";
-}
+// Shared gameplay/editor vocabulary; keep authored trick IDs stable.
+export { DECK_TRICKS, deckTrickInfo, deckTrickFromInput, type DeckTrickKind } from './skateTricks';
 
 export interface TrickGate {
   center: THREE.Vector3;

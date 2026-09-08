@@ -199,7 +199,7 @@ assert.match(player, /deckTrickPreviewSequence\+\+/);
 assert.match(player, /comboHudActionRevision\+\+/);
 assert.match(player, /onComboBank\(amount, sourceComboLabelLine\(this\.comboLabels\)\)/);
 assert.match(player, /onComboBail\([\s\S]*sourceComboLabelLine\(this\.comboLabels\)[\s\S]*this\.comboPoints[\s\S]*this\.comboMult/);
-assert.match(player, /while \(this\.grindTickT >= 0\.25\)[\s\S]{0,180}this\.comboPoints \+= CONST\.ptsGrindTick/);
+assert.match(player, /while \(this\.grindTickT >= 0\.25\)[\s\S]{0,300}this\.awardHeldScore\('grind',\.25/);
 const main = await readFile(`${root}src/main.ts`, "utf8");
 assert.match(main, /comboPreview = player\.comboHudPreview/);
 assert.match(main, /comboActionRevision: player\.comboActionRevision/);

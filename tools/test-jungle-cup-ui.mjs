@@ -12,7 +12,7 @@ await withSkateRuntime(async ({ server }) => {
   const create=document.createElement.bind(document);
   document.createElement=tag=>{
     const element=create(tag),listeners=new Map();let html='',buttons=[];
-    element.dataset={};element.classList=classes();element.querySelectorAll=()=>buttons.filter(b=>!b.disabled);
+    element.dataset={};element.classList=classes();element.querySelectorAll=selector=>selector.startsWith('button')?buttons.filter(b=>!b.disabled):[];
     element.querySelector=selector=>buttons.find(b=>!b.disabled&&selector.includes(`"${b.dataset.action}"`))??null;
     element.addEventListener=(name,fn)=>listeners.set(name,fn);
     Object.defineProperty(element,'innerHTML',{get:()=>html,set:value=>{
@@ -35,23 +35,30 @@ await withSkateRuntime(async ({ server }) => {
   const pad=(x=0,y=0,held=[])=>({axes:[x,y],buttons:Array.from({length:17},(_,i)=>({pressed:held.includes(i),value:held.includes(i)?1:0})),mapping:'standard',connected:true,id:'test',index:0});
   const neutral=()=>ui.updateInput(pad());
   const tap=(x,y,held=[])=>{neutral();ui.updateInput(pad(x,y,held));neutral();};
-  assert.deepEqual(selected(),['start']);assert.deepEqual(buttons().map(b=>b.tabIndex),[0,-1]);
+  assert.deepEqual(selected(),['start']);assert.deepEqual(buttons().map(b=>b.tabIndex),[0,-1,-1]);
   ui.updateInput(pad(0,0,[0]));assert.deepEqual(calls,[],'held confirm activated the opening menu');
-  tap(1,0);assert.deepEqual(selected(),['exit'],'horizontal stick lacks a visible selection');
+  tap(1,0);assert.deepEqual(selected(),['guide'],'horizontal stick lacks a visible selection');
+  tap(1,0);assert.deepEqual(selected(),['exit']);
   assert.equal(document.activeElement.dataset.action,'exit');
   neutral();ui.updateInput(pad(1,0));ui.updateInput(pad(1,0));
   assert.deepEqual(selected(),['start'],'held direction repeated');
   tap(-1,0);assert.deepEqual(selected(),['exit']);
-  tap(0,-1);assert.deepEqual(selected(),['start']);tap(0,1);assert.deepEqual(selected(),['exit']);
-  tap(0,0,[14]);assert.deepEqual(selected(),['start']);tap(0,0,[15]);assert.deepEqual(selected(),['exit']);
+  tap(0,-1);assert.deepEqual(selected(),['guide']);tap(0,1);assert.deepEqual(selected(),['exit']);
+  tap(0,0,[14]);assert.deepEqual(selected(),['guide']);tap(0,0,[15]);assert.deepEqual(selected(),['exit']);
   ui.updateInput(pad(0,0,[0]));assert.deepEqual(calls,['exit']);
-  assert.equal(buttons()[1].classList.contains('pressed'),true);
+  assert.equal(buttons()[2].classList.contains('pressed'),true);
   ui.updateInput(pad(0,0,[0]));assert.equal(calls.length,1,'held confirm repeated an action');
-  neutral();assert.equal(buttons()[1].classList.contains('pressed'),false);
+  neutral();assert.equal(buttons()[2].classList.contains('pressed'),false);
   event.bails++;ui.render(event);assert.deepEqual(selected(),['exit'],'same-screen refresh lost selection');
   ui.render(event,true);tap(0,-1);assert.deepEqual(selected(),['exit'],'suppressed UI consumed navigation');
   ui.render(event);ui.updateInput(pad(0,0,[0]));assert.equal(calls.length,1,'held confirm after pause activated menu');
   neutral();
+  tap(-1,0);tap(0,0,[0]);
+  assert.ok(ui.element.innerHTML.includes('TRICKS & COMBOS'));
+  assert.ok(ui.element.innerHTML.includes('Hardflip')&&ui.element.innerHTML.includes('Tailgrab'));
+  assert.deepEqual(selected(),['guide-back']);assert.equal(calls.length,1,'guide dispatched a gameplay action');
+  tap(0,0,[1]);assert.deepEqual(selected(),['guide'],'controller Back did not restore guide focus');
+  assert.ok(ui.element.innerHTML.includes('BEAT YOUR RIVAL'));
   event.startRun();event.stepPresentation(3);event.stepRun(60,9876,false);ui.render(event);
   tap(0,0,[0]);assert.equal(calls.length,1,'disabled judge button activated');
   event.stepPresentation(3);ui.render(event);assert.deepEqual(selected(),['standings']);

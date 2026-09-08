@@ -24,7 +24,7 @@ export const SPECIAL_TRICKS: readonly SpecialTrick[] = [
     category: 'flip',
     label: 'Kickflip McTwist',
     directions: ['left', 'right'],
-    points: 1500,
+    points: 2500,
     duration: 0.78,
     controls: '← → + □',
   },
@@ -33,7 +33,7 @@ export const SPECIAL_TRICKS: readonly SpecialTrick[] = [
     category: 'grab',
     label: 'The 900',
     directions: ['right', 'down'],
-    points: 900,
+    points: 3000,
     duration: 0.9,
     controls: '→ ↓ + ○',
   },
@@ -42,7 +42,7 @@ export const SPECIAL_TRICKS: readonly SpecialTrick[] = [
     category: 'grind',
     label: 'Darkslide',
     directions: ['left', 'right'],
-    points: 1200,
+    points: 1800,
     duration: 0,
     controls: '← → + △',
   },
@@ -183,6 +183,12 @@ export class SpecialSystem {
 
   clearInput(): void {
     this.heldDirection = null;
+    this.taps = [];
+  }
+
+  /** A direction used by an ordinary trick cannot become direction one of
+   * a later special. Keep the held latch so holding it cannot create a tap. */
+  consumeInput(): void {
     this.taps = [];
   }
 

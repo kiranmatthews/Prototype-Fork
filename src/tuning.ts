@@ -1,3 +1,5 @@
+import { DECK_TRICKS, GRAB_TRICKS, GRIND_TRICKS } from './skateTricks';
+import { TRICK_REPEAT_FACTORS } from './trickScoring';
 // All movement in this prototype is authored numbers — there is no physics
 // engine anywhere. These values ARE the game feel; everything is exposed on
 // sliders in the debug panel (ui.ts) for live tuning.
@@ -816,14 +818,14 @@ export const CONST = {
   ptsSlide: 30,
   ptsSlam: 75,
   ptsRopeSwing: 60, // leaping off a swing rope
-  ptsGrab: 150,
+  ptsGrab: GRAB_TRICKS[0].points,
   vertSpinMin: 2, // halves needed to SCORE a spin out of a pipe hang (2 = a full 360; a vert 180 is too easy to be worth points)
   ptsSpin: 80, // per 180 degrees of air rotation landed — a rotation is its own trick
-  ptsGrabTick: 4, // accrues every quarter second a grab is held (THPS-style)
+  ptsGrabTick: GRAB_TRICKS[0].rate / 4, // accrues every quarter second a grab is held (THPS-style)
   ptsCrystal: 500, // the level crystal pickup
   ptsGem: 1000, // all-boxes gem
   ptsGrindBase: 100,
-  ptsGrindTick: 6, // accrues every quarter second on the rail (THPS-style)
+  ptsGrindTick: GRIND_TRICKS.normal.rate / 4, // accrues every quarter second on the rail (THPS-style)
   ptsWallride: 120, // base for a wallride (shows the plate immediately)
   ptsWallrideTick: 6, // accrues every quarter second on a wallride (THPS-style)
   ptsManualBase: 100, // popping a manual / nose manual
@@ -831,9 +833,9 @@ export const CONST = {
   ptsLip: 125, // catching a lip stall on the coping
   ptsLipTick: 6, // accrues every quarter second stalled on the lip
   ptsSpine: 250, // spine transfer: carried over the ridge, landed the far side
-  repeatDecay: [1, 0.75, 0.5, 0.25], // THPS4/THUG: the Nth use of the SAME trick in one combo pays this share of its base (last entry is the floor). World rewards — crates, fruit, enemies — never decay
-  flipTime: 0.42, // how long a flip trick takes the deck to complete — finish it in the air or the landing goes sketchy and pays nothing
-  ptsFlip: 110, // base for a flip trick (kickflip family), scored the moment the deck completes mid-air
+  repeatDecay: TRICK_REPEAT_FACTORS, // Current and previously landed combos share run history; bailed attempts are discarded.
+  flipTime: DECK_TRICKS[0].duration, // how long a flip trick takes the deck to complete — finish it in the air or the landing goes sketchy and pays nothing
+  ptsFlip: DECK_TRICKS[0].points, // base for a flip trick (kickflip family), scored the moment the deck completes mid-air
   ptsRevert: 100, // R2 within the beat after a transition touchdown: the pivot that keeps a vert combo alive into the manual (THPS3+/THUG's bridge)
   uberScoreMult: 2, // three masks banked (uber): every trick goes SPECIAL — renamed on the plate and paying this multiple
   hangLatMax: 40, // pipe hang: cap on the off-axis lateral carry. Effectively uncapped now (THPS conserves coping drift — a hard angled carve genuinely flies you down the pipe); out-running the pipe is the hang-end bail's job, not a clamp's

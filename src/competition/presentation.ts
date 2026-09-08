@@ -3,6 +3,8 @@ import { setPromptText } from '../inputPromptUI';
 import { actionButtonDown } from '../inputBindings';
 import { JUDGES, type JungleCupEvent, type Standing } from './event';
 import { CompetitionSurface } from './surface';
+import { DECK_TRICKS, GRAB_TRICKS, GRIND_TRICKS } from '../skateTricks';
+import { SPECIAL_TRICKS } from '../specialTricks';
 
 export type CompetitionAction = 'start' | 'standings' | 'retry' | 'exit';
 export interface JudgePresentationHooks {
@@ -25,13 +27,14 @@ export class CompetitionPresentation {
   readonly element = document.createElement('div');
   private key = '';
   private event: JungleCupEvent | null = null;
-  private previous = {accept:false,up:false,down:false,left:false,right:false};
+  private previous = {accept:false,back:false,up:false,down:false,left:false,right:false};
   private selected = 0;
   private seedInput = true;
   private revealed = 0;
   private revealRun = 0;
   private surface: CompetitionSurface;
   private phase = '';
+  private guideOpen = false;
   private pointer = { x: NaN, y: NaN };
   constructor(private action: (action: CompetitionAction) => void, readonly hooks: JudgePresentationHooks = {}) {
     this.element.className = 'competition-host'; this.element.hidden = true;
@@ -42,6 +45,8 @@ export class CompetitionPresentation {
       const button = (e.target as Element).closest<HTMLButtonElement>('button[data-action]');
       if (button && !button.disabled && this.modalActive) {
         this.selected = this.buttons().indexOf(button); this.syncSelection(false);
+        if(button.dataset.action==='guide'){this.showGuide(true);return;}
+        if(button.dataset.action==='guide-back'){this.showGuide(false);return;}
         this.action(button.dataset.action as CompetitionAction);
       }
     });
@@ -69,6 +74,7 @@ export class CompetitionPresentation {
       if (!this.modalActive || document.body.classList.contains('game-shell-modal') ||
           (e.target instanceof Element && e.target.closest('input,textarea,select,[contenteditable=true],.side-wrap,.secondary-text-tuner,[data-crt-guest-panel-host],[data-render-quality-panel-host],[data-skateboard-panel-host],.ed-panel'))) return;
       const buttons = this.buttons();
+      if(e.code==='Escape'&&this.guideOpen){e.preventDefault();e.stopImmediatePropagation();if(!e.repeat)this.showGuide(false);return;}
       if (['ArrowDown','ArrowRight','KeyS','KeyD'].includes(e.code)) {e.preventDefault();if(!e.repeat)this.select(1);}
       else if (['ArrowUp','ArrowLeft','KeyW','KeyA'].includes(e.code)) {e.preventDefault();if(!e.repeat)this.select(-1);}
       else if (e.code === 'Enter' || e.code === 'Space') {e.preventDefault();if(!e.repeat){this.press(true);buttons[this.selected]?.click();}}
@@ -76,6 +82,10 @@ export class CompetitionPresentation {
     });
   }
   get modalActive(): boolean { return !!this.event && !this.element.hidden && this.event.phase !== 'running'; }
+  private showGuide(open:boolean):void {
+    this.guideOpen=open;this.key='';this.seedInput=true;this.render(this.event);
+    if(!open){this.selected=Math.max(0,this.buttons().findIndex(button=>button.dataset.action==='guide'));this.syncSelection();}
+  }
   get diagnostics() { return { selected: this.buttons()[this.selected]?.dataset.action ?? null, ...this.surface.diagnostics }; }
   paint(ctx: CanvasRenderingContext2D, size: {width:number;height:number}): void { this.surface.paint(ctx,size); }
   setComposited(value: boolean): void { if(!value)this.surface.deactivate(); }
@@ -103,7 +113,7 @@ export class CompetitionPresentation {
   }
   updateInput(pad: Gamepad | null = inputPrompts.gamepad): void {
     if (!this.event) return;
-    const next={accept:actionButtonDown(pad,'confirm'),
+    const next={accept:actionButtonDown(pad,'confirm'),back:actionButtonDown(pad,'back'),
       up:(pad?.axes[1]??0)<-.55||pad?.buttons[12]?.pressed===true,
       down:(pad?.axes[1]??0)>.55||pad?.buttons[13]?.pressed===true,
       left:(pad?.axes[0]??0)<-.55||pad?.buttons[14]?.pressed===true,
@@ -112,38 +122,44 @@ export class CompetitionPresentation {
       if((next.up&&!this.previous.up)||(next.left&&!this.previous.left))this.select(-1);
       else if((next.down&&!this.previous.down)||(next.right&&!this.previous.right))this.select(1);
       if(next.accept&&!this.previous.accept){this.press(true);this.buttons()[this.selected]?.click();}
+      else if(next.back&&!this.previous.back&&this.guideOpen)this.showGuide(false);
     }
     if(!next.accept&&this.previous.accept)this.press(false);
     this.previous=next;this.seedInput=false;
   }
   render(event: JungleCupEvent | null, suppressed = false): void {
     if (!event && !this.event && this.element.hidden) return;
-    if (this.event !== event) { this.key=''; this.phase=''; this.revealed=0; this.revealRun=0; this.seedInput=true; }
+    if (this.event !== event) { this.key=''; this.phase=''; this.guideOpen=false; this.revealed=0; this.revealRun=0; this.seedInput=true; }
     const wasHidden=this.element.hidden;
     this.event=event;this.element.hidden=!event||suppressed;
     if(wasHidden!==this.element.hidden){this.seedInput=true;this.surface.invalidate();}
     if(this.element.hidden)this.surface.deactivate();
     document.body.classList.toggle('competition-active',!!event);
     if(!event)return;
-    const key=[event.phase,event.runs.length,Math.ceil(event.remaining),Math.ceil(event.countdown),event.revealedJudges,event.bails,event.cupAwarded,event.overtime].join(':');
+    if(event.phase==='running'||event.phase==='countdown')this.guideOpen=false;
+    const view=this.guideOpen?'guide':event.phase;
+    const key=[view,event.runs.length,Math.ceil(event.remaining),Math.ceil(event.countdown),event.revealedJudges,event.bails,event.cupAwarded,event.overtime].join(':');
     if(key===this.key)return;this.key=key;
-    const phaseChanged=this.phase!==event.phase;this.phase=event.phase;
+    const phaseChanged=this.phase!==view;this.phase=view;
     if(phaseChanged)this.seedInput=true;
     this.element.classList.toggle('is-running',event.phase==='running');
     this.element.setAttribute('role',event.phase==='running'?'status':'dialog');
     this.element.setAttribute('aria-label','Jungle Cup skate competition');
     this.element.setAttribute('aria-modal',String(event.phase!=='running'));
     const header='<div class="comp-eyebrow">ISLAND 1 · SKATE COMPETITION</div><h1>JUNGLE CUP</h1>';
-    const button=(label:string,action:CompetitionAction,disabled=false)=>`<button data-action="${action}"${disabled?' disabled':''}>${label}</button>`;
+    const button=(label:string,action:CompetitionAction|'guide'|'guide-back',disabled=false)=>`<button data-action="${action}"${disabled?' disabled':''}>${label}</button>`;
     let html='';
     const reveals: {id:string;score:number}[]=[];
-    if(event.phase==='running') {
+    if(this.guideOpen){
+      const table=(rows:readonly {direction:string;label:string;points:number}[])=>`<table><thead><tr><th>DIRECTION</th><th>TRICK</th><th>BASE</th></tr></thead><tbody>${rows.map(row=>`<tr><td>${esc(row.direction)}</td><td>${esc(row.label)}</td><td>${row.points.toLocaleString()}</td></tr>`).join('')}</tbody></table>`;
+      html=`<section class="comp-card comp-guide">${header}<h2>TRICKS & COMBOS</h2><p>Tap a face button with a direction. Short direction taps choose a trick; holding left or right also rotates the rider. Release grabs and catch flips before landing.</p><div class="comp-guide-grid"><article><h3 data-guide-prompt="{spin} FLIPS"></h3>${table(DECK_TRICKS.map(trick=>({direction:trick.recipe.split(' + □')[0],label:trick.label,points:trick.points})))}</article><article><h3 data-guide-prompt="{grab} GRABS"></h3>${table(GRAB_TRICKS)}<p>Hold for more points. The entry direction fixes the grab while you rotate.</p></article><article><h3 data-guide-prompt="{grind} GRINDS"></h3>${table(Object.values(GRIND_TRICKS))}<p>Press again with a direction to change grind. Moving along the rail earns hold points.</p></article><article><h3>SPECIAL</h3><table><tbody>${SPECIAL_TRICKS.map(trick=>`<tr><td>${esc(trick.controls)}</td><td>${esc(trick.label)}</td><td>${trick.points.toLocaleString()}</td></tr>`).join('')}</tbody></table><p>Fill the avatar's SPECIAL ring with tricks. Enter the two directions in order, then the face button.</p><h3>KEEP IT FRESH</h3><p>Repeated tricks pay 100%, 75%, 50%, 25%, then 10%. Landed combos share this history until the next run; bailed attempts don't add to it. Hold points use the same penalty and grow more slowly after two seconds.</p><p>Link airs with grinds, manuals (up–down / down–up), and a revert on vert touchdown.</p></article></div><div class="comp-actions">${button('BACK','guide-back')}${button(`START RUN ${event.runNumber}`,'start')}</div></section>`;
+    } else if(event.phase==='running') {
       const seconds=Math.ceil(event.remaining);
       html=`<div class="comp-run-hud${seconds<=10?' urgent':''}${event.overtime?' overtime':''}"><span>RUN ${event.runNumber}/3${event.overtime?'<small>FINAL COMBO</small>':''}</span><strong>${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}</strong><span class="comp-bails">${event.bails} BAIL${event.bails===1?'':'S'}</span></div>`;
     } else if(event.phase==='countdown') {
       html=`<div class="comp-countdown"><span>RUN ${event.runNumber} / 3</span><strong>${Math.max(1,Math.ceil(event.countdown))}</strong><p>MAKE IT COUNT</p></div>`;
     } else if(event.phase==='intro') {
-      html=`<section class="comp-card comp-intro">${header}<div class="comp-intro-body"><div class="comp-cup">${CUP_TROPHY_SVG}</div><div><h2>BEAT YOUR RIVAL. TAKE THE CUP.</h2><div class="comp-rules"><b>3 RUNS</b><b>60 SECONDS EACH</b><b>BEST 2 COUNT</b></div><p>Link grinds, airs and manuals through the temple park. Your board returns automatically after a bail. The clock holds at 0:00 until your final combo lands or breaks. Every bail costs judge points.</p><p>Only <strong>1st overall</strong> wins the Jungle Cup.</p></div></div><div class="comp-actions">${button('START RUN 1','start')}${button('RETURN TO MAP','exit')}</div></section>`;
+      html=`<section class="comp-card comp-intro">${header}<div class="comp-intro-body"><div class="comp-cup">${CUP_TROPHY_SVG}</div><div><h2>BEAT YOUR RIVAL. TAKE THE CUP.</h2><div class="comp-rules"><b>3 RUNS</b><b>60 SECONDS EACH</b><b>BEST 2 COUNT</b></div><p>Link grinds, airs and manuals through the temple park. Your board returns automatically after a bail. The clock holds at 0:00 until your final combo lands or breaks. Every bail costs judge points.</p><p>Only <strong>1st overall</strong> wins the Jungle Cup.</p></div></div><div class="comp-actions">${button('START RUN 1','start')}${button('TRICK GUIDE','guide')}${button('RETURN TO MAP','exit')}</div></section>`;
     } else if(event.phase==='judges') {
       const run=event.runs[event.runs.length-1]!, all=event.revealedJudges===3;
       if(this.revealRun!==event.runs.length){this.revealRun=event.runs.length;this.revealed=0;}
@@ -159,11 +175,13 @@ export class CompetitionPresentation {
     }
     const focused=!phaseChanged?this.buttons()[this.selected]?.dataset.action:undefined;
     this.element.innerHTML=html;this.selected=0;
+    if(this.guideOpen)for(const heading of this.element.querySelectorAll<HTMLElement>('[data-guide-prompt]'))setPromptText(heading,heading.dataset.guidePrompt!);
     if(event.phase==='intro') {
       const body=this.element.querySelector('.comp-intro-body>div:last-child');
       if(body) for(const text of [
         '{left} / {right} steer · {down} brake · {up} transfers over vert',
         'Hold {jump} to crouch and accelerate; release to ollie. {grind} grinds.',
+        '{spin} + direction flips · {grab} + direction grabs · {transfer} reverts on landing.',
       ]) {
         const row=document.createElement('p');row.className='comp-controls';
         setPromptText(row,text);body.appendChild(row);
@@ -189,6 +207,7 @@ const CSS=`
 .comp-judges{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.comp-judge{text-align:center;background:#10251f;border-top:6px solid var(--judge);padding:16px 12px}.comp-portrait{width:94px;height:94px;margin:auto}.comp-portrait svg,.comp-portrait img,.comp-avatar svg,.comp-avatar img{width:100%;height:100%;object-fit:cover}.comp-judge h3{font-size:24px;margin:8px 0 1px}.comp-judge small{color:#b7c0a9}.comp-judge>strong{display:block;font-size:56px;color:#ffd278;margin:8px 0}.comp-judge p{min-height:32px;font:14px/1.3 Arial,sans-serif;color:#c8d6c6;margin:5px 0}.comp-judge.hostile{background:#3b2925}.comp-judge.revealed>strong{animation:comp-pop .25s ease-out}.comp-run-summary{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;margin-top:20px;font-size:16px}.comp-run-summary strong{font-size:30px;color:#ffce66}.comp-history{display:flex;gap:18px;justify-content:center;margin:16px 0}.comp-history span{background:#294a40;padding:8px 14px;color:#c7d2ba}.comp-history b{color:white;margin-left:12px}
 .comp-table-wrap table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}.comp-table-wrap th,.comp-table-wrap td{padding:10px 8px;border-bottom:1px solid #426155;text-align:right}.comp-table-wrap thead th{font-size:12px;color:#b6c4aa;letter-spacing:1px}.comp-table-wrap th:first-child,.comp-table-wrap td:first-child{text-align:center;width:35px}.comp-table-wrap th:nth-child(2){text-align:left}.comp-table-wrap tbody th{display:flex;align-items:center;gap:10px;font-size:18px}.comp-avatar{display:inline-flex;width:37px;height:37px;flex-shrink:0}.comp-table-wrap td{font-size:22px}.comp-table-wrap .player-row{background:#416044;box-shadow:inset 4px 0 #ffd278}.comp-table-wrap .rival-row{background:#382f4b}.comp-table-wrap .discarded{text-decoration:line-through;color:#7b8d7f}.comp-note{font:14px/1.4 Arial,sans-serif;color:#c2cdb9}.comp-standings h1{font-size:38px}.comp-standings .comp-avatar{width:30px;height:30px}.comp-podium{display:flex;justify-content:center;gap:24px;margin:8px 0 12px}.comp-podium>div{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:110px;padding:8px;background:#10261f}.comp-podium b{color:#ffd278}.comp-podium .comp-avatar{width:36px;height:36px}.comp-award{display:flex;align-items:center;justify-content:center;gap:18px;background:#2d4b36;margin-top:12px;padding:8px}.comp-award>span{width:64px}.comp-award h3{color:#ffce66;margin:0;font-size:23px}.comp-award p{font:14px Arial,sans-serif;margin:5px 0}
 body.game-interface-composited .comp-judge.revealed>strong{animation:none}.comp-table-wrap{overflow-x:auto}
+.comp-guide>p,.comp-guide article p{font:14px/1.45 Arial,sans-serif;color:#d9e0ce}.comp-guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.comp-guide article{background:#10251f;padding:12px}.comp-guide h3{font-size:19px;color:#ffd278;margin:5px 0 12px}.comp-guide table{width:100%;border-collapse:collapse;font:12px/1.4 Arial,sans-serif}.comp-guide th,.comp-guide td{padding:6px 4px;border-bottom:1px solid #426155;text-align:left}.comp-guide th{font-size:10px;color:#b6c4aa}.comp-guide td:last-child{text-align:right;white-space:nowrap;color:#ffd278}.comp-guide .comp-actions{position:sticky;bottom:0;background:#19332f;padding:12px 0 6px}@media(max-width:620px){.comp-guide-grid{grid-template-columns:1fr}.comp-guide article{padding:8px}}
 @keyframes comp-pop{from{transform:scale(1.2)}to{transform:scale(1)}}@media(max-width:620px){.competition-host{padding:9px}.comp-card{padding:16px 12px;max-height:96vh}.comp-card h1{font-size:34px}.comp-card h2{font-size:20px}.comp-intro-body{display:block;margin:12px 0}.comp-cup{width:88px;margin:auto}.comp-rules{gap:5px}.comp-rules b{font-size:11px;padding:8px}.comp-intro-body p{font-size:14px}.comp-judges{gap:6px}.comp-judge{padding:10px 4px}.comp-portrait{width:60px;height:60px}.comp-judge h3{font-size:19px}.comp-judge small{font-size:10px}.comp-judge>strong{font-size:37px}.comp-judge p{font-size:11px;min-height:40px}.comp-run-summary{font-size:12px;justify-content:center;gap:8px}.comp-run-summary strong{font-size:23px}.comp-history{gap:5px}.comp-history span{font-size:11px;padding:7px}.comp-history b{margin-left:4px}.comp-actions{gap:8px;margin-top:14px}.comp-actions button{font-size:15px;padding:11px}.comp-table-wrap th,.comp-table-wrap td{padding:8px 3px}.comp-table-wrap thead th{font-size:9px;letter-spacing:0}.comp-table-wrap tbody th{font-size:12px;gap:4px;min-width:82px}.comp-table-wrap td{font-size:15px}.comp-avatar{width:26px;height:26px}.comp-podium{gap:7px}.comp-podium>div{min-width:80px;font-size:12px}.comp-run-hud{gap:14px;padding:7px 12px}.comp-run-hud span{font-size:14px}.comp-run-hud>strong{font-size:29px;min-width:67px}.comp-award p{font-size:12px}.comp-note{font-size:11px}}
 @media(max-width:620px){.competition-host.is-running{justify-content:flex-start;padding:12px 14px 0 28px}.comp-run-hud{display:grid;grid-template-columns:1fr auto;gap:2px 8px;width:min(255px,calc(100vw - 165px));padding:8px 10px}.comp-run-hud>span{font-size:12px;white-space:nowrap}.comp-run-hud small{font-size:9px}.comp-run-hud>strong{grid-column:2;grid-row:1 / span 2;min-width:0;font-size:28px}.comp-run-hud>.comp-bails{grid-column:1;font-size:10px}}
 @media(max-height:650px){.comp-actions{position:sticky;bottom:0;background:#19332f;padding:10px 0 6px}}`;
