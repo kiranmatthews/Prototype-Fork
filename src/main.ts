@@ -6,6 +6,7 @@ import { configureJungleAssetRenderer } from "./jungleAssets";
 import { afterPresentationPaint, presentationAssets } from "./presentationLoading";
 import { installLocalResetListener } from "./localGameStorage";
 import { Input } from "./input";
+import { requiresTerrainSupportBuildCheck } from "./terrainSupportBudget";
 import {
   Level,
   LevelEntry,
@@ -22,6 +23,7 @@ import {
   adoptLegacyLevels,
   starterCustomLevel,
   normalizeCustomLevelData,
+  borrowedValidatedLevelData,
   parseCustomLevelJson,
   newLaneCursor,
   userLevelStorageHealthy,
@@ -2276,10 +2278,8 @@ function switchLevel(
   preserveEditor = false,
   preserveInventory = false,
   warpReturnFromKey: string | null = null,
-): void {
-  ui.hideMessage();
-  if (bonusSession) discardSuspendedBonus();
-  clearResultsPresentation();
+  beforeSwitch?: () => void,
+): boolean {
   // An id that no longer exists — a deleted user level, a replay or saved
   // editor target from an older list — resolves to the default course rather
   // than taking the whole game down on entry.name.toUpperCase().
@@ -2290,8 +2290,30 @@ function switchLevel(
       ? findLevel(campaignTarget.fallbackLevelId)
       : null) ??
     findLevel(DEFAULT_LEVEL_ID)!;
+  // A schema-valid library entry can still exceed the exact construction
+  // workload limit. Build before changing the active run or releasing any of
+  // its resources, so selecting/restoring that entry cannot blank the world.
+  let candidate: Level;
+  const buildForEditor = preserveEditor && editor.active;
+  const changedBuildMode = setEditorBuild(buildForEditor);
+  try {
+    candidate = new Level(scene, entry, level);
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : "invalid level data";
+    ui.showMessage("LEVEL LOAD FAILED", `${entry.name} · ${detail}`, 3200);
+    return false;
+  } finally {
+    if (changedBuildMode) setEditorBuild(!buildForEditor);
+  }
+  // Menu inventory/pause changes must precede respawn, but only after the
+  // destination exists. A refused load leaves that live run state untouched.
+  beforeSwitch?.();
+  ui.hideMessage();
+  if (bonusSession) discardSuspendedBonus();
+  clearResultsPresentation();
   current = entry;
-  localStorage.setItem("solProtoLevelId", entry.id);
+  try { localStorage.setItem("solProtoLevelId", entry.id); }
+  catch { /* a storage failure cannot interrupt an otherwise playable switch */ }
   if (replayer.active) {
     // a manual level switch cancels a running replay (and restores tuning)
     replayer.end();
@@ -2311,11 +2333,11 @@ function switchLevel(
   }
   worldMapController?.deactivate();
   worldMapUI?.hide();
-  level.dispose();
+  level.dispose(candidate);
   puffs.clear(); // no cloud from the level you just left hanging over the new one
   swirls.clear();
   fieldSwirls.clear();
-  level = new Level(scene, entry);
+  level = candidate;
   loadedLevelId = entry.id;
   puffs.attach(scene);
   const warpReturnPose =
@@ -2378,6 +2400,7 @@ function switchLevel(
       >
     ).level = level);
   if (preserveEditor) editor.onLevelRebuilt();
+  return true;
 }
 
 function currentCampaignName(): string {
@@ -2420,7 +2443,7 @@ function startNewCampaign(slot: number): void {
     const save = campaign.newGame(slot);
     player.lives = save.lives;
     player.fruit = save.fruit;
-    switchLevel("warproom", false, true);
+    if (!switchLevel("warproom", false, true)) return;
     await prepareActivePresentationAssets();
     gameFlow.hide();
   });
@@ -2437,7 +2460,7 @@ function loadCampaign(slot: number): void {
     if (!save) return;
     player.lives = save.lives;
     player.fruit = save.fruit;
-    switchLevel("warproom", false, true);
+    if (!switchLevel("warproom", false, true)) return;
     await prepareActivePresentationAssets();
     gameFlow.hide();
   });
@@ -2565,10 +2588,10 @@ function discardSuspendedBonus(): void {
   applyEndlessDeaths();
 }
 
-function returnToWarpRoom(originLevelId: string): void {
+function returnToWarpRoom(originLevelId: string): boolean {
   const returnFromKey = campaignLevelById(originLevelId)?.progressKey ?? null;
   const target = findLevel(campaignMapOriginId) ? campaignMapOriginId : "warproom";
-  switchLevel(target, false, true, returnFromKey);
+  return switchLevel(target, false, true, returnFromKey);
 }
 
 function quitCurrentLevel(): void {
@@ -2582,9 +2605,8 @@ function quitCurrentLevel(): void {
   campaign.updateInventory(player.lives, player.fruit);
   restoreCommittedRunRewards();
   void gameFlow.transition(async () => {
+    if (!returnToWarpRoom(originLevelId)) return;
     paused = false;
-    if (bonusSession) discardSuspendedBonus();
-    returnToWarpRoom(originLevelId);
     await prepareActivePresentationAssets();
     gameFlow.hide();
   });
@@ -2615,8 +2637,8 @@ function quitAfterGameOver(): void {
   player.fruit = 0;
   restoreCommittedRunRewards();
   void gameFlow.transition(async () => {
+    if (!returnToWarpRoom(originLevelId)) return;
     paused = false;
-    returnToWarpRoom(originLevelId);
     await prepareActivePresentationAssets();
     ui.showDeathScreen(false);
     gameFlow.hide();
@@ -2627,8 +2649,7 @@ function retryFromResults(): void {
   guardGameplayFromMenu();
   campaign.updateInventory(player.lives, player.fruit);
   void gameFlow.transition(async () => {
-    clearResultsPresentation();
-    switchLevel(current.id, false, true);
+    if (!switchLevel(current.id, false, true)) return;
     await prepareActivePresentationAssets();
     gameFlow.hide();
   });
@@ -2637,16 +2658,17 @@ function retryFromResults(): void {
 function continueFromResults(): void {
   const originLevelId = current.id;
   const unlockReveal = pendingMapUnlockReveal;
-  pendingMapUnlockReveal = [];
+  let returned = false;
   guardGameplayFromMenu();
   campaign.updateInventory(player.lives, player.fruit);
   void gameFlow.transition(async () => {
-    clearResultsPresentation();
-    returnToWarpRoom(originLevelId);
+    if (!returnToWarpRoom(originLevelId)) return;
+    pendingMapUnlockReveal = [];
+    returned = true;
     await prepareActivePresentationAssets();
     gameFlow.hide();
   }).then(() => {
-    worldMapController?.revealUnlocks(unlockReveal);
+    if (returned) worldMapController?.revealUnlocks(unlockReveal);
   });
 }
 
@@ -2744,7 +2766,7 @@ function enterCampaignLevel(targetId: string): void {
   if (level.isCampaignMap) campaignMapOriginId = current.id;
   campaign.updateInventory(player.lives, player.fruit);
   void gameFlow.transition(async () => {
-    switchLevel(targetId, false, true);
+    if (!switchLevel(targetId, false, true)) return;
     await prepareActivePresentationAssets();
     gameFlow.hide();
   });
@@ -2918,9 +2940,9 @@ function flushPendingCompletion(): void {
 // A live edit rebuilds from the editor's in-memory source, so edit = play
 // truth. A no-op session instead keeps the exact original Level alive and uses
 // an unbatched proxy only for picking/guides.
-function tryBuildEditorLevel(entry: LevelEntry, context: string): Level | null {
+function tryBuildEditorLevel(entry: LevelEntry, context: string, buildScene = scene): Level | null {
   const safeData = entry.data
-    ? normalizeCustomLevelData(entry.data)
+    ? borrowedValidatedLevelData(entry.data) ?? normalizeCustomLevelData(entry.data)
     : undefined;
   if (entry.data && !safeData) {
     ui.showMessage(
@@ -2931,7 +2953,7 @@ function tryBuildEditorLevel(entry: LevelEntry, context: string): Level | null {
     return null;
   }
   const safeEntry = safeData ? { ...entry, data: safeData } : entry;
-  const before = new Set(scene.children);
+  const before = new Set(buildScene.children);
   const nativeRandom = Math.random;
   let seed = 0x811c9dc5;
   const seedText = `${entry.id}:${entry.name}:${entry.data?.components.length ?? 0}`;
@@ -2947,13 +2969,13 @@ function tryBuildEditorLevel(entry: LevelEntry, context: string): Level | null {
     return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
   };
   try {
-    return new Level(scene, safeEntry);
+    return new Level(buildScene, safeEntry, editorPreviewLevel ?? level);
   } catch (error) {
     // A constructor may have attached its root before a later component
     // failed. Remove every orphan it introduced; the last good Level remains
     // mounted and authoritative.
-    for (const child of [...scene.children])
-      if (!before.has(child)) scene.remove(child);
+    for (const child of [...buildScene.children])
+      if (!before.has(child)) buildScene.remove(child);
     const detail = error instanceof Error ? error.message : "invalid level data";
     ui.showMessage("EDITOR BUILD FAILED", `${context} · ${detail}`, 3200);
     return null;
@@ -3082,15 +3104,25 @@ function restoreEditorProxyBaseline(): void {
   editor.onLevelRebuilt();
 }
 
-function preflightEditorWorking(): boolean {
-  const working = editor.workingEntry();
+function preflightEditorWorking(prepared?: LevelEntry): boolean {
+  const working = prepared ?? editor.workingEntry();
   if (!working) return false;
-  if (working.data && !normalizeCustomLevelData(working.data)) {
+  if (working.data && !(borrowedValidatedLevelData(working.data) ?? normalizeCustomLevelData(working.data))) {
     editor.showMessage(
       "CHANGE REJECTED",
       "values or geometry exceed safe authoring limits",
     );
     return false;
+  }
+  if (working.data && requiresTerrainSupportBuildCheck(working.data)) {
+    // The exact BVH work guard is authoritative for shapes whose overlap a
+    // data-only estimate cannot predict. Fail before persistence or history.
+    const probe = tryBuildEditorLevel(working, "support-probe preflight", new THREE.Scene());
+    if (!probe) {
+      editor.showMessage("CHANGE REJECTED", "terrain support probes exceed safe construction work");
+      return false;
+    }
+    probe.dispose(editorPreviewLevel ?? level);
   }
   return true;
 }
@@ -3111,7 +3143,11 @@ function rebuildLevel(): void {
       return;
     }
   }
-  const next = editor?.workingEntry() ?? findLevel(current.id) ?? current;
+  // This path is only for an accepted commit or editor exit. Borrow the
+  // immutable accepted entry; live gesture previews keep using workingEntry.
+  const working = editor?.workingEntry();
+  const saved = findLevel(working?.id ?? current.id);
+  const next = saved?.data ? saved : working ?? saved ?? current;
   const candidate = tryBuildEditorLevel(next, "playable level kept last good build");
   if (!candidate) {
     level.pickRoot.visible = true;
@@ -3194,7 +3230,7 @@ const editor = new Editor(
   renderer.domElement,
   () => editorPreviewLevel ?? level,
   {
-    preflight: () => preflightEditorWorking(),
+    preflight: prepared => preflightEditorWorking(prepared),
     rebuild: (committed = false) =>
       committed ? rebuildLevel() : rebuildEditorPreview(),
     resetPreview: () => restoreEditorProxyBaseline(),
@@ -3213,11 +3249,7 @@ const editor = new Editor(
           ui.setHUD(currentHudState(), 0);
           rebuildEditorPreview();
         } else {
-          editor.exit();
-          editorSavedAcc = null;
-          editorSavedMessage = null;
-          switchLevel(goTo);
-          editorExitAlreadyBuilt = true;
+          if (switchLevel(goTo)) editorExitAlreadyBuilt = true;
         }
       } else {
         current = findLevel(current.id) ?? current;
@@ -3429,7 +3461,7 @@ function openEditor(
   // A cross-level pencil click intentionally loads that target, but it must
   // not replace a persistent PAUSED banner with the transient level-name
   // toast that switchLevel emits.
-  if (current.id !== entry.id) switchLevel(entry.id);
+  if (current.id !== entry.id && !switchLevel(entry.id)) return;
   editorSavedAcc = acc;
   editorSavedMessage = preservedMessage ?? ui.captureMessage();
   // The editor owns the frame and freezes the simulation. Do not respawn,
@@ -3484,7 +3516,7 @@ function editLevel(
     openEditor(id, undefined, preservedMessage);
     return;
   }
-  if (current.id !== id) switchLevel(id); // capture reads the LIVE level
+  if (current.id !== id && !switchLevel(id)) return; // capture reads the LIVE level
   // captureData reads authored/home snapshots for dynamic entities, so this
   // harvest is side-effect free: no reset of the live run and no second
   // hand-built Level spawning global VFX behind the editor.
@@ -3511,7 +3543,7 @@ ui.onLevelNew = () => {
       "new level is session-only · export before reloading",
       3000,
     );
-  switchLevel(id);
+  if (!switchLevel(id)) return;
   ui.refreshLevels(id);
   openEditor(id);
   ui.showMessage(persisted ? "NEW LEVEL" : "NEW LEVEL · SAVE FAILED", persisted ? "rename it in the editor's PROJECT tab" : "session only · export before reloading", 3000);
@@ -3528,7 +3560,7 @@ function importLevelFile(txt: string, fallbackName: string): boolean {
       id: "__import_probe",
       name,
       data: normalized,
-    });
+    }, level);
   } catch {
     return false;
   } finally {
@@ -3537,7 +3569,7 @@ function importLevelFile(txt: string, fallbackName: string): boolean {
   const id = saveUserLevel({ id: "", name, data: normalized });
   if (!findLevel(id)?.data) { ui.showMessage("LEVEL LIMIT REACHED", "export and remove an unused level before importing", 3000); return false; }
   const persisted = userLevelStorageHealthy();
-  switchLevel(id);
+  if (!switchLevel(id)) return false;
   ui.refreshLevels(id);
   ui.showMessage(persisted ? "LEVEL IMPORTED" : "IMPORTED · SAVE FAILED",
     persisted ? findLevel(id)?.name ?? name : "session only · export before reloading", 3000);
@@ -3594,8 +3626,12 @@ ui.onForceResync = async (): Promise<void> => {
   }
   localStorage.setItem("solProtoCloudPulled", "1");
   const after = getUserLevels().length;
-  if (editor.active) editor.exit();
-  switchLevel(findLevel(current.id) ? current.id : DEFAULT_LEVEL_ID);
+  if (!switchLevel(findLevel(current.id) ? current.id : DEFAULT_LEVEL_ID)) {
+    ui.refreshLevels(current.id);
+    ui.refreshEditControls();
+    ui.setSyncStatus("library restored · previous run retained because the selected level could not load", "err");
+    return;
+  }
   player.respawn(level, true);
   ui.refreshLevels(current.id);
   ui.refreshEditControls();
@@ -3699,15 +3735,16 @@ function loadReplay(data: unknown): void {
     ui.showMessage("REPLAY LEVEL MISSING", String(data.level), 2200);
     return;
   }
-  if (replayer.active) {
-    replayer.end();
-    restoreReplayRunRule();
-    ui.setReplayBadge(false);
-  }
-  replaySavedEndlessDeaths = endlessDeathsOn;
-  endlessDeathsOn = data.endlessDeaths === true;
-  applyEndlessDeaths();
-  switchLevel(data.level); // clean slate: replay assumes a fresh level load
+  if (!switchLevel(data.level, false, false, null, () => {
+    if (replayer.active) {
+      replayer.end();
+      restoreReplayRunRule();
+      ui.setReplayBadge(false);
+    }
+    replaySavedEndlessDeaths = endlessDeathsOn;
+    endlessDeathsOn = data.endlessDeaths === true;
+    applyEndlessDeaths();
+  })) return; // clean slate: replay assumes a fresh level load
   replayer.begin(data);
   ui.setReplayBadge(true);
   ui.showMessage("REPLAY", `${(data.frames / 60).toFixed(0)}s take`, 1400);
@@ -3790,16 +3827,17 @@ ui.onLevelSelect = (id) => {
   // The M-menu is an explicit developer action in production too. Let the
   // transition owner serialize loading, including clicks from paused/title UI.
   void gameFlow.transition(async () => {
-    paused = false;
-    pendingCompletion = null;
-    if (bonusSession) {
-      player.lives = bonusSession.parentState.lives;
-      player.fruit = bonusSession.parentState.fruit;
-    } else player.bankFlyingFruit();
-    restoreCommittedRunRewards();
-    // Title-screen testing must not create a save or replace an active slot.
-    if (!campaign.active) campaign.startEphemeral();
-    switchLevel(id, false, !shellBypass);
+    if (!switchLevel(id, false, !shellBypass, null, () => {
+      paused = false;
+      pendingCompletion = null;
+      if (bonusSession) {
+        player.lives = bonusSession.parentState.lives;
+        player.fruit = bonusSession.parentState.fruit;
+      } else player.bankFlyingFruit();
+      restoreCommittedRunRewards();
+      // Title-screen testing must not create a save or replace an active slot.
+      if (!campaign.active) campaign.startEphemeral();
+    })) return;
     await prepareActivePresentationAssets();
     gameFlow.hide();
   });

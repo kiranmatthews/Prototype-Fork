@@ -75,16 +75,22 @@ import {
 import {
   accelerateGroundMeshes,
   disposeGroundAcceleration,
+  groundRaycastWork,
   type GroundAccelerationStats,
 } from "./groundAcceleration";
 import { boxIntersectsMeshTriangles } from "./meshIntersections";
+import {
+  MAX_TERRAIN_SUPPORT_TRIANGLE_TESTS,
+  MAX_TERRAIN_SUPPORT_RAW_TRIANGLES,
+  terrainSupportGroundTriangles,
+  terrainSupportMeshOverlap,
+  terrainSupportProbeCount,
+  woodPathProfileForComponent,
+} from "./terrainSupportBudget";
 import { selectCrateRestSurface } from "./crateRestSurface";
 import { surfaceBoundaryEdges } from "./surfaceEdges";
 import {
   buildWoodPathLayout,
-  UNITY_BEACH_BOARDWALK_PROFILE,
-  UNITY_ISLAND_BOARDWALK_PROFILE,
-  UNITY_LIGHT_BOARDWALK_PROFILE,
   type WoodPathFrame,
   type WoodPathProfile,
 } from "./woodPathKit";
@@ -760,6 +766,9 @@ export interface CustomComponent {
   airOnly?: boolean; // returnportal only accepts an airborne player
   coverage?: number; // grindosaurus: fraction of spine that must be ridden to defeat it
   radius?: number; // camnode: lane corner radius · stone: the boulder's radius
+  emissive?: string; // mesh: bounded emissive tint, no custom shader code
+  opacity?: number; // mesh: 0..1; lower values enable transparency
+  fog?: boolean; // mesh: explicit material fog participation
   color?: string; // '#rrggbb' tint for surfaces, rocks, pits and procedural thorns
   tex?: string; // surface texture kind (see TEX_KINDS) for paintable surfaces — tinted by color
   dir?: "E" | "W" | "N" | "S"; // zone: travel direction — E/W turn the course sideways (side-scroll), N runs it INTO the camera, S = the normal corridor (still overrides a camera lane)
@@ -796,6 +805,7 @@ export const DECOR_KINDS = [
   "toadstools",
   "mossrock",
   "jungletree",
+  "pine",
   "palm",
   "vines",
   "planter",
@@ -828,6 +838,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
   toadstools: "toadstool cluster",
   mossrock: "mossy rock",
   jungletree: "canopy tree",
+  pine: "roadside pine",
   palm: "palm",
   vines: "hanging vines",
   planter: "planter",
@@ -2251,6 +2262,40 @@ export function isBuiltin(id: string): boolean {
 const USER_KEY = "solProtoUserLevels";
 let USER_CACHE: LevelEntry[] | null = null;
 let LAST_USER_WRITE_OK = true;
+// Only entry trees cloned/validated and retained by this registry are trusted.
+// Their immutable identity lets edits avoid revalidating unrelated levels.
+const CANONICAL_USER_ENTRIES = new WeakMap<LevelEntry, { bytes: number; json: string }>();
+const CANONICAL_USER_DATA = new WeakSet<CustomLevelData>();
+
+/** Borrow only a registry-owned immutable validation result for construction.
+ * Callers that need an editable copy must use normalizeCustomLevelData. */
+export function borrowedValidatedLevelData(value: CustomLevelData): CustomLevelData | null {
+  return CANONICAL_USER_DATA.has(value) ? value : null;
+}
+
+export interface PreparedUserLevelChange {
+  readonly entry: LevelEntry & { data: CustomLevelData };
+  readonly json: string;
+}
+const PREPARED_USER_CHANGES = new WeakMap<PreparedUserLevelChange, LevelEntry | undefined>();
+
+function retainUserLevelEntry(entry: LevelEntry): LevelEntry {
+  if (CANONICAL_USER_ENTRIES.has(entry)) return entry;
+  const freeze = (value: object): void => {
+    for (const child of Object.values(value))
+      if (child && typeof child === "object") freeze(child);
+    Object.freeze(value);
+  };
+  // This helper receives only the bounded plain-data output of normalization,
+  // never caller-owned objects, proxies, accessors or arbitrary frozen values.
+  freeze(entry);
+  if (entry.data) CANONICAL_USER_DATA.add(entry.data);
+  const json = JSON.stringify(entry);
+  CANONICAL_USER_ENTRIES.set(entry, {
+    bytes: new TextEncoder().encode(json).byteLength, json,
+  });
+  return entry;
+}
 
 export const CUSTOM_COMPONENT_TYPES = new Set<CustomComponent["t"]>([
   "platform", "ramp", "wall", "wallpath", "rail", "pipe", "vertramp", "crumble",
@@ -2296,7 +2341,7 @@ const COMPONENT_DATA_KEYS = new Set([
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
   "trick", "exitYaw", "airOnly", "coverage", "radius", "color", "tex", "dir",
-  "layer", "grp", "lk", "nm", "trafficRoad", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand",
+  "layer", "grp", "lk", "nm", "trafficRoad", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand",
 ]);
 const hasOnlyKeys = (value: object, keys: ReadonlySet<string>): boolean =>
   Object.keys(value).every((key) => keys.has(key));
@@ -2625,6 +2670,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   const structureStyles = new Set(["light", "island", "beach"]);
   const textureKinds = new Set<string>(TEX_KINDS);
   const booleanKeys: (keyof CustomComponent)[] = [
+    "fog",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "lk",
     "shoreProfile", "edgeGrinding", "trafficRoad", "doubleSided", "beachSand",
@@ -2643,6 +2689,9 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   let checkpointCount = 0;
   let crateCount = 0;
   let supportProbeCount = 0;
+  let supportGroundTriangles = 0;
+  let supportOverlapTriangles = 0;
+  const hasTerrainSupports = source.components.some(c => c?.t === "woodpath" && c.terrainSupports);
   let masonryWork = 0;
   let meshVertices = 0;
   let meshTriangles = 0;
@@ -2700,6 +2749,11 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     if (
       (component.tex !== undefined &&
         (typeof component.tex !== "string" || !textureKinds.has(component.tex))) ||
+      (component.t !== "mesh" && (component.emissive !== undefined || component.opacity !== undefined || component.fog !== undefined)) ||
+      (component.emissive !== undefined &&
+        (typeof component.emissive !== "string" || !/^#[0-9a-f]{6}$/i.test(component.emissive))) ||
+      (component.opacity !== undefined &&
+        (typeof component.opacity !== "number" || !Number.isFinite(component.opacity) || component.opacity < 0 || component.opacity > 1)) ||
       (component.color !== undefined &&
         (typeof component.color !== "string" ||
           !/^#[0-9a-f]{6}$/i.test(component.color))) ||
@@ -2788,6 +2842,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
 
     const pathKind = ["woodpath", "terrain", "vertramp", "wallpath", "rail", "trickrail", "pipe", "coastwall"].includes(component.t);
     let length = 0;
+    let denseNodes = component.pts?.length ?? 2;
     if (component.pts) {
       for (let index = 1; index < component.pts.length; index++) {
         const before = component.pts[index - 1];
@@ -2804,7 +2859,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       if (pathKind && (length < 0.02 || length > MAX_PATH_LENGTH)) return null;
       // Every component currently evaluates its filleted outline during build,
       // and polygon triangulation can be quadratic for adversarial outlines.
-      const denseNodes = component.pts.reduce((sum, point) => sum + ((point[2] ?? 0) > 0.01 ? 7 : 1), 0);
+      denseNodes = component.pts.reduce((sum, point) => sum + ((point[2] ?? 0) > 0.01 ? 7 : 1), 0);
       aggregateSamples += denseNodes;
       if (["platform", "wall", "pit"].includes(component.t)) {
         if (component.pts.length < 3 || component.pts.length > (component.t === "pit" ? MAX_POINTS : 512)) return null;
@@ -2833,9 +2888,8 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
         if (component.supports ?? component.scaffold) {
           const bays = Math.ceil(curvedLength / Math.max(1.5, component.baySpacing ?? 3.8));
           aggregateSamples += bays * 32;
-          if (component.terrainSupports) supportProbeCount += (bays + 1) * 2;
         }
-        if (supportProbeCount * source.components.length > 2_000_000) return null;
+        supportProbeCount += terrainSupportProbeCount(component, curvedLength);
         if (component.rails ?? component.scaffold) aggregateSamples += Math.ceil(curvedLength / 0.35) * 6;
       } else if (component.t === "terrain") {
         aggregateSamples += Math.max(8, Math.ceil(length / 1.5)) * 5;
@@ -2847,6 +2901,13 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       } else {
         aggregateSamples += nodes * 7 * 8;
       }
+    }
+    if (hasTerrainSupports) {
+      const triangles = terrainSupportGroundTriangles(component, length, denseNodes);
+      supportGroundTriangles += triangles;
+      supportOverlapTriangles += component.t === "mesh" ? terrainSupportMeshOverlap(component) : triangles;
+      if (supportProbeCount * supportOverlapTriangles > MAX_TERRAIN_SUPPORT_TRIANGLE_TESTS ||
+          supportProbeCount * supportGroundTriangles > MAX_TERRAIN_SUPPORT_RAW_TRIANGLES) return null;
     }
     if (aggregateSamples > MAX_GENERATED_SAMPLES) return null;
     // Polygon walls and spun slabs use the complete scanline collider below.
@@ -3108,17 +3169,29 @@ export function normalizeUserLevelEntries(value: unknown): LevelEntry[] | null {
   let bytes = 2; // JSON array brackets, plus separators below
   try {
     for (const input of value) {
-      const entry = cloneBoundedLevelJson(input) as LevelEntry | null;
-      if (!entry || Array.isArray(entry) ||
-          !hasOnlyKeys(entry, new Set(["id", "name", "data"])) ||
-          !validLevelId(entry.id) || typeof entry.name !== "string" ||
-          entry.name.length > MAX_LEVEL_LABEL_LENGTH || ids.has(entry.id)) return null;
-      const data = normalizeLevelDataFields(entry.data);
-      if (!data) return null;
-      const normalized = { id: entry.id, name: cleanLevelName(entry.name), data };
-      bytes += new TextEncoder().encode(JSON.stringify(normalized)).byteLength + (out.length ? 1 : 0);
+      let normalized: LevelEntry;
+      let entryBytes: number;
+      const retained = CANONICAL_USER_ENTRIES.get(input);
+      if (retained) {
+        // A caller can reuse an immutable registry snapshot, but cannot forge
+        // this identity by freezing an unchecked object or sharing its data.
+        if (ids.has(input.id)) return null;
+        normalized = input;
+        entryBytes = retained.bytes;
+      } else {
+        const entry = cloneBoundedLevelJson(input) as LevelEntry | null;
+        if (!entry || Array.isArray(entry) ||
+            !hasOnlyKeys(entry, new Set(["id", "name", "data"])) ||
+            !validLevelId(entry.id) || typeof entry.name !== "string" ||
+            entry.name.length > MAX_LEVEL_LABEL_LENGTH || ids.has(entry.id)) return null;
+        const data = normalizeLevelDataFields(entry.data);
+        if (!data) return null;
+        normalized = { id: entry.id, name: cleanLevelName(entry.name), data };
+        entryBytes = new TextEncoder().encode(JSON.stringify(normalized)).byteLength;
+      }
+      bytes += entryBytes + (out.length ? 1 : 0);
       if (bytes > MAX_LEVEL_PACK_BYTES) return null;
-      ids.add(entry.id);
+      ids.add(normalized.id);
       out.push(normalized);
     }
     return out;
@@ -3127,8 +3200,10 @@ export function normalizeUserLevelEntries(value: unknown): LevelEntry[] | null {
   }
 }
 
+/** A list snapshot of immutable registry entries. Use getEditData to obtain
+ * an editable level copy; use saveUserLevel/setUserLevels to publish changes. */
 export function getUserLevels(): LevelEntry[] {
-  if (USER_CACHE) return USER_CACHE;
+  if (USER_CACHE) return [...USER_CACHE];
   let list: LevelEntry[] = [];
   try {
     const text = localStorage.getItem(USER_KEY) ?? "[]";
@@ -3150,8 +3225,8 @@ export function getUserLevels(): LevelEntry[] {
   } catch {
     /* corrupt/unavailable store cannot break boot */
   }
-  USER_CACHE = list;
-  return list;
+  USER_CACHE = list.map(retainUserLevelEntry);
+  return [...USER_CACHE];
 }
 
 export function setUserLevels(list: LevelEntry[]): boolean {
@@ -3161,9 +3236,12 @@ export function setUserLevels(list: LevelEntry[]): boolean {
     return false;
   }
   // Storage quota failures still leave a valid session copy available to export.
-  USER_CACHE = normalized;
+  USER_CACHE = normalized.map(retainUserLevelEntry);
   try {
-    localStorage.setItem(USER_KEY, JSON.stringify(USER_CACHE));
+    // Frozen entries have stable serialization as well as stable validation.
+    // Assemble the bounded pack without traversing every untouched scene.
+    const json = `[${USER_CACHE.map(entry => CANONICAL_USER_ENTRIES.get(entry)!.json).join(",")}]`;
+    localStorage.setItem(USER_KEY, json);
     LAST_USER_WRITE_OK = true;
   } catch {
     LAST_USER_WRITE_OK = false;
@@ -3236,26 +3314,66 @@ export function cleanLevelName(name: string): string {
   return t || "Untitled";
 }
 
+/** Validate one transaction snapshot; no caller-owned object is trusted or
+ * retained. Names undergo existing-data migration before requested-title
+ * migration, matching the exported-wrapper import ordering. */
+export function prepareUserLevelChange(entry: LevelEntry): PreparedUserLevelChange | null {
+  if (!entry || typeof entry !== "object" || Array.isArray(entry)) return null;
+  const prototype = Object.getPrototypeOf(entry);
+  if (prototype !== Object.prototype && prototype !== null) return null;
+  const keys = Reflect.ownKeys(entry);
+  if (keys.length !== 3 || keys.some(key => !["id", "name", "data"].includes(String(key)))) return null;
+  const fields = Object.getOwnPropertyDescriptors(entry);
+  if (["id", "name", "data"].some(key => !fields[key] || !("value" in fields[key]) || !fields[key].enumerable)) return null;
+  const requestedId: unknown = fields.id.value;
+  if (requestedId !== "" && !validLevelId(requestedId)) return null;
+  const id = requestedId || newLevelId();
+  const normalized = normalizeUserLevelEntries([{ id, name: fields.name.value, data: fields.data!.value }])?.[0];
+  if (!normalized?.data) return null;
+  if (normalized.data.name !== normalized.name) {
+    normalized.data.name = normalized.name;
+    const renamed = normalizeCustomLevelData(normalized.data);
+    if (!renamed) return null;
+    normalized.data = renamed;
+  }
+  const owned = retainUserLevelEntry(normalized) as LevelEntry & { data: CustomLevelData };
+  const entries = getUserLevels();
+  const at = entries.findIndex(item => item.id === id);
+  const previous = at >= 0 ? entries[at] : undefined;
+  if (at < 0) entries.push(owned); else entries[at] = owned;
+  if (!normalizeUserLevelEntries(entries)) return null;
+  const change = Object.freeze({ entry: owned, json: JSON.stringify(owned.data) });
+  PREPARED_USER_CHANGES.set(change, previous);
+  return change;
+}
+
+/** Recheck the live registry before accepting a prepared immutable snapshot.
+ * Quota failure is an accepted session edit; stale/capacity failure is not. */
+export function commitPreparedUserLevelChange(change: PreparedUserLevelChange): { accepted: boolean; persisted: boolean } {
+  if (!PREPARED_USER_CHANGES.has(change)) {
+    LAST_USER_WRITE_OK = false;
+    return { accepted: false, persisted: false };
+  }
+  const entries = getUserLevels();
+  const at = entries.findIndex(item => item.id === change.entry.id);
+  if ((at >= 0 ? entries[at] : undefined) !== PREPARED_USER_CHANGES.get(change)) {
+    LAST_USER_WRITE_OK = false;
+    return { accepted: false, persisted: false };
+  }
+  if (at < 0) entries.push(change.entry); else entries[at] = change.entry;
+  if (!normalizeUserLevelEntries(entries)) {
+    LAST_USER_WRITE_OK = false;
+    return { accepted: false, persisted: false };
+  }
+  return { accepted: true, persisted: setUserLevels(entries) };
+}
+
 /** Insert or replace a user level. Returns the id actually stored. */
 export function saveUserLevel(entry: LevelEntry): string {
-  const normalized = normalizeCustomLevelData(entry.data);
-  if (!normalized || (entry.id !== "" && !validLevelId(entry.id))) {
-    LAST_USER_WRITE_OK = false;
-    return entry.id;
-  }
-  const list = [...getUserLevels()];
-  const e: LevelEntry = {
-    // only a BLANK id mints a new one; a built-in's id is kept, which is what
-    // makes editing one edit the level itself instead of forking a copy
-    id: entry.id || newLevelId(),
-    name: cleanLevelName(entry.name),
-    data: normalized,
-  };
-  const at = list.findIndex((l) => l.id === e.id);
-  if (at >= 0) list[at] = e;
-  else list.push(e);
-  setUserLevels(list);
-  return e.id;
+  const prepared = prepareUserLevelChange(entry);
+  if (!prepared) { LAST_USER_WRITE_OK = false; return entry.id; }
+  const result = commitPreparedUserLevelChange(prepared);
+  return result.accepted ? prepared.entry.id : entry.id;
 }
 
 /**
@@ -3286,12 +3404,12 @@ export function deleteUserLevel(id: string): void {
 }
 
 export function renameUserLevel(id: string, name: string): boolean {
-  const list = [...getUserLevels()];
-  const at = list.findIndex((l) => l.id === id);
-  if (at < 0) return false;
-  list[at] = { ...list[at], name: cleanLevelName(name) };
-  setUserLevels(list);
-  return true;
+  const entry = getUserLevels().find(item => item.id === id);
+  if (!entry) return false;
+  const wanted = cleanLevelName(name);
+  if (entry.name === wanted && entry.data?.name === wanted) return true;
+  const prepared = prepareUserLevelChange({ ...entry, name: wanted });
+  return !!prepared && commitPreparedUserLevelChange(prepared).accepted;
 }
 
 /** The editor's working copy for a level: its own data, else a blank slate. */
@@ -3309,8 +3427,13 @@ export function persistEditData(id: string, json: string): boolean {
   const e = findLevel(id);
   if (!e) return false;
   try {
+    const previous = e.data ? JSON.stringify(e.data) : null;
+    if (json === previous) return LAST_USER_WRITE_OK;
     const data = parseCustomLevelJson(json);
     if (!data) return false;
+    // Older entries may intentionally retain a distinct menu title. Opening
+    // and autosaving unchanged data must not turn that into a rename.
+    if (JSON.stringify(data) === previous) return LAST_USER_WRITE_OK;
     saveUserLevel({ ...e, data });
     return LAST_USER_WRITE_OK;
   } catch {
@@ -3446,6 +3569,9 @@ export class Level {
   private obstacleEdgeMeshes: THREE.Mesh[] = [];
   groundAccelerationStats!: GroundAccelerationStats;
   private acceleratedGroundGeometries = new Set<THREE.BufferGeometry>();
+  private groundAccelerationBuildMs = 0;
+  private terrainSupportTriangleTests = 0;
+  private terrainSupportRayWork = 0;
   crates: Crate[] = [];
   enemies: Enemy[] = [];
   projectiles: Projectile[] = []; // sentry orbs in flight
@@ -4296,7 +4422,11 @@ export class Level {
     }
   }
 
-  constructor(scene: THREE.Scene, entry: LevelEntry = BUILTIN_LEVELS[0]) {
+  constructor(
+    scene: THREE.Scene,
+    entry: LevelEntry = BUILTIN_LEVELS[0],
+    preserveResourcesOnFailure?: Level,
+  ) {
     this.scene = scene;
     scene.add(this.root);
     this.root.add(this.discardedBoards.root);
@@ -4312,6 +4442,17 @@ export class Level {
     // A user level carries its own component data and builds through the same
     // pipeline the editor writes. A built-in has none, so its id picks the
     // hand-coded builder — built-ins stay pristine, editing one forks a copy.
+    try {
+      this.buildEntry(entry);
+    } catch (error) {
+      // A rejected runtime workload can happen after ordinary terrain and its
+      // BVHs exist. Constructors have no returned Level for the editor to free.
+      this.dispose(preserveResourcesOnFailure);
+      throw error;
+    }
+  }
+
+  private buildEntry(entry: LevelEntry): void {
     if (entry.data)
       this.buildCustom(
         migrateCustomLevel(
@@ -4383,9 +4524,19 @@ export class Level {
     // teeter, shadows, ledges, crates and editor picking—uses the same
     // accelerated Mesh.raycast contract with no first-query hitch.
     this.root.updateMatrixWorld(true);
-    const groundAcceleration = accelerateGroundMeshes(this.groundMeshes);
-    this.acceleratedGroundGeometries = groundAcceleration.ownedGeometries;
-    this.groundAccelerationStats = groundAcceleration.stats;
+    this.installGroundAcceleration(this.groundMeshes);
+  }
+
+  private installGroundAcceleration(meshes: readonly THREE.Mesh[]): void {
+    const acceleration = accelerateGroundMeshes(meshes);
+    for (const geometry of acceleration.ownedGeometries)
+      this.acceleratedGroundGeometries.add(geometry);
+    this.groundAccelerationBuildMs += acceleration.stats.buildMs;
+    // The final pass supplies unduplicated mesh/triangle/memory totals, while
+    // build time includes the early support-query pass.
+    this.groundAccelerationStats = {
+      ...acceleration.stats, buildMs: this.groundAccelerationBuildMs,
+    };
   }
 
   // WHERE EVERYTHING STARTED.
@@ -4801,7 +4952,7 @@ export class Level {
         f.needsUpdate = true; // the flag is compiled into the shader
       }
     };
-    for (const g of this.groundMeshes) off(g.material);
+    for (const g of this.groundMeshes) if (g.userData.authoredFog === undefined) off(g.material);
     for (const m of this.baseMats.values()) off(m); // walls, blocks, ramps
   }
 
@@ -4874,6 +5025,7 @@ export class Level {
   // comes through correct by construction. Authored geometry, scenery and
   // motion retain their component identities so an edit rebuilds their logic.
   private builtFromData: CustomLevelData | null = null;
+  private capturedSceneryMeshes: THREE.Mesh[] = [];
 
   private captureSurfaceMesh(m: THREE.Mesh, style: Partial<CustomComponent>): CustomComponent[] {
     m.updateWorldMatrix(true, false);
@@ -4882,8 +5034,10 @@ export class Level {
     if (!position || position.count < 3) return [];
     const index = geometry.index;
     const normal = geometry.getAttribute("normal");
-    const uv = geometry.getAttribute("uv");
     const material = (Array.isArray(m.material) ? m.material[0] : m.material) as THREE.MeshLambertMaterial;
+    // Procedural untextured scenery needs no UV payload. Retain authored
+    // normals (e.g. analytic cone shading), while omitting unused attributes.
+    const uv = style.solid === false && !material.map ? undefined : geometry.getAttribute("uv");
     const reverseWinding = (m.matrixWorld.determinant() < 0) !== (material.side === THREE.BackSide);
     const color = material.vertexColors ? geometry.getAttribute("color") : undefined;
     const center = new THREE.Box3().setFromObject(m).getCenter(new THREE.Vector3());
@@ -4897,6 +5051,9 @@ export class Level {
         vertices: [], indices: [], ...(normal ? { normals: [] } : {}),
         ...(uv ? { uvs: [] } : {}), ...(color ? { colors: [] } : {}),
         ...style,
+        ...(material.emissive && material.emissive.getHex() !== 0 ? { emissive: `#${material.emissive.getHexString()}` } : {}),
+        ...(material.opacity !== 1 ? { opacity: material.opacity } : {}),
+        ...(material.fog === false ? { fog: false } : {}),
         ...(m.name ? { nm: m.name.slice(0, 100) } : {}),
         ...(material.side === THREE.DoubleSide ? { doubleSided: true } : {}),
         ...(m.userData.beachSandFriction ? { beachSand: true, tex: "sand" } : {}),
@@ -4963,6 +5120,8 @@ export class Level {
     geometry.computeBoundingSphere();
     const material = new THREE.MeshLambertMaterial({
       color: c.color ?? "#ffffff", vertexColors: !!c.colors,
+      emissive: c.emissive ?? "#000000", opacity: c.opacity ?? 1,
+      transparent: (c.opacity ?? 1) < 1, fog: c.fog !== false,
       side: c.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
       map: this.surfaceTexture(c.tex ?? "checker"),
     });
@@ -4972,6 +5131,8 @@ export class Level {
     mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0);
     mesh.scale.set(...(c.s ?? [1, 1, 1]));
     mesh.name = c.nm ?? "triangle surface";
+    if (c.fog !== undefined) mesh.userData.authoredFog = c.fog;
+    if (c.solid === false) { mesh.userData.visualOnly = true; mesh.userData.edgeGrinding = false; }
     if (c.slip) mesh.userData.slippy = true;
     if (c.beachSand) mesh.userData.beachSandFriction = true;
     if (c.edgeGrinding === false) mesh.userData.edgeGrinding = false;
@@ -4980,7 +5141,7 @@ export class Level {
       mesh.userData.editorGhost = true;
     }
     this.root.add(mesh);
-    this.groundMeshes.push(mesh);
+    if (c.solid !== false) this.groundMeshes.push(mesh);
   }
 
   captureData(): CustomLevelData {
@@ -5146,6 +5307,17 @@ export class Level {
         C.push(...chunks);
       }
     }
+    // Native visual meshes retain their exact triangles and material values,
+    // but never become phantom support surfaces or grind edges after capture.
+    for (const mesh of this.capturedSceneryMeshes) {
+      const style = matInfo(mesh);
+      const chunks = this.captureSurfaceMesh(mesh, { ...style, tex: style.tex ?? "solid", solid: false, edgeGrinding: false });
+      const authored = mesh.userData.captureGroup as number | undefined;
+      const id = authored !== undefined && groups.some(group => group.id === authored) ? authored : nextCaptureGroup++;
+      if (!groups.some(group => group.id === id)) groups.push({ id, nm: (mesh.name || "scenery").slice(0, 100), editorOnly: true });
+      for (const chunk of chunks) chunk.grp = id;
+      C.push(...chunks);
+    }
     // SCENERY. Logged by the decor helpers as they draw (see noteDecor), so
     // capturing a hand-coded level keeps its foliage instead of stripping the
     // world back to grey boxes.
@@ -5307,6 +5479,7 @@ export class Level {
             ],
         ),
         invisible: rail.object.children.length === 0 ? true : undefined,
+        grp: rail.object.userData.captureGroup as number | undefined,
       });
     }
     // finish gate (where the run ends) + the run-mode activators beside spawn
@@ -5807,12 +5980,8 @@ export class Level {
   }
 
   private buildCustom(data: CustomLevelData): void {
-    if (data.jungleAtmosphere) for (const c of data.components) {
-      if (c.t === "terrain" && ["grass", "jungle", "sunsoil"].includes(c.tex ?? "")) {
-        c.tex = "dirt";
-        c.color = "#fff0d6";
-      }
-    }
+    // Atmosphere controls lighting. Native Jungle already authors its dirt
+    // explicitly; never overwrite a material the editor or a shared file chose.
     this.builtFromData = data; // captureData: a data-built level IS its own capture
     this.jungleAtmosphere = data.jungleAtmosphere === true;
     if (this.jungleAtmosphere) this.bermTint = 0xd9c5a6;
@@ -6860,6 +7029,12 @@ export class Level {
       sand.owner.dispose();
     }
     this.customUnitySand.length = 0;
+    // Preserved trees now belong to the successor; skipping disposal without
+    // transferring ownership strands them after the original Level is gone.
+    if (preserveResourcesFrom)
+      for (const geometry of this.acceleratedGroundGeometries)
+        if (preservedGeometry.has(geometry))
+          preserveResourcesFrom.acceleratedGroundGeometries.add(geometry);
     disposeGroundAcceleration(
       this.acceleratedGroundGeometries,
       preservedGeometry,
@@ -9349,6 +9524,18 @@ export class Level {
     const F = (t: number, off: number, h: number): THREE.Vector3 =>
       road.frame(THREE.MathUtils.clamp(t, 0.001, 0.999), off, h);
     const CHUNK = 240; // metres of course per mesh — the culling grain
+    // Native physical assemblies retain one editor selection after conversion.
+    const mountainGroups = new Map<number, number>();
+    const mountainGroup = (arc: number): number => {
+      const section = Math.floor(arc / CHUNK);
+      let id = mountainGroups.get(section);
+      if (id === undefined) {
+        id = 900_000 + section;
+        mountainGroups.set(section, id);
+        this.sceneryCaptureGroups.push({ id, nm: `Mountain wall ${section + 1}`, editorOnly: true });
+      }
+      return id;
+    };
 
     // spawn in the right lane — the sea side — looking down the hill
     const sp = F(0.004, 5.6, 0.15);
@@ -9378,6 +9565,7 @@ export class Level {
       ground: boolean,
       name: string,
       step = 8,
+      captureGroup?: number,
     ): void => {
       const posArr: number[] = [];
       const idx: number[] = [];
@@ -9399,9 +9587,13 @@ export class Level {
       g.computeVertexNormals();
       const mesh = new THREE.Mesh(g, mat);
       mesh.name = name;
+      if (captureGroup !== undefined) mesh.userData.captureGroup = captureGroup;
+      else if (["rock face", "hillside", "crag", "high ridge"].includes(name))
+        mesh.userData.captureGroup = mountainGroup(s0);
       if (ground) mesh.userData.edgeGrinding = false;
       this.root.add(mesh);
       if (ground) this.groundMeshes.push(mesh);
+      else this.capturedSceneryMeshes.push(mesh);
     };
     const chunks = (cb: (s0: number, s1: number) => void): void => {
       for (let s0 = 0; s0 < road.len; s0 += CHUNK)
@@ -9442,10 +9634,12 @@ export class Level {
     const postMat = new THREE.MeshLambertMaterial({ color: 0x5a616b });
     const PQ = new THREE.Quaternion();
     for (const side of [-1, 1] as const) {
+      const barrierGroup = side === -1 ? 900_100 : 900_101;
+      this.sceneryCaptureGroups.push({id: barrierGroup, nm: side === -1 ? "Mountain-side guardrail" : "Sea-side guardrail", editorOnly: true});
       const bOff = side * 10.95;
       chunks((s0, s1) => {
         strip(s0, s1, () => bOff, () => 0.45, () => bOff, () => 0.88,
-          beamMat, false, "barrier beam", 8);
+          beamMat, false, "barrier beam", 8, barrierGroup);
       });
       for (let sArc = 6; sArc < road.len - 6; sArc += 9) {
         const p = F(sArc / road.len, bOff, 0);
@@ -9454,13 +9648,14 @@ export class Level {
           PQ,
           new THREE.Vector3(1, 1, 1),
         );
-        this.putDecor("barrier post", postGeo, postMat, m);
+        this.putDecor("barrier post", postGeo, postMat, m, undefined, true, barrierGroup);
       }
       // the grind line along the barrier top, full course length
       const rpts: THREE.Vector3[] = [];
       for (let sArc = 4; sArc <= road.len - 4; sArc += 10)
         rpts.push(F(sArc / road.len, bOff, 0.92));
       const rail = new Rail(rpts);
+      rail.object.userData.captureGroup = barrierGroup;
       this.rails.push(rail);
       this.root.add(rail.object);
     }
@@ -9583,7 +9778,7 @@ export class Level {
       box.max.y = Math.max(a0.y, a1.y) + 8;
       this.walls.push(box);
       this.capturedCollisionComponents.push({
-        t: "wall", invisible: true, edgeGrinding: false,
+        t: "wall", invisible: true, edgeGrinding: false, grp: mountainGroup(sArc),
         p: [(box.min.x + box.max.x) / 2, box.min.y, (box.min.z + box.max.z) / 2],
         s: box.getSize(new THREE.Vector3()).toArray() as [number, number, number],
       });
@@ -9615,29 +9810,8 @@ export class Level {
       rs = (rs * 16807) % 2147483647;
       return rs / 2147483647;
     };
-    const trunkGeo = new THREE.CylinderGeometry(0.22, 0.32, 2.6, 5);
-    const coneGeo = new THREE.ConeGeometry(1.7, 3.8, 6);
-    const trunkMat = new THREE.MeshLambertMaterial({ color: 0x6b4a2e });
-    const pineMat = new THREE.MeshLambertMaterial({ color: 0x2e6b34 });
-    const Q = new THREE.Quaternion();
-    const E = new THREE.Euler();
-    const pine = (x: number, y: number, z: number, sc: number): void => {
-      Q.setFromEuler(E.set(0, rnd() * 6.28, 0));
-      const m = new THREE.Matrix4().compose(
-        new THREE.Vector3(x, y + 1.3 * sc, z),
-        Q,
-        new THREE.Vector3(sc, sc, sc),
-      );
-      this.putDecor("pine trunk", trunkGeo, trunkMat, m);
-      for (let c = 0; c < 2; c++) {
-        const cm = new THREE.Matrix4().compose(
-          new THREE.Vector3(x, y + (2.6 + c * 2.1) * sc, z),
-          Q,
-          new THREE.Vector3(sc * (1 - c * 0.28), sc, sc * (1 - c * 0.28)),
-        );
-        this.putDecor("pine crown", coneGeo, pineMat, cm);
-      }
-    };
+    const pine = (x: number, y: number, z: number, sc: number): void =>
+      this.pine(x, y, z, sc, THREE.MathUtils.radToDeg(rnd() * 6.28));
     chunks((s0, s1) => {
       for (let sArc = Math.max(30, s0); sArc < Math.min(s1, road.len - 40); sArc += 9) {
         // a dense treeline STANDING ON the rock lip: the visible half of the
@@ -9679,7 +9853,9 @@ export class Level {
       const c = lateral(tt, d);
       const isle = new THREE.Mesh(new THREE.ConeGeometry(r, h, 7), isleMat);
       isle.position.set(c.x, h / 2 - 6, c.z);
+      isle.name = "bay island";
       this.root.add(isle);
+      this.capturedSceneryMeshes.push(isle);
     }
 
     // ---- oncoming traffic -------------------------------------------------
@@ -12204,12 +12380,7 @@ export class Level {
       polyLength += knots[index].distanceTo(knots[index - 1]);
     if (polyLength < 1) return;
 
-    const sourceProfile =
-      c.structureStyle === "island"
-        ? UNITY_ISLAND_BOARDWALK_PROFILE
-        : c.structureStyle === "beach"
-          ? UNITY_BEACH_BOARDWALK_PROFILE
-          : UNITY_LIGHT_BOARDWALK_PROFILE;
+    const sourceProfile = woodPathProfileForComponent(c);
     const profile: WoodPathProfile = {
       ...sourceProfile,
       deckThickness: c.s?.[1] ?? sourceProfile.deckThickness,
@@ -12277,6 +12448,22 @@ export class Level {
       const up = new THREE.Vector3().crossVectors(forward, right).normalize();
       if (frames.length) arc += center.distanceTo(frames[frames.length - 1].center);
       frames.push({ center, forward, right, up, width, arc });
+    }
+
+    const supportMeshes = c.terrainSupports
+      ? this.groundMeshes.filter(mesh => !mesh.userData.woodPathComp)
+      : [];
+    const probeCount = terrainSupportProbeCount(c, arc);
+    if (probeCount > 0 && supportMeshes.length > 0) {
+      const triangles = supportMeshes.reduce((sum, mesh) => sum + Math.floor(
+        (mesh.geometry.index?.count ?? mesh.geometry.getAttribute("position")?.count ?? 0) / 3,
+      ), 0);
+      const work = probeCount * triangles;
+      if (!Number.isFinite(work) || this.terrainSupportTriangleTests + work > MAX_TERRAIN_SUPPORT_RAW_TRIANGLES)
+        throw new RangeError("Terrain support probing exceeds the level triangle-work limit.");
+      this.terrainSupportTriangleTests += work;
+      this.root.updateMatrixWorld(true);
+      this.installGroundAcceleration(supportMeshes);
     }
 
     const thickness = profile.deckThickness;
@@ -12395,12 +12582,10 @@ export class Level {
       up: frame.up.toArray() as [number, number, number],
       width: frame.width,
     });
-    const supportMeshes = c.terrainSupports
-      ? this.groundMeshes.filter(
-          (mesh) => mesh !== deck && !mesh.userData.woodPathComp,
-        )
-      : [];
     const supportRay = new THREE.Raycaster();
+    // Only this private height lookup needs the closest face per mesh. Keep
+    // the all-hit contract intact for gameplay, picking and collision callers.
+    supportRay.firstHitOnly = true;
     const layout = buildWoodPathLayout(
       {
         length: arc,
@@ -12425,6 +12610,11 @@ export class Level {
                   80,
                   Math.abs(request.probeOrigin[1] - request.fallback[1]) * 4,
                 );
+                const work = groundRaycastWork(supportMeshes, supportRay.ray,
+                  MAX_TERRAIN_SUPPORT_TRIANGLE_TESTS - this.terrainSupportRayWork);
+                if (this.terrainSupportRayWork + work > MAX_TERRAIN_SUPPORT_TRIANGLE_TESTS)
+                  throw new RangeError("Terrain support probing exceeds the level triangle-work limit.");
+                this.terrainSupportRayWork += work;
                 const hit = supportRay.intersectObjects(supportMeshes, false)[0];
                 return hit
                   ? [request.top[0], hit.point.y, request.top[2]]
@@ -14862,6 +15052,7 @@ export class Level {
     const [x, y, z] = c.p;
     const s = c.w ?? 1;
     switch (c.dkind) {
+      case "pine": return this.pine(x, y, z, s, c.yaw ?? 0);
       case "fanpalm":
       case "bananatree":
       case "seagrape":
@@ -14979,6 +15170,8 @@ export class Level {
     string,
     {
       mat: THREE.Material;
+      captureScenery?: boolean;
+      captureGroup?: number;
       parts: { geo: THREE.BufferGeometry; m: THREE.Matrix4; tint?: THREE.Color }[];
     }
   >();
@@ -14988,6 +15181,8 @@ export class Level {
     mat: THREE.Material,
     m: THREE.Matrix4,
     tint?: THREE.Color,
+    captureScenery = false,
+    captureGroup?: number,
   ): void {
     if (!this.batchDecor) {
       // Unbatched (the editor's pickable-mesh mode): the shared geometry has
@@ -15008,11 +15203,14 @@ export class Level {
       const mesh = new THREE.Mesh(g, mat);
       m.decompose(mesh.position, mesh.quaternion, mesh.scale);
       this.root.add(mesh);
+      if (captureGroup !== undefined) mesh.userData.captureGroup = captureGroup;
+      if (captureScenery) this.capturedSceneryMeshes.push(mesh);
       return;
     }
+    if (captureScenery) key += ` scenery${captureGroup === undefined ? "" : ` ${captureGroup}`}`;
     let b = this.decorParts.get(key);
     if (!b) {
-      b = { mat, parts: [] };
+      b = { mat, parts: [], captureScenery, captureGroup };
       this.decorParts.set(key, b);
     }
     b.parts.push({ geo, m, tint });
@@ -15022,8 +15220,10 @@ export class Level {
     for (const [key, b] of this.decorParts) {
       if (b.parts.length === 0) continue;
       const mesh = new THREE.Mesh(Level.mergeGeos(b.parts), b.mat);
-      mesh.name = key;
+      mesh.name = b.captureGroup === undefined ? key : key.replace(/ \d+$/, "");
+      if (b.captureGroup !== undefined) mesh.userData.captureGroup = b.captureGroup;
       this.root.add(mesh);
+      if (b.captureScenery) this.capturedSceneryMeshes.push(mesh);
     }
     this.decorParts.clear();
   }
@@ -15043,6 +15243,24 @@ export class Level {
       new THREE.Quaternion().setFromEuler(new THREE.Euler(0, ry, rz)),
       new THREE.Vector3(s, sy, sz),
     );
+  }
+
+  private pineGeometry: { trunk: THREE.BufferGeometry; crown: THREE.BufferGeometry } | null = null;
+  private pine(x: number, y: number, z: number, scale = 1, yaw = 0): void {
+    // Retain the procedural owner even in lite captures. Full precision keeps
+    // these native roadside placements on their authored rock ledges.
+    if (!this.builtFromData && !this.decorQuiet)
+      this.decorLog.push({ t: "decor", dkind: "pine", p: [x, y, z], w: scale, yaw });
+    const geometry = this.pineGeometry ??= {
+      trunk: new THREE.CylinderGeometry(0.22, 0.32, 2.6, 5),
+      crown: new THREE.ConeGeometry(1.7, 3.8, 6),
+    };
+    const rotation = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), THREE.MathUtils.degToRad(yaw));
+    const matrix = (height: number, width: number): THREE.Matrix4 => new THREE.Matrix4().compose(
+      new THREE.Vector3(x, y + height * scale, z), rotation, new THREE.Vector3(scale * width, scale, scale * width));
+    this.putDecor("pine trunk", geometry.trunk, this.decorMat("pine trunk", 0x6b4a2e), matrix(1.3, 1));
+    for (let tier = 0; tier < 2; tier++)
+      this.putDecor("pine crown", geometry.crown, this.decorMat("pine crown", 0x2e6b34), matrix(2.6 + tier * 2.1, 1 - tier * .28));
   }
 
   // Jak-era palm: bowed trunk, merged frond crown, coconut cluster — three

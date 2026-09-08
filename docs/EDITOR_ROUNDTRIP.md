@@ -37,6 +37,21 @@ width. The EDIT toggle reveals the canvas without changing the working level.
 The active inspector pane scrolls independently while history, status and TEST
 remain accessible. Non-editor side tools are hidden only while editing.
 
+Pointer gestures belong to one pointer ID. A second touch cancels a geometry
+preview before handing camera control to OrbitControls; foreign pen/mouse
+contacts cannot mutate or commit it. Capture loss, blur, resize, view changes,
+framing and keyboard nudges terminate old gestures before applying new work.
+Synthetic pointer behavior is tested in Node and a real browser DOM harness;
+physical-device coverage is reported separately.
+
+Committed rebuilds borrow only the immutable snapshot just accepted by the
+registry. Uncommitted preview builds continue to read the mutable working copy.
+The public normalization API still returns an isolated editable copy. Prepared
+changes cannot be forged, reused after intervening edits, or accepted at stale
+library capacity. Support-bearing edits additionally build disposable geometry
+before acceptance so exact ray-work rejection cannot leave saved data diverged
+from the visible course.
+
 Non-uniform group transforms use the runtime's own component axes. Procedural
 wood paths mirror the runtime's linear/Catmull-Rom tangents, banked frames, arc
 sampling density, and sample cap when scaling widths and plank/support spacing.

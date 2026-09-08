@@ -22,29 +22,65 @@ release gate, not proof that every remaining fidelity or resource issue is solve
   keeps TEST reachable while scrolling. Reentrant capture loss cannot roll back
   a completed numeric scrub.
 
+## Verified hardening after 71893a3
+
+- Support probes use early BVHs and private nearest-hit queries. A normal-grid
+  regression drops from 458,752 to 2,048 triangle tests. Imported overlap is
+  estimated before construction; exact cumulative BVH work is bounded before
+  each ray, including coincident faces. Editor support-bearing commits get an
+  exact disposable build before persistence. Rejected builds dispose their
+  early acceleration trees and partial resources; successor ownership is tested.
+  Level switching constructs a candidate before retiring the current run; ten
+  actual main-handler regressions verify failed selection preserves world,
+  editor/replay, pause, inventory, bonus sessions and VFX. Explicit cloud restore
+  may still replace the requested library while retaining/reporting the old run
+  if its selected replacement cannot build.
+- Immutable owned registry entries cache their canonical JSON. At 128 levels /
+  16.6 MB, a small transaction dropped from seconds to single-digit milliseconds
+  in the non-rendering/in-memory-storage harness. Prepared transactions reuse
+  exactly one validated active snapshot, reject forged/stale tokens, and still
+  check live library limits before writing. Active Descent transaction work
+  drops to roughly 0.4 s; its construction/rendering are separate costs.
+- Twenty synthetic pointer cases exercise the real Editor and OrbitControls.
+  A separate browser DOM harness passes six touch/pen/cancel/scrub/view cases,
+  reports no browser errors, and leaves saved storage unchanged. Synthetic
+  capture is modeled explicitly; this is not a physical-device claim.
+- Descent retains road paint, barriers, mountain strips, bay islands and 214
+  procedural pine owners. Visual mesh data carries material opacity/emission/
+  fog without becoming phantom ground. Unused UV payloads are omitted while
+  authored normals are preserved. All 294 geometry/material/collision/movement
+  checks pass in lite and full modes without raising interchange limits.
+  Mountain groups link their visible strips to collision walls; guardrail
+  groups link their beams/posts to grind paths. Explicit terrain material edits
+  are no longer overwritten by the jungle atmosphere setting.
+
 ## Remaining audit work
 
-1. **Terrain support probe cost:** `buildWoodPath` probes ground before the final
-   scene BVHs are installed. Current accounting multiplies probe count by
-   component count, which does not describe the triangle work of native meshes.
-   A 600 m support-seeking path with 25 native meshes of roughly 4,000 triangles
-   can pass existing limits yet request roughly 31.8 million raw triangle tests.
-   Reproduce this with real support probes and either build the acceleration
-   structures before probing or enforce an accurate aggregate work limit.
-2. **Legacy conversion fidelity:** strict hand-built object comparison still
-   diagnoses themes/custom material effects and manually emitted visual-only
-   scenery. Compare actual missing content, not only object-tree inequality;
-   preserve authored content with editable representations and meaningful
-   visual/runtime evidence before claiming complete capture parity.
-3. **Touch gesture coverage:** portrait/landscape panel layout is checked in a
-   browser, but true multi-touch selection, orbit, cancellation and keyboard
-   viewport transitions still need targeted browser/device verification.
-4. **Large-library responsiveness:** whole-registry transaction validation now
-   preserves correctness; measure repeated edits near the allowed library size
-   before deciding whether a cached acceptance summary is needed. Such a cache
-   must invalidate on all mutations and never weaken the trust boundary.
+1. **Legacy conversion fidelity:** actual remaining differences were measured
+   through the real atmosphere/material code, beyond object-tree warnings.
+   Sky Bridge forks lose their id-bound whiteout (fog 5–24 m becomes 90–260 m,
+   sky/mist reappear). Nightworks and coastal fog/light values change because
+   native themes are not captured. Beachfront's Standard sand material loses
+   normal/AO maps; oil slicks gain checker textures; static Nightworks platform
+   emission is lost. Preserve these through bounded authored theme/material
+   controls and verify rendered/effective values. Jungle atmosphere itself
+   already matches after capture; do not add unused flags based on warnings.
+   Descent's listed static scenery is covered, not every legacy builder.
+2. **Large active-draft rendering:** active Descent has approximately 3 MB /
+   1,940 components. Its CPU transaction and rebuild are now about 0.8–0.9 s
+   combined before browser storage, DOM and WebGL. Measure the browser costs
+   and repeated scene/resource churn independently if input remains sluggish;
+   do not weaken import validation or rely on identity-caching mutable drafts.
+3. **Device gesture coverage:** synthetic browser and actual OrbitControls
+   event coverage is established, but physical touch/pen input and mobile
+   virtual-keyboard viewport transitions still need device-specific QA.
+4. **Cross-feature authoring audit:** continue checking component controls,
+   authored field semantics, runtime ownership and import/build failure paths
+   against the full original edit/move invariant. Existing passing tests do not
+   establish that all possible editor interactions are covered.
 
 Use `npm run check:editor-security`, `npm run check:editor-roundtrip`, and
-`npm run build`, followed by real-browser lite/full checks. Preserve the full
-scope above when a later pass continues; do not declare completion merely because
-current regression cases pass.
+`npm run build`, followed by real-browser lite/full checks. The dev-only
+`/tools/editor-pointer-review.html` page provides the synthetic browser harness.
+Preserve the full scope above when a later pass continues; do not declare
+completion merely because current regression cases pass.

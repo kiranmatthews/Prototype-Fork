@@ -33,6 +33,16 @@ try {
   };
   const rejectComponent = (component, reason) => reject({ ...base(), components: [component] }, reason);
   assert.ok(normalize(base()));
+  const visualMesh = {t:"mesh",p:[0,0,0],vertices:[0,0,0,1,0,0,0,1,0],solid:false,
+    emissive:"#223344",opacity:.5,fog:false};
+  assert.ok(normalize({...base(),components:[visualMesh]}));
+  for(const emissive of ["url(https://example.invalid/x)",0,null,"#12345g"])
+    rejectComponent({...visualMesh,emissive},"invalid emissive input");
+  for(const opacity of [-1,1.01,NaN,Infinity,"0.5",null])
+    rejectComponent({...visualMesh,opacity},"invalid opacity input");
+  for(const fog of [0,"false",null]) rejectComponent({...visualMesh,fog},"invalid fog input");
+  rejectComponent({t:"platform",p:[0,0,0],emissive:"#223344"},"mesh-only material field on another primitive");
+
   const original = base();
   const copy = normalize(original);
   copy.components[0].p[0] = 100;

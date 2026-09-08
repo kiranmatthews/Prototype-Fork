@@ -368,6 +368,10 @@ export const chooseUnityWeightedVariant = (
   return fallback;
 };
 
+/** Shared by construction and the untrusted-level support-work budget. */
+export const woodPathBentIntervals = (length: number, bentSpacing: number): number =>
+  Math.max(1, Math.ceil(length / Math.max(0.5, finite(bentSpacing, 4.5))));
+
 const profileWithSafety = (
   raw: Readonly<WoodPathProfile>,
 ): Readonly<WoodPathProfile> => ({
@@ -580,7 +584,7 @@ export const buildWoodPathLayout = (
   };
 
   if (length > 0 && (includeSupports || includeHandrails)) {
-    const bentIntervals = Math.max(1, Math.ceil(length / profile.bentSpacing));
+    const bentIntervals = woodPathBentIntervals(length, profile.bentSpacing);
     const bentSpacing = length / bentIntervals;
     for (let index = 0; index <= bentIntervals; index++) {
       const distance = index * bentSpacing;

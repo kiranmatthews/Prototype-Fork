@@ -20,6 +20,19 @@ export function assertEditorRuntimeAuthoring({ Level, setEditorBuild, worldMapCo
   });
   try {
     window.location.search = "?lite";
+    for (const tex of ["grass", "jungle", "sunsoil"]) {
+      const terrain = {t:"terrain",p:[0,0,0],pts:[[0,0],[0,-20]],w:5,amp:0,tex,color:"#3d8a45"};
+      const authored = {...makeData([terrain]),jungleAtmosphere:true};
+      const painted = create(authored);
+      try {
+        assert.deepEqual(painted.captureData().components.find(c=>c.t==="terrain"),terrain,
+          "atmosphere rewrote the editor's terrain material");
+        const ground=painted.groundMeshes.find(mesh=>mesh.userData.terrainComp);
+        assert.ok(ground); assert.equal(ground.material.userData.texKind,tex);
+        assert.equal(ground.material.color.getHexString(),"3d8a45");
+      } finally {painted.dispose();}
+    }
+
     const data = makeData([
       { t: "rail", p: [3, 4, -3], pts: [[0, 0, 0, 0], [2, -4, 0.5, 1], [-2, -8, 0, 2]], amp: 5, speed: 0.75, axis: "y", invisible: true },
       { t: "rail", p: [7, 4, -3], len: 9, yaw: 35, amp: 2, speed: 1, axis: "x", invisible: true },

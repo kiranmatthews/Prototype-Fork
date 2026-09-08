@@ -40,7 +40,11 @@ for (const screen of [null, "launch", "pause", "results", "gameover"]) {
       active,
       startEphemeral() { events.push("ephemeral"); this.active = { slot: 0 }; },
     },
-    switchLevel: (...args) => events.push(args),
+    switchLevel: (...args) => {
+      args[4]?.(); // successful construction admits the menu's run-state commit
+      events.push(args.slice(0, 3));
+      return true;
+    },
     prepareActivePresentationAssets: () => assets,
     gameFlow: {
       blocksGameplay: screen !== null,
@@ -148,7 +152,7 @@ const switchLevelFlow =
 assert.ok(switchLevelFlow, "switchLevel flow could not be inspected");
 assert.doesNotMatch(
   switchLevelFlow,
-  /ui\.showMessage\(/,
+  /ui\.showMessage\((?!\s*"LEVEL LOAD FAILED")/,
   "level switches must not raise an intrusive full-screen level-name splash",
 );
 const bonusEntryFlow =

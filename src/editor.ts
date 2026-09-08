@@ -28,11 +28,12 @@ import {
   starterCustomLevel,
   migrateCustomLevel,
   normalizeCustomLevelData,
-  normalizeUserLevelEntries,
+  prepareUserLevelChange,
+  commitPreparedUserLevelChange,
+  PreparedUserLevelChange,
   MAX_LEVEL_FILE_BYTES,
   MAX_USER_LEVELS,
   getUserLevels,
-  newLevelId,
   parseCustomLevelJson,
   cleanLevelName,
   groupChainOf,
@@ -46,7 +47,6 @@ import {
   isBuiltin,
   isOverridden,
   getEditData,
-  persistEditData,
   userLevelStorageHealthy,
   saveUserLevel,
   renameUserLevel,
@@ -68,7 +68,7 @@ import { TROPICAL_PLANT_KINDS } from "./tropicalPlants";
 import { JUNGLE_ASSETS, JUNGLE_ASSET_KINDS, isJungleAsset, type JungleAssetKind } from "./jungleAssets";
 
 interface Hooks {
-  preflight: () => boolean;
+  preflight: (prepared?: LevelEntry) => boolean;
   rebuild: (committed?: boolean) => void; // live preview, or committed play-source rebuild
   resetPreview: () => void; // canceled gesture: reveal exact retained level again
   exitToPlay: () => void; // leave the editor and hand control back to the game
@@ -175,6 +175,8 @@ const manyDots = (x: CanvasRenderingContext2D): void => {
   }
 };
 const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
+  pine: x => { x.fillStyle = "#856044"; x.fillRect(8, 9, 2, 8); x.fillStyle = "#58a66a";
+    for (const [y, width] of [[2, 5], [7, 7]]) { x.beginPath(); x.moveTo(9, y); x.lineTo(9 + width, y + 7); x.lineTo(9 - width, y + 7); x.closePath(); x.fill(); } },
   ...Object.fromEntries(JUNGLE_ASSET_KINDS.map(kind => [kind, (x: CanvasRenderingContext2D) => {
     if (kind.startsWith("jungle")) leafSpray(x, "#a1ce45", 3, 14, 3.4);
     else { x.fillStyle = "#d3a653"; x.fillRect(2, 5, 14, 12); x.fillStyle = "#387b70"; x.fillRect(5, 8, 8, 7); }
@@ -460,6 +462,7 @@ const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
 // What a freshly dropped prop looks like: the same numbers the hand-coded
 // levels plant with, so a new one matches the ones already standing there.
 const DECOR_DEFAULTS: Record<DecorKind, Partial<CustomComponent>> = {
+  pine: { w: 1, yaw: 0 },
   ...Object.fromEntries(JUNGLE_ASSET_KINDS.map(kind => [kind, { s: [...JUNGLE_ASSETS[kind].size], w: 1, yaw: 0,
     ...(kind === "carvedlog" ? {} : { solid: false }) }])) as Record<JungleAssetKind, Partial<CustomComponent>>,
   fanpalm: {w:1},
@@ -2352,6 +2355,7 @@ export class Editor {
   targetId = DEFAULT_LEVEL_ID; // the user level this session edits
   private targetName = ""; // its menu name — what the rename field shows
   private initialTargetId = DEFAULT_LEVEL_ID;
+  private initialTargetName = "";
   private initialJson = "";
   private pristineBuiltin = false;
   private registryChanged = false;
@@ -2471,6 +2475,11 @@ export class Editor {
   private cameraDirty = false;
   private cancelScrub: (() => void) | null = null;
   private releasingCapture = false;
+  // One contact owns an edit from down through up/cancel. Other contacts must
+  // never replace its grab snapshot or finish its transaction.
+  private editPointerId: number | null = null;
+  private touchPointers = new Set<number>();
+  private touchNavigating = false;
   // PEN TOOL: click-to-draw polygon platforms / pits / walls
   private drawing: {
     t:
@@ -2601,6 +2610,7 @@ export class Editor {
       deepClone(initialData ?? getEditData(target.id)),
     );
     this.initialTargetId = target.id;
+    this.initialTargetName = target.name;
     this.initialJson = JSON.stringify(this.data);
     this.pristineBuiltin = isBuiltin(target.id) && !isOverridden(target.id);
     this.registryChanged = false;
@@ -2629,15 +2639,7 @@ export class Editor {
     const height = Math.max(1, this.dom.clientHeight);
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
-    this.controls = new OrbitControls(this.camera, this.dom);
-    this.controls.enableDamping = true;
-    this.controls.dampingFactor = 0.12;
-    // FIGMA pointer rules: LEFT is for selecting and moving things (marquee
-    // on empty space) — never the camera. Orbit = right-drag, pan = middle
-    // or space-drag, zoom = wheel.
-    this.controls.mouseButtons.LEFT = -1 as unknown as THREE.MOUSE;
-    this.controls.mouseButtons.MIDDLE = THREE.MOUSE.PAN;
-    this.controls.mouseButtons.RIGHT = THREE.MOUSE.ROTATE;
+    this.controls = this.resetCameraControls();
     // refresh-proof: come back exactly where you were looking
     let restored = false;
     try {
@@ -2691,7 +2693,7 @@ export class Editor {
     this.hooks.setView(true); // no fog, far plane pushed out — see the whole level
     this.showMessage(
       `EDITING: ${target.name.toUpperCase()}`,
-      "drag = select & move · RIGHT-drag = orbit · space = pan",
+      "drag = select & move · RIGHT-drag = orbit · space = pan · two fingers = pan/zoom",
     );
   }
 
@@ -2733,18 +2735,32 @@ export class Editor {
     );
   }
 
-  private canStoreDraft(id: string, name: string, data: CustomLevelData): boolean {
-    const entries = [...getUserLevels()];
-    const entry = { id: id || newLevelId(), name, data };
-    const at = entries.findIndex(item => item.id === entry.id);
-    if (at < 0) entries.push(entry);
-    else entries[at] = entry;
-    if (normalizeUserLevelEntries(entries)) return true;
+  private draftName(): string {
+    const name = this.data.name || this.targetName;
+    if (name === this.targetName || !this.lastCommitted) return name;
+    // Old saves can have a different menu and exported title. Geometry edits
+    // preserve their menu title; only an actual edited name requests a rename.
+    try {
+      if ((JSON.parse(this.lastCommitted) as CustomLevelData).name === this.data.name)
+        return this.targetName;
+    } catch { /* history is normally canonical; preparation still validates */ }
+    return name;
+  }
+
+  private prepareDraft(id: string, name: string, data: CustomLevelData): PreparedUserLevelChange | null {
+    const prepared = prepareUserLevelChange({ id, name, data });
+    if (prepared) return prepared;
+    if (!normalizeCustomLevelData(data)) {
+      this.showMessage("CHANGE REJECTED", "values or geometry exceed safe authoring limits");
+      return null;
+    }
+    const entries = getUserLevels();
+    const adding = !id || !entries.some(entry => entry.id === id);
     this.showMessage(
-      entries.length > MAX_USER_LEVELS ? "LEVEL LIMIT REACHED" : "LIBRARY LIMIT REACHED",
+      adding && entries.length >= MAX_USER_LEVELS ? "LEVEL LIMIT REACHED" : "LIBRARY LIMIT REACHED",
       "export and remove unused levels before saving more geometry",
     );
-    return false;
+    return null;
   }
 
   private forkHandBuiltDraft(): { persisted: boolean } | null {
@@ -2755,11 +2771,19 @@ export class Editor {
         : `${originalName} edit`;
     const previousName = this.data.name;
     this.data.name = forkName;
-    if (!this.canStoreDraft("", forkName, this.data)) {
+    const prepared = this.prepareDraft("", forkName, this.data);
+    const draftJson = JSON.stringify(this.data);
+    if (!prepared || !this.hooks.preflight(prepared.entry) || JSON.stringify(this.data) !== draftJson) {
       this.data.name = previousName;
       return null;
     }
-    const id = saveUserLevel({ id: "", name: forkName, data: this.data });
+    const result = commitPreparedUserLevelChange(prepared);
+    if (!result.accepted) { this.data.name = previousName; return null; }
+    const id = prepared.entry.id;
+    if (JSON.stringify(this.data) !== prepared.json) {
+      this.data = JSON.parse(prepared.json) as CustomLevelData;
+      this.renderProps();
+    }
     this.targetId = id;
     this.targetName = findLevel(id)?.name ?? forkName;
     this.forkedLevelId = id;
@@ -2773,7 +2797,7 @@ export class Editor {
       "EDITABLE COPY CREATED",
       `${originalName} stays untouched · now editing ${this.targetName}`,
     );
-    return { persisted: userLevelStorageHealthy() };
+    return { persisted: result.persisted };
   }
 
   private rollbackActiveGesture(rebuildPreview = false): boolean {
@@ -2782,7 +2806,7 @@ export class Editor {
       this.moveDrag !== null ||
       this.gizmoDrag !== null ||
       this.hdlDrag !== null ||
-      this.dragging;
+      this.dragging || this.marquee !== null;
     for (const original of this.moveDrag?.orig ?? []) {
       const component = this.data.components[original.idx];
       if (component) setComponentPosition(component, [...original.p]);
@@ -2823,7 +2847,9 @@ export class Editor {
     this.dragSelectionBefore = null;
     this.downAt = null;
     this.marquee = null;
+    this.marqueeNodes = false;
     this.hideMarquee();
+    this.releaseEditPointer();
     this.spaceHeld = false;
     if (this.controls) {
       this.controls.enabled = true;
@@ -2839,10 +2865,57 @@ export class Editor {
     return hadGesture;
   }
 
-  private onPointerCancel = (): void => {
+  private releaseEditPointer(): void {
+    const id = this.editPointerId;
+    this.editPointerId = null;
+    if (id === null || id === undefined) return;
+    this.releasingCapture = true;
+    try {
+      if (this.dom.hasPointerCapture(id)) this.dom.releasePointerCapture(id);
+    } catch {
+      /* capture optional */
+    } finally { this.releasingCapture = false; }
+  }
+
+  private resetCameraControls(): OrbitControls {
+    const target = this.controls?.target.clone();
+    this.controls?.dispose();
+    this.controls = new OrbitControls(this.camera, this.dom);
+    if (target) this.controls.target.copy(target);
+    this.controls.enableDamping = true;
+    this.controls.dampingFactor = 0.12;
+    this.controls.enableRotate = this.viewMode === "3d";
+    // A finger edits; adding a second finger cancels the edit and pans/zooms.
+    // OrbitControls still tracks the first touch so it can start a pinch
+    // smoothly, but must never orbit at the same time as a geometry drag.
+    this.controls.touches.ONE = -1 as unknown as THREE.TOUCH;
+    this.controls.touches.TWO = THREE.TOUCH.DOLLY_PAN;
+    this.controls.mouseButtons.LEFT = -1 as unknown as THREE.MOUSE;
+    this.controls.mouseButtons.MIDDLE = THREE.MOUSE.PAN;
+    this.controls.mouseButtons.RIGHT = THREE.MOUSE.ROTATE;
+    this.controls.update();
+    return this.controls;
+  }
+
+  private onPointerCancel = (event?: Event): void => {
     if (!this.active || this.releasingCapture) return;
+    if (event && "pointerId" in event) {
+      const id = (event as PointerEvent).pointerId;
+      const wasTouch = this.touchPointers.delete(id);
+      if (id === this.editPointerId) this.rollbackActiveGesture(true);
+      else if (!wasTouch) return;
+      // Lost capture does not reset OrbitControls' private pointer list.
+      // Recreate its listeners/state and wait for remaining fingers to lift.
+      this.touchNavigating = this.touchPointers.size > 0;
+      this.resetCameraControls();
+      return;
+    }
     this.cancelScrub?.();
     this.rollbackActiveGesture(true);
+    this.focusAnim = null;
+    this.touchPointers.clear();
+    this.touchNavigating = false;
+    this.resetCameraControls();
   };
 
   exit(): void {
@@ -2877,6 +2950,8 @@ export class Editor {
     editorStorage.removeItem("solProtoEditorTarget");
     this.controls?.dispose();
     this.controls = null;
+    this.touchPointers.clear();
+    this.touchNavigating = false;
     document.body.classList.remove("ed-active");
     this.panel.style.display = "none";
     if (this.popWrap) this.popWrap.style.display = "none";
@@ -3006,7 +3081,7 @@ export class Editor {
         id: "__editor_import_probe",
         name: name ?? data.name,
         data,
-      });
+      }, this.getLevel());
     } catch {
       this.showMessage("BAD LEVEL FILE", "the level could not be built safely");
       return;
@@ -3084,6 +3159,7 @@ export class Editor {
     editorStorage.setItem("solProtoEditorTarget", e.id);
     this.data = migrateCustomLevel(getEditData(e.id));
     this.initialTargetId = e.id;
+    this.initialTargetName = e.name;
     this.initialJson = JSON.stringify(this.data);
     this.pristineBuiltin = false;
     this.forkOnFirstCommit = false;
@@ -3159,7 +3235,10 @@ export class Editor {
     // built-in override unless the working JSON actually changed.
     const beforePrune = JSON.stringify(this.data);
     if (beforePrune === this.lastCommitted) return true;
-    if (!this.hooks.preflight()) {
+    const special = (this.forkOnFirstCommit && this.targetId === this.initialTargetId) ||
+      (this.pristineBuiltin && this.targetId === this.initialTargetId && beforePrune === this.initialJson);
+    let prepared = special ? null : this.prepareDraft(this.targetId, this.draftName(), this.data);
+    if ((!special && !prepared) || !this.hooks.preflight(prepared?.entry)) {
       this.restoreCommittedData();
       return false;
     }
@@ -3174,7 +3253,7 @@ export class Editor {
     });
     this.resizeIdx = resizedObject ? indices.get(resizedObject) ?? -1 : -1;
     if (this.resizeIdx < 0) this.selVtxs.clear();
-    const selectionAdjusted = previousSelection.length !== this.sel.length ||
+    let selectionAdjusted = previousSelection.length !== this.sel.length ||
       previousSelection.some((index, position) => index !== this.sel[position]);
     this.pruneGroups();
     let fork: { persisted: boolean } | null = null;
@@ -3186,13 +3265,44 @@ export class Editor {
       fork = this.forkHandBuiltDraft();
       if (!fork) { this.restoreCommittedData(previousSelection, previousResize); return false; }
     }
-    const now = JSON.stringify(this.data);
+    let now = JSON.stringify(this.data);
     if (now === this.lastCommitted) return true;
     const restoringBuiltin = this.pristineBuiltin &&
       this.targetId === this.initialTargetId && now === this.initialJson;
-    if (!fork && !restoringBuiltin && !this.canStoreDraft(this.targetId, this.targetName, this.data)) {
-      this.restoreCommittedData(previousSelection, previousResize);
-      return false;
+    let persisted = fork?.persisted ?? true;
+    if (!fork && restoringBuiltin) {
+      restoreBuiltin(this.targetId);
+      persisted = userLevelStorageHealthy();
+    } else if (!fork) {
+      // Keep numeric/property closures attached to the existing working
+      // objects. Only structural canonicalization needs a fresh snapshot.
+      if (!prepared || prepared.json !== now) {
+        prepared = this.prepareDraft(this.targetId, this.draftName(), this.data);
+        if (!prepared || !this.hooks.preflight(prepared.entry)) {
+          this.restoreCommittedData(previousSelection, previousResize);
+          return false;
+        }
+      }
+      if (JSON.stringify(this.data) !== now) {
+        this.restoreCommittedData(previousSelection, previousResize);
+        this.showMessage("CHANGE REJECTED", "the working draft changed during validation; retry the edit");
+        return false;
+      }
+      const result = commitPreparedUserLevelChange(prepared);
+      if (!result.accepted) {
+        this.restoreCommittedData(previousSelection, previousResize);
+        this.showMessage("CHANGE REJECTED", "the saved level or library changed; retry the edit");
+        return false;
+      }
+      persisted = result.persisted;
+      if (now !== prepared.json) {
+        this.data = JSON.parse(prepared.json) as CustomLevelData;
+        now = prepared.json;
+        this.sel = this.sel.filter(index => index < this.data.components.length);
+        if (!this.sel.includes(this.resizeIdx)) this.resizeIdx = -1;
+        selectionAdjusted = true;
+      }
+      this.targetName = prepared.entry.name;
     }
     const t = performance.now();
     const chained =
@@ -3211,11 +3321,6 @@ export class Editor {
     this.syncHistoryButtons();
     this.renderLayers();
     this.syncProjectFields();
-    let persisted = fork?.persisted ?? true;
-    if (!fork && restoringBuiltin)
-      restoreBuiltin(this.targetId);
-    else if (!fork)
-      persisted = persistEditData(this.targetId, now); // autosave straight into the level list
     if (!persisted || !userLevelStorageHealthy())
       this.showMessage(
         "SAVE FAILED",
@@ -3276,11 +3381,17 @@ export class Editor {
     )
       restoreBuiltin(this.targetId);
     else {
-      if (!this.canStoreDraft(this.targetId, this.targetName, this.data)) {
+      const historyName = canonical === this.initialJson ? this.initialTargetName || this.targetName : this.data.name || this.targetName;
+      const prepared = this.prepareDraft(this.targetId, historyName, this.data);
+      if (!prepared || !this.hooks.preflight(prepared.entry) || JSON.stringify(this.data) !== canonical) {
         this.data = previousData;
         return false;
       }
-      persisted = persistEditData(this.targetId, canonical);
+      const result = commitPreparedUserLevelChange(prepared);
+      if (!result.accepted) { this.data = previousData; return false; }
+      persisted = result.persisted;
+      if (canonical !== prepared.json) this.data = JSON.parse(prepared.json) as CustomLevelData;
+      canonical = prepared.json;
     }
     this.syncSkySelect(); // undo/redo can change the time of day
     this.lastCommitted = canonical;
@@ -3292,7 +3403,8 @@ export class Editor {
         "browser storage is full · export before reloading",
       );
     const wantedName = this.data.name?.trim();
-    if (wantedName && findLevel(this.targetId)?.data)
+    const savedEntry = findLevel(this.targetId);
+    if (wantedName && savedEntry?.data && savedEntry.name !== cleanLevelName(wantedName))
       renameUserLevel(this.targetId, wantedName);
     this.targetName = findLevel(this.targetId)?.name ?? wantedName ?? this.targetName;
     if (this.nameInput) this.nameInput.value = this.targetName;
@@ -3772,6 +3884,8 @@ export class Editor {
   // F: frame the selection (or the whole level) in the orbit view
   private frameSelection(): void {
     if (!this.controls) return;
+    this.onPointerCancel();
+    this.cameraDirty = true;
     const box = new THREE.Box3();
     let any = false;
     const idxs = this.sel.length
@@ -3800,6 +3914,7 @@ export class Editor {
   // view angle (just travels in), and eases over ~0.34s (driven in update()).
   private focusOnBox(box: THREE.Box3): void {
     if (!this.controls) return;
+    this.onPointerCancel();
     this.cameraDirty = true;
     const cen = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3()).length();
@@ -5258,7 +5373,61 @@ export class Editor {
   // ---- pointer handlers ----
 
   private onDown = (e: PointerEvent): void => {
-    if (!this.active || e.button !== 0) return;
+    if (!this.active) return;
+    if (this.cancelScrub) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      return;
+    }
+    if ((this.editPointerId !== null && e.pointerId !== this.editPointerId &&
+         !(e.pointerType === "touch" && this.touchPointers.has(this.editPointerId))) ||
+        (this.touchNavigating && e.pointerType !== "touch")) {
+      e.stopImmediatePropagation();
+      return;
+    }
+    if (e.button !== 0) return;
+    if (e.pointerType === "touch") {
+      if (this.touchPointers.size >= 2 && !this.touchPointers.has(e.pointerId)) {
+        // OrbitControls has only one/two-finger states; a third finger must
+        // not replace the active two-finger state with its NONE fallback.
+        e.stopImmediatePropagation();
+        return;
+      }
+      this.touchPointers.add(e.pointerId);
+      if (this.touchPointers.size > 1 || this.touchNavigating) {
+        // The first contact stays captured/tracked by OrbitControls during
+        // handoff; releasing it here would cancel the new pinch next frame.
+        this.editPointerId = null;
+        this.rollbackActiveGesture(true);
+        this.touchNavigating = true;
+        this.cameraDirty = true;
+        return;
+      }
+    }
+    if (this.editPointerId !== null || this.touchNavigating) {
+      e.stopImmediatePropagation();
+      return;
+    }
+    this.editPointerId = e.pointerId;
+    try {
+      // Capture click/marquee gestures as well as geometry handles. A sweep
+      // released over a panel or outside the canvas still needs its ending.
+      this.dom.setPointerCapture(e.pointerId);
+    } catch {
+      /* capture optional */
+    }
+    try {
+      // Touch pen vertices land on release, so a second finger can turn the
+      // gesture into camera navigation without leaving an accidental node.
+      if (!(e.pointerType === "touch" && this.drawing)) this.editPointerDown(e);
+    } finally {
+      // Disabled ONE-touch camera action isolates edits; keeping controls
+      // enabled lets OrbitControls remember the first finger for a pinch.
+      if (e.pointerType === "touch" && this.controls) this.controls.enabled = true;
+    }
+  };
+
+  private editPointerDown(e: PointerEvent): void {
     // space-hand: the pointer belongs to the pan — no picking, no marquee
     if (this.spaceHeld) {
       this.downAt = null;
@@ -5461,7 +5630,7 @@ export class Editor {
         this.rollbackActiveGesture(true);
       }
     }
-  };
+  }
 
   // ---- pen tool (draw polygon platforms / pits / walls) ----
 
@@ -5730,6 +5899,15 @@ export class Editor {
 
   private onMove = (e: PointerEvent): void => {
     if (!this.active) return;
+    if (this.touchNavigating) {
+      if (e.pointerType !== "touch" || !this.touchPointers.has(e.pointerId))
+        e.stopImmediatePropagation();
+      return;
+    }
+    if (this.editPointerId !== null && e.pointerId !== this.editPointerId) {
+      e.stopImmediatePropagation();
+      return;
+    }
     if (this.spaceHeld) return; // panning: OrbitControls owns the pointer
     // pen tool: rubber-band the next segment to the cursor
     if (this.drawing) {
@@ -5943,13 +6121,21 @@ export class Editor {
 
   private onUp = (e: PointerEvent): void => {
     if (!this.active) return;
-    this.releasingCapture = true;
-    try {
-      if (this.dom.hasPointerCapture(e.pointerId))
-        this.dom.releasePointerCapture(e.pointerId);
-    } catch {
-      /* capture optional */
-    } finally { this.releasingCapture = false; }
+    if (e.pointerType === "touch") {
+      const tracked = this.touchPointers.delete(e.pointerId);
+      if (this.touchNavigating) {
+        if (!tracked) { e.stopImmediatePropagation(); return; }
+        if (this.touchPointers.size === 0) this.touchNavigating = false;
+        return;
+      }
+    }
+    if (this.editPointerId !== null && e.pointerId !== this.editPointerId) {
+      e.stopImmediatePropagation();
+      return;
+    }
+    if (e.pointerId !== this.editPointerId || e.button !== 0) return;
+    this.releaseEditPointer();
+    if (e.pointerType === "touch" && this.drawing) this.editPointerDown(e);
     if (this.drawing) return; // pen tool owns the pointer (vertices drop on down)
     if (this.spaceHeld) {
       this.dom.style.cursor = "grab";
@@ -6063,7 +6249,8 @@ export class Editor {
     // HOLD SPACE: grabby hand — left-drag pans the canvas (Figma rules)
     if (e.code === "Space") {
       e.preventDefault();
-      if (!this.spaceHeld && !this.dragging && !this.hdlDrag && !this.moveDrag && !this.gizmoDrag) {
+      if (!this.spaceHeld && this.editPointerId === null && !this.marquee &&
+          !this.dragging && !this.hdlDrag && !this.moveDrag && !this.gizmoDrag) {
         this.spaceHeld = true;
         if (this.controls) this.controls.mouseButtons.LEFT = THREE.MOUSE.PAN;
         this.dom.style.cursor = "grab";
@@ -6071,7 +6258,8 @@ export class Editor {
       return;
     }
     const cmd = e.metaKey || e.ctrlKey;
-    if (cmd && ["KeyD", "KeyX", "KeyV", "KeyG", "KeyA"].includes(e.code)) {
+    if ((cmd && ["KeyD", "KeyX", "KeyV", "KeyG", "KeyA"].includes(e.code)) ||
+        e.code.startsWith("Arrow")) {
       this.cancelScrub?.(); this.rollbackActiveGesture(true);
     }
     // pen tool: Enter closes the shape, Escape abandons it
@@ -6081,6 +6269,7 @@ export class Editor {
       return;
     }
     if (e.code === "Escape") {
+      if (this.cancelScrub) { this.cancelScrub(); return; }
       if (this.rollbackActiveGesture(true)) return;
       // step out: resize mode first, then the selection itself
       if (this.resizeIdx >= 0) this.setResize(-1);
@@ -6739,6 +6928,7 @@ export class Editor {
   // keeping the zoom. Already on that axis? Flip to the opposite side.
   snapView(axis: "x" | "y" | "z"): void {
     if (!this.controls) return;
+    this.onPointerCancel();
     this.cameraDirty = true;
     const t = this.controls.target;
     const off = new THREE.Vector3().subVectors(this.camera.position, t);
@@ -6784,6 +6974,7 @@ export class Editor {
   // the 3D button: back to the free orbit view saved when 2D was entered
   to3D(): void {
     if (!this.controls || this.viewMode === "3d") return;
+    this.onPointerCancel();
     this.viewMode = "3d";
     if (this.saved3D) {
       this.camera.fov = this.saved3D.fov;
@@ -7272,6 +7463,7 @@ export class Editor {
     this.numberGetters.set(input, get);
     input.step = String(step);
     input.value = String(get());
+    input.style.touchAction = "none";
     input.title = "shift+↑/↓ = ±10 · drag up/down to scrub";
     // read the field, apply it, coalesce bursts into one undo step, resync
     const apply = (commitChange = true, finishingScrub = false): void => {
@@ -7290,7 +7482,7 @@ export class Editor {
       }
       input.value = String(get());
     };
-    input.addEventListener("change", () => apply());
+    input.addEventListener("change", () => { if (!scrub?.moved) apply(); });
     input.addEventListener("blur", () => { if (!scrub?.moved) apply(); });
     // SHIFT+ARROW = coarse ±10 steps (plain arrows keep the field's fine step)
     input.addEventListener("keydown", (e) => {
@@ -7322,8 +7514,13 @@ export class Editor {
     } | null =
       null;
     let lastScrub = 0;
+    const cancelThisScrub = (): void => endScrub(true);
     input.addEventListener("pointerdown", (e) => {
       if (e.button !== 0) return;
+      if (scrub || this.cancelScrub || this.editPointerId != null) {
+        e.preventDefault(); // a second contact must not move text focus either
+        return;
+      }
       scrub = {
         y: e.clientY,
         val: parseFloat(input.value) || 0,
@@ -7331,19 +7528,21 @@ export class Editor {
         id: e.pointerId,
         source: JSON.stringify(this.data),
       };
-      this.cancelScrub = () => endScrub(true);
+      this.cancelScrub = cancelThisScrub;
+      try {
+        // Capture before the drag threshold too: a click released outside
+        // the field must not leave a scrub armed for the next hover.
+        input.setPointerCapture(e.pointerId);
+      } catch {
+        /* capture optional */
+      }
     });
     input.addEventListener("pointermove", (e) => {
-      if (!scrub) return;
+      if (!scrub || e.pointerId !== scrub.id) return;
       const dy = scrub.y - e.clientY; // up = increase
       if (!scrub.moved) {
         if (Math.abs(dy) < 3) return; // small movement is still a click
         scrub.moved = true;
-        try {
-          input.setPointerCapture(scrub.id);
-        } catch {
-          /* capture optional */
-        }
         input.style.cursor = "ns-resize";
         input.blur(); // no text caret while scrubbing
       }
@@ -7358,15 +7557,16 @@ export class Editor {
     });
     const endScrub = (cancel = false): void => {
       const ending = scrub;
+      if (!ending) return;
       scrub = null;
-      this.cancelScrub = null;
-      if (ending?.moved) {
-        try {
-          input.releasePointerCapture(ending.id);
-        } catch {
-          /* ignore */
-        }
-        input.style.cursor = "";
+      if (this.cancelScrub === cancelThisScrub) this.cancelScrub = null;
+      try {
+        input.releasePointerCapture(ending.id);
+      } catch {
+        /* capture optional */
+      }
+      input.style.cursor = "";
+      if (ending.moved) {
         if (cancel) {
           this.data = migrateCustomLevel(
             JSON.parse(ending.source) as CustomLevelData,
@@ -7376,9 +7576,9 @@ export class Editor {
         } else apply(true, true); // finish after releasing the capture owner
       }
     };
-    input.addEventListener("pointerup", () => endScrub(false));
-    input.addEventListener("pointercancel", () => endScrub(true));
-    input.addEventListener("lostpointercapture", () => endScrub(true));
+    input.addEventListener("pointerup", (e) => { if (e.pointerId === scrub?.id) endScrub(false); });
+    input.addEventListener("pointercancel", (e) => { if (e.pointerId === scrub?.id) endScrub(true); });
+    input.addEventListener("lostpointercapture", (e) => { if (e.pointerId === scrub?.id) endScrub(true); });
     row.appendChild(lab);
     row.appendChild(input);
     return row;
@@ -7910,7 +8110,7 @@ export class Editor {
       c.t === "metal"
     ) {
       const defaultEdgeGrinding =
-        !c.invisible &&
+        !(c.t === "mesh" && c.solid === false) && !c.invisible &&
         c.t !== "woodpath" &&
         !(c.t === "terrain" && c.berms === true) &&
         !(c.t === "platform" && c.shoreProfile === true);
@@ -7932,6 +8132,15 @@ export class Editor {
       num("shore variation phase", () => c.shorePhase ?? 0, v => { c.shorePhase = v; }, 0.1);
     }
     if (c.t === "mesh") {
+      boolRow("walkable collision", () => c.solid !== false, value => { c.solid = value; });
+      boolRow("material fog", () => c.fog ?? c.solid === false, value => { c.fog = value; });
+      num("opacity", () => c.opacity ?? 1, value => { c.opacity = Math.max(0, Math.min(1, value)); }, .05);
+      const emissionRow = document.createElement("label"); emissionRow.className = "ed-row";
+      const emissionLabel = document.createElement("span"); emissionLabel.textContent = "emissive";
+      const emission = document.createElement("input"); emission.type = "color"; emission.value = c.emissive ?? "#000000";
+      emission.setAttribute("aria-label", "emissive color");
+      emission.addEventListener("change", () => { c.emissive = emission.value; this.commit(); });
+      emissionRow.append(emissionLabel, emission); this.propsEl.appendChild(emissionRow);
       const count = Math.floor((c.vertices?.length ?? 0) / 3);
       const note = document.createElement("div");
       note.className = "ed-dim";
@@ -8887,6 +9096,7 @@ export class Editor {
       // so they simply render nothing for one. Only the closing note has to
       // know, or a library prop would carry two.
       const SCALED: DecorKind[] = [
+        "pine",
         ...JUNGLE_ASSET_KINDS,
         ...TROPICAL_PLANT_KINDS,
         "fern",
@@ -8932,7 +9142,7 @@ export class Editor {
         num(stone ? "roll °" : "lean °", () => c.amp ?? 0,
           (v) => (c.amp = THREE.MathUtils.clamp(v,stone?-180:-40,stone?180:40)), 2);
       }
-      if (["fern", "broadleaf", "flowers", "toadstool", "toadstools", "mossrock", "jungletree", "palm", "vines", "planter", "log", "coastalhouse"].includes(dk))
+      if (["pine", "fern", "broadleaf", "flowers", "toadstool", "toadstools", "mossrock", "jungletree", "palm", "vines", "planter", "log", "coastalhouse"].includes(dk))
         num("yaw °", () => c.yaw ?? 0, v => { c.yaw = v; }, 15);
       if (isJungleAsset(dk)) {
         boolRow("invisible in play", () => c.invisible === true, value => {

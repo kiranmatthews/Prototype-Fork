@@ -304,7 +304,7 @@ assert.match(runtimeSource, /buildBeachsideGameplayOverlay\(\)/);
 assert.match(runtimeSource, /buildBeachsideCoastContainment\(reference\.shore\)/);
 assert.match(
   runtimeSource,
-  /mesh !== deck && !mesh\.userData\.woodPathComp/,
+  /this\.groundMeshes\.filter\(mesh => !mesh\.userData\.woodPathComp\)/,
   "terrain-seeking supports must ignore earlier boardwalk collision decks",
 );
 const presentationSource = readFileSync(

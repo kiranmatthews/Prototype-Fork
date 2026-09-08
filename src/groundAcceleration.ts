@@ -98,6 +98,45 @@ export function accelerateGroundMeshes(
   return { ownedGeometries, stats };
 }
 
+/**
+ * Upper bound for this ray's triangle visits plus BVH bounds checks. Count
+ * actual leaf ranges, including coincident faces which a BVH cannot separate;
+ * nearest-hit traversal can visit fewer leaves but never more than this walk.
+ * Stop through the shapecast return contract: throwing inside its callbacks
+ * would bypass the library's temporary-buffer cleanup.
+ */
+export function groundRaycastWork(
+  meshes: readonly THREE.Mesh[], ray: THREE.Ray, remaining: number,
+): number {
+  let work = 0;
+  const inverse = new THREE.Matrix4();
+  const localRay = new THREE.Ray();
+  for (const mesh of meshes) {
+    const tree = mesh.geometry.boundsTree;
+    work++; // object dispatch itself is bounded, even when every ray misses.
+    if (tree && !(mesh as THREE.InstancedMesh).isInstancedMesh) {
+      localRay.copy(ray).applyMatrix4(inverse.copy(mesh.matrixWorld).invert());
+      tree.shapecast({
+        intersectsBounds: box => {
+          work++;
+          // Return true after the budget is exhausted so the next range can
+          // terminate the traversal and unwind the library's buffer stack.
+          return work > remaining || localRay.intersectsBox(box);
+        },
+        intersectsRange: (_offset, count, _contained, _depth, _node, box) => {
+          if (localRay.intersectsBox(box)) work += count;
+          return work > remaining;
+        },
+      });
+    } else {
+      work += triangleCount(mesh.geometry) * ((mesh as THREE.InstancedMesh).isInstancedMesh
+        ? (mesh as THREE.InstancedMesh).count : 1);
+    }
+    if (work > remaining) break;
+  }
+  return work;
+}
+
 /** Releases only trees built by this Level and not shared with its successor. */
 export function disposeGroundAcceleration(
   ownedGeometries: ReadonlySet<THREE.BufferGeometry>,
