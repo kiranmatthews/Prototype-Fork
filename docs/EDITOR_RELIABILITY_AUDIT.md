@@ -1,8 +1,11 @@
 # Editor reliability audit
 
-This is an ongoing audit against the requirement that authored level content can
-be moved and edited without losing behavior. Passing the normal build is a
-release gate, not proof that every remaining fidelity or resource issue is solved.
+This records the completed hardening passes against the requirement that
+authored level content can be moved and edited without losing behavior. The
+user requested closeout after the current integration and release. The findings
+below remain documented follow-up candidates; no further audit is scheduled.
+Passing the normal build is a release gate, not proof that every possible
+fidelity or resource issue is solved.
 
 ## Verified hardening after a03db25
 
@@ -60,7 +63,7 @@ release gate, not proof that every remaining fidelity or resource issue is solve
   copied IDs retain Sky Bridge's whiteout and Nightworks/coastal lighting.
   Legacy data-backed Sky exports/duplicates preserve their effective defaults
   without saving a no-op editor open. Explicit custom settings apply after
-  sky/jungle/map defaults, with honest fallback-sky controls. 392 actual
+  sky/jungle/map defaults, with honest fallback-sky controls. 442 actual
   renderer/security/history checks compare against the pre-change native
   baseline and exercise every override; control tests preserve exact data
   behind rounded numeric/color displays.
@@ -73,7 +76,13 @@ release gate, not proof that every remaining fidelity or resource issue is solve
 - Signed-axis transforms preserve moving platform/rail/ferry direction at each
   point in time. Independent rope swing/ferry clocks and natural rope speed
   survive native capture; actual collider, grind and release velocities are
-  tested through rotations and nonuniform group transforms.
+  tested through rotations and nonuniform group transforms. The merged
+  floating-rock Nightworks retains its flexible rope grips and gains accurate
+  rock size/yaw controls, signed movement and diagonal ridge alignment. The
+  corrected ridge mapping turns native 90-degree asymmetric hulls by 180
+  degrees from the prior inconsistent mapping; native support/landing and
+  loaded visual/collision checks pass. Explicit rock color/glow/texture/fog
+  overrides reach both fallback and asynchronously loaded materials.
 - A real-browser large-draft fixture exposed six leaked ocean textures per
   rebuild: uniform merging cloned rendered textures while disposal released
   originals. Owned sampler bindings fix the leak. Nine repeated operations in
@@ -81,7 +90,7 @@ release gate, not proof that every remaining fidelity or resource issue is solve
   after cleanup. See [browser measurements](EDITOR_BROWSER_PERFORMANCE.md) for
   timings and the distinction between this fixture and the full game pipeline.
 
-## Remaining audit work
+## Follow-up findings retained at closeout
 
 1. **Thorn authoring and hazard alignment:** a selected elongated thorn and pit
    rotate differently. The pit turns while the thorn visual stays on its old
@@ -114,5 +123,5 @@ release gate, not proof that every remaining fidelity or resource issue is solve
 Use `npm run check:editor-security`, `npm run check:editor-roundtrip`, and
 `npm run build`, followed by real-browser lite/full checks. The dev-only
 `/tools/editor-pointer-review.html` page provides the synthetic browser harness.
-Preserve the full scope above when a later pass continues; do not declare
-completion merely because current regression cases pass.
+These findings describe the limits of this closed pass and can guide a future
+user-requested iteration. They are not scheduled background work.

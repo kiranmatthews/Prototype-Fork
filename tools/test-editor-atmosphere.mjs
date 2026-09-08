@@ -5,8 +5,10 @@ import * as THREE from 'three';
 import { atmosphereRenderer } from './atmosphere-runtime-harness.mjs';
 
 // Baseline fixture was measured by executing c902b81's actual renderer functions
-// before the shared resolver change. This prevents source/copy tests from both
-// passing after the same accidental change to native defaults.
+// before the shared resolver change. Only `dark` was intentionally refreshed
+// from 55edc03's pristine Level/renderer when Nightworks became a floating-rock
+// data-backed course. The other nineteen scenarios retain their old baseline.
+// This prevents source/copy tests from sharing the same accidental drift.
 const baseline = JSON.parse(await readFile(new URL('./fixtures/native-atmosphere-baseline.json', import.meta.url),'utf8'));
 const harness = await readFile(new URL('./validate-editor-roundtrip.mjs', import.meta.url),'utf8');
 new Function(harness.slice(harness.indexOf('function installHeadlessDom()'),harness.indexOf('\nfunction round('))+'\ninstallHeadlessDom();')();
@@ -14,12 +16,13 @@ const server = await createServer({appType:'custom',logLevel:'silent',server:{mi
 const clone = value => JSON.parse(JSON.stringify(value));
 const dataFor = (kind='ordinary',sky='coast') => ({v:1,name:'Atmosphere sentinel',spawn:[0,1,0],killY:-30,sky,
   ...(kind==='jungle'?{jungleAtmosphere:true}:{}),components:kind==='map'?[{t:'worldmap',p:[0,0,0]}]:
-    [{t:'platform',p:[0,-1,0],s:[4,1,4]},{t:'gate',p:[0,0,-2]}]});
+    [{t:'platform',...(kind==='nightworks'?{dkind:'nightplateau',p:[0,-3,0],s:[8,6,8]}:{p:[0,-1,0],s:[4,1,4]})},{t:'gate',p:[0,0,-2]}]});
 let checks=0, failures=0;
 const check=(label,fn)=>{checks++;try{fn();}catch(error){failures++;console.error(`FAIL ${label}: ${error.stack}`);}};
 try{
   const api=await server.ssrLoadModule('/src/level.ts');
   const atmosphere=await server.ssrLoadModule('/src/levelAtmosphere.ts');
+  const {NIGHTWORKS_LEVEL}=await server.ssrLoadModule('/src/levels/nightworks.ts');
   const render=atmosphereRenderer(await readFile(new URL('../src/main.ts',import.meta.url),'utf8'),atmosphere);
   const renderLevel=(level,entry,painted=true,editor=false)=>render(level,entry,{painted,editor},THREE,atmosphere);
   const build=(data,id='atmosphere_copy')=>new api.Level(new THREE.Scene(),{id,name:data.name,data:clone(data)});
@@ -30,7 +33,12 @@ try{
       try{
         const exported=source.captureData(), normalized=api.normalizeCustomLevelData(exported);
         check(`${entry.id} ${query}: captured atmosphere is safe portable JSON`,()=>{
-          assert.ok(normalized?.atmosphere);assert.ok(api.parseCustomLevelJson(JSON.stringify(exported)));
+          assert.ok(normalized);assert.ok(api.parseCustomLevelJson(JSON.stringify(exported)));
+          if(entry.id==='dark'){
+            assert.ok(source.builtFromData,'Nightworks no longer uses its source-owned data');
+            assert.deepEqual(exported,api.migrateCustomLevel(clone(NIGHTWORKS_LEVEL)),
+              'read-only data-backed Nightworks capture materialized atmosphere overrides');
+          }else assert.ok(normalized.atmosphere);
           assert.deepEqual(api.normalizeCustomLevelData(normalized),normalized);
         });
         if(!normalized)continue;
@@ -64,7 +72,7 @@ try{
   const numericValues={fogNear:321,fogFar:78,ambientIntensity:3.2,sunIntensity:2.7,fillIntensity:1.6,
     shadowStrength:.17,drawDistance:1234,fallbackSunU:.23,fallbackSunV:.71};
   const tuple=[.123,.456,.789],hex='#17a39f';
-  for(const kind of ['ordinary','jungle','map']){
+  for(const kind of ['ordinary','jungle','map','nightworks']){
     const data=dataFor(kind),entry={id:'overrides',name:data.name,data},level=build(data,entry.id);
     try{
       for(const [key,value] of Object.entries(numericValues))check(`${kind}: final numeric override ${key}`,()=>{
@@ -117,11 +125,38 @@ try{
         source.groundMeshes.find(m=>m.userData.editorIdx===0).material.fog);
     });}finally{copy?.dispose();source.dispose();}
   }
-  for(const keepPlayFog of [undefined,false,true]){
-    const data={...dataFor('jungle','day'),...(keepPlayFog!==undefined?{keepPlayFog}: {})};const level=build(data);
-    try{check(`jungle material fog default/override ${keepPlayFog}`,()=>{
+  for(const kind of ['jungle','nightworks'])for(const keepPlayFog of [undefined,false,true]){
+    const data={...dataFor(kind,'day'),...(keepPlayFog!==undefined?{keepPlayFog}: {})};const level=build(data);
+    try{check(`${kind} material fog default/override ${keepPlayFog}`,()=>{
       assert.equal(level.keepPlayFog,keepPlayFog??true);
-      assert.equal(level.groundMeshes.find(m=>m.name==='platform').material.fog,keepPlayFog??true);
+      assert.equal(level.groundMeshes.find(m=>m.userData.editorIdx===0).material.fog,keepPlayFog??true);
+    });}finally{level.dispose();}
+  }
+  const rockTriggers=[
+    ...['nightplateau','nightlongisland','nightsteppingrock','nightphaserock','nightrockridge'].map(dkind=>({t:'platform',dkind,p:[0,-3,0],s:[8,6,8]})),
+    {t:'mover',dkind:'nightsteppingrock',p:[0,3,0],s:[5,4,5]},
+    {t:'phasepad',dkind:'nightphaserock',p:[0,3,0],s:[5,4,5]},
+    {t:'rail',dkind:'nightrockridge',p:[0,3,0],len:12},
+    {t:'ropeswing',dkind:'nightanchorrock',p:[0,10,0],len:6},
+  ];
+  for(const component of [...rockTriggers,{t:'decor',dkind:'nightdistantarch',p:[0,10,0],s:[8,10,4]},
+    {t:'decor',dkind:'nightanchorrock',p:[0,10,0],s:[4,3,3]},
+    {t:'rail',dkind:'nightplateau',p:[0,3,0],len:12}]){
+    const data={...dataFor('ordinary','night'),components:[component,{t:'gate',p:[0,0,-20]}]},level=build(data);
+    try{check(`Nightworks inherited-default trigger ${component.t}/${component.dkind}`,()=>{
+      assert.equal(atmosphere.usesNightworksAtmosphere(data),!!level.nightworksRocks);
+      assert.deepEqual(atmosphere.resolveDataAtmosphere(data),atmosphere.resolveLevelAtmosphere(level),
+        'inspector inherited values disagree with the constructed level');
+    });}finally{level.dispose();}
+  }
+  for(const data of [clone(NIGHTWORKS_LEVEL),{...dataFor('nightworks','day'),jungleAtmosphere:true},
+    {...dataFor('nightworks','night'),components:[...dataFor('nightworks').components,{t:'worldmap',p:[0,0,0]}]}]){
+    const level=build(data);
+    try{check('Nightworks defaults/custom transition preserves effective appearance',()=>{
+      const before=renderLevel(level,{id:'custom-transition',data});
+      assert.deepEqual(atmosphere.resolveDataAtmosphere(data),atmosphere.resolveLevelAtmosphere(level));
+      level.atmosphere=atmosphere.resolveDataAtmosphere(data);
+      assert.deepEqual(renderLevel(level,{id:'custom-transition',data}),before);
     });}finally{level.dispose();}
   }
   const base=dataFor();

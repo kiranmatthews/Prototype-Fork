@@ -492,6 +492,32 @@ try {
     unsupported.sel = [0]; unsupported.renderProps();
     assert.ok(!unsupported.propsEl.children.some(row => row.children?.[0]?.textContent === "surface glow"));
   });
+  check("rock texture selector preserves the asset default and commits explicit checker with undo", () => {
+    const data = migrateCustomLevel(base([{ t: "platform", dkind: "nightplateau", p: [0, 0, 0], s: [8, 4, 8] }]));
+    const id = saveUserLevel({ id: "", name: data.name, data });
+    const editor = editorFor(data); editor.targetId = id; editor.initialTargetId = id;
+    editor.commit = Editor.prototype.commit.bind(editor);
+    editor.hooks.preflight = () => !!normalizeCustomLevelData(editor.data);
+    const select = () => editor.propsEl.children.find(row => row.children?.[0]?.textContent === "texture").querySelector("select");
+    editor.sel = [0]; editor.renderProps();
+    assert.equal(select().value, "");
+    assert.ok(select().children.some(option => option.value === "" && option.textContent === "asset material"));
+    assert.equal(editor.data.components[0].tex, undefined);
+    select().value = "checker"; select().dispatch("change");
+    assert.equal(editor.data.components[0].tex, "checker");
+    assert.equal(findLevel(id).data.components[0].tex, "checker");
+    const level = new Level(new THREE.Scene(), { id, name: data.name, data: editor.data });
+    const rock = level.groundMeshes.find(mesh => mesh.userData.nightworksRock);
+    assert.ok(rock.material.map && rock.geometry.attributes.uv); level.dispose();
+    editor.undo(); assert.equal(editor.data.components[0].tex, undefined);
+    editor.redo(); assert.equal(editor.data.components[0].tex, "checker");
+    editor.sel = [0]; editor.renderProps(); select().value = ""; select().dispatch("change");
+    assert.equal(editor.data.components[0].tex, undefined); assert.equal(findLevel(id).data.components[0].tex, undefined);
+    const ordinary = editorFor(base([{ t: "platform", p: [0, 0, 0] }]));
+    ordinary.sel = [0]; ordinary.renderProps();
+    const regular = ordinary.propsEl.children.find(row => row.children?.[0]?.textContent === "texture").querySelector("select");
+    assert.equal(regular.value, "checker"); assert.ok(!regular.children.some(option => option.value === ""));
+  });
 } finally {
   await server.close();
 }

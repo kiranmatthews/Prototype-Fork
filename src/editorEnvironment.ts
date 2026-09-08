@@ -1,5 +1,5 @@
 import type { CustomLevelData, CustomOceanData } from "./level";
-import { ATMOSPHERE_NUMBERS, ATMOSPHERE_COLORS, atmosphereColorHex, resolveDataAtmosphere,
+import { ATMOSPHERE_NUMBERS, ATMOSPHERE_COLORS, atmosphereColorHex, resolveDataAtmosphere, usesNightworksAtmosphere,
   type AtmosphereColor, type CustomAtmosphereData } from "./levelAtmosphere";
 
 /** Enter node editing without changing any ocean geometry. */
@@ -122,7 +122,7 @@ export class EditorEnvironment {
       ["perfectGrindBoost", "perfect grind boost"],
       ["keepPlayFog", "keep authored fog"],
     ] as const)
-      choice(label, ["off", "on"], () => (data()[key] ?? (key === "keepPlayFog" && (this.hooks.levelId?.() === "sky" || !!data().jungleAtmosphere))) ? "on" : "off", v => { data()[key] = v === "on"; });
+      choice(label, ["off", "on"], () => (data()[key] ?? (key === "keepPlayFog" && (this.hooks.levelId?.() === "sky" || !!data().jungleAtmosphere || usesNightworksAtmosphere(data())))) ? "on" : "off", v => { data()[key] = v === "on"; });
     num("ledge assist", () => data().ledgeAssist ?? 0, v => { data().ledgeAssist = Math.min(1, Math.max(0, v)); }, 0.05);
 
     heading("ATMOSPHERE");

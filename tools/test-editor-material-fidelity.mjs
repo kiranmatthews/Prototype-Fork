@@ -124,18 +124,120 @@ try {
 
   const night = new api.Level(new THREE.Scene(), { id: "dark", name: "Nightworks" });
   const nightCapture = api.normalizeCustomLevelData(night.captureData());
-  assert.ok(nightCapture);
-  const platforms = nightCapture.components.filter(c => c.t === "platform" && c.emissive === "#10131c");
-  const nativePlatforms = night.groundMeshes.filter(m => m.name === "platform" && m.material.emissive?.getHex() === 0x10131c);
-  assert.ok(platforms.length > 10); assert.equal(platforms.length, nativePlatforms.length);
-  const nightCopy = build({ ...dataFor(platforms), keepPlayFog: true });
-  const copiedPlatforms = nightCopy.groundMeshes.filter(m => m.name === "platform");
+  assert.ok(nightCapture, "current floating-rock Nightworks capture must remain valid");
+  const nightCopy = build(nightCapture);
+  assert.ok(night.nightworksRocks && nightCopy.nightworksRocks, "current Nightworks lost its intended rock owner");
+  assert.deepEqual(nightCopy.captureData().components, nightCapture.components);
+  assert.equal(nightCopy.groundMeshes.filter(m => m.userData.nightworksRock).length,
+    night.groundMeshes.filter(m => m.userData.nightworksRock).length);
+  nightCopy.dispose(); night.dispose();
+
+  // Real Level authoring passes its safe overrides through the asynchronous
+  // rock owner. A controlled registered template makes completion/fog timing
+  // deterministic while retaining genuine meshes, LODs and material objects.
+  const { NightworksRocks } = await server.ssrLoadModule("/src/nightworksRocks.ts");
+  const templateGeometry = new THREE.BoxGeometry(1, 1, 1), templateFar = new THREE.BoxGeometry(1, 1, 1);
+  const templateMap = new THREE.Texture();
+  for (const resource of [templateGeometry, templateFar, templateMap]) resource.userData.shared = true;
+  const templateUvs = Array.from(templateGeometry.attributes.uv.array);
+  let templateDisposals = 0;
+  for (const resource of [templateGeometry, templateFar, templateMap]) resource.addEventListener("dispose", () => templateDisposals++);
+  let releaseTemplate;
+  const templateReady = new Promise(resolve => { releaseTemplate = resolve; });
+  const originalEntryBuilder = api.Level.prototype.buildEntry;
+  api.Level.prototype.buildEntry = function (entry) {
+    this.nightworksRocks = new NightworksRocks(() => templateReady);
+    return originalEntryBuilder.call(this, entry);
+  };
+  let authoredRocks;
+  const appearances = [{}, {}, { color: "#ff6600", emissive: "#335577", tex: "checker" },
+    { color: "#44bb66", emissive: "#112233", tex: "checker" }, { color: "#778899", tex: "solid" }];
+  const rockData = { ...dataFor(appearances.map((appearance, index) => ({
+    t: "platform", dkind: "nightplateau", p: [index * 12, 0, 0], s: [8, 4, 8], ...appearance,
+  }))), keepPlayFog: false };
+  assert.ok(api.normalizeCustomLevelData(rockData));
+  try { authoredRocks = build(rockData); }
+  finally { api.Level.prototype.buildEntry = originalEntryBuilder; }
+  const proxies = authoredRocks.groundMeshes.filter(m => m.userData.nightworksRock);
+  assert.equal(proxies.length, appearances.length);
+  assert.equal(proxies[0].material.color.getHex(), 0xa98258, "omitted color changed the upstream fallback");
+  assert.equal(proxies[0].material.emissive.getHex(), 0x1e2638, "omitted emission changed the upstream fallback");
+  assert.ok(proxies.every(mesh => mesh.material.fog === false), "explicit course fog choice missed the synchronous rocks");
+  proxies[0].material.fog = true; // model a view change while the shared asset is still loading
+  for (const i of [2, 3]) {
+    assert.equal(proxies[i].material.color.getHexString(), appearances[i].color.slice(1));
+    assert.equal(proxies[i].material.emissive.getHexString(), appearances[i].emissive.slice(1));
+    assert.ok(proxies[i].material.map);
+    assert.equal(proxies[i].geometry.attributes.uv.count, proxies[i].geometry.attributes.position.count);
+    assert.ok(Array.from(proxies[i].geometry.attributes.uv.array).every(Number.isFinite));
+  }
+  assert.equal(proxies[4].material.map, null);
+  releaseTemplate({ geometry: templateGeometry, lodGeometry: templateFar, map: templateMap });
+  await authoredRocks.nightworksRocks.ready();
+  assert.deepEqual(authoredRocks.nightworksRocks.errors, []);
+  const lods = proxies.map(proxy => {
+    const meshes = []; proxy.traverse(object => { if (object.isMesh && object !== proxy) meshes.push(object); });
+    assert.equal(meshes.length, 2); assert.equal(meshes[0].geometry, templateGeometry); assert.equal(meshes[1].geometry, templateFar);
+    assert.equal(meshes[0].material, meshes[1].material, "near/far LOD appearance diverged");
+    return meshes;
+  });
+  assert.equal(lods[0][0].material.fog, true); assert.equal(lods[1][0].material.fog, false);
+  assert.notEqual(lods[0][0].material, lods[1][0].material, "opposite fog states shared a mutable material");
+  assert.equal(lods[0][0].material.color.getHex(), 0xffffff);
+  assert.equal(lods[0][0].material.emissive.getHex(), 0x293c60);
+  assert.equal(lods[0][0].material.emissiveIntensity, .24);
+  assert.equal(lods[0][0].material.map, templateMap, "absent texture replaced the registered asset map");
+  for (const i of [2, 3]) {
+    assert.equal(lods[i][0].material.color.getHexString(), appearances[i].color.slice(1));
+    assert.equal(lods[i][0].material.emissive.getHexString(), appearances[i].emissive.slice(1));
+    assert.equal(lods[i][0].material.emissiveIntensity, 1);
+    assert.equal(lods[i][0].material.map, proxies[i].material.map);
+    assert.equal(lods[i][0].material.fog, false);
+  }
+  assert.notEqual(lods[2][0].material, lods[3][0].material);
+  assert.equal(lods[2][0].material.map, lods[3][0].material.map, "safe texture overrides duplicated maps");
+  lods[2][0].material.color.setHex(0x112233);
+  assert.equal(lods[3][0].material.color.getHex(), 0x44bb66, "one appearance variant recolored its sibling");
+  assert.equal(lods[4][0].material.map, null);
+  assert.deepEqual(Array.from(templateGeometry.attributes.uv.array), templateUvs, "override mutated shared asset UVs");
+  authoredRocks.dispose(); assert.equal(templateDisposals, 0, "per-Level ownership freed registered asset resources");
+  let releaseLate;
+  const lateOwner = new NightworksRocks(() => new Promise(resolve => { releaseLate = resolve; }));
+  const lateProxy = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshLambertMaterial());
+  const lateHolder = lateOwner.attach(lateProxy, "nightplateau", [8, 4, 8], new THREE.Vector3(), 0, lateProxy,
+    { color: "#ff6600", emissive: "#335577", map: null });
+  lateOwner.dispose(); releaseLate({ geometry: templateGeometry, map: templateMap }); await lateOwner.ready();
+  assert.equal(lateHolder.children.length, 0); assert.equal(lateProxy.material.visible, true);
+  assert.equal(templateDisposals, 0); lateProxy.geometry.dispose(); lateProxy.material.dispose();
+  templateGeometry.dispose(); templateFar.dispose(); templateMap.dispose();
+
+  // Nightworks now intentionally uses fitted floating rocks. Keep its former
+  // glowing-slab capture regression as a small native-builder fixture, without
+  // expecting the old aesthetic or its platform count in the new course.
+  const originalJungleBuilder = api.Level.prototype.buildJungle;
+  let legacyGlow;
+  api.Level.prototype.buildJungle = function () {
+    this.keepPlayFog = true; this.killY = -30;
+    this.spawnPos.set(0, 3.1, 0); this.currentSpawn.copy(this.spawnPos);
+    this.slab("platform", 10, -20, 3, 12,
+      new THREE.MeshLambertMaterial({ color: 0x6d7484, emissive: 0x10131c }), false, 0, "stone");
+    this.finishGate(3, -18);
+  };
+  try { legacyGlow = new api.Level(new THREE.Scene(), { id: "legacy-glow-fixture", name: "Legacy glowing stone" }); }
+  finally { api.Level.prototype.buildJungle = originalJungleBuilder; }
+  const legacyCapture = api.normalizeCustomLevelData(legacyGlow.captureData());
+  assert.ok(legacyCapture);
+  const platforms = legacyCapture.components.filter(c => c.t === "platform" && c.emissive === "#10131c");
+  const nativePlatforms = legacyGlow.groundMeshes.filter(m => m.name === "platform" && m.material.emissive?.getHex() === 0x10131c);
+  assert.equal(platforms.length, 1); assert.equal(nativePlatforms.length, 1);
+  const legacyCopy = build({ ...dataFor(platforms), keepPlayFog: true });
+  const copiedPlatforms = legacyCopy.groundMeshes.filter(m => m.name === "platform");
   copiedPlatforms.forEach((mesh, i) => ordinaryMaterial(mesh.material, nativePlatforms[i].material));
   const nightBaseline = build({ ...dataFor(platforms.map(({ emissive, ...c }) => c)), keepPlayFog: true });
-  assert.deepEqual(nightCopy.walls.map(box => [...box.min, ...box.max]), nightBaseline.walls.map(box => [...box.min, ...box.max]));
-  assert.deepEqual(nightCopy.rails.map(rail => rail.points.map(p => [...p])), nightBaseline.rails.map(rail => rail.points.map(p => [...p])));
+  assert.deepEqual(legacyCopy.walls.map(box => [...box.min, ...box.max]), nightBaseline.walls.map(box => [...box.min, ...box.max]));
+  assert.deepEqual(legacyCopy.rails.map(rail => rail.points.map(p => [...p])), nightBaseline.rails.map(rail => rail.points.map(p => [...p])));
   nightBaseline.dispose();
-  nightCopy.dispose(); night.dispose();
+  legacyCopy.dispose(); legacyGlow.dispose();
 
   for (const t of api.EMISSIVE_COMPONENT_TYPES) {
     const component = { t, p: [0, 0, 0], tex: "solid", emissive: "#335577",

@@ -5,7 +5,7 @@
 // finish gate at the far end.
 
 import * as THREE from "three";
-import { resolveLevelAtmosphere, validAtmosphere, CUSTOM_LEVEL_THEME, JUNGLE_THEME_OVERRIDES,
+import { resolveLevelAtmosphere, validAtmosphere, CUSTOM_LEVEL_THEME, JUNGLE_THEME_OVERRIDES, NIGHTWORKS_THEME_OVERRIDES,
   SKY_BRIDGE_FOG_NEAR, SKY_BRIDGE_FOG_FAR, type CustomAtmosphereData } from "./levelAtmosphere";
 export type { CustomAtmosphereData } from "./levelAtmosphere";
 export { SKY_BRIDGE_FOG_NEAR, SKY_BRIDGE_FOG_FAR } from "./levelAtmosphere";
@@ -41,6 +41,9 @@ import {
   BEACHFRONT_COURSE_LENGTH,
   beachfrontPointAtDistance,
 } from "./beachfrontCourse";
+import { BraidedRope, ropeLocalPoint, flexibleRopePoint, flexibleRopeVelocity, closestRopeDistance } from "./ropeGeometry";
+import { NightworksRocks, nightworksGeometry, isNightworksSurface } from "./nightworksRocks";
+import { NIGHTWORKS_LEVEL } from "./levels/nightworks";
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
 import { ASTRA_CHIMEWORKS_LEVEL } from "./levels/astra-chimeworks";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
@@ -376,6 +379,7 @@ interface Crumble {
 // and, if you linger, snaps and drops you into the void. Eases back to taut
 // if you hop off in time.
 interface SkyRope {
+  visual: BraidedRope;
   rail: Rail;
   segs: THREE.Mesh[]; // visual rope segments, repositioned each frame to the live nodes
   rest: THREE.Vector3[]; // taut rest positions of the N+1 nodes
@@ -406,8 +410,10 @@ interface Crusher {
 
 // Swinging grab-rope: jump at it to hang on, climb its length, leap off with
 // the swing's momentum. Pure driven pendulum — the player rides it, never
-// bends it.
+// adds a small secondary flex without changing endpoint timing.
 export interface RopeSwing {
+  visual: BraidedRope;
+  bend: number; bendV: number; sway: number; swayV: number;
   pivot: THREE.Group; // at the anchor; rotation.y = yaw, rotation.z = the swing
   anchor: THREE.Vector3;
   anchorVel: THREE.Vector3; // analytic travelling-anchor velocity at the sampled level time
@@ -3779,6 +3785,7 @@ export class Level {
   private thornClusters: ProceduralThornCluster[] = [];
   private tropicalPlants: TropicalPlantKit | null = null;
   private jungleAssets: JungleAssetKit | null = null;
+  nightworksRocks: NightworksRocks | null = null;
   jungleAtmosphere = false;
   private jungleTime = { value: 0 };
   private sceneryCaptureGroups: CustomGroup[] = [];
@@ -4454,6 +4461,7 @@ export class Level {
       emissive: 0x11141a,
     });
     for (const rail of this.rails) {
+      if (rail.object.userData.nightworksRock) continue;
       rail.object.traverse((o) => {
         const m = o as THREE.Mesh;
         if (!m.isMesh) return;
@@ -4550,6 +4558,10 @@ export class Level {
         const mesh=object as THREE.Mesh;
         if(mesh.isMesh)for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material])addJungleDepthFade(material);
       });
+    }
+    if (this.nightworksRocks) {
+      if (this.builtFromData?.keepPlayFog === undefined) this.keepPlayFog = true;
+      Object.assign(this.theme, NIGHTWORKS_THEME_OVERRIDES);
     }
     if (this.noFogLevel) this.stripFog();
     this.buildTorchLights(); // every torch is placed by now — the pool is sized once
@@ -6184,6 +6196,10 @@ export class Level {
                   emissive: c.emissive ?? fallback.emissive,
                 })
               : fallback;
+          if (isNightworksSurface(c.dkind) && (c.t === "platform" || c.t === "mover" || c.t === "phasepad")) {
+            this.buildNightworksRock(c);
+            return;
+          }
           // VECTOR SHAPES: a 3+ point outline turns platform/wall/pit into a
           // drawn polygon. Shape points are authored in XZ around p; three.js
           // Shapes live in XY, so (x, -z) + rotateX(-90°) lands them flat.
@@ -6726,6 +6742,16 @@ export class Level {
               this.rails.push(rail);
               this.root.add(rail.object);
             }
+            if (c.dkind === "nightrockridge") {
+              const rail = this.rails[this.rails.length-1];
+              rail.object.clear();rail.object.userData.nightworksRock=true;
+              // The thin stone crest remains grindable, and its hanging body
+              // is a real moving solid. Both sample the same authored cycle.
+              // Rails run (sin(yaw), cos(yaw)); a long-X hull at yaw+90
+              // shares that line. 90-yaw only aligned at quarter turns and
+              // sent an edited 45-degree crest across its own collision hull.
+              this.buildNightworksRock({...c,t:"mover",s:[c.len??12,2.4,.48],yaw:(c.yaw??0)+90,lit:false});
+            }
           } else if (c.t === "vertramp") {
             this.buildVertRamp(c);
           } else if (c.t === "rope") {
@@ -6966,6 +6992,11 @@ export class Level {
               c.travelPhase ?? c.phase ?? 0,
               c.travelSign ?? 1,
             );
+            if (c.dkind === "nightanchorrock") {
+              const rope=this.ropeSwings[this.ropeSwings.length-1];
+              this.nightworksRocks ??= new NightworksRocks();
+              this.nightworksRocks.attach(rope.pivot,"nightanchorrock",[3.8,2.8,3],new THREE.Vector3(0,-.08,0));
+            }
           } else if (c.t === "pendulum") {
             this.pendulum(
               c.p[0],
@@ -7079,6 +7110,8 @@ export class Level {
   }
 
   dispose(preserveResourcesFrom?: Level): void {
+    this.nightworksRocks?.dispose();
+    this.nightworksRocks = null;
     this.jungleAssets?.dispose();
     this.jungleAssets = null;
     this.campaignWorldMap?.dispose();
@@ -8236,6 +8269,7 @@ export class Level {
       if (on !== pad.on) {
         pad.on = on;
         pad.mesh.material = on ? pad.litMat : pad.ghostMat;
+        for (const child of pad.mesh.children) child.visible=on;
         const at = this.groundMeshes.indexOf(pad.mesh);
         if (on) {
           if (at === -1) this.groundMeshes.push(pad.mesh);
@@ -8480,7 +8514,14 @@ export class Level {
     for (const rs of this.ropeSwings) {
       rs.theta = Math.sin(this.time * rs.speed + rs.phase) * rs.amp;
       rs.thetaV = Math.cos(this.time * rs.speed + rs.phase) * rs.amp * rs.speed;
-      rs.pivot.rotation.z = rs.theta;
+      const phase=this.time*rs.speed+rs.phase;
+      const flex=rs.len*.045*rs.amp;
+      rs.bend=Math.sin(phase*2-.7)*flex;
+      rs.bendV=Math.cos(phase*2-.7)*flex*rs.speed*2;
+      rs.sway=Math.sin(phase*1.6+1.1)*flex*.24;
+      rs.swayV=Math.cos(phase*1.6+1.1)*flex*.24*rs.speed*1.6;
+      rs.pivot.rotation.z=0;
+      rs.visual.update((d,out)=>ropeLocalPoint(rs,d,out));
     }
 
     // Scrolling pit textures (lava/void) drift forever.
@@ -9125,6 +9166,7 @@ export class Level {
     for (const pad of this.phasePads) {
       pad.on = true;
       pad.mesh.material = pad.litMat;
+      for (const child of pad.mesh.children) child.visible=true;
       if (this.groundMeshes.indexOf(pad.mesh) === -1)
         this.groundMeshes.push(pad.mesh);
       for (const t of pad.torches) t.wantBurn = 1;
@@ -13842,19 +13884,7 @@ export class Level {
 
   // Repoint a rope's visual segments onto its live (sagged) grind nodes.
   private syncRope(r: SkyRope): void {
-    const up = new THREE.Vector3(0, 1, 0);
-    const dir = new THREE.Vector3();
-    for (let i = 0; i < r.segs.length; i++) {
-      const a = r.rail.points[i];
-      const bb = r.rail.points[i + 1];
-      dir.copy(bb).sub(a);
-      const len = dir.length() || 1e-3;
-      dir.divideScalar(len);
-      const seg = r.segs[i];
-      seg.position.copy(a).addScaledVector(dir, len / 2);
-      seg.quaternion.setFromUnitVectors(up, dir);
-      seg.scale.y = len;
-    }
+    r.visual.update((d,out)=>out.copy(r.rail.pointAt(d/r.visual.len*r.rail.totalLength)));
   }
 
   // Sky-bridge side rope: a grindable, saggable, breakable rope running along Z.
@@ -13868,7 +13898,7 @@ export class Level {
     sagAmt = 1.2,
     regen: number | null = 4,
   ): void {
-    const N = 8;
+    const N = 24;
     const rest: THREE.Vector3[] = [];
     for (let i = 0; i <= N; i++) {
       rest.push(
@@ -13885,16 +13915,9 @@ export class Level {
     );
     this.rails.push(rail);
     const group = new THREE.Group();
-    const ropeMat = new THREE.MeshLambertMaterial({ color: 0xc2a878 });
-    const segs: THREE.Mesh[] = [];
-    for (let i = 0; i < N; i++) {
-      const seg = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.09, 0.09, 1, 6),
-        ropeMat,
-      );
-      group.add(seg);
-      segs.push(seg);
-    }
+    const visual=new BraidedRope(Math.hypot(x1-x0,z1-z0),.11,false);
+    group.add(visual.root);
+    const segs=[visual.mesh];
     const postMat = new THREE.MeshLambertMaterial({ color: 0x6b4a2a });
     for (const [px, pz] of [
       [x0, z0],
@@ -13909,6 +13932,7 @@ export class Level {
     }
     this.root.add(group);
     const rope: SkyRope = {
+      visual,
       rail,
       segs,
       rest,
@@ -14493,31 +14517,14 @@ export class Level {
     travelPhase = 0,
     travelSign = 1,
   ): void {
+    len=Math.max(1.2,len);
     const yaw = THREE.MathUtils.degToRad(yawDeg);
     const pivot = new THREE.Group();
     pivot.position.set(x, anchorY, z);
     pivot.rotation.order = "YZX"; // yaw FIRST, the animated z-swing lives in the spun frame
     pivot.rotation.y = yaw;
-    const ropeMat = new THREE.MeshLambertMaterial({ color: 0xa8845a });
-    const bandMat = new THREE.MeshLambertMaterial({ color: 0x7a5c3a });
-    const rope = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.07, 0.07, len, 5),
-      ropeMat,
-    );
-    rope.position.y = -len / 2;
-    pivot.add(rope);
-    // knot bands down the line sell "rope" at PS1 fidelity — and mark the grips
-    for (let d = 1.2; d < len - 0.3; d += 1.2) {
-      const band = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.11, 0.11, 0.14, 6),
-        bandMat,
-      );
-      band.position.y = -d;
-      pivot.add(band);
-    }
-    const knot = new THREE.Mesh(new THREE.SphereGeometry(0.2, 6, 5), bandMat);
-    knot.position.y = -len;
-    pivot.add(knot);
+    const visual = new BraidedRope(len,.105);
+    pivot.add(visual.root);
     // anchor mount so a floating anchor still reads attached to SOMETHING
     const mount = new THREE.Mesh(
       new THREE.BoxGeometry(0.8, 0.35, 0.8),
@@ -14526,7 +14533,8 @@ export class Level {
     mount.position.y = 0.18;
     pivot.add(mount);
     this.root.add(pivot);
-    this.ropeSwings.push({
+    const rs: RopeSwing = {
+      visual,bend:0,bendV:0,sway:0,swayV:0,
       pivot,
       anchor: new THREE.Vector3(x, anchorY, z),
       anchorVel: new THREE.Vector3(),
@@ -14552,33 +14560,19 @@ export class Level {
               phase: travelPhase,
             }
           : undefined,
-    });
+    };
+    this.ropeSwings.push(rs);
+    visual.update((d,out)=>ropeLocalPoint(rs,d,out));
   }
 
-  // World position `d` meters down a swing rope (d may exceed len — the body
-  // dangles on the same line below the hands).
   ropePointAt(rs: RopeSwing, d: number, out: THREE.Vector3): THREE.Vector3 {
-    const swing = Math.sin(rs.theta) * d;
-    const cos = Math.cos(rs.yaw);
-    const sin = Math.sin(rs.yaw);
-    out.set(
-      rs.anchor.x + swing * cos,
-      rs.anchor.y - Math.cos(rs.theta) * d,
-      rs.anchor.z - swing * sin,
-    );
-    return out;
+    return flexibleRopePoint(rs,d,out);
   }
-
-  // Velocity of that point — the momentum a jump-off inherits.
   ropeVelAt(rs: RopeSwing, d: number, out: THREE.Vector3): THREE.Vector3 {
-    const tang = d * rs.thetaV; // speed along the swing arc
-    const cos = Math.cos(rs.yaw);
-    const sin = Math.sin(rs.yaw);
-    const planar = tang * Math.cos(rs.theta);
-    out
-      .set(planar * cos, tang * Math.sin(rs.theta), -planar * sin)
-      .add(rs.anchorVel);
-    return out;
+    return flexibleRopeVelocity(rs,d,out);
+  }
+  ropeClosestDistance(rs:RopeSwing,point:THREE.Vector3):number {
+    return closestRopeDistance(rs,point);
   }
 
   // ---------------------------------------------------------- visual kit --
@@ -15084,7 +15078,7 @@ export class Level {
    * colour, a size, a spin and a lean for every single plant.
    */
   get jungleAssetDiagnostics() { return this.jungleAssets?.diagnostics ?? null; }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([this.jungleAssets?.ready(),this.campaignWorldMap?.prepareAssets()]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([this.jungleAssets?.ready(),this.nightworksRocks?.ready(),this.campaignWorldMap?.prepareAssets()]); }
 
   private jungleAsset(c: CustomComponent): void {
     if (!isJungleAsset(c.dkind)) return;
@@ -18971,328 +18965,55 @@ export class Level {
   // No safety floor under the rails or the ropes: they ARE the route, with a
   // checkpoint right before each crossing so the void costs seconds, not
   // progress.
+  private buildNightworksRock(c: CustomComponent): void {
+    if (!isNightworksSurface(c.dkind)) return;
+    this.nightworksRocks ??= new NightworksRocks();
+    const s=c.s??[5,4,5],top=c.t==="platform"?c.p[1]+s[1]/2:c.p[1];
+    const yaw=THREE.MathUtils.degToRad(c.yaw??0),origin=new THREE.Vector3(c.p[0],top,c.p[2]);
+    const rotateTorch=(torch:Torch):void=>{
+      torch.group.position.sub(origin).applyAxisAngle(THREE.Object3D.DEFAULT_UP,yaw).add(origin);
+      torch.group.rotation.y+=yaw;
+      torch.lightAt.sub(origin).applyAxisAngle(THREE.Object3D.DEFAULT_UP,yaw).add(origin);
+    };
+    let mesh:THREE.Mesh,delta=new THREE.Vector3(),active=()=>true;
+    if(c.t==="mover") {
+      this.mover(c.p[0],top,c.p[2],s[0],s[2],c.axis??"x",c.amp??4,c.speed??.6,c.phase??0,!!c.lit,s[1],c.travelSign??1);
+      const mover=this.movers[this.movers.length-1];mesh=mover.mesh;delta=mover.lastDelta;
+      const previous=mesh.material as THREE.MeshLambertMaterial;previous.map?.dispose();previous.dispose();
+      mesh.material=new THREE.MeshLambertMaterial({color:0xa98258,emissive:0x1e2638});
+      if(mover.torch){const shift=new THREE.Vector3(-s[0]*.24+.55,0,-s[2]*.24+.55);mover.torch.group.position.add(shift);mover.torch.lightAt.add(shift);rotateTorch(mover.torch);}
+    } else if(c.t==="phasepad") {
+      this.phasePad(c.p[0],top,c.p[2],s[0],s[2],c.cycle??4,c.phase??0,c.amp??.5,s[1]);
+      const pad=this.phasePads[this.phasePads.length-1];mesh=pad.mesh;active=()=>pad.on;
+      for(const [i,torch] of pad.torches.entries()) {
+        const sign=i===0?-1:1,shift=new THREE.Vector3(sign*(-s[0]*.27+.45),0,sign*(-s[2]*.27+.45));
+        torch.group.position.add(shift);torch.lightAt.add(shift);
+        rotateTorch(torch);
+      }
+      const lit=pad.litMat as THREE.MeshLambertMaterial;lit.map=null;lit.color.setHex(0xa98258);lit.emissive.setHex(0x1e2638);
+    } else {
+      mesh=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshLambertMaterial({color:0xa98258,emissive:0x1e2638}));
+      mesh.position.set(c.p[0],top-s[1]/2,c.p[2]);this.root.add(mesh);this.groundMeshes.push(mesh);
+    }
+    mesh.geometry.dispose();mesh.geometry=nightworksGeometry(c.dkind,s,c.yaw??0);
+    mesh.name="floating rock island";mesh.userData.nightworksRock=c.dkind;mesh.userData.edgeGrinding=false;
+    const fallback=mesh.material as THREE.MeshLambertMaterial;
+    if(c.color!==undefined)fallback.color.set(c.color);
+    if(c.emissive!==undefined){fallback.emissive.set(c.emissive);fallback.emissiveIntensity=1;}
+    const map=c.tex===undefined?undefined:c.tex==="solid"?null:this.surfaceTexture(c.tex);
+    if(map!==undefined){
+      fallback.map=map;fallback.userData.texKind=c.tex;
+      if(map){const position=mesh.geometry.getAttribute("position"),uv=new Float32Array(position.count*2);
+        for(let i=0;i<position.count;i++){uv[i*2]=position.getX(i)/4;uv[i*2+1]=position.getZ(i)/4;}
+        mesh.geometry.setAttribute("uv",new THREE.BufferAttribute(uv,2));}
+    }
+    this.nightworksRocks.addSolid(mesh,delta,active);
+    this.nightworksRocks.attach(mesh,c.dkind,s,new THREE.Vector3(0,-s[1]/2,0),c.yaw??0,mesh,
+      {color:c.color,emissive:c.emissive,map,tex:c.tex});
+  }
+
   private buildNightworks(): void {
-    this.skyPreset = "night";
-    this.keepPlayFog = true; // the dark eats the course: no seeing three sections over
-    this.killY = -26; // a long, quiet drop off any edge — even from the summit
-    this.finishZ = -353;
-    this.endWallZ = -376;
-    this.wallTint = 0x2a2f3c;
-    this.blockTint = 0x333a48;
-    this.theme = {
-      skyTop: "#03060f",
-      skyBottom: "#0b1226",
-      sunColorHex: "", // no disc: the only light in this place is on fire
-      sunU: 0.5,
-      sunV: 0.5,
-      stars: true,
-      fog: 0x05070f, // near-black: an island is a glow before it is a shape
-      fogNear: 12,
-      fogFar: 58, // the parallel stretch across the void is a rumour, not a view
-      hemiSky: 0x24304e,
-      hemiGround: 0x12151f,
-      hemiI: 0.62, // dark, not blind: unlit stone still reads as stone
-      sunColor: 0x6f8cd4,
-      sunI: 0.68,
-    };
-
-    const stoneMat = new THREE.MeshLambertMaterial({
-      color: 0x6d7484,
-      emissive: 0x10131c, // a whisper of self-light so unlit stone never goes full black
-    });
-    // An island of solid stone, lit at its corners. Safe ground, and the only
-    // place in the level you can stop and read what's coming.
-    const isle = (
-      z: number,
-      w: number,
-      d: number,
-      x = 0,
-      y = 0,
-      torchH = 2.2,
-    ): void => {
-      this.slab("platform", z + d / 2, z - d / 2, y, w, stoneMat, false, x, "stone");
-      this.torch(x - w / 2 + 0.7, y, z + d / 2 - 0.7, torchH);
-      this.torch(x + w / 2 - 0.7, y, z - d / 2 + 0.7, torchH);
-    };
-    // A GANTRY PAD: the small fixed footing that keeps the rail and rope
-    // sections honest. Every one carries a fire, because in this level a
-    // light IS the promise that there's something to land on.
-    const ledge = (x: number, z: number, y = 3, s = 4.5): void => {
-      this.slab("platform", z + s / 2, z - s / 2, y, s, stoneMat, false, x, "stone");
-      // fire at the BACK corner: it marks the pad from a distance without
-      // standing in the middle of the only place you have to land
-      this.torch(x + s / 2 - 0.6, y, z + s / 2 - 0.6, 1.5, 0.8);
-    };
-
-    // The two pad teams, one metronome: same clock, half a turn apart, with
-    // a beat of overlap where both stand. AMBER = phase 0, BLUE = phase 0.5
-    // (the pad derives its colour from its phase, so the teams read on sight).
-    // Duty EXACTLY half: the teams hand over cleanly, so at every instant one
-    // set is solid and the other is genuinely gone. (At 0.55 they overlapped
-    // for a fifth of a second and every pad in the row stood at once — which
-    // is what "half of them don't disappear" was: the trade never looked like
-    // anything left.) The 0.9s warning strobe is the fairness, not an overlap.
-    const padA = (x: number, y: number, z: number, s = 5): void =>
-      this.phasePad(x, y, z, s, s, 4.4, 0, 0.5);
-    const padB = (x: number, y: number, z: number, s = 5): void =>
-      this.phasePad(x, y, z, s, s, 4.4, 0.5, 0.5);
-    // Every mover in this level burns: warm iron deck + a brazier riding it.
-    const fmover = (
-      x: number,
-      y: number,
-      z: number,
-      w: number,
-      d: number,
-      axis: "x" | "y" | "z",
-      amp: number,
-      speed: number,
-      phase = 0,
-    ): void => this.mover(x, y, z, w, d, axis, amp, speed, phase, true);
-    // SIDE-SCROLL STRETCHES: inside a travel zone the course itself runs
-    // along X and the camera never yaws — the cross-stretches become classic
-    // side-scroll platforming with NO swing to wait for. The lane handles the
-    // -z stretches; the zones handle the crossings.
-    const sideScroll = (
-      xMin: number,
-      xMax: number,
-      zMin: number,
-      zMax: number,
-      dir: "E" | "W",
-    ): void => {
-      this.zones.push({ xMin, xMax, zMin, zMax, dir });
-    };
-
-    // --- start: a wide lit dock, and the dark ahead --------------------------
-    isle(2, 11, 12, 0, 0, 2.6);
-    this.spawnPos.set(0, 0.1, 4);
-    this.currentSpawn.copy(this.spawnPos);
-    this.torch(-4.4, 0, 7.2, 2.6);
-    this.torch(4.4, 0, 7.2, 2.6);
-
-    // --- A (out, -z): fire-ferries ------------------------------------------
-    fmover(0, 0, -10, 5, 5, "x", 5.5, 0.5, 0);
-    fmover(0, 0, -19, 5, 5, "x", 6, 0.55, Math.PI);
-    fmover(0, 0, -28, 4.5, 4.5, "x", 6, 0.6, Math.PI / 2);
-    this.pickup(0, 1.3, -19);
-    isle(-36, 10, 10, 0, 0, 2.6); // the landing off the ferries...
-    // ...and the corner slab runs WEST — a real runway toward the lift bank,
-    // so the frame has finished its business before the first lift asks
-    isle(-46, 16, 10, 0, 0, 2.6);
-    this.checkpoint(0, -44);
-
-    // --- B (LEFT, -x, SIDE-SCROLL): the lift bank, y0 -> y12 ----------------
-    // A ZONE SPANS NODE TO NODE IN X, AND IS TIGHT TO THE CROSS LEG IN Z.
-    // That rule is what keeps the spine and the zone from fighting, and it is
-    // worth stating once here because all four side-scroll zones follow it.
-    //
-    // The lane's corner arc and the zone both want to own the frame. The arc
-    // eases the camera toward the corner; the zone forces it back to facing
-    // down-course, because that IS the side-scroll shot. Measured at this
-    // corner, the lane was asking for -45 degrees and the zone snapped it back
-    // to 0 four units later — swing out, snap back, on every cross-stretch.
-    //
-    // The fix is not to shrink the arc (that only makes the snap sharper) or
-    // to swallow the bend (that reaches back onto the -Z approach and swaps
-    // the stick while you are still running forward). It is to start the zone
-    // AT THE CORNER NODE, where the arc has not begun yet and the lane is
-    // still pointing straight down-course — the same thing the zone forces.
-    // The handover is then continuous, and the whole arc lives inside the
-    // zone where nothing reads it.
-    //
-    // In z the zone hugs the cross leg only, so the -Z approach never enters
-    // it: this leg sits at z -48 and the approach corridor ends at z -41.
-    sideScroll(-47, 0, -54, -42, "W");
-    fmover(-11, 1, -45, 4.5, 4.5, "y", 3.2, 0.7, 0);
-    fmover(-19, 4, -51, 4.5, 4.5, "y", 3.4, 0.7, Math.PI);
-    fmover(-27, 7, -45, 4.5, 4.5, "y", 3.2, 0.75, Math.PI / 2);
-    fmover(-35, 10, -51, 4.5, 4.5, "y", 3.0, 0.65, 0);
-    this.pickup(-27, 9, -45);
-    // corner isle runs LONG down-course: the camera finishes its swing while
-    // you cross it, before the first pad ever asks for a jump
-    isle(-51, 16, 16, -47, 12);
-    this.checkpoint(12, -48, -47);
-
-    // --- C (RIGHT, -z): the pad metronome, y12 ------------------------------
-    padA(-47, 12, -64);
-    padB(-47, 12, -72);
-    padA(-47, 12, -80);
-    this.pickup(-47, 13.3, -72);
-    ledge(-47, -87, 12, 5);
-    padA(-50.2, 12, -95, 4.4);
-    padB(-43.8, 12, -95, 4.4);
-    padB(-50.2, 12, -103, 4.4);
-    padA(-43.8, 12, -103, 4.4);
-    isle(-112, 16, 14, -47, 12);
-    this.checkpoint(12, -112, -47);
-    // The switchback is the BIGGEST swing in the level, so its runway is the
-    // longest: a mount platform reaching east under the first rail's near
-    // end — walk it while the camera comes round, then ollie onto the bar
-    // anywhere along it.
-    this.slab("platform", -105, -119, 12, 8, stoneMat, false, -35, "stone");
-    this.torch(-31.8, 12, -105.8, 1.5, 0.8);
-
-    // --- D (SWITCHBACK, +x): THE GRAND RAILS, y12 ---------------------------
-    // Two 22u travelling rails over pure void, in strict antiphase: twice a
-    // cycle their inner ends sweep past each other at the centre line — THAT
-    // is the hop. Miss it and you ride your rail back out over the dark.
-    this.movingRail(-29, 13.7, -112, 22, 90, "z", 6.5, 0.6, 0);
-    this.movingRail(-7, 13.7, -112, 22, 90, "z", 6.5, 0.6, Math.PI);
-    this.pickup(-18, 15.4, -112); // hangs exactly over the crossing point
-    isle(-112, 12, 20, 10, 12); // long landing: settle before the ferry line
-    this.checkpoint(12, -112, 10);
-
-    // --- E (RIGHT, -z): the ferry line, then the lift stair, y12 -> y26 -----
-    // Sit the ferry out over the void, TIME the hop onto the rail sweeping
-    // crosswise, ride it down the dark, drop to the second ferry — then climb
-    // a staircase of burning lifts to the high deck.
-    fmover(10, 12, -130, 5, 5, "z", 6, 0.55, 0);
-    this.movingRail(10, 13.7, -147, 14, 0, "x", 5, 0.55, Math.PI / 2);
-    this.pickup(10, 15.4, -147);
-    fmover(10, 12, -159, 5, 5, "z", 4.5, 0.5, Math.PI);
-    isle(-170, 12, 10, 10, 12);
-    this.checkpoint(12, -170, 10);
-    fmover(10, 14, -180, 4.5, 4.5, "y", 3, 0.7, 0);
-    fmover(10, 17.5, -185, 4.5, 4.5, "y", 3, 0.7, Math.PI);
-    fmover(10, 21, -190, 4.5, 4.5, "y", 3, 0.75, Math.PI / 2);
-    fmover(10, 24.5, -195, 4.5, 4.5, "y", 3, 0.65, 0);
-    isle(-202, 20, 10, 8, 26); // a REAL west runway: the first rope's arc crosses its lip
-    this.checkpoint(26, -202, 10);
-
-    // --- F (LEFT, -x, SIDE-SCROLL): rope ferries over pure void, y26 --------
-    // The ropes swing AND ferry along x, so the whole crossing plays flat
-    // against the screen like the lift banks.
-    //
-    // NODE TO NODE, like B, H and J: x -48..10 spans the cross leg's own two
-    // corner nodes, and z -208..-197 is exactly the runway isle. That is the
-    // rule, and F used to be the one exception to it — the zone stopped at the
-    // runway's west lip (x -2) so that the lift stair could drop you onto the
-    // runway at x 10 with your own frame instead of a swapped stick.
-    //
-    // The reason it had to be an exception is gone. The stair lands you at the
-    // corner node, so entering the zone meant flipping the travel frame WHILE
-    // AIRBORNE, and that flip zeroes your speed — it dropped you into the void
-    // short of the runway. The frame flip now waits for touchdown (player.ts),
-    // so you fly the last hop on the momentum you left the lift with, land on
-    // the runway, and the crossing's frame takes over under your feet.
-    //
-    // Getting the exception back costs nothing and buys the framing: with the
-    // corner inside the zone, the spine's arc is never visible to the rig, so
-    // the camera holds straight down -Z across the whole crossing instead of
-    // swinging 81 degrees out and unwinding again over those 12 units.
-    sideScroll(-48, 10, -208, -197, "W");
-    this.ropeSwing(-8, 34.6, -202, 7, 0.7, 0, 0, 0, "x", 5.5, 0.45, 0);
-    this.ropeSwing(-22, 34.6, -202, 7, 0.7, 0, Math.PI, 0, "x", 5.5, 0.45, Math.PI);
-    this.ropeSwing(-36, 34.6, -202, 7, 0.75, 0, 0, 0, "x", 5.5, 0.4, Math.PI / 2);
-    this.torch(-8, 32.2, -204.6, 1.0, 0.8); // beacons under the anchor line
-    this.torch(-22, 32.2, -204.6, 1.0, 0.8);
-    this.torch(-36, 32.2, -204.6, 1.0, 0.8);
-    this.pickup(-22, 29.5, -202);
-    isle(-202, 12, 16, -48, 26); // long south runway into metronome II
-    this.checkpoint(26, -202, -48);
-
-    // --- G (RIGHT, -z): metronome II, a ferry, then up again, y26 -> y34 ----
-    padA(-48, 26, -216);
-    padB(-48, 26, -224);
-    this.pickup(-48, 27.3, -224);
-    fmover(-48, 26, -233, 4.5, 4.5, "z", 5, 0.5, 0);
-    padA(-51.2, 26, -246, 4.4);
-    padB(-44.8, 26, -246, 4.4);
-    padB(-51.2, 26, -254, 4.4);
-    padA(-44.8, 26, -254, 4.4);
-    fmover(-48, 28, -262, 4.5, 4.5, "y", 3, 0.7, 0);
-    fmover(-48, 32.5, -268, 4.5, 4.5, "y", 3, 0.7, Math.PI);
-    isle(-278, 12, 12, -48, 34);
-    this.checkpoint(34, -278, -48);
-
-    // --- H (SWITCHBACK, +x, SIDE-SCROLL): the lift tower, y34 -> y56 --------
-    // Eight burning lifts, each a step higher — the long climb, played flat
-    // against the screen like the classic towers.
-    sideScroll(-48, 9, -284, -272, "E"); // node to node (x -48..9), tight to the leg — see the note on B
-    fmover(-41, 36, -275, 4.5, 4.5, "y", 2.75, 0.7, 0);
-    fmover(-35, 38.75, -281, 4.5, 4.5, "y", 2.75, 0.7, Math.PI);
-    fmover(-29, 41.5, -275, 4.5, 4.5, "y", 2.75, 0.75, Math.PI / 2);
-    fmover(-23, 44.25, -281, 4.5, 4.5, "y", 2.75, 0.65, 0);
-    fmover(-17, 47, -275, 4.5, 4.5, "y", 2.75, 0.7, Math.PI / 2);
-    fmover(-11, 49.75, -281, 4.5, 4.5, "y", 2.75, 0.7, Math.PI);
-    fmover(-5, 52.5, -275, 4.5, 4.5, "y", 2.75, 0.75, 0);
-    fmover(1, 55.25, -281, 4.5, 4.5, "y", 2.75, 0.65, Math.PI / 2);
-    this.pickup(-17, 51, -275);
-    isle(-278, 12, 16, 9, 56); // long south runway into the long rail
-    this.checkpoint(56, -278, 9);
-
-    // --- I (RIGHT, -z): the long rail with a MOVING destination, y56 --------
-    // 24 units of grind over nothing, sweeping side to side — and the landing
-    // is a big fire-lit isle that is ITSELF a mover. Time the dismount for
-    // when it swings under the rail's end, or scramble mid-air for it.
-    this.movingRail(9, 57.7, -296, 24, 0, "x", 6, 0.5, 0);
-    this.pickup(9, 59.4, -296);
-    fmover(9, 56, -314, 6, 6, "x", 7, 0.4, Math.PI / 2);
-    isle(-324, 12, 10, 9, 56);
-    this.checkpoint(56, -324, 9);
-
-    // --- J (LEFT, -x, SIDE-SCROLL): everything on the beat, y56 -> y64 ------
-    sideScroll(-43, 9, -330, -318, "W"); // node to node (x -43..9), tight to the leg — see the note on B
-    padB(-2, 56, -324);
-    fmover(-9.5, 56, -324, 4.5, 4.5, "x", 4, 0.6, 0);
-    this.movingRail(-19, 57.7, -324, 10, 90, "z", 4, 0.6, Math.PI / 2);
-    this.pickup(-19, 59.4, -324);
-    fmover(-29, 58, -324, 4.5, 4.5, "y", 2, 0.7, Math.PI);
-    fmover(-35, 62, -324, 4.5, 4.5, "y", 2.5, 0.7, 0);
-    isle(-324, 10, 14, -43, 64); // runs south toward the last lift: the swing out of the side-scroll happens on stone
-    this.checkpoint(64, -324, -43);
-
-    // --- K (RIGHT, -z): the last lift, one last swing, y64 -> y70 -----------
-    fmover(-43, 68, -334, 4.5, 4.5, "y", 2.5, 1.0, 0); // quick cycle: the two rhythms align often
-    // A rope cannot be leapt TO on foot — it has to come to YOU. Hung so the
-    // pendulum's inbound tip sweeps right across the lift's column at hop
-    // height: ride the lift near its top, hop as the rope arrives, done.
-    this.ropeSwing(-43, 75.8, -338.5, 7.4, 0.8, 0, 0, 90); // swings down-course
-
-    // --- goal: the summit of the works, lit up ------------------------------
-    isle(-353, 14, 12, -43, 70, 3.2);
-    this.torch(-48, 70, -356, 3.2);
-    this.torch(-38, 70, -356, 3.2);
-    this.crystal(-43, 70.6, -350);
-    this.finishGate(70, this.finishZ, -43);
-
-    // --- THE CAMERA SPINE ----------------------------------------------------
-    // The -z stretches ride the lane; the cross-stretches are ZONES and never
-    // swing at all. Every corner isle runs long in the outgoing direction, so
-    // the frame has settled before the first obstacle asks for a jump.
-    //
-    // CORNER RADIUS 5, and the number matters more than it looks. The lane's
-    // tangent is not just the camera — the CONTROL FRAME eases onto it too
-    // (player.ts, axisF), so screen-up is whatever the spine says. A corner
-    // radius is therefore how far back up the straight the steering starts
-    // turning, and these corner isles are only 10-20 units across.
-    //
-    // It was 9, and I raised it to 14 "so the swing starts well before the
-    // corner, leading you into the next stretch" — thinking about the camera
-    // and forgetting the stick rides the same tangent. Measured, that put the
-    // A->B lane 17 degrees off straight at z -40 and 31 at z -44, on a
-    // corridor slab that runs dead straight to z -41. You hold forward on a
-    // visibly straight platform and get walked sideways off it. At I->J the
-    // two 14s ate a 46-unit leg from both ends and left almost no straight at
-    // all. Five keeps the arc inside the corner isle where the turn actually
-    // happens; the camera still eases (camF lerps at 3.5/s in main.ts), it
-    // just no longer starts turning you a bus-length early.
-    const laneNodes: [number, number, number, number][] = [
-      [0, 10, 0, 0], // behind spawn
-      [0, -48, 5, 0], // A->B: left into the side-scroll
-      [-47, -48, 5, 12], // B->C: right, onto the mid deck
-      [-47, -112, 5, 12], // C->D: the first switchback
-      [10, -112, 5, 12], // D->E: right
-      [10, -202, 5, 26], // E->F: left, up the lift stair
-      [-48, -202, 5, 26], // F->G: right
-      [-48, -278, 5, 34], // G->H: the tower switchback
-      [9, -278, 5, 56], // H->I: right, off the tower
-      [9, -324, 5, 56], // I->J: left into the last side-scroll
-      [-43, -324, 5, 64], // J->K: right
-      [-43, -363, 0, 70], // out through the gate at the summit
-    ];
-    const rp = roundCorners(laneNodes, false);
-    this.lanePts = rp.map((q) => ({ x: q.x, y: q.y, z: q.z }));
-    this.measureLane();
+    this.buildCustom(JSON.parse(JSON.stringify(NIGHTWORKS_LEVEL)) as CustomLevelData);
   }
 
   private boulderGroundY(z: number): number {

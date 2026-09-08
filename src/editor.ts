@@ -68,6 +68,7 @@ import {
 } from "./props";
 import { TROPICAL_PLANT_KINDS } from "./tropicalPlants";
 import { JUNGLE_ASSETS, JUNGLE_ASSET_KINDS, isJungleAsset, type JungleAssetKind } from "./jungleAssets";
+import { isNightworksSurface } from "./nightworksRocks";
 
 interface Hooks {
   preflight: (prepared?: LevelEntry) => boolean;
@@ -4741,6 +4742,8 @@ export class Editor {
   // Runtime-authored defaults, in one place. Property rendering and handle
   // display read these without writing them into sparse source data.
   private defaultSizeFor(c: CustomComponent): [number, number, number] | null {
+    if (isNightworksSurface(c.dkind) && ["platform", "mover", "phasepad"].includes(c.t))
+      return [5, 4, 5];
     if (c.t === "platform") return [8, 1, 8];
     if (c.t === "tumblezone") return [6, 4, 6];
     if (c.t === "mesh") return [1, 1, 1];
@@ -7308,21 +7311,26 @@ export class Editor {
   private texRow(
     get: () => string | undefined,
     set: (v: string | undefined) => void,
+    assetDefault = false,
   ): HTMLElement {
     const row = document.createElement("div");
     row.className = "ed-row";
     const lab = document.createElement("label");
     lab.textContent = "texture";
     const sel = document.createElement("select");
+    if (assetDefault) {
+      const option = document.createElement("option");
+      option.value = ""; option.textContent = "asset material"; sel.appendChild(option);
+    }
     for (const k of TEX_KINDS) {
       const opt = document.createElement("option");
       opt.value = k;
       opt.textContent = k;
       sel.appendChild(opt);
     }
-    sel.value = get() ?? "checker";
+    sel.value = get() ?? (assetDefault ? "" : "checker");
     sel.addEventListener("change", () => {
-      set(sel.value === "checker" ? undefined : sel.value);
+      set(assetDefault ? sel.value || undefined : sel.value === "checker" ? undefined : sel.value);
       this.commit();
     });
     row.appendChild(lab);
@@ -7412,9 +7420,13 @@ export class Editor {
       } else if (c.t === "crusher" || c.t === "tumblezone") {
         if (c.s) c.s = [c.s[2], c.s[1], c.s[0]];
       } else if (c.t === "mover") {
-        if (c.s) c.s = [c.s[2], c.s[1], c.s[0]];
+        if (isNightworksSurface(c.dkind))
+          c.yaw = ((((c.yaw ?? 0) + deg) % 360) + 360) % 360;
+        else if (c.s) c.s = [c.s[2], c.s[1], c.s[0]];
       } else if (c.t === "phasepad") {
-        if (c.s) c.s = [c.s[2], c.s[1], c.s[0]];
+        if (isNightworksSurface(c.dkind))
+          c.yaw = ((((c.yaw ?? 0) + deg) % 360) + 360) % 360;
+        else if (c.s) c.s = [c.s[2], c.s[1], c.s[0]];
       } else if (yawable.has(c.t)) {
         c.yaw = ((((c.yaw ?? 0) + deg) % 360) + 360) % 360;
       }
@@ -7961,6 +7973,7 @@ export class Editor {
         this.texRow(
           () => c.tex,
           (v) => (c.tex = v),
+          isNightworksSurface(c.dkind) && ["platform", "mover", "phasepad"].includes(c.t),
         ),
       );
     };
@@ -9335,6 +9348,8 @@ export class Editor {
       sizeRow(0, "width");
       sizeRow(1, "thickness");
       sizeRow(2, "depth");
+      if (isNightworksSurface(c.dkind))
+        num("yaw °", () => c.yaw ?? 0, value => { c.yaw = value; }, 15);
       const axisBtn = document.createElement("button");
       axisBtn.className = "ed-btn";
       const axLabel = (): string =>
@@ -9394,6 +9409,8 @@ export class Editor {
       sizeRow(0, "width");
       sizeRow(1, "thickness");
       sizeRow(2, "depth");
+      if (isNightworksSurface(c.dkind))
+        num("yaw °", () => c.yaw ?? 0, value => { c.yaw = value; }, 15);
       num(
         "cycle (s)",
         () => c.cycle ?? 4,

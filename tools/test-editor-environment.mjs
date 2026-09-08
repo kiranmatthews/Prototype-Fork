@@ -21,7 +21,9 @@ const atmosphereExports = {};
 const atmosphereCode = ts.transpileModule(await readFile(new URL('../src/levelAtmosphere.ts', import.meta.url), 'utf8'), {
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
 }).outputText;
+const nightworksShapes = JSON.parse(await readFile(new URL('../src/nightworksShapes.json', import.meta.url), 'utf8'));
 new Function('exports', 'require', atmosphereCode)(atmosphereExports, name => {
+  if (name === './nightworksRocks') return { isNightworksSurface: kind => !!kind && Object.hasOwn(nightworksShapes, kind) };
   assert.equal(name, 'three'); return THREE;
 });
 new Function('exports', 'document', 'require', code)(exports, { createElement: tag => new Element(tag) }, name => {
@@ -142,6 +144,17 @@ assert.equal(select('keep authored fog').value, 'on', 'legacy Sky default is inv
 choose('keep authored fog', 'off'); assert.equal(data.keepPlayFog, false);
 levelId = 'ordinary'; data.jungleAtmosphere = true; delete data.keepPlayFog; env.render();
 assert.equal(select('keep authored fog').value, 'on', 'Jungle default is invisible in the inspector');
+choose('keep authored fog', 'off'); assert.equal(data.keepPlayFog, false);
+delete data.jungleAtmosphere; delete data.keepPlayFog;
+data.sky = 'night'; data.components = [{t:'platform',dkind:'nightplateau',p:[0,-3,0],s:[8,6,8]},{t:'gate',p:[0,0,-20]}];
+env.render();
+assert.equal(select('keep authored fog').value, 'on', 'Nightworks inherited material fog is invisible in the inspector');
+const nightBefore = clone(data);
+choose('atmosphere settings', 'custom');
+assert.equal(data.atmosphere.fogNear, 18); assert.equal(data.atmosphere.fogFar, 88);
+assert.equal(data.atmosphere.ambientIntensity, .46); assert.equal(data.atmosphere.sunIntensity, .82 * .26);
+assert.deepEqual(atmosphereExports.resolveDataAtmosphere(data), atmosphereExports.resolveDataAtmosphere(nightBefore),
+  'enabling custom atmosphere changed inherited Nightworks appearance');
 choose('keep authored fog', 'off'); assert.equal(data.keepPlayFog, false);
 console.log('PASS atmosphere controls, effective defaults, bounded fields, fallback visibility, precise display and history rebinding');
 console.log('PASS environment add/move/resize/rotate/remove, independent patch selection, undo/reset bindings, live choices, map ownership and safe shoreline conversion');

@@ -1,0 +1,12 @@
+{
+  "workflow": "Built-in OpenAI imagegen, one original reference per Meshy asset; official Meshy CLI image-to-3d smart-topology with texturing/PBR at 2k. No CLI imagegen fallback.",
+  "common": "Isolated single game asset on plain pale grey, full object in a three-quarter studio view, soft even light, broad simplified low-poly matte clay facets, sparse large geological detail, warm ochre/terracotta flat tops and dark slate-blue layered undersides. No vegetation, characters, props, text or watermark.",
+  "plateau": "A 10 by 9 metre irregular nearly circular broad flat plateau with a chipped rim; 7 metre hanging depth tapering into four uneven long stone points.",
+  "stepping-rock": "A 4.5 by 4.5 metre flat stepping island, eight-sided chipped silhouette and three uneven deep hanging teeth, 4 metres tall.",
+  "long-island": "An elongated 15 by 7 metre flat natural island with clipped organic corners and five asymmetric hanging stone spear formations, 8 metres deep.",
+  "phase-rock": "A 4.5 metre angular flat island with four tapered points; subtle pale amber mineral seams on matte dark rock, no crystals or symbols.",
+  "rock-ridge": "A 12 metre long, 0.6 metre narrow, perfectly straight horizontal stone crest with fused dark hanging triangular rock shards 3 metres below it; no metal or supports.",
+  "anchor-rock": "A compact asymmetrical 4 by 3 by 3 metre floating anchor crag, five broad fractures, a small ochre upper shelf and a stout tapered lower point; no rope or attachment in the reference.",
+  "distant-arch": "A 22 by 30 by 8 metre monumental natural floating arch with a clear tall opening, jagged spires on its shoulders and long hanging pillar points; slate-blue simplified silhouette, no masonry.",
+  "top-albedo": "Seamless square top-down sandstone albedo, muted warm ochre terracotta, gentle clay-like mottling, sparse broad shallow natural cracks, low detail without granular noise. Flat diffuse lighting; no shadows, perspective, ambient occlusion, objects, vegetation, text or watermark."
+}

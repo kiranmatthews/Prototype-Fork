@@ -85,6 +85,19 @@ try {
               source.ropePointAt(a, 4, new THREE.Vector3()).applyMatrix4(transform), "moving rope grip");
             vectorNear(edited.ropeVelAt(b, 4, new THREE.Vector3()),
               source.ropeVelAt(a, 4, new THREE.Vector3()).applyMatrix3(linear), "rope rider release velocity");
+            for (const [level, rope] of [[source, a], [edited, b]]) {
+              rope.pivot.updateWorldMatrix(true, true);
+              vectorNear(rope.visual.endKnot.getWorldPosition(new THREE.Vector3()),
+                level.ropePointAt(rope, rope.len, new THREE.Vector3()), "braided knot/contact endpoint", 1e-5);
+              const ring = Math.floor(rope.visual.segments * .57), center = new THREE.Vector3();
+              const positions = rope.visual.mesh.geometry.attributes.position;
+              for (let side = 0; side < 12; side++) center.add(new THREE.Vector3().fromBufferAttribute(positions, ring * 13 + side));
+              center.multiplyScalar(1 / 12).applyMatrix4(rope.visual.mesh.matrixWorld);
+              const distance = ring / rope.visual.segments * rope.len;
+              vectorNear(center, level.ropePointAt(rope, distance, new THREE.Vector3()), "braid centre/contact grip", 1e-5);
+              assert.ok(Math.abs(level.ropeClosestDistance(rope, center) - distance) < .006,
+                "closest-curve grab no longer meets the visible braided rope");
+            }
           }
         }
       }
@@ -133,7 +146,7 @@ try {
         compareMotion(data, editor.data, t, transform, new THREE.Matrix3().setFromMatrix4(transform), false);
       });
     }
-    check(`${mode}: legacy Nightworks ferry retains its independent native anchor phase`, () => {
+    check(`${mode}: source-owned Nightworks ferry retains independent clocks and flexible grips`, () => {
       const native = new Level(new THREE.Scene(), { id: "dark", name: "Nightworks" });
       let edited;
       try {
@@ -171,6 +184,114 @@ try {
         } finally { native.dispose(); }
       }
     });
+    check(`${mode}: legacy natural rope capture retains speed zero and independent anchor clock`, () => {
+      const data = fixture([{ ...baseComponent("ropeswing"), speed: 0, travelSign: -1 }]), native = build(data);
+      try {
+        // The current Nightworks is data-backed. Exercise the legacy helper
+        // capture seam separately so its provenance does not become untested.
+        native.builtFromData = null;
+        const c = native.captureData().components.find(component => component.t === "ropeswing");
+        assert.equal(c.speed, 0); assert.equal(c.travelPhase, 1.2); assert.equal(c.travelSign, -1);
+        compareMotion(data, fixture([c]), "ropeswing", new THREE.Matrix4(), new THREE.Matrix3());
+      } finally { native.dispose(); }
+    });
+    for (const t of ["platform", "mover", "phasepad"]) {
+      check(`${mode}: asymmetric Nightworks ${t} hulls, support and torches follow group turns`, () => {
+        for (const yaw of [0, 37, 90]) for (const turn of [90, -90]) {
+          const c = { t, dkind: t === "platform" ? "nightplateau" : t === "mover" ? "nightsteppingrock" : "nightphaserock",
+            p: [3, 8, -9], s: [6, 4, 3], yaw,
+            ...(t === "mover" ? { amp: 3, axis: "x", phase: .7, speed: 1.3, lit: true }
+              : t === "phasepad" ? { cycle: 4, phase: .15, amp: .55 } : {}) };
+          const data = fixture([c, { t: "platform", p: [-7, 3, -1], s: [2, 1, 4] }]), editor = editorFor(data, 2);
+          editor.rotateSelection(turn);
+          assert.deepEqual(editor.data.components[0].s, c.s, "rock yaw and size were both rotated");
+          const pivot = new THREE.Vector3(-2, 0, -5);
+          const transform = new THREE.Matrix4().makeTranslation(...pivot.toArray())
+            .multiply(new THREE.Matrix4().makeRotationY(THREE.MathUtils.degToRad(turn)))
+            .multiply(new THREE.Matrix4().makeTranslation(...pivot.clone().negate().toArray()));
+          const a = build(data), b = build(editor.data);
+          try {
+            const source = a.nightworksRocks.solids[0].mesh, target = b.nightworksRocks.solids[0].mesh;
+            for (const dt of [0, .25, .5, 2]) {
+              a.update(dt); b.update(dt); a.root.updateMatrixWorld(true); b.root.updateMatrixWorld(true);
+              const p = source.geometry.attributes.position, q = target.geometry.attributes.position;
+              assert.equal(p.count, q.count);
+              for (let i = 0; i < p.count; i++)
+                vectorNear(new THREE.Vector3().fromBufferAttribute(q, i).applyMatrix4(target.matrixWorld),
+                  new THREE.Vector3().fromBufferAttribute(p, i).applyMatrix4(source.matrixWorld).applyMatrix4(transform),
+                  `rock hull vertex ${i}`, .00005);
+              assert.equal(a.groundMeshes.includes(source), b.groundMeshes.includes(target), "phase collision timing changed");
+              const ray = new THREE.Raycaster(source.position.clone().add(new THREE.Vector3(0, 20, 0)), new THREE.Vector3(0, -1, 0));
+              const before = ray.intersectObject(source, false)[0]; assert.ok(before, "source rock has no supported top");
+              const expected = before.point.clone().applyMatrix4(transform);
+              ray.set(expected.clone().add(new THREE.Vector3(0, 20, 0)), new THREE.Vector3(0, -1, 0));
+              const after = ray.intersectObject(target, false)[0]; assert.ok(after, "rotated rock lost supported top");
+              vectorNear(after.point, expected, "rotated support ray", .00005);
+              assert.equal(a.torches.length, b.torches.length);
+              a.torches.forEach((torch, i) => {
+                vectorNear(b.torches[i].group.position, torch.group.position.clone().applyMatrix4(transform), "rock brazier");
+                vectorNear(b.torches[i].lightAt, torch.lightAt.clone().applyMatrix4(transform), "rock moving light");
+              });
+            }
+          } finally { a.dispose(); b.dispose(); }
+        }
+      });
+      check(`${mode}: rotated Nightworks ${t} supports nonuniform world-axis scaling`, () => {
+        const c = { t, dkind: t === "platform" ? "nightplateau" : t === "mover" ? "nightsteppingrock" : "nightphaserock",
+          p: [3, 8, -9], s: [6, 4, 3], yaw: 0, ...(t === "mover" ? { amp: 3, phase: .7, speed: 1.3 } : {}) };
+        const data = fixture([c]), rotated = editorFor(data); rotated.rotateSelection(90);
+        const scaled = editorFor(rotated.data), anchor = new THREE.Vector3(...c.p), scale = new THREE.Vector3(2, 1.5, 3);
+        scaled.applyScaleNoCommit(...scale.toArray(), anchor);
+        const transform = new THREE.Matrix4().makeTranslation(...anchor.toArray())
+          .multiply(new THREE.Matrix4().makeScale(...scale.toArray()))
+          .multiply(new THREE.Matrix4().makeTranslation(...anchor.clone().negate().toArray()));
+        const a = build(rotated.data), b = build(scaled.data);
+        try {
+          a.update(0); b.update(0);
+          const source = a.nightworksRocks.solids[0].mesh, target = b.nightworksRocks.solids[0].mesh;
+          source.updateWorldMatrix(true, false); target.updateWorldMatrix(true, false);
+          const p = source.geometry.attributes.position, q = target.geometry.attributes.position;
+          for (let i = 0; i < p.count; i++)
+            vectorNear(new THREE.Vector3().fromBufferAttribute(q, i).applyMatrix4(target.matrixWorld),
+              new THREE.Vector3().fromBufferAttribute(p, i).applyMatrix4(source.matrixWorld).applyMatrix4(transform), "scaled rock hull", .00005);
+        } finally { a.dispose(); b.dispose(); }
+      });
+    }
+    check(`${mode}: diagonal moving rock ridge keeps its signed grind line over its collider`, () => {
+      for (const yaw of [0, 45, 90, 137]) for (const travelSign of [1, -1]) {
+        const c = { t: "rail", dkind: "nightrockridge", p: [3, 8, -9], len: 12, yaw, axis: "x", amp: 3, phase: .7, speed: 1.3, travelSign };
+        const data = fixture([c]), editor = editorFor(data); editor.rotateSelection(90);
+        const a = build(data), b = build(editor.data);
+        try {
+          const pivot = new THREE.Vector3(c.p[0], 0, c.p[2]);
+          const transform = new THREE.Matrix4().makeTranslation(...pivot.toArray())
+            .multiply(new THREE.Matrix4().makeRotationY(Math.PI / 2))
+            .multiply(new THREE.Matrix4().makeTranslation(...pivot.clone().negate().toArray()));
+          for (const dt of [0, .25, .5, 1]) {
+            a.update(dt); b.update(dt);
+            for (const level of [a, b]) {
+              const rail = level.movingRails[0], mover = level.movers[0], p = mover.mesh.geometry.attributes.position;
+              vectorNear(mover.mesh.position.clone().sub(mover.base), rail.object.position, "ridge solid and grind travel separated");
+              const along = rail.rail.points.at(-1).clone().sub(rail.rail.points[0]).normalize(), across = new THREE.Vector3(-along.z, 0, along.x);
+              let crossMin = Infinity, crossMax = -Infinity, alongMin = Infinity, alongMax = -Infinity;
+              for (let i = 0; i < p.count; i++) {
+                const vertex = new THREE.Vector3().fromBufferAttribute(p, i), cross = vertex.dot(across), forward = vertex.dot(along);
+                crossMin = Math.min(crossMin, cross); crossMax = Math.max(crossMax, cross);
+                alongMin = Math.min(alongMin, forward); alongMax = Math.max(alongMax, forward);
+              }
+              assert.ok(crossMax - crossMin < 1 && alongMax - alongMin > 8, "rock hull crossed its grind line at edited yaw");
+            }
+            const source = a.movers[0].mesh, target = b.movers[0].mesh;
+            source.updateWorldMatrix(true, false); target.updateWorldMatrix(true, false);
+            const p = source.geometry.attributes.position, q = target.geometry.attributes.position;
+            for (let i = 0; i < p.count; i++) vectorNear(new THREE.Vector3().fromBufferAttribute(q, i).applyMatrix4(target.matrixWorld),
+              new THREE.Vector3().fromBufferAttribute(p, i).applyMatrix4(source.matrixWorld).applyMatrix4(transform), "rotated ridge hull", .00005);
+            b.movingRails[0].rail.points.forEach((point, i) => vectorNear(point,
+              a.movingRails[0].rail.points[i].clone().applyMatrix4(transform), "rotated ridge grind point"));
+          }
+        } finally { a.dispose(); b.dispose(); }
+      }
+    });
   }
   check("travel schema rejects wrong types, excessive phase and unsupported component owners", () => {
     for (const travelSign of [0, 2, -2, true, "-1", null, [], {}])
@@ -200,6 +321,25 @@ try {
         assert.equal(Number(phase.value), .7); phase.value = "1.2"; phase.dispatch("change");
         assert.equal(editor.data.components[0].phase, .7); assert.equal(editor.data.components[0].travelPhase, 1.2);
       }
+    }
+  });
+  check("sparse rock mover/phase inspectors expose actual dimensions and yaw without changing box defaults", () => {
+    for (const t of ["platform", "mover", "phasepad"]) {
+      const data = fixture([{ t, dkind: "nightsteppingrock", p: [0, 8, 0] }]), editor = editorFor(data);
+      editor.renderProps = Editor.prototype.renderProps;
+      const before = JSON.stringify(editor.data); editor.renderProps(); assert.equal(JSON.stringify(editor.data), before);
+      assert.deepEqual(editor.defaultSizeFor(editor.data.components[0]), [5, 4, 5]);
+      const fields = allElements(editor.propsEl);
+      const width = fields.find(node => node.children[0]?.textContent === "width").children[1];
+      const yaw = fields.find(node => node.children[0]?.textContent === "yaw °").children[1];
+      assert.equal(Number(width.value), 5); assert.equal(Number(yaw.value), 0);
+      width.value = "7"; width.dispatch("change"); assert.deepEqual(editor.data.components[0].s, [7, 4, 5]);
+      yaw.value = "37"; yaw.dispatch("change"); assert.equal(editor.data.components[0].yaw, 37);
+    }
+    for (const t of ["mover", "phasepad"]) {
+      const editor = editorFor(fixture([{ t, p: [0, 0, 0], s: [6, 2, 3] }]));
+      editor.rotateSelection(90); assert.deepEqual(editor.data.components[0].s, [3, 2, 6]);
+      assert.equal(editor.data.components[0].yaw, undefined, "ordinary box gained unsupported yaw");
     }
   });
 } finally { await server.close(); }

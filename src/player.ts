@@ -315,7 +315,7 @@ const LEDGE_FRAME_DIRECTIONS = [
 ] as const;
 const HANG_BOX = new THREE.Box3();
 const ROPE_P = new THREE.Vector3();
-const ROPE_DIR = new THREE.Vector3();
+const ROCK_CONTACT = new THREE.Vector3();
 const ROPE_V = new THREE.Vector3();
 const ROPE_AXIS = new THREE.Vector3();
 const ROPE_SIDE = new THREE.Vector3();
@@ -7546,16 +7546,7 @@ export class Player {
     if (level.ropeSwings.length === 0) return false;
     const chestY = this.pos.y + 1.0;
     for (const rs of level.ropeSwings) {
-      // rope direction (anchor -> knot) at its CURRENT swing angle
-      level.ropePointAt(rs, 1, ROPE_DIR).sub(rs.anchor);
-      const px = this.pos.x - rs.anchor.x;
-      const py = chestY - rs.anchor.y;
-      const pz = this.pos.z - rs.anchor.z;
-      const d = THREE.MathUtils.clamp(
-        px * ROPE_DIR.x + py * ROPE_DIR.y + pz * ROPE_DIR.z,
-        1.0,
-        rs.len - 0.1,
-      );
+      const d=level.ropeClosestDistance(rs,ROPE_P.set(this.pos.x,chestY,this.pos.z));
       level.ropePointAt(rs, d, ROPE_P);
       const dx = ROPE_P.x - this.pos.x;
       const dy = ROPE_P.y - chestY;
@@ -7621,7 +7612,7 @@ export class Player {
   }
 
   // Hanging on: follow the swing, climb with up/down, leap with X, spin to
-  // smash. The rope is driven — your weight never bends it.
+  // smash. Hands sample the same flexing curve as the visible rope.
   private stepRope(dt: number, input: Input, level: Level): void {
     this.runTime += dt;
     // state-local timers (uber already advanced before this early route)
@@ -11192,6 +11183,17 @@ export class Player {
       // their gap faces, so falling past them was ungrabbable by the loop
       // above no matter how clean the reach was.
       if (this.state === 'air') this.tryLedgeGrabMesh(level);
+      if (this.state !== 'hang' && level.nightworksRocks?.resolve(this.prevPos,this.pos,this.hitboxHalf,ROCK_CONTACT)) {
+        const inward=this.walkVelocity.dot(ROCK_CONTACT);
+        if(inward<0)this.walkVelocity.addScaledVector(ROCK_CONTACT,-inward);
+        if(ROCK_CONTACT.y<-.5 && this.vVel>0)this.vVel=0;
+        if(this.freeSkate && this.axisF.dot(ROCK_CONTACT)<-.25)this.speed=0;
+        const half=this.hitboxHalf;
+        this.playerBox.min.set(this.pos.x-half.x,this.pos.y,this.pos.z-half.z);
+        this.playerBox.max.set(this.pos.x+half.x,this.pos.y+half.y*2,this.pos.z+half.z);
+        this.feetBox.copy(this.playerBox);
+      }
+
     }
 
     // Rails are solid on foot: a side-on walk is curbed, a fast skate trips.

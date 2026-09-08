@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { isNightworksSurface } from "./nightworksRocks";
 import type { CustomLevelData, SkyPreset, Theme } from "./level";
 
 /** Hex colors are convenient to author; linear RGB tuples retain the exact
@@ -80,6 +81,20 @@ export const CUSTOM_LEVEL_THEME: Theme = {
 };
 export const JUNGLE_THEME_OVERRIDES = { fog: 0x537d70, fogNear: 38, fogFar: 150,
   hemiSky: 0xaed8c2, hemiGround: 0x634a2e, hemiI: 1.04, sunColor: 0xffdea0, sunI: 1.65 };
+/** Nightworks rock owners opt into the upstream floating-island atmosphere.
+ * Keep these defaults shared with the editor's inherited-value display. */
+export const NIGHTWORKS_THEME_OVERRIDES = {
+  skyTop: "#03060f", skyBottom: "#0b1226", stars: true,
+  fog: 0x081123, fogNear: 18, fogFar: 88, hemiSky: 0x526b9c, hemiGround: 0x221723,
+  hemiI: 0.92, sunColor: 0xa0b6e7, sunI: 0.82,
+};
+export function usesNightworksAtmosphere(data: CustomLevelData): boolean {
+  return data.components.some(component =>
+    (["platform", "mover", "phasepad"].includes(component.t) && isNightworksSurface(component.dkind)) ||
+    (component.t === "rail" && component.dkind === "nightrockridge") ||
+    (component.t === "ropeswing" && component.dkind === "nightanchorrock"));
+}
+
 
 export interface SkyPresetDef {
   file: string; // painted backdrop in public/
@@ -276,7 +291,8 @@ export function resolveLevelAtmosphere(source: AtmosphereSource): ResolvedAtmosp
 export function resolveDataAtmosphere(data: CustomLevelData, levelId?: string): ResolvedAtmosphere {
   return resolveLevelAtmosphere({ theme: { ...CUSTOM_LEVEL_THEME,
       ...(levelId === "sky" ? { fogNear: SKY_BRIDGE_FOG_NEAR, fogFar: SKY_BRIDGE_FOG_FAR } : {}),
-      ...(data.jungleAtmosphere ? JUNGLE_THEME_OVERRIDES : {}) },
+      ...(data.jungleAtmosphere ? JUNGLE_THEME_OVERRIDES : {}),
+      ...(usesNightworksAtmosphere(data) ? NIGHTWORKS_THEME_OVERRIDES : {}) },
     skyBackdrop: levelId === "sky" ? "fog" : "sky",
     skyPreset: data.sky ?? "sunset", jungleAtmosphere: !!data.jungleAtmosphere,
     isCampaignMap: data.components.some(component => component.t === "worldmap"), atmosphere: data.atmosphere });

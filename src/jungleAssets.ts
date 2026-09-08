@@ -4,6 +4,7 @@ import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader.js";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { JUNGLE_MODULES } from "./jungleModules";
 import { MAP_MODULES } from "./mapModules";
+import { NIGHTWORKS_MODULES } from "./nightworksModules";
 import { JUNGLE_EDITOR_ASSETS } from "./jungleEditorAssets";
 import { isJungleAssembly, jungleAssemblyParts, type JunglePartKind } from "./jungleAssemblies";
 import { addJungleDepthFade } from "./jungleGround";
@@ -17,6 +18,7 @@ export interface JungleAssetSpec {
 const ASSETS = {
   ...JUNGLE_MODULES,
   ...MAP_MODULES,
+  ...NIGHTWORKS_MODULES,
   ...JUNGLE_EDITOR_ASSETS,
   junglecliff: {file:"",label:"jungle cliff face",size:[28,32,30],wind:false,backdrop:true},
   junglebackdrop: {file:"",label:"outer jungle canopy",size:[42,44,40],wind:false,backdrop:true},
@@ -47,7 +49,7 @@ export function jungleAssetMatrix(c:JunglePlacement):THREE.Matrix4 {
 }
 
 type RenderKind = JungleAssetKind | JunglePartKind;
-interface Template {
+export interface Template {
   geometry:THREE.BufferGeometry;lodGeometry?:THREE.BufferGeometry;map:THREE.Texture|null;
   normalMap?:THREE.Texture|null;roughnessMap?:THREE.Texture|null;
 }
@@ -132,7 +134,7 @@ function loadTemplate(kind:RenderKind):Promise<Template> {
     if(!high)throw new Error(`Jungle asset ${kind} has no geometry`);
     const geometry=high.geometry.clone().applyMatrix4(high.matrixWorld);geometry.computeBoundingBox();
     const bounds=geometry.boundingBox!,size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
-    const normalize=new THREE.Matrix4().makeScale(1/size.x,1/size.y,1/size.z).multiply(new THREE.Matrix4().makeTranslation(-center.x,-bounds.min.y,-center.z));
+    const normalize=kind.startsWith("night") ? new THREE.Matrix4() : new THREE.Matrix4().makeScale(1/size.x,1/size.y,1/size.z).multiply(new THREE.Matrix4().makeTranslation(-center.x,-bounds.min.y,-center.z));
     geometry.applyMatrix4(normalize);
     const lodGeometry=low?low.geometry.clone().applyMatrix4(low.matrixWorld).applyMatrix4(normalize):undefined;
     const material=high.material as THREE.MeshStandardMaterial;
@@ -145,6 +147,9 @@ function loadTemplate(kind:RenderKind):Promise<Template> {
   }).catch(error=>{templates.delete(kind);throw error;});
   templates.set(kind,pending);return pending;
 }
+
+/** Shared cached Meshy geometry/textures for terrain whose transform moves. */
+export const loadJungleAssetTemplate = loadTemplate;
 
 const WIND = /* glsl */ `
 vec4 jungleOrigin = vec4(0.0, 0.0, 0.0, 1.0);
@@ -230,6 +235,10 @@ export class JungleAssetKit {
   private material(kind:RenderKind,template:Template):THREE.MeshStandardMaterial|THREE.MeshLambertMaterial {
     const cached=this.materials.get(kind);if(cached)return cached;
     const spec=renderSpec(kind),isVine=kind==="vine"||kind==="junglevine";
+    if (kind.startsWith("night")) {
+      const material=new THREE.MeshLambertMaterial({map:template.map,emissive:0x1b2d4b,emissiveIntensity:.3});
+      material.name=spec.label;material.userData.jungleAsset=true;this.materials.set(kind,material);return material;
+    }
     const m=spec.backdrop?new THREE.MeshLambertMaterial({map:template.map,vertexColors:kind==="junglecliff",
       emissive:kind==="junglecliff"?0x64765f:0x25462e,emissiveIntensity:kind==="junglecliff"?.35:.18,
       side:kind==="junglebackdrop"?THREE.DoubleSide:THREE.FrontSide}):new THREE.MeshStandardMaterial({map:template.map,normalMap:template.normalMap??null,

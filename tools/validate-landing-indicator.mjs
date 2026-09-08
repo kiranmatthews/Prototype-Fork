@@ -225,7 +225,8 @@ try {
     player.commitRenderStep(level);
     if (frame >= 8803) {
       const mover = level.movers[3];
-      const height = mover.mesh.geometry.parameters.height;
+      mover.mesh.geometry.computeBoundingBox();
+      const top = mover.mesh.geometry.boundingBox.max.y;
       rows.set(frame, {
         state: player.state,
         grounded: player.grounded,
@@ -233,7 +234,7 @@ try {
         marker: player.floorX.position.clone(),
         markerVisible: player.floorX.visible,
         groundY: player.shadowGroundY,
-        moverTop: mover.mesh.position.y + height / 2,
+        moverTop: mover.mesh.position.y + top,
       });
     }
     input.consumeEdges();
@@ -260,8 +261,16 @@ try {
   // Gameplay lands against the mover transform sampled by Player.step; the
   // subsequent Level.update is presentation timing and remains untouched.
   assert.ok(Math.abs(touchdown.pos.y - 3.5764) < 1e-3);
-  assert.ok(Math.abs(touchdown.pos.x - -9.169170946) < 1e-4);
-  assert.ok(Math.abs(touchdown.pos.z - -45.14170831) < 1e-4);
+  // The fitted stone rim can resolve the approach laterally. The replay must
+  // still land on this same lift, with the marker under the actual feet.
+  const supportRay = new THREE.Raycaster(
+    new THREE.Vector3(touchdown.pos.x, rows.get(8806).moverTop + 1, touchdown.pos.z),
+    new THREE.Vector3(0, -1, 0), 0, 2,
+  );
+  assert.ok(supportRay.intersectObject(level.movers[3].mesh, false).length > 0,
+    `touchdown must remain over the lift: ${touchdown.pos.toArray()}`);
+  assert.ok(Math.abs(touchdown.pos.x - level.movers[3].mesh.position.x) < 2.25);
+  assert.ok(Math.abs(touchdown.pos.z - level.movers[3].mesh.position.z) < 2.25);
 
   const main = await readFile(`${root}src/main.ts`, "utf8");
   assert.match(
@@ -276,7 +285,7 @@ try {
   );
 
   console.log(
-    "Validated post-mover landing-X refresh on the Nightworks vertical lift with unchanged touchdown physics.",
+    "Validated post-mover landing-X refresh and the recorded touchdown height on the fitted Nightworks lift.",
   );
   level.dispose();
 } finally {
