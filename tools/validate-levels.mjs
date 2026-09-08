@@ -54,6 +54,8 @@ for (const [levelIndex, level] of (payload.levels ?? []).entries()) {
   if (data.v !== 1) errors.push(`${label}.data.v must be 1`);
   if (!finiteTuple(data.spawn, 3)) errors.push(`${label}.data.spawn must be three finite numbers`);
   if (!Number.isFinite(data.killY)) errors.push(`${label}.data.killY must be finite`);
+  if (data.skatepark !== undefined && typeof data.skatepark !== 'boolean')
+    errors.push(`${label}.data.skatepark must be boolean when present`);
   if (data.relicTime !== undefined && (typeof data.relicTime !== "number" || !Number.isFinite(data.relicTime) || data.relicTime < 0.01 || data.relicTime > 86400))
     errors.push(`${label}.data.relicTime must be 0.01–86400 seconds when present`);
   if (data.medalTimes !== undefined) {
@@ -207,7 +209,7 @@ for (const [levelIndex, level] of (payload.levels ?? []).entries()) {
         errors.push(`${path}.${key} must be boolean when present`);
     }
   }
-  if (data.hudMode !== "hub" && gates !== 1) errors.push(`${label} must contain exactly one finish gate (found ${gates})`);
+  if (data.hudMode !== "hub" && !data.skatepark && gates !== 1) errors.push(`${label} must contain exactly one finish gate (found ${gates})`);
   rows.push({
     id: level.id,
     components: data.components.length,

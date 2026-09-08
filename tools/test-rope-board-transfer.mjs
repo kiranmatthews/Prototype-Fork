@@ -288,7 +288,6 @@ try {
   rider.vertLossT = 0.2;
   rider.vertGravT = 0.3;
   rider.vertLatVel = 4;
-  rider.vertInDrift = 2;
   rider.pipeHang = true;
   rider.pipeEndFly = true;
   rider.rollOffT = 0.3;
@@ -368,7 +367,6 @@ try {
     ["vertLossT", rider.vertLossT],
     ["vertGravT", rider.vertGravT],
     ["vertLatVel", rider.vertLatVel],
-    ["vertInDrift", rider.vertInDrift],
     ["rollOffT", rider.rollOffT],
     ["chargeTimer", rider.chargeTimer],
     ["jumpBufferT", rider.jumpBufferT],

@@ -441,6 +441,7 @@ interface GroundHit {
   vert?: boolean; // AUTHORED transition face: the level says "this is vert", overriding the normal.y guesswork
   finishPad?: boolean; // the warp pad's masonry: standing on it ends the run
   halfpipe?: Halfpipe; // the transition wall we're on (drives the pendulum + coping launch)
+  mesh?: THREE.Object3D; // exact mesh contact for swept transition attachment
   pipeCross?: number; // analytic pipe hit: exact cross-axis coordinate of the surface point
   trampolineBounce?: number;
   trampolineHeldMult?: number;
@@ -963,20 +964,20 @@ export class Player {
   // the travel axes ARE the board's heading and the stick carves them around
   // — no more axis-locked "brake if you turn too far".
   private freeSkate = false;
+  private parkControls = false;
   // Deliberate dismount (pull-back brake bled to walking pace): drop the
   // skate persistence THIS frame so the feet take the stick immediately.
   private stepOff = false;
   // SWITCH STANCE: 1 = regular, -1 = switch (landed a 180 — the body faces
   // opposite the travel direction until the next 180 or stepping off).
   private stance: 1 | -1 = 1;
-  // THPS2 VERT HANG TIME: an air earned off a vert lip stays GLUED to the
-  // wall — the planar position is pulled back to the launch plane so gravity
-  // drops you into the same transition, stick drift allowed ALONG the coping
-  // only. Escape at the lip by RELEASING X (ollie out over the coping).
+  // Vert flight keeps its launch plane and earned coping velocity. Gravity
+  // brings it back to the transition; deliberate releases own transfers.
   vertAir = false;
   readonly vertNormal = new THREE.Vector3(); // wall outward normal, horizontal
   readonly vertAnchor = new THREE.Vector3(); // the lip point we launched from
   vertLatVel = 0; // hang-time lateral drift along the coping (from the approach angle)
+  private vertLaunchSpeed = 1;
   // THUG-style wall tracking (non-pipe vert airs): the feeler re-finds the
   // wall each frame so the hang follows CURVED walls and bowl corners.
   private vertTracked = false; // the feeler has seen a real vert face this hang
@@ -1190,7 +1191,6 @@ export class Player {
   private specialFlip: SpecialTrick | null = null;
   private flipDuration = CONST.flipTime;
   private revertT = 0; // beat after a vert-air touchdown where R2 = Revert (the THPS3+/THUG combo bridge)
-  private vertInDrift = 0; // NON-pipe vert airs: gentle into-the-ramp carry so the ballistic arc comes down over the transition face, not the deck behind the coping
   private pipeEndFly = false; // flew off a pipe's END mid-hang: the landing judges it — a vert/rail/wall catch saves it, flat ground is the bail
   private rollOffT = 0; // rode out a pipe's open END partway up the wall: seconds left of the gradual level-out — land before the wheels are down and the tilt is judged like a fly-off
   private grindExitAir = false; // this air left a RAIL: held R2 may add transfer strafe; left/right alone only rotates
@@ -1656,6 +1656,19 @@ export class Player {
     if (this.state !== 'ride' || !this.grounded) return false;
     const g = this.groundHit;
     return !g || (g.normal.y > 0.9 && g.halfpipe === undefined);
+  }
+
+  /** Heading is simulation-owned; trick/body rotations never steer the lens. */
+  get skateCameraHeading(): Readonly<THREE.Vector3> { return this.axisF; }
+  get skateCameraBailing(): boolean { return this.isBailing; }
+  private readonly skateCameraUpVector = new THREE.Vector3(0, 1, 0);
+  get skateCameraUp(): Readonly<THREE.Vector3> {
+    // Match syncVisual's quaternion slerp, including partially level airs.
+    const angle = Math.acos(THREE.MathUtils.clamp(this.alignNormal.y, -1, 1)) * this.alignPose;
+    const horizontal = Math.hypot(this.alignNormal.x, this.alignNormal.z);
+    if (horizontal < 1e-6) return this.skateCameraUpVector.copy(VERT_UP);
+    const scale = Math.sin(angle) / horizontal;
+    return this.skateCameraUpVector.set(this.alignNormal.x * scale, Math.cos(angle), this.alignNormal.z * scale);
   }
 
   get sliding(): boolean {
@@ -3008,6 +3021,7 @@ export class Player {
   // warp that skipped any of this would arrive still grinding a rail that is
   // now four hundred units behind you.
   private settle(level: Level, facing?: THREE.Vector3): void {
+    this.parkControls = level.skatepark;
     this.endResultsPose();
     this.softSkateImpactT = 0;
     this.softSkateImpactNormal.set(0, 0, 0);
@@ -3198,7 +3212,7 @@ export class Player {
     this.chargePlanted = false;
     this.chargeTimer = 0;
     this.skateCharge = 0;
-    this.freeSkate = false;
+    this.freeSkate = level.skatepark;
     this.airMomentum = false;
     this.airJumpUsed = false;
     this.doubleJumpAir = false;
@@ -3270,6 +3284,7 @@ export class Player {
 
   // One deterministic fixed step.
   step(dt: number, input: Input, level: Level): void {
+    this.parkControls = level.skatepark;
     if (this.discardedBoardLevel !== level) {
       this.releaseDiscardedBoard();
       this.discardedBoardLevel = level;
@@ -3503,11 +3518,11 @@ export class Player {
     // CHASE CAM: the course frame follows the CAMERA's forward (which main
     // is easing behind the travel direction) — stick-up is always "away from
     // camera", and the skater reads always-facing-forward.
-    const chaseMode = TUNING.chaseCam > 0.5 && !level.boulder;
+    const chaseMode = (level.skatepark || TUNING.chaseCam > 0.5) && !level.boulder;
     const laneDir =
       this.state !== 'grind' && !this.freeSkate
         ? (this.courseInputDirection(level) ??
-          (chaseMode ? { x: this.camDir.x, z: this.camDir.z } : null))
+          (chaseMode ? (level.skatepark ? this.axisF : this.camDir) : null))
         : null;
     if (laneDir) {
       const k = level.cameraViews.length && !chaseMode ? 1 : Math.min(1, 6 * dt);
@@ -3572,7 +3587,7 @@ export class Player {
         : this.travelDir === 'E'
           ? ({ ...input, moveY: input.moveX, moveX: input.moveY } as unknown as Input)
           : ({ ...input, moveY: -input.moveX, moveX: input.moveY } as unknown as Input);
-    if (this.freeSkate) {
+    if (this.freeSkate && !this.parkControls) {
       // Decompose the screen-space stick onto the CURRENT heading axes, so
       // downstream code (acceleration, slides, air control, lean) reads
       // "forward" as "along the board" no matter where it points.
@@ -4815,7 +4830,8 @@ export class Player {
   }
 
   private courseInputDirection(level:Level):{x:number;z:number}|null {
-    if(!level.cameraViews.length || TUNING.chaseCam>.5) {
+    if (level.skatepark || (TUNING.chaseCam > .5 && !level.boulder)) { this.viewInput.reset(); return null; }
+    if(!level.cameraViews.length) {
       this.viewInput.reset();
       return level.laneDirAt(this.pos.x,this.pos.y,this.pos.z,this.laneCursor);
     }
@@ -4827,11 +4843,11 @@ export class Player {
 
   /** Stable input frame for a recovery whose physical heading is still free. */
   private resolveBailControlFrame(level: Level): void {
-    const chaseMode = TUNING.chaseCam > 0.5 && !level.boulder;
+    const chaseMode = (level.skatepark || TUNING.chaseCam > 0.5) && !level.boulder;
     const laneDir = this.courseInputDirection(level);
     if (laneDir || chaseMode) {
-      const fx = laneDir?.x ?? this.camDir.x;
-      const fz = laneDir?.z ?? this.camDir.z;
+      const fx = laneDir?.x ?? (level.skatepark ? this.axisF.x : this.camDir.x);
+      const fz = laneDir?.z ?? (level.skatepark ? this.axisF.z : this.camDir.z);
       const inv = 1 / (Math.hypot(fx, fz) || 1);
       BAIL_CONTROL_F.set(fx * inv, 0, fz * inv);
       BAIL_CONTROL_L.set(-fz * inv, 0, fx * inv);
@@ -5002,7 +5018,7 @@ export class Player {
     // lock-til-release, separate from the timed run lock.
     const wasCrouching = this.crawling;
     if (
-      !slamFlat &&
+      !slamFlat && !this.parkControls &&
       input.grabHeld &&
       !this.oBrakeHold &&
       (this.crawling ||
@@ -5085,7 +5101,7 @@ export class Player {
     // dead stop — so re-holding a direction ramps you back to cruise instead
     // of dumping you to feet, and the wheels/pose persist to zero. Only a
     // true stop or the deliberate pull-back dismount steps off.
-    const rollingOut = this.freeSkate && (Math.abs(this.speed) > 0.08 || (this.softSkateImpactT > 0 && !input.grabHeld)) && !this.stepOff;
+    const rollingOut = this.freeSkate && (this.parkControls || Math.abs(this.speed) > 0.08 || (this.softSkateImpactT > 0 && !input.grabHeld)) && !this.stepOff;
     this.stepOff = false;
     const looseDeck = !!(this.flyBoard && this.flyBoard.visible);
     // A thrown deck is never recovered by proximity or carried speed. Only
@@ -5138,7 +5154,7 @@ export class Player {
         // it had just inherited) off-course, and on a stretch pointing near
         // +Z the error exceeded carveBrakeAngle, so mounting the board fired
         // the pull-back brake instead of a carve.
-        const cfc =
+        const cfc = this.parkControls ? this.axisF :
           this.courseInputDirection(level) ??
           (TUNING.chaseCam > 0.5 && !level.boulder
             ? { x: this.camDir.x, z: this.camDir.z }
@@ -5356,6 +5372,32 @@ export class Player {
               : 0;
           this.speed =
             this.slideSpd * (this.slideVec.x * this.axisF.x + this.slideVec.z * this.axisF.z);
+        }
+      } else if (this.freeSkate && this.parkControls) {
+        // A park stick is an accelerator/brake and a steering wheel. Its
+        // frame is the rider, never the camera's delayed orbit or a map lane.
+        const rx = this.rawInput.moveX;
+        const ry = this.manualing ? 0 : this.rawInput.moveY;
+        const rate = THREE.MathUtils.degToRad(THREE.MathUtils.lerp(155, 100,
+          THREE.MathUtils.clamp(this.speed / Math.max(1, TUNING.maxSpeed), 0, 1)));
+        const turn = -rx * rate * dt;
+        const c = Math.cos(turn), s = Math.sin(turn);
+        this.axisF.set(this.axisF.x * c + this.axisF.z * s, 0,
+          -this.axisF.x * s + this.axisF.z * c).normalize();
+        this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+        braking = input.grabHeld || ry < -0.25;
+        if (braking) {
+          // A stop stays on the board; releasing it has no foot lockout.
+          this.speed = Math.max(0, this.speed - TUNING.turnaround * dt);
+          this.brakeLockT = 0;
+          this.brakeRampT = 0;
+        } else if (this.charging) {
+          if (this.speed < TUNING.maxSpeed)
+            this.speed = Math.min(TUNING.maxSpeed, this.speed + TUNING.chargeBoost * dt);
+        } else if (ry > 0.15 && !steepGround) {
+          this.cruiseEase(dt, false);
+        } else if (!this.onTransition) {
+          this.frictionBleed(dt, false);
         }
       } else if (this.freeSkate && input.grabHeld) {
         // O = BRAKE: held on the board it bleeds speed (ignoring the stick) and
@@ -5664,9 +5706,11 @@ export class Player {
           // flip below only fires along the coping). Right AT the coping
           // (rideNormal.y <= 0.25) the flip yields to the coping launch instead,
           // so you pop over into hang time rather than flipping just short of it.
-          const nx = this.rideNormal.x; // < 0 on the +X wall, > 0 on the −X wall (points to centre)
-          if (Math.abs(nx) > 1e-3) {
-            this.axisF.set(Math.sign(nx), 0, this.axisF.z);
+          const n = this.rideNormal;
+          if (Math.hypot(n.x, n.z) > 1e-3) {
+            const hp = this.groundHit?.halfpipe;
+            this.axisF.set(hp?.axis === 'x' ? this.axisF.x : Math.sign(n.x), 0,
+              hp?.axis === 'x' ? Math.sign(n.z) : this.axisF.z);
             const l = this.axisF.length() || 1;
             this.axisF.divideScalar(l);
             this.axisL.set(this.axisF.z, 0, -this.axisF.x);
@@ -5908,6 +5952,25 @@ export class Player {
         }
       }
     }
+    if (!hit && this.freeSkate && this.groundHit?.vert === true && this.groundHit.mesh?.userData.vertRampMesh) {
+      const mesh = this.groundHit.mesh;
+      // Follow the face along its normal. A world-down feeler becomes
+      // parallel to vert and was sampling the foundation THROUGH the ramp.
+      VERT_RAY_O.copy(this.pos).addScaledVector(this.rideNormal, 0.7);
+      VERT_RAY_D.copy(this.rideNormal).negate();
+      this.raycaster.set(VERT_RAY_O, VERT_RAY_D);
+      this.raycaster.far = 1.5;
+      const contact = this.raycaster.intersectObject(mesh, false).find(h => h.face &&
+        h.face.normal.clone().transformDirection(mesh.matrixWorld).dot(this.rideNormal) > 0.25);
+      if (contact?.face) {
+        const normal = contact.face.normal.clone().transformDirection(mesh.matrixWorld);
+        if (normal.y >= 0 && contact.point.distanceTo(this.pos) < 0.7) {
+          this.pos.copy(contact.point);
+          hit = { y: contact.point.y, normal, name: mesh.name, vert: mesh.userData.vert, mesh };
+          this.rideNormal.copy(normal);
+        }
+      }
+    }
     if (!hit) hit = this.queryGround(level);
     const steepHit = hit !== null && hit.normal.y < CONST.steepSnapNormal;
     const upWindow = steepHit ? TUNING.wallStick : 0.8;
@@ -5931,29 +5994,31 @@ export class Player {
     // the pipe (reusing the mature glue) instead of freezing on the face or
     // flinging off to your death. This is what the old dedicated launch lacked.
     const hpNow = this.freeSkate && hit ? hit.halfpipe : undefined;
+    const meshCrest = this.freeSkate && this.groundHit?.mesh?.userData.vertRampMesh &&
+      this.groundHit.vert === true && this.rideNormal.y < 0.18 && this.lastTy > 0.3;
     if (
-      hpNow &&
+      (hpNow || meshCrest) &&
       this.landingLaunchLockT <= 0 &&
       !this.isBailing && // a tumbling body must never be thrown into a hang
       this.lastTy > 0.15 && // heading is still climbing (not dropping back down)
       this.rideNormal.y <= 0.25 && // at the near-vertical coping stretch
-      this.pos.y > hpNow.lipY - 1.2 // and up near the lip
+      (meshCrest || this.pos.y > hpNow!.lipY - 1.2) // and up near the lip
     ) {
       // LIP STALL: reaching the top IS this launch condition — so the stall
       // check lives here, ahead of the pop. Holding Triangle, SQUARE to the
       // wall (within lipAngle of 90°): park on the coping instead of hanging.
       // Speed doesn't matter — only that you actually made it up here.
-      if (this.lipCoolT <= 0 && this.rawInput.grindHeld && this.lipHeadOn(hpNow)) {
+      if (hpNow && this.lipCoolT <= 0 && this.rawInput.grindHeld && this.lipHeadOn(hpNow)) {
         this.enterLipStall(hpNow);
         return;
       }
       this.state = 'air';
       this.grounded = false;
-      this.groundHit = hit;
+      this.groundHit = meshCrest ? this.groundHit : hit;
       this.airFromSkate = true;
       this.airGrav = 'board';
       this.pipeHang = true; // climb-hold must not read as a trick-spin (no phantom bail)
-      this.hangPipe = hpNow; // remember which pipe launched this hang (spine transfers)
+      this.hangPipe = hpNow ?? null; // remember which pipe launched this hang (spine transfers)
       this.grabSpinAngle = 0;
       // vertical launch = the climb speed you carried up, plus a pop so even a
       // gentle arrival clears the coping into a hang.
@@ -6238,7 +6303,6 @@ export class Player {
       this.vertTracked = false;
       this.vertLossT = 0;
       this.vertLatVel = 0;
-      this.vertInDrift = 0;
       this.pipeHang = false;
       this.hangPipe = null;
     }
@@ -6395,7 +6459,7 @@ export class Player {
     // the stick drifts you along the coping — never away from the wall.
     // Non-pipe hangs first RE-AIM that plane at whatever the wall feeler
     // finds, so curved walls and bowl corners carry the hang around with them.
-    if (this.vertAir && !this.hangPipe) this.trackVertWall(level, dt);
+    if (this.vertAir && !this.hangPipe && !this.pipeHang) this.trackVertWall(level, dt);
     if (this.vertAir) {
       // BALLISTIC VERT (THPS): the air is free flight. The launch already did
       // the assist work — enterVertAir zeroes the into-ramp component, so with
@@ -6413,14 +6477,6 @@ export class Player {
       if (this.vertLatVel !== 0) {
         this.pos.x += tx * this.vertLatVel * dt;
         this.pos.z += tz * this.vertLatVel * dt;
-      }
-      // NON-pipe verts (bowls, mesh walls): the crest detection fires a beat
-      // PAST the lip, over the deck — so a touch of into-the-ramp drift puts
-      // the arc back over the transition face, the job the old 1.2-inset glue
-      // anchor used to do. Analytic pipes launch on the face and stay pure.
-      if (!this.pipeHang && this.vertInDrift !== 0) {
-        this.pos.x += this.vertNormal.x * this.vertInDrift * dt;
-        this.pos.z += this.vertNormal.z * this.vertInDrift * dt;
       }
       // Stick steering along the coping — OFF during a pipe hang (locked-in
       // vert: the stick SPINS you, it never translates you; this slide is
@@ -6590,6 +6646,7 @@ export class Player {
               ? TUNING.rampFallGravity // ramp/downhill launch: ballistic fall, THPS-style
               : TUNING.boardFallGravity
             : TUNING.fallGravity;
+      if (this.parkControls && board) flatG = TUNING.boardRiseGravity;
       // APEX FLOAT (board only): bleed a slice of gravity out of the top of the
       // arc and hand it straight back on the way down. The hang lands where the
       // player is actually reading the trick, and because the window is a fixed
@@ -6636,6 +6693,7 @@ export class Player {
       !this.slideJumpAir
     ) {
       const footAir =
+        !(this.parkControls && this.airFromSkate) &&
         !this.charging &&
         !this.airMomentum && // grind/slide exits keep flying, even when slow
         Math.abs(this.speed) <= TUNING.walkSpeed + 0.5;
@@ -6692,6 +6750,8 @@ export class Player {
     // into riding the wall, THPS-style). This replaces the raycast for pipe
     // walls — a down-ray is parallel to a near-vertical face and tunnels.
     const pipeCatch = this.wallriding ? null : this.pipeCrossHit(level);
+    const transitionCatch = !this.wallriding && !pipeCatch ? this.sweepTransitionContact(level) : null;
+    if (transitionCatch) hit = transitionCatch;
     if (pipeCatch) {
       const hp = pipeCatch.halfpipe!;
       if (hp.axis === 'z') this.pos.x = pipeCatch.pipeCross!;
@@ -6743,7 +6803,7 @@ export class Player {
           : 0.35;
     let landNow =
       hit !== null &&
-      (pipeCatch !== null || // the analytic catch already resolved the contact exactly
+      (pipeCatch !== null || transitionCatch !== null || // swept contacts already resolved the contact exactly
         (this.vVel <= 0 &&
           this.pos.y <= hit.y + 0.05 &&
           (this.prevPos.y >= hit.y - 0.05 || this.pos.y >= hit.y - landGive)));
@@ -7364,7 +7424,7 @@ export class Player {
     // Launched off a halfpipe (via ANY crest path — the fast pump can take the
     // general one): suppress the hang-time stick-spin so the climb-hold doesn't
     // spin you into a phantom bail. Deliberate spins use the Square button.
-    if (this.pipeRideT > 0) {
+    if (this.pipeRideT > 0 || this.groundHit?.vert === true) {
       this.pipeHang = true;
       this.grabSpinAngle = 0; // start the hang un-spun; a held direction rotates from here
     }
@@ -7413,15 +7473,11 @@ export class Player {
       Math.max(this.vVel, conserved * TUNING.vertLaunchConserve),
       CONST.maxFallSpeed,
     );
+    this.vertLaunchSpeed = Math.max(1, this.vVel);
     this.speed = 0; // the energy is in vVel (up) + vertLatVel (across) now
-    // Launch reference (NOT a glue plane any more — the flight is ballistic).
-    // The anchor's Y feeds the wall-tracking ray ladder; the small inset keeps
-    // it just off the face. Non-pipe crests also take a gentle into-the-ramp
-    // drift so the arc lands on the transition instead of the deck behind it
-    // (the crest detection fires a beat past the lip).
-    const inset = this.pipeHang ? 0.25 : 1.2;
-    this.vertAnchor.copy(this.pos).addScaledVector(this.vertNormal, inset);
-    this.vertInDrift = this.pipeHang ? 0 : 1.8;
+    // Launch exactly where contact ended. No inward offset, restoring spring,
+    // or drift: head-on flight returns to the same point under gravity.
+    this.vertAnchor.copy(this.pos);
     this.pipeEndFly = false; // catching ANOTHER vert saves a pipe-end fly-off
     this.rollOffT = 0; // ...and re-owns a levelling ride-out's pose
     this.vertAir = true;
@@ -7542,7 +7598,6 @@ export class Player {
     this.vertLossT = 0;
     this.vertGravT = 0;
     this.vertLatVel = 0;
-    this.vertInDrift = 0;
     this.vertLaunchT = 0;
     this.vertLandGraceT = 0;
     this.pipeHang = false;
@@ -8539,7 +8594,6 @@ export class Player {
     this.pipeHang = false;
     this.hangPipe = null;
     this.vertLatVel = 0;
-    this.vertInDrift = 0;
     this.vertLaunchT = 0;
     this.vertLandGraceT = 0;
     this.pipeEndFly = false;
@@ -13891,6 +13945,28 @@ export class Player {
     return this.findCrateFloor(level, x, z);
   }
 
+  /** Sweep the completed flight segment against the actual transition
+   * triangles. Catches steep angled landings before a down-ray can see the
+   * foundation below; backside/under-shell approaches are never landings. */
+  private sweepTransitionContact(level: Level): GroundHit | null {
+    VERT_RAY_O.copy(this.prevPos).addScaledVector(VERT_UP, 0.025);
+    VERT_RAY_D.subVectors(this.pos, VERT_RAY_O);
+    const distance = VERT_RAY_D.length();
+    if (distance < 1e-5) return null;
+    VERT_RAY_D.multiplyScalar(1 / distance);
+    this.raycaster.set(VERT_RAY_O, VERT_RAY_D);
+    this.raycaster.far = distance + 0.015;
+    for (const hit of this.raycaster.intersectObjects(level.groundMeshes, false)) {
+      if (!hit.face || !hit.object.userData.vertRampMesh || hit.object.userData.vert !== true) continue;
+      const normal = hit.face.normal.clone().transformDirection(hit.object.matrixWorld);
+      if (normal.y < 0 || normal.dot(VERT_RAY_D) >= -1e-4) continue;
+      this.pos.copy(hit.point);
+      return { y: hit.point.y, normal, name: hit.object.name,
+        mesh: hit.object, vert: hit.object.userData.vert };
+    }
+    return null;
+  }
+
   private queryGround(
     level: Level,
     ox = 0,
@@ -14022,6 +14098,7 @@ export class Player {
         | number
         | undefined,
       halfpipe: hp,
+      mesh: hit.object,
     };
   }
 
@@ -14368,8 +14445,13 @@ export class Player {
     let alignTarget = 0;
     let targetNormal: THREE.Vector3 | null = null;
     const onPipe = this.groundHit !== null && this.groundHit.name.startsWith('halfpipe');
-    if (this.vertAir) {
-      alignTarget = 1;
+    if (this.vertAir && !this.grounded) {
+      // The wheels leave the wall, level for the trick at the apex, then
+      // match the transition again for the drop-in. This changes the pose,
+      // never the flight path or trick rotation/landing judgement.
+      alignTarget = this.parkControls
+        ? THREE.MathUtils.smoothstep(Math.abs(this.vVel) / this.vertLaunchSpeed, 0.12, 0.9)
+        : 1;
       targetNormal = this.vertNormal;
     } else if ((this.pipeEndFly || this.rollOffT > 0) && this.state === 'air') {
       alignTarget = this.pipeEndFly
@@ -14538,6 +14620,10 @@ export class Player {
       const vz = this.walkVelocity.z;
       if (vx * vx + vz * vz > RUN_ANIMATION_THRESHOLD ** 2)
         targetYaw = wrapAngle(Math.atan2(vx, vz) - Math.PI);
+    } else if (this.parkControls && this.freeSkate && this.grounded && this.state === 'ride' && !this.isBailing) {
+      // Steering at a mounted stop turns the deck and rider immediately too;
+      // movement-derived facing used to leave the body behind the camera.
+      targetYaw = wrapAngle(Math.atan2(this.axisF.x, this.axisF.z) - Math.PI);
     } else {
       const vx = this.pos.x - this.prevPos.x;
       const vz = this.pos.z - this.prevPos.z;

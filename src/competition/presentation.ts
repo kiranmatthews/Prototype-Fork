@@ -1,4 +1,5 @@
 import { inputPrompts } from '../inputPrompts';
+import { setPromptText } from '../inputPromptUI';
 import { actionButtonDown } from '../inputBindings';
 import { JUDGES, type JungleCupEvent, type Standing } from './event';
 
@@ -102,6 +103,16 @@ export class CompetitionPresentation {
     }
     const focused=(document.activeElement as HTMLElement)?.dataset.action;
     this.element.innerHTML=html;this.selected=0;
+    if(event.phase==='intro') {
+      const body=this.element.querySelector('.comp-intro-body>div:last-child');
+      if(body) for(const text of [
+        '{left} / {right} steer · {up} push · {down} brake',
+        'Hold {jump} to pump. Release to ollie. {grind} grinds.',
+      ]) {
+        const row=document.createElement('p');row.className='comp-controls';
+        setPromptText(row,text);body.appendChild(row);
+      }
+    }
     for (const reveal of reveals) this.hooks.onReveal?.(reveal.id,reveal.score);
     if(event.phase!=='running'&&event.phase!=='countdown') {
       const target=this.element.querySelector<HTMLButtonElement>(`button[data-action="${focused??''}"]:not(:disabled)`)??this.buttons()[0];

@@ -1,68 +1,65 @@
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
-import * as THREE from 'three';
-import ts from 'typescript';
-import {createServer} from 'vite';
-// Reuse the existing game's DOM fixture without running its test suite.
-const fixture=await readFile(new URL('./test-campaign-death-flow.mjs',import.meta.url),'utf8');
-const ast=ts.createSourceFile('fixture.mjs',fixture,ts.ScriptTarget.Latest,true);
-const dom=ast.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='installHeadlessDom');
-new Function('noop',dom.getText(ast)+'; installHeadlessDom();')(()=>{});
-const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true}});
-const warn=console.warn,error=console.error;
-console.warn=(...args)=>{if(!/failed|GLB|procedural skateboard/i.test(String(args[0])))warn(...args)};
-console.error=(...args)=>{if(!/failed|GLB/i.test(String(args[0])))error(...args)};
-let level,rebuild;
-const input=()=>({moveX:0,moveY:0,jumpHeld:false,jumpPressed:false,jumpReleased:false,grindHeld:false,grindPressed:false,spinHeld:false,spinPressed:false,grabHeld:false,grabPressed:false,transferHeld:false,transferPressed:false,restartPressed:false,consumeEdges(){}});
-try{
- const {Level,BUILTIN_LEVELS,parseCustomLevelJson,worldMapComponentPoints}=await server.ssrLoadModule('/src/level.ts');
- const {Player}=await server.ssrLoadModule('/src/player.ts');
- const {CONST}=await server.ssrLoadModule('/src/tuning.ts');
- const scene=new THREE.Scene();level=new Level(scene,BUILTIN_LEVELS.find(e=>e.id==='jungle-cup'));scene.updateMatrixWorld(true);
- const ray=new THREE.Raycaster();
- const ground=(x,z)=>{ray.set(new THREE.Vector3(x,40,z),new THREE.Vector3(0,-1,0));ray.far=100;return ray.intersectObjects(level.groundMeshes,false)[0]?.point.y};
- const near=(a,b,label)=>assert.ok(a!==undefined&&Math.abs(a-b)<.06,`${label}: ${a} != ${b}`);
- near(ground(0,8),4,'supported spawn');
- for(let i=0;i<=10;i++){const z=5-12*i/10;near(ground(0,z),4*(1-i/10),'continuous drop-in');}
- near(ground(0,-31),1.6,'funbox deck');
- near(ground(0,15),2,'starting terrace return bank');
- near(ground(25,16),1.1,'ceremony return bank');
- near(ground(24,-60),2.8,'spine ridge');near(ground(20,-60),1.4,'spine west bank');near(ground(28,-60),1.4,'spine east bank');
- near(ground(-26,-45),0,'halfpipe flat');
- near(ground(-24,15),3.6*(1-Math.cos(85*Math.PI/180)),'south return quarter');
- near(ground(-26+4+3.6*Math.sin(Math.PI/4),-45),3.6*(1-Math.cos(Math.PI/4)),'halfpipe transition');
- near(ground(0,-77-.8-4.8*Math.sin(Math.PI/4)),4.8*(1-Math.cos(Math.PI/4)),'north quarter');
- assert.equal(level.bonusPlatformDiagnostics,null,'competition built an unrelated bonus entrance');
- assert.equal(level.crystalPickup,null,'competition built an extra collectible');
- assert.equal(level.clockPickup,null,'competition built a time-trial activator');
- assert.equal(level.comboOrb,null,'competition built a combo-run activator');
- const player=new Player(scene);player.rawInput=input();player.competitionMode=true;
- const place=(x,y,z)=>{player.respawn(level,true,true,{position:new THREE.Vector3(x,y,z),heading:new THREE.Vector3(0,0,-1)});player.commitRenderStep(level)};
- place(0,4.1,8);near(player.groundBelowY,4,'countdown ground anchor');
- const neutral=input();let bails=0;player.onWipeout=()=>bails++;
- player.points=1234;player.lives=8;player.bail();player.die();assert.equal(bails,1,'ragdoll-to-death counted twice');
- for(let i=0;i<180&&player.state==='dead';i++)player.step(CONST.fixedStep,neutral,level);
- assert.equal(player.state,'ride');assert.equal(player.points,1234);assert.equal(player.lives,8);
- player.comboPoints=120;player.comboMult=3;player.comboHasTrick=true;
- assert.equal(player.competitionScoreAtBuzzer(),1594,'landed buzzer combo was not banked');
- player.comboPoints=120;player.comboMult=3;player.grounded=false;player.state='air';
- assert.equal(player.competitionScoreAtBuzzer(),1594,'unlanded buzzer combo was awarded');
- place(39,.1,-35);const right={...input(),moveX:1};for(let i=0;i<90;i++)player.step(CONST.fixedStep,right,level);
- assert.ok(player.pos.x<=40.51,'east containment leaked');
- place(-12,.95,-18);player.state='air';player.grounded=false;player.freeSkate=true;player.speed=9;player.vVel=-1;
- const grind={...input(),grindHeld:true,grindPressed:true};player.step(CONST.fixedStep,grind,level);
- assert.equal(player.state,'grind','flat-bar catch failed');
- grind.grindPressed=false;for(let i=0;i<360;i++){player.step(CONST.fixedStep,grind,level);level.update(CONST.fixedStep);}
- assert.ok(player.points>0,'real rail line never banked a score');
- const gate=level.finishGlow.getCenter(new THREE.Vector3());place(gate.x,gate.y,gate.z);player.state='air';player.grounded=false;
- player.step(CONST.fixedStep,input(),level);assert.notEqual(player.state,'finished','gate bypassed competition scoring');
- player.competitionMode=false;player.step(CONST.fixedStep,input(),level);assert.equal(player.state,'finished','geometry lost its ordinary finish trigger');
- const data=level.captureData();
- const cup=data.components.find(c=>c.t==='decor'&&c.dkind==='junglecup');assert.ok(cup);assert.deepEqual(cup.s,[2,2,2]);
- rebuild=new Level(new THREE.Scene(),{id:'jungle-cup',name:data.name,data});assert.ok(rebuild.root.getObjectByName('Jungle Cup ceremony trophy'));
- const oldPoints=worldMapComponentPoints().slice(0,11);oldPoints[4][0]=-31;
- const legacy={v:1,name:'Old map',spawn:[0,1,0],killY:-20,hudMode:'hub',components:[{t:'worldmap',p:[0,0,0],pts:oldPoints}]};
- const migrated=parseCustomLevelJson(JSON.stringify(legacy));assert.ok(migrated);assert.equal(migrated.components[0].pts.length,12);
- assert.equal(migrated.components[0].pts[4][0],-47);assert.equal(migrated.components[0].pts[11][0],-31);
- console.log('PASS Jungle Cup runtime: supported drop-in, spine/vert geometry, containment, rail score, death/life/bail accounting, buzzer settlement, finish guard, cup round trip and eleven-hub migration.');
-}finally{level?.dispose();rebuild?.dispose();await server.close();console.warn=warn;console.error=error}
+import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
+await withSkateRuntime(async ({ THREE, server, level, player, step, Level }) => {
+  const { parseCustomLevelJson, worldMapComponentPoints } = await server.ssrLoadModule('/src/level.ts');
+  const ray = new THREE.Raycaster();
+  const ground = (x,z) => { ray.set(new THREE.Vector3(x,40,z),new THREE.Vector3(0,-1,0));ray.far=100;return ray.intersectObjects(level.groundMeshes,false)[0]?.point.y; };
+  const near = (a,b,label) => assert.ok(a!==undefined && Math.abs(a-b)<.06,`${label}: ${a} != ${b}`);
+  near(ground(0,14),0,'supported spawn');
+  near(ground(-14,-44),2.4,'funbox deck');
+  near(ground(22,-68),.6,'manual island');
+  near(ground(0,-91),1.8,'transfer island');
+  for(let i=0;i<=16;i++) {
+    near(ground(-14,-31-i*.5),2.4*i/16,'continuous funbox approach');
+    near(ground(0,-76-i*.4375),1.8*i/16,'continuous transfer approach');
+  }
+  for(const [x,z] of [[28,-116.5-6*Math.SQRT1_2],[0,24.5+6*Math.SQRT1_2],[-45.5-6*Math.SQRT1_2,-42],[45.5+6*Math.SQRT1_2,-42]])
+    near(ground(x,z),6*(1-Math.SQRT1_2),'perimeter transition');
+  // Dense coverage of the accessible flat: no voids between composed pieces.
+  for(let x=-42;x<=42;x+=3)for(let z=-112;z<=20;z+=3)
+    assert.ok(ground(x,z)>=-.001,`unsupported park floor at ${x},${z}`);
+  assert.equal(level.skatepark,true);
+  assert.equal(level.checkpoints.length,0);
+  assert.equal(level.crates.length,0);
+  assert.ok(level.finishGlow.isEmpty());
+  for(const key of ['bonusPlatformDiagnostics','crystalPickup','clockPickup','comboOrb'])assert.equal(level[key],null,key);
+  const place = (x,y,z,heading=[0,0,-1]) => {
+    player.respawn(level,true,true,{position:new THREE.Vector3(x,y,z),heading:new THREE.Vector3(...heading)});
+    player.axisF.set(...heading);player.axisL.set(heading[2],0,-heading[0]);player.commitRenderStep(level);
+  };
+  place(0,.1,14);near(player.groundBelowY,0,'countdown ground anchor');
+  let bails=0;player.onWipeout=()=>bails++;
+  player.points=1234;player.lives=8;player.bail();player.die();assert.equal(bails,1,'ragdoll-to-death double counted');
+  const neutral=makeInput();for(let i=0;i<180&&player.state==='dead';i++)step(neutral);
+  assert.equal(player.state,'ride');assert.equal(player.points,1234);assert.equal(player.lives,8);
+  player.comboPoints=120;player.comboMult=3;player.comboHasTrick=true;
+  assert.equal(player.competitionScoreAtBuzzer(),1594,'landed buzzer combo missing');
+  player.comboPoints=120;player.comboMult=3;player.grounded=false;player.state='air';
+  assert.equal(player.competitionScoreAtBuzzer(),1594,'unlanded buzzer combo awarded');
+  // The safety shell reaches BELOW deck height, including a thrown rider.
+  for(const y of [.1,6.1,16]){
+    place(55,y,-42,[1,0,0]);player.speed=32;
+    const forward=makeInput({moveY:1,jumpHeld:true,jumpPressed:true});
+    for(let i=0;i<90;i++)step(forward);
+    assert.ok(player.pos.x<57,'east containment leaked below/above deck');
+    assert.ok(player.pos.y>=-.05,'containment contact fell through the foundation');
+  }
+  place(-22,.78,-6);player.state='air';player.grounded=false;player.speed=9;player.vVel=-1;
+  const grind=makeInput({grindHeld:true,grindPressed:true});step(grind);
+  assert.equal(player.state,'grind','flat-bar catch failed');
+  for(let i=0;i<360;i++)step(grind);
+  assert.ok(player.points>0,'real rail line never banked points');
+  const data=level.captureData();
+  assert.equal(data.skatepark,true);
+  assert.ok(!data.components.some(c=>['gate','checkpoint','crate','clock','comboorb'].includes(c.t)||c.dkind==='junglecup'));
+  const roundtrip=parseCustomLevelJson(JSON.stringify(data));assert.ok(roundtrip);
+  assert.ok(!roundtrip.components.some(c=>['gate','clock','comboorb'].includes(c.t)),'migration resurrected course furniture');
+  const rebuilt=new Level(new THREE.Scene(),{id:'practice-park',name:data.name,data:roundtrip});
+  assert.equal(rebuilt.skatepark,true);assert.ok(rebuilt.finishGlow.isEmpty());assert.equal(rebuilt.clockPickup,null);rebuilt.dispose();
+  assert.equal(parseCustomLevelJson(JSON.stringify({...data,skatepark:'yes'})),null,'invalid profile accepted');
+  const oldPoints=worldMapComponentPoints().slice(0,11);oldPoints[4][0]=-31;
+  const legacy={v:1,name:'Old map',spawn:[0,1,0],killY:-20,hudMode:'hub',components:[{t:'worldmap',p:[0,0,0],pts:oldPoints}]};
+  const migrated=parseCustomLevelJson(JSON.stringify(legacy));assert.ok(migrated);assert.equal(migrated.components[0].pts.length,12);
+  assert.equal(migrated.components[0].pts[4][0],-47);assert.equal(migrated.components[0].pts[11][0],-31);
+  console.log('PASS Jungle Cup runtime: continuous banks/floor/perimeter, supported spawn, containment at three heights, rail cash-in, competition death/buzzer accounting, and gate-free editor round trip.');
+});

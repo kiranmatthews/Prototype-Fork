@@ -79,6 +79,7 @@ import {
 } from "./cameraSpeedEffect";
 import { CameraLookOffset } from "./cameraLook";
 import { cameraRigFraming, setCameraRigAim } from "./cameraRig";
+import { SkateChaseCamera } from "./skateChaseCamera";
 import { sfx } from "./audio";
 import { Recorder, Replayer, ReplayFile, camYawOf, isReplayFile } from "./replay";
 import { Editor } from "./editor";
@@ -3928,11 +3929,7 @@ let cameraRenderSnapVersion = -1;
 // drawn CAMERA LANE it eases along the lane's local tangent, turning the
 // whole rig through winding corridors (Crash 3 camera rails).
 const camF = new THREE.Vector3(0, 0, -1);
-// CHASE CAM heading: the player's own travel direction, held while stopped.
-// With TUNING.chaseCam on, camF follows THIS instead — the camera swings
-// around behind wherever they go, so the skater always faces forward.
-const chaseF = new THREE.Vector3(0, 0, -1);
-let chaseSteadyT = 0; // seconds of continuous steady travel (filters pipe swings)
+const skateChaseCamera = new SkateChaseCamera();
 
 function updateCamera(dt: number): void {
   const subject = player.renderPosition;
@@ -3956,7 +3953,6 @@ function updateCamera(dt: number): void {
     cameraRenderSnapVersion = player.renderSnapVersion;
     prevPlayerPos.copy(subject);
     cameraLaneCursor.s = -1;
-    chaseSteadyT = 0;
     cameraLook.reset();
   }
   if (oceanOverview && current.id === "beachfront") {
@@ -4000,12 +3996,32 @@ function updateCamera(dt: number): void {
   // X-running stretch, the same camera sees it side-on — no yaw, just a
   // slightly wider, higher frame with less forward lead.
   // CHASE CAM ignores zones — the rig yaws behind the player instead.
-  const chaseOn = TUNING.chaseCam > 0.5 && !level.boulder;
+  const chaseOn = (level.skatepark || TUNING.chaseCam > 0.5) && !level.boulder;
+  if (chaseOn) {
+    const speed = player.cameraSkateSpeed;
+    camSpeedFovBoost = stepSpeedSkateFov(camSpeedFovBoost,
+      speedSkateFovTarget(speed, speed > 0, TUNING.cruiseSpeed, TUNING.maxSpeed, TUNING.camSpeedFovBoost),
+      dt, snapped);
+    camera.fov = TUNING.camFov + 7 + camSpeedFovBoost;
+    camera.updateProjectionMatrix();
+    skateChaseCamera.update(camera, {
+      position: subject, heading: player.skateCameraHeading,
+      up: player.skateCameraUp,
+      vertAir: player.vertAir, vertNormal: player.vertNormal,
+      verticalSpeed: player.vVel, speed, grounded: player.grounded,
+      bailing: player.skateCameraBailing,
+    }, dt, snapped, level.groundMeshes, TUNING);
+    camControlDir.copy(skateChaseCamera.forward);
+    cameraLook.step(input.lookX, input.lookY, dt);
+    cameraLook.apply(camera, skateChaseCamera.aim);
+    prevPlayerPos.copy(subject);
+    return;
+  }
   // side framing only on E/W stretches — a run-at-camera ('N') zone keeps the
   // normal corridor shot: the fixed lens IS the chase framing there
   const znHere = level.zoneAt(subject.x, subject.z);
   const inTurn =
-    !chaseOn && znHere !== null && (znHere.dir === "E" || znHere.dir === "W");
+    znHere !== null && (znHere.dir === "E" || znHere.dir === "W");
   sideF += ((inTurn ? 1 : 0) - sideF) * (snapped ? 1 : Math.min(1, 3.5 * dt));
 
   // Boulder-chase framing is a proper cinematographic shot, not just a further
@@ -4046,47 +4062,9 @@ function updateCamera(dt: number): void {
     camera.updateProjectionMatrix();
   }
 
-  // CHASE CAM: track the player's travel direction — but only SUSTAINED,
-  // steady travel. Airs coast on the held heading; halfpipe transitions and
-  // trough crossings never steer it (swinging a pipe would pinwheel the
-  // shot — the level's spine is camera noise, not a heading); and the brief
-  // sustain window filters what's left. Held while stopped: idling never
-  // spins the frame.
-  if (snapped && chaseOn) {
-    const seed = level.cameraDirAt(
-      subject.x,
-      subject.y,
-      subject.z,
-      cameraLaneCursor,
-    ) ?? { x: 0, z: -1 };
-    chaseF.set(seed.x, 0, seed.z).normalize();
-  }
-  const vx = dt > 0 ? (subject.x - prevPlayerPos.x) / dt : 0;
-  const vz = dt > 0 ? (subject.z - prevPlayerPos.z) / dt : 0;
-  chaseSteadyT = chaseOn && player.chaseSteady ? chaseSteadyT + dt : 0;
-  if (chaseOn && chaseSteadyT > 0.35 && vx * vx + vz * vz > 9) {
-    const inv = 1 / Math.hypot(vx, vz);
-    const k = Math.min(1, 2.5 * dt);
-    chaseF.x += (vx * inv - chaseF.x) * k;
-    chaseF.z += (vz * inv - chaseF.z) * k;
-    if (chaseF.lengthSq() > 1e-4) chaseF.normalize();
-  }
-
-  // CAMERA LANE: ease the rig's forward along the lane's local tangent (the
-  // player's course axes ease the same way, so screen-up stays "onward").
-  // Chase mode feeds the player's own heading through the same rig instead.
-  // The turn rate sets the carve radius (radius ≈ speed / rate, since the
-  // frame chases its own tail while you hold a side) — keep it LAZY: a held
-  // side is a wide arc, not a spin-top.
-  const lf = chaseOn
-    ? chaseF
-    : level.cameraDirAt(
-        subject.x,
-        subject.y,
-        subject.z,
-        cameraLaneCursor,
-      );
-  const turnK = snapped ? 1 : Math.min(1, (chaseOn ? 1.6 : 3.5) * dt);
+  // Course cameras retain their authored lane; the skate rig returned above.
+  const lf = level.cameraDirAt(subject.x, subject.y, subject.z, cameraLaneCursor);
+  const turnK = snapped ? 1 : Math.min(1, 3.5 * dt);
   camF.x += ((lf ? lf.x : 0) - camF.x) * turnK;
   camF.z += ((lf ? lf.z : -1) - camF.z) * turnK;
   camF.y = 0;
@@ -4100,9 +4078,8 @@ function updateCamera(dt: number): void {
         dt
       : 0;
   prevPlayerPos.copy(subject);
-  // chase mode swings around behind instead of dollying back
   const movingBack =
-    !chaseOn && (vAlong < -2.5 || (player.grounded && player.speed < -1.5));
+    vAlong < -2.5 || (player.grounded && player.speed < -1.5);
   camBack +=
     ((movingBack ? 1 : 0) - camBack) *
     (snapped ? 1 : Math.min(1, 3 * dt));
@@ -4520,7 +4497,7 @@ function frame(nowMs: number): void {
     if ((competition.phase as string) !== "running") {
       input.consumeEdges(); acc = 0; sfx.stopLoops();
       if (competition.phase === "countdown") updateCamera(dt);
-      else { camera.position.set(58, 55, 38); camera.lookAt(0, 0, -37); }
+      else { camera.position.set(90, 85, 54); camera.lookAt(0, 1, -46); }
       sky.position.copy(camera.position); skyMist.position.copy(camera.position);
       updateSunShadow(0, 0, -35);
       renderGameplayScene(dt, true, false);

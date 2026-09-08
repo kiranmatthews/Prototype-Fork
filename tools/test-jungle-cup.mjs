@@ -63,13 +63,15 @@ for(let scenario=0;scenario<1000;scenario++){
  assert.ok([1,2].includes(e.standings.find(s=>s.id==='rival').rank));
  if(e.won)assert.equal(e.standings[1].id,'rival');
 }
-assert.equal(level.components.filter(c=>c.t==='gate').length,1);
+assert.equal(level.components.filter(c=>c.t==='gate').length,0);
+assert.equal(level.skatepark,true);
+assert.ok(!level.components.some(c=>['crate','checkpoint','gate'].includes(c.t)||c.dkind==='junglecup'));
 assert.ok(level.killY<0);
 assert.equal(level.jungleAtmosphere,true);
-assert.ok(level.components.filter(c=>c.t==='vertramp').length>=3);
+assert.ok(level.components.some(c=>c.t==='vertramp'&&c.closed&&c.arc===90&&c.deck>=4));
 assert.ok(level.components.filter(c=>c.t==='rail').length>=4);
 assert.ok(level.components.some(c=>c.t==='wallpath'&&c.containment));
-assert.ok(level.components.filter(c=>c.t==='camnode').length>=2);
+assert.equal(level.components.filter(c=>c.t==='camnode').length,0);
 assert.ok(!level.components.some(c=>['clock','comboorb','crystal'].includes(c.t)));
 const storage = new Map();
 globalThis.localStorage = {getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,String(v)),removeItem:k=>storage.delete(k)};

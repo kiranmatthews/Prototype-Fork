@@ -935,6 +935,8 @@ export interface CustomLevelData {
   name: string;
   spawn: [number, number, number];
   killY: number;
+  /** Continuous park: rider-relative skating/chase camera, no course finish or run-mode pickups. */
+  skatepark?: boolean;
   /** Bonus stages opt into their distinct persistent collection HUD. */
   hudMode?: "bonus" | "hub";
   allBalanceCrates?: boolean;
@@ -1276,7 +1278,7 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   // before gates existed get one on their furthest down-course deck (move it
   // wherever afterwards); duplicate gates collapse to the last one placed.
   const lastGate = d.components.map((c) => c.t).lastIndexOf("gate");
-  if (lastGate === -1 && d.hudMode !== "hub") d.components.push(defaultGateFor(d));
+  if (lastGate === -1 && d.hudMode !== "hub" && !d.skatepark) d.components.push(defaultGateFor(d));
   else
     d.components = d.components.filter(
       (c, i) => c.t !== "gate" || i === lastGate,
@@ -1284,7 +1286,7 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   // RUN-MODE ACTIVATORS: the stopwatch and the combo orb are level furniture
   // the same way the spawn and the gate are — old saves get them beside the
   // spawn (move them wherever afterwards); duplicates collapse to the last.
-  if (d.hudMode !== "bonus" && d.hudMode !== "hub") {
+  if (d.hudMode !== "bonus" && d.hudMode !== "hub" && !d.skatepark) {
     for (const t of ["clock", "comboorb"] as const) {
       const last = d.components.map((c) => c.t).lastIndexOf(t);
       if (last === -1)
@@ -2375,7 +2377,7 @@ const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const LEVEL_DATA_KEYS = new Set([
   "v", "name", "spawn", "killY", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "atmosphere",
-  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog",
+  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "containment",
@@ -2599,7 +2601,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (!source.medalTimes || !hasOnlyKeys(source.medalTimes, new Set(["gold", "silver", "bronze"]))))
     return null;
   if (source.hudMode !== undefined && source.hudMode !== "bonus" && source.hudMode !== "hub") return null;
-  for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog"] as const)
+  for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark"] as const)
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
   if (source.relicTime !== undefined && !validRelicTime(source.relicTime)) return null;
   if (source.medalTimes !== undefined && !validMedalTimes(source.medalTimes)) return null;
@@ -2948,7 +2950,9 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
         aggregateSamples += Math.max(8, Math.ceil(length / 1.5)) * 5;
         if (component.berms) aggregateSamples += Math.ceil(length / 0.25) * 8;
       } else if (component.t === "vertramp" || component.t === "pipe") {
-        aggregateSamples += Math.max(nodes * 7, Math.ceil(curvedLength / 1.6)) * 24;
+        // Park transitions use three times the arc resolution; account for
+        // that in the import/build workload budget as well as the renderer.
+        aggregateSamples += Math.max(nodes * 7, Math.ceil(curvedLength / 1.6)) * 24 * (source.skatepark ? 3 : 1);
       } else if (component.t === "wallpath" || component.t === "coastwall") {
         aggregateSamples += Math.max(nodes * 7, Math.ceil(curvedLength / 0.6)) * 8;
       } else {
@@ -3665,6 +3669,7 @@ export class Level {
   // tuning. One source course can widen its ledge catch envelope while every
   // other level retains the exact global grab feel.
   ledgeAssist = 0;
+  skatepark = false;
   // Presentation semantics are authored with data so edited/copied bonus
   // stages retain their HUD without relying on a special registry id.
   hudMode: "standard" | "bonus" | "hub" = "standard";
@@ -4553,7 +4558,7 @@ export class Level {
     this.buildSystemicSurfaceEdgeRails(); // ordinary solid boundaries grind by default
     this.dressRails(); // every builder is done adding rails by now
     this.syncTrickPrimitives(new Set<DeckTrickKind>(), false);
-    if (this.hudMode !== "bonus" && this.hudMode !== "hub" && entry.id !== "jungle-cup") {
+    if (this.hudMode !== "bonus" && this.hudMode !== "hub" && !this.skatepark && entry.id !== "jungle-cup") {
       this.placeClock(); // time-trial stopwatch near spawn (only where a finish gate exists)
       this.placeComboOrb(); // combo-run orb, the other side of the racing line
     }
@@ -5250,6 +5255,7 @@ export class Level {
     mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0);
     mesh.scale.set(...(c.s ?? [1, 1, 1]));
     mesh.name = c.nm ?? "triangle surface";
+    if (c.vert !== undefined) mesh.userData.vert = c.vert;
     if (c.fog !== undefined) mesh.userData.authoredFog = c.fog;
     if (c.solid === false) { mesh.userData.visualOnly = true; mesh.userData.edgeGrinding = false; }
     if (c.slip) mesh.userData.slippy = true;
@@ -6106,6 +6112,7 @@ export class Level {
     if (this.jungleAtmosphere) this.bermTint = 0xd9c5a6;
     this.skyPreset = asSkyPreset(data.sky); // unknown/absent -> sunset
     this.hudMode = data.hudMode ?? "standard";
+    this.skatepark = data.skatepark === true;
     this.allBalanceCrates = data.allBalanceCrates === true;
     this.perfectGrindBoost = data.perfectGrindBoost === true;
     this.keepPlayFog = data.keepPlayFog === true;
@@ -14371,6 +14378,7 @@ export class Level {
       arcDeg: arc,
       deck,
       closed,
+      arcSteps: this.skatepark ? 24 : 8,
     });
     const mesh = new THREE.Mesh(vr.geometry, mat);
     mesh.name = c.vert === false ? "slide deck" : "vertramp";
