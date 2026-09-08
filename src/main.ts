@@ -201,24 +201,24 @@ sun.position.set(30, 60, 20);
 scene.add(sun);
 scene.add(sun.target);
 // SHADOWS. A directional light shadows the whole world through one ortho
-// frustum, so the frustum has to be small enough to hold detail and therefore
-// has to FOLLOW the skater (see updateSunShadow). 46 units square at 2048 is
-// ~22 texels per unit — enough that a crate edge reads sharp — and the bias
-// pair is tuned for the shallow angles the low sun throws across a deck.
+// frustum that follows the skater (see updateSunShadow). Cover distant scenery
+// as well as nearby obstacles: 192 metres across, with a 4096 map to retain
+// useful crate/contact detail across the larger footprint.
 sun.castShadow = true;
-sun.shadow.mapSize.set(2048, 2048);
-const SHADOW_HALF = 23;
-const MAP_SHADOW_HALF = 58;
+sun.shadow.mapSize.set(4096, 4096);
+const SHADOW_HALF = 96;
+const MAP_SHADOW_HALF = 116;
 sun.shadow.camera.left = -SHADOW_HALF;
 sun.shadow.camera.right = SHADOW_HALF;
 sun.shadow.camera.top = SHADOW_HALF;
 sun.shadow.camera.bottom = -SHADOW_HALF;
 sun.shadow.camera.near = 1;
-sun.shadow.camera.far = 190;
-sun.shadow.bias = -0.0006;
+sun.shadow.camera.far = 600;
+sun.shadow.bias = -0.0002; // preserve the world-space bias with the deeper frustum
 sun.shadow.normalBias = 0.035;
 // The sun rides a fixed offset from whatever it is lighting, so the frustum
-// travels with play and the light direction never changes.
+// travels with play and the light direction never changes. Triple its distance
+// in updateSunShadow so tall/distant casters remain ahead of the near plane.
 const SUN_OFFSET = new THREE.Vector3(38, 74, 26);
 // Unity Beachfront directional light rotation (40.1, 98.9, 0), converted to
 // a Three light-position offset opposite its forward ray.
@@ -241,9 +241,9 @@ function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
   sun.target.position.set(focusX, focusY, focusZ);
   sun.target.updateMatrixWorld();
   sun.position.set(
-    focusX + offset.x,
-    focusY + offset.y,
-    focusZ + offset.z,
+    focusX + offset.x * 3,
+    focusY + offset.y * 3,
+    focusZ + offset.z * 3,
   );
   sun.shadow.camera.updateProjectionMatrix();
 }
@@ -1870,7 +1870,7 @@ function updateCamera2(dt: number): void {
     dt,
     snapped,
   );
-  const p2AuthoredFov = TUNING.camFov + (level.jungleAtmosphere ? 5 : 0);
+  const p2AuthoredFov = TUNING.camFov;
   const p2TargetFov = THREE.MathUtils.lerp(
     p2AuthoredFov + cam2SpeedFovBoost,
     BOULDER_FOV + TUNING.camFov - 49,
@@ -1897,7 +1897,6 @@ function updateCamera2(dt: number): void {
   if (cam2F.lengthSq() < 1e-4) cam2F.set(0, 0, -1);
   cam2F.normalize();
   const framing = cameraRigFraming(TUNING, 0, 0, 0, true);
-  if (level.jungleAtmosphere) { framing.height += 1.8; framing.distance += 2; framing.pitch -= 4.5; }
   const tx = subject.x - cam2F.x * framing.distance;
   const tz = subject.z - cam2F.z * framing.distance;
   const ty = subject.y + framing.height;
@@ -3984,7 +3983,7 @@ function updateCamera(dt: number): void {
     dt,
     snapped,
   );
-  const authoredFov = TUNING.camFov + (level.jungleAtmosphere ? 5 : 0);
+  const authoredFov = TUNING.camFov;
   const targetFov = THREE.MathUtils.lerp(
     authoredFov + camSpeedFovBoost,
     BOULDER_FOV + TUNING.camFov - 49,
@@ -4058,9 +4057,6 @@ function updateCamera(dt: number): void {
   const back = camBack * (1 - sideF) * (1 - boulderF); // corridor thing only
 
   const framing = cameraRigFraming(TUNING, sideF, back, boulderF);
-  // Give the canopy, hanging arches and roof silhouettes room above the lane.
-  // These are level presentation offsets; the saved movement/camera tuning stays authored.
-  if (level.jungleAtmosphere) { framing.height += 1.8; framing.distance += 2; framing.pitch -= 4.5; }
   // CRASH RIG VERTICAL: the camera's height anchors to the GROUND under the
   // skater, not the skater — a jump rises THROUGH the frame
   // instead of yanking the whole rig skyward and pulling the

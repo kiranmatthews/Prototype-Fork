@@ -682,7 +682,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   boulderSpeed:
     'Boulder Dash chase speed. The boulder rubber-bands around this base — faster when it has passed you or lags too far, a touch slower when right on your heels. Higher = a tighter, scarier chase.',
   camFov:
-    'LENS: vertical field of view in degrees. Lower zooms in; higher shows more of the world. Does not move or rotate the camera. Jungle and the boulder chase retain their authored lens offsets; fixed review shots keep their reference lens.',
+    'LENS: vertical field of view in degrees. Lower zooms in; higher shows more of the world. Does not move or rotate the camera. The boulder chase retains its authored lens offset; fixed review shots keep their reference lens.',
   camSpeedFovBoost:
     'HIGH-SPEED SKATE lens push in extra FOV degrees. It is 0 at cruiseSpeed, eases up to this full amount at maxSpeed, and holds through downhill/vert overspeed. It only applies while the board is live; walking and stopping ease back to camFov. 0 disables the trick.',
   camPitch:

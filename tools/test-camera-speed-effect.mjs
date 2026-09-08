@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import ts from 'typescript';
 import { readFile } from 'node:fs/promises';
 import { createServer } from 'vite';
 
@@ -114,8 +116,34 @@ try {
     for (const lens of [35, 49, 75]) for (const id of ['beachfront', 'shared-beach-copy', 'flats']) {
       near(resolve({ camFov: lens }, { jungleAtmosphere: false }, { id }), lens,
         `${declaration}: Beachfront or its copy retained a level-only lens adjustment`);
-      near(resolve({ camFov: lens }, { jungleAtmosphere: true }, { id }), lens + 5,
-        `${declaration}: unrelated Jungle lens adjustment changed`);
+      near(resolve({ camFov: lens }, { jungleAtmosphere: true }, { id }), lens,
+        `${declaration}: Jungle retained the enhancement lens offset`);
+    }
+  }
+  assert.doesNotMatch(mainSource, /if \(level\.jungleAtmosphere\) \{ framing\./,
+    'Jungle retained the enhancement position/pitch offsets');
+  const shadowSetup = ts.transpileModule(
+    mainSource.slice(mainSource.indexOf('const sun ='), mainSource.indexOf('// Cool fill')),
+    { compilerOptions: { target: ts.ScriptTarget.ES2022 } },
+  ).outputText;
+  for (const mode of ['default', 'jungle', 'coast', 'map']) {
+    const scene = new THREE.Scene();
+    const { sun, updateSunShadow } = new Function('THREE', 'scene', 'document', 'level', 'activeSky',
+      shadowSetup + '; return { sun, updateSunShadow };')(
+        THREE, scene, { body: { classList: { contains: () => mode === 'map' } } },
+        { jungleAtmosphere: mode === 'jungle' }, mode === 'coast' ? 'coast' : 'day');
+    assert.equal(sun.shadow.mapSize.x, 4096);
+    for (const focus of [new THREE.Vector3(), new THREE.Vector3(150, 65, -300)]) {
+      updateSunShadow(focus.x, focus.y, focus.z);
+      scene.updateMatrixWorld(true);
+      sun.shadow.updateMatrices(sun);
+      for (const [x, y, z] of [[0,0,0], [70,0,0], [-70,0,0], [0,0,70], [0,0,-70], [0,70,0]]) {
+        const clip = focus.clone().add(new THREE.Vector3(x,y,z))
+          .applyMatrix4(sun.shadow.camera.matrixWorldInverse)
+          .applyMatrix4(sun.shadow.camera.projectionMatrix);
+        assert.ok(Math.max(Math.abs(clip.x), Math.abs(clip.y), Math.abs(clip.z)) < 1,
+          `${mode}: distant caster clipped at ${x},${y},${z}`);
+      }
     }
   }
   assert.match(playerSource, /get cameraSkateSpeed\(\): number/,
