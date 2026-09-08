@@ -42,11 +42,12 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, TUNING, CONS
   for(let i=0;i<60;i++)step(makeInput({jumpHeld:true}));
   assert.ok(player.speed>15.3&&player.speed<15.34,'crouching is an unbounded pump');
 
+  // Start outside the new interior sessions when isolating perimeter vert.
   const cases=[
     ['north',[28,.1,-90],[0,0,-1]],['south',[0,.1,0],[0,0,1]],
     ['west',[-28,.1,-70],[-1,0,0]],['east',[28,.1,-42],[1,0,0]],
-    ['north-west',[-26,.1,-98],[-1,0,-1]],['north-east',[26,.1,-98],[1,0,-1]],
-    ['south-west',[-26,.1,6],[-1,0,1]],['south-east',[26,.1,6],[1,0,1]],
+    ['north-west',[-37,.1,-108],[-1,0,-1]],['north-east',[37,.1,-108],[1,0,-1]],
+    ['south-west',[-37,.1,16],[-1,0,1]],['south-east',[37,.1,16],[1,0,1]],
   ];
   let returns=0,apexChecks=0,worstShunt=0,worstFraming=0;
   for(const speed of [16,21,26])for(const [name,p,h] of cases){

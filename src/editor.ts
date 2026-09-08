@@ -4085,6 +4085,7 @@ export class Editor {
         if (c.w != null) c.w = Math.max(0, c.w * sLocX);
         if (c.rise != null) c.rise = Math.max(0.5, c.rise * sy);
         if (c.lipRise != null) c.lipRise = Math.min(8, Math.max(0, c.lipRise * sy));
+        if (c.outerBank != null) c.outerBank = Math.min(40, Math.max(0, c.outerBank * ((sLocX + sLocZ) / 2)));
         if (c.deck != null)
           c.deck = Math.max(0, c.deck * ((sLocX + sLocZ) / 2));
         break;
@@ -8888,6 +8889,7 @@ export class Editor {
         (v) => (c.rise = Math.max(0.5, v)),
       );
       num('vertical top', () => c.lipRise ?? 0, (v) => (c.lipRise = Math.max(0, Math.min(8, v))), 0.1);
+      num('outside bank run', () => c.outerBank ?? 0, (v) => (c.outerBank = Math.max(0, Math.min(40, v))), 0.25);
       num(
         "arc °",
         () => c.arc ?? 90,

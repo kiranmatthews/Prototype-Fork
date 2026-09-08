@@ -3158,6 +3158,7 @@ export class Player {
     this.pipeHang = false;
     this.pipeRideT = 0;
     this.pipeLandGraceT = 0;
+    this.vertLandGraceT = 0;
     this.landingLaunchLockT = 0;
     this.manualing = 0;
     this.manualArmed = 0;
@@ -13988,6 +13989,8 @@ export class Player {
       // Riding the wall beneath it — or landing fresh out of a vert air —
       // passes under/over freely; the rail is a grind target, not a barrier.
       if (this.vertLandGraceT > 0) continue;
+      if (this.parkControls && rail.coping &&
+          Math.abs(s.point.y - this.pos.y) <= 0.2) continue;
       if (this.groundHit && this.groundHit.normal.y < TUNING.steepStand) continue;
       // Vertical overlap: the rail line must sit within the body column (from a
       // shade below the feet up to a shade over the head) to count — a rail well

@@ -29,6 +29,8 @@ export class Rail {
   // plunge left them — a grindable line hanging in empty air where nothing is
   // drawn. Clearing this takes it out of every grind query until it restrings.
   grindable = true;
+  // A ramp's flush lip is a grind target, not a freestanding street barrier.
+  coping = false;
   private hasVisual = true;
 
   private segDirs: THREE.Vector3[] = [];

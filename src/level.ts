@@ -706,6 +706,7 @@ export interface CustomComponent {
   vkind?: "quarter" | "half"; // vertramp: one wall, or two facing each other with a flat between
   arc?: number; // vertramp: degrees round the transition (90 = vertical lip, ~60 = a crestable bowl wall)
   lipRise?: number; // vertramp: straight vertical section above the curved transition
+  outerBank?: number; // vertramp: horizontal run of a rideable outside bank from deck to base
   deck?: number; // vertramp: flat platform past the lip, with a skirt to the floor (0 = bare coping)
   closed?: boolean; // vertramp: loop the spine end to end — a rounded-rect path becomes a pool
   bank?: number; // vertramp: auto-lean into turns, in world units of curvature gain (0 = never lean)
@@ -1389,6 +1390,7 @@ export interface VertRampOpts {
   closed?: boolean; // loop the spine end-to-end
   arcSteps?: number;
   lipRise?: number;
+  outerBank?: number;
 }
 export interface VertRampResult {
   geometry: THREE.BufferGeometry;
@@ -1525,6 +1527,7 @@ export function buildVertRampGeometry(
   const lipLat = flatHalf + radius * Math.sin(arcRad);
   const arcY = radius * (1 - Math.cos(arcRad));
   const lipRise = Math.max(0, Math.min(8, o.lipRise ?? 0));
+  const outerBank = Math.max(0, Math.min(40, o.outerBank ?? 0));
   const lipY = arcY + lipRise;
 
   // Half the cross-section, centre outward: transition arc, then deck + skirt.
@@ -1538,7 +1541,12 @@ export function buildVertRampGeometry(
   }
   if (lipRise > 0) half.push({ lat: lipLat, y: lipY });
   const lipK = half.length - 1; // the coping, within `half`
-  if (deck > 0) {
+  if (outerBank > 0) {
+    if (deck > 0) half.push({ lat: lipLat + deck, y: lipY });
+    // A raised bowl can be entered from every outside approach. Keeping the
+    // return bank in the same profile removes overlapping backs and seams.
+    half.push({ lat: lipLat + deck + outerBank, y: 0 });
+  } else if (deck > 0) {
     half.push({ lat: lipLat + deck, y: lipY }); // deck out to its edge
     half.push({ lat: lipLat + deck + 0.1, y: lipY }); // knife the edge
     half.push({ lat: lipLat + deck + 0.1, y: 0 }); // skirt down to the floor
@@ -2387,7 +2395,7 @@ const LEVEL_DATA_KEYS = new Set([
 const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "containment",
   "edgeGrinding", "cameraView", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "deck",
-  "closed", "bank", "curve", "vert", "lipRise", "shake", "kind", "dkind", "vr", "tn",
+  "closed", "bank", "curve", "vert", "lipRise", "outerBank", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid",
   "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "spacing",
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
@@ -2593,7 +2601,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   )
     return null;
   const numericKeys: (keyof CustomComponent)[] = [
-    "len", "rise", "w", "yaw", "arc", "deck", "lipRise", "bank", "shake", "range",
+    "len", "rise", "w", "yaw", "arc", "deck", "lipRise", "outerBank", "bank", "shake", "range",
     "speed", "cycle", "phase", "travelPhase", "amp", "seed", "n", "vr", "tn", "spacing",
     "baySpacing", "supportDepth", "exitYaw", "coverage", "radius",
     "collisionHeight", "supportBaseY", "shoreSeaLevel", "shorePhase",
@@ -2879,6 +2887,8 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     }
     if (component.lipRise !== undefined &&
         (component.t !== 'vertramp' || component.lipRise < 0 || component.lipRise > 8)) return null;
+    if (component.outerBank !== undefined &&
+        (component.t !== 'vertramp' || component.outerBank < 0 || component.outerBank > 40)) return null;
     const dynamic = dynamicKinds.has(component.t) ||
       (component.t === "rail" && (component.amp ?? 0) > 0);
     if (dynamic && ++dynamicCount > 1024) return null;
@@ -14295,8 +14305,9 @@ export class Level {
       );
       return fwd || rev;
     };
-    for (const r of this.rails) if (same(r.points, pts)) return;
+    for (const r of this.rails) if (same(r.points, pts)) { r.coping = true; return; }
     const rail = new Rail(pts);
+    rail.coping = true;
     this.rails.push(rail);
     this.root.add(rail.object);
   }
@@ -14321,6 +14332,7 @@ export class Level {
     const arc = THREE.MathUtils.clamp(c.arc ?? 90, 5, 90);
     const deck = Math.max(0, c.deck ?? 0);
     const lipRise = Math.max(0, Math.min(8, c.lipRise ?? 0));
+    const outerBank = Math.max(0, Math.min(40, c.outerBank ?? 0));
     const closed = c.closed === true;
     const yawQ = (((c.yaw ?? 0) % 360) + 360) % 360;
     const straight = !c.pts || c.pts.length < 2;
@@ -14338,6 +14350,7 @@ export class Level {
       arc === 90 &&
       deck === 0 &&
       lipRise === 0 &&
+      outerBank === 0 &&
       yawQ % 90 === 0
     ) {
       // ---- analytic backing: full lip-trick / pendulum / transfer physics ----
@@ -14389,6 +14402,7 @@ export class Level {
       closed,
       arcSteps: this.skatepark ? 24 : 8,
       lipRise,
+      outerBank,
     });
     const mesh = new THREE.Mesh(vr.geometry, mat);
     mesh.name = c.vert === false ? "slide deck" : "vertramp";

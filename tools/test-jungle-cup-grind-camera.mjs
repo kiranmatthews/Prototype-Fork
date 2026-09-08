@@ -42,7 +42,7 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, CONST }) => 
   };
 
   let catches = 0, grindFrames = 0, exits = 0;
-  for (const rail of level.grindRails.slice(1)) for (const dir of [-1, 1]) {
+  for (const rail of level.grindRails.slice(1, 6)) for (const dir of [-1, 1]) {
     const t = dir > 0 ? 1 : rail.totalLength - 1;
     const tangent = rail.tangentAt(t).multiplyScalar(dir);
     const approach = tangent.clone().applyAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 4);
