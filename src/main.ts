@@ -1776,6 +1776,7 @@ function set2P(on: boolean, force = false): void {
     split2p = false;
     if (p2) {
       level.clearTrickPrimitiveSource(p2);
+      p2.handoffWorldFruit(player);
       p2.group.visible = false;
     }
     // release both so the 1P scan is free to take any pad again

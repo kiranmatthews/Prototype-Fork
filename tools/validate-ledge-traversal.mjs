@@ -1,3 +1,4 @@
+import { useLegacyCrateEnvelope } from './legacy-crate-envelope.mjs';
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
@@ -706,6 +707,9 @@ try {
       player.special.step = () => {};
       player.special.award = () => false;
     }
+    // Preserve the crate contacts preceding this fixed-frame historical take.
+    // Pose-fitted pickups/smashes have their own current-runtime regression suite.
+    useLegacyCrateEnvelope(player, CONST);
     player.enterLevel(entry.id);
     player.endlessDeaths = data.endlessDeaths === true;
     player.respawn(level, true);

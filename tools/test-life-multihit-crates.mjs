@@ -227,7 +227,11 @@ try {
   const prepareBonk = (player) => {
     player.state = "air"; player.grounded = false; player.spinTimer = 0;
     player.slamActive = false; player.freeSkate = false; player.speed = 0;
-    player.prevPos.set(0, 1.9, 0); player.pos.set(0, 2.15, 0); player.vVel = 10;
+    // Cross the underside with the live crown, rather than a fixed foot height.
+    player.refreshCharacterBounds();
+    const crownHeight = player.characterBounds.max.y - player.pos.y;
+    player.prevPos.set(0, 3 - crownHeight - .15, 0);
+    player.pos.set(0, 3 - crownHeight + .10, 0); player.vVel = 10;
   };
   const bonk = create("multihit", { crateY: 3 });
   prepareBonk(bonk.player);

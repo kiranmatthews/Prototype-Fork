@@ -591,9 +591,13 @@ class CharacterLab implements CharacterLabHandle {
     const footwearStatus = footwear.ready
       ? `Procedural footwear ready · ${footwear.styleId}`
       : 'Procedural footwear missing';
+    const interaction=this.ctx.player.interactionBoundsDiagnostics;
+    const interactionSize=interaction.max.map((value,i)=>value-interaction.min[i])
+      .map(value=>Number.isFinite(value)?value.toFixed(2):'…').join(' × ');
     this.status.textContent =
       `${size.x.toFixed(2)} × ${size.y.toFixed(2)} × ${size.z.toFixed(2)} world units\n` +
-      `${diagnostics.appliedObjectCount} proportion targets · ${diagnostics.hitboxHeight.toFixed(2)} hitbox height\n` +
+      `${diagnostics.appliedObjectCount} proportion targets · ${diagnostics.hitboxHeight.toFixed(2)} movement collider height\n` +
+      `${interactionSize} pickup / smash bounds\n` +
       `${torsoStatus} · ${torso.triangles.toLocaleString()} tris\n` +
       `${shortsStatus} · ${shorts.triangles.toLocaleString()} tris\n` +
       `${footwearStatus} · ${footwear.triangles.toLocaleString()} tris\n` +

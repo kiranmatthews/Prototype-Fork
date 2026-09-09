@@ -1,3 +1,4 @@
+import { useLegacyCrateEnvelope } from './legacy-crate-envelope.mjs';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import * as THREE from 'three';
@@ -879,6 +880,11 @@ try {
       // before those vert releases. Keep its historical contact response here;
       // test-ragdoll-recovery covers current low-speed collision behaviour.
       player.softSkateImpact = () => false;
+      // This input-only recording also predates pose-fitted crate attacks.
+      // Preserve its old crate envelope so early box contact cannot move the
+      // later release timestamps. Current bounds are covered independently.
+      useLegacyCrateEnvelope(player, CONST);
+
     }
     replayer.begin(replay);
     const samples = new Map();

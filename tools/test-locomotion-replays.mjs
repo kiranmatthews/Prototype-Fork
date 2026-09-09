@@ -1,3 +1,4 @@
+import { useLegacyCrateEnvelope } from './legacy-crate-envelope.mjs';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
@@ -68,6 +69,8 @@ try {
     const entry = findLevel(replay.level);
     const level = new Level(new THREE.Scene(), entry);
     const player = new Player(level.scene);
+    // Keep pre-change crate contacts so this recorded route reaches its recovery.
+    useLegacyCrateEnvelope(player, CONST);
     // Lock the collision silhouette used to establish these historical hashes.
     player.setCharacterHeadStyle('skull');
     player.setCharacterProportions({ headSize: 1.55, neckLength: 0 });

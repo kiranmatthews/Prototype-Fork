@@ -4,6 +4,7 @@
 // as fake boost/slowdown numbers derived from the surface normal.
 
 import * as THREE from 'three';
+import { CharacterInteractionBounds } from './character/interactionBounds';
 import { CameraInputFrame } from "./cameraViews";
 import { softSkateRebound, sampleSoftSkateImpact, SOFT_SKATE_IMPACT_SECONDS } from './skateImpact';
 import { BONUS_FRUIT_FLIGHT_SECONDS } from './bonusPayout';
@@ -22,6 +23,7 @@ import {
   deckTrickFromInput,
   deckTrickInfo,
   type DeckTrickKind,
+  type Pickup,
   type CampaignPortalReturnPose,
   LaneCursor,
   Level,
@@ -231,12 +233,15 @@ const FRUIT_FLY_SPEED = 2.2;
 const FRUIT_MAX = 600;
 const FRUIT_P = new THREE.Vector3(); // scratch: fruit world position -> screen
 const FRUIT_BOX = new THREE.Box3(); // scratch: the grab box around idle fruit
+const FRUIT_MAGNET_RANGE = 1.75;
+const FRUIT_MAGNET_TARGET = new THREE.Vector3();
+const FRUIT_MAGNET_CENTER = new THREE.Vector3();
 const FRUIT_REACH = new THREE.Box3(); // scratch: the player's body box, this frame
 const REACH_C = new THREE.Vector3();
 const REACH_S = new THREE.Vector3();
 const FRUIT_SIZE = new THREE.Vector2(); // scratch: renderer size, split-screen draw
 const FRUIT_PREV = new THREE.Vector4(); // scratch: viewport to put back
-const FRUIT_GRAB = new THREE.Vector3(1.2, 1.5, 1.2); // same reach a level pickup has
+const FRUIT_GRAB = new THREE.Vector3(WUMPA_SIZE, WUMPA_SIZE, WUMPA_SIZE); // physical fruit size; the magnet supplies the generous outer range
 
 export type MoveState = 'ride' | 'air' | 'grind' | 'hang' | 'rope' | 'dead' | 'gameover' | 'finished';
 
@@ -523,6 +528,7 @@ const LEAN_Q = new THREE.Quaternion();
 const _renderDelta = new THREE.Vector3(); // post-step PVP root correction
 
 export class Player {
+  private static readonly fruitPlayers = new WeakMap<THREE.Scene,Set<Player>>();
   pos = new THREE.Vector3(); // feet position
   /** Feet position currently presented to the renderer/camera. Never gameplay. */
   readonly renderPosition = new THREE.Vector3();
@@ -1354,6 +1360,15 @@ export class Player {
   private walkTurnaround = false; // full-run direction change: gait/facing lead while momentum crosses over
   private walkIntent = new THREE.Vector3(); // world heading presented immediately during a committed turnaround
   private raycaster = new THREE.Raycaster();
+  private readonly interactionMeasure = new CharacterInteractionBounds();
+  private interactionVersion = 0;
+  private measuredInteractionVersion = -1;
+  private readonly characterBounds = new THREE.Box3();
+  private readonly previousCharacterBounds = new THREE.Box3();
+  private readonly interactionAt = new THREE.Vector3();
+  private readonly interactionShift = new THREE.Vector3();
+  private readonly crateBodyBox = new THREE.Box3();
+  private readonly crateAttackBox = new THREE.Box3();
   private playerBox = new THREE.Box3();
   private feetBox = new THREE.Box3(); // body box WITHOUT the grind reach-down (pit checks)
   private spinBox = new THREE.Box3();
@@ -1367,22 +1382,10 @@ export class Player {
   private pfWasSlamming = false;
   private runStepSign = 1; // footfall edge detector for the run dust trail
   private jumpPose = 0; // on-foot jump: overhead arm throw + leg tuck (Crash reference)
-  // One wumpa out of a smashed crate, through its whole life.
-  //
-  //   idle  hanging where the crate was, WAITING TO BE PICKED UP
-  //   fly   collected: on the flat overlay layer, sailing to the HUD counter
-  //   flung spun away instead of collected, ballistic then gone
-  //
-  // `idle` is the phase this pool didn't used to have. Fruit arced out of the
-  // box and homed to the counter on its own, which meant breaking a box WAS
-  // collecting its fruit — the burst was decoration over a number that had
-  // already gone up. Now the box gives you fruit and picking it up is still a
-  // thing you do.
-  //
-  // Nothing falls on the way IN any more: fruit does not arc, scatter or land,
-  // it appears in a clump where the box stood and hangs there (see spawnFruit).
-  // `flung` is the one ballistic path left, and it is an exit — fruit you chose
-  // to smack away rather than collect.
+  // World fruit waits idle, attracts toward the live character in `magnet`,
+  // then switches to the existing screen-space `fly` animation on contact.
+  // A magnet is still unearned: death/reset releases native reservations or
+  // leaves crate fruit idle. Legacy flung bodies can finish retiring safely.
   //
   // `mesh` is a holder Group, NOT the wumpaMesh itself: the fruit is an
   // authored model that arrives async and rescales its own group when it
@@ -1391,13 +1394,15 @@ export class Player {
   private fruits: {
     mesh: THREE.Group;
     vel: THREE.Vector3;
-    phase: 'off' | 'idle' | 'fly' | 'flung';
+    phase: 'off' | 'idle' | 'magnet' | 'fly' | 'flung';
     t: number; // seconds in the current phase
     hop: number; // seconds left of the canned spawn bounce (spin-proof while > 0)
     home: THREE.Vector3; // where it hangs, before the idle bob
     sx: number; // overlay position, screen fractions (0..1)
     sy: number;
     payoutFlight?: { x: number; y: number };
+    sourcePickup?: Pickup;
+    sourceLevel?: Level;
   }[] = [];
   cam: THREE.PerspectiveCamera | null = null; // set by main: wumpa fly to the HUD counter, which lives on the lens
   /** Set by main: where the HUD fruit counter is, in 0..1 screen fractions. */
@@ -1570,6 +1575,8 @@ export class Player {
 
     // Wumpa pool: fruit appears where a box was and waits to be picked up.
     this.worldScene = scene;
+    const fruitPlayers=Player.fruitPlayers.get(scene)??new Set<Player>();
+    fruitPlayers.add(this);Player.fruitPlayers.set(scene,fruitPlayers);
     // Seed enough bodies for a normal crate or two; freeFruit grows the pool
     // from here on demand, so this is a warm-up, not a budget.
     for (let i = 0; i < 12; i++) this.addFruitBody();
@@ -2247,6 +2254,7 @@ export class Player {
   }
 
   private syncCharacterHitboxDimensions(): void {
+    this.interactionVersion++;
     this.hitboxHalf.y =
       characterCollisionHeight(
         characterProportionSettings.value,
@@ -2388,6 +2396,7 @@ export class Player {
   }
 
   private syncCharacterHeadStyle(): void {
+    this.interactionVersion++;
     const alternateReady =
       this.characterHeadStyleValue === 'alternate' && this.meshyBoolieRooHead !== null;
     // Keep the skull visible while the optional chunk/texture arrives rather
@@ -3182,6 +3191,7 @@ export class Player {
     this.bailSpin = 0;
     this.bodyGroup.rotation.x = 0;
     for (const f of this.fruits) this.retireFruit(f);
+    this.characterBounds.makeEmpty();this.previousCharacterBounds.makeEmpty();
     this.groundHit = null;
     this.clearCoyoteJumpWindow();
     this.crateFloorT = 0; // a respawn never inherits "stood on a box"
@@ -3303,6 +3313,7 @@ export class Player {
 
   // One deterministic fixed step.
   step(dt: number, input: Input, level: Level): void {
+    this.previousCharacterBounds.copy(this.characterBounds);
     this.parkControls = level.skatepark;
     if (this.discardedBoardLevel !== level) {
       this.releaseDiscardedBoard();
@@ -3462,8 +3473,8 @@ export class Player {
       this.updateSparks(dt);
       this.updatePuffs();
       this.updateFlyBoard(dt, level);
-      this.updateFruit(dt);
       this.finishVisualStep(input, dt);
+      this.updateFruit(dt, level);
       return;
     }
     if (this.state === 'hang') {
@@ -3477,8 +3488,8 @@ export class Player {
       this.updateSparks(dt);
       this.updatePuffs();
       this.updateFlyBoard(dt, level);
-      this.updateFruit(dt);
       this.finishVisualStep(input, dt);
+      this.updateFruit(dt, level);
       return;
     }
     // MANUAL FLICK: watch the raw stick's vertical axis for the two-beat flick.
@@ -4199,7 +4210,9 @@ export class Player {
     this.updateSparks(dt);
     this.updatePuffs();
     this.updateFlyBoard(dt, level);
-    this.updateFruit(dt);
+    this.finishVisualStep(input, dt);
+    const interactionPose=this.interactionPoseKey();
+    this.updateFruit(dt, level);
 
     if (this.state === 'ride' || this.state === 'air' || this.state === 'grind') {
       this.collide(level);
@@ -4231,7 +4244,10 @@ export class Player {
     // (you get one wallride per air-time — no wall-to-wall chaining).
     if (this.grounded || this.state === 'grind') this.wallrideLatched = false;
 
-    this.finishVisualStep(input, dt);
+    if(interactionPose!==this.interactionPoseKey())this.finishVisualStep(input,0);
+    else if(!this.group.position.equals(this.pos)){
+      this.group.position.copy(this.pos);this.refreshCharacterBounds();
+    }
   }
 
   // ---------------------------------------------------------------- states --
@@ -10843,12 +10859,17 @@ export class Player {
     // Trip halfway through and turned crate ordering into gameplay.
     const crateContactSpeed = this.speed;
     let crateBoardSmashTax = false;
+    this.refreshCharacterBounds();
+    this.refreshCrateBounds();
     const {
       ordered: crateContacts,
       stomps: crateStompContacts,
       bonks: crateBonkContacts,
     } = this.cratesInFaceContactOrder(level);
     for (const c of crateContacts) {
+      this.refreshCrateBounds();
+      const solid=c.metal||c.metalBounce||c.bang||c.nitroBang;
+      const crateTouch=crateStompContacts.has(c)||(solid?this.playerBox:this.crateBodyBox).intersectsBox(c.box);
       if (!c.alive || c.pending) continue; // outline ghosts: no collision at all
       // A METAL BOX COMING DOWN ON YOU IS A DEATH. It cannot be smashed and it
       // cannot be stomped aside, so standing under one is not a situation with
@@ -10859,7 +10880,7 @@ export class Player {
         c.fallVel !== undefined &&
         c.fallVel > 0 &&
         c.box.min.y > this.pos.y + this.hitboxHalf.y &&
-        this.playerBox.intersectsBox(c.box) &&
+        crateTouch &&
         this.isCenteredFallingMetalContact(c.box)
       ) {
         if (this.uberTimer <= 0 && this.invulnTimer <= 0 && !this.spendMask()) {
@@ -10882,7 +10903,7 @@ export class Player {
         c.fallVel !== undefined &&
         c.fallVel > 0 &&
         c.box.min.y > this.pos.y + this.hitboxHalf.y &&
-        this.playerBox.intersectsBox(c.box)
+        crateTouch
       ) {
         this.smashCrate(level, c);
         this.vVel = Math.min(this.vVel, 2);
@@ -10893,7 +10914,7 @@ export class Player {
         // a TNT in a grind line is the hazard on that line: ride onto one and
         // it goes off underneath you, right now, no fuse. The rest of the run
         // stays scenery for the length of the grind.
-        if ((c.nitro || c.tnt) && this.playerBox.intersectsBox(c.box))
+        if ((c.nitro || c.tnt) && crateTouch)
           level.detonate(c);
         continue;
       }
@@ -10923,7 +10944,7 @@ export class Player {
       if (c.nitro) {
         // Nitro: body contact detonates it — fatally, unless uber or a mask
         // (or the invuln flicker from one) absorbs the hit.
-        if (this.playerBox.intersectsBox(c.box)) {
+        if (crateTouch) {
           if (this.uberTimer > 0 || this.invulnTimer > 0) {
             level.detonate(c, true); // plow straight through it
           } else if (this.spendMask()) {
@@ -10951,15 +10972,15 @@ export class Player {
         // Uber, a mask, and the flicker after spending one still cover you
         // (the blast test player-side reads those), so nothing that used to
         // protect you stopped protecting you.
-        if (this.spinning && this.spinBox.intersectsBox(c.box)) {
+        if (this.spinning && this.crateAttackBox.intersectsBox(c.box)) {
           level.detonate(c);
-        } else if (this.playerBox.intersectsBox(c.box)) {
+        } else if (crateTouch) {
           if (this.isBailing) {
             // A TUMBLING BODY is not a stomp. Without this the ragdoll's fall
             // read as isStomping, lit the fuse and crateBounce'd the downed
             // body back into the sky — the same defect the plain-crate,
             // arrow-crate and '!' branches each guard against.
-            if (this.grounded) this.pushOutOf(c.box);
+            if (this.grounded) this.pushOutOfCrate(c.box);
           } else if (this.uberTimer > 0 || this.sliding) {
             level.detonate(c);
           } else if (this.state === 'grind') {
@@ -10996,7 +11017,7 @@ export class Player {
               }
               if (Math.abs(this.speed) > 1.5) level.lightFuse(c);
             }
-            this.pushOutOf(c.box);
+            this.pushOutOfCrate(c.box);
           }
         }
         continue;
@@ -11007,14 +11028,14 @@ export class Player {
         // METAL arrows are indestructible trampolines.
         // PERFECT BOUNCE: the higher launch is a visible held-input choice at
         // contact, not a hidden recent-press timing window.
-        if (c.bouncy && this.spinning && this.spinBox.intersectsBox(c.box)) {
+        if (c.bouncy && this.spinning && this.crateAttackBox.intersectsBox(c.box)) {
           this.smashCrate(level, c);
           continue;
         }
-        if (this.playerBox.intersectsBox(c.box)) {
+        if (crateTouch) {
           if (this.isBailing) {
             // tumbling body: the trampoline is scenery (no mid-ragdoll Boing)
-            if (this.grounded) this.pushOutOf(c.box);
+            if (this.grounded) this.pushOutOfCrate(c.box);
           } else if (this.state === 'grind') {
             // rail-line obstacle rules, same as plain crates: WOOD smashes at
             // speed (or a mask pays and breaks it); METAL can't break — a
@@ -11084,7 +11105,7 @@ export class Player {
             const bx = this.pos.x;
             const bz = this.pos.z;
             const bs = this.speed;
-            if (!this.pushOutOf(c.box))
+            if (!this.pushOutOfCrate(c.box))
               this.wallSmack(bx, bz, bs, c.box); // typed solid: generic low/high obstacle response
           }
         }
@@ -11098,9 +11119,9 @@ export class Player {
         // not a bounce pad. Everything else it does is what any unbreakable
         // box does: a headbutt from below is a hard stop, and running into the
         // side at speed is a wall crash.
-        if (this.playerBox.intersectsBox(c.box)) {
+        if (crateTouch) {
           if (this.isBailing) {
-            if (this.grounded) this.pushOutOf(c.box); // a tumbling body: scenery
+            if (this.grounded) this.pushOutOfCrate(c.box); // a tumbling body: scenery
           } else if (crateStompContacts.has(c)) {
             if (this.slamActive) {
               // Seat first so the shock origin is the lid contact. The metal
@@ -11123,7 +11144,7 @@ export class Player {
             const bx = this.pos.x;
             const bz = this.pos.z;
             const bs = this.speed;
-            if (!this.pushOutOf(c.box))
+            if (!this.pushOutOfCrate(c.box))
               this.wallSmack(bx, bz, bs, c.box); // typed solid: generic low/high obstacle response
           }
         }
@@ -11135,12 +11156,12 @@ export class Player {
         // lid like a box that refuses to break) and never counts toward the
         // tally. The green one is the same box with a different charge: it
         // sets off every nitro instead of materializing outlines.
-        if (this.spinning && this.spinBox.intersectsBox(c.box)) {
+        if (this.spinning && this.crateAttackBox.intersectsBox(c.box)) {
           level.triggerBang(c);
-        } else if (this.playerBox.intersectsBox(c.box)) {
+        } else if (crateTouch) {
           if (this.isBailing) {
             // tumbling body: the switch is scenery (no mid-ragdoll bounce)
-            if (this.grounded) this.pushOutOf(c.box);
+            if (this.grounded) this.pushOutOfCrate(c.box);
           } else if (crateStompContacts.has(c)) {
             level.triggerBang(c);
             this.slamActive = false; // same anti-relock rule as the metal arrow
@@ -11159,29 +11180,29 @@ export class Player {
             level.triggerBang(c); // grind-through flips it — no bail, no shove
           } else if (this.sliding || this.uberTimer > 0) {
             level.triggerBang(c);
-            this.pushOutOf(c.box);
+            this.pushOutOfCrate(c.box);
           } else if (this.isLatchedCrateTopCarry(c.box)) {
             // Crate-top carry, not a side impact.
           } else {
             const bx = this.pos.x;
             const bz = this.pos.z;
             const bs = this.speed;
-            if (!this.pushOutOf(c.box))
+            if (!this.pushOutOfCrate(c.box))
               this.wallSmack(bx, bz, bs, c.box); // typed solid: generic low/high obstacle response
           }
         }
         continue;
       }
-      if (this.spinning && this.spinBox.intersectsBox(c.box)) {
+      if (this.spinning && this.crateAttackBox.intersectsBox(c.box)) {
         this.smashCrate(level, c);
-      } else if (this.playerBox.intersectsBox(c.box)) {
+      } else if (crateTouch) {
         if (this.isBailing) {
           // A TUMBLING BODY neither smashes nor stomps — the box is scenery.
           // (Measured: the trip-over arc used to re-enter here as a STOMP,
           // smash the very crate that tripped it and crateBounce 14 back into
           // the sky.) Airborne it arcs clean over with no shove — a push here
           // pins the arc against the near face; down and sliding it's a wall.
-          if (this.grounded) this.pushOutOf(c.box);
+          if (this.grounded) this.pushOutOfCrate(c.box);
         } else if (this.uberTimer > 0 && !crateStompContacts.has(c)) {
           // Uber: boxes shatter on touch (stomps below still bounce).
           this.smashCrate(level, c);
@@ -11247,7 +11268,7 @@ export class Player {
           // eject the player or fabricate enough measured speed to mount.
         } else {
           // Bumping does nothing to the crate — it's a wall. Full stop.
-          this.pushOutOf(c.box);
+          this.pushOutOfCrate(c.box);
         }
       }
     }
@@ -11609,21 +11630,6 @@ export class Player {
           // Slow bump = wall, like a normal box. Spin, slide, or stomp to bank it.
           this.pushOutOf(cp.box);
         }
-      }
-    }
-
-    // Floating wumpa: touch to collect — but a spin smacks it away.
-    for (const p of level.pickups) {
-      if (level.runMode) break; // no fruit in a run mode
-      if (!p.alive) continue;
-      if (this.spinning && this.spinBox.intersectsBox(p.box)) {
-        p.alive = false;
-        p.mesh.visible = false;
-        sfx.play('fruitSpun', 0.7);
-      } else if (this.playerBox.intersectsBox(p.box)) {
-        p.alive = false;
-        p.mesh.visible = false;
-        this.flyFruit(p.mesh.position); // tally ticks when it lands on the HUD counter
       }
     }
 
@@ -12097,13 +12103,13 @@ export class Player {
 
   captureIdleFruit(): PlayerWorldFruitSnapshot[] {
     return this.fruits
-      .filter((fruit) => fruit.phase === 'idle')
+      .filter((fruit) => fruit.phase === 'idle' || (fruit.phase === 'magnet' && !fruit.sourcePickup))
       .map((fruit) => ({
         position: fruit.mesh.position.toArray() as [number, number, number],
-        home: fruit.home.toArray() as [number, number, number],
+        home: (fruit.phase==='magnet'?fruit.mesh.position:fruit.home).toArray() as [number, number, number],
         rotationY: fruit.mesh.rotation.y,
         time: fruit.t,
-        hop: fruit.hop,
+        hop: fruit.phase==='magnet'?0:fruit.hop,
       }));
   }
 
@@ -12136,9 +12142,10 @@ export class Player {
   // past costs a matrix update and a sphere test, not a draw call.
   //
   // FRUIT_MAX is a runaway guard, not a design limit — far above any level.
-  private freeFruit(): (typeof this.fruits)[number] | null {
+  private freeFruit(reclaim=true): (typeof this.fruits)[number] | null {
     for (const f of this.fruits) if (f.phase === 'off') return f;
     if (this.fruits.length < FRUIT_MAX) return this.addFruitBody();
+    if(!reclaim)return null;
     // Genuinely out: cash in the longest-idling fruit for its slot rather than
     // drop the new one. Only reachable if something has gone wrong.
     let oldest: (typeof this.fruits)[number] | null = null;
@@ -12225,7 +12232,7 @@ export class Player {
   // One already-earned wumpa (a touched pickup, or fruit just walked into)
   // leaves `pos` for the HUD counter on the flat overlay layer.
   private flyFruit(pos: THREE.Vector3): void {
-    const f = this.freeFruit();
+    const f = this.freeFruit(false);
     if (!f) {
       this.collectFruit(); // pool exhausted: count it rather than lose it
       return;
@@ -12276,30 +12283,75 @@ export class Player {
     }
   }
 
-  /**
-   * The player's body box RIGHT NOW, optionally widened by a spin's reach.
-   *
-   * Not `this.playerBox`: that one is rebuilt inside collide(), which runs
-   * AFTER updateFruit and does not run at all while hanging, on a rope, or
-   * dead — so fruit was being tested against where the body was one frame ago,
-   * or against a box frozen at the moment of death.
-   */
+  /** Last authoritative pose used for pickup and destructible-crate contact. */
+  get interactionBoundsDiagnostics() {
+    return { min:this.characterBounds.min.toArray(),max:this.characterBounds.max.toArray(),meshes:this.interactionMeasure.meshCount };
+  }
+
+  private interactionPoseKey():string {
+    return [this.state,this.grounded,this.isBailing,this.freeSkate,this.wallriding,this.slamActive,
+      this.vVel,this.speed,this.axisF.x,this.axisF.z,this.flipT>0].join(':');
+  }
+
+  private refreshCharacterBounds():void {
+    if(this.measuredInteractionVersion===this.interactionVersion&&!this.characterBounds.isEmpty()){
+      this.characterBounds.translate(this.interactionShift.copy(this.pos).sub(this.interactionAt));
+      this.interactionAt.copy(this.pos);return;
+    }
+    if(this.riderG&&this.interactionMeasure.measure(this.riderG,this.characterBounds)){
+      this.characterBounds.translate(this.interactionShift.copy(this.pos).sub(this.group.position));
+    }else{
+      const half=this.hitboxHalf;
+      this.characterBounds.setFromCenterAndSize(REACH_C.set(this.pos.x,this.pos.y+half.y,this.pos.z),REACH_S.set(half.x*2,half.y*2,half.z*2));
+    }
+    this.interactionAt.copy(this.pos);
+    this.measuredInteractionVersion=this.interactionVersion;
+  }
+
+  private refreshCrateBounds():void {
+    this.interactionShift.copy(this.pos).sub(this.interactionAt);
+    this.crateBodyBox.copy(this.characterBounds).translate(this.interactionShift);
+    this.crateAttackBox.copy(this.crateBodyBox);
+  }
+
   private reach(grow: number): THREE.Box3 {
-    const half = this.hitboxHalf;
-    FRUIT_REACH.setFromCenterAndSize(
-      REACH_C.set(this.pos.x, this.pos.y + half.y, this.pos.z),
-      REACH_S.set(half.x * 2, half.y * 2, half.z * 2),
-    );
-    if (grow > 0) FRUIT_REACH.expandByVector(REACH_S.set(grow, 0.2, grow));
+    if(this.characterBounds.isEmpty())this.refreshCharacterBounds();
+    FRUIT_REACH.copy(this.characterBounds).translate(this.interactionShift.copy(this.pos).sub(this.interactionAt));
+    if(grow>0)FRUIT_REACH.expandByScalar(grow);
     return FRUIT_REACH;
   }
 
   /** Retire every wumpa hanging in the level, uncollected. */
   private clearLooseFruit(): void {
-    for (const f of this.fruits) if (f.phase === 'idle') this.retireFruit(f);
+    for (const f of this.fruits) if (f.phase === 'idle'||f.phase==='magnet') this.retireFruit(f);
   }
 
-  private updateFruit(dt: number): void {
+  /** P2 leaving must not strand reserved or uncollected world fruit. */
+  handoffWorldFruit(recipient:Player):void {
+    this.bankFlyingFruit();
+    const world=this.captureIdleFruit();
+    this.clearLooseFruit();
+    recipient.restoreIdleFruit(world);
+    for(const fruit of this.fruits)if(fruit.phase==='flung')this.retireFruit(fruit);
+  }
+
+  private claimNearbyWorldFruit():void {
+    if(!this.worldScene)return;
+    for(const owner of Player.fruitPlayers.get(this.worldScene)??[]){
+      if(owner===this)continue;
+      for(let i=0;i<owner.fruits.length;i++){
+        const fruit=owner.fruits[i];
+        if(fruit.phase!=='idle'||this.reach(0).distanceToPoint(fruit.mesh.position)>FRUIT_MAGNET_RANGE)continue;
+        const spare=this.freeFruit(false);if(!spare)return;
+        // Exchange pool slots rather than duplicating a fruit or its reward.
+        this.fruits[this.fruits.indexOf(spare)]=fruit;owner.fruits[i]=spare;
+        this.attractLooseFruit(fruit);
+      }
+    }
+  }
+
+  private updateFruit(dt: number, level?: Level): void {
+    this.refreshCharacterBounds();
     // A run mode pays no fruit — crateReward returns before spawnFruit for
     // every crate once ttActive/comboRun is set. Fruit already hanging from
     // BEFORE the run started is the loophole: left alone it stays collectable
@@ -12312,10 +12364,55 @@ export class Player {
     // A corpse does not pick fruit up. Bodies still in flight finish their
     // trip — they were earned before the death.
     const dead = this.state === 'dead' || this.state === 'gameover';
+    if(!dead&&this.state!=='finished'&&!this.fruitRunMode&&!level?.runMode)this.claimNearbyWorldFruit();
+    if(level&&!dead&&this.state!=='finished'&&!level.runMode&&!this.fruitRunMode){
+      for(const pickup of level.pickups){
+        if(!pickup.alive||pickup.magnetOwner)continue;
+        pickup.mesh.getWorldPosition(FRUIT_P);
+        FRUIT_BOX.setFromCenterAndSize(FRUIT_P,FRUIT_GRAB);
+        if(this.reach(0).intersectsBox(FRUIT_BOX)){
+          pickup.alive=false;pickup.mesh.visible=false;this.flyFruit(FRUIT_P);
+        }else if(this.reach(0).distanceToPoint(FRUIT_P)<=FRUIT_MAGNET_RANGE){
+          const fruit=this.freeFruit(false);if(!fruit)continue;
+          fruit.phase='magnet';fruit.t=0;fruit.hop=0;
+          fruit.sourcePickup=pickup;fruit.sourceLevel=level;
+          fruit.mesh.position.copy(FRUIT_P);fruit.home.copy(FRUIT_P);
+          pickup.mesh.getWorldQuaternion(fruit.mesh.quaternion);
+          fruit.mesh.scale.setScalar(WUMPA_SIZE);fruit.mesh.visible=true;
+          fruit.vel.set(0,0,0);pickup.magnetOwner=this;pickup.mesh.visible=false;
+        }
+      }
+    }
     for (const f of this.fruits) {
       if (f.phase === 'off') continue;
+      if(f.phase==='magnet'&&f.sourcePickup&&
+          (!f.sourcePickup.alive||f.sourcePickup.magnetOwner!==this||f.sourceLevel?.runMode)){
+        this.retireFruit(f);continue;
+      }
+      if(dead&&f.phase==='magnet'){
+        if(f.sourcePickup)this.retireFruit(f);
+        else {f.phase='idle';f.home.copy(f.mesh.position);f.hop=0;f.vel.set(0,0,0);}
+        continue;
+      }
       if (dead && f.phase === 'idle') continue;
       f.t += dt;
+
+      if(f.phase==='magnet'){
+        const body=this.reach(0);
+        FRUIT_BOX.setFromCenterAndSize(f.mesh.position,FRUIT_GRAB);
+        if(!body.intersectsBox(FRUIT_BOX)){
+          body.clampPoint(f.mesh.position,FRUIT_MAGNET_TARGET);
+          body.getCenter(FRUIT_MAGNET_CENTER);
+          FRUIT_MAGNET_TARGET.lerp(FRUIT_MAGNET_CENTER,.18);
+          f.vel.copy(FRUIT_MAGNET_TARGET).sub(f.mesh.position);
+          const distance=f.vel.length(),speed=Math.min(75,6+Math.abs(this.speed)+30*f.t);
+          if(distance>1e-8)f.mesh.position.addScaledVector(f.vel,Math.min(1,speed*dt/distance));
+          f.mesh.rotation.y+=dt*8;
+          FRUIT_BOX.setFromCenterAndSize(f.mesh.position,FRUIT_GRAB);
+        }
+        if(body.intersectsBox(FRUIT_BOX))this.collectWorldFruit(f);
+        continue;
+      }
 
       if (f.phase === 'flung') {
         // smacked away by a spin: pure ballistic, then gone
@@ -12382,37 +12479,41 @@ export class Player {
         // box is still swinging when its fruit appears, so without this the
         // reward from a spun crate is instantly batted through the floor,
         // which is the bug this whole hop is here to fix.
-        if (this.reach(0).intersectsBox(
-          FRUIT_BOX.setFromCenterAndSize(f.mesh.position, FRUIT_GRAB),
-        ))
-          this.beginFruitFlight(f, f.mesh.position);
+        this.attractLooseFruit(f);
         continue;
       }
       // Then bob and turn on the spot, like a level pickup. It hangs where the
       // crate was — no gravity, nothing to land on, nothing to roll away.
       f.mesh.position.y = f.home.y + Math.sin(f.t * 3) * 0.09;
       f.mesh.rotation.y += dt * 1.8;
-      // The grab box matches the one a level's own fruit carries (1.2 x 1.5 x
-      // 1.2 in Level.pickup): a collectable you have to stand exactly on top
-      // of is a collectable you walk past. A SPIN uses the same box — it used
-      // to be a centre-point test, which quietly made spinning fruit away much
-      // fussier than walking into it and contradicted this very comment.
-      FRUIT_BOX.setFromCenterAndSize(f.mesh.position, FRUIT_GRAB);
-      if (this.spinning && this.reach(CONST.spinReach).intersectsBox(FRUIT_BOX)) {
-        f.phase = 'flung';
-        f.t = 0;
-        f.vel.set((Math.random() - 0.5) * 16, 8, (Math.random() - 0.5) * 16);
-        sfx.play('fruitSpun', 0.7);
-        continue;
-      }
-      if (this.reach(0).intersectsBox(FRUIT_BOX)) {
-        this.beginFruitFlight(f, f.mesh.position);
-      }
+      this.attractLooseFruit(f);
     }
+  }
+
+  private attractLooseFruit(f:(typeof this.fruits)[number]):void {
+    FRUIT_BOX.setFromCenterAndSize(f.mesh.position,FRUIT_GRAB);
+    const body=this.reach(0);
+    if(body.intersectsBox(FRUIT_BOX))this.collectWorldFruit(f);
+    else if(body.distanceToPoint(f.mesh.position)<=FRUIT_MAGNET_RANGE){
+      f.phase='magnet';f.t=0;f.hop=0;f.vel.set(0,0,0);
+    }
+  }
+
+  private collectWorldFruit(f:(typeof this.fruits)[number]):void {
+    if(f.sourcePickup){
+      f.sourcePickup.alive=false;f.sourcePickup.mesh.visible=false;
+      f.sourcePickup.magnetOwner=undefined;f.sourcePickup=undefined;f.sourceLevel=undefined;
+    }
+    this.beginFruitFlight(f,f.mesh.position);
   }
 
   /** Back to the pool, off whichever layer it was on. */
   private retireFruit(f: (typeof this.fruits)[number]): void {
+    if(f.sourcePickup?.magnetOwner===this){
+      f.sourcePickup.magnetOwner=undefined;
+      f.sourcePickup.mesh.visible=f.sourcePickup.alive&&!f.sourceLevel?.runMode;
+    }
+    f.sourcePickup=undefined;f.sourceLevel=undefined;
     f.payoutFlight = undefined;
     f.phase = 'off';
     f.hop = 0;
@@ -12516,12 +12617,15 @@ export class Player {
     const faces: { crate: Crate; index: number; face: number }[] = [];
     for (let index = 0; index < level.crates.length; index++) {
       const c = level.crates[index];
-      if (!c.alive || c.pending || !this.playerBox.intersectsBox(c.box)) continue;
+      const solid=c.metal||c.metalBounce||c.bang||c.nitroBang;
+      if (!c.alive || c.pending) continue;
+      // A crossed sole/lid is a swept landing contact even when the airborne
+      // pose lifts its visible feet above the final sampled box.
       if (this.vVel < 0) {
-        if (this.isStomping(c.box))
+        if (this.playerBox.intersectsBox(c.box) && this.isStomping(c.box))
           faces.push({ crate: c, index, face: c.box.max.y });
       } else {
-        if (this.isBonking(c.box))
+        if ((solid?this.playerBox:this.crateBodyBox).intersectsBox(c.box) && this.isBonking(c.box,!solid))
           faces.push({ crate: c, index, face: c.box.min.y });
       }
     }
@@ -12548,18 +12652,19 @@ export class Player {
   }
 
   // Rising and our head is at the target's bottom face = a headbutt from below.
-  private isBonking(box: THREE.Box3): boolean {
+  private isBonking(box: THREE.Box3, silhouette=true): boolean {
     if (this.isBailing || this.state !== 'air' || this.vVel <= 0) return false;
-    const bodyHeight = this.hitboxHalf.y * 2;
-    const previousHead = this.prevPos.y + bodyHeight;
-    const currentHead = this.pos.y + bodyHeight;
+    const currentHead = silhouette?this.crateBodyBox.max.y:this.pos.y+this.hitboxHalf.y*2;
+    const previousHead = !silhouette||this.previousCharacterBounds.isEmpty()
+      ?currentHead+this.prevPos.y-this.pos.y:this.previousCharacterBounds.max.y;
     if (currentHead < box.min.y || previousHead > box.min.y + 0.75)
       return false;
+    if(!silhouette)return this.pos.x>=box.min.x&&this.pos.x<=box.max.x&&this.pos.z>=box.min.z&&this.pos.z<=box.max.z;
     return (
-      this.pos.x >= box.min.x &&
-      this.pos.x <= box.max.x &&
-      this.pos.z >= box.min.z &&
-      this.pos.z <= box.max.z
+      this.crateBodyBox.max.x >= box.min.x &&
+      this.crateBodyBox.min.x <= box.max.x &&
+      this.crateBodyBox.max.z >= box.min.z &&
+      this.crateBodyBox.min.z <= box.max.z
     );
   }
 
@@ -12771,6 +12876,8 @@ export class Player {
     this.playerBox.translate(CRATE_CONTACT_SHIFT);
     this.feetBox.translate(CRATE_CONTACT_SHIFT);
     this.spinBox.translate(CRATE_CONTACT_SHIFT);
+    this.crateBodyBox.translate(CRATE_CONTACT_SHIFT);
+    this.crateAttackBox.translate(CRATE_CONTACT_SHIFT);
   }
 
   /** Exact curved-wall push. null = the Box3 broadphase was a false positive. */
@@ -12850,6 +12957,13 @@ export class Player {
   }
 
   /** Returns true for positional start-inside repair, false for a fresh hit. */
+  private pushOutOfCrate(box:THREE.Box3):boolean {
+    // The fitted silhouette owns smashing. Solid separation still belongs
+    // to the authored movement collider, so a larger head cannot shove the
+    // feet off a ledge when it brushes a box without attacking.
+    return this.playerBox.intersectsBox(box)?this.pushOutOf(box):true;
+  }
+
   private pushOutOf(box: THREE.Box3): boolean {
     const hx = CONST.playerHalf.x + 0.02;
     const hz = CONST.playerHalf.z + 0.02;
@@ -14752,6 +14866,8 @@ export class Player {
   private finishVisualStep(input: Input, dt: number): void {
     this.updateSurfaceAlignment(dt);
     this.syncVisual(input, dt);
+    this.interactionVersion++;
+    this.refreshCharacterBounds();
     this.meshyBoolieRooHead?.blink?.update(dt,
       this.characterHeadStyleValue === 'alternate' && this.group.visible);
   }

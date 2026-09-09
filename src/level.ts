@@ -555,6 +555,8 @@ export interface Pickup {
   mesh: THREE.Object3D;
   box: THREE.Box3;
   alive: boolean;
+  /** Runtime reservation while a player draws this still-unearned fruit in. */
+  magnetOwner?: object;
 }
 
 export interface Checkpoint {
@@ -9109,6 +9111,7 @@ export class Level {
     // checkpoint snapshot, so it stays collectable).
     for (const p of this.pickups) {
       p.alive = true;
+      p.magnetOwner = undefined;
       p.mesh.visible = true;
     }
 
@@ -17203,7 +17206,7 @@ export class Level {
 
   private applyRunDress(on: boolean, withTimeCrates: boolean): void {
     for (const cp of this.checkpoints) cp.mesh.visible = !on && !cp.active;
-    for (const p of this.pickups) p.mesh.visible = !on && p.alive;
+    for (const p of this.pickups) p.mesh.visible = !on && p.alive && !p.magnetOwner;
     // the crystal sits the trial out too — pure racing, no collectathon
     if (this.crystalPickup && !this.crystalPickup.collected)
       this.crystalPickup.group.visible = !on;
