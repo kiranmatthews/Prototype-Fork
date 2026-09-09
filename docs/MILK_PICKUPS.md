@@ -10,4 +10,4 @@ The opaque, texture-free shader retains creamy wrapped shading and wet highlight
 
 The live attraction threshold is **TUNER → MILK → Magnet distance (m)** (`milkMagnetRange`): 0–8 m in 0.05 m increments, default 1.75 m. It measures from the current character bounds to the orb centre. Zero disables proximity attraction while retaining contact pickup, including drops from the other player. Already-attracted orbs finish their flight when the value changes. The normal tuner Save/Reset/Defaults paths apply.
 
-The current fruit HUD icon and wooden crates remain temporary, awaiting the user's bottle and carton assets.
+The HUD now uses the user's 0–100 milk-bottle PNG frames, with a visual drink animation on rollover (see `MILK_BOTTLE_HUD.md`). Wooden crates remain temporary, awaiting the carton assets.

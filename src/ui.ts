@@ -14,7 +14,7 @@ import {
 } from "./gameHudSurface";
 import { COMBO_GEM_TINT, Level, levelList, MAX_LEVEL_FILE_BYTES } from "./level";
 import { RooLabel, ROO_HUD, ROO_TT } from "./rootext";
-import { wumpaMesh } from "./wumpa";
+import { MilkBottleHud } from "./milkBottleHud";
 import {
   COMBO_CASH_IN_EXTRA_HOLD_MS,
   SOURCE_HUD_TRACKING,
@@ -126,6 +126,7 @@ export class UI {
   private comboGemIcon!: HTMLElement;
   private crateIcon!: HTMLElement;
   private wumpaIcon!: HTMLElement;
+  private readonly milkBottle = new MilkBottleHud();
   // Every 3D HUD icon lives in ONE scene with ONE camera; each is drawn into
   // its own host element's rectangle, one slot visible at a time. See
   // buildIcons/drawIcons.
@@ -657,8 +658,7 @@ export class UI {
 
     // ---- game HUD: contextual Crash counters + THPS trick plate ----
     // top-left: fruit pickup pop-up and L2 inventory
-    // The crate and the fruit are 3D, drawn into these boxes by drawIcons —
-    // the divs are empty and exist only to be measured and laid out.
+    // The crate model and fixed milk PNG share drawIcons and these layout hosts.
     const tl = div("hud-tl");
     const crateRow = div("hud-counter hud-reveal hud-crate-row");
     this.crateRowEl = crateRow;
@@ -672,6 +672,7 @@ export class UI {
     crateRow.appendChild(this.cratesEl);
     const wumpaRow = div("hud-counter hud-reveal hud-fruit-row");
     this.wumpaIcon = div("hud-icon hud-icon-wumpa");
+    this.wumpaIcon.setAttribute("role","img");
     wumpaRow.appendChild(this.wumpaIcon);
     this.wumpaEl = div("hud-num");
     wumpaRow.appendChild(this.wumpaEl);
@@ -1137,8 +1138,8 @@ export class UI {
     // aspect horizontally, so fitting art to a box is one scale factor.
     this.iconCam = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, -500, 500);
     // Gems/crystals use their own cheap vertex-specular studio rig and ignore
-    // these lights. The crate and fruit are Lambert, like the world, so they
-    // need lighting or they would render as silhouettes.
+    // these lights, as does the supplied bottle PNG. The crate uses Lambert
+    // world shading and still needs the icon lighting rig.
     //
     // Lit HOTTER than the world, deliberately. These icons have no drop
     // shadow to sit on any more — a CSS filter can't reach into the canvas —
@@ -1168,7 +1169,7 @@ export class UI {
     }[] = [
       // the crate shows its top face: you look DOWN on crates in this game
       { host: this.crateIcon, revealHost: this.crateRowEl, make: () => Level.crateMesh(1), lean: -0.42, rate: 0.6, fill: 0.66, relic: false },
-      { host: this.wumpaIcon, revealHost: this.wumpaRowEl, make: () => wumpaMesh(1), lean: -0.12, rate: 0.9, fill: 0.86, relic: false },
+      { host: this.wumpaIcon, revealHost: this.wumpaRowEl, make: () => this.milkBottle.group, lean: 0, rate: 0, fill: 1.12, relic: false },
       { host: this.crystalIcon, revealHost: this.relicRowEl, make: () => Level.crystalMesh(1), lean: -0.2, rate: 1.5, fill: 0.9, relic: true },
       { host: this.gemIcon, revealHost: this.relicRowEl, make: () => Level.gemMesh(1), lean: -0.2, rate: 1.5, fill: 0.9, relic: true },
       { host: this.comboGemIcon, revealHost: this.relicRowEl, make: () => Level.gemMesh(1, COMBO_GEM_TINT), lean: -0.2, rate: 1.5, fill: 0.9, relic: true },
@@ -1399,6 +1400,7 @@ export class UI {
   setHUD(s: HudState, deltaSeconds = 1 / 60): void {
     const hudNow = performance.now();
     const payout = this.bonusPayout;
+    let bottlePayoutDelta:number|undefined;
     if (payout) {
       const launchedBefore = payout.fruitLaunched;
       const paidBefore = payout.fruitPaid;
@@ -1408,6 +1410,7 @@ export class UI {
       // up, so interrupted reveals and new pickups cannot lose or duplicate loot.
       s = { ...s, ...display, lives: s.endlessDeaths ? s.lives : display.lives,
         deaths: payout.displayDeaths(s.deaths), inventoryHeld: true };
+      bottlePayoutDelta=payout.fruitPaid-paidBefore;
       const launches = payout.fruitLaunched - launchedBefore;
       if (launches > 0) this.onBonusFruitFlight(launches);
       for (let fruit = paidBefore; fruit < payout.fruitPaid; fruit++)
@@ -1473,6 +1476,9 @@ export class UI {
       pop(this.cratesEl);
       this.prevHud.crates = crateKey;
     }
+    this.milkBottle.update(s.fruit,s.fruitCollectionRevision,deltaSeconds,bottlePayoutDelta);
+    this.wumpaIcon.dataset.milkFrame=String(this.milkBottle.displayedFrame??'loading');
+    this.wumpaIcon.setAttribute('aria-label',`Milk bottle: ${s.fruit}/100`);
     if (s.fruit !== this.prevHud.fruit) {
       this.rooWumpa.set(String(s.fruit));
       pop(this.wumpaEl);
@@ -1687,6 +1693,7 @@ export class UI {
     fruitCollectionRevision = 0,
     inventoryHeld = false,
   ): void {
+    this.milkBottle.reset();
     this.endCombo();
     this.lastComboActionRevision = -1;
     this.lastComboPreviewSequence = -1;
@@ -2369,11 +2376,8 @@ export class UI {
         width: clamp(68px, 10.7vh, 111px); height: clamp(68px, 10.7vh, 111px);
         image-rendering: pixelated; flex-shrink: 0;
       }
-      /* These two are EMPTY BOXES on purpose. They were a flat PNG each; the
-         crate and the fruit are now the real 3D models, turning slowly, drawn
-         straight into these rectangles by drawIcons(). A background image
-         here would sit on top of the canvas and hide them — the HUD is DOM
-         over WebGL, so an icon that is 3D has to be nothing in the DOM. */
+      /* Transparent layout hosts: drawIcons supplies the crate model and
+         fixed milk-bottle PNG below CRT in the shared renderer. */
       /* Transparent hosts: the actual game meshes are drawn into these boxes. */
       .hud-relics { gap: 10px; align-items: center; }
       .hud-icon-crystal {
