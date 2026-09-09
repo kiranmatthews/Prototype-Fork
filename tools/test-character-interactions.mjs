@@ -123,6 +123,13 @@ await withSkateRuntime(async ({THREE,server,Level,Player,TUNING})=>{
     p.updateFruit(1/60,level);
     assert.equal(touch.phase,'fly','zero magnet range blocked direct peer-drop contact');
     assert.ok(p.fruits.includes(touch));assert.equal(p2.fruits.includes(touch),false);
+    p.spawnFruit(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(10,1,10),new THREE.Vector3(.2,.2,.2)),1);
+    const idleDrop=p.fruits.find(f=>f.phase==='idle'&&Math.abs(f.home.x-10)<.1);
+    let milk;idleDrop.mesh.traverse(o=>{if(o.userData.milkBlob)milk=o;});
+    for(let i=0;i<420;i++){
+      p.updateFruit(1/60,level);
+      if(i>120)assert.ok(milk.quaternion.angleTo(new THREE.Quaternion())<.01,'idle hover tilted the settled milk drop');
+    }
     console.log(`PASS live head/height/pose/morph/skin bounds; crown-only box smash; world magnet -> contact -> HUD; moving target, spin, death, snapshots, run modes and two-player ownership (${frames} magnet frames).`);
   }finally{TUNING.milkMagnetRange=initialMagnet;p.setCharacterHeadStyle(initialStyle);p.setCharacterProportions(initial);level.dispose();}
 });

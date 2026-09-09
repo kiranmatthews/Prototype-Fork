@@ -120,7 +120,7 @@ import {
   type UnitySandMaterialOwner,
 } from "./unitySandMaterial";
 
-import { milkBlob, MILK_SIZE } from "./milk";
+import { milkBlob, updateMilkMotion, MILK_SIZE } from "./milk";
 
 export interface Crate {
   mesh: THREE.Mesh;
@@ -226,6 +226,7 @@ interface Projectile {
   owner: Enemy;
 }
 
+const MILK_IDLE_VELOCITY = new THREE.Vector3();
 const PROJECTILE_PATH_DIR = new THREE.Vector3();
 const PROJECTILE_PATH_HIT = new THREE.Vector3();
 const PROJECTILE_PREVIOUS = new THREE.Vector3();
@@ -8509,18 +8510,13 @@ export class Level {
 
     this.updateEnemies(dt);
     this.updateProjectiles(dt);
-    // Floating wumpa bob and turn in place. The model is baked centred on its
-    // own origin (tools/bake-wumpa.mjs), so this is a turn rather than an
-    // orbit. Twice the speed it was: the gentle rate came from an argument
-    // that the fruit is readable art now and no longer needs speed to look
-    // alive, which is true of a still frame and wrong in motion — a slow turn
-    // reads as scenery, and a collectable wants to catch the eye.
+    // One upright milk form; independent deformation clocks supply variety.
     for (const p of this.pickups) {
       if (!p.alive) continue;
       p.mesh.position.y =
         (p.mesh.userData.baseY as number) +
         Math.sin(this.time * 3 + p.mesh.position.z * 0.7) * 0.12;
-      p.mesh.rotation.y += dt * 1.8;
+      updateMilkMotion(p.mesh, MILK_IDLE_VELOCITY, dt);
     }
     // Unbroken checkpoint boxes idle-spin so they read as special.
     for (const c of this.checkpoints) {

@@ -35,7 +35,7 @@ import { sfx } from './audio';
 import { Rail, RailSample, nearestRail } from './rails';
 import { Halfpipe } from './halfpipe';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { milkBlob, setMilkVariant, MILK_SIZE as WUMPA_SIZE } from './milk';
+import { milkBlob, setMilkVariant, updateMilkMotion, kickMilkMotion, resetMilkMotion, copyMilkMotion, MILK_SIZE as WUMPA_SIZE } from './milk';
 import { puffs, surfaceFromName, type SurfaceKind } from './puffs';
 import {
   skateGroundFrictionRate,
@@ -231,6 +231,8 @@ const FRUIT_FLY_SPEED = 2.2;
 // A runaway guard on the fruit pool, not a design limit — a level would have
 // to drop several hundred wumpa on the floor at once to reach it.
 const FRUIT_MAX = 600;
+const FRUIT_MOTION_P = new THREE.Vector3();
+const FRUIT_MOTION_V = new THREE.Vector3();
 const FRUIT_P = new THREE.Vector3(); // scratch: fruit world position -> screen
 const FRUIT_BOX = new THREE.Box3(); // scratch: the grab box around idle fruit
 const FRUIT_MAGNET_TARGET = new THREE.Vector3();
@@ -1391,6 +1393,7 @@ export class Player {
   private fruits: {
     mesh: THREE.Group;
     vel: THREE.Vector3;
+    motionPosition: THREE.Vector3;
     phase: 'off' | 'idle' | 'magnet' | 'fly' | 'flung';
     t: number; // seconds in the current phase
     hop: number; // seconds left of the canned spawn bounce (spin-proof while > 0)
@@ -12141,6 +12144,7 @@ export class Player {
       fruit.mesh.scale.setScalar(WUMPA_SIZE);
       fruit.mesh.position.fromArray(snapshot.position);
       fruit.mesh.rotation.set(0, snapshot.rotationY, 0);
+      fruit.motionPosition.copy(fruit.mesh.position);resetMilkMotion(fruit.mesh);
       fruit.home.fromArray(snapshot.home);
       fruit.vel.set(0, 0, 0);
       fruit.t = snapshot.time;
@@ -12188,6 +12192,7 @@ export class Player {
     const f = {
       mesh,
       vel: new THREE.Vector3(),
+      motionPosition: new THREE.Vector3(),
       phase: 'off' as const as (typeof this.fruits)[number]['phase'],
       t: 0,
       hop: 0,
@@ -12242,19 +12247,21 @@ export class Player {
         cz + Math.sin(a) * r,
       );
       f.home.copy(f.mesh.position);
+      f.motionPosition.copy(f.mesh.position);resetMilkMotion(f.mesh);kickMilkMotion(f.mesh);
       f.vel.set(0, 0, 0);
     }
   }
 
   // One already-earned wumpa (a touched pickup, or fruit just walked into)
   // leaves `pos` for the HUD counter on the flat overlay layer.
-  private flyFruit(pos: THREE.Vector3, variant = 0): void {
+  private flyFruit(pos: THREE.Vector3, variant = 0, source?:THREE.Object3D): void {
     const f = this.freeFruit(false);
     if (!f) {
       this.collectFruit(); // pool exhausted: count it rather than lose it
       return;
     }
     setMilkVariant(f.mesh, variant);
+    if(source)copyMilkMotion(source,f.mesh);
     this.beginFruitFlight(f, pos);
   }
 
@@ -12284,6 +12291,7 @@ export class Player {
     // No pickup sound here: collectFruit still owns it, and it fires when the
     // counter ticks at the end of the flight. Playing one at both ends would
     // just double it.
+    f.motionPosition.set(f.sx*this.fruitAspect,-f.sy,0);
     this.fruitLayer?.add(f.mesh);
   }
 
@@ -12392,13 +12400,14 @@ export class Player {
         pickup.mesh.getWorldPosition(FRUIT_P);
         FRUIT_BOX.setFromCenterAndSize(FRUIT_P,FRUIT_GRAB);
         if(this.reach(0).intersectsBox(FRUIT_BOX)){
-          pickup.alive=false;pickup.mesh.visible=false;this.flyFruit(FRUIT_P, pickup.mesh.userData.milkVariant);
+          pickup.alive=false;pickup.mesh.visible=false;this.flyFruit(FRUIT_P, pickup.mesh.userData.milkVariant, pickup.mesh);
         }else if(this.reach(0).distanceToPoint(FRUIT_P)<=TUNING.milkMagnetRange){
           const fruit=this.freeFruit(false);if(!fruit)continue;
           fruit.phase='magnet';fruit.t=0;fruit.hop=0;
           fruit.sourcePickup=pickup;fruit.sourceLevel=level;
           setMilkVariant(fruit.mesh, pickup.mesh.userData.milkVariant ?? 0);
-          fruit.mesh.position.copy(FRUIT_P);fruit.home.copy(FRUIT_P);
+          copyMilkMotion(pickup.mesh,fruit.mesh);
+          fruit.mesh.position.copy(FRUIT_P);fruit.home.copy(FRUIT_P);fruit.motionPosition.copy(FRUIT_P);
           pickup.mesh.getWorldQuaternion(fruit.mesh.quaternion);
           fruit.mesh.scale.setScalar(WUMPA_SIZE);fruit.mesh.visible=true;
           fruit.vel.set(0,0,0);pickup.magnetOwner=this;pickup.mesh.visible=false;
@@ -12429,10 +12438,10 @@ export class Player {
           f.vel.copy(FRUIT_MAGNET_TARGET).sub(f.mesh.position);
           const distance=f.vel.length(),speed=Math.min(75,6+Math.abs(this.speed)+30*f.t);
           if(distance>1e-8)f.mesh.position.addScaledVector(f.vel,Math.min(1,speed*dt/distance));
-          f.mesh.rotation.y+=dt*8;
           FRUIT_BOX.setFromCenterAndSize(f.mesh.position,FRUIT_GRAB);
         }
         if(body.intersectsBox(FRUIT_BOX))this.collectWorldFruit(f);
+        this.updateMilkVisual(f,dt);
         continue;
       }
 
@@ -12441,6 +12450,7 @@ export class Player {
         f.vel.y -= 26 * dt;
         f.mesh.position.addScaledVector(f.vel, dt);
         if (f.t > 0.9) this.retireFruit(f);
+        this.updateMilkVisual(f,dt);
         continue;
       }
 
@@ -12459,8 +12469,8 @@ export class Player {
           const t = Math.min(1, f.t / BONUS_FRUIT_FLIGHT_SECONDS);
           f.sx = THREE.MathUtils.lerp(f.payoutFlight.x, tx, t) + Math.sin(t * Math.PI) * 0.035;
           f.sy = THREE.MathUtils.lerp(f.payoutFlight.y, ty, t) - Math.sin(t * Math.PI) * 0.08;
-          f.mesh.rotation.y += dt * 5;
           if (t >= 1) this.retireFruit(f);
+          this.updateMilkVisual(f,dt);
           continue;
         }
         // Screen fractions are not square — x spans an `aspect`-times-wider
@@ -12477,7 +12487,7 @@ export class Player {
         }
         f.sx += (dx / gap) * (step / this.fruitAspect);
         f.sy += (dy / gap) * step;
-        f.mesh.rotation.y += dt * 5; // turns on the CLOCK, not per drawn frame
+        this.updateMilkVisual(f,dt);
         continue;
       }
 
@@ -12496,20 +12506,34 @@ export class Player {
         // floor — a 0.14-unit dip on the very frame it was supposed to land.
         const u = Math.min(1, Math.max(0, 1 - f.hop / FRUIT_HOP_TIME));
         f.mesh.position.y = f.home.y + FRUIT_HOP_RISE * 4 * u * (1 - u);
-        f.mesh.rotation.y += dt * 3.2; // spins a little livelier on the way up
         // ...and NOTHING can spin it away mid-hop. The spin that broke the
         // box is still swinging when its fruit appears, so without this the
         // reward from a spun crate is instantly batted through the floor,
         // which is the bug this whole hop is here to fix.
         this.attractLooseFruit(f);
+        this.updateMilkVisual(f,dt);
         continue;
       }
       // Then bob and turn on the spot, like a level pickup. It hangs where the
       // crate was — no gravity, nothing to land on, nothing to roll away.
       f.mesh.position.y = f.home.y + Math.sin(f.t * 3) * 0.09;
-      f.mesh.rotation.y += dt * 1.8;
       this.attractLooseFruit(f);
+      this.updateMilkVisual(f,dt);
     }
+  }
+
+  /** Drive deformation from actual travel, in each flight's own coordinate frame. */
+  private updateMilkVisual(f:(typeof this.fruits)[number],dt:number):void {
+    if(f.phase==='off'||dt<=0)return;
+    const hud=f.phase==='fly';
+    if(hud)FRUIT_MOTION_P.set(f.sx*this.fruitAspect,-f.sy,0);
+    else FRUIT_MOTION_P.copy(f.mesh.position);
+    FRUIT_MOTION_V.copy(FRUIT_MOTION_P).sub(f.motionPosition).multiplyScalar((hud?12:1)/dt);
+    f.motionPosition.copy(FRUIT_MOTION_P);
+    // The idle hover is presentation, not travel: it must not tip the drop
+    // upside-down on the rising half of every bob.
+    if(f.phase==='idle'&&f.hop<=0)FRUIT_MOTION_V.set(0,0,0);
+    updateMilkMotion(f.mesh,FRUIT_MOTION_V,dt,f.phase==='idle');
   }
 
   private attractLooseFruit(f:(typeof this.fruits)[number]):void {
@@ -12536,6 +12560,7 @@ export class Player {
       f.sourcePickup.mesh.visible=f.sourcePickup.alive&&!f.sourceLevel?.runMode;
     }
     f.sourcePickup=undefined;f.sourceLevel=undefined;
+    resetMilkMotion(f.mesh);
     f.payoutFlight = undefined;
     f.phase = 'off';
     f.hop = 0;

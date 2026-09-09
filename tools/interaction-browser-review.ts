@@ -37,6 +37,7 @@ button('Pause at magnet',()=>{stopAtMagnet=true;fruit();});button('Pause at HUD'
 button('Resume',()=>freeze=false);button('Next frame',()=>{freeze=true;oneFrame=true;});
 button('Crown crates',()=>{p.refreshCharacterBounds();const b=p.characterBounds;g.level.crate(p.pos.x,b.max.y-.04,p.pos.z);g.level.crate(p.pos.x,b.max.y+1.1,p.pos.z);});
 button('Crate stack',()=>{for(let i=0;i<4;i++)g.level.crate(0,i*.96,11.5);});
+button('Release milk',()=>{p.spawnFruit(new THREE.Box3().setFromCenterAndSize(p.pos.clone().add(new THREE.Vector3(3.4,1.1,0)),new THREE.Vector3(.96,.96,.96)),3);freeze=true;});
 button('Show bounds',()=>helper.visible=!helper.visible);
 button('Finish review',()=>{p.setCharacterHeadStyle(initialStyle);p.setCharacterProportions(initial);location.assign('/?playtest&level=jungle-cup');});
 const render=g.renderer.render.bind(g.renderer);
@@ -48,5 +49,5 @@ g.renderer.render=(...args:any[])=>{
   }
   render(...args);
 };
-function report(){status.textContent=JSON.stringify({paused:freeze,state:p.state,fruit:p.fruit,bounds:p.interactionBoundsDiagnostics,phases:p.fruits.filter((f:any)=>f.phase!=='off').map((f:any)=>({phase:f.phase,position:f.mesh.position.toArray().map((n:number)=>+n.toFixed(2)),t:+f.t.toFixed(2)})),crates:g.level.crates.filter((c:any)=>c.alive).length},null,0);requestAnimationFrame(report);}reset();report();
+function report(){status.textContent=JSON.stringify({paused:freeze,state:p.state,fruit:p.fruit,bounds:p.interactionBoundsDiagnostics,phases:p.fruits.filter((f:any)=>f.phase!=='off').map((f:any)=>({phase:f.phase,position:f.mesh.position.toArray().map((n:number)=>+n.toFixed(2)),t:+f.t.toFixed(2),deformation:f.mesh.children[0]?.children[0]?.morphTargetInfluences?.map((n:number)=>+n.toFixed(2))})),crates:g.level.crates.filter((c:any)=>c.alive).length},null,0);requestAnimationFrame(report);}reset();report();
 window.addEventListener('pagehide',()=>{p.setCharacterHeadStyle(initialStyle);p.setCharacterProportions(initial);});
