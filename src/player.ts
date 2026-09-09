@@ -562,7 +562,7 @@ export class Player {
   comboPoints = 0; // pending combo: sum of base values...
   comboMult = 0; // ...times the number of actions strung together
   comboLabels: string[] = []; // THPS-style trick names for the combo readout
-  comboHasTrick = false; // a REAL trick (grab/grind/wallride/slide) is in the combo — gates the HUD plate; bare spins/bounces/enemy pops don't show it
+  comboHasTrick = false; // a scored trick, including a bare rotation, owns the HUD plate
   private comboHudActionRevision = 0; // fixed awards snap; timed accrual alone tickers
   private deckTrickPreviewSequence = 0;
   private readonly special = new SpecialSystem();
@@ -1624,14 +1624,40 @@ export class Player {
     return this.comboHudActionRevision;
   }
 
-  /** Non-authoritative Unity-style plate projection while a deck trick turns. */
+  /** Non-authoritative plate projection while a deck trick or bare rotation turns. */
   get comboHudPreview(): ComboHudPreview | null {
-    if (
-      this.flipT <= 0 ||
-      this.state !== 'air' ||
-      this.grounded ||
-      this.isBailing
-    ) return null;
+    if (this.state !== 'air' || this.grounded || this.isBailing) return null;
+    if (this.flipT <= 0) {
+      // A direction-only board spin is pending until a judged landing, just
+      // like a flip preview. It also owns the clock's final-combo extension.
+      const halves = Math.floor((Math.abs(this.grabSpinAngle) +
+        THREE.MathUtils.degToRad(TUNING.spinTolerance)) / Math.PI);
+      const minimum = this.pipeHang && !this.parkControls ? CONST.vertSpinMin : 1;
+      if (!this.airFromSkate || this.slamActive || this.wallriding ||
+          this.airGrabShown || this.specialGrabLanding || halves < minimum) return null;
+      let switchLanding = halves % 2 !== 0;
+      if (this.parkControls && this.vertAir) {
+        // A vert drop may ride away fakie even after a full turn. Use the
+        // projected descent frame, not street parity, for its pending label
+        // and repeat-history lookup. The actual contact still judges it.
+        const board = skateSurfaceDirection(new THREE.Vector3(), this.axisF, this.vertNormal)
+          .applyAxisAngle(this.vertNormal, this.parkAutoTurnTarget + this.grabSpinAngle);
+        const descent = this.parkVelocity.clone();
+        descent.y = -Math.max(.01, Math.abs(this.launchVy));
+        descent.addScaledVector(this.vertNormal, -descent.dot(this.vertNormal));
+        switchLanding = board.dot(descent) < 0;
+      }
+      const label = `${switchLanding ? 'Switch ' : ''}${halves * 180}°`;
+      let pay = Math.round(halves * CONST.ptsSpin * this.trickRepeat(label));
+      if (this.uberTimer > 0) pay *= CONST.uberScoreMult;
+      return {
+        points: this.comboPoints + pay,
+        multiplier: this.comboMult + 1,
+        labels: sourceComboLabelLine(projectComboLabels(this.comboLabels,
+          `${this.uberTimer > 0 ? 'Tiki ' : ''}${label}`)),
+        sequence: 1000000 + halves,
+      };
+    }
     const base = this.specialFlip?.points ?? deckTrickInfo(this.flipKind).points;
     let pay = Math.round(base * this.trickRepeat(this.flipName));
     if (this.uberTimer > 0) pay *= CONST.uberScoreMult;
@@ -4347,11 +4373,9 @@ export class Player {
       this.comboTimer = Math.max(this.comboTimer, CONST.comboWindow);
       if (shown) {
         this.pushLabel(shown);
-        // Real tricks (grabs, grinds, wallride, slide, body slam) light up the
-        // combo plate; bare platforming — spins (…°), crate bounces (Boing),
-        // enemy pops (Flattened/Takedown/Bonk), box smashes — do not on their own.
-        if (!/°$|Boing|Flattened|Takedown|Bonk|^Box$|Slam Smash|Crystal|Gem/.test(shown))
-          this.comboHasTrick = true;
+        // Bare rotations are real tricks too: show their plate, cash-in and
+        // overtime ownership. World rewards retain their quiet accounting.
+        if (isTrick) this.comboHasTrick = true;
       }
       this.comboHudActionRevision++;
     } else {
@@ -7472,12 +7496,10 @@ export class Player {
           this.speed = THREE.MathUtils.clamp(this.speed, -cap, cap);
           landedTrick = true;
         }
-        // A 180 out of a PIPE HANG is nearly free — the glue pins you to the
-        // wall plane and the drop-in auto-corrects on-axis, so you'd score a
-        // trick for holding a direction. THUG refuses it explicitly ("if in
-        // vert air, only count the spin if it is at least 360, because getting
-        // 180 is too easy"). Street airs still pay from the first 180.
-        if (!completedSpecialGrab && halves >= (wasPipeHang ? CONST.vertSpinMin : 1)) {
+        // Park auto-turn is separate from grabSpinAngle: these are earned
+        // player rotations, so the first 180 pays even in vert. Legacy
+        // non-park pipes retain their authored minimum.
+        if (!completedSpecialGrab && halves >= (wasPipeHang && !this.parkControls ? CONST.vertSpinMin : 1)) {
           const deg = halves * 180;
           const spinBase = Math.round(halves * CONST.ptsSpin * (sketchy ? 0.5 : 1));
           const spinName = `${sketchy ? 'Sketchy ' : ''}${isSwitch ? 'Switch ' : ''}${deg}°`;

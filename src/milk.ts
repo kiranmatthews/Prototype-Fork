@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 export const MILK_SIZE = 0.7;
-export const MILK_VARIANTS = ['Pearl', 'Pear', 'Twin', 'Drop', 'Puddle', 'Cloud'] as const;
+export const MILK_VARIANTS = ['Drip', 'Hook', 'Leaning drop', 'Teardrop', 'Swoosh', 'Soft splash'] as const;
 const clock = { value: 0 };
 
 const deformation = /* glsl */ `
@@ -52,15 +52,24 @@ export function buildMilkGeometry(variant: number): THREE.BufferGeometry {
   sphere.deleteAttribute('normal'); sphere.deleteAttribute('uv');
   const geometry = mergeVertices(sphere); sphere.dispose();
   const position = geometry.getAttribute('position');
-  const axes = [[1, 1, 1], [.88, 1.18, .92], [1.2, .88, .9], [.88, 1.25, .88], [1.2, .76, 1.02], [1.06, .98, .94]][id];
+  // A rounded reservoir pulled into a narrow, curved liquid tip. Ellipsoid
+  // stretching alone reads as an egg; the neck and pointed tail must be part
+  // of the surface itself, with a broad lower bulb and asymmetric shoulders.
+  const profiles = [
+    [1, .58, .18, .05], [.94, .72, .72, .08], [1.08, .45, -.55, .16],
+    [.9, .83, .04, -.04], [1.18, .38, .92, -.18], [1.12, .56, -.38, .32],
+  ];
+  const [width, length, bend, twist] = profiles[id];
   for (let i = 0; i < position.count; i++) {
     const x = position.getX(i), y = position.getY(i), z = position.getZ(i);
-    let radius = 1 + .045 * Math.sin(x * 4 + id) * Math.sin(y * 3 - z * 2 + id * .7);
-    if (id === 1) radius *= 1 - .17 * y;
-    if (id === 2) radius *= 1 + .18 * x * x - .1 * y * y;
-    if (id === 3) radius *= 1 - .22 * y + .16 * Math.pow(Math.max(y, 0), 5);
-    if (id === 5) radius *= 1 + .12 * Math.cos(x * 5) * Math.cos(z * 4 + y * 3);
-    position.setXYZ(i, x * radius * axes[0], y * radius * axes[1], z * radius * axes[2]);
+    const upper = Math.max(0, y), neck = upper * upper * (3 - 2 * upper);
+    const lobe = 1 + .055 * Math.sin(x * 4 + id) * Math.sin(z * 3 + y * 2);
+    const shoulder = (1 - .79 * neck) * (1 + .12 * Math.max(0, -y));
+    const splash = id === 5 ? 1 + .11 * Math.sin(Math.atan2(z, x) * 3) * (1 - y * y) : 1;
+    position.setXYZ(i,
+      x * shoulder * width * lobe * splash + bend * upper * upper,
+      y + length * upper * upper * upper,
+      z * shoulder * .94 * lobe * splash + twist * upper * upper);
   }
   geometry.computeBoundingBox();
   const box = geometry.boundingBox!, center = box.getCenter(new THREE.Vector3()), size = box.getSize(new THREE.Vector3());

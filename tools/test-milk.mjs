@@ -24,6 +24,15 @@ try {
       assert.ok(Math.abs(new THREE.Vector3().fromBufferAttribute(n, j).length() - 1) < 1e-5);
       for (const value of [p.getX(j), p.getY(j), p.getZ(j)]) assert.ok(Math.abs(value) * 1.025 < .5, 'wobble exceeds pickup envelope');
     }
+    const size = g.boundingBox.getSize(new THREE.Vector3());
+    const tipX = [], bulbX = [];
+    for (let j = 0; j < p.count; j++) {
+      const height = (p.getY(j) - g.boundingBox.min.y) / size.y;
+      if (height > .85) tipX.push(p.getX(j));
+      if (height > .2 && height < .6) bulbX.push(p.getX(j));
+    }
+    assert.ok(Math.max(...tipX) - Math.min(...tipX) <
+      .4 * (Math.max(...bulbX) - Math.min(...bulbX)), 'milk lost its narrow pulled droplet tip');
     g.dispose();
   }
   assert.equal(shapes.size, 6, 'variants must have distinct surfaces');

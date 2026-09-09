@@ -1,6 +1,6 @@
 # Procedural milk pickups — first asset pass
 
-`src/milk.ts` supplies six original procedural silhouettes: Pearl, Pear, Twin, Drop, Puddle and Cloud. Each is a smooth, closed surface with 1,472 triangles. Geometry and materials are shared across instances. The full animated silhouette fits the existing 0.7 m pickup envelope; the gentle stretch varies in phase between shapes.
+`src/milk.ts` supplies six original procedural silhouettes: Drip, Hook, Leaning drop, Teardrop, Swoosh and Soft splash. The original egg-like ellipsoids have been reshaped into broad lower bulbs with narrow pulled necks and curved tips. Each is a smooth, closed surface with 1,472 triangles. Geometry and materials are shared across instances. The full animated silhouette fits the existing 0.7 m pickup envelope; the gentle stretch varies in phase between shapes.
 
 The opaque shader uses cool wrapped body shading, a cream-white lit region, broad wet highlights and a soft rim. It needs no textures, environment-map download, transmission pass or external model. Normal correction follows the stretch; directional shadow depth uses the same deformation. Native fog, material opacity and the existing renderer output conversion remain available.
 
