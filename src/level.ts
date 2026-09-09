@@ -121,9 +121,11 @@ import {
 } from "./unitySandMaterial";
 
 import { milkBlob, updateMilkMotion, MILK_SIZE } from "./milk";
+import { createMilkCarton, milkCartonTexture, pressMilkCarton, renderMilkCarton, setCartonExpansion, updateMilkCarton, CARTON_TOP_HEIGHT, type MilkCarton } from "./milkCarton";
 
 export interface Crate {
   mesh: THREE.Mesh;
+  carton?: MilkCarton; // plain wood's visual replacement; the existing box owns all contact
   box: THREE.Box3;
   alive: boolean;
   nitro?: boolean; // green, bobbing, touch = instant detonation
@@ -4556,6 +4558,7 @@ export class Level {
     this.buildTorchLights(); // every torch is placed by now — the pool is sized once
     this.clearPlayFog(); // ...and the course you run on comes back out of it
     this.reconcileCrateColumnGrounds(); // support floors cannot depend on component order
+    this.refreshCartonTops(true);
     this.snapshotHome(); // last: reset() needs where everything actually started
     this.rebuildCrateRails(); // every crate is placed: derive the grind lines
     // All geometry and authoring transforms are now final. Build local-space
@@ -8523,6 +8526,9 @@ export class Level {
       if (!c.active) c.mesh.rotation.y += dt * 1.2;
     }
     this.settleCrates(dt);
+    this.refreshCartonTops();
+    for (const c of this.crates)
+      if (c.carton) updateMilkCarton(c.carton, dt, c.alive, c.pending);
     // Five-hit fruit crates squash and rebound in place on partial hits. Their
     // collision box stays authoritative and full-sized; this is presentation
     // only, so stacked crates never inherit a moving support plane.
@@ -8592,7 +8598,7 @@ export class Level {
     for (let i = this.pops.length - 1; i >= 0; i--) {
       const p = this.pops[i];
       p.t -= dt;
-      const s = Math.max(p.t / 0.12, 0.001);
+      const s = Math.min(1, Math.max(p.t / 0.12, 0.001));
       p.obj.scale.setScalar(s);
       if (p.t <= 0) {
         p.obj.visible = false;
@@ -8611,6 +8617,61 @@ export class Level {
   // so a nitro dropping on your head is not a fair thing to build.
   private settleLiveCrates = -1;
   private settleFalling = 0;
+  private cartonLiveCount = -1;
+  private cartonStacksDirty = true;
+
+  /** Only the highest solid crate in a support column can unfold its gable. */
+  private refreshCartonTops(reset = false): void {
+    let live = 0;
+    for (const c of this.crates) if (c.alive && !c.pending) live++;
+    if (!reset && !this.cartonStacksDirty && live === this.cartonLiveCount && this.settleFalling === 0) return;
+    this.cartonLiveCount = live;
+    this.cartonStacksDirty = false;
+    for (const c of this.crates) {
+      if (!c.carton) continue;
+      const p = c.mesh.position;
+      c.carton.covered = this.crates.some(other => other !== c && other.alive && !other.pending &&
+        other.mesh.position.y > p.y + .02 && Math.abs(other.mesh.position.x-p.x) <= .6 && Math.abs(other.mesh.position.z-p.z) <= .6);
+      if (reset) {
+        c.carton.velocity = c.carton.pressTime = 0;
+        c.carton.pressTarget = 1;
+        setCartonExpansion(c.carton, c.alive && !c.pending && !c.carton.covered ? 1 : 0);
+        c.carton.previousExpansion = c.carton.lastExpansion = c.carton.expansion;
+      }
+      updateMilkCarton(c.carton, 0, c.alive, c.pending);
+    }
+  }
+
+  applyCartonRenderInterpolation(alpha: number): void {
+    for (const c of this.crates) if (c.carton) renderMilkCarton(c.carton, alpha);
+  }
+
+  restoreCartonRenderPose(): void {
+    for (const c of this.crates) if (c.carton) renderMilkCarton(c.carton, 1);
+  }
+
+  /** The existing stomp snaps feet to the lid; its visual fold ends there too. */
+  landOnCarton(crate: Crate): void {
+    if (crate.carton) pressMilkCarton(crate.carton);
+  }
+
+  /** Visual sole contact starts above the immutable cube's physical lid. */
+  pressCartonTops(feet: THREE.Vector3, sole: { x: number; z: number }, verticalSpeed: number): void {
+    if (verticalSpeed > 0) return;
+    for (const c of this.crates) {
+      if (!c.carton || !c.alive || c.pending || c.carton.covered) continue;
+      const clearance = feet.y - c.box.max.y;
+      const overlapX = Math.min(feet.x+sole.x,c.box.max.x)-Math.max(feet.x-sole.x,c.box.min.x);
+      const overlapZ = Math.min(feet.z+sole.z,c.box.max.z)-Math.max(feet.z-sole.z,c.box.min.z);
+      // Match the existing 8 cm sole-support margin: merely grazing a
+      // neighbouring carton with the broad movement box is not weight on it.
+      if (clearance < -.08 || clearance > .96*CARTON_TOP_HEIGHT || overlapX < .08 || overlapZ < .08) continue;
+      // Account for the gable hinge sitting 0.007 body-heights inside the
+      // bevel. Its highest point follows the sole, with only 2 mm clearance.
+      pressMilkCarton(c.carton, Math.max(0,clearance+.96*.007-.002));
+    }
+  }
+
   private settleCrates(dt: number): void {
     const SIZE = 0.96;
     // Nothing can START falling unless a crate has just left the stack, so the
@@ -8732,6 +8793,7 @@ export class Level {
         p.clone(),
         new THREE.Vector3(SIZE, SIZE, SIZE),
       );
+      if (moved) this.cartonStacksDirty = true;
       if (moved || plan.moving || plan.sound !== null)
         this.crateRailsDirty = true;
       if (plan.sound === "bounce") sfx.play("crateBounce", 0.5, 0.95);
@@ -8753,8 +8815,17 @@ export class Level {
       return;
     }
     if (crate.metalBounce || crate.metal || crate.pending) return;
+    if (!crate.alive) return;
     crate.alive = false;
-    this.pops.push({ obj: crate.mesh, t: 0.12 });
+    this.cartonStacksDirty = true;
+    if (crate.carton) {
+      crate.carton.pressTarget = 0;
+      crate.carton.pressTime = .12;
+      crate.carton.velocity = -10;
+    }
+    // Keep the body at full size for the impact render interval, allowing
+    // the gable and interpolated feet to reach the lid together before pop.
+    this.pops.push({ obj: crate.mesh, t: 0.12 + (crate.carton ? CONST.fixedStep : 0) });
     sfx.play(Math.random() < 0.5 ? "crateBreak1" : "crateBreak2", 0.8);
   }
 
@@ -8829,6 +8900,7 @@ export class Level {
   // Flip a crate between ghost (outline) and real — both faces are kept so
   // level resets and checkpoint restores can flip it back.
   private setCratePending(c: Crate, pending: boolean): void {
+    if (c.pending !== pending) this.cartonStacksDirty = true;
     c.pending = pending;
     if (!c.wasOutline) return;
     if (c.realMat && c.ghostMat)
@@ -8847,6 +8919,7 @@ export class Level {
   detonate(c: Crate, safe = false): void {
     if (!c.alive) return;
     this.crateRailsDirty = true;
+    this.cartonStacksDirty = true;
     c.alive = false;
     c.fuse = undefined;
     c.mesh.visible = false;
@@ -9046,6 +9119,7 @@ export class Level {
     // stack is re-evaluated rather than compared against a stale tally
     this.settleLiveCrates = -1;
     this.settleFalling = 0;
+    this.refreshCartonTops(true);
     this.crateRailsDirty = true; // every box is back where it started
 
     for (const e of this.enemies) {
@@ -15969,8 +16043,11 @@ export class Level {
     // pointing at the player who is already standing on it, and the one on the
     // bottom is never seen at all. BoxGeometry group order is +X, -X, +Y, -Y,
     // +Z, -Z, so indices 2 and 3 are the two that lose it.
-    let mat: THREE.MeshLambertMaterial | THREE.MeshLambertMaterial[];
-    if (kind === "bouncy" || kind === "metalbounce") {
+    const carton = !kind ? createMilkCarton(size) : undefined;
+    let mat: THREE.Material | THREE.Material[];
+    if (carton) {
+      mat = carton.body.material;
+    } else if (kind === "bouncy" || kind === "metalbounce") {
       const wood = kind === "bouncy";
       const side = new THREE.MeshLambertMaterial({
         color: 0xffffff,
@@ -16081,7 +16158,7 @@ export class Level {
           ? (this.crateRestSurface(x, z, deckY) ?? deckY)
           : this.floorY(x, z, deckY));
     }
-    const mesh = new THREE.Mesh(new THREE.BoxGeometry(size, size, size), mat);
+    const mesh = carton?.body ?? new THREE.Mesh(new THREE.BoxGeometry(size, size, size), mat);
     mesh.position.set(x, base + size / 2, z);
     mesh.userData.baseY = mesh.position.y;
     mesh.userData.groundBaseY = groundBase; // the floor of this crate's column
@@ -16097,6 +16174,7 @@ export class Level {
     );
     const entry: Crate = {
       mesh,
+      carton,
       box,
       alive: true,
       nitro: kind === "nitro",
@@ -16132,8 +16210,10 @@ export class Level {
       );
       mesh.add(edges);
       entry.ghostEdges = edges;
+      if (carton) updateMilkCarton(carton, 0, true, true);
     }
     this.crates.push(entry);
+    this.cartonStacksDirty = true;
     // Classic Crash formation: every arrow crate carries a breakable fruit
     // crate floating above it — bounce off the arrow, headbutt the reward.
     // AUTHORING ONLY. Data-built levels pass noAuto, because their partner is
@@ -16302,18 +16382,15 @@ export class Level {
     return tex;
   }
 
-  // Plain wooden crate: planks + X brace, nothing else.
+  // Plain crates now wear the milk print; specialized crate faces remain distinct.
   private plainTexture(): THREE.CanvasTexture {
     if (!this.plainTex) this.plainTex = Level.plainCrateTexture();
     return this.plainTex;
   }
 
   /** The plain crate face, owned by the class so the HUD can have one too. */
-  private static plainCrateTex: THREE.CanvasTexture | null = null;
   static plainCrateTexture(): THREE.CanvasTexture {
-    if (!Level.plainCrateTex)
-      Level.plainCrateTex = Level.makeTex((ctx) => Level.crateWood(ctx, true));
-    return Level.plainCrateTex;
+    return milkCartonTexture();
   }
 
   /**
@@ -16324,15 +16401,11 @@ export class Level {
    */
   static crateMesh(size = 1): THREE.Group {
     const g = new THREE.Group();
-    g.add(
-      new THREE.Mesh(
-        new THREE.BoxGeometry(size, size, size),
-        new THREE.MeshLambertMaterial({
-          color: 0xffffff,
-          map: Level.plainCrateTexture(),
-        }),
-      ),
-    );
+    const carton = createMilkCarton(size);
+    // Fit the complete silhouette in the existing counter icon slot.
+    carton.body.scale.setScalar(1 / (1 + CARTON_TOP_HEIGHT));
+    carton.body.position.y = -size*CARTON_TOP_HEIGHT / (2*(1+CARTON_TOP_HEIGHT));
+    g.add(carton.body);
     return g;
   }
 

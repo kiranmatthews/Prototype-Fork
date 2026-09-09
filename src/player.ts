@@ -1319,6 +1319,7 @@ export class Player {
   // live joint chain by plantOnDeck() each frame.
   private soleR: THREE.Vector3[] | null = null;
   private soleL: THREE.Vector3[] | null = null;
+  private cartonFootPlantT = 0; // brief visual sole seating through a carton impact
   private teetering = false; // stopped on a ledge lip, Crash-style wobble
   private teeterPhase = 0;
   private teeterPose = 0;
@@ -2906,6 +2907,7 @@ export class Player {
     placement?: CampaignPortalReturnPose,
   ): void {
     if (hard) this.runTrickUses.clear();
+    this.cartonFootPlantT = 0;
     const preservedLives = this.lives;
     const preservedFruit = this.fruit;
     // Checkpoints restore the authored world/counters, but an endless-mode
@@ -4274,6 +4276,7 @@ export class Player {
     else if(!this.group.position.equals(this.pos)){
       this.group.position.copy(this.pos);this.refreshCharacterBounds();
     }
+    this.seatOnCarton(level, dt);
   }
 
   // ---------------------------------------------------------------- states --
@@ -10883,6 +10886,7 @@ export class Player {
     let crateBoardSmashTax = false;
     this.refreshCharacterBounds();
     this.refreshCrateBounds();
+    level.pressCartonTops(this.pos, CONST.playerHalf, this.vVel);
     const {
       ordered: crateContacts,
       stomps: crateStompContacts,
@@ -11243,6 +11247,8 @@ export class Player {
           // Crash rules: landing on top breaks it and bounces you — high
           // enough to chain crate to crate. The final Unity rule keeps a true
           // stomp authoritative even while the loose board is elsewhere.
+          level.landOnCarton(c);
+          if (c.carton) this.cartonFootPlantT = .12;
           if (
             c.multiHit &&
             !this.ttActive &&
@@ -14903,6 +14909,42 @@ export class Player {
     _plantO.set(0, 0, 0).applyMatrix4(_plantInv);
     _plantC.set(0, -drop, 0).applyMatrix4(_plantInv).sub(_plantO);
     rg.position.add(_plantC);
+  }
+
+  /** The airborne pose lifts its shoes above the movement feet. Ease that
+   * presentation offset out near a carton, so visible soles actually press
+   * the gable while the original stomp/support volume stays unchanged. */
+  private seatOnCarton(level: Level, dt: number): void {
+    this.cartonFootPlantT = Math.max(0, this.cartonFootPlantT - dt);
+    const rg = this.riderG;
+    if (!rg?.parent || this.proceduralFootwear.length !== 2 || this.freeSkate ||
+      this.isBailing || this.state === 'dead' || this.spinning) return;
+    let weight = THREE.MathUtils.smoothstep(this.cartonFootPlantT, 0, .08);
+    if (this.vVel <= 0) for (const c of level.crates) {
+      if (!c.carton || !c.alive || c.pending || c.carton.covered) continue;
+      const above = this.pos.y - c.box.max.y;
+      if (above < -.08 || above > .85 ||
+        !this.crateLidOverlapsSole(c.box, this.pos.x, this.pos.z)) continue;
+      weight = Math.max(weight, 1 - THREE.MathUtils.smoothstep(above, .4, .85));
+    }
+    if (weight <= .001) return;
+    let low = Infinity;
+    for (const { sole } of this.proceduralFootwear) {
+      sole.updateWorldMatrix(true, false);
+      const points = sole.geometry.getAttribute('position');
+      for (let i = 0; i < points.count; i++) {
+        _plantV.fromBufferAttribute(points, i).applyMatrix4(sole.matrixWorld);
+        low = Math.min(low, _plantV.y);
+      }
+    }
+    if (!Number.isFinite(low)) return;
+    const drop = Math.max(0, low - this.pos.y - .004) * weight;
+    _plantInv.copy(rg.parent.matrixWorld).invert();
+    _plantO.set(0, 0, 0).applyMatrix4(_plantInv);
+    _plantC.set(0, -drop, 0).applyMatrix4(_plantInv).sub(_plantO);
+    rg.position.add(_plantC);
+    this.interactionVersion++;
+    this.refreshCharacterBounds();
   }
 
   /**

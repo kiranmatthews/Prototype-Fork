@@ -4605,6 +4605,7 @@ function frame(nowMs: number): void {
     player.applyRenderInterpolation(renderAlpha);
     if (split2p && p2) p2.applyRenderInterpolation(renderAlpha);
     level.discardedBoards.applyRenderInterpolation(renderAlpha);
+    level.applyCartonRenderInterpolation(renderAlpha);
 
     frameStats.frame++;
     frameStats.rawDt = rawDt;
@@ -4760,6 +4761,7 @@ function frame(nowMs: number): void {
     player.restoreRenderPose();
     if (split2p && p2) p2.restoreRenderPose();
     level.discardedBoards.restoreRenderPose();
+    level.restoreCartonRenderPose();
   }
 }
 requestAnimationFrame(frame);
