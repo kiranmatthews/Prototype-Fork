@@ -120,7 +120,7 @@ import {
   type UnitySandMaterialOwner,
 } from "./unitySandMaterial";
 
-import { releaseWumpaMesh, wumpaMesh, WUMPA_SIZE } from "./wumpa";
+import { milkBlob, MILK_SIZE } from "./milk";
 
 export interface Crate {
   mesh: THREE.Mesh;
@@ -7149,12 +7149,9 @@ export class Level {
       preservedGeometry,
     );
     this.acceleratedGroundGeometries.clear();
-    this.root.traverse((object) => releaseWumpaMesh(object));
     // Anything flagged `shared` is a process-wide singleton that outlives this
-    // level — the one wumpa geometry/material/texture behind every apple in
-    // the game (see src/wumpa.ts), which the player's fruit pool and the HUD
-    // icon are still drawing after this level is gone. Freeing it here would
-    // yank the GPU buffers out from under them on every level switch.
+    // level, including the milk shapes/material also used by the player's
+    // collection pool. Freeing those here would invalidate live pickups.
     const disposedTextures = new Set<THREE.Texture>();
     const disposedMaterials = new Set<THREE.Material>();
     const disposeMat = (x: THREE.Material): void => {
@@ -18230,12 +18227,11 @@ export class Level {
     this.removeProjectile(index);
   }
 
-  // Floating collectable wumpa.
+  // Procedural hovering milk; collection rules retain their existing data IDs.
   private pickup(x: number, y: number, z: number): void {
-    // WUMPA_SIZE, like every other wumpa in the game — see the note on it.
-    // The pickup box below is untouched: how big the fruit LOOKS and how
-    // generous it is to grab are separate questions.
-    const mesh = wumpaMesh(WUMPA_SIZE);
+    // The legacy editor proxy is retained for capture; live contact uses the
+    // character silhouette and MILK_SIZE in Player.
+    const mesh = milkBlob(MILK_SIZE, this.pickups.length);
     mesh.position.set(x, y, z);
     mesh.userData.baseY = y;
     this.root.add(mesh);

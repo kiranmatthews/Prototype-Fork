@@ -35,7 +35,7 @@ import { sfx } from './audio';
 import { Rail, RailSample, nearestRail } from './rails';
 import { Halfpipe } from './halfpipe';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { wumpaMesh, WUMPA_SIZE } from './wumpa';
+import { milkBlob, setMilkVariant, MILK_SIZE as WUMPA_SIZE } from './milk';
 import { puffs, surfaceFromName, type SurfaceKind } from './puffs';
 import {
   skateGroundFrictionRate,
@@ -1387,10 +1387,8 @@ export class Player {
   // A magnet is still unearned: death/reset releases native reservations or
   // leaves crate fruit idle. Legacy flung bodies can finish retiring safely.
   //
-  // `mesh` is a holder Group, NOT the wumpaMesh itself: the fruit is an
-  // authored model that arrives async and rescales its own group when it
-  // lands (src/wumpa.ts), so anything that resizes the fruit — the overlay
-  // does, every frame — has to own a wrapper the loader will not touch.
+  // Legacy fruit accounting now carries procedural milk. A separate holder
+  // owns world/HUD scaling while the child keeps its selected milk geometry.
   private fruits: {
     mesh: THREE.Group;
     vel: THREE.Vector3;
@@ -12158,14 +12156,11 @@ export class Player {
     return null;
   }
 
-  /** One more wumpa body, on the world layer, parked and invisible. */
+  /** One more milk body, on the world layer, parked and invisible. */
   private addFruitBody(): (typeof this.fruits)[number] {
-    // The art is built at ONE unit tall and sized by the holder, so the same
-    // body can be a world-scale fruit one frame and a fixed slice of the
-    // screen the next without ever fighting the loader, which rescales the
-    // art's own group when the model finally arrives.
+    // Unit-envelope art uses the same holder for world and HUD presentation.
     const mesh = new THREE.Group();
-    mesh.add(wumpaMesh(1));
+    mesh.add(milkBlob(1));
     mesh.scale.setScalar(WUMPA_SIZE);
     mesh.visible = false;
     this.worldScene.add(mesh);
@@ -12209,6 +12204,7 @@ export class Player {
       // stacked pair, and the coefficient is small enough that neighbours
       // OVERLAP — a clump, which is what a payload should look like, rather
       // than a ring of separate collectables.
+      setMilkVariant(f.mesh, i + this.cratesBroken);
       const a = i * 2.39996323;
       const r = 0.3 * Math.sqrt(i);
       f.phase = 'idle';
@@ -12231,12 +12227,13 @@ export class Player {
 
   // One already-earned wumpa (a touched pickup, or fruit just walked into)
   // leaves `pos` for the HUD counter on the flat overlay layer.
-  private flyFruit(pos: THREE.Vector3): void {
+  private flyFruit(pos: THREE.Vector3, variant = 0): void {
     const f = this.freeFruit(false);
     if (!f) {
       this.collectFruit(); // pool exhausted: count it rather than lose it
       return;
     }
+    setMilkVariant(f.mesh, variant);
     this.beginFruitFlight(f, pos);
   }
 
@@ -12371,11 +12368,12 @@ export class Player {
         pickup.mesh.getWorldPosition(FRUIT_P);
         FRUIT_BOX.setFromCenterAndSize(FRUIT_P,FRUIT_GRAB);
         if(this.reach(0).intersectsBox(FRUIT_BOX)){
-          pickup.alive=false;pickup.mesh.visible=false;this.flyFruit(FRUIT_P);
+          pickup.alive=false;pickup.mesh.visible=false;this.flyFruit(FRUIT_P, pickup.mesh.userData.milkVariant);
         }else if(this.reach(0).distanceToPoint(FRUIT_P)<=FRUIT_MAGNET_RANGE){
           const fruit=this.freeFruit(false);if(!fruit)continue;
           fruit.phase='magnet';fruit.t=0;fruit.hop=0;
           fruit.sourcePickup=pickup;fruit.sourceLevel=level;
+          setMilkVariant(fruit.mesh, pickup.mesh.userData.milkVariant ?? 0);
           fruit.mesh.position.copy(FRUIT_P);fruit.home.copy(FRUIT_P);
           pickup.mesh.getWorldQuaternion(fruit.mesh.quaternion);
           fruit.mesh.scale.setScalar(WUMPA_SIZE);fruit.mesh.visible=true;

@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 
 await withSkateRuntime(async ({THREE,server,Level,Player})=>{
+  const {setMilkVariant}=await server.ssrLoadModule('/src/milk.ts');
   const {CharacterInteractionBounds}=await server.ssrLoadModule('/src/character/interactionBounds.ts');
   const measure=new CharacterInteractionBounds(),out=new THREE.Box3();
   const parent=new THREE.Group(),rider=new THREE.Group();parent.add(rider);
@@ -59,8 +60,10 @@ await withSkateRuntime(async ({THREE,server,Level,Player})=>{
     const p2=new Player(scene);p2.respawn(level,true);p2.rawInput=makeInput();p2.prepareStartPresentation(level);
     const actor=box(),near=actor.getCenter(new THREE.Vector3());near.x=actor.max.x+1.2;
     level.pickup(near.x,near.y,near.z);const pickup=level.pickups.at(-1);
+    setMilkVariant(pickup.mesh,4);
     scene.updateMatrixWorld(true);p.updateFruit(1/60,level);
     const attracted=p.fruits.find(f=>f.phase==='magnet');assert.ok(attracted,'near fruit did not enter world magnet phase');
+    assert.equal(attracted.mesh.userData.milkVariant,4,'magnet changed the source milk shape');
     assert.equal(attracted.mesh.parent,scene);assert.equal(p.fruit,0);assert.equal(pickup.alive,true);
     assert.equal(pickup.magnetOwner,p);assert.equal(pickup.mesh.visible,false);
     assert.equal(p.bankFlyingFruit(),0,'uncollected magnet was banked as a HUD flight');
@@ -72,6 +75,7 @@ await withSkateRuntime(async ({THREE,server,Level,Player})=>{
     assert.equal(pickup.alive,false);assert.equal(pickup.magnetOwner,undefined);
     assert.equal(p.fruit,0,'counter skipped its existing HUD arrival animation');
     assert.equal(attracted.mesh.parent,p.fruitLayer);
+    assert.equal(attracted.mesh.userData.milkVariant,4,'HUD handoff changed the milk shape');
     for(let i=0;i<180;i++)p.updateFruit(1/60,level);
     assert.equal(p.fruit,1);assert.equal(p.fruitCollectionRevision,1);assert.equal(p2.fruit,0);
     assert.equal(p.bankFlyingFruit(),0,'HUD arrival could be banked twice');
