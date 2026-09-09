@@ -86,6 +86,7 @@ export const TUNING = {
   grabRelease: 0.15, // how long the grab pose takes to return to neutral after letting go of Circle
   spinTolerance: 30, // degrees a landing spin may be off the travel (or 180/switch) line before it's a bail. 30 still leaves 240 of the circle bailing — it's a net under the auto-correct, not a removal
   sketchyTolerance: 55, // degrees off-line before a SKETCHY landing becomes a full bail — between spinTolerance and this you ride away wobbling with a speed tax and half the spin points (THPS's middle tier)
+  milkMagnetRange: 1.75, // activation distance from the current character bounds, in metres
   crateBounce: 14, // vertical pop from stomping a crate — tuned for chaining crate to crate
   crateHopSpeed: 14, // how hard an arrow crate throws a BOX that lands on it (0 = the box just sits there)
   crateHopGravity: 28, // gravity on crate-on-Arrow loops; 14/28 produces the stable ~59-tick cadence
@@ -291,6 +292,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   grabRelease: { min: 0.05, max: 0.6, step: 0.05 },
   spinTolerance: { min: 10, max: 90, step: 5 },
   sketchyTolerance: { min: 20, max: 120, step: 5 },
+  milkMagnetRange: { min: 0, max: 8, step: 0.05 },
   crateBounce: { min: 5, max: 30, step: 0.5 },
   crateHopSpeed: { min: 0, max: 26, step: 0.5 },
   crateHopGravity: { min: 5, max: 80, step: 1 },
@@ -389,6 +391,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
 };
 
 export const TUNING_LABELS: Partial<Record<TuningKey, string>> = {
+  milkMagnetRange: 'Magnet distance (m)',
   chaseCam: 'Chase camera',
   camHeight: 'Height (m)',
   camDist: 'Distance (m)',
@@ -401,6 +404,7 @@ export const TUNING_LABELS: Partial<Record<TuningKey, string>> = {
 
 // Hover text for the tuning panel: what each slider actually does in play.
 export const TUNING_INFO: Record<TuningKey, string> = {
+  milkMagnetRange: 'Distance from your current character bounds to a milk orb’s centre that starts attraction. Higher reaches farther; 0 requires direct contact. Applies to placed milk and crate drops, including two-player pickups. Milk already moving toward you finishes its flight.',
   maxSpeed:
     'Top skate speed from CHARGING. Downhill/pipe riding can exceed it up to the downhillMax slider before bleeding back on the flat.',
   walkSpeed:
@@ -783,6 +787,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'tripCarryMin', 'tripCarryMax',
     ],
   },
+  { title: 'MILK', keys: ['milkMagnetRange'] },
   { title: 'CRATES', keys: ['crateBounce', 'crateHopSpeed', 'crateHopGravity', 'arrowBounce', 'arrowBoostMult', 'nitroRadius', 'tntRadius'] },
   { title: 'CAMERA', keys: ['chaseCam', 'camHeight', 'camDist', 'camPitch', 'camFov', 'camSpeedFovBoost', 'camAirLift', 'camBalanceRoll'] },
   { title: 'WORLD', keys: ['boulderSpeed'] },

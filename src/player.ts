@@ -233,7 +233,6 @@ const FRUIT_FLY_SPEED = 2.2;
 const FRUIT_MAX = 600;
 const FRUIT_P = new THREE.Vector3(); // scratch: fruit world position -> screen
 const FRUIT_BOX = new THREE.Box3(); // scratch: the grab box around idle fruit
-const FRUIT_MAGNET_RANGE = 1.75;
 const FRUIT_MAGNET_TARGET = new THREE.Vector3();
 const FRUIT_MAGNET_CENTER = new THREE.Vector3();
 const FRUIT_REACH = new THREE.Box3(); // scratch: the player's body box, this frame
@@ -12360,7 +12359,10 @@ export class Player {
       if(owner===this)continue;
       for(let i=0;i<owner.fruits.length;i++){
         const fruit=owner.fruits[i];
-        if(fruit.phase!=='idle'||this.reach(0).distanceToPoint(fruit.mesh.position)>FRUIT_MAGNET_RANGE)continue;
+        if(fruit.phase!=='idle')continue;
+        FRUIT_BOX.setFromCenterAndSize(fruit.mesh.position,FRUIT_GRAB);
+        const body=this.reach(0);
+        if(!body.intersectsBox(FRUIT_BOX)&&body.distanceToPoint(fruit.mesh.position)>TUNING.milkMagnetRange)continue;
         const spare=this.freeFruit(false);if(!spare)return;
         // Exchange pool slots rather than duplicating a fruit or its reward.
         this.fruits[this.fruits.indexOf(spare)]=fruit;owner.fruits[i]=spare;
@@ -12391,7 +12393,7 @@ export class Player {
         FRUIT_BOX.setFromCenterAndSize(FRUIT_P,FRUIT_GRAB);
         if(this.reach(0).intersectsBox(FRUIT_BOX)){
           pickup.alive=false;pickup.mesh.visible=false;this.flyFruit(FRUIT_P, pickup.mesh.userData.milkVariant);
-        }else if(this.reach(0).distanceToPoint(FRUIT_P)<=FRUIT_MAGNET_RANGE){
+        }else if(this.reach(0).distanceToPoint(FRUIT_P)<=TUNING.milkMagnetRange){
           const fruit=this.freeFruit(false);if(!fruit)continue;
           fruit.phase='magnet';fruit.t=0;fruit.hop=0;
           fruit.sourcePickup=pickup;fruit.sourceLevel=level;
@@ -12514,7 +12516,7 @@ export class Player {
     FRUIT_BOX.setFromCenterAndSize(f.mesh.position,FRUIT_GRAB);
     const body=this.reach(0);
     if(body.intersectsBox(FRUIT_BOX))this.collectWorldFruit(f);
-    else if(body.distanceToPoint(f.mesh.position)<=FRUIT_MAGNET_RANGE){
+    else if(body.distanceToPoint(f.mesh.position)<=TUNING.milkMagnetRange){
       f.phase='magnet';f.t=0;f.hop=0;f.vel.set(0,0,0);
     }
   }

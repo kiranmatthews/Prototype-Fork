@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 
-await withSkateRuntime(async ({THREE,server,Level,Player})=>{
+await withSkateRuntime(async ({THREE,server,Level,Player,TUNING})=>{
   const {setMilkVariant}=await server.ssrLoadModule('/src/milk.ts');
   const {CharacterInteractionBounds}=await server.ssrLoadModule('/src/character/interactionBounds.ts');
   const measure=new CharacterInteractionBounds(),out=new THREE.Box3();
@@ -37,7 +37,7 @@ await withSkateRuntime(async ({THREE,server,Level,Player})=>{
     {t:'gate',p:[0,0,-18]},
   ]}});
   const p=new Player(scene);p.respawn(level,true);p.rawInput=makeInput();p.prepareStartPresentation(level);
-  const initial={...p.characterProportionDiagnostics.settings},initialStyle=p.characterHeadStyle;
+  const initial={...p.characterProportionDiagnostics.settings},initialStyle=p.characterHeadStyle,initialMagnet=TUNING.milkMagnetRange;
   const box=()=>{p.refreshCharacterBounds();return p.characterBounds.clone();};
   try{
     p.setCharacterHeadStyle('skull');p.setCharacterProportions({height:1,headSize:1,headWidth:1,headDepth:1});p.prepareStartPresentation(level);
@@ -61,7 +61,9 @@ await withSkateRuntime(async ({THREE,server,Level,Player})=>{
     const actor=box(),near=actor.getCenter(new THREE.Vector3());near.x=actor.max.x+1.2;
     level.pickup(near.x,near.y,near.z);const pickup=level.pickups.at(-1);
     setMilkVariant(pickup.mesh,4);
-    scene.updateMatrixWorld(true);p.updateFruit(1/60,level);
+    scene.updateMatrixWorld(true);TUNING.milkMagnetRange=.5;p.updateFruit(1/60,level);
+    assert.equal(pickup.magnetOwner,undefined,'milk outside the live radius was attracted');
+    TUNING.milkMagnetRange=1.75;p.updateFruit(1/60,level);
     const attracted=p.fruits.find(f=>f.phase==='magnet');assert.ok(attracted,'near fruit did not enter world magnet phase');
     assert.equal(attracted.mesh.userData.milkVariant,4,'magnet changed the source milk shape');
     assert.equal(attracted.mesh.parent,scene);assert.equal(p.fruit,0);assert.equal(pickup.alive,true);
@@ -112,6 +114,15 @@ await withSkateRuntime(async ({THREE,server,Level,Player})=>{
     const before=p.captureIdleFruit().length;p2.handoffWorldFruit(p);
     assert.equal(waiting.magnetOwner,undefined);assert.equal(waiting.alive,true);
     assert.equal(p.captureIdleFruit().length,before+1);assert.equal(p2.captureIdleFruit().length,0);
+    // Zero disables proximity attraction but keeps direct contact with a
+    // peer's world drop, even when its centre lies just outside the body.
+    TUNING.milkMagnetRange=0;
+    const contact=box().getCenter(new THREE.Vector3());contact.x=box().max.x+.2;
+    p2.spawnFruit(new THREE.Box3().setFromCenterAndSize(contact,new THREE.Vector3(.2,.2,.2)),1);
+    const touch=p2.fruits.find(f=>f.phase==='idle');touch.mesh.position.copy(contact);touch.home.copy(contact);touch.hop=0;
+    p.updateFruit(1/60,level);
+    assert.equal(touch.phase,'fly','zero magnet range blocked direct peer-drop contact');
+    assert.ok(p.fruits.includes(touch));assert.equal(p2.fruits.includes(touch),false);
     console.log(`PASS live head/height/pose/morph/skin bounds; crown-only box smash; world magnet -> contact -> HUD; moving target, spin, death, snapshots, run modes and two-player ownership (${frames} magnet frames).`);
-  }finally{p.setCharacterHeadStyle(initialStyle);p.setCharacterProportions(initial);level.dispose();}
+  }finally{TUNING.milkMagnetRange=initialMagnet;p.setCharacterHeadStyle(initialStyle);p.setCharacterProportions(initial);level.dispose();}
 });
