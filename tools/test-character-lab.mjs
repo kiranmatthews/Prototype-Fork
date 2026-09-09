@@ -653,8 +653,9 @@ try {
   assert.match(packageJson.scripts['check:character-lab'], /test-character-lab\.mjs/);
   assert.match(packageJson.scripts['check:character-lab'], /test-cartoon-glove\.mjs/);
   assert.match(packageJson.scripts['check:character-lab'], /test-stretchable-bone\.mjs/);
-  assert.match(packageJson.scripts.build, /npm run check:character-lab/);
-  assert.doesNotMatch(packageJson.scripts.build, /check:character-evaluation/);
+  assert.match(packageJson.scripts['check:all'], /npm run check:character-lab/);
+  assert.doesNotMatch(packageJson.scripts['check:all'], /check:character-evaluation/);
+  assert.doesNotMatch(packageJson.scripts.build, /npm run check:/);
 
   console.log(
     `PASS Character Lab settings, reversible proportion layer, persistence, extremes, UI wiring, and comparison-asset removal`,

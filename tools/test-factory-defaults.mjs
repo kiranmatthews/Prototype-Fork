@@ -11,7 +11,8 @@ const server = await createServer({
 try {
   const { TUNING } = await server.ssrLoadModule('/src/tuning.ts');
   // Camera v18 expresses this same captured shot as actual distance + angle.
-  const expectedTuning = { ...expected.tuning, camDist: 5.05, camPitch: 25.35 };
+  // Milk attraction became tunable after this browser capture.
+  const expectedTuning = { ...expected.tuning, camDist: 5.05, camPitch: 25.35, milkMagnetRange: 1.75 };
   delete expectedTuning.camTilt;
   delete expectedTuning.camOffset;
   assert.deepEqual(TUNING, expectedTuning);

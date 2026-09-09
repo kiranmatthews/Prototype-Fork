@@ -5,6 +5,11 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      full_suite:
+        description: Run the full test suite (explicit request only)
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -28,6 +33,9 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Full suite (explicit request)
+        if: github.event_name == 'workflow_dispatch' && inputs.full_suite
+        run: npm run check:all
       - run: npm run build
       - uses: actions/configure-pages@v5
         with:
