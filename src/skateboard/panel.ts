@@ -161,6 +161,7 @@ const CSS = `
     color: #f6f1e8; cursor: pointer; }
   button:hover, button:focus-visible { border-color: #fff; background: #322015; outline: none; }
   .hidden { display: none; }
+  :host(:not([data-target='map-ui'])) .map-only { display: none; }
   @media (max-width: 1000px) {
     :host([data-lab-profiles][data-target='map-ui']) .panel { top: auto; bottom: 0; left: 0; right: 0; width: 100vw; height: 55vh; }
   }
@@ -285,6 +286,13 @@ export class SkateboardTuningPanel {
     const sections = this.make("div", "sections");
     sections.id = "skateboard-profile-controls";
     if (this.mapSettings) sections.setAttribute("role", "tabpanel");
+    if (this.mapSettings) {
+      const text = this.make("details", "map-only");
+      text.open = true;
+      text.append(this.make("summary", "", "Map level name"));
+      text.append(this.createSlider({ label: "Level name text size", key: "mapTitleSize", min: 48, max: 190, step: 1 }));
+      sections.append(text);
+    }
     SECTIONS.forEach((definition, sectionIndex) => {
       const details = documentRef.createElement("details");
       details.open = sectionIndex < 2;

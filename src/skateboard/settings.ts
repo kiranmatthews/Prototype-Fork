@@ -10,6 +10,10 @@ export interface SkateboardColor {
  * board-local space; the directional nose points along local +Z.
  */
 export interface SkateboardSettingsValue {
+  /** Map-card canvas pixels. Absent from the gameplay profile. */
+  mapTitleSize?: number;
+  /** Undefined retains the gameplay board's original griptape. */
+  gripCenterStripe?: boolean;
   overallScale: number;
   deckHalfWidth: number;
   deckTailLength: number;
@@ -198,6 +202,12 @@ export function clampSkateboardSettings(
   };
   const out = copySkateboardSettings({ ...d, ...input } as SkateboardSettingsValue);
   delete out.artworkScale;
+  if (d.mapTitleSize !== undefined) out.mapTitleSize = clamp(n("mapTitleSize"), 48, 190);
+  else delete out.mapTitleSize;
+  // Keep explicit finishes through the model's own geometry validation pass.
+  if (typeof input.gripCenterStripe === "boolean") out.gripCenterStripe = input.gripCenterStripe;
+  else if (d.gripCenterStripe !== undefined) out.gripCenterStripe = d.gripCenterStripe;
+  else delete out.gripCenterStripe;
   out.overallScale = clamp(n("overallScale"), 0.25, 3);
   out.deckHalfWidth = clamp(n("deckHalfWidth"), 0.05, 0.65);
   out.deckTailLength = clamp(n("deckTailLength"), 0.2, 1.8);

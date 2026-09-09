@@ -123,8 +123,19 @@ export class MapLevelPresentation {
       this.deckPivot.add(pivot); this.rewards.push(pivot);
     }
     this.updateBoard(false);
-    this.boardSettings.subscribe(() => { this.boardDirty = true; });
+    let geometryKey = this.geometryKey();
+    this.boardSettings.subscribe(() => {
+      const next = this.geometryKey();
+      if (next !== geometryKey) this.boardDirty = true;
+      geometryKey = next;
+      this.inkKey = "";
+    });
     void document.fonts?.ready.then(() => { this.inkKey = ""; });
+  }
+
+  private geometryKey(): string {
+    const { mapTitleSize: _textSize, ...geometry } = this.boardSettings.value;
+    return JSON.stringify(geometry);
   }
 
   get diagnostics() {
@@ -218,9 +229,12 @@ export class MapLevelPresentation {
       ctx.fillText(data.cup ? "🏆 JUNGLE CUP EARNED" : "3 RUNS · FINISH 1ST", 768, 360);
     }
     ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.lineJoin = "round";
-    let fontSize = 156;
-    do { ctx.font = `${fontSize}px Roo, Impact, sans-serif`; fontSize -= 2; } while (ctx.measureText(data.name.toUpperCase()).width > 1430 && fontSize > 58);
-    ctx.strokeStyle = "#161719"; ctx.lineWidth = 15;
+    let fontSize = this.boardSettings.value.mapTitleSize ?? 156;
+    ctx.font = `${fontSize}px Roo, Impact, sans-serif`;
+    // Fit long names horizontally and vertically without overlapping sockets.
+    fontSize *= Math.min(1, 1430 / Math.max(1, ctx.measureText(data.name.toUpperCase()).width), 190 / fontSize);
+    ctx.font = `${fontSize}px Roo, Impact, sans-serif`;
+    ctx.strokeStyle = "#161719"; ctx.lineWidth = 15 * fontSize / 156;
     ctx.strokeText(data.name.toUpperCase(), 768, 145);
     const gold = ctx.createLinearGradient(0, 70, 0, 220);
     gold.addColorStop(0, "#ffe36b"); gold.addColorStop(0.55, "#ffb52c"); gold.addColorStop(1, "#f07b13");

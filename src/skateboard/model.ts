@@ -449,7 +449,7 @@ export function buildSkateboardDeckGeometry(
   return geometry;
 }
 
-let gripTexture: THREE.DataTexture | null = null;
+const gripTextures = new Map<boolean, THREE.DataTexture>();
 
 function pixelHash(x: number, y: number, seed: number): number {
   let value = (seed ^ Math.imul(x, 0x9e3779b9) ^ Math.imul(y, 0x85ebca6b)) >>> 0;
@@ -460,8 +460,9 @@ function pixelHash(x: number, y: number, seed: number): number {
   return (value ^ (value >>> 16)) >>> 0;
 }
 
-function getGripTexture(): THREE.DataTexture {
-  if (gripTexture) return gripTexture;
+function getGripTexture(centerStripe = true): THREE.DataTexture {
+  const cached = gripTextures.get(centerStripe);
+  if (cached) return cached;
   const width = 256;
   const height = 512;
   const pixels = new Uint8Array(width * height * 4);
@@ -469,7 +470,7 @@ function getGripTexture(): THREE.DataTexture {
     for (let x = 0; x < width; x++) {
       const hash = pixelHash(x, y, 0x8d26a3f1);
       const grit = 24 + (hash & 0x1f);
-      const stripe = Math.abs((x + 0.5) / width - 0.5) < 0.008;
+      const stripe = centerStripe && Math.abs((x + 0.5) / width - 0.5) < 0.008;
       const offset = (y * width + x) * 4;
       pixels[offset] = stripe ? 191 + ((hash >>> 8) & 0x0f) : grit;
       pixels[offset + 1] = stripe
@@ -481,8 +482,8 @@ function getGripTexture(): THREE.DataTexture {
       pixels[offset + 3] = 255;
     }
   }
-  gripTexture = new THREE.DataTexture(pixels, width, height, THREE.RGBAFormat);
-  gripTexture.name = "SkateboardDeck_Grip_Default_Web";
+  const gripTexture = new THREE.DataTexture(pixels, width, height, THREE.RGBAFormat);
+  gripTexture.name = centerStripe ? "SkateboardDeck_Grip_Default_Web" : "SkateboardDeck_Grip_Map_Plain";
   gripTexture.colorSpace = THREE.SRGBColorSpace;
   gripTexture.wrapS = gripTexture.wrapT = THREE.ClampToEdgeWrapping;
   gripTexture.minFilter = THREE.LinearMipmapLinearFilter;
@@ -490,6 +491,7 @@ function getGripTexture(): THREE.DataTexture {
   gripTexture.generateMipmaps = true;
   gripTexture.anisotropy = 2;
   gripTexture.needsUpdate = true;
+  gripTextures.set(centerStripe, gripTexture);
   return gripTexture;
 }
 
@@ -648,7 +650,7 @@ function deckMaterials(
   const materials: THREE.Material[] = [
     surfaceMaterial(
       "SkateboardDeck_TopGrip_Lit_Web",
-      getGripTexture(),
+      getGripTexture(settings.gripCenterStripe),
       settings,
       false,
     ),
