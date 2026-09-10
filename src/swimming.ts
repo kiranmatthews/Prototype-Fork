@@ -3,7 +3,7 @@ import * as THREE from 'three';
 export const SWIMMING = Object.freeze({
   speed: 4.2, fastSpeed: 6.2, acceleration: 5, drag: 4,
   enterDepth: 1.4, exitDepth: 1.04, floatResponse: 7,
-  idleImmersion: 1.65, strokeImmersion: 1.33,
+  idleImmersion: 1.65, strokeImmersion: 1.53,
 });
 
 /** Exact exponential velocity response; diagonal input cannot add speed. */

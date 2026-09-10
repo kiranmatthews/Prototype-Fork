@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "author": "Quaternius",
+    "pack": "Universal Animation Library",
+    "edition": "Standard (original 2025 release)",
+    "page": "https://quaternius.com/packs/universalanimationlibrary.html",
+    "downloadPage": "https://opengameart.org/content/universal-animation-library",
+    "archiveUrl": "https://opengameart.org/sites/default/files/universal_animation_librarystandard.zip",
+    "archiveSha256": "18ff1a7215f4852b320203e8aaf02a1578b5c8eef9027fbaedfcedc7b85a3ac2",
+    "archivePath": "Animation Library[Standard]/Godot/AnimationLibrary_Godot_Standard.glb",
+    "sourceFileSha256": "1b7bf67866360665426bb99e4c71bd619f19b408453c24e30f0c3071601eee5c",
+    "sourceFileBytes": 6671104,
+    "sourceRootMotion": false,
+    "sampleRate": 30,
+    "clips": [
+      "Death01"
+    ],
+    "importedOn": "2026-09-10",
+    "durationSeconds": 2.4
+  },
+  "license": {
+    "spdx": "CC0-1.0",
+    "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "includedLicenseSha256": "11eac7504a28077e9d8dbac8ddfca2566510efba7eef46e11f21cdd2bc96d4d5"
+  },
+  "conversion": {
+    "tool": "tools/import-quaternius-humanoid-animation.mjs",
+    "targetRig": "player-procedural-v1",
+    "mapping": "Original Blender DEF bone names alias the equivalent modern UAL semantic names; original bind matrices and animation clocks are retained.",
+    "method": "Bind-world rotation deltas to player canonical-world/rest-local; 22 semantic joints. Cyclic pelvis translations go to the visual root; target proportions remain authoritative.",
+    "loopPolicy": "One shot. AnimationMixer clampWhenFinished preserves the real final source sample; --loop false disables loop closure.",
+    "modules": [
+      "src/animation/quaterniusDeath.generated.ts"
+    ],
+    "runtimePlaybackSpeed": 2
+  }
+}

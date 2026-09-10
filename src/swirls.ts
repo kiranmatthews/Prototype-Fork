@@ -22,6 +22,7 @@
 // a percent or two at most): contours RESHAPE, they do not rotate like
 // wheels or pour into the centre.
 import * as THREE from 'three';
+import { swirlContourWave, swirlBandOffset } from './swirlContours';
 
 /** Flat preset: three rings (r1/r2/r3), core, halo, backing, two palettes. */
 export interface SwirlPreset {
@@ -383,7 +384,7 @@ export class Swirl {
     // the shared bulges, once per segment, reused by every band
     for (let j = 0; j < S; j++) {
       const th = (j / S) * TAU;
-      SHARED[j] = sLo * Math.sin(th * 2 + t * sLoR) + sMi * Math.sin(th * 3 - t * sMiR);
+      SHARED[j] = swirlContourWave(th, t, sLo, 2, 0, sLoR) + swirlContourWave(th, t, sMi, 3, 0, -sMiR);
     }
 
     // ---------------------------------------------------------- backing ---
@@ -530,16 +531,13 @@ export class Swirl {
       const wScale = depth === 1 ? 1 : Math.min(1.8, Math.max(0.25, depth * Math.pow(laneR, depth - 1)));
       const bright = bright0 * (1 + 0.4 * v(11)) * env * cur(dispR) * pulseB;
       const spinTh = bandAngle(dispR);
-      RING_OFFR[0] = -glowW * wScale * R;
-      RING_OFFR[1] = -lineW * wScale * R;
-      RING_OFFR[2] = 0;
-      RING_OFFR[3] = lineW * wScale * R;
-      RING_OFFR[4] = glowW * wScale * R;
+      for (let row = 0; row < RING_ROWS; row++)
+        RING_OFFR[row] = swirlBandOffset(row, lineW * wScale * R, glowW * wScale * R);
       for (let j = 0; j < S; j++) {
         const th = (j / S) * TAU + spinTh;
         const local =
-          ampA * Math.sin(th * freqA + phA + t * rateA) +
-          ampB * Math.sin(th * freqB + phB - t * rateB);
+          swirlContourWave(th, t, ampA, freqA, phA, rateA) +
+          swirlContourWave(th, t, ampB, freqB, phB, -rateB);
         const mid = (dispR * breath + SHARED[j] + local) * R;
         const cs = Math.cos(th);
         const sn = Math.sin(th);

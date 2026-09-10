@@ -89,13 +89,14 @@ function parseArguments(argv) {
   if (!source || !clip || !output || !symbol) {
     throw new Error(
       'usage: node tools/import-quaternius-humanoid-animation.mjs ' +
-      '--source <library.glb> --clip <clip-name> --output <module.ts> --symbol <PREFIX>',
+      '--source <library.glb> --clip <clip-name> --output <module.ts> --symbol <PREFIX> [--loop false]',
     );
   }
   if (!/^[A-Z][A-Z0-9_]*$/.test(symbol)) {
     throw new Error('--symbol must be an uppercase TypeScript identifier');
   }
   return {
+    closeLoop: values.get('loop') !== 'false',
     source: resolve(source),
     clip,
     output: resolve(output),
@@ -152,6 +153,7 @@ function moduleSource({
   times,
   rootKeys,
   rotationKeys,
+  closeLoop,
 }) {
   const rotations = PLAYER_HIERARCHY.map(([joint]) => {
     const keys = rotationKeys.get(joint);
@@ -174,6 +176,7 @@ export const ${symbol}_SOURCE = Object.freeze({
   sourceSha256: '${sourceHash}',
   sourceClip: '${clipName}',
   sourceRootMotion: false,
+  sourceLoop: ${closeLoop},
   sampleRate: ${rounded(sampleRate)},
   sourceFrameCount: ${times.length},
   conversion: 'Quaternius bind-world delta to player canonical-world/rest-local',
@@ -248,7 +251,9 @@ async function main() {
   const previousQuaternions = new Map();
   const rootKeys = [];
   const mixer = new THREE.AnimationMixer(gltf.scene);
-  mixer.clipAction(clip).reset().setLoop(THREE.LoopOnce, 0).play();
+  const action = mixer.clipAction(clip).reset().setLoop(THREE.LoopOnce, 0);
+  action.clampWhenFinished = true;
+  action.play();
   const currentTarget = new THREE.Quaternion();
   const targetRest = new THREE.Quaternion();
   const parentDesiredWorld = new Map();
@@ -278,12 +283,15 @@ async function main() {
     }
   }
 
-  // The source is named as a loop; close its tiny exporter drift exactly so
-  // browser playback cannot pop at the wrap boundary.
-  rootKeys[rootKeys.length - 1].copy(rootKeys[0]);
-  for (const keys of rotationKeys.values()) keys[keys.length - 1].copy(keys[0]);
+  // Only loops close their exporter seam. One-shots retain the actual final
+  // source pose, held by clampWhenFinished above.
+  if (args.closeLoop) {
+    rootKeys[rootKeys.length - 1].copy(rootKeys[0]);
+    for (const keys of rotationKeys.values()) keys[keys.length - 1].copy(keys[0]);
+  }
   const interval = times.at(-1) / (times.length - 1);
   const output = moduleSource({
+    closeLoop: args.closeLoop,
     symbol: args.symbol,
     sourceFile: basename(args.source),
     sourceHash: createHash('sha256').update(bytes).digest('hex'),

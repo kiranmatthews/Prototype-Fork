@@ -1,3 +1,5 @@
+import { QUATERNIUS_DEATH_DURATION, QUATERNIUS_DEATH_ROOT_KEYS,
+  QUATERNIUS_DEATH_ROTATION_KEYS, QUATERNIUS_DEATH_SOURCE } from './quaterniusDeath.generated';
 import { QUATERNIUS_SWIM_FWD_DURATION, QUATERNIUS_SWIM_FWD_ROOT_KEYS,
   QUATERNIUS_SWIM_FWD_ROTATION_KEYS, QUATERNIUS_SWIM_FWD_SOURCE } from './quaterniusSwimFwd.generated';
 import { QUATERNIUS_SWIM_IDLE_DURATION, QUATERNIUS_SWIM_IDLE_ROOT_KEYS,
@@ -109,6 +111,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
   'player.rope-release-charged',
   'player.slam',
   'player.bail',
+  'player.death',
   'player.spin',
 ] as const;
 
@@ -118,7 +121,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 20;
+export const PLAYER_STARTER_CATALOG_VERSION = 21;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -398,6 +401,7 @@ const PLAYER_STARTER_CLIP_INTRODUCED_IN_VERSION: Record<
   'player.rope-release-charged': 10,
   'player.slam': 1,
   'player.bail': 1,
+  'player.death': 21,
   'player.spin': 1,
 };
 
@@ -906,6 +910,23 @@ function unityCrouchCrawlSourceMetadata(
   };
 }
 
+function buildDeath(rigId: string, includeTorsoRoot: boolean): AnimationClip {
+  const clip = baseClip('player.death', 'Fall and Settle — Quaternius Death01',
+    QUATERNIUS_DEATH_DURATION, 'once', rigId);
+  clip.loop.seamless = false;
+  // Complete the fall inside the existing 1.5-second visible death beat,
+  // then hold its actual final pose through the normal fade.
+  clip.playbackSpeed = 2;
+  clip.tracks = [sampledPositionTrack(clip.id, 'root', QUATERNIUS_DEATH_ROOT_KEYS),
+    ...sampledQuaterniusRotationTracks(clip.id, QUATERNIUS_DEATH_ROTATION_KEYS, includeTorsoRoot)];
+  clip.contacts = [];
+  clip.tags = ['player', 'quaternius', 'death', 'source-animation-retarget'];
+  clip.metadata = { starterQuality: 'source-animation-retarget',
+    starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
+    sourceAnimation: { ...QUATERNIUS_DEATH_SOURCE } };
+  return clip;
+}
+
 function buildSwim(rigId: string, includeTorsoRoot: boolean, idle: boolean): AnimationClip {
   const clip = baseClip(idle ? 'player.swim-idle' : 'player.swim',
     idle ? 'Tread Water — Quaternius Swim_Idle_Loop' : 'Swim — Quaternius Swim_Fwd_Loop',
@@ -1393,6 +1414,7 @@ export function createPlayerStarterClips(
     buildUnityRopeRelease(rigId, true, includeTorsoRoot),
     buildUnitySlam(rigId),
     placeholder('player.bail', 'Bail', 1.1, rigId),
+    buildDeath(rigId, includeTorsoRoot),
     placeholder('player.spin', 'Spin', 0.8, rigId),
   ];
 }

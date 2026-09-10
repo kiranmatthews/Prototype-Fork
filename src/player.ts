@@ -295,6 +295,7 @@ export type PlayerAnimationClipHint =
   | 'player.rope-climb'
   | 'player.rope-release'
   | 'player.slam'
+  | 'player.death'
   | 'player.bail'
   | 'player.spin';
 
@@ -801,8 +802,12 @@ export class Player {
   private starPose = 0;
   private slopeRoll = 0; // ...and rolls to match the cross-slope (bank/wall)
   private slamSquash = 0; // pancake pose timer after a slam lands
-  private bailing = false; // death with a tumble animation instead of a blink-out
-  private bailSpin = 0;
+  private bailing = false; // visible fatal fall through the death watch/fade
+  private deathElapsed = 0;
+  private deathFacingYaw = 0;
+  private deathSupport: GroundHit | null = null;
+  private readonly deathHeadContact = new THREE.Vector3();
+  private readonly deathFootContact = new THREE.Vector3();
   // Knockdown lifetime: physical tumble first, then a supported procedural
   // roll-up whose latter half accepts movement intent. Non-lethal by itself.
   private bailDownT = 0;
@@ -1755,7 +1760,8 @@ export class Player {
    * movement state itself.
    */
   get animationClipHint(): PlayerAnimationClipHint {
-    if (this.isBailing || this.state === 'dead' || this.state === 'gameover') return 'player.bail';
+    if (this.state === 'dead' || this.state === 'gameover') return 'player.death';
+    if (this.isBailing) return 'player.bail';
     if (this.swimming) return this.swimVelocity.length() > .35 ? 'player.swim' : 'player.swim-idle';
     if (this.state === 'rope') {
       return this.ropeClimbDirection === 0
@@ -1965,6 +1971,11 @@ export class Player {
       rightGripError: this.ropeRightGripError,
       gripRootOffsetY: this.ropeGripRootOffsetY,
     } as const;
+  }
+
+  get deathPresentationDiagnostics() {
+    return { elapsed: this.deathElapsed, floor: this.deathSupport?.y ?? null,
+      settled: this.state === 'dead' && this.grounded, rotatingRagdoll: this.ragActive };
   }
 
   get deathPresentationDelay(): number {
@@ -3233,7 +3244,8 @@ export class Player {
     this.hangPipe = null;
     this.slamSquash = 0;
     this.bailing = false;
-    this.bailSpin = 0;
+    this.deathElapsed = 0;
+    this.deathSupport = null;
     this.bodyGroup.rotation.x = 0;
     for (const f of this.fruits) this.retireFruit(f);
     this.characterBounds.makeEmpty();this.previousCharacterBounds.makeEmpty();
@@ -3833,7 +3845,7 @@ export class Player {
     // friction had already stopped the body. Reserve the final recovery window
     // until there is stable ground; once the slide is slow (or the impact clock
     // reaches that window), hand the body to a mashable forward roll instead.
-    if (this.bailDownT > 0) {
+    if (this.bailDownT > 0 && this.state !== 'dead' && this.state !== 'gameover') {
       // Some bails begin already supported (a lost manual or a tumble-zone
       // spill) instead of crossing the ground through stepAir. That grounded
       // frame is still the first real body impact; launched trips remain
@@ -4139,7 +4151,7 @@ export class Player {
 
     switch (this.state) {
       case 'dead':
-        if (this.bailing) this.stepDeathRagdoll(dt, level);
+        if (this.bailing) this.stepDeathFall(dt, level);
         this.respawnTimer -= dt;
         if (this.respawnTimer <= 0) {
           if (this.ttDied || this.comboDied) {
@@ -8124,7 +8136,6 @@ export class Player {
       // the body upside-down). grabPhase/grabT were just cleared, so the grab
       // tuck releases too — hands are on the rope.
       this.flipTimer = 0;
-      this.bailSpin = 0;
       this.spinTimer = 0;
       this.spinAngle = 0;
       // Face the direction you were actually travelling when you grabbed, and
@@ -11929,7 +11940,6 @@ export class Player {
     this.bailRush = 1;
     this.bailExitSpeed = 0;
     this.bailVelocity.set(0, 0, 0);
-    this.bailSpin = 0;
     this.dropPose = 0;
 
     this.ragActive = false;
@@ -14347,7 +14357,8 @@ export class Player {
   }
 
   // Corpse-only motion: no pickups, attacks, recovery or repeated damage.
-  private stepDeathRagdoll(dt: number, level: Level): void {
+  private stepDeathFall(dt: number, level: Level): void {
+    this.deathElapsed += dt;
     const oldY = this.pos.y;
     this.pos.addScaledVector(this.axisF, this.speed * dt);
     this.vVel = Math.max(-CONST.maxFallSpeed, this.vVel - TUNING.fallGravity * dt);
@@ -14370,12 +14381,11 @@ export class Player {
     if (hit && this.vVel <= 0 && this.pos.y <= hit.y && oldY >= hit.y - 0.05) {
       this.pos.y = hit.y;
       this.groundHit = hit;
-      if (!this.resolveRagdollGroundBounce(hit)) {
-        this.vVel = 0;
-        this.grounded = true;
-        this.speed *= Math.exp(-TUNING.bailFriction * dt);
-      }
+      this.vVel = 0;
+      this.grounded = true;
+      this.speed *= Math.exp(-TUNING.bailFriction * dt);
     }
+    this.deathSupport = hit;
   }
 
   private die(): void {
@@ -14413,7 +14423,21 @@ export class Player {
     this.respawnTimer = CONST.respawnDelay + CONST.deathWatchTime;
     this.armBailRecovery(this.respawnTimer + 1);
     this.bailing = true;
-    this.startRagdoll('air');
+    this.deathElapsed = 0;
+    this.deathFacingYaw = this.visualYaw;
+    this.deathSupport = this.groundHit;
+    // Fatal falls have one authored owner. Recoverable skating wipeouts keep
+    // their existing integrated tumble and roll-up behavior.
+    this.ragActive = false; this.ragBlend = this.ragPoseAnchorW = 0;
+    this.ragAngVel.set(0, 0, 0);
+    this.bailRecoverT = -1; this.bailRecoveryPose = 0;
+    this.freeSkate = this.skateOn = this.airFromSkate = false;
+    this.skatePose = this.sidePose = this.deckPose = 0;
+    this.flipTimer = this.flipT = this.spinTimer = this.grabPose = 0;
+    this.grabPhase = 'none'; this.slamActive = false;
+    this.cancelSlideTraversal(); this.crawling = false;
+    this.slopePose = this.slopeRoll = this.landingAlignPose = this.alignPose = 0;
+    this.manualing = 0; this.lipStallT = 0; this.wallriding = false;
     this.grounded = false;
     sfx.play('death', 0.9);
     // the pending combo dies with you; banked points survive
@@ -15072,8 +15096,52 @@ export class Player {
     this.syncVisual(input, dt);
     this.interactionVersion++;
     this.refreshCharacterBounds();
+    this.seatDeathOnGround();
     this.meshyBoolieRooHead?.blink?.update(dt,
       this.characterHeadStyleValue === 'alternate' && this.group.visible);
+  }
+
+  private seatDeathOnGround(): void {
+    if (this.state !== 'dead' || !this.bailing || !this.deathSupport || !this.bodyGroup.parent) return;
+    const support = this.deathSupport, n = support.normal;
+    if (n.y < .3 || !this.riderG) return;
+    const settle = this.grounded ? THREE.MathUtils.smoothstep(this.deathElapsed, .3, .85) : 0;
+    // A large cartoon head must not prop the entire straight body in the air.
+    // Seat head and heels together with a small support tilt, then solve exact
+    // vertex clearance. The source fall remains the joint-motion authority.
+    const foot = this.ankleR ?? this.kneeR;
+    if (settle > 0 && this.headM && foot) {
+      const planePoint = REACH_C.set(this.pos.x, support.y, this.pos.z);
+      const headY = this.interactionMeasure.minimumPlaneDistance(this.headM, n, planePoint, this.deathHeadContact);
+      const footY = this.interactionMeasure.minimumPlaneDistance(foot, n, planePoint, this.deathFootContact);
+      if (Number.isFinite(headY) && Number.isFinite(footY)) {
+        this.bodyGroup.worldToLocal(this.deathHeadContact);
+        this.bodyGroup.worldToLocal(this.deathFootContact);
+        this.deathFootContact.sub(this.deathHeadContact);
+        if (Math.abs(this.deathFootContact.z) > .2)
+          this.bodyGroup.rotation.x = THREE.MathUtils.clamp(
+            Math.atan(this.deathFootContact.y / this.deathFootContact.z), -.45, .45) * settle;
+        this.interactionVersion++;
+        this.refreshCharacterBounds();
+      }
+    }
+    const distance = this.interactionMeasure.minimumPlaneDistance(this.riderG, n,
+      REACH_C.set(this.pos.x, support.y, this.pos.z));
+    if (!Number.isFinite(distance)) return;
+    const offset = (.02 - distance) / n.y;
+    // During the actual collapse, correct penetration only. Once the source
+    // reaches its resting portion, also close any target-rig floor gap.
+    const lift = offset >= 0 ? offset : offset * settle;
+    if (Math.abs(lift) < 1e-5) return;
+    // Correct the final visible pose (including head/height variants), without
+    // moving the death collider or changing life/respawn accounting.
+    this.bodyGroup.parent.updateWorldMatrix(true, false);
+    _plantInv.copy(this.bodyGroup.parent.matrixWorld).invert();
+    _plantO.set(0, 0, 0).applyMatrix4(_plantInv);
+    _plantC.set(0, lift, 0).applyMatrix4(_plantInv).sub(_plantO);
+    this.bodyGroup.position.add(_plantC);
+    this.characterBounds.translate(this.interactionShift.set(0, lift, 0));
+    this.group.updateMatrixWorld(true);
   }
 
   private updateSurfaceAlignment(dt: number): void {
@@ -15226,7 +15294,9 @@ export class Player {
       !this.crawling &&
       !this.isBailing &&
       this.walkIntent.lengthSq() > 1e-6;
-    if (this.state === 'rope') {
+    if (this.state === 'dead' || this.state === 'gameover') {
+      targetYaw = this.deathFacingYaw;
+    } else if (this.state === 'rope') {
       // On the swing rope, face the direction you were travelling when you
       // grabbed (captured in tryRopeGrab) and hold it — the swing never turns
       // you, and climbing up/down never turns you.
@@ -15838,7 +15908,6 @@ export class Player {
     const critFlail =
       (this.balanceCritT > 0 ? Math.sin(this.runTime * 22) * 0.8 : 0) +
       Math.sin(this.runTime * (9 + 9 * offBal)) * 0.42 * offBal * offBal;
-    const bailFlail = this.bailing ? Math.sin(this.bailSpin * 2.7) * 1.1 : 0;
     const anti = -swing * 1.35 * (1 - this.grabPose); // reference arm pump: big, from the shoulder
     const sym =
       (breathe * 0.06 * this.idleAmp +
@@ -15847,8 +15916,7 @@ export class Player {
         0.95 * this.chargePose +
         1.9 * flipTuck +
         windmill +
-        critFlail +
-        bailFlail) *
+        critFlail) *
       (1 - this.grabPose);
     // Slide: trailing hand drags behind, lead arm reaches ahead.
     const slideR = -1.1 * this.slidePose;
@@ -16193,9 +16261,9 @@ export class Player {
     // smoothstep: the roll accelerates into the tuck and eases out upright
     const flip = flipQ * flipQ * (3 - 2 * flipQ) * Math.PI * 2;
     if (this.state === 'dead' && this.bailing) {
-      // Bail tumble: rag-doll head-over-heels until the respawn.
-      this.bailSpin += 13 * dt;
-      this.bodyGroup.rotation.x = this.bailSpin;
+      // Death01 owns the fall through its skeleton/root tracks. No second
+      // rotation may keep turning that already-fallen body through the floor.
+      this.bodyGroup.rotation.x = 0;
     } else {
       // forward lean builds with real running speed (sprint posture)
       const runLean = 0.14 * this.walkAmp * Math.min(1, planar / Math.max(TUNING.walkSpeed, 1));
@@ -16481,7 +16549,7 @@ export class Player {
           0.46 * recovery.tuck + 0.24 * recovery.plant;
     }
 
-    // A bail stays visible so the tumble reads; a plain death blinks out.
+    // The fatal fall stays visible through its watch/fade; silent resets may hide.
     this.group.visible = (this.state !== 'dead' && this.state !== 'gameover') || this.bailing;
 
     // A small arm lift sells the mounting hop while the stance turns onto the

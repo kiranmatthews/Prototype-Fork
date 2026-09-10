@@ -46,6 +46,39 @@ export class CharacterInteractionBounds {
     return !out.isEmpty()&&[...out.min.toArray(),...out.max.toArray()].every(Number.isFinite);
   }
 
+  /** Exact rendered-vertex support for a rare settled pose. A transformed
+   * local AABB can put an empty corner far below a rotated head or limb. */
+  minimumPlaneDistance(root: THREE.Object3D, normal: Readonly<THREE.Vector3>, point: Readonly<THREE.Vector3>, contact?: THREE.Vector3): number {
+    root.updateWorldMatrix(true, true);
+    // Attached SkinnedMesh updates its bind inverse in updateMatrixWorld,
+    // which updateWorldMatrix alone does not invoke after a root adjustment.
+    root.updateMatrixWorld(true);
+    let minimum = Infinity;
+    const visit = (node: THREE.Object3D): void => {
+      if (node !== root && !node.visible) return;
+      if (node instanceof THREE.Mesh) {
+        const materials = Array.isArray(node.material) ? node.material : [node.material];
+        const vertices = node.geometry.getAttribute('position');
+        if (vertices && materials.some(material => material.visible && material.opacity > 0)) {
+          if (node instanceof THREE.SkinnedMesh) node.skeleton.update();
+          const count = node instanceof THREE.InstancedMesh ? node.count : 1;
+          for (let instance = 0; instance < count; instance++) {
+            this.world.copy(node.matrixWorld);
+            if (node instanceof THREE.InstancedMesh) { node.getMatrixAt(instance, this.instance); this.world.multiply(this.instance); }
+            for (let i = 0; i < vertices.count; i++) {
+              node.getVertexPosition(i, this.point).applyMatrix4(this.world);
+              const distance = normal.x * (this.point.x - point.x) + normal.y * (this.point.y - point.y) + normal.z * (this.point.z - point.z);
+              if (distance < minimum) { minimum = distance; contact?.copy(this.point); }
+            }
+          }
+        }
+      }
+      for (const child of node.children) visit(child);
+    };
+    visit(root);
+    return minimum;
+  }
+
   private localBounds(mesh:THREE.Mesh):THREE.Box3|null {
     const geometry=mesh.geometry,positions=geometry.getAttribute('position');
     if(!positions)return null;

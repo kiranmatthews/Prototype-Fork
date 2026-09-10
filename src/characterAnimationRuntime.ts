@@ -127,6 +127,7 @@ const AIRBORNE_CLIP_IDS = new Set<ClipId>([
 
 function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId): number {
   if (!from) return 0;
+  if (to === 'player.death') return .12;
   if (from.startsWith('player.swim') || to.startsWith('player.swim')) return .3;
   if (to === LAND_CLIP_ID && AIRBORNE_CLIP_IDS.has(from)) {
     return LAND_IMPACT_CROSSFADE_SECONDS;
@@ -409,13 +410,13 @@ export class CharacterAnimationRuntime {
 
     if (this.manualClipId === null) {
       // Landing has first refusal on the exact contact frame.
-      if (justLanded && !this.currentClipId?.startsWith('player.swim') && hint !== 'player.bail' && hint !== 'player.slam') {
+      if (justLanded && !this.currentClipId?.startsWith('player.swim') && hint !== 'player.bail' && hint !== 'player.death' && hint !== 'player.slam') {
         this.resetLandingRunBlend();
         this.transient = this.makeTransient('landing', LAND_CLIP_ID);
       } else if (this.transient?.kind === 'landing') {
         if (
           !grounded ||
-          hint === 'player.bail' ||
+          hint === 'player.bail' || hint === 'player.death' ||
           (hint !== 'player.run' && hint !== 'player.idle')
         ) {
           this.cancelTransient();
@@ -904,5 +905,6 @@ export const PLAYER_STATE_CLIP_IDS: readonly PlayerAnimationClipHint[] = [
   'player.rope-release',
   'player.slam',
   'player.bail',
+  'player.death',
   'player.spin',
 ];
