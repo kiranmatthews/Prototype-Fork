@@ -1,0 +1,895 @@
+{
+  "goal": "1:1 reference fidelity. This is not complete.",
+  "fontSha256": "55bb1b2485f41fdef43742088140d52d3c5a6fa05f2e83b2e1ab3a6d15e2610f",
+  "glyphCount": 51,
+  "modelMode": "built-in image_gen",
+  "generatedGlyphCount": 51,
+  "glyphs": [
+    {
+      "glyph": "0",
+      "codePoint": 48,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/0-counter-01.png",
+        "candidates/0-counter-02.png",
+        "candidates/0-counter-03.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": "1",
+      "codePoint": 49,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/1-counter-01.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": "2",
+      "codePoint": 50,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/2-counter-01.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": "3",
+      "codePoint": 51,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/3-counter-01.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": "4",
+      "codePoint": 52,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/4-counter-01.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": "5",
+      "codePoint": 53,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/5-counter-01.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": "6",
+      "codePoint": 54,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/6-counter-01.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": "7",
+      "codePoint": 55,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/7-counter-01.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": "8",
+      "codePoint": 56,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/8-counter-01.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": "9",
+      "codePoint": 57,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/9-counter-01.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": "A",
+      "codePoint": 65,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/A-bonus-01.png"
+      ],
+      "reference": {
+        "box": [
+          137,
+          480,
+          196,
+          546
+        ],
+        "ink": [
+          7,
+          7,
+          45,
+          52
+        ],
+        "coloredPixels": 952,
+        "native": "analysis/A-alphabet-native.png",
+        "zoom": "analysis/A-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "B",
+      "codePoint": 66,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/B-bonus-01.png",
+        "candidates/B-bonus-02.png",
+        "candidates/B-bonus-03.png",
+        "candidates/B-bonus-04.png"
+      ],
+      "reference": {
+        "box": [
+          200,
+          475,
+          257,
+          547
+        ],
+        "ink": [
+          7,
+          7,
+          43,
+          58
+        ],
+        "coloredPixels": 1152,
+        "native": "analysis/B-alphabet-native.png",
+        "zoom": "analysis/B-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "C",
+      "codePoint": 67,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/C-bonus-01.png"
+      ],
+      "reference": {
+        "box": [
+          260,
+          477,
+          312,
+          547
+        ],
+        "ink": [
+          7,
+          7,
+          38,
+          56
+        ],
+        "coloredPixels": 876,
+        "native": "analysis/C-alphabet-native.png",
+        "zoom": "analysis/C-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "D",
+      "codePoint": 68,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/D-bonus-01.png"
+      ],
+      "reference": {
+        "box": [
+          317,
+          477,
+          372,
+          547
+        ],
+        "ink": [
+          7,
+          7,
+          41,
+          56
+        ],
+        "coloredPixels": 1069,
+        "native": "analysis/D-alphabet-native.png",
+        "zoom": "analysis/D-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "E",
+      "codePoint": 69,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/E-bonus-01.png"
+      ],
+      "reference": {
+        "box": [
+          376,
+          479,
+          424,
+          544
+        ],
+        "ink": [
+          7,
+          7,
+          34,
+          51
+        ],
+        "coloredPixels": 848,
+        "native": "analysis/E-alphabet-native.png",
+        "zoom": "analysis/E-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "F",
+      "codePoint": 70,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/F-bonus-01.png"
+      ],
+      "reference": {
+        "box": [
+          430,
+          479,
+          477,
+          545
+        ],
+        "ink": [
+          7,
+          7,
+          33,
+          52
+        ],
+        "coloredPixels": 712,
+        "native": "analysis/F-alphabet-native.png",
+        "zoom": "analysis/F-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "G",
+      "codePoint": 71,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/G-bonus-01.png"
+      ],
+      "reference": {
+        "box": [
+          479,
+          477,
+          533,
+          547
+        ],
+        "ink": [
+          7,
+          7,
+          40,
+          56
+        ],
+        "coloredPixels": 1016,
+        "native": "analysis/G-alphabet-native.png",
+        "zoom": "analysis/G-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "H",
+      "codePoint": 72,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/H-bonus-01.png"
+      ],
+      "reference": {
+        "box": [
+          538,
+          480,
+          589,
+          547
+        ],
+        "ink": [
+          7,
+          7,
+          37,
+          53
+        ],
+        "coloredPixels": 1017,
+        "native": "analysis/H-alphabet-native.png",
+        "zoom": "analysis/H-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "I",
+      "codePoint": 73,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/I-bonus-01.png"
+      ],
+      "reference": {
+        "box": [
+          596,
+          481,
+          626,
+          544
+        ],
+        "ink": [
+          7,
+          7,
+          16,
+          49
+        ],
+        "coloredPixels": 496,
+        "native": "analysis/I-alphabet-native.png",
+        "zoom": "analysis/I-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "J",
+      "codePoint": 74,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/J-bonus-01.png"
+      ],
+      "reference": {
+        "box": [
+          630,
+          481,
+          680,
+          547
+        ],
+        "ink": [
+          7,
+          7,
+          36,
+          52
+        ],
+        "coloredPixels": 707,
+        "native": "analysis/J-alphabet-native.png",
+        "zoom": "analysis/J-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "K",
+      "codePoint": 75,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/K-bonus-01.png"
+      ],
+      "reference": {
+        "box": [
+          687,
+          481,
+          743,
+          546
+        ],
+        "ink": [
+          7,
+          7,
+          42,
+          51
+        ],
+        "coloredPixels": 976,
+        "native": "analysis/K-alphabet-native.png",
+        "zoom": "analysis/K-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "L",
+      "codePoint": 76,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/L-bonus-01.png"
+      ],
+      "reference": {
+        "box": [
+          748,
+          480,
+          796,
+          544
+        ],
+        "ink": [
+          7,
+          7,
+          34,
+          50
+        ],
+        "coloredPixels": 640,
+        "native": "analysis/L-alphabet-native.png",
+        "zoom": "analysis/L-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "M",
+      "codePoint": 77,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/M-bonus-01.png"
+      ],
+      "reference": {
+        "box": [
+          801,
+          478,
+          864,
+          545
+        ],
+        "ink": [
+          7,
+          7,
+          49,
+          53
+        ],
+        "coloredPixels": 1290,
+        "native": "analysis/M-alphabet-native.png",
+        "zoom": "analysis/M-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "N",
+      "codePoint": 78,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/N-bonus-01.png",
+        "candidates/N-bonus-02.png"
+      ],
+      "reference": {
+        "box": [
+          136,
+          565,
+          190,
+          631
+        ],
+        "ink": [
+          7,
+          7,
+          40,
+          52
+        ],
+        "coloredPixels": 974,
+        "native": "analysis/N-alphabet-native.png",
+        "zoom": "analysis/N-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "O",
+      "codePoint": 79,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/O-bonus-01.png",
+        "candidates/O-bonus-02.png"
+      ],
+      "reference": {
+        "box": [
+          195,
+          564,
+          249,
+          631
+        ],
+        "ink": [
+          7,
+          7,
+          40,
+          53
+        ],
+        "coloredPixels": 953,
+        "native": "analysis/O-alphabet-native.png",
+        "zoom": "analysis/O-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "P",
+      "codePoint": 80,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/P-bonus-01.png"
+      ],
+      "reference": {
+        "box": [
+          251,
+          564,
+          305,
+          628
+        ],
+        "ink": [
+          7,
+          7,
+          40,
+          50
+        ],
+        "coloredPixels": 805,
+        "native": "analysis/P-alphabet-native.png",
+        "zoom": "analysis/P-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "Q",
+      "codePoint": 81,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/Q-bonus-01.png"
+      ],
+      "reference": {
+        "box": [
+          308,
+          563,
+          367,
+          632
+        ],
+        "ink": [
+          7,
+          7,
+          45,
+          55
+        ],
+        "coloredPixels": 1080,
+        "native": "analysis/Q-alphabet-native.png",
+        "zoom": "analysis/Q-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "R",
+      "codePoint": 82,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/R-bonus-01.png"
+      ],
+      "reference": {
+        "box": [
+          369,
+          563,
+          429,
+          635
+        ],
+        "ink": [
+          7,
+          7,
+          46,
+          58
+        ],
+        "coloredPixels": 1019,
+        "native": "analysis/R-alphabet-native.png",
+        "zoom": "analysis/R-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "S",
+      "codePoint": 83,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/S-bonus-01.png",
+        "candidates/S-bonus-02.png"
+      ],
+      "reference": {
+        "box": [
+          427,
+          565,
+          475,
+          631
+        ],
+        "ink": [
+          7,
+          7,
+          34,
+          52
+        ],
+        "coloredPixels": 795,
+        "native": "analysis/S-alphabet-native.png",
+        "zoom": "analysis/S-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "T",
+      "codePoint": 84,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/T-bonus-01.png"
+      ],
+      "reference": {
+        "box": [
+          480,
+          565,
+          526,
+          628
+        ],
+        "ink": [
+          7,
+          7,
+          32,
+          49
+        ],
+        "coloredPixels": 642,
+        "native": "analysis/T-alphabet-native.png",
+        "zoom": "analysis/T-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "U",
+      "codePoint": 85,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/U-bonus-01.png",
+        "candidates/U-bonus-02.png"
+      ],
+      "reference": {
+        "box": [
+          530,
+          565,
+          582,
+          631
+        ],
+        "ink": [
+          7,
+          7,
+          38,
+          52
+        ],
+        "coloredPixels": 873,
+        "native": "analysis/U-alphabet-native.png",
+        "zoom": "analysis/U-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "V",
+      "codePoint": 86,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/V-bonus-01.png"
+      ],
+      "reference": {
+        "box": [
+          584,
+          564,
+          638,
+          631
+        ],
+        "ink": [
+          7,
+          7,
+          40,
+          53
+        ],
+        "coloredPixels": 811,
+        "native": "analysis/V-alphabet-native.png",
+        "zoom": "analysis/V-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "W",
+      "codePoint": 87,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/W-bonus-01.png"
+      ],
+      "reference": {
+        "box": [
+          639,
+          567,
+          708,
+          630
+        ],
+        "ink": [
+          7,
+          7,
+          55,
+          49
+        ],
+        "coloredPixels": 1224,
+        "native": "analysis/W-alphabet-native.png",
+        "zoom": "analysis/W-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "X",
+      "codePoint": 88,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/X-bonus-01.png"
+      ],
+      "reference": {
+        "box": [
+          710,
+          567,
+          767,
+          630
+        ],
+        "ink": [
+          7,
+          7,
+          43,
+          49
+        ],
+        "coloredPixels": 846,
+        "native": "analysis/X-alphabet-native.png",
+        "zoom": "analysis/X-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "Y",
+      "codePoint": 89,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/Y-bonus-01.png"
+      ],
+      "reference": {
+        "box": [
+          768,
+          565,
+          823,
+          629
+        ],
+        "ink": [
+          7,
+          7,
+          41,
+          50
+        ],
+        "coloredPixels": 646,
+        "native": "analysis/Y-alphabet-native.png",
+        "zoom": "analysis/Y-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "Z",
+      "codePoint": 90,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/Z-bonus-01.png"
+      ],
+      "reference": {
+        "box": [
+          823,
+          566,
+          869,
+          629
+        ],
+        "ink": [
+          7,
+          7,
+          32,
+          49
+        ],
+        "coloredPixels": 702,
+        "native": "analysis/Z-alphabet-native.png",
+        "zoom": "analysis/Z-alphabet-zoom.png"
+      }
+    },
+    {
+      "glyph": "!",
+      "codePoint": 33,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/u0021-counter-01.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": "?",
+      "codePoint": 63,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/u003f-counter-01.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": ".",
+      "codePoint": 46,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/u002e-counter-01.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": ",",
+      "codePoint": 44,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/u002c-counter-01.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": ":",
+      "codePoint": 58,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/u003a-counter-01.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": ";",
+      "codePoint": 59,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/u003b-counter-01.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": "/",
+      "codePoint": 47,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/u002f-counter-01.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": "-",
+      "codePoint": 45,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/u002d-counter-01.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": "+",
+      "codePoint": 43,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/u002b-counter-01.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": "'",
+      "codePoint": 39,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/u0027-counter-01.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": "\"",
+      "codePoint": 34,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/u0022-counter-01.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": "(",
+      "codePoint": 40,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/u0028-counter-01.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": ")",
+      "codePoint": 41,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/u0029-counter-01.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": "%",
+      "codePoint": 37,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/u0025-counter-01.png"
+      ],
+      "reference": null
+    },
+    {
+      "glyph": "&",
+      "codePoint": 38,
+      "status": "baked_and_browser_verified",
+      "candidates": [
+        "candidates/u0026-counter-01.png"
+      ],
+      "reference": null
+    }
+  ],
+  "status": "local_release_verified",
+  "validation": "All 51 model passes, source font hashes, identical palette alpha, antialiased coverage, no magenta pixels, exports, reference-size typography, dynamic counts, lite/full HUD and portrait layout checked."
+}

@@ -1,0 +1,418 @@
+{
+  "version": 2,
+  "font": "RooRegular.ttf",
+  "fontSha256": "55bb1b2485f41fdef43742088140d52d3c5a6fa05f2e83b2e1ab3a6d15e2610f",
+  "generator": "built-in image_gen",
+  "method": "Per-glyph model color/detail pass; original Roo geometry alpha; reference lighting/color retained where available; two baked palettes.",
+  "glyphCount": 51,
+  "glyphs": {
+    "0": {
+      "model": "candidates/0-counter-03.png",
+      "modelSha256": "0ecbf34db17f494d225753600b613dd68d6d9124770b8259f4c50805d5348dbb",
+      "generatorOutput": "exec-f5d6b20c-ab8f-484b-bf17-33d78008550b.png",
+      "prompt": "0-extraction-prompt.txt",
+      "promptText": "Edit only the background of this image. Preserve the colored numeral 0 artwork exactly: identical yellow/gold/orange/red front-face colors, subtle shading, bevel profiles, narrow highlights, outer contour and tall hole. Remove the surrounding dungeon image and the thick black outer stroke/shadow, replacing those areas and the hole background with perfectly flat solid #ff00ff magenta. Do not redesign, repaint, recolor, add shininess, widen the bevel, change the shape, or add details to the colored 0. Preserve its existing rendered treatment and antialiased edges. Return just this same 0 on the magenta background, at high resolution. No extra objects or text.\n",
+      "reference": "analysis/0-reference-native.png"
+    },
+    "1": {
+      "model": "candidates/1-counter-01.png",
+      "modelSha256": "3b1dfbf24fe5cf338a339ab6d59e453f9ebbfddc8b47e7acc0c22223d4af29c3",
+      "generatorOutput": "exec-85377d3d-8fd8-439c-b28b-b123cff7b579.png",
+      "prompt": "1-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo numeral \"1\" silhouette. Image 2 is the authoritative golden/orange/red HUD zero whose material this numeral must match. Render just the numeral \"1\" using Image 1's exact outer and inner contours, placement and proportions, with Image 2's polished narrow sculpted bevel, subtle front-face shading, tiny upper-left edge highlights, and saturated yellow through gold/amber/orange to deep red gradient. Match the reference's actual finish and light direction; do not add inflated jewel-like volume, big white streaks, extra gloss, cracks, grain or scratches. No black outer stroke or black drop shadow. The glyph is the number 1, not a letter. Solid flat #ff00ff magenta outside the colored glyph and in its holes. Smooth antialiased edges, one glyph only, no other text or objects.\n",
+      "reference": null
+    },
+    "2": {
+      "model": "candidates/2-counter-01.png",
+      "modelSha256": "b56543074c819205e13aacd516c1b60eaa4b294e08f3c36625170fff16402b00",
+      "generatorOutput": "exec-296b8817-0316-49c7-b85c-174e5e710341.png",
+      "prompt": "2-counter-prompt.txt",
+      "promptText": "Edit only the background of this exact numeral \"2\" from the reference HUD. Preserve the colored numeral's shape, narrow rugged 3D bevels, gentle polished front-face shading, small edge highlights, and yellow/gold/amber/orange/deep-red gradient. Remove the scene and large black surround, leaving only the colored glyph on perfectly flat #ff00ff magenta outside it and in every open area. Do not inflate the bevel, add gloss or texture, reinterpret the lighting, or alter the glyph. Restore smooth high-resolution antialiasing while preserving the exact material. One numeral \"2\" only, no other objects or text.\n",
+      "reference": "analysis/2-number-native.png"
+    },
+    "3": {
+      "model": "candidates/3-counter-01.png",
+      "modelSha256": "e8fd1124c7f630153213f168f7651a3021a979715174f20aa75f50002831a618",
+      "generatorOutput": "exec-f80d0b48-fd65-4e12-b2fb-e65ed782ff59.png",
+      "prompt": "3-counter-prompt.txt",
+      "promptText": "Edit only the background of this exact numeral \"3\" from the reference HUD. Preserve the colored numeral's shape, narrow rugged 3D bevels, gentle polished front-face shading, small edge highlights, and yellow/gold/amber/orange/deep-red gradient. Remove the scene and large black surround, leaving only the colored glyph on perfectly flat #ff00ff magenta outside it and in every open area. Do not inflate the bevel, add gloss or texture, reinterpret the lighting, or alter the glyph. Restore smooth high-resolution antialiasing while preserving the exact material. One numeral \"3\" only, no other objects or text.\n",
+      "reference": "analysis/3-number-native.png"
+    },
+    "4": {
+      "model": "candidates/4-counter-01.png",
+      "modelSha256": "210a1e134e8996bf2415333f1e353a7d12e1ec50a6e9c269c311b094ddd7d541",
+      "generatorOutput": "exec-f366db59-041d-4938-86fd-9d51f46b6e8b.png",
+      "prompt": "4-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo numeral \"4\" silhouette. Image 2 is the authoritative golden/orange/red HUD zero whose material this numeral must match. Render just the numeral \"4\" using Image 1's exact outer and inner contours, placement and proportions, with Image 2's polished narrow sculpted bevel, subtle front-face shading, tiny upper-left edge highlights, and saturated yellow through gold/amber/orange to deep red gradient. Match the reference's actual finish and light direction; do not add inflated jewel-like volume, big white streaks, extra gloss, cracks, grain or scratches. No black outer stroke or black drop shadow. The glyph is the number 4, not a letter. Solid flat #ff00ff magenta outside the colored glyph and in its holes. Smooth antialiased edges, one glyph only, no other text or objects.\n",
+      "reference": null
+    },
+    "5": {
+      "model": "candidates/5-counter-01.png",
+      "modelSha256": "58c903fb8ffb681abc0ad582126063117be53f481bacdfbeb765bd5dab7f5edd",
+      "generatorOutput": "exec-2e0df3f0-1383-4c87-943d-cce983c442f0.png",
+      "prompt": "5-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo numeral \"5\" silhouette. Image 2 is the authoritative golden/orange/red HUD zero whose material this numeral must match. Render just the numeral \"5\" using Image 1's exact outer and inner contours, placement and proportions, with Image 2's polished narrow sculpted bevel, subtle front-face shading, tiny upper-left edge highlights, and saturated yellow through gold/amber/orange to deep red gradient. Match the reference's actual finish and light direction; do not add inflated jewel-like volume, big white streaks, extra gloss, cracks, grain or scratches. No black outer stroke or black drop shadow. The glyph is the number 5, not a letter. Solid flat #ff00ff magenta outside the colored glyph and in its holes. Smooth antialiased edges, one glyph only, no other text or objects.\n",
+      "reference": null
+    },
+    "6": {
+      "model": "candidates/6-counter-01.png",
+      "modelSha256": "15699eda97b57c718ac0786444e6296c1745059a8715d28f2ed5d25a826974db",
+      "generatorOutput": "exec-d5477838-0623-4f81-b0fb-55ff022bbadf.png",
+      "prompt": "6-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo numeral \"6\" silhouette. Image 2 is the authoritative golden/orange/red HUD zero whose material this numeral must match. Render just the numeral \"6\" using Image 1's exact outer and inner contours, placement and proportions, with Image 2's polished narrow sculpted bevel, subtle front-face shading, tiny upper-left edge highlights, and saturated yellow through gold/amber/orange to deep red gradient. Match the reference's actual finish and light direction; do not add inflated jewel-like volume, big white streaks, extra gloss, cracks, grain or scratches. No black outer stroke or black drop shadow. The glyph is the number 6, not a letter. Solid flat #ff00ff magenta outside the colored glyph and in its holes. Smooth antialiased edges, one glyph only, no other text or objects.\n",
+      "reference": null
+    },
+    "7": {
+      "model": "candidates/7-counter-01.png",
+      "modelSha256": "caba6844b206543a065e0318e04bed92d4b44392414ef2c1b92a4e0b12f2288f",
+      "generatorOutput": "exec-10de617a-7387-40a0-87ad-f41f43c3af29.png",
+      "prompt": "7-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo numeral \"7\" silhouette. Image 2 is the authoritative golden/orange/red HUD zero whose material this numeral must match. Render just the numeral \"7\" using Image 1's exact outer and inner contours, placement and proportions, with Image 2's polished narrow sculpted bevel, subtle front-face shading, tiny upper-left edge highlights, and saturated yellow through gold/amber/orange to deep red gradient. Match the reference's actual finish and light direction; do not add inflated jewel-like volume, big white streaks, extra gloss, cracks, grain or scratches. No black outer stroke or black drop shadow. The glyph is the number 7, not a letter. Solid flat #ff00ff magenta outside the colored glyph and in its holes. Smooth antialiased edges, one glyph only, no other text or objects.\n",
+      "reference": null
+    },
+    "8": {
+      "model": "candidates/8-counter-01.png",
+      "modelSha256": "983af9c02d5bdadf70977a233d4a0ed7b9938a76e66de5d41d514496f8dd495e",
+      "generatorOutput": "exec-cfa85a45-b603-4f5f-b150-915d120cc484.png",
+      "prompt": "8-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo numeral \"8\" silhouette. Image 2 is the authoritative golden/orange/red HUD zero whose material this numeral must match. Render just the numeral \"8\" using Image 1's exact outer and inner contours, placement and proportions, with Image 2's polished narrow sculpted bevel, subtle front-face shading, tiny upper-left edge highlights, and saturated yellow through gold/amber/orange to deep red gradient. Match the reference's actual finish and light direction; do not add inflated jewel-like volume, big white streaks, extra gloss, cracks, grain or scratches. No black outer stroke or black drop shadow. The glyph is the number 8, not a letter. Solid flat #ff00ff magenta outside the colored glyph and in its holes. Smooth antialiased edges, one glyph only, no other text or objects.\n",
+      "reference": null
+    },
+    "9": {
+      "model": "candidates/9-counter-01.png",
+      "modelSha256": "8dff033c4314125275ea0d0eb8db5a5382c88d2bb6dcd11889174bf18f14b27d",
+      "generatorOutput": "exec-d5f5a629-1afe-4639-b822-ed3688ddbaf4.png",
+      "prompt": "9-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo numeral \"9\" silhouette. Image 2 is the authoritative golden/orange/red HUD zero whose material this numeral must match. Render just the numeral \"9\" using Image 1's exact outer and inner contours, placement and proportions, with Image 2's polished narrow sculpted bevel, subtle front-face shading, tiny upper-left edge highlights, and saturated yellow through gold/amber/orange to deep red gradient. Match the reference's actual finish and light direction; do not add inflated jewel-like volume, big white streaks, extra gloss, cracks, grain or scratches. No black outer stroke or black drop shadow. The glyph is the number 9, not a letter. Solid flat #ff00ff magenta outside the colored glyph and in its holes. Smooth antialiased edges, one glyph only, no other text or objects.\n",
+      "reference": null
+    },
+    "A": {
+      "model": "candidates/A-bonus-01.png",
+      "modelSha256": "2b120ec7acbde6b84511205f3553b9fe6ecf5212804398da9431552a961e6622",
+      "generatorOutput": "exec-500761c2-6541-41db-afd5-28b469a53add.png",
+      "prompt": "A-extraction-prompt.txt",
+      "promptText": "Edit the background of this exact reference glyph and restore its resolution. The single colored letter is uppercase \"A\". Keep that same colored letter design, pointed contour, openings, narrow beveled edge ridges, subtle raised-face shading, and green-to-blue material. Preserve the actual light placement and color relationships in the supplied reference; do not redesign or add new gloss.\nRemove the dark scene/plate background and the giant black surround, replacing those areas and all hole/open backgrounds with perfectly flat solid #ff00ff magenta. Retain genuine colored dark bevel facets and the small bright highlights already present. Reconstruct clean, polished antialiasing and continuous surfaces from this magnified small reference without changing its visual treatment. Do not add texture, grain, scratches, extra cuts, broad white streaks or inflated jewel-like volume.\nReturn this one \"A\" only, on the flat magenta background, preserving the reference glyph's aspect ratio. No other text, symbols, frames or objects. This is one image-model color layer for a Roo image-font glyph; original Roo vector geometry supplies the final alpha.\n",
+      "reference": "analysis/A-alphabet-native.png"
+    },
+    "B": {
+      "model": "candidates/B-bonus-04.png",
+      "modelSha256": "07c3d43931a127a21fdf51e67bd8734be97e754882daed829da948a252fbc843",
+      "generatorOutput": "exec-4409a092-5f96-44be-94c1-72139941fa2e.png",
+      "prompt": "B-extraction-prompt.txt",
+      "promptText": "Edit only the background of this image. Preserve the colored uppercase B artwork exactly: identical front-face colors, subtle shading, bevel profiles, narrow highlights, contour and holes. Remove the surrounding dungeon image and the thick black outer stroke/shadow, replacing those areas and the hole backgrounds with perfectly flat solid #ff00ff magenta. Do not redesign, repaint, recolor, add shininess, widen the bevel, change the shape, or add details to the colored B. Preserve its existing green/emerald/cyan/royal-blue treatment and antialiased edges. Return just this same B on the magenta background, at high resolution. No extra objects or text.\n",
+      "reference": "analysis/B-reference-native.png"
+    },
+    "C": {
+      "model": "candidates/C-bonus-01.png",
+      "modelSha256": "6591ad4f6be978f88532acb07e3c058fd20d23d9234a927d663ff824565afc37",
+      "generatorOutput": "exec-becb8e2c-2af5-4d50-b6fe-dba09d478029.png",
+      "prompt": "C-extraction-prompt.txt",
+      "promptText": "Edit the background of this exact reference glyph and restore its resolution. The single colored letter is uppercase \"C\". Keep that same colored letter design, pointed contour, openings, narrow beveled edge ridges, subtle raised-face shading, and green-to-blue material. Preserve the actual light placement and color relationships in the supplied reference; do not redesign or add new gloss.\nRemove the dark scene/plate background and the giant black surround, replacing those areas and all hole/open backgrounds with perfectly flat solid #ff00ff magenta. Retain genuine colored dark bevel facets and the small bright highlights already present. Reconstruct clean, polished antialiasing and continuous surfaces from this magnified small reference without changing its visual treatment. Do not add texture, grain, scratches, extra cuts, broad white streaks or inflated jewel-like volume.\nReturn this one \"C\" only, on the flat magenta background, preserving the reference glyph's aspect ratio. No other text, symbols, frames or objects. This is one image-model color layer for a Roo image-font glyph; original Roo vector geometry supplies the final alpha.\n",
+      "reference": "analysis/C-alphabet-native.png"
+    },
+    "D": {
+      "model": "candidates/D-bonus-01.png",
+      "modelSha256": "115f3300c7d50abe4c62962b5ac5664a865a52ea28a2721f85d171b29f048f1d",
+      "generatorOutput": "exec-448a5682-b497-41ea-af69-9494dc03553f.png",
+      "prompt": "D-extraction-prompt.txt",
+      "promptText": "Edit the background of this exact reference glyph and restore its resolution. The single colored letter is uppercase \"D\". Keep that same colored letter design, pointed contour, openings, narrow beveled edge ridges, subtle raised-face shading, and green-to-blue material. Preserve the actual light placement and color relationships in the supplied reference; do not redesign or add new gloss.\nRemove the dark scene/plate background and the giant black surround, replacing those areas and all hole/open backgrounds with perfectly flat solid #ff00ff magenta. Retain genuine colored dark bevel facets and the small bright highlights already present. Reconstruct clean, polished antialiasing and continuous surfaces from this magnified small reference without changing its visual treatment. Do not add texture, grain, scratches, extra cuts, broad white streaks or inflated jewel-like volume.\nReturn this one \"D\" only, on the flat magenta background, preserving the reference glyph's aspect ratio. No other text, symbols, frames or objects. This is one image-model color layer for a Roo image-font glyph; original Roo vector geometry supplies the final alpha.\n",
+      "reference": "analysis/D-alphabet-native.png"
+    },
+    "E": {
+      "model": "candidates/E-bonus-01.png",
+      "modelSha256": "d0224a0ea2acd05a5d85031ca4567066f9cc915ede4ac5bbaecdefdb85034d9d",
+      "generatorOutput": "exec-88f46f0a-8dc8-45b1-888f-4c133748135c.png",
+      "prompt": "E-extraction-prompt.txt",
+      "promptText": "Edit the background of this exact reference glyph and restore its resolution. The single colored letter is uppercase \"E\". Keep that same colored letter design, pointed contour, openings, narrow beveled edge ridges, subtle raised-face shading, and green-to-blue material. Preserve the actual light placement and color relationships in the supplied reference; do not redesign or add new gloss.\nRemove the dark scene/plate background and the giant black surround, replacing those areas and all hole/open backgrounds with perfectly flat solid #ff00ff magenta. Retain genuine colored dark bevel facets and the small bright highlights already present. Reconstruct clean, polished antialiasing and continuous surfaces from this magnified small reference without changing its visual treatment. Do not add texture, grain, scratches, extra cuts, broad white streaks or inflated jewel-like volume.\nReturn this one \"E\" only, on the flat magenta background, preserving the reference glyph's aspect ratio. No other text, symbols, frames or objects. This is one image-model color layer for a Roo image-font glyph; original Roo vector geometry supplies the final alpha.\n",
+      "reference": "analysis/E-alphabet-native.png"
+    },
+    "F": {
+      "model": "candidates/F-bonus-01.png",
+      "modelSha256": "4d83b8ec0ca2758ac747bf6a119d67a6c239c5fafccd19c3b2408ff9bba4cab8",
+      "generatorOutput": "exec-4ad4e66c-1dc9-4fe8-abe3-63ef2efdc65b.png",
+      "prompt": "F-extraction-prompt.txt",
+      "promptText": "Restore this exact colored uppercase \"F\" as one clean high-resolution image-font glyph. Preserve the colored artwork's design, narrow bevel ridges, front-face shading, tiny highlights and green/emerald/cyan/royal-blue material. Maintain the reference's light and color placement, without adding gloss, texture or inflated volume.\nThe large BLACK OUTER SURROUND is background, not part of the glyph: remove it completely. Keep only the colored face and colored beveled edges. Also remove all scene/plate pixels and all backgrounds in holes/open areas. Replace those removed areas with perfectly flat solid #ff00ff magenta. Do not leave a black border, drop shadow or checkerboard.\nReconstruct polished antialiased edges and smooth continuous shading from this magnified reference while keeping the same visual treatment and letter structure. Only one literal \"F\", preserving its aspect ratio, no extra symbols, captions or objects. This is the per-letter image-model color/detail pass for a Roo vector-based PNG font.\n",
+      "reference": "analysis/F-alphabet-native.png"
+    },
+    "G": {
+      "model": "candidates/G-bonus-01.png",
+      "modelSha256": "d3b8b1297f2d83536d2f1e75bc7ee5d2fd04f345c7a9bf22ba7b230f2cefe471",
+      "generatorOutput": "exec-2c5509f8-1392-48b3-bfef-61013cce30c6.png",
+      "prompt": "G-extraction-prompt.txt",
+      "promptText": "Restore this exact colored uppercase \"G\" as one clean high-resolution image-font glyph. Preserve the colored artwork's design, narrow bevel ridges, front-face shading, tiny highlights and green/emerald/cyan/royal-blue material. Maintain the reference's light and color placement, without adding gloss, texture or inflated volume.\nThe large BLACK OUTER SURROUND is background, not part of the glyph: remove it completely. Keep only the colored face and colored beveled edges. Also remove all scene/plate pixels and all backgrounds in holes/open areas. Replace those removed areas with perfectly flat solid #ff00ff magenta. Do not leave a black border, drop shadow or checkerboard.\nReconstruct polished antialiased edges and smooth continuous shading from this magnified reference while keeping the same visual treatment and letter structure. Only one literal \"G\", preserving its aspect ratio, no extra symbols, captions or objects. This is the per-letter image-model color/detail pass for a Roo vector-based PNG font.\n",
+      "reference": "analysis/G-alphabet-native.png"
+    },
+    "H": {
+      "model": "candidates/H-bonus-01.png",
+      "modelSha256": "e84fbbe993d52e92494b27b690fdc4d21f917151e7abd9e6cb00f8bf60a0713a",
+      "generatorOutput": "exec-a0b9d45d-e100-4605-a8a4-d9b08bed4d4f.png",
+      "prompt": "H-extraction-prompt.txt",
+      "promptText": "Restore this exact colored uppercase \"H\" as one clean high-resolution image-font glyph. Preserve the colored artwork's design, narrow bevel ridges, front-face shading, tiny highlights and green/emerald/cyan/royal-blue material. Maintain the reference's light and color placement, without adding gloss, texture or inflated volume.\nThe large BLACK OUTER SURROUND is background, not part of the glyph: remove it completely. Keep only the colored face and colored beveled edges. Also remove all scene/plate pixels and all backgrounds in holes/open areas. Replace those removed areas with perfectly flat solid #ff00ff magenta. Do not leave a black border, drop shadow or checkerboard.\nReconstruct polished antialiased edges and smooth continuous shading from this magnified reference while keeping the same visual treatment and letter structure. Only one literal \"H\", preserving its aspect ratio, no extra symbols, captions or objects. This is the per-letter image-model color/detail pass for a Roo vector-based PNG font.\n",
+      "reference": "analysis/H-alphabet-native.png"
+    },
+    "I": {
+      "model": "candidates/I-bonus-01.png",
+      "modelSha256": "69e9810a152701dfddb7eaacb6c2b78694dc93709137be339fd77bce0658fff4",
+      "generatorOutput": "exec-52e3c9de-487b-4798-ae58-2cdc12aba800.png",
+      "prompt": "I-extraction-prompt.txt",
+      "promptText": "Restore this exact colored uppercase \"I\" as one clean high-resolution image-font glyph. Preserve the colored artwork's design, narrow bevel ridges, front-face shading, tiny highlights and green/emerald/cyan/royal-blue material. Maintain the reference's light and color placement, without adding gloss, texture or inflated volume.\nThe large BLACK OUTER SURROUND is background, not part of the glyph: remove it completely. Keep only the colored face and colored beveled edges. Also remove all scene/plate pixels and all backgrounds in holes/open areas. Replace those removed areas with perfectly flat solid #ff00ff magenta. Do not leave a black border, drop shadow or checkerboard.\nReconstruct polished antialiased edges and smooth continuous shading from this magnified reference while keeping the same visual treatment and letter structure. Only one literal \"I\", preserving its aspect ratio, no extra symbols, captions or objects. This is the per-letter image-model color/detail pass for a Roo vector-based PNG font.\n",
+      "reference": "analysis/I-alphabet-native.png"
+    },
+    "J": {
+      "model": "candidates/J-bonus-01.png",
+      "modelSha256": "e195a2e977938d2867d36ce59e665fc56d952049859ff610c3dcd5a65e5fada6",
+      "generatorOutput": "exec-b288e230-e8d8-4777-8f54-71c39a044b9e.png",
+      "prompt": "J-extraction-prompt.txt",
+      "promptText": "Restore this exact colored uppercase \"J\" as one clean high-resolution image-font glyph. Preserve the colored artwork's design, narrow bevel ridges, front-face shading, tiny highlights and green/emerald/cyan/royal-blue material. Maintain the reference's light and color placement, without adding gloss, texture or inflated volume.\nThe large BLACK OUTER SURROUND is background, not part of the glyph: remove it completely. Keep only the colored face and colored beveled edges. Also remove all scene/plate pixels and all backgrounds in holes/open areas. Replace those removed areas with perfectly flat solid #ff00ff magenta. Do not leave a black border, drop shadow or checkerboard.\nReconstruct polished antialiased edges and smooth continuous shading from this magnified reference while keeping the same visual treatment and letter structure. Only one literal \"J\", preserving its aspect ratio, no extra symbols, captions or objects. This is the per-letter image-model color/detail pass for a Roo vector-based PNG font.\n",
+      "reference": "analysis/J-alphabet-native.png"
+    },
+    "K": {
+      "model": "candidates/K-bonus-01.png",
+      "modelSha256": "1062dd6f16d8acdd79fb1072e794d4fc3988563134269f583c04aae74841e3f6",
+      "generatorOutput": "exec-552a0dbc-4a96-4e9c-9f81-6d2fa46c16dc.png",
+      "prompt": "K-extraction-prompt.txt",
+      "promptText": "Restore this exact colored uppercase \"K\" as one clean high-resolution image-font glyph. Preserve the colored artwork's design, narrow bevel ridges, front-face shading, tiny highlights and green/emerald/cyan/royal-blue material. Maintain the reference's light and color placement, without adding gloss, texture or inflated volume.\nThe large BLACK OUTER SURROUND is background, not part of the glyph: remove it completely. Keep only the colored face and colored beveled edges. Also remove all scene/plate pixels and all backgrounds in holes/open areas. Replace those removed areas with perfectly flat solid #ff00ff magenta. Do not leave a black border, drop shadow or checkerboard.\nReconstruct polished antialiased edges and smooth continuous shading from this magnified reference while keeping the same visual treatment and letter structure. Only one literal \"K\", preserving its aspect ratio, no extra symbols, captions or objects. This is the per-letter image-model color/detail pass for a Roo vector-based PNG font.\n",
+      "reference": "analysis/K-alphabet-native.png"
+    },
+    "L": {
+      "model": "candidates/L-bonus-01.png",
+      "modelSha256": "eb9a592a59aedc94b69e0aec050750e15b2ce0d175d209c76eff012c54640755",
+      "generatorOutput": "exec-737fe9b5-4200-481b-8517-7c1029e987a7.png",
+      "prompt": "L-extraction-prompt.txt",
+      "promptText": "Restore this exact colored uppercase \"L\" as one clean high-resolution image-font glyph. Preserve the colored artwork's design, narrow bevel ridges, front-face shading, tiny highlights and green/emerald/cyan/royal-blue material. Maintain the reference's light and color placement, without adding gloss, texture or inflated volume.\nThe large BLACK OUTER SURROUND is background, not part of the glyph: remove it completely. Keep only the colored face and colored beveled edges. Also remove all scene/plate pixels and all backgrounds in holes/open areas. Replace those removed areas with perfectly flat solid #ff00ff magenta. Do not leave a black border, drop shadow or checkerboard.\nReconstruct polished antialiased edges and smooth continuous shading from this magnified reference while keeping the same visual treatment and letter structure. Only one literal \"L\", preserving its aspect ratio, no extra symbols, captions or objects. This is the per-letter image-model color/detail pass for a Roo vector-based PNG font.\n",
+      "reference": "analysis/L-alphabet-native.png"
+    },
+    "M": {
+      "model": "candidates/M-bonus-01.png",
+      "modelSha256": "9bf62fac4e466d8064bd0daa756b1a7cecde4074db7f235a26a4d093bcc4018c",
+      "generatorOutput": "exec-144d0f5e-f43b-4d0c-84b3-6f72e6d4d67d.png",
+      "prompt": "M-extraction-prompt.txt",
+      "promptText": "Restore this exact colored uppercase \"M\" as one clean high-resolution image-font glyph. Preserve the colored artwork's design, narrow bevel ridges, front-face shading, tiny highlights and green/emerald/cyan/royal-blue material. Maintain the reference's light and color placement, without adding gloss, texture or inflated volume.\nThe large BLACK OUTER SURROUND is background, not part of the glyph: remove it completely. Keep only the colored face and colored beveled edges. Also remove all scene/plate pixels and all backgrounds in holes/open areas. Replace those removed areas with perfectly flat solid #ff00ff magenta. Do not leave a black border, drop shadow or checkerboard.\nReconstruct polished antialiased edges and smooth continuous shading from this magnified reference while keeping the same visual treatment and letter structure. Only one literal \"M\", preserving its aspect ratio, no extra symbols, captions or objects. This is the per-letter image-model color/detail pass for a Roo vector-based PNG font.\n",
+      "reference": "analysis/M-alphabet-native.png"
+    },
+    "N": {
+      "model": "candidates/N-bonus-02.png",
+      "modelSha256": "f1436a510d53817bc37b5357c52c54657ab5c6d85996c6e5a5edab4190643a5f",
+      "generatorOutput": "exec-599d09e4-e1a1-4f4f-9726-38e91fa7b0e4.png",
+      "prompt": "N-extraction-prompt.txt",
+      "promptText": "Edit only the background of this image. Preserve the colored uppercase N artwork exactly: identical front-face colors, subtle shading, bevel profiles, narrow highlights, contour and open areas. Remove the surrounding dungeon image and the giant black outer stroke/drop shadow, replacing those areas and the hole/open backgrounds with perfectly flat solid #ff00ff magenta. Do not redesign, repaint, recolor, add shininess, widen the bevel, change the shape, or add details to the colored N. Preserve its existing green/emerald/cyan/royal-blue treatment and antialiased edges, including the darker colored bevel facets. Return just this same N on the magenta background, preserving its aspect ratio at high resolution. No extra objects or text.\n",
+      "reference": "analysis/N-reference-native.png"
+    },
+    "O": {
+      "model": "candidates/O-bonus-02.png",
+      "modelSha256": "bb869ae1cffb26807d5d6e0405383d031174a76b7091471332e596f512214069",
+      "generatorOutput": "exec-7b850e3f-2745-400f-ae69-8961e09c218f.png",
+      "prompt": "O-extraction-prompt.txt",
+      "promptText": "Edit only the background of this image. Preserve the colored uppercase O artwork exactly: identical front-face colors, subtle shading, bevel profiles, narrow highlights, contour and open areas. Remove the surrounding dungeon image and the giant black outer stroke/drop shadow, replacing those areas and the hole/open backgrounds with perfectly flat solid #ff00ff magenta. Do not redesign, repaint, recolor, add shininess, widen the bevel, change the shape, or add details to the colored O. Preserve its existing green/emerald/cyan/royal-blue treatment and antialiased edges, including the darker colored bevel facets. Return just this same O on the magenta background, preserving its aspect ratio at high resolution. No extra objects or text.\n",
+      "reference": "analysis/O-reference-native.png"
+    },
+    "P": {
+      "model": "candidates/P-bonus-01.png",
+      "modelSha256": "27ccfef506eb9a93489be252e9e51478bc7ab550d29edafeb6234168b0a1a261",
+      "generatorOutput": "exec-74dbe8b0-b1cd-4e3a-8314-97569484942b.png",
+      "prompt": "P-extraction-prompt.txt",
+      "promptText": "Restore this exact colored uppercase \"P\" as one clean high-resolution image-font glyph. Preserve the colored artwork's design, narrow bevel ridges, front-face shading, tiny highlights and green/emerald/cyan/royal-blue material. Maintain the reference's light and color placement, without adding gloss, texture or inflated volume.\nThe large BLACK OUTER SURROUND is background, not part of the glyph: remove it completely. Keep only the colored face and colored beveled edges. Also remove all scene/plate pixels and all backgrounds in holes/open areas. Replace those removed areas with perfectly flat solid #ff00ff magenta. Do not leave a black border, drop shadow or checkerboard.\nReconstruct polished antialiased edges and smooth continuous shading from this magnified reference while keeping the same visual treatment and letter structure. Only one literal \"P\", preserving its aspect ratio, no extra symbols, captions or objects. This is the per-letter image-model color/detail pass for a Roo vector-based PNG font.\n",
+      "reference": "analysis/P-alphabet-native.png"
+    },
+    "Q": {
+      "model": "candidates/Q-bonus-01.png",
+      "modelSha256": "d8544b1d96de1aaca2dffff352d0c58a03844539cac571a1ecdfcba2462fab2d",
+      "generatorOutput": "exec-c679a481-148c-4c79-8f59-753a135a8a11.png",
+      "prompt": "Q-extraction-prompt.txt",
+      "promptText": "Restore this exact colored uppercase \"Q\" as one clean high-resolution image-font glyph. Preserve the colored artwork's design, narrow bevel ridges, front-face shading, tiny highlights and green/emerald/cyan/royal-blue material. Maintain the reference's light and color placement, without adding gloss, texture or inflated volume.\nThe large BLACK OUTER SURROUND is background, not part of the glyph: remove it completely. Keep only the colored face and colored beveled edges. Also remove all scene/plate pixels and all backgrounds in holes/open areas. Replace those removed areas with perfectly flat solid #ff00ff magenta. Do not leave a black border, drop shadow or checkerboard.\nReconstruct polished antialiased edges and smooth continuous shading from this magnified reference while keeping the same visual treatment and letter structure. Only one literal \"Q\", preserving its aspect ratio, no extra symbols, captions or objects. This is the per-letter image-model color/detail pass for a Roo vector-based PNG font.\n",
+      "reference": "analysis/Q-alphabet-native.png"
+    },
+    "R": {
+      "model": "candidates/R-bonus-01.png",
+      "modelSha256": "2d072abd4786cd304c1fb01b6d089e874df9b55cca32cfdee4aafa3d7967ef07",
+      "generatorOutput": "exec-b0f625cb-260d-4a02-bc63-25d270e113dc.png",
+      "prompt": "R-extraction-prompt.txt",
+      "promptText": "Restore this exact colored uppercase \"R\" as one clean high-resolution image-font glyph. Preserve the colored artwork's design, narrow bevel ridges, front-face shading, tiny highlights and green/emerald/cyan/royal-blue material. Maintain the reference's light and color placement, without adding gloss, texture or inflated volume.\nThe large BLACK OUTER SURROUND is background, not part of the glyph: remove it completely. Keep only the colored face and colored beveled edges. Also remove all scene/plate pixels and all backgrounds in holes/open areas. Replace those removed areas with perfectly flat solid #ff00ff magenta. Do not leave a black border, drop shadow or checkerboard.\nReconstruct polished antialiased edges and smooth continuous shading from this magnified reference while keeping the same visual treatment and letter structure. Only one literal \"R\", preserving its aspect ratio, no extra symbols, captions or objects. This is the per-letter image-model color/detail pass for a Roo vector-based PNG font.\n",
+      "reference": "analysis/R-alphabet-native.png"
+    },
+    "S": {
+      "model": "candidates/S-bonus-02.png",
+      "modelSha256": "d82bb71267ec790081ee254d3775565a7e3655d1391f5f617363a4e5a491a5ca",
+      "generatorOutput": "exec-d6d7499d-0c5d-432c-89cd-000de5e0a7e5.png",
+      "prompt": "S-extraction-prompt.txt",
+      "promptText": "Edit only the background of this image. Preserve the colored uppercase S artwork exactly: identical front-face colors, subtle shading, bevel profiles, narrow highlights, contour and open areas. Remove the surrounding dungeon image and the giant black outer stroke/drop shadow, replacing those areas and the hole/open backgrounds with perfectly flat solid #ff00ff magenta. Do not redesign, repaint, recolor, add shininess, widen the bevel, change the shape, or add details to the colored S. Preserve its existing green/emerald/cyan/royal-blue treatment and antialiased edges, including the darker colored bevel facets. Return just this same S on the magenta background, preserving its aspect ratio at high resolution. No extra objects or text.\n",
+      "reference": "analysis/S-reference-native.png"
+    },
+    "T": {
+      "model": "candidates/T-bonus-01.png",
+      "modelSha256": "9ab8b51925b47373d87c25d7de08686d441c050975c47cb666ff1fb2c579d084",
+      "generatorOutput": "exec-24f117f2-4374-49f3-b469-79cce8cc4ee4.png",
+      "prompt": "T-extraction-prompt.txt",
+      "promptText": "Restore this exact colored uppercase \"T\" as one clean high-resolution image-font glyph. Preserve the colored artwork's design, narrow bevel ridges, front-face shading, tiny highlights and green/emerald/cyan/royal-blue material. Maintain the reference's light and color placement, without adding gloss, texture or inflated volume.\nThe large BLACK OUTER SURROUND is background, not part of the glyph: remove it completely. Keep only the colored face and colored beveled edges. Also remove all scene/plate pixels and all backgrounds in holes/open areas. Replace those removed areas with perfectly flat solid #ff00ff magenta. Do not leave a black border, drop shadow or checkerboard.\nReconstruct polished antialiased edges and smooth continuous shading from this magnified reference while keeping the same visual treatment and letter structure. Only one literal \"T\", preserving its aspect ratio, no extra symbols, captions or objects. This is the per-letter image-model color/detail pass for a Roo vector-based PNG font.\n",
+      "reference": "analysis/T-alphabet-native.png"
+    },
+    "U": {
+      "model": "candidates/U-bonus-02.png",
+      "modelSha256": "c881acd19aa60583632926865a8f16881a19bc546f448ff3d8f508c557429978",
+      "generatorOutput": "exec-536e188b-6dd3-4eaa-8e3c-e16d10a737f1.png",
+      "prompt": "U-extraction-prompt.txt",
+      "promptText": "Edit only the background of this image. Preserve the colored uppercase U artwork exactly: identical front-face colors, subtle shading, bevel profiles, narrow highlights, contour and open areas. Remove the surrounding dungeon image and the giant black outer stroke/drop shadow, replacing those areas and the hole/open backgrounds with perfectly flat solid #ff00ff magenta. Do not redesign, repaint, recolor, add shininess, widen the bevel, change the shape, or add details to the colored U. Preserve its existing green/emerald/cyan/royal-blue treatment and antialiased edges, including the darker colored bevel facets. Return just this same U on the magenta background, preserving its aspect ratio at high resolution. No extra objects or text.\n",
+      "reference": "analysis/U-reference-native.png"
+    },
+    "V": {
+      "model": "candidates/V-bonus-01.png",
+      "modelSha256": "48cd5c267955ff2cee65dcdc14189f4634ebc7510aacda5abbf035bcbf553aed",
+      "generatorOutput": "exec-7b3e7fa1-b024-4163-aebe-03ec7e14a881.png",
+      "prompt": "V-extraction-prompt.txt",
+      "promptText": "Restore this exact colored uppercase \"V\" as one clean high-resolution image-font glyph. Preserve the colored artwork's design, narrow bevel ridges, front-face shading, tiny highlights and green/emerald/cyan/royal-blue material. Maintain the reference's light and color placement, without adding gloss, texture or inflated volume.\nThe large BLACK OUTER SURROUND is background, not part of the glyph: remove it completely. Keep only the colored face and colored beveled edges. Also remove all scene/plate pixels and all backgrounds in holes/open areas. Replace those removed areas with perfectly flat solid #ff00ff magenta. Do not leave a black border, drop shadow or checkerboard.\nReconstruct polished antialiased edges and smooth continuous shading from this magnified reference while keeping the same visual treatment and letter structure. Only one literal \"V\", preserving its aspect ratio, no extra symbols, captions or objects. This is the per-letter image-model color/detail pass for a Roo vector-based PNG font.\n",
+      "reference": "analysis/V-alphabet-native.png"
+    },
+    "W": {
+      "model": "candidates/W-bonus-01.png",
+      "modelSha256": "5adf7efa66562b9d24c711af9d9b447a94be2047757a18dea7af55c51981d9c9",
+      "generatorOutput": "exec-3d52e932-e9e9-4929-ae8c-567230a62d6c.png",
+      "prompt": "W-extraction-prompt.txt",
+      "promptText": "Restore this exact colored uppercase \"W\" as one clean high-resolution image-font glyph. Preserve the colored artwork's design, narrow bevel ridges, front-face shading, tiny highlights and green/emerald/cyan/royal-blue material. Maintain the reference's light and color placement, without adding gloss, texture or inflated volume.\nThe large BLACK OUTER SURROUND is background, not part of the glyph: remove it completely. Keep only the colored face and colored beveled edges. Also remove all scene/plate pixels and all backgrounds in holes/open areas. Replace those removed areas with perfectly flat solid #ff00ff magenta. Do not leave a black border, drop shadow or checkerboard.\nReconstruct polished antialiased edges and smooth continuous shading from this magnified reference while keeping the same visual treatment and letter structure. Only one literal \"W\", preserving its aspect ratio, no extra symbols, captions or objects. This is the per-letter image-model color/detail pass for a Roo vector-based PNG font.\n",
+      "reference": "analysis/W-alphabet-native.png"
+    },
+    "X": {
+      "model": "candidates/X-bonus-01.png",
+      "modelSha256": "7878cfcee4938429c31a9b82188f0c91c3ed39ef47c7a3fa12aeb55c708ba233",
+      "generatorOutput": "exec-151288fe-f629-426b-a201-9183d3a45c39.png",
+      "prompt": "X-extraction-prompt.txt",
+      "promptText": "Restore this exact colored uppercase \"X\" as one clean high-resolution image-font glyph. Preserve the colored artwork's design, narrow bevel ridges, front-face shading, tiny highlights and green/emerald/cyan/royal-blue material. Maintain the reference's light and color placement, without adding gloss, texture or inflated volume.\nThe large BLACK OUTER SURROUND is background, not part of the glyph: remove it completely. Keep only the colored face and colored beveled edges. Also remove all scene/plate pixels and all backgrounds in holes/open areas. Replace those removed areas with perfectly flat solid #ff00ff magenta. Do not leave a black border, drop shadow or checkerboard.\nReconstruct polished antialiased edges and smooth continuous shading from this magnified reference while keeping the same visual treatment and letter structure. Only one literal \"X\", preserving its aspect ratio, no extra symbols, captions or objects. This is the per-letter image-model color/detail pass for a Roo vector-based PNG font.\n",
+      "reference": "analysis/X-alphabet-native.png"
+    },
+    "Y": {
+      "model": "candidates/Y-bonus-01.png",
+      "modelSha256": "0385a064239f38e511732b1e49060c1f902fbd1ba00f0a9b34f331ec09612a60",
+      "generatorOutput": "exec-9844a4d2-222f-4cf3-bde3-168f35725ca4.png",
+      "prompt": "Y-extraction-prompt.txt",
+      "promptText": "Restore this exact colored uppercase \"Y\" as one clean high-resolution image-font glyph. Preserve the colored artwork's design, narrow bevel ridges, front-face shading, tiny highlights and green/emerald/cyan/royal-blue material. Maintain the reference's light and color placement, without adding gloss, texture or inflated volume.\nThe large BLACK OUTER SURROUND is background, not part of the glyph: remove it completely. Keep only the colored face and colored beveled edges. Also remove all scene/plate pixels and all backgrounds in holes/open areas. Replace those removed areas with perfectly flat solid #ff00ff magenta. Do not leave a black border, drop shadow or checkerboard.\nReconstruct polished antialiased edges and smooth continuous shading from this magnified reference while keeping the same visual treatment and letter structure. Only one literal \"Y\", preserving its aspect ratio, no extra symbols, captions or objects. This is the per-letter image-model color/detail pass for a Roo vector-based PNG font.\n",
+      "reference": "analysis/Y-alphabet-native.png"
+    },
+    "Z": {
+      "model": "candidates/Z-bonus-01.png",
+      "modelSha256": "90aba4ae1fc8f00c879958e0d6cfd8c32744da102e13c44f4f4fb58bed7f9d0a",
+      "generatorOutput": "exec-58edda86-975d-4036-ab62-3ff271725289.png",
+      "prompt": "Z-extraction-prompt.txt",
+      "promptText": "Restore this exact colored uppercase \"Z\" as one clean high-resolution image-font glyph. Preserve the colored artwork's design, narrow bevel ridges, front-face shading, tiny highlights and green/emerald/cyan/royal-blue material. Maintain the reference's light and color placement, without adding gloss, texture or inflated volume.\nThe large BLACK OUTER SURROUND is background, not part of the glyph: remove it completely. Keep only the colored face and colored beveled edges. Also remove all scene/plate pixels and all backgrounds in holes/open areas. Replace those removed areas with perfectly flat solid #ff00ff magenta. Do not leave a black border, drop shadow or checkerboard.\nReconstruct polished antialiased edges and smooth continuous shading from this magnified reference while keeping the same visual treatment and letter structure. Only one literal \"Z\", preserving its aspect ratio, no extra symbols, captions or objects. This is the per-letter image-model color/detail pass for a Roo vector-based PNG font.\n",
+      "reference": "analysis/Z-alphabet-native.png"
+    },
+    "!": {
+      "model": "candidates/u0021-counter-01.png",
+      "modelSha256": "78f6206419a5ff16a7f2fa8aade2770e606946cb5303bf2a6c02f8a2e8cab8b8",
+      "generatorOutput": "exec-c1973035-7493-4879-bb17-5d388f38e8fb.png",
+      "prompt": "u0021-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo exclamation mark glyph, literal \"!\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment, consistently with a font whose cap band runs from image y=122 (yellow-gold) to y=902 (deep red). The upper part is yellow/gold and the lower part orange/deep red. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent or remove marks.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    "?": {
+      "model": "candidates/u003f-counter-01.png",
+      "modelSha256": "6a80c7aab14146f5de96c5d17ae1586f00548112f57abb6b1a052f081c6070af",
+      "generatorOutput": "exec-8296ddfd-a9b1-437e-95a2-49d0872d32bc.png",
+      "prompt": "u003f-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo question mark glyph, literal \"?\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment, consistently with a font whose cap band runs from image y=122 (yellow-gold) to y=902 (deep red). The upper part is yellow/gold and the lower part orange/deep red. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent or remove marks.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    ".": {
+      "model": "candidates/u002e-counter-01.png",
+      "modelSha256": "0345fe40ead4090b551e49d4a89fb524e123ec25deca2062156ed134159b0f60",
+      "generatorOutput": "exec-0af1101e-1062-4f49-b17f-18a107465b4b.png",
+      "prompt": "u002e-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo full stop / period glyph, literal \".\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment, consistently with a font whose cap band runs from image y=122 (yellow-gold) to y=902 (deep red). This small baseline glyph is predominantly orange-red/vermilion, using the lower part of the font gradient. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent or remove marks.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    ",": {
+      "model": "candidates/u002c-counter-01.png",
+      "modelSha256": "888609132d087f515eb0a662cb114c5f0936d63d5500728ba1624f420186f1c3",
+      "generatorOutput": "exec-a46edcaa-a863-4dfc-9d1c-38e99daaaa59.png",
+      "prompt": "u002c-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo comma glyph, literal \",\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment, consistently with a font whose cap band runs from image y=122 (yellow-gold) to y=902 (deep red). This small baseline glyph is predominantly orange-red/vermilion, using the lower part of the font gradient. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent or remove marks.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    ":": {
+      "model": "candidates/u003a-counter-01.png",
+      "modelSha256": "957c00d313698d2b33ec37faf4982e3513e16438d9a7b514f8f62a12c4cc5972",
+      "generatorOutput": "exec-8e09f04b-b155-4534-ba14-a12788ceff0c.png",
+      "prompt": "u003a-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo colon, two marks vertically separated glyph, literal \":\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment, consistently with a font whose cap band runs from image y=122 (yellow-gold) to y=902 (deep red). Preserve both separated marks; the upper one is amber and the lower one orange-red. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent or remove marks.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    ";": {
+      "model": "candidates/u003b-counter-01.png",
+      "modelSha256": "9a921eebb3d1f38ca385f12ea77e29f0fe3829a9d8f902f396539f5ca52eaa1a",
+      "generatorOutput": "exec-541cbbfc-9493-4d32-9c00-ba03be273756.png",
+      "prompt": "u003b-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo semicolon, upper mark and lower comma tail glyph, literal \";\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment, consistently with a font whose cap band runs from image y=122 (yellow-gold) to y=902 (deep red). Preserve both separated parts; the upper one is amber, the lower tail orange-red. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent or remove marks.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    "/": {
+      "model": "candidates/u002f-counter-01.png",
+      "modelSha256": "1e534ae56cb92beab85fbc1b88c221456626fb32319fab64ae5779a568642816",
+      "generatorOutput": "exec-d3ec2deb-42ab-495b-afaa-f6fdc222031d.png",
+      "prompt": "u002f-counter-prompt.txt",
+      "promptText": "Edit only the background of this exact forward slash \"/\" from the reference HUD. Preserve its exact narrow pointed Roo shape, diagonal angle, 3D bevel and golden-yellow to orange/red shading. Remove the scene and large black surround, leaving only the colored slash on perfectly flat #ff00ff magenta. Restore polished high-resolution antialiasing without changing the artwork's lighting, color profile or proportions. One forward slash only; no letters, numbers or other objects.\n",
+      "reference": "analysis/u002f-number-native.png"
+    },
+    "-": {
+      "model": "candidates/u002d-counter-01.png",
+      "modelSha256": "a30b43f7ae262ce6f0860c923727860fd8b35a2f8bf6f1420563806924671b3c",
+      "generatorOutput": "exec-a48ecc52-4105-4342-970c-b8da75f6f494.png",
+      "prompt": "u002d-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo hyphen / minus sign glyph, literal \"-\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment, consistently with a font whose cap band runs from image y=122 (yellow-gold) to y=902 (deep red). This mid-height glyph uses the amber/orange middle of the font gradient. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent or remove marks.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    "+": {
+      "model": "candidates/u002b-counter-01.png",
+      "modelSha256": "c487aaae25a9148a9eedf5217569f11d0c0ed7b41a6065a530fe3833f886a544",
+      "generatorOutput": "exec-0ecf20de-00c3-4620-b1a5-147ef120b91b.png",
+      "prompt": "u002b-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo plus sign glyph, literal \"+\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment consistently with the font's vertical cap band. This mid-height glyph should be mainly amber/orange. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent, join, or remove components.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    "'": {
+      "model": "candidates/u0027-counter-01.png",
+      "modelSha256": "9bf0fac4458876d46590b9ad6b6629876632c9ea9cb441c7a22514d3c093b3c4",
+      "generatorOutput": "exec-8c0ace61-3cc5-4b6b-accb-cc5df9f1e050.png",
+      "prompt": "u0027-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo apostrophe / single quotation mark glyph, literal \"'\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment consistently with the font's vertical cap band. This glyph sits near the top of the font, so use mainly rich yellow/gold with small warm-orange shading. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent, join, or remove components.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    "\"": {
+      "model": "candidates/u0022-counter-01.png",
+      "modelSha256": "83e3d2038a727f68da05a49f2b321cba7876377881c056e6aa00463b2ce8e275",
+      "generatorOutput": "exec-347e35ad-6e1b-450f-8929-b2974f53129e.png",
+      "prompt": "u0022-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo double quotation mark, two separate marks glyph, literal \"\"\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment consistently with the font's vertical cap band. This glyph sits near the top of the font, so use mainly rich yellow/gold with small warm-orange shading. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent, join, or remove components.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    "(": {
+      "model": "candidates/u0028-counter-01.png",
+      "modelSha256": "74a89a6fb6bbf82c9e486d50cd7ce538d8e40cbe9d1609e3fadcd04a0a60af1c",
+      "generatorOutput": "exec-2f642f9c-1835-4e4e-aadb-a41aedd46dcd.png",
+      "prompt": "u0028-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo opening left parenthesis glyph, literal \"(\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment consistently with the font's vertical cap band. Use the complete top-to-bottom yellow/gold, amber/orange, deep-vermilion gradient. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent, join, or remove components.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    ")": {
+      "model": "candidates/u0029-counter-01.png",
+      "modelSha256": "d09d264863d89b93797cf5f2845a1f54b0595ec45c1dffd3a5a07821ad8e8f1e",
+      "generatorOutput": "exec-4a664ca7-8c8e-4c0a-b0c0-d05e7cc39b14.png",
+      "prompt": "u0029-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo closing right parenthesis glyph, literal \")\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment consistently with the font's vertical cap band. Use the complete top-to-bottom yellow/gold, amber/orange, deep-vermilion gradient. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent, join, or remove components.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    "%": {
+      "model": "candidates/u0025-counter-01.png",
+      "modelSha256": "2285ba7d60ce8a3946b4458c2147328200295a548c0084882513508d4011c373",
+      "generatorOutput": "exec-849cc3d4-256d-45ee-89b9-692321947bba.png",
+      "prompt": "u0025-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo percent sign, diagonal stroke and two holes glyph, literal \"%\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment consistently with the font's vertical cap band. Use the complete top-to-bottom yellow/gold, amber/orange, deep-vermilion gradient. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent, join, or remove components.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    "&": {
+      "model": "candidates/u0026-counter-01.png",
+      "modelSha256": "94acd4c6e790ea711e5e6d48c66c0b156ee3d3aa125bddef260eef4f70a6246f",
+      "generatorOutput": "exec-e566bfce-b1f5-4ad1-bea0-59c4483ca3ab.png",
+      "prompt": "u0026-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo ampersand glyph, literal \"&\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment consistently with the font's vertical cap band. Use the complete top-to-bottom yellow/gold, amber/orange, deep-vermilion gradient. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent, join, or remove components.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    }
+  }
+}

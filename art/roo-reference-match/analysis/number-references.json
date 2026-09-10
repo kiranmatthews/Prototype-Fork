@@ -1,0 +1,58 @@
+{
+  "0": {
+    "native": "analysis/0-reference-native.png",
+    "zoom": "analysis/0-reference-soft.png",
+    "ink": [
+      9,
+      11,
+      69,
+      93
+    ],
+    "origin": [
+      242,
+      759
+    ]
+  },
+  "2": {
+    "native": "analysis/2-number-native.png",
+    "zoom": "analysis/2-number-zoom.png",
+    "ink": [
+      8,
+      11,
+      59,
+      97
+    ],
+    "origin": [
+      936,
+      754
+    ]
+  },
+  "3": {
+    "native": "analysis/3-number-native.png",
+    "zoom": "analysis/3-number-zoom.png",
+    "ink": [
+      8,
+      15,
+      57,
+      94
+    ],
+    "origin": [
+      1014,
+      754
+    ]
+  },
+  "/": {
+    "native": "analysis/u002f-number-native.png",
+    "zoom": "analysis/u002f-number-zoom.png",
+    "ink": [
+      8,
+      12,
+      53,
+      104
+    ],
+    "origin": [
+      868,
+      754
+    ]
+  }
+}

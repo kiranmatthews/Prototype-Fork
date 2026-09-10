@@ -1,0 +1,65 @@
+{
+  "scope": "Interior color only, 3-pixel edge exclusion; does not prove bevel, alpha or whole-font fidelity.",
+  "measurements": {
+    "B": {
+      "model-only": {
+        "interiorPixels": 6602,
+        "rgbRMSE": 12.612,
+        "medianAbsoluteRGB": 6.0
+      },
+      "reference-match-": {
+        "interiorPixels": 6602,
+        "rgbRMSE": 3.376,
+        "medianAbsoluteRGB": 0.0
+      }
+    },
+    "O": {
+      "model-only": {
+        "interiorPixels": 5781,
+        "rgbRMSE": 12.434,
+        "medianAbsoluteRGB": 3.0
+      },
+      "reference-match-": {
+        "interiorPixels": 5781,
+        "rgbRMSE": 3.157,
+        "medianAbsoluteRGB": 1.0
+      }
+    },
+    "N": {
+      "model-only": {
+        "interiorPixels": 5367,
+        "rgbRMSE": 9.122,
+        "medianAbsoluteRGB": 5.0
+      },
+      "reference-match-": {
+        "interiorPixels": 5367,
+        "rgbRMSE": 2.297,
+        "medianAbsoluteRGB": 1.0
+      }
+    },
+    "U": {
+      "model-only": {
+        "interiorPixels": 4948,
+        "rgbRMSE": 14.86,
+        "medianAbsoluteRGB": 9.0
+      },
+      "reference-match-": {
+        "interiorPixels": 4948,
+        "rgbRMSE": 2.384,
+        "medianAbsoluteRGB": 0.0
+      }
+    },
+    "S": {
+      "model-only": {
+        "interiorPixels": 4214,
+        "rgbRMSE": 13.812,
+        "medianAbsoluteRGB": 6.0
+      },
+      "reference-match-": {
+        "interiorPixels": 4214,
+        "rgbRMSE": 3.632,
+        "medianAbsoluteRGB": 1.0
+      }
+    }
+  }
+}

@@ -9,6 +9,7 @@
 import * as THREE from "three";
 import { trackPresentationImage } from "./presentationLoading";
 import { RooAtlasPainter } from "./roo-type/atlas";
+import { ROO_COUNTER_TRACKING, rooNumberCap, rooTitleCap } from "./roo-type/typography";
 import {
   SOURCE_HUD_TRACKING,
   sourceTrackingPixels,
@@ -451,7 +452,7 @@ export class GameHudSurface {
       width: width * 0.5,
       height: 100 * sy,
     };
-    const titleSize = 76 * sy * revealScale;
+    const titleSize = rooTitleCap(height) * revealScale;
     this.drawRooInRect(ctx, readRooHudText(title) || "BONUS", rect, {
       size: titleSize,
       align: "center",
@@ -651,7 +652,7 @@ export class GameHudSurface {
     time: number,
   ): void {
     const sy = height / 720;
-    const counterSize = 90 * sy;
+    const counterSize = rooNumberCap(height);
     const iconSize = 77 * sy;
     const left = 40 * (width / 1280);
     const top = 16 * sy;
@@ -698,14 +699,14 @@ export class GameHudSurface {
       this.drawRooInRect(ctx, String(crates.value), valueRect, {
         size: crateSize,
         align: "left",
-        tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.largeNumber, crateSize),
+        tracking: sourceTrackingPixels(ROO_COUNTER_TRACKING, crateSize),
         alpha: crateAlpha,
       });
       if (crates.total !== undefined) {
-        const totalSize = 50 * sy * crateScale;
+        const totalSize = counterSize * crateScale;
         const totalRect = this.rect(this.elements.crateTotal, layout) ?? {
-          x: valueRect.x + valueRect.width - 8 * sy,
-          y: valueRect.y + valueRect.height * 0.32,
+          x: valueRect.x + valueRect.width + totalSize * .04,
+          y: valueRect.y,
           width: width * 0.12,
           height: totalSize * 1.285,
         };
@@ -713,7 +714,7 @@ export class GameHudSurface {
           size: totalSize,
           align: "left",
           tracking: sourceTrackingPixels(
-            SOURCE_HUD_TRACKING.largeNumber,
+            ROO_COUNTER_TRACKING,
             totalSize,
           ),
           alpha: crateAlpha,
@@ -743,7 +744,7 @@ export class GameHudSurface {
       this.drawRooInRect(ctx, String(fruit.value), valueRect, {
         size: fruitSize,
         align: "left",
-        tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.largeNumber, fruitSize),
+        tracking: sourceTrackingPixels(ROO_COUNTER_TRACKING, fruitSize),
         alpha: fruitAlpha,
       });
     }
@@ -775,11 +776,11 @@ export class GameHudSurface {
         height: counterSize * 1.285,
       };
       const lifeSize =
-        Math.min(111 * sy, counterSize * 1.23) * lifeScale;
+        counterSize * lifeScale;
       this.drawRooInRect(ctx, String(life.value), lifeRect, {
         size: lifeSize,
         align: "right",
-        tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.largeNumber, lifeSize),
+        tracking: sourceTrackingPixels(ROO_COUNTER_TRACKING, lifeSize),
         alpha: lifeAlpha,
       });
       if (deathsMode) {
@@ -837,7 +838,7 @@ export class GameHudSurface {
       this.drawRooInRect(ctx, String(score.value), valueRect, {
         size: scoreSize,
         align: "right",
-        tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.largeNumber, scoreSize),
+        tracking: sourceTrackingPixels(ROO_COUNTER_TRACKING, scoreSize),
         alpha: scoreAlpha,
       });
     }
@@ -851,9 +852,9 @@ export class GameHudSurface {
       height: 116 * sy,
     };
     this.drawRooInRect(ctx, clock.value, valueRect, {
-      size: 90 * sy,
+      size: rooNumberCap(height),
       align: "right",
-      tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.largeNumber, 90 * sy),
+      tracking: sourceTrackingPixels(ROO_COUNTER_TRACKING, rooNumberCap(height)),
       palette: "bonus",
       glow: clock.frozen ? "#6ee6ff" : undefined,
     });
@@ -1180,7 +1181,7 @@ export class GameHudSurface {
       size: 66 * sy,
       align: "center",
       palette: "bonus",
-      tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.largeNumber, 66 * sy),
+      tracking: sourceTrackingPixels(ROO_COUNTER_TRACKING, 66 * sy),
     });
 
     if (explicit?.rows) {

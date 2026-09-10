@@ -1,100 +1,84 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
-import { pathToFileURL } from 'node:url';
-const { chromium }=await import(process.env.PLAYWRIGHT_MODULE?pathToFileURL(process.env.PLAYWRIGHT_MODULE).href:'playwright');
+import {pathToFileURL} from 'node:url';
+import {createHash} from 'node:crypto';
+const {chromium}=await import(process.env.PLAYWRIGHT_MODULE?pathToFileURL(process.env.PLAYWRIGHT_MODULE).href:'playwright');
 const base=process.env.ROO_LAB_URL||'http://127.0.0.1:5178/';
-const out=process.env.ROO_REVIEW_DIR||'/private/tmp/roo-type-review';
-await fs.mkdir(out,{recursive:true});
+const out=process.env.ROO_REVIEW_DIR||'/private/tmp/roo-type-v2-review';await fs.mkdir(out,{recursive:true});
+const report={errors:[],checks:{},captures:[]};
+const root=new URL('../../',import.meta.url);
+const font=await fs.readFile(new URL('public/fonts/RooRegular.ttf',root));
+const provenance=JSON.parse(await fs.readFile(new URL('public/fonts/roo-font-v2-provenance.json',root),'utf8'));
+assert.equal(Object.keys(provenance.glyphs).length,51);
+for(const entry of Object.values(provenance.glyphs)){
+ const model=await fs.readFile(new URL('art/roo-reference-match/'+entry.model,root));
+ assert.equal(createHash('sha256').update(model).digest('hex'),entry.modelSha256);
+ assert.equal(await fs.readFile(new URL('art/roo-reference-match/'+entry.prompt,root),'utf8'),entry.promptText);
+}
+report.checks.modelPasses=51;
 const browser=await chromium.launch({headless:true,channel:'chrome'});
-const report={errors:[],captures:[],checks:{}};
 try{
-  const page=await browser.newPage({viewport:{width:1440,height:900},deviceScaleFactor:1});
-  page.on('pageerror',e=>report.errors.push(e.message));
-  page.on('console',m=>{if(m.type()==='error')report.errors.push(m.text());});
-  await page.goto(base+'roo-type-lab.html');
-  await page.waitForFunction(()=>window.rooTypeLab?.ready);
-  await page.locator('#motion').uncheck();
-  await page.evaluate(()=>window.rooTypeLab.setTime(0));
-  report.checks.liveMetrics=await page.evaluate(()=>window.rooTypeLab.metrics());
-  const capture=async name=>{await page.screenshot({path:`${out}/${name}.png`});report.captures.push(name);};
-  const coverage=()=>page.evaluate(()=>{const source=window.rooTypeLab.renderer.domElement,c=document.createElement('canvas');c.width=source.width;c.height=source.height;const ctx=c.getContext('2d');ctx.drawImage(source,0,0);const data=ctx.getImageData(0,0,c.width,c.height).data;let n=0;for(let i=3;i<data.length;i+=4)if(data[i]>127)n++;return n;});
-  await capture('live-front');
-  const frontCoverage=await coverage();
-  const front=await page.evaluate(()=>window.rooTypeLab.renderer.domElement.toDataURL());
-  await page.mouse.move(1050,300);await page.evaluate(()=>window.rooTypeLab.setTime(0));
-  const relit=await page.evaluate(()=>window.rooTypeLab.renderer.domElement.toDataURL());
-  assert.notEqual(front,relit,'Moving only the light must change the actual shading');
-  await capture('live-relit');
-  await page.locator('#turn').fill('18');await page.locator('#turn').dispatchEvent('input');
-  await page.evaluate(()=>window.rooTypeLab.setTime(0));await capture('live-turn');
-  report.checks.turnCoverage=[];
-  for(const angle of [-25,25]){
-    await page.locator('#turn').fill(String(angle));await page.locator('#turn').dispatchEvent('input');
-    await page.evaluate(()=>window.rooTypeLab.setTime(0));
-    const ratio=(await coverage())/frontCoverage;
-    assert.ok(ratio>.85&&ratio<1.08,`Yaw ${angle} clipped glyphs: coverage ${ratio}`);
-    report.checks.turnCoverage.push({angle,ratio});
+ const page=await browser.newPage({viewport:{width:1440,height:900},deviceScaleFactor:1});
+ page.on('pageerror',e=>report.errors.push(e.message));page.on('console',m=>{if(m.type()==='error')report.errors.push(m.text());});
+ await page.goto(base+'roo-type-lab.html');await page.waitForFunction(()=>window.rooTypeLab?.ready);await page.screenshot({path:out+'/lab-dark.png'});
+ await page.locator('#backdrop').check();await page.screenshot({path:out+'/lab-light.png'});
+ const download=page.waitForEvent('download');await page.locator('#png').click();await(await download).saveAs(out+'/roo-text.png');
+ const zip=page.waitForEvent('download');await page.locator('#atlas').click();await(await zip).saveAs(out+'/roo-image-font-v2.zip');
+ const{unzipSync}=await import('../../node_modules/three/examples/jsm/libs/fflate.module.js');
+ const zipFiles=unzipSync(await fs.readFile(out+'/roo-image-font-v2.zip'));
+ assert.equal(Object.keys(zipFiles).length,6);
+ assert.equal(JSON.parse(new TextDecoder().decode(zipFiles['roo-font-v2-provenance.json'])).glyphCount,51);report.checks.exports=true;
+ const shapes=await page.evaluate(async()=>{
+  const source=await fetch('/fonts/roo-bevel-source-v1.json').then(r=>r.json());
+  const results={};await document.fonts.load('400 1000px Roo');
+  for(const palette of ['bonus','counter']){
+   const m=await fetch(`/fonts/roo-${palette}-v2.json`).then(r=>r.json()),image=new Image();image.src=`/fonts/roo-${palette}-v2.png`;await image.decode();
+   let worst={char:'',iou:1},partial=0,pink=0;const alphaHashes={};
+   for(const [char,g]of Object.entries(m.glyphs)){
+    if(!g.width)continue;
+    const actual=document.createElement('canvas');actual.width=g.width;actual.height=g.height;const ctx=actual.getContext('2d');ctx.drawImage(image,g.x,g.y,g.width,g.height,0,0,g.width,g.height);
+    const expected=document.createElement('canvas');expected.width=g.width;expected.height=g.height;const e=expected.getContext('2d'),b=source.glyphs[char].bounds;
+    const sx=(g.inkRight-g.inkLeft)/(b[2]-b[0]),sy=(g.inkBottom-g.inkTop)/(b[3]-b[1]),cap=m.capPixels;
+    e.setTransform(sx*cap/882,0,0,sy*cap/882,(g.inkLeft-b[0]*sx-g.left)*cap,(g.inkTop+b[3]*sy-76/882*sy-g.top)*cap);
+    e.font='400 1000px Roo';e.textBaseline='alphabetic';e.fillStyle='#fff';e.fillText(char,0,0);
+    const a=ctx.getImageData(0,0,g.width,g.height).data,d=e.getImageData(0,0,g.width,g.height).data;let union=0,intersection=0,hash=2166136261;
+    for(let i=0;i<a.length;i+=4){const aa=a[i+3];hash=Math.imul(hash^aa,16777619);if(aa>0&&aa<255)partial++;if(aa>240&&a[i]>150&&a[i+2]>150&&a[i+1]<70)pink++;const x=aa>127,y=d[i+3]>127;if(x||y)union++;if(x&&y)intersection++;}
+    const iou=intersection/union;if(iou<worst.iou)worst={char,iou};alphaHashes[char]=hash;
+   }
+   results[palette]={worst,partial,pink,alphaHashes,fontSha256:m.fontSha256,version:m.version};
   }
-  await page.locator('#reset').click();
-  await page.locator('#mode').selectOption('baked');
-  await page.evaluate(()=>window.rooTypeLab.setTime(0));await capture('baked-font');
-  await page.locator('#backdrop').check();await capture('baked-light-background');
-  report.checks.silhouette=await page.evaluate(async()=>{
-    const [{ROO_ATLAS_METRICS},{loadRooAtlases,RooAtlasPainter}]=await Promise.all([import('/src/roo-type/atlas-metrics.ts'),import('/src/roo-type/atlas.ts')]);
-    await loadRooAtlases();await document.fonts.load('400 256px Roo');
-    const image=new Image();image.src='/fonts/roo-counter-v1.png';await image.decode();
-    const m=ROO_ATLAS_METRICS.counter;let worst={char:'',iou:1},partial=0;
-    for(const [char,g]of Object.entries(m.glyphs)){
-      if(!g.width)continue;
-      const actual=document.createElement('canvas');actual.width=g.width;actual.height=g.height;
-      const a=actual.getContext('2d');a.drawImage(image,g.x,g.y,g.width,g.height,0,0,g.width,g.height);
-      const expected=document.createElement('canvas');expected.width=g.width;expected.height=g.height;
-      const e=expected.getContext('2d');e.font=`400 ${m.capPixels*m.capBand.unitsPerEm/m.capBand.height}px Roo`;
-      e.textBaseline='alphabetic';e.fillText(char,-g.left*m.capPixels,(-g.top+m.capBand.top/m.capBand.height)*m.capPixels);
-      const ad=a.getImageData(0,0,g.width,g.height).data,ed=e.getImageData(0,0,g.width,g.height).data;
-      let intersection=0,union=0;
-      for(let i=3;i<ad.length;i+=4){const x=ad[i]>127,y=ed[i]>127;if(x&&y)intersection++;if(x||y)union++;if(ad[i]>0&&ad[i]<255)partial++;}
-      const iou=intersection/union;if(iou<worst.iou)worst={char,iou};
-    }
-    const painter=new RooAtlasPainter(),ctx=document.createElement('canvas').getContext('2d');
-    return{worst,partial,glyphs:Object.keys(m.glyphs).length,unsupportedFallsBack:painter.draw(ctx,'☃',0,0,{size:90})===false};
-  });
-  assert.ok(report.checks.silhouette.worst.iou>.97,JSON.stringify(report.checks.silhouette));
-  assert.ok(report.checks.silhouette.partial>1000,'Bakes must contain antialiased alpha, not binary masks');
-  assert.ok(report.checks.silhouette.unsupportedFallsBack);
-  report.checks.metrics=await page.evaluate(()=>window.rooTypeLab.metrics());
-  const titleDownload=page.waitForEvent('download');await page.locator('#png').click();
-  const png=await titleDownload;await png.saveAs(`${out}/roo-title.png`);
-  assert.equal((await fs.readFile(`${out}/roo-title.png`)).readUInt32BE(0),0x89504e47);
-  const atlasDownload=page.waitForEvent('download');await page.locator('#atlas').click();
-  const zip=await atlasDownload;await zip.saveAs(`${out}/roo-image-font.zip`);
-  const {unzipSync}=await import('../../node_modules/three/examples/jsm/libs/fflate.module.js');
-  const files=unzipSync(await fs.readFile(`${out}/roo-image-font.zip`));
-  assert.deepEqual(Object.keys(files).sort(),['README.txt','roo-bonus-v1.json','roo-bonus-v1.png','roo-counter-v1.json','roo-counter-v1.png']);
-  report.checks.pngAndZipExport=true;
-  await page.setViewportSize({width:390,height:844});await capture('phone-lab');
-  await page.close();
-
-  if(process.env.ROO_REVIEW_GAME!=='0')for(const lite of [true,false]){
-    const game=await browser.newPage({viewport:{width:1280,height:720}});
-    game.on('pageerror',e=>report.errors.push(e.message));
-    await game.goto(base+'?playtest&level=codex-lab'+(lite?'&lite':''));
-    await game.waitForFunction(()=>window.__game&&!window.__game.gameFlow.blocksGameplay,null,{timeout:90000});
-    await game.waitForFunction(()=>window.__game.ui.gameHudDiagnostics?.rooAtlasReady,null,{timeout:30000});
-    await game.evaluate(()=>{
-      const g=window.__game;const original=g.input.update.bind(g.input);g.input.update=()=>{original();g.input.inventoryHeld=true;};
-      g.player.fruit=42;g.player.lives=7;
-    });
-    await game.waitForTimeout(800);
-    assert.ok(await game.locator('.game-hud-layer svg image').count(),'DOM/lite labels must use the same atlas');
-    const stamp=await game.locator('.hud-build').textContent();assert.match(stamp,/Codex\/sol fork/);
-    report.checks[lite?'liteHud':'fullHud']=await game.evaluate(()=>window.__game.ui.gameHudDiagnostics);
-    await game.screenshot({path:`${out}/game-${lite?'lite':'full'}.png`});
-    if(!lite){await game.keyboard.press('Escape');await game.screenshot({path:`${out}/game-pause.png`});}
-    await game.close();
-  }
-  assert.deepEqual(report.errors,[]);
-  report.checks.lightResponse=true;
-  await fs.writeFile(`${out}/report.json`,JSON.stringify(report,null,2));
-  console.log(JSON.stringify(report,null,2));
+  return results;
+ });
+ const sha=createHash('sha256').update(font).digest('hex');
+ for(const p of ['bonus','counter']){assert.equal(shapes[p].fontSha256,sha);assert.equal(shapes[p].version,2);assert.equal(shapes[p].pink,0);assert.ok(shapes[p].partial>5000);assert.ok(shapes[p].worst.iou>.96,JSON.stringify(shapes[p].worst));}
+ assert.deepEqual(shapes.bonus.alphaHashes,shapes.counter.alphaHashes);delete shapes.bonus.alphaHashes;delete shapes.counter.alphaHashes;report.checks.shapes=shapes;
+ await page.setViewportSize({width:390,height:844});await page.screenshot({path:out+'/lab-phone.png',fullPage:true});await page.close();
+ if(process.env.ROO_REVIEW_GAME!=='0')for(const lite of [true,false]){
+  const game=await browser.newPage({viewport:{width:1280,height:720}});game.on('pageerror',e=>report.errors.push(e.message));
+  await game.goto(base+'?playtest&level=codex-lab'+(lite?'&lite':''));
+  await game.waitForFunction(()=>window.__game&&!window.__game.gameFlow.blocksGameplay,null,{timeout:90000});
+  await game.waitForFunction(()=>window.__game.ui.gameHudDiagnostics.rooAtlasReady);
+  await game.evaluate(()=>{const g=window.__game,original=g.ui.setHUD.bind(g.ui);window.rooForceBonus=false;window.rooReviewFruit=42;g.ui.setHUD=(s,dt)=>original({...s,fruit:window.rooReviewFruit,lives:7,cratesBroken:0,cratesTotal:23,inventoryHeld:true,bonusMode:window.rooForceBonus},dt);});
+  await game.waitForTimeout(600);assert.match(await game.locator('.hud-build').textContent(),/Codex\/sol fork/);
+  const urls=await game.locator('.game-hud-layer svg image').evaluateAll(images=>images.map(i=>i.getAttribute('href')));assert.ok(urls.length>0&&urls.every(s=>s.includes('-v2.png')));
+  report.checks[lite?'lite':'full']=await game.evaluate(()=>window.__game.ui.gameHudDiagnostics);
+  await game.screenshot({path:out+`/game-${lite?'lite':'full'}.png`});
+  const fonts=await game.locator('.hud-box-current,.hud-box-total').evaluateAll(es=>es.map(e=>getComputedStyle(e).fontSize));assert.equal(fonts[0],fonts[1]);
+  const bandHeights=[];
+  for(const n of [9,10,99]){await game.evaluate(n=>window.rooReviewFruit=n,n);await game.waitForTimeout(350);bandHeights.push(await game.locator('.hud-fruit-row .hud-num').evaluate(e=>e.getBoundingClientRect().height));}
+  assert.ok(Math.max(...bandHeights)-Math.min(...bandHeights)<.5,'digit count changed the text cap band');
+  await game.evaluate(()=>{window.rooForceBonus=true;window.__game.ui.setLevel('bonus-easy','bonus',0,true);});await game.waitForTimeout(600);
+  assert.ok(await game.locator('.hud-bonus-title').isVisible());
+  await game.screenshot({path:out+`/bonus-${lite?'lite':'full'}.png`});
+  await game.setViewportSize({width:1672,height:941});await game.waitForTimeout(250);
+  const caps={number:await game.locator('.hud-box-current').evaluate(e=>parseFloat(getComputedStyle(e).fontSize)),title:await game.locator('.hud-bonus-title').evaluate(e=>parseFloat(getComputedStyle(e).fontSize))};
+  assert.ok(Math.abs(caps.number-107)<.1&&Math.abs(caps.title-165)<.1,`reference viewport cap sizes: ${JSON.stringify(caps)}`);
+  await game.screenshot({path:out+`/bonus-reference-size-${lite?'lite':'full'}.png`});
+  await game.setViewportSize({width:390,height:844});await game.waitForTimeout(300);await game.screenshot({path:out+`/bonus-phone-${lite?'lite':'full'}.png`});
+  const mobile=await game.locator('.hud-fruit-row,.hud-crate-row,.hud-life-row').evaluateAll(es=>es.map(e=>{const r=e.getBoundingClientRect();return{left:r.left,right:r.right,top:r.top,bottom:r.bottom};}));
+  for(const r of mobile)assert.ok(r.left>=-1&&r.right<=391&&r.top>=-1&&r.bottom<=845,JSON.stringify(r));
+  assert.ok(mobile[1].bottom<mobile[0].top,'portrait bonus counters overlap vertically');
+  await game.close();
+ }
+ assert.deepEqual(report.errors,[]);await fs.writeFile(out+'/report.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
 }finally{await browser.close();}

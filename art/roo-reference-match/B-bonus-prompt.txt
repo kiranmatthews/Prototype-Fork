@@ -1,0 +1,11 @@
+Use case: style-transfer.
+Asset: one finished transparent PNG glyph for an AAA game HUD image font.
+Image 1 is the edit target: the exact existing Roo font capital B, dark on white. Image 2 is the authoritative finished-material reference. Match the green/blue B at the start of BONUS in Image 2 as closely as possible, not a generic interpretation of beveled lettering.
+
+Change the dark fill of Image 1 into the reference B's fully rendered, polished, rugged 3D treatment. Preserve Image 1's exact outer outline, two holes, serif tips, proportions, placement, and straight-on orientation. Do not redraw the typeface or change the camera angle.
+
+Precisely copy the reference's sculpted bevel construction and lighting: a very narrow outer highlight ridge, a substantial angled chamfer with locally changing facets and smooth tight highlights, a raised subtly shaded front face, directional deep-green/blue occlusion at the bevel junctions, and the inner-hole bevels catching cyan near the bottom. The bevel must look like a real sculpted three-dimensional surface, with polished small-radius edges and rich tonal variation, not a flat polygon with a uniform outline. Keep the surface as clean as the reference: no added rock grain, scratches, cracks, glitter, chrome reflections, or grunge.
+
+Color and lighting must match Image 2's B: luminous yellow-lime upper edge, vivid green face through most of its height, a narrow emerald-to-cyan transition in the lower portion, then deep saturated electric royal blue at the bottom. Upper-left key light; dark opposite bevels; tiny bright specular ridges. Preserve the nuanced shading and gradients of the reference rather than washing everything out with white highlights.
+
+Text verbatim: "B". Only that single glyph. Output on genuine transparent RGBA with transparency in both holes. Keep the 1024-square framing and generous existing margins. Extremely clean antialiased edges. Exclude the reference's large black outer stroke and black drop shadow, and exclude all scene/background objects. No other letters, captions, border or watermark.

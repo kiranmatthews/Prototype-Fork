@@ -179,7 +179,7 @@ assert.match(bailKeyframes, /translateY\(92px\)/);
 assert.match(bailKeyframes, /opacity: 0/);
 assert.doesNotMatch(bailKeyframes, /rotate\(/);
 const surface = await readFile(`${root}src/gameHudSurface.ts`, "utf8");
-assert.match(surface, /SOURCE_HUD_TRACKING\.largeNumber/);
+assert.match(surface, /ROO_COUNTER_TRACKING/);
 assert.match(surface, /const stableTextWidth = Math\.min\(width \* 0\.94, 1100 \* layout\.scaleX\)/);
 assert.match(surface, /drawWrappedPlainText\(ctx, line, stableLineRect/);
 assert.match(surface, /color: bailed \? "#ff3b30" : "#ffe08a"/);

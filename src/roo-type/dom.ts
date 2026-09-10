@@ -1,5 +1,5 @@
 import { ROO_ATLAS_METRICS } from './atlas-metrics';
-import { layoutRooAtlas, loadRooAtlases, RooAtlasPainter } from './atlas';
+import { layoutRooAtlas, loadRooAtlases, RooAtlasPainter, rooAtlasGlyphRect, rooAtlasUrl } from './atlas';
 import type { RooTextHandle, RooTextOptions, RooPaletteName } from '../roo-text.js';
 
 const NS='http://www.w3.org/2000/svg';
@@ -37,9 +37,10 @@ export async function createBakedRooText(host:HTMLElement,options:RooTextOptions
     }
     for(const entry of layout.glyphs){
       const g=metrics.glyphs[entry.char];
-      const glyph=node('svg',{x:entry.x+g.left,y:g.top,width:g.width/metrics.capPixels,height:g.height/metrics.capPixels,
-        viewBox:`${g.x} ${g.y} ${g.width} ${g.height}`,overflow:'hidden'});
-      glyph.append(node('image',{href:`${import.meta.env.BASE_URL}fonts/roo-${palette}-v1.png`,width:metrics.width,height:metrics.height}));
+      const rect=rooAtlasGlyphRect(metrics,entry);
+      const glyph=node('svg',{x:rect.x,y:rect.y,width:rect.width,height:rect.height,
+        viewBox:`${g.x} ${g.y} ${g.width} ${g.height}`,overflow:'hidden',preserveAspectRatio:'none'});
+      glyph.append(node('image',{href:rooAtlasUrl(palette),width:metrics.width,height:metrics.height}));
       art.append(glyph);
     }
     svg.setAttribute('viewBox',`${layout.min-.03} -.1425 ${Math.max(.06,layout.width+.06)} 1.285`);

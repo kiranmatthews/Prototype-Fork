@@ -14,10 +14,10 @@ import {
 } from "./gameHudSurface";
 import { COMBO_GEM_TINT, Level, levelList, MAX_LEVEL_FILE_BYTES } from "./level";
 import { RooLabel, ROO_HUD, ROO_TT } from "./rootext";
+import { ROO_COUNTER_TRACKING, ROO_NUMBER_VH, ROO_TITLE_VH } from "./roo-type/typography";
 import { MilkBottleHud } from "./milkBottleHud";
 import {
   COMBO_CASH_IN_EXTRA_HOLD_MS,
-  SOURCE_HUD_TRACKING,
   advanceComboCashInDisplay,
   advanceLiveComboTicker,
   advanceSourceComboTicker,
@@ -864,18 +864,18 @@ export class UI {
     // renderer measures a real bounding box, so the hosts have to be live).
     // The counters read ORANGE; the trial clock and its result time read
     // GREEN->BLUE.
-    this.rooCratesCurrent = new RooLabel(this.cratesCurrentEl, { palette: ROO_HUD, tracking: SOURCE_HUD_TRACKING.largeNumber });
-    this.rooCratesTotal = new RooLabel(this.cratesTotalEl, { palette: ROO_HUD, tracking: SOURCE_HUD_TRACKING.largeNumber });
-    this.rooWumpa = new RooLabel(this.wumpaEl, { palette: ROO_HUD, tracking: SOURCE_HUD_TRACKING.largeNumber });
-    this.rooLives = new RooLabel(this.livesEl, { palette: ROO_HUD, tracking: SOURCE_HUD_TRACKING.largeNumber });
-    this.rooScore = new RooLabel(this.scoreEl, { palette: ROO_HUD, tracking: SOURCE_HUD_TRACKING.largeNumber });
+    this.rooCratesCurrent = new RooLabel(this.cratesCurrentEl, { palette: ROO_HUD, tracking: ROO_COUNTER_TRACKING });
+    this.rooCratesTotal = new RooLabel(this.cratesTotalEl, { palette: ROO_HUD, tracking: ROO_COUNTER_TRACKING });
+    this.rooWumpa = new RooLabel(this.wumpaEl, { palette: ROO_HUD, tracking: ROO_COUNTER_TRACKING });
+    this.rooLives = new RooLabel(this.livesEl, { palette: ROO_HUD, tracking: ROO_COUNTER_TRACKING });
+    this.rooScore = new RooLabel(this.scoreEl, { palette: ROO_HUD, tracking: ROO_COUNTER_TRACKING });
     this.rooTTTime = new RooLabel(this.ttTimeEl, {
       palette: ROO_TT,
-      tracking: SOURCE_HUD_TRACKING.largeNumber,
+      tracking: ROO_COUNTER_TRACKING,
     });
     this.rooTTBest = new RooLabel(this.ttResTimeEl, {
       palette: ROO_TT,
-      tracking: SOURCE_HUD_TRACKING.largeNumber,
+      tracking: ROO_COUNTER_TRACKING,
     });
     this.rooTTFreeze = new RooLabel(this.ttFreezeEl, { palette: ROO_TT });
     this.rooTTResTitle = new RooLabel(this.ttResTitleEl, { palette: ROO_TT });
@@ -2329,9 +2329,9 @@ export class UI {
         transform: translateX(-50%);
         --hud-reveal-x: 0px; --hud-reveal-y: -12px;
         transform-origin: center top;
-        font: 900 clamp(52px, 9vh, 86px) Impact, 'Arial Black', sans-serif;
+        font: 900 clamp(52px, min(${ROO_TITLE_VH}vh, 23vw), 190px) Impact, 'Arial Black', sans-serif;
         line-height: 0; pointer-events: none;
-        filter: drop-shadow(0 5px 2px rgba(70, 18, 0, 0.78));
+        filter: none;
       }
       .game-hud-layer.hud-bonus .hud-tl {
         position: static;
@@ -2362,15 +2362,15 @@ export class UI {
       /* Sized as CAP HEIGHT — see the .roo-line note below. The icon leads the
          digits slightly, the way the crate and the fruit do in Crash. */
       .hud-num {
-        font: 900 clamp(55px, 8.7vh, 90px) Impact, 'Arial Black', sans-serif;
+        font: 900 clamp(55px, ${ROO_NUMBER_VH}vh, 132px) Impact, 'Arial Black', sans-serif;
         color: #ffb43a; letter-spacing: 2px;
       }
       .hud-box-count { display: flex; align-items: flex-end; gap: 0; }
       .hud-box-current { font-size: inherit; }
       .hud-box-total {
-        font-size: clamp(30px, 4.8vh, 50px);
-        margin-left: clamp(-11px, -1.1vh, -7px);
-        margin-bottom: clamp(8px, 1.4vh, 14px);
+        font-size: inherit;
+        margin-left: .04em;
+        margin-bottom: 0;
       }
       .hud-icon {
         width: clamp(68px, 10.7vh, 111px); height: clamp(68px, 10.7vh, 111px);
@@ -2395,9 +2395,19 @@ export class UI {
         .game-hud-layer:not(.hud-bonus) .hud-life-row { top: 18px; right: 14px; gap: 4px; }
         .game-hud-layer:not(.hud-bonus) .hud-fruit-row .hud-icon-wumpa { width: 54px; height: 54px; }
         .game-hud-layer:not(.hud-bonus) .hud-fruit-row .hud-num { font-size: 56px; }
+        .game-hud-layer:not(.hud-bonus) .hud-crate-row .hud-num { font-size: 56px; }
+        .game-hud-layer:not(.hud-bonus) .hud-crate-row .hud-icon-crate { width: 54px; height: 54px; }
         .game-hud-layer:not(.hud-bonus) .hud-life-face-wrap { width: 64px; height: 64px; }
         .game-hud-layer:not(.hud-bonus) .hud-lives { font-size: 60px; }
         .hud-relics .hud-icon-gem { width: 108px; height: 108px; }
+        .game-hud-layer.hud-bonus .hud-num { font-size: 56px; }
+        .game-hud-layer.hud-bonus .hud-icon { width: 52px; height: 52px; }
+        .game-hud-layer.hud-bonus .hud-life-face-wrap { width: 60px; height: 60px; }
+        .game-hud-layer.hud-bonus .hud-fruit-row { left: 16px; bottom: 16px; }
+        .game-hud-layer.hud-bonus .hud-life-row { right: 16px; bottom: 16px; }
+        .game-hud-layer.hud-bonus .hud-crate-row { left: 16px; bottom: 96px; }
+        .hud-box-count { max-width: calc(100vw - 98px); }
+        .hud-box-current, .hud-box-total { min-width: 0; }
       }
       .hud-icon-face {
         background-image: ${LIFE_FACE_URL};
@@ -2747,12 +2757,12 @@ export class UI {
       .hud-scorenum { font-size: clamp(24px, 4vh, 36px); }
       .hud-ttfreeze { font-size: clamp(15px, 2.3vh, 22px); margin-top: 1px; }
       .hud-boostlabel { font-size: 20px; }
-      .hud-tttime { font-size: clamp(50px, 8.7vh, 90px); }
+      .hud-tttime { font-size: clamp(50px, ${ROO_NUMBER_VH}vh, 132px); }
       /* The lives digit reads against a PAINTING, not a blocky icon, and at
          the shared .hud-num cap height it sat visibly short of the face
          beside it. Same clamp as .hud-icon, so the digit is exactly as tall
          as the portrait. */
-      .hud-lives { font-size: clamp(68px, 10.7vh, 111px); }
+      .hud-lives { font-size: clamp(60px, ${ROO_NUMBER_VH}vh, 132px); }
       .hud-ttres-title { font-size: 42px; }
       .hud-ttres-time { font-size: 66px; }
       .hud-msg-title { font-size: 84px; }

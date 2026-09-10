@@ -54,13 +54,13 @@ const counterPainter = surface.match(
   /private paintCounters\(([\s\S]*?)\n  private paintScoreAndClock/,
 )?.[1] ?? "";
 assert.match(counterPainter, /resolveCrateCounter\(/);
-assert.match(counterPainter, /const counterSize = 90 \* sy/);
-assert.match(counterPainter, /const totalSize = 50 \* sy/);
+assert.match(counterPainter, /const counterSize = rooNumberCap\(height\)/);
+assert.match(counterPainter, /const totalSize = counterSize \* crateScale/);
 assert.match(counterPainter, /formatCrateTotal\(crates\.total\)/);
 assert.match(
   counterPainter,
-  /valueRect\.x\s*\+\s*valueRect\.width\s*-\s*8\s*\*\s*sy/,
-  "native box suffix fallback did not adopt the tighter overlap",
+  /valueRect\.x\s*\+\s*valueRect\.width\s*\+\s*totalSize\s*\*\s*\.04/,
+  "native box suffix must share the reference font's size and gap",
 );
 assert.ok(
   (counterPainter.match(/hudRevealOpacity\s*\(/g) ?? []).length >= 3,
@@ -234,9 +234,11 @@ assert.match(
 const boxTotalCss = ui.match(/\.hud-box-total\s*\{([^}]*)\}/)?.[1] ?? "";
 assert.match(
   boxTotalCss,
-  /margin-left\s*:\s*(?:-|calc\(\s*-|clamp\(\s*-)/,
-  "box denominator does not compensate for Roo's padded numerator edge",
+  /margin-left\s*:\s*\.04em/,
+  "box denominator must use the measured reference gap",
 );
+assert.match(boxTotalCss,/font-size\s*:\s*inherit/,'box denominator must share the numerator cap height');
+assert.match(boxTotalCss,/margin-bottom\s*:\s*0/,'box denominator must share the numerator baseline');
 assert.match(
   surface,
   /hudRevealOpacity\s*\(\s*this\.elements\.scorePlate\s*\)/,

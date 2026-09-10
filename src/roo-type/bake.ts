@@ -5,11 +5,14 @@ export interface RooAtlasGlyph {
   x: number; y: number; width: number; height: number;
   /** Destination left/top relative to the glyph pen and the top of the cap band. */
   left: number; top: number; advance: number; inkLeft: number; inkRight: number;
+  inkTop?: number; inkBottom?: number;
 }
 export interface RooAtlasMetrics {
   version: number; palette: RooTreatment; capPixels: number; width: number; height: number;
   fontSha256: string; capBand: RooTypeGeometry['source']['capBand'];
   glyphs: Record<string,RooAtlasGlyph>; kern: Record<string,number>;
+  /** Optical layouts measured from the supplied reference; values are cap-band units. */
+  layouts?: Record<string,{width:number;glyphs:Array<{char:string;x:number;y:number;width:number;height:number}>}>;
 }
 
 function renderPng(renderer: THREE.WebGLRenderer, group: THREE.Object3D, capPixels: number): HTMLCanvasElement {
