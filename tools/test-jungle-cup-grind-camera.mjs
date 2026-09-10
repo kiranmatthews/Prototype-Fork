@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 
-await withSkateRuntime(async ({ THREE, server, player, level, step, CONST }) => {
+await withSkateRuntime(async ({ THREE, server, player, level, step, CONST, TUNING }) => {
   const { SkateChaseCamera, SKATE_CAMERA } = await server.ssrLoadModule('/src/skateChaseCamera.ts');
   const { SKATE_PARK } = await server.ssrLoadModule('/src/skateParkPhysics.ts');
   // Exercise the same supported-state routing as the shipped render loop.
@@ -15,7 +15,7 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, CONST }) => 
   const makeCamera = () => ({ rig: new SkateChaseCamera(),
     camera: new THREE.PerspectiveCamera(SKATE_CAMERA.verticalFov, 16 / 9, .1, 400) });
   const tickCamera = ({ rig, camera }, snap = false) => {
-    rig.update(camera, subject(), CONST.fixedStep, snap, level.groundMeshes);
+    rig.update(camera, subject(), CONST.fixedStep, snap, level.groundMeshes, TUNING);
     camera.updateMatrixWorld(true);
     assert.ok(camera.position.toArray().every(Number.isFinite));
     assert.ok(camera.quaternion.toArray().every(Number.isFinite));
@@ -66,8 +66,8 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, CONST }) => 
       if (player.state !== 'grind') break;
       const travel = checkTangent(rail); grindFrames++;
       if (frame >= 14) {
-        const behind = view.camera.position.clone().sub(view.rig.aim).normalize();
-        assert.ok(behind.dot(travel) < -.95, 'camera did not settle behind the rail travel');
+        const behind = view.camera.position.clone().sub(view.rig.aim).setY(0).normalize();
+        assert.ok(behind.dot(travel.clone().setY(0).normalize()) < -.95, 'camera did not settle behind the rail travel');
       }
     }
     assert.equal(player.state, 'air');

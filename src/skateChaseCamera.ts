@@ -13,6 +13,14 @@ export interface SkateCameraSubject {
   bailing: boolean;
 }
 
+/** Main-game framing for flat park travel. Vert keeps its calibrated profile. */
+export interface SkateGroundFraming {
+  camDist:number;
+  camHeight:number;
+  camPitch:number;
+  camFov:number;
+}
+
 // Reference medium-camera proportions, scaled for this taller character.
 // Preserve the reference's vertical framing on a widescreen viewport.
 export const SKATE_CAMERA = Object.freeze({
@@ -39,9 +47,16 @@ export class SkateChaseCamera {
   private readonly ray = new THREE.Raycaster();
   private wasGrounded = true;
   private landingBlendTime = 0;
+  private groundBlend = 0;
+  private readonly flatForward = new THREE.Vector3();
+  private readonly flatEye = new THREE.Vector3();
+  private readonly flatAim = new THREE.Vector3();
+  private readonly worldUp = new THREE.Vector3(0,1,0);
+  /** Final presentation weight; never feeds steering or the vert frame. */
+  groundFramingWeight = 0;
 
   update(camera: THREE.PerspectiveCamera, rider: SkateCameraSubject, dt: number,
-    snap: boolean, surfaces: THREE.Object3D[], _tuning?: unknown): void {
+    snap: boolean, surfaces: THREE.Object3D[], framing?: SkateGroundFraming): void {
     const step = Math.max(0, Math.min(dt, 0.1));
     const vert = rider.vertAir && !rider.grounded;
     if (rider.grounded && !this.wasGrounded) this.landingBlendTime = 10 / 60;
@@ -76,6 +91,34 @@ export class SkateChaseCamera {
     this.aim.copy(rider.position).addScaledVector(rider.up, SKATE_CAMERA.above);
     this.desiredEye.copy(this.pivot).addScaledVector(this.back, SKATE_CAMERA.behind)
       .addScaledVector(rider.up, SKATE_CAMERA.above);
+    // Keep the original orientation/pivot evolution intact. Only the final
+    // presented shot changes on flats, so the established wall swing is
+    // exactly recoverable before the lip instead of being re-tuned.
+    this.groundFramingWeight = 0;
+    if (framing) {
+      const flatness = vert ? 0 : THREE.MathUtils.smoothstep(rider.up.y,
+        Math.cos(35*Math.PI/180), Math.cos(5*Math.PI/180));
+      this.groundBlend = snap ? flatness : this.groundBlend +
+        (flatness-this.groundBlend)*frameBlend(.12,step);
+      // The spatial envelope reaches exactly zero on steep transitions.
+      // The eased state softens recovery back to the main shot on flat land.
+      const blend = this.groundFramingWeight = this.groundBlend*flatness;
+      if (blend > 0) {
+        this.flatForward.set(-this.back.x,0,-this.back.z);
+        if(this.flatForward.lengthSq()<1e-8)this.flatForward.set(rider.heading.x,0,rider.heading.z);
+        this.flatForward.normalize();
+        this.flatEye.copy(this.pivot).addScaledVector(this.flatForward,-framing.camDist);
+        this.flatEye.y+=framing.camHeight;
+        const run=Math.max(.1,Math.abs(framing.camDist));
+        this.flatAim.copy(this.flatEye).addScaledVector(this.flatForward,run);
+        this.flatAim.y-=run*Math.tan(THREE.MathUtils.degToRad(THREE.MathUtils.clamp(framing.camPitch,-85,85)));
+        this.desiredEye.lerp(this.flatEye,blend);
+        this.aim.lerp(this.flatAim,blend);
+        this.up.lerp(this.worldUp,blend).normalize();
+      }
+      const fov=THREE.MathUtils.lerp(SKATE_CAMERA.verticalFov,framing.camFov,blend);
+      if(camera.fov!==fov){camera.fov=fov;camera.updateProjectionMatrix();}
+    } else this.groundBlend = 0;
     // Local collision correction: never rotate or displace the skater to
     // satisfy the lens. The smoothed frame naturally restores the full view.
     this.direction.subVectors(this.desiredEye, this.aim);

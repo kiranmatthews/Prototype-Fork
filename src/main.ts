@@ -79,7 +79,7 @@ import {
 } from "./cameraSpeedEffect";
 import { CameraLookOffset } from "./cameraLook";
 import { cameraRigFraming, setCameraRigAim } from "./cameraRig";
-import { SkateChaseCamera, SKATE_CAMERA } from "./skateChaseCamera";
+import { SkateChaseCamera } from "./skateChaseCamera";
 import { sfx } from "./audio";
 import { Recorder, Replayer, ReplayFile, camYawOf, isReplayFile } from "./replay";
 import { Editor } from "./editor";
@@ -4008,15 +4008,20 @@ function updateCamera(dt: number): void {
     camSpeedFovBoost = stepSpeedSkateFov(camSpeedFovBoost,
       speedSkateFovTarget(speed, speed > 0, TUNING.cruiseSpeed, TUNING.maxSpeed, TUNING.camSpeedFovBoost),
       dt, snapped);
-    camera.fov = level.skatepark ? SKATE_CAMERA.verticalFov : TUNING.camFov + 7 + camSpeedFovBoost;
-    camera.updateProjectionMatrix();
+    if (!level.skatepark) {
+      camera.fov = TUNING.camFov + 7 + camSpeedFovBoost;
+      camera.updateProjectionMatrix();
+    }
     skateChaseCamera.update(camera, {
       position: subject, heading: player.skateCameraHeading,
       up: player.skateCameraUp,
       vertAir: player.vertAir, vertNormal: player.vertNormal,
       verticalSpeed: player.vVel, speed, grounded: player.skateCameraSupported,
       bailing: player.skateCameraBailing,
-    }, dt, snapped, level.groundMeshes, TUNING);
+    }, dt, snapped, level.groundMeshes, level.skatepark ? {
+      camDist:TUNING.camDist,camHeight:TUNING.camHeight,camPitch:TUNING.camPitch,
+      camFov:TUNING.camFov+camSpeedFovBoost,
+    } : undefined);
     camControlDir.copy(skateChaseCamera.forward);
     cameraLook.step(input.lookX, input.lookY, dt);
     cameraLook.apply(camera, skateChaseCamera.aim);
