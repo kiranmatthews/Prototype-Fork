@@ -216,11 +216,16 @@ try {
     player.prevPos.set(0, 1.1, 0); player.pos.set(0, 0.9, 0); player.vVel = -10;
   };
   const stomp = create("multihit");
+  assert.equal(stomp.crate.milkCrate.bottles.count, 9, "new milk crate needs a full 3×3 grid");
+  const collisionSize = stomp.crate.box.getSize(new THREE.Vector3()).toArray();
+  assert.deepEqual(collisionSize, [.96,.96,.96], "replacement changed the cube collider");
   for (let hit = 1; hit <= 5; hit++) {
     prepareStomp(stomp.player);
     stomp.player.collide(stomp.level);
     assert.equal(activeFruit(stomp.player), hit * 2, `stomp ${hit} did not pay two fruit`);
     assert.equal(stomp.crate.alive, hit < 5, `stomp ${hit} alive state`);
+    assert.equal(stomp.crate.milkCrate.bottles.count, Math.max(0,9-hit*2), `stomp ${hit} bottle count`);
+    assert.deepEqual(stomp.crate.box.getSize(new THREE.Vector3()).toArray(), collisionSize, "a lost bottle changed support bounds");
     assert.equal(stomp.player.cratesBroken, hit === 5 ? 1 : 0, `stomp ${hit} crate tally`);
   }
 
@@ -285,8 +290,16 @@ try {
   assert.equal(checkpoint.crate.hitsRemaining, 1);
   checkpoint.level.reset(false);
   assert.equal(checkpoint.crate.hitsRemaining, 3, "soft reset lost checkpointed hit progress");
+  assert.equal(checkpoint.crate.milkCrate.bottles.count, 5, "checkpoint restored the wrong bottle count");
   checkpoint.level.reset(true);
   assert.equal(checkpoint.crate.hitsRemaining, 5, "hard reset did not restore five hits");
+  assert.equal(checkpoint.crate.milkCrate.bottles.count, 9, "restart did not refill the rack");
+  checkpoint.level.setTimeTrial(true);
+  assert.equal(checkpoint.crate.milkCrate.visual.visible, false, "bottles cover run-mode printing");
+  assert.equal(checkpoint.crate.mesh.material.visible, true, "time trial cube disappeared");
+  checkpoint.level.setTimeTrial(false);
+  assert.equal(checkpoint.crate.milkCrate.visual.visible, true, "standard mode lost the milk rack");
+  assert.equal(checkpoint.crate.mesh.material.visible, false, "solid proxy cube covers the bottles");
 
   console.log("Validated life/multi-hit crates, triple-mask SPECIAL, fruit HUD events, rewards, contacts, checkpoints, and capture.");
 } finally {

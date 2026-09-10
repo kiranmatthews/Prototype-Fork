@@ -983,10 +983,13 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
         }),
       },
       {
-        label: "5-hit fruit",
+        label: "5-bounce milk",
         icon: (x) => {
-          box(x, "#c98332", "#6f3d13");
-          glyph(x, "5", "#ffe88a");
+          box(x, "#216dd1", "#123e85");
+          for (let row = 0; row < 3; row++) for (let col = 0; col < 3; col++) {
+            x.fillStyle = '#f5efe2'; x.fillRect(4 + col * 4, 4 + row * 4, 2, 3);
+            x.fillStyle = '#e74a32'; x.fillRect(4 + col * 4, 4 + row * 4, 2, 1);
+          }
         },
         make: (at) => ({
           t: "crate",
@@ -8960,7 +8963,7 @@ export class Editor {
               : k === "life"
                 ? "extra life"
                 : k === "multihit"
-                  ? "5-hit fruit"
+                  ? "5-bounce milk"
                   : k;
         if ((c.kind ?? "wood") === k) o.selected = true;
         sel.appendChild(o);

@@ -1,3 +1,4 @@
+import { createMilkCrate, setMilkCrateState, disposeMilkCrate, type MilkCrate } from "./milkCrate";
 import { DECK_TRICKS, deckTrickInfo, type DeckTrickKind } from './skateTricks';
 import { createJungleCupTrophy } from "./competition/trophy";
 import { cameraViewDirection, type CameraView } from "./cameraViews";
@@ -126,6 +127,7 @@ import { createMilkCarton, milkCartonTexture, pressMilkCarton, renderMilkCarton,
 
 export interface Crate {
   mesh: THREE.Mesh;
+  milkCrate?: MilkCrate; // same cube collider, imported blue rack and nine instanced bottles
   carton?: MilkCarton; // plain wood's visual replacement; the existing box owns all contact
   box: THREE.Box3;
   alive: boolean;
@@ -138,7 +140,7 @@ export interface Crate {
   mask?: boolean; // Aku crate: breaking it grants a protective mask
   mystery?: boolean; // ? crate: random reward (wumpa burst, mask, or a life)
   life?: boolean; // extra-life crate: breaking it grants one life
-  multiHit?: boolean; // striped fruit crate: five stomps/head-bumps, two fruit each
+  multiHit?: boolean; // milk crate: five stomps/head-bumps, two milk each
   hitsRemaining?: number; // live multi-hit counter (starts at five)
   hitPulse?: number; // presentation squash after a non-breaking hit
   bang?: boolean; // metal '!' SWITCH: hitting it materializes its group's outline crates; never breaks, uncounted
@@ -3791,7 +3793,6 @@ export class Level {
   private tntTexCache = new Map<string, THREE.CanvasTexture>();
   private maskTex: THREE.CanvasTexture | null = null;
   private lifeTex: THREE.CanvasTexture | null = null;
-  private multiHitTexCache = new Map<number, THREE.CanvasTexture>();
   private mysteryTex: THREE.CanvasTexture | null = null;
   private plainTex: THREE.CanvasTexture | null = null;
   private nitroTex: THREE.CanvasTexture | null = null;
@@ -7096,6 +7097,7 @@ export class Level {
   }
 
   dispose(preserveResourcesFrom?: Level): void {
+    for (const crate of this.crates) if (crate.milkCrate) disposeMilkCrate(crate.milkCrate);
     this.nightworksRocks?.dispose();
     this.nightworksRocks = null;
     this.jungleAssets?.dispose();
@@ -8545,7 +8547,7 @@ export class Level {
     this.refreshCartonTops();
     for (const c of this.crates)
       if (c.carton) updateMilkCarton(c.carton, dt, c.alive, c.pending);
-    // Five-hit fruit crates squash and rebound in place on partial hits. Their
+    // Five-hit milk crates squash and rebound in place on partial hits. Their
     // collision box stays authoritative and full-sized; this is presentation
     // only, so stacked crates never inherit a moving support plane.
     for (const c of this.crates) {
@@ -8845,15 +8847,14 @@ export class Level {
     sfx.play(Math.random() < 0.5 ? "crateBreak1" : "crateBreak2", 0.8);
   }
 
-  /** One non-destructive stomp/head-bump on a five-hit fruit crate. */
+  /** One non-destructive stomp/head-bump on a five-hit milk crate. */
   hitMultiCrate(crate: Crate): number {
     if (!crate.alive || !crate.multiHit || crate.pending)
       return crate.hitsRemaining ?? 0;
     const remaining = Math.max(0, (crate.hitsRemaining ?? 5) - 1);
     crate.hitsRemaining = remaining;
     crate.hitPulse = 0.14;
-    if (remaining > 0)
-      this.setCrateFace(crate, this.multiHitTexture(remaining), 1);
+    if (crate.milkCrate) setMilkCrateState(crate.milkCrate, remaining, !!crate.pending, crate.ttOrigMap !== undefined);
     return remaining;
   }
 
@@ -8922,6 +8923,7 @@ export class Level {
     if (c.realMat && c.ghostMat)
       c.mesh.material = pending ? c.ghostMat : c.realMat;
     if (c.ghostEdges) c.ghostEdges.visible = pending;
+    if (c.milkCrate) setMilkCrateState(c.milkCrate, c.hitsRemaining ?? 5, pending, c.ttOrigMap !== undefined);
   }
 
   lightFuse(c: Crate): void {
@@ -9042,12 +9044,7 @@ export class Level {
     if (!c.multiHit) return;
     c.hitPulse = 0;
     c.mesh.scale.setScalar(1);
-    if (c.alive && c.ttOrigMap === undefined)
-      this.setCrateFace(
-        c,
-        this.multiHitTexture(c.hitsRemaining ?? 5),
-        1,
-      );
+    if (c.milkCrate) setMilkCrateState(c.milkCrate, c.hitsRemaining ?? 5, !!c.pending, c.ttOrigMap !== undefined);
   }
 
   // Soft reset (death): restore the crate world to the last checkpoint's
@@ -15057,7 +15054,7 @@ export class Level {
    * colour, a size, a spin and a lean for every single plant.
    */
   get jungleAssetDiagnostics() { return this.jungleAssets?.diagnostics ?? null; }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([this.jungleAssets?.ready(),this.nightworksRocks?.ready(),this.campaignWorldMap?.prepareAssets()]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([this.jungleAssets?.ready(),this.nightworksRocks?.ready(),this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => crate.milkCrate ? [crate.milkCrate.ready] : [])]); }
 
   private jungleAsset(c: CustomComponent): void {
     if (!isJungleAsset(c.dkind)) return;
@@ -16069,6 +16066,7 @@ export class Level {
     // bottom is never seen at all. BoxGeometry group order is +X, -X, +Y, -Y,
     // +Z, -Z, so indices 2 and 3 are the two that lose it.
     const carton = !kind ? createMilkCarton(size) : undefined;
+    const milkCrate = kind === 'multihit' ? createMilkCrate(size) : undefined;
     let mat: THREE.Material | THREE.Material[];
     if (carton) {
       mat = carton.body.material;
@@ -16111,11 +16109,8 @@ export class Level {
         color: 0xffffff,
         map: this.lifeTexture(),
       });
-    } else if (kind === "multihit") {
-      mat = new THREE.MeshLambertMaterial({
-        color: 0xffffff,
-        map: this.multiHitTexture(5),
-      });
+    } else if (milkCrate) {
+      mat = milkCrate.body.material;
     } else if (kind === "mystery") {
       mat = new THREE.MeshLambertMaterial({
         color: 0xffffff,
@@ -16183,7 +16178,7 @@ export class Level {
           ? (this.crateRestSurface(x, z, deckY) ?? deckY)
           : this.floorY(x, z, deckY));
     }
-    const mesh = carton?.body ?? new THREE.Mesh(new THREE.BoxGeometry(size, size, size), mat);
+    const mesh = carton?.body ?? milkCrate?.body ?? new THREE.Mesh(new THREE.BoxGeometry(size, size, size), mat);
     mesh.position.set(x, base + size / 2, z);
     mesh.userData.baseY = mesh.position.y;
     mesh.userData.groundBaseY = groundBase; // the floor of this crate's column
@@ -16200,6 +16195,7 @@ export class Level {
     const entry: Crate = {
       mesh,
       carton,
+      milkCrate,
       box,
       alive: true,
       nitro: kind === "nitro",
@@ -16236,6 +16232,7 @@ export class Level {
       mesh.add(edges);
       entry.ghostEdges = edges;
       if (carton) updateMilkCarton(carton, 0, true, true);
+      if (milkCrate) setMilkCrateState(milkCrate, 5, true);
     }
     this.crates.push(entry);
     this.cartonStacksDirty = true;
@@ -16523,27 +16520,6 @@ export class Level {
         this.crateLabel(ctx, "?", 22, "#ff8c1a", "#5a2d08", 16, 17);
       });
     return this.mysteryTex;
-  }
-
-  // Five-hit Wumpa crate: striped slats plus its remaining hit count. The
-  // changing digit is deliberately explicit at gameplay camera distance; the
-  // squash pulse sells each hit, while the face says how many are still owed.
-  private multiHitTexture(remaining: number): THREE.CanvasTexture {
-    const hits = THREE.MathUtils.clamp(Math.round(remaining), 1, 5);
-    const cached = this.multiHitTexCache.get(hits);
-    if (cached) return cached;
-    const tex = Level.makeTex((ctx) => {
-      Level.crateWood(ctx, false);
-      ctx.fillStyle = "#6f3d13";
-      for (let x = 5; x < 29; x += 7) ctx.fillRect(x, 3, 3, 26);
-      ctx.fillStyle = "#e6a13d";
-      for (let x = 6; x < 29; x += 7) ctx.fillRect(x, 4, 1, 24);
-      ctx.fillStyle = "rgba(70, 34, 8, 0.72)";
-      ctx.fillRect(10, 8, 12, 17);
-      this.crateLabel(ctx, String(hits), 17, "#ffe88a", "#4b2208", 16, 17);
-    });
-    this.multiHitTexCache.set(hits, tex);
-    return tex;
   }
 
   // Mask crate: the authored crossbones sticker (public/crossbones.png, alpha)
@@ -17349,6 +17325,7 @@ export class Level {
         c.timeSecs = undefined;
         c.boost = undefined;
       }
+      if (c.milkCrate) setMilkCrateState(c.milkCrate, c.hitsRemaining ?? 5, !!c.pending, on);
       i++;
     }
   }
