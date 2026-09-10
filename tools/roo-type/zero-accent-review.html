@@ -1,0 +1,16 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="icon" href="data:,"><style>body{margin:0;background:#0c131d;color:#d8e5f2;font:14px system-ui}canvas{display:block}</style></head><body><canvas id="proof"></canvas><script type="module">
+const canvas=document.getElementById('proof');canvas.width=1320;canvas.height=1080;const ctx=canvas.getContext('2d');
+const load=src=>new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve(image);image.onerror=reject;image.src=src;});
+const baked='/art/roo-reference-match/bake/';
+const palettes=await Promise.all(['counter','bonus'].map(async p=>({p,m:await fetch(baked+`roo-${p}-v4.json`).then(r=>r.json()),images:await Promise.all([0,1,2].map(f=>load(baked+`roo-${p}-v4${f?'-light'+f:''}.png`)))})));
+function glyph(a,char,x,y,size,frame=0){const g=a.m.glyphs[char];ctx.drawImage(a.images[frame],g.x,g.y,g.width,g.height,x+g.left*size,y+g.top*size,g.width/a.m.capPixels*size,g.height/a.m.capPixels*size);}
+ctx.fillStyle='#0c131d';ctx.fillRect(0,0,canvas.width,canvas.height);
+for(const [row,a]of palettes.entries()){
+ const top=row*530;ctx.fillStyle='#c2d2e3';ctx.font='18px system-ui';ctx.fillText(a.p.toUpperCase()+' · zero / letter O',30,top+32);
+ glyph(a,'0',40,top+58,330);glyph(a,'O',285,top+58,330);
+ for(const [i,size]of [107,56,32].entries()){const x=610+i*220;ctx.fillStyle='#a8b9c9';ctx.font='14px system-ui';ctx.fillText(size+' px',x,top+58);glyph(a,'0',x,top+90,size);glyph(a,'O',x+size*.76,top+90,size);}
+ ctx.fillStyle='#a8b9c9';ctx.font='14px system-ui';ctx.fillText('Left / neutral / right edge light',610,top+280);
+ for(const [i,frame]of [1,0,2].entries())glyph(a,'0',610+i*180,top+305,165,frame);
+}
+window.zeroAccentReview={ready:true};
+</script></body></html>

@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import {execFileSync}from'node:child_process';
 import{pathToFileURL}from'node:url';
 const{chromium}=await import(process.env.PLAYWRIGHT_MODULE?pathToFileURL(process.env.PLAYWRIGHT_MODULE).href:'playwright');
-const out=process.env.ROO_REVIEW_DIR||'/private/tmp/roo-type-v3-review';await fs.mkdir(out,{recursive:true});
+const out=process.env.ROO_REVIEW_DIR||'/private/tmp/roo-type-v4-review';await fs.mkdir(out,{recursive:true});
 const browser=await chromium.launch({headless:true,channel:'chrome'});
 try{
  const page=await browser.newPage({viewport:{width:900,height:300}});

@@ -1,6 +1,7 @@
 import type { RooAtlasMetrics } from '../../src/roo-type/bake';
 import type { RooVectorSource } from '../../src/roo-type/geometry';
 import { RooColorProjector, type ColorLayer } from './color-projection';
+import { addZeroInnerAccent, ZERO_INNER_ACCENT } from './zero-accent';
 
 type Palette='bonus'|'counter';
 interface Candidate {glyph:string;palette:Palette;file:string;prompt:string;colorBounds:[number,number,number,number];background:string;status:string;materialSource?:'cleaned'}
@@ -48,7 +49,11 @@ export async function bakeModelFont(allowPartial=false){
       vertical.offset=1-inkTop-glyph.bounds[3]*vertical.scale;
     }
     for(const palette of ['bonus','counter'] as const){
-      for(const [frame,shift]of [0,-.85,.85].entries())rendered[palette][frame][char]=projector.render(glyph,{image,colorBounds:c.colorBounds},capPixels,widthScale,true,ref,{source:c.palette,target:palette},vertical,shift);
+      for(const [frame,shift]of [0,-.85,.85].entries()){
+        const r=projector.render(glyph,{image,colorBounds:c.colorBounds},capPixels,widthScale,true,ref,{source:c.palette,target:palette},vertical,shift);
+        rendered[palette][frame][char]=r;
+        if(char==='0')addZeroInnerAccent(projector,glyph,r,rendered[palette][0][char],palette,vertical,shift);
+      }
     }
     provenance[char]={model:c.file,prompt:c.prompt,reference:refFile};
   }
@@ -66,7 +71,7 @@ export async function bakeModelFont(allowPartial=false){
     }
     const frames=rendered[palette].map(frame=>{const canvas=document.createElement('canvas');canvas.width=atlasWidth;canvas.height=y+row+gutter;const ctx=canvas.getContext('2d')!;for(const item of items)ctx.drawImage(frame[item.char].canvas,item.x,item.y);return canvas;});
     const canvas=frames[0];
-    const metrics:RooAtlasMetrics={version:3,lightFrames:3,palette,capPixels,width:canvas.width,height:canvas.height,fontSha256:source.sha256,capBand:source.capBand,glyphs,kern:{...source.kern},layouts:{BONUS:{width:626/165,glyphs:[...'BONUS'].map(char=>{const r=report.measuredTitleGlyphs[char];return{char,x:(r.x-546)/165,y:(r.y-60)/165,width:r.width/165,height:r.height/165};})}}};
+    const metrics:RooAtlasMetrics={version:4,lightFrames:3,accents:{'0':ZERO_INNER_ACCENT},palette,capPixels,width:canvas.width,height:canvas.height,fontSha256:source.sha256,capBand:source.capBand,glyphs,kern:{...source.kern},layouts:{BONUS:{width:626/165,glyphs:[...'BONUS'].map(char=>{const r=report.measuredTitleGlyphs[char];return{char,x:(r.x-546)/165,y:(r.y-60)/165,width:r.width/165,height:r.height/165};})}}};
     for(const n of '0123456789')metrics.kern[n+'/']=-.035;
     metrics.kern['23']=-.016;
     atlases[palette]={canvas,frames,metrics};

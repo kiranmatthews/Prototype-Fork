@@ -4,11 +4,11 @@ import {pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE?pathToFileURL(process.env.PLAYWRIGHT_MODULE).href:'playwright');
 const base=process.env.ROO_LAB_URL||'http://127.0.0.1:5178/';
-const out=process.env.ROO_REVIEW_DIR||'/private/tmp/roo-type-v3-review';await fs.mkdir(out,{recursive:true});
+const out=process.env.ROO_REVIEW_DIR||'/private/tmp/roo-type-v4-review';await fs.mkdir(out,{recursive:true});
 const report={errors:[],checks:{},captures:[]};
 const root=new URL('../../',import.meta.url);
 const font=await fs.readFile(new URL('public/fonts/RooRegular.ttf',root));
-const provenance=JSON.parse(await fs.readFile(new URL('public/fonts/roo-font-v3-provenance.json',root),'utf8'));
+const provenance=JSON.parse(await fs.readFile(new URL('public/fonts/roo-font-v4-provenance.json',root),'utf8'));
 assert.equal(Object.keys(provenance.glyphs).length,51);
 for(const entry of Object.values(provenance.glyphs)){
  const model=await fs.readFile(new URL('art/roo-reference-match/'+entry.model,root));
@@ -24,16 +24,16 @@ try{
  await page.goto(base+'roo-type-lab.html');await page.waitForFunction(()=>window.rooTypeLab?.ready);await page.screenshot({path:out+'/lab-dark.png'});
  await page.locator('#backdrop').check();await page.screenshot({path:out+'/lab-light.png'});
  const download=page.waitForEvent('download');await page.locator('#png').click();await(await download).saveAs(out+'/roo-text.png');
- const zip=page.waitForEvent('download');await page.locator('#atlas').click();await(await zip).saveAs(out+'/roo-image-font-v3.zip');
+ const zip=page.waitForEvent('download');await page.locator('#atlas').click();await(await zip).saveAs(out+'/roo-image-font-v4.zip');
  const{unzipSync}=await import('../../node_modules/three/examples/jsm/libs/fflate.module.js');
- const zipFiles=unzipSync(await fs.readFile(out+'/roo-image-font-v3.zip'));
+ const zipFiles=unzipSync(await fs.readFile(out+'/roo-image-font-v4.zip'));
  assert.equal(Object.keys(zipFiles).length,10);
- assert.equal(JSON.parse(new TextDecoder().decode(zipFiles['roo-font-v3-provenance.json'])).glyphCount,51);report.checks.exports=true;
+ assert.equal(JSON.parse(new TextDecoder().decode(zipFiles['roo-font-v4-provenance.json'])).glyphCount,51);report.checks.exports=true;
  const shapes=await page.evaluate(async()=>{
   const source=await fetch('/fonts/roo-bevel-source-v1.json').then(r=>r.json());
   const results={};await document.fonts.load('400 1000px Roo');
   for(const palette of ['bonus','counter']){
-   const m=await fetch(`/fonts/roo-${palette}-v3.json`).then(r=>r.json()),image=new Image();image.src=`/fonts/roo-${palette}-v3.png`;await image.decode();
+   const m=await fetch(`/fonts/roo-${palette}-v4.json`).then(r=>r.json()),image=new Image();image.src=`/fonts/roo-${palette}-v4.png`;await image.decode();
    let worst={char:'',iou:1},partial=0,pink=0;const alphaHashes={};
    for(const [char,g]of Object.entries(m.glyphs)){
     if(!g.width)continue;
@@ -42,6 +42,12 @@ try{
     const sx=(g.inkRight-g.inkLeft)/(b[2]-b[0]),sy=(g.inkBottom-g.inkTop)/(b[3]-b[1]),cap=m.capPixels;
     e.setTransform(sx*cap/882,0,0,sy*cap/882,(g.inkLeft-b[0]*sx-g.left)*cap,(g.inkTop+b[3]*sy-76/882*sy-g.top)*cap);
     e.font='400 1000px Roo';e.textBaseline='alphabetic';e.fillStyle='#fff';e.fillText(char,0,0);
+    const accent=m.accents?.[char];
+    if(accent){
+      const offset=1-g.inkTop-b[3]*sy,path=new Path2D();
+      for(const c of accent.commands){if(c.type==='M')path.moveTo(c.x,c.y);else if(c.type==='C')path.bezierCurveTo(c.x1,c.y1,c.x2,c.y2,c.x,c.y);else if(c.type==='Z')path.closePath();}
+      e.setTransform(sx*cap,0,0,-sy*cap,-g.left*cap,(1-offset-g.top)*cap);e.fill(path);
+    }
     const a=ctx.getImageData(0,0,g.width,g.height).data,d=e.getImageData(0,0,g.width,g.height).data;let union=0,intersection=0,hash=2166136261;
     for(let i=0;i<a.length;i+=4){const aa=a[i+3];hash=Math.imul(hash^aa,16777619);if(aa>0&&aa<255)partial++;if(aa>240&&a[i]>150&&a[i+2]>150&&a[i+1]<70)pink++;const x=aa>127,y=d[i+3]>127;if(x||y)union++;if(x&&y)intersection++;}
     const iou=intersection/union;if(iou<worst.iou)worst={char,iou};alphaHashes[char]=hash;
@@ -51,13 +57,13 @@ try{
   return results;
  });
  const sha=createHash('sha256').update(font).digest('hex');
- for(const p of ['bonus','counter']){assert.equal(shapes[p].fontSha256,sha);assert.equal(shapes[p].version,3);assert.equal(shapes[p].pink,0);assert.ok(shapes[p].partial>5000);assert.ok(shapes[p].worst.iou>.96,JSON.stringify(shapes[p].worst));}
+ for(const p of ['bonus','counter']){assert.equal(shapes[p].fontSha256,sha);assert.equal(shapes[p].version,4);assert.equal(shapes[p].pink,0);assert.ok(shapes[p].partial>5000);assert.ok(shapes[p].worst.iou>.96,JSON.stringify(shapes[p].worst));}
  assert.deepEqual(shapes.bonus.alphaHashes,shapes.counter.alphaHashes);delete shapes.bonus.alphaHashes;delete shapes.counter.alphaHashes;report.checks.shapes=shapes;
  report.checks.lightFrames=await page.evaluate(async()=>{
   const results={};
   for(const palette of ['bonus','counter']){
-   const m=await fetch(`/fonts/roo-${palette}-v3.json`).then(r=>r.json()),frames=[];
-   for(const frame of [0,1,2]){const image=new Image();image.src=`/fonts/roo-${palette}-v3${frame?'-light'+frame:''}.png`;await image.decode();const canvas=document.createElement('canvas');canvas.width=m.width;canvas.height=m.height;const ctx=canvas.getContext('2d');ctx.drawImage(image,0,0);frames.push(ctx.getImageData(0,0,m.width,m.height).data);}
+   const m=await fetch(`/fonts/roo-${palette}-v4.json`).then(r=>r.json()),frames=[];
+   for(const frame of [0,1,2]){const image=new Image();image.src=`/fonts/roo-${palette}-v4${frame?'-light'+frame:''}.png`;await image.decode();const canvas=document.createElement('canvas');canvas.width=m.width;canvas.height=m.height;const ctx=canvas.getContext('2d');ctx.drawImage(image,0,0);frames.push(ctx.getImageData(0,0,m.width,m.height).data);}
    let alphaMismatches=0,grayPixels=0,maxNeutralRatio=0;const unchanged=[];
    for(let i=0;i<frames[0].length;i+=4){for(const frame of [1,2])if(frames[frame][i+3]!==frames[0][i+3])alphaMismatches++;const rgb=frames[0].slice(i,i+3),hi=Math.max(...rgb),lo=Math.min(...rgb);if(frames[0][i+3]>250&&hi>80&&hi<220&&hi-lo<8)grayPixels++;}
    for(const[char,g]of Object.entries(m.glyphs)){if(!g.width)continue;let changed=0,opaque=0,neutral=0;for(let y=g.y;y<g.y+g.height;y++)for(let x=g.x;x<g.x+g.width;x++){const p=(y*m.width+x)*4;if(frames[0][p+3]>128&&[0,1,2].some(c=>frames[1][p+c]!==frames[2][p+c]))changed++;if(frames[0][p+3]>250){opaque++;const rgb=frames[0].slice(p,p+3);if(Math.max(...rgb)-Math.min(...rgb)<10)neutral++;}}if(!changed)unchanged.push(char);maxNeutralRatio=Math.max(maxNeutralRatio,neutral/Math.max(1,opaque));}
@@ -81,7 +87,7 @@ try{
   await game.waitForFunction(()=>window.__game.ui.gameHudDiagnostics.rooAtlasReady);
   await game.evaluate(()=>{const g=window.__game,original=g.ui.setHUD.bind(g.ui);window.rooForceBonus=false;window.rooReviewFruit=42;g.ui.setHUD=(s,dt)=>original({...s,fruit:window.rooReviewFruit,lives:7,cratesBroken:0,cratesTotal:23,inventoryHeld:true,bonusMode:window.rooForceBonus},dt);});
   await game.waitForTimeout(600);assert.match(await game.locator('.hud-build').textContent(),/Codex\/sol fork/);
-  const urls=await game.locator('.game-hud-layer svg image').evaluateAll(images=>images.map(i=>i.getAttribute('href')));assert.ok(urls.length>0&&urls.every(s=>/-v3(?:-light[12])?\.png/.test(s)));
+  const urls=await game.locator('.game-hud-layer svg image').evaluateAll(images=>images.map(i=>i.getAttribute('href')));assert.ok(urls.length>0&&urls.every(s=>/-v4(?:-light[12])?\.png/.test(s)));
   report.checks[lite?'lite':'full']=await game.evaluate(()=>window.__game.ui.gameHudDiagnostics);
   await game.screenshot({path:out+`/game-${lite?'lite':'full'}.png`});
   const fonts=await game.locator('.hud-box-current,.hud-box-total').evaluateAll(es=>es.map(e=>getComputedStyle(e).fontSize));assert.equal(fonts[0],fonts[1]);

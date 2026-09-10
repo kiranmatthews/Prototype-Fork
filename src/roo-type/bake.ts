@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { RooTypeGeometry, type RooTreatment } from './geometry';
+import { RooTypeGeometry, type RooTreatment, type RooVectorGlyph } from './geometry';
 
 export interface RooAtlasGlyph {
   x: number; y: number; width: number; height: number;
@@ -8,6 +8,7 @@ export interface RooAtlasGlyph {
   inkTop?: number; inkBottom?: number;
 }
 export interface RooAtlasMetrics {
+  accents?:Record<string,{kind:string;commands:RooVectorGlyph['commands']}>;
   lightFrames?: number;
   version: number; palette: RooTreatment; capPixels: number; width: number; height: number;
   fontSha256: string; capBand: RooTypeGeometry['source']['capBand'];

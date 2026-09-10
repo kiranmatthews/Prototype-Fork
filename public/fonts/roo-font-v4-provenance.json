@@ -1,0 +1,688 @@
+{
+  "version": 4,
+  "font": "RooRegular.ttf",
+  "fontSha256": "55bb1b2485f41fdef43742088140d52d3c5a6fa05f2e83b2e1ab3a6d15e2610f",
+  "generator": "built-in image_gen",
+  "generatorModel": null,
+  "generatorQuality": null,
+  "generatorControls": "The built-in tool did not expose or report a model ID or quality setting for the original passes.",
+  "method": "Per-glyph model color/detail pass; analytic Roo curve alpha with an authored zero accent; reference lighting retained where available; smooth floating-point color profile; three aligned bevel-light frames in two palettes.",
+  "lighting": {
+    "frames": [
+      "neutral",
+      "left",
+      "right"
+    ],
+    "keyShift": [
+      0,
+      -0.85,
+      0.85
+    ],
+    "method": "Render the same Roo mesh and color field three times; change only bevel light; blend premultiplied pixels with identical alpha."
+  },
+  "glyphCount": 51,
+  "glyphs": {
+    "0": {
+      "model": "candidates/0-counter-03.png",
+      "modelSha256": "0ecbf34db17f494d225753600b613dd68d6d9124770b8259f4c50805d5348dbb",
+      "generatorOutput": "exec-f5d6b20c-ab8f-484b-bf17-33d78008550b.png",
+      "prompt": "0-extraction-prompt.txt",
+      "promptText": "Edit only the background of this image. Preserve the colored numeral 0 artwork exactly: identical yellow/gold/orange/red front-face colors, subtle shading, bevel profiles, narrow highlights, outer contour and tall hole. Remove the surrounding dungeon image and the thick black outer stroke/shadow, replacing those areas and the hole background with perfectly flat solid #ff00ff magenta. Do not redesign, repaint, recolor, add shininess, widen the bevel, change the shape, or add details to the colored 0. Preserve its existing rendered treatment and antialiased edges. Return just this same 0 on the magenta background, at high resolution. No extra objects or text.\n",
+      "reference": "analysis/0-reference-native.png"
+    },
+    "1": {
+      "model": "candidates/1-counter-01.png",
+      "modelSha256": "3b1dfbf24fe5cf338a339ab6d59e453f9ebbfddc8b47e7acc0c22223d4af29c3",
+      "generatorOutput": "exec-85377d3d-8fd8-439c-b28b-b123cff7b579.png",
+      "prompt": "1-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo numeral \"1\" silhouette. Image 2 is the authoritative golden/orange/red HUD zero whose material this numeral must match. Render just the numeral \"1\" using Image 1's exact outer and inner contours, placement and proportions, with Image 2's polished narrow sculpted bevel, subtle front-face shading, tiny upper-left edge highlights, and saturated yellow through gold/amber/orange to deep red gradient. Match the reference's actual finish and light direction; do not add inflated jewel-like volume, big white streaks, extra gloss, cracks, grain or scratches. No black outer stroke or black drop shadow. The glyph is the number 1, not a letter. Solid flat #ff00ff magenta outside the colored glyph and in its holes. Smooth antialiased edges, one glyph only, no other text or objects.\n",
+      "reference": null
+    },
+    "2": {
+      "model": "candidates/2-counter-01.png",
+      "modelSha256": "b56543074c819205e13aacd516c1b60eaa4b294e08f3c36625170fff16402b00",
+      "generatorOutput": "exec-296b8817-0316-49c7-b85c-174e5e710341.png",
+      "prompt": "2-counter-prompt.txt",
+      "promptText": "Edit only the background of this exact numeral \"2\" from the reference HUD. Preserve the colored numeral's shape, narrow rugged 3D bevels, gentle polished front-face shading, small edge highlights, and yellow/gold/amber/orange/deep-red gradient. Remove the scene and large black surround, leaving only the colored glyph on perfectly flat #ff00ff magenta outside it and in every open area. Do not inflate the bevel, add gloss or texture, reinterpret the lighting, or alter the glyph. Restore smooth high-resolution antialiasing while preserving the exact material. One numeral \"2\" only, no other objects or text.\n",
+      "reference": "analysis/2-number-native.png"
+    },
+    "3": {
+      "model": "candidates/3-counter-01.png",
+      "modelSha256": "e8fd1124c7f630153213f168f7651a3021a979715174f20aa75f50002831a618",
+      "generatorOutput": "exec-f80d0b48-fd65-4e12-b2fb-e65ed782ff59.png",
+      "prompt": "3-counter-prompt.txt",
+      "promptText": "Edit only the background of this exact numeral \"3\" from the reference HUD. Preserve the colored numeral's shape, narrow rugged 3D bevels, gentle polished front-face shading, small edge highlights, and yellow/gold/amber/orange/deep-red gradient. Remove the scene and large black surround, leaving only the colored glyph on perfectly flat #ff00ff magenta outside it and in every open area. Do not inflate the bevel, add gloss or texture, reinterpret the lighting, or alter the glyph. Restore smooth high-resolution antialiasing while preserving the exact material. One numeral \"3\" only, no other objects or text.\n",
+      "reference": "analysis/3-number-native.png"
+    },
+    "4": {
+      "model": "candidates/4-counter-01.png",
+      "modelSha256": "210a1e134e8996bf2415333f1e353a7d12e1ec50a6e9c269c311b094ddd7d541",
+      "generatorOutput": "exec-f366db59-041d-4938-86fd-9d51f46b6e8b.png",
+      "prompt": "4-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo numeral \"4\" silhouette. Image 2 is the authoritative golden/orange/red HUD zero whose material this numeral must match. Render just the numeral \"4\" using Image 1's exact outer and inner contours, placement and proportions, with Image 2's polished narrow sculpted bevel, subtle front-face shading, tiny upper-left edge highlights, and saturated yellow through gold/amber/orange to deep red gradient. Match the reference's actual finish and light direction; do not add inflated jewel-like volume, big white streaks, extra gloss, cracks, grain or scratches. No black outer stroke or black drop shadow. The glyph is the number 4, not a letter. Solid flat #ff00ff magenta outside the colored glyph and in its holes. Smooth antialiased edges, one glyph only, no other text or objects.\n",
+      "reference": null
+    },
+    "5": {
+      "model": "candidates/5-counter-01.png",
+      "modelSha256": "58c903fb8ffb681abc0ad582126063117be53f481bacdfbeb765bd5dab7f5edd",
+      "generatorOutput": "exec-2e0df3f0-1383-4c87-943d-cce983c442f0.png",
+      "prompt": "5-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo numeral \"5\" silhouette. Image 2 is the authoritative golden/orange/red HUD zero whose material this numeral must match. Render just the numeral \"5\" using Image 1's exact outer and inner contours, placement and proportions, with Image 2's polished narrow sculpted bevel, subtle front-face shading, tiny upper-left edge highlights, and saturated yellow through gold/amber/orange to deep red gradient. Match the reference's actual finish and light direction; do not add inflated jewel-like volume, big white streaks, extra gloss, cracks, grain or scratches. No black outer stroke or black drop shadow. The glyph is the number 5, not a letter. Solid flat #ff00ff magenta outside the colored glyph and in its holes. Smooth antialiased edges, one glyph only, no other text or objects.\n",
+      "reference": null
+    },
+    "6": {
+      "model": "candidates/6-counter-01.png",
+      "modelSha256": "15699eda97b57c718ac0786444e6296c1745059a8715d28f2ed5d25a826974db",
+      "generatorOutput": "exec-d5477838-0623-4f81-b0fb-55ff022bbadf.png",
+      "prompt": "6-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo numeral \"6\" silhouette. Image 2 is the authoritative golden/orange/red HUD zero whose material this numeral must match. Render just the numeral \"6\" using Image 1's exact outer and inner contours, placement and proportions, with Image 2's polished narrow sculpted bevel, subtle front-face shading, tiny upper-left edge highlights, and saturated yellow through gold/amber/orange to deep red gradient. Match the reference's actual finish and light direction; do not add inflated jewel-like volume, big white streaks, extra gloss, cracks, grain or scratches. No black outer stroke or black drop shadow. The glyph is the number 6, not a letter. Solid flat #ff00ff magenta outside the colored glyph and in its holes. Smooth antialiased edges, one glyph only, no other text or objects.\n",
+      "reference": null
+    },
+    "7": {
+      "model": "candidates/7-counter-01.png",
+      "modelSha256": "caba6844b206543a065e0318e04bed92d4b44392414ef2c1b92a4e0b12f2288f",
+      "generatorOutput": "exec-10de617a-7387-40a0-87ad-f41f43c3af29.png",
+      "prompt": "7-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo numeral \"7\" silhouette. Image 2 is the authoritative golden/orange/red HUD zero whose material this numeral must match. Render just the numeral \"7\" using Image 1's exact outer and inner contours, placement and proportions, with Image 2's polished narrow sculpted bevel, subtle front-face shading, tiny upper-left edge highlights, and saturated yellow through gold/amber/orange to deep red gradient. Match the reference's actual finish and light direction; do not add inflated jewel-like volume, big white streaks, extra gloss, cracks, grain or scratches. No black outer stroke or black drop shadow. The glyph is the number 7, not a letter. Solid flat #ff00ff magenta outside the colored glyph and in its holes. Smooth antialiased edges, one glyph only, no other text or objects.\n",
+      "reference": null
+    },
+    "8": {
+      "model": "candidates/8-counter-01.png",
+      "modelSha256": "983af9c02d5bdadf70977a233d4a0ed7b9938a76e66de5d41d514496f8dd495e",
+      "generatorOutput": "exec-cfa85a45-b603-4f5f-b150-915d120cc484.png",
+      "prompt": "8-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo numeral \"8\" silhouette. Image 2 is the authoritative golden/orange/red HUD zero whose material this numeral must match. Render just the numeral \"8\" using Image 1's exact outer and inner contours, placement and proportions, with Image 2's polished narrow sculpted bevel, subtle front-face shading, tiny upper-left edge highlights, and saturated yellow through gold/amber/orange to deep red gradient. Match the reference's actual finish and light direction; do not add inflated jewel-like volume, big white streaks, extra gloss, cracks, grain or scratches. No black outer stroke or black drop shadow. The glyph is the number 8, not a letter. Solid flat #ff00ff magenta outside the colored glyph and in its holes. Smooth antialiased edges, one glyph only, no other text or objects.\n",
+      "reference": null
+    },
+    "9": {
+      "model": "candidates/9-counter-01.png",
+      "modelSha256": "8dff033c4314125275ea0d0eb8db5a5382c88d2bb6dcd11889174bf18f14b27d",
+      "generatorOutput": "exec-d5f5a629-1afe-4639-b822-ed3688ddbaf4.png",
+      "prompt": "9-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo numeral \"9\" silhouette. Image 2 is the authoritative golden/orange/red HUD zero whose material this numeral must match. Render just the numeral \"9\" using Image 1's exact outer and inner contours, placement and proportions, with Image 2's polished narrow sculpted bevel, subtle front-face shading, tiny upper-left edge highlights, and saturated yellow through gold/amber/orange to deep red gradient. Match the reference's actual finish and light direction; do not add inflated jewel-like volume, big white streaks, extra gloss, cracks, grain or scratches. No black outer stroke or black drop shadow. The glyph is the number 9, not a letter. Solid flat #ff00ff magenta outside the colored glyph and in its holes. Smooth antialiased edges, one glyph only, no other text or objects.\n",
+      "reference": null
+    },
+    "A": {
+      "model": "candidates/A-bonus-repair-v3.png",
+      "modelSha256": "7c3f91aaa75230a02a098659c5c302bf206059363cb4201d19926dd0b73e94ad",
+      "generatorOutput": "exec-ce34c983-da76-494a-8d4a-9ed9f1e60017.png",
+      "prompt": "A-repair-v3-prompt.txt",
+      "promptText": "Use case: precise-object-edit. Image 1 is the exact existing Roo uppercase \"A\" to repair. Image 2 (C) is a finish-quality reference only; do not copy its shape. Output only \"A\". Preserve the exact silhouette, pointed tips, openings, orientation, proportions and color placement of image 1. Replace the blurred and blotchy bevel rendering with the polished carved facets and clean, continuous gradients of image 2. Keep the bevel narrow, about 4\u20135% of the full cap height, and retain a broad smooth face; do not inflate it into rounded tubing. Keep lime highlights on the upper left, green face through the upper two thirds, cyan reflected highlights toward the lower left and cobalt blue at the foot. Remove dark blobs, cloudy patches, stretched edge streaks, color banding and blurry seams. Use crisp restrained specular edges and smooth antialiased contours. No black outline, drop shadow, extra cuts, texture noise, extra letters, objects or decorations. Return one complete \"A\" on a truly transparent background, never a painted checkerboard.",
+      "reference": "candidates/A-bonus-repair-v3.png",
+      "inputs": [
+        {
+          "file": "repairs-v3/inputs/A-source.png",
+          "sha256": "b7f01a42d0812b630ae99c22fbe2681da5f018051e23d7c776889bd285790369"
+        },
+        {
+          "file": "candidates/C-bonus-repair-v3.png",
+          "sha256": "2c8d54f3094577111cf453936926857dca0dcc15ba21c22814bb3dadef58389d"
+        }
+      ]
+    },
+    "B": {
+      "model": "candidates/B-bonus-04.png",
+      "modelSha256": "07c3d43931a127a21fdf51e67bd8734be97e754882daed829da948a252fbc843",
+      "generatorOutput": "exec-4409a092-5f96-44be-94c1-72139941fa2e.png",
+      "prompt": "B-extraction-prompt.txt",
+      "promptText": "Edit only the background of this image. Preserve the colored uppercase B artwork exactly: identical front-face colors, subtle shading, bevel profiles, narrow highlights, contour and holes. Remove the surrounding dungeon image and the thick black outer stroke/shadow, replacing those areas and the hole backgrounds with perfectly flat solid #ff00ff magenta. Do not redesign, repaint, recolor, add shininess, widen the bevel, change the shape, or add details to the colored B. Preserve its existing green/emerald/cyan/royal-blue treatment and antialiased edges. Return just this same B on the magenta background, at high resolution. No extra objects or text.\n",
+      "reference": "analysis/B-reference-native.png"
+    },
+    "C": {
+      "model": "candidates/C-bonus-repair-v3.png",
+      "modelSha256": "2c8d54f3094577111cf453936926857dca0dcc15ba21c22814bb3dadef58389d",
+      "generatorOutput": "exec-810f0fe0-11c6-400d-9327-fb4280b795c6.png",
+      "prompt": "C-repair-v3-prompt.txt",
+      "promptText": "Use case: precise-object-edit. Edit target: the attached transparent PNG of the existing Roo letter C. Preserve the exact C silhouette, the pointed tips, the hole, the glyph orientation and proportions, and the same green/lime-to-cyan-to-cobalt material family. Repair the rendering inside the letter: remove the dark blob at the bottom inner corner, cloudy patches, stretched edge streaks and blurred bevel transitions. Make a highly polished, sharply defined, chiseled 3D bevel with a continuous smooth face gradient and controlled thin specular edge highlights, as a professionally rendered game HUD glyph. The bevel must look like flat carved facets, never a rounded inflated tube. Keep the dominant face green in the upper two thirds and cobalt blue at the foot. Lighting stays from upper left with cyan reflection near the lower left. No black outline, no drop shadow, no extra text or objects. Output one C only on a truly transparent background, with smooth antialiased contours and no painted checkerboard. Do not alter the character design.",
+      "reference": "candidates/C-bonus-repair-v3.png",
+      "inputs": [
+        {
+          "file": "repairs-v3/inputs/C-initial-target.png",
+          "sha256": "dd8f51a6b13c511ae84904aed76aac8009cf4c7dc3e2137bdf88e605e2c33ae8"
+        }
+      ]
+    },
+    "D": {
+      "model": "candidates/D-bonus-repair-v3.png",
+      "modelSha256": "ff1049178f29b711f3e825467144685c37e1c50db7b05bde09b622496838b2cd",
+      "generatorOutput": "exec-5237075c-27e5-4741-b0e5-509dff83c264.png",
+      "prompt": "D-repair-v3-prompt.txt",
+      "promptText": "Use case: precise-object-edit. Image 1 is the exact existing Roo uppercase \"D\" to repair. Image 2 (C) is a finish-quality reference only; do not copy its shape. Output only \"D\". Preserve the exact silhouette, pointed tips, openings, orientation, proportions and color placement of image 1. Replace the blurred and blotchy bevel rendering with the polished carved facets and clean, continuous gradients of image 2. Keep the bevel narrow, about 4\u20135% of the full cap height, and retain a broad smooth face; do not inflate it into rounded tubing. Keep lime highlights on the upper left, green face through the upper two thirds, cyan reflected highlights toward the lower left and cobalt blue at the foot. Remove dark blobs, cloudy patches, stretched edge streaks, color banding and blurry seams. Use crisp restrained specular edges and smooth antialiased contours. No black outline, drop shadow, extra cuts, texture noise, extra letters, objects or decorations. Return one complete \"D\" on a truly transparent background, never a painted checkerboard.",
+      "reference": "candidates/D-bonus-repair-v3.png",
+      "inputs": [
+        {
+          "file": "repairs-v3/inputs/D-source.png",
+          "sha256": "684da6bf4942eca60b3cadf232d35042e0cb3169968ae3a760e1df50c70b84f4"
+        },
+        {
+          "file": "candidates/C-bonus-repair-v3.png",
+          "sha256": "2c8d54f3094577111cf453936926857dca0dcc15ba21c22814bb3dadef58389d"
+        }
+      ]
+    },
+    "E": {
+      "model": "candidates/E-bonus-repair-v3.png",
+      "modelSha256": "c78c752f9abe813bae5156791c4b3d38b2b656d9dfc37fa72d072e89035693d4",
+      "generatorOutput": "exec-c3a2bade-d4cc-4e6b-bf00-10cea11a4848.png",
+      "prompt": "E-repair-v3-prompt.txt",
+      "promptText": "Use case: precise-object-edit. Image 1 is the exact existing Roo uppercase \"E\" to repair. Image 2 (C) is a finish-quality reference only; do not copy its shape. Output only \"E\". Preserve the exact silhouette, pointed tips, openings, orientation, proportions and color placement of image 1. Replace the blurred and blotchy bevel rendering with the polished carved facets and clean, continuous gradients of image 2. Keep the bevel narrow, about 4\u20135% of the full cap height, and retain a broad smooth face; do not inflate it into rounded tubing. Keep lime highlights on the upper left, green face through the upper two thirds, cyan reflected highlights toward the lower left and cobalt blue at the foot. Remove dark blobs, cloudy patches, stretched edge streaks, color banding and blurry seams. Use crisp restrained specular edges and smooth antialiased contours. No black outline, drop shadow, extra cuts, texture noise, extra letters, objects or decorations. Return one complete \"E\" on a truly transparent background, never a painted checkerboard.",
+      "reference": "candidates/E-bonus-repair-v3.png",
+      "inputs": [
+        {
+          "file": "repairs-v3/inputs/E-source.png",
+          "sha256": "cad94e6f73bd3d72c7819edf04f002c8cab3e7b449fbcbf7af8564930140ed8b"
+        },
+        {
+          "file": "candidates/C-bonus-repair-v3.png",
+          "sha256": "2c8d54f3094577111cf453936926857dca0dcc15ba21c22814bb3dadef58389d"
+        }
+      ]
+    },
+    "F": {
+      "model": "candidates/F-bonus-repair-v3.png",
+      "modelSha256": "75ee171b6e86d267dfaaebaa77a6acca5efc1fe64d1c8c64a3418bb5e055c024",
+      "generatorOutput": "exec-70e65b03-bd76-46b3-be5b-7b9db16274f2.png",
+      "prompt": "F-repair-v3-prompt.txt",
+      "promptText": "Use case: precise-object-edit. Image 1 is the exact existing Roo uppercase \"F\" to repair. Image 2 (C) is a finish-quality reference only; do not copy its shape. Output only \"F\". Preserve the exact silhouette, pointed tips, openings, orientation, proportions and color placement of image 1. Replace the blurred and blotchy bevel rendering with the polished carved facets and clean, continuous gradients of image 2. Keep the bevel narrow, about 4\u20135% of the full cap height, and retain a broad smooth face; do not inflate it into rounded tubing. Keep lime highlights on the upper left, green face through the upper two thirds, cyan reflected highlights toward the lower left and cobalt blue at the foot. Remove dark blobs, cloudy patches, stretched edge streaks, color banding and blurry seams. Use crisp restrained specular edges and smooth antialiased contours. No black outline, drop shadow, extra cuts, texture noise, extra letters, objects or decorations. Return one complete \"F\" on a truly transparent background, never a painted checkerboard.",
+      "reference": "candidates/F-bonus-repair-v3.png",
+      "inputs": [
+        {
+          "file": "repairs-v3/inputs/F-source.png",
+          "sha256": "7ea113d19ce7cb8e0f31c63a04c51db47c429bdbfd649d7027968db12760cce4"
+        },
+        {
+          "file": "candidates/C-bonus-repair-v3.png",
+          "sha256": "2c8d54f3094577111cf453936926857dca0dcc15ba21c22814bb3dadef58389d"
+        }
+      ]
+    },
+    "G": {
+      "model": "candidates/G-bonus-repair-v3.png",
+      "modelSha256": "5c1a348dd7d7579bef8d7b20e07d1fc4dfa34b159e4b9adcab50fa271d6cb5bf",
+      "generatorOutput": "exec-744dcfa8-b73c-4373-b249-a71c5907ada4.png",
+      "prompt": "G-repair-v3-prompt.txt",
+      "promptText": "Use case: precise-object-edit. Image 1 is the exact existing Roo uppercase \"G\" to repair. Image 2 (C) is a finish-quality reference only; do not copy its shape. Output only \"G\". Preserve the exact silhouette, pointed tips, openings, orientation, proportions and color placement of image 1. Replace the blurred and blotchy bevel rendering with the polished carved facets and clean, continuous gradients of image 2. Keep the bevel narrow, about 4\u20135% of the full cap height, and retain a broad smooth face; do not inflate it into rounded tubing. Keep lime highlights on the upper left, green face through the upper two thirds, cyan reflected highlights toward the lower left and cobalt blue at the foot. Remove dark blobs, cloudy patches, stretched edge streaks, color banding and blurry seams. Use crisp restrained specular edges and smooth antialiased contours. No black outline, drop shadow, extra cuts, texture noise, extra letters, objects or decorations. Return one complete \"G\" on a truly transparent background, never a painted checkerboard.",
+      "reference": "candidates/G-bonus-repair-v3.png",
+      "inputs": [
+        {
+          "file": "repairs-v3/inputs/G-source.png",
+          "sha256": "69482dc9cfe945dfb91b192e394dd3f80a5b656dd8b11d16efec7a3c03e35dee"
+        },
+        {
+          "file": "candidates/C-bonus-repair-v3.png",
+          "sha256": "2c8d54f3094577111cf453936926857dca0dcc15ba21c22814bb3dadef58389d"
+        }
+      ]
+    },
+    "H": {
+      "model": "candidates/H-bonus-repair-v3.png",
+      "modelSha256": "da44c89a112b8706d31690cd539b57714b97cbb8b8a090e7b8e37f107222cddd",
+      "generatorOutput": "exec-1da64b39-016e-4128-ae99-23e224fd12a3.png",
+      "prompt": "H-repair-v3-prompt.txt",
+      "promptText": "Use case: precise-object-edit. Image 1 is the exact existing Roo uppercase \"H\" to repair. Image 2 (C) is a finish-quality reference only; do not copy its shape. Output only \"H\". Preserve the exact silhouette, pointed tips, openings, orientation, proportions and color placement of image 1. Replace the blurred and blotchy bevel rendering with the polished carved facets and clean, continuous gradients of image 2. Keep the bevel narrow, about 4\u20135% of the full cap height, and retain a broad smooth face; do not inflate it into rounded tubing. Keep lime highlights on the upper left, green face through the upper two thirds, cyan reflected highlights toward the lower left and cobalt blue at the foot. Remove dark blobs, cloudy patches, stretched edge streaks, color banding and blurry seams. Use crisp restrained specular edges and smooth antialiased contours. No black outline, drop shadow, extra cuts, texture noise, extra letters, objects or decorations. Return one complete \"H\" on a truly transparent background, never a painted checkerboard.",
+      "reference": "candidates/H-bonus-repair-v3.png",
+      "inputs": [
+        {
+          "file": "repairs-v3/inputs/H-source.png",
+          "sha256": "c044a9ca68fa759bf6709a749c5d6055e5ed8f81bf1ca02b9200f578badc89c6"
+        },
+        {
+          "file": "candidates/C-bonus-repair-v3.png",
+          "sha256": "2c8d54f3094577111cf453936926857dca0dcc15ba21c22814bb3dadef58389d"
+        }
+      ]
+    },
+    "I": {
+      "model": "candidates/I-bonus-repair-v3.png",
+      "modelSha256": "7e1e3faaaf48fa5f76c1f1a2ef7754d628153c3376f12c3c7e21cbe159287e41",
+      "generatorOutput": "exec-6349c7ef-00fd-4f51-9ef1-8ebe805bd4f9.png",
+      "prompt": "I-repair-v3-prompt.txt",
+      "promptText": "Use case: precise-object-edit. Image 1 is the exact existing Roo uppercase \"I\" to repair. Image 2 (C) is a finish-quality reference only; do not copy its shape. Output only \"I\". Preserve the exact silhouette, pointed tips, openings, orientation, proportions and color placement of image 1. Replace the blurred and blotchy bevel rendering with the polished carved facets and clean, continuous gradients of image 2. Keep the bevel narrow, about 4\u20135% of the full cap height, and retain a broad smooth face; do not inflate it into rounded tubing. Keep lime highlights on the upper left, green face through the upper two thirds, cyan reflected highlights toward the lower left and cobalt blue at the foot. Remove dark blobs, cloudy patches, stretched edge streaks, color banding and blurry seams. Use crisp restrained specular edges and smooth antialiased contours. No black outline, drop shadow, extra cuts, texture noise, extra letters, objects or decorations. Return one complete \"I\" on a truly transparent background, never a painted checkerboard.",
+      "reference": "candidates/I-bonus-repair-v3.png",
+      "inputs": [
+        {
+          "file": "repairs-v3/inputs/I-source.png",
+          "sha256": "22df48e7ea454ee0bb97a5c6bfaf6139d08d51b27fb17b56f28407f5d7e428b7"
+        },
+        {
+          "file": "candidates/C-bonus-repair-v3.png",
+          "sha256": "2c8d54f3094577111cf453936926857dca0dcc15ba21c22814bb3dadef58389d"
+        }
+      ]
+    },
+    "J": {
+      "model": "candidates/J-bonus-repair-v3.png",
+      "modelSha256": "99167f87c9770f73811af8744c14cb37b5bf4468ef2b9b26ff216f0f43ea9585",
+      "generatorOutput": "exec-fe143f76-caae-48d6-a943-accd9cff4e42.png",
+      "prompt": "J-repair-v3-prompt.txt",
+      "promptText": "Use case: precise-object-edit. Image 1 is the exact existing Roo uppercase \"J\" to repair. Image 2 (C) is a finish-quality reference only; do not copy its shape. Output only \"J\". Preserve the exact silhouette, pointed tips, openings, orientation, proportions and color placement of image 1. Replace the blurred and blotchy bevel rendering with the polished carved facets and clean, continuous gradients of image 2. Keep the bevel narrow, about 4\u20135% of the full cap height, and retain a broad smooth face; do not inflate it into rounded tubing. Keep lime highlights on the upper left, green face through the upper two thirds, cyan reflected highlights toward the lower left and cobalt blue at the foot. Remove dark blobs, cloudy patches, stretched edge streaks, color banding and blurry seams. Use crisp restrained specular edges and smooth antialiased contours. No black outline, drop shadow, extra cuts, texture noise, extra letters, objects or decorations. Return one complete \"J\" on a truly transparent background, never a painted checkerboard.",
+      "reference": "candidates/J-bonus-repair-v3.png",
+      "inputs": [
+        {
+          "file": "repairs-v3/inputs/J-source.png",
+          "sha256": "f4cdbc652c8ebd1dbbf6a9e22b85d2364d22916d51d5a9d48518a52d447d9115"
+        },
+        {
+          "file": "candidates/C-bonus-repair-v3.png",
+          "sha256": "2c8d54f3094577111cf453936926857dca0dcc15ba21c22814bb3dadef58389d"
+        }
+      ]
+    },
+    "K": {
+      "model": "candidates/K-bonus-repair-v3.png",
+      "modelSha256": "8715af57c8a116311b6aeca57b08a7465b314c53f43e312e4081eccf928d1997",
+      "generatorOutput": "exec-e9cbd8ee-bdeb-406b-ad91-7e1c4a0d0f56.png",
+      "prompt": "K-repair-v3-prompt.txt",
+      "promptText": "Use case: precise-object-edit. Image 1 is the exact existing Roo uppercase \"K\" to repair. Image 2 (C) is a finish-quality reference only; do not copy its shape. Output only \"K\". Preserve the exact silhouette, pointed tips, openings, orientation, proportions and color placement of image 1. Replace the blurred and blotchy bevel rendering with the polished carved facets and clean, continuous gradients of image 2. Keep the bevel narrow, about 4\u20135% of the full cap height, and retain a broad smooth face; do not inflate it into rounded tubing. Keep lime highlights on the upper left, green face through the upper two thirds, cyan reflected highlights toward the lower left and cobalt blue at the foot. Remove dark blobs, cloudy patches, stretched edge streaks, color banding and blurry seams. Use crisp restrained specular edges and smooth antialiased contours. No black outline, drop shadow, extra cuts, texture noise, extra letters, objects or decorations. Return one complete \"K\" on a truly transparent background, never a painted checkerboard.",
+      "reference": "candidates/K-bonus-repair-v3.png",
+      "inputs": [
+        {
+          "file": "repairs-v3/inputs/K-source.png",
+          "sha256": "88bd0caee8498e648be8b1130bf3c0aae2aa5098e2805c50c609f4de60d6bca1"
+        },
+        {
+          "file": "candidates/C-bonus-repair-v3.png",
+          "sha256": "2c8d54f3094577111cf453936926857dca0dcc15ba21c22814bb3dadef58389d"
+        }
+      ]
+    },
+    "L": {
+      "model": "candidates/L-bonus-repair-v3.png",
+      "modelSha256": "a1ddcda810d2d88557f636fac99215bfe5c9a368148a45ee2def4f3a68109d44",
+      "generatorOutput": "exec-bda65b8a-08fd-446c-b989-30b37a59aaa4.png",
+      "prompt": "L-repair-v3-prompt.txt",
+      "promptText": "Use case: precise-object-edit. Image 1 is the exact existing Roo uppercase \"L\" to repair. Image 2 (C) is a finish-quality reference only; do not copy its shape. Output only \"L\". Preserve the exact silhouette, pointed tips, openings, orientation, proportions and color placement of image 1. Replace the blurred and blotchy bevel rendering with the polished carved facets and clean, continuous gradients of image 2. Keep the bevel narrow, about 4\u20135% of the full cap height, and retain a broad smooth face; do not inflate it into rounded tubing. Keep lime highlights on the upper left, green face through the upper two thirds, cyan reflected highlights toward the lower left and cobalt blue at the foot. Remove dark blobs, cloudy patches, stretched edge streaks, color banding and blurry seams. Use crisp restrained specular edges and smooth antialiased contours. No black outline, drop shadow, extra cuts, texture noise, extra letters, objects or decorations. Return one complete \"L\" on a truly transparent background, never a painted checkerboard.",
+      "reference": "candidates/L-bonus-repair-v3.png",
+      "inputs": [
+        {
+          "file": "repairs-v3/inputs/L-source.png",
+          "sha256": "94557d9351a31cde4e3b9388cf026fe36ff78aa7abcc4703a7223b38676e58e8"
+        },
+        {
+          "file": "candidates/C-bonus-repair-v3.png",
+          "sha256": "2c8d54f3094577111cf453936926857dca0dcc15ba21c22814bb3dadef58389d"
+        }
+      ]
+    },
+    "M": {
+      "model": "candidates/M-bonus-repair-v3.png",
+      "modelSha256": "27978d9b0598d8c4bf35a4f3ba0f49490eb6d83ea4f5a1ad982170384a68224d",
+      "generatorOutput": "exec-257596fd-8675-4fa5-ab73-abcc6e014af0.png",
+      "prompt": "M-repair-v3-prompt.txt",
+      "promptText": "Use case: precise-object-edit. Image 1 is the exact existing Roo uppercase \"M\" to repair. Image 2 (C) is a finish-quality reference only; do not copy its shape. Output only \"M\". Preserve the exact silhouette, pointed tips, openings, orientation, proportions and color placement of image 1. Replace the blurred and blotchy bevel rendering with the polished carved facets and clean, continuous gradients of image 2. Keep the bevel narrow, about 4\u20135% of the full cap height, and retain a broad smooth face; do not inflate it into rounded tubing. Keep lime highlights on the upper left, green face through the upper two thirds, cyan reflected highlights toward the lower left and cobalt blue at the foot. Remove dark blobs, cloudy patches, stretched edge streaks, color banding and blurry seams. Use crisp restrained specular edges and smooth antialiased contours. No black outline, drop shadow, extra cuts, texture noise, extra letters, objects or decorations. Return one complete \"M\" on a truly transparent background, never a painted checkerboard.",
+      "reference": "candidates/M-bonus-repair-v3.png",
+      "inputs": [
+        {
+          "file": "repairs-v3/inputs/M-source.png",
+          "sha256": "5a01ecaeb7f71f4839fa8231f08e2b3966ce416b26e016f5e01fa5c4d47cb3d1"
+        },
+        {
+          "file": "candidates/C-bonus-repair-v3.png",
+          "sha256": "2c8d54f3094577111cf453936926857dca0dcc15ba21c22814bb3dadef58389d"
+        }
+      ]
+    },
+    "N": {
+      "model": "candidates/N-bonus-02.png",
+      "modelSha256": "f1436a510d53817bc37b5357c52c54657ab5c6d85996c6e5a5edab4190643a5f",
+      "generatorOutput": "exec-599d09e4-e1a1-4f4f-9726-38e91fa7b0e4.png",
+      "prompt": "N-extraction-prompt.txt",
+      "promptText": "Edit only the background of this image. Preserve the colored uppercase N artwork exactly: identical front-face colors, subtle shading, bevel profiles, narrow highlights, contour and open areas. Remove the surrounding dungeon image and the giant black outer stroke/drop shadow, replacing those areas and the hole/open backgrounds with perfectly flat solid #ff00ff magenta. Do not redesign, repaint, recolor, add shininess, widen the bevel, change the shape, or add details to the colored N. Preserve its existing green/emerald/cyan/royal-blue treatment and antialiased edges, including the darker colored bevel facets. Return just this same N on the magenta background, preserving its aspect ratio at high resolution. No extra objects or text.\n",
+      "reference": "analysis/N-reference-native.png"
+    },
+    "O": {
+      "model": "candidates/O-bonus-02.png",
+      "modelSha256": "bb869ae1cffb26807d5d6e0405383d031174a76b7091471332e596f512214069",
+      "generatorOutput": "exec-7b850e3f-2745-400f-ae69-8961e09c218f.png",
+      "prompt": "O-extraction-prompt.txt",
+      "promptText": "Edit only the background of this image. Preserve the colored uppercase O artwork exactly: identical front-face colors, subtle shading, bevel profiles, narrow highlights, contour and open areas. Remove the surrounding dungeon image and the giant black outer stroke/drop shadow, replacing those areas and the hole/open backgrounds with perfectly flat solid #ff00ff magenta. Do not redesign, repaint, recolor, add shininess, widen the bevel, change the shape, or add details to the colored O. Preserve its existing green/emerald/cyan/royal-blue treatment and antialiased edges, including the darker colored bevel facets. Return just this same O on the magenta background, preserving its aspect ratio at high resolution. No extra objects or text.\n",
+      "reference": "analysis/O-reference-native.png"
+    },
+    "P": {
+      "model": "candidates/P-bonus-repair-v3.png",
+      "modelSha256": "ef66bb109baa9652cc663c04ca16c91b57e9f5d0ae64a240b9d03a93a27b26cd",
+      "generatorOutput": "exec-456dcc56-7eb1-4a4b-ae52-3d598b4aac62.png",
+      "prompt": "P-repair-v3-prompt.txt",
+      "promptText": "Use case: precise-object-edit. Image 1 is the exact existing Roo uppercase \"P\" to repair. Image 2 (C) is a finish-quality reference only; do not copy its shape. Output only \"P\". Preserve the exact silhouette, pointed tips, openings, orientation, proportions and color placement of image 1. Replace the blurred and blotchy bevel rendering with the polished carved facets and clean, continuous gradients of image 2. Keep the bevel narrow, about 4\u20135% of the full cap height, and retain a broad smooth face; do not inflate it into rounded tubing. Keep lime highlights on the upper left, green face through the upper two thirds, cyan reflected highlights toward the lower left and cobalt blue at the foot. Remove dark blobs, cloudy patches, stretched edge streaks, color banding and blurry seams. Use crisp restrained specular edges and smooth antialiased contours. No black outline, drop shadow, extra cuts, texture noise, extra letters, objects or decorations. Return one complete \"P\" on a truly transparent background, never a painted checkerboard.",
+      "reference": "candidates/P-bonus-repair-v3.png",
+      "inputs": [
+        {
+          "file": "repairs-v3/inputs/P-source.png",
+          "sha256": "82dcef4894476b8c9df161d849483569fee64714fbb47e9bf959d95212de916e"
+        },
+        {
+          "file": "candidates/C-bonus-repair-v3.png",
+          "sha256": "2c8d54f3094577111cf453936926857dca0dcc15ba21c22814bb3dadef58389d"
+        }
+      ]
+    },
+    "Q": {
+      "model": "candidates/Q-bonus-repair-v3.png",
+      "modelSha256": "0bff01ccce838031310a14f239a6b36c3d5dc33772461f2370c23dfe18b0aeb2",
+      "generatorOutput": "exec-d9394900-aec0-4646-8372-58626f36e139.png",
+      "prompt": "Q-repair-v3-prompt.txt",
+      "promptText": "Use case: precise-object-edit. Image 1 is the exact existing Roo uppercase \"Q\" to repair. Image 2 (C) is a finish-quality reference only; do not copy its shape. Output only \"Q\". Preserve the exact silhouette, pointed tips, openings, orientation, proportions and color placement of image 1. Replace the blurred and blotchy bevel rendering with the polished carved facets and clean, continuous gradients of image 2. Keep the bevel narrow, about 4\u20135% of the full cap height, and retain a broad smooth face; do not inflate it into rounded tubing. Keep lime highlights on the upper left, green face through the upper two thirds, cyan reflected highlights toward the lower left and cobalt blue at the foot. Remove dark blobs, cloudy patches, stretched edge streaks, color banding and blurry seams. Use crisp restrained specular edges and smooth antialiased contours. No black outline, drop shadow, extra cuts, texture noise, extra letters, objects or decorations. Return one complete \"Q\" on a truly transparent background, never a painted checkerboard.",
+      "reference": "candidates/Q-bonus-repair-v3.png",
+      "inputs": [
+        {
+          "file": "repairs-v3/inputs/Q-source.png",
+          "sha256": "5577330afbb7d60ef27aa7b645d6551033a7fab558cd25a88879d89a9bdb6e7c"
+        },
+        {
+          "file": "candidates/C-bonus-repair-v3.png",
+          "sha256": "2c8d54f3094577111cf453936926857dca0dcc15ba21c22814bb3dadef58389d"
+        }
+      ]
+    },
+    "R": {
+      "model": "candidates/R-bonus-repair-v3.png",
+      "modelSha256": "4918937d733f486893c1b00058cf293cf29548bb488e7e02a4b98a1893c21670",
+      "generatorOutput": "exec-01e0a223-1218-4678-b911-aa975ca3df50.png",
+      "prompt": "R-repair-v3-prompt.txt",
+      "promptText": "Use case: precise-object-edit. Image 1 is the exact existing Roo uppercase \"R\" to repair. Image 2 (C) is a finish-quality reference only; do not copy its shape. Output only \"R\". Preserve the exact silhouette, pointed tips, openings, orientation, proportions and color placement of image 1. Replace the blurred and blotchy bevel rendering with the polished carved facets and clean, continuous gradients of image 2. Keep the bevel narrow, about 4\u20135% of the full cap height, and retain a broad smooth face; do not inflate it into rounded tubing. Keep lime highlights on the upper left, green face through the upper two thirds, cyan reflected highlights toward the lower left and cobalt blue at the foot. Remove dark blobs, cloudy patches, stretched edge streaks, color banding and blurry seams. Use crisp restrained specular edges and smooth antialiased contours. No black outline, drop shadow, extra cuts, texture noise, extra letters, objects or decorations. Return one complete \"R\" on a truly transparent background, never a painted checkerboard.",
+      "reference": "candidates/R-bonus-repair-v3.png",
+      "inputs": [
+        {
+          "file": "repairs-v3/inputs/R-source.png",
+          "sha256": "9cec53730f9fd60ced9272484841840dd78d175739e9a28a68d2c5c595726f5e"
+        },
+        {
+          "file": "candidates/C-bonus-repair-v3.png",
+          "sha256": "2c8d54f3094577111cf453936926857dca0dcc15ba21c22814bb3dadef58389d"
+        }
+      ]
+    },
+    "S": {
+      "model": "candidates/S-bonus-02.png",
+      "modelSha256": "d82bb71267ec790081ee254d3775565a7e3655d1391f5f617363a4e5a491a5ca",
+      "generatorOutput": "exec-d6d7499d-0c5d-432c-89cd-000de5e0a7e5.png",
+      "prompt": "S-extraction-prompt.txt",
+      "promptText": "Edit only the background of this image. Preserve the colored uppercase S artwork exactly: identical front-face colors, subtle shading, bevel profiles, narrow highlights, contour and open areas. Remove the surrounding dungeon image and the giant black outer stroke/drop shadow, replacing those areas and the hole/open backgrounds with perfectly flat solid #ff00ff magenta. Do not redesign, repaint, recolor, add shininess, widen the bevel, change the shape, or add details to the colored S. Preserve its existing green/emerald/cyan/royal-blue treatment and antialiased edges, including the darker colored bevel facets. Return just this same S on the magenta background, preserving its aspect ratio at high resolution. No extra objects or text.\n",
+      "reference": "analysis/S-reference-native.png"
+    },
+    "T": {
+      "model": "candidates/T-bonus-repair-v3.png",
+      "modelSha256": "5b3f1564c2831df5036f6e2c7e53b48611b35efa1513f1024a62597fa8cffa94",
+      "generatorOutput": "exec-b9f777c0-cc26-4025-bb91-292a0a81c960.png",
+      "prompt": "T-repair-v3-prompt.txt",
+      "promptText": "Use case: precise-object-edit. Image 1 is the exact existing Roo uppercase \"T\" to repair. Image 2 (C) is a finish-quality reference only; do not copy its shape. Output only \"T\". Preserve the exact silhouette, pointed tips, openings, orientation, proportions and color placement of image 1. Replace the blurred and blotchy bevel rendering with the polished carved facets and clean, continuous gradients of image 2. Keep the bevel narrow, about 4\u20135% of the full cap height, and retain a broad smooth face; do not inflate it into rounded tubing. Keep lime highlights on the upper left, green face through the upper two thirds, cyan reflected highlights toward the lower left and cobalt blue at the foot. Remove dark blobs, cloudy patches, stretched edge streaks, color banding and blurry seams. Use crisp restrained specular edges and smooth antialiased contours. No black outline, drop shadow, extra cuts, texture noise, extra letters, objects or decorations. Return one complete \"T\" on a truly transparent background, never a painted checkerboard.",
+      "reference": "candidates/T-bonus-repair-v3.png",
+      "inputs": [
+        {
+          "file": "repairs-v3/inputs/T-source.png",
+          "sha256": "ee14ac1fe8e67e2060108a4e603e052ee1fdd291dffab2f2956ab10dcce6f0bf"
+        },
+        {
+          "file": "candidates/C-bonus-repair-v3.png",
+          "sha256": "2c8d54f3094577111cf453936926857dca0dcc15ba21c22814bb3dadef58389d"
+        }
+      ]
+    },
+    "U": {
+      "model": "candidates/U-bonus-02.png",
+      "modelSha256": "c881acd19aa60583632926865a8f16881a19bc546f448ff3d8f508c557429978",
+      "generatorOutput": "exec-536e188b-6dd3-4eaa-8e3c-e16d10a737f1.png",
+      "prompt": "U-extraction-prompt.txt",
+      "promptText": "Edit only the background of this image. Preserve the colored uppercase U artwork exactly: identical front-face colors, subtle shading, bevel profiles, narrow highlights, contour and open areas. Remove the surrounding dungeon image and the giant black outer stroke/drop shadow, replacing those areas and the hole/open backgrounds with perfectly flat solid #ff00ff magenta. Do not redesign, repaint, recolor, add shininess, widen the bevel, change the shape, or add details to the colored U. Preserve its existing green/emerald/cyan/royal-blue treatment and antialiased edges, including the darker colored bevel facets. Return just this same U on the magenta background, preserving its aspect ratio at high resolution. No extra objects or text.\n",
+      "reference": "analysis/U-reference-native.png"
+    },
+    "V": {
+      "model": "candidates/V-bonus-repair-v3.png",
+      "modelSha256": "031ac2712f283e624bd4dea77b678102fea10943613752ba812ef888b8f77df2",
+      "generatorOutput": "exec-31185c57-32c0-432c-9a75-0b1fc2076d53.png",
+      "prompt": "V-repair-v3-prompt.txt",
+      "promptText": "Use case: precise-object-edit. Image 1 is the exact existing Roo uppercase \"V\" to repair. Image 2 (C) is a finish-quality reference only; do not copy its shape. Output only \"V\". Preserve the exact silhouette, pointed tips, openings, orientation, proportions and color placement of image 1. Replace the blurred and blotchy bevel rendering with the polished carved facets and clean, continuous gradients of image 2. Keep the bevel narrow, about 4\u20135% of the full cap height, and retain a broad smooth face; do not inflate it into rounded tubing. Keep lime highlights on the upper left, green face through the upper two thirds, cyan reflected highlights toward the lower left and cobalt blue at the foot. Remove dark blobs, cloudy patches, stretched edge streaks, color banding and blurry seams. Use crisp restrained specular edges and smooth antialiased contours. No black outline, drop shadow, extra cuts, texture noise, extra letters, objects or decorations. Return one complete \"V\" on a truly transparent background, never a painted checkerboard.",
+      "reference": "candidates/V-bonus-repair-v3.png",
+      "inputs": [
+        {
+          "file": "repairs-v3/inputs/V-source.png",
+          "sha256": "020f0200c5e7c395750f8659a4398572cb38e8b852e7e61ad6796893fbed946c"
+        },
+        {
+          "file": "candidates/C-bonus-repair-v3.png",
+          "sha256": "2c8d54f3094577111cf453936926857dca0dcc15ba21c22814bb3dadef58389d"
+        }
+      ]
+    },
+    "W": {
+      "model": "candidates/W-bonus-repair-v3.png",
+      "modelSha256": "829cd221b287430a7245951d04bda864bf5f19d5db78cd3cc72f942c18a98e33",
+      "generatorOutput": "exec-f416e1a2-878f-4e76-8060-8df7bf59944b.png",
+      "prompt": "W-repair-v3-prompt.txt",
+      "promptText": "Use case: precise-object-edit. Image 1 is the exact existing Roo uppercase \"W\" to repair. Image 2 (C) is a finish-quality reference only; do not copy its shape. Output only \"W\". Preserve the exact silhouette, pointed tips, openings, orientation, proportions and color placement of image 1. Replace the blurred and blotchy bevel rendering with the polished carved facets and clean, continuous gradients of image 2. Keep the bevel narrow, about 4\u20135% of the full cap height, and retain a broad smooth face; do not inflate it into rounded tubing. Keep lime highlights on the upper left, green face through the upper two thirds, cyan reflected highlights toward the lower left and cobalt blue at the foot. Remove dark blobs, cloudy patches, stretched edge streaks, color banding and blurry seams. Use crisp restrained specular edges and smooth antialiased contours. No black outline, drop shadow, extra cuts, texture noise, extra letters, objects or decorations. Return one complete \"W\" on a truly transparent background, never a painted checkerboard.",
+      "reference": "candidates/W-bonus-repair-v3.png",
+      "inputs": [
+        {
+          "file": "repairs-v3/inputs/W-source.png",
+          "sha256": "05605a00bb0e361a159013fa68b4b2a148bf678350a40accc011c4deea7836e8"
+        },
+        {
+          "file": "candidates/C-bonus-repair-v3.png",
+          "sha256": "2c8d54f3094577111cf453936926857dca0dcc15ba21c22814bb3dadef58389d"
+        }
+      ]
+    },
+    "X": {
+      "model": "candidates/X-bonus-repair-v3.png",
+      "modelSha256": "2dc38df925b02f70b71cd7b5a9517131e653650c9c4ef78ecd2d076a7aa8d704",
+      "generatorOutput": "exec-3df4d541-78f1-4acf-b435-acdb8d97f563.png",
+      "prompt": "X-repair-v3-prompt.txt",
+      "promptText": "Use case: precise-object-edit. Image 1 is the exact existing Roo uppercase \"X\" to repair. Image 2 (C) is a finish-quality reference only; do not copy its shape. Output only \"X\". Preserve the exact silhouette, pointed tips, openings, orientation, proportions and color placement of image 1. Replace the blurred and blotchy bevel rendering with the polished carved facets and clean, continuous gradients of image 2. Keep the bevel narrow, about 4\u20135% of the full cap height, and retain a broad smooth face; do not inflate it into rounded tubing. Keep lime highlights on the upper left, green face through the upper two thirds, cyan reflected highlights toward the lower left and cobalt blue at the foot. Remove dark blobs, cloudy patches, stretched edge streaks, color banding and blurry seams. Use crisp restrained specular edges and smooth antialiased contours. No black outline, drop shadow, extra cuts, texture noise, extra letters, objects or decorations. Return one complete \"X\" on a truly transparent background, never a painted checkerboard.",
+      "reference": "candidates/X-bonus-repair-v3.png",
+      "inputs": [
+        {
+          "file": "repairs-v3/inputs/X-source.png",
+          "sha256": "1fe96618753701eebc7415722c9992512a14de0f4e5d3b03e14d36e8e5d8c0b8"
+        },
+        {
+          "file": "candidates/C-bonus-repair-v3.png",
+          "sha256": "2c8d54f3094577111cf453936926857dca0dcc15ba21c22814bb3dadef58389d"
+        }
+      ]
+    },
+    "Y": {
+      "model": "candidates/Y-bonus-repair-v3.png",
+      "modelSha256": "3e6dc182e4cff53a0aad2ea3fd06c9b66bab65ae6ba0d1c1bc886eb424a1de80",
+      "generatorOutput": "exec-5e7b90aa-f033-4274-a13e-d81c6de2abcc.png",
+      "prompt": "Y-repair-v3-prompt.txt",
+      "promptText": "Use case: precise-object-edit. Image 1 is the exact existing Roo uppercase \"Y\" to repair. Image 2 (C) is a finish-quality reference only; do not copy its shape. Output only \"Y\". Preserve the exact silhouette, pointed tips, openings, orientation, proportions and color placement of image 1. Replace the blurred and blotchy bevel rendering with the polished carved facets and clean, continuous gradients of image 2. Keep the bevel narrow, about 4\u20135% of the full cap height, and retain a broad smooth face; do not inflate it into rounded tubing. Keep lime highlights on the upper left, green face through the upper two thirds, cyan reflected highlights toward the lower left and cobalt blue at the foot. Remove dark blobs, cloudy patches, stretched edge streaks, color banding and blurry seams. Use crisp restrained specular edges and smooth antialiased contours. No black outline, drop shadow, extra cuts, texture noise, extra letters, objects or decorations. Return one complete \"Y\" on a truly transparent background, never a painted checkerboard.",
+      "reference": "candidates/Y-bonus-repair-v3.png",
+      "inputs": [
+        {
+          "file": "repairs-v3/inputs/Y-source.png",
+          "sha256": "c56ef8a888cf2601b8f093ae88172362fb573673987cdd95061d1fbe989b5765"
+        },
+        {
+          "file": "candidates/C-bonus-repair-v3.png",
+          "sha256": "2c8d54f3094577111cf453936926857dca0dcc15ba21c22814bb3dadef58389d"
+        }
+      ]
+    },
+    "Z": {
+      "model": "candidates/Z-bonus-repair-v3.png",
+      "modelSha256": "af69280295e82996936173cf419c22c294acd6a5edb2879ada33889c91bcf2d7",
+      "generatorOutput": "exec-80438b5f-a127-441a-a906-64193edc23d4.png",
+      "prompt": "Z-repair-v3-prompt.txt",
+      "promptText": "Use case: precise-object-edit. Image 1 is the exact existing Roo uppercase \"Z\" to repair. Image 2 (C) is a finish-quality reference only; do not copy its shape. Output only \"Z\". Preserve the exact silhouette, pointed tips, openings, orientation, proportions and color placement of image 1. Replace the blurred and blotchy bevel rendering with the polished carved facets and clean, continuous gradients of image 2. Keep the bevel narrow, about 4\u20135% of the full cap height, and retain a broad smooth face; do not inflate it into rounded tubing. Keep lime highlights on the upper left, green face through the upper two thirds, cyan reflected highlights toward the lower left and cobalt blue at the foot. Remove dark blobs, cloudy patches, stretched edge streaks, color banding and blurry seams. Use crisp restrained specular edges and smooth antialiased contours. No black outline, drop shadow, extra cuts, texture noise, extra letters, objects or decorations. Return one complete \"Z\" on a truly transparent background, never a painted checkerboard.",
+      "reference": "candidates/Z-bonus-repair-v3.png",
+      "inputs": [
+        {
+          "file": "repairs-v3/inputs/Z-source.png",
+          "sha256": "97f3e511c43bbac6029cd0cc17934df944b09f5bdd08c87ef797016026a53d79"
+        },
+        {
+          "file": "candidates/C-bonus-repair-v3.png",
+          "sha256": "2c8d54f3094577111cf453936926857dca0dcc15ba21c22814bb3dadef58389d"
+        }
+      ]
+    },
+    "!": {
+      "model": "candidates/u0021-counter-01.png",
+      "modelSha256": "78f6206419a5ff16a7f2fa8aade2770e606946cb5303bf2a6c02f8a2e8cab8b8",
+      "generatorOutput": "exec-c1973035-7493-4879-bb17-5d388f38e8fb.png",
+      "prompt": "u0021-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo exclamation mark glyph, literal \"!\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment, consistently with a font whose cap band runs from image y=122 (yellow-gold) to y=902 (deep red). The upper part is yellow/gold and the lower part orange/deep red. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent or remove marks.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    "?": {
+      "model": "candidates/u003f-counter-01.png",
+      "modelSha256": "6a80c7aab14146f5de96c5d17ae1586f00548112f57abb6b1a052f081c6070af",
+      "generatorOutput": "exec-8296ddfd-a9b1-437e-95a2-49d0872d32bc.png",
+      "prompt": "u003f-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo question mark glyph, literal \"?\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment, consistently with a font whose cap band runs from image y=122 (yellow-gold) to y=902 (deep red). The upper part is yellow/gold and the lower part orange/deep red. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent or remove marks.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    ".": {
+      "model": "candidates/u002e-counter-01.png",
+      "modelSha256": "0345fe40ead4090b551e49d4a89fb524e123ec25deca2062156ed134159b0f60",
+      "generatorOutput": "exec-0af1101e-1062-4f49-b17f-18a107465b4b.png",
+      "prompt": "u002e-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo full stop / period glyph, literal \".\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment, consistently with a font whose cap band runs from image y=122 (yellow-gold) to y=902 (deep red). This small baseline glyph is predominantly orange-red/vermilion, using the lower part of the font gradient. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent or remove marks.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    ",": {
+      "model": "candidates/u002c-counter-01.png",
+      "modelSha256": "888609132d087f515eb0a662cb114c5f0936d63d5500728ba1624f420186f1c3",
+      "generatorOutput": "exec-a46edcaa-a863-4dfc-9d1c-38e99daaaa59.png",
+      "prompt": "u002c-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo comma glyph, literal \",\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment, consistently with a font whose cap band runs from image y=122 (yellow-gold) to y=902 (deep red). This small baseline glyph is predominantly orange-red/vermilion, using the lower part of the font gradient. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent or remove marks.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    ":": {
+      "model": "candidates/u003a-counter-01.png",
+      "modelSha256": "957c00d313698d2b33ec37faf4982e3513e16438d9a7b514f8f62a12c4cc5972",
+      "generatorOutput": "exec-8e09f04b-b155-4534-ba14-a12788ceff0c.png",
+      "prompt": "u003a-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo colon, two marks vertically separated glyph, literal \":\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment, consistently with a font whose cap band runs from image y=122 (yellow-gold) to y=902 (deep red). Preserve both separated marks; the upper one is amber and the lower one orange-red. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent or remove marks.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    ";": {
+      "model": "candidates/u003b-counter-01.png",
+      "modelSha256": "9a921eebb3d1f38ca385f12ea77e29f0fe3829a9d8f902f396539f5ca52eaa1a",
+      "generatorOutput": "exec-541cbbfc-9493-4d32-9c00-ba03be273756.png",
+      "prompt": "u003b-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo semicolon, upper mark and lower comma tail glyph, literal \";\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment, consistently with a font whose cap band runs from image y=122 (yellow-gold) to y=902 (deep red). Preserve both separated parts; the upper one is amber, the lower tail orange-red. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent or remove marks.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    "/": {
+      "model": "candidates/u002f-counter-01.png",
+      "modelSha256": "1e534ae56cb92beab85fbc1b88c221456626fb32319fab64ae5779a568642816",
+      "generatorOutput": "exec-d3ec2deb-42ab-495b-afaa-f6fdc222031d.png",
+      "prompt": "u002f-counter-prompt.txt",
+      "promptText": "Edit only the background of this exact forward slash \"/\" from the reference HUD. Preserve its exact narrow pointed Roo shape, diagonal angle, 3D bevel and golden-yellow to orange/red shading. Remove the scene and large black surround, leaving only the colored slash on perfectly flat #ff00ff magenta. Restore polished high-resolution antialiasing without changing the artwork's lighting, color profile or proportions. One forward slash only; no letters, numbers or other objects.\n",
+      "reference": "analysis/u002f-number-native.png"
+    },
+    "-": {
+      "model": "candidates/u002d-counter-01.png",
+      "modelSha256": "a30b43f7ae262ce6f0860c923727860fd8b35a2f8bf6f1420563806924671b3c",
+      "generatorOutput": "exec-a48ecc52-4105-4342-970c-b8da75f6f494.png",
+      "prompt": "u002d-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo hyphen / minus sign glyph, literal \"-\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment, consistently with a font whose cap band runs from image y=122 (yellow-gold) to y=902 (deep red). This mid-height glyph uses the amber/orange middle of the font gradient. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent or remove marks.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    "+": {
+      "model": "candidates/u002b-counter-01.png",
+      "modelSha256": "c487aaae25a9148a9eedf5217569f11d0c0ed7b41a6065a530fe3833f886a544",
+      "generatorOutput": "exec-0ecf20de-00c3-4620-b1a5-147ef120b91b.png",
+      "prompt": "u002b-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo plus sign glyph, literal \"+\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment consistently with the font's vertical cap band. This mid-height glyph should be mainly amber/orange. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent, join, or remove components.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    "'": {
+      "model": "candidates/u0027-counter-01.png",
+      "modelSha256": "9bf0fac4458876d46590b9ad6b6629876632c9ea9cb441c7a22514d3c093b3c4",
+      "generatorOutput": "exec-8c0ace61-3cc5-4b6b-accb-cc5df9f1e050.png",
+      "prompt": "u0027-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo apostrophe / single quotation mark glyph, literal \"'\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment consistently with the font's vertical cap band. This glyph sits near the top of the font, so use mainly rich yellow/gold with small warm-orange shading. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent, join, or remove components.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    "\"": {
+      "model": "candidates/u0022-counter-01.png",
+      "modelSha256": "83e3d2038a727f68da05a49f2b321cba7876377881c056e6aa00463b2ce8e275",
+      "generatorOutput": "exec-347e35ad-6e1b-450f-8929-b2974f53129e.png",
+      "prompt": "u0022-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo double quotation mark, two separate marks glyph, literal \"\"\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment consistently with the font's vertical cap band. This glyph sits near the top of the font, so use mainly rich yellow/gold with small warm-orange shading. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent, join, or remove components.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    "(": {
+      "model": "candidates/u0028-counter-01.png",
+      "modelSha256": "74a89a6fb6bbf82c9e486d50cd7ce538d8e40cbe9d1609e3fadcd04a0a60af1c",
+      "generatorOutput": "exec-2f642f9c-1835-4e4e-aadb-a41aedd46dcd.png",
+      "prompt": "u0028-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo opening left parenthesis glyph, literal \"(\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment consistently with the font's vertical cap band. Use the complete top-to-bottom yellow/gold, amber/orange, deep-vermilion gradient. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent, join, or remove components.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    ")": {
+      "model": "candidates/u0029-counter-01.png",
+      "modelSha256": "d09d264863d89b93797cf5f2845a1f54b0595ec45c1dffd3a5a07821ad8e8f1e",
+      "generatorOutput": "exec-4a664ca7-8c8e-4c0a-b0c0-d05e7cc39b14.png",
+      "prompt": "u0029-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo closing right parenthesis glyph, literal \")\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment consistently with the font's vertical cap band. Use the complete top-to-bottom yellow/gold, amber/orange, deep-vermilion gradient. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent, join, or remove components.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    "%": {
+      "model": "candidates/u0025-counter-01.png",
+      "modelSha256": "2285ba7d60ce8a3946b4458c2147328200295a548c0084882513508d4011c373",
+      "generatorOutput": "exec-849cc3d4-256d-45ee-89b9-692321947bba.png",
+      "prompt": "u0025-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo percent sign, diagonal stroke and two holes glyph, literal \"%\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment consistently with the font's vertical cap band. Use the complete top-to-bottom yellow/gold, amber/orange, deep-vermilion gradient. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent, join, or remove components.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    },
+    "&": {
+      "model": "candidates/u0026-counter-01.png",
+      "modelSha256": "94acd4c6e790ea711e5e6d48c66c0b156ee3d3aa125bddef260eef4f70a6246f",
+      "generatorOutput": "exec-e566bfce-b1f5-4ad1-bea0-59c4483ca3ab.png",
+      "prompt": "u0026-counter-prompt.txt",
+      "promptText": "Image 1 is the exact Roo ampersand glyph, literal \"&\". Image 2 is the authoritative game HUD material reference. Paint only Image 1's existing silhouette with that same polished, narrow rugged bevel, subtly shaded raised face, and small directional edge highlights. Preserve the exact outline, component count, holes/open areas, placement, size and proportions. It is one punctuation glyph, not a word.\nUse the reference's warm yellow/gold to amber/orange/deep-red treatment consistently with the font's vertical cap band. Use the complete top-to-bottom yellow/gold, amber/orange, deep-vermilion gradient. Narrow colored bevels; no giant black outline or shadow. No inflated jewel volume, extra white glare, scratches, grain, or added cuts. Do not invent, join, or remove components.\nOutput this one glyph on perfectly flat #ff00ff magenta outside the colored parts and in every opening. Extremely clean antialiasing, no checkerboard, no extra text or objects.\n",
+      "reference": null
+    }
+  },
+  "accents": {
+    "0": {
+      "method": "Authored rising vector stroke inside the zero; color sampled from the existing zero face; rendered through the same three light positions.",
+      "source": "tools/roo-type/zero-accent.ts",
+      "reference": "art/roo-reference-match/zero-accent-reference.jpg",
+      "referenceSha256": "2a994764c1716b16d0a33a709ef71eab90829a51648d3fd1a353469f3f3805ba",
+      "geometry": {
+        "kind": "rising-inner-stroke",
+        "commands": [
+          {
+            "type": "M",
+            "x": 0.184,
+            "y": 0.404
+          },
+          {
+            "type": "C",
+            "x1": 0.232,
+            "y1": 0.488,
+            "x2": 0.286,
+            "y2": 0.565,
+            "x": 0.41,
+            "y": 0.594
+          },
+          {
+            "type": "C",
+            "x1": 0.339,
+            "y1": 0.612,
+            "x2": 0.274,
+            "y2": 0.589,
+            "x": 0.23,
+            "y": 0.541
+          },
+          {
+            "type": "C",
+            "x1": 0.204,
+            "y1": 0.514,
+            "x2": 0.191,
+            "y2": 0.499,
+            "x": 0.181,
+            "y": 0.48
+          },
+          {
+            "type": "Z"
+          }
+        ]
+      }
+    }
+  }
+}
