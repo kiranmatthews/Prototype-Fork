@@ -1,3 +1,4 @@
+import { createExplosiveBundle, updateExplosiveBundle, disposeExplosiveBundle, type ExplosiveBundle } from "./explosiveBundle";
 import { createMilkCrate, setMilkCrateState, disposeMilkCrate, type MilkCrate } from "./milkCrate";
 import { DECK_TRICKS, deckTrickInfo, type DeckTrickKind } from './skateTricks';
 import { createJungleCupTrophy } from "./competition/trophy";
@@ -127,6 +128,7 @@ import { createMilkCarton, milkCartonTexture, pressMilkCarton, renderMilkCarton,
 
 export interface Crate {
   mesh: THREE.Mesh;
+  explosiveBundle?: ExplosiveBundle; // TNT/Nitro visual; the original cube owns contacts
   milkCrate?: MilkCrate; // same cube collider, imported blue rack and nine instanced bottles
   carton?: MilkCarton; // plain wood's visual replacement; the existing box owns all contact
   box: THREE.Box3;
@@ -7097,7 +7099,10 @@ export class Level {
   }
 
   dispose(preserveResourcesFrom?: Level): void {
-    for (const crate of this.crates) if (crate.milkCrate) disposeMilkCrate(crate.milkCrate);
+    for (const crate of this.crates) {
+      if (crate.milkCrate) disposeMilkCrate(crate.milkCrate);
+      if (crate.explosiveBundle) disposeExplosiveBundle(crate.explosiveBundle);
+    }
     this.nightworksRocks?.dispose();
     this.nightworksRocks = null;
     this.jungleAssets?.dispose();
@@ -8570,20 +8575,19 @@ export class Level {
     for (const c of this.crates) {
       if (!c.tnt || !c.alive || c.fuse === undefined) continue;
       c.fuse -= dt;
-      const digit = Math.max(1, Math.ceil(c.fuse));
+      const digit = Math.max(1, Math.ceil(c.fuse - 1e-9));
       if (c.mesh.userData.digit !== digit) {
         c.mesh.userData.digit = digit;
-        (c.mesh.material as THREE.MeshLambertMaterial).map = this.tntTexture(
-          String(digit),
-        );
+        if (!c.explosiveBundle) (c.mesh.material as THREE.MeshLambertMaterial).map = this.tntTexture(String(digit));
         sfx.play(digit % 2 === 0 ? "tntCount2" : "tntCount", 0.7);
       }
       const urgency = 6 + (CONST.tntFuse - c.fuse) * 6;
-      c.mesh.scale.setScalar(
-        1 + Math.abs(Math.sin(this.time * urgency)) * 0.06,
-      );
-      if (c.fuse <= 0) this.detonate(c);
+      c.mesh.scale.setScalar(c.explosiveBundle ? 1 : 1 + Math.abs(Math.sin(this.time * urgency)) * 0.06);
+      if (c.fuse <= 1e-9) this.detonate(c);
     }
+
+    for (const c of this.crates) if (c.explosiveBundle && c.alive)
+      updateExplosiveBundle(c.explosiveBundle, c.fuse, this.time, !!c.pending);
 
     // Expanding blasts: chain explosives, break crates, kill enemies.
     for (const ex of this.explosions) {
@@ -8924,10 +8928,14 @@ export class Level {
       c.mesh.material = pending ? c.ghostMat : c.realMat;
     if (c.ghostEdges) c.ghostEdges.visible = pending;
     if (c.milkCrate) setMilkCrateState(c.milkCrate, c.hitsRemaining ?? 5, pending, c.ttOrigMap !== undefined);
+    if (c.explosiveBundle) updateExplosiveBundle(c.explosiveBundle, c.fuse, this.time, pending);
   }
 
   lightFuse(c: Crate): void {
-    if (c.alive && c.tnt && c.fuse === undefined) c.fuse = CONST.tntFuse;
+    if (c.alive && c.tnt && !c.pending && c.fuse === undefined) {
+      c.fuse = CONST.tntFuse;
+      if (c.explosiveBundle) updateExplosiveBundle(c.explosiveBundle, c.fuse, this.time);
+    }
   }
 
   // Blow up a nitro/TNT box: expanding blast that chains neighbors, breaks
@@ -9033,6 +9041,11 @@ export class Level {
   }
 
   private restoreTntFace(c: Crate): void {
+    if (c.explosiveBundle) {
+      c.mesh.userData.digit = undefined;
+      updateExplosiveBundle(c.explosiveBundle, c.fuse, this.time, !!c.pending);
+      return;
+    }
     if (c.tnt && c.mesh.userData.digit !== undefined) {
       c.mesh.userData.digit = undefined;
       (c.mesh.material as THREE.MeshLambertMaterial).map =
@@ -15054,7 +15067,7 @@ export class Level {
    * colour, a size, a spin and a lean for every single plant.
    */
   get jungleAssetDiagnostics() { return this.jungleAssets?.diagnostics ?? null; }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([this.jungleAssets?.ready(),this.nightworksRocks?.ready(),this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => crate.milkCrate ? [crate.milkCrate.ready] : [])]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([this.jungleAssets?.ready(),this.nightworksRocks?.ready(),this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.milkCrate?.ready,crate.explosiveBundle?.ready])]); }
 
   private jungleAsset(c: CustomComponent): void {
     if (!isJungleAsset(c.dkind)) return;
@@ -16067,9 +16080,12 @@ export class Level {
     // +Z, -Z, so indices 2 and 3 are the two that lose it.
     const carton = !kind ? createMilkCarton(size) : undefined;
     const milkCrate = kind === 'multihit' ? createMilkCrate(size) : undefined;
+    const explosiveBundle = kind === 'tnt' || kind === 'nitro' ? createExplosiveBundle(kind === 'nitro',size) : undefined;
     let mat: THREE.Material | THREE.Material[];
     if (carton) {
       mat = carton.body.material;
+    } else if (explosiveBundle) {
+      mat = explosiveBundle.body.material;
     } else if (kind === "bouncy" || kind === "metalbounce") {
       const wood = kind === "bouncy";
       const side = new THREE.MeshLambertMaterial({
@@ -16178,7 +16194,7 @@ export class Level {
           ? (this.crateRestSurface(x, z, deckY) ?? deckY)
           : this.floorY(x, z, deckY));
     }
-    const mesh = carton?.body ?? milkCrate?.body ?? new THREE.Mesh(new THREE.BoxGeometry(size, size, size), mat);
+    const mesh = carton?.body ?? milkCrate?.body ?? explosiveBundle?.body ?? new THREE.Mesh(new THREE.BoxGeometry(size, size, size), mat);
     mesh.position.set(x, base + size / 2, z);
     mesh.userData.baseY = mesh.position.y;
     mesh.userData.groundBaseY = groundBase; // the floor of this crate's column
@@ -16196,6 +16212,7 @@ export class Level {
       mesh,
       carton,
       milkCrate,
+      explosiveBundle,
       box,
       alive: true,
       nitro: kind === "nitro",
@@ -16233,6 +16250,7 @@ export class Level {
       entry.ghostEdges = edges;
       if (carton) updateMilkCarton(carton, 0, true, true);
       if (milkCrate) setMilkCrateState(milkCrate, 5, true);
+      if (explosiveBundle) updateExplosiveBundle(explosiveBundle,undefined,this.time,true);
     }
     this.crates.push(entry);
     this.cartonStacksDirty = true;

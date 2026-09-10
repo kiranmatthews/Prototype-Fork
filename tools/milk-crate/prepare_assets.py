@@ -6,7 +6,7 @@ from pathlib import Path
 from PIL import Image
 ROOT=Path(__file__).resolve().parents[2]
 
-def prepare(source, name, dimensions):
+def prepare(source, name, dimensions, output_dir=None):
     raw=Path(source).read_bytes()
     size,kind=struct.unpack_from('<II',raw,12)
     data=json.loads(raw[20:20+size]);start=20+size
@@ -37,7 +37,8 @@ def prepare(source, name, dimensions):
     data['buffers'][0]['byteLength']=len(packed)
     header=json.dumps(data,separators=(',',':')).encode();header+=b' '*(-len(header)%4);packed+=b'\0'*(-len(packed)%4)
     output=struct.pack('<III',0x46546c67,2,28+len(header)+len(packed))+struct.pack('<II',len(header),0x4e4f534a)+header+struct.pack('<II',len(packed),0x004e4942)+packed
-    target=ROOT/'public/props/milk-crate'/f'{name}.glb';target.write_bytes(output)
+    directory=Path(output_dir) if output_dir else ROOT/'public/props/milk-crate';directory.mkdir(parents=True,exist_ok=True)
+    target=directory/f'{name}.glb';target.write_bytes(output)
     print(f'{target.name}: {len(raw):,} → {len(output):,} bytes; geometry unchanged')
 if __name__=='__main__':
     prepare(sys.argv[1],'blue-crate',(1024,512,512))

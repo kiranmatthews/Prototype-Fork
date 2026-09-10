@@ -1,0 +1,34 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {createServer} from 'vite';
+import * as THREE from 'three';
+const source=await readFile(new URL('./test-life-multihit-crates.mjs',import.meta.url),'utf8');
+new Function('noop',source.slice(source.indexOf('function installHeadlessDom()'),source.indexOf('const held ='))+'installHeadlessDom();')(()=>{});
+const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true}});
+const warn=console.warn;console.warn=()=>{};let level;
+try{
+ const {Level}=await server.ssrLoadModule('/src/level.ts');
+ const {explosivePulse}=await server.ssrLoadModule('/src/explosiveBundle.ts');
+ level=new Level(new THREE.Scene(),{id:'explosive-review',name:'Explosive review',data:{v:1,name:'Explosive review',spawn:[0,.1,8],killY:-20,components:[{t:'platform',p:[8,-.5,0],s:[32,1,24]},...['tnt','tnt','nitro','tnt'].map((kind,i)=>({t:'crate',kind,p:[i*6,0,0],...(i===3?{outline:true}:{} )})),{t:'gate',p:[0,0,-9]}]}});
+ const [first,second,nitro,ghost]=level.crates;
+ const a=first.explosiveBundle,b=second.explosiveBundle;
+ assert.deepEqual(first.box.getSize(new THREE.Vector3()).toArray(),[.96,.96,.96]);
+ assert.equal(a.fuseFraction.value,1);assert.equal(a.ember.visible,false);assert.equal(nitro.explosiveBundle.ember,undefined);
+ level.lightFuse(ghost);assert.equal(ghost.fuse,undefined);assert.equal(ghost.explosiveBundle.visual.visible,false);
+ level.lightFuse(first);assert.equal(first.fuse,3);assert.equal(a.ember.visible,true);
+ const originalTip=a.ember.position.y;
+ for(let i=0;i<60;i++)level.update(1/60);
+ assert.ok(Math.abs(first.fuse-2)<1e-8);assert.ok(a.ember.position.y<originalTip);assert.ok(Math.abs(a.fuseFraction.value-2/3)<1e-8);
+ assert.equal(second.fuse,undefined);assert.equal(b.fuseFraction.value,1,'one TNT fuse consumed another');
+ level.lightFuse(second);
+ for(let i=0;i<60;i++)level.update(1/60);
+ assert.ok(Math.abs(a.fuseFraction.value-1/3)<1e-8);assert.ok(Math.abs(b.fuseFraction.value-2/3)<1e-8);
+ const tip=a.ember.position.clone();level.update(0);assert.ok(a.ember.position.equals(tip),'paused draw burned rope');
+ for(let i=0;i<60;i++)level.update(1/60);
+ assert.equal(first.alive,false,'TNT did not explode at three seconds');assert.equal(second.alive,true);assert.equal(nitro.alive,true);
+ level.reset(true);assert.equal(first.alive,true);assert.equal(a.fuseFraction.value,1);assert.equal(a.ember.visible,false);
+ for(const remaining of [3,2,1])assert.ok(explosivePulse(false,remaining,0)>.999,'pulse missed a countdown beat');
+ assert.ok(explosivePulse(false,2.5,0)<.001);assert.equal(explosivePulse(false,undefined,0),0);
+ assert.notEqual(explosivePulse(true,undefined,0),explosivePulse(true,undefined,.275),'Nitro has no idle pulse');
+ console.log('PASS explosive bundles: cube bounds, independent 3-second fuses, paused burn, detonation, reset, outline safety and countdown/idle pulses.');
+}finally{level?.dispose();await new Promise(r=>setTimeout(r,30));console.warn=warn;await server.close();}
