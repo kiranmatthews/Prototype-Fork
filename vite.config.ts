@@ -16,6 +16,7 @@ export default defineConfig({
         spinLab: 'spin-lab.html',
         milkReview: 'milk-review.html',
         resetLocalData: 'reset-local-data.html',
+        rooTypeLab: 'roo-type-lab.html',
       },
     },
   },

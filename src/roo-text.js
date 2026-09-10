@@ -19,6 +19,8 @@
  * <use> of <text> are unreliable in Safari/Firefox; userSpaceOnUse is not.
  */
 
+import { createBakedRooText } from "./roo-type/dom";
+
 const SVG_NS = "http://www.w3.org/2000/svg";
 
 // Tuned against the Crash reference plates: a saturated vertical gradient
@@ -146,6 +148,11 @@ export async function createRooText(host, options = {}) {
   if (!(host instanceof HTMLElement)) {
     throw new TypeError("createRooText requires a valid host element.");
   }
+
+  // Prefer the same real-bevel image font as the pre-CRT Canvas HUD. The
+  // original vector treatment below remains available if the atlas is absent.
+  const baked = await createBakedRooText(host, options);
+  if (baked) return baked;
 
   const state = {
     text: options.text ?? host.dataset.rooText ?? "BONUS",

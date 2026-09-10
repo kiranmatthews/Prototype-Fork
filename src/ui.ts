@@ -882,7 +882,7 @@ export class UI {
     // Combo copy stays ordinary text. It can wrap naturally and the CRT pass
     // supplies enough character without a per-glyph SVG treatment.
     this.rooMsgTitle = new RooLabel(this.msgTitle, { palette: ROO_HUD });
-    this.rooBonusTitle = new RooLabel(this.bonusTitleEl, { palette: ROO_HUD, extrusionSteps: 12 });
+    this.rooBonusTitle = new RooLabel(this.bonusTitleEl, { palette: ROO_TT, extrusionSteps: 12 });
     // Fixed captions: set once, then they never change again.
     new RooLabel(this.scoreLabelEl, { palette: ROO_HUD }).set("SCORE");
     this.rooBonusTitle.set("BONUS");

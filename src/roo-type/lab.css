@@ -1,0 +1,22 @@
+@import '../roo-text.css';
+:root { color-scheme: dark; font: 14px/1.4 system-ui,sans-serif; color: #e8edf5; background: #080c13; }
+* { box-sizing: border-box; } body { margin: 0; } button,input,select { font: inherit; }
+header { display:flex; align-items:center; gap:18px; padding:20px 32px; border-bottom:1px solid #243043; }
+header strong { font-size:18px; letter-spacing:.04em; } header span { color:#9aaabb; } header a { margin-left:auto; color:#c6d4e1; }
+main { display:grid; grid-template-columns:minmax(0,1fr) 260px; min-height:calc(100vh - 67px); }
+.stage { position:relative; min-width:0; overflow:hidden; background: radial-gradient(ellipse at 50% 20%,#1a2b3c 0%,#0a111b 55%,#04070a 100%); }
+.stage.light { background:radial-gradient(ellipse at 50% 20%,#e6d6b8,#9a907e); }
+.stage canvas { display:block; width:100%; height:100%; min-height:640px; }
+.stage canvas.baked { position:absolute; inset:0; pointer-events:none; }
+.stage canvas[hidden] { display:none; }
+.stamp { position:absolute; left:28px; bottom:16px; color:#8292a2; font:11px ui-monospace,monospace; pointer-events:none; }
+aside { padding:20px 22px; background:#101722; border-left:1px solid #243043; }
+aside h1 { font-size:15px; margin:0 0 5px; } aside p { color:#a8b6c5; font-size:12px; margin:0 0 12px; }
+label { display:block; margin:12px 0; font-size:12px; color:#b9c6d2; } label span { float:right; color:#eaf2fb; font-variant-numeric:tabular-nums; }
+input[type=range] { display:block; width:100%; accent-color:#bdec53; margin:10px 0 0; }
+input[type=text], select { display:block; width:100%; background:#080f19; color:white; border:1px solid #35465c; border-radius:5px; padding:8px; margin-top:8px; }
+button { color:#ecf3fa; border:1px solid #35465c; background:#1b2a3c; border-radius:5px; padding:9px 12px; cursor:pointer; width:100%; margin:5px 0; }
+button:hover { background:#2b4059; } button.primary { background:#c8f169; color:#162000; border-color:#c8f169; }
+.check { display:flex; align-items:center; gap:8px; } .check input { accent-color:#bdec53; }
+#report { font:11px/1.6 ui-monospace,monospace; white-space:pre-wrap; color:#91a6bb; border-top:1px solid #29384b; padding-top:16px; margin-top:18px; }
+@media(max-width:760px) { main { grid-template-columns:1fr; } aside { border-left:0; display:grid; grid-template-columns:1fr 1fr; gap:0 22px; } aside>h1,aside>p,#report { grid-column:1/-1; } header { padding:14px 18px; } header span { display:none; } .stage { height:650px; } }

@@ -8,6 +8,7 @@
 
 import * as THREE from "three";
 import { trackPresentationImage } from "./presentationLoading";
+import { RooAtlasPainter } from "./roo-type/atlas";
 import {
   SOURCE_HUD_TRACKING,
   sourceTrackingPixels,
@@ -200,6 +201,7 @@ export interface GameHudSurfaceDiagnostics {
   lastCanvasMs: number;
   lifeFaceReady: boolean;
   rooFontReady: boolean;
+  rooAtlasReady: boolean;
   disposed: boolean;
 }
 
@@ -288,6 +290,7 @@ export class GameHudSurface {
   private lifeFace: HTMLImageElement | null = null;
   private lifeFaceReady = false;
   private rooFontReady = false;
+  private readonly rooAtlas = new RooAtlasPainter();
   private disposed = false;
   private hasPixels = false;
   private primitiveCount = 0;
@@ -367,6 +370,7 @@ export class GameHudSurface {
       lastCanvasMs: this.lastCanvasMs,
       lifeFaceReady: this.lifeFaceReady,
       rooFontReady: this.rooFontReady,
+      rooAtlasReady: this.rooAtlas.ready,
       disposed: this.disposed,
     };
   }
@@ -451,6 +455,7 @@ export class GameHudSurface {
     this.drawRooInRect(ctx, readRooHudText(title) || "BONUS", rect, {
       size: titleSize,
       align: "center",
+      palette: "bonus",
       tracking: sourceTrackingPixels(SOURCE_HUD_TRACKING.word, titleSize),
       glow: "rgba(255, 184, 31, 0.7)",
       alpha,
@@ -1337,16 +1342,22 @@ export class GameHudSurface {
     style: RooStyle,
   ): void {
     if (!text || rect.width <= 0 || rect.height <= 0) return;
+    // Roo DOM hosts are 1.285 cap bands high. Read that same physical size
+    // before fitting the line; otherwise narrow digits grow between lite/full.
+    const capSize = Math.min(style.size, rect.height / 1.285);
+    const sideBearing = capSize * 0.03;
     const align = style.align ?? "left";
     const x = align === "center"
       ? rect.x + rect.width / 2
       : align === "right"
-        ? rect.x + rect.width
-        : rect.x;
+        ? rect.x + rect.width - sideBearing
+        : rect.x + sideBearing;
     this.drawRooText(ctx, text, x, rect.y + rect.height / 2, {
       ...style,
+      size: capSize,
+      tracking: style.tracking === undefined ? undefined : style.tracking * capSize / style.size,
       align,
-      maxWidth: style.maxWidth ?? rect.width,
+      maxWidth: style.maxWidth ?? Math.max(1, rect.width - sideBearing * 2),
     });
   }
 
@@ -1359,6 +1370,10 @@ export class GameHudSurface {
   ): void {
     const text = rawText.toUpperCase();
     if (!text) return;
+    if (this.fontFamily === "Roo" && this.rooAtlas.draw(ctx, text, x, y, style)) {
+      this.mark();
+      return;
+    }
     const palette = GAME_HUD_PALETTES[style.palette ?? "counter"];
     const tracking = style.tracking ?? Math.max(0, style.size * 0.025);
     const family = `"${this.fontFamily}", Impact, "Arial Black", sans-serif`;
