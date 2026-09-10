@@ -8,6 +8,8 @@ import type * as THREE from "three";
 import type { ResultsViewport } from "./resultsPresentation";
 import { runLoadingTransition, type LoadingTransitionPhase } from "./presentationLoading";
 import { rooReady } from "./roofont";
+import { installRooMenuText } from './roo-type/menu';
+import { getRooAppearance, setRooAppearance, subscribeRooLight } from './roo-type/settings';
 import { inputPrompts, CONTROLLER_FAMILIES, PROMPT_FAMILY_NAMES } from "./inputPrompts";
 import { actionButtonDown } from "./inputBindings";
 import {
@@ -242,6 +244,8 @@ export class GameFlowUI {
       </svg>`;
     this.root.append(this.panel, this.cursor);
     document.body.append(this.root, this.transitionCurtain);
+    installRooMenuText(this.panel,()=>this.invalidatePreCrt());
+    subscribeRooLight(()=>{if(this.screen&&(this.preCrtComposited||this.preCrtHandoffPending))this.requestGameplayFrame();});
     document.body.classList.toggle("game-debug-hidden", !this.debugVisible);
     document.body.classList.toggle("game-debug-visible", this.debugVisible);
     this.root.setAttribute("aria-modal", String(!this.debugVisible));
@@ -1328,6 +1332,11 @@ export class GameFlowUI {
         return enabled;
       }),
       promptStyle,
+      this.button('TEXT APPEARANCE',()=>{
+        const url=new URL(`${import.meta.env.BASE_URL}roo-type-lab.html`,location.href);
+        window.open(url.href,'roo-font-appearance');
+      }),
+      this.toggleButton('TEXT SHIMMER',getRooAppearance().shimmer,enabled=>{setRooAppearance({shimmer:enabled});return enabled;}),
       this.button("BACK", () => {
         this.callbacks.onAudioOptions({ ...this.options });
         if (this.mapDirect) this.callbacks.onResume();

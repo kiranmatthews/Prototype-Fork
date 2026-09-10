@@ -11,6 +11,8 @@ from PIL import Image
 parser=argparse.ArgumentParser()
 for key in ['glyph','palette','version','source','prompt']:
     parser.add_argument('--'+key,required=True)
+parser.add_argument('--cleaned-material',action='store_true')
+parser.add_argument('--input',action='append')
 args=parser.parse_args()
 root=Path(__file__).resolve().parents[2]
 folder=root/'art/roo-reference-match'
@@ -27,6 +29,7 @@ a=np.asarray(im.convert('RGBA')).astype(float)
 r,g,b=a[:,:,0],a[:,:,1],a[:,:,2];mx=a[:,:,:3].max(2);mn=a[:,:,:3].min(2)
 magenta=(r>80)&(b>80)&(g<np.minimum(r,b)*.6)
 mask=(a[:,:,3]>16)&(mx>90)&((mx-mn>45)|(mx>205))&~magenta
+if args.cleaned_material:mask=(a[:,:,3]>32)&(mx>90)&((mx-mn)>np.maximum(32,mx*.2))&~magenta
 yy,xx=np.where(mask)
 assert len(xx)>0,'No colored foreground detected'
 corners=np.r_[magenta[:10,:10].ravel(),magenta[-10:,:10].ravel(),magenta[:10,-10:].ravel(),magenta[-10:,-10:].ravel()]
@@ -38,6 +41,11 @@ entry={'glyph':args.glyph,'palette':args.palette,'file':relative,'prompt':args.p
        'background':background,'status':'under_review','issues':['Final material, edge and registration review pending'],
        'colorBounds':[int(xx.min()),int(yy.min()),int(xx.max()+1-xx.min()),int(yy.max()+1-yy.min())]}
 if args.glyph in refs:entry['reference']=refs[args.glyph]
+previous=next((c for c in report['candidates'] if c['file']==relative),{})
+if args.input or previous.get('inputs'):entry['inputs']=args.input or previous['inputs']
+if args.cleaned_material:
+    entry['materialSource']='cleaned'
+    if background=='unrecognized':entry['background']='opaque-matte'
 report['candidates']=[c for c in report['candidates'] if c['file']!=relative]+[entry]
 (folder/'review.json').write_text(json.dumps(report,indent=2)+'\n')
 work=json.loads((folder/'worklist.json').read_text())

@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import { loadRooAtlases, RooAtlasPainter } from './roo-type/atlas';
+import { ROO_APPEARANCE_EVENT, rooLightPosition } from './roo-type/settings';
 import { Level, COMBO_GEM_TINT } from "./level";
 import { createSkateboardPresentation, rebuildSkateboardPresentation } from "./skateboard/model";
 import { type SkateboardSettings } from "./skateboard/settings";
@@ -95,6 +97,8 @@ export class MapLevelPresentation {
   private readonly board: THREE.Group;
   private readonly face: THREE.Mesh;
   private boardDirty = false;
+  private readonly rooAtlas=new RooAtlasPainter();
+  private lightPhase=NaN;
 
   constructor(private readonly deckHost: HTMLElement, private readonly trialHost: HTMLElement,
     private readonly boardSettings: SkateboardSettings = mapSkateboardSettings) {
@@ -131,6 +135,8 @@ export class MapLevelPresentation {
       this.inkKey = "";
     });
     void document.fonts?.ready.then(() => { this.inkKey = ""; });
+    void loadRooAtlases().then(()=>{this.inkKey='';});
+    window.addEventListener(ROO_APPEARANCE_EVENT,()=>{this.inkKey='';});
   }
 
   private geometryKey(): string {
@@ -177,7 +183,10 @@ export class MapLevelPresentation {
     const data = this.flip.shown;
     if (!data) return;
     const key = JSON.stringify(data);
+    const lightPhase=Math.round(rooLightPosition()*64);
     if (key !== this.inkKey) { this.paint(data); this.inkKey = key; }
+    else if(lightPhase!==this.lightPhase)this.paint(data,false);
+    this.lightPhase=lightPhase;
     const w = window.innerWidth, h = window.innerHeight;
     this.camera.left = -w / 2; this.camera.right = w / 2;
     this.camera.top = h / 2; this.camera.bottom = -h / 2; this.camera.updateProjectionMatrix();
@@ -213,7 +222,7 @@ export class MapLevelPresentation {
     }
   }
 
-  private paint(data: MapLevelCardData): void {
+  private paint(data: MapLevelCardData,updateTrial=true): void {
     setTimeMedalTier(this.rewards[3], data.medal ?? 'gold');
     const ctx = this.faceTexture.image.getContext("2d")!;
     ctx.clearRect(0, 0, 1536, 512);
@@ -230,6 +239,7 @@ export class MapLevelPresentation {
     }
     ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.lineJoin = "round";
     let fontSize = this.boardSettings.value.mapTitleSize ?? 156;
+    if(!this.rooAtlas.draw(ctx,data.name.toUpperCase(),768,137,{size:Math.min(190,fontSize)*.882,palette:'counter',align:'center',maxWidth:1430})){
     ctx.font = `${fontSize}px Roo, Impact, sans-serif`;
     // Fit long names horizontally and vertically without overlapping sockets.
     fontSize *= Math.min(1, 1430 / Math.max(1, ctx.measureText(data.name.toUpperCase()).width), 190 / fontSize);
@@ -239,8 +249,9 @@ export class MapLevelPresentation {
     const gold = ctx.createLinearGradient(0, 70, 0, 220);
     gold.addColorStop(0, "#ffe36b"); gold.addColorStop(0.55, "#ffb52c"); gold.addColorStop(1, "#f07b13");
     ctx.fillStyle = gold; ctx.fillText(data.name.toUpperCase(), 768, 137);
+    }
     this.faceTexture.needsUpdate = true;
-    this.paintTrial(data);
+    if(updateTrial)this.paintTrial(data);
   }
 
   private paintTrial(data: MapLevelCardData): void {

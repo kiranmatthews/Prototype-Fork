@@ -8,101 +8,112 @@
     {
       "glyph": "0",
       "codePoint": 48,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/0-counter-01.png",
         "candidates/0-counter-02.png",
         "candidates/0-counter-03.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/0-counter-03.png"
     },
     {
       "glyph": "1",
       "codePoint": 49,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/1-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/1-counter-01.png"
     },
     {
       "glyph": "2",
       "codePoint": 50,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/2-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/2-counter-01.png"
     },
     {
       "glyph": "3",
       "codePoint": 51,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/3-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/3-counter-01.png"
     },
     {
       "glyph": "4",
       "codePoint": 52,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/4-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/4-counter-01.png"
     },
     {
       "glyph": "5",
       "codePoint": 53,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/5-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/5-counter-01.png"
     },
     {
       "glyph": "6",
       "codePoint": 54,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/6-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/6-counter-01.png"
     },
     {
       "glyph": "7",
       "codePoint": 55,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/7-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/7-counter-01.png"
     },
     {
       "glyph": "8",
       "codePoint": 56,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/8-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/8-counter-01.png"
     },
     {
       "glyph": "9",
       "codePoint": 57,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/9-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/9-counter-01.png"
     },
     {
       "glyph": "A",
       "codePoint": 65,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
-        "candidates/A-bonus-01.png"
+        "candidates/A-bonus-01.png",
+        "candidates/A-bonus-repair-v3.png"
       ],
       "reference": {
         "box": [
@@ -120,12 +131,13 @@
         "coloredPixels": 952,
         "native": "analysis/A-alphabet-native.png",
         "zoom": "analysis/A-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/A-bonus-repair-v3.png"
     },
     {
       "glyph": "B",
       "codePoint": 66,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/B-bonus-01.png",
         "candidates/B-bonus-02.png",
@@ -148,14 +160,16 @@
         "coloredPixels": 1152,
         "native": "analysis/B-alphabet-native.png",
         "zoom": "analysis/B-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/B-bonus-04.png"
     },
     {
       "glyph": "C",
       "codePoint": 67,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
-        "candidates/C-bonus-01.png"
+        "candidates/C-bonus-01.png",
+        "candidates/C-bonus-repair-v3.png"
       ],
       "reference": {
         "box": [
@@ -173,14 +187,16 @@
         "coloredPixels": 876,
         "native": "analysis/C-alphabet-native.png",
         "zoom": "analysis/C-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/C-bonus-repair-v3.png"
     },
     {
       "glyph": "D",
       "codePoint": 68,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
-        "candidates/D-bonus-01.png"
+        "candidates/D-bonus-01.png",
+        "candidates/D-bonus-repair-v3.png"
       ],
       "reference": {
         "box": [
@@ -198,14 +214,16 @@
         "coloredPixels": 1069,
         "native": "analysis/D-alphabet-native.png",
         "zoom": "analysis/D-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/D-bonus-repair-v3.png"
     },
     {
       "glyph": "E",
       "codePoint": 69,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
-        "candidates/E-bonus-01.png"
+        "candidates/E-bonus-01.png",
+        "candidates/E-bonus-repair-v3.png"
       ],
       "reference": {
         "box": [
@@ -223,14 +241,16 @@
         "coloredPixels": 848,
         "native": "analysis/E-alphabet-native.png",
         "zoom": "analysis/E-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/E-bonus-repair-v3.png"
     },
     {
       "glyph": "F",
       "codePoint": 70,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
-        "candidates/F-bonus-01.png"
+        "candidates/F-bonus-01.png",
+        "candidates/F-bonus-repair-v3.png"
       ],
       "reference": {
         "box": [
@@ -248,14 +268,16 @@
         "coloredPixels": 712,
         "native": "analysis/F-alphabet-native.png",
         "zoom": "analysis/F-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/F-bonus-repair-v3.png"
     },
     {
       "glyph": "G",
       "codePoint": 71,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
-        "candidates/G-bonus-01.png"
+        "candidates/G-bonus-01.png",
+        "candidates/G-bonus-repair-v3.png"
       ],
       "reference": {
         "box": [
@@ -273,14 +295,16 @@
         "coloredPixels": 1016,
         "native": "analysis/G-alphabet-native.png",
         "zoom": "analysis/G-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/G-bonus-repair-v3.png"
     },
     {
       "glyph": "H",
       "codePoint": 72,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
-        "candidates/H-bonus-01.png"
+        "candidates/H-bonus-01.png",
+        "candidates/H-bonus-repair-v3.png"
       ],
       "reference": {
         "box": [
@@ -298,14 +322,16 @@
         "coloredPixels": 1017,
         "native": "analysis/H-alphabet-native.png",
         "zoom": "analysis/H-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/H-bonus-repair-v3.png"
     },
     {
       "glyph": "I",
       "codePoint": 73,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
-        "candidates/I-bonus-01.png"
+        "candidates/I-bonus-01.png",
+        "candidates/I-bonus-repair-v3.png"
       ],
       "reference": {
         "box": [
@@ -323,14 +349,16 @@
         "coloredPixels": 496,
         "native": "analysis/I-alphabet-native.png",
         "zoom": "analysis/I-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/I-bonus-repair-v3.png"
     },
     {
       "glyph": "J",
       "codePoint": 74,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
-        "candidates/J-bonus-01.png"
+        "candidates/J-bonus-01.png",
+        "candidates/J-bonus-repair-v3.png"
       ],
       "reference": {
         "box": [
@@ -348,14 +376,16 @@
         "coloredPixels": 707,
         "native": "analysis/J-alphabet-native.png",
         "zoom": "analysis/J-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/J-bonus-repair-v3.png"
     },
     {
       "glyph": "K",
       "codePoint": 75,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
-        "candidates/K-bonus-01.png"
+        "candidates/K-bonus-01.png",
+        "candidates/K-bonus-repair-v3.png"
       ],
       "reference": {
         "box": [
@@ -373,14 +403,16 @@
         "coloredPixels": 976,
         "native": "analysis/K-alphabet-native.png",
         "zoom": "analysis/K-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/K-bonus-repair-v3.png"
     },
     {
       "glyph": "L",
       "codePoint": 76,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
-        "candidates/L-bonus-01.png"
+        "candidates/L-bonus-01.png",
+        "candidates/L-bonus-repair-v3.png"
       ],
       "reference": {
         "box": [
@@ -398,14 +430,16 @@
         "coloredPixels": 640,
         "native": "analysis/L-alphabet-native.png",
         "zoom": "analysis/L-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/L-bonus-repair-v3.png"
     },
     {
       "glyph": "M",
       "codePoint": 77,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
-        "candidates/M-bonus-01.png"
+        "candidates/M-bonus-01.png",
+        "candidates/M-bonus-repair-v3.png"
       ],
       "reference": {
         "box": [
@@ -423,12 +457,13 @@
         "coloredPixels": 1290,
         "native": "analysis/M-alphabet-native.png",
         "zoom": "analysis/M-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/M-bonus-repair-v3.png"
     },
     {
       "glyph": "N",
       "codePoint": 78,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/N-bonus-01.png",
         "candidates/N-bonus-02.png"
@@ -449,12 +484,13 @@
         "coloredPixels": 974,
         "native": "analysis/N-alphabet-native.png",
         "zoom": "analysis/N-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/N-bonus-02.png"
     },
     {
       "glyph": "O",
       "codePoint": 79,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/O-bonus-01.png",
         "candidates/O-bonus-02.png"
@@ -475,14 +511,16 @@
         "coloredPixels": 953,
         "native": "analysis/O-alphabet-native.png",
         "zoom": "analysis/O-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/O-bonus-02.png"
     },
     {
       "glyph": "P",
       "codePoint": 80,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
-        "candidates/P-bonus-01.png"
+        "candidates/P-bonus-01.png",
+        "candidates/P-bonus-repair-v3.png"
       ],
       "reference": {
         "box": [
@@ -500,14 +538,16 @@
         "coloredPixels": 805,
         "native": "analysis/P-alphabet-native.png",
         "zoom": "analysis/P-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/P-bonus-repair-v3.png"
     },
     {
       "glyph": "Q",
       "codePoint": 81,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
-        "candidates/Q-bonus-01.png"
+        "candidates/Q-bonus-01.png",
+        "candidates/Q-bonus-repair-v3.png"
       ],
       "reference": {
         "box": [
@@ -525,14 +565,16 @@
         "coloredPixels": 1080,
         "native": "analysis/Q-alphabet-native.png",
         "zoom": "analysis/Q-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/Q-bonus-repair-v3.png"
     },
     {
       "glyph": "R",
       "codePoint": 82,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
-        "candidates/R-bonus-01.png"
+        "candidates/R-bonus-01.png",
+        "candidates/R-bonus-repair-v3.png"
       ],
       "reference": {
         "box": [
@@ -550,12 +592,13 @@
         "coloredPixels": 1019,
         "native": "analysis/R-alphabet-native.png",
         "zoom": "analysis/R-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/R-bonus-repair-v3.png"
     },
     {
       "glyph": "S",
       "codePoint": 83,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/S-bonus-01.png",
         "candidates/S-bonus-02.png"
@@ -576,14 +619,16 @@
         "coloredPixels": 795,
         "native": "analysis/S-alphabet-native.png",
         "zoom": "analysis/S-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/S-bonus-02.png"
     },
     {
       "glyph": "T",
       "codePoint": 84,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
-        "candidates/T-bonus-01.png"
+        "candidates/T-bonus-01.png",
+        "candidates/T-bonus-repair-v3.png"
       ],
       "reference": {
         "box": [
@@ -601,12 +646,13 @@
         "coloredPixels": 642,
         "native": "analysis/T-alphabet-native.png",
         "zoom": "analysis/T-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/T-bonus-repair-v3.png"
     },
     {
       "glyph": "U",
       "codePoint": 85,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/U-bonus-01.png",
         "candidates/U-bonus-02.png"
@@ -627,14 +673,16 @@
         "coloredPixels": 873,
         "native": "analysis/U-alphabet-native.png",
         "zoom": "analysis/U-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/U-bonus-02.png"
     },
     {
       "glyph": "V",
       "codePoint": 86,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
-        "candidates/V-bonus-01.png"
+        "candidates/V-bonus-01.png",
+        "candidates/V-bonus-repair-v3.png"
       ],
       "reference": {
         "box": [
@@ -652,14 +700,16 @@
         "coloredPixels": 811,
         "native": "analysis/V-alphabet-native.png",
         "zoom": "analysis/V-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/V-bonus-repair-v3.png"
     },
     {
       "glyph": "W",
       "codePoint": 87,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
-        "candidates/W-bonus-01.png"
+        "candidates/W-bonus-01.png",
+        "candidates/W-bonus-repair-v3.png"
       ],
       "reference": {
         "box": [
@@ -677,14 +727,16 @@
         "coloredPixels": 1224,
         "native": "analysis/W-alphabet-native.png",
         "zoom": "analysis/W-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/W-bonus-repair-v3.png"
     },
     {
       "glyph": "X",
       "codePoint": 88,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
-        "candidates/X-bonus-01.png"
+        "candidates/X-bonus-01.png",
+        "candidates/X-bonus-repair-v3.png"
       ],
       "reference": {
         "box": [
@@ -702,14 +754,16 @@
         "coloredPixels": 846,
         "native": "analysis/X-alphabet-native.png",
         "zoom": "analysis/X-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/X-bonus-repair-v3.png"
     },
     {
       "glyph": "Y",
       "codePoint": 89,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
-        "candidates/Y-bonus-01.png"
+        "candidates/Y-bonus-01.png",
+        "candidates/Y-bonus-repair-v3.png"
       ],
       "reference": {
         "box": [
@@ -727,14 +781,16 @@
         "coloredPixels": 646,
         "native": "analysis/Y-alphabet-native.png",
         "zoom": "analysis/Y-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/Y-bonus-repair-v3.png"
     },
     {
       "glyph": "Z",
       "codePoint": 90,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
-        "candidates/Z-bonus-01.png"
+        "candidates/Z-bonus-01.png",
+        "candidates/Z-bonus-repair-v3.png"
       ],
       "reference": {
         "box": [
@@ -752,144 +808,162 @@
         "coloredPixels": 702,
         "native": "analysis/Z-alphabet-native.png",
         "zoom": "analysis/Z-alphabet-zoom.png"
-      }
+      },
+      "selectedV3": "candidates/Z-bonus-repair-v3.png"
     },
     {
       "glyph": "!",
       "codePoint": 33,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/u0021-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/u0021-counter-01.png"
     },
     {
       "glyph": "?",
       "codePoint": 63,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/u003f-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/u003f-counter-01.png"
     },
     {
       "glyph": ".",
       "codePoint": 46,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/u002e-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/u002e-counter-01.png"
     },
     {
       "glyph": ",",
       "codePoint": 44,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/u002c-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/u002c-counter-01.png"
     },
     {
       "glyph": ":",
       "codePoint": 58,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/u003a-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/u003a-counter-01.png"
     },
     {
       "glyph": ";",
       "codePoint": 59,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/u003b-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/u003b-counter-01.png"
     },
     {
       "glyph": "/",
       "codePoint": 47,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/u002f-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/u002f-counter-01.png"
     },
     {
       "glyph": "-",
       "codePoint": 45,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/u002d-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/u002d-counter-01.png"
     },
     {
       "glyph": "+",
       "codePoint": 43,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/u002b-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/u002b-counter-01.png"
     },
     {
       "glyph": "'",
       "codePoint": 39,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/u0027-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/u0027-counter-01.png"
     },
     {
       "glyph": "\"",
       "codePoint": 34,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/u0022-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/u0022-counter-01.png"
     },
     {
       "glyph": "(",
       "codePoint": 40,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/u0028-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/u0028-counter-01.png"
     },
     {
       "glyph": ")",
       "codePoint": 41,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/u0029-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/u0029-counter-01.png"
     },
     {
       "glyph": "%",
       "codePoint": 37,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/u0025-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/u0025-counter-01.png"
     },
     {
       "glyph": "&",
       "codePoint": 38,
-      "status": "baked_and_browser_verified",
+      "status": "baked_and_browser_verified_v3",
       "candidates": [
         "candidates/u0026-counter-01.png"
       ],
-      "reference": null
+      "reference": null,
+      "selectedV3": "candidates/u0026-counter-01.png"
     }
   ],
-  "status": "local_release_verified",
-  "validation": "All 51 model passes, source font hashes, identical palette alpha, antialiased coverage, no magenta pixels, exports, reference-size typography, dynamic counts, lite/full HUD and portrait layout checked."
+  "status": "v3_local_release_verified",
+  "validation": "All 51 model passes, source font hashes, identical palette alpha, antialiased coverage, no magenta pixels, exports, reference-size typography, dynamic counts, lite/full HUD and portrait layout checked.",
+  "cleanupPassCount": 21,
+  "lightingFramesPerPalette": 3
 }

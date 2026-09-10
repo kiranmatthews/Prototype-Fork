@@ -1,63 +1,97 @@
 import './lab.css';
 import { RooAtlasPainter, loadRooAtlases, layoutRooAtlas } from './atlas';
 import { ROO_ATLAS_METRICS } from './atlas-metrics';
+import { getRooAppearance, setRooAppearance, ROO_APPEARANCE_DEFAULTS, ROO_APPEARANCE_EVENT, rooLightPosition, subscribeRooLight } from './settings';
 import type { RooTreatment } from './geometry';
 
 async function main(){
  const root=document.querySelector<HTMLDivElement>('#app')!;
- root.innerHTML=`<header><strong>ROO / REFERENCE FONT</strong><span>Model-processed glyphs · baked lighting</span><a href="./">Back to game</a></header>
- <main><div class="stage"><canvas aria-label="Roo font preview"></canvas><div class="stamp">Codex/sol fork · RooRegular.ttf · 51 image-model glyph passes</div></div>
- <aside><h1>Roo image font</h1><p>The bevel and light are baked into each glyph. Change the text, size and spacing, or export the complete font.</p>
+ root.innerHTML=`<header><strong>ROO / FONT STUDIO</strong><span>Bevel light, close-up inspection and spacing</span><a href="./">Back to game</a></header>
+ <main><div class="stage"><canvas aria-label="Roo font preview"></canvas><div class="stamp">Codex/sol fork · Same font in menus and HUD</div></div>
+ <aside><h1>Roo appearance</h1><p>Spacing and shimmer save automatically and update the game, including other open tabs.</p>
+ <label>View<select id="view"><option value="words">Words and alphabet</option><option value="glyph">Inspect one glyph</option><option value="all">All glyphs, close up</option></select></label>
  <label>Text<input id="text" type="text" value="BONUS" maxlength="30"></label>
+ <label id="glyph-field" hidden>Glyph<select id="glyph"></select></label>
+ <div id="pager" hidden><button id="prev">Previous</button><span id="page-v"></span><button id="next">Next</button></div>
  <label>Color treatment<select id="palette"><option value="bonus">Green / cobalt</option><option value="counter">Gold / vermilion</option></select></label>
- <label>Text size <span id="size-v"></span><input id="size" type="range" min="45" max="210" value="165"></label>
- <label>Extra letter spacing <span id="tracking-v"></span><input id="tracking" type="range" min="-0.03" max="0.16" step="0.001" value="0"></label>
+ <label>Preview size <span id="size-v"></span><input id="size" type="range" min="32" max="640" value="165"></label>
+ <label>Letter spacing <span id="tracking-v"></span><input id="tracking" type="range" min="-.16" max=".16" step=".001"><input aria-label="Exact letter spacing in cap units" id="tracking-number" type="number" min="-.16" max=".16" step=".001"></label>
+ <button id="reset-spacing">Reset spacing</button>
+ <label class="check"><input id="shimmer" type="checkbox">Animate edge highlights</label>
+ <label>Highlight movement <span id="strength-v"></span><input id="strength" type="range" min="0" max="1" step=".01"></label>
+ <label>Preview light position <span id="light-v"></span><input id="light" type="range" min="-1" max="1" value="0" step=".01"></label>
  <label class="check"><input id="backdrop" type="checkbox">Light background</label>
  <label class="check"><input id="counts" type="checkbox">Run the counter</label>
- <button id="png" class="primary">Export transparent text PNG</button><button id="atlas">Download image font + metrics</button>
+ <button id="png" class="primary">Export transparent text PNG</button><button id="atlas">Download font + 3 light frames</button>
  <div id="report" aria-live="polite">Loading glyphs…</div></aside></main>`;
  const input=(id:string)=>document.getElementById(id) as HTMLInputElement;
  const stage=document.querySelector<HTMLDivElement>('.stage')!,canvas=stage.querySelector('canvas')!,ctx=canvas.getContext('2d')!;
  const painter=new RooAtlasPainter();await loadRooAtlases();if(!painter.ready)throw new Error('Font atlas failed to load');
- let width=0,height=0,frame=0;
+ const characters=Object.keys(ROO_ATLAS_METRICS.bonus.glyphs).filter(c=>ROO_ATLAS_METRICS.bonus.glyphs[c].width);
+ const glyphSelect=document.getElementById('glyph') as HTMLSelectElement;
+ for(const char of characters)glyphSelect.add(new Option(char,char));glyphSelect.value='5';
+ let width=0,height=0,page=0;
+ function sync(){
+   const settings=getRooAppearance();input('tracking').value=input('tracking-number').value=String(settings.tracking);
+   input('shimmer').checked=settings.shimmer;input('strength').value=String(settings.lightStrength);input('light').disabled=settings.shimmer;
+   input('tracking-v').textContent=`${(settings.tracking*100).toFixed(1)}%`;
+   input('strength-v').textContent=`${Math.round(settings.lightStrength*100)}%`;
+ }
+ const light=()=>getRooAppearance().shimmer?rooLightPosition():+input('light').value;
  function paint(){
    const ratio=Math.min(3,Math.max(2,devicePixelRatio));width=stage.clientWidth;height=Math.max(640,stage.clientHeight);
    if(canvas.width!==Math.round(width*ratio)||canvas.height!==Math.round(height*ratio)){canvas.width=Math.round(width*ratio);canvas.height=Math.round(height*ratio);}
    ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(0,0,width,height);
-   const palette=input('palette').value as RooTreatment,size=+input('size').value,tracking=+input('tracking').value;
-   const text=input('text').value.toUpperCase()||'BONUS';
-   painter.draw(ctx,text,width/2,height*.24,{size,tracking:tracking*size,palette,align:'center',maxWidth:width-50});
-   const count=input('counts').checked?String(Math.floor(frame/30)%100):'0';
-   const numSize=Math.min(107,(width-60)/9.7);
-   painter.draw(ctx,`${count}/23   99   100`,width/2,height*.49,{size:numSize,tracking:numSize*.1,palette:'counter',align:'center',maxWidth:width-50});
-   const letterSize=Math.min(59,(width-60)/13.4);
-   for(const [i,row]of ['ABCDEFGHIJKLM','NOPQRSTUVWXYZ'].entries())painter.draw(ctx,row,width/2,height*(.72+i*.12),{size:letterSize,tracking:letterSize*.25,palette,align:'center',maxWidth:width-50});
-   ctx.fillStyle=input('backdrop').checked?'#4d5148':'#91a5b9';ctx.font='11px system-ui';ctx.textAlign='center';
-   ctx.fillText('MODEL-BAKED ROO',width/2,height*.24-size*.7-18);
-   ctx.fillText('COUNTERS · FIXED SIZE THROUGH VALUE CHANGES',width/2,height*.49-numSize*.7-18);
-   ctx.fillText('ALPHABET',width/2,height*.72-letterSize*.7-18);
-   document.getElementById('size-v')!.textContent=`${size} px`;
-   document.getElementById('tracking-v')!.textContent=`${(tracking*size).toFixed(1)} px`;
-   document.getElementById('report')!.textContent=`51 modeled glyphs · 2 colorways\nOriginal Roo contours and metrics\n384 px source cap band\nBONUS uses measured optical spacing\nRGBA · smooth edges · no heavy stroke`;
+   const palette=input('palette').value as RooTreatment,size=+input('size').value,mode=input('view').value;
+   const draw=(text:string,x:number,y:number,cap:number,maxWidth=width-50)=>painter.draw(ctx,text,x,y,{size:cap,palette,align:'center',maxWidth,lightPosition:light()});
+   const caption=(text:string,x:number,y:number)=>{ctx.fillStyle=input('backdrop').checked?'#4d5148':'#91a5b9';ctx.font='11px system-ui';ctx.textAlign='center';ctx.fillText(text,x,y);};
+   if(mode==='glyph'){
+     draw(glyphSelect.value,width/2,height/2,Math.min(size,height-110));caption(`${glyphSelect.value} · SAME CONTOUR IN ALL THREE LIGHT FRAMES`,width/2,45);
+   }else if(mode==='all'){
+     const cols=width<650?2:3,perPage=cols*2,pages=Math.ceil(characters.length/perPage);page=Math.max(0,Math.min(page,pages-1));
+     const cellW=width/cols,cellH=(height-80)/2;
+     for(const [i,char]of characters.slice(page*perPage,(page+1)*perPage).entries()){
+       const x=(i%cols+.5)*cellW,y=65+(Math.floor(i/cols)+.5)*cellH;
+       draw(char,x,y,Math.min(size,cellH*.86),cellW-40);caption(char,x,y-cellH*.44);
+     }
+     input('page-v').textContent=`${page+1} / ${pages}`;
+   }else{
+     draw(input('text').value.toUpperCase()||'BONUS',width/2,height*.24,size);
+     const count=input('counts').checked?String(Math.floor(performance.now()/700)%100):'0',numSize=Math.min(107,(width-60)/9.7);
+     painter.draw(ctx,`${count}/23   99   100`,width/2,height*.49,{size:numSize,palette:'counter',align:'center',maxWidth:width-50,lightPosition:light()});
+     const letterSize=Math.min(59,(width-60)/12.2);
+     for(const [i,row]of ['ABCDEFGHIJKLM','NOPQRSTUVWXYZ'].entries())draw(row,width/2,height*(.72+i*.12),letterSize);
+     caption('THREE BAKED HIGHLIGHT POSITIONS',width/2,height*.24-Math.min(size,height*.24)*.7-18);
+     caption('COUNTERS · FIXED SIZE THROUGH VALUE CHANGES',width/2,height*.49-numSize*.7-18);
+     caption('ALPHABET',width/2,height*.72-letterSize*.7-18);
+   }
+   input('size-v').textContent=`${size} px`;
+   input('light-v').textContent=light()<-.05?'Left':light()>.05?'Right':'Neutral';
  }
+ sync();window.addEventListener(ROO_APPEARANCE_EVENT,()=>{sync();paint();});
  new ResizeObserver(paint).observe(stage);
- for(const id of ['text','palette','size','tracking'])input(id).addEventListener('input',paint);
+ for(const id of ['text','palette','size','glyph','light'])input(id).addEventListener('input',paint);
+ input('view').onchange=()=>{
+   const mode=input('view').value;input('glyph-field').hidden=mode!=='glyph';input('pager').hidden=mode!=='all';
+   input('size').value=mode==='words'?'165':mode==='glyph'?'512':'384';page=0;paint();
+ };
+ input('tracking').oninput=()=>setRooAppearance({tracking:+input('tracking').value});
+ input('tracking-number').onchange=()=>{if(Number.isFinite(input('tracking-number').valueAsNumber))setRooAppearance({tracking:input('tracking-number').valueAsNumber});};
+ input('reset-spacing').onclick=()=>setRooAppearance({tracking:ROO_APPEARANCE_DEFAULTS.tracking});
+ input('shimmer').onchange=()=>setRooAppearance({shimmer:input('shimmer').checked});
+ input('strength').oninput=()=>setRooAppearance({lightStrength:+input('strength').value});
+ input('prev').onclick=()=>{page--;paint();};input('next').onclick=()=>{page++;paint();};
  input('backdrop').onchange=()=>{stage.classList.toggle('light',input('backdrop').checked);paint();};
- input('counts').onchange=paint;
- function tick(){frame++;if(input('counts').checked)paint();requestAnimationFrame(tick);}requestAnimationFrame(tick);paint();
+ input('counts').onchange=paint;subscribeRooLight(paint);setInterval(()=>{if(input('counts').checked&&!getRooAppearance().shimmer)paint();},250);
  function download(name:string,blob:Blob|string){const a=document.createElement('a');a.download=name;a.href=typeof blob==='string'?blob:URL.createObjectURL(blob);a.click();if(typeof blob!=='string')setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
- document.getElementById('png')!.onclick=()=>{
-   const palette=input('palette').value as RooTreatment,text=input('text').value.toUpperCase()||'BONUS',size=+input('size').value*2,tracking=+input('tracking').value;
-   const layout=layoutRooAtlas(ROO_ATLAS_METRICS[palette],text,tracking);if(!layout)return;
+ input('png').onclick=()=>{
+   const palette=input('palette').value as RooTreatment,text=input('view').value==='glyph'?glyphSelect.value:input('text').value.toUpperCase()||'BONUS',size=+input('size').value*2;
+   const layout=layoutRooAtlas(ROO_ATLAS_METRICS[palette],text,getRooAppearance().tracking);if(!layout)return;
    const out=document.createElement('canvas');out.width=Math.ceil(layout.width*size+24);out.height=Math.ceil(size*1.285+24);
-   painter.draw(out.getContext('2d')!,text,out.width/2,out.height/2,{size,tracking:tracking*size,palette,align:'center'});
-   download('roo-text.png',out.toDataURL('image/png'));
+   painter.draw(out.getContext('2d')!,text,out.width/2,out.height/2,{size,palette,align:'center',lightPosition:light()});download('roo-text.png',out.toDataURL('image/png'));
  };
- document.getElementById('atlas')!.onclick=async()=>{
-   const response=await fetch(`${import.meta.env.BASE_URL}fonts/roo-image-font-v2.zip`);
-   if(!response.ok)throw new Error('Font download failed');
-   download('roo-image-font-v2.zip',await response.blob());
- };
- Object.assign(window,{rooTypeLab:{ready:true,paint,painter,metrics:()=>({glyphs:51,palettes:2,version:2,width,height})}});
+ input('atlas').onclick=async()=>{const version=ROO_ATLAS_METRICS.bonus.version,response=await fetch(`${import.meta.env.BASE_URL}fonts/roo-image-font-v${version}.zip`);if(!response.ok)throw new Error('Font download failed');download(`roo-image-font-v${version}.zip`,await response.blob());};
+ input('report').textContent='51 glyphs · 2 colorways · 3 light frames\nOriginal Roo contours · smooth alpha\n384 px source cap band\nSettings save for this browser\nReduced motion keeps the light still';
+ paint();Object.assign(window,{rooTypeLab:{ready:true,paint,painter,metrics:()=>({glyphs:51,palettes:2,version:ROO_ATLAS_METRICS.bonus.version,lightFrames:3,width,height}),appearance:getRooAppearance}});
 }
 void main().catch(error=>{const report=document.getElementById('report');if(report)report.textContent=String(error);console.error(error);});

@@ -1,59 +1,65 @@
-# Roo reference image font, v2
+# Roo image font and highlight frames, v3
 
-V2 is a PNG image font built from **51 separate image-model glyph passes** and the existing `RooRegular.ttf` contours. It replaces the rejected v1 procedural material. `roo-type-lab.html` previews the shipped font, accepts arbitrary supported text, and exports transparent text PNGs or the complete font ZIP. Lighting is baked; this version does not claim live 3D relighting.
+V3 repairs the enlarged font, adds three aligned baked lighting frames per glyph, and uses the PNG font in the HUD and menu screens. The Font Studio at `roo-type-lab.html` lets the user inspect any glyph, page through all 51, change spacing, control shimmer, export text PNGs and download the complete font.
 
-## Material construction
+## Model and quality provenance
 
-Each nonempty Roo glyph received its own built-in `image_gen` call. The alphabet, 0, 2, 3 and slash use the supplied reference artwork as direct material evidence. Other glyphs use the original Roo silhouette and the same reference material. All selected RGB outputs and their prompts are preserved in `art/roo-reference-match/`; `public/fonts/roo-font-v2-provenance.json` records hashes and generator output IDs for every glyph.
+All 51 nonempty glyphs have recorded individual built-in `image_gen` passes. V3 adds individual cleanup passes for the 21 alphabet glyphs whose small reference crops had blurred or blotchy bevels: A, C, D, E, F, G, H, I, J, K, L, M, P, Q, R, T, V, W, X, Y and Z. The larger BONUS reference letters retain their measured material field. The numeric and punctuation passes retain their original source images with a repaired color bake.
 
-The image model can change the reference's light balance or leave a black surround. The final bake therefore uses three explicit sources of truth:
+The built-in tool does not expose a model selector or quality control, and its output does not report a selectable model ID or quality tier. This work therefore does **not** claim GPT Image 2.5 at `max` quality. OpenAI documents that combination for its API at https://developers.openai.com/api/docs/models/gpt-image-2.5-sunburst; that separate API path was not used. The exported provenance records these unknown fields as null.
 
-1. Original Roo contours for the silhouette, holes and antialiased alpha.
-2. Reference pixels for the visible light/color field where a reference glyph exists.
-3. The individual model pass for finer surface detail on the raised face. That detail fades out at the outer bevel, preserving the reference's edge profile.
+Raw outputs and exact prompts remain in `art/roo-reference-match/`. Some raw images contain a painted matte/checkerboard or imperfect generated alpha. They are preserved unchanged as color sources. Final font transparency always comes from the original Roo contours; generated backgrounds never become font alpha.
 
-The reference crops contain black-matted antialiasing and bits of scenery. The authoring renderer identifies the connected colored glyph, retains real bright glints, rejects dim background-contaminated boundary samples, and extends valid edge colors before sampling. This avoids the dark dotted seams that a naive crop or transparent-black texture produced. The final PNG alpha comes from Roo geometry, not from a painted checkerboard. Model RGB files remain unchanged.
+## Repairs and bake
 
-`tools/roo-type/color-projection.ts` implements this bake. `palette-profile.ts` keeps the two colorways consistent while preserving light/dark variation. Direct reference glyphs in their original colorway retain their full two-dimensional light/color field. The alternate colorway and unseen glyphs are derived from the same measured material family; they are not claimed to be recovered original game assets.
+The old per-row 8-bit color correction followed holes and bevels, creating visible horizontal bands and hue excursions on otherwise smooth model images. `palette-profile.ts` now uses a smooth floating-point profile and continuous palette curves. Lighting variation is separated from the material hue, and shadow corrections are restrained. `color-projection.ts` pads the complete valid color field before sampling, avoiding magenta seams where model and Roo contours differ.
 
-## Typography
+The alphabet cleanup passes replace the enlarged low-resolution color field with clean carved facets and continuous shading. The connected foreground extraction excludes neutral matte pixels and pads from uncontaminated interior colors. The bevel mesh uses 48 curve samples per segment for its lighting. Final alpha clips the padded RGB with Roo's original analytic Canvas paths, independently of mesh triangulation; this fixes narrow punctuation whose mesh coverage did not precisely match the font. The camera preserves exactly 384 pixels per cap band, with rendering and curve clipping at twice that resolution before downsampling. Space has an advance without a bitmap.
 
-The reference is 1672×941. Its BONUS word occupies about 626×162 colored pixels. `layouts.BONUS` records each letter's measured x/y position and size, because equal tracking or a total-width fit hid errors in N and U. Font size 165 reproduces that optical layout.
+The two palettes are green/cobalt and gold/vermilion. Alternate-color glyphs are derived from the same material family; these are reconstructed Roo assets, not recovered original game assets.
 
-The alphabet proof uses a 59 px band. The warm numeral reference uses a 107 px band, producing a roughly 93 px zero. Optical glyph sizes and baseline offsets are derived from the reference boxes while retaining Roo's vector contours. The source font-wide band is −76 to 806, or 882 units in a 1000-unit em; CSS em size and visible letter height are not interchangeable.
+## Three lighting frames
 
-The game scales the number and title bands against the reference viewport height. Current/total crate counts now share one font size and baseline. Numeric tracking is 0.10 band units with measured slash/23 pair corrections; the split `/total` starts with a 0.04-em gap. Both the DOM/lite renderer and Canvas/CRT renderer consume the same placements and metrics. Changing digit count does not change the cap band. Compact portrait layout places the bonus crate counter above the fruit/life row so the enlarged readouts stay on-screen.
+Each palette has a neutral PNG plus `-light1` (left) and `-light2` (right). All three use the same camera, geometry, crop rectangles, bearings and alpha. Only the bevel illumination changes. The front gradient remains fixed.
+
+The normal display follows an 11-second wave between the three positions. Strength defaults to 70%; reduced motion holds neutral. Canvas first paints each complete word with normal glyph overlap, then adds weighted premultiplied frames on an isolated surface. SVG uses isolated groups with `plus-lighter`. Ordinary source-over fading would change edge alpha and is intentionally avoided. This also keeps very tight or overlapping letters from brightening at their intersections.
+
+The renderer reuses the existing Canvas/CRT path and caches word rasters. Menus reuse their measured DOM layout and existing composite surface; a changed light blend repaints color without remeasuring unchanged layout. There is no additional gameplay WebGL context or runtime mesh bake.
+
+## Spacing and menus
+
+Default extra tracking is now **−0.065 cap-band units**. Persistent counters previously added +0.10 units; their extra local offset is now zero. The `/total` gap uses the same preference, and numerator/denominator retain equal size and baseline. The measured reference scale remains 107 px for counters and 165 px for BONUS at 1672×941. BONUS retains its individual optical letter placements, with the shared tracking adjustment applied afterward.
+
+Font Studio offers a slider and exact number input from −0.160 to +0.160, a reset button, shimmer/strength controls and a frozen light-position preview. Settings persist under `solProtoRooAppearanceV3` and propagate to other open game tabs. Options → Text Appearance opens the studio; Text Shimmer also toggles motion directly.
+
+The PNG font decorates Roo menu titles, actions, saved-game labels, level/progress screens, results and Game Over. Warm timber panels use green/cobalt for contrast; dark areas use gold/vermilion. The world-map board title and competition headings/countdown also use the atlas. Existing comic control hints and prose retain their authored fonts. Semantic text and actual button hit targets remain in the DOM, and game-owned artwork remains below CRT.
 
 ## Delivered files
 
-- `public/fonts/roo-bonus-v2.png` — green/cobalt RGBA atlas.
-- `public/fonts/roo-counter-v2.png` — gold/vermilion RGBA atlas.
-- Matching `.json` files — crops, bearings, advances, kerning, cap metrics and BONUS optical layout.
-- `public/fonts/roo-font-v2-provenance.json` — all 51 image-model hashes, output IDs and exact prompts.
-- `public/fonts/roo-image-font-v2.zip` — both atlases, metrics, provenance and a short integration note.
+- `public/fonts/roo-bonus-v3.png`, `roo-bonus-v3-light1.png`, `roo-bonus-v3-light2.png`.
+- `public/fonts/roo-counter-v3.png`, `roo-counter-v3-light1.png`, `roo-counter-v3-light2.png`.
+- Matching palette metrics JSON, `roo-font-v3-provenance.json`, and `roo-image-font-v3.zip`.
 
-Each atlas is 2048×2724 with 384 pixels per cap band. The bake renders at twice that resolution with MSAA and downsamples with smooth alpha. The two colorways have identical alpha masks. Space is an advance without a bitmap. Roo does not contain ×, ° or an ellipsis; the existing readable font fallback still handles unsupported characters.
-
-`src/roo-type/atlas.ts` uses the existing Canvas2D HUD surface, adding no gameplay WebGL context or per-frame bake. `dom.ts` uses the identical atlas in SVG viewports with semantic text retained. Game-owned artwork remains below CRT, so the full game's existing CRT treatment still applies to the final display.
+Both palette metrics describe all three frames. The ZIP includes six PNGs, two metrics files, provenance and integration notes. Raw generation records and repair inputs are authoring sources, not runtime downloads.
 
 ## Rebuild and review
 
 ```sh
-node tools/roo-type/build-source.mjs
-python3 tools/roo-type/prepare-image-inputs.py
 npm run dev -- --host 127.0.0.1 --port 5178
-# Run each desired glyph prompt with built-in image_gen, then register its output:
-python3 tools/roo-type/register-model-output.py --glyph A --palette bonus --version 01 --source /absolute/generated.png --prompt A-extraction-prompt.txt
+# Run any new per-letter edit with built-in image_gen, then register it:
+python3 tools/roo-type/register-model-output.py --glyph A --palette bonus --version repair-v3 --source /absolute/generated.png --prompt A-repair-v3-prompt.txt --cleaned-material
 PLAYWRIGHT_MODULE=/absolute/path/to/playwright/index.mjs node tools/roo-type/model-font-review.mjs
-# Inspect dark/light and enlarged proofs before installing:
+# Inspect the baked proof before installing:
 python3 tools/roo-type/install-bake.py
+PLAYWRIGHT_MODULE=/absolute/path/to/playwright/index.mjs node tools/roo-type/audit-glyphs.mjs
 PLAYWRIGHT_MODULE=/absolute/path/to/playwright/index.mjs node tools/roo-type/review.mjs
+PLAYWRIGHT_MODULE=/absolute/path/to/playwright/index.mjs node tools/roo-type/review-menus.mjs
+PYTHON_BIN=/absolute/path/to/python3 PLAYWRIGHT_MODULE=/absolute/path/to/playwright/index.mjs node tools/roo-type/review-dom-alpha.mjs
 node tools/test-game-hud-pipeline.mjs
-node tools/test-hud-visibility.mjs
-node tools/test-combo-hud-parity.mjs
+node tools/test-game-flow-surface.mjs
+node tools/test-game-flow-interaction.mjs
+node tools/test-map-level-presentation.mjs
 npm run build
 ```
 
-`ROO_LAB_URL` changes the local review server. The model-font bake refuses missing glyph passes unless explicitly run as an authoring-only partial proof. Installation verifies every model file against its generator output hash or previously recorded provenance. These tools do not make new API/CLI image-generation calls.
-
-The direct authoring comparison remains in `tools/roo-type/reference-review.html`. It shows the original, rejected v1, raw model treatment and reference-preserving treatment separately. Interior color statistics are explicitly scoped to the interior and are not used as proof of edge quality. Final browser review checks all glyph masks, palette alpha parity, absence of magenta contamination, PNG/ZIP exports, dynamic number sizing, equal `/total` sizing, and actual lite/full/bonus/portrait presentation. Visual inspection covers the bevels and color transitions at native size and the repaired edges at larger size. The full test suite is not part of this brief.
+Checks cover source provenance, Roo masks, exact alpha parity across the three frames, palette alpha parity, absence of pink/gray background contamination, distinct highlights on every glyph, stable overlapping-letter crossfades, exports, dynamic counter sizing, saved/cross-tab spacing, reduced motion, and lite/full menu layouts at 1280×720, 1920×1080, 1024×768, 390×844 and 844×390. Visual inspection remains necessary for material fidelity; numerical mask/color checks do not replace it. The full test suite is not part of this brief.

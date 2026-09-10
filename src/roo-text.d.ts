@@ -19,6 +19,8 @@ export interface RooPalette {
 export declare const PALETTES: Record<RooPaletteName, RooPalette>;
 
 export interface RooTextOptions {
+  /** Menu overlays keep their accessible text in a separate semantic span. */
+  decorative?: boolean;
   text?: string;
   palette?: RooPaletteName;
   /** letter-spacing in SVG units (the source glyph is set at font-size 200) */

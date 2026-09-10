@@ -31,8 +31,8 @@ assert.doesNotMatch(
 );
 assert.match(
   surface,
-  /if \(this\.dirty \|\| resized\) this\.paint\(/,
-  "unchanged screens must reuse their cached canvas texture",
+  /if \(this\.dirty \|\| resized \|\| phase!==this\.lightPhase\) \{this\.paint\(/,
+  "screens must repaint only for layout, size or a changed baked-light blend",
 );
 assert.match(
   surface,

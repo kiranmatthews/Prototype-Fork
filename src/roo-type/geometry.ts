@@ -42,7 +42,7 @@ export function rooGlyphGeometry(glyph: RooVectorGlyph, width: number = ROO_BEVE
   const integerScale = 1e6;
   const contours: ClipperLib.Paths = [];
   for (const shape of path.toShapes(true)) {
-    const points=shape.extractPoints(12);
+    const points=shape.extractPoints(48);
     for(const [index,ring] of [points.shape,...points.holes].entries()) {
       let contour=ring.map(p=>({X:Math.round(p.x*integerScale),Y:Math.round(p.y*integerScale)}));
       contour=ClipperLib.Clipper.CleanPolygon(contour,120);

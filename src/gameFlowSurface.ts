@@ -9,6 +9,10 @@
 import { paintSilverSecondaryText } from "./secondaryText";
 import * as THREE from "three";
 import { trackPresentationImage } from "./presentationLoading";
+import { loadRooAtlases, RooAtlasPainter, layoutRooAtlas } from './roo-type/atlas';
+import { ROO_ATLAS_METRICS } from './roo-type/atlas-metrics';
+import { getRooAppearance, ROO_APPEARANCE_EVENT, rooLightPosition } from './roo-type/settings';
+import { rooMenuText, rooMenuPalette } from './roo-type/menu';
 
 export type GameFlowSurfaceScreen =
   | "launch"
@@ -58,9 +62,11 @@ export interface GameFlowSurfaceText {
   font: GameFlowSurfaceFont;
   wrap: boolean;
   silver?: boolean;
+  rooPalette?:'bonus'|'counter';
 }
 
 export interface GameFlowSurfaceButton {
+  rooPalette?:'bonus'|'counter';
   rect: GameFlowSurfaceRect;
   kind: "action" | "slot" | "toggle" | "close" | "level" | "hint";
   label: string;
@@ -383,6 +389,7 @@ export function snapshotGameFlowSurface(
       Object.freeze({
         text,
         silver,
+        rooPalette:rooMenuPalette(node),
         rect,
         font,
         wrap:
@@ -416,6 +423,7 @@ export function snapshotGameFlowSurface(
         rect,
         kind: button.classList.contains("game-control-hint") ? "hint" : levelRow ? "level" : button.classList.contains("game-map-close") ? "close" : slot ? "slot" : toggle ? "toggle" : "action",
         launch: source.screen === "launch",
+        rooPalette:rooMenuPalette(button),
         label: slot
           ? ""
           : ((label?.textContent ?? button.textContent) || "")
@@ -509,11 +517,17 @@ export class GameFlowSurface {
   private disposed = false;
   private maskImage: HTMLImageElement | null = null;
   private maskImageReady = false;
+  private readonly rooAtlas=new RooAtlasPainter();
+  private lightPhase=NaN;
+  private readonly appearanceChanged=()=>{this.invalidate();this.onAsyncInvalidate();};
 
   constructor(
     private readonly readState: () => GameFlowSurfaceRenderState,
     private readonly onAsyncInvalidate: () => void = () => {},
-  ) {}
+  ) {
+    window.addEventListener(ROO_APPEARANCE_EVENT,this.appearanceChanged);
+    void loadRooAtlases().then(()=>{if(!this.disposed)this.appearanceChanged();});
+  }
 
   get diagnostics(): GameFlowSurfaceDiagnostics {
     const canvas = this.resources?.canvas;
@@ -567,7 +581,8 @@ export class GameFlowSurface {
 
     const resources = this.ensureResources();
     const resized = this.ensureSize(resources, raster.width, raster.height);
-    if (this.dirty || resized) this.paint(resources, state, raster.width, raster.height);
+    const phase=Math.round(rooLightPosition()*64);
+    if (this.dirty || resized || phase!==this.lightPhase) {this.paint(resources, state, raster.width, raster.height);this.lightPhase=phase;}
     if (!this.hasPixels) return false;
     return this.composite(
       resources,
@@ -596,6 +611,7 @@ export class GameFlowSurface {
     if (this.disposed) return;
     this.deactivate();
     this.disposed = true;
+    this.rooAtlas.dispose();window.removeEventListener(ROO_APPEARANCE_EVENT,this.appearanceChanged);
     if (this.maskImage) {
       this.maskImage.onload = null;
       this.maskImage.onerror = null;
@@ -846,7 +862,8 @@ export class GameFlowSurface {
       ctx.lineWidth = button.selected ? 2 : 1; ctx.stroke();
       ctx.font = `${button.fontWeight} ${button.fontSize}px ${button.fontFamily}`;
       ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillStyle = button.selected ? '#542615' : '#fff4d6';
-      ctx.fillText(button.label, rect.x + 16, rect.y + rect.height / 2, Math.max(1, rect.width - (button.valueLabel ? 45 : 28)));
+      const labelWidth=Math.max(1,rect.width-(button.valueLabel?45:28));
+      if(!/\bRoo\b/.test(button.fontFamily)||!this.rooAtlas.draw(ctx,rooMenuText(button.label),rect.x+16,rect.y+rect.height/2,{size:button.fontSize*.882,palette:button.rooPalette,align:'left',maxWidth:labelWidth}))ctx.fillText(button.label,rect.x+16,rect.y+rect.height/2,labelWidth);
       ctx.textAlign = 'right'; ctx.font = '700 12px Arial,sans-serif'; ctx.fillStyle = '#713a1e';
       ctx.fillText(button.valueLabel, rect.x + rect.width - 14, rect.y + rect.height / 2);
       ctx.restore(); this.primitiveCount++; return;
@@ -908,16 +925,17 @@ export class GameFlowSurface {
         // long values such as CLASSIC on a narrow options card.
         const gap = 12;
         const available = Math.max(1, rect.width - 50 - gap);
-        const textWidth = ctx.measureText(button.label).width +
-          ctx.measureText(button.valueLabel).width;
+        const usesRoo=/\bRoo\b/.test(button.fontFamily);
+        const measure=(text:string)=>usesRoo?(layoutRooAtlas(ROO_ATLAS_METRICS.counter,rooMenuText(text),getRooAppearance().tracking)?.width??0)*button.fontSize*.882:ctx.measureText(text).width;
+        const textWidth = measure(button.label)+measure(button.valueLabel);
         const fit = Math.min(1, available / Math.max(1, textWidth));
         ctx.font = `${button.fontWeight} ${button.fontSize * fit}px ${button.fontFamily}`;
         ctx.textAlign = "left";
         ctx.fillStyle = button.color;
-        ctx.fillText(button.label, rect.x + 25, rect.y + rect.height / 2);
+        if(!usesRoo||!this.rooAtlas.draw(ctx,rooMenuText(button.label),rect.x+25,rect.y+rect.height/2,{size:button.fontSize*fit*.882,palette:button.rooPalette,align:'left'}))ctx.fillText(button.label,rect.x+25,rect.y+rect.height/2);
         ctx.textAlign = "right";
         ctx.fillStyle = button.valueColor;
-        ctx.fillText(
+        if(!usesRoo||!this.rooAtlas.draw(ctx,rooMenuText(button.valueLabel),rect.x+rect.width-25,rect.y+rect.height/2,{size:button.fontSize*fit*.882,palette:button.rooPalette,align:'right'}))ctx.fillText(
           button.valueLabel,
           rect.x + rect.width - 25,
           rect.y + rect.height / 2,
@@ -927,7 +945,7 @@ export class GameFlowSurface {
         // Snapshot color already includes selected, danger and Game Over's
         // context override from the semantic DOM cascade.
         ctx.fillStyle = button.color;
-        ctx.fillText(
+        if(!/\bRoo\b/.test(button.fontFamily)||!this.rooAtlas.draw(ctx,rooMenuText(button.label),rect.x+rect.width/2,rect.y+rect.height/2,{size:button.fontSize*.882,palette:button.rooPalette,align:'center',maxWidth:Math.max(1,rect.width-36)}))ctx.fillText(
           button.label,
           rect.x + rect.width / 2,
           rect.y + rect.height / 2,
@@ -1067,6 +1085,7 @@ export class GameFlowSurface {
         : rect.x;
     for (let index = 0; index < lines.length; index++) {
       const y = top + lineHeight * (index + 0.5);
+      if(/\bRoo\b/.test(font.family)&&this.rooAtlas.draw(ctx,rooMenuText(lines[index]),x,y,{size:font.size*.882,palette:text.rooPalette,align:font.align,maxWidth:rect.width}))continue;
       if (font.strokeWidth > 0) ctx.strokeText(lines[index], x, y, rect.width);
       ctx.fillText(lines[index], x, y, rect.width);
     }

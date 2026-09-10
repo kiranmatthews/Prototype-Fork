@@ -12,11 +12,11 @@ try{
  await page.locator('#light').click();await page.screenshot({path:fileURLToPath(new URL('proof-light.png',out)),fullPage:true});
  const data=await page.evaluate(()=>{
   const r=window.rooModelFont;return {missing:r.missing,provenance:r.provenance,measuredTitleGlyphs:r.measuredTitleGlyphs,
-    atlases:Object.fromEntries(Object.entries(r.atlases).map(([p,a])=>[p,{metrics:a.metrics,png:a.canvas.toDataURL('image/png') }]))};
+    atlases:Object.fromEntries(Object.entries(r.atlases).map(([p,a])=>[p,{metrics:a.metrics,pngs:a.frames.map(c=>c.toDataURL('image/png')) }]))};
  });
  for(const [palette,a]of Object.entries(data.atlases)){
-  await fs.writeFile(new URL(`roo-${palette}-v2.png`,out),Buffer.from(a.png.split(',')[1],'base64'));
-  await fs.writeFile(new URL(`roo-${palette}-v2.json`,out),JSON.stringify(a.metrics,null,2));delete a.png;
+  for(const [frame,png]of a.pngs.entries())await fs.writeFile(new URL(`roo-${palette}-v${a.metrics.version}${frame?'-light'+frame:''}.png`,out),Buffer.from(png.split(',')[1],'base64'));
+  await fs.writeFile(new URL(`roo-${palette}-v${a.metrics.version}.json`,out),JSON.stringify(a.metrics,null,2));delete a.pngs;
  }
  await fs.writeFile(new URL('report.json',out),JSON.stringify({errors,...data},null,2));
  console.log(JSON.stringify({errors,missing:data.missing,glyphs:Object.keys(data.provenance).length,atlasSizes:Object.fromEntries(Object.entries(data.atlases).map(([k,a])=>[k,[a.metrics.width,a.metrics.height]]))}));

@@ -1,0 +1,6 @@
+.roo-menu-label { display:inline-block; position:relative; vertical-align:middle; max-width:100%; letter-spacing:0; line-height:1; text-shadow:none; -webkit-text-stroke:0; filter:none; }
+.roo-menu-label .roo-menu-art { display:none; max-width:100%; }
+.roo-menu-label[data-ready] .roo-menu-art { display:block; }
+.roo-menu-label[data-ready] .roo-menu-source { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+.roo-menu-art .roo-text-svg { max-width:100%; }
+.game-logo:has(.roo-menu-label),.game-panel-title:has(.roo-menu-label),.game-over-title:has(.roo-menu-label),.comp-card h1:has(.roo-menu-label) { filter:none; -webkit-text-stroke:0; text-shadow:none; }

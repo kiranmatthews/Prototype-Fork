@@ -2369,7 +2369,7 @@ export class UI {
       .hud-box-current { font-size: inherit; }
       .hud-box-total {
         font-size: inherit;
-        margin-left: .04em;
+        margin-left: calc(.04em + var(--roo-tracking, -.065em));
         margin-bottom: 0;
       }
       .hud-icon {

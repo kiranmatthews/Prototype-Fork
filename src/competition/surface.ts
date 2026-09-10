@@ -1,6 +1,9 @@
 import { paintSilverSecondaryText } from "../secondaryText";
 import { paintInputPrompts } from '../inputPromptUI';
 import { gameFlowRasterSize } from '../gameFlowSurface';
+import { loadRooAtlases, RooAtlasPainter } from '../roo-type/atlas';
+import { rooMenuText, rooMenuTitle } from '../roo-type/menu';
+import { ROO_APPEARANCE_EVENT, rooLightPosition } from '../roo-type/settings';
 
 /** Native ink for the competition's semantic DOM, drawn by the shared pre-CRT
  * interface pass. Layout/hit targets remain in DOM, just like the other menus. */
@@ -12,7 +15,11 @@ export class CompetitionSurface {
   private layout = '';
   private paints = 0;
   private paths = new Map<string, Path2D>();
+  private readonly rooAtlas=new RooAtlasPainter();
+  private lightPhase=NaN;
   constructor(private root: HTMLElement) {
+    void loadRooAtlases().then(()=>this.invalidate());
+    window.addEventListener(ROO_APPEARANCE_EVENT,()=>this.invalidate());
     root.addEventListener('scroll', () => this.invalidate(), true);
     root.addEventListener('load', () => this.invalidate(), true);
     window.addEventListener('resize', () => this.invalidate());
@@ -40,12 +47,13 @@ export class CompetitionSurface {
     if(!this.ctx)return;
     if(this.layout!==layout){this.canvas.width=raster.width;this.canvas.height=raster.height;this.layout=layout;this.dirty=true;}
     this.active=true;
-    if(this.dirty){
+    const lightPhase=Math.round(rooLightPosition()*64);
+    if(this.dirty||lightPhase!==this.lightPhase){
       const ctx=this.ctx;
       ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
       ctx.scale(this.canvas.width/window.innerWidth,this.canvas.height/window.innerHeight);
       this.paintElement(ctx,this.root);
-      this.paints++;this.dirty=false;
+      this.paints++;this.dirty=false;this.lightPhase=lightPhase;
     }
     target.drawImage(this.canvas,0,0,window.innerWidth,window.innerHeight);
   }
@@ -53,6 +61,13 @@ export class CompetitionSurface {
     const style=getComputedStyle(element),rect=element.getBoundingClientRect();
     if(style.display==='none'||style.visibility==='hidden'||rect.width<.1||rect.height<.1||Number(style.opacity)<.001)return;
     ctx.save();ctx.globalAlpha*=Number(style.opacity);
+    if(element.hasAttribute?.('data-roo-menu')){
+      const text=element.querySelector('.roo-menu-source')?.textContent??'';
+      if(!this.rooAtlas.draw(ctx,rooMenuText(text),rect.x+rect.width/2,rect.y+rect.height/2,{size:parseFloat(style.fontSize)*.882,palette:rooMenuTitle(element)?'bonus':'counter',align:'center',maxWidth:rect.width})){
+        ctx.font=`${style.fontSize} ${style.fontFamily}`;ctx.fillStyle=style.color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,rect.x+rect.width/2,rect.y+rect.height/2,rect.width);
+      }
+      ctx.restore();return;
+    }
     if(element.classList.contains('secondary-silver')){paintSilverSecondaryText(ctx,element.firstChild?.textContent??'',rect.x,rect.y,parseFloat(style.fontSize));ctx.restore();return;}
     if(element.classList.contains('input-glyph')){ctx.restore();return;}
     if(element.classList.contains('game-control-hint')){const alpha=ctx.globalAlpha;ctx.globalAlpha=1;paintInputPrompts(ctx,element);ctx.globalAlpha=alpha;}

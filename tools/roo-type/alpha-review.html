@@ -1,0 +1,9 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="icon" href="data:,"><style>html,body{margin:0;background:transparent}#host{font-size:165px;display:inline-block}</style></head><body><div id="host"></div><script type="module">
+import '../../src/roofont.ts';
+import {createBakedRooText} from '../../src/roo-type/dom.ts';
+import {setRooAppearance,rooLightWeights} from '../../src/roo-type/settings.ts';
+setRooAppearance({tracking:-.065,shimmer:false});
+const handle=await createBakedRooText(document.getElementById('host'),{text:'WWW',palette:'bonus',tracking:-19});
+handle.element.style.width=handle.element.viewBox.baseVal.width*165+'px';handle.element.style.height=1.285*165+'px';
+window.rooAlphaReview={ready:true,setPhase(p){const groups=handle.element.querySelectorAll(':scope>g>g');rooLightWeights(p).forEach((w,i)=>groups[i].setAttribute('opacity',String(w)));}};
+</script></body></html>

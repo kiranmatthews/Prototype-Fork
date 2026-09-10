@@ -59,8 +59,8 @@ assert.match(counterPainter, /const totalSize = counterSize \* crateScale/);
 assert.match(counterPainter, /formatCrateTotal\(crates\.total\)/);
 assert.match(
   counterPainter,
-  /valueRect\.x\s*\+\s*valueRect\.width\s*\+\s*totalSize\s*\*\s*\.04/,
-  "native box suffix must share the reference font's size and gap",
+  /valueRect\.x\s*\+\s*valueRect\.width\s*\+\s*totalSize\s*\*\s*\(\.04\s*\+\s*getRooAppearance\(\)\.tracking\)/,
+  "native box suffix must use the shared spacing preference",
 );
 assert.ok(
   (counterPainter.match(/hudRevealOpacity\s*\(/g) ?? []).length >= 3,
@@ -234,8 +234,8 @@ assert.match(
 const boxTotalCss = ui.match(/\.hud-box-total\s*\{([^}]*)\}/)?.[1] ?? "";
 assert.match(
   boxTotalCss,
-  /margin-left\s*:\s*\.04em/,
-  "box denominator must use the measured reference gap",
+  /margin-left\s*:\s*calc\(\.04em\s*\+\s*var\(--roo-tracking/,
+  "box denominator must use the same spacing preference as its digits",
 );
 assert.match(boxTotalCss,/font-size\s*:\s*inherit/,'box denominator must share the numerator cap height');
 assert.match(boxTotalCss,/margin-bottom\s*:\s*0/,'box denominator must share the numerator baseline');

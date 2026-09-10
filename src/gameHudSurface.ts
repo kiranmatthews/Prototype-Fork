@@ -9,6 +9,7 @@
 import * as THREE from "three";
 import { trackPresentationImage } from "./presentationLoading";
 import { RooAtlasPainter } from "./roo-type/atlas";
+import { getRooAppearance } from './roo-type/settings';
 import { ROO_COUNTER_TRACKING, rooNumberCap, rooTitleCap } from "./roo-type/typography";
 import {
   SOURCE_HUD_TRACKING,
@@ -36,7 +37,7 @@ export interface GameHudElements {
   crateIcon?: HTMLElement;
   /** Current broken-box count. `crateValue` remains as a legacy fallback. */
   crateCurrent?: HTMLElement;
-  /** Smaller `/total` suffix beside `crateCurrent`. */
+  /** Same-size `/total` suffix beside `crateCurrent`. */
   crateTotal?: HTMLElement;
   crateValue?: HTMLElement;
   fruitRow?: HTMLElement;
@@ -604,6 +605,7 @@ export class GameHudSurface {
   dispose(): void {
     if (this.disposed) return;
     this.disposed = true;
+    this.rooAtlas.dispose();
     this.texture.dispose();
     this.material.dispose();
     this.geometry.dispose();
@@ -705,7 +707,7 @@ export class GameHudSurface {
       if (crates.total !== undefined) {
         const totalSize = counterSize * crateScale;
         const totalRect = this.rect(this.elements.crateTotal, layout) ?? {
-          x: valueRect.x + valueRect.width + totalSize * .04,
+          x: valueRect.x + valueRect.width + totalSize * (.04 + getRooAppearance().tracking),
           y: valueRect.y,
           width: width * 0.12,
           height: totalSize * 1.285,

@@ -49,6 +49,9 @@
 .game-pause-layout > .game-progress-card { grid-column:1; grid-row:2; width:100%; padding:1vh 2vw; }
 .game-progress-card { min-height:0; display:flex; flex-direction:column; }
 .game-progress-head h2,.game-progress-head strong { font-size:clamp(18px,3vh,34px); }
+.game-progress-head { gap:.6em; }
+.game-progress-head > h2 { min-width:0; }
+.game-progress-head > strong { flex-shrink:0; }
 .game-progress-grid { display:flex; flex:1; min-height:0; gap:1vw; margin-top:1vh; }
 .game-progress-grid > div { flex:1; display:flex; flex-direction:column; align-items:center; min-height:0; }
 .game-progress-grid .game-reward-slot { min-height:0; width:100%; }

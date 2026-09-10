@@ -6,6 +6,7 @@ import { JUDGES, type JungleCupEvent, type Standing } from './event';
 import { CompetitionSurface } from './surface';
 import { DECK_TRICKS, GRAB_TRICKS, GRIND_TRICKS } from '../skateTricks';
 import { SPECIAL_TRICKS } from '../specialTricks';
+import { installRooMenuText } from '../roo-type/menu';
 
 export type CompetitionAction = 'start' | 'standings' | 'retry' | 'exit';
 export interface JudgePresentationHooks {
@@ -43,6 +44,7 @@ export class CompetitionPresentation {
     const style = document.createElement('style'); style.textContent = CSS;
     document.head.append(style); document.body.append(this.element);
     this.surface = new CompetitionSurface(this.element);
+    installRooMenuText(this.element,()=>this.surface.invalidate());
     this.element.addEventListener('click', e => {
       const button = (e.target as Element).closest<HTMLButtonElement>('button[data-action]');
       if (button && !button.disabled && this.modalActive) {
