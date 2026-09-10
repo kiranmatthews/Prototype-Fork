@@ -804,6 +804,8 @@ export class Player {
   private slamSquash = 0; // pancake pose timer after a slam lands
   private bailing = false; // visible fatal fall through the death watch/fade
   private deathElapsed = 0;
+  private deathRagdoll = false;
+  private deathPoseFrozen = false;
   private deathFacingYaw = 0;
   private deathSupport: GroundHit | null = null;
   private readonly deathHeadContact = new THREE.Vector3();
@@ -1975,7 +1977,8 @@ export class Player {
 
   get deathPresentationDiagnostics() {
     return { elapsed: this.deathElapsed, floor: this.deathSupport?.y ?? null,
-      settled: this.state === 'dead' && this.grounded, rotatingRagdoll: this.ragActive };
+      settled: this.state === 'dead' && this.grounded, rotatingRagdoll: this.ragActive,
+      mode: this.deathRagdoll ? 'ragdoll' : this.grounded ? 'canned' : 'falling', frozen: this.deathPoseFrozen, supportSamples: this.interactionMeasure.supportSamples };
   }
 
   get deathPresentationDelay(): number {
@@ -3245,6 +3248,7 @@ export class Player {
     this.slamSquash = 0;
     this.bailing = false;
     this.deathElapsed = 0;
+    this.deathRagdoll = this.deathPoseFrozen = false;
     this.deathSupport = null;
     this.bodyGroup.rotation.x = 0;
     for (const f of this.fruits) this.retireFruit(f);
@@ -3390,10 +3394,15 @@ export class Player {
     // delta before this step's movement so we stay glued). Crumble pads get
     // told they've been stepped on.
     if (this.grounded && this.groundHit) {
-      if (this.groundHit.moverId !== undefined) this.pos.add(level.moverDelta(this.groundHit.moverId));
+      if (this.groundHit.moverId !== undefined) {
+        const delta = level.moverDelta(this.groundHit.moverId);
+        this.pos.add(delta);
+        if (this.state === 'dead' && this.deathSupport) this.deathSupport.y += delta.y;
+      }
       if (this.groundHit.crumbleId !== undefined) level.touchCrumble(this.groundHit.crumbleId);
     }
     level.playerPos.copy(this.pos); // the boulder chase reads this
+    if (this.stepDeathOnly(dt, input, level)) return;
     this.returnPortalCoolT = Math.max(0, this.returnPortalCoolT - dt);
     this.trickGateHintT = Math.max(0, this.trickGateHintT - dt);
     if (this.trickGateHintT <= 0) this.trickGateHintKind = null;
@@ -4151,27 +4160,7 @@ export class Player {
 
     switch (this.state) {
       case 'dead':
-        if (this.bailing) this.stepDeathFall(dt, level);
-        this.respawnTimer -= dt;
-        if (this.respawnTimer <= 0) {
-          if (this.ttDied || this.comboDied) {
-            // a special-mode death: back to the very start, mode off
-            this.ttDied = false;
-            this.comboDied = false;
-            this.respawn(level, true, true);
-          } else if (this.bonusMode) {
-            this.state = 'gameover';
-            this.onBonusDeath();
-          } else if (this.gameOverPending) {
-            // This death began with no reserve lives: hold on the black screen
-            // until the Game Over choice. A late-arriving wumpa cannot rewrite
-            // the outcome after the death has already happened.
-            this.state = 'gameover';
-            this.onGameOver();
-          } else {
-            this.respawn(level);
-          }
-        }
+        this.advanceDeath(dt, level);
         break;
       case 'gameover':
         break;
@@ -9233,6 +9222,7 @@ export class Player {
     kind: 'forward' | 'back' | 'side' | 'air',
     sideSign = 0,
     poseSource: THREE.Object3D = this.bodyGroup,
+    preserveTranslation = false,
   ): void {
     this.ragActive = true;
     this.ragBounces = 0;
@@ -9241,7 +9231,7 @@ export class Player {
     this.ragSeedB = Math.random() * Math.PI * 2;
     // start the tumble exactly where the pose left the body — no snap
     poseSource.getWorldQuaternion(this.ragQ);
-    if (poseSource !== this.bodyGroup && this.bodyGroup.parent) {
+    if ((poseSource !== this.bodyGroup || preserveTranslation) && this.bodyGroup.parent) {
       poseSource.updateWorldMatrix(true, false);
       this.bodyGroup.parent.updateWorldMatrix(true, false);
       Player.RAG_AXIS.set(0, this.characterWaistLocal(0.82), 0)
@@ -14356,9 +14346,81 @@ export class Player {
     }
   }
 
+  /** Fatal presentation has no live input, rail search, attacks or body scans. */
+  private stepDeathOnly(dt: number, input: Input, level: Level): boolean {
+    if (this.state !== 'dead' && this.state !== 'gameover') return false;
+    this.rawInput = input;
+    this.measurePlanar(dt);
+    if (input.restartPressed) this.respawn(level, true);
+    else if (this.state === 'dead') this.advanceDeath(dt, level);
+    this.updateSparks(dt); this.updatePuffs(); this.updateFlyBoard(dt, level);
+    this.swimEffects?.step(dt, level.water, this.pos, 0, false, false);
+    this.finishVisualStep(input, dt);
+    // Already-earned pickups may still finish their HUD flight during the fade.
+    this.updateFruit(dt, level);
+    return true;
+  }
+
+  private advanceDeath(dt: number, level: Level): void {
+    if (this.bailing) this.stepDeathFall(dt, level);
+    this.respawnTimer -= dt;
+    if (this.respawnTimer <= 0) {
+      if (this.ttDied || this.comboDied) {
+        // a special-mode death: back to the very start, mode off
+        this.ttDied = false;
+        this.comboDied = false;
+        this.respawn(level, true, true);
+      } else if (this.bonusMode) {
+        this.state = 'gameover';
+        this.onBonusDeath();
+      } else if (this.gameOverPending) {
+        // This death began with no reserve lives: hold on the black screen
+        // until the Game Over choice. A late-arriving wumpa cannot rewrite
+        // the outcome after the death has already happened.
+        this.state = 'gameover';
+        this.onGameOver();
+      } else {
+        this.respawn(level);
+      }
+    }
+  }
+
+  private deathGroundPresent(level: Level): boolean {
+    const hit = this.deathSupport;
+    if (!hit || hit.normal.y < .3) return false;
+    if (hit.crate) {
+      if (!hit.crate.alive || hit.crate.pending) return false;
+      hit.y = hit.crate.box.max.y;
+      return this.pos.x >= hit.crate.box.min.x && this.pos.x <= hit.crate.box.max.x &&
+        this.pos.z >= hit.crate.box.min.z && this.pos.z <= hit.crate.box.max.z;
+    }
+    if (hit.crumbleId !== undefined) {
+      const state = level.crumbles[hit.crumbleId]?.state;
+      if (state === 'fall' || state === 'gone') return false;
+    }
+    return !hit.mesh || level.groundMeshes.includes(hit.mesh as THREE.Mesh);
+  }
+
   // Corpse-only motion: no pickups, attacks, recovery or repeated damage.
   private stepDeathFall(dt: number, level: Level): void {
     this.deathElapsed += dt;
+    if (this.grounded && this.deathGroundPresent(level)) {
+      // Supported deaths are just the canned collapse on a cached plane.
+      this.speed = this.vVel = 0;
+      this.pos.y = this.deathSupport!.y;
+      return;
+    }
+    this.grounded = false;
+    this.deathPoseFrozen = false;
+    // Finish the canned fall first. Only a continuing unsupported drop gets
+    // the existing tumble, with no recovery/second damage or life charge.
+    if (!this.deathRagdoll && this.deathElapsed >= 1.2) {
+      this.deathRagdoll = true;
+      // Keep Death01's finished joints while the existing bail tumble owns
+      // outer motion; selecting a fresh bail clip would stand the corpse up.
+      this.ragBlend = 1;
+      this.startRagdoll('air', 0, this.bodyGroup, true);
+    }
     const oldY = this.pos.y;
     this.pos.addScaledVector(this.axisF, this.speed * dt);
     this.vVel = Math.max(-CONST.maxFallSpeed, this.vVel - TUNING.fallGravity * dt);
@@ -14383,7 +14445,7 @@ export class Player {
       this.groundHit = hit;
       this.vVel = 0;
       this.grounded = true;
-      this.speed *= Math.exp(-TUNING.bailFriction * dt);
+      this.speed = 0;
     }
     this.deathSupport = hit;
   }
@@ -14424,8 +14486,14 @@ export class Player {
     this.armBailRecovery(this.respawnTimer + 1);
     this.bailing = true;
     this.deathElapsed = 0;
+    this.deathRagdoll = this.deathPoseFrozen = false;
     this.deathFacingYaw = this.visualYaw;
-    this.deathSupport = this.groundHit;
+    // A stale ground hit from before an airborne hit must not pin the corpse.
+    const supported = this.groundHit !== null && this.groundHit.normal.y >= .3 &&
+      Math.abs(this.pos.y - this.groundHit.y) < .12 && this.vVel <= .1;
+    this.deathSupport = supported ? this.groundHit : null;
+    if (supported) { this.pos.y = this.groundHit!.y; this.speed = this.vVel = 0; }
+    this.walkVelocity.set(0, 0, 0);
     // Fatal falls have one authored owner. Recoverable skating wipeouts keep
     // their existing integrated tumble and roll-up behavior.
     this.ragActive = false; this.ragBlend = this.ragPoseAnchorW = 0;
@@ -14438,7 +14506,7 @@ export class Player {
     this.cancelSlideTraversal(); this.crawling = false;
     this.slopePose = this.slopeRoll = this.landingAlignPose = this.alignPose = 0;
     this.manualing = 0; this.lipStallT = 0; this.wallriding = false;
-    this.grounded = false;
+    this.grounded = supported;
     sfx.play('death', 0.9);
     // the pending combo dies with you; banked points survive
     this.comboPoints = 0;
@@ -14773,6 +14841,10 @@ export class Player {
   }
 
   private refreshGroundPresentation(level: Level): void {
+    if (this.state === 'dead' || this.state === 'gameover') {
+      this.floorX.visible = false;
+      return;
+    }
     this.shadowGroundY = this.queryShadowGround(level);
     if (this.shadowGroundY !== null) this.lastGroundY = this.shadowGroundY;
     this.syncFloorX();
@@ -15092,11 +15164,36 @@ export class Player {
    * of any presentation transforms the animation editor may replace.
    */
   private finishVisualStep(input: Input, dt: number): void {
+    if (this.state === 'dead' && this.deathPoseFrozen && this.grounded && this.measuredInteractionVersion === this.interactionVersion) {
+      // Hold the completed authored pose; only carry its outer root with a mover.
+      this.interactionShift.copy(this.pos).sub(this.group.position);
+      this.group.position.copy(this.pos);
+      this.characterBounds.translate(this.interactionShift);
+      this.interactionAt.copy(this.pos);
+      this.group.updateMatrixWorld(true);
+      return;
+    }
     this.updateSurfaceAlignment(dt);
     this.syncVisual(input, dt);
     this.interactionVersion++;
-    this.refreshCharacterBounds();
-    this.seatDeathOnGround();
+    if (this.state === 'dead') {
+      // Dead bodies cannot collect or attack. Do not reskin their entire mesh
+      // to compute gameplay interaction bounds during the visible death beat.
+      this.group.updateMatrixWorld(true);
+      if (!this.deathSupport) {
+        // Unsupported corpses have no pickup/attack silhouette to solve.
+        // Keep a finite proxy so HUD-flight bookkeeping cannot request a skin scan.
+        const half = this.hitboxHalf;
+        this.characterBounds.setFromCenterAndSize(
+          REACH_C.set(this.pos.x, this.pos.y + half.y, this.pos.z),
+          REACH_S.set(half.x * 2, half.y * 2, half.z * 2));
+      }
+      this.seatDeathOnGround();
+      this.interactionAt.copy(this.pos);
+      this.measuredInteractionVersion = this.interactionVersion;
+      if (this.grounded && !this.deathRagdoll && this.deathElapsed >= 1.35)
+        this.deathPoseFrozen = true;
+    } else this.refreshCharacterBounds();
     this.meshyBoolieRooHead?.blink?.update(dt,
       this.characterHeadStyleValue === 'alternate' && this.group.visible);
   }
@@ -15106,14 +15203,13 @@ export class Player {
     const support = this.deathSupport, n = support.normal;
     if (n.y < .3 || !this.riderG) return;
     const settle = this.grounded ? THREE.MathUtils.smoothstep(this.deathElapsed, .3, .85) : 0;
-    // A large cartoon head must not prop the entire straight body in the air.
-    // Seat head and heels together with a small support tilt, then solve exact
-    // vertex clearance. The source fall remains the joint-motion authority.
+    // Sparse cached surface probes keep the canned pose near its support.
+    // These are kinematic pose offsets, not a full-mesh collision solver.
     const foot = this.ankleR ?? this.kneeR;
-    if (settle > 0 && this.headM && foot) {
+    if (settle > 0 && !this.deathRagdoll && this.headM && foot) {
       const planePoint = REACH_C.set(this.pos.x, support.y, this.pos.z);
-      const headY = this.interactionMeasure.minimumPlaneDistance(this.headM, n, planePoint, this.deathHeadContact);
-      const footY = this.interactionMeasure.minimumPlaneDistance(foot, n, planePoint, this.deathFootContact);
+      const headY = this.interactionMeasure.sampledPlaneDistance(this.headM, n, planePoint, this.deathHeadContact);
+      const footY = this.interactionMeasure.sampledPlaneDistance(foot, n, planePoint, this.deathFootContact);
       if (Number.isFinite(headY) && Number.isFinite(footY)) {
         this.bodyGroup.worldToLocal(this.deathHeadContact);
         this.bodyGroup.worldToLocal(this.deathFootContact);
@@ -15121,14 +15217,13 @@ export class Player {
         if (Math.abs(this.deathFootContact.z) > .2)
           this.bodyGroup.rotation.x = THREE.MathUtils.clamp(
             Math.atan(this.deathFootContact.y / this.deathFootContact.z), -.45, .45) * settle;
-        this.interactionVersion++;
-        this.refreshCharacterBounds();
+        this.group.updateMatrixWorld(true);
       }
     }
-    const distance = this.interactionMeasure.minimumPlaneDistance(this.riderG, n,
-      REACH_C.set(this.pos.x, support.y, this.pos.z));
+    const distance = this.interactionMeasure.sampledPlaneDistance(this.riderG, n,
+      REACH_C.set(this.pos.x, support.y, this.pos.z), undefined, this.characterBounds);
     if (!Number.isFinite(distance)) return;
-    const offset = (.02 - distance) / n.y;
+    const offset = (.035 - distance) / n.y;
     // During the actual collapse, correct penetration only. Once the source
     // reaches its resting portion, also close any target-rig floor gap.
     const lift = offset >= 0 ? offset : offset * settle;

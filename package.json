@@ -55,7 +55,7 @@
     "check:milk": "node tools/test-milk.mjs && node tools/test-milk-depth-isolation.mjs",
     "check:bare-spins": "node tools/test-bare-spins.mjs",
     "check:all": "npm run check:level-select && npm run check:swimming && npm run check:milk-bottle && npm run check:bare-spins && npm run check:milk && npm run check:levels && npm run check:nightworks && npm run check:local-data-reset && npm run check:audio && npm run check:chimeworks && npm run check:campaign && npm run check:competition && npm run check:unity-ports && npm run check:ground && npm run check:crouch-jump && npm run check:pipe && npm run check:ledge && npm run check:rope && npm run check:rail-air && npm run check:landing-x && npm run check:run-facing && npm run check:carve-grip && npm run check:surface-friction && npm run check:camera-speed && npm run check:bail-recovery && npm run check:air-rescue && npm run check:crate-types && npm run check:crate-jump && npm run check:nst-port && npm run check:editor-roundtrip && npm run check:editor-security && npm run check:interpolation && npm run check:animation && npm run check:character-lab && npm run check:ocean && npm run check:crt && npm run check:render-quality && npm run check:look && npm run check:skateboard && npm run check:special && npm run check:combo-hud && npm run check:spin-effects",
-    "check:swimming": "node tools/test-swimming.mjs && node tools/test-swim-death-polish.mjs",
+    "check:swimming": "node tools/test-swimming.mjs && node tools/test-swim-death-polish.mjs && node tools/test-death-performance.mjs",
     "check:milk-bottle": "node tools/test-milk-bottle-hud.mjs"
   },
   "dependencies": {
