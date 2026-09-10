@@ -39,7 +39,8 @@ class FakeClassList {
 class FakeElement {
   constructor(tag = "div") {
     this.tagName = String(tag).toUpperCase();
-    this.style = {};
+    this.style = {setProperty: noop};
+    this.dataset = {};
     this.children = [];
     this.parentElement = null;
     this.attributes = new Map();
@@ -159,14 +160,18 @@ function installHeadlessDom() {
   globalThis.HTMLElement = FakeElement;
   globalThis.HTMLButtonElement = FakeElement;
   globalThis.HTMLCanvasElement = FakeElement;
+  globalThis.Image = class extends FakeElement { constructor(){super("img");this.complete=false;this.naturalWidth=0;} };
   const body = new FakeElement("body");
   const head = new FakeElement("head");
   globalThis.document = {
     body,
     head,
+    documentElement: new FakeElement("html"),
     activeElement: null,
+    querySelectorAll: selector => body.querySelectorAll(selector),
     fonts: null,
     createElement: (tag) => new FakeElement(tag),
+    createElementNS: (_namespace, tag) => new FakeElement(tag),
   };
   const storage = new Map();
   globalThis.localStorage = {

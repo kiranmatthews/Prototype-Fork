@@ -16,7 +16,7 @@ import { puffs } from "./puffs";
 const UP = new THREE.Vector3(0, 1, 0);
 const MAP_PLAYER_SCALE = 3;
 
-export type WorldMapSection = "progress" | "options" | "save-load" | "quit";
+export type WorldMapSection = "level-select" | "progress" | "options" | "save-load" | "quit";
 
 export interface WorldMapDirections {
   up: boolean;
@@ -244,6 +244,7 @@ export class WorldMapController {
   step(dt: number, input: Input): void {
     const level = this.level;
     if (!level) return;
+    if (input.mapLevelSelectPressed) { this.openSection("level-select"); return; }
     if (this.travel) {
       this.travel.elapsed += dt;
       const raw = THREE.MathUtils.clamp(

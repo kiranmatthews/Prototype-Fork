@@ -69,7 +69,7 @@ were removed; history retains them. Stale editor overrides remain exportable
 but cannot restore its menu entry.
 
 Quick keyboard down/up pairs are latched even between render frames. Cross/Enter
-enters a hub; the map exposes Progress, Options, Save/Load, and Quit directly.
+enters a hub; the map exposes Level Select, Progress, Options, Save/Load, and Quit directly. Touchpad (PS4/PS5), View/Share or keyboard Tab opens Level Select, with up/down level selection and left/right paging between unlocked islands. See [LEVEL_SELECT.md](LEVEL_SELECT.md).
 
 Keyboard R and controller Share reset are debug-only: they require the debug
 menus to be visible (M). K/L checkpoint skipping has the same visibility gate,
@@ -147,15 +147,12 @@ Modal and loading screens suppress the presentation; map return snaps to the
 correct hub before the reveal. Portrait places the trial card below the deck,
 on the right, without changing map navigation or utility controls.
 
-All four map utilities (Progress, Options, Save/Load and Quit) have a fixed,
-safe-area 48px close X. It uses the existing Back/cancel route: closing Quit
-never quits the game, and closing a save/load confirmation does not perform
-the operation. Touch map panels are native vertical scroll surfaces, including
-their blank gutters, with no vertically centred overflowing content. Opening
-another panel resets scroll to the top. Scroll events invalidate the cached
-pre-CRT menu, and the X has its own matching Canvas rendering so it stays
-visible and usable while the filtered content scrolls underneath it. Desktop
-menu layout and gameplay touch controls are unchanged.
+Map utilities use the shared TV-safe menu composition. Level Select and Progress
+page between islands, with fixed headings and prompt-kit/comic controls. Long
+content is confined to a bounded middle segment; the whole menu never scrolls.
+Back/cancel stays available without performing a pending save/load/quit action.
+Earned collectibles use the actual rotating game models; empty recessed sockets
+show unearned rewards. See `docs/MENU_DESIGN.md` and `docs/LEVEL_SELECT.md`.
 
 Map utilities keep the ocean, plants, shoreline wetness, waterfalls and hub
 effects animating behind the panel. This advances only the map's scenic runtime

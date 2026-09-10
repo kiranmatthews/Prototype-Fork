@@ -9,7 +9,7 @@ try {
  const {INPUT_BINDINGS,actionButtonDown}=await server.ssrLoadModule('/src/inputBindings.ts');
  const cases=[['Xbox Wireless Controller','xbox'],['Wireless Controller (STANDARD GAMEPAD Vendor: 054c Product: 05c4)','ps4'],['DualSense Wireless Controller','ps5'],['054c-0ce6-Wireless Controller','ps5'],['DualSense Edge','ps5'],['Nintendo Switch Pro Controller','switch'],['Joy-Con (L+R)','switch'],['Steam Deck Controller','steamdeck'],['Valve Neptune','steamdeck'],['Generic standard gamepad','xbox']];
  for(const [id,family] of cases)assert.equal(detectControllerFamily(id),family);
- const pad=(id,mapping='standard')=>({id,mapping,connected:true,index:0,axes:[0,0,0,0],buttons:Array.from({length:17},()=>({pressed:false,value:0}))});
+ const pad=(id,mapping='standard')=>({id,mapping,connected:true,index:0,axes:[0,0,0,0],buttons:Array.from({length:18},()=>({pressed:false,value:0}))});
  const model=new InputPromptSystem();
  assert.equal(model.family,'keyboard');assert.match(model.resolve('mapProgress').url,/T_I_Key_Dark/);
  for(const [id,family] of cases){model.update(pad(id),false);assert.equal(model.family,family);for(const action of Object.keys(INPUT_BINDINGS))assert.equal(model.resolve(action).family,family);}

@@ -8,10 +8,13 @@ export const INPUT_BINDINGS = {
   mapEnter: { key: 'Enter', button: 0 }, mapProgress: { key: 'KeyI', button: 3 },
   mapOptions: { key: 'KeyP', button: 9 }, mapSaveLoad: { key: 'KeyL', button: 2 },
   mapQuit: { key: 'KeyQ', button: 1 },
+  mapLevelSelect: { key: 'Tab', button: 17 },
   up: { key: 'ArrowUp', button: 12 }, down: { key: 'ArrowDown', button: 13 },
   left: { key: 'ArrowLeft', button: 14 }, right: { key: 'ArrowRight', button: 15 },
 } as const;
 export type InputAction = keyof typeof INPUT_BINDINGS;
 export function actionButtonDown(pad: Gamepad | null, action: InputAction): boolean {
+  if (action === 'mapLevelSelect')
+    return pad?.buttons[17]?.pressed === true || pad?.buttons[8]?.pressed === true;
   return pad?.buttons[INPUT_BINDINGS[action].button]?.pressed === true;
 }

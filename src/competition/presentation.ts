@@ -1,3 +1,4 @@
+import { menuHint } from "../menuPresentation";
 import { inputPrompts } from '../inputPrompts';
 import { setPromptText } from '../inputPromptUI';
 import { actionButtonDown } from '../inputBindings';
@@ -35,6 +36,7 @@ export class CompetitionPresentation {
   private surface: CompetitionSurface;
   private phase = '';
   private guideOpen = false;
+  private guidePage = 0;
   private pointer = { x: NaN, y: NaN };
   constructor(private action: (action: CompetitionAction) => void, readonly hooks: JudgePresentationHooks = {}) {
     this.element.className = 'competition-host'; this.element.hidden = true;
@@ -46,6 +48,7 @@ export class CompetitionPresentation {
       if (button && !button.disabled && this.modalActive) {
         this.selected = this.buttons().indexOf(button); this.syncSelection(false);
         if(button.dataset.action==='guide'){this.showGuide(true);return;}
+        if(button.dataset.action==='guide-prev' || button.dataset.action==='guide-next'){this.changeGuidePage(button.dataset.action==='guide-next'?1:-1);return;}
         if(button.dataset.action==='guide-back'){this.showGuide(false);return;}
         this.action(button.dataset.action as CompetitionAction);
       }
@@ -74,6 +77,7 @@ export class CompetitionPresentation {
       if (!this.modalActive || document.body.classList.contains('game-shell-modal') ||
           (e.target instanceof Element && e.target.closest('input,textarea,select,[contenteditable=true],.side-wrap,.secondary-text-tuner,[data-crt-guest-panel-host],[data-render-quality-panel-host],[data-skateboard-panel-host],.ed-panel'))) return;
       const buttons = this.buttons();
+      if(this.guideOpen && ['ArrowLeft','ArrowRight'].includes(e.code)){e.preventDefault();if(!e.repeat)this.changeGuidePage(e.code==='ArrowRight'?1:-1);return;}
       if(e.code==='Escape'&&this.guideOpen){e.preventDefault();e.stopImmediatePropagation();if(!e.repeat)this.showGuide(false);return;}
       if (['ArrowDown','ArrowRight','KeyS','KeyD'].includes(e.code)) {e.preventDefault();if(!e.repeat)this.select(1);}
       else if (['ArrowUp','ArrowLeft','KeyW','KeyA'].includes(e.code)) {e.preventDefault();if(!e.repeat)this.select(-1);}
@@ -86,6 +90,7 @@ export class CompetitionPresentation {
     this.guideOpen=open;this.key='';this.seedInput=true;this.render(this.event);
     if(!open){this.selected=Math.max(0,this.buttons().findIndex(button=>button.dataset.action==='guide'));this.syncSelection();}
   }
+  private changeGuidePage(delta:number):void {this.guidePage=(this.guidePage+delta+4)%4;this.key='';this.render(this.event);}
   get diagnostics() { return { selected: this.buttons()[this.selected]?.dataset.action ?? null, ...this.surface.diagnostics }; }
   paint(ctx: CanvasRenderingContext2D, size: {width:number;height:number}): void { this.surface.paint(ctx,size); }
   setComposited(value: boolean): void { if(!value)this.surface.deactivate(); }
@@ -119,7 +124,8 @@ export class CompetitionPresentation {
       left:(pad?.axes[0]??0)<-.55||pad?.buttons[14]?.pressed===true,
       right:(pad?.axes[0]??0)>.55||pad?.buttons[15]?.pressed===true};
     if(!this.seedInput&&this.modalActive&&!document.body.classList.contains('game-shell-modal')){
-      if((next.up&&!this.previous.up)||(next.left&&!this.previous.left))this.select(-1);
+      if(this.guideOpen && ((next.left&&!this.previous.left)||(next.right&&!this.previous.right)))this.changeGuidePage(next.right?1:-1);
+      else if((next.up&&!this.previous.up)||(next.left&&!this.previous.left))this.select(-1);
       else if((next.down&&!this.previous.down)||(next.right&&!this.previous.right))this.select(1);
       if(next.accept&&!this.previous.accept){this.press(true);this.buttons()[this.selected]?.click();}
       else if(next.back&&!this.previous.back&&this.guideOpen)this.showGuide(false);
@@ -175,6 +181,23 @@ export class CompetitionPresentation {
     }
     const focused=!phaseChanged?this.buttons()[this.selected]?.dataset.action:undefined;
     this.element.innerHTML=html;this.selected=0;
+    const card=this.element.querySelector<HTMLElement>('.comp-card');
+    if(card){
+      const content=document.createElement('div');content.className='comp-content';
+      for(const child of [...card.children])if(!child.matches('.comp-eyebrow,h1,.comp-actions'))content.append(child);
+      const actions=card.querySelector('.comp-actions');card.insertBefore(content,actions);
+      if(this.guideOpen){
+        const articles=[...content.querySelectorAll<HTMLElement>('.comp-guide-grid article')];
+        articles.forEach((article,index)=>article.hidden=index!==this.guidePage);
+        const pager=document.createElement('div');pager.className='comp-guide-pager';
+        pager.innerHTML=`<button data-action="guide-prev" aria-label="Previous trick page">◀</button><span>${this.guidePage+1} / 4</span><button data-action="guide-next" aria-label="Next trick page">▶</button>`;
+        content.prepend(pager);
+      }
+      const hints=document.createElement('footer');hints.className='game-menu-hints comp-hints';
+      hints.append(menuHint('CHOOSE',['up','down']),menuHint('SELECT',['confirm']));
+      if(this.guideOpen)hints.append(menuHint('PAGE',['left','right']),menuHint('BACK',['back']));
+      card.append(hints);
+    }
     if(this.guideOpen)for(const heading of this.element.querySelectorAll<HTMLElement>('[data-guide-prompt]'))setPromptText(heading,heading.dataset.guidePrompt!);
     if(event.phase==='intro') {
       const body=this.element.querySelector('.comp-intro-body>div:last-child');
@@ -210,4 +233,23 @@ body.game-interface-composited .comp-judge.revealed>strong{animation:none}.comp-
 .comp-guide>p,.comp-guide article p{font:14px/1.45 Arial,sans-serif;color:#d9e0ce}.comp-guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.comp-guide article{background:#10251f;padding:12px}.comp-guide h3{font-size:19px;color:#ffd278;margin:5px 0 12px}.comp-guide table{width:100%;border-collapse:collapse;font:12px/1.4 Arial,sans-serif}.comp-guide th,.comp-guide td{padding:6px 4px;border-bottom:1px solid #426155;text-align:left}.comp-guide th{font-size:10px;color:#b6c4aa}.comp-guide td:last-child{text-align:right;white-space:nowrap;color:#ffd278}.comp-guide .comp-actions{position:sticky;bottom:0;background:#19332f;padding:12px 0 6px}@media(max-width:620px){.comp-guide-grid{grid-template-columns:1fr}.comp-guide article{padding:8px}}
 @keyframes comp-pop{from{transform:scale(1.2)}to{transform:scale(1)}}@media(max-width:620px){.competition-host{padding:9px}.comp-card{padding:16px 12px;max-height:96vh}.comp-card h1{font-size:34px}.comp-card h2{font-size:20px}.comp-intro-body{display:block;margin:12px 0}.comp-cup{width:88px;margin:auto}.comp-rules{gap:5px}.comp-rules b{font-size:11px;padding:8px}.comp-intro-body p{font-size:14px}.comp-judges{gap:6px}.comp-judge{padding:10px 4px}.comp-portrait{width:60px;height:60px}.comp-judge h3{font-size:19px}.comp-judge small{font-size:10px}.comp-judge>strong{font-size:37px}.comp-judge p{font-size:11px;min-height:40px}.comp-run-summary{font-size:12px;justify-content:center;gap:8px}.comp-run-summary strong{font-size:23px}.comp-history{gap:5px}.comp-history span{font-size:11px;padding:7px}.comp-history b{margin-left:4px}.comp-actions{gap:8px;margin-top:14px}.comp-actions button{font-size:15px;padding:11px}.comp-table-wrap th,.comp-table-wrap td{padding:8px 3px}.comp-table-wrap thead th{font-size:9px;letter-spacing:0}.comp-table-wrap tbody th{font-size:12px;gap:4px;min-width:82px}.comp-table-wrap td{font-size:15px}.comp-avatar{width:26px;height:26px}.comp-podium{gap:7px}.comp-podium>div{min-width:80px;font-size:12px}.comp-run-hud{gap:14px;padding:7px 12px}.comp-run-hud span{font-size:14px}.comp-run-hud>strong{font-size:29px;min-width:67px}.comp-award p{font-size:12px}.comp-note{font-size:11px}}
 @media(max-width:620px){.competition-host.is-running{justify-content:flex-start;padding:12px 14px 0 28px}.comp-run-hud{display:grid;grid-template-columns:1fr auto;gap:2px 8px;width:min(255px,calc(100vw - 165px));padding:8px 10px}.comp-run-hud>span{font-size:12px;white-space:nowrap}.comp-run-hud small{font-size:9px}.comp-run-hud>strong{grid-column:2;grid-row:1 / span 2;min-width:0;font-size:28px}.comp-run-hud>.comp-bails{grid-column:1;font-size:10px}}
-@media(max-height:650px){.comp-actions{position:sticky;bottom:0;background:#19332f;padding:10px 0 6px}}`;
+@media(max-height:650px){.comp-actions{position:sticky;bottom:0;background:#19332f;padding:10px 0 6px}}
+.competition-host .comp-card{height:90vh;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;padding:2vh 3vw;width:min(1100px,94vw)}
+.comp-card>.comp-eyebrow,.comp-card>h1,.comp-card>.comp-actions,.comp-card>.comp-hints{flex-shrink:0}
+.comp-card>h1{font-size:clamp(25px,5.3vh,54px);margin:0 0 1vh}
+.comp-content{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}
+.comp-card .comp-actions{position:static;flex-wrap:nowrap;margin:1.5vh 0 0;padding:1vh 0;gap:1.2vw}
+.comp-card .comp-actions button{padding:1.3vh 1.7vw;font-size:clamp(12px,2.4vh,23px)}
+.comp-guide-grid{grid-template-columns:minmax(0,1fr)}
+.comp-guide article[hidden]{display:none}
+.comp-guide-grid article{padding:1vh 2vw}.comp-guide table{font-size:clamp(11px,1.8vh,16px)}
+.comp-guide-pager{display:flex;align-items:center;justify-content:center;gap:4vw;margin:0 0 1vh;font:24px Roo,Impact,sans-serif}
+.comp-guide-pager button{background:transparent;border:0;color:#ffce66;font-size:24px}.comp-guide-pager button.selected{outline:2px solid #ffd278}
+.comp-content h2{font-size:clamp(17px,3vh,30px);margin:1vh 0 2vh}
+.comp-content .comp-intro-body{margin:1vh 0;gap:3vw}
+.comp-content .comp-intro-body p{font-size:clamp(12px,2vh,18px);line-height:1.4}
+.comp-content .comp-cup{width:min(170px,18vh)}
+.comp-hints.game-menu-hints{position:static;height:5vh;margin-top:1vh;gap:2vw}
+.comp-card .comp-podium{margin:1vh 0}.comp-card .comp-table-wrap th,.comp-card .comp-table-wrap td{padding:.75vh .8vw}
+.comp-card .comp-table-wrap td{font-size:clamp(12px,2.3vh,22px)}
+`;

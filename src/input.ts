@@ -43,6 +43,7 @@ export class Input {
   // World-map-only semantic edges. Gameplay ignores them; keeping them here
   // lets keyboard taps survive a render frame exactly like jump/pause edges.
   confirmPressed = false;
+  mapLevelSelectPressed = false;
   mapProgressPressed = false;
   mapSaveLoadPressed = false;
   mapQuitPressed = false;
@@ -75,6 +76,7 @@ export class Input {
   private prevTransfer = false;
   private prevRestart = false;
   private prevPause = false;
+  private prevLevelSelect = false;
   private menuReleaseGuard = false;
 
   // padOnly: the split-screen P2 input — one claimed gamepad only, no
@@ -112,6 +114,9 @@ export class Input {
         }
         if (e.code === INPUT_BINDINGS.pause.key || e.code === 'Escape') this.pausePressed = true;
         if (e.code === INPUT_BINDINGS.confirm.key) this.confirmPressed = true;
+        if (e.code === INPUT_BINDINGS.mapLevelSelect.key && document.body.classList.contains('world-map-active')) {
+          e.preventDefault(); this.mapLevelSelectPressed = true;
+        }
         if (e.code === INPUT_BINDINGS.mapProgress.key) this.mapProgressPressed = true;
         if (e.code === INPUT_BINDINGS.mapSaveLoad.key) this.mapSaveLoadPressed = true;
         if (e.code === INPUT_BINDINGS.mapQuit.key) this.mapQuitPressed = true;
@@ -139,6 +144,7 @@ export class Input {
     const solo = this.padOnly;
     const k = this.keys;
     const allowRestart = this.debugShortcutsEnabled();
+    const mapMode = typeof document !== 'undefined' && document.body.classList.contains('world-map-active');
     let moveX = solo ? 0 : (k.has('ArrowRight') || k.has('KeyD') ? 1 : 0) - (k.has('ArrowLeft') || k.has('KeyA') ? 1 : 0);
     let moveY = solo ? 0 : (k.has('ArrowUp') || k.has('KeyW') ? 1 : 0) - (k.has('ArrowDown') || k.has('KeyS') ? 1 : 0);
     let lookX = 0;
@@ -152,6 +158,7 @@ export class Input {
     let inventory = !solo && k.has(INPUT_BINDINGS.inventory.key);
     let restart = !solo && k.has(INPUT_BINDINGS.restart.key);
     let pause = !solo && (k.has(INPUT_BINDINGS.pause.key) || k.has('Escape'));
+    let levelSelect = !solo && k.has(INPUT_BINDINGS.mapLevelSelect.key);
     let touchJumpPressed = false;
     let touchGrindPressed = false;
     let touchSpinPressed = false;
@@ -189,6 +196,7 @@ export class Input {
       transfer = transfer || actionButtonDown(pad, 'transfer');
       restart = restart || actionButtonDown(pad, 'restart');
       pause = pause || actionButtonDown(pad, 'pause');
+      levelSelect = levelSelect || actionButtonDown(pad, 'mapLevelSelect');
     }
 
     // Touch overlay merges like a second gamepad: the D-pad only speaks when
@@ -235,7 +243,7 @@ export class Input {
         transfer ||
         inventory ||
         (restart && allowRestart) ||
-        pause;
+        pause || (mapMode && levelSelect);
       this.moveX = 0;
       this.moveY = 0;
       this.lookX = 0;
@@ -253,6 +261,7 @@ export class Input {
       this.prevTransfer = false;
       this.prevRestart = restart;
       this.prevPause = false;
+      this.prevLevelSelect = levelSelect;
       this.consumeEdges();
       if (!stillHeld) this.menuReleaseGuard = false;
       return;
@@ -296,6 +305,7 @@ export class Input {
     this.restartPressed = allowRestart &&
       (this.restartPressed || (restart && !this.prevRestart));
     this.pausePressed = this.pausePressed || (pause && !this.prevPause);
+    this.mapLevelSelectPressed = this.mapLevelSelectPressed || (mapMode && levelSelect && !this.prevLevelSelect);
 
     this.prevJump = jump;
     this.prevGrind = grind;
@@ -304,6 +314,7 @@ export class Input {
     this.prevTransfer = transfer;
     this.prevRestart = restart;
     this.prevPause = pause;
+    this.prevLevelSelect = levelSelect;
   }
 
   // Drop the claimed pad and restart the audition from scratch (2P toggles).
@@ -340,6 +351,7 @@ export class Input {
     this.restartPressed = false;
     this.pausePressed = false;
     this.confirmPressed = false;
+    this.mapLevelSelectPressed = false;
     this.mapProgressPressed = false;
     this.mapSaveLoadPressed = false;
     this.mapQuitPressed = false;

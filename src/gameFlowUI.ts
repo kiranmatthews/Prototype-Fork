@@ -2,6 +2,8 @@
 // input/accessibility owner; GameFlowSurface can mirror its known geometry into
 // the pre-CRT render path without turning the menu into canvas hit regions.
 
+import { menuHint, rewardSlot } from "./menuPresentation";
+import menuLayoutStyle from "./game-menu-layout.css?inline";
 import type * as THREE from "three";
 import type { ResultsViewport } from "./resultsPresentation";
 import { runLoadingTransition, type LoadingTransitionPhase } from "./presentationLoading";
@@ -39,6 +41,7 @@ type GameScreen =
   | "confirm-load"
   | "confirm-quit-main"
   | "pause"
+  | "level-select"
   | "progress"
   | "options"
   | "gameover"
@@ -87,6 +90,8 @@ export interface GameFlowUICallbacks {
   onResume: () => void;
   onRestart: () => void;
   onQuitLevel: () => void;
+  onLevelSelect?: (levelId: string) => void;
+  getLevelSelectFocus?: () => string;
   onGameOverRetry: () => void;
   onGameOverQuit: () => void;
   onResultsRetry: () => void;
@@ -154,6 +159,15 @@ export class GameFlowUI {
   private previousScreen: GameScreen | null = null;
   private navButtons: HTMLButtonElement[] = [];
   private selected = 0;
+  private levelSelectKey = 'jungle';
+  private levelSelectIsland = 'island-1';
+  private readonly levelSelectMemories = new Map<string, string>();
+  private levelSelectDetail: HTMLElement | null = null;
+  private levelSelectPreview: HTMLImageElement | null = null;
+  private progressIsland = 0;
+  private levelSelectPlay: HTMLButtonElement | null = null;
+  private levelSelectSlide = 0;
+  private levelSelectSlideUntil = 0;
   private transitionActive = false;
   private loadingVortexActive = false;
   private destinationRevealing = false;
@@ -261,12 +275,12 @@ export class GameFlowUI {
       }
     });
     window.addEventListener("keydown", (event) => this.onKey(event));
-    window.addEventListener("input-prompts-changed", () => this.requestGameplayFrame());
+    window.addEventListener("input-prompts-changed", () => this.invalidatePreCrt());
     window.addEventListener("resize", () => this.invalidatePreCrt());
     window.visualViewport?.addEventListener("resize", () => this.invalidatePreCrt());
     window.visualViewport?.addEventListener("scroll", () => this.invalidatePreCrt());
     this.panel.addEventListener("scroll", () => this.invalidatePreCrt(), {
-      passive: true,
+      passive: true, capture: true,
     });
     if (typeof ResizeObserver === "function") {
       this.layoutObserver = new ResizeObserver(() => this.invalidatePreCrt());
@@ -436,12 +450,13 @@ export class GameFlowUI {
   }
 
   /** Open one map-owned utility directly, without a redundant pause submenu. */
-  showMapSection(section: "progress" | "options" | "save-load" | "quit"): void {
+  showMapSection(section: "level-select" | "progress" | "options" | "save-load" | "quit"): void {
     this.pauseState = { levelName: "THE ISLAND MAP", inWarpRoom: true };
     this.mapDirect = true;
     this.slotOrigin = "warp";
     this.operationStatus = "";
     this.operationStatusError = false;
+    if (section === "level-select") { this.openLevelSelect(); return; }
     this.screen = section === "quit" ? "confirm-quit-main" : section;
     this.render();
   }
@@ -487,7 +502,7 @@ export class GameFlowUI {
       this.backToMapOrPause();
       return true;
     }
-    if (this.screen === "progress") {
+    if (this.screen === "progress" || this.screen === "level-select") {
       this.backToMapOrPause();
       return true;
     }
@@ -573,6 +588,8 @@ export class GameFlowUI {
   }
 
   update(now = performance.now()): void {
+    if (this.screen && !this.reducedMotion && this.panel.querySelector('.game-reward-slot[data-earned="true"]')) this.requestGameplayFrame();
+    if (this.screen === 'level-select' && now < this.levelSelectSlideUntil) this.invalidatePreCrt();
     if (this.preCrtComposited && now < this.cursorFadeUntil) this.requestGameplayFrame();
     void now;
     // Input already polls gamepads for gameplay. Do not repeat that scan and
@@ -590,8 +607,17 @@ export class GameFlowUI {
       Object.assign(this.previousPad, { up, down, left, right, accept, back });
       return;
     }
-    if ((up && !this.previousPad.up) || (left && !this.previousPad.left)) this.moveSelection(-1);
-    if ((down && !this.previousPad.down) || (right && !this.previousPad.right)) this.moveSelection(1);
+    if (this.screen === 'level-select') {
+      if (left && !this.previousPad.left) this.changeLevelSelectIsland(-1);
+      else if (right && !this.previousPad.right) this.changeLevelSelectIsland(1);
+      else if (up && !this.previousPad.up) this.moveLevelSelectRow(-1);
+      else if (down && !this.previousPad.down) this.moveLevelSelectRow(1);
+    } else if (this.screen === 'progress' && ((left && !this.previousPad.left) || (right && !this.previousPad.right))) {
+      this.progressIsland = (this.progressIsland + (right ? 1 : -1) + CAMPAIGN_ISLANDS.length) % CAMPAIGN_ISLANDS.length; this.render();
+    } else {
+      if ((up && !this.previousPad.up) || (left && !this.previousPad.left)) this.moveSelection(-1);
+      if ((down && !this.previousPad.down) || (right && !this.previousPad.right)) this.moveSelection(1);
+    }
     if (accept && !this.previousPad.accept) this.activateSelection();
     if (back && !this.previousPad.back) this.goBack();
     Object.assign(this.previousPad, { up, down, left, right, accept, back });
@@ -661,6 +687,7 @@ export class GameFlowUI {
       "game-shell-paused",
         this.screen === "pause" ||
         this.screen === "progress" ||
+        this.screen === "level-select" ||
         this.screen === "options" ||
         this.screen === "save-load" ||
         this.screen === "confirm-save" ||
@@ -693,15 +720,16 @@ export class GameFlowUI {
     else if (this.screen === "confirm-quit-main") this.renderConfirmQuitMain();
     else if (this.screen === "pause") this.renderPause();
     else if (this.screen === "progress") this.renderProgress();
+    else if (this.screen === "level-select") this.renderLevelSelect();
     else if (this.screen === "options") this.renderOptions();
     else if (this.screen === "gameover") this.renderGameOver();
-    if (this.mapDirect) {
-      const close = this.button("X", () => this.goBack());
-      close.classList.add("game-map-close");
-      close.setAttribute("aria-label", "Close menu");
-      this.panel.appendChild(close);
-      this.panel.scrollTop = 0;
+    if (this.screen !== 'level-select') {
+      const hints = element('footer', 'game-menu-hints');
+      hints.append(menuHint('CHOOSE', ['up', 'down']), menuHint('SELECT', ['confirm']));
+      if (!['launch', 'gameover', 'results'].includes(this.screen ?? '')) hints.append(menuHint('BACK', ['back']));
+      this.panel.append(hints);
     }
+    this.boundMenuSegments();
     this.observePreCrtLayout();
     this.syncVortexBodyClass();
     this.syncSelection();
@@ -1009,7 +1037,7 @@ export class GameFlowUI {
     if (!save) detail.textContent = "EMPTY";
     else {
       const totals = this.campaign.totals(save);
-      detail.textContent = `${totals.percent}%  ·  ${save.lives} LIVES  ·  ${save.fruit} FRUIT`;
+      detail.textContent = `${totals.percent}%  ·  ${save.lives} LIVES  ·  ${save.fruit} MILK`;
     }
     const date = element("small", "game-slot-date");
     date.textContent = save ? formatDate(save.updatedAt).toUpperCase() : "START FRESH";
@@ -1030,7 +1058,7 @@ export class GameFlowUI {
     const paused = element("div", "game-eyebrow");
     paused.textContent = state.inWarpRoom ? "ISLAND MAP" : "PAUSED";
     const list = element("div", "game-menu-list");
-    list.append(this.button("RESUME", this.callbacks.onResume));
+    list.append(this.button("RESUME", this.callbacks.onResume), this.button("LEVEL SELECT", () => this.openLevelSelect()));
     const openOptions = (): void => {
       this.previousScreen = "pause";
       this.screen = "options";
@@ -1067,54 +1095,187 @@ export class GameFlowUI {
     this.panel.appendChild(layout);
   }
 
-  private renderProgress(): void {
-    const layout = element("div", "game-progress-layout");
-    const summary = this.progressCard();
-    const ledger = element("div", "game-progress-ledger timber-card");
-    const title = element("h2", "game-panel-title");
-    title.textContent = "ISLAND PROGRESS";
-    ledger.appendChild(title);
-    for (const island of CAMPAIGN_ISLANDS) {
-      const section = element("section", "game-progress-island");
-      const heading = element("h3", "game-progress-island-name");
-      heading.textContent = island.name.toUpperCase();
-      section.appendChild(heading);
-      for (const key of island.levelKeys) {
-        const definition = campaignLevelByKey(key);
-        if (!definition) continue;
-        const progress = this.campaign.levelProgress(definition.levelId);
-        const unlocked = this.campaign.levelUnlocked(key);
-        const row = element(
-          "div",
-          `game-progress-level${unlocked ? "" : " locked"}${definition.boss ? " boss" : ""}`,
-        );
-        const name = element("strong", "game-progress-level-name");
-        name.textContent = `${definition.boss ? "★ " : ""}${definition.name.toUpperCase()}`;
-        const rewards = element("span", "game-progress-level-rewards");
-        rewards.textContent = definition.competition
-          ? progress?.cup ? "🏆 JUNGLE CUP" : "CUP NOT YET WON"
-          : unlocked
-          ? `${progress?.crystal ? "◆" : "·"} ${progress?.boxGem ? "◇" : "·"} ${progress?.comboGem ? "⬙" : "·"} · ${earnedTimeMedal(progress)?.toUpperCase() ?? "NO"} MEDAL`
-          : "LOCKED";
-        const timing = element("small", "game-progress-level-time");
-        const targets = this.callbacks.getMedalTargets?.(definition.levelId) ?? defaultMedalTimes(this.callbacks.getRelicTarget?.(definition.levelId) ?? definition.relicTime);
-        timing.textContent = definition.competition
-          ? progress?.cup ? "1ST OVERALL · UNIQUE CUP EARNED" : "3 × 60 SECOND RUNS · FINISH 1ST"
-          : progress?.cleared
-          ? `BEST ${progress.bestTime === undefined ? "—" : this.formatTime(progress.bestTime)} · ${TIME_MEDALS.map(tier => `${tier.toUpperCase()} ${this.formatTime(targets[tier])}`).join(" · ")}`
-          : unlocked
-            ? "NOT YET CLEARED"
-            : "CLEAR THE CONNECTED PATH";
-        row.append(name, rewards, timing);
-        section.appendChild(row);
-      }
-      ledger.appendChild(section);
+  private levelSelectIslands() {
+    return CAMPAIGN_ISLANDS.filter(island => island.levelKeys.some(key => this.campaign.levelUnlocked(key)));
+  }
+
+  private openLevelSelect(): void {
+    const focus = this.callbacks.getLevelSelectFocus?.() ?? this.campaign.recommendedMapLevelKey();
+    const definition = campaignLevelByKey(focus);
+    this.levelSelectKey = focus;
+    this.levelSelectIsland = definition?.islandId ?? 'island-1';
+    this.levelSelectSlide = 0;
+    this.screen = 'level-select';
+    this.render();
+  }
+
+  private changeLevelSelectIsland(direction: number): void {
+    const islands = this.levelSelectIslands();
+    if (islands.length < 2) return;
+    const current = Math.max(0, islands.findIndex(island => island.id === this.levelSelectIsland));
+    const next = islands[(current + direction + islands.length) % islands.length];
+    this.levelSelectIsland = next.id;
+    this.levelSelectKey = this.levelSelectMemories.get(next.id) ?? next.levelKeys[0];
+    this.levelSelectSlide = this.reducedMotion ? 0 : direction;
+    this.levelSelectSlideUntil = performance.now() + 220;
+    this.render();
+  }
+
+  private renderLevelSelect(): void {
+    const islands = this.levelSelectIslands();
+    const island = islands.find(item => item.id === this.levelSelectIsland) ?? islands[0];
+    const layout = element('div', 'game-level-select-layout');
+    const header = element('header', 'game-level-header');
+    const previous = this.button('◀', () => this.changeLevelSelectIsland(-1));
+    const next = this.button('▶', () => this.changeLevelSelectIsland(1));
+    previous.classList.add('game-island-arrow'); next.classList.add('game-island-arrow');
+    previous.setAttribute('aria-label', 'Previous island'); next.setAttribute('aria-label', 'Next island');
+    previous.disabled = next.disabled = islands.length < 2;
+    const heading = element('div');
+    const title = element('h1', 'game-panel-title'); title.textContent = island?.name.toUpperCase() ?? 'NO UNLOCKED ISLANDS';
+    const pages = element('div', 'game-level-text game-island-pages');
+    pages.textContent = islands.map(item => item === island ? '●' : '○').join('  ');
+    heading.append(title, pages); header.append(previous, heading, next);
+    layout.append(header);
+    if (!island) {
+      layout.append(this.button('BACK', () => this.backToMapOrPause()));
+      this.panel.append(layout); return;
     }
-    const back = this.button("BACK TO MAP", () => this.backToMapOrPause());
-    back.classList.add("game-secondary-action", "game-progress-back");
-    ledger.appendChild(back);
-    layout.append(summary, ledger);
-    this.panel.appendChild(layout);
+    this.levelSelectIsland = island.id;
+    const definitions = island.levelKeys.map(key => campaignLevelByKey(key)!).filter(Boolean);
+    if (!definitions.some(def => def.progressKey === this.levelSelectKey && this.campaign.levelUnlocked(def.progressKey)))
+      this.levelSelectKey = definitions.find(def => this.campaign.levelUnlocked(def.progressKey))!.progressKey;
+    layout.dataset.island = island.id;
+    const columns = element('div', 'game-level-columns');
+    if (this.levelSelectSlide) columns.classList.add(this.levelSelectSlide > 0 ? 'island-from-right' : 'island-from-left');
+    const left = element('section', 'game-level-browser');
+    this.levelSelectPreview = element('img', 'game-level-preview');
+    this.levelSelectPreview.addEventListener('load', () => this.invalidatePreCrt());
+    const list = element('div', 'game-level-list game-scroll-segment');
+    list.setAttribute('role', 'listbox'); list.setAttribute('aria-label', `${island.name} levels`);
+    for (const [index, definition] of definitions.entries()) {
+      const unlocked = this.campaign.levelUnlocked(definition.progressKey);
+      const progress = this.campaign.levelProgress(definition.levelId);
+      const row = this.button('', () => {
+        this.selected = this.navButtons.indexOf(row); this.syncSelection(false);
+      });
+      row.classList.add('game-level-row'); row.dataset.levelKey = definition.progressKey;
+      row.disabled = !unlocked; row.setAttribute('role', 'option');
+      row.setAttribute('aria-label', `${definition.name}${unlocked ? progress?.cleared ? ', cleared' : ', available' : ', locked'}`);
+      const label = element('span', 'game-level-label'); label.textContent = `${String(index + 1).padStart(2, '0')}  ${definition.name.toUpperCase()}`;
+      const marker = element('span', 'game-level-mark'); marker.textContent = !unlocked ? '●' : progress?.cleared ? '✓' : '';
+      row.append(label, marker);
+      row.addEventListener('dblclick', () => this.playSelectedLevel());
+      list.append(row);
+      if (definition.progressKey === this.levelSelectKey) this.selected = this.navButtons.indexOf(row);
+    }
+    this.levelSelectDetail = element('section', 'game-level-detail');
+    this.levelSelectDetail.setAttribute('aria-label', 'Selected level progress');
+    this.levelSelectDetail.setAttribute('aria-live', 'polite');
+    left.append(this.levelSelectPreview, list); columns.append(left, this.levelSelectDetail); layout.append(columns);
+    const footer = element('footer', 'game-level-footer');
+    this.levelSelectPlay = this.button('PLAY LEVEL', () => this.playSelectedLevel());
+    const back = this.button('BACK', () => this.backToMapOrPause());
+    menuHint('PLAY LEVEL', ['confirm'], this.levelSelectPlay); menuHint('BACK', ['back'], back);
+    footer.append(menuHint('LEVEL', ['up', 'down']), menuHint('ISLAND', ['left', 'right']), this.levelSelectPlay, back); layout.append(footer);
+    this.panel.append(layout);
+    this.updateLevelSelectChoice(this.levelSelectKey, true);
+  }
+
+  private updateLevelSelectChoice(key: string, force = false): void {
+    if (!force && key === this.levelSelectKey) return;
+    const definition = campaignLevelByKey(key);
+    const detail = this.levelSelectDetail;
+    if (!definition || !detail || !this.campaign.levelUnlocked(key)) return;
+    this.levelSelectKey = key; this.levelSelectMemories.set(definition.islandId, key);
+    for (const row of this.panel.querySelectorAll<HTMLButtonElement>('.game-level-row')) {
+      const chosen = row.dataset.levelKey === key;
+      row.classList.toggle('chosen', chosen); row.setAttribute('aria-selected', String(chosen));
+    }
+    const progress = this.campaign.levelProgress(definition.levelId);
+    detail.replaceChildren();
+    const text = (tag: 'h2'|'h3'|'p'|'span'|'strong', value: string, extra = '') => {
+      const node = element(tag, `game-level-text ${extra}`); node.textContent = value; return node;
+    };
+    if (this.levelSelectPreview) {
+      this.levelSelectPreview.src = `${import.meta.env.BASE_URL}level-previews/${definition.progressKey}.jpg`;
+      this.levelSelectPreview.alt = definition.name;
+    }
+    detail.append(text('h2', definition.name.toUpperCase(), 'game-level-name'));
+    const rewards = element('div', 'game-level-rewards');
+    const medal = earnedTimeMedal(progress);
+    if (definition.competition) rewards.append(rewardSlot('cup', !!progress?.cup));
+    else {
+      const entries = [['crystal', !!progress?.crystal, 'CRYSTAL'], ['gem', !!progress?.boxGem, 'ALL BOXES'], ['combo', !!progress?.comboGem, 'COMBO'], ['medal', !!medal, 'TIME TRIAL']] as const;
+      for (const [kind, earned, label] of entries) {
+        const item = element('div', 'game-level-prize');
+        item.append(rewardSlot(kind, earned, medal), text('span', label, 'game-reward-caption')); rewards.append(item);
+      }
+    }
+    detail.append(rewards);
+    if (definition.competition) detail.append(text('p', '3 RUNS · 60 SECONDS', 'game-level-record-title'));
+    else {
+      const times = progress?.trialTimes ?? (progress?.bestTime !== undefined ? [progress.bestTime] : []);
+      const records = element('div', 'game-level-records');
+      records.append(text('h3', 'BEST TIMES', 'game-level-record-title'));
+      for (let i = 0; i < 3; i++) {
+        const row = element('div', 'game-level-record');
+        row.append(text('span', `${i + 1}.`), text('strong', times[i] === undefined ? '—:—.—' : this.formatTime(times[i]))); records.append(row);
+      }
+      detail.append(records);
+    }
+    if (this.levelSelectPlay) this.levelSelectPlay.disabled = !this.campaign.levelUnlocked(key);
+    this.invalidatePreCrt();
+  }
+
+  private moveLevelSelectRow(direction: number): void {
+    const rows = this.navButtons.filter(button => button.dataset.levelKey && !button.disabled);
+    if (!rows.length) return;
+    const current = rows.findIndex(button => button.dataset.levelKey === this.levelSelectKey);
+    this.selected = this.navButtons.indexOf(rows[(Math.max(0, current) + direction + rows.length) % rows.length]);
+    this.syncSelection();
+  }
+
+  private playSelectedLevel(): void {
+    if (this.transitionActive) return;
+    const definition = campaignLevelByKey(this.levelSelectKey);
+    if (!definition || !this.campaign.levelUnlocked(definition.progressKey)) return;
+    this.callbacks.onLevelSelect?.(definition.levelId);
+  }
+
+  private renderProgress(): void {
+    const layout = element('div', 'game-progress-layout');
+    const ledger = element('section', 'game-progress-ledger');
+    const header = element('header', 'game-progress-page-heading');
+    const island = CAMPAIGN_ISLANDS[this.progressIsland];
+    const title = element('h2', 'game-panel-title'); title.textContent = island.name.toUpperCase();
+    const turn = (direction: number) => { this.progressIsland = (this.progressIsland + direction + CAMPAIGN_ISLANDS.length) % CAMPAIGN_ISLANDS.length; this.render(); };
+    header.append(this.button('◀', () => turn(-1)), title, this.button('▶', () => turn(1)));
+    const segment = element('div', 'game-progress-island game-scroll-segment');
+    for (const key of island.levelKeys) {
+      const definition = campaignLevelByKey(key)!;
+      const progress = this.campaign.levelProgress(definition.levelId);
+      const row = element('div', `game-progress-level${this.campaign.levelUnlocked(key) ? '' : ' locked'}`);
+      const name = element('strong', 'game-progress-level-name'); name.textContent = definition.name.toUpperCase();
+      const rewards = element('span', 'game-progress-level-rewards');
+      if (definition.competition) rewards.append(rewardSlot('cup', !!progress?.cup));
+      else rewards.append(rewardSlot('crystal', !!progress?.crystal), rewardSlot('gem', !!progress?.boxGem), rewardSlot('combo', !!progress?.comboGem), rewardSlot('medal', !!earnedTimeMedal(progress), earnedTimeMedal(progress)));
+      row.append(name, rewards); segment.append(row);
+    }
+    const back = this.button('BACK', () => this.backToMapOrPause());
+    ledger.append(header, segment, back); layout.append(this.progressCard(), ledger); this.panel.append(layout);
+  }
+
+  /** Headers and actions are fixed; only explicitly bounded content can scroll. */
+  private boundMenuSegments(): void {
+    for (const card of this.panel.querySelectorAll<HTMLElement>('.game-slot-card, .game-options-card, .game-results-card')) {
+      const content = card.querySelector<HTMLElement>('.game-save-slots, .game-toggle-list, .game-results-tally');
+      if (content) content.classList.add('game-scroll-segment');
+      if (content?.classList.contains('game-toggle-list')) {
+        const back = [...content.querySelectorAll<HTMLButtonElement>('.game-menu-button')].find(button => button.textContent === 'BACK');
+        if (back) card.append(back);
+      }
+    }
   }
 
   private renderOptions(): void {
@@ -1242,10 +1403,11 @@ export class GameFlowUI {
       const medal = medalForTime(state.actualTime, targets);
       tally.innerHTML = `
         <div class="game-results-run-time"><span>YOUR TIME</span><strong>${this.formatTime(state.actualTime)}</strong></div>
-        <div class="game-results-medal"><span>MEDAL</span><strong>${medal ? medal.toUpperCase() : "NONE"}</strong></div>
+        <div class="game-results-medal"><span>MEDAL</span></div>
         ${TIME_MEDALS.map(tier => `<div><span>${tier.toUpperCase()} TARGET</span><strong>${this.formatTime(targets[tier])}</strong></div>`).join("")}
         <div><span>BOXES</span><strong>${state.boxes} / ${state.totalBoxes}</strong></div>
         <div class="game-results-bests"><span>YOUR BEST TIMES</span><strong>${bestTimes.map((time) => this.formatTime(time)).join(" · ") || "—"}</strong></div>`;
+      tally.querySelector('.game-results-medal')?.append(rewardSlot('medal', !!medal, medal));
     } else {
       tally.innerHTML = `
         <div><span>BOXES</span><strong>${state.boxes} / ${state.totalBoxes}</strong></div>`;
@@ -1267,6 +1429,8 @@ export class GameFlowUI {
     card.append(eyebrow, title, tally);
     card.append(actions);
     this.panel.appendChild(card);
+    const hints = element('footer', 'game-menu-hints');hints.append(menuHint('CHOOSE',['up','down']),menuHint('SELECT',['confirm']));this.panel.append(hints);
+    this.boundMenuSegments();
     this.observePreCrtLayout();
     this.syncVortexBodyClass();
     this.syncSelection();
@@ -1287,12 +1451,10 @@ export class GameFlowUI {
     fill.style.width = `${totals.percent}%`;
     bar.appendChild(fill);
     const grid = element("div", "game-progress-grid");
-    grid.innerHTML = `
-      <div><span>◆</span><strong>${totals.crystals}/${totals.maxCrystals}</strong><small>CRYSTALS</small></div>
-      <div><span>◇</span><strong>${totals.gems}/${totals.maxGems}</strong><small>GEMS</small></div>
-      <div><span>◉</span><strong>${totals.relics}/${totals.maxRelics}</strong><small>MEDALS</small></div>
-      <div><span>✦</span><strong>${totals.cleared}/${totals.maxLevels}</strong><small>LEVELS</small></div>
-      ${totals.cups ? `<div><span>🏆</span><strong>${totals.cups}/${totals.maxCups}</strong><small>JUNGLE CUP</small></div>` : ""}`;
+    for (const [kind, count, max] of [['crystal', totals.crystals, totals.maxCrystals], ['gem', totals.gems, totals.maxGems], ['medal', totals.relics, totals.maxRelics], ['cup', totals.cups, totals.maxCups]] as const) {
+      const cell = element('div'); const countNode = element('strong'); countNode.textContent = `${count}/${max}`;
+      cell.append(rewardSlot(kind, count > 0), countNode); grid.append(cell);
+    }
     const cleared = element("p", "game-progress-cleared");
     cleared.textContent = `${totals.cleared} OF ${CAMPAIGN_LEVELS.length} LEVELS CLEARED`;
     card.append(head, bar, grid, cleared);
@@ -1374,6 +1536,16 @@ export class GameFlowUI {
       this.moveSelection(event.shiftKey ? -1 : 1);
       return;
     }
+    if (this.screen === 'progress' && ['ArrowLeft','ArrowRight'].includes(event.code)) {
+      event.preventDefault();if (!event.repeat) {this.progressIsland=(this.progressIsland+(event.code==='ArrowRight'?1:-1)+CAMPAIGN_ISLANDS.length)%CAMPAIGN_ISLANDS.length;this.render();}return;
+    }
+    if (this.screen === 'level-select' && ['ArrowLeft','ArrowRight','KeyA','KeyD','ArrowUp','ArrowDown','KeyW','KeyS'].includes(event.code)) {
+      event.preventDefault();
+      if (['ArrowLeft','KeyA'].includes(event.code)) this.changeLevelSelectIsland(-1);
+      else if (['ArrowRight','KeyD'].includes(event.code)) this.changeLevelSelectIsland(1);
+      else this.moveLevelSelectRow(['ArrowUp','KeyW'].includes(event.code) ? -1 : 1);
+      return;
+    }
     if (["ArrowUp", "ArrowLeft", "KeyW", "KeyA"].includes(event.code)) {
       event.preventDefault();
       this.moveSelection(-1);
@@ -1407,7 +1579,7 @@ export class GameFlowUI {
       left: (pad?.axes[0] ?? 0) < -0.55 || pad?.buttons[14]?.pressed === true,
       right: (pad?.axes[0] ?? 0) > 0.55 || pad?.buttons[15]?.pressed === true,
       accept: actionButtonDown(pad, 'confirm'),
-      back: actionButtonDown(pad, 'back'),
+      back: actionButtonDown(pad, 'back') || (this.screen === 'level-select' && this.mapDirect && actionButtonDown(pad, 'mapLevelSelect')),
     };
   }
 
@@ -1435,7 +1607,10 @@ export class GameFlowUI {
 
   private activateSelection(): void {
     const button = this.navButtons[this.selected];
-    if (button && !button.disabled) button.click();
+    if (button && !button.disabled) {
+      if (this.screen === 'level-select' && button.dataset.levelKey) this.playSelectedLevel();
+      else button.click();
+    }
   }
 
   private goBack(): void {
@@ -1463,7 +1638,7 @@ export class GameFlowUI {
         this.screen = this.previousScreen ?? "pause";
         this.render();
       }
-    } else if (this.screen === "progress") {
+    } else if (this.screen === "progress" || this.screen === "level-select") {
       this.backToMapOrPause();
     } else if (this.screen === "pause") this.callbacks.onResume();
   }
@@ -1477,8 +1652,10 @@ export class GameFlowUI {
       button.setAttribute("tabindex", active ? "0" : "-1");
     });
     const selected = this.navButtons[this.selected];
+    if (this.screen === 'level-select' && selected?.dataset.levelKey) this.updateLevelSelectChoice(selected.dataset.levelKey);
     this.cancelScheduledFocus();
     if (focusSelected && selected && !selected.disabled) {
+      if (this.screen === 'level-select') selected.scrollIntoView?.({ block: 'nearest' });
       this.focusFrame = requestAnimationFrame(() => {
         this.focusFrame = null;
         if (
@@ -1537,6 +1714,7 @@ export class GameFlowUI {
       case "confirm-quit-main": return "Quit to main menu confirmation";
       case "pause": return "Pause menu";
       case "progress": return "Campaign progress";
+      case "level-select": return "Level select";
       case "options": return "Game options";
       case "gameover": return "Game over";
       case "results": return "Run results";
@@ -1648,7 +1826,7 @@ export class GameFlowUI {
         background: radial-gradient(circle at 50% 43%, rgba(4,5,14,.08), rgba(3,5,12,.34) 62%, rgba(2,3,8,.72) 100%);
       }
       body.game-shell-results .game-shell::before { background: transparent; backdrop-filter: none; }
-      .game-shell-panel { position: absolute; inset: 0; display: grid; place-items: center; overflow-y: auto; padding: max(18px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left)); box-sizing: border-box; pointer-events: none; transition: none; }
+      .game-shell-panel { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; padding: max(18px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left)); box-sizing: border-box; pointer-events: none; transition: none; }
       .timber-card {
         position: relative; border: 5px solid #5d2d17; border-radius: 15px 10px 17px 12px;
         background:
@@ -1822,7 +2000,7 @@ export class GameFlowUI {
       }
       @media (max-width: 760px), (max-height: 560px) {
         .game-options-card { padding: 24px; }
-        .game-shell-panel { overflow-y: auto; place-items: start center; }
+        .game-shell-panel { overflow: hidden; place-items: center; }
         .game-launch-card { margin: auto; }
         .game-pause-layout { height: auto; grid-template-columns: 1fr; grid-template-rows: auto; gap: 14px; }
         .game-pause-preview { width: min(92vw, 520px); box-sizing: border-box; }
@@ -1865,16 +2043,6 @@ export class GameFlowUI {
       @media (prefers-reduced-motion: reduce) {
         .game-transition-curtain { transition-duration: .01ms !important; }
       }
-      /* Map utilities are real scroll surfaces, including their blank gutters.
-         Keep the cancel affordance outside document flow so it cannot scroll
-         off-screen. The pre-CRT surface mirrors both scrolling and this X. */
-      body.tc-on .game-shell-panel.game-map-menu-panel {
-        display:block; pointer-events:auto; overflow-y:auto; overflow-x:hidden;
-        touch-action:pan-y; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
-        padding:calc(max(12px, env(safe-area-inset-top)) + 60px) max(18px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
-      }
-      body.tc-on .game-map-menu-panel > :not(.game-map-close) { max-width:100%; margin-inline:auto; }
-      body.tc-on .game-map-menu-panel .game-progress-layout { margin-block:0; }
       .game-menu-button.game-map-close {
         position:fixed; z-index:5; right:max(16px, env(safe-area-inset-right)); top:max(12px, env(safe-area-inset-top));
         width:48px; height:48px; min-height:48px; margin:0; padding:0; border:2px solid #e5e0cd; border-radius:10px;
@@ -1884,6 +2052,7 @@ export class GameFlowUI {
       .game-menu-button.game-map-close.selected { background:#36515d; box-shadow:none; color:#fff7da; filter:none; }
       .game-menu-button.game-map-close::before { display:none; }
     `;
+    style.textContent += menuLayoutStyle;
     document.head.appendChild(style);
   }
 }

@@ -37,3 +37,7 @@ This repository is the isolated browser prototype used to compare Codex/sol leve
 - The unrigged Tripo GLB is the img2threejs surface measurement instrument. A rigged or animated Tripo GLB is skeleton/motion evidence, not a code-only factory.
 - `characterir-authoring-seed.json` is an authoring seed, not a complete CharacterIR or a validated deformation rig. Model-specific semantic mapping, weights, secondary joints, clearance corrections, and multi-angle motion review remain required.
 - Do not copy `vendor/img2threejs-showcase/src/character` into this Apache-licensed repository; the showcase has no license file. Use the pinned companion checkout until the owner clarifies reuse terms.
+
+## Player-facing menus
+
+Follow `docs/MENU_DESIGN.md`: fixed TV-screen segments, no whole-menu scrolling, prompt-kit/comic control hints, and visual collectible ownership (empty sockets or actual earned models). Pause and Level Select are full-screen compositions. Keep game-owned menu artwork below CRT.

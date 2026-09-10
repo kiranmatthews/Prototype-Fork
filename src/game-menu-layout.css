@@ -1,0 +1,117 @@
+/* TV-safe menu composition. The viewport never becomes a document scroll area. */
+.game-shell-panel, body.tc-on .game-shell-panel.game-map-menu-panel {
+  --menu-unit:min(1vw,1.78vh);
+  display:grid; place-items:center; overflow:hidden; pointer-events:none;
+  padding:4vh 5vw 10vh; min-width:0; min-height:0;
+}
+.game-shell-panel > * { min-width:0; min-height:0; max-width:100%; max-height:100%; }
+.game-scroll-segment { min-width:0; min-height:0; overflow:auto; overscroll-behavior:contain; scrollbar-width:thin; pointer-events:auto; }
+.game-menu-hints, .game-level-footer { display:flex; align-items:center; justify-content:center; gap:3vw; min-width:0; }
+.game-menu-hints { position:absolute; bottom:3vh; left:5vw; right:5vw; height:5vh; }
+.game-control-hint { display:inline-flex; align-items:center; justify-content:center; gap:.35em; white-space:nowrap; min-width:0; }
+.game-control-hint .input-glyph { --input-glyph-size:clamp(18px,4.5vh,46px); width:var(--input-glyph-size); height:var(--input-glyph-size); flex:none; }
+.game-control-hint .secondary-silver { font-size:clamp(12px,2.5vh,28px); }
+.game-menu-button.game-control-hint { padding:0 .4em; min-height:5vh; color:#fff4d6; }
+.game-menu-button.game-control-hint::before { display:none; }
+.game-shell-panel.game-screen-level-select { padding:3vh 6vw; }
+.game-level-select-layout { width:100%; height:100%; display:grid; grid-template-rows:12% minmax(0,1fr) 8%; gap:2vh; padding:0; }
+.game-level-header { display:grid; grid-template-columns:8vw minmax(0,1fr) 8vw; justify-self:center; width:70%; padding:0; align-items:center; }
+.game-level-header .game-panel-title { font-size:clamp(25px,5.8vh,68px); color:#ffd531; }
+.game-island-arrow { color:#ff9b20; font-size:clamp(24px,4vh,45px); min-height:0; }
+.game-island-pages { margin:1vh 0 0; font-size:clamp(10px,1.7vh,20px); color:#f7b54b; }
+.game-level-columns { min-height:0; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); gap:5vw; }
+.game-level-browser { min-height:0; display:grid; grid-template-rows:minmax(0,.88fr) minmax(0,1fr); gap:1.5vh; }
+.game-level-preview { display:block; width:100%; height:100%; min-height:0; object-fit:cover; border:4px solid #dcad64; box-shadow:0 5px 0 #4b2515,0 8px 15px #0007; background:#12343d; }
+.game-level-list { display:grid; grid-auto-rows:minmax(0,1fr); gap:.6vh; padding:0; }
+.game-level-row { min-height:0; height:100%; padding:.45vh 1vw; gap:1vw; font-size:clamp(13px,2.8vh,32px); border-radius:2px; color:#fff4d6; background:linear-gradient(#347b80,#153e4b); border:1px solid #52908b; }
+.game-level-row.chosen,.game-level-row.selected { background:linear-gradient(#ffe6a0,#efaa4e); color:#542615; }
+.game-level-mark { color:#f5c761; font-size:clamp(10px,2vh,22px); }
+.game-level-detail { padding:0; display:grid; grid-template-rows:auto minmax(0,1fr) auto; min-height:0; }
+.game-level-name { color:#ffd575; font-size:clamp(20px,3.7vh,42px); margin:0; text-align:center; }
+.game-level-rewards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); grid-auto-rows:minmax(0,1fr); gap:1vh 2vw; min-height:0; margin:1vh 0; }
+.game-level-prize { display:flex; flex-direction:column; align-items:center; min-height:0; }
+.game-reward-slot { display:block; width:100%; height:100%; min-height:0; flex:1; }
+.game-reward-caption { flex:none; color:#ffda8f; font:clamp(12px,2.2vh,25px)/1.2 Roo,Impact,sans-serif; }
+.game-level-rewards > .game-reward-slot { grid-column:1/-1; }
+.game-level-records { width:70%; justify-self:center; display:grid; gap:.4vh; margin-top:1vh; }
+.game-level-record-title { text-align:center; font:clamp(14px,2.4vh,28px)/1 Roo,Impact,sans-serif; color:#ffd575; margin:0 0 .5vh; }
+.game-level-record { color:#fff4d6; font:clamp(13px,2.4vh,27px)/1.15 'Staging Secondary',Impact,sans-serif; }
+.game-level-footer { padding:0; gap:2vw; }
+.game-level-footer .game-menu-button { font-size:inherit; min-width:0; }
+.game-pause-layout { width:100%; height:100%; max-height:none; display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,.9fr); grid-template-rows:minmax(0,1fr) minmax(0,.42fr); align-items:stretch; gap:3vh 5vw; }
+.game-pause-preview { width:100%; min-height:0; padding:1.1vh; display:grid; grid-template-rows:minmax(0,1fr) auto; }
+.game-pause-thumbnail { height:100%; min-height:0; aspect-ratio:auto; object-fit:cover; }
+.game-preview-name { font-size:clamp(22px,4vh,50px); margin:1vh 0 .5vh; }
+.game-pause-actions { grid-column:2; grid-row:1/3; width:100%; padding:3vh 2vw; }
+.game-pause-actions .game-menu-list { height:75%; justify-content:space-evenly; gap:1vh; }
+.game-pause-actions .game-menu-button { min-height:0; flex:1; font-size:clamp(20px,4.4vh,50px); padding:.5vh 1vw; }
+.game-pause-actions .game-eyebrow { font-size:clamp(18px,3vh,36px); margin-bottom:2vh; }
+.game-pause-layout > .game-progress-card { grid-column:1; grid-row:2; width:100%; padding:1vh 2vw; }
+.game-progress-card { min-height:0; display:flex; flex-direction:column; }
+.game-progress-head h2,.game-progress-head strong { font-size:clamp(18px,3vh,34px); }
+.game-progress-grid { display:flex; flex:1; min-height:0; gap:1vw; margin-top:1vh; }
+.game-progress-grid > div { flex:1; display:flex; flex-direction:column; align-items:center; min-height:0; }
+.game-progress-grid .game-reward-slot { min-height:0; width:100%; }
+.game-progress-grid strong { flex:none; font-size:clamp(13px,2.3vh,27px); }
+.game-progress-cleared { display:none; }
+.game-progress-bar { height:.7vh; flex:none; }
+.game-progress-layout { width:100%; height:100%; grid-template-columns:minmax(0,.55fr) minmax(0,1fr); gap:4vw; align-items:stretch; }
+.game-progress-layout > .game-progress-card { position:static; width:100%; padding:2vh 2vw; }
+.game-progress-layout .game-progress-grid { display:grid; grid-template-columns:1fr 1fr; grid-auto-rows:minmax(0,1fr); gap:2vh; }
+.game-progress-ledger { display:grid; grid-template-rows:10% minmax(0,1fr) 7%; min-height:0; padding:0; gap:2vh; }
+.game-progress-page-heading { display:grid; grid-template-columns:5vw 1fr 5vw; align-items:center; }
+.game-progress-page-heading .game-panel-title { color:#ffd531; font-size:clamp(22px,4vh,50px); }
+.game-progress-page-heading .game-menu-button { color:#ffb32e; min-height:0; }
+.game-progress-island { margin:0; display:grid; grid-auto-rows:minmax(0,1fr); }
+.game-progress-level { padding:.3vh 0; min-height:0; grid-template-columns:1.2fr 1fr; }
+.game-progress-level-name { font-size:clamp(12px,2.4vh,27px); color:#ffe2a0; }
+.game-progress-level-rewards { display:flex; height:100%; min-height:0; gap:.5vw; }
+.game-progress-level .game-reward-slot { width:25%; height:100%; }
+.game-progress-ledger > .game-menu-button { color:#ffd575; min-height:0; font-size:clamp(16px,3vh,32px); }
+/* Remaining menus retain their authored artwork, with bounded middle segments. */
+.game-slot-card,.game-options-card { max-height:100%; padding:3vh 3vw; display:flex; flex-direction:column; }
+.game-slot-card > :not(.game-scroll-segment),.game-options-card > :not(.game-scroll-segment) { flex-shrink:0; }
+.game-panel-title { font-size:clamp(25px,6vh,70px); }
+.game-panel-subtitle { font-size:clamp(10px,1.9vh,16px); margin:1vh 0 2vh; }
+.game-save-slots { flex:1; grid-auto-rows:minmax(0,1fr); gap:1vh; }
+.game-save-slot { min-height:0; padding:1.3vh 1.6vw; }
+.game-slot-number { font-size:clamp(18px,3.6vh,35px); }
+.game-slot-detail { font-size:clamp(12px,2.6vh,24px); }
+.game-slot-date { font-size:clamp(8px,1.4vh,12px); }
+.game-secondary-action { margin-top:1.5vh; }
+.game-options-card .game-menu-button,.game-slot-card > .game-menu-button { min-height:5vh; font-size:clamp(18px,3.6vh,38px); }
+.game-toggle-list { gap:1.2vh; }
+.game-launch-card { max-height:100%; padding:2vh 2vw; }
+.game-launch-card .game-logo { margin:0 0 4vh; }
+.game-launch-card .game-logo span { font-size:clamp(40px,11vh,100px); }
+.game-launch-card .game-menu-button { min-height:7vh; font-size:clamp(24px,5vh,50px); }
+.game-results-card { max-height:100%; display:flex; flex-direction:column; }
+.game-results-tally { min-height:0; overflow:auto; }
+.game-results-actions { flex-shrink:0; }
+.game-map-close { display:none; }
+@media(max-aspect-ratio:1/1) {
+  .game-shell-panel,body.tc-on .game-shell-panel.game-map-menu-panel { padding:3vh 4vw 11vh; }
+  .game-level-header { width:100%; }
+  .game-level-columns { gap:3vw; grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+  .game-level-browser { grid-template-rows:minmax(0,.5fr) minmax(0,1fr); }
+  .game-level-row { font-size:clamp(11px,3.1vw,22px); }
+  .game-level-name { font-size:clamp(14px,4vw,24px); }
+  .game-level-records { width:100%; }
+  .game-level-footer { flex-wrap:wrap; column-gap:3vw; row-gap:0; }
+  .game-control-hint .secondary-silver { font-size:clamp(10px,2.6vw,20px); }
+  .game-control-hint .input-glyph { --input-glyph-size:clamp(16px,5vw,28px); }
+  .game-reward-caption { font-size:clamp(10px,2.5vw,20px); }
+  .game-pause-layout { grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:2vh 3vw; }
+  .game-pause-actions .game-menu-button { font-size:clamp(16px,4.5vw,30px); }
+  .game-preview-name { font-size:clamp(16px,4vw,28px); }
+  .game-progress-layout { grid-template-columns:minmax(0,1fr); grid-template-rows:22% minmax(0,1fr); gap:3vh; }
+  .game-progress-layout .game-progress-grid { display:flex; }
+  .game-progress-layout > .game-progress-card,.game-progress-ledger { grid-column:1; }
+}
+.island-from-right{animation:level-select-right .2s ease-out}.island-from-left{animation:level-select-left .2s ease-out}
+@keyframes level-select-right{from{transform:translateX(36px)}to{transform:translateX(0)}}
+@keyframes level-select-left{from{transform:translateX(-36px)}to{transform:translateX(0)}}
+@media(prefers-reduced-motion:reduce){.island-from-right,.island-from-left{animation:none}}
+.game-level-record { display:flex; justify-content:space-between; gap:1vw; }
+.game-shell-panel,body.tc-on .game-shell-panel.game-map-menu-panel { grid-template-columns:minmax(0,1fr); }
+.game-results-medal .game-reward-slot { height:clamp(40px,9vh,100px); }

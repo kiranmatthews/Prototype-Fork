@@ -1,3 +1,4 @@
+import { paintSilverSecondaryText } from "../secondaryText";
 import { paintInputPrompts } from '../inputPromptUI';
 import { gameFlowRasterSize } from '../gameFlowSurface';
 
@@ -52,6 +53,9 @@ export class CompetitionSurface {
     const style=getComputedStyle(element),rect=element.getBoundingClientRect();
     if(style.display==='none'||style.visibility==='hidden'||rect.width<.1||rect.height<.1||Number(style.opacity)<.001)return;
     ctx.save();ctx.globalAlpha*=Number(style.opacity);
+    if(element.classList.contains('secondary-silver')){paintSilverSecondaryText(ctx,element.firstChild?.textContent??'',rect.x,rect.y,parseFloat(style.fontSize));ctx.restore();return;}
+    if(element.classList.contains('input-glyph')){ctx.restore();return;}
+    if(element.classList.contains('game-control-hint')){const alpha=ctx.globalAlpha;ctx.globalAlpha=1;paintInputPrompts(ctx,element);ctx.globalAlpha=alpha;}
     if(element instanceof SVGSVGElement){this.paintSvg(ctx,element);ctx.restore();return;}
     if(element instanceof HTMLImageElement){
       if(element.complete&&element.naturalWidth)ctx.drawImage(element,rect.x,rect.y,rect.width,rect.height);

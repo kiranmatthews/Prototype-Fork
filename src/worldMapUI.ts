@@ -63,6 +63,7 @@ export class WorldMapUI {
     const actionBar = node("nav", "world-map-actions");
     actionBar.setAttribute("aria-label", "World map actions");
     actionBar.append(
+      this.actionButton("mapLevelSelect", "LEVEL SELECT", "level-select"),
       this.actionButton("mapProgress", "VIEW PROGRESS", "progress"),
       this.actionButton("mapOptions", "OPTIONS", "options"),
       this.actionButton("mapSaveLoad", "SAVE / LOAD", "save-load"),
@@ -204,7 +205,7 @@ export class WorldMapUI {
       .world-map-action { border:0; color:#fff8db; font-family:inherit; cursor:pointer; touch-action:manipulation; }
       .world-map-action:focus-visible { outline:2px solid #e8f0f4; outline-offset:4px; border-radius:3px; }
       .world-map-action:hover strong { filter:brightness(1.2); }
-      .world-map-actions { position: absolute; left: 50%; bottom: max(28px, env(safe-area-inset-bottom)); transform: translateX(-50%); pointer-events: auto; display: flex; gap: clamp(16px, 2.4vw, 46px); padding: 0; background: none; border: 0; }
+      .world-map-actions { position: absolute; left: 50%; bottom: max(28px, env(safe-area-inset-bottom)); transform: translateX(-50%); pointer-events: auto; display: flex; flex-wrap:wrap; justify-content:center; gap: clamp(6px, 1.5vw, 26px); padding: 0; background: none; border: 0; }
       .world-map-actions { width:max-content; max-width:calc(100vw - 24px); }
       .world-map-action { display:flex; align-items:center; gap:9px; padding:4px 5px; min-height:44px; background:transparent; flex-shrink:0; }
       .world-map-action strong { font-size:clamp(calc(19px * var(--secondary-size-scale, 1)), calc(1.65vw * var(--secondary-size-scale, 1)), calc(32px * var(--secondary-size-scale, 1))); line-height:1.15; white-space:nowrap; }

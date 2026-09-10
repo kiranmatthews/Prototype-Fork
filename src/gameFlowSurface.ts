@@ -6,6 +6,7 @@
 // insertion point. No DOM screenshotting, foreignObject, or debug UI enters the
 // render path.
 
+import { paintSilverSecondaryText } from "./secondaryText";
 import * as THREE from "three";
 import { trackPresentationImage } from "./presentationLoading";
 
@@ -19,6 +20,7 @@ export type GameFlowSurfaceScreen =
   | "confirm-load"
   | "confirm-quit-main"
   | "pause"
+  | "level-select"
   | "progress"
   | "options"
   | "gameover"
@@ -34,6 +36,7 @@ export interface GameFlowSurfaceRect {
   y: number;
   width: number;
   height: number;
+  clip?: {x:number;y:number;width:number;height:number};
 }
 
 interface GameFlowSurfaceFont {
@@ -54,11 +57,12 @@ export interface GameFlowSurfaceText {
   rect: GameFlowSurfaceRect;
   font: GameFlowSurfaceFont;
   wrap: boolean;
+  silver?: boolean;
 }
 
 export interface GameFlowSurfaceButton {
   rect: GameFlowSurfaceRect;
-  kind: "action" | "slot" | "toggle" | "close";
+  kind: "action" | "slot" | "toggle" | "close" | "level" | "hint";
   label: string;
   valueLabel: string;
   color: string;
@@ -80,7 +84,7 @@ export interface GameFlowSurfaceProgress {
 
 export interface GameFlowSurfaceThumbnail {
   rect: GameFlowSurfaceRect;
-  source: HTMLCanvasElement | null;
+  source: HTMLCanvasElement | HTMLImageElement | null;
 }
 
 export interface GameFlowSurfaceRenderState {
@@ -94,6 +98,7 @@ export interface GameFlowSurfaceRenderState {
   texts: readonly GameFlowSurfaceText[];
   progress: GameFlowSurfaceProgress | null;
   thumbnail: GameFlowSurfaceThumbnail | null;
+  sockets?: readonly {rect: GameFlowSurfaceRect; kind:string}[];
   maskFallback: (GameFlowSurfaceRect & { opacity: number }) | null;
 }
 
@@ -138,6 +143,8 @@ interface GameFlowSurfaceResources {
 }
 
 const TEXT_SELECTOR = [
+  ".game-control-hint .secondary-silver",
+  ".game-level-text",
   ".game-eyebrow",
   ".game-logo > span",
   ".game-logo > strong",
@@ -241,11 +248,18 @@ function rectFrom(
 ): GameFlowSurfaceRect | null {
   const rect = element.getBoundingClientRect();
   if (rect.width <= 0 || rect.height <= 0) return null;
+  let left = -Infinity, top = -Infinity, right = Infinity, bottom = Infinity;
+  for (let ancestor = element.parentElement; ancestor; ancestor = ancestor.parentElement) {
+    const style = getComputedStyle(ancestor), bounds = ancestor.getBoundingClientRect();
+    if (/(hidden|auto|scroll|clip)/.test(style.overflowX)) { left = Math.max(left,bounds.left); right = Math.min(right,bounds.right); }
+    if (/(hidden|auto|scroll|clip)/.test(style.overflowY)) { top = Math.max(top,bounds.top); bottom = Math.min(bottom,bounds.bottom); }
+  }
+  if (rect.right <= left || rect.left >= right || rect.bottom <= top || rect.top >= bottom) return null;
+  const clipped = Number.isFinite(left) || Number.isFinite(top);
   return Object.freeze({
-    x: rect.left - origin.left,
-    y: rect.top - origin.top,
-    width: rect.width,
-    height: rect.height,
+    x: rect.left - origin.left, y: rect.top - origin.top, width: rect.width, height: rect.height,
+    ...(clipped ? {clip: {x:Math.max(left,0)-origin.left, y:Math.max(top,0)-origin.top,
+      width:Math.min(right,window.innerWidth)-Math.max(left,0), height:Math.min(bottom,window.innerHeight)-Math.max(top,0)}} : {}),
   });
 }
 
@@ -308,14 +322,15 @@ export function snapshotGameFlowSurface(
     .map((node) => rectFrom(node, origin))
     .filter((rect): rect is GameFlowSurfaceRect => rect !== null);
   const blocks = Array.from(
-    source.panel.querySelectorAll<HTMLElement>(".game-results-tally > div"),
+    source.panel.querySelectorAll<HTMLElement>(".game-results-tally > div, .game-level-reward"),
   )
     .map((node) => rectFrom(node, origin))
     .filter((rect): rect is GameFlowSurfaceRect => rect !== null);
 
   const texts: GameFlowSurfaceText[] = [];
   for (const node of source.panel.querySelectorAll<HTMLElement>(TEXT_SELECTOR)) {
-    const text = (node.textContent ?? "").replace(/\s+/g, " ").trim();
+    const silver = node.classList.contains("secondary-silver");
+    const text = ((silver ? node.firstChild?.textContent : node.textContent) ?? "").replace(/\s+/g, " ").trim();
     const measuredRect = rectFrom(node, origin);
     // Roo's Canvas2D middle baseline has a taller ascender than its CSS line
     // box. Keep the menu logo aligned with its CSS layout after rasterisation.
@@ -367,11 +382,12 @@ export function snapshotGameFlowSurface(
     texts.push(
       Object.freeze({
         text,
+        silver,
         rect,
         font,
         wrap:
           node.classList.contains("game-panel-subtitle") ||
-          node.classList.contains("game-input-hint"),
+          node.classList.contains("game-input-hint") || node.classList.contains("game-level-text"),
       }),
     );
   }
@@ -383,11 +399,12 @@ export function snapshotGameFlowSurface(
     if (!rect) continue;
     const style = getComputedStyle(button);
     if (style.display === "none" || style.visibility === "hidden") continue;
+    const levelRow = button.classList.contains('game-level-row');
     const toggle = button.classList.contains("game-toggle");
     const slot = button.classList.contains("game-save-slot");
-    const value = toggle ? button.querySelector<HTMLElement>(":scope > strong") : null;
-    const label = toggle ? button.querySelector<HTMLElement>(":scope > span") : null;
-    const selected = button.classList.contains("selected");
+    const value = levelRow ? button.querySelector<HTMLElement>(".game-level-mark") : toggle ? button.querySelector<HTMLElement>(":scope > strong") : null;
+    const label = levelRow ? button.querySelector<HTMLElement>(".game-level-label") : toggle ? button.querySelector<HTMLElement>(":scope > span") : null;
+    const selected = button.classList.contains("selected") || (levelRow && button.classList.contains("chosen"));
     const disabled = button.disabled;
     const danger = button.classList.contains("danger");
     const localOpacity = clamp01(finiteCssNumber(style.opacity, 1));
@@ -397,7 +414,7 @@ export function snapshotGameFlowSurface(
     buttons.push(
       Object.freeze({
         rect,
-        kind: button.classList.contains("game-map-close") ? "close" : slot ? "slot" : toggle ? "toggle" : "action",
+        kind: button.classList.contains("game-control-hint") ? "hint" : levelRow ? "level" : button.classList.contains("game-map-close") ? "close" : slot ? "slot" : toggle ? "toggle" : "action",
         launch: source.screen === "launch",
         label: slot
           ? ""
@@ -405,7 +422,7 @@ export function snapshotGameFlowSurface(
               .replace(/\s+/g, " ")
               .trim(),
         valueLabel: (value?.textContent ?? "").trim(),
-        color: stableButtonColor(button, style.color),
+        color: levelRow || button.closest(".game-progress-ledger, .game-level-header") ? style.color : stableButtonColor(button, style.color),
         valueColor: value
           ? disabled
             ? opaqueCssColor(getComputedStyle(value).color, "#462416")
@@ -432,13 +449,15 @@ export function snapshotGameFlowSurface(
     ? Object.freeze({ track: trackRect, fill: fillRect })
     : null;
 
-  const thumbnailRect = source.thumbnail
-    ? rectFrom(source.thumbnail, origin)
+  const preview = source.panel.querySelector<HTMLImageElement>(".game-level-preview");
+  const image = preview ?? source.thumbnail;
+  const thumbnailRect = image
+    ? rectFrom(image, origin)
     : null;
-  const thumbnail = source.thumbnail && thumbnailRect
+  const thumbnail = image && thumbnailRect
     ? Object.freeze({
         rect: thumbnailRect,
-        source: source.thumbnailCaptured ? source.thumbnail : null,
+        source: preview ? (preview.complete && preview.naturalWidth ? preview : null) : source.thumbnailCaptured ? source.thumbnail : null,
       })
     : null;
 
@@ -460,6 +479,7 @@ export function snapshotGameFlowSurface(
     screen: source.screen,
     sourceWidth,
     sourceHeight,
+    sockets: [...source.panel.querySelectorAll<HTMLElement>('.game-reward-slot[data-earned="false"]')].map(host => ({rect:rectFrom(host,origin),kind:host.dataset.reward!})).filter((item): item is {rect:GameFlowSurfaceRect;kind:string} => !!item.rect),
     cards: immutableArray(cards),
     blocks: immutableArray(blocks),
     buttons: immutableArray(buttons),
@@ -658,13 +678,20 @@ export class GameFlowSurface {
     ctx.save();
     ctx.scale(width / state.sourceWidth, height / state.sourceHeight);
     this.paintBackdrop(ctx, state.screen, state.sourceWidth, state.sourceHeight);
-    for (const card of state.cards) this.paintCard(ctx, card);
-    for (const block of state.blocks) this.paintBlock(ctx, block);
-    for (const button of state.buttons) this.paintButton(ctx, button);
+    const clipped = (rect: GameFlowSurfaceRect, paint: () => void) => {
+      ctx.save(); if (rect.clip) { const c=rect.clip;ctx.beginPath();ctx.rect(c.x,c.y,c.width,c.height);ctx.clip(); } paint();ctx.restore();
+    };
+    for (const card of state.cards) clipped(card, () => this.paintCard(ctx, card));
+    for (const block of state.blocks) clipped(block, () => this.paintBlock(ctx, block));
+    for (const button of state.buttons) clipped(button.rect, () => this.paintButton(ctx, button));
+    for (const socket of state.sockets ?? []) clipped(socket.rect, () => this.paintSocket(ctx, socket.rect, socket.kind));
     if (state.progress) this.paintProgress(ctx, state.progress);
     if (state.thumbnail) this.paintThumbnail(ctx, state.thumbnail);
     if (state.maskFallback) this.paintMask(ctx, state.maskFallback);
-    for (const text of state.texts) this.paintText(ctx, text);
+    for (const text of state.texts) clipped(text.rect, () => {
+      if (text.silver) { paintSilverSecondaryText(ctx,text.text,text.rect.x,text.rect.y,text.font.size); this.primitiveCount++; }
+      else this.paintText(ctx, text);
+    });
     ctx.restore();
     this.hasPixels = this.primitiveCount > 0;
     resources.texture.needsUpdate = true;
@@ -675,6 +702,19 @@ export class GameFlowSurface {
     this.dirty = false;
   }
 
+  private paintSocket(ctx: CanvasRenderingContext2D, rect: GameFlowSurfaceRect, kind: string): void {
+    ctx.save(); ctx.translate(rect.x+rect.width/2, rect.y+rect.height/2);
+    const unit = Math.min(rect.width,rect.height) * .008; ctx.scale(unit,unit);
+    const path = new Path2D();
+    if (kind === 'crystal') { path.moveTo(0,-45); path.lineTo(23,-22); path.lineTo(19,18); path.lineTo(0,46); path.lineTo(-19,18); path.lineTo(-23,-22);path.closePath(); }
+    else if (kind === 'medal') path.arc(0,0,35,0,Math.PI*2);
+    else if (kind === 'cup') { path.moveTo(-30,-40);path.lineTo(30,-40);path.quadraticCurveTo(28,4,7,12);path.lineTo(7,28);path.lineTo(28,28);path.lineTo(28,42);path.lineTo(-28,42);path.lineTo(-28,28);path.lineTo(-7,28);path.lineTo(-7,12);path.quadraticCurveTo(-28,4,-30,-40);path.closePath(); }
+    else { path.moveTo(-40,-16);path.lineTo(-24,-36);path.lineTo(24,-36);path.lineTo(40,-16);path.lineTo(0,42);path.closePath(); }
+    ctx.translate(0,2);ctx.strokeStyle='#99b6b344';ctx.lineWidth=5;ctx.stroke(path);ctx.translate(0,-2);
+    const fill=ctx.createLinearGradient(0,-45,0,45);fill.addColorStop(0,'#020a12');fill.addColorStop(1,'#1b3e49');ctx.fillStyle=fill;ctx.fill(path);
+    ctx.strokeStyle='#01070c';ctx.lineWidth=2;ctx.stroke(path);ctx.restore();this.primitiveCount++;
+  }
+
   private paintBackdrop(
     ctx: CanvasRenderingContext2D,
     screen: GameFlowSurfaceScreen | null,
@@ -682,7 +722,10 @@ export class GameFlowSurface {
     height: number,
   ): void {
     ctx.save();
-    if (screen === "results") {
+    if (screen === 'level-select' || screen === 'progress') {
+      const gradient=ctx.createRadialGradient(width*.55,height*.4,0,width*.5,height*.5,Math.max(width,height)*.8);
+      gradient.addColorStop(0,'#153c49');gradient.addColorStop(.6,'#082332');gradient.addColorStop(1,'#020b14');ctx.fillStyle=gradient;
+    } else if (screen === "results") {
       const beside = width > 760 && height > 560 || width / height > 1.3;
       const gradient = ctx.createLinearGradient(0, 0, beside ? width : 0, beside ? 0 : height);
       gradient.addColorStop(0, "rgba(3,5,10,0)");
@@ -780,6 +823,10 @@ export class GameFlowSurface {
     // compound background. Slot child text receives that ancestor opacity in
     // its own snapshot, so rgba color alpha is never multiplied a second time.
     ctx.globalAlpha = button.opacity;
+    if (button.kind === 'hint') {
+      if (button.selected) { roundedRect(ctx,rect,5);ctx.fillStyle='#ffd15c22';ctx.fill();ctx.strokeStyle='#ffc965';ctx.lineWidth=2;ctx.stroke(); }
+      ctx.restore(); this.primitiveCount++;return;
+    }
     if (button.kind === "close") {
       roundedRect(ctx, rect, 10);
       ctx.fillStyle = button.selected ? "#36515d" : "#243138"; ctx.fill();
@@ -787,6 +834,21 @@ export class GameFlowSurface {
       ctx.fillStyle = "#fff7da"; ctx.font = "700 30px Arial, sans-serif";
       ctx.textAlign = "center"; ctx.textBaseline = "middle";
       ctx.fillText("X", rect.x + rect.width / 2, rect.y + rect.height / 2);
+      ctx.restore(); this.primitiveCount++; return;
+    }
+    if (button.kind === "level") {
+      roundedRect(ctx, rect, 7);
+      if (button.selected) {
+        const gradient = ctx.createLinearGradient(0, rect.y, 0, rect.y + rect.height);
+        gradient.addColorStop(0, '#ffe6a0'); gradient.addColorStop(1, '#efaa4e'); ctx.fillStyle = gradient;
+      } else { const gradient = ctx.createLinearGradient(0,rect.y,0,rect.y+rect.height);gradient.addColorStop(0,'#347b80');gradient.addColorStop(1,'#153e4b');ctx.fillStyle=gradient; }
+      ctx.fill(); ctx.strokeStyle = button.selected ? '#ec712c' : 'rgba(109,51,23,.26)';
+      ctx.lineWidth = button.selected ? 2 : 1; ctx.stroke();
+      ctx.font = `${button.fontWeight} ${button.fontSize}px ${button.fontFamily}`;
+      ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillStyle = button.selected ? '#542615' : '#fff4d6';
+      ctx.fillText(button.label, rect.x + 16, rect.y + rect.height / 2, Math.max(1, rect.width - (button.valueLabel ? 45 : 28)));
+      ctx.textAlign = 'right'; ctx.font = '700 12px Arial,sans-serif'; ctx.fillStyle = '#713a1e';
+      ctx.fillText(button.valueLabel, rect.x + rect.width - 14, rect.y + rect.height / 2);
       ctx.restore(); this.primitiveCount++; return;
     }
     if (button.kind === "slot") {
@@ -912,13 +974,11 @@ export class GameFlowSurface {
     ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
     if (source) {
       try {
-        ctx.drawImage(
-          source,
-          rect.x + 4,
-          rect.y + 4,
-          Math.max(1, rect.width - 8),
-          Math.max(1, rect.height - 8),
-        );
+        const w = Math.max(1, rect.width - 8), h = Math.max(1, rect.height - 8);
+        const sw = source instanceof HTMLImageElement ? source.naturalWidth : source.width;
+        const sh = source instanceof HTMLImageElement ? source.naturalHeight : source.height;
+        const scale = Math.max(w/sw,h/sh), cropW = w/scale, cropH = h/scale;
+        ctx.drawImage(source,(sw-cropW)/2,(sh-cropH)/2,cropW,cropH,rect.x+4,rect.y+4,w,h);
       } catch {
         // A transient/lost source frame leaves the readable dark card in place.
       }

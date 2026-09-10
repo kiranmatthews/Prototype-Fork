@@ -5,7 +5,7 @@ let nextLabelId = 0;
 const SVG_NS = "http://www.w3.org/2000/svg";
 
 /** Silver face over a solid, gap-free black extrusion, not a drop shadow. */
-export function silverSecondaryLabel(label: string): HTMLElement {
+export function silverSecondaryLabel(label: string, live = true): HTMLElement {
   const host = document.createElement("strong");
   host.className = "secondary-silver";
   host.textContent = label;
@@ -53,7 +53,7 @@ export function silverSecondaryLabel(label: string): HTMLElement {
   };
   render();
   // Map labels are built once for the lifetime of the world-map UI.
-  secondaryTextSettings.subscribe(render);
+  if (live) secondaryTextSettings.subscribe(render);
   host.appendChild(svg);
   return host;
 }

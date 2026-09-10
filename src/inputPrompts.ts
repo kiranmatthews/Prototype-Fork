@@ -58,8 +58,8 @@ export function controllerGlyph(family: ControllerFamily, index: number): Prompt
         : family === 'ps5' ? `ps5/T_P5_Dpad_${direction==='Up'?'UP':direction}.png`
         : family === 'switch' ? `switch/T_S_Dpad_${direction}.png` : `xbox/T_X_Dpad_${direction}.png`;
     } else if (family === 'ps4' || family === 'ps5') {
-      label = ({4:'L1',5:'R1',6:'L2',7:'R2',8:family==='ps4'?'Share':'Create',9:'Options',10:'L3',11:'R3'} as Record<number,string>)[index];
-      const key = index===8?'Share':label;
+      label = ({4:'L1',5:'R1',6:'L2',7:'R2',8:family==='ps4'?'Share':'Create',9:'Options',10:'L3',11:'R3',17:'Touchpad'} as Record<number,string>)[index];
+      const key = index===17?'Touch_Pad':index===8?'Share':label;
       if (key) file = family==='ps4' ? `ps4/T_P4_${key}_Stylized.png` : `ps5/T_P5_${key}.png`;
     } else if (family === 'switch') {
       label = ({4:'L',5:'R',6:'ZL',7:'ZR',8:'Minus',9:'Plus',10:'Left stick',11:'Right stick'} as Record<number,string>)[index];
@@ -119,7 +119,8 @@ export class InputPromptSystem {
     if(this.family==='keyboard')return keyboardGlyph(binding.key);
     if(this.pad?.mapping!== 'standard' && this.pad && !this.hostFamily && !this.override)
       return {family:this.family,label:`Button ${binding.button+1}`,url:svgGlyph(String(binding.button+1)),fallback:true};
-    return controllerGlyph(this.family,binding.button);
+    const index = action === 'mapLevelSelect' && this.family !== 'ps4' && this.family !== 'ps5' ? 8 : binding.button;
+    return controllerGlyph(this.family,index);
   }
   subscribe(listener: () => void): () => void { this.listeners.add(listener);return ()=>this.listeners.delete(listener); }
   private changed(): void { this.revisionValue++;this.listeners.forEach(listener=>listener()); }

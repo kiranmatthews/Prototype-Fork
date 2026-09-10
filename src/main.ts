@@ -1,3 +1,4 @@
+import { MenuRewardsPresentation } from "./menuPresentation";
 import { mapSkateboardSettings } from "./skateboard/mapSettings";
 import { JungleCupEvent, JUNGLE_CUP_ID, COMPETITION_TUNING, COMPETITORS, JUDGES } from "./competition/event";
 import { CompetitionPresentation, type CompetitionAction } from "./competition/presentation";
@@ -1090,6 +1091,7 @@ function syncPostResolution(): void {
 }
 
 let gameFlow!: GameFlowUI;
+const menuRewards = new MenuRewardsPresentation();
 
 function drawGameFlowPreCrt(context: Parameters<CoastPostPreCrtOverlay>[0]): void {
   gameFlow.drawPreCrt(
@@ -1097,6 +1099,7 @@ function drawGameFlowPreCrt(context: Parameters<CoastPostPreCrtOverlay>[0]): voi
     { width: context.inputWidth, height: context.inputHeight },
     context.target,
   );
+  menuRewards.draw(context.renderer, { width: context.inputWidth, height: context.inputHeight }, context.target);
   gameInterface.setComposited(true);
   gameInterface.draw(context.renderer, { width: context.inputWidth, height: context.inputHeight }, context.target);
 }
@@ -1115,14 +1118,19 @@ function renderGameplayWithGameFlow(dt: number): void {
   // the menu into it; the capture then requests one corrected composited frame.
   const composited =
     gameFlow.currentScreen !== null &&
-    (coastPost?.gameFlowPostActive ?? false) &&
     !gameFlow.needsPauseThumbnail;
   gameFlow.setPreCrtComposited(composited);
   renderPrimaryScene(
     dt,
     true,
-    composited ? drawGameFlowPreCrt : undefined,
+    composited && coastPost?.gameFlowPostActive ? drawGameFlowPreCrt : undefined,
   );
+  if (composited && !coastPost?.gameFlowPostActive) {
+    const size = renderer.getSize(new THREE.Vector2());
+    gameFlow.drawPreCrt(renderer, {width:size.x,height:size.y}, null);
+    menuRewards.draw(renderer,{width:size.x,height:size.y},null);
+    gameInterface.setComposited(true);gameInterface.draw(renderer,{width:size.x,height:size.y},null);
+  }
 }
 
 /**
@@ -1162,6 +1170,11 @@ function renderVortexWithGameFlow(
   gameInterface.setComposited(false);
   if (!gameFlowVortex.resident) releaseGameplayPostForGameFlow();
   gameFlowVortex.render(renderer, dt, nowMs, context);
+  gameFlow.setPreCrtComposited(true);
+  const size = renderer.getSize(new THREE.Vector2());
+  gameFlow.drawPreCrt(renderer,{width:size.x,height:size.y},null);
+  menuRewards.draw(renderer,{width:size.x,height:size.y},null);
+  gameInterface.setComposited(true);gameInterface.draw(renderer,{width:size.x,height:size.y},null);
 }
 
 function resize(): void {
@@ -1948,6 +1961,10 @@ gameFlow = new GameFlowUI(
     onResume: resumeFromPause,
     onRestart: restartCurrentRun,
     onQuitLevel: quitCurrentLevel,
+    onLevelSelect: selectLevelFromMenu,
+    getLevelSelectFocus: () => (current.id === "warproom" || level.isCampaignMap)
+      ? worldMapController?.selectedKey ?? campaign.recommendedMapLevelKey()
+      : campaignLevelById(bonusSession?.parentEntry.id ?? current.id)?.progressKey ?? campaign.recommendedMapLevelKey(),
     onGameOverRetry: retryAfterGameOver,
     onGameOverQuit: quitAfterGameOver,
     onResultsRetry: retryFromResults,
@@ -2631,6 +2648,18 @@ function showTimeTrialResults(time: number): void {
   });
 }
 
+function selectLevelFromMenu(targetId: string): void {
+  const destination = campaignLevelById(targetId);
+  if (!destination || !campaign.levelUnlocked(destination.progressKey)) return;
+  guardGameplayFromMenu();
+  if (bonusSession) {
+    player.lives = bonusSession.parentState.lives;
+    player.fruit = bonusSession.parentState.fruit;
+  } else player.bankFlyingFruit();
+  restoreCommittedRunRewards();
+  enterCampaignLevel(targetId);
+}
+
 function enterCampaignLevel(targetId: string): void {
   const destination = campaignLevelById(targetId);
   if (!destination || !campaign.levelUnlocked(destination.progressKey)) return;
@@ -2638,6 +2667,8 @@ function enterCampaignLevel(targetId: string): void {
   campaign.updateInventory(player.lives, player.fruit);
   void gameFlow.transition(async () => {
     if (!switchLevel(targetId, false, true)) return;
+    campaign.setMapFocus(destination.progressKey);
+    paused = false;
     await prepareActivePresentationAssets();
     gameFlow.hide();
   });

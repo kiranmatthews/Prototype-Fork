@@ -76,9 +76,10 @@ assert.match(
   /\.game-shell\.precrt-composited \.game-menu-button:focus-visible \{ outline: none; \}/,
   "native focus chrome must not leak sharply above the shader-rendered selection",
 );
+const syncSelection = flow.slice(flow.indexOf('  private syncSelection('), flow.indexOf('  private cancelScheduledFocus('));
 assert.match(
-  flow,
-  /private syncSelection\(focusSelected = true\): void \{[\s\S]{0,900}this\.invalidatePreCrt\(\);/,
+  syncSelection,
+  /this\.invalidatePreCrt\(\);/,
   "keyboard/gamepad/pointer selection changes must invalidate the mirror",
 );
 assert.match(
@@ -88,7 +89,7 @@ assert.match(
 );
 assert.match(
   main,
-  /!gameFlow\.needsPauseThumbnail[\s\S]{0,220}composited \? drawGameFlowPreCrt : undefined/,
+  /!gameFlow\.needsPauseThumbnail[\s\S]{0,220}composited && coastPost\?\.gameFlowPostActive \? drawGameFlowPreCrt : undefined/,
   "the clean pause thumbnail must be captured before the menu is composited",
 );
 assert.match(
