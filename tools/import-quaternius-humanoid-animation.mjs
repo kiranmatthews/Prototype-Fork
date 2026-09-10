@@ -60,6 +60,19 @@ const PLAYER_TO_TARGET = new Map(
   Object.entries(TARGET_TO_PLAYER).map(([target, player]) => [player, target]),
 );
 
+// The author's original CC0 release uses Blender DEF names. Alias those
+// bones to the newer UAL names without altering tracks, bind poses or clocks.
+const LEGACY_BONES = {
+  pelvis: 'DEF-hips', spine_01: 'DEF-spine001', spine_02: 'DEF-spine002',
+  spine_03: 'DEF-spine003', neck_01: 'DEF-neck', Head: 'DEF-head',
+  clavicle_l: 'DEF-shoulderL', upperarm_l: 'DEF-upper_armL',
+  lowerarm_l: 'DEF-forearmL', hand_l: 'DEF-handL',
+  clavicle_r: 'DEF-shoulderR', upperarm_r: 'DEF-upper_armR',
+  lowerarm_r: 'DEF-forearmR', hand_r: 'DEF-handR',
+  thigh_l: 'DEF-thighL', calf_l: 'DEF-shinL', foot_l: 'DEF-footL', ball_l: 'DEF-toeL',
+  thigh_r: 'DEF-thighR', calf_r: 'DEF-shinR', foot_r: 'DEF-footR', ball_r: 'DEF-toeR',
+};
+
 function parseArguments(argv) {
   const values = new Map();
   for (let index = 0; index < argv.length; index++) {
@@ -197,6 +210,9 @@ async function main() {
   });
   if (!skinnedMesh) throw new Error('source GLB has no SkinnedMesh skeleton');
   const targetBones = new Map(skinnedMesh.skeleton.bones.map((bone) => [bone.name, bone]));
+  for (const [name, legacy] of Object.entries(LEGACY_BONES)) {
+    if (!targetBones.has(name) && targetBones.has(legacy)) targetBones.set(name, targetBones.get(legacy));
+  }
   for (const target of Object.keys(TARGET_TO_PLAYER)) {
     if (!targetBones.has(target)) throw new Error(`source skeleton is missing ${target}`);
   }
@@ -220,6 +236,9 @@ async function main() {
   for (let index = 0; index < skinnedMesh.skeleton.bones.length; index++) {
     const bone = skinnedMesh.skeleton.bones[index];
     targetRestWorld.set(bone.name, skinnedMesh.skeleton.boneInverses[index].clone().invert());
+  }
+  for (const [name, legacy] of Object.entries(LEGACY_BONES)) {
+    if (!targetRestWorld.has(name) && targetRestWorld.has(legacy)) targetRestWorld.set(name, targetRestWorld.get(legacy));
   }
   const targetPelvisRest = new THREE.Vector3().setFromMatrixPosition(
     targetRestWorld.get('pelvis'),

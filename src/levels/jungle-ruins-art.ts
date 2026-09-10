@@ -121,7 +121,7 @@ export function jungleRuinsDressing(gx: (z: number) => number, gy: (z: number) =
       s:[43+r*5,39+r*6,46+r*4],yaw:r*360,color:side<0?"#89a796":"#98af93",
       solid:false,grp:outerGroup,nm:"Outer jungle canopy"});
   }
-  for(const z of [38,-748])out.push({t:"decor",dkind:"junglecliff",p:[gx(z),gy(z)-5,z],
+  for(const z of [-748])out.push({t:"decor",dkind:"junglecliff",p:[gx(z),gy(z)-5,z],
     s:[98,39,28],yaw:7,color:"#acbba9",solid:false,grp:outerGroup,nm:"Jungle end rock face"});
   out.push(jungleContainment(gx,group("Jungle perimeter")));
   return {components:out,groups};

@@ -4,6 +4,8 @@
 // as fake boost/slowdown numbers derived from the surface normal.
 
 import * as THREE from 'three';
+import { SwimEffects } from './swimEffects';
+import { SWIMMING, stepSwimVelocity, stepSwimBuoyancy } from './swimming';
 import { CharacterInteractionBounds } from './character/interactionBounds';
 import { CameraInputFrame } from "./cameraViews";
 import { softSkateRebound, sampleSoftSkateImpact, SOFT_SKATE_IMPACT_SECONDS } from './skateImpact';
@@ -244,7 +246,7 @@ const FRUIT_SIZE = new THREE.Vector2(); // scratch: renderer size, split-screen 
 const FRUIT_PREV = new THREE.Vector4(); // scratch: viewport to put back
 const FRUIT_GRAB = new THREE.Vector3(WUMPA_SIZE, WUMPA_SIZE, WUMPA_SIZE); // physical fruit size; the magnet supplies the generous outer range
 
-export type MoveState = 'ride' | 'air' | 'grind' | 'hang' | 'rope' | 'dead' | 'gameover' | 'finished';
+export type MoveState = 'ride' | 'swim' | 'air' | 'grind' | 'hang' | 'rope' | 'dead' | 'gameover' | 'finished';
 
 export interface PlayerRunState {
   lives: number;
@@ -274,6 +276,8 @@ export interface PlayerWorldFruitSnapshot {
 
 /** Presentation-only route into the browser-authored player clip catalog. */
 export type PlayerAnimationClipHint =
+  | 'player.swim'
+  | 'player.swim-idle'
   | 'player.idle'
   | 'player.run'
   | 'player.jump'
@@ -543,6 +547,12 @@ export class Player {
   speed = 0; // signed along-course velocity (+ = forward, - = toward camera)
   vVel = 0;
   state: MoveState = 'ride';
+  readonly swimVelocity = new THREE.Vector3();
+  private swimEffects: SwimEffects | null = null;
+  private swimFast = false;
+  private swimImmersion = SWIMMING.idleImmersion;
+  get swimming(): boolean { return this.state === 'swim'; }
+
   grounded = false;
   surfaceName = '-';
   runTime = 0;
@@ -1720,6 +1730,7 @@ export class Player {
   }
 
   private get animationPlanarSpeed(): number {
+    if (this.swimming) return this.swimVelocity.length();
     if (this.state === 'rope' || this.state === 'hang') return 0;
     if (
       this.state === 'ride' &&
@@ -1745,6 +1756,7 @@ export class Player {
    */
   get animationClipHint(): PlayerAnimationClipHint {
     if (this.isBailing || this.state === 'dead' || this.state === 'gameover') return 'player.bail';
+    if (this.swimming) return this.swimVelocity.length() > .35 ? 'player.swim' : 'player.swim-idle';
     if (this.state === 'rope') {
       return this.ropeClimbDirection === 0
         ? UNITY_ROPE_CLIP_IDS.hang
@@ -1892,6 +1904,7 @@ export class Player {
         actionProgress,
         inputs: {
           travelSign,
+          swimCadence: this.swimming ? Math.max(.8, this.swimVelocity.length() / SWIMMING.speed) : 1,
           signedSpeed: normalizedSpeed * travelSign,
           [LOCOMOTION_WALK_BLEND_INPUT]: locomotionWalkBlendWeight(normalizedSpeed),
           balance: THREE.MathUtils.clamp(this.balance, -1, 1),
@@ -3146,6 +3159,10 @@ export class Player {
     this.brakeRampT = 0;
     this.oBrakeHold = false;
     this.walkRamp = 0;
+    this.swimVelocity.set(0, 0, 0);
+    this.swimEffects?.reset();
+    this.swimFast = false;
+    this.swimImmersion = SWIMMING.idleImmersion;
     this.walkVelocity.set(0, 0, 0);
     this.walkTarget.set(0, 0, 0);
     this.walkTurnaround = false;
@@ -3344,6 +3361,7 @@ export class Player {
     this.previousCharacterBounds.copy(this.characterBounds);
     this.parkControls = level.skatepark;
     if (this.discardedBoardLevel !== level) {
+      this.swimEffects?.dispose(); this.swimEffects = null;
       this.releaseDiscardedBoard();
       this.discardedBoardLevel = level;
     }
@@ -3439,6 +3457,17 @@ export class Player {
     // stays available (rawInput) for the slam, grab-spin direction, and
     // grind balance.
     this.rawInput = input;
+    const waterSurface = level.swimmingSurfaceAt(this.pos.x, this.pos.z);
+    if (waterSurface !== null && (this.state === 'ride' || this.state === 'air') &&
+        this.pos.y < waterSurface - SWIMMING.enterDepth) this.enterSwimming();
+    this.swimFast = this.swimming && input.jumpHeld;
+    if (this.swimming) {
+      // The same face buttons resume their normal actions only after leaving water.
+      input = { ...input, jumpHeld: false, jumpPressed: false, jumpReleased: false,
+        grabHeld: false, grabPressed: false, spinHeld: false, spinPressed: false,
+        grindHeld: false, grindPressed: false, transferHeld: false, transferPressed: false } as Input;
+      this.rawInput = input;
+    }
     // An X press that began in air remains owned by that air until the button
     // comes all the way back up. Sanitize it before ANY ground/crest/trick
     // routing: doing this only inside the late charge block still let the
@@ -4215,6 +4244,10 @@ export class Player {
         }
         break;
       }
+      case 'swim':
+        this.runTime += dt;
+        this.stepSwimming(dt, input, level);
+        break;
       case 'grind':
         this.runTime += dt;
         this.stepGrind(dt, input, level);
@@ -4242,7 +4275,7 @@ export class Player {
     const interactionPose=this.interactionPoseKey();
     this.updateFruit(dt, level);
 
-    if (this.state === 'ride' || this.state === 'air' || this.state === 'grind') {
+    if (this.state === 'ride' || this.state === 'air' || this.state === 'grind' || this.state === 'swim') {
       this.collide(level);
       this.flushLevelCrateRewards(level);
       // All boxes broken -> the gem materializes on the spot, Crash rules.
@@ -4277,6 +4310,87 @@ export class Player {
       this.group.position.copy(this.pos);this.refreshCharacterBounds();
     }
     this.seatOnCarton(level, dt);
+    const water = level.swimmingSurfaceAt(this.pos.x, this.pos.z);
+    const wet = water !== null && this.pos.y < water - .08 &&
+      (this.swimming || this.state === 'ride');
+    if (wet && !this.swimEffects) {
+      this.swimEffects = new SwimEffects(); this.group.parent?.add(this.swimEffects.group);
+    }
+    this.swimEffects?.step(dt, level.water, this.pos,
+      this.swimming ? this.swimVelocity.length() : this.walkVelocity.length(), wet, this.swimming);
+  }
+
+  private enterSwimming(): void {
+    this.swimVelocity.copy(this.walkVelocity);
+    if (this.freeSkate || this.airFromSkate) this.swimVelocity.copy(this.axisF).multiplyScalar(this.speed);
+    this.swimVelocity.clampLength(0, SWIMMING.fastSpeed);
+    this.swimImmersion = SWIMMING.idleImmersion;
+    this.state = 'swim';
+    this.grounded = false;
+    this.freeSkate = this.skateOn = this.airFromSkate = false;
+    this.skatePose = this.sidePose = this.deckPose = 0;
+    this.skateMountT = -1;
+    this.charging = this.chargePlanted = false;
+    this.chargeTimer = this.skateCharge = this.jumpBufferT = 0;
+    this.cancelSlideTraversal();
+    this.crawling = false;
+    this.crawlPose = this.slidePose = this.chargePose = 0;
+    this.boardOllieAir = this.doubleJumpAir = false;
+    this.vertAir = this.pipeHang = this.pipeEndFly = this.wallriding = false;
+    this.rollOffT = this.flipTimer = this.flipT = this.spinTimer = 0;
+    this.lipStallT = this.manualArmT = this.manualArmed = 0;
+    this.lipPipe = null;
+    this.landingAlignPose = this.alignPose = this.slopePose = this.slopeRoll = this.wallridePose = 0;
+    this.grabPhase = 'none';
+    this.grabPose = 0;
+    this.slamActive = false;
+    this.slamSquash = this.slamFlatT = 0;
+    this.endManual();
+    this.loseCombo();
+    this.bailing = this.ragActive = false;
+    this.bailDownT = this.bailRecoveryPose = this.ragBlend = 0;
+    this.bailRecoverT = -1;
+    this.ragAngVel.set(0, 0, 0);
+    this.releaseDiscardedBoard();
+    this.boardSnapT = 0;
+    this.walkVelocity.set(0, 0, 0);
+    this.rideNormal.set(0, 1, 0);
+    this.groundHit = null;
+    this.vVel = Math.max(-3, Math.min(2, this.vVel));
+  }
+
+  private stepSwimming(dt: number, input: Input, level: Level): void {
+    const surface = level.swimmingSurfaceAt(this.pos.x, this.pos.z);
+    if (surface === null) {
+      this.state = 'air';
+      this.walkVelocity.copy(this.swimVelocity);
+      this.speed = this.swimVelocity.dot(this.axisF);
+      this.swimVelocity.set(0, 0, 0);
+      return;
+    }
+    // Walking and swimming share the course/camera input frame, including analogue diagonals.
+    stepSwimVelocity(this.swimVelocity, this.axisF, input.moveX, input.moveY, this.swimFast, dt);
+    this.pos.addScaledVector(this.swimVelocity, dt);
+    this.speed = this.swimVelocity.dot(this.axisF);
+    this.lastPlanar = this.swimVelocity.length();
+    const nextSurface = level.swimmingSurfaceAt(this.pos.x, this.pos.z) ?? surface;
+    const ground = this.queryGround(level);
+    if (ground && nextSurface - ground.y < SWIMMING.exitDepth && ground.normal.y > .65) {
+      this.state = 'ride'; this.grounded = true; this.pos.y = ground.y;
+      this.groundHit = ground; this.rideNormal.copy(ground.normal); this.surfaceName = ground.name;
+      this.walkVelocity.copy(this.swimVelocity); this.swimVelocity.set(0, 0, 0);
+      this.vVel = 0; this.airborneT = 0;
+      this.jumpReleaseRearmRequired = true;
+      return;
+    }
+    const immersion = this.swimVelocity.length() > .35 ? SWIMMING.strokeImmersion : SWIMMING.idleImmersion;
+    this.swimImmersion += (immersion - this.swimImmersion) * (1 - Math.exp(-8 * dt));
+    const float = stepSwimBuoyancy(this.pos.y, this.vVel, nextSurface, this.swimImmersion, dt);
+    this.pos.y = Math.max(ground ? ground.y + .03 : -Infinity, float.y);
+    this.vVel = float.velocity;
+    this.grounded = false; this.groundHit = null;
+    this.surfaceName = 'water';
+    this.walkAmp = 0;
   }
 
   // ---------------------------------------------------------------- states --
@@ -14601,6 +14715,7 @@ export class Player {
   }
 
   private syncFloorX(): void {
+    if (this.swimming) { this.floorX.visible = false; return; }
     // Landing X: persistent live vertical projection, snapped to whatever
     // floor is below the final player position. It grows a touch with height
     // so it reads from the top of a big air.
@@ -15863,6 +15978,7 @@ export class Player {
         this.slideTimer <= 0 &&
         this.starPose < 0.4 && // stowed through the star-jump beat
         this.ledgePose < 0.3 && // stowed while hanging off a ledge (hands are busy)
+        this.state !== 'swim' &&
         this.state !== 'rope' && // stowed on the swing rope: both hands grip it
         (this.state === 'grind' || this.freeSkate || this.grabPose > 0.05);
     }

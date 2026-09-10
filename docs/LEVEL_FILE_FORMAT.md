@@ -164,3 +164,7 @@ Nightworks uses existing `platform`, `mover`, `phasepad`, `rail`, `ropeswing` an
 `ropeswing.travelPhase` optionally sets the travelling anchor's phase in radians independently of its swing `phase`. Omission retains the existing shared-phase behavior. The editor exposes this as “ferry phase”. Flexible rope rendering is global; no additional generated scripts, URLs or material definitions enter level data.
 
 A `camnode` with `cameraView: true` is a fixed-view volume rather than a point in the camera spine. `p` is its centre; `s` gives local width/height/depth; `yaw` rotates the volume and view using Three.js Y rotation (0 looks toward -Z, -90 toward +X). `radius` is the boundary blend distance. Ordinary camnodes retain their existing meaning. View volumes do not create collision or travel-zone input remaps. Within levels using these volumes, continuously held directional input retains its camera frame through camera turns; releasing or deliberately changing direction adopts the current view. The editor exposes the volume's dimensions, view yaw and blend distance.
+
+### Playable water
+
+An `ocean` may opt into swimming with `swimBounds: [minX, minZ, maxX, maxZ]` in world Three XZ coordinates. The four finite values must be ordered and within the existing coordinate limits. The bounds describe playable water, independently of the longer visual horizon. Actual surface height uses the ocean wave sample. Omit this property to retain a presentation-only ocean. See [SWIMMING.md](SWIMMING.md).

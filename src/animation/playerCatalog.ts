@@ -1,3 +1,7 @@
+import { QUATERNIUS_SWIM_FWD_DURATION, QUATERNIUS_SWIM_FWD_ROOT_KEYS,
+  QUATERNIUS_SWIM_FWD_ROTATION_KEYS, QUATERNIUS_SWIM_FWD_SOURCE } from './quaterniusSwimFwd.generated';
+import { QUATERNIUS_SWIM_IDLE_DURATION, QUATERNIUS_SWIM_IDLE_ROOT_KEYS,
+  QUATERNIUS_SWIM_IDLE_ROTATION_KEYS, QUATERNIUS_SWIM_IDLE_SOURCE } from './quaterniusSwimIdle.generated';
 import * as THREE from 'three';
 import { createAnimationSuiteDocument, createProceduralDriver } from './document';
 import { PLAYER_PROCEDURAL_RIG_ID } from './rigBinding';
@@ -84,6 +88,8 @@ export const PLAYER_DEFORMATION_CONTROLS = {
 export const PLAYER_STARTER_CLIP_IDS = [
   'player.idle',
   'player.walk',
+  'player.swim',
+  'player.swim-idle',
   'player.run',
   'player.jump',
   'player.double-jump',
@@ -112,7 +118,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 19;
+export const PLAYER_STARTER_CATALOG_VERSION = 20;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -371,6 +377,8 @@ const PLAYER_STARTER_CLIP_INTRODUCED_IN_VERSION: Record<
 > = {
   'player.idle': 1,
   'player.walk': 17,
+  'player.swim': 20,
+  'player.swim-idle': 20,
   'player.run': 1,
   'player.jump': 1,
   'player.double-jump': 6,
@@ -898,6 +906,23 @@ function unityCrouchCrawlSourceMetadata(
   };
 }
 
+function buildSwim(rigId: string, includeTorsoRoot: boolean, idle: boolean): AnimationClip {
+  const clip = baseClip(idle ? 'player.swim-idle' : 'player.swim',
+    idle ? 'Tread Water — Quaternius Swim_Idle_Loop' : 'Swim — Quaternius Swim_Fwd_Loop',
+    idle ? QUATERNIUS_SWIM_IDLE_DURATION : QUATERNIUS_SWIM_FWD_DURATION, 'loop', rigId);
+  clip.tracks = [
+    sampledPositionTrack(clip.id, 'root', idle ? QUATERNIUS_SWIM_IDLE_ROOT_KEYS : QUATERNIUS_SWIM_FWD_ROOT_KEYS),
+    ...sampledQuaterniusRotationTracks(clip.id,
+      idle ? QUATERNIUS_SWIM_IDLE_ROTATION_KEYS : QUATERNIUS_SWIM_FWD_ROTATION_KEYS, includeTorsoRoot),
+  ];
+  clip.contacts = [];
+  clip.tags = ['player', 'quaternius', 'swimming', 'source-animation-retarget', 'imported-keyframes'];
+  clip.metadata = { starterQuality: 'source-animation-retarget',
+    starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
+    sourceAnimation: { ...(idle ? QUATERNIUS_SWIM_IDLE_SOURCE : QUATERNIUS_SWIM_FWD_SOURCE) } };
+  return clip;
+}
+
 function buildWalk(rigId: string, includeTorsoRoot: boolean): AnimationClip {
   const clip = baseClip(
     PLAYER_WALK_CLIP_ID,
@@ -1347,6 +1372,8 @@ export function createPlayerStarterClips(
   return [
     buildIdle(rigId),
     buildWalk(rigId, includeTorsoRoot),
+    buildSwim(rigId, includeTorsoRoot, false),
+    buildSwim(rigId, includeTorsoRoot, true),
     buildRun(rigId, includeTorsoRoot),
     buildJump(rigId),
     buildDoubleJump(rigId),

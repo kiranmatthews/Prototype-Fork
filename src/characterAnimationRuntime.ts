@@ -127,6 +127,7 @@ const AIRBORNE_CLIP_IDS = new Set<ClipId>([
 
 function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId): number {
   if (!from) return 0;
+  if (from.startsWith('player.swim') || to.startsWith('player.swim')) return .3;
   if (to === LAND_CLIP_ID && AIRBORNE_CLIP_IDS.has(from)) {
     return LAND_IMPACT_CROSSFADE_SECONDS;
   }
@@ -408,7 +409,7 @@ export class CharacterAnimationRuntime {
 
     if (this.manualClipId === null) {
       // Landing has first refusal on the exact contact frame.
-      if (justLanded && hint !== 'player.bail' && hint !== 'player.slam') {
+      if (justLanded && !this.currentClipId?.startsWith('player.swim') && hint !== 'player.bail' && hint !== 'player.slam') {
         this.resetLandingRunBlend();
         this.transient = this.makeTransient('landing', LAND_CLIP_ID);
       } else if (this.transient?.kind === 'landing') {
@@ -795,6 +796,8 @@ export class CharacterAnimationRuntime {
     clip: AnimationClip,
     motion: ProceduralMotionContext,
   ): number {
+    if (this.manualClipId === null && clip.id === 'player.swim')
+      return Math.max(.8, Math.min(1.5, motion.inputs?.swimCadence ?? 1));
     if (this.manualClipId !== null || clip.id !== 'player.run') return 1;
     const variant = clipVariantBlend(clip) ?? {
       clipId: PLAYER_WALK_CLIP_ID,
@@ -881,6 +884,8 @@ export function createCharacterAnimationRuntime(
 
 /** The gameplay-owned routes, useful for diagnostics and completeness tests. */
 export const PLAYER_STATE_CLIP_IDS: readonly PlayerAnimationClipHint[] = [
+  'player.swim',
+  'player.swim-idle',
   'player.idle',
   'player.run',
   'player.jump',

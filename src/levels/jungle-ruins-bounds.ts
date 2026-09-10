@@ -1,4 +1,5 @@
 import type { CustomComponent } from "../level";
+import { jungleCoveWidth } from "./jungle-shore";
 
 export const JUNGLE_BOUNDARY_BOTTOM = -18;
 export const JUNGLE_BOUNDARY_TOP = 64;
@@ -30,7 +31,10 @@ export function jungleContainment(gx: (z: number) => number, group: number): Cus
       left.push([gx(z)-half,z,0]);right.push([gx(z)+half,z,0]);
     }
   }
-  return {t:"wallpath",p:[0,JUNGLE_BOUNDARY_BOTTOM,0],pts:[...left,...right.reverse()],
+  const cove: [number,number,number][] = [];
+  for (const z of [25,42,62,96]) cove.push([gx(14)+jungleCoveWidth(z)+1.55,z,0]);
+  for (const z of [96,62,42,25]) cove.push([gx(14)-jungleCoveWidth(z)-1.55,z,0]);
+  return {t:"wallpath",p:[0,JUNGLE_BOUNDARY_BOTTOM,0],pts:[...left,...right.reverse(),...cove],
     w:JUNGLE_BOUNDARY_THICKNESS,rise:JUNGLE_BOUNDARY_TOP-JUNGLE_BOUNDARY_BOTTOM,
     collisionHeight:JUNGLE_BOUNDARY_TOP-JUNGLE_BOUNDARY_BOTTOM,closed:true,curve:"corner",
     invisible:true,containment:true,edgeGrinding:false,tex:"solid",grp:group,nm:"Jungle perimeter"};

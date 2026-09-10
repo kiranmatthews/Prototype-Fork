@@ -56,6 +56,7 @@ import { UNITY_PORT_LEVELS } from "./levels/unity-ports";
 import { EASY_BONUS_LEVEL, DEFAULT_BONUS_CRATE_COUNT } from "./levels/bonus-easy";
 import { TropicalPlantKit, TROPICAL_PLANT_KINDS, TROPICAL_PLANT_LABELS } from "./tropicalPlants";
 import { JungleAssetKit, JUNGLE_ASSET_KINDS, JUNGLE_ASSET_LABELS, isJungleAsset, addJungleDapple, jungleAssetMatrix } from "./jungleAssets";
+import { jungleShore } from "./levels/jungle-shore";
 import { jungleRuinsDressing } from "./levels/jungle-ruins-art";
 import { isJungleAssembly, jungleAssemblyWork } from "./jungleAssemblies";
 import { createJungleShoulder, addJungleDepthFade } from "./jungleGround";
@@ -915,6 +916,8 @@ export interface CustomLevelData {
 }
 
 export interface CustomOceanData {
+  /** Optional playable water extent in world XZ: minX, minZ, maxX, maxZ. */
+  swimBounds?: [number, number, number, number];
   /** Version 2 uses the editor's world Three positions and positive-Y yaw. */
   geometryVersion?: 2;
   /** Nominal shoreline midpoint and sea level. */
@@ -2584,7 +2587,10 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     if (
       !ocean ||
       !hasOnlyKeys(ocean, new Set(["p", "length", "yaw", "seaward", "width", "overlap",
-        "longitudinalSegments", "lateralSegments", "sourceCoordinates", "shore", "extendTails", "geometryVersion"])) ||
+        "longitudinalSegments", "lateralSegments", "sourceCoordinates", "shore", "extendTails", "geometryVersion", "swimBounds"])) ||
+      (ocean.swimBounds !== undefined && (!finiteTuple(ocean.swimBounds, 4) ||
+        ocean.swimBounds.some((n) => Math.abs(n) > MAX_ABS) ||
+        ocean.swimBounds[0] >= ocean.swimBounds[2] || ocean.swimBounds[1] >= ocean.swimBounds[3])) ||
       (ocean.geometryVersion !== undefined && ocean.geometryVersion !== 2) ||
       !finiteTuple(ocean.p, 3) ||
       ocean.p.some((number) => Math.abs(number) > MAX_ABS) ||
@@ -6000,6 +6006,7 @@ export class Level {
   private buildCustomWaterPresentation(data: CustomLevelData): void {
     const spec = data.ocean;
     if (spec) {
+      this.capturedOceanSpec = JSON.parse(JSON.stringify(spec));
       const yaw = THREE.MathUtils.degToRad(spec.yaw ?? 0);
       const cosine = Math.cos(yaw), sine = Math.sin(yaw);
       const sx = cosine * spec.seaward;
@@ -7847,6 +7854,15 @@ export class Level {
   // direction the camera and the controls steer along.
   readonly cameraViews: CameraView[] = [];
   private lanePts: { x: number; y: number; z: number }[] = [];
+  get hasSwimmableWater(): boolean { return !!this.capturedOceanSpec?.swimBounds; }
+
+  /** Only explicitly authored water supports swimming; other oceans retain their rules. */
+  swimmingSurfaceAt(x: number, z: number): number | null {
+    const b = this.capturedOceanSpec?.swimBounds;
+    if (!this.water || !b || x < b[0] || x > b[2] || z < b[1] || z > b[3]) return null;
+    return this.water.heightAt(x, z);
+  }
+
   water: CoastWater | null = null; // the coast's procedural sea (main drives its update with the camera)
   private beachfrontReferenceDispose: (() => void) | null = null;
   private islandShoreFoam: IslandShoreFoam | null = null;
@@ -11768,6 +11784,15 @@ export class Level {
           invisible:true,tex:"solid",nm:c.nm,grp:c.grp});
       } else this.decorProp(c);
     }
+
+    const cove = jungleShore(gx, gy);
+    this.sceneryCaptureGroups.push(cove.group);
+    for (const c of cove.components) {
+      if (c.t === "mesh") this.buildSurfaceMesh(c);
+      else this.decorProp(c);
+    }
+    this.buildCustomWaterPresentation({ v: 1, name: this.name,
+      spawn: this.spawnPos.toArray(), killY: this.killY, ocean: cove.ocean, components: [] });
 
     // ---- FURNITURE ---------------------------------------------------------
     // Every seat below raycasts the terrain through floorY, and a mesh built

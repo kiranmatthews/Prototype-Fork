@@ -925,7 +925,7 @@ function updateWaterPresentation(dt: number): void {
   } else {
     level.water.clearPreCrtRenderSize();
   }
-  level.water.setQuality(level.skyPreset === "coast" && !split2p && !LITE_RENDER && !NO_OCEAN_PASSES ? "full" : "lite");
+  level.water.setQuality((level.skyPreset === "coast" || (level.hasSwimmableWater && player.pos.z > -12)) && !split2p && !LITE_RENDER && !NO_OCEAN_PASSES ? "full" : "lite");
   oceanTuning.apply(level.water, (current.id === "warproom" || level.isCampaignMap) ? "map" : "level");
   level.water.setSkyUrl(import.meta.env.BASE_URL + SKY_PRESETS[activeSky].file,
     SKY_PRESETS[activeSky].fog, presetHorizonV(activeSky));
@@ -4113,6 +4113,7 @@ function updateCamera(dt: number): void {
   // A rising jump over the gap can still lift it via the maxRise term.
   const floorY = player.groundBelowY;
   const anchorGoal =
+    player.swimming ? subject.y :
     floorY !== null
       ? Math.max(floorY, subject.y - maxRise)
       : Math.max(camAnchorY, subject.y - maxRise);
@@ -4123,7 +4124,7 @@ function updateCamera(dt: number): void {
   // full-follow (the camera rises with the jump, so airs read small and snappy
   // on screen); 0 = pure ground anchor (the skater does all the on-screen
   // rising — same physics, but every air reads much bigger and floatier).
-  const airLift = Math.max(TUNING.camAirLift, boulderF);
+  const airLift = player.swimming ? 1 : Math.max(TUNING.camAirLift, boulderF);
   const effY = THREE.MathUtils.lerp(camAnchorY, subject.y, airLift);
   camTarget.set(
     subject.x - camF.x * framing.distance,
