@@ -49,7 +49,7 @@ export function createJungleShoulder(z0:number,z1:number,baseY:number,width:numb
 
 /** Fade the deep scenery after fog so the bottom of a death pit stays black. */
 export function addJungleDepthFade(material: THREE.Material): void {
-  if(material.userData.jungleDepthFade)return;
+  if(material.userData.levelDepthFade === false || material.userData.jungleDepthFade)return;
   material.userData.jungleDepthFade=true;
   const previous=material.onBeforeCompile;
   const previousKey=material.customProgramCacheKey.bind(material);

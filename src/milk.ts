@@ -22,6 +22,9 @@ export class MilkMaterial extends THREE.MeshBasicMaterial {
   constructor() {
     super({ color: 0xffffff, toneMapped: false });
     this.name = 'opaque milk';
+    // This material serves every level and HUD flight. Scenery-only depth
+    // blackening must never turn low-altitude pickups into silhouettes.
+    this.userData.levelDepthFade = false;
     this.onBeforeCompile = shader => {
       shader.vertexShader = 'varying vec3 vMilkNormal;\nvarying vec3 vMilkEye;\n' + shader.vertexShader
         .replace('#if defined ( USE_ENVMAP ) || defined ( USE_SKINNING )', '#if 1')
