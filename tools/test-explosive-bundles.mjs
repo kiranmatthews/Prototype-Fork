@@ -16,8 +16,9 @@ try{
  assert.equal(a.fuseFraction.value,1);assert.equal(a.ember.visible,false);assert.equal(nitro.explosiveBundle.ember,undefined);
  level.lightFuse(ghost);assert.equal(ghost.fuse,undefined);assert.equal(ghost.explosiveBundle.visual.visible,false);
  level.lightFuse(first);assert.equal(first.fuse,3);assert.equal(a.ember.visible,true);
- const originalTip=a.ember.position.y;
+ const originalTip=a.ember.position.y,nitroY=nitro.mesh.position.y;
  for(let i=0;i<60;i++)level.update(1/60);
+ assert.equal(nitro.mesh.position.y,nitroY,'Nitro moved vertically at idle');
  assert.ok(Math.abs(first.fuse-2)<1e-8);assert.ok(a.ember.position.y<originalTip);assert.ok(Math.abs(a.fuseFraction.value-2/3)<1e-8);
  assert.equal(second.fuse,undefined);assert.equal(b.fuseFraction.value,1,'one TNT fuse consumed another');
  level.lightFuse(second);
@@ -29,6 +30,7 @@ try{
  level.reset(true);assert.equal(first.alive,true);assert.equal(a.fuseFraction.value,1);assert.equal(a.ember.visible,false);
  for(const remaining of [3,2,1])assert.ok(explosivePulse(false,remaining,0)>.999,'pulse missed a countdown beat');
  assert.ok(explosivePulse(false,2.5,0)<.001);assert.equal(explosivePulse(false,undefined,0),0);
+ assert.ok(explosivePulse(true,undefined,.825)>=.65,'Nitro minimum pulse went dark');
  assert.notEqual(explosivePulse(true,undefined,0),explosivePulse(true,undefined,.275),'Nitro has no idle pulse');
  console.log('PASS explosive bundles: cube bounds, independent 3-second fuses, paused burn, detonation, reset, outline safety and countdown/idle pulses.');
 }finally{level?.dispose();await new Promise(r=>setTimeout(r,30));console.warn=warn;await server.close();}

@@ -68,8 +68,10 @@ try {
   };
 
   const allIds = [...PLAYER_STATE_CLIP_IDS, ...PLAYER_TRANSITION_CLIP_IDS];
-  assert.equal(allIds.length, 20);
-  assert.equal(new Set(allIds).size, 20);
+  assert.equal(allIds.length, 23);
+  assert.equal(new Set(allIds).size, 23);
+  for (const id of ['player.swim', 'player.swim-idle', 'player.death'])
+    assert.ok(allIds.includes(id), `missing authored ${id} route`);
   assert.deepEqual(LEGACY_GAMEPLAY_PRESENTATION_CLIP_IDS, ['player.skate']);
   assert.deepEqual(ACTION_PROGRESS_TIMELINE_CLIP_IDS, [
     'player.jump', 'player.double-jump', 'player.fall', 'player.rope-climb',
@@ -217,9 +219,9 @@ try {
   head.position.z = 7;
   tick(0.1);
   assert.equal(runtime.activeClipId, 'player.idle');
-  near(hips.position.x, 0);
+  near(hips.position.x, allIds.indexOf('player.idle'));
   near(head.position.z, 7);
-  near(hipsXWhenDeformed, 0);
+  near(hipsXWhenDeformed, allIds.indexOf('player.idle'));
   near(upperArmRestAngleWeight, 1);
 
   // A saved Run without new metadata still discovers the source-matched
@@ -269,6 +271,9 @@ try {
       if (actionProgressTimelineIds.has(id))
         near(runtime.diagnostics.timelineTime, actionProgress);
     }
+    // Swim-to-idle deliberately blends for 0.3 s; idle rest-angle ownership
+    // reaches one after that handoff, not on its first sample.
+    if (id === 'player.idle') tick(.3);
     near(upperArmRestAngleWeight, id === 'player.idle' ? 1 : 0);
   }
 
@@ -583,7 +588,7 @@ try {
   near(upperArmRestAngleWeight, 0.5);
   near(deformationValues['deform.torso.length'], 1.2);
   near(hips.position.x,
-    (outgoingRunX + LOCOMOTION_BLEND_SECONDS / 2) / 2);
+    (outgoingRunX + allIds.indexOf('player.idle') + LOCOMOTION_BLEND_SECONDS / 2) / 2);
   tick(LOCOMOTION_BLEND_SECONDS / 2);
   assert.equal(runtime.activeClipId, 'player.idle');
   assert.equal(runtime.diagnostics.transientClipId, null);

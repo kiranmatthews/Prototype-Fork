@@ -77,7 +77,7 @@ export function fusePoint(fraction:number,target=new THREE.Vector3()):THREE.Vect
   return target.set(.06*Math.sin(t*1.7)*t,.502+.31*t,.02*Math.sin(t*2.1)*t);
 }
 export function explosivePulse(nitro:boolean,remaining:number|undefined,clock:number):number{
-  if(nitro)return .12+.64*Math.pow(.5+.5*Math.sin(clock*Math.PI*2/1.1),2);
+  if(nitro)return .65+.55*Math.pow(.5+.5*Math.sin(clock*Math.PI*2/1.1),2);
   if(remaining===undefined)return 0;
   const elapsed=CONST.tntFuse-THREE.MathUtils.clamp(remaining,0,CONST.tntFuse);
   return Math.pow(.5+.5*Math.cos(elapsed*Math.PI*2),6);

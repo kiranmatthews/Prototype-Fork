@@ -17,6 +17,10 @@ function installHeadlessDom() {
     style: {},
     classList,
     children: [],
+    // Non-DOM gameplay tests still let presentation owners query their empty
+    // semantic subtree (the competition running HUD has no menu card).
+    querySelector: () => null,
+    querySelectorAll: () => [],
     addEventListener: noop,
     removeEventListener: noop,
     setAttribute: noop,

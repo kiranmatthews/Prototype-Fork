@@ -17,14 +17,21 @@ const gameInterface = await text("src/gameInterfaceSurface.ts");
 assert.match(worldMapUi, /this\.enterButton\.textContent = "Play"/);
 assert.doesNotMatch(worldMapUi, /this\.enterButton\.innerHTML/);
 assert.match(gameInterface, /this\.box\(ctx,enter\);\s*this\.text\(ctx,enter\)/, "Play must be text in the filtered interface too");
-assert.match(gameFlow, /if \(this\.mapDirect\) \{\s*const close = this\.button\("X", \(\) => this\.goBack\(\)\)/, "each map utility needs a cancel/back close, never a quit action");
-assert.match(gameFlow, /close\.setAttribute\("aria-label", "Close menu"\)/);
-assert.match(gameFlow, /body\.tc-on \.game-shell-panel\.game-map-menu-panel \{[^}]*pointer-events:auto[^}]*overflow-y:auto[^}]*touch-action:pan-y/s);
-assert.match(gameFlow, /\.game-menu-button\.game-map-close \{[^}]*position:fixed[^}]*width:48px; height:48px/s, "X must remain at the viewport top with a real touch target");
-assert.match(gameFlow, /this\.panel\.scrollTop = 0/, "opening another panel should reset its scroll position");
-assert.match(gameFlow, /this\.panel\.addEventListener\("scroll", \(\) => this\.invalidatePreCrt\(\)/, "scrolling must redraw filtered text");
-assert.match(gameFlowSurface, /button\.classList\.contains\("game-map-close"\) \? "close"/);
-assert.match(gameFlowSurface, /if \(button\.kind === "close"\)/, "close requires its own opaque pre-CRT ink, not the narrow generic action layout");
+const menuLayout = await text("src/game-menu-layout.css");
+assert.match(gameFlow, /private backToMapOrPause\(\): void \{\s*if \(this\.mapDirect\) \{\s*this\.callbacks\.onResume\(\)/,
+  "map-menu Back must resume the map without performing a pending quit/save action");
+assert.match(gameFlow, /menuHint\('BACK', \['back'\], back\)/, "level selection must expose the shared Back prompt/action");
+assert.match(gameFlow, /style\.textContent \+= menuLayoutStyle/, "the shared TV-safe sizing policy must follow legacy artwork styles");
+assert.match(menuLayout, /\.game-shell-panel, body\.tc-on \.game-shell-panel\.game-map-menu-panel \{[^}]*overflow:hidden/s,
+  "touch map utilities must retain fixed screen regions rather than whole-menu scrolling");
+assert.match(menuLayout, /\.game-scroll-segment \{[^}]*min-height:0[^}]*overflow:auto/s,
+  "long content may scroll only inside its bounded segment");
+assert.match(menuLayout, /\.game-menu-hints \{[^}]*position:absolute[^}]*bottom:3vh/s,
+  "control hints must remain in their fixed bottom region");
+assert.match(gameFlow, /this\.panel\.addEventListener\("scroll", \(\) => this\.invalidatePreCrt\(\), \{\s*passive: true, capture: true/,
+  "nested segment scrolling must invalidate the filtered mirror");
+assert.match(gameFlowSurface, /if \(rect\.clip\)[^\n]*ctx\.clip\(\)/,
+  "the Canvas mirror must clip content to the same bounded segment");
 const secondaryText = await text("src/secondary-text.css");
 assert.match(secondaryText, /CCGeekSpeakTweak-Bold-staging\.ttf/);
 const secondaryLabel = await text("src/secondaryText.ts");
@@ -190,11 +197,11 @@ for (const [height, safeTop, safeLeft] of [[390, 0, 0], [375, 18, 21], [430, 47,
   assert.ok(pause.top >= safeTop && pause.top + pause.height <= height);
 }
 
-assert.match(
-  await text("src/gameFlowUI.ts"),
-  /orientation: landscape[\s\S]{0,500}grid-template-columns: minmax\(0, 1\.35fr\) minmax\(190px, \.65fr\)[\s\S]{0,500}min-height: 44px/,
-  "short landscape phones must keep pause actions in the first row",
-);
+assert.match(menuLayout,
+  /\.game-pause-layout \{[^}]*width:100%; height:100%[^}]*grid-template-columns:minmax\(0,1\.2fr\) minmax\(0,\.9fr\)/s,
+  "pause must fit its preview, actions and progress within a full-screen composition");
+assert.match(menuLayout, /\.game-pause-actions \{[^}]*grid-column:2; grid-row:1\/3/s,
+  "pause actions must remain beside the preview, including short landscape screens");
 
 const { createServer } = await import("vite");
 const secondaryServer = await createServer({ appType: "custom", logLevel: "silent", server: { middlewareMode: true } });

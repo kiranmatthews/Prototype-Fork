@@ -153,9 +153,12 @@ assert.ok(gameplayFlowStart >= 0 && gameplayFlowEnd > gameplayFlowStart,
 const gameplayFlow = main.slice(gameplayFlowStart, gameplayFlowEnd);
 assert.match(
   gameplayFlow,
-  /renderPrimaryScene\([\s\S]{0,180}composited \? drawGameFlowPreCrt : undefined/,
+  /renderPrimaryScene\([\s\S]{0,180}composited && coastPost\?\.gameFlowPostActive \? drawGameFlowPreCrt : undefined/,
   "pause/results UI must enter through the post-LOOK PreCrtOverlay pass",
 );
+assert.match(gameplayFlow,
+  /if \(composited && !coastPost\?\.gameFlowPostActive\)[\s\S]{0,100}renderer\.getSize\([\s\S]{0,140}gameFlow\.drawPreCrt\(/,
+  "CRT-off menus must use the direct surface with logical viewport dimensions");
 
 const bloom = await text("src/unityBloom.ts");
 for (const contract of [

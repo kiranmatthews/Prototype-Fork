@@ -8562,16 +8562,15 @@ export class Level {
       c.mesh.scale.set(1 + hit * 0.08, 1 - hit * 0.18, 1 + hit * 0.08);
       if (c.hitPulse <= 0) c.mesh.scale.setScalar(1);
     }
-    // Nitro crates bob menacingly.
+    // Legacy Nitro boxes bob; dynamite bundles stay seated at their authored height.
     this.time += dt;
     for (const thorn of this.thornClusters) thorn.update(this.time);
     for (const c of this.crates) {
       if (!c.nitro) continue;
-      c.mesh.position.y =
-        (c.mesh.userData.baseY as number) +
-        Math.sin(this.time * 4 + c.mesh.position.z) * 0.12;
+      c.mesh.position.y = (c.mesh.userData.baseY as number) + (c.explosiveBundle ? 0 :
+        Math.sin(this.time * 4 + c.mesh.position.z) * 0.12);
     }
-    // Lit TNT fuses: pulse faster and faster, then blow.
+    // Lit TNT keeps the 3/2/1 audio; bundles use that clock for rope burn and colour beats.
     for (const c of this.crates) {
       if (!c.tnt || !c.alive || c.fuse === undefined) continue;
       c.fuse -= dt;
