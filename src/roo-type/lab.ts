@@ -32,8 +32,10 @@ const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true,
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.setClearColor(0x000000, 0);
 const scene = new THREE.Scene();
-const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 100);
-camera.position.z = 20;
+// Pixel-sized words sweep hundreds of depth units during a turn. Keep the
+// complete line between the near/far planes at either end of the yaw control.
+const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 3000);
+camera.position.z = 1000;
 const bonus = createRooMaterial('bonus'), counter = createRooMaterial('counter');
 const source = await loadRooVectors();
 let factory = new RooTypeGeometry(source);

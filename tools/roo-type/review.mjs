@@ -17,7 +17,9 @@ try{
   await page.evaluate(()=>window.rooTypeLab.setTime(0));
   report.checks.liveMetrics=await page.evaluate(()=>window.rooTypeLab.metrics());
   const capture=async name=>{await page.screenshot({path:`${out}/${name}.png`});report.captures.push(name);};
+  const coverage=()=>page.evaluate(()=>{const source=window.rooTypeLab.renderer.domElement,c=document.createElement('canvas');c.width=source.width;c.height=source.height;const ctx=c.getContext('2d');ctx.drawImage(source,0,0);const data=ctx.getImageData(0,0,c.width,c.height).data;let n=0;for(let i=3;i<data.length;i+=4)if(data[i]>127)n++;return n;});
   await capture('live-front');
+  const frontCoverage=await coverage();
   const front=await page.evaluate(()=>window.rooTypeLab.renderer.domElement.toDataURL());
   await page.mouse.move(1050,300);await page.evaluate(()=>window.rooTypeLab.setTime(0));
   const relit=await page.evaluate(()=>window.rooTypeLab.renderer.domElement.toDataURL());
@@ -25,6 +27,14 @@ try{
   await capture('live-relit');
   await page.locator('#turn').fill('18');await page.locator('#turn').dispatchEvent('input');
   await page.evaluate(()=>window.rooTypeLab.setTime(0));await capture('live-turn');
+  report.checks.turnCoverage=[];
+  for(const angle of [-25,25]){
+    await page.locator('#turn').fill(String(angle));await page.locator('#turn').dispatchEvent('input');
+    await page.evaluate(()=>window.rooTypeLab.setTime(0));
+    const ratio=(await coverage())/frontCoverage;
+    assert.ok(ratio>.85&&ratio<1.08,`Yaw ${angle} clipped glyphs: coverage ${ratio}`);
+    report.checks.turnCoverage.push({angle,ratio});
+  }
   await page.locator('#reset').click();
   await page.locator('#mode').selectOption('baked');
   await page.evaluate(()=>window.rooTypeLab.setTime(0));await capture('baked-font');
