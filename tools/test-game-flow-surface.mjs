@@ -152,10 +152,10 @@ assert.match(saveLoadFlow, /this\.campaign\.dirty/);
 const saveAt = saveLoadFlow.indexOf('this.button("SAVE GAME"');
 const loadAt = saveLoadFlow.indexOf('this.button("LOAD GAME"');
 const autosaveAt = saveLoadFlow.indexOf('"AUTOSAVE"');
-const backAt = saveLoadFlow.indexOf('this.button("BACK"');
+
 assert.ok(
-  saveAt >= 0 && saveAt < loadAt && loadAt < autosaveAt && autosaveAt < backAt,
-  "Save Game, Load Game, Autosave, Back order drifted",
+  saveAt >= 0 && saveAt < loadAt && loadAt < autosaveAt,
+  "Save Game, Load Game, Autosave order drifted",
 );
 
 for (const [method, action] of [

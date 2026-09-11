@@ -23,6 +23,7 @@ export type GameFlowSurfaceScreen =
   | "confirm-save"
   | "confirm-load"
   | "confirm-quit-main"
+  | "confirm-level-select"
   | "pause"
   | "level-select"
   | "progress"
@@ -73,6 +74,7 @@ export interface GameFlowSurfaceButton {
   valueLabel: string;
   color: string;
   valueColor: string;
+  stacked?: boolean;
   opacity: number;
   fontFamily: string;
   fontSize: number;
@@ -182,27 +184,14 @@ const TEXT_SELECTOR = [
 
 const PREVIOUS_VIEWPORT = new THREE.Vector4();
 const PREVIOUS_SCISSOR = new THREE.Vector4();
-export const GAME_FLOW_MAX_RASTER_PIXELS = 2_073_600;
 
 function finiteDimension(value: number): number {
   return Number.isFinite(value) ? Math.max(1, Math.round(value)) : 1;
 }
 
-/** Keep Canvas2D uploads bounded while the quad still covers the full target. */
-export function gameFlowRasterSize(
-  width: number,
-  height: number,
-): GameFlowSurfaceSize {
-  const targetWidth = finiteDimension(width);
-  const targetHeight = finiteDimension(height);
-  const pixels = targetWidth * targetHeight;
-  if (pixels <= GAME_FLOW_MAX_RASTER_PIXELS)
-    return { width: targetWidth, height: targetHeight };
-  const scale = Math.sqrt(GAME_FLOW_MAX_RASTER_PIXELS / pixels);
-  return {
-    width: Math.max(1, Math.floor(targetWidth * scale)),
-    height: Math.max(1, Math.floor(targetHeight * scale)),
-  };
+/** Match the HUD's render target: never downsample menu type to a 1080p intermediate. */
+export function gameFlowRasterSize(width: number, height: number): GameFlowSurfaceSize {
+  return { width: finiteDimension(width), height: finiteDimension(height) };
 }
 
 function finiteCssNumber(value: string, fallback: number): number {
@@ -335,6 +324,8 @@ export function snapshotGameFlowSurface(
 
   const texts: GameFlowSurfaceText[] = [];
   for (const node of source.panel.querySelectorAll<HTMLElement>(TEXT_SELECTOR)) {
+    // The semantic label owns its text; PNG/SVG decoration is not another label.
+    if (node.closest("[data-roo-menu], .roo-menu-art, .roo-menu-source")) continue;
     const silver = node.classList.contains("secondary-silver");
     const text = ((silver ? node.firstChild?.textContent : node.textContent) ?? "").replace(/\s+/g, " ").trim();
     const measuredRect = rectFrom(node, origin);
@@ -430,6 +421,7 @@ export function snapshotGameFlowSurface(
               .replace(/\s+/g, " ")
               .trim(),
         valueLabel: (value?.textContent ?? "").trim(),
+        stacked: toggle && style.flexDirection === "column",
         color: levelRow || button.closest(".game-progress-ledger, .game-level-header") ? style.color : stableButtonColor(button, style.color),
         valueColor: value
           ? disabled
@@ -570,7 +562,10 @@ export class GameFlowSurface {
     if (this.disposed) return false;
     const targetWidth = finiteDimension(inputSize.width);
     const targetHeight = finiteDimension(inputSize.height);
-    const raster = gameFlowRasterSize(targetWidth, targetHeight);
+    // Null-target viewports use CSS units in Three.js, but the texture needs
+    // physical pixels. Render-target inputs are already expressed in pixels.
+    const pixelRatio = target === null ? renderer.getPixelRatio() : 1;
+    const raster = gameFlowRasterSize(targetWidth * pixelRatio, targetHeight * pixelRatio);
     const state = this.state ?? this.readState();
     this.state = state;
     this.screen = state.screen;
@@ -919,7 +914,14 @@ export class GameFlowSurface {
       ctx.textBaseline = "middle";
       ctx.shadowColor = button.launch ? "#172536" : "rgba(255,235,151,.6)";
       ctx.shadowOffsetY = 2;
-      if (button.kind === "toggle") {
+      if (button.kind === "toggle" && button.stacked) {
+        const size = button.fontSize * .882;
+        ctx.textAlign = 'center'; ctx.fillStyle = button.color;
+        for (const [label, offset] of [[button.label, -.8], [button.valueLabel, .8]] as const) {
+          const x = rect.x + rect.width / 2, y = rect.y + rect.height / 2 + offset * button.fontSize;
+          if (!this.rooAtlas.draw(ctx, rooMenuText(label), x, y, {size, palette:button.rooPalette, align:'center', maxWidth:Math.max(1,rect.width-16)})) ctx.fillText(label,x,y,Math.max(1,rect.width-16));
+        }
+      } else if (button.kind === "toggle") {
         // The Canvas mirror does not inherit flexbox shrinking/wrapping.
         // Fit the label and choice together, reserving a real gap even for
         // long values such as CLASSIC on a narrow options card.

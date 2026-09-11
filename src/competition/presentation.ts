@@ -196,7 +196,7 @@ export class CompetitionPresentation {
         content.prepend(pager);
       }
       const hints=document.createElement('footer');hints.className='game-menu-hints comp-hints';
-      hints.append(menuHint('CHOOSE',['up','down']),menuHint('SELECT',['confirm']));
+      hints.append(menuHint('SELECT',['confirm']));
       if(this.guideOpen)hints.append(menuHint('PAGE',['left','right']),menuHint('BACK',['back']));
       card.append(hints);
     }

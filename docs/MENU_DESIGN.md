@@ -11,3 +11,8 @@ Player-facing menus are game screens, composed for a TV frame. They must not beh
 - Check 16:9 at 1280×720 and 1920×1080, 4:3, and compact portrait/landscape. No controls or essential text may escape the screen. Respect reduced motion.
 
 `src/game-menu-layout.css` owns the shared sizing policy; it is inserted after the legacy artwork styles. `src/menuPresentation.ts` reuses the game collectible factories and renderer. It does not create another WebGL context or load gameplay levels while browsing. Preview JPEGs in `public/level-previews` are captured from actual game geometry; the local authoring helper is `tools/capture-level-previews.ts`.
+
+- Map Level Stats retains level selection and entry. Gameplay pause keeps the Level Select name and requires confirmation before abandoning the current run; cancel preserves it.
+- Pause and Options use actions/options on the left and the overall collectibles sheet on the right. No progress bar or separate map Progress submenu.
+- Submenu hints are Select and clickable Back only; never show Up/Down Choose. Touch has no menu hints and uses a corner close action instead. Back is never a menu-list row.
+- Text appearance and shimmer are authoring controls in the M-dismissible Text Tuning panel, never gameplay options. Menu PNG text uses the HUD atlas painter at the render target's full resolution, including physical pixels on the direct path.

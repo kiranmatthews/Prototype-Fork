@@ -55,3 +55,5 @@ npm run build
 ```
 
 `glisten-proof.html` compares the neutral and an actual animated fade. `atlas-audit.html` and its capture script show all three frames for all 51 glyphs in both palettes. Checks cover preserved components, no clipped tile borders, complete source provenance, fixed alpha, different glisten pixels, actual clock-driven pixel changes, pause/manual/reduced-motion controls, exports, sizing, spacing and lite/full HUD/menu rendering. Exact overlap with the original flat font is deliberately not an acceptance gate. Visual review of the finished artwork remains required. The full test suite is not part of this brief.
+
+Menu appearance controls now live in the M-dismissible **Text Tuning** panel, including shimmer, light strength, letter spacing and the studio link. They are not gameplay options. The menu Canvas mirror keeps the full HUD render-target resolution (physical DPR on a direct target) and skips nested PNG decoration when collecting semantic text, so each label is painted once.

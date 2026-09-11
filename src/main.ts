@@ -1602,6 +1602,7 @@ let runStartRewards = {
   comboGem: false,
 };
 const player = new Player(scene);
+let runStartInventory = { lives: player.lives, fruit: player.fruit };
 player.onWipeout = () => competition?.bail();
 const playerAnimationBinding = RigBinding.fromSculptRuntime(
   player.animationRig.root,
@@ -2221,6 +2222,7 @@ function switchLevel(
   // Save data wins after every rider's hard reset. Level stores the crystal
   // baseline too, so a later shared/P2 reset cannot resurrect it.
   adoptCommittedCampaignProgress(entry.id);
+  runStartInventory = { lives: player.lives, fruit: player.fruit };
   applyRunModes(); // the new level's pickups obey the switch too
   applyTheme();
   applyShadowFlags();
@@ -2652,21 +2654,24 @@ function selectLevelFromMenu(targetId: string): void {
   const destination = campaignLevelById(targetId);
   if (!destination || !campaign.levelUnlocked(destination.progressKey)) return;
   guardGameplayFromMenu();
-  if (bonusSession) {
-    player.lives = bonusSession.parentState.lives;
-    player.fruit = bonusSession.parentState.fruit;
-  } else player.bankFlyingFruit();
-  restoreCommittedRunRewards();
-  enterCampaignLevel(targetId);
+  enterCampaignLevel(targetId, !level.isCampaignMap && current.id !== 'warproom');
 }
 
-function enterCampaignLevel(targetId: string): void {
+function enterCampaignLevel(targetId: string, forfeitCurrentRun = false): void {
   const destination = campaignLevelById(targetId);
   if (!destination || !campaign.levelUnlocked(destination.progressKey)) return;
   if (level.isCampaignMap) campaignMapOriginId = current.id;
-  campaign.updateInventory(player.lives, player.fruit);
+  if (!forfeitCurrentRun) campaign.updateInventory(player.lives, player.fruit);
   void gameFlow.transition(async () => {
-    if (!switchLevel(targetId, false, true)) return;
+    if (!switchLevel(targetId, false, true, null, () => {
+      // Commit the forfeiture only after the destination successfully builds.
+      if (forfeitCurrentRun) {
+        player.lives = runStartInventory.lives;
+        player.fruit = runStartInventory.fruit;
+        restoreCommittedRunRewards();
+        campaign.updateInventory(player.lives, player.fruit);
+      }
+    })) return;
     campaign.setMapFocus(destination.progressKey);
     paused = false;
     await prepareActivePresentationAssets();

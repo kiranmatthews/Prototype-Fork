@@ -1,3 +1,4 @@
+import { getRooAppearance, setRooAppearance, ROO_APPEARANCE_EVENT } from './roo-type/settings';
 import { SECONDARY_TEXT_RANGES, secondaryTextSettings, type SecondaryTextSettings } from "./secondaryTextSettings";
 
 export function createSecondaryTextPanel(): void {
@@ -10,10 +11,28 @@ export function createSecondaryTextPanel(): void {
     root.addEventListener(event, event => {
       // M remains the shared debug-chrome toggle outside text/number editing.
       if (event instanceof KeyboardEvent && event.code === "KeyM" &&
-          !(event.target instanceof HTMLInputElement) && !(event.target instanceof HTMLTextAreaElement)) return;
+          (!(event.target instanceof HTMLInputElement) || ["checkbox", "range", "button"].includes(event.target.type)) && !(event.target instanceof HTMLTextAreaElement)) return;
       event.stopPropagation();
     });
   root.querySelector("header button")!.addEventListener("click", () => { root.open = false; });
+  const roo = document.createElement('section');
+  roo.className = 'roo-debug-controls';
+  roo.innerHTML = `<b>Roo HUD & menu text</b><label><span>Text shimmer</span><input type="checkbox" data-roo-setting="shimmer"></label><label><span>Edge light strength</span><input type="range" min="0" max="1" step="0.01" data-roo-setting="lightStrength"></label><label><span>Letter spacing (em)</span><input type="number" min="-.16" max=".16" step=".005" data-roo-setting="tracking"></label><button type="button" data-roo-studio>Open text appearance studio</button><hr>`;
+  body.querySelector('header')!.after(roo);
+  const syncRoo = () => {
+    const value = getRooAppearance();
+    for (const input of roo.querySelectorAll<HTMLInputElement>('[data-roo-setting]')) {
+      if (input.dataset.rooSetting === 'shimmer') input.checked = value.shimmer;
+      else input.value = String(value[input.dataset.rooSetting as 'tracking' | 'lightStrength']);
+    }
+  };
+  roo.addEventListener('input', event => {
+    const input = event.target as HTMLInputElement, key = input.dataset.rooSetting;
+    if (key === 'shimmer') setRooAppearance({ shimmer: input.checked });
+    else if ((key === 'tracking' || key === 'lightStrength') && Number.isFinite(input.valueAsNumber)) setRooAppearance({ [key]: input.valueAsNumber });
+  });
+  roo.querySelector('[data-roo-studio]')!.addEventListener('click', () => window.open(new URL(`${import.meta.env.BASE_URL}roo-type-lab.html`, location.href).href, 'roo-font-appearance'));
+  window.addEventListener(ROO_APPEARANCE_EVENT, syncRoo); syncRoo();
   const controls = root.querySelector(".secondary-text-controls")!;
   const sync: (() => void)[] = [];
   const names: Record<keyof typeof SECONDARY_TEXT_RANGES, string> = {
@@ -55,7 +74,7 @@ export function createSecondaryTextPanel(): void {
   const style = document.createElement("style");
   style.textContent = `
     .secondary-text-tuner { display:none; position:fixed; z-index:130; left:16px; top:16px; color:#e9eff3; font:13px/1.4 system-ui,sans-serif; }
-    body.world-map-active:not(.game-shell-modal):not(.game-shell-transitioning):not(.game-debug-hidden) .secondary-text-tuner { display:block; }
+    body:not(.game-shell-transitioning):not(.game-debug-hidden) .secondary-text-tuner { display:block; }
     .secondary-text-tuner summary { cursor:pointer; width:max-content; padding:7px 11px; border:1px solid #a6b6c4; border-radius:5px; background:#15212bea; font-size:11px; font-weight:800; }
     .secondary-text-tuner-body { width:310px; max-width:calc(100vw - 32px); max-height:calc(100dvh - 150px); overflow:auto; box-sizing:border-box; padding:12px; background:#15212bf5; border:1px solid #8194a2; border-radius:0 8px 8px; }
     .secondary-text-tuner header,.secondary-text-tuner footer { display:flex; align-items:center; justify-content:space-between; gap:8px; }

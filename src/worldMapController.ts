@@ -336,7 +336,7 @@ export class WorldMapController {
     }
 
     if (input.confirmPressed || input.jumpPressed) this.enterSelected();
-    else if (input.mapProgressPressed || input.grindPressed) this.openSection("progress");
+    else if (input.mapProgressPressed || input.grindPressed) this.openSection("options");
     else if (input.mapSaveLoadPressed || input.spinPressed) this.openSection("save-load");
     else if (input.mapQuitPressed || input.grabPressed) this.openSection("quit");
   }

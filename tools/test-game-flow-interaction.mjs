@@ -296,21 +296,11 @@ expect(
   "pause thumbnail must use a stable 16:9 cover crop instead of resizing or stretching",
 );
 
-// A 4K/retina post target must not force a same-sized Canvas2D upload. Keep
-// compositing at the requested target size, but cap the raster source.
-const rasterCap = surface.match(
-  /const\s+[A-Z0-9_]*MAX[A-Z0-9_]*RASTER[A-Z0-9_]*\s*=\s*([\d_]+)/,
-);
-expect(
-  rasterCap && Number(rasterCap[1].replaceAll("_", "")) > 0,
-  "GameFlowSurface needs an explicit finite Canvas raster cap",
-);
+// Menu glyphs retain the same target resolution as the HUD. Direct rendering
+// additionally accounts for the backing buffer's physical pixel ratio.
 const surfaceDraw = blockAfter(surface, "drawPreCrt(");
-expect(
-  !/ensureSize\(resources,\s*width,\s*height\)/.test(surfaceDraw) &&
-    /(?:raster|canvas|capped|scaled)[A-Za-z]*(?:Width|Size)/i.test(surfaceDraw),
-  "drawPreCrt must size Canvas storage from capped raster dimensions",
-);
+expect(!/MAX_RASTER_PIXELS/.test(surface), "menu type must not be downsampled to a 1080p canvas");
+expect(/target === null \? renderer.getPixelRatio\(\) : 1/.test(surfaceDraw), "direct menus must retain physical pixel resolution");
 
 expect(
   /\.game-save-slot:disabled/.test(surface) &&
@@ -351,5 +341,5 @@ if (failures.length) {
 }
 
 console.log(
-  "Validated stable GameFlow geometry, atomic composition, debug passthrough, and capped Canvas state.",
+  "Validated stable GameFlow geometry, atomic composition, debug passthrough, and full-resolution Canvas state.",
 );

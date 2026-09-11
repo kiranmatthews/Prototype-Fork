@@ -63,8 +63,7 @@ export class WorldMapUI {
     const actionBar = node("nav", "world-map-actions");
     actionBar.setAttribute("aria-label", "World map actions");
     actionBar.append(
-      this.actionButton("mapLevelSelect", "LEVEL SELECT", "level-select"),
-      this.actionButton("mapProgress", "VIEW PROGRESS", "progress"),
+      this.actionButton("mapLevelSelect", "LEVEL STATS", "level-select"),
       this.actionButton("mapOptions", "OPTIONS", "options"),
       this.actionButton("mapSaveLoad", "SAVE / LOAD", "save-load"),
       this.actionButton("mapQuit", "QUIT GAME", "quit"),
