@@ -1,3 +1,4 @@
+import {updateMenuPngFocus} from './menuPngFocus';
 // Game-owned menus and campaign screens. The live DOM remains the semantic
 // input/accessibility owner; GameFlowSurface can mirror its known geometry into
 // the pre-CRT render path without turning the menu into canvas hit regions.
@@ -604,6 +605,7 @@ export class GameFlowUI {
     // Input already polls gamepads for gameplay. Do not repeat that scan and
     // allocate an Array/state object on every ordinary gameplay frame.
     if (!this.screen) return;
+    if(updateMenuPngFocus(this.root,now))this.invalidatePreCrt();
     if (this.screen === "gameover") {
       const maskReady = document.body.classList.contains("game-flow-mask-ready");
       if (maskReady !== this.maskReady) {
@@ -1655,6 +1657,7 @@ export class GameFlowUI {
           selected.focus({ preventScroll: true });
       });
     }
+    updateMenuPngFocus(this.root,performance.now(),true);
     this.invalidatePreCrt();
   }
 

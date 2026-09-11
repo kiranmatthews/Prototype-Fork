@@ -9,7 +9,7 @@
 import { paintSilverSecondaryText } from "./secondaryText";
 import * as THREE from "three";
 import { trackPresentationImage } from "./presentationLoading";
-import { loadRooAtlases, RooAtlasPainter, layoutRooAtlas } from './roo-type/atlas';
+import { loadRooAtlases, RooAtlasPainter, layoutRooAtlas, type RooAtlasStyle } from './roo-type/atlas';
 import { ROO_ATLAS_METRICS } from './roo-type/atlas-metrics';
 import { getRooAppearance, ROO_APPEARANCE_EVENT, rooLightPosition } from './roo-type/settings';
 import { rooMenuText, rooMenuPalette } from './roo-type/menu';
@@ -63,6 +63,7 @@ export interface GameFlowSurfaceText {
   font: GameFlowSurfaceFont;
   wrap: boolean;
   silver?: boolean;
+  pngFilter?: string;
   rooPalette?:'bonus'|'counter';
 }
 
@@ -74,6 +75,7 @@ export interface GameFlowSurfaceButton {
   valueLabel: string;
   color: string;
   valueColor: string;
+  pngFilter?: string;
   stacked?: boolean;
   opacity: number;
   fontFamily: string;
@@ -381,6 +383,7 @@ export function snapshotGameFlowSurface(
         text,
         silver,
         rooPalette:rooMenuPalette(node),
+        pngFilter:style.getPropertyValue("--menu-png-colour-filter").trim()||undefined,
         rect,
         font,
         wrap:
@@ -402,7 +405,7 @@ export function snapshotGameFlowSurface(
     const slot = button.classList.contains("game-save-slot");
     const value = levelRow ? button.querySelector<HTMLElement>(".game-level-mark") : toggle ? button.querySelector<HTMLElement>(":scope > strong") : null;
     const label = levelRow ? button.querySelector<HTMLElement>(".game-level-label") : toggle ? button.querySelector<HTMLElement>(":scope > span") : null;
-    const selected = button.classList.contains("selected") || (levelRow && button.classList.contains("chosen"));
+    const selected = button.classList.contains("selected");
     const disabled = button.disabled;
     const danger = button.classList.contains("danger");
     const localOpacity = clamp01(finiteCssNumber(style.opacity, 1));
@@ -415,6 +418,7 @@ export function snapshotGameFlowSurface(
         kind: button.classList.contains("game-control-hint") ? "hint" : levelRow ? "level" : button.classList.contains("game-map-close") ? "close" : slot ? "slot" : toggle ? "toggle" : "action",
         launch: source.screen === "launch",
         rooPalette:rooMenuPalette(button),
+        pngFilter:style.getPropertyValue("--menu-png-colour-filter").trim()||undefined,
         label: slot
           ? ""
           : ((label?.textContent ?? button.textContent) || "")
@@ -829,13 +833,17 @@ export class GameFlowSurface {
     button: GameFlowSurfaceButton,
   ): void {
     const { rect } = button;
+    const png=(text:string,x:number,y:number,style:RooAtlasStyle)=>{
+      ctx.save();ctx.filter=button.pngFilter??'none';
+      const drawn=this.rooAtlas.draw(ctx,text,x,y,button.pngFilter?{...style,lightPosition:0}:style);
+      ctx.restore();return drawn;
+    };
     ctx.save();
     // One captured element opacity drives action/toggle text or the slot's
     // compound background. Slot child text receives that ancestor opacity in
     // its own snapshot, so rgba color alpha is never multiplied a second time.
     ctx.globalAlpha = button.opacity;
     if (button.kind === 'hint') {
-      if (button.selected) { roundedRect(ctx,rect,5);ctx.fillStyle='#ffd15c22';ctx.fill();ctx.strokeStyle='#ffc965';ctx.lineWidth=2;ctx.stroke(); }
       ctx.restore(); this.primitiveCount++;return;
     }
     if (button.kind === "close") {
@@ -849,65 +857,23 @@ export class GameFlowSurface {
     }
     if (button.kind === "level") {
       roundedRect(ctx, rect, 7);
-      if (button.selected) {
-        const gradient = ctx.createLinearGradient(0, rect.y, 0, rect.y + rect.height);
-        gradient.addColorStop(0, '#ffe6a0'); gradient.addColorStop(1, '#efaa4e'); ctx.fillStyle = gradient;
-      } else { const gradient = ctx.createLinearGradient(0,rect.y,0,rect.y+rect.height);gradient.addColorStop(0,'#347b80');gradient.addColorStop(1,'#153e4b');ctx.fillStyle=gradient; }
-      ctx.fill(); ctx.strokeStyle = button.selected ? '#ec712c' : 'rgba(109,51,23,.26)';
-      ctx.lineWidth = button.selected ? 2 : 1; ctx.stroke();
+      const gradient=ctx.createLinearGradient(0,rect.y,0,rect.y+rect.height);gradient.addColorStop(0,'#347b80');gradient.addColorStop(1,'#153e4b');ctx.fillStyle=gradient;
+      ctx.fill();ctx.strokeStyle='rgba(109,51,23,.26)';ctx.lineWidth=1;ctx.stroke();
       ctx.font = `${button.fontWeight} ${button.fontSize}px ${button.fontFamily}`;
       ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillStyle = button.selected ? '#542615' : '#fff4d6';
       const labelWidth=Math.max(1,rect.width-(button.valueLabel?45:28));
-      if(!/\bRoo\b/.test(button.fontFamily)||!this.rooAtlas.draw(ctx,rooMenuText(button.label),rect.x+16,rect.y+rect.height/2,{size:button.fontSize*.882,palette:button.rooPalette,align:'left',maxWidth:labelWidth}))ctx.fillText(button.label,rect.x+16,rect.y+rect.height/2,labelWidth);
+      if(!/\bRoo\b/.test(button.fontFamily)||!png(rooMenuText(button.label),rect.x+16,rect.y+rect.height/2,{size:button.fontSize*.882,palette:button.rooPalette,align:'left',maxWidth:labelWidth}))ctx.fillText(button.label,rect.x+16,rect.y+rect.height/2,labelWidth);
       ctx.textAlign = 'right'; ctx.font = '700 12px Arial,sans-serif'; ctx.fillStyle = '#713a1e';
       ctx.fillText(button.valueLabel, rect.x + rect.width - 14, rect.y + rect.height / 2);
       ctx.restore(); this.primitiveCount++; return;
     }
     if (button.kind === "slot") {
       roundedRect(ctx, rect, 10);
-      ctx.fillStyle = button.selected
-        ? "rgba(255,244,183,.68)"
-        : "rgba(255,226,147,.30)";
+      ctx.fillStyle = "rgba(255,226,147,.30)";
       ctx.fill();
       ctx.strokeStyle = "#7f3c1b";
       ctx.lineWidth = 3;
       ctx.stroke();
-    }
-    if (button.selected && button.kind !== "slot" && !button.launch) {
-      // A warm, stable highlight replaces the DOM's layout-changing scale and
-      // filter transition. It uses the same paper/orange palette without ever
-      // moving the semantic hit rectangle underneath the pointer.
-      const insetX = Math.max(3, Math.min(10, rect.height * 0.12));
-      const insetY = Math.max(2, Math.min(6, rect.height * 0.08));
-      roundedRect(
-        ctx,
-        {
-          x: rect.x + insetX,
-          y: rect.y + insetY,
-          width: Math.max(1, rect.width - insetX * 2),
-          height: Math.max(1, rect.height - insetY * 2),
-        },
-        8,
-      );
-      ctx.fillStyle = "rgba(255,244,183,.22)";
-      ctx.fill();
-      ctx.strokeStyle = "rgba(240,90,32,.40)";
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-    }
-    if (button.selected) {
-      const mid = rect.y + rect.height / 2;
-      ctx.beginPath();
-      ctx.moveTo(rect.x + 4, mid - 10);
-      ctx.lineTo(rect.x + 21, mid);
-      ctx.lineTo(rect.x + 4, mid + 10);
-      ctx.closePath();
-      ctx.fillStyle = "#218d3c";
-      ctx.shadowColor = "#103514";
-      ctx.shadowOffsetX = 1;
-      ctx.shadowOffsetY = 1;
-      ctx.fill();
-      ctx.shadowColor = "transparent";
     }
     if (button.kind !== "slot") {
       ctx.font = `${button.fontWeight} ${button.fontSize}px ${button.fontFamily}`;
@@ -919,7 +885,7 @@ export class GameFlowSurface {
         ctx.textAlign = 'center'; ctx.fillStyle = button.color;
         for (const [label, offset] of [[button.label, -.8], [button.valueLabel, .8]] as const) {
           const x = rect.x + rect.width / 2, y = rect.y + rect.height / 2 + offset * button.fontSize;
-          if (!this.rooAtlas.draw(ctx, rooMenuText(label), x, y, {size, palette:button.rooPalette, align:'center', maxWidth:Math.max(1,rect.width-16)})) ctx.fillText(label,x,y,Math.max(1,rect.width-16));
+          if (!png(rooMenuText(label), x, y, {size, palette:button.rooPalette, align:'center', maxWidth:Math.max(1,rect.width-16)})) ctx.fillText(label,x,y,Math.max(1,rect.width-16));
         }
       } else if (button.kind === "toggle") {
         // The Canvas mirror does not inherit flexbox shrinking/wrapping.
@@ -934,10 +900,10 @@ export class GameFlowSurface {
         ctx.font = `${button.fontWeight} ${button.fontSize * fit}px ${button.fontFamily}`;
         ctx.textAlign = "left";
         ctx.fillStyle = button.color;
-        if(!usesRoo||!this.rooAtlas.draw(ctx,rooMenuText(button.label),rect.x+25,rect.y+rect.height/2,{size:button.fontSize*fit*.882,palette:button.rooPalette,align:'left'}))ctx.fillText(button.label,rect.x+25,rect.y+rect.height/2);
+        if(!usesRoo||!png(rooMenuText(button.label),rect.x+25,rect.y+rect.height/2,{size:button.fontSize*fit*.882,palette:button.rooPalette,align:'left'}))ctx.fillText(button.label,rect.x+25,rect.y+rect.height/2);
         ctx.textAlign = "right";
         ctx.fillStyle = button.valueColor;
-        if(!usesRoo||!this.rooAtlas.draw(ctx,rooMenuText(button.valueLabel),rect.x+rect.width-25,rect.y+rect.height/2,{size:button.fontSize*fit*.882,palette:button.rooPalette,align:'right'}))ctx.fillText(
+        if(!usesRoo||!png(rooMenuText(button.valueLabel),rect.x+rect.width-25,rect.y+rect.height/2,{size:button.fontSize*fit*.882,palette:button.rooPalette,align:'right'}))ctx.fillText(
           button.valueLabel,
           rect.x + rect.width - 25,
           rect.y + rect.height / 2,
@@ -947,7 +913,7 @@ export class GameFlowSurface {
         // Snapshot color already includes selected, danger and Game Over's
         // context override from the semantic DOM cascade.
         ctx.fillStyle = button.color;
-        if(!/\bRoo\b/.test(button.fontFamily)||!this.rooAtlas.draw(ctx,rooMenuText(button.label),rect.x+rect.width/2,rect.y+rect.height/2,{size:button.fontSize*.882,palette:button.rooPalette,align:'center',maxWidth:Math.max(1,rect.width-36)}))ctx.fillText(
+        if(!/\bRoo\b/.test(button.fontFamily)||!png(rooMenuText(button.label),rect.x+rect.width/2,rect.y+rect.height/2,{size:button.fontSize*.882,palette:button.rooPalette,align:'center',maxWidth:Math.max(1,rect.width-36)}))ctx.fillText(
           button.label,
           rect.x + rect.width / 2,
           rect.y + rect.height / 2,
@@ -1087,7 +1053,11 @@ export class GameFlowSurface {
         : rect.x;
     for (let index = 0; index < lines.length; index++) {
       const y = top + lineHeight * (index + 0.5);
-      if(/\bRoo\b/.test(font.family)&&this.rooAtlas.draw(ctx,rooMenuText(lines[index]),x,y,{size:font.size*.882,palette:text.rooPalette,align:font.align,maxWidth:rect.width}))continue;
+      if(/\bRoo\b/.test(font.family)){
+        ctx.filter=text.pngFilter??'none';
+        if(this.rooAtlas.draw(ctx,rooMenuText(lines[index]),x,y,{size:font.size*.882,palette:text.rooPalette,...(text.pngFilter?{lightPosition:0}:{}),align:font.align,maxWidth:rect.width}))continue;
+        ctx.filter='none';
+      }
       if (font.strokeWidth > 0) ctx.strokeText(lines[index], x, y, rect.width);
       ctx.fillText(lines[index], x, y, rect.width);
     }

@@ -1,0 +1,11 @@
+/* Colour filters on the existing PNG artwork, not replacement glyphs or ink. */
+.png-menu-focus .game-menu-button .roo-menu-art { filter:var(--menu-png-colour-filter,none); }
+.png-menu-focus .game-menu-button::before { display:none !important; }
+.png-menu-focus .game-menu-button { outline:none !important; box-shadow:none !important; filter:none !important; transition:none !important; }
+.png-menu-focus .game-menu-button.selected:not(.game-save-slot):not(.game-level-row):not(.game-map-close) { background:transparent !important; }
+.png-menu-focus .game-save-slot.selected { background:rgba(255,226,147,.30) !important; }
+.png-menu-focus .game-level-row.chosen,.png-menu-focus .game-level-row.selected { background:linear-gradient(#347b80,#153e4b) !important; border:1px solid #52908b !important; }
+
+/* Keep the approved neutral PNG visible; lighting assets remain untouched. */
+.png-menu-focus .game-menu-button:not(.game-control-hint) .roo-text-svg > g > g { opacity:0 !important; }
+.png-menu-focus .game-menu-button:not(.game-control-hint) .roo-text-svg > g > g:first-child { opacity:1 !important; }

@@ -1,3 +1,4 @@
+import {getMenuPngFocusSettings,setMenuPngFocusSettings,resetMenuPngFocusSettings,MENU_PNG_FOCUS_RANGES,MENU_PNG_FOCUS_EVENT,type MenuPngFocusSettings} from './menuPngFocusSettings';
 import { getRooAppearance, setRooAppearance, ROO_APPEARANCE_EVENT } from './roo-type/settings';
 import { SECONDARY_TEXT_RANGES, secondaryTextSettings, type SecondaryTextSettings } from "./secondaryTextSettings";
 
@@ -5,7 +6,7 @@ export function createSecondaryTextPanel(): void {
   if (document.querySelector(".secondary-text-tuner")) return;
   const root = document.createElement("details");
   root.className = "secondary-text-tuner";
-  root.innerHTML = `<summary>TEXT TUNING</summary><div class="secondary-text-tuner-body"><header><b>Secondary text</b><button type="button" aria-label="Close text tuning">×</button></header><p>Live map preview · saved in this browser</p><div class="secondary-text-controls"></div><p>Weight adjusts the glyph face thickness; the supplied font is a fixed Bold face.</p><footer><button type="button" data-action="reset">Reset</button><button type="button" data-action="copy">Copy settings</button></footer><textarea aria-label="Text settings JSON" readonly hidden></textarea><p role="status"></p></div>`;
+  root.innerHTML = `<summary>TEXT TUNING</summary><div class="secondary-text-tuner-body"><header><b>Text tuning</b><button type="button" aria-label="Close text tuning">×</button></header><p>Live map preview · saved in this browser</p><div class="secondary-text-controls"></div><p>Weight adjusts the glyph face thickness; the supplied font is a fixed Bold face.</p><footer><button type="button" data-action="reset">Reset</button><button type="button" data-action="copy">Copy settings</button></footer><textarea aria-label="Text settings JSON" readonly hidden></textarea><p role="status"></p></div>`;
   const body = root.querySelector<HTMLElement>(".secondary-text-tuner-body")!;
   for (const event of ["keydown", "keyup", "pointerdown", "pointerup", "touchstart", "touchend", "wheel"])
     root.addEventListener(event, event => {
@@ -33,6 +34,19 @@ export function createSecondaryTextPanel(): void {
   });
   roo.querySelector('[data-roo-studio]')!.addEventListener('click', () => window.open(new URL(`${import.meta.env.BASE_URL}roo-type-lab.html`, location.href).href, 'roo-font-appearance'));
   window.addEventListener(ROO_APPEARANCE_EVENT, syncRoo); syncRoo();
+  const focus=document.createElement('section');focus.className='menu-png-tuning';
+  focus.innerHTML='<hr><b>Menu PNG focus filters</b><p>Orange is the untouched neutral PNG. Reference: one white frame, three orange frames at 30 fps.</p>';
+  const focusLabels:Record<keyof MenuPngFocusSettings,string>={rateHz:'Flash rate (Hz; 0 = still)',whitePercent:'White duration (%)',whiteBrightness:'White flash brightness',whiteDesaturation:'White flash desaturation',inactiveSaturation:'Inactive saturation',inactiveBrightness:'Inactive brightness'};
+  const focusSync:(()=>void)[]=[];
+  for(const key of Object.keys(focusLabels) as (keyof MenuPngFocusSettings)[]){
+    const[min,max,step]=MENU_PNG_FOCUS_RANGES[key],row=document.createElement('label');
+    row.innerHTML=`<span>${focusLabels[key]}</span><input type="range" min="${min}" max="${max}" step="${step}" data-menu-png-setting="${key}" aria-label="${focusLabels[key]}"><input type="number" min="${min}" max="${max}" step="${step}" aria-label="${focusLabels[key]} value">`;
+    const[slider,number]=[...row.querySelectorAll('input')];
+    for(const input of [slider,number])input.addEventListener('input',()=>{if(input.value!==''&&Number.isFinite(input.valueAsNumber))setMenuPngFocusSettings({[key]:input.valueAsNumber});});
+    focusSync.push(()=>{slider.value=number.value=String(getMenuPngFocusSettings()[key]);});focus.append(row);
+  }
+  const focusReset=document.createElement('button');focusReset.type='button';focusReset.textContent='Reset focus filters';focusReset.dataset.menuPngReset='';focusReset.addEventListener('click',resetMenuPngFocusSettings);focus.append(focusReset);
+  const updateFocus=()=>focusSync.forEach(sync=>sync());window.addEventListener(MENU_PNG_FOCUS_EVENT,updateFocus);updateFocus();roo.before(focus);
   const controls = root.querySelector(".secondary-text-controls")!;
   const sync: (() => void)[] = [];
   const names: Record<keyof typeof SECONDARY_TEXT_RANGES, string> = {
@@ -92,5 +106,5 @@ export function createSecondaryTextPanel(): void {
   `;
   document.head.appendChild(style); document.body.appendChild(root);
   // Keep the body reference owned by this details panel, not a fullscreen modal.
-  body.setAttribute("aria-label", "Secondary text tuning");
+  body.setAttribute("aria-label", "Text tuning");
 }
