@@ -1,0 +1,18 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="icon" href="data:,"><style>body{margin:0;background:#111820}canvas{display:block}</style></head><body><canvas id="proof" width="1560" height="1150"></canvas><script type="module">
+import {goldToBonusBalanced} from './artwork-palette.ts';
+const m=await fetch('/fonts/roo-counter-v6.json').then(r=>r.json());
+const load=src=>new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve(image);image.onerror=reject;image.src=src;});
+const gold=await load('/fonts/roo-counter-v6.png'),old=await load('/fonts/roo-bonus-v6.png');
+const source=document.createElement('canvas');source.width=m.width;source.height=m.height;source.getContext('2d').drawImage(gold,0,0);
+const revised=goldToBonusBalanced(source),canvas=document.getElementById('proof'),ctx=canvas.getContext('2d');
+function paint(light=false){
+ ctx.fillStyle=light?'#e6e4d8':'#111820';ctx.fillRect(0,0,canvas.width,canvas.height);
+ for(const [i,image]of [gold,old,revised].entries()){
+  const cy=i*380+190;ctx.fillStyle=light?'#3b4f5b':'#b9cbdc';ctx.font='20px system-ui';ctx.fillText(['APPROVED GOLD / ORANGE','V6 GREEN / COBALT','REVISED GREEN / COBALT'][i],40,cy-145);
+  let pen=40;for(const char of 'BONUSA0'){
+   const g=m.glyphs[char],scale=250/m.capPixels;ctx.drawImage(image,g.x,g.y,g.width,g.height,pen,cy-100,g.width*scale,g.height*scale);pen+=(g.advance-.065)*250;
+  }
+ }
+}
+window.paletteReview={ready:true,paint,revised};paint();
+</script></body></html>

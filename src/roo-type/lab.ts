@@ -10,10 +10,10 @@ async function main(){
  <main><div class="stage"><canvas aria-label="Roo font preview"></canvas><div class="stamp">Codex/sol fork · Same font in menus and HUD</div></div>
  <aside><h1>Roo appearance</h1><p>Spacing and shimmer save automatically and update the game, including other open tabs.</p>
  <label>View<select id="view"><option value="words">Words and alphabet</option><option value="glyph">Inspect one glyph</option><option value="angles">Compare light angles</option><option value="all">All glyphs, close up</option></select></label>
- <label>Text<input id="text" type="text" value="BONUS" maxlength="30"></label>
+ <label>Text<input id="text" type="text" value="BONEMAN" maxlength="30"></label>
  <label id="glyph-field" hidden>Glyph<select id="glyph"></select></label>
  <div id="pager" hidden><button id="prev">Previous</button><span id="page-v"></span><button id="next">Next</button></div>
- <label>Color treatment<select id="palette"><option value="bonus">Green / cobalt</option><option value="counter">Gold / vermilion</option></select></label>
+ <label>Color treatment<select id="palette"><option value="bonus">Green / cobalt</option><option value="counter" selected>Gold / vermilion</option></select></label>
  <label>Preview size <span id="size-v"></span><input id="size" type="range" min="32" max="640" value="165"></label>
  <label>Letter spacing <span id="tracking-v"></span><input id="tracking" type="range" min="-.16" max=".16" step=".001"><input aria-label="Exact letter spacing in cap units" id="tracking-number" type="number" min="-.16" max=".16" step=".001"></label>
  <button id="reset-spacing">Reset spacing</button>

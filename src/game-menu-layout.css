@@ -84,9 +84,10 @@
 .game-secondary-action { margin-top:1.5vh; }
 .game-options-card .game-menu-button,.game-slot-card > .game-menu-button { min-height:5vh; font-size:clamp(18px,3.6vh,38px); }
 .game-toggle-list { gap:1.2vh; }
-.game-launch-card { max-height:100%; padding:2vh 2vw; }
+.game-launch-card { width:min(1000px,88vw); max-height:100%; padding:2vh 2vw; }
 .game-launch-card .game-logo { margin:0 0 4vh; }
-.game-launch-card .game-logo span { font-size:clamp(40px,11vh,100px); }
+.game-launch-card .game-logo span { font-size:clamp(48px,min(19vh,16vw),190px); }
+.game-launch-card > .game-menu-list { width:min(440px,100%); margin-inline:auto; }
 .game-launch-card .game-menu-button { min-height:7vh; font-size:clamp(24px,5vh,50px); }
 .game-results-card { max-height:100%; display:flex; flex-direction:column; }
 .game-results-tally { min-height:0; overflow:auto; }

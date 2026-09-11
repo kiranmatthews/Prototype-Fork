@@ -7,7 +7,7 @@ import type { RooTextHandle } from '../roo-text.js';
 
 export const rooMenuText=(text:string)=>text.toUpperCase().replace(/[‘’]/g,"'").replace(/[“”]/g,'"').replace(/[–—]/g,'-').replace(/…/g,'...').replace(/×/g,'X');
 export const rooMenuTitle=(node:Element)=>!!node.closest('.game-logo,.game-panel-title,.game-over-title,.comp-card h1,.comp-countdown>strong');
-export const rooMenuPalette=(node:Element)=>rooMenuTitle(node)||!!node.closest('.timber-card')?'bonus' as const:'counter' as const;
+export const rooMenuPalette=(node:Element)=>node.closest('.game-logo')?'counter' as const:rooMenuTitle(node)||!!node.closest('.timber-card')?'bonus' as const:'counter' as const;
 
 /** Decorate the existing semantic menu; hit targets and control hints stay owned by it. */
 export function installRooMenuText(root:HTMLElement,onLayout:()=>void):()=>void {

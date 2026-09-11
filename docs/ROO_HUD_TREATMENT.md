@@ -1,6 +1,6 @@
-# Roo image font v6: approved artwork and model-made glisten
+# Roo image font v7: calmer green/cobalt and a large orange title
 
-V6 uses each finished glyph as the artwork. Full painted bevels, highlights, counter shapes and pointed terminals are retained. The original Roo vectors guide the letter design and cap metrics; they do not clip the finished image. All 51 nonempty glyphs have individual image-model sources. The approved accented zero is reused unchanged from v5, and the other 50 neutral masters were rebuilt to match its finish.
+V7 retains the approved v6 finished glyphs and glisten sources. Each finished glyph supplies the artwork. Full painted bevels, highlights, counter shapes and pointed terminals are retained. The original Roo vectors guide the letter design and cap metrics; they do not clip the finished image. All 51 nonempty glyphs have individual image-model sources. The approved accented zero is reused unchanged from v5, and the other 50 neutral masters were rebuilt to match its finish.
 
 ## Artwork and glisten
 
@@ -10,7 +10,7 @@ The bake removes a separate magenta matte (or uses genuine generated alpha), kee
 
 A–D initially received opaque gray checkerboards despite transparent requests. Background-only model edits replaced those mattes with flat magenta while preserving white bevel glints. The font baker rejects gray/checker mattes instead of guessing which white pixels belong to the lettering. Original outputs and prompts remain in the authoring record.
 
-The gold/vermilion images preserve the model's rendered colors. Green/cobalt is a pointwise hue grade that retains saturation, value, alpha and painted detail; it does not add shading or use a height gradient. The original TTF remains unchanged.
+The gold/vermilion images preserve the model's rendered colors. Green/cobalt now uses a restrained pointwise Oklab grade from the same gold frames. Its face lightness follows the gold artwork with compressed contrast, chroma is reduced, and near-white glints are protected. Gamut mapping reduces chroma instead of clipping RGB channels. This removes the previous fluorescent green/deep-blue imbalance without adding shading, spatial masks or geometry changes. The color transforms follow [the Oklab reference](https://bottosson.github.io/posts/oklab/). The original TTF and all three gold/orange PNGs remain byte-for-byte unchanged.
 
 The built-in image tool did not expose or report a selectable model ID or quality tier. Provenance records those fields as unknown; this work makes no claim of a verified GPT Image 2.5/max setting.
 
@@ -20,13 +20,13 @@ Both palettes contain neutral, `-light1` and `-light2` PNG atlases at a **512 px
 
 Reference sizing remains 107 px for counters and 165 px for BONUS at 1672×941. Numerator and denominator share size and baseline. Advances follow the complete neutral artwork; the measured BONUS optical layout remains available. Default extra tracking is −0.065 cap units and can be tuned from −0.160 to +0.160. Existing settings remain under `solProtoRooAppearanceV3` and propagate across open game tabs.
 
-Font Studio now moves its light-position slider with the actual animation, reports paused/reduced-motion/zero-strength states, enables manual inspection while motion is reduced, and provides a three-frame comparison view. The same font serves HUD, menus, world-map titles and competition headings. Semantic DOM text, button targets, comic control hints and the existing pre-CRT presentation path are preserved.
+Font Studio now moves its light-position slider with the actual animation, reports paused/reduced-motion/zero-strength states, enables manual inspection while motion is reduced, and provides a three-frame comparison view. The main BONEMAN title uses the orange palette at a larger responsive size; its menu controls retain a compact, separate column. Font Studio opens on the orange BONEMAN preview. The same font serves HUD, menus, world-map titles and competition headings. Semantic DOM text, button targets, comic control hints and the existing pre-CRT presentation path are preserved.
 
 ## Delivered files
 
-- `public/fonts/roo-bonus-v6.png`, `roo-bonus-v6-light1.png`, `roo-bonus-v6-light2.png`.
-- `public/fonts/roo-counter-v6.png`, `roo-counter-v6-light1.png`, `roo-counter-v6-light2.png`.
-- Palette metrics, `roo-font-v6-provenance.json`, and `roo-image-font-v6.zip`.
+- `public/fonts/roo-bonus-v7.png`, `roo-bonus-v7-light1.png`, `roo-bonus-v7-light2.png`.
+- `public/fonts/roo-counter-v7.png`, `roo-counter-v7-light1.png`, `roo-counter-v7-light2.png`.
+- Palette metrics, `roo-font-v7-provenance.json`, and `roo-image-font-v7.zip`.
 
 The ZIP contains six PNGs, two metrics files, provenance and integration notes. Provenance includes all neutral and glisten source hashes, exact prompts, and the neutral input used by every glisten edit. Raw authoring sources are retained in the repository rather than downloaded at runtime.
 
@@ -43,6 +43,9 @@ PLAYWRIGHT_MODULE=/absolute/playwright/index.mjs node tools/roo-type/raster-bake
 PLAYWRIGHT_MODULE=/absolute/playwright/index.mjs node tools/roo-type/capture-atlas-audit.mjs
 # Inspect the complete artwork and every glisten frame before installation.
 python3 tools/roo-type/install-raster-bake.py
+# V7 grades the approved gold atlases; no additional image generation is needed.
+PLAYWRIGHT_MODULE=/absolute/playwright/index.mjs node tools/roo-type/grade-font.mjs
+python3 tools/roo-type/install-palette-bake.py
 python3 tools/roo-type/check-raster.py
 PLAYWRIGHT_MODULE=/absolute/playwright/index.mjs node tools/roo-type/review.mjs
 PLAYWRIGHT_MODULE=/absolute/playwright/index.mjs node tools/roo-type/review-lighting.mjs
