@@ -1,4 +1,3 @@
-import {menuTextFocusButton,menuTextFocusEnabled,MENU_TEXT_FOCUS_EVENT} from '../menuTextFocus';
 import { createBakedRooText } from './dom';
 import './menu.css';
 import { layoutRooAtlas } from './atlas';
@@ -8,14 +7,13 @@ import type { RooTextHandle } from '../roo-text.js';
 
 export const rooMenuText=(text:string)=>text.toUpperCase().replace(/[‘’]/g,"'").replace(/[“”]/g,'"').replace(/[–—]/g,'-').replace(/…/g,'...').replace(/×/g,'X');
 export const rooMenuTitle=(node:Element)=>!!node.closest('.game-logo,.game-panel-title,.game-over-title,.comp-card h1,.comp-countdown>strong');
-export const rooMenuPalette=(node:Element)=>(menuTextFocusEnabled()&&menuTextFocusButton(node))||node.closest('.game-logo')?'counter' as const:rooMenuTitle(node)||!!node.closest('.timber-card')?'bonus' as const:'counter' as const;
+export const rooMenuPalette=(node:Element)=>node.closest('.game-logo')?'counter' as const:rooMenuTitle(node)||!!node.closest('.timber-card')?'bonus' as const:'counter' as const;
 
 /** Decorate the existing semantic menu; hit targets and control hints stay owned by it. */
 export function installRooMenuText(root:HTMLElement,onLayout:()=>void):()=>void {
   if(typeof MutationObserver==='undefined'||typeof document.createTreeWalker!=='function')return()=>{};
-  const handles=new Map<HTMLElement,RooTextHandle>();let queued=false,disposed=false,generation=0;
+  const handles=new Map<HTMLElement,RooTextHandle>();let queued=false,disposed=false;
   async function decorate(textNode:Text){
-    const started=generation;
     const parent=textNode.parentElement,text=textNode.textContent??'';if(!parent||!text.trim())return;
     if(parent.closest('svg,[data-roo-menu],.secondary-silver,.input-glyph,script,style'))return;
     if(!/\bRoo\b/.test(getComputedStyle(parent).fontFamily))return;
@@ -34,7 +32,6 @@ export function installRooMenuText(root:HTMLElement,onLayout:()=>void):()=>void 
     const handle=await createBakedRooText(art,{text:normalized,palette,tracking:0,decorative:true});
     if(!handle){wrapper.replaceWith(document.createTextNode(text));return;}
     if(disposed||!root.contains(wrapper)){handle.destroy();return;}
-    if(started!==generation){handle.destroy();wrapper.replaceWith(document.createTextNode(text));return;}
     handles.set(wrapper,handle);fit();
   }
   function scan(){
@@ -46,7 +43,5 @@ export function installRooMenuText(root:HTMLElement,onLayout:()=>void):()=>void 
   }
   const observer=new MutationObserver(()=>{if(!queued){queued=true;queueMicrotask(scan);}});
   observer.observe(root,{childList:true,characterData:true,subtree:true});scan();
-  const restore=()=>{generation++;for(const [wrapper,handle]of handles){const text=wrapper.querySelector('.roo-menu-source')?.textContent??'';handle.destroy();wrapper.replaceWith(document.createTextNode(text));}handles.clear();scan();onLayout();};
-  window.addEventListener(MENU_TEXT_FOCUS_EVENT,restore);
-  return()=>{window.removeEventListener(MENU_TEXT_FOCUS_EVENT,restore);disposed=true;observer.disconnect();for(const handle of handles.values())handle.destroy();handles.clear();};
+  return()=>{disposed=true;observer.disconnect();for(const handle of handles.values())handle.destroy();handles.clear();};
 }

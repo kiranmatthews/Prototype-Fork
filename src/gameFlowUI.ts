@@ -1,4 +1,3 @@
-import {observeMenuTextFocus} from './menuTextFocus';
 // Game-owned menus and campaign screens. The live DOM remains the semantic
 // input/accessibility owner; GameFlowSurface can mirror its known geometry into
 // the pre-CRT render path without turning the menu into canvas hit regions.
@@ -246,7 +245,6 @@ export class GameFlowUI {
     this.root.append(this.panel, this.cursor);
     document.body.append(this.root, this.transitionCurtain);
     installRooMenuText(this.panel,()=>this.invalidatePreCrt());
-    observeMenuTextFocus(this.root,()=>this.invalidatePreCrt());
     subscribeRooLight(()=>{if(this.screen&&(this.preCrtComposited||this.preCrtHandoffPending))this.requestGameplayFrame();});
     document.body.classList.toggle("game-debug-hidden", !this.debugVisible);
     document.body.classList.toggle("game-debug-visible", this.debugVisible);
