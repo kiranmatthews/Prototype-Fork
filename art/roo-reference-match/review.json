@@ -2553,6 +2553,34 @@
         "alpha": "analytic original Roo curves",
         "review": "native and enlarged material, edge, palette and browser review"
       }
+    },
+    {
+      "glyph": "0",
+      "palette": "counter",
+      "file": "candidates/0-counter-rebuild-v5.png",
+      "prompt": "zero-v5/0-counter-rebuild-prompt.txt",
+      "mode": "built-in imagegen",
+      "generatedSource": "/Users/kiki/.codex/generated_images/01a08b3e-693b-7171-a2de-ce88b1cb0ff0/exec-5bbe0532-a733-45de-848c-1b9370832aff.png",
+      "background": "transparent",
+      "status": "baked_verified_v5",
+      "issues": [],
+      "colorBounds": [
+        153,
+        113,
+        816,
+        1168
+      ],
+      "inputs": [
+        "zero-v5/zero-flat.png",
+        "analysis/0-reference-zoom.png"
+      ],
+      "materialSource": "cleaned",
+      "validation": {
+        "atlasVersion": 5,
+        "frames": 3,
+        "alpha": "integrated flat zero contour",
+        "review": "whole-glyph model, continuous root/bevel, 32\u2013330 px, both palettes, lite/full HUD and exports"
+      }
     }
   ],
   "opticalWidthScale": 1.06,

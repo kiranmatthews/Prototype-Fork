@@ -8,14 +8,16 @@
     {
       "glyph": "0",
       "codePoint": 48,
-      "status": "baked_and_browser_verified_v3",
+      "status": "baked_and_browser_verified_v5",
       "candidates": [
         "candidates/0-counter-01.png",
         "candidates/0-counter-02.png",
-        "candidates/0-counter-03.png"
+        "candidates/0-counter-03.png",
+        "candidates/0-counter-rebuild-v5.png"
       ],
       "reference": null,
-      "selectedV3": "candidates/0-counter-03.png"
+      "selectedV3": "candidates/0-counter-03.png",
+      "selectedV5": "candidates/0-counter-rebuild-v5.png"
     },
     {
       "glyph": "1",

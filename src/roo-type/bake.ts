@@ -8,7 +8,7 @@ export interface RooAtlasGlyph {
   inkTop?: number; inkBottom?: number;
 }
 export interface RooAtlasMetrics {
-  accents?:Record<string,{kind:string;commands:RooVectorGlyph['commands']}>;
+  outlineOverrides?:Record<string,RooVectorGlyph>;
   lightFrames?: number;
   version: number; palette: RooTreatment; capPixels: number; width: number; height: number;
   fontSha256: string; capBand: RooTypeGeometry['source']['capBand'];

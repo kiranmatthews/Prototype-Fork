@@ -2,7 +2,7 @@
 const canvas=document.getElementById('proof');canvas.width=1320;canvas.height=1080;const ctx=canvas.getContext('2d');
 const load=src=>new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve(image);image.onerror=reject;image.src=src;});
 const baked='/art/roo-reference-match/bake/';
-const palettes=await Promise.all(['counter','bonus'].map(async p=>({p,m:await fetch(baked+`roo-${p}-v4.json`).then(r=>r.json()),images:await Promise.all([0,1,2].map(f=>load(baked+`roo-${p}-v4${f?'-light'+f:''}.png`)))})));
+const palettes=await Promise.all(['counter','bonus'].map(async p=>({p,m:await fetch(baked+`roo-${p}-v5.json`).then(r=>r.json()),images:await Promise.all([0,1,2].map(f=>load(baked+`roo-${p}-v5${f?'-light'+f:''}.png`)))})));
 function glyph(a,char,x,y,size,frame=0){const g=a.m.glyphs[char];ctx.drawImage(a.images[frame],g.x,g.y,g.width,g.height,x+g.left*size,y+g.top*size,g.width/a.m.capPixels*size,g.height/a.m.capPixels*size);}
 ctx.fillStyle='#0c131d';ctx.fillRect(0,0,canvas.width,canvas.height);
 for(const [row,a]of palettes.entries()){

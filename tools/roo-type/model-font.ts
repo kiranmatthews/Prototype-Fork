@@ -1,21 +1,24 @@
 import type { RooAtlasMetrics } from '../../src/roo-type/bake';
-import type { RooVectorSource } from '../../src/roo-type/geometry';
+import type { RooVectorSource, RooVectorGlyph } from '../../src/roo-type/geometry';
 import { RooColorProjector, type ColorLayer } from './color-projection';
-import { addZeroInnerAccent, ZERO_INNER_ACCENT } from './zero-accent';
 
 type Palette='bonus'|'counter';
-interface Candidate {glyph:string;palette:Palette;file:string;prompt:string;colorBounds:[number,number,number,number];background:string;status:string;materialSource?:'cleaned'}
+interface Candidate {glyph:string;palette:Palette;file:string;prompt:string;colorBounds:[number,number,number,number];background:string;status:string;materialSource?:'cleaned';inputs?:string[]}
 interface Reference {native:string;ink:[number,number,number,number];box?:[number,number,number,number];origin?:[number,number]}
 const base='/art/roo-reference-match/';
 const load=(src:string)=>new Promise<HTMLImageElement>((resolve,reject)=>{const image=new Image();image.onload=()=>resolve(image);image.onerror=()=>reject(new Error(src));image.src=src;});
 
 export async function bakeModelFont(allowPartial=false){
-  const [source,report,alphabet,numbers]=await Promise.all([
+  const [source,report,alphabet,numbers,zero]=await Promise.all([
     fetch('/fonts/roo-bevel-source-v1.json').then(r=>r.json()) as Promise<RooVectorSource>,
     fetch(base+'review.json').then(r=>r.json()),
     fetch(base+'analysis/alphabet-references.json').then(r=>r.json()) as Promise<Record<string,Reference>>,
     fetch(base+'analysis/number-references.json').then(r=>r.json()) as Promise<Record<string,Reference>>,
+    fetch(base+'zero-v5/zero-outline.json').then(r=>r.json()) as Promise<RooVectorGlyph>,
   ]);
+  // The accent belongs to the flat letterform. The complete revised contour
+  // goes through the same mesh, model material and three lighting passes.
+  source.glyphs['0']=zero;
   const candidates:Record<string,Candidate>={};
   for(const c of report.candidates as Candidate[])if(c.status!=='rejected'&&(c.materialSource==='cleaned'||['magenta','transparent'].includes(c.background)))candidates[c.glyph]=c;
   for(const [char,file]of Object.entries(report.provisionalWord as Record<string,string>))candidates[char]=report.candidates.find((c:Candidate)=>c.file===file);
@@ -28,6 +31,7 @@ export async function bakeModelFont(allowPartial=false){
   for(const [char,glyph]of Object.entries(source.glyphs)){
     if(!glyph.commands.length||!candidates[char])continue;
     const c=candidates[char],image=await load(base+c.file);
+    if(char==='0'&&!c.inputs?.includes('zero-v5/zero-flat.png'))throw new Error('Zero needs its revised flat-letterform model pass');
     let ref:ColorLayer|undefined,refFile:string|undefined;
     if(c.materialSource==='cleaned'){refFile=c.file;ref={image,colorBounds:c.colorBounds};}
     else if(char in titleOrigins){
@@ -52,7 +56,6 @@ export async function bakeModelFont(allowPartial=false){
       for(const [frame,shift]of [0,-.85,.85].entries()){
         const r=projector.render(glyph,{image,colorBounds:c.colorBounds},capPixels,widthScale,true,ref,{source:c.palette,target:palette},vertical,shift);
         rendered[palette][frame][char]=r;
-        if(char==='0')addZeroInnerAccent(projector,glyph,r,rendered[palette][0][char],palette,vertical,shift);
       }
     }
     provenance[char]={model:c.file,prompt:c.prompt,reference:refFile};
@@ -71,7 +74,7 @@ export async function bakeModelFont(allowPartial=false){
     }
     const frames=rendered[palette].map(frame=>{const canvas=document.createElement('canvas');canvas.width=atlasWidth;canvas.height=y+row+gutter;const ctx=canvas.getContext('2d')!;for(const item of items)ctx.drawImage(frame[item.char].canvas,item.x,item.y);return canvas;});
     const canvas=frames[0];
-    const metrics:RooAtlasMetrics={version:4,lightFrames:3,accents:{'0':ZERO_INNER_ACCENT},palette,capPixels,width:canvas.width,height:canvas.height,fontSha256:source.sha256,capBand:source.capBand,glyphs,kern:{...source.kern},layouts:{BONUS:{width:626/165,glyphs:[...'BONUS'].map(char=>{const r=report.measuredTitleGlyphs[char];return{char,x:(r.x-546)/165,y:(r.y-60)/165,width:r.width/165,height:r.height/165};})}}};
+    const metrics:RooAtlasMetrics={version:5,lightFrames:3,outlineOverrides:{'0':zero},palette,capPixels,width:canvas.width,height:canvas.height,fontSha256:source.sha256,capBand:source.capBand,glyphs,kern:{...source.kern},layouts:{BONUS:{width:626/165,glyphs:[...'BONUS'].map(char=>{const r=report.measuredTitleGlyphs[char];return{char,x:(r.x-546)/165,y:(r.y-60)/165,width:r.width/165,height:r.height/165};})}}};
     for(const n of '0123456789')metrics.kern[n+'/']=-.035;
     metrics.kern['23']=-.016;
     atlases[palette]={canvas,frames,metrics};
