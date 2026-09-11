@@ -3,6 +3,7 @@
 
 import * as THREE from "three";
 import { BonusPayout } from "./bonusPayout";
+import {loadBalanceMeterAssets,paintBalanceElement} from './balanceMeter';
 import { sfx } from "./audio";
 import { setPromptText } from "./inputPromptUI";
 import { localDataResetUrl } from "./localGameStorage";
@@ -828,6 +829,7 @@ export class UI {
     this.vBalanceWrap.appendChild(tailTick);
     this.vBalanceWrap.appendChild(this.vBalanceNeedle);
     this.vBalanceWrap.style.display = "none";
+    void loadBalanceMeterAssets();
 
     // Playtest capture badges: ▶ REPLAY while a take plays back, ● REC while
     // the canvas is being recorded to video.
@@ -1795,6 +1797,11 @@ export class UI {
     this.balanceWrap.style.display = grind ? "block" : "none";
     this.vBalanceWrap.style.display = manual ? "block" : "none";
     if (!meter) return;
+    const active=grind?this.balanceWrap:this.vBalanceWrap;
+    active.dataset.balanceValue=String(meter.bal);active.dataset.balanceCritical=String(meter.crit);
+    active.setAttribute('role','meter');active.setAttribute('aria-valuemin','-1');active.setAttribute('aria-valuemax','1');active.setAttribute('aria-valuenow',String(meter.bal));
+    active.setAttribute('aria-label',grind?'Horizontal trick balance':'Vertical trick balance');
+    if(!this.gameHudLayer.classList.contains('precrt-composited'))paintBalanceElement(active,{mode:meter.mode,value:meter.bal,critical:meter.crit});
     const hot = meter.crit || Math.abs(meter.bal) > 0.7;
     const color = meter.crit
       ? Math.sin(performance.now() * 0.045) > 0
@@ -2820,15 +2827,13 @@ export class UI {
       @keyframes boostblink { to { opacity: 0.35; } }
 
       .hud-balance {
-        position: fixed; z-index: 10; left: 50%; bottom: 24%;
-        transform: translateX(-50%); width: 240px; height: 14px;
-        background: linear-gradient(180deg, rgba(8, 10, 15, 0.9), rgba(26, 30, 44, 0.9));
-        border: 1px solid #3a4152; border-radius: 7px;
-        box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.12);
+        position: fixed; z-index: 10; left: 50%; top: 35%;
+        transform: translate(-50%,-50%); width: clamp(220px,25vw,320px); aspect-ratio:1390/700;
+        pointer-events:none;
       }
       .game-hud-layer.hud-combo-present .hud-balance,
       .game-hud-layer.hud-combo-present .hud-vbalance {
-        bottom: clamp(230px, 36vh, 330px);
+        top: 35%;
       }
       .hud-balance-center {
         position: absolute; left: 50%; top: 2px; bottom: 2px; width: 2px;
@@ -2840,11 +2845,9 @@ export class UI {
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
       }
       .hud-vbalance {
-        position: fixed; z-index: 10; left: calc(50% + 96px); bottom: 22%;
-        width: 14px; height: 132px;
-        background: linear-gradient(90deg, rgba(8, 10, 15, 0.9), rgba(26, 30, 44, 0.9));
-        border: 1px solid #3a4152; border-radius: 7px;
-        box-shadow: inset 2px 0 3px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.12);
+        position: fixed; z-index: 10; left:calc(50% - clamp(105px,14vw,215px)); top:49%;
+        transform:translate(-50%,-50%); height:clamp(220px,37vh,290px); aspect-ratio:700/1390;
+        pointer-events:none;
       }
       .hud-vbalance-center {
         position: absolute; top: 50%; left: 2px; right: 2px; height: 2px;
@@ -2859,6 +2862,9 @@ export class UI {
         margin-top: -4px; border-radius: 4px; background: #8fd4a8;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
       }
+      .hud-balance-art { display:block; width:100%; height:100%; }
+      .hud-balance-center,.hud-balance-needle,.hud-vbalance-center,.hud-vbalance-cap,.hud-vbalance-needle { display:none; }
+      .game-hud-layer.hud-combo-present .hud-vbalance { top:49%; }
       /* ---- mouse-only states ---------------------------------------------
          iOS fakes a hover on tap and then LEAVES IT ON until something else is
          touched, so a tapped row or button stayed lit as though it were still

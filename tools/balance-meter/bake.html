@@ -1,0 +1,24 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="icon" href="data:,"></head><body><script type="module">
+import {modelCutout} from '../roo-type/raster-material.ts';
+const load=src=>new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve(image);image.onerror=reject;image.src=src;});
+const base='/art/balance-meter/v1/';
+async function bake(name,hand=false){
+ const image=await load(base+name),cut=modelCutout(image),canvas=document.createElement('canvas'),bounds=cut.bounds;
+ canvas.width=hand?320:384;canvas.height=hand?Math.round(320*bounds[3]/bounds[2])+12:1152;
+ const ctx=canvas.getContext('2d');ctx.imageSmoothingQuality='high';
+ const scale=Math.min((canvas.width-16)/bounds[2],(canvas.height-16)/bounds[3]),w=bounds[2]*scale,h=bounds[3]*scale,x=(canvas.width-w)/2,y=(canvas.height-h)/2;
+ ctx.drawImage(cut.canvas,...bounds,x,y,w,h);
+ const pixels=ctx.getImageData(0,0,canvas.width,canvas.height).data;
+ let solidLeft=canvas.width,solidRight=0,solidTop=canvas.height,solidBottom=0;
+ for(let yy=0;yy<canvas.height;yy++)for(let xx=0;xx<canvas.width;xx++)if(pixels[(yy*canvas.width+xx)*4+3]>180){solidLeft=Math.min(solidLeft,xx);solidRight=Math.max(solidRight,xx);solidTop=Math.min(solidTop,yy);solidBottom=Math.max(solidBottom,yy);}
+ const points=[];
+ if(!hand)for(let i=0;i<65;i++){
+  const yy=Math.round(solidTop+(solidBottom-solidTop)*i/64);let left=canvas.width,right=0;
+  for(let dy=-1;dy<=1;dy++)for(let xx=0;xx<canvas.width;xx++)if(pixels[((yy+dy)*canvas.width+xx)*4+3]>180){left=Math.min(left,xx);right=Math.max(right,xx);}
+  points.push([Number(((left+right)/2/canvas.width).toFixed(6)),Number((yy/canvas.height).toFixed(6))]);
+ }
+ let tip=null;if(hand){let sum=0,count=0;for(let yy=0;yy<canvas.height;yy++)for(let xx=solidRight-3;xx<=solidRight;xx++)if(pixels[(yy*canvas.width+xx)*4+3]>180){sum+=yy;count++;}tip=[solidRight/canvas.width,sum/count/canvas.height];}
+ return{png:canvas.toDataURL('image/png'),points,tip,width:canvas.width,height:canvas.height,source:name,sourceBounds:bounds,background:cut.background};
+}
+window.balanceBake=async()=>({frames:await Promise.all([0,1,2,3].map(i=>bake(`meter-${i}-source.png`))),glove:await bake('glove-clean-source.png',true)});
+</script></body></html>

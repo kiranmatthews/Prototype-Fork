@@ -1,0 +1,26 @@
+{
+  "name": "stone-circle",
+  "triangles": 2511,
+  "bytes": 512060,
+  "textureSize": 1024,
+  "sourceSha256": "e2a768de72636b9986ed6400b700c2f854e716666511f13804d2a984250b287d",
+  "sha256": "8a1fa7a5808d881c60e3e32db08440fa8179bef853cdc812954324cf6b1e33e4",
+  "provider": "Meshy",
+  "task": {
+    "provider": "Meshy",
+    "resource": "image-to-3d",
+    "state": "SUCCEEDED",
+    "reference": "art/bonus-platform/concept.png",
+    "targetTriangles": 2400,
+    "modelType": "smart-topology",
+    "id": "01a08f91-2a3b-7289-bdac-5aaac05bcb34"
+  },
+  "concept": "art/bonus-platform/concept.png",
+  "conceptSha256": "2f7970c3e8e34c9bb36a1f7be3239a1ae0d667dc50fad14eedca4675321d6e2f",
+  "prompt": "art/bonus-platform/concept-prompt.txt",
+  "runtimeSize": [
+    3.2,
+    1.05,
+    3.2
+  ]
+}

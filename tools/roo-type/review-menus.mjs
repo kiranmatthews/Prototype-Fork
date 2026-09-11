@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import {pathToFileURL} from 'node:url';
 const{chromium}=await import(process.env.PLAYWRIGHT_MODULE?pathToFileURL(process.env.PLAYWRIGHT_MODULE).href:'playwright');
-const base=process.env.ROO_LAB_URL||'http://127.0.0.1:5178/',out=process.env.ROO_REVIEW_DIR||'/private/tmp/roo-type-v7-review';await fs.mkdir(out,{recursive:true});
+const base=process.env.ROO_LAB_URL||'http://127.0.0.1:5178/',out=process.env.ROO_REVIEW_DIR||'/private/tmp/roo-type-v8-review';await fs.mkdir(out,{recursive:true});
 const browser=await chromium.launch({headless:true,channel:'chrome'}),report={errors:[],menus:[]};
 try{
  for(const lite of [true,false]){

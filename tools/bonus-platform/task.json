@@ -1,0 +1,9 @@
+{
+  "provider": "Meshy",
+  "resource": "image-to-3d",
+  "state": "SUCCEEDED",
+  "reference": "art/bonus-platform/concept.png",
+  "targetTriangles": 2400,
+  "modelType": "smart-topology",
+  "id": "01a08f91-2a3b-7289-bdac-5aaac05bcb34"
+}

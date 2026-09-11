@@ -11709,6 +11709,15 @@ export class Player {
       // their gap faces, so falling past them was ungrabbable by the loop
       // above no matter how clean the reach was.
       if (this.state === 'air') this.tryLedgeGrabMesh(level);
+      if(this.state!=='hang'&&level.resolveBonusPlatformContact?.(this.prevPos,this.pos,this.hitboxHalf,ROCK_CONTACT)){
+        const inward=this.walkVelocity.dot(ROCK_CONTACT);
+        if(inward<0)this.walkVelocity.addScaledVector(ROCK_CONTACT,-inward);
+        if(this.freeSkate&&this.axisF.dot(ROCK_CONTACT)<-.25)this.speed=0;
+        const half=this.hitboxHalf;
+        this.playerBox.min.set(this.pos.x-half.x,this.pos.y,this.pos.z-half.z);
+        this.playerBox.max.set(this.pos.x+half.x,this.pos.y+half.y*2,this.pos.z+half.z);
+        this.feetBox.copy(this.playerBox);
+      }
       if (this.state !== 'hang' && level.nightworksRocks?.resolve(this.prevPos,this.pos,this.hitboxHalf,ROCK_CONTACT)) {
         const inward=this.walkVelocity.dot(ROCK_CONTACT);
         if(inward<0)this.walkVelocity.addScaledVector(ROCK_CONTACT,-inward);

@@ -2803,22 +2803,18 @@ function returnFromBonus(completed: boolean): void {
 
 function checkCampaignEntrances(): void {
   if (current.id === JUNGLE_CUP_ID) return;
-  if (gameFlow.blocksGameplay || paused || editor.active || player.state === "dead" || player.state === "gameover" || player.state === "finished")
+  if(player.state === "dead" || player.state === "gameover" || player.state === "finished") {level.cancelBonusEntry();return;}
+  if (gameFlow.blocksGameplay || paused || editor.active)
     return;
   if ((current.id === "warproom" || level.isCampaignMap)) {
     const target = level.campaignPortalAt(player.pos);
     if (target) enterCampaignLevel(target);
     return;
   }
-  if (
-    !bonusSession &&
-    (isCampaignLevel(current.id) || !!level.bonusPlatformDiagnostics) &&
-    !player.ttActive &&
-    !level.timeTrial &&
-    !player.comboRun &&
-    player.grounded &&
-    level.bonusPlatformAt(player.pos)
-  )
+  if (level.consumeBonusLanding(player.pos,{
+    enabled:!bonusSession&&(isCampaignLevel(current.id)||!!level.bonusPlatformDiagnostics)&&!player.ttActive&&!level.timeTrial&&!player.comboRun,
+    grounded:player.grounded,jump:input.jumpPressed||input.jumpReleased,rising:player.vVel>.2,
+  }))
     enterBonusRound();
 }
 

@@ -1,5 +1,6 @@
 import { createExplosiveBundle, updateExplosiveBundle, disposeExplosiveBundle, type ExplosiveBundle } from "./explosiveBundle";
 import { createMilkCrate, setMilkCrateState, disposeMilkCrate, type MilkCrate } from "./milkCrate";
+import {attachBonusStone,BonusJumpGate,BONUS_PLATFORM_HEIGHT,BONUS_PLATFORM_RADIUS,BONUS_LANDING_RADIUS} from './bonusPlatform';
 import { DECK_TRICKS, deckTrickInfo, type DeckTrickKind } from './skateTricks';
 import { createJungleCupTrophy } from "./competition/trophy";
 import { cameraViewDirection, type CameraView } from "./cameraViews";
@@ -610,7 +611,7 @@ export interface CustomComponent {
     | "camnode" // camera-lane node: nodes chain in order into the lane the camera + controls steer along
     | "outline" // LEGACY ghost crate (old saves) — loads as a wood crate with outline: true
     | "checkpoint"
-    | "bonusplatform" // bonus-stage entrance: p = deck feet point, to = return feet point
+    | "bonusplatform" // bonus-stage entrance: p = ground/base point; raised deck requires a jump, to = return feet point
     | "worldmap" // campaign diorama: p/yaw move its frame; pts are local hub feet coordinates in campaign order
     | "tumblezone" // invisible ragdoll trigger: p center, s bounds
     | "coastwall" // invisible continuous safety wall: p base, pts XZ path, w thickness, rise height
@@ -3764,6 +3765,7 @@ export class Level {
     returnPoint: THREE.Vector3;
     locked: boolean;
     laneFraction: number;
+    entry: BonusJumpGate;
   } | null = null;
   /** Main-level tally extension supplied by its linked bonus stage. */
   bonusCrateTotal = 0;
@@ -7099,6 +7101,7 @@ export class Level {
   }
 
   dispose(preserveResourcesFrom?: Level): void {
+    if(this.bonusPlatform)this.bonusPlatform.group.userData.bonusStoneDisposed=true;
     for (const crate of this.crates) {
       if (crate.milkCrate) disposeMilkCrate(crate.milkCrate);
       if (crate.explosiveBundle) disposeExplosiveBundle(crate.explosiveBundle);
@@ -7425,7 +7428,29 @@ export class Level {
 
   bonusPlatformAt(position: THREE.Vector3): boolean {
     const platform = this.bonusPlatform;
-    return !this.timeTrial && !!platform && platform.group.visible && !platform.locked && platform.box.containsPoint(position);
+    return !this.timeTrial && !!platform && platform.group.visible && !platform.locked && platform.box.containsPoint(position)
+      && Math.hypot(position.x-platform.group.position.x,position.z-platform.group.position.z)<=BONUS_LANDING_RADIUS;
+  }
+
+  consumeBonusLanding(position:THREE.Vector3,state:{enabled:boolean;grounded:boolean;jump:boolean;rising:boolean}):boolean {
+    const platform=this.bonusPlatform;if(!platform)return false;
+    return platform.entry.step({...state,enabled:state.enabled&&!this.timeTrial&&!platform.locked&&platform.group.visible,
+      near:Math.hypot(position.x-platform.group.position.x,position.z-platform.group.position.z)<7,
+      onTop:this.bonusPlatformAt(position)});
+  }
+
+  cancelBonusEntry():void {this.bonusPlatform?.entry.reset();}
+
+  /** Steep circular sides block running without adding square invisible corners. */
+  resolveBonusPlatformContact(previous:THREE.Vector3,position:THREE.Vector3,half:{x:number;y:number;z:number},normal:THREE.Vector3):boolean {
+    const p=this.bonusPlatform;if(!p||this.timeTrial||!p.group.visible)return false;
+    const center=p.group.position,top=center.y+BONUS_PLATFORM_HEIGHT;
+    if(position.y>=top-.025||position.y+half.y*2<center.y)return false;
+    let dx=position.x-center.x,dz=position.z-center.z,d=Math.hypot(dx,dz);
+    const radius=BONUS_PLATFORM_RADIUS+Math.max(half.x,half.z);
+    if(d>=radius)return false;
+    if(d<.0001){dx=previous.x-center.x;dz=previous.z-center.z;d=Math.hypot(dx,dz);if(d<.0001){dx=1;dz=0;d=1;}}
+    normal.set(dx/d,0,dz/d);position.x=center.x+normal.x*(radius+.002);position.z=center.z+normal.z*(radius+.002);return true;
   }
 
   bonusReturnPoint(): THREE.Vector3 {
@@ -7437,6 +7462,9 @@ export class Level {
     y: number;
     z: number;
     laneFraction: number;
+    topY: number;
+    radius: number;
+    modelReady: boolean;
   } | null {
     const platform = this.bonusPlatform;
     if (!platform) return null;
@@ -7445,6 +7473,9 @@ export class Level {
       y: platform.group.position.y,
       z: platform.group.position.z,
       laneFraction: platform.laneFraction,
+      topY: platform.group.position.y+BONUS_PLATFORM_HEIGHT,
+      radius: BONUS_PLATFORM_RADIUS,
+      modelReady:platform.group.userData.bonusStoneReady===true,
     };
   }
 
@@ -7452,11 +7483,12 @@ export class Level {
     const platform = this.bonusPlatform;
     if (!platform || platform.locked === locked) return;
     platform.locked = locked;
+    platform.entry.reset();platform.group.userData.bonusLocked=locked;
     platform.group.name = locked ? "bonus platform locked" : "bonus platform";
     platform.group.traverse((object) => {
       const mesh = object as THREE.Mesh;
       if (!mesh.isMesh || !(mesh.material instanceof THREE.MeshLambertMaterial)) return;
-      mesh.material.emissive.setHex(locked ? 0x160f1c : 0x5b2300);
+      mesh.material.emissive.setHex(locked ? 0x080408 : Number(mesh.userData.bonusOpenEmissive??0x5b2300));
       const openColor = Number(mesh.userData.bonusOpenColor);
       if (Number.isFinite(openColor))
         mesh.material.color.setHex(locked ? new THREE.Color(openColor).multiplyScalar(0.46).getHex() : openColor);
@@ -9064,6 +9096,7 @@ export class Level {
   // back; banked checkpoints stay consumed. Hard reset (R / new run) revives
   // everything and relights every checkpoint box.
   reset(hard: boolean): void {
+    this.cancelBonusEntry();
     this.discardedBoards.clear(); // no debris from the previous life/run
     // Hard reset restores the committed crystal baseline and clears any
     // materialized run-local gem; a soft death keeps current-run pickups.
@@ -10829,6 +10862,14 @@ export class Level {
     return true;
   }
 
+  private raisedBonusSiteClear(x:number,y:number,z:number):boolean {
+    const space=new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(x,y+1.65,z),new THREE.Vector3(3.7,3.1,3.7));
+    if(this.walls.some(w=>w.intersectsBox(space)))return false;
+    for(const entity of [...this.crates,...this.checkpoints,...this.enemies])if(entity.box.intersectsBox(space))return false;
+    for(const rail of this.rails)for(let i=1;i<rail.points.length;i++)if(new THREE.Box3().setFromPoints([rail.points[i-1],rail.points[i]]).expandByScalar(.2).intersectsBox(space))return false;
+    return true;
+  }
+
   // A derived Nitro clear switch belongs to this Level only. That distinction
   // is load-bearing for bonus stages: the parent level is merely suspended,
   // so its Nitro set and its switch must never be reachable from the bonus
@@ -10950,7 +10991,7 @@ export class Level {
     const alongOffsets = [0];
     for (let distance = 4; distance <= searchLimit; distance += 4)
       alongOffsets.push(-distance, distance);
-    const lateralOffsets = [2.7, -2.7, 2.2, -2.2, 0];
+    const lateralOffsets = [2.7, -2.7, 3.1, -3.1, 2.2, -2.2, 3.8, -3.8, 4.4, -4.4];
     let placement: {
       x: number;
       z: number;
@@ -10958,6 +10999,7 @@ export class Level {
       s: number;
       laneFraction: number;
       lateral: number;
+      approach:THREE.Vector3;
     } | null = null;
     for (const along of alongOffsets) {
       const courseDistance = THREE.MathUtils.clamp(
@@ -10978,7 +11020,7 @@ export class Level {
       for (const lateral of lateralOffsets) {
         const x = sample.point.x + rightX * lateral;
         const z = sample.point.z + rightZ * lateral;
-        if (!this.bonusSiteClear(x, deckY, z)) continue;
+        if (!this.bonusSiteClear(x, deckY, z)||!this.raisedBonusSiteClear(x,deckY,z)) continue;
         placement = {
           x,
           z,
@@ -10986,6 +11028,7 @@ export class Level {
           s,
           laneFraction: courseLength > 0 ? courseDistance / courseLength : 0.5,
           lateral,
+          approach:sample.point.clone(),
         };
         break;
       }
@@ -11001,11 +11044,12 @@ export class Level {
       route,
       placement.s + courseDirection * returnDistance,
     );
-    const returnX = returnSample.point.x;
-    const returnZ = returnSample.point.z;
-    const returnDeckY = this.bonusRouteGroundY(
+    let returnX = returnSample.point.x;
+    let returnZ = returnSample.point.z;
+    let returnDeckY = this.bonusRouteGroundY(
       returnX, returnZ, returnSample.point.y,
-    ) ?? deckY;
+    );
+    if(returnDeckY===null){returnX=placement.approach.x;returnZ=placement.approach.z;returnDeckY=deckY;}
     this.buildBonusPlatform({
       t: "bonusplatform", p: [x, deckY, z],
       to: [returnX, returnDeckY + 0.1, returnZ],
@@ -11017,57 +11061,33 @@ export class Level {
     const group = new THREE.Group();
     group.name = "bonus platform";
     group.position.set(x, deckY, z);
-    const baseMaterial = new THREE.MeshLambertMaterial({
-      color: 0xf27b23,
-      emissive: 0x5b2300,
-      flatShading: true,
-    });
+    const baseMaterial = new THREE.MeshLambertMaterial({visible:false});
     const base = new THREE.Mesh(
-      new THREE.CylinderGeometry(1.58, 1.82, 0.42, 12),
+      new THREE.CylinderGeometry(1.52,1.52,.12,32),
       baseMaterial,
     );
-    base.position.y = -0.21;
+    base.position.y = BONUS_PLATFORM_HEIGHT-.06;
     base.name = "bonus platform deck";
     base.userData.edgeGrinding = false;
-    base.userData.bonusOpenColor = 0xf27b23;
     group.add(base);
     this.groundMeshes.push(base);
-    const ringMaterial = new THREE.MeshLambertMaterial({
-      color: 0xffdc45,
-      emissive: 0x5b2300,
-    });
-    const ring = new THREE.Mesh(new THREE.TorusGeometry(1.22, 0.14, 8, 22), ringMaterial);
-    ring.rotation.x = Math.PI / 2;
-    ring.position.y = 0.08;
-    ring.userData.bonusOpenColor = 0xffdc45;
-    group.add(ring);
-    const beacon = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.82, 1.18, 0.16, 10),
-      new THREE.MeshLambertMaterial({
-        color: 0x9e45d6,
-        emissive: 0x361050,
-        transparent: true,
-        opacity: 0.82,
-      }),
-    );
-    beacon.position.y = 0.12;
-    beacon.userData.bonusOpenColor = 0x9e45d6;
-    group.add(beacon);
     const label = this.worldRooLabel("Bonus", 4.4);
-    label.position.set(0, 2.35, 0);
+    label.position.set(0, 2.9, 0);
     group.add(label);
     this.root.add(group);
+    attachBonusStone(group);
     this.bonusPlatform = {
       group,
       ground: base,
       groundIndex: this.groundMeshes.indexOf(base),
       box: new THREE.Box3().setFromCenterAndSize(
-        new THREE.Vector3(x, deckY + 0.42, z),
-        new THREE.Vector3(3.1, 1.25, 3.1),
+        new THREE.Vector3(x,deckY+BONUS_PLATFORM_HEIGHT,z),
+        new THREE.Vector3(BONUS_LANDING_RADIUS*2,.28,BONUS_LANDING_RADIUS*2),
       ),
       returnPoint: new THREE.Vector3(...(c.to ?? [x, deckY + 0.1, z + 3.4])),
       locked: false,
       laneFraction,
+      entry:new BonusJumpGate(),
     };
     this.bonusCrateTotal = DEFAULT_BONUS_CRATE_COUNT;
   }
@@ -17276,6 +17296,7 @@ export class Level {
     this.timeTrial = on;
     const bonus = this.bonusPlatform;
     if (bonus) {
+      bonus.entry.reset();
       bonus.group.visible = !on;
       const index = this.groundMeshes.indexOf(bonus.ground);
       if (on && index >= 0) {

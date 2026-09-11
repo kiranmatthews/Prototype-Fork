@@ -4,8 +4,8 @@ export interface RooAppearance {
   shimmer: boolean;
   lightStrength: number;
 }
-export const ROO_APPEARANCE_KEY='solProtoRooAppearanceV3';
-export const ROO_APPEARANCE_DEFAULTS:Readonly<RooAppearance>={tracking:-.065,shimmer:true,lightStrength:.7};
+export const ROO_APPEARANCE_KEY='solProtoRooAppearanceV4';
+export const ROO_APPEARANCE_DEFAULTS:Readonly<RooAppearance>={tracking:-.065,shimmer:true,lightStrength:1};
 export const ROO_APPEARANCE_EVENT='roo-appearance-change';
 const listeners=new Set<()=>void>();
 let timer:ReturnType<typeof setInterval>|undefined;
@@ -15,7 +15,12 @@ function valid(raw:Partial<RooAppearance>):RooAppearance {
     shimmer:typeof raw.shimmer==='boolean'?raw.shimmer:ROO_APPEARANCE_DEFAULTS.shimmer,
     lightStrength:Number.isFinite(raw.lightStrength)?clamp(raw.lightStrength!,0,1):ROO_APPEARANCE_DEFAULTS.lightStrength};
 }
-function read():RooAppearance{try{return valid(JSON.parse(localStorage.getItem(ROO_APPEARANCE_KEY)||'{}'));}catch{return {...ROO_APPEARANCE_DEFAULTS};}}
+function read():RooAppearance{try{
+  const current=localStorage.getItem(ROO_APPEARANCE_KEY);if(current)return valid(JSON.parse(current));
+  const legacy=JSON.parse(localStorage.getItem('solProtoRooAppearanceV3')||'{}');
+  // Upgrade the old default, retaining explicit off/zero and custom strengths.
+  if(legacy.lightStrength===.7)legacy.lightStrength=1;return valid(legacy);
+}catch{return {...ROO_APPEARANCE_DEFAULTS};}}
 let appearance=read();
 const syncCss=()=>{if(typeof document!=='undefined')document.documentElement?.style?.setProperty('--roo-tracking',`${appearance.tracking}em`);};
 syncCss();
@@ -35,7 +40,7 @@ export function rooLightStatus():'playing'|'paused'|'reduced-motion'|'zero-stren
 }
 export function rooMotionEnabled():boolean{return rooLightStatus()==='playing'&&motionMedia?.matches===false;}
 export function rooLightPosition(now=performance.now()):number {
-  return rooMotionEnabled()?Math.sin(now/1000*Math.PI*2/11)*appearance.lightStrength:0;
+  return rooMotionEnabled()?Math.sin(now/1000*Math.PI*2/4.2)*appearance.lightStrength:0;
 }
 export function rooLightWeights(position=rooLightPosition()):readonly number[]{
   const p=clamp(position,-1,1);return [1-Math.abs(p),Math.max(0,-p),Math.max(0,p)];

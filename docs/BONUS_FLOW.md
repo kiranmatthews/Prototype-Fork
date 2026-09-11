@@ -1,5 +1,9 @@
 # Default bonus and return flow
 
+Bonus entrances use a Meshy-generated circular stone pedestal, 3.2 m across and 1.05 m high. Steep circular sides block running approaches; the flat top supports a deliberate jump. Entry requires an actual rising jump command followed by a grounded landing inside the top area. Walking, standing, falling without a jump command, and landing elsewhere cannot enter. A jump arms only one landing; deaths, resets, trial mode and locks clear it. Board riders charge and release an ollie to clear the raised deck. Default placements stay off the route centre and check room around walls, crates, checkpoints, enemies and individual rail segments. Narrow bridges can use a farther side pad. If a forward return point is over a gap, the supported approach point is retained for return.
+
+The generated model is in `public/props/bonus-platform/stone-circle.glb`, with Meshy task/source hashes in `provenance.json`. Trial mode hides both art and all platform collision; locked completed platforms remain physical but do not accept entry. Suspended parent levels retain the shared artwork correctly.
+
 Campaign bonus platforms now enter **Bonus: Easy Street**, authored in `src/levels/bonus-easy.ts`. It remains a left-to-right, one-line course with the same parallax backdrop: three broad terraces, two 2 m gaps, 18 crates, 15 loose fruit, one life crate and one mask crate. Every reward has permanent terrain below it. No rail, moving lift, enemy or explosive is mandatory. The original 34-crate Unity bonus remains available as `bonus-level`; the easier standalone editor entry is `bonus-easy`.
 
 Parent all-box totals use the new default's 18 crates. Completing the bonus banks its broken-box count and locks that run's bonus platform. Failing returns the original parent fruit/lives purse and leaves the bonus retryable.

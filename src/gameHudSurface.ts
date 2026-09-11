@@ -9,6 +9,7 @@
 import * as THREE from "three";
 import { trackPresentationImage } from "./presentationLoading";
 import { RooAtlasPainter } from "./roo-type/atlas";
+import {drawBalanceMeter} from './balanceMeter';
 import { getRooAppearance } from './roo-type/settings';
 import { ROO_COUNTER_TRACKING, rooNumberCap, rooTitleCap } from "./roo-type/typography";
 import {
@@ -1040,22 +1041,24 @@ export class GameHudSurface {
     const trackEl = horizontal ? this.elements.grindBalance : this.elements.manualBalance;
     const needleEl = horizontal ? this.elements.grindNeedle : this.elements.manualNeedle;
     const track = this.rect(trackEl, layout) ?? (horizontal
-      ? { x: width / 2 - 120 * sy, y: height * 0.76, width: 240 * sy, height: 14 * sy }
-      : { x: width / 2 + 96 * sy, y: height * 0.72, width: 14 * sy, height: 132 * sy });
+      ? {x:width/2-140*sy,y:height*.35-70.5*sy,width:280*sy,height:141*sy}
+      : {x:width/2-150*sy-70.5*sy,y:height*.49-140*sy,width:141*sy,height:280*sy});
+    const value=explicit?.value??Number(trackEl?.dataset.balanceValue??0),critical=explicit?.critical??trackEl?.dataset.balanceCritical==='true';
+    if(drawBalanceMeter(ctx,track,{mode,value,critical,nowMs:frame.nowMs})){this.mark();return;}
     this.drawBalanceTrack(ctx, track, horizontal);
     let needle = this.rect(needleEl, layout);
-    if (!needle && explicit) {
-      const value = Math.max(-1, Math.min(1, explicit.value));
+    if (!needle) {
+      const clamped = Math.max(-1, Math.min(1, value));
       needle = horizontal
         ? {
-            x: track.x + track.width * (0.5 + value * 0.46) - 4 * sy,
+            x: track.x + track.width * (0.5 + clamped * 0.46) - 4 * sy,
             y: track.y - 4 * sy,
             width: 8 * sy,
             height: 20 * sy,
           }
         : {
             x: track.x - 4 * sy,
-            y: track.y + track.height * (0.5 + value * 0.44) - 4 * sy,
+            y: track.y + track.height * (0.5 + clamped * 0.44) - 4 * sy,
             width: 22 * sy,
             height: 8 * sy,
           };

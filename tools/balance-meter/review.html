@@ -1,0 +1,7 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="icon" href="data:,"><style>body{margin:0;background:#101820;color:#cbd8e3;font:16px system-ui}canvas{display:block}header{padding:14px 24px}</style></head><body><header>Generated curved meters · shared balance path · stop-motion frames</header><canvas id="c" width="1440" height="900"></canvas><script type="module">
+import {drawBalanceMeter,loadBalanceMeterAssets,balanceMeterFrame,balanceMeterPoint} from '../../src/balanceMeter.ts';
+await loadBalanceMeterAssets();const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');let automatic=true;
+function paint(now=performance.now(),value=Math.sin(now/1400)*.92,light=false){ctx.fillStyle=light?'#e9e5d8':'#101820';ctx.fillRect(0,0,1440,900);ctx.font='18px system-ui';ctx.fillStyle=light?'#293a48':'#b9cbdc';ctx.textAlign='center';
+ for(const [i,v]of [-.85,0,.85].entries()){const x=i*480;ctx.fillText('GRIND / HORIZONTAL LIP',x+240,45);drawBalanceMeter(ctx,{x:x+40,y:65,width:400,height:202},{mode:'grind',value:v,nowMs:now,critical:Math.abs(v)>.8});ctx.fillText('MANUAL / VERTICAL LIP',x+240,335);drawBalanceMeter(ctx,{x:x+115,y:365,width:250,height:497},{mode:'manual',value:i===1?value:v,nowMs:now,critical:Math.abs(v)>.8});}}
+function tick(){if(automatic)paint();requestAnimationFrame(tick);}tick();window.balanceReview={ready:true,paint(now,value=0,light=false){automatic=false;paint(now,value,light);},resume(){automatic=true;},pose:balanceMeterFrame,point:balanceMeterPoint};
+</script></body></html>

@@ -4,11 +4,11 @@ import {pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE?pathToFileURL(process.env.PLAYWRIGHT_MODULE).href:'playwright');
 const base=process.env.ROO_LAB_URL||'http://127.0.0.1:5178/';
-const out=process.env.ROO_REVIEW_DIR||'/private/tmp/roo-type-v7-review';await fs.mkdir(out,{recursive:true});
+const out=process.env.ROO_REVIEW_DIR||'/private/tmp/roo-type-v8-review';await fs.mkdir(out,{recursive:true});
 const report={errors:[],checks:{},captures:[]};
 const root=new URL('../../',import.meta.url);
 const font=await fs.readFile(new URL('public/fonts/RooRegular.ttf',root));
-const provenance=JSON.parse(await fs.readFile(new URL('public/fonts/roo-font-v7-provenance.json',root),'utf8'));
+const provenance=JSON.parse(await fs.readFile(new URL('public/fonts/roo-font-v8-provenance.json',root),'utf8'));
 assert.equal(Object.keys(provenance.glyphs).length,51);
 for(const entry of Object.values(provenance.glyphs)){
  const model=await fs.readFile(new URL('art/roo-reference-match/'+entry.model,root));
@@ -30,15 +30,15 @@ try{
  await page.goto(base+'roo-type-lab.html');await page.waitForFunction(()=>window.rooTypeLab?.ready);await page.screenshot({path:out+'/lab-dark.png'});
  await page.locator('#backdrop').check();await page.screenshot({path:out+'/lab-light.png'});
  const download=page.waitForEvent('download');await page.locator('#png').click();await(await download).saveAs(out+'/roo-text.png');
- const zip=page.waitForEvent('download');await page.locator('#atlas').click();await(await zip).saveAs(out+'/roo-image-font-v7.zip');
+ const zip=page.waitForEvent('download');await page.locator('#atlas').click();await(await zip).saveAs(out+'/roo-image-font-v8.zip');
  const{unzipSync}=await import('../../node_modules/three/examples/jsm/libs/fflate.module.js');
- const zipFiles=unzipSync(await fs.readFile(out+'/roo-image-font-v7.zip'));
+ const zipFiles=unzipSync(await fs.readFile(out+'/roo-image-font-v8.zip'));
  assert.equal(Object.keys(zipFiles).length,10);
- assert.equal(JSON.parse(new TextDecoder().decode(zipFiles['roo-font-v7-provenance.json'])).glyphCount,51);report.checks.exports=true;
+ assert.equal(JSON.parse(new TextDecoder().decode(zipFiles['roo-font-v8-provenance.json'])).glyphCount,51);report.checks.exports=true;
  const shapes=await page.evaluate(async()=>{
   const results={};
   for(const palette of ['bonus','counter']){
-   const m=await fetch(`/fonts/roo-${palette}-v7.json`).then(r=>r.json()),image=new Image();image.src=`/fonts/roo-${palette}-v7.png`;await image.decode();
+   const m=await fetch(`/fonts/roo-${palette}-v8.json`).then(r=>r.json()),image=new Image();image.src=`/fonts/roo-${palette}-v8.png`;await image.decode();
    let partial=0,pink=0;const alphaHashes={},cropped=[];
    for(const [char,g]of Object.entries(m.glyphs)){
     if(!g.width)continue;
@@ -52,13 +52,13 @@ try{
   return results;
  });
  const sha=createHash('sha256').update(font).digest('hex');
- for(const p of ['bonus','counter']){assert.equal(shapes[p].fontSha256,sha);assert.equal(shapes[p].version,7);assert.equal(shapes[p].contourSource,'model-artwork');assert.equal(shapes[p].capPixels,512);assert.equal(shapes[p].pink,0);assert.deepEqual(shapes[p].cropped,[]);assert.ok(shapes[p].partial>5000);}
+ for(const p of ['bonus','counter']){assert.equal(shapes[p].fontSha256,sha);assert.equal(shapes[p].version,8);assert.equal(shapes[p].contourSource,'model-artwork');assert.equal(shapes[p].capPixels,512);assert.equal(shapes[p].pink,0);assert.deepEqual(shapes[p].cropped,[]);assert.ok(shapes[p].partial>5000);}
  assert.deepEqual(shapes.bonus.alphaHashes,shapes.counter.alphaHashes);delete shapes.bonus.alphaHashes;delete shapes.counter.alphaHashes;report.checks.shapes=shapes;
  report.checks.lightFrames=await page.evaluate(async()=>{
   const results={};
   for(const palette of ['bonus','counter']){
-   const m=await fetch(`/fonts/roo-${palette}-v7.json`).then(r=>r.json()),frames=[];
-   for(const frame of [0,1,2]){const image=new Image();image.src=`/fonts/roo-${palette}-v7${frame?'-light'+frame:''}.png`;await image.decode();const canvas=document.createElement('canvas');canvas.width=m.width;canvas.height=m.height;const ctx=canvas.getContext('2d');ctx.drawImage(image,0,0);frames.push(ctx.getImageData(0,0,m.width,m.height).data);}
+   const m=await fetch(`/fonts/roo-${palette}-v8.json`).then(r=>r.json()),frames=[];
+   for(const frame of [0,1,2]){const image=new Image();image.src=`/fonts/roo-${palette}-v8${frame?'-light'+frame:''}.png`;await image.decode();const canvas=document.createElement('canvas');canvas.width=m.width;canvas.height=m.height;const ctx=canvas.getContext('2d');ctx.drawImage(image,0,0);frames.push(ctx.getImageData(0,0,m.width,m.height).data);}
    let alphaMismatches=0,grayPixels=0,maxNeutralRatio=0;const unchanged=[];
    for(let i=0;i<frames[0].length;i+=4){for(const frame of [1,2])if(frames[frame][i+3]!==frames[0][i+3])alphaMismatches++;const rgb=frames[0].slice(i,i+3),hi=Math.max(...rgb),lo=Math.min(...rgb);if(frames[0][i+3]>250&&hi>80&&hi<220&&hi-lo<8)grayPixels++;}
    for(const[char,g]of Object.entries(m.glyphs)){if(!g.width)continue;let changed=0,opaque=0,neutral=0;for(let y=g.y;y<g.y+g.height;y++)for(let x=g.x;x<g.x+g.width;x++){const p=(y*m.width+x)*4;if(frames[0][p+3]>128&&[0,1,2].some(c=>frames[1][p+c]!==frames[2][p+c]))changed++;if(frames[0][p+3]>250){opaque++;const rgb=frames[0].slice(p,p+3);if(Math.max(...rgb)-Math.min(...rgb)<10)neutral++;}}if(!changed)unchanged.push(char);maxNeutralRatio=Math.max(maxNeutralRatio,neutral/Math.max(1,opaque));}
@@ -83,7 +83,7 @@ try{
   await game.evaluate(()=>{const g=window.__game,original=g.ui.setHUD.bind(g.ui);window.rooForceBonus=false;window.rooReviewFruit=42;g.ui.setHUD=(s,dt)=>original({...s,fruit:window.rooReviewFruit,lives:7,cratesBroken:0,cratesTotal:23,inventoryHeld:true,bonusMode:window.rooForceBonus},dt);});
   await game.waitForTimeout(600);assert.match(await game.locator('.hud-build').textContent(),/Codex\/sol fork/);
   await game.waitForFunction(()=>document.querySelectorAll('.game-hud-layer svg image').length>0);
-  const urls=await game.locator('.game-hud-layer svg image').evaluateAll(images=>images.map(i=>i.getAttribute('href')));assert.ok(urls.length>0&&urls.every(s=>/-v7(?:-light[12])?\.png/.test(s)));
+  const urls=await game.locator('.game-hud-layer svg image').evaluateAll(images=>images.map(i=>i.getAttribute('href')));assert.ok(urls.length>0&&urls.every(s=>/-v8(?:-light[12])?\.png/.test(s)));
   report.checks[lite?'lite':'full']=await game.evaluate(()=>window.__game.ui.gameHudDiagnostics);
   await game.screenshot({path:out+`/game-${lite?'lite':'full'}.png`});
   const fonts=await game.locator('.hud-box-current,.hud-box-total').evaluateAll(es=>es.map(e=>getComputedStyle(e).fontSize));assert.equal(fonts[0],fonts[1]);
