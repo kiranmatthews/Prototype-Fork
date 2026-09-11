@@ -30,7 +30,7 @@ export function goldToBonus(source:HTMLCanvasElement){
  * Oklab matrices: https://bottosson.github.io/posts/oklab/ (public domain).
  * This is a pointwise color grade; geometry, texture and alpha are untouched.
  */
-export function goldToBonusBalanced(source:HTMLCanvasElement){
+export function goldToBonusBalanced(source:HTMLCanvasElement, preserveSourceTone=false){
  const canvas=document.createElement('canvas');canvas.width=source.width;canvas.height=source.height;
  const ctx=canvas.getContext('2d')!,pixels=source.getContext('2d')!.getImageData(0,0,source.width,source.height),d=pixels.data;
  const linear=(v:number)=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4;
@@ -59,8 +59,8 @@ export function goldToBonusBalanced(source:HTMLCanvasElement){
    const R=linear(r),G=linear(g),B=linear(b);
    const l=Math.cbrt(.4122214708*R+.5363325363*G+.0514459929*B),m=Math.cbrt(.2119034982*R+.6806995451*G+.1073969566*B),s=Math.cbrt(.0883024619*R+.2817188376*G+.6299787005*B);
    const L=.2104542553*l+.793617785*m-.0040720468*s,a=1.9779984951*l-2.428592205*m+.4505937099*s,b2=.0259040371*l+.7827717662*m-.808675766*s,C=Math.hypot(a,b2);
-   const glint=smooth(.8,.97,L)*(1-smooth(.03,.11,C)),lightness=(.12+.76*L)*(1-glint)+L*glint;
-   const chroma=C*.8,ca=Math.cos(angle),cb=Math.sin(angle);let rgb=rgbFromLab(lightness,chroma*ca,chroma*cb);
+   const glint=smooth(.8,.97,L)*(1-smooth(.03,.11,C)),lightness=preserveSourceTone?L:(.12+.76*L)*(1-glint)+L*glint;
+   const chroma=preserveSourceTone?C:C*.8,ca=Math.cos(angle),cb=Math.sin(angle);let rgb=rgbFromLab(lightness,chroma*ca,chroma*cb);
    // Reduce chroma before encoding instead of clipping individual RGB channels.
    if(rgb.some(v=>v<0||v>1)){
     let low=0,high=chroma;for(let step=0;step<10;step++){const c=(low+high)/2,test=rgbFromLab(lightness,c*ca,c*cb);if(test.every(v=>v>=0&&v<=1))low=c;else high=c;}
@@ -105,4 +105,13 @@ export function enhanceModelGlisten(source:HTMLCanvasElement,neutral:HTMLCanvasE
   for(let k=0;k<3;k++)d[p+k]=Math.round(d[p+k]+(255-d[p+k])*gain);
  }
  ctx.putImageData(pixels,0,0);return source;
+}
+
+/** V9 keeps the v7 green/teal/cobalt hue curve, with the original artwork's
+ * perceptual lightness and chroma. No contrast curve, saturation multiplier,
+ * exposure adjustment or amplified glint. Chroma is reduced only when needed
+ * to represent a rotated colour in sRGB without clipping channels.
+ */
+export function goldToBonusNeutral(source:HTMLCanvasElement){
+ return goldToBonusBalanced(source,true);
 }

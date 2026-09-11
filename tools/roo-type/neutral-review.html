@@ -1,0 +1,24 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="icon" href="data:,"><style>body{margin:0;background:#102335}canvas{display:block}</style></head><body><canvas id="proof" width="1800" height="1040"></canvas><script type="module">
+const m=await fetch('/fonts/roo-counter-v6.json').then(r=>r.json());
+const load=async src=>{const image=new Image();image.src=src;await image.decode();return image;};
+const images=await Promise.all(['/fonts/roo-bonus-v7.png','/fonts/roo-bonus-v8.png','/fonts/roo-bonus-v9.png'].map(load));
+const canvas=document.getElementById('proof'),ctx=canvas.getContext('2d');
+ctx.fillStyle='#102335';ctx.fillRect(0,0,1800,1040);
+for(const [i,image]of images.entries()){
+ const x=i*600;ctx.fillStyle='#d9e3ee';ctx.font='20px system-ui';ctx.fillText(['V7 — EARLIER HUES + SOFTENING','V8 — CURRENT BUILD','V9 — EARLIER HUES, ORIGINAL TONE'][i],x+20,34);
+ let pen=x+20;for(const char of 'BONUS'){const g=m.glyphs[char],size=103,scale=size/m.capPixels;ctx.drawImage(image,g.x,g.y,g.width,g.height,pen+g.left*size,72+g.top*size,g.width*scale,g.height*scale);pen+=(g.advance-.065)*size;}
+ const g=m.glyphs.H,scale=600/m.capPixels;ctx.drawImage(image,g.x,g.y,g.width,g.height,x+65,260,g.width*scale,g.height*scale);
+}
+window.neutralReview={ready:true,async audit(){
+ const frames=await Promise.all([0,1,2].map(f=>load(`/fonts/roo-bonus-v9${f?'-light'+f:''}.png`)));
+ canvas.width=1800;canvas.height=1660;ctx.fillStyle='#102335';ctx.fillRect(0,0,1800,1660);
+ const chars=Object.keys(m.glyphs).filter(c=>m.glyphs[c].width);
+ for(const [i,char]of chars.entries()){
+  const x=(i%6)*300,y=Math.floor(i/6)*182,g=m.glyphs[char];ctx.fillStyle='#d9e3ee';ctx.font='14px system-ui';ctx.fillText(`${char}  —  NEUTRAL / A / B`,x+8,y+19);
+  for(const [f,image]of frames.entries()){
+   const scale=Math.min(84/g.width,145/g.height),w=g.width*scale,h=g.height*scale;
+   ctx.drawImage(image,g.x,g.y,g.width,g.height,x+f*100+(100-w)/2,y+27+(145-h)/2,w,h);
+  }
+ }
+}};
+</script></body></html>

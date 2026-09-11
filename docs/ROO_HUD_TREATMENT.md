@@ -1,6 +1,6 @@
-# Roo image font v8: reference colours and visible glisten
+# Roo image font v9: earlier teal hues with original artwork tone
 
-V8 retains the approved v6 finished glyphs and glisten sources. Each finished glyph supplies the artwork. Full painted bevels, highlights, counter shapes and pointed terminals are retained. The original Roo vectors guide the letter design and cap metrics; they do not clip the finished image. All 51 nonempty glyphs have individual image-model sources. The approved accented zero is reused unchanged from v5, and the other 50 neutral masters were rebuilt to match its finish.
+V9 retains the approved v6 finished glyphs and glisten sources. Each finished glyph supplies the artwork. Full painted bevels, highlights, counter shapes and pointed terminals are retained. The original Roo vectors guide the letter design and cap metrics; they do not clip the finished image. All 51 nonempty glyphs have individual image-model sources. The approved accented zero is reused unchanged from v5, and the other 50 neutral masters were rebuilt to match its finish.
 
 ## Artwork and glisten
 
@@ -10,7 +10,7 @@ The bake removes a separate magenta matte (or uses genuine generated alpha), kee
 
 A–D initially received opaque gray checkerboards despite transparent requests. Background-only model edits replaced those mattes with flat magenta while preserving white bevel glints. The font baker rejects gray/checker mattes instead of guessing which white pixels belong to the lettering. Original outputs and prompts remain in the authoring record.
 
-The approved gold/orange neutral PNG is retained byte-for-byte. Green/cobalt now follows the original reference's saturated lime/green and azure/cobalt pigment, using the earlier sampled reference palette rather than the fluorescent v6 or washed v7 grade. The mapping retains painted detail and white glints with no spatial masks or geometry changes. Newly lit specular pixels in each existing image-model light edit are strengthened, preserving the same alpha and the approved neutral. It does not reconstruct or reshape the bevels.
+All three approved orange PNGs are retained byte-for-byte from v8. Green/teal/cobalt uses the earlier v7 hue curve while retaining the original image artwork's perceptual lightness and chroma. The v7 face contrast compression and 0.8 chroma multiplier are removed, as are v8's stronger pigment remap and green glint amplification. The neutral and both original model lighting edits pass through the same hue-only treatment. Chroma is reduced only where the rotated colour falls outside sRGB; lightness and hue are preserved instead of clipping individual channels. No geometry, alpha, bevel or spatial shading changes are introduced.
 
 The built-in image tool did not expose or report a selectable model ID or quality tier. Provenance records those fields as unknown; this work makes no claim of a verified GPT Image 2.5/max setting.
 
@@ -24,9 +24,9 @@ Font Studio now moves its light-position slider with the actual animation, repor
 
 ## Delivered files
 
-- `public/fonts/roo-bonus-v8.png`, `roo-bonus-v8-light1.png`, `roo-bonus-v8-light2.png`.
-- `public/fonts/roo-counter-v8.png`, `roo-counter-v8-light1.png`, `roo-counter-v8-light2.png`.
-- Palette metrics, `roo-font-v8-provenance.json`, and `roo-image-font-v8.zip`.
+- `public/fonts/roo-bonus-v9.png`, `roo-bonus-v9-light1.png`, `roo-bonus-v9-light2.png`.
+- `public/fonts/roo-counter-v9.png`, `roo-counter-v9-light1.png`, `roo-counter-v9-light2.png`.
+- Palette metrics, `roo-font-v9-provenance.json`, and `roo-image-font-v9.zip`.
 
 The ZIP contains six PNGs, two metrics files, provenance and integration notes. Provenance includes all neutral and glisten source hashes, exact prompts, and the neutral input used by every glisten edit. Raw authoring sources are retained in the repository rather than downloaded at runtime.
 
@@ -43,9 +43,10 @@ PLAYWRIGHT_MODULE=/absolute/playwright/index.mjs node tools/roo-type/raster-bake
 PLAYWRIGHT_MODULE=/absolute/playwright/index.mjs node tools/roo-type/capture-atlas-audit.mjs
 # Inspect the complete artwork and every glisten frame before installation.
 python3 tools/roo-type/install-raster-bake.py
-# V8 restores the reference palette and strengthens existing model glints.
-PLAYWRIGHT_MODULE=/absolute/playwright/index.mjs node tools/roo-type/refine-font.mjs
-python3 tools/roo-type/install-refined-font.py
+# V9 restores the earlier hues with the source artwork tone and unboosted green lights.
+PLAYWRIGHT_MODULE=/absolute/playwright/index.mjs node tools/roo-type/neutral-font.mjs
+python3 tools/roo-type/install-neutral-font.py
+python3 tools/roo-type/check-neutral-tone.py
 python3 tools/roo-type/check-raster.py
 PLAYWRIGHT_MODULE=/absolute/playwright/index.mjs node tools/roo-type/review.mjs
 PLAYWRIGHT_MODULE=/absolute/playwright/index.mjs node tools/roo-type/review-lighting.mjs

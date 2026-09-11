@@ -26,6 +26,9 @@ async function main(){
  <button id="png" class="primary">Export transparent text PNG</button><button id="atlas">Download font + 3 light frames</button>
  <div id="report" aria-live="polite">Loading glyphs…</div></aside></main>`;
  const input=(id:string)=>document.getElementById(id) as HTMLInputElement;
+ const query=new URLSearchParams(location.search),palette=query.get('palette');
+ if(palette==='bonus'||palette==='counter')input('palette').value=palette;
+ if(query.has('text'))input('text').value=query.get('text')!.slice(0,30);
  const stage=document.querySelector<HTMLDivElement>('.stage')!,canvas=stage.querySelector('canvas')!,ctx=canvas.getContext('2d')!;
  const painter=new RooAtlasPainter();await loadRooAtlases();if(!painter.ready)throw new Error('Font atlas failed to load');
  const characters=Object.keys(ROO_ATLAS_METRICS.bonus.glyphs).filter(c=>ROO_ATLAS_METRICS.bonus.glyphs[c].width);

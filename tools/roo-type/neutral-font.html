@@ -1,0 +1,8 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="icon" href="data:,"></head><body><script type="module">
+import {goldToBonusNeutral} from './artwork-palette.ts';
+window.neutralFont=async frame=>{
+ const image=new Image();image.src=`/fonts/roo-counter-v6${frame?'-light'+frame:''}.png`;await image.decode();
+ const source=document.createElement('canvas');source.width=image.width;source.height=image.height;source.getContext('2d').drawImage(image,0,0);
+ const result=goldToBonusNeutral(source),png=result.toDataURL('image/png');source.width=source.height=result.width=result.height=1;return png;
+};
+</script></body></html>
