@@ -44,8 +44,10 @@ export function rooLightWeights(position=rooLightPosition()):readonly number[]{
 export function subscribeRooLight(listener:()=>void):()=>void {
   listeners.add(listener);
   if(!timer&&typeof document!=='undefined'&&document.documentElement){
-    let moving=rooMotionEnabled();
-    timer=setInterval(()=>{const next=rooMotionEnabled();if(!document.hidden&&(next||next!==moving))for(const f of listeners)f();moving=next;},1000/24);
+    let status=rooLightStatus();
+    // Distinguish paused, reduced motion and zero strength even when several
+    // controls change between ticks and both endpoints have stopped moving.
+    timer=setInterval(()=>{const next=rooLightStatus();if(!document.hidden&&(next==='playing'||next!==status))for(const f of listeners)f();status=next;},1000/24);
   }
   return()=>{listeners.delete(listener);if(!listeners.size&&timer){clearInterval(timer);timer=undefined;}};
 }

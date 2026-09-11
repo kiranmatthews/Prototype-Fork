@@ -15,3 +15,5 @@ The old public v5 light label did cycle in Chrome, but its disabled slider staye
 Focused review covers source hashes/prompts, exports, complete contours, light frames, crossfade alpha, animation pixels, controls, 50 responsive menu layouts, cross-tab saved spacing, world-map/Jungle Cup screens, lite/full HUD and the 107/165 px reference sizes. Local build passes. No full test suite was requested or run. Review captures and machine reports are in `/private/tmp/roo-type-v6-review`; installed distribution files are under `public/fonts` and the method/rebuild guide is `docs/ROO_HUD_TREATMENT.md`.
 
 Only Roo-font assets, authoring tools, runtime controls and documentation belong to this change. Unrelated character-study/blink work, `.gitignore` and `vite.config.ts` are preserved.
+
+The public motion check exposed a pause/reduced-motion transition race in the old Boolean clock state. The shared clock now compares the complete lighting status, ensuring a repaint between different stopped states even if rapid changes occur between ticks. The focused actual-pixel/control review passes with the correction. The approved font bytes remain unchanged.
