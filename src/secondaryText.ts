@@ -59,7 +59,7 @@ export function silverSecondaryLabel(label: string, live = true): HTMLElement {
 }
 
 /** Synchronous Canvas twin for the pre-CRT pass; never rasterizes DOM/SVG. */
-export function paintSilverSecondaryText(ctx: CanvasRenderingContext2D, label: string, x: number, y: number, fontSize: number): void {
+export function paintSilverSecondaryText(ctx: CanvasRenderingContext2D, label: string, x: number, y: number, fontSize: number, faceColor?: string): void {
   const s = secondaryTextSettings.value;
   ctx.save();
   ctx.font = `700 ${fontSize}px "Staging Secondary", Impact, sans-serif`;
@@ -83,8 +83,8 @@ export function paintSilverSecondaryText(ctx: CanvasRenderingContext2D, label: s
     if (outline > 0) { ctx.lineWidth = outline; ctx.strokeText(label, sx, sy); }
     ctx.fillText(label, sx, sy);
   }
-  ctx.fillStyle = gradient;
-  if (s.weight > 0) { ctx.strokeStyle = gradient; ctx.lineWidth = s.weight * 2; ctx.strokeText(label, x, baseline); }
+  ctx.fillStyle = faceColor ?? gradient;
+  if (s.weight > 0) { ctx.strokeStyle = faceColor ?? gradient; ctx.lineWidth = s.weight * 2; ctx.strokeText(label, x, baseline); }
   ctx.fillText(label, x, baseline);
   if (s.weight < 0) { ctx.strokeStyle = "#050608"; ctx.lineWidth = -s.weight * 2; ctx.strokeText(label, x, baseline); }
   ctx.restore();

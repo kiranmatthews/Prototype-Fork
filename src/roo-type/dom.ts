@@ -1,3 +1,4 @@
+import {menuTextFocusButton,menuTextFocusEnabled} from '../menuTextFocus';
 import { ROO_ATLAS_METRICS } from './atlas-metrics';
 import { layoutRooAtlas, loadRooAtlases, RooAtlasPainter, rooAtlasGlyphRect, rooAtlasUrl } from './atlas';
 import type { RooTextHandle, RooTextOptions, RooPaletteName } from '../roo-text.js';
@@ -26,7 +27,7 @@ export async function createBakedRooText(host:HTMLElement,options:RooTextOptions
   let destroyed=false,baked=true,currentText='';
   const updateLight=()=>{
     if(!host.isConnected)return;
-    const weights=baked&&frames.length===3?rooLightWeights():[1,0,0];
+    const weights=menuTextFocusEnabled()&&menuTextFocusButton(host)?[1,0,0]:baked&&frames.length===3?rooLightWeights():[1,0,0];
     for(const [i,frame]of frames.entries())frame.setAttribute('opacity',String(weights[i]??0));
   };
   async function setText(raw:string){

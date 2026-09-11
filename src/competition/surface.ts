@@ -1,3 +1,4 @@
+import {menuTextFocusButton,menuTextFocusEnabled,menuTextFocusStyle,observeMenuTextFocus} from '../menuTextFocus';
 import { paintSilverSecondaryText } from "../secondaryText";
 import { paintInputPrompts } from '../inputPromptUI';
 import { gameFlowRasterSize } from '../gameFlowSurface';
@@ -18,6 +19,7 @@ export class CompetitionSurface {
   private readonly rooAtlas=new RooAtlasPainter();
   private lightPhase=NaN;
   constructor(private root: HTMLElement) {
+    observeMenuTextFocus(root,()=>this.invalidate());
     void loadRooAtlases().then(()=>this.invalidate());
     window.addEventListener(ROO_APPEARANCE_EVENT,()=>this.invalidate());
     root.addEventListener('scroll', () => this.invalidate(), true);
@@ -61,9 +63,10 @@ export class CompetitionSurface {
     const style=getComputedStyle(element),rect=element.getBoundingClientRect();
     if(style.display==='none'||style.visibility==='hidden'||rect.width<.1||rect.height<.1||Number(style.opacity)<.001)return;
     ctx.save();ctx.globalAlpha*=Number(style.opacity);
+    const button=menuTextFocusButton(element),focus=menuTextFocusEnabled()&&!!button;
     if(element.hasAttribute?.('data-roo-menu')){
       const text=element.querySelector('.roo-menu-source')?.textContent??'';
-      if(!this.rooAtlas.draw(ctx,rooMenuText(text),rect.x+rect.width/2,rect.y+rect.height/2,{size:parseFloat(style.fontSize)*.882,palette:rooMenuTitle(element)?'bonus':'counter',align:'center',maxWidth:rect.width})){
+      if(!this.rooAtlas.draw(ctx,rooMenuText(text),rect.x+rect.width/2,rect.y+rect.height/2,{size:parseFloat(style.fontSize)*.882,palette:rooMenuTitle(element)?'bonus':'counter',...(focus?menuTextFocusStyle(button!.classList.contains('selected')):{}),align:'center',maxWidth:rect.width})){
         ctx.font=`${style.fontSize} ${style.fontFamily}`;ctx.fillStyle=style.color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,rect.x+rect.width/2,rect.y+rect.height/2,rect.width);
       }
       ctx.restore();return;

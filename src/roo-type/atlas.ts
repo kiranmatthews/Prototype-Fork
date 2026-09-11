@@ -1,3 +1,4 @@
+import {applyRooInk,type RooInk} from './ink';
 import { trackPresentationImage } from '../presentationLoading';
 import { ROO_ATLAS_METRICS } from './atlas-metrics';
 import type { RooAtlasMetrics } from './bake';
@@ -11,6 +12,8 @@ export interface RooAtlasStyle {
   align?: CanvasTextAlign;
   maxWidth?: number;
   alpha?: number;
+  /** Cached runtime colour layer; source PNGs and alpha are untouched. */
+  ink?: RooInk;
   /** -1 left, 0 neutral, +1 right. Omit for gentle automatic lighting. */
   lightPosition?: number;
 }
@@ -86,7 +89,7 @@ export class RooAtlasPainter {
     ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
     const phase=this.lightingReady?Math.round((style.lightPosition??rooLightPosition())*256)/256:0;
     const placed=layout.glyphs.map(entry=>({glyph:metrics.glyphs[entry.char],rect:rooAtlasGlyphRect(metrics,entry)}));
-    if(!this.lightingReady||placed.length===0)for(const {glyph,rect}of placed){
+    if((!this.lightingReady&&!style.ink)||placed.length===0)for(const {glyph,rect}of placed){
       ctx.drawImage(image,glyph.x,glyph.y,glyph.width,glyph.height,
         left+rect.x*size,y-size/2+rect.y*size,rect.width*size,rect.height*size);
     }else{
@@ -94,7 +97,7 @@ export class RooAtlasPainter {
       const width=(Math.max(...placed.map(p=>p.rect.x+p.rect.width))-minX)*size;
       const height=(Math.max(...placed.map(p=>p.rect.y+p.rect.height))-minY)*size;
       const transform=ctx.getTransform(),ratio=Math.max(1,Math.min(3,Math.hypot(transform.a,transform.b)));
-      const key=JSON.stringify([palette,text,size,tracking,ratio]);let item=this.cache.get(key);
+      const key=JSON.stringify([palette,text,size,tracking,ratio,style.ink]);let item=this.cache.get(key);
       if(!item){const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.ceil(width*ratio));canvas.height=Math.max(1,Math.ceil(height*ratio));item={canvas,phase:NaN};this.cache.set(key,item);}
       if(item.phase!==phase){
         // Keep both intermediate surfaces on one raster backend. Chrome can
@@ -115,6 +118,7 @@ export class RooAtlasPainter {
           for(const {glyph,rect}of placed)frameCtx.drawImage(images[palette][frame],glyph.x,glyph.y,glyph.width,glyph.height,(rect.x-minX)*size,(rect.y-minY)*size,rect.width*size,rect.height*size);
           mix.drawImage(this.frameCanvas,0,0,item.canvas.width,item.canvas.height,0,0,item.canvas.width,item.canvas.height);
         }
+        if(style.ink)applyRooInk(mix,style.ink);
         item.phase=phase;
       }
       ctx.drawImage(item.canvas,left+minX*size,y-size/2+minY*size,item.canvas.width/ratio,item.canvas.height/ratio);

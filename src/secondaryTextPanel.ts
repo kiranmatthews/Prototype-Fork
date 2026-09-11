@@ -1,3 +1,4 @@
+import {menuTextFocusEnabled,setMenuTextFocusEnabled,MENU_TEXT_FOCUS_EVENT} from './menuTextFocus';
 import { getRooAppearance, setRooAppearance, ROO_APPEARANCE_EVENT } from './roo-type/settings';
 import { SECONDARY_TEXT_RANGES, secondaryTextSettings, type SecondaryTextSettings } from "./secondaryTextSettings";
 
@@ -17,8 +18,11 @@ export function createSecondaryTextPanel(): void {
   root.querySelector("header button")!.addEventListener("click", () => { root.open = false; });
   const roo = document.createElement('section');
   roo.className = 'roo-debug-controls';
-  roo.innerHTML = `<b>Roo HUD & menu text</b><label><span>Text shimmer</span><input type="checkbox" data-roo-setting="shimmer"></label><label><span>Edge light strength</span><input type="range" min="0" max="1" step="0.01" data-roo-setting="lightStrength"></label><label><span>Letter spacing (em)</span><input type="number" min="-.16" max=".16" step=".005" data-roo-setting="tracking"></label><button type="button" data-roo-studio>Open text appearance studio</button><hr>`;
+  roo.innerHTML = `<b>Roo HUD & menu text</b><label><span>Menu focus colours (orange / white)</span><input type="checkbox" data-menu-text-focus></label><label><span>Text shimmer</span><input type="checkbox" data-roo-setting="shimmer"></label><label><span>Edge light strength</span><input type="range" min="0" max="1" step="0.01" data-roo-setting="lightStrength"></label><label><span>Letter spacing (em)</span><input type="number" min="-.16" max=".16" step=".005" data-roo-setting="tracking"></label><button type="button" data-roo-studio>Open text appearance studio</button><hr>`;
   body.querySelector('header')!.after(roo);
+  const focus=roo.querySelector<HTMLInputElement>('[data-menu-text-focus]')!;focus.checked=menuTextFocusEnabled();
+  focus.addEventListener('change',()=>setMenuTextFocusEnabled(focus.checked));
+  window.addEventListener(MENU_TEXT_FOCUS_EVENT,()=>{focus.checked=menuTextFocusEnabled();});
   const syncRoo = () => {
     const value = getRooAppearance();
     for (const input of roo.querySelectorAll<HTMLInputElement>('[data-roo-setting]')) {
