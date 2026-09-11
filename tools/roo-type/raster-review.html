@@ -1,0 +1,22 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="icon" href="data:,"><style>body{margin:0;background:#0c131d;color:#d8e5f2;font:14px system-ui}canvas{display:block}#loading{padding:20px}</style></head><body><div id="loading">Baking complete artwork and light angles…</div><canvas id="sheet"></canvas><script type="module">
+import {bakeRasterFont} from './raster-font.ts';
+const r=await bakeRasterFont(new URLSearchParams(location.search).has('partial'));
+const canvas=document.getElementById('sheet');canvas.width=1560;canvas.height=1100;const ctx=canvas.getContext('2d');
+function paint(chars=Object.keys(r.rendered).slice(0,6),palette='counter',frame=0,light=false){
+ ctx.fillStyle=light?'#edf0e5':'#0c131d';ctx.fillRect(0,0,1560,1100);
+ for(const [i,char]of chars.entries()){
+  const g=r.rendered[char];if(!g)continue;const image=g.frames[palette][frame],size=440,scale=size/512,cx=(i%3+.5)*520,cy=(Math.floor(i/3)+.5)*550;
+  ctx.drawImage(image,cx-image.width*scale/2,cy-image.height*scale/2,image.width*scale,image.height*scale);
+  ctx.fillStyle=light?'#40505b':'#becddb';ctx.font='18px system-ui';ctx.textAlign='center';ctx.fillText(`${char} · ${palette} · ${['neutral','left','right'][frame]}`,cx,Math.floor(i/3)*550+30);
+ }
+}
+function angles(chars=['A','0'],palette='counter'){
+ ctx.fillStyle='#0c131d';ctx.fillRect(0,0,1560,1100);
+ for(const [row,char]of chars.entries())for(const [column,frame]of [1,0,2].entries()){
+  const g=r.rendered[char];if(!g)continue;const image=g.frames[palette][frame],size=440,scale=size/512,cx=(column+.5)*520,cy=(row+.5)*550;
+  ctx.drawImage(image,cx-image.width*scale/2,cy-image.height*scale/2,image.width*scale,image.height*scale);
+  ctx.fillStyle='#becddb';ctx.font='18px system-ui';ctx.textAlign='center';ctx.fillText(`${char} · ${['neutral','left','right'][frame]}`,cx,row*550+30);
+ }
+}
+document.getElementById('loading').remove();paint();window.rooRasterFont=r;window.rooRasterReview={paint,angles};
+</script></body></html>

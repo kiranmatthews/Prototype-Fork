@@ -84,7 +84,7 @@ export class RooAtlasPainter {
     else if(style.align==='right'||style.align==='end')left-=layout.width*size;
     ctx.save();ctx.globalAlpha*=Math.min(1,Math.max(0,style.alpha??1));ctx.shadowColor='transparent';
     ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
-    const phase=this.lightingReady?Math.round((style.lightPosition??rooLightPosition())*64)/64:0;
+    const phase=this.lightingReady?Math.round((style.lightPosition??rooLightPosition())*256)/256:0;
     const placed=layout.glyphs.map(entry=>({glyph:metrics.glyphs[entry.char],rect:rooAtlasGlyphRect(metrics,entry)}));
     if(!this.lightingReady||placed.length===0)for(const {glyph,rect}of placed){
       ctx.drawImage(image,glyph.x,glyph.y,glyph.width,glyph.height,
@@ -97,7 +97,9 @@ export class RooAtlasPainter {
       const key=JSON.stringify([palette,text,size,tracking,ratio]);let item=this.cache.get(key);
       if(!item){const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.ceil(width*ratio));canvas.height=Math.max(1,Math.ceil(height*ratio));item={canvas,phase:NaN};this.cache.set(key,item);}
       if(item.phase!==phase){
-        const mix=item.canvas.getContext('2d')!;mix.setTransform(1,0,0,1,0,0);mix.clearRect(0,0,item.canvas.width,item.canvas.height);
+        // Keep both intermediate surfaces on one raster backend. Chrome can
+        // otherwise change downsampling during GPU/CPU transfers at small rims.
+        const mix=item.canvas.getContext('2d',{willReadFrequently:true})!;mix.setTransform(1,0,0,1,0,0);mix.clearRect(0,0,item.canvas.width,item.canvas.height);
         mix.imageSmoothingEnabled=true;mix.imageSmoothingQuality='high';
         // Add weighted premultiplied pixels on an isolated transparent surface.
         // Ordinary source-over fades change edge alpha and make the rim pulse.
@@ -105,7 +107,7 @@ export class RooAtlasPainter {
         this.frameCanvas??=document.createElement('canvas');
         if(this.frameCanvas.width<item.canvas.width)this.frameCanvas.width=item.canvas.width;
         if(this.frameCanvas.height<item.canvas.height)this.frameCanvas.height=item.canvas.height;
-        const frameCtx=this.frameCanvas.getContext('2d')!;
+        const frameCtx=this.frameCanvas.getContext('2d',{willReadFrequently:true})!;
         for(const [frame,weight]of rooLightWeights(phase).entries())if(weight>0){
           mix.globalAlpha=weight;
           frameCtx.setTransform(1,0,0,1,0,0);frameCtx.clearRect(0,0,item.canvas.width,item.canvas.height);frameCtx.setTransform(ratio,0,0,ratio,0,0);

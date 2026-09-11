@@ -1,0 +1,17 @@
+# V6 approved artwork and direct model glisten
+
+Brief began 2026-09-11 02:45:23 UTC. Complete local artwork and runtime review reached 06:31 UTC (about 3 h 46 min, including image generation and the user's lighting correction). Release verification follows separately.
+
+The user approved all generated neutrals and rejected procedural relighting. Every neutral is frozen. Each of the 102 glisten edits takes only its already-generated neutral as the reference, with a saved prompt asking for highlights and shadows in different areas while holding the finished letter, camera, bevels and detail fixed. The approved accented zero is reused unchanged from v5. No neutral was overwritten with a lighting variant.
+
+The initial distance/normal-field lighting route was rejected and removed. The final bake has no inferred normals, reconstructed bevels, spatial color bands or original-vector clipping. It removes a separate matte, retains the complete artwork, registers the model edits and holds the neutral bitmap alpha. The second palette is a pointwise hue grade preserving saturation/value and painted detail. Near-white glints remain available for later real-time bloom.
+
+All 51 neutral masters and 102 glisten sources are copied unchanged from image-tool outputs and verified by SHA-256. Original prompts, flat shape/style inputs and A–D's initial opaque-checker outputs are retained. A–D received model background-only edits to a removable flat magenta matte; the gray-key extraction that damaged white glints was abandoned. The manifest is authoritative. The image tool did not expose a selectable model ID or quality tier.
+
+Both 2048×4046 atlases use a 512 px source cap band. Complete per-glyph review covered all 51 glyphs in all three light states and both palettes (34 sheets), plus a light backdrop for A, zero and detached punctuation. Full bevels and glints remain intact. Numerically, all six PNGs have identical alpha, 229,277 partial-alpha pixels per atlas, correct connected components, no tile-border clipping and no opaque magenta contamination. Every glisten pair differs visibly in pixel values.
+
+The old public v5 light label did cycle in Chrome, but its disabled slider stayed at zero and the old frames were subtle. V6 has a moving slider, explicit playback/paused/reduced-motion/zero-strength status and a three-angle inspection view. Existing appearance preferences, tight adjustable spacing, counter sizes and menu/HUD integration remain. Actual preview pixels change through the light cycle; pause and manual controls work. A Canvas backend transition caused a six-level edge-alpha discrepancy in an early test; keeping intermediate surfaces on one raster backend reduces the final word fade to at most one alpha level. SVG fades also retain alpha within one level.
+
+Focused review covers source hashes/prompts, exports, complete contours, light frames, crossfade alpha, animation pixels, controls, 50 responsive menu layouts, cross-tab saved spacing, world-map/Jungle Cup screens, lite/full HUD and the 107/165 px reference sizes. Local build passes. No full test suite was requested or run. Review captures and machine reports are in `/private/tmp/roo-type-v6-review`; installed distribution files are under `public/fonts` and the method/rebuild guide is `docs/ROO_HUD_TREATMENT.md`.
+
+Only Roo-font assets, authoring tools, runtime controls and documentation belong to this change. Unrelated character-study/blink work, `.gitignore` and `vite.config.ts` are preserved.

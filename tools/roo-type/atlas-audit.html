@@ -1,0 +1,14 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="icon" href="data:,"><style>body{margin:0;background:#111820}canvas{display:block}</style></head><body><canvas id="sheet" width="1560" height="1620"></canvas><script type="module">
+const base='/art/roo-reference-match/bake/';
+const data=Object.fromEntries(await Promise.all(['counter','bonus'].map(async p=>[p,{m:await fetch(base+`roo-${p}-v6.json`).then(r=>r.json()),images:await Promise.all([0,1,2].map(f=>new Promise((resolve,reject)=>{const i=new Image();i.onload=()=>resolve(i);i.onerror=reject;i.src=base+`roo-${p}-v6${f?'-light'+f:''}.png`;})))}])));
+const canvas=document.getElementById('sheet'),ctx=canvas.getContext('2d');
+function paint(chars,palette='counter',light=false){
+ ctx.fillStyle=light?'#eef0e7':'#111820';ctx.fillRect(0,0,1560,1620);const {m,images}=data[palette];
+ for(const [row,char]of chars.entries())for(const [col,frame]of [1,0,2].entries()){
+  const g=m.glyphs[char],scale=440/m.capPixels,cx=(col+.5)*520,cy=row*540+290;
+  ctx.drawImage(images[frame],g.x,g.y,g.width,g.height,cx-g.width*scale/2,cy-g.height*scale/2,g.width*scale,g.height*scale);
+  ctx.fillStyle=light?'#3c4f5b':'#bbccda';ctx.font='18px system-ui';ctx.textAlign='center';ctx.fillText(`${char} · ${['NEUTRAL','GLISTEN A','GLISTEN B'][frame]}`,cx,row*540+30);
+ }
+}
+window.atlasAudit={ready:true,characters:Object.keys(data.counter.m.glyphs).filter(c=>data.counter.m.glyphs[c].width),paint};paint(['A','0','B']);
+</script></body></html>

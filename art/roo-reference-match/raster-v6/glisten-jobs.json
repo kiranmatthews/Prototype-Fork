@@ -1,0 +1,494 @@
+[
+  {
+    "glyph": "1",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0031.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0031-left.txt"
+  },
+  {
+    "glyph": "1",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0031.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0031-right.txt"
+  },
+  {
+    "glyph": "2",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0032.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0032-left.txt"
+  },
+  {
+    "glyph": "2",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0032.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0032-right.txt"
+  },
+  {
+    "glyph": "3",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0033.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0033-left.txt"
+  },
+  {
+    "glyph": "3",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0033.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0033-right.txt"
+  },
+  {
+    "glyph": "4",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0034.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0034-left.txt"
+  },
+  {
+    "glyph": "4",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0034.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0034-right.txt"
+  },
+  {
+    "glyph": "5",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0035.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0035-left.txt"
+  },
+  {
+    "glyph": "5",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0035.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0035-right.txt"
+  },
+  {
+    "glyph": "6",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0036.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0036-left.txt"
+  },
+  {
+    "glyph": "6",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0036.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0036-right.txt"
+  },
+  {
+    "glyph": "7",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0037.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0037-left.txt"
+  },
+  {
+    "glyph": "7",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0037.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0037-right.txt"
+  },
+  {
+    "glyph": "8",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0038.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0038-left.txt"
+  },
+  {
+    "glyph": "8",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0038.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0038-right.txt"
+  },
+  {
+    "glyph": "9",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0039.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0039-left.txt"
+  },
+  {
+    "glyph": "9",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0039.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0039-right.txt"
+  },
+  {
+    "glyph": "J",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u004a.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u004a-left.txt"
+  },
+  {
+    "glyph": "J",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u004a.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u004a-right.txt"
+  },
+  {
+    "glyph": "K",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u004b.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u004b-left.txt"
+  },
+  {
+    "glyph": "K",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u004b.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u004b-right.txt"
+  },
+  {
+    "glyph": "L",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u004c.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u004c-left.txt"
+  },
+  {
+    "glyph": "L",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u004c.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u004c-right.txt"
+  },
+  {
+    "glyph": "M",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u004d.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u004d-left.txt"
+  },
+  {
+    "glyph": "M",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u004d.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u004d-right.txt"
+  },
+  {
+    "glyph": "N",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u004e.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u004e-left.txt"
+  },
+  {
+    "glyph": "N",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u004e.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u004e-right.txt"
+  },
+  {
+    "glyph": "O",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u004f.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u004f-left.txt"
+  },
+  {
+    "glyph": "O",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u004f.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u004f-right.txt"
+  },
+  {
+    "glyph": "P",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0050.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0050-left.txt"
+  },
+  {
+    "glyph": "P",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0050.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0050-right.txt"
+  },
+  {
+    "glyph": "Q",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0051.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0051-left.txt"
+  },
+  {
+    "glyph": "Q",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0051.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0051-right.txt"
+  },
+  {
+    "glyph": "R",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0052.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0052-left.txt"
+  },
+  {
+    "glyph": "R",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0052.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0052-right.txt"
+  },
+  {
+    "glyph": "S",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0053.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0053-left.txt"
+  },
+  {
+    "glyph": "S",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0053.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0053-right.txt"
+  },
+  {
+    "glyph": "T",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0054.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0054-left.txt"
+  },
+  {
+    "glyph": "T",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0054.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0054-right.txt"
+  },
+  {
+    "glyph": "U",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0055.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0055-left.txt"
+  },
+  {
+    "glyph": "U",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0055.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0055-right.txt"
+  },
+  {
+    "glyph": "V",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0056.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0056-left.txt"
+  },
+  {
+    "glyph": "V",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0056.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0056-right.txt"
+  },
+  {
+    "glyph": "W",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0057.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0057-left.txt"
+  },
+  {
+    "glyph": "W",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0057.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0057-right.txt"
+  },
+  {
+    "glyph": "X",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0058.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0058-left.txt"
+  },
+  {
+    "glyph": "X",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0058.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0058-right.txt"
+  },
+  {
+    "glyph": "Y",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0059.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0059-left.txt"
+  },
+  {
+    "glyph": "Y",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0059.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0059-right.txt"
+  },
+  {
+    "glyph": "Z",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u005a.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u005a-left.txt"
+  },
+  {
+    "glyph": "Z",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u005a.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u005a-right.txt"
+  },
+  {
+    "glyph": "!",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0021.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0021-left.txt"
+  },
+  {
+    "glyph": "!",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0021.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0021-right.txt"
+  },
+  {
+    "glyph": "?",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u003f.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u003f-left.txt"
+  },
+  {
+    "glyph": "?",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u003f.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u003f-right.txt"
+  },
+  {
+    "glyph": ".",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u002e.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u002e-left.txt"
+  },
+  {
+    "glyph": ".",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u002e.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u002e-right.txt"
+  },
+  {
+    "glyph": ",",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u002c.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u002c-left.txt"
+  },
+  {
+    "glyph": ",",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u002c.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u002c-right.txt"
+  },
+  {
+    "glyph": ":",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u003a.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u003a-left.txt"
+  },
+  {
+    "glyph": ":",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u003a.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u003a-right.txt"
+  },
+  {
+    "glyph": ";",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u003b.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u003b-left.txt"
+  },
+  {
+    "glyph": ";",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u003b.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u003b-right.txt"
+  },
+  {
+    "glyph": "/",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u002f.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u002f-left.txt"
+  },
+  {
+    "glyph": "/",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u002f.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u002f-right.txt"
+  },
+  {
+    "glyph": "-",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u002d.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u002d-left.txt"
+  },
+  {
+    "glyph": "-",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u002d.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u002d-right.txt"
+  },
+  {
+    "glyph": "+",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u002b.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u002b-left.txt"
+  },
+  {
+    "glyph": "+",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u002b.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u002b-right.txt"
+  },
+  {
+    "glyph": "'",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0027.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0027-left.txt"
+  },
+  {
+    "glyph": "'",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0027.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0027-right.txt"
+  },
+  {
+    "glyph": "\"",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0022.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0022-left.txt"
+  },
+  {
+    "glyph": "\"",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0022.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0022-right.txt"
+  },
+  {
+    "glyph": "(",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0028.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0028-left.txt"
+  },
+  {
+    "glyph": "(",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0028.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0028-right.txt"
+  },
+  {
+    "glyph": ")",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0029.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0029-left.txt"
+  },
+  {
+    "glyph": ")",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0029.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0029-right.txt"
+  },
+  {
+    "glyph": "%",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0025.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0025-left.txt"
+  },
+  {
+    "glyph": "%",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0025.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0025-right.txt"
+  },
+  {
+    "glyph": "&",
+    "side": "left",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0026.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0026-left.txt"
+  },
+  {
+    "glyph": "&",
+    "side": "right",
+    "neutral": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/masters/u0026.png",
+    "prompt": "/Users/kiki/Documents/ChatGPT/Prototype Fork/art/roo-reference-match/raster-v6/lights/prompts/u0026-right.txt"
+  }
+]

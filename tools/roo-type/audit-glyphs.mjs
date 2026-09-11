@@ -3,14 +3,14 @@ import assert from 'node:assert/strict';
 import {pathToFileURL} from 'node:url';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE?pathToFileURL(process.env.PLAYWRIGHT_MODULE).href:'playwright');
 const base=process.env.ROO_LAB_URL||'http://127.0.0.1:5178/';
-const out=process.env.ROO_REVIEW_DIR||'/private/tmp/roo-type-v5-review';await fs.mkdir(out,{recursive:true});
+const out=process.env.ROO_REVIEW_DIR||'/private/tmp/roo-type-v6-review';await fs.mkdir(out,{recursive:true});
 const browser=await chromium.launch({headless:true,channel:'chrome'}),errors=[];
 try{
  const context=await browser.newContext({viewport:{width:1800,height:1250},deviceScaleFactor:1});
  await context.addInitScript(()=>localStorage.setItem('solProtoRooAppearanceV3',JSON.stringify({tracking:-.065,shimmer:false,lightStrength:.7})));
  const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
  await page.goto(base+'roo-type-lab.html');await page.waitForFunction(()=>window.rooTypeLab?.ready);
- assert.equal((await page.evaluate(()=>window.rooTypeLab.metrics())).version,5);
+ assert.equal((await page.evaluate(()=>window.rooTypeLab.metrics())).version,6);
  await page.screenshot({path:out+'/lab-v3.png',fullPage:true});
  await page.selectOption('#view','all');
  const coverage=[];

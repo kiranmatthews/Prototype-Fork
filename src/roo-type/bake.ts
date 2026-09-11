@@ -8,6 +8,7 @@ export interface RooAtlasGlyph {
   inkTop?: number; inkBottom?: number;
 }
 export interface RooAtlasMetrics {
+  contourSource?:'model-artwork';
   outlineOverrides?:Record<string,RooVectorGlyph>;
   lightFrames?: number;
   version: number; palette: RooTreatment; capPixels: number; width: number; height: number;

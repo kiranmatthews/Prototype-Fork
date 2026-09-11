@@ -27,7 +27,13 @@ export function setRooAppearance(change:Partial<RooAppearance>):void {
   try{localStorage.setItem(ROO_APPEARANCE_KEY,JSON.stringify(appearance));}catch{/* The current session still uses the chosen appearance. */}
   if(typeof window!=='undefined')window.dispatchEvent?.(new Event(ROO_APPEARANCE_EVENT));for(const listener of listeners)listener();
 }
-export function rooMotionEnabled():boolean{return appearance.shimmer&&motionMedia?.matches===false;}
+export function rooLightStatus():'playing'|'paused'|'reduced-motion'|'zero-strength'{
+  if(!appearance.shimmer)return 'paused';
+  if(motionMedia?.matches)return 'reduced-motion';
+  if(appearance.lightStrength<=0)return 'zero-strength';
+  return 'playing';
+}
+export function rooMotionEnabled():boolean{return rooLightStatus()==='playing'&&motionMedia?.matches===false;}
 export function rooLightPosition(now=performance.now()):number {
   return rooMotionEnabled()?Math.sin(now/1000*Math.PI*2/11)*appearance.lightStrength:0;
 }
