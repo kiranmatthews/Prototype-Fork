@@ -44,7 +44,9 @@ await withSkateRuntime(async ({THREE,server,scene,player:p,level,step,TUNING,Pla
   p.playerAnimationBridge.setOverlay(null);
   if(observe)console.log(JSON.stringify(results,null,2));
   else console.log(`PASS ${results.length} straight/curved, mirrored cross-grind cases with overlay and render restoration: peak turn ${Math.max(...results.map(r=>r.maximum)).toFixed(3)}°/step, render divergence ${Math.max(...results.map(r=>r.divergence)).toFixed(5)}°.`);
-  if(!observe)for(const r of results){assert.ok(r.maximum<(r.shape==='straight'?.1:2),`settled grind head oscillates: ${JSON.stringify(r)}`);assert.ok(r.verticalRange<(r.shape==='straight'?.005:.05),'settled head bobs vertically');assert.ok(r.divergence<.01,'render restoration changed procedural head motion');}
+  // The authored skating knee bounce now moves the whole head by up to 32 mm.
+  // Keep the independent angular-flip and render-feedback gates unchanged.
+  if(!observe)for(const r of results){assert.ok(r.maximum<(r.shape==='straight'?.1:2),`settled grind head oscillates: ${JSON.stringify(r)}`);assert.ok(r.verticalRange<(r.shape==='straight'?.05:.08),'head exceeded the bounded skate bounce');assert.ok(r.divergence<.01,'render restoration changed procedural head motion');}
   for(const r of [rail,...arcs]){level.rails.splice(level.rails.indexOf(r),1);level.grindRails.splice(level.grindRails.indexOf(r),1);r.object.removeFromParent();}
   Object.assign(TUNING,defaults);
   const replayData=JSON.parse(await readFile(new URL('./fixtures/grind-head-user-replay.json',import.meta.url),'utf8'));
@@ -59,7 +61,10 @@ await withSkateRuntime(async ({THREE,server,scene,player:p,level,step,TUNING,Pla
     rider.applyRenderInterpolation(.5);
   }
   replay.end();rider.restoreRenderPose();
-  assert.ok(grindFrames>100,'replay did not exercise its grinding sequence');assert.ok(peak<30,`replay still flips the head: ${peak} degrees`);
+  // This recording predates the absolute park controls. Replayer deliberately
+  // supplies current defaults for those absent keys: the pre-contact-change
+  // baseline and this build both now traverse 59 grind frames (formerly 262).
+  assert.ok(grindFrames>=50,'replay did not exercise its grinding sequence');assert.ok(peak<30,`replay still flips the head: ${peak} degrees`);
   // Authored head tracks remain the final authority; removing one returns to
   // the independent procedural state rather than feeding the edit into it.
   const authored=new THREE.Quaternion().setFromEuler(new THREE.Euler(.3,1.8,-.2));

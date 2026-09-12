@@ -48,6 +48,58 @@ export const GRIND_TRICKS = {
 } as const;
 export type GrindStyle = keyof typeof GRIND_TRICKS;
 
+/** Mechanical identity, independent of camera, rig axes and presentation lean.
+ * +Z is the physical nose. A nosegrind loads the front hanger, not the tip
+ * (tip/deck contact would be a noseslide). Smith stays on the approach side;
+ * Feeble crosses it. A slide's entry path distinguishes board from lip. */
+export const GRIND_CONTACTS = {
+  normal: { support: 'both-trucks', pitch: 0, yaw: 0 },
+  nose: { support: 'front-truck', pitch: .19, yaw: 0 },
+  five0: { support: 'rear-truck', pitch: -.24, yaw: 0 },
+  crook: { support: 'front-truck', pitch: .25, yaw: .48 },
+  smith: { support: 'rear-truck', pitch: .23, yaw: .40 },
+  feeble: { support: 'rear-truck', pitch: .23, yaw: -.40 },
+  board: { support: 'deck', pitch: 0, yaw: Math.PI / 2 },
+  lip: { support: 'deck', pitch: 0, yaw: Math.PI / 2 },
+} as const satisfies Record<GrindStyle, { support: string; pitch: number; yaw: number }>;
+
+/** Hand names are relative to the rider's stance, never screen left/right.
+ * Method = boned/tweaked Melon; Japan = tucked-knee Mute/Weddle. */
+export const GRAB_CONTACTS = {
+  indy: { hand: 'trailing', edge: 'toe', pitch: -.08, roll: .20, tuck: .06 },
+  melon: { hand: 'leading', edge: 'heel', pitch: .08, roll: -.20, tuck: .06 },
+  nose: { hand: 'leading', edge: 'nose', pitch: -.48, roll: 0, tuck: .10 },
+  tail: { hand: 'trailing', edge: 'tail', pitch: .48, roll: 0, tuck: .10 },
+  method: { hand: 'leading', edge: 'heel', pitch: -.25, roll: -.85, tuck: .16 },
+  mute: { hand: 'leading', edge: 'toe', pitch: .08, roll: .20, tuck: .06 },
+  stalefish: { hand: 'trailing', edge: 'heel', pitch: -.12, roll: -.30, tuck: .12 },
+  japan: { hand: 'leading', edge: 'toe', pitch: -.22, roll: .92, tuck: .18 },
+} as const satisfies Record<GrabTrickKind, { hand: string; edge: string; pitch: number; roll: number; tuck: number }>;
+
+export const LIP_CONTACTS = {
+  axle: { label: 'Axle Stall', support: 'both-trucks', pitch: 0, yaw: Math.PI / 2 },
+  rock: { label: 'Rock to Fakie', support: 'deck', pitch: .04, yaw: 0 },
+  nose: { label: 'Nose Stall', support: 'nose-tip', pitch: -.38, yaw: 0 },
+  tail: { label: 'Tail Stall', support: 'tail-tip', pitch: .38, yaw: Math.PI },
+} as const;
+export type LipStyle = keyof typeof LIP_CONTACTS;
+
+/** Damped compression/rebound. It is zero at contact and settles exactly,
+ * allowing locked wheels/hangers/hands to remain fixed while knees bounce. */
+export function skateContactBounce(age: number): number {
+  if (age < 0 || age >= .65) return 0;
+  return Math.sin(age * Math.PI / .18) * Math.exp(-age * 7.5) *
+    (1 - smooth((age - .45) / .20));
+}
+
+/** Backside 540 with an inverted middle and a Weddle/Mute catch. The deck
+ * kickflip finishes before the hand closes; included spin is not rescored. */
+export function sampleMcTwist(progress: number) {
+  const t = Math.max(0, Math.min(1, progress)), motion = smooth(t);
+  return { yaw: Math.PI * 3 * motion, inversion: Math.PI * Math.sin(Math.PI * motion),
+    deckProgress: Math.min(1, t / .34), grab: smooth((t - .32) / .14) * (1 - smooth((t - .80) / .20)) };
+}
+
 const smooth=(t:number)=>{const x=Math.max(0,Math.min(1,t));return x*x*(3-2*x);};
 /** Deck-local pose: +Z length, +X width, +Y grip. The rider's lift and foot
  * flick are applied after the ordinary sole/contact solver, never to physics. */
