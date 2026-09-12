@@ -770,7 +770,7 @@ export class UI {
     livesRow.style.pointerEvents = "auto";
     livesRow.title = "click: +1 life";
     livesRow.addEventListener("click", () => {
-      if (this.lifeCheatEnabled) this.onLifeCheat();
+      if (this.lifeCheatEnabled && this.hudMode !== 'competition') this.onLifeCheat();
     });
 
     // Textless radial SPECIAL meter. It is physically nested with the life
@@ -1679,6 +1679,7 @@ export class UI {
     this.livesRowEl.title = enabled ? "click: +1 life" : "lives remaining";
     this.livesRowEl.style.cursor = enabled ? "pointer" : "default";
     this.livesRowEl.style.pointerEvents = enabled ? "auto" : "none";
+    this.syncHudVisibility();
   }
 
   setLevel(
@@ -1932,6 +1933,15 @@ export class UI {
 
   private syncHudVisibility(): void {
     if (!this.gameHudLayer) return;
+    const avatarOnly = this.hudMode === 'competition';
+    this.livesRowEl.classList.toggle('hud-avatar-only', avatarOnly);
+    this.livesRowEl.classList.toggle('hud-deathcount', this.endlessDeaths && !avatarOnly);
+    this.livesEl.style.display = avatarOnly ? 'none' : '';
+    this.livesEl.setAttribute('aria-hidden', String(avatarOnly));
+    this.deathModeLabelEl.style.display = this.endlessDeaths && !avatarOnly ? 'block' : 'none';
+    this.livesRowEl.title = avatarOnly ? 'Special meter' : this.endlessDeaths ? 'total deaths this run' : this.lifeCheatEnabled ? 'click: +1 life' : 'lives remaining';
+    this.livesRowEl.style.cursor = !avatarOnly && !this.endlessDeaths && this.lifeCheatEnabled ? 'pointer' : 'default';
+    this.livesRowEl.style.pointerEvents = !avatarOnly && !this.endlessDeaths && this.lifeCheatEnabled ? 'auto' : 'none';
     const bonus = this.bonusMode;
     // A bonus-only label must not animate out over the returned level.
     // display:none also excludes it from the shader-composited HUD mirror.

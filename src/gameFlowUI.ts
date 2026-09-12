@@ -57,6 +57,7 @@ type GameScreen =
 export interface PauseScreenState {
   levelName: string;
   inWarpRoom: boolean;
+  competition?: boolean;
 }
 
 export type ResultsScreenState =
@@ -1105,7 +1106,7 @@ export class GameFlowUI {
     } else {
       list.append(
         this.button("OPTIONS", openOptions),
-        this.button("RESTART", this.callbacks.onRestart),
+        this.button(state.competition ? "RESTART COMPETITION" : "RESTART", this.callbacks.onRestart),
         this.button("QUIT LEVEL", this.callbacks.onQuitLevel, "danger"),
       );
     }

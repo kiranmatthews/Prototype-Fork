@@ -6,7 +6,7 @@ Island 1's first competition boss follows Nightworks. Nightworks remains a norma
 
 Three runs, 60 seconds each. All three judges contribute to the run average. After the third run, everyone drops their lowest mark and adds the other two. Bone Man must finish **1st overall**, directly ahead of the rival. A tie with the rival is not a win.
 
-The timer advances with active gameplay, including ragdolls and respawns; Pause freezes it. Competition falls do not consume reserve lives or erase banked trick points. A knockdown followed by a death is one bail, not two. Normal combo losses still apply. At zero, an active combo keeps the run playable at **0:00** with a **FINAL COMBO** label. There is no overtime limit. Normal manual/grind links and landing grace remain active; judging begins when that combo banks or breaks. Its final banked score and any final bail are included exactly once. A new combo cannot reopen the extension after the previous one resolves, even in the same simulation tick. An empty air does not extend the clock. Restart/Retry begins a new three-run event.
+The timer advances with active gameplay, including ragdolls and respawns; Pause freezes it. Competition falls do not consume reserve lives or erase banked trick points. A knockdown followed by a death is one bail, not two. Normal combo losses still apply. At zero, an active combo keeps the run playable at **0:00** with a **FINAL COMBO** label. There is no overtime limit. Normal manual/grind links and landing grace remain active; judging begins when that combo banks or breaks. Its final banked score and any final bail are included exactly once. A new combo cannot reopen the extension after the previous one resolves, even in the same simulation tick. An empty air does not extend the clock. **Restart competition** begins a new three-run event at the first heat. Heat 1 is daylight, heat 2 sunset with a low warm sun and long shadows, and heat 3 a readable blue moonlit night. Each look stays through judging; a restart restores day. The authored level atmosphere is unchanged outside the event.
 
 The arena is a continuous vert bowl with a 3.6 m transition radius, a 0.8 m vertical top, four straight walls, rounded corners and a 7.4 m coping deck. Its 120 × 172 m foundation is 2.29 times the former footprint. The interior combines a four-way temple funbox, a low manual island, a north transfer island, a smaller banked pocket bowl with a divider, a four-step plaza, a manual terrace, a round hip, three rollers and connecting banked channels. Thirteen grind lines connect the sessions. See [JUNGLE_CUP_LAYOUT.md](JUNGLE_CUP_LAYOUT.md) for the THPS layout references and route roles. The islands use continuous bank meshes, including their corners, rather than overlapping wedges with exposed ends. Spectator temples, trees and braziers remain outside the primary ride lines. There are no crates, checkpoints, ceremony dais, finish gate, in-level trophy, bonus entrances or run-mode collectibles.
 
@@ -30,13 +30,18 @@ Explicit vert meshes attach along the ridden face normal. Swept air contacts cat
 
 `src/competition/event.ts` owns the small event model and exported tuning:
 
-| Setting | Initial value |
+| Setting | Current value |
 | --- | ---: |
 | Run duration | 60 seconds |
 | PerfectRunTarget | 12,000 gameplay points |
 | Score exponent | 0.55 |
 | Linear bail penalty | 3.0 |
 | Quadratic bail penalty | 0.75 |
+| Huge-score threshold | 48,000 (4 × target) |
+| Maximum first-two-bail relief | 80% |
+| Inactivity setup grace | 12 seconds |
+| Inactivity deduction | 0.125 × excess seconds squared, per gap |
+| Total inactivity deduction cap | 60 marks |
 | Judges 1/2 randomness | −1.2 to +1.2 |
 | Hostile judge randomness | −1.2 to +0.5 |
 | Hostile judge bias | −3.0 |
@@ -45,7 +50,11 @@ Explicit vert meshes attach along the ridden face normal. Swept air contacts cat
 | Rival player tracking | 0.2 around a 95.0 reference |
 | Rival allowed run range | 94.1–98.5 |
 
-The gameplay-score normalization and bail formula follow the supplied brief. Official judge and run marks use one decimal place, so the displayed best-two total adds up exactly from the scorecard. The total is bounded by 199.8. With the initial bias, a perfect run still gives the hostile judge a grudging high-90s mark.
+Base normalization is unchanged. Above 12,000 banked points, forgiveness grows linearly to an 80% reduction of the first two bail deductions at 48,000. Later bails keep their full escalating marginal cost. Under neutral judge rolls, 48,000 points yields 98.8 / 98.1 / 97.0 / 90.3 with zero through three bails.
+
+Regulation-time stretches without active tricks accumulate an independent deduction after 12 seconds of setup grace: a 20-second gap costs 8 marks, 25 seconds costs 21.125, and 30 seconds costs 40.5. Doing a trick ends the gap but retains its deduction; separate long gaps add together. Real board airtime, moving grinds/manuals, lip balance and wallrides count as active; a stale combo or ordinary coasting does not. Countdown, pause, overtime, dismount and score tally do not add idle time. Moss calls out material inactivity on the scorecard. A new heat resets its counters.
+
+ Official judge and run marks use one decimal place, so the displayed best-two total adds up exactly from the scorecard. The total is bounded by 199.8. With the initial bias, a perfect run still gives the hostile judge a grudging high-90s mark.
 
 `COMPETITORS` exposes each normal skater's ID, name, portrait, skill and variance. These skaters receive only a bounded random run mark, capped at 94.0; no trick or bail simulation runs for them.
 
@@ -57,7 +66,7 @@ Developer inspection is available through `window.__game.getCompetition()`, `com
 
 `src/competition/presentation.ts` renders the event introduction, run HUD, sequential judge reveal, interim standings and final podium. Normal trick/combo presentation remains active during runs. Each leaderboard has three run slots, a total, portraits and a highlighted player row; the discarded run is struck through after Run 3.
 
-The existing score plate and character avatar, including the radial SPECIAL meter, stay visible for the entire run and overtime. Inventory input cannot hide them. The competition strip shows only the run, clock and bail count; its narrow-screen layout leaves clearance for the avatar. Judge scorecards retain their end-of-run points summary.
+The existing score plate and character avatar, including the radial SPECIAL meter, stay visible for the entire run and overtime. Inventory input cannot hide them. Life/death numerals and the DEATHS label are hidden in both DOM and Canvas, and the portrait has no life-cheat action. The competition strip shows only the run and clock; its narrow-screen layout leaves clearance for the avatar. Judge scorecards retain their end-of-run points summary.
 
 Competition menus use explicit selected and pressed states for keyboard, pointer, four-way stick and D-pad navigation. Held confirm cannot repeat or skip a newly opened menu, and unrevealed judge actions remain disabled. Semantic buttons retain focus, accessibility and hit testing. `src/competition/surface.ts` paints their native Canvas ink in `GameInterfaceSurface`, after the gameplay HUD and before CRT, alongside the other game interfaces. It caches layout/ink between changes, clips scrolling cards and tables, and releases its canvas when inactive. The normal DOM presentation remains available when post-processing is bypassed.
 

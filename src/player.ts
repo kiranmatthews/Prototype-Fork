@@ -4558,6 +4558,16 @@ export class Player {
       ((this.comboHasTrick && this.comboMult > 0) || this.comboHudPreview !== null);
   }
 
+  /** A carried combo or ordinary coasting is not an active performance.
+   * Balanced tricks and genuine board airtime keep a line moving. */
+  get competitionPerformingTrick(): boolean {
+    if (this.isBailing || this.state === 'dead' || this.state === 'gameover') return false;
+    const rolling = Math.abs(this.speed) > 0.5;
+    return (this.state === 'grind' && rolling) || (this.manualing !== 0 && rolling) ||
+      this.lipStallT > 0 || this.wallriding ||
+      (this.state === 'air' && !this.grounded && this.airFromSkate);
+  }
+
   get competitionReadyToStop(): boolean {
     return this.state === 'ride' && this.grounded && !this.isBailing &&
       (this.groundHit?.normal.y ?? 0) >= TUNING.steepStand &&

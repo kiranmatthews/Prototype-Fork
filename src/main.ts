@@ -243,12 +243,13 @@ function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
   const offset = document.body.classList.contains("game-world-map")
     ? MAP_SUN_OFFSET
     : level.jungleAtmosphere ? JUNGLE_SUN_OFFSET : activeSky === "coast" ? COAST_SUN_OFFSET : SUN_OFFSET;
+  const heatSun = competition && current.id === JUNGLE_CUP_ID && !editorViewActive ? competition.heatLook.sunOffset : null;
   sun.target.position.set(focusX, focusY, focusZ);
   sun.target.updateMatrixWorld();
   sun.position.set(
-    focusX + offset.x * 3,
-    focusY + offset.y * 3,
-    focusZ + offset.z * 3,
+    focusX + (heatSun?.[0] ?? offset.x) * 3,
+    focusY + (heatSun?.[1] ?? offset.y) * 3,
+    focusZ + (heatSun?.[2] ?? offset.z) * 3,
   );
   sun.shadow.camera.updateProjectionMatrix();
 }
@@ -766,7 +767,11 @@ let levelPostEnabled = false;
 
 function applyTheme(): void {
   const t = level.theme;
-  const atmosphere = resolveLevelAtmosphere(level);
+  const heat = competition && current.id === JUNGLE_CUP_ID && !editorViewActive ? competition.heatLook : null;
+  const skyPreset = heat?.sky ?? level.skyPreset;
+  const atmosphere = resolveLevelAtmosphere(heat ? { theme: level.theme, skyPreset,
+    jungleAtmosphere: level.jungleAtmosphere, isCampaignMap: level.isCampaignMap, skyBackdrop: level.skyBackdrop,
+    atmosphere: { ...level.atmosphere, ...heat.lighting, fogColor: heat.fogColor } } : level);
   const bonusBackdropActive =
     (current.data?.hudMode === "bonus" || current.id === "bonus-level" || current.id.startsWith("bonus:")) && !LITE && !(atmosphere.backdrop === "fog" && !editorViewActive);
   if (bonusBackdropActive) {
@@ -776,13 +781,13 @@ function applyTheme(): void {
   } else {
     releaseBonusParallax();
   }
-  activeSky = level.skyPreset;
+  activeSky = skyPreset;
   retainOnlyActiveSky();
   // Sky Bridge is a true whiteout: its distance is the fog-coloured scene
   // background, not a fog-immune painted dome visible behind the last plank.
   // The editor deliberately restores the dome alongside its fog-free lens.
   syncSkyBackdropVisibility();
-  levelPostEnabled = level.skyPreset === "coast" && !NO_COAST_POST;
+  levelPostEnabled = skyPreset === "coast" && !NO_COAST_POST;
   // On initial campaign boot and during fade-backed level travel, the private
   // game-flow renderer owns the framebuffer. Do not allocate the much larger
   // gameplay composer behind it; renderPrimaryScene creates that scope for the
@@ -2259,6 +2264,7 @@ function syncCompetitionLevel(editing = false): void {
   competitionUI.render(competition, gameFlow.blocksGameplay || editing);
   if (competition) {
     ui.setLevel(current.id, "competition", player.fruitCollectionRevision, input.inventoryHeld);
+    applyTheme();
   }
 }
 
@@ -2274,6 +2280,7 @@ function handleCompetitionAction(action: CompetitionAction): void {
   if (!competition || current.id !== JUNGLE_CUP_ID) return;
   if (action === "retry") { competition = new JungleCupEvent(Math.random, () => sfx.countdownBeep()); action = "start"; }
   if (action === "start" && competition.startRun()) {
+    applyTheme();
     player.respawn(level, true, true);
     player.competitionMode = true;
     scene.updateMatrixWorld(true);
@@ -4475,6 +4482,7 @@ function frame(nowMs: number): void {
         gameFlow.showPause({
           levelName: currentCampaignName(),
           inWarpRoom: false,
+          competition: competition !== null,
         });
       }
     }
@@ -4611,6 +4619,7 @@ function frame(nowMs: number): void {
     }
     level.update(CONST.fixedStep);
     player.flushLevelCrateRewards(level);
+    competition?.trackActivity(CONST.fixedStep, player.competitionPerformingTrick);
     // Zero holds through all air/tricks/combos. A safe grounded end starts
     // the dismount; judging waits for its presentation and the HUD cash-in.
     if (competition?.stepRun(CONST.fixedStep, player.points,
