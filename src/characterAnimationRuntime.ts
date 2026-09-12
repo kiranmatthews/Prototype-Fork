@@ -137,6 +137,11 @@ function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId): number {
   if (to === LAND_CLIP_ID && AIRBORNE_CLIP_IDS.has(from)) {
     return LAND_IMPACT_CROSSFADE_SECONDS;
   }
+  if ((to === 'player.jump' || to === 'player.fall') &&
+      (AIRBORNE_CLIP_IDS.has(from) || from === 'player.idle' || from === 'player.run' || from === LAND_CLIP_ID)) {
+    return 0.1;
+  }
+  if (from === LAND_CLIP_ID && to === 'player.idle') return LOCOMOTION_BLEND_SECONDS;
   if (ROPE_ATTACHED_CLIP_IDS.has(from) && ROPE_ATTACHED_CLIP_IDS.has(to)) {
     return UNITY_ROPE_TIMING.attachedBlend;
   }

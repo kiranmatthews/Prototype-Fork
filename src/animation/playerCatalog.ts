@@ -132,7 +132,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 24;
+export const PLAYER_STARTER_CATALOG_VERSION = 25;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -733,6 +733,31 @@ function buildRun(rigId: string, includeTorsoRoot: boolean): AnimationClip {
   return clip;
 }
 
+/** Keep the complete arm chain outside the torso while rising, lowering
+ * through the apex and settling. Explicit elbow/wrist keys avoid inheriting
+ * the changing legacy jump/run arm layer underneath these authored poses. */
+function withJumpArmClearance(clip: AnimationClip): AnimationClip {
+  const phases: ReadonlyArray<readonly [number, number, number, number]> = clip.id === 'player.jump'
+    ? [[0, -2.45, .32, -.3], [.1, -2.62, .35, -.28], [.5, -2.1, .38, -.35],
+       [.75, -1.4, .4, -.42], [.9, -.9, .43, -.5], [1, -.65, .45, -.55]]
+    : clip.id === 'player.fall'
+      ? [[0, -.65, .45, -.55], [.18, -.55, .42, -.5], [.5, -.38, .38, -.42], [1, -.22, .34, -.35]]
+      : [[0, -.22, .34, -.35], [.075, .1, .45, -.42], [.2, -.1, .32, -.28], [.45, 0, .25, -.12]];
+  const armTracks: AnimationTrack[] = [];
+  const timeScale = clip.duration / (clip.id === 'player.land' ? .45 : 1);
+  for (const [side, sign] of [['Left', 1], ['Right', -1]] as const) {
+    armTracks.push(
+      quaternionTrack(clip.id, `shoulder${side}`, phases.map(([t, pitch, spread]) => [t * timeScale, pitch, 0, spread * sign])),
+      quaternionTrack(clip.id, `elbow${side}`, phases.map(([t, , , bend]) => [t * timeScale, bend, 0, 0])),
+      quaternionTrack(clip.id, `wrist${side}`, [[0, 0, 0, 0], [clip.duration, 0, 0, 0]]),
+    );
+  }
+  const targets = new Set(armTracks.map(track => track.target));
+  return { ...clip,
+    tracks: [...clip.tracks.filter(track => !(track.kind === 'quaternion' && targets.has(track.target))), ...armTracks],
+    metadata: { ...clip.metadata, jumpArmRevision: 1 } };
+}
+
 function buildJump(rigId: string): AnimationClip {
   const clip = baseClip('player.jump', 'Jump — Stretch, Apex Squash', 1, 'once', rigId);
   clip.tracks = [
@@ -742,8 +767,6 @@ function buildJump(rigId: string): AnimationClip {
     quaternionTrack(clip.id, 'kneeLeft', [[0, 0.12, 0, 0], [0.1, 0.06, 0, 0], [0.5, 0.18, 0, 0], [0.85, 0.92, 0, 0], [1, 1.45, 0, 0]]),
     quaternionTrack(clip.id, 'hipRight', [[0, 0.05, 0, 0], [0.1, 0.12, 0, 0], [0.5, 0.03, 0, 0], [0.85, -0.39, 0, 0], [1, -0.74, 0, 0]]),
     quaternionTrack(clip.id, 'kneeRight', [[0, 0.12, 0, 0], [0.1, 0.06, 0, 0], [0.5, 0.18, 0, 0], [0.85, 0.88, 0, 0], [1, 1.4, 0, 0]]),
-    quaternionTrack(clip.id, 'shoulderLeft', [[0, -2.45, 0, 0.18], [0.1, -2.62, 0, 0.22], [0.5, -2.48, 0, 0.2], [0.85, -0.65, 0, 0.14], [1, 0.45, 0, 0.12]]),
-    quaternionTrack(clip.id, 'shoulderRight', [[0, -2.4, 0, -0.18], [0.1, -2.58, 0, -0.22], [0.5, -2.44, 0, -0.2], [0.85, -0.62, 0, -0.14], [1, 0.42, 0, -0.12]]),
     scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.torso, [[0, 1.25], [0.1, 1.42], [0.5, 1.36], [0.85, 0.9], [1, 0.78]]),
     scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armUpperLeft, [[0, 1.24], [0.1, 1.34], [0.5, 1.3], [0.85, 0.92], [1, 0.86]]),
     scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armLowerLeft, [[0, 1.3], [0.1, 1.42], [0.5, 1.36], [0.85, 0.88], [1, 0.82]]),
@@ -768,7 +791,7 @@ function buildJump(rigId: string): AnimationClip {
     progressSource: 'gameplay-actionProgress',
     deformationArc: 'charged squash -> rising stretch -> apex squash -> neutral fall',
   };
-  return withForwardRollSquashLayer(clip);
+  return withForwardRollSquashLayer(withJumpArmClearance(clip));
 }
 
 function buildDoubleJump(rigId: string): AnimationClip {
@@ -854,8 +877,6 @@ function buildFall(rigId: string): AnimationClip {
     quaternionTrack(clip.id, 'kneeLeft', [[0, 1.45, 0, 0], [0.18, 0.9, 0, 0], [0.38, 0.5, 0, 0], [1, 0.5, 0, 0]]),
     quaternionTrack(clip.id, 'hipRight', [[0, -0.74, 0, 0], [0.18, -0.46, 0, 0], [0.38, -0.28, 0, -0.04], [1, -0.28, 0, -0.04]]),
     quaternionTrack(clip.id, 'kneeRight', [[0, 1.4, 0, 0], [0.18, 0.86, 0, 0], [0.38, 0.54, 0, 0], [1, 0.54, 0, 0]]),
-    quaternionTrack(clip.id, 'shoulderLeft', [[0, 0.45, 0, 0.12], [0.18, -0.35, 0, 0.06], [0.38, -1.2, 0, -0.22], [1, -1.2, 0, -0.22]]),
-    quaternionTrack(clip.id, 'shoulderRight', [[0, 0.42, 0, -0.12], [0.18, -0.32, 0, -0.06], [0.38, -1.15, 0, 0.22], [1, -1.15, 0, 0.22]]),
     scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.torso, [[0, 0.78], [0.18, 0.9], [0.38, 1], [1, 1]]),
     scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armUpperLeft, [[0, 0.86], [0.18, 0.94], [0.38, 1], [1, 1]]),
     scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armLowerLeft, [[0, 0.82], [0.18, 0.91], [0.38, 1], [1, 1]]),
@@ -879,7 +900,7 @@ function buildFall(rigId: string): AnimationClip {
     progressSource: 'gameplay-actionProgress',
     deformationArc: 'apex squash -> neutral descent',
   };
-  return withForwardRollSquashLayer(clip);
+  return withForwardRollSquashLayer(withJumpArmClearance(clip));
 }
 
 function buildLand(rigId: string): AnimationClip {
@@ -891,8 +912,6 @@ function buildLand(rigId: string): AnimationClip {
     quaternionTrack(clip.id, 'kneeLeft', [[0, 0.38, 0, 0], [0.075, 1.52, 0, 0], [0.2, 0.82, 0, 0], [0.45, 0, 0, 0]]),
     quaternionTrack(clip.id, 'hipRight', [[0, -0.22, 0, 0], [0.085, -0.8, 0, -0.04], [0.21, -0.42, 0, 0], [0.45, 0, 0, 0]]),
     quaternionTrack(clip.id, 'kneeRight', [[0, 0.42, 0, 0], [0.085, 1.46, 0, 0], [0.21, 0.78, 0, 0], [0.45, 0, 0, 0]]),
-    quaternionTrack(clip.id, 'shoulderLeft', [[0, -1.75, 0, -0.1], [0.075, 0.65, 0, -0.3], [0.2, -0.2, 0, -0.1], [0.45, 0, 0, 0]]),
-    quaternionTrack(clip.id, 'shoulderRight', [[0, -1.7, 0, 0.1], [0.085, 0.6, 0, 0.3], [0.21, -0.18, 0, 0.1], [0.45, 0, 0, 0]]),
     scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.torso, [[0, 1], [0.075, 0.72], [0.18, 1.1], [0.34, 0.98], [0.45, 1]]),
     scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armUpperLeft, [[0, 1], [0.075, 0.82], [0.18, 1.06], [0.34, 0.98], [0.45, 1]]),
     scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.armLowerLeft, [[0, 1], [0.075, 0.78], [0.18, 1.08], [0.34, 0.98], [0.45, 1]]),
@@ -926,7 +945,7 @@ function buildLand(rigId: string): AnimationClip {
       contactPolicy: 'phase-matched moving run feet; no gameplay or world-space foot lock',
     },
   };
-  return clip;
+  return withJumpArmClearance(clip);
 }
 
 function unityCrouchCrawlSourceMetadata(
@@ -1769,6 +1788,21 @@ export function reconcilePlayerStarterAnimationSuite(
         metadata: { ...clip.metadata, palmOrientation: QUATERNIUS_CRAWL_PALMS } };
       return clip;
     });
+  }
+
+  if (previousVersion < 25) {
+    for (const id of ['player.jump', 'player.fall', 'player.land']) {
+      const old = clips.find(clip => clip.id === id);
+      if (!old || old.metadata?.jumpArmRevision === 1) continue;
+      const backupId = `${id}.pre-arm-clearance`;
+      if (!clips.some(clip => clip.id === backupId)) clips.push({ ...old,
+        id: backupId, name: `${old.name} — Before Arm Clearance`,
+        metadata: { ...old.metadata, replacedBy: id } });
+      // Keep root, torso, legs, deformation drivers, contacts and saved speed.
+      // Only the arm rotation channels change for this correction.
+      const revised = withJumpArmClearance(old);
+      clips = clips.map(clip => clip.id === id ? revised : clip);
+    }
   }
 
   const existingIds = new Set(clips.map((clip) => clip.id));

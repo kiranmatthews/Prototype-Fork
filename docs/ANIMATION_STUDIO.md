@@ -185,6 +185,15 @@ roll cannot bleed into the double jump.
 
 ## Jump deformation arc
 
+Catalog 25 corrects the Jump/Fall/Land arm chain: shoulders remain outward,
+arms lower continuously through the apex, and keyed elbows/wrists prevent
+the legacy arm layer from changing those joints underneath. Takeoff and air
+route changes blend over 0.1 seconds; stationary landing settles into Idle
+over the existing locomotion blend. Saved drafts retain all non-arm tracks,
+deformation drivers and speeds, with their previous clips backed up under
+`.pre-arm-clearance` IDs. `tools/test-jump-arms.mjs` samples the styled rig's
+arm clearance and checks a complete jump/descent/landing sequence.
+
 The charged crouch is the anticipation, so `player.jump` begins at release in
 an already elongated pose instead of replaying another squash. It reaches a
 very long whole-limb stretch early in the rise, holds that extension through
