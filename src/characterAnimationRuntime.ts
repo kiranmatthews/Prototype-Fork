@@ -6,6 +6,7 @@ import {
   UNITY_CROUCH_CRAWL_OUTER_POSE_OWNERSHIP,
   UNITY_CROUCH_CRAWL_TIMING,
   CROUCH_CLIP_IDS,
+  QUATERNIUS_CRAWL_PALMS,
   QUATERNIUS_LOW_POSE_OWNERSHIP,
   LOCOMOTION_WALK_BLEND_INPUT,
   PLAYER_WALK_CLIP_ID,
@@ -254,6 +255,8 @@ export class CharacterAnimationRuntime {
   private crawlContactOwnership = 0;
   private switchOutgoingCrawlContactPhase: number | null = null;
   private switchOutgoingCrawlContactOwnership = 0;
+  private crawlPalmWeight = 0;
+  private switchOutgoingCrawlPalmWeight = 0;
   private readonly controlDefaults = new Map<string, number>();
   private poseApplied = false;
   private compositionOrder: ProceduralCompositionOrder | null = null;
@@ -410,6 +413,7 @@ export class CharacterAnimationRuntime {
       this.requestedClipId = null;
       this.poseApplied = false;
       this.player.setAuthoredCrawlContactPhase(null);
+      this.player.setAuthoredCrawlPalmWeight(0);
       this.player.setCharacterUpperArmRestAngleWeight(
         hint === 'player.idle' ? 1 : 0,
       );
@@ -506,6 +510,7 @@ export class CharacterAnimationRuntime {
       this.switchOutgoingCrawlContactOwnership = switchBlendDuration > 0
         ? this.crawlContactOwnership
         : 0;
+      this.switchOutgoingCrawlPalmWeight = switchBlendDuration > 0 ? this.crawlPalmWeight : 0;
       this.currentClipId = clip.id;
       this.elapsedSeconds = 0;
       this.playbackSeconds = 0;
@@ -688,6 +693,11 @@ export class CharacterAnimationRuntime {
       this.crawlContactPhase,
       this.crawlContactOwnership,
     );
+    const incomingPalmWeight = clip.id === CROUCH_CLIP_IDS.move &&
+      clip.metadata?.palmOrientation === QUATERNIUS_CRAWL_PALMS ? 1 : 0;
+    this.crawlPalmWeight = contactTransitionWeight === null ? incomingPalmWeight
+      : this.switchOutgoingCrawlPalmWeight * (1 - contactTransitionWeight) + incomingPalmWeight * contactTransitionWeight;
+    this.player.setAuthoredCrawlPalmWeight(this.crawlPalmWeight);
     if (contactTransitionWeight !== null && contactTransitionWeight >= 1) {
       this.switchOutgoingCrawlContactPhase = null;
       this.switchOutgoingCrawlContactOwnership = 0;
@@ -876,6 +886,9 @@ export class CharacterAnimationRuntime {
 
   private clearPlayback(clearRequest = true): void {
     this.player.setAuthoredCrawlContactPhase(null);
+    this.player.setAuthoredCrawlPalmWeight(0);
+    this.crawlPalmWeight = 0;
+    this.switchOutgoingCrawlPalmWeight = 0;
     this.currentClipId = null;
     if (clearRequest) this.requestedClipId = null;
     this.elapsedSeconds = 0;

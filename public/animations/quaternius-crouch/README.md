@@ -9,8 +9,10 @@ Four animations from the user's Universal Animation Library [Source] pack:
 | player.crouch-exit | Crouch_Exit | Once |
 | player.crawl | Crawl_Fwd_Loop | Loop |
 
-Source: `Unreal-Godot/UAL1.glb`, the pack's in-place variant. Native durations
-and 30 FPS samples are retained. `tools/import-quaternius-humanoid-animation.mjs`
+Source: `Unreal-Godot/UAL1.glb`, the pack's in-place variant. All source samples
+are retained; revision 24 retimes enter/exit to five gameplay frames (5/60 s),
+matching the previous transition speed. The loops retain their native clocks.
+`tools/import-quaternius-humanoid-animation.mjs`
 retargets 22 semantic body joints using the same bind-world conversion as the
 existing Quaternius walk/run. Use `--edition Source`, and `--loop false` for
 the two one-shots. All resulting tracks remain editable in Animation Studio.
@@ -28,3 +30,8 @@ Movement interrupts enter/exit immediately, allowing crawling or running to
 continue; jumps and other gameplay actions also interrupt the one-shots.
 The new source pose owns its torso/root shape and does not use the Unity-specific
 hand IK, 180-degree wrist correction, or arm-stretch tracks.
+Revision 24 adds a reversible palm-only orientation layer after wrist-rest and
+body-proportion settings: glove backs face up, palms down, while source wrist
+positions and the arm/body gait stay intact. Gameplay and Studio share it.
+Saved v23 clips adopt the quicker timeline and palm layer without losing keys
+or user playback speeds.

@@ -45,6 +45,12 @@ const ROTATION_EULER = new THREE.Euler(0, 0, 0, 'XYZ');
 const ROTATION_QUATERNION = new THREE.Quaternion();
 const HEAD_PRESENTATION_OFFSET = new THREE.Vector3();
 const HEAD_PRESENTATION_INVERSE = new THREE.Quaternion();
+const PALM_PARENT_TRANSPOSE = new THREE.Matrix3();
+const PALM_LOCAL_UP = new THREE.Vector3();
+const PALM_LOCAL_X = new THREE.Vector3();
+const PALM_LOCAL_Y = new THREE.Vector3();
+const PALM_BASIS = new THREE.Matrix4();
+const PALM_QUATERNION = new THREE.Quaternion();
 
 const SEGMENT_FACTORS: Readonly<
   Record<string, keyof CharacterProportionSettingsValue>
@@ -132,7 +138,7 @@ export class CharacterProportionLayer {
 
   apply(
     value: Readonly<CharacterProportionSettingsValue>,
-    options: { upperArmRestAngleWeight?: number } = {},
+    options: { upperArmRestAngleWeight?: number; crawlPalmWeight?: number } = {},
   ): void {
     this.clear();
 
@@ -336,6 +342,35 @@ export class CharacterProportionLayer {
         this.root.getObjectByName(anchorName),
         value.legKnobSize,
       );
+    }
+
+    const palmWeight = THREE.MathUtils.clamp(options.crawlPalmWeight ?? 0, 0, 1);
+    if (palmWeight > 0) {
+      this.root.updateWorldMatrix(true, true);
+      for (const side of ['left', 'right']) {
+        const mount = this.root.getObjectByName(`hand-rest-orientation-${side}`);
+        if (!mount?.parent) continue;
+        this.stateFor(mount).movesQuaternion = true;
+        // The glove's +Z is its back/X-mark, -Z its palm. Bring the back
+        // normal up, retaining the source fingers' projected heading. Solve
+        // through the parent's full linear transform so non-uniform body
+        // scaling cannot cant the rendered palm away from the ground plane.
+        PALM_PARENT_TRANSPOSE.setFromMatrix4(mount.parent.matrixWorld).transpose();
+        PALM_LOCAL_UP.set(0, 1, 0).applyMatrix3(PALM_PARENT_TRANSPOSE).normalize();
+        PALM_LOCAL_Y.set(0, 1, 0).applyQuaternion(mount.quaternion);
+        PALM_LOCAL_Y.addScaledVector(PALM_LOCAL_UP, -PALM_LOCAL_Y.dot(PALM_LOCAL_UP));
+        if (PALM_LOCAL_Y.lengthSq() < 1e-8) {
+          PALM_LOCAL_Y.set(0, 0, 1);
+          if (Math.abs(PALM_LOCAL_UP.z) > .9) PALM_LOCAL_Y.set(1, 0, 0);
+          PALM_LOCAL_Y.addScaledVector(PALM_LOCAL_UP, -PALM_LOCAL_Y.dot(PALM_LOCAL_UP));
+        }
+        PALM_LOCAL_Y.normalize();
+        PALM_LOCAL_X.crossVectors(PALM_LOCAL_Y, PALM_LOCAL_UP).normalize();
+        PALM_LOCAL_Y.crossVectors(PALM_LOCAL_UP, PALM_LOCAL_X).normalize();
+        PALM_BASIS.makeBasis(PALM_LOCAL_X, PALM_LOCAL_Y, PALM_LOCAL_UP);
+        PALM_QUATERNION.setFromRotationMatrix(PALM_BASIS).normalize();
+        mount.quaternion.slerp(PALM_QUATERNION, palmWeight).normalize();
+      }
     }
 
     for (const state of this.states.values()) {

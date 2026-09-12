@@ -178,6 +178,7 @@ try {
       crawlContactPhase = phase;
       crawlContactWeight = phase === null ? 0 : weight;
     },
+    setAuthoredCrawlPalmWeight() {},
     setCharacterUpperArmRestAngleWeight(weight) {
       upperArmRestAngleWeight = weight;
     },

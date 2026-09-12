@@ -5,7 +5,7 @@ import { QUATERNIUS_SWIM_FWD_DURATION, QUATERNIUS_SWIM_FWD_ROOT_KEYS,
 import { QUATERNIUS_SWIM_IDLE_DURATION, QUATERNIUS_SWIM_IDLE_ROOT_KEYS,
   QUATERNIUS_SWIM_IDLE_ROTATION_KEYS, QUATERNIUS_SWIM_IDLE_SOURCE } from './quaterniusSwimIdle.generated';
 import * as THREE from 'three';
-import { CROUCH_CLIP_IDS, QUATERNIUS_LOW_POSE_OWNERSHIP } from './crouch';
+import { CROUCH_CLIP_IDS, CROUCH_TRANSITION_DURATION, QUATERNIUS_CRAWL_PALMS, QUATERNIUS_LOW_POSE_OWNERSHIP } from './crouch';
 import { QUATERNIUS_CROUCH_IDLE_DURATION, QUATERNIUS_CROUCH_IDLE_ROOT_KEYS,
   QUATERNIUS_CROUCH_IDLE_ROTATION_KEYS, QUATERNIUS_CROUCH_IDLE_SOURCE } from './quaterniusCrouchIdle.generated';
 import { QUATERNIUS_CRAWL_DURATION, QUATERNIUS_CRAWL_ROOT_KEYS,
@@ -132,7 +132,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 23;
+export const PLAYER_STARTER_CATALOG_VERSION = 24;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -1042,6 +1042,7 @@ function buildQuaterniusLowPose(rigId: string, includeTorsoRoot: boolean, moving
     starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
     sourceAnimation: { ...source },
     outerPoseOwnership: QUATERNIUS_LOW_POSE_OWNERSHIP,
+    ...(moving ? { palmOrientation: QUATERNIUS_CRAWL_PALMS } : {}),
   };
   if (!moving) clip.contacts = [
     contact(`${clip.id}:left-foot`, 0, clip.duration, 'footLeft'),
@@ -1050,7 +1051,7 @@ function buildQuaterniusLowPose(rigId: string, includeTorsoRoot: boolean, moving
   return clip;
 }
 
-/** Full source takes, retaining their native clocks and distinct end poses. */
+/** Keep every source sample, retimed to the original five-frame handoff. */
 function buildQuaterniusCrouchTransition(rigId: string, includeTorsoRoot: boolean, entering: boolean): AnimationClip {
   const clip = baseClip(entering ? CROUCH_CLIP_IDS.enter : CROUCH_CLIP_IDS.exit,
     entering ? 'Crouch Enter — Quaternius Crouch_Enter' : 'Crouch Exit — Quaternius Crouch_Exit',
@@ -1066,7 +1067,20 @@ function buildQuaterniusCrouchTransition(rigId: string, includeTorsoRoot: boolea
     starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
     outerPoseOwnership: QUATERNIUS_LOW_POSE_OWNERSHIP,
     sourceAnimation: { ...(entering ? QUATERNIUS_CROUCH_ENTER_SOURCE : QUATERNIUS_CROUCH_EXIT_SOURCE) } };
-  return clip;
+  return retimeCrouchTransition(clip);
+}
+
+function retimeCrouchTransition(clip: AnimationClip): AnimationClip {
+  if (clip.metadata?.crouchTimingRevision === 1) return clip;
+  const ratio = CROUCH_TRANSITION_DURATION / Math.max(clip.duration, 1e-6);
+  return { ...clip, duration: CROUCH_TRANSITION_DURATION,
+    range: { start: clip.range.start * ratio, end: clip.range.end * ratio },
+    tracks: clip.tracks.map(track => ({ ...track,
+      keys: track.keys.map(key => ({ ...key, time: key.time * ratio })) } as AnimationTrack)),
+    contacts: clip.contacts.map(contact => ({ ...contact, start: contact.start * ratio, end: contact.end * ratio })),
+    markers: clip.markers.map(marker => ({ ...marker, time: marker.time * ratio })),
+    events: clip.events.map(event => ({ ...event, time: event.time * ratio })),
+    metadata: { ...clip.metadata, sourceDuration: clip.duration, crouchTimingRevision: 1 } };
 }
 
 function scaledUnityLowPosePositionKeys(
@@ -1745,6 +1759,16 @@ export function reconcilePlayerStarterAnimationSuite(
       clips = clips.map(clip => clip.id === id
         ? { ...replacement, playbackSpeed: old.playbackSpeed } : clip);
     }
+  }
+
+  if (previousVersion < 24) {
+    clips = clips.map(clip => {
+      if (clip.metadata?.outerPoseOwnership !== QUATERNIUS_LOW_POSE_OWNERSHIP) return clip;
+      if (clip.id === CROUCH_CLIP_IDS.enter || clip.id === CROUCH_CLIP_IDS.exit) return retimeCrouchTransition(clip);
+      if (clip.id === CROUCH_CLIP_IDS.move) return { ...clip,
+        metadata: { ...clip.metadata, palmOrientation: QUATERNIUS_CRAWL_PALMS } };
+      return clip;
+    });
   }
 
   const existingIds = new Set(clips.map((clip) => clip.id));

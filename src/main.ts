@@ -125,6 +125,7 @@ import { touchControlsRequested } from "./touch";
 import {
   RigBinding,
   UNITY_CRAWL_CONTACT_ADAPTATION,
+  QUATERNIUS_CRAWL_PALMS,
   createLocalDraftStore,
   createPreferredDraftStore,
   createPlayerStarterAnimationSuite,
@@ -3250,7 +3251,10 @@ async function openAnimationStudioTool(): Promise<void> {
         player.setCharacterUpperArmRestAngleWeight(
           clip?.id === 'player.idle' ? 1 : 0,
         );
-        player.syncCharacterAppearance();
+        player.syncCharacterAppearance({
+          crawlPalmWeight: clip?.id === 'player.crawl' &&
+            clip.metadata?.palmOrientation === QUATERNIUS_CRAWL_PALMS ? 1 : 0,
+        });
       },
       clearPostPose: () => player.clearCrawlHandPlantPreview(),
       applyPostPose: (clip, time) => {

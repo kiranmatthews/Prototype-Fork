@@ -98,12 +98,16 @@ backflip variants from the fixed-step release charge and uses Unity's trimmed
 the live rope axis after the authored pose; the pendulum angle never drives or
 distorts the body animation.
 
-## Quaternius crouch and crawl (catalog 23)
+## Quaternius crouch and crawl (catalog 24)
 
 The live low poses use four real takes from the Universal Animation Library
 **Source** pack: `Crouch_Enter`, `Crouch_Idle_Loop`, `Crouch_Exit`, and
-`Crawl_Fwd_Loop`. All retain the native clocks and editable body-joint keys;
-entry and exit are one-shots, while crouch idle and crawl are seam-closed loops.
+`Crawl_Fwd_Loop`. All source poses remain editable. Entry and exit are retimed
+to the previous five-frame handoff (5/60 seconds); the two loops keep their
+native clocks. The palm-only orientation constraint runs after wrist-rest and
+body-proportion settings, keeping both palms flat down throughout Crawl in
+gameplay and Studio. It does not move the wrists or change the arm/body gait.
+Saved v23 drafts gain these corrections with their authored keys and speeds retained.
 Direction input interrupts entry into crawl and exit into run immediately.
 Jumping, falling and other actions also interrupt the transitions.
 

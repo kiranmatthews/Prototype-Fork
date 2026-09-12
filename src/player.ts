@@ -1333,6 +1333,7 @@ export class Player {
   private walkPhase = 0; // procedural run cycle
   private authoredCrawlContactPhase: number | null = null;
   private authoredCrawlContactWeight = 0;
+  private authoredCrawlPalmWeight = 0;
   private readonly crawlContactUpperOffset = new THREE.Vector3();
   private walkAmp = 0;
   private idleAmp = 0;
@@ -2377,12 +2378,17 @@ export class Player {
     );
   }
 
-  syncCharacterAppearance(options: { upperArmRestAngleWeight?: number } = {}): void {
+  setAuthoredCrawlPalmWeight(weight: number): void {
+    this.authoredCrawlPalmWeight = THREE.MathUtils.clamp(Number.isFinite(weight) ? weight : 0, 0, 1);
+  }
+
+  syncCharacterAppearance(options: { upperArmRestAngleWeight?: number; crawlPalmWeight?: number } = {}): void {
     const upperArmRestAngleWeight = Number.isFinite(options.upperArmRestAngleWeight)
       ? THREE.MathUtils.clamp(options.upperArmRestAngleWeight as number, 0, 1)
       : this.characterUpperArmRestAngleWeight;
     this.characterProportionLayer.apply(characterProportionSettings.value, {
       upperArmRestAngleWeight,
+      crawlPalmWeight: options.crawlPalmWeight ?? this.authoredCrawlPalmWeight,
     });
     this.syncCharacterTailVisibility();
     this.syncCharacterHeadStyle();
