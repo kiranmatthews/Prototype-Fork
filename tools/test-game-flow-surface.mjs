@@ -130,7 +130,7 @@ assert.ok(pauseFlow, "pause renderer could not be inspected");
 const resumeAt = pauseFlow.indexOf('this.button("RESUME"');
 const saveLoadAt = pauseFlow.indexOf('this.button("SAVE / LOAD"');
 const optionsAt = pauseFlow.indexOf('this.button("OPTIONS"');
-const quitMainAt = pauseFlow.indexOf('this.button("QUIT TO MAIN MENU"');
+const quitMainAt = pauseFlow.indexOf('this.button("MAIN MENU"');
 assert.ok(
   resumeAt >= 0 &&
     resumeAt < saveLoadAt &&
@@ -140,7 +140,7 @@ assert.ok(
 );
 assert.match(
   pauseFlow,
-  /else \{[\s\S]{0,180}this\.button\("OPTIONS"[\s\S]{0,180}this\.button\(state\.competition \? "RESTART COMPETITION" : "RESTART"[\s\S]{0,180}this\.button\("QUIT LEVEL"/,
+  /else \{[\s\S]{0,180}this\.button\("OPTIONS"[\s\S]{0,180}this\.button\(state\.competition \? "RESTART CUP" : "RESTART"[\s\S]{0,180}this\.button\("QUIT LEVEL"/,
   "non-warp pause order must remain unchanged",
 );
 

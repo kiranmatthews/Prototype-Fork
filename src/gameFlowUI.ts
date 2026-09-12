@@ -1,3 +1,4 @@
+import { MENU_THEME_CSS } from './menuTheme';
 import {updateMenuPngFocus} from './menuPngFocus';
 // Game-owned menus and campaign screens. The live DOM remains the semantic
 // input/accessibility owner; GameFlowSurface can mirror its known geometry into
@@ -1144,7 +1145,7 @@ export class GameFlowUI {
           this.render();
         }),
         this.button("OPTIONS", openOptions),
-        this.button("QUIT TO MAIN MENU", () => {
+        this.button("MAIN MENU", () => {
           this.operationStatus = "";
           this.operationStatusError = false;
           this.screen = "confirm-quit-main";
@@ -1154,7 +1155,7 @@ export class GameFlowUI {
     } else {
       list.append(
         this.button("OPTIONS", openOptions),
-        this.button(state.competition ? "RESTART COMPETITION" : "RESTART", this.callbacks.onRestart),
+        this.button(state.competition ? "RESTART CUP" : "RESTART", this.callbacks.onRestart),
         this.button("QUIT LEVEL", this.callbacks.onQuitLevel, "danger"),
       );
     }
@@ -1389,11 +1390,11 @@ export class GameFlowUI {
       toggles.append(modeButton, description);
     }
     toggles.append(
-      this.toggleButton("SOUND EFFECTS", !this.options.sfxMuted, (enabled) => {
+      this.toggleButton("SOUND", !this.options.sfxMuted, (enabled) => {
         this.options.sfxMuted = !enabled;
         return enabled;
       }),
-      this.toggleButton("BACKGROUND MUSIC", !this.options.musicMuted, (enabled) => {
+      this.toggleButton("MUSIC", !this.options.musicMuted, (enabled) => {
         this.options.musicMuted = !enabled;
         return enabled;
       }),
@@ -1988,7 +1989,7 @@ export class GameFlowUI {
       .game-progress-bar span { display: block; height: 100%; min-width: 3px; border-radius: 7px; background: linear-gradient(90deg, #62cf37, #e8e82f); box-shadow: 0 0 8px rgba(137,237,64,.8); }
       .game-progress-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
       .game-progress-grid div { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 9px; }
-      .game-progress-grid span { grid-row: 1 / 3; font-size: 32px; color: #9a4ce6; }
+      .game-progress-grid > div > span:not(.game-reward-slot) { grid-row: 1 / 3; font-size: 32px; color: #9a4ce6; }
       .game-progress-grid strong { font-size: 24px; color: #71321a; }
       .game-progress-grid small { font: 800 11px/1 ui-monospace, Menlo, monospace; color: #70492c; }
       .game-progress-cleared { margin: 12px 0 0; text-align: right; color: #754425; font: 800 11px/1 ui-monospace, Menlo, monospace; }
@@ -2160,7 +2161,7 @@ export class GameFlowUI {
       .game-menu-button.game-map-close.selected { background:#36515d; box-shadow:none; color:#fff7da; filter:none; }
       .game-menu-button.game-map-close::before { display:none; }
     `;
-    style.textContent += menuLayoutStyle;
+    style.textContent += MENU_THEME_CSS + menuLayoutStyle;
     document.head.appendChild(style);
   }
 }

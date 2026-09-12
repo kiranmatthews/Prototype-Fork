@@ -1,4 +1,11 @@
 /* TV-safe menu composition. The viewport never becomes a document scroll area. */
+:root {
+  --menu-title:clamp(30px,7.8vh,94px);
+  --menu-action:clamp(23px,5.8vh,70px);
+  --menu-section:clamp(21px,4vh,48px);
+  --menu-body:clamp(16px,3vh,36px);
+  --menu-caption:clamp(14px,2.6vh,30px);
+}
 .game-shell-panel, body.tc-on .game-shell-panel.game-map-menu-panel {
   --menu-unit:min(1vw,1.78vh);
   display:grid; place-items:center; overflow:hidden; pointer-events:none;
@@ -10,32 +17,32 @@
 .game-menu-hints { position:absolute; bottom:3vh; left:5vw; right:5vw; height:5vh; }
 .game-control-hint { display:inline-flex; align-items:center; justify-content:center; gap:.35em; white-space:nowrap; min-width:0; }
 .game-control-hint .input-glyph { --input-glyph-size:clamp(18px,4.5vh,46px); width:var(--input-glyph-size); height:var(--input-glyph-size); flex:none; }
-.game-control-hint .secondary-silver { font-size:clamp(12px,2.5vh,28px); }
+.game-control-hint .secondary-silver { font-size:var(--menu-body); }
 .game-menu-button.game-control-hint { padding:0 .4em; min-height:5vh; color:#fff4d6; }
 .game-menu-button.game-control-hint::before { display:none; }
 .game-shell-panel.game-screen-level-select { padding:3vh 6vw; }
 .game-level-select-layout { width:100%; height:100%; display:grid; grid-template-rows:12% minmax(0,1fr) 8%; gap:2vh; padding:0; }
 .game-level-header { display:grid; grid-template-columns:8vw minmax(0,1fr) 8vw; justify-self:center; width:70%; padding:0; align-items:center; }
-.game-level-header .game-panel-title { font-size:clamp(25px,5.8vh,68px); color:#ffd531; }
+.game-level-header .game-panel-title { font-size:var(--menu-title); color:#ffd531; }
 .game-island-arrow { color:#ff9b20; font-size:clamp(24px,4vh,45px); min-height:0; }
 .game-island-pages { margin:1vh 0 0; font-size:clamp(10px,1.7vh,20px); color:#f7b54b; }
 .game-level-columns { min-height:0; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); gap:5vw; }
 .game-level-browser { min-height:0; display:grid; grid-template-rows:minmax(0,.88fr) minmax(0,1fr); gap:1.5vh; }
 .game-level-preview { display:block; width:100%; height:100%; min-height:0; object-fit:cover; border:4px solid #dcad64; box-shadow:0 5px 0 #4b2515,0 8px 15px #0007; background:#12343d; }
 .game-level-list { display:grid; grid-auto-rows:minmax(0,1fr); gap:.6vh; padding:0; }
-.game-level-row { min-height:0; height:100%; padding:.45vh 1vw; gap:1vw; font-size:clamp(13px,2.8vh,32px); border-radius:2px; color:#fff4d6; background:linear-gradient(#347b80,#153e4b); border:1px solid #52908b; }
+.game-level-row { min-height:0; height:100%; padding:.45vh 1vw; gap:1vw; font-size:var(--menu-section); border-radius:2px; color:#fff4d6; background:linear-gradient(#347b80,#153e4b); border:1px solid #52908b; }
 .game-level-row.chosen,.game-level-row.selected { background:linear-gradient(#ffe6a0,#efaa4e); color:#542615; }
 .game-level-mark { color:#f5c761; font-size:clamp(10px,2vh,22px); }
 .game-level-detail { padding:0; display:grid; grid-template-rows:auto minmax(0,1fr) auto; min-height:0; }
-.game-level-name { color:#ffd575; font-size:clamp(20px,3.7vh,42px); margin:0; text-align:center; }
+.game-level-name { color:#ffd575; font-size:var(--menu-section); margin:0; text-align:center; }
 .game-level-rewards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); grid-auto-rows:minmax(0,1fr); gap:1vh 2vw; min-height:0; margin:1vh 0; }
 .game-level-prize { display:flex; flex-direction:column; align-items:center; min-height:0; }
 .game-reward-slot { display:block; width:100%; height:100%; min-height:0; flex:1; }
-.game-reward-caption { flex:none; color:#ffda8f; font:clamp(12px,2.2vh,25px)/1.2 Roo,Impact,sans-serif; }
+.game-reward-caption { flex:none; color:#ffda8f; font:var(--menu-caption)/1.2 Roo,Impact,sans-serif; }
 .game-level-rewards > .game-reward-slot { grid-column:1/-1; }
 .game-level-records { width:70%; justify-self:center; display:grid; gap:.4vh; margin-top:1vh; }
-.game-level-record-title { text-align:center; font:clamp(14px,2.4vh,28px)/1 Roo,Impact,sans-serif; color:#ffd575; margin:0 0 .5vh; }
-.game-level-record { color:#fff4d6; font:clamp(13px,2.4vh,27px)/1.15 'Staging Secondary',Impact,sans-serif; }
+.game-level-record-title { text-align:center; font:var(--menu-body)/1 Roo,Impact,sans-serif; color:#ffd575; margin:0 0 .5vh; }
+.game-level-record { color:#fff4d6; font:var(--menu-body)/1.15 'Staging Secondary',Impact,sans-serif; }
 .game-level-footer { padding:0; gap:2vw; }
 .game-level-footer .game-menu-button { font-size:inherit; min-width:0; }
 .game-pause-layout { width:100%; height:100%; max-height:none; display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,.9fr); grid-template-rows:minmax(0,1fr) minmax(0,.42fr); align-items:stretch; gap:3vh 5vw; }
@@ -74,8 +81,8 @@
 /* Remaining menus retain their authored artwork, with bounded middle segments. */
 .game-slot-card,.game-options-card { max-height:100%; padding:3vh 3vw; display:flex; flex-direction:column; }
 .game-slot-card > :not(.game-scroll-segment),.game-options-card > :not(.game-scroll-segment) { flex-shrink:0; }
-.game-panel-title { font-size:clamp(25px,6vh,70px); }
-.game-panel-subtitle { font-size:clamp(10px,1.9vh,16px); margin:1vh 0 2vh; }
+.game-panel-title { font-size:var(--menu-title); }
+.game-panel-subtitle { font-size:var(--menu-caption); margin:1vh 0 2vh; }
 .game-save-slots { flex:1; grid-auto-rows:minmax(0,1fr); gap:1vh; }
 .game-save-slot { min-height:0; padding:1.3vh 1.6vw; }
 .game-slot-number { font-size:clamp(18px,3.6vh,35px); }
@@ -88,7 +95,7 @@
 .game-launch-card .game-logo { margin:0 0 4vh; }
 .game-launch-card .game-logo span { font-size:clamp(48px,min(19vh,16vw),190px); }
 .game-launch-card > .game-menu-list { width:min(440px,100%); margin-inline:auto; }
-.game-launch-card .game-menu-button { min-height:7vh; font-size:clamp(24px,5vh,50px); }
+.game-launch-card .game-menu-button { min-height:7vh; font-size:var(--menu-action); }
 .game-results-card { max-height:100%; display:flex; flex-direction:column; }
 .game-results-tally { min-height:0; overflow:auto; }
 .game-results-actions { flex-shrink:0; }
@@ -179,10 +186,10 @@ body.game-shell-modal .tc-zone { display:none !important; }
 .game-slot-preview,.game-slot-empty { grid-column:1; grid-row:1/5; width:100%; height:100%; min-height:0; object-fit:cover; box-sizing:border-box; border:4px solid #54280f; background:#090b12; }
 .game-slot-preview,.game-slot-empty { height:auto; aspect-ratio:16/9; max-height:100%; align-self:center; }
 .game-slot-empty { display:flex; align-items:center; justify-content:center; text-align:center; color:#f2d7a1; font:clamp(18px,3vh,34px)/1 Roo,Impact,sans-serif; }
-.game-save-browser .game-slot-number { grid-column:2; grid-row:1; font-size:clamp(18px,3.4vh,38px); text-align:center; }
-.game-slot-level { grid-column:2; grid-row:2; font:clamp(15px,2.8vh,29px)/1.2 Roo,Impact,sans-serif; color:#ffe2a0; text-align:center; }
-.game-save-browser .game-slot-detail { grid-column:2; grid-row:3; align-self:center; font-size:clamp(16px,3.5vh,38px); text-align:center; color:#ffd575; }
-.game-save-browser .game-slot-date { grid-column:2; grid-row:4; font-size:clamp(8px,1.4vh,14px); text-align:center; color:#decaa7; }
+.game-save-browser .game-slot-number { grid-column:2; grid-row:1; font-size:var(--menu-section); text-align:center; }
+.game-slot-level { grid-column:2; grid-row:2; font:var(--menu-body)/1.2 Roo,Impact,sans-serif; color:#ffe2a0; text-align:center; }
+.game-save-browser .game-slot-detail { grid-column:2; grid-row:3; align-self:center; font-size:var(--menu-section); text-align:center; color:#ffd575; }
+.game-save-browser .game-slot-date { grid-column:2; grid-row:4; font-size:var(--menu-caption); text-align:center; color:#decaa7; }
 .game-save-actions { flex:none; display:flex; flex-direction:row; justify-content:center; gap:4vw; margin-top:1.5vh; }
 .game-save-actions .game-menu-button { font-size:clamp(16px,3vh,32px); min-height:5vh; padding:1vh 2vw; }
 .game-save-browser .game-operation-status:empty { display:none; }
@@ -206,24 +213,130 @@ body.game-shell-modal .tc-zone { display:none !important; }
 .game-trick-guide .game-panel-title { margin:0; }
 .game-trick-pager { display:flex; justify-content:center; align-items:center; gap:5vw; }
 .game-trick-pager .game-menu-button { min-height:4vh; padding:0 1vw; font-size:clamp(22px,3.6vh,40px); }
-.game-trick-pager > span { font:clamp(16px,2.6vh,28px)/1 'Staging Secondary',sans-serif; }
-.game-trick-intro { margin:0 auto; max-width:900px; text-align:center; font:clamp(12px,2vh,20px)/1.35 'Staging Secondary',sans-serif; }
+.game-trick-pager > span { font:var(--menu-body)/1 'Staging Secondary',sans-serif; }
+.game-trick-intro { margin:0 auto; max-width:900px; text-align:center; font:var(--menu-body)/1.35 'Staging Secondary',sans-serif; }
 .game-trick-content { padding:1vh 2vw; }
-.game-trick-content h3 { margin:.5vh 0 1.3vh; color:#ffd278; font:clamp(19px,3.2vh,36px)/1.2 'Staging Secondary',sans-serif; }
-.game-trick-content p { font:clamp(12px,2vh,20px)/1.4 'Staging Secondary',sans-serif; margin:1.3vh 0; }
-.game-trick-content table { width:100%; border-collapse:collapse; font:clamp(13px,2.3vh,25px)/1.3 'Staging Secondary',sans-serif; }
+.game-trick-content h3 { margin:.5vh 0 1.3vh; color:#ffd278; font:var(--menu-section)/1.2 'Staging Secondary',sans-serif; }
+.game-trick-content p { font:var(--menu-body)/1.4 'Staging Secondary',sans-serif; margin:1.3vh 0; }
+.game-trick-content table { width:100%; border-collapse:collapse; font:var(--menu-body)/1.3 'Staging Secondary',sans-serif; }
 .game-trick-content th,.game-trick-content td { padding:.7vh .8vw; text-align:left; border-bottom:1px solid #426155; }
 .game-trick-content th { color:#b6c4aa; font-size:.8em; }
 .game-trick-content td:last-child { text-align:right; color:#ffd278; white-space:nowrap; }
 .game-trick-content .input-glyph { --input-glyph-size:clamp(18px,3vh,34px); }
-@media(max-height:500px) and (min-aspect-ratio:1/1) {
-  .game-trick-guide { gap:1vh; }
-  .game-trick-intro,.game-trick-content p { font-size:11px; line-height:1.2; }
-  .game-trick-content h3 { font-size:16px; margin:.3vh 0 .7vh; }
-  .game-trick-content table { font-size:11.5px; line-height:1.1; }
-  .game-trick-content th,.game-trick-content td { padding:.35vh .8vw; }
+
+/* Crash reference proportions: headline 7–8% and actions 5–6% of a TV frame.
+   These rules also style the DOM fallback; menuTheme.ts paints the same panels. */
+.game-shell::before,body.game-flow-vortex .game-shell::before {
+  background:linear-gradient(var(--menu-backdrop-top),var(--menu-backdrop-bottom));
 }
+.game-shell .timber-card {
+  border:4px solid var(--menu-edge); border-radius:13px;
+  background:linear-gradient(var(--menu-panel-top),var(--menu-panel-middle) 56%,var(--menu-panel-bottom));
+  color:#fff0d0; box-shadow:0 12px 28px #000a; text-shadow:none;
+}
+.game-shell .timber-card::before,.game-shell .timber-card::after { background:var(--menu-rivet); border-color:var(--menu-shadow); }
+.game-menu-button { font-size:var(--menu-action); color:#ffe6a7; text-shadow:none; }
+.game-eyebrow,.game-pause-actions .game-eyebrow { font-size:var(--menu-section); color:#ffd575; }
+.game-panel-subtitle,.game-save-status,.game-operation-status,.game-progress-cleared,.game-slot-date {
+  font-family:'Staging Secondary',Impact,sans-serif; font-weight:400; font-size:var(--menu-caption); color:#efe3cc;
+}
+.game-operation-status.error { color:#ffa986; }
+.game-pause-actions .game-menu-button { font-size:var(--menu-action); }
+.game-pause-actions .game-menu-list { justify-content:space-evenly; }
+.game-options-layout .game-menu-button { font-size:clamp(23px,5vh,60px); min-height:8vh; }
+.game-options-layout .game-toggle { padding:1vh .5vw; gap:1.2vw; }
+.game-toggle strong,.game-toggle.toggle-off strong { color:#ffe6a7; }
+.game-options-layout .game-panel-subtitle { margin:0 0 1vh; font-size:var(--menu-caption); }
+.game-progress-head h2 { font-size:var(--menu-section); color:#ffd575; }
+.game-progress-head strong { font-size:var(--menu-action); }
+.game-progress-grid strong { font-size:var(--menu-action); color:#ffd575; }
+.game-progress-grid small { font-size:var(--menu-caption); }
+.game-progress-cleared { font-size:var(--menu-caption); }
+.game-progress-level-name { font-size:var(--menu-body); }
+.game-progress-level-time { font:var(--menu-caption)/1.2 'Staging Secondary',sans-serif; color:#efdfc5; }
+.game-launch-card { width:94%; }
+.game-launch-card > .game-menu-list { width:min(55vw,720px); gap:1.5vh; }
+.game-launch-card .game-menu-button { min-height:8.5vh; }
+.game-slot-card:not(.game-save-browser),.game-options-card:not(.game-options-layout > *) { width:min(1100px,90vw); padding:4vh 4vw; }
+.game-slot-card > .game-menu-list { gap:2vh; }
+.game-slot-card .game-menu-list > .game-menu-button,.game-slot-card > .game-menu-button { font-size:var(--menu-action); min-height:8vh; }
+.game-slot-card .game-panel-subtitle { margin:2vh 0 3vh; }
+.game-slot-card.game-save-browser { width:100%; }
+.game-save-browser .game-save-slot-inner { grid-template-columns:minmax(0,.95fr) minmax(0,1.15fr); gap:.8vh 1vw; }
+.game-save-browser .game-slot-date { font-size:var(--menu-caption); }
+.game-save-actions .game-menu-button { font-size:var(--menu-section); min-height:7vh; }
+.game-level-row,.png-menu-focus .game-level-row.chosen,.png-menu-focus .game-level-row.selected {
+  background:linear-gradient(#17323e,#0a1c27) !important; border-color:#49616a !important;
+}
+.game-level-mark { font-size:var(--menu-caption); }
+.game-level-browser { grid-template-rows:minmax(0,.68fr) minmax(0,1fr); }
+.game-island-pages { font-size:var(--menu-caption); }
+.game-screen-trick-guide { background:transparent; }
+.game-trick-guide { width:100%; }
+.game-trick-intro { max-width:90%; }
+.game-trick-content th { font-size:var(--menu-caption); }
+.game-trick-content td,.game-trick-content th { padding:.8vh 1vw; }
+.game-trick-content .input-glyph { --input-glyph-size:clamp(22px,4vh,46px); }
+.game-screen-results { padding:4vh 4vw 7vh; }
+.game-results-card { width:53vw; min-width:0; margin:0; padding:2.5vh 2vw; }
+.game-results-title { font-size:var(--menu-action); margin:1.5vh 0 2vh; }
+.game-results-tally { gap:1.2vh; }
+.game-results-tally div { padding:1vh 1vw; background:#06131c; border-color:#36505a; }
+.game-results-tally span { font:var(--menu-caption)/1.2 'Staging Secondary',sans-serif; color:#efe3cc; }
+.game-results-tally strong,.game-results-time-trial .game-results-tally strong { font-size:var(--menu-section); color:#ffd575; }
+.game-results-time-trial .game-results-run-time strong { font-size:var(--menu-title); }
+.game-results-time-trial .game-results-bests strong { font:var(--menu-caption)/1.25 'Staging Secondary',sans-serif; }
+.game-results-time-trial .game-results-medal strong { font-size:var(--menu-body); }
+.game-results-actions .game-menu-button { min-height:7vh; font-size:var(--menu-action); }
+.game-over-copy { bottom:13vh; width:86vw; max-width:none; gap:2vh 4vw; }
+.game-over-title { font-size:clamp(48px,12vh,144px); }
+.game-over-question { font-size:var(--menu-action); }
+.game-over-actions { width:24vw; }
+.game-over-actions .game-menu-button { font-size:var(--menu-action); min-height:8vh; }
+.game-control-hint .input-glyph { --input-glyph-size:clamp(24px,5.4vh,64px); }
+.game-control-hint .secondary-silver { font-size:var(--menu-body); }
+.game-menu-hints { bottom:2.5vh; height:6vh; }
 @media(max-aspect-ratio:1/1) {
-  .game-trick-content table { font-size:clamp(12px,3.4vw,22px); }
-  .game-trick-intro,.game-trick-content p { font-size:clamp(12px,3.1vw,18px); }
+  :root { --menu-title:clamp(30px,8vw,62px); --menu-action:clamp(21px,6vw,46px); --menu-section:clamp(18px,4.8vw,36px); --menu-body:clamp(16px,4.2vw,30px); --menu-caption:clamp(14px,3.6vw,26px); }
+  .game-pause-actions,.game-options-layout > .game-options-card,.game-pause-layout > .game-progress-card,.game-options-layout > .game-progress-card { padding:2vh 1.5vw; }
+  .game-options-layout .game-menu-button { font-size:var(--menu-section); }
+  .game-options-layout .game-toggle { min-height:9vh; }
+  .game-level-row { font-size:var(--menu-section); padding:.5vh .5vw; }
+  .game-level-name { font-size:var(--menu-section); }
+  .game-level-mark { font-size:14px; }
+  .game-progress-head h2 { font-size:var(--menu-section); }
+  .game-progress-grid { gap:2vh 1vw; }
+  .game-progress-grid small { font-size:var(--menu-caption); }
+  .game-progress-cleared { line-height:1.3; }
+  .game-control-hint .input-glyph { --input-glyph-size:clamp(22px,6vw,38px); }
+  .game-control-hint .secondary-silver { font-size:var(--menu-body); }
+  .game-launch-card > .game-menu-list { width:100%; }
+  .game-save-browser .game-save-slot-inner { grid-template-columns:minmax(0,1fr); }
+  .game-save-browser .game-slot-number { font-size:var(--menu-section); }
+  .game-slot-level { font-size:var(--menu-body); }
+  .game-save-browser .game-slot-detail { font-size:var(--menu-section); }
+  .game-results-card { width:100%; max-height:66vh; align-self:end; }
+  .game-results-actions .game-menu-button { min-height:6vh; }
+  .game-over-actions { width:26vw; min-width:0; }
+  .game-over-copy { width:90vw; }
+  .game-over-question { font-size:var(--menu-section); }
 }
+@media(max-height:500px) and (min-aspect-ratio:1/1) {
+  :root { --menu-title:8vh; --menu-action:6vh; --menu-section:4.7vh; --menu-body:4vh; --menu-caption:3.6vh; }
+  .game-pause-actions,.game-options-layout > .game-options-card,.game-pause-layout > .game-progress-card,.game-options-layout > .game-progress-card { padding:1.5vh 1.5vw; }
+  .game-progress-grid { gap:1.5vh; }
+  .game-progress-cleared { margin:1vh 0 0; }
+  .game-save-browser .game-slot-date { font-size:var(--menu-caption); }
+  .game-trick-guide { gap:1vh; }
+  .game-results-card { padding:1.5vh 2vw; }
+}
+
+.game-save-browser .game-save-slot,.png-menu-focus .game-save-slot.selected { background:#0c2029 !important; }
+.game-level-select-layout { grid-template-rows:17% minmax(0,1fr) 8%; }
+.game-level-browser { grid-template-rows:minmax(0,.58fr) minmax(0,1fr); }
+
+.game-screen-level-select,.game-screen-progress,.game-screen-trick-guide { background:linear-gradient(#07141b,#02070f); }
+.game-screen-results { place-items:center end; }
+.game-trick-content th,.game-trick-content td { padding:.4vh 1vw; }
+.game-trick-content .input-glyph { --prompt-icon-size:1.5em; }
+@media(max-aspect-ratio:1/1) { .game-screen-results { place-items:end center; } }

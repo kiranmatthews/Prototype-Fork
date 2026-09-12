@@ -1,3 +1,4 @@
+import { paintMenuBackdrop, paintMenuPanel } from './menuTheme';
 // Cached Canvas2D mirror for the game-owned modal UI.
 //
 // GameFlowUI remains the only interaction/accessibility owner. This surface
@@ -750,91 +751,27 @@ export class GameFlowSurface {
     height: number,
   ): void {
     ctx.save();
-    if (screen === 'level-select' || screen === 'progress' || screen === 'trick-guide') {
-      const gradient=ctx.createRadialGradient(width*.55,height*.4,0,width*.5,height*.5,Math.max(width,height)*.8);
-      gradient.addColorStop(0,'#153c49');gradient.addColorStop(.6,'#082332');gradient.addColorStop(1,'#020b14');ctx.fillStyle=gradient;
-    } else if (screen === "results") {
+    if (screen === "results") {
       const beside = width > 760 && height > 560 || width / height > 1.3;
-      const gradient = ctx.createLinearGradient(0, 0, beside ? width : 0, beside ? 0 : height);
-      gradient.addColorStop(0, "rgba(3,5,10,0)");
-      gradient.addColorStop(0.38, "rgba(3,5,10,0)");
-      gradient.addColorStop(0.58, "rgba(3,5,10,.35)");
-      gradient.addColorStop(1, "rgba(3,5,10,.88)");
-      ctx.fillStyle = gradient;
-    } else {
-      const radius = Math.max(width, height) * 0.72;
-      const gradient = ctx.createRadialGradient(
-        width * 0.5,
-        height * (screen === "gameover" ? 0.44 : 0.4),
-        0,
-        width * 0.5,
-        height * 0.5,
-        radius,
-      );
-      gradient.addColorStop(
-        0,
-        screen === "gameover" ? "rgba(176,55,13,.20)" : "rgba(31,58,100,.18)",
-      );
-      gradient.addColorStop(0.66, "rgba(3,5,12,.58)");
-      gradient.addColorStop(1, "rgba(2,3,8,.90)");
-      ctx.fillStyle = gradient;
-    }
-    ctx.fillRect(0, 0, width, height);
+      const shade = ctx.createLinearGradient(0, 0, beside ? width : 0, beside ? 0 : height);
+      shade.addColorStop(0, '#02070f55'); shade.addColorStop(.4, '#02070f77');
+      shade.addColorStop(1, '#02070ff7'); ctx.fillStyle=shade; ctx.fillRect(0,0,width,height);
+    } else paintMenuBackdrop(ctx, width, height, ['level-select','progress','trick-guide'].includes(screen ?? ''));
     ctx.restore();
     this.primitiveCount++;
   }
 
   private paintCard(ctx: CanvasRenderingContext2D, rect: GameFlowSurfaceRect): void {
-    ctx.save();
-    ctx.shadowColor = "rgba(0,0,0,.62)";
-    ctx.shadowBlur = 28;
-    ctx.shadowOffsetY = 14;
-    roundedRect(ctx, rect, 13);
-    ctx.fillStyle = "#35190f";
-    ctx.fill();
-    ctx.shadowColor = "transparent";
-    const wood = ctx.createLinearGradient(0, rect.y, 0, rect.y + rect.height);
-    wood.addColorStop(0, "#ffd37d");
-    wood.addColorStop(0.56, "#e7ad55");
-    wood.addColorStop(1, "#a75b27");
-    roundedRect(ctx, rect, 13);
-    ctx.fillStyle = wood;
-    ctx.fill();
-    ctx.strokeStyle = "#5d2d17";
-    ctx.lineWidth = 5;
-    ctx.stroke();
-    ctx.globalAlpha = 0.18;
-    ctx.strokeStyle = "#5c2a0f";
-    ctx.lineWidth = 1;
-    for (const fraction of [0.14, 0.59]) {
-      ctx.beginPath();
-      ctx.moveTo(rect.x + rect.width * fraction, rect.y + 5);
-      ctx.lineTo(rect.x + rect.width * (fraction + 0.015), rect.y + rect.height - 5);
-      ctx.stroke();
-    }
-    ctx.globalAlpha = 1;
-    for (const [x, y] of [
-      [rect.x + 13, rect.y + 13],
-      [rect.x + rect.width - 13, rect.y + rect.height - 13],
-    ] as const) {
-      ctx.beginPath();
-      ctx.arc(x, y, 5, 0, Math.PI * 2);
-      ctx.fillStyle = "#8a491f";
-      ctx.fill();
-      ctx.strokeStyle = "#4a230f";
-      ctx.lineWidth = 2;
-      ctx.stroke();
-    }
-    ctx.restore();
+    paintMenuPanel(ctx, rect);
     this.primitiveCount++;
   }
 
   private paintBlock(ctx: CanvasRenderingContext2D, rect: GameFlowSurfaceRect): void {
     ctx.save();
     roundedRect(ctx, rect, 8);
-    ctx.fillStyle = "rgba(92,43,18,.14)";
+    ctx.fillStyle = "#06131c";
     ctx.fill();
-    ctx.strokeStyle = "rgba(91,41,17,.55)";
+    ctx.strokeStyle = "#36505a";
     ctx.lineWidth = 2;
     ctx.stroke();
     ctx.restore();
@@ -870,19 +807,19 @@ export class GameFlowSurface {
     }
     if (button.kind === "level") {
       roundedRect(ctx, rect, 7);
-      const gradient=ctx.createLinearGradient(0,rect.y,0,rect.y+rect.height);gradient.addColorStop(0,'#347b80');gradient.addColorStop(1,'#153e4b');ctx.fillStyle=gradient;
+      const gradient=ctx.createLinearGradient(0,rect.y,0,rect.y+rect.height);gradient.addColorStop(0,'#17323e');gradient.addColorStop(1,'#0a1c27');ctx.fillStyle=gradient;
       ctx.fill();ctx.strokeStyle='rgba(109,51,23,.26)';ctx.lineWidth=1;ctx.stroke();
       ctx.font = `${button.fontWeight} ${button.fontSize}px ${button.fontFamily}`;
       ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillStyle = button.selected ? '#542615' : '#fff4d6';
       const labelWidth=Math.max(1,rect.width-(button.valueLabel?45:28));
       if(!/\bRoo\b/.test(button.fontFamily)||!png(rooMenuText(button.label),rect.x+16,rect.y+rect.height/2,{size:button.fontSize*.882,palette:button.rooPalette,align:'left',maxWidth:labelWidth}))ctx.fillText(button.label,rect.x+16,rect.y+rect.height/2,labelWidth);
-      ctx.textAlign = 'right'; ctx.font = '700 12px Arial,sans-serif'; ctx.fillStyle = '#713a1e';
+      ctx.textAlign = 'right'; ctx.font = `400 ${Math.max(14,button.fontSize*.65)}px 'Staging Secondary',sans-serif`; ctx.fillStyle = '#efe3cc';
       ctx.fillText(button.valueLabel, rect.x + rect.width - 14, rect.y + rect.height / 2);
       ctx.restore(); this.primitiveCount++; return;
     }
     if (button.kind === "slot") {
       roundedRect(ctx, rect, 10);
-      ctx.fillStyle = "#183638";
+      ctx.fillStyle = "#0c2029";
       ctx.fill();
       ctx.strokeStyle = "#bf9656";
       ctx.lineWidth = 3;

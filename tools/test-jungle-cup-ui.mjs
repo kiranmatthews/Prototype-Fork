@@ -54,7 +54,7 @@ await withSkateRuntime(async ({ server }) => {
   ui.render(event);ui.updateInput(pad(0,0,[0]));assert.equal(calls.length,1,'held confirm after pause activated menu');
   neutral();
   tap(-1,0);tap(0,0,[0]);
-  assert.ok(ui.element.innerHTML.includes('TRICKS & COMBOS'));
+  assert.ok(ui.element.innerHTML.includes('timber-card comp-card comp-guide'));
   assert.ok(ui.element.innerHTML.includes('Hardflip')&&ui.element.innerHTML.includes('Tailgrab'));
   assert.deepEqual(selected(),['guide-back']);assert.equal(calls.length,1,'guide dispatched a gameplay action');
   tap(0,0,[1]);assert.deepEqual(selected(),['guide'],'controller Back did not restore guide focus');

@@ -1,8 +1,10 @@
+import { paintMenuBackdrop, paintMenuPanel } from '../menuTheme';
+import { updateMenuPngFocus } from '../menuPngFocus';
 import { paintSilverSecondaryText } from "../secondaryText";
 import { paintInputPrompts } from '../inputPromptUI';
 import { gameFlowRasterSize } from '../gameFlowSurface';
 import { loadRooAtlases, RooAtlasPainter } from '../roo-type/atlas';
-import { rooMenuText, rooMenuTitle } from '../roo-type/menu';
+import { rooMenuText, rooMenuPalette } from '../roo-type/menu';
 import { ROO_APPEARANCE_EVENT, rooLightPosition } from '../roo-type/settings';
 
 /** Native ink for the competition's semantic DOM, drawn by the shared pre-CRT
@@ -47,6 +49,7 @@ export class CompetitionSurface {
     if(!this.ctx)return;
     if(this.layout!==layout){this.canvas.width=raster.width;this.canvas.height=raster.height;this.layout=layout;this.dirty=true;}
     this.active=true;
+    if(updateMenuPngFocus(this.root,performance.now(),this.dirty))this.dirty=true;
     const lightPhase=Math.round(rooLightPosition()*64);
     if(this.dirty||lightPhase!==this.lightPhase){
       const ctx=this.ctx;
@@ -63,12 +66,14 @@ export class CompetitionSurface {
     ctx.save();ctx.globalAlpha*=Number(style.opacity);
     if(element.hasAttribute?.('data-roo-menu')){
       const text=element.querySelector('.roo-menu-source')?.textContent??'';
-      if(!this.rooAtlas.draw(ctx,rooMenuText(text),rect.x+rect.width/2,rect.y+rect.height/2,{size:parseFloat(style.fontSize)*.882,palette:rooMenuTitle(element)?'bonus':'counter',align:'center',maxWidth:rect.width})){
+      const button=element.closest('.game-menu-button');
+      if(button)ctx.filter=getComputedStyle(button).getPropertyValue('--menu-png-colour-filter').trim()||'none';
+      if(!this.rooAtlas.draw(ctx,rooMenuText(text),rect.x+rect.width/2,rect.y+rect.height/2,{size:parseFloat(style.fontSize)*.882,palette:rooMenuPalette(element),lightPosition:button?0:undefined,align:'center',maxWidth:rect.width})){
         ctx.font=`${style.fontSize} ${style.fontFamily}`;ctx.fillStyle=style.color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,rect.x+rect.width/2,rect.y+rect.height/2,rect.width);
       }
       ctx.restore();return;
     }
-    if(element.classList.contains('secondary-silver')){paintSilverSecondaryText(ctx,element.firstChild?.textContent??'',rect.x,rect.y,parseFloat(style.fontSize));ctx.restore();return;}
+    if(element.classList.contains('secondary-silver')&&!element.classList.contains('input-prompt-row')){paintSilverSecondaryText(ctx,element.firstChild?.textContent??'',rect.x,rect.y,parseFloat(style.fontSize));ctx.restore();return;}
     if(element.classList.contains('input-glyph')){ctx.restore();return;}
     if(element.classList.contains('game-control-hint')){const alpha=ctx.globalAlpha;ctx.globalAlpha=1;paintInputPrompts(ctx,element);ctx.globalAlpha=alpha;}
     if(element instanceof SVGSVGElement){this.paintSvg(ctx,element);ctx.restore();return;}
@@ -95,14 +100,10 @@ export class CompetitionSurface {
   private paintBox(ctx: CanvasRenderingContext2D, element: Element, r: DOMRect, style: CSSStyleDeclaration): void {
     const running=element.classList.contains('is-running');
     let fill: string|CanvasGradient=style.backgroundColor;
-    if(element===this.root&&!running){
-      const gradient=ctx.createLinearGradient(0,r.top,0,r.bottom);
-      gradient.addColorStop(0,'#10231cd9');gradient.addColorStop(1,'#0b151be8');fill=gradient;
-    }
-    if(element.classList.contains('comp-card')||element.classList.contains('comp-run-hud')){
-      ctx.fillStyle=element.classList.contains('comp-card')?'#0715129c':'#0006';
-      const offset=element.classList.contains('comp-card')?12:4;
-      ctx.fillRect(r.x+offset,r.y+offset,r.width,r.height);
+    if(element===this.root&&!running){paintMenuBackdrop(ctx,r.width,r.height);return;}
+    if(element.classList.contains('comp-card')){paintMenuPanel(ctx,r);return;}
+    if(element.classList.contains('comp-run-hud')){
+      ctx.fillStyle='#0006';ctx.fillRect(r.x+4,r.y+4,r.width,r.height);
     }
     ctx.fillStyle=fill;ctx.fillRect(r.x,r.y,r.width,r.height);
     const borders=[
