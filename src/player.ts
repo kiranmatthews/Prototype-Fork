@@ -307,6 +307,8 @@ export type PlayerAnimationClipHint =
 
 export interface PlayerAnimationIntent {
   readonly clipId: PlayerAnimationClipHint;
+  /** Scripted map travel is not input-driven gameplay locomotion. */
+  readonly presentation?: 'gameplay' | 'world-map';
   readonly motion: ProceduralMotionContext;
 }
 
@@ -1940,6 +1942,7 @@ export class Player {
     const travelSign = Math.sign(this.speed);
     return {
       clipId,
+      presentation: this.worldMapBaseScale === null ? 'gameplay' : 'world-map',
       motion: {
         normalizedSpeed,
         gaitPhase,
@@ -1948,7 +1951,8 @@ export class Player {
         actionProgress,
         inputs: {
           travelSign,
-          [RUN_MOVE_INTENT_INPUT]: Math.min(1, Math.hypot(this.rawInput?.moveX ?? 0, this.rawInput?.moveY ?? 0)),
+          [RUN_MOVE_INTENT_INPUT]: this.worldMapBaseScale === null
+            ? Math.min(1, Math.hypot(this.rawInput?.moveX ?? 0, this.rawInput?.moveY ?? 0)) : 0,
           swimCadence: this.swimming ? Math.max(.8, this.swimVelocity.length() / SWIMMING.speed) : 1,
           signedSpeed: normalizedSpeed * travelSign,
           [LOCOMOTION_WALK_BLEND_INPUT]: locomotionWalkBlendWeight(normalizedSpeed),

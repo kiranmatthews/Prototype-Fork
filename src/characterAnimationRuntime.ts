@@ -274,6 +274,7 @@ export class CharacterAnimationRuntime {
   private authoredPlaybackSpeed: number | null = null;
   private previousGrounded: boolean;
   private previousHint: ClipId;
+  private previousPresentation: 'gameplay' | 'world-map' = 'gameplay';
   private previousMoveIntent = 0;
   private previousFootSpeed = 0;
   private runStopStartSpeed = 1;
@@ -315,6 +316,7 @@ export class CharacterAnimationRuntime {
     this.manualClipId = options.manualClipId ?? null;
     this.proceduralEvaluators = options.proceduralEvaluators;
     const initialIntent = player.animationIntent;
+    this.previousPresentation = initialIntent.presentation ?? 'gameplay';
     this.previousGrounded = initialIntent.motion.grounded;
     this.previousHint = initialIntent.clipId;
     for (const control of this.binding.definition.controls) {
@@ -440,6 +442,17 @@ export class CharacterAnimationRuntime {
     if (this.disposed) return;
     const dt = Number.isFinite(deltaSeconds) ? Math.max(0, deltaSeconds) : 0;
     const intent = this.player.animationIntent;
+    const presentation = intent.presentation ?? 'gameplay';
+    if (presentation !== this.previousPresentation) {
+      // A map rail owns exact travel, not foot inertia. Retire both one-shots
+      // and their outgoing pose snapshots when either owner takes over.
+      this.cancelTransient();
+      this.clearPlayback();
+      this.previousMoveIntent = this.previousFootSpeed = 0;
+      this.previousHint = intent.clipId;
+      this.previousGrounded = intent.motion.grounded;
+      this.previousPresentation = presentation;
+    }
     const grounded = intent.motion.grounded;
     const justLanded = grounded && !this.previousGrounded;
     this.previousGrounded = grounded;
@@ -476,7 +489,7 @@ export class CharacterAnimationRuntime {
       return;
     }
 
-    if (this.manualClipId === null) {
+    if (this.manualClipId === null && presentation === 'gameplay') {
       const canSkid = grounded && (hint === 'player.run' || hint === 'player.idle') &&
         (intent.motion.inputs?.charge ?? 0) < .01;
       if (this.transient?.kind === 'run-stop' && (!canSkid || moveIntent > .05)) this.cancelTransient();

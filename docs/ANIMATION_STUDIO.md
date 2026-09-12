@@ -55,6 +55,15 @@ state, camera state, and render interpolation before play resumes.
 
 ## Locomotion transitions
 
+World-map rail travel has a separate `world-map` presentation context. Map
+direction taps select destinations; they never feed the gameplay run-release
+detector. Gameplay transient poses and cached outgoing blends are cleared
+when entering/leaving that context, and map walk/boardslide/idle updates do
+not start gameplay skid, landing or crouch one-shots. Ordinary gameplay skids
+remain enabled after returning. `tools/test-world-map-locomotion.mjs` covers
+the supplied 1,144-frame input pattern, inherited skids, board-route endings
+and map/gameplay re-entry; its replay fixture retains only navigation pulses.
+
 Catalog 26 replaces boardless `player.idle` with Quaternius `Idle_Loop`.
 Catalog 30 slows its 2.5-second loop to **2×**; Run remains independently at 1.6×.
 Both the dense body tracks and speed remain editable. Existing idle keys are
