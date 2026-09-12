@@ -9331,10 +9331,12 @@ export class Player {
     this.grindStyleT += dt;
     level.grindRope(rail); // sky-bridge ropes: grinding one makes it sag, wobble, and eventually snap
     this.snapEase = Math.min(1, this.snapEase + dt / CONST.railSnapEase);
-    // THPS3+ TRICK SWITCHING: a fresh Triangle press mid-grind re-reads the
+    // TRICK SWITCHING: every fresh Triangle press mid-grind re-reads the
     // stick and swaps the trick in place — a new plate entry (repeat decay
     // keeps it honest), a jolt through the needle, and the pose follows.
-    if (input.grindPressed && this.grindStyleT > 0.25 && this.lipStallT <= 0) {
+    // Input edges already debounce holds; a time lock discarded quick
+    // commands after catches and during back-to-back grind changes.
+    if (input.grindPressed && this.lipStallT <= 0) {
       const prev = this.grindStyle;
       const prevYaw = this.grindYawDir;
       const prevCross = this.grindCrossDir;
@@ -9648,6 +9650,10 @@ export class Player {
     // punishment into a free 50-50.
     if (this.regrindCd > 0 || this.isBailing || this.specialGrab !== null || !this.railCand)
       return false;
+    // Triangle must not catch and silently erase an unfinished flip. A trick
+    // completing on this tick may catch; enterGrind pays it before resetting
+    // the air pose. Longer flips keep their airtime and can catch afterwards.
+    if (this.flipT > CONST.fixedStep + 1e-6) return false;
     if (
       level.isTrickRail(this.railCand.rail) &&
       !this.freeSkate &&
@@ -9746,6 +9752,7 @@ export class Player {
   }
 
   private enterGrind(rail: Rail, sample: RailSample, level?: Level): void {
+    if (this.state === 'air' && this.flipT > 0) this.completeDeckTrick();
     // Locked park vert carries coping motion separately from axisF*speed.
     // Capture that real incoming velocity before ending the flight so either
     // catch direction retains its speed rather than reversing at the rail.
@@ -10367,12 +10374,15 @@ export class Player {
     const boardAir = this.state === 'air' && this.airFromSkate && !this.isBailing;
     this.ollieDeckTrickBufferT = Math.max(0, this.ollieDeckTrickBufferT - dt);
     if(this.queuedFlip){this.queuedFlip.time-=dt;if(this.queuedFlip.time<=0)this.queuedFlip=null;}
-    const bufferOllieDeckTrick = input.spinPressed && this.state==='ride' &&
-      this.grounded && this.freeSkate && this.charging;
+    // Square commonly precedes releasing X by a few frames. Retain its
+    // direction through a charged rail exit just as we do a ground ollie.
+    const railOllie = this.state==='grind' && !this.railUnder;
+    const bufferOllieDeckTrick = input.spinPressed && this.freeSkate && this.charging &&
+      ((this.state==='ride' && this.grounded) || railOllie);
     if(input.spinPressed && (boardAir || bufferOllieDeckTrick)) {
       const releasingGrab = boardAir && this.grabPhase!=='none' && !this.specialGrab;
       this.queuedFlip = {x:this.rawInput.moveX,y:this.rawInput.moveY,
-        time:bufferOllieDeckTrick?OLLIE_DECK_TRICK_CHORD:releasingGrab?Math.max(.18,TUNING.grabRelease+.04):.18,special:this.pendingSpecialFlip};
+        time:bufferOllieDeckTrick?(railOllie ? .18 : OLLIE_DECK_TRICK_CHORD):releasingGrab?Math.max(.18,TUNING.grabRelease+.04):.18,special:this.pendingSpecialFlip};
       this.queuedGrab=null;
       if(releasingGrab){
         if(this.grabPhase!=='exit'){this.grabPhase='exit';this.grabT=0;}
@@ -10388,7 +10398,7 @@ export class Player {
       if(specialFlipStarted || this.tryStartDeckTrick(true,queued.x,queued.y)){
         this.queuedFlip=null;this.ollieDeckTrickBufferT=0;
       }
-    } else if(!bufferOllieDeckTrick && this.state!=='ride')this.queuedFlip=null;
+    } else if(!bufferOllieDeckTrick && this.state!=='ride' && !railOllie)this.queuedFlip=null;
     if (
       input.spinPressed &&
       !specialFlipStarted &&

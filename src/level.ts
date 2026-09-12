@@ -671,6 +671,7 @@ export interface CustomComponent {
   bank?: number; // vertramp: auto-lean into turns, in world units of curvature gain (0 = never lean)
   curve?: "corner" | "spline"; // path primitive: filleted/linear corners or Catmull-Rom; terrain uses linear or spline
   vert?: boolean; // vertramp: carry the vert surface flag (default true; false = an ordinary banked road)
+  depthBias?: number; // render-only coplanar layering; positive values put an underlay behind ride surfaces
   shake?: number;
   kind?:
     | "wood"
@@ -2356,7 +2357,7 @@ const LEVEL_DATA_KEYS = new Set([
 const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "containment",
   "edgeGrinding", "cameraView", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "deck",
-  "closed", "bank", "curve", "vert", "lipRise", "outerBank", "shake", "kind", "dkind", "vr", "tn",
+  "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid",
   "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "spacing",
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
@@ -2562,7 +2563,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   )
     return null;
   const numericKeys: (keyof CustomComponent)[] = [
-    "len", "rise", "w", "yaw", "arc", "deck", "lipRise", "outerBank", "bank", "shake", "range",
+    "len", "rise", "w", "yaw", "arc", "deck", "lipRise", "outerBank", "depthBias", "bank", "shake", "range",
     "speed", "cycle", "phase", "travelPhase", "amp", "seed", "n", "vr", "tn", "spacing",
     "baySpacing", "supportDepth", "exitYaw", "coverage", "radius",
     "collisionHeight", "supportBaseY", "shoreSeaLevel", "shorePhase",
@@ -2851,6 +2852,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     }
     if (component.lipRise !== undefined &&
         (component.t !== 'vertramp' || component.lipRise < 0 || component.lipRise > 8)) return null;
+    if (component.depthBias !== undefined && Math.abs(component.depthBias) > 8) return null;
     if (component.outerBank !== undefined &&
         (component.t !== 'vertramp' || component.outerBank < 0 || component.outerBank > 40)) return null;
     const dynamic = dynamicKinds.has(component.t) ||
@@ -6120,7 +6122,23 @@ export class Level {
       const before = this.root.children.length;
       fn();
       for (let c = before; c < this.root.children.length; c++) {
-        this.root.children[c].traverse((o) => (o.userData.editorIdx = idx));
+        this.root.children[c].traverse((o) => {
+          o.userData.editorIdx = idx;
+          const bias = data.components[idx].depthBias;
+          if (!bias || !(o instanceof THREE.Mesh)) return;
+          // A shared material must not move other components' depth. Keep
+          // actual support, collision and adjoining ramp toes at their
+          // authored height; only resolve the coincident rendered layers.
+          const offset = (material: THREE.Material): THREE.Material => {
+            const own = material.clone();
+            own.onBeforeCompile = material.onBeforeCompile;
+            own.customProgramCacheKey = material.customProgramCacheKey;
+            own.polygonOffset = true;
+            own.polygonOffsetFactor = own.polygonOffsetUnits = bias;
+            return own;
+          };
+          o.material = Array.isArray(o.material) ? o.material.map(offset) : offset(o.material);
+        });
         this.root.children[c].userData.editorIdx = idx;
         if (data.components[idx].invisible && data.components[idx].t === "platform") {
           this.root.children[c].visible = false;

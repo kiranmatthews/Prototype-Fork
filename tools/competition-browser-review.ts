@@ -37,6 +37,7 @@ function fixture(kind:'intro'|'countdown'|'running'|'judges'|'standings'|'win'|'
   pad=null;actions=[];
 }
 for(const name of ['intro','countdown','running','judges','standings','win','loss','overtime'] as const)button(name,()=>fixture(name));
+for(const digit of [3,2,1])button(`Countdown ${digit}`,()=>{fixture('countdown');g.getCompetition().countdown=digit;});
 button('Pad left',()=>pad=fakePad(-1));button('Pad right',()=>pad=fakePad(1));
 button('Pad up',()=>pad=fakePad(0,-1));button('Pad down',()=>pad=fakePad(0,1));
 button('Pad confirm held',()=>pad=fakePad(0,0,[0]));button('Pad release',()=>pad=null);

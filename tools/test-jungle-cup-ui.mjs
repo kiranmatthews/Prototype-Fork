@@ -67,7 +67,7 @@ await withSkateRuntime(async ({ server }) => {
   event.startRun();event.stepPresentation(3);event.stepRun(60,9876,true);ui.render(event);
   assert.ok(ui.element.innerHTML.includes('0:00')&&ui.element.innerHTML.includes('FINAL COMBO'));
   assert.doesNotMatch(ui.element.innerHTML,/9876|9,876|PTS|POINTS/,'the clock duplicated the existing points HUD');
-  assert.match(ui.element.innerHTML,/BAILS/);
+  assert.doesNotMatch(ui.element.innerHTML,/BAILS|comp-bails/,'run HUD still shows a bail counter');
   const surface=await readFile('src/gameInterfaceSurface.ts','utf8');
   assert.match(surface,/INK = [^;]*\.competition-host/,'competition DOM ink is still above CRT');
   assert.match(surface,/this.competition\?\.paint\(ctx,size\)/,'competition does not enter the shared pre-CRT pass');

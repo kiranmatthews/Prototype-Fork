@@ -77,6 +77,16 @@ button('Rail follow',()=>{
  start('Rail follow',p.toArray(),h.toArray(),f=>({grindHeld:true,grindPressed:f===0,moveX:f===0?.7:0}),45,14);
  route.firstLanding=false;route.setup=()=>{g.player.state='air';g.player.grounded=false;g.player.airFromSkate=true;g.player.airGrav='board';g.player.vVel=0;g.player.balanceBoostT=20;};
 });
+button('Quick grind tricks',()=>{
+ const rail=g.level.grindRails[3],p=rail.pointAt(1).add(new THREE.Vector3(0,.3,0)),h=rail.tangentAt(1);
+ start('Quick grind tricks',p.toArray(),h.toArray(),f=>({grindHeld:true,grindPressed:f===0||f===4||f===8||f===12,moveX:f===4?-1:f===12?1:0,moveY:f===8?1:f===12?-1:0}),20,8);
+ route.firstLanding=false;route.setup=()=>{g.player.state='air';g.player.grounded=false;g.player.airFromSkate=true;g.player.airGrav='board';g.player.vVel=0;g.player.balanceBoostT=20;};
+});
+button('Buffered rail flip',()=>{
+ const rail=g.level.grindRails[3],p=rail.pointAt(1).add(new THREE.Vector3(0,.3,0)),h=rail.tangentAt(1);
+ start('Buffered rail flip',p.toArray(),h.toArray(),f=>({grindHeld:true,grindPressed:f===0||f===50,jumpHeld:f>0&&f<21,jumpReleased:f===21,spinHeld:f===17,spinPressed:f===17,moveX:f===17?1:0}),70,8);
+ route.firstLanding=false;route.setup=()=>{g.player.state='air';g.player.grounded=false;g.player.airFromSkate=true;g.player.airGrav='board';g.player.vVel=0;g.player.balanceBoostT=20;};
+});
 button('Pocket bowl',()=>{let popped=false;start('Pocket bowl',[-27,.1,-94.5],[1,0,0],(f,p)=>{const pop=!popped&&p.grounded&&p.rideNormal.y<.55;if(pop)popped=true;return {jumpHeld:!popped,jumpPressed:f===0,jumpReleased:pop};});});
 button('Pocket bank entry',()=>{start('Pocket bank entry',[-10.8,.1,-94.5],[-1,0,0],push,220);route.firstLanding=false;});
 button('Street stairs',()=>{start('Street stairs',[-6,.1,-6],[0,0,-1],f=>({jumpHeld:f<6,jumpPressed:f===0,jumpReleased:f===6,grindHeld:f>=8,grindPressed:f===8}),85);route.firstLanding=false;});
@@ -86,6 +96,6 @@ button('Park overview',()=>{overview=!overview;document.body.classList.toggle('l
 button('Hide panel',()=>{panel.style.opacity=panel.style.opacity==='0.15'?'1':'0.15';});
 function render(){
  const p=g.player,c=g.camera;lastDrawMs=drawMs;drawMs=0;
- status.textContent=`${route?.name??'Live input'} · frame ${frame} ${freeze?'PAUSED':''}\n${p.state} ${p.vertAir?'VERT':''} · speed ${p.speed.toFixed(1)} · vy ${p.vVel.toFixed(1)}\nboard ${p.freeSkate?'mounted':'off'} · bail ${p.bailTimeLeft.toFixed(2)}\nevent ${g.getCompetition()?.phase} · clock ${g.getCompetition()?.remaining.toFixed(2)} · overtime ${g.getCompetition()?.overtime}\nplayer ${p.pos.toArray().map((n:number)=>n.toFixed(2)).join(', ')}\nCPU cam ${cameraMs.toFixed(1)} / sim ${physicsMs.toFixed(1)} / draw ${lastDrawMs.toFixed(1)} ms · focus ${document.hasFocus()}\nrender ${(1/Math.max(.001,g.frameStats.rawDt)).toFixed(0)} fps · ${g.renderer.info.render.calls} draws\ncamera ${c.position.toArray().map((n:number)=>n.toFixed(2)).join(', ')}\n${events.slice(-4).join('\n')}`;
+ status.textContent=`${route?.name??'Live input'} · frame ${frame} ${freeze?'PAUSED':''}\n${p.state} ${p.vertAir?'VERT':''} · speed ${p.speed.toFixed(1)} · vy ${p.vVel.toFixed(1)}\nboard ${p.freeSkate?'mounted':'off'} · bail ${p.bailTimeLeft.toFixed(2)}\ntricks ${p.comboLabels.join(' + ')}\nevent ${g.getCompetition()?.phase} · clock ${g.getCompetition()?.remaining.toFixed(2)} · overtime ${g.getCompetition()?.overtime}\nplayer ${p.pos.toArray().map((n:number)=>n.toFixed(2)).join(', ')}\nCPU cam ${cameraMs.toFixed(1)} / sim ${physicsMs.toFixed(1)} / draw ${lastDrawMs.toFixed(1)} ms · focus ${document.hasFocus()}\nrender ${(1/Math.max(.001,g.frameStats.rawDt)).toFixed(0)} fps · ${g.renderer.info.render.calls} draws\ncamera ${c.position.toArray().map((n:number)=>n.toFixed(2)).join(', ')}\n${events.slice(-4).join('\n')}`;
  requestAnimationFrame(render);
 }render();

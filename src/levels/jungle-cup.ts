@@ -37,6 +37,10 @@ const roundedRing = (radius: number): [number, number][] => {
 };
 
 platform('Continuous park foundation', [0, -2, -46], [120, 4, 172], '#8d9a7a');
+// Transition toes, channel beds and stair landings join this floor at y=0.
+// The foundation is the visual underlay at those shared planes, without
+// lifting any ride surface or adding a lip to its collision geometry.
+components[components.length - 1].depthBias = 2;
 add({
   t: 'vertramp', nm: 'Jade perimeter bowl', p: [0, 0, -46],
   pts: roundedRing(12),
