@@ -13,6 +13,8 @@ import { installRooMenuText } from './roo-type/menu';
 import { subscribeRooLight } from './roo-type/settings';
 import { inputPrompts, CONTROLLER_FAMILIES, PROMPT_FAMILY_NAMES } from "./inputPrompts";
 import { actionButtonDown } from "./inputBindings";
+import { setPromptText } from './inputPromptUI';
+import { TRICK_GUIDE_INTRO, TRICK_GUIDE_PAGE_COUNT, trickGuidePages } from './skateTrickGuide';
 import {
   CAMPAIGN_ISLANDS,
   CAMPAIGN_LEVELS,
@@ -48,6 +50,7 @@ type GameScreen =
   | "level-select"
   | "progress"
   | "options"
+  | "trick-guide"
   | "gameover"
   | "results";
 
@@ -161,6 +164,7 @@ export class GameFlowUI {
   private cursor = element("div", "game-cartoon-cursor");
   private screen: GameScreen | null = null;
   private previousScreen: GameScreen | null = null;
+  private trickGuidePage = 0;
   private navButtons: HTMLButtonElement[] = [];
   private selected = 0;
   private levelSelectKey = 'jungle';
@@ -332,7 +336,8 @@ export class GameFlowUI {
       this.screen === "launch" ||
       this.screen === "new-slots" ||
       (this.screen === "load-slots" && this.slotOrigin === "launch") ||
-      this.screen === "confirm-new"
+      this.screen === "confirm-new" ||
+      (['options', 'trick-guide'].includes(this.screen ?? '') && this.previousScreen === 'launch')
     )
       return "menu";
     return null;
@@ -423,6 +428,7 @@ export class GameFlowUI {
 
   showLaunch(): void {
     this.mapDirect = false;
+    this.previousScreen = null;
     this.slotOrigin = "launch";
     this.operationStatus = "";
     this.screen = "launch";
@@ -458,6 +464,7 @@ export class GameFlowUI {
   showMapSection(section: "level-select" | "progress" | "options" | "save-load" | "quit"): void {
     this.pauseState = { levelName: "THE ISLAND MAP", inWarpRoom: true };
     this.mapDirect = true;
+    this.previousScreen = "pause";
     this.slotOrigin = "warp";
     this.operationStatus = "";
     this.operationStatusError = false;
@@ -469,6 +476,7 @@ export class GameFlowUI {
   /** Options/Escape/P routing is polled by the gameplay Input owner. */
   handlePauseToggle(): boolean {
     if (this.transitionActive) return true;
+    if (this.screen === 'trick-guide') { this.goBack(); return true; }
     if (this.screen === "confirm-level-select") {
       this.screen = "level-select";
       this.render();
@@ -508,8 +516,7 @@ export class GameFlowUI {
       return true;
     }
     if (this.screen === "options") {
-      this.callbacks.onAudioOptions({ ...this.options });
-      this.backToMapOrPause();
+      this.goBack();
       return true;
     }
     if (this.screen === "progress" || this.screen === "level-select") {
@@ -624,6 +631,11 @@ export class GameFlowUI {
       else if (up && !this.previousPad.up) this.moveLevelSelectRow(-1);
       else if (down && !this.previousPad.down) this.moveLevelSelectRow(1);
 
+    } else if (this.screen === 'trick-guide') {
+      if (left && !this.previousPad.left) this.changeTrickGuidePage(-1);
+      else if (right && !this.previousPad.right) this.changeTrickGuidePage(1);
+      else if (up && !this.previousPad.up) this.moveSelection(-1);
+      else if (down && !this.previousPad.down) this.moveSelection(1);
     } else {
       if ((up && !this.previousPad.up) || (left && !this.previousPad.left)) this.moveSelection(-1);
       if ((down && !this.previousPad.down) || (right && !this.previousPad.right)) this.moveSelection(1);
@@ -699,6 +711,7 @@ export class GameFlowUI {
         this.screen === "progress" ||
         this.screen === "level-select" ||
         this.screen === "options" ||
+        this.screen === "trick-guide" ||
         this.screen === "save-load" ||
         this.screen === "confirm-save" ||
         this.screen === "confirm-load" ||
@@ -734,6 +747,7 @@ export class GameFlowUI {
     else if (this.screen === "progress") this.renderProgress();
     else if (this.screen === "level-select") this.renderLevelSelect();
     else if (this.screen === "options") this.renderOptions();
+    else if (this.screen === "trick-guide") this.renderTrickGuide();
     else if (this.screen === "gameover") this.renderGameOver();
     if (this.screen !== 'level-select') {
       const hints = element('footer', 'game-menu-hints');
@@ -783,6 +797,11 @@ export class GameFlowUI {
         this.slotOrigin = "launch";
         this.previousScreen = "launch";
         this.screen = "load-slots";
+        this.render();
+      }),
+      this.button("OPTIONS", () => {
+        this.previousScreen = "launch";
+        this.screen = "options";
         this.render();
       }),
     );
@@ -1298,7 +1317,7 @@ export class GameFlowUI {
       promptStyle.setAttribute("aria-label", `Controller prompts: ${selected ? PROMPT_FAMILY_NAMES[selected] : 'Automatic'}. Activate to change.`);
     };
     syncPromptStyle();
-    if (this.pauseState?.inWarpRoom) {
+    if (this.previousScreen === 'launch' || this.pauseState?.inWarpRoom) {
       const description = element('p', 'game-panel-subtitle');
       const modeButton = this.button('', () => {
         const next = this.callbacks.getPlayMode() === 'modern' ? 'classic' : 'modern';
@@ -1330,10 +1349,45 @@ export class GameFlowUI {
         return enabled;
       }),
       promptStyle,
+      this.button('TRICK GUIDE', () => {
+        this.trickGuidePage = 0;
+        this.screen = 'trick-guide';
+        this.render();
+      }),
     );
     card.append(title, toggles);
+    // Prompt style is constructed before its synchronizer; navigate in the
+    // visible order rather than the order those controls were constructed.
+    this.navButtons = [...toggles.querySelectorAll<HTMLButtonElement>('button')];
     const layout = element("div", "game-options-layout");
     layout.append(card, this.progressCard()); this.panel.append(layout);
+  }
+
+  private changeTrickGuidePage(delta: number): void {
+    this.trickGuidePage = (this.trickGuidePage + delta + TRICK_GUIDE_PAGE_COUNT) % TRICK_GUIDE_PAGE_COUNT;
+    const selected = this.selected;
+    this.render();
+    this.selected = selected; this.syncSelection();
+  }
+
+  private renderTrickGuide(): void {
+    const guide = element('section', 'game-trick-guide');
+    const title = element('h2', 'game-panel-title'); title.textContent = 'TRICK GUIDE';
+    const pager = element('div', 'game-trick-pager');
+    const previous = this.button('◀', () => this.changeTrickGuidePage(-1));
+    previous.setAttribute('aria-label', 'Previous trick page');
+    const next = this.button('▶', () => this.changeTrickGuidePage(1));
+    next.setAttribute('aria-label', 'Next trick page');
+    const page = element('span'); page.textContent = `${this.trickGuidePage + 1} / ${TRICK_GUIDE_PAGE_COUNT}`;
+    pager.append(previous, page, next);
+    const intro = element('p', 'game-trick-intro'); intro.textContent = TRICK_GUIDE_INTRO;
+    const content = element('div', 'game-trick-content game-scroll-segment');
+    content.innerHTML = trickGuidePages()[this.trickGuidePage];
+    for (const heading of content.querySelectorAll<HTMLElement>('[data-guide-prompt]')) {
+      heading.classList.add('secondary-silver');
+      setPromptText(heading, heading.dataset.guidePrompt!);
+    }
+    guide.append(title, pager, intro, content); this.panel.append(guide);
   }
 
   private renderGameOver(): void {
@@ -1528,6 +1582,9 @@ export class GameFlowUI {
       this.moveSelection(event.shiftKey ? -1 : 1);
       return;
     }
+    if (this.screen === 'trick-guide' && ['ArrowLeft', 'ArrowRight', 'KeyA', 'KeyD'].includes(event.code)) {
+      event.preventDefault(); this.changeTrickGuidePage(['ArrowLeft', 'KeyA'].includes(event.code) ? -1 : 1); return;
+    }
     if (this.screen === 'level-select' && ['ArrowLeft','ArrowRight','KeyA','KeyD','ArrowUp','ArrowDown','KeyW','KeyS'].includes(event.code)) {
       event.preventDefault();
       if (['ArrowLeft','KeyA'].includes(event.code)) this.changeLevelSelectIsland(-1);
@@ -1603,7 +1660,11 @@ export class GameFlowUI {
   }
 
   private goBack(): void {
-    if (this.screen === "confirm-level-select") {
+    if (this.screen === 'trick-guide') {
+      this.screen = 'options'; this.render();
+      this.selected = this.navButtons.findIndex(button => button.textContent === 'TRICK GUIDE');
+      this.syncSelection();
+    } else if (this.screen === "confirm-level-select") {
       this.screen = "level-select"; this.render();
     } else if (this.screen === "confirm-new") {
       this.screen = "new-slots";
@@ -1709,6 +1770,7 @@ export class GameFlowUI {
       case "level-select": return this.pauseState?.inWarpRoom ? "Level stats" : "Level select";
       case "confirm-level-select": return "Switch level confirmation";
       case "options": return "Game options";
+      case "trick-guide": return "Trick guide";
       case "gameover": return "Game over";
       case "results": return "Run results";
       default: return "Game menu";

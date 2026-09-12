@@ -162,3 +162,35 @@ body[data-prompt-family="touch"] .game-menu-button.game-map-close {
   .game-progress-grid strong { font-size:clamp(18px,4vw,30px); }
 }
 body.game-shell-modal .tc-zone { display:none !important; }
+
+/* The shared trick catalogue has a fixed heading/pager and one bounded page. */
+.game-screen-trick-guide { background:radial-gradient(ellipse at 55% 40%,#153c49,#082332 60%,#020b14); }
+.game-trick-guide {
+  width:min(1150px,100%); height:100%; display:grid;
+  grid-template-rows:auto auto auto minmax(0,1fr); gap:1.4vh; pointer-events:auto;
+  color:#fff0d0;
+}
+.game-trick-guide .game-panel-title { margin:0; }
+.game-trick-pager { display:flex; justify-content:center; align-items:center; gap:5vw; }
+.game-trick-pager .game-menu-button { min-height:4vh; padding:0 1vw; font-size:clamp(22px,3.6vh,40px); }
+.game-trick-pager > span { font:clamp(16px,2.6vh,28px)/1 'Staging Secondary',sans-serif; }
+.game-trick-intro { margin:0 auto; max-width:900px; text-align:center; font:clamp(12px,2vh,20px)/1.35 'Staging Secondary',sans-serif; }
+.game-trick-content { padding:1vh 2vw; }
+.game-trick-content h3 { margin:.5vh 0 1.3vh; color:#ffd278; font:clamp(19px,3.2vh,36px)/1.2 'Staging Secondary',sans-serif; }
+.game-trick-content p { font:clamp(12px,2vh,20px)/1.4 'Staging Secondary',sans-serif; margin:1.3vh 0; }
+.game-trick-content table { width:100%; border-collapse:collapse; font:clamp(13px,2.3vh,25px)/1.3 'Staging Secondary',sans-serif; }
+.game-trick-content th,.game-trick-content td { padding:.7vh .8vw; text-align:left; border-bottom:1px solid #426155; }
+.game-trick-content th { color:#b6c4aa; font-size:.8em; }
+.game-trick-content td:last-child { text-align:right; color:#ffd278; white-space:nowrap; }
+.game-trick-content .input-glyph { --input-glyph-size:clamp(18px,3vh,34px); }
+@media(max-height:500px) and (min-aspect-ratio:1/1) {
+  .game-trick-guide { gap:1vh; }
+  .game-trick-intro,.game-trick-content p { font-size:11px; line-height:1.2; }
+  .game-trick-content h3 { font-size:16px; margin:.3vh 0 .7vh; }
+  .game-trick-content table { font-size:11.5px; line-height:1.1; }
+  .game-trick-content th,.game-trick-content td { padding:.35vh .8vw; }
+}
+@media(max-aspect-ratio:1/1) {
+  .game-trick-content table { font-size:clamp(12px,3.4vw,22px); }
+  .game-trick-intro,.game-trick-content p { font-size:clamp(12px,3.1vw,18px); }
+}

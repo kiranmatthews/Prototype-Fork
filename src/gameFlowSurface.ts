@@ -28,6 +28,7 @@ export type GameFlowSurfaceScreen =
   | "level-select"
   | "progress"
   | "options"
+  | "trick-guide"
   | "gameover"
   | "results";
 
@@ -153,6 +154,7 @@ interface GameFlowSurfaceResources {
 }
 
 const TEXT_SELECTOR = [
+  '.game-trick-intro, .game-trick-pager > span, .game-trick-content p, .game-trick-content h3:not([data-guide-prompt]), .game-trick-content th, .game-trick-content td:not([data-guide-prompt])',
   ".game-control-hint .secondary-silver",
   ".game-level-text",
   ".game-eyebrow",
@@ -388,7 +390,8 @@ export function snapshotGameFlowSurface(
         font,
         wrap:
           node.classList.contains("game-panel-subtitle") ||
-          node.classList.contains("game-input-hint") || node.classList.contains("game-level-text"),
+          node.classList.contains("game-input-hint") || node.classList.contains("game-level-text") ||
+          node.matches('.game-trick-intro, .game-trick-content p, .game-trick-content td'),
       }),
     );
   }
@@ -737,7 +740,7 @@ export class GameFlowSurface {
     height: number,
   ): void {
     ctx.save();
-    if (screen === 'level-select' || screen === 'progress') {
+    if (screen === 'level-select' || screen === 'progress' || screen === 'trick-guide') {
       const gradient=ctx.createRadialGradient(width*.55,height*.4,0,width*.5,height*.5,Math.max(width,height)*.8);
       gradient.addColorStop(0,'#153c49');gradient.addColorStop(.6,'#082332');gradient.addColorStop(1,'#020b14');ctx.fillStyle=gradient;
     } else if (screen === "results") {

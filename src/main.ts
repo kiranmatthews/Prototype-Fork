@@ -2304,9 +2304,10 @@ function applyGameAudioOptions(options: GameAudioOptions): void {
 }
 
 function applyGamePlayMode(mode: GamePlayMode): void {
-  // A hub option, never a mid-course rules/economy switch. Applying it must
+  // A home/hub option, never a mid-course rules/economy switch. Applying it must
   // not respawn the player, reset progress, or consume/replenish stored lives.
-  if ((current.id !== 'warproom' && !level.isCampaignMap)) return;
+  const homeOptions = gameFlow.currentScreen === 'options' && gameFlow.vortexContext === 'menu';
+  if (!homeOptions && current.id !== 'warproom' && !level.isCampaignMap) return;
   if (replayer.active) {
     replayer.end();
     restoreReplayRunRule();

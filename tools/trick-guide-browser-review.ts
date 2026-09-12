@@ -1,0 +1,20 @@
+// Local-only entry and controller fixtures; never changes campaign saves.
+const g:any=await new Promise(resolve=>{const poll=()=>{const game=(window as any).__game;if(game)resolve(game);else requestAnimationFrame(poll);};poll();});
+const f=g.gameFlow;
+const panel=document.createElement('details'); panel.dataset.testid='trick-guide-review';
+panel.style.cssText='position:fixed;left:4px;top:4px;z-index:999999;max-width:260px;background:#091b29ed;color:white;font:11px monospace;padding:5px';
+panel.innerHTML='<summary>Trick guide review</summary>';
+const controls=document.createElement('div'),status=document.createElement('pre');status.dataset.testid='trick-guide-review-status';
+status.style.whiteSpace='pre-wrap';panel.append(controls,status);document.body.append(panel);
+const add=(name:string,action:()=>void)=>{const b=document.createElement('button');b.textContent=name;b.onclick=action;controls.append(b);};
+const neutral={up:false,down:false,left:false,right:false,accept:false,back:false};
+const readPad=f.readGamepad.bind(f); let pad:any=null;
+f.readGamepad=()=>pad??readPad();
+const tap=(key:string)=>{pad={...neutral};f.update();pad={...neutral,[key]:true};f.update();f.update();pad={...neutral};f.update();pad=null;};
+add('Home',()=>f.showLaunch());
+add('Gameplay pause',()=>f.showPause({levelName:'Jungle Cup',inWarpRoom:false}));
+add('Map options',()=>f.showMapSection('options'));
+for(const key of ['up','down','left','right','accept','back'])add(`Pad ${key}`,()=>tap(key));
+add('Pause / Options button',()=>f.handlePauseToggle());
+function report(){panel.inert=false;panel.removeAttribute('aria-hidden');status.textContent=JSON.stringify({screen:f.currentScreen,page:f.trickGuidePage,selected:f.navButtons[f.selected]?.getAttribute('aria-label')||f.navButtons[f.selected]?.textContent,paused:f.blocksGameplay,surface:g.getGameFlowSurfaceDiagnostics().screen,composited:g.getGameFlowSurfaceDiagnostics().active,crt:g.getCrtDiagnostics()?.active},null,2);requestAnimationFrame(report);}report();
+f.showLaunch();

@@ -4,8 +4,7 @@ import { setPromptText } from '../inputPromptUI';
 import { actionButtonDown } from '../inputBindings';
 import { JUDGES, type JungleCupEvent, type Standing } from './event';
 import { CompetitionSurface } from './surface';
-import { DECK_TRICKS, GRAB_TRICKS, GRIND_TRICKS } from '../skateTricks';
-import { SPECIAL_TRICKS } from '../specialTricks';
+import { TRICK_GUIDE_INTRO, TRICK_GUIDE_PAGE_COUNT, trickGuidePages } from '../skateTrickGuide';
 import { installRooMenuText } from '../roo-type/menu';
 
 export type CompetitionAction = 'start' | 'standings' | 'retry' | 'exit';
@@ -92,7 +91,7 @@ export class CompetitionPresentation {
     this.guideOpen=open;this.key='';this.seedInput=true;this.render(this.event);
     if(!open){this.selected=Math.max(0,this.buttons().findIndex(button=>button.dataset.action==='guide'));this.syncSelection();}
   }
-  private changeGuidePage(delta:number):void {this.guidePage=(this.guidePage+delta+4)%4;this.key='';this.render(this.event);}
+  private changeGuidePage(delta:number):void {this.guidePage=(this.guidePage+delta+TRICK_GUIDE_PAGE_COUNT)%TRICK_GUIDE_PAGE_COUNT;this.key='';this.render(this.event);}
   get diagnostics() { return { selected: this.buttons()[this.selected]?.dataset.action ?? null, ...this.surface.diagnostics }; }
   paint(ctx: CanvasRenderingContext2D, size: {width:number;height:number}): void { this.surface.paint(ctx,size); }
   setComposited(value: boolean): void { if(!value)this.surface.deactivate(); }
@@ -159,8 +158,7 @@ export class CompetitionPresentation {
     let html='';
     const reveals: {id:string;score:number}[]=[];
     if(this.guideOpen){
-      const table=(rows:readonly {direction:string;label:string;points:number}[])=>`<table><thead><tr><th>DIRECTION</th><th>TRICK</th><th>BASE</th></tr></thead><tbody>${rows.map(row=>`<tr><td>${esc(row.direction)}</td><td>${esc(row.label)}</td><td>${row.points.toLocaleString()}</td></tr>`).join('')}</tbody></table>`;
-      html=`<section class="comp-card comp-guide">${header}<h2>TRICKS & COMBOS</h2><p>Tap a face button with a direction. Short direction taps choose a trick; holding left or right also rotates the rider. Release grabs and catch flips before landing.</p><div class="comp-guide-grid"><article><h3 data-guide-prompt="{spin} FLIPS"></h3>${table(DECK_TRICKS.map(trick=>({direction:trick.recipe.split(' + □')[0],label:trick.label,points:trick.points})))}</article><article><h3 data-guide-prompt="{grab} GRABS"></h3>${table(GRAB_TRICKS)}<p>Hold for more points. The entry direction fixes the grab while you rotate.</p></article><article><h3 data-guide-prompt="{grind} GRINDS"></h3>${table(Object.values(GRIND_TRICKS))}<p>Press again with a direction to change grind. Moving along the rail earns hold points.</p></article><article><h3>SPECIAL</h3><table><tbody>${SPECIAL_TRICKS.map(trick=>`<tr><td>${esc(trick.controls)}</td><td>${esc(trick.label)}</td><td>${trick.points.toLocaleString()}</td></tr>`).join('')}</tbody></table><p>Fill the avatar's SPECIAL ring with tricks. Enter the two directions in order, then the face button.</p><h3>KEEP IT FRESH</h3><p>Repeated tricks pay 100%, 75%, 50%, 25%, then 10%. Landed combos share this history until the next run; bailed attempts don't add to it. Hold points use the same penalty and grow more slowly after two seconds.</p><p>Link airs with grinds, manuals (up–down / down–up), and a revert on vert touchdown.</p></article></div><div class="comp-actions">${button('BACK','guide-back')}${button(`START RUN ${event.runNumber}`,'start')}</div></section>`;
+      html=`<section class="comp-card comp-guide">${header}<h2>TRICKS & COMBOS</h2><p>${TRICK_GUIDE_INTRO}</p><div class="comp-guide-grid">${trickGuidePages().join('')}</div><div class="comp-actions">${button('BACK','guide-back')}${button(`START RUN ${event.runNumber}`,'start')}</div></section>`;
     } else if(event.simulating) {
       const seconds=Math.ceil(event.remaining);
       html=`<div class="comp-run-hud${seconds<=10?' urgent':''}${event.overtime?' overtime':''}"><span>RUN ${event.runNumber}/3${event.overtime&&event.finalComboActive?'<small>FINAL COMBO</small>':''}</span><strong>${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}</strong></div>`;
@@ -192,7 +190,7 @@ export class CompetitionPresentation {
         const articles=[...content.querySelectorAll<HTMLElement>('.comp-guide-grid article')];
         articles.forEach((article,index)=>article.hidden=index!==this.guidePage);
         const pager=document.createElement('div');pager.className='comp-guide-pager';
-        pager.innerHTML=`<button data-action="guide-prev" aria-label="Previous trick page">◀</button><span>${this.guidePage+1} / 4</span><button data-action="guide-next" aria-label="Next trick page">▶</button>`;
+        pager.innerHTML=`<button data-action="guide-prev" aria-label="Previous trick page">◀</button><span>${this.guidePage+1} / ${TRICK_GUIDE_PAGE_COUNT}</span><button data-action="guide-next" aria-label="Next trick page">▶</button>`;
         content.prepend(pager);
       }
       const hints=document.createElement('footer');hints.className='game-menu-hints comp-hints';
@@ -236,6 +234,13 @@ body.game-interface-composited .comp-judge.revealed>strong{animation:none}.comp-
 .comp-guide-grid article{padding:1vh 2vw}.comp-guide table{font-size:clamp(11px,1.8vh,16px)}
 .comp-guide-pager{display:flex;align-items:center;justify-content:center;gap:4vw;margin:0 0 1vh;font:24px Roo,Impact,sans-serif}
 .comp-guide-pager button{background:transparent;border:0;color:#ffce66;font-size:24px}.comp-guide-pager button.selected{outline:2px solid #ffd278}
+.comp-guide .input-glyph{--input-glyph-size:clamp(16px,2.6vh,26px)}
+.comp-guide .comp-content>h2{margin:.5vh 0}
+.comp-guide .comp-content>p{font:clamp(11px,1.8vh,16px)/1.3 'Staging Secondary',sans-serif;margin:.5vh 0}
+.comp-guide article h3{margin:.4vh 0 .7vh}
+.comp-guide table{line-height:1.25}
+.comp-guide th,.comp-guide td{padding:.5vh .4vw}
+.comp-guide article p{font-size:clamp(11px,1.8vh,16px);line-height:1.3;margin:.6vh 0}
 .comp-content h2{font-size:clamp(17px,3vh,30px);margin:1vh 0 2vh}
 .comp-content .comp-intro-body{margin:1vh 0;gap:3vw}
 .comp-content .comp-intro-body p{font-size:clamp(12px,2vh,18px);line-height:1.4}
