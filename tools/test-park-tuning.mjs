@@ -1,46 +1,33 @@
 import assert from 'node:assert/strict';
 import {withSkateRuntime,makeInput} from './jungle-cup-harness.mjs';
 await withSkateRuntime(async({THREE,server,Player,Level,scene,TUNING,CONST})=>{
- const {TUNING_RANGES,TUNING_LABELS,TUNING_SECTIONS,PARK_MOVEMENT_KEYS,PARK_CAMERA_KEYS}=await server.ssrLoadModule('/src/tuning.ts');
- const defaults={...TUNING};
- for(const [base,park] of Object.entries({...PARK_MOVEMENT_KEYS,...PARK_CAMERA_KEYS})){
-  assert.equal(TUNING[park],TUNING[base],`${park} default differs from platforming`);
-  assert.deepEqual(TUNING_RANGES[park],TUNING_RANGES[base]);
-  assert.equal(TUNING_SECTIONS.flatMap(s=>s.keys).filter(k=>k===park).length,1);
-  assert.ok(!TUNING_LABELS[park].includes('×'));
- }
- for(const removed of ['parkCruiseSpeedScale','parkChargeSpeedScale','parkAccelerationScale','parkOllieHeight','parkOllieHangtime'])assert.ok(!(removed in TUNING));
- const course=new Level(scene,{id:'future-freecam-test',name:'Future park',data:{skatepark:true,spawn:[0,.1,100],killY:-30,components:[{t:'platform',p:[0,-.5,0],s:[600,1,600]}]}});scene.updateMatrixWorld(true);
- const p=new Player(scene);p.endlessDeaths=true;
- function reset(park,speed=12,yaw=0){course.skatepark=park;p.competitionMode=false;p.rawInput=makeInput();p.respawn(course,true,true,{position:new THREE.Vector3(0,0,100),heading:new THREE.Vector3(Math.sin(yaw),0,-Math.cos(yaw))});p.freeSkate=true;p.speed=speed;p.pos.y=p.prevPos.y=0;p.grounded=true;p.groundHit=p.queryGround(course);p.rideNormal.copy(p.groundHit.normal);p.camDir.copy(p.axisF);p.crateFloor=null;}
- function step(input,park){if(!park){TUNING.chaseCam=1;p.camDir.copy(p.axisF);}p.step(CONST.fixedStep,input,course);input.consumeEdges();}
- function trace(park,script,frames=90,speed=12,yaw=0){reset(park,speed,yaw);const out=[];for(let f=0;f<frames;f++){step(makeInput(script(f)),park);out.push([...p.pos.toArray(),p.speed,...p.axisF.toArray(),p.vVel]);}return out;}
- const scripts={coast:()=>({}),cruise:()=>({moveY:1}),charge:f=>({moveY:1,jumpHeld:true,jumpPressed:f===0}),turn:f=>({moveX:.7,moveY:.7,jumpHeld:true,jumpPressed:f===0}),brake:()=>({grabHeld:true}),pullback:()=>({moveY:-1}),overspeed:()=>({moveY:1})};
- for(const [name,script] of Object.entries(scripts))for(const yaw of [0,1.1]){
-  const frames=['brake','pullback'].includes(name)?18:90,speed=name==='overspeed'?35:12;
-  const platform=trace(false,script,frames,speed,yaw),park=trace(true,script,frames,speed,yaw);
-  for(let f=0;f<frames;f++)for(let k=0;k<park[f].length;k++)assert.ok(Math.abs(park[f][k]-platform[f][k])<1e-8,`${name}, yaw ${yaw}, frame ${f}, component ${k}: ${park[f][k]} vs ${platform[f][k]}`);
- }
- // Holding either brake reaches zero and stays mounted; releasing everything
- // remains stopped, while a fresh directional push builds speed normally.
- for(const input of [{grabHeld:true},{moveY:-1}]){
-  reset(true);for(let i=0;i<180;i++)step(makeInput(input),true);assert.equal(p.speed,0);assert.equal(p.freeSkate,true);assert.equal(p.isBailing,false);
-  for(let i=0;i<120;i++)step(makeInput(),true);assert.equal(p.speed,0);assert.equal(p.freeSkate,true);
-  for(let i=0;i<60;i++)step(makeInput({moveY:1}),true);assert.ok(p.speed>9);assert.equal(p.freeSkate,true);
- }
- reset(true,.1);for(let i=0;i<100;i++)step(makeInput(),true);assert.equal(p.speed,0);assert.equal(p.freeSkate,true);
- // Ordinary air now shares the full platform curve and charge duration.
- function ollie(park,hold){reset(park);const out=[];for(let f=0;f<Math.round(hold/CONST.fixedStep);f++)step(makeInput({jumpHeld:true,jumpPressed:f===0}),park);step(makeInput({jumpReleased:true}),park);assert.equal(p.state,'air');for(let i=0;i<160;i++){out.push([p.pos.y,p.vVel,p.speed]);if(p.grounded)break;step(makeInput(),park);}assert.ok(p.grounded);assert.equal(p.isBailing,false);return out;}
- for(const hold of [1/60,.2,.4,.8]){const a=ollie(true,hold),b=ollie(false,hold);assert.equal(a.length,b.length);for(let i=0;i<a.length;i++)for(let k=0;k<3;k++)assert.ok(Math.abs(a[i][k]-b[i][k])<1e-8,`${hold}s ollie differs from platforming at ${i}/${k}`);}
- // Absolute edits affect only the park; test independent acceleration/drag and pop.
- const baseline=trace(false,scripts.charge);TUNING.parkMaxSpeed=28;TUNING.parkChargeBoost=18;
- const fast=trace(true,scripts.charge);assert.ok(fast.at(-1)[3]>27.9);assert.deepEqual(trace(false,scripts.charge),baseline);
- Object.assign(TUNING,defaults);const coast=trace(true,scripts.coast);TUNING.parkRollFriction=10;assert.ok(trace(true,scripts.coast).at(-1)[3]<coast.at(-1)[3]-1);
- Object.assign(TUNING,defaults);const jump=ollie(false,.4);TUNING.parkOllieVelocity=14;assert.ok(Math.max(...ollie(true,.4).map(f=>f[0]))>Math.max(...jump.map(f=>f[0]))+.8);assert.deepEqual(ollie(false,.4),jump);
- // The profile is a read-only view: edits never temporarily replace globals.
- const {PARK_MOVEMENT_TUNING}=await server.ssrLoadModule('/src/skateParkTuning.ts');assert.equal(PARK_MOVEMENT_TUNING.ollieVelocity,14);assert.equal(TUNING.ollieVelocity,11);
- const {Recorder,Replayer}=await server.ssrLoadModule('/src/replay.ts');
- Object.assign(TUNING,defaults);TUNING.parkMaxSpeed=28;const rec=new Recorder();rec.start('jungle-cup');rec.record(makeInput());TUNING.parkMaxSpeed=30;rec.record(makeInput());const take=rec.export();TUNING.parkMaxSpeed=34;const replay=new Replayer();replay.begin(take);assert.equal(PARK_MOVEMENT_TUNING.maxSpeed,28);replay.feed(makeInput());replay.feed(makeInput());assert.equal(PARK_MOVEMENT_TUNING.maxSpeed,30);replay.end();assert.equal(PARK_MOVEMENT_TUNING.maxSpeed,34);
- const old=structuredClone(take);old.tuning.parkCruiseSpeedScale=2;old.tuningChanges=[[0,'parkCruiseSpeedScale',3]];replay.begin(old);replay.feed(makeInput());assert.ok(!('parkCruiseSpeedScale' in TUNING));replay.end();
- Object.assign(TUNING,defaults);course.dispose();console.log('PASS absolute defaults/schema, 14 complete motor traces, platform ollie parity, both brakes and idle remain mounted at zero, resume, and park-only edits.');
+ const {TUNING_RANGES,TUNING_SECTIONS}=await server.ssrLoadModule('/src/tuning.ts');
+ const {SKATE_PARK}=await server.ssrLoadModule('/src/skateParkPhysics.ts');
+ const defaults={...TUNING},keys=Object.keys(TUNING).filter(k=>k.startsWith('park'));
+ assert.equal(keys.length,9,'park tuner grew beyond speed/acceleration and five camera controls');
+ for(const [park,base] of [['parkCruiseSpeed','cruiseSpeed'],['parkChargeSpeed','maxSpeed'],['parkCruiseAcceleration','chargeDecay'],['parkChargeAcceleration','chargeBoost']])assert.equal(TUNING[park],TUNING[base]);
+ for(const key of keys){const r=TUNING_RANGES[key];assert.equal(TUNING_SECTIONS.flatMap(s=>s.keys).filter(k=>k===key).length,1);assert.ok(Math.abs((TUNING[key]-r.min)/r.step-Math.round((TUNING[key]-r.min)/r.step))<1e-7);}
+ const course=new Level(scene,{id:'future-park',name:'Future park',data:{skatepark:true,spawn:[0,0,100],killY:-30,components:[{t:'platform',p:[0,-.5,0],s:[600,1,600]}]}});scene.updateMatrixWorld(true);const p=new Player(scene);p.endlessDeaths=true;
+ function reset(park=true,speed=0){course.skatepark=park;p.competitionMode=false;p.rawInput=makeInput();p.respawn(course,true,true,{position:new THREE.Vector3(0,0,100),heading:new THREE.Vector3(0,0,-1)});p.freeSkate=true;p.speed=speed;p.pos.y=p.prevPos.y=0;p.grounded=true;p.groundHit=p.queryGround(course);p.rideNormal.copy(p.groundHit.normal);}
+ function step(input){p.step(CONST.fixedStep,input,course);input.consumeEdges();}
+ function run(input,frames=180,park=true,speed=0){reset(park,speed);const trace=[];for(let i=0;i<frames;i++){step(makeInput({...input,jumpPressed:!!input.jumpHeld&&i===0}));trace.push(p.speed);}return trace;}
+ const cruise=run({moveY:1}),charge=run({jumpHeld:true});assert.ok(Math.abs(cruise.at(-1)-12)<.002);assert.ok(Math.abs(charge.at(-1)-23)<.002);
+ assert.ok(Math.abs(cruise[0]/CONST.fixedStep-10)<.002);assert.ok(Math.abs(charge[0]/CONST.fixedStep-9)<.002);
+ // Only no-input rollout borrows platform friction. Compare the whole curve
+ // until the platform's dismount threshold, then hold zero on the park board.
+ const platform=run({},1800,false,15),park=run({},1800,true,15);
+ for(let i=0;i<1800&&platform[i]>.08;i++)assert.ok(Math.abs(platform[i]-park[i])<1e-8,`coast differs at ${i}`);
+ assert.equal(p.speed,0);assert.equal(p.freeSkate,true);assert.equal(p.isBailing,false);
+ for(let i=0;i<120;i++)step(makeInput());assert.equal(p.speed,0);assert.equal(p.freeSkate,true);
+ for(let i=0;i<60;i++)step(makeInput({moveY:1}));assert.ok(p.speed>9.9);
+ // Park turning and braking retain their old calibrated response, independent
+ // of the camera and the platform's replacement steering/brake settings.
+ reset(true,15);p.camDir.set(1,0,0);step(makeInput({moveX:.5,jumpHeld:true}));assert.ok(Math.abs(Math.atan2(p.axisF.x,-p.axisF.z)-SKATE_PARK.turnRate*.5*CONST.fixedStep)<1e-9);
+ reset(true,15);step(makeInput({grabHeld:true}));const afterBrake=15-SKATE_PARK.brake*CONST.fixedStep;assert.ok(Math.abs(p.speed-(afterBrake-SKATE_PARK.standingDrag*afterBrake**2*CONST.fixedStep))<1e-9);assert.equal(p.brakeLockT,0);
+ // Restored symmetric park ollie, with its original 0.2-second charge.
+ reset(true,12);for(let i=0;i<15;i++)step(makeInput({jumpHeld:true,jumpPressed:i===0}));step(makeInput({jumpReleased:true}));const launch=p.vVel;assert.ok(Math.abs(launch-10.9728)<1e-10);
+ let peak=p.pos.y;for(let i=0;i<100&&!p.grounded;i++){const vy=p.vVel;step(makeInput());peak=Math.max(peak,p.pos.y);if(!p.grounded)assert.ok(Math.abs(p.vVel-vy+34.29*CONST.fixedStep)<1e-9);}assert.ok(Math.abs(peak-1.75546)<.003);assert.equal(p.isBailing,false);
+ const before=run({jumpHeld:true,moveY:1},100,false,12);TUNING.parkChargeSpeed=27;TUNING.parkChargeAcceleration=18;assert.ok(Math.abs(run({jumpHeld:true}).at(-1)-27)<.002);assert.deepEqual(run({jumpHeld:true,moveY:1},100,false,12),before);
+ Object.assign(TUNING,defaults);const {Recorder,Replayer}=await server.ssrLoadModule('/src/replay.ts');const rec=new Recorder();rec.start('jungle-cup');rec.record(makeInput());const take=rec.export();take.tuning.parkCamAirLift=0;take.tuning.parkBoardFallGravity=70;take.tuningChanges=[[0,'parkCruiseSpeedScale',2]];const replay=new Replayer();replay.begin(take);replay.feed(makeInput());for(const retired of ['parkCamAirLift','parkBoardFallGravity','parkCruiseSpeedScale'])assert.ok(!(retired in TUNING));replay.end();
+ Object.assign(TUNING,defaults);course.dispose();console.log('PASS nine controls; 12/23 m/s, 10/9 m/s²; platform no-input coast with mounted zero; restored park steering/brake/0.2 s ballistic ollie; profile isolation and retired-key filtering.');
 });

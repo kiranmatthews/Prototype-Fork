@@ -4,7 +4,22 @@ import { TRICK_REPEAT_FACTORS } from './trickScoring';
 // engine anywhere. These values ARE the game feel; everything is exposed on
 // sliders in the debug panel (ui.ts) for live tuning.
 
-const PLATFORM_TUNING = {
+// Also seeds replays made before park tuning existed.
+export const PARK_TUNING_DEFAULTS = {
+  parkCruiseSpeed: 12,
+  parkChargeSpeed: 23,
+  parkCruiseAcceleration: 10,
+  parkChargeAcceleration: 9,
+  parkCamHeight: 5.1,
+  parkCamDist: 5.05,
+  parkCamPitch: 25.35,
+  parkCamFov: 49,
+  parkCamSpeedFovBoost: 6,
+
+};
+
+export const TUNING = {
+  ...PARK_TUNING_DEFAULTS,
   maxSpeed: 23, // top skate speed
   walkSpeed: 9, // full on-foot run speed; also the skate/walk boundary
   walkRampTime: 0.75, // seconds for a fresh walk to build from rest to full walkSpeed
@@ -38,7 +53,7 @@ const PLATFORM_TUNING = {
   doubleJumpVelocity: 11, // vertical speed of the second on-foot pop
   doubleJumpHorizontalScale: 0.55, // traversal retained after the second pop
   chargeBoost: 9, // THE skate acceleration: holding X builds speed toward maxSpeed
-  cruiseSpeed: 12, // baseline held with directional input; no input coasts to a stop
+  cruiseSpeed: 12, // baseline the board holds on its own while skating (no input)
   chargeDecay: 10, // rate the board eases UP to cruiseSpeed when you're below it. (It no longer bleeds you DOWN to cruise — that was punishing you for steering, and overspeed now goes through the normal friction model.)
   downhillMax: 30.5, // hard ceiling for speed EARNED downhill (charge still tops at maxSpeed)
   vertMax: 32, // speed ceiling on TRANSITIONS. Above downhillMax (30.5) so vert is the FASTEST surface in the game, the way THPS reads — and the ceiling is enforced as a bleed now, not a one-frame chop, so arriving hot keeps its momentum readable
@@ -203,94 +218,12 @@ const PLATFORM_TUNING = {
 
 export type TuningKey = keyof typeof TUNING;
 
-// Both modes use the same movement rules. Park knobs start from the platform
-// defaults but remain independent live values; no multiplier conversions.
-export const PARK_MOVEMENT_KEYS = {
-  "maxSpeed": "parkMaxSpeed",
-  "cruiseSpeed": "parkCruiseSpeed",
-  "chargeBoost": "parkChargeBoost",
-  "chargeDecay": "parkChargeDecay",
-  "turnaround": "parkTurnaround",
-  "brakeRampTime": "parkBrakeRampTime",
-  "carveGripLow": "parkCarveGripLow",
-  "carveGripHigh": "parkCarveGripHigh",
-  "friction": "parkFriction",
-  "rollFriction": "parkRollFriction",
-  "windDrag": "parkWindDrag",
-  "heavyDrag": "parkHeavyDrag",
-  "downhillMax": "parkDownhillMax",
-  "vertMax": "parkVertMax",
-  "groundGravity": "parkGroundGravity",
-  "pipeCarve": "parkPipeCarve",
-  "pipePumpGain": "parkPipePumpGain",
-  "pipeFriction": "parkPipeFriction",
-  "ollieMinVelocity": "parkOllieMinVelocity",
-  "ollieVelocity": "parkOllieVelocity",
-  "ollieDownCouple": "parkOllieDownCouple",
-  "boardRiseGravity": "parkBoardRiseGravity",
-  "boardFallGravity": "parkBoardFallGravity",
-  "rampFallGravity": "parkRampFallGravity",
-  "boardApexFloat": "parkBoardApexFloat",
-  "boardApexBand": "parkBoardApexBand",
-  "airControl": "parkAirControl",
-  "grabBoost": "parkGrabBoost",
-  "landPumpBoost": "parkLandPumpBoost",
-  "jumpChargeTime": "parkOllieChargeTime"
-} as const;
-export const PARK_CAMERA_KEYS = {
-  "camHeight": "parkCamHeight",
-  "camDist": "parkCamDist",
-  "camPitch": "parkCamPitch",
-  "camFov": "parkCamFov",
-  "camSpeedFovBoost": "parkCamSpeedFovBoost",
-  "camAirLift": "parkCamAirLift"
-} as const;
-export const PARK_TUNING_DEFAULTS = {
-  parkMaxSpeed: PLATFORM_TUNING.maxSpeed,
-  parkCruiseSpeed: PLATFORM_TUNING.cruiseSpeed,
-  parkChargeBoost: PLATFORM_TUNING.chargeBoost,
-  parkChargeDecay: PLATFORM_TUNING.chargeDecay,
-  parkTurnaround: PLATFORM_TUNING.turnaround,
-  parkBrakeRampTime: PLATFORM_TUNING.brakeRampTime,
-  parkCarveGripLow: PLATFORM_TUNING.carveGripLow,
-  parkCarveGripHigh: PLATFORM_TUNING.carveGripHigh,
-  parkFriction: PLATFORM_TUNING.friction,
-  parkRollFriction: PLATFORM_TUNING.rollFriction,
-  parkWindDrag: PLATFORM_TUNING.windDrag,
-  parkHeavyDrag: PLATFORM_TUNING.heavyDrag,
-  parkDownhillMax: PLATFORM_TUNING.downhillMax,
-  parkVertMax: PLATFORM_TUNING.vertMax,
-  parkGroundGravity: PLATFORM_TUNING.groundGravity,
-  parkPipeCarve: PLATFORM_TUNING.pipeCarve,
-  parkPipePumpGain: PLATFORM_TUNING.pipePumpGain,
-  parkPipeFriction: PLATFORM_TUNING.pipeFriction,
-  parkOllieMinVelocity: PLATFORM_TUNING.ollieMinVelocity,
-  parkOllieVelocity: PLATFORM_TUNING.ollieVelocity,
-  parkOllieDownCouple: PLATFORM_TUNING.ollieDownCouple,
-  parkBoardRiseGravity: PLATFORM_TUNING.boardRiseGravity,
-  parkBoardFallGravity: PLATFORM_TUNING.boardFallGravity,
-  parkRampFallGravity: PLATFORM_TUNING.rampFallGravity,
-  parkBoardApexFloat: PLATFORM_TUNING.boardApexFloat,
-  parkBoardApexBand: PLATFORM_TUNING.boardApexBand,
-  parkAirControl: PLATFORM_TUNING.airControl,
-  parkGrabBoost: PLATFORM_TUNING.grabBoost,
-  parkLandPumpBoost: PLATFORM_TUNING.landPumpBoost,
-  parkOllieChargeTime: PLATFORM_TUNING.jumpChargeTime,
-  parkCamHeight: PLATFORM_TUNING.camHeight,
-  parkCamDist: PLATFORM_TUNING.camDist,
-  parkCamPitch: PLATFORM_TUNING.camPitch,
-  parkCamFov: PLATFORM_TUNING.camFov,
-  parkCamSpeedFovBoost: PLATFORM_TUNING.camSpeedFovBoost,
-  parkCamAirLift: PLATFORM_TUNING.camAirLift,
-};
-export const TUNING = { ...PLATFORM_TUNING, ...PARK_TUNING_DEFAULTS };
-
+// Bump when shipped DEFAULTS change in a way saved snapshots must not mask.
 // A saved tuning records the defaults it was taken against; on load, only
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-// Bump when shipped DEFAULTS change in a way saved snapshots must not mask.
-export const TUNING_VERSION = 23; // v23: absolute park controls and shared platform movement
+export const TUNING_VERSION = 24; // v24: restore park feel; only speed/acceleration, coast-to-stop and camera tuning
 // v17: captured Chrome carve grip and balance defaults
 // v16: tunable high-speed skating FOV push
 // v15: independent low/high skate carve grip replaces the coupled ratio
@@ -301,7 +234,17 @@ export const TUNING_VERSION = 23; // v23: absolute park controls and shared plat
 // v9: THPS physics pass — ollie stacks the ramp climb (min 8), one symmetric groundGravity replaces slopeBoost/uphillSlowdown/pipeGravity, quadratic heavyDrag + vertMax, rollFriction/windDrag roll-out shape, bail momentum
 
 // Slider metadata for the debug panel.
-const PLATFORM_TUNING_RANGES: Record<keyof typeof PLATFORM_TUNING, { min: number; max: number; step: number }> = {
+export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: number }> = {
+  parkCruiseSpeed: { min: 6, max: 20, step: 0.5 },
+  parkChargeSpeed: { min: 10, max: 40, step: 0.5 },
+  parkCruiseAcceleration: { min: 0.5, max: 20, step: 0.5 },
+  parkChargeAcceleration: { min: 1, max: 30, step: 0.5 },
+  parkCamHeight: { min: 0.5, max: 10, step: 0.1 },
+  parkCamDist: { min: 2, max: 16, step: 0.05 },
+  parkCamPitch: { min: 0, max: 65, step: 0.05 },
+  parkCamFov: { min: 35, max: 85, step: 1 },
+  parkCamSpeedFovBoost: { min: 0, max: 20, step: 0.5 },
+
 
   maxSpeed: { min: 5, max: 60, step: 1 },
   walkSpeed: { min: 6, max: 20, step: 0.5 },
@@ -481,49 +424,16 @@ const PLATFORM_TUNING_RANGES: Record<keyof typeof PLATFORM_TUNING, { min: number
   camBalanceRoll: { min: 0, max: 25, step: 0.5 },
 };
 
-export const TUNING_RANGES = {
-  ...PLATFORM_TUNING_RANGES,
-  ...Object.fromEntries(Object.entries({...PARK_MOVEMENT_KEYS,...PARK_CAMERA_KEYS})
-    .map(([base,park]) => [park, PLATFORM_TUNING_RANGES[base as keyof typeof PLATFORM_TUNING]])),
-} as Record<TuningKey, { min:number; max:number; step:number }>;
-
 export const TUNING_LABELS: Partial<Record<TuningKey, string>> = {
-  parkMaxSpeed: 'Park Charged Speed (m/s)',
   parkCruiseSpeed: 'Park Cruise Speed (m/s)',
-  parkChargeBoost: 'Park Charge Accel (m/s²)',
-  parkChargeDecay: 'Park Cruise Pickup (m/s²)',
-  parkTurnaround: 'Park Brake Strength (m/s²)',
-  parkBrakeRampTime: 'Park Brake Ramp (s)',
-  parkCarveGripLow: 'Park Slow Turn (°/s)',
-  parkCarveGripHigh: 'Park Fast Turn (°/s)',
-  parkFriction: 'Park Steep Friction (m/s²)',
-  parkRollFriction: 'Park Rolling Friction (m/s²)',
-  parkWindDrag: 'Park Wind Drag',
-  parkHeavyDrag: 'Park Overspeed Drag',
-  parkDownhillMax: 'Park Downhill Limit (m/s)',
-  parkVertMax: 'Park Transition Limit (m/s)',
-  parkGroundGravity: 'Park Slope Gravity (m/s²)',
-  parkPipeCarve: 'Park Carve Gain (m/s²)',
-  parkPipePumpGain: 'Park Pump Gain (m/s²)',
-  parkPipeFriction: 'Park Pipe Friction (m/s²)',
-  parkOllieMinVelocity: 'Park Tap Ollie (m/s)',
-  parkOllieVelocity: 'Park Charged Ollie (m/s)',
-  parkOllieDownCouple: 'Park Downhill Coupling',
-  parkBoardRiseGravity: 'Park Rise Gravity (m/s²)',
-  parkBoardFallGravity: 'Park Fall Gravity (m/s²)',
-  parkRampFallGravity: 'Park Ramp Fall (m/s²)',
-  parkBoardApexFloat: 'Park Apex Float',
-  parkBoardApexBand: 'Park Apex Band (m/s)',
-  parkAirControl: 'Park Air Control (m/s²)',
-  parkGrabBoost: 'Park Grab Landing (m/s)',
-  parkLandPumpBoost: 'Park Landing Pump (m/s)',
-  parkOllieChargeTime: 'Park Ollie Charge (s)',
+  parkChargeSpeed: 'Park Charged Speed (m/s)',
+  parkCruiseAcceleration: 'Park Cruise Pickup (m/s²)',
+  parkChargeAcceleration: 'Park Charge Accel (m/s²)',
   parkCamHeight: 'Park Camera Height (m)',
   parkCamDist: 'Park Camera Distance (m)',
   parkCamPitch: 'Park Camera Tilt (°)',
   parkCamFov: 'Park Camera FOV (°)',
   parkCamSpeedFovBoost: 'Park Speed FOV (+°)',
-  parkCamAirLift: 'Park Ollie Camera Follow',
 
 
   balanceDrift: 'Grind Drift',
@@ -566,7 +476,17 @@ export const TUNING_LABELS: Partial<Record<TuningKey, string>> = {
 };
 
 // Hover text for the tuning panel: what each slider actually does in play.
-const PLATFORM_TUNING_INFO: Record<keyof typeof PLATFORM_TUNING, string> = {
+export const TUNING_INFO: Record<TuningKey, string> = {
+  parkCruiseSpeed: 'Skate parks only. Standing speed target while steering without holding X. Default 12 m/s matches platforming. Release all movement input to coast to a stop; the board stays mounted.',
+  parkChargeSpeed: 'Skate parks only. Speed target while holding X. Default 23 m/s matches platforming. Preserves park steering, slope momentum, braking and jump rules.',
+  parkCruiseAcceleration: 'Skate parks only. Standing pickup acceleration, in m/s², while steering below cruise speed. Default 10 matches platforming. Does not change steering or braking.',
+  parkChargeAcceleration: 'Skate parks only. Acceleration toward charged speed while holding X, in m/s². Default 9 matches platforming. Does not change the ollie charge duration or arc.',
+  parkCamHeight: 'Skate parks only. Height of the flat park chase shot. The original camera still follows ordinary airs and keeps its calibrated vert swing.',
+  parkCamDist: 'Skate parks only. Trailing distance on flat park travel. The calibrated steep/vert frame is unchanged.',
+  parkCamPitch: 'Skate parks only. Downward angle of the flat park shot. Fades to the original steep/vert camera frame.',
+  parkCamFov: 'Skate parks only. Base vertical field of view on flats and ordinary airs. Vert retains its original lens and swing.',
+  parkCamSpeedFovBoost: 'Skate parks only. Extra FOV degrees between the actual park cruise and charged targets. 0 disables the effect. Steep/vert framing stays unchanged.',
+
 
   milkMagnetRange: 'Distance from your current character bounds to a milk orb’s centre that starts attraction. Higher reaches farther; 0 requires direct contact. Applies to placed milk and crate drops, including two-player pickups. Milk already moving toward you finishes its flight.',
   maxSpeed:
@@ -615,7 +535,7 @@ const PLATFORM_TUNING_INFO: Record<keyof typeof PLATFORM_TUNING, string> = {
   chargeBoost:
     'THE skate accelerator: holding X builds speed toward maxSpeed at this rate. Also how fast you dig out of a stop.',
   cruiseSpeed:
-    'Target while skating with a direction held and X released. Below this, Cruise Pickup builds speed; above it, ordinary friction and wind drag bleed speed. Releasing ALL input coasts to a stop. Holding X accelerates toward Charged Speed.',
+    'Baseline skate speed: the board holds this on its own, no input needed. The ladder: cruiseSpeed -> hold X toward maxSpeed -> release decays back at chargeDecay -> downhill/pipes exceed everything up to downhillMax.',
   chargeDecay:
     'The PICK-UP rate only: how fast the board eases UP to cruiseSpeed when you are below it — coasting back up to cruise, or recovering after a hill scrubbed you. It no longer drags you DOWN to cruise from above. Bleeding at this rate while you held a direction was HARSHER than letting go of the stick entirely, so steering was punished and holding X forever was the only way to keep a hard-won hill; overspeed now goes through the normal friction model whether you steer or coast.',
   downhillMax:
@@ -687,7 +607,7 @@ const PLATFORM_TUNING_INFO: Record<keyof typeof PLATFORM_TUNING, string> = {
   spinAirCorrection:
     'Small upward stall from spinning in the air (capped, never a full rescue) — Crash-style ledge save.',
   turnaround:
-    'Full braking strength in m/s². Pulling back against forward travel brakes with an ease-out near zero; Circle eases into this strength over Brake Ramp time. Higher = harder stops. Skate parks keep the board mounted at zero.',
+    'PULL-BACK BRAKE (still live!): carving handles all turning now, but yanking the stick (near-)opposite your travel bleeds speed at this rate — the intentional slow-down-and-dismount. Also the FULL-FORCE rate the Circle brake ramps up to. Higher = harder stops.',
   brakeRampTime:
     'Circle brake on the board eases in: a quick TAP barely slows you, and the slow-down accelerates the longer you hold, reaching full force (the turnaround rate) after this many seconds — so you cannot insta-stop with one tap. Lower = the brake bites sooner.',
   brakeLockTime:
@@ -874,24 +794,11 @@ const PLATFORM_TUNING_INFO: Record<keyof typeof PLATFORM_TUNING, string> = {
     'CHASE CAM (0 = off, 1 = on): third-person follow — the camera swings around behind wherever you travel, so the skater always faces forward and stick-up is always "onward". Overrides the fixed corridor framing, drawn camera lanes, and corner zones while on; the boulder chase keeps its authored shot. All the other CAMERA sliders still shape the rig.',
 };
 
-export const TUNING_INFO = {
-  ...PLATFORM_TUNING_INFO,
-  ...Object.fromEntries(Object.entries(PARK_MOVEMENT_KEYS).map(([base,park]) =>
-    [park, 'SKATE PARK ONLY. Same rules and factory value as platforming; an independent absolute setting. '+PLATFORM_TUNING_INFO[base as keyof typeof PLATFORM_TUNING]])),
-  ...Object.fromEntries(Object.entries(PARK_CAMERA_KEYS).map(([base,park]) =>
-    [park, 'SKATE PARK ONLY. Shapes the flat/ordinary-air shot; steep/vert framing stays calibrated. '+PLATFORM_TUNING_INFO[base as keyof typeof PLATFORM_TUNING]])),
-  parkOllieChargeTime: 'Park-only ordinary ollie charge duration, in seconds. Default 0.4 matches platforming. True vert/lip pops keep the established 0.2 second timing.',
-  parkCamSpeedFovBoost: 'Park-only extra FOV degrees from Cruise Speed to Charged Speed. Fades out on steep transitions; the vert lens and swing stay unchanged. 0 disables the speed zoom.',
-} as Record<TuningKey,string>;
-
 // Debug-panel layout: sliders grouped under labelled sections, in this order.
 // Every TuningKey should appear exactly once; anything missed lands in OTHER.
 export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
-  { title: 'SKATE PARK · SPEED & CONTROL', keys: ['parkMaxSpeed', 'parkCruiseSpeed', 'parkChargeBoost', 'parkChargeDecay', 'parkTurnaround', 'parkBrakeRampTime', 'parkCarveGripLow', 'parkCarveGripHigh'] },
-  { title: 'SKATE PARK · FRICTION & SLOPES', keys: ['parkFriction', 'parkRollFriction', 'parkWindDrag', 'parkHeavyDrag', 'parkDownhillMax', 'parkVertMax', 'parkGroundGravity', 'parkPipeCarve', 'parkPipePumpGain', 'parkPipeFriction'] },
-  { title: 'SKATE PARK · OLLIE & AIR', keys: ['parkOllieMinVelocity', 'parkOllieVelocity', 'parkOllieDownCouple', 'parkBoardRiseGravity', 'parkBoardFallGravity', 'parkRampFallGravity', 'parkBoardApexFloat', 'parkBoardApexBand', 'parkAirControl', 'parkGrabBoost', 'parkLandPumpBoost', 'parkOllieChargeTime'] },
-  { title: 'SKATE PARK · CAMERA', keys: ['parkCamHeight', 'parkCamDist', 'parkCamPitch', 'parkCamFov', 'parkCamSpeedFovBoost', 'parkCamAirLift'] },
-
+  { title: 'SKATE PARK · SPEED', keys: ['parkCruiseSpeed', 'parkChargeSpeed', 'parkCruiseAcceleration', 'parkChargeAcceleration'] },
+  { title: 'SKATE PARK · CAMERA', keys: ['parkCamHeight', 'parkCamDist', 'parkCamPitch', 'parkCamFov', 'parkCamSpeedFovBoost'] },
   { title: 'WALKING', keys: ['walkSpeed', 'walkRampTime', 'walkSlowdownTime', 'crawlSpeed'] },
   {
     title: 'JUMPS & AIR',

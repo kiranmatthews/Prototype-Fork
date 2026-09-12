@@ -4063,7 +4063,7 @@ function updateCamera(dt: number): void {
       bailing: player.skateCameraBailing,
     }, dt, snapped, level.groundMeshes, level.skatepark ? {
       camDist:TUNING.parkCamDist,camHeight:TUNING.parkCamHeight,camPitch:TUNING.parkCamPitch,
-      camFov:TUNING.parkCamFov+camSpeedFovBoost,camAirLift:TUNING.parkCamAirLift,
+      camFov:TUNING.parkCamFov+camSpeedFovBoost,
     } : undefined);
     camControlDir.copy(skateChaseCamera.forward);
     cameraLook.step(input.lookX, input.lookY, dt);

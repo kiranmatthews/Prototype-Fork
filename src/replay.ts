@@ -34,7 +34,7 @@ import {
 import { setLegacyVisualSurfaceFrictionReplay } from './surfaceFriction';
 import { legacyCameraRigTuning } from './cameraRig';
 
-const retiredParkTuners = new Set(['parkCruiseSpeedScale','parkChargeSpeedScale','parkAccelerationScale','parkOllieHeight','parkOllieHangtime']);
+const retiredParkTuner = (key:string):boolean => key.startsWith('park') && !Object.prototype.hasOwnProperty.call(TUNING,key);
 
 // the button channels the sim reads, packed into one bitmask per frame.
 // APPEND-ONLY: bit positions are the file format — old replays simply never
@@ -271,7 +271,7 @@ export class Replayer {
     delete replayTuning.camOffset;
     // Missing park values use this build's defaults; retired multipliers must
     // never become live properties or silently affect the absolute profile.
-    for (const key of retiredParkTuners) delete replayTuning[key];
+    for (const key of Object.keys(replayTuning)) if (retiredParkTuner(key)) delete replayTuning[key];
     Object.assign(TUNING, PARK_TUNING_DEFAULTS, replayTuning);
     this.refreshLegacyCarveGrip();
     this.refreshLegacyCamera();
@@ -307,7 +307,7 @@ export class Replayer {
         if (k === 'camDist' || k === 'camHeight' || k === 'camTilt' || k === 'camOffset')
           refreshLegacyCamera = true;
       }
-      if (k !== 'carveGrip' && k !== 'carveGripRatio' && k !== 'camTilt' && k !== 'camOffset' && !retiredParkTuners.has(k)) t[k] = v;
+      if (k !== 'carveGrip' && k !== 'carveGripRatio' && k !== 'camTilt' && k !== 'camOffset' && !retiredParkTuner(k)) t[k] = v;
     }
     if (refreshLegacyCarveGrip) this.refreshLegacyCarveGrip();
     if (refreshLegacyCamera) this.refreshLegacyCamera();

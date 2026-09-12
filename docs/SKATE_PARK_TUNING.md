@@ -1,31 +1,27 @@
-# Skate-park movement and camera tuning
+# Skate-park tuning: preserve the park model
 
-Skate parks now use the platforming movement code for acceleration, cruise pickup, braking, steering response, coasting/friction, overspeed decay, slope drive and ordinary board jumps. `level.skatepark` selects independent absolute tuning values and keeps the board mounted at low speed and at zero. Jungle Cup and future skate-only freecam levels use this flag; the optional chase-camera toggle on a platforming course does not select park tuning.
+The broad platform-motor change in `db1a374` is rolled back. Park skating again uses its established player-relative turn rates, braking, surface projection, slope gravity, ballistic ollies, vert pop, wall tracking and landing behavior. The chase-camera implementation is restored exactly to the pre-tuning version; ordinary airs follow the rider again, and vert retains its original swing.
 
-Open **M → TUNER**. The four **SKATE PARK** sections are at the top: Speed & Control, Friction & Slopes, Ollie & Air, and Camera. There are no reference multipliers. Their factory values and ranges come directly from the corresponding platform settings, so the two default profiles cannot silently diverge.
+Only the park motor's speed/acceleration targets and no-input rollout change. Compared with `3d78c24`, `player.ts` differs only by its tuning-helper import and this small motor block. Platforming code and values remain unchanged.
 
-| Setting | Default in both profiles |
+**M → TUNER** has two compact park sections, with nine absolute controls:
+
+| Control | Default |
 | --- | --- |
-| Cruise / charged speed | 12 / 23 m/s |
-| Cruise pickup / charge acceleration | 10 / 9 m/s² |
-| Brake strength / ramp time | 35 m/s² / 0.4 s |
-| Low / high speed steering | 360 / 60 degrees per second |
-| Tap / charged ollie launch | 6.5 / 11 m/s |
-| Full ordinary ollie charge | 0.4 s |
-| Ordinary board rise / fall gravity | 33 / 70 m/s² |
-| Ramp fall gravity | 40 m/s² |
-| Apex float / speed band | 0.35 / 4.5 m/s |
-| Slope gravity | 45 m/s² |
-| Rolling friction / wind drag | 3.5 / 0.0015 |
-| Overspeed drag / downhill limit | 0.005 / 30.5 m/s |
-| Camera height / trailing distance | 5.1 / 5.05 m |
-| Camera tilt / base FOV | 25.35 / 49 degrees |
-| Speed FOV / ordinary jump follow | 6 degrees / 0 (ground anchored) |
+| Cruise speed | 12 m/s |
+| Charged speed | 23 m/s |
+| Cruise pickup acceleration | 10 m/s² |
+| Charged acceleration | 9 m/s² |
+| Camera height | 5.1 m |
+| Camera distance | 5.05 m |
+| Camera tilt | 25.35° |
+| Camera FOV | 49° |
+| Speed FOV | +6° |
 
-Holding a direction without X picks up toward cruise; above cruise, the ordinary friction model sheds speed. Holding X accelerates toward charged speed. Releasing all input coasts to a complete stop. Circle and pull-back use the same ramp/ease-out brake behavior. In a park, slowing or stopping leaves the board under the rider; another directional push starts rolling again. Genuine bails still play and recall the board through the existing recovery.
+The four drive defaults match the platforming targets. They do not replace the park motor or change its control response. A direction requests cruise pickup; holding X requests charged acceleration. Releasing both movement and X removes motor drive. On flat/gentle ground the existing platform rollout friction then brings the board to a stop, where it remains mounted. Transitions retain the park's gravity and drag, avoiding the rejected change's new wall friction and pumping rules. Holding a direction or X starts rolling again.
 
-The shared steering response resolves through the park's player-relative frame, maintaining the requested behind-the-skater controls. Platforming retains its course/camera frame. The protected vert launch, wall tracking, angled return and camera swing remain. Slope pumping now follows the platforming rules, so approach speed and available vert height reflect those settings. Ordinary park ollies use the same charged pop, downhill coupling, rise/fall gravity and apex treatment as platforming; true vert/lip release retains its calibrated 0.2 second charge and symmetric gravity.
+Camera settings affect the flat/ordinary-air shot and fade out through steep transitions. The full six-degree speed push uses the actual park cruise/charge endpoints. There are no park ollie, gravity, friction, steering-curve or air-follow sliders. The original 0.2-second park ollie charge, 8.89–10.9728 m/s pop and symmetric 34.29 m/s² ordinary-air gravity remain. Defaults describe factory values; existing deliberate edits to retained controls still load through the normal tuner save flow. Removed park keys are ignored in saved tuning and filtered from replay state.
 
-Park movement reads a live, read-only tuning view. It never temporarily changes global platform settings; editing park sliders cannot affect another player or a platforming level. The existing save/reset/readout flow applies. Old multiplier keys are retired rather than interpreted as speeds or gravity. Older replays run under the current shared movement model and must not be used as exact recordings of the retired park motor.
+Scope follows `level.skatepark`, so future skate-only freecam levels receive the same profile. The ordinary platforming chase toggle does not opt into it.
 
-Validation includes fourteen full motor traces across two headings (charge, cruise, coast, steering, Circle, pull-back, overspeed), four charge-length ollie trajectories, idle and both brakes through zero, mounted restart, profile isolation and factory metadata. Existing camera checks cover protected steep/vert framing and real perimeter routes. Coping drop-in, curved-wall/charged-vert skating checks, the production build and lite/full browser review cover the integration. No full suite was run.
+Focused validation covers nine controls and slider steps, drive targets/rates, the platform no-input decay curve, a mounted stop and restart, original park turn/brake response, the restored ballistic ollie, platforming isolation and retired-key filtering. Camera checks cover 163 protected steep/vert samples and four actual perimeter return routes. Build and lite/full browser review check the integrated result; no full suite is run for this correction.

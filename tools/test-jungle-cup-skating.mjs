@@ -5,7 +5,7 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, TUNING, CONS
   const { SkateChaseCamera, SKATE_CAMERA } = await server.ssrLoadModule('/src/skateChaseCamera.ts');
   const { SKATE_PARK, skateSurfaceDirection, skateSurfaceHeading } = await server.ssrLoadModule('/src/skateParkPhysics.ts');
   const { Replayer } = await server.ssrLoadModule('/src/replay.ts');
-  const place = (p,h,speed=TUNING.parkMaxSpeed) => {
+  const place = (p,h,speed=TUNING.parkChargeSpeed) => {
     player.respawn(level,true,true,{position:new THREE.Vector3(...p),heading:new THREE.Vector3(...h)});
     player.axisF.set(...h).normalize();player.axisL.set(player.axisF.z,0,-player.axisF.x);
     player.freeSkate=true;player.speed=speed;
@@ -35,14 +35,15 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, TUNING, CONS
   assert.ok(samples[0][0]>5,'right steering did not turn rider right');
   place([0,.1,10],[1,0,0],12);
   for(let i=0;i<60;i++)step(makeInput({moveY:-1}));
-  assert.equal(player.speed,0);assert.equal(player.freeSkate,true);assert.ok(player.brakeLockT>0,'shared pullback lock was not armed');
-  // Same platform motor: idle stays stopped; a direction picks up to cruise.
+  assert.equal(player.speed,0);assert.equal(player.freeSkate,true);assert.equal(player.brakeLockT,0);
+  // Restored park controls: idle stays stopped; steering picks up to cruise.
   for(let i=0;i<60;i++)step(makeInput());
   assert.equal(player.speed,0);assert.equal(player.freeSkate,true);
+  place([28,.1,-80],[0,0,1],0);
   for(let i=0;i<90;i++)step(makeInput({moveY:1}));
   assert.ok(Math.abs(player.speed-TUNING.parkCruiseSpeed)<.03);
   for(let i=0;i<90;i++)step(makeInput({jumpHeld:true,moveY:1}));
-  assert.ok(Math.abs(player.speed-TUNING.parkMaxSpeed)<.03,'charged target differs from platforming');
+  assert.ok(Math.abs(player.speed-TUNING.parkChargeSpeed)<.03,'charged target differs from platforming');
 
   // Start outside the new interior sessions when isolating perimeter vert.
   const cases=[
@@ -67,7 +68,7 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, TUNING, CONS
         launch={p:player.pos.clone(),n:player.vertNormal.clone(),vy:player.vVel,i};
         assert.ok(player.pos.y>=4.39,`${name}: launched before the actual 4.4m lip`);
         assert.ok(player.pos.y<4.85,`${name}: missed the lip`);
-        assert.ok(player.vVel<=oldSpeed+(TUNING.parkChargeBoost+TUNING.parkPipePumpGain+TUNING.parkPipeCarve+TUNING.parkGroundGravity)*CONST.fixedStep+.05,`${name}: free lip pop minted velocity`);
+        assert.ok(player.vVel<=oldSpeed+(TUNING.parkChargeAcceleration+SKATE_PARK.groundGravity)*CONST.fixedStep+.05,`${name}: free lip pop minted velocity`);
       }
       if(launch&&wasVert&&player.vertAir&&!player.grounded&&name==='south'){
         assert.ok(Math.abs(player.vVel-oldVy+31.1727272727*CONST.fixedStep)<1e-7,'gravity changed around apex');
@@ -229,5 +230,5 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, TUNING, CONS
       stalled=stuck?stalled+1:0;assert.ok(stalled<120,`stress ${seed}/${i}: welded to transition`);
     }
   }
-  console.log(`PASS shared-motor park: ${returns} vert returns, ballistic gravity/no free pop, charged impulse, full surface frame, curved tracking, no spin snap, ${catches} terminal contacts, ${frames} replay + ${stressFrames} stress frames. Camera: full rider visibility, wall-oriented apex, 30/60/120 Hz equivalence. Shunt ${worstShunt.toFixed(4)}m; framing ${worstFraming.toFixed(3)}.`);
+  console.log(`PASS preserved park motor: ${returns} vert returns, ballistic gravity/no free pop, charged impulse, full surface frame, curved tracking, no spin snap, ${catches} terminal contacts, ${frames} replay + ${stressFrames} stress frames. Camera: full rider visibility, wall-oriented apex, 30/60/120 Hz equivalence. Shunt ${worstShunt.toFixed(4)}m; framing ${worstFraming.toFixed(3)}.`);
 });
