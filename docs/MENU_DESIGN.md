@@ -38,4 +38,9 @@ At 1280×720, the shared CSS scale is approximately 56 px for titles, 42 px for 
 
 `src/menuTheme.ts` owns the deep teal panel palette, brass edges and backdrop used by both Canvas painters. Its exported CSS variables keep native DOM fallback artwork in step with the pre-CRT pass. Unboxed Level Select, Progress and Trick Guide screens use an opaque dark backdrop. `src/game-menu-layout.css` owns the common type scale; `src/competition/menu.css` consumes it. Jungle Cup uses the same Roo headings, action lettering, orange/white PNG focus, secondary body text and input hints. Final standings place the podium alongside all six skaters on landscape screens. The competition guide returns through a footer Back action or a touch close button.
 
+Home is intentionally exempt from the shared backdrop: show the authored vortex
+without a dark-blue overlay or backdrop blur in either Canvas or DOM. Keep its
+current type, layout and controls; replacement legibility artwork will be authored
+separately. Other menu backdrops retain their current treatment.
+
 For local visual review, open `menu-review.html?playtest&level=codex-lab&lite`, then repeat without `lite`. The catalogue exposes 25 screens, including every confirmation, both result types, the competition introduction, guide, judges, standings, win and loss. Save previews and competition results are memory-only fixtures. The review entry is excluded from the production build. Audit layout checks viewport bounds, clipped controls, page width and the full standings table. It does not replace visual inspection of text or actual gameplay navigation.

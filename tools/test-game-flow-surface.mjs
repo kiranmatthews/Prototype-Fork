@@ -3,11 +3,19 @@ import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
-const [surface, flow, main] = await Promise.all([
+const [surface, flow, main, layout] = await Promise.all([
   readFile(`${root}src/gameFlowSurface.ts`, "utf8"),
   readFile(`${root}src/gameFlowUI.ts`, "utf8"),
   readFile(`${root}src/main.ts`, "utf8"),
+  readFile(`${root}src/game-menu-layout.css`, "utf8"),
 ]);
+
+const backdrop = surface.slice(surface.indexOf('  private paintBackdrop('), surface.indexOf('  private paintCard('));
+assert.match(backdrop, /if \(screen === "launch"\) return;\s*ctx\.save\(\)/,
+  'Home must bypass the full-screen shade in the Canvas path');
+assert.match(backdrop, /else paintMenuBackdrop\(/, 'Other menu backdrops must remain unchanged');
+assert.match(layout, /body\.game-flow-vortex \.game-shell:has\(\.game-screen-launch\)::before\s*\{[^}]*background:none;[^}]*filter:none;[^}]*backdrop-filter:none;/,
+  'Home DOM fallback must not restore the tint or blur');
 
 assert.equal(
   (surface.match(/document\.createElement\("canvas"\)/g) ?? []).length,

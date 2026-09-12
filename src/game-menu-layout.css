@@ -229,6 +229,11 @@ body.game-shell-modal .tc-zone { display:none !important; }
 .game-shell::before,body.game-flow-vortex .game-shell::before {
   background:linear-gradient(var(--menu-backdrop-top),var(--menu-backdrop-bottom));
 }
+/* Match the clear home background in the Canvas compositor. */
+.game-shell:has(.game-screen-launch)::before,
+body.game-flow-vortex .game-shell:has(.game-screen-launch)::before {
+  background:none; filter:none; -webkit-backdrop-filter:none; backdrop-filter:none;
+}
 .game-shell .timber-card {
   border:4px solid var(--menu-edge); border-radius:13px;
   background:linear-gradient(var(--menu-panel-top),var(--menu-panel-middle) 56%,var(--menu-panel-bottom));

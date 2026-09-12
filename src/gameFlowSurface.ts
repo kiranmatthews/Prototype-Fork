@@ -750,6 +750,8 @@ export class GameFlowSurface {
     width: number,
     height: number,
   ): void {
+    // Home shows the authored vortex directly; legibility artwork is separate.
+    if (screen === "launch") return;
     ctx.save();
     if (screen === "results") {
       const beside = width > 760 && height > 560 || width / height > 1.3;
