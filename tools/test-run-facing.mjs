@@ -17,8 +17,8 @@ try {
     wrapFacingAngle,
   } = await server.ssrLoadModule("/src/runFacing.ts");
 
-  assert.equal(RUN_REVERSAL_DURATION, 0.4);
-  assert.equal(RUN_REVERSAL_YAW_RATE, Math.PI / 0.4);
+  assert.equal(RUN_REVERSAL_DURATION, 4 / 60);
+  assert.equal(RUN_REVERSAL_YAW_RATE, Math.PI / (4 / 60));
   const first = stepFacingYaw(
     0,
     Math.PI,
@@ -27,7 +27,7 @@ try {
   );
   assert.ok(first > 0 && first < Math.PI, "180 reversal still snaps");
   assert.ok(
-    Math.abs(first - Math.PI / 24) < 1e-9,
+    Math.abs(first - Math.PI / 4) < 1e-9,
     "turn rate is not fixed-step",
   );
   assert.ok(
@@ -116,7 +116,7 @@ try {
   );
 
   console.log(
-    "Validated a deterministic ~0.4s on-foot pivot with no one-frame snap or non-turn facing changes.",
+    "Validated a deterministic four-frame on-foot pivot, leading physical inertia with ordinary facing unchanged.",
   );
 } finally {
   await server.close();

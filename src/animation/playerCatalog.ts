@@ -5,6 +5,7 @@ import { QUATERNIUS_SWIM_FWD_DURATION, QUATERNIUS_SWIM_FWD_ROOT_KEYS,
 import { QUATERNIUS_SWIM_IDLE_DURATION, QUATERNIUS_SWIM_IDLE_ROOT_KEYS,
   QUATERNIUS_SWIM_IDLE_ROTATION_KEYS, QUATERNIUS_SWIM_IDLE_SOURCE } from './quaterniusSwimIdle.generated';
 import * as THREE from 'three';
+import { RUN_STOP_CLIP_ID, RUN_STOP_DURATION } from './runStop';
 import { QUATERNIUS_IDLE_DURATION, QUATERNIUS_IDLE_ROOT_KEYS,
   QUATERNIUS_IDLE_ROTATION_KEYS, QUATERNIUS_IDLE_SOURCE } from './quaterniusIdle.generated';
 import { CROUCH_CLIP_IDS, CROUCH_TRANSITION_DURATION, QUATERNIUS_CRAWL_PALMS, QUATERNIUS_LOW_POSE_OWNERSHIP } from './crouch';
@@ -106,6 +107,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
   'player.swim',
   'player.swim-idle',
   'player.run',
+  RUN_STOP_CLIP_ID,
   'player.jump',
   'player.double-jump',
   'player.slide-jump',
@@ -137,7 +139,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 28;
+export const PLAYER_STARTER_CATALOG_VERSION = 29;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -400,6 +402,7 @@ const PLAYER_STARTER_CLIP_INTRODUCED_IN_VERSION: Record<
   'player.swim': 20,
   'player.swim-idle': 20,
   'player.run': 1,
+  [RUN_STOP_CLIP_ID]: 29,
   'player.jump': 1,
   'player.double-jump': 6,
   'player.slide-jump': 27,
@@ -1216,6 +1219,36 @@ function buildSlide(rigId: string): AnimationClip {
   return clip;
 }
 
+function buildRunStop(rigId: string, includeTorsoRoot: boolean): AnimationClip {
+  const clip = baseClip(RUN_STOP_CLIP_ID, 'Run Stop — Skid and Settle', RUN_STOP_DURATION, 'once', rigId);
+  clip.loop.seamless = false;
+  // A compact brake pose: feet forward, body trailing, arms counterbalancing.
+  // Gameplay scrubs the coast section from actual remaining momentum; only
+  // the little compression/rebound after rest uses the saved playback clock.
+  const rotations: Record<string, [number, number, number]> = {
+    hips: [-.08, 0, 0], torsoRoot: [-.14, 0, 0], spine: [-.10, 0, 0], chest: [.06, 0, 0],
+    neck: [0, 0, 0], head: [.08, 0, 0],
+    clavicleLeft: [0, 0, .03], clavicleRight: [0, 0, -.03],
+    shoulderLeft: [.18, 0, .30], shoulderRight: [.18, 0, -.30],
+    elbowLeft: [-.50, 0, 0], elbowRight: [-.50, 0, 0],
+    wristLeft: [0, 0, 0], wristRight: [0, 0, 0],
+    hipLeft: [-.58, 0, .10], kneeLeft: [.65, 0, 0], ankleLeft: [.01, 0, -.10], toeLeft: [0, 0, 0],
+    hipRight: [-.35, 0, -.10], kneeRight: [.40, 0, 0], ankleRight: [.03, 0, .10], toeRight: [0, 0, 0],
+  };
+  clip.tracks = Object.entries(rotations).filter(([joint]) => includeTorsoRoot || joint !== 'torsoRoot')
+    .map(([joint, [x, y, z]]) => quaternionTrack(clip.id, joint, [
+    [0, x, y, z], [.4, x, y, z], [.49, x * .65, y, z * .85], [.65, x * .25, y, z * .75],
+  ]));
+  clip.tracks.push(scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.torso,
+    [[0, .98], [.34, .98], [.42, .92], [.51, 1.035], [.65, 1]]));
+  clip.markers = [{id:`${clip.id}:coast-end`,time:.4,name:'Momentum stops'},
+    {id:`${clip.id}:rebound`,time:.51,name:'Soft rebound'}];
+  clip.tags = ['player', 'procedural', 'locomotion', 'stop', 'skid'];
+  clip.metadata = { starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
+    coastTiming: 'remaining foot momentum', settleTiming: 'saved playback speed' };
+  return clip;
+}
+
 function buildSkate(rigId: string): AnimationClip {
   const clip = baseClip('player.skate', 'Skate Push — Starter', 0.9, 'loop', rigId);
   clip.tracks = [
@@ -1465,6 +1498,7 @@ export function createPlayerStarterClips(
     buildSwim(rigId, includeTorsoRoot, false),
     buildSwim(rigId, includeTorsoRoot, true),
     buildRun(rigId, includeTorsoRoot),
+    buildRunStop(rigId, includeTorsoRoot),
     buildJump(rigId),
     buildDoubleJump(rigId),
     buildDoubleJump(rigId, true),

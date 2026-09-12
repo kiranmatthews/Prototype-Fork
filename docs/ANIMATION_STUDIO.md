@@ -76,11 +76,25 @@ locally for the cycling visual review.
 over Jog: full Walk through 3/9 normalized speed, then a continuous blend to
 full Jog at run speed. The shared gait phase keeps corresponding legs aligned,
 while the runtime eases between each clip's native cycle duration so the
-1.333-second Walk is not accelerated to the 0.933-second Jog cadence. Stopping
-crossfades directly into Quaternius Idle; the retired pacing-stop interlude is no longer
-part of the catalog or runtime. Grounded gait speed and facing come from the
+1.333-second Walk is not accelerated to the 0.933-second Jog cadence. Gentle walk stops
+crossfade directly into Quaternius Idle; the retired pacing-stop interlude remains removed.
+Grounded gait speed and facing come from the
 character's own walk velocity, so a stationary rider carried by a Nightworks
 platform remains in Idle.
+
+Catalog 29 adds `player.run-stop` (**Run Stop — Skid and Settle**) for released
+running input above 45% pace. Its editable 0–0.4 s brace section follows actual
+remaining foot momentum; the final 0.25 s compress/rebound uses saved playback
+speed. The runtime blends in over 0.1 s and out over 0.12 s, with immediate
+movement/action interruption. Slow analogue walking does not trigger it.
+The clip is added to saved suites without replacing existing authored tracks.
+
+Hard direction changes now finish their visual pivot in four 60 Hz frames
+(about 67 ms), well before the existing movement-inertia envelope. The authored
+gait follows committed intent through zero physical velocity, avoiding a
+mid-reversal Walk/Idle flash. The motor, friction, coast time and slide distance
+are unchanged. `tools/test-run-inertia-presentation.mjs` checks these separate
+facing/momentum clocks, stop/restart/jump behavior and movement parity.
 
 ## Unity body-slam pose
 

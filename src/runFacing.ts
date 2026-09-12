@@ -1,6 +1,7 @@
 const TAU = Math.PI * 2;
 
-export const RUN_REVERSAL_DURATION = 0.4;
+// Four 60 Hz frames: facing leads the much slower physical momentum reversal.
+export const RUN_REVERSAL_DURATION = 4 / 60;
 export const RUN_REVERSAL_YAW_RATE = Math.PI / RUN_REVERSAL_DURATION;
 
 export function wrapFacingAngle(angle: number): number {

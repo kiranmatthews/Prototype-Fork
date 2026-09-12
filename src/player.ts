@@ -74,6 +74,7 @@ import {
   type LedgeCatchEnvelope,
 } from './ledgeTraversal';
 import { RUN_REVERSAL_YAW_RATE, stepFacingYaw } from './runFacing';
+import { RUN_MOVE_INTENT_INPUT } from './animation/runStop';
 import { sampleSkateMount, SKATE_MOUNT_DURATION, SKATE_DISMOUNT_DURATION } from './skateMount';
 import {
   SpinEffectsPresentation,
@@ -1813,7 +1814,7 @@ export class Player {
       return this.vVel > 0 ? 'player.jump' : 'player.fall';
     }
     if (this.freeSkate || this.skatePose > 0.25 || this.deckPose > 0.25) return 'player.skate';
-    return this.animationPlanarSpeed > RUN_ANIMATION_THRESHOLD ? 'player.run' : 'player.idle';
+    return this.walkTurnaround || this.animationPlanarSpeed > RUN_ANIMATION_THRESHOLD ? 'player.run' : 'player.idle';
   }
 
   /**
@@ -1847,7 +1848,11 @@ export class Player {
         : this.freeSkate || (this.state === 'air' && this.airFromSkate) || this.state === 'grind'
           ? Math.max(TUNING.maxSpeed, 0.001)
           : Math.max(TUNING.walkSpeed, 0.001);
-    const planarSpeed = this.animationPlanarSpeed;
+    // The feet keep running toward intent while momentum slides the other way.
+    // Physical speed still owns collisions, movement and ordinary stop coasts.
+    const planarSpeed = this.walkTurnaround && clipId === 'player.run'
+      ? Math.max(this.animationPlanarSpeed, TUNING.walkSpeed * this.walkRamp)
+      : this.animationPlanarSpeed;
     const normalizedSpeed = THREE.MathUtils.clamp(planarSpeed / speedReference, 0, 1);
     const crawlMotion = this.crawlPose * Math.min(1, planarSpeed / 1.2);
     const crouchPose = Math.max(0, this.crawlPose - crawlMotion);
@@ -1938,6 +1943,7 @@ export class Player {
         actionProgress,
         inputs: {
           travelSign,
+          [RUN_MOVE_INTENT_INPUT]: Math.min(1, Math.hypot(this.rawInput?.moveX ?? 0, this.rawInput?.moveY ?? 0)),
           swimCadence: this.swimming ? Math.max(.8, this.swimVelocity.length() / SWIMMING.speed) : 1,
           signedSpeed: normalizedSpeed * travelSign,
           [LOCOMOTION_WALK_BLEND_INPUT]: locomotionWalkBlendWeight(normalizedSpeed),
@@ -15576,8 +15582,8 @@ export class Player {
       targetYaw = this.ropeFaceYaw;
     } else if (onFootRunReversal) {
       // Input leads a committed run turnaround while the root still slides
-      // through old momentum. The body takes a smooth visible pivot rather
-      // than teleporting through 180 degrees in one rendered frame.
+      // through old momentum. A four-frame pivot gets facing out of the way
+      // before the much slower physical slide changes direction.
       targetYaw = wrapAngle(Math.atan2(this.walkIntent.x, this.walkIntent.z) - Math.PI);
       runReversal = true;
     } else if (

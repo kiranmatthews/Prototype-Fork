@@ -84,6 +84,7 @@ try {
     let boardAirFrames = 0;
     let slowWalkFrames = 0;
     const movement = createHash('sha256');
+    const trajectory = createHash('sha256');
     try {
       for (let frame = 0; frame < replay.frames; frame++) {
         assert.ok(replayer.feed(input, player.camDir));
@@ -91,13 +92,16 @@ try {
         level.update(CONST.fixedStep);
         player.flushLevelCrateRewards(level);
         player.commitRenderStep(level);
+        trajectory.update(JSON.stringify([player.state, player.grounded, player.freeSkate,
+          ...player.pos.toArray(), player.speed, player.vVel, ...player.walkVelocity.toArray()]));
         movement.update(JSON.stringify([player.state, player.grounded, player.freeSkate,
           ...player.pos.toArray(), player.speed, player.vVel, ...player.walkVelocity.toArray(),
           player.cratesBroken, player.fruit, player.lives]));
         const intent = player.animationIntent;
         const { normalizedSpeed, inputs } = intent.motion;
         if (intent.clipId === 'player.run' && player.grounded && !player.freeSkate) {
-          const expected = Math.min(1, player.walkVelocity.length() / TUNING.walkSpeed);
+          const physical = player.walkVelocity.length() / TUNING.walkSpeed;
+          const expected = Math.min(1, player.walkTurnaround ? Math.max(physical, player.walkRamp) : physical);
           assert.ok(Math.abs(normalizedSpeed - expected) < 1e-10,
             `${name} frame ${frame}: on-foot animation uses the wrong speed range`);
           if (player.airFromSkate && expected >= .99) {
@@ -105,7 +109,7 @@ try {
             assert.ok(inputs.locomotionWalkBlend < .02,
               `${name} frame ${frame}: running after board air is stuck in Walk`);
           }
-          if (expected > 0 && expected <= 1 / 3) {
+          if (!player.walkTurnaround && expected > 0 && expected <= 1 / 3) {
             slowWalkFrames++;
             assert.equal(inputs.locomotionWalkBlend, 1, 'slow movement lost the Walk endpoint');
           }
@@ -121,6 +125,12 @@ try {
       assert.ok(recoveredRunFrames > 300, `${name}: replay missed the reported grounded recovery`);
       assert.ok(boardAirFrames > 60, `${name}: replay did not exercise board airs`);
       assert.ok(slowWalkFrames > 0, `${name}: replay did not exercise slow walking`);
+      // Baseline ee9857a: pose/facing changes may alter visual pickup overlap,
+      // but must not retune the controller or change the physical route.
+      assert.equal(trajectory.digest('hex'), name === 'test-course'
+        ? '62e53e98c2b068f66aaf10b87fe4f833aea713c88f66054ffa11f118009f3b4c'
+        : 'ede4514080f972ba32efaa1dda21ae1ce5d9885508c08622d5e2fef2a20c78c9',
+      `${name}: facing/animation changed the physical trajectory`);
       console.log(`${name}: ${recoveredRunFrames} recovered run frames, ${boardAirFrames} board air frames; movement ${movement.digest('hex')}`);
     } finally {
       replayer.end(); level.dispose(); swirls.clear();

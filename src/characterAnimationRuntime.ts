@@ -1,4 +1,5 @@
 import type { Player, PlayerAnimationClipHint } from './player';
+import { RUN_STOP_CLIP_ID, RUN_MOVE_INTENT_INPUT, RUN_STOP_COAST_FRACTION } from './animation/runStop';
 import {
   RigBinding,
   UNITY_CRAWL_CONTACT_ADAPTATION,
@@ -30,7 +31,7 @@ import {
 } from './animation';
 
 export const LAND_CLIP_ID = 'player.land';
-export const PLAYER_TRANSITION_CLIP_IDS = [LAND_CLIP_ID, CROUCH_CLIP_IDS.enter, CROUCH_CLIP_IDS.exit] as const;
+export const PLAYER_TRANSITION_CLIP_IDS = [LAND_CLIP_ID, CROUCH_CLIP_IDS.enter, CROUCH_CLIP_IDS.exit, RUN_STOP_CLIP_ID] as const;
 /** Routes allowed to opt into gameplay-phase scrubbing via clip metadata.
  * Manual Studio preview always remains ordinary saved-speed playback. */
 export const ACTION_PROGRESS_TIMELINE_CLIP_IDS = [
@@ -54,7 +55,7 @@ export const LAND_RUN_CANCEL_BLEND_SECONDS = 0.12;
 export const LAND_RUN_LATE_BLEND_SECONDS = 0.12;
 export const LOCOMOTION_BLEND_SECONDS = 0.14;
 
-type RuntimeTransientKind = 'landing' | 'crouch-enter' | 'crouch-exit';
+type RuntimeTransientKind = 'landing' | 'crouch-enter' | 'crouch-exit' | 'run-stop';
 
 interface RuntimeTransient {
   readonly kind: RuntimeTransientKind;
@@ -145,6 +146,8 @@ const AIRBORNE_CLIP_IDS = new Set<ClipId>([
 
 function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId): number {
   if (!from) return 0;
+  if (to === RUN_STOP_CLIP_ID) return .10;
+  if (from === RUN_STOP_CLIP_ID) return .12;
   if (to === 'player.death') return .12;
   if (from.startsWith('player.swim') || to.startsWith('player.swim')) return .3;
   if (to === LAND_CLIP_ID && AIRBORNE_CLIP_IDS.has(from)) {
@@ -262,6 +265,10 @@ export class CharacterAnimationRuntime {
   private authoredPlaybackSpeed: number | null = null;
   private previousGrounded: boolean;
   private previousHint: ClipId;
+  private previousMoveIntent = 0;
+  private previousFootSpeed = 0;
+  private runStopStartSpeed = 1;
+  private runStopSettleElapsed = 0;
   private transient: RuntimeTransient | null = null;
   private lastSampledPose: PoseBuffer | null = null;
   private transitionBlendWeight: number | null = null;
@@ -426,6 +433,11 @@ export class CharacterAnimationRuntime {
     const justLanded = grounded && !this.previousGrounded;
     this.previousGrounded = grounded;
     const hint = intent.clipId;
+    const moveIntent = intent.motion.inputs?.[RUN_MOVE_INTENT_INPUT] ?? 0;
+    const releasedRun = this.previousMoveIntent > .05 && moveIntent <= .05 && this.previousFootSpeed >= .45;
+    const releasedSpeed = this.previousFootSpeed;
+    this.previousMoveIntent = moveIntent;
+    this.previousFootSpeed = intent.motion.normalizedSpeed;
     const wasLow = this.previousHint === CROUCH_CLIP_IDS.idle || this.previousHint === CROUCH_CLIP_IDS.move;
     const isLow = hint === CROUCH_CLIP_IDS.idle || hint === CROUCH_CLIP_IDS.move;
     this.previousHint = hint;
@@ -443,6 +455,9 @@ export class CharacterAnimationRuntime {
     }
 
     if (this.manualClipId === null) {
+      const canSkid = grounded && (hint === 'player.run' || hint === 'player.idle') &&
+        (intent.motion.inputs?.charge ?? 0) < .01;
+      if (this.transient?.kind === 'run-stop' && (!canSkid || moveIntent > .05)) this.cancelTransient();
       // Enter/exit are presentation one-shots. A jump, slide, bail, or renewed
       // crouch interrupts them immediately; they never delay gameplay input.
       if ((this.transient?.kind === 'crouch-enter' && hint !== CROUCH_CLIP_IDS.idle) ||
@@ -473,6 +488,11 @@ export class CharacterAnimationRuntime {
           this.findPlayableClip(CROUCH_CLIP_IDS.exit)) {
         this.cancelTransient();
         this.transient = this.makeTransient('crouch-exit', CROUCH_CLIP_IDS.exit);
+      }
+      if (!justLanded && !this.transient && canSkid && releasedRun && this.findPlayableClip(RUN_STOP_CLIP_ID)) {
+        this.transient = this.makeTransient('run-stop', RUN_STOP_CLIP_ID);
+        this.runStopStartSpeed = Math.max(.001, releasedSpeed);
+        this.runStopSettleElapsed = 0;
       }
     } else {
       this.cancelTransient();
@@ -511,13 +531,13 @@ export class CharacterAnimationRuntime {
       const idle = this.findPlayableClip('player.idle');
       const locomotionSwitch = this.manualClipId === null && !this.restartPending &&
         idle?.metadata?.locomotionTransition === LOCOMOTION_PHASE_MATCHED_IDLE &&
-        ((clip.id === 'player.idle' && (previousClipId === 'player.run' || previousClipId === PLAYER_WALK_CLIP_ID)) ||
+        ((clip.id === 'player.idle' && (previousClipId === 'player.run' || previousClipId === PLAYER_WALK_CLIP_ID || previousClipId === RUN_STOP_CLIP_ID)) ||
           (previousClipId === 'player.idle' && (clip.id === 'player.run' || clip.id === PLAYER_WALK_CLIP_ID)));
       const previousClip = previousClipId ? this.findPlayableClip(previousClipId) : null;
       // A steady outgoing loop keeps moving as it fades. If input reverses
       // during a fade, start from the last fully mixed pose instead: restarting
       // a raw source there would pop the entire skeleton back to that source.
-      this.locomotionOutgoing = locomotionSwitch && !this.switchOutgoingPose && previousClip && this.motionContext
+      this.locomotionOutgoing = locomotionSwitch && !this.switchOutgoingPose && previousClip?.loop.mode === 'loop' && this.motionContext
         ? { clip: previousClip, playbackSeconds: this.playbackSeconds, offset: this.playbackOffset,
             rate: this.locomotionPlaybackScale(previousClip, this.motionContext), motion: this.motionContext }
         : null;
@@ -529,7 +549,7 @@ export class CharacterAnimationRuntime {
           ? this.pendingRunHandoffOffset
           : null;
       const switchBlendDuration = this.manualClipId === null
-        ? locomotionSwitch
+        ? previousClipId === RUN_STOP_CLIP_ID ? .12 : locomotionSwitch
           ? clip.id === 'player.idle' ? LOCOMOTION_STOP_BLEND_SECONDS : LOCOMOTION_START_BLEND_SECONDS
           : authoredSwitchBlendDuration(previousClipId, clip.id)
         : 0;
@@ -564,7 +584,7 @@ export class CharacterAnimationRuntime {
       if (this.locomotionOutgoing) this.locomotionOutgoing.playbackSeconds += dt * this.runtimeSpeed * this.locomotionOutgoing.rate;
     }
 
-    const motion = this.motionForClip(clip, intent.motion);
+    let motion = this.motionForClip(clip, intent.motion);
     const gameplayProgressTimeline =
       this.manualClipId === null && usesActionProgressTimeline(clip);
     this.timelineTime = gameplayProgressTimeline
@@ -572,6 +592,16 @@ export class CharacterAnimationRuntime {
         Math.min(1, Math.max(0, motion.actionProgress)) *
         (clip.range.end - clip.range.start)
       : clipTimeAt(clip, this.playbackSeconds, { offset: this.playbackOffset });
+    if (this.manualClipId === null && this.transient?.kind === 'run-stop') {
+      const span = Math.max(1e-6, clip.range.end - clip.range.start);
+      const coasting = motion.normalizedSpeed > .005;
+      if (!coasting) this.runStopSettleElapsed += dt * this.runtimeSpeed * clip.playbackSpeed;
+      const phase = coasting
+        ? RUN_STOP_COAST_FRACTION * Math.min(1, Math.max(0, 1 - motion.normalizedSpeed / this.runStopStartSpeed))
+        : Math.min(1, RUN_STOP_COAST_FRACTION + this.runStopSettleElapsed / span);
+      this.timelineTime = clip.range.start + span * phase;
+      motion = { ...motion, actionProgress: phase };
+    }
     const ownsCrawlContacts =
       clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crawl &&
       clip.metadata?.contactAdaptation === UNITY_CRAWL_CONTACT_ADAPTATION;
@@ -731,7 +761,9 @@ export class CharacterAnimationRuntime {
           hint === 'player.run' &&
           landingRunBlendWeight >= 1
         ) ||
-        (this.oneTraversalFinished(clip) && !landingRunBlendInFlight)
+        ((this.transient.kind === 'run-stop'
+          ? this.timelineTime >= clip.range.end - 1e-8
+          : this.oneTraversalFinished(clip)) && !landingRunBlendInFlight)
       )
     ) {
       this.cancelTransient(false);
