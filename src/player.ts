@@ -1138,7 +1138,6 @@ export class Player {
   private slideGraceT = 0; // window after a slide ends where a jump still slide-boosts
   private grindTime = 0; // how long this grind has lasted (balance ramps up)
   private grindCalmT = 0; // entry calm beat: seconds of steadied needle, bought by momentum carried ALONG the bar at the catch
-  private grindStickStale = 0; // SIGN of the stick direction already held when the rail was caught (a side-scroll travel hold, not a lean): it can never push the needle outward, only steady it — until released or flipped once (0 = none)
   private balanceCritT = 0; // time spent pegged at the meter edge (bail grace)
   private snapOffset = new THREE.Vector3(); // entry offset, eased away on the rail
   private snapEase = 1; // 0 -> 1 over railSnapEase seconds after a grind starts
@@ -8614,26 +8613,24 @@ export class Player {
   // manuals the vertical one (up/down needle — balance + = tipping back onto
   // the tail, needle sinks to the bottom; push UP to level out). null = hidden.
   get balanceMeter(): { mode: 'grind' | 'manual'; bal: number; crit: boolean } | null {
-    if (this.state === 'grind') return { mode: 'grind', bal: this.balance, crit: this.balanceCritT > 0 };
+    // Warn before the brink; with zero bail grace there is no live pegged
+    // frame left to display the old last-chance glow.
+    const critical = Math.abs(this.balance) >= 0.7 || this.balanceCritT > 0;
+    if (this.state === 'grind') return { mode: 'grind', bal: this.balance, crit: critical };
     if (this.lipStallT > 0)
       // stall: whichever bar reads true on screen ('grind' = the horizontal
       // bar, 'manual' = the vertical one), needle signed to the screen too
       return {
         mode: this.lipMeterH ? 'grind' : 'manual',
         bal: this.balance * this.lipDispSign,
-        crit: this.balanceCritT > 0,
+        crit: critical,
       };
-    if (this.manualing !== 0) return { mode: 'manual', bal: this.balance, crit: this.balanceCritT > 0 };
+    if (this.manualing !== 0) return { mode: 'manual', bal: this.balance, crit: critical };
     return null;
   }
 
-  // ---- authentic THPS/THUG balance core (shared by grind, manual & lip) ------
-  // Neversoft ran ONE CManual per balance trick: a needle POSITION plus a
-  // VELOCITY — an inverted pendulum that runs away from center, nudged by taps
-  // and a little noise. We fold that onto our single this.balance ([-1,1]) as
-  // additive layers, each gated by a slider whose 0 is the classic first-order
-  // needle. So neutral (inertia/gravity/noise = 0) is byte-for-byte the old
-  // feel, and every dial toward "authentic" is opt-in and live-tunable.
+  // Shared balance position and velocity. The middle permits small taps;
+  // nonlinear outward pull and momentum make a late edge correction costly.
   private stepBalanceCore(
     dt: number,
     runSign: number, // which way the constant drift runs (sign of the needle)
@@ -8641,11 +8638,12 @@ export class Player {
     control: number, // already-signed, already safe-gained player fight
     ramp: number, // the capped difficulty ramp (also scales the sketch)
   ): void {
-    // constant runaway — kept so the neutral model equals the classic one
+    // The familiar base drift still chooses the direction. Edge strength is
+    // nonlinear in position: default cubic pull grows much faster through
+    // the outer third than across the calm middle.
     let force = runSign * drift;
-    // inverted-pendulum "gravity": zero at center, harder the further off you
-    // are (the edge cliff — react too late and no tap saves it)
-    force += this.balance * TUNING.balanceGravity * drift;
+    const edge = Math.pow(Math.min(1, Math.abs(this.balance)), Math.max(1, TUNING.balanceEdgePower));
+    force += Math.sign(this.balance) * edge * TUNING.balanceGravity * drift;
     // the player's tap/hold fight
     force += control;
     // the "sketch": a smoothed, deterministic wander so the tip is never
@@ -8659,19 +8657,21 @@ export class Player {
         force += n * TUNING.balanceNoise * (1 + ramp) * quiet;
       }
     }
-    // momentum: the velocity LAGS toward the force. At inertia 0 it snaps to the
-    // force every frame (follow = 1) so the needle is exactly first-order; dial
-    // up and the needle carries speed, overshoots center, and demands feathered
-    // taps — the real Tony Hawk slosh.
+    // Integrate the velocity response and its travel over this whole step.
+    // A counter-input brakes carried velocity; it cannot reverse the needle
+    // instantaneously. Inertia 0 remains available for direct response.
     if (TUNING.balanceInertia <= 0) {
       this.balanceVel = force;
+      this.balance += force * dt;
     } else {
       const respRate =
         CONST.balanceRespSnap +
         (CONST.balanceRespFloat - CONST.balanceRespSnap) * TUNING.balanceInertia;
-      this.balanceVel += (force - this.balanceVel) * Math.min(1, respRate * dt);
+      const before = this.balanceVel;
+      const follow = -Math.expm1(-respRate * dt);
+      this.balanceVel += (force - before) * follow;
+      this.balance += force * dt + (before - force) * follow / respRate;
     }
-    this.balance += this.balanceVel * dt;
   }
 
   // Neversoft "safe_period": for the first balanceSafePeriod seconds of a trick,
@@ -9435,27 +9435,11 @@ export class Player {
     );
     const instability = TUNING.balanceDrift * (1 + ramp) * speedFactor * styleWobble;
     const runSign = Math.sign(this.balance || 1);
-    // Left/right fights the needle — everywhere, the classic. Two guards
-    // keep a MOMENTUM entry honest (side-scroll rails: you necessarily hold
-    // the travel direction to make the hop, and that same direction used to
-    // shove the needle at full force the frame you caught the bar):
-    //  * the STALE HOLD — the direction already down at the catch — never
-    //    pushes OUTWARD: it can steady you back toward center but can't
-    //    fling you past it. Let go once (or flip) and it's a live
-    //    correction with full authority, like any fresh press.
-    //  * the entry calm beat (grindCalmT, bought by speed carried along the
-    //    bar) wakes the drift up gradually instead of at full boil.
-    const mx = this.rawInput.moveX;
-    if (
-      this.grindStickStale !== 0 &&
-      (Math.abs(mx) < 0.3 || Math.sign(mx) !== this.grindStickStale)
-    )
-      this.grindStickStale = 0; // released or flipped: the stick is yours again
-    const staleOut =
-      this.grindStickStale !== 0 && Math.sign(mx) === Math.sign(this.balance || mx);
+    // Held input is always a balance command, even if it was already down
+    // at the catch. Entry calm is an explicit tuner, disabled by default.
     const calm =
       this.grindCalmT > 0 ? Math.min(1, this.grindTime / this.grindCalmT) : 1;
-    let control = (staleOut ? 0 : mx) * TUNING.balanceControl;
+    let control = this.rawInput.moveX * TUNING.balanceControl;
     control *= this.safeGain(this.grindTime, control, runSign);
     this.stepBalanceCore(dt, runSign, instability * calm, control, ramp);
     if (this.uberTimer > 0 || this.balanceBoostT > 0) {
@@ -9479,15 +9463,10 @@ export class Player {
           return;
         } else if (this.tryGrindDropIn(level)) {
           return;
-        } else if (this.railFallSide(level) === 'vert') {
-          // The needle threw us INTO the transition — that's not a crash,
-          // it's the grind ending: drop in and keep riding the line.
-          this.dropOffRail();
-          return;
         } else {
           // thrown toward the deck / uphill side: the honest bail — and the
           // tumble goes to the SIDE the needle pegged, not down the rail
-          this.bailFromRail(Math.sign(this.balance || 1), level);
+          this.bailFromRail(Math.sign(this.balance || 1));
           return;
         }
       }
@@ -9874,18 +9853,11 @@ export class Player {
     this.balanceVel = 0;
     this.balanceCritT = 0;
     this.noisePhase = this.simRand() * Math.PI * 2;
-    // MOMENTUM STEADIES THE CATCH: speed carried along the bar buys a calm
-    // beat where the needle stays quiet, so a committed fast entry starts
-    // planted instead of instantly tipping. And the direction you were
-    // ALREADY holding on the way in (on a side-scroll stretch you hold
-    // toward the rail just to make the hop) never counts as a lean — it
-    // goes dead until it comes back to neutral once.
+    // Optional entry calm remains tunable but is off in the default profile.
     this.grindCalmT =
       TUNING.grindCalm > 0
         ? Math.max(0.12, Math.min(1, Math.abs(alongVel) / 10) * TUNING.grindCalm)
         : 0;
-    this.grindStickStale =
-      Math.abs(this.rawInput.moveX) > 0.3 ? Math.sign(this.rawInput.moveX) : 0;
     // landing-on-the-rail burst: one bright spray of the same sparks the
     // grind itself will now stream
     PUFF_DIR.set(-this.axisF.x * Math.sign(this.speed || 1), 0.5, -this.axisF.z * Math.sign(this.speed || 1));
@@ -10180,56 +10152,11 @@ export class Player {
     return false;
   }
 
-  // Which way is the balance needle throwing us, and what's over there?
-  // Steep ground or a real drop on the fall side = the transition ('vert'):
-  // falling that way reads as dropping in, not crashing. Flat ground near
-  // rail height = the deck/uphill side, where a fall is still a bail.
-  private railFallSide(level: Level): 'vert' | 'deck' {
-    if (!this.grindRail) return 'deck';
-    const s = Player.RAIL_SIDE;
-    this.railSide(s);
-    if (s.x === 0 && s.z === 0) return 'deck';
-    const probe = this.queryGround(level, s.x * 2.2, s.z * 2.2);
-    if (!probe) return 'vert'; // open air: riding the drop out beats a face-plant
-    if (probe.normal.y < TUNING.steepStand) return 'vert'; // transition face
-    return this.pos.y - probe.y > 1.6 ? 'vert' : 'deck';
-  }
-
-  // The needle threw us INTO the transition: end the grind cleanly — heading
-  // bends off the rail toward the drop, speed and pending combo both live.
-  private dropOffRail(): void {
-    const rail = this.grindRail!;
-    const t = rail.tangentAt(this.grindT);
-    const hx = t.x * this.grindDir;
-    const hz = t.z * this.grindDir;
-    const hl = Math.hypot(hx, hz) || 1;
-    const s = Player.RAIL_SIDE;
-    this.railSide(s);
-    const fx = hx / hl + s.x * 0.9;
-    const fz = hz / hl + s.z * 0.9;
-    const fl = Math.hypot(fx, fz) || 1;
-    this.axisF.set(fx / fl, 0, fz / fl);
-    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
-    this.railLeft();
-    this.grindRail = null;
-    this.state = 'air';
-    this.airFromSkate = true; // still a board air: tricks live
-    this.airGrav = 'board';
-    this.freeSkate = true;
-    this.speed = Math.max(this.grindVel * 0.85, 3);
-    this.vVel = 1.2;
-    this.airMomentum = true;
-    this.regrindCd = CONST.regrindCooldown;
-    this.balance = 0;
-    this.balanceCritT = 0;
-    sfx.play('skateTransition', 0.6);
-  }
-
   // Pegged the balance meter (or hit a crate): stumble off the rail with most
   // speed gone and the pending combo lost. Over a pit that means a drop.
   // sideSign ±1 = the needle pegged that way: the stumble EJECTS toward that
   // side (heading tips hard off the rail), so you fall where you failed.
-  private bailFromRail(sideSign = 0, level: Level | null = null): void {
+  private bailFromRail(sideSign = 0): void {
     const rail = this.grindRail;
     if (sideSign !== 0 && rail) {
       const t = rail.tangentAt(this.grindT);
@@ -10259,26 +10186,7 @@ export class Player {
     this.invulnSilent = true; // the tumble is the tell, not the flicker
     this.loseCombo();
     this.emitSparks(8, 0xffb545, 2);
-    // DROPPING INTO A VERT: the needle pegged on a coping/lip line and threw
-    // you toward the TRANSITION — that's a drop-in, not a wipeout. Stay on the
-    // board, no knockdown, and ride out whatever the fall gives you (the
-    // energy-conserving landing turns the drop into speed down the face).
-    // Coping drops have already validated and attached their riding face in
-    // tryGrindDropIn. The flat deck carries the same vert tag as its bowl;
-    // it must not turn a failed OUTWARD balance into this legacy air save.
-    if (level !== null && !rail?.coping) {
-      const into = this.queryGround(level, this.axisF.x * 1.6, this.axisF.z * 1.6);
-      if (
-        into !== null &&
-        (into.halfpipe !== undefined || into.vert === true || into.normal.y < TUNING.steepStand)
-      ) {
-        this.airFromSkate = true; // the landing projection needs the board air
-        this.airGrav = 'board';
-        this.airMomentum = true;
-        return;
-      }
-    }
-    // Falling off a rail anywhere ELSE is a WIPEOUT: the body rolls off the
+    // A failed rail balance is a WIPEOUT: the body rolls off the
     // side the needle said, the deck goes flying, and the knockdown clock
     // (mashable) runs like every other crash. Board gravity + carried
     // momentum, or the old foot fall-rate (119) put her down before the roll
@@ -11209,7 +11117,7 @@ export class Player {
             level.detonate(c);
           } else if (this.state === 'grind') {
             if (this.grindVel >= TUNING.smashSpeed || this.spendMask()) level.detonate(c);
-            else this.bailFromRail(0, level);
+            else this.bailFromRail(0);
           } else if (crateStompContacts.has(c)) {
             if (this.slamActive) {
               level.detonate(c);
@@ -11274,9 +11182,9 @@ export class Player {
             if (c.bouncy) {
               if (this.grindVel >= TUNING.smashSpeed || this.spendMask())
                 this.smashCrate(level, c);
-              else this.bailFromRail(0, level);
+              else this.bailFromRail(0);
             } else if (this.invulnTimer <= 0 && !this.spendMask()) {
-              this.bailFromRail(0, level);
+              this.bailFromRail(0);
             }
           } else if (crateStompContacts.has(c) && this.slamActive) {
             // Slam on WOOD breaks it. Slam on METAL cancels into a plain
@@ -11361,7 +11269,7 @@ export class Player {
           } else if (this.state === 'grind') {
             // a slab across the rail line knocks you off like any other
             // unbreakable box, unless a mask covers it
-            if (this.invulnTimer <= 0 && !this.spendMask()) this.bailFromRail(0, level);
+            if (this.invulnTimer <= 0 && !this.spendMask()) this.bailFromRail(0);
           } else if (this.isLatchedCrateTopCarry(c.box)) {
             // Crate-top carry, not a side impact.
           } else {
@@ -11440,7 +11348,7 @@ export class Player {
           // exception: grinding through one always pops it (it's a reward,
           // not a trap).
           if (c.mask || this.grindVel >= TUNING.smashSpeed || this.spendMask()) this.smashCrate(level, c);
-          else this.bailFromRail(0, level);
+          else this.bailFromRail(0);
         } else if (crateStompContacts.has(c)) {
           // Crash rules: landing on top breaks it and bounces you — high
           // enough to chain crate to crate. The final Unity rule keeps a true

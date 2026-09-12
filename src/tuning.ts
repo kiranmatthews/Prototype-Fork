@@ -133,18 +133,18 @@ export const TUNING = {
   // return as a deliberate mechanic in the redesign.)
   balanceDrift: 0.9, // THPS grind balance: how fast the needle runs away
   balanceControl: 2.8, // how hard left/right fights the needle
-  grindCalm: 0.45, // entry calm: a full-speed catch steadies the needle for up to this many seconds (momentum plants you; slow creeps get less)
-  balanceSpeedEffect: 1.4, // how much grind SPEED sways the needle (0 = none, slow grinds wobble more)
-  balanceGrace: 2, // seconds of flat difficulty at the start of every grind
+  grindCalm: 0, // optional entry calm; disabled so catches require balance immediately
+  balanceSpeedEffect: 0.75, // fast grinds retain at least 70% of base drift
+  balanceGrace: 0, // difficulty begins increasing immediately
   balanceRamp: 0.25, // per-second drift growth after the grace (longer grind = harder)
-  balanceRampMax: 6, // difficulty CEILING: drift never exceeds this multiple of balanceDrift
+  balanceRampMax: 3, // keeps a centred ordinary-speed grind controllable as its edge pull steepens
   bailSpeedKeep: 0.5, // fraction of speed a bail KEEPS — crashing at 23 should carry you further than crashing at a walk (0 = the old dead stop)
   bailFriction: 14, // how fast the downed body scrubs that speed off (2x normal friction)
   bailMashWindow: 0.4, // button-edge accumulator half-life while knocked down
   bailMashGain: 0.2, // knockdown clock speed-up per accumulated edge
   bailMashMax: 1, // cap on that speed-up: 1 = a saturated mash HALVES the lockout (THUG's 1.0-2.0x bash factor)
   bailRollOutSpeed: 4, // automatic forward carry as the recovery roll becomes its first running stride
-  bailGrace: 0.15, // pegged-needle beat where slamming the stick back can still save the grind
+  bailGrace: 0, // no last-chance recovery after the needle reaches either end
   // RAGDOLL WIPEOUTS: every knockdown becomes a tumbling body — it bounces off
   // the ground, the limbs windmill, the deck flies off on its own, and the
   // whole thing settles into the existing sprawl + mash-out get-up.
@@ -168,15 +168,14 @@ export const TUNING = {
   hugeDropDistance: 12, // apex-to-touchdown descent required for a heavy-landing bail
   hugeDropImpact: 20, // minimum velocity into the landing normal for a heavy-landing bail
   crateTripSpeed: 6, // skate into a wood crate at or above this (but below smashSpeed) = trip and tumble OVER it
-  // AUTHENTIC THPS/THUG balance dynamics (Neversoft's CManual is an unstable
-  // inverted pendulum: needle position + velocity, nudged by taps and noise).
-  // Each layer is ADDITIVE — at 0 the meter is exactly the classic first-order
-  // needle, so neutral reproduces today; dial up for the real Tony Hawk feel.
-  balanceInertia: 0, // needle MOMENTUM: 0 = snappy instant correction, 1 = heavy lag — input feeds velocity so the needle overshoots and you must lead your taps
-  balanceGravity: 2, // EDGE CLIFF: extra runaway proportional to how far off-center you are — 0 = flat, higher = calm middle but the edges bolt away (react late = no save)
+  // Shared grind/manual/lip dynamics: a controllable middle, escalating edge
+  // pull, and carried velocity that requires corrections before the brink.
+  balanceInertia: 0.85, // 0 = instant response; higher = braking takes time and corrections can overshoot
+  balanceGravity: 6, // additional outward pull at the ends, as a multiple of base drift
+  balanceEdgePower: 3, // 1 = linear pull; 3 = cubic escalation concentrated near the ends
   balanceNoise: 0.18, // SKETCH: smoothed random wander so the tip direction can't be memorized (rides the same capped ramp as the drift; a committed counter-tap quiets it)
   balanceNoiseFreq: 6, // how fast the sketch sways (rad/s) — low = a lazy roll, high = a nervous jitter
-  balanceSafePeriod: 0.1, // entry ease-in: corrective input fades in over this many seconds so an eager first tap can't fling the fresh needle (Neversoft safe_period)
+  balanceSafePeriod: 0, // optional entry input easing; disabled for immediate full control
   crawlSpeed: 3.5, // Crash crouch-crawl speed while holding Circle stopped
   smashSpeed: 12.5, // skating/grinding at or above this speed plows straight through plain crates
   arrowBounce: 16, // arrow-crate super bounce launch velocity
@@ -205,7 +204,7 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 18; // v18: independent camera position and pitch; retire redundant rig offset
+export const TUNING_VERSION = 19; // v19: nonlinear balance edge pull, momentum and unbuffered failures
 // v17: captured Chrome carve grip and balance defaults
 // v16: tunable high-speed skating FOV push
 // v15: independent low/high skate carve grip replaces the coupled ratio
@@ -369,6 +368,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   bailGrace: { min: 0, max: 1.2, step: 0.05 },
   balanceInertia: { min: 0, max: 1, step: 0.05 },
   balanceGravity: { min: 0, max: 6, step: 0.1 },
+  balanceEdgePower: { min: 1, max: 5, step: 0.1 },
   balanceNoise: { min: 0, max: 0.6, step: 0.02 },
   balanceNoiseFreq: { min: 0.5, max: 20, step: 0.5 },
   balanceSafePeriod: { min: 0, max: 1.5, step: 0.05 },
@@ -619,21 +619,23 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   balanceDrift: 'How fast the grind balance needle runs away from center on its own.',
   balanceControl: 'How hard left/right input fights the balance needle.',
   grindCalm:
-    'Momentum steadies the catch: landing on a rail at speed keeps the needle quiet for up to this many seconds (scaled by how fast you got on — slow creeps get a shorter beat). The direction you were still holding at the catch never shoves the needle; let go once and left/right fight as normal. 0 = off.',
+    'Optional entry calm scaled by incoming rail speed. 0 = full drift immediately, the default. Held direction always controls balance, including the direction used to catch the rail.',
   balanceSpeedEffect:
-    'Baseline for how much grind speed sways the needle. 0 = speed is ignored; 1 = slow grinds wobble up to 1.5x, fast grinds less; 2 = that effect doubled.',
+    'How much grind speed changes instability. 0 ignores speed. The default 0.75 leaves fast grinds at 70% of base drift; the old 1.4 reduced them to 44%. Slower grinds remain less stable.',
   balanceGrace:
     'Every grind starts with this many seconds at BASE difficulty — the needle ramp only starts growing after.',
   balanceRamp:
     'After the grace, needle drift grows by this fraction of balanceDrift per second — long grinds get progressively dicier.',
   balanceRampMax:
-    'The difficulty ceiling: drift never exceeds this multiple of balanceDrift, so marathon grinds stay hard but never impossible.',
+    'Ceiling on the time-based drift multiplier. The default keeps the centre recoverable at ordinary grind speeds; edge pull still makes late corrections fail.',
   bailGrace:
-    'Rail forgiveness buffer: once the balance needle pegs, you have this many seconds to slam the stick the other way before the bail actually fires. 0 = pegging is instant death for the grind.',
+    'Optional last-chance balance buffer for grinds, manuals and lip stalls. The default 0 resolves a meter-end crossing immediately; nonzero values allow recovery after reaching the end.',
   balanceInertia:
-    'AUTHENTIC THPS momentum. 0 = the classic snappy needle (corrections are instant). Higher makes the needle carry velocity — input accelerates it instead of moving it directly, so it overshoots center and you must feather taps and lead the drift, the real Tony Hawk slosh. Applies to grinds, manuals AND lip stalls.',
+    'How much needle velocity carries through a correction. 0 reverses instantly; higher values require you to brake the outward drift before steering back and can overshoot the centre. Applies to grinds, manuals and lip stalls.',
   balanceGravity:
-    'The inverted-pendulum edge cliff. 0 = the needle runs away at the same rate everywhere (classic). Higher keeps the CENTER calm and makes the EDGES bolt away — drift too far and no counter-tap saves it, so you fight to stay near the middle. Shares the grind/manual/lip drift scaling (speed, style, ramp).',
+    'Additional outward pull at the meter ends, multiplied by the current mode, speed, style and time-based drift. Balance Edge Power shapes how progressively this force builds away from centre.',
+  balanceEdgePower:
+    'Shape of the edge pull: 1 grows linearly with distance from centre; 3 grows cubically, leaving room to balance in the middle but accelerating sharply through the outer third. Higher values concentrate danger nearer the ends.',
   balanceNoise:
     "The 'sketch'. 0 = a perfectly predictable needle. Above 0 adds a smoothed random wander so which way you start tipping is never the same twice (a committed counter-tap quiets it). Amplitude rides the same capped ramp as the drift, so long tricks fluctuate wilder but stay bounded.",
   balanceNoiseFreq:
@@ -766,7 +768,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'LEDGE GRAB', keys: ['ledgeGrabTime', 'ledgeClimbTime', 'ledgeClimbPop', 'ledgeReach'] },
   {
     title: 'GRINDS',
-    keys: ['railSnapDistance', 'grindApproachMargin', 'railTripSpeed', 'railSpeedBoost', 'grindDrag', 'perfectGrindSpeed', 'perfectGrindHold', 'grindSpeed', 'grindJumpForce', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'grindCalm', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace', 'balanceInertia', 'balanceGravity', 'balanceNoise', 'balanceNoiseFreq', 'balanceSafePeriod'],
+    keys: ['railSnapDistance', 'grindApproachMargin', 'railTripSpeed', 'railSpeedBoost', 'grindDrag', 'perfectGrindSpeed', 'perfectGrindHold', 'grindSpeed', 'grindJumpForce', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'grindCalm', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace', 'balanceInertia', 'balanceGravity', 'balanceEdgePower', 'balanceNoise', 'balanceNoiseFreq', 'balanceSafePeriod'],
   },
   {
     title: 'MANUAL & LIP',
