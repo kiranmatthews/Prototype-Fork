@@ -118,8 +118,10 @@ export const TUNING = {
   ledgeReach: 2.4, // highest a lip can sit above your feet and still be caught
   airControl: 0, // forward/back speed adjustment in the air
   manualMinSpeed: 3.5, // must be rolling at least this fast to pop (or hold) a manual
-  manualDrift: 0.65, // manual balance: how fast the pitch needle runs away
+  manualDrift: 0.5, // manual balance: how fast the pitch needle runs away
   manualControl: 4, // slightly stronger up/down correction; edge shape and momentum stay unchanged
+  manualCalm: 0.35, // seconds of natural-pressure easing on every manual catch
+  manualArmWindow: 0.35, // completed airborne flick waits this long for a landing
   manualFlickWindow: 0.28, // max seconds between the two stick flicks (up-then-down = manual, down-then-up = nose)
   manualLandGrace: 0.65, // seconds after a clean landing before the combo banks — time to flick into a manual
   manualCoyote: 0.45, // seconds a manual survives with the wheels off the deck (crests, rollers) before it drops
@@ -131,14 +133,15 @@ export const TUNING = {
   // glue anchor off the wall and is removed from the code entirely; old
   // saves/replays that still carry the key are ignored. Spine transfers
   // return as a deliberate mechanic in the redesign.)
-  balanceDrift: 0.9, // THPS grind balance: how fast the needle runs away
-  balanceControl: 3, // slightly stronger left/right correction
+  balanceDrift: 0.7, // natural grind pressure
+  balanceControl: 3.4,
+  balanceEntryLean: 0.1, // initial offset on a fresh grind; linked catches retain their state
   balanceReentryRelief: 0.1, // fraction of needle offset/momentum relieved by a same-combo re-entry
-  grindCalm: 0, // optional entry calm; disabled so catches require balance immediately
+  grindCalm: 0.5, // seconds of natural-pressure easing on every catch; read live
   balanceSpeedEffect: 0.75, // fast grinds retain at least 70% of base drift
-  balanceGrace: 0, // difficulty begins increasing immediately
-  balanceRamp: 0.25, // per-second drift growth after the grace (longer grind = harder)
-  balanceRampMax: 3, // keeps a centred ordinary-speed grind controllable as its edge pull steepens
+  balanceGrace: 1, // accumulated balancing seconds before difficulty increases
+  balanceRamp: 0.18, // per-second difficulty growth, retained through linked catches
+  balanceRampMax: 2.5, // shared difficulty ceiling
   bailSpeedKeep: 0.5, // fraction of speed a bail KEEPS — crashing at 23 should carry you further than crashing at a walk (0 = the old dead stop)
   bailFriction: 14, // how fast the downed body scrubs that speed off (2x normal friction)
   bailMashWindow: 0.4, // button-edge accumulator half-life while knocked down
@@ -171,12 +174,12 @@ export const TUNING = {
   crateTripSpeed: 6, // skate into a wood crate at or above this (but below smashSpeed) = trip and tumble OVER it
   // Shared grind/manual/lip dynamics: a controllable middle, escalating edge
   // pull, and carried velocity that requires corrections before the brink.
-  balanceInertia: 0.85, // 0 = instant response; higher = braking takes time and corrections can overshoot
-  balanceGravity: 6, // additional outward pull at the ends, as a multiple of base drift
+  balanceInertia: 0.7, // quicker braking, with carried momentum and overshoot
+  balanceGravity: 4.5, // additional outward pull at the ends, as a multiple of base drift
   balanceEdgePower: 3, // 1 = linear pull; 3 = cubic escalation concentrated near the ends
   balanceNoise: 0.18, // SKETCH: smoothed random wander so the tip direction can't be memorized (rides the same capped ramp as the drift; a committed counter-tap quiets it)
   balanceNoiseFreq: 6, // how fast the sketch sways (rad/s) — low = a lazy roll, high = a nervous jitter
-  balanceSafePeriod: 0, // optional entry input easing; disabled for immediate full control
+  balanceSafePeriod: 0.25, // eases outward catch input; inward correction always stays full strength
   crawlSpeed: 3.5, // Crash crouch-crawl speed while holding Circle stopped
   smashSpeed: 12.5, // skating/grinding at or above this speed plows straight through plain crates
   arrowBounce: 16, // arrow-crate super bounce launch velocity
@@ -205,7 +208,7 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 20; // v20: modest correction boost and 90% balance carry between linked tricks
+export const TUNING_VERSION = 21; // v21: live per-catch settling, full correction and softer balance pressure
 // v17: captured Chrome carve grip and balance defaults
 // v16: tunable high-speed skating FOV push
 // v15: independent low/high skate carve grip replaces the coupled ratio
@@ -324,17 +327,20 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   ledgeReach: { min: 1.4, max: 3.5, step: 0.1 },
   airControl: { min: 0, max: 40, step: 1 },
   manualMinSpeed: { min: 0, max: 15, step: 0.5 },
-  manualDrift: { min: 0.2, max: 3, step: 0.05 },
+  manualDrift: { min: 0, max: 3, step: 0.05 },
   manualControl: { min: 0.5, max: 8, step: 0.1 },
+  manualCalm: { min: 0, max: 1.2, step: 0.05 },
+  manualArmWindow: { min: 0, max: 1.2, step: 0.05 },
   manualFlickWindow: { min: 0.1, max: 0.6, step: 0.02 },
-  manualLandGrace: { min: 0, max: 1.2, step: 0.05 },
+  manualLandGrace: { min: 0.15, max: 1.2, step: 0.05 },
   manualCoyote: { min: 0, max: 0.6, step: 0.05 },
   lipAngle: { min: 5, max: 60, step: 1 },
   lipMaxTime: { min: 0.5, max: 12, step: 0.25 },
   lipDrift: { min: 0.1, max: 3, step: 0.05 },
   lipControl: { min: 0.5, max: 8, step: 0.1 },
-  balanceDrift: { min: 0.1, max: 2, step: 0.05 },
+  balanceDrift: { min: 0, max: 2, step: 0.05 },
   balanceControl: { min: 0.5, max: 6, step: 0.1 },
+  balanceEntryLean: { min: 0, max: 0.5, step: 0.01 },
   balanceReentryRelief: { min: 0, max: 1, step: 0.01 },
   grindCalm: { min: 0, max: 1.2, step: 0.05 },
   balanceSpeedEffect: { min: 0, max: 2, step: 0.1 },
@@ -393,6 +399,34 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
 };
 
 export const TUNING_LABELS: Partial<Record<TuningKey, string>> = {
+  balanceDrift: 'Grind Drift',
+  balanceControl: 'Grind Correction',
+  balanceReentryRelief: 'Linked Catch Relief',
+  balanceSpeedEffect: 'Grind Speed Influence',
+  grindSpeed: 'Grind Speed Reference',
+  balanceInertia: 'Balance Momentum',
+  balanceEdgePower: 'Edge Curve Power',
+  balanceNoise: 'Balance Wander',
+  balanceNoiseFreq: 'Wander Rate',
+  bailGrace: 'Balance Bail Buffer',
+  manualMinSpeed: 'Manual Entry Speed',
+  manualDrift: 'Manual Drift',
+  manualControl: 'Manual Correction',
+  manualFlickWindow: 'Manual Flick Window',
+  manualCoyote: 'Manual Bump Grace',
+  perfectGrindSpeed: 'Perfect Rail Reward Speed',
+  perfectGrindHold: 'Perfect Rail Reward Duration',
+  railTripSpeed: 'Rail Side-Impact Bail Speed',
+  balanceEntryLean: 'Grind Entry Lean',
+  grindCalm: 'Grind Catch Settle',
+  manualCalm: 'Manual Catch Settle',
+  manualArmWindow: 'Manual Landing Buffer',
+  manualLandGrace: 'Landing Combo Grace',
+  balanceSafePeriod: 'Catch Input Ease',
+  balanceGrace: 'Combo Difficulty Delay',
+  balanceRamp: 'Combo Difficulty Ramp',
+  balanceRampMax: 'Combo Difficulty Cap',
+  balanceGravity: 'Balance Edge Pull',
   milkMagnetRange: 'Magnet distance (m)',
   chaseCam: 'Chase camera',
   camHeight: 'Height (m)',
@@ -603,15 +637,17 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   airControl:
     'Forward/back speed adjustment in the air WHILE SKATING (braking against travel bites 2x harder). On-foot air is direct-drive and ignores this.',
   manualMinSpeed:
-    'Minimum rolling speed to pop a manual (flick the stick up-then-down) or nose manual (down-then-up), and the speed a held manual drops out at.',
+    'Minimum rolling speed to START a manual. An existing manual drops below 70% of this speed, allowing brief speed dips over slopes.',
   manualDrift: 'How fast the manual balance needle runs away on its own (fought with up/down on the stick). Pegging it = bail.',
   manualControl: 'How hard up/down input fights the manual needle.',
+  manualCalm: 'Seconds to smoothly bring in natural manual drift, edge pull and noise after EACH entry, including linked manuals. Full inward correction is always available. Reads live; 0 disables settling. Does not erase the retained needle or combo difficulty.',
+  manualArmWindow: 'Seconds a completed mid-air manual flick waits for a supported landing. Manual Flick Window controls the gap between its two direction taps; this controls the later touchdown buffer.',
   manualLandGrace:
-    'Seconds after a clean landing before the combo banks. Flick a manual (or catch a rail) inside this window and the string stays alive.',
+    'Minimum plain-rolling combo-link time after a clean landing or revert. Flick a manual or catch a rail before it expires. The built-in combo window is 0.15s, so the slider starts there; this is separate from the airborne Manual Landing Buffer.',
   manualCoyote:
     'Seconds a live manual keeps balancing with the wheels briefly off the deck — carries it over crests and rollers instead of dropping. The needle freezes while airborne.',
   manualFlickWindow:
-    'Max time between the two stick flicks that pop a manual. Finish the flick mid-air (within a beat of touchdown) and you LAND INTO the manual — the combo stays alive.',
+    'Maximum time between the two direction taps that request a manual. A completed airborne flick is held for Manual Landing Buffer seconds awaiting touchdown.',
   lipAngle:
     'LIP TRICKS: reach the top of the pipe within this many degrees of DEAD-ON (square to the coping) with Triangle down and you stall on the lip — any speed, press it on the climb or around the lip. Arrive more off-axis than this and Triangle grinds the coping instead. Once stalled you can let go of Triangle: balance alone holds the trick.',
   lipMaxTime: 'Longest a lip stall holds before it auto-drops back into the pipe (keeping the trick).',
@@ -620,16 +656,17 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   lipControl: 'How hard stick input fights the lip stall needle (along whichever screen axis the meter shows).',
   balanceDrift: 'How fast the grind balance needle runs away from center on its own.',
   balanceControl: 'How hard left/right input fights the balance needle.',
+  balanceEntryLean: 'Initial absolute needle offset on a NEW-combo grind; direction is random. Applies at catch. A linked catch instead keeps the previous needle and momentum minus Reentry Relief.',
   balanceReentryRelief:
     'Relief when re-entering a grind, manual or lip balance in the same combo. 0.1 keeps 90% of the previous needle offset and velocity. Accumulated difficulty is retained; a banked/broken combo starts fresh.',
   grindCalm:
-    'Optional entry calm scaled by incoming rail speed. 0 = full drift immediately, the default. Held direction always controls balance, including the direction used to catch the rail.',
+    'Seconds to smoothly bring in natural grind drift, edge pull and noise after EACH catch, including re-entries. Full inward correction remains available. Reads live with no speed scaling; 0 disables settling. Does not reset retained needle position, momentum or combo difficulty.',
   balanceSpeedEffect:
     'How much grind speed changes instability. 0 ignores speed. The default 0.75 leaves fast grinds at 70% of base drift; the old 1.4 reduced them to 44%. Slower grinds remain less stable.',
   balanceGrace:
-    'Every grind starts with this many seconds at BASE difficulty — the needle ramp only starts growing after.',
+    'Accumulated seconds actually balancing in the current combo before difficulty starts increasing. Shared by grind/manual/lip; re-entry retains the elapsed time. This delays difficulty growth, not the base drift or bail boundary.',
   balanceRamp:
-    'After the grace, needle drift grows by this fraction of balanceDrift per second — long grinds get progressively dicier.',
+    'Difficulty growth per accumulated balancing second after Combo Difficulty Delay. Grinds use this rate, manuals 1.5× and lip stalls 2×, up to Combo Difficulty Cap. Reads live and carries through linked entries.',
   balanceRampMax:
     'Ceiling on the time-based drift multiplier. The default keeps the centre recoverable at ordinary grind speeds; edge pull still makes late corrections fail.',
   bailGrace:
@@ -645,7 +682,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   balanceNoiseFreq:
     'How fast the sketch wander sways, in radians/sec (~6 ≈ a one-second sway). Low = a slow lazy roll that is easy to read; high = a nervous jitter. Does nothing while Balance Noise is 0.',
   balanceSafePeriod:
-    "Entry ease-in (Neversoft's safe_period). 0 = full corrective authority the instant a trick starts. Above 0, inward (toward-center) taps fade in over this many seconds so an over-eager first tap can't fling the fresh needle straight off; pushing further OUT always keeps full authority.",
+    'Seconds to ease OUTWARD stick input on each grind/manual/lip catch, so the direction used to select a trick does not immediately throw the needle. INWARD correction has full authority from the first frame. 0 disables this easing. This replaces the old inward-input suppression; it is not a peg/bail buffer.',
   ragBounce:
     'Wipeout restitution: how much of each fall a tumbling body keeps when it hits the ground. 0 = flops dead on first contact (the old bail); higher = bouncier, more chaotic crashes.',
   ragSpin:
@@ -772,11 +809,15 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'LEDGE GRAB', keys: ['ledgeGrabTime', 'ledgeClimbTime', 'ledgeClimbPop', 'ledgeReach'] },
   {
     title: 'GRINDS',
-    keys: ['railSnapDistance', 'grindApproachMargin', 'railTripSpeed', 'railSpeedBoost', 'grindDrag', 'perfectGrindSpeed', 'perfectGrindHold', 'grindSpeed', 'grindJumpForce', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'balanceReentryRelief', 'grindCalm', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace', 'balanceInertia', 'balanceGravity', 'balanceEdgePower', 'balanceNoise', 'balanceNoiseFreq', 'balanceSafePeriod'],
+    keys: ['railSnapDistance', 'grindApproachMargin', 'railTripSpeed', 'railSpeedBoost', 'grindDrag', 'perfectGrindSpeed', 'perfectGrindHold', 'grindSpeed', 'grindJumpForce', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'balanceEntryLean', 'grindCalm', 'balanceSpeedEffect'],
+  },
+  {
+    title: 'BALANCE · SHARED',
+    keys: ['balanceReentryRelief', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace', 'balanceInertia', 'balanceGravity', 'balanceEdgePower', 'balanceNoise', 'balanceNoiseFreq', 'balanceSafePeriod'],
   },
   {
     title: 'MANUAL & LIP',
-    keys: ['manualMinSpeed', 'manualDrift', 'manualControl', 'manualFlickWindow', 'manualLandGrace', 'manualCoyote', 'lipAngle', 'lipMaxTime', 'lipDrift', 'lipControl'],
+    keys: ['manualMinSpeed', 'manualDrift', 'manualControl', 'manualCalm', 'manualFlickWindow', 'manualArmWindow', 'manualLandGrace', 'manualCoyote', 'lipAngle', 'lipMaxTime', 'lipDrift', 'lipControl'],
   },
   { title: 'TRICKS', keys: ['spinDuration', 'spinAirCorrection', 'grabBoost', 'landPumpBoost', 'grabSpinRate', 'grabRelease', 'spinTolerance', 'sketchyTolerance', 'slamRadius', 'bailSpeedKeep', 'bailFriction', 'bailMashWindow', 'bailMashGain', 'bailMashMax'] },
   {
@@ -851,7 +892,6 @@ export const CONST = {
   uberScoreMult: 2, // three masks banked (uber): every trick goes SPECIAL — renamed on the plate and paying this multiple
   hangLatMax: 40, // pipe hang: cap on the off-axis lateral carry. Effectively uncapped now (THPS conserves coping drift — a hard angled carve genuinely flies you down the pipe); out-running the pipe is the hang-end bail's job, not a clamp's
   rollOffLevelTime: 1.5, // riding out a pipe's open END partway up the wall: the body levels from the wall tilt to wheels-down over this many airborne seconds — touch down still tilted (off a saving surface) and it's the bail you were carrying
-  manualArmWindow: 0.35, // a flick finished mid-air arms a LAND-INTO-manual for this long
   ropeGrabRadius: 1.1, // jump within this of a swing rope's line to catch it
   ropeClimbSpeed: 2.4, // up/down on the stick walks the grip along the rope (u/s)
   ropeRegrabCool: 0.5, // after leaping off, the rope won't re-catch you for this long
@@ -874,7 +914,6 @@ export const CONST = {
   crouchJumpGrace: 0.16, // ...and a jump still gets that boost for this long after a static crouch ends (coyote time)
   slamSquashTime: 0.3, // pancake squash pose on impact
   fruitPerCrate: 3, // wumpa spawned per broken box
-  balanceStart: 0.15, // initial needle kick when a grind starts
   balanceBailSpeedKeep: 0.3, // speed kept after a grind bail
   balanceRespSnap: 60, // needle-velocity follow rate at inertia 0 (== fixedStep hz, so follow==1 and the needle stays exactly first-order)
   balanceRespFloat: 5, // needle-velocity follow rate at inertia 1 (heavy lag / overshoot)

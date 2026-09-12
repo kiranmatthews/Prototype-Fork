@@ -227,6 +227,7 @@ export class Recorder {
 }
 
 export class Replayer {
+  constructor(private readonly onTuningApplied: () => void = () => {}) {}
   private data: ReplayFile | null = null;
   frame = 0;
   private nextChange = 0;
@@ -269,6 +270,7 @@ export class Replayer {
     Object.assign(TUNING, replayTuning);
     this.refreshLegacyCarveGrip();
     this.refreshLegacyCamera();
+    this.onTuningApplied();
   }
 
   // Overwrite the live Input with the recorded frame. false = take is over
@@ -283,6 +285,7 @@ export class Replayer {
     const t = TUNING as unknown as Record<string, number>;
     let refreshLegacyCarveGrip = false;
     let refreshLegacyCamera = false;
+    const changeBefore = this.nextChange;
     while (this.nextChange < d.tuningChanges.length && d.tuningChanges[this.nextChange][0] === this.frame) {
       const [, k, v] = d.tuningChanges[this.nextChange++];
       if (this.legacyCarveGripValues) {
@@ -303,6 +306,7 @@ export class Replayer {
     }
     if (refreshLegacyCarveGrip) this.refreshLegacyCarveGrip();
     if (refreshLegacyCamera) this.refreshLegacyCamera();
+    if (this.nextChange !== changeBefore) this.onTuningApplied();
     input.moveX = d.mx[this.frame];
     input.moveY = d.my[this.frame];
     const mask = d.b[this.frame];
@@ -318,6 +322,7 @@ export class Replayer {
   }
 
   end(): void {
+    const restoring = this.savedTuning !== null;
     if (this.savedTuning) Object.assign(TUNING, this.savedTuning);
     this.savedTuning = null;
     this.legacyCarveGripValues = null;
@@ -325,6 +330,7 @@ export class Replayer {
     setLegacyCarveGripReplayCurve(null);
     setLegacyVisualSurfaceFrictionReplay(false);
     this.data = null;
+    if (restoring) this.onTuningApplied();
   }
 
   private refreshLegacyCamera(): void {

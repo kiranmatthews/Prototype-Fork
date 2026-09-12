@@ -15,7 +15,7 @@ await withSkateRuntime(async ({THREE,server,scene,player:p,level,step,TUNING,CON
     const a=core(v,0),b=core(-v,0);
     assert.ok(Math.abs(a.velocity+b.velocity)<1e-10 && Math.abs(a.value+b.value)<1e-10,'unbalanced left/right pull');
   }
-  assert.ok(core(.2,.8,-TUNING.balanceControl).velocity>0,'counter-input reversed velocity instantly');
+  assert.ok(core(.2,1.5,-TUNING.balanceControl).velocity>0,'large outward momentum did not brake progressively');
   const recover=(side,start,velocity)=>{
     let state={value:side*start,velocity:side*velocity};
     for(let i=0;i<120;i++){
@@ -27,11 +27,11 @@ await withSkateRuntime(async ({THREE,server,scene,player:p,level,step,TUNING,CON
   };
   for(const side of [-1,1]){
     assert.equal(recover(side,.45,1),true,'early correction should remain recoverable');
-    assert.equal(recover(side,.9,2.2),false,'late edge correction was rescued');
+    assert.equal(recover(side,.97,2.2),false,'pegged-edge correction was rescued');
   }
   Object.assign(TUNING,defaults);
-  assert.equal(TUNING.bailGrace,0);assert.equal(TUNING.grindCalm,0);
-  assert.equal(TUNING.balanceSafePeriod,0);assert.equal(TUNING.balanceGrace,0);
+  assert.equal(TUNING.bailGrace,0);assert.equal(TUNING.grindCalm,.5);
+  assert.equal(TUNING.balanceSafePeriod,.25);assert.equal(TUNING.balanceGrace,1);
   const {Rail}=await server.ssrLoadModule('/src/rails.ts');
   const rail=new Rail([new THREE.Vector3(0,7,25),new THREE.Vector3(0,7,-115)]);
   level.rails.push(rail);level.grindRails.push(rail);level.root.add(rail.object);scene.updateMatrixWorld(true);
@@ -42,7 +42,7 @@ await withSkateRuntime(async ({THREE,server,scene,player:p,level,step,TUNING,CON
     p.state='air';p.grounded=false;p.freeSkate=p.airFromSkate=true;p.speed=8;p.vVel=0;
     step(makeInput({grindHeld:true,grindPressed:true,moveX:held}));
     assert.equal(p.state,'grind');assert.equal(p.grindRail,rail);
-    p.balance=side*CONST.balanceStart;p.balanceVel=0;p.noisePhase=0;
+    p.balance=side*TUNING.balanceEntryLean;p.balanceVel=0;p.noisePhase=0;
   };
   const timeToFail=(side,held)=>{
     catchRail(side,held);let max=0;

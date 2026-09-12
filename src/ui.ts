@@ -1623,10 +1623,22 @@ export class UI {
     }
   }
 
+  /** Replay changes are authoritative historical values. Refresh the display
+   * without feeding slider range clamping back into replay physics. */
+  syncTuningReadouts(): void {
+    for (const [key, el] of this.sliderEls) {
+      el.input.value = String(TUNING[key]);
+      el.value.value = String(TUNING[key]);
+      el.sync?.();
+    }
+  }
+
   private applyTuning(vals: Partial<Record<TuningKey, number>>): void {
     for (const key of Object.keys(TUNING_RANGES) as TuningKey[]) {
-      const v = vals[key];
-      if (typeof v !== "number" || !isFinite(v)) continue;
+      const raw = vals[key];
+      if (typeof raw !== "number" || !isFinite(raw)) continue;
+      const range = TUNING_RANGES[key];
+      const v = Math.min(range.max, Math.max(range.min, raw));
       TUNING[key] = v;
       const el = this.sliderEls.get(key);
       if (el) {

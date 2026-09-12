@@ -13,9 +13,9 @@ try {
   // Camera v18 expresses this same captured shot as actual distance + angle.
   // Milk attraction became tunable after this browser capture.
   const expectedTuning = { ...expected.tuning, camDist: 5.05, camPitch: 25.35, milkMagnetRange: 1.75,
-    grindCalm:0,balanceSpeedEffect:.75,balanceGrace:0,balanceRampMax:3,bailGrace:0,
-    balanceInertia:.85,balanceGravity:6,balanceEdgePower:3,balanceSafePeriod:0,
-    balanceControl:3,manualControl:4,lipControl:2.2,balanceReentryRelief:.1 };
+    grindCalm:.5,balanceSpeedEffect:.75,balanceGrace:1,balanceRamp:.18,balanceRampMax:2.5,bailGrace:0,
+    balanceInertia:.7,balanceGravity:4.5,balanceEdgePower:3,balanceSafePeriod:.25,
+    balanceControl:3.4,balanceDrift:.7,balanceEntryLean:.1,manualControl:4,manualDrift:.5,manualCalm:.35,manualArmWindow:.35,lipControl:2.2,balanceReentryRelief:.1 };
   delete expectedTuning.camTilt;
   delete expectedTuning.camOffset;
   assert.deepEqual(TUNING, expectedTuning);

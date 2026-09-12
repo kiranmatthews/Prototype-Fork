@@ -78,7 +78,7 @@ await withSkateRuntime(async ({THREE,server,scene,player:p,level,step,CONST,TUNI
     assert.equal(p.balance,0);assert.equal(p.balanceVel,0);assert.equal(p.balanceAge,0);
   }
   fresh();seed();p.railLeft();fresh();
-  assert.equal(p.comboBalance,null);close(Math.abs(p.balance),CONST.balanceStart,'fresh catch');
+  assert.equal(p.comboBalance,null);close(Math.abs(p.balance),TUNING.balanceEntryLean,'fresh catch');
   assert.equal(p.balanceVel,0);assert.equal(p.balanceAge,0);
   console.log('PASS balance carry: six real rail ollie/flip catches, both signs, 90% offset/momentum, retained age/noise, cross-mode/manual/lip links, no style-change relief, and fresh bank/bail/respawn resets.');
 });

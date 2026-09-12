@@ -588,6 +588,7 @@ export class Player {
   balance = 0; // THPS grind balance needle, -1..1
   balanceVel = 0; // needle VELOCITY — second-order momentum (THUG's mManualLeanDir); 0 at neutral inertia keeps the model exactly first-order
   private balanceAge = 0; // accumulated time actually balancing in this combo
+  private balanceEntryAge = 0; // current catch only; never resets combo difficulty
   private comboBalance: { value: number; velocity: number; age: number; noise: number } | null = null;
   private noisePhase = 0; // deterministic 'sketch' phase (rad), carried through linked balance entries
 
@@ -1142,7 +1143,6 @@ export class Player {
   private jumpBufferCharge = 0;
   private slideGraceT = 0; // window after a slide ends where a jump still slide-boosts
   private grindTime = 0; // current grind animation age; difficulty uses combo balanceAge
-  private grindCalmT = 0; // entry calm beat: seconds of steadied needle, bought by momentum carried ALONG the bar at the catch
   private balanceCritT = 0; // time spent pegged at the meter edge (bail grace)
   private snapOffset = new THREE.Vector3(); // entry offset, eased away on the rail
   private snapEase = 1; // 0 -> 1 over railSnapEase seconds after a grind starts
@@ -5270,6 +5270,7 @@ export class Player {
     if (this.lipStallT > 0) {
       this.lipStallT -= dt;
       this.balanceAge += dt;
+      this.balanceEntryAge += dt;
       // (no runTime here: the 'ride' case in step() already counted this frame
       // before calling stepRide — adding it again ran the clock at 2x through
       // every lip stall, inflating trial times and the animation clock)
@@ -5279,7 +5280,7 @@ export class Player {
       // Difficulty ramps the longer you hold the stall.
       const lipRamp = Math.min(
         Math.max(0, TUNING.balanceRampMax - 1),
-        this.balanceAge * TUNING.balanceRamp * 2,
+        Math.max(0, this.balanceAge - TUNING.balanceGrace) * TUNING.balanceRamp * 2,
       );
       const instability = TUNING.lipDrift * (1 + lipRamp);
       const runSign = Math.sign(this.balance || 1); // + drifts INTO the pipe (forgiving)
@@ -5287,7 +5288,7 @@ export class Player {
       const lipSgn = this.lipAim(false);
       const fightStick = this.lipMeterH ? this.rawInput.moveX : this.rawInput.moveY;
       let control = fightStick * lipSgn * TUNING.lipControl;
-      control *= this.safeGain(this.balanceAge, control, runSign);
+      control *= this.safeGain(this.balanceEntryAge, control, runSign);
       this.stepBalanceCore(dt, runSign, instability, control, lipRamp);
       if (this.uberTimer > 0 || this.balanceBoostT > 0) {
         this.balance = 0;
@@ -6095,15 +6096,17 @@ export class Player {
         this.endManual();
       } else {
         this.balanceAge += dt;
+        this.balanceEntryAge += dt;
         const ramp = Math.min(
           Math.max(0, TUNING.balanceRampMax - 1),
-          Math.max(0, this.balanceAge - TUNING.balanceGrace * 0.5) * TUNING.balanceRamp * 1.5,
+          Math.max(0, this.balanceAge - TUNING.balanceGrace) * TUNING.balanceRamp * 1.5,
         );
         const instability = TUNING.manualDrift * (1 + ramp);
         const runSign = Math.sign(this.balance || this.manualing);
         let control = -this.rawInput.moveY * TUNING.manualControl; // up/down fights the pitch needle
-        control *= this.safeGain(this.balanceAge, control, runSign);
-        this.stepBalanceCore(dt, runSign, instability, control, ramp);
+        control *= this.safeGain(this.balanceEntryAge, control, runSign);
+        const settle = this.balanceEntryEase(TUNING.manualCalm);
+        this.stepBalanceCore(dt, runSign, instability * settle, control, ramp, settle);
         if (this.uberTimer > 0 || this.balanceBoostT > 0) {
           this.balance = 0;
           this.balanceVel = 0;
@@ -8634,7 +8637,7 @@ export class Player {
     if (this.state === 'air') {
       if (this.airFromSkate) {
         this.manualArmed = type;
-        this.manualArmT = CONST.manualArmWindow;
+        this.manualArmT = TUNING.manualArmWindow;
       }
       return;
     }
@@ -8702,6 +8705,7 @@ export class Player {
   }
 
   private beginBalance(initial: number, displaySign = 1): void {
+    this.balanceEntryAge = 0;
     const previous = this.comboHasTrick && this.comboMult > 0 ? this.comboBalance : null;
     if (previous) {
       const keep = 1 - THREE.MathUtils.clamp(TUNING.balanceReentryRelief, 0, 1);
@@ -8744,6 +8748,7 @@ export class Player {
     drift: number, // per-mode instability: balanceDrift*(1+ramp)*speed*style, etc.
     control: number, // already-signed, already safe-gained player fight
     ramp: number, // the capped difficulty ramp (also scales the sketch)
+    settle = 1, // quiet catch noise too; corrective input stays available
   ): void {
     // The familiar base drift still chooses the direction. Edge strength is
     // nonlinear in position: default cubic pull grows much faster through
@@ -8761,7 +8766,7 @@ export class Player {
       const quiet = Math.max(0, 1 - Math.abs(this.balanceVel) / CONST.balanceNoiseGate);
       if (quiet > 0) {
         const n = Math.sin(this.noisePhase) * 0.6 + Math.sin(this.noisePhase * 2.3 + 1.7) * 0.4;
-        force += n * TUNING.balanceNoise * (1 + ramp) * quiet;
+        force += n * TUNING.balanceNoise * (1 + ramp) * quiet * settle;
       }
     }
     // Integrate the velocity response and its travel over this whole step.
@@ -8781,14 +8786,17 @@ export class Player {
     }
   }
 
-  // Neversoft "safe_period": for the first balanceSafePeriod seconds of a trick,
-  // INWARD (corrective) input authority ramps up from 0, so an eager first tap
-  // can't fling the fresh needle. Outward input keeps full authority. Identity
-  // (returns 1) when the slider is 0.
+  private balanceEntryEase(seconds: number): number {
+    return seconds > 0 ? THREE.MathUtils.smoothstep(this.balanceEntryAge, 0, seconds) : 1;
+  }
+
+  // Catch directions also select tricks. Ease their OUTWARD influence while
+  // they are released; inward correction always has full authority. This is
+  // not an end-of-meter grace or a reset of the carried needle.
   private safeGain(t: number, control: number, runSign: number): number {
     if (TUNING.balanceSafePeriod <= 0) return 1;
-    if (Math.sign(control) === runSign) return 1; // pushing further out: unrestrained
-    return Math.min(1, t / TUNING.balanceSafePeriod);
+    if (Math.sign(control) !== runSign) return 1;
+    return THREE.MathUtils.smoothstep(t, 0, TUNING.balanceSafePeriod);
   }
 
   // --------------------------------------------------------------- lip stall --
@@ -9435,6 +9443,7 @@ export class Player {
     const rail = this.grindRail!;
     this.grindTime += dt;
     this.balanceAge += dt;
+    this.balanceEntryAge += dt;
     this.grindStyleT += dt;
     level.grindRope(rail); // sky-bridge ropes: grinding one makes it sag, wobble, and eventually snap
     this.snapEase = Math.min(1, this.snapEase + dt / CONST.railSnapEase);
@@ -9542,13 +9551,11 @@ export class Player {
     );
     const instability = TUNING.balanceDrift * (1 + ramp) * speedFactor * styleWobble;
     const runSign = Math.sign(this.balance || 1);
-    // Held input is always a balance command, even if it was already down
-    // at the catch. Entry calm is an explicit tuner, disabled by default.
-    const calm =
-      this.grindCalmT > 0 ? Math.min(1, this.balanceAge / this.grindCalmT) : 1;
+    // Read live tuning against the current catch, not the combo's age.
+    const calm = this.balanceEntryEase(TUNING.grindCalm);
     let control = this.rawInput.moveX * TUNING.balanceControl;
-    control *= this.safeGain(this.balanceAge, control, runSign);
-    this.stepBalanceCore(dt, runSign, instability * calm, control, ramp);
+    control *= this.safeGain(this.balanceEntryAge, control, runSign);
+    this.stepBalanceCore(dt, runSign, instability * calm, control, ramp, calm);
     if (this.uberTimer > 0 || this.balanceBoostT > 0) {
       this.balance = 0;
       this.balanceVel = 0;
@@ -9787,6 +9794,14 @@ export class Player {
         return false;
       }
     }
+    // Do not flash a grind/needle for a catch that will run off its endpoint
+    // within two physics ticks. Inward catches at the same end remain valid.
+    const vertVelocity = this.parkControls && this.vertAir && !this.grounded;
+    const vx = vertVelocity ? -this.vertNormal.z * this.vertLatVel : this.axisF.x * this.speed;
+    const vz = vertVelocity ? this.vertNormal.x * this.vertLatVel : this.axisF.z * this.speed;
+    const along = vx * s.tangent.x + vz * s.tangent.z;
+    const remaining = along >= 0 ? this.railCand.rail.totalLength - s.t : s.t;
+    if (remaining <= Math.max(.08, Math.abs(along) * CONST.fixedStep * 2)) return false;
     this.enterGrind(this.railCand.rail, s, level);
     return true;
   }
@@ -9958,12 +9973,7 @@ export class Player {
     if(!entrySpecial)this.special.consumeInput();
     // Only a new combo receives a fresh catch. Linked re-entries keep 90%
     // of the previous balance/momentum and all accumulated difficulty.
-    this.beginBalance((this.simRand() < 0.5 ? -1 : 1) * CONST.balanceStart);
-    // Optional entry calm remains tunable but is off in the default profile.
-    this.grindCalmT =
-      TUNING.grindCalm > 0
-        ? Math.max(0.12, Math.min(1, Math.abs(alongVel) / 10) * TUNING.grindCalm)
-        : 0;
+    this.beginBalance((this.simRand() < 0.5 ? -1 : 1) * TUNING.balanceEntryLean);
     // landing-on-the-rail burst: one bright spray of the same sparks the
     // grind itself will now stream
     PUFF_DIR.set(-this.axisF.x * Math.sign(this.speed || 1), 0.5, -this.axisF.z * Math.sign(this.speed || 1));

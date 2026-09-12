@@ -1449,7 +1449,7 @@ visualTreatmentSettings.subscribe((value) => {
   );
 });
 const recorder = new Recorder();
-const replayer = new Replayer();
+const replayer = new Replayer(() => ui.syncTuningReadouts());
 adoptLegacyLevels(); // one-shot: old single-slot edits become real user levels
 const oceanReview = new URLSearchParams(window.location.search).has(
   "oceanreview",

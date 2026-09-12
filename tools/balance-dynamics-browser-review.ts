@@ -40,7 +40,7 @@ p.step=(dt:number,input:any,level:any)=>{
  const scripted={...neutral(),grindPressed:frame===0,moveX:mode==='wrong'?1:correcting?-1:0};
  const before=p.state;
  native(dt,mode==='control'&&frame>0?input:scripted,level);
- if(frame===0){p.balance=.15;p.balanceVel=0;p.noisePhase=0;}
+ if(frame===0){p.balance=TUNING.balanceEntryLean;p.balanceVel=0;p.noisePhase=0;}
  frame++;
  if(frame%6===0)record.push(`${(frame*dt).toFixed(2)}s  needle ${p.balance.toFixed(3)}  speed ${p.balanceVel.toFixed(2)}`);
  if(before==='grind'&&p.state!=='grind'){result=p.isBailing?'BAIL — boundary resolved immediately':'RAIL EXIT';frozen=true;}
