@@ -121,7 +121,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 21;
+export const PLAYER_STARTER_CATALOG_VERSION = 22;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -535,6 +535,30 @@ function sampledRotationTracks(
     (!includeTorsoRoot && jointId === 'torsoRoot') || excludedJoints.has(jointId)
       ? []
       : [sampledQuaternionTrack(clipId, jointId, keys)]);
+}
+
+/** Imported thigh directions converge across the rider's centreline. Turn each
+ * complete leg about pelvis-local up until its knee points at least 14 degrees
+ * outward. This preserves thigh elevation and the source knee/ankle motion;
+ * rolling the knee sideways would instead introduce a non-hinge bend. Bake the
+ * correction into editable hip keys so Studio and gameplay share the pose. */
+function crouchLegSeparation(
+  values: Readonly<Record<string, readonly SampledQuaternion[]>>,
+): Readonly<Record<string, readonly SampledQuaternion[]>> {
+  const up = new THREE.Vector3(0, 1, 0);
+  const minimumSplay = THREE.MathUtils.degToRad(14);
+  return Object.fromEntries(Object.entries(values).map(([jointId, keys]) => {
+    if (jointId !== 'hipLeft' && jointId !== 'hipRight') return [jointId, keys];
+    const side = jointId === 'hipLeft' ? 1 : -1;
+    return [jointId, keys.map(([time, value]) => {
+      const quaternion = new THREE.Quaternion().fromArray(value);
+      const thigh = new THREE.Vector3(0, -1, 0).applyQuaternion(quaternion);
+      const azimuth = Math.atan2(thigh.x, thigh.z);
+      const outward = side * Math.max(minimumSplay, side * azimuth);
+      quaternion.premultiply(new THREE.Quaternion().setFromAxisAngle(up, outward - azimuth)).normalize();
+      return [time, quaternion.toArray() as QuaternionTuple];
+    })];
+  }));
 }
 
 function combinedQuaternionSamples(
@@ -999,7 +1023,7 @@ function scaledUnityLowPosePositionKeys(
   ]]);
 }
 
-function buildCrouch(rigId: string, includeTorsoRoot: boolean): AnimationClip {
+function buildCrouch(rigId: string, includeTorsoRoot: boolean, adaptStance = true): AnimationClip {
   const clip = baseClip(
     UNITY_CROUCH_CRAWL_CLIP_IDS.crouch,
     'Crouch Idle — Unity PunkyFox',
@@ -1015,7 +1039,7 @@ function buildCrouch(rigId: string, includeTorsoRoot: boolean): AnimationClip {
     ),
     ...sampledRotationTracks(
       clip.id,
-      UNITY_CROUCH_IDLE_ROTATION_KEYS,
+      adaptStance ? crouchLegSeparation(UNITY_CROUCH_IDLE_ROTATION_KEYS) : UNITY_CROUCH_IDLE_ROTATION_KEYS,
       includeTorsoRoot,
     ),
   ];
@@ -1033,8 +1057,44 @@ function buildCrouch(rigId: string, includeTorsoRoot: boolean): AnimationClip {
     sourceAnimation: unityCrouchCrawlSourceMetadata('crouchIdle'),
     floorLift: UNITY_CROUCH_CRAWL_TIMING.floorLift,
     outerPoseOwnership: UNITY_CROUCH_CRAWL_OUTER_POSE_OWNERSHIP,
+    ...(adaptStance ? { crouchStanceRevision: 1 } : {}),
   };
   return clip;
+}
+
+/** Match the old source clip, including normalized/reordered browser drafts,
+ * while permitting the saved playback-speed control. Actual authored edits
+ * and intentionally deleted clips remain owned by the user. */
+function isUntouchedCrossedCrouch(clip: AnimationClip): boolean {
+  const version = clip.metadata?.starterCatalogVersion;
+  if (typeof version !== 'number') return false;
+  const legacy = buildCrouch(clip.rigId,
+    clip.tracks.some(track => track.target === 'torsoRoot'), false);
+  legacy.playbackSpeed = clip.playbackSpeed;
+  legacy.metadata = { ...legacy.metadata,
+    starterCatalogVersion: version };
+  let rotationsMatch = true;
+  const tracks = clip.tracks.map(track => {
+    if (track.kind !== 'quaternion') return track;
+    const sourceTrack = legacy.tracks.find(source => source.id === track.id);
+    if (!sourceTrack || sourceTrack.kind !== 'quaternion') return track;
+    return { ...track, keys: track.keys.map(key => {
+      const sourceKey = sourceTrack.keys.find(source => source.id === key.id);
+      if (!sourceKey) return key;
+      const q = new THREE.Quaternion().fromArray(key.value).normalize();
+      const rest = new THREE.Quaternion().fromArray(sourceKey.value).normalize();
+      if (q.dot(rest) < 0) q.set(-q.x, -q.y, -q.z, -q.w);
+      // Compare with a tolerance, then canonicalize to the exact source value.
+      // Hashing rounded normalized floats alone can land on opposite sides of
+      // a rounding boundary even after a harmless second normalization.
+      if (Math.hypot(q.x-rest.x, q.y-rest.y, q.z-rest.z, q.w-rest.w) > 1e-9) {
+        rotationsMatch = false;
+      }
+      return { ...key, value: sourceKey.value };
+    }) };
+  });
+  return rotationsMatch && canonicalLegacyStarterClipSignature({ ...clip, tracks }) ===
+    canonicalLegacyStarterClipSignature(legacy);
 }
 
 function buildCrawl(rigId: string, includeTorsoRoot: boolean): AnimationClip {
@@ -1452,7 +1512,9 @@ export function reconcilePlayerStarterAnimationSuite(
   const activeClipId = document.activeClipId === RETIRED_PACE_STOP_CLIP_ID
     ? 'player.idle'
     : document.activeClipId;
-  if (previousVersion >= PLAYER_STARTER_CATALOG_VERSION) {
+  const crossedCrouch = clips.find(clip => clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crouch &&
+    clip.metadata?.crouchStanceRevision !== 1 && isUntouchedCrossedCrouch(clip));
+  if (previousVersion >= PLAYER_STARTER_CATALOG_VERSION && !crossedCrouch) {
     return rigs === document.rigs &&
       clips.length === document.clips.length &&
       activeClipId === document.activeClipId
@@ -1588,6 +1650,14 @@ export function reconcilePlayerStarterAnimationSuite(
     if (currentWalk && importedWalk && isUnityWalkingWomanWalk(currentWalk)) {
       clips = clips.map((clip) =>
         clip.id === PLAYER_WALK_CLIP_ID ? importedWalk : clip);
+    }
+  }
+
+  if (crossedCrouch) {
+    const imported = starters.find(clip => clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crouch);
+    if (imported) {
+      clips = clips.map(clip => clip === crossedCrouch
+        ? { ...imported, playbackSpeed: crossedCrouch.playbackSpeed } : clip);
     }
   }
 

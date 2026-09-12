@@ -114,6 +114,25 @@ its pitch, roll, and descendant look-around motion, so gameplay facing remains
 the sole N/S/E/W-plus-diagonals authority instead of shifting every direction
 onto an angle.
 
+Catalog revision 22 corrects Crouch's converging thigh directions for the live
+procedural rider. Each complete leg turns about pelvis-local up until the knee
+points at least 14 degrees outward. Only the two hip quaternion tracks change;
+source thigh elevation, knee/ankle articulation, hips translation and upper-body
+motion remain. This is baked into ordinary editable keys, shared by Studio and
+gameplay. The rejected local-Z hip/knee offsets left only 0.004 rig units between
+knee centres; the corrected default rig retains at least 0.364 between knees and
+0.399 between ankles over the entire loop.
+
+Saved untouched Crouch clips upgrade automatically, including normalized
+quaternions with reversed signs and reordered browser drafts. The comparison
+allows normalization noise and retains saved playback speed; authored key edits
+and intentional deletions survive. `tools/test-crouch-stance.mjs` checks 2,103
+preview samples, four full gameplay loops in different headings, crawl handoffs,
+and migration. For visual comparison, open
+`/crouch-review.html?lite&playtest&level=codex-lab`, then repeat without `lite`.
+The local review has Source / Previous guess / Fixed and 0° / 40° / 90° views;
+its animation overrides do not save to browser storage.
+
 Any measured planar movement above Unity's `0.001` threshold selects Crawl,
 including pure lateral movement. Stopping selects Crouch Idle. Entry, exit, and
 crouch↔crawl changes use Unity's five-frame smooth crossfade. The source's
