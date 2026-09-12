@@ -8,6 +8,8 @@
 
 `JungleCupEvent.stepRun` now signals the start of finishing. The caller supplies both combo activity and the player's safe-stop readiness. `stepFinish` receives the completed dismount and actual HUD-settled signals; it performs the one-time judging transition.
 
+The finish presentation does not consume or record gameplay replay input. A slower score animation must not exhaust a replay before judging.
+
 The dismount reuses the existing mount pose's hop/tuck/settle shape. It does not introduce a ragdoll or board-physics simulation. The parked visual shares existing board resources and is removed without disposing resources owned by the live skater.
 
 Local review: `run-finish-review.html?playtest&level=jungle-cup`. Scenarios cover grounded expiry, an unscored air at zero, a large final manual, and a bail at zero. The optional dismount hold is for inspecting the pose; it is not part of production gameplay.

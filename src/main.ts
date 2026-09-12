@@ -4570,9 +4570,10 @@ function frame(nowMs: number): void {
   // by binary floating-point error (the visible symptom is another repeated
   // pose followed by a catch-up step).
   while (acc + 1e-10 >= CONST.fixedStep) {
+    const gameplayStep = competition?.phase !== 'finishing';
     // Playback: overwrite the live input with the recorded frame; when the
     // take runs out, reset to a clean level so the next live take is valid.
-    if (!split2p && replayer.active && !replayer.feed(input, player.camDir)) {
+    if (gameplayStep && !split2p && replayer.active && !replayer.feed(input, player.camDir)) {
       ui.setReplayBadge(false);
       ui.showMessage("REPLAY DONE", "", 1200);
       restoreReplayRunRule();
@@ -4625,7 +4626,9 @@ function frame(nowMs: number): void {
     player.commitRenderStep(level);
     if ((current.id !== "warproom" && !level.isCampaignMap) && split2p && p2) p2.commitRenderStep(level);
     // record exactly what the sim consumed (edges intact, pre-consume)
-    if (!replayer.active && !split2p) recorder.record(input, player.camDir);
+    // The finish is a presentation, like countdown/judging. Its HUD-dependent
+    // duration must not consume a replay's next inputs or extend the recording.
+    if (gameplayStep && !replayer.active && !split2p) recorder.record(input, player.camDir);
     input.consumeEdges(); // one press = one step
     if (split2p) input2.consumeEdges();
     acc = Math.max(0, acc - CONST.fixedStep);
