@@ -303,6 +303,12 @@ made the mount restart at clip frame zero and replaced the proven steady stance.
 Live skating therefore preserves the procedural presentation until a future
 authored skate clip is explicitly approved to replace it.
 
+That ownership includes ordinary board flight and its exact landing frame:
+on-foot Jump/Fall/Land no longer layer over the mounted ollie. A shared
+proportion-aware spring (`src/skateBodyMotion.ts`) supplies moderate charge,
+takeoff extension, apex gather and a cushioned return to relaxed ride. The
+separate grab/flip/grind routes and manually selected Studio clips are unchanged.
+
 Entering skating now plays one short procedural mount hop: 0.30 seconds of
 lift with a 0.28 m peak, knee tuck and a small arm lift, followed by 0.14 seconds
 of landing compression. Standing/moving charges and automatic momentum or

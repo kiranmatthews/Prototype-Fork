@@ -499,8 +499,9 @@ export class CharacterAnimationRuntime {
           (this.transient?.kind === 'crouch-exit' && hint !== 'player.idle')) {
         this.cancelTransient();
       }
-      // Landing has first refusal on the exact contact frame.
-      if (justLanded && !this.currentClipId?.startsWith('player.swim') && hint !== 'player.bail' && hint !== 'player.death' && hint !== 'player.slam') {
+      // On-foot landing has first refusal on the exact contact frame. The
+      // mounted board's procedural spring owns its own contact/rebound.
+      if (justLanded && !this.currentClipId?.startsWith('player.swim') && hint !== 'player.bail' && hint !== 'player.death' && hint !== 'player.slam' && hint !== 'player.skate') {
         this.resetLandingRunBlend();
         this.transient = this.makeTransient('landing', LAND_CLIP_ID);
       } else if (this.transient?.kind === 'landing') {

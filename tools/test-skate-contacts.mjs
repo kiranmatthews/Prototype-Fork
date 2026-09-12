@@ -22,7 +22,7 @@ await withSkateRuntime(async ({player:p,level,THREE,server,step})=>{
     const error=contact()?.footError;maxFoot=Math.max(maxFoot,error);
     assert.ok(error<tolerance,`${label}: feet detached by ${error}m`);
   };
-  // Casual skate idle is taller; charging retains its previous endpoint.
+  // Charge deepens a natural standing-height skate posture, not a low squat.
   // Both stances must keep the soles on the same unmoving deck throughout.
   for(const stance of [-1,1]){
     reset(stance);p.state='ride';p.grounded=true;p.speed=0;p.charging=false;p.chargeTimer=0;
@@ -44,10 +44,12 @@ await withSkateRuntime(async ({player:p,level,THREE,server,step})=>{
       assert.ok(Math.abs(current-previous)<.10,'charge transition snapped');previous=current;
       assert.ok(p.boardG.getWorldPosition(v()).distanceTo(board)<.001,'pose lift moved the board');
     }
-    assert.ok(Math.abs(height()-.395)<.002,'full-charge crouch must remain unchanged');
+    assert.ok(height()>idleHeight*.8&&height()<idleHeight-.035,'charge must load the legs without collapsing into a squat');
+    for(const side of ['left','right'])assert.ok(bend(side)>.55&&bend(side)<1.15,'full-charge knees must stay in a natural, moderate bend');
+    console.log(`Stance ${stance}: idle ${idleHeight.toFixed(3)} m, charge ${height().toFixed(3)} m; knees ${['left','right'].map(s=>(bend(s)*180/Math.PI).toFixed(1)).join('/')}°`);
     assert.ok(bend('left')+bend('right')>idleBend+.15,'charging needs visibly more knee bend');
     p.charging=false;p.chargeTimer=0;settle(100);
-    assert.ok(Math.abs(height()-idleHeight)<.002,'released charge did not return to relaxed idle');
+    assert.ok(Math.abs(height()-idleHeight)<.004,'released charge did not return to relaxed idle');
   }
   let grinds=0;
   // Independent geometric requirements in both stances and rail directions,

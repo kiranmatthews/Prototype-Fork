@@ -52,7 +52,9 @@ function render(now:number){
   p.revertPoseT=id==='Revert'?.22*(1-u):0;p.revertPoseSign=p.stance;
   p.manualing=id==='Manual'?1:id==='Nose Manual'?-1:0;p.lipStallT=category==='lip'?1:0;p.lipStyle=category==='lip'?id:'axle';p.boardOllieAir=id==='Ollie';
   p.wallriding=id==='Wallride';p.wallridePose=p.wallriding?1:0;p.wallNormal.set(1,0,0);
-  if(p.skateAnimation&&id==='Ollie')p.skateAnimation.airAge=u*.7;
+  if(p.skateAnimation&&id==='Ollie'){
+    p.skateAnimation.airAge=u*.7;p.launchVy=8;p.vVel=8*(1-2*u);
+  }
   p.pos.set(0,p.state==='grind'?.95:category==='lip'?.8:p.grounded?0:.7+Math.sin(u*Math.PI)*.4,0);p.prevPos.copy(p.pos);
   p.alignPose=p.alignNormal.x=p.alignNormal.z=0;p.alignNormal.y=1;p.slopePose=p.slopeRoll=0;
   p.syncVisual(input,1/60);rail.object.visible=p.state==='grind'||p.lipStallT>0;rail.object.rotation.y=category==='lip'?Math.PI/2:0;wall.visible=p.wallriding;

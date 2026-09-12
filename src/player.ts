@@ -1811,6 +1811,8 @@ export class Player {
     if (this.sliding || this.slidePose > 0.25) return 'player.slide';
     if (this.state === 'air' || !this.grounded) {
       if (this.doubleJumpAir) return 'player.double-jump';
+      // Board flight is procedural skating, not the on-foot stretch jump.
+      if (this.airFromSkate) return 'player.skate';
       if (
         this.ropeReleaseDuration > 0 &&
         this.ropeReleaseElapsed < this.ropeReleaseDuration
@@ -16897,6 +16899,8 @@ export class Player {
         yaw: this.visualYaw + (boardRoutedSpin ? 0 : this.spinAngle) + this.grabSpinAngle + revertYaw +
           (this.parkControls && this.vertAir && !this.grounded ? this.parkAutoTurn : 0),
         deckYaw: this.deckYawOffset, speed: this.speed, charge: this.chargePose, balance: this.balance,
+        verticalVelocity: this.vVel, launchVelocity: this.launchVy,
+        mount: mountPose.tuck + .75 * mountPose.settle,
         manual: this.manualing, grab: this.specialGrab ? 'mute' : this.grabKind, grabWeight: this.grabPose,
         grind: this.state === 'grind' ? this.grindStyle : null, rail: this.grindRail,
         railT: this.grindT, railDir: this.grindDir, crossDir: this.grindCrossDir,

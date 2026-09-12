@@ -432,6 +432,16 @@ try {
   assert.equal(runtime.diagnostics.requestedClipId, 'player.skate');
   assert.equal(runtime.activeClipId, null);
 
+  // Ordinary board takeoff/landing stays in the procedural contact spring,
+  // including the exact landing frame: no on-foot Land or Jump overlay.
+  grounded = false;
+  tick(0.016);
+  grounded = true;
+  tick(0.016);
+  assert.equal(runtime.diagnostics.requestedClipId, 'player.skate');
+  assert.equal(runtime.activeClipId, null);
+  assert.equal(runtime.diagnostics.landingOneShotActive, false);
+
   // Landing is a short reaction over the live continued-run base. It blends
   // out by 0.28s and carries the current gait phase into Run without freezing
   // either foot in world space.

@@ -4,6 +4,7 @@ import { GRAB_CONTACTS, GRIND_CONTACTS, LIP_CONTACTS, skateContactBounce, sample
 import { DEFAULT_SKATEBOARD_SETTINGS, type SkateboardSettingsValue } from './skateboard/settings';
 import { evaluateSkateboardSurfaceHeight } from './skateboard/model';
 import type { Rail } from './rails';
+import { SkateBodySpring } from './skateBodyMotion';
 
 const X = new THREE.Vector3(1, 0, 0), Y = new THREE.Vector3(0, 1, 0), Z = new THREE.Vector3(0, 0, 1);
 const clamp = THREE.MathUtils.clamp;
@@ -13,6 +14,7 @@ type Limb = { root: THREE.Object3D; mid: THREE.Object3D; end: THREE.Object3D; so
 export interface SkatePoseInput {
   dt: number; time: number; active: boolean; grounded: boolean; stance: number;
   yaw: number; deckYaw: number; speed: number; charge: number; balance: number;
+  verticalVelocity?: number; launchVelocity?: number; mount?: number;
   manual: number; grab: GrabTrickKind; grabWeight: number;
   grind: GrindStyle | null; rail: Rail | null; railT: number; railDir: number;
   crossDir: number; approachSide: number; crookedSide: number;
@@ -42,7 +44,8 @@ export class SkateAnimation {
   private supportY = 0;
   private lastActive = false;
   private darkWeight = 0;
-  private relaxedRideWeight = 0;
+  private locomotionWeight = 0;
+  private bodySpring = new SkateBodySpring();
   private frame = new THREE.Quaternion();
   private boardQ = new THREE.Quaternion();
   private boardP = new THREE.Vector3();
@@ -74,7 +77,7 @@ export class SkateAnimation {
     this.spine = rider.getObjectByName('spine');
   }
 
-  reset(): void { this.key = ''; this.lastActive = false; this.age = this.airAge = this.darkWeight = this.relaxedRideWeight = 0; this.bounceAge = 1; this.wasGrounded = true; }
+  reset(): void { this.key = ''; this.lastActive = false; this.age = this.airAge = this.darkWeight = this.locomotionWeight = 0; this.bounceAge = 1; this.wasGrounded = true; this.bodySpring.reset(); }
 
   /** Restore the legacy sibling frame before it authors its fallback pose. */
   prepare(): void {
@@ -116,7 +119,10 @@ export class SkateAnimation {
     // two-bone solve alone leaves centimetres of error under the stretched
     // cartoon torso. Local CCD respects those actual affine transforms.
     const from = new THREE.Vector3(), to = new THREE.Vector3();
-    for (let i = 0; i < 32; i++) {
+    // Nearly straight legs converge more slowly than trick tucks. Allow the
+    // shallow charge/takeoff pose to finish the same socket solve; most limbs
+    // still exit at the 1 mm tolerance before reaching this bound.
+    for (let i = 0; i < 64; i++) {
       this.worldRotation(limb.end, desired);
       if (limb.socket.getWorldPosition(socket).distanceTo(goal) < .001) break;
       for (const joint of [limb.mid, limb.root]) {
@@ -142,9 +148,11 @@ export class SkateAnimation {
     const front = p.stance > 0 ? 0 : 1, back = 1 - front;
     const key = p.wallWeight > .01 ? 'wallride' : p.grind ? `${p.grind}:${p.darkslide}` : p.lip ? `lip:${p.lip}` : p.manual ? `manual:${p.manual}`
       : p.grabWeight > .01 ? `grab:${p.grab}` : p.grounded ? 'ride' : 'air';
-    const relaxedTarget = key === 'ride' ? 1 - smooth(p.charge) : 0;
-    this.relaxedRideWeight += (relaxedTarget - this.relaxedRideWeight) * (1 - Math.exp(-16 * p.dt));
-    if (key !== this.key || !this.lastActive) { this.age = 0; this.key = key; this.bounceAge = 0; }
+    if (key !== this.key || !this.lastActive) {
+      this.age = 0; this.key = key;
+      // Taking off is extension, not another ground-contact compression.
+      if (key !== 'air') this.bounceAge = 0;
+    }
     else this.age += p.dt;
     if (!p.grounded && this.wasGrounded) this.airAge = 0;
     else if (!p.grounded) this.airAge += p.dt;
@@ -157,6 +165,14 @@ export class SkateAnimation {
     const grab = GRAB_CONTACTS[grabKind];
     const gw = clamp(mcTwist ? mcTwist.grab : p.grabWeight, 0, 1);
     const flipPose = p.flip ? sampleDeckTrick(p.flip, mcTwist ? mcTwist.deckProgress : p.flipProgress) : null;
+    const locomotionTarget = (key === 'ride' || key === 'air') && !p.flip && gw < .01 ? 1 : 0;
+    if (!this.lastActive) { this.locomotionWeight = locomotionTarget; this.bodySpring.reset(p.charge); }
+    else this.locomotionWeight += (locomotionTarget-this.locomotionWeight)*(1-Math.exp(-16*p.dt));
+    const bodyFlex = this.bodySpring.step(p.dt, {
+      grounded:p.grounded, charge:p.charge,
+      verticalVelocity:p.verticalVelocity??0, launchVelocity:p.launchVelocity??0,
+      contactBounce:p.grounded?bounce:0, mount:clamp(p.mount??0,0,1),
+    });
 
     this.group.getWorldQuaternion(this.frame);
     this.frame.multiply(this.q.setFromAxisAngle(Y, p.yaw));
@@ -195,8 +211,10 @@ export class SkateAnimation {
       pivotZ = p.lip === 'nose' ? s.deckNoseLength * scale * .94 : p.lip === 'tail' ? -s.deckTailLength * scale * .94 : 0;
       pivotY = p.lip === 'axle' ? (s.wheelRadius - s.truckHangerRadius) * scale : surface(0, pivotZ) - s.deckThickness * scale;
     } else if (p.ollie && !p.grounded && !p.flip && gw < .01) {
-      // Tail pop, front-foot slide, level catch. No physical launch impulse.
-      pitch = -.34 * (1 - smooth(this.airAge / .22));
+      // Tail pop, front-foot slide, level catch. Build the pop over 50 ms
+      // instead of dropping the pelvis on a stepped board angle at
+      // release; the body can extend as the nose comes up. No physics impulse.
+      pitch = -.30 * smooth(this.airAge / .05) * (1 - smooth((this.airAge - .05) / .20));
     }
     const ease = 1 - Math.exp(-22 * p.dt);
     if (!this.lastActive) { this.pitch = pitch; this.grindYaw = yaw; this.supportZ = pivotZ; this.supportY = pivotY; }
@@ -257,13 +275,13 @@ export class SkateAnimation {
     const pelvis = footTargets[0].clone().add(footTargets[1]).multiplyScalar(.5);
     const load = p.grind ? pivotZ * .24 : p.manual ? pivotZ * .22 : 0;
     pelvis.addScaledVector(Z.clone().applyQuaternion(this.boardQ), load);
-    // Stand a little taller when casually rolling or idling. Fade this lift
-    // away as charge builds so the existing full-charge crouch stays intact.
-    let relaxedHeight = .46;
-    if (this.relaxedRideWeight > .001) {
+    // Idle, load and ordinary board flight share a single proportion-aware
+    // spring. Only actual tricks retain their separate contact/tuck poses.
+    let locomotionHeight = .46;
+    if (this.locomotionWeight > .001) {
       const scaleY = this.rider.getWorldScale(new THREE.Vector3()).y;
       const hipWorld = this.hips.getWorldPosition(new THREE.Vector3());
-      relaxedHeight = Infinity;
+      locomotionHeight = Infinity;
       for (let i = 0; i < 2; i++) {
         const leg = this.feet[i];
         // Measure unbent lengths: folded world lengths under the non-uniform
@@ -280,12 +298,13 @@ export class SkateAnimation {
         const horizontalSq = Math.max(0, delta.lengthSq() - vertical * vertical);
         // Leave some reach in reserve for the sideways stance and affine
         // parent scale; otherwise one knee locks while its sole floats.
-        const reachSq = upper * upper + lower * lower + 2 * upper * lower * Math.cos(.65);
-        relaxedHeight = Math.min(relaxedHeight, vertical + Math.sqrt(Math.max(0, reachSq - horizontalSq)));
+        const reachSq = upper * upper + lower * lower + 2 * upper * lower * Math.cos(bodyFlex);
+        locomotionHeight = Math.min(locomotionHeight, vertical + Math.sqrt(Math.max(0, reachSq - horizontalSq)));
       }
     }
-    const relaxedLift = Math.max(0, relaxedHeight - .46) * this.relaxedRideWeight;
-    const height = THREE.MathUtils.lerp(.46 - .29 * gw, .10, dark) - .065 * p.charge - .11 * bounce + breathe + relaxedLift;
+    const trickHeight = THREE.MathUtils.lerp(.46 - .29 * gw, .10, dark) - .065 * p.charge - .11 * bounce + breathe;
+    const restingBreath = Math.sin(p.time*5.6)*.005*(.35+.65*Math.min(1,Math.abs(p.speed)/5));
+    const height = THREE.MathUtils.lerp(trickHeight, locomotionHeight+restingBreath, this.locomotionWeight);
     pelvis.addScaledVector(this.up, height);
     pelvis.addScaledVector(Y, .14 * p.wallWeight);
     if (gw > .01 && (grabKind === 'method' || grabKind === 'japan'))
@@ -394,7 +413,8 @@ export class SkateAnimation {
     } else delete this.board.userData.skateWrapPivot;
     this.board.userData.skateContact = { support: p.wallWeight > .01 ? 'wall-wheels' : p.darkslide ? 'griptape' : p.grind ? GRIND_CONTACTS[p.grind].support
       : p.manual ? p.manual > 0 ? 'rear-wheels' : 'front-wheels' : p.lip ? LIP_CONTACTS[p.lip].support : 'wheels',
-      local: [0, this.supportY, this.supportZ], world: this.support.toArray(), footError, handError, bounce };
+      local: [0, this.supportY, this.supportZ], world: this.support.toArray(), footError, handError, bounce,
+      bodyFlex, bodyHeight:height, locomotionWeight:this.locomotionWeight };
     return true;
   }
 }
