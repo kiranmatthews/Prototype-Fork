@@ -38,7 +38,7 @@ The edge term remains cubic: `sign(balance) × abs(balance)^3 × edgePull × mod
 
 ## Slider audit
 
-The panel separates **GRINDS**, **BALANCE · SHARED**, and **MANUAL & LIP**. Storage/replay keys remain stable when labels change. Saved values are clamped to the displayed range on load/reset, preserving deliberate in-range edits. Untouched saved defaults follow v21 automatically.
+The panel separates **GRINDS**, **BALANCE · SHARED**, and **MANUAL & LIP**. Storage/replay keys remain stable when labels change. Step sizes now represent every shipped grind/manual default exactly, including 0.75 speed influence and 0.18 difficulty growth; the range widget must not silently round away those values. Saved values are clamped to the displayed range on load/reset, preserving deliberate in-range edits. Untouched saved defaults follow v21 automatically.
 
 | Key / control | Runtime effect and scope |
 | --- | --- |

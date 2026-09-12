@@ -128,6 +128,8 @@ await withSkateRuntime(async ({server,THREE,scene,player:p,level,step,TUNING,CON
       assert.equal(allKeys.filter(k=>k===key).length,1,`duplicate slider ${key}`);
       assert.ok(TUNING_INFO[key]?.length>20,`missing help ${key}`);
       const r=TUNING_RANGES[key];assert.ok(defaults[key]>=r.min&&defaults[key]<=r.max,`default outside range ${key}`);
+      const steps=(defaults[key]-r.min)/r.step;
+      assert.ok(Math.abs(steps-Math.round(steps))<1e-7,`slider rounds away its default ${key}: ${defaults[key]}`);
     }
   // Saved v20 values follow new defaults unless deliberately changed. Loaded
   // out-of-range values cannot disagree with the displayed range control.
