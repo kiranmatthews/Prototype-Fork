@@ -26,7 +26,7 @@
 // consumed are then the same value by construction. Files without `cy` are
 // older takes and simply keep using the live camera.
 
-import { TUNING } from './tuning';
+import { TUNING, PARK_TUNING_DEFAULTS } from './tuning';
 import {
   legacyCarveGripEndpointsFromRecord,
   setLegacyCarveGripReplayCurve,
@@ -267,7 +267,8 @@ export class Replayer {
     delete replayTuning.carveGripRatio;
     delete replayTuning.camTilt;
     delete replayTuning.camOffset;
-    Object.assign(TUNING, replayTuning);
+    // Old takes used fixed park physics; live park tweaks must not leak in.
+    Object.assign(TUNING, PARK_TUNING_DEFAULTS, replayTuning);
     this.refreshLegacyCarveGrip();
     this.refreshLegacyCamera();
     this.onTuningApplied();

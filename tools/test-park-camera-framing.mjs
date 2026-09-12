@@ -4,7 +4,7 @@ await withSkateRuntime(async({THREE,server,player:p,level,step,CONST,TUNING})=>{
   const {SkateChaseCamera,SKATE_CAMERA}=await server.ssrLoadModule('/src/skateChaseCamera.ts');
   const {setCameraRigAim}=await server.ssrLoadModule('/src/cameraRig.ts');
   const camera=()=>new THREE.PerspectiveCamera(SKATE_CAMERA.verticalFov,16/9,.1,400);
-  const framing={camDist:TUNING.camDist,camHeight:TUNING.camHeight,camPitch:TUNING.camPitch,camFov:TUNING.camFov};
+  const framing={camDist:TUNING.parkCamDist,camHeight:TUNING.parkCamHeight,camPitch:TUNING.parkCamPitch,camFov:TUNING.parkCamFov};
   const subject={position:new THREE.Vector3(2,1,3),heading:new THREE.Vector3(0,0,-1),up:new THREE.Vector3(0,1,0),
     vertAir:false,vertNormal:new THREE.Vector3(0,0,1),verticalSpeed:0,speed:12,grounded:true,bailing:false};
   for(const settings of [framing,{camDist:6.3,camHeight:6.6,camPitch:35,camFov:54}])for(const yaw of [0,.7,Math.PI,-1.8]){
@@ -17,6 +17,21 @@ await withSkateRuntime(async({THREE,server,player:p,level,step,CONST,TUNING})=>{
     assert.ok(actual.quaternion.angleTo(expected.quaternion)<1e-7,'flat pitch/yaw differs from main game');
     assert.equal(actual.fov,settings.camFov);assert.equal(rig.groundFramingWeight,1);
   }
+  // A ground-anchored ordinary-ollie camera gives visible rise without touching
+  // the internal frame which will be needed by the next vert approach.
+  const followRig=new SkateChaseCamera(),anchorRig=new SkateChaseCamera(),follow=camera(),anchorCamera=camera();
+  subject.position.set(0,0,0);subject.heading.set(0,0,-1);subject.up.set(0,1,0);subject.grounded=true;
+  followRig.update(follow,subject,0,true,[],{...framing,camAirLift:1});
+  anchorRig.update(anchorCamera,subject,0,true,[],{...framing,camAirLift:0});
+  subject.grounded=false;subject.position.y=2;
+  for(let i=0;i<60;i++){
+    followRig.update(follow,subject,1/60,false,[],{...framing,camAirLift:1});
+    anchorRig.update(anchorCamera,subject,1/60,false,[],{...framing,camAirLift:0});
+  }
+  assert.ok(Math.abs(follow.position.y-anchorCamera.position.y-2)<1e-8);
+  assert.ok(follow.quaternion.angleTo(anchorCamera.quaternion)<1e-7,'air follow changed pitch');
+  // Even extreme flat-only settings must relinquish the complete shot at vert.
+  const extreme={camDist:2,camHeight:2,camPitch:5,camFov:85,camAirLift:0};
   // Both runs keep exactly the same legacy internal frame, even though one
   // presents the main-game shot on the approach. Steep/vert output must match.
   const oldRig=new SkateChaseCamera(),newRig=new SkateChaseCamera(),oldCamera=camera(),newCamera=camera();
@@ -30,6 +45,12 @@ await withSkateRuntime(async({THREE,server,player:p,level,step,CONST,TUNING})=>{
     subject.position.set(0,5*(1-Math.cos(angle))+(air?4*Math.sin((frame-60)/90*Math.PI):0),-5*Math.sin(angle));
     oldRig.update(oldCamera,subject,1/60,frame===0,[]);
     newRig.update(newCamera,subject,1/60,frame===0,[],framing);
+    if(air){
+      const tuned=new SkateChaseCamera(),tunedCamera=camera(),reference=new SkateChaseCamera(),referenceCamera=camera();
+      tuned.update(tunedCamera,subject,0,true,[],extreme);reference.update(referenceCamera,subject,0,true,[]);
+      assert.ok(tunedCamera.position.distanceTo(referenceCamera.position)<1e-10);
+      assert.ok(tunedCamera.quaternion.angleTo(referenceCamera.quaternion)<1e-7);assert.equal(tunedCamera.fov,referenceCamera.fov);
+    }
     if(frame>0)maxStep=Math.max(maxStep,newCamera.position.distanceTo(previous));previous.copy(newCamera.position);
     if(air||angle>=35*Math.PI/180){
       protectedFrames++;

@@ -13,12 +13,13 @@ export interface SkateCameraSubject {
   bailing: boolean;
 }
 
-/** Main-game framing for flat park travel. Vert keeps its calibrated profile. */
+/** Independent framing for flat park travel. Vert keeps its calibrated profile. */
 export interface SkateGroundFraming {
   camDist:number;
   camHeight:number;
   camPitch:number;
   camFov:number;
+  camAirLift?:number;
 }
 
 // Reference medium-camera proportions, scaled for this taller character.
@@ -48,6 +49,7 @@ export class SkateChaseCamera {
   private wasGrounded = true;
   private landingBlendTime = 0;
   private groundBlend = 0;
+  private takeoffY = 0;
   private readonly flatForward = new THREE.Vector3();
   private readonly flatEye = new THREE.Vector3();
   private readonly flatAim = new THREE.Vector3();
@@ -59,6 +61,7 @@ export class SkateChaseCamera {
     snap: boolean, surfaces: THREE.Object3D[], framing?: SkateGroundFraming): void {
     const step = Math.max(0, Math.min(dt, 0.1));
     const vert = rider.vertAir && !rider.grounded;
+    if (snap || rider.grounded) this.takeoffY = rider.position.y;
     if (rider.grounded && !this.wasGrounded) this.landingBlendTime = 10 / 60;
     this.wasGrounded = rider.grounded;
     this.landingBlendTime = Math.max(0, this.landingBlendTime - step);
@@ -109,6 +112,8 @@ export class SkateChaseCamera {
         this.flatForward.normalize();
         this.flatEye.copy(this.pivot).addScaledVector(this.flatForward,-framing.camDist);
         this.flatEye.y+=framing.camHeight;
+        if (!rider.grounded && !vert)
+          this.flatEye.y += (this.takeoffY-this.pivot.y) * (1-(framing.camAirLift ?? 1));
         const run=Math.max(.1,Math.abs(framing.camDist));
         this.flatAim.copy(this.flatEye).addScaledVector(this.flatForward,run);
         this.flatAim.y-=run*Math.tan(THREE.MathUtils.degToRad(THREE.MathUtils.clamp(framing.camPitch,-85,85)));

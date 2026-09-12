@@ -1,3 +1,4 @@
+import { parkCruiseSpeed, parkChargedSpeed } from './skateParkTuning';
 import { MenuRewardsPresentation } from "./menuPresentation";
 import { mapSkateboardSettings } from "./skateboard/mapSettings";
 import { JungleCupEvent, JUNGLE_CUP_ID, COMPETITION_TUNING, COMPETITORS, JUDGES } from "./competition/event";
@@ -4045,7 +4046,10 @@ function updateCamera(dt: number): void {
   if (chaseOn) {
     const speed = player.cameraSkateSpeed;
     camSpeedFovBoost = stepSpeedSkateFov(camSpeedFovBoost,
-      speedSkateFovTarget(speed, speed > 0, TUNING.cruiseSpeed, TUNING.maxSpeed, TUNING.camSpeedFovBoost),
+      speedSkateFovTarget(speed, speed > 0,
+        level.skatepark ? parkCruiseSpeed() : TUNING.cruiseSpeed,
+        level.skatepark ? parkChargedSpeed() : TUNING.maxSpeed,
+        level.skatepark ? TUNING.parkCamSpeedFovBoost : TUNING.camSpeedFovBoost),
       dt, snapped);
     if (!level.skatepark) {
       camera.fov = TUNING.camFov + 7 + camSpeedFovBoost;
@@ -4058,8 +4062,8 @@ function updateCamera(dt: number): void {
       verticalSpeed: player.vVel, speed, grounded: player.skateCameraSupported,
       bailing: player.skateCameraBailing,
     }, dt, snapped, level.groundMeshes, level.skatepark ? {
-      camDist:TUNING.camDist,camHeight:TUNING.camHeight,camPitch:TUNING.camPitch,
-      camFov:TUNING.camFov+camSpeedFovBoost,
+      camDist:TUNING.parkCamDist,camHeight:TUNING.parkCamHeight,camPitch:TUNING.parkCamPitch,
+      camFov:TUNING.parkCamFov+camSpeedFovBoost,camAirLift:TUNING.parkCamAirLift,
     } : undefined);
     camControlDir.copy(skateChaseCamera.forward);
     cameraLook.step(input.lookX, input.lookY, dt);

@@ -16,6 +16,7 @@ import { trickRepeatFactor, extendHeldTrick, type HeldTrickScore } from './trick
 import { liveCarveGripAtSpeed } from './carveGrip';
 import { solveSkateSteering } from './skateSteering';
 import { SKATE_PARK, skateSurfaceDirection, skateSurfaceHeading, redirectSkateVelocity } from './skateParkPhysics';
+import { parkCruiseSpeed, parkChargedSpeed, parkSpeedLimitScale, parkOllieLaunch } from './skateParkTuning';
 import { cameraSkateSpeed as resolveCameraSkateSpeed } from './cameraSpeedEffect';
 import { HANG_ANIMS } from './hangAnims';
 import { Input } from './input';
@@ -985,6 +986,7 @@ export class Player {
   private parkControls = false;
   private readonly parkVelocity = new THREE.Vector3();
   private parkFlightGravity = SKATE_PARK.airGravity;
+  private parkTunedOllie = false;
   private parkAutoTurn = 0;
   private parkAutoTurnTarget = 0;
   private parkSpinHold = 0;
@@ -3112,6 +3114,7 @@ export class Player {
     this.competitionParkedBoard = null; // shared board geometry/materials remain owned by the rider
     this.parkControls = level.skatepark;
     this.parkFlightGravity = SKATE_PARK.airGravity;
+    this.parkTunedOllie = false;
     this.parkVelocity.set(0, 0, 0);
     this.parkAutoTurn = this.parkAutoTurnTarget = this.parkSpinHold = this.parkBreakHold = 0;
     this.endResultsPose();
@@ -3771,6 +3774,7 @@ export class Player {
     // touching down mid-somersault cuts it — Crash lands upright, no carry-over tumble
     this.flipTimer = this.grounded ? 0 : Math.max(0, this.flipTimer - dt);
     if (this.grounded || this.state === 'grind') {
+      this.parkTunedOllie = false;
       this.airJumpUsed = false; // double jump re-arms on any contact
       this.doubleJumpAir = false;
       this.airborneT = 0; // the double-jump window clock starts at takeoff
@@ -3781,7 +3785,7 @@ export class Player {
       // double-jump window can scale with the jump's actual size
       if (this.airborneT === 0) {
         this.launchVy = Math.max(0, this.vVel);
-        if (this.parkControls && this.airFromSkate)
+        if (this.parkControls && this.airFromSkate && !this.parkTunedOllie)
           this.parkFlightGravity = this.vertAir ? SKATE_PARK.vertGravity : SKATE_PARK.airGravity;
       }
       this.airborneT += dt;
@@ -4726,7 +4730,7 @@ export class Player {
     if (input.jumpHeld)
       this.chargeTimer = Math.min(
         this.chargeTimer + dt,
-        TUNING.jumpChargeTime,
+        this.parkControls ? Math.max(SKATE_PARK.chargeSeconds, TUNING.parkOllieChargeTime, TUNING.jumpChargeTime) : TUNING.jumpChargeTime,
       );
   }
 
@@ -4763,7 +4767,8 @@ export class Player {
       skateSurfaceDirection(this.parkVelocity, this.axisF, this.rideNormal).multiplyScalar(this.speed);
       this.startParkAir(vert, THREE.MathUtils.lerp(
         vert ? SKATE_PARK.vertPopMin : SKATE_PARK.ollieMin,
-        vert ? SKATE_PARK.vertPopMax : SKATE_PARK.ollieMax, t));
+        vert ? SKATE_PARK.vertPopMax : SKATE_PARK.ollieMax,
+        vert ? t : Math.min(1, this.chargeTimer / TUNING.parkOllieChargeTime)), !vert);
       this.lastJumpType = 'Board Ollie';
       sfx.play('ollie', 0.7);
       return;
@@ -6580,7 +6585,7 @@ export class Player {
           this.chargePlanted = this.lastPlanar < 1 && this.slideTimer <= 0;
         }
         this.charging = true;
-        this.chargeTimer = Math.min(this.chargeTimer + dt, TUNING.jumpChargeTime);
+        this.chargeTimer = Math.min(this.chargeTimer + dt, this.parkControls ? Math.max(SKATE_PARK.chargeSeconds, TUNING.parkOllieChargeTime, TUNING.jumpChargeTime) : TUNING.jumpChargeTime);
       }
       if (input.jumpReleased && this.charging && !slamFlat && (this.state === 'ride' || this.coyoteTimer > 0)) {
         // Climbing a near-vert wall: DON'T ollie into the wall — reserve the
@@ -6630,20 +6635,22 @@ export class Player {
       this.brakeLockT = this.brakeRampT = 0;
     } else if (!this.manualing && !slowSteep) {
       const crouching = input.jumpHeld;
-      const target = crouching ? SKATE_PARK.crouchingSpeed : SKATE_PARK.standingSpeed;
-      const acceleration = crouching ? SKATE_PARK.crouchingAcceleration : SKATE_PARK.standingAcceleration;
+      const target = crouching ? parkChargedSpeed() : parkCruiseSpeed();
+      const acceleration = (crouching ? SKATE_PARK.crouchingAcceleration : SKATE_PARK.standingAcceleration) * TUNING.parkAccelerationScale;
       if (this.speed < target) this.speed = Math.min(target, this.speed + acceleration * dt);
     }
-    const drag = this.speed > SKATE_PARK.softSpeedLimit ? SKATE_PARK.heavyDrag :
+    const limitScale = parkSpeedLimitScale();
+    const drag = this.speed > SKATE_PARK.softSpeedLimit * limitScale ? SKATE_PARK.heavyDrag :
       input.jumpHeld ? SKATE_PARK.crouchingDrag : SKATE_PARK.standingDrag;
-    this.speed = THREE.MathUtils.clamp(this.speed - drag * this.speed * this.speed * dt, 0, SKATE_PARK.hardSpeedLimit);
+    this.speed = THREE.MathUtils.clamp(this.speed - drag * this.speed * this.speed * dt, 0, SKATE_PARK.hardSpeedLimit * limitScale);
     this.lastTy = skateSurfaceDirection(this.parkCameraForward, this.axisF, n).y;
     this.liftTy = this.lastTy;
     this.liftTyT = 0;
     return braking;
   }
 
-  private startParkAir(vert: boolean, pop: number): void {
+  private startParkAir(vert: boolean, pop: number, ollie = false): void {
+    this.parkTunedOllie = ollie && !vert;
     const velocity = this.parkVelocity;
     if (vert) {
       this.vertNormal.set(this.rideNormal.x, 0, this.rideNormal.z).normalize();
@@ -6657,6 +6664,11 @@ export class Player {
     this.vertTracked = vert;
     this.vertLossT = 0;
     this.parkFlightGravity = vert ? SKATE_PARK.vertGravity : SKATE_PARK.airGravity;
+    if (ollie && !vert) {
+      const launch = parkOllieLaunch(this.vVel);
+      this.vVel = velocity.y = launch.velocity;
+      this.parkFlightGravity = launch.gravity;
+    }
     this.parkAutoTurn = this.parkAutoTurnTarget = this.parkSpinHold = this.parkBreakHold = 0;
     this.grabSpinAngle = 0;
     if (vert) {

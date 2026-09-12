@@ -4,7 +4,24 @@ import { TRICK_REPEAT_FACTORS } from './trickScoring';
 // engine anywhere. These values ARE the game feel; everything is exposed on
 // sliders in the debug panel (ui.ts) for live tuning.
 
+// Also seeds replays made before park tuning existed.
+export const PARK_TUNING_DEFAULTS = {
+  parkCruiseSpeedScale: 1,
+  parkChargeSpeedScale: 1,
+  parkAccelerationScale: 1,
+  parkOllieHeight: 1,
+  parkOllieHangtime: 1,
+  parkOllieChargeTime: 0.2,
+  parkCamHeight: 5.1,
+  parkCamDist: 5.05,
+  parkCamPitch: 25.35,
+  parkCamFov: 49,
+  parkCamSpeedFovBoost: 6,
+  parkCamAirLift: 1,
+};
+
 export const TUNING = {
+  ...PARK_TUNING_DEFAULTS,
   maxSpeed: 23, // top skate speed
   walkSpeed: 9, // full on-foot run speed; also the skate/walk boundary
   walkRampTime: 0.75, // seconds for a fresh walk to build from rest to full walkSpeed
@@ -208,7 +225,7 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 21; // v21: live per-catch settling, full correction and softer balance pressure
+export const TUNING_VERSION = 22; // v22: independent skatepark speed, ollie and camera controls
 // v17: captured Chrome carve grip and balance defaults
 // v16: tunable high-speed skating FOV push
 // v15: independent low/high skate carve grip replaces the coupled ratio
@@ -220,6 +237,19 @@ export const TUNING_VERSION = 21; // v21: live per-catch settling, full correcti
 
 // Slider metadata for the debug panel.
 export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: number }> = {
+  parkCruiseSpeedScale: { min: 0.5, max: 2, step: 0.05 },
+  parkChargeSpeedScale: { min: 0.5, max: 2.5, step: 0.05 },
+  parkAccelerationScale: { min: 0.25, max: 3, step: 0.05 },
+  parkOllieHeight: { min: 0.5, max: 3, step: 0.05 },
+  parkOllieHangtime: { min: 0.5, max: 2, step: 0.05 },
+  parkOllieChargeTime: { min: 0.05, max: 1, step: 0.05 },
+  parkCamHeight: { min: 0.5, max: 10, step: 0.1 },
+  parkCamDist: { min: 2, max: 16, step: 0.05 },
+  parkCamPitch: { min: 0, max: 65, step: 0.05 },
+  parkCamFov: { min: 35, max: 85, step: 1 },
+  parkCamSpeedFovBoost: { min: 0, max: 20, step: 0.5 },
+  parkCamAirLift: { min: 0, max: 1, step: 0.05 },
+
   maxSpeed: { min: 5, max: 60, step: 1 },
   walkSpeed: { min: 6, max: 20, step: 0.5 },
   walkRampTime: { min: 0, max: 2, step: 0.05 },
@@ -399,6 +429,19 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
 };
 
 export const TUNING_LABELS: Partial<Record<TuningKey, string>> = {
+  parkCruiseSpeedScale: 'Park Cruise Speed ×',
+  parkChargeSpeedScale: 'Park Charged Speed ×',
+  parkAccelerationScale: 'Park Acceleration ×',
+  parkOllieHeight: 'Park Ollie Height ×',
+  parkOllieHangtime: 'Park Ollie Hangtime ×',
+  parkOllieChargeTime: 'Park Ollie Charge (s)',
+  parkCamHeight: 'Park Camera Height (m)',
+  parkCamDist: 'Park Camera Distance (m)',
+  parkCamPitch: 'Park Camera Tilt (°)',
+  parkCamFov: 'Park Camera FOV (°)',
+  parkCamSpeedFovBoost: 'Park Speed FOV (+°)',
+  parkCamAirLift: 'Park Ollie Camera Follow',
+
   balanceDrift: 'Grind Drift',
   balanceControl: 'Grind Correction',
   balanceReentryRelief: 'Linked Catch Relief',
@@ -440,6 +483,19 @@ export const TUNING_LABELS: Partial<Record<TuningKey, string>> = {
 
 // Hover text for the tuning panel: what each slider actually does in play.
 export const TUNING_INFO: Record<TuningKey, string> = {
+  parkCruiseSpeedScale: 'Park-only standing speed multiplier: 1 = 11.303 m/s. Applies to Jungle Cup and every skatepark level; platforming is unchanged.',
+  parkChargeSpeedScale: 'Park-only crouched target multiplier: 1 = 15.329 m/s. The effective target cannot fall below park cruise. Downhill speed ceilings rise with these targets, preserving earned overspeed.',
+  parkAccelerationScale: 'Park-only push acceleration multiplier, standing and crouched. Changes how quickly speed builds, not the final cruise/charge targets. 1 preserves the existing response.',
+  parkOllieHeight: 'Non-vert park ollie height multiplier. 1 preserves the existing tap/full-charge heights (about 1.15 / 1.76 m on flat ground). 1.5 gives 50% more height at the SAME airtime; use Hangtime separately. Does not change vert launches, rail pops or platforming.',
+  parkOllieHangtime: 'Non-vert park ollie airtime multiplier. 1 preserves about 0.52 / 0.64 seconds for tap/full charge. 1.25 adds 25% airtime at the SAME height by scaling launch and gravity together. Captured at takeoff; vert airs and platforming retain their arcs.',
+  parkOllieChargeTime: 'Time held for a full non-vert park ollie. Tap and full-charge pop retain their existing proportions. Vert/lip release keeps its calibrated 0.2 second timing; platforming keeps jumpChargeTime.',
+  parkCamHeight: 'Park-only camera height above the follow anchor on flats and ordinary ollies. Lower framing strengthens ground motion. Fades out on transitions so the established vert camera swing is preserved.',
+  parkCamDist: 'Park-only flat trailing distance. A closer view can strengthen perceived speed. Does not change platform cameras or the calibrated steep/vert shot.',
+  parkCamPitch: 'Park-only flat camera angle below the horizon, independent of height and distance. Fades to the established vert shot on steep transitions.',
+  parkCamFov: 'Park-only base vertical field of view on flat ground and normal ollies. Steep transitions and vert keep their existing lens and swing.',
+  parkCamSpeedFovBoost: 'Extra park-only FOV between the ACTUAL park cruise and charged targets. Reaches the full amount at charged speed, including after changing either speed multiplier. 0 disables it. Vert framing remains protected.',
+  parkCamAirLift: 'Vertical camera follow during ordinary park airs: 1 follows the skater (existing shot), 0 holds the takeoff height so the rise reads larger on screen. Does not affect vert camera tracking or actual jump height.',
+
   milkMagnetRange: 'Distance from your current character bounds to a milk orb’s centre that starts attraction. Higher reaches farther; 0 requires direct contact. Applies to placed milk and crate drops, including two-player pickups. Milk already moving toward you finishes its flight.',
   maxSpeed:
     'Top skate speed from CHARGING. Downhill/pipe riding can exceed it up to the downhillMax slider before bleeding back on the flat.',
@@ -749,6 +805,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
 // Debug-panel layout: sliders grouped under labelled sections, in this order.
 // Every TuningKey should appear exactly once; anything missed lands in OTHER.
 export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
+  { title: 'SKATE PARK · SPEED & OLLIE', keys: ['parkCruiseSpeedScale', 'parkChargeSpeedScale', 'parkAccelerationScale', 'parkOllieHeight', 'parkOllieHangtime', 'parkOllieChargeTime'] },
+  { title: 'SKATE PARK · CAMERA', keys: ['parkCamHeight', 'parkCamDist', 'parkCamPitch', 'parkCamFov', 'parkCamSpeedFovBoost', 'parkCamAirLift'] },
   { title: 'WALKING', keys: ['walkSpeed', 'walkRampTime', 'walkSlowdownTime', 'crawlSpeed'] },
   {
     title: 'JUMPS & AIR',

@@ -129,7 +129,7 @@ try {
   for (const mode of ['default', 'jungle', 'coast', 'map']) {
     const scene = new THREE.Scene();
     const { sun, updateSunShadow } = new Function('THREE', 'scene', 'document', 'level', 'activeSky',
-      shadowSetup + '; return { sun, updateSunShadow };')(
+      'const competition = null;\n' + shadowSetup + '; return { sun, updateSunShadow };')(
         THREE, scene, { body: { classList: { contains: () => mode === 'map' } } },
         { jungleAtmosphere: mode === 'jungle' }, mode === 'coast' ? 'coast' : 'day');
     assert.equal(sun.shadow.mapSize.x, 4096);
