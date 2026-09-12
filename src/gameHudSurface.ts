@@ -279,8 +279,8 @@ export function readRooHudText(element: HTMLElement | undefined): string {
 
 /** DOM and native HUD share one complete Modern readout, including its count. */
 export function formatLifeHudValue(value: string | number, deathsMode: boolean): string {
-  const count = String(value).trim().replace(/\s+DEATHS$/i, '');
-  return deathsMode ? `${count} DEATHS` : count;
+  const count = String(value).trim().replace(/\s+DEATHS?$/i, '');
+  return deathsMode ? `${count} ${count === '1' ? 'DEATH' : 'DEATHS'}` : count;
 }
 
 export class GameHudSurface {

@@ -4,10 +4,13 @@ import {createServer} from 'vite';
 const server=await createServer({logLevel:'silent',server:{middlewareMode:true}});
 try{
   const {GameHudSurface,formatLifeHudValue}=await server.ssrLoadModule('/src/gameHudSurface.ts');
-  for(const count of [0,3,12,999]){
-    assert.equal(formatLifeHudValue(count,true),`${count} DEATHS`);
-    assert.equal(formatLifeHudValue(`${count} DEATHS`,true),`${count} DEATHS`);
+  for(const count of [0,1,2,3,11,12,21,101,999]){
+    const expected=`${count} ${count===1?'DEATH':'DEATHS'}`;
+    assert.equal(formatLifeHudValue(count,true),expected);
+    assert.equal(formatLifeHudValue(`${count} DEATHS`,true),expected);
+    assert.equal(formatLifeHudValue(expected,true),expected);
     assert.equal(formatLifeHudValue(count,false),String(count));
+    assert.equal(formatLifeHudValue(expected,false),String(count));
   }
   const style={display:'block',visibility:'visible',opacity:'1',getPropertyValue:()=> '1'};
   globalThis.getComputedStyle=()=>style;
@@ -22,9 +25,14 @@ try{
   surface.drawLifeFace=()=>{};
   surface.drawPlainText=()=>assert.fail('Modern readout used a plain text font');
   const calls=[];surface.drawRooInRect=(_ctx,text,rect,style)=>calls.push({text,rect,style});
-  for(const life of [{value:3,deathsMode:true},{value:'3 DEATHS',deathsMode:true},undefined]){
+  for(const [life,expectedText] of [
+    [{value:3,deathsMode:true},'3 DEATHS'],[{value:'3 DEATHS',deathsMode:true},'3 DEATHS'],
+    [{value:1,deathsMode:true},'1 DEATH'],[{value:'1 DEATH',deathsMode:true},'1 DEATH'],
+    [undefined,'1 DEATH'],
+  ]){
+    value.textContent=expectedText;
     calls.length=0;surface.paintCounters({}, {scaleX:1,scaleY:1},1280,720,{life},0);
-    assert.equal(calls.length,1);assert.equal(calls[0].text,'3 DEATHS');
+    assert.equal(calls.length,1);assert.equal(calls[0].text,expectedText);
     assert.equal(calls[0].style.align,'center');assert.ok(Math.abs(calls[0].style.size-36.8)<1e-8);
     assert.ok(calls[0].rect.y>=faceRect.y+faceRect.height,'readout not below portrait');
   }

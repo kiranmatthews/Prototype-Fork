@@ -5,7 +5,7 @@ const native=g.ui.setHUD.bind(g.ui);
 g.ui.setHUD=(state:any,dt:number)=>native({...state,endlessDeaths:modern,deaths:count,lives:count},dt);
 const panel=document.createElement('div');panel.style.cssText='position:fixed;left:12px;bottom:16px;z-index:999999;background:#14212def;color:white;padding:10px;font:13px monospace';
 const controls=document.createElement('div'),status=document.createElement('pre');status.dataset.testid='modern-hud-status';status.style.whiteSpace='pre-wrap';panel.style.maxWidth='calc(100vw - 44px)';panel.append(controls,status);document.body.append(panel);
-for(const [name,m,n]of [['Modern 3',true,3],['Classic 3',false,3],['Modern 0',true,0],['Modern 123',true,123]]as const){
+for(const [name,m,n]of [['Modern 3',true,3],['Classic 3',false,3],['Modern 0',true,0],['Modern 1',true,1],['Modern 123',true,123]]as const){
  const b=document.createElement('button');b.textContent=name;b.onclick=()=>{modern=m;count=n;};controls.append(b);
 }
 function report(){panel.inert=false;panel.removeAttribute('aria-hidden');const value=document.querySelector<HTMLElement>('.hud-lives'),face=document.querySelector<HTMLElement>('.hud-life-face-wrap');
