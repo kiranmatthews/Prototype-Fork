@@ -119,20 +119,21 @@ export const TUNING = {
   airControl: 0, // forward/back speed adjustment in the air
   manualMinSpeed: 3.5, // must be rolling at least this fast to pop (or hold) a manual
   manualDrift: 0.65, // manual balance: how fast the pitch needle runs away
-  manualControl: 3.8, // how hard up/down input fights the manual needle
+  manualControl: 4, // slightly stronger up/down correction; edge shape and momentum stay unchanged
   manualFlickWindow: 0.28, // max seconds between the two stick flicks (up-then-down = manual, down-then-up = nose)
   manualLandGrace: 0.65, // seconds after a clean landing before the combo banks — time to flick into a manual
   manualCoyote: 0.45, // seconds a manual survives with the wheels off the deck (crests, rollers) before it drops
   lipAngle: 10, // LIP TRICK: approach must be within this many degrees of dead-on (90 deg to the coping) — off-axis arrivals grind the coping instead
   lipMaxTime: 12, // longest a lip stall holds before you drop back in
   lipDrift: 0.95, // lip stall balance: how fast the needle runs away on its own
-  lipControl: 2.1, // how hard up/down input fights the lip needle
+  lipControl: 2.2, // how hard up/down input fights the lip needle
   // (spineDrift is RETIRED — the hold-into-the-lip spine carry walked the
   // glue anchor off the wall and is removed from the code entirely; old
   // saves/replays that still carry the key are ignored. Spine transfers
   // return as a deliberate mechanic in the redesign.)
   balanceDrift: 0.9, // THPS grind balance: how fast the needle runs away
-  balanceControl: 2.8, // how hard left/right fights the needle
+  balanceControl: 3, // slightly stronger left/right correction
+  balanceReentryRelief: 0.1, // fraction of needle offset/momentum relieved by a same-combo re-entry
   grindCalm: 0, // optional entry calm; disabled so catches require balance immediately
   balanceSpeedEffect: 0.75, // fast grinds retain at least 70% of base drift
   balanceGrace: 0, // difficulty begins increasing immediately
@@ -204,7 +205,7 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 19; // v19: nonlinear balance edge pull, momentum and unbuffered failures
+export const TUNING_VERSION = 20; // v20: modest correction boost and 90% balance carry between linked tricks
 // v17: captured Chrome carve grip and balance defaults
 // v16: tunable high-speed skating FOV push
 // v15: independent low/high skate carve grip replaces the coupled ratio
@@ -334,6 +335,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   lipControl: { min: 0.5, max: 8, step: 0.1 },
   balanceDrift: { min: 0.1, max: 2, step: 0.05 },
   balanceControl: { min: 0.5, max: 6, step: 0.1 },
+  balanceReentryRelief: { min: 0, max: 1, step: 0.01 },
   grindCalm: { min: 0, max: 1.2, step: 0.05 },
   balanceSpeedEffect: { min: 0, max: 2, step: 0.1 },
   balanceGrace: { min: 0, max: 6, step: 0.25 },
@@ -618,6 +620,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   lipControl: 'How hard stick input fights the lip stall needle (along whichever screen axis the meter shows).',
   balanceDrift: 'How fast the grind balance needle runs away from center on its own.',
   balanceControl: 'How hard left/right input fights the balance needle.',
+  balanceReentryRelief:
+    'Relief when re-entering a grind, manual or lip balance in the same combo. 0.1 keeps 90% of the previous needle offset and velocity. Accumulated difficulty is retained; a banked/broken combo starts fresh.',
   grindCalm:
     'Optional entry calm scaled by incoming rail speed. 0 = full drift immediately, the default. Held direction always controls balance, including the direction used to catch the rail.',
   balanceSpeedEffect:
@@ -768,7 +772,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'LEDGE GRAB', keys: ['ledgeGrabTime', 'ledgeClimbTime', 'ledgeClimbPop', 'ledgeReach'] },
   {
     title: 'GRINDS',
-    keys: ['railSnapDistance', 'grindApproachMargin', 'railTripSpeed', 'railSpeedBoost', 'grindDrag', 'perfectGrindSpeed', 'perfectGrindHold', 'grindSpeed', 'grindJumpForce', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'grindCalm', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace', 'balanceInertia', 'balanceGravity', 'balanceEdgePower', 'balanceNoise', 'balanceNoiseFreq', 'balanceSafePeriod'],
+    keys: ['railSnapDistance', 'grindApproachMargin', 'railTripSpeed', 'railSpeedBoost', 'grindDrag', 'perfectGrindSpeed', 'perfectGrindHold', 'grindSpeed', 'grindJumpForce', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'balanceReentryRelief', 'grindCalm', 'balanceSpeedEffect', 'balanceGrace', 'balanceRamp', 'balanceRampMax', 'bailGrace', 'balanceInertia', 'balanceGravity', 'balanceEdgePower', 'balanceNoise', 'balanceNoiseFreq', 'balanceSafePeriod'],
   },
   {
     title: 'MANUAL & LIP',

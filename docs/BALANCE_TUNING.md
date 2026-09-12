@@ -1,4 +1,12 @@
-# Balance profile v19
+# Balance profile v20
+
+Correction strength is slightly higher than v19: grind **2.8 → 3** (+7.1%), manual **3.8 → 4** (+5.3%), lip **2.1 → 2.2** (+4.8%). Cubic edge pull, momentum, noise and immediate boundary failure remain unchanged.
+
+Re-entering a grind, manual or lip stall during a live combo now retains **90% of the previous needle offset and velocity**. For example, a needle at +0.80 returns at +0.72, still moving in the same direction at 90% of its departure velocity. The new `balanceReentryRelief` tuner defaults to 0.10. Accumulated time spent balancing and the noise phase carry through each link, including grind/manual switches; actual airtime pauses them. Repeated valid hops each grant that small relief, while continuous grind-style changes grant none. Banking or breaking the combo, respawning and starting a new run clear the history for a fresh catch.
+
+Focused coverage includes six real charged-ollie/Square/Triangle re-catches with mirrored needle signs, manual and lip transitions, continuous style switches and combo reset boundaries. The browser review's **Rejoin left/right** actions show departure/catch offset, velocity and accumulated time beside the actual combo and meter.
+
+## Underlying v19 edge model
 
 Grinds, manuals and lip stalls share a needle position and velocity. The previous edge term was linear in position, with instant velocity reversal at the default inertia setting. Fast grinds also received a 56% drift discount, and the peg grace allowed another 150 ms of recovery after reaching an end.
 
@@ -27,7 +35,7 @@ Velocity approaches that target over time. Counter-input first brakes the existi
 | Bail Grace | 0.15 s | 0 s | Resolve a boundary crossing on that physics step |
 | Balance Ramp Max | 6× | 3× | Stronger edge dynamics without overpowering centred ordinary-speed grinds solely through elapsed time |
 
-Base drift, control strength, noise, and the time-ramp rate retain their existing defaults. The saved-tuning merger already makes untouched values follow new build defaults while retaining deliberate edits. The ranges/help text expose the new Edge Power setting and the disabled optional grace settings.
+Base drift, noise, and the time-ramp rate retain their existing defaults; v20's control changes are listed above. The saved-tuning merger makes untouched values follow new build defaults while retaining deliberate edits. The ranges/help text expose Edge Power, Reentry Relief and the disabled optional grace settings.
 
 The catch-direction filter has been removed: holding a direction can push the needle out, even if it was held when the rail was caught. High rails and open gaps no longer receive the old automatic clean-air save. Actual coping transitions retain the verified wheels-down drop-in, and inward lip failures retain their intended lip release. Explicit earned perfect-balance powerups are unchanged.
 
