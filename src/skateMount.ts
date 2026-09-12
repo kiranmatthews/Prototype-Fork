@@ -13,6 +13,7 @@ export interface SkateMountPose {
 
 const REST: Readonly<SkateMountPose> = Object.freeze({ lift: 0, tuck: 0, settle: 0 });
 export const SKATE_MOUNT_DURATION = SKATE_MOUNT_TIMING.airTime + SKATE_MOUNT_TIMING.settleTime;
+export const SKATE_DISMOUNT_DURATION = 0.6;
 
 /** A committed mount rises briskly from the loaded crouch, folds slightly in
  * the air, then absorbs the landing. No root motion enters the simulation. */

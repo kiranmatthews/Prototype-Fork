@@ -35,15 +35,16 @@ await withSkateRuntime(async ({ player:p, level, step, THREE, CONST, server }) =
   // The buzzer must preserve a pending rotation, then judge its normal bank.
   place(true);while(Math.abs(p.grabSpinAngle)<Math.PI)step(makeInput({moveX:1}));
   const event=new JungleCupEvent(()=>.5);event.startRun();event.stepPresentation(3);
-  p.onComboBank=()=>event.comboResolved();p.onComboBail=()=>event.comboResolved();
+  p.onComboBank=()=>{};p.onComboBail=()=>{};
   assert.equal(event.stepRun(60,p.points,p.competitionComboActive),false);
   assert.equal(event.overtime,true);
-  for(let i=0;i<300&&event.phase==='running';i++){step(makeInput());event.stepRun(CONST.fixedStep,p.points,p.competitionComboActive);}
+  for(let i=0;i<300&&event.phase==='running';i++){step(makeInput());event.stepRun(CONST.fixedStep,p.points,p.competitionComboActive,p.competitionReadyToStop);}
+  assert.equal(event.phase,'finishing');event.stepFinish(.6,true,true);
   assert.equal(event.phase,'judges');assert.equal(event.runs[0].gameplayScore,CONST.ptsSpin);
   place(true);while(Math.abs(p.grabSpinAngle)<Math.PI)step(makeInput({moveX:-1}));
   assert.ok(p.comboHudPreview);p.bail();assert.equal(p.comboHudPreview,null);assert.equal(p.points,0);
   place(false);assert.equal(p.comboHudPreview,null,'unrotated ollie invents a trick');
-  assert.equal(p.competitionComboActive,false,'unrotated ollie extends the clock');
+  assert.equal(p.competitionComboActive,false,'unrotated ollie invents a combo');
   p.grabSpinAngle=Math.PI/2;assert.equal(p.comboHudPreview,null,'quarter turn advertised a landable 180');
   p.grabSpinAngle=Math.PI*.86;assert.equal(p.comboHudPreview.points,CONST.ptsSpin,'landing tolerance lost its spin preview');
   console.log('PASS grabless ollie 180 and vert 180/360 both ways: live preview, clean landing, one multiplier/cash-in, exact points, overtime and bail/no-spin guards.');

@@ -7,7 +7,7 @@ const p=g.player;
 let mode='live',frame=0,frozen=false,correcting=false,record:string[]=[],result='';
 const neutral=()=>({moveX:0,moveY:0,jumpHeld:false,jumpPressed:false,jumpReleased:false,grindHeld:true,grindPressed:false,spinHeld:false,spinPressed:false,grabHeld:false,grabPressed:false,transferHeld:false,transferPressed:false,restartPressed:false});
 const native=p.step.bind(p),runStep=JungleCupEvent.prototype.stepRun;
-JungleCupEvent.prototype.stepRun=function(dt,score,active){return runStep.call(this,frozen?0:dt,score,active);};
+JungleCupEvent.prototype.stepRun=function(dt,score,active,ready){return runStep.call(this,frozen?0:dt,score,active,ready);};
 p.step=(dt:number,input:any,level:any)=>{
  if(frozen)return;
  if(mode==='live'){native(dt,input,level);return;}

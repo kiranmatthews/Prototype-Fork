@@ -2255,7 +2255,7 @@ function switchLevel(
 function syncCompetitionLevel(editing = false): void {
   player.competitionMode = current.id === JUNGLE_CUP_ID && !editing;
   if (player.competitionMode && split2p) set2P(false);
-  competition = player.competitionMode ? new JungleCupEvent() : null;
+  competition = player.competitionMode ? new JungleCupEvent(Math.random, () => sfx.countdownBeep()) : null;
   competitionUI.render(competition, gameFlow.blocksGameplay || editing);
   if (competition) {
     ui.setLevel(current.id, "competition", player.fruitCollectionRevision, input.inventoryHeld);
@@ -2272,7 +2272,7 @@ function commitCompetitionVictory(): void {
 
 function handleCompetitionAction(action: CompetitionAction): void {
   if (!competition || current.id !== JUNGLE_CUP_ID) return;
-  if (action === "retry") { competition = new JungleCupEvent(); action = "start"; }
+  if (action === "retry") { competition = new JungleCupEvent(Math.random, () => sfx.countdownBeep()); action = "start"; }
   if (action === "start" && competition.startRun()) {
     player.respawn(level, true, true);
     player.competitionMode = true;
@@ -3806,11 +3806,9 @@ ui.onToggleEndlessDeaths = () => {
   );
 };
 player.onComboBank = (amount, labels) => {
-  competition?.comboResolved();
   ui.comboBank(amount, labels);
 };
 player.onComboBail = (labels, points, multiplier) => {
-  competition?.comboResolved();
   ui.comboBail(labels, points, multiplier);
 };
 // Debug cheat: clicking the HUD face banks an extra life.
@@ -4303,6 +4301,7 @@ function updateAudio(dt: number): void {
 function currentHudState(): HudState {
   const comboPreview = player.comboHudPreview;
   return {
+    competitionFinishing: competition?.phase === 'finishing',
     points: player.points,
     comboPoints: player.comboPoints,
     comboMult: player.comboMult,
@@ -4535,7 +4534,7 @@ function frame(nowMs: number): void {
   gameFlowVortex.deactivate();
   paused = false;
 
-  if (competition && competition.phase !== "running") {
+  if (competition && !competition.simulating) {
     competition.stepPresentation(dt);
     competitionUI.render(competition);
     if ((competition.phase as string) !== "running") {
@@ -4609,15 +4608,16 @@ function frame(nowMs: number): void {
       stepPvp(CONST.fixedStep);
     }
     level.update(CONST.fixedStep);
-    // The buzzer never forces a bank. Keep the same live combo at 0:00 until
-    // its ordinary cash-in or loss; the terminal tick includes its final score.
-    if (competition?.stepRun(CONST.fixedStep, player.points, player.competitionComboActive)) {
-      commitCompetitionVictory();
+    player.flushLevelCrateRewards(level);
+    // Zero holds through all air/tricks/combos. A safe grounded end starts
+    // the dismount; judging waits for its presentation and the HUD cash-in.
+    if (competition?.stepRun(CONST.fixedStep, player.points,
+        player.competitionComboActive, player.competitionReadyToStop)) {
+      player.beginCompetitionFinish(level);
       ui.deathFade(false);
       player.collapseRenderInterpolation();
       sfx.stopLoops();
     }
-    player.flushLevelCrateRewards(level);
     flushPendingCompletion();
     checkCampaignEntrances();
     // Player.step authors the fixed pose; PVP may then move either root. Only
@@ -4631,7 +4631,7 @@ function frame(nowMs: number): void {
     acc = Math.max(0, acc - CONST.fixedStep);
     simSteps++;
     frameStats.totalFixedSteps++;
-    if (gameFlow.blocksGameplay || (competition && competition.phase !== "running")) break;
+    if (gameFlow.blocksGameplay || (competition && !competition.simulating)) break;
   }
   competitionUI.render(competition);
 
@@ -4703,6 +4703,13 @@ function frame(nowMs: number): void {
     ui.updateTTClock(player.ttTime, player.ttFreeze); // every frame: the trial clock is the whole show
     ui.updateBalanceBoost(player.balanceBoostT, 6);
     ui.setHUD(currentHudState(), dt);
+  }
+  if (competition?.stepFinish(dt, player.competitionDismounted,
+      ui.competitionScoreSettled(competition.liveScore))) {
+    commitCompetitionVictory();
+    competitionUI.render(competition);
+    player.collapseRenderInterpolation();
+    sfx.stopLoops();
   }
   // M-hidden developer chrome should be computationally hidden too. Building
   // these strings and replacing innerHTML every frame was pure background work.

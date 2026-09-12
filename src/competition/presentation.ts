@@ -87,7 +87,7 @@ export class CompetitionPresentation {
       else if (e.code === 'Tab' && buttons.length) {e.preventDefault();if(!e.repeat)this.select(e.shiftKey?-1:1);}
     });
   }
-  get modalActive(): boolean { return !!this.event && !this.element.hidden && this.event.phase !== 'running'; }
+  get modalActive(): boolean { return !!this.event && !this.element.hidden && !this.event.simulating; }
   private showGuide(open:boolean):void {
     this.guideOpen=open;this.key='';this.seedInput=true;this.render(this.event);
     if(!open){this.selected=Math.max(0,this.buttons().findIndex(button=>button.dataset.action==='guide'));this.syncSelection();}
@@ -144,16 +144,16 @@ export class CompetitionPresentation {
     if(this.element.hidden)this.surface.deactivate();
     document.body.classList.toggle('competition-active',!!event);
     if(!event)return;
-    if(event.phase==='running'||event.phase==='countdown')this.guideOpen=false;
+    if(event.simulating||event.phase==='countdown')this.guideOpen=false;
     const view=this.guideOpen?'guide':event.phase;
-    const key=[view,event.runs.length,Math.ceil(event.remaining),Math.ceil(event.countdown),event.revealedJudges,event.bails,event.cupAwarded,event.overtime].join(':');
+    const key=[view,event.runs.length,Math.ceil(event.remaining),Math.ceil(event.countdown),event.revealedJudges,event.bails,event.cupAwarded,event.overtime,event.finalComboActive].join(':');
     if(key===this.key)return;this.key=key;
     const phaseChanged=this.phase!==view;this.phase=view;
     if(phaseChanged)this.seedInput=true;
-    this.element.classList.toggle('is-running',event.phase==='running');
-    this.element.setAttribute('role',event.phase==='running'?'status':'dialog');
+    this.element.classList.toggle('is-running',event.simulating);
+    this.element.setAttribute('role',event.simulating?'status':'dialog');
     this.element.setAttribute('aria-label','Jungle Cup skate competition');
-    this.element.setAttribute('aria-modal',String(event.phase!=='running'));
+    this.element.setAttribute('aria-modal',String(!event.simulating));
     const header='<div class="comp-eyebrow">ISLAND 1 · SKATE COMPETITION</div><h1>JUNGLE CUP</h1>';
     const button=(label:string,action:CompetitionAction|'guide'|'guide-back',disabled=false)=>`<button data-action="${action}"${disabled?' disabled':''}>${label}</button>`;
     let html='';
@@ -161,9 +161,9 @@ export class CompetitionPresentation {
     if(this.guideOpen){
       const table=(rows:readonly {direction:string;label:string;points:number}[])=>`<table><thead><tr><th>DIRECTION</th><th>TRICK</th><th>BASE</th></tr></thead><tbody>${rows.map(row=>`<tr><td>${esc(row.direction)}</td><td>${esc(row.label)}</td><td>${row.points.toLocaleString()}</td></tr>`).join('')}</tbody></table>`;
       html=`<section class="comp-card comp-guide">${header}<h2>TRICKS & COMBOS</h2><p>Tap a face button with a direction. Short direction taps choose a trick; holding left or right also rotates the rider. Release grabs and catch flips before landing.</p><div class="comp-guide-grid"><article><h3 data-guide-prompt="{spin} FLIPS"></h3>${table(DECK_TRICKS.map(trick=>({direction:trick.recipe.split(' + □')[0],label:trick.label,points:trick.points})))}</article><article><h3 data-guide-prompt="{grab} GRABS"></h3>${table(GRAB_TRICKS)}<p>Hold for more points. The entry direction fixes the grab while you rotate.</p></article><article><h3 data-guide-prompt="{grind} GRINDS"></h3>${table(Object.values(GRIND_TRICKS))}<p>Press again with a direction to change grind. Moving along the rail earns hold points.</p></article><article><h3>SPECIAL</h3><table><tbody>${SPECIAL_TRICKS.map(trick=>`<tr><td>${esc(trick.controls)}</td><td>${esc(trick.label)}</td><td>${trick.points.toLocaleString()}</td></tr>`).join('')}</tbody></table><p>Fill the avatar's SPECIAL ring with tricks. Enter the two directions in order, then the face button.</p><h3>KEEP IT FRESH</h3><p>Repeated tricks pay 100%, 75%, 50%, 25%, then 10%. Landed combos share this history until the next run; bailed attempts don't add to it. Hold points use the same penalty and grow more slowly after two seconds.</p><p>Link airs with grinds, manuals (up–down / down–up), and a revert on vert touchdown.</p></article></div><div class="comp-actions">${button('BACK','guide-back')}${button(`START RUN ${event.runNumber}`,'start')}</div></section>`;
-    } else if(event.phase==='running') {
+    } else if(event.simulating) {
       const seconds=Math.ceil(event.remaining);
-      html=`<div class="comp-run-hud${seconds<=10?' urgent':''}${event.overtime?' overtime':''}"><span>RUN ${event.runNumber}/3${event.overtime?'<small>FINAL COMBO</small>':''}</span><strong>${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}</strong></div>`;
+      html=`<div class="comp-run-hud${seconds<=10?' urgent':''}${event.overtime?' overtime':''}"><span>RUN ${event.runNumber}/3${event.overtime&&event.finalComboActive?'<small>FINAL COMBO</small>':''}</span><strong>${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}</strong></div>`;
     } else if(event.phase==='countdown') {
       html=`<div class="comp-countdown"><span>RUN ${event.runNumber} / 3</span><strong>${Math.max(1,Math.ceil(event.countdown))}</strong><p>MAKE IT COUNT</p></div>`;
     } else if(event.phase==='intro') {
@@ -202,7 +202,7 @@ export class CompetitionPresentation {
     }
     if(this.guideOpen)for(const heading of this.element.querySelectorAll<HTMLElement>('[data-guide-prompt]'))setPromptText(heading,heading.dataset.guidePrompt!);
     for (const reveal of reveals) this.hooks.onReveal?.(reveal.id,reveal.score);
-    if(event.phase!=='running'&&event.phase!=='countdown') {
+    if(!event.simulating&&event.phase!=='countdown') {
       const target=this.element.querySelector<HTMLButtonElement>(`button[data-action="${focused??''}"]:not(:disabled)`)??this.buttons()[0];
       this.selected=Math.max(0,this.buttons().indexOf(target!));
       this.syncSelection(!suppressed&&!document.body.classList.contains('game-shell-modal'));

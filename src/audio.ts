@@ -189,6 +189,21 @@ class SfxEngine {
     }
   }
 
+  /** A short, exact-pitch clock cue through the existing SFX mute/volume bus. */
+  countdownBeep(): void {
+    try {
+      if (!this.ctx || !this.sfxBus) return;
+      const now = this.ctx.currentTime, tone = this.ctx.createOscillator(), gain = this.ctx.createGain();
+      tone.type = 'sine'; tone.frequency.setValueAtTime(880, now);
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(0.22, now + 0.008);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+      tone.connect(gain); gain.connect(this.sfxBus);
+      tone.onended = () => { tone.disconnect(); gain.disconnect(); };
+      tone.start(now); tone.stop(now + 0.15);
+    } catch { /* Audio availability never owns the run lifecycle. */ }
+  }
+
   // Managed loop channel: call every frame with the desired state.
   setLoop(id: string, name: string, active: boolean, vol: number, rate = 1): void {
     try {

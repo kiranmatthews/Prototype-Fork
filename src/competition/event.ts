@@ -11,6 +11,7 @@ export const COMPETITION_TUNING = {
   biasedJudgeHigh: 0.5,
   biasPenalty: 3,
   revealBeat: 0.65,
+  finishBeat: 0.6,
   rival: { skill: 96.1, variance: 0.65, tracking: 0.2, reference: 95, min: 94.1, max: 98.5 },
 };
 export const JUDGES = [
@@ -24,7 +25,7 @@ export const COMPETITORS = [
   { id: 'mondo', name: 'Mondo', portrait: 'mondo', skill: 82, variance: 4 },
   { id: 'pip', name: 'Pip', portrait: 'pip', skill: 72, variance: 5 },
 ] as const;
-export type CompetitionPhase = 'intro' | 'countdown' | 'running' | 'judges' | 'standings' | 'final';
+export type CompetitionPhase = 'intro' | 'countdown' | 'running' | 'finishing' | 'judges' | 'standings' | 'final';
 export interface JudgedRun { gameplayScore: number; bails: number; judges: [number, number, number]; score: number; }
 export interface Standing { id: string; name: string; portrait: string; runs: number[]; total: number; discarded: number | null; rank: number; }
 export const roundMark = (n: number): number => Math.round((n + Number.EPSILON) * 10) / 10;
@@ -68,7 +69,8 @@ export class JungleCupEvent {
   bails = 0;
   liveScore = 0;
   overtime = false;
-  private overtimeComboEnded = false;
+  finalComboActive = false;
+  private finishHold = 0;
   runs: JudgedRun[] = [];
   cupAwarded = false;
   resultCommitted = false;
@@ -77,8 +79,10 @@ export class JungleCupEvent {
     { id: 'rival', name: 'Rival', portrait: 'rival', runs: [] as number[] },
     ...COMPETITORS.map(c => ({ id: c.id as string, name: c.name as string, portrait: c.portrait as string, runs: [] as number[] })),
   ];
-  constructor(private readonly rng: () => number = Math.random) {}
-  get runNumber(): number { return Math.min(3, this.runs.length + (this.phase === 'running' || this.phase === 'countdown' || this.phase === 'intro' ? 1 : 0)); }
+  constructor(private readonly rng: () => number = Math.random,
+    private readonly onFinalSecond: (second: number) => void = () => {}) {}
+  get runNumber(): number { return Math.min(3, this.runs.length + (['running','finishing','countdown','intro'].includes(this.phase) ? 1 : 0)); }
+  get simulating(): boolean { return this.phase === 'running' || this.phase === 'finishing'; }
   get revealedJudges(): number { return Math.min(3, Math.floor(this.presentationTime / COMPETITION_TUNING.revealBeat)); }
   get standings(): Standing[] {
     return this.field.map(s => ({ ...s, ...bestTwo(s.runs), rank: 0 }))
@@ -91,31 +95,42 @@ export class JungleCupEvent {
     if (this.runs.length >= 3 || !['intro','standings'].includes(this.phase)) return false;
     this.phase = 'countdown'; this.countdown = 3; this.remaining = COMPETITION_TUNING.runSeconds;
     this.liveScore = 0; this.bails = 0;
-    this.overtime = false; this.overtimeComboEnded = false; return true;
+    this.overtime = this.finalComboActive = false; this.finishHold = 0; return true;
   }
   bail(): void { if (this.phase === 'running') this.bails++; }
-  /** A bank/break closes THIS extension even if a new combo starts in the
-   * same simulation tick. Before the buzzer this signal has no effect. */
-  comboResolved(): void {
-    if (this.phase === 'running' && this.overtime) this.overtimeComboEnded = true;
-  }
   stepPresentation(dt: number): void {
     if (this.phase === 'countdown') {
       this.countdown = Math.max(0, this.countdown - dt);
       if (this.countdown === 0) this.phase = 'running';
     } else if (this.phase === 'judges') this.presentationTime += dt;
   }
-  stepRun(dt: number, bankedScore: number, comboActive = false): boolean {
+  /** True begins the controlled dismount, not the judging screen. */
+  stepRun(dt: number, bankedScore: number, comboActive = false, readyToStop = true): boolean {
     if (this.phase !== 'running') return false;
     this.liveScore = Math.max(0, bankedScore);
+    const previous = this.remaining;
     this.remaining = Math.max(0, this.remaining - dt);
+    const whole = Math.round(this.remaining);
+    if (Math.abs(this.remaining - whole) < 1e-7) this.remaining = whole;
+    for (const second of [3, 2, 1])
+      if (previous > second && this.remaining <= second) this.onFinalSecond(second);
     if (this.remaining > 1e-7) return false;
     this.remaining = 0;
-    if (comboActive && !this.overtimeComboEnded) {
+    this.finalComboActive = comboActive;
+    if (comboActive || !readyToStop) {
       this.overtime = true;
       return false;
     }
     this.overtime = false;
+    this.phase = 'finishing'; this.finishHold = 0;
+    return true;
+  }
+  /** Dismount, then hold a beat and wait for the actual HUD cash-in to finish. */
+  stepFinish(dt: number, dismounted: boolean, scoreSettled: boolean): boolean {
+    if (this.phase !== 'finishing') return false;
+    if (!dismounted) { this.finishHold = 0; return false; }
+    this.finishHold += Math.max(0, dt);
+    if (this.finishHold + 1e-7 < COMPETITION_TUNING.finishBeat || !scoreSettled) return false;
     const run = judgeRun(this.liveScore, this.bails, this.rng);
     this.runs.push(run);
     this.field[0].runs.push(run.score);

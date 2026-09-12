@@ -4,7 +4,7 @@ import ts from 'typescript';
 
 const source = await readFile(new URL('../src/audio.ts', import.meta.url), 'utf8');
 const code = ts.transpileModule(source, {compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.ES2020}}).outputText;
-const sources=[];
+const sources=[],tones=[];
 class BufferSource {
   playbackRate={value:1}; loop=false; loopStart=0; loopEnd=0;
   starts=0; stops=0;
@@ -16,13 +16,21 @@ globalThis.window={addEventListener(){}};
 Object.defineProperty(globalThis,'navigator',{configurable:true,value:{}});
 globalThis.AudioContext=class {
   state='running'; currentTime=1; destination={};
-  createGain(){return{gain:{value:1},connect(){}}}
+  createGain(){return{gain:{value:1,setValueAtTime(v){this.value=v},linearRampToValueAtTime(v){this.value=v},exponentialRampToValueAtTime(v){this.value=v}},connect(node){this.output=node},disconnect(){this.disconnected=true}}}
+  createOscillator(){const tone={frequency:{setValueAtTime(v){this.value=v}},connect(node){this.output=node},start(at){this.started=at},stop(at){this.stopped=at},disconnect(){this.disconnected=true}};tones.push(tone);return tone}
   createBufferSource(){const node=new BufferSource();sources.push(node);return node}
   async decodeAudioData(){return{length:57932,sampleRate:44100,duration:57932/44100}}
 };
 globalThis.fetch=async()=>({arrayBuffer:async()=>new ArrayBuffer(0)});
 const {sfx}=await import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`);
 await sfx.prepare();
+sfx.countdownBeep();
+assert.equal(tones[0].type,'sine');assert.equal(tones[0].frequency.value,880);
+assert.ok(Math.abs(tones[0].stopped-tones[0].started-.15)<1e-9);
+sfx.setMuted({sfxMuted:true,musicMuted:false});sfx.countdownBeep();
+assert.equal(tones[1].output.output.gain.value,0,'clock cue bypassed SFX mute');
+tones[0].onended();assert.equal(tones[0].disconnected,true);assert.equal(tones[0].output.disconnected,true);
+sfx.setMuted({sfxMuted:false,musicMuted:false});
 for(const [length,sampleRate] of [[15764,12000],[57932,44100],[63056,48000],[2,48000],[1,48000]]){
   const buffer={length,sampleRate,duration:length/sampleRate};sfx.buffers.set('grindLoop',buffer);
   sfx.setLoop('grind','grindLoop',true,.55,1);

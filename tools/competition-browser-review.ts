@@ -13,7 +13,7 @@ g.competitionUI.updateInput=()=>nativeInput(pad);
 g.competitionUI.action=(action:string)=>{actions.push(action);};
 g.player.step=()=>{}; // Keep the real run HUD visible on a stationary rider.
 const nativeRun=JungleCupEvent.prototype.stepRun;
-JungleCupEvent.prototype.stepRun=function(_dt,score,active){return nativeRun.call(this,0,score,active);};
+JungleCupEvent.prototype.stepRun=function(_dt,score,active,ready){return nativeRun.call(this,0,score,active,ready);};
 JungleCupEvent.prototype.stepPresentation=()=>{};
 function fixture(kind:'intro'|'countdown'|'running'|'judges'|'standings'|'win'|'loss'|'overtime'){
   g.competitionAction('retry');
@@ -23,6 +23,7 @@ function fixture(kind:'intro'|'countdown'|'running'|'judges'|'standings'|'win'|'
     for(let i=0;i<count;i++){
       event.startRun();event.phase='running';
       nativeRun.call(event,60,kind==='loss'?500:12000,false);
+      event.stepFinish(.6,true,true);
       event.presentationTime=3;
       if(kind!=='judges')event.showStandings();
     }

@@ -22,7 +22,7 @@ const blank=()=>({moveX:0,moveY:0,jumpHeld:false,jumpPressed:false,jumpReleased:
 let route:any=null, frame=0, events:string[]=[], freeze=false, placed=false;
 let firstAir=false, firstLanding=false, pauseAtApex=false, lastVert=false, previousY=0;
 const nativeRunStep=JungleCupEvent.prototype.stepRun;
-JungleCupEvent.prototype.stepRun=function(dt,score,active){return nativeRunStep.call(this,freeze?0:dt,score,active);};
+JungleCupEvent.prototype.stepRun=function(dt,score,active,ready){return nativeRunStep.call(this,freeze?0:dt,score,active,ready);};
 const originalStep=g.player.step.bind(g.player);
 g.player.step=(dt:number,input:any,level:any)=>{
   if(freeze)return;
@@ -65,8 +65,8 @@ button('Overtime manual',()=>{
  start('Overtime manual',[5,.1,10],[0,0,-1],(_f,p)=>({moveY:p.balance>0?.5:-.5}),180,12);
  route.firstLanding=false;route.setup=()=>{const p=g.player;g.getCompetition().remaining=.1;p.points=1234;p.comboPoints=200;p.comboMult=2;p.comboHasTrick=true;p.comboLabels=['Manual'];p.comboTimer=.65;p.manualing=1;};
 });
-button('Bank final combo',()=>{if(!route)return;g.player.manualing=0;g.player.comboTimer=.05;route.input=blank;route.frames=frame+20;freeze=false;});
-button('Bail final combo',()=>{if(!route)return;g.player.bail();route.input=blank;route.frames=frame+20;freeze=false;});
+button('Bank final combo',()=>{if(!route)return;g.player.manualing=0;g.player.comboTimer=.05;route.input=blank;route.frames=frame+360;freeze=false;});
+button('Bail final combo',()=>{if(!route)return;g.player.bail();route.input=blank;route.frames=frame+360;freeze=false;});
 button('Auto remount',()=>{start('Auto remount',[5,.1,14],[0,0,-1],blank,360,12);route.firstLanding=false;route.recovery=true;route.setup=()=>g.player.bail();});
 button('Deck bail',()=>{start('Deck bail',[0,4.4,30],[0,0,1],blank,360,20);route.firstLanding=false;route.recovery=true;route.setup=()=>g.player.bail();});
 button('Corner bail',()=>{start('Corner bail',[46,4.4,25],[1,0,1],blank,360,20);route.firstLanding=false;route.recovery=true;route.setup=()=>g.player.bail();});

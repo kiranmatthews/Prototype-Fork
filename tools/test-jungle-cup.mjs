@@ -39,6 +39,8 @@ for(const win of [false,true]){
   const score=win?T.perfectRunTarget:100;
   for(let step=0;step<3599;step++) assert.equal(event.stepRun(1/60,score),false);
   assert.ok(event.remaining>0);assert.equal(event.stepRun(1/60,score),true);
+  assert.equal(event.phase,'finishing');assert.equal(event.runs.length,r);
+  assert.equal(event.stepFinish(T.finishBeat,true,true),true);
   assert.equal(event.phase,'judges');assert.equal(event.revealedJudges,0);
   assert.equal(event.showStandings(),false);
   event.stepPresentation(T.revealBeat);assert.equal(event.revealedJudges,1);
@@ -59,7 +61,7 @@ for(const win of [false,true]){
 }
 for(let scenario=0;scenario<1000;scenario++){
  const e=new JungleCupEvent(random);
- for(let r=0;r<3;r++){e.startRun();e.stepPresentation(3);e.stepRun(60,random()*18000);e.stepPresentation(3);e.showStandings();}
+ for(let r=0;r<3;r++){e.startRun();e.stepPresentation(3);e.stepRun(60,random()*18000);e.stepFinish(T.finishBeat,true,true);e.stepPresentation(3);e.showStandings();}
  assert.ok([1,2].includes(e.standings.find(s=>s.id==='rival').rank));
  if(e.won)assert.equal(e.standings[1].id,'rival');
 }

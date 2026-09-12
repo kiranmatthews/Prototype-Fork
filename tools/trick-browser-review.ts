@@ -16,7 +16,7 @@ const walls={South:{p:[0,.1,10],h:[0,0,1]},North:{p:[28,.1,-90],h:[0,0,-1]},East
 let scenario='flip',wall=walls.South,frame=0,air=0,placed=false,freeze=false,single=0,autoPause=true,pausedPose=false,hadAir=false,active=false;
 let logs:string[]=[];
 const nativeStep=g.player.step.bind(g.player),nativeRun=JungleCupEvent.prototype.stepRun;
-JungleCupEvent.prototype.stepRun=function(dt,score,combo){return nativeRun.call(this,freeze?0:dt,score,combo);};
+JungleCupEvent.prototype.stepRun=function(dt,score,combo,ready){return nativeRun.call(this,freeze?0:dt,score,combo,ready);};
 const blank=()=>({moveX:0,moveY:0,jumpHeld:true,jumpPressed:false,jumpReleased:false,grindHeld:false,grindPressed:false,spinHeld:false,spinPressed:false,grabHeld:false,grabPressed:false,transferHeld:false,transferPressed:false,restartPressed:false});
 function start(kind:string,side:keyof typeof walls='South'){
   scenario=kind;wall=walls[side];frame=air=0;placed=freeze=pausedPose=hadAir=false;active=true;logs=[];single=0;

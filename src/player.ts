@@ -72,7 +72,7 @@ import {
   type LedgeCatchEnvelope,
 } from './ledgeTraversal';
 import { RUN_REVERSAL_YAW_RATE, stepFacingYaw } from './runFacing';
-import { sampleSkateMount, SKATE_MOUNT_DURATION } from './skateMount';
+import { sampleSkateMount, SKATE_MOUNT_DURATION, SKATE_DISMOUNT_DURATION } from './skateMount';
 import {
   SpinEffectsPresentation,
   type SpinPresentationDiagnostics,
@@ -790,6 +790,10 @@ export class Player {
   private skatePose = 0; // feet-on-the-board stance while rolling
   private deckPose = 0; // 0..1: the deck is under the feet; articulated knees + sole planting own the stance
   private skateMountT = -1; // one-shot presentation when on-foot movement becomes skating
+  private competitionFinishT = -1;
+  private readonly competitionFinishFrom = new THREE.Vector3();
+  private readonly competitionFinishTo = new THREE.Vector3();
+  private competitionParkedBoard: THREE.Object3D | null = null;
   // SIDE-ON STANCE: a real skater faces 90° across the board — face and
   // belly toward the rail side, head turned to look down the line. This
   // blends the whole body into that pose whenever the board is under you
@@ -3097,6 +3101,9 @@ export class Player {
   // warp that skipped any of this would arrive still grinding a rail that is
   // now four hundred units behind you.
   private settle(level: Level, facing?: THREE.Vector3): void {
+    this.competitionFinishT = -1;
+    this.competitionParkedBoard?.removeFromParent();
+    this.competitionParkedBoard = null; // shared board geometry/materials remain owned by the rider
     this.parkControls = level.skatepark;
     this.parkFlightGravity = SKATE_PARK.airGravity;
     this.parkVelocity.set(0, 0, 0);
@@ -3375,6 +3382,7 @@ export class Player {
 
   // One deterministic fixed step.
   step(dt: number, input: Input, level: Level): void {
+    if (this.competitionFinishT >= 0) { this.stepCompetitionFinish(dt, level); return; }
     this.previousCharacterBounds.copy(this.characterBounds);
     this.parkControls = level.skatepark;
     if (this.discardedBoardLevel !== level) {
@@ -4545,6 +4553,71 @@ export class Player {
   get competitionComboActive(): boolean {
     return this.state !== 'dead' && this.state !== 'gameover' &&
       ((this.comboHasTrick && this.comboMult > 0) || this.comboHudPreview !== null);
+  }
+
+  get competitionReadyToStop(): boolean {
+    return this.state === 'ride' && this.grounded && !this.isBailing &&
+      (this.groundHit?.normal.y ?? 0) >= TUNING.steepStand &&
+      !this.competitionComboActive && this.comboPoints <= 0 &&
+      this.manualing === 0 && this.lipStallT <= 0 && !this.wallriding &&
+      this.flipT <= 0 && this.grabPhase === 'none' && this.spinTimer <= 0 &&
+      !this.slamActive && !this.sliding;
+  }
+
+  get competitionDismounted(): boolean { return this.competitionFinishT >= SKATE_DISMOUNT_DURATION; }
+
+  /** A small authored hop off the stopped board; no ragdoll or live tricks. */
+  beginCompetitionFinish(level: Level): void {
+    if (this.competitionFinishT >= 0 || !this.competitionReadyToStop) return;
+    this.competitionFinishFrom.copy(this.pos); this.competitionFinishTo.copy(this.pos);
+    // Only step onto real nearby support. The broad park decks normally give
+    // both sides; a narrow perch can stow the board without stepping off it.
+    for (const sign of [1, -1]) {
+      const x = this.axisL.x * 0.6 * sign, z = this.axisL.z * 0.6 * sign;
+      const hit = this.queryGround(level, x, z, this.pos.y + 0.2);
+      if (!hit || hit.normal.y < TUNING.steepStand || Math.abs(hit.y - this.pos.y) > 0.2) continue;
+      this.competitionFinishTo.set(this.pos.x + x, hit.y, this.pos.z + z); break;
+    }
+    const mounted = this.freeSkate && this.boardG?.visible;
+    if (mounted && this.boardG) {
+      this.boardG.updateWorldMatrix(true, true);
+      this.competitionParkedBoard = this.boardG.clone(true);
+      new THREE.Matrix4().copy(this.worldScene.matrixWorld).invert().multiply(this.boardG.matrixWorld)
+        .decompose(this.competitionParkedBoard.position,
+        this.competitionParkedBoard.quaternion, this.competitionParkedBoard.scale);
+      this.worldScene.add(this.competitionParkedBoard);
+    }
+    this.cancelWipeoutActions();
+    this.competitionFinishT = mounted ? 0 : SKATE_DISMOUNT_DURATION;
+    this.freeSkate = this.skateOn = this.airFromSkate = false;
+    this.skateMountT = -1;
+    this.speed = this.vVel = this.lastPlanar = 0;
+    this.walkVelocity.set(0, 0, 0); this.walkIntent.set(0, 0, 0);
+    this.parkVelocity.set(0, 0, 0);
+    if (this.boardG) this.boardG.visible = false;
+    sfx.play('skateHalt', 0.35);
+  }
+
+  private stepCompetitionFinish(dt: number, level: Level): void {
+    const input = {moveX:0,moveY:0} as Input;
+    this.rawInput = input;
+    this.runTime += dt; this.competitionFinishT += dt;
+    const move = THREE.MathUtils.smoothstep(this.competitionFinishT, 0.08, 0.42);
+    this.pos.lerpVectors(this.competitionFinishFrom, this.competitionFinishTo, move);
+    const ground = this.queryGround(level);
+    if (ground && ground.normal.y >= TUNING.steepStand && Math.abs(ground.y - this.pos.y) < 0.3) {
+      this.pos.y = ground.y; this.groundHit = ground; this.rideNormal.copy(ground.normal);
+    }
+    this.prevPos.copy(this.pos);
+    this.speed = this.vVel = this.lastPlanar = 0;
+    this.freeSkate = this.skateOn = false;
+    this.updateSparks(dt); this.updatePuffs();
+    this.refreshGroundPresentation(level);
+    this.finishVisualStep(input, dt);
+    this.updateFruit(dt, level);
+    if (this.competitionDismounted && this.competitionParkedBoard &&
+        this.competitionFinishFrom.distanceToSquared(this.competitionFinishTo) < 0.01)
+      this.competitionParkedBoard.visible = false;
   }
 
   private bankCombo(): void {
@@ -12512,7 +12585,7 @@ export class Player {
     }
     // A corpse does not pick fruit up. Bodies still in flight finish their
     // trip — they were earned before the death.
-    const dead = this.state === 'dead' || this.state === 'gameover';
+    const dead = this.state === 'dead' || this.state === 'gameover' || this.competitionFinishT >= 0;
     if(!dead&&this.state!=='finished'&&!this.fruitRunMode&&!level?.runMode)this.claimNearbyWorldFruit();
     if(level&&!dead&&this.state!=='finished'&&!level.runMode&&!this.fruitRunMode){
       for(const pickup of level.pickups){
@@ -15305,7 +15378,8 @@ export class Player {
         if (this.skateMountT >= SKATE_MOUNT_DURATION) this.skateMountT = -1;
       }
     }
-    const mountPose = sampleSkateMount(this.skateMountT);
+    const mountPose = sampleSkateMount(this.competitionFinishT >= 0
+      ? this.competitionFinishT / SKATE_DISMOUNT_DURATION * SKATE_MOUNT_DURATION : this.skateMountT);
     const characterShape = characterProportionSettings.value;
     this.upperLegLengthR = PROCEDURAL_THIGH_LENGTH * characterShape.thighLength;
     this.upperLegLengthL = PROCEDURAL_THIGH_LENGTH * characterShape.thighLength;

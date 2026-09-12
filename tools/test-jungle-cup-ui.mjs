@@ -59,7 +59,7 @@ await withSkateRuntime(async ({ server }) => {
   assert.deepEqual(selected(),['guide-back']);assert.equal(calls.length,1,'guide dispatched a gameplay action');
   tap(0,0,[1]);assert.deepEqual(selected(),['guide'],'controller Back did not restore guide focus');
   assert.ok(ui.element.innerHTML.includes('BEAT YOUR RIVAL'));
-  event.startRun();event.stepPresentation(3);event.stepRun(60,9876,false);ui.render(event);
+  event.startRun();event.stepPresentation(3);event.stepRun(60,9876,false);event.stepFinish(.6,true,true);ui.render(event);
   tap(0,0,[0]);assert.equal(calls.length,1,'disabled judge button activated');
   event.stepPresentation(3);ui.render(event);assert.deepEqual(selected(),['standings']);
   tap(0,0,[0]);assert.deepEqual(calls,['exit','standings']);
@@ -70,6 +70,6 @@ await withSkateRuntime(async ({ server }) => {
   assert.doesNotMatch(ui.element.innerHTML,/BAILS|comp-bails/,'run HUD still shows a bail counter');
   const surface=await readFile('src/gameInterfaceSurface.ts','utf8');
   assert.match(surface,/INK = [^;]*\.competition-host/,'competition DOM ink is still above CRT');
-  assert.match(surface,/this.competition\?\.paint\(ctx,size\)/,'competition does not enter the shared pre-CRT pass');
+  assert.match(surface,/this.competition\?\.paint\(ctx,raster\)/,'competition does not enter the shared pre-CRT pass at its actual raster size');
   console.log('PASS competition selection/focus, four-way stick/D-pad, hold edges, pressed state, disabled judges, refresh/pause handoff and one in-run points UI.');
 });

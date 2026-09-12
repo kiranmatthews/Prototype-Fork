@@ -16,16 +16,20 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, CONST }) => 
   for(let i=0;i<100;i++)assert.equal(event.stepRun(60,1234+i,true),false,'overtime imposed a duration limit');
   assert.equal(event.runs.length,0,'judges ran before the combo resolved');
   event.stepPresentation(600);assert.equal(event.overtime,true,'pause/presentation consumed overtime');
-  event.comboResolved();
-  assert.equal(event.stepRun(1/60,20000,true),true,'same-frame new combo reopened overtime');
+  assert.equal(event.stepRun(1/60,20000,true),false,'a current combo was cut off');
+  assert.equal(event.stepRun(1/60,20000,false,false),false,'a bare air was cut off');
+  assert.equal(event.stepRun(1/60,20000,false,true),true);
+  assert.equal(event.phase,'finishing');assert.equal(event.runs.length,0);
+  assert.equal(event.stepFinish(.6,true,true),true);
   assert.equal(event.runs[0].gameplayScore,20000,'final bank was not judged');
   assert.equal(event.remaining,0);assert.equal(event.overtime,false);
   assert.equal(event.stepRun(60,50000,true),false);assert.equal(event.runs.length,1,'run judged twice');
   event.stepPresentation(3);event.showStandings();event.startRun();
   assert.equal(event.remaining,60);assert.equal(event.overtime,false,'overtime leaked into next run');
   event.stepPresentation(3);assert.equal(event.stepRun(60,100,true),false,'old resolution latch leaked');
-  const empty=fresh();assert.equal(empty.stepRun(60,456,false),true,'empty air received overtime');
-  const early=fresh();early.comboResolved();assert.equal(early.stepRun(60,0,true),false,'pre-buzzer bank blocked a later combo');
+  const empty=fresh();assert.equal(empty.stepRun(60,456,false,false),false,'empty air was ended before landing');
+  assert.equal(empty.stepRun(1/60,456,false,true),true);assert.equal(empty.phase,'finishing');
+  const early=fresh();assert.equal(early.stepRun(60,0,true),false,'pre-buzzer bank blocked a later combo');
 
   const place=()=>{
     player.respawn(level,true,true,{position:new THREE.Vector3(0,.1,14),heading:new THREE.Vector3(0,0,-1)});
@@ -38,24 +42,27 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, CONST }) => 
   // and the ordinary bank callback closes the event with the final purse.
   place();seedCombo();player.manualing=1;player.points=1234;
   const manual=fresh();manual.remaining=.01;
-  player.onComboBank=()=>manual.comboResolved();player.onComboBail=()=>manual.comboResolved();
+  player.onComboBank=()=>{};player.onComboBail=()=>{};
   for(let i=0;i<12;i++){
-    step(makeInput());assert.equal(manual.stepRun(CONST.fixedStep,player.points,player.competitionComboActive),false);
+    step(makeInput());assert.equal(manual.stepRun(CONST.fixedStep,player.points,player.competitionComboActive,player.competitionReadyToStop),false);
   }
   assert.equal(player.manualing,1);assert.equal(player.points,1234,'manual was forcibly cashed at zero');
   assert.equal(manual.remaining,0);assert.equal(manual.overtime,true);
   player.manualing=0;player.comboTimer=.1;
   for(let i=0;i<15&&manual.phase==='running';i++){
-    step(makeInput());manual.stepRun(CONST.fixedStep,player.points,player.competitionComboActive);
+    step(makeInput());manual.stepRun(CONST.fixedStep,player.points,player.competitionComboActive,player.competitionReadyToStop);
   }
+  assert.equal(manual.phase,'finishing');manual.stepFinish(.6,true,true);
   assert.equal(manual.phase,'judges');assert.equal(manual.runs[0].gameplayScore,1594);
   // Bail at zero loses only the pending combo, includes the last bail, and
   // cannot respawn into another extension of the already-ended run.
   place();seedCombo();player.points=1234;
-  const bail=fresh();player.onWipeout=()=>bail.bail();player.onComboBail=()=>bail.comboResolved();
+  const bail=fresh();player.onWipeout=()=>bail.bail();player.onComboBail=()=>{};
   bail.stepRun(60,player.points,player.competitionComboActive);player.bail();
   assert.equal(player.competitionComboActive,false);
-  assert.equal(bail.stepRun(CONST.fixedStep,player.points,player.competitionComboActive),true);
+  assert.equal(bail.stepRun(CONST.fixedStep,player.points,player.competitionComboActive,player.competitionReadyToStop),false);
+  for(let i=0;i<600&&bail.phase==='running';i++){step(makeInput());bail.stepRun(CONST.fixedStep,player.points,player.competitionComboActive,player.competitionReadyToStop);}
+  assert.equal(bail.phase,'finishing');bail.stepFinish(.6,true,true);
   assert.equal(bail.runs[0].gameplayScore,1234);assert.equal(bail.runs[0].bails,1);
   // A protected wipeout that preserves the string is still the same combo.
   place();seedCombo();const protectedRun=fresh();
@@ -66,7 +73,7 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, CONST }) => 
 
   // An already-started flip is visible as a live combo before its award.
   place();player.state='air';player.grounded=false;player.airFromSkate=true;player.airGrav='board';
-  assert.equal(player.competitionComboActive,false,'bare ollie extended the clock');
+  assert.equal(player.competitionComboActive,false,'bare ollie invented a combo');
   player.flipT=.2;player.flipName='Kickflip';assert.equal(player.competitionComboActive,true,'pending flip lost at buzzer');
   player.bail();assert.equal(player.competitionComboActive,false);
 
@@ -106,5 +113,5 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, CONST }) => 
   for(let i=0;i<2;i++){step(makeInput({jumpHeld:true,jumpPressed:true}));step(makeInput({jumpReleased:true}));}
   assert.equal(player.vertBoardRelease.stage,3);assert.equal(player.freeSkate,true);assert.equal(player.airFromSkate,true);
   assert.equal(player.emergencyEjectUsed,false);assert.equal(player.flyBoard,null);
-  console.log('PASS competition overtime: 100-minute extension, final bank/bail, same-tick resolution, reset/pause, real manual linking and pending flips; always-skate neutral bail/board recovery and blocked foot exits.');
+  console.log('PASS competition overtime: 100-minute extension, final bank/bail, safe landing/recovery before finishing, reset/pause, real manual linking and pending flips; always-skate neutral bail/board recovery and blocked foot exits.');
 });

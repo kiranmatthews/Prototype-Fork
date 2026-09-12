@@ -74,6 +74,7 @@ export interface Stats {
 }
 
 export interface HudState {
+  competitionFinishing?: boolean;
   points: number;
   comboPoints: number;
   comboMult: number;
@@ -1097,6 +1098,11 @@ export class UI {
     this.setComboTotal(String(Math.round(this.dispCombo)));
   }
 
+  /** Final screens wait for both the combo purse and the displayed total. */
+  competitionScoreSettled(score: number): boolean {
+    return this.comboState === 'none' && Math.round(this.dispScore) === Math.round(score);
+  }
+
   // Combo lost on a bail: keep the exact copy already on screen, turn it red,
   // and drop it away. The callback snapshot is only a same-step fallback for
   // a trick that scored and failed before the HUD received its first frame.
@@ -1543,7 +1549,7 @@ export class UI {
       } else if (!cashInHolding) {
         this.dispCombo = cashInFrame?.combo ?? this.dispCombo;
         this.setComboTotal(String(Math.round(this.dispCombo)));
-        if (this.dispCombo <= 0 || hudNow >= this.comboCashInExpires) this.endCombo();
+        if (this.dispCombo <= 0 || (!s.competitionFinishing && hudNow >= this.comboCashInExpires)) this.endCombo();
       }
     } else if (this.comboState === "bail") {
       if (show) {
