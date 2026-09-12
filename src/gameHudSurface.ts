@@ -52,7 +52,6 @@ export interface GameHudElements {
   lifeRow?: HTMLElement;
   lifeFace?: HTMLElement;
   lifeValue?: HTMLElement;
-  deathModeLabel?: HTMLElement;
   scorePlate?: HTMLElement;
   scoreLabel?: HTMLElement;
   scoreValue?: HTMLElement;
@@ -276,6 +275,12 @@ export function readRooHudText(element: HTMLElement | undefined): string {
   const glyph = element.querySelector("text");
   const raw = glyph?.textContent ?? element.textContent ?? "";
   return raw.replace(/\s+/g, " ").trim();
+}
+
+/** DOM and native HUD share one complete Modern readout, including its count. */
+export function formatLifeHudValue(value: string | number, deathsMode: boolean): string {
+  const count = String(value).trim().replace(/\s+DEATHS$/i, '');
+  return deathsMode ? `${count} DEATHS` : count;
 }
 
 export class GameHudSurface {
@@ -763,46 +768,35 @@ export class GameHudSurface {
       const bonusLife =
         isLaidOut(this.elements.bonusTitle) &&
         hudRevealOpacity(this.elements.bonusTitle) > 0.001;
+      const deathsMode = !avatarOnly && (frame.life?.deathsMode ??
+        Boolean(this.elements.lifeFace?.closest(".hud-deathcount")));
       const faceRect = this.rect(this.elements.lifeFace, layout) ?? {
-        x: width - 40 * (width / 1280) - iconSize,
+        x: width - 40 * (width / 1280) - (deathsMode ? 100 * sy + iconSize / 2 : iconSize),
         y: bonusLife ? height - 20 * sy - iconSize : top,
         width: iconSize,
         height: iconSize,
       };
-      const deathsMode = !avatarOnly && (frame.life?.deathsMode ??
-        Boolean(this.elements.lifeFace?.closest(".hud-deathcount")));
       this.drawLifeFace(ctx, faceRect, deathsMode, lifeAlpha);
       if (!avatarOnly && life) {
-        const lifeRect = this.rect(this.elements.lifeValue, layout) ?? {
+        const lifeRect = this.rect(this.elements.lifeValue, layout) ?? (deathsMode ? {
+          x: faceRect.x + faceRect.width / 2 - 100 * sy,
+          y: faceRect.y + faceRect.height + 8 * sy,
+          width: 200 * sy,
+          height: 42 * .882 * 1.285 * sy,
+        } : {
           x: faceRect.x - counterSize * 1.35,
           y: faceRect.y + (faceRect.height - counterSize * 1.285) / 2,
           width: counterSize * 1.25,
           height: counterSize * 1.285,
-        };
+        });
         const lifeSize =
-          counterSize * lifeScale;
-        this.drawRooInRect(ctx, String(life.value), lifeRect, {
+          deathsMode ? lifeRect.height / 1.285 : counterSize * lifeScale;
+        this.drawRooInRect(ctx, formatLifeHudValue(life.value, deathsMode), lifeRect, {
           size: lifeSize,
-          align: "right",
+          align: deathsMode ? "center" : "right",
           tracking: sourceTrackingPixels(ROO_COUNTER_TRACKING, lifeSize),
           alpha: lifeAlpha,
         });
-        if (deathsMode) {
-          const labelRect = this.rect(this.elements.deathModeLabel, layout) ?? {
-            x: lifeRect.x + lifeRect.width + 4 * sy,
-            y: lifeRect.y + lifeRect.height - 22 * sy,
-            width: 72 * sy,
-            height: 18 * sy,
-          };
-          this.drawPlainText(ctx, "DEATHS", labelRect.x, labelRect.y + labelRect.height / 2, {
-            size: Math.max(6, 14 * sy * lifeScale),
-            align: "left",
-            color: "#ff765f",
-            weight: "bold",
-            shadow: "rgba(0,0,0,0.85)",
-            alpha: lifeAlpha,
-          });
-        }
       }
     }
   }

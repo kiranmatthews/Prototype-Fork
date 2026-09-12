@@ -9,6 +9,7 @@ import { setPromptText } from "./inputPromptUI";
 import { localDataResetUrl } from "./localGameStorage";
 import {
   GameHudSurface,
+  formatLifeHudValue,
   type GameHudBoostState,
   type GameHudSpecialState,
   type GameHudSurfaceDiagnostics,
@@ -116,7 +117,6 @@ export class UI {
   private relicRowEl!: HTMLElement;
   private livesRowEl!: HTMLElement;
   private lifeFaceEl!: HTMLElement;
-  private deathModeLabelEl!: HTMLElement;
   private runRowsHidden = false;
   private endlessDeaths = false;
   private lifeCheatEnabled = true;
@@ -713,10 +713,6 @@ export class UI {
     this.livesEl = div("hud-num hud-lives");
     livesRow.appendChild(this.livesEl);
     livesRow.appendChild(lifeFaceWrap);
-    this.deathModeLabelEl = div("hud-deathcount-label");
-    this.deathModeLabelEl.textContent = "DEATHS";
-    this.deathModeLabelEl.style.display = "none";
-    livesRow.insertBefore(this.deathModeLabelEl, this.livesEl);
     this.livesRowEl = livesRow;
 
     // TIME TRIAL: the big clock and its score share the explicit run-mode
@@ -912,7 +908,6 @@ export class UI {
         lifeRow: this.livesRowEl,
         lifeFace: this.lifeFaceEl,
         lifeValue: this.livesEl,
-        deathModeLabel: this.deathModeLabelEl,
         scorePlate: this.scorePlateEl,
         scoreLabel: this.scoreLabelEl,
         scoreValue: this.scoreEl,
@@ -1509,7 +1504,7 @@ export class UI {
     }
     const lifeReadout = s.endlessDeaths ? s.deaths : s.lives;
     if (lifeReadout !== this.prevHud.lives) {
-      this.rooLives.set(String(lifeReadout));
+      this.rooLives.set(formatLifeHudValue(lifeReadout, s.endlessDeaths));
       pop(this.livesEl);
       this.prevHud.lives = lifeReadout;
     }
@@ -1669,7 +1664,6 @@ export class UI {
       ? "∞ STANDARD RULE: ENDLESS DEATHS"
       : "× STANDARD RULE: CLASSIC LIVES";
     this.endlessBtn.style.color = on ? "#ffd45a" : "";
-    if (this.deathModeLabelEl) this.deathModeLabelEl.style.display = on ? "block" : "none";
     if (this.livesRowEl) {
       this.livesRowEl.classList.toggle("hud-deathcount", on);
       this.livesRowEl.title = on
@@ -1950,7 +1944,6 @@ export class UI {
     this.livesRowEl.classList.toggle('hud-deathcount', this.endlessDeaths && !avatarOnly);
     this.livesEl.style.display = avatarOnly ? 'none' : '';
     this.livesEl.setAttribute('aria-hidden', String(avatarOnly));
-    this.deathModeLabelEl.style.display = this.endlessDeaths && !avatarOnly ? 'block' : 'none';
     this.livesRowEl.title = avatarOnly ? 'Special meter' : this.endlessDeaths ? 'total deaths this run' : this.lifeCheatEnabled ? 'click: +1 life' : 'lives remaining';
     this.livesRowEl.style.cursor = !avatarOnly && !this.endlessDeaths && this.lifeCheatEnabled ? 'pointer' : 'default';
     this.livesRowEl.style.pointerEvents = !avatarOnly && !this.endlessDeaths && this.lifeCheatEnabled ? 'auto' : 'none';
@@ -2385,14 +2378,6 @@ export class UI {
         top: auto; bottom: 20px;
       }
       .game-hud-layer.hud-bonus .hud-counter { margin-bottom: 0; }
-      .hud-deathcount-label {
-        align-self: flex-end;
-        margin: 0 0 clamp(8px, 1.2vh, 13px) -7px;
-        font: bold clamp(10px, 1.45vh, 14px) Impact, 'Arial Black', sans-serif;
-        letter-spacing: 1.5px;
-        color: #ff765f;
-        text-shadow: 0 2px 2px #000, 0 0 6px rgba(255, 70, 45, 0.55);
-      }
       .hud-deathcount .hud-icon-face { filter: grayscale(0.35) saturate(1.3) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.6)); }
       /* Sized as CAP HEIGHT — see the .roo-line note below. The icon leads the
          digits slightly, the way the crate and the fruit do in Crash. */
@@ -2798,6 +2783,18 @@ export class UI {
          beside it. Same clamp as .hud-icon, so the digit is exactly as tall
          as the portrait. */
       .hud-lives { font-size: clamp(60px, ${ROO_NUMBER_VH}vh, 132px); }
+      .game-hud-layer .hud-life-row.hud-deathcount {
+        flex-direction: column; align-items: center; gap: 4px;
+        max-width: calc(100vw - 32px);
+      }
+      .hud-deathcount .hud-life-face-wrap { order: 0; transform: none; }
+      .game-hud-layer .hud-life-row.hud-deathcount .hud-lives {
+        order: 1; justify-content: center; white-space: nowrap;
+        /* Menu PNG art uses .882 × its CSS action size as visible cap height. */
+        font-size: calc(var(--menu-action, clamp(23px, 5.8vh, 70px)) * .882);
+        font-family: Roo, sans-serif; letter-spacing: 0; max-width: 100%;
+      }
+      .hud-deathcount .hud-lives > .roo-text-svg { max-width: 100%; }
       .hud-ttres-title { font-size: 42px; }
       .hud-ttres-time { font-size: 66px; }
       .hud-msg-title { font-size: 84px; }

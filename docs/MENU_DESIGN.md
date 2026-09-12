@@ -1,5 +1,11 @@
 # BONEMAN menu design
 
+Modern mode's gameplay life readout is one Roo PNG line (`3 DEATHS`) centred
+below the portrait/SPECIAL ring. It uses the shared menu action size and the
+same 0.882 cap-height conversion as menu PNG lettering, in both direct DOM
+and native pre-CRT rendering. Classic retains its large adjacent life count;
+competition's avatar-only and Bonus visibility rules are unchanged.
+
 Player-facing menus are game screens, composed for a TV frame. They must not behave like scrolling web pages.
 
 - Divide the viewport into fixed regions. Keep the island/title area and control hints visible. Pause and Level Select fill the screen inside TV-safe margins.

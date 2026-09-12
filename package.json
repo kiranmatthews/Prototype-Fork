@@ -36,7 +36,7 @@
     "check:look": "node tools/test-visual-treatment.mjs && node tools/test-factory-defaults.mjs",
     "check:skateboard": "node tools/test-skateboard-port.mjs && node tools/test-discarded-boards.mjs && node tools/test-map-skateboard-profile.mjs",
     "check:special": "node tools/test-special-system.mjs",
-    "check:combo-hud": "node tools/test-combo-hud-parity.mjs",
+    "check:combo-hud": "node tools/test-modern-life-hud.mjs && node tools/test-combo-hud-parity.mjs",
     "check:spin-effects": "node tools/test-spin-effects-port.mjs",
     "check:crt-generated": "python3 tools/crt-guest-web/generate.py --check",
     "generate:crt": "python3 tools/crt-guest-web/generate.py",
