@@ -31,12 +31,22 @@ export class GameInterfaceSurface {
     // another full-screen transparent texture just to draw nothing.
     if (![...document.querySelectorAll(INK)].some(element => this.visible(element))) return;
     this.surface ??= new GameHudSurface();
-    this.surface.render(renderer, size, { drawExtra: ctx => {
+    // A null render target is expressed in CSS pixels by Three.js, while its
+    // drawing buffer is physical pixels. Match GameFlowSurface's direct-path
+    // contract so prompt icons do not become the menu's lone 1x layer on a
+    // Retina display.
+    const pixelRatio = target === null ? renderer.getPixelRatio() : 1;
+    const raster = {
+      width: Math.max(1, Math.round(size.width * pixelRatio)),
+      height: Math.max(1, Math.round(size.height * pixelRatio)),
+    };
+    const drawn = this.surface.draw(raster, { drawExtra: ctx => {
       this.cursorDrawn = false;
-      ctx.scale(size.width / window.innerWidth, size.height / window.innerHeight);
-      this.paintMap(ctx); this.paintTouch(ctx); this.competition?.paint(ctx,size);
+      ctx.scale(raster.width / window.innerWidth, raster.height / window.innerHeight);
+      this.paintMap(ctx); this.paintTouch(ctx); this.competition?.paint(ctx,raster);
       paintInputPrompts(ctx,document,'.competition-host'); this.paintCursor(ctx); this.paintCurtain(ctx);
-    } }, target);
+    } });
+    if (drawn) this.surface.composite(renderer, size, target);
   }
 
   private visible(element: Element | null): element is HTMLElement {

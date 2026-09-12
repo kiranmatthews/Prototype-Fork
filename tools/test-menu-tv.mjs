@@ -70,8 +70,9 @@ try {
     if(!lite){
       await page.evaluate(()=>{window.__game.renderQualitySettings.setEnabled(false);window.__game.gameFlow.showPause({levelName:'CODEX GEOMETRY LAB',inWarpRoom:false});});
       await page.waitForTimeout(600);
-      const resolution=await page.evaluate(()=>({menu:window.__game.getGameFlowSurfaceDiagnostics(),buffer:{width:window.__game.renderer.domElement.width,height:window.__game.renderer.domElement.height}}));
+      const resolution=await page.evaluate(()=>({menu:window.__game.getGameFlowSurfaceDiagnostics(),interface:window.__game.getInterfaceSurfaceDiagnostics(),buffer:{width:window.__game.renderer.domElement.width,height:window.__game.renderer.domElement.height}}));
       assert.equal(resolution.menu.width,resolution.buffer.width);assert.equal(resolution.menu.height,resolution.buffer.height);
+      assert.equal(resolution.interface.surface.width,resolution.buffer.width);assert.equal(resolution.interface.surface.height,resolution.buffer.height);
       assert.ok(resolution.menu.width*resolution.menu.height>2073600);report.resolution.push(resolution);
       await page.screenshot({path:out+'/pause-native-2x.png'});
     }
