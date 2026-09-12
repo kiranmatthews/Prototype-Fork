@@ -1,7 +1,16 @@
-<!doctype html><html><head><meta charset="utf-8"><link rel="icon" href="data:,"><style>body{margin:0;background:#101820;color:#cbd8e3;font:16px system-ui}canvas{display:block}header{padding:14px 24px}</style></head><body><header>Generated curved meters · shared balance path · stop-motion frames</header><canvas id="c" width="1440" height="900"></canvas><script type="module">
-import {drawBalanceMeter,loadBalanceMeterAssets,balanceMeterFrame,balanceMeterPoint} from '../../src/balanceMeter.ts';
-await loadBalanceMeterAssets();const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');let automatic=true;
-function paint(now=performance.now(),value=Math.sin(now/1400)*.92,light=false){ctx.fillStyle=light?'#e9e5d8':'#101820';ctx.fillRect(0,0,1440,900);ctx.font='18px system-ui';ctx.fillStyle=light?'#293a48':'#b9cbdc';ctx.textAlign='center';
- for(const [i,v]of [-.85,0,.85].entries()){const x=i*480;ctx.fillText('GRIND / HORIZONTAL LIP',x+240,45);drawBalanceMeter(ctx,{x:x+40,y:65,width:400,height:202},{mode:'grind',value:v,nowMs:now,critical:Math.abs(v)>.8});ctx.fillText('MANUAL / VERTICAL LIP',x+240,335);drawBalanceMeter(ctx,{x:x+115,y:365,width:250,height:497},{mode:'manual',value:i===1?value:v,nowMs:now,critical:Math.abs(v)>.8});}}
-function tick(){if(automatic)paint();requestAnimationFrame(tick);}tick();window.balanceReview={ready:true,paint(now,value=0,light=false){automatic=false;paint(now,value,light);},resume(){automatic=true;},pose:balanceMeterFrame,point:balanceMeterPoint};
+<!doctype html><html><head><meta charset="utf-8"><link rel="icon" href="data:,"><style>
+body{margin:0;background:#101820;color:#cbd8e3;font:14px system-ui;overflow:hidden}header{height:80px;box-sizing:border-box;padding:10px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}button,select,input{font:inherit}canvas{display:block;width:min(100vw,calc((100vh - 80px)*1.6));height:auto;margin:auto}output{font:12px monospace}
+</style></head><body><header><button id="play">Pause motion</button><button id="light">Light backdrop</button><label>Centre needle <input id="value" aria-label="Centre needle" type="range" min="-1" max="1" step=".01" value="0"></label><label>Meter cel <select id="frame" aria-label="Meter cel"><option value="0">0</option><option value="141">1</option><option value="236">2</option><option value="526">3</option></select></label><output id="status"></output></header><canvas id="c" width="1440" height="900"></canvas><script type="module">
+import {drawBalanceMeter,loadBalanceMeterAssets,balanceMeterFrame,balanceMeterPoint,balanceMeterPointerPose} from '../../src/balanceMeter.ts';
+await loadBalanceMeterAssets();const canvas=document.getElementById('c'),ctx=canvas.getContext('2d'),slider=document.getElementById('value'),frame=document.getElementById('frame');let automatic=true,light=false;
+function paint(now=performance.now(),value=Math.sin(now/1400)*.92,backdrop=light){ctx.fillStyle=backdrop?'#e9e5d8':'#101820';ctx.fillRect(0,0,1440,900);ctx.font='18px system-ui';ctx.fillStyle=backdrop?'#293a48':'#b9cbdc';ctx.textAlign='center';
+ for(const [i,fixed]of [-.85,0,.85].entries()){const x=i*480,v=i===1?value:fixed;ctx.fillText('GRIND / HORIZONTAL LIP',x+240,45);drawBalanceMeter(ctx,{x:x+40,y:65,width:400,height:202},{mode:'grind',value:v,nowMs:now,critical:Math.abs(v)>.8});ctx.fillText('MANUAL / VERTICAL LIP',x+240,335);drawBalanceMeter(ctx,{x:x+115,y:365,width:250,height:497},{mode:'manual',value:v,nowMs:now,critical:Math.abs(v)>.8});}
+ const pose=balanceMeterFrame(now),pointer=balanceMeterPointerPose(value,pose.frame);document.getElementById('status').textContent=`value ${value.toFixed(2)} · cel ${pose.frame} · tilt ${(pointer.angle*180/Math.PI).toFixed(1)}°`;
+}
+function refresh(){paint(Number(frame.value),Number(slider.value));}
+document.getElementById('play').onclick=e=>{automatic=!automatic;e.target.textContent=automatic?'Pause motion':'Play motion';if(!automatic)refresh();};
+document.getElementById('light').onclick=()=>{light=!light;if(!automatic)refresh();};
+slider.oninput=frame.onchange=()=>{automatic=false;document.getElementById('play').textContent='Play motion';refresh();};
+function tick(){if(automatic)paint();requestAnimationFrame(tick);}tick();
+window.balanceReview={ready:true,paint(now,value=0,light=false){automatic=false;paint(now,value,light);},resume(){automatic=true;},pose:balanceMeterFrame,point:balanceMeterPoint};
 </script></body></html>

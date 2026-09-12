@@ -15,7 +15,7 @@ function morphology(mask:Uint8Array,w:number,h:number,dilate:boolean){
 /** Remove a model's matte/islands, retaining its own complete colored bevels.
  * This never reads or clips against the original Roo vector silhouette.
  */
-export function modelCutout(image:HTMLImageElement){
+export function modelCutout(image:HTMLImageElement,options:{preserveBlack?:boolean}={}){
  const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;
  const ctx=canvas.getContext('2d')!;
  ctx.drawImage(image,0,0);const raw=ctx.getImageData(0,0,canvas.width,canvas.height),d=raw.data,w=canvas.width,h=canvas.height,n=w*h;
@@ -25,7 +25,7 @@ export function modelCutout(image:HTMLImageElement){
  const eligible=new Uint8Array(n);let count=0;
  for(let p=0;p<n;p++){
   const r=d[p*4],g=d[p*4+1],b=d[p*4+2],hi=Math.max(r,g,b),lo=Math.min(r,g,b);
-  const color=magenta?!(r>80&&b>80&&g<Math.min(r,b)*.74)&&hi>35:hi-lo>16&&hi>35;
+  const color=magenta?!(r>80&&b>80&&g<Math.min(r,b)*.74)&&(options.preserveBlack||hi>35):hi-lo>16&&hi>35;
   eligible[p]=transparent?Number(d[p*4+3]>32):Number(color);count+=eligible[p];
  }
  const seen=new Uint8Array(n),kept=new Uint8Array(n),queue=new Int32Array(n),components:number[]=[];

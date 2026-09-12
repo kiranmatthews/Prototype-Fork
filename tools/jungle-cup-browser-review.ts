@@ -87,6 +87,8 @@ button('Buffered rail flip',()=>{
  start('Buffered rail flip',p.toArray(),h.toArray(),f=>({grindHeld:true,grindPressed:f===0||f===50,jumpHeld:f>0&&f<21,jumpReleased:f===21,spinHeld:f===17,spinPressed:f===17,moveX:f===17?1:0}),70,8);
  route.firstLanding=false;route.setup=()=>{g.player.state='air';g.player.grounded=false;g.player.airFromSkate=true;g.player.airGrav='board';g.player.vVel=0;g.player.balanceBoostT=20;};
 });
+for(const [label,value] of [['left',-.85],['centre',0],['right',.85]] as const)
+ button(`Needle ${label}`,()=>{g.player.balance=value;freeze=true;});
 button('Pocket bowl',()=>{let popped=false;start('Pocket bowl',[-27,.1,-94.5],[1,0,0],(f,p)=>{const pop=!popped&&p.grounded&&p.rideNormal.y<.55;if(pop)popped=true;return {jumpHeld:!popped,jumpPressed:f===0,jumpReleased:pop};});});
 button('Pocket bank entry',()=>{start('Pocket bank entry',[-10.8,.1,-94.5],[-1,0,0],push,220);route.firstLanding=false;});
 button('Street stairs',()=>{start('Street stairs',[-6,.1,-6],[0,0,-1],f=>({jumpHeld:f<6,jumpPressed:f===0,jumpReleased:f===6,grindHeld:f>=8,grindPressed:f===8}),85);route.firstLanding=false;});

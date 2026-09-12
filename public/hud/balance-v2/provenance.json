@@ -1,0 +1,25 @@
+{
+  "generator": "built-in image_gen",
+  "anatomy": "three fingers plus thumb; one pointing index, two curled fingers, one folded thumb",
+  "source": "art/balance-meter/v2/glove-matte-source.png",
+  "sourceSha256": "2030c976bcddab179d65b2401a1f097604145c206b63314430f2edc95ed66761",
+  "runtimeSha256": "f5a2ec9ce0fd701b5e72d8cb4a6f386ef836683ffd0dfc29f2b6c4c27c55a24b",
+  "background": "magenta matte",
+  "preserveBlack": true,
+  "sourceBounds": [
+    29,
+    97,
+    1485,
+    770
+  ],
+  "width": 320,
+  "height": 182,
+  "tip": [
+    0.971875,
+    0.34615384615384615
+  ],
+  "prompts": {
+    "three-finger-selected.txt": "Edit the supplied cartoon glove image for the Boneman game's balance-meter pointer. Keep the existing pose and style: one ivory glove pointing horizontally to the RIGHT, a rolled cuff on the left, dark outline and painted dimensional shading. Correct the cartoon anatomy to three fingers plus one thumb: ONE extended index finger, TWO curled fingers, and ONE folded thumb. Remove the extra small curled finger visible at the bottom of the original. Preserve the long horizontal pointing index, its rounded fingertip, the cuff and the three dark marks on the back of the glove. The whole hand should remain fully visible. Output only the finished glove on a genuinely transparent alpha background, no shadow outside the hand and no text or other objects.\n",
+    "glove-matte.txt": "Background-only production matte correction. Replace ONLY the gray checkerboard outside the supplied finished cartoon glove with perfectly flat solid RGB #FF00FF magenta. Keep every pixel of the actual glove artwork unchanged: exact contour, three fingers plus thumb, pointing direction, black outlines and crease marks, ivory highlights, shading, scale and position. This is a flat working matte for the game's existing transparent sprite exporter. All space outside the glove, including below the pointing index, must be one uniform magenta color. No transparency checkerboard, no gradient, no texture, no cast shadow. Do not add, remove or redraw any part of the glove.\n"
+  }
+}

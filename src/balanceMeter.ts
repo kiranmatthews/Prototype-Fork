@@ -28,17 +28,32 @@ export function balanceMeterPoint(value:number,frame=0){
  return{x:a[0]+(b[0]-a[0])*f,y:a[1]+(b[1]-a[1])*f};
 }
 
+// Read the broad bend rather than individual painted nicks. The source is
+// tall and narrow, so derive the inward normal in its actual drawn units.
+function curveNormalAngle(value:number,frame:number):number {
+ const a=balanceMeterPoint(value-.2,frame),b=balanceMeterPoint(value+.2,frame);
+ return Math.atan2(-(b.x-a.x)*360,(b.y-a.y)*1152);
+}
+const centreAngles=BALANCE_METER_ASSETS.frames.map((_,frame)=>curveNormalAngle(0,frame));
+export function balanceMeterPointerPose(value:number,frame=0){
+ const bounded=Math.max(-1,Math.min(1,Number.isFinite(value)?value:0));
+ return{...balanceMeterPoint(bounded,frame),angle:curveNormalAngle(bounded,frame)-centreAngles[frame]};
+}
+
 /** Both DOM/lite and pre-CRT Canvas draw the same generated frames and marker. */
 export function drawBalanceMeter(ctx:CanvasRenderingContext2D,rect:BalanceMeterRect,state:BalanceMeterState):boolean {
  void loadBalanceMeterAssets();if(![0,1,2,3].every(i=>images[i])||!glove.has('pointer'))return false;
  const reduced=state.reducedMotion??motion?.matches??false,pose=balanceMeterFrame(state.nowMs??performance.now(),reduced);
- const horizontal=state.mode==='grind',point=balanceMeterPoint(horizontal?-state.value:state.value,pose.frame),scale=Math.min(rect.width/(horizontal?1390:700),rect.height/(horizontal?700:1390));
+ const horizontal=state.mode==='grind',point=balanceMeterPointerPose(horizontal?-state.value:state.value,pose.frame),scale=Math.min(rect.width/(horizontal?1390:700),rect.height/(horizontal?700:1390));
  const sprite=images[pose.frame],pointer=glove.get('pointer')!,tip=BALANCE_METER_ASSETS.glove.tip;
  ctx.save();ctx.translate(rect.x+rect.width/2,rect.y+rect.height/2);if(horizontal)ctx.rotate(Math.PI/2);ctx.rotate(pose.angle);ctx.scale(scale,scale);ctx.translate(-350,-695);
  ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(sprite,300,119,360,1152);
  const x=300+point.x*360,y=119+point.y*1152,pw=250,ph=pw*pointer.height/pointer.width;
  if(state.critical){ctx.shadowColor='#ff471e';ctx.shadowBlur=6;}
- ctx.drawImage(pointer,x-pw*tip[0],y-ph*tip[1],pw,ph);ctx.restore();return true;
+ // Put the transform origin on the contact point before rotating: the hand
+ // leans into the arc while the tip continues to report the exact balance.
+ ctx.translate(x,y);ctx.rotate(point.angle);
+ ctx.drawImage(pointer,-pw*tip[0],-ph*tip[1],pw,ph);ctx.restore();return true;
 }
 
 export function paintBalanceElement(host:HTMLElement,state:BalanceMeterState):void {
