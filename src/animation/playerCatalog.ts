@@ -137,7 +137,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 27;
+export const PLAYER_STARTER_CATALOG_VERSION = 28;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -1234,56 +1234,6 @@ function buildSkate(rigId: string): AnimationClip {
 }
 
 type UnityRopeSourceKey = keyof typeof UNITY_ROPE_ANIMATION_SOURCE.clips;
-const UNITY_ROPE_IK_AUTHORED_JOINTS = new Set([
-  'clavicleLeft', 'shoulderLeft', 'elbowLeft',
-  'clavicleRight', 'shoulderRight', 'elbowRight',
-]);
-
-function unityRopeGripTracks(
-  clipId: string,
-  duration: number,
-  climbing: boolean,
-): AnimationTrack[] {
-  if (!climbing) {
-    return [
-      quaternionTrack(clipId, 'clavicleLeft', [[0, 0, 0, 0.04], [duration, 0, 0, 0.04]]),
-      quaternionTrack(clipId, 'clavicleRight', [[0, 0, 0, -0.04], [duration, 0, 0, -0.04]]),
-      quaternionTrack(clipId, 'shoulderLeft', [[0, 0, 0.5, -2.72], [duration, 0, 0.5, -2.72]]),
-      quaternionTrack(clipId, 'shoulderRight', [[0, 0, -0.5, 2.72], [duration, 0, -0.5, 2.72]]),
-      quaternionTrack(clipId, 'elbowLeft', [[0, -0.22, 0, 0], [duration, -0.22, 0, 0]]),
-      quaternionTrack(clipId, 'elbowRight', [[0, -0.22, 0, 0], [duration, -0.22, 0, 0]]),
-    ];
-  }
-  const q1 = duration * 0.25;
-  const q2 = duration * 0.5;
-  const q3 = duration * 0.75;
-  return [
-    quaternionTrack(clipId, 'clavicleLeft', [
-      [0, 0, 0, 0.04], [q1, 0.08, 0, 0.12], [q2, 0, 0, 0.04],
-      [q3, -0.08, 0, -0.04], [duration, 0, 0, 0.04],
-    ]),
-    quaternionTrack(clipId, 'clavicleRight', [
-      [0, 0, 0, -0.04], [q1, -0.08, 0, 0.04], [q2, 0, 0, -0.04],
-      [q3, 0.08, 0, -0.12], [duration, 0, 0, -0.04],
-    ]),
-    quaternionTrack(clipId, 'shoulderLeft', [
-      [0, 0, 0.5, -2.72], [q1, -0.1, 0.4, -2.85], [q2, 0, 0.5, -2.72],
-      [q3, -0.35, 0.35, -2.35], [duration, 0, 0.5, -2.72],
-    ]),
-    quaternionTrack(clipId, 'shoulderRight', [
-      [0, 0, -0.5, 2.72], [q1, -0.35, -0.35, 2.35], [q2, 0, -0.5, 2.72],
-      [q3, -0.1, -0.4, 2.85], [duration, 0, -0.5, 2.72],
-    ]),
-    quaternionTrack(clipId, 'elbowLeft', [
-      [0, -0.22, 0, 0], [q1, -0.1, 0, 0], [q2, -0.22, 0, 0],
-      [q3, -0.95, 0, 0], [duration, -0.22, 0, 0],
-    ]),
-    quaternionTrack(clipId, 'elbowRight', [
-      [0, -0.22, 0, 0], [q1, -0.95, 0, 0], [q2, -0.22, 0, 0],
-      [q3, -0.1, 0, 0], [duration, -0.22, 0, 0],
-    ]),
-  ];
-}
 
 function unityRopeSourceMetadata(sourceKey: UnityRopeSourceKey) {
   return {
@@ -1311,9 +1261,7 @@ function buildUnityRopeHang(rigId: string, includeTorsoRoot: boolean): Animation
       clip.id,
       UNITY_ROPE_HANG_ROTATION_KEYS,
       includeTorsoRoot,
-      UNITY_ROPE_IK_AUTHORED_JOINTS,
     ),
-    ...unityRopeGripTracks(clip.id, clip.duration, false),
   ];
   clip.contacts = [
     contact(`${clip.id}:left-grip`, 0, clip.duration, 'gripLeft', 'grip'),
@@ -1328,7 +1276,8 @@ function buildUnityRopeHang(rigId: string, includeTorsoRoot: boolean): Animation
     starterQuality: 'source-animation-retarget',
     starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
     sourceAnimation: unityRopeSourceMetadata('hang'),
-    gripAdaptation: 'Unity post-animation two-bone solve; semantic preview keys',
+    ropeMappingRevision: 1,
+    gripAdaptation: 'Source anatomical limb directions; live rope contact IK',
     physicalSwingOwnership: 'gameplay rope; attached body samples idle independently',
   };
   return clip;
@@ -1347,9 +1296,7 @@ function buildUnityRopeClimb(rigId: string, includeTorsoRoot: boolean): Animatio
       clip.id,
       UNITY_ROPE_CLIMB_ROTATION_KEYS,
       includeTorsoRoot,
-      UNITY_ROPE_IK_AUTHORED_JOINTS,
     ),
-    ...unityRopeGripTracks(clip.id, clip.duration, true),
   ];
   clip.contacts = [
     contact(`${clip.id}:left-grip`, 0, clip.duration, 'gripLeft', 'grip'),
@@ -1366,7 +1313,8 @@ function buildUnityRopeClimb(rigId: string, includeTorsoRoot: boolean): Animatio
     progressSource: 'gameplay-actionProgress',
     playbackDirectionSource: UNITY_ROPE_INPUTS.climbDirection,
     sourceAnimation: unityRopeSourceMetadata('climb'),
-    gripAdaptation: 'Unity post-animation two-bone solve; semantic preview keys',
+    ropeMappingRevision: 1,
+    gripAdaptation: 'Source anatomical limb directions; live rope contact IK',
   };
   return clip;
 }
@@ -1420,6 +1368,7 @@ function buildUnityRopeRelease(
     sourceAnimation: unityRopeSourceMetadata(
       charged ? 'releaseBackflip' : 'releaseSwing',
     ),
+    ropeMappingRevision: 1,
     ...(charged ? {
       variantFor: UNITY_ROPE_CLIP_IDS.release,
       variantWeight: 1,
@@ -1780,6 +1729,22 @@ export function reconcilePlayerStarterAnimationSuite(
       const playbackSpeed = run && runSpan > 0 && run.playbackSpeed > 0
         ? idle.duration / runSpan * run.playbackSpeed : idle.playbackSpeed;
       clips = clips.map(clip => clip.id === 'player.idle' ? { ...idle, playbackSpeed } : clip);
+    }
+  }
+
+  if (previousVersion < 28) {
+    for (const id of Object.values(UNITY_ROPE_CLIP_IDS)) {
+      const old = clips.find(clip => clip.id === id);
+      if (!old || old.metadata?.ropeMappingRevision === 1) continue;
+      // A wholly hand-authored placeholder has no Unity mapping to repair.
+      if (!old.metadata?.sourceAnimation) continue;
+      const backupId = `${id}.pre-limb-mapping`;
+      if (!clips.some(clip => clip.id === backupId)) clips.push({ ...old,
+        id: backupId, name: `${old.name} — Before Limb Mapping`,
+        metadata: { ...old.metadata, replacedBy: id } });
+      const replacement = starters.find(clip => clip.id === id)!;
+      clips = clips.map(clip => clip.id === id
+        ? { ...replacement, playbackSpeed: old.playbackSpeed } : clip);
     }
   }
 

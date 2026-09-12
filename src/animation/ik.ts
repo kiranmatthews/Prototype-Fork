@@ -84,6 +84,8 @@ export interface ResolveIkChainOptions {
 }
 
 export interface TwoBoneIkOptions {
+  /** Aim through the complete parent linear transform on proportioned rigs. */
+  accountForParentScale?: boolean;
   root: THREE.Object3D;
   mid: THREE.Object3D;
   end: THREE.Object3D;
@@ -224,6 +226,7 @@ function writeWorldRotationDelta(
   weight: number,
   globalMaxStep: number,
   limit: IkRotationLimit | undefined,
+  directions?: readonly [THREE.Vector3, THREE.Vector3],
 ): RotationWriteResult {
   if (!finiteQuaternion(worldDelta) || !finiteQuaternion(node.quaternion)) {
     return { ok: false, limited: false };
@@ -239,7 +242,18 @@ function writeWorldRotationDelta(
   else parentWorld.identity();
   if (!finiteQuaternion(parentWorld)) return { ok: false, limited: false };
 
-  const candidate = parentWorld.invert().multiply(desiredWorld).normalize();
+  let candidate = parentWorld.invert().multiply(desiredWorld).normalize();
+  if (directions) {
+    // World quaternions discard shear introduced by rotated, non-uniformly
+    // scaled ancestors. Aim in the parent's actual affine space instead.
+    const inverse = node.parent?.matrixWorld.clone() ?? new THREE.Matrix4();
+    if (Math.abs(inverse.determinant()) < EPSILON) return { ok: false, limited: false };
+    inverse.invert();
+    const from = directions[0].clone().transformDirection(inverse);
+    const to = directions[1].clone().transformDirection(inverse);
+    candidate = new THREE.Quaternion().setFromUnitVectors(from, to)
+      .multiply(startLocal).normalize();
+  }
   if (!finiteQuaternion(candidate)) return { ok: false, limited: false };
 
   let limited = false;
@@ -396,7 +410,8 @@ export function solveTwoBoneIk(options: TwoBoneIkOptions): IkSolveResult {
   const weight = finiteClamp(options.weight, 1, 0, 1);
   const maxStep = finiteClamp(options.maxAngularStepRadians, Math.PI, 0, Math.PI);
   const rootDelta = new THREE.Quaternion().setFromUnitVectors(currentUpper, desiredUpper).normalize();
-  const rootWrite = writeWorldRotationDelta(root, rootDelta, weight, maxStep, options.rootLimit);
+  const rootWrite = writeWorldRotationDelta(root, rootDelta, weight, maxStep, options.rootLimit,
+    options.accountForParentScale ? [currentUpper, desiredUpper] : undefined);
   if (!rootWrite.ok) {
     root.quaternion.copy(rootStart);
     mid.quaternion.copy(midStart);
@@ -425,7 +440,8 @@ export function solveTwoBoneIk(options: TwoBoneIkOptions): IkSolveResult {
   desiredLower.normalize();
 
   const midDelta = new THREE.Quaternion().setFromUnitVectors(currentLower, desiredLower).normalize();
-  const midWrite = writeWorldRotationDelta(mid, midDelta, weight, maxStep, options.midLimit);
+  const midWrite = writeWorldRotationDelta(mid, midDelta, weight, maxStep, options.midLimit,
+    options.accountForParentScale ? [currentLower, desiredLower] : undefined);
   if (!midWrite.ok) {
     root.quaternion.copy(rootStart);
     mid.quaternion.copy(midStart);

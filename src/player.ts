@@ -8434,7 +8434,9 @@ export class Player {
     const desiredShoulderY = this.ropeGripWorld.y -
       Math.min(leftReach, rightReach) * 0.7;
     this.ropeGripRootOffsetY = THREE.MathUtils.clamp(
-      desiredShoulderY - (ROPE_SHOULDER.y + ROPE_SHOULDER_R.y) * 0.5,
+      // Keep the lower shoulder in reach during asymmetric source pulls,
+      // rather than averaging it with the other, raised shoulder.
+      desiredShoulderY - Math.min(ROPE_SHOULDER.y, ROPE_SHOULDER_R.y),
       -2,
       2,
     );
@@ -8454,13 +8456,16 @@ export class Player {
     ROPE_POLE_L.copy(ROPE_SHOULDER)
       .addScaledVector(ROPE_SIDE, -0.35)
       .addScaledVector(ROPE_FORWARD, 0.18);
-    for (let iteration = 0; iteration < 2; iteration++) {
+    // Source-aligned elbows plus independent character width/length scaling
+    // require a few refinement passes; two left a visible contact residual.
+    for (let iteration = 0; iteration < 6; iteration++) {
       solveTwoBoneIk({
         root: this.armL,
         mid: this.elbowL,
         end: this.wristL,
         target: ROPE_TARGET_L,
         pole: ROPE_POLE_L,
+        accountForParentScale: true,
         tolerance: 0.002,
       });
     }
@@ -8469,13 +8474,14 @@ export class Player {
     ROPE_POLE_R.copy(ROPE_SHOULDER)
       .addScaledVector(ROPE_SIDE, 0.35)
       .addScaledVector(ROPE_FORWARD, 0.18);
-    for (let iteration = 0; iteration < 2; iteration++) {
+    for (let iteration = 0; iteration < 6; iteration++) {
       solveTwoBoneIk({
         root: this.armR,
         mid: this.elbowR,
         end: this.wristR,
         target: ROPE_TARGET_R,
         pole: ROPE_POLE_R,
+        accountForParentScale: true,
         tolerance: 0.002,
       });
     }

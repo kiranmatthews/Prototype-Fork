@@ -338,6 +338,23 @@ shorten only the torso or selected limbs.
 
 ## Verification
 
+### Rope limb mapping (catalog v28)
+
+The Unity rope source has a relaxed, bent A-pose, not the Quaternius T-pose.
+The importer now reflects Unity X into the player's handedness and calibrates
+each upper/lower arm and leg to its measured bind child direction. All four
+rope clips retain the resulting source rotations; the old placeholder arm
+tracks no longer override hang/climb. Live grip IK runs afterward, using the
+complete scaled parent transform and the lower shoulder's reach during pulls.
+Other IK consumers retain their existing behavior.
+
+Saved Unity rope clips upgrade with their playback speeds retained and exact
+`pre-limb-mapping` recovery copies. Custom non-Unity clips are not replaced.
+Run `npm run check:rope` for independent source-direction fixtures, live
+hang/climb/descend checks, scaled-parent contacts and saved-draft migration.
+The local-only `/rope-review.html?playtest&level=codex-lab&nocrt` review provides
+front/oblique/side views and normal/charged release controls without saving data.
+
 Run:
 
 ```sh

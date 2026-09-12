@@ -3,6 +3,7 @@
 import { createHash } from 'node:crypto';
 import { readFile, writeFile } from 'node:fs/promises';
 import { basename, relative, resolve, sep } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import * as THREE from 'three';
 
 const SAMPLE_RATE = 60;
@@ -285,18 +286,52 @@ function sourceWorldQuaternions(curves, fallbackCurves, paths, time) {
   return result;
 }
 
-function playerCanonicalWorldQuaternions() {
+// Unity's +Z forward is retained, so reflect X to change handedness. The
+// source's Left limbs are at -X; the player's semantic Left limbs are at +X.
+export function unityToPlayerQuaternion(q) {
+  return new THREE.Quaternion(q.x, -q.y, -q.z, q.w).normalize();
+}
+
+export function parseBindPositions(source) {
+  const section = source.slice(source.indexOf('  m_PositionCurves:'), source.indexOf('  m_ScaleCurves:'));
+  return new Map(section.split('\n  - curve:\n').slice(1).map(block => {
+    const path = block.match(/\n    path: ([^\n]+)/)?.[1]?.trim();
+    const value = block.match(/value: \{x: ([^,]+), y: ([^,]+), z: ([^}]+)\}/);
+    if (!path || !value) throw new Error('Missing source bind position');
+    return [path, new THREE.Vector3(...value.slice(1).map(Number))];
+  }));
+}
+
+export const LIMB_CHILDREN = Object.freeze({
+  shoulderLeft: 'elbowLeft', elbowLeft: 'wristLeft',
+  shoulderRight: 'elbowRight', elbowRight: 'wristRight',
+  hipLeft: 'kneeLeft', kneeLeft: 'ankleLeft',
+  hipRight: 'kneeRight', kneeRight: 'ankleRight',
+});
+
+function playerCanonicalWorldQuaternions(bindWorld, positions) {
   const result = new Map();
+  const sourcePaths = new Map(PLAYER_HIERARCHY.map(([joint, , path]) => [joint, path]));
   for (const [joint, parent] of PLAYER_HIERARCHY) {
     const local = new THREE.Quaternion();
-    if (joint === 'shoulderLeft') {
-      local.set(0, 0, Math.SQRT1_2, Math.SQRT1_2);
-    } else if (joint === 'shoulderRight') {
-      local.set(0, 0, -Math.SQRT1_2, Math.SQRT1_2);
+    const child = LIMB_CHILDREN[joint];
+    if (child) {
+      // This source is a relaxed, bent A-pose, NOT the Quaternius T-pose.
+      // Calibrate the player's local -Y bone axis to the actual source segment
+      // so the world-space delta preserves its animated direction exactly.
+      const direction = positions.get(sourcePaths.get(child)).clone()
+        .applyQuaternion(bindWorld.get(sourcePaths.get(joint))).normalize();
+      direction.x *= -1;
+      result.set(joint, new THREE.Quaternion().setFromUnitVectors(
+        new THREE.Vector3(0, -1, 0), direction,
+      ));
+      continue;
     }
     result.set(
       joint,
-      parent ? result.get(parent).clone().multiply(local).normalize() : local,
+      // Hands/feet start neutral in world space; they must not inherit an
+      // invented T-pose shoulder offset from the calibration hierarchy.
+      local,
     );
   }
   return result;
@@ -322,8 +357,8 @@ function retargetPose(
     const current = currentWorld.get(sourcePath);
     const rest = bindWorld.get(sourcePath);
     if (!current || !rest) throw new Error(`cannot retarget missing source joint ${sourcePath}`);
-    const world = current.clone()
-      .multiply(rest.clone().invert())
+    const world = unityToPlayerQuaternion(current)
+      .multiply(unityToPlayerQuaternion(rest).invert())
       .multiply(canonicalWorld.get(joint))
       .normalize();
     const local = parent
@@ -600,7 +635,7 @@ async function main() {
   const bindCurves = parseRotationCurves(bindSource, bindPath);
   const paths = sourcePathOrder(bindCurves);
   const bindWorld = sourceWorldQuaternions(bindCurves, bindCurves, paths, 0);
-  const canonicalWorld = playerCanonicalWorldQuaternions();
+  const canonicalWorld = playerCanonicalWorldQuaternions(bindWorld, parseBindPositions(bindSource));
   for (const [, , sourcePath] of PLAYER_HIERARCHY) {
     if (!bindWorld.has(sourcePath)) {
       throw new Error(`${bindPath} is missing mapped source joint ${sourcePath}`);
@@ -651,7 +686,7 @@ async function main() {
     sampleRate: SAMPLE_RATE,
     maximumQuaternionErrorDegrees: MAX_QUATERNION_ERROR_DEGREES,
     conversion:
-      'Unity bind-world delta to player canonical-world/rest-local; component Hermite source sampling',
+      'Unity X-reflection handedness; actual A-pose segment-axis calibration; bind-world delta to player rest-local; component Hermite source sampling',
     translationPolicy: 'omitted; deterministic gameplay owns traversal translation and root motion',
     loopPolicy: {
       hang: 'source loop with exact end-to-start closure',
@@ -681,4 +716,7 @@ async function main() {
   console.log(`Wrote ${args.output}`);
 }
 
-await main();
+export { PLAYER_HIERARCHY, parseRotationCurves, sourceWorldQuaternions,
+  sourcePathOrder, playerCanonicalWorldQuaternions, retargetPose };
+
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) await main();
