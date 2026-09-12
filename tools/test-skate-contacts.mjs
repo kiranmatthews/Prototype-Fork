@@ -22,6 +22,31 @@ await withSkateRuntime(async ({player:p,level,THREE,server,step})=>{
     const error=contact()?.footError;maxFoot=Math.max(maxFoot,error);
     assert.ok(error<tolerance,`${label}: feet detached by ${error}m`);
   };
+  // Casual skate idle is taller; charging retains its previous endpoint.
+  // Both stances must keep the soles on the same unmoving deck throughout.
+  for(const stance of [-1,1]){
+    reset(stance);p.state='ride';p.grounded=true;p.speed=0;p.charging=false;p.chargeTimer=0;
+    const hips=()=>p.riderG.getObjectByName('hips').getWorldPosition(v());
+    const foot=side=>p.riderG.getObjectByName(`socket-foot-${side}`).getWorldPosition(v());
+    const height=()=>hips().y-(foot('left').y+foot('right').y)/2;
+    const bend=side=>{
+      const at=joint=>p.riderG.getObjectByName(`${joint}-${side}`).getWorldPosition(v());
+      return at('knee').sub(at('hip')).angleTo(at('ankle').sub(at('knee')));
+    };
+    settle(100);const idleHeight=height(),idleBend=bend('left')+bend('right');
+    assert.ok(Math.abs(idleHeight-.53)<.002,'relaxed stance should lift the pelvis 7cm');checkFeet('skate idle');
+    const board=p.boardG.getWorldPosition(v());let previous=idleHeight;
+    p.charging=true;p.chargeTimer=999;
+    for(let frame=0;frame<100;frame++){
+      tick();checkFeet('idle-to-charge');const current=height();
+      assert.ok(Math.abs(current-previous)<.03,'charge transition snapped');previous=current;
+      assert.ok(p.boardG.getWorldPosition(v()).distanceTo(board)<.001,'pose lift moved the board');
+    }
+    assert.ok(Math.abs(height()-.395)<.002,'full-charge crouch must remain unchanged');
+    assert.ok(bend('left')+bend('right')>idleBend+.15,'charging needs visibly more knee bend');
+    p.charging=false;p.chargeTimer=0;settle(100);
+    assert.ok(Math.abs(height()-idleHeight)<.002,'released charge did not return to relaxed idle');
+  }
   let grinds=0;
   // Independent geometric requirements in both stances and rail directions,
   // on a horizontal rail and a sloped rail crossing the world axes.

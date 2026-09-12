@@ -21,7 +21,7 @@ const entries=[...Object.entries(GRIND_TRICKS).map(([id,t])=>({id:`grind:${id}`,
   ...GRAB_TRICKS.map(t=>({id:`grab:${t.kind}`,label:t.label})),...DECK_TRICKS.map(t=>({id:`flip:${t.kind}`,label:t.label})),
   ...SPECIAL_TRICKS.map(t=>({id:`special:${t.id}`,label:t.label})),
   ...Object.entries(LIP_CONTACTS).map(([id,t])=>({id:`lip:${id}`,label:t.label})),
-  ...['Rolling','Ollie','Manual','Nose Manual','Wallride','Revert'].map(t=>({id:`basic:${t}`,label:t}))];
+  ...['Rolling','Skate idle','Charge idle','Idle to charge','Ollie','Manual','Nose Manual','Wallride','Revert'].map(t=>({id:`basic:${t}`,label:t}))];
 for(const t of entries){const o=document.createElement('option');o.value=t.id;o.textContent=t.label;trick.append(o);}
 let clock=0,playing=true,elapsed=0,last=0;
 const input={moveX:0,moveY:0};
@@ -34,6 +34,9 @@ function render(now:number){
   const dt=Math.min(.035,(now-last)/1000||1/60);last=now;clock+=dt;if(playing)elapsed=(elapsed+dt*.48)%2.6;
   const u=elapsed/2.6;phase.value=String(u);const [category,id]=trick.value.split(':');
   p.runTime=clock;p.stance=Number(stance.value);p.rawInput=input;p.visualYaw=0;p.speed=8;p.balance=0;
+  if(id.includes('idle')||id==='Idle to charge')p.speed=0;
+  p.charging=id==='Charge idle'||id==='Idle to charge'&&u>.25&&u<.75;
+  p.chargeTimer=p.charging?999:0;
   p.axisF.set(0,0,-1);p.axisL.set(-1,0,0);p.sidePose=p.deckPose=1;p.skatePose=1;
   p.state=category==='grind'||id==='darkslide'?'grind':category==='lip'||category==='basic'&&id!=='Ollie'&&id!=='Wallride'?'ride':'air';
   p.grounded=p.state==='ride';p.grindStyle=category==='grind'?id:'board';p.grindRail=p.state==='grind'?rail:null;

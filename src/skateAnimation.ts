@@ -42,6 +42,7 @@ export class SkateAnimation {
   private supportY = 0;
   private lastActive = false;
   private darkWeight = 0;
+  private relaxedRideWeight = 0;
   private frame = new THREE.Quaternion();
   private boardQ = new THREE.Quaternion();
   private boardP = new THREE.Vector3();
@@ -73,7 +74,7 @@ export class SkateAnimation {
     this.spine = rider.getObjectByName('spine');
   }
 
-  reset(): void { this.key = ''; this.lastActive = false; this.age = this.airAge = this.darkWeight = 0; this.bounceAge = 1; this.wasGrounded = true; }
+  reset(): void { this.key = ''; this.lastActive = false; this.age = this.airAge = this.darkWeight = this.relaxedRideWeight = 0; this.bounceAge = 1; this.wasGrounded = true; }
 
   /** Restore the legacy sibling frame before it authors its fallback pose. */
   prepare(): void {
@@ -141,6 +142,8 @@ export class SkateAnimation {
     const front = p.stance > 0 ? 0 : 1, back = 1 - front;
     const key = p.wallWeight > .01 ? 'wallride' : p.grind ? `${p.grind}:${p.darkslide}` : p.lip ? `lip:${p.lip}` : p.manual ? `manual:${p.manual}`
       : p.grabWeight > .01 ? `grab:${p.grab}` : p.grounded ? 'ride' : 'air';
+    const relaxedTarget = key === 'ride' ? 1 - smooth(p.charge) : 0;
+    this.relaxedRideWeight += (relaxedTarget - this.relaxedRideWeight) * (1 - Math.exp(-16 * p.dt));
     if (key !== this.key || !this.lastActive) { this.age = 0; this.key = key; this.bounceAge = 0; }
     else this.age += p.dt;
     if (!p.grounded && this.wasGrounded) this.airAge = 0;
@@ -254,7 +257,10 @@ export class SkateAnimation {
     const pelvis = footTargets[0].clone().add(footTargets[1]).multiplyScalar(.5);
     const load = p.grind ? pivotZ * .24 : p.manual ? pivotZ * .22 : 0;
     pelvis.addScaledVector(Z.clone().applyQuaternion(this.boardQ), load);
-    const height = THREE.MathUtils.lerp(.46 - .29 * gw, .10, dark) - .065 * p.charge - .11 * bounce + breathe;
+    // Stand a little taller when casually rolling or idling. Fade this lift
+    // away as charge builds so the existing full-charge crouch stays intact.
+    const relaxedLift = .07 * this.relaxedRideWeight;
+    const height = THREE.MathUtils.lerp(.46 - .29 * gw, .10, dark) - .065 * p.charge - .11 * bounce + breathe + relaxedLift;
     pelvis.addScaledVector(this.up, height);
     pelvis.addScaledVector(Y, .14 * p.wallWeight);
     if (gw > .01 && (grabKind === 'method' || grabKind === 'japan'))
