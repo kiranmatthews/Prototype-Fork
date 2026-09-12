@@ -34,12 +34,14 @@ await withSkateRuntime(async ({player:p,level,THREE,server,step})=>{
       return at('knee').sub(at('hip')).angleTo(at('ankle').sub(at('knee')));
     };
     settle(100);const idleHeight=height(),idleBend=bend('left')+bend('right');
-    assert.ok(Math.abs(idleHeight-.53)<.002,'relaxed stance should lift the pelvis 7cm');checkFeet('skate idle');
+    assert.ok(idleHeight>.85&&idleHeight<1.05,'relaxed skate height should resemble standing idle');
+    for(const side of ['left','right'])assert.ok(bend(side)>.10&&bend(side)<.62,'relaxed knees must be lightly bent, not locked or squatting');
+    checkFeet('skate idle');
     const board=p.boardG.getWorldPosition(v());let previous=idleHeight;
     p.charging=true;p.chargeTimer=999;
     for(let frame=0;frame<100;frame++){
       tick();checkFeet('idle-to-charge');const current=height();
-      assert.ok(Math.abs(current-previous)<.03,'charge transition snapped');previous=current;
+      assert.ok(Math.abs(current-previous)<.10,'charge transition snapped');previous=current;
       assert.ok(p.boardG.getWorldPosition(v()).distanceTo(board)<.001,'pose lift moved the board');
     }
     assert.ok(Math.abs(height()-.395)<.002,'full-charge crouch must remain unchanged');

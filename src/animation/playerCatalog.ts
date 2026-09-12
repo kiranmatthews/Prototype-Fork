@@ -5,6 +5,7 @@ import { QUATERNIUS_SWIM_FWD_DURATION, QUATERNIUS_SWIM_FWD_ROOT_KEYS,
 import { QUATERNIUS_SWIM_IDLE_DURATION, QUATERNIUS_SWIM_IDLE_ROOT_KEYS,
   QUATERNIUS_SWIM_IDLE_ROTATION_KEYS, QUATERNIUS_SWIM_IDLE_SOURCE } from './quaterniusSwimIdle.generated';
 import * as THREE from 'three';
+import { JUMP_CHARGE_CLIP_ID } from './jumpCharge';
 import { RUN_STOP_CLIP_ID, RUN_STOP_DURATION } from './runStop';
 import { QUATERNIUS_IDLE_DURATION, QUATERNIUS_IDLE_ROOT_KEYS,
   QUATERNIUS_IDLE_ROTATION_KEYS, QUATERNIUS_IDLE_SOURCE } from './quaterniusIdle.generated';
@@ -107,6 +108,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
   'player.swim',
   'player.swim-idle',
   'player.run',
+  JUMP_CHARGE_CLIP_ID,
   RUN_STOP_CLIP_ID,
   'player.jump',
   'player.double-jump',
@@ -139,7 +141,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 29;
+export const PLAYER_STARTER_CATALOG_VERSION = 30;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -402,6 +404,7 @@ const PLAYER_STARTER_CLIP_INTRODUCED_IN_VERSION: Record<
   'player.swim': 20,
   'player.swim-idle': 20,
   'player.run': 1,
+  [JUMP_CHARGE_CLIP_ID]: 30,
   [RUN_STOP_CLIP_ID]: 29,
   'player.jump': 1,
   'player.double-jump': 6,
@@ -634,9 +637,7 @@ function contact(
 
 function buildIdle(rigId: string, includeTorsoRoot: boolean): AnimationClip {
   const clip = baseClip('player.idle', 'Idle — Quaternius Idle_Loop', QUATERNIUS_IDLE_DURATION, 'loop', rigId);
-  // Both sources contain two bobs per full cycle. Match the complete cycle
-  // duration at the approved Jog playback speed; keep this editable in Studio.
-  clip.playbackSpeed = QUATERNIUS_IDLE_DURATION / QUATERNIUS_JOG_FWD_DURATION * PLAYER_RUN_PLAYBACK_SPEED;
+  clip.playbackSpeed = 2;
   clip.tracks = [
     sampledPositionTrack(clip.id, 'root', QUATERNIUS_IDLE_ROOT_KEYS),
     ...sampledQuaterniusRotationTracks(clip.id, QUATERNIUS_IDLE_ROTATION_KEYS, includeTorsoRoot),
@@ -650,7 +651,7 @@ function buildIdle(rigId: string, includeTorsoRoot: boolean): AnimationClip {
     starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
     sourceAnimation: { ...QUATERNIUS_IDLE_SOURCE },
     locomotionTransition: LOCOMOTION_PHASE_MATCHED_IDLE,
-    rhythmReference: 'player.run: two bobs per full cycle' };
+    idleTempoRevision: 1 };
   return clip;
 }
 
@@ -1219,6 +1220,38 @@ function buildSlide(rigId: string): AnimationClip {
   return clip;
 }
 
+function buildJumpCharge(rigId: string, includeTorsoRoot: boolean): AnimationClip {
+  const clip = baseClip(JUMP_CHARGE_CLIP_ID, 'Jump Charge — Preload and Wind-up', 1, 'once', rigId);
+  clip.loop.seamless = false;
+  // The controller's eased 35% preload + held charge drives this timeline.
+  clip.tracks = [
+    positionTrack(clip.id, 'root', [[0,[0,0,0]],[1,[0,0,0]]]),
+    quaternionTrack(clip.id, 'hips', [[0,0,0,0],[1,0,0,0]]),
+    quaternionTrack(clip.id, 'spine', [[0,0,0,0],[.35,-.025,0,0],[1,-.10,0,0]]),
+    quaternionTrack(clip.id, 'chest', [[0,0,0,0],[1,.03,0,0]]),
+    quaternionTrack(clip.id, 'neck', [[0,0,0,0],[1,0,0,0]]),
+    quaternionTrack(clip.id, 'head', [[0,0,0,0],[.35,.06,0,0],[1,.16,0,0]]),
+    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.torso, [[0,1],[.35,.98],[1,.94]]),
+  ];
+  if (includeTorsoRoot) clip.tracks.push(quaternionTrack(clip.id, 'torsoRoot', [[0,0,0,0],[.35,.05,0,0],[1,.16,0,0]]));
+  for (const [side,sign] of [['Left',1],['Right',-1]] as const) clip.tracks.push(
+    quaternionTrack(clip.id, `clavicle${side}`, [[0,0,0,0],[1,0,0,.04*sign]]),
+    quaternionTrack(clip.id, `shoulder${side}`, [[0,0,0,.25*sign],[.35,.3,0,.28*sign],[1,.9,0,.35*sign]]),
+    quaternionTrack(clip.id, `elbow${side}`, [[0,-.12,0,0],[.35,-.16,0,0],[1,-.24,0,0]]),
+    quaternionTrack(clip.id, `wrist${side}`, [[0,0,0,0],[1,0,0,0]]),
+    quaternionTrack(clip.id, `hip${side}`, [[0,-.07,0,.035*sign],[.35,-.21,0,.045*sign],[1,-.51,0,.06*sign]]),
+    quaternionTrack(clip.id, `knee${side}`, [[0,.14,0,0],[.35,.44,0,0],[1,1.06,0,0]]),
+    quaternionTrack(clip.id, `ankle${side}`, [[0,-.07,0,-.035*sign],[.35,-.23,0,-.045*sign],[1,-.55,0,-.06*sign]]),
+    quaternionTrack(clip.id, `toe${side}`, [[0,0,0,0],[1,0,0,0]]),
+  );
+  clip.contacts = [contact(`${clip.id}:left-foot`,0,1,'footLeft'), contact(`${clip.id}:right-foot`,0,1,'footRight')];
+  clip.markers = [{id:`${clip.id}:preload`,time:.35,name:'Immediate preload'}, {id:`${clip.id}:loaded`,time:1,name:'Fully loaded'}];
+  clip.tags = ['player','procedural','charge','jump','feet-planted'];
+  clip.metadata = { starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
+    progressSource: 'gameplay-actionProgress', controlPolicy: 'existing release-to-jump; eased preload plus held charge' };
+  return clip;
+}
+
 function buildRunStop(rigId: string, includeTorsoRoot: boolean): AnimationClip {
   const clip = baseClip(RUN_STOP_CLIP_ID, 'Run Stop — Skid and Settle', RUN_STOP_DURATION, 'once', rigId);
   clip.loop.seamless = false;
@@ -1498,6 +1531,7 @@ export function createPlayerStarterClips(
     buildSwim(rigId, includeTorsoRoot, false),
     buildSwim(rigId, includeTorsoRoot, true),
     buildRun(rigId, includeTorsoRoot),
+    buildJumpCharge(rigId, includeTorsoRoot),
     buildRunStop(rigId, includeTorsoRoot),
     buildJump(rigId),
     buildDoubleJump(rigId),
@@ -1780,6 +1814,12 @@ export function reconcilePlayerStarterAnimationSuite(
       clips = clips.map(clip => clip.id === id
         ? { ...replacement, playbackSpeed: old.playbackSpeed } : clip);
     }
+  }
+
+  if (previousVersion < 30) {
+    clips = clips.map(clip => clip.id === 'player.idle' && (clip.playbackSpeed !== 2 || clip.metadata?.idleTempoRevision !== 1)
+      ? { ...clip, playbackSpeed: 2, metadata: { ...clip.metadata, idleTempoRevision: 1 } }
+      : clip);
   }
 
   const existingIds = new Set(clips.map((clip) => clip.id));

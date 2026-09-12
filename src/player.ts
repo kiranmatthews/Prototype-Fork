@@ -75,7 +75,8 @@ import {
 } from './ledgeTraversal';
 import { RUN_REVERSAL_YAW_RATE, stepFacingYaw } from './runFacing';
 import { RUN_MOVE_INTENT_INPUT } from './animation/runStop';
-import { sampleSkateMount, SKATE_MOUNT_DURATION, SKATE_DISMOUNT_DURATION } from './skateMount';
+import { sampleSkateMount, SKATE_MOUNT_DURATION, SKATE_DISMOUNT_DURATION, DEFAULT_SKATE_STANCE } from './skateMount';
+import { JUMP_CHARGE_CLIP_ID } from './animation/jumpCharge';
 import {
   SpinEffectsPresentation,
   type SpinPresentationDiagnostics,
@@ -286,6 +287,7 @@ export type PlayerAnimationClipHint =
   | 'player.jump'
   | 'player.double-jump'
   | 'player.slide-jump'
+  | 'player.jump-charge'
   | 'player.fall'
   | 'player.crouch'
   | 'player.crawl'
@@ -997,9 +999,9 @@ export class Player {
   // Deliberate dismount (pull-back brake bled to walking pace): drop the
   // skate persistence THIS frame so the feet take the stick immediately.
   private stepOff = false;
-  // SWITCH STANCE: 1 = regular, -1 = switch (landed a 180 — the body faces
-  // opposite the travel direction until the next 180 or stepping off).
-  private stance: 1 | -1 = 1;
+  // The two side-on orientations. A 180/revert flips the sign; a fresh
+  // mount uses the authored default foot-forward/body-facing direction.
+  private stance: 1 | -1 = DEFAULT_SKATE_STANCE;
   // Vert flight keeps its launch plane and earned coping velocity. Gravity
   // brings it back to the transition; deliberate releases own transfers.
   vertAir = false;
@@ -1814,6 +1816,7 @@ export class Player {
       return this.vVel > 0 ? 'player.jump' : 'player.fall';
     }
     if (this.freeSkate || this.skatePose > 0.25 || this.deckPose > 0.25) return 'player.skate';
+    if (this.charging && this.chargePlanted) return JUMP_CHARGE_CLIP_ID;
     return this.walkTurnaround || this.animationPlanarSpeed > RUN_ANIMATION_THRESHOLD ? 'player.run' : 'player.idle';
   }
 
@@ -1892,7 +1895,9 @@ export class Player {
       : 0;
     const forwardRoll = this.forwardRollPresentation();
     let actionProgress = 0;
-    if (clipId === 'player.idle' || clipId === 'player.run' || clipId === 'player.crawl' || clipId === 'player.skate') {
+    if (clipId === JUMP_CHARGE_CLIP_ID) {
+      actionProgress = this.chargePose;
+    } else if (clipId === 'player.idle' || clipId === 'player.run' || clipId === 'player.crawl' || clipId === 'player.skate') {
       actionProgress = gaitPhase;
     } else if (clipId === 'player.jump') {
       actionProgress = this.launchVy > 0
@@ -3260,7 +3265,7 @@ export class Player {
     resetVertBoardRelease(this.vertBoardRelease);
     this.jumpReleaseRearmRequired = false;
     this.stepOff = false;
-    this.stance = 1;
+    this.stance = DEFAULT_SKATE_STANCE;
     this.vertAir = false;
     this.vertLatVel = 0;
     this.pipeFlipCd = 0;
@@ -5569,7 +5574,7 @@ export class Player {
       this.walkIntent.set(0, 0, 0);
     } else if (!free && this.freeSkate) {
       this.softSkateImpactT = 0;
-      this.stance = 1; // feet down: the next push starts regular
+      this.stance = DEFAULT_SKATE_STANCE; // feet down: reset the next mount's facing
       // back onto the course grid: keep the along-course velocity component
       const vx = this.axisF.x * this.speed;
       const vz = this.axisF.z * this.speed;
@@ -15271,8 +15276,8 @@ export class Player {
     const rg = this.riderG;
     if (!rg?.parent || this.proceduralFootwear.length !== 2 || !this.grounded || this.freeSkate) return;
     const hint = this.animationClipHint;
-    if (hint !== 'player.idle' && hint !== 'player.run') return;
-    const walkWeight = hint === 'player.idle' ? 1 : locomotionWalkBlendWeight(
+    if (hint !== 'player.idle' && hint !== 'player.run' && hint !== JUMP_CHARGE_CLIP_ID) return;
+    const walkWeight = hint === 'player.idle' || hint === JUMP_CHARGE_CLIP_ID ? 1 : locomotionWalkBlendWeight(
       this.animationPlanarSpeed / Math.max(TUNING.walkSpeed, 0.001),
     );
     const weight = walkWeight * (1 - THREE.MathUtils.smoothstep(this.deckPose, 0, 0.5));
@@ -15294,8 +15299,10 @@ export class Player {
     }
     if (!Number.isFinite(clearance)) return;
 
-    const drop = Math.max(0, clearance - 0.006) * weight;
-    if (drop <= 0) return;
+    // Keep the authored planted load above its support plane, also correcting
+    // downward penetration. This moves presentation only, never collision.
+    const drop = (hint === JUMP_CHARGE_CLIP_ID ? clearance - .006 : Math.max(0, clearance - .006)) * weight;
+    if (Math.abs(drop) < 1e-8) return;
     // A running lean or sloped parent must not turn a vertical correction
     // into a sideways move. Convert a WORLD-up delta into the rider's parent.
     _plantInv.copy(rg.parent.matrixWorld).invert();

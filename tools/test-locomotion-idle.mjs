@@ -30,7 +30,7 @@ try {
   const idle = suite.clips.find(clip => clip.id === 'player.idle');
   const run = suite.clips.find(clip => clip.id === 'player.run');
   assert.equal(idle.metadata.sourceAnimation.sourceClip, 'Idle_Loop');
-  assert.ok(Math.abs(idle.duration / idle.playbackSpeed - run.duration / run.playbackSpeed) < 1e-8);
+  assert.equal(idle.playbackSpeed, 2);
   assert.equal(idle.tracks.filter(track => track.kind === 'quaternion').length, 22);
   assert.equal(idle.proceduralDrivers.length, 0);
   for (const track of idle.tracks) assert.deepEqual(track.keys[0].value, track.keys.at(-1).value);
@@ -42,7 +42,7 @@ try {
   saved.clips.find(clip => clip.id === 'player.run').playbackSpeed = 2;
   const upgraded = a.reconcilePlayerStarterAnimationSuite(saved, binding.definition);
   assert.deepEqual(upgraded.clips.find(clip => clip.id === 'player.idle.pre-quaternius').tracks, old.tracks);
-  assert.ok(Math.abs(upgraded.clips.find(clip => clip.id === 'player.idle').playbackSpeed - idle.duration / run.duration * 2) < 1e-8);
+  assert.equal(upgraded.clips.find(clip => clip.id === 'player.idle').playbackSpeed, 2);
   assert.deepEqual(a.reconcilePlayerStarterAnimationSuite(upgraded, binding.definition), upgraded);
   const withoutIdle = { ...saved, clips: saved.clips.filter(clip => clip.id !== 'player.idle') };
   assert.ok(!a.reconcilePlayerStarterAnimationSuite(withoutIdle, binding.definition).clips.some(clip => clip.id === 'player.idle'));

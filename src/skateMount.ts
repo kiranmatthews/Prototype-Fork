@@ -4,6 +4,8 @@ export const SKATE_MOUNT_TIMING = Object.freeze({
   height: 0.28,
 });
 
+export const DEFAULT_SKATE_STANCE = -1 as const;
+
 export interface SkateMountPose {
   /** Presentation-only vertical lift in world metres. */
   lift: number;

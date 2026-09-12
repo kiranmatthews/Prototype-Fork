@@ -56,10 +56,10 @@ state, camera state, and render interpolation before play resumes.
 ## Locomotion transitions
 
 Catalog 26 replaces boardless `player.idle` with Quaternius `Idle_Loop`.
-Its two-bob 2.5-second loop runs at about 4.29× to match the two-bob Jog cycle
-at 1.6×. Both the dense body tracks and speed remain editable. Saved suites
-adopt the new idle (tempo derived from their Run speed) and retain the old
-clip under `player.idle.pre-quaternius`; deleted idle slots stay deleted.
+Catalog 30 slows its 2.5-second loop to **2×**; Run remains independently at 1.6×.
+Both the dense body tracks and speed remain editable. Existing idle keys are
+preserved when the speed changes. Historical pre-Quaternius copies remain under
+`player.idle.pre-quaternius`; deleted idle slots stay deleted.
 
 Run/Walk ↔ Idle matches an incoming phase and uses 0.26-second stop and
 0.18-second start fades. The outgoing loop keeps advancing with its captured
@@ -85,9 +85,29 @@ platform remains in Idle.
 Catalog 29 adds `player.run-stop` (**Run Stop — Skid and Settle**) for released
 running input above 45% pace. Its editable 0–0.4 s brace section follows actual
 remaining foot momentum; the final 0.25 s compress/rebound uses saved playback
-speed. The runtime blends in over 0.1 s and out over 0.12 s, with immediate
+speed. The runtime blends in over 0.1 s, with immediate
 movement/action interruption. Slow analogue walking does not trigger it.
 The clip is added to saved suites without replacing existing authored tracks.
+
+Landing and skid recovery now blend the arms/legs **into the live Idle phase
+during their existing bounce/settle**. Landing limbs arrive by 0.30 s, inside
+its 0.45 s rebound; skid limbs arrive by 0.60 s, before its 0.65 s ending.
+Root motion and squash remain until the last part of the recovery, then all
+channels hand off to the same Idle sample without a second fade. Upper-arm
+rest offsets use this same weight. Late Run/Idle input changes start from the
+last mixed pose, preserving the continuing-run landing behavior.
+
+`player.jump-charge` (**Jump Charge — Preload and Wind-up**) is newly authored
+for this rig. It retains the control concepts checked against `4401518`,
+`d2f8438` and `7457284`: eased immediate 35% preload, deeper held charge,
+rearward arm loading, lowered gaze, fixed-length knees and flat planted soles.
+It does not copy the old joint positions. Gameplay scrubs the editable clip
+from `chargePose`; tap/full power and release-to-jump are still controller-owned.
+Moving charges retain their gait and board charging stays a separate pose.
+`tools/test-idle-recovery-charge.mjs` verifies both recoveries, exact handoff,
+preload/hold/release behavior, foot clearance and saved-data migration.
+`/idle-polish-review.html?playtest&level=codex-lab&nocrt` is a local multi-angle
+review with real input and a pause-at-recovered-limbs option.
 
 Hard direction changes now finish their visual pivot in four 60 Hz frames
 (about 67 ms), well before the existing movement-inertia envelope. The authored

@@ -1,4 +1,5 @@
 import type { Player, PlayerAnimationClipHint } from './player';
+import { JUMP_CHARGE_CLIP_ID } from './animation/jumpCharge';
 import { RUN_STOP_CLIP_ID, RUN_MOVE_INTENT_INPUT, RUN_STOP_COAST_FRACTION } from './animation/runStop';
 import {
   RigBinding,
@@ -35,6 +36,7 @@ export const PLAYER_TRANSITION_CLIP_IDS = [LAND_CLIP_ID, CROUCH_CLIP_IDS.enter, 
 /** Routes allowed to opt into gameplay-phase scrubbing via clip metadata.
  * Manual Studio preview always remains ordinary saved-speed playback. */
 export const ACTION_PROGRESS_TIMELINE_CLIP_IDS = [
+  JUMP_CHARGE_CLIP_ID,
   'player.jump',
   'player.double-jump',
   'player.slide-jump',
@@ -91,6 +93,8 @@ export interface CharacterAnimationRuntimeDiagnostics {
   readonly playbackSpeedMultiplier: number;
   readonly landingOneShotActive: boolean;
   readonly transientClipId: ClipId | null;
+  readonly idleRecoveryWeight: number;
+  readonly idleRecoveryTimelineTime: number | null;
   readonly transitionBlendWeight: number | null;
   readonly authoredPoseApplied: boolean;
   readonly proceduralOrder: ProceduralCompositionOrder | null;
@@ -146,6 +150,7 @@ const AIRBORNE_CLIP_IDS = new Set<ClipId>([
 
 function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId): number {
   if (!from) return 0;
+  if (from === JUMP_CHARGE_CLIP_ID || to === JUMP_CHARGE_CLIP_ID) return .10;
   if (to === RUN_STOP_CLIP_ID) return .10;
   if (from === RUN_STOP_CLIP_ID) return .12;
   if (to === 'player.death') return .12;
@@ -254,6 +259,10 @@ export class CharacterAnimationRuntime {
   /** Authored-range offset used for phase-continuous loop handoffs. */
   private playbackOffset = 0;
   private pendingRunHandoffOffset: number | null = null;
+  private pendingIdleHandoffOffset: number | null = null;
+  private recoveryIdle: { source: ClipId; offset: number; clock: number } | null = null;
+  private recoveryIdleWeight = 0;
+  private recoveryIdleTimelineTime: number | null = null;
   private landingRunBlendProgress = 0;
   private landingRunPreviousTime = 0;
   private landingRunEntryGaitPhase = 0;
@@ -349,6 +358,8 @@ export class CharacterAnimationRuntime {
       playbackSpeedMultiplier: this.runtimeSpeed,
       landingOneShotActive: transient?.kind === 'landing',
       transientClipId: transient?.clipId ?? null,
+      idleRecoveryWeight: this.recoveryIdleWeight,
+      idleRecoveryTimelineTime: this.recoveryIdleTimelineTime,
       transitionBlendWeight: this.transitionBlendWeight,
       authoredPoseApplied: this.poseApplied,
       proceduralOrder: this.compositionOrder,
@@ -433,6 +444,17 @@ export class CharacterAnimationRuntime {
     const justLanded = grounded && !this.previousGrounded;
     this.previousGrounded = grounded;
     const hint = intent.clipId;
+    const recoveryHintChanged = this.manualClipId === null && this.currentClipId === LAND_CLIP_ID &&
+      this.transient?.kind === 'landing' && hint !== this.previousHint &&
+      (hint === 'player.run' || hint === 'player.idle') &&
+      (this.previousHint === 'player.run' || this.previousHint === 'player.idle');
+    if (recoveryHintChanged && this.lastSampledPose) {
+      this.switchOutgoingPose = this.lastSampledPose;
+      this.locomotionOutgoing = null;
+      this.switchBlendDuration = .12;
+      this.switchBlendElapsed = 0;
+      this.switchOutgoingUpperArmRestWeight = this.upperArmRestWeight;
+    }
     const moveIntent = intent.motion.inputs?.[RUN_MOVE_INTENT_INPUT] ?? 0;
     const releasedRun = this.previousMoveIntent > .05 && moveIntent <= .05 && this.previousFootSpeed >= .45;
     const releasedSpeed = this.previousFootSpeed;
@@ -548,8 +570,11 @@ export class CharacterAnimationRuntime {
         previousClipId === LAND_CLIP_ID && clip.id === 'player.run'
           ? this.pendingRunHandoffOffset
           : null;
+      const idleHandoffOffset = this.manualClipId === null && clip.id === 'player.idle' &&
+        (previousClipId === LAND_CLIP_ID || previousClipId === RUN_STOP_CLIP_ID)
+        ? this.pendingIdleHandoffOffset : null;
       const switchBlendDuration = this.manualClipId === null
-        ? previousClipId === RUN_STOP_CLIP_ID ? .12 : locomotionSwitch
+        ? idleHandoffOffset !== null ? 0 : previousClipId === RUN_STOP_CLIP_ID ? .12 : locomotionSwitch
           ? clip.id === 'player.idle' ? LOCOMOTION_STOP_BLEND_SECONDS : LOCOMOTION_START_BLEND_SECONDS
           : authoredSwitchBlendDuration(previousClipId, clip.id)
         : 0;
@@ -573,14 +598,15 @@ export class CharacterAnimationRuntime {
       this.currentClipId = clip.id;
       this.elapsedSeconds = 0;
       this.playbackSeconds = 0;
-      this.playbackOffset = runHandoffOffset ?? matchedOffset ?? 0;
+      this.playbackOffset = idleHandoffOffset ?? runHandoffOffset ?? matchedOffset ?? 0;
       this.pendingRunHandoffOffset = null;
+      this.pendingIdleHandoffOffset = null;
       this.restartPending = false;
     } else {
       this.elapsedSeconds += dt;
       this.playbackSeconds +=
         dt * this.runtimeSpeed * this.locomotionPlaybackScale(clip, intent.motion);
-      this.switchBlendElapsed += dt;
+      if (!recoveryHintChanged) this.switchBlendElapsed += dt;
       if (this.locomotionOutgoing) this.locomotionOutgoing.playbackSeconds += dt * this.runtimeSpeed * this.locomotionOutgoing.rate;
     }
 
@@ -691,6 +717,18 @@ export class CharacterAnimationRuntime {
     } else {
       this.pendingRunHandoffOffset = null;
     }
+    // Return the limbs DURING the rebound/settle, not in a second fade once
+    // the landing or skid has already finished. Root compression remains its
+    // own channel until the last part of the bounce.
+    this.recoveryIdleWeight = 0;
+    this.recoveryIdleTimelineTime = null;
+    if (this.manualClipId === null && hint === 'player.idle' &&
+        (this.transient?.kind === 'landing' || this.transient?.kind === 'run-stop')) {
+      pose = this.recoverIntoIdle(clip, pose, motion, dt);
+    } else {
+      this.recoveryIdle = null;
+      this.pendingIdleHandoffOffset = null;
+    }
     let contactTransitionWeight: number | null = null;
     if (this.switchOutgoingPose && this.switchBlendDuration > 0) {
       const weight = smoothstep01(this.switchBlendElapsed / this.switchBlendDuration);
@@ -717,7 +755,7 @@ export class CharacterAnimationRuntime {
     } else {
       this.transitionBlendWeight = null;
     }
-    const incomingRestWeight = clip.id === 'player.idle' ? 1 : 0;
+    const incomingRestWeight = clip.id === 'player.idle' ? 1 : this.recoveryIdleWeight;
     this.upperArmRestWeight = this.transitionBlendWeight === null ? incomingRestWeight
       : this.switchOutgoingUpperArmRestWeight * (1 - this.transitionBlendWeight) + incomingRestWeight * this.transitionBlendWeight;
     this.player.setCharacterUpperArmRestAngleWeight(this.upperArmRestWeight);
@@ -768,6 +806,34 @@ export class CharacterAnimationRuntime {
     ) {
       this.cancelTransient(false);
     }
+  }
+
+  private recoverIntoIdle(clip: AnimationClip, pose: PoseBuffer, motion: ProceduralMotionContext, dt: number): PoseBuffer {
+    const idle = this.findPlayableClip('player.idle');
+    if (!idle || this.timelineTime === null) return pose;
+    if (this.recoveryIdle?.source !== clip.id) this.recoveryIdle = {
+      source: clip.id, offset: this.closestLocomotionOffset(idle, pose, motion), clock: 0,
+    };
+    else this.recoveryIdle.clock += dt * this.runtimeSpeed;
+    const span = Math.max(1e-6, clip.range.end - clip.range.start);
+    const phase = Math.min(1, Math.max(0, (this.timelineTime - clip.range.start) / span));
+    const isLand = clip.id === LAND_CLIP_ID;
+    const start = isLand ? .075 / .45 : RUN_STOP_COAST_FRACTION;
+    const end = isLand ? .30 / .45 : .60 / .65;
+    const weight = Math.min(smoothstep01((phase - start) / (end - start)), smoothstep01(this.recoveryIdle.clock / .12));
+    const idleTime = clipTimeAt(idle, this.recoveryIdle.clock, { offset: this.recoveryIdle.offset });
+    const target = withControlDefaults(canonicalizePose(this.samplePoseAt(idle, idleTime, motion, true), this.binding), this.controlDefaults);
+    const source = withControlDefaults(canonicalizePose(pose, this.binding), this.controlDefaults);
+    const result = blendPoses(source, target, weight);
+    const rootStart = isLand ? .20 / .45 : RUN_STOP_COAST_FRACTION;
+    const rootWeight = smoothstep01((phase - rootStart) / (1 - rootStart));
+    const root = blendPoses(source, target, Math.min(rootWeight, weight)).joints.root;
+    if (root) result.joints.root = root;
+    result.scalars = blendPoses(source, target, smoothstep01((phase - .8) / .2)).scalars;
+    this.recoveryIdleWeight = weight;
+    this.recoveryIdleTimelineTime = idleTime;
+    if (phase >= 1 - 1e-8 && weight >= 1 - 1e-8) this.pendingIdleHandoffOffset = idleTime - idle.range.start;
+    return result;
   }
 
   private samplePoseAt(clip: AnimationClip, time: number, motion: ProceduralMotionContext, includeVariant: boolean): PoseBuffer {
@@ -954,6 +1020,12 @@ export class CharacterAnimationRuntime {
     this.transient = null;
     if (cancelledLanding) this.resetLandingRunBlend(clearBlend);
     if (clearBlend) this.transitionBlendWeight = null;
+    if (clearBlend) {
+      this.recoveryIdle = null;
+      this.pendingIdleHandoffOffset = null;
+      this.recoveryIdleWeight = 0;
+      this.recoveryIdleTimelineTime = null;
+    }
   }
 
   private resetLandingRunBlend(clearHandoff = true): void {
@@ -983,6 +1055,10 @@ export class CharacterAnimationRuntime {
     this.playbackSeconds = 0;
     this.playbackOffset = 0;
     this.pendingRunHandoffOffset = null;
+    this.pendingIdleHandoffOffset = null;
+    this.recoveryIdle = null;
+    this.recoveryIdleWeight = 0;
+    this.recoveryIdleTimelineTime = null;
     this.resetLandingRunBlend();
     this.timelineTime = null;
     this.authoredPlaybackSpeed = null;
@@ -1015,6 +1091,7 @@ export function createCharacterAnimationRuntime(
 
 /** The gameplay-owned routes, useful for diagnostics and completeness tests. */
 export const PLAYER_STATE_CLIP_IDS: readonly PlayerAnimationClipHint[] = [
+  JUMP_CHARGE_CLIP_ID,
   'player.swim',
   'player.swim-idle',
   'player.idle',

@@ -48,6 +48,16 @@ Manuals load rear wheels; nose manuals load front wheels. Axle stalls turn along
 
 ## Contact and cartoon motion
 
+The default new mount is now `stance = -1`, reversing the old body-facing
+direction; explicit switch/revert behavior remains intact. Relaxed skating
+uses standing idle as its silhouette reference. Instead of the old fixed
+0.53 m pelvis-to-sole height (about 96° knees), the contact layer measures
+unbent legs, ankle/sole offsets and foot spread to find a lightly bent stance.
+The authored character now has roughly 20–30° knee flex, near standing idle's
+15–20°, while keeping the same board contacts. Charge fades out this taller
+rest posture and retains a separate deeper load. The initial two-bone contact
+solve now respects parent scale before the existing bounded refinement.
+
 The board has a separate scale compensation parent. Its metre dimensions survive the body's nonuniform cartoon proportions without shearing. Hanger height, wheel radius, deck thickness and grip height come from the current skateboard settings. A selected support point anchors the board transform; torso lean can no longer exchange a nosegrind for a centre-balanced board tilt.
 
 Feet and palms use actual rig sockets, two-bone IK and a bounded local-coordinate refinement. The latter removes the centimetre-scale error left by an ordinary world-space solve under stretched parents. Wrist orientation makes the palm face the edge and fingers curl underneath. The spine folds to make the short arms reach without scaling bones. Contact corrections happen after appearance/animation layers.

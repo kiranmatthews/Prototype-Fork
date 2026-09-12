@@ -110,7 +110,7 @@ export class SkateAnimation {
       limb.end.getWorldPosition(endpoint); limb.socket.getWorldPosition(socket);
       wristTarget.copy(goal).sub(socket).add(endpoint);
       solveTwoBoneIk({ root: limb.root, mid: limb.mid, end: limb.end, target: wristTarget,
-        pole, tolerance: .001 });
+        pole, tolerance: .001, accountForParentScale: true });
     }
     // Refine in each joint's parent coordinates: a world-space analytical
     // two-bone solve alone leaves centimetres of error under the stretched
@@ -259,7 +259,32 @@ export class SkateAnimation {
     pelvis.addScaledVector(Z.clone().applyQuaternion(this.boardQ), load);
     // Stand a little taller when casually rolling or idling. Fade this lift
     // away as charge builds so the existing full-charge crouch stays intact.
-    const relaxedLift = .07 * this.relaxedRideWeight;
+    let relaxedHeight = .46;
+    if (this.relaxedRideWeight > .001) {
+      const scaleY = this.rider.getWorldScale(new THREE.Vector3()).y;
+      const hipWorld = this.hips.getWorldPosition(new THREE.Vector3());
+      relaxedHeight = Infinity;
+      for (let i = 0; i < 2; i++) {
+        const leg = this.feet[i];
+        // Measure unbent lengths: folded world lengths under the non-uniform
+        // cartoon scale underestimate the height of a standing-idle stance.
+        const upper = leg.mid.position.length() * leg.root.scale.y * scaleY;
+        const lower = leg.end.position.length() * leg.mid.scale.y * scaleY;
+        this.worldRotation(leg.end, footQ);
+        leg.end.updateWorldMatrix(true, true);
+        const ankleOffset = leg.end.getWorldPosition(new THREE.Vector3())
+          .sub(leg.socket.getWorldPosition(new THREE.Vector3()));
+        const hipOffset = leg.root.getWorldPosition(new THREE.Vector3()).sub(hipWorld);
+        const delta = footTargets[i].clone().add(ankleOffset).sub(pelvis).sub(hipOffset);
+        const vertical = delta.dot(this.up);
+        const horizontalSq = Math.max(0, delta.lengthSq() - vertical * vertical);
+        // Leave some reach in reserve for the sideways stance and affine
+        // parent scale; otherwise one knee locks while its sole floats.
+        const reachSq = upper * upper + lower * lower + 2 * upper * lower * Math.cos(.65);
+        relaxedHeight = Math.min(relaxedHeight, vertical + Math.sqrt(Math.max(0, reachSq - horizontalSq)));
+      }
+    }
+    const relaxedLift = Math.max(0, relaxedHeight - .46) * this.relaxedRideWeight;
     const height = THREE.MathUtils.lerp(.46 - .29 * gw, .10, dark) - .065 * p.charge - .11 * bounce + breathe + relaxedLift;
     pelvis.addScaledVector(this.up, height);
     pelvis.addScaledVector(Y, .14 * p.wallWeight);
