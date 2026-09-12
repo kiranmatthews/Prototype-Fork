@@ -2734,7 +2734,8 @@ class AnimationStudio implements AnimationStudioHandle {
     if (!clip) return;
     if (document.activeElement !== this.clipNameInput) this.clipNameInput.value = clip.name;
     setNumberInput(this.durationInput, clip.duration);
-    this.speedSlider.value = String(clamp(clip.playbackSpeed, 0.1, 3));
+    this.speedSlider.max = String(Math.min(PLAYBACK_SPEED_MAX, Math.max(3, Math.ceil(clip.playbackSpeed))));
+    this.speedSlider.value = String(clamp(clip.playbackSpeed, 0.1, Number(this.speedSlider.max)));
     setNumberInput(this.speedInput, clip.playbackSpeed, 2);
     this.loopButton.classList.toggle('ast-active', clip.loop.mode !== 'once');
     this.loopModeSelect.value = clip.loop.mode;

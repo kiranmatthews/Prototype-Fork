@@ -1,0 +1,9 @@
+CC0 1.0 Universal (CC0 1.0)
+Public Domain Dedication
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Animations by Quaternius
+https://quaternius.com/packs/universalanimationlibrary.html
+
+The supplied Universal Animation Library [Source] License.txt declares CC0.
+Original license SHA-256: 6d01f55c6e4c49a2c9963e147e561945ae2c83958c8ca667d90a6bffdbfac061

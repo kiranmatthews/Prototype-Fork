@@ -5,6 +5,8 @@ import { QUATERNIUS_SWIM_FWD_DURATION, QUATERNIUS_SWIM_FWD_ROOT_KEYS,
 import { QUATERNIUS_SWIM_IDLE_DURATION, QUATERNIUS_SWIM_IDLE_ROOT_KEYS,
   QUATERNIUS_SWIM_IDLE_ROTATION_KEYS, QUATERNIUS_SWIM_IDLE_SOURCE } from './quaterniusSwimIdle.generated';
 import * as THREE from 'three';
+import { QUATERNIUS_IDLE_DURATION, QUATERNIUS_IDLE_ROOT_KEYS,
+  QUATERNIUS_IDLE_ROTATION_KEYS, QUATERNIUS_IDLE_SOURCE } from './quaterniusIdle.generated';
 import { CROUCH_CLIP_IDS, CROUCH_TRANSITION_DURATION, QUATERNIUS_CRAWL_PALMS, QUATERNIUS_LOW_POSE_OWNERSHIP } from './crouch';
 import { QUATERNIUS_CROUCH_IDLE_DURATION, QUATERNIUS_CROUCH_IDLE_ROOT_KEYS,
   QUATERNIUS_CROUCH_IDLE_ROTATION_KEYS, QUATERNIUS_CROUCH_IDLE_SOURCE } from './quaterniusCrouchIdle.generated';
@@ -51,6 +53,8 @@ import {
 } from './unityCrouchCrawl';
 import {
   LOCOMOTION_WALK_BLEND_INPUT,
+  LOCOMOTION_PHASE_MATCHED_IDLE,
+  PLAYER_RUN_PLAYBACK_SPEED,
   PLAYER_WALK_CLIP_ID,
 } from './locomotionBlend';
 import {
@@ -132,7 +136,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 25;
+export const PLAYER_STARTER_CATALOG_VERSION = 26;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -428,15 +432,6 @@ type SampledQuaternion = readonly [
   value: readonly [number, number, number, number],
 ];
 
-const IDLE_ENTRY = {
-  root: [0, 0, 0] as Vec3Tuple,
-  spine: [0.015, 0, -0.025] as const,
-  head: [0.015, -0.02, 0.012] as const,
-  shoulderLeft: [0.03, 0, 0.025] as const,
-  shoulderRight: [-0.015, 0, -0.018] as const,
-  torsoLength: 1,
-};
-
 function baseClip(
   id: string,
   name: string,
@@ -632,61 +627,25 @@ function contact(
   return { id, start, end, effector, mode, weight: 1 };
 }
 
-function buildIdle(rigId: string): AnimationClip {
-  const clip = baseClip('player.idle', 'Idle — Breathing Starter', 2, 'loop', rigId);
+function buildIdle(rigId: string, includeTorsoRoot: boolean): AnimationClip {
+  const clip = baseClip('player.idle', 'Idle — Quaternius Idle_Loop', QUATERNIUS_IDLE_DURATION, 'loop', rigId);
+  // Both sources contain two bobs per full cycle. Match the complete cycle
+  // duration at the approved Jog playback speed; keep this editable in Studio.
+  clip.playbackSpeed = QUATERNIUS_IDLE_DURATION / QUATERNIUS_JOG_FWD_DURATION * PLAYER_RUN_PLAYBACK_SPEED;
   clip.tracks = [
-    positionTrack(clip.id, 'root', [[0, IDLE_ENTRY.root], [1, [0, 0.018, 0]], [2, IDLE_ENTRY.root]]),
-    quaternionTrack(clip.id, 'spine', [[0, ...IDLE_ENTRY.spine], [1, -0.012, 0.02, 0.025], [2, ...IDLE_ENTRY.spine]]),
-    quaternionTrack(clip.id, 'head', [[0, ...IDLE_ENTRY.head], [1, -0.01, 0.02, -0.012], [2, ...IDLE_ENTRY.head]]),
-    quaternionTrack(clip.id, 'shoulderLeft', [[0, ...IDLE_ENTRY.shoulderLeft], [1, -0.015, 0, -0.018], [2, ...IDLE_ENTRY.shoulderLeft]]),
-    quaternionTrack(clip.id, 'shoulderRight', [[0, ...IDLE_ENTRY.shoulderRight], [1, 0.03, 0, 0.025], [2, ...IDLE_ENTRY.shoulderRight]]),
-    scalarTrack(clip.id, PLAYER_DEFORMATION_CONTROLS.torso, [[0, IDLE_ENTRY.torsoLength], [1, 1.025], [2, IDLE_ENTRY.torsoLength]]),
+    sampledPositionTrack(clip.id, 'root', QUATERNIUS_IDLE_ROOT_KEYS),
+    ...sampledQuaterniusRotationTracks(clip.id, QUATERNIUS_IDLE_ROTATION_KEYS, includeTorsoRoot),
   ];
   clip.contacts = [
-    contact(`${clip.id}:foot-left`, 0, 2, 'footLeft'),
-    contact(`${clip.id}:foot-right`, 0, 2, 'footRight'),
+    contact(`${clip.id}:foot-left`, 0, clip.duration, 'footLeft'),
+    contact(`${clip.id}:foot-right`, 0, clip.duration, 'footRight'),
   ];
-  clip.proceduralDrivers = [
-    createProceduralDriver('oscillator', { kind: 'position', target: 'root', component: 'y' }, {
-      id: `${clip.id}:driver:breathing-rise`,
-      name: 'Breathing rise',
-      order: 0,
-      source: 'time',
-      waveform: 'sine',
-      amplitude: 0.012,
-      frequency: 0.5,
-      phase: 0,
-    }),
-    createProceduralDriver('oscillator', { kind: 'quaternion', target: 'spine', axis: [0, 0, 1] }, {
-      id: `${clip.id}:driver:weight-shift`,
-      name: 'Weight shift',
-      order: 1,
-      source: 'time',
-      waveform: 'sine',
-      amplitude: 0.022,
-      frequency: 0.5,
-      // Zero at the loop seam so one-shot transitions can hand off to the
-      // authored idle entry exactly; the sway develops immediately afterward.
-      phase: 0,
-    }),
-    createProceduralDriver('oscillator', {
-      kind: 'scalar',
-      target: PLAYER_DEFORMATION_CONTROLS.torso,
-      baseValue: 1,
-    }, {
-      id: `${clip.id}:driver:torso-breath`,
-      name: 'Torso breath',
-      order: 2,
-      blend: 'override',
-      source: 'time',
-      waveform: 'sine',
-      amplitude: 0.018,
-      frequency: 0.5,
-      phase: 0,
-      bias: 1,
-      clamp: [0.96, 1.04],
-    }),
-  ];
+  clip.tags = ['player', 'quaternius', 'idle', 'locomotion', 'imported-keyframes'];
+  clip.metadata = { starterQuality: 'source-animation-retarget',
+    starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
+    sourceAnimation: { ...QUATERNIUS_IDLE_SOURCE },
+    locomotionTransition: LOCOMOTION_PHASE_MATCHED_IDLE,
+    rhythmReference: 'player.run: two bobs per full cycle' };
   return clip;
 }
 
@@ -699,7 +658,7 @@ function buildRun(rigId: string, includeTorsoRoot: boolean): AnimationClip {
     rigId,
   );
   // Promoted from the local Chrome Animation Studio run-cycle tuning.
-  clip.playbackSpeed = 1.6;
+  clip.playbackSpeed = PLAYER_RUN_PLAYBACK_SPEED;
   clip.tracks = [
     sampledPositionTrack(clip.id, 'root', QUATERNIUS_JOG_FWD_ROOT_KEYS),
     ...sampledQuaterniusRotationTracks(
@@ -1550,7 +1509,7 @@ export function createPlayerStarterClips(
   const includeTorsoRoot = typeof rig === 'string' ||
     rig.joints.some((joint) => joint.id === 'torsoRoot');
   return [
-    buildIdle(rigId),
+    buildIdle(rigId, includeTorsoRoot),
     buildWalk(rigId, includeTorsoRoot),
     buildSwim(rigId, includeTorsoRoot, false),
     buildSwim(rigId, includeTorsoRoot, true),
@@ -1802,6 +1761,22 @@ export function reconcilePlayerStarterAnimationSuite(
       // Only the arm rotation channels change for this correction.
       const revised = withJumpArmClearance(old);
       clips = clips.map(clip => clip.id === id ? revised : clip);
+    }
+  }
+
+  if (previousVersion < 26) {
+    const old = clips.find(clip => clip.id === 'player.idle');
+    const idle = starters.find(clip => clip.id === 'player.idle')!;
+    if (old && old.metadata?.locomotionTransition !== LOCOMOTION_PHASE_MATCHED_IDLE) {
+      const backupId = 'player.idle.pre-quaternius';
+      if (!clips.some(clip => clip.id === backupId)) clips.push({ ...old,
+        id: backupId, name: `${old.name} — Before Quaternius`,
+        metadata: { ...old.metadata, replacedBy: 'player.idle' } });
+      const run = clips.find(clip => clip.id === 'player.run');
+      const runSpan = run ? run.range.end - run.range.start : 0;
+      const playbackSpeed = run && runSpan > 0 && run.playbackSpeed > 0
+        ? idle.duration / runSpan * run.playbackSpeed : idle.playbackSpeed;
+      clips = clips.map(clip => clip.id === 'player.idle' ? { ...idle, playbackSpeed } : clip);
     }
   }
 

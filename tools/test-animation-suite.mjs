@@ -344,7 +344,7 @@ try {
   );
 
   const starterClips = createPlayerStarterClips();
-  assert.equal(PLAYER_STARTER_CATALOG_VERSION, 25);
+  assert.equal(PLAYER_STARTER_CATALOG_VERSION, 26);
   assert.equal(starterClips.length, 27);
   for (const id of [
     'player.idle', PLAYER_WALK_CLIP_ID, 'player.run', 'player.jump', 'player.double-jump', 'player.fall', 'player.land', 'player.crouch',
@@ -595,7 +595,8 @@ try {
   assert.ok(Math.abs(new THREE.Quaternion().fromArray(crawlStart.joints.shoulderLeft.quaternion)
     .dot(new THREE.Quaternion().fromArray(crawlHalf.joints.shoulderLeft.quaternion))) < 0.995,
   'Unity crawl lost its alternating four-point gait');
-  assert.ok(idle.proceduralDrivers.length >= 2);
+  assert.equal(idle.proceduralDrivers.length, 0, 'Quaternius idle must not receive the old procedural breathing twice');
+  assert.equal(idle.metadata.sourceAnimation.sourceClip, 'Idle_Loop');
   assert.equal(run.proceduralDrivers.length, 0,
     'Jog_Fwd already owns its cadence and must not receive the legacy gait twice');
 

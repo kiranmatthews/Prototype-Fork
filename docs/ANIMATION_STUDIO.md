@@ -55,6 +55,21 @@ state, camera state, and render interpolation before play resumes.
 
 ## Locomotion transitions
 
+Catalog 26 replaces boardless `player.idle` with Quaternius `Idle_Loop`.
+Its two-bob 2.5-second loop runs at about 4.29× to match the two-bob Jog cycle
+at 1.6×. Both the dense body tracks and speed remain editable. Saved suites
+adopt the new idle (tempo derived from their Run speed) and retain the old
+clip under `player.idle.pre-quaternius`; deleted idle slots stay deleted.
+
+Run/Walk ↔ Idle matches an incoming phase and uses 0.26-second stop and
+0.18-second start fades. The outgoing loop keeps advancing with its captured
+Walk/Run mixture. Reversing a fade starts from the last mixed pose, while
+the idle-only upper-arm rest adjustment fades in both directions. Movement
+and board-mounted poses remain governed by the existing Player controller.
+Use `tools/test-locomotion-idle.mjs` for real-controller stop/start and
+movement-parity checks, or `/idle-review.html?playtest&level=codex-lab&nocrt`
+locally for the cycling visual review.
+
 `player.walk` is Quaternius' CC0 `Walk_Loop`, imported from the exact same
 `UAL1_Standard.glb`, skeleton, and 22-joint retargeting path as the approved
 `Jog_Fwd_Loop` Run. Gameplay keeps one `player.run` route and phase-blends Walk
@@ -62,7 +77,7 @@ over Jog: full Walk through 3/9 normalized speed, then a continuous blend to
 full Jog at run speed. The shared gait phase keeps corresponding legs aligned,
 while the runtime eases between each clip's native cycle duration so the
 1.333-second Walk is not accelerated to the 0.933-second Jog cadence. Stopping
-crossfades directly into Idle; the retired pacing-stop interlude is no longer
+crossfades directly into Quaternius Idle; the retired pacing-stop interlude is no longer
 part of the catalog or runtime. Grounded gait speed and facing come from the
 character's own walk velocity, so a stationary rider carried by a Nightworks
 platform remains in Idle.

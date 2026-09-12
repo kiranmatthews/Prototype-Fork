@@ -274,7 +274,7 @@ try {
     }
     // Swim-to-idle deliberately blends for 0.3 s; idle rest-angle ownership
     // reaches one after that handoff, not on its first sample.
-    if (id === 'player.idle') tick(.3);
+    if (runtime.diagnostics.transitionBlendWeight !== null) tick(.3);
     near(upperArmRestAngleWeight, id === 'player.idle' ? 1 : 0);
   }
 

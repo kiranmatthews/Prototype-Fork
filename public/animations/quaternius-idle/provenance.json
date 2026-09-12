@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "asset": { "id": "player.idle", "sourceClip": "Idle_Loop", "generatedModule": "src/animation/quaterniusIdle.generated.ts" },
+  "source": {
+    "author": "Quaternius",
+    "pack": "Universal Animation Library",
+    "edition": "Source",
+    "page": "https://quaternius.com/packs/universalanimationlibrary.html",
+    "archive": "Universal Animation Library[Source].zip",
+    "archiveSha256": "28f7528643b945fc8e95362da16ee2218e82b1f4735460e707918047ed868ed5",
+    "archivePath": "Unreal-Godot/UAL1.glb",
+    "sourceFileSha256": "d1cb4537efa4c06a953ca951e5935062f88c2580ac68e45045592d587bddb43d",
+    "sourceDuration": 2.5,
+    "sourceFrameCount": 76,
+    "sampleRate": 30,
+    "rootMotion": false,
+    "importedOn": "2026-09-13"
+  },
+  "license": { "spdx": "CC0-1.0", "url": "https://creativecommons.org/publicdomain/zero/1.0/" },
+  "conversion": {
+    "tool": "tools/import-quaternius-humanoid-animation.mjs",
+    "method": "Quaternius bind-world delta to player canonical-world/rest-local",
+    "jointCount": 22,
+    "loopPolicy": "Final sample equals first sample",
+    "tempoPolicy": "Match complete Idle cycle to the authored Run cycle at its saved playback speed"
+  }
+}

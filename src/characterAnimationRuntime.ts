@@ -9,6 +9,9 @@ import {
   QUATERNIUS_CRAWL_PALMS,
   QUATERNIUS_LOW_POSE_OWNERSHIP,
   LOCOMOTION_WALK_BLEND_INPUT,
+  LOCOMOTION_PHASE_MATCHED_IDLE,
+  LOCOMOTION_STOP_BLEND_SECONDS,
+  LOCOMOTION_START_BLEND_SECONDS,
   PLAYER_WALK_CLIP_ID,
   UNITY_ROPE_CLIP_IDS,
   UNITY_ROPE_TIMING,
@@ -55,6 +58,14 @@ type RuntimeTransientKind = 'landing' | 'crouch-enter' | 'crouch-exit';
 interface RuntimeTransient {
   readonly kind: RuntimeTransientKind;
   readonly clipId: ClipId;
+}
+
+interface LocomotionOutgoing {
+  clip: AnimationClip;
+  playbackSeconds: number;
+  offset: number;
+  rate: number;
+  motion: ProceduralMotionContext;
 }
 
 export interface CharacterAnimationRuntimeOptions {
@@ -253,6 +264,9 @@ export class CharacterAnimationRuntime {
   private lastSampledPose: PoseBuffer | null = null;
   private transitionBlendWeight: number | null = null;
   private switchOutgoingPose: PoseBuffer | null = null;
+  private locomotionOutgoing: LocomotionOutgoing | null = null;
+  private upperArmRestWeight = 1;
+  private switchOutgoingUpperArmRestWeight = 1;
   private switchBlendDuration = 0;
   private switchBlendElapsed = 0;
   private switchOutgoingLowPoseOuterOwnership = 0;
@@ -492,15 +506,33 @@ export class CharacterAnimationRuntime {
     const previousClipId = this.currentClipId;
     const switched = previousClipId !== clip.id || this.restartPending;
     if (switched) {
+      const idle = this.findPlayableClip('player.idle');
+      const locomotionSwitch = this.manualClipId === null && !this.restartPending &&
+        idle?.metadata?.locomotionTransition === LOCOMOTION_PHASE_MATCHED_IDLE &&
+        ((clip.id === 'player.idle' && (previousClipId === 'player.run' || previousClipId === PLAYER_WALK_CLIP_ID)) ||
+          (previousClipId === 'player.idle' && (clip.id === 'player.run' || clip.id === PLAYER_WALK_CLIP_ID)));
+      const previousClip = previousClipId ? this.findPlayableClip(previousClipId) : null;
+      // A steady outgoing loop keeps moving as it fades. If input reverses
+      // during a fade, start from the last fully mixed pose instead: restarting
+      // a raw source there would pop the entire skeleton back to that source.
+      this.locomotionOutgoing = locomotionSwitch && !this.switchOutgoingPose && previousClip && this.motionContext
+        ? { clip: previousClip, playbackSeconds: this.playbackSeconds, offset: this.playbackOffset,
+            rate: this.locomotionPlaybackScale(previousClip, this.motionContext), motion: this.motionContext }
+        : null;
+      const matchedOffset = locomotionSwitch && this.lastSampledPose
+        ? this.closestLocomotionOffset(clip, this.lastSampledPose, intent.motion) : null;
       const runHandoffOffset =
         this.manualClipId === null &&
         previousClipId === LAND_CLIP_ID && clip.id === 'player.run'
           ? this.pendingRunHandoffOffset
           : null;
       const switchBlendDuration = this.manualClipId === null
-        ? authoredSwitchBlendDuration(previousClipId, clip.id)
+        ? locomotionSwitch
+          ? clip.id === 'player.idle' ? LOCOMOTION_STOP_BLEND_SECONDS : LOCOMOTION_START_BLEND_SECONDS
+          : authoredSwitchBlendDuration(previousClipId, clip.id)
         : 0;
       this.switchOutgoingPose = switchBlendDuration > 0 ? this.lastSampledPose : null;
+      this.switchOutgoingUpperArmRestWeight = this.upperArmRestWeight;
       this.switchBlendDuration = switchBlendDuration;
       this.switchBlendElapsed = 0;
       this.switchOutgoingLowPoseOuterOwnership =
@@ -519,7 +551,7 @@ export class CharacterAnimationRuntime {
       this.currentClipId = clip.id;
       this.elapsedSeconds = 0;
       this.playbackSeconds = 0;
-      this.playbackOffset = runHandoffOffset ?? 0;
+      this.playbackOffset = runHandoffOffset ?? matchedOffset ?? 0;
       this.pendingRunHandoffOffset = null;
       this.restartPending = false;
     } else {
@@ -527,6 +559,7 @@ export class CharacterAnimationRuntime {
       this.playbackSeconds +=
         dt * this.runtimeSpeed * this.locomotionPlaybackScale(clip, intent.motion);
       this.switchBlendElapsed += dt;
+      if (this.locomotionOutgoing) this.locomotionOutgoing.playbackSeconds += dt * this.runtimeSpeed * this.locomotionOutgoing.rate;
     }
 
     const motion = this.motionForClip(clip, intent.motion);
@@ -547,43 +580,9 @@ export class CharacterAnimationRuntime {
       )
       : null;
     this.authoredPlaybackSpeed = clip.playbackSpeed;
-    const sampledPose = sampleComposedClip(clip, this.timelineTime, motion, {
-      evaluators: this.proceduralEvaluators,
-    });
-    let pose = sampledPose;
+    let pose = this.samplePoseAt(clip, this.timelineTime, motion, this.manualClipId === null);
     let landingRunBlendWeight = 0;
     let landingRunBlendInFlight = false;
-    const variant = this.manualClipId === null
-      ? clipVariantBlend(clip) ??
-        (clip.id === 'player.run'
-          ? {
-              clipId: PLAYER_WALK_CLIP_ID,
-              source: LOCOMOTION_WALK_BLEND_INPUT,
-            }
-          : null)
-      : null;
-    if (variant) {
-      const variantClip = this.findPlayableClip(variant.clipId);
-      const weight = Math.min(1, Math.max(0, motion.inputs?.[variant.source] ?? 0));
-      if (variantClip && weight > 0) {
-        const phase = clip.id === 'player.run'
-          ? normalizedPhase(
-              (this.timelineTime - clip.range.start) /
-                Math.max(1e-6, clip.range.end - clip.range.start),
-            )
-          : Math.min(1, Math.max(0, motion.actionProgress));
-        const variantTime = variantClip.range.start +
-          phase * (variantClip.range.end - variantClip.range.start);
-        const variantPose = sampleComposedClip(variantClip, variantTime, motion, {
-          evaluators: this.proceduralEvaluators,
-        });
-        pose = blendPoses(
-          withControlDefaults(canonicalizePose(sampledPose, this.binding), this.controlDefaults),
-          withControlDefaults(canonicalizePose(variantPose, this.binding), this.controlDefaults),
-          weight,
-        );
-      }
-    }
     if (this.transient?.kind === 'landing' && clip.id === LAND_CLIP_ID) {
       const runClip = this.findPlayableClip('player.run');
       if (runClip) {
@@ -664,9 +663,13 @@ export class CharacterAnimationRuntime {
     if (this.switchOutgoingPose && this.switchBlendDuration > 0) {
       const weight = smoothstep01(this.switchBlendElapsed / this.switchBlendDuration);
       contactTransitionWeight = weight;
+      const outgoing = this.locomotionOutgoing;
+      const outgoingPose = outgoing
+        ? this.samplePoseAt(outgoing.clip, clipTimeAt(outgoing.clip, outgoing.playbackSeconds, { offset: outgoing.offset }), outgoing.motion, true)
+        : this.switchOutgoingPose;
       pose = blendPoses(
         withControlDefaults(
-          canonicalizePose(this.switchOutgoingPose, this.binding),
+          canonicalizePose(outgoingPose, this.binding),
           this.controlDefaults,
         ),
         withControlDefaults(canonicalizePose(pose, this.binding), this.controlDefaults),
@@ -675,17 +678,17 @@ export class CharacterAnimationRuntime {
       this.transitionBlendWeight = weight;
       if (weight >= 1) {
         this.switchOutgoingPose = null;
+        this.locomotionOutgoing = null;
         this.switchBlendDuration = 0;
         this.switchOutgoingLowPoseOuterOwnership = 0;
       }
     } else {
       this.transitionBlendWeight = null;
     }
-    this.player.setCharacterUpperArmRestAngleWeight(
-      clip.id === 'player.idle'
-        ? this.transitionBlendWeight ?? 1
-        : 0,
-    );
+    const incomingRestWeight = clip.id === 'player.idle' ? 1 : 0;
+    this.upperArmRestWeight = this.transitionBlendWeight === null ? incomingRestWeight
+      : this.switchOutgoingUpperArmRestWeight * (1 - this.transitionBlendWeight) + incomingRestWeight * this.transitionBlendWeight;
+    this.player.setCharacterUpperArmRestAngleWeight(this.upperArmRestWeight);
     const incomingCrawlContactOwnership = ownsCrawlContacts ? 1 : 0;
     this.crawlContactOwnership = contactTransitionWeight === null
       ? incomingCrawlContactOwnership
@@ -731,6 +734,52 @@ export class CharacterAnimationRuntime {
     ) {
       this.cancelTransient(false);
     }
+  }
+
+  private samplePoseAt(clip: AnimationClip, time: number, motion: ProceduralMotionContext, includeVariant: boolean): PoseBuffer {
+    const pose = sampleComposedClip(clip, time, motion, { evaluators: this.proceduralEvaluators });
+    const variant = includeVariant ? clipVariantBlend(clip) ?? (clip.id === 'player.run'
+      ? { clipId: PLAYER_WALK_CLIP_ID, source: LOCOMOTION_WALK_BLEND_INPUT } : null) : null;
+    if (!variant) return pose;
+    const alternate = this.findPlayableClip(variant.clipId);
+    const weight = Math.min(1, Math.max(0, motion.inputs?.[variant.source] ?? 0));
+    if (!alternate || weight <= 0) return pose;
+    const phase = clip.id === 'player.run'
+      ? normalizedPhase((time - clip.range.start) / Math.max(1e-6, clip.range.end - clip.range.start))
+      : Math.min(1, Math.max(0, motion.actionProgress));
+    const alternatePose = sampleComposedClip(alternate,
+      alternate.range.start + phase * (alternate.range.end - alternate.range.start), motion,
+      { evaluators: this.proceduralEvaluators });
+    return blendPoses(withControlDefaults(canonicalizePose(pose, this.binding), this.controlDefaults),
+      withControlDefaults(canonicalizePose(alternatePose, this.binding), this.controlDefaults), weight);
+  }
+
+  /** Choose a compatible incoming pose before the fade, using both arms and
+   * legs. Matching the complete walk/run mixture avoids an elbow or knee
+   * jumping to the opposite side of its cycle on a stop or quick restart. */
+  private closestLocomotionOffset(clip: AnimationClip, outgoing: PoseBuffer, motion: ProceduralMotionContext): number {
+    const previous = canonicalizePose(outgoing, this.binding);
+    const span = clip.range.end - clip.range.start;
+    let bestScore = Infinity, bestOffset = 0;
+    for (let sample = 0; sample < 24; sample++) {
+      const offset = sample / 24 * span;
+      const pose = canonicalizePose(this.samplePoseAt(clip, clip.range.start + offset, motion, true), this.binding);
+      let score = 0;
+      for (const [id, delta] of Object.entries(previous.joints)) {
+        const candidate = pose.joints[id];
+        if (!candidate) continue;
+        if (delta.quaternion && candidate.quaternion) {
+          const q = delta.quaternion, r = candidate.quaternion;
+          const dot = Math.abs(q[0]*r[0] + q[1]*r[1] + q[2]*r[2] + q[3]*r[3]);
+          score += (/shoulder|elbow|hip|knee/.test(id) ? 2 : 1) * (1 - Math.min(1, dot));
+        }
+        if (delta.position && candidate.position) {
+          for (let axis = 0; axis < 3; axis++) score += 2 * (delta.position[axis] - candidate.position[axis]) ** 2;
+        }
+      }
+      if (score < bestScore) { bestScore = score; bestOffset = offset; }
+    }
+    return bestOffset;
   }
 
   private findPlayableClip(id: ClipId): AnimationClip | null {
@@ -910,6 +959,7 @@ export class CharacterAnimationRuntime {
     this.lastSampledPose = null;
     this.transitionBlendWeight = null;
     this.switchOutgoingPose = null;
+    this.locomotionOutgoing = null;
     this.switchBlendDuration = 0;
     this.switchBlendElapsed = 0;
     this.switchOutgoingLowPoseOuterOwnership = 0;
