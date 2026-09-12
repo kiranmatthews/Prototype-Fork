@@ -1067,6 +1067,7 @@ export class Player {
   // beat that stale hold must not read as a pull-back brake (the skateHalt
   // stall) or carve you back up the face: the drop-in flows.
   private pipeLandGraceT = 0;
+  private grindDropSteerT = 0; // retire the balance hold during the first drop-in beat
   // One grounded physics beat after an air landing cannot be mistaken for a
   // new automatic coping crest while the previous steep rideNormal settles.
   private landingLaunchLockT = 0;
@@ -3223,6 +3224,7 @@ export class Player {
     this.pipeHang = false;
     this.pipeRideT = 0;
     this.pipeLandGraceT = 0;
+    this.grindDropSteerT = 0;
     this.vertLandGraceT = 0;
     this.landingLaunchLockT = 0;
     this.manualing = 0;
@@ -3841,6 +3843,7 @@ export class Player {
     }
     this.pipeRideT = Math.max(0, this.pipeRideT - dt);
     this.pipeLandGraceT = Math.max(0, this.pipeLandGraceT - dt);
+    this.grindDropSteerT = Math.max(0, this.grindDropSteerT - dt);
     this.landingLaunchLockT = Math.max(0, this.landingLaunchLockT - dt);
     this.lipCoolT = Math.max(0, this.lipCoolT - dt);
     this.transferCoolT = Math.max(0, this.transferCoolT - dt);
@@ -6503,9 +6506,9 @@ export class Player {
   private stepParkGroundMotor(dt: number, input: Input): boolean {
     const n = this.rideNormal;
     const slowSteep = n.y < 0.5 && this.speed < SKATE_PARK.slowSlopeSpeed;
-    const braking = !this.manualing && !slowSteep &&
+    const braking = this.grindDropSteerT <= 0 && !this.manualing && !slowSteep &&
       (input.grabHeld || this.rawInput.moveY < -0.25);
-    const turn = -this.rawInput.moveX *
+    const turn = (this.grindDropSteerT > 0 ? 0 : -this.rawInput.moveX) *
       (braking ? SKATE_PARK.sharpTurnRate : SKATE_PARK.turnRate) * dt;
     this.axisF.applyAxisAngle(VERT_UP, turn);
     if (slowSteep && Math.hypot(n.x, n.z) > 0.001) {
@@ -9472,6 +9475,8 @@ export class Player {
           // you drop straight off — ground below breaks the fall, a pit doesn't
           this.snapBoardFall();
           return;
+        } else if (this.tryGrindDropIn(level)) {
+          return;
         } else if (this.railFallSide(level) === 'vert') {
           // The needle threw us INTO the transition — that's not a crash,
           // it's the grind ending: drop in and keep riding the line.
@@ -10103,6 +10108,71 @@ export class Player {
   }
   private static readonly RAIL_SIDE = { x: 0, z: 0 };
 
+  /** A coping balance failure toward its riding face is a wheels-down drop,
+   * like a lip release. Probe sideways just below the rail: a down-ray cannot
+   * see vertical walls and can mistake the foundation for the transition.
+   * The face normal must point toward the failed side, excluding back skirts,
+   * decks and unrelated bars. Both analytic pipes and swept bowls use this. */
+  private tryGrindDropIn(level: Level): boolean {
+    const rail = this.grindRail;
+    if (!rail?.coping) return false;
+    const side = Player.RAIL_SIDE;
+    this.railSide(side);
+    const lip = rail.pointAt(this.grindT);
+    VERT_RAY_O.set(lip.x + side.x * 0.65, lip.y - 0.23, lip.z + side.z * 0.65);
+    VERT_RAY_D.set(-side.x, 0, -side.z);
+    this.raycaster.set(VERT_RAY_O, VERT_RAY_D);
+    this.raycaster.far = 0.8;
+    for (const contact of this.raycaster.intersectObjects(level.groundMeshes, false)) {
+      const mesh = contact.object;
+      const hp = mesh.userData.halfpipe as Halfpipe | undefined;
+      if (!contact.face || mesh.userData.vert !== true || (!hp && !mesh.userData.vertRampMesh)) continue;
+      const normal = contact.face.normal.clone().transformDirection(mesh.matrixWorld);
+      const point = contact.point.clone();
+      if (hp) {
+        const projection = hp.project(hp.crossCoord(point.x, point.z), point.y);
+        if (!projection) continue;
+        if (hp.axis === 'z') point.x = projection.cross;
+        else point.z = projection.cross;
+        point.y = projection.y;
+        hp.normalAt(projection.u, normal);
+      }
+      if (normal.y < 0 || normal.y > 0.65 || normal.x * side.x + normal.z * side.z < 0.5) continue;
+      // Turn DOWN the face, not diagonally along the coping or up into an
+      // ollie. Preserve carried speed while the ordinary surface motor owns
+      // all subsequent gravity, curvature and camera motion.
+      this.axisF.set(normal.x, 0, normal.z).normalize();
+      this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+      this.speed = Math.max(this.grindVel * 0.85, 4);
+      this.railLeft();
+      this.grindRail = null;
+      this.state = 'ride';
+      this.grounded = this.freeSkate = true;
+      this.pos.copy(point);
+      this.groundHit = { y: point.y, normal, name: mesh.name, mesh, halfpipe: hp, vert: true };
+      this.surfaceName = mesh.name;
+      this.rideNormal.copy(normal);
+      skateSurfaceDirection(this.parkVelocity, this.axisF, normal).multiplyScalar(this.speed);
+      this.lastTy = this.parkVelocity.y / this.speed;
+      this.liftTy = this.lastTy;
+      this.liftTyT = 0;
+      this.vVel = 0;
+      this.airMomentum = this.grindExitAir = this.airFromSkate = false;
+      this.balance = this.balanceVel = this.balanceCritT = 0;
+      this.charging = false;
+      this.chargeTimer = this.jumpBufferT = this.vertLaunchT = 0;
+      this.clearCoyoteJumpWindow();
+      this.regrindCd = CONST.regrindCooldown;
+      this.lipCoolT = 0.5;
+      this.pipeRideT = 0.2;
+      this.pipeLandGraceT = this.grindDropSteerT = 0.35;
+      this.landingLaunchLockT = 0.1;
+      sfx.play('skateTransition', 0.6);
+      return true;
+    }
+    return false;
+  }
+
   // Which way is the balance needle throwing us, and what's over there?
   // Steep ground or a real drop on the fall side = the transition ('vert'):
   // falling that way reads as dropping in, not crashing. Flat ground near
@@ -10186,7 +10256,10 @@ export class Player {
     // you toward the TRANSITION — that's a drop-in, not a wipeout. Stay on the
     // board, no knockdown, and ride out whatever the fall gives you (the
     // energy-conserving landing turns the drop into speed down the face).
-    if (level !== null) {
+    // Coping drops have already validated and attached their riding face in
+    // tryGrindDropIn. The flat deck carries the same vert tag as its bowl;
+    // it must not turn a failed OUTWARD balance into this legacy air save.
+    if (level !== null && !rail?.coping) {
       const into = this.queryGround(level, this.axisF.x * 1.6, this.axisF.z * 1.6);
       if (
         into !== null &&
