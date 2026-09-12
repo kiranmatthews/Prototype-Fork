@@ -5,6 +5,8 @@ import {
   UNITY_CROUCH_CRAWL_CLIP_IDS,
   UNITY_CROUCH_CRAWL_OUTER_POSE_OWNERSHIP,
   UNITY_CROUCH_CRAWL_TIMING,
+  CROUCH_CLIP_IDS,
+  QUATERNIUS_LOW_POSE_OWNERSHIP,
   LOCOMOTION_WALK_BLEND_INPUT,
   PLAYER_WALK_CLIP_ID,
   UNITY_ROPE_CLIP_IDS,
@@ -24,7 +26,7 @@ import {
 } from './animation';
 
 export const LAND_CLIP_ID = 'player.land';
-export const PLAYER_TRANSITION_CLIP_IDS = [LAND_CLIP_ID] as const;
+export const PLAYER_TRANSITION_CLIP_IDS = [LAND_CLIP_ID, CROUCH_CLIP_IDS.enter, CROUCH_CLIP_IDS.exit] as const;
 /** Routes allowed to opt into gameplay-phase scrubbing via clip metadata.
  * Manual Studio preview always remains ordinary saved-speed playback. */
 export const ACTION_PROGRESS_TIMELINE_CLIP_IDS = [
@@ -47,7 +49,7 @@ export const LAND_RUN_CANCEL_BLEND_SECONDS = 0.12;
 export const LAND_RUN_LATE_BLEND_SECONDS = 0.12;
 export const LOCOMOTION_BLEND_SECONDS = 0.14;
 
-type RuntimeTransientKind = 'landing';
+type RuntimeTransientKind = 'landing' | 'crouch-enter' | 'crouch-exit';
 
 interface RuntimeTransient {
   readonly kind: RuntimeTransientKind;
@@ -117,6 +119,8 @@ const ROPE_ATTACHED_CLIP_IDS = new Set<ClipId>([
 const CROUCH_CRAWL_CLIP_IDS = new Set<ClipId>([
   UNITY_CROUCH_CRAWL_CLIP_IDS.crouch,
   UNITY_CROUCH_CRAWL_CLIP_IDS.crawl,
+  CROUCH_CLIP_IDS.enter,
+  CROUCH_CLIP_IDS.exit,
 ]);
 
 const AIRBORNE_CLIP_IDS = new Set<ClipId>([
@@ -238,6 +242,7 @@ export class CharacterAnimationRuntime {
   private timelineTime: number | null = null;
   private authoredPlaybackSpeed: number | null = null;
   private previousGrounded: boolean;
+  private previousHint: ClipId;
   private transient: RuntimeTransient | null = null;
   private lastSampledPose: PoseBuffer | null = null;
   private transitionBlendWeight: number | null = null;
@@ -271,6 +276,7 @@ export class CharacterAnimationRuntime {
     this.proceduralEvaluators = options.proceduralEvaluators;
     const initialIntent = player.animationIntent;
     this.previousGrounded = initialIntent.motion.grounded;
+    this.previousHint = initialIntent.clipId;
     for (const control of this.binding.definition.controls) {
       this.controlDefaults.set(control.id, control.defaultValue);
     }
@@ -396,6 +402,9 @@ export class CharacterAnimationRuntime {
     const justLanded = grounded && !this.previousGrounded;
     this.previousGrounded = grounded;
     const hint = intent.clipId;
+    const wasLow = this.previousHint === CROUCH_CLIP_IDS.idle || this.previousHint === CROUCH_CLIP_IDS.move;
+    const isLow = hint === CROUCH_CLIP_IDS.idle || hint === CROUCH_CLIP_IDS.move;
+    this.previousHint = hint;
 
     if (!this.runtimeEnabled) {
       this.requestedClipId = null;
@@ -409,6 +418,12 @@ export class CharacterAnimationRuntime {
     }
 
     if (this.manualClipId === null) {
+      // Enter/exit are presentation one-shots. A jump, slide, bail, or renewed
+      // crouch interrupts them immediately; they never delay gameplay input.
+      if ((this.transient?.kind === 'crouch-enter' && hint !== CROUCH_CLIP_IDS.idle) ||
+          (this.transient?.kind === 'crouch-exit' && hint !== 'player.idle')) {
+        this.cancelTransient();
+      }
       // Landing has first refusal on the exact contact frame.
       if (justLanded && !this.currentClipId?.startsWith('player.swim') && hint !== 'player.bail' && hint !== 'player.death' && hint !== 'player.slam') {
         this.resetLandingRunBlend();
@@ -421,6 +436,18 @@ export class CharacterAnimationRuntime {
         ) {
           this.cancelTransient();
         }
+      }
+      if (hint === CROUCH_CLIP_IDS.idle && !wasLow &&
+          this.findPlayableClip(hint)?.metadata?.outerPoseOwnership === QUATERNIUS_LOW_POSE_OWNERSHIP &&
+          this.findPlayableClip(CROUCH_CLIP_IDS.enter)) {
+        this.cancelTransient();
+        this.transient = this.makeTransient('crouch-enter', CROUCH_CLIP_IDS.enter);
+      } else if (!isLow && wasLow && grounded && hint === 'player.idle' &&
+          this.currentClipId &&
+          this.findPlayableClip(this.currentClipId)?.metadata?.outerPoseOwnership === QUATERNIUS_LOW_POSE_OWNERSHIP &&
+          this.findPlayableClip(CROUCH_CLIP_IDS.exit)) {
+        this.cancelTransient();
+        this.transient = this.makeTransient('crouch-exit', CROUCH_CLIP_IDS.exit);
       }
     } else {
       this.cancelTransient();
@@ -726,8 +753,9 @@ export class CharacterAnimationRuntime {
   /** The legacy parent-level crawl shaping remains the safe fallback for a
    * missing, invalid, disabled, or preserved pre-Unity low-pose clip. */
   private clipLowPoseOuterOwnership(clip: AnimationClip | null): number {
-    return clip?.metadata?.outerPoseOwnership ===
-      UNITY_CROUCH_CRAWL_OUTER_POSE_OWNERSHIP ? 1 : 0;
+    const ownership = clip?.metadata?.outerPoseOwnership;
+    return ownership === UNITY_CROUCH_CRAWL_OUTER_POSE_OWNERSHIP ||
+      ownership === QUATERNIUS_LOW_POSE_OWNERSHIP ? 1 : 0;
   }
 
   /** Predict the ownership weight that applyFrame will use later in this same

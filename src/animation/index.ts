@@ -2,6 +2,7 @@ export * from './types';
 export * from './document';
 export * from './forwardRoll';
 export * from './locomotionBlend';
+export * from './crouch';
 export * from './quaterniusWalk.generated';
 export * from './unityRope';
 export * from './unityRopeAnimations.generated';

@@ -20,7 +20,13 @@ try {
   const raw = await server.ssrLoadModule('/src/animation/unityCrouchCrawlAnimations.generated.ts');
   const player = new Player(new THREE.Scene());
   const binding = animation.RigBinding.fromSculptRuntime(player.animationRig.root);
-  const suite = animation.createPlayerStarterAnimationSuite(binding.definition);
+  const legacySuite = rig => {
+    const current = animation.createPlayerStarterAnimationSuite(rig);
+    const clips = animation.createLegacyUnityLowPoseClips(rig);
+    return { ...current, metadata: { ...current.metadata, playerStarterCatalogVersion: 22 },
+      clips: current.clips.filter(clip => !clip.id.startsWith('player.crouch') && clip.id !== 'player.crawl').concat(clips) };
+  };
+  const suite = legacySuite(binding.definition);
   const crouch = suite.clips.find(clip => clip.id === 'player.crouch');
   player.enterAnimationPreview();
   const local = id => player.animationRig.root.worldToLocal(
@@ -81,15 +87,17 @@ try {
     const input=normalized?animation.parseAnimationSuite(JSON.stringify(saved)):saved;
     const migrated=animation.reconcilePlayerStarterAnimationSuite(input,binding.definition);
     const updated=migrated.clips.find(c=>c.id===old.id);
-    assert.equal(updated.metadata.crouchStanceRevision,1,`saved v${version} normalized=${normalized} failed upgrade`);
+    assert.equal(updated.metadata.sourceAnimation.author,'Quaternius',`saved v${version} normalized=${normalized} failed upgrade`);
     assert.equal(updated.playbackSpeed,.73,'saved speed lost');
     assert.deepEqual(animation.reconcilePlayerStarterAnimationSuite(migrated,binding.definition),migrated,'upgrade not idempotent');
   }
   const edited=structuredClone(oldSuite);edited.clips.find(c=>c.id===oldCrouch.id).tracks[0].keys[0].value[1]+=.01;
-  assert.deepEqual(animation.reconcilePlayerStarterAnimationSuite(edited,binding.definition).clips,edited.clips,'authored edits overwritten');
+  assert.deepEqual(animation.reconcilePlayerStarterAnimationSuite(edited,binding.definition).clips.find(c=>c.id==='player.crouch.pre-quaternius').tracks,
+    edited.clips.find(c=>c.id==='player.crouch').tracks,'authored edits not backed up');
   const rotated=structuredClone(oldSuite);
   rotated.clips.find(c=>c.id===oldCrouch.id).tracks.find(t=>t.target==='hipLeft').keys[0].value[0]+=.001;
-  assert.deepEqual(animation.reconcilePlayerStarterAnimationSuite(rotated,binding.definition).clips,rotated.clips,'edited hip rotation overwritten');
+  assert.deepEqual(animation.reconcilePlayerStarterAnimationSuite(rotated,binding.definition).clips.find(c=>c.id==='player.crouch.pre-quaternius').tracks,
+    rotated.clips.find(c=>c.id==='player.crouch').tracks,'edited hip rotation not backed up');
   const deleted={...oldSuite,clips:oldSuite.clips.filter(c=>c.id!==oldCrouch.id)};
   assert.ok(!animation.reconcilePlayerStarterAnimationSuite(deleted,binding.definition).clips.some(c=>c.id===oldCrouch.id),'deleted crouch restored');
   player.exitAnimationPreview();
@@ -102,7 +110,7 @@ try {
   }});
   const live=new Player(level.scene);live.enterLevel('crouch-stance-test');live.respawn(level,true);
   const liveBinding=animation.RigBinding.fromSculptRuntime(live.animationRig.root);
-  const runtime=createCharacterAnimationRuntime(live,animation.createPlayerStarterAnimationSuite(liveBinding.definition));
+  const runtime=createCharacterAnimationRuntime(live,legacySuite(liveBinding.definition));
   const input={moveX:0,moveY:0,grabHeld:false,consumeEdges(){}};
   const tick=()=>{live.step(1/60,input,level);level.update(1/60);};
   const liveLocal=id=>live.animationRig.root.worldToLocal(liveBinding.getJoint(id).getWorldPosition(new THREE.Vector3()));

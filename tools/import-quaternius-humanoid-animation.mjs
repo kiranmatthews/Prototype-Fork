@@ -97,6 +97,7 @@ function parseArguments(argv) {
   }
   return {
     closeLoop: values.get('loop') !== 'false',
+    edition: values.get('edition') === 'Source' ? 'Source' : 'Standard',
     source: resolve(source),
     clip,
     output: resolve(output),
@@ -154,6 +155,7 @@ function moduleSource({
   rootKeys,
   rotationKeys,
   closeLoop,
+  edition,
 }) {
   const rotations = PLAYER_HIERARCHY.map(([joint]) => {
     const keys = rotationKeys.get(joint);
@@ -169,7 +171,7 @@ function moduleSource({
 export const ${symbol}_SOURCE = Object.freeze({
   author: 'Quaternius',
   pack: 'Universal Animation Library',
-  edition: 'Standard',
+  edition: '${edition}',
   page: 'https://quaternius.com/packs/universalanimationlibrary.html',
   license: 'CC0-1.0',
   sourceFile: '${sourceFile}',
@@ -292,6 +294,7 @@ async function main() {
   const interval = times.at(-1) / (times.length - 1);
   const output = moduleSource({
     closeLoop: args.closeLoop,
+    edition: args.edition,
     symbol: args.symbol,
     sourceFile: basename(args.source),
     sourceHash: createHash('sha256').update(bytes).digest('hex'),

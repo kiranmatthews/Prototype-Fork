@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "author": "Quaternius",
+    "pack": "Universal Animation Library",
+    "edition": "Source",
+    "page": "https://quaternius.com/packs/universalanimationlibrary.html",
+    "archive": "Universal Animation Library[Source].zip",
+    "archiveSha256": "28f7528643b945fc8e95362da16ee2218e82b1f4735460e707918047ed868ed5",
+    "archivePath": "Unreal-Godot/UAL1.glb",
+    "sourceFileByteLength": 21378992,
+    "sourceFileSha256": "d1cb4537efa4c06a953ca951e5935062f88c2580ac68e45045592d587bddb43d",
+    "sourceRootMotion": false,
+    "importedOn": "2026-09-12"
+  },
+  "license": {
+    "spdx": "CC0-1.0",
+    "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sourceLicenseSha256": "6d01f55c6e4c49a2c9963e147e561945ae2c83958c8ca667d90a6bffdbfac061"
+  },
+  "clips": [
+    { "id": "player.crouch-enter", "sourceClip": "Crouch_Enter", "module": "src/animation/quaterniusCrouchEnter.generated.ts", "loop": false, "frames": 26 },
+    { "id": "player.crouch", "sourceClip": "Crouch_Idle_Loop", "module": "src/animation/quaterniusCrouchIdle.generated.ts", "loop": true, "frames": 89 },
+    { "id": "player.crouch-exit", "sourceClip": "Crouch_Exit", "module": "src/animation/quaterniusCrouchExit.generated.ts", "loop": false, "frames": 26 },
+    { "id": "player.crawl", "sourceClip": "Crawl_Fwd_Loop", "module": "src/animation/quaterniusCrawl.generated.ts", "loop": true, "frames": 66 }
+  ],
+  "conversion": {
+    "tool": "tools/import-quaternius-humanoid-animation.mjs",
+    "targetRig": "player-procedural-v1",
+    "transformSpace": "rest-local-delta",
+    "sampleRate": 30,
+    "jointCount": 22,
+    "positionPolicy": "Retain in-place pelvis displacement on visual root; reset hips-position delta; exclude source limb translations and scales.",
+    "loopPolicy": "Close loop endpoints only. Preserve distinct source endpoints for enter and exit."
+  }
+}

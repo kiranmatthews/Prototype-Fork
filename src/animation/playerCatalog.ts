@@ -5,6 +5,15 @@ import { QUATERNIUS_SWIM_FWD_DURATION, QUATERNIUS_SWIM_FWD_ROOT_KEYS,
 import { QUATERNIUS_SWIM_IDLE_DURATION, QUATERNIUS_SWIM_IDLE_ROOT_KEYS,
   QUATERNIUS_SWIM_IDLE_ROTATION_KEYS, QUATERNIUS_SWIM_IDLE_SOURCE } from './quaterniusSwimIdle.generated';
 import * as THREE from 'three';
+import { CROUCH_CLIP_IDS, QUATERNIUS_LOW_POSE_OWNERSHIP } from './crouch';
+import { QUATERNIUS_CROUCH_IDLE_DURATION, QUATERNIUS_CROUCH_IDLE_ROOT_KEYS,
+  QUATERNIUS_CROUCH_IDLE_ROTATION_KEYS, QUATERNIUS_CROUCH_IDLE_SOURCE } from './quaterniusCrouchIdle.generated';
+import { QUATERNIUS_CRAWL_DURATION, QUATERNIUS_CRAWL_ROOT_KEYS,
+  QUATERNIUS_CRAWL_ROTATION_KEYS, QUATERNIUS_CRAWL_SOURCE } from './quaterniusCrawl.generated';
+import { QUATERNIUS_CROUCH_ENTER_DURATION, QUATERNIUS_CROUCH_ENTER_ROOT_KEYS,
+  QUATERNIUS_CROUCH_ENTER_ROTATION_KEYS, QUATERNIUS_CROUCH_ENTER_SOURCE } from './quaterniusCrouchEnter.generated';
+import { QUATERNIUS_CROUCH_EXIT_DURATION, QUATERNIUS_CROUCH_EXIT_ROOT_KEYS,
+  QUATERNIUS_CROUCH_EXIT_ROTATION_KEYS, QUATERNIUS_CROUCH_EXIT_SOURCE } from './quaterniusCrouchExit.generated';
 import { createAnimationSuiteDocument, createProceduralDriver } from './document';
 import { PLAYER_PROCEDURAL_RIG_ID } from './rigBinding';
 import {
@@ -97,8 +106,10 @@ export const PLAYER_STARTER_CLIP_IDS = [
   'player.double-jump',
   'player.fall',
   'player.land',
+  'player.crouch-enter',
   'player.crouch',
   'player.crawl',
+  'player.crouch-exit',
   'player.slide',
   'player.skate',
   'player.grind',
@@ -121,7 +132,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 22;
+export const PLAYER_STARTER_CATALOG_VERSION = 23;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -257,6 +268,7 @@ function canonicalLegacyStarterClipSignature(clip: AnimationClip): string {
 }
 
 function withCrawlWristYawRevision(clip: AnimationClip): AnimationClip {
+  if (clip.metadata?.outerPoseOwnership === QUATERNIUS_LOW_POSE_OWNERSHIP) return clip;
   if (clip.metadata?.wristYawRevision === 1) return clip;
   const halfTurn = new THREE.Quaternion(0, 1, 0, 0);
   return {
@@ -387,8 +399,10 @@ const PLAYER_STARTER_CLIP_INTRODUCED_IN_VERSION: Record<
   'player.double-jump': 6,
   'player.fall': 1,
   'player.land': 1,
+  'player.crouch-enter': 23,
   'player.crouch': 1,
   'player.crawl': 1,
+  'player.crouch-exit': 23,
   'player.slide': 1,
   'player.skate': 1,
   'player.grind': 1,
@@ -1011,6 +1025,50 @@ function buildWalk(rigId: string, includeTorsoRoot: boolean): AnimationClip {
   return clip;
 }
 
+function buildQuaterniusLowPose(rigId: string, includeTorsoRoot: boolean, moving: boolean): AnimationClip {
+  const source = moving ? QUATERNIUS_CRAWL_SOURCE : QUATERNIUS_CROUCH_IDLE_SOURCE;
+  const clip = baseClip(moving ? CROUCH_CLIP_IDS.move : CROUCH_CLIP_IDS.idle,
+    moving ? 'Crawl — Quaternius Crawl_Fwd_Loop' : 'Crouch Idle — Quaternius Crouch_Idle_Loop',
+    moving ? QUATERNIUS_CRAWL_DURATION : QUATERNIUS_CROUCH_IDLE_DURATION, 'loop', rigId);
+  clip.tracks = [
+    sampledPositionTrack(clip.id, 'root', moving ? QUATERNIUS_CRAWL_ROOT_KEYS : QUATERNIUS_CROUCH_IDLE_ROOT_KEYS),
+    positionTrack(clip.id, 'hips', [[0, [0, 0, 0]], [clip.duration, [0, 0, 0]]]),
+    ...sampledQuaterniusRotationTracks(clip.id,
+      moving ? QUATERNIUS_CRAWL_ROTATION_KEYS : QUATERNIUS_CROUCH_IDLE_ROTATION_KEYS, includeTorsoRoot),
+  ];
+  clip.tags = ['player', 'quaternius', 'crouch', moving ? 'locomotion' : 'idle', 'imported-keyframes'];
+  clip.metadata = {
+    starterQuality: 'source-animation-retarget',
+    starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
+    sourceAnimation: { ...source },
+    outerPoseOwnership: QUATERNIUS_LOW_POSE_OWNERSHIP,
+  };
+  if (!moving) clip.contacts = [
+    contact(`${clip.id}:left-foot`, 0, clip.duration, 'footLeft'),
+    contact(`${clip.id}:right-foot`, 0, clip.duration, 'footRight'),
+  ];
+  return clip;
+}
+
+/** Full source takes, retaining their native clocks and distinct end poses. */
+function buildQuaterniusCrouchTransition(rigId: string, includeTorsoRoot: boolean, entering: boolean): AnimationClip {
+  const clip = baseClip(entering ? CROUCH_CLIP_IDS.enter : CROUCH_CLIP_IDS.exit,
+    entering ? 'Crouch Enter — Quaternius Crouch_Enter' : 'Crouch Exit — Quaternius Crouch_Exit',
+    entering ? QUATERNIUS_CROUCH_ENTER_DURATION : QUATERNIUS_CROUCH_EXIT_DURATION, 'once', rigId);
+  clip.tracks = [
+    sampledPositionTrack(clip.id, 'root', entering ? QUATERNIUS_CROUCH_ENTER_ROOT_KEYS : QUATERNIUS_CROUCH_EXIT_ROOT_KEYS),
+    positionTrack(clip.id, 'hips', [[0, [0, 0, 0]], [clip.duration, [0, 0, 0]]]),
+    ...sampledQuaterniusRotationTracks(clip.id,
+      entering ? QUATERNIUS_CROUCH_ENTER_ROTATION_KEYS : QUATERNIUS_CROUCH_EXIT_ROTATION_KEYS, includeTorsoRoot),
+  ];
+  clip.tags = ['player', 'quaternius', 'crouch', 'transition', 'imported-keyframes'];
+  clip.metadata = { starterQuality: 'source-animation-retarget',
+    starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
+    outerPoseOwnership: QUATERNIUS_LOW_POSE_OWNERSHIP,
+    sourceAnimation: { ...(entering ? QUATERNIUS_CROUCH_ENTER_SOURCE : QUATERNIUS_CROUCH_EXIT_SOURCE) } };
+  return clip;
+}
+
 function scaledUnityLowPosePositionKeys(
   keys: readonly SampledVector[],
 ): SampledVector[] {
@@ -1444,6 +1502,14 @@ function placeholder(id: string, label: string, duration: number, rigId: string)
   return clip;
 }
 
+/** Historical factory for recovering/testing saved Unity low-pose drafts. */
+export function createLegacyUnityLowPoseClips(rig: string | RigDefinition): AnimationClip[] {
+  const id = typeof rig === 'string' ? rig : rig.id;
+  const torso = typeof rig === 'string' || rig.joints.some(joint => joint.id === 'torsoRoot');
+  return [buildCrouch(id, torso), buildCrawl(id, torso)].map(clip => ({ ...clip,
+    metadata: { ...clip.metadata, starterCatalogVersion: 22 } }));
+}
+
 export function createPlayerStarterClips(
   rig: string | RigDefinition = PLAYER_PROCEDURAL_RIG_ID,
 ): AnimationClip[] {
@@ -1460,8 +1526,10 @@ export function createPlayerStarterClips(
     buildDoubleJump(rigId),
     buildFall(rigId),
     buildLand(rigId),
-    buildCrouch(rigId, includeTorsoRoot),
-    buildCrawl(rigId, includeTorsoRoot),
+    buildQuaterniusCrouchTransition(rigId, includeTorsoRoot, true),
+    buildQuaterniusLowPose(rigId, includeTorsoRoot, false),
+    buildQuaterniusLowPose(rigId, includeTorsoRoot, true),
+    buildQuaterniusCrouchTransition(rigId, includeTorsoRoot, false),
     buildSlide(rigId),
     buildSkate(rigId),
     placeholder('player.grind', 'Grind', 1, rigId),
@@ -1653,11 +1721,29 @@ export function reconcilePlayerStarterAnimationSuite(
     }
   }
 
-  if (crossedCrouch) {
+  if (crossedCrouch && previousVersion >= 23) {
     const imported = starters.find(clip => clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crouch);
     if (imported) {
       clips = clips.map(clip => clip === crossedCrouch
         ? { ...imported, playbackSpeed: crossedCrouch.playbackSpeed } : clip);
+    }
+  }
+
+  if (previousVersion < 23) {
+    for (const id of [CROUCH_CLIP_IDS.idle, CROUCH_CLIP_IDS.move]) {
+      // Read the original draft, before older catalog migrations adjusted keys
+      // or playback speed. The recovery copy must be exact even for v10–v21.
+      const old = document.clips.find(clip => clip.id === id);
+      const replacement = starters.find(clip => clip.id === id)!;
+      if (!old || old.metadata?.outerPoseOwnership === QUATERNIUS_LOW_POSE_OWNERSHIP) continue;
+      // Keep a recoverable copy of the previous browser clip (including any
+      // authored edits), while ensuring saved data cannot hide this source swap.
+      const backupId = `${id}.pre-quaternius`;
+      if (!clips.some(clip => clip.id === backupId)) clips.push({ ...old,
+        id: backupId, name: `${old.name} — Before Quaternius`,
+        metadata: { ...old.metadata, replacedBy: id } });
+      clips = clips.map(clip => clip.id === id
+        ? { ...replacement, playbackSpeed: old.playbackSpeed } : clip);
     }
   }
 

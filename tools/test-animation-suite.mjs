@@ -344,8 +344,8 @@ try {
   );
 
   const starterClips = createPlayerStarterClips();
-  assert.equal(PLAYER_STARTER_CATALOG_VERSION, 22);
-  assert.equal(starterClips.length, 25);
+  assert.equal(PLAYER_STARTER_CATALOG_VERSION, 23);
+  assert.equal(starterClips.length, 27);
   for (const id of [
     'player.idle', PLAYER_WALK_CLIP_ID, 'player.run', 'player.jump', 'player.double-jump', 'player.fall', 'player.land', 'player.crouch',
     'player.crawl', 'player.slide', 'player.skate', 'player.grind', 'player.grab', 'player.hang',
@@ -362,8 +362,9 @@ try {
   const jump = findClip(parsedSuite, 'player.jump');
   const fall = findClip(parsedSuite, 'player.fall');
   const land = findClip(parsedSuite, 'player.land');
-  const crouch = findClip(parsedSuite, UNITY_CROUCH_CRAWL_CLIP_IDS.crouch);
-  const crawl = findClip(parsedSuite, UNITY_CROUCH_CRAWL_CLIP_IDS.crawl);
+  // Retained Unity drafts still support their original contact adaptation.
+  // The current Quaternius starters are exercised in test-quaternius-crouch.
+  const [crouch, crawl] = animation.createLegacyUnityLowPoseClips(binding.definition);
   const idle = findClip(parsedSuite, 'player.idle');
   const walk = findClip(parsedSuite, PLAYER_WALK_CLIP_ID);
   const run = findClip(parsedSuite, 'player.run');
@@ -1180,9 +1181,9 @@ try {
     ),
   ]) {
     assert.equal(findClip(candidate, UNITY_CROUCH_CRAWL_CLIP_IDS.crouch).name,
-      'Crouch Idle — Unity PunkyFox');
+      'Crouch Idle — Quaternius Crouch_Idle_Loop');
     assert.equal(findClip(candidate, UNITY_CROUCH_CRAWL_CLIP_IDS.crawl).name,
-      'Crawl — Unity PunkyFox');
+      'Crawl — Quaternius Crawl_Fwd_Loop');
   }
   const persistedRoundTripCrawl = structuredClone(
     catalogV10LowPoseById.get(UNITY_CROUCH_CRAWL_CLIP_IDS.crawl),
@@ -1202,7 +1203,7 @@ try {
     metadata: { ...parsedSuite.metadata, playerStarterCatalogVersion: 11 },
   }, binding.definition);
   assert.equal(findClip(upgradedPersistedRoundTrip,
-    UNITY_CROUCH_CRAWL_CLIP_IDS.crawl).name, 'Crawl — Unity PunkyFox',
+    UNITY_CROUCH_CRAWL_CLIP_IDS.crawl).name, 'Crawl — Quaternius Crawl_Fwd_Loop',
   'catalog v12 did not migrate an untouched browser-round-tripped Crawl');
   const editedV10Crouch = structuredClone(
     catalogV10LowPoseById.get(UNITY_CROUCH_CRAWL_CLIP_IDS.crouch),
@@ -1213,8 +1214,8 @@ try {
     clips: versionTenLowPoseSuite.clips.map((clip) =>
       clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crouch ? editedV10Crouch : clip),
   }, binding.definition);
-  assert.equal(findClip(preservedEditedCrouch, UNITY_CROUCH_CRAWL_CLIP_IDS.crouch).name,
-    'Crouch — Compression Starter', 'an edited v10 Crouch was overwritten');
+  assert.ok(findClip(preservedEditedCrouch, 'player.crouch.pre-quaternius').name.startsWith('Crouch — Compression Starter'),
+    'an edited v10 Crouch was not backed up');
   const deletedV10Crawl = reconcilePlayerStarterAnimationSuite({
     ...versionTenLowPoseSuite,
     clips: versionTenLowPoseSuite.clips.filter((clip) =>
@@ -1243,9 +1244,9 @@ try {
     ),
   ]) {
     const upgraded = findClip(candidate, UNITY_CROUCH_CRAWL_CLIP_IDS.crawl);
-    assert.equal(upgraded.duration, 1,
-      'catalog v13 did not replace the deployed incomplete crawl cycle');
-    assert.equal(upgraded.metadata.sourceAnimation.outputDuration, 1);
+    near(upgraded.duration, 65 / 30,
+      1e-6);
+    assert.equal(upgraded.metadata.sourceAnimation.sourceClip, 'Crawl_Fwd_Loop');
   }
   const editedV12Crawl = structuredClone(deployedV12Crawl);
   editedV12Crawl.tracks[0].keys[0].value[0] += 0.001;
@@ -1255,7 +1256,7 @@ try {
       clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crawl ? editedV12Crawl : clip),
   }, binding.definition);
   near(
-    findClip(preservedEditedV12Crawl, UNITY_CROUCH_CRAWL_CLIP_IDS.crawl).duration,
+    findClip(preservedEditedV12Crawl, 'player.crawl.pre-quaternius').duration,
     52 / 60,
     1e-6,
   );

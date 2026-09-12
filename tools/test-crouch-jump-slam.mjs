@@ -113,11 +113,20 @@ try {
     UNITY_CROUCH_CRAWL_CLIP_IDS,
     UNITY_SLAM_ANTICIPATION_POSE_DEGREES,
     UNITY_SLAM_FALL_POSE_DEGREES,
-    createPlayerStarterAnimationSuite,
+    createPlayerStarterAnimationSuite: createCurrentPlayerSuite,
+    createLegacyUnityLowPoseClips,
     parseAnimationSuite,
     reconcilePlayerStarterAnimationSuite,
     sampleForwardRollPresentation,
   } = await server.ssrLoadModule("/src/animation/index.ts");
+  // This suite keeps coverage of saved Unity drafts and their palm/torso IK.
+  // New source routes and one-shots are checked by test-quaternius-crouch.
+  const createPlayerStarterAnimationSuite = (rig) => {
+    const suite = createCurrentPlayerSuite(rig);
+    const legacy = new Map(createLegacyUnityLowPoseClips(rig).map(clip => [clip.id, clip]));
+    return { ...suite, clips: suite.clips.filter(clip => !['player.crouch-enter', 'player.crouch-exit'].includes(clip.id))
+      .map(clip => legacy.get(clip.id) ?? clip) };
+  };
   const { createCharacterAnimationRuntime } = await server.ssrLoadModule(
     "/src/characterAnimationRuntime.ts",
   );
@@ -245,10 +254,10 @@ try {
   );
   assert.equal(upgradedLiveLowPoses.clips.find((clip) =>
     clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crouch)?.name,
-    "Crouch Idle — Unity PunkyFox");
+    "Crouch Idle — Quaternius Crouch_Idle_Loop");
   assert.equal(upgradedLiveLowPoses.clips.find((clip) =>
     clip.id === UNITY_CROUCH_CRAWL_CLIP_IDS.crawl)?.name,
-    "Crawl — Unity PunkyFox");
+    "Crawl — Quaternius Crawl_Fwd_Loop");
 
   const lowPosePlayer = new Player(level.scene);
   lowPosePlayer.enterLevel("crouch-jump-slam-guard");

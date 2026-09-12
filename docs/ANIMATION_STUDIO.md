@@ -98,7 +98,26 @@ backflip variants from the fixed-step release charge and uses Unity's trimmed
 the live rope axis after the authored pose; the pendulum angle never drives or
 distorts the body animation.
 
-## Unity crouch and crawl
+## Quaternius crouch and crawl (catalog 23)
+
+The live low poses use four real takes from the Universal Animation Library
+**Source** pack: `Crouch_Enter`, `Crouch_Idle_Loop`, `Crouch_Exit`, and
+`Crawl_Fwd_Loop`. All retain the native clocks and editable body-joint keys;
+entry and exit are one-shots, while crouch idle and crawl are seam-closed loops.
+Direction input interrupts entry into crawl and exit into run immediately.
+Jumping, falling and other actions also interrupt the transitions.
+
+Revision 23 replaces existing `player.crouch` / `player.crawl` routes, preserving
+their saved speeds and backing up the old clips under `.pre-quaternius` IDs.
+Deleted routes remain deleted and subsequent edits to the new clips survive.
+Quaternius clips own the complete low pose without the old Unity hand-plant,
+arm-stretch or wrist-half-turn corrections. Source/license details live in
+`public/animations/quaternius-crouch/`. `tools/test-quaternius-crouch.mjs` covers
+source identity, real-player routing/interruption, sampled joint clearance,
+and saved draft migration. The historical tests below retain coverage for old
+Unity drafts that can still be imported or restored.
+
+### Historical Unity crouch and crawl (catalog 12–22)
 
 `player.crouch` retargets PunkyFox's complete 350-frame
 `CrouchLookAroundBow` loop. `player.crawl` keeps Unity's clean frames 219–271
