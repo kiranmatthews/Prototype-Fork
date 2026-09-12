@@ -1183,6 +1183,11 @@ export class Player {
   private grindPoseZ = 0; // which side the free end of the deck hangs off (smith/feeble/crook)
   private grindYawPose = 0; // boardslide: body across the rail
   private grindCrossPose = 0; // eased wide stance shared by Boardslide/Lipslide
+  // Render/overlay restoration writes quaternions, which can re-express a
+  // sideways gaze as flipped XYZ Euler angles. Never feed those angles back
+  // into the procedural smoothing state.
+  private headPitchPose = 0;
+  private headYawPose = 0;
   private grindArmPose = 0; // arms out wide for balance on the rail
   private railUnder = false; // hanging BENEATH the rail (board crosswise in the hands)
   private underK = 0; // 0 = on top, 1 = hanging under; eases through the committed swing
@@ -3120,6 +3125,8 @@ export class Player {
     this.spinCd = 0;
     this.slamFlatT = 0; // dying mid-pancake must not respawn you still flattened
     this.bodyGroup.rotation.y = 0;
+    this.headPitchPose = 0;
+    this.headYawPose = 0;
     this.grindRail = null;
     this.regrindCd = 0;
     this.activeSpeedPadId = 0;
@@ -15533,6 +15540,14 @@ export class Player {
       const vz = this.walkVelocity.z;
       if (vx * vx + vz * vz > RUN_ANIMATION_THRESHOLD ** 2)
         targetYaw = wrapAngle(Math.atan2(vx, vz) - Math.PI);
+    } else if (this.state === 'grind' && this.grindRail) {
+      // axisF retains the catch heading until rail exit. A curved grind must
+      // face its current tangent, or the gaze keeps twisting to compensate
+      // for a rider/board still aimed at the start of the curve.
+      const tangent = this.grindRail.tangentAt(this.grindT);
+      const hx = tangent.x * this.grindDir, hz = tangent.z * this.grindDir;
+      if (Math.hypot(hx, hz) > 1e-5)
+        targetYaw = wrapAngle(Math.atan2(hx, hz) - Math.PI);
     } else if (this.parkControls && this.freeSkate && !this.isBailing) {
       // Steering at a mounted stop turns the deck and rider immediately too;
       // movement-derived facing used to leave the body behind the camera.
@@ -16017,8 +16032,8 @@ export class Player {
         0.55 * this.slopePose +
         0.06 * breathe * idleW + // idle: breath lifts the chin a touch
         0.18 * jp * Math.max(0, riseK); // jump: chin up through the launch
-      this.headM.rotation.x +=
-        (THREE.MathUtils.clamp(look, -1.0, 0.6) - this.headM.rotation.x) * Math.min(1, 12 * dt);
+      this.headPitchPose +=
+        (THREE.MathUtils.clamp(look, -1.0, 0.6) - this.headPitchPose) * Math.min(1, 12 * dt);
       // Side-on: the head turns back over the lead shoulder to watch the
       // line of travel (the body faces across the board; the eyes don't).
       // Idling, she glances around the scene slowly instead.
@@ -16042,7 +16057,9 @@ export class Player {
       );
       const headYaw = ordinaryHeadYaw +
         wrapAngle(crossHeadYaw - ordinaryHeadYaw) * this.grindCrossPose;
-      this.headM.rotation.y += (headYaw - this.headM.rotation.y) * Math.min(1, 12 * dt);
+      this.headYawPose = wrapAngle(this.headYawPose +
+        wrapAngle(headYaw - this.headYawPose) * Math.min(1, 12 * dt));
+      this.headM.rotation.set(this.headPitchPose, this.headYawPose, 0);
     }
     // A readable hand pose is part of the procedural motion layer. Authored
     // finger tracks run afterward and therefore remain the final authority.
