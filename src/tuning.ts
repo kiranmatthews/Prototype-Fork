@@ -114,7 +114,7 @@ export const TUNING = {
   slideMinSpeed: 2, // moving at least this fast + Circle = slide (slower + held = crawl)
   slideDistance: 5, // how far the canned slide carries you (world units)
   slideSpeed: 26, // the slide starts at least this fast, then analytically brakes to zero over slideDistance
-  slideJumpHeight: 1.3, // Crash slide-jump: jump velocity multiplier when leaping out of a slide
+  slideJumpHeight: 1.3, // actual rise-height multiplier over the matching charged foot jump (applied once)
   slideJumpTravel: 0.2, // horizontal launch speed scale out of a slide-jump (independent of height)
   slideJumpGrace: 0.15, // jumps this long AFTER a slide ends still get the slide boost
   slideRecover: 0.5, // get-up beat after a PLAIN slide: movement locked while the skater picks themselves off the ground (stops slide-spam for free speed)
@@ -658,7 +658,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   slideSpeed:
     'Minimum entry speed of the slide. It never slows a faster entry, then analytically brakes to zero over slideDistance.',
   slideJumpHeight:
-    'Crash slide-jump: a fresh X press+release during a slide leaps THIS much higher than a normal jump. It is a PLATFORMING move — always lands back on your feet, never flips out the board into skating.',
+    'Slide-jump rise height relative to the matching charged normal jump: 1.3 = 30% higher, not a velocity multiplier. It applies once, including slide-to-crawl grace, and never stacks the crouch boost. Always lands on foot.',
   slideJumpTravel:
     'Extra horizontal reach of a slide-jump, as a multiple of WALK speed OVER a normal jump (0.95 = launches ~1.95x walk speed). The launch is a fixed punch regardless of how fast the slide was, so the gap-clearing distance stays predictable — it is not a speed carry.',
   slideJumpGrace:

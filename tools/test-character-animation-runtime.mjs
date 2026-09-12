@@ -68,13 +68,13 @@ try {
   };
 
   const allIds = [...PLAYER_STATE_CLIP_IDS, ...PLAYER_TRANSITION_CLIP_IDS];
-  assert.equal(allIds.length, 25);
-  assert.equal(new Set(allIds).size, 25);
+  assert.equal(allIds.length, 26);
+  assert.equal(new Set(allIds).size, 26);
   for (const id of ['player.swim', 'player.swim-idle', 'player.death'])
     assert.ok(allIds.includes(id), `missing authored ${id} route`);
   assert.deepEqual(LEGACY_GAMEPLAY_PRESENTATION_CLIP_IDS, ['player.skate']);
   assert.deepEqual(ACTION_PROGRESS_TIMELINE_CLIP_IDS, [
-    'player.jump', 'player.double-jump', 'player.fall', 'player.rope-climb',
+    'player.jump', 'player.double-jump', 'player.slide-jump', 'player.fall', 'player.rope-climb',
     'player.rope-release', 'player.slam',
   ]);
 
@@ -250,7 +250,7 @@ try {
 
   // Every state-owned route resolves to its catalog clip.
   const airborneRoutes = new Set([
-    'player.jump', 'player.double-jump', 'player.fall', 'player.rope-release',
+    'player.jump', 'player.double-jump', 'player.slide-jump', 'player.fall', 'player.rope-release',
   ]);
   const stateRouteOrder = [
     ...PLAYER_STATE_CLIP_IDS.filter((id) => !airborneRoutes.has(id)),

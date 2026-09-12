@@ -200,6 +200,15 @@ roll cannot bleed into the double jump.
 
 ## Jump deformation arc
 
+Catalog 27 adds `player.slide-jump`, an independent editable split-legged
+air clip using the high-jump silhouette through rise and descent. It is selected
+by `slideJumpAir` before any lingering slide pose can hide it, and it uses the
+actual launch velocity for its phase. It never sets `doubleJumpAir` or starts a
+forward roll. The `slideJumpHeight` tuning is a rise-height multiplier, converted
+to velocity with a square root and applied once; slide-to-crawl grace no longer
+stacks the crouch boost. `tools/test-slide-jump.mjs` checks active-slide and grace
+launches, travel direction, split legs and foot landings, with optional replay input.
+
 Catalog 25 corrects the Jump/Fall/Land arm chain: shoulders remain outward,
 arms lower continuously through the apex, and keyed elbows/wrists prevent
 the legacy arm layer from changing those joints underneath. Takeoff and air

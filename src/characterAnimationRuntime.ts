@@ -36,6 +36,7 @@ export const PLAYER_TRANSITION_CLIP_IDS = [LAND_CLIP_ID, CROUCH_CLIP_IDS.enter, 
 export const ACTION_PROGRESS_TIMELINE_CLIP_IDS = [
   'player.jump',
   'player.double-jump',
+  'player.slide-jump',
   'player.fall',
   'player.rope-climb',
   'player.rope-release',
@@ -138,6 +139,7 @@ const CROUCH_CRAWL_CLIP_IDS = new Set<ClipId>([
 const AIRBORNE_CLIP_IDS = new Set<ClipId>([
   'player.jump',
   'player.double-jump',
+  'player.slide-jump',
   'player.fall',
 ]);
 
@@ -987,6 +989,7 @@ export const PLAYER_STATE_CLIP_IDS: readonly PlayerAnimationClipHint[] = [
   'player.run',
   'player.jump',
   'player.double-jump',
+  'player.slide-jump',
   'player.fall',
   'player.crouch',
   'player.crawl',

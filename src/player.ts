@@ -283,6 +283,7 @@ export type PlayerAnimationClipHint =
   | 'player.run'
   | 'player.jump'
   | 'player.double-jump'
+  | 'player.slide-jump'
   | 'player.fall'
   | 'player.crouch'
   | 'player.crawl'
@@ -1787,6 +1788,11 @@ export class Player {
     if (this.slamActive || this.slamFlatT > 0 || this.slamSquash > 0) return 'player.slam';
     if (this.grabbing || this.grabPose > 0.25 || this.specialGrab !== null) return 'player.grab';
     if (this.spinTimer > 0 || this.flipT > 0) return 'player.spin';
+    // A committed split jump owns its full airborne silhouette, even while
+    // the old slide/crouch presentation weights are still easing away.
+    if (this.state === 'air' && (this.slideJumpAir || this.doubleJumpAir)) {
+      return this.doubleJumpAir ? 'player.double-jump' : 'player.slide-jump';
+    }
     if (this.crawling) {
       return this.animationPlanarSpeed > 0.001 ? 'player.crawl' : 'player.crouch';
     }
@@ -1812,6 +1818,7 @@ export class Player {
       this.state === 'air' &&
       !this.grounded &&
       !this.doubleJumpAir &&
+      !this.slideJumpAir &&
       !this.slamActive &&
       !this.airFromSkate;
     return sampleForwardRollPresentation(
@@ -1879,11 +1886,11 @@ export class Player {
       actionProgress = this.launchVy > 0
         ? 1 - Math.max(0, this.vVel) / this.launchVy
         : this.airborneT;
-    } else if (clipId === 'player.double-jump') {
-      const doubleVelocity = Math.max(TUNING.doubleJumpVelocity, 0.001);
+    } else if (clipId === 'player.double-jump' || clipId === 'player.slide-jump') {
+      const splitVelocity = Math.max(clipId === 'player.slide-jump' ? this.launchVy : TUNING.doubleJumpVelocity, 0.001);
       actionProgress = this.vVel >= 0
-        ? 0.5 * (1 - this.vVel / doubleVelocity)
-        : 0.5 + 0.5 * Math.min(1, -this.vVel / doubleVelocity);
+        ? 0.5 * (1 - this.vVel / splitVelocity)
+        : 0.5 + 0.5 * Math.min(1, -this.vVel / splitVelocity);
     } else if (clipId === 'player.fall') {
       actionProgress = -this.vVel / Math.max(TUNING.hugeDropImpact, 0.001);
     } else if (clipId === 'player.crouch') {
@@ -4852,13 +4859,15 @@ export class Player {
     this.crawling = false;
     this.vVel =
       THREE.MathUtils.lerp(TUNING.jumpMinVelocity, TUNING.jumpVelocity, t) *
-      (fromSlide ? TUNING.slideJumpHeight : 1);
-    if (wasCrawling) this.vVel *= CONST.crouchJumpMult; // crouch jump: extra height
+      (fromSlide ? Math.sqrt(Math.max(0, TUNING.slideJumpHeight)) : 1);
+    // Height is proportional to launch velocity squared. A grace-window
+    // slide jump may also be in crawl, but must never stack its crouch boost.
+    if (wasCrawling && !fromSlide) this.vVel *= CONST.crouchJumpMult;
     const spd = Math.max(Math.abs(this.speed), planar); // direction-agnostic
     // Crouch and slide jumps strike the classic Crash star pose in the air.
     if (fromSlide || wasCrawling) this.starTimer = 0.6;
     if (fromSlide) {
-      // Crash slide-jump: a HIGH, CONTROLLED platforming leap — deliberately NOT
+      // Crash slide-jump: a controlled split-legged platforming leap — deliberately NOT
       // a skating move. The horizontal launch is a consistent punch over WALK
       // speed (independent of how fast the slide was, so distance is
       // predictable), it grants no board tricks, and it always lands back on
@@ -4875,6 +4884,7 @@ export class Player {
       this.speed = sjMag * fwd;
       this.slideAirLat = sjMag * lat;
       this.slideJumpAir = true; // committed arc: input can't add a diagonal
+      this.flipTimer = 0;
       this.airFromSkate = false; // a platforming hop, not a board air (no grabs, no skate carry)
       this.slideFromWalk = true; // force the on-foot touchdown clamp: no skate takeover on landing
       this.freeSkate = false; // DROP the board — a slide jump is on-foot even if you slid out of a skate

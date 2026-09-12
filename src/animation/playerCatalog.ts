@@ -108,6 +108,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
   'player.run',
   'player.jump',
   'player.double-jump',
+  'player.slide-jump',
   'player.fall',
   'player.land',
   'player.crouch-enter',
@@ -136,7 +137,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 26;
+export const PLAYER_STARTER_CATALOG_VERSION = 27;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -401,6 +402,7 @@ const PLAYER_STARTER_CLIP_INTRODUCED_IN_VERSION: Record<
   'player.run': 1,
   'player.jump': 1,
   'player.double-jump': 6,
+  'player.slide-jump': 27,
   'player.fall': 1,
   'player.land': 1,
   'player.crouch-enter': 23,
@@ -753,10 +755,10 @@ function buildJump(rigId: string): AnimationClip {
   return withForwardRollSquashLayer(withJumpArmClearance(clip));
 }
 
-function buildDoubleJump(rigId: string): AnimationClip {
+function buildDoubleJump(rigId: string, slideJump = false): AnimationClip {
   const clip = baseClip(
-    'player.double-jump',
-    'Double Jump — Split High Jump',
+    slideJump ? 'player.slide-jump' : 'player.double-jump',
+    slideJump ? 'Slide Jump — Split-Legged' : 'Double Jump — Split High Jump',
     1,
     'once',
     rigId,
@@ -816,7 +818,7 @@ function buildDoubleJump(rigId: string): AnimationClip {
     { id: `${clip.id}:split`, time: 0.12, name: 'Full split' },
     { id: `${clip.id}:apex`, time: 0.5, name: 'High-jump apex squash' },
   ];
-  clip.tags = ['player', 'double-jump', 'split', 'high-jump', 'no-roll'];
+  clip.tags = ['player', slideJump ? 'slide-jump' : 'double-jump', 'split', 'high-jump', 'no-roll'];
   clip.metadata = {
     starterQuality: 'authored-foundation',
     starterCatalogVersion: PLAYER_STARTER_CATALOG_VERSION,
@@ -1516,6 +1518,7 @@ export function createPlayerStarterClips(
     buildRun(rigId, includeTorsoRoot),
     buildJump(rigId),
     buildDoubleJump(rigId),
+    buildDoubleJump(rigId, true),
     buildFall(rigId),
     buildLand(rigId),
     buildQuaterniusCrouchTransition(rigId, includeTorsoRoot, true),
