@@ -30,7 +30,7 @@ export function goldToBonus(source:HTMLCanvasElement){
  * Oklab matrices: https://bottosson.github.io/posts/oklab/ (public domain).
  * This is a pointwise color grade; geometry, texture and alpha are untouched.
  */
-export function goldToBonusBalanced(source:HTMLCanvasElement, preserveSourceTone=false){
+export function goldToBonusBalanced(source:HTMLCanvasElement, preserveSourceTone=false, compressGamut=true){
  const canvas=document.createElement('canvas');canvas.width=source.width;canvas.height=source.height;
  const ctx=canvas.getContext('2d')!,pixels=source.getContext('2d')!.getImageData(0,0,source.width,source.height),d=pixels.data;
  const linear=(v:number)=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4;
@@ -62,7 +62,7 @@ export function goldToBonusBalanced(source:HTMLCanvasElement, preserveSourceTone
    const glint=smooth(.8,.97,L)*(1-smooth(.03,.11,C)),lightness=preserveSourceTone?L:(.12+.76*L)*(1-glint)+L*glint;
    const chroma=preserveSourceTone?C:C*.8,ca=Math.cos(angle),cb=Math.sin(angle);let rgb=rgbFromLab(lightness,chroma*ca,chroma*cb);
    // Reduce chroma before encoding instead of clipping individual RGB channels.
-   if(rgb.some(v=>v<0||v>1)){
+   if(compressGamut&&rgb.some(v=>v<0||v>1)){
     let low=0,high=chroma;for(let step=0;step<10;step++){const c=(low+high)/2,test=rgbFromLab(lightness,c*ca,c*cb);if(test.every(v=>v>=0&&v<=1))low=c;else high=c;}
     rgb=rgbFromLab(lightness,low*ca,low*cb);
    }
@@ -114,4 +114,12 @@ export function enhanceModelGlisten(source:HTMLCanvasElement,neutral:HTMLCanvasE
  */
 export function goldToBonusNeutral(source:HTMLCanvasElement){
  return goldToBonusBalanced(source,true);
+}
+
+/** V10: retain source lightness/chroma through the hue rotation, without
+ * either saturation gain or gamut-driven chroma reduction. The existing
+ * sRGB encoder bounds channels to their representable range only.
+ */
+export function goldToBonusUncompressed(source:HTMLCanvasElement){
+ return goldToBonusBalanced(source,true,false);
 }

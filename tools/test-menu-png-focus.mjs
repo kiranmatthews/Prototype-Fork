@@ -2,8 +2,13 @@ import assert from 'node:assert/strict';import fs from 'node:fs/promises';import
 const{chromium}=await import(process.env.PLAYWRIGHT_MODULE?pathToFileURL(process.env.PLAYWRIGHT_MODULE).href:'playwright');
 const base=process.env.MENU_TEST_URL||'http://127.0.0.1:5178/',out=process.env.MENU_TEST_OUT||'/private/tmp/menu-png-focus-review';await fs.mkdir(out,{recursive:true});
 const reference=JSON.parse(await fs.readFile(new URL('../docs/menu-focus-reference.json',import.meta.url),'utf8'));
-for(const name of ['atlas.ts','dom.ts','atlas-metrics.ts']){
+for(const name of ['atlas.ts','dom.ts']){
  const path='src/roo-type/'+name;assert.deepEqual(await fs.readFile(new URL('../'+path,import.meta.url)),execFileSync('git',['show','0a26dd9:'+path]),path+' changed from the approved PNG renderer');
+}
+for(const palette of ['bonus','counter']){
+ const current=JSON.parse(await fs.readFile(new URL(`../public/fonts/roo-${palette}-v10.json`,import.meta.url),'utf8'));
+ const prior=JSON.parse(await fs.readFile(new URL(`../public/fonts/roo-${palette}-v9.json`,import.meta.url),'utf8'));
+ delete current.version;delete prior.version;assert.deepEqual(current,prior,'Colour-only font update changed glyph geometry');
 }
 const b=await chromium.launch({channel:'chrome',headless:true}),report={reference:{fps:reference.fps,cycle:reference.cycle,lumaRatio:reference.lumaRatio},modes:[],errors:[]};
 try{

@@ -2,13 +2,14 @@ import fs from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import {pathToFileURL} from 'node:url';
 const{chromium}=await import(process.env.PLAYWRIGHT_MODULE?pathToFileURL(process.env.PLAYWRIGHT_MODULE).href:'playwright');
-const base=process.env.ROO_LAB_URL||'http://127.0.0.1:5178/',out=process.env.ROO_REVIEW_DIR||'/private/tmp/roo-type-v9-review';await fs.mkdir(out,{recursive:true});
+const base=process.env.ROO_LAB_URL||'http://127.0.0.1:5178/',out=process.env.ROO_REVIEW_DIR||'/private/tmp/roo-type-v10-review';await fs.mkdir(out,{recursive:true});
 const browser=await chromium.launch({headless:true,channel:'chrome'}),report={errors:[],samples:[]};
 try{
  const page=await browser.newPage({viewport:{width:1440,height:1000},deviceScaleFactor:1});
  page.on('pageerror',e=>report.errors.push(e.message));page.on('console',m=>{if(m.type()==='error')report.errors.push(m.text());});
  await page.goto(base+'roo-type-lab.html');await page.waitForFunction(()=>window.rooTypeLab?.ready);
- assert.equal(await page.evaluate(()=>window.rooTypeLab.metrics().version),9);
+ if(process.env.ROO_REVIEW_PALETTE)await page.locator('#palette').selectOption(process.env.ROO_REVIEW_PALETTE);
+ assert.equal(await page.evaluate(()=>window.rooTypeLab.metrics().version),10);
  await page.selectOption('#view','glyph');await page.selectOption('#glyph','A');await page.selectOption('#palette','counter');
  await page.emulateMedia({reducedMotion:'no-preference'});await page.locator('#shimmer').check();
  const sample=()=>page.evaluate(()=>{

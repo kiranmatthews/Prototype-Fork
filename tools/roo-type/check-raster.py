@@ -25,16 +25,16 @@ def component_sizes(mask):
  return [size for i,size in enumerate(sizes) if parents[i]==i]
 
 root=Path(__file__).resolve().parents[2];fonts=root/'public/fonts'
-provenance=json.loads((fonts/'roo-font-v9-provenance.json').read_text())
+provenance=json.loads((fonts/'roo-font-v10-provenance.json').read_text())
 assert len(provenance['glyphs'])==51
 assert all(set(g['glisten'])=={'left','right'} for g in provenance['glyphs'].values())
 report={};shared_alpha=None
 expected_components={'!':2,'?':2,':':2,';':2,'"':2,'%':3}
 for palette in ['counter','bonus']:
- m=json.loads((fonts/f'roo-{palette}-v9.json').read_text())
- assert m['version']==9 and m['capPixels']==512 and m['contourSource']=='model-artwork'
+ m=json.loads((fonts/f'roo-{palette}-v10.json').read_text())
+ assert m['version']==10 and m['capPixels']==512 and m['contourSource']=='model-artwork'
  assert m['width']<=8192 and m['height']<=8192
- frames=[np.asarray(Image.open(fonts/f'roo-{palette}-v9{s}.png').convert('RGBA')) for s in ['', '-light1','-light2']]
+ frames=[np.asarray(Image.open(fonts/f'roo-{palette}-v10{s}.png').convert('RGBA')) for s in ['', '-light1','-light2']]
  for frame in frames[1:]:assert np.array_equal(frame[:,:,3],frames[0][:,:,3]), 'Glisten alters the approved silhouette'
  if shared_alpha is not None:assert np.array_equal(shared_alpha,frames[0][:,:,3])
  shared_alpha=frames[0][:,:,3]

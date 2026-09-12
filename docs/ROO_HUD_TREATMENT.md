@@ -1,6 +1,6 @@
-# Roo image font v9: earlier teal hues with original artwork tone
+# Roo image font v10: teal hues without chroma reduction
 
-V9 retains the approved v6 finished glyphs and glisten sources. Each finished glyph supplies the artwork. Full painted bevels, highlights, counter shapes and pointed terminals are retained. The original Roo vectors guide the letter design and cap metrics; they do not clip the finished image. All 51 nonempty glyphs have individual image-model sources. The approved accented zero is reused unchanged from v5, and the other 50 neutral masters were rebuilt to match its finish.
+V10 retains the approved v6 finished glyphs and glisten sources. Each finished glyph supplies the artwork. Full painted bevels, highlights, counter shapes and pointed terminals are retained. The original Roo vectors guide the letter design and cap metrics; they do not clip the finished image. All 51 nonempty glyphs have individual image-model sources. The approved accented zero is reused unchanged from v5, and the other 50 neutral masters were rebuilt to match its finish.
 
 ## Artwork and glisten
 
@@ -10,7 +10,7 @@ The bake removes a separate magenta matte (or uses genuine generated alpha), kee
 
 A–D initially received opaque gray checkerboards despite transparent requests. Background-only model edits replaced those mattes with flat magenta while preserving white bevel glints. The font baker rejects gray/checker mattes instead of guessing which white pixels belong to the lettering. Original outputs and prompts remain in the authoring record.
 
-All three approved orange PNGs are retained byte-for-byte from v8. Green/teal/cobalt uses the earlier v7 hue curve while retaining the original image artwork's perceptual lightness and chroma. The v7 face contrast compression and 0.8 chroma multiplier are removed, as are v8's stronger pigment remap and green glint amplification. The neutral and both original model lighting edits pass through the same hue-only treatment. Chroma is reduced only where the rotated colour falls outside sRGB; lightness and hue are preserved instead of clipping individual channels. No geometry, alpha, bevel or spatial shading changes are introduced.
+All three approved orange PNGs are retained byte-for-byte from v9. Green/teal/cobalt keeps the earlier hue curve with the source lightness and chroma entering the hue rotation unchanged. V10 removes the remaining gamut-fitting branch that reduced chroma in v9. There is no saturation gain or reduction, contrast curve, exposure adjustment or new highlight boost in the conversion. The sRGB encoder bounds out-of-range RGB channels to the displayable range; it no longer desaturates colours to make them fit. This can produce small local colour/lightness differences at the gamut boundary. No geometry, alpha, bevel or spatial shading changes are introduced.
 
 The built-in image tool did not expose or report a selectable model ID or quality tier. Provenance records those fields as unknown; this work makes no claim of a verified GPT Image 2.5/max setting.
 
@@ -24,9 +24,9 @@ Font Studio now moves its light-position slider with the actual animation, repor
 
 ## Delivered files
 
-- `public/fonts/roo-bonus-v9.png`, `roo-bonus-v9-light1.png`, `roo-bonus-v9-light2.png`.
-- `public/fonts/roo-counter-v9.png`, `roo-counter-v9-light1.png`, `roo-counter-v9-light2.png`.
-- Palette metrics, `roo-font-v9-provenance.json`, and `roo-image-font-v9.zip`.
+- `public/fonts/roo-bonus-v10.png`, `roo-bonus-v10-light1.png`, `roo-bonus-v10-light2.png`.
+- `public/fonts/roo-counter-v10.png`, `roo-counter-v10-light1.png`, `roo-counter-v10-light2.png`.
+- Palette metrics, `roo-font-v10-provenance.json`, and `roo-image-font-v10.zip`.
 
 The ZIP contains six PNGs, two metrics files, provenance and integration notes. Provenance includes all neutral and glisten source hashes, exact prompts, and the neutral input used by every glisten edit. Raw authoring sources are retained in the repository rather than downloaded at runtime.
 
@@ -43,10 +43,9 @@ PLAYWRIGHT_MODULE=/absolute/playwright/index.mjs node tools/roo-type/raster-bake
 PLAYWRIGHT_MODULE=/absolute/playwright/index.mjs node tools/roo-type/capture-atlas-audit.mjs
 # Inspect the complete artwork and every glisten frame before installation.
 python3 tools/roo-type/install-raster-bake.py
-# V9 restores the earlier hues with the source artwork tone and unboosted green lights.
-PLAYWRIGHT_MODULE=/absolute/playwright/index.mjs node tools/roo-type/neutral-font.mjs
-python3 tools/roo-type/install-neutral-font.py
-python3 tools/roo-type/check-neutral-tone.py
+# V10 removes gamut-driven chroma reduction without adding saturation gain.
+PLAYWRIGHT_MODULE=/absolute/playwright/index.mjs node tools/roo-type/uncompressed-font.mjs
+python3 tools/roo-type/install-uncompressed-font.py
 python3 tools/roo-type/check-raster.py
 PLAYWRIGHT_MODULE=/absolute/playwright/index.mjs node tools/roo-type/review.mjs
 PLAYWRIGHT_MODULE=/absolute/playwright/index.mjs node tools/roo-type/review-lighting.mjs
@@ -61,7 +60,7 @@ Menu appearance controls now live in the M-dismissible **Text Tuning** panel, in
 
 ## Reference-timed menu colour filters
 
-The rejected cached-ink pass was reverted. The PNG painter, decoder, metrics and image assets remain the approved v9 implementation. Menu item labels bind the existing orange neutral PNG; the normal selected phase uses `filter: none`. The other states use standard CSS colour filters on `.roo-menu-art` and the equivalent Canvas `context.filter` around the existing PNG draw. There are no pixel rewrites, replacement glyphs, new atlases or grey fill overlays. Menu items display the neutral frame; HUD/title lighting remains unchanged.
+The rejected cached-ink pass was reverted. The PNG painter, decoder, metrics and image assets remain the approved PNG implementation. Menu item labels bind the existing orange neutral PNG; the normal selected phase uses `filter: none`. The other states use standard CSS colour filters on `.roo-menu-art` and the equivalent Canvas `context.filter` around the existing PNG draw. There are no pixel rewrites, replacement glyphs, new atlases or grey fill overlays. Menu items display the neutral frame; HUD/title lighting remains unchanged.
 
 `docs/menu-focus-reference.json` records all sixty native frames from 36–38 seconds of the supplied video. The measured cycle is white/orange/orange/orange at 30 fps: 33⅓ ms white and 100 ms orange. The original clip's measured luminance ratio is about 2.65; the latest brief deliberately keeps our orange PNG untouched rather than darkening it to the clip's orange. Default white exposure targets the clip's bright white, and is adjustable. No equal-length slow blink or guessed easing is used.
 
