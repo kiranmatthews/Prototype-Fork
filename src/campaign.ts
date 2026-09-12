@@ -5,7 +5,7 @@
 // backing level is replaced.
 
 export const DEFAULT_CAMPAIGN_LIVES = 4;
-export const CAMPAIGN_SAVE_SLOTS = 3;
+export const CAMPAIGN_SAVE_SLOTS = 4;
 /** Placeholder target shared by every canonical trial until authored per-level. */
 export const CAMPAIGN_TIME_RELIC_TARGET_SECONDS = 60;
 export const MAX_RELIC_TIME_SECONDS = 86_400;
@@ -444,6 +444,8 @@ export interface CampaignSaveV1 {
   fruit: number;
   /** Last settled world-map hub. Optional so every existing V1 save migrates. */
   mapFocus?: string;
+  /** Most recently finished campaign level/run, independent of map browsing. */
+  lastFinishedLevel?: string;
   levels: Record<string, CampaignLevelProgress>;
 }
 
@@ -573,6 +575,17 @@ function cloneSave(save: Readonly<CampaignSaveV1>): CampaignSaveV1 {
   };
 }
 
+/** Old saves have no completion chronology. Use completed map progression
+ * as a stable fallback; browsing hubs must not change the image. */
+export function campaignSavePreviewLevel(save: Readonly<CampaignSaveV1>) {
+  const finished = save.lastFinishedLevel && campaignLevelByKey(save.lastFinishedLevel);
+  if (finished) return finished;
+  const completed = (key: string) => save.levels[key]?.cleared || (save.levels[key]?.bestTime ?? 0) > 0;
+  const progression = CAMPAIGN_ISLANDS.flatMap(island => island.levelKeys);
+  const key = progression.reverse().find(completed);
+  return (key && campaignLevelByKey(key)) || CAMPAIGN_LEVELS[0];
+}
+
 function cloneSlots(
   slots: readonly (CampaignSaveV1 | null)[],
 ): Array<CampaignSaveV1 | null> {
@@ -640,6 +653,9 @@ function normalizeSave(value: unknown, slot: number): CampaignSaveV1 | null {
       typeof raw.mapFocus === "string" && campaignLevelByKey(raw.mapFocus)
         ? raw.mapFocus
         : undefined,
+    lastFinishedLevel:
+      typeof raw.lastFinishedLevel === 'string' && campaignLevelByKey(raw.lastFinishedLevel)
+        ? raw.lastFinishedLevel : undefined,
     levels,
   };
 }
@@ -941,6 +957,7 @@ export class CampaignStore {
     const progress = this.levelProgress(levelId);
     if (!progress) return null;
     if (campaignLevelById(levelId)?.competition) return progress;
+    const finishedChanged = this.updateLastFinishedLevel(levelId);
     const before = { ...progress };
     progress.cleared = true;
     progress.crystal = progress.crystal || rewards.crystal;
@@ -950,7 +967,7 @@ export class CampaignStore {
       progress.cleared !== before.cleared ||
       progress.crystal !== before.crystal ||
       progress.boxGem !== before.boxGem ||
-      progress.comboGem !== before.comboGem
+      progress.comboGem !== before.comboGem || finishedChanged
     )
       this.noteWorkingChange();
     return progress;
@@ -970,7 +987,9 @@ export class CampaignStore {
     const beforeTimeRelic = progress.timeRelic;
     const beforeMedal = progress.timeMedal;
     const beforeTimes = JSON.stringify(progress.trialTimes);
+    let finishedChanged = false;
     if (Number.isFinite(rewards.time) && rewards.time > 0) {
+      finishedChanged = this.updateLastFinishedLevel(levelId);
       const award = rewards.medal === undefined ? (rewards.timeRelic === true ? 'gold' : null)
         : validTimeMedal(rewards.medal) ? rewards.medal : null;
       const medal = higherTimeMedal(earnedTimeMedal(progress), award);
@@ -984,7 +1003,7 @@ export class CampaignStore {
     if (
       progress.bestTime !== beforeBestTime ||
       JSON.stringify(progress.trialTimes) !== beforeTimes ||
-      progress.timeRelic !== beforeTimeRelic || progress.timeMedal !== beforeMedal
+      progress.timeRelic !== beforeTimeRelic || progress.timeMedal !== beforeMedal || finishedChanged
     )
       this.noteWorkingChange();
     return progress;
@@ -995,11 +1014,25 @@ export class CampaignStore {
     const progress = this.levelProgress(levelId);
     if (!progress) return false;
     const first = progress.cup !== true;
-    const changed = first || !progress.cleared;
+    const finishedChanged = this.updateLastFinishedLevel(levelId);
+    const changed = first || !progress.cleared || finishedChanged;
     progress.cup = true;
     progress.cleared = true;
     if (changed) this.noteWorkingChange();
     return first;
+  }
+
+  /** Completing a competition without winning still identifies the last
+   * finished level, without awarding a cup or marking it cleared. */
+  recordLevelFinished(levelId: string): void {
+    if (this.updateLastFinishedLevel(levelId)) this.noteWorkingChange();
+  }
+
+  private updateLastFinishedLevel(levelId: string): boolean {
+    const definition = campaignLevelById(levelId), save = this.activeValue;
+    if (!save || !definition || save.lastFinishedLevel === definition.progressKey) return false;
+    save.lastFinishedLevel = definition.progressKey;
+    return true;
   }
 
   totals(save: CampaignSaveV1 | null = this.activeValue): CampaignTotals {

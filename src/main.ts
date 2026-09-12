@@ -2289,6 +2289,7 @@ function handleCompetitionAction(action: CompetitionAction): void {
     ui.resetHudTransients(player.fruitCollectionRevision, false);
     input.consumeEdges(); acc = 0;
   } else if (action === "standings" && competition.showStandings()) {
+    if (competition.phase === 'final') campaign.recordLevelFinished(current.id);
     commitCompetitionVictory();
   } else if (action === "exit") {
     // The successful level switch retires the event. A rejected map build

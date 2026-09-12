@@ -96,6 +96,7 @@ export interface GameFlowSurfaceProgress {
 export interface GameFlowSurfaceThumbnail {
   rect: GameFlowSurfaceRect;
   source: HTMLCanvasElement | HTMLImageElement | null;
+  opacity?: number;
 }
 
 export interface GameFlowSurfaceRenderState {
@@ -109,6 +110,7 @@ export interface GameFlowSurfaceRenderState {
   texts: readonly GameFlowSurfaceText[];
   progress: GameFlowSurfaceProgress | null;
   thumbnail: GameFlowSurfaceThumbnail | null;
+  slotPreviews?: readonly GameFlowSurfaceThumbnail[];
   sockets?: readonly {rect: GameFlowSurfaceRect; kind:string}[];
   maskFallback: (GameFlowSurfaceRect & { opacity: number }) | null;
 }
@@ -168,6 +170,8 @@ const TEXT_SELECTOR = [
   ".game-slot-number",
   ".game-slot-detail",
   ".game-slot-date",
+  '.game-slot-level',
+  '.game-slot-empty',
   ".game-preview-name",
   ".game-progress-head h2",
   ".game-progress-head strong",
@@ -391,7 +395,7 @@ export function snapshotGameFlowSurface(
         wrap:
           node.classList.contains("game-panel-subtitle") ||
           node.classList.contains("game-input-hint") || node.classList.contains("game-level-text") ||
-          node.matches('.game-trick-intro, .game-trick-content p, .game-trick-content td'),
+          node.matches('.game-trick-intro, .game-trick-content p, .game-trick-content td, .game-slot-level'),
       }),
     );
   }
@@ -493,6 +497,11 @@ export function snapshotGameFlowSurface(
     texts: immutableArray(texts),
     progress,
     thumbnail,
+    slotPreviews: [...source.panel.querySelectorAll<HTMLElement>('.game-slot-preview,.game-slot-empty')].flatMap(image => {
+      const rect = rectFrom(image, origin);
+      return rect ? [{rect, source:image instanceof HTMLImageElement && image.complete && image.naturalWidth ? image : null,
+        opacity:effectiveOpacity(image, source.panel)}] : [];
+    }),
     maskFallback,
   });
 }
@@ -705,6 +714,7 @@ export class GameFlowSurface {
     for (const socket of state.sockets ?? []) clipped(socket.rect, () => this.paintSocket(ctx, socket.rect, socket.kind));
     if (state.progress) this.paintProgress(ctx, state.progress);
     if (state.thumbnail) this.paintThumbnail(ctx, state.thumbnail);
+    for (const preview of state.slotPreviews ?? []) clipped(preview.rect, () => this.paintThumbnail(ctx, preview));
     if (state.maskFallback) this.paintMask(ctx, state.maskFallback);
     for (const text of state.texts) clipped(text.rect, () => {
       if (text.silver) { paintSilverSecondaryText(ctx,text.text,text.rect.x,text.rect.y,text.font.size); this.primitiveCount++; }
@@ -872,9 +882,9 @@ export class GameFlowSurface {
     }
     if (button.kind === "slot") {
       roundedRect(ctx, rect, 10);
-      ctx.fillStyle = "rgba(255,226,147,.30)";
+      ctx.fillStyle = "#183638";
       ctx.fill();
-      ctx.strokeStyle = "#7f3c1b";
+      ctx.strokeStyle = "#bf9656";
       ctx.lineWidth = 3;
       ctx.stroke();
     }
@@ -959,6 +969,7 @@ export class GameFlowSurface {
   ): void {
     const { rect, source } = thumbnail;
     ctx.save();
+    ctx.globalAlpha = thumbnail.opacity ?? 1;
     ctx.fillStyle = "#090b12";
     ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
     if (source) {

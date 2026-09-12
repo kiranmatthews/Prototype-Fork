@@ -140,7 +140,7 @@ assert.ok(
 );
 assert.match(
   pauseFlow,
-  /else \{[\s\S]{0,180}this\.button\("OPTIONS"[\s\S]{0,180}this\.button\("RESTART"[\s\S]{0,180}this\.button\("QUIT LEVEL"/,
+  /else \{[\s\S]{0,180}this\.button\("OPTIONS"[\s\S]{0,180}this\.button\(state\.competition \? "RESTART COMPETITION" : "RESTART"[\s\S]{0,180}this\.button\("QUIT LEVEL"/,
   "non-warp pause order must remain unchanged",
 );
 
@@ -149,13 +149,13 @@ const saveLoadFlow =
 assert.ok(saveLoadFlow, "save/load submenu could not be inspected");
 assert.match(saveLoadFlow, /this\.campaign\.activeSlot/);
 assert.match(saveLoadFlow, /this\.campaign\.dirty/);
-const saveAt = saveLoadFlow.indexOf('this.button("SAVE GAME"');
-const loadAt = saveLoadFlow.indexOf('this.button("LOAD GAME"');
+const saveAt = saveLoadFlow.indexOf('const save = this.button(');
+const gridAt = saveLoadFlow.indexOf('this.createSaveSlotGrid(false)');
 const autosaveAt = saveLoadFlow.indexOf('"AUTOSAVE"');
 
 assert.ok(
-  saveAt >= 0 && saveAt < loadAt && loadAt < autosaveAt,
-  "Save Game, Load Game, Autosave order drifted",
+  gridAt >= 0 && gridAt < saveAt && saveAt < autosaveAt,
+  "Four-slot loading grid must precede Save Game and Autosave actions",
 );
 
 for (const [method, action] of [

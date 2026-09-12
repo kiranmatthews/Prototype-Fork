@@ -24,6 +24,7 @@ import {
   TIME_MEDALS, defaultMedalTimes, medalForTime, earnedTimeMedal,
   type MedalTimes, type TimeMedal,
   campaignLevelByKey,
+  campaignSavePreviewLevel,
   type CampaignSaveV1,
   type GameAudioOptions,
   type GamePlayMode,
@@ -184,6 +185,7 @@ export class GameFlowUI {
   private mapDirect = false;
   private pendingNewSlot = 1;
   private pendingLoadSlot = 1;
+  private loadConfirmOrigin: 'load-slots' | 'save-load' = 'load-slots';
   private slotOrigin: "launch" | "warp" = "launch";
   private operationStatus = "";
   private operationStatusError = false;
@@ -484,8 +486,7 @@ export class GameFlowUI {
       return true;
     }
     if (this.screen === "confirm-new") {
-      this.screen = "new-slots";
-      this.render();
+      this.returnToSaveGrid('new-slots', this.pendingNewSlot);
       return true;
     }
     if (this.screen === "new-slots") {
@@ -494,8 +495,7 @@ export class GameFlowUI {
       return true;
     }
     if (this.screen === "confirm-load") {
-      this.screen = "load-slots";
-      this.render();
+      this.returnToSaveGrid(this.loadConfirmOrigin, this.pendingLoadSlot);
       return true;
     }
     if (this.screen === "load-slots") {
@@ -632,6 +632,11 @@ export class GameFlowUI {
       else if (up && !this.previousPad.up) this.moveLevelSelectRow(-1);
       else if (down && !this.previousPad.down) this.moveLevelSelectRow(1);
 
+    } else if (this.isSaveGrid()) {
+      if (left && !this.previousPad.left) this.moveSaveGrid(-1,0);
+      else if (right && !this.previousPad.right) this.moveSaveGrid(1,0);
+      else if (up && !this.previousPad.up) this.moveSaveGrid(0,-1);
+      else if (down && !this.previousPad.down) this.moveSaveGrid(0,1);
     } else if (this.screen === 'trick-guide') {
       if (left && !this.previousPad.left) this.changeTrickGuidePage(-1);
       else if (right && !this.previousPad.right) this.changeTrickGuidePage(1);
@@ -813,7 +818,7 @@ export class GameFlowUI {
 
   private renderSlots(newGame: boolean): void {
     const warpLoad = !newGame && this.slotOrigin === "warp";
-    const card = element("div", "game-slot-card timber-card");
+    const card = element("div", "game-slot-card game-save-browser");
     const title = element("h2", "game-panel-title");
     title.textContent = newGame ? "NEW GAME" : "LOAD GAME";
     const subtitle = element("p", "game-panel-subtitle");
@@ -822,6 +827,12 @@ export class GameFlowUI {
       : warpLoad
         ? "Choose a saved adventure to load on the Island Map."
         : "Choose a saved adventure.";
+    card.append(title, subtitle, this.createSaveSlotGrid(newGame));
+    this.panel.appendChild(card);
+  }
+
+  private createSaveSlotGrid(newGame: boolean): HTMLElement {
+    const warpLoad = !newGame && this.slotOrigin === 'warp';
     const slots = element("div", "game-save-slots");
     const saves = this.campaign.listSlots();
     for (let slot = 1; slot <= CAMPAIGN_SAVE_SLOTS; slot++) {
@@ -836,17 +847,51 @@ export class GameFlowUI {
           // Unlike title loading, this abandons an active working session. The
           // callback cannot run until the explicit confirmation screen agrees.
           this.pendingLoadSlot = slot;
+          this.loadConfirmOrigin = this.screen === 'save-load' ? 'save-load' : 'load-slots';
           this.screen = "confirm-load";
           this.render();
         } else this.callbacks.onLoadGame(slot);
       });
       button.classList.add("game-save-slot");
+      button.dataset.saveSlot = String(slot);
+      button.setAttribute('aria-label', save
+        ? `Slot ${slot}: ${campaignSavePreviewLevel(save).name}, ${this.campaign.totals(save).percent}% complete`
+        : `Slot ${slot}: Empty`);
       button.disabled = !newGame && !save;
       button.appendChild(this.saveSlotContents(slot, save));
       slots.appendChild(button);
     }
-    card.append(title, subtitle, slots);
-    this.panel.appendChild(card);
+    return slots;
+  }
+
+  private isSaveGrid(): boolean {
+    return this.screen === 'new-slots' || this.screen === 'load-slots' || this.screen === 'save-load';
+  }
+
+  private returnToSaveGrid(screen: 'new-slots' | 'load-slots' | 'save-load', slot: number): void {
+    this.screen = screen; this.render();
+    const index = this.navButtons.findIndex(button => Number(button.dataset.saveSlot) === slot && !button.disabled);
+    if (index >= 0) { this.selected = index; this.syncSelection(); }
+  }
+
+  private moveSaveGrid(dx: number, dy: number): void {
+    const current = this.navButtons[this.selected];
+    const slots = this.navButtons.filter(button => button.dataset.saveSlot);
+    const actions = this.navButtons.filter(button => !button.dataset.saveSlot && !button.disabled);
+    const select = (button: HTMLButtonElement | undefined) => {
+      if (!button || button.disabled) return;
+      this.selected = this.navButtons.indexOf(button); this.syncSelection();
+    };
+    if (!current?.dataset.saveSlot) {
+      if (dy) select((dy < 0 ? [...slots].reverse() : slots).find(button => !button.disabled));
+      else if (actions.length) select(actions[(Math.max(0,actions.indexOf(current)) + dx + actions.length) % actions.length]);
+      return;
+    }
+    const index = Number(current.dataset.saveSlot) - 1, row = Math.floor(index / 2), col = index % 2;
+    if (dy && actions.length && ((row === 1 && dy > 0) || (row === 0 && dy < 0))) { select(actions[0]); return; }
+    const nextRow = (row + dy + 2) % 2, nextCol = (col + dx + 2) % 2;
+    const candidates = [nextRow * 2 + nextCol, dx ? (1-nextRow)*2+nextCol : nextRow*2+1-nextCol];
+    select(candidates.map(i => slots[i]).find(button => button && !button.disabled));
   }
 
   private renderConfirmNew(): void {
@@ -859,8 +904,7 @@ export class GameFlowUI {
     actions.append(
       this.button("REPLACE", () => this.callbacks.onNewGame(this.pendingNewSlot), "danger"),
       this.button("CANCEL", () => {
-        this.screen = "new-slots";
-        this.render();
+        this.returnToSaveGrid('new-slots', this.pendingNewSlot);
       }),
     );
     card.append(title, warning, actions);
@@ -868,7 +912,7 @@ export class GameFlowUI {
   }
 
   private renderSaveLoad(): void {
-    const card = element("div", "game-options-card game-save-load-card timber-card");
+    const card = element("div", "game-slot-card game-save-browser game-save-load-card");
     const title = element("h2", "game-panel-title");
     title.textContent = "SAVE / LOAD";
     const status = element("p", "game-save-status");
@@ -882,25 +926,18 @@ export class GameFlowUI {
     };
     refreshStatus();
     const message = this.operationStatusLine();
-    const list = element("div", "game-menu-list");
-    const save = this.button("SAVE GAME", () => {
+    const slots = this.createSaveSlotGrid(false);
+    const list = element("div", "game-menu-list game-save-actions");
+    const activeSlot = this.campaign.activeSlot;
+    const save = this.button(activeSlot ? `SAVE SLOT ${activeSlot}` : 'SAVE GAME', () => {
       this.operationStatus = "";
       this.operationStatusError = false;
       this.screen = "confirm-save";
       this.render();
     });
     save.disabled = this.campaign.activeSlot === null;
-    const load = this.button("LOAD GAME", () => {
-      this.operationStatus = "";
-      this.operationStatusError = false;
-      this.slotOrigin = "warp";
-      this.screen = "load-slots";
-      this.render();
-    });
-    load.disabled = !this.campaign.listSlots().some((entry) => entry !== null);
     list.append(
       save,
-      load,
       this.toggleButton(
         "AUTOSAVE",
         this.campaign.autosaveEnabled,
@@ -918,7 +955,8 @@ export class GameFlowUI {
         },
       ),
     );
-    card.append(title, status, message, list);
+    card.append(title, status, message, slots, list);
+    this.selected = this.navButtons.indexOf(save);
     this.panel.appendChild(card);
   }
 
@@ -966,8 +1004,7 @@ export class GameFlowUI {
       : "Load this save and return to the Island Map?";
     const actions = element("div", "game-menu-list");
     const cancel = this.button("CANCEL", () => {
-      this.screen = "load-slots";
-      this.render();
+      this.returnToSaveGrid(this.loadConfirmOrigin, this.pendingLoadSlot);
     });
     const load = this.button(
       "LOAD GAME",
@@ -1059,16 +1096,27 @@ export class GameFlowUI {
 
   private saveSlotContents(slot: number, save: CampaignSaveV1 | null): HTMLElement {
     const contents = element("span", "game-save-slot-inner");
+    if (save) {
+      const definition = campaignSavePreviewLevel(save);
+      const preview = element('img', 'game-slot-preview');
+      preview.src = `${import.meta.env.BASE_URL}level-previews/${definition.progressKey}.jpg`;
+      preview.alt = definition.name;
+      preview.addEventListener('load', () => this.invalidatePreCrt());
+      const levelName = element('span', 'game-slot-level'); levelName.textContent = definition.name;
+      contents.append(preview, levelName);
+    } else {
+      const empty = element('span', 'game-slot-empty'); empty.textContent = 'EMPTY'; contents.append(empty);
+    }
     const number = element("strong", "game-slot-number");
     number.textContent = `SLOT ${slot}`;
     const detail = element("span", "game-slot-detail");
-    if (!save) detail.textContent = "EMPTY";
+    if (!save) detail.textContent = "START FRESH";
     else {
       const totals = this.campaign.totals(save);
-      detail.textContent = `${totals.percent}%  ·  ${save.lives} LIVES  ·  ${save.fruit} MILK`;
+      detail.textContent = `${totals.percent}%`;
     }
     const date = element("small", "game-slot-date");
-    date.textContent = save ? formatDate(save.updatedAt).toUpperCase() : "START FRESH";
+    date.textContent = save ? formatDate(save.updatedAt).toUpperCase() : "";
     contents.append(number, detail, date);
     return contents;
   }
@@ -1583,6 +1631,12 @@ export class GameFlowUI {
       this.moveSelection(event.shiftKey ? -1 : 1);
       return;
     }
+    if (this.isSaveGrid() && ['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','KeyA','KeyD','KeyW','KeyS'].includes(event.code)) {
+      event.preventDefault();
+      this.moveSaveGrid(['ArrowLeft','KeyA'].includes(event.code) ? -1 : ['ArrowRight','KeyD'].includes(event.code) ? 1 : 0,
+        ['ArrowUp','KeyW'].includes(event.code) ? -1 : ['ArrowDown','KeyS'].includes(event.code) ? 1 : 0);
+      return;
+    }
     if (this.screen === 'trick-guide' && ['ArrowLeft', 'ArrowRight', 'KeyA', 'KeyD'].includes(event.code)) {
       event.preventDefault(); this.changeTrickGuidePage(['ArrowLeft', 'KeyA'].includes(event.code) ? -1 : 1); return;
     }
@@ -1668,14 +1722,12 @@ export class GameFlowUI {
     } else if (this.screen === "confirm-level-select") {
       this.screen = "level-select"; this.render();
     } else if (this.screen === "confirm-new") {
-      this.screen = "new-slots";
-      this.render();
+      this.returnToSaveGrid('new-slots', this.pendingNewSlot);
     } else if (this.screen === "new-slots") {
       this.screen = "launch";
       this.render();
     } else if (this.screen === "confirm-load") {
-      this.screen = "load-slots";
-      this.render();
+      this.returnToSaveGrid(this.loadConfirmOrigin, this.pendingLoadSlot);
     } else if (this.screen === "load-slots") {
       this.screen = this.slotOrigin === "warp" ? "save-load" : "launch";
       this.render();

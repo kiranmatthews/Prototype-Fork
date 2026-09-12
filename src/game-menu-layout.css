@@ -163,6 +163,39 @@ body[data-prompt-family="touch"] .game-menu-button.game-map-close {
 }
 body.game-shell-modal .tc-zone { display:none !important; }
 
+/* Four fixed save bays, with 2D controller navigation and previews beneath CRT. */
+.game-slot-card.game-save-browser { width:min(1120px,100%); height:100%; padding:1vh 1vw; }
+.game-save-browser .game-save-slots {
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:repeat(2,minmax(0,1fr));
+  flex:1; min-height:0; overflow:hidden; gap:2vh 2vw;
+}
+.game-save-browser .game-save-slot { height:100%; padding:1vh 1vw; min-height:0; }
+.game-save-browser .game-save-slot,.game-save-browser .game-save-slot.selected { background:#183638; border-color:#bf9656; }
+.game-save-browser .game-panel-subtitle,.game-save-browser .game-save-status,.game-save-browser .game-operation-status:not(.error) { color:#efdfc5; }
+.game-save-browser .game-save-slot-inner {
+  height:100%; display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);
+  grid-template-rows:auto auto minmax(0,1fr) auto; gap:1vh 1.3vw; align-items:center;
+}
+.game-slot-preview,.game-slot-empty { grid-column:1; grid-row:1/5; width:100%; height:100%; min-height:0; object-fit:cover; box-sizing:border-box; border:4px solid #54280f; background:#090b12; }
+.game-slot-preview,.game-slot-empty { height:auto; aspect-ratio:16/9; max-height:100%; align-self:center; }
+.game-slot-empty { display:flex; align-items:center; justify-content:center; text-align:center; color:#f2d7a1; font:clamp(18px,3vh,34px)/1 Roo,Impact,sans-serif; }
+.game-save-browser .game-slot-number { grid-column:2; grid-row:1; font-size:clamp(18px,3.4vh,38px); text-align:center; }
+.game-slot-level { grid-column:2; grid-row:2; font:clamp(15px,2.8vh,29px)/1.2 Roo,Impact,sans-serif; color:#ffe2a0; text-align:center; }
+.game-save-browser .game-slot-detail { grid-column:2; grid-row:3; align-self:center; font-size:clamp(16px,3.5vh,38px); text-align:center; color:#ffd575; }
+.game-save-browser .game-slot-date { grid-column:2; grid-row:4; font-size:clamp(8px,1.4vh,14px); text-align:center; color:#decaa7; }
+.game-save-actions { flex:none; display:flex; flex-direction:row; justify-content:center; gap:4vw; margin-top:1.5vh; }
+.game-save-actions .game-menu-button { font-size:clamp(16px,3vh,32px); min-height:5vh; padding:1vh 2vw; }
+.game-save-browser .game-operation-status:empty { display:none; }
+@media(max-aspect-ratio:1/1) {
+  .game-save-browser .game-save-slot-inner { grid-template-columns:minmax(0,1fr); grid-template-rows:minmax(0,1fr) auto auto auto auto; gap:.7vh; }
+  .game-slot-preview,.game-slot-empty { grid-column:1; grid-row:1; }
+  .game-slot-preview { height:auto; aspect-ratio:16/9; max-height:100%; }
+  .game-save-browser .game-slot-number { grid-column:1; grid-row:2; font-size:clamp(16px,4.4vw,28px); }
+  .game-slot-level { grid-column:1; grid-row:3; font-size:clamp(12px,3.5vw,22px); }
+  .game-save-browser .game-slot-detail { grid-column:1; grid-row:4; font-size:clamp(14px,4vw,26px); }
+  .game-save-browser .game-slot-date { grid-column:1; grid-row:5; font-size:clamp(8px,2.2vw,12px); }
+}
+
 /* The shared trick catalogue has a fixed heading/pager and one bounded page. */
 .game-screen-trick-guide { background:radial-gradient(ellipse at 55% 40%,#153c49,#082332 60%,#020b14); }
 .game-trick-guide {
