@@ -5,7 +5,7 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, TUNING, CONS
   const { SkateChaseCamera, SKATE_CAMERA } = await server.ssrLoadModule('/src/skateChaseCamera.ts');
   const { SKATE_PARK, skateSurfaceDirection, skateSurfaceHeading } = await server.ssrLoadModule('/src/skateParkPhysics.ts');
   const { Replayer } = await server.ssrLoadModule('/src/replay.ts');
-  const place = (p,h,speed=15.3) => {
+  const place = (p,h,speed=TUNING.parkMaxSpeed) => {
     player.respawn(level,true,true,{position:new THREE.Vector3(...p),heading:new THREE.Vector3(...h)});
     player.axisF.set(...h).normalize();player.axisL.set(player.axisF.z,0,-player.axisF.x);
     player.freeSkate=true;player.speed=speed;
@@ -35,12 +35,14 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, TUNING, CONS
   assert.ok(samples[0][0]>5,'right steering did not turn rider right');
   place([0,.1,10],[1,0,0],12);
   for(let i=0;i<60;i++)step(makeInput({moveY:-1}));
-  assert.equal(player.speed,0);assert.equal(player.freeSkate,true);assert.equal(player.brakeLockT,0);
-  // THPS keeps kicking with neutral input; Down is the held stop.
+  assert.equal(player.speed,0);assert.equal(player.freeSkate,true);assert.ok(player.brakeLockT>0,'shared pullback lock was not armed');
+  // Same platform motor: idle stays stopped; a direction picks up to cruise.
   for(let i=0;i<60;i++)step(makeInput());
-  assert.ok(player.speed>11&&player.speed<11.31,'neutral kick speed differs from the reference');
-  for(let i=0;i<60;i++)step(makeInput({jumpHeld:true}));
-  assert.ok(player.speed>15.3&&player.speed<15.34,'crouching is an unbounded pump');
+  assert.equal(player.speed,0);assert.equal(player.freeSkate,true);
+  for(let i=0;i<90;i++)step(makeInput({moveY:1}));
+  assert.ok(Math.abs(player.speed-TUNING.parkCruiseSpeed)<.03);
+  for(let i=0;i<90;i++)step(makeInput({jumpHeld:true,moveY:1}));
+  assert.ok(Math.abs(player.speed-TUNING.parkMaxSpeed)<.03,'charged target differs from platforming');
 
   // Start outside the new interior sessions when isolating perimeter vert.
   const cases=[
@@ -56,7 +58,7 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, TUNING, CONS
     const rig=new SkateChaseCamera(),camera=new THREE.PerspectiveCamera(SKATE_CAMERA.verticalFov,16/9,.1,400);
     let launch=null,landed=false;
     for(let i=0;i<500;i++){
-      const previous=player.pos.clone(),wasVert=player.vertAir,oldVy=player.vVel;
+      const previous=player.pos.clone(),wasVert=player.vertAir,oldVy=player.vVel,oldSpeed=player.speed;
       step(input);
       assert.ok(player.pos.toArray().every(Number.isFinite),`${name}: nonfinite position`);
       assert.ok(player.pos.distanceTo(previous)<1.1,`${name}: discontinuous travel`);
@@ -65,7 +67,7 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, TUNING, CONS
         launch={p:player.pos.clone(),n:player.vertNormal.clone(),vy:player.vVel,i};
         assert.ok(player.pos.y>=4.39,`${name}: launched before the actual 4.4m lip`);
         assert.ok(player.pos.y<4.85,`${name}: missed the lip`);
-        assert.ok(player.vVel<=Math.min(speed,26)+.05,`${name}: free lip pop minted velocity`);
+        assert.ok(player.vVel<=oldSpeed+(TUNING.parkChargeBoost+TUNING.parkPipePumpGain+TUNING.parkPipeCarve+TUNING.parkGroundGravity)*CONST.fixedStep+.05,`${name}: free lip pop minted velocity`);
       }
       if(launch&&wasVert&&player.vertAir&&!player.grounded&&name==='south'){
         assert.ok(Math.abs(player.vVel-oldVy+31.1727272727*CONST.fixedStep)<1e-7,'gravity changed around apex');
@@ -106,7 +108,9 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, TUNING, CONS
   assert.ok(apexChecks>=24);
   // Angled entry must survive the transition without flattening into a coping
   // slide. A curved return must continue tracking the real wall around a bend.
-  place([30,.1,8],[.8,0,1]);
+  // At the new 23 m/s target, z=8 meets the corner almost head-on.
+  // Start farther forward to retain a genuinely oblique curved-wall air.
+  place([30,.1,12],[.8,0,1]);
   let startNormal=null,trackedTurn=0,angledLaunch=false;
   for(let i=0;i<400;i++){
     step(makeInput({jumpHeld:true,jumpPressed:i===0}));
@@ -130,8 +134,8 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, TUNING, CONS
     chargedApex=Math.max(chargedApex,player.pos.y);
     if(chargedLaunch&&player.grounded)break;
   }
-  assert.ok(chargedLaunch&&chargedLaunch.vy>21&&chargedLaunch.vy<22.5,'vert release impulse is wrong');
-  assert.ok(chargedApex-chargedLaunch.p.y>7&&chargedApex-chargedLaunch.p.y<8.2,'charged hangtime is wrong');
+  assert.ok(chargedLaunch&&chargedLaunch.vy>SKATE_PARK.vertPopMax,'vert release lost its climb');
+  assert.ok(Math.abs(chargedApex-chargedLaunch.p.y-chargedLaunch.vy**2/(2*SKATE_PARK.vertGravity))<.03,'charged hangtime is not ballistic');
   // Air direction inputs rotate the board; releasing does not auto-complete
   // a half turn. No direction input changes the locked plane position.
   place([0,.1,10],[0,0,1]);for(let i=0;i<200&&!player.vertAir;i++)step(makeInput({jumpHeld:true}));
@@ -225,5 +229,5 @@ await withSkateRuntime(async ({ THREE, server, player, level, step, TUNING, CONS
       stalled=stuck?stalled+1:0;assert.ok(stalled<120,`stress ${seed}/${i}: welded to transition`);
     }
   }
-  console.log(`PASS park reference: ${returns} vert returns, ballistic gravity/no free pop, charged impulse, full surface frame, curved tracking, no spin snap, ${catches} terminal contacts, ${frames} replay + ${stressFrames} stress frames. Camera: full rider visibility, wall-oriented apex, 30/60/120 Hz equivalence. Shunt ${worstShunt.toFixed(4)}m; framing ${worstFraming.toFixed(3)}.`);
+  console.log(`PASS shared-motor park: ${returns} vert returns, ballistic gravity/no free pop, charged impulse, full surface frame, curved tracking, no spin snap, ${catches} terminal contacts, ${frames} replay + ${stressFrames} stress frames. Camera: full rider visibility, wall-oriented apex, 30/60/120 Hz equivalence. Shunt ${worstShunt.toFixed(4)}m; framing ${worstFraming.toFixed(3)}.`);
 });

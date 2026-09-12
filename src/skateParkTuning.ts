@@ -1,24 +1,15 @@
-import { SKATE_PARK } from './skateParkPhysics';
-import { TUNING } from './tuning';
+import { TUNING, PARK_MOVEMENT_KEYS } from './tuning';
 
-// Callers gate this profile on level.skatepark, never on the competition ID
-// or the optional chase-camera toggle used by platforming levels.
+/** A read-only view, not a global override. Each alias reads the current park
+ * value, while unrelated settings inherit live from TUNING. No allocation in
+ * the simulation loop and no cross-talk between two players/level profiles. */
+export const PARK_MOVEMENT_TUNING: Readonly<typeof TUNING> = Object.create(TUNING,
+  Object.fromEntries(Object.entries(PARK_MOVEMENT_KEYS).map(([base,park]) =>
+    [base, {get: () => TUNING[park]}])));
+
 export function parkCruiseSpeed(): number {
-  return SKATE_PARK.standingSpeed * TUNING.parkCruiseSpeedScale;
+  return Math.min(TUNING.parkCruiseSpeed, TUNING.parkMaxSpeed);
 }
 export function parkChargedSpeed(): number {
-  return Math.max(parkCruiseSpeed(), SKATE_PARK.crouchingSpeed * TUNING.parkChargeSpeedScale);
-}
-export function parkSpeedLimitScale(): number {
-  return Math.max(1, TUNING.parkCruiseSpeedScale, TUNING.parkChargeSpeedScale);
-}
-
-/** H = v²/2g and T = 2v/g: scale height and duration independently.
- * Snapshot both at takeoff so live edits never kink an airborne arc. */
-export function parkOllieLaunch(verticalSpeed: number): { velocity: number; gravity: number } {
-  const height = TUNING.parkOllieHeight, time = TUNING.parkOllieHangtime;
-  return {
-    velocity: verticalSpeed * height / time,
-    gravity: SKATE_PARK.airGravity * height / (time * time),
-  };
+  return TUNING.parkMaxSpeed;
 }

@@ -16,7 +16,7 @@ import { trickRepeatFactor, extendHeldTrick, type HeldTrickScore } from './trick
 import { liveCarveGripAtSpeed } from './carveGrip';
 import { solveSkateSteering } from './skateSteering';
 import { SKATE_PARK, skateSurfaceDirection, skateSurfaceHeading, redirectSkateVelocity } from './skateParkPhysics';
-import { parkCruiseSpeed, parkChargedSpeed, parkSpeedLimitScale, parkOllieLaunch } from './skateParkTuning';
+import { PARK_MOVEMENT_TUNING } from './skateParkTuning';
 import { cameraSkateSpeed as resolveCameraSkateSpeed } from './cameraSpeedEffect';
 import { HANG_ANIMS } from './hangAnims';
 import { Input } from './input';
@@ -986,7 +986,9 @@ export class Player {
   private parkControls = false;
   private readonly parkVelocity = new THREE.Vector3();
   private parkFlightGravity = SKATE_PARK.airGravity;
-  private parkTunedOllie = false;
+  private get skateTuning(): Readonly<typeof TUNING> {
+    return this.parkControls ? PARK_MOVEMENT_TUNING : TUNING;
+  }
   private parkAutoTurn = 0;
   private parkAutoTurnTarget = 0;
   private parkSpinHold = 0;
@@ -1831,14 +1833,14 @@ export class Player {
         // dismount. It only selects the board speed range while still in air;
         // grounded on-foot locomotion must reach the Run endpoint at walkSpeed.
         : this.freeSkate || (this.state === 'air' && this.airFromSkate) || this.state === 'grind'
-          ? Math.max(TUNING.maxSpeed, 0.001)
+          ? Math.max(this.skateTuning.maxSpeed, 0.001)
           : Math.max(TUNING.walkSpeed, 0.001);
     const planarSpeed = this.animationPlanarSpeed;
     const normalizedSpeed = THREE.MathUtils.clamp(planarSpeed / speedReference, 0, 1);
     const crawlMotion = this.crawlPose * Math.min(1, planarSpeed / 1.2);
     const crouchPose = Math.max(0, this.crawlPose - crawlMotion);
     const charge = THREE.MathUtils.clamp(
-      this.chargeTimer / Math.max(TUNING.jumpChargeTime, 0.001),
+      this.chargeTimer / Math.max(this.skateTuning.jumpChargeTime, 0.001),
       0,
       1,
     );
@@ -3114,7 +3116,6 @@ export class Player {
     this.competitionParkedBoard = null; // shared board geometry/materials remain owned by the rider
     this.parkControls = level.skatepark;
     this.parkFlightGravity = SKATE_PARK.airGravity;
-    this.parkTunedOllie = false;
     this.parkVelocity.set(0, 0, 0);
     this.parkAutoTurn = this.parkAutoTurnTarget = this.parkSpinHold = this.parkBreakHold = 0;
     this.endResultsPose();
@@ -3774,7 +3775,6 @@ export class Player {
     // touching down mid-somersault cuts it — Crash lands upright, no carry-over tumble
     this.flipTimer = this.grounded ? 0 : Math.max(0, this.flipTimer - dt);
     if (this.grounded || this.state === 'grind') {
-      this.parkTunedOllie = false;
       this.airJumpUsed = false; // double jump re-arms on any contact
       this.doubleJumpAir = false;
       this.airborneT = 0; // the double-jump window clock starts at takeoff
@@ -3785,7 +3785,7 @@ export class Player {
       // double-jump window can scale with the jump's actual size
       if (this.airborneT === 0) {
         this.launchVy = Math.max(0, this.vVel);
-        if (this.parkControls && this.airFromSkate && !this.parkTunedOllie)
+        if (this.parkControls && this.airFromSkate)
           this.parkFlightGravity = this.vertAir ? SKATE_PARK.vertGravity : SKATE_PARK.airGravity;
       }
       this.airborneT += dt;
@@ -4136,7 +4136,7 @@ export class Player {
       }
       this.slideSpd = Math.min(
         Math.max(Math.abs(this.speed), TUNING.slideSpeed),
-        TUNING.downhillMax,
+        this.skateTuning.downhillMax,
       );
       this.slideDistanceLeft = Math.max(0, TUNING.slideDistance);
       this.slideGraceHold = false;
@@ -4730,7 +4730,7 @@ export class Player {
     if (input.jumpHeld)
       this.chargeTimer = Math.min(
         this.chargeTimer + dt,
-        this.parkControls ? Math.max(SKATE_PARK.chargeSeconds, TUNING.parkOllieChargeTime, TUNING.jumpChargeTime) : TUNING.jumpChargeTime,
+        this.parkControls ? Math.max(SKATE_PARK.chargeSeconds, this.skateTuning.jumpChargeTime) : this.skateTuning.jumpChargeTime,
       );
   }
 
@@ -4760,15 +4760,12 @@ export class Player {
     this.emergencyEjectLandingPending = false;
     this.emergencyEjectLandingWillBail = false;
     this.deckTricksThisAir.clear();
-    const t = Math.min(1, this.chargeTimer / (this.parkControls ? SKATE_PARK.chargeSeconds : TUNING.jumpChargeTime));
-    if (this.parkControls && this.freeSkate && !this.isBailing) {
+    const parkVert = this.parkControls && this.grounded && this.groundHit?.vert === true && this.rideNormal.y < 0.9;
+    const t = Math.min(1, this.chargeTimer / (parkVert ? SKATE_PARK.chargeSeconds : this.skateTuning.jumpChargeTime));
+    if (parkVert && this.freeSkate && !this.isBailing) {
       if (this.manualing) this.endManual();
-      const vert = this.grounded && this.groundHit?.vert === true && this.rideNormal.y < 0.9;
       skateSurfaceDirection(this.parkVelocity, this.axisF, this.rideNormal).multiplyScalar(this.speed);
-      this.startParkAir(vert, THREE.MathUtils.lerp(
-        vert ? SKATE_PARK.vertPopMin : SKATE_PARK.ollieMin,
-        vert ? SKATE_PARK.vertPopMax : SKATE_PARK.ollieMax,
-        vert ? t : Math.min(1, this.chargeTimer / TUNING.parkOllieChargeTime)), !vert);
+      this.startParkAir(true, THREE.MathUtils.lerp(SKATE_PARK.vertPopMin, SKATE_PARK.vertPopMax, t));
       this.lastJumpType = 'Board Ollie';
       sfx.play('ollie', 0.7);
       return;
@@ -4895,7 +4892,7 @@ export class Player {
       // the skate accelerator, so riding the charge scale up to jumpVelocity
       // made every accelerating jump a moon jump. Cruising on direction keys
       // and tapping X gives the small pop; a held charge earns the big one.
-      const pop = THREE.MathUtils.lerp(TUNING.ollieMinVelocity, TUNING.ollieVelocity, t);
+      const pop = THREE.MathUtils.lerp(this.skateTuning.ollieMinVelocity, this.skateTuning.ollieVelocity, t);
       // DOWNHILL OLLIE: the road keeps falling away under the arc, so a flat
       // pop up there buys near-double the airtime and reads as floaty. Fold
       // a tunable fraction of the descent rate (slope x speed, negative) back
@@ -4903,7 +4900,7 @@ export class Player {
       // is never robbed of its crate clearance.
       const descent = Math.min(0, this.speed * this.takeoffTy);
       this.vVel = Math.min(
-        rampClimb + Math.max(pop * 0.45, pop + descent * TUNING.ollieDownCouple),
+        rampClimb + Math.max(pop * 0.45, pop + descent * this.skateTuning.ollieDownCouple),
         CONST.maxFallSpeed,
       );
       this.lastJumpType = 'Board Ollie';
@@ -5057,7 +5054,7 @@ export class Player {
         BAIL_V.lerp(BAIL_TARGET, THREE.MathUtils.lerp(0.34, 0.58, this.simRand()));
         const velocity = BAIL_V.length();
         if (velocity > 1e-4) {
-          const cap = Math.max(TUNING.downhillMax, currentSpeed);
+          const cap = Math.max(this.skateTuning.downhillMax, currentSpeed);
           this.speed = Math.min(velocity, cap);
           this.axisF.copy(BAIL_V).multiplyScalar(1 / velocity);
           this.axisL.set(this.axisF.z, 0, -this.axisF.x);
@@ -5590,7 +5587,7 @@ export class Player {
         const l = Math.hypot(n.x, n.z) || 1;
         this.axisF.set(n.x / l, 0, n.z / l); // the fall line (normal leans toward the flat)
         this.axisL.set(this.axisF.z, 0, -this.axisF.x);
-        this.speed = Math.min(this.speed + TUNING.groundGravity * 0.6 * dt, 12);
+        this.speed = Math.min(this.speed + this.skateTuning.groundGravity * 0.6 * dt, 12);
         this.emitDust(1);
       } else if (this.slamFlatT > 0) {
         this.speed = 0; // the pancake slam is AUTHORED as a dead stop
@@ -5738,8 +5735,6 @@ export class Player {
           this.speed =
             this.slideSpd * (this.slideVec.x * this.axisF.x + this.slideVec.z * this.axisF.z);
         }
-      } else if (this.freeSkate && this.parkControls) {
-        braking = this.stepParkGroundMotor(dt, input);
       } else if (this.freeSkate && input.grabHeld) {
         // O = BRAKE: held on the board it bleeds speed (ignoring the stick) and
         // rolls you to a FULL stop, then steps off at ~0. Two shaping curves:
@@ -5751,9 +5746,9 @@ export class Player {
         // Circle while skating is a brake; sliding is on-foot only.
         this.brakeT += dt;
         const s = Math.abs(this.speed);
-        const ramp = Math.min(1, this.brakeT / TUNING.brakeRampTime);
-        const ease = 0.25 + 0.75 * Math.min(1, s / Math.max(TUNING.cruiseSpeed, 1));
-        const rate = TUNING.turnaround * ramp * ramp * ease;
+        const ramp = Math.min(1, this.brakeT / this.skateTuning.brakeRampTime);
+        const ease = 0.25 + 0.75 * Math.min(1, s / Math.max(this.skateTuning.cruiseSpeed, 1));
+        const rate = this.skateTuning.turnaround * ramp * ramp * ease;
         this.speed = Math.sign(this.speed) * Math.max(0, s - rate * dt);
         braking = true;
         // screech only once the brake is really biting, not on a light tap
@@ -5778,8 +5773,8 @@ export class Player {
           this.greaseT = 0.35;
         else this.greaseT = Math.max(0, this.greaseT - dt);
         const slick = this.greaseT > 0 ? 0.22 : 1; // greasy wheels: see greaseT
-        const rx = this.rawInput.moveX;
-        const ry = this.manualing !== 0 ? 0 : this.rawInput.moveY;
+        const rx = this.grindDropSteerT > 0 ? 0 : this.rawInput.moveX;
+        const ry = this.manualing !== 0 || this.grindDropSteerT > 0 ? 0 : this.rawInput.moveY;
         // (during a MANUAL, up/down is the balance pole ONLY — no accel, no
         // pull-back brake — while left/right keeps steering the line; a pure
         // side stick sits at 90° off the heading, well under the brake angle)
@@ -5789,7 +5784,7 @@ export class Player {
           // frame the stick decomposition uses. Reading the raw stick as
           // world -Z here is what made "forward" stop meaning forward the
           // moment the spine turned the course.
-          const cfc =
+          const cfc = this.parkControls ? this.axisF :
             this.courseInputDirection(level) ??
             (TUNING.chaseCam > 0.5 && !level.boulder
               ? { x: this.camDir.x, z: this.camDir.z }
@@ -5836,8 +5831,8 @@ export class Player {
               this.haltCd = 0.6;
             }
             const s = Math.abs(this.speed);
-            const ease = 0.25 + 0.75 * Math.min(1, s / Math.max(TUNING.cruiseSpeed, 1));
-            this.speed = Math.max(0, this.speed - TUNING.turnaround * ease * slick * dt);
+            const ease = 0.25 + 0.75 * Math.min(1, s / Math.max(this.skateTuning.cruiseSpeed, 1));
+            this.speed = Math.max(0, this.speed - this.skateTuning.turnaround * ease * slick * dt);
             braking = true;
             // The stick is still yanked BACKWARD, so once you're under walking
             // pace refresh the post-brake lock: walk/sidestep stay dead (no
@@ -5852,9 +5847,9 @@ export class Player {
             // and a deliberately damped fast line at the same time.
             const grip = liveCarveGripAtSpeed(
               this.speed,
-              TUNING.maxSpeed,
-              TUNING.carveGripLow,
-              TUNING.carveGripHigh,
+              this.skateTuning.maxSpeed,
+              this.skateTuning.carveGripLow,
+              this.skateTuning.carveGripHigh,
             );
             const maxTurn = THREE.MathUtils.degToRad(grip) * slick * dt;
             const turn = THREE.MathUtils.clamp(ang, -maxTurn, maxTurn);
@@ -5866,13 +5861,13 @@ export class Player {
             this.axisL.set(this.axisF.z, 0, -this.axisF.x);
             // The charge only ADDS speed up to maxSpeed — it must never chop
             // hard-earned downhill overspeed back down (that read as greasy).
-            if (this.charging && this.speed < TUNING.maxSpeed)
-              this.speed = Math.min(this.speed + TUNING.chargeBoost * dt, TUNING.maxSpeed);
+            if (this.charging && this.speed < this.skateTuning.maxSpeed)
+              this.speed = Math.min(this.speed + this.skateTuning.chargeBoost * dt, this.skateTuning.maxSpeed);
             else if (!this.charging && !onPipe) this.cruiseEase(dt, steepGround);
           }
         } else if (this.charging && this.speed > 1) {
-          if (this.speed < TUNING.maxSpeed)
-            this.speed = Math.min(this.speed + TUNING.chargeBoost * dt, TUNING.maxSpeed);
+          if (this.speed < this.skateTuning.maxSpeed)
+            this.speed = Math.min(this.speed + this.skateTuning.chargeBoost * dt, this.skateTuning.maxSpeed);
         } else {
           // TRULY idle (no stick, no X): friction bleeds you all the way to a
           // stop, below cruise. Coasting WITH a direction held (above) settles
@@ -5890,30 +5885,29 @@ export class Player {
               ? Math.sign(this.speed)
               : 0;
         if (dir !== 0) {
-          const rate = dir * this.speed < -0.01 ? TUNING.turnaround : TUNING.chargeBoost;
+          const rate = dir * this.speed < -0.01 ? this.skateTuning.turnaround : this.skateTuning.chargeBoost;
           this.speed = THREE.MathUtils.clamp(
             this.speed + rate * dir * dt,
-            -TUNING.maxSpeed,
-            TUNING.maxSpeed,
+            -this.skateTuning.maxSpeed,
+            this.skateTuning.maxSpeed,
           );
         }
       } else if (Math.abs(input.moveY) > 0.05 && input.moveY * this.speed < 0) {
         // stick against travel: snappy brake (crossing walking pace drops
         // you onto your feet, where the walk logic takes the stick)
-        this.speed += TUNING.turnaround * Math.sign(input.moveY) * dt;
+        this.speed += this.skateTuning.turnaround * Math.sign(input.moveY) * dt;
       } else if (onPipe) {
         // halfpipe carries its own tiny friction (below the slope response) — the
         // heavy general roll-out would bleed a swing dead in a second.
       } else if (Math.abs(input.moveY) > 0.05) {
         // stick with travel: easy coast, light bleed
-        const drop = TUNING.friction * 0.35 * dt;
+        const drop = this.skateTuning.friction * 0.35 * dt;
         this.speed -= Math.sign(this.speed) * Math.min(drop, Math.abs(this.speed));
       } else {
-        const drop = TUNING.friction * dt;
+        const drop = this.skateTuning.friction * dt;
         this.speed -= Math.sign(this.speed) * Math.min(drop, Math.abs(this.speed));
       }
 
-      if (!(this.parkControls && this.freeSkate)) {
       // Slope response from the SMOOTHED ride plane: project the heading onto
       // the surface — the tangent's rise is the SINE of the slope along
       // travel. Bounded ±1, so a vert wall pulls hard but never explodes;
@@ -5937,7 +5931,7 @@ export class Player {
       // this just generalises it past the `name.startsWith('halfpipe')` check.
       // The braking guard stays: it's what lets the brake beat gravity on a hill.
       if (Math.abs(ty) > 0.02 && !(braking && ty < 0)) {
-        this.speed += -TUNING.groundGravity * ty * dt;
+        this.speed += -this.skateTuning.groundGravity * ty * dt;
       }
       // HALFPIPE CARVE: just HOLDING a direction on the transition works the wall
       // for momentum — no X needed. This is the "carving pumps you" feel: hold
@@ -5958,7 +5952,7 @@ export class Player {
             )
           : 0;
       if ((onPipe || this.onTransition) && (input.moveX !== 0 || input.moveY !== 0)) {
-        this.speed += TUNING.pipeCarve * transWeight * dt;
+        this.speed += this.skateTuning.pipeCarve * transWeight * dt;
       }
       // PUMP: hold X to work the transition for EXTRA speed — the hard pump on
       // top of the carve, the honest way to build vert height. ONE gain now
@@ -5970,7 +5964,7 @@ export class Player {
       if (this.charging && this.onTransition) {
         // full pump on ANY transition face — analytic pipe, mesh bowl wall, or
         // anything the level flagged as vert
-        this.speed += TUNING.pipePumpGain * transWeight * dt;
+        this.speed += this.skateTuning.pipePumpGain * transWeight * dt;
       }
       // Sustained powered push on an ORDINARY uphill road must not chatter
       // across the rollout threshold: held X is active drive even when
@@ -5990,7 +5984,7 @@ export class Player {
       // dead in a couple of seconds; on the pipe a tiny bleed lets momentum
       // carry wall-to-wall. Applied here so it hits every frame, not just idle.
       if (onPipe && Math.abs(this.speed) > 0) {
-        const fr = Math.min(TUNING.pipeFriction * dt, Math.abs(this.speed));
+        const fr = Math.min(this.skateTuning.pipeFriction * dt, Math.abs(this.speed));
         this.speed -= Math.sign(this.speed) * fr;
       }
       this.lastTy = ty;
@@ -6009,7 +6003,7 @@ export class Player {
       // than a linear countdown. Transitions get their own, higher ceiling —
       // vert is where the big speed is supposed to live.
       const onTrans = this.onTransition;
-      let hardCap = onTrans ? TUNING.vertMax : TUNING.downhillMax;
+      let hardCap = onTrans ? this.skateTuning.vertMax : this.skateTuning.downhillMax;
       // A perfect grind pays out ABOVE the normal ceiling, so for a moment the
       // clamp has to let it through — otherwise the launch would be confiscated
       // on the very next frame and the reward would be invisible. heavyDrag is
@@ -6021,8 +6015,8 @@ export class Player {
           this.speedPadCap,
         );
       const over = Math.abs(this.speed);
-      if (over > TUNING.maxSpeed) {
-        this.speed -= Math.sign(this.speed) * Math.min(TUNING.heavyDrag * over * over * dt, over);
+      if (over > this.skateTuning.maxSpeed) {
+        this.speed -= Math.sign(this.speed) * Math.min(this.skateTuning.heavyDrag * over * over * dt, over);
       }
       // The ceiling is a fast BLEED, not a one-frame chop: arriving on a
       // transition carrying downhill speed eases to the cap over a few frames
@@ -6090,7 +6084,6 @@ export class Player {
           }
         }
         this.speed = Math.max(0, this.speed);
-      }
       }
     }
 
@@ -6543,7 +6536,7 @@ export class Player {
       this.jumpBufferT = 0;
       if (input.jumpPressed) this.charging = true;
       if (this.charging && input.jumpHeld) {
-        this.chargeTimer = Math.min(this.chargeTimer + dt, TUNING.jumpChargeTime);
+        this.chargeTimer = Math.min(this.chargeTimer + dt, this.skateTuning.jumpChargeTime);
       }
       if (input.jumpReleased && this.charging) {
         this.chargedJump(dt);
@@ -6585,7 +6578,7 @@ export class Player {
           this.chargePlanted = this.lastPlanar < 1 && this.slideTimer <= 0;
         }
         this.charging = true;
-        this.chargeTimer = Math.min(this.chargeTimer + dt, this.parkControls ? Math.max(SKATE_PARK.chargeSeconds, TUNING.parkOllieChargeTime, TUNING.jumpChargeTime) : TUNING.jumpChargeTime);
+        this.chargeTimer = Math.min(this.chargeTimer + dt, this.parkControls ? Math.max(SKATE_PARK.chargeSeconds, this.skateTuning.jumpChargeTime) : this.skateTuning.jumpChargeTime);
       }
       if (input.jumpReleased && this.charging && !slamFlat && (this.state === 'ride' || this.coyoteTimer > 0)) {
         // Climbing a near-vert wall: DON'T ollie into the wall — reserve the
@@ -6601,56 +6594,7 @@ export class Player {
     }
   }
 
-  /** Park controls use the board's surface frame and the reference's kick,
-   * brake and drag rules. Course/platforming tuning remains separate. */
-  private stepParkGroundMotor(dt: number, input: Input): boolean {
-    const n = this.rideNormal;
-    const slowSteep = n.y < 0.5 && this.speed < SKATE_PARK.slowSlopeSpeed;
-    const braking = this.grindDropSteerT <= 0 && !this.manualing && !slowSteep &&
-      (input.grabHeld || this.rawInput.moveY < -0.25);
-    const turn = (this.grindDropSteerT > 0 ? 0 : -this.rawInput.moveX) *
-      (braking ? SKATE_PARK.sharpTurnRate : SKATE_PARK.turnRate) * dt;
-    this.axisF.applyAxisAngle(VERT_UP, turn);
-    if (slowSteep && Math.hypot(n.x, n.z) > 0.001) {
-      const current = Math.atan2(this.axisF.x, this.axisF.z);
-      const target = Math.atan2(n.x, n.z);
-      const delta = wrapAngle(target - current);
-      this.axisF.applyAxisAngle(VERT_UP,
-        THREE.MathUtils.clamp(delta, -SKATE_PARK.slowSlopeTurnRate * dt, SKATE_PARK.slowSlopeTurnRate * dt));
-    }
-    this.axisF.normalize();
-    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
-    const direction = skateSurfaceDirection(this.parkCameraForward, this.axisF, n);
-    this.parkVelocity.copy(direction).multiplyScalar(this.speed);
-    const gravity = new THREE.Vector3(0, -SKATE_PARK.groundGravity, 0);
-    gravity.addScaledVector(n, -gravity.dot(n));
-    this.parkVelocity.addScaledVector(gravity, dt);
-    this.speed = this.parkVelocity.length() * (this.parkVelocity.dot(direction) < 0 ? -1 : 1);
-    if (this.speed < -0.0254) {
-      this.axisF.negate(); this.axisL.negate(); this.speed = -this.speed;
-      this.stance = -this.stance as 1 | -1;
-    }
-    if (braking) {
-      this.speed = Math.max(0, this.speed - SKATE_PARK.brake * dt);
-      this.brakeLockT = this.brakeRampT = 0;
-    } else if (!this.manualing && !slowSteep) {
-      const crouching = input.jumpHeld;
-      const target = crouching ? parkChargedSpeed() : parkCruiseSpeed();
-      const acceleration = (crouching ? SKATE_PARK.crouchingAcceleration : SKATE_PARK.standingAcceleration) * TUNING.parkAccelerationScale;
-      if (this.speed < target) this.speed = Math.min(target, this.speed + acceleration * dt);
-    }
-    const limitScale = parkSpeedLimitScale();
-    const drag = this.speed > SKATE_PARK.softSpeedLimit * limitScale ? SKATE_PARK.heavyDrag :
-      input.jumpHeld ? SKATE_PARK.crouchingDrag : SKATE_PARK.standingDrag;
-    this.speed = THREE.MathUtils.clamp(this.speed - drag * this.speed * this.speed * dt, 0, SKATE_PARK.hardSpeedLimit * limitScale);
-    this.lastTy = skateSurfaceDirection(this.parkCameraForward, this.axisF, n).y;
-    this.liftTy = this.lastTy;
-    this.liftTyT = 0;
-    return braking;
-  }
-
-  private startParkAir(vert: boolean, pop: number, ollie = false): void {
-    this.parkTunedOllie = ollie && !vert;
+  private startParkAir(vert: boolean, pop: number): void {
     const velocity = this.parkVelocity;
     if (vert) {
       this.vertNormal.set(this.rideNormal.x, 0, this.rideNormal.z).normalize();
@@ -6664,11 +6608,6 @@ export class Player {
     this.vertTracked = vert;
     this.vertLossT = 0;
     this.parkFlightGravity = vert ? SKATE_PARK.vertGravity : SKATE_PARK.airGravity;
-    if (ollie && !vert) {
-      const launch = parkOllieLaunch(this.vVel);
-      this.vVel = velocity.y = launch.velocity;
-      this.parkFlightGravity = launch.gravity;
-    }
     this.parkAutoTurn = this.parkAutoTurnTarget = this.parkSpinHold = this.parkBreakHold = 0;
     this.grabSpinAngle = 0;
     if (vert) {
@@ -6693,6 +6632,7 @@ export class Player {
     this.state = 'air'; this.grounded = false;
     this.freeSkate = this.airFromSkate = this.airMomentum = true;
     this.airGrav = 'board'; this.boardOllieAir = pop > 0;
+    this.floatAir = !vert && (this.takeoffTy > 0.05 || this.rideNormal.y < 0.985);
     this.airborneT = 0; this.launchVy = this.vVel;
     this.airPeakY = this.pos.y; this.airRose = false;
     this.charging = false; this.chargeTimer = 0; this.jumpBufferT = 0;
@@ -6922,7 +6862,7 @@ export class Player {
       else if (this.charging && input.jumpHeld)
         this.chargeTimer = Math.min(
           this.chargeTimer + dt,
-          TUNING.jumpChargeTime,
+          this.skateTuning.jumpChargeTime,
         );
       if (input.jumpReleased && this.charging) this.chargedJump(dt);
     } else if (!this.isBailing) {
@@ -7150,7 +7090,7 @@ export class Player {
     }
 
     let parkGravityCorrection = 0;
-    if (this.parkControls && this.airFromSkate && !this.isBailing) {
+    if (this.parkControls && this.vertAir && this.airFromSkate && !this.isBailing) {
       const g = this.parkFlightGravity;
       this.vVel -= g * dt;
       parkGravityCorrection = 0.5 * g * dt * dt;
@@ -7189,23 +7129,22 @@ export class Player {
       let flatG =
         this.vVel > 0
           ? board
-            ? TUNING.boardRiseGravity
+            ? this.skateTuning.boardRiseGravity
             : TUNING.riseGravity
           : board
             ? this.floatAir
-              ? TUNING.rampFallGravity // ramp/downhill launch: ballistic fall, THPS-style
-              : TUNING.boardFallGravity
+              ? this.skateTuning.rampFallGravity // ramp/downhill launch: ballistic fall, THPS-style
+              : this.skateTuning.boardFallGravity
             : TUNING.fallGravity;
-      if (this.parkControls && board) flatG = TUNING.boardRiseGravity;
       // APEX FLOAT (board only): bleed a slice of gravity out of the top of the
       // arc and hand it straight back on the way down. The hang lands where the
       // player is actually reading the trick, and because the window is a fixed
       // band of vertical speed it costs a big kicker air proportionally far
       // less than a little ollie — which is what stops authored gaps going
       // trivial. At boardApexFloat 0 this is exactly the plain two-value model.
-      if (board && TUNING.boardApexFloat > 0 && TUNING.boardApexBand > 0) {
-        const nearApex = 1 - Math.min(1, Math.abs(this.vVel) / TUNING.boardApexBand);
-        flatG *= 1 - TUNING.boardApexFloat * nearApex;
+      if (board && this.skateTuning.boardApexFloat > 0 && this.skateTuning.boardApexBand > 0) {
+        const nearApex = 1 - Math.min(1, Math.abs(this.vVel) / this.skateTuning.boardApexBand);
+        flatG *= 1 - this.skateTuning.boardApexFloat * nearApex;
       }
       const g =
         this.vertAir || this.pipeHang
@@ -7240,7 +7179,6 @@ export class Player {
       !this.grabbing &&
       !this.slamActive &&
       !this.vertAir &&
-      !(this.parkControls && this.airFromSkate) &&
       !this.slideJumpAir
     ) {
       const footAir =
@@ -7271,8 +7209,8 @@ export class Player {
         // Braking (input against travel) bites harder than stretching, in
         // either direction.
         const opposing = input.moveY * this.speed < 0;
-        const rate = opposing ? TUNING.airControl * CONST.airBrakeFactor : TUNING.airControl;
-        const cap = TUNING.downhillMax;
+        const rate = opposing ? this.skateTuning.airControl * CONST.airBrakeFactor : this.skateTuning.airControl;
+        const cap = this.skateTuning.downhillMax;
         this.speed = THREE.MathUtils.clamp(this.speed + rate * input.moveY * dt, -cap, cap);
       }
       // A rail hop keeps its old horizontal freedom by default. R2 or a grab
@@ -7524,7 +7462,7 @@ export class Player {
           this.axisF.set(hx / hl, 0, hz / hl);
           this.axisL.set(this.axisF.z, 0, -this.axisF.x);
           const keep = THREE.MathUtils.lerp(Math.abs(this.speed), tangSpeed, TUNING.landingFlow);
-          this.speed = Math.min(keep, TUNING.downhillMax);
+          this.speed = Math.min(keep, this.skateTuning.downhillMax);
         }
       }
       let parkLandingDot: number | null = null;
@@ -7721,8 +7659,8 @@ export class Player {
           // The grab itself already scored on START (it's a timed trick that
           // ticks up on the combo plate), so the landing only pays the burst —
           // scoring again here would double-count it.
-          if (!this.parkControls) this.speed += TUNING.grabBoost * (this.speed >= 0 ? 1 : -1);
-          const cap = TUNING.downhillMax;
+          this.speed += this.skateTuning.grabBoost * (this.speed >= 0 ? 1 : -1);
+          const cap = this.skateTuning.downhillMax;
           this.speed = THREE.MathUtils.clamp(this.speed, -cap, cap);
           landedTrick = true;
         }
@@ -7774,8 +7712,8 @@ export class Player {
         // a perfect-grind payout lands above downhillMax on purpose, and the
         // pump must not chop it back to the ceiling.
         if (input.jumpHeld && this.airFromSkate && Math.abs(this.speed) > 0.5) {
-          const pumpCap = Math.max(TUNING.downhillMax, Math.abs(this.speed));
-          this.speed += TUNING.landPumpBoost * (this.speed >= 0 ? 1 : -1);
+          const pumpCap = Math.max(this.skateTuning.downhillMax, Math.abs(this.speed));
+          this.speed += this.skateTuning.landPumpBoost * (this.speed >= 0 ? 1 : -1);
           this.speed = THREE.MathUtils.clamp(this.speed, -pumpCap, pumpCap);
         }
       }
@@ -8056,13 +7994,11 @@ export class Player {
     else resetVertBoardRelease(this.vertBoardRelease);
   }
 
-  // BASELINE CRUISE: while free-skating the board holds cruiseSpeed on its
-  // own. Above it (a released charge, spent downhill speed) it settles back
-  // down at chargeDecay; below it (a hill scrubbed you) the same rate eases
-  // you back up. No assist on ground too steep to stand — pipes stay honest,
-  // and the pull-back brake still cuts straight through to the dismount.
+  // DIRECTION-HELD CRUISE: pick up toward cruise below it, and coast through
+  // ordinary friction above it. No-input rollout uses frictionBleed directly.
+  // No cruise assist on ground too steep to stand.
   private cruiseEase(dt: number, steep: boolean): void {
-    const cruise = Math.min(TUNING.cruiseSpeed, TUNING.maxSpeed);
+    const cruise = Math.min(this.skateTuning.cruiseSpeed, this.skateTuning.maxSpeed);
     // No assist on transitions — and the old friction bleed stays, so a
     // sideways crawl on a wall dies out and the stall-flip can roll you
     // back into the pipe instead of parking you mid-face.
@@ -8076,7 +8012,7 @@ export class Player {
     // was to hold X forever. Overspeed now bleeds through the same friction
     // model whether you steer or coast; only the pick-up rate stays chargeDecay.
     if (Math.abs(this.speed) > cruise) this.frictionBleed(dt, steep);
-    else if (this.grounded) this.speed = Math.min(cruise, this.speed + TUNING.chargeDecay * dt);
+    else if (this.grounded) this.speed = Math.min(cruise, this.speed + this.skateTuning.chargeDecay * dt);
   }
 
   // ROLL-OUT friction, THPS-shaped: explicitly tagged Beach sand gets the full
@@ -8094,9 +8030,9 @@ export class Player {
       steep,
       surface: this.groundHit?.surface,
       beachSand: this.groundHit?.beachSand === true,
-      steepFriction: TUNING.friction,
-      rollFriction: TUNING.rollFriction,
-      windDrag: TUNING.windDrag,
+      steepFriction: this.skateTuning.friction,
+      rollFriction: this.skateTuning.rollFriction,
+      windDrag: this.skateTuning.windDrag,
     }) * dt;
     // Slick planks (icy sky-bridge boards): almost no friction, so you keep
     // sliding and can't stop short of the gap — the precision hazard.
@@ -8316,7 +8252,7 @@ export class Player {
     }
     if (this.ropeJumpArm && input.jumpHeld) {
       this.charging = true;
-      this.chargeTimer = Math.min(this.chargeTimer + dt, TUNING.jumpChargeTime);
+      this.chargeTimer = Math.min(this.chargeTimer + dt, this.skateTuning.jumpChargeTime);
     }
     if (!input.jumpHeld) this.ropeJumpArm = true;
     // the rope never shelters you from the kill floor (long ropes over pits)
@@ -8324,7 +8260,7 @@ export class Player {
   }
 
   private ropeLeap(level: Level, rs: RopeSwing): void {
-    const t = Math.min(1, this.chargeTimer / TUNING.jumpChargeTime);
+    const t = Math.min(1, this.chargeTimer / this.skateTuning.jumpChargeTime);
     const jumpV = TUNING.jumpMinVelocity + (TUNING.jumpVelocity - TUNING.jumpMinVelocity) * t;
     level.ropeVelAt(rs, this.ropeD, ROPE_V);
     this.state = 'air';
@@ -9530,8 +9466,8 @@ export class Player {
     // any earned downhill. tangent.y IS sin(slope) on a unit tangent.
     const railSlope = rail.tangentAt(this.grindT).y * this.grindDir; // + = climbing
     if (Math.abs(railSlope) > 1e-3) {
-      this.grindVel -= railSlope * TUNING.groundGravity * dt;
-      this.grindVel = THREE.MathUtils.clamp(this.grindVel, CONST.grindMinSpeed, TUNING.downhillMax);
+      this.grindVel -= railSlope * this.skateTuning.groundGravity * dt;
+      this.grindVel = THREE.MathUtils.clamp(this.grindVel, CONST.grindMinSpeed, this.skateTuning.downhillMax);
     }
 
     // THPS balance: the needle is an unstable equilibrium that runs away from
@@ -9696,10 +9632,10 @@ export class Player {
 
     if (input.jumpHeld) {
       this.charging = true;
-      this.chargeTimer = Math.min(this.chargeTimer + dt, TUNING.jumpChargeTime);
+      this.chargeTimer = Math.min(this.chargeTimer + dt, this.skateTuning.jumpChargeTime);
     }
     if (input.jumpReleased && this.charging) {
-      const t = Math.min(1, this.chargeTimer / TUNING.jumpChargeTime);
+      const t = Math.min(1, this.chargeTimer / this.skateTuning.jumpChargeTime);
       this.charging = false;
       this.chargeTimer = 0;
       this.lastJumpType = this.underK > 0.5 ? 'Under-Rail Drop' : 'Grind Exit';
@@ -10012,7 +9948,7 @@ export class Player {
     this.grindVel = THREE.MathUtils.clamp(
       planarIn * (0.72 + 0.28 * alongFrac) + TUNING.railSpeedBoost,
       CONST.grindMinSpeed,
-      TUNING.downhillMax,
+      this.skateTuning.downhillMax,
     );
     this.speed = this.grindVel;
     // Remember how far off the rail the body was at entry; placeOnRail eases
@@ -10126,7 +10062,7 @@ export class Player {
       // snappy gravity — flat and climbing rails are untouched.
       const desc = Math.min(0, t.y * this.grindDir * this.grindVel);
       if (desc < -0.5) {
-        vVel = Math.max(vVel * 0.45, vVel + desc * TUNING.ollieDownCouple);
+        vVel = Math.max(vVel * 0.45, vVel + desc * this.skateTuning.ollieDownCouple);
         this.floatAir = false;
       }
       if (len > 0.05) {
@@ -16537,7 +16473,7 @@ export class Player {
     const manualTarget =
       this.manualing !== 0 ? (this.manualing === 1 ? -0.4 : 0.35) - this.balance * 0.4 : stallLean;
     this.manualPitch += (manualTarget - this.manualPitch) * Math.min(1, 14 * dt);
-    const targetCharge = this.charging ? 0.35 + 0.65 * Math.min(1, this.chargeTimer / TUNING.jumpChargeTime) : 0;
+    const targetCharge = this.charging ? 0.35 + 0.65 * Math.min(1, this.chargeTimer / this.skateTuning.jumpChargeTime) : 0;
     this.chargePose += (targetCharge - this.chargePose) * Math.min(1, 16 * dt);
     // Imported Unity clips own their hips translation, body pitch and 0.225 m
     // floor lift. Their ownership marker neutralizes this compatibility root;

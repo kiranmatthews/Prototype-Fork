@@ -9,28 +9,17 @@ const server = await createServer({
   appType: 'custom', logLevel: 'silent', server: { middlewareMode: true },
 });
 try {
-  const { TUNING } = await server.ssrLoadModule('/src/tuning.ts');
+  const { TUNING, PARK_MOVEMENT_KEYS, PARK_CAMERA_KEYS } = await server.ssrLoadModule('/src/tuning.ts');
   // Camera v18 expresses this same captured shot as actual distance + angle.
   // Milk attraction became tunable after this browser capture.
   const expectedTuning = { ...expected.tuning,
-    parkCruiseSpeedScale: 1,
-    parkChargeSpeedScale: 1,
-    parkAccelerationScale: 1,
-    parkOllieHeight: 1,
-    parkOllieHangtime: 1,
-    parkOllieChargeTime: 0.2,
-    parkCamHeight: 5.1,
-    parkCamDist: 5.05,
-    parkCamPitch: 25.35,
-    parkCamFov: 49,
-    parkCamSpeedFovBoost: 6,
-    parkCamAirLift: 1,
- camDist: 5.05, camPitch: 25.35, milkMagnetRange: 1.75,
+    camDist: 5.05, camPitch: 25.35, milkMagnetRange: 1.75,
     grindCalm:.5,balanceSpeedEffect:.75,balanceGrace:1,balanceRamp:.18,balanceRampMax:2.5,bailGrace:0,
     balanceInertia:.7,balanceGravity:4.5,balanceEdgePower:3,balanceSafePeriod:.25,
     balanceControl:3.4,balanceDrift:.7,balanceEntryLean:.1,manualControl:4,manualDrift:.5,manualCalm:.35,manualArmWindow:.35,lipControl:2.2,balanceReentryRelief:.1 };
   delete expectedTuning.camTilt;
   delete expectedTuning.camOffset;
+  for (const [base,park] of Object.entries({...PARK_MOVEMENT_KEYS,...PARK_CAMERA_KEYS})) expectedTuning[park]=expectedTuning[base];
   assert.deepEqual(TUNING, expectedTuning);
   const { CrtGuestSettings } = await server.ssrLoadModule('/src/crt-guest/settings.ts');
   const crt = new CrtGuestSettings({ storage: null });
