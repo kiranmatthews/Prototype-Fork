@@ -27,12 +27,17 @@ export function installAnimationStudioStyles(): void {
     }
 
     body.animation-studio-open { overflow: hidden; }
+    /* Opening the authoring tool is explicit, even when ordinary debug chrome
+       is hidden. This also gives camera framing real panel bounds on deep links. */
+    body.animation-studio-open.game-debug-hidden .ast-root { display: block !important; }
     body.animation-studio-open .game-hud-layer,
     body.animation-studio-open .hud-tl, body.animation-studio-open .hud-tr,
     body.animation-studio-open .hud-trickplate, body.animation-studio-open .hud-msg,
     body.animation-studio-open .hud-boosts, body.animation-studio-open .hud-balance,
     body.animation-studio-open .hud-vbalance, body.animation-studio-open .side-wrap,
-    body.animation-studio-open .hud-ttclock { display: none !important; }
+    body.animation-studio-open .hud-ttclock,
+    body.animation-studio-open .ed-panel, body.animation-studio-open .ed-popwrap,
+    body.animation-studio-open .secondary-text-tuner { display: none !important; }
 
     .ast-root, .ast-root * { box-sizing: border-box; }
     .ast-root {

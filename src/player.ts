@@ -17278,7 +17278,12 @@ export class Player {
     // the skateboard so Unity's authored metre dimensions survive in world.
     boardG.scale.set(1 / 1.18, 1 / 1.36, 1 / 1.18);
     boardG.userData.preserveResourcesOnRebuild = true;
-    g.add(boardG);
+    // Publish the stable board frame before any Studio/review binding exists.
+    // Its identity transform preserves the original pre-contact pose.
+    const boardFrame = new THREE.Group();
+    boardFrame.name = 'skateboard-scale-compensation';
+    g.add(boardFrame);
+    boardFrame.add(boardG);
     this.boardG = boardG;
     skateboardSettings.subscribe((value) => {
       rebuildSkateboardPresentation(boardG, value);

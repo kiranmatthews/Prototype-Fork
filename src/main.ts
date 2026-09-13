@@ -1,4 +1,6 @@
 import { configureCityAssetRenderer } from "./cityAssets";
+import { addSkateReviewClips, loadSkateReviewCatalog, skateBoardVisibleAt, withSkatePresentationRig } from './animation/skateCatalog';
+import { Halfpipe } from './halfpipe';
 import { parkCruiseSpeed, parkChargedSpeed } from './skateParkTuning';
 import { MenuRewardsPresentation } from "./menuPresentation";
 import { mapSkateboardSettings } from "./skateboard/mapSettings";
@@ -1613,10 +1615,8 @@ let runStartRewards = {
 const player = new Player(scene);
 let runStartInventory = { lives: player.lives, fruit: player.fruit };
 player.onWipeout = () => competition?.bail();
-const playerAnimationBinding = RigBinding.fromSculptRuntime(
-  player.animationRig.root,
-  { strict: false },
-);
+const playerAnimationBinding = RigBinding.fromDefinition(player.animationRig.root,
+  withSkatePresentationRig(RigBinding.fromSculptRuntime(player.animationRig.root, { strict: false }).definition), { strict: false });
 const playerAnimationStarter = createPlayerStarterAnimationSuite(
   playerAnimationBinding.definition,
 );
@@ -3232,22 +3232,47 @@ async function openCharacterLabTool(): Promise<void> {
 }
 // Full character animation authoring. Gameplay is frozen while this owns the
 // stage; Player snapshots and restores its authoritative pose at the boundary.
-let animationStudio: {
-  frame: (dt: number) => void;
-  close: () => void;
-  getDocument: () => unknown;
-} | null = null;
+let animationStudio: import('./animationStudio').AnimationStudioHandle | null = null;
+let animationStudioOpening = false;
 async function openAnimationStudioTool(): Promise<void> {
-  if (animationStudio || characterLab) return;
+  if (animationStudio || characterLab || animationStudioOpening) return;
+  animationStudioOpening = true;
+  await animationPreparation;
   const rig = player.enterAnimationPreview();
+  const entryRotation = player.group.quaternion.clone();
+  const entryScale = player.group.scale.clone();
+  const entryBoardVisibility = rig.root.getObjectByName('board')?.visible ?? false;
+  let studyBoardVisible = true;
+  const studyStage = new THREE.Group();
+  const studyRail = new THREE.Mesh(new THREE.CylinderGeometry(.09,.09,5,8), new THREE.MeshStandardMaterial({color:0x93b6aa,roughness:.55}));
+  studyRail.rotation.x = Math.PI/2;studyRail.position.y = .8;studyStage.add(studyRail);
+  const studyWall = new THREE.Mesh(new THREE.PlaneGeometry(5,4), new THREE.MeshStandardMaterial({color:0xb2c5b5,side:THREE.DoubleSide}));
+  studyWall.rotation.y = Math.PI/2;studyWall.position.set(-.55,2,0);studyStage.add(studyWall);
+  const studyPipeMaterial = new THREE.MeshStandardMaterial({color:0xb2c5b5,side:THREE.DoubleSide});
+  const studyPipe = new Halfpipe(5,-5,0,2,3,studyPipeMaterial,5,'x');studyStage.add(studyPipe.object);
+  studyStage.visible = false;scene.add(studyStage);
+  const disposeStudyStage = () => {
+    studyStage.removeFromParent();
+    const materials = new Set<THREE.Material>([studyPipeMaterial]);
+    studyStage.traverse(node => {
+      if (!(node instanceof THREE.Mesh)) return;
+      node.geometry.dispose();
+      for (const material of Array.isArray(node.material) ? node.material : [node.material]) materials.add(material);
+    });
+    for (const material of materials) material.dispose();
+  };
   try {
-    const mod = await import("./animationStudio");
+    const [mod, skateReview] = await Promise.all([import("./animationStudio"), loadSkateReviewCatalog()]);
+    const reviewDocument = addSkateReviewClips(characterAnimationRuntime.document, skateReview);
+    playerAnimationDocument = reviewDocument;
+    characterAnimationRuntime.setDocument(reviewDocument);
     animationStudio = mod.openAnimationStudio({
       renderer,
       scene,
       camera,
       rigRoot: rig.root,
-      document: characterAnimationRuntime.document,
+      rigDefinition: playerAnimationBinding.definition,
+      document: reviewDocument,
       applyScalars: (values) => player.applyAnimationDeformations(values),
       syncPresentation: (clip) => {
         player.setCharacterUpperArmRestAngleWeight(
@@ -3257,9 +3282,28 @@ async function openAnimationStudioTool(): Promise<void> {
           crawlPalmWeight: clip?.id === 'player.crawl' &&
             clip.metadata?.palmOrientation === QUATERNIUS_CRAWL_PALMS ? 1 : 0,
         });
+        if (clip?.metadata?.reviewCapture === true) {
+          const board = rig.root.getObjectByName('board');
+          if (board) board.visible = studyBoardVisible;
+          player.group.rotation.set(0,Math.PI,0);player.group.scale.setScalar(1);
+          studyStage.position.copy(player.group.position);studyStage.visible = true;
+          const id = String(clip.metadata.skateReviewId);
+          studyRail.visible = id.startsWith('grind:') || id.startsWith('lip:') || id === 'special:darkslide';
+          studyRail.rotation.z = id.startsWith('lip:') ? Math.PI/2 : 0;
+          studyRail.position.y = Number(clip.metadata.reviewRailHeight ?? .8);
+          studyWall.visible = id === 'basic:Wallride';
+          studyPipe.object.visible = clip.metadata.reviewPipe === true;
+        } else {
+          player.group.quaternion.copy(entryRotation);player.group.scale.copy(entryScale);studyStage.visible = false;
+          const board = rig.root.getObjectByName('board');if (board) board.visible = entryBoardVisibility;
+        }
       },
       clearPostPose: () => player.clearCrawlHandPlantPreview(),
       applyPostPose: (clip, time) => {
+        if (clip.metadata?.reviewCapture === true) {
+          studyBoardVisible = skateBoardVisibleAt(clip, time);
+          const board = rig.root.getObjectByName('board');if (board) board.visible = studyBoardVisible;
+        }
         if (
           clip.id === 'player.crawl' &&
           clip.metadata?.contactAdaptation === UNITY_CRAWL_CONTACT_ADAPTATION
@@ -3276,6 +3320,7 @@ async function openAnimationStudioTool(): Promise<void> {
         p2CharacterAnimationRuntime?.setDocument(document);
       },
       onClose: () => {
+        disposeStudyStage();
         player.setCharacterUpperArmRestAngleWeight(
           player.animationClipHint === 'player.idle' ? 1 : 0,
         );
@@ -3286,9 +3331,18 @@ async function openAnimationStudioTool(): Promise<void> {
     });
     (window as unknown as { __game: Record<string, unknown> }).__game.animationStudio =
       animationStudio;
+    const requestedSkateClip = new URLSearchParams(location.search).get('skateClip');
+    if (requestedSkateClip) {
+      animationStudio.diagnostics.selectClip(requestedSkateClip);
+      animationStudio.diagnostics.play();
+    }
   } catch (error) {
+    disposeStudyStage();
     player.exitAnimationPreview();
+    console.error('Animation Studio failed to open', error);
     throw error;
+  } finally {
+    animationStudioOpening = false;
   }
 }
 // The SMOKE studio: same idea, different subject. #puffstudio on the URL.

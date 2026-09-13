@@ -305,6 +305,7 @@ function renderableDirectChildren(node: THREE.Object3D): THREE.Object3D[] {
  */
 export class PlayerAnimationBridge {
   private previewSnapshot: MutableTransformSnapshot[] | null = null;
+  private previewDeformationValues: Readonly<Record<string, number>> | null = null;
   private readonly overlayBaseline: MutableTransformSnapshot[] = [];
   private overlayBaselineApplied = false;
   private overlay: PlayerAnimationOverlay | null = null;
@@ -327,7 +328,10 @@ export class PlayerAnimationBridge {
   /** Snapshot the authoritative, non-interpolated pose exactly once. */
   enterPreview(): PlayerAnimationRig {
     this.restoreOverlayBaseline();
-    if (!this.previewSnapshot) this.previewSnapshot = captureHierarchy(this.playerRoot);
+    if (!this.previewSnapshot) {
+      this.previewSnapshot = captureHierarchy(this.playerRoot);
+      this.previewDeformationValues = { ...this.deformationValues };
+    }
     return this.rig;
   }
 
@@ -336,6 +340,7 @@ export class PlayerAnimationBridge {
     if (!this.previewSnapshot) return;
     this.restoreDeformationStates(true);
     restoreHierarchy(this.previewSnapshot);
+    this.deformationValues = { ...this.previewDeformationValues };
   }
 
   /** Restore the captured pose before relinquishing editor ownership. */
@@ -343,7 +348,9 @@ export class PlayerAnimationBridge {
     if (!this.previewSnapshot) return;
     this.restoreDeformationStates(true);
     restoreHierarchy(this.previewSnapshot);
+    this.deformationValues = { ...this.previewDeformationValues };
     this.previewSnapshot = null;
+    this.previewDeformationValues = null;
   }
 
   setOverlay(overlay: PlayerAnimationOverlay | null): () => void {

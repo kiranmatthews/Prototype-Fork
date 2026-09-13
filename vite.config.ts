@@ -13,6 +13,7 @@ export default defineConfig({
         index: 'index.html',
         crtReview: 'crt-review.html',
         skateboardLab: 'skateboard-lab.html',
+        skatePoseReview: 'skate-pose-review.html',
         spinLab: 'spin-lab.html',
         milkReview: 'milk-review.html',
         resetLocalData: 'reset-local-data.html',

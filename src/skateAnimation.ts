@@ -27,7 +27,7 @@ export interface SkatePoseInput {
  * Board transforms live in an un-stretched frame; endpoints use measured rig
  * lengths. This keeps the same contacts after character/board lab edits. */
 export class SkateAnimation {
-  readonly boardMount = new THREE.Group();
+  readonly boardMount: THREE.Group;
   private feet: [Limb, Limb] | null;
   private hands: [Limb, Limb] | null;
   private hips: THREE.Object3D | undefined;
@@ -59,6 +59,7 @@ export class SkateAnimation {
 
   constructor(private group: THREE.Group, private body: THREE.Group,
     private rider: THREE.Group, private board: THREE.Group) {
+    this.boardMount = body.getObjectByName('skateboard-scale-compensation') as THREE.Group ?? new THREE.Group();
     this.boardMount.name = 'skateboard-scale-compensation';
     body.add(this.boardMount);
     this.boardMount.add(board);

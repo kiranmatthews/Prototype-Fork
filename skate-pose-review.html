@@ -1,4 +1,31 @@
 <!doctype html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Skate pose contact review</title>
-<style>body{margin:0;background:#e6e4dd;color:#17212b;font:15px system-ui}canvas{display:block;width:100vw;height:100vh}aside{position:fixed;top:20px;left:20px;width:270px;background:#fffdf5ee;padding:20px;border-radius:12px;box-shadow:0 8px 32px #1222}h1{font-size:21px;margin:0 0 10px}label{display:block;margin-top:12px}select,button,input{font:inherit;margin:4px 0;padding:7px;max-width:100%}select,input{width:100%}button{cursor:pointer}pre{font-size:11px;white-space:pre-wrap}p{line-height:1.45}small{opacity:.7}</style></head>
-<body><aside><small>ACTUAL GAME RIG · LOCAL REVIEW</small><h1>Skate pose catalogue</h1><label>Trick<select id="trick" aria-label="Trick"></select></label><label>View<select id="view" aria-label="View"><option>Three quarter</option><option>Side</option><option>Front</option><option>Back</option><option>Orbit</option></select></label><label>Stance<select id="stance" aria-label="Stance"><option value="1">Right foot forward</option><option value="-1">Left foot forward</option></select></label><button id="play">Pause</button> <button id="next">Next trick</button><label>Phase<input id="phase" aria-label="Phase" type="range" min="0" max="1" step=".005" value="0"></label><p id="definition"></p><pre id="metrics" data-testid="pose-metrics"></pre></aside><script type="module" src="/tools/skate-pose-browser-review.ts"></script></body></html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Skate poses · contact sheet</title>
+  <link rel="icon" href="data:,">
+  <script>
+    // Raw TypeScript cannot run under file://. Old local file links open the
+    // published tool instead of leaving the user with a nonfunctional page.
+    if (location.protocol === 'file:') location.replace('https://kiranmatthews.github.io/Prototype-Fork/skate-pose-review.html' + location.hash);
+  </script>
+</head>
+<body>
+  <header class="sheet-header">
+    <div class="heading-row"><div><span class="eyebrow">ANIMATION REVIEW</span><h1>Skate pose contact sheet</h1></div><a class="game-link" href="./?playtest&level=codex-lab&lite#animationstudio">Animation Lab ↗</a></div>
+    <div class="controls">
+      <button id="play" disabled>Pause all</button>
+      <label>Speed<select id="speed"><option value="0.25">¼×</option><option value="0.5" selected>½×</option><option value="1">1×</option></select></label>
+      <label>View<select id="view"><option value="front">Front three-quarter</option><option value="rear">Rear three-quarter</option><option value="side">Board side</option><option value="nose">Board nose</option><option value="orbit">Orbit</option></select></label>
+      <label>Show<select id="category"><option>All poses</option></select></label>
+      <label class="scrub-label">All phases<input id="scrub" type="range" min="0" max="1" step=".005" value="0"></label>
+      <button id="restart">Restart loops</button>
+      <button id="studies" disabled>Use Lab edits</button>
+    </div>
+    <p id="status" role="status">Loading the current skate poses…</p>
+  </header>
+  <main><p class="intro">Every pose loops below. Use its <strong>S-number</strong> when asking for repairs. Pause a card, choose a view, or open its editable capture in the Animation Lab.</p><div id="grid" class="pose-grid"></div>
+  <p class="capture-note">These are captures of the current game poses, including existing issues. Lab edits are saved as study clips; use “Use Lab edits” to review them here.</p><small id="build-stamp"></small>
+  <p id="failure" hidden></p><noscript><p>This animated sheet needs JavaScript. <a href="https://kiranmatthews.github.io/Prototype-Fork/skate-pose-review.html">Open the hosted contact sheet.</a></p></noscript></main>
+  <script type="module" src="/src/skatePoseGallery.ts"></script>
+</body></html>

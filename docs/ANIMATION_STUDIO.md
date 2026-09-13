@@ -20,6 +20,8 @@ state, camera state, and render interpolation before play resumes.
 
 ## Authoring workflow
 
+The complete skate catalogue is available as **Skate · S01–S42** editable study clips, including the board and captured independent elasticity. The published [contact sheet](https://kiranmatthews.github.io/Prototype-Fork/skate-pose-review.html) loops them in three columns and links directly to each Lab clip. **Use Lab edits** loads saved studies into the sheet for comparison. These review clips preserve the current poses for correction and do not automatically replace procedural gameplay; see [SKATE_REVIEW_SHEET.md](SKATE_REVIEW_SHEET.md).
+
 1. Select an animation from the clip selector. The starter suite contains
    idle, walk, run, jump, double jump, fall, land, crouch, crawl, slide, skate,
    grind, grab, hang, climb, rope, slam, bail, and spin slots.

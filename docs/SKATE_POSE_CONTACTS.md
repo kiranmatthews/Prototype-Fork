@@ -1,5 +1,7 @@
 # Skate pose contact audit — September 2026
 
+**Visual review status:** the user subsequently reported that several poses regressed. The numerical contact checks below are historical technical evidence, not approval of the silhouettes. Use the [three-column contact sheet](SKATE_REVIEW_SHEET.md) to identify and repair the individual poses.
+
 `src/skateTricks.ts` defines mechanical identities; `src/skateAnimation.ts` applies the final contact constraints to the actual Player rig after animation and character proportions. `skate-pose-review.html` is a local catalogue viewer with phase scrubbing, both foot-forward stances and five camera views. `trick-review.html?playtest&level=jungle-cup` exercises real takeoffs, inputs, catches and landings.
 
 ## Mechanical identities

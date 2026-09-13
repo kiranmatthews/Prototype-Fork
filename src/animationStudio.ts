@@ -525,6 +525,7 @@ class AnimationStudio implements AnimationStudioHandle {
   private playTime = 0;
   private needsSample = true;
   private reframeAfterSample = true;
+  private skateCameraAnchor: THREE.Vector3 | null = null;
   private autoKey = true;
   private authoringMode: AuthoringMode = 'fk';
   private transformMode: TransformMode = 'rotate';
@@ -566,6 +567,7 @@ class AnimationStudio implements AnimationStudioHandle {
   private readonly ikGuide = createIkGuide();
 
   private clipSelect!: HTMLSelectElement;
+  private readonly skateReviewNote = dom('p', 'ast-hint', 'Gameplay capture · edits are saved as a study for review.');
   private clipNameInput!: HTMLInputElement;
   private durationInput!: HTMLInputElement;
   private speedSlider!: HTMLInputElement;
@@ -765,7 +767,10 @@ class AnimationStudio implements AnimationStudioHandle {
     this.selectJoint(this.selectedJointId);
     this.refreshAll();
     this.seek(this.activeClip()?.range.start ?? 0);
-    void this.restorePreferredDraft();
+    // A supplied host document has already restored/reconciled its drafts.
+    // A late storage read must not remove newly imported review clips or
+    // replace the clip selected by a deep link.
+    if (!ctx.document) void this.restorePreferredDraft();
   }
 
   get isOpen(): boolean {
@@ -802,10 +807,21 @@ class AnimationStudio implements AnimationStudioHandle {
     if (this.onionEnabled && this.onionDirty) this.updateOnionSkin();
     this.ctx.syncPresentation?.(clip ?? null);
     if (clip && sampledThisFrame) this.ctx.applyPostPose?.(clip, this.playTime);
-    if (this.reframeAfterSample) {
+    const reframed = this.reframeAfterSample;
+    if (reframed) {
       this.frameCamera();
       this.reframeAfterSample = false;
     }
+    // Keep native rail swings and drops in the clear authoring viewport.
+    // Translate only on playback/seek; paused pose edits retain a fixed camera.
+    if (clip?.metadata?.reviewCapture === true) {
+      const anchor = this.ctx.rigRoot.getWorldPosition(new THREE.Vector3());
+      if (!reframed && sampledThisFrame && this.skateCameraAnchor) {
+        const delta = anchor.clone().sub(this.skateCameraAnchor);
+        this.ctx.camera.position.add(delta);this.orbit.target.add(delta);
+      }
+      this.skateCameraAnchor = anchor;
+    } else this.skateCameraAnchor = null;
     this.refreshTailVisibilityButton();
     this.orbit.update();
     this.syncTimeUi();
@@ -961,6 +977,11 @@ class AnimationStudio implements AnimationStudioHandle {
     closeButton.classList.add('ast-icon');
     closeButton.onclick = () => this.close();
     parent.append(importButton, exportButton, closeButton);
+    const skateSheet = dom('a', 'ast-button', 'Skate contact sheet ↗');
+    skateSheet.href = `${import.meta.env.BASE_URL}skate-pose-review.html`;
+    skateSheet.target = '_blank';
+    skateSheet.rel = 'noopener';
+    parent.insertBefore(skateSheet, importButton);
   }
 
   private refreshTailVisibilityButton(): void {
@@ -983,6 +1004,8 @@ class AnimationStudio implements AnimationStudioHandle {
     this.clipSelect.setAttribute('aria-label', 'Selected animation');
     this.clipSelect.onchange = () => this.selectClip(this.clipSelect.value);
     selectRow.appendChild(this.clipSelect);
+    this.skateReviewNote.hidden = true;
+    section.appendChild(this.skateReviewNote);
     section.appendChild(selectRow);
 
     const buttons = dom('div', 'ast-button-row');
@@ -2485,11 +2508,28 @@ class AnimationStudio implements AnimationStudioHandle {
     if (box.isEmpty()) box.setFromCenterAndSize(this.ctx.rigRoot.getWorldPosition(new THREE.Vector3()), new THREE.Vector3(1, 2, 1));
     const center = box.getCenter(new THREE.Vector3());
     const size = Math.max(0.5, box.getSize(new THREE.Vector3()).length());
-    const distance = size / (2 * Math.tan(THREE.MathUtils.degToRad(this.ctx.camera.fov) / 2)) * 1.3;
+    let distance = size / (2 * Math.tan(THREE.MathUtils.degToRad(this.ctx.camera.fov) / 2)) * 1.3;
+    const direction = new THREE.Vector3(0.68, 0.28, -1).normalize();
+    if (this.activeClip()?.metadata?.reviewCapture === true) {
+      const canvas = this.ctx.renderer.domElement.getBoundingClientRect();
+      const left = this.root.querySelector('.ast-left')?.getBoundingClientRect();
+      const right = this.root.querySelector('.ast-right')?.getBoundingClientRect();
+      const top = this.root.querySelector('.ast-topbar')?.getBoundingClientRect();
+      const timeline = this.root.querySelector('.ast-timeline')?.getBoundingClientRect();
+      if (left && right && top && timeline && canvas.height > 0) {
+        const h = Math.max(180, timeline.top - top.bottom);
+        distance *= canvas.height / h;
+        const metresPerPixel = 2 * distance * Math.tan(THREE.MathUtils.degToRad(this.ctx.camera.fov) / 2) / canvas.height;
+        const screenRight = new THREE.Vector3().crossVectors(this.ctx.camera.up, direction).normalize();
+        const screenUp = new THREE.Vector3().crossVectors(direction, screenRight).normalize();
+        center.addScaledVector(screenUp, -(canvas.top + canvas.height / 2 - (top.bottom + timeline.top) / 2) * metresPerPixel);
+        center.addScaledVector(screenRight, -((left.right + right.left) / 2 - (canvas.left + canvas.width / 2)) * metresPerPixel);
+      }
+    }
     this.orbit.target.copy(center);
     // The active rider faces world -Z at rest. Start from a readable front
     // three-quarter authoring view; orbit remains completely free afterwards.
-    this.ctx.camera.position.copy(center).add(new THREE.Vector3(0.68, 0.28, -1).normalize().multiplyScalar(distance));
+    this.ctx.camera.position.copy(center).add(direction.multiplyScalar(distance));
     this.ctx.camera.near = Math.max(0.005, distance / 200);
     this.ctx.camera.far = Math.max(100, distance * 30);
     this.ctx.camera.lookAt(center);
@@ -2732,6 +2772,7 @@ class AnimationStudio implements AnimationStudioHandle {
       this.clipSelect.appendChild(option);
     }
     this.clipSelect.value = current;
+    this.skateReviewNote.hidden = clip?.metadata?.reviewCapture !== true;
     if (!clip) return;
     if (document.activeElement !== this.clipNameInput) this.clipNameInput.value = clip.name;
     setNumberInput(this.durationInput, clip.duration);
