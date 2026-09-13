@@ -816,6 +816,11 @@ class AnimationStudio implements AnimationStudioHandle {
     // Translate only on playback/seek; paused pose edits retain a fixed camera.
     if (clip?.metadata?.reviewCapture === true) {
       const anchor = this.ctx.rigRoot.getWorldPosition(new THREE.Vector3());
+      if(clip.metadata.skateReviewId==='grind:under'){
+        const hips=this.jointNodes.get('hips')?.getWorldPosition(new THREE.Vector3());
+        const board=this.jointNodes.get('skateBoard')?.getWorldPosition(new THREE.Vector3())??anchor;
+        if(hips){anchor.x=(board.x+hips.x)*.5;anchor.z=(board.z+hips.z)*.5;}
+      }
       if (!reframed && sampledThisFrame && this.skateCameraAnchor) {
         const delta = anchor.clone().sub(this.skateCameraAnchor);
         this.ctx.camera.position.add(delta);this.orbit.target.add(delta);
@@ -2511,6 +2516,7 @@ class AnimationStudio implements AnimationStudioHandle {
     let distance = size / (2 * Math.tan(THREE.MathUtils.degToRad(this.ctx.camera.fov) / 2)) * 1.3;
     const direction = new THREE.Vector3(0.68, 0.28, -1).normalize();
     if (this.activeClip()?.metadata?.reviewCapture === true) {
+      if(['grind:under','special:darkslide'].includes(String(this.activeClip()?.metadata?.skateReviewId)))distance*=1.2;
       const canvas = this.ctx.renderer.domElement.getBoundingClientRect();
       const left = this.root.querySelector('.ast-left')?.getBoundingClientRect();
       const right = this.root.querySelector('.ast-right')?.getBoundingClientRect();

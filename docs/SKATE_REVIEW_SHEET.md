@@ -32,8 +32,12 @@ Held grinds (including Darkslide), manuals, wallrides and lip stalls capture rea
 
 The board frame is created at rig construction with its original identity transform, so binding it does not change the live stance. Captures include the board transform and use a separate authoring presentation root to retain body motion without deforming the whole skeleton. Existing gameplay clip IDs and routing remain intact.
 
-Keys are reduced against the 30 fps capture with 0.0002 local-unit/scalar tolerance and 0.0009 radian quaternion tolerance, then written to six decimals. The 42-clip file is about 6.7 MiB before HTTP compression, fetched only by the sheet or when opening the Lab. The renderer reuses the same character surfaces; it does not allocate a WebGL context per card.
+Keys are reduced against the 30 fps capture with 0.0002 local-unit/scalar tolerance and 0.0009 radian quaternion tolerance, then written to six decimals. The 42-clip file is about 6.8 MiB before HTTP compression, fetched only by the sheet or when opening the Lab. The renderer reuses the same character surfaces; it does not allocate a WebGL context per card.
 
 `node tools/test-skate-review.mjs` checks all entries, schema/rig references, 1,890 sampled playback frames, independent deformation bounds, board tracks/visibility, native transition evidence, source upgrades, preserved edits/deletions and complete preview restoration. Preview cleanup restores the deformation-control values as well as bone transforms, preventing garment length from inheriting a study frame after closing. Existing animation suite/runtime and skate contact checks cover the shared integration. Browser QA must cover scrolling, loops, pause/scrub/restart, category and camera controls, a Lab deep link, saved study loading, and the deployed file-link redirect. Run the production build; no full repository suite is required for this change.
 
 Validated the packaged sheet and Lab in a real browser: 42 clips, a three-column grid, S42 hang/return/drop/landing views, native ramp exits, visible authoring panels with debug chrome hidden, and preview close. Lite and full rendering were checked with no console errors.
+
+Revision 5 repairs S40 and S42 in gameplay and the study captures. The hang includes continuous stretched arm shafts and two truck grips; the Darkslide uses a narrow upright stance. Camera framing accommodates the longer hang and the Darkslide exit.
+
+Revision 5 browser QA covered the held truck grip from opposite and rail-end views, the board handoff on release, Darkslide hold/exit, and full-render Animation Lab playback with clean close and no console errors.

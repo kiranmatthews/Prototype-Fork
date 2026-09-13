@@ -1,6 +1,9 @@
 const clamp = (n: number, a: number, b: number) => Math.max(a, Math.min(b, n));
 const smooth = (n: number) => { const t=clamp(n,0,1); return t*t*(3-2*t); };
 
+// The rail anchor and its clearance probe share the deeper hanging position.
+export const SKATE_UNDER_RAIL_DEPTH = 3.5;
+
 export interface SkateBodyMotionInput {
   grounded: boolean;
   charge: number;

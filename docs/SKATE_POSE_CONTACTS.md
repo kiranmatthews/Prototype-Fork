@@ -15,7 +15,7 @@
 | Smith | Rear hanger; nose dipped on approach side |
 | Feeble | Rear hanger; nose dipped across rail |
 | Boardslide / Lipslide | Deck underside, perpendicular; entry path distinguishes them |
-| Darkslide | Inverted griptape; feet on underside beyond trucks |
+| Darkslide | Inverted griptape; close stance on the underside between trucks |
 
 A nosegrind uses the front truck; pressing the deck tip is a different contact. See [skatedeluxe's nosegrind lesson](https://www.skatedeluxe.com/blog/en/trick-tips/skateboard/curb-rail/how-to-nosegrind/).
 
@@ -113,3 +113,13 @@ S05 now holds a stronger nose-up pitch through ascent. The leading knee follows 
 S06 and S07 share the proportion-aware standing solve at a nominal 0.55 radian knee-flex target. On the review rig at neutral balance, the groin rises from about 0.42 m above the mean sole height to about 0.90 m; knees change from roughly 119° to about 26°/50–54°. The loaded rear/front wheels and both shoes retain their contacts. Shoulders make alternating small corrections, with delayed elbow/wrist motion and a smoothed response to the balance needle. Shared elasticity and the entry/exit spring remain active.
 
 Catalogue revision 4 refreshes the sheet and unedited Lab studies while preserving authored repairs. The expanded contact check covers 10,206 pose frames, including both manual types, stances and balance extremes; worst sole error is 2.14 mm, palm error 0.94 mm. All 42 captures reconstruct and pass 1,890 playback samples. Build, contact-sheet review and actual-controller lite/full rendering pass with no console errors.
+
+## S40 / S42 review repairs
+
+S42 now uses the contact solver through the complete hang. The board spans the rail at 90°, with its belly supported above the rail and one curled hand around each truck hanger. The hanging anchor is 3.5 m below the rail; the same depth drives the ground-clearance probe. The body swings around the rail during entry and return, and the board passes beside the head during the release-to-feet handoff. Head bounds, including hair/ears, remain at least 0.41 m below the rail underside during the hold.
+
+The shared under-rail elasticity profile lengthens upper-arm and forearm shafts independently: roughly 3.65×/3.85× in the hold, with extra reach during the swing and finite release. Arm controls allow 5.75×, and the rendered arm components allow that range composed with the existing 1.58× maximum authored arm proportion. Both rigid knobbles keep their shapes. A separate check verifies visible shaft endpoints as well as the semantic joints, preventing detached-looking elbows or wrists.
+
+S40 now uses a ~0.68 m stance between the trucks and a proportion-aware upright pelvis. Feet follow a stable catch plane while the deck flips. The board carries its support offset into the exit and avoids adding a second flip pop over the real ollie. This removes the below-knee groin pose, excessive width and amplified exit bounce while retaining the inverted-deck contact and shared cartoon elasticity.
+
+`tools/test-skate-hang-darkslide.mjs` drives 2,744 actual controller frames across both stances and travel directions. It checks the complete entry, hold, return, release and landing: both truck grips remain within 1 mm through the swing, head bounds clear the rail, visible arm shafts meet their joints, and Darkslide stays narrow with the groin above the knees. The existing 10,206-frame contact audit, 1,344-frame ollie regression, 1,890-frame review playback check, stretchable-bone integration and production build pass. Catalogue revision 5 refreshes unedited Lab captures and preserves user repairs.

@@ -78,6 +78,7 @@ async function start(){
   const rig=player.enterAnimationPreview();
   const binding=RigBinding.fromDefinition(rig.root,withSkatePresentationRig(RigBinding.fromSculptRuntime(rig.root).definition));
   const board=rig.root.getObjectByName('board')!;board.visible=true;
+  const hipsNode=rig.root.getObjectByName('hips')!;
   const floor=new THREE.Mesh(new THREE.PlaneGeometry(30,30),new THREE.MeshStandardMaterial({color:0xe1e6dc,roughness:1}));floor.rotation.x=-Math.PI/2;floor.position.y=-.02;scene.add(floor);
   const stageGrid=new THREE.GridHelper(12,12,0xc4cec1,0xd6ddd2);stageGrid.position.y=-.01;scene.add(stageGrid);
   const rail=new THREE.Mesh(new THREE.CylinderGeometry(.09,.09,6,8),new THREE.MeshStandardMaterial({color:0x829891,roughness:.45,metalness:.25}));rail.rotation.x=Math.PI/2;rail.position.y=.8;scene.add(rail);
@@ -106,9 +107,15 @@ async function start(){
         const airborne=card.entry.category==='Flips'||card.entry.category==='Grabs'||card.entry.category==='Specials'&&card.entry.id!=='special:darkslide'||card.entry.id==='basic:Ollie';
         const rootPosition=pose.joints.skateBody?.position??[0,0,0];
         target.set(-rootPosition[0],rootPosition[1]+1.25,-rootPosition[2]);
+        if(card.entry.id==='special:darkslide')target.y+=.15;
+        if(card.entry.id==='grind:under'){
+          const hips=hipsNode.getWorldPosition(new THREE.Vector3());
+          const deck=board.getWorldPosition(new THREE.Vector3());
+          target.set((hips.x+deck.x)*.5,rootPosition[1]+1.65,(hips.z+deck.z)*.5);
+        }
         const mode=card.view.value||view.value;
         const angle=mode==='front'?-2.35:mode==='rear'?.8:mode==='side'?-Math.PI/2:mode==='nose'?Math.PI:clock*.28;
-        const distance=airborne?7.8:6.7;
+        const distance=card.entry.id==='grind:under'?9.6:card.entry.id==='special:darkslide'?8.6:airborne?7.8:6.7;
         camera.position.copy(target).add(new THREE.Vector3(Math.sin(angle)*distance,1.7,Math.cos(angle)*distance));camera.lookAt(target);camera.aspect=r.width/r.height;camera.updateProjectionMatrix();
         renderer.setViewport(r.left,height-r.bottom,r.width,r.height);renderer.setScissor(r.left,height-r.bottom,r.width,r.height);renderer.render(scene,camera);
       }

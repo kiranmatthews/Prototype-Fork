@@ -4,7 +4,7 @@ import { GRAB_CONTACTS, GRIND_CONTACTS, LIP_CONTACTS, skateContactBounce, sample
 import { DEFAULT_SKATEBOARD_SETTINGS, type SkateboardSettingsValue } from './skateboard/settings';
 import { evaluateSkateboardSurfaceHeight } from './skateboard/model';
 import type { Rail } from './rails';
-import { SkateBodySpring, skateOlliePitch } from './skateBodyMotion';
+import { SkateBodySpring, skateOlliePitch, SKATE_UNDER_RAIL_DEPTH } from './skateBodyMotion';
 
 const X = new THREE.Vector3(1, 0, 0), Y = new THREE.Vector3(0, 1, 0), Z = new THREE.Vector3(0, 0, 1);
 const clamp = THREE.MathUtils.clamp;
@@ -15,6 +15,7 @@ export interface SkatePoseInput {
   dt: number; time: number; active: boolean; grounded: boolean; stance: number;
   yaw: number; deckYaw: number; speed: number; charge: number; balance: number;
   verticalVelocity?: number; launchVelocity?: number; mount?: number;
+  underWeight?: number;
   manual: number; grab: GrabTrickKind; grabWeight: number;
   grind: GrindStyle | null; rail: Rail | null; railT: number; railDir: number;
   crossDir: number; approachSide: number; crookedSide: number;
@@ -32,6 +33,8 @@ export class SkateAnimation {
   private hands: [Limb, Limb] | null;
   private hips: THREE.Object3D | undefined;
   private spine: THREE.Object3D | undefined;
+  private head: THREE.Object3D | undefined;
+  private hangFrame = new THREE.Quaternion();
   private spineBefore: THREE.Quaternion | null = null;
   private key = '';
   private age = 0;
@@ -44,6 +47,8 @@ export class SkateAnimation {
   private supportY = 0;
   private lastActive = false;
   private darkWeight = 0;
+  private darkExitOffset = new THREE.Vector3();
+  private darkPop = 0;
   private locomotionWeight = 0;
   private manualWeight = 0;
   private manualBalance = 0;
@@ -78,9 +83,10 @@ export class SkateAnimation {
     this.hands = lh && rh ? [lh, rh] : null;
     this.hips = rider.getObjectByName('hips');
     this.spine = rider.getObjectByName('spine');
+    this.head = rider.getObjectByName('head');
   }
 
-  reset(): void { this.key = ''; this.lastActive = false; this.age = this.airAge = this.darkWeight = this.locomotionWeight = this.manualWeight = this.manualBalance = 0; this.bounceAge = 1; this.wasGrounded = true; this.bodySpring.reset(); }
+  reset(): void { this.key = ''; this.lastActive = false; this.age = this.airAge = this.darkWeight = this.darkPop = this.locomotionWeight = this.manualWeight = this.manualBalance = 0; this.darkExitOffset.set(0,0,0); this.bounceAge = 1; this.wasGrounded = true; this.bodySpring.reset(); }
 
   /** Restore the legacy sibling frame before it authors its fallback pose. */
   prepare(): void {
@@ -141,9 +147,12 @@ export class SkateAnimation {
   }
 
   apply(p: SkatePoseInput): boolean {
-    if (!p.active || !this.feet || !this.hands || !this.hips) { this.lastActive = false; this.darkWeight = this.manualWeight = this.manualBalance = 0; return false; }
+    if (!p.active || !this.feet || !this.hands || !this.hips) { this.lastActive = false; this.darkWeight = this.darkPop = this.manualWeight = this.manualBalance = 0; return false; }
     this.darkWeight = clamp(this.darkWeight + (p.darkslide ? 1 : -1) * p.dt / .22, 0, 1);
-    const dark = smooth(this.darkWeight), darkPop = Math.sin(Math.PI * dark);
+    const dark = smooth(this.darkWeight);
+    this.darkPop = p.darkslide ? Math.sin(Math.PI*dark) : this.darkPop*Math.exp(-20*p.dt);
+    const darkPop = this.darkPop;
+    const under = smooth(clamp(p.underWeight??0,0,1));
     const s = (this.board.userData.settings ?? DEFAULT_SKATEBOARD_SETTINGS) as SkateboardSettingsValue;
     const scale = s.overallScale, grip = s.boardToGroundDistance * scale;
     const surface = (x: number, z: number) => (s.boardToGroundDistance + evaluateSkateboardSurfaceHeight(s, x / scale, z / scale)) * scale;
@@ -168,14 +177,14 @@ export class SkateAnimation {
     const grab = GRAB_CONTACTS[grabKind];
     const gw = clamp(mcTwist ? mcTwist.grab : p.grabWeight, 0, 1);
     const flipPose = p.flip ? sampleDeckTrick(p.flip, mcTwist ? mcTwist.deckProgress : p.flipProgress) : null;
-    const locomotionTarget = (key === 'ride' || key === 'air' || p.manual !== 0) && !p.flip && gw < .01 ? 1 : 0;
+    const locomotionTarget = (key === 'ride' || key === 'air' || p.manual !== 0 || p.darkslide) && !p.flip && gw < .01 ? 1 : 0;
     if (!this.lastActive) { this.locomotionWeight = locomotionTarget; this.bodySpring.reset(p.charge); }
     else this.locomotionWeight += (locomotionTarget-this.locomotionWeight)*(1-Math.exp(-16*p.dt));
     this.manualWeight += ((p.manual ? 1 : 0)-this.manualWeight)*(1-Math.exp(-12*p.dt));
     if (!p.manual && this.manualWeight < .001) this.manualWeight = 0;
     this.manualBalance += (clamp(p.balance,-1,1)-this.manualBalance)*(1-Math.exp(-10*p.dt));
     const bodyFlex = this.bodySpring.step(p.dt, {
-      grounded:p.grounded, charge:p.charge,
+      grounded:p.grounded || p.darkslide, charge:p.charge,
       verticalVelocity:p.verticalVelocity??0, launchVelocity:p.launchVelocity??0,
       contactBounce:p.grounded?bounce:0, mount:clamp(p.mount??0,0,1),
       manual:p.manual !== 0,
@@ -194,6 +203,7 @@ export class SkateAnimation {
       this.up.crossVectors(tangent, this.right).normalize();
       this.forward.copy(tangent);
       this.frame.setFromRotationMatrix(this.matrix.makeBasis(this.right, this.up, tangent));
+      this.hangFrame.copy(this.frame);
       // Rail visuals use a 0.09 m tube, including the ordinary coping rails.
       this.support.copy(p.rail.pointAt(p.railT)).addScaledVector(this.up, .09);
       const d = GRIND_CONTACTS[p.grind];
@@ -236,7 +246,9 @@ export class SkateAnimation {
     // cannot bury one truck or lift the one the named grind is loading.
     this.temp.set(0, this.supportY, this.supportZ).applyQuaternion(this.boardQ);
     this.boardP.copy(this.support).sub(this.temp);
-    if (!p.grind && !p.manual && !p.lip) this.boardP.copy(this.support);
+    if (!p.grind && !p.manual && !p.lip) this.boardP.copy(this.support).addScaledVector(this.darkExitOffset,dark);
+    if(p.grind && p.darkslide)this.darkExitOffset.copy(this.boardP).sub(this.group.getWorldPosition(new THREE.Vector3()));
+    // A real exit ollie already supplies lift; do not add a second flip pop.
     this.boardP.addScaledVector(this.up, .30 * gw + .18 * darkPop);
     if (p.wallWeight > .001) {
       const wallForward = p.wallForward.clone().addScaledVector(p.wallNormal, -p.wallForward.dot(p.wallNormal)).normalize();
@@ -247,6 +259,19 @@ export class SkateAnimation {
       this.up.copy(Y).applyQuaternion(this.boardQ);
       this.forward.copy(Z).applyQuaternion(this.boardQ);
       this.right.copy(X).applyQuaternion(this.boardQ);
+    }
+
+    const hangAnchor = p.grind && p.rail ? p.rail.pointAt(p.railT)
+      : this.group.getWorldPosition(new THREE.Vector3()).addScaledVector(Y,SKATE_UNDER_RAIL_DEPTH);
+    if (under > 0) {
+      const hangQ = this.hangFrame.clone().multiply(new THREE.Quaternion().setFromAxisAngle(Y,Math.PI/2));
+      const hangUp = Y.clone().applyQuaternion(this.hangFrame);
+      const hangBoard = hangAnchor.clone().addScaledVector(hangUp,.09)
+        .sub(new THREE.Vector3(0,(s.boardToGroundDistance-s.deckThickness)*scale,0).applyQuaternion(hangQ));
+      this.boardQ.slerp(hangQ,under);this.boardP.lerp(hangBoard,under);
+      // On release the board passes beside the head on its way to the feet.
+      if (!p.grind) this.boardP.addScaledVector(X.clone().applyQuaternion(this.hangFrame),2.8*Math.sin(Math.PI*under));
+      this.worldRotation(this.rider,this.rider.getWorldQuaternion(new THREE.Quaternion()).slerp(this.hangFrame,under));
     }
 
     // Cancel the body's nonuniform cartoon proportions BEFORE board rotation.
@@ -267,12 +292,13 @@ export class SkateAnimation {
       const supportKind = p.grind ? GRIND_CONTACTS[p.grind].support : null;
       if (supportKind === 'front-truck' || p.manual < 0) z = z > 0 ? frontZ : -.10 * scale;
       if (supportKind === 'rear-truck' || p.manual > 0) z = z < 0 ? rearZ : .10 * scale;
-      // On a Darkslide the feet stand on the exposed underside near the ends,
-      // outside the trucks, while griptape (not wheels) touches the rail.
+      // Darkslide feet stay between the trucks, straddling the rail on a
+      // narrow, horizontal catch plane while the deck rolls underneath.
+      if (dark > 0) z = THREE.MathUtils.lerp(z,Math.sign(z)*Math.min(.34*scale,frontZ*.60,-rearZ*.60),dark);
       footTargets[i].set(0, surface(0, z) + .006, z).applyQuaternion(catchQ).add(this.boardP);
       if (dark > 0) {
-        const underside = this.board.localToWorld(new THREE.Vector3(0, (s.boardToGroundDistance - s.deckThickness) * scale,
-          Math.sign(z) * Math.max(footSpan, Math.abs(frontZ) + .13)));
+        const underside = new THREE.Vector3(0,-(s.boardToGroundDistance-s.deckThickness)*scale+.006,z)
+          .applyQuaternion(catchQ).add(this.boardP);
         footTargets[i].lerp(underside, dark).addScaledVector(this.up, .22 * darkPop);
       }
     }
@@ -308,7 +334,7 @@ export class SkateAnimation {
         locomotionHeight = Math.min(locomotionHeight, vertical + Math.sqrt(Math.max(0, reachSq - horizontalSq)));
       }
     }
-    const trickHeight = THREE.MathUtils.lerp(.46 - .29 * gw, .10, dark) - .065 * p.charge - .11 * bounce + breathe;
+    const trickHeight = .46 - .29 * gw - .065 * p.charge - .11 * bounce + breathe;
     const restingBreath = Math.sin(p.time*5.6)*.005*(.35+.65*Math.min(1,Math.abs(p.speed)/5));
     const height = THREE.MathUtils.lerp(trickHeight, locomotionHeight+restingBreath, this.locomotionWeight);
     pelvis.addScaledVector(this.up, height);
@@ -326,6 +352,15 @@ export class SkateAnimation {
       }
       pelvis.addScaledVector(this.up, flipPose.riderLift * .7);
     }
+    if (under > 0 && this.head) {
+      const headBox = new THREE.Box3().setFromObject(this.head);
+      const headAboveHips = (headBox.isEmpty()?this.head.getWorldPosition(new THREE.Vector3()).y+.7:headBox.max.y)
+        -this.hips.getWorldPosition(new THREE.Vector3()).y;
+      const hangingPelvis=hangAnchor.clone();hangingPelvis.y-=headAboveHips+.50;
+      pelvis.lerp(hangingPelvis,under);
+      // Swing around the side of the rail while the head crosses its height.
+      if(p.grind)pelvis.addScaledVector(X.clone().applyQuaternion(this.hangFrame),2.5*Math.sin(Math.PI*under));
+    }
     this.hips.getWorldPosition(this.temp);
     const delta = pelvis.clone().sub(this.temp);
     const localZero = this.body.worldToLocal(this.temp.copy(pelvis));
@@ -336,10 +371,30 @@ export class SkateAnimation {
     for (let i = 0; i < 2; i++) {
       const pole = this.feet[i].root.getWorldPosition(new THREE.Vector3())
         .addScaledVector(this.right, p.stance * .65).addScaledVector(this.forward, i === front ? .12 : -.12);
-      footError = Math.max(footError, this.solve(this.feet[i], footTargets[i], footQ, pole));
+      const footWeight=1-smooth(under/.25);
+      if(footWeight>0)footError = Math.max(footError, this.solve(this.feet[i], footTargets[i], footQ, pole,footWeight));
     }
 
     let handError = 0;
+    if (under > 0) {
+      const gripWeight=smooth(under/.25);
+      const handTargets: number[][]=[];
+      // The hanging torso faces along the rail: its anatomical left reaches
+      // the nose truck and its right reaches the tail, without crossing arms.
+      for(const [i,z] of [[1,frontZ],[0,rearZ]]) {
+        const hand=this.hands[i];
+        const target=this.board.localToWorld(new THREE.Vector3(0,s.wheelRadius*scale,z));
+        const socketRelative=hand.end.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(hand.socket.getWorldQuaternion(new THREE.Quaternion()));
+        const handX=X.clone().applyQuaternion(this.boardQ).multiplyScalar(z>0?-1:1);
+        const handY=Y.clone().applyQuaternion(this.boardQ).negate();
+        const handZ=handX.clone().cross(handY).normalize();
+        const handQ=new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(handX,handY,handZ)).multiply(socketRelative.invert());
+        const pole=hand.root.getWorldPosition(new THREE.Vector3()).addScaledVector(Z.clone().applyQuaternion(this.boardQ),z>0?1:-1).addScaledVector(Y,-.4);
+        if(gripWeight>0)handError=Math.max(handError,this.solve(hand,target,handQ,pole,gripWeight));
+        handTargets.push(target.toArray());
+      }
+      this.board.userData.skateUnderRail={weight:under,handError,targets:handTargets,rail:hangAnchor.toArray()};
+    } else delete this.board.userData.skateUnderRail;
     if (this.manualWeight > .001 && !p.grind && !p.lip && gw < .001 && p.wallWeight < .001) {
       const sway = Math.sin(p.time*3.6), counter = Math.sin(p.time*3.6-.65);
       for (let i=0; i<2; i++) {
@@ -429,7 +484,7 @@ export class SkateAnimation {
       }
       this.putBoard();
     } else delete this.board.userData.skateWrapPivot;
-    this.board.userData.skateContact = { support: p.wallWeight > .01 ? 'wall-wheels' : p.darkslide ? 'griptape' : p.grind ? GRIND_CONTACTS[p.grind].support
+    this.board.userData.skateContact = { support: under>.99 ? 'truck-grips' : p.wallWeight > .01 ? 'wall-wheels' : p.darkslide ? 'griptape' : p.grind ? GRIND_CONTACTS[p.grind].support
       : p.manual ? p.manual > 0 ? 'rear-wheels' : 'front-wheels' : p.lip ? LIP_CONTACTS[p.lip].support : 'wheels',
       local: [0, this.supportY, this.supportZ], world: this.support.toArray(), footError, handError, bounce,
       bodyFlex, bodyHeight:height, footSpan, locomotionWeight:this.locomotionWeight };

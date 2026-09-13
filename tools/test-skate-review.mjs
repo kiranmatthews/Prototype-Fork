@@ -54,7 +54,7 @@ await withSkateRuntime(async ({player:p,server,THREE})=>{
       const at=t=>trace.filter(s=>s.time<=t).at(-1);
       assert.equal(at(.4).underFlag,false);assert.equal(at(1.1).underFlag,true);
       assert.equal(at(2.8).underFlag,false);assert.equal(at(4.6).underFlag,true);
-      assert.equal(at(5.5).state,'air');assert.equal(at(6.8).grounded,true);
+      assert.equal(at(5.4).state,'air');assert.equal(at(6.8).grounded,true);
       const rootY=t=>a.sampleComposedClip(clip,t,motion).joints.skateBody.position[1];
       assert.ok(rootY(.4)-rootY(1.1)>1.6&&rootY(2.8)-rootY(4.6)>1.6,'under-rail transitions have no visible vertical travel');
       assert.ok(rootY(6.8)<.25,'the drop never reaches the floor');
@@ -65,7 +65,7 @@ await withSkateRuntime(async ({player:p,server,THREE})=>{
       binding.applyPose(pose,{resetUnspecified:true});p.applyAnimationDeformations(pose.scalars);p.syncCharacterAppearance({upperArmRestAngleWeight:0});
       p.group.updateMatrixWorld(true);
       for(const node of binding.joints.values())assert.ok(node.matrixWorld.elements.every(Number.isFinite),`${entry.name} produced invalid transforms`);
-      for(const [key,value] of Object.entries(pose.scalars))assert.ok(value>=.54&&value<=1.76,`${entry.name} ${key} exceeds deformation bounds`);
+      for(const [key,value] of Object.entries(pose.scalars))assert.ok(value>=(rig.controls.find(c=>c.id===key)?.min??.55)-.01&&value<=(rig.controls.find(c=>c.id===key)?.max??1.75)+.01,`${entry.name} ${key} exceeds deformation bounds`);
       assert.ok(p.bodyGroup.scale.distanceTo(new THREE.Vector3(1.18,1.36,1.18))<1e-6,'capture scales the entire skeleton');
       frames++;
     }

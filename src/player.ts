@@ -1,3 +1,5 @@
+import { SKATE_UNDER_RAIL_DEPTH } from './skateBodyMotion';
+import { skateUnderRailElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
 // Authored fake-physics board movement. No rigidbody, no forces: just a
 // heading, a scalar speed, a vertical velocity, and hand-tuned numbers from
 // tuning.ts. Ground following is a single downward raycast; slopes only exist
@@ -391,7 +393,7 @@ const VERT_TRACK_STEPS = [0.15, 0.05, 0, -0.12, -0.26, -0.45, -0.7];
 // Under-rail hang: how far the FEET ride below the rail line while hanging
 // underneath (hands + crosswise board grip the rail overhead), and how long
 // the committed swing between top and under takes.
-const UNDER_RAIL_DEPTH = 1.65;
+const UNDER_RAIL_DEPTH = SKATE_UNDER_RAIL_DEPTH;
 const UNDER_RAIL_SWING = 0.32;
 // Deck-plant fallback for a malformed/custom board. The production value is
 // read live from boardG.userData.gripTop so the Unity shape lab can tune it.
@@ -16395,15 +16397,8 @@ export class Player {
       this.boardG.position.z = 0;
       // UNDER-RAIL HANG: the deck leaves the feet and goes CROSSWISE overhead,
       // gripped at both ends — riding just beneath the rail line.
-      if (underW > 0.001) {
-        this.boardG.rotation.x *= 1 - underW;
-        this.boardG.rotation.z *= 1 - underW;
-        this.boardG.rotation.y = this.boardG.rotation.y * (1 - underW) + (Math.PI / 2) * underW;
-        this.boardG.position.y += underW * 1.05; // up into both hands, just beneath the line
-        // the grip IS the board under a RAIL — but on the swing rope the hands
-        // hold the rope itself, so no deck.
-        this.boardG.visible = this.state !== 'rope';
-      }
+      // The rail grip is solved against both trucks after proportions below.
+      if (this.state === 'rope') this.boardG.visible = false;
       // WALLRIDE: the deck's wall pose is authored in WORLD space — griptape
       // out along the wall normal (toward the rider), length down the ride
       // line, wheels pressed into the face — then pulled back through the
@@ -16883,6 +16878,8 @@ export class Player {
       }
     }
     if(this.boardG)this.boardG.userData.ollieMotion=ollieMotion;
+    if(this.underK>0 && !this.isBailing && (this.state==='grind'||this.state==='air'))
+      this.playerAnimationBridge.modulateDeformations(skateUnderRailElasticity(this.underK,this.runTime));
     if (this.softSkateImpactT > 0 && this.freeSkate && this.grounded && this.state === 'ride' && !this.isBailing) {
       const hit = sampleSoftSkateImpact(this.softSkateImpactT);
       this.bodyGroup.rotation.x += 0.16 * hit.brace;
@@ -16919,7 +16916,7 @@ export class Player {
       skateContactOwned = this.skateAnimation.apply({
         dt, time: this.runTime,
         active: this.boardG.visible && !this.isBailing && !this.slamActive && this.starPose < .01 &&
-          underW < .001 && this.slidePose < .001 && this.ledgePose < .001 &&
+          this.slidePose < .001 && this.ledgePose < .001 &&
           this.competitionFinishT < 0 && !this.resultsPose && this.worldMapBaseScale === null &&
           (this.state === 'ride' || this.state === 'air' || this.state === 'grind'),
         grounded: this.grounded, stance: this.stance,
@@ -16927,6 +16924,7 @@ export class Player {
           (this.parkControls && this.vertAir && !this.grounded ? this.parkAutoTurn : 0),
         deckYaw: this.deckYawOffset, speed: this.speed, charge: this.chargePose, balance: this.balance,
         verticalVelocity: this.vVel, launchVelocity: this.launchVy,
+        underWeight: this.underK,
         mount: mountPose.tuck + .75 * mountPose.settle,
         manual: this.manualing, grab: this.specialGrab ? 'mute' : this.grabKind, grabWeight: this.grabPose,
         grind: this.state === 'grind' ? this.grindStyle : null, rail: this.grindRail,
@@ -17549,6 +17547,7 @@ export class Player {
       arm.add(elbowJoint);
       const upperArmBone = createStretchableBone({
         id: `upper-arm-${anatomicalSide}`,
+        maxScale: 1.58 * SKATE_UNDER_RAIL_ARM_LIMIT,
         length: 0.22,
         knobRadius: 0.043,
         knobTwist: side * 0.08,
@@ -17565,6 +17564,7 @@ export class Player {
       elbowJoint.add(wrist);
       const lowerArmBone = createStretchableBone({
         id: `lower-arm-${anatomicalSide}`,
+        maxScale: 1.58 * SKATE_UNDER_RAIL_ARM_LIMIT,
         length: 0.195,
         knobRadius: 0.039,
         knobTwist: -side * 0.06,
@@ -18018,16 +18018,16 @@ export class Player {
           name: 'Torso Length', defaultValue: 1, min: 0.55, max: 1.5,
         },
         'deform.arm.upper.left.length': {
-          name: 'Left Upper Arm Length', defaultValue: 1, min: 0.55, max: 1.75,
+          name: 'Left Upper Arm Length', defaultValue: 1, min: 0.55, max: SKATE_UNDER_RAIL_ARM_LIMIT,
         },
         'deform.arm.lower.left.length': {
-          name: 'Left Forearm Length', defaultValue: 1, min: 0.55, max: 1.75,
+          name: 'Left Forearm Length', defaultValue: 1, min: 0.55, max: SKATE_UNDER_RAIL_ARM_LIMIT,
         },
         'deform.arm.upper.right.length': {
-          name: 'Right Upper Arm Length', defaultValue: 1, min: 0.55, max: 1.75,
+          name: 'Right Upper Arm Length', defaultValue: 1, min: 0.55, max: SKATE_UNDER_RAIL_ARM_LIMIT,
         },
         'deform.arm.lower.right.length': {
-          name: 'Right Forearm Length', defaultValue: 1, min: 0.55, max: 1.75,
+          name: 'Right Forearm Length', defaultValue: 1, min: 0.55, max: SKATE_UNDER_RAIL_ARM_LIMIT,
         },
         'deform.leg.upper.left.length': {
           name: 'Left Thigh Length', defaultValue: 1, min: 0.55, max: 1.75,
@@ -18071,7 +18071,7 @@ export class Player {
           downstreamJointIds: ['elbowLeft'],
           lengthAxis: [0, -1, 0],
           min: 0.55,
-          max: 1.75,
+          max: SKATE_UNDER_RAIL_ARM_LIMIT,
           volume: 'preserve-cross-section-area',
         },
         {
@@ -18080,7 +18080,7 @@ export class Player {
           downstreamJointIds: ['wristLeft'],
           lengthAxis: [0, -1, 0],
           min: 0.55,
-          max: 1.75,
+          max: SKATE_UNDER_RAIL_ARM_LIMIT,
           volume: 'preserve-cross-section-area',
         },
         {
@@ -18089,7 +18089,7 @@ export class Player {
           downstreamJointIds: ['elbowRight'],
           lengthAxis: [0, -1, 0],
           min: 0.55,
-          max: 1.75,
+          max: SKATE_UNDER_RAIL_ARM_LIMIT,
           volume: 'preserve-cross-section-area',
         },
         {
@@ -18098,7 +18098,7 @@ export class Player {
           downstreamJointIds: ['wristRight'],
           lengthAxis: [0, -1, 0],
           min: 0.55,
-          max: 1.75,
+          max: SKATE_UNDER_RAIL_ARM_LIMIT,
           volume: 'preserve-cross-section-area',
         },
         {

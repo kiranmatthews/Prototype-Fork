@@ -168,7 +168,7 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
       if(id==='under'){
         const at=t=>stateTrace[Math.round(t*60)];
         assert.ok(at(.4).under<.01&&at(1.1).under>.99&&at(2.8).under<.01&&at(4.6).under>.99);
-        assert.ok(at(5.5).state==='air'&&at(6.8).grounded,'under-rail drop did not land');
+        assert.ok(at(5.4).state==='air'&&at(6.8).grounded,'under-rail drop did not land');
       }
       clip.metadata.transitionCapture='native Player.step inputs';
       clip.metadata.transitionEvidence=stateTrace.filter((s,i)=>i===0||s.state!==stateTrace[i-1].state||s.underFlag!==stateTrace[i-1].underFlag||s.lip!==stateTrace[i-1].lip||s.wall!==stateTrace[i-1].wall||s.manual!==stateTrace[i-1].manual);
