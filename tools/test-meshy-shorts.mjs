@@ -102,7 +102,15 @@ try {
   });
   assert.deepEqual(mesh.morphTargetInfluences, [0, 0, 0]);
   assert.deepEqual(component.skeleton.bones.map((bone) => bone.name),
-    ['hips', 'hip-left', 'hip-right']);
+    ['hips', 'shorts-leg-length-left', 'shorts-leg-length-right']);
+  assert.equal(component.skeleton.bones[1].parent,hipLeft);
+  assert.equal(component.skeleton.bones[2].parent,hipRight);
+  component.setLegStretch(1.55,.74);
+  near(component.skeleton.bones[1].scale.y,1.55);
+  near(component.skeleton.bones[2].scale.y,1); // compressed knee nests inside the unchanged hem
+  assert.deepEqual(hipLeft.scale.toArray(),[1,1,1],'garment deformation must not scale limb joints');
+  assert.deepEqual(hipRight.scale.toArray(),[1,1,1]);
+  component.setLegStretch(1,1);
   assert.equal(mesh.material.flatShading, true);
   assert.equal(mesh.material.map.colorSpace, THREE.SRGBColorSpace);
   assert.equal(mesh.material.normalMap, null);

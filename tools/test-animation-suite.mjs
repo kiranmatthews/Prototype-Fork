@@ -344,7 +344,7 @@ try {
   );
 
   const starterClips = createPlayerStarterClips();
-  assert.equal(PLAYER_STARTER_CATALOG_VERSION, 30);
+  assert.equal(PLAYER_STARTER_CATALOG_VERSION, 31);
   assert.equal(starterClips.length, 30);
   for (const id of [
     'player.idle', PLAYER_WALK_CLIP_ID, 'player.run', 'player.jump', 'player.double-jump', 'player.fall', 'player.land', 'player.crouch',
@@ -595,10 +595,10 @@ try {
   assert.ok(Math.abs(new THREE.Quaternion().fromArray(crawlStart.joints.shoulderLeft.quaternion)
     .dot(new THREE.Quaternion().fromArray(crawlHalf.joints.shoulderLeft.quaternion))) < 0.995,
   'Unity crawl lost its alternating four-point gait');
-  assert.equal(idle.proceduralDrivers.length, 0, 'Quaternius idle must not receive the old procedural breathing twice');
+  assert.ok(idle.proceduralDrivers.every(driver=>driver.id.includes(':elasticity:')&&driver.target.kind==='scalar'), 'Idle may gain independent length elasticity, not duplicated root breathing');
   assert.equal(idle.metadata.sourceAnimation.sourceClip, 'Idle_Loop');
-  assert.equal(run.proceduralDrivers.length, 0,
-    'Jog_Fwd already owns its cadence and must not receive the legacy gait twice');
+  assert.ok(run.proceduralDrivers.every(driver=>driver.id.includes(':elasticity:')&&driver.target.kind==='scalar'),
+    'Jog_Fwd keeps its joint cadence; only independent length elasticity is added');
 
   assert.equal(doubleJump.name, 'Double Jump — Split High Jump');
   assert.equal(doubleJump.duration, 1);
@@ -661,8 +661,8 @@ try {
     source: UNITY_ROPE_INPUTS.releaseCharge,
   });
   assert.equal(ropeReleaseCharged.metadata.variantFor, UNITY_ROPE_CLIP_IDS.release);
-  assert.ok(ropeRelease.tracks.every((track) => track.kind === 'quaternion'));
-  assert.ok(ropeReleaseCharged.tracks.every((track) => track.kind === 'quaternion'));
+  assert.ok(ropeRelease.tracks.filter(track=>!track.id.includes(':elasticity:')).every((track) => track.kind === 'quaternion'));
+  assert.ok(ropeReleaseCharged.tracks.filter(track=>!track.id.includes(':elasticity:')).every((track) => track.kind === 'quaternion'));
   const swingReleaseMid = sampleClip(ropeRelease, ropeRelease.duration * 0.5);
   const backflipReleaseMid = sampleClip(
     ropeReleaseCharged,
@@ -675,7 +675,7 @@ try {
 
   assert.equal(slam.name, 'Body Slam — Unity Pose');
   assert.equal(slam.duration, UNITY_SLAM_POSE_TIMING.duration);
-  assert.equal(slam.tracks.length, 8);
+  assert.equal(slam.tracks.filter(track=>!track.id.includes(':elasticity:')).length, 8);
   assert.equal(slam.metadata.progressSource, 'gameplay-actionProgress');
   assert.equal(slam.proceduralDrivers.some((driver) =>
     driver.source === FORWARD_ROLL_TUCK_INPUT), false);
@@ -956,19 +956,21 @@ try {
     binding.definition,
   );
   assert.equal(findClip(upgradedUnitySlam, 'player.slam').name, 'Body Slam — Unity Pose');
-  assert.equal(findClip(upgradedUnitySlam, 'player.slam').tracks.length, 8);
+  assert.equal(findClip(upgradedUnitySlam, 'player.slam').tracks.filter(track=>!track.id.includes(':elasticity:')).length, 8);
   const editedSlamPlaceholder = {
     ...slamPlaceholder,
     name: 'My Authored Slam',
-    tracks: [structuredClone(slam.tracks[0])],
+    tracks: [structuredClone(slam.tracks.find(track=>track.kind==='quaternion'))],
   };
   const preservedEditedSlam = reconcilePlayerStarterAnimationSuite({
     ...versionFourPlaceholderSuite,
     clips: versionFourPlaceholderSuite.clips.map((clip) =>
       clip.id === 'player.slam' ? editedSlamPlaceholder : clip),
   }, binding.definition);
-  assert.equal(findClip(preservedEditedSlam, 'player.slam'), editedSlamPlaceholder,
-    'catalog v5 replaced an edited local slam clip');
+  const preservedSlam=findClip(preservedEditedSlam, 'player.slam');
+  assert.equal(preservedSlam.name,editedSlamPlaceholder.name);
+  assert.deepEqual(preservedSlam.tracks.filter(track=>!track.id.includes(':elasticity:')),editedSlamPlaceholder.tracks,
+    'catalog v5 replaced an edited local slam pose instead of adding elasticity');
 
   const versionFiveWithoutDoubleJump = {
     ...parsedSuite,

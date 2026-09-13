@@ -18,6 +18,8 @@ export interface MeshyShortsComponent {
   readonly skeleton: THREE.Skeleton;
   readonly triangles: number;
   readonly sourceSha256: string;
+  /** Garment-only skin bones; semantic hips and all limb joints stay unscaled. */
+  setLegStretch(left:number,right:number):void;
 }
 
 export interface MeshyShortsTextureDiagnostics {
@@ -199,6 +201,9 @@ function material(): THREE.MeshStandardMaterial {
 }
 
 export function createMeshyShorts(rig: MeshyShortsRig): MeshyShortsComponent {
+  const lengthLeft=new THREE.Bone(),lengthRight=new THREE.Bone();
+  lengthLeft.name='shorts-leg-length-left';lengthRight.name='shorts-leg-length-right';
+  rig.hipLeft.add(lengthLeft);rig.hipRight.add(lengthRight);
   const mesh = new THREE.SkinnedMesh(geometry(), material());
   mesh.name = 'meshy-shorts-surface';
   mesh.position.y = MESHY_SHORTS_REST_CENTER_Y;
@@ -216,12 +221,12 @@ export function createMeshyShorts(rig: MeshyShortsRig): MeshyShortsComponent {
     triangles: MESHY_SHORTS_ASSET.triangles,
     restScale: MESHY_SHORTS_REST_SCALE,
     restCenterY: MESHY_SHORTS_REST_CENTER_Y,
-    skinBones: [rig.hips.name, rig.hipLeft.name, rig.hipRight.name],
+    skinBones: [rig.hips.name, lengthLeft.name, lengthRight.name],
     proportionControls: ['shortsWidth', 'shortsHeight', 'shortsDepth'],
   };
   rig.mount.add(mesh);
   rig.mount.updateWorldMatrix(true, true);
-  const skeleton = new THREE.Skeleton([rig.hips, rig.hipLeft, rig.hipRight]);
+  const skeleton = new THREE.Skeleton([rig.hips, lengthLeft, lengthRight]);
   skeleton.calculateInverses();
   mesh.bind(skeleton, mesh.matrixWorld);
   return {
@@ -229,5 +234,12 @@ export function createMeshyShorts(rig: MeshyShortsRig): MeshyShortsComponent {
     skeleton,
     triangles: MESHY_SHORTS_ASSET.triangles,
     sourceSha256: MESHY_SHORTS_ASSET.sourceSha256,
+    setLegStretch(left,right){
+      // Extend the hems with elongated thighs. Compressed knees nest inside
+      // the cloth; shrinking only the leg-weighted skin would pinch its
+      // pelvis-weighted crotch into a point instead of folding the garment.
+      lengthLeft.scale.y=THREE.MathUtils.clamp(Number.isFinite(left)?left:1,1,1.75);
+      lengthRight.scale.y=THREE.MathUtils.clamp(Number.isFinite(right)?right:1,1,1.75);
+    },
   };
 }

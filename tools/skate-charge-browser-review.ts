@@ -5,7 +5,7 @@ const g:any=await new Promise(resolve=>{const poll=()=>{const game=(window as an
 const p=g.player,runtime=g.characterAnimationRuntime;
 const level=new Level(g.scene,{id:'skate-charge-review',name:'Skate charge review',data:{v:1,name:'Skate charge review',spawn:[1000,.02,0],killY:-30,
   components:[{t:'platform',p:[1000,-.5,0],s:[1000,1,1000]},{t:'gate',p:[1000,0,-450]}]}});
-let mode='Full ollie',frame=0,frozen=false,angle=.7,park=false,stance=-1,stopAt='None',hadAir=false,landFrame=0;
+let mode='Full ollie',frame=0,frozen=false,angle=.7,park=false,stance=-1,stopAt='None',hadAir=false,landFrame=0,slow=false,skips=0;
 const input=()=>({moveX:0,moveY:1,jumpHeld:false,jumpPressed:false,jumpReleased:false,
   grabHeld:false,grabPressed:false,spinHeld:false,spinPressed:false,grindHeld:false,grindPressed:false,consumeEdges(){}});
 function reset(next=mode){mode=next;frame=0;frozen=false;hadAir=false;landFrame=0;level.skatepark=park;p.respawn(level,true);runtime.restart();
@@ -15,6 +15,7 @@ function reset(next=mode){mode=next;frame=0;frozen=false;hadAir=false;landFrame=
 const native=p.step.bind(p);
 p.step=(dt:number)=>{
   if(frozen)return;
+  if(slow&&++skips%3!==0)return;
   const i=input(),hold=mode==='Tap ollie'?3:55;
   i.jumpHeld=mode!=='Ride'&&frame>=60&&(mode==='Hold charge'||frame<60+hold);
   i.jumpPressed=i.jumpHeld&&frame===60;i.jumpReleased=mode!=='Ride'&&mode!=='Hold charge'&&frame===60+hold;
@@ -36,14 +37,16 @@ const button=(label:string,fn:()=>void)=>{const b=document.createElement('button
 for(const name of ['Ride','Hold charge','Tap ollie','Full ollie'])button(name,()=>reset(name));
 for(const [name,a]of [['Front',Math.PI],['Side',Math.PI/2],['Behind',0],['Oblique',.7]]as const)button(name,()=>angle=a);
 button('Freeze',()=>frozen=!frozen);button('Switch stance',()=>{stance=-stance;reset();});button('Campaign / Park',()=>{park=!park;reset();});
+button('Slow / realtime',()=>slow=!slow);
 for(const name of ['None','Loaded','Extension','Apex','Landing'])button('Pause: '+name,()=>{stopAt=name;reset();});
 function report(){panel.inert=false;panel.removeAttribute('aria-hidden');
  const at=(n:string)=>p.riderG.getObjectByName(n).getWorldPosition(new THREE.Vector3());
  const knees=['left','right'].map(s=>at('knee-'+s).sub(at('hip-'+s)).angleTo(at('ankle-'+s).sub(at('knee-'+s)))*180/Math.PI);
- const d=runtime.diagnostics,c=p.boardG.userData.skateContact;
- status.textContent=JSON.stringify({mode,park,frame,frozen,stopAt,state:p.state,position:p.pos.toArray().map((n:number)=>+n.toFixed(2)),requested:d.requestedClipId,active:d.activeClipId,
+ const d=runtime.diagnostics,c=p.boardG.userData.skateContact,e=p.boardG.userData.ollieMotion?.deformations;
+ status.textContent=JSON.stringify({mode,park,frame,frozen,slow,stopAt,state:p.state,requested:d.requestedClipId,active:d.activeClipId,
   knees:knees.map(n=>+n.toFixed(1)),stance,charge:+p.chargePose.toFixed(3),grounded:p.grounded,
-  vVel:+p.vVel.toFixed(2),flex:c?.bodyFlex,height:c?.bodyHeight,footError:c?.footError},null,2);
+  vVel:+p.vVel.toFixed(2),stanceWidth:c?+(c.footSpan*2).toFixed(2):null,
+  torso:e?.['deform.torso.length'],shin:e?.['deform.leg.lower.left.length'],footError:c?.footError},null,2);
  requestAnimationFrame(report);
 }
 reset();report();

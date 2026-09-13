@@ -22,12 +22,12 @@ game.renderer.render = (...args: any[]) => {
   }
   return render(...args);
 };
-let amount = 0, cycle = false, frame = 0, frozen = false;
+let amount = 0, cycle = false, frame = 0, frozen = false, low = false;
 const step = p.step.bind(p);
 p.step = (dt: number, _input: unknown, level: unknown) => {
   if(frozen)return;
   if (cycle) amount = Math.floor(frame++ / 120) % 4 === 0 ? 1 : Math.floor(frame / 120) % 4 === 2 ? .18 : 0;
-  step(dt, { moveX: 0, moveY: amount }, fixture);
+  step(dt, { moveX: 0, moveY: amount, grabHeld:low }, fixture);
   fixture.update(dt);
   if(Math.abs(p.pos.z)>45)p.respawn(fixture,true);
 };
@@ -37,7 +37,11 @@ const buttons = document.createElement('div'), status = document.createElement('
 status.dataset.testid = 'idle-transition-status'; panel.append(buttons, status); document.body.append(panel);
 for (const [label, value] of [['Run', 1], ['Reverse', -1], ['Walk', .18], ['Idle', 0]] as const) {
   const button = document.createElement('button'); button.textContent = label;
-  button.onclick = () => { cycle = false; amount = value; frozen=false; }; buttons.append(button);
+  button.onclick = () => { cycle = false; amount = value; frozen=false; low=false; }; buttons.append(button);
+}
+for(const [label,value] of [['Crouch',0],['Crawl',.35]] as const){
+  const button=document.createElement('button');button.textContent=label;
+  button.onclick=()=>{cycle=false;amount=value;low=true;frozen=false;p.respawn(fixture,true);runtime.restart();};buttons.append(button);
 }
 const repeat = document.createElement('button'); repeat.textContent = 'Cycle Run / Idle / Walk / Idle';
 repeat.onclick = () => { cycle = !cycle; frame = 0; }; buttons.append(repeat);
@@ -48,7 +52,8 @@ const report = () => {
   status.textContent = JSON.stringify({ input: amount, active: d.activeClipId,
     speed: d.authoredPlaybackSpeed, phaseTime: d.timelineTime?.toFixed(3),
     yaw: p.visualYaw.toFixed(3), physicalZ:p.walkVelocity.z.toFixed(3),
-    blend: d.transitionBlendWeight?.toFixed(3), velocity: p.animationPlanarSpeed.toFixed(3) }, null, 2);
+    blend: d.transitionBlendWeight?.toFixed(3), velocity: p.animationPlanarSpeed.toFixed(3),
+    elasticity:runtime.lastSampledPose?.scalars }, null, 2);
   requestAnimationFrame(report);
 };
 report();

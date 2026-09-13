@@ -49,7 +49,7 @@ await withSkateRuntime(async ({player:p,level,THREE,server,step})=>{
     console.log(`Stance ${stance}: idle ${idleHeight.toFixed(3)} m, charge ${height().toFixed(3)} m; knees ${['left','right'].map(s=>(bend(s)*180/Math.PI).toFixed(1)).join('/')}°`);
     assert.ok(bend('left')+bend('right')>idleBend+.15,'charging needs visibly more knee bend');
     p.charging=false;p.chargeTimer=0;settle(100);
-    assert.ok(Math.abs(height()-idleHeight)<.004,'released charge did not return to relaxed idle');
+    assert.ok(Math.abs(height()-idleHeight)<.03,'released charge did not return within the relaxed breathing band');
   }
   let grinds=0;
   // Independent geometric requirements in both stances and rail directions,

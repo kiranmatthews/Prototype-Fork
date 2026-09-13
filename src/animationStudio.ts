@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { withCharacterElasticity } from './animation/elasticity';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js';
 import {
@@ -431,7 +432,7 @@ function bindRig(definition: RigDefinition, root: THREE.Object3D): Map<JointId, 
 
 function makeInitialDocument(rig: RigDefinition): AnimationSuiteDocument {
   if (rig.id === 'player-procedural-v1') return createPlayerStarterAnimationSuite(rig);
-  const clip = createAnimationClip({ name: 'Idle', rigId: rig.id, duration: DEFAULT_DURATION });
+  const clip = withCharacterElasticity(createAnimationClip({ name: 'Idle', rigId: rig.id, duration: DEFAULT_DURATION }),rig);
   return createAnimationSuiteDocument({
     id: `${rig.id}-animation-suite`,
     name: `${rig.name} Animations`,
@@ -1282,7 +1283,7 @@ class AnimationStudio implements AnimationStudioHandle {
     if (!active) active = this.animationDocument.clips.find((clip) => clip.rigId === this.rig.id);
     if (!active && this.animationDocument.clips.length > 0) active = this.animationDocument.clips[0];
     if (!active) {
-      active = createAnimationClip({ rigId: this.rig.id, duration: DEFAULT_DURATION, name: 'Idle' });
+      active = withCharacterElasticity(createAnimationClip({ rigId: this.rig.id, duration: DEFAULT_DURATION, name: 'Idle' }),this.rig);
       this.animationDocument = upsertClip(this.animationDocument, active);
     }
     this.animationDocument = setActiveClip(this.animationDocument, active.id);
@@ -1439,7 +1440,7 @@ class AnimationStudio implements AnimationStudioHandle {
 
   private createClip(): void {
     const name = uniqueName('New Animation', this.animationDocument.clips.map((clip) => clip.name));
-    const clip = createAnimationClip({ rigId: this.rig.id, duration: DEFAULT_DURATION, name });
+    const clip = withCharacterElasticity(createAnimationClip({ rigId: this.rig.id, duration: DEFAULT_DURATION, name }),this.rig);
     this.commitMutation('Create animation', () => {
       this.animationDocument = setActiveClip(upsertClip(this.animationDocument, clip), clip.id);
     });

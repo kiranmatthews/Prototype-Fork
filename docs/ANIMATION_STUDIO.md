@@ -360,17 +360,26 @@ The runtime applies layers in this order:
    charge, and action progress;
 3. procedural base drivers;
 4. keyed correction tracks, or the explicitly selected reverse composition;
-5. independent segment deformation controls;
-6. render-pose capture and interpolation.
+5. independent segment deformation controls and the additive skate elastic layer;
+6. character proportions, garment response and final foot/palm contacts;
+7. render-pose capture and interpolation.
 
 Gameplay routes listed as legacy-presentation-owned (currently
-`player.skate`) stop after step 2; explicit Studio/manual preview still exercises
-their clip data through the remaining authored layers.
+`player.skate`) skip their starter clip's joint tracks and use the dedicated
+procedural skate elasticity/contact path. Explicit Studio/manual preview still
+exercises their saved clip data through the authored layers.
 
 Gameplay collision and movement do not read editable transforms. The one
 former exception, pipe landing alignment, now has a simulation-owned value.
 
 ## Independent squash and stretch
+
+Catalogue 31 makes this a core principle across all 30 current character clips
+and newly created Studio clips. Named Elasticity drivers or scalar keyframes are
+editable and do not replace existing authored length controls. The shared
+profiles preserve grips, loop seams and finite settles. See
+[CHARACTER_ELASTICITY.md](CHARACTER_ELASTICITY.md) for the profile/ownership rules
+and recovered elastic ollie.
 
 Each deformable segment has an anchor joint, a local length axis, bounded
 minimum/maximum scale, volume-compensation policy, and downstream endpoint

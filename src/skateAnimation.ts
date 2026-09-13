@@ -251,7 +251,9 @@ export class SkateAnimation {
     this.putBoard();
 
     const parity = Math.cos(p.deckYaw) >= 0 ? 1 : -1;
-    const footSpan = Math.min((frontZ - rearZ) * .40, p.wallWeight > .01 ? .34 : .50);
+    // A relaxed, narrower stance for ride/load/ollie only. Authored trick
+    // contacts keep their established wider positions; blend at the handoff.
+    const footSpan = Math.min((frontZ - rearZ) * .40, p.wallWeight > .01 ? .34 : .50) * (1-.25*this.locomotionWeight);
     const footYaw = p.stance * parity * Math.PI / 2;
     const catchQ = this.boardQ.clone().multiply(new THREE.Quaternion().setFromAxisAngle(Z, -Math.PI * dark));
     const footQ = catchQ.clone().multiply(new THREE.Quaternion().setFromAxisAngle(Y, footYaw));
@@ -414,7 +416,7 @@ export class SkateAnimation {
     this.board.userData.skateContact = { support: p.wallWeight > .01 ? 'wall-wheels' : p.darkslide ? 'griptape' : p.grind ? GRIND_CONTACTS[p.grind].support
       : p.manual ? p.manual > 0 ? 'rear-wheels' : 'front-wheels' : p.lip ? LIP_CONTACTS[p.lip].support : 'wheels',
       local: [0, this.supportY, this.supportZ], world: this.support.toArray(), footError, handError, bounce,
-      bodyFlex, bodyHeight:height, locomotionWeight:this.locomotionWeight };
+      bodyFlex, bodyHeight:height, footSpan, locomotionWeight:this.locomotionWeight };
     return true;
   }
 }

@@ -56,7 +56,9 @@ await withSkateRuntime(async ({server,THREE,Level,Player})=>{
         maxFoot=Math.max(maxFoot,c.footError);maxKnee=Math.max(maxKnee,knee('left'),knee('right'));
         if(frame>5&&previousHeight!==null){
           maxHeightStep=Math.max(maxHeightStep,Math.abs(c.bodyHeight-previousHeight));
-          if(Math.abs(c.bodyHeight-previousHeight)>=.045)poseErrors.push({problem:'height step',step:c.bodyHeight-previousHeight,...poseInfo});
+          // The restored 1.65x leg stretch intentionally moves the pelvis much
+          // farther than knee-only motion; bound the continuous shape change.
+          if(Math.abs(c.bodyHeight-previousHeight)>=.16)poseErrors.push({problem:'height step',step:c.bodyHeight-previousHeight,...poseInfo});
         }
         previousHeight=c.bodyHeight;
         // The leading knee lifts with the nose, while the trailing leg opens.

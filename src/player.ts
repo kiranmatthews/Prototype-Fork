@@ -13,6 +13,7 @@ import { BONUS_FRUIT_FLIGHT_SECONDS } from './bonusPayout';
 import { TUNING, CONST } from './tuning';
 import { GRIND_TRICKS, GRIND_CONTACTS, LIP_CONTACTS, grabTrickInfo, grabTrickFromInput, sampleDeckTrick, sampleMcTwist, type GrabTrickKind, type GrindStyle, type LipStyle } from './skateTricks';
 import { SkateAnimation } from './skateAnimation';
+import { SkateOllieMotion } from './skateOllieMotion';
 import { trickRepeatFactor, extendHeldTrick, type HeldTrickScore } from './trickScoring';
 import { liveCarveGripAtSpeed } from './carveGrip';
 import { solveSkateSteering } from './skateSteering';
@@ -1346,6 +1347,7 @@ export class Player {
   private idleAmp = 0;
   private boardG: THREE.Group | null = null; // board + wheels: pulled up during grabs
   private skateAnimation: SkateAnimation | null = null;
+  private readonly skateOllieMotion = new SkateOllieMotion();
   private grindApproachSide = 1;
   private lipStyle: LipStyle = 'axle';
   private lipYawPose = 0;
@@ -2421,6 +2423,10 @@ export class Player {
       upperArmRestAngleWeight,
       crawlPalmWeight: options.crawlPalmWeight ?? this.authoredCrawlPalmWeight,
     });
+    this.meshyShorts?.setLegStretch(
+      this.playerAnimationBridge?.deformationValue('deform.leg.upper.left.length')??1,
+      this.playerAnimationBridge?.deformationValue('deform.leg.upper.right.length')??1,
+    );
     this.syncCharacterTailVisibility();
     this.syncCharacterHeadStyle();
     this.bodyGroup.updateMatrixWorld(true);
@@ -3195,6 +3201,7 @@ export class Player {
     this.grabBlockedUntilRelease = false;
     this.deckYawOffset = 0;
     this.skateAnimation?.reset();
+    this.skateOllieMotion.reset();
     this.lipYawPose = this.revertPoseT = 0;
     this.deckTricksThisAir.clear();
     this.deckTricksThisCombo.clear();
@@ -16852,10 +16859,30 @@ export class Player {
       if (this.elbowR) this.elbowR.rotation.x -= 0.15 * mountPose.tuck;
     }
 
-    // Authored clips are the final pose layer. The bridge snapshots this
-    // complete legacy result first and restores it before the next fixed step,
-    // so authored writes are absolute and can never accumulate into gameplay.
+    // Compose authored clips onto the legacy base before elastic modifiers
+    // and contacts. The bridge restores that base on the next fixed step,
+    // so pose and deformation writes cannot accumulate into gameplay.
     this.playerAnimationBridge.applyOverlay(dt);
+    // Restore the old independent stretch/catch/rebound, not its on-foot leg
+    // pose. Appearance and final deck contacts consume the deformed lengths.
+    const ollieMotion = this.skateOllieMotion.step(dt, {
+      active:this.animationClipHint==='player.skate' && this.freeSkate &&
+        this.competitionFinishT<0 && !this.resultsPose,
+      grounded:this.grounded, verticalVelocity:this.vVel, launchVelocity:this.launchVy,
+      airborneSeconds:this.airborneT, fallReferenceVelocity:TUNING.hugeDropImpact,time:this.runTime,
+      reset:this.playerAnimationBridge.previewActive || this.worldMapBaseScale!==null ||
+        this.isBailing || this.state==='dead' || this.state==='gameover',
+    });
+    if(ollieMotion){
+      this.playerAnimationBridge.modulateDeformations(ollieMotion.deformations);
+      if(this.spineG)this.spineG.rotation.x+=ollieMotion.spine;
+      for(const [arm,elbow,wrist,side] of [[this.armR,this.elbowR,this.wristR,1],[this.armL,this.elbowL,this.wristL,-1]] as const){
+        if(arm){arm.rotation.x+=ollieMotion.arms;arm.rotation.z+=side*ollieMotion.flare;}
+        if(elbow)elbow.rotation.x-=.12*ollieMotion.flare+.10*ollieMotion.jangle*(side===this.stance?1:.7);
+        if(wrist)wrist.rotation.x+=.18*ollieMotion.jangle*(side===this.stance?1:-.7);
+      }
+    }
+    if(this.boardG)this.boardG.userData.ollieMotion=ollieMotion;
     if (this.softSkateImpactT > 0 && this.freeSkate && this.grounded && this.state === 'ride' && !this.isBailing) {
       const hit = sampleSoftSkateImpact(this.softSkateImpactT);
       this.bodyGroup.rotation.x += 0.16 * hit.brace;

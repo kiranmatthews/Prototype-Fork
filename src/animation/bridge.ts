@@ -309,6 +309,7 @@ export class PlayerAnimationBridge {
   private overlayBaselineApplied = false;
   private overlay: PlayerAnimationOverlay | null = null;
   private deformationStates: AppliedDeformationState[] = [];
+  private deformationValues: Readonly<Record<string, number>> = {};
 
   constructor(
     private readonly playerRoot: THREE.Group,
@@ -394,6 +395,7 @@ export class PlayerAnimationBridge {
     // pass, undo our prior endpoint translation. If it has, that new pose is
     // the baseline and must not be replaced with stale data.
     this.restoreDeformationStates();
+    this.deformationValues = { ...values };
 
     const rig = this.rig;
     const visualStates = new Map<THREE.Object3D, AppliedDeformationState>();
@@ -580,8 +582,20 @@ export class PlayerAnimationBridge {
     this.deformationStates = [...visualStates.values(), ...endpointStates.values()];
   }
 
+  /** Compose a procedural length layer over any authored scalar pose, instead
+   * of erasing its controls when an action interrupts that layer. */
+  modulateDeformations(factors: Readonly<Record<string, number>>): void {
+    const values = { ...this.deformationValues };
+    for (const [control, factor] of Object.entries(factors))
+      values[control] = (values[control] ?? 1) * factor;
+    this.applyDeformations(values);
+  }
+
+  deformationValue(control: string): number { return this.deformationValues[control] ?? 1; }
+
   private restoreOverlayBaseline(): void {
     this.restoreDeformationStates(true);
+    this.deformationValues = {};
     if (this.overlayBaselineApplied) restoreHierarchy(this.overlayBaseline);
     this.overlayBaselineApplied = false;
   }

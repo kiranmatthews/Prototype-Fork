@@ -31,6 +31,7 @@ This repository is the isolated browser prototype used to compare Codex/sol leve
 
 ## Character asset pipeline
 
+- Stretch, compression and rebound are core principles for every character animation, not optional final polish. Use the shared editable elasticity profiles for new/adapted clips; preserve authored deformation, planted hands/feet and finite settles. Deform segments independently, never by scaling the whole skeleton or changing movement physics.
 - Read `docs/TRIPO_CHARACTER_PIPELINE.md` before character generation or rig work.
 - Use `tools/tripo-character/tripo_character.py`; it composes the official blocking Tripo CLI and must not be replaced by a second polling implementation.
 - Never place `TRIPO_API_KEY` in frontend code, browser storage, logs, screenshots, committed files, or GitHub Pages. Prefer `tripo login` device authorization.

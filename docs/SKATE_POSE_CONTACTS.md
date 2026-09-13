@@ -53,10 +53,10 @@ direction; explicit switch/revert behavior remains intact. Relaxed skating
 uses standing idle as its silhouette reference. Instead of the old fixed
 0.53 m pelvis-to-sole height (about 96° knees), the contact layer measures
 unbent legs, ankle/sole offsets and foot spread to find a lightly bent stance.
-The authored character now has roughly 20–30° knee flex, near standing idle's
+The authored character now has roughly 25–35° knee flex, near standing idle's
 15–20°, while keeping the same board contacts. Charge now uses that same
-proportion-aware solve: a moderate 53° knee bend lowers the authored rig's hips
-about 10 cm from relaxed ride, replacing the old 0.395 m squat endpoint.
+proportion-aware solve: a moderate 55° knee bend lowers the authored rig's hips
+about 8–10 cm from relaxed ride, replacing the old 0.395 m squat endpoint.
 The initial two-bone contact solve respects parent scale; its bounded local
 refinement allows up to 64 iterations for nearly straight legs, exiting early
 once the socket is within 1 mm.
@@ -70,6 +70,13 @@ trigger a second contact compression. Ordinary board airs route to procedural
 Skate, not the on-foot Jump/Fall; their exact landing frame also bypasses the
 on-foot Land one-shot. Grab, flip, grind and manual identities retain their
 separate contact poses. The spring changes joint presentation, never physics.
+
+The stance is now 25% narrower for idle/charge/ordinary ollies (0.75 m versus
+1.00 m on the default deck); named tricks retain their contact-specific widths.
+`src/skateOllieMotion.ts` restores the pre-contact-rewrite independent torso/limb
+stretch, apex compression and landing rebound on top of the retained shallow
+knee spring. Garment-only shorts bones follow the animated thighs so elongation
+does not detach the shins. See [CHARACTER_ELASTICITY.md](CHARACTER_ELASTICITY.md).
 
 `skate-charge-review.html?playtest&level=test-course&nocrt` is a local-only
 actual-controller review, including the authored runtime, tap/full ollies,
@@ -87,8 +94,8 @@ Input recipes, durations, scoring, balance difficulty and movement tuning remain
 
 ## Verification
 
-- `node tools/test-skate-charge-ollie.mjs`: 1,344 actual controller frames covering tap/full ollies in campaign/park and both stances. Exact position/speed/state parity with the no-authored-runtime controller; correct procedural ownership throughout air/landing; no deep two-legged squat; maximum sole error 4.28 mm. Constant-target spring agrees at 30/60/120 fps.
-- `node tools/test-skate-contacts.mjs`: 64 grind cases across both stances, directions and flat/sloped rails; 32 grabs and releases; 12 manuals; both Darkslides; four lip stalls; four wallrides; 16 complete flip cycles; McTwist definition; actual revert input, plus relaxed/charged stance and release. 10,014 pose frames. Maximum sole error 1.74 mm; palm error 0.94 mm in the authored rig fixture.
+- `node tools/test-skate-charge-ollie.mjs`: 1,344 actual controller frames covering tap/full ollies in campaign/park and both stances. Exact position/speed/state parity with the no-authored-runtime controller; correct procedural ownership throughout air/landing; no deep two-legged squat; maximum sole error 1.48 mm. Constant-target spring agrees at 30/60/120 fps.
+- `node tools/test-skate-contacts.mjs`: 64 grind cases across both stances, directions and flat/sloped rails; 32 grabs and releases; 12 manuals; both Darkslides; four lip stalls; four wallrides; 16 complete flip cycles; McTwist definition; actual revert input, plus relaxed/charged stance and release. 10,014 pose frames. Maximum sole error 1.15 mm; palm error 0.94 mm in the authored rig fixture.
 - `node tools/test-skate-tricks.mjs`: all eight flips launched and landed on all four vert walls, both aerial specials, queues, same-tick catches, late bails and scoring/history boundaries.
 - Input polish, SPECIAL, leg solver, animation IK, lip recovery and grind head stability checks pass. Head checks retain angular limits and allow the requested bounded knee bounce.
 - The historical 3,603-frame recording lacks the newer absolute park settings. Under current replay defaults both the pre-change Player and this implementation traverse 59 grind frames, with exactly zero position or state differences. Updated the stale minimum-frame assertion; the new pose grid separately exercises sustained grinding. Its replay head turn peaks at 6.74 degrees, with no repeated flips.

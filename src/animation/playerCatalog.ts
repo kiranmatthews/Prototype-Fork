@@ -19,6 +19,7 @@ import { QUATERNIUS_CROUCH_ENTER_DURATION, QUATERNIUS_CROUCH_ENTER_ROOT_KEYS,
 import { QUATERNIUS_CROUCH_EXIT_DURATION, QUATERNIUS_CROUCH_EXIT_ROOT_KEYS,
   QUATERNIUS_CROUCH_EXIT_ROTATION_KEYS, QUATERNIUS_CROUCH_EXIT_SOURCE } from './quaterniusCrouchExit.generated';
 import { createAnimationSuiteDocument, createProceduralDriver } from './document';
+import { withCharacterElasticity } from './elasticity';
 import { PLAYER_PROCEDURAL_RIG_ID } from './rigBinding';
 import {
   FORWARD_ROLL_SQUASH_MULTIPLIER,
@@ -141,7 +142,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 30;
+export const PLAYER_STARTER_CATALOG_VERSION = 31;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -1556,7 +1557,7 @@ export function createPlayerStarterClips(
     placeholder('player.bail', 'Bail', 1.1, rigId),
     buildDeath(rigId, includeTorsoRoot),
     placeholder('player.spin', 'Spin', 0.8, rigId),
-  ];
+  ].map(clip=>withCharacterElasticity(clip,typeof rig==='string'?undefined:rig));
 }
 
 function savedStarterCatalogVersion(document: AnimationSuiteDocument): number {
@@ -1820,6 +1821,11 @@ export function reconcilePlayerStarterAnimationSuite(
     clips = clips.map(clip => clip.id === 'player.idle' && (clip.playbackSpeed !== 2 || clip.metadata?.idleTempoRevision !== 1)
       ? { ...clip, playbackSpeed: 2, metadata: { ...clip.metadata, idleTempoRevision: 1 } }
       : clip);
+  }
+
+  if (previousVersion < 31) {
+    const playerIds=new Set<string>(PLAYER_STARTER_CLIP_IDS);
+    clips=clips.map(clip=>playerIds.has(clip.id)?withCharacterElasticity(clip,rig):clip);
   }
 
   const existingIds = new Set(clips.map((clip) => clip.id));
