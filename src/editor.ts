@@ -68,6 +68,7 @@ import {
   propSize,
 } from "./props";
 import { TROPICAL_PLANT_KINDS } from "./tropicalPlants";
+import { CITY_ASSETS, CITY_ASSET_KINDS, isCityAsset, type CityKind } from "./cityAssets";
 import { JUNGLE_ASSETS, JUNGLE_ASSET_KINDS, isJungleAsset, type JungleAssetKind } from "./jungleAssets";
 import { isNightworksSurface } from "./nightworksRocks";
 
@@ -179,6 +180,7 @@ const manyDots = (x: CanvasRenderingContext2D): void => {
   }
 };
 const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
+  ...Object.fromEntries(CITY_ASSET_KINDS.map(kind => [kind, (x: CanvasRenderingContext2D) => { x.fillStyle="#c8a879"; x.fillRect(2,3,14,14); x.fillStyle="#497b8c"; for(let j=0;j<3;j++)for(let i=0;i<3;i++)x.fillRect(4+i*4,5+j*4,2,2); }])) as Record<CityKind, Draw>,
   junglecup: x => { x.fillStyle="#eabb58"; x.fillRect(5,2,8,8); x.fillRect(8,9,2,6); x.fillRect(4,15,10,3); x.strokeStyle="#eabb58"; x.strokeRect(2,4,14,5); },
   pine: x => { x.fillStyle = "#856044"; x.fillRect(8, 9, 2, 8); x.fillStyle = "#58a66a";
     for (const [y, width] of [[2, 5], [7, 7]]) { x.beginPath(); x.moveTo(9, y); x.lineTo(9 + width, y + 7); x.lineTo(9 - width, y + 7); x.closePath(); x.fill(); } },
@@ -467,6 +469,7 @@ const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
 // What a freshly dropped prop looks like: the same numbers the hand-coded
 // levels plant with, so a new one matches the ones already standing there.
 const DECOR_DEFAULTS: Record<DecorKind, Partial<CustomComponent>> = {
+  ...Object.fromEntries(CITY_ASSET_KINDS.map(kind => [kind, {s:[...CITY_ASSETS[kind].size],w:1,yaw:0,solid:!!(CITY_ASSETS[kind].building||CITY_ASSETS[kind].ground)}])) as Record<CityKind,Partial<CustomComponent>>,
   junglecup: {s:[2,2,2],yaw:0},
   pine: { w: 1, yaw: 0 },
   ...Object.fromEntries(JUNGLE_ASSET_KINDS.map(kind => [kind, { s: [...JUNGLE_ASSETS[kind].size], w: 1, yaw: 0,
@@ -4756,6 +4759,7 @@ export class Editor {
     if (c.t === "tumblezone") return [6, 4, 6];
     if (c.t === "mesh") return [1, 1, 1];
     if (c.t === "decor") {
+      if (isCityAsset(c.dkind)) return [...CITY_ASSETS[c.dkind].size] as [number,number,number];
       if (isJungleAsset(c.dkind)) return [...JUNGLE_ASSETS[c.dkind].size];
       if (c.dkind === "block") return [6, 6, 6];
       if (c.dkind === "ruinblock") return [2.4, 1.6, 2.4];
@@ -9200,6 +9204,7 @@ export class Editor {
       const SCALED: DecorKind[] = [
         "pine",
         ...JUNGLE_ASSET_KINDS,
+        ...CITY_ASSET_KINDS,
         ...TROPICAL_PLANT_KINDS,
         "fern",
         "broadleaf",
@@ -9253,6 +9258,7 @@ export class Editor {
         if (dk === "carvedlog" || dk === "thornroots")
           boolRow(dk === "thornroots" ? "hazard collision" : "solid collision", () => c.solid ?? dk === "carvedlog", value => { c.solid = value; });
       }
+      if(isCityAsset(dk)){num("yaw °",()=>c.yaw??0,v=>{c.yaw=v;},15);sizeRow(0,"width");sizeRow(1,"height");sizeRow(2,"depth");boolRow("solid collision",()=>c.solid??!!(CITY_ASSETS[dk].building||CITY_ASSETS[dk].ground),v=>{c.solid=v;});}
       if (dk === "coastalhouse") {
         sizeRow(0, "width"); sizeRow(1, "height"); sizeRow(2, "depth");
         num("district colour", () => c.tn ?? 0, v => { c.tn = THREE.MathUtils.clamp(Math.round(v), 0, 6); }, 1);
@@ -9307,6 +9313,7 @@ export class Editor {
       const note = document.createElement("div");
       note.className = "ed-dim";
       note.textContent =
+        isCityAsset(dk) ? (CITY_ASSETS[dk].ground ? "Modular city surface — collision follows the tile shape." : "City prop — fitted dimensions and optional solid collision.") :
         dk === "meshycourtyard"
           ? "compressed owner-supplied Meshy bridge — visual only; keep a separate ride hull"
           : dk === "idol"

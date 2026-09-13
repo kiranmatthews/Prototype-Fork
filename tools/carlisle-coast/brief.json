@@ -1,0 +1,19 @@
+{
+  "name": "Carlisle Coast",
+  "levelId": "test",
+  "progressKey": "test-course",
+  "started": "2026-09-12T22:10:18.946321+00:00",
+  "requirements": [
+    "Remove the spawn-right obstacle course and its associated objects",
+    "Use Downtown City MegaKit Standard road tiles, proper intersections and varied buildings",
+    "Ground-level dense urban construction across the complete course",
+    "Enclose former gaps as construction death pits",
+    "Thoughtful skating crate lines and distinct on-foot crate puzzles",
+    "Use high-fidelity props and obstacles",
+    "Preserve unrelated work and movement tuning; focused checks, build, browser and publication"
+  ],
+  "sourcePack": "/Users/kiki/Downloads/Downtown City MegaKit[Standard]",
+  "license": "Quaternius CC0 1.0",
+  "meshyBudget": 600,
+  "style": "Crash N. Sane Trilogy / Crash 4 inspired polished stylized 3D: whimsical proportions, crisp readable silhouettes, painted material detail, vibrant controlled colours, soft lighting. Avoid pillowy play-dough geometry, flat pastels and photoreal grime."
+}

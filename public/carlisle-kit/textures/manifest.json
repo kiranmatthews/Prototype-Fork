@@ -1,0 +1,135 @@
+[
+  {
+    "file": "T_Ornaments_BaseColor.ktx2",
+    "sha256": "6619aa4905b2e24a121acd0e0a44a5350245c88e75f86ab3ef70794c150fcb74",
+    "sourceSha256": "528cbe672c62384aa3bac703f574b60509bd69b4d492291cb2915022a12a449c",
+    "bytes": 602114,
+    "fallback": "T_Ornaments_BaseColor.jpg"
+  },
+  {
+    "file": "T_Ornaments_Normal.ktx2",
+    "sha256": "072d523aa7654033024a2bbc9eab674a521af11183712af7b6ab19e1e00df882",
+    "sourceSha256": "c1aa6b307d47386b63e775ba88d82992dd0aaf34f1e4c2b7824002e3cc0a795a",
+    "bytes": 75573,
+    "fallback": "T_Ornaments_Normal.jpg"
+  },
+  {
+    "file": "T_MarbleFloor_BaseColor.ktx2",
+    "sha256": "4c9abc4aaa8d3b2bf7d4eb216827ff22815873f95a1f8cbec48e1a91f62b49ba",
+    "sourceSha256": "a01f57e2976d3af21a59f1ae18e12be84d2acae7ba3e93d184d2874224f737c0",
+    "bytes": 155474,
+    "fallback": "T_MarbleFloor_BaseColor.jpg"
+  },
+  {
+    "file": "T_MarbleFloor_Normal.ktx2",
+    "sha256": "5daadbef8ce362346a3bfc91065bbf337b693802525a9a05aa503cd750f505b0",
+    "sourceSha256": "52ba88ccfd35f072a51d11c31cdfb6e6ea8cde641ab4521115994d2c3216b451",
+    "bytes": 21574,
+    "fallback": "T_MarbleFloor_Normal.jpg"
+  },
+  {
+    "file": "T_Trim_BaseColor.ktx2",
+    "sha256": "468eca029cf8d8c6c36eee51c5ba870c2a94bb2f4cfd088fdb83e7c00ccfb5d4",
+    "sourceSha256": "c3334902f8315783477eec63e2d462f8cefedf9c55b41ef452d8374b5603f08e",
+    "bytes": 547342,
+    "fallback": "T_Trim_BaseColor.jpg"
+  },
+  {
+    "file": "T_Trim_Normal.ktx2",
+    "sha256": "f66bc8b9b8ebc2667adb7051dcfa28fc26a260cfc9fa63bce318e7068d84caeb",
+    "sourceSha256": "95fa43093067956fa6e206408f3e2f2302c18c7453b75a02f6e29fe57e2cd041",
+    "bytes": 19364,
+    "fallback": "T_Trim_Normal.jpg"
+  },
+  {
+    "file": "T_lit_interior_1.ktx2",
+    "sha256": "80d6d44ceea31bbaf8ccc452a782dfc649bf1de4a68a3fef0b2db905b1a79bf3",
+    "sourceSha256": "d20aa9f249a506eb145d76e264e59667cec4bef66c07e4baace6583a28cc3be4",
+    "bytes": 77254,
+    "fallback": "T_lit_interior_1.jpg"
+  },
+  {
+    "file": "T_lit_interior_2.ktx2",
+    "sha256": "f6f7d05b7a176657a399f18a73bbe45cb31f98c3a73e31f38e0c98ec1e51bd2e",
+    "sourceSha256": "83c3f1b2ad84b65aab88d5744e6997730a04140e41d230e2cecfe9bfb2ae0559",
+    "bytes": 59480,
+    "fallback": "T_lit_interior_2.jpg"
+  },
+  {
+    "file": "T_dark_interior.ktx2",
+    "sha256": "a8eedfb6a394c7ae2ddd580474ce70ee4d1eceaa3a9a249d7e3d15efabe1d477",
+    "sourceSha256": "59e5c77292953d93c3cd239c2f06d4e80e393761195da66d886d3887ad59f1dc",
+    "bytes": 48211,
+    "fallback": "T_dark_interior.jpg"
+  },
+  {
+    "file": "T_RedBrick_BaseColor.ktx2",
+    "sha256": "947112c437fd8e3ac5f3f2092a6a82cd8d9a27e9bafe314921f74bed37161851",
+    "sourceSha256": "ea85bfc02c4c807265a85f7ab50656f7eaa19f6567301d362d78c1d06da161ab",
+    "bytes": 361134,
+    "fallback": "T_RedBrick_BaseColor.jpg"
+  },
+  {
+    "file": "T_RedBrick_Normal.ktx2",
+    "sha256": "fdef25b001a70731b7ee869c66678481b186ea94bcecf0ede6d3fe2d53e09ba2",
+    "sourceSha256": "147f14d7f665d2598d0d796bd02a227f6b8b0fbc790c3e0737b1b90128101c93",
+    "bytes": 77259,
+    "fallback": "T_RedBrick_Normal.jpg"
+  },
+  {
+    "file": "T_Concrete_Asphalt_BaseColor.ktx2",
+    "sha256": "80f49aee634d2d54e553a1987fe4245023acb02166a0955ccf4738fe7abc8a31",
+    "sourceSha256": "a37ca932c4287a67d9cf7f78997b5cc4b026ca7319a4c8454132d076307ca5cf",
+    "bytes": 131230,
+    "fallback": "T_Concrete_Asphalt_BaseColor.jpg"
+  },
+  {
+    "file": "T_Concrete_Normal.ktx2",
+    "sha256": "ec592509a8eeec2ef639d49fbaa01edd620ab4ede3ea5430bf54e15caa78ec3f",
+    "sourceSha256": "e4de917d2506bff4b17d44380a136336cf16e5ea828edfdb8981f4f27e30a86a",
+    "bytes": 36507,
+    "fallback": "T_Concrete_Normal.jpg"
+  },
+  {
+    "file": "T_MetalConcrete_BaseColor.ktx2",
+    "sha256": "9539590777cb07f6d076a20654d008b1d3507b8d106b256f8d178b513a1173b3",
+    "sourceSha256": "adae656323f15cd2c3f1a6453685cb1ca104b700dc114076137cb3a4c253d3d0",
+    "bytes": 261868,
+    "fallback": "T_MetalConcrete_BaseColor.jpg"
+  },
+  {
+    "file": "T_MetalConcrete_Normal.ktx2",
+    "sha256": "6c7695fe5a4f172d8892245cebb3205d3e09d331f5bbb5a7e0bf386bb9a2c5e7",
+    "sourceSha256": "93f95a96c32b27820c590301f00f5ba1d23d4054046d92bf6d58adbf23007419",
+    "bytes": 35648,
+    "fallback": "T_MetalConcrete_Normal.jpg"
+  },
+  {
+    "file": "T_Concrete_BaseColor.ktx2",
+    "sha256": "c55850c6d7fcc4877417bbab4d5447a68a0751d91e31ce314be3d50a8dd09d8a",
+    "sourceSha256": "697276f680b34d6321e6b06da208a0fc3516db372d4a7de543fc2c33e895f482",
+    "bytes": 246953,
+    "fallback": "T_Concrete_BaseColor.jpg"
+  },
+  {
+    "file": "T_Street_Decals.ktx2",
+    "sha256": "31ca4101e3184d51b889966bb97f113ba7c1cbbc5e7e3ebbb7fc6b0b7bd071bc",
+    "sourceSha256": "90eca7571c910f713952d7568674e231fd21bc6f6693de5514a563c19c91148e",
+    "bytes": 754494,
+    "fallback": "T_Street_Decals.png"
+  },
+  {
+    "file": "T_Dirt_BaseColor.ktx2",
+    "sha256": "48337d1ec3d815450b231e762a59e1ca220dee66d673fb415ef026c73faf4b68",
+    "sourceSha256": "bcb7b1d7bb9801aae25720f495af76306d11cce7654f52763e3cb6b273845302",
+    "bytes": 168887,
+    "fallback": "T_Dirt_BaseColor.jpg"
+  },
+  {
+    "file": "T_Dirt_Normal.ktx2",
+    "sha256": "4c570ffab063802eb3661c9e995cce291bff3b706c140c03dac7d51defcc2aa8",
+    "sourceSha256": "88958149742c2ebf8447079edd80ac1133f7b72a5fce0c118206b2f742a350ea",
+    "bytes": 85089,
+    "fallback": "T_Dirt_Normal.jpg"
+  }
+]

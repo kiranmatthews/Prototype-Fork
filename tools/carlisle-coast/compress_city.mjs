@@ -1,0 +1,17 @@
+import {pathToFileURL} from 'node:url';
+import path from 'node:path';
+import {mkdir} from 'node:fs/promises';
+const root=path.resolve(import.meta.dirname,'../..');
+const runtime=process.env.CARLISLE_GLTF_TOOLS??'/tmp/carlisle-gltf-tools/node_modules';
+const {NodeIO}=await import(pathToFileURL(path.join(runtime,'@gltf-transform/core/dist/index.js')));
+const {ALL_EXTENSIONS}=await import(pathToFileURL(path.join(runtime,'@gltf-transform/extensions/dist/index.js')));
+const {dedup,prune,weld,meshopt}=await import(pathToFileURL(path.join(runtime,'@gltf-transform/functions/dist/index.js')));
+const {MeshoptEncoder}=await import(pathToFileURL(path.join(runtime,'meshoptimizer/index.module.js')));
+await MeshoptEncoder.ready;
+const io=new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({'meshopt.encoder':MeshoptEncoder});
+const work=path.join(root,'.img2threejs/carlisle-coast/city-baked');
+const doc=await io.read(path.join(work,'city.gltf'));
+await doc.transform(dedup(),weld(),prune(),meshopt({encoder:MeshoptEncoder,level:'medium',quantizePosition:16,quantizeNormal:10,quantizeTexcoord:14}));
+await mkdir(path.join(work,'compressed'),{recursive:true});
+await io.write(path.join(work,'compressed/city.gltf'),doc);
+console.log('Compressed the city geometry with meshopt; original material images remain separate.');

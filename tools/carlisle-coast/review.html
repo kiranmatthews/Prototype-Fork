@@ -1,0 +1,45 @@
+<!doctype html><meta charset="utf-8"><title>Carlisle Coast review</title>
+<style>body{margin:0;background:#142c37;color:#fff;font:13px system-ui}nav{display:flex;gap:5px;padding:5px;flex-wrap:wrap}button{background:#edc178;border:0;padding:5px 9px;cursor:pointer}iframe{border:0;width:100%;height:calc(100vh - 105px)}pre{margin:3px 8px;white-space:pre-wrap;font-size:11px}</style>
+<nav id="bar"></nav><pre id="status">Loading…</pre><pre id="report"></pre>
+<iframe id="game" src="/?playtest&level=test&frameprobe&renderdiag"></iframe>
+<script type="module">
+import * as THREE from '/node_modules/three/build/three.module.js';
+const frame=document.querySelector('#game'),status=document.querySelector('#status'),bar=document.querySelector('#bar');
+let timings={},lastAction=null;const get=()=>frame.contentWindow.__game;
+function profile(){const g=get();if(!g||g.cityProfile)return;g.cityProfile=true;for(const [name,obj,key] of [['draw',g.renderer,'render'],['player',g.player,'step'],['level',g.getLevel(),'update'],['rays',g.player.raycaster,'intersectObjects'],['pose',g.player,'syncVisual'],['sole',g.player,'soleFootprint']]){const original=obj[key];obj[key]=function(...args){const start=performance.now();try{return original.apply(this,args);}finally{const t=timings[name]??{n:0,total:0,max:0};const ms=performance.now()-start;t.n++;t.total+=ms;t.max=Math.max(t.max,ms);timings[name]=t;}};}}
+function button(label,fn){const b=document.createElement('button');b.textContent=label;b.onclick=fn;bar.append(b);}
+const poses=[['Spawn',0,4],['Crossroads',0,-84],['First cut',0,-144],['Switch bay',0,-226],['Tram cut',0,-342],['Deck crossing',0,-570],['Canal',0,-822],['Market',0,-1140],['Turn east',0,-1710],['East works',22,-1728],['Turn north',150,-1728],['Harbour',156,-1858],['Foot docks',156,-2045],['Finish',156,-2286]];
+function place(x,z,y=.12){const g=get();if(!g)return;const p=g.player;p.pos.set(x,y,z);p.speed=0;p.vVel=0;p.freeSkate=false;p.laneCursor.s=-1;p.settle(g.getLevel());p.lives=30;p.snapRenderPose?.();frame.contentWindow.focus();}
+poses.forEach(([name,x,z])=>button(name,()=>place(x,z)));
+function key(code,type){frame.contentWindow.dispatchEvent(new frame.contentWindow.KeyboardEvent(type,{code,key:code==='Space'?' ':code==='ArrowUp'?'ArrowUp':code.slice(3).toLowerCase(),bubbles:true}));}
+function hold(code,ms){key(code,'keydown');setTimeout(()=>key(code,'keyup'),ms);}
+function actionResult(name,ms){lastAction={name,state:'running'};setTimeout(()=>{const g=get();lastAction={name,state:'complete',pos:g.player.pos.toArray(),mode:g.player.state,grounded:g.player.grounded,lives:g.player.lives};document.querySelector('#report').textContent=JSON.stringify(lastAction);},ms);}
+button('Deck start',()=>place(5.4,-349));
+button('Foot hop',()=>{hold('ArrowUp',850);setTimeout(()=>hold('Space',250),120);actionResult('Foot hop',1800);});
+button('Grind start',()=>place(-3,-334));
+button('Walk 2s',()=>hold('ArrowUp',2000));button('Jump',()=>{hold('ArrowUp',1300);hold('Space',250);});button('Grind crossing',()=>{hold('KeyE',11000);hold('ArrowUp',11000);let grinds=0;const controller=setInterval(()=>{const p=get().player;if(p.state==='grind'){grinds++;const intent=p.balance*4+p.balanceVel*.6;key('ArrowLeft',intent>.025?'keydown':'keyup');key('ArrowRight',intent<-.025?'keydown':'keyup');}else{key('ArrowLeft','keyup');key('ArrowRight','keyup');}},35);setTimeout(()=>{clearInterval(controller);key('ArrowLeft','keyup');key('ArrowRight','keyup');document.querySelector('#report').dataset.grindSamples=grinds;},11000);actionResult('Steel grind',11400);});
+button('Skate 3s',()=>{hold('KeyE',3000);hold('ArrowUp',3000);});
+button('Spin switch',()=>{place(-7.2,-227);hold('ArrowUp',550);setTimeout(()=>hold('KeyF',500),150);});
+button('Pit respawn',()=>{const g=get();g.player.pos.set(0,-8,-159);g.player.vVel=-4;g.player.grounded=false;g.player.snapRenderPose?.();});
+button('Checkpoint',()=>get().player.warpCheckpoint(get().getLevel(),1));
+button('Use source',async()=>{const g=get();g.restoreBuiltin('test');await g.switchLevel('test');});
+button('Full render',()=>frame.src='/?playtest&level=test&frameprobe&renderdiag');
+button('Lite render',()=>frame.src='/?playtest&level=test&frameprobe&renderdiag&lite');
+button('Editor',()=>{const g=get();if(!g.gameFlow.developerChromeVisible)key('KeyM','keydown');g.openEditor();});
+button('Save preview',async()=>{
+ const g=get();await g.getLevel().prepareJungleAssets();
+ const target=new THREE.WebGLRenderTarget(1280,720);target.texture.colorSpace=THREE.SRGBColorSpace;
+ const camera=new THREE.PerspectiveCamera(56,16/9,.1,285);camera.position.set(9,10,12);camera.lookAt(0,3,-35);
+ g.getLevel().updateCityVisibility(camera.position);const previous=g.renderer.getRenderTarget(),visible=g.player.group.visible;g.player.group.visible=false;
+ const bytes=new Uint8Array(1280*720*4);g.renderer.setRenderTarget(target);g.renderer.clear();g.renderer.render(g.scene,camera);g.renderer.readRenderTargetPixels(target,0,0,1280,720,bytes);g.renderer.setRenderTarget(previous);g.player.group.visible=visible;target.dispose();
+ const canvas=document.createElement('canvas');canvas.width=1280;canvas.height=720;const ctx=canvas.getContext('2d'),pixels=ctx.createImageData(1280,720);
+ for(let y=0;y<720;y++)pixels.data.set(bytes.subarray((719-y)*1280*4,(720-y)*1280*4),y*1280*4);ctx.putImageData(pixels,0,0);
+ const response=await fetch('http://127.0.0.1:5178/preview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:canvas.toDataURL('image/jpeg',.93)})});document.querySelector('#report').textContent=response.ok?'Preview saved':'Preview failed';
+});
+button('Profile',profile);
+button('Audit surfaces',()=>{const g=get(),l=g.getLevel(),ray=new THREE.Raycaster(),rows=[];l.root.updateMatrixWorld(true);
+ for(const [name,x,z] of poses){ray.set(new THREE.Vector3(x,5,z),new THREE.Vector3(0,-1,0));const hits=ray.intersectObjects(l.groundMeshes,false);rows.push({name,top:hits[0]?.point.y??null,walls:l.walls.filter(b=>b.containsPoint(new THREE.Vector3(x,.5,z))).length});}
+ document.querySelector('#report').textContent=JSON.stringify(rows);
+});
+setInterval(()=>{const g=get();if(!g)return;const d=JSON.parse(frame.contentDocument.querySelector('#render-diagnostics')?.textContent||'{}');status.textContent=JSON.stringify({level:g.getCurrentLevel().name,pos:g.player.pos.toArray().map(x=>+x.toFixed(2)),grounded:g.player.grounded,state:g.player.state,lives:g.player.lives,assets:g.getLevel().cityAssetDiagnostics,frame:d.frameTiming,draw:d.sceneDraw,flow:g.gameFlow.mode,lastAction,checkpoint:g.getLevel().checkpointIndex,crateState:{pending:g.getLevel().crates.filter(c=>c.pending).length,alive:g.getLevel().crates.filter(c=>c.alive).length},cpu:Object.fromEntries(Object.entries(timings).map(([k,t])=>[k,{n:t.n,avg:+(t.total/t.n).toFixed(2),max:+t.max.toFixed(2)}]))});},400);
+</script>

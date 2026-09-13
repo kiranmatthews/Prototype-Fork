@@ -1,0 +1,26 @@
+[
+  {
+    "file": "city.glb",
+    "bytes": 5617488,
+    "sha256": "96e75082239d4ddbee6377b73e382b25700842a5b0f2552da100adfbf69c87ae",
+    "triangles": 290198
+  },
+  {
+    "file": "excavator.glb",
+    "bytes": 979192,
+    "sha256": "0afea06124c7a68af02678265a1a7d605eb4cf192730f137605b449c1338e6d5",
+    "triangles": 5442
+  },
+  {
+    "file": "jersey-barrier.glb",
+    "bytes": 578988,
+    "sha256": "72a32a55a382d0ed33fd095c8ebdd64a7d0307cc701542d09fb7f65a6baae71e",
+    "triangles": 1863
+  },
+  {
+    "file": "utility-pole.glb",
+    "bytes": 604952,
+    "sha256": "7e387df0f517b0678f46dfc6d20b7881cee027f190972075de13fa1069270a4d",
+    "triangles": 2904
+  }
+]

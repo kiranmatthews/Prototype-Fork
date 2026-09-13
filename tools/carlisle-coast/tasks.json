@@ -1,0 +1,48 @@
+{
+  "budget": 600,
+  "reservedCredits": 75,
+  "tasks": {
+    "jersey-barrier": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 1800,
+      "id": "01a097c0-4b41-7165-b7f3-ad9a02608d0c",
+      "note": "Selected for the final Crash-inspired city presentation.",
+      "usedInBuild": true
+    },
+    "utility-pole": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 3000,
+      "id": "01a097c0-64f7-776a-866c-792f66b82411",
+      "note": "Selected for the final Crash-inspired city presentation.",
+      "usedInBuild": true
+    },
+    "jersey-clay": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 2200,
+      "id": "01a097c7-123d-71d4-a62b-2f3ab896cdc3",
+      "usedInBuild": false,
+      "note": "Clay-style study omitted after the user refined the art direction."
+    },
+    "utility-clay": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 3000,
+      "id": "01a097d0-0936-7645-8e61-77f206e4ebb6",
+      "usedInBuild": false,
+      "note": "Clay-style study omitted after the user refined the art direction."
+    },
+    "excavator": {
+      "credits": 15,
+      "state": "SUCCEEDED",
+      "targetTriangles": 6000,
+      "id": "01a097fe-4f06-7337-bbbb-e40e6f5c9c75",
+      "usedInBuild": true,
+      "note": "Selected for the final Crash-inspired city presentation."
+    }
+  },
+  "lastBalance": 1826,
+  "startingBalance": 1901
+}

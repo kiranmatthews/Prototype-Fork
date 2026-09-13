@@ -1,3 +1,4 @@
+import { configureCityAssetRenderer } from "./cityAssets";
 import { parkCruiseSpeed, parkChargedSpeed } from './skateParkTuning';
 import { MenuRewardsPresentation } from "./menuPresentation";
 import { mapSkateboardSettings } from "./skateboard/mapSettings";
@@ -147,6 +148,7 @@ const NO_COAST_POST = window.location.search.includes("nopost");
 const NO_OCEAN_PASSES = window.location.search.includes("nopasses");
 const renderer = new THREE.WebGLRenderer({ antialias: !LITE_RENDER });
 configureJungleAssetRenderer(renderer);
+configureCityAssetRenderer(renderer);
 // A zero-resource host. The actual Gouraud scene/render target exists only
 // while title/loading/Game Over owns the framebuffer.
 const gameFlowVortex = new GameFlowVortexHost();
@@ -4761,6 +4763,7 @@ function frame(nowMs: number): void {
       time: player.runTime,
     });
 
+  level.updateCityVisibility(camera.position);
   // Walk the shadow frustum onto the skater before drawing — it's small enough
   // to stay sharp, so it has to travel with them.
   updateSunShadow(

@@ -1,0 +1,85 @@
+{
+  "levelId": "test",
+  "name": "Carlisle Coast",
+  "sourcePack": "Quaternius Downtown City MegaKit Standard (CC0)",
+  "style": "Crash N. Sane / Crash 4: crisp stylized forms, painted surface detail, saturated material separation; clay studies omitted",
+  "assetFiles": [
+    {
+      "file": "city.glb",
+      "bytes": 5617488,
+      "sha256": "96e75082239d4ddbee6377b73e382b25700842a5b0f2552da100adfbf69c87ae",
+      "triangles": 290198
+    },
+    {
+      "file": "excavator.glb",
+      "bytes": 979192,
+      "sha256": "0afea06124c7a68af02678265a1a7d605eb4cf192730f137605b449c1338e6d5",
+      "triangles": 5442
+    },
+    {
+      "file": "jersey-barrier.glb",
+      "bytes": 578988,
+      "sha256": "72a32a55a382d0ed33fd095c8ebdd64a7d0307cc701542d09fb7f65a6baae71e",
+      "triangles": 1863
+    },
+    {
+      "file": "utility-pole.glb",
+      "bytes": 604952,
+      "sha256": "7e387df0f517b0678f46dfc6d20b7881cee027f190972075de13fa1069270a4d",
+      "triangles": 2904
+    }
+  ],
+  "meshyCreditsUsed": 75,
+  "meshyCreditCeiling": 600,
+  "requirements": {
+    "wholeCourse": "Grounded road grid from spawn through East Quay to the civic finish, including all former gaps",
+    "streets": "4-lane boulevard, 2-lane service roads, 12 crossroads, 5 T junctions, tapered lane transitions, 7 rounded bends",
+    "buildings": "9 distinct native/assembled pack building types; 182 front-row buildings plus second rows and terminal buildings",
+    "pits": "17 fenced excavations; bolted retaining panels, Meshy barriers, no survivable bottom floor, depth fade",
+    "traversal": "17 structural steel grind crossings, 3 optional sagging utility-wire lines, parallel foot decks with supported stairs",
+    "puzzles": "4 switch staircases, 3 TNT retreat puzzles, 2 nitro choices, spaced skating lines; 208 crates including checkpoint/system crates",
+    "editor": "All fitted city modules and Meshy props available with size, yaw and collision controls",
+    "preservation": "Movement tuning unchanged; exact pristine Test Course copies follow Carlisle, any local edit is retained"
+  },
+  "validation": {
+    "streetSupportProbes": 11217,
+    "deckLedgeCatches": 24,
+    "pitInvulnerabilityRegression": "passed",
+    "sourceAndPublishedPack": "agree and pass runtime normalization",
+    "cameraDirections": "north/east/north along ordered curved spine",
+    "browser": {
+      "footHop": {
+        "grounded": true,
+        "position": [
+          5.4,
+          0,
+          -352.145
+        ],
+        "livesRetained": true
+      },
+      "steelCrossing": {
+        "grounded": true,
+        "position": [
+          -3.106,
+          0,
+          -428.009
+        ],
+        "livesRetained": true
+      },
+      "switchStaircase": {
+        "pendingBefore": 24,
+        "pendingAfter": 18
+      },
+      "steadyOpeningFrameMs": 17,
+      "finish": "COURSE CLEAR / Carlisle Coast / Crystal / TIME TRIAL UNLOCKED / GOLD TARGET 3:00.00",
+      "consoleErrors": 0,
+      "eastQuayCamera": "forward along +X; northern finish returns to -Z"
+    },
+    "checks": [
+      "npm run check:levels",
+      "node tools/test-carlisle-coast.mjs",
+      "npm run build"
+    ],
+    "fullSuiteRun": false
+  }
+}

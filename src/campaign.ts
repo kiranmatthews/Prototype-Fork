@@ -249,7 +249,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     progressKey: "test-course",
     levelId: "test",
     fallbackLevelId: "flats",
-    name: "Test Course",
+    name: "Carlisle Coast",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-1",
     mapPath: "main",

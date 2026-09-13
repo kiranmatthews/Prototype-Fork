@@ -1,3 +1,6 @@
+import { CARLISLE_COAST_LEVEL } from "./levels/carlisle-coast";
+import { isOriginalTestCourse } from "./levels/carlisleLegacy";
+import { CityAssetKit, CITY_ASSETS, CITY_ASSET_KINDS, CITY_ASSET_LABELS, isCityAsset, cityMatrix, cityCollisionGeometry, cityRailVisual, accelerateCityGround } from "./cityAssets";
 import { createExplosiveBundle, updateExplosiveBundle, disposeExplosiveBundle, type ExplosiveBundle } from "./explosiveBundle";
 import { createMilkCrate, setMilkCrateState, disposeMilkCrate, type MilkCrate } from "./milkCrate";
 import {attachBonusStone,BonusJumpGate,BONUS_PLATFORM_HEIGHT,BONUS_PLATFORM_RADIUS,BONUS_LANDING_RADIUS} from './bonusPlatform';
@@ -781,6 +784,7 @@ export function setEditorBuild(on: boolean): boolean {
 // up in the add panel the moment it is added here and wired in decorProp().
 export const DECOR_KINDS = [
   ...JUNGLE_ASSET_KINDS,
+  ...CITY_ASSET_KINDS,
   ...TROPICAL_PLANT_KINDS,
   "fern",
   "broadleaf",
@@ -815,6 +819,7 @@ export type DecorKind = (typeof DECOR_KINDS)[number];
 /** Human labels for the palette + the props dropdown. */
 export const DECOR_LABELS: Record<DecorKind, string> = {
   ...JUNGLE_ASSET_LABELS,
+  ...CITY_ASSET_LABELS,
   ...TROPICAL_PLANT_LABELS,
   fern: "fern",
   broadleaf: "broadleaf",
@@ -2252,6 +2257,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "flats", name: "Flats & Pipes" }, // sky-deck runway opening into the transition yard
   { id: "sky", name: "Sky Bridge" },
   { id: "slip", name: "The Slipstream" }, // banked ribbon slide high over the sea
+  {id:"test",name:CARLISLE_COAST_LEVEL.name,data:CARLISLE_COAST_LEVEL},
   { id: "dark", name: "The Nightworks" }, // torch-lit machine hall: cycling platforms, phase pads, travelling rails and ropes
   { id: "warproom", name: "Island World Map" }, // legacy id, graph-driven map runtime
   { id: "descent", name: "The Descent" }, // two-lane mountain road, very long, very downhill
@@ -3306,7 +3312,7 @@ export function levelList(): LevelEntry[] {
   const edited = new Map(user.map((l) => [l.id, l]));
   const out = BUILTIN_LEVELS.map((builtin) => {
     const override = edited.get(builtin.id);
-    if (!override) return builtin;
+    if (!override || isOriginalTestCourse(override)) return builtin;
     // Old edited copies predate semantic HUD metadata. Inherit only a missing
     // built-in presentation tag without mutating the saved object; an explicit
     // tag on the override remains authoritative.
@@ -3325,7 +3331,7 @@ export function levelList(): LevelEntry[] {
 
 /** True when this built-in has been edited and is building from data. */
 export function isOverridden(id: string): boolean {
-  return isBuiltin(id) && getUserLevels().some((l) => l.id === id);
+  return isBuiltin(id) && getUserLevels().some((l) => l.id === id && !isOriginalTestCourse(l));
 }
 
 export function findLevel(id: string): LevelEntry | null {
@@ -3790,6 +3796,7 @@ export class Level {
   private thornClusters: ProceduralThornCluster[] = [];
   private tropicalPlants: TropicalPlantKit | null = null;
   private jungleAssets: JungleAssetKit | null = null;
+  private cityAssets: CityAssetKit | null = null;
   nightworksRocks: NightworksRocks | null = null;
   jungleAtmosphere = false;
   private jungleTime = { value: 0 };
@@ -4465,7 +4472,7 @@ export class Level {
       emissive: 0x11141a,
     });
     for (const rail of this.rails) {
-      if (rail.object.userData.nightworksRock) continue;
+      if (rail.object.userData.nightworksRock || rail.object.userData.cityRail) continue;
       rail.object.traverse((o) => {
         const m = o as THREE.Mesh;
         if (!m.isMesh) return;
@@ -4547,6 +4554,7 @@ export class Level {
     }
     this.bakeDecor(); // any batched decor the builder didn't flush itself
     this.jungleAssets?.flush();
+    this.cityAssets?.flush();
     if (this.jungleAtmosphere) {
       if (this.builtFromData?.keepPlayFog === undefined) this.keepPlayFog = true;
       Object.assign(this.theme, JUNGLE_THEME_OVERRIDES);
@@ -4584,6 +4592,7 @@ export class Level {
 
   private installGroundAcceleration(meshes: readonly THREE.Mesh[]): void {
     const acceleration = accelerateGroundMeshes(meshes);
+    for(const mesh of meshes)accelerateCityGround(mesh);
     for (const geometry of acceleration.ownedGeometries)
       this.acceleratedGroundGeometries.add(geometry);
     this.groundAccelerationBuildMs += acceleration.stats.buildMs;
@@ -6208,6 +6217,9 @@ export class Level {
             this.buildNightworksRock(c);
             return;
           }
+          if (isCityAsset(c.dkind) && (c.t === "platform" || c.t === "decor")) {
+            this.buildCityAsset(c);return;
+          }
           // VECTOR SHAPES: a 3+ point outline turns platform/wall/pit into a
           // drawn polygon. Shape points are authored in XZ around p; three.js
           // Shapes live in XY, so (x, -z) + rotateX(-90°) lands them flat.
@@ -6750,6 +6762,7 @@ export class Level {
               this.rails.push(rail);
               this.root.add(rail.object);
             }
+            if(c.dkind === "citydeck" || c.dkind === "cityutilitypole"){const rail=this.rails[this.rails.length-1];rail.object.traverse(o=>{const mesh=o as THREE.Mesh;if(mesh.isMesh){mesh.geometry.dispose();}});rail.object.clear();rail.object.userData.cityRail=true;rail.object.add(cityRailVisual(rail.points,c.dkind === "cityutilitypole"));}
             if (c.dkind === "nightrockridge") {
               const rail = this.rails[this.rails.length-1];
               rail.object.clear();rail.object.userData.nightworksRock=true;
@@ -7126,6 +7139,7 @@ export class Level {
     }
     this.nightworksRocks?.dispose();
     this.nightworksRocks = null;
+    this.cityAssets?.dispose();this.cityAssets=null;
     this.jungleAssets?.dispose();
     this.jungleAssets = null;
     this.campaignWorldMap?.dispose();
@@ -15103,8 +15117,31 @@ export class Level {
    * point of the library that a scatter does not have to choose a model, a
    * colour, a size, a spin and a lean for every single plant.
    */
+  updateCityVisibility(position:THREE.Vector3):void {this.cityAssets?.updateVisibility(position);}
+  get cityAssetDiagnostics(){return this.cityAssets?.diagnostics??null;}
+  private buildCityAsset(c:CustomComponent):void {
+    if(!isCityAsset(c.dkind))return;
+    const spec=CITY_ASSETS[c.dkind],placement={...c,dkind:c.dkind};
+    if(!this.cityAssets){this.cityAssets=new CityAssetKit(!EDITOR_BUILD);this.root.add(this.cityAssets.root);}
+    const holder=this.cityAssets.add(placement,c.t==="platform");if(holder)this.root.add(holder);
+    const matrix=cityMatrix(placement,c.t==="platform");
+    if(spec.ground&&c.solid!==false){
+      const material=new THREE.MeshBasicMaterial();material.visible=false;
+      const mesh=new THREE.Mesh(cityCollisionGeometry(c.dkind),material);mesh.matrix.copy(matrix);mesh.matrixAutoUpdate=false;
+      mesh.name=spec.label;mesh.userData.cityAsset=c.dkind;mesh.userData.edgeGrinding=c.edgeGrinding??false;
+      this.root.add(mesh);this.groundMeshes.push(mesh);
+      if(c.dkind==='citydeck'){const box=new THREE.Box3(new THREE.Vector3(-2.25,0,-2.25),new THREE.Vector3(2.25,.3,2.25)).applyMatrix4(matrix);this.walls.push(box);}
+    }
+    if(!spec.ground&&((spec.building&&c.solid!==false)||c.solid===true)){
+      const lo=spec.bounds[0],hi=spec.bounds[1],centerX=(lo[0]+hi[0])/2,centerZ=(lo[2]+hi[2])/2;
+      const f=spec.footprint??[lo[0],lo[2],hi[0],hi[2]];
+      const box=new THREE.Box3(new THREE.Vector3(f[0]-centerX,0,f[1]-centerZ),new THREE.Vector3(f[2]-centerX,hi[1]-lo[1],f[3]-centerZ));
+      box.applyMatrix4(matrix);this.walls.push(box);
+    }
+  }
+
   get jungleAssetDiagnostics() { return this.jungleAssets?.diagnostics ?? null; }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([this.jungleAssets?.ready(),this.nightworksRocks?.ready(),this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.milkCrate?.ready,crate.explosiveBundle?.ready])]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([this.jungleAssets?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.milkCrate?.ready,crate.explosiveBundle?.ready])]); }
 
   private jungleAsset(c: CustomComponent): void {
     if (!isJungleAsset(c.dkind)) return;
