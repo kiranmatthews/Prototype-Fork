@@ -52,11 +52,11 @@ await withSkateRuntime(async ({player:p,server,THREE})=>{
     }
     if(entry.id==='grind:under'){
       const at=t=>trace.filter(s=>s.time<=t).at(-1);
-      assert.equal(at(.4).underFlag,false);assert.equal(at(1.1).underFlag,true);
-      assert.equal(at(2.8).underFlag,false);assert.equal(at(4.6).underFlag,true);
+      assert.equal(at(.4).underFlag,false);assert.equal(at(1.4).underFlag,true);
+      assert.equal(at(3.0).underFlag,false);assert.equal(at(4.7).underFlag,true);
       assert.equal(at(5.4).state,'air');assert.equal(at(6.8).grounded,true);
       const rootY=t=>a.sampleComposedClip(clip,t,motion).joints.skateBody.position[1];
-      assert.ok(rootY(.4)-rootY(1.1)>1.6&&rootY(2.8)-rootY(4.6)>1.6,'under-rail transitions have no visible vertical travel');
+      assert.ok(rootY(.4)-rootY(1.4)>1.6&&rootY(3.0)-rootY(4.7)>1.6,'under-rail transitions have no visible vertical travel');
       assert.ok(rootY(6.8)<.25,'the drop never reaches the floor');
     }
     for(let f=0;f<45;f++){

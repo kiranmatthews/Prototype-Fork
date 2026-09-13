@@ -41,3 +41,5 @@ Validated the packaged sheet and Lab in a real browser: 42 clips, a three-column
 Revision 5 repairs S40 and S42 in gameplay and the study captures. The hang includes continuous stretched arm shafts and two truck grips; the Darkslide uses a narrow upright stance. Camera framing accommodates the longer hang and the Darkslide exit.
 
 Revision 5 browser QA covered the held truck grip from opposite and rail-end views, the board handoff on release, Darkslide hold/exit, and full-render Animation Lab playback with clean close and no console errors.
+
+Revision 6 stages S42 as a foot-driven quarter turn, hop off the board and late truck catch, with shorter elongated arms and minimal clear headroom. S08 captures the new wallride rule: the character must face the wall independently of travel direction. The local `wallride-facing-review.html` developer page exercises actual eligibility; it is not a production catalogue entry.

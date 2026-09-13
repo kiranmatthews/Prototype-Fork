@@ -1,5 +1,6 @@
 import { createProceduralDriver } from './document';
 import type { AnimationClip, AnimationTrack, RigDefinition } from './types';
+import { sampleUnderRailMotion } from '../skateBodyMotion';
 
 export const CHARACTER_ELASTICITY_REVISION = 1;
 /** Torso, upper arm, forearm, thigh and shin. Zero protects a planted grip. */
@@ -78,9 +79,9 @@ export function skateRestElasticity(time:number):Record<string,number> {
 /** Long independent arm shafts carry the under-rail body. The contact solve
  * plants both palms afterward, so this small elastic sway cannot loosen grips. */
 export const SKATE_UNDER_RAIL_ARM_LIMIT = 5.75;
-export function skateUnderRailElasticity(weight:number,time:number):Record<string,number> {
-  const t=Math.max(0,Math.min(1,weight/.4)),reach=t*t*(3-2*t);
-  const pulse=.04*Math.sin(time*3.8)*Math.max(0,weight)+1.5*Math.sin(Math.PI*Math.max(0,Math.min(1,weight)));
+export function skateUnderRailElasticity(weight:number,time:number,returning=false,releasing=false):Record<string,number> {
+  const motion=sampleUnderRailMotion(weight,returning,releasing);
+  const pulse=.025*Math.sin(time*3.8)*Math.max(0,weight)+motion.armExtra;
   return Object.fromEntries(ELASTIC_LENGTH_CONTROLS.filter(([id])=>id.startsWith('deform.arm.')).map(([id])=>
-    [id,1+reach*((id.includes('.lower.')?3.85:3.65)-1+pulse)]));
+    [id,1+motion.armReach*((id.includes('.lower.')?3:2.8)-1+pulse)]));
 }

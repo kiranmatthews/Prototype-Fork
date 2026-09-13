@@ -10,7 +10,7 @@ await withSkateRuntime(async({player:p,server,THREE,Level})=>{
     components:[{t:'platform',p:[0,-.5,0],s:[1000,1,1000]},{t:'gate',p:[0,0,-450]}]}});
   const runtime=createCharacterAnimationRuntime(p,a.createPlayerStarterAnimationSuite(a.RigBinding.fromSculptRuntime(p.animationRig.root).definition));
   const v=(...xyz)=>new THREE.Vector3(...xyz),joint=name=>p.riderG.getObjectByName(name).getWorldPosition(v());
-  let frames=0,maxGrip=0,maxDarkStep=0,minHeadGap=Infinity,maxTransitGrip=0,maxShaftGap=0;let maxDarkCase=null;
+  let frames=0,maxGrip=0,maxDarkStep=0,minHeadGap=Infinity,maxTransitGrip=0,maxShaftGap=0;let maxDarkCase=null,maxGripCase=null;
   const issues=[];
   for(const under of [true,false])for(const stance of [-1,1])for(const direction of [-1,1]){
     const railY=under?4.5:.8,rail=new Rail([v(0,railY,70),v(0,railY,-70)],false);
@@ -22,7 +22,7 @@ await withSkateRuntime(async({player:p,server,THREE,Level})=>{
     p.state='air';p.grounded=false;p.pos.set(0,railY+.25,0);p.prevPos.copy(p.pos);p.vVel=-1;p.grindVel=12;p.regrindCd=0;p.underCoolT=0;
     p.axisF.set(0,0,-direction);p.axisL.set(-direction,0,0);p.visualYaw=Math.atan2(p.axisF.x,p.axisF.z)-Math.PI;
     if(!under)p.special.award(1200);
-    let held=0,landed=false,previous=null;
+    let held=0,landed=false,previous=null,flicked=false,jumpedClear=false,caughtLate=false,shoesLifted=false;
     for(let f=0;f<=(under?432:252);f++){
       const input=makeInput();
       if(f===(under?0:2)){input.grindPressed=input.grindHeld=true;if(!under)input.moveX=1;}
@@ -36,12 +36,18 @@ await withSkateRuntime(async({player:p,server,THREE,Level})=>{
       const s=p.boardG.userData.settings,origin=p.boardG.getWorldPosition(v());
       const boardDirection=p.boardG.localToWorld(v(0,0,1)).sub(origin).normalize();
       const boardUp=p.boardG.localToWorld(v(0,1,0)).sub(origin).normalize();
-      if(under&&(p.boardG.userData.skateUnderRail?.weight??0)>.25)maxTransitGrip=Math.max(maxTransitGrip,p.boardG.userData.skateUnderRail.handError);
+      if(under&&(p.boardG.userData.skateUnderRail?.handContact??0)>.999&&p.boardG.userData.skateUnderRail.handError>maxTransitGrip){maxTransitGrip=p.boardG.userData.skateUnderRail.handError;maxGripCase={stance,direction,f,progress:p.underK,phase:p.boardG.userData.skateUnderRail.phase};}
       if(under)for(const side of ['left','right'])for(const [anchor,end] of [['shoulder','elbow'],['elbow','wrist']]){
         const node=p.riderG.getObjectByName(`${anchor}-${side}`);
         for(const bone of directStretchableBones(node))maxShaftGap=Math.max(maxShaftGap,bone.distalSocket.getWorldPosition(v()).distanceTo(joint(`${end}-${side}`)));
       }
       if(under&&p.state==='grind'){
+        const m=p.boardG.userData.skateUnderRail;
+        if(f>36&&f<80&&m){
+          if(m.boardTurn>.9&&m.footContact>.99&&m.handContact===0)flicked=true;
+          if(flicked&&m.footContact===0&&m.handContact===0){jumpedClear=true;const deckY=p.boardG.localToWorld(v(0,s.boardToGroundDistance,0)).y;if(Math.min(joint('socket-foot-left').y,joint('socket-foot-right').y)>deckY+.06)shoesLifted=true;}
+          if(jumpedClear&&m.handContact>.999)caughtLate=true;
+        }
         const box=new THREE.Box3().setFromObject(p.headM);
         const dx=Math.max(box.min.x,0,-box.max.x),dy=Math.max(box.min.y-railY,0,railY-box.max.y);
         if(Math.hypot(dx,dy)<.10)issues.push({kind:'head crosses rail',stance,direction,f,w:p.underK,box:[box.min.toArray(),box.max.toArray()]});
@@ -49,12 +55,12 @@ await withSkateRuntime(async({player:p,server,THREE,Level})=>{
           held++;
           assert.ok(Math.abs(boardDirection.z)<.002,'under-rail board is not crosswise');
           minHeadGap=Math.min(minHeadGap,railY-.09-box.max.y);
-          assert.ok(railY-.09-box.max.y>.35,`head/hair clearance ${railY-.09-box.max.y} at ${stance}/${direction}/${f}; ${JSON.stringify(p.boardG.userData.skateUnderRail)}`);
+          assert.ok(railY-.09-box.max.y>.04&&railY-.09-box.max.y<.14,`head/hair clearance ${railY-.09-box.max.y} at ${stance}/${direction}/${f}; ${JSON.stringify(p.boardG.userData.skateUnderRail)}`);
           const trucks=[s.frontTruckLocalZ,s.rearTruckLocalZ].map(z=>p.boardG.localToWorld(v(0,s.wheelRadius,z)));
           const palms=[joint('socket-grip-left'),joint('socket-grip-right')];
           const error=Math.min(Math.max(palms[0].distanceTo(trucks[0]),palms[1].distanceTo(trucks[1])),Math.max(palms[1].distanceTo(trucks[0]),palms[0].distanceTo(trucks[1])));
           maxGrip=Math.max(maxGrip,error);assert.ok(error<.006,`both truck grips must stay planted: ${error}`);
-          for(const side of ['left','right'])for(const part of ['upper','lower'])assert.ok(p.playerAnimationBridge.deformationValue(`deform.arm.${part}.${side}.length`)>3,'under-rail arms need visibly elongated shafts');
+          for(const side of ['left','right'])for(const part of ['upper','lower'])assert.ok(p.playerAnimationBridge.deformationValue(`deform.arm.${part}.${side}.length`)>2.5&&p.playerAnimationBridge.deformationValue(`deform.arm.${part}.${side}.length`)<3.2,'under-rail arms need visibly elongated shafts');
         }
       }
       if(!under&&p.state==='grind'&&f>20){
@@ -74,9 +80,10 @@ await withSkateRuntime(async({player:p,server,THREE,Level})=>{
       if(f>release&&p.grounded)landed=true;
     }
     assert.ok(held>20&&landed,'the complete entry/hold/exit/landing was not reviewed');
+    if(under)assert.ok(flicked&&jumpedClear&&caughtLate&&shoesLifted,'entry must flick with feet, jump clear, then catch the trucks');
   }
   runtime.dispose();level.dispose();
-  console.log(JSON.stringify({frames,maxGrip,maxTransitGrip,maxShaftGap,minHeadGap,maxDarkStep,maxDarkCase,transitionIssues:issues.slice(0,8)}));
+  console.log(JSON.stringify({frames,maxGrip,maxTransitGrip,maxShaftGap,minHeadGap,maxGripCase,maxDarkStep,maxDarkCase,transitionIssues:issues.slice(0,8)}));
   assert.equal(issues.length,0,'head must swing around the rail during entry and return');
   assert.ok(maxTransitGrip<.006,'truck grips must remain planted through the swing');
   assert.ok(maxShaftGap<.002,'visible arm shafts must reach their actual elbow/wrist endpoints');

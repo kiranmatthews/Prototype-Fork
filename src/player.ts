@@ -1,4 +1,4 @@
-import { SKATE_UNDER_RAIL_DEPTH } from './skateBodyMotion';
+import { SKATE_UNDER_RAIL_DEPTH, sampleUnderRailMotion } from './skateBodyMotion';
 import { skateUnderRailElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
 // Authored fake-physics board movement. No rigidbody, no forces: just a
 // heading, a scalar speed, a vertical velocity, and hand-tuned numbers from
@@ -394,7 +394,7 @@ const VERT_TRACK_STEPS = [0.15, 0.05, 0, -0.12, -0.26, -0.45, -0.7];
 // underneath (hands + crosswise board grip the rail overhead), and how long
 // the committed swing between top and under takes.
 const UNDER_RAIL_DEPTH = SKATE_UNDER_RAIL_DEPTH;
-const UNDER_RAIL_SWING = 0.32;
+const UNDER_RAIL_SWING = 0.72;
 // Deck-plant fallback for a malformed/custom board. The production value is
 // read live from boardG.userData.gripTop so the Unity shape lab can tune it.
 const PLANT_DECK_TOP = SKATEBOARD_GRIP_TOP;
@@ -10095,7 +10095,7 @@ export class Player {
     // Under-rail hang: the body swings to hands-overhead beneath the line
     // (underK eases through the committed switch, so this is the animation).
     if (this.underK > 0) {
-      const k = this.underK * this.underK * (3 - 2 * this.underK); // smoothstep swing
+      const k = sampleUnderRailMotion(this.underK,!this.railUnder,false).bodyDrop;
       this.pos.y -= k * (UNDER_RAIL_DEPTH + CONST.railRideHeight);
     }
     // Glide onto the rail: the entry offset eases away over railSnapEase
@@ -13400,6 +13400,12 @@ export class Player {
   // holding grind, off cooldown, moving fast enough, and within the wall's
   // height. The wall is a thin box; its NORMAL is the thin axis, the ride runs
   // along the long axis carrying your speed. Returns true if it grabbed.
+  private wallrideFacesWall(nx: number, nz: number): boolean {
+    const facing=(this.riderG??this.bodyGroup).getWorldDirection(new THREE.Vector3());
+    const horizontal=Math.hypot(facing.x,facing.z);
+    return horizontal>1e-4 && -(facing.x*nx+facing.z*nz)/horizontal>Math.max(1e-4,Math.cos(TUNING.wallrideMaxAngle*Math.PI/180));
+  }
+
   private tryWallride(w: THREE.Box3, level: Level): boolean {
     if (
       this.state !== 'air' ||
@@ -13415,7 +13421,7 @@ export class Player {
     const vx = this.axisF.x * this.speed;
     const vz = this.axisF.z * this.speed;
     const hspeed = Math.hypot(vx, vz);
-    if (hspeed < TUNING.wallrideMinSpeed) return false;
+    if (Math.hypot(hspeed,this.vVel) < TUNING.wallrideMinSpeed) return false;
     const wallPath = level.wallPathForBox(w);
     if (wallPath) {
       const contact = level.closestWallPath(
@@ -13437,11 +13443,7 @@ export class Player {
       )
         return false;
       const alongVelocity = vx * contact.tx + vz * contact.tz;
-      const along = Math.abs(alongVelocity);
-      const into = -(vx * contact.nx + vz * contact.nz);
-      const approach =
-        (Math.atan2(Math.abs(into), Math.max(0.001, along)) * 180) / Math.PI;
-      if (approach > TUNING.wallrideMaxAngle) return false;
+      if (!this.wallrideFacesWall(contact.nx,contact.nz)) return false;
       this.wallPath = wallPath;
       this.wallPathS = contact.s;
       this.wallPathDir = Math.abs(alongVelocity) > 0.01 ? Math.sign(alongVelocity) : 1;
@@ -13468,11 +13470,7 @@ export class Player {
       // Outward normal: points from the wall face back toward the skater.
       const nx = alongZ ? (this.pos.x >= (w.min.x + w.max.x) / 2 ? 1 : -1) : 0;
       const nz = alongZ ? 0 : this.pos.z >= (w.min.z + w.max.z) / 2 ? 1 : -1;
-      const along = alongZ ? Math.abs(vz) : Math.abs(vx);
-      const into = alongZ ? -vx * nx : -vz * nz;
-      const approach =
-        (Math.atan2(Math.abs(into), Math.max(0.001, along)) * 180) / Math.PI;
-      if (approach > TUNING.wallrideMaxAngle) return false;
+      if (!this.wallrideFacesWall(nx,nz)) return false;
       this.wallPath = null;
       if (alongZ) {
         this.wallNormal.set(nx, 0, 0);
@@ -14308,10 +14306,14 @@ export class Player {
 
   // Ride the wall: gentle gravity, along-wall travel + bleed, glued to the face.
   // PUMP X (hold) to load a spring, RELEASE to leap off — the longer the pump,
-  // the bigger the pop. Else drop when it times out / stalls / runs off / you
+  // the bigger the pop. Else drop when it times out / runs off / you
   // meet the ground.
   private stepWallride(dt: number, input: Input, level: Level): void {
     const w = this.wallBox;
+    if(!this.wallrideFacesWall(this.wallNormal.x,this.wallNormal.z)){
+      this.wallriding=false;this.wallPath=null;this.wallCoolT=.35;
+      this.state='air';this.airFromSkate=true;this.airGrav='board';return;
+    }
     if (input.jumpHeld) this.wallChargeT = Math.min(TUNING.wallChargeMax, this.wallChargeT + dt);
     if (input.jumpReleased) {
       // charge 0..1 over wallChargeMax; a quick tap barely loads (normal ollie),
@@ -14438,9 +14440,9 @@ export class Player {
       return;
     }
 
-    // Ends only when you ollie off (handled above), run out of air-time, stall,
+    // Ends when you ollie off (handled above), run out of air-time,
     // or run off the wall — NOT when you let go of grind.
-    if (this.wallrideT <= 0 || this.wallSpeed < 1 || off) {
+    if (this.wallrideT <= 0 || off) {
       this.wallriding = false;
       this.wallPath = null;
       this.wallCoolT = 0.35;
@@ -15679,6 +15681,13 @@ export class Player {
       this.grabSpinAngle + (this.parkControls && this.vertAir && !this.grounded ? this.parkAutoTurn : 0) +
       appliedGrindYaw +
       sideYaw + revertYaw;
+    // Wall travel and torso facing are independent, including reverse and
+    // vertical travel. Keep the chest into the wall, then ease out on release.
+    if(this.wallriding || this.wallridePose>.001){
+      const wallYaw=Math.atan2(this.wallNormal.x,this.wallNormal.z);
+      const weight=this.wallriding?1:this.wallridePose;
+      this.bodyGroup.rotation.y+=wrapAngle(wallYaw-this.bodyGroup.rotation.y)*weight;
+    }
 
     // Grab pose, skate-photo style: knees tucked high, one hand pulls the
     // board, the other arm throws up. Direction held picks the variant —
@@ -16879,7 +16888,7 @@ export class Player {
     }
     if(this.boardG)this.boardG.userData.ollieMotion=ollieMotion;
     if(this.underK>0 && !this.isBailing && (this.state==='grind'||this.state==='air'))
-      this.playerAnimationBridge.modulateDeformations(skateUnderRailElasticity(this.underK,this.runTime));
+      this.playerAnimationBridge.modulateDeformations(skateUnderRailElasticity(this.underK,this.runTime,this.state==='grind'&&!this.railUnder,this.state!=='grind'));
     if (this.softSkateImpactT > 0 && this.freeSkate && this.grounded && this.state === 'ride' && !this.isBailing) {
       const hit = sampleSoftSkateImpact(this.softSkateImpactT);
       this.bodyGroup.rotation.x += 0.16 * hit.brace;
@@ -16925,6 +16934,7 @@ export class Player {
         deckYaw: this.deckYawOffset, speed: this.speed, charge: this.chargePose, balance: this.balance,
         verticalVelocity: this.vVel, launchVelocity: this.launchVy,
         underWeight: this.underK,
+        underReturning: this.state==='grind'&&!this.railUnder,
         mount: mountPose.tuck + .75 * mountPose.settle,
         manual: this.manualing, grab: this.specialGrab ? 'mute' : this.grabKind, grabWeight: this.grabPose,
         grind: this.state === 'grind' ? this.grindStyle : null, rail: this.grindRail,

@@ -4,7 +4,7 @@ import { GRAB_CONTACTS, GRIND_CONTACTS, LIP_CONTACTS, skateContactBounce, sample
 import { DEFAULT_SKATEBOARD_SETTINGS, type SkateboardSettingsValue } from './skateboard/settings';
 import { evaluateSkateboardSurfaceHeight } from './skateboard/model';
 import type { Rail } from './rails';
-import { SkateBodySpring, skateOlliePitch, SKATE_UNDER_RAIL_DEPTH } from './skateBodyMotion';
+import { SkateBodySpring, skateOlliePitch, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_HEADROOM, sampleUnderRailMotion } from './skateBodyMotion';
 
 const X = new THREE.Vector3(1, 0, 0), Y = new THREE.Vector3(0, 1, 0), Z = new THREE.Vector3(0, 0, 1);
 const clamp = THREE.MathUtils.clamp;
@@ -16,6 +16,7 @@ export interface SkatePoseInput {
   yaw: number; deckYaw: number; speed: number; charge: number; balance: number;
   verticalVelocity?: number; launchVelocity?: number; mount?: number;
   underWeight?: number;
+  underReturning?: boolean;
   manual: number; grab: GrabTrickKind; grabWeight: number;
   grind: GrindStyle | null; rail: Rail | null; railT: number; railDir: number;
   crossDir: number; approachSide: number; crookedSide: number;
@@ -152,7 +153,9 @@ export class SkateAnimation {
     const dark = smooth(this.darkWeight);
     this.darkPop = p.darkslide ? Math.sin(Math.PI*dark) : this.darkPop*Math.exp(-20*p.dt);
     const darkPop = this.darkPop;
-    const under = smooth(clamp(p.underWeight??0,0,1));
+    const underProgress=clamp(p.underWeight??0,0,1);
+    const underMotion=sampleUnderRailMotion(underProgress,p.underReturning,!p.grind);
+    const under=underMotion.bodyDrop;
     const s = (this.board.userData.settings ?? DEFAULT_SKATEBOARD_SETTINGS) as SkateboardSettingsValue;
     const scale = s.overallScale, grip = s.boardToGroundDistance * scale;
     const surface = (x: number, z: number) => (s.boardToGroundDistance + evaluateSkateboardSurfaceHeight(s, x / scale, z / scale)) * scale;
@@ -263,15 +266,16 @@ export class SkateAnimation {
 
     const hangAnchor = p.grind && p.rail ? p.rail.pointAt(p.railT)
       : this.group.getWorldPosition(new THREE.Vector3()).addScaledVector(Y,SKATE_UNDER_RAIL_DEPTH);
-    if (under > 0) {
+    if (underProgress > 0) {
       const hangQ = this.hangFrame.clone().multiply(new THREE.Quaternion().setFromAxisAngle(Y,Math.PI/2));
       const hangUp = Y.clone().applyQuaternion(this.hangFrame);
       const hangBoard = hangAnchor.clone().addScaledVector(hangUp,.09)
         .sub(new THREE.Vector3(0,(s.boardToGroundDistance-s.deckThickness)*scale,0).applyQuaternion(hangQ));
-      this.boardQ.slerp(hangQ,under);this.boardP.lerp(hangBoard,under);
+      this.boardQ.slerp(hangQ,underMotion.boardTurn);this.boardP.lerp(hangBoard,underMotion.boardTurn);
+      if(p.grind&&!p.underReturning)this.boardP.addScaledVector(hangUp,.12*Math.sin(Math.PI*underMotion.boardTurn));
       // On release the board passes beside the head on its way to the feet.
-      if (!p.grind) this.boardP.addScaledVector(X.clone().applyQuaternion(this.hangFrame),2.8*Math.sin(Math.PI*under));
-      this.worldRotation(this.rider,this.rider.getWorldQuaternion(new THREE.Quaternion()).slerp(this.hangFrame,under));
+      if (!p.grind) this.boardP.addScaledVector(X.clone().applyQuaternion(this.hangFrame),2.2*underMotion.boardSwing);
+      this.worldRotation(this.rider,this.rider.getWorldQuaternion(new THREE.Quaternion()).slerp(this.hangFrame,underMotion.boardTurn));
     }
 
     // Cancel the body's nonuniform cartoon proportions BEFORE board rotation.
@@ -352,14 +356,18 @@ export class SkateAnimation {
       }
       pelvis.addScaledVector(this.up, flipPose.riderLift * .7);
     }
-    if (under > 0 && this.head) {
+    if (underProgress > 0 && this.head) {
       const headBox = new THREE.Box3().setFromObject(this.head);
       const headAboveHips = (headBox.isEmpty()?this.head.getWorldPosition(new THREE.Vector3()).y+.7:headBox.max.y)
         -this.hips.getWorldPosition(new THREE.Vector3()).y;
-      const hangingPelvis=hangAnchor.clone();hangingPelvis.y-=headAboveHips+.50;
+      const hangingPelvis=hangAnchor.clone();hangingPelvis.y-=headAboveHips+SKATE_UNDER_RAIL_HEADROOM;
+      // During release the rider falls independently while the deck returns
+      // below the feet; the moving board must not pull the body upward.
+      if(!p.grind)pelvis.copy(this.support).addScaledVector(Y,grip+height);
       pelvis.lerp(hangingPelvis,under);
       // Swing around the side of the rail while the head crosses its height.
-      if(p.grind)pelvis.addScaledVector(X.clone().applyQuaternion(this.hangFrame),2.5*Math.sin(Math.PI*under));
+      if(p.grind)pelvis.addScaledVector(X.clone().applyQuaternion(this.hangFrame),1.55*underMotion.swing);
+      pelvis.addScaledVector(Y,.25*underMotion.hop-.12*underMotion.dip);
     }
     this.hips.getWorldPosition(this.temp);
     const delta = pelvis.clone().sub(this.temp);
@@ -371,13 +379,23 @@ export class SkateAnimation {
     for (let i = 0; i < 2; i++) {
       const pole = this.feet[i].root.getWorldPosition(new THREE.Vector3())
         .addScaledVector(this.right, p.stance * .65).addScaledVector(this.forward, i === front ? .12 : -.12);
-      const footWeight=1-smooth(under/.25);
-      if(footWeight>0)footError = Math.max(footError, this.solve(this.feet[i], footTargets[i], footQ, pole,footWeight));
+      const footWeight=underProgress>0?underMotion.footContact:1;
+      const airFeet=underProgress>0?underMotion.airFeet:0;
+      const target=footTargets[i].clone();
+      if(airFeet>0){
+        // The jump keeps both shoes visibly above the deck before the legs
+        // relax into the hang. Free FK must not drop them through the board.
+        const tuck=pelvis.clone().addScaledVector(Y,-.36-.16*under)
+          .addScaledVector(Z.clone().applyQuaternion(this.boardQ),(i===front?1:-1)*footSpan*.65);
+        target.lerp(tuck,1-footWeight);
+      }
+      const solveWeight=Math.max(footWeight,airFeet);
+      if(solveWeight>0)footError = Math.max(footError, this.solve(this.feet[i], target, footQ, pole,solveWeight));
     }
 
     let handError = 0;
-    if (under > 0) {
-      const gripWeight=smooth(under/.25);
+    if (underProgress > 0) {
+      const gripWeight=underMotion.handContact;
       const handTargets: number[][]=[];
       // The hanging torso faces along the rail: its anatomical left reaches
       // the nose truck and its right reaches the tail, without crossing arms.
@@ -393,7 +411,7 @@ export class SkateAnimation {
         if(gripWeight>0)handError=Math.max(handError,this.solve(hand,target,handQ,pole,gripWeight));
         handTargets.push(target.toArray());
       }
-      this.board.userData.skateUnderRail={weight:under,handError,targets:handTargets,rail:hangAnchor.toArray()};
+      this.board.userData.skateUnderRail={weight:underProgress,...underMotion,handError,targets:handTargets,rail:hangAnchor.toArray()};
     } else delete this.board.userData.skateUnderRail;
     if (this.manualWeight > .001 && !p.grind && !p.lip && gw < .001 && p.wallWeight < .001) {
       const sway = Math.sin(p.time*3.6), counter = Math.sin(p.time*3.6-.65);

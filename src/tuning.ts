@@ -120,8 +120,8 @@ export const TUNING = {
   slideRecover: 0.5, // get-up beat after a PLAIN slide: movement locked while the skater picks themselves off the ground (stops slide-spam for free speed)
   wallrideGravity: 16, // THPS wallride: gentle sink while riding a wall (vs the board pair 33/70, or 33/119 on foot)
   wallrideFriction: 1, // along-wall speed bleed per second on a wallride
-  wallrideMinSpeed: 7.5, // need at least this much horizontal speed (airborne, grind held) to stick to a wall
-  wallrideMaxAngle: 76, // max approach angle OFF PARALLEL (deg) to stick — steeper/more head-on and you bonk off
+  wallrideMinSpeed: 7.5, // minimum movement speed, including vertical travel, to catch a wall
+  wallrideMaxAngle: 76, // maximum torso-facing angle away from directly into the wall (degrees)
   wallrideMaxTime: 12, // longest a single wallride lasts before you drop off
   wallKickUp: 10.5, // the WALLIE: base vertical pop when you ollie OFF a wallride (a quick tap)
   wallPumpBonus: 17, // extra vertical launch at FULL pump — hold X on the wall, release to spring off big
@@ -669,9 +669,9 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'THPS wallride sink rate: jump into a wall while HOLDING GRIND (E) and you ride along its face. This is the gentle gravity while stuck to the wall (0 = ride dead level, higher = sink faster). A board air is 33 up / 70 down for reference, and a platforming jump is 33 up / 119 down.',
   wallrideFriction: 'How fast your along-the-wall speed bleeds off during a wallride (higher = shorter rides).',
   wallrideMinSpeed:
-    'Minimum horizontal speed needed (airborne, grind held, moving into the wall) to stick to a wall instead of bonking off it.',
+    'Minimum movement speed needed while airborne, holding grind and facing the wall. Includes vertical travel; movement direction does not gate the catch.',
   wallrideMaxAngle:
-    'How PARALLEL your approach must be to stick to a wall. This is the biggest angle (in degrees) your flight can be off the wall face — glide in almost parallel (0 = dead parallel) and you catch it; come in too head-on (past this angle) and you bonk off. Ollie into the wall holding Triangle to catch it. Lower = stricter (must be very parallel), higher = catch steeper approaches.',
+    'Maximum torso-facing angle from directly into the wall. Lower values demand a more direct facing; a back-to-wall pose is never allowed. Travel can be forward, backward, head-on or vertical.',
   wallrideMaxTime: 'Longest a single wallride can last before you automatically drop off.',
   wallKickUp: 'The WALLIE: BASE vertical pop when you ollie off a wallride — what a quick tap-and-release of X gives you.',
   wallPumpBonus:

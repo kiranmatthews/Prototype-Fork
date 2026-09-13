@@ -2,7 +2,36 @@ const clamp = (n: number, a: number, b: number) => Math.max(a, Math.min(b, n));
 const smooth = (n: number) => { const t=clamp(n,0,1); return t*t*(3-2*t); };
 
 // The rail anchor and its clearance probe share the deeper hanging position.
-export const SKATE_UNDER_RAIL_DEPTH = 3.5;
+export const SKATE_UNDER_RAIL_DEPTH = 3.15;
+export const SKATE_UNDER_RAIL_HEADROOM = .17;
+
+/** Foot flick → hop clear → descend beside the rail → late truck catch.
+ * Return and release have their own contact timing; they are not backwards
+ * playback of the catch. Values drive both the native anchor and the rig. */
+export function sampleUnderRailMotion(progress:number,returning=false,releasing=false) {
+  const u=clamp(progress,0,1),r=1-u;
+  if(releasing)return {
+    boardTurn:1-smooth((r-.20)/.80),boardSwing:smooth(r/.24)*(1-smooth((r-.80)/.20)),bodyDrop:smooth(u),swing:0,hop:0,dip:0,
+    footContact:smooth((r-.90)/.10),airFeet:0,handContact:1-smooth(r/.16),
+    armReach:1-smooth(r/.55),armExtra:0,
+    phase:'release',
+  };
+  if(returning)return {
+    boardTurn:1-smooth((r-.76)/.24),boardSwing:0,bodyDrop:1-smooth((r-.20)/.50),
+    swing:smooth(r/.25)*(1-smooth((r-.70)/.20)),hop:0,dip:0,
+    footContact:smooth((r-.75)/.18),airFeet:smooth((r-.50)/.16)*(1-smooth((r-.82)/.15)),handContact:1-smooth((r-.48)/.16),
+    armReach:1-smooth((r-.60)/.30),armExtra:1.2*Math.sin(Math.PI*clamp(r/.65,0,1)),
+    phase:'return',
+  };
+  return {
+    boardTurn:smooth(u/.28),boardSwing:0,bodyDrop:smooth((u-.38)/.34),
+    swing:smooth((u-.20)/.20)*(1-smooth((u-.74)/.20)),
+    hop:Math.sin(Math.PI*clamp((u-.18)/.28,0,1)),dip:Math.sin(Math.PI*clamp((u-.70)/.30,0,1)),
+    footContact:1-smooth((u-.28)/.10),airFeet:smooth((u-.28)/.10)*(1-smooth((u-.74)/.20)),handContact:smooth((u-.83)/.12),
+    armReach:smooth((u-.65)/.28),armExtra:0,
+    phase:u<.28?'flick':u<.83?'jump':u<.96?'catch':'hang',
+  };
+}
 
 export interface SkateBodyMotionInput {
   grounded: boolean;
