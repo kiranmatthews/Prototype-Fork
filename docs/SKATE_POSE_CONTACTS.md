@@ -66,12 +66,13 @@ once the socket is within 1 mm.
 `src/skateBodyMotion.ts` gives normal ride, charge, ollie and landing one
 continuous damped spring. The load opens during early ascent, gathers the
 knees around the actual apex, then relaxes for a cushion/rebound on contact.
-The tail-pop pitch builds over 50 ms before levelling, so release no longer
-steps the board angle and drops the pelvis in one frame. Air entry does not
+The S05 tail-pop pitch builds over 50 ms toward a 31° nose-up angle. It
+follows vertical velocity to hold the uphill board attitude through ascent
+and level around the apex, instead of ending at a fixed quarter-second. Air entry does not
 trigger a second contact compression. Ordinary board airs route to procedural
 Skate, not the on-foot Jump/Fall; their exact landing frame also bypasses the
-on-foot Land one-shot. Grab, flip, grind and manual identities retain their
-separate contact poses. The spring changes joint presentation, never physics.
+on-foot Land one-shot. Grab, flip and grind identities retain their separate contact poses. Manuals
+use the standing-height solve with their own wheel contacts and soft arm corrections. The spring changes joint presentation, never physics.
 
 The stance is now 25% narrower for idle/charge/ordinary ollies (0.75 m versus
 1.00 m on the default deck); named tricks retain their contact-specific widths.
@@ -104,3 +105,11 @@ Input recipes, durations, scoring, balance difficulty and movement tuning remain
 - Production TypeScript/bundle checks pass, including an isolated source snapshot excluding concurrent rope/character edits. Real-browser catalogue and lite/full gameplay review cover visible contacts, complete Impossible and McTwist catches/landings, and console checks. No full repository suite was requested or run.
 
 The numerical tolerances describe the authored fixture. The contacts also use current board geometry and rig transforms; arbitrary extreme Character Lab proportions still require their own visual review.
+
+## S05–S07 review repairs
+
+S05 now holds a stronger nose-up pitch through ascent. The leading knee follows the raised nose while the trailing leg stays open; the existing independent limb stretch, apex gather and finite landing rebound remain in place. Actual tap/full ollies in campaign and park controls, in both stances, reach up to 31.3° nose tilt with unchanged controller motion across 1,344 frames and at most 1.48 mm sole error. The posture check distinguishes this intended leading-knee lift from a two-legged squat.
+
+S06 and S07 share the proportion-aware standing solve at a nominal 0.55 radian knee-flex target. On the review rig at neutral balance, the groin rises from about 0.42 m above the mean sole height to about 0.90 m; knees change from roughly 119° to about 26°/50–54°. The loaded rear/front wheels and both shoes retain their contacts. Shoulders make alternating small corrections, with delayed elbow/wrist motion and a smoothed response to the balance needle. Shared elasticity and the entry/exit spring remain active.
+
+Catalogue revision 4 refreshes the sheet and unedited Lab studies while preserving authored repairs. The expanded contact check covers 10,206 pose frames, including both manual types, stances and balance extremes; worst sole error is 2.14 mm, palm error 0.94 mm. All 42 captures reconstruct and pass 1,890 playback samples. Build, contact-sheet review and actual-controller lite/full rendering pass with no console errors.

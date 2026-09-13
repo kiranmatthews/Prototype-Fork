@@ -102,6 +102,21 @@ await withSkateRuntime(async ({player:p,level,THREE,server,step})=>{
     const rear=world(0,s.wheelRadius,s.rearTruckLocalZ).y-s.wheelRadius-p.pos.y;
     assert.ok(Math.abs(type>0?rear:front)<.009,'manual wheels lost ground');
     assert.ok((type>0?front:rear)>.10,'manual changed into the opposite trick');checkFeet('manual');
+    const joint=name=>p.riderG.getObjectByName(name).getWorldPosition(v());
+    const pelvisHeight=joint('hips').y-(joint('socket-foot-left').y+joint('socket-foot-right').y)/2;
+    assert.ok(pelvisHeight>.80,'manual dropped the groin into the old trick squat');
+    const bends=['left','right'].map(side=>joint('knee-'+side).sub(joint('hip-'+side)).angleTo(joint('ankle-'+side).sub(joint('knee-'+side))));
+    assert.ok(Math.max(...bends)<1.30&&(bends[0]+bends[1])/2<.88,'manual knees are too deeply bent');
+    if(bal===0){
+      const arms=['shoulder-left','shoulder-right','wrist-left','wrist-right'].map(n=>p.riderG.getObjectByName(n));
+      const before=arms.map(n=>n.getWorldQuaternion(new THREE.Quaternion()));
+      const excursion=arms.map(()=>0);
+      for(let f=0;f<48;f++){
+        tick();checkFeet('manual balance motion');
+        for(let i=0;i<arms.length;i++)excursion[i]=Math.max(excursion[i],before[i].angleTo(arms[i].getWorldQuaternion(new THREE.Quaternion())));
+      }
+      for(let i=0;i<arms.length;i++)assert.ok(excursion[i]>.08,`${arms[i].name} does not make visible manual balance corrections: ${excursion[i]}`);
+    }
   }
   for(const stance of [-1,1]){
     reset(stance);const rail=new Rail([v(0,5,10),v(0,5,-10)],false);

@@ -31,7 +31,7 @@ await withSkateRuntime(async ({server,THREE,Level,Player})=>{
   const runtime=createCharacterAnimationRuntime(p,a.createPlayerStarterAnimationSuite(binding.definition));
   const joint=n=>p.riderG.getObjectByName(n).getWorldPosition(new THREE.Vector3());
   const knee=side=>joint('knee-'+side).sub(joint('hip-'+side)).angleTo(joint('ankle-'+side).sub(joint('knee-'+side)));
-  let total=0,maxFoot=0,maxKnee=0,maxHeightStep=0;const poseErrors=[];
+  let total=0,maxFoot=0,maxKnee=0,maxHeightStep=0,maxNoseTilt=0;const poseErrors=[];
   try{
     for(const park of [false,true])for(const stance of [-1,1])for(const hold of [3,55]){
       level.skatepark=park;
@@ -42,6 +42,7 @@ await withSkateRuntime(async ({server,THREE,Level,Player})=>{
       }
       runtime.restart();
       let air=false,landed=false,releaseFlex=0,extension=Infinity,apex=0,landAge=0,previousHeight=null;
+      let sustainedAscent=0,raisedAscent=0,peakTilt=0;
       for(let frame=0;frame<240;frame++){
         const input=makeInput({moveY:1,jumpHeld:frame>=60&&frame<60+hold,jumpPressed:frame===60,jumpReleased:frame===60+hold});
         p.step(1/60,input,level);control.step(1/60,input,level);level.update(1/60);total++;
@@ -51,7 +52,10 @@ await withSkateRuntime(async ({server,THREE,Level,Player})=>{
         assert.equal(runtime.activeClipId,null,'board pose received an authored on-foot overlay');
         assert.equal(runtime.diagnostics.landingOneShotActive,false,'board landing got a second bounce layer');
         const c=p.boardG.userData.skateContact;
-        const poseInfo={park,stance,hold,frame,error:c?.footError,flex:c?.bodyFlex,height:c?.bodyHeight,knees:[knee('left'),knee('right')],vVel:p.vVel};
+        const boardAxis=p.boardG.localToWorld(new THREE.Vector3(0,0,1)).sub(p.boardG.localToWorld(new THREE.Vector3(0,0,0))).normalize();
+        const noseTilt=Math.asin(THREE.MathUtils.clamp(boardAxis.y,-1,1));
+        maxNoseTilt=Math.max(maxNoseTilt,noseTilt);peakTilt=Math.max(peakTilt,noseTilt);
+        const poseInfo={park,stance,hold,frame,error:c?.footError,flex:c?.bodyFlex,height:c?.bodyHeight,knees:[knee('left'),knee('right')],vVel:p.vVel,noseTilt};
         if(!c||c.footError>=.006)poseErrors.push({problem:'feet',...poseInfo});
         maxFoot=Math.max(maxFoot,c.footError);maxKnee=Math.max(maxKnee,knee('left'),knee('right'));
         if(frame>5&&previousHeight!==null){
@@ -61,22 +65,29 @@ await withSkateRuntime(async ({server,THREE,Level,Player})=>{
           if(Math.abs(c.bodyHeight-previousHeight)>=.16)poseErrors.push({problem:'height step',step:c.bodyHeight-previousHeight,...poseInfo});
         }
         previousHeight=c.bodyHeight;
-        // The leading knee lifts with the nose, while the trailing leg opens.
-        // That useful asymmetry is not the old two-legged deep squat.
-        if(Math.max(...poseInfo.knees)>=1.5||(poseInfo.knees[0]+poseInfo.knees[1])/2>=1.15)poseErrors.push({problem:'knee bend',...poseInfo});
+        // S05 now deliberately lifts the leading knee with a steeper nose.
+        // Keep the trailing leg open and reject a two-legged squat; retain
+        // the original shallow bounds for charge, level flight and landing.
+        const leading=poseInfo.knees[stance>0?1:0],trailing=poseInfo.knees[stance>0?0:1];
+        const raisedOllie=!p.grounded&&p.boardOllieAir&&noseTilt>.12;
+        if(raisedOllie ? leading>=2.1||trailing>=1.15||(leading+trailing)/2>=1.4
+          : Math.max(leading,trailing)>=1.5||(leading+trailing)/2>=1.15)poseErrors.push({problem:'knee bend',...poseInfo});
         if(frame===59+hold)releaseFlex=c.bodyFlex;
         if(!p.grounded){
           air=true;
+          if(p.airborneT>.075&&p.vVel>p.launchVy*.25){sustainedAscent++;if(noseTilt>.30)raisedAscent++;}
           if(p.vVel>p.launchVy*.4)extension=Math.min(extension,c.bodyFlex);
           if(Math.abs(p.vVel)<2)apex=Math.max(apex,c.bodyFlex);
         }else if(air){landed=true;landAge++;}
         if(landAge>45){assert.ok(c.bodyFlex<.7,'landing bounce never returned to relaxed ride');break;}
       }
       assert.ok(air&&landed&&landAge>45,'real charged ollie did not take off and settle');
+      assert.ok(peakTilt>.38,'S05 never develops a clear uphill board tilt');
+      assert.ok(sustainedAscent>0&&raisedAscent/sustainedAscent>=.75,'S05 levels before most of the ascent is complete');
       if(hold===55)assert.ok(extension<releaseFlex-.2,'held charge did not spring open at takeoff');
       assert.ok(apex>extension+.08,'airborne extension never gathered at the apex');
     }
-    console.log(`Tap/full ollie in campaign/park, both stances; ${total} controller frames with exact motion parity; max knee ${(maxKnee*180/Math.PI).toFixed(1)}°, sole ${(maxFoot*1000).toFixed(2)} mm, pelvis step ${(maxHeightStep*1000).toFixed(2)} mm; spring 30/60/120 fps.`);
+    console.log(`Tap/full ollie in campaign/park, both stances; ${total} controller frames with exact motion parity; max knee ${(maxKnee*180/Math.PI).toFixed(1)}°, nose tilt ${(maxNoseTilt*180/Math.PI).toFixed(1)}°, sole ${(maxFoot*1000).toFixed(2)} mm, pelvis step ${(maxHeightStep*1000).toFixed(2)} mm; spring 30/60/120 fps.`);
     assert.equal(poseErrors.length,0,`pose continuity/contact failures: ${JSON.stringify(poseErrors.slice(0,8))}`);
     console.log('PASS spring, contact, charge/air/landing ownership and unchanged movement');
   }finally{runtime.dispose();level.dispose();}

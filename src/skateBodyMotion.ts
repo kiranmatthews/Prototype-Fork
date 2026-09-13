@@ -8,18 +8,26 @@ export interface SkateBodyMotionInput {
   launchVelocity: number;
   contactBounce: number;
   mount: number;
+  manual?: boolean;
 }
 
 /** Nominal knee flex for the dimension/contact solve, not a root scale.
  * These are presentation phases; neither the spring nor its clock moves physics. */
 export function skateBodyFlexTarget(p: SkateBodyMotionInput): number {
-  if (p.grounded) return clamp(.65 + .45*smooth(p.charge) + .24*p.mount + .55*p.contactBounce, .62, 1.24);
+  if (p.grounded) return clamp((p.manual ? .55 : .65) + .45*smooth(p.charge) + .24*p.mount + .55*p.contactBounce, .52, 1.24);
   const launch = Math.max(1, Math.abs(p.launchVelocity));
   if (p.verticalVelocity > 0) {
     const rise = 1-clamp(p.verticalVelocity/launch,0,1);
     return .62 + .40*smooth((rise-.35)/.65); // extend out of load, gather at apex
   }
   return 1.02 - .27*smooth(-p.verticalVelocity/launch); // relax into the catch
+}
+
+/** Pop the physical nose, hold that uphill attitude through ascent, then
+ * slide the front foot forward to level around the apex. */
+export function skateOlliePitch(age: number, verticalVelocity: number, launchVelocity: number): number {
+  const ascent = verticalVelocity / Math.max(1, Math.abs(launchVelocity));
+  return -.55 * smooth(age / .05) * smooth((ascent + .12) / .38);
 }
 
 /** Exact damped-spring step gives charge/release and landing a soft overshoot
@@ -36,7 +44,7 @@ export class SkateBodySpring {
     const envelope = Math.exp(-decay*t), c = Math.cos(frequency*t), s = Math.sin(frequency*t);
     this.value = target + envelope*(x*c+(v+decay*x)/frequency*s);
     this.velocity = envelope*(v*c-(decay*v+omega*omega*x)/frequency*s);
-    const bounded = clamp(this.value,.62,1.24);
+    const bounded = clamp(this.value,input.manual ? .52 : .62,1.24);
     if (bounded!==this.value) this.velocity=0;
     return this.value=bounded;
   }

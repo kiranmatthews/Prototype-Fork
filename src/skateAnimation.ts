@@ -4,7 +4,7 @@ import { GRAB_CONTACTS, GRIND_CONTACTS, LIP_CONTACTS, skateContactBounce, sample
 import { DEFAULT_SKATEBOARD_SETTINGS, type SkateboardSettingsValue } from './skateboard/settings';
 import { evaluateSkateboardSurfaceHeight } from './skateboard/model';
 import type { Rail } from './rails';
-import { SkateBodySpring } from './skateBodyMotion';
+import { SkateBodySpring, skateOlliePitch } from './skateBodyMotion';
 
 const X = new THREE.Vector3(1, 0, 0), Y = new THREE.Vector3(0, 1, 0), Z = new THREE.Vector3(0, 0, 1);
 const clamp = THREE.MathUtils.clamp;
@@ -45,6 +45,8 @@ export class SkateAnimation {
   private lastActive = false;
   private darkWeight = 0;
   private locomotionWeight = 0;
+  private manualWeight = 0;
+  private manualBalance = 0;
   private bodySpring = new SkateBodySpring();
   private frame = new THREE.Quaternion();
   private boardQ = new THREE.Quaternion();
@@ -78,7 +80,7 @@ export class SkateAnimation {
     this.spine = rider.getObjectByName('spine');
   }
 
-  reset(): void { this.key = ''; this.lastActive = false; this.age = this.airAge = this.darkWeight = this.locomotionWeight = 0; this.bounceAge = 1; this.wasGrounded = true; this.bodySpring.reset(); }
+  reset(): void { this.key = ''; this.lastActive = false; this.age = this.airAge = this.darkWeight = this.locomotionWeight = this.manualWeight = this.manualBalance = 0; this.bounceAge = 1; this.wasGrounded = true; this.bodySpring.reset(); }
 
   /** Restore the legacy sibling frame before it authors its fallback pose. */
   prepare(): void {
@@ -139,7 +141,7 @@ export class SkateAnimation {
   }
 
   apply(p: SkatePoseInput): boolean {
-    if (!p.active || !this.feet || !this.hands || !this.hips) { this.lastActive = false; this.darkWeight = 0; return false; }
+    if (!p.active || !this.feet || !this.hands || !this.hips) { this.lastActive = false; this.darkWeight = this.manualWeight = this.manualBalance = 0; return false; }
     this.darkWeight = clamp(this.darkWeight + (p.darkslide ? 1 : -1) * p.dt / .22, 0, 1);
     const dark = smooth(this.darkWeight), darkPop = Math.sin(Math.PI * dark);
     const s = (this.board.userData.settings ?? DEFAULT_SKATEBOARD_SETTINGS) as SkateboardSettingsValue;
@@ -166,13 +168,17 @@ export class SkateAnimation {
     const grab = GRAB_CONTACTS[grabKind];
     const gw = clamp(mcTwist ? mcTwist.grab : p.grabWeight, 0, 1);
     const flipPose = p.flip ? sampleDeckTrick(p.flip, mcTwist ? mcTwist.deckProgress : p.flipProgress) : null;
-    const locomotionTarget = (key === 'ride' || key === 'air') && !p.flip && gw < .01 ? 1 : 0;
+    const locomotionTarget = (key === 'ride' || key === 'air' || p.manual !== 0) && !p.flip && gw < .01 ? 1 : 0;
     if (!this.lastActive) { this.locomotionWeight = locomotionTarget; this.bodySpring.reset(p.charge); }
     else this.locomotionWeight += (locomotionTarget-this.locomotionWeight)*(1-Math.exp(-16*p.dt));
+    this.manualWeight += ((p.manual ? 1 : 0)-this.manualWeight)*(1-Math.exp(-12*p.dt));
+    if (!p.manual && this.manualWeight < .001) this.manualWeight = 0;
+    this.manualBalance += (clamp(p.balance,-1,1)-this.manualBalance)*(1-Math.exp(-10*p.dt));
     const bodyFlex = this.bodySpring.step(p.dt, {
       grounded:p.grounded, charge:p.charge,
       verticalVelocity:p.verticalVelocity??0, launchVelocity:p.launchVelocity??0,
       contactBounce:p.grounded?bounce:0, mount:clamp(p.mount??0,0,1),
+      manual:p.manual !== 0,
     });
 
     this.group.getWorldQuaternion(this.frame);
@@ -212,10 +218,7 @@ export class SkateAnimation {
       pivotZ = p.lip === 'nose' ? s.deckNoseLength * scale * .94 : p.lip === 'tail' ? -s.deckTailLength * scale * .94 : 0;
       pivotY = p.lip === 'axle' ? (s.wheelRadius - s.truckHangerRadius) * scale : surface(0, pivotZ) - s.deckThickness * scale;
     } else if (p.ollie && !p.grounded && !p.flip && gw < .01) {
-      // Tail pop, front-foot slide, level catch. Build the pop over 50 ms
-      // instead of dropping the pelvis on a stepped board angle at
-      // release; the body can extend as the nose comes up. No physics impulse.
-      pitch = -.30 * smooth(this.airAge / .05) * (1 - smooth((this.airAge - .05) / .20));
+      pitch = skateOlliePitch(this.airAge, p.verticalVelocity??0, p.launchVelocity??1);
     }
     const ease = 1 - Math.exp(-22 * p.dt);
     if (!this.lastActive) { this.pitch = pitch; this.grindYaw = yaw; this.supportZ = pivotZ; this.supportY = pivotY; }
@@ -278,8 +281,8 @@ export class SkateAnimation {
     const pelvis = footTargets[0].clone().add(footTargets[1]).multiplyScalar(.5);
     const load = p.grind ? pivotZ * .24 : p.manual ? pivotZ * .22 : 0;
     pelvis.addScaledVector(Z.clone().applyQuaternion(this.boardQ), load);
-    // Idle, load and ordinary board flight share a single proportion-aware
-    // spring. Only actual tricks retain their separate contact/tuck poses.
+    // Manuals balance at standing height too; the raised truck determines
+    // the leg asymmetry instead of forcing both knees into the grab tuck.
     let locomotionHeight = .46;
     if (this.locomotionWeight > .001) {
       const scaleY = this.rider.getWorldScale(new THREE.Vector3()).y;
@@ -337,6 +340,18 @@ export class SkateAnimation {
     }
 
     let handError = 0;
+    if (this.manualWeight > .001 && !p.grind && !p.lip && gw < .001 && p.wallWeight < .001) {
+      const sway = Math.sin(p.time*3.6), counter = Math.sin(p.time*3.6-.65);
+      for (let i=0; i<2; i++) {
+        const hand = this.hands[i], side = i===front ? 1 : -1, w = this.manualWeight;
+        // One hand rises as the other lowers; shoulders anticipate the
+        // needle, then elbows and wrists follow with a small delayed wobble.
+        hand.root.rotation.z += w*(.20*sway-.28*this.manualBalance);
+        hand.root.rotation.x += w*side*(.16*counter+.30*this.manualBalance);
+        hand.mid.rotation.x += w*(.08+.10*Math.sin(p.time*3.6-side*.75));
+        hand.end.rotation.x += w*side*.12*Math.sin(p.time*3.6-1.2);
+      }
+    }
     if (gw > .001) {
       const hand = this.hands[grab.hand === 'leading' ? front : back];
       const toeSign = p.stance * parity;
