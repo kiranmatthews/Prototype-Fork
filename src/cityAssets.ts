@@ -28,7 +28,7 @@ export const CITY_ASSET_KINDS=Object.keys(ASSETS) as CityKind[];
 export const CITY_ASSET_LABELS=Object.fromEntries(CITY_ASSET_KINDS.map(k=>[k,CITY_ASSETS[k].label])) as Record<CityKind,string>;
 export const isCityAsset=(kind:string|undefined):kind is CityKind=>!!kind&&Object.prototype.hasOwnProperty.call(ASSETS,kind);
 export interface CityPlacement {
- dkind:CityKind;p:[number,number,number];s?:[number,number,number];yaw?:number;w?:number;color?:string;
+ dkind:CityKind;p:[number,number,number];s?:[number,number,number];yaw?:number;w?:number;color?:string;cameraCutaway?:boolean;
  /** Height change in metres across local +X; yaw 90 points +X along world -Z. */
  amp?:number;
 }
@@ -155,8 +155,8 @@ function loadExtra(kind:CityKind):Promise<Template>{
 }
 const procedural=new Map<CityKind,Template>();
 function box(w:number,h:number,d:number,x:number,y:number,z:number):THREE.BufferGeometry {return new RoundedBoxGeometry(w,h,d,2,Math.min(.035,w*.15,h*.15,d*.15)).translate(x,y,z);}
-function cylinder(a:THREE.Vector3,b:THREE.Vector3,r=.05):THREE.BufferGeometry {
- const delta=b.clone().sub(a),geometry=new THREE.CylinderGeometry(r,r,delta.length(),10);geometry.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0),delta.normalize()));return geometry.translate((a.x+b.x)/2,(a.y+b.y)/2,(a.z+b.z)/2);
+function cylinder(a:THREE.Vector3,b:THREE.Vector3,r=.05,radial=10):THREE.BufferGeometry {
+ const delta=b.clone().sub(a),geometry=new THREE.CylinderGeometry(r,r,delta.length(),radial);geometry.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0),delta.normalize()));return geometry.translate((a.x+b.x)/2,(a.y+b.y)/2,(a.z+b.z)/2);
 }
 function proceduralTemplate(kind:CityKind):Template {
  const cached=procedural.get(kind);if(cached)return cached;
@@ -215,7 +215,7 @@ export function cityCollisionGeometry(kind:CityKind):THREE.BufferGeometry {
  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(data.positions,3));g.setIndex(data.indices);
  g.translate(-(spec.bounds[0][0]+spec.bounds[1][0])/2,-spec.bounds[0][1],-(spec.bounds[0][2]+spec.bounds[1][2])/2);g.computeVertexNormals();return g;
 }
-interface Bucket {kind:CityKind;matrices:THREE.Matrix4[];colors:THREE.Color[];}
+interface Bucket {kind:CityKind;cutaway:boolean;matrices:THREE.Matrix4[];colors:THREE.Color[];}
 /** City streets are static; reject distant rays before entering each tile's BVH. */
 export function accelerateCityGround(mesh:THREE.Mesh):void {
  if(!mesh.userData.cityAsset)return;
@@ -234,7 +234,7 @@ export class CityAssetKit {
  constructor(private batched=true){this.root.name='Carlisle Coast city kit';}
  add(c:CityPlacement,centered=false):THREE.Group|null {
   const matrix=cityMatrix(c,centered);this.count++;
-  if(this.batched){const key=c.dkind+':'+Math.floor(c.p[0]/48)+':'+Math.floor(c.p[2]/48);let bucket=this.buckets.get(key);if(!bucket){bucket={kind:c.dkind,matrices:[],colors:[]};this.buckets.set(key,bucket);}bucket.matrices.push(matrix);bucket.colors.push(new THREE.Color(c.color??'#ffffff'));return null;}
+  if(this.batched){const key=c.dkind+':'+Math.floor(c.p[0]/48)+':'+Math.floor(c.p[2]/48)+':'+(c.cameraCutaway?'cutaway':'solid');let bucket=this.buckets.get(key);if(!bucket){bucket={kind:c.dkind,cutaway:!!c.cameraCutaway,matrices:[],colors:[]};this.buckets.set(key,bucket);}bucket.matrices.push(matrix);bucket.colors.push(new THREE.Color(c.color??'#ffffff'));return null;}
   return this.addLoose(this.root,c,matrix);
  }
  /** Dress a moving gameplay object in its local coordinates without replacing its collider. */
@@ -256,29 +256,52 @@ export class CityAssetKit {
     // A sphere transformed by max-axis scale can under-bound a graded instance.
     // The transformed box encloses all instances, including their full descent.
     m.boundingSphere=m.boundingBox!.getBoundingSphere(new THREE.Sphere());bounds.union(m.boundingBox!);m.updateMatrix();m.matrixAutoUpdate=false;m.castShadow=m.receiveShadow=true;m.userData.cityAsset=bucket.kind;group.add(m);}return group;};
-   lod.addLevel(build(template.near),0);if(template.far!==template.near)lod.addLevel(build(template.far),130,.15);lod.userData.cityBounds=bounds.translate(center);lod.updateMatrix();lod.matrixAutoUpdate=false;this.root.add(lod);this.loaded+=bucket.matrices.length;
+   lod.addLevel(build(template.near),0);if(template.far!==template.near)lod.addLevel(build(template.far),130,.15);lod.userData.cityBounds=bounds.translate(center);lod.userData.cameraCutaway=bucket.cutaway;lod.updateMatrix();lod.matrixAutoUpdate=false;this.root.add(lod);this.loaded+=bucket.matrices.length;
   }).catch(e=>this.failed(bucket.kind,e)));this.buckets.clear();
  }
  private failed(kind:CityKind,error:unknown):void {if(this.disposed||this.errors.includes(kind))return;this.errors.push(kind);if((error as {response?:{url?:string}}).response?.url!=='')console.error('City asset failed: '+kind,error);}
- updateVisibility(position:THREE.Vector3):void {
+ updateVisibility(position:THREE.Vector3,sideScroll=false):void {
   if(!this.batched)return;
-  for(const group of this.root.children){const box=group.userData.cityBounds as THREE.Box3|undefined;if(!box)continue;const dx=Math.max(box.min.x-position.x,0,position.x-box.max.x),dz=Math.max(box.min.z-position.z,0,position.z-box.max.z);group.visible=dx*dx+dz*dz<285*285;}
+  for(const group of this.root.children){const box=group.userData.cityBounds as THREE.Box3|undefined;if(!box)continue;const dx=Math.max(box.min.x-position.x,0,position.x-box.max.x),dz=Math.max(box.min.z-position.z,0,position.z-box.max.z);group.visible=dx*dx+dz*dz<285*285&&!(sideScroll&&group.userData.cameraCutaway);}
  }
  async ready():Promise<void>{await Promise.all(this.jobs);}
  get diagnostics(){return {placements:this.count,ready:this.loaded,errors:[...this.errors]};}
  dispose():void {this.disposed=true;this.root.traverse(o=>{if((o as THREE.InstancedMesh).isInstancedMesh)(o as THREE.InstancedMesh).dispose();});this.root.removeFromParent();this.root.clear();for(const holder of this.loose){holder.removeFromParent();holder.clear();}this.loose.clear();for(const m of this.ownedMaterials)m.dispose();this.ownedMaterials.clear();this.buckets.clear();}
 }
 
-/** Render the same authored nodes used by Rail; no decorative curve can drift from its grind target. */
+/** The skate contact layer rides 9 cm above a rail's authored centreline. */
+export const CITY_RAIL_TOP = .09;
+export const CITY_BEAM_WIDTH = .18; // fits between the default board's wheel inner faces
+export const CITY_BEAM_DEPTH = .56;
+/** Use an upright frame in every direction, including almost-opposite -Z slopes. */
+export function cityRailFrame(tangent:THREE.Vector3):THREE.Matrix4 {
+ const forward=tangent.clone().normalize(),right=new THREE.Vector3().crossVectors(new THREE.Vector3(0,1,0),forward);
+ if(right.lengthSq()<1e-10)right.set(1,0,0);else right.normalize();
+ const up=new THREE.Vector3().crossVectors(forward,right).normalize();
+ return new THREE.Matrix4().makeBasis(right,up,forward);
+}
+/** The top flange shares the exact surface used by the skater's truck/deck contact. */
 export function cityRailVisual(points:readonly THREE.Vector3[],cable=false):THREE.Group {
  const group=new THREE.Group(),pieces:THREE.BufferGeometry[]=[];
  for(let i=1;i<points.length;i++){
   const a=points[i-1],b=points[i],delta=b.clone().sub(a),length=delta.length();if(length<.001)continue;
-  if(cable)pieces.push(cylinder(a,b,.075));
-  else {const rotation=new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,0,1),delta.clone().normalize()),mid=a.clone().add(b).multiplyScalar(.5);
-   for(const [w,h,dy] of [[.46,.095,-.045],[.105,.52,-.31],[.46,.095,-.57]]){const g=box(w,h,length,0,dy,0);g.applyQuaternion(rotation);g.translate(mid.x,mid.y,mid.z);pieces.push(g);}
+  if(cable)pieces.push(cylinder(a,b,CITY_RAIL_TOP,32));
+  else {
+   const frame=cityRailFrame(delta),mid=a.clone().add(b).multiplyScalar(.5);
+   frame.setPosition(mid);
+   // Rounded running edge leaves room for Smith/Feeble deck overhangs and
+   // crooked-grind wheels; the supported point remains exactly at +.09 m.
+   const crest=new THREE.Shape(),radius=CITY_BEAM_WIDTH/2,crestBase=-.025;
+   crest.moveTo(-radius,crestBase);crest.lineTo(radius,crestBase);crest.lineTo(radius,0);
+   for(let j=1;j<=24;j++){const a=j*Math.PI/24;crest.lineTo(radius*Math.cos(a),CITY_RAIL_TOP*Math.sin(a));}
+   crest.closePath();
+   const cap=new THREE.ExtrudeGeometry(crest,{depth:length,steps:1,bevelEnabled:false});cap.translate(0,0,-length/2);pieces.push(cap.applyMatrix4(frame));
+   const flange=.065,bottom=CITY_RAIL_TOP-CITY_BEAM_DEPTH,web=crestBase-(bottom+flange);
+   for(const [width,height,y] of [[.07,web,(crestBase+bottom+flange)/2],[CITY_BEAM_WIDTH,flange,bottom+flange/2]])pieces.push(box(width,height,length,0,y,0).applyMatrix4(frame));
   }
  }
  const geometry=mergeGeometries(pieces.map(g=>g.index?g.toNonIndexed():g))!;
- const mat=new THREE.MeshStandardMaterial({color:cable?0x334a60:0x678fa8,metalness:.25,roughness:.55});const m=new THREE.Mesh(geometry,mat);m.castShadow=m.receiveShadow=true;group.add(m);return group;
+ geometry.computeBoundingBox();geometry.computeBoundingSphere();
+ const mat=new THREE.MeshStandardMaterial({color:cable?0x334a60:0x678fa8,metalness:.25,roughness:.55});
+ const mesh=new THREE.Mesh(geometry,mat);mesh.name=cable?'grind cable':'upright grind beam';mesh.castShadow=mesh.receiveShadow=true;group.add(mesh);return group;
 }

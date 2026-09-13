@@ -645,6 +645,7 @@ export interface CustomComponent {
     | "decor" // scenery prop: p = base point, dkind picks it, w = scale, rise = height/length, amp = lean, yaw. Visual only, except the idol and the log, which are solid.
     | "wumpa"
     | "crystal"; // one per level (the editor enforces it)
+  cameraCutaway?: boolean; // scenery-only: hide foreground obstruction during an E/W camera view
   p: [number, number, number];
   s?: [number, number, number];
   collisionHeight?: number; // wall/wallpath: optional collider height when visual height differs
@@ -2362,7 +2363,7 @@ const LEVEL_DATA_KEYS = new Set([
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "containment",
-  "edgeGrinding", "cameraView", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "deck",
+  "edgeGrinding", "cameraView", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid",
   "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "spacing",
@@ -2705,7 +2706,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     "fog",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "lk",
-    "shoreProfile", "cameraView", "edgeGrinding", "trafficRoad", "doubleSided", "beachSand",
+    "shoreProfile", "cameraView", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "beachSand",
   ];
   let aggregateNodes = source.ocean?.shore?.length ?? 0;
   let aggregateSamples = source.ocean
@@ -3797,6 +3798,7 @@ export class Level {
   private tropicalPlants: TropicalPlantKit | null = null;
   private jungleAssets: JungleAssetKit | null = null;
   private cityAssets: CityAssetKit | null = null;
+  private cityCutawayObjects:{object:THREE.Object3D;visible:boolean}[]=[];
   nightworksRocks: NightworksRocks | null = null;
   jungleAtmosphere = false;
   private jungleTime = { value: 0 };
@@ -6153,6 +6155,8 @@ export class Level {
           this.root.children[c].visible = false;
           this.root.children[c].userData.editorGhost = true;
         }
+        if (data.components[idx].cameraCutaway && this.root.children[c] !== this.cityAssets?.root)
+          this.cityCutawayObjects.push({object:this.root.children[c],visible:this.root.children[c].visible});
       }
     };
     const geomPass = new Set([
@@ -7141,7 +7145,7 @@ export class Level {
     }
     this.nightworksRocks?.dispose();
     this.nightworksRocks = null;
-    this.cityAssets?.dispose();this.cityAssets=null;
+    this.cityAssets?.dispose();this.cityAssets=null;this.cityCutawayObjects.length=0;
     this.jungleAssets?.dispose();
     this.jungleAssets = null;
     this.campaignWorldMap?.dispose();
@@ -15124,7 +15128,7 @@ export class Level {
     for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material])material.visible=false;
     this.cityAssets.attach(mesh,{dkind:'citydeck',p:[0,-height/2,0],s:[c.s?.[0]??4,height,c.s?.[2]??4]});
   }
-  updateCityVisibility(position:THREE.Vector3):void {this.cityAssets?.updateVisibility(position);}
+  updateCityVisibility(position:THREE.Vector3,sideScroll=false):void {this.cityAssets?.updateVisibility(position,sideScroll);for(const entry of this.cityCutawayObjects)entry.object.visible=entry.visible&&!sideScroll;}
   get cityAssetDiagnostics(){return this.cityAssets?.diagnostics??null;}
   private buildCityAsset(c:CustomComponent):void {
     if(!isCityAsset(c.dkind))return;

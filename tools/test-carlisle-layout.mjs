@@ -11,25 +11,23 @@ const original = JSON.parse(await readFile(new URL('carlisle-coast/original-cour
 const range = (a, b) => Array.from({length: b - a + 1}, (_, i) => a + i);
 const removed = new Set([1, ...range(20, 30), ...range(71, 86), ...range(121, 123), 175, 176,
   ...range(242, 253), 276, 490, 493, 499, 502]);
-const expectedIndices = original.data.components.map((_, i) => i).filter(i => !removed.has(i));
+const expectedIndices = original.data.components.map((_, i) => i).filter(i => !removed.has(i) && original.data.components[i].t !== 'crate');
 const expected = expectedIndices.map(i => original.data.components[i]);
 const json = value => JSON.parse(JSON.stringify(value));
 const countBy = (components, key) => components.reduce((out, c) => {
   const value = key(c); out[value] = (out[value] ?? 0) + 1; return out;
 }, {});
 assert.equal(original.data.components.length, 508, 'the immutable original snapshot has 508 components');
-assert.equal(expectedIndices.length, 458, 'only 50 playground components are removed');
+assert.equal(expectedIndices.length, 288, 'original non-box components survive the playground removal and authorized box overhaul');
 assert.deepEqual(countBy(expected, c => c.t), {
   platform: 48, ramp: 9, wall: 10, vertramp: 1, rail: 73, gate: 1, clock: 1,
-  comboorb: 1, crumble: 14, crate: 170, enemy: 28, checkpoint: 14, wumpa: 74,
+  comboorb: 1, crumble: 14, enemy: 28, checkpoint: 14, wumpa: 74,
   mover: 2, stone: 5, crusher: 2, pendulum: 2, ropeswing: 1, zone: 1, crystal: 1,
 }, 'independent original challenge inventory');
 assert.deepEqual(countBy(expected.filter(c => c.t === 'enemy'), c => c.foe ?? 'grunt'), {
   grunt: 6, spiker: 6, turtle: 4, hopper: 3, sentry: 2, charger: 3, floater: 2, spinner: 2,
 }, 'all eight original enemy kinds and quantities');
-assert.deepEqual(countBy(expected.filter(c => c.t === 'crate'), c => c.kind), {
-  wood: 118, mask: 12, nitro: 13, tnt: 10, bouncy: 6, mystery: 11,
-}, 'the original crate encounters are retained');
+
 
 const harness = await readFile(new URL('validate-editor-roundtrip.mjs', import.meta.url), 'utf8');
 runInThisContext(harness.slice(harness.indexOf('function installHeadlessDom()'), harness.indexOf('\nfunction round(')) + '\ninstallHeadlessDom();');
@@ -53,7 +51,7 @@ try {
   assert.equal(data.name, 'Carlisle Coast');
   assert.deepEqual(data.spawn, original.data.spawn, 'the original supported spawn is preserved');
   assert.equal(data.killY, original.data.killY, 'the original below-course death height remains');
-  const presentation = new Set(['invisible', 'dkind', 'tex', 'color', 'nm']);
+  const presentation = new Set(['invisible', 'dkind', 'tex', 'color', 'nm', 'cameraCutaway']);
   const gameplay = c => Object.fromEntries(Object.entries(c).filter(([key]) => !presentation.has(key)));
   for (let j = 0; j < expected.length; j++) {
     const index = indices[j], a = gameplay(json(expected[j])), b = gameplay(json(data.components[j]));
@@ -74,11 +72,17 @@ try {
       assert.ok(b.p[0] - b.s[0] / 2 <= -7 && b.p[0] + b.s[0] / 2 >= 7, 'rear wall spans the main course');
       a.p[0] = b.p[0]; a.s[0] = b.s[0];
     }
+    if(index===132){
+      assert.equal(b.pts.length,6,'hill rail has two additional crest knots');
+      assert.deepEqual(b.pts.filter((_,i)=>[0,2,4,5].includes(i)),a.pts,'original hill rail anchors are retained');
+      assert.deepEqual(b.pts[1],[0,-23,0,2.98]);assert.deepEqual(b.pts[3],[0,-88,0,5.96]);
+      a.pts=b.pts;
+    }
     assert.deepEqual(b, a, `original #${index} ${a.t}: coordinates, dimensions, motion and gameplay properties`);
   }
   const dressing = data.components.slice(indices.length);
-  const dressingTypes = new Set(['decor', 'mesh', 'platform', 'wall', 'wallpath', 'coastwall', 'pit']);
-  assert.ok(dressing.every(c => dressingTypes.has(c.t)), 'additions dress and support the original route; no substitute enemies, crates, crossings or camera zones');
+  const dressingTypes = new Set(['decor', 'mesh', 'platform', 'wall', 'wallpath', 'coastwall', 'pit', 'crate']);
+  assert.ok(dressing.every(c => dressingTypes.has(c.t)), 'additions dress and support the original route; no substitute enemies, crossings or camera zones');
   assert.equal(data.components.filter(c => c.t === 'zone').length, 1, 'only the original side-scroll section');
   assert.equal(data.components.filter(c => c.t === 'camnode').length, 0, 'no replacement camera spine overrides the original flow');
   const normalized = normalizeCustomLevelData(json(data));
@@ -104,7 +108,7 @@ try {
   const transform = o => o ? {p: vector(o.position), r: o.rotation.toArray().map(v => typeof v === 'number' ? round(v) : v)} : null;
   const entityState = level => ({
     enemies: level.enemies.map(e => ({...subset(e, ['kind', 'x0', 'x1', 'speed', 'axis', 'baseY', 'cross', 'homeX', 'homeZ']), home: vector(e.homePosition), p: vector(e.group.position), box: box(e.box)})),
-    crates: level.crates.map(c => ({...subset(c, ['nitro', 'bouncy', 'metalBounce', 'metal', 'tnt', 'mask', 'mystery', 'life', 'multiHit', 'bang', 'nitroBang', 'pending', 'wasOutline', 'groupIds', 'homeY']), box: box(c.box)})),
+
     movers: level.movers.map(m => ({...subset(m, ['amp', 'speed', 'phase']), base: vector(m.base), axis: vector(m.axisV), pose: transform(m.mesh)})),
     crumbles: level.crumbles.map(c => ({...subset(c, ['shakeTime', 'fallSpeed', 'regen', 'yaw']), base: vector(c.base), pose: transform(c.mesh)})),
     stones: level.stones.map(s => ({...subset(s, ['x', 'z0', 'z1', 'speed', 'r', 'axis', 'x0', 'x1', 'z']), box: box(s.box), p: vector(s.mesh.position)})),
@@ -114,9 +118,9 @@ try {
     checkpoints: level.checkpoints.map(c => ({box: box(c.box), spawn: vector(c.spawnPos)})),
     finish: box(level.finishBox), finishGlow: box(level.finishGlow), gateYaw: level.gateYaw,
   });
-  assert.deepEqual(entityState(city), entityState(oracle), 'real runtime enemies, crates, motion hazards, checkpoints and finish retain their original placement/parameters');
+  assert.deepEqual(entityState(city), entityState(oracle), 'real runtime enemies and motion hazards, checkpoints and finish retain their original placement/parameters');
   const authoredRails = level => level.rails.filter(r => Number.isInteger(r.object.userData.editorIdx) && r.object.userData.editorIdx < expected.length);
-  const railState = level => authoredRails(level).map(r => ({index: r.object.userData.editorIdx, points: r.points.map(vector), length: round(r.totalLength)}));
+  const railState = level => authoredRails(level).filter(r=>indices[r.object.userData.editorIdx]!==132).map(r => ({index: r.object.userData.editorIdx, points: r.points.map(vector), length: round(r.totalLength)}));
   assert.deepEqual(railState(city), railState(oracle), 'authored grind paths retain exact lengths, heights and directions');
   assert.ok(authoredRails(city).length >= 73, 'all original rail components build real grind paths');
   const edgeKey = r => r.points.map(vector).map(p => p.join(',')).sort().join('|');
@@ -408,7 +412,7 @@ try {
   assert.ok(['shake', 'fall', 'gone'].every(state => crumbleStates.has(state)), 'attached decks are checked through shake, tumble and disappearance');
   assert.ok(city.crumbles.every(c => c.state === 'gone' && !c.mesh.visible), 'all broken deck skins vanish with their original pads');
   assert.ok(normalizeCustomLevelData(city.captureData()), 'editor capture remains a valid complete level');
-  console.log(`PASS Carlisle restoration: all 458 retained originals match independently; 170 crates, 28 enemies, 73 rails, 9 slopes, 14 crumble pads, 14 checkpoints; ${supportProbes} real support probes (${rampProbes} slope probes), ${joinProbes} join body-clearance probes, ${gapProbes} open-gap and ${visualGapProbes} rendered-gap probes, ${ledgeProbes} Player ledge probes (${ledgeCatches} matching catches), ${skinChecks} attached moving-deck checks, timed obstacle parity, original E side-scroll, source/published parity.`);
+  console.log(`PASS Carlisle restoration: all 288 retained non-box originals match independently (hill rail clearance exception); 28 enemies, 73 rails, 9 slopes, 14 crumble pads, 14 checkpoints; ${supportProbes} real support probes (${rampProbes} slope probes), ${joinProbes} join body-clearance probes, ${gapProbes} open-gap and ${visualGapProbes} rendered-gap probes, ${ledgeProbes} Player ledge probes (${ledgeCatches} matching catches), ${skinChecks} attached moving-deck checks, timed obstacle parity, original E side-scroll, source/published parity.`);
 } finally {
   city?.dispose(); oracle?.dispose(); await server.close();
 }

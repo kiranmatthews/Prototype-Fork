@@ -8152,6 +8152,7 @@ export class Editor {
         this.propsEl.appendChild(remove);
       }
     };
+    if(c.t==="decor"||c.t==="wall"||c.t==="mesh")boolRow("hide in side view",()=>c.cameraCutaway===true,value=>{if(value)c.cameraCutaway=true;else delete c.cameraCutaway;});
     if (
       c.t === "platform" ||
       c.t === "mesh" ||

@@ -1,16 +1,30 @@
 <!doctype html><meta charset="utf-8"><title>Carlisle Coast review</title>
-<style>body{margin:0;background:#142c37;color:#fff;font:13px system-ui}nav{display:flex;gap:5px;padding:5px;flex-wrap:wrap}button{background:#edc178;border:0;padding:5px 9px;cursor:pointer}iframe{border:0;width:100%;height:calc(100vh - 105px)}pre{margin:3px 8px;white-space:pre-wrap;font-size:11px}</style>
+<style>body{margin:0;height:100vh;display:flex;flex-direction:column;background:#142c37;color:#fff;font:13px system-ui}nav{display:flex;gap:5px;padding:5px;flex-wrap:wrap}button{background:#edc178;border:0;padding:5px 9px;cursor:pointer}iframe{border:0;width:100%;flex:1;min-height:0}pre{margin:3px 8px;white-space:pre-wrap;font-size:11px}</style>
 <nav id="bar"></nav><pre id="status">Loading…</pre><pre id="report"></pre>
 <iframe id="game" src="/?playtest&level=test&frameprobe&renderdiag"></iframe>
 <script type="module">
 import * as THREE from '/node_modules/three/build/three.module.js';
 const frame=document.querySelector('#game'),status=document.querySelector('#status'),bar=document.querySelector('#bar');
-let timings={},lastAction=null;const get=()=>frame.contentWindow.__game;
+let timings={},lastAction=null,fixture=null;const get=()=>frame.contentWindow.__game;
 function profile(){const g=get();if(!g||g.cityProfile)return;g.cityProfile=true;for(const [name,obj,key] of [['draw',g.renderer,'render'],['player',g.player,'step'],['level',g.getLevel(),'update'],['rays',g.player.raycaster,'intersectObjects'],['pose',g.player,'syncVisual'],['sole',g.player,'soleFootprint']]){const original=obj[key];obj[key]=function(...args){const start=performance.now();try{return original.apply(this,args);}finally{const t=timings[name]??{n:0,total:0,max:0};const ms=performance.now()-start;t.n++;t.total+=ms;t.max=Math.max(t.max,ms);timings[name]=t;}};}}
 function button(label,fn){const b=document.createElement('button');b.textContent=label;b.onclick=fn;bar.append(b);}
 const poses=[['Spawn',0,0,.1],['First slope',0,-42,-.1],['Rope gap',0,-146,-4.5],['Side stairs',4,-189,-5],['First rail',0,-340,-12.4],['Kicker',0,-460,-12.5],['Halfpipe',0,-746,-13.4],['Triple rails',0,-832,-13.4],['Hill climb',0,-1241,-21.5],['Crumble gap',0,-1488,-12.4],['Lift',-5,-1617,-18.4],['Side scroll',22,-1720,-18.9],['Moving crossing',68,-1720,-15.9],['Last slope',152,-1731,-16],['Crushers',152,-1805,-25.4],['Weaving rails',152,-1864,-25.9],['Final plaza',152,-2000,-25.9],['Split foot path',146.5,-2086,-25.9],['Pendulums',152,-2194,-25.4],['Finish',152,-2283,-25.9]];
-function place(x,z,y=.12){const g=get();if(!g)return;const p=g.player;p.pos.set(x,y,z);p.speed=0;p.vVel=0;p.freeSkate=false;p.laneCursor.s=-1;p.settle(g.getLevel());p.lives=30;p.snapRenderPose?.();frame.contentWindow.focus();}
+function resume(){if(fixture){fixture.player.step=fixture.step;fixture=null;}}
+function place(x,z,y=.12){resume();const g=get();if(!g)return;const p=g.player,l=g.getLevel(),heading=l.zoneAt(x,z)?.dir==='E'?new THREE.Vector3(1,0,0):new THREE.Vector3(0,0,-1);p.respawn(l,true,true,{position:new THREE.Vector3(x,y,z),heading});p.freeSkate=false;p.settle(l);p.lives=30;p.snapRenderPose?.();lastAction=null;frame.contentWindow.focus();}
 poses.forEach(([name,x,z,y])=>button(name,()=>place(x,z,y)));
+for(const [name,x,z,y] of [['Market boxes',0,-1085,-21.9],['Harbour boxes',152,-2020,-25.9],['Upper side route',125,-1720,-11.4],['Underpass',126,-1720,-16.5]])button(name,()=>place(x,z,y));
+function grindPose(originalId,style='normal'){
+ resume();const g=get(),p=g.player,l=g.getLevel(),idx=g.getCurrentLevel().data.components.findIndex(c=>c.nm===`Test Course ${originalId}`),rail=l.rails.find(r=>r.object.userData.editorIdx===idx);
+ if(!rail)return;const t=rail.totalLength*.45,tangent=rail.tangentAt(t);
+ p.respawn(l,true,true,{position:rail.pointAt(t).add(new THREE.Vector3(0,.15,0)),heading:tangent});
+ p.freeSkate=p.airFromSkate=true;p.visualYaw=Math.atan2(tangent.x,tangent.z)-Math.PI;p.axisF.copy(tangent);p.sidePose=p.deckPose=p.skatePose=1;p.speed=10;p.stance=1;p.skateMountT=-1;
+ p.enterGrind(rail,rail.closest(rail.pointAt(t)),l);p.grindStyle=style;p.balance=0;p.snapRenderPose?.();
+ // Static art fixture: the actual player pose continues to settle while the
+ // gameplay step is held. Resume or a location button restores the controller.
+ fixture={player:p,step:p.step};p.step=function(dt,input){this.runTime+=dt;this.syncVisual(input,dt);};
+ lastAction={name:`${style} on rail ${originalId}`,state:'pose fixture'};frame.contentWindow.focus();
+}
+button('Grind hill pose',()=>grindPose(132));button('Grind east pose',()=>grindPose(146));button('Smith east pose',()=>grindPose(146,'smith'));button('Resume controller',resume);
 function key(code,type){frame.contentWindow.dispatchEvent(new frame.contentWindow.KeyboardEvent(type,{code,key:code==='Space'?' ':code==='ArrowUp'?'ArrowUp':code.slice(3).toLowerCase(),bubbles:true}));}
 function hold(code,ms){key(code,'keydown');setTimeout(()=>key(code,'keyup'),ms);}
 function actionResult(name,ms){lastAction={name,state:'running'};setTimeout(()=>{const g=get();lastAction={name,state:'complete',pos:g.player.pos.toArray(),mode:g.player.state,grounded:g.player.grounded,lives:g.player.lives};document.querySelector('#report').textContent=JSON.stringify(lastAction);},ms);}

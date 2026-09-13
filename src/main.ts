@@ -4467,6 +4467,7 @@ function frame(nowMs: number): void {
   // frozen anyway, and the orbit camera + panel must keep responding).
   if (editor.active) {
     editor.update();
+    level.updateCityVisibility(camera.position);
     input.consumeEdges();
     acc = 0;
     sky.position.copy(camera.position);
@@ -4763,7 +4764,7 @@ function frame(nowMs: number): void {
       time: player.runTime,
     });
 
-  level.updateCityVisibility(camera.position);
+  level.updateCityVisibility(camera.position,sideF>.08&&TUNING.chaseCam<=.5&&!level.skatepark);
   // Walk the shadow frustum onto the skater before drawing — it's small enough
   // to stay sharp, so it has to travel with them.
   updateSunShadow(

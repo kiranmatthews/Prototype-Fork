@@ -1,20 +1,20 @@
 {
   "levelId": "test",
   "name": "Carlisle Coast",
-  "revision": "Original Test Course layout restored",
+  "revision": "Box overhaul, side-view cutaway and beam contact correction",
   "baseline": {
     "file": "tools/carlisle-coast/original-course.json",
     "sha256": "a96b53b6bd476cd330d9acde9631ce8eb4bb7e142d323b5c6e3e68ee0bcaf459",
     "originalComponents": 508,
-    "retainedComponents": 458,
-    "removedPlaygroundComponents": 50
+    "retainedComponents": 288,
+    "removedPlaygroundComponents": 50,
+    "replacedOriginalCrates": 170
   },
   "preserved": {
     "platforms": 48,
     "ramps": 9,
     "halfpipe": 1,
-    "authoredRails": 73,
-    "crates": 170,
+    "authoredRails": "73; rail 132 retains four original anchors plus two road-crest clearance knots",
     "enemies": 28,
     "crumblePads": 14,
     "checkpoints": 14,
@@ -49,17 +49,24 @@
     }
   },
   "presentation": {
-    "cityPlacements": 3371,
+    "cityPlacements": 3375,
     "buildingTypes": 9,
     "constructionCuts": 19,
     "roads": "fitted to exact original horizontal lengths, widths and grades",
     "movingDecks": "attached to original collision meshes",
     "style": "Crash N. Sane / Crash4 inspired painted material detail and crisp stylized forms",
     "additionalMeshyCredits": 0,
-    "totalPreviousMeshyCredits": 75
+    "totalPreviousMeshyCredits": 75,
+    "sideView": "Foreground frontage and scaffold braces cut away; playable decks/rails and collision retained; ordinary/chase/editor views restore scenery",
+    "beam": {
+      "width": 0.18,
+      "depth": 0.56,
+      "roundedCrestOffset": 0.09,
+      "orientation": "upright tangent frame in all travel directions"
+    }
   },
   "validation": {
-    "allOriginalGameplayProperties": "matched with presentation-only exceptions and narrowed shared spawn rear wall",
+    "allOriginalGameplayProperties": "Original non-box terrain and encounters match, with the previously narrowed rear wall and two hill rail clearance knots",
     "groundSupportProbes": 3192,
     "rampProbes": 912,
     "joinBodyClearanceProbes": 3950,
@@ -70,23 +77,41 @@
     "identicalLedgeRejections": 232,
     "movingSkinChecks": 208,
     "obstacleMotion": "matched original at sampled phases",
-    "cachePreservation": "untouched original and first-city snapshots follow builtin; edited copies retained",
+    "cachePreservation": "Untouched prior published cache follows builtin; 1 cm edits, renamed copies and in-place edits retained",
     "browser": [
-      "original first descent",
-      "original halfpipe",
-      "three-ramp ascent",
-      "E side-scroll framing",
-      "standing on original horizontal mover",
-      "checkpoint at [0,-5.085,-185]",
-      "fall to original killY and respawn at checkpoint",
-      "COURSE CLEAR at original finish location"
+      "supported full/lite spawn",
+      "clear E foreground sightline",
+      "underpass scaffold cutaway",
+      "visible supported moving deck",
+      "actual 50-50 and Smith beam poses",
+      "live controller grind on corrected hill rail",
+      "market movement/spin breaks the skating-line crate",
+      "checkpoint and pit respawn",
+      "COURSE CLEAR through the unobstructed finish line",
+      "editor reopens with normal scenery visibility"
     ],
     "consoleErrors": 0,
     "commands": [
       "node tools/test-carlisle-layout.mjs",
+      "node tools/test-carlisle-boxes.mjs",
+      "node tools/test-carlisle-beam-contact.mjs",
+      "node tools/carlisle-coast/cache-signature.mjs 3b0c637 --check",
       "npm run check:levels",
       "npm run build"
     ],
-    "fullSuiteRun": false
+    "fullSuiteRun": false,
+    "beamSurfaceProbes": 1026,
+    "minimumBeamRoadClearanceMetres": 0.109,
+    "boardContactPoses": 96,
+    "deckWheelVertexProbes": 720,
+    "maximumMeasuredPenetrationMetres": 0,
+    "maximumMeasuredContactErrorMetres": 0
+  },
+  "boxes": {
+    "count": 162,
+    "sections": 20,
+    "kinds": 12,
+    "independentSwitchStaircases": 2,
+    "nitroClear": "off the straight finish line"
   }
 }

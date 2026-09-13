@@ -1,14 +1,15 @@
 import type {CustomComponent,CustomLevelData} from '../level';
+import {buildCarlisleBoxes} from './carlisle-boxes';
 import {CITY_MODULES} from '../cityModules';
 import originalEntry from '../../tools/carlisle-coast/original-course.json';
 
-// This immutable snapshot owns gameplay. The city is fitted around its exact
-// coordinates: no road-grid snapping, reordered encounters or replacement jumps.
+// The original snapshot owns the course shape and enemy sequence. The city
+// and the new box encounters fit that route; the hill rail gets clearance knots.
 const original=originalEntry.data as unknown as CustomLevelData;
 const range=(a:number,b:number)=>Array.from({length:b-a+1},(_,i)=>a+i);
 export const CARLISLE_REMOVED_PARK_INDICES=[1,...range(20,30),...range(71,86),...range(121,123),175,176,...range(242,253),276,490,493,499,502];
 const removed=new Set(CARLISLE_REMOVED_PARK_INDICES);
-export const CARLISLE_ORIGINAL_INDICES=original.components.map((_,i)=>i).filter(i=>!removed.has(i));
+export const CARLISLE_ORIGINAL_INDICES=original.components.map((_,i)=>i).filter(i=>!removed.has(i)&&original.components[i].t!=='crate');
 const C:CustomComponent[]=CARLISLE_ORIGINAL_INDICES.map(index=>{
  const c=JSON.parse(JSON.stringify(original.components[index])) as CustomComponent;
  c.nm=`Test Course ${index}`;
@@ -17,12 +18,22 @@ const C:CustomComponent[]=CARLISLE_ORIGINAL_INDICES.map(index=>{
  if(c.t==='vertramp'){c.color='#b5c1c1';c.tex='pavement';}
  if(c.t==='rail'&&!c.invisible)c.dkind=[117,151].includes(index)?'cityutilitypole':'citydeck';
  if(c.t==='mover'||c.t==='crumble')c.dkind='citydeck';
+ // This rail previously cut below the two raised landings. Keep its old
+ // anchors and horizontal route, adding support-height knots at the crests.
+ if(index===132)c.pts=[[0,0,0,0],[0,-23,0,2.98],[0,-63,0,3.2],[0,-88,0,5.96],[0,-128,0,6.2],[0,-150,0,9]];
+ if(index===92)c.cameraCutaway=true;
  if(index===69){c.p[0]=0;c.s![0]=22;}
  return c;
 });
 const G={streets:101,buildings:102,works:103,foundations:104};
 const add=(c:CustomComponent)=>C.push(c);
-function prop(dkind:CustomComponent['dkind'],p:[number,number,number],s?:[number,number,number],yaw=0,grp=G.works,amp=0,solid=false){add({t:'decor',dkind,p,s,yaw,grp,amp,solid});}
+function prop(dkind:CustomComponent['dkind'],p:[number,number,number],s?:[number,number,number],yaw=0,grp=G.works,amp=0,solid=false){
+ const ground=CITY_MODULES[dkind as keyof typeof CITY_MODULES]?.ground||dkind==='citydeck'||dkind==='citytaper';
+ // Scaffolds centred on the course also have near-side braces. Cut those
+ // away with the foreground frontage while keeping every usable deck/rail.
+ const cameraCutaway=!ground&&p[0]>-10&&p[0]<174&&p[2]>=-1720&&p[2]<-1680;
+ add({t:'decor',dkind,p,s,yaw,grp,amp,solid,...(cameraCutaway?{cameraCutaway:true}:{})});
+}
 function tile(kind:CustomComponent['dkind'],x:number,y:number,z:number,length:number,width:number,yaw=90,rise=0){
  prop(kind,[x,y+.003,z],[length,.15,width],yaw,G.streets,rise);
 }
@@ -153,9 +164,9 @@ for(const h of CARLISLE_EXCAVATIONS){
  }
  prop('citypavementflat',[h.x,-62,h.z],[h.w,.15,h.d],0,G.foundations);C[C.length-1].color='#000000';
 }
-// Existing rails get supports; neither nodes nor their heights are changed.
-for(const index of CARLISLE_ORIGINAL_INDICES){
- const c=original.components[index];if(c.t!=='rail'||c.invisible||!c.pts)continue;
+// Supports follow the live rail path, including the two hill-clearance knots.
+for(let i=0;i<CARLISLE_ORIGINAL_INDICES.length;i++){
+ const index=CARLISLE_ORIGINAL_INDICES[i],c=C[i];if(c.t!=='rail'||c.invisible||!c.pts)continue;
  const pts=c.pts.map(p=>[c.p[0]+p[0],c.p[1]+(p[3]??0),c.p[2]+p[1]] as [number,number,number]);
  if([117,151].includes(index))for(const [x,y,z] of pts)prop('cityutilitypole',[x-.65,y-2.72,z],[1.4,3,.4]);
  else for(let i=1;i<pts.length;i++){
@@ -261,9 +272,14 @@ for(let i=1;i<terrainCuts.length;i++){
 }
 for(const [z,geometry] of chunks)add({t:'mesh',p:[0,0,z],...geometry,tex:'pavement',color:'#c0c7bb',solid:false,edgeGrinding:false,grp:G.foundations});
 
+const boxLayout=buildCarlisleBoxes(original);
+export const CARLISLE_CRATE_SECTIONS=boxLayout.sections;
+export const CARLISLE_CRATES=boxLayout.components;
+C.push(...boxLayout.components);
+
 export const CARLISLE_COAST_LEVEL:CustomLevelData={
  ...JSON.parse(JSON.stringify(original)),name:'Carlisle Coast',sky:'coast',keepPlayFog:true,
  atmosphere:{fogEnabled:true,fogNear:95,fogFar:245,fogColor:'#b1cedd',ambientSky:'#d4e9f1',ambientGround:'#a69981',ambientIntensity:2,sunColor:'#ffe4bd',sunIntensity:3,fillColor:'#b2d5de',fillIntensity:.7,shadowStrength:.42,drawDistance:285},
  medalTimes:{gold:180,silver:210,bronze:255},
- groups:Object.entries(G).map(([nm,id])=>({id,nm})),components:C,
+ groups:[...Object.entries(G).map(([nm,id])=>({id,nm})),...boxLayout.groups],components:C,
 };
