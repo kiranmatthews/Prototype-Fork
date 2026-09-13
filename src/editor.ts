@@ -9258,7 +9258,7 @@ export class Editor {
         if (dk === "carvedlog" || dk === "thornroots")
           boolRow(dk === "thornroots" ? "hazard collision" : "solid collision", () => c.solid ?? dk === "carvedlog", value => { c.solid = value; });
       }
-      if(isCityAsset(dk)){num("yaw °",()=>c.yaw??0,v=>{c.yaw=v;},15);sizeRow(0,"width");sizeRow(1,"height");sizeRow(2,"depth");boolRow("solid collision",()=>c.solid??!!(CITY_ASSETS[dk].building||CITY_ASSETS[dk].ground),v=>{c.solid=v;});}
+      if(isCityAsset(dk)){if(CITY_ASSETS[dk].ground||dk==="cityfence")num("rise along tile (m)",()=>c.amp??0,v=>{c.amp=v;},.1);num("yaw °",()=>c.yaw??0,v=>{c.yaw=v;},15);sizeRow(0,"width");sizeRow(1,"height");sizeRow(2,"depth");boolRow("solid collision",()=>c.solid??!!(CITY_ASSETS[dk].building||CITY_ASSETS[dk].ground),v=>{c.solid=v;});}
       if (dk === "coastalhouse") {
         sizeRow(0, "width"); sizeRow(1, "height"); sizeRow(2, "depth");
         num("district colour", () => c.tn ?? 0, v => { c.tn = THREE.MathUtils.clamp(Math.round(v), 0, 6); }, 1);

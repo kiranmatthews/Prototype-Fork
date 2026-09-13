@@ -6871,6 +6871,7 @@ export class Level {
               c.speed ?? 30,
               c.emissive,
             );
+            if(c.dkind==="citydeck")this.dressCityMovingDeck(this.crumbles[this.crumbles.length-1].mesh,c,.5);
           } else if (c.t === "crate") {
             const gids = gameplayGroupChainOf(c, data);
             // sharing a group with a '!' switch ghosts the crate until the
@@ -6945,6 +6946,7 @@ export class Level {
               s[1],
               c.travelSign ?? 1,
             );
+            if(c.dkind==="citydeck")this.dressCityMovingDeck(this.movers[this.movers.length-1].mesh,c,s[1]);
           } else if (c.t === "torch") {
             this.torch(c.p[0], c.p[1], c.p[2], c.rise ?? 2.2, c.w ?? 1);
           } else if (c.t === "phasepad") {
@@ -15117,6 +15119,11 @@ export class Level {
    * point of the library that a scatter does not have to choose a model, a
    * colour, a size, a spin and a lean for every single plant.
    */
+  private dressCityMovingDeck(mesh:THREE.Mesh,c:CustomComponent,height:number):void {
+    if(!this.cityAssets){this.cityAssets=new CityAssetKit(!EDITOR_BUILD);this.root.add(this.cityAssets.root);}
+    for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material])material.visible=false;
+    this.cityAssets.attach(mesh,{dkind:'citydeck',p:[0,-height/2,0],s:[c.s?.[0]??4,height,c.s?.[2]??4]});
+  }
   updateCityVisibility(position:THREE.Vector3):void {this.cityAssets?.updateVisibility(position);}
   get cityAssetDiagnostics(){return this.cityAssets?.diagnostics??null;}
   private buildCityAsset(c:CustomComponent):void {

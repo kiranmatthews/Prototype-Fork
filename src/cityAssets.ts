@@ -6,7 +6,6 @@ import {RoundedBoxGeometry} from 'three/examples/jsm/geometries/RoundedBoxGeomet
 import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import {CITY_MODULES} from './cityModules';
 import collisionData from './cityShapes.json';
-import {addJungleDepthFade} from './jungleGround';
 
 const PROPS={
  cityretaining:{label:"bolted concrete retaining panel",size:[6,13,.35],bounds:[[-3,0,-.175],[3,13,.175]],procedural:true},
@@ -28,12 +27,48 @@ export const CITY_ASSETS:Readonly<Record<CityKind,CitySpec>>=ASSETS;
 export const CITY_ASSET_KINDS=Object.keys(ASSETS) as CityKind[];
 export const CITY_ASSET_LABELS=Object.fromEntries(CITY_ASSET_KINDS.map(k=>[k,CITY_ASSETS[k].label])) as Record<CityKind,string>;
 export const isCityAsset=(kind:string|undefined):kind is CityKind=>!!kind&&Object.prototype.hasOwnProperty.call(ASSETS,kind);
-export interface CityPlacement {dkind:CityKind;p:[number,number,number];s?:[number,number,number];yaw?:number;w?:number;color?:string;}
+export interface CityPlacement {
+ dkind:CityKind;p:[number,number,number];s?:[number,number,number];yaw?:number;w?:number;color?:string;
+ /** Height change in metres across local +X; yaw 90 points +X along world -Z. */
+ amp?:number;
+}
 export function cityMatrix(c:CityPlacement,centered=false):THREE.Matrix4 {
  const size=c.s??CITY_ASSETS[c.dkind].size,nominal=CITY_ASSETS[c.dkind].size,scale=c.w??1;
- return new THREE.Matrix4().compose(new THREE.Vector3(c.p[0],c.p[1]-(centered?size[1]*scale/2:0),c.p[2]),
+ const matrix=new THREE.Matrix4().compose(new THREE.Vector3(c.p[0],c.p[1]-(centered?size[1]*scale/2:0),c.p[2]),
   new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),THREE.MathUtils.degToRad(c.yaw??0)),
   new THREE.Vector3(size[0]/nominal[0]*scale,size[1]/nominal[1]*scale,size[2]/nominal[2]*scale));
+ // Grade vertically about the tile midpoint. Unlike a rigid pitch, this keeps
+ // its requested horizontal span exact at every height, including the curbs.
+ matrix.elements[1]=(c.amp??0)/nominal[0];
+ return matrix;
+}
+/** Three's default instanced normal transform assumes orthogonal matrix axes. */
+function addCityInstanceNormals(material:THREE.Material):void {
+ if(material.userData.cityInstanceNormals)return;
+ material.userData.cityInstanceNormals=true;
+ const previous=material.onBeforeCompile,previousKey=material.customProgramCacheKey.bind(material);
+ material.onBeforeCompile=(shader,renderer)=>{
+  previous.call(material,shader,renderer);
+  shader.vertexShader=shader.vertexShader.replace('#include <defaultnormal_vertex>',THREE.ShaderChunk.defaultnormal_vertex.replace(
+   /transformedNormal \/= vec3\( dot\( im\[ 0 \], im\[ 0 \] \), dot\( im\[ 1 \], im\[ 1 \] \), dot\( im\[ 2 \], im\[ 2 \] \) \);\s*transformedNormal = im \* transformedNormal;/,
+   `vec3 cityNormalX = cross(im[1], im[2]);
+    vec3 cityNormalY = cross(im[2], im[0]);
+    vec3 cityNormalZ = cross(im[0], im[1]);
+    transformedNormal = mat3(cityNormalX, cityNormalY, cityNormalZ) * transformedNormal / dot(im[0], cityNormalX);`));
+ };
+ material.customProgramCacheKey=()=>previousKey()+'|city-affine-normals-v1';
+}
+/** Retaining panels fade by their own height, independent of the street elevation. */
+function addCityRetainingFade(material:THREE.Material):void {
+ const previous=material.onBeforeCompile,previousKey=material.customProgramCacheKey.bind(material);
+ material.onBeforeCompile=(shader,renderer)=>{
+  previous.call(material,shader,renderer);
+  shader.vertexShader='varying float vCityPanelHeight;\n'+shader.vertexShader;
+  shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvCityPanelHeight=position.y/13.0;');
+  shader.fragmentShader='varying float vCityPanelHeight;\n'+shader.fragmentShader;
+  shader.fragmentShader=shader.fragmentShader.replace('#include <fog_fragment>','#include <fog_fragment>\ngl_FragColor.rgb*=smoothstep(0.08,0.60,vCityPanelHeight);');
+ };
+ material.customProgramCacheKey=()=>previousKey()+'|city-panel-depth-v1';
 }
 interface Part {geometry:THREE.BufferGeometry;material:THREE.MeshStandardMaterial;}
 interface Template {near:Part[];far:Part[];}
@@ -50,6 +85,7 @@ function stylize(source:THREE.MeshStandardMaterial):THREE.MeshStandardMaterial {
  mat.onBeforeCompile=shader=>{shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',THREE.ShaderChunk.map_fragment.replace('vec4 sampledDiffuseColor = texture2D( map, vMapUv );','vec4 sampledDiffuseColor = texture2D( map, vMapUv, 0.4 );\n sampledDiffuseColor.rgb = mix(vec3(0.64),sampledDiffuseColor.rgb,0.86);'));};
  mat.customProgramCacheKey=()=> 'carlisle-painted-material-v2';
  for(const tex of [mat.map,mat.normalMap])if(tex){tex.userData.shared=true;tex.anisotropy=8;renderer?.initTexture(tex);}
+ addCityInstanceNormals(mat);
  return mat;
 }
 function floatGeometry(source:THREE.BufferGeometry):THREE.BufferGeometry {
@@ -61,6 +97,22 @@ function floatGeometry(source:THREE.BufferGeometry):THREE.BufferGeometry {
   geometry.setAttribute(name,new THREE.Float32BufferAttribute(values,attribute.itemSize));
  }
  return geometry;
+}
+/** Keep the fitted street markings on flat roads without importing raised curbs. */
+function bareRoadParts(parts:Part[],kind:'cityroad2bare'|'cityroad4bare'):Part[] {
+ const halfX=CITY_ASSETS[kind].size[0]/2,halfZ=CITY_ASSETS[kind].size[2]/2,result:Part[]=[];
+ for(const part of parts){
+  const decal=part.material.name.includes('StreetDecals');
+  if(part.material.name!=='MI_Asphalt'&&!decal)continue;
+  const geometry=part.geometry.clone();geometry.computeBoundingBox();const bounds=geometry.boundingBox!;
+  // Quantized edge vertices may differ by fractions of a millimetre. Never
+  // pull a sidewalk decal into the driving surface to make a larger part fit.
+  if(bounds.min.x<-halfX-.002||bounds.max.x>halfX+.002||bounds.min.z<-halfZ-.002||bounds.max.z>halfZ+.002){geometry.dispose();continue;}
+  const position=geometry.getAttribute('position');
+  for(let i=0;i<position.count;i++)position.setXYZ(i,THREE.MathUtils.clamp(position.getX(i),-halfX,halfX),decal ? .002 : 0,THREE.MathUtils.clamp(position.getZ(i),-halfZ,halfZ));
+  geometry.computeVertexNormals();geometry.computeBoundingBox();geometry.computeBoundingSphere();geometry.userData.shared=true;result.push({geometry,material:part.material});
+ }
+ return result;
 }
 let library:Promise<Map<CityKind,Template>>|null=null;
 function loadLibrary():Promise<Map<CityKind,Template>> {
@@ -75,12 +127,17 @@ function loadLibrary():Promise<Map<CityKind,Template>> {
     const parts:Part[]=[];root.traverse(object=>{const mesh=object as THREE.Mesh;if(!mesh.isMesh)return;
      const source=(Array.isArray(mesh.material)?mesh.material[0]:mesh.material) as THREE.MeshStandardMaterial;
      let material=materials.get(source);if(!material){material=stylize(source);materials.set(source,material);}
-     if(kind==='citypavementflat'){material=material.clone();material.map=null;material.normalMap=null;material.color.set('#b0b6a9');material.onBeforeCompile=shader=>{shader.vertexShader='varying vec3 vCityWorld;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>','#include <project_vertex>\nvec4 cityWorld=vec4(transformed,1.0);\n#ifdef USE_INSTANCING\ncityWorld=instanceMatrix*cityWorld;\n#endif\nvCityWorld=(modelMatrix*cityWorld).xyz;');shader.fragmentShader='varying vec3 vCityWorld;\n'+shader.fragmentShader;shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>','#include <color_fragment>\nvec2 paver=vCityWorld.xz/vec2(1.25,.8);paver.x+=mod(floor(paver.y),2.0)*.5;vec2 cell=fract(paver);float edge=smoothstep(0.0,.015,min(min(cell.x,1.0-cell.x),min(cell.y,1.0-cell.y)));float variation=fract(sin(dot(floor(paver),vec2(12.9898,78.233)))*43758.5453);diffuseColor.rgb*=mix(.72,.96+variation*.08,edge);');};material.customProgramCacheKey=()=> 'city-world-pavers-v2';}
+     if(kind==='citypavementflat'){material=material.clone();material.map=null;material.normalMap=null;material.color.set('#b0b6a9');material.onBeforeCompile=shader=>{shader.vertexShader='varying vec3 vCityWorld;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>','#include <project_vertex>\nvec4 cityWorld=vec4(transformed,1.0);\n#ifdef USE_INSTANCING\ncityWorld=instanceMatrix*cityWorld;\n#endif\nvCityWorld=(modelMatrix*cityWorld).xyz;');shader.fragmentShader='varying vec3 vCityWorld;\n'+shader.fragmentShader;shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>','#include <color_fragment>\nvec2 paver=vCityWorld.xz/vec2(1.25,.8);paver.x+=mod(floor(paver.y),2.0)*.5;vec2 cell=fract(paver);float edge=smoothstep(0.0,.015,min(min(cell.x,1.0-cell.x),min(cell.y,1.0-cell.y)));float variation=fract(sin(dot(floor(paver),vec2(12.9898,78.233)))*43758.5453);diffuseColor.rgb*=mix(.72,.96+variation*.08,edge);');};material.customProgramCacheKey=()=> 'city-world-pavers-v2';material.userData.cityInstanceNormals=false;addCityInstanceNormals(material);}
      const geometry=floatGeometry(mesh.geometry).applyMatrix4(mesh.matrixWorld).applyMatrix4(normalize);geometry.computeBoundingBox();geometry.computeBoundingSphere();geometry.userData.shared=true;
      parts.push({geometry,material});
     });return parts;
    };
    result.set(kind,{near:extract('_LOD0'),far:extract('_LOD1')});
+  }
+  for(const [bare,full] of [['cityroad2bare','cityroad2'],['cityroad4bare','cityroad4']] as const){
+   const old=result.get(bare)!,road=result.get(full)!;
+   result.set(bare,{near:bareRoadParts(road.near,bare),far:bareRoadParts(road.far,bare)});
+   for(const part of [...old.near,...old.far])part.geometry.dispose();
   }
   const taper=transformTaper;const road=result.get('cityroad4')!;result.set('citytaper',{near:road.near.map(p=>({material:p.material,geometry:taper(p.geometry.clone())})),far:road.near.map(p=>({material:p.material,geometry:taper(p.geometry.clone())}))});
   gltf.scene.traverse(o=>{if((o as THREE.Mesh).isMesh)(o as THREE.Mesh).geometry.dispose();});
@@ -140,7 +197,8 @@ function proceduralTemplate(kind:CityKind):Template {
  for(const [key,geometries] of buckets){const [color,emissive]=key.split(':').map(Number);const geometry=mergeGeometries(geometries)!;geometry.computeBoundingSphere();geometry.userData.shared=true;
   const material=new THREE.MeshStandardMaterial({color,emissive,roughness:.85,metalness:0});
   if(kind==='citybarrier'&&color===0xdad0b5){material.onBeforeCompile=shader=>{shader.vertexShader='varying vec3 vBarrier;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvBarrier=position;');shader.fragmentShader='varying vec3 vBarrier;\n'+shader.fragmentShader;shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>','#include <color_fragment>\nif(abs(vBarrier.z)>.12){float stripe=step(.5,fract((vBarrier.x+vBarrier.y*.7)*1.6));diffuseColor.rgb*=mix(vec3(.91,.88,.74),vec3(.78,.29,.12),stripe);}');};material.customProgramCacheKey=()=> 'city-barrier-stripes-v1';}
-  addJungleDepthFade(material);
+  addCityInstanceNormals(material);
+  if(kind==='cityretaining')addCityRetainingFade(material);
   parts.push({geometry,material});
  }
  const result={near:parts,far:parts};procedural.set(kind,result);return result;
@@ -177,7 +235,14 @@ export class CityAssetKit {
  add(c:CityPlacement,centered=false):THREE.Group|null {
   const matrix=cityMatrix(c,centered);this.count++;
   if(this.batched){const key=c.dkind+':'+Math.floor(c.p[0]/48)+':'+Math.floor(c.p[2]/48);let bucket=this.buckets.get(key);if(!bucket){bucket={kind:c.dkind,matrices:[],colors:[]};this.buckets.set(key,bucket);}bucket.matrices.push(matrix);bucket.colors.push(new THREE.Color(c.color??'#ffffff'));return null;}
-  const holder=new THREE.Group();holder.name=CITY_ASSETS[c.dkind].label;holder.position.fromArray(c.p);this.root.add(holder);this.loose.add(holder);
+  return this.addLoose(this.root,c,matrix);
+ }
+ /** Dress a moving gameplay object in its local coordinates without replacing its collider. */
+ attach(parent:THREE.Object3D,placement:CityPlacement):void {
+  this.count++;this.addLoose(parent,placement,cityMatrix(placement));
+ }
+ private addLoose(parent:THREE.Object3D,c:CityPlacement,matrix:THREE.Matrix4):THREE.Group {
+  const holder=new THREE.Group();holder.name=CITY_ASSETS[c.dkind].label;holder.position.fromArray(c.p);holder.userData.editorIdx=parent.userData.editorIdx;parent.add(holder);this.loose.add(holder);
   this.jobs.push(this.template(c.dkind).then(template=>{if(this.disposed)return;const inverse=new THREE.Matrix4().makeTranslation(-c.p[0],-c.p[1],-c.p[2]);
    for(const part of template.near){const material=part.material.clone();material.onBeforeCompile=part.material.onBeforeCompile;material.customProgramCacheKey=part.material.customProgramCacheKey;material.color.multiply(new THREE.Color(c.color??'#ffffff'));this.ownedMaterials.add(material);const m=new THREE.Mesh(part.geometry,material);m.matrix.copy(inverse).multiply(matrix);m.matrixAutoUpdate=false;m.castShadow=m.receiveShadow=true;m.userData.editorIdx=holder.userData.editorIdx;holder.add(m);}this.loaded++;
   }).catch(e=>this.failed(c.dkind,e)));return holder;
@@ -187,7 +252,10 @@ export class CityAssetKit {
   for(const bucket of this.buckets.values())this.jobs.push(this.template(bucket.kind).then(template=>{if(this.disposed)return;
    const center=new THREE.Vector3();for(const m of bucket.matrices)center.add(new THREE.Vector3().setFromMatrixPosition(m));center.multiplyScalar(1/bucket.matrices.length);
    const inverse=new THREE.Matrix4().makeTranslation(-center.x,-center.y,-center.z),lod=new THREE.LOD(),bounds=new THREE.Box3();lod.position.copy(center);lod.name=CITY_ASSETS[bucket.kind].label;
-   const build=(parts:Part[])=>{const group=new THREE.Group();for(const part of parts){const m=new THREE.InstancedMesh(part.geometry,part.material,bucket.matrices.length);bucket.matrices.forEach((matrix,i)=>{m.setMatrixAt(i,inverse.clone().multiply(matrix));m.setColorAt(i,bucket.colors[i]);});m.computeBoundingBox();m.computeBoundingSphere();bounds.union(m.boundingBox!);m.updateMatrix();m.matrixAutoUpdate=false;m.castShadow=m.receiveShadow=true;m.userData.cityAsset=bucket.kind;group.add(m);}return group;};
+   const build=(parts:Part[])=>{const group=new THREE.Group();for(const part of parts){const m=new THREE.InstancedMesh(part.geometry,part.material,bucket.matrices.length);bucket.matrices.forEach((matrix,i)=>{m.setMatrixAt(i,inverse.clone().multiply(matrix));m.setColorAt(i,bucket.colors[i]);});m.computeBoundingBox();
+    // A sphere transformed by max-axis scale can under-bound a graded instance.
+    // The transformed box encloses all instances, including their full descent.
+    m.boundingSphere=m.boundingBox!.getBoundingSphere(new THREE.Sphere());bounds.union(m.boundingBox!);m.updateMatrix();m.matrixAutoUpdate=false;m.castShadow=m.receiveShadow=true;m.userData.cityAsset=bucket.kind;group.add(m);}return group;};
    lod.addLevel(build(template.near),0);if(template.far!==template.near)lod.addLevel(build(template.far),130,.15);lod.userData.cityBounds=bounds.translate(center);lod.updateMatrix();lod.matrixAutoUpdate=false;this.root.add(lod);this.loaded+=bucket.matrices.length;
   }).catch(e=>this.failed(bucket.kind,e)));this.buckets.clear();
  }
