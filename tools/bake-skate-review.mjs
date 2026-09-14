@@ -50,7 +50,7 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
     let previousCommand=null;
     const nativeGrind=category==='grind'||id==='darkslide';
     const nativeLip=category==='lip',nativeWall=id==='Wallride',nativeManual=id==='Manual'||id==='Nose Manual';
-    const nativeRevert=id==='Revert',nativeGrab=category==='grab'&&(id==='indy'||id==='melon'||id==='nose'||id==='tail'||id==='method');
+    const nativeRevert=id==='Revert',nativeGrab=category==='grab'&&(id==='indy'||id==='melon'||id==='nose'||id==='tail'||id==='method'||id==='mute');
     // Down + grab is Tailgrab in parks; campaign controls reserve it for slam.
     level.skatepark=nativeGrab&&id==='tail';
     const nativeBackflip=id==='kickflip-mctwist',nativeFootFlip=category==='flip'&&(id==='kick'||id==='heel'||id==='shove'||id==='imposs'||id==='varial'||id==='varial-heel'||id==='hardflip'||id==='inward-heel');
@@ -80,7 +80,7 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
           if(p.state==='air'){
             indyAirFrames++;
             command.grabHeld=indyAirFrames>=3&&indyAirFrames<22;
-            if(indyAirFrames===3){command.moveX=(id==='melon'||id==='method')?-1:(id==='nose'||id==='tail')?0:1;command.moveY=(id==='nose'||id==='method')?1:id==='tail'?-1:0;command.grabPressed=true;}
+            if(indyAirFrames===3){command.moveX=(id==='melon'||id==='method')?-1:(id==='nose'||id==='tail')?0:1;command.moveY=(id==='nose'||id==='method'||id==='mute')?1:id==='tail'?-1:0;command.grabPressed=true;}
           }
         }else if(nativeBackflip){
           command.jumpHeld=landedAt===null;

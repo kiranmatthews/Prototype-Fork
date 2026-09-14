@@ -105,3 +105,5 @@ Revision 23 synchronizes the seated S20 Nosegrab and forward nose reach from gam
 Revision 24 synchronizes the seated S21 Tailgrab and back-arm tail reach from gameplay. Its native capture uses park controls, where down + grab selects Tailgrab. Other 41 motions remain unchanged.
 
 Revision 25 synchronizes Method’s extended legs, head-clear arm placement and inward-facing palm from gameplay. Other 41 motion tracks remain unchanged.
+
+Revision 26 synchronizes Mute’s seated stance, upper-body fold and clear release path from gameplay. Other 41 motion tracks remain unchanged.
