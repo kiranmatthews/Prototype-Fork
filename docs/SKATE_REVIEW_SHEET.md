@@ -99,3 +99,5 @@ Use `SKATE_REVIEW_ONLY=grab:indy node tools/bake-skate-review.mjs` to rebuild on
 The revision 21 audit covers 2,904 samples and 23,865,072 garment vertices, with S18 hip/knee/grip checks between keys. The other 41 motion tracks are unchanged.
 
 Revision 22 synchronizes the seated-back, waist-driven S19 Melon gameplay fix. Other 41 motion tracks are unchanged; no review interface changes were needed.
+
+Revision 23 synchronizes the seated S20 Nosegrab and forward nose reach from gameplay. Other 41 motion tracks remain unchanged.

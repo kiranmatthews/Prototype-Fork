@@ -50,7 +50,7 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
     let previousCommand=null;
     const nativeGrind=category==='grind'||id==='darkslide';
     const nativeLip=category==='lip',nativeWall=id==='Wallride',nativeManual=id==='Manual'||id==='Nose Manual';
-    const nativeRevert=id==='Revert',nativeGrab=category==='grab'&&(id==='indy'||id==='melon');
+    const nativeRevert=id==='Revert',nativeGrab=category==='grab'&&(id==='indy'||id==='melon'||id==='nose');
     const nativeBackflip=id==='kickflip-mctwist',nativeFootFlip=category==='flip'&&(id==='kick'||id==='heel'||id==='shove'||id==='imposs'||id==='varial'||id==='varial-heel'||id==='hardflip'||id==='inward-heel');
     const native=nativeGrind||nativeLip||nativeWall||nativeManual||nativeRevert||nativeBackflip||nativeFootFlip||nativeGrab;
     const arena=nativeLip||nativeBackflip?lipLevel:nativeWall?wallLevel:level;
@@ -78,7 +78,7 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
           if(p.state==='air'){
             indyAirFrames++;
             command.grabHeld=indyAirFrames>=3&&indyAirFrames<22;
-            if(indyAirFrames===3){command.moveX=id==='melon'?-1:1;command.grabPressed=true;}
+            if(indyAirFrames===3){command.moveX=id==='melon'?-1:id==='nose'?0:1;command.moveY=id==='nose'?1:0;command.grabPressed=true;}
           }
         }else if(nativeBackflip){
           command.jumpHeld=landedAt===null;

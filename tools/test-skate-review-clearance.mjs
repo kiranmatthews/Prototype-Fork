@@ -7,14 +7,14 @@ await withSkateRuntime(async({player:p,THREE,server})=>{
   const {withSkatePresentationRig}=await server.ssrLoadModule('/src/animation/skateCatalog.ts');
   const {evaluateSkateboardSurfaceHeight}=await server.ssrLoadModule('/src/skateboard/model.ts');
   const catalog=JSON.parse(await readFile(new URL('../public/animations/skate-review/catalog.json',import.meta.url),'utf8'));
-  const selected=catalog.clips.filter(c=>/Skate · S(?:09|1[0-9]|2[6-9]|3[0-8]|42) ·/.test(c.name));assert.equal(selected.length,25);
+  const selected=catalog.clips.filter(c=>/Skate · S(?:09|1[0-9]|20|2[6-9]|3[0-8]|42) ·/.test(c.name));assert.equal(selected.length,26);
   const base=p.enterAnimationPreview();p.group.position.set(0,0,0);p.group.rotation.set(0,Math.PI,0);
   const binding=a.RigBinding.fromDefinition(base.root,withSkatePresentationRig(a.RigBinding.fromSculptRuntime(base.root).definition));
   const motion=a.createProceduralMotionContext(),shorts=p.riderG.getObjectByName('meshy-shorts-surface'),deck=p.boardG.getObjectByName('Deck_ContinuousRoundedKick');
   const point=new THREE.Vector3(),matrix=new THREE.Matrix4();let samples=0,vertices=0;const failures=[],results=[];
   for(const clip of selected){
     let minShorts=Infinity,minCoping=Infinity,minShoe=Infinity,minShin=Infinity;
-    const wrapped=clip.metadata.skateReviewId==='flip:imposs',indy=clip.metadata.skateReviewId==='grab:indy',melon=clip.metadata.skateReviewId==='grab:melon';
+    const wrapped=clip.metadata.skateReviewId==='flip:imposs',indy=clip.metadata.skateReviewId==='grab:indy',melon=clip.metadata.skateReviewId==='grab:melon',nosegrab=clip.metadata.skateReviewId==='grab:nose';
     const varial=['flip:varial','flip:varial-heel','flip:hardflip','flip:inward-heel'].includes(clip.metadata.skateReviewId);
     const footFlip=['flip:kick','flip:heel','flip:shove','flip:varial','flip:varial-heel','flip:hardflip','flip:inward-heel'].includes(clip.metadata.skateReviewId),trace=clip.metadata.transitionEvidence??[],flight=[];
     const flipStart=trace.find(s=>s.flipping)?.time??Infinity;
@@ -24,18 +24,19 @@ await withSkateRuntime(async({player:p,THREE,server})=>{
       const time=clip.duration*f/120;p.applyAnimationDeformations({});
       const pose=a.sampleComposedClip(clip,time,motion);binding.applyPose(pose,{resetUnspecified:true});
       p.applyAnimationDeformations(pose.scalars);p.syncCharacterAppearance({upperArmRestAngleWeight:0});p.group.updateMatrixWorld(true);samples++;
-      if(indy||melon){
+      if(indy||melon||nosegrab){
         const state=trace.filter(s=>s.time<=time+1e-6).at(-1);
         if(state?.grabWeight>.95){
           const at=name=>p.riderG.getObjectByName(name).getWorldPosition(new THREE.Vector3());
           const normal=new THREE.Vector3(0,1,0).transformDirection(p.boardG.matrixWorld);
           const feet=at('socket-foot-left').add(at('socket-foot-right')).multiplyScalar(.5);
-          assert.ok(at('hips').sub(feet).dot(normal)>(melon?.55:.75),'captured grab squats below supported reach');
+          assert.ok(at('hips').sub(feet).dot(normal)>(melon||nosegrab?.55:.75),'captured grab squats below supported reach');
           const settings=p.boardG.userData.settings,scale=settings.overallScale,parity=Math.cos(state.deckYaw)<0?-1:1;
-          const x=settings.deckHalfWidth*scale*state.stance*parity*(melon?-1:1),z=(melon?.10:-.10)*parity;
+          const x=nosegrab?0:settings.deckHalfWidth*scale*state.stance*parity*(melon?-1:1),z=nosegrab?settings.deckNoseLength*scale*.96:(melon?.10:-.10)*parity;
           const target=p.boardG.localToWorld(new THREE.Vector3(x,(settings.boardToGroundDistance+evaluateSkateboardSurfaceHeight(settings,x/scale,z/scale))*scale,z));
-          const gripError=at(`socket-grip-${(state.stance>0)!==melon?'left':'right'}`).distanceTo(target);assert.ok(gripError<.008,`captured grab loses its edge contact at ${time}: ${gripError}; weight ${state.grabWeight}`);
-          for(const side of ['left','right'])assert.ok(at(`knee-${side}`).sub(at(`hip-${side}`)).angleTo(at(`ankle-${side}`).sub(at(`knee-${side}`)))<(melon?1.45:1.20),'captured grab knee folds too far');
+          const side=nosegrab?(state.stance*parity>0?'right':'left'):(state.stance>0)!==melon?'left':'right';
+          const gripError=at(`socket-grip-${side}`).distanceTo(target);assert.ok(gripError<.008,`captured grab loses its edge contact at ${time}: ${gripError}; weight ${state.grabWeight}`);
+          for(const side of ['left','right']){const knee=at(`knee-${side}`).sub(at(`hip-${side}`)).angleTo(at(`ankle-${side}`).sub(at(`knee-${side}`)));assert.ok(knee<(nosegrab?1.50:melon?1.45:1.20),`${clip.name} knee ${side} bends ${knee*180/Math.PI} degrees at ${time}`);}
         }
       }
       for(const entry of reverts){
@@ -99,5 +100,5 @@ await withSkateRuntime(async({player:p,THREE,server})=>{
     results.push({clip:clip.name,minShorts,minCoping,...(footFlip||wrapped?{minShoe}:{}),...(wrapped||varial?{minShin}:{})});
   }
   p.exitAnimationPreview();console.log({samples,vertices,results,failures});assert.deepEqual(failures,[]);
-  console.log('PASS S09–S19/S26–S38/S42 captured entry, trick and exit garment/board and rail clearance.');
+  console.log('PASS S09–S20/S26–S38/S42 captured entry, trick and exit garment/board and rail clearance.');
 });
