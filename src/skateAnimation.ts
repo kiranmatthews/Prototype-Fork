@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { solveTwoBoneIk } from './animation/ik';
-import { GRAB_CONTACTS, GRIND_CONTACTS, LIP_CONTACTS, skateContactBounce, sampleDeckTrick, sampleMcTwist, type DeckTrickKind, type GrabTrickKind, type GrindStyle, type LipStyle } from './skateTricks';
+import { GRAB_CONTACTS, GRIND_CONTACTS, LIP_CONTACTS, skateContactBounce, sampleDeckTrick, sampleBackflip, type DeckTrickKind, type GrabTrickKind, type GrindStyle, type LipStyle } from './skateTricks';
 import { DEFAULT_SKATEBOARD_SETTINGS, type SkateboardSettingsValue } from './skateboard/settings';
 import { evaluateSkateboardSurfaceHeight } from './skateboard/model';
 import type { Rail } from './rails';
@@ -23,6 +23,7 @@ export interface SkatePoseInput {
   darkslide: boolean; ollie: boolean; flip: DeckTrickKind | null;
   nineHundred?: boolean;
   flipProgress: number; specialFlip: boolean; lip: LipStyle | null;
+  coping?: { center: THREE.Vector3; normal: THREE.Vector3 };
   wallWeight: number; wallNormal: THREE.Vector3; wallForward: THREE.Vector3;
 }
 
@@ -48,6 +49,10 @@ export class SkateAnimation {
   private supportZ = 0;
   private supportY = 0;
   private lastActive = false;
+  private lipEntryP = new THREE.Vector3();
+  private lipEntryQ = new THREE.Quaternion();
+  private coping: SkatePoseInput['coping'];
+  private copingAge = 1;
   private darkWeight = 0;
   private darkExitOffset = new THREE.Vector3();
   private darkPop = 0;
@@ -88,7 +93,7 @@ export class SkateAnimation {
     this.head = rider.getObjectByName('head');
   }
 
-  reset(): void { this.key = ''; this.lastActive = false; this.age = this.airAge = this.darkWeight = this.darkPop = this.locomotionWeight = this.manualWeight = this.manualBalance = 0; this.darkExitOffset.set(0,0,0); this.bounceAge = 1; this.wasGrounded = true; this.bodySpring.reset(); }
+  reset(): void { this.key = ''; this.lastActive = false; this.coping=undefined;this.copingAge=1;this.age = this.airAge = this.darkWeight = this.darkPop = this.locomotionWeight = this.manualWeight = this.manualBalance = 0; this.darkExitOffset.set(0,0,0); this.bounceAge = 1; this.wasGrounded = true; this.bodySpring.reset(); }
 
   /** Restore the legacy sibling frame before it authors its fallback pose. */
   prepare(): void {
@@ -165,6 +170,8 @@ export class SkateAnimation {
     const key = p.wallWeight > .01 ? 'wallride' : p.grind ? `${p.grind}:${p.darkslide}` : p.lip ? `lip:${p.lip}` : p.manual ? `manual:${p.manual}`
       : p.grabWeight > .01 ? `grab:${p.grab}` : p.grounded ? 'ride' : 'air';
     if (key !== this.key || !this.lastActive) {
+      if(p.lip && this.lastActive){this.lipEntryP.copy(this.boardP);this.lipEntryQ.copy(this.boardQ);}
+      else if(p.lip){this.lipEntryP.copy(this.board.getWorldPosition(new THREE.Vector3()));this.lipEntryQ.copy(this.board.getWorldQuaternion(new THREE.Quaternion()));}
       this.age = 0; this.key = key;
       // Taking off is extension, not another ground-contact compression.
       if (key !== 'air') this.bounceAge = 0;
@@ -176,22 +183,22 @@ export class SkateAnimation {
     this.bounceAge += p.dt; this.wasGrounded = p.grounded;
     const bounce = skateContactBounce(this.bounceAge);
     const breathe = Math.sin(p.time * 5.6) * .016 * Math.min(1, Math.abs(p.speed) / 5);
-    const mcTwist = p.specialFlip ? sampleMcTwist(p.flipProgress) : null;
-    const grabKind = mcTwist ? 'mute' : p.grab;
+    const backflip = p.specialFlip ? sampleBackflip(p.flipProgress) : null;
+    const grabKind = p.grab;
     const grab = GRAB_CONTACTS[grabKind];
-    const gw = clamp(mcTwist ? mcTwist.grab : p.grabWeight, 0, 1);
-    const flipPose = p.flip ? sampleDeckTrick(p.flip, mcTwist ? mcTwist.deckProgress : p.flipProgress) : null;
-    const locomotionTarget = p.nineHundred || (key === 'ride' || key === 'air' || p.manual !== 0 || p.darkslide) && !p.flip && gw < .01 ? 1 : 0;
+    const gw = backflip ? 0 : clamp(p.grabWeight, 0, 1);
+    const flipPose = p.flip && !backflip ? sampleDeckTrick(p.flip, p.flipProgress) : null;
+    const locomotionTarget = p.nineHundred || p.lip || backflip || (key === 'ride' || key === 'air' || p.manual !== 0 || p.darkslide) && !p.flip && gw < .01 ? 1 : 0;
     if (!this.lastActive) { this.locomotionWeight = locomotionTarget; this.bodySpring.reset(p.charge); }
     else this.locomotionWeight += (locomotionTarget-this.locomotionWeight)*(1-Math.exp(-16*p.dt));
     this.manualWeight += ((p.manual ? 1 : 0)-this.manualWeight)*(1-Math.exp(-12*p.dt));
     if (!p.manual && this.manualWeight < .001) this.manualWeight = 0;
     this.manualBalance += (clamp(p.balance,-1,1)-this.manualBalance)*(1-Math.exp(-10*p.dt));
     const bodyFlex = this.bodySpring.step(p.dt, {
-      grounded:p.grounded || p.darkslide || !!p.nineHundred, charge:p.nineHundred?0:p.charge,
+      grounded:p.grounded || p.darkslide || !!p.nineHundred, charge:p.nineHundred||p.lip?0:p.charge,
       verticalVelocity:p.verticalVelocity??0, launchVelocity:p.launchVelocity??0,
       contactBounce:p.grounded?bounce:0, mount:clamp(p.mount??0,0,1),
-      manual:p.manual !== 0,
+      manual:p.manual !== 0 || !!p.lip,
     });
     if(p.nineHundred && gw>0 && this.spine){
       this.spineBefore=this.spine.quaternion.clone();
@@ -230,11 +237,14 @@ export class SkateAnimation {
     } else if (p.lip) {
       this.frame.setFromAxisAngle(Y, Math.PI + p.yaw);
       this.up.copy(Y);this.forward.copy(Z).applyQuaternion(this.frame);this.right.copy(X).applyQuaternion(this.frame);
-      this.support.addScaledVector(this.up, .09);
+      // Authored coping centre is 5 cm above the pipe's analytic lip.
+      this.support.addScaledVector(this.up, .05 + .09);
       const d = LIP_CONTACTS[p.lip];
       yaw = d.yaw; pitch = d.pitch + clamp(p.balance * .06, -.06, .06);
       pivotZ = p.lip === 'nose' ? s.deckNoseLength * scale * .94 : p.lip === 'tail' ? -s.deckTailLength * scale * .94 : 0;
       pivotY = p.lip === 'axle' ? (s.wheelRadius - s.truckHangerRadius) * scale : surface(0, pivotZ) - s.deckThickness * scale;
+    } else if (backflip) {
+      pitch = backflip.nosePitch;
     } else if (p.ollie && !p.grounded && !p.flip && gw < .01) {
       pitch = skateOlliePitch(this.airAge, p.verticalVelocity??0, p.launchVelocity??1);
     }
@@ -258,6 +268,31 @@ export class SkateAnimation {
     if(p.grind && p.darkslide)this.darkExitOffset.copy(this.boardP).sub(this.group.getWorldPosition(new THREE.Vector3()));
     // A real exit ollie already supplies lift; do not add a second flip pop.
     this.boardP.addScaledVector(this.up, .30 * gw + .18 * darkPop);
+    if (p.lip) {
+      const enter=smooth(this.age/.18);
+      this.boardQ.copy(this.lipEntryQ.clone().slerp(this.boardQ,enter));
+      this.boardP.copy(this.lipEntryP.clone().lerp(this.boardP,enter)).addScaledVector(Y,.20*Math.sin(Math.PI*enter));
+      const boardUp=Y.clone().applyQuaternion(this.boardQ);
+      this.up.copy(Y).lerp(boardUp,1-enter).normalize();
+      const tilt=new THREE.Quaternion().setFromUnitVectors(Y,this.up);
+      this.worldRotation(this.rider,this.rider.getWorldQuaternion(new THREE.Quaternion()).premultiply(tilt));
+    }
+    if(p.coping){this.coping=p.coping;this.copingAge=0;}else this.copingAge+=p.dt;
+    if(this.coping && this.copingAge<.8 && !p.grind){
+      // Stay on the grip side of the coping through crest, catch and release.
+      // Push along the deck normal: inward on the climbing board, upward on
+      // the stall. The extra 15 mm protects interpolated review frames too.
+      const {center,normal}=this.coping,radius=.105,push=Y.clone().applyQuaternion(this.boardQ);
+      const nx=push.dot(normal),ny=push.y,n=Math.hypot(nx,ny);
+      let lift=0;
+      if(n>.2)for(let iz=0;iz<=64;iz++)for(let ix=0;ix<=8;ix++)for(const layer of [0,1]){
+        const x=(ix/8*2-1)*s.deckHalfWidth*scale,z=(-s.deckTailLength+(s.deckTailLength+s.deckNoseLength)*iz/64)*scale;
+        const point=new THREE.Vector3(x,surface(x,z)-layer*s.deckThickness*scale,z).applyQuaternion(this.boardQ).add(this.boardP).sub(center);
+        const cross=point.dot(normal),across=(cross*ny-point.y*nx)/n,along=(cross*nx+point.y*ny)/n;
+        if(Math.abs(across)<radius)lift=Math.max(lift,(Math.sqrt(radius*radius-across*across)-along)/n);
+      }
+      this.boardP.addScaledVector(push,lift);
+    }
     if (p.wallWeight > .001) {
       const wallForward = p.wallForward.clone().addScaledVector(p.wallNormal, -p.wallForward.dot(p.wallNormal)).normalize();
       const wallRight = new THREE.Vector3().crossVectors(p.wallNormal, wallForward).normalize();
@@ -291,7 +326,7 @@ export class SkateAnimation {
     const parity = Math.cos(p.deckYaw) >= 0 ? 1 : -1;
     // A relaxed, narrower stance for ride/load/ollie only. Authored trick
     // contacts keep their established wider positions; blend at the handoff.
-    const footSpan = Math.min((frontZ - rearZ) * .40, p.wallWeight > .01 ? .34 : .50) * (1-.25*this.locomotionWeight);
+    const footSpan = Math.min((frontZ - rearZ) * .40, p.wallWeight > .01 ? .34 : .50) * (1-.25*this.locomotionWeight) * (p.lip ? .8 : 1);
     const footYaw = p.stance * parity * Math.PI / 2;
     const catchQ = this.boardQ.clone().multiply(new THREE.Quaternion().setFromAxisAngle(Z, -Math.PI * dark));
     const footQ = catchQ.clone().multiply(new THREE.Quaternion().setFromAxisAngle(Y, footYaw));
@@ -382,8 +417,9 @@ export class SkateAnimation {
     this.body.updateWorldMatrix(true, true);
     let footError = 0;
     for (let i = 0; i < 2; i++) {
+      const kneeForward=p.lip?Z.clone().applyQuaternion(footQ):this.right.clone().multiplyScalar(p.stance);
       const pole = this.feet[i].root.getWorldPosition(new THREE.Vector3())
-        .addScaledVector(this.right, p.stance * .65).addScaledVector(this.forward, i === front ? .12 : -.12);
+        .addScaledVector(kneeForward, .65).addScaledVector(this.forward, i === front ? .12 : -.12);
       const footWeight=underProgress>0?underMotion.footContact:1;
       const airFeet=underProgress>0?underMotion.airFeet:0;
       const target=footTargets[i].clone();

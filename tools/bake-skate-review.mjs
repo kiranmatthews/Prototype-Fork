@@ -110,11 +110,11 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
       p.flipKind=flip?.kind??'kick';p.flipDuration=p.specialFlip?.duration??flip?.duration??1;
       p.flipT=p.specialFlip?(1-specialProgress)*p.flipDuration:flip&&time>=.6&&trickProgress<1?(1-trickProgress)*flip.duration:0;
       const smooth=specialProgress*specialProgress*(3-2*specialProgress);
-      p.grabSpinAngle=id==='the-900'?Math.PI*5*smooth:id==='kickflip-mctwist'&&specialProgress===1?Math.PI*3:0;
+      p.grabSpinAngle=id==='the-900'?Math.PI*5*smooth:0;
       p.deckYawOffset=flip&&trickProgress===1?flip.yaw*Math.PI*2:id==='Revert'&&time>.6?Math.PI:0;
       p.revertPoseT=id==='Revert'&&time>=.6?Math.max(0,.22-(time-.6)):0;p.revertPoseSign=1;
       p.manualing=id==='Manual'?1:id==='Nose Manual'?-1:0;p.lipStallT=category==='lip'?5:0;p.lipStyle=category==='lip'?id:'axle';
-      p.boardOllieAir=id==='Ollie'&&airborne;p.wallriding=id==='Wallride';p.wallridePose=p.wallriding?1:0;p.wallNormal.set(1,0,0);
+      p.boardOllieAir=(id==='Ollie'||id==='kickflip-mctwist')&&airborne;p.wallriding=id==='Wallride';p.wallridePose=p.wallriding?1:0;p.wallNormal.set(1,0,0);
       p.pos.set(0,p.state==='grind'?.95:category==='lip'?.8:p.wallriding?1:airborne?Math.sin(Math.PI*flight)*1.15:0);p.prevPos.copy(p.pos);
       if(id==='under'){p.snapEase=1;p.placeOnRail(highRail);p.prevPos.copy(p.pos);}
       if(native){p.state='ride';p.grounded=true;p.grindRail=null;p.grindStyle='normal';p.underK=0;p.railUnder=false;p.specialGrind=null;p.manualing=0;p.lipStallT=0;p.wallriding=false;p.pos.set(0,0,0);p.prevPos.copy(p.pos);}
@@ -132,6 +132,7 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
     }else if(nativeLip){
       p.pos.set(0,.01,2.8);p.prevPos.copy(p.pos);p.speed=20;p.grounded=true;p.state='ride';p.freeSkate=true;p.grindRail=null;p.lipStallT=0;
       p.groundHit=p.queryGround(lipLevel);if(p.groundHit)p.rideNormal.copy(p.groundHit.normal);p.balanceBoostT=60;p.charging=false;p.chargeTimer=0;p.stance=1;
+      if(id==='tail'){p.deckYawOffset=Math.PI;p.stance=-1;}
     }else if(nativeWall){
       p.pos.set(.2,3,0);p.prevPos.copy(p.pos);p.speed=12;p.vVel=2;p.state='air';p.grounded=false;p.wallriding=false;p.wallridePose=0;p.wallCoolT=0;
       p.axisF.set(-.45,0,-1).normalize();p.axisL.set(p.axisF.z,0,-p.axisF.x);p.airFromSkate=p.freeSkate=true;p.airMomentum=true;p.airGrav='board';
@@ -139,7 +140,7 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
       level.grindRails.length=0;level.rails.length=0;p.pos.set(0,0,0);p.prevPos.copy(p.pos);p.state='ride';p.grounded=true;p.speed=12;p.manualing=0;p.balanceBoostT=60;
     }
     for(let f=0;f<=Math.round(entry.duration*60);f++){
-      pose(f/60);if(f%2!==0)continue;
+      pose(f/60);if(f%2!==0&&!nativeLip)continue;
       const live=[...binding.joints.values()].map(node=>node.getWorldPosition(new THREE.Vector3()));
       p.clearCharacterAppearance();
       const scalars=Object.fromEntries(p.animationRig.deformations.map(d=>[d.controlId,p.playerAnimationBridge.deformationValue(d.controlId)]));
@@ -176,7 +177,7 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
       clip.metadata.transitionCapture='native Player.step inputs';
       clip.metadata.transitionEvidence=stateTrace.filter((s,i)=>i===0||s.state!==stateTrace[i-1].state||s.underFlag!==stateTrace[i-1].underFlag||s.lip!==stateTrace[i-1].lip||s.wall!==stateTrace[i-1].wall||s.manual!==stateTrace[i-1].manual);
       clip.metadata.reviewRailHeight=id==='under'?4.5:nativeLip?3.05:.8;
-      if(nativeLip)clip.metadata.reviewPipe=true;
+      if(nativeLip){clip.metadata.reviewPipe=true;clip.metadata.captureFps=60;}
     }
     clip.metadata.boardVisibility=frames.filter((f,i)=>i===0||f.boardVisible!==frames[i-1].boardVisible).map(f=>[f.time,f.boardVisible]);
     const track=(kind,target,values)=>{

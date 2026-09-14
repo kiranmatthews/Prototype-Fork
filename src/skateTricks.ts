@@ -79,8 +79,8 @@ export const GRAB_CONTACTS = {
 export const LIP_CONTACTS = {
   axle: { label: 'Axle Stall', support: 'both-trucks', pitch: 0, yaw: Math.PI / 2 },
   rock: { label: 'Rock to Fakie', support: 'deck', pitch: .04, yaw: 0 },
-  nose: { label: 'Nose Stall', support: 'nose-tip', pitch: -.38, yaw: 0 },
-  tail: { label: 'Tail Stall', support: 'tail-tip', pitch: .38, yaw: Math.PI },
+  nose: { label: 'Nose Stall', support: 'nose-tip', pitch: -.24, yaw: 0 },
+  tail: { label: 'Tail Stall', support: 'tail-tip', pitch: .24, yaw: 0 },
 } as const;
 export type LipStyle = keyof typeof LIP_CONTACTS;
 
@@ -92,12 +92,12 @@ export function skateContactBounce(age: number): number {
     (1 - smooth((age - .45) / .20));
 }
 
-/** Backside 540 with an inverted middle and a Weddle/Mute catch. The deck
- * kickflip finishes before the hand closes; included spin is not rescored. */
-export function sampleMcTwist(progress: number) {
-  const t = Math.max(0, Math.min(1, progress)), motion = smooth(t);
-  return { yaw: Math.PI * 3 * motion, inversion: Math.PI * Math.sin(Math.PI * motion),
-    deckProgress: Math.min(1, t / .34), grab: smooth((t - .32) / .14) * (1 - smooth((t - .80) / .20)) };
+/** Nose-up ollie, one backward somersault, then an upright catch. The rider
+ * and deck turn together; there is no shove, deck flip or grabbing phase. */
+export function sampleBackflip(progress: number) {
+  const t = Math.max(0, Math.min(1, progress));
+  return { rotation: -2 * Math.PI * smooth((t - .12) / .80),
+    nosePitch: -.55 * (1 - smooth((t - .12) / .26)) };
 }
 
 const smooth=(t:number)=>{const x=Math.max(0,Math.min(1,t));return x*x*(3-2*x);};

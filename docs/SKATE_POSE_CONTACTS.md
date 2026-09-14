@@ -41,7 +41,7 @@ The hand mapping is stance-relative; anatomical left/right alone cannot define a
 | Hardflip | Kickflip + frontside half-shove |
 | Inward Heelflip | Heelflip + backside half-shove |
 | Impossible | Full wrap around trailing foot |
-| Kickflip McTwist | Kickflip catch, inverted backside 540, Weddle grip |
+| Backflip | Nose-up ollie into one full backward rotation of rider and board |
 | Tornado Twist | Two-and-a-half backside turns with Weddle grip |
 
 References include [skatedeluxe's Hardflip lesson](https://www.skatedeluxe.com/blog/en/trick-tips/skateboard/flat/how-to-hardflip/), [Nollie Skateboarding's rear-foot Impossible lesson](https://nollieskateboarding.com/en/news/15884), and [Mike McGill's McTwist account](https://www.wbur.org/onlyagame/2012/11/10/skateboarding-mctwist). These are original procedural interpretations, not copied animation clips.
@@ -91,7 +91,7 @@ The board has a separate scale compensation parent. Its metre dimensions survive
 
 Feet and palms use actual rig sockets, two-bone IK and a bounded local-coordinate refinement. The latter removes the centimetre-scale error left by an ordinary world-space solve under stretched parents. Wrist orientation makes the palm face the edge and fingers curl underneath. The spine folds to make the short arms reach without scaling bones. Contact corrections happen after appearance/animation layers.
 
-Contact events compress the knees and rebound with a damped curve that finishes in 0.65 seconds. A small continuing knee pulse adds motion to held poses. Grinds keep the contact fixed; manuals never wobble through flat into the opposite named manual. Feet lift and flick independently during flips. The Impossible rotates around its measured rear-foot pivot. Darkslide entry/exit uses a half-flip and foot clearance. The McTwist finishes its kickflip before closing the grabbing hand, then rotates around the actual posed hips.
+Contact events compress the knees and rebound with a damped curve that finishes in 0.65 seconds. A small continuing knee pulse adds motion to held poses. Grinds keep the contact fixed; manuals never wobble through flat into the opposite named manual. Feet lift and flick independently during flips. The Impossible rotates around its measured rear-foot pivot. Darkslide entry/exit uses a half-flip and foot clearance. Backflip starts nose-up, then rotates rider and board together around the actual posed hips.
 
 Input recipes, durations, scoring, balance difficulty and movement tuning remain unchanged. Revert and completed half-shove orientation bookkeeping now agree with the rendered deck.
 
@@ -141,3 +141,13 @@ S39 keeps its pelvis high with a shallow knee spring, leans the torso back and e
 `tools/test-tornado-twist-pose.mjs` exercises 396 native entry/spin/release/landing frames across both stances and two headings, plus 121 samples of the complete baked clip. It checks 4,117,218 actual skinned garment vertex positions against the board surface: minimum sampled clearance is 15.7 cm. During the held native pose, pelvis height is at least 86.4 cm above the mean soles and knee flex peaks at 50.7°. Sole/grip errors remain below 3.83/1.91 mm, with continuous rendered arm shafts. Every native spin completes and lands cleanly.
 
 Catalogue revision 7 refreshes unedited motion and migrates the old automatic S39 label while preserving edited keys and custom names. The existing 10,206-frame contact audit, native trick regression, 1,890-frame review/migration check and production build pass. Lite/full gameplay browser runs land for 3,000 points with no console errors; the packaged sheet shows the high pelvis, backward lean and extended grip. No full suite was run.
+
+## S34–S38: Backflip and lip-stall repairs
+
+S38 is now **Backflip**. The raised-nose ollie starts a full backward somersault around the posed hips, with shoes planted on the board throughout. It retains the shared ollie segment stretch, compression and landing rebound. The old kickflip, Weddle grab and backside yaw are removed; finishing no longer adds a half-turn to the landing. The existing special command, 2,500 points and stable `kickflip-mctwist` identifier remain compatible. The automatic Lab name migrates to Backflip while user-authored keys and custom names survive.
+
+All four lip stalls use the proportion-aware shallow leg solve with a narrower stance. Knee poles follow shoe orientation through the Axle Stall turn. Nose/Tail Stall no longer forces a 180° turn: either side input requests the tip stall, and the incoming physical board end selects its name. Normal/fakie deck orientation and anatomical stance survive the catch; reversing travel on the drop preserves the board's physical nose by updating its travel-relative offset.
+
+The visible coping's centre is 5 cm above the analytic lip and its tube radius is 9 cm. The board and rider crest into the stall over 0.18 seconds, with a small unweighting arc. Deck surface clearance follows its normal, pointing inward during the climb and upward on the stall, and remains active through release. Both deck surfaces are sampled so curved kicks cannot intersect the tube between their nominal support points. A 15 mm allowance also protects playback interpolation; lip studies now retain 60 Hz capture samples.
+
+`tools/test-skate-backflip-stalls.mjs` covers 48 native stalls across both pipe axes/sides, both stances, normal/reversed decks and balance excursions, plus four complete native Backflips. Across 5,180 controller frames and 38,098,648 skinned garment vertices, no sampled shorts/board intersections or reversed knee bends occur; sole error stays below 3.28 mm. The full crest/hold range peaks at 81.6° knee bend. `tools/test-skate-review-clearance.mjs` adds 605 samples and 4,971,890 garment vertices from the actual S34–S38 studies, including entry and release: stall shorts remain at least 17.5 cm above the deck, Backflip shorts at least 11.5 cm, and coping clearance at least 7.26 mm. These values describe the authored fixture, not arbitrary extreme Character Lab proportions.

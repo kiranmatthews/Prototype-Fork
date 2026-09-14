@@ -13,7 +13,7 @@ import { CameraInputFrame } from "./cameraViews";
 import { softSkateRebound, sampleSoftSkateImpact, SOFT_SKATE_IMPACT_SECONDS } from './skateImpact';
 import { BONUS_FRUIT_FLIGHT_SECONDS } from './bonusPayout';
 import { TUNING, CONST } from './tuning';
-import { GRIND_TRICKS, GRIND_CONTACTS, LIP_CONTACTS, grabTrickInfo, grabTrickFromInput, sampleDeckTrick, sampleMcTwist, type GrabTrickKind, type GrindStyle, type LipStyle } from './skateTricks';
+import { GRIND_TRICKS, GRIND_CONTACTS, LIP_CONTACTS, grabTrickInfo, grabTrickFromInput, sampleDeckTrick, sampleBackflip, type GrabTrickKind, type GrindStyle, type LipStyle } from './skateTricks';
 import { SkateAnimation } from './skateAnimation';
 import { SkateOllieMotion } from './skateOllieMotion';
 import { trickRepeatFactor, extendHeldTrick, type HeldTrickScore } from './trickScoring';
@@ -434,7 +434,6 @@ const _trickPivot = new THREE.Vector3();
 const _trickRight = new THREE.Vector3(1,0,0);
 const _trickFrameQ = new THREE.Quaternion();
 const _trickRotationQ = new THREE.Quaternion();
-const _trickPitchQ = new THREE.Quaternion();
 
 interface GroundHit {
   y: number;
@@ -1804,6 +1803,7 @@ export class Player {
     if (this.state === 'grind') return 'player.grind';
     if (this.slamActive || this.slamFlatT > 0 || this.slamSquash > 0) return 'player.slam';
     if (this.grabbing || this.grabPose > 0.25 || this.specialGrab !== null) return 'player.grab';
+    if (this.specialFlip) return 'player.skate';
     if (this.spinTimer > 0 || this.flipT > 0) return 'player.spin';
     // A committed split jump owns its full airborne silhouette, even while
     // the old slide/crouch presentation weights are still easing away.
@@ -8954,19 +8954,15 @@ export class Player {
     this.lipAim(true); // pick the meter that reads true on screen for THIS wall
     this.beginBalance(0, this.lipDispSign);
     this.rideNormal.set(0, 1, 0);
-    // THPS lip variety: the stick at the catch picks the trick. The climb
-    // hold (up) is the neutral case on purpose — Axle Stall is the default,
-    // not a trick you have to avoid; sideways leans and a pull-back rock pay
-    // more. (Same balance game either way; the name and the payout differ.)
+    // Either side input requests a tip stall. The physical board end that
+    // arrived at the deck determines nose/tail; never turn it to fit a name.
     const rIn = this.rawInput;
+    const noseYaw = this.visualYaw + this.deckYawOffset;
+    const noseOut = this.lipSide * (hp.axis === 'z' ? -Math.sin(noseYaw) : -Math.cos(noseYaw));
     this.lipStyle =
       rIn.moveY < -0.4
         ? 'rock'
-        : rIn.moveX < -0.4
-          ? 'nose'
-          : rIn.moveX > 0.4
-            ? 'tail'
-            : 'axle';
+        : Math.abs(rIn.moveX) > 0.4 ? noseOut >= 0 ? 'nose' : 'tail' : 'axle';
     const lipName = LIP_CONTACTS[this.lipStyle].label;
     const lipMult = lipName === 'Axle Stall' ? 1 : lipName === 'Rock to Fakie' ? 1.15 : 1.25;
     this.score(Math.round(CONST.ptsLip * lipMult), lipName, 'lip');
@@ -9137,6 +9133,7 @@ export class Player {
       const oldStance = this.stance;
       this.stance = -this.stance as 1 | -1;
       this.visualYaw = wrapAngle(this.visualYaw + oldStance * Math.PI * this.sidePose);
+      this.deckYawOffset = wrapAngle(this.deckYawOffset + Math.PI);
     }
     this.speed = 4;
     this.lipStallT = 0;
@@ -10462,10 +10459,8 @@ export class Player {
   private completeDeckTrick(): void {
     const completedSpecial=this.specialFlip;
     this.score(completedSpecial?.points??deckTrickInfo(this.flipKind).points,this.flipName);
-    if(completedSpecial){
-      this.grabSpinAngle+=Math.PI*3*this.stance;
-      this.specialGrabLanding=true;
-    } else
+    if(completedSpecial)this.specialGrabLanding=true;
+    else
       this.deckYawOffset=wrapAngle(this.deckYawOffset+deckTrickInfo(this.flipKind).yaw*Math.PI*2*this.stance);
     this.flipT=0;this.specialFlip=null;this.flipDuration=CONST.flipTime;
   }
@@ -15162,15 +15157,13 @@ export class Player {
    * Only local matrices are touched, and the correction is applied to the
    * PARENT of everything measured, so there is no feedback and no jitter.
    */
-  private applyMcTwistPose(progress:number):void {
-    const pose=sampleMcTwist(progress);
+  private applyBackflipPose(progress:number):void {
+    const pose=sampleBackflip(progress);
     const side=-this.stance*Math.PI/2*this.sidePose;
     _trickFrameQ.setFromAxisAngle(VERT_UP,side);
-    _trickRotationQ.setFromAxisAngle(VERT_UP,pose.yaw*this.stance);
-    _trickPitchQ.setFromAxisAngle(_trickRight,pose.inversion);
-    _trickRotationQ.multiply(_trickPitchQ);
+    _trickRotationQ.setFromAxisAngle(_trickRight,pose.rotation);
     _trickRotationQ.premultiply(_trickFrameQ).multiply(_trickFrameQ.invert());
-    // Rotate around the tucked hips, not the physics origin at the feet.
+    // Rotate the attached board and rider around their posed hips.
     if (this.legs) {
       this.legs.getWorldPosition(_trickPivot);
       this.bodyGroup.worldToLocal(_trickPivot);
@@ -15568,7 +15561,7 @@ export class Player {
     // numerically identical to the old code whenever the heading is -Z.
     this.group.rotation.set(0, Math.PI, 0);
     const roll = this.lean + wobble;
-    if (roll * roll > 1e-8) {
+    if (roll * roll > 1e-8 && this.lipStallT <= 0) {
       // visualYaw is updated below; a frame of lag on the AXIS is invisible
       // (the yaw is eased at 14/s) and keeps the euler reset above intact.
       LEAN_AXIS.set(-Math.sin(this.visualYaw), 0, -Math.cos(this.visualYaw));
@@ -15581,7 +15574,7 @@ export class Player {
     // walls — the SAME quaternion while riding the transition AND while glued
     // in hang time, so lip → hang → drop-in has no snap. Spins (bodyGroup yaw)
     // then run about the rig's own up = the surface normal, THPS-style.
-    if (this.alignPose > 0.001) {
+    if (this.alignPose > 0.001 && this.lipStallT <= 0) {
       VERT_Q.setFromUnitVectors(VERT_UP, this.alignNormal);
       VERT_Q2.identity().slerp(VERT_Q, this.alignPose);
       this.group.quaternion.premultiply(VERT_Q2);
@@ -16917,7 +16910,7 @@ export class Player {
     // Plant only after both layers so feet cannot slide away from the deck.
     // The hop needs a fully seated reference from its first frame; the old
     // partial mount blend could start a charged shoe underneath the new deck.
-    const deckTrickPose=this.flipT>0&&this.state==='air'
+    const deckTrickPose=this.flipT>0&&this.state==='air'&&!this.specialFlip
       ?sampleDeckTrick(this.flipKind,1-this.flipT/this.flipDuration):null;
     if(deckTrickPose){
       if(this.kneeL)this.kneeL.rotation.x+=.45*deckTrickPose.tuck;
@@ -16928,6 +16921,16 @@ export class Player {
     this.plantOnDeck(underW, this.skateMountT >= 0);
     let skateContactOwned = false;
     if (this.boardG && this.riderG) {
+      const copingPipe=this.lipPipe ?? (this.grounded && this.rawInput.grindHeld ? this.groundHit?.halfpipe : undefined);
+      let coping: {center:THREE.Vector3;normal:THREE.Vector3}|undefined;
+      if(copingPipe && this.pos.y>copingPipe.lipY-1.8){
+        const side=Math.sign(copingPipe.crossCoord(this.pos.x,this.pos.z)-copingPipe.cross)||1;
+        const normal=new THREE.Vector3(copingPipe.axis==='z'?side:0,0,copingPipe.axis==='x'?side:0);
+        const center=this.pos.clone();center.y=copingPipe.lipY+.05;
+        if(copingPipe.axis==='z')center.x=copingPipe.cross+side*copingPipe.lipX;
+        else center.z=copingPipe.cross+side*copingPipe.lipX;
+        coping={center,normal};
+      }
       this.skateAnimation ??= new SkateAnimation(this.group, this.bodyGroup, this.riderG, this.boardG);
       skateContactOwned = this.skateAnimation.apply({
         dt, time: this.runTime,
@@ -16952,6 +16955,7 @@ export class Player {
         ollie: this.boardOllieAir, flip: this.flipT > 0 ? this.flipKind : null,
         flipProgress: 1 - this.flipT / this.flipDuration, specialFlip: !!this.specialFlip,
         lip: this.lipStallT > 0 ? this.lipStyle : null,
+        coping,
         wallWeight: this.wallridePose, wallNormal: this.wallNormal, wallForward: this.axisF,
       });
     }
@@ -16963,10 +16967,10 @@ export class Player {
       _trickOffset.set(0,deckTrickPose.orbitY,deckTrickPose.orbitZ).applyQuaternion(this.boardG.quaternion);
       this.boardG.position.add(_trickOffset);
       this.boardG.rotateZ(deckTrickPose.roll);
-      this.boardG.rotateY(this.specialFlip?(1-this.flipT/this.flipDuration)*Math.PI*2:deckTrickPose.yaw);
+      this.boardG.rotateY(deckTrickPose.yaw);
       this.boardG.rotateX(deckTrickPose.pitch);
     }
-    if(this.specialFlip&&this.flipT>0)this.applyMcTwistPose(1-this.flipT/this.flipDuration);
+    if(this.specialFlip&&this.flipT>0)this.applyBackflipPose(1-this.flipT/this.flipDuration);
     this.seatOnFoot();
     // Apply lift AFTER deck planting; otherwise the contact solver cancels
     // the hop. The skateboard and physics point remain on their exact path.

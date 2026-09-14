@@ -11,7 +11,7 @@ The sheet presents 42 numbered poses in three columns. All loop at half speed by
 | S18–S25 | Eight grabs |
 | S26–S33 | Eight grinds |
 | S34–S37 | Axle, rock, nose and tail stalls |
-| S38–S40 | McTwist, Tornado Twist and Darkslide |
+| S38–S40 | Backflip, Tornado Twist and Darkslide |
 | S41–S42 | Mount and under-rail hang |
 
 These are review material, including the current defects. They are not a new visual approval of the poses rejected by the user. Endpoint contact tests alone cannot establish a convincing silhouette or trick animation.
@@ -32,7 +32,7 @@ Held grinds (including Darkslide), manuals, wallrides and lip stalls capture rea
 
 The board frame is created at rig construction with its original identity transform, so binding it does not change the live stance. Captures include the board transform and use a separate authoring presentation root to retain body motion without deforming the whole skeleton. Existing gameplay clip IDs and routing remain intact.
 
-Keys are reduced against the 30 fps capture with 0.0002 local-unit/scalar tolerance and 0.0009 radian quaternion tolerance, then written to six decimals. The 42-clip file is about 6.8 MiB before HTTP compression, fetched only by the sheet or when opening the Lab. The renderer reuses the same character surfaces; it does not allocate a WebGL context per card.
+Keys are reduced against the 30 fps capture (60 fps for lip stalls) with 0.0002 local-unit/scalar tolerance and 0.0009 radian quaternion tolerance, then written to six decimals. The 42-clip file is about 7.2 MiB before HTTP compression, fetched only by the sheet or when opening the Lab. The renderer reuses the same character surfaces; it does not allocate a WebGL context per card.
 
 `node tools/test-skate-review.mjs` checks all entries, schema/rig references, 1,890 sampled playback frames, independent deformation bounds, board tracks/visibility, native transition evidence, source upgrades, preserved edits/deletions and complete preview restoration. Preview cleanup restores the deformation-control values as well as bone transforms, preventing garment length from inheriting a study frame after closing. Existing animation suite/runtime and skate contact checks cover the shared integration. Browser QA must cover scrolling, loops, pause/scrub/restart, category and camera controls, a Lab deep link, saved study loading, and the deployed file-link redirect. Run the production build; no full repository suite is required for this change.
 
@@ -47,3 +47,7 @@ Revision 6 stages S42 as a foot-driven quarter turn, hop off the board and late 
 Revision 7 repairs S39 with a higher pelvis, shallow knees, backward lean and an elastic leading-arm reach, preserving the pose through release and landing. The move is renamed **Tornado Twist**, retaining S39 and its existing clip ID. The old automatic Lab label migrates even when motion keys were edited; custom names and authored keys remain intact. Native and captured garment-surface checks find at least 15.7 cm of sampled board clearance through the complete move.
 
 The catalogue request includes its revision in the URL. Public release verification caught an old cached JSON response paired with the newly deployed page, which correctly failed the revision check but prevented the sheet and Lab from loading. Revision-specific requests keep that cached response separate from the current captures.
+
+Revision 8 replaces S38 with **Backflip**: raised-nose ollie, one full backward body/board rotation and an upright landing. S34–S37 have shallower knees, narrower foot spacing, forward knee bends and a smooth coping catch. S36/S37 preserve incoming normal/fakie orientation, which selects the contacting nose or tail. S37's native capture therefore starts with the physical tail leading. The deck clears the rounded coping through catch and release, and the lip clips retain 60 Hz samples to preserve those transitions during playback. Stable IDs, saved edits, custom names and intentional deletions remain supported.
+
+`node tools/test-skate-review-clearance.mjs` checks the actual S34–S38 captures at 605 times, using skinned garment vertices and the complete deck mesh. It covers the approach, held pose, release and landing, including the gaps between recorded keyframes.

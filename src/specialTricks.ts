@@ -22,7 +22,7 @@ export const SPECIAL_TRICKS: readonly SpecialTrick[] = [
   {
     id: 'kickflip-mctwist',
     category: 'flip',
-    label: 'Kickflip McTwist',
+    label: 'Backflip',
     directions: ['left', 'right'],
     points: 2500,
     duration: 0.78,

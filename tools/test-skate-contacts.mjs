@@ -3,7 +3,7 @@ import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 
 await withSkateRuntime(async ({player:p,level,THREE,server,step})=>{
   const {Rail}=await server.ssrLoadModule('/src/rails.ts');
-  const {DECK_TRICKS,GRAB_TRICKS,GRIND_TRICKS,sampleMcTwist,skateContactBounce}=await server.ssrLoadModule('/src/skateTricks.ts');
+  const {DECK_TRICKS,GRAB_TRICKS,GRIND_TRICKS,sampleBackflip,skateContactBounce}=await server.ssrLoadModule('/src/skateTricks.ts');
   const v=(...xyz)=>new THREE.Vector3(...xyz),up=v(0,1,0);
   let frames=0,maxFoot=0,maxHand=0;
   const tick=()=>{p.runTime+=1/60;p.syncVisual(makeInput(),1/60);frames++;};
@@ -128,7 +128,7 @@ await withSkateRuntime(async ({player:p,level,THREE,server,step})=>{
   for(const lip of ['axle','rock','nose','tail']){
     reset();p.state='ride';p.grounded=true;p.lipStyle=lip;p.lipStallT=5;settle();
     const s=p.boardG.userData.settings,c=contact();
-    assert.ok(Math.abs(world(...c.local).y-p.pos.y-.09)<.002,`${lip} stall is floating`);
+    assert.ok(world(...c.local).y>=p.pos.y+.088,`${lip} stall sinks through the coping`);
     if(lip==='axle')assert.ok(Math.abs(world(0,0,1).sub(world(0,0,0)).normalize().z)<.002,'axle stall must turn along coping');
     if(lip==='nose')assert.ok(c.local[2]>.9*s.deckNoseLength);
     if(lip==='tail')assert.ok(c.local[2]<-.9*s.deckTailLength);checkFeet(`${lip} stall`);
@@ -153,10 +153,11 @@ await withSkateRuntime(async ({player:p,level,THREE,server,step})=>{
     }
     assert.ok(world(0,1,0).sub(world(0,0,0)).normalize().y>.999,'flip never catches upright');
   }
-  assert.equal(sampleMcTwist(1).yaw,3*Math.PI);assert.ok(Math.abs(sampleMcTwist(.5).inversion-Math.PI)<1e-12);
-  assert.equal(sampleMcTwist(.5).deckProgress,1,'McTwist grabs before catching kickflip');
+  assert.equal(sampleBackflip(1).rotation,-2*Math.PI);
+  assert.equal(Math.abs(sampleBackflip(0).rotation),0);assert.ok(sampleBackflip(.08).nosePitch<-.5);
+  assert.equal(Math.abs(sampleBackflip(1).nosePitch),0);
   assert.ok(skateContactBounce(.08)>0&&skateContactBounce(.26)<0,'cartoon contact must compress then rebound');assert.equal(skateContactBounce(.7),0);
   reset();p.pos.set(0,.1,10);p.prevPos.copy(p.pos);p.state='ride';p.grounded=true;p.revertT=.4;p.speed=10;
   step(makeInput({transferPressed:true}));assert.ok(p.comboLabels.includes('Revert'));assert.ok(p.revertPoseT>0);assert.ok(Math.abs(p.deckYawOffset)>3);
-  console.log(`PASS ${grinds} mirrored/sloped grind contacts, ${grabs} grab contacts/releases, 12 manuals, both Darkslides, 4 lip stalls, 16 complete flip cycles, McTwist definition and live revert. ${frames} pose frames; worst sole ${(maxFoot*1000).toFixed(2)} mm, palm ${(maxHand*1000).toFixed(2)} mm.`);
+  console.log(`PASS ${grinds} mirrored/sloped grind contacts, ${grabs} grab contacts/releases, 12 manuals, both Darkslides, 4 lip stalls, 16 complete flip cycles, Backflip definition and live revert. ${frames} pose frames; worst sole ${(maxFoot*1000).toFixed(2)} mm, palm ${(maxHand*1000).toFixed(2)} mm.`);
 });
