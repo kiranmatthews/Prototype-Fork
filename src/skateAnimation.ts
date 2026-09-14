@@ -272,7 +272,6 @@ export class SkateAnimation {
     if(p.grind && p.darkslide)this.darkExitOffset.copy(this.boardP).sub(this.group.getWorldPosition(new THREE.Vector3()));
     // A real exit ollie already supplies lift; do not add a second flip pop.
     this.boardP.addScaledVector(this.up, .30 * gw + .18 * darkPop);
-    if(p.revert)this.boardP.addScaledVector(this.up,p.revert.lift);
     if (p.lip) {
       const enter=smooth(this.age/.18);
       this.boardQ.copy(this.lipEntryQ.clone().slerp(this.boardQ,enter));
@@ -317,6 +316,7 @@ export class SkateAnimation {
       const hangBoard = hangAnchor.clone().addScaledVector(hangUp,.09)
         .sub(new THREE.Vector3(0,(s.boardToGroundDistance-s.deckThickness)*scale,0).applyQuaternion(hangQ));
       this.boardQ.slerp(hangQ,underMotion.boardTurn);this.boardP.lerp(hangBoard,underMotion.boardTurn);
+      this.boardP.addScaledVector(Z.clone().applyQuaternion(this.hangFrame),underMotion.boardAdvance);
       if(p.grind&&!p.underReturning)this.boardP.addScaledVector(hangUp,.12*Math.sin(Math.PI*underMotion.boardTurn));
       // On release the board passes beside the head on its way to the feet.
       if (!p.grind) this.boardP.addScaledVector(X.clone().applyQuaternion(this.hangFrame),2.2*underMotion.boardSwing);
@@ -421,13 +421,17 @@ export class SkateAnimation {
       const headAboveHips = (headBox.isEmpty()?this.head.getWorldPosition(new THREE.Vector3()).y+.7:headBox.max.y)
         -this.hips.getWorldPosition(new THREE.Vector3()).y;
       const hangingPelvis=hangAnchor.clone();hangingPelvis.y-=headAboveHips+SKATE_UNDER_RAIL_HEADROOM;
+      if(this.spine && underMotion.torsoDuck>0){
+        this.spineBefore=this.spine.quaternion.clone();
+        const tuck=new THREE.Quaternion().setFromAxisAngle(Z.clone().applyQuaternion(this.hangFrame),-1.20*underMotion.torsoDuck);
+        this.worldRotation(this.spine,this.spine.getWorldQuaternion(new THREE.Quaternion()).premultiply(tuck));
+      }
       // During release the rider falls independently while the deck returns
       // below the feet; the moving board must not pull the body upward.
       if(!p.grind)pelvis.copy(this.support).addScaledVector(Y,grip+height);
       pelvis.lerp(hangingPelvis,under);
-      // Swing around the side of the rail while the head crosses its height.
-      if(p.grind)pelvis.addScaledVector(X.clone().applyQuaternion(this.hangFrame),1.55*underMotion.swing);
-      pelvis.addScaledVector(Y,.25*underMotion.hop-.12*underMotion.dip);
+      if(p.grind){pelvis.x=hangAnchor.x;pelvis.z=hangAnchor.z;}
+      pelvis.addScaledVector(Y,underMotion.springY);
     }
     this.hips.getWorldPosition(this.temp);
     const delta = pelvis.clone().sub(this.temp);
@@ -458,7 +462,7 @@ export class SkateAnimation {
     if(p.revert && p.revert.reach>0){
       const hand=this.hands[(p.revertSign??1)>0?1:0],other=this.hands[(p.revertSign??1)>0?0:1];
       const shoulder=hand.root.getWorldPosition(new THREE.Vector3());
-      const outward=shoulder.clone().sub(other.root.getWorldPosition(new THREE.Vector3())).normalize();
+      const outward=shoulder.clone().sub(other.root.getWorldPosition(new THREE.Vector3())).normalize().addScaledVector(this.up,-.65).normalize();
       const reach=shoulder.distanceTo(hand.mid.getWorldPosition(new THREE.Vector3()))+
         hand.mid.getWorldPosition(new THREE.Vector3()).distanceTo(hand.end.getWorldPosition(new THREE.Vector3()));
       const relative=hand.end.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(hand.socket.getWorldQuaternion(new THREE.Quaternion()));
@@ -471,7 +475,7 @@ export class SkateAnimation {
         return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(handX,handY,handZ)).multiply(relative.clone().invert());
       };
       const handQ=wristAlong(outward);
-      const target=shoulder.clone().addScaledVector(outward,reach+.09).addScaledVector(this.up,reach*.16);
+      const target=shoulder.clone().addScaledVector(outward,reach+.09);
       const pole=shoulder.clone().addScaledVector(this.up,.3).addScaledVector(this.forward,.25);
       this.solve(hand,target,handQ,pole,p.revert.reach);
       const forearm=hand.end.getWorldPosition(new THREE.Vector3()).sub(hand.mid.getWorldPosition(new THREE.Vector3())).normalize();

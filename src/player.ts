@@ -1,4 +1,4 @@
-import { SKATE_UNDER_RAIL_DEPTH, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
+import { SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
 import { skateUnderRailElasticity, skate900Elasticity, skateRevertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
 // Authored fake-physics board movement. No rigidbody, no forces: just a
 // heading, a scalar speed, a vertical velocity, and hand-tuned numbers from
@@ -394,7 +394,7 @@ const VERT_TRACK_STEPS = [0.15, 0.05, 0, -0.12, -0.26, -0.45, -0.7];
 // underneath (hands + crosswise board grip the rail overhead), and how long
 // the committed swing between top and under takes.
 const UNDER_RAIL_DEPTH = SKATE_UNDER_RAIL_DEPTH;
-const UNDER_RAIL_SWING = 0.72;
+const UNDER_RAIL_TRANSITION = SKATE_UNDER_RAIL_TRANSITION;
 // Deck-plant fallback for a malformed/custom board. The production value is
 // read live from boardG.userData.gripTop so the Unity shape lab can tune it.
 const PLANT_DECK_TOP = SKATEBOARD_GRIP_TOP;
@@ -1201,7 +1201,7 @@ export class Player {
   private headYawPose = 0;
   private grindArmPose = 0; // arms out wide for balance on the rail
   private railUnder = false; // hanging BENEATH the rail (board crosswise in the hands)
-  private underK = 0; // 0 = on top, 1 = hanging under; eases through the committed swing
+  private underK = 0; // 0 = on top, 1 = hanging under; eased committed transition
   private grindUsedUnder = false; // Grindosaurus runs must remain top-side for the whole ride
   private underCoolT = 0; // switch cooldown: no rapid top/under spam
   private underProbeT = 0; // periodic clearance re-check while hanging (terrain rises -> pop back up)
@@ -9689,7 +9689,7 @@ export class Player {
       }
     }
     this.underK = THREE.MathUtils.clamp(
-      this.underK + (this.railUnder ? 1 : -1) * (dt / UNDER_RAIL_SWING),
+      this.underK + (this.railUnder ? 1 : -1) * (dt / UNDER_RAIL_TRANSITION),
       0,
       1,
     );

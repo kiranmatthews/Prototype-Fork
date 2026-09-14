@@ -2,7 +2,7 @@ import { DECK_TRICKS, GRAB_TRICKS, GRIND_TRICKS, LIP_CONTACTS } from '../skateTr
 import { SPECIAL_TRICKS } from '../specialTricks';
 import type { AnimationClip, AnimationSuiteDocument, RigDefinition } from './types';
 
-export const SKATE_REVIEW_REVISION = 10;
+export const SKATE_REVIEW_REVISION = 11;
 export interface SkateReviewEntry {
   id: string;
   clipId: string;
@@ -20,7 +20,7 @@ export const SKATE_REVIEW_ENTRIES: readonly SkateReviewEntry[] = [
   ...Object.entries(LIP_CONTACTS).map(([id,t]) => ({ id: `lip:${id}`, name: t.label, category: 'Lip stalls' as const, duration: 3.2 })),
   ...SPECIAL_TRICKS.map(t => ({ id: `special:${t.id}`, name: t.label, category: 'Specials' as const, duration: 3.2 })),
   { id: 'basic:Skate mount', name: 'Skate mount', category: 'Basics' as const, duration: 3.2 },
-  { id: 'grind:under', name: 'Under-rail hang', category: 'Grinds' as const, duration: 7.2 },
+  { id: 'grind:under', name: 'Under-rail hang', category: 'Grinds' as const, duration: 4.2 },
 ].map((entry, i) => ({ ...entry, number: `S${String(i + 1).padStart(2, '0')}`,
   clipId: `player.skate-study.${entry.id.toLowerCase().replace(/[^a-z0-9]+/g, '-')}` }));
 

@@ -2,46 +2,51 @@ const clamp = (n: number, a: number, b: number) => Math.max(a, Math.min(b, n));
 const smooth = (n: number) => { const t=clamp(n,0,1); return t*t*(3-2*t); };
 
 export const SKATE_REVERT_DURATION = .52;
-/** One half-turn: load, unweight, turn, then cushion the new stance. */
+/** One grounded half-turn: crouch into the slide, then rise in the new stance. */
 export function sampleSkateRevert(age:number) {
   const u=clamp(age/SKATE_REVERT_DURATION,0,1);
-  const air=clamp((u-.12)/.76,0,1),lift=.22*Math.sin(Math.PI*air);
   const load=Math.sin(Math.PI*clamp(u/.24,0,1));
   const land=Math.sin(Math.PI*clamp((u-.80)/.20,0,1));
   const reach=smooth((u-.12)/.18)*(1-smooth((u-.74)/.24));
-  return {turn:smooth((u-.14)/.66),lift,knee:.65*load+.70*reach+.70*land,
+  return {turn:smooth((u-.14)/.66),knee:.65*load+.70*reach+.70*land,
     reach,compression:load+.6*land,rebound:Math.sin(Math.PI*clamp((u-.92)/.08,0,1))};
 }
 
 // The rail anchor and its clearance probe share the deeper hanging position.
 export const SKATE_UNDER_RAIL_DEPTH = 3.15;
 export const SKATE_UNDER_RAIL_HEADROOM = .17;
+export const SKATE_UNDER_RAIL_TRANSITION = .48;
 
-/** Foot flick → hop clear → descend beside the rail → late truck catch.
- * Return and release have their own contact timing; they are not backwards
- * playback of the catch. Values drive both the native anchor and the rig. */
+/** Overlapping turn/drop/reach, with a finite elastic catch. The pelvis
+ * falls vertically; the torso ducks past the coping as the board glides ahead. */
 export function sampleUnderRailMotion(progress:number,returning=false,releasing=false) {
   const u=clamp(progress,0,1),r=1-u;
   if(releasing)return {
     boardTurn:1-smooth((r-.20)/.80),boardSwing:smooth(r/.24)*(1-smooth((r-.80)/.20)),bodyDrop:smooth(u),swing:0,hop:0,dip:0,
     footContact:smooth((r-.90)/.10),airFeet:0,handContact:1-smooth(r/.16),
     armReach:1-smooth(r/.55),armExtra:0,
-    phase:'release',
+    torsoDuck:0,boardAdvance:0,springY:0,phase:'release',
   };
   if(returning)return {
-    boardTurn:1-smooth((r-.76)/.24),boardSwing:0,bodyDrop:1-smooth((r-.20)/.50),
-    swing:smooth(r/.25)*(1-smooth((r-.70)/.20)),hop:0,dip:0,
-    footContact:smooth((r-.75)/.18),airFeet:smooth((r-.50)/.16)*(1-smooth((r-.82)/.15)),handContact:1-smooth((r-.48)/.16),
-    armReach:1-smooth((r-.60)/.30),armExtra:1.2*Math.sin(Math.PI*clamp(r/.65,0,1)),
+    boardTurn:1-smooth(r/.85),boardSwing:0,bodyDrop:1-smooth(smooth(r/.9)),
+    swing:0,hop:0,dip:0,
+    footContact:smooth((r-.78)/.22),airFeet:smooth(r/.12)*(1-smooth((r-.78)/.22)),handContact:1-smooth(r/.30),
+    armReach:1-smooth(r/.8),armExtra:1.2*Math.sin(Math.PI*clamp(r/.65,0,1)),
+    torsoDuck:smooth(r/.12)*(1-smooth((r-.70)/.30)),
+    boardAdvance:1.15*smooth(r/.16)*(1-smooth((r-.75)/.25)),springY:0,
     phase:'return',
   };
+  const settle=clamp((u-.58)/.42,0,1);
+  const pulse=Math.sin(3*Math.PI*settle)*Math.exp(-3*settle)*(1-smooth((settle-.70)/.30));
+  const springY=pulse>=0?-.27*pulse:-.10*pulse;
   return {
-    boardTurn:smooth(u/.28),boardSwing:0,bodyDrop:smooth((u-.38)/.34),
-    swing:smooth((u-.20)/.20)*(1-smooth((u-.74)/.20)),
-    hop:Math.sin(Math.PI*clamp((u-.18)/.28,0,1)),dip:Math.sin(Math.PI*clamp((u-.70)/.30,0,1)),
-    footContact:1-smooth((u-.28)/.10),airFeet:smooth((u-.28)/.10)*(1-smooth((u-.74)/.20)),handContact:smooth((u-.83)/.12),
-    armReach:smooth((u-.65)/.28),armExtra:0,
-    phase:u<.28?'flick':u<.83?'jump':u<.96?'catch':'hang',
+    boardTurn:smooth(u/.30),boardSwing:0,bodyDrop:smooth(smooth(u/.58)),
+    swing:0,hop:0,dip:0,
+    footContact:1-smooth(u/.12),airFeet:smooth(u/.10)*(1-smooth((u-.62)/.38)),handContact:smooth((u-.12)/.52),
+    armReach:smooth(u/.62),armExtra:.35*Math.sin(Math.PI*smooth(u/.70))+.6*Math.max(0,-springY),
+    torsoDuck:smooth(u/.18)*(1-smooth((u-.38)/.22)),
+    boardAdvance:1.15*smooth(u/.12)*(1-smooth((u-.42)/.24)),springY,
+    phase:u<.58?'drop':u<1?'catch':'hang',
   };
 }
 

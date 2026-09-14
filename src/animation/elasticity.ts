@@ -82,8 +82,9 @@ export const SKATE_UNDER_RAIL_ARM_LIMIT = 5.75;
 export function skateUnderRailElasticity(weight:number,time:number,returning=false,releasing=false):Record<string,number> {
   const motion=sampleUnderRailMotion(weight,returning,releasing);
   const pulse=.025*Math.sin(time*3.8)*Math.max(0,weight)+motion.armExtra;
-  return Object.fromEntries(ELASTIC_LENGTH_CONTROLS.filter(([id])=>id.startsWith('deform.arm.')).map(([id])=>
-    [id,1+motion.armReach*((id.includes('.lower.')?3:2.8)-1+pulse)]));
+  return {...Object.fromEntries(ELASTIC_LENGTH_CONTROLS.filter(([id])=>id.startsWith('deform.arm.')).map(([id])=>
+    [id,1+motion.armReach*((id.includes('.lower.')?3:2.8)-1+pulse)])),
+    'deform.torso.length':1+.46*motion.torsoDuck};
 }
 
 /** Tornado Twist reaches to its leading-hand Weddle grip from a high pelvis. */
@@ -92,7 +93,7 @@ export function skate900Elasticity(weight:number,stance:number):Record<string,nu
   return {[`deform.arm.upper.${side}.length`]:1+1.1*reach,[`deform.arm.lower.${side}.length`]:1+1.3*reach};
 }
 
-/** Independent recoil and a slightly longer balancing arm during the hop. */
+/** Independent recoil and a slightly longer balancing arm during the slide. */
 export function skateRevertElasticity(motion:ReturnType<typeof sampleSkateRevert>,enteringStance:number):Record<string,number> {
   const side=enteringStance>0?'left':'right',values:Record<string,number>={
     'deform.torso.length':1-.035*motion.compression+.02*motion.rebound,

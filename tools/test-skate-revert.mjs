@@ -12,7 +12,7 @@ await withSkateRuntime(async({player:p,server,THREE,Level,level:park,step})=>{
   const yaw=node=>{const forward=v(0,0,1).transformDirection(node.matrixWorld);return Math.atan2(forward.x,forward.z);};
   const delta=(x,y)=>Math.atan2(Math.sin(x-y),Math.cos(x-y));
   const shorts=p.riderG.getObjectByName('meshy-shorts-surface'),point=v(),matrix=new THREE.Matrix4();
-  let frames=0,vertices=0,reverts=0,maxHop=0,maxKnee=0,maxFoot=0,minClearance=Infinity,maxTurnStep=0,maxArmReach=0,minWristAlignment=1;
+  let frames=0,vertices=0,reverts=0,maxDeckLift=0,maxKnee=0,maxFoot=0,minClearance=Infinity,maxTurnStep=0,maxArmReach=0,minWristAlignment=1;
   function clearance(){
     const s=p.boardG.userData.settings,k=s.overallScale;
     matrix.copy(p.boardG.matrixWorld).invert().multiply(shorts.matrixWorld);
@@ -29,12 +29,12 @@ await withSkateRuntime(async({player:p,server,THREE,Level,level:park,step})=>{
     p.freeSkate=p.airFromSkate=true;p.sidePose=p.deckPose=p.skatePose=1;p.skateMountT=-1;p.speed=12;p.stance=entering;p.deckYawOffset=deck;
     for(let f=0;f<50;f++)p.step(1/60,makeInput(),flat);
     p.group.updateMatrixWorld(true);
-    let priorBoard=yaw(p.boardG),priorBody=yaw(p.bodyGroup),boardTurn=0,bodyTurn=0,active=false,sign=entering,air=false,arm=false,kneeRise=0;const trace=[];
+    let priorBoard=yaw(p.boardG),priorBody=yaw(p.bodyGroup),boardTurn=0,bodyTurn=0,active=false,sign=entering,turning=false,arm=false,kneeRise=0;const trace=[];
     const bend=()=>Math.max(...['left','right'].map(side=>at(`knee-${side}`).sub(at(`hip-${side}`)).angleTo(at(`ankle-${side}`).sub(at(`knee-${side}`)))));
     const idleBend=bend();
     for(let f=0;f<165;f++){
       const input=makeInput(),start=f===15||f===95;
-      if(start){p.revertT=.3;input.transferPressed=true;sign=p.stance;boardTurn=bodyTurn=0;active=true;air=arm=false;}
+      if(start){p.revertT=.3;input.transferPressed=true;sign=p.stance;boardTurn=bodyTurn=0;active=true;turning=arm=false;}
       // A fresh eligibility window during the active pose cannot stack a turn.
       if(f===20)p.revertT=.3;if(f>=20&&f<=30)input.transferPressed=true;
       const wasStance=p.stance;p.step(1/60,input,flat);frames++;p.group.updateMatrixWorld(true);
@@ -44,9 +44,10 @@ await withSkateRuntime(async({player:p,server,THREE,Level,level:park,step})=>{
       if(active){
         boardTurn+=db;bodyTurn+=dr;clearance();
         maxFoot=Math.max(maxFoot,p.boardG.userData.skateContact.footError);maxKnee=Math.max(maxKnee,bend());
-        const lift=p.boardG.getWorldPosition(v()).y-p.pos.y;maxHop=Math.max(maxHop,lift);
+        const lift=p.boardG.getWorldPosition(v()).y-p.pos.y;maxDeckLift=Math.max(maxDeckLift,Math.abs(lift));
         const motion=p.boardG.userData.skateRevert;
-        if(lift>.12){air=true;kneeRise=Math.max(kneeRise,bend()-idleBend);}
+        assert.ok(Math.abs(lift)<.003,'revert must keep the deck on the ground');
+        if(motion?.reach>.8){turning=true;kneeRise=Math.max(kneeRise,bend()-idleBend);}
         if(motion?.reach>.95){
           const side=sign>0?'left':'right';assert.equal(motion.hand,`socket-grip-${side}`);
           const shoulder=at(`shoulder-${side}`),elbow=at(`elbow-${side}`),wrist=at(`wrist-${side}`);
@@ -54,13 +55,13 @@ await withSkateRuntime(async({player:p,server,THREE,Level,level:park,step})=>{
           const fingers=v(0,-1,0).transformDirection(p.riderG.getObjectByName(`socket-grip-${side}`).matrixWorld);
           const alignment=fingers.dot(wrist.clone().sub(elbow).normalize());minWristAlignment=Math.min(minWristAlignment,alignment);
           assert.ok(alignment>Math.cos(Math.PI/12),'balancing hand droops away from the forearm');
-          if(reach>.82&&wrist.y>shoulder.y-.06)arm=true;
+          if(reach>.80&&wrist.y<shoulder.y-.12)arm=true;
           trace.push({time:p.revertPoseT,reach,wristHeight:wrist.y-shoulder.y,knee:bend(),bodyFlex:p.boardG.userData.skateContact.bodyFlex});
         }
         if(p.revertPoseT<=0){
           assert.ok(Math.abs(boardTurn+sign*Math.PI)<.002,`board rotated ${boardTurn*180/Math.PI} degrees`);
           assert.ok(Math.abs(bodyTurn+sign*Math.PI)<.002,`body rotated ${bodyTurn*180/Math.PI} degrees`);
-          assert.ok(air&&arm&&kneeRise>.04,`missing hop, balancing reach or knee flex: ${JSON.stringify({air,arm,kneeRise,idleBend,trace})}`);
+          assert.ok(turning&&arm&&kneeRise>.04,`missing down/out reach or crouch: ${JSON.stringify({turning,arm,kneeRise,idleBend,trace})}`);
           active=false;reverts++;
         }
       }
@@ -75,7 +76,7 @@ await withSkateRuntime(async({player:p,server,THREE,Level,level:park,step})=>{
   assert.ok(landed&&p.revertT>0);const previous=p.stance;step(makeInput({transferPressed:true}));assert.equal(p.stance,-previous);assert.ok(p.revertPoseT>0);
   for(let f=0;f<50;f++)step(makeInput());assert.equal(p.isBailing,false);assert.equal(p.revertPoseT,0);
   runtime.dispose();flat.dispose();
-  console.log({frames,reverts,vertices,maxHop,maxKneeDegrees:maxKnee*180/Math.PI,maxFoot,minClearance,maxTurnStepDegrees:maxTurnStep*180/Math.PI,maxArmReach,maxWristBendDegrees:Math.acos(minWristAlignment)*180/Math.PI});
+  console.log({frames,reverts,vertices,maxDeckLift,maxKneeDegrees:maxKnee*180/Math.PI,maxFoot,minClearance,maxTurnStepDegrees:maxTurnStep*180/Math.PI,maxArmReach,maxWristBendDegrees:Math.acos(minWristAlignment)*180/Math.PI});
   assert.equal(reverts,16);assert.ok(maxTurnStep<.35&&maxKnee<1.25&&maxFoot<.006);
-  console.log('PASS native 180-degree reverts in both stances/deck orientations/headings: stance alternation, small hop/knee load, balancing arm, planted feet and shorts clearance.');
+  console.log('PASS native grounded 180-degree reverts in both stances/deck orientations/headings: stance alternation, crouch, down/out arm, straight wrist, planted feet and shorts clearance.');
 });

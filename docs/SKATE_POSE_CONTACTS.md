@@ -46,7 +46,7 @@ The hand mapping is stance-relative; anatomical left/right alone cannot define a
 
 References include [skatedeluxe's Hardflip lesson](https://www.skatedeluxe.com/blog/en/trick-tips/skateboard/flat/how-to-hardflip/), [Nollie Skateboarding's rear-foot Impossible lesson](https://nollieskateboarding.com/en/news/15884), and [Mike McGill's McTwist account](https://www.wbur.org/onlyagame/2012/11/10/skateboarding-mctwist). These are original procedural interpretations, not copied animation clips.
 
-Manuals load rear wheels; nose manuals load front wheels. Axle stalls turn along coping; rock stalls use the belly; nose/tail stalls load their respective tips. Wallrides turn the wheels into the wall. Ollies show tail pop followed by levelling. Reverts make a small hop while rider and board rotate 180 degrees into the opposite normal/fakie stance.
+Manuals load rear wheels; nose manuals load front wheels. Axle stalls turn along coping; rock stalls use the belly; nose/tail stalls load their respective tips. Wallrides turn the wheels into the wall. Ollies show tail pop followed by levelling. Reverts use a grounded crouch-driven 180-degree slide into the opposite normal/fakie stance.
 
 ## Contact and cartoon motion
 
@@ -166,10 +166,18 @@ Revision 9's eight grind captures add 968 sampled playback frames with at least 
 
 ## S09 Revert
 
-One native revert switches the current stance once and turns both rider and board exactly 180°. Its 0.52-second presentation loads the knees, lifts the board/rider up to 22 cm, extends the entering stance's trailing arm during the turn and cushions the new stance. Shared independent torso/leg compression and arm length controls supply the elastic motion. The hop follows the ground normal as a presentation offset; the original post-vert input window, speed tax, scoring and ride collision remain intact. An active revert cannot accept a second overlapping turn, and bail/death/map transitions clear its presentation.
+One native revert switches the current stance once and turns both rider and board exactly 180°. Its 0.52-second presentation crouches into a grounded slide, reaches the entering stance's trailing arm down and out, then rises into the new stance. Shared independent torso/leg compression and arm length controls supply the elastic motion. Revision 11 removes the earlier presentation hop; the original post-vert input window, speed tax, scoring and ride collision remain intact. An active revert cannot accept a second overlapping turn, and bail/death/map transitions clear its presentation.
 
 The balancing wrist follows the forearm, accounting for the glove's actual finger axis (-Y), palm normal (-Z) and persistent hand orientation mount. This avoids treating the palm's contact axis as the finger direction and producing a sharply drooping hand.
 
 The old S09 study changed the deck orientation without changing the captured stance. Revision 10 captures two separate native R2 inputs, with post-landing availability supplied for review: normal → fakie, then fakie → normal, separated by rolling beats. There is no reverse-stance snap at the loop boundary. Unedited Lab studies upgrade and authored changes remain preserved.
 
-`tools/test-skate-revert.mjs` checks 16 native reverts across both initial stances, both deck orientations and two headings, plus eligibility from a real vert landing. Across 1,320 controller frames and 4,207,616 garment vertex positions, both turns remain exactly 180°, the hop reaches 21.97 cm, knees stay below 47°, sole error stays below 1.43 mm and shorts clearance stays above 40.8 cm. The balancing hand stays within 10.1° of its forearm. Captured stance alternation, the expanded garment check, existing contact/trick regressions and build pass. Lite/full native browser review confirms the reach, neutral wrist and clean new stance.
+`tools/test-skate-revert.mjs` checks 16 native reverts across both initial stances, both deck orientations and two headings, plus eligibility from a real vert landing. Across 1,320 controller frames and 4,207,616 garment vertex positions, both turns remain exactly 180°, the deck stays on the ground, knees stay below 47°, sole error stays below 1.43 mm and shorts clearance stays above 40.8 cm. The down-and-out balancing hand stays within 8.6° of its forearm. Captured stance alternation, the expanded garment check and build pass.
+
+## S42 fluid vertical drop
+
+The under-rail transition now takes 0.48 seconds instead of 0.72. Board rotation, pelvis descent and arm reach overlap from the start, followed by a finite downward stretch and upward rebound at the catch. The hips track a vertical path relative to the moving rail. A brief spine tuck and independent torso stretch keep the large head clear; the turning board glides ahead along the rail while the body passes beneath it. Both truck grips remain fixed through the settled hang. Return uses the same vertical-path principle with its own coordinated contact timing.
+
+The review loop is 4.2 seconds instead of 7.2: one catch/drop, hang, release and landing. It retains 60 Hz samples so the quick catch and rebound survive playback. The previous return-and-second-entry sequence is removed from the sheet loop; return remains available and covered in native gameplay tests.
+
+The 2,744-frame native hang/Darkslide check verifies overlapping motion, less than 2.5 cm horizontal hip deviation, an observed catch dip/rebound, head clearance, sub-millimetre truck grips and continuous arm shafts in both stances/directions. The expanded capture audit covers S09/S26–S38/S42 at 1,815 times and 14,915,670 garment vertex positions. S42's sampled shorts/deck separation is at least 18.7 cm and head/rail clearance at least 6.19 cm. The native grounded Revert check, catalogue/migration check and production build also pass; no full suite.

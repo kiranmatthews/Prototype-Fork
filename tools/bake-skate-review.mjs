@@ -71,8 +71,8 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
           if(f===30)p.tryManual(id==='Manual'?1:-1);
           command.jumpHeld=f>=108&&f<120;command.jumpPressed=f===108;command.jumpReleased=f===120;
         }else if(id==='under'){
-          if([36,132,231].includes(f))command.grabHeld=command.grabPressed=true;
-          command.jumpHeld=f>=312&&f<318;command.jumpPressed=f===312;command.jumpReleased=f===318;
+          if(f===24)command.grabHeld=command.grabPressed=true;
+          command.jumpHeld=f>=132&&f<138;command.jumpPressed=f===132;command.jumpReleased=f===138;
         }else{
           command.jumpHeld=f>=126&&f<138;command.jumpPressed=f===126;command.jumpReleased=f===138;
           if(f>=139&&f<154)command.moveX=1;
@@ -144,7 +144,7 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
       level.grindRails.length=0;level.rails.length=0;p.pos.set(0,0,0);p.prevPos.copy(p.pos);p.state='ride';p.grounded=true;p.speed=12;p.manualing=0;p.balanceBoostT=60;
     }
     for(let f=0;f<=Math.round(entry.duration*60);f++){
-      pose(f/60);if(f%2!==0&&!nativeLip)continue;
+      pose(f/60);if(f%2!==0&&!nativeLip&&id!=='under')continue;
       const live=[...binding.joints.values()].map(node=>node.getWorldPosition(new THREE.Vector3()));
       p.clearCharacterAppearance();
       const scalars=Object.fromEntries(p.animationRig.deformations.map(d=>[d.controlId,p.playerAnimationBridge.deformationValue(d.controlId)]));
@@ -176,13 +176,14 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
       if(nativeRevert)assert.ok(stateTrace.some(s=>s.stance===-1)&&stateTrace.at(-1).stance===1,'reverts must alternate normal/fakie');
       if(id==='under'){
         const at=t=>stateTrace[Math.round(t*60)];
-        assert.ok(at(.4).under<.01&&at(1.4).under>.99&&at(3.0).under<.01&&at(4.7).under>.99);
-        assert.ok(at(5.4).state==='air'&&at(6.8).grounded,'under-rail drop did not land');
+        assert.ok(at(.2).under<.01&&at(.95).under>.99&&at(2.1).under>.99);
+        assert.ok(at(2.4).state==='air'&&at(3.8).grounded,'under-rail drop did not land');
       }
       clip.metadata.transitionCapture='native Player.step inputs';
       clip.metadata.transitionEvidence=stateTrace.filter((s,i)=>i===0||s.state!==stateTrace[i-1].state||s.underFlag!==stateTrace[i-1].underFlag||s.lip!==stateTrace[i-1].lip||s.wall!==stateTrace[i-1].wall||s.manual!==stateTrace[i-1].manual||s.stance!==stateTrace[i-1].stance||s.reverting!==stateTrace[i-1].reverting);
       clip.metadata.reviewRailHeight=id==='under'?4.5:nativeLip?3.05:.8;
       if(nativeLip){clip.metadata.reviewPipe=true;clip.metadata.captureFps=60;}
+      if(id==='under')clip.metadata.captureFps=60;
     }
     clip.metadata.boardVisibility=frames.filter((f,i)=>i===0||f.boardVisible!==frames[i-1].boardVisible).map(f=>[f.time,f.boardVisible]);
     const track=(kind,target,values)=>{

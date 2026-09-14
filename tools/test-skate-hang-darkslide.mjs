@@ -22,7 +22,7 @@ await withSkateRuntime(async({player:p,server,THREE,Level})=>{
     p.state='air';p.grounded=false;p.pos.set(0,railY+.25,0);p.prevPos.copy(p.pos);p.vVel=-1;p.grindVel=12;p.regrindCd=0;p.underCoolT=0;
     p.axisF.set(0,0,-direction);p.axisL.set(-direction,0,0);p.visualYaw=Math.atan2(p.axisF.x,p.axisF.z)-Math.PI;
     if(!under)p.special.award(1200);
-    let held=0,landed=false,previous=null,flicked=false,jumpedClear=false,caughtLate=false,shoesLifted=false;
+    let held=0,landed=false,previous=null,flicked=false,jumpedClear=false,caughtLate=false,shoesLifted=false,maxHipCross=0;const catchHeights=[];
     for(let f=0;f<=(under?432:252);f++){
       const input=makeInput();
       if(f===(under?0:2)){input.grindPressed=input.grindHeld=true;if(!under)input.moveX=1;}
@@ -44,10 +44,13 @@ await withSkateRuntime(async({player:p,server,THREE,Level})=>{
       if(under&&p.state==='grind'){
         const m=p.boardG.userData.skateUnderRail;
         if(f>36&&f<80&&m){
-          if(m.boardTurn>.9&&m.footContact>.99&&m.handContact===0)flicked=true;
-          if(flicked&&m.footContact===0&&m.handContact===0){jumpedClear=true;const deckY=p.boardG.localToWorld(v(0,s.boardToGroundDistance,0)).y;if(Math.min(joint('socket-foot-left').y,joint('socket-foot-right').y)>deckY+.06)shoesLifted=true;}
-          if(jumpedClear&&m.handContact>.999)caughtLate=true;
+          if(m.boardTurn>.05&&m.boardTurn<.95&&m.bodyDrop>.002&&m.armReach>.02)flicked=true;
+          if(m.footContact===0&&m.bodyDrop<.8)jumpedClear=true;
+          if(m.handContact>.999)caughtLate=true;
+          if(m.airFeet>.5)shoesLifted=true;
+          maxHipCross=Math.max(maxHipCross,Math.abs(joint('hips').x),Math.abs(joint('hips').z-rail.pointAt(p.grindT).z));
         }
+        if(f>=36&&f<=110)catchHeights.push({f,y:joint('hips').y});
         const box=new THREE.Box3().setFromObject(p.headM);
         const dx=Math.max(box.min.x,0,-box.max.x),dy=Math.max(box.min.y-railY,0,railY-box.max.y);
         if(Math.hypot(dx,dy)<.10)issues.push({kind:'head crosses rail',stance,direction,f,w:p.underK,box:[box.min.toArray(),box.max.toArray()]});
@@ -80,11 +83,17 @@ await withSkateRuntime(async({player:p,server,THREE,Level})=>{
       if(f>release&&p.grounded)landed=true;
     }
     assert.ok(held>20&&landed,'the complete entry/hold/exit/landing was not reviewed');
-    if(under)assert.ok(flicked&&jumpedClear&&caughtLate&&shoesLifted,'entry must flick with feet, jump clear, then catch the trucks');
+    if(under){
+      assert.ok(flicked&&jumpedClear&&caughtLate&&shoesLifted,'turn, vertical drop and reach must overlap');
+      const rest=catchHeights.at(-1).y,low=catchHeights.reduce((a,b)=>b.y<a.y?b:a);
+      const rebound=Math.max(...catchHeights.filter(s=>s.f>low.f&&s.f<85).map(s=>s.y))-rest;
+      assert.ok(low.y-rest<-.08&&rebound>.005,`catch needs visible dip/rebound: ${low.y-rest}/${rebound}`);
+      assert.ok(maxHipCross<.025,'hips must drop vertically without an out-and-back detour');
+    }
   }
   runtime.dispose();level.dispose();
   console.log(JSON.stringify({frames,maxGrip,maxTransitGrip,maxShaftGap,minHeadGap,maxGripCase,maxDarkStep,maxDarkCase,transitionIssues:issues.slice(0,8)}));
-  assert.equal(issues.length,0,'head must swing around the rail during entry and return');
+  assert.equal(issues.length,0,'head must clear the rail while the hips travel vertically');
   assert.ok(maxTransitGrip<.006,'truck grips must remain planted through the swing');
   assert.ok(maxShaftGap<.002,'visible arm shafts must reach their actual elbow/wrist endpoints');
   assert.ok(maxDarkStep<.24,'Darkslide pelvis snaps during entry or exit');
