@@ -284,3 +284,18 @@ Revision 19 captures the complete native S17 charge/pop/flick/flight/catch/landi
 The expanded captured audit covers 2,783 samples and 22,870,694 garment vertices. S17’s sampled shoe clearance remains above 1.95 mm, shin clearance above 9.49 cm and shorts clearance above 21.61 cm through playback interpolation. S10–S16 capture tracks remain unchanged. Native contact/trick regressions, all 42 playback/migration checks and the production build pass. No full repository suite was run.
 
 Native lite/full gameplay, the packaged contact sheet and the S17 Animation Lab study were visually reviewed with no console errors.
+
+
+## S09 deeper charge, downward upper arm and springy recovery
+
+Revision 20 makes the grounded Revert load into a fuller charge-like crouch before the slide. The turn and limb envelopes now use quintic easing, with zero endpoint velocity/acceleration. A damped, finite rebound feeds the torso, individual leg lengths and reaching arm: the body compresses, rises slightly, dips and recovers into the new stance. The exact 180-degree rotation remains monotonic and the board stays planted throughout its original 0.52-second duration.
+
+The balancing arm’s old elbow target was above the shoulder. It is now below the shoulder, with a flattened outward direction and a downward reach. The upper arm visibly lengthens more than the forearm, and its elbow remains below the shoulder through the held reach. The wrist follows the forearm. A small spine lean accompanies the crouch without moving the feet or changing the whole skeleton’s scale. Eligibility, stance switching, scoring, speed tax and movement physics are unchanged.
+
+The strengthened native revert check covers 16 turns across both stances, both board orientations and two headings, plus a real vert landing. Across 1,320 frames and 4,207,616 garment vertices, hip compression reaches about 21 cm and knees stay below 61 degrees. The reaching upper arm stretches by up to 38%, with the elbow at least 36 cm below its shoulder during full reach. Every case shows a visible recovery dip of at least 1.42 cm, followed by a return upward. Both turns remain exactly 180 degrees, deck lift is zero, sole error stays below 1.42 mm and shorts clear the board by at least 26.98 cm. The balancing wrist stays within 7.5 degrees of its forearm.
+
+S09’s native study now retains 60 Hz samples so the elbow path and finite bounce survive playback interpolation. Its two separated turns still show normal → fakie → normal with complete entries and exits.
+
+The captured audit checks 2,783 samples and 22,870,694 garment vertices, now explicitly requiring the S09 elbow to remain below the shoulder between keys. S09’s captured shorts clearance remains above 28.12 cm. All other 41 captures’ motion tracks remain unchanged. Native contact/trick regressions, all 42 playback/migration checks and the production build pass. No full repository suite was run.
+
+Native lite/full gameplay, the packaged sheet and the updated S09 Lab study were visually reviewed with no console errors.

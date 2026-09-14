@@ -5,11 +5,13 @@ export const SKATE_REVERT_DURATION = .52;
 /** One grounded half-turn: crouch into the slide, then rise in the new stance. */
 export function sampleSkateRevert(age:number) {
   const u=clamp(age/SKATE_REVERT_DURATION,0,1);
-  const load=Math.sin(Math.PI*clamp(u/.24,0,1));
-  const land=Math.sin(Math.PI*clamp((u-.80)/.20,0,1));
-  const reach=smooth((u-.12)/.18)*(1-smooth((u-.74)/.24));
-  return {turn:smooth((u-.14)/.66),knee:.65*load+.70*reach+.70*land,
-    reach,compression:load+.6*land,rebound:Math.sin(Math.PI*clamp((u-.92)/.08,0,1))};
+  const ease=(n:number)=>{const t=clamp(n,0,1);return t*t*t*(10+t*(-15+6*t));};
+  const charge=ease(u/.20)*(1-ease((u-.48)/.44));
+  const settle=clamp((u-.44)/.56,0,1);
+  const rebound=Math.sin(3*Math.PI*settle)*Math.exp(-2.5*settle)*ease(settle/.10)*(1-ease((settle-.78)/.22));
+  const reach=ease(u/.24)*(1-ease((u-.58)/.42));
+  return {turn:ease((u-.16)/.68),knee:clamp(charge-.20*rebound,0,1),
+    reach,compression:clamp(charge-.12*rebound,0,1),rebound};
 }
 
 // The rail anchor and its clearance probe share the deeper hanging position.

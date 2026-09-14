@@ -138,14 +138,14 @@ export function skateImpossibleElasticity(motion:ReturnType<typeof sampleImpossi
   return values;
 }
 
-/** Independent recoil and a slightly longer balancing arm during the slide. */
+/** Charge-like gathering and a visibly lengthening downward balance arm. */
 export function skateRevertElasticity(motion:ReturnType<typeof sampleSkateRevert>,enteringStance:number):Record<string,number> {
   const side=enteringStance>0?'left':'right',values:Record<string,number>={
-    'deform.torso.length':1-.035*motion.compression+.02*motion.rebound,
-    [`deform.arm.upper.${side}.length`]:1+.08*motion.reach,
-    [`deform.arm.lower.${side}.length`]:1+.12*motion.reach,
+    'deform.torso.length':1-.09*motion.compression+.05*motion.rebound,
+    [`deform.arm.upper.${side}.length`]:1+(.30+.10*motion.rebound)*motion.reach,
+    [`deform.arm.lower.${side}.length`]:1+(.24+.08*motion.rebound)*motion.reach,
   };
   for(const leg of ['left','right'])for(const part of ['upper','lower'])
-    values[`deform.leg.${part}.${leg}.length`]=1-.025*motion.compression+.015*motion.rebound;
+    values[`deform.leg.${part}.${leg}.length`]=1-(part==='upper'?.10:.08)*motion.compression+.06*motion.rebound;
   return values;
 }

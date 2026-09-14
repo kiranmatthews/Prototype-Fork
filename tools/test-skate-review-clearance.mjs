@@ -19,10 +19,19 @@ await withSkateRuntime(async({player:p,THREE,server})=>{
     const footFlip=['flip:kick','flip:heel','flip:shove','flip:varial','flip:varial-heel','flip:hardflip','flip:inward-heel'].includes(clip.metadata.skateReviewId),trace=clip.metadata.transitionEvidence??[],flight=[];
     const flipStart=trace.find(s=>s.flipping)?.time??Infinity;
     const flipEnd=trace.find(s=>s.time>flipStart&&!s.flipping)?.time??-Infinity;
+    const reverts=trace.filter((s,i)=>s.reverting&&!trace[i-1]?.reverting);
     for(let f=0;f<=120;f++){
       const time=clip.duration*f/120;p.applyAnimationDeformations({});
       const pose=a.sampleComposedClip(clip,time,motion);binding.applyPose(pose,{resetUnspecified:true});
       p.applyAnimationDeformations(pose.scalars);p.syncCharacterAppearance({upperArmRestAngleWeight:0});p.group.updateMatrixWorld(true);samples++;
+      for(const entry of reverts){
+        const age=time-entry.time;
+        if(age<.13||age>.29)continue;
+        const side=entry.stance<0?'left':'right';
+        const shoulder=p.riderG.getObjectByName(`shoulder-${side}`).getWorldPosition(new THREE.Vector3());
+        const elbow=p.riderG.getObjectByName(`elbow-${side}`).getWorldPosition(new THREE.Vector3());
+        assert.ok(elbow.y<shoulder.y-.12,'captured revert upper arm bends upward');
+      }
       const s=p.boardG.userData.settings,k=s.overallScale;
       matrix.copy(p.boardG.matrixWorld).invert().multiply(shorts.matrixWorld);
       for(let i=0;i<shorts.geometry.attributes.position.count;i++){

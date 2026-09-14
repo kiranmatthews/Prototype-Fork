@@ -247,12 +247,12 @@ export class SkateAnimation {
     this.manualBalance += (clamp(p.balance,-1,1)-this.manualBalance)*(1-Math.exp(-10*p.dt));
     const springFlex = this.bodySpring.step(p.dt, {
       grounded:p.grounded || uprightGrind || p.darkslide || !!p.nineHundred,
-      charge:backflip?0:p.revert ? .7*p.revert.knee : p.nineHundred||p.lip?0:uprightGrind?p.charge*.35:p.charge,
+      charge:backflip?0:p.revert ? p.revert.knee : p.nineHundred||p.lip?0:uprightGrind?p.charge*.35:p.charge,
       verticalVelocity:p.verticalVelocity??0, launchVelocity:p.launchVelocity??0,
       contactBounce:p.grounded||uprightGrind?bounce:0, mount:clamp(p.mount??0,0,1),
       manual:p.manual !== 0 || !!p.lip || uprightGrind,
     });
-    const bodyFlex=backflip?THREE.MathUtils.lerp(springFlex,.62,backflip.compression):impossible?THREE.MathUtils.lerp(springFlex,.65,impossible.wrap):springFlex;
+    const bodyFlex=backflip?THREE.MathUtils.lerp(springFlex,.62,backflip.compression):impossible?THREE.MathUtils.lerp(springFlex,.65,impossible.wrap):p.revert?Math.min(1.24,springFlex+.10*p.revert.knee):springFlex;
     if(p.nineHundred && gw>0 && this.spine){
       this.spineBefore=this.spine.quaternion.clone();
       this.spine.rotation.x-=.50*smooth(gw);
@@ -624,9 +624,11 @@ export class SkateAnimation {
     }
     let handError = 0;
     if(p.revert && p.revert.reach>0){
+      if(this.spine){this.spineBefore??=this.spine.quaternion.clone();this.spine.rotation.x+=.28*p.revert.knee-.06*p.revert.rebound;}
       const hand=this.hands[(p.revertSign??1)>0?1:0],other=this.hands[(p.revertSign??1)>0?0:1];
       const shoulder=hand.root.getWorldPosition(new THREE.Vector3());
-      const outward=shoulder.clone().sub(other.root.getWorldPosition(new THREE.Vector3())).normalize().addScaledVector(this.up,-.65).normalize();
+      const outward=shoulder.clone().sub(other.root.getWorldPosition(new THREE.Vector3()));
+      outward.addScaledVector(this.up,-outward.dot(this.up)).normalize().addScaledVector(this.up,-.95-.12*p.revert.rebound).normalize();
       const reach=shoulder.distanceTo(hand.mid.getWorldPosition(new THREE.Vector3()))+
         hand.mid.getWorldPosition(new THREE.Vector3()).distanceTo(hand.end.getWorldPosition(new THREE.Vector3()));
       const relative=hand.end.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(hand.socket.getWorldQuaternion(new THREE.Quaternion()));
@@ -639,8 +641,9 @@ export class SkateAnimation {
         return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(handX,handY,handZ)).multiply(relative.clone().invert());
       };
       const handQ=wristAlong(outward);
-      const target=shoulder.clone().addScaledVector(outward,reach+.09);
-      const pole=shoulder.clone().addScaledVector(this.up,.3).addScaledVector(this.forward,.25);
+      const target=shoulder.clone().addScaledVector(outward,reach+.13);
+      // The elbow bends below the shoulder while the upper arm lengthens.
+      const pole=shoulder.clone().addScaledVector(this.up,-.65).addScaledVector(outward,.25).addScaledVector(this.forward,.15);
       this.solve(hand,target,handQ,pole,p.revert.reach);
       const forearm=hand.end.getWorldPosition(new THREE.Vector3()).sub(hand.mid.getWorldPosition(new THREE.Vector3())).normalize();
       this.worldRotation(hand.end,hand.end.getWorldQuaternion(new THREE.Quaternion()).slerp(wristAlong(forearm),p.revert.reach));

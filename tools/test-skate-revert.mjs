@@ -12,7 +12,7 @@ await withSkateRuntime(async({player:p,server,THREE,Level,level:park,step})=>{
   const yaw=node=>{const forward=v(0,0,1).transformDirection(node.matrixWorld);return Math.atan2(forward.x,forward.z);};
   const delta=(x,y)=>Math.atan2(Math.sin(x-y),Math.cos(x-y));
   const shorts=p.riderG.getObjectByName('meshy-shorts-surface'),point=v(),matrix=new THREE.Matrix4();
-  let frames=0,vertices=0,reverts=0,maxDeckLift=0,maxKnee=0,maxFoot=0,minClearance=Infinity,maxTurnStep=0,maxArmReach=0,minWristAlignment=1;
+  let frames=0,vertices=0,reverts=0,maxDeckLift=0,maxKnee=0,maxFoot=0,minClearance=Infinity,maxTurnStep=0,maxArmReach=0,minWristAlignment=1,maxHipDrop=0,maxUpperStretch=0,maxElbowAbove=-Infinity,minReboundDip=Infinity;
   function clearance(){
     const s=p.boardG.userData.settings,k=s.overallScale;
     matrix.copy(p.boardG.matrixWorld).invert().multiply(shorts.matrixWorld);
@@ -23,7 +23,7 @@ await withSkateRuntime(async({player:p,server,THREE,Level,level:park,step})=>{
       minClearance=Math.min(minClearance,gap);assert.ok(gap>.02,`revert shorts intersect the board: ${gap}`);
     }
   }
-  for(const entering of [-1,1])for(const deck of [0,Math.PI])for(const heading of [v(0,0,-1),v(1,0,0)]){
+  for(const entering of (process.env.REVERT_DEBUG?[-1]:[-1,1]))for(const deck of (process.env.REVERT_DEBUG?[0]:[0,Math.PI]))for(const heading of (process.env.REVERT_DEBUG?[v(0,0,-1)]:[v(0,0,-1),v(1,0,0)])){
     p.respawn(flat,true,true,{position:v(0,0,0),heading});runtime.restart();
     p.axisF.copy(heading);p.axisL.set(heading.z,0,-heading.x);p.visualYaw=Math.atan2(heading.x,heading.z)-Math.PI;
     p.freeSkate=p.airFromSkate=true;p.sidePose=p.deckPose=p.skatePose=1;p.skateMountT=-1;p.speed=12;p.stance=entering;p.deckYawOffset=deck;
@@ -31,10 +31,12 @@ await withSkateRuntime(async({player:p,server,THREE,Level,level:park,step})=>{
     p.group.updateMatrixWorld(true);
     let priorBoard=yaw(p.boardG),priorBody=yaw(p.bodyGroup),boardTurn=0,bodyTurn=0,active=false,sign=entering,turning=false,arm=false,kneeRise=0;const trace=[];
     const bend=()=>Math.max(...['left','right'].map(side=>at(`knee-${side}`).sub(at(`hip-${side}`)).angleTo(at(`ankle-${side}`).sub(at(`knee-${side}`)))));
-    const idleBend=bend();
+    const idleBend=bend(),hipHeight=()=>at('hip-left').add(at('hip-right')).multiplyScalar(.5).y-p.pos.y;
+    const idleHip=hipHeight(),idleUpper=Object.fromEntries(['left','right'].map(side=>[side,at(`shoulder-${side}`).distanceTo(at(`elbow-${side}`))]));
+    let hipDrop=0;const recovery=[];
     for(let f=0;f<165;f++){
       const input=makeInput(),start=f===15||f===95;
-      if(start){p.revertT=.3;input.transferPressed=true;sign=p.stance;boardTurn=bodyTurn=0;active=true;turning=arm=false;}
+      if(start){p.revertT=.3;input.transferPressed=true;sign=p.stance;boardTurn=bodyTurn=0;active=true;turning=arm=false;kneeRise=0;hipDrop=0;recovery.length=0;}
       // A fresh eligibility window during the active pose cannot stack a turn.
       if(f===20)p.revertT=.3;if(f>=20&&f<=30)input.transferPressed=true;
       const wasStance=p.stance;p.step(1/60,input,flat);frames++;p.group.updateMatrixWorld(true);
@@ -46,11 +48,17 @@ await withSkateRuntime(async({player:p,server,THREE,Level,level:park,step})=>{
         maxFoot=Math.max(maxFoot,p.boardG.userData.skateContact.footError);maxKnee=Math.max(maxKnee,bend());
         const lift=p.boardG.getWorldPosition(v()).y-p.pos.y;maxDeckLift=Math.max(maxDeckLift,Math.abs(lift));
         const motion=p.boardG.userData.skateRevert;
+        hipDrop=Math.max(hipDrop,idleHip-hipHeight());maxHipDrop=Math.max(maxHipDrop,hipDrop);
+        if(motion)recovery.push({turn:motion.turn,height:hipHeight()});
         assert.ok(Math.abs(lift)<.003,'revert must keep the deck on the ground');
         if(motion?.reach>.8){turning=true;kneeRise=Math.max(kneeRise,bend()-idleBend);}
         if(motion?.reach>.95){
           const side=sign>0?'left':'right';assert.equal(motion.hand,`socket-grip-${side}`);
           const shoulder=at(`shoulder-${side}`),elbow=at(`elbow-${side}`),wrist=at(`wrist-${side}`);
+          const elbowAbove=elbow.y-shoulder.y;maxElbowAbove=Math.max(maxElbowAbove,elbowAbove);
+          const stretch=shoulder.distanceTo(elbow)/idleUpper[side];maxUpperStretch=Math.max(maxUpperStretch,stretch);
+          assert.ok(elbowAbove<-.12,`upper arm bends upward: ${elbowAbove}`);
+          assert.ok(stretch>1.12,`upper arm did not lengthen: ${stretch}`);
           const reach=shoulder.distanceTo(wrist)/(shoulder.distanceTo(elbow)+elbow.distanceTo(wrist));maxArmReach=Math.max(maxArmReach,reach);
           const fingers=v(0,-1,0).transformDirection(p.riderG.getObjectByName(`socket-grip-${side}`).matrixWorld);
           const alignment=fingers.dot(wrist.clone().sub(elbow).normalize());minWristAlignment=Math.min(minWristAlignment,alignment);
@@ -59,9 +67,13 @@ await withSkateRuntime(async({player:p,server,THREE,Level,level:park,step})=>{
           trace.push({time:p.revertPoseT,reach,wristHeight:wrist.y-shoulder.y,knee:bend(),bodyFlex:p.boardG.userData.skateContact.bodyFlex});
         }
         if(p.revertPoseT<=0){
+          const crest=Math.max(...recovery.filter(f=>f.turn>.4&&f.turn<.75).map(f=>f.height));
+          const trough=Math.min(...recovery.filter(f=>f.turn>.75&&f.turn<.93).map(f=>f.height));
+          minReboundDip=Math.min(minReboundDip,crest-trough);
+          assert.ok(crest-trough>.012&&recovery.at(-1).height>crest+.10,'crouch must rebound, dip and recover');
           assert.ok(Math.abs(boardTurn+sign*Math.PI)<.002,`board rotated ${boardTurn*180/Math.PI} degrees`);
           assert.ok(Math.abs(bodyTurn+sign*Math.PI)<.002,`body rotated ${bodyTurn*180/Math.PI} degrees`);
-          assert.ok(turning&&arm&&kneeRise>.04,`missing down/out reach or crouch: ${JSON.stringify({turning,arm,kneeRise,idleBend,trace})}`);
+          assert.ok(turning&&arm&&kneeRise>.20&&hipDrop>.10,`missing down/out reach or crouch: ${JSON.stringify({turning,arm,kneeRise,hipDrop,idleBend,trace})}`);
           active=false;reverts++;
         }
       }
@@ -76,7 +88,7 @@ await withSkateRuntime(async({player:p,server,THREE,Level,level:park,step})=>{
   assert.ok(landed&&p.revertT>0);const previous=p.stance;step(makeInput({transferPressed:true}));assert.equal(p.stance,-previous);assert.ok(p.revertPoseT>0);
   for(let f=0;f<50;f++)step(makeInput());assert.equal(p.isBailing,false);assert.equal(p.revertPoseT,0);
   runtime.dispose();flat.dispose();
-  console.log({frames,reverts,vertices,maxDeckLift,maxKneeDegrees:maxKnee*180/Math.PI,maxFoot,minClearance,maxTurnStepDegrees:maxTurnStep*180/Math.PI,maxArmReach,maxWristBendDegrees:Math.acos(minWristAlignment)*180/Math.PI});
-  assert.equal(reverts,16);assert.ok(maxTurnStep<.35&&maxKnee<1.25&&maxFoot<.006);
-  console.log('PASS native grounded 180-degree reverts in both stances/deck orientations/headings: stance alternation, crouch, down/out arm, straight wrist, planted feet and shorts clearance.');
+  console.log({frames,reverts,vertices,maxDeckLift,maxKneeDegrees:maxKnee*180/Math.PI,maxFoot,minClearance,maxTurnStepDegrees:maxTurnStep*180/Math.PI,maxArmReach,maxHipDrop,maxUpperStretch,maxElbowAbove,minReboundDip,maxWristBendDegrees:Math.acos(minWristAlignment)*180/Math.PI});
+  assert.equal(reverts,process.env.REVERT_DEBUG?2:16);assert.ok(maxTurnStep<.35&&maxKnee<1.25&&maxFoot<.006);
+  console.log('PASS native grounded 180-degree reverts in both stances/deck orientations/headings: stance alternation, charge-like crouch, lengthening downward upper arm, straight wrist, planted feet and shorts clearance.');
 });

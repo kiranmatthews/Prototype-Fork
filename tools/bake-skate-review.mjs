@@ -174,7 +174,7 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
       if(nativeFootFlip){p.groundHit=p.queryGround(level);p.rideNormal.copy(p.groundHit.normal);p.charging=false;p.chargeTimer=0;p.speed=8;}
     }
     for(let f=0;f<=Math.round(entry.duration*tickFps);f++){
-      pose(f/tickFps);if(f%2!==0&&!nativeLip&&!nativeBackflip&&!nativeFootFlip&&id!=='under')continue;
+      pose(f/tickFps);if(f%2!==0&&!nativeLip&&!nativeBackflip&&!nativeFootFlip&&!nativeRevert&&id!=='under')continue;
       const live=[...binding.joints.values()].map(node=>node.getWorldPosition(new THREE.Vector3()));
       p.clearCharacterAppearance();
       const scalars=Object.fromEntries(p.animationRig.deformations.map(d=>[d.controlId,p.playerAnimationBridge.deformationValue(d.controlId)]));
@@ -215,7 +215,7 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
       clip.metadata.transitionEvidence=stateTrace.filter((s,i)=>i===0||s.state!==stateTrace[i-1].state||s.underFlag!==stateTrace[i-1].underFlag||s.lip!==stateTrace[i-1].lip||s.wall!==stateTrace[i-1].wall||s.manual!==stateTrace[i-1].manual||s.stance!==stateTrace[i-1].stance||s.reverting!==stateTrace[i-1].reverting||s.backflip!==stateTrace[i-1].backflip||s.flipping!==stateTrace[i-1].flipping);
       clip.metadata.reviewRailHeight=id==='under'?4.5:nativeLip||nativeBackflip?3.05:.8;
       if(nativeLip||nativeBackflip){clip.metadata.reviewPipe=true;clip.metadata.captureFps=60;}
-      if(id==='under'||nativeFootFlip)clip.metadata.captureFps=tickFps;
+      if(id==='under'||nativeFootFlip||nativeRevert)clip.metadata.captureFps=tickFps;
       if(denseCapture)clip.metadata.inputFps=60;
     }
     clip.metadata.boardVisibility=frames.filter((f,i)=>i===0||f.boardVisible!==frames[i-1].boardVisible).map(f=>[f.time,f.boardVisible]);
