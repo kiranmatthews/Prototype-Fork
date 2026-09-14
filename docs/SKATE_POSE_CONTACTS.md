@@ -314,3 +314,10 @@ Revision 21 replaces S18’s controlled-flight study with native flatground inpu
 The expanded capture audit checks 2,904 samples and 23,865,072 garment vertices, including S18’s held hip height, knee bend and toe-edge palm contact between keys. S18’s captured shorts clear by at least 21.46 cm. The other 41 motion tracks are preserved exactly. Native contact/trick regressions, all 42 playback/migration checks and the production build pass. No full repository suite was run.
 
 The final game was reviewed through the complete Indy entry, hold, release and landing in lite and full rendering, with no console errors. Subsequent work prioritizes gameplay animation over review-sheet enhancements.
+
+
+## S19 seated-back Melon
+
+Melon now keeps its hips above the board and shifts them toward the heel side, creating a seated-back pose with moderate knee bend. The torso folds at the anatomical waist; the leading hand reaches the heel edge between the feet while the trailing arm extends backward. In the normal stance this is the requested left-hand grab and right-arm counterbalance; the pose mirrors with the opposite stance. The shared waist/contact path preserves Indy’s existing values and retains independent segment elasticity, planted feet and smooth release.
+
+Sixteen native sequences cover both stances, reversed decks and all four vert directions. Across 1,320 frames and 16,850,224 mesh vertices, knees stay below 55 degrees, shorts clear the board by at least 18.88 cm, feet stay within 1 mm and held grip within 2.91 mm. The backward arm reach, rearward hip placement, head/shoe clearance and clean release/landing all pass. Indy, contact/trick regressions, playback checks and the production build pass. Native lite/full gameplay review has no console errors. Revision 22 synchronizes S19’s existing study from gameplay; the other 41 motion tracks are preserved. No full suite was run.

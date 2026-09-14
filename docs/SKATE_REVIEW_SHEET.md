@@ -97,3 +97,5 @@ Revision 21 raises S18 Indy out of its low squat and supplies the toe-edge hand 
 Use `SKATE_REVIEW_ONLY=grab:indy node tools/bake-skate-review.mjs` to rebuild only Indy while preserving every other existing capture. The filter accepts source IDs, validates them, and requires a previous capture for each preserved entry.
 
 The revision 21 audit covers 2,904 samples and 23,865,072 garment vertices, with S18 hip/knee/grip checks between keys. The other 41 motion tracks are unchanged.
+
+Revision 22 synchronizes the seated-back, waist-driven S19 Melon gameplay fix. Other 41 motion tracks are unchanged; no review interface changes were needed.
