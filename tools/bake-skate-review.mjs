@@ -50,7 +50,9 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
     let previousCommand=null;
     const nativeGrind=category==='grind'||id==='darkslide';
     const nativeLip=category==='lip',nativeWall=id==='Wallride',nativeManual=id==='Manual'||id==='Nose Manual';
-    const nativeRevert=id==='Revert',nativeGrab=category==='grab'&&(id==='indy'||id==='melon'||id==='nose');
+    const nativeRevert=id==='Revert',nativeGrab=category==='grab'&&(id==='indy'||id==='melon'||id==='nose'||id==='tail');
+    // Down + grab is Tailgrab in parks; campaign controls reserve it for slam.
+    level.skatepark=nativeGrab&&id==='tail';
     const nativeBackflip=id==='kickflip-mctwist',nativeFootFlip=category==='flip'&&(id==='kick'||id==='heel'||id==='shove'||id==='imposs'||id==='varial'||id==='varial-heel'||id==='hardflip'||id==='inward-heel');
     const native=nativeGrind||nativeLip||nativeWall||nativeManual||nativeRevert||nativeBackflip||nativeFootFlip||nativeGrab;
     const arena=nativeLip||nativeBackflip?lipLevel:nativeWall?wallLevel:level;
@@ -78,7 +80,7 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
           if(p.state==='air'){
             indyAirFrames++;
             command.grabHeld=indyAirFrames>=3&&indyAirFrames<22;
-            if(indyAirFrames===3){command.moveX=id==='melon'?-1:id==='nose'?0:1;command.moveY=id==='nose'?1:0;command.grabPressed=true;}
+            if(indyAirFrames===3){command.moveX=id==='melon'?-1:(id==='nose'||id==='tail')?0:1;command.moveY=id==='nose'?1:id==='tail'?-1:0;command.grabPressed=true;}
           }
         }else if(nativeBackflip){
           command.jumpHeld=landedAt===null;
@@ -187,7 +189,7 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
       p.axisF.set(-.45,0,-1).normalize();p.axisL.set(p.axisF.z,0,-p.axisF.x);p.airFromSkate=p.freeSkate=true;p.airMomentum=true;p.airGrav='board';
     }else if(nativeManual||nativeRevert||nativeFootFlip||nativeGrab){
       level.grindRails.length=0;level.rails.length=0;p.pos.set(0,0,0);p.prevPos.copy(p.pos);p.state='ride';p.grounded=true;p.speed=12;p.manualing=0;p.balanceBoostT=60;
-      if(nativeFootFlip||nativeGrab){p.groundHit=p.queryGround(level);p.rideNormal.copy(p.groundHit.normal);p.charging=false;p.chargeTimer=0;p.speed=8;}
+      if(nativeFootFlip||nativeGrab){p.groundHit=p.queryGround(level);p.rideNormal.copy(p.groundHit.normal);p.charging=false;p.chargeTimer=0;p.speed=8;if(level.skatepark)p.parkVelocity.copy(p.axisF).multiplyScalar(8);}
     }
     for(let f=0;f<=Math.round(entry.duration*tickFps);f++){
       pose(f/tickFps);if(f%2!==0&&!nativeLip&&!nativeBackflip&&!nativeFootFlip&&!nativeRevert&&!nativeGrab&&id!=='under')continue;
@@ -221,7 +223,7 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
       if(nativeManual)assert.ok(stateTrace.some(s=>s.manual!==0)&&stateTrace.at(-1).manual===0,'manual cycle must load and release');
       if(nativeRevert)assert.ok(stateTrace.some(s=>s.stance===-1)&&stateTrace.at(-1).stance===1,'reverts must alternate normal/fakie');
       if(nativeFootFlip)assert.ok(stateTrace.some(s=>s.flipping)&&landedAt!==null,`${entry.name} must pop, flick and land`);
-      if(nativeGrab)assert.ok(stateTrace.some(s=>s.grabPhase==='held')&&landedAt!==null&&stateTrace.at(-1).grabWeight===0,`${entry.name} must grab, release and land`);
+      if(nativeGrab)assert.ok(stateTrace.some(s=>s.grabPhase==='held')&&landedAt!==null&&stateTrace.at(-1).grabWeight===0,`${entry.name} must grab, release and land: ${JSON.stringify({held:stateTrace.filter(s=>s.grabPhase==='held').length,landedAt,last:stateTrace.at(-1),kind:p.grabKind})}`);
       if(nativeBackflip)assert.ok(stateTrace.some(s=>s.backflip)&&landedAt!==null,'Backflip must launch, rotate and land');
       if(id==='under'){
         const at=t=>stateTrace[Math.round(t*60)];

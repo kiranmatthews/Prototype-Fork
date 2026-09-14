@@ -101,3 +101,5 @@ The revision 21 audit covers 2,904 samples and 23,865,072 garment vertices, with
 Revision 22 synchronizes the seated-back, waist-driven S19 Melon gameplay fix. Other 41 motion tracks are unchanged; no review interface changes were needed.
 
 Revision 23 synchronizes the seated S20 Nosegrab and forward nose reach from gameplay. Other 41 motion tracks remain unchanged.
+
+Revision 24 synchronizes the seated S21 Tailgrab and back-arm tail reach from gameplay. Its native capture uses park controls, where down + grab selects Tailgrab. Other 41 motions remain unchanged.
