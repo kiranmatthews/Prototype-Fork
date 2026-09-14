@@ -74,7 +74,7 @@ export const GRAB_CONTACTS = {
   method: { hand: 'leading', edge: 'heel', pitch: -.25, roll: -.85, tuck: .16 },
   mute: { hand: 'leading', edge: 'toe', pitch: .08, roll: .20, tuck: .06 },
   stalefish: { hand: 'trailing', edge: 'heel', pitch: -.12, roll: -.30, tuck: .12 },
-  japan: { hand: 'leading', edge: 'toe', pitch: -.22, roll: .92, tuck: .18 },
+  japan: { hand: 'leading', edge: 'toe', pitch: -.10, roll: -1.30, tuck: .18 },
 } as const satisfies Record<GrabTrickKind, { hand: string; edge: string; pitch: number; roll: number; tuck: number }>;
 
 export const LIP_CONTACTS = {
