@@ -117,11 +117,12 @@ await withSkateRuntime(async ({player:p,level,THREE,server,step})=>{
     assert.ok(Math.max(...bends)<1.30&&(bends[0]+bends[1])/2<.88,'manual knees are too deeply bent');
     if(bal===0){
       const arms=['shoulder-left','shoulder-right','wrist-left','wrist-right'].map(n=>p.riderG.getObjectByName(n));
-      const before=arms.map(n=>n.getWorldQuaternion(new THREE.Quaternion()));
+      // Nonuniform segment scales can leave decomposed world quaternions non-unit.
+      const before=arms.map(n=>n.getWorldQuaternion(new THREE.Quaternion()).normalize());
       const excursion=arms.map(()=>0);
       for(let f=0;f<48;f++){
         tick();checkFeet('manual balance motion');
-        for(let i=0;i<arms.length;i++)excursion[i]=Math.max(excursion[i],before[i].angleTo(arms[i].getWorldQuaternion(new THREE.Quaternion())));
+        for(let i=0;i<arms.length;i++)excursion[i]=Math.max(excursion[i],before[i].angleTo(arms[i].getWorldQuaternion(new THREE.Quaternion()).normalize()));
       }
       for(let i=0;i<arms.length;i++)assert.ok(excursion[i]>.08,`${arms[i].name} does not make visible manual balance corrections: ${excursion[i]}`);
     }

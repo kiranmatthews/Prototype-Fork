@@ -252,7 +252,10 @@ export class SkateAnimation {
     const endGrab=nosegrab||tailgrab,endDirection=nosegrab?1:-1;
     const method=grabKind==='method'&&gw>.001&&!p.nineHundred;
     const mute=grabKind==='mute'&&gw>.001&&!backflip&&!p.nineHundred;
-    const waistGrab=indy||melon||endGrab||method||mute;
+    const stalefish=grabKind==='stalefish'&&gw>.001&&!p.nineHundred;
+    // Load the knees first, then fold sideways into the trailing heel grab.
+    const grabFold=stalefish?smooth((gw-.12)/.88):smooth(gw);
+    const waistGrab=indy||melon||endGrab||method||mute||stalefish;
     if(waistGrab)deckAlignment=smooth(gw);
     const footFrame=deckAlignment>.999?this.body:undefined;
     const flipPose = p.flip && !backflip ? sampleDeckTrick(p.flip, p.flipProgress) : null;
@@ -270,7 +273,7 @@ export class SkateAnimation {
       contactBounce:p.grounded||uprightGrind?bounce:0, mount:clamp(p.mount??0,0,1),
       manual:p.manual !== 0 || !!p.lip || uprightGrind,
     });
-    const bodyFlex=waistGrab?THREE.MathUtils.lerp(springFlex,method?1.10:melon||mute?.95:endGrab?1.05:.65,smooth(gw)):backflip?THREE.MathUtils.lerp(springFlex,.62,backflip.compression):impossible?THREE.MathUtils.lerp(springFlex,.65,impossible.wrap):p.revert?Math.min(1.24,springFlex+.10*p.revert.knee):springFlex;
+    const bodyFlex=waistGrab?THREE.MathUtils.lerp(springFlex,method?1.10:stalefish?1.05:melon||mute?.95:endGrab?1.05:.65,stalefish?smooth(gw/.65):smooth(gw)):backflip?THREE.MathUtils.lerp(springFlex,.62,backflip.compression):impossible?THREE.MathUtils.lerp(springFlex,.65,impossible.wrap):p.revert?Math.min(1.24,springFlex+.10*p.revert.knee):springFlex;
     if(p.nineHundred && gw>0 && this.spine){
       this.spineBefore=this.spine.quaternion.clone();
       this.spine.rotation.x-=.50*smooth(gw);
@@ -487,6 +490,7 @@ export class SkateAnimation {
     const pelvis = footTargets[0].clone().add(footTargets[1]).multiplyScalar(.5);
     const load = p.grind ? pivotZ * .24 : p.manual ? pivotZ * .22 : 0;
     pelvis.addScaledVector(Z.clone().applyQuaternion(this.boardQ), load);
+    if(stalefish)pelvis.addScaledVector(Z.clone().applyQuaternion(footQ),-.40*grabFold);
     if(mute)pelvis.addScaledVector(Z.clone().applyQuaternion(footQ),-.24*smooth(gw));
     if(method)pelvis.addScaledVector(Z.clone().applyQuaternion(footQ),-.50*smooth(gw));
     if(melon)pelvis.addScaledVector(Z.clone().applyQuaternion(footQ),-.44*smooth(gw));
@@ -706,10 +710,10 @@ export class SkateAnimation {
       if(waistGrab&&this.spine&&this.waist){
         this.spineBefore??=this.spine.quaternion.clone();
         this.waistBefore??=this.waist.quaternion.clone();
-        const hinge=this.waistRest.clone().multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(mute?1.40:method?1.50:endGrab?.30:melon?1.32:1.82,0,endGrab?(parity*endDirection<0?1.185:1.38)*p.stance*parity*endDirection:(mute?.62:method?.72:melon?.65:-.58)*p.stance,'ZXY')));
+        const hinge=this.waistRest.clone().multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(stalefish?1.25:mute?1.40:method?1.50:endGrab?.30:melon?1.32:1.82,0,endGrab?(parity*endDirection<0?1.185:1.38)*p.stance*parity*endDirection:(stalefish?-.90:mute?.62:method?.72:melon?.65:-.58)*p.stance,'ZXY')));
         const spineFold=mute?this.spineRest.clone().multiply(new THREE.Quaternion().setFromAxisAngle(X,.22)):this.spineRest;
         this.spine.quaternion.slerp(spineFold,smooth(gw));
-        this.waist.quaternion.slerp(hinge,smooth(gw));
+        this.waist.quaternion.slerp(hinge,grabFold);
       }
       const handIndex=endGrab?(parity*endDirection>0?front:back):grab.hand==='leading'?front:back;
       const hand = this.hands[handIndex];
@@ -730,7 +734,7 @@ export class SkateAnimation {
       const handY = Y.clone().applyQuaternion(this.boardQ);
       const handX = handY.clone().cross(across).normalize();
       const handQ = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(handX, handY, across)).multiply(relative.invert());
-      const pole = method?hand.root.getWorldPosition(new THREE.Vector3()).addScaledVector(across,.60).addScaledVector(Z.clone().applyQuaternion(this.boardQ),.30*parity).addScaledVector(handY,-.25)
+      const pole = method||stalefish?hand.root.getWorldPosition(new THREE.Vector3()).addScaledVector(across,.60).addScaledVector(Z.clone().applyQuaternion(this.boardQ),(stalefish?-.30:.30)*parity).addScaledVector(handY,-.25)
         :hand.root.getWorldPosition(new THREE.Vector3()).addScaledVector(this.right,(grab.edge === 'heel' ? -1 : 1)*p.stance*.7).addScaledVector(this.forward,grab.hand === 'leading'?.3:-.45);
       // Fold the chest toward the board so the short cartoon arm can reach
       // without stretching bones or pulling the feet off the deck.
@@ -776,12 +780,12 @@ export class SkateAnimation {
           handError = this.solve(hand, target, handQ, pole);
         }
       }
-      if(melon||method||mute){
-        const free=this.hands[back],shoulder=free.root.getWorldPosition(new THREE.Vector3());
+      if(melon||method||mute||stalefish){
+        const free=this.hands[stalefish?front:back],shoulder=free.root.getWorldPosition(new THREE.Vector3());
         const toe=Z.clone().applyQuaternion(footQ);
         const outward=shoulder.clone().sub(hand.root.getWorldPosition(new THREE.Vector3()));
         outward.addScaledVector(this.up,-outward.dot(this.up)).normalize();
-        const direction=outward.addScaledVector(toe,mute?-.90:-.95).addScaledVector(this.up,mute?.12:method?-.35:.18).normalize();
+        const direction=outward.addScaledVector(toe,stalefish?-.65:mute?-.90:-.95).addScaledVector(this.up,stalefish?.50:mute?.12:method?-.35:.18).normalize();
         const length=shoulder.distanceTo(free.mid.getWorldPosition(new THREE.Vector3()))+free.mid.getWorldPosition(new THREE.Vector3()).distanceTo(free.end.getWorldPosition(new THREE.Vector3()));
         const mount=free.end.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(free.socket.getWorldQuaternion(new THREE.Quaternion()));
         const y=direction.clone().negate(),x=y.clone().cross(this.up).normalize();

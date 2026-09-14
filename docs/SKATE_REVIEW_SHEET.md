@@ -107,3 +107,5 @@ Revision 24 synchronizes the seated S21 Tailgrab and back-arm tail reach from ga
 Revision 25 synchronizes Method’s extended legs, head-clear arm placement and inward-facing palm from gameplay. Other 41 motion tracks remain unchanged.
 
 Revision 26 synchronizes Mute’s seated stance, upper-body fold and clear release path from gameplay. Other 41 motion tracks remain unchanged.
+
+Revision 27 synchronizes Stalefish’s knee load, side fold and trailing heel-edge grip from gameplay. Other 41 motion tracks remain unchanged.
