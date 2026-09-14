@@ -683,11 +683,43 @@ try {
   assert.equal(boardPlayer.slamActive, false, "held board grab became a slam after moving the stick down");
   assert.equal(boardPlayer.freeSkate, true, "held board grab unexpectedly stowed the board");
 
+  const airGrabs = [
+    [0, 0, 'indy'], [1, 0, 'indy'], [-1, 0, 'melon'],
+    [0, 1, 'nose'], [-1, 1, 'method'], [1, 1, 'mute'],
+    [0, -1, 'tail'], [-1, -1, 'stalefish'], [1, -1, 'japan'],
+  ];
+  for (const parkControls of [false, true]) for (const stance of [-1, 1]) for (const [x, y, kind] of airGrabs) {
+    level.skatepark = parkControls;
+    prepareBoardAir();
+    boardPlayer.stance = stance;
+    tickBoard(makeInput({ moveX: x, moveY: y, grabHeld: true, grabPressed: true }));
+    assert.equal(boardPlayer.grabKind, kind, `air grab ${x}/${y} in ${parkControls ? 'park' : 'campaign'}`);
+    assert.equal(boardPlayer.slamActive, false, 'skating grab became bodyslam');
+    assert.equal(boardPlayer.airFromSkate, true, 'grab stowed the board');
+    for (let f = 0; f < 12; f++) tickBoard(makeInput({ grabHeld: true }));
+    assert.equal(boardPlayer.grabKind, kind, 'recentering changed the grab');
+    assert.equal(boardPlayer.grabPhase, 'held', 'grab did not sustain');
+    for (let f = 0; f < 12; f++) tickBoard(makeInput());
+    assert.equal(boardPlayer.grabPhase, 'none', 'grab did not release');
+    assert.equal(boardPlayer.slamActive, false, 'grab release started slam');
+  }
+  level.skatepark = false;
+
   prepareBoardAir();
   tickBoard(makeInput({ moveY: -1, grabHeld: true, grabPressed: true }));
-  assert.equal(boardPlayer.slamActive, true, "fresh Circle+down no longer starts a board-air slam");
-  assert.equal(boardPlayer.freeSkate, false, "board-air slam did not stow the board");
-  assert.equal(boardPlayer.airFromSkate, false, "board-air slam retained skate-air ownership");
+  assert.equal(boardPlayer.slamActive, false, "fresh Circle+down must remain a skating grab");
+  assert.equal(boardPlayer.freeSkate, true, "airborne grab stowed the board");
+  assert.equal(boardPlayer.airFromSkate, true, "airborne grab lost skate ownership");
+  assert.equal(boardPlayer.grabKind, "tail");
+  assert.ok(boardPlayer.grabPhase === "enter" || boardPlayer.grabPhase === "held");
+
+  // The on-foot slam keeps its existing anticipation and fall animation.
+  prepareBoardAir();
+  boardPlayer.freeSkate = boardPlayer.airFromSkate = false;
+  boardPlayer.airGrav = "foot";
+  boardPlayer.boardOllieAir = false;
+  tickBoard(makeInput({ grabHeld: true, grabPressed: true }));
+  assert.equal(boardPlayer.slamActive, true, "fresh on-foot Circle no longer starts slam");
   assert.equal(boardAnimationRuntime.activeClipId, "player.slam");
   closeTo(
     boardAnimationRuntime.diagnostics.timelineTime,

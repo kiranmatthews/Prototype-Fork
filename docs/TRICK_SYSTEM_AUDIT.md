@@ -56,7 +56,7 @@ These are a custom, consistent loadout, rather than a claim that every THUG char
 | Down + left | Stalefish | 350 | 550/s |
 | Down + right | Japan | 350 | 550/s |
 
-Release before landing: the existing 0.15-second return animation is part of the landing requirement. The park's down + Circle remains a Tailgrab in air; the other levels retain their authored slam behavior where applicable.
+Release before landing: the existing 0.15-second return animation is part of the landing requirement. All skating airs use the same directional grabs as vert: down + Circle selects Tailgrab, with Stalefish/Japan on the diagonals. Body slam is available only during on-foot air.
 
 ## Grind loadout
 

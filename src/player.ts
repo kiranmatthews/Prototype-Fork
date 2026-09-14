@@ -796,7 +796,7 @@ export class Player {
   private landingScoring = false; // landing-tick payouts still count as air tricks
   private crawling = false; // Circle held while stopped: all-fours crawl
   private crawlPose = 0;
-  private slamActive = false; // Circle+down in the air: pancake body slam
+  private slamActive = false; // Fresh Circle in on-foot air: pancake body slam
   private slamHangT = 0; // cartoon hang before the drop
   private slamFlatT = 0; // lie pancaked on the ground for a beat after impact
   private hangPose = 0;
@@ -930,7 +930,7 @@ export class Player {
   }
   // Whether the current airtime started from SKATING (ollie, slide/grind
   // jump, vert launch, skate edge-fall). Grabs are board tricks: a standing
-  // Crash hop never offers them (the slam stays available from any air).
+  // Crash hop never offers them (the slam stays available from on-foot air).
   private airFromSkate = false;
   // WHICH GRAVITY THIS AIRTIME FLIES UNDER. A skate air and a platforming hop
   // are different arcs now, so the choice has to be a property of the LAUNCH,
@@ -7054,7 +7054,7 @@ export class Player {
       this.airTapT = 0;
     }
 
-    // Circle + down: pancake body slam, Wile E. Coyote rules — engage, FREEZE
+    // On-foot Circle: pancake body slam, Wile E. Coyote rules — engage, FREEZE
     // in the air for a beat (momentum screeches to nothing), then plummet.
     // The impact breaks everything around you (TNT pops safely, nitro does NOT).
     // VERT HANG TIME: glued to the wall. The planar position eases back to
@@ -7147,48 +7147,20 @@ export class Player {
       }
     }
 
-    // PANCAKE SLAM. On foot it is a fresh Circle press ALONE — that is the move
-    // you reach for mid-air over a crate and it should not want a direction as
-    // well. The fresh edge is load-bearing: Circle held from a grounded crouch
-    // must stay a crouch-boosted jump after X releases, not become a slam on the
-    // first air tick. On the BOARD it is fresh Circle + DOWN, because there
-    // Circle on its own has to stay free for the grab. Either way it is a
-    // platforming move, so a board slam
-    // also STOWS THE BOARD: you plummet, land on your feet, and carry on
-    // running (exactly like a slide jump, which is the other way off the deck).
-    // Vert air is the one place it never fires — a pipe/wall air belongs to the
-    // grab and the spin, and a slam there would eat the drop back in.
+    // On-foot pancake slam requires a fresh Circle press. A held crouch
+    // remains a crouch-jump; every skating air keeps Circle for grabs.
     const vertTrick = this.vertAir || this.pipeHang;
     const slamNow =
+      !this.airFromSkate &&
       !this.parkControls &&
       !this.slamActive &&
       !this.isBailing && // a ragdolling body can't slam (Circle may still be held from the crash)
       !vertTrick &&
-      // a street grab already committed owns its air — rolling the stick to
-      // down mid-Melon must not detonate into a slam. A FRESH Circle+down
-      // chord still slams, because updateGrab runs AFTER the state step (see
-      // the call order in step()): this test reads the phase as it stood at
-      // the top of the frame, which for a brand-new chord is still 'none'.
-      // updateGrab's own hard-down guard then refuses to open the grab.
       this.grabPhase !== 'enter' &&
       this.grabPhase !== 'held' &&
       this.pendingSpecialGrab === null &&
-      input.grabPressed &&
-      (!this.airFromSkate || this.rawInput.moveY < -0.5);
+      input.grabPressed;
     if (slamNow) {
-      if (this.airFromSkate) {
-        // off the deck: the rest of this air, the landing and everything after
-        // it are on foot
-        if (this.vertBoardRelease.pressArmed && input.jumpHeld)
-          this.jumpReleaseRearmRequired = true;
-        resetVertBoardRelease(this.vertBoardRelease);
-        this.airFromSkate = false;
-        this.airGrav = 'foot';
-        this.freeSkate = false;
-        this.slideFromWalk = true; // on-foot touchdown clamp: no skate takeover on landing
-        this.stepOff = true;
-        this.airMomentum = false;
-      }
       this.slamActive = true;
       this.vertAir = false; // the slam plummets straight down, no wall glue
       this.vertLatVel = 0;
@@ -10700,14 +10672,12 @@ export class Player {
       // the release-snap below plus the landing tolerance, and coming down
       // mid-rotation is now judged clean / sketchy / bail on VERT airs the
       // same as street ones. Big spins are earned again.)
-      // Outside parks, board air retains the authored down + Circle slam.
-      // The park loadout uses Tailgrab there and always requires a fresh
-      // entry command; carrying the ground brake into air cannot start one.
+      // Street and vert skating share all directional grabs. Park controls
+      // still require a fresh press so a ground brake cannot become a grab.
       const streetGrabAir =
         this.airGrav === 'board' &&
         !this.wallriding &&
-        !this.isBailing &&
-        (this.parkControls || grabActive || this.rawInput.moveY >= -0.5);
+        !this.isBailing;
       if (
         input.grabHeld &&
         !this.grabBlockedUntilRelease &&
