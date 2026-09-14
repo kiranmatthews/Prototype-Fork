@@ -264,7 +264,7 @@ export class JungleAssetKit {
   private depths=new Map<RenderKind,THREE.MeshDepthMaterial>();
   private loose=new Set<THREE.Group>();private disposed=false;
   private sourceCount=0;private count=0;private readyCount=0;private skipped=0;
-  constructor(private batched:boolean,private lite:boolean,private depthFade=false,private lodDistanceScale=1){this.root.name="Jungle Ruins modular kit";}
+  constructor(private batched:boolean,private lite:boolean,private depthFade=false){this.root.name="Jungle Ruins modular kit";}
   private material(kind:RenderKind,template:Template):THREE.MeshStandardMaterial|THREE.MeshLambertMaterial|THREE.MeshBasicMaterial {
     const cached=this.materials.get(kind);if(cached)return cached;
     const spec=renderSpec(kind),isVine=kind==="vine"||kind==="junglevine";
@@ -350,12 +350,9 @@ export class JungleAssetKit {
           mesh.instanceMatrix.needsUpdate=true;if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;
           mesh.computeBoundingBox();mesh.computeBoundingSphere();this.configure(mesh,bucket.kind);return mesh;
         };
-        if(template.lodGeometry){
-          const lod=new THREE.LOD();lod.name=renderSpec(bucket.kind).label+' cell';lod.position.copy(center);
-          // Large canopy silhouettes keep detail farther away than a single masonry block.
-          const distance=(renderSpec(bucket.kind).wind?48:32)*this.lodDistanceScale;
-          lod.addLevel(make(template.geometry),0);lod.addLevel(make(template.lodGeometry),distance,.12);this.root.add(lod);
-        }else{const mesh=make(template.geometry);mesh.position.copy(center);this.root.add(mesh);}
+        // Keep the authored mesh at every distance. Cell bounds still allow
+        // frustum culling without changing silhouettes as the camera moves.
+        const mesh=make(template.geometry);mesh.position.copy(center);this.root.add(mesh);
         this.readyCount+=bucket.transforms.length;
       }).catch(error=>this.failed(bucket.kind,error)));
     }

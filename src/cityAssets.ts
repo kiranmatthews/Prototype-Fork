@@ -251,12 +251,12 @@ export class CityAssetKit {
  flush():void {
   for(const bucket of this.buckets.values())this.jobs.push(this.template(bucket.kind).then(template=>{if(this.disposed)return;
    const center=new THREE.Vector3();for(const m of bucket.matrices)center.add(new THREE.Vector3().setFromMatrixPosition(m));center.multiplyScalar(1/bucket.matrices.length);
-   const inverse=new THREE.Matrix4().makeTranslation(-center.x,-center.y,-center.z),lod=new THREE.LOD(),bounds=new THREE.Box3();lod.position.copy(center);lod.name=CITY_ASSETS[bucket.kind].label;
+   const inverse=new THREE.Matrix4().makeTranslation(-center.x,-center.y,-center.z),cell=new THREE.Group(),bounds=new THREE.Box3();cell.position.copy(center);cell.name=CITY_ASSETS[bucket.kind].label;
    const build=(parts:Part[])=>{const group=new THREE.Group();for(const part of parts){const m=new THREE.InstancedMesh(part.geometry,part.material,bucket.matrices.length);bucket.matrices.forEach((matrix,i)=>{m.setMatrixAt(i,inverse.clone().multiply(matrix));m.setColorAt(i,bucket.colors[i]);});m.computeBoundingBox();
     // A sphere transformed by max-axis scale can under-bound a graded instance.
     // The transformed box encloses all instances, including their full descent.
     m.boundingSphere=m.boundingBox!.getBoundingSphere(new THREE.Sphere());bounds.union(m.boundingBox!);m.updateMatrix();m.matrixAutoUpdate=false;m.castShadow=m.receiveShadow=true;m.userData.cityAsset=bucket.kind;group.add(m);}return group;};
-   lod.addLevel(build(template.near),0);if(template.far!==template.near)lod.addLevel(build(template.far),130,.15);lod.userData.cityBounds=bounds.translate(center);lod.userData.cameraCutaway=bucket.cutaway;lod.updateMatrix();lod.matrixAutoUpdate=false;this.root.add(lod);this.loaded+=bucket.matrices.length;
+   cell.add(build(template.near));cell.userData.cityBounds=bounds.translate(center);cell.userData.cameraCutaway=bucket.cutaway;cell.updateMatrix();cell.matrixAutoUpdate=false;this.root.add(cell);this.loaded+=bucket.matrices.length;
   }).catch(e=>this.failed(bucket.kind,e)));this.buckets.clear();
  }
  private failed(kind:CityKind,error:unknown):void {if(this.disposed||this.errors.includes(kind))return;this.errors.push(kind);if((error as {response?:{url?:string}}).response?.url!=='')console.error('City asset failed: '+kind,error);}

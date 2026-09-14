@@ -38,6 +38,8 @@ jobs:
         run: npm run check:all
       - name: World-map startup regression
         run: node tools/test-world-map-locomotion.mjs
+      - name: Offline cache regression
+        run: npm run check:offline
       - run: npm run build
       - uses: actions/configure-pages@v5
         with:

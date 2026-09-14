@@ -72,11 +72,8 @@ export class NightworksRocks {
         material.name=`Nightworks ${kind}`;
         if(requested.tex!==undefined)material.userData.texKind=requested.tex;
         this.materials.set(key,material);}
-      const lod=new THREE.LOD();
-      const near=new THREE.Mesh(template.geometry,material);near.receiveShadow=true;near.castShadow=true;lod.addLevel(near,0);
-      if(template.lodGeometry){const far=new THREE.Mesh(template.lodGeometry,material);far.receiveShadow=true;lod.addLevel(far,42,.15);}
-      // LOD distances live in world units despite the fitted parent's nonuniform scale.
-      holder.add(lod);holder.userData.assetReady=true;this.readyCount++;
+      const mesh=new THREE.Mesh(template.geometry,material);mesh.receiveShadow=true;mesh.castShadow=true;
+      holder.add(mesh);holder.userData.assetReady=true;this.readyCount++;
       holder.traverse(object=>{object.userData.editorIdx=parent.userData.editorIdx;});
       if(proxy&&fallback){fallback.visible=false;proxy.userData.rockLoaded=true;}
     }).catch(error=>{if(!this.disposed){

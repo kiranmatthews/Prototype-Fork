@@ -1,15 +1,15 @@
 import { defineConfig } from 'vite';
+import { offlineBuild } from './tools/offline-build.mjs';
 
 // Relative base so the build works both at a domain root and on a subpath
 // like GitHub Pages (https://<user>.github.io/<repo>/).
 export default defineConfig({
   base: './',
+  plugins: [offlineBuild()],
   build: {
     rollupOptions: {
       input: {
-        // Keep the entry chunk named index-*; main.ts's Pages cache-buster
-        // intentionally detects that stable stem in both import.meta.url and
-        // the freshly fetched HTML.
+        // The offline manifest includes the game and these companion tools.
         index: 'index.html',
         crtReview: 'crt-review.html',
         skateboardLab: 'skateboard-lab.html',

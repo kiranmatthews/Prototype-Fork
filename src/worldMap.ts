@@ -829,7 +829,7 @@ export function createCampaignWorldMap(
   oceanTuning.applyOutline(shoreline);
   root.add(shoreline.group);
 
-  const scenery = new JungleAssetKit(true,false,false,1.45);
+  const scenery = new JungleAssetKit(true,false,false);
   scenery.root.name='world map modular landscape kit';root.add(scenery.root);
   const mountainSpecs=MAP_ROCK_PLACEMENTS.map((p,i)=>({x:p.p[0],z:p.p[2],r:p.s[0]*.4,s:31+i*17}));
   for(const islet of scenicIslandSpecs)scenery.add({dkind:'mapcliff',p:[islet.x,MAP_SEA_LEVEL-.5,islet.z],s:[islet.rx*1.1,4.5+(islet.seed%4),islet.rz*1.1],yaw:islet.seed%360});

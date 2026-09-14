@@ -5,6 +5,8 @@
   "orientation": "portrait",
   "background_color": "#1a1c24",
   "theme_color": "#1a1c24",
-  "start_url": ".",
-  "icons": []
+  "id": "./",
+  "scope": "./",
+  "start_url": "./",
+  "icons": [{ "src": "roo.png", "sizes": "192x181", "type": "image/png", "purpose": "any" }]
 }
