@@ -59,8 +59,9 @@ export const GRIND_CONTACTS = {
   crook: { support: 'front-truck', pitch: .25, yaw: .48 },
   smith: { support: 'rear-truck', pitch: .23, yaw: .40 },
   feeble: { support: 'rear-truck', pitch: .23, yaw: -.40 },
-  board: { support: 'deck', pitch: 0, yaw: Math.PI / 2 },
-  lip: { support: 'deck', pitch: 0, yaw: Math.PI / 2 },
+  // Opposing ten-degree biases keep the slide silhouette off dead crosswise.
+  board: { support: 'deck', pitch: 0, yaw: Math.PI * 80 / 180 },
+  lip: { support: 'deck', pitch: 0, yaw: Math.PI * 100 / 180 },
 } as const satisfies Record<GrindStyle, { support: string; pitch: number; yaw: number }>;
 
 /** Hand names are relative to the rider's stance, never screen left/right.

@@ -15756,10 +15756,10 @@ export class Player {
     this.grindPoseX += (gp - this.grindPoseX) * Math.min(1, 12 * dt);
     this.grindPoseZ += ((gs ? gs[1] : 0) - this.grindPoseZ) * Math.min(1, 12 * dt);
     const crossRail = this.grindStyle === 'board' || this.grindStyle === 'lip';
-    const mechanicalYaw = this.state === 'grind' ? GRIND_CONTACTS[this.grindStyle].yaw : 0;
+    const mechanicalYaw = this.state === 'grind' ? this.specialGrind?.id==='darkslide' ? Math.PI/2 : GRIND_CONTACTS[this.grindStyle].yaw : 0;
     const gy =
       this.state === 'grind' && crossRail
-        ? -this.grindCrossDir * (Math.PI / 2)
+        ? -this.grindCrossDir * mechanicalYaw
         : gs
           ? mechanicalYaw * (this.grindStyle === 'smith' || this.grindStyle === 'feeble' ? this.grindApproachSide : this.grindYawDir || 1)
           : 0;

@@ -73,10 +73,18 @@ await withSkateRuntime(async ({player:p,level,THREE,server,step})=>{
     }
     if(style==='board'||style==='lip'){
       const belly=world(0,s.boardToGroundDistance-s.deckThickness,0);assert.ok(belly.distanceTo(top)<.002,'slide must contact the deck belly');
-      assert.ok(Math.abs(front.clone().sub(rear).normalize().dot(tangent))<.002,'slide deck must be perpendicular');
+      const forward=front.clone().sub(rear).normalize().dot(tangent);
+      assert.ok(Math.abs(forward-(style==='board'?1:-1)*Math.sin(Math.PI/18))<.002,'slide deck must sit 10 degrees off crosswise with the correct end leading');
     }
     if(style==='crook')assert.ok(Math.abs(front.clone().sub(rear).normalize().dot(right))>.3,'crooked grind must be crooked');
-    checkFeet(style);grinds++;
+    checkFeet(`${style}/${slope}/${dir}/${stance}`);grinds++;
+    if(style==='board'||style==='lip'){
+      p.deckYawOffset=Math.PI;settle();
+      const noseDirection=world(0,0,1).sub(world(0,0,0)).normalize();
+      assert.ok(Math.abs(noseDirection.dot(tangent)-(style==='board'?-1:1)*Math.sin(Math.PI/18))<.002,'reversed deck lost its opposing leading end');
+      assert.ok(world(0,s.boardToGroundDistance-s.deckThickness,0).distanceTo(top)<.002,'reversed slide lost its belly contact');
+      checkFeet(`${style} reversed deck`);
+    }
   }
   let grabs=0;
   const expected={indy:['trailing','toe'],melon:['leading','heel'],nose:['leading','nose'],tail:['trailing','tail'],method:['leading','heel'],mute:['leading','toe'],stalefish:['trailing','heel'],japan:['leading','toe']};

@@ -188,17 +188,18 @@ export class SkateAnimation {
     const grab = GRAB_CONTACTS[grabKind];
     const gw = backflip ? 0 : clamp(p.grabWeight, 0, 1);
     const flipPose = p.flip && !backflip ? sampleDeckTrick(p.flip, p.flipProgress) : null;
-    const locomotionTarget = p.nineHundred || p.lip || backflip || (key === 'ride' || key === 'air' || p.manual !== 0 || p.darkslide) && !p.flip && gw < .01 ? 1 : 0;
+    const uprightGrind=!!p.grind && !p.darkslide && underProgress<.001;
+    const locomotionTarget = uprightGrind || p.nineHundred || p.lip || backflip || (key === 'ride' || key === 'air' || p.manual !== 0 || p.darkslide) && !p.flip && gw < .01 ? 1 : 0;
     if (!this.lastActive) { this.locomotionWeight = locomotionTarget; this.bodySpring.reset(p.charge); }
     else this.locomotionWeight += (locomotionTarget-this.locomotionWeight)*(1-Math.exp(-16*p.dt));
     this.manualWeight += ((p.manual ? 1 : 0)-this.manualWeight)*(1-Math.exp(-12*p.dt));
     if (!p.manual && this.manualWeight < .001) this.manualWeight = 0;
     this.manualBalance += (clamp(p.balance,-1,1)-this.manualBalance)*(1-Math.exp(-10*p.dt));
     const bodyFlex = this.bodySpring.step(p.dt, {
-      grounded:p.grounded || p.darkslide || !!p.nineHundred, charge:p.nineHundred||p.lip?0:p.charge,
+      grounded:p.grounded || uprightGrind || p.darkslide || !!p.nineHundred, charge:p.nineHundred||p.lip?0:uprightGrind?p.charge*.35:p.charge,
       verticalVelocity:p.verticalVelocity??0, launchVelocity:p.launchVelocity??0,
-      contactBounce:p.grounded?bounce:0, mount:clamp(p.mount??0,0,1),
-      manual:p.manual !== 0 || !!p.lip,
+      contactBounce:p.grounded||uprightGrind?bounce:0, mount:clamp(p.mount??0,0,1),
+      manual:p.manual !== 0 || !!p.lip || uprightGrind,
     });
     if(p.nineHundred && gw>0 && this.spine){
       this.spineBefore=this.spine.quaternion.clone();
@@ -223,7 +224,7 @@ export class SkateAnimation {
       this.support.copy(p.rail.pointAt(p.railT)).addScaledVector(this.up, .09);
       const d = GRIND_CONTACTS[p.grind];
       pitch = d.pitch;
-      yaw = d.yaw * (p.grind === 'smith' || p.grind === 'feeble' ? p.approachSide
+      yaw = (p.darkslide ? Math.PI/2 : d.yaw) * (p.grind === 'smith' || p.grind === 'feeble' ? p.approachSide
         : p.grind === 'crook' ? p.crookedSide : -p.crossDir);
       if (p.grind === 'smith' || p.grind === 'feeble') yaw *= Math.cos(p.deckYaw) >= 0 ? 1 : -1;
       pivotZ = d.support === 'front-truck' ? frontZ : d.support === 'rear-truck' ? rearZ : 0;
@@ -330,6 +331,20 @@ export class SkateAnimation {
     const footYaw = p.stance * parity * Math.PI / 2;
     const catchQ = this.boardQ.clone().multiply(new THREE.Quaternion().setFromAxisAngle(Z, -Math.PI * dark));
     const footQ = catchQ.clone().multiply(new THREE.Quaternion().setFromAxisAngle(Y, footYaw));
+    if(uprightGrind){
+      // The legs stand from the deck's plane. Folding the old whole-body
+      // balance lean into these hips overextended one leg in Smith/Feeble.
+      // Turn before the body's nonuniform proportion scale; a counter-turn
+      // inside that scale shears the leg frame and can pull a sole loose.
+      this.worldRotation(this.body,footQ);
+      this.putBoard();
+      this.up.copy(Y).applyQuaternion(catchQ);
+      if(this.spine){
+        this.spineBefore=this.spine.quaternion.clone();
+        const lean=new THREE.Quaternion().setFromAxisAngle(this.forward,.14*p.balance);
+        this.worldRotation(this.spine,this.spine.getWorldQuaternion(new THREE.Quaternion()).premultiply(lean));
+      }
+    }
     const footTargets = [new THREE.Vector3(), new THREE.Vector3()];
     for (const i of [front, back]) {
       let z = (i === front ? 1 : -1) * footSpan * parity;
@@ -380,7 +395,8 @@ export class SkateAnimation {
     }
     const trickHeight = .46 - .29 * gw - .065 * p.charge - .11 * bounce + breathe;
     const restingBreath = Math.sin(p.time*5.6)*.005*(.35+.65*Math.min(1,Math.abs(p.speed)/5));
-    const height = THREE.MathUtils.lerp(trickHeight, locomotionHeight+restingBreath, this.locomotionWeight);
+    // Keep a little reach in reserve under the grind's nonuniform body lean.
+    const height = THREE.MathUtils.lerp(trickHeight, locomotionHeight+restingBreath-(uprightGrind ? .025 : 0), this.locomotionWeight);
     pelvis.addScaledVector(this.up, height);
     pelvis.addScaledVector(Y, .14 * p.wallWeight);
     if (gw > .01 && (grabKind === 'method' || grabKind === 'japan'))
@@ -417,7 +433,7 @@ export class SkateAnimation {
     this.body.updateWorldMatrix(true, true);
     let footError = 0;
     for (let i = 0; i < 2; i++) {
-      const kneeForward=p.lip?Z.clone().applyQuaternion(footQ):this.right.clone().multiplyScalar(p.stance);
+      const kneeForward=p.lip||uprightGrind?Z.clone().applyQuaternion(footQ):this.right.clone().multiplyScalar(p.stance);
       const pole = this.feet[i].root.getWorldPosition(new THREE.Vector3())
         .addScaledVector(kneeForward, .65).addScaledVector(this.forward, i === front ? .12 : -.12);
       const footWeight=underProgress>0?underMotion.footContact:1;

@@ -7,7 +7,7 @@ await withSkateRuntime(async({player:p,THREE,server})=>{
   const {withSkatePresentationRig}=await server.ssrLoadModule('/src/animation/skateCatalog.ts');
   const {evaluateSkateboardSurfaceHeight}=await server.ssrLoadModule('/src/skateboard/model.ts');
   const catalog=JSON.parse(await readFile(new URL('../public/animations/skate-review/catalog.json',import.meta.url),'utf8'));
-  const selected=catalog.clips.filter(c=>/Skate · S3[4-8] ·/.test(c.name));assert.equal(selected.length,5);
+  const selected=catalog.clips.filter(c=>/Skate · S(?:2[6-9]|3[0-8]) ·/.test(c.name));assert.equal(selected.length,13);
   const base=p.enterAnimationPreview();p.group.position.set(0,0,0);p.group.rotation.set(0,Math.PI,0);
   const binding=a.RigBinding.fromDefinition(base.root,withSkatePresentationRig(a.RigBinding.fromSculptRuntime(base.root).definition));
   const motion=a.createProceduralMotionContext(),shorts=p.riderG.getObjectByName('meshy-shorts-surface'),deck=p.boardG.getObjectByName('Deck_ContinuousRoundedKick');
@@ -37,5 +37,5 @@ await withSkateRuntime(async({player:p,THREE,server})=>{
     results.push({clip:clip.name,minShorts,minCoping});
   }
   p.exitAnimationPreview();console.log({samples,vertices,results,failures});assert.deepEqual(failures,[]);
-  console.log('PASS S34–S38 captured entry, trick and exit garment/board and coping clearance.');
+  console.log('PASS S26–S38 captured entry, trick and exit garment/board and coping clearance.');
 });

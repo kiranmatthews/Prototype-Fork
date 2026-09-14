@@ -14,7 +14,7 @@
 | Crooked | Front hanger, angled deck |
 | Smith | Rear hanger; nose dipped on approach side |
 | Feeble | Rear hanger; nose dipped across rail |
-| Boardslide / Lipslide | Deck underside, perpendicular; entry path distinguishes them |
+| Boardslide / Lipslide | Deck underside, opposing 10° offsets from crosswise; entry path distinguishes them |
 | Darkslide | Inverted griptape; close stance on the underside between trucks |
 
 A nosegrind uses the front truck; pressing the deck tip is a different contact. See [skatedeluxe's nosegrind lesson](https://www.skatedeluxe.com/blog/en/trick-tips/skateboard/curb-rail/how-to-nosegrind/).
@@ -151,3 +151,15 @@ All four lip stalls use the proportion-aware shallow leg solve with a narrower s
 The visible coping's centre is 5 cm above the analytic lip and its tube radius is 9 cm. The board and rider crest into the stall over 0.18 seconds, with a small unweighting arc. Deck surface clearance follows its normal, pointing inward during the climb and upward on the stall, and remains active through release. Both deck surfaces are sampled so curved kicks cannot intersect the tube between their nominal support points. A 15 mm allowance also protects playback interpolation; lip studies now retain 60 Hz capture samples.
 
 `tools/test-skate-backflip-stalls.mjs` covers 48 native stalls across both pipe axes/sides, both stances, normal/reversed decks and balance excursions, plus four complete native Backflips. Across 5,180 controller frames and 38,098,648 skinned garment vertices, no sampled shorts/board intersections or reversed knee bends occur; sole error stays below 3.28 mm. The full crest/hold range peaks at 81.6° knee bend. `tools/test-skate-review-clearance.mjs` adds 605 samples and 4,971,890 garment vertices from the actual S34–S38 studies, including entry and release: stall shorts remain at least 17.5 cm above the deck, Backflip shorts at least 11.5 cm, and coping clearance at least 7.26 mm. These values describe the authored fixture, not arbitrary extreme Character Lab proportions.
+
+## S26–S33 grind posture and slide angles
+
+The eight ordinary grinds now use the proportion-aware standing-height solve, with the hips aligned to the deck plane and knees bending in the shoes' forward direction. This removes the low generic trick squat and the one-legged collapse caused by combining Smith/Feeble deck tilt with the old whole-body balance lean. The torso carries a smaller balance correction independently. Shared segment elasticity, finite contact compression/rebound and a restrained jump preload remain active; named hanger/deck support points and movement physics are unchanged.
+
+Boardslide uses an 80° yaw and Lipslide 100°, mirrored through the existing entry direction and deck orientation. Both are 10° away from exact crosswise, with opposing leading ends in the ordinary orientation. Gameplay body yaw and board contacts share the same values. Darkslide keeps its existing 90° yaw, and the under-rail hanging pose keeps its separate constraints.
+
+The final orientation is applied before the body's nonuniform proportion scale. Counter-rotating inside that scale skewed the leg frame during hard balance corrections and could detach a sole. The corrected order keeps both shoes planted while the pelvis stays high.
+
+`tools/test-skate-grind-posture.mjs` passes 64 native cases across all eight styles, both stances/travel directions, flat/sloped rails and balance excursions: 9,200 controller frames and 75,605,600 skinned garment vertex positions. Per-style peak knee flex ranges from 46.2° to 67.8°, with pelvis height along the deck normal at least 82.2 cm above the mean soles. Minimum sampled shorts/board clearance is 15.77 cm through the complete entries, holds, ollie exits and landings; maximum sole error is 2.35 mm. Slide biases converge to +10°/-10°, and the contact audit checks the reversed-deck leading ends as well.
+
+Revision 9's eight grind captures add 968 sampled playback frames with at least 17.39 cm shorts clearance. The expanded S26–S38 check passes 1,573 samples and 12,926,914 garment vertices, retaining the earlier stall and Backflip repairs. The 11,246-frame contact audit, 2,744-frame under-rail/Darkslide regression, head/render-restoration check, catalogue migration check and production build also pass. No full repository suite was run.
