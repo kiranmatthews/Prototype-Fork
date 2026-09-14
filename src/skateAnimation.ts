@@ -1,3 +1,4 @@
+import { skateGrabTweak } from './skateGrabMotion';
 import * as THREE from 'three';
 import { solveTwoBoneIk } from './animation/ik';
 import { GRAB_CONTACTS, GRIND_CONTACTS, LIP_CONTACTS, skateContactBounce, sampleDeckTrick, sampleBackflip, sampleFootFlip, sampleImpossible, type DeckTrickKind, type GrabTrickKind, type GrindStyle, type LipStyle } from './skateTricks';
@@ -253,9 +254,11 @@ export class SkateAnimation {
     const method=grabKind==='method'&&gw>.001&&!p.nineHundred;
     const mute=grabKind==='mute'&&gw>.001&&!backflip&&!p.nineHundred;
     const japan=grabKind==='japan'&&gw>.001&&!p.nineHundred;
-    const japanFold=smooth(gw);
-    const japanFrame=this.group.getWorldQuaternion(new THREE.Quaternion()).multiply(new THREE.Quaternion().setFromAxisAngle(Y,p.yaw+p.stance*Math.PI/2));
-    const japanToe=Z.clone().applyQuaternion(japanFrame);
+    const tweak=!p.nineHundred&&!backflip&&gw>.001?skateGrabTweak(grabKind):null;
+    const tweakWeight=smooth(gw);
+    const grabFrame=this.group.getWorldQuaternion(new THREE.Quaternion()).multiply(new THREE.Quaternion().setFromAxisAngle(Y,p.yaw+p.stance*Math.PI/2));
+    const grabForward=Z.clone().applyQuaternion(grabFrame);
+    const tweakBody=tweak?grabFrame.clone().multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(tweak.bodyPitch,0,tweak.bodyBank*p.stance,'ZXY'))):grabFrame;
     const stalefish=grabKind==='stalefish'&&gw>.001&&!p.nineHundred;
     // Load the knees first, then fold sideways into the trailing heel grab.
     const grabFold=stalefish?smooth((gw-.12)/.88):smooth(gw);
@@ -339,9 +342,9 @@ export class SkateAnimation {
       this.supportY += (pivotY - this.supportY) * ease;
     }
     this.lastActive = true;
-    this.boardQ.copy(this.frame).multiply(this.q.setFromAxisAngle(Y, p.deckYaw + this.grindYaw))
-      .multiply(this.q.setFromAxisAngle(X, this.pitch + (backflip?0:japan?grab.pitch*japanFold:grab.pitch*gw)))
-      .multiply(this.q.setFromAxisAngle(Z, roll + Math.PI * dark + (backflip?0:japan?grab.roll*p.stance*(Math.cos(p.deckYaw)<0?-1:1)*japanFold:grab.roll*p.stance*gw)));
+    this.boardQ.copy(this.frame).multiply(this.q.setFromAxisAngle(Y, p.deckYaw + this.grindYaw + (tweak?tweak.boardYaw*p.stance*tweakWeight:0)))
+      .multiply(this.q.setFromAxisAngle(X, this.pitch + (backflip?0:tweak?tweak.boardPitch*(Math.cos(p.deckYaw)<0?-1:1)*tweakWeight:grab.pitch*gw)))
+      .multiply(this.q.setFromAxisAngle(Z, roll + Math.PI * dark + (backflip?0:tweak?tweak.boardRoll*p.stance*(Math.cos(p.deckYaw)<0?-1:1)*tweakWeight:grab.roll*p.stance*gw)));
     // The support point is geometric, not the rig origin. Rocking the deck
     // cannot bury one truck or lift the one the named grind is loading.
     this.temp.set(0, this.supportY, this.supportZ).applyQuaternion(this.boardQ);
@@ -349,8 +352,8 @@ export class SkateAnimation {
     if (!p.grind && !p.manual && !p.lip) this.boardP.copy(this.support).addScaledVector(this.darkExitOffset,dark);
     if(p.grind && p.darkslide)this.darkExitOffset.copy(this.boardP).sub(this.group.getWorldPosition(new THREE.Vector3()));
     // A real exit ollie already supplies lift; do not add a second flip pop.
-    this.boardP.addScaledVector(this.up, (backflip?0:.30*gw) + .18 * darkPop);
-    if(japan)this.boardP.addScaledVector(japanToe,-.45*japanFold).addScaledVector(this.up,.52*japanFold);
+    this.boardP.addScaledVector(this.up, (backflip||tweak?0:.30*gw) + .18 * darkPop);
+    if(tweak)this.boardP.addScaledVector(grabForward,tweak.boardForward*tweakWeight).addScaledVector(this.up,tweak.boardLift*tweakWeight);
     if(footFlip){
       const centreY=surface(0,0)-s.deckThickness*scale*.5;
       this.boardP.addScaledVector(this.up,centreY).addScaledVector(Y.clone().applyQuaternion(this.boardQ),-centreY);
@@ -419,15 +422,15 @@ export class SkateAnimation {
     const catchQ = this.boardQ.clone().multiply(new THREE.Quaternion().setFromAxisAngle(Z, -Math.PI * dark));
     const footQ = catchQ.clone().multiply(new THREE.Quaternion().setFromAxisAngle(Y, footYaw));
     if(waistGrab || uprightGrind || backflip || footFlip || impossible || this.deckCaught){
-      // Japan keeps its torso frame independent of the board behind it.
-      // Other supported grabs stand from the deck's plane. Folding the old whole-body
+      // Tweaked grabs keep the torso independent of the deck; the other
+      // supported grabs stand from its plane. Folding the old whole-body
       // balance lean into these hips overextended one leg in Smith/Feeble.
       // Turn before the body's nonuniform proportion scale; a counter-turn
       // inside that scale shears the leg frame and can pull a sole loose.
       const alignment=waistGrab||backflip||footFlip||impossible||this.deckCaught?deckAlignment:1;
-      this.worldRotation(this.body,this.body.getWorldQuaternion(new THREE.Quaternion()).slerp(japan?japanFrame:footQ,alignment));
+      this.worldRotation(this.body,this.body.getWorldQuaternion(new THREE.Quaternion()).slerp(tweak?tweakBody:footQ,alignment));
       this.putBoard();
-      if(!japan)this.up.lerp(Y.clone().applyQuaternion(catchQ),alignment).normalize();
+      if(!tweak)this.up.lerp(Y.clone().applyQuaternion(catchQ),alignment).normalize();
       if(this.spine && uprightGrind){
         this.spineBefore=this.spine.quaternion.clone();
         const lean=new THREE.Quaternion().setFromAxisAngle(this.forward,.14*p.balance);
@@ -496,10 +499,10 @@ export class SkateAnimation {
     const pelvis = footTargets[0].clone().add(footTargets[1]).multiplyScalar(.5);
     const load = p.grind ? pivotZ * .24 : p.manual ? pivotZ * .22 : 0;
     pelvis.addScaledVector(Z.clone().applyQuaternion(this.boardQ), load);
-    if(stalefish)pelvis.addScaledVector(Z.clone().applyQuaternion(footQ),-.40*grabFold);
+
     if(mute)pelvis.addScaledVector(Z.clone().applyQuaternion(footQ),-.24*smooth(gw));
-    if(method)pelvis.addScaledVector(Z.clone().applyQuaternion(footQ),-.50*smooth(gw));
-    if(melon)pelvis.addScaledVector(Z.clone().applyQuaternion(footQ),-.44*smooth(gw));
+
+
     if(endGrab)pelvis.addScaledVector(Z.clone().applyQuaternion(footQ),-.18*smooth(gw)).addScaledVector(Z.clone().applyQuaternion(this.boardQ),-.18*endDirection*smooth(gw));
     // Manuals balance at standing height too; the raised truck determines
     // the leg asymmetry instead of forcing both knees into the grab tuck.
@@ -535,11 +538,11 @@ export class SkateAnimation {
     const height = THREE.MathUtils.lerp(trickHeight, locomotionHeight+restingBreath-reserve, this.locomotionWeight);
     pelvis.addScaledVector(this.up, height);
     pelvis.addScaledVector(Y, .14 * p.wallWeight);
-    if(japan){
-      // The pelvis stays in front of the raised board; knees fold down into
-      // the free space ahead of it instead of squashing onto the griptape.
-      const tuck=footTargets[0].clone().add(footTargets[1]).multiplyScalar(.5).addScaledVector(japanToe,.50).addScaledVector(this.up,.05);
-      pelvis.lerp(tuck,japanFold);
+    if(tweak){
+      // Each silhouette owns its pelvis-to-deck relationship. The joints
+      // fold in the free space around that relationship, not into the deck.
+      const tuck=footTargets[0].clone().add(footTargets[1]).multiplyScalar(.5).addScaledVector(grabForward,tweak.hipForward).addScaledVector(this.up,tweak.hipUp);
+      pelvis.lerp(tuck,tweakWeight);
     }
     if (flipPose && !footFlip && !impossible) {
       for (let i = 0; i < 2; i++) {
@@ -577,10 +580,10 @@ export class SkateAnimation {
     this.body.updateWorldMatrix(true, true);
     let footError = 0;
     for (let i = 0; i < 2; i++) {
-      const kneeForward=japan?japanToe:waistGrab||p.lip||uprightGrind||backflip||footFlip||impossible||this.deckCaught?Z.clone().applyQuaternion(footQ):this.right.clone().multiplyScalar(p.stance);
+      const kneeForward=tweak?grabForward:waistGrab||p.lip||uprightGrind||backflip||footFlip||impossible||this.deckCaught?Z.clone().applyQuaternion(footQ):this.right.clone().multiplyScalar(p.stance);
       const pole = this.feet[i].root.getWorldPosition(new THREE.Vector3())
         .addScaledVector(kneeForward, .65).addScaledVector(this.forward, i === front ? .12 : -.12);
-      if(japan)pole.addScaledVector(this.up,-.70*japanFold);
+      if(tweak)pole.addScaledVector(grabForward,(tweak.kneeForward-.65)*tweakWeight).addScaledVector(this.up,-tweak.kneeDown*tweakWeight).addScaledVector(X.clone().applyQuaternion(grabFrame),tweak.kneeSide*p.stance*tweakWeight);
       const footWeight=underProgress>0?underMotion.footContact:1;
       const airFeet=underProgress>0?underMotion.airFeet:0;
       const target=footTargets[i].clone();
@@ -727,8 +730,8 @@ export class SkateAnimation {
       if(waistGrab&&this.spine&&this.waist){
         this.spineBefore??=this.spine.quaternion.clone();
         this.waistBefore??=this.waist.quaternion.clone();
-        const hinge=this.waistRest.clone().multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(japan?.30:stalefish?1.25:mute?1.40:method?1.50:endGrab?.30:melon?1.32:1.82,0,endGrab?(parity*endDirection<0?1.185:1.38)*p.stance*parity*endDirection:(japan?.50:stalefish?-.90:mute?.62:method?.72:melon?.65:-.58)*p.stance,'ZXY')));
-        const spineFold=mute?this.spineRest.clone().multiply(new THREE.Quaternion().setFromAxisAngle(X,.22)):this.spineRest;
+        const hinge=this.waistRest.clone().multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(tweak?tweak.waistPitch:mute?1.40:endGrab?.30:1.82,tweak?tweak.waistTwist*p.stance:0,endGrab?(parity*endDirection<0?1.185:1.38)*p.stance*parity*endDirection:(tweak?tweak.waistBank:mute?.62:-.58)*p.stance,'ZXY')));
+        const spineFold=tweak?this.spineRest.clone().multiply(new THREE.Quaternion().setFromAxisAngle(X,tweak.spinePitch)):mute?this.spineRest.clone().multiply(new THREE.Quaternion().setFromAxisAngle(X,.22)):this.spineRest;
         this.spine.quaternion.slerp(spineFold,smooth(gw));
         this.waist.quaternion.slerp(hinge,grabFold);
       }
@@ -751,7 +754,9 @@ export class SkateAnimation {
       const handY = Y.clone().applyQuaternion(this.boardQ);
       const handX = handY.clone().cross(across).normalize();
       const handQ = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(handX, handY, across)).multiply(relative.invert());
-      const pole = method||stalefish||japan?hand.root.getWorldPosition(new THREE.Vector3()).addScaledVector(across,.60).addScaledVector(Z.clone().applyQuaternion(this.boardQ),(stalefish?-.30:.30)*parity).addScaledVector(handY,-.25)
+      const pole = method?hand.root.getWorldPosition(new THREE.Vector3()).addScaledVector(grabForward,-.75).addScaledVector(X.clone().applyQuaternion(grabFrame),-.65*p.stance).addScaledVector(this.up,-.60)
+        :stalefish?this.board.localToWorld(new THREE.Vector3(-s.deckHalfWidth*scale*toeSign-.40*toeSign,surface(x,z)+.50,-1.0*parity))
+        :method||japan?hand.root.getWorldPosition(new THREE.Vector3()).addScaledVector(across,.60).addScaledVector(Z.clone().applyQuaternion(this.boardQ),(stalefish?-.30:.30)*parity).addScaledVector(handY,-.25)
         :hand.root.getWorldPosition(new THREE.Vector3()).addScaledVector(this.right,(grab.edge === 'heel' ? -1 : 1)*p.stance*.7).addScaledVector(this.forward,grab.hand === 'leading'?.3:-.45);
       // The waist fold and independent segment elasticity supply reach
       // while both feet retain their deck contacts.
@@ -799,15 +804,19 @@ export class SkateAnimation {
       }
       if(melon||method||mute||stalefish||japan){
         const free=this.hands[stalefish?front:back],shoulder=free.root.getWorldPosition(new THREE.Vector3());
-        const toe=japan?japanToe:Z.clone().applyQuaternion(footQ);
+        const toe=tweak?grabForward:Z.clone().applyQuaternion(footQ);
         const outward=shoulder.clone().sub(hand.root.getWorldPosition(new THREE.Vector3()));
         outward.addScaledVector(this.up,-outward.dot(this.up)).normalize();
-        const direction=outward.addScaledVector(toe,japan?-.60:stalefish?-.65:mute?-.90:-.95).addScaledVector(this.up,japan?.22:stalefish?.50:mute?.12:method?-.35:.18).normalize();
+        const direction=outward.addScaledVector(toe,method?.70:japan?-.60:stalefish?-.65:mute?-.90:-.95).addScaledVector(this.up,japan?.22:stalefish?.50:mute?.12:method?-.35:.18).normalize();
         const length=shoulder.distanceTo(free.mid.getWorldPosition(new THREE.Vector3()))+free.mid.getWorldPosition(new THREE.Vector3()).distanceTo(free.end.getWorldPosition(new THREE.Vector3()));
         const mount=free.end.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(free.socket.getWorldQuaternion(new THREE.Quaternion()));
         const y=direction.clone().negate(),x=y.clone().cross(this.up).normalize();
         const rotation=new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(x,y,x.clone().cross(y).normalize())).multiply(mount.invert());
-        this.solve(free,shoulder.clone().addScaledVector(direction,length+.08),rotation,shoulder.clone().addScaledVector(toe,-.4).addScaledVector(this.up,.2),smooth(gw),128,this.body,true);
+        const freeJoints=[free.root,free.mid,free.end],freeBase=method?freeJoints.map(joint=>joint.quaternion.clone()):null;
+        this.solve(free,shoulder.clone().addScaledVector(direction,length+.08),rotation,shoulder.clone().addScaledVector(toe,method?.35:-.4).addScaledVector(this.up,method?-.55:.2),method?1:smooth(gw),128,this.body,true);
+        // Fade Method's full arm chain; blending only its target can swing
+        // the elbow across the head as the arched torso releases.
+        if(freeBase)for(let i=0;i<freeJoints.length;i++)freeJoints[i].quaternion.slerpQuaternions(freeBase[i],freeJoints[i].quaternion.clone(),smooth(gw/.65));
       }
       this.board.userData.skateGrab = { kind: grabKind, hand: hand.socket.name, target: target.toArray(), error: handError };
     } else delete this.board.userData.skateGrab;

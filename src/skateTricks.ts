@@ -1,3 +1,5 @@
+import { SKATE_GRAB_TWEAKS } from './skateGrabMotion';
+
 /** Source-owned trick loadout. Directions are rider-relative on the board.
  * Gameplay, gate hints and the trick guide share these definitions. */
 export const DECK_TRICKS = [
@@ -68,13 +70,13 @@ export const GRIND_CONTACTS = {
  * Method = boned/tweaked Melon; Japan = tucked-knee Mute/Weddle. */
 export const GRAB_CONTACTS = {
   indy: { hand: 'trailing', edge: 'toe', pitch: -.08, roll: .20, tuck: .06 },
-  melon: { hand: 'leading', edge: 'heel', pitch: .08, roll: -.20, tuck: .06 },
+  melon: { hand: 'leading', edge: 'heel', pitch: SKATE_GRAB_TWEAKS.melon.boardPitch, roll: SKATE_GRAB_TWEAKS.melon.boardRoll, tuck: .06 },
   nose: { hand: 'leading', edge: 'nose', pitch: -.48, roll: 0, tuck: .10 },
   tail: { hand: 'trailing', edge: 'tail', pitch: .48, roll: 0, tuck: .10 },
-  method: { hand: 'leading', edge: 'heel', pitch: -.25, roll: -.85, tuck: .16 },
+  method: { hand: 'leading', edge: 'heel', pitch: SKATE_GRAB_TWEAKS.method.boardPitch, roll: SKATE_GRAB_TWEAKS.method.boardRoll, tuck: .16 },
   mute: { hand: 'leading', edge: 'toe', pitch: .08, roll: .20, tuck: .06 },
-  stalefish: { hand: 'trailing', edge: 'heel', pitch: -.12, roll: -.30, tuck: .12 },
-  japan: { hand: 'leading', edge: 'toe', pitch: -.10, roll: -1.30, tuck: .18 },
+  stalefish: { hand: 'trailing', edge: 'heel', pitch: SKATE_GRAB_TWEAKS.stalefish.boardPitch, roll: SKATE_GRAB_TWEAKS.stalefish.boardRoll, tuck: .12 },
+  japan: { hand: 'leading', edge: 'toe', pitch: SKATE_GRAB_TWEAKS.japan.boardPitch, roll: SKATE_GRAB_TWEAKS.japan.boardRoll, tuck: .18 },
 } as const satisfies Record<GrabTrickKind, { hand: string; edge: string; pitch: number; roll: number; tuck: number }>;
 
 export const LIP_CONTACTS = {

@@ -1,3 +1,5 @@
+import { skateGrabTweak } from '../skateGrabMotion';
+import type { GrabTrickKind } from '../skateTricks';
 import { createProceduralDriver } from './document';
 import type { AnimationClip, AnimationTrack, RigDefinition } from './types';
 import { sampleUnderRailMotion, sampleSkateRevert } from '../skateBodyMotion';
@@ -94,29 +96,18 @@ export function skate900Elasticity(weight:number,stance:number):Record<string,nu
   return {[`deform.arm.upper.${side}.length`]:1+1.1*reach,[`deform.arm.lower.${side}.length`]:1+1.3*reach};
 }
 
-/** Method extends each leg segment independently, leaving the planted grip
- * and movement physics untouched. The entry pulse settles at full extension. */
-export function skateMethodElasticity(weight:number):Record<string,number> {
+/** Independent segment reach supports each conventional grab silhouette;
+ * a finite gather/rebound pulse resolves before the held pose. */
+export function skateGrabTweakElasticity(kind:GrabTrickKind,weight:number,stance:number):Record<string,number> {
+  const pose=skateGrabTweak(kind);if(!pose)return {};
   const t=Math.max(0,Math.min(1,weight)),w=t*t*(3-2*t),pulse=.025*Math.sin(Math.PI*w);
-  const values:Record<string,number>={'deform.torso.length':1-.035*w};
-  for(const side of ['left','right']){
-    values[`deform.leg.upper.${side}.length`]=1+.26*w+pulse;
-    values[`deform.leg.lower.${side}.length`]=1+.30*w+pulse;
+  const side=(kind==='stalefish'?stance<0:stance>0)?'right':'left',values:Record<string,number>={};
+  for(const leg of ['left','right']){
+    values[`deform.leg.upper.${leg}.length`]=1+(pose.upperLeg-1)*w+pulse;
+    values[`deform.leg.lower.${leg}.length`]=1+(pose.lowerLeg-1)*w+pulse;
   }
-  return values;
-}
-
-/** Japan's longer shins let the knees project down/forward while the soles
- * stay on the board behind the hips. Independent reach keeps the head clear. */
-export function skateJapanElasticity(weight:number,stance:number):Record<string,number> {
-  const t=Math.max(0,Math.min(1,weight)),w=t*t*(3-2*t),pulse=.025*Math.sin(Math.PI*w);
-  const leading=stance>0?'right':'left',values:Record<string,number>={};
-  for(const side of ['left','right']){
-    values[`deform.leg.upper.${side}.length`]=1+.15*w+pulse;
-    values[`deform.leg.lower.${side}.length`]=1+.55*w+pulse;
-  }
-  values[`deform.arm.upper.${leading}.length`]=1+.45*w+pulse;
-  values[`deform.arm.lower.${leading}.length`]=1+.45*w+pulse;
+  values[`deform.arm.upper.${side}.length`]=1+(pose.upperArm-1)*w+pulse;
+  values[`deform.arm.lower.${side}.length`]=1+(pose.lowerArm-1)*w+pulse;
   return values;
 }
 

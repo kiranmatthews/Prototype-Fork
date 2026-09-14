@@ -377,3 +377,19 @@ A before/after native comparison reproduced a 33.62-degree arm jump. The repaire
 Balance arms now integrate a continuous 1.1–1.7 Hz phase instead of multiplying total run time by the changing needle position. Danger, critical-state amplitude and arm spread ease in/out independently. The old two-wave flail could reach about 1.22 radians; the new correction is bounded below 0.28 radians. This is presentation-only: balance forces, input, grace and scoring are untouched.
 
 The supplied Flats & Pipes replay reproduces five grind entries and 42 critical frames on the current level snapshot, but not its later Nosegrind/5-0 catches. Replaying all 32,798 inputs before/after preserves those entries and critical-frame counts, while peak near-limit arm change drops from 35.19 to 2.33 degrees per frame. Controlled critical toggles at early and 600-second clocks stay below 2.45 degrees per frame and settle after exit. Separate entry/contact checks verify Up → Nosegrind/front truck and Down → 5-0/rear truck in 16 stance, deck-orientation and travel-direction combinations; no binding swap was made because the reported inversion was not reproduced. Balance dynamics, general skate contacts, build and temporary full-render checks pass without console errors.
+
+
+## Conventional grab silhouettes — S19, S22, S24, S25 rework
+
+This supersedes the earlier posture descriptions for these four grabs. Correct hand contact alone did not make the old Method recognizable: its torso folded down toward the board. The new `src/skateGrabMotion.ts` profiles author the pelvis, torso and deck separately, with shared independent segment elasticity and finite entry/release pulses.
+
+| Grab | Defining shape now preserved |
+| --- | --- |
+| Melon | Seated hips behind the feet, knees gathered in front, moderate waist fold and leading-hand heel grip. |
+| Method | Open chest/back arch and an extended hip line, with bent legs drawing the board up behind the hips; leading-hand heel grip. The free arm returns as a complete chain to avoid crossing the head. |
+| Stalefish | Legs move forward to open space beside/behind the rear knee; the trailing arm reaches through that space to the heel edge just inside the back foot, with a side fold and raised counterbalancing arm. |
+| Japan | Leading-hand toe grip, raised board behind the hips and a forward/sideways knee tuck; the upper body folds forward instead of using Method’s open arch. |
+
+The supplied photographs anchor the silhouettes. TransWorld’s [Stalefish lesson](https://www.skateboarding.com/archives/starting-point-stalefish-grab) also describes moving the legs forward to make room for the rear-hand reach. Indy, Mute, Nosegrab and Tailgrab keep their existing poses.
+
+Validation now checks the defining geometry as well as contact. Sixty-four native sequences (5,280 frames, 67,400,896 mesh vertices) cover both stances, reversed decks and four vert directions. Revised grabs keep feet and held palms within 1 mm; shorts retain at least 3.56 cm deck clearance. Head/arm, head/leg and held arm/shorts probes report no intersections. The four approved grabs pass their existing regressions. General contacts, flip/chain/scoring checks, captured playback/clearance and production build pass. Revision 30 synchronizes only these four gameplay captures; the other 38 tracks are unchanged. No review UI changes or full suite.

@@ -31,30 +31,38 @@ await withSkateRuntime(async({player:p,THREE,server})=>{
           const at=name=>p.riderG.getObjectByName(name).getWorldPosition(new THREE.Vector3());
           const normal=new THREE.Vector3(0,1,0).transformDirection(p.boardG.matrixWorld);
           const feet=at('socket-foot-left').add(at('socket-foot-right')).multiplyScalar(.5);
-          assert.ok(at('hips').sub(feet).dot(normal)>(japan?.35:melon||endGrab||method||mute||stalefish?.55:.75),'captured grab squats below supported reach');
+          assert.ok(at('hips').sub(feet).dot(normal)>(melon||method||stalefish||japan?.30:endGrab||mute?.55:.75),'captured grab squats below supported reach');
           const settings=p.boardG.userData.settings,scale=settings.overallScale,parity=Math.cos(state.deckYaw)<0?-1:1;
           const x=endGrab?0:settings.deckHalfWidth*scale*state.stance*parity*(melon||method||stalefish?-1:1),z=nosegrab?settings.deckNoseLength*scale*.96:tailgrab?-settings.deckTailLength*scale*.96:(melon||method||mute||japan?.10:-.10)*parity;
           const target=p.boardG.localToWorld(new THREE.Vector3(x,(settings.boardToGroundDistance+evaluateSkateboardSurfaceHeight(settings,x/scale,z/scale))*scale,z));
           const side=endGrab?(state.stance*parity*(nosegrab?1:-1)>0?'right':'left'):(state.stance>0)!==(melon||method||mute||japan)?'left':'right';
           const gripError=at(`socket-grip-${side}`).distanceTo(target);assert.ok(gripError<.008,`captured grab loses its edge contact at ${time}: ${gripError}; weight ${state.grabWeight}`);
-          if(japan){
-            const toe=new THREE.Vector3(0,0,1).transformDirection(p.bodyGroup.matrixWorld),up=new THREE.Vector3(0,1,0).transformDirection(p.bodyGroup.matrixWorld);
-            assert.ok(at('hips').sub(feet).dot(toe)>.35,'captured Japan must put its board behind the hips');
+          if(method||japan){
+            const toe=new THREE.Vector3(0,0,1).transformDirection(p.bodyGroup.matrixWorld),up=new THREE.Vector3(0,1,0);
+            assert.ok(at('hips').sub(feet).dot(toe)>.25,'captured tweak must pull the board behind the hips');
+            const raised=feet.clone().sub(at('hips')).dot(new THREE.Vector3(0,1,0));assert.ok(raised>(method?.10:.01),'captured tweak lost its raised board');
+            const chest=at('shoulder-left').add(at('shoulder-right')).multiplyScalar(.5).sub(at('spine')).normalize().dot(toe);
+            assert.ok(method?chest<-.10:chest>.15,'Method must arch open; Japan must tuck forward');
             for(const side of ['left','right']){
-              const knee=at(`knee-${side}`);assert.ok(knee.clone().sub(at(`ankle-${side}`)).dot(toe)>.25,'captured Japan knees must stay forward of its feet');
-              assert.ok(at(`hip-${side}`).sub(knee).dot(up)>.22,'captured Japan knees must point down');
+              const knee=at(`knee-${side}`);assert.ok(knee.clone().sub(at(`ankle-${side}`)).dot(toe)>.10,'captured tweak knees must stay forward of its feet');
+              assert.ok(at(`hip-${side}`).sub(knee).dot(up)>.10,'captured tweak knees must point down');
             }
+          }
+          if(melon||stalefish){
+            const toe=new THREE.Vector3(0,0,1).transformDirection(p.bodyGroup.matrixWorld);
+            assert.ok(at('hips').sub(feet).dot(toe)<-.08,'captured heel grab lost its seated hips');
+            if(stalefish){const elbow=p.boardG.worldToLocal(at(`elbow-${side}`)),knee=p.boardG.worldToLocal(at(`knee-${state.stance>0?'left':'right'}`));assert.ok((elbow.x-knee.x)*state.stance*parity<-.10,'captured Stalefish fails to reach behind the rear leg');}
           }
           if(mute){
             for(const side of ['left','right'])for(const part of ['upper','lower'])assert.ok(pose.scalars[`deform.leg.${part}.${side}.length`]>.90,'captured Mute compresses its legs');
             const upper=at('shoulder-left').add(at('shoulder-right')).multiplyScalar(.5).sub(at('spine'));assert.ok(upper.angleTo(normal)>.75,'captured Mute needs its upper-body fold');
           }
           if(method){
-            for(const side of ['left','right'])for(const part of ['upper','lower'])assert.ok(pose.scalars[`deform.leg.${part}.${side}.length`]>1.18,'captured Method loses leg extension');
+            for(const side of ['left','right'])for(const part of ['upper','lower'])assert.ok(pose.scalars[`deform.leg.${part}.${side}.length`]>(part==='upper'?1.05:1.30),'captured Method loses leg extension');
             const palm=new THREE.Vector3(0,0,-1).applyMatrix3(new THREE.Matrix3().getNormalMatrix(p.riderG.getObjectByName(`socket-grip-${side}`).matrixWorld)).normalize();
             const inward=new THREE.Vector3(state.stance*parity,0,0).transformDirection(p.boardG.matrixWorld);assert.ok(palm.dot(inward)>.80,'captured Method palm faces away from the board');
           }
-          for(const side of ['left','right']){const knee=at(`knee-${side}`).sub(at(`hip-${side}`)).angleTo(at(`ankle-${side}`).sub(at(`knee-${side}`)));assert.ok(knee<(japan?2.75:endGrab||method?1.50:melon||mute?1.45:1.20),`${clip.name} knee ${side} bends ${knee*180/Math.PI} degrees at ${time}`);}
+          for(const side of ['left','right']){const knee=at(`knee-${side}`).sub(at(`hip-${side}`)).angleTo(at(`ankle-${side}`).sub(at(`knee-${side}`)));assert.ok(knee<(method||japan?2.75:melon||stalefish?2.25:endGrab?1.50:mute?1.45:1.20),`${clip.name} knee ${side} bends ${knee*180/Math.PI} degrees at ${time}`);}
         }
       }
       for(const entry of reverts){

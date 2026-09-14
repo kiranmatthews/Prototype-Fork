@@ -113,3 +113,5 @@ Revision 27 synchronizes Stalefish’s knee load, side fold and trailing heel-ed
 Revision 28 synchronizes Japan’s knees-forward/down tuck, raised board behind the hips and leading toe-edge grip from gameplay. Other 41 motion tracks remain unchanged.
 
 Revision 29 synchronizes S09’s continuous whole-arm entry and return from gameplay. The other 41 captured motions remain unchanged.
+
+Revision 30 synchronizes the conventional Melon, Method, Stalefish and Japan gameplay silhouettes. The other 38 motion tracks and the review UI are unchanged.
