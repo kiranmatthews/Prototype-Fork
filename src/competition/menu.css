@@ -65,7 +65,7 @@
 .comp-guide .input-glyph { --input-glyph-size:clamp(22px,4vh,46px); }
 .competition-host.is-running { background:none; pointer-events:none; display:flex; align-items:flex-start; justify-content:center; padding:16px; }
 .comp-run-hud { display:flex; align-items:center; gap:24px; background:#0c2029ee; border:2px solid #87683d; padding:9px 20px; }
-.comp-run-hud > strong { font-size:36px; color:#ffd278; min-width:80px; text-align:center; }
+.comp-run-hud > strong { font:36px/1 Roo,Impact,sans-serif; color:#6cdecf; min-width:80px; text-align:center; }
 .comp-run-hud > span { font-size:18px; }
 .comp-run-hud small { display:block; font-size:14px; color:#e8d5ad; }
 .comp-run-hud.urgent > strong { color:#ff8864; }
