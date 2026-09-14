@@ -269,3 +269,18 @@ Revision 18 captures the complete S16 charge/pop/flick/flight/catch/landing sequ
 The expanded captured audit checks 2,662 samples and 21,876,316 garment vertices, including S16’s shoes and shins between keys. Its captured shoe clearance stays above 2.02 mm, shin clearance above 9.40 cm and shorts clearance above 21.62 cm. S10–S15 and S17 motion tracks are unchanged. Native contact/trick regressions, all 42 playback/migration checks and the production build pass. No full repository suite was run.
 
 Native lite/full gameplay, the packaged contact sheet and the S16 Animation Lab study were visually reviewed with no console errors.
+
+
+## S17 scooped, heel-driven Inward Heelflip
+
+Motion reference: [@Allthingslife30 — Slow motion inward heelflip](https://www.youtube.com/shorts/LGOwOynzn_g), supplied by the user and reviewed through setup, toe-up heel kick, tilted board turn, airborne gather and landing. S17 combines a backside rear-foot scoop with a leading heel flick. The front shoe raises its toes and clears the nose corner while the rear shoe briefly follows the turning tail. The deck pitches through release and levels while completing its backside half-shove and full heelflip. The skater retains the incoming stance.
+
+The deck rotates around its own centre on the unchanged gameplay flight path. Both feet withdraw clear of its passage, gather above it and descend for a staggered catch. The trailing arm reaches higher while the leading arm opens forward, matching the reference’s unequal balance response; both sweep down into the catch with wrists following the forearms. Shared independent elasticity supplies heel reach, leg gathering, arm stretch and the existing finite landing rebound. Early inputs keep the skate presentation. Controls, duration, movement and the 350-point score are unchanged.
+
+`tools/test-skate-inward-heelflip-motion.mjs` checks 16 native sequences across campaign/park controls, both stances, reversed boards and early/later inputs. Across 1,896 frames and 7,034,608 garment vertices, the heel rises visibly, the deck completes its correct half-turn/full-roll, the arms balance asymmetrically, and every case lands for 350 points with one multiplier. Foot-target error stays below 1 mm; sampled shoes clear by at least 1.92 mm, shins by 9.37 cm and shorts by 18.93 cm. Controller position matches a player with presentation disabled, and the deck centre retains its original flight path.
+
+Revision 19 captures the complete native S17 charge/pop/flick/flight/catch/landing sequence at 240 Hz with 60 Hz input edges. The dense keys preserve the heel release and combined rotation through review playback.
+
+The expanded captured audit covers 2,783 samples and 22,870,694 garment vertices. S17’s sampled shoe clearance remains above 1.95 mm, shin clearance above 9.49 cm and shorts clearance above 21.61 cm through playback interpolation. S10–S16 capture tracks remain unchanged. Native contact/trick regressions, all 42 playback/migration checks and the production build pass. No full repository suite was run.
+
+Native lite/full gameplay, the packaged contact sheet and the S17 Animation Lab study were visually reviewed with no console errors.

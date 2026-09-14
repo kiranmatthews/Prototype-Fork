@@ -219,7 +219,7 @@ export class SkateAnimation {
     this.bounceAge += p.dt; this.wasGrounded = p.grounded;
     const bounce = skateContactBounce(this.bounceAge);
     const breathe = Math.sin(p.time * 5.6) * .016 * Math.min(1, Math.abs(p.speed) / 5);
-    const scoopFlip=p.flip==='varial'||p.flip==='varial-heel'||p.flip==='hardflip';
+    const scoopFlip=p.flip==='varial'||p.flip==='varial-heel'||p.flip==='hardflip'||p.flip==='inward-heel';
     // Completing a shove swaps the material nose/tail. Preserve the same
     // world tilt across that yaw handoff instead of tipping through level.
     if(this.shoveDeckYaw!==null&&Math.cos(p.deckYaw-this.shoveDeckYaw)<0){this.pitch*=-1;this.deckCaught=true;}
@@ -228,7 +228,7 @@ export class SkateAnimation {
     if(p.grounded||p.flip&&p.flip!=='shove'&&p.flip!=='imposs'&&!scoopFlip||p.grabWeight>.001||p.grind||p.lip||p.wallWeight>.001)this.deckCaught=false;
     this.shoveDeckYaw=p.flip==='shove'||scoopFlip?p.deckYaw:null;
     const backflip = p.specialFlip ? sampleBackflip(p.flipProgress) : null;
-    const footFlip=(p.flip==='kick'||p.flip==='heel'||p.flip==='shove'||p.flip==='varial'||p.flip==='varial-heel'||p.flip==='hardflip')&&!backflip?sampleFootFlip(p.flip,p.flipProgress):null;
+    const footFlip=(p.flip==='kick'||p.flip==='heel'||p.flip==='shove'||p.flip==='varial'||p.flip==='varial-heel'||p.flip==='hardflip'||p.flip==='inward-heel')&&!backflip?sampleFootFlip(p.flip,p.flipProgress):null;
     const impossible=p.flip==='imposs'?sampleImpossible(p.flipProgress):null;
     if(p.grounded)this.footFlipAir=false;
     if(footFlip||impossible)this.footFlipAir=true;
@@ -593,6 +593,7 @@ export class SkateAnimation {
       }
     }
 
+    const inward=p.flip==='inward-heel';
     const balanceMotion=impossible??(scoopFlip?footFlip:null);
     if(balanceMotion&&balanceMotion.arms>0){
       if(this.spine){this.spineBefore??=this.spine.quaternion.clone();this.spine.rotation.y+=balanceMotion.counter*p.stance;}
@@ -602,8 +603,10 @@ export class SkateAnimation {
         const outward=shoulder.clone().sub(other.root.getWorldPosition(new THREE.Vector3()));
         outward.addScaledVector(this.up,-outward.dot(this.up)).normalize();
         const toeDirection=Z.clone().applyQuaternion(footQ);
-        const direction=outward.addScaledVector(this.up,(i===front?(scoopFlip?.38:.48):(scoopFlip?.10:.28))-(scoopFlip?.50:.65)*balanceMotion.armSweep)
-          .addScaledVector(toeDirection,(i===front?.08:(scoopFlip?-.35:-.18))+(scoopFlip?.50:.42)*balanceMotion.armSweep).normalize();
+        const armHeight=inward?(i===front?.12:.52):(i===front?(scoopFlip?.38:.48):(scoopFlip?.10:.28));
+        const armForward=inward?(i===front?.32:-.20):(i===front?.08:(scoopFlip?-.35:-.18));
+        const direction=outward.addScaledVector(this.up,armHeight-(scoopFlip?.50:.65)*balanceMotion.armSweep)
+          .addScaledVector(toeDirection,armForward+(scoopFlip?.50:.42)*balanceMotion.armSweep).normalize();
         const reach=shoulder.distanceTo(hand.mid.getWorldPosition(new THREE.Vector3()))+
           hand.mid.getWorldPosition(new THREE.Vector3()).distanceTo(hand.end.getWorldPosition(new THREE.Vector3()));
         const relative=hand.end.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(hand.socket.getWorldQuaternion(new THREE.Quaternion()));
@@ -612,7 +615,7 @@ export class SkateAnimation {
           if(x.lengthSq()<1e-8)x.crossVectors(y,this.forward);x.normalize();
           return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(x,y,x.clone().cross(y).normalize())).multiply(relative.clone().invert());
         };
-        const target=shoulder.clone().addScaledVector(direction,reach*(scoopFlip?(i===front?1.00:.82+.15*balanceMotion.armSweep):1.04));
+        const target=shoulder.clone().addScaledVector(direction,reach*(inward?(i===front?.91:1.02):scoopFlip?(i===front?1.00:.82+.15*balanceMotion.armSweep):1.04));
         const pole=shoulder.clone().addScaledVector(toeDirection,.25).addScaledVector(this.up,.2);
         this.solve(hand,target,along(direction),pole,balanceMotion.arms);
         const forearm=hand.end.getWorldPosition(new THREE.Vector3()).sub(hand.mid.getWorldPosition(new THREE.Vector3())).normalize();

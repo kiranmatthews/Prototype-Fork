@@ -160,7 +160,20 @@ export function sampleHardflip(progress:number) {
     backLift:.68*smooth((t-.02)/.22)*(1-smooth((t-.76)/.24)),
     counter:.18*Math.sin(Math.PI*base.yawTurn)*base.arms};
 }
-export function sampleFootFlip(kind:'kick'|'heel'|'shove'|'varial'|'varial-heel'|'hardflip',progress:number) {
+/** The backside scoop passes under an outward, toe-up heel kick. A
+ * pitched release gives way to free rotation while the rider gathers. */
+export function sampleInwardHeelflip(progress:number) {
+  const t=Math.max(0,Math.min(1,progress)),base=sampleVarial('varial-heel',t);
+  const passage=smooth((t-.04)/.18)*(1-smooth((t-.32)/.34));
+  return {...base,scoopSign:1,noseReach:.20,sideReach:.24,
+    flick:smooth(t/.17)*(1-smooth((t-.28)/.30)),
+    rock:-.62*passage,
+    frontLift:.72*smooth((t-.02)/.18)*(1-smooth((t-.68)/.24)),
+    backLift:.64*smooth((t-.02)/.22)*(1-smooth((t-.76)/.24)),
+    counter:-.18*Math.sin(Math.PI*base.yawTurn)*base.arms};
+}
+export function sampleFootFlip(kind:'kick'|'heel'|'shove'|'varial'|'varial-heel'|'hardflip'|'inward-heel',progress:number) {
+  if(kind==='inward-heel')return sampleInwardHeelflip(progress);
   if(kind==='hardflip')return sampleHardflip(progress);
   if(kind==='shove')return samplePopShoveIt(progress);
   if(kind==='varial'||kind==='varial-heel')return sampleVarial(kind,progress);
@@ -193,12 +206,11 @@ export function sampleImpossible(progress:number) {
 export function sampleDeckTrick(kind:DeckTrickKind,progress:number) {
   const trick=deckTrickInfo(kind),t=Math.max(0,Math.min(1,progress));
   const motion=smooth((t-.08)/.78),clearance=smooth(t/.18)*(1-smooth((t-.72)/.28));
-  const hard=kind==='inward-heel';
-  const footFlip=kind==='kick'||kind==='heel'||kind==='shove'||kind==='varial'||kind==='varial-heel'||kind==='hardflip'?sampleFootFlip(kind,t):null;
+  const footFlip=kind==='kick'||kind==='heel'||kind==='shove'||kind==='varial'||kind==='varial-heel'||kind==='hardflip'||kind==='inward-heel'?sampleFootFlip(kind,t):null;
   const impossible=kind==='imposs'?sampleImpossible(t):null;
   return {
     roll:trick.roll*2*Math.PI*(footFlip?footFlip.turn:motion)+(footFlip?.bank??0),yaw:trick.yaw*2*Math.PI*(footFlip?footFlip.yawTurn:motion),
-    pitch:trick.pitch*2*Math.PI*(impossible?impossible.turn:motion)+(hard?Math.sin(Math.PI*motion)*.85:0)+(footFlip?.rock??0),
+    pitch:trick.pitch*2*Math.PI*(impossible?impossible.turn:motion)+(footFlip?.rock??0),
     deckDrop:footFlip?0:clearance*(kind==='imposs'?.28:.07),
     orbitY:kind==='imposs'?-.28*Math.sin(2*Math.PI*motion):0,
     orbitZ:kind==='imposs'?-.28*(1-Math.cos(2*Math.PI*motion)):0,

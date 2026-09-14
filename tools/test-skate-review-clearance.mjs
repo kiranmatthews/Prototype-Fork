@@ -7,7 +7,7 @@ await withSkateRuntime(async({player:p,THREE,server})=>{
   const {withSkatePresentationRig}=await server.ssrLoadModule('/src/animation/skateCatalog.ts');
   const {evaluateSkateboardSurfaceHeight}=await server.ssrLoadModule('/src/skateboard/model.ts');
   const catalog=JSON.parse(await readFile(new URL('../public/animations/skate-review/catalog.json',import.meta.url),'utf8'));
-  const selected=catalog.clips.filter(c=>/Skate · S(?:09|1[0-6]|2[6-9]|3[0-8]|42) ·/.test(c.name));assert.equal(selected.length,22);
+  const selected=catalog.clips.filter(c=>/Skate · S(?:09|1[0-7]|2[6-9]|3[0-8]|42) ·/.test(c.name));assert.equal(selected.length,23);
   const base=p.enterAnimationPreview();p.group.position.set(0,0,0);p.group.rotation.set(0,Math.PI,0);
   const binding=a.RigBinding.fromDefinition(base.root,withSkatePresentationRig(a.RigBinding.fromSculptRuntime(base.root).definition));
   const motion=a.createProceduralMotionContext(),shorts=p.riderG.getObjectByName('meshy-shorts-surface'),deck=p.boardG.getObjectByName('Deck_ContinuousRoundedKick');
@@ -15,8 +15,8 @@ await withSkateRuntime(async({player:p,THREE,server})=>{
   for(const clip of selected){
     let minShorts=Infinity,minCoping=Infinity,minShoe=Infinity,minShin=Infinity;
     const wrapped=clip.metadata.skateReviewId==='flip:imposs';
-    const varial=['flip:varial','flip:varial-heel','flip:hardflip'].includes(clip.metadata.skateReviewId);
-    const footFlip=['flip:kick','flip:heel','flip:shove','flip:varial','flip:varial-heel','flip:hardflip'].includes(clip.metadata.skateReviewId),trace=clip.metadata.transitionEvidence??[],flight=[];
+    const varial=['flip:varial','flip:varial-heel','flip:hardflip','flip:inward-heel'].includes(clip.metadata.skateReviewId);
+    const footFlip=['flip:kick','flip:heel','flip:shove','flip:varial','flip:varial-heel','flip:hardflip','flip:inward-heel'].includes(clip.metadata.skateReviewId),trace=clip.metadata.transitionEvidence??[],flight=[];
     const flipStart=trace.find(s=>s.flipping)?.time??Infinity;
     const flipEnd=trace.find(s=>s.time>flipStart&&!s.flipping)?.time??-Infinity;
     for(let f=0;f<=120;f++){
@@ -76,5 +76,5 @@ await withSkateRuntime(async({player:p,THREE,server})=>{
     results.push({clip:clip.name,minShorts,minCoping,...(footFlip||wrapped?{minShoe}:{}),...(wrapped||varial?{minShin}:{})});
   }
   p.exitAnimationPreview();console.log({samples,vertices,results,failures});assert.deepEqual(failures,[]);
-  console.log('PASS S09–S16/S26–S38/S42 captured entry, trick and exit garment/board and rail clearance.');
+  console.log('PASS S09–S17/S26–S38/S42 captured entry, trick and exit garment/board and rail clearance.');
 });
