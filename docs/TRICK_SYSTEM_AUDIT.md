@@ -83,7 +83,7 @@ Duration grows the existing trick's points without adding multipliers. Below 4 m
 | Right, down + Circle | Tornado Twist | 3,000 | 0.90 s |
 | Left, right + Triangle | Darkslide | 1,800 | held; initial 500/s |
 
-Backflip replaces the former McTwist: a raised-nose ollie starts one full backward rotation of the rider and attached board, without a deck flip, grab or yaw twist. Tornado Twist owns its full 900° rotation rather than accepting ordinary steering during the move. Their included rotation does not mint a second trick multiplier. Darkslide inversion occurs after foot seating so its inverted deck cannot drag the rider below the rail.
+Backflip replaces the former McTwist: a raised-nose ollie overlaps one full eased backward rotation of the rider and attached board, without a separate deck flip or yaw twist. Independent segment shortening compresses the apex, where the leading hand grips the board; a finite extension rebound leads into the landing. Tornado Twist owns its full 900° rotation rather than accepting ordinary steering during the move. Their included rotation does not mint a second trick multiplier. Darkslide inversion occurs after foot seating so its inverted deck cannot drag the rider below the rail.
 
 These remain procedural animations. Grab shoulder/elbow poses approximate the named silhouettes; exact hand-to-deck attachment and original Neversoft clip reproduction are not implemented. Visual polish and hand contact could not be reviewed on the locked desktop, and the user requested this release proceed without that review. No emulator timing comparison is claimed.
 

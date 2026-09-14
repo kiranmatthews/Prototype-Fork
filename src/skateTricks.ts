@@ -93,12 +93,15 @@ export function skateContactBounce(age: number): number {
     (1 - smooth((age - .45) / .20));
 }
 
-/** Nose-up ollie, one backward somersault, then an upright catch. The rider
- * and deck turn together; there is no shove, deck flip or grabbing phase. */
+/** The ollie and full backward rotation share their launch. Short segments
+ * gather at inversion, then extend with a finite rebound into the catch. */
 export function sampleBackflip(progress: number) {
   const t = Math.max(0, Math.min(1, progress));
-  return { rotation: -2 * Math.PI * smooth((t - .12) / .80),
-    nosePitch: -.55 * (1 - smooth((t - .12) / .26)) };
+  const turn=t*t*t*(10+t*(-15+6*t));
+  const compression=smooth(t/.30)*(1-smooth((t-.68)/.30));
+  return {rotation:-2*Math.PI*turn,nosePitch:-.55*(1-smooth((t-.25)/.40)),compression,alignment:smooth(t/.12),
+    grab:smooth((t-.10)/.28)*(1-smooth((t-.67)/.25)),
+    rebound:Math.sin(Math.PI*Math.max(0,Math.min(1,(t-.78)/.22)))*(1-compression)};
 }
 
 const smooth=(t:number)=>{const x=Math.max(0,Math.min(1,t));return x*x*(3-2*x);};

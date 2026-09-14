@@ -62,6 +62,12 @@ await withSkateRuntime(async ({player:p,server,THREE})=>{
       const switches=trace.filter((s,i)=>s.reverting&&!trace[i-1]?.reverting).map(s=>s.stance);
       assert.deepEqual(switches,[-1,1],'S09 must show two separated 180-degree stance switches');
     }
+    if(entry.id==='special:kickflip-mctwist'){
+      assert.equal(clip.metadata.transitionCapture,'native Player.step inputs');
+      const launch=trace.find(s=>s.state==='air'),flip=trace.find(s=>s.backflip);
+      assert.ok(launch&&flip&&flip.time-launch.time<.10,'S38 delays the flip until after the ollie');
+      assert.ok(trace.at(-1).grounded,'S38 must show its landing');
+    }
     if(['Grinds','Lip stalls'].includes(entry.category)||['basic:Manual','basic:Nose Manual','basic:Wallride','special:darkslide'].includes(entry.id)){
       assert.equal(clip.metadata.transitionCapture,'native Player.step inputs');
       assert.ok(trace.some(s=>s.state==='air')&&trace.at(-1).grounded,`${entry.name} does not show an exit and landing`);

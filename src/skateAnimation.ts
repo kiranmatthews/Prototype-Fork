@@ -105,7 +105,14 @@ export class SkateAnimation {
     this.board.scale.set(1 / 1.18, 1 / 1.36, 1 / 1.18);
   }
 
-  private worldRotation(node: THREE.Object3D, rotation: THREE.Quaternion): void {
+  private worldRotation(node: THREE.Object3D, rotation: THREE.Quaternion, orientationFrame?:THREE.Object3D): void {
+    if(orientationFrame){
+      const desired=orientationFrame.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(rotation);
+      const chain=new THREE.Quaternion();
+      for(let parent=node.parent;parent&&parent!==orientationFrame;parent=parent.parent)chain.premultiply(parent.quaternion);
+      node.quaternion.copy(chain.invert()).multiply(desired).normalize();
+      return;
+    }
     node.parent!.getWorldQuaternion(this.q).invert();
     node.quaternion.copy(this.q).multiply(rotation).normalize();
   }
@@ -118,15 +125,26 @@ export class SkateAnimation {
   }
 
   private solve(limb: Limb, target: THREE.Vector3, rotation: THREE.Quaternion,
-    pole: THREE.Vector3, weight = 1): number {
+    pole: THREE.Vector3, weight = 1, iterations = 64, orientationFrame?:THREE.Object3D): number {
     // The socket is offset from the ankle/wrist. Restore its orientation after
     // each two-bone solve, then remeasure the offset (also handles scaled rigs).
     const desired = limb.end.getWorldQuaternion(new THREE.Quaternion()).slerp(rotation, weight);
+    const frameDesired=orientationFrame?orientationFrame.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(desired):null;
+    const chainRotation=new THREE.Quaternion();
+    const orient=()=>{
+      if(!orientationFrame||!frameDesired){this.worldRotation(limb.end,desired);return;}
+      // Cancel joint rotations inside the character frame, before its
+      // nonuniform scale. World quaternion decomposition loses this basis.
+      chainRotation.identity();
+      for(let parent=limb.end.parent;parent&&parent!==orientationFrame;parent=parent.parent)
+        chainRotation.premultiply(parent.quaternion);
+      limb.end.quaternion.copy(chainRotation.invert()).multiply(frameDesired).normalize();
+    };
     const endpoint = new THREE.Vector3(), socket = new THREE.Vector3();
     const goal = limb.socket.getWorldPosition(new THREE.Vector3()).lerp(target, weight);
     const wristTarget = new THREE.Vector3();
     for (let i = 0; i < 2; i++) {
-      this.worldRotation(limb.end, desired);
+      orient();
       limb.end.updateWorldMatrix(true, true);
       limb.end.getWorldPosition(endpoint); limb.socket.getWorldPosition(socket);
       wristTarget.copy(goal).sub(socket).add(endpoint);
@@ -140,18 +158,18 @@ export class SkateAnimation {
     // Nearly straight legs converge more slowly than trick tucks. Allow the
     // shallow charge/takeoff pose to finish the same socket solve; most limbs
     // still exit at the 1 mm tolerance before reaching this bound.
-    for (let i = 0; i < 64; i++) {
-      this.worldRotation(limb.end, desired);
+    for (let i = 0; i < iterations; i++) {
+      orient();
       if (limb.socket.getWorldPosition(socket).distanceTo(goal) < .001) break;
       for (const joint of [limb.mid, limb.root]) {
         joint.parent!.updateWorldMatrix(true, false);
         from.copy(limb.socket.getWorldPosition(socket)); joint.parent!.worldToLocal(from); from.sub(joint.position).normalize();
         to.copy(goal); joint.parent!.worldToLocal(to); to.sub(joint.position).normalize();
         joint.quaternion.premultiply(new THREE.Quaternion().setFromUnitVectors(from, to));
-        this.worldRotation(limb.end, desired);
+        orient();
       }
     }
-    this.worldRotation(limb.end, desired);
+    orient();
     return limb.socket.getWorldPosition(socket).distanceTo(target);
   }
 
@@ -186,9 +204,9 @@ export class SkateAnimation {
     const bounce = skateContactBounce(this.bounceAge);
     const breathe = Math.sin(p.time * 5.6) * .016 * Math.min(1, Math.abs(p.speed) / 5);
     const backflip = p.specialFlip ? sampleBackflip(p.flipProgress) : null;
-    const grabKind = p.grab;
+    const grabKind = backflip ? 'mute' : p.grab;
     const grab = GRAB_CONTACTS[grabKind];
-    const gw = backflip ? 0 : clamp(p.grabWeight, 0, 1);
+    const gw = backflip ? backflip.grab : clamp(p.grabWeight, 0, 1);
     const flipPose = p.flip && !backflip ? sampleDeckTrick(p.flip, p.flipProgress) : null;
     const uprightGrind=!!p.grind && !p.darkslide && underProgress<.001;
     const locomotionTarget = uprightGrind || p.nineHundred || p.lip || backflip || (key === 'ride' || key === 'air' || p.manual !== 0 || p.darkslide) && !p.flip && gw < .01 ? 1 : 0;
@@ -197,13 +215,14 @@ export class SkateAnimation {
     this.manualWeight += ((p.manual ? 1 : 0)-this.manualWeight)*(1-Math.exp(-12*p.dt));
     if (!p.manual && this.manualWeight < .001) this.manualWeight = 0;
     this.manualBalance += (clamp(p.balance,-1,1)-this.manualBalance)*(1-Math.exp(-10*p.dt));
-    const bodyFlex = this.bodySpring.step(p.dt, {
+    const springFlex = this.bodySpring.step(p.dt, {
       grounded:p.grounded || uprightGrind || p.darkslide || !!p.nineHundred,
-      charge:p.revert ? .7*p.revert.knee : p.nineHundred||p.lip?0:uprightGrind?p.charge*.35:p.charge,
+      charge:backflip?0:p.revert ? .7*p.revert.knee : p.nineHundred||p.lip?0:uprightGrind?p.charge*.35:p.charge,
       verticalVelocity:p.verticalVelocity??0, launchVelocity:p.launchVelocity??0,
       contactBounce:p.grounded||uprightGrind?bounce:0, mount:clamp(p.mount??0,0,1),
       manual:p.manual !== 0 || !!p.lip || uprightGrind,
     });
+    const bodyFlex=backflip?THREE.MathUtils.lerp(springFlex,.62,backflip.compression):springFlex;
     if(p.nineHundred && gw>0 && this.spine){
       this.spineBefore=this.spine.quaternion.clone();
       this.spine.rotation.x-=.50*smooth(gw);
@@ -262,8 +281,8 @@ export class SkateAnimation {
     }
     this.lastActive = true;
     this.boardQ.copy(this.frame).multiply(this.q.setFromAxisAngle(Y, p.deckYaw + this.grindYaw))
-      .multiply(this.q.setFromAxisAngle(X, this.pitch + grab.pitch * gw))
-      .multiply(this.q.setFromAxisAngle(Z, roll + Math.PI * dark + grab.roll * p.stance * gw));
+      .multiply(this.q.setFromAxisAngle(X, this.pitch + (backflip?0:grab.pitch*gw)))
+      .multiply(this.q.setFromAxisAngle(Z, roll + Math.PI * dark + (backflip?0:grab.roll*p.stance*gw)));
     // The support point is geometric, not the rig origin. Rocking the deck
     // cannot bury one truck or lift the one the named grind is loading.
     this.temp.set(0, this.supportY, this.supportZ).applyQuaternion(this.boardQ);
@@ -271,7 +290,7 @@ export class SkateAnimation {
     if (!p.grind && !p.manual && !p.lip) this.boardP.copy(this.support).addScaledVector(this.darkExitOffset,dark);
     if(p.grind && p.darkslide)this.darkExitOffset.copy(this.boardP).sub(this.group.getWorldPosition(new THREE.Vector3()));
     // A real exit ollie already supplies lift; do not add a second flip pop.
-    this.boardP.addScaledVector(this.up, .30 * gw + .18 * darkPop);
+    this.boardP.addScaledVector(this.up, (backflip?0:.30*gw) + .18 * darkPop);
     if (p.lip) {
       const enter=smooth(this.age/.18);
       this.boardQ.copy(this.lipEntryQ.clone().slerp(this.boardQ,enter));
@@ -335,15 +354,16 @@ export class SkateAnimation {
     const footYaw = p.stance * parity * Math.PI / 2;
     const catchQ = this.boardQ.clone().multiply(new THREE.Quaternion().setFromAxisAngle(Z, -Math.PI * dark));
     const footQ = catchQ.clone().multiply(new THREE.Quaternion().setFromAxisAngle(Y, footYaw));
-    if(uprightGrind){
+    if(uprightGrind || backflip){
       // The legs stand from the deck's plane. Folding the old whole-body
       // balance lean into these hips overextended one leg in Smith/Feeble.
       // Turn before the body's nonuniform proportion scale; a counter-turn
       // inside that scale shears the leg frame and can pull a sole loose.
-      this.worldRotation(this.body,footQ);
+      const alignment=backflip?backflip.alignment:1;
+      this.worldRotation(this.body,this.body.getWorldQuaternion(new THREE.Quaternion()).slerp(footQ,alignment));
       this.putBoard();
-      this.up.copy(Y).applyQuaternion(catchQ);
-      if(this.spine){
+      this.up.lerp(Y.clone().applyQuaternion(catchQ),alignment).normalize();
+      if(this.spine && uprightGrind){
         this.spineBefore=this.spine.quaternion.clone();
         const lean=new THREE.Quaternion().setFromAxisAngle(this.forward,.14*p.balance);
         this.worldRotation(this.spine,this.spine.getWorldQuaternion(new THREE.Quaternion()).premultiply(lean));
@@ -383,7 +403,7 @@ export class SkateAnimation {
         // cartoon scale underestimate the height of a standing-idle stance.
         const upper = leg.mid.position.length() * leg.root.scale.y * scaleY;
         const lower = leg.end.position.length() * leg.mid.scale.y * scaleY;
-        this.worldRotation(leg.end, footQ);
+        this.worldRotation(leg.end, footQ,backflip&&backflip.alignment>.999?this.body:undefined);
         leg.end.updateWorldMatrix(true, true);
         const ankleOffset = leg.end.getWorldPosition(new THREE.Vector3())
           .sub(leg.socket.getWorldPosition(new THREE.Vector3()));
@@ -400,7 +420,8 @@ export class SkateAnimation {
     const trickHeight = .46 - .29 * gw - .065 * p.charge - .11 * bounce + breathe;
     const restingBreath = Math.sin(p.time*5.6)*.005*(.35+.65*Math.min(1,Math.abs(p.speed)/5));
     // Keep a little reach in reserve under the grind's nonuniform body lean.
-    const height = THREE.MathUtils.lerp(trickHeight, locomotionHeight+restingBreath-(uprightGrind ? .025 : 0), this.locomotionWeight);
+    const reserve=uprightGrind ? .025 : backflip ? .025*Math.max(backflip.compression,backflip.rebound) : 0;
+    const height = THREE.MathUtils.lerp(trickHeight, locomotionHeight+restingBreath-reserve, this.locomotionWeight);
     pelvis.addScaledVector(this.up, height);
     pelvis.addScaledVector(Y, .14 * p.wallWeight);
     if (gw > .01 && (grabKind === 'method' || grabKind === 'japan'))
@@ -441,7 +462,7 @@ export class SkateAnimation {
     this.body.updateWorldMatrix(true, true);
     let footError = 0;
     for (let i = 0; i < 2; i++) {
-      const kneeForward=p.lip||uprightGrind?Z.clone().applyQuaternion(footQ):this.right.clone().multiplyScalar(p.stance);
+      const kneeForward=p.lip||uprightGrind||backflip?Z.clone().applyQuaternion(footQ):this.right.clone().multiplyScalar(p.stance);
       const pole = this.feet[i].root.getWorldPosition(new THREE.Vector3())
         .addScaledVector(kneeForward, .65).addScaledVector(this.forward, i === front ? .12 : -.12);
       const footWeight=underProgress>0?underMotion.footContact:1;
@@ -455,7 +476,9 @@ export class SkateAnimation {
         target.lerp(tuck,1-footWeight);
       }
       const solveWeight=Math.max(footWeight,airFeet);
-      if(solveWeight>0)footError = Math.max(footError, this.solve(this.feet[i], target, footQ, pole,solveWeight));
+      // Shortened Backflip legs need more refinement against the unchanged
+      // shoe socket offset; the normal convergence tolerance still exits early.
+      if(solveWeight>0)footError = Math.max(footError, this.solve(this.feet[i], target, footQ, pole,solveWeight,backflip?192:64,backflip&&backflip.alignment>.999?this.body:undefined));
     }
 
     let handError = 0;

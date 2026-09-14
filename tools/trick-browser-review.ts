@@ -64,7 +64,7 @@ g.player.step=(dt:number,input:any,level:any)=>{
   const was=p.vertAir;
   nativeStep(dt,command,level);frame++;
   if(!was&&p.vertAir){hadAir=true;logs.push(`takeoff vy ${p.vVel.toFixed(3)}`);}
-  if(p.flipT>0&&autoPause&&!pausedPose&&1-p.flipT/p.flipDuration>=.45){pausedPose=freeze=true;logs.push('mid-flip');}
+  if(p.flipT>0&&autoPause&&!pausedPose&&1-p.flipT/p.flipDuration>=(scenario==='special-flip'?.5:.45)){pausedPose=freeze=true;logs.push('mid-flip');}
   if(scenario==='grab'&&p.grabPhase==='held'&&air>14&&autoPause&&!pausedPose){pausedPose=freeze=true;logs.push('held grab');}
   if(scenario==='revert'&&p.revertPoseT>0&&autoPause&&!pausedPose&&p.revertPoseT<SKATE_REVERT_DURATION/2){pausedPose=freeze=true;logs.push('mid-revert');}
   if(p.isBailing){freeze=true;logs.push('bail');}

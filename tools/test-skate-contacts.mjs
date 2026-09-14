@@ -163,6 +163,7 @@ await withSkateRuntime(async ({player:p,level,THREE,server,step})=>{
   }
   assert.equal(sampleBackflip(1).rotation,-2*Math.PI);
   assert.equal(Math.abs(sampleBackflip(0).rotation),0);assert.ok(sampleBackflip(.08).nosePitch<-.5);
+  assert.ok(sampleBackflip(.02).rotation<0,'Backflip must rotate during the ollie launch');
   assert.equal(Math.abs(sampleBackflip(1).nosePitch),0);
   assert.ok(skateContactBounce(.08)>0&&skateContactBounce(.26)<0,'cartoon contact must compress then rebound');assert.equal(skateContactBounce(.7),0);
   reset();p.pos.set(0,.1,10);p.prevPos.copy(p.pos);p.state='ride';p.grounded=true;p.revertT=.4;p.speed=10;

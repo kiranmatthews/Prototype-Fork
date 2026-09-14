@@ -1,6 +1,7 @@
 import { createProceduralDriver } from './document';
 import type { AnimationClip, AnimationTrack, RigDefinition } from './types';
 import { sampleUnderRailMotion, sampleSkateRevert } from '../skateBodyMotion';
+import { sampleBackflip } from '../skateTricks';
 
 export const CHARACTER_ELASTICITY_REVISION = 1;
 /** Torso, upper arm, forearm, thigh and shin. Zero protects a planted grip. */
@@ -91,6 +92,18 @@ export function skateUnderRailElasticity(weight:number,time:number,returning=fal
 export function skate900Elasticity(weight:number,stance:number):Record<string,number> {
   const t=Math.max(0,Math.min(1,weight)),reach=t*t*(3-2*t),side=stance>0?'right':'left';
   return {[`deform.arm.upper.${side}.length`]:1+1.1*reach,[`deform.arm.lower.${side}.length`]:1+1.3*reach};
+}
+
+/** Blend from the live ollie lengths, rather than multiplying two squashes. */
+export function skateBackflipElasticity(motion:ReturnType<typeof sampleBackflip>,stance:number,ollie:Record<string,number>):Record<string,number> {
+  const gripping=stance>0?'right':'left',values={...ollie};
+  for(const [id,part] of ELASTIC_LENGTH_CONTROLS){
+    const target=part===0?.60:part===3?.60:part===4?.62:
+      id.includes(`.${gripping}.`)?(part===1?1.10:1.16):(part===1?.68:.70);
+    const base=ollie[id]??1;
+    values[id]=(base+(target-base)*motion.compression)*(1+motion.rebound*(part===0?.04:.08));
+  }
+  return values;
 }
 
 /** Independent recoil and a slightly longer balancing arm during the slide. */

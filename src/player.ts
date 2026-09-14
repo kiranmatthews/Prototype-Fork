@@ -1,5 +1,5 @@
 import { SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
-import { skateUnderRailElasticity, skate900Elasticity, skateRevertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
+import { skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateRevertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
 // Authored fake-physics board movement. No rigidbody, no forces: just a
 // heading, a scalar speed, a vertical velocity, and hand-tuned numbers from
 // tuning.ts. Ground following is a single downward raycast; slopes only exist
@@ -16160,6 +16160,10 @@ export class Player {
     glovePose = blendCartoonGlovePose(glovePose, CARTOON_GLOVE_POSES.fist, gloveFist);
     if (this.gloveLeft) setCartoonGlovePose(this.gloveLeft, glovePose);
     if (this.gloveRight) setCartoonGlovePose(this.gloveRight, glovePose);
+    if(this.specialFlip){
+      const hand=this.stance>0?this.gloveRight:this.gloveLeft;
+      if(hand)setCartoonGlovePose(hand,blendCartoonGlovePose(glovePose,CARTOON_GLOVE_POSES.grab,sampleBackflip(1-this.flipT/this.flipDuration).grab));
+    }
     // Tail + legacy ponytail-node follow-through is authored before the final appearance
     // pass so keyframed secondary channels can still layer over the simulation.
     if (this.tail) {
@@ -16877,7 +16881,9 @@ export class Player {
         this.isBailing || this.state==='dead' || this.state==='gameover',
     });
     if(ollieMotion){
-      this.playerAnimationBridge.modulateDeformations(ollieMotion.deformations);
+      const lengths=this.specialFlip
+        ?skateBackflipElasticity(sampleBackflip(1-this.flipT/this.flipDuration),this.stance,ollieMotion.deformations):ollieMotion.deformations;
+      this.playerAnimationBridge.modulateDeformations(lengths);
       if(this.spineG)this.spineG.rotation.x+=ollieMotion.spine;
       for(const [arm,elbow,wrist,side] of [[this.armR,this.elbowR,this.wristR,1],[this.armL,this.elbowL,this.wristL,-1]] as const){
         if(arm){arm.rotation.x+=ollieMotion.arms;arm.rotation.z+=side*ollieMotion.flare;}
@@ -16924,7 +16930,7 @@ export class Player {
     this.plantOnDeck(underW, this.skateMountT >= 0);
     let skateContactOwned = false;
     if (this.boardG && this.riderG) {
-      const copingPipe=this.lipPipe ?? (this.grounded && this.rawInput.grindHeld ? this.groundHit?.halfpipe : undefined);
+      const copingPipe=this.lipPipe ?? (this.grounded && (this.rawInput.grindHeld||this.rawInput.jumpHeld) ? this.groundHit?.halfpipe : undefined);
       let coping: {center:THREE.Vector3;normal:THREE.Vector3}|undefined;
       if(copingPipe && this.pos.y>copingPipe.lipY-1.8){
         const side=Math.sign(copingPipe.crossCoord(this.pos.x,this.pos.z)-copingPipe.cross)||1;

@@ -41,7 +41,7 @@ The hand mapping is stance-relative; anatomical left/right alone cannot define a
 | Hardflip | Kickflip + frontside half-shove |
 | Inward Heelflip | Heelflip + backside half-shove |
 | Impossible | Full wrap around trailing foot |
-| Backflip | Nose-up ollie into one full backward rotation of rider and board |
+| Backflip | Nose-up ollie with one full backward rotation, shortened segments and a leading-hand board grip at the compressed apex |
 | Tornado Twist | Two-and-a-half backside turns with Weddle grip |
 
 References include [skatedeluxe's Hardflip lesson](https://www.skatedeluxe.com/blog/en/trick-tips/skateboard/flat/how-to-hardflip/), [Nollie Skateboarding's rear-foot Impossible lesson](https://nollieskateboarding.com/en/news/15884), and [Mike McGill's McTwist account](https://www.wbur.org/onlyagame/2012/11/10/skateboarding-mctwist). These are original procedural interpretations, not copied animation clips.
@@ -91,7 +91,7 @@ The board has a separate scale compensation parent. Its metre dimensions survive
 
 Feet and palms use actual rig sockets, two-bone IK and a bounded local-coordinate refinement. The latter removes the centimetre-scale error left by an ordinary world-space solve under stretched parents. Wrist orientation makes the palm face the edge and fingers curl underneath. The spine folds to make the short arms reach without scaling bones. Contact corrections happen after appearance/animation layers.
 
-Contact events compress the knees and rebound with a damped curve that finishes in 0.65 seconds. A small continuing knee pulse adds motion to held poses. Grinds keep the contact fixed; manuals never wobble through flat into the opposite named manual. Feet lift and flick independently during flips. The Impossible rotates around its measured rear-foot pivot. Darkslide entry/exit uses a half-flip and foot clearance. Backflip starts nose-up, then rotates rider and board together around the actual posed hips.
+Contact events compress the knees and rebound with a damped curve that finishes in 0.65 seconds. A small continuing knee pulse adds motion to held poses. Grinds keep the contact fixed; manuals never wobble through flat into the opposite named manual. Feet lift and flick independently during flips. The Impossible rotates around its measured rear-foot pivot. Darkslide entry/exit uses a half-flip and foot clearance. Backflip rotates rider and board around the actual posed hips while the nose-up ollie is still ascending.
 
 Input recipes, scoring, balance difficulty and movement tuning remain unchanged. Presentation timings are detailed in the repair notes below. Revert and completed half-shove orientation bookkeeping agree with the rendered deck.
 
@@ -144,7 +144,7 @@ Catalogue revision 7 refreshes unedited motion and migrates the old automatic S3
 
 ## S34–S38: Backflip and lip-stall repairs
 
-S38 is now **Backflip**. The raised-nose ollie starts a full backward somersault around the posed hips, with shoes planted on the board throughout. It retains the shared ollie segment stretch, compression and landing rebound. The old kickflip, Weddle grab and backside yaw are removed; finishing no longer adds a half-turn to the landing. The existing special command, 2,500 points and stable `kickflip-mctwist` identifier remain compatible. The automatic Lab name migrates to Backflip while user-authored keys and custom names survive.
+S38 is now **Backflip**. The raised-nose ollie starts a full backward somersault around the posed hips, with shoes planted on the board throughout. It retains the shared ollie segment stretch, compression and landing rebound. The old kickflip and backside yaw are removed; finishing no longer adds a half-turn to the landing. The later S38 refinement below adds a leading-hand grip at the compressed apex. The existing special command, 2,500 points and stable `kickflip-mctwist` identifier remain compatible. The automatic Lab name migrates to Backflip while user-authored keys and custom names survive.
 
 All four lip stalls use the proportion-aware shallow leg solve with a narrower stance. Knee poles follow shoe orientation through the Axle Stall turn. Nose/Tail Stall no longer forces a 180° turn: either side input requests the tip stall, and the incoming physical board end selects its name. Normal/fakie deck orientation and anatomical stance survive the catch; reversing travel on the drop preserves the board's physical nose by updating its travel-relative offset.
 
@@ -181,3 +181,16 @@ The under-rail transition now takes 0.48 seconds instead of 0.72. Board rotation
 The review loop is 4.2 seconds instead of 7.2: one catch/drop, hang, release and landing. It retains 60 Hz samples so the quick catch and rebound survive playback. The previous return-and-second-entry sequence is removed from the sheet loop; return remains available and covered in native gameplay tests.
 
 The 2,744-frame native hang/Darkslide check verifies overlapping motion, less than 2.5 cm horizontal hip deviation, an observed catch dip/rebound, head clearance, sub-millimetre truck grips and continuous arm shafts in both stances/directions. The expanded capture audit covers S09/S26–S38/S42 at 1,815 times and 14,915,670 garment vertex positions. S42's sampled shorts/deck separation is at least 18.7 cm and head/rail clearance at least 6.19 cm. The native grounded Revert check, catalogue/migration check and production build also pass; no full suite.
+
+
+## S38 simultaneous, elastic Backflip
+
+The full backward rotation now uses a quintic easing curve with no delayed start. The raised nose stays loaded during the opening rotation, then blends level while rider and board continue turning together. The native review command completes 0.05 seconds after vert takeoff, within the ascending ollie. The move still completes exactly 360 degrees in 0.78 seconds and keeps its original command and 2,500-point score.
+
+At inversion, the shared deformation controls shorten the torso and thighs to 0.60 and shins to 0.62 of their authored lengths. The free upper arm/forearm shorten to 0.68/0.70; the gripping arm keeps enough independent reach to plant the leading hand at the board's toe edge. These targets blend from the live ollie lengths, preventing compounded squash. The knees stay relatively open, and a finite extension rebound releases the grip into the landing. The whole skeleton's scale is unchanged.
+
+The legs ease into the board plane before the body's nonuniform proportion scale. Ankle orientation is solved in that character frame, preserving the shoe socket offsets while short limbs converge. The existing coping surface correction also covers a charged jump's final ramp approach, preventing the raised deck from crossing the visible tube.
+
+`tools/test-skate-backflip-motion.mjs` drives eight complete launches on four Jungle Cup walls in both stances: 660 controller frames and 5,292,392 skinned garment vertices. Feet and the held hand stay within 1 mm, sampled shorts clearance stays above 6.43 cm, and knee bend stays below 61.1 degrees. Apex pelvis-to-soles height falls below 47% of its launch height through segment shortening. Frame-to-frame body rotation stays below 12.1 degrees, and all eight cases land cleanly for 2,500 points with one multiplier.
+
+Revision 12 replaces S38's controlled-phase study with a 60 Hz native vert launch, flip, landing and settle. The expanded captured clearance audit passes 1,815 samples and 14,915,670 garment vertices; S38 retains at least 6.43 cm shorts clearance and 1.70 mm coping clearance, including interpolated frames. Existing contact/trick checks, four additional native Backflips, all 42 editable captures and source-upgrade tests, and the production build pass. Full-render native gameplay, the packaged sheet and the Animation Lab were visually reviewed with no console errors. No full suite was run.

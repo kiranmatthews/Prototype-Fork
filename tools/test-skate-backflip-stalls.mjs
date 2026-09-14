@@ -98,7 +98,7 @@ await withSkateRuntime(async({player:p,THREE,server,Level,TUNING})=>{
         if(normal.y<-.9)inverted=true;if(progress<.15&&nose.y>.2)noseRise=true;
         if(f%6===0)turns.push({progress,up:normal.toArray()});
         assert.ok(width.dot(right)>.97,'Backflip introduced a yaw/roll twist');
-        assert.equal(p.boardG.userData.skateGrab,undefined,'Backflip inherited the McTwist grab');
+        if(progress>.4&&progress<.65)assert.equal(p.boardG.userData.skateGrab?.hand,`socket-grip-${stance>0?'right':'left'}`,'Backflip needs its leading-hand apex grip');
       }else if(started)completed=true;
       if(started)garment('Backflip');
       assert.equal(p.isBailing,false,'Backflip bailed');
