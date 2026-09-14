@@ -32,6 +32,13 @@ await withSkateRuntime(async ({player:p,server,THREE})=>{
   assert.equal(refreshed.playbackSpeed,.37);assert.equal(refreshed.name,'My nosegrind review');
   assert.deepEqual(upgraded.clips.find(c=>c.id===repaired.id),repaired,'source upgrade overwrote a repaired pose');
   assert.ok(!upgraded.clips.some(c=>c.id===SKATE_REVIEW_ENTRIES[0].clipId),'source upgrade resurrected a deleted study');
+  const oldName=structuredClone(parsed);oldName.metadata.skateReviewRevision=data.revision-1;
+  const renamed=oldName.clips.find(c=>c.id==='player.skate-study.special-the-900');
+  renamed.name='Skate · S39 · The 900';renamed.tracks.find(t=>t.kind==='position').keys[0].value[1]+=.13;
+  const migratedName=addSkateReviewClips(oldName,data).clips.find(c=>c.id===renamed.id);
+  assert.equal(migratedName.name,'Skate · S39 · Tornado Twist');assert.deepEqual(migratedName.tracks,renamed.tracks,'rename replaced user-authored motion');
+  renamed.name='My spinning grab';
+  assert.equal(addSkateReviewClips(oldName,data).clips.find(c=>c.id===renamed.id).name,'My spinning grab','rename overwrote a custom study name');
   const visibility={metadata:{boardVisibility:[[0,false],[.5,true],[2,false]]}};
   assert.equal(skateBoardVisibleAt(visibility,.49),false);assert.equal(skateBoardVisibleAt(visibility,.5),true);assert.equal(skateBoardVisibleAt(visibility,2),false);
 

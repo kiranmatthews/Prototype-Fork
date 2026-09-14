@@ -21,6 +21,7 @@ export interface SkatePoseInput {
   grind: GrindStyle | null; rail: Rail | null; railT: number; railDir: number;
   crossDir: number; approachSide: number; crookedSide: number;
   darkslide: boolean; ollie: boolean; flip: DeckTrickKind | null;
+  nineHundred?: boolean;
   flipProgress: number; specialFlip: boolean; lip: LipStyle | null;
   wallWeight: number; wallNormal: THREE.Vector3; wallForward: THREE.Vector3;
 }
@@ -180,18 +181,22 @@ export class SkateAnimation {
     const grab = GRAB_CONTACTS[grabKind];
     const gw = clamp(mcTwist ? mcTwist.grab : p.grabWeight, 0, 1);
     const flipPose = p.flip ? sampleDeckTrick(p.flip, mcTwist ? mcTwist.deckProgress : p.flipProgress) : null;
-    const locomotionTarget = (key === 'ride' || key === 'air' || p.manual !== 0 || p.darkslide) && !p.flip && gw < .01 ? 1 : 0;
+    const locomotionTarget = p.nineHundred || (key === 'ride' || key === 'air' || p.manual !== 0 || p.darkslide) && !p.flip && gw < .01 ? 1 : 0;
     if (!this.lastActive) { this.locomotionWeight = locomotionTarget; this.bodySpring.reset(p.charge); }
     else this.locomotionWeight += (locomotionTarget-this.locomotionWeight)*(1-Math.exp(-16*p.dt));
     this.manualWeight += ((p.manual ? 1 : 0)-this.manualWeight)*(1-Math.exp(-12*p.dt));
     if (!p.manual && this.manualWeight < .001) this.manualWeight = 0;
     this.manualBalance += (clamp(p.balance,-1,1)-this.manualBalance)*(1-Math.exp(-10*p.dt));
     const bodyFlex = this.bodySpring.step(p.dt, {
-      grounded:p.grounded || p.darkslide, charge:p.charge,
+      grounded:p.grounded || p.darkslide || !!p.nineHundred, charge:p.nineHundred?0:p.charge,
       verticalVelocity:p.verticalVelocity??0, launchVelocity:p.launchVelocity??0,
       contactBounce:p.grounded?bounce:0, mount:clamp(p.mount??0,0,1),
       manual:p.manual !== 0,
     });
+    if(p.nineHundred && gw>0 && this.spine){
+      this.spineBefore=this.spine.quaternion.clone();
+      this.spine.rotation.x-=.50*smooth(gw);
+    }
 
     this.group.getWorldQuaternion(this.frame);
     this.frame.multiply(this.q.setFromAxisAngle(Y, p.yaw));
@@ -452,7 +457,7 @@ export class SkateAnimation {
       const reach = shoulder.distanceTo(hand.mid.getWorldPosition(new THREE.Vector3())) +
         hand.mid.getWorldPosition(new THREE.Vector3()).distanceTo(hand.end.getWorldPosition(new THREE.Vector3())) + .12;
       const distance = shoulder.distanceTo(target);
-      if (distance > reach && this.spine) {
+      if (distance > reach && this.spine && !p.nineHundred) {
         // The spine is a true joint; bend it toward this hand's contact.
         const chest = this.spine;
         this.spineBefore = chest.quaternion.clone();
@@ -464,7 +469,7 @@ export class SkateAnimation {
         chest.quaternion.premultiply(limited);
       }
       handError = this.solve(hand, target, handQ, pole, smooth(gw));
-      if (handError > .005 && gw > .95 && this.spine) {
+      if (handError > .005 && gw > .95 && this.spine && !p.nineHundred) {
         // Deep heel-side/Japan tweaks can move the glove's wrist offset above
         // the grip. Fit the shoulder to that actual wrist target as well.
         for (let attempt = 0; attempt < 2 && handError > .005; attempt++) {

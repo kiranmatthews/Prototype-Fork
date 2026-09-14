@@ -85,3 +85,9 @@ export function skateUnderRailElasticity(weight:number,time:number,returning=fal
   return Object.fromEntries(ELASTIC_LENGTH_CONTROLS.filter(([id])=>id.startsWith('deform.arm.')).map(([id])=>
     [id,1+motion.armReach*((id.includes('.lower.')?3:2.8)-1+pulse)]));
 }
+
+/** Tornado Twist reaches to its leading-hand Weddle grip from a high pelvis. */
+export function skate900Elasticity(weight:number,stance:number):Record<string,number> {
+  const t=Math.max(0,Math.min(1,weight)),reach=t*t*(3-2*t),side=stance>0?'right':'left';
+  return {[`deform.arm.upper.${side}.length`]:1+1.1*reach,[`deform.arm.lower.${side}.length`]:1+1.3*reach};
+}

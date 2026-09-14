@@ -1,5 +1,5 @@
 import { SKATE_UNDER_RAIL_DEPTH, sampleUnderRailMotion } from './skateBodyMotion';
-import { skateUnderRailElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
+import { skateUnderRailElasticity, skate900Elasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
 // Authored fake-physics board movement. No rigidbody, no forces: just a
 // heading, a scalar speed, a vertical velocity, and hand-tuned numbers from
 // tuning.ts. Ground following is a single downward raycast; slopes only exist
@@ -777,6 +777,7 @@ export class Player {
   private specialGrabT = 0;
   private specialGrabStartAngle = 0;
   private specialGrabLanding = false;
+  private nineHundredPose = false;
   private slideTimer = 0;
   private slideCd = 0;
   private slidePose = 0;
@@ -4475,6 +4476,7 @@ export class Player {
   }
 
   private clearSpecialMoves(): void {
+    this.nineHundredPose = false;
     this.queuedFlip=this.queuedGrab=null;
     this.grabBlockedUntilRelease=false;
     this.pendingSpecialFlip = null;
@@ -10612,6 +10614,7 @@ export class Player {
       return false;
     this.pendingSpecialGrab = null;
     this.specialGrab = trick;
+    this.nineHundredPose = true;
     this.specialGrabT = trick.duration;
     // The recipe's brief RIGHT tap may have begun a tiny ordinary spin. The
     // committed 900 owns the rotation and starts from the nearest landable line.
@@ -10621,7 +10624,7 @@ export class Player {
     this.grabPhase = 'enter';
     this.grabT = 0;
     this.grabTrickName = trick.label;
-    this.grabKind='indy';
+    this.grabKind='mute';
     this.grabTickT = 0;
     const scored = this.score(trick.points, trick.label, 'grab');
     this.airGrabShown = scored.shown ?? null;
@@ -10630,6 +10633,7 @@ export class Player {
   }
 
   private startGrab(kind:GrabTrickKind):void {
+    this.nineHundredPose = false;
     const trick=grabTrickInfo(kind);
     this.grabKind=kind;this.grabTrickName=trick.label;
     this.special.consumeInput();
@@ -16187,7 +16191,7 @@ export class Player {
     }
 
     // Read the latched trick, not the current rotation/balance input.
-    const grabDefinition=grabTrickInfo(this.specialGrab?'indy':this.grabKind);
+    const grabDefinition=grabTrickInfo(this.specialGrab?'mute':this.grabKind);
     const pitchT=grabDefinition.pitch,rollT=grabDefinition.roll;
     const armRT=grabDefinition.rightArm,armLT=grabDefinition.leftArm;
     const poseBlend = Math.min(1, 12 * dt);
@@ -16887,6 +16891,9 @@ export class Player {
       }
     }
     if(this.boardG)this.boardG.userData.ollieMotion=ollieMotion;
+    const nineHundred=this.specialGrab?.id==='the-900'||this.nineHundredPose&&this.grabPose>.001;
+    if(nineHundred && this.grabPose>0)
+      this.playerAnimationBridge.modulateDeformations(skate900Elasticity(this.grabPose,this.stance));
     if(this.underK>0 && !this.isBailing && (this.state==='grind'||this.state==='air'))
       this.playerAnimationBridge.modulateDeformations(skateUnderRailElasticity(this.underK,this.runTime,this.state==='grind'&&!this.railUnder,this.state!=='grind'));
     if (this.softSkateImpactT > 0 && this.freeSkate && this.grounded && this.state === 'ride' && !this.isBailing) {
@@ -16937,6 +16944,7 @@ export class Player {
         underReturning: this.state==='grind'&&!this.railUnder,
         mount: mountPose.tuck + .75 * mountPose.settle,
         manual: this.manualing, grab: this.specialGrab ? 'mute' : this.grabKind, grabWeight: this.grabPose,
+        nineHundred,
         grind: this.state === 'grind' ? this.grindStyle : null, rail: this.grindRail,
         railT: this.grindT, railDir: this.grindDir, crossDir: this.grindCrossDir,
         approachSide: this.grindApproachSide, crookedSide: this.grindYawDir || 1,

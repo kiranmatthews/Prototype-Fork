@@ -2,7 +2,7 @@ import { DECK_TRICKS, GRAB_TRICKS, GRIND_TRICKS, LIP_CONTACTS } from '../skateTr
 import { SPECIAL_TRICKS } from '../specialTricks';
 import type { AnimationClip, AnimationSuiteDocument, RigDefinition } from './types';
 
-export const SKATE_REVIEW_REVISION = 6;
+export const SKATE_REVIEW_REVISION = 7;
 export interface SkateReviewEntry {
   id: string;
   clipId: string;
@@ -104,8 +104,11 @@ export function addSkateReviewClips(document: AnimationSuiteDocument, catalog: S
   const sources = new Map(catalog.clips.map(clip => [clip.id,clip]));
   const clips = document.clips.map(clip => {
     const replacement = sources.get(clip.id);
-    if (!replacement || !catalog.previousSignatures?.[clip.id]?.includes(skateReviewSignature(clip))) return clip;
-    return { ...structuredClone(replacement), name: clip.name, playbackSpeed: clip.playbackSpeed,
+    if (!replacement) return clip;
+    const name=clip.id==='player.skate-study.special-the-900' && clip.name==='Skate · S39 · The 900'
+      ? replacement.name : clip.name;
+    if (!catalog.previousSignatures?.[clip.id]?.includes(skateReviewSignature(clip))) return name===clip.name?clip:{...clip,name};
+    return { ...structuredClone(replacement), name, playbackSpeed: clip.playbackSpeed,
       metadata: { ...clip.metadata, ...replacement.metadata } };
   });
   return { ...document, clips: [...clips, ...catalog.clips.filter(clip => !ids.has(clip.id) &&

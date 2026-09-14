@@ -101,6 +101,9 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
       p.specialGrind=id==='darkslide'?SPECIAL_TRICKS[2]:null;
       const specialProgress=Math.max(0,Math.min(1,(time-.6)/.9));
       p.specialGrab=id==='the-900'&&time>=.6&&specialProgress<1?SPECIAL_TRICKS[1]:null;
+      p.specialGrabLanding=id==='the-900'&&specialProgress===1;
+      p.nineHundredPose=id==='the-900'&&time>=.6;
+      if(id==='the-900')p.grabKind='mute';
       if(p.specialGrab)p.grabPhase=specialProgress>.12&&specialProgress<.83?'held':'none';
       p.specialFlip=id==='kickflip-mctwist'&&time>=.6&&specialProgress<1?SPECIAL_TRICKS[0]:null;
       const flip=DECK_TRICKS.find(t=>t.kind===id),trickProgress=flip?Math.max(0,Math.min(1,(time-.6)/flip.duration)):0;

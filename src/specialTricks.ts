@@ -31,7 +31,7 @@ export const SPECIAL_TRICKS: readonly SpecialTrick[] = [
   {
     id: 'the-900',
     category: 'grab',
-    label: 'The 900',
+    label: 'Tornado Twist',
     directions: ['right', 'down'],
     points: 3000,
     duration: 0.9,

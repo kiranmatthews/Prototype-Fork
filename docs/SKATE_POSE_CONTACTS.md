@@ -42,7 +42,7 @@ The hand mapping is stance-relative; anatomical left/right alone cannot define a
 | Inward Heelflip | Heelflip + backside half-shove |
 | Impossible | Full wrap around trailing foot |
 | Kickflip McTwist | Kickflip catch, inverted backside 540, Weddle grip |
-| The 900 | Two-and-a-half backside turns with Weddle grip |
+| Tornado Twist | Two-and-a-half backside turns with Weddle grip |
 
 References include [skatedeluxe's Hardflip lesson](https://www.skatedeluxe.com/blog/en/trick-tips/skateboard/flat/how-to-hardflip/), [Nollie Skateboarding's rear-foot Impossible lesson](https://nollieskateboarding.com/en/news/15884), and [Mike McGill's McTwist account](https://www.wbur.org/onlyagame/2012/11/10/skateboarding-mctwist). These are original procedural interpretations, not copied animation clips.
 
@@ -133,3 +133,11 @@ S42 now has a 0.72-second staged entry: the feet flick the board crosswise, the 
 `tools/test-wallride-facing.mjs` covers 360 straight/curved-wall cases across both sides, stances, five body-facing angles and six movement directions. It exercises 144 allowed catches and 2,880 native ride frames, including reverse, head-on, upward and downward travel, back-facing rejection, head-look independence and the continuation guard. `tools/test-skate-hang-darkslide.mjs` also checks the ordered foot-flick/jump/late-catch sequence, visible shoe clearance, continuous shafts, roughly 8 cm held headroom and truck-grip error below 2.4 mm through the return.
 
 For local gameplay review, open `wallride-facing-review.html?playtest&level=codex-lab&lite` under Vite, or remove `lite` for full rendering. This test-only page exposes native facing and travel cases without saving settings or progress. Browser checks confirm a back-to-wall rejection and valid reverse/head-on/vertical rides; the sheet shows S42's flick, airborne beat and shorter-arm catch. Catalogue revision 6 refreshes S08/S42 and preserves authored studies. Focused wallride, hang/Darkslide, contact, ollie and review tests plus build pass; no full suite.
+
+## S39 Tornado Twist
+
+S39 keeps its pelvis high with a shallow knee spring, leans the torso back and extends the leading arm to the Weddle grip. Shared upper-arm/forearm elasticity reaches 2.1×/2.3× independently, preserving the planted shoes and hand without pulling the chest down. The pose and leading-hand contact persist through release, followed by the existing finite landing rebound. The move is now named **Tornado Twist** in gameplay, the Trick Guide, sheet and Lab. Its stable `the-900` ID, full 900° rotation, input and score remain unchanged.
+
+`tools/test-tornado-twist-pose.mjs` exercises 396 native entry/spin/release/landing frames across both stances and two headings, plus 121 samples of the complete baked clip. It checks 4,117,218 actual skinned garment vertex positions against the board surface: minimum sampled clearance is 15.7 cm. During the held native pose, pelvis height is at least 86.4 cm above the mean soles and knee flex peaks at 50.7°. Sole/grip errors remain below 3.83/1.91 mm, with continuous rendered arm shafts. Every native spin completes and lands cleanly.
+
+Catalogue revision 7 refreshes unedited motion and migrates the old automatic S39 label while preserving edited keys and custom names. The existing 10,206-frame contact audit, native trick regression, 1,890-frame review/migration check and production build pass. Lite/full gameplay browser runs land for 3,000 points with no console errors; the packaged sheet shows the high pelvis, backward lean and extended grip. No full suite was run.

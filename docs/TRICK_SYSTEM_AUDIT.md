@@ -80,10 +80,10 @@ Duration grows the existing trick's points without adding multipliers. Below 4 m
 | Command with SPECIAL lit | Trick | Base | Duration |
 | --- | --- | ---: | ---: |
 | Left, right + Square | Kickflip McTwist | 2,500 | 0.78 s |
-| Right, down + Circle | The 900 | 3,000 | 0.90 s |
+| Right, down + Circle | Tornado Twist | 3,000 | 0.90 s |
 | Left, right + Triangle | Darkslide | 1,800 | held; initial 500/s |
 
-The McTwist now combines a backflip and half-twist around the hips, with a deck flip, and carries the completed half-turn into landing. The 900 owns its full rotation rather than accepting ordinary steering during the move. Their included rotation does not mint a second trick multiplier. Darkslide inversion occurs after foot seating so its inverted deck cannot drag the rider below the rail.
+The McTwist now combines a backflip and half-twist around the hips, with a deck flip, and carries the completed half-turn into landing. Tornado Twist owns its full 900° rotation rather than accepting ordinary steering during the move. Their included rotation does not mint a second trick multiplier. Darkslide inversion occurs after foot seating so its inverted deck cannot drag the rider below the rail.
 
 These remain procedural animations. Grab shoulder/elbow poses approximate the named silhouettes; exact hand-to-deck attachment and original Neversoft clip reproduction are not implemented. Visual polish and hand contact could not be reviewed on the locked desktop, and the user requested this release proceed without that review. No emulator timing comparison is claimed.
 

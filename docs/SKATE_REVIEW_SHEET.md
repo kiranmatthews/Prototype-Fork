@@ -11,7 +11,7 @@ The sheet presents 42 numbered poses in three columns. All loop at half speed by
 | S18–S25 | Eight grabs |
 | S26–S33 | Eight grinds |
 | S34–S37 | Axle, rock, nose and tail stalls |
-| S38–S40 | McTwist, 900 and Darkslide |
+| S38–S40 | McTwist, Tornado Twist and Darkslide |
 | S41–S42 | Mount and under-rail hang |
 
 These are review material, including the current defects. They are not a new visual approval of the poses rejected by the user. Endpoint contact tests alone cannot establish a convincing silhouette or trick animation.
@@ -43,3 +43,5 @@ Revision 5 repairs S40 and S42 in gameplay and the study captures. The hang incl
 Revision 5 browser QA covered the held truck grip from opposite and rail-end views, the board handoff on release, Darkslide hold/exit, and full-render Animation Lab playback with clean close and no console errors.
 
 Revision 6 stages S42 as a foot-driven quarter turn, hop off the board and late truck catch, with shorter elongated arms and minimal clear headroom. S08 captures the new wallride rule: the character must face the wall independently of travel direction. The local `wallride-facing-review.html` developer page exercises actual eligibility; it is not a production catalogue entry.
+
+Revision 7 repairs S39 with a higher pelvis, shallow knees, backward lean and an elastic leading-arm reach, preserving the pose through release and landing. The move is renamed **Tornado Twist**, retaining S39 and its existing clip ID. The old automatic Lab label migrates even when motion keys were edited; custom names and authored keys remain intact. Native and captured garment-surface checks find at least 15.7 cm of sampled board clearance through the complete move.

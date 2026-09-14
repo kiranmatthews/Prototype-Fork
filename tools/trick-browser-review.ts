@@ -24,7 +24,7 @@ function start(kind:string,side:keyof typeof walls='South'){
 }
 for(const side of Object.keys(walls) as (keyof typeof walls)[])button(`${side} flip`,()=>start('flip',side));
 button('Grab air',()=>start('grab'));button('Grab to flip',()=>start('grab-flip'));button('Flip to grab',()=>start('flip-grab'));button('Three-trick line',()=>start('line'));
-button('Kickflip McTwist',()=>start('special-flip'));button('The 900',()=>start('special-grab'));button('Grind score',()=>start('grind'));
+button('Kickflip McTwist',()=>start('special-flip'));button('Tornado Twist',()=>start('special-grab'));button('Grind score',()=>start('grind'));
 button('Resume motion',()=>{freeze=false;autoPause=false;});button('Pause',()=>freeze=true);button('Next frame',()=>{freeze=true;single=1;});
 g.player.step=(dt:number,input:any,level:any)=>{
   if(freeze&&single===0)return;
