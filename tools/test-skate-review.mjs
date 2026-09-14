@@ -62,7 +62,7 @@ await withSkateRuntime(async ({player:p,server,THREE})=>{
       const switches=trace.filter((s,i)=>s.reverting&&!trace[i-1]?.reverting).map(s=>s.stance);
       assert.deepEqual(switches,[-1,1],'S09 must show two separated 180-degree stance switches');
     }
-    if(entry.id==='flip:kick'||entry.id==='flip:heel'){
+    if(entry.id==='flip:kick'||entry.id==='flip:heel'||entry.id==='flip:shove'){
       assert.equal(clip.metadata.transitionCapture,'native Player.step inputs');
       assert.equal(clip.metadata.captureFps,60);
       assert.ok(trace.some(s=>s.flipping)&&trace.at(-1).grounded,`${entry.number} must show a real pop, flick and landing`);

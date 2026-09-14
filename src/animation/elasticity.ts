@@ -115,7 +115,10 @@ export function skateFootFlipElasticity(motion:ReturnType<typeof sampleFootFlip>
     values[id]=base+(target-base)*motion.tuck;
     // The heel pushes farther sideways: extend only that leading leg, then
     // let it gather again as the shoe retracts above the freely turning deck.
-    if(part>=3&&id.includes(`.${stance>0?'right':'left'}.`))values[id]+=.14*motion.heelLead;
+    if(part>=3){
+      const leading=id.includes(`.${stance>0?'right':'left'}.`);
+      values[id]+=leading?.14*motion.heelLead:.18*motion.scoop;
+    }
   }
   return values;
 }

@@ -41,7 +41,7 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
     const nativeGrind=category==='grind'||id==='darkslide';
     const nativeLip=category==='lip',nativeWall=id==='Wallride',nativeManual=id==='Manual'||id==='Nose Manual';
     const nativeRevert=id==='Revert';
-    const nativeBackflip=id==='kickflip-mctwist',nativeFootFlip=category==='flip'&&(id==='kick'||id==='heel');
+    const nativeBackflip=id==='kickflip-mctwist',nativeFootFlip=category==='flip'&&(id==='kick'||id==='heel'||id==='shove');
     const native=nativeGrind||nativeLip||nativeWall||nativeManual||nativeRevert||nativeBackflip||nativeFootFlip;
     const arena=nativeLip||nativeBackflip?lipLevel:nativeWall?wallLevel:level;
     const grindDirections={normal:[0,0],nose:[0,1],five0:[0,-1],board:[1,0],lip:[1,0],smith:[-1,-1],feeble:[1,-1],crook:[-1,1],under:[0,0]};
@@ -61,7 +61,7 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
           command.jumpHeld=f>=12&&f<42;command.jumpPressed=f===12;command.jumpReleased=f===42;
           if(p.state==='air'){
             footFlipAirFrames++;
-            if(footFlipAirFrames===4){command.spinPressed=command.spinHeld=true;command.moveX=id==='heel'?1:0;}
+            if(footFlipAirFrames===4){command.spinPressed=command.spinHeld=true;command.moveX=id==='heel'?1:0;command.moveY=id==='shove'?-1:0;}
           }
         }else if(nativeBackflip){
           command.jumpHeld=landedAt===null;

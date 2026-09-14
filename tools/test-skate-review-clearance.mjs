@@ -7,14 +7,14 @@ await withSkateRuntime(async({player:p,THREE,server})=>{
   const {withSkatePresentationRig}=await server.ssrLoadModule('/src/animation/skateCatalog.ts');
   const {evaluateSkateboardSurfaceHeight}=await server.ssrLoadModule('/src/skateboard/model.ts');
   const catalog=JSON.parse(await readFile(new URL('../public/animations/skate-review/catalog.json',import.meta.url),'utf8'));
-  const selected=catalog.clips.filter(c=>/Skate · S(?:09|10|11|2[6-9]|3[0-8]|42) ·/.test(c.name));assert.equal(selected.length,17);
+  const selected=catalog.clips.filter(c=>/Skate · S(?:09|10|11|12|2[6-9]|3[0-8]|42) ·/.test(c.name));assert.equal(selected.length,18);
   const base=p.enterAnimationPreview();p.group.position.set(0,0,0);p.group.rotation.set(0,Math.PI,0);
   const binding=a.RigBinding.fromDefinition(base.root,withSkatePresentationRig(a.RigBinding.fromSculptRuntime(base.root).definition));
   const motion=a.createProceduralMotionContext(),shorts=p.riderG.getObjectByName('meshy-shorts-surface'),deck=p.boardG.getObjectByName('Deck_ContinuousRoundedKick');
   const point=new THREE.Vector3(),matrix=new THREE.Matrix4();let samples=0,vertices=0;const failures=[],results=[];
   for(const clip of selected){
     let minShorts=Infinity,minCoping=Infinity,minShoe=Infinity;
-    const footFlip=['flip:kick','flip:heel'].includes(clip.metadata.skateReviewId),trace=clip.metadata.transitionEvidence??[],flight=[];
+    const footFlip=['flip:kick','flip:heel','flip:shove'].includes(clip.metadata.skateReviewId),trace=clip.metadata.transitionEvidence??[],flight=[];
     const flipStart=trace.find(s=>s.flipping)?.time??Infinity;
     const flipEnd=trace.find(s=>s.time>flipStart&&!s.flipping)?.time??-Infinity;
     for(let f=0;f<=120;f++){
@@ -62,5 +62,5 @@ await withSkateRuntime(async({player:p,THREE,server})=>{
     results.push({clip:clip.name,minShorts,minCoping,...(footFlip?{minShoe}:{})});
   }
   p.exitAnimationPreview();console.log({samples,vertices,results,failures});assert.deepEqual(failures,[]);
-  console.log('PASS S09–S11/S26–S38/S42 captured entry, trick and exit garment/board and rail clearance.');
+  console.log('PASS S09–S12/S26–S38/S42 captured entry, trick and exit garment/board and rail clearance.');
 });
