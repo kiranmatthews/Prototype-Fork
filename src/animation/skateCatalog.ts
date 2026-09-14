@@ -84,7 +84,7 @@ export function withSkatePresentationRig(rig: RigDefinition): RigDefinition {
 }
 let pending: Promise<SkateReviewCatalog> | undefined;
 export function loadSkateReviewCatalog(): Promise<SkateReviewCatalog> {
-  return pending ??= fetch(`${import.meta.env.BASE_URL}animations/skate-review/catalog.json`)
+  return pending ??= fetch(`${import.meta.env.BASE_URL}animations/skate-review/catalog.json?revision=${SKATE_REVIEW_REVISION}`)
     .then(async response => {
       if (!response.ok) throw new Error(`Skate catalogue could not load (${response.status}).`);
       const data = await response.json() as SkateReviewCatalog;
