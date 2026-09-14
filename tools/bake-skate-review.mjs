@@ -38,12 +38,13 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
     p.freeSkate=p.airFromSkate=true;p.skateMountT=-1;p.sidePose=p.deckPose=1;
     p.alignPose=p.slopePose=p.slopeRoll=0;p.axisF.set(0,0,-1);p.axisL.set(-1,0,0);p.visualYaw=0;
     const [category,id]=entry.id.split(':');
-    const tickFps=id==='imposs'?240:60,dt=1/tickFps,substeps=tickFps/60;
+    const denseCapture=['imposs','varial','varial-heel'].includes(id);
+    const tickFps=denseCapture?240:60,dt=1/tickFps,substeps=tickFps/60;
     let previousCommand=null;
     const nativeGrind=category==='grind'||id==='darkslide';
     const nativeLip=category==='lip',nativeWall=id==='Wallride',nativeManual=id==='Manual'||id==='Nose Manual';
     const nativeRevert=id==='Revert';
-    const nativeBackflip=id==='kickflip-mctwist',nativeFootFlip=category==='flip'&&(id==='kick'||id==='heel'||id==='shove'||id==='imposs');
+    const nativeBackflip=id==='kickflip-mctwist',nativeFootFlip=category==='flip'&&(id==='kick'||id==='heel'||id==='shove'||id==='imposs'||id==='varial'||id==='varial-heel');
     const native=nativeGrind||nativeLip||nativeWall||nativeManual||nativeRevert||nativeBackflip||nativeFootFlip;
     const arena=nativeLip||nativeBackflip?lipLevel:nativeWall?wallLevel:level;
     const grindDirections={normal:[0,0],nose:[0,1],five0:[0,-1],board:[1,0],lip:[1,0],smith:[-1,-1],feeble:[1,-1],crook:[-1,1],under:[0,0]};
@@ -63,7 +64,7 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
           command.jumpHeld=f>=12&&f<42;command.jumpPressed=f===12;command.jumpReleased=f===42;
           if(p.state==='air'&&edgeFrame){
             footFlipAirFrames++;
-            if(footFlipAirFrames===4){command.spinPressed=command.spinHeld=true;command.moveX=id==='heel'?1:0;command.moveY=id==='shove'?-1:id==='imposs'?1:0;}
+            if(footFlipAirFrames===4){command.spinPressed=command.spinHeld=true;command.moveX=id==='heel'||id==='varial-heel'?1:id==='varial'?-1:0;command.moveY=id==='shove'||id==='varial'||id==='varial-heel'?-1:id==='imposs'?1:0;}
           }
         }else if(nativeBackflip){
           command.jumpHeld=landedAt===null;
@@ -215,7 +216,7 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
       clip.metadata.reviewRailHeight=id==='under'?4.5:nativeLip||nativeBackflip?3.05:.8;
       if(nativeLip||nativeBackflip){clip.metadata.reviewPipe=true;clip.metadata.captureFps=60;}
       if(id==='under'||nativeFootFlip)clip.metadata.captureFps=tickFps;
-      if(id==='imposs')clip.metadata.inputFps=60;
+      if(denseCapture)clip.metadata.inputFps=60;
     }
     clip.metadata.boardVisibility=frames.filter((f,i)=>i===0||f.boardVisible!==frames[i-1].boardVisible).map(f=>[f.time,f.boardVisible]);
     const track=(kind,target,values)=>{
@@ -224,7 +225,7 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
       if(values.every(v=>distance(v,identity)<1e-6))return;
       const constant=values.every(v=>distance(v,values[0])<1e-6);
       const kept=new Set([0,values.length-1]);
-      const tolerance=id==='imposs'?(kind==='quaternion'?.0002:.00005):kind==='quaternion'?.0009:.0002;
+      const tolerance=denseCapture?(kind==='quaternion'?.0002:.00005):kind==='quaternion'?.0009:.0002;
       const segments=[[0,values.length-1]];
       while(!constant&&segments.length){
         const [start,end]=segments.pop();let worst=tolerance,index=-1;

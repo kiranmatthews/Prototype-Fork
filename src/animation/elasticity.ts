@@ -110,7 +110,10 @@ export function skateBackflipElasticity(motion:ReturnType<typeof sampleBackflip>
 export function skateFootFlipElasticity(motion:ReturnType<typeof sampleFootFlip>,ollie:Record<string,number>,stance:number):Record<string,number> {
   const values={...ollie};
   for(const [id,part] of ELASTIC_LENGTH_CONTROLS){
-    if(part===1||part===2)continue;
+    if(part===1||part===2){
+      if(motion.varial){const base=ollie[id]??1;values[id]=base+((part===1?1.25:1.35)-base)*motion.arms;}
+      continue;
+    }
     const target=part===0?.94:part===3?.88:.84,base=ollie[id]??1;
     values[id]=base+(target-base)*motion.tuck;
     // The heel pushes farther sideways: extend only that leading leg, then
