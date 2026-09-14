@@ -1806,7 +1806,7 @@ export class Player {
     if (this.specialFlip) return 'player.skate';
     // These foot-driven clips own their arm/leg deformation; an early
     // input must not route through the on-foot spin overlay.
-    if(this.state==='air'&&this.airFromSkate&&this.flipT>0&&(this.flipKind==='imposs'||this.flipKind==='varial'||this.flipKind==='varial-heel'))return 'player.skate';
+    if(this.state==='air'&&this.airFromSkate&&this.flipT>0&&(this.flipKind==='imposs'||this.flipKind==='varial'||this.flipKind==='varial-heel'||this.flipKind==='hardflip'))return 'player.skate';
     if (this.spinTimer > 0 || this.flipT > 0) return 'player.spin';
     // A committed split jump owns its full airborne silhouette, even while
     // the old slide/crouch presentation weights are still easing away.
@@ -16886,7 +16886,7 @@ export class Player {
     if(ollieMotion){
       const lengths=this.specialFlip
         ?skateBackflipElasticity(sampleBackflip(1-this.flipT/this.flipDuration),this.stance,ollieMotion.deformations)
-        :this.flipT>0&&(this.flipKind==='kick'||this.flipKind==='heel'||this.flipKind==='shove'||this.flipKind==='varial'||this.flipKind==='varial-heel')?skateFootFlipElasticity(sampleFootFlip(this.flipKind,1-this.flipT/this.flipDuration),ollieMotion.deformations,this.stance):this.flipT>0&&this.flipKind==='imposs'?skateImpossibleElasticity(sampleImpossible(1-this.flipT/this.flipDuration),ollieMotion.deformations,this.stance):ollieMotion.deformations;
+        :this.flipT>0&&(this.flipKind==='kick'||this.flipKind==='heel'||this.flipKind==='shove'||this.flipKind==='varial'||this.flipKind==='varial-heel'||this.flipKind==='hardflip')?skateFootFlipElasticity(sampleFootFlip(this.flipKind,1-this.flipT/this.flipDuration),ollieMotion.deformations,this.stance):this.flipT>0&&this.flipKind==='imposs'?skateImpossibleElasticity(sampleImpossible(1-this.flipT/this.flipDuration),ollieMotion.deformations,this.stance):ollieMotion.deformations;
       this.playerAnimationBridge.modulateDeformations(lengths);
       if(this.spineG)this.spineG.rotation.x+=ollieMotion.spine;
       for(const [arm,elbow,wrist,side] of [[this.armR,this.elbowR,this.wristR,1],[this.armL,this.elbowL,this.wristL,-1]] as const){

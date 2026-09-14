@@ -254,3 +254,18 @@ The feet push in opposite directions, then retract above the board. The rear sho
 `tools/test-skate-varial-motion.mjs` covers 32 native sequences across both stances, reversed decks, campaign/park controls and early/later inputs. Across 3,792 frames and 14,069,216 garment vertices, foot targets stay within 1 mm; sampled shoes clear by at least 1.93 mm, shins by 9.30 cm and shorts by 16.94 cm. The exact half-shove/full-roll directions, opposing foot motion, asymmetric arms, downward catch and clean scores pass. Controller position matches a player with presentation disabled and the deck centre matches its original flight path.
 
 Revision 17 records both complete studies at 240 Hz with 60 Hz input edges. All 42 playback/migration checks pass, preserving authored studies. The expanded captured audit covers 2,541 samples and 20,881,938 garment vertices. S14/S15 retain at least 2.02 mm shoe, 9.37 cm shin and 21.62 cm shorts clearance between keys. S10–S13 capture tracks remain unchanged. Native contact/trick regressions and the production build pass. Native lite/full rendering, the packaged sheet and both Animation Lab studies were visually reviewed with no console errors. No full repository suite was run.
+
+
+## S16 steep, foot-driven Hardflip
+
+Motion reference: [@blackjessus — Hardflip In Slow Mo](https://www.youtube.com/shorts/1oQ3bEuIsTo), supplied by the user and reviewed through pop, steep board passage, airborne gather and landing. S16 now combines a frontside rear-foot scoop with a leading toe flick. The front foot releases and retracts promptly, clearing the nose as the deck tips close to vertical. The pitch settles while the board completes its frontside half-shove and full kickflip; the rider retains the incoming stance.
+
+The board rotates about its own centre on the unchanged gameplay flight path. Both feet gather above and to the side of its steep passage, then descend for a staggered catch. Shared independent elasticity gathers the legs, extends the unequal balancing arms and blends into the existing landing rebound. The arms counter the scoop before sweeping down into the catch, with wrists aligned to the forearms. Early inputs keep the skate animation path; durations, controls, physics and the 300-point score remain unchanged.
+
+`tools/test-skate-hardflip-motion.mjs` covers 16 native sequences across campaign/park controls, both stances, reversed boards and early/later inputs. Across 1,896 frames and 7,034,608 garment vertices, the actual deck completes the correct half-yaw/full-roll, the nose rises steeply, the feet clear and return downward, and every sequence lands for 300 points with one multiplier. Foot targets stay within 1 mm; sampled shoes clear by at least 1.93 mm, shins by 9.31 cm and shorts by 17.41 cm. Movement matches a player with presentation disabled and the deck centre retains its original flight path.
+
+Revision 18 captures the complete S16 charge/pop/flick/flight/catch/landing sequence at 240 Hz with 60 Hz input edges. The shared scooped-flip presentation keeps the earlier Varial profiles unchanged.
+
+The expanded captured audit checks 2,662 samples and 21,876,316 garment vertices, including S16’s shoes and shins between keys. Its captured shoe clearance stays above 2.02 mm, shin clearance above 9.40 cm and shorts clearance above 21.62 cm. S10–S15 and S17 motion tracks are unchanged. Native contact/trick regressions, all 42 playback/migration checks and the production build pass. No full repository suite was run.
+
+Native lite/full gameplay, the packaged contact sheet and the S16 Animation Lab study were visually reviewed with no console errors.

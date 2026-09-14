@@ -111,7 +111,7 @@ export function skateFootFlipElasticity(motion:ReturnType<typeof sampleFootFlip>
   const values={...ollie};
   for(const [id,part] of ELASTIC_LENGTH_CONTROLS){
     if(part===1||part===2){
-      if(motion.varial){const base=ollie[id]??1;values[id]=base+((part===1?1.25:1.35)-base)*motion.arms;}
+      if(motion.scoopFlip){const base=ollie[id]??1;values[id]=base+((part===1?1.25:1.35)-base)*motion.arms;}
       continue;
     }
     const target=part===0?.94:part===3?.88:.84,base=ollie[id]??1;

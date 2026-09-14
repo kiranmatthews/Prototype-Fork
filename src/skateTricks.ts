@@ -112,7 +112,7 @@ function sampleToeHeelFlip(kind:'kick'|'heel',progress:number) {
   const turn=u<r?u*u/(2*r*(1-r)):u>1-r?1-(1-u)*(1-u)/(2*r*(1-r)):(u-r/2)/(1-r);
   const flick=smooth(t/.24)*(1-smooth((t-.30)/.37));
   const gather=smooth(t/.30);
-  return {turn,yawTurn:turn,varial:false,arms:0,armSweep:0,counter:0,scoopSign:1,flick,scoop:0,rearContact:0,rearToe:0,bank:0,rock:0,flickSign:kind==='heel'?-1:1,noseReach:kind==='heel'?.32:.38,sideReach:kind==='heel'?.26:.20,
+  return {turn,yawTurn:turn,scoopFlip:false,arms:0,armSweep:0,counter:0,scoopSign:1,flick,scoop:0,rearContact:0,rearToe:0,bank:0,rock:0,flickSign:kind==='heel'?-1:1,noseReach:kind==='heel'?.32:.38,sideReach:kind==='heel'?.26:.20,
     heelLead:kind==='heel'?.65*smooth(t/.12)*(1-smooth((t-.36)/.30)):0,
     departure:smooth(t/.05)*(1-smooth((t-.08)/.10)),tuck:gather*(1-smooth((t-.65)/.35)),
     frontLift:.40*smooth((t-.10)/.22)*(1-smooth((t-.74)/.26)),
@@ -126,7 +126,7 @@ export function samplePopShoveIt(progress:number) {
   const turn=u<r?u*u/(2*r*(1-r)):u>1-r?1-(1-u)*(1-u)/(2*r*(1-r)):(u-r/2)/(1-r);
   const scoop=smooth(t/.24)*(1-smooth((t-.30)/.42));
   const settle=1-smooth((t-.67)/.17);
-  return {turn,yawTurn:turn,varial:false,arms:0,armSweep:0,counter:0,scoopSign:1,flick:0,flickSign:0,noseReach:0,sideReach:0,heelLead:0,scoop,
+  return {turn,yawTurn:turn,scoopFlip:false,arms:0,armSweep:0,counter:0,scoopSign:1,flick:0,flickSign:0,noseReach:0,sideReach:0,heelLead:0,scoop,
     rearContact:1-smooth((t-.08)/.18),rearToe:.28*scoop,
     bank:.16*Math.sin(Math.PI*turn)*settle,rock:.11*Math.sin(2*Math.PI*turn)*settle,
     departure:smooth(t/.05)*(1-smooth((t-.08)/.10)),
@@ -142,13 +142,26 @@ export function sampleVarial(kind:'varial'|'varial-heel',progress:number) {
   const base=sampleToeHeelFlip(heel?'heel':'kick',t),shove=samplePopShoveIt(t);
   const arms=smooth(t/.14)*(1-smooth((t-.80)/.20));
   const scoop=smooth(t/.13)*(1-smooth((t-.14)/.28));
-  return {...base,varial:true,yawTurn:shove.turn,scoop,scoopSign:heel?-1:1,noseReach:heel?.24:.30,sideReach:heel?.16:.18,
+  return {...base,scoopFlip:true,yawTurn:shove.turn,scoop,scoopSign:heel?-1:1,noseReach:heel?.24:.30,sideReach:heel?.16:.18,
     rearContact:1-smooth((t-.025)/.13),rearToe:.18*scoop,
     frontLift:.60*smooth((t-.08)/.22)*(1-smooth((t-.68)/.24)),
     backLift:.60*smooth((t-.04)/.20)*(1-smooth((t-.76)/.24)),
     arms,armSweep:smooth((t-.56)/.34),counter:-.14*(heel?-1:1)*Math.sin(Math.PI*shove.turn)*arms};
 }
-export function sampleFootFlip(kind:'kick'|'heel'|'shove'|'varial'|'varial-heel',progress:number) {
+/** Frontside tail scoop and kickflip release drive a steep, nose-first
+ * passage. The feet gather clear before returning to the free board. */
+export function sampleHardflip(progress:number) {
+  const t=Math.max(0,Math.min(1,progress)),base=sampleVarial('varial',t);
+  const passage=smooth((t-.03)/.18)*(1-smooth((t-.36)/.32));
+  return {...base,scoopSign:-1,noseReach:.16,sideReach:.24,
+    flick:smooth(t/.17)*(1-smooth((t-.26)/.30)),
+    rock:-.95*passage,
+    frontLift:.76*smooth((t-.02)/.19)*(1-smooth((t-.68)/.24)),
+    backLift:.68*smooth((t-.02)/.22)*(1-smooth((t-.76)/.24)),
+    counter:.18*Math.sin(Math.PI*base.yawTurn)*base.arms};
+}
+export function sampleFootFlip(kind:'kick'|'heel'|'shove'|'varial'|'varial-heel'|'hardflip',progress:number) {
+  if(kind==='hardflip')return sampleHardflip(progress);
   if(kind==='shove')return samplePopShoveIt(progress);
   if(kind==='varial'||kind==='varial-heel')return sampleVarial(kind,progress);
   return sampleToeHeelFlip(kind,progress);
@@ -180,8 +193,8 @@ export function sampleImpossible(progress:number) {
 export function sampleDeckTrick(kind:DeckTrickKind,progress:number) {
   const trick=deckTrickInfo(kind),t=Math.max(0,Math.min(1,progress));
   const motion=smooth((t-.08)/.78),clearance=smooth(t/.18)*(1-smooth((t-.72)/.28));
-  const hard=kind==='hardflip'||kind==='inward-heel';
-  const footFlip=kind==='kick'||kind==='heel'||kind==='shove'||kind==='varial'||kind==='varial-heel'?sampleFootFlip(kind,t):null;
+  const hard=kind==='inward-heel';
+  const footFlip=kind==='kick'||kind==='heel'||kind==='shove'||kind==='varial'||kind==='varial-heel'||kind==='hardflip'?sampleFootFlip(kind,t):null;
   const impossible=kind==='imposs'?sampleImpossible(t):null;
   return {
     roll:trick.roll*2*Math.PI*(footFlip?footFlip.turn:motion)+(footFlip?.bank??0),yaw:trick.yaw*2*Math.PI*(footFlip?footFlip.yawTurn:motion),
