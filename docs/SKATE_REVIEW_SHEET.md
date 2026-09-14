@@ -103,3 +103,5 @@ Revision 22 synchronizes the seated-back, waist-driven S19 Melon gameplay fix. O
 Revision 23 synchronizes the seated S20 Nosegrab and forward nose reach from gameplay. Other 41 motion tracks remain unchanged.
 
 Revision 24 synchronizes the seated S21 Tailgrab and back-arm tail reach from gameplay. Its native capture uses park controls, where down + grab selects Tailgrab. Other 41 motions remain unchanged.
+
+Revision 25 synchronizes Method’s extended legs, head-clear arm placement and inward-facing palm from gameplay. Other 41 motion tracks remain unchanged.

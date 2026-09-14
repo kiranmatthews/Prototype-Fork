@@ -94,6 +94,18 @@ export function skate900Elasticity(weight:number,stance:number):Record<string,nu
   return {[`deform.arm.upper.${side}.length`]:1+1.1*reach,[`deform.arm.lower.${side}.length`]:1+1.3*reach};
 }
 
+/** Method extends each leg segment independently, leaving the planted grip
+ * and movement physics untouched. The entry pulse settles at full extension. */
+export function skateMethodElasticity(weight:number):Record<string,number> {
+  const t=Math.max(0,Math.min(1,weight)),w=t*t*(3-2*t),pulse=.025*Math.sin(Math.PI*w);
+  const values:Record<string,number>={'deform.torso.length':1-.035*w};
+  for(const side of ['left','right']){
+    values[`deform.leg.upper.${side}.length`]=1+.26*w+pulse;
+    values[`deform.leg.lower.${side}.length`]=1+.30*w+pulse;
+  }
+  return values;
+}
+
 /** Blend from the live ollie lengths, rather than multiplying two squashes. */
 export function skateBackflipElasticity(motion:ReturnType<typeof sampleBackflip>,stance:number,ollie:Record<string,number>):Record<string,number> {
   const gripping=stance>0?'right':'left',values={...ollie};

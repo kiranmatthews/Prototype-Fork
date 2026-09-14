@@ -57,7 +57,7 @@ await withSkateRuntime(async ({player:p,server,THREE})=>{
     assert.ok(clip.tracks.some(t=>t.target==='skateBoard'),'board was omitted from capture');
     assert.equal(clip.metadata.reviewCapture,true);
     const trace=clip.metadata.transitionEvidence;
-    if(['grab:indy','grab:melon','grab:nose','grab:tail'].includes(entry.id)){
+    if(['grab:indy','grab:melon','grab:nose','grab:tail','grab:method'].includes(entry.id)){
       assert.equal(clip.metadata.transitionCapture,'native Player.step inputs');assert.equal(clip.metadata.captureFps,60);
       assert.ok(trace.some(s=>s.grabPhase==='held')&&trace.at(-1).grounded&&trace.at(-1).grabWeight===0,`${entry.name} must enter, grab, release and land`);
     }
