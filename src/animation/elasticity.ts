@@ -1,7 +1,7 @@
 import { createProceduralDriver } from './document';
 import type { AnimationClip, AnimationTrack, RigDefinition } from './types';
 import { sampleUnderRailMotion, sampleSkateRevert } from '../skateBodyMotion';
-import { sampleBackflip, sampleKickflip } from '../skateTricks';
+import { sampleBackflip, sampleFootFlip } from '../skateTricks';
 
 export const CHARACTER_ELASTICITY_REVISION = 1;
 /** Torso, upper arm, forearm, thigh and shin. Zero protects a planted grip. */
@@ -107,12 +107,15 @@ export function skateBackflipElasticity(motion:ReturnType<typeof sampleBackflip>
 }
 
 /** Gather the legs above a freely turning board without folding the pelvis down. */
-export function skateKickflipElasticity(motion:ReturnType<typeof sampleKickflip>,ollie:Record<string,number>):Record<string,number> {
+export function skateFootFlipElasticity(motion:ReturnType<typeof sampleFootFlip>,ollie:Record<string,number>,stance:number):Record<string,number> {
   const values={...ollie};
   for(const [id,part] of ELASTIC_LENGTH_CONTROLS){
     if(part===1||part===2)continue;
     const target=part===0?.94:part===3?.88:.84,base=ollie[id]??1;
     values[id]=base+(target-base)*motion.tuck;
+    // The heel pushes farther sideways: extend only that leading leg, then
+    // let it gather again as the shoe retracts above the freely turning deck.
+    if(part>=3&&id.includes(`.${stance>0?'right':'left'}.`))values[id]+=.14*motion.heelLead;
   }
   return values;
 }

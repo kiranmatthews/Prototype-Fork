@@ -27,7 +27,7 @@ function start(kind:string,side:keyof typeof walls='South'){
 for(const side of Object.keys(walls) as (keyof typeof walls)[])button(`${side} flip`,()=>start('flip',side));
 button('Grab air',()=>start('grab'));button('Grab to flip',()=>start('grab-flip'));button('Flip to grab',()=>start('flip-grab'));button('Three-trick line',()=>start('line'));
 button('Backflip',()=>start('special-flip'));button('Tornado Twist',()=>start('special-grab'));button('Grind score',()=>start('grind'));
-button('Revert',()=>start('revert'));button('Flat Kickflip',()=>start('flat-flip'));
+button('Revert',()=>start('revert'));button('Flat Kickflip',()=>{flip.value='Kickflip';start('flat-flip');});button('Flat Heelflip',()=>{flip.value='Heelflip';start('flat-flip');});
 button('Resume motion',()=>{freeze=false;autoPause=false;});button('Pause',()=>freeze=true);button('Next frame',()=>{freeze=true;single=1;});
 g.player.step=(dt:number,input:any,level:any)=>{
   if(freeze&&single===0)return;
@@ -53,7 +53,7 @@ g.player.step=(dt:number,input:any,level:any)=>{
   };
   if(scenario==='flat-flip'){
     command.jumpHeld=frame>=12&&frame<42;command.jumpPressed=frame===12;command.jumpReleased=frame===42;
-    if(p.state==='air'){air++;if(air===4)press('flip',[-1,0]);}
+    if(p.state==='air'){air++;if(air===4)press('flip',vectors[flipKind]);}
   }
   if(scenario==='grind'){command.grindHeld=true;command.grindPressed=frame===0;command.jumpHeld=false;}
   if(scenario==='revert'&&hadAir&&p.grounded){command.jumpHeld=false;if(!reverted){command.transferPressed=true;reverted=true;logs.push(`revert from stance ${p.stance}`);}}
