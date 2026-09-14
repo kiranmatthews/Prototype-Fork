@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import { DECK_TRICKS, GRAB_TRICKS } from '../src/skateTricks';
 import { JungleCupEvent } from '../src/competition/event';
+import { SKATE_REVERT_DURATION } from '../src/skateBodyMotion';
 const g:any=await new Promise(resolve=>{const ready=()=>{const game=(window as any).__game;if(game)resolve(game);else requestAnimationFrame(ready);};ready();});
 const panel=document.createElement('details');panel.open=true;panel.dataset.testid='trick-review';
 panel.style.cssText='position:fixed;bottom:7px;left:7px;width:340px;max-width:calc(100vw - 30px);z-index:999999;background:#092323ed;color:white;padding:10px;font:12px monospace;border:1px solid #80a99d';
@@ -13,18 +14,19 @@ const flip=select('Flip trick',DECK_TRICKS.map(trick=>trick.label)),grab=select(
 const view=select('Review view',['Follow','Side','Front']);
 const vectors:Record<string,[number,number]>={kick:[-1,0],heel:[1,0],imposs:[0,1],shove:[0,-1],varial:[-1,-1],'varial-heel':[1,-1],hardflip:[-1,1],'inward-heel':[1,1],indy:[1,0],melon:[-1,0],nose:[0,1],tail:[0,-1],method:[-1,1],mute:[1,1],stalefish:[-1,-1],japan:[1,-1]};
 const walls={South:{p:[0,.1,10],h:[0,0,1]},North:{p:[28,.1,-90],h:[0,0,-1]},East:{p:[28,.1,-42],h:[1,0,0]},West:{p:[-28,.1,-70],h:[-1,0,0]}};
-let scenario='flip',wall=walls.South,frame=0,air=0,placed=false,freeze=false,single=0,autoPause=true,pausedPose=false,hadAir=false,active=false;
+let scenario='flip',wall=walls.South,frame=0,air=0,placed=false,freeze=false,single=0,autoPause=true,pausedPose=false,hadAir=false,active=false,reverted=false;
 let logs:string[]=[];
 const nativeStep=g.player.step.bind(g.player),nativeRun=JungleCupEvent.prototype.stepRun;
 JungleCupEvent.prototype.stepRun=function(dt,score,combo,ready){return nativeRun.call(this,freeze?0:dt,score,combo,ready);};
 const blank=()=>({moveX:0,moveY:0,jumpHeld:true,jumpPressed:false,jumpReleased:false,grindHeld:false,grindPressed:false,spinHeld:false,spinPressed:false,grabHeld:false,grabPressed:false,transferHeld:false,transferPressed:false,restartPressed:false});
 function start(kind:string,side:keyof typeof walls='South'){
-  scenario=kind;wall=walls[side];frame=air=0;placed=freeze=pausedPose=hadAir=false;active=true;logs=[];single=0;
-  autoPause=kind==='flip'||kind==='grab'||kind==='special-flip';g.competitionAction('retry');
+  scenario=kind;wall=walls[side];frame=air=0;placed=freeze=pausedPose=hadAir=reverted=false;active=true;logs=[];single=0;
+  autoPause=kind==='flip'||kind==='grab'||kind==='special-flip'||kind==='revert';g.competitionAction('retry');
 }
 for(const side of Object.keys(walls) as (keyof typeof walls)[])button(`${side} flip`,()=>start('flip',side));
 button('Grab air',()=>start('grab'));button('Grab to flip',()=>start('grab-flip'));button('Flip to grab',()=>start('flip-grab'));button('Three-trick line',()=>start('line'));
 button('Backflip',()=>start('special-flip'));button('Tornado Twist',()=>start('special-grab'));button('Grind score',()=>start('grind'));
+button('Revert',()=>start('revert'));
 button('Resume motion',()=>{freeze=false;autoPause=false;});button('Pause',()=>freeze=true);button('Next frame',()=>{freeze=true;single=1;});
 g.player.step=(dt:number,input:any,level:any)=>{
   if(freeze&&single===0)return;
@@ -48,6 +50,7 @@ g.player.step=(dt:number,input:any,level:any)=>{
     if(category==='flip')command.spinPressed=command.spinHeld=true;else command.grabPressed=command.grabHeld=true;
   };
   if(scenario==='grind'){command.grindHeld=true;command.grindPressed=frame===0;command.jumpHeld=false;}
+  if(scenario==='revert'&&hadAir&&p.grounded){command.jumpHeld=false;if(!reverted){command.transferPressed=true;reverted=true;logs.push(`revert from stance ${p.stance}`);}}
   if(p.vertAir){
     air++;
     if(scenario==='flip'&&air===1)press('flip',vectors[flipKind]);
@@ -63,8 +66,10 @@ g.player.step=(dt:number,input:any,level:any)=>{
   if(!was&&p.vertAir){hadAir=true;logs.push(`takeoff vy ${p.vVel.toFixed(3)}`);}
   if(p.flipT>0&&autoPause&&!pausedPose&&1-p.flipT/p.flipDuration>=.45){pausedPose=freeze=true;logs.push('mid-flip');}
   if(scenario==='grab'&&p.grabPhase==='held'&&air>14&&autoPause&&!pausedPose){pausedPose=freeze=true;logs.push('held grab');}
+  if(scenario==='revert'&&p.revertPoseT>0&&autoPause&&!pausedPose&&p.revertPoseT<SKATE_REVERT_DURATION/2){pausedPose=freeze=true;logs.push('mid-revert');}
   if(p.isBailing){freeze=true;logs.push('bail');}
-  if(hadAir&&p.grounded){freeze=true;logs.push(`landed ${p.comboPoints} × ${p.comboMult}`);}
+  if(hadAir&&p.grounded&&scenario!=='revert'){freeze=true;logs.push(`landed ${p.comboPoints} × ${p.comboMult}`);}
+  if(scenario==='revert'&&reverted&&p.revertPoseT<=0){freeze=true;logs.push(`revert complete in stance ${p.stance}`);}
   if(scenario==='grind'&&frame>=180){freeze=true;logs.push('three seconds of grind');}
   if(frame>500){freeze=true;logs.push('route ended');}
 };
@@ -77,4 +82,4 @@ g.renderer.render=(...args:any[])=>{
   }
   nativeRender(...args);
 };
-function report(){const p=g.player;status.textContent=JSON.stringify({scenario,frame,air,paused:freeze,state:p.state,vert:p.vertAir,flip:p.flipName,remaining:p.flipT,grab:p.grabTrickName,grabPhase:p.grabPhase,score:p.comboPoints,mult:p.comboMult,labels:p.comboLabels,bail:p.isBailing,vy:p.vVel,history:[...p.runTrickUses],logs},null,0);requestAnimationFrame(report);}report();
+function report(){const p=g.player;status.textContent=JSON.stringify({scenario,frame,air,paused:freeze,state:p.state,vert:p.vertAir,flip:p.flipName,remaining:p.flipT,grab:p.grabTrickName,grabPhase:p.grabPhase,score:p.comboPoints,mult:p.comboMult,labels:p.comboLabels,bail:p.isBailing,vy:p.vVel,stance:p.stance,reverting:p.revertPoseT>0,history:[...p.runTrickUses],logs},null,0);requestAnimationFrame(report);}report();

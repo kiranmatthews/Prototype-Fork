@@ -1,6 +1,18 @@
 const clamp = (n: number, a: number, b: number) => Math.max(a, Math.min(b, n));
 const smooth = (n: number) => { const t=clamp(n,0,1); return t*t*(3-2*t); };
 
+export const SKATE_REVERT_DURATION = .52;
+/** One half-turn: load, unweight, turn, then cushion the new stance. */
+export function sampleSkateRevert(age:number) {
+  const u=clamp(age/SKATE_REVERT_DURATION,0,1);
+  const air=clamp((u-.12)/.76,0,1),lift=.22*Math.sin(Math.PI*air);
+  const load=Math.sin(Math.PI*clamp(u/.24,0,1));
+  const land=Math.sin(Math.PI*clamp((u-.80)/.20,0,1));
+  const reach=smooth((u-.12)/.18)*(1-smooth((u-.74)/.24));
+  return {turn:smooth((u-.14)/.66),lift,knee:.65*load+.70*reach+.70*land,
+    reach,compression:load+.6*land,rebound:Math.sin(Math.PI*clamp((u-.92)/.08,0,1))};
+}
+
 // The rail anchor and its clearance probe share the deeper hanging position.
 export const SKATE_UNDER_RAIL_DEPTH = 3.15;
 export const SKATE_UNDER_RAIL_HEADROOM = .17;

@@ -1,6 +1,6 @@
 import { createProceduralDriver } from './document';
 import type { AnimationClip, AnimationTrack, RigDefinition } from './types';
-import { sampleUnderRailMotion } from '../skateBodyMotion';
+import { sampleUnderRailMotion, sampleSkateRevert } from '../skateBodyMotion';
 
 export const CHARACTER_ELASTICITY_REVISION = 1;
 /** Torso, upper arm, forearm, thigh and shin. Zero protects a planted grip. */
@@ -90,4 +90,16 @@ export function skateUnderRailElasticity(weight:number,time:number,returning=fal
 export function skate900Elasticity(weight:number,stance:number):Record<string,number> {
   const t=Math.max(0,Math.min(1,weight)),reach=t*t*(3-2*t),side=stance>0?'right':'left';
   return {[`deform.arm.upper.${side}.length`]:1+1.1*reach,[`deform.arm.lower.${side}.length`]:1+1.3*reach};
+}
+
+/** Independent recoil and a slightly longer balancing arm during the hop. */
+export function skateRevertElasticity(motion:ReturnType<typeof sampleSkateRevert>,enteringStance:number):Record<string,number> {
+  const side=enteringStance>0?'left':'right',values:Record<string,number>={
+    'deform.torso.length':1-.035*motion.compression+.02*motion.rebound,
+    [`deform.arm.upper.${side}.length`]:1+.08*motion.reach,
+    [`deform.arm.lower.${side}.length`]:1+.12*motion.reach,
+  };
+  for(const leg of ['left','right'])for(const part of ['upper','lower'])
+    values[`deform.leg.${part}.${leg}.length`]=1-.025*motion.compression+.015*motion.rebound;
+  return values;
 }

@@ -57,6 +57,11 @@ await withSkateRuntime(async ({player:p,server,THREE})=>{
     assert.ok(clip.tracks.some(t=>t.target==='skateBoard'),'board was omitted from capture');
     assert.equal(clip.metadata.reviewCapture,true);
     const trace=clip.metadata.transitionEvidence;
+    if(entry.id==='basic:Revert'){
+      assert.equal(clip.metadata.transitionCapture,'native Player.step inputs');
+      const switches=trace.filter((s,i)=>s.reverting&&!trace[i-1]?.reverting).map(s=>s.stance);
+      assert.deepEqual(switches,[-1,1],'S09 must show two separated 180-degree stance switches');
+    }
     if(['Grinds','Lip stalls'].includes(entry.category)||['basic:Manual','basic:Nose Manual','basic:Wallride','special:darkslide'].includes(entry.id)){
       assert.equal(clip.metadata.transitionCapture,'native Player.step inputs');
       assert.ok(trace.some(s=>s.state==='air')&&trace.at(-1).grounded,`${entry.name} does not show an exit and landing`);

@@ -1,5 +1,5 @@
-import { SKATE_UNDER_RAIL_DEPTH, sampleUnderRailMotion } from './skateBodyMotion';
-import { skateUnderRailElasticity, skate900Elasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
+import { SKATE_UNDER_RAIL_DEPTH, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
+import { skateUnderRailElasticity, skate900Elasticity, skateRevertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
 // Authored fake-physics board movement. No rigidbody, no forces: just a
 // heading, a scalar speed, a vertical velocity, and hand-tuned numbers from
 // tuning.ts. Ground following is a single downward raycast; slopes only exist
@@ -4114,12 +4114,12 @@ export class Player {
       // (no freeSkate gate: a dead-vertical pop can land at ~0 speed and step
       // you off the deck the same frame — the window itself is only ever
       // opened by a vert-air touchdown, so R2 here is always the revert)
-      if (input.transferPressed && this.grounded && this.state === 'ride' && !this.isBailing) {
+      if (input.transferPressed && this.grounded && this.state === 'ride' && !this.isBailing && this.revertPoseT<=0) {
         this.revertT = 0;
         const oldStance = this.stance;
         this.stance = -this.stance as 1 | -1;
         this.deckYawOffset = wrapAngle(this.deckYawOffset + Math.PI);
-        this.revertPoseT = .22;
+        this.revertPoseT = SKATE_REVERT_DURATION;
         this.revertPoseSign = oldStance;
         this.speed *= 0.88; // the pivot scrubs a little — THPS's revert tax
         this.landingScoring = true; // the revert IS part of the landing's trick window
@@ -15665,8 +15665,10 @@ export class Player {
     const sideYaw = this.stance * (Math.PI / 2) * this.sidePose;
     this.lipYawPose += ((this.lipStallT > 0 ? LIP_CONTACTS[this.lipStyle].yaw : 0) - this.lipYawPose) * (1 - Math.exp(-22 * dt));
     const appliedGrindYaw = this.grindYawPose + this.lipYawPose;
+    if(this.isBailing || this.state==='dead' || this.state==='gameover' || this.worldMapBaseScale!==null)this.revertPoseT=0;
     this.revertPoseT = Math.max(0, this.revertPoseT - dt);
-    const revertYaw = this.revertPoseSign * Math.PI * THREE.MathUtils.smoothstep(this.revertPoseT / .22, 0, 1);
+    const revertMotion=this.revertPoseT>0?sampleSkateRevert(SKATE_REVERT_DURATION-this.revertPoseT):null;
+    const revertYaw = revertMotion ? this.revertPoseSign * Math.PI * (1-revertMotion.turn) : 0;
     // Only an actual airborne deck trick owns the board's yaw. Merely routing
     // spin VFX away from an attached board must not suppress the rider's native
     // grounded/grind spin animation.
@@ -16884,6 +16886,7 @@ export class Player {
       }
     }
     if(this.boardG)this.boardG.userData.ollieMotion=ollieMotion;
+    if(revertMotion)this.playerAnimationBridge.modulateDeformations(skateRevertElasticity(revertMotion,this.revertPoseSign));
     const nineHundred=this.specialGrab?.id==='the-900'||this.nineHundredPose&&this.grabPose>.001;
     if(nineHundred && this.grabPose>0)
       this.playerAnimationBridge.modulateDeformations(skate900Elasticity(this.grabPose,this.stance));
@@ -16948,6 +16951,7 @@ export class Player {
         mount: mountPose.tuck + .75 * mountPose.settle,
         manual: this.manualing, grab: this.specialGrab ? 'mute' : this.grabKind, grabWeight: this.grabPose,
         nineHundred,
+        revert:revertMotion,revertSign:this.revertPoseSign,
         grind: this.state === 'grind' ? this.grindStyle : null, rail: this.grindRail,
         railT: this.grindT, railDir: this.grindDir, crossDir: this.grindCrossDir,
         approachSide: this.grindApproachSide, crookedSide: this.grindYawDir || 1,

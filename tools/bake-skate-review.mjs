@@ -40,7 +40,8 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
     const [category,id]=entry.id.split(':');
     const nativeGrind=category==='grind'||id==='darkslide';
     const nativeLip=category==='lip',nativeWall=id==='Wallride',nativeManual=id==='Manual'||id==='Nose Manual';
-    const native=nativeGrind||nativeLip||nativeWall||nativeManual;
+    const nativeRevert=id==='Revert';
+    const native=nativeGrind||nativeLip||nativeWall||nativeManual||nativeRevert;
     const arena=nativeLip?lipLevel:nativeWall?wallLevel:level;
     const grindDirections={normal:[0,0],nose:[0,1],five0:[0,-1],board:[1,0],lip:[1,0],smith:[-1,-1],feeble:[1,-1],crook:[-1,1],under:[0,0]};
     const stateTrace=[];
@@ -55,7 +56,9 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
           [command.moveX,command.moveY]=grindDirections[id]??[1,0];
         }
         if(id==='darkslide'&&f===0)command.moveX=-1;
-        if(nativeLip){
+        if(nativeRevert){
+          if(f===36||f===120){p.revertT=.3;command.transferPressed=true;}
+        }else if(nativeLip){
           command.moveY=lipEnteredAt===null?1:lipExitSent?-1:0;command.grindHeld=lipEnteredAt===null;
           if(lipEnteredAt===null&&f>=11){
             command.moveX=id==='nose'?-1:id==='tail'?1:0;
@@ -78,7 +81,8 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
         else p.step(dt,command,arena);
         if(nativeLip&&p.lipStallT>0&&lipEnteredAt===null){lipEnteredAt=time;assert.equal(p.lipStyle,id,'wrong lip-stall entry');}
         if(nativeLip&&lipExitSent&&p.grounded&&p.lipStallT<=0&&landedAt===null)landedAt=time;
-        stateTrace.push({time,state:p.state,under:p.underK,underFlag:p.railUnder,lip:p.lipStallT>0,wall:p.wallriding,manual:p.manualing,grounded:p.grounded,y:p.pos.y});
+        stateTrace.push({time,state:p.state,under:p.underK,underFlag:p.railUnder,lip:p.lipStallT>0,wall:p.wallriding,manual:p.manualing,grounded:p.grounded,y:p.pos.y,
+          ...(nativeRevert?{stance:p.stance,reverting:p.revertPoseT>0}:{})});
         if(nativeGrind&&f===(id==='darkslide'?2:0)){
           assert.equal(p.grindStyle,id==='under'?'normal':id==='darkslide'?'board':id,`Wrong entry for ${entry.name}`);
           if(id==='darkslide')assert.equal(p.specialGrind?.id,'darkslide');
@@ -111,8 +115,8 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
       p.flipT=p.specialFlip?(1-specialProgress)*p.flipDuration:flip&&time>=.6&&trickProgress<1?(1-trickProgress)*flip.duration:0;
       const smooth=specialProgress*specialProgress*(3-2*specialProgress);
       p.grabSpinAngle=id==='the-900'?Math.PI*5*smooth:0;
-      p.deckYawOffset=flip&&trickProgress===1?flip.yaw*Math.PI*2:id==='Revert'&&time>.6?Math.PI:0;
-      p.revertPoseT=id==='Revert'&&time>=.6?Math.max(0,.22-(time-.6)):0;p.revertPoseSign=1;
+      p.deckYawOffset=flip&&trickProgress===1?flip.yaw*Math.PI*2:0;
+      p.revertPoseT=0;p.revertPoseSign=1;
       p.manualing=id==='Manual'?1:id==='Nose Manual'?-1:0;p.lipStallT=category==='lip'?5:0;p.lipStyle=category==='lip'?id:'axle';
       p.boardOllieAir=(id==='Ollie'||id==='kickflip-mctwist')&&airborne;p.wallriding=id==='Wallride';p.wallridePose=p.wallriding?1:0;p.wallNormal.set(1,0,0);
       p.pos.set(0,p.state==='grind'?.95:category==='lip'?.8:p.wallriding?1:airborne?Math.sin(Math.PI*flight)*1.15:0);p.prevPos.copy(p.pos);
@@ -136,7 +140,7 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
     }else if(nativeWall){
       p.pos.set(.2,3,0);p.prevPos.copy(p.pos);p.speed=12;p.vVel=2;p.state='air';p.grounded=false;p.wallriding=false;p.wallridePose=0;p.wallCoolT=0;
       p.axisF.set(-.45,0,-1).normalize();p.axisL.set(p.axisF.z,0,-p.axisF.x);p.airFromSkate=p.freeSkate=true;p.airMomentum=true;p.airGrav='board';
-    }else if(nativeManual){
+    }else if(nativeManual||nativeRevert){
       level.grindRails.length=0;level.rails.length=0;p.pos.set(0,0,0);p.prevPos.copy(p.pos);p.state='ride';p.grounded=true;p.speed=12;p.manualing=0;p.balanceBoostT=60;
     }
     for(let f=0;f<=Math.round(entry.duration*60);f++){
@@ -164,18 +168,19 @@ await withSkateRuntime(async ({player:p,Level,server,THREE})=>{
     clip.metadata={skateReviewId:entry.id,skateReviewRevision:SKATE_REVIEW_REVISION,reviewCapture:true,
       description:'Editable gameplay capture for review. Gameplay retains its procedural source until a repair is accepted.'};
     if(native){
-      assert.ok(stateTrace.some(s=>s.state==='air')&&stateTrace.at(-1).grounded,`${entry.name} must exit and land`);
+      assert.ok((nativeRevert||stateTrace.some(s=>s.state==='air'))&&stateTrace.at(-1).grounded,`${entry.name} must exit and land`);
       if(nativeGrind)assert.ok(stateTrace.some(s=>s.state==='grind'));
       if(nativeLip)assert.ok(stateTrace.some(s=>s.lip)&&lipExitSent,'lip cycle must enter and exit');
       if(nativeWall)assert.ok(stateTrace.some(s=>s.wall),'wallride cycle never attached');
       if(nativeManual)assert.ok(stateTrace.some(s=>s.manual!==0)&&stateTrace.at(-1).manual===0,'manual cycle must load and release');
+      if(nativeRevert)assert.ok(stateTrace.some(s=>s.stance===-1)&&stateTrace.at(-1).stance===1,'reverts must alternate normal/fakie');
       if(id==='under'){
         const at=t=>stateTrace[Math.round(t*60)];
         assert.ok(at(.4).under<.01&&at(1.4).under>.99&&at(3.0).under<.01&&at(4.7).under>.99);
         assert.ok(at(5.4).state==='air'&&at(6.8).grounded,'under-rail drop did not land');
       }
       clip.metadata.transitionCapture='native Player.step inputs';
-      clip.metadata.transitionEvidence=stateTrace.filter((s,i)=>i===0||s.state!==stateTrace[i-1].state||s.underFlag!==stateTrace[i-1].underFlag||s.lip!==stateTrace[i-1].lip||s.wall!==stateTrace[i-1].wall||s.manual!==stateTrace[i-1].manual);
+      clip.metadata.transitionEvidence=stateTrace.filter((s,i)=>i===0||s.state!==stateTrace[i-1].state||s.underFlag!==stateTrace[i-1].underFlag||s.lip!==stateTrace[i-1].lip||s.wall!==stateTrace[i-1].wall||s.manual!==stateTrace[i-1].manual||s.stance!==stateTrace[i-1].stance||s.reverting!==stateTrace[i-1].reverting);
       clip.metadata.reviewRailHeight=id==='under'?4.5:nativeLip?3.05:.8;
       if(nativeLip){clip.metadata.reviewPipe=true;clip.metadata.captureFps=60;}
     }

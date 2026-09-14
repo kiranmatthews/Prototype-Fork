@@ -4,7 +4,7 @@ import { GRAB_CONTACTS, GRIND_CONTACTS, LIP_CONTACTS, skateContactBounce, sample
 import { DEFAULT_SKATEBOARD_SETTINGS, type SkateboardSettingsValue } from './skateboard/settings';
 import { evaluateSkateboardSurfaceHeight } from './skateboard/model';
 import type { Rail } from './rails';
-import { SkateBodySpring, skateOlliePitch, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_HEADROOM, sampleUnderRailMotion } from './skateBodyMotion';
+import { SkateBodySpring, skateOlliePitch, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_HEADROOM, sampleUnderRailMotion, sampleSkateRevert } from './skateBodyMotion';
 
 const X = new THREE.Vector3(1, 0, 0), Y = new THREE.Vector3(0, 1, 0), Z = new THREE.Vector3(0, 0, 1);
 const clamp = THREE.MathUtils.clamp;
@@ -22,6 +22,8 @@ export interface SkatePoseInput {
   crossDir: number; approachSide: number; crookedSide: number;
   darkslide: boolean; ollie: boolean; flip: DeckTrickKind | null;
   nineHundred?: boolean;
+  revert?: ReturnType<typeof sampleSkateRevert> | null;
+  revertSign?: number;
   flipProgress: number; specialFlip: boolean; lip: LipStyle | null;
   coping?: { center: THREE.Vector3; normal: THREE.Vector3 };
   wallWeight: number; wallNormal: THREE.Vector3; wallForward: THREE.Vector3;
@@ -196,7 +198,8 @@ export class SkateAnimation {
     if (!p.manual && this.manualWeight < .001) this.manualWeight = 0;
     this.manualBalance += (clamp(p.balance,-1,1)-this.manualBalance)*(1-Math.exp(-10*p.dt));
     const bodyFlex = this.bodySpring.step(p.dt, {
-      grounded:p.grounded || uprightGrind || p.darkslide || !!p.nineHundred, charge:p.nineHundred||p.lip?0:uprightGrind?p.charge*.35:p.charge,
+      grounded:p.grounded || uprightGrind || p.darkslide || !!p.nineHundred,
+      charge:p.revert ? .7*p.revert.knee : p.nineHundred||p.lip?0:uprightGrind?p.charge*.35:p.charge,
       verticalVelocity:p.verticalVelocity??0, launchVelocity:p.launchVelocity??0,
       contactBounce:p.grounded||uprightGrind?bounce:0, mount:clamp(p.mount??0,0,1),
       manual:p.manual !== 0 || !!p.lip || uprightGrind,
@@ -269,6 +272,7 @@ export class SkateAnimation {
     if(p.grind && p.darkslide)this.darkExitOffset.copy(this.boardP).sub(this.group.getWorldPosition(new THREE.Vector3()));
     // A real exit ollie already supplies lift; do not add a second flip pop.
     this.boardP.addScaledVector(this.up, .30 * gw + .18 * darkPop);
+    if(p.revert)this.boardP.addScaledVector(this.up,p.revert.lift);
     if (p.lip) {
       const enter=smooth(this.age/.18);
       this.boardQ.copy(this.lipEntryQ.clone().slerp(this.boardQ,enter));
@@ -451,6 +455,29 @@ export class SkateAnimation {
     }
 
     let handError = 0;
+    if(p.revert && p.revert.reach>0){
+      const hand=this.hands[(p.revertSign??1)>0?1:0],other=this.hands[(p.revertSign??1)>0?0:1];
+      const shoulder=hand.root.getWorldPosition(new THREE.Vector3());
+      const outward=shoulder.clone().sub(other.root.getWorldPosition(new THREE.Vector3())).normalize();
+      const reach=shoulder.distanceTo(hand.mid.getWorldPosition(new THREE.Vector3()))+
+        hand.mid.getWorldPosition(new THREE.Vector3()).distanceTo(hand.end.getWorldPosition(new THREE.Vector3()));
+      const relative=hand.end.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(hand.socket.getWorldQuaternion(new THREE.Quaternion()));
+      const wristAlong=(direction:THREE.Vector3)=>{
+        // The glove's fingers extend along -Y; -Z is its palm normal.
+        const handY=direction.clone().negate(),handX=handY.clone().cross(this.up);
+        if(handX.lengthSq()<1e-8)handX.crossVectors(handY,this.forward);
+        handX.normalize();
+        const handZ=handX.clone().cross(handY).normalize();
+        return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(handX,handY,handZ)).multiply(relative.clone().invert());
+      };
+      const handQ=wristAlong(outward);
+      const target=shoulder.clone().addScaledVector(outward,reach+.09).addScaledVector(this.up,reach*.16);
+      const pole=shoulder.clone().addScaledVector(this.up,.3).addScaledVector(this.forward,.25);
+      this.solve(hand,target,handQ,pole,p.revert.reach);
+      const forearm=hand.end.getWorldPosition(new THREE.Vector3()).sub(hand.mid.getWorldPosition(new THREE.Vector3())).normalize();
+      this.worldRotation(hand.end,hand.end.getWorldQuaternion(new THREE.Quaternion()).slerp(wristAlong(forearm),p.revert.reach));
+      this.board.userData.skateRevert={...p.revert,hand:hand.socket.name};
+    }else delete this.board.userData.skateRevert;
     if (underProgress > 0) {
       const gripWeight=underMotion.handContact;
       const handTargets: number[][]=[];
