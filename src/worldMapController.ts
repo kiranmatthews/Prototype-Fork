@@ -2,6 +2,7 @@ import * as THREE from "three";
 import {
   CAMPAIGN_ISLANDS,
   CAMPAIGN_LEVELS,
+  CAMPAIGN_START_LEVEL_KEY,
   CAMPAIGN_MAP_EDGES,
   campaignLevelByKey,
   type CampaignIslandId,
@@ -83,7 +84,7 @@ export class WorldMapController {
         ? preferredKey
         : level.campaignMapHas(fallback)
           ? fallback
-          : "jungle";
+          : CAMPAIGN_START_LEVEL_KEY;
     this.level = level;
     this.selectedKeyValue = selected;
     this.travel = null;

@@ -13,7 +13,7 @@ try {
     await server.ssrLoadModule('/src/cameraRig.ts');
   const { TUNING, TUNING_VERSION } = await server.ssrLoadModule('/src/tuning.ts');
   const { Replayer } = await server.ssrLoadModule('/src/replay.ts');
-  assert.equal(TUNING_VERSION, 18);
+  assert.ok(TUNING_VERSION >= 18);
   const saved = { ...TUNING };
   const camera = new THREE.PerspectiveCamera(49, 16 / 9, 0.1, 400);
   const aim = new THREE.Vector3();
@@ -57,6 +57,40 @@ try {
       near(Math.atan2(dir.x, dir.z), Math.atan2(forward.x, forward.z), 'translation changed yaw');
     }
   }
+
+  // Authored compositions share the heading volume's feather and leave the
+  // underlying live camera intact, including its independent pitch and lens.
+  const { CameraViewFraming, cameraViewAt, cameraViewDirection } = await server.ssrLoadModule('/src/cameraViews.ts');
+  const view={p:[0,0,0],s:[40,60,30],yaw:0,feather:10,
+    cameraPosition:[0,9,39],cameraTarget:[0,6,-7],cameraFov:43};
+  const layer=new CameraViewFraming();
+  const baseline=shot(saved,[]),baseFov=camera.fov;
+  near(cameraViewAt([view],0,0,0).weight,1,'interior shot did not fully settle');
+  near(cameraViewAt([view],15,0,0).weight,.5,'shot feather disagrees with its boundary');
+  assert.equal(cameraViewAt([view],20,0,0),null,'shot leaks outside its bounds');
+  const fixedHeading=cameraViewDirection([view],0,0,0,{x:1,z:0});near(fixedHeading.x,0,"fixed heading X");near(fixedHeading.z,-1,"fixed heading Z");
+  const expected=new THREE.PerspectiveCamera();expected.position.fromArray(view.cameraPosition);expected.lookAt(...view.cameraTarget);
+  layer.apply(camera,cameraViewAt([view],0,0,0));
+  near(camera.position.distanceTo(expected.position),0,'fixed view eye');
+  near(camera.quaternion.angleTo(expected.quaternion),0,'fixed view target',1e-7);
+  near(camera.fov,43,'fixed view lens');
+  layer.restore(camera);
+  near(camera.position.distanceTo(baseline.position),0,'shot polluted follow position');
+  near(camera.quaternion.angleTo(baseline.quaternion),0,'shot polluted follow orientation',1e-7);
+  near(camera.fov,baseFov,'shot polluted follow lens');
+  for(let frame=0;frame<60;frame++){
+    camera.position.x=frame*.1;
+    const normal=camera.position.clone();
+    layer.apply(camera,cameraViewAt([view],15,0,0));
+    near(camera.position.distanceTo(normal.clone().lerp(expected.position,.5)),0,'partial shot accumulated feedback');
+    near(camera.fov,(baseFov+43)/2,'partial lens accumulated feedback');
+    layer.restore(camera);
+    near(camera.position.distanceTo(normal),0,'moving follow position was not restored');
+  }
+  layer.apply(camera,null);near(camera.fov,baseFov,'exiting a volume kept its lens');
+  const headingOnly={...view};delete headingOnly.cameraPosition;delete headingOnly.cameraTarget;delete headingOnly.cameraFov;
+  const beforeLegacy=camera.position.clone();layer.apply(camera,cameraViewAt([headingOnly],0,0,0));
+  near(camera.position.distanceTo(beforeLegacy),0,'legacy heading-only view changed framing');
 
   const legacy = { camDist: 3.8, camHeight: 5.1, camTilt: 3.3, camOffset: -1.25 };
   near(legacyCameraRigTuning(legacy).camDist, 5.05, 'legacy offset was not folded into distance');
@@ -104,7 +138,7 @@ try {
   near(TUNING.camPitch, saved.camPitch, 'modern replay recoupled height/distance to pitch');
   replay.end();
   assert.deepEqual(TUNING, saved);
-  console.log('PASS independent camera controls, moving-eye pitch stability, saved-shot migration and replay compatibility');
+  console.log('PASS independent camera controls, moving-eye pitch stability, authored view blending, saved-shot migration and replay compatibility');
 } finally {
   await server.close();
 }

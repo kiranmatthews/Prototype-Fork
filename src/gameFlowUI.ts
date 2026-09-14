@@ -19,6 +19,7 @@ import { TRICK_GUIDE_INTRO, TRICK_GUIDE_PAGE_COUNT, trickGuidePages } from './sk
 import {
   CAMPAIGN_ISLANDS,
   CAMPAIGN_LEVELS,
+  CAMPAIGN_START_LEVEL_KEY,
   CAMPAIGN_SAVE_SLOTS,
   CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
   CampaignStore,
@@ -170,7 +171,7 @@ export class GameFlowUI {
   private trickGuidePage = 0;
   private navButtons: HTMLButtonElement[] = [];
   private selected = 0;
-  private levelSelectKey = 'jungle';
+  private levelSelectKey = CAMPAIGN_START_LEVEL_KEY;
   private levelSelectIsland = 'island-1';
   private readonly levelSelectMemories = new Map<string, string>();
   private levelSelectDetail: HTMLElement | null = null;

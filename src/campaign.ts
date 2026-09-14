@@ -5,6 +5,8 @@
 // backing level is replaced.
 
 export const DEFAULT_CAMPAIGN_LIVES = 4;
+/** First playable hub; kept separate from append-only editor identities. */
+export const CAMPAIGN_START_LEVEL_KEY = "treehouse-trail";
 export const CAMPAIGN_SAVE_SLOTS = 4;
 /** Placeholder target shared by every canonical trial until authored per-level. */
 export const CAMPAIGN_TIME_RELIC_TARGET_SECONDS = 60;
@@ -104,7 +106,7 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     name: "Island 1",
     subtitle: "REGION 01",
     centre: [-95, 0, 0],
-    levelKeys: ["jungle", "test-course", "sky-bridge", "slipstream", "codex-switchback", "nightworks", "jungle-cup"],
+    levelKeys: ["treehouse-trail", "jungle", "test-course", "sky-bridge", "slipstream", "codex-switchback", "nightworks", "jungle-cup"],
   },
   {
     id: "island-2",
@@ -136,6 +138,14 @@ export interface CampaignMapEdgeDefinition {
  * are traversable in both directions once both endpoint hubs are unlocked.
  */
 export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
+  {
+    from: "treehouse-trail",
+    to: "jungle",
+    travel: "trail",
+    fromDirection: "right",
+    toDirection: "left",
+    waypoints: [[-163, 1.6, 23]],
+  },
   {
     from: "jungle",
     to: "test-course",
@@ -243,7 +253,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     islandId: "island-1",
     mapPath: "main",
     mapPosition: [-151, 1.35, 22],
-    unlockAfter: [],
+    unlockAfter: ["treehouse-trail"],
   },
   {
     progressKey: "test-course",
@@ -355,6 +365,16 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-1", mapPath: "main", mapPosition: [-31, 3.8, 22],
     unlockAfter: ["nightworks"], boss: true, competition: true,
+  },
+  {
+    progressKey: "treehouse-trail",
+    levelId: "treehouse-trail",
+    name: "Treehouse Trail",
+    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+    islandId: "island-1",
+    mapPath: "main",
+    mapPosition: [-175, 1.35, 22],
+    unlockAfter: [],
   },
 ] as const;
 
@@ -557,7 +577,7 @@ function createSave(slot: number, now = Date.now()): CampaignSaveV1 {
     updatedAt: now,
     lives: DEFAULT_CAMPAIGN_LIVES,
     fruit: 0,
-    mapFocus: CAMPAIGN_LEVELS[0].progressKey,
+    mapFocus: CAMPAIGN_START_LEVEL_KEY,
     levels: emptyLevels(),
   };
 }
@@ -583,7 +603,7 @@ export function campaignSavePreviewLevel(save: Readonly<CampaignSaveV1>) {
   const completed = (key: string) => save.levels[key]?.cleared || (save.levels[key]?.bestTime ?? 0) > 0;
   const progression = CAMPAIGN_ISLANDS.flatMap(island => island.levelKeys);
   const key = progression.reverse().find(completed);
-  return (key && campaignLevelByKey(key)) || CAMPAIGN_LEVELS[0];
+  return (key && campaignLevelByKey(key)) || campaignLevelByKey(CAMPAIGN_START_LEVEL_KEY)!;
 }
 
 function cloneSlots(
@@ -908,6 +928,9 @@ export class CampaignStore {
     const definition =
       campaignLevelById(levelIdOrKey) ?? campaignLevelByKey(levelIdOrKey);
     if (!definition || !this.activeValue) return false;
+    // Previously completed courses stay playable when a new opening level is
+    // inserted ahead of them; old saves keep every earned reward and record.
+    if (this.activeValue.levels[definition.progressKey]?.cleared) return true;
     if (definition.unlockAfter.length === 0) return true;
     const cleared = definition.unlockAfter.map(
       (key) => this.activeValue?.levels[key]?.cleared === true,
@@ -924,8 +947,9 @@ export class CampaignStore {
   recommendedMapLevelKey(): string {
     const remembered = this.activeValue?.mapFocus;
     if (remembered && this.levelUnlocked(remembered)) return remembered;
-    let candidate = CAMPAIGN_LEVELS[0].progressKey;
-    for (const definition of CAMPAIGN_LEVELS) {
+    let candidate = CAMPAIGN_START_LEVEL_KEY;
+    for (const key of CAMPAIGN_ISLANDS.flatMap(island => island.levelKeys)) {
+      const definition = campaignLevelByKey(key)!;
       if (!this.levelUnlocked(definition.progressKey)) continue;
       candidate = definition.progressKey;
       if (!this.activeValue?.levels[definition.progressKey]?.cleared) break;

@@ -9,7 +9,8 @@ export async function captureLevelPreviews(g:any, report:(text:string)=>void):Pr
   const canvas=document.createElement('canvas');canvas.width=640;canvas.height=360;
   const ctx=canvas.getContext('2d')!,bytes=new Uint8Array(640*360*4),pixels=ctx.createImageData(640,360);
   try {
-    for(const def of CAMPAIGN_LEVELS){
+    const captures=CAMPAIGN_LEVELS.filter(def=>def.progressKey!=='treehouse-trail');
+    for(const def of captures){
       report(`Capturing ${def.name}`);
       g.gameFlow.hide();g.switchLevel(def.levelId);
       g.gameFlow.showPause({levelName:def.name,inWarpRoom:false});
@@ -26,6 +27,6 @@ export async function captureLevelPreviews(g:any, report:(text:string)=>void):Pr
       const response=await fetch('http://127.0.0.1:5174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:def.progressKey,image:canvas.toDataURL('image/jpeg',.9)})});
       if(!response.ok)throw new Error(`Capture failed: ${def.progressKey}`);
     }
-    report('12 level previews saved');
+    report(`${captures.length} level previews saved; Treehouse Trail concept artwork preserved`);
   } finally {target.dispose();g.gameFlow.hide();g.switchLevel('jungle');g.gameFlow.showPause({levelName:'Jungle Ruins',inWarpRoom:false});}
 }

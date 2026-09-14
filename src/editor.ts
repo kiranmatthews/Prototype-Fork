@@ -2195,6 +2195,9 @@ export function setComponentPosition(c: CustomComponent, p: CustomComponent["p"]
   const delta = p.map((v, i) => v - c.p[i]);
   if ((c.t === "returnportal" || c.t === "bonusplatform") && c.to)
     c.to = c.to.map((v, i) => v + delta[i]) as CustomComponent["p"];
+  if (c.t === "camnode" && c.cameraView)
+    for (const key of ["cameraPosition", "cameraTarget"] as const)
+      if (c[key]) c[key] = c[key]!.map((v, i) => v + delta[i]) as CustomComponent["p"];
   if (c.t === "woodpath" && c.supportBaseY !== undefined) c.supportBaseY += delta[1];
   if (c.t === "platform" && c.shoreSeaLevel !== undefined) c.shoreSeaLevel += delta[1];
   c.p = [...p];
@@ -4239,6 +4242,13 @@ export class Editor {
           anchor.y + (c.to[1] - anchor.y) * sy,
           anchor.z + (c.to[2] - anchor.z) * sz,
         ];
+      if (c.t === "camnode" && c.cameraView)
+        for (const key of ["cameraPosition", "cameraTarget"] as const)
+          if (c[key]) c[key] = [
+            anchor.x + (c[key]![0] - anchor.x) * sx,
+            anchor.y + (c[key]![1] - anchor.y) * sy,
+            anchor.z + (c[key]![2] - anchor.z) * sz,
+          ];
       if (c.t === "woodpath" && c.supportBaseY !== undefined)
         c.supportBaseY = anchor.y + (c.supportBaseY - anchor.y) * sy;
       if (c.t === "platform" && c.shoreSeaLevel !== undefined)
@@ -7429,7 +7439,7 @@ export class Editor {
         c.p[1],
         Math.round((cz + rz) * 100) / 100,
       ];
-      if (c.t === "worldmap" || c.t === "terrain") {
+      if (c.t === "worldmap" || c.t === "terrain" || (c.t === "camnode" && c.cameraView)) {
         c.yaw = ((((c.yaw ?? 0) + deg) % 360) + 360) % 360;
       } else if (c.pts) {
         c.pts = c.pts.map((pt) => {
@@ -7474,6 +7484,12 @@ export class Editor {
         }
       }
       if (c.t === "stone") c.axis = c.axis === "x" ? "z" : "x";
+      if (c.t === "camnode" && c.cameraView)
+        for (const key of ["cameraPosition", "cameraTarget"] as const)
+          if (c[key]) {
+            const [x, z] = rot(c[key]![0] - cx, c[key]![2] - cz);
+            c[key] = [Math.round((cx + x) * 100) / 100, c[key]![1], Math.round((cz + z) * 100) / 100];
+          }
       if (c.t === "returnportal" || c.t === "bonusplatform") {
         if (c.to) {
           const [tx, tz] = rot(c.to[0] - cx, c.to[2] - cz);

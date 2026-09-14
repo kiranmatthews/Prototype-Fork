@@ -30,7 +30,7 @@ const campaign = await import(
   `data:text/javascript;base64,${Buffer.from(output).toString("base64")}`
 );
 
-assert.equal(campaign.CAMPAIGN_LEVELS.length, 12);
+assert.equal(campaign.CAMPAIGN_LEVELS.length, 13);
 assert.equal(campaign.resolveRelicTime('jungle'), 60);
 assert.equal(campaign.resolveRelicTime('editor-course', { relicTime: 83.75 }), 83.75);
 assert.equal(campaign.resolveRelicTime('jungle', { relicTime: 45.125 }), 45.125);
@@ -42,7 +42,7 @@ assert.deepEqual(
   campaign.CAMPAIGN_LEVELS.map(({ levelId, name }) => [levelId, name]),
   [
     ["jungle", "Jungle Ruins"],
-    ["test", "Test Course"],
+    ["test", "Carlisle Coast"],
     ["sky", "Sky Bridge"],
     ["slip", "Slipstream"],
     ["dark", "Nightworks"],
@@ -53,12 +53,13 @@ assert.deepEqual(
     ["codex-lab", "Codex Switchback"],
     ["astra-chimeworks", "Chimeworks"],
     ["jungle-cup", "Jungle Cup"],
+    ["treehouse-trail", "Treehouse Trail"],
   ],
   "canonical portal order or labels drifted",
 );
 assert.equal(
   new Set(campaign.CAMPAIGN_LEVELS.map((level) => level.progressKey)).size,
-  12,
+  13,
   "campaign progress keys must remain unique",
 );
 assert.equal(campaign.CAMPAIGN_TIME_RELIC_TARGET_SECONDS, 60);
@@ -68,8 +69,8 @@ assert.ok(
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ levelKeys }) => levelKeys.length),
-  [7, 5],
-  "the prototype map must exercise multiple 4-7 hub islands",
+  [8, 5],
+  "the opening island must include Treehouse Trail without removing existing hubs",
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ id, name }) => [id, name]),
@@ -89,7 +90,7 @@ assert.deepEqual(
   [],
   "campaign map edge endpoints and direction slots must stay valid",
 );
-const mainPath = ['jungle','test-course','sky-bridge','nightworks','jungle-cup','beachside-run','coastal','island-hopper','jungle-gate'];
+const mainPath = ['treehouse-trail','jungle','test-course','sky-bridge','nightworks','jungle-cup','beachside-run','coastal','island-hopper','jungle-gate'];
 for(let i=1;i<mainPath.length;i++) {
   const edge=campaign.CAMPAIGN_MAP_EDGES.find(e=>e.from===mainPath[i-1]&&e.to===mainPath[i]);
   assert.ok(edge);assert.equal(edge.fromDirection,'right');assert.equal(edge.toDirection,'left');
@@ -101,6 +102,11 @@ assert.deepEqual(campaign.CAMPAIGN_MAP_EDGES.filter(e=>campaign.campaignLevelByK
 
 const graph = new campaign.CampaignStore();
 graph.startEphemeral();
+assert.equal(graph.recommendedMapLevelKey(), "treehouse-trail");
+assert.equal(campaign.CAMPAIGN_ISLANDS[0].levelKeys[0], "treehouse-trail");
+assert.equal(graph.levelUnlocked("treehouse-trail"), true);
+assert.equal(graph.levelUnlocked("jungle"), false);
+graph.commitClear("treehouse-trail", {});
 assert.equal(graph.levelUnlocked("jungle"), true);
 assert.equal(graph.levelUnlocked("test-course"), false);
 graph.commitClear("jungle", { crystal: false, boxGem: false, comboGem: false });

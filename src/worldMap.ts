@@ -2,6 +2,7 @@ import * as THREE from "three";
 import {
   CAMPAIGN_ISLANDS,
   CAMPAIGN_LEVELS,
+  CAMPAIGN_START_LEVEL_KEY,
   CAMPAIGN_MAP_EDGES,
   campaignLevelByKey,
   type CampaignLevelProgress,
@@ -460,7 +461,7 @@ export class CampaignWorldMapRuntime {
   private elapsed = 0;
   private readonly nodeByKey = new Map<string, MapNodeVisual>();
   private readonly edgeByKey = new Map<string, MapEdgeVisual>();
-  private selectedKey = CAMPAIGN_LEVELS[0].progressKey;
+  private selectedKey = CAMPAIGN_START_LEVEL_KEY;
 
   constructor(
     nodes: MapNodeVisual[],
@@ -768,7 +769,7 @@ export function createCampaignWorldMap(
     };
   });
   const scenicIslandSpecs = [
-    { x: -168, z: 44, rx: 3.2, rz: 2.5, seed: 1009, scenic: true, campaignIslandId: null },
+    { x: -198, z: 58, rx: 3.2, rz: 2.5, seed: 1009, scenic: true, campaignIslandId: null },
     { x: 3, z: 40, rx: 2.8, rz: 2.2, seed: 1031, scenic: true, campaignIslandId: null },
     { x: 139, z: 42, rx: 3.5, rz: 2.7, seed: 1061, scenic: true, campaignIslandId: null },
     { x: 5, z: -46, rx: 3, rz: 2.3, seed: 1091, scenic: true, campaignIslandId: null },

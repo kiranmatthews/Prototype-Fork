@@ -49,12 +49,26 @@ assert.ok(budget.reservedCredits<=650);
 const harness=await readFile(new URL('tools/validate-editor-roundtrip.mjs',root),'utf8');
 const dom=harness.slice(harness.indexOf('function installHeadlessDom()'),harness.indexOf('\nfunction round('));
 const nativeFetch=globalThis.fetch;runInThisContext(dom+'\ninstallHeadlessDom();');globalThis.self=globalThis;
+// Matte scenery uses TextureLoader rather than GLB ImageBitmapLoader. Decode
+// real PNG headers while the headless DOM supplies the image load event.
+const originalCreateElementNS=document.createElementNS.bind(document);
+document.createElementNS=(namespace,tag)=>{
+ const element=originalCreateElementNS(namespace,tag);if(tag!=='img')return element;
+ const listeners=new Map();element.addEventListener=(type,fn)=>listeners.set(type,fn);
+ element.removeEventListener=type=>listeners.delete(type);
+ Object.defineProperty(element,'src',{set(url){
+  const path=new URL(url,'http://headless.invalid').pathname.match(/\/(treehouse-trail\/matte-(?:far|mid)\.png)$/)?.[1];
+  if(path)readFile(new URL('public/'+path,root)).then(bytes=>{
+   element.width=bytes.readUInt32BE(16);element.height=bytes.readUInt32BE(20);listeners.get('load')?.call(element);
+  }).catch(error=>listeners.get('error')?.(error));
+ }});return element;
+};
 globalThis.createImageBitmap=async()=>({width:1024,height:1024,close(){}});
 globalThis.ProgressEvent??=class{constructor(type,data){this.type=type;Object.assign(this,data);}};
-globalThis.fetch=async input=>{const url=typeof input==='string'?input:input.url;if(url.startsWith('blob:'))return nativeFetch(input);const match=new URL(url,'http://headless.invalid').pathname.match(/\/((?:jungle-kit\/(?:(?:modular|editor)\/)?|map-kit\/|nightworks-kit\/)[\w-]+\.glb)$/);return match?new Response(await readFile(new URL('public/'+match[1],root))):new Response('',{status:404});};
+globalThis.fetch=async input=>{const url=typeof input==='string'?input:input.url;if(url.startsWith('blob:'))return nativeFetch(input);const match=new URL(url,'http://headless.invalid').pathname.match(/\/((?:jungle-kit\/(?:(?:modular|editor)\/)?|map-kit\/|nightworks-kit\/|treehouse-trail\/)[\w-]+\.glb)$/);return match?new Response(await readFile(new URL('public/'+match[1],root))):new Response('',{status:404});};
 const server=await createServer({logLevel:'silent',server:{middlewareMode:true},appType:'custom'});
 try{
- const {JungleAssetKit,JUNGLE_ASSETS,JUNGLE_ASSET_KINDS,jungleAssetMatrix}=await server.ssrLoadModule('/src/jungleAssets.ts');
+ const {JungleAssetKit,JUNGLE_ASSETS,JUNGLE_ASSET_KINDS,jungleAssetMatrix,loadJungleAssetTemplate}=await server.ssrLoadModule('/src/jungleAssets.ts');
  const {templePavilionParts,templeArchParts}=await server.ssrLoadModule('/src/jungleAssemblies.ts');
  const {JUNGLE_MODULES}=await server.ssrLoadModule('/src/jungleModules.ts');
  for(const kind of ['roofedtemple','hangingarch','templewall','templeplatform'])assert.equal(JUNGLE_ASSETS[kind].file,'','assemblies cannot load a whole-building/facade GLB');
@@ -84,6 +98,14 @@ try{
  const kit=new JungleAssetKit(true,false);
  for(const kind of JUNGLE_ASSET_KINDS)for(let i=0;i<2;i++)kit.add({dkind:kind,p:[0,0,-i*12]});
  kit.flush();await kit.ready();assert.deepEqual(kit.errors,[]);assert.equal(kit.diagnostics.ready,kit.diagnostics.placements);
+ for(const kind of ['treehousemattefar','treehousemattemid']){
+  const template=await loadJungleAssetTemplate(kind),position=template.geometry.attributes.position,normal=template.geometry.attributes.normal;
+  assert.equal(template,(await loadJungleAssetTemplate(kind)),'matte texture and geometry are cached');
+  for(let i=0;i<position.count;i++){assert.ok(Number.isFinite(position.getX(i)));assert.equal(position.getZ(i),0);assert.equal(normal.getZ(i),1);}
+  assert.equal(template.map.colorSpace,THREE.SRGBColorSpace);assert.equal(template.map.image.width,1942);
+  const draws=[];kit.root.traverse(o=>{if(o.isMesh&&o.userData.jungleAsset===kind)draws.push(o);});
+  assert.ok(draws.length>0);for(const mesh of draws){assert.equal(mesh.material.isMeshBasicMaterial,true);assert.equal(mesh.material.fog,false);assert.equal(mesh.material.toneMapped,false);assert.equal(mesh.castShadow,false);assert.equal(mesh.receiveShadow,false);assert.equal(mesh.material.transparent,false);assert.equal(mesh.material.alphaTest,kind==='treehousemattemid'?.35:0);}
+ }
  assert.ok(kit.diagnostics.placements>kit.diagnostics.components,'assemblies really expand into multiple modules');
  let lods=0;kit.root.traverse(o=>{if(o.isLOD)lods++;if(o.isMesh){assert.ok(o.geometry.userData.shared);if(JUNGLE_ASSETS[o.userData.jungleAsset]?.wind||o.userData.jungleAsset==='vine')assert.ok(o.customDepthMaterial);}});assert.ok(lods>5);
  kit.update(1/60);const time=kit.time.value;kit.update(0);assert.equal(kit.time.value,time);kit.update(1/60);assert.ok(kit.time.value>time);

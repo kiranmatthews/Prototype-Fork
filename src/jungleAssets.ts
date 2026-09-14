@@ -16,12 +16,24 @@ export interface JungleAssetSpec {
   doubleSided?: boolean;
   backdrop?: boolean;
   clay?: boolean;
+  /** Painted scenery cards share the kit's cache, instancing and editor path. */
+  matte?: boolean;
+  image?: string;
+  alphaCutout?: boolean;
 }
 const ASSETS = {
   ...JUNGLE_MODULES,
   ...MAP_MODULES,
   ...NIGHTWORKS_MODULES,
   ...JUNGLE_EDITOR_ASSETS,
+  treehousebody: {file:"../treehouse-trail/body",label:"Treehouse cabin body",size:[7,5.2,5.5],wind:false,normalStrength:0.18,lod:true,doubleSided:false},
+  treehousebalcony: {file:"../treehouse-trail/balcony",label:"Treehouse balcony",size:[8,1.5,3],wind:false,normalStrength:0.18,lod:true,doubleSided:false},
+  treehousestairs: {file:"../treehouse-trail/stairs",label:"Treehouse stair flight",size:[3,2.25,5.5],wind:false,normalStrength:0.18,lod:true,doubleSided:false},
+  treehouselanding: {file:"../treehouse-trail/landing",label:"Treehouse landing",size:[3.5,0.35,3.5],wind:false,normalStrength:0.18,lod:true,doubleSided:false},
+  treehousetree: {file:"../treehouse-trail/tree",label:"Treehouse ancient canopy tree",size:[22,20,17],wind:true,normalStrength:0.12,lod:true,doubleSided:false},
+  treehousebush: {file:"../treehouse-trail/bush",label:"Treehouse lush bush cluster",size:[5,2.8,4.5],wind:true,normalStrength:0.12,lod:true,doubleSided:false},
+  treehousemattefar: {file:"",image:"treehouse-trail/matte-far.png",label:"Treehouse distant painted jungle",size:[120,50,.02],wind:false,matte:true},
+  treehousemattemid: {file:"",image:"treehouse-trail/matte-mid.png",label:"Treehouse painted forest layer",size:[85,38,.02],wind:false,matte:true,alphaCutout:true},
   junglecliff: {file:"",label:"jungle cliff face",size:[28,32,30],wind:false,backdrop:true},
   junglebackdrop: {file:"",label:"outer jungle canopy",size:[42,44,40],wind:false,backdrop:true},
   jungleleaf: {file:"broadleaf",label:"jungle broadleaf",size:[4.2,2.6,4.2],wind:true},
@@ -92,6 +104,7 @@ function finishGeometry(geometry:THREE.BufferGeometry,kind:RenderKind):THREE.Buf
     const y=positions.getY(i),radial=Math.hypot(positions.getX(i),positions.getZ(i));
     flex[i]=geometry.hasAttribute('aClayLeaf')?geometry.attributes.aClayLeaf.getX(i):kind==="vine"||kind==="junglevine"?Math.max(0,1-y):kind==="junglepalmtree"
       ?Math.pow(THREE.MathUtils.smoothstep(y,.48,1),1.2)*.6+y*y*.08
+      :kind==="treehousetree"?Math.pow(THREE.MathUtils.smoothstep(y,.42,.86),1.5)*.34
       :Math.min(1,Math.pow(radial*1.6+y*.45,1.5))*THREE.MathUtils.smoothstep(y,0,.12);
   }
   geometry.setAttribute("aJungleFlex",new THREE.BufferAttribute(flex,1));
@@ -103,6 +116,16 @@ function finishGeometry(geometry:THREE.BufferGeometry,kind:RenderKind):THREE.Buf
 function loadTemplate(kind:RenderKind):Promise<Template> {
   const cached=templates.get(kind);if(cached)return cached;
   const spec=renderSpec(kind);
+  if(spec.matte && spec.image){
+    // The plane is already normalized in X/Y, bottom-anchored, facing +Z.
+    // Skip GLB bounds normalization: a genuine flat card has zero Z extent.
+    const geometry=finishGeometry(new THREE.PlaneGeometry(1,1).translate(0,.5,0),kind);
+    const pending=new THREE.TextureLoader().loadAsync(import.meta.env.BASE_URL+spec.image).then(map=>{
+      map.colorSpace=THREE.SRGBColorSpace;map.anisotropy=4;map.userData.shared=true;
+      assetRenderer?.initTexture(map);return {geometry,map};
+    }).catch(error=>{geometry.dispose();templates.delete(kind);throw error;});
+    templates.set(kind,pending);return pending;
+  }
   if(isClayPlant(kind)){
     const pending=Promise.resolve({geometry:finishGeometry(createClayPlantGeometry(kind),kind),lodGeometry:finishGeometry(createClayPlantGeometry(kind,true),kind),map:null});
     templates.set(kind,pending);return pending;
@@ -237,14 +260,20 @@ interface Bucket {kind:RenderKind;transforms:THREE.Matrix4[];colors:THREE.Color[
 export class JungleAssetKit {
   readonly root=new THREE.Group();readonly time={value:0};readonly errors:string[]=[];
   private buckets=new Map<string,Bucket>();private jobs:Promise<void>[]=[];
-  private materials=new Map<RenderKind,THREE.MeshStandardMaterial|THREE.MeshLambertMaterial>();
+  private materials=new Map<RenderKind,THREE.MeshStandardMaterial|THREE.MeshLambertMaterial|THREE.MeshBasicMaterial>();
   private depths=new Map<RenderKind,THREE.MeshDepthMaterial>();
   private loose=new Set<THREE.Group>();private disposed=false;
   private sourceCount=0;private count=0;private readyCount=0;private skipped=0;
   constructor(private batched:boolean,private lite:boolean,private depthFade=false,private lodDistanceScale=1){this.root.name="Jungle Ruins modular kit";}
-  private material(kind:RenderKind,template:Template):THREE.MeshStandardMaterial|THREE.MeshLambertMaterial {
+  private material(kind:RenderKind,template:Template):THREE.MeshStandardMaterial|THREE.MeshLambertMaterial|THREE.MeshBasicMaterial {
     const cached=this.materials.get(kind);if(cached)return cached;
     const spec=renderSpec(kind),isVine=kind==="vine"||kind==="junglevine";
+    if(spec.matte){
+      const material=new THREE.MeshBasicMaterial({map:template.map,fog:false,toneMapped:false,
+        side:THREE.FrontSide,alphaTest:spec.alphaCutout?.35:0,transparent:false,depthWrite:true});
+      material.name=spec.label;material.userData.jungleAsset=true;material.userData.treehouseMatte=true;
+      this.materials.set(kind,material);return material;
+    }
     if (kind.startsWith("night")) {
       const material=new THREE.MeshLambertMaterial({map:template.map,emissive:0x1b2d4b,emissiveIntensity:.3});
       material.name=spec.label;material.userData.jungleAsset=true;this.materials.set(kind,material);return material;
@@ -263,6 +292,7 @@ export class JungleAssetKit {
   }
   private configure(mesh:THREE.Mesh,kind:RenderKind):void {
     const spec=renderSpec(kind);mesh.name=spec.label;mesh.userData.jungleAsset=kind;
+    if(spec.matte){mesh.castShadow=false;mesh.receiveShadow=false;return;}
     mesh.castShadow=!this.lite&&!spec.backdrop&&kind!=="joint"&&kind!=="earth";
     mesh.receiveShadow=!this.lite&&!spec.backdrop;
     if(!spec.wind)return;

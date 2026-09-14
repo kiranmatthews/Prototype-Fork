@@ -419,7 +419,7 @@ try {
   );
   const { swirls } = await server.ssrLoadModule("/src/swirls.ts");
 
-  assert.equal(CAMPAIGN_LEVELS.length, 12);
+  assert.equal(CAMPAIGN_LEVELS.length, 13);
   assert.equal(
     new Set(CAMPAIGN_LEVELS.map(({ progressKey }) => progressKey)).size,
     CAMPAIGN_LEVELS.length,
@@ -843,24 +843,6 @@ try {
     onEnterLevel: (id) => entered.push(id),
     onOpenSection: (section) => sections.push(section),
   });
-  controller.activate(warpLevel, null);
-  assert.deepEqual(fakePlayer.group.scale.toArray(), [3, 3, 3]);
-  assert.equal(controller.selectedKey, "jungle");
-  assert.equal(controller.travelTo("nightworks"), false, "touch must not bypass locked progression");
-  assert.deepEqual(selections.at(-1).directions, {
-    up: false,
-    down: false,
-    left: false,
-    right: false,
-  });
-  controllerStore.commitClear("jungle", {
-    crystal: false,
-    boxGem: false,
-    comboGem: false,
-  });
-  controller.refresh();
-  assert.equal(selections.at(-1).directions.right, true);
-  assert.equal(controller.navigate(1, 0), true);
   const neutralInput = {
     moveX: 0,
     moveY: 0,
@@ -875,6 +857,32 @@ try {
     mapQuitPressed: false,
     grabPressed: false,
   };
+  controller.activate(warpLevel, null);
+  assert.deepEqual(fakePlayer.group.scale.toArray(), [3, 3, 3]);
+  assert.equal(controller.selectedKey, "treehouse-trail");
+  assert.equal(controller.travelTo("nightworks"), false, "touch must not bypass locked progression");
+  assert.deepEqual(selections.at(-1).directions, {
+    up: false,
+    down: false,
+    left: false,
+    right: false,
+  });
+  controllerStore.commitClear("treehouse-trail", {});
+  controller.refresh();
+  assert.equal(selections.at(-1).directions.right, true);
+  assert.equal(controller.navigate(1, 0), true);
+  for (let frame = 0; frame < 180 && controller.moving; frame++)
+    controller.step(1 / 60, neutralInput);
+  assert.equal(controller.selectedKey, "jungle", "the new opening trail did not reach level two");
+  controllerStore.commitClear("jungle", {
+    crystal: false,
+    boxGem: false,
+    comboGem: false,
+  });
+  controller.refresh();
+  assert.equal(selections.at(-1).directions.right, true);
+  assert.equal(controller.navigate(1, 0), true);
+
   for (let frame = 0; frame < 180 && controller.moving; frame++)
     controller.step(1 / 60, neutralInput);
   assert.equal(controller.selectedKey, "test-course");

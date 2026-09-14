@@ -55,6 +55,7 @@ import { NightworksRocks, nightworksGeometry, isNightworksSurface } from "./nigh
 import { NIGHTWORKS_LEVEL } from "./levels/nightworks";
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
+import { TREEHOUSE_TRAIL_LEVEL } from "./levels/treehouse-trail";
 import { ASTRA_CHIMEWORKS_LEVEL } from "./levels/astra-chimeworks";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
 import { BEACHFRONT_RUN_LEVEL } from "./levels/beachfront-run";
@@ -68,6 +69,7 @@ import { isJungleAssembly, jungleAssemblyWork } from "./jungleAssemblies";
 import { createJungleShoulder, addJungleDepthFade } from "./jungleGround";
 import {
   CAMPAIGN_LEVELS,
+  CAMPAIGN_START_LEVEL_KEY,
   CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
   resolveRelicTime,
   validRelicTime,
@@ -747,6 +749,9 @@ export interface CustomComponent {
   airOnly?: boolean; // returnportal only accepts an airborne player
   coverage?: number; // grindosaurus: fraction of spine that must be ridden to defeat it
   cameraView?: boolean; // camnode: s/yaw define a fixed-view volume; radius feathers its boundary
+  cameraPosition?: [number, number, number]; // cameraView: optional world-space eye (paired with cameraTarget)
+  cameraTarget?: [number, number, number]; // cameraView: optional world-space look target
+  cameraFov?: number; // cameraView: optional vertical field of view in degrees
   radius?: number; // camnode: lane corner radius · stone: the boulder's radius
   materialStyle?: "unity-sand"; // mesh only: registered MatrixRex sand factory, never external assets
   emissive?: string; // bounded surface emission on EMISSIVE_COMPONENT_TYPES
@@ -2254,6 +2259,7 @@ export interface LevelEntry {
 }
 
 export const BUILTIN_LEVELS: LevelEntry[] = [
+  { id: "treehouse-trail", name: TREEHOUSE_TRAIL_LEVEL.name, data: TREEHOUSE_TRAIL_LEVEL },
   { id: "jungle", name: "Jungle Ruins" }, // enclosed corridor: pit hops, a trunk grind, a temple climb
   { id: "flats", name: "Flats & Pipes" }, // sky-deck runway opening into the transition yard
   { id: "sky", name: "Sky Bridge" },
@@ -2278,7 +2284,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
     data: BACKPORT_LAB_LEVEL,
   }, // reusable Unity-backport mechanics and procedural-path validation course
 ];
-export const DEFAULT_LEVEL_ID = "jungle";
+export const DEFAULT_LEVEL_ID = "treehouse-trail";
 const BUILTIN_IDS = new Set(BUILTIN_LEVELS.map((l) => l.id));
 export function isBuiltin(id: string): boolean {
   return BUILTIN_IDS.has(id);
@@ -2363,7 +2369,7 @@ const LEVEL_DATA_KEYS = new Set([
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "containment",
-  "edgeGrinding", "cameraView", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "deck",
+  "edgeGrinding", "cameraView", "cameraPosition", "cameraTarget", "cameraFov", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid",
   "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "spacing",
@@ -2739,6 +2745,8 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       !finiteTuple(component.p, 3) ||
       (component.s !== undefined && !finiteTuple(component.s, 3)) ||
       (component.to !== undefined && !finiteTuple(component.to, 3)) ||
+      (component.cameraPosition !== undefined && !finiteTuple(component.cameraPosition, 3)) ||
+      (component.cameraTarget !== undefined && !finiteTuple(component.cameraTarget, 3)) ||
       (component.widths !== undefined && !finiteTuple(component.widths, 0, MAX_POINTS)) ||
       (component.pts !== undefined &&
         (!Array.isArray(component.pts) ||
@@ -2753,6 +2761,8 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       component.p.some((number) => Math.abs(number) > MAX_ABS) ||
       component.s?.some((number) => Math.abs(number) > MAX_ABS) ||
       component.to?.some((number) => Math.abs(number) > MAX_ABS) ||
+      component.cameraPosition?.some((number) => Math.abs(number) > MAX_ABS) ||
+      component.cameraTarget?.some((number) => Math.abs(number) > MAX_ABS) ||
       component.widths?.some((number) => Math.abs(number) > MAX_ABS) ||
       component.pts?.some((point) =>
         point.some((number) => Math.abs(number) > MAX_ABS),
@@ -2844,7 +2854,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       singletonKinds.add(component.t);
       if (component.t === "worldmap") {
         if (source.ocean || (component.pts &&
-            (![9, 11, CAMPAIGN_LEVELS.length].includes(component.pts.length) || component.pts.some(point =>
+            (![9, 11, 12, CAMPAIGN_LEVELS.length].includes(component.pts.length) || component.pts.some(point =>
               Math.abs(point[0]) > 256 || Math.abs(point[1]) > 256 || Math.abs(point[3] ?? 0) > 128))))
           return null;
         if (component.pts) for (let i = 0; i < component.pts.length; i++) {
@@ -2988,6 +2998,13 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     )
       return null;
     if (component.cameraView && (component.t !== "camnode" || !component.s)) return null;
+    if (component.cameraPosition !== undefined || component.cameraTarget !== undefined || component.cameraFov !== undefined) {
+      if (component.t !== "camnode" || !component.cameraView || !component.s) return null;
+      if (!!component.cameraPosition !== !!component.cameraTarget) return null;
+      if (component.cameraPosition && component.cameraTarget &&
+          Math.hypot(...component.cameraPosition.map((v, i) => v - component.cameraTarget![i])) < 0.01) return null;
+      if (component.cameraFov !== undefined && (!Number.isFinite(component.cameraFov) || component.cameraFov < 10 || component.cameraFov > 120)) return null;
+    }
     switch (component.t) {
       case "ramp":
         if ((component.len ?? 10) < 1 || (component.w ?? 8) < 1) return null;
@@ -5953,6 +5970,14 @@ export class Level {
         p: [r2(group.position.x), r2(baseY - 1.75), r2(group.position.z)],
       });
     }
+    for (const view of this.cameraViews) C.push({
+      t: "camnode", cameraView: true,
+      p: [...view.p] as [number, number, number], s: [...view.s] as [number, number, number],
+      yaw: view.yaw, radius: view.feather,
+      ...(view.cameraPosition ? { cameraPosition: [...view.cameraPosition] as [number, number, number] } : {}),
+      ...(view.cameraTarget ? { cameraTarget: [...view.cameraTarget] as [number, number, number] } : {}),
+      ...(view.cameraFov !== undefined ? { cameraFov: view.cameraFov } : {}),
+    });
     // CAMERA LANE. The rig and the control frame ease along this spine, so a
     // level that loses it stops steering with the course — which is exactly
     // what happened to the Slipstream the moment it became editable. (A level
@@ -7034,7 +7059,10 @@ export class Level {
           } else if (c.t === "wumpa") {
             this.pickup(c.p[0], c.p[1], c.p[2]);
           } else if (c.t === "camnode" && c.cameraView && c.s) {
-            this.cameraViews.push({p:[...c.p],s:[...c.s],yaw:c.yaw??0,feather:c.radius??4});
+            this.cameraViews.push({p:[...c.p],s:[...c.s],yaw:c.yaw??0,feather:c.radius??4,
+              ...(c.cameraPosition ? {cameraPosition:[...c.cameraPosition] as [number,number,number]} : {}),
+              ...(c.cameraTarget ? {cameraTarget:[...c.cameraTarget] as [number,number,number]} : {}),
+              ...(c.cameraFov !== undefined ? {cameraFov:c.cameraFov} : {})});
             const marker=new THREE.Mesh(new THREE.BoxGeometry(...c.s),new THREE.MeshBasicMaterial({color:0x52d7ed,wireframe:true,transparent:true,opacity:.3}));
             marker.position.fromArray(c.p);marker.rotation.y=THREE.MathUtils.degToRad(c.yaw??0);
             marker.visible=false;marker.userData.editorGhost=true;this.root.add(marker);
@@ -7434,12 +7462,12 @@ export class Level {
   ): void {
     if (this.campaignWorldMap) {
       this.campaignWorldMap.sync(
-        CAMPAIGN_LEVELS[0].progressKey,
+        CAMPAIGN_START_LEVEL_KEY,
         (levelId) => {
           const progress = progressAt(levelId);
           return progress ? { cleared: false, ...progress } : null;
         },
-        (key) => key === CAMPAIGN_LEVELS[0].progressKey,
+        (key) => key === CAMPAIGN_START_LEVEL_KEY,
       );
       return;
     }
@@ -11174,7 +11202,7 @@ export class Level {
     this.campaignWorldMap = built.runtime;
     this.water = built.water;
     this.groundMeshes.push(...built.groundMeshes);
-    const start = built.runtime.pose(CAMPAIGN_LEVELS[0].progressKey);
+    const start = built.runtime.pose(CAMPAIGN_START_LEVEL_KEY);
     if (start) {
       this.spawnPos.copy(start.position);
       this.currentSpawn.copy(start.position);

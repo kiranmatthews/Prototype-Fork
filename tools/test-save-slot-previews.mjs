@@ -9,14 +9,17 @@ const {CampaignStore,CAMPAIGN_SAVE_SLOTS,campaignSavePreviewLevel,CAMPAIGN_LEVEL
 assert.equal(CAMPAIGN_SAVE_SLOTS,4);
 const initial=new CampaignStore();
 for(let slot=1;slot<=3;slot++){initial.newGame(slot);initial.commitClear(['jungle','test','dark'][slot-1],{crystal:false,boxGem:false,comboGem:false});}
-const legacy=JSON.parse(memory.get('solProtoCampaignSavesV1')).slice(0,3);legacy.forEach(save=>delete save.lastFinishedLevel);
+const legacy=JSON.parse(memory.get('solProtoCampaignSavesV1')).slice(0,3);legacy.forEach(save=>{delete save.lastFinishedLevel;delete save.levels['treehouse-trail'];});
 memory.set('solProtoCampaignSavesV1',JSON.stringify(legacy));
 const legacyView={...legacy[2],mapFocus:'jungle'};
 assert.equal(campaignSavePreviewLevel(legacyView).progressKey,campaignSavePreviewLevel({...legacyView,mapFocus:'nightworks'}).progressKey,'legacy preview followed map browsing');
 const store=new CampaignStore();assert.equal(store.listSlots().length,4);assert.equal(store.listSlots()[3],null);
 store.newGame(4);assert.equal(store.activeSlot,4);assert.equal(store.continueSlot(),4);
-assert.deepEqual(JSON.parse(memory.get('solProtoCampaignSavesV1')).slice(0,3),legacy,'creating slot four altered old saves');
-assert.equal(campaignSavePreviewLevel(store.active).progressKey,'jungle');
+assert.deepEqual(JSON.parse(memory.get('solProtoCampaignSavesV1')).slice(0,3),legacy.map(save=>({...save,levels:{...save.levels,'treehouse-trail':{cleared:false,crystal:false,boxGem:false,comboGem:false,timeRelic:false}}})), 'creating slot four altered existing progress');
+assert.equal(campaignSavePreviewLevel(store.active).progressKey,'treehouse-trail');
+const oldProgress=new CampaignStore();oldProgress.load(1);
+assert.equal(oldProgress.levelUnlocked('jungle'),true,'a completed old opening level was locked by the new intro');
+assert.equal(oldProgress.levelProgress('treehouse-trail').cleared,false,'migration invented a Treehouse Trail clear');
 const clear=id=>store.commitClear(id,{crystal:false,boxGem:false,comboGem:false});
 clear('jungle');clear('sky');clear('jungle');
 assert.equal(store.listSlots()[3].lastFinishedLevel,'jungle','replaying an earlier finished level did not update the preview');

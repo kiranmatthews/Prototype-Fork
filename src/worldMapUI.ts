@@ -5,7 +5,7 @@ import type { InputAction } from "./inputBindings";
 import type * as THREE from "three";
 import { MapLevelPresentation, mapTrialTime } from "./mapLevelPresentation";
 import {
-  CAMPAIGN_LEVELS,
+  CAMPAIGN_START_LEVEL_KEY,
   campaignLevelByKey,
   defaultMedalTimes, earnedTimeMedal, TIME_MEDALS, type MedalTimes,
   type CampaignStore,
@@ -39,7 +39,7 @@ export class WorldMapUI {
   private readonly trial = node("div", "world-map-trial");
   private readonly collectibleRow = node("div", "world-map-collectibles");
   private readonly enterButton = node("button", "world-map-enter-touch");
-  private selectedKey = "jungle";
+  private selectedKey = CAMPAIGN_START_LEVEL_KEY;
   private moving = false;
   private presentation: MapLevelPresentation | null = null;
 
@@ -107,7 +107,7 @@ export class WorldMapUI {
   }
 
   private render(immediate = false): void {
-    const definition = campaignLevelByKey(this.selectedKey) ?? CAMPAIGN_LEVELS[0];
+    const definition = campaignLevelByKey(this.selectedKey) ?? campaignLevelByKey(CAMPAIGN_START_LEVEL_KEY)!;
     const progress = this.campaign.levelProgress(definition.levelId);
     const unlocked = this.campaign.levelUnlocked(definition.progressKey);
     this.enterButton.disabled = this.moving || !unlocked;

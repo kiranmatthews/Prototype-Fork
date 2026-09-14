@@ -1,0 +1,1841 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "modelType": "smart-topology",
+  "textureGeneratedResolution": "2k",
+  "request": "Separate reusable treehouse body, balcony, stair flight, landing, large tree and dense bush in the supplied jungle artwork style.",
+  "referenceGenerator": "Built-in image_gen",
+  "referencePrompts": [
+    "tools/treehouse-trail/prompts.json",
+    "tools/treehouse-trail/foliage-prompts.json"
+  ],
+  "tasks": {
+    "body": {
+      "state": "SUCCEEDED",
+      "targetTriangles": 3000,
+      "id": "01a0a20e-fd9b-726b-92d6-65e481e494db",
+      "estimatedCredits": 15,
+      "progress": 100
+    },
+    "balcony": {
+      "state": "SUCCEEDED",
+      "targetTriangles": 2000,
+      "id": "01a0a20f-0a59-7249-9ee5-dd9a4a8430f4",
+      "estimatedCredits": 15,
+      "progress": 100
+    },
+    "landing": {
+      "state": "SUCCEEDED",
+      "targetTriangles": 1200,
+      "id": "01a0a20f-1575-7269-b9c5-d4428e8da60f",
+      "estimatedCredits": 15,
+      "progress": 100
+    },
+    "stairs": {
+      "state": "SUCCEEDED",
+      "targetTriangles": 1800,
+      "id": "01a0a210-06b2-746c-9da7-3d00ab80dd21",
+      "estimatedCredits": 15,
+      "progress": 100
+    },
+    "tree": {
+      "state": "SUCCEEDED",
+      "targetTriangles": 3000,
+      "id": "01a0a21c-885a-707b-95cc-7cee1e439aad",
+      "estimatedCredits": 15,
+      "progress": 100
+    },
+    "bush": {
+      "state": "SUCCEEDED",
+      "targetTriangles": 1200,
+      "id": "01a0a21c-9673-765b-a373-6d37af341037",
+      "estimatedCredits": 15,
+      "progress": 100
+    }
+  },
+  "credits": {
+    "publishedModules": 90,
+    "supersededMonolithicStudy": 15,
+    "total": 105,
+    "evidence": "Official Meshy CLI balance difference across the seven recorded task submissions."
+  },
+  "reusedMeshyFoliage": {
+    "registry": "src/jungleModules.ts and src/jungleAssets.ts",
+    "provenance": "tools/jungle-kit/tasks.json",
+    "kinds": [
+      "junglecanopy",
+      "junglepalmtree",
+      "jungleleaf",
+      "junglefern",
+      "carvedlog"
+    ]
+  },
+  "moduleNotes": {
+    "body": "Front +Z; no attached balcony, tree or stairs.",
+    "balcony": "Open long edge -Z; deck contact plane normalized Y=1/6; total height1.5m gives deck top0.25m above bottom.",
+    "stairs": "Seven actual Meshy treads, open risers, no handrails; rise +Z to -Z; fitted normalized tread levels1/7 through1.",
+    "landing": "Flat top normalized Y=1; no rails or supports extending below module bounds.",
+    "tree": "Independent ancient tree; branches and foliage as solid geometry; bottom-anchored, canopy-only wind.",
+    "bush": "Independent dense foliage clump with thick leaf forms; bottom-anchored with wind."
+  },
+  "models": [
+    {
+      "name": "body",
+      "triangles": 2989,
+      "lodTriangles": 1135,
+      "sourceSpanGltf": [
+        0.9316409826278687,
+        0.7265620231628418,
+        1.0
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.4648439884185791,
+          -0.5,
+          -0.3632810115814209
+        ],
+        [
+          0.46679699420928955,
+          0.5,
+          0.3632810115814209
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "centerlineFromPositiveZ": [
+        {
+          "along": 0.00769,
+          "top": 0.89928
+        },
+        {
+          "along": 0.02308,
+          "top": 0.8963
+        },
+        {
+          "along": 0.03846,
+          "top": 0.89332
+        },
+        {
+          "along": 0.05385,
+          "top": 0.89033
+        },
+        {
+          "along": 0.06923,
+          "top": 0.88725
+        },
+        {
+          "along": 0.08462,
+          "top": 0.88418
+        },
+        {
+          "along": 0.1,
+          "top": 0.8811
+        },
+        {
+          "along": 0.11538,
+          "top": 0.8938
+        },
+        {
+          "along": 0.13077,
+          "top": 0.89373
+        },
+        {
+          "along": 0.14615,
+          "top": 0.88299
+        },
+        {
+          "along": 0.16154,
+          "top": 0.87574
+        },
+        {
+          "along": 0.17692,
+          "top": 0.87475
+        },
+        {
+          "along": 0.19231,
+          "top": 0.87376
+        },
+        {
+          "along": 0.20769,
+          "top": 0.87279
+        },
+        {
+          "along": 0.22308,
+          "top": 0.87181
+        },
+        {
+          "along": 0.23846,
+          "top": 0.87097
+        },
+        {
+          "along": 0.25385,
+          "top": 0.87097
+        },
+        {
+          "along": 0.26923,
+          "top": 0.87097
+        },
+        {
+          "along": 0.28462,
+          "top": 0.87097
+        },
+        {
+          "along": 0.3,
+          "top": 0.87097
+        },
+        {
+          "along": 0.31538,
+          "top": 0.87097
+        },
+        {
+          "along": 0.33077,
+          "top": 0.87097
+        },
+        {
+          "along": 0.34615,
+          "top": 0.87097
+        },
+        {
+          "along": 0.36154,
+          "top": 0.87097
+        },
+        {
+          "along": 0.37692,
+          "top": 0.87108
+        },
+        {
+          "along": 0.39231,
+          "top": 0.87236
+        },
+        {
+          "along": 0.40769,
+          "top": 0.87364
+        },
+        {
+          "along": 0.42308,
+          "top": 0.8748
+        },
+        {
+          "along": 0.43846,
+          "top": 0.87548
+        },
+        {
+          "along": 0.45385,
+          "top": 0.87616
+        },
+        {
+          "along": 0.46923,
+          "top": 0.87684
+        },
+        {
+          "along": 0.48462,
+          "top": 0.87752
+        },
+        {
+          "along": 0.5,
+          "top": 0.8782
+        },
+        {
+          "along": 0.51538,
+          "top": 0.87888
+        },
+        {
+          "along": 0.53077,
+          "top": 0.87955
+        },
+        {
+          "along": 0.54615,
+          "top": 0.88085
+        },
+        {
+          "along": 0.56154,
+          "top": 0.88261
+        },
+        {
+          "along": 0.57692,
+          "top": 0.88437
+        },
+        {
+          "along": 0.59231,
+          "top": 0.88612
+        },
+        {
+          "along": 0.60769,
+          "top": 0.88788
+        },
+        {
+          "along": 0.62308,
+          "top": 0.91945
+        },
+        {
+          "along": 0.63846,
+          "top": 0.92072
+        },
+        {
+          "along": 0.65385,
+          "top": 0.92201
+        },
+        {
+          "along": 0.66923,
+          "top": 0.89592
+        },
+        {
+          "along": 0.68462,
+          "top": 0.89802
+        },
+        {
+          "along": 0.7,
+          "top": 0.90013
+        },
+        {
+          "along": 0.71538,
+          "top": 0.90228
+        },
+        {
+          "along": 0.73077,
+          "top": 0.90471
+        },
+        {
+          "along": 0.74615,
+          "top": 0.90715
+        },
+        {
+          "along": 0.76154,
+          "top": 0.90958
+        },
+        {
+          "along": 0.77692,
+          "top": 0.90064
+        },
+        {
+          "along": 0.79231,
+          "top": 0.87923
+        },
+        {
+          "along": 0.80769,
+          "top": 0.93608
+        },
+        {
+          "along": 0.82308,
+          "top": 0.93819
+        },
+        {
+          "along": 0.83846,
+          "top": 0.9403
+        },
+        {
+          "along": 0.85385,
+          "top": 0.93918
+        },
+        {
+          "along": 0.86923,
+          "top": 0.88999
+        },
+        {
+          "along": 0.88462,
+          "top": null
+        },
+        {
+          "along": 0.9,
+          "top": null
+        },
+        {
+          "along": 0.91538,
+          "top": null
+        },
+        {
+          "along": 0.93077,
+          "top": null
+        },
+        {
+          "along": 0.94615,
+          "top": null
+        },
+        {
+          "along": 0.96154,
+          "top": null
+        },
+        {
+          "along": 0.97692,
+          "top": null
+        },
+        {
+          "along": 0.99231,
+          "top": null
+        }
+      ],
+      "bytes": 765688,
+      "sha256": "cc69037cff326707a7ecddb49173c5907b71f66b5e1e42718456a6c3424e150e",
+      "sourceSha256": "192c01bc6b43d8ccaa9be51815fc65053f79662d058736c6ae8b52175137591b",
+      "albedoResolution": 1024,
+      "normalResolution": 512,
+      "path": "body.glb",
+      "referenceSha256": "d270b8822b1a325fe3d12db06c072d06a3ca5a6b43bd743af369ff1501e59fb8"
+    },
+    {
+      "name": "balcony",
+      "triangles": 2050,
+      "lodTriangles": 779,
+      "sourceSpanGltf": [
+        1.0,
+        0.19775399565696716,
+        0.4619140028953552
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.5,
+          -0.22851599752902985,
+          -0.0976559966802597
+        ],
+        [
+          0.5,
+          0.23339800536632538,
+          0.10009799897670746
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "centerlineFromPositiveZ": [
+        {
+          "along": 0.00769,
+          "top": 0.16667
+        },
+        {
+          "along": 0.02308,
+          "top": 0.16667
+        },
+        {
+          "along": 0.03846,
+          "top": 0.16667
+        },
+        {
+          "along": 0.05385,
+          "top": 0.62852
+        },
+        {
+          "along": 0.06923,
+          "top": 0.16667
+        },
+        {
+          "along": 0.08462,
+          "top": 0.16667
+        },
+        {
+          "along": 0.1,
+          "top": 0.16667
+        },
+        {
+          "along": 0.11538,
+          "top": 0.16667
+        },
+        {
+          "along": 0.13077,
+          "top": 0.16667
+        },
+        {
+          "along": 0.14615,
+          "top": 0.16667
+        },
+        {
+          "along": 0.16154,
+          "top": 0.16667
+        },
+        {
+          "along": 0.17692,
+          "top": 0.16667
+        },
+        {
+          "along": 0.19231,
+          "top": 0.16667
+        },
+        {
+          "along": 0.20769,
+          "top": 0.16667
+        },
+        {
+          "along": 0.22308,
+          "top": 0.16667
+        },
+        {
+          "along": 0.23846,
+          "top": 0.16667
+        },
+        {
+          "along": 0.25385,
+          "top": 0.16667
+        },
+        {
+          "along": 0.26923,
+          "top": 0.16667
+        },
+        {
+          "along": 0.28462,
+          "top": 0.16667
+        },
+        {
+          "along": 0.3,
+          "top": 0.16667
+        },
+        {
+          "along": 0.31538,
+          "top": 0.16667
+        },
+        {
+          "along": 0.33077,
+          "top": 0.16667
+        },
+        {
+          "along": 0.34615,
+          "top": 0.16667
+        },
+        {
+          "along": 0.36154,
+          "top": 0.16667
+        },
+        {
+          "along": 0.37692,
+          "top": 0.16667
+        },
+        {
+          "along": 0.39231,
+          "top": 0.16667
+        },
+        {
+          "along": 0.40769,
+          "top": 0.16667
+        },
+        {
+          "along": 0.42308,
+          "top": 0.16667
+        },
+        {
+          "along": 0.43846,
+          "top": 0.16667
+        },
+        {
+          "along": 0.45385,
+          "top": 0.16667
+        },
+        {
+          "along": 0.46923,
+          "top": 0.16667
+        },
+        {
+          "along": 0.48462,
+          "top": 0.16667
+        },
+        {
+          "along": 0.5,
+          "top": 0.16667
+        },
+        {
+          "along": 0.51538,
+          "top": 0.16667
+        },
+        {
+          "along": 0.53077,
+          "top": 0.16667
+        },
+        {
+          "along": 0.54615,
+          "top": 0.16667
+        },
+        {
+          "along": 0.56154,
+          "top": 0.16667
+        },
+        {
+          "along": 0.57692,
+          "top": 0.16667
+        },
+        {
+          "along": 0.59231,
+          "top": 0.16667
+        },
+        {
+          "along": 0.60769,
+          "top": 0.16667
+        },
+        {
+          "along": 0.62308,
+          "top": 0.16667
+        },
+        {
+          "along": 0.63846,
+          "top": 0.16667
+        },
+        {
+          "along": 0.65385,
+          "top": 0.16667
+        },
+        {
+          "along": 0.66923,
+          "top": 0.16667
+        },
+        {
+          "along": 0.68462,
+          "top": 0.16667
+        },
+        {
+          "along": 0.7,
+          "top": 0.16667
+        },
+        {
+          "along": 0.71538,
+          "top": 0.16667
+        },
+        {
+          "along": 0.73077,
+          "top": 0.16667
+        },
+        {
+          "along": 0.74615,
+          "top": 0.16667
+        },
+        {
+          "along": 0.76154,
+          "top": 0.16667
+        },
+        {
+          "along": 0.77692,
+          "top": 0.16667
+        },
+        {
+          "along": 0.79231,
+          "top": 0.16667
+        },
+        {
+          "along": 0.80769,
+          "top": 0.16667
+        },
+        {
+          "along": 0.82308,
+          "top": 0.16667
+        },
+        {
+          "along": 0.83846,
+          "top": 0.16667
+        },
+        {
+          "along": 0.85385,
+          "top": 0.16667
+        },
+        {
+          "along": 0.86923,
+          "top": 0.16667
+        },
+        {
+          "along": 0.88462,
+          "top": 0.16667
+        },
+        {
+          "along": 0.9,
+          "top": 0.16667
+        },
+        {
+          "along": 0.91538,
+          "top": 0.16667
+        },
+        {
+          "along": 0.93077,
+          "top": 0.16667
+        },
+        {
+          "along": 0.94615,
+          "top": 0.16667
+        },
+        {
+          "along": 0.96154,
+          "top": null
+        },
+        {
+          "along": 0.97692,
+          "top": null
+        },
+        {
+          "along": 0.99231,
+          "top": null
+        }
+      ],
+      "bytes": 757088,
+      "sha256": "8e74664313cdc58bd35adb5f9401bb3e1e60b1e11a41d9acae5e99552b397b2f",
+      "sourceSha256": "d6b9d0299ec9e63839f0735c7ffb20cf0492571728cf8a659964c2cb99015ff4",
+      "albedoResolution": 1024,
+      "normalResolution": 512,
+      "path": "balcony.glb",
+      "referenceSha256": "84efad7dc001cb45405d8454b833f36c640d4a2c7c6adb8008368017307ebadf"
+    },
+    {
+      "name": "stairs",
+      "triangles": 1880,
+      "lodTriangles": 714,
+      "sourceSpanGltf": [
+        0.5781239867210388,
+        0.65625,
+        1.0
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.2890619933605194,
+          -0.5,
+          -0.328125
+        ],
+        [
+          0.2890619933605194,
+          0.5,
+          0.328125
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "centerlineFromPositiveZ": [
+        {
+          "along": 0.00769,
+          "top": null
+        },
+        {
+          "along": 0.02308,
+          "top": 0.14286
+        },
+        {
+          "along": 0.03846,
+          "top": 0.14286
+        },
+        {
+          "along": 0.05385,
+          "top": 0.14286
+        },
+        {
+          "along": 0.06923,
+          "top": 0.14286
+        },
+        {
+          "along": 0.08462,
+          "top": 0.14286
+        },
+        {
+          "along": 0.1,
+          "top": 0.14286
+        },
+        {
+          "along": 0.11538,
+          "top": 0.14286
+        },
+        {
+          "along": 0.13077,
+          "top": 0.14286
+        },
+        {
+          "along": 0.14615,
+          "top": null
+        },
+        {
+          "along": 0.16154,
+          "top": 0.28484
+        },
+        {
+          "along": 0.17692,
+          "top": 0.28571
+        },
+        {
+          "along": 0.19231,
+          "top": 0.28571
+        },
+        {
+          "along": 0.20769,
+          "top": 0.28571
+        },
+        {
+          "along": 0.22308,
+          "top": null
+        },
+        {
+          "along": 0.23846,
+          "top": 0.28571
+        },
+        {
+          "along": 0.25385,
+          "top": 0.28571
+        },
+        {
+          "along": 0.26923,
+          "top": 0.28571
+        },
+        {
+          "along": 0.28462,
+          "top": 0.28571
+        },
+        {
+          "along": 0.3,
+          "top": 0.42857
+        },
+        {
+          "along": 0.31538,
+          "top": 0.42857
+        },
+        {
+          "along": 0.33077,
+          "top": 0.42857
+        },
+        {
+          "along": 0.34615,
+          "top": 0.42857
+        },
+        {
+          "along": 0.36154,
+          "top": 0.42857
+        },
+        {
+          "along": 0.37692,
+          "top": 0.42857
+        },
+        {
+          "along": 0.39231,
+          "top": 0.42857
+        },
+        {
+          "along": 0.40769,
+          "top": 0.42857
+        },
+        {
+          "along": 0.42308,
+          "top": 0.5202
+        },
+        {
+          "along": 0.43846,
+          "top": 0.57143
+        },
+        {
+          "along": 0.45385,
+          "top": 0.57143
+        },
+        {
+          "along": 0.46923,
+          "top": 0.57143
+        },
+        {
+          "along": 0.48462,
+          "top": 0.57143
+        },
+        {
+          "along": 0.5,
+          "top": 0.57143
+        },
+        {
+          "along": 0.51538,
+          "top": 0.57143
+        },
+        {
+          "along": 0.53077,
+          "top": 0.57143
+        },
+        {
+          "along": 0.54615,
+          "top": 0.70229
+        },
+        {
+          "along": 0.56154,
+          "top": 0.71429
+        },
+        {
+          "along": 0.57692,
+          "top": 0.71429
+        },
+        {
+          "along": 0.59231,
+          "top": 0.71429
+        },
+        {
+          "along": 0.60769,
+          "top": 0.71429
+        },
+        {
+          "along": 0.62308,
+          "top": 0.71429
+        },
+        {
+          "along": 0.63846,
+          "top": 0.71429
+        },
+        {
+          "along": 0.65385,
+          "top": 0.71429
+        },
+        {
+          "along": 0.66923,
+          "top": 0.71429
+        },
+        {
+          "along": 0.68462,
+          "top": 0.85714
+        },
+        {
+          "along": 0.7,
+          "top": 0.85714
+        },
+        {
+          "along": 0.71538,
+          "top": 0.85714
+        },
+        {
+          "along": 0.73077,
+          "top": 0.85234
+        },
+        {
+          "along": 0.74615,
+          "top": 0.85714
+        },
+        {
+          "along": 0.76154,
+          "top": 0.85714
+        },
+        {
+          "along": 0.77692,
+          "top": 0.85714
+        },
+        {
+          "along": 0.79231,
+          "top": 0.85714
+        },
+        {
+          "along": 0.80769,
+          "top": null
+        },
+        {
+          "along": 0.82308,
+          "top": 1.0
+        },
+        {
+          "along": 0.83846,
+          "top": 1.0
+        },
+        {
+          "along": 0.85385,
+          "top": 1.0
+        },
+        {
+          "along": 0.86923,
+          "top": 1.0
+        },
+        {
+          "along": 0.88462,
+          "top": 1.0
+        },
+        {
+          "along": 0.9,
+          "top": 1.0
+        },
+        {
+          "along": 0.91538,
+          "top": 0.99911
+        },
+        {
+          "along": 0.93077,
+          "top": 1.0
+        },
+        {
+          "along": 0.94615,
+          "top": 1.0
+        },
+        {
+          "along": 0.96154,
+          "top": 1.0
+        },
+        {
+          "along": 0.97692,
+          "top": 0.99994
+        },
+        {
+          "along": 0.99231,
+          "top": null
+        }
+      ],
+      "bytes": 667964,
+      "sha256": "52728784a728ef4abf6baa813fb2d1b76e3d002908c88bcf726471a8cd489c3f",
+      "sourceSha256": "5a1ed72e6478b73fde58e1136116199a362fe36335ca8d7eaf03e6259d50cbb2",
+      "albedoResolution": 1024,
+      "normalResolution": 512,
+      "path": "stairs.glb",
+      "referenceSha256": "5a8a52d82485d22e234ae0113fb8e89f64a7baa4d7d3968134aa1fc0b2a32399"
+    },
+    {
+      "name": "landing",
+      "triangles": 1181,
+      "lodTriangles": 448,
+      "sourceSpanGltf": [
+        0.9765620231628418,
+        0.1640630066394806,
+        1.0
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.4882810115814209,
+          -0.5,
+          -0.08300799876451492
+        ],
+        [
+          0.4882810115814209,
+          0.5,
+          0.08105500042438507
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "centerlineFromPositiveZ": [
+        {
+          "along": 0.00769,
+          "top": null
+        },
+        {
+          "along": 0.02308,
+          "top": null
+        },
+        {
+          "along": 0.03846,
+          "top": null
+        },
+        {
+          "along": 0.05385,
+          "top": 1.0
+        },
+        {
+          "along": 0.06923,
+          "top": 1.0
+        },
+        {
+          "along": 0.08462,
+          "top": 1.0
+        },
+        {
+          "along": 0.1,
+          "top": 1.0
+        },
+        {
+          "along": 0.11538,
+          "top": 1.0
+        },
+        {
+          "along": 0.13077,
+          "top": 1.0
+        },
+        {
+          "along": 0.14615,
+          "top": 1.0
+        },
+        {
+          "along": 0.16154,
+          "top": 1.0
+        },
+        {
+          "along": 0.17692,
+          "top": 1.0
+        },
+        {
+          "along": 0.19231,
+          "top": 1.0
+        },
+        {
+          "along": 0.20769,
+          "top": 1.0
+        },
+        {
+          "along": 0.22308,
+          "top": 1.0
+        },
+        {
+          "along": 0.23846,
+          "top": 1.0
+        },
+        {
+          "along": 0.25385,
+          "top": 1.0
+        },
+        {
+          "along": 0.26923,
+          "top": 1.0
+        },
+        {
+          "along": 0.28462,
+          "top": 1.0
+        },
+        {
+          "along": 0.3,
+          "top": 1.0
+        },
+        {
+          "along": 0.31538,
+          "top": 1.0
+        },
+        {
+          "along": 0.33077,
+          "top": 1.0
+        },
+        {
+          "along": 0.34615,
+          "top": 1.0
+        },
+        {
+          "along": 0.36154,
+          "top": 1.0
+        },
+        {
+          "along": 0.37692,
+          "top": 1.0
+        },
+        {
+          "along": 0.39231,
+          "top": 1.0
+        },
+        {
+          "along": 0.40769,
+          "top": 1.0
+        },
+        {
+          "along": 0.42308,
+          "top": 1.0
+        },
+        {
+          "along": 0.43846,
+          "top": 1.0
+        },
+        {
+          "along": 0.45385,
+          "top": 1.0
+        },
+        {
+          "along": 0.46923,
+          "top": 1.0
+        },
+        {
+          "along": 0.48462,
+          "top": 1.0
+        },
+        {
+          "along": 0.5,
+          "top": 1.0
+        },
+        {
+          "along": 0.51538,
+          "top": 1.0
+        },
+        {
+          "along": 0.53077,
+          "top": 1.0
+        },
+        {
+          "along": 0.54615,
+          "top": 1.0
+        },
+        {
+          "along": 0.56154,
+          "top": 1.0
+        },
+        {
+          "along": 0.57692,
+          "top": 1.0
+        },
+        {
+          "along": 0.59231,
+          "top": 1.0
+        },
+        {
+          "along": 0.60769,
+          "top": 1.0
+        },
+        {
+          "along": 0.62308,
+          "top": 1.0
+        },
+        {
+          "along": 0.63846,
+          "top": 1.0
+        },
+        {
+          "along": 0.65385,
+          "top": 1.0
+        },
+        {
+          "along": 0.66923,
+          "top": 1.0
+        },
+        {
+          "along": 0.68462,
+          "top": 1.0
+        },
+        {
+          "along": 0.7,
+          "top": 1.0
+        },
+        {
+          "along": 0.71538,
+          "top": 1.0
+        },
+        {
+          "along": 0.73077,
+          "top": 1.0
+        },
+        {
+          "along": 0.74615,
+          "top": 1.0
+        },
+        {
+          "along": 0.76154,
+          "top": 1.0
+        },
+        {
+          "along": 0.77692,
+          "top": 1.0
+        },
+        {
+          "along": 0.79231,
+          "top": 1.0
+        },
+        {
+          "along": 0.80769,
+          "top": 1.0
+        },
+        {
+          "along": 0.82308,
+          "top": 1.0
+        },
+        {
+          "along": 0.83846,
+          "top": 1.0
+        },
+        {
+          "along": 0.85385,
+          "top": 1.0
+        },
+        {
+          "along": 0.86923,
+          "top": 1.0
+        },
+        {
+          "along": 0.88462,
+          "top": 1.0
+        },
+        {
+          "along": 0.9,
+          "top": 1.0
+        },
+        {
+          "along": 0.91538,
+          "top": 1.0
+        },
+        {
+          "along": 0.93077,
+          "top": 1.0
+        },
+        {
+          "along": 0.94615,
+          "top": 1.0
+        },
+        {
+          "along": 0.96154,
+          "top": null
+        },
+        {
+          "along": 0.97692,
+          "top": null
+        },
+        {
+          "along": 0.99231,
+          "top": null
+        }
+      ],
+      "bytes": 616600,
+      "sha256": "7124f01f3697a155236e15db9eab6e5f80546b3be254e14dd19cdb47bec214d0",
+      "sourceSha256": "1f3eb403b1092804a54c247fb529dfa008e6d54a7225006b00273827d5971058",
+      "albedoResolution": 1024,
+      "normalResolution": 512,
+      "path": "landing.glb",
+      "referenceSha256": "c52c1375ac0451f27117882d36da110bc185b90397a4f3d6274fb6f8f95e4700"
+    },
+    {
+      "name": "tree",
+      "triangles": 2860,
+      "lodTriangles": 1086,
+      "sourceSpanGltf": [
+        1.0,
+        0.6953120231628418,
+        0.9746090173721313
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.5,
+          -0.49023398756980896,
+          -0.3476560115814209
+        ],
+        [
+          0.5,
+          0.484375,
+          0.3476560115814209
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "centerlineFromPositiveZ": [
+        {
+          "along": 0.00769,
+          "top": null
+        },
+        {
+          "along": 0.02308,
+          "top": null
+        },
+        {
+          "along": 0.03846,
+          "top": null
+        },
+        {
+          "along": 0.05385,
+          "top": null
+        },
+        {
+          "along": 0.06923,
+          "top": null
+        },
+        {
+          "along": 0.08462,
+          "top": null
+        },
+        {
+          "along": 0.1,
+          "top": null
+        },
+        {
+          "along": 0.11538,
+          "top": null
+        },
+        {
+          "along": 0.13077,
+          "top": null
+        },
+        {
+          "along": 0.14615,
+          "top": null
+        },
+        {
+          "along": 0.16154,
+          "top": null
+        },
+        {
+          "along": 0.17692,
+          "top": null
+        },
+        {
+          "along": 0.19231,
+          "top": 0.00866
+        },
+        {
+          "along": 0.20769,
+          "top": 0.02356
+        },
+        {
+          "along": 0.22308,
+          "top": 0.04152
+        },
+        {
+          "along": 0.23846,
+          "top": 0.05991
+        },
+        {
+          "along": 0.25385,
+          "top": 0.62806
+        },
+        {
+          "along": 0.26923,
+          "top": 0.63585
+        },
+        {
+          "along": 0.28462,
+          "top": 0.93397
+        },
+        {
+          "along": 0.3,
+          "top": 0.94144
+        },
+        {
+          "along": 0.31538,
+          "top": 0.94754
+        },
+        {
+          "along": 0.33077,
+          "top": 0.95364
+        },
+        {
+          "along": 0.34615,
+          "top": 0.95865
+        },
+        {
+          "along": 0.36154,
+          "top": 0.955
+        },
+        {
+          "along": 0.37692,
+          "top": 0.95135
+        },
+        {
+          "along": 0.39231,
+          "top": 0.94575
+        },
+        {
+          "along": 0.40769,
+          "top": 0.93571
+        },
+        {
+          "along": 0.42308,
+          "top": 0.90392
+        },
+        {
+          "along": 0.43846,
+          "top": 0.90372
+        },
+        {
+          "along": 0.45385,
+          "top": 0.90095
+        },
+        {
+          "along": 0.46923,
+          "top": 0.89542
+        },
+        {
+          "along": 0.48462,
+          "top": 0.89205
+        },
+        {
+          "along": 0.5,
+          "top": 0.94507
+        },
+        {
+          "along": 0.51538,
+          "top": 0.94605
+        },
+        {
+          "along": 0.53077,
+          "top": 0.91495
+        },
+        {
+          "along": 0.54615,
+          "top": 0.91056
+        },
+        {
+          "along": 0.56154,
+          "top": 0.90396
+        },
+        {
+          "along": 0.57692,
+          "top": 0.93658
+        },
+        {
+          "along": 0.59231,
+          "top": 0.93712
+        },
+        {
+          "along": 0.60769,
+          "top": 0.93338
+        },
+        {
+          "along": 0.62308,
+          "top": 0.92893
+        },
+        {
+          "along": 0.63846,
+          "top": 0.92449
+        },
+        {
+          "along": 0.65385,
+          "top": 0.92004
+        },
+        {
+          "along": 0.66923,
+          "top": 0.9088
+        },
+        {
+          "along": 0.68462,
+          "top": 0.8853
+        },
+        {
+          "along": 0.7,
+          "top": 0.86426
+        },
+        {
+          "along": 0.71538,
+          "top": 0.69145
+        },
+        {
+          "along": 0.73077,
+          "top": 0.70459
+        },
+        {
+          "along": 0.74615,
+          "top": 0.70293
+        },
+        {
+          "along": 0.76154,
+          "top": 0.68045
+        },
+        {
+          "along": 0.77692,
+          "top": 0.67846
+        },
+        {
+          "along": 0.79231,
+          "top": 0.67646
+        },
+        {
+          "along": 0.80769,
+          "top": 0.67533
+        },
+        {
+          "along": 0.82308,
+          "top": 0.67528
+        },
+        {
+          "along": 0.83846,
+          "top": 0.66884
+        },
+        {
+          "along": 0.85385,
+          "top": 0.65882
+        },
+        {
+          "along": 0.86923,
+          "top": 0.63889
+        },
+        {
+          "along": 0.88462,
+          "top": 0.61849
+        },
+        {
+          "along": 0.9,
+          "top": 0.5309
+        },
+        {
+          "along": 0.91538,
+          "top": 0.52409
+        },
+        {
+          "along": 0.93077,
+          "top": 0.51728
+        },
+        {
+          "along": 0.94615,
+          "top": 0.50662
+        },
+        {
+          "along": 0.96154,
+          "top": 0.48881
+        },
+        {
+          "along": 0.97692,
+          "top": 0.47651
+        },
+        {
+          "along": 0.99231,
+          "top": 0.46422
+        }
+      ],
+      "bytes": 873132,
+      "sha256": "f9ccf8f9721466ddebc709f93dc4e3dcd1411167db02fa159b421a622268597d",
+      "sourceSha256": "0c8f4bf69e20274185102a6e264c9db6ae6b7721865b6f1366f501e630e57176",
+      "albedoResolution": 1024,
+      "normalResolution": 512,
+      "path": "tree.glb",
+      "referenceSha256": "86ecf691e9d7de53513f6d7d6b85918a3b5741dba4507994b70274ca95585f4b"
+    },
+    {
+      "name": "bush",
+      "triangles": 961,
+      "lodTriangles": 365,
+      "sourceSpanGltf": [
+        1.0,
+        0.6132820248603821,
+        0.9707030057907104
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.5,
+          -0.484375,
+          -0.30664101243019104
+        ],
+        [
+          0.5,
+          0.48632800579071045,
+          0.30664101243019104
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "centerlineFromPositiveZ": [
+        {
+          "along": 0.00769,
+          "top": null
+        },
+        {
+          "along": 0.02308,
+          "top": null
+        },
+        {
+          "along": 0.03846,
+          "top": 0.11851
+        },
+        {
+          "along": 0.05385,
+          "top": 0.15263
+        },
+        {
+          "along": 0.06923,
+          "top": 0.16711
+        },
+        {
+          "along": 0.08462,
+          "top": 0.18233
+        },
+        {
+          "along": 0.1,
+          "top": 0.19756
+        },
+        {
+          "along": 0.11538,
+          "top": 0.20982
+        },
+        {
+          "along": 0.13077,
+          "top": 0.21425
+        },
+        {
+          "along": 0.14615,
+          "top": 0.35802
+        },
+        {
+          "along": 0.16154,
+          "top": 0.36462
+        },
+        {
+          "along": 0.17692,
+          "top": 0.37123
+        },
+        {
+          "along": 0.19231,
+          "top": 0.64149
+        },
+        {
+          "along": 0.20769,
+          "top": 0.64503
+        },
+        {
+          "along": 0.22308,
+          "top": 0.36858
+        },
+        {
+          "along": 0.23846,
+          "top": 0.65052
+        },
+        {
+          "along": 0.25385,
+          "top": 0.64943
+        },
+        {
+          "along": 0.26923,
+          "top": 0.6455
+        },
+        {
+          "along": 0.28462,
+          "top": 0.64157
+        },
+        {
+          "along": 0.3,
+          "top": 0.63764
+        },
+        {
+          "along": 0.31538,
+          "top": 0.63371
+        },
+        {
+          "along": 0.33077,
+          "top": 0.62978
+        },
+        {
+          "along": 0.34615,
+          "top": 0.62483
+        },
+        {
+          "along": 0.36154,
+          "top": 0.60935
+        },
+        {
+          "along": 0.37692,
+          "top": 0.59013
+        },
+        {
+          "along": 0.39231,
+          "top": 0.57091
+        },
+        {
+          "along": 0.40769,
+          "top": 0.5517
+        },
+        {
+          "along": 0.42308,
+          "top": 0.53248
+        },
+        {
+          "along": 0.43846,
+          "top": 0.51213
+        },
+        {
+          "along": 0.45385,
+          "top": 0.48524
+        },
+        {
+          "along": 0.46923,
+          "top": 0.45834
+        },
+        {
+          "along": 0.48462,
+          "top": 0.40084
+        },
+        {
+          "along": 0.5,
+          "top": 0.29657
+        },
+        {
+          "along": 0.51538,
+          "top": 0.35559
+        },
+        {
+          "along": 0.53077,
+          "top": 0.4146
+        },
+        {
+          "along": 0.54615,
+          "top": 0.4677
+        },
+        {
+          "along": 0.56154,
+          "top": 0.63674
+        },
+        {
+          "along": 0.57692,
+          "top": 0.66695
+        },
+        {
+          "along": 0.59231,
+          "top": 0.69716
+        },
+        {
+          "along": 0.60769,
+          "top": 0.72737
+        },
+        {
+          "along": 0.62308,
+          "top": 0.75758
+        },
+        {
+          "along": 0.63846,
+          "top": 0.77904
+        },
+        {
+          "along": 0.65385,
+          "top": 0.79153
+        },
+        {
+          "along": 0.66923,
+          "top": 0.79927
+        },
+        {
+          "along": 0.68462,
+          "top": 0.80486
+        },
+        {
+          "along": 0.7,
+          "top": 0.81045
+        },
+        {
+          "along": 0.71538,
+          "top": 0.63608
+        },
+        {
+          "along": 0.73077,
+          "top": 0.44819
+        },
+        {
+          "along": 0.74615,
+          "top": 0.44827
+        },
+        {
+          "along": 0.76154,
+          "top": 0.44791
+        },
+        {
+          "along": 0.77692,
+          "top": 0.44754
+        },
+        {
+          "along": 0.79231,
+          "top": 0.44718
+        },
+        {
+          "along": 0.80769,
+          "top": 0.44681
+        },
+        {
+          "along": 0.82308,
+          "top": 0.44645
+        },
+        {
+          "along": 0.83846,
+          "top": 0.44608
+        },
+        {
+          "along": 0.85385,
+          "top": 0.44572
+        },
+        {
+          "along": 0.86923,
+          "top": 0.43122
+        },
+        {
+          "along": 0.88462,
+          "top": 0.413
+        },
+        {
+          "along": 0.9,
+          "top": 0.39478
+        },
+        {
+          "along": 0.91538,
+          "top": 0.37656
+        },
+        {
+          "along": 0.93077,
+          "top": 0.35834
+        },
+        {
+          "along": 0.94615,
+          "top": 0.33523
+        },
+        {
+          "along": 0.96154,
+          "top": null
+        },
+        {
+          "along": 0.97692,
+          "top": null
+        },
+        {
+          "along": 0.99231,
+          "top": null
+        }
+      ],
+      "bytes": 718344,
+      "sha256": "45f9324f3d553dcf6f107682f8896fcf90a27f257265a5404836ca50622f17a9",
+      "sourceSha256": "719501a58fdd59ee5348307b48b48ddad526eae4df09cf2bff9eec1648e0dd14",
+      "albedoResolution": 1024,
+      "normalResolution": 512,
+      "path": "bush.glb",
+      "referenceSha256": "84dabf7105694c3c0edcd4bb741916d4c6daee82bdb6c584f43048ddc5456e2b"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "provider": "Meshy",
+  "modelType": "smart-topology",
+  "model": "meshy-t2",
+  "supersededMonolithicTask": {
+    "id": "01a0a207-3e3c-767c-b6be-dd375e7a040b",
+    "credits": 15,
+    "note": "Superseded before integration by separate-chunk user request; asset is not published."
+  },
+  "tasks": {
+    "body": {
+      "state": "SUCCEEDED",
+      "targetTriangles": 3000,
+      "id": "01a0a20e-fd9b-726b-92d6-65e481e494db",
+      "estimatedCredits": 15,
+      "progress": 100
+    },
+    "balcony": {
+      "state": "SUCCEEDED",
+      "targetTriangles": 2000,
+      "id": "01a0a20f-0a59-7249-9ee5-dd9a4a8430f4",
+      "estimatedCredits": 15,
+      "progress": 100
+    },
+    "landing": {
+      "state": "SUCCEEDED",
+      "targetTriangles": 1200,
+      "id": "01a0a20f-1575-7269-b9c5-d4428e8da60f",
+      "estimatedCredits": 15,
+      "progress": 100
+    },
+    "stairs": {
+      "state": "SUCCEEDED",
+      "targetTriangles": 1800,
+      "id": "01a0a210-06b2-746c-9da7-3d00ab80dd21",
+      "estimatedCredits": 15,
+      "progress": 100
+    },
+    "tree": {
+      "state": "SUCCEEDED",
+      "targetTriangles": 3000,
+      "id": "01a0a21c-885a-707b-95cc-7cee1e439aad",
+      "estimatedCredits": 15,
+      "progress": 100
+    },
+    "bush": {
+      "state": "SUCCEEDED",
+      "targetTriangles": 1200,
+      "id": "01a0a21c-9673-765b-a373-6d37af341037",
+      "estimatedCredits": 15,
+      "progress": 100
+    }
+  }
+}

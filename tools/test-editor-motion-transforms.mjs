@@ -33,7 +33,7 @@ const check = (name, callback) => {
   catch (error) { failures++; console.error(`FAIL ${name}: ${error.stack}`); }
 };
 try {
-  const { Editor } = await server.ssrLoadModule("/src/editor.ts");
+  const { Editor, setComponentPosition } = await server.ssrLoadModule("/src/editor.ts");
   const { Level, normalizeCustomLevelData, parseCustomLevelJson } = await server.ssrLoadModule("/src/level.ts");
   const editorFor = (data, count = 1) => {
     const editor = Object.create(Editor.prototype);
@@ -53,6 +53,36 @@ try {
   const runtime = (level, t, index = 0) => t === "mover" ? level.movers[index] : t === "rail" ? level.movingRails[index] : level.ropeSwings[index];
   const offset = (item, t) => t === "mover" ? item.mesh.position.clone().sub(item.base)
     : t === "rail" ? item.object.position.clone() : item.anchor.clone().sub(item.travel.base);
+  check("camera framing validation, source/runtime capture and editor world-anchor transforms", () => {
+    const view={t:"camnode",cameraView:true,p:[3,4,5],s:[40,60,30],yaw:0,radius:10,
+      cameraPosition:[0,9,39],cameraTarget:[0,6,-7],cameraFov:43};
+    const data=fixture([view]);assert.ok(normalizeCustomLevelData(data));
+    for(const patch of [{cameraPosition:[0,1]},{cameraPosition:[NaN,0,0]},{cameraTarget:undefined},
+      {cameraFov:"43"},{cameraFov:0},{cameraFov:121},{cameraTarget:view.cameraPosition},{t:"platform"},{cameraView:false}])
+      assert.equal(normalizeCustomLevelData(fixture([{...view,...patch}])),null,`invalid framing accepted ${JSON.stringify(patch)}`);
+    const native=build(data);
+    try {
+      for(const fromRuntime of [false,true]){
+        if(fromRuntime)native.builtFromData=null;
+        const captured=native.captureData().components.find(c=>c.cameraView);
+        assert.deepEqual(captured.cameraPosition,view.cameraPosition);assert.deepEqual(captured.cameraTarget,view.cameraTarget);assert.equal(captured.cameraFov,43);
+        const reopened=build(fixture([captured]));
+        try {assert.deepEqual(reopened.cameraViews[0].cameraPosition,view.cameraPosition);assert.deepEqual(reopened.cameraViews[0].cameraTarget,view.cameraTarget);}
+        finally {reopened.dispose();}
+      }
+    } finally {native.dispose();}
+    const moved=clone(view);setComponentPosition(moved,[6,6,1]);
+    assert.deepEqual(moved.cameraPosition,[3,11,35]);assert.deepEqual(moved.cameraTarget,[3,8,-11]);
+    const editor=editorFor(data);editor.rotateSelection(90);
+    const rotated=editor.data.components[0];assert.equal(rotated.yaw,90);
+    assert.deepEqual(rotated.cameraPosition,[37,9,8]);assert.deepEqual(rotated.cameraTarget,[-9,6,8]);
+    editor.rotateSelection(-90);assert.deepEqual(editor.data.components[0],view);
+    editor.applyScaleNoCommit(2,3,4,new THREE.Vector3(1,2,3));
+    const scaled=editor.data.components[0];
+    assert.deepEqual(scaled.cameraPosition,[-1,23,147]);assert.deepEqual(scaled.cameraTarget,[-1,14,-37]);
+    assert.deepEqual(scaled.s,[80,180,120]);assert.equal(scaled.cameraFov,43);
+    assert.ok(normalizeCustomLevelData(editor.data));
+  });
   const baseComponent = t => ({ t, p: [3, 8, -9], speed: 1.3, phase: .7,
     ...(t === "mover" ? { s: [6, .8, 3], amp: 3 }
       : t === "rail" ? { amp: 3, pts: [[-2, 4, 0, 0], [2, 0, 0, 1], [-1, -6, 0, 2]], invisible: true }

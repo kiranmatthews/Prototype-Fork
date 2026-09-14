@@ -1,0 +1,14 @@
+{
+  "generator": "Built-in image_gen.imagegen",
+  "reference": "/Users/kiki/Desktop/image 20.jpg",
+  "assets": [
+    {
+      "file": "public/treehouse-trail/matte-far.png",
+      "prompt": "Use case: stylized-concept. Asset type: opaque distant parallax background matte for a stylized low-poly jungle game, wide landscape 2.4:1 panorama. Input image: /Users/kiki/Desktop/image 20.jpg is the visual art-style reference. Generate ONLY the distant jungle and blue sky seen behind the treehouse: overlapping immense broad irregular umbrella canopies, soft teal and blue-green atmospheric tree masses, a few faint twisting far trunks, natural dense rainforest silhouettes, painterly angular brush shapes and sculptural leaf clusters, warm green top-light against cool teal shadows. Match the reference's calm richly painted game-world style and level eye-height view. Broad blue sky opening in the upper middle, foliage layers along the left and right and across the lower two thirds. This is a background plate filling the entire rectangle edge to edge, opaque RGB with no transparency. Mid-distance forms remain quiet and low-contrast to sit behind real 3D foreground trees. No house, no buildings, no ramps or halfpipe, no railings, no rope, no stairs, no trail foreground, no rocks close to camera, no people, no characters, no text, no border, no watermark. Keep the bottom edge a continuous deep muted teal forest fill."
+    },
+    {
+      "file": "public/treehouse-trail/matte-mid.png",
+      "prompt": "Use case: stylized-concept. Asset type: genuinely transparent RGBA midground parallax forest cutout for a stylized jungle game, wide landscape 2.4:1 panorama. Input image: /Users/kiki/Desktop/image 20.jpg is an art-style reference only. Create a separate dense layer of large old rainforest trees with chunky twisting brown trunks and branching limbs, overlapping spreading umbrella crowns with rich green angular painted leaves and drooping leafy edges, hanging thin vines, and darker fern undergrowth along the lower edge. Match the reference's painterly, sculptural low-poly game-world style, warm green sunlit canopy tops and cool emerald-teal shade. Important: all sky and air between trunks/branches and all negative space above the leaf contours MUST be truly TRANSPARENT alpha, no painted background and no checkerboard. Trees distributed across the width as a forest layer; two broad central gaps between trunks for the distant sky layer to show through. Keep the center lower-middle sparse enough for a real 3D treehouse/halfpipe foreground to read against it. Forest shapes extend to left/right image edges; bottom has continuous dark green undergrowth. Straight level eye-height perspective, no dramatic perspective distortion. No house, no buildings, no halfpipe or ramps, no railings, no stairs, no rope, no ground trail, no characters, no text, no border, no watermark. Output a true RGBA PNG with transparency."
+    }
+  ]
+}
