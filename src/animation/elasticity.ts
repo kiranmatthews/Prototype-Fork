@@ -1,7 +1,7 @@
 import { createProceduralDriver } from './document';
 import type { AnimationClip, AnimationTrack, RigDefinition } from './types';
 import { sampleUnderRailMotion, sampleSkateRevert } from '../skateBodyMotion';
-import { sampleBackflip, sampleFootFlip } from '../skateTricks';
+import { sampleBackflip, sampleFootFlip, sampleImpossible } from '../skateTricks';
 
 export const CHARACTER_ELASTICITY_REVISION = 1;
 /** Torso, upper arm, forearm, thigh and shin. Zero protects a planted grip. */
@@ -119,6 +119,18 @@ export function skateFootFlipElasticity(motion:ReturnType<typeof sampleFootFlip>
       const leading=id.includes(`.${stance>0?'right':'left'}.`);
       values[id]+=leading?.14*motion.heelLead:.18*motion.scoop;
     }
+  }
+  return values;
+}
+
+/** Gather the free leg, keep reach in the wrapping leg, and let the arms
+ * extend into their broad balance sweep using independent segment controls. */
+export function skateImpossibleElasticity(motion:ReturnType<typeof sampleImpossible>,ollie:Record<string,number>,stance:number):Record<string,number> {
+  const values={...ollie};
+  for(const [id,part] of ELASTIC_LENGTH_CONTROLS){
+    const leading=id.includes(`.${stance>0?'right':'left'}.`);
+    const target=part===0?.88:part===1?1.45:part===2?1.55:leading?(part===3?.60:.56):(part===3?1.02:1.04);
+    const base=ollie[id]??1;values[id]=base+(target-base)*motion.wrap;
   }
   return values;
 }

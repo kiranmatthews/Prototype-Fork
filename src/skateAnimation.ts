@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { solveTwoBoneIk } from './animation/ik';
-import { GRAB_CONTACTS, GRIND_CONTACTS, LIP_CONTACTS, skateContactBounce, sampleDeckTrick, sampleBackflip, sampleFootFlip, type DeckTrickKind, type GrabTrickKind, type GrindStyle, type LipStyle } from './skateTricks';
+import { GRAB_CONTACTS, GRIND_CONTACTS, LIP_CONTACTS, skateContactBounce, sampleDeckTrick, sampleBackflip, sampleFootFlip, sampleImpossible, type DeckTrickKind, type GrabTrickKind, type GrindStyle, type LipStyle } from './skateTricks';
 import { DEFAULT_SKATEBOARD_SETTINGS, type SkateboardSettingsValue } from './skateboard/settings';
 import { evaluateSkateboardSurfaceHeight } from './skateboard/model';
 import type { Rail } from './rails';
@@ -46,7 +46,8 @@ export class SkateAnimation {
   private airAge = 0;
   private footFlipAir = false;
   private shoveDeckYaw:number|null = null;
-  private shoveCaught = false;
+  private deckCaught = false;
+  private impossibleActive = false;
   private wasGrounded = true;
   private bounceAge = 1;
   private pitch = 0;
@@ -98,7 +99,7 @@ export class SkateAnimation {
     this.head = rider.getObjectByName('head');
   }
 
-  reset(): void { this.shoveCaught=false; this.shoveDeckYaw=null; this.footFlipAir=false; this.key = ''; this.lastActive = false; this.coping=undefined;this.copingAge=1;this.age = this.airAge = this.darkWeight = this.darkPop = this.locomotionWeight = this.manualWeight = this.manualBalance = 0; this.darkExitOffset.set(0,0,0); this.bounceAge = 1; this.wasGrounded = true; this.bodySpring.reset(); }
+  reset(): void { this.impossibleActive=false; this.deckCaught=false; this.shoveDeckYaw=null; this.footFlipAir=false; this.key = ''; this.lastActive = false; this.coping=undefined;this.copingAge=1;this.age = this.airAge = this.darkWeight = this.darkPop = this.locomotionWeight = this.manualWeight = this.manualBalance = 0; this.darkExitOffset.set(0,0,0); this.bounceAge = 1; this.wasGrounded = true; this.bodySpring.reset(); }
 
   /** Restore the legacy sibling frame before it authors its fallback pose. */
   prepare(): void {
@@ -189,7 +190,7 @@ export class SkateAnimation {
   }
 
   apply(p: SkatePoseInput): boolean {
-    if (!p.active || !this.feet || !this.hands || !this.hips) { this.shoveCaught=false;this.shoveDeckYaw=null; this.lastActive = false; this.darkWeight = this.darkPop = this.manualWeight = this.manualBalance = 0; return false; }
+    if (!p.active || !this.feet || !this.hands || !this.hips) { this.impossibleActive=false;this.deckCaught=false;this.shoveDeckYaw=null; this.lastActive = false; this.darkWeight = this.darkPop = this.manualWeight = this.manualBalance = 0; return false; }
     this.darkWeight = clamp(this.darkWeight + (p.darkslide ? 1 : -1) * p.dt / .22, 0, 1);
     const dark = smooth(this.darkWeight);
     this.darkPop = p.darkslide ? Math.sin(Math.PI*dark) : this.darkPop*Math.exp(-20*p.dt);
@@ -220,21 +221,24 @@ export class SkateAnimation {
     const breathe = Math.sin(p.time * 5.6) * .016 * Math.min(1, Math.abs(p.speed) / 5);
     // Completing a shove swaps the material nose/tail. Preserve the same
     // world tilt across that yaw handoff instead of tipping through level.
-    if(this.shoveDeckYaw!==null&&Math.cos(p.deckYaw-this.shoveDeckYaw)<0){this.pitch*=-1;this.shoveCaught=true;}
-    if(p.grounded||p.flip&&p.flip!=='shove'||p.grabWeight>.001||p.grind||p.lip||p.wallWeight>.001)this.shoveCaught=false;
+    if(this.shoveDeckYaw!==null&&Math.cos(p.deckYaw-this.shoveDeckYaw)<0){this.pitch*=-1;this.deckCaught=true;}
+    if(this.impossibleActive&&p.flip!=='imposs')this.deckCaught=true;
+    this.impossibleActive=p.flip==='imposs';
+    if(p.grounded||p.flip&&p.flip!=='shove'&&p.flip!=='imposs'||p.grabWeight>.001||p.grind||p.lip||p.wallWeight>.001)this.deckCaught=false;
     this.shoveDeckYaw=p.flip==='shove'?p.deckYaw:null;
     const backflip = p.specialFlip ? sampleBackflip(p.flipProgress) : null;
     const footFlip=(p.flip==='kick'||p.flip==='heel'||p.flip==='shove')&&!backflip?sampleFootFlip(p.flip,p.flipProgress):null;
+    const impossible=p.flip==='imposs'?sampleImpossible(p.flipProgress):null;
     if(p.grounded)this.footFlipAir=false;
-    if(footFlip)this.footFlipAir=true;
-    const deckAlignment=backflip?.alignment??(footFlip?smooth(p.flipProgress/.16):this.shoveCaught?1:0);
+    if(footFlip||impossible)this.footFlipAir=true;
+    const deckAlignment=backflip?.alignment??(footFlip||impossible?smooth(p.flipProgress/.16):this.deckCaught?1:0);
     const footFrame=deckAlignment>.999?this.body:undefined;
     const grabKind = backflip ? 'mute' : p.grab;
     const grab = GRAB_CONTACTS[grabKind];
     const gw = backflip ? backflip.grab : clamp(p.grabWeight, 0, 1);
     const flipPose = p.flip && !backflip ? sampleDeckTrick(p.flip, p.flipProgress) : null;
     const uprightGrind=!!p.grind && !p.darkslide && underProgress<.001;
-    const locomotionTarget = uprightGrind || p.nineHundred || p.lip || backflip || footFlip || (key === 'ride' || key === 'air' || p.manual !== 0 || p.darkslide) && !p.flip && gw < .01 ? 1 : 0;
+    const locomotionTarget = uprightGrind || p.nineHundred || p.lip || backflip || footFlip || impossible || (key === 'ride' || key === 'air' || p.manual !== 0 || p.darkslide) && !p.flip && gw < .01 ? 1 : 0;
     if (!this.lastActive) { this.locomotionWeight = locomotionTarget; this.bodySpring.reset(p.charge); }
     else this.locomotionWeight += (locomotionTarget-this.locomotionWeight)*(1-Math.exp(-16*p.dt));
     this.manualWeight += ((p.manual ? 1 : 0)-this.manualWeight)*(1-Math.exp(-12*p.dt));
@@ -247,7 +251,7 @@ export class SkateAnimation {
       contactBounce:p.grounded||uprightGrind?bounce:0, mount:clamp(p.mount??0,0,1),
       manual:p.manual !== 0 || !!p.lip || uprightGrind,
     });
-    const bodyFlex=backflip?THREE.MathUtils.lerp(springFlex,.62,backflip.compression):springFlex;
+    const bodyFlex=backflip?THREE.MathUtils.lerp(springFlex,.62,backflip.compression):impossible?THREE.MathUtils.lerp(springFlex,.65,impossible.wrap):springFlex;
     if(p.nineHundred && gw>0 && this.spine){
       this.spineBefore=this.spine.quaternion.clone();
       this.spine.rotation.x-=.50*smooth(gw);
@@ -293,6 +297,8 @@ export class SkateAnimation {
       pivotY = p.lip === 'axle' ? (s.wheelRadius - s.truckHangerRadius) * scale : surface(0, pivotZ) - s.deckThickness * scale;
     } else if (backflip) {
       pitch = backflip.nosePitch;
+    } else if (impossible) {
+      pitch=impossible.nosePitch*(Math.cos(p.deckYaw)<0?-1:1);
     } else if (footFlip) {
       pitch = footFlip.nosePitch*(p.flip==='shove'&&Math.cos(p.deckYaw)<0?-1:1);
     } else if (p.ollie && !p.grounded && !p.flip && !this.footFlipAir && gw < .01) {
@@ -385,12 +391,12 @@ export class SkateAnimation {
     const footYaw = p.stance * parity * Math.PI / 2;
     const catchQ = this.boardQ.clone().multiply(new THREE.Quaternion().setFromAxisAngle(Z, -Math.PI * dark));
     const footQ = catchQ.clone().multiply(new THREE.Quaternion().setFromAxisAngle(Y, footYaw));
-    if(uprightGrind || backflip || footFlip || this.shoveCaught){
+    if(uprightGrind || backflip || footFlip || impossible || this.deckCaught){
       // The legs stand from the deck's plane. Folding the old whole-body
       // balance lean into these hips overextended one leg in Smith/Feeble.
       // Turn before the body's nonuniform proportion scale; a counter-turn
       // inside that scale shears the leg frame and can pull a sole loose.
-      const alignment=backflip||footFlip||this.shoveCaught?deckAlignment:1;
+      const alignment=backflip||footFlip||impossible||this.deckCaught?deckAlignment:1;
       this.worldRotation(this.body,this.body.getWorldQuaternion(new THREE.Quaternion()).slerp(footQ,alignment));
       this.putBoard();
       this.up.lerp(Y.clone().applyQuaternion(catchQ),alignment).normalize();
@@ -418,6 +424,9 @@ export class SkateAnimation {
       if(shoveQ)soleRotations[back].slerp(shoveQ.clone().multiply(new THREE.Quaternion().setFromAxisAngle(Y,footYaw)),footFlip.rearContact);
       soleRotations[back].multiply(new THREE.Quaternion().setFromAxisAngle(X,footFlip.rearToe));
     }
+    if(impossible)soleRotations[back].multiply(new THREE.Quaternion().setFromAxisAngle(Y,impossible.rearYaw))
+      .multiply(new THREE.Quaternion().setFromAxisAngle(X,impossible.rearToe))
+      .multiply(new THREE.Quaternion().setFromAxisAngle(Z,impossible.rearRoll));
     const footTargets = [new THREE.Vector3(), new THREE.Vector3()];
     for (const i of [front, back]) {
       let z = (i === front ? 1 : -1) * footSpan * parity;
@@ -452,6 +461,11 @@ export class SkateAnimation {
         footTargets[back].addScaledVector(this.up,footFlip.backLift);
       }
     }
+    if(impossible){
+      footTargets[back].add(new THREE.Vector3(impossible.rearSide*p.stance*parity,0,impossible.rearBack*parity).applyQuaternion(catchQ)).addScaledVector(this.up,impossible.rearLift);
+      footTargets[front].addScaledVector(this.up,impossible.frontLift)
+        .add(new THREE.Vector3(impossible.frontOut*p.stance*parity,0,0).applyQuaternion(catchQ));
+    }
     // Pelvis follows the weighted truck while both feet retain their own
     // contact. The bounce is absorbed by knees, never by the rail/deck.
     const pelvis = footTargets[0].clone().add(footTargets[1]).multiplyScalar(.5);
@@ -470,7 +484,7 @@ export class SkateAnimation {
         // cartoon scale underestimate the height of a standing-idle stance.
         const upper = leg.mid.position.length() * leg.root.scale.y * scaleY;
         const lower = leg.end.position.length() * leg.mid.scale.y * scaleY;
-        this.worldRotation(leg.end, soleRotations[i],footFrame,!!footFlip||this.shoveCaught);
+        this.worldRotation(leg.end, soleRotations[i],footFrame,!!footFlip||!!impossible||this.deckCaught);
         leg.end.updateWorldMatrix(true, true);
         const ankleOffset = leg.end.getWorldPosition(new THREE.Vector3())
           .sub(leg.socket.getWorldPosition(new THREE.Vector3()));
@@ -487,13 +501,13 @@ export class SkateAnimation {
     const trickHeight = .46 - .29 * gw - .065 * p.charge - .11 * bounce + breathe;
     const restingBreath = Math.sin(p.time*5.6)*.005*(.35+.65*Math.min(1,Math.abs(p.speed)/5));
     // Keep a little reach in reserve under the grind's nonuniform body lean.
-    const reserve=uprightGrind ? .025 : backflip ? .025*Math.max(backflip.compression,backflip.rebound) : footFlip ? .025*footFlip.tuck : 0;
+    const reserve=uprightGrind ? .025 : backflip ? .025*Math.max(backflip.compression,backflip.rebound) : footFlip ? .025*footFlip.tuck : impossible ? .025*impossible.wrap : 0;
     const height = THREE.MathUtils.lerp(trickHeight, locomotionHeight+restingBreath-reserve, this.locomotionWeight);
     pelvis.addScaledVector(this.up, height);
     pelvis.addScaledVector(Y, .14 * p.wallWeight);
     if (gw > .01 && (grabKind === 'method' || grabKind === 'japan'))
       pelvis.addScaledVector(this.right, p.stance * .12 * gw);
-    if (flipPose && !footFlip) {
+    if (flipPose && !footFlip && !impossible) {
       for (let i = 0; i < 2; i++) {
         if (p.flip === 'imposs' && i === back) continue;
         const lift = p.flip === 'imposs' ? .38 * flipPose.tuck : flipPose.riderLift;
@@ -529,7 +543,7 @@ export class SkateAnimation {
     this.body.updateWorldMatrix(true, true);
     let footError = 0;
     for (let i = 0; i < 2; i++) {
-      const kneeForward=p.lip||uprightGrind||backflip||footFlip||this.shoveCaught?Z.clone().applyQuaternion(footQ):this.right.clone().multiplyScalar(p.stance);
+      const kneeForward=p.lip||uprightGrind||backflip||footFlip||impossible||this.deckCaught?Z.clone().applyQuaternion(footQ):this.right.clone().multiplyScalar(p.stance);
       const pole = this.feet[i].root.getWorldPosition(new THREE.Vector3())
         .addScaledVector(kneeForward, .65).addScaledVector(this.forward, i === front ? .12 : -.12);
       const footWeight=underProgress>0?underMotion.footContact:1;
@@ -547,8 +561,8 @@ export class SkateAnimation {
       // shoe socket offset; the normal convergence tolerance still exits early.
       if(solveWeight>0){
         const soleQ=soleRotations[i];
-        let error=this.solve(this.feet[i],target,soleQ,pole,solveWeight,backflip||footFlip||this.shoveCaught?192:64,footFrame,!!footFlip||this.shoveCaught);
-        if(footFlip||this.shoveCaught){
+        let error=this.solve(this.feet[i],target,soleQ,pole,solveWeight,backflip||footFlip||impossible||this.deckCaught?192:64,footFrame,!!footFlip||!!impossible||this.deckCaught);
+        if(footFlip||impossible||this.deckCaught){
           // Keep both feet seated after the half-turn while the skater falls;
           // handing back to the old ankle solve at the catch caused a dip.
           // Fit the visible sole at the nose corner too. The contact socket
@@ -558,7 +572,7 @@ export class SkateAnimation {
             const surfaces=[sole];
             // When the toes lift, the rounded heel upper can touch the edge
             // before the outsole. Fit that visible shoe envelope as well.
-            if(p.flip==='heel'||p.flip==='shove'||this.shoveCaught)for(const part of ['shoe','shoe-foxing']){
+            if(p.flip==='heel'||p.flip==='shove'||impossible||this.deckCaught)for(const part of ['shoe','shoe-foxing']){
               const mesh=this.feet[i].end.getObjectByName(`${part}-${i===0?'right':'left'}`) as THREE.Mesh|undefined;
               if(mesh)surfaces.push(mesh);
             }
@@ -581,6 +595,31 @@ export class SkateAnimation {
       }
     }
 
+    if(impossible&&impossible.arms>0){
+      if(this.spine){this.spineBefore??=this.spine.quaternion.clone();this.spine.rotation.y+=impossible.counter*p.stance;}
+      for(const i of [front,back]){
+        const hand=this.hands[i],other=this.hands[1-i];
+        const shoulder=hand.root.getWorldPosition(new THREE.Vector3());
+        const outward=shoulder.clone().sub(other.root.getWorldPosition(new THREE.Vector3()));
+        outward.addScaledVector(this.up,-outward.dot(this.up)).normalize();
+        const toeDirection=Z.clone().applyQuaternion(footQ);
+        const direction=outward.addScaledVector(this.up,(i===front?.48:.28)-.65*impossible.armSweep)
+          .addScaledVector(toeDirection,(i===front?.08:-.18)+.42*impossible.armSweep).normalize();
+        const reach=shoulder.distanceTo(hand.mid.getWorldPosition(new THREE.Vector3()))+
+          hand.mid.getWorldPosition(new THREE.Vector3()).distanceTo(hand.end.getWorldPosition(new THREE.Vector3()));
+        const relative=hand.end.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(hand.socket.getWorldQuaternion(new THREE.Quaternion()));
+        const along=(axis:THREE.Vector3)=>{
+          const y=axis.clone().negate(),x=y.clone().cross(this.up);
+          if(x.lengthSq()<1e-8)x.crossVectors(y,this.forward);x.normalize();
+          return new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(x,y,x.clone().cross(y).normalize())).multiply(relative.clone().invert());
+        };
+        const target=shoulder.clone().addScaledVector(direction,reach*1.04);
+        const pole=shoulder.clone().addScaledVector(toeDirection,.25).addScaledVector(this.up,.2);
+        this.solve(hand,target,along(direction),pole,impossible.arms);
+        const forearm=hand.end.getWorldPosition(new THREE.Vector3()).sub(hand.mid.getWorldPosition(new THREE.Vector3())).normalize();
+        this.worldRotation(hand.end,hand.end.getWorldQuaternion(new THREE.Quaternion()).slerp(along(forearm),impossible.arms));
+      }
+    }
     let handError = 0;
     if(p.revert && p.revert.reach>0){
       const hand=this.hands[(p.revertSign??1)>0?1:0],other=this.hands[(p.revertSign??1)>0?0:1];
@@ -693,15 +732,75 @@ export class SkateAnimation {
     } else delete this.board.userData.skateGrab;
     if (flipPose) {
       const turn = new THREE.Quaternion();
-      if (p.flip === 'imposs') {
-        // A full, slightly tilted vertical wrap about the actual trailing
-        // foot. The board material point under that foot remains the pivot.
-        const pivot = new THREE.Vector3(0, surface(0, -footSpan * parity), -footSpan * parity);
-        const pivotWorld = this.board.localToWorld(pivot.clone());
-        turn.setFromAxisAngle(new THREE.Vector3(1, 0, .30 * p.stance).normalize(), -flipPose.pitch * parity);
-        this.boardQ.multiply(turn);
-        this.boardP.copy(pivotWorld).sub(pivot.applyQuaternion(this.boardQ));
-        this.board.userData.skateWrapPivot = pivotWorld.toArray();
+      if (impossible) {
+        const rear=this.feet[back],side=back===0?'right':'left';
+        const toe=this.rider.getObjectByName(`socket-toe-${side}`),heel=this.rider.getObjectByName(`socket-heel-${side}`);
+        const axis=toe&&heel?toe.getWorldPosition(new THREE.Vector3()).sub(heel.getWorldPosition(new THREE.Vector3())).normalize()
+          :Z.clone().transformDirection(rear.end.matrixWorld);
+        this.boardQ.premultiply(turn.setFromAxisAngle(axis,-impossible.angle*p.stance));
+        const normal=Y.clone().applyQuaternion(this.boardQ),samples:THREE.Vector3[]=[];
+        let minimum=Infinity;
+        for(const part of ['shoe','sole','shoe-foxing','shoe-tongue']){
+          const mesh=rear.end.getObjectByName(`${part}-${side}`) as THREE.Mesh|undefined;
+          if(!mesh)continue;mesh.updateWorldMatrix(true,false);
+          for(let i=0;i<mesh.geometry.attributes.position.count;i++){
+            const point=new THREE.Vector3().fromBufferAttribute(mesh.geometry.attributes.position,i).applyMatrix4(mesh.matrixWorld);
+            samples.push(point);minimum=Math.min(minimum,point.dot(normal));
+          }
+        }
+        // A smooth support point on the actual shoe moves from sole to edge
+        // and instep. Project it onto the hull's supporting plane so the
+        // rotating deck cannot cut through the foot between those contacts.
+        if(!samples.length){const point=rear.socket.getWorldPosition(new THREE.Vector3());samples.push(point);minimum=point.dot(normal);}
+        const supportPoint=new THREE.Vector3();let total=0;
+        for(const point of samples){const weight=Math.exp(-85*(point.dot(normal)-minimum));supportPoint.addScaledVector(point,weight);total+=weight;}
+        supportPoint.divideScalar(total);supportPoint.addScaledVector(normal,minimum-supportPoint.dot(normal)-.004);
+        const pivotWorld=rear.socket.getWorldPosition(new THREE.Vector3()).addScaledVector(this.up,-.006)
+          .lerp(supportPoint,impossible.wrap);
+        const intrusion=pivotWorld.dot(normal)-minimum+.003;
+        if(intrusion>0)pivotWorld.addScaledVector(normal,-intrusion);
+        // Roll toward the toe cap while the grip faces down, keeping the
+        // returning deck in front of the ankle rather than through the calf.
+        const toeTangent=axis.clone().addScaledVector(normal,-axis.dot(normal)).normalize();
+        const inverted=smooth(clamp((-normal.dot(this.up)-.25)/.60,0,1))*impossible.edge;
+        const toeLimit=Math.max(...samples.map(point=>point.dot(axis)))-.045;
+        const advance=Math.max(0,Math.min(.23*inverted,(toeLimit-pivotWorld.dot(axis))/Math.max(.1,toeTangent.dot(axis))));
+        pivotWorld.addScaledVector(toeTangent,advance);
+        const x=-s.deckHalfWidth*scale*.98*p.stance*parity*impossible.edge;
+        const z=clamp((-footSpan+impossible.slide)*parity,-s.deckTailLength*scale*.86,s.deckNoseLength*scale*.86);
+        const pivot=new THREE.Vector3(x,surface(x,z),z);
+        this.boardP.copy(pivotWorld).sub(pivot.clone().applyQuaternion(this.boardQ));this.putBoard();
+        const inverse=new THREE.Matrix4().copy(this.board.matrixWorld).invert();let closest=Infinity;
+        for(const world of samples){
+          const point=world.clone().applyMatrix4(inverse);
+          if(Math.abs(point.x)>s.deckHalfWidth*scale||point.z< -s.deckTailLength*scale||point.z>s.deckNoseLength*scale)continue;
+          closest=Math.min(closest,point.y-surface(point.x,point.z));
+        }
+        if(Number.isFinite(closest)){this.boardP.addScaledVector(normal,closest-.004);this.putBoard();}
+        if(impossible.catchWeight>0){
+          const target=this.board.localToWorld(new THREE.Vector3(0,surface(0,footSpan*parity)+.008,footSpan*parity));
+          const pole=this.feet[front].root.getWorldPosition(new THREE.Vector3()).addScaledVector(Z.clone().applyQuaternion(footQ),.65);
+          this.solve(this.feet[front],target,footQ,pole,impossible.catchWeight,192,footFrame,true);
+          let frontClearance=0;
+          for(const part of ['shoe','sole','shoe-foxing','shoe-tongue']){
+            const mesh=this.feet[front].end.getObjectByName(`${part}-${front===0?'right':'left'}`) as THREE.Mesh|undefined;
+            if(!mesh)continue;mesh.updateWorldMatrix(true,false);
+            const toBoard=new THREE.Matrix4().copy(this.board.matrixWorld).invert().multiply(mesh.matrixWorld);
+            for(let i=0;i<mesh.geometry.attributes.position.count;i++){
+              const point=new THREE.Vector3().fromBufferAttribute(mesh.geometry.attributes.position,i).applyMatrix4(toBoard);
+              if(Math.abs(point.x)>s.deckHalfWidth*scale||point.z< -s.deckTailLength*scale||point.z>s.deckNoseLength*scale)continue;
+              frontClearance=Math.max(frontClearance,surface(point.x,point.z)+.004-point.y);
+            }
+          }
+          if(frontClearance>0){
+            const seated=this.feet[front].socket.getWorldPosition(new THREE.Vector3()).addScaledVector(normal,frontClearance);
+            footError=Math.max(footError,this.solve(this.feet[front],seated,footQ,pole,1,192,footFrame,true));
+          }
+        }
+        const contact=pivot.clone().applyQuaternion(this.boardQ).add(this.boardP);
+        this.board.userData.skateWrapPivot=contact.toArray();
+        this.board.userData.skateImpossible={...impossible,rearFoot:rear.socket.name,frontFoot:this.feet[front].socket.name,
+          materialPoint:pivot.toArray(),contact:contact.toArray(),axis:axis.toArray()};
       } else {
         // Roll about the deck's own centre of mass. Rotating about the wheel
         // support origin made the deck rise toward the feet every revolution.
@@ -718,6 +817,7 @@ export class SkateAnimation {
       }
       this.putBoard();
     } else delete this.board.userData.skateWrapPivot;
+    if(!impossible)delete this.board.userData.skateImpossible;
     if(footFlip)this.board.userData.skateFootFlip={...footFlip,kind:p.flip,front:this.feet[front].socket.name,back:this.feet[back].socket.name};
     else delete this.board.userData.skateFootFlip;
     this.board.userData.skateContact = { support: under>.99 ? 'truck-grips' : p.wallWeight > .01 ? 'wall-wheels' : p.darkslide ? 'griptape' : p.grind ? GRIND_CONTACTS[p.grind].support

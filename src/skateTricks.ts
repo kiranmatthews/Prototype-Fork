@@ -139,6 +139,25 @@ export function samplePopShoveIt(progress:number) {
 export const sampleKickflip=(progress:number)=>sampleFootFlip('kick',progress);
 export const sampleHeelflip=(progress:number)=>sampleFootFlip('heel',progress);
 
+/** The rear shoe rolls through the contact while its ankle draws a small
+ * loop. Sliding contact on the deck and a moving axis make a foot wrap, not
+ * a rigid prop hinged to one point under a stationary sole. */
+export function sampleImpossible(progress:number) {
+  const t=Math.max(0,Math.min(1,progress)),u=Math.max(0,Math.min(1,(t-.08)/.76)),r=.17;
+  const turn=u<r?u*u/(2*r*(1-r)):u>1-r?1-(1-u)*(1-u)/(2*r*(1-r)):(u-r/2)/(1-r);
+  const angle=2*Math.PI*turn,wrap=smooth(t/.12)*(1-smooth((t-.84)/.16));
+  const wave=Math.sin(angle),raised=wave*wave*wrap;
+  const free=wrap*(1-smooth((t-.68)/.20));
+  const rearLift=.38*wrap+.18*raised;
+  return {turn,angle,wrap,raised,rearLift,frontLift:rearLift+.60*free,frontOut:.38*free,
+    rearBack:-.18*raised,rearSide:.09*wave*wrap,rearToe:.95*wave*wrap,
+    rearYaw:.14*wave*wrap,rearRoll:.16*wave*wrap,
+    slide:(.50*wave-.125*(1-Math.cos(angle)))*wrap,
+    edge:Math.sin(Math.PI*turn)**2*wrap,
+    arms:smooth(t/.16)*(1-smooth((t-.80)/.20)),
+    armSweep:smooth((t-.58)/.32),counter:.10*Math.sin(2*angle)*wrap,
+    catchWeight:smooth((t-.84)/.10),nosePitch:-.28*(1-smooth(t/.20))};
+}
 /** Deck-local pose: +Z length, +X width, +Y grip. The rider's lift and foot
  * flick are applied after the ordinary sole/contact solver, never to physics. */
 export function sampleDeckTrick(kind:DeckTrickKind,progress:number) {
@@ -146,9 +165,10 @@ export function sampleDeckTrick(kind:DeckTrickKind,progress:number) {
   const motion=smooth((t-.08)/.78),clearance=smooth(t/.18)*(1-smooth((t-.72)/.28));
   const hard=kind==='hardflip'||kind==='inward-heel';
   const footFlip=kind==='kick'||kind==='heel'||kind==='shove'?sampleFootFlip(kind,t):null;
+  const impossible=kind==='imposs'?sampleImpossible(t):null;
   return {
     roll:trick.roll*2*Math.PI*(footFlip?footFlip.turn:motion)+(footFlip?.bank??0),yaw:trick.yaw*2*Math.PI*(footFlip?footFlip.turn:motion),
-    pitch:trick.pitch*2*Math.PI*motion+(hard?Math.sin(Math.PI*motion)*.85:0)+(footFlip?.rock??0),
+    pitch:trick.pitch*2*Math.PI*(impossible?impossible.turn:motion)+(hard?Math.sin(Math.PI*motion)*.85:0)+(footFlip?.rock??0),
     deckDrop:footFlip?0:clearance*(kind==='imposs'?.28:.07),
     orbitY:kind==='imposs'?-.28*Math.sin(2*Math.PI*motion):0,
     orbitZ:kind==='imposs'?-.28*(1-Math.cos(2*Math.PI*motion)):0,

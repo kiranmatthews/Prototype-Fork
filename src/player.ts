@@ -1,5 +1,5 @@
 import { SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
-import { skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateRevertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
+import { skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
 // Authored fake-physics board movement. No rigidbody, no forces: just a
 // heading, a scalar speed, a vertical velocity, and hand-tuned numbers from
 // tuning.ts. Ground following is a single downward raycast; slopes only exist
@@ -13,7 +13,7 @@ import { CameraInputFrame } from "./cameraViews";
 import { softSkateRebound, sampleSoftSkateImpact, SOFT_SKATE_IMPACT_SECONDS } from './skateImpact';
 import { BONUS_FRUIT_FLIGHT_SECONDS } from './bonusPayout';
 import { TUNING, CONST } from './tuning';
-import { GRIND_TRICKS, GRIND_CONTACTS, LIP_CONTACTS, grabTrickInfo, grabTrickFromInput, sampleDeckTrick, sampleBackflip, sampleFootFlip, type GrabTrickKind, type GrindStyle, type LipStyle } from './skateTricks';
+import { GRIND_TRICKS, GRIND_CONTACTS, LIP_CONTACTS, grabTrickInfo, grabTrickFromInput, sampleDeckTrick, sampleBackflip, sampleFootFlip, sampleImpossible, type GrabTrickKind, type GrindStyle, type LipStyle } from './skateTricks';
 import { SkateAnimation } from './skateAnimation';
 import { SkateOllieMotion } from './skateOllieMotion';
 import { trickRepeatFactor, extendHeldTrick, type HeldTrickScore } from './trickScoring';
@@ -1804,6 +1804,9 @@ export class Player {
     if (this.slamActive || this.slamFlatT > 0 || this.slamSquash > 0) return 'player.slam';
     if (this.grabbing || this.grabPose > 0.25 || this.specialGrab !== null) return 'player.grab';
     if (this.specialFlip) return 'player.skate';
+    // The Impossible's moving shoe contact and arm sweep own its rig; an
+    // early input must not route through the on-foot spin overlay.
+    if(this.state==='air'&&this.airFromSkate&&this.flipT>0&&this.flipKind==='imposs')return 'player.skate';
     if (this.spinTimer > 0 || this.flipT > 0) return 'player.spin';
     // A committed split jump owns its full airborne silhouette, even while
     // the old slide/crouch presentation weights are still easing away.
@@ -16883,7 +16886,7 @@ export class Player {
     if(ollieMotion){
       const lengths=this.specialFlip
         ?skateBackflipElasticity(sampleBackflip(1-this.flipT/this.flipDuration),this.stance,ollieMotion.deformations)
-        :this.flipT>0&&(this.flipKind==='kick'||this.flipKind==='heel'||this.flipKind==='shove')?skateFootFlipElasticity(sampleFootFlip(this.flipKind,1-this.flipT/this.flipDuration),ollieMotion.deformations,this.stance):ollieMotion.deformations;
+        :this.flipT>0&&(this.flipKind==='kick'||this.flipKind==='heel'||this.flipKind==='shove')?skateFootFlipElasticity(sampleFootFlip(this.flipKind,1-this.flipT/this.flipDuration),ollieMotion.deformations,this.stance):this.flipT>0&&this.flipKind==='imposs'?skateImpossibleElasticity(sampleImpossible(1-this.flipT/this.flipDuration),ollieMotion.deformations,this.stance):ollieMotion.deformations;
       this.playerAnimationBridge.modulateDeformations(lengths);
       if(this.spineG)this.spineG.rotation.x+=ollieMotion.spine;
       for(const [arm,elbow,wrist,side] of [[this.armR,this.elbowR,this.wristR,1],[this.armL,this.elbowL,this.wristL,-1]] as const){

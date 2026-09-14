@@ -40,7 +40,7 @@ The hand mapping is stance-relative; anatomical left/right alone cannot define a
 | Varial Heelflip | Heelflip + frontside half-shove |
 | Hardflip | Kickflip + frontside half-shove |
 | Inward Heelflip | Heelflip + backside half-shove |
-| Impossible | Full wrap around trailing foot |
+| Impossible | Full wrap around a moving trailing shoe, with rolling contact and balancing arm sweeps |
 | Backflip | Nose-up ollie with one full backward rotation, shortened segments and a leading-hand board grip at the compressed apex |
 | Tornado Twist | Two-and-a-half backside turns with Weddle grip |
 
@@ -91,7 +91,7 @@ The board has a separate scale compensation parent. Its metre dimensions survive
 
 Feet and palms use actual rig sockets, two-bone IK and a bounded local-coordinate refinement. The latter removes the centimetre-scale error left by an ordinary world-space solve under stretched parents. Wrist orientation makes the palm face the edge and fingers curl underneath. The spine folds to make the short arms reach without scaling bones. Contact corrections happen after appearance/animation layers.
 
-Contact events compress the knees and rebound with a damped curve that finishes in 0.65 seconds. A small continuing knee pulse adds motion to held poses. Grinds keep the contact fixed; manuals never wobble through flat into the opposite named manual. Feet lift and flick independently during flips. The Impossible rotates around its measured rear-foot pivot. Darkslide entry/exit uses a half-flip and foot clearance. Backflip rotates rider and board around the actual posed hips while the nose-up ollie is still ascending.
+Contact events compress the knees and rebound with a damped curve that finishes in 0.65 seconds. A small continuing knee pulse adds motion to held poses. Grinds keep the contact fixed; manuals never wobble through flat into the opposite named manual. Feet lift and flick independently during flips. The Impossible rolls around the moving rear shoe; its contact shifts across the shoe and along the deck. Darkslide entry/exit uses a half-flip and foot clearance. Backflip rotates rider and board around the actual posed hips while the nose-up ollie is still ascending.
 
 Input recipes, scoring, balance difficulty and movement tuning remain unchanged. Presentation timings are detailed in the repair notes below. Revert and completed half-shove orientation bookkeeping agree with the rendered deck.
 
@@ -230,3 +230,16 @@ The rear foot follows the actual rotating tail during the supported part of the 
 `tools/test-skate-shove-motion.mjs` drives 16 complete sequences across campaign/park controls, both stances, both deck orientations and early/later input. It checks the loaded tail, visible sideways scoop, tilted board flight, exact half-turn, unchanged rider stance, front-foot-first catch, shoe/garment clearance and controller parity. Across 1,896 frames and 7,034,608 garment vertices, foot targets stay within 1 mm, shoes clear by at least 1.96 mm and shorts by at least 18.47 cm. All cases land for 100 points with one multiplier. The centre follows the controller's skate frame exactly.
 
 Revision 15 records the complete S12 sequence from native flatground inputs at 60 Hz. S10 and S11 capture tracks remain unchanged. The expanded captured audit checks S12's shoes and flight curvature between keys, alongside the earlier pose repairs. The captured audit passes 2,178 samples and 17,898,804 garment vertices; S12 retains at least 1.99 mm shoe clearance and 21.13 cm shorts clearance, including the catch handoff. Native paired flip/contact/trick checks, all 42 playback/migration checks and the production build pass. Native lite/full rendering, the sheet and Lab were visually checked with no console errors. No full repository suite was run.
+
+
+## S13 moving Impossible wrap and arm choreography
+
+Motion references: [Rodney Mullen Nollie Impossible](https://www.youtube.com/shorts/iXXefBf4AB4) and [Jonny Giger — PERFECT IMPOSSIBLE?!](https://www.youtube.com/shorts/MkFdGqVxECM), supplied by the user. Both were reviewed through the scoop, wrap and catch. The first is a nollie variation; S13 retains the ordinary rear-foot Impossible identity, 0.42-second duration, full rotation and 100-point score.
+
+The old fixed material pivot under the sole is replaced by a moving shoe contact. The rear ankle traces a small loop, pitches its toes and steers the wrap axis. A smooth support point measured from the actual shoe moves from sole to edge and instep; it advances toward the toe cap as the grip turns downward, keeping the deck clear of the calf. The contacting point also slides along the deck. Contact is fitted against the overlapping shoe surface, and the free foot returns for the catch. The planted fall continues after the trick timer ends.
+
+The free leg gathers through independent shortening while the rear leg retains reach. Both arms stretch into broad, unequal balance sweeps, then move forward and down into the catch; wrists follow the forearms. Impossible explicitly owns the skate presentation path, so early inputs no longer select the on-foot spin overlay and skip these deformation controls. Movement, gravity, input recipes and scoring are unchanged.
+
+`tools/test-skate-impossible-motion.mjs` covers 16 native sequences across both stances/deck orientations, campaign/park controls and early/later input. Across 1,896 controller frames and 7,034,608 garment vertices, foot targets stay within 1 mm, sampled shoe clearance remains at least 3.85 mm, rear-shin clearance 3.73 cm and shorts clearance 6.07 cm. The contact moves around the shoe and along the deck, both arms spread visibly, the board inverts and completes the full wrap, and every case lands for 100 points with one multiplier. Controller position matches a player with presentation disabled.
+
+Revision 16 captures S13 at 240 Hz with the same 60 Hz input edges and held controls, preserving this tightly coupled wrap through playback interpolation. Its keys use 0.00005 position/scalar and 0.0002-radian quaternion reduction tolerances. The expanded capture audit passes 2,299 samples and 18,893,182 garment vertices, checking both shins and the shoes during S13: shoe clearance is at least 1.47 mm, shin clearance 3.91 cm and shorts clearance 7.66 cm. S10–S12 motion tracks remain unchanged. Contact/trick checks, all 42 playback/migration checks and build pass; no full repository suite was run.

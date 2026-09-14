@@ -147,7 +147,7 @@ await withSkateRuntime(async ({player:p,level,THREE,server,step})=>{
     assert.ok(gripNormal.dot(normal)>.999,'wallride wheels face away from wall');checkFeet('wallride');
   }
   // Every flip is finite through its complete cycle and returns upright.
-  // The Impossible's actual material pivot stays at the trailing foot.
+  // The Impossible rolls its contact around the moving trailing shoe.
   for(const stance of [-1,1])for(const trick of DECK_TRICKS){
     reset(stance);p.flipKind=trick.kind;p.flipDuration=1;let pivot=null;
     for(let f=0;f<=60;f++){
@@ -155,8 +155,9 @@ await withSkateRuntime(async ({player:p,level,THREE,server,step})=>{
       assert.ok(p.boardG.matrixWorld.elements.every(Number.isFinite),`${trick.kind}: non-finite pose`);
       assert.deepEqual(p.pos.toArray(),[0,5,0],'animation changed physics');
       if(trick.kind==='imposs'){
-        const wrap=v(...p.boardG.userData.skateWrapPivot);pivot??=wrap.clone();assert.ok(wrap.distanceTo(pivot)<.002,'Impossible pivot wanders away from back foot');
-        const side=stance>0?'left':'right';assert.ok(p.riderG.getObjectByName(`socket-foot-${side}`).getWorldPosition(v()).distanceTo(wrap)<.015,'Impossible loses its back-foot wrap');
+        const wrap=v(...p.boardG.userData.skateWrapPivot);pivot??=wrap.clone();
+        const side=stance>0?'left':'right';assert.ok(p.riderG.getObjectByName(`socket-foot-${side}`).getWorldPosition(v()).distanceTo(wrap)<.55,'Impossible loses its moving shoe contact');
+        if(f===30)assert.ok(wrap.distanceTo(pivot)>.15,'Impossible still uses a fixed hinge');
       }
     }
     assert.ok(world(0,1,0).sub(world(0,0,0)).normalize().y>.999,'flip never catches upright');
