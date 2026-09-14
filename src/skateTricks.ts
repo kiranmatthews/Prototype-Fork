@@ -105,16 +105,29 @@ export function sampleBackflip(progress: number) {
 }
 
 const smooth=(t:number)=>{const x=Math.max(0,Math.min(1,t));return x*x*(3-2*x);};
+/** The shoe supplies a brief impulse, followed by a long angular coast.
+ * Catch comes from the feet descending onto the deck's unchanged flight arc. */
+export function sampleKickflip(progress:number) {
+  const t=Math.max(0,Math.min(1,progress)),u=Math.max(0,Math.min(1,(t-.14)/.68)),r=.12;
+  const turn=u<r?u*u/(2*r*(1-r)):u>1-r?1-(1-u)*(1-u)/(2*r*(1-r)):(u-r/2)/(1-r);
+  const flick=smooth(t/.24)*(1-smooth((t-.30)/.37));
+  const gather=smooth(t/.30);
+  return {turn,flick,departure:smooth(t/.05)*(1-smooth((t-.08)/.10)),tuck:gather*(1-smooth((t-.65)/.35)),
+    frontLift:.40*smooth((t-.10)/.22)*(1-smooth((t-.74)/.26)),
+    backLift:.40*smooth(t/.22)*(1-smooth((t-.66)/.24)),
+    nosePitch:-.48*(1-smooth((t-.18)/.44))};
+}
 /** Deck-local pose: +Z length, +X width, +Y grip. The rider's lift and foot
  * flick are applied after the ordinary sole/contact solver, never to physics. */
 export function sampleDeckTrick(kind:DeckTrickKind,progress:number) {
   const trick=deckTrickInfo(kind),t=Math.max(0,Math.min(1,progress));
   const motion=smooth((t-.08)/.78),clearance=smooth(t/.18)*(1-smooth((t-.72)/.28));
   const hard=kind==='hardflip'||kind==='inward-heel';
+  const kick=kind==='kick'?sampleKickflip(t):null;
   return {
-    roll:trick.roll*2*Math.PI*motion,yaw:trick.yaw*2*Math.PI*motion,
+    roll:trick.roll*2*Math.PI*(kick?kick.turn:motion),yaw:trick.yaw*2*Math.PI*motion,
     pitch:trick.pitch*2*Math.PI*motion+(hard?Math.sin(Math.PI*motion)*.85:0),
-    deckDrop:clearance*(kind==='imposs'?.28:.07),
+    deckDrop:kick?0:clearance*(kind==='imposs'?.28:.07),
     orbitY:kind==='imposs'?-.28*Math.sin(2*Math.PI*motion):0,
     orbitZ:kind==='imposs'?-.28*(1-Math.cos(2*Math.PI*motion)):0,
     riderLift:clearance*(kind==='imposs'?.23:.16),

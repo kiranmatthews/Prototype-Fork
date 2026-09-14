@@ -1,7 +1,7 @@
 import { createProceduralDriver } from './document';
 import type { AnimationClip, AnimationTrack, RigDefinition } from './types';
 import { sampleUnderRailMotion, sampleSkateRevert } from '../skateBodyMotion';
-import { sampleBackflip } from '../skateTricks';
+import { sampleBackflip, sampleKickflip } from '../skateTricks';
 
 export const CHARACTER_ELASTICITY_REVISION = 1;
 /** Torso, upper arm, forearm, thigh and shin. Zero protects a planted grip. */
@@ -102,6 +102,17 @@ export function skateBackflipElasticity(motion:ReturnType<typeof sampleBackflip>
       id.includes(`.${gripping}.`)?(part===1?1.10:1.16):(part===1?.68:.70);
     const base=ollie[id]??1;
     values[id]=(base+(target-base)*motion.compression)*(1+motion.rebound*(part===0?.04:.08));
+  }
+  return values;
+}
+
+/** Gather the legs above a freely turning board without folding the pelvis down. */
+export function skateKickflipElasticity(motion:ReturnType<typeof sampleKickflip>,ollie:Record<string,number>):Record<string,number> {
+  const values={...ollie};
+  for(const [id,part] of ELASTIC_LENGTH_CONTROLS){
+    if(part===1||part===2)continue;
+    const target=part===0?.94:part===3?.88:.84,base=ollie[id]??1;
+    values[id]=base+(target-base)*motion.tuck;
   }
   return values;
 }

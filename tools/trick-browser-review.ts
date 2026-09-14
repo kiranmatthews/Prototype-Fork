@@ -12,6 +12,7 @@ const button=(name:string,fn:()=>void)=>{const element=document.createElement('b
 const select=(label:string,values:readonly string[])=>{const element=document.createElement('select');element.setAttribute('aria-label',label);for(const name of values){const option=document.createElement('option');option.value=name;option.textContent=name;element.append(option);}controls.append(element);return element;};
 const flip=select('Flip trick',DECK_TRICKS.map(trick=>trick.label)),grab=select('Grab trick',GRAB_TRICKS.map(trick=>trick.label));
 const view=select('Review view',['Follow','Side','Front']);
+const phase=select('Flip review phase',['Flick','Free flip','Catch']);phase.value='Free flip';
 const vectors:Record<string,[number,number]>={kick:[-1,0],heel:[1,0],imposs:[0,1],shove:[0,-1],varial:[-1,-1],'varial-heel':[1,-1],hardflip:[-1,1],'inward-heel':[1,1],indy:[1,0],melon:[-1,0],nose:[0,1],tail:[0,-1],method:[-1,1],mute:[1,1],stalefish:[-1,-1],japan:[1,-1]};
 const walls={South:{p:[0,.1,10],h:[0,0,1]},North:{p:[28,.1,-90],h:[0,0,-1]},East:{p:[28,.1,-42],h:[1,0,0]},West:{p:[-28,.1,-70],h:[-1,0,0]}};
 let scenario='flip',wall=walls.South,frame=0,air=0,placed=false,freeze=false,single=0,autoPause=true,pausedPose=false,hadAir=false,active=false,reverted=false;
@@ -21,12 +22,12 @@ JungleCupEvent.prototype.stepRun=function(dt,score,combo,ready){return nativeRun
 const blank=()=>({moveX:0,moveY:0,jumpHeld:true,jumpPressed:false,jumpReleased:false,grindHeld:false,grindPressed:false,spinHeld:false,spinPressed:false,grabHeld:false,grabPressed:false,transferHeld:false,transferPressed:false,restartPressed:false});
 function start(kind:string,side:keyof typeof walls='South'){
   scenario=kind;wall=walls[side];frame=air=0;placed=freeze=pausedPose=hadAir=reverted=false;active=true;logs=[];single=0;
-  autoPause=kind==='flip'||kind==='grab'||kind==='special-flip'||kind==='revert';g.competitionAction('retry');
+  autoPause=kind==='flip'||kind==='flat-flip'||kind==='grab'||kind==='special-flip'||kind==='revert';g.competitionAction('retry');
 }
 for(const side of Object.keys(walls) as (keyof typeof walls)[])button(`${side} flip`,()=>start('flip',side));
 button('Grab air',()=>start('grab'));button('Grab to flip',()=>start('grab-flip'));button('Flip to grab',()=>start('flip-grab'));button('Three-trick line',()=>start('line'));
 button('Backflip',()=>start('special-flip'));button('Tornado Twist',()=>start('special-grab'));button('Grind score',()=>start('grind'));
-button('Revert',()=>start('revert'));
+button('Revert',()=>start('revert'));button('Flat Kickflip',()=>start('flat-flip'));
 button('Resume motion',()=>{freeze=false;autoPause=false;});button('Pause',()=>freeze=true);button('Next frame',()=>{freeze=true;single=1;});
 g.player.step=(dt:number,input:any,level:any)=>{
   if(freeze&&single===0)return;
@@ -37,6 +38,7 @@ g.player.step=(dt:number,input:any,level:any)=>{
     p.respawn(level,true,true,{position:new THREE.Vector3(...wall.p),heading:new THREE.Vector3(...wall.h)});
     p.axisF.set(...wall.h);p.axisL.set(wall.h[2],0,-wall.h[0]);p.freeSkate=true;p.speed=15.3;
     p.groundHit=p.queryGround(level);p.rideNormal.copy(p.groundHit.normal);placed=true;
+    if(scenario==='flat-flip'){p.pos.set(-10,.1,-28);p.prevPos.copy(p.pos);p.axisF.set(0,0,-1);p.axisL.set(-1,0,0);p.speed=6;p.parkVelocity.set(0,0,-6);p.groundHit=p.queryGround(level);p.rideNormal.copy(p.groundHit.normal);}
     if(scenario.startsWith('special'))p.special.award(1200);
     if(scenario==='grind'){
       const rail=level.grindRails[3],at=rail.pointAt(2);
@@ -49,6 +51,10 @@ g.player.step=(dt:number,input:any,level:any)=>{
     command.moveX=direction[0];command.moveY=direction[1];
     if(category==='flip')command.spinPressed=command.spinHeld=true;else command.grabPressed=command.grabHeld=true;
   };
+  if(scenario==='flat-flip'){
+    command.jumpHeld=frame>=12&&frame<42;command.jumpPressed=frame===12;command.jumpReleased=frame===42;
+    if(p.state==='air'){air++;if(air===4)press('flip',[-1,0]);}
+  }
   if(scenario==='grind'){command.grindHeld=true;command.grindPressed=frame===0;command.jumpHeld=false;}
   if(scenario==='revert'&&hadAir&&p.grounded){command.jumpHeld=false;if(!reverted){command.transferPressed=true;reverted=true;logs.push(`revert from stance ${p.stance}`);}}
   if(p.vertAir){
@@ -61,10 +67,10 @@ g.player.step=(dt:number,input:any,level:any)=>{
     if(scenario==='special-flip'){if(air===1)command.moveX=-1;if(air===3)press('flip',[1,0]);}
     if(scenario==='special-grab'){if(air===1)command.moveX=1;if(air===3)press('grab',[0,-1]);command.grabHeld=air>=3;}
   }
-  const was=p.vertAir;
+  const was=p.vertAir,wasGrounded=p.grounded;
   nativeStep(dt,command,level);frame++;
-  if(!was&&p.vertAir){hadAir=true;logs.push(`takeoff vy ${p.vVel.toFixed(3)}`);}
-  if(p.flipT>0&&autoPause&&!pausedPose&&1-p.flipT/p.flipDuration>=(scenario==='special-flip'?.5:.45)){pausedPose=freeze=true;logs.push('mid-flip');}
+  if(!was&&p.vertAir||scenario==='flat-flip'&&wasGrounded&&!p.grounded){hadAir=true;logs.push(`takeoff vy ${p.vVel.toFixed(3)}`);}
+  if(p.flipT>0&&autoPause&&!pausedPose&&1-p.flipT/p.flipDuration>=(scenario==='special-flip'?.5:phase.value==='Flick'?.18:phase.value==='Catch'?.9:.45)){pausedPose=freeze=true;logs.push('mid-flip');}
   if(scenario==='grab'&&p.grabPhase==='held'&&air>14&&autoPause&&!pausedPose){pausedPose=freeze=true;logs.push('held grab');}
   if(scenario==='revert'&&p.revertPoseT>0&&autoPause&&!pausedPose&&p.revertPoseT<SKATE_REVERT_DURATION/2){pausedPose=freeze=true;logs.push('mid-revert');}
   if(p.isBailing){freeze=true;logs.push('bail');}
