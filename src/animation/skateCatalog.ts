@@ -2,7 +2,7 @@ import { DECK_TRICKS, GRAB_TRICKS, GRIND_TRICKS, LIP_CONTACTS } from '../skateTr
 import { SPECIAL_TRICKS } from '../specialTricks';
 import type { AnimationClip, AnimationSuiteDocument, RigDefinition } from './types';
 
-export const SKATE_REVIEW_REVISION = 28;
+export const SKATE_REVIEW_REVISION = 29;
 export interface SkateReviewEntry {
   id: string;
   clipId: string;

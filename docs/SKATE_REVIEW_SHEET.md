@@ -111,3 +111,5 @@ Revision 26 synchronizes Mute’s seated stance, upper-body fold and clear relea
 Revision 27 synchronizes Stalefish’s knee load, side fold and trailing heel-edge grip from gameplay. Other 41 motion tracks remain unchanged.
 
 Revision 28 synchronizes Japan’s knees-forward/down tuck, raised board behind the hips and leading toe-edge grip from gameplay. Other 41 motion tracks remain unchanged.
+
+Revision 29 synchronizes S09’s continuous whole-arm entry and return from gameplay. The other 41 captured motions remain unchanged.

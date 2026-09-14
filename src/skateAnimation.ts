@@ -681,9 +681,15 @@ export class SkateAnimation {
       const target=shoulder.clone().addScaledVector(outward,reach+.13);
       // The elbow bends below the shoulder while the upper arm lengthens.
       const pole=shoulder.clone().addScaledVector(this.up,-.65).addScaledVector(outward,.25).addScaledVector(this.forward,.15);
-      this.solve(hand,target,handQ,pole,p.revert.reach);
+      // Blend the entire solved chain, not just its hand target. A partly
+      // weighted target still applies the full elbow pole, reversing the bend
+      // on entry and snapping back to the riding elbow when reach hits zero.
+      const joints=[hand.root,hand.mid,hand.end];
+      const riding=joints.map(joint=>joint.quaternion.clone());
+      this.solve(hand,target,handQ,pole,1);
       const forearm=hand.end.getWorldPosition(new THREE.Vector3()).sub(hand.mid.getWorldPosition(new THREE.Vector3())).normalize();
-      this.worldRotation(hand.end,hand.end.getWorldQuaternion(new THREE.Quaternion()).slerp(wristAlong(forearm),p.revert.reach));
+      this.worldRotation(hand.end,wristAlong(forearm));
+      for(let i=0;i<joints.length;i++)joints[i].quaternion.slerpQuaternions(riding[i],joints[i].quaternion.clone(),p.revert.reach);
       this.board.userData.skateRevert={...p.revert,hand:hand.socket.name};
     }else delete this.board.userData.skateRevert;
     if (underProgress > 0) {
