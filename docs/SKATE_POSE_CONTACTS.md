@@ -299,3 +299,18 @@ S09’s native study now retains 60 Hz samples so the elbow path and finite boun
 The captured audit checks 2,783 samples and 22,870,694 garment vertices, now explicitly requiring the S09 elbow to remain below the shoulder between keys. S09’s captured shorts clearance remains above 28.12 cm. All other 41 captures’ motion tracks remain unchanged. Native contact/trick regressions, all 42 playback/migration checks and the production build pass. No full repository suite was run.
 
 Native lite/full gameplay, the packaged sheet and the updated S09 Lab study were visually reviewed with no console errors.
+
+
+## S18 upright Indy with a waist-driven reach
+
+The user supplied an Indy reference image and requested upright legs, no shorts/board clipping, and hand reach supplied by bending at the waist. S18 now retains a standing-height pelvis and moderate knee bend, with both shoes aligned to the board plane. Its trailing hand still holds the toe edge between the feet.
+
+Indy now authors its bend at the anatomical `torso-root` waist joint, with a controlled forward hinge and a sideways lean toward the grabbing shoulder. The spine remains neutral relative to the waist. This replaces the old corrective spine fold, which could invert the upper body when combined with the low generic grab squat. The hand reaches without adding arm length. The bend eases through the existing grab envelope and unfolds on release, while the shared grab elasticity retains independent torso/leg spring motion. The waist baseline is restored before the next gameplay pose.
+
+Revision 21 replaces S18’s controlled-flight study with native flatground inputs: launch, grab entry, held toe-edge contact, release, landing and settle. It retains 60 Hz samples for the hand/foot contacts and the waist transition. Controls, physics, scoring and the other grab definitions remain unchanged.
+
+`tools/test-skate-indy-motion.mjs` drives 16 native grab/release/landing sequences across both stances, reversed boards and all four vert directions. Across 1,320 frames and 16,850,224 sampled mesh vertices, knees stay below 51 degrees, the held pelvis stays above 75 cm relative to the soles, and the torso reaches through a roughly 104-degree waist bend. The shorts clear by at least 18.88 cm, shoes by 1.90 mm, and head surfaces stay clear of the board. Foot targets remain within 1 mm and held palm contact within 2.98 mm. Waist motion stays below 18 degrees per frame, and all cases release and land cleanly.
+
+The expanded capture audit checks 2,904 samples and 23,865,072 garment vertices, including S18’s held hip height, knee bend and toe-edge palm contact between keys. S18’s captured shorts clear by at least 21.46 cm. The other 41 motion tracks are preserved exactly. Native contact/trick regressions, all 42 playback/migration checks and the production build pass. No full repository suite was run.
+
+The final game was reviewed through the complete Indy entry, hold, release and landing in lite and full rendering, with no console errors. Subsequent work prioritizes gameplay animation over review-sheet enhancements.
