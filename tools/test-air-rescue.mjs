@@ -284,6 +284,17 @@ try {
   const ejectB = steerTrajectory({ eject: true });
   assert.deepEqual(ejectA, ejectB, "board-abandon steering was not deterministic");
 
+  // Raw stick input in east/west side-scroll zones must not be interpreted
+  // as the already-swapped course input used by grounded recovery.
+  for(const dir of ['E','W'])for(const mode of [{bail:true},{eject:true}])for(const [mx,my] of [[1,0],[-1,0],[0,1],[0,-1]]){
+    const f=create({t:'zone',p:[0,0,0],s:[100,1,100],dir});
+    prepareAirCarry(f.player,mode);f.player.travelDir=dir;
+    for(let frame=0;frame<12;frame++)f.player.step(dt,makeInput({moveX:mx,moveY:my}),f.level);
+    const velocity=f.player.axisF.clone().multiplyScalar(f.player.speed),wanted=new THREE.Vector3(mx,0,-my);
+    assert.ok(velocity.dot(wanted)>4,`${dir} ${mode.bail?'bail':'eject'} ignored screen input ${mx}/${my}`);
+    assert.ok(velocity.clone().normalize().dot(wanted)>.9,'side-scroll rescue steered into the wrong axis');
+  }
+
   // Neutral input retains the exact planar carry. Steering is authority over
   // an existing flight, not hidden drag or an automatic course-axis snap.
   for (const mode of [{ bail: true }, { eject: true }]) {

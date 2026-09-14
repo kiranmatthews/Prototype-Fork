@@ -5091,7 +5091,7 @@ export class Player {
       this.ragFlailKickT = Math.max(this.ragFlailKickT, 0.2);
       const steerChance = THREE.MathUtils.clamp(TUNING.ragFlailSteerChance, 0, 1);
       if (steerChance > 0 && this.simRand() < steerChance) {
-        this.resolveBailControlFrame(level);
+        this.resolveBailControlFrame(level, 'screen');
         BAIL_TARGET.copy(BAIL_CONTROL_F)
           .multiplyScalar(moveY)
           .addScaledVector(BAIL_CONTROL_L, moveX)
@@ -5224,7 +5224,7 @@ export class Player {
   }
 
   /** Stable input frame for a recovery whose physical heading is still free. */
-  private resolveBailControlFrame(level: Level): void {
+  private resolveBailControlFrame(level: Level, inputSpace: 'course' | 'screen' = 'course'): void {
     const chaseMode = (level.skatepark || TUNING.chaseCam > 0.5) && !level.boulder;
     const laneDir = this.courseInputDirection(level);
     if (laneDir || chaseMode) {
@@ -5235,7 +5235,12 @@ export class Player {
       BAIL_CONTROL_L.set(-fz * inv, 0, fx * inv);
       return;
     }
-    if (this.travelDir === 'S') {
+    if (inputSpace === 'screen' && (this.travelDir === 'E' || this.travelDir === 'W')) {
+      // Raw right/left has not passed through the side-scroll axis swap.
+      // Match ordinary skating: right is +X, up is depth away from camera.
+      BAIL_CONTROL_F.set(0, 0, -1);
+      BAIL_CONTROL_L.set(1, 0, 0);
+    } else if (this.travelDir === 'S') {
       BAIL_CONTROL_F.set(0, 0, -1);
       BAIL_CONTROL_L.set(1, 0, 0);
     } else if (this.travelDir === 'N') {
@@ -5268,7 +5273,7 @@ export class Player {
     const intent = Math.min(1, Math.hypot(moveX, moveY));
     if (intent <= AIR_RESCUE_INPUT_DEADZONE) return true;
 
-    this.resolveBailControlFrame(level);
+    this.resolveBailControlFrame(level, 'screen');
     BAIL_TARGET.copy(BAIL_CONTROL_F)
       .multiplyScalar(moveY)
       .addScaledVector(BAIL_CONTROL_L, moveX);
