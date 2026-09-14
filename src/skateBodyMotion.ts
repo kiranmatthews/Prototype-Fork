@@ -14,6 +14,27 @@ export function sampleSkateRevert(age:number) {
     reach,compression:clamp(charge-.12*rebound,0,1),rebound};
 }
 
+/** Presentation-only balance corrections. Integrate phase so a changing
+ * balance value cannot multiply the entire run clock into a vibrating arm. */
+export class SkateBalanceArms {
+  private phase=0;
+  private weight=0;
+  private danger=0;
+  private critical=0;
+  private tilt=0;
+  reset():void {this.phase=this.weight=this.danger=this.critical=this.tilt=0;}
+  step(dt:number,active:boolean,balance:number,pegged:boolean) {
+    const ease=1-Math.exp(-8*Math.max(0,dt));
+    this.weight+=((active?1:0)-this.weight)*ease;
+    this.danger+=(smooth((Math.abs(balance)-.35)/.65)-this.danger)*ease;
+    this.critical+=((active&&pegged?1:0)-this.critical)*ease;
+    this.tilt+=((active?clamp(balance,-1,1):0)-this.tilt)*ease;
+    this.phase=(this.phase+Math.PI*2*(1.10+.45*this.danger+.15*this.critical)*Math.max(0,dt))%(Math.PI*2);
+    const amplitude=(.10*this.danger+.12*this.danger*this.danger+.05*this.critical)*this.weight;
+    return {tilt:this.tilt,swing:Math.sin(this.phase)*amplitude};
+  }
+}
+
 // The rail anchor and its clearance probe share the deeper hanging position.
 export const SKATE_UNDER_RAIL_DEPTH = 3.15;
 export const SKATE_UNDER_RAIL_HEADROOM = .17;

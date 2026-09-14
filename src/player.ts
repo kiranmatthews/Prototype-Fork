@@ -1,4 +1,4 @@
-import { SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
+import { SkateBalanceArms, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
 import { skateJapanElasticity, skateMethodElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
 // Authored fake-physics board movement. No rigidbody, no forces: just a
 // heading, a scalar speed, a vertical velocity, and hand-tuned numbers from
@@ -1199,6 +1199,7 @@ export class Player {
   // into the procedural smoothing state.
   private headPitchPose = 0;
   private headYawPose = 0;
+  private balanceArmMotion = new SkateBalanceArms();
   private grindArmPose = 0; // arms out wide for balance on the rail
   private railUnder = false; // hanging BENEATH the rail (board crosswise in the hands)
   private underK = 0; // 0 = on top, 1 = hanging under; eased committed transition
@@ -3209,6 +3210,7 @@ export class Player {
     this.skateAnimation?.reset();
     this.skateOllieMotion.reset();
     this.lipYawPose = this.revertPoseT = 0;
+    this.balanceArmMotion.reset();
     this.deckTricksThisAir.clear();
     this.deckTricksThisCombo.clear();
     this.ollieDeckTrickBufferT = 0;
@@ -16187,14 +16189,10 @@ export class Player {
     // Only GRINDS tip the spread arms sideways with the needle — a manual's
     // needle is fought in pitch (see manualPitch), so its arms stay symmetric.
     const railBal = this.state === 'grind' ? this.balance : 0;
-    // The flail used to switch on only at the peg, which made the last moment
-    // before a bail arrive with no warning at all. It now RAMPS with how far
-    // out the needle is, so the arms start working well before the edge, and
-    // goes faster and wider once it is actually pegged.
-    const offBal = Math.abs(railBal);
-    const critFlail =
-      (this.balanceCritT > 0 ? Math.sin(this.runTime * 22) * 0.8 : 0) +
-      Math.sin(this.runTime * (9 + 9 * offBal)) * 0.42 * offBal * offBal;
+    const balanceArms=this.balanceArmMotion.step(dt,
+      this.state==='grind'||this.manualing!==0||this.lipStallT>0,this.balance,this.balanceCritT>0);
+    const armBal=this.state==='grind'?balanceArms.tilt:0;
+    const critFlail=balanceArms.swing;
     const anti = -swing * 1.35 * (1 - this.grabPose); // reference arm pump: big, from the shoulder
     const sym =
       (breathe * 0.06 * this.idleAmp +
@@ -16219,7 +16217,7 @@ export class Player {
       this.armR.rotation.z =
         leanR -
         this.grabPose * 0.55 +
-        1.15 * this.grindArmPose * (1 + 0.85 * railBal) + // balance arms out wide; on a grind they SWING WITH the roll — see the left arm
+        1.15 * this.grindArmPose * (1 + 0.85 * armBal) + // balance arms out wide; on a grind they SWING WITH the roll — see the left arm
         1.25 * this.dropPose + // slam starfish
         2.1 * this.starPose + // star jump: arms thrown up-out
         (2.1 + 0.6 * riseK) * jp + // jump: arms thrown overhead, easing as she drops
@@ -16244,7 +16242,7 @@ export class Player {
         // and the left drops. A true counterweight (left arm up) was tried and
         // is worse here — it half-cancels the roll, and the roll is the cue
         // that has to read in a fifth of a second from six metres back.
-        1.15 * this.grindArmPose * (1 - 0.85 * railBal) -
+        1.15 * this.grindArmPose * (1 - 0.85 * armBal) -
         1.25 * this.dropPose -
         2.1 * this.starPose - // star jump: arms thrown up-out
         (2.1 + 0.6 * riseK) * jp - // jump: arms thrown overhead, easing as she drops
