@@ -20,12 +20,15 @@ try{
   p.enterLevel(replay.level);p.respawn(level,true);
   const runtime=createCharacterAnimationRuntime(p,a.createPlayerStarterAnimationSuite(a.RigBinding.fromSculptRuntime(p.animationRig.root).definition));
   const input={moveX:0,moveY:0,mapDirectionX:0,mapDirectionY:0,consumeEdges(){}};
-  // The normal Input object is shared/mutated each poll after returning from
-  // gameplay. The map owns movement; these taps only select destinations.
-  p.rawInput=input;
+  // A fresh page activates the map before Player.step has received input.
+  // Keep that cold-start path intact; seeding rawInput here hides boot crashes.
+  assert.equal(p.rawInput,undefined,'startup must precede the first gameplay input');
   const campaign={recommendedMapLevelKey:()=> 'jungle',levelUnlocked:()=>true,setMapFocus(){},levelProgress:()=>null};
   const map=new WorldMapController(campaign,p,{onSelection(){},onEnterLevel(){},onOpenSection(){}});
-  map.activate(level,'jungle');
+  assert.doesNotThrow(()=>map.activate(level,'jungle'),'fresh world-map activation must render before input polling');
+  assert.equal(map.active,true);
+  assert.equal(runtime.activeClipId,'player.idle');
+  assert.doesNotThrow(()=>p.prepareStartPresentation(level),'startup frame preparation must also work without gameplay input');
   const forbidden=[],visited=new Set();let moving=0;
   for(let frame=0;frame<replay.frames;frame++){
     const pulse=replay.pulses.find(s=>frame>=s.start&&frame<s.end);
@@ -70,5 +73,5 @@ try{
   for(let f=0;f<70;f++){p.step(1/60,input,flat);flat.update(1/60);}
   assert.equal(runtime.activeClipId,'player.idle');
   runtime.dispose();flat.dispose();level.dispose();
-  console.log('PASS recorded map taps, boardslide endings, active-skid entry, idle hold and restored gameplay skids');
+  console.log('PASS fresh startup without gameplay input, recorded map taps, boardslide endings, active-skid entry, idle hold and restored gameplay skids');
 }finally{await server.close();console.warn=warn;console.error=error;}

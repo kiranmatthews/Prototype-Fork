@@ -36,6 +36,8 @@ jobs:
       - name: Full suite (explicit request)
         if: github.event_name == 'workflow_dispatch' && inputs.full_suite
         run: npm run check:all
+      - name: World-map startup regression
+        run: node tools/test-world-map-locomotion.mjs
       - run: npm run build
       - uses: actions/configure-pages@v5
         with:

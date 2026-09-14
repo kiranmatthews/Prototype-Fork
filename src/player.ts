@@ -16934,7 +16934,9 @@ export class Player {
     this.plantOnDeck(underW, this.skateMountT >= 0);
     let skateContactOwned = false;
     if (this.boardG && this.riderG) {
-      const copingPipe=this.lipPipe ?? (this.grounded && (this.rawInput.grindHeld||this.rawInput.jumpHeld) ? this.groundHit?.halfpipe : undefined);
+      // Map/start/results poses run before the first gameplay input poll and
+      // supply their own neutral input. Use this pose's input, not rawInput.
+      const copingPipe=this.lipPipe ?? (this.grounded && (input.grindHeld||input.jumpHeld) ? this.groundHit?.halfpipe : undefined);
       let coping: {center:THREE.Vector3;normal:THREE.Vector3}|undefined;
       if(copingPipe && this.pos.y>copingPipe.lipY-1.8){
         const side=Math.sign(copingPipe.crossCoord(this.pos.x,this.pos.z)-copingPipe.cross)||1;
