@@ -1,6 +1,6 @@
 export const RENDER_QUALITY_STORAGE_KEY = "solProtoRenderQuality.v1";
 export const RENDER_QUALITY_VERSION = 1;
-export const RENDER_BASE_HEIGHTS = [540, 720, 900] as const;
+export const RENDER_BASE_HEIGHTS = [540, 720, 900, 1080] as const;
 export const RENDER_OUTPUT_MULTIPLIERS = [1, 2, 3] as const;
 
 export type RenderBaseHeight = (typeof RENDER_BASE_HEIGHTS)[number];

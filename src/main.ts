@@ -1966,6 +1966,23 @@ gameFlow = new GameFlowUI(
     onResultsRetry: retryFromResults,
     onResultsContinue: continueFromResults,
     onAudioOptions: applyGameAudioOptions,
+    getCrtEnabled: () => crtGuestSettings.enabled,
+    onCrtEnabled: (enabled) => {
+      crtGuestSettings.setEnabled(enabled);
+      gameFlow.requestGameplayFrame();
+    },
+    getRenderResolution: () => renderQualitySettings.enabled
+      ? renderQualitySettings.baseHeight === 540 || renderQualitySettings.baseHeight === 720
+        ? renderQualitySettings.baseHeight
+        : 1080
+      : "max",
+    onRenderResolution: (resolution) => {
+      if (resolution === "max") renderQualitySettings.setEnabled(false);
+      else {
+        renderQualitySettings.setBaseHeight(resolution);
+        renderQualitySettings.setEnabled(true);
+      }
+    },
     getPlayMode: () => endlessDeathsOn ? 'modern' : 'classic',
     getRelicTarget: (id) => resolveRelicTime(id, findLevel(id)?.data),
     getMedalTargets: (id) => resolveMedalTimes(id, findLevel(id)?.data),

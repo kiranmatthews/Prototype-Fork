@@ -109,6 +109,10 @@ export interface GameFlowUICallbacks {
   onResultsRetry: () => void;
   onResultsContinue: () => void;
   onAudioOptions: (options: GameAudioOptions) => void;
+  getCrtEnabled: () => boolean;
+  onCrtEnabled: (enabled: boolean) => void;
+  getRenderResolution: () => 540 | 720 | 1080 | "max";
+  onRenderResolution: (resolution: 540 | 720 | 1080 | "max") => void;
   getPlayMode: () => GamePlayMode;
   onPlayMode: (mode: GamePlayMode) => void;
   getRelicTarget?: (levelId: string) => number;
@@ -1411,6 +1415,30 @@ export class GameFlowUI {
         this.options.musicMuted = !enabled;
         return enabled;
       }),
+      this.toggleButton("CRT", this.callbacks.getCrtEnabled(), (enabled) => {
+        this.callbacks.onCrtEnabled(enabled);
+        return enabled;
+      }),
+      (() => {
+        const modes = [540, 720, 1080, "max"] as const;
+        const button = this.button("", () => {
+          const current = this.callbacks.getRenderResolution();
+          const next = modes[(modes.indexOf(current) + 1) % modes.length];
+          this.callbacks.onRenderResolution(next);
+          sync();
+          this.invalidatePreCrt();
+        });
+        button.classList.add("game-toggle", "game-resolution");
+        button.innerHTML = "<span>RESOLUTION</span><strong></strong>";
+        const sync = () => {
+          const resolution = this.callbacks.getRenderResolution();
+          button.querySelector("strong")!.textContent =
+            resolution === "max" ? "MAX" : `${resolution}P`;
+          button.setAttribute("aria-label", `Render resolution: ${resolution === "max" ? "maximum" : `${resolution}p`}. Activate to change.`);
+        };
+        sync();
+        return button;
+      })(),
       promptStyle,
       this.button('TRICK GUIDE', () => {
         this.trickGuidePage = 0;
