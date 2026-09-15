@@ -305,3 +305,6 @@
 
 
 | 201 | Apply regular resolution presets on mobile | ~3 min | Automatic from main | Make 540/720/1080 visibly affect touch devices and enable Render when selected | Removed the touch-only fixed-resolution bypass; regular numbered presets atomically enable fixed rendering at a 1× output while Max restores native resolution | Type-check and production build pass. No test suite or browser matrix at the user's request. |
+
+
+| 202 | Keep mobile resolution presets at literal 1× pixels | ~2 min | Automatic from main | Make 540P mean a 540-pixel canvas on iPhone, including devices with an older saved Render multiplier | Mobile size calculation now ignores the developer 2×/3× multiplier and uses the selected base height directly; desktop developer controls retain their multiplier | Production build pass. No test suite or browser matrix. |

@@ -939,7 +939,11 @@ let coastPostSuspendCount = 0;
 let coastPostResumeCount = 0;
 let renderQualityPanel: RenderQualityPanel | null = null;
 let renderQualitySizes: RenderQualitySizes =
-  renderQualitySettings.computeSizes(window.innerWidth, window.innerHeight);
+  renderQualitySettings.computeSizes(
+    window.innerWidth,
+    window.innerHeight,
+    TOUCH_PRESENTATION ? 1 : renderQualitySettings.outputMultiplier,
+  );
 function configureCoastPost(enabled: boolean): void {
   if (coastPost) {
     coastPost.setEnabled(enabled);
@@ -1174,7 +1178,13 @@ function resize(): void {
     (navigator as unknown as { standalone?: boolean }).standalone === true;
   if (standalone && h > w && window.screen.height > h) h = window.screen.height;
   document.documentElement.style.setProperty("--vh", h + "px");
-  renderQualitySizes = renderQualitySettings.computeSizes(w, h);
+  // Phone presets name the actual canvas height. Ignore any older/debug 2×
+  // multiplier so 540P remains a 540-pixel output on a Retina display.
+  renderQualitySizes = renderQualitySettings.computeSizes(
+    w,
+    h,
+    TOUCH_PRESENTATION ? 1 : renderQualitySettings.outputMultiplier,
+  );
   const optimized = fixedResolutionActive();
   // Optimized mode owns exact physical pixels: the world/post composer renders
   // at inputWidth×inputHeight, while the canvas is the CRT's 1×/2×/3× output.

@@ -168,7 +168,11 @@ export class RenderQualitySettings {
     this.replace({ ...DEFAULTS }, true);
   }
 
-  computeSizes(viewportWidth: number, viewportHeight: number): RenderQualitySizes {
+  computeSizes(
+    viewportWidth: number,
+    viewportHeight: number,
+    outputMultiplier = this.state.outputMultiplier,
+  ): RenderQualitySizes {
     const vw = validDimension(viewportWidth);
     const vh = validDimension(viewportHeight);
     const aspect = vw / vh;
@@ -181,8 +185,8 @@ export class RenderQualitySettings {
       viewportHeight: vh,
       inputWidth,
       inputHeight,
-      outputWidth: inputWidth * this.state.outputMultiplier,
-      outputHeight: inputHeight * this.state.outputMultiplier,
+      outputWidth: inputWidth * outputMultiplier,
+      outputHeight: inputHeight * outputMultiplier,
     };
   }
 
