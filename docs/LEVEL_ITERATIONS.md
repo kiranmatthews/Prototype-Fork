@@ -302,3 +302,6 @@
 
 
 | 200 | Add regular CRT and resolution options | ~4 min | Automatic from main | Put lightweight CRT and 540/720/1080/max resolution controls in the normal Options screen | Reused the persisted CRT Guest and render-quality settings; numbered modes select internal vertical resolution and Max restores native device resolution | Type-check and production build pass. No test suite or browser matrix at the user's request. |
+
+
+| 201 | Apply regular resolution presets on mobile | ~3 min | Automatic from main | Make 540/720/1080 visibly affect touch devices and enable Render when selected | Removed the touch-only fixed-resolution bypass; regular numbered presets atomically enable fixed rendering at a 1× output while Max restores native resolution | Type-check and production build pass. No test suite or browser matrix at the user's request. |

@@ -156,6 +156,14 @@ export class RenderQualitySettings {
     return this.replace({ ...this.state, fixed60 });
   }
 
+  /** Regular Options preset: one click enables fixed rendering at its named
+   * output height. Null restores the native device-resolution path. */
+  setRegularResolution(baseHeight: RenderBaseHeight | null): boolean {
+    return this.replace(baseHeight === null
+      ? { ...this.state, enabled: false }
+      : { ...this.state, enabled: true, baseHeight, outputMultiplier: 1 });
+  }
+
   reset(): void {
     this.replace({ ...DEFAULTS }, true);
   }

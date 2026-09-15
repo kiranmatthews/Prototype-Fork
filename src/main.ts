@@ -161,7 +161,7 @@ const gameFlowVortex = new GameFlowVortexHost();
 // thing making the game look cheap. Capped at 2: past that the pixels are far
 // too small to see and it is pure fill-rate.
 renderer.setPixelRatio(
-  renderQualitySettings.enabled && !LITE_RENDER && !TOUCH_PRESENTATION
+  renderQualitySettings.enabled && !LITE_RENDER
     ? 1
     : Math.min(window.devicePixelRatio || 1, 2),
 );
@@ -1046,12 +1046,10 @@ function renderGameplayScene(dt = 0, prepareOcean = true, showHud = true): void 
 function fixedResolutionActive(): boolean {
   // Split screen owns two scissored cameras and deliberately remains on its
   // direct renderer path until it gets two independent pre-CRT surfaces.
-  // Coarse/touch devices use the native-aspect DPR path. Fixed 720p×2 was
-  // allocating a 3K-wide target on an 853px phone and was the lead trigger for
-  // the mobile HUD composition regression.
+  // Regular mobile resolution presets use a 1× output, so touch devices can
+  // use this path without allocating the old oversized 2× phone target.
   return (
     renderQualitySettings.enabled &&
-    !TOUCH_PRESENTATION &&
     !LITE_RENDER &&
     !split2p
   );
@@ -1977,11 +1975,9 @@ gameFlow = new GameFlowUI(
         : 1080
       : "max",
     onRenderResolution: (resolution) => {
-      if (resolution === "max") renderQualitySettings.setEnabled(false);
-      else {
-        renderQualitySettings.setBaseHeight(resolution);
-        renderQualitySettings.setEnabled(true);
-      }
+      renderQualitySettings.setRegularResolution(
+        resolution === "max" ? null : resolution,
+      );
     },
     getPlayMode: () => endlessDeathsOn ? 'modern' : 'classic',
     getRelicTarget: (id) => resolveRelicTime(id, findLevel(id)?.data),
