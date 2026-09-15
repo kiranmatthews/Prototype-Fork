@@ -14,7 +14,8 @@ WORK = ROOT / '.img2threejs/treehouse-trail'
 WORK.mkdir(parents=True, exist_ok=True)
 NODE = os.environ.get('MESHY_NODE', '/Users/kiki/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node')
 CLI = os.environ.get('MESHY_CLI', '/tmp/carlisle-meshy-cli/node_modules/@meshy-ai/cli/dist/index.js')
-SPECS = {'body': 3000, 'balcony': 2000, 'stairs': 1800, 'landing': 1200, 'tree': 3000, 'bush': 1200}
+SPECS = {'body': 3000, 'balcony': 2000, 'stairs': 1800, 'landing': 1200, 'tree': 3000, 'bush': 1200,
+         'host': 6000, 'body-v2': 8000}
 LEDGER = ROOT / 'tools/treehouse-trail/tasks.json'
 data = json.loads(LEDGER.read_text()) if LEDGER.exists() else {
     'provider': 'Meshy', 'modelType': 'smart-topology', 'model': 'meshy-t2',
@@ -32,7 +33,8 @@ for name in sys.argv[1:]:
         continue
     data['tasks'][name] = {'state': 'submitting', 'targetTriangles': SPECS[name]}
     LEDGER.write_text(json.dumps(data, indent=2) + '\n')
-    result = cli('image-to-3d', 'create', '--image-url', str(ROOT / 'tools/treehouse-trail' / (name + '-reference.png')),
+    reference = 'body' if name == 'body-v2' else name
+    result = cli('image-to-3d', 'create', '--image-url', str(ROOT / 'tools/treehouse-trail' / (reference + '-reference.png')),
         '--model-type', 'smart-topology', '--target-polycount', str(SPECS[name]),
         '--should-texture', 'true', '--enable-pbr', 'true', '--texture-resolution', '2k',
         '--target-formats', 'glb', '--operation-id', 'treehouse-trail-module-' + name + '-2026-09-15', '--async')

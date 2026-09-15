@@ -1,0 +1,10 @@
+{
+  "tool": "built-in image_gen",
+  "reference": "/Users/kiki/Desktop/image 20.jpg",
+  "output": "tools/treehouse-trail/host-reference.png",
+  "prompt": "Create one isolated modular 3D game asset reference by extracting and reconstructing ONLY the massive ancient supporting TREE TRUNK AND BOUGHS from the left side of this style reference. No house, no stairs, no planks, NO LEAVES OR CANOPY, no moss bush, no floating scene, no ground disk, no other objects, no text. Transparent background. Whole object completely framed. Same premium hand-painted stylized game art: richly sculpted cinnamon/ochre bark grooves, broad warm planes, dark cool crevices, thick rounded asymmetric forms. A very thick rooted tree trunk, its roots about 6 metres wide, main trunk 3.5 metres wide, overall height 15 metres; it gently twists while staying nearly vertical through lower 7 metres. Two huge load-bearing arms fork at 7 metres high and curve OUTWARD into sturdy horizontal boughs at 8.5 metres high, spanning 14 metres left to right, physically thick enough to hold a small cabin deck. Central continuation rises BEHIND the fork to 15 metres, with several cut stout branch ends. Clear EMPTY OPEN SPACE directly above the two supporting boughs for placing a separate cabin at 8.5 metres high; the upper trunk stays toward the back. Make the lower trunk robust and visually dominant, no skinny stems. Detailed sculpted ridges and grooves that remain broad and game-readable, natural buttress root feet on one flat plane. Show a clear three-quarter front view with rich readable bark, restrained even studio illumination. This is a standalone support-tree module for Meshy reconstruction, coherent geometry with no leaf cards, and must look like it can physically carry a treehouse.",
+  "meshy": {
+    "host": {"targetTriangles": 6000, "modelType": "smart-topology", "textureResolution": "2k"},
+    "body-v2": {"reference": "tools/treehouse-trail/body-reference.png", "targetTriangles": 8000, "modelType": "smart-topology", "textureResolution": "2k"}
+  }
+}

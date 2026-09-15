@@ -4,6 +4,7 @@ Run with Blender --background --python tools/treehouse-trail/prepare.py.
 Only the downloaded model is used; no replacement procedural house is built.
 """
 import bpy
+import bmesh
 import json
 import math
 import sys
@@ -13,10 +14,11 @@ from mathutils import Vector
 ROOT = Path(__file__).resolve().parents[2]
 WORK = ROOT / '.img2threejs/treehouse-trail'
 name = sys.argv[sys.argv.index('--') + 1]
-assert name in {'body', 'balcony', 'stairs', 'landing', 'tree', 'bush'}
+assert name in {'body', 'body-v2', 'balcony', 'stairs', 'landing', 'tree', 'bush', 'host', 'balcony-deck', 'canopy'}
 bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete(use_global=False)
-bpy.ops.import_scene.gltf(filepath=str(WORK / (name + '-source.glb')))
+source_name = {'balcony-deck': 'balcony', 'canopy': 'tree'}.get(name, name)
+bpy.ops.import_scene.gltf(filepath=str(WORK / (source_name + '-source.glb')))
 parts = [o for o in bpy.context.scene.objects if o.type == 'MESH']
 assert parts, 'Meshy produced no meshes'
 for obj in bpy.context.scene.objects:
@@ -27,6 +29,25 @@ if len(parts) > 1:
 high = bpy.context.view_layer.objects.active
 bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 high.name = name + '_LOD0'
+# Reuse the actual Meshy deck and crown as distinct modular parts. Removing
+# the original railing lets the new stair opening and rope rail be authored
+# correctly; a separate crown keeps leaves out of the cabin/trunk junction.
+if name in {'balcony-deck', 'canopy'}:
+    lower = min(v.co.z for v in high.data.vertices)
+    span = max(v.co.z for v in high.data.vertices) - lower
+    bm = bmesh.new(); bm.from_mesh(high.data)
+    if name == 'balcony-deck':
+        remove = [f for f in bm.faces if any((v.co.z-lower)/span > .35 for v in f.verts)]
+    else:
+        remove = [f for f in bm.faces if any((v.co.z-lower)/span < .53 for v in f.verts)]
+    bmesh.ops.delete(bm, geom=remove, context='FACES')
+    if name == 'balcony-deck':
+        for v in bm.verts:
+            if (v.co.z-lower)/span > .27: v.co.z = lower + span * .30
+        bmesh.ops.remove_doubles(bm, verts=list(bm.verts), dist=.00003)
+        boundary = [e for e in bm.edges if e.is_boundary]
+        if boundary: bmesh.ops.holes_fill(bm, edges=boundary, sides=0)
+    bm.to_mesh(high.data); bm.free(); high.data.update()
 # Seat the generated surfaces on reproducible module contact planes. The
 # texture/UVs and source silhouette remain Meshy's; these are fitting edits.
 source_lo = min(v.co.z for v in high.data.vertices)

@@ -104,7 +104,7 @@ try{
   for(let i=0;i<position.count;i++){assert.ok(Number.isFinite(position.getX(i)));assert.equal(position.getZ(i),0);assert.equal(normal.getZ(i),1);}
   assert.equal(template.map.colorSpace,THREE.SRGBColorSpace);assert.equal(template.map.image.width,1942);
   const draws=[];kit.root.traverse(o=>{if(o.isMesh&&o.userData.jungleAsset===kind)draws.push(o);});
-  assert.ok(draws.length>0);for(const mesh of draws){assert.equal(mesh.material.isMeshBasicMaterial,true);assert.equal(mesh.material.fog,false);assert.equal(mesh.material.toneMapped,false);assert.equal(mesh.castShadow,false);assert.equal(mesh.receiveShadow,false);assert.equal(mesh.material.transparent,false);assert.equal(mesh.material.alphaTest,kind==='treehousemattemid'?.35:0);}
+  assert.ok(draws.length>0);for(const mesh of draws){assert.equal(mesh.material.isMeshBasicMaterial,true);assert.equal(mesh.material.fog,false);assert.equal(mesh.material.toneMapped,false);assert.equal(mesh.castShadow,false);assert.equal(mesh.receiveShadow,false);assert.equal(mesh.material.transparent,kind==='treehousemattemid');assert.equal(mesh.material.depthWrite,kind!=='treehousemattemid');assert.equal(mesh.material.alphaTest,kind==='treehousemattemid'?.005:0);}
  }
  assert.ok(kit.diagnostics.placements>kit.diagnostics.components,'assemblies really expand into multiple modules');
  let lods=0;kit.root.traverse(o=>{if(o.isLOD)lods++;if(o.isMesh){assert.ok(o.geometry.userData.shared);if(JUNGLE_ASSETS[o.userData.jungleAsset]?.wind||o.userData.jungleAsset==='vine')assert.ok(o.customDepthMaterial);}});assert.equal(lods,0,'scenery keeps its authored mesh at every camera distance');

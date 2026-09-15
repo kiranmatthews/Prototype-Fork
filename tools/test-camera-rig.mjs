@@ -92,6 +92,18 @@ try {
   const beforeLegacy=camera.position.clone();layer.apply(camera,cameraViewAt([headingOnly],0,0,0));
   near(camera.position.distanceTo(beforeLegacy),0,'legacy heading-only view changed framing');
 
+  // A narrow app panel must still show both ends of an authored wide shot.
+  const wideShot={...view,cameraPosition:[-1,8.5,36],cameraTarget:[-1,5.5,-5],cameraFov:46,cameraAspect:16/9};
+  const projected=[];
+  for(const aspect of [16/9,4/3,1,390/844]){
+    const panelCamera=new THREE.PerspectiveCamera(49,aspect,.1,400),panelLayer=new CameraViewFraming();
+    panelLayer.apply(panelCamera,{view:wideShot,weight:1});panelCamera.updateMatrixWorld(true);
+    const edges=[new THREE.Vector3(-24,8,-5),new THREE.Vector3(21,4,0)].map(p=>p.project(panelCamera).x);
+    assert.ok(edges.every(x=>Math.abs(x)<.95),'narrow panel cropped a landmark');
+    projected.push(edges);
+  }
+  for(const edges of projected.slice(1))for(let i=0;i<2;i++)near(edges[i],projected[0][i],'horizontal shot composition changed');
+
   const legacy = { camDist: 3.8, camHeight: 5.1, camTilt: 3.3, camOffset: -1.25 };
   near(legacyCameraRigTuning(legacy).camDist, 5.05, 'legacy offset was not folded into distance');
   near(legacyCameraRigTuning(legacy).camPitch, saved.camPitch, 'default shot changed', 0.005);

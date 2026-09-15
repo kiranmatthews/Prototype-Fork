@@ -20,20 +20,25 @@ export interface JungleAssetSpec {
   matte?: boolean;
   image?: string;
   alphaCutout?: boolean;
+  edgeFade?: number;
+  windowGlow?: boolean;
 }
 const ASSETS = {
   ...JUNGLE_MODULES,
   ...MAP_MODULES,
   ...NIGHTWORKS_MODULES,
   ...JUNGLE_EDITOR_ASSETS,
-  treehousebody: {file:"../treehouse-trail/body",label:"Treehouse cabin body",size:[7,5.2,5.5],wind:false,normalStrength:0.18,lod:true,doubleSided:false},
+  treehousebody: {file:"../treehouse-trail/body-v2",label:"Detailed treehouse cabin body",size:[7,5.2,5.5],wind:false,normalStrength:0.14,lod:true,doubleSided:false,windowGlow:true},
+  treehousehost: {file:"../treehouse-trail/host",label:"Treehouse supporting trunk and boughs",size:[15.5,15,10],wind:false,normalStrength:0.18,lod:true,doubleSided:false},
+  treehousebalconydeck: {file:"../treehouse-trail/balcony-deck",label:"Treehouse balcony deck without rails",size:[14.5,0.35,3],wind:false,normalStrength:0.14,lod:true,doubleSided:false},
+  treehousecanopy: {file:"../treehouse-trail/canopy",label:"Separate treehouse crown",size:[28,10,22],wind:true,normalStrength:0.08,lod:true,doubleSided:false},
   treehousebalcony: {file:"../treehouse-trail/balcony",label:"Treehouse balcony",size:[8,1.5,3],wind:false,normalStrength:0.18,lod:true,doubleSided:false},
   treehousestairs: {file:"../treehouse-trail/stairs",label:"Treehouse stair flight",size:[3,2.25,5.5],wind:false,normalStrength:0.18,lod:true,doubleSided:false},
   treehouselanding: {file:"../treehouse-trail/landing",label:"Treehouse landing",size:[3.5,0.35,3.5],wind:false,normalStrength:0.18,lod:true,doubleSided:false},
   treehousetree: {file:"../treehouse-trail/tree",label:"Treehouse ancient canopy tree",size:[22,20,17],wind:true,normalStrength:0.12,lod:true,doubleSided:false},
   treehousebush: {file:"../treehouse-trail/bush",label:"Treehouse lush bush cluster",size:[5,2.8,4.5],wind:true,normalStrength:0.12,lod:true,doubleSided:false},
   treehousemattefar: {file:"",image:"treehouse-trail/matte-far.png",label:"Treehouse distant painted jungle",size:[120,50,.02],wind:false,matte:true},
-  treehousemattemid: {file:"",image:"treehouse-trail/matte-mid.png",label:"Treehouse painted forest layer",size:[85,38,.02],wind:false,matte:true,alphaCutout:true},
+  treehousemattemid: {file:"",image:"treehouse-trail/matte-mid.png",label:"Treehouse painted forest layer",size:[85,38,.02],wind:false,matte:true,alphaCutout:true,edgeFade:0.1},
   junglecliff: {file:"",label:"jungle cliff face",size:[28,32,30],wind:false,backdrop:true},
   junglebackdrop: {file:"",label:"outer jungle canopy",size:[42,44,40],wind:false,backdrop:true},
   jungleleaf: {file:"broadleaf",label:"jungle broadleaf",size:[4.2,2.6,4.2],wind:true},
@@ -270,7 +275,15 @@ export class JungleAssetKit {
     const spec=renderSpec(kind),isVine=kind==="vine"||kind==="junglevine";
     if(spec.matte){
       const material=new THREE.MeshBasicMaterial({map:template.map,fog:false,toneMapped:false,
-        side:THREE.FrontSide,alphaTest:spec.alphaCutout?.35:0,transparent:false,depthWrite:true});
+        side:THREE.FrontSide,alphaTest:spec.edgeFade?0.005:spec.alphaCutout?.35:0,transparent:!!spec.edgeFade,depthWrite:!spec.edgeFade});
+      if(spec.edgeFade){
+        material.onBeforeCompile=shader=>{
+          shader.uniforms.uMatteEdgeFade={value:spec.edgeFade};
+          shader.fragmentShader='uniform float uMatteEdgeFade;\n'+shader.fragmentShader;
+          shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>', '#include <map_fragment>\nfloat matteBorder = min(min(vMapUv.x, 1.0-vMapUv.x), min(vMapUv.y, 1.0-vMapUv.y));\ndiffuseColor.a *= smoothstep(0.0, uMatteEdgeFade, matteBorder);');
+        };
+        material.customProgramCacheKey=()=>"painted-matte-soft-border-v1";
+      }
       material.name=spec.label;material.userData.jungleAsset=true;material.userData.treehouseMatte=true;
       this.materials.set(kind,material);return material;
     }
@@ -287,6 +300,14 @@ export class JungleAssetKit {
     m.name=spec.label;m.userData.jungleAsset=true;
     if(kind==="earth")m.userData.jungleDirt=true;
     addJungleDapple(m,this.time,spec.wind);
+    if(spec.windowGlow){
+      const compile=m.onBeforeCompile,key=m.customProgramCacheKey.bind(m);
+      m.onBeforeCompile=(shader,renderer)=>{
+        compile.call(m,shader,renderer);
+        shader.fragmentShader=shader.fragmentShader.replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\nfloat goldRatio=diffuseColor.r/max(diffuseColor.g,0.008);\nfloat amberGlass=smoothstep(2.3,3.2,diffuseColor.g/max(diffuseColor.b,0.008))*smoothstep(0.1,0.26,diffuseColor.g)*smoothstep(1.1,1.3,goldRatio)*(1.0-smoothstep(2.4,3.1,goldRatio));\ntotalEmissiveRadiance+=vec3(1.0,0.46,0.035)*amberGlass*0.65;');
+      };
+      m.customProgramCacheKey=()=>key()+'|amber-window-v1';
+    }
     if(this.depthFade)addJungleDepthFade(m);
     this.materials.set(kind,m);return m;
   }

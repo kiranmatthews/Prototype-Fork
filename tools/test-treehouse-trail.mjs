@@ -170,37 +170,43 @@ try {
   assert.ok(half,'clearing halfpipe');
   const [hx,hy,hz]=half.p, radius=half.rise??6, flat=half.w??3, halfLength=(half.len??30)/2;
   const arc=(half.arc??90)*Math.PI/180, lip=flat+radius*Math.sin(arc), lipY=hy+radius*(1-Math.cos(arc));
-  assert.equal(half.yaw??0,0,'review expects length along Z');
+  const yaw=(half.yaw??0)*Math.PI/180;
+  const pipeWorld=(x,y,z)=>new THREE.Vector3(hx+Math.cos(yaw)*x+Math.sin(yaw)*z,y,hz-Math.sin(yaw)*x+Math.cos(yaw)*z);
+  const pipeLocal=p=>({x:Math.cos(yaw)*(p.x-hx)-Math.sin(yaw)*(p.z-hz),z:Math.sin(yaw)*(p.x-hx)+Math.cos(yaw)*(p.z-hz)});
+  const pipeGround=(x,z)=>{const p=pipeWorld(x,0,z);return ground(p.x,p.z);};
+  assert.ok(radius>=4,'reference halfpipe has tall transitions');
+  assert.ok((half.arcSteps??8)>=24,'hero transition has a smooth authored profile');
+  assert.ok((half.len??30)<8,'compact halfpipe does not read as a long chute');
   let pipeProbes=0;
-  for(const z of [hz-halfLength+.2,hz,hz+halfLength-.2]) {
-    assert.ok(Math.abs(ground(hx,z).point.y-hy)<.03,'halfpipe flat floor');pipeProbes++;
+  for(const z of [-halfLength+.2,0,halfLength-.2]) {
+    assert.ok(Math.abs(pipeGround(0,z).point.y-hy)<.03,'halfpipe flat floor');pipeProbes++;
     for(const side of [-1,1])for(const fraction of [.25,.5,.75,.96]) {
-      const angle=arc*fraction,x=hx+side*(flat+radius*Math.sin(angle));
-      const expected=hy+radius*(1-Math.cos(angle)),hit=ground(x,z);
+      const angle=arc*fraction,x=side*(flat+radius*Math.sin(angle));
+      const expected=hy+radius*(1-Math.cos(angle)),hit=pipeGround(x,z);
       // The campaign mesh uses eight visible arc faces. Near the vertical lip
       // their chord differs from the ideal circle by up to 0.11m in a Y ray.
       assert.ok(hit && Math.abs(hit.point.y-expected)<.13,`halfpipe transition support ${x}/${z}: ${hit?.point.y} versus ${expected}`);pipeProbes++;
     }
     if(half.deck)for(const side of [-1,1]) {
-      assert.ok(Math.abs(ground(hx+side*(lip+half.deck*.5),z).point.y-lipY)<.04,'halfpipe deck support');pipeProbes++;
+      assert.ok(Math.abs(pipeGround(side*(lip+half.deck*.5),z).point.y-lipY)<.04,'halfpipe deck support');pipeProbes++;
     }
   }
   for(const dir of [-1,1]){
-    reset(new THREE.Vector3(hx,hy+.1,hz-dir*(halfLength+2)));
+    reset(pipeWorld(0,hy+.1,-dir*(halfLength+2)));
     const walkPipe=makeInput();
-    for(let i=0;i<240 && (player.pos.z-hz)*dir<halfLength+2;i++){
-      const dx=hx-player.pos.x,dz=hz+dir*(halfLength+2)-player.pos.z,mag=Math.hypot(dx,dz);
+    for(let i=0;i<240 && pipeLocal(player.pos).z*dir<halfLength+2;i++){
+      const target=pipeWorld(0,hy,dir*(halfLength+2)),dx=target.x-player.pos.x,dz=target.z-player.pos.z,mag=Math.hypot(dx,dz);
       walkPipe.moveX=(dx*player.axisL.x+dz*player.axisL.z)/mag;
       walkPipe.moveY=(dx*player.axisF.x+dz*player.axisF.z)/mag;
       step(walkPipe);safe('halfpipe walk through');
-      assert.ok(Math.abs(player.pos.x-hx)<.15,`halfpipe entry has no sideways obstruction: ${player.pos.toArray()}, frame ${i}, direction ${dir}, state ${player.state}`);
+      assert.ok(Math.abs(pipeLocal(player.pos).x)<.15,`halfpipe entry has no sideways obstruction: ${player.pos.toArray()}, frame ${i}, direction ${dir}, state ${player.state}`);
     }
-    assert.ok((player.pos.z-hz)*dir>halfLength+1.5,'halfpipe open-end exit');
+    assert.ok(pipeLocal(player.pos).z*dir>halfLength+1.5,'halfpipe open-end exit');
   }
   const ridePeaks=[];
   for(const side of [-1,1]){
     reset(new THREE.Vector3(hx,hy,hz));
-    player.axisF.set(side,0,0);player.axisL.set(0,0,-side);player.speed=14;player.freeSkate=true;
+    player.axisF.set(Math.cos(yaw)*side,0,-Math.sin(yaw)*side);player.axisL.set(player.axisF.z,0,-player.axisF.x);player.speed=14;player.freeSkate=true;
     player.groundHit=player.queryGround(level);player.rideNormal.copy(player.groundHit.normal);
     let maximum=hy,returned=false;
     const ride=makeInput({jumpHeld:true,jumpPressed:true});
@@ -215,21 +221,22 @@ try {
   // Climb the two real flight colliders and all shared landing seams, then
   // descend along the same path. There is no jump or teleport between modules.
   const stairFlights=data.components.filter(c=>c.nm==='Treehouse stair flight support');
-  assert.equal(stairFlights.length,2,'two separate stair flights');
+  assert.equal(stairFlights.length,3,'three separate stair flights wrap around the trunk');
   let stairProbes=0;
   for(const flight of stairFlights)for(const t of [0,.01,.25,.5,.75,.99,1])for(const x of [-.9,0,.9]){
-    const hit=ground(flight.p[0]+x,flight.p[2]+flight.len*(.5-t));
-    assert.ok(hit&&Math.abs(hit.point.y-(flight.p[1]+flight.rise*t))<.04,'stair flight and landing seams share support');stairProbes++;
+    const angle=(flight.yaw??0)*Math.PI/180,z=flight.len*(.5-t);
+    const hit=ground(flight.p[0]+Math.cos(angle)*x+Math.sin(angle)*z,flight.p[2]-Math.sin(angle)*x+Math.cos(angle)*z);
+    assert.ok(hit&&Math.abs(hit.point.y-(flight.p[1]+flight.rise*t))<.04,`stair flight at ${flight.p}/${flight.yaw}, fraction ${t}, cross ${x}: floor ${hit?.point.y}, expected ${flight.p[1]+flight.rise*t}`);stairProbes++;
   }
   for(const deck of data.components.filter(c=>/^Treehouse (landing|balcony|cabin floor) support$/.test(c.nm??''))){
     const top=deck.p[1]+deck.s[1]/2;
     assert.ok(Math.abs(ground(deck.p[0],deck.p[2]).point.y-top)<.04,'separate treehouse deck support');stairProbes++;
   }
   const stairs=treehouseStairRoute(data);
-  for(let x=Math.min(stairs[0].x,stairs[1].x);x<=Math.max(stairs[0].x,stairs[1].x);x+=.1)
-    for(const z of [stairs[0].z-.4,stairs[0].z,stairs[0].z+.4]){
-      assert.ok(Math.abs(ground(x,z).point.y-stairs[0].y)<.05,`stairs side path support at ${x}/${z}: ${ground(x,z).point.y}`);stairProbes++;
-    }
+  for(let i=0;i<=40;i++)for(const offset of [-.4,0,.4]) {
+    const p=stairs[0].clone().lerp(stairs[1],i/40);p.x+=offset;
+    assert.ok(Math.abs(ground(p.x,p.z).point.y-stairs[0].y)<.05,'continuous single ground mesh at stair approach');stairProbes++;
+  }
   let stairTicks=0;
   for(const path of [stairs,[...stairs].reverse()]){
     reset(path[0]);
@@ -251,7 +258,9 @@ try {
     const forward=level.cameraDirAt(player.pos.x,player.pos.y,player.pos.z,cameraCursor)??{x:0,z:-1};
     player.viewInput.reset();step(makeInput({moveX:(-dx*forward.z+dz*forward.x)/mag,moveY:(dx*forward.x+dz*forward.z)/mag}));safe('cabin facade');
   }
-  assert.ok(player.pos.z>facade.p[2]+facade.s[2]/2+.3,`cabin facade stops entry into visual shell: ${player.pos.toArray()}`);
+  const fa=(facade.yaw??0)*Math.PI/180;
+  const localZ=Math.sin(fa)*(player.pos.x-facade.p[0])+Math.cos(fa)*(player.pos.z-facade.p[2]);
+  assert.ok(localZ>facade.s[2]/2+.3,`cabin facade stops entry into visual shell: ${player.pos.toArray()}`);
   console.log(`PASS Treehouse Trail: held Right +${heldRightDistance.toFixed(1)}m, fresh forward after turn; ${samples} support probes, lowest floor ${minGround.toFixed(2)} m; ${(ticks*CONST.fixedStep).toFixed(1)} s real-input walk to finish (lowest feet ${minPlayerY.toFixed(2)} m); shallow pit landing, checkpoint spin/respawn, rail catch/exit and rope climb/release without deaths. Halfpipe: ${pipeProbes} floor/curve/deck probes, both open-end walk exits, both skating transitions and supported returns (peaks ${ridePeaks.join('/')} m). Treehouse: ${stairProbes} flight/deck/seam probes and ${(stairTicks*CONST.fixedStep).toFixed(1)} s real-input stair/landing/balcony climb/descent, with solid cabin facade.`);
 } finally {
   level?.dispose(); await server.close(); console.warn=warning;console.error=error;

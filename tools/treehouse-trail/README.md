@@ -1,6 +1,6 @@
 # Treehouse Trail modular art
 
-Six separate Meshy Smart Topology models were generated from isolated
+The original six Meshy Smart Topology modules and two refined hero models were generated from isolated
 references derived with the built-in `image_gen` tool from the user's
 `image 20.jpg`. The exact prompts are in `prompts.json` and
 `foliage-prompts.json`; the six selected reference PNGs are stored beside this
@@ -18,10 +18,7 @@ No complete treehouse model is published.
 | bush / `treehousebush` | 5 / 2.8 / 4.5 | 961 / 365 | Dense independent leaf cluster, anchored at bottom. |
 
 The shared `JungleAssetKit` normalizes each mesh to its placement size and
-loads two real levels of detail with one shared material per module. The
-published GLBs contain a 1024px JPEG color atlas and 512px normal map; the
-six models together total 4,398,816 bytes and 11,921 near / 4,527 far
-triangles. Meshy geometry and UVs are retained. Blender fits the balcony
+loads the authored geometry with one shared material per module. Simplified meshes remain in the GLBs for offline authoring; the runtime keeps the detailed mesh visible. The active opening modules now keep 2048px color atlases and 1024px normal maps. Exact current counts, byte sizes and hashes are in each manifest. Meshy geometry and UVs are retained. Blender fits the balcony
 deck and landing top to exact planes and the seven stair tops to equal
 normalized rises. Collision remains authored separately in the level.
 
@@ -58,7 +55,7 @@ stay in `.img2threejs/treehouse-trail/`. Final artwork stays in
 `src/levels/treehouse-trail.ts` owns the opening: a large cabin and balcony on
 the left, an open timber halfpipe on the right, then a rounded path into the
 existing forward bush route. The landmark assembly uses explicit per-piece
-sizes; its stair landings are at 0, 4.05 and 8.1 metres. Separate collision
+sizes; its stair landings are at 0, 2.8, 5.6 and 8.4 metres. Three short flights turn around the trunk, with shared rotated poses for each model and collider. Separate collision
 ramps make the stair flights walkable without changing player tuning.
 
 A `cameraView` component stores `cameraPosition`, `cameraTarget` and `cameraFov`
@@ -75,3 +72,23 @@ The original user JPEG remains untouched at
 Local review: `/treehouse-trail-review.html?playtest&level=treehouse-trail`
 (add `&lite` for collision checks). The review page is excluded from the
 production entry list. Focused gameplay check: `node tools/test-treehouse-trail.mjs`.
+
+## Structural and fidelity pass
+
+The opening now uses the detailed `body-v2` cabin and an independent `host`
+trunk with load-bearing forks. `balcony-deck` and `canopy` are fitted parts
+extracted from the retained Meshy balcony/tree, so the railing opening, roof
+clearance and trunk junction can be authored without stretching the whole
+assembly. Rounded beams, braces, posts, rope lashings and enclosed lanterns
+are separate source-owned mesh components in `src/levels/treehouse-opening.ts`.
+
+The halfpipe has 4.2m transitions, a 1.8m flat, 5.8m length and a -20-degree
+yaw, with a 32-step curved profile. Its surface sits 0.1m above the ground.
+The opening ground is one continuous indexed surface split into two adjacent
+editor-sized chunks; triangles never overlap. Painted vertex tint blends the
+trail and undergrowth. The midground matte feathers all four edges, and the
+opening camera preserves its horizontal composition in narrower app panes.
+
+This refinement used two additional Meshy tasks (30 credits). The new trunk
+reference was created with built-in imagegen; its exact prompt and the cabin
+reconstruction settings are recorded in `refinement-prompts.json`.

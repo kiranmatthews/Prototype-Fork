@@ -78,7 +78,8 @@ add('Rope approach', () => {
 add('Halfpipe entrance', () => {
   const half=level().captureData().components.find((c:any)=>c.t==='vertramp'&&c.vkind==='half');
   if(!half){mode='No halfpipe';return;}
-  place(new THREE.Vector3(half.p[0],half.p[1]+.1,half.p[2]+(half.len??30)/2+2));mode='Halfpipe entrance';
+  const angle=THREE.MathUtils.degToRad(half.yaw??0),distance=(half.len??30)/2+2;
+  place(new THREE.Vector3(half.p[0]+Math.sin(angle)*distance,half.p[1]+.1,half.p[2]+Math.cos(angle)*distance));mode='Halfpipe entrance';
 });
 add('Treehouse stairs', () => {
   place(treehouseStairRoute(level().captureData())[1].add(new THREE.Vector3(0,.1,0)));mode='Treehouse stairs';
@@ -105,17 +106,20 @@ player.step = (dt: number, input: any, current: any) => {
     ticks++;
     let target = route[waypoint];
     if (target && Math.hypot(target.x - player.pos.x, target.z - player.pos.z) < waypointRadius) target = route[++waypoint];
-    if (!target || player.state === 'finished') stop(player.state === 'finished' ? 'PASS: finished' : 'PASS: route ended');
+    if (!target || player.state === 'finished') {
+      const missedLanding=waypointRadius<1&&Math.abs(player.pos.y-route[route.length-1].y)>.45;
+      stop(missedLanding?'FAIL: missed landing height':player.state === 'finished' ? 'PASS: finished' : 'PASS: route ended');
+    }
     else if (['dead','gameover'].includes(player.state) || player.totalDeaths > startingDeaths) stop('FAIL: death');
     else if (ticks > 60 * 240) stop('FAIL: route timed out');
     else {
       const dx = target.x - player.pos.x, dz = target.z - player.pos.z, length = Math.hypot(dx, dz);
-      const heading=current.cameraDirAt(player.pos.x,player.pos.y,player.pos.z)??{x:0,z:-1};
-      const forward=new THREE.Vector3(heading.x,0,heading.z).normalize(),right=new THREE.Vector3(-forward.z,0,forward.x);
+      const forward=player.camDir.clone().setY(0).normalize(),right=new THREE.Vector3(-forward.z,0,forward.x);
       // Each input describes an intentional new world direction as the camera follows.
       player.viewInput.reset();
-      input.moveX = (dx * right.x + dz * right.z) / length;
-      input.moveY = (dx * forward.x + dz * forward.z) / length;
+      const pace=waypointRadius<1?0.65:1;
+      input.moveX = (dx * right.x + dz * right.z) / length * pace;
+      input.moveY = (dx * forward.x + dz * forward.z) / length * pace;
       input.jumpHeld = input.jumpPressed = input.jumpReleased = false;
       input.grindHeld = input.grindPressed = false;
       input.spinPressed = ticks % 45 === 1; input.spinHeld = false;

@@ -7,7 +7,8 @@
   "referenceGenerator": "Built-in image_gen",
   "referencePrompts": [
     "tools/treehouse-trail/prompts.json",
-    "tools/treehouse-trail/foliage-prompts.json"
+    "tools/treehouse-trail/foliage-prompts.json",
+    "tools/treehouse-trail/refinement-prompts.json"
   ],
   "tasks": {
     "body": {
@@ -51,14 +52,39 @@
       "id": "01a0a21c-9673-765b-a373-6d37af341037",
       "estimatedCredits": 15,
       "progress": 100
+    },
+    "host": {
+      "state": "SUCCEEDED",
+      "targetTriangles": 6000,
+      "id": "01a0a241-781c-74e2-beb4-1ad566755fe3",
+      "estimatedCredits": 15,
+      "progress": 100
+    },
+    "body-v2": {
+      "state": "SUCCEEDED",
+      "targetTriangles": 8000,
+      "id": "01a0a241-84c3-768f-9771-1babb211f1da",
+      "estimatedCredits": 15,
+      "progress": 100
     }
   },
   "credits": {
-    "publishedModules": 90,
+    "originalModules": 90,
+    "refinedHostAndCabin": 30,
     "supersededMonolithicStudy": 15,
-    "total": 105,
-    "evidence": "Official Meshy CLI balance difference across the seven recorded task submissions."
+    "total": 135,
+    "evidence": "Official Meshy CLI balance audits: 1826 to 1721 for the original seven tasks; 1721 to 1691 for the host/cabin refinement."
   },
+  "openingModules": [
+    "body-v2",
+    "host",
+    "balcony-deck",
+    "canopy",
+    "stairs",
+    "landing",
+    "tree",
+    "bush"
+  ],
   "reusedMeshyFoliage": {
     "registry": "src/jungleModules.ts and src/jungleAssets.ts",
     "provenance": "tools/jungle-kit/tasks.json",
@@ -72,6 +98,10 @@
   },
   "moduleNotes": {
     "body": "Front +Z; no attached balcony, tree or stairs.",
+    "body-v2": "More detailed 8K-target Meshy cabin, kept near its source proportions; 2K color and 1K normal atlas.",
+    "host": "Independent rooted load-bearing fork, with broad boughs physically beneath the deck.",
+    "balcony-deck": "Actual Meshy balcony deck extracted from the original module; separate source-authored ropes leave a correct stair entry.",
+    "canopy": "Upper crown extracted from the Meshy tree to keep foliage outside the cabin and its support junction.",
     "balcony": "Open long edge -Z; deck contact plane normalized Y=1/6; total height1.5m gives deck top0.25m above bottom.",
     "stairs": "Seven actual Meshy treads, open risers, no handrails; rise +Z to -Z; fitted normalized tread levels1/7 through1.",
     "landing": "Flat top normalized Y=1; no rails or supports extending below module bounds.",
@@ -373,6 +403,299 @@
       "referenceSha256": "d270b8822b1a325fe3d12db06c072d06a3ca5a6b43bd743af369ff1501e59fb8"
     },
     {
+      "name": "body-v2",
+      "triangles": 7555,
+      "lodTriangles": 2870,
+      "sourceSpanGltf": [
+        0.9082030057907104,
+        0.7265620231628418,
+        1.0
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.45507800579071045,
+          -0.5,
+          -0.3632810115814209
+        ],
+        [
+          0.453125,
+          0.5,
+          0.3632810115814209
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "centerlineFromPositiveZ": [
+        {
+          "along": 0.00769,
+          "top": 0.87181
+        },
+        {
+          "along": 0.02308,
+          "top": 0.86813
+        },
+        {
+          "along": 0.03846,
+          "top": 0.86445
+        },
+        {
+          "along": 0.05385,
+          "top": 0.8615
+        },
+        {
+          "along": 0.06923,
+          "top": 0.85908
+        },
+        {
+          "along": 0.08462,
+          "top": 0.85639
+        },
+        {
+          "along": 0.1,
+          "top": 0.85368
+        },
+        {
+          "along": 0.11538,
+          "top": 0.86749
+        },
+        {
+          "along": 0.13077,
+          "top": 0.86751
+        },
+        {
+          "along": 0.14615,
+          "top": 0.86139
+        },
+        {
+          "along": 0.16154,
+          "top": 0.85042
+        },
+        {
+          "along": 0.17692,
+          "top": 0.84988
+        },
+        {
+          "along": 0.19231,
+          "top": 0.84888
+        },
+        {
+          "along": 0.20769,
+          "top": 0.84843
+        },
+        {
+          "along": 0.22308,
+          "top": 0.84844
+        },
+        {
+          "along": 0.23846,
+          "top": 0.84845
+        },
+        {
+          "along": 0.25385,
+          "top": 0.84846
+        },
+        {
+          "along": 0.26923,
+          "top": 0.84892
+        },
+        {
+          "along": 0.28462,
+          "top": 0.84939
+        },
+        {
+          "along": 0.3,
+          "top": 0.85045
+        },
+        {
+          "along": 0.31538,
+          "top": 0.85162
+        },
+        {
+          "along": 0.33077,
+          "top": 0.8528
+        },
+        {
+          "along": 0.34615,
+          "top": 0.85391
+        },
+        {
+          "along": 0.36154,
+          "top": 0.85469
+        },
+        {
+          "along": 0.37692,
+          "top": 0.85548
+        },
+        {
+          "along": 0.39231,
+          "top": 0.85623
+        },
+        {
+          "along": 0.40769,
+          "top": 0.85656
+        },
+        {
+          "along": 0.42308,
+          "top": 0.85688
+        },
+        {
+          "along": 0.43846,
+          "top": 0.85721
+        },
+        {
+          "along": 0.45385,
+          "top": 0.85754
+        },
+        {
+          "along": 0.46923,
+          "top": 0.85819
+        },
+        {
+          "along": 0.48462,
+          "top": 0.85884
+        },
+        {
+          "along": 0.5,
+          "top": 0.85949
+        },
+        {
+          "along": 0.51538,
+          "top": 0.86166
+        },
+        {
+          "along": 0.53077,
+          "top": 0.86405
+        },
+        {
+          "along": 0.54615,
+          "top": 0.86645
+        },
+        {
+          "along": 0.56154,
+          "top": 0.86884
+        },
+        {
+          "along": 0.57692,
+          "top": 0.87124
+        },
+        {
+          "along": 0.59231,
+          "top": 0.87357
+        },
+        {
+          "along": 0.60769,
+          "top": 0.87511
+        },
+        {
+          "along": 0.62308,
+          "top": 0.87692
+        },
+        {
+          "along": 0.63846,
+          "top": 0.89264
+        },
+        {
+          "along": 0.65385,
+          "top": 0.89262
+        },
+        {
+          "along": 0.66923,
+          "top": 0.87944
+        },
+        {
+          "along": 0.68462,
+          "top": 0.87908
+        },
+        {
+          "along": 0.7,
+          "top": 0.87896
+        },
+        {
+          "along": 0.71538,
+          "top": 0.87886
+        },
+        {
+          "along": 0.73077,
+          "top": 0.83175
+        },
+        {
+          "along": 0.74615,
+          "top": 0.83333
+        },
+        {
+          "along": 0.76154,
+          "top": 0.8325
+        },
+        {
+          "along": 0.77692,
+          "top": 0.83251
+        },
+        {
+          "along": 0.79231,
+          "top": 0.83255
+        },
+        {
+          "along": 0.80769,
+          "top": 0.88686
+        },
+        {
+          "along": 0.82308,
+          "top": 0.88746
+        },
+        {
+          "along": 0.83846,
+          "top": 0.88319
+        },
+        {
+          "along": 0.85385,
+          "top": 0.84975
+        },
+        {
+          "along": 0.86923,
+          "top": null
+        },
+        {
+          "along": 0.88462,
+          "top": null
+        },
+        {
+          "along": 0.9,
+          "top": null
+        },
+        {
+          "along": 0.91538,
+          "top": null
+        },
+        {
+          "along": 0.93077,
+          "top": null
+        },
+        {
+          "along": 0.94615,
+          "top": null
+        },
+        {
+          "along": 0.96154,
+          "top": null
+        },
+        {
+          "along": 0.97692,
+          "top": null
+        },
+        {
+          "along": 0.99231,
+          "top": null
+        }
+      ],
+      "bytes": 2425360,
+      "sha256": "8f3d57bc72d75fa5a12f3aa32e08bd67665a15b6a44d12342c05e6b1b8722d84",
+      "sourceSha256": "4db015166713a6c574a701bc0aca5bafeef73996738b9a40650badc9aea4c149",
+      "albedoResolution": 2048,
+      "normalResolution": 1024,
+      "path": "body-v2.glb",
+      "referenceSha256": "d270b8822b1a325fe3d12db06c072d06a3ca5a6b43bd743af369ff1501e59fb8"
+    },
+    {
       "name": "balcony",
       "triangles": 2050,
       "lodTriangles": 779,
@@ -666,6 +989,299 @@
       "referenceSha256": "84efad7dc001cb45405d8454b833f36c640d4a2c7c6adb8008368017307ebadf"
     },
     {
+      "name": "balcony-deck",
+      "triangles": 432,
+      "lodTriangles": 162,
+      "sourceSpanGltf": [
+        0.9980469942092896,
+        0.05932619795203209,
+        0.4609379768371582
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.49804699420928955,
+          -0.22851599752902985,
+          -0.0976559966802597
+        ],
+        [
+          0.5,
+          0.23242199420928955,
+          -0.038329798728227615
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "centerlineFromPositiveZ": [
+        {
+          "along": 0.00769,
+          "top": 1.0
+        },
+        {
+          "along": 0.02308,
+          "top": 1.0
+        },
+        {
+          "along": 0.03846,
+          "top": 1.0
+        },
+        {
+          "along": 0.05385,
+          "top": 1.0
+        },
+        {
+          "along": 0.06923,
+          "top": 1.0
+        },
+        {
+          "along": 0.08462,
+          "top": 1.0
+        },
+        {
+          "along": 0.1,
+          "top": 1.0
+        },
+        {
+          "along": 0.11538,
+          "top": 1.0
+        },
+        {
+          "along": 0.13077,
+          "top": 1.0
+        },
+        {
+          "along": 0.14615,
+          "top": 1.0
+        },
+        {
+          "along": 0.16154,
+          "top": 1.0
+        },
+        {
+          "along": 0.17692,
+          "top": 1.0
+        },
+        {
+          "along": 0.19231,
+          "top": 1.0
+        },
+        {
+          "along": 0.20769,
+          "top": 1.0
+        },
+        {
+          "along": 0.22308,
+          "top": 1.0
+        },
+        {
+          "along": 0.23846,
+          "top": 1.0
+        },
+        {
+          "along": 0.25385,
+          "top": 1.0
+        },
+        {
+          "along": 0.26923,
+          "top": 1.0
+        },
+        {
+          "along": 0.28462,
+          "top": 1.0
+        },
+        {
+          "along": 0.3,
+          "top": 1.0
+        },
+        {
+          "along": 0.31538,
+          "top": 1.0
+        },
+        {
+          "along": 0.33077,
+          "top": 1.0
+        },
+        {
+          "along": 0.34615,
+          "top": 1.0
+        },
+        {
+          "along": 0.36154,
+          "top": 1.0
+        },
+        {
+          "along": 0.37692,
+          "top": 1.0
+        },
+        {
+          "along": 0.39231,
+          "top": 1.0
+        },
+        {
+          "along": 0.40769,
+          "top": 1.0
+        },
+        {
+          "along": 0.42308,
+          "top": 1.0
+        },
+        {
+          "along": 0.43846,
+          "top": 1.0
+        },
+        {
+          "along": 0.45385,
+          "top": 1.0
+        },
+        {
+          "along": 0.46923,
+          "top": 1.0
+        },
+        {
+          "along": 0.48462,
+          "top": 1.0
+        },
+        {
+          "along": 0.5,
+          "top": 1.0
+        },
+        {
+          "along": 0.51538,
+          "top": 1.0
+        },
+        {
+          "along": 0.53077,
+          "top": 1.0
+        },
+        {
+          "along": 0.54615,
+          "top": 1.0
+        },
+        {
+          "along": 0.56154,
+          "top": 1.0
+        },
+        {
+          "along": 0.57692,
+          "top": 1.0
+        },
+        {
+          "along": 0.59231,
+          "top": 1.0
+        },
+        {
+          "along": 0.60769,
+          "top": 1.0
+        },
+        {
+          "along": 0.62308,
+          "top": 1.0
+        },
+        {
+          "along": 0.63846,
+          "top": 1.0
+        },
+        {
+          "along": 0.65385,
+          "top": 1.0
+        },
+        {
+          "along": 0.66923,
+          "top": 1.0
+        },
+        {
+          "along": 0.68462,
+          "top": 1.0
+        },
+        {
+          "along": 0.7,
+          "top": 1.0
+        },
+        {
+          "along": 0.71538,
+          "top": 1.0
+        },
+        {
+          "along": 0.73077,
+          "top": 1.0
+        },
+        {
+          "along": 0.74615,
+          "top": 1.0
+        },
+        {
+          "along": 0.76154,
+          "top": 1.0
+        },
+        {
+          "along": 0.77692,
+          "top": 1.0
+        },
+        {
+          "along": 0.79231,
+          "top": 1.0
+        },
+        {
+          "along": 0.80769,
+          "top": 1.0
+        },
+        {
+          "along": 0.82308,
+          "top": 1.0
+        },
+        {
+          "along": 0.83846,
+          "top": 1.0
+        },
+        {
+          "along": 0.85385,
+          "top": 1.0
+        },
+        {
+          "along": 0.86923,
+          "top": 1.0
+        },
+        {
+          "along": 0.88462,
+          "top": 1.0
+        },
+        {
+          "along": 0.9,
+          "top": 1.0
+        },
+        {
+          "along": 0.91538,
+          "top": 1.0
+        },
+        {
+          "along": 0.93077,
+          "top": 1.0
+        },
+        {
+          "along": 0.94615,
+          "top": 1.0
+        },
+        {
+          "along": 0.96154,
+          "top": 1.0
+        },
+        {
+          "along": 0.97692,
+          "top": null
+        },
+        {
+          "along": 0.99231,
+          "top": null
+        }
+      ],
+      "bytes": 2215988,
+      "sha256": "61280eb49f4a8289bfed74a97f1f7e8c75c6657f3f7900d4d561fb5cabbe96ef",
+      "sourceSha256": "d6b9d0299ec9e63839f0735c7ffb20cf0492571728cf8a659964c2cb99015ff4",
+      "albedoResolution": 2048,
+      "normalResolution": 1024,
+      "path": "balcony-deck.glb",
+      "referenceSha256": "84efad7dc001cb45405d8454b833f36c640d4a2c7c6adb8008368017307ebadf"
+    },
+    {
       "name": "stairs",
       "triangles": 1880,
       "lodTriangles": 714,
@@ -950,11 +1566,11 @@
           "top": null
         }
       ],
-      "bytes": 667964,
-      "sha256": "52728784a728ef4abf6baa813fb2d1b76e3d002908c88bcf726471a8cd489c3f",
+      "bytes": 2117412,
+      "sha256": "6de4fab5953fda3b0bcdbc9ec026f24a36b41aaffb617191c2ee1aaa06b24fb7",
       "sourceSha256": "5a1ed72e6478b73fde58e1136116199a362fe36335ca8d7eaf03e6259d50cbb2",
-      "albedoResolution": 1024,
-      "normalResolution": 512,
+      "albedoResolution": 2048,
+      "normalResolution": 1024,
       "path": "stairs.glb",
       "referenceSha256": "5a8a52d82485d22e234ae0113fb8e89f64a7baa4d7d3968134aa1fc0b2a32399"
     },
@@ -1243,11 +1859,11 @@
           "top": null
         }
       ],
-      "bytes": 616600,
-      "sha256": "7124f01f3697a155236e15db9eab6e5f80546b3be254e14dd19cdb47bec214d0",
+      "bytes": 1965184,
+      "sha256": "b2e69db8f26ca0e2b5e7e34be512d50ec3816e085fabac716c3d80a0e20fd4c6",
       "sourceSha256": "1f3eb403b1092804a54c247fb529dfa008e6d54a7225006b00273827d5971058",
-      "albedoResolution": 1024,
-      "normalResolution": 512,
+      "albedoResolution": 2048,
+      "normalResolution": 1024,
       "path": "landing.glb",
       "referenceSha256": "c52c1375ac0451f27117882d36da110bc185b90397a4f3d6274fb6f8f95e4700"
     },
@@ -1536,13 +2152,599 @@
           "top": 0.46422
         }
       ],
-      "bytes": 873132,
-      "sha256": "f9ccf8f9721466ddebc709f93dc4e3dcd1411167db02fa159b421a622268597d",
+      "bytes": 2558712,
+      "sha256": "eb6f971b6b7fb96939e6b392a295014942885b4f5b3025e43a91b4ad9c1b486d",
       "sourceSha256": "0c8f4bf69e20274185102a6e264c9db6ae6b7721865b6f1366f501e630e57176",
-      "albedoResolution": 1024,
-      "normalResolution": 512,
+      "albedoResolution": 2048,
+      "normalResolution": 1024,
       "path": "tree.glb",
       "referenceSha256": "86ecf691e9d7de53513f6d7d6b85918a3b5741dba4507994b70274ca95585f4b"
+    },
+    {
+      "name": "canopy",
+      "triangles": 1301,
+      "lodTriangles": 494,
+      "sourceSpanGltf": [
+        0.9667969942092896,
+        0.32580500841140747,
+        0.90625
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.5,
+          -0.47070300579071045,
+          0.02185099944472313
+        ],
+        [
+          0.46679699420928955,
+          0.43554699420928955,
+          0.3476560115814209
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "centerlineFromPositiveZ": [
+        {
+          "along": 0.00769,
+          "top": null
+        },
+        {
+          "along": 0.02308,
+          "top": null
+        },
+        {
+          "along": 0.03846,
+          "top": null
+        },
+        {
+          "along": 0.05385,
+          "top": null
+        },
+        {
+          "along": 0.06923,
+          "top": null
+        },
+        {
+          "along": 0.08462,
+          "top": null
+        },
+        {
+          "along": 0.1,
+          "top": null
+        },
+        {
+          "along": 0.11538,
+          "top": null
+        },
+        {
+          "along": 0.13077,
+          "top": null
+        },
+        {
+          "along": 0.14615,
+          "top": null
+        },
+        {
+          "along": 0.16154,
+          "top": null
+        },
+        {
+          "along": 0.17692,
+          "top": null
+        },
+        {
+          "along": 0.19231,
+          "top": null
+        },
+        {
+          "along": 0.20769,
+          "top": null
+        },
+        {
+          "along": 0.22308,
+          "top": null
+        },
+        {
+          "along": 0.23846,
+          "top": null
+        },
+        {
+          "along": 0.25385,
+          "top": 0.66878
+        },
+        {
+          "along": 0.26923,
+          "top": 0.7704
+        },
+        {
+          "along": 0.28462,
+          "top": 0.88478
+        },
+        {
+          "along": 0.3,
+          "top": 0.90048
+        },
+        {
+          "along": 0.31538,
+          "top": 0.91618
+        },
+        {
+          "along": 0.33077,
+          "top": 0.93188
+        },
+        {
+          "along": 0.34615,
+          "top": 0.94522
+        },
+        {
+          "along": 0.36154,
+          "top": 0.94704
+        },
+        {
+          "along": 0.37692,
+          "top": 0.93313
+        },
+        {
+          "along": 0.39231,
+          "top": 0.91321
+        },
+        {
+          "along": 0.40769,
+          "top": 0.89328
+        },
+        {
+          "along": 0.42308,
+          "top": 0.87336
+        },
+        {
+          "along": 0.43846,
+          "top": 0.82742
+        },
+        {
+          "along": 0.45385,
+          "top": 0.81644
+        },
+        {
+          "along": 0.46923,
+          "top": 0.80545
+        },
+        {
+          "along": 0.48462,
+          "top": 0.79447
+        },
+        {
+          "along": 0.5,
+          "top": 0.7578
+        },
+        {
+          "along": 0.51538,
+          "top": 0.77223
+        },
+        {
+          "along": 0.53077,
+          "top": 0.78666
+        },
+        {
+          "along": 0.54615,
+          "top": 0.80109
+        },
+        {
+          "along": 0.56154,
+          "top": 0.79452
+        },
+        {
+          "along": 0.57692,
+          "top": 0.78142
+        },
+        {
+          "along": 0.59231,
+          "top": 0.85283
+        },
+        {
+          "along": 0.60769,
+          "top": 0.85389
+        },
+        {
+          "along": 0.62308,
+          "top": 0.85495
+        },
+        {
+          "along": 0.63846,
+          "top": 0.84488
+        },
+        {
+          "along": 0.65385,
+          "top": 0.8336
+        },
+        {
+          "along": 0.66923,
+          "top": 0.82478
+        },
+        {
+          "along": 0.68462,
+          "top": 0.81249
+        },
+        {
+          "along": 0.7,
+          "top": 0.77567
+        },
+        {
+          "along": 0.71538,
+          "top": 0.70721
+        },
+        {
+          "along": 0.73077,
+          "top": 0.62425
+        },
+        {
+          "along": 0.74615,
+          "top": 0.36865
+        },
+        {
+          "along": 0.76154,
+          "top": 0.39474
+        },
+        {
+          "along": 0.77692,
+          "top": 0.39369
+        },
+        {
+          "along": 0.79231,
+          "top": 0.38974
+        },
+        {
+          "along": 0.80769,
+          "top": 0.38579
+        },
+        {
+          "along": 0.82308,
+          "top": 0.34522
+        },
+        {
+          "along": 0.83846,
+          "top": 0.34126
+        },
+        {
+          "along": 0.85385,
+          "top": 0.3373
+        },
+        {
+          "along": 0.86923,
+          "top": 0.33409
+        },
+        {
+          "along": 0.88462,
+          "top": 0.32436
+        },
+        {
+          "along": 0.9,
+          "top": 0.28584
+        },
+        {
+          "along": 0.91538,
+          "top": 0.24179
+        },
+        {
+          "along": 0.93077,
+          "top": 0.21378
+        },
+        {
+          "along": 0.94615,
+          "top": 0.15543
+        },
+        {
+          "along": 0.96154,
+          "top": null
+        },
+        {
+          "along": 0.97692,
+          "top": null
+        },
+        {
+          "along": 0.99231,
+          "top": null
+        }
+      ],
+      "bytes": 2437488,
+      "sha256": "45c4e40430c009dd8900cfaa473157344b1fcdeb031afa2117fcf61be82ec380",
+      "sourceSha256": "0c8f4bf69e20274185102a6e264c9db6ae6b7721865b6f1366f501e630e57176",
+      "albedoResolution": 2048,
+      "normalResolution": 1024,
+      "path": "canopy.glb",
+      "referenceSha256": "86ecf691e9d7de53513f6d7d6b85918a3b5741dba4507994b70274ca95585f4b"
+    },
+    {
+      "name": "host",
+      "triangles": 6662,
+      "lodTriangles": 2531,
+      "sourceSpanGltf": [
+        1.0,
+        1.0,
+        0.7128909826278687
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.5,
+          -0.35742199420928955,
+          -0.5
+        ],
+        [
+          0.5,
+          0.3554689884185791,
+          0.5
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "centerlineFromPositiveZ": [
+        {
+          "along": 0.00769,
+          "top": null
+        },
+        {
+          "along": 0.02308,
+          "top": null
+        },
+        {
+          "along": 0.03846,
+          "top": null
+        },
+        {
+          "along": 0.05385,
+          "top": null
+        },
+        {
+          "along": 0.06923,
+          "top": null
+        },
+        {
+          "along": 0.08462,
+          "top": null
+        },
+        {
+          "along": 0.1,
+          "top": null
+        },
+        {
+          "along": 0.11538,
+          "top": null
+        },
+        {
+          "along": 0.13077,
+          "top": null
+        },
+        {
+          "along": 0.14615,
+          "top": null
+        },
+        {
+          "along": 0.16154,
+          "top": 0.00881
+        },
+        {
+          "along": 0.17692,
+          "top": 0.02898
+        },
+        {
+          "along": 0.19231,
+          "top": 0.03373
+        },
+        {
+          "along": 0.20769,
+          "top": 0.03003
+        },
+        {
+          "along": 0.22308,
+          "top": 0.0148
+        },
+        {
+          "along": 0.23846,
+          "top": null
+        },
+        {
+          "along": 0.25385,
+          "top": null
+        },
+        {
+          "along": 0.26923,
+          "top": null
+        },
+        {
+          "along": 0.28462,
+          "top": null
+        },
+        {
+          "along": 0.3,
+          "top": null
+        },
+        {
+          "along": 0.31538,
+          "top": null
+        },
+        {
+          "along": 0.33077,
+          "top": 0.06117
+        },
+        {
+          "along": 0.34615,
+          "top": 0.14863
+        },
+        {
+          "along": 0.36154,
+          "top": 0.16515
+        },
+        {
+          "along": 0.37692,
+          "top": 0.18967
+        },
+        {
+          "along": 0.39231,
+          "top": 0.22852
+        },
+        {
+          "along": 0.40769,
+          "top": 0.5015
+        },
+        {
+          "along": 0.42308,
+          "top": 0.52123
+        },
+        {
+          "along": 0.43846,
+          "top": 0.53057
+        },
+        {
+          "along": 0.45385,
+          "top": 0.56274
+        },
+        {
+          "along": 0.46923,
+          "top": 0.5722
+        },
+        {
+          "along": 0.48462,
+          "top": 0.58372
+        },
+        {
+          "along": 0.5,
+          "top": 0.62762
+        },
+        {
+          "along": 0.51538,
+          "top": 0.72887
+        },
+        {
+          "along": 0.53077,
+          "top": 0.78154
+        },
+        {
+          "along": 0.54615,
+          "top": 0.89173
+        },
+        {
+          "along": 0.56154,
+          "top": 0.89537
+        },
+        {
+          "along": 0.57692,
+          "top": 0.89661
+        },
+        {
+          "along": 0.59231,
+          "top": 0.90143
+        },
+        {
+          "along": 0.60769,
+          "top": 0.90196
+        },
+        {
+          "along": 0.62308,
+          "top": 0.9068
+        },
+        {
+          "along": 0.63846,
+          "top": 0.89516
+        },
+        {
+          "along": 0.65385,
+          "top": 0.88785
+        },
+        {
+          "along": 0.66923,
+          "top": 0.89926
+        },
+        {
+          "along": 0.68462,
+          "top": 0.91577
+        },
+        {
+          "along": 0.7,
+          "top": 0.93303
+        },
+        {
+          "along": 0.71538,
+          "top": 0.93241
+        },
+        {
+          "along": 0.73077,
+          "top": 0.92232
+        },
+        {
+          "along": 0.74615,
+          "top": 0.91442
+        },
+        {
+          "along": 0.76154,
+          "top": 0.19703
+        },
+        {
+          "along": 0.77692,
+          "top": 0.1747
+        },
+        {
+          "along": 0.79231,
+          "top": 0.15559
+        },
+        {
+          "along": 0.80769,
+          "top": 0.1391
+        },
+        {
+          "along": 0.82308,
+          "top": 0.12597
+        },
+        {
+          "along": 0.83846,
+          "top": 0.11653
+        },
+        {
+          "along": 0.85385,
+          "top": 0.10344
+        },
+        {
+          "along": 0.86923,
+          "top": 0.09906
+        },
+        {
+          "along": 0.88462,
+          "top": 0.08601
+        },
+        {
+          "along": 0.9,
+          "top": null
+        },
+        {
+          "along": 0.91538,
+          "top": null
+        },
+        {
+          "along": 0.93077,
+          "top": null
+        },
+        {
+          "along": 0.94615,
+          "top": null
+        },
+        {
+          "along": 0.96154,
+          "top": null
+        },
+        {
+          "along": 0.97692,
+          "top": null
+        },
+        {
+          "along": 0.99231,
+          "top": null
+        }
+      ],
+      "bytes": 2512708,
+      "sha256": "26e300804de69c5d5c7f59ccb36ed8e9f177a53fc8ae0c399aa23c973325098a",
+      "sourceSha256": "70e71f3ee9d110536d3d3d6ed1c99f25707eb757cd294a609710414a4ab517e6",
+      "albedoResolution": 2048,
+      "normalResolution": 1024,
+      "path": "host.glb",
+      "referenceSha256": "fb52f934df0bd7566dcba3e4bdd8de2298da938389e4e18a7fa69e45f3ab9a02"
     },
     {
       "name": "bush",
@@ -1829,11 +3031,11 @@
           "top": null
         }
       ],
-      "bytes": 718344,
-      "sha256": "45f9324f3d553dcf6f107682f8896fcf90a27f257265a5404836ca50622f17a9",
+      "bytes": 2311716,
+      "sha256": "73e4e12d3b87a7251ea9f11497d424ea63762dbd148cce9f2051b52f4cf874c8",
       "sourceSha256": "719501a58fdd59ee5348307b48b48ddad526eae4df09cf2bff9eec1648e0dd14",
-      "albedoResolution": 1024,
-      "normalResolution": 512,
+      "albedoResolution": 2048,
+      "normalResolution": 1024,
       "path": "bush.glb",
       "referenceSha256": "84dabf7105694c3c0edcd4bb741916d4c6daee82bdb6c584f43048ddc5456e2b"
     }

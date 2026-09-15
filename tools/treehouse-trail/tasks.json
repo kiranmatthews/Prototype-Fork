@@ -49,6 +49,20 @@
       "id": "01a0a21c-9673-765b-a373-6d37af341037",
       "estimatedCredits": 15,
       "progress": 100
+    },
+    "host": {
+      "state": "SUCCEEDED",
+      "targetTriangles": 6000,
+      "id": "01a0a241-781c-74e2-beb4-1ad566755fe3",
+      "estimatedCredits": 15,
+      "progress": 100
+    },
+    "body-v2": {
+      "state": "SUCCEEDED",
+      "targetTriangles": 8000,
+      "id": "01a0a241-84c3-768f-9771-1babb211f1da",
+      "estimatedCredits": 15,
+      "progress": 100
     }
   }
 }

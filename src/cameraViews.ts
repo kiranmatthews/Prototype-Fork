@@ -9,6 +9,7 @@ export interface CameraView {
   cameraPosition?: readonly [number, number, number];
   cameraTarget?: readonly [number, number, number];
   cameraFov?: number;
+  cameraAspect?: number;
 }
 
 export interface CameraViewMatch { view: CameraView; weight: number; }
@@ -63,7 +64,9 @@ export class CameraViewFraming {
       camera.up.lerp(this.worldUp,weight).normalize();
     }
     if(view.cameraFov!==undefined){
-      camera.fov=THREE.MathUtils.lerp(camera.fov,view.cameraFov,weight);camera.updateProjectionMatrix();
+      const fit=Math.max(1,(view.cameraAspect??camera.aspect)/camera.aspect);
+      const fov=fit>1?Math.min(120,THREE.MathUtils.radToDeg(2*Math.atan(Math.tan(THREE.MathUtils.degToRad(view.cameraFov)*.5)*fit))):view.cameraFov;
+      camera.fov=THREE.MathUtils.lerp(camera.fov,fov,weight);camera.updateProjectionMatrix();
     }
   }
 }

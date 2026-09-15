@@ -1,4 +1,4 @@
-"""Keep Meshy geometry/UVs, pack one shared 1K albedo and 512px normal map."""
+"""Keep Meshy geometry/UVs and the detailed 2K color / 1K normal atlases."""
 from pathlib import Path
 import hashlib
 import io
@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[2]
 WORK = ROOT / '.img2threejs/treehouse-trail'
 OUT = ROOT / 'public/treehouse-trail'
 name = sys.argv[1]
-assert name in {'body', 'balcony', 'stairs', 'landing', 'tree', 'bush'}
+assert name in {'body', 'body-v2', 'balcony', 'stairs', 'landing', 'tree', 'bush', 'host', 'balcony-deck', 'canopy'}
 raw = (WORK / (name + '-lods.glb')).read_bytes()
 n = struct.unpack_from('<I', raw, 12)[0]
 doc = json.loads(raw[20:20+n])
@@ -52,10 +52,10 @@ def texture(index, resolution, name, quality):
     return len(textures)-1
 pbr = source_material['pbrMetallicRoughness']
 material = {'name': 'Treehouse Trail painted wood and leaves', 'doubleSided': False,
-    'pbrMetallicRoughness': {'baseColorTexture': {'index': texture(pbr['baseColorTexture']['index'], 1024, name + '-albedo', 94)},
+    'pbrMetallicRoughness': {'baseColorTexture': {'index': texture(pbr['baseColorTexture']['index'], 2048, name + '-albedo', 95)},
     'metallicFactor': 0, 'roughnessFactor': .91}}
 if 'normalTexture' in source_material:
-    material['normalTexture'] = {'index': texture(source_material['normalTexture']['index'], 512, name + '-normal', 96), 'scale': .18}
+    material['normalTexture'] = {'index': texture(source_material['normalTexture']['index'], 1024, name + '-normal', 96), 'scale': .18}
 doc['materials'] = [material]
 doc['bufferViews'] = views
 doc['images'] = images
@@ -64,10 +64,11 @@ doc['samplers'] = [{'magFilter': 9729, 'minFilter': 9987, 'wrapS': 33071, 'wrapT
 doc['buffers'] = [{'byteLength': len(packed)}]
 doc.pop('extensionsUsed', None)
 doc.pop('extensionsRequired', None)
-source_hash = hashlib.sha256((WORK / (name + '-source.glb')).read_bytes()).hexdigest()
+source_name = {'balcony-deck': 'balcony', 'canopy': 'tree'}.get(name, name)
+source_hash = hashlib.sha256((WORK / (source_name + '-source.glb')).read_bytes()).hexdigest()
 doc['asset'] = {'version': '2.0', 'generator': 'Meshy Smart Topology / Treehouse Trail web pack',
     'copyright': 'Created with Meshy and OpenAI image generation for the project owner.',
-    'extras': {'sourceSha256': source_hash, 'lods': 2, 'albedoResolution': 1024, 'normalResolution': 512}}
+    'extras': {'sourceSha256': source_hash, 'lods': 2, 'albedoResolution': 2048, 'normalResolution': 1024}}
 js = json.dumps(doc, separators=(',', ':')).encode()
 js += b' ' * (-len(js) % 4)
 packed.extend(b'\0' * (-len(packed) % 4))
@@ -75,6 +76,6 @@ glb = struct.pack('<III', 0x46546c67, 2, 28+len(js)+len(packed)) + struct.pack('
 (OUT / (name + '.glb')).write_bytes(glb)
 report = {'name': name, **json.loads((WORK / (name + '-geometry.json')).read_text()), 'bytes': len(glb),
     'sha256': hashlib.sha256(glb).hexdigest(), 'sourceSha256': source_hash,
-    'albedoResolution': 1024, 'normalResolution': 512}
+    'albedoResolution': 2048, 'normalResolution': 1024}
 (OUT / (name + '-manifest.json')).write_text(json.dumps(report, indent=2) + '\n')
 print(json.dumps({k: report[k] for k in ['name', 'triangles', 'lodTriangles', 'bytes', 'sha256']}, indent=2))

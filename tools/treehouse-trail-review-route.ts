@@ -30,9 +30,7 @@ export function treehouseReviewRoute(data: CustomLevelData, overshoot = 3): THRE
 export function treehouseStairRoute(data: CustomLevelData): THREE.Vector3[] {
   const decks = data.components.filter(c => c.nm === 'Treehouse landing support').sort((a,b) => a.p[1] - b.p[1]);
   const balcony = data.components.find(c => c.nm === 'Treehouse balcony support');
-  const approach = data.components.find(c => c.nm === 'Treehouse side path');
-  if (!decks.length || !balcony || !approach) throw new Error('Missing treehouse support chunks');
+  if (!decks.length || !balcony) throw new Error('Missing treehouse support chunks');
   const top = (c: typeof balcony) => new THREE.Vector3(c.p[0], c.p[1] + (c.s?.[1] ?? 0) / 2, c.p[2]);
-  const edgeX = approach.p[0] + (approach.pts ? Math.max(...approach.pts.map(p => p[0])) : (approach.s?.[0] ?? 0) / 2);
-  return [new THREE.Vector3(edgeX, top(approach).y, decks[0].p[2]), ...decks.map(top), top(balcony)];
+  return [new THREE.Vector3(decks[0].p[0], 0, data.spawn[2]), ...decks.map(top), top(balcony)];
 }

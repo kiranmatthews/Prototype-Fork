@@ -283,9 +283,9 @@
       "top": 0.46422
     }
   ],
-  "bytes": 873132,
-  "sha256": "f9ccf8f9721466ddebc709f93dc4e3dcd1411167db02fa159b421a622268597d",
+  "bytes": 2558712,
+  "sha256": "eb6f971b6b7fb96939e6b392a295014942885b4f5b3025e43a91b4ad9c1b486d",
   "sourceSha256": "0c8f4bf69e20274185102a6e264c9db6ae6b7721865b6f1366f501e630e57176",
-  "albedoResolution": 1024,
-  "normalResolution": 512
+  "albedoResolution": 2048,
+  "normalResolution": 1024
 }
