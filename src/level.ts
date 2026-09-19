@@ -7205,6 +7205,8 @@ export class Level {
             : [];
         for (const material of materials) {
           preservedMaterials.add(material);
+          const grass=material.userData.jungleGrassTexture as THREE.Texture|undefined;
+          if(grass?.isTexture)preservedTextures.add(grass);
           for (const value of Object.values(material)) {
             const texture = value as THREE.Texture | null;
             if (texture?.isTexture) preservedTextures.add(texture);
@@ -7284,13 +7286,16 @@ export class Level {
     // Environment owners were removed before generic traversal; styled meshes
     // may already have released these same maps through their texture slots.
     // A retained successor keeps them alive and releases them on its own turn.
-    for (const texture of this.ownedUnitySandTextures) {
+    // Shader-only maps (notably the trail grass blend) have no material.map
+    // slot. Include the level's caches, including textures on removed props.
+    for (const texture of new Set([...this.ownedUnitySandTextures,...this.surfTexCache.values(),...this.decorTexCache.values(),...this.trickGateTexCache.values()])) {
       if (preservedTextures.has(texture) || disposedTextures.has(texture) || texture.userData.shared) continue;
       disposedTextures.add(texture);
       texture.userData.disposed = true;
       texture.dispose();
     }
     this.ownedUnitySandTextures.clear();
+    this.surfTexCache.clear();this.decorTexCache.clear();this.trickGateTexCache.clear();
     this.sharedUnitySandMaps = null;
     this.meshSandMaterials.clear();
     this.scene.remove(this.root);

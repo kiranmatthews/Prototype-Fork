@@ -1,4 +1,5 @@
 import { startOfflineCache } from "./offline";
+import { installShadowTextureCleanup } from "./shadowTextureCleanup";
 import { configureCityAssetRenderer } from "./cityAssets";
 import { addSkateReviewClips, loadSkateReviewCatalog, skateBoardVisibleAt, withSkatePresentationRig } from './animation/skateCatalog';
 import { Halfpipe } from './halfpipe';
@@ -172,6 +173,7 @@ renderer.setPixelRatio(
 // contact between the skater, the props and the ground.
 renderer.shadowMap.enabled = !LITE_RENDER;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+installShadowTextureCleanup(renderer);
 Level.setMaxAnisotropy(renderer.capabilities.getMaxAnisotropy());
 app.appendChild(renderer.domElement);
 

@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { Octree } from "three/examples/jsm/math/Octree.js";
 import { Capsule } from "three/examples/jsm/math/Capsule.js";
-import { loadJungleAssetTemplate, type Template } from "./jungleAssets";
+import { createJungleAssetScope, type Template } from "./jungleAssets";
 import { NIGHTWORKS_MODULES, type NightworksKind } from "./nightworksModules";
 import shapes from "./nightworksShapes.json";
 
@@ -45,7 +45,8 @@ export class NightworksRocks {
   private jobs:Promise<void>[]=[];
   private pending=0;
   private readyCount=0;
-  constructor(private loadTemplate:(kind:NightworksKind)=>Promise<Template>=loadJungleAssetTemplate) {}
+  private assets=createJungleAssetScope();
+  constructor(private loadTemplate:(kind:NightworksKind)=>Promise<Template>=kind=>this.assets.load(kind)) {}
   addSolid(mesh:THREE.Mesh,delta:THREE.Vector3,active=()=>true):void {
     // Translation is owned by the mover. Bake dimensions/yaw into the local geometry.
     const proxy=new THREE.Mesh(mesh.geometry);
@@ -119,5 +120,5 @@ export class NightworksRocks {
   }
   async ready():Promise<void>{await Promise.all(this.jobs);}
   get diagnostics(){return {models:this.pending,ready:this.readyCount,solids:this.solids.length,errors:[...this.errors]};}
-  dispose():void {this.disposed=true;for(const m of this.materials.values())m.dispose();this.materials.clear();this.solids.length=0;}
+  dispose():void {this.disposed=true;for(const m of this.materials.values())m.dispose();this.materials.clear();this.solids.length=0;this.assets.dispose();this.jobs.length=0;}
 }

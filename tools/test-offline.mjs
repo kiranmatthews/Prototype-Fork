@@ -33,7 +33,7 @@ function release(version, files) {
     addEventListener(type, handler) { handlers[type] = handler; },
   };
   runInNewContext(source.replace('/* OFFLINE_MANIFEST */', JSON.stringify(manifest)), {
-    self, caches: storage, URL, Response, Headers, AbortController, crypto: webcrypto, setTimeout, clearTimeout,
+    self, caches: storage, URL, Response, Headers, AbortController, crypto: webcrypto, setTimeout, clearTimeout, Date: {now:()=>1000},
     async fetch(url) {
       requests.push(url);
       if (!online) throw new TypeError('Offline');
@@ -107,6 +107,13 @@ assert.ok(stores.has('solProtoOffline:/Prototype-Fork/:two'));
 quotaFailure = true; serve(changed);
 await assert.rejects(v3.event('install'));
 assert.equal(messages.at(-1).reason, 'storage');
+quotaFailure = false;
+const burstFiles=Object.fromEntries(Array.from({length:100},(_,i)=>[`part-${i}.glb`,`small part ${i}`]));
+serve(burstFiles);const beforeBurst=messages.length,burst=release('burst',burstFiles);
+await burst.event('install');
+assert.equal(messages.at(-1).phase,'ready');
+assert.equal(messages.at(-1).completed,messages.at(-1).total,'throttling preserves exact final progress');
+assert.ok(messages.length-beforeBurst<20,'a small-file burst does not invalidate menu artwork once per file');
 
 const fonts = { bonus: 10, counter: 10 };
 for (const file of ['fonts/roo-bonus-v10.png', 'fonts/roo-counter-v10-light2.png', 'fonts/RooRegular.otf', 'jungle-kit/basis/basis_transcoder.wasm', 'animations/skate-review/catalog.json']) assert.ok(runtimeAsset(file, fonts), file);

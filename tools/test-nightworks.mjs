@@ -15,7 +15,8 @@ try {
  const {Player}=await server.ssrLoadModule('/src/player.ts');
  const {CONST}=await server.ssrLoadModule('/src/tuning.ts');
  const {NIGHTWORKS_LEVEL}=await server.ssrLoadModule('/src/levels/nightworks.ts');
- const {loadJungleAssetTemplate}=await server.ssrLoadModule('/src/jungleAssets.ts');
+ const {createJungleAssetScope}=await server.ssrLoadModule('/src/jungleAssets.ts');
+ const inspection=createJungleAssetScope(),loadJungleAssetTemplate=inspection.load;
  assert.ok(normalizeCustomLevelData(JSON.parse(JSON.stringify(NIGHTWORKS_LEVEL))));
  const scene=new THREE.Scene(),level=new Level(scene,{id:'dark',name:'The Nightworks'});
  await level.nightworksRocks.ready();await level.prepareJungleAssets();level.root.updateMatrixWorld(true);
@@ -166,5 +167,5 @@ try {
  const copy=new Level(new THREE.Scene(),{id:'dark-copy',name:'Copy',data:JSON.parse(JSON.stringify(level.captureData()))});
  assert.deepEqual(copy.captureData(),level.captureData());assert.equal(copy.ropeSwings[2].travel.phase,Math.PI/2);copy.dispose();
  console.log(`PASS Nightworks: ${groundProbes} surface probes, ${sideProbes} swept side/corner collisions, ${ledges} real Player ledge catches, ${joinedEdges} supported joins, ${matchingRays} visual/collision comparisons; moving mantle and death/finish; moving support, phase collision and visibility, rope endpoints/velocity, editor round trip.`);
- level.dispose();
+ level.dispose();inspection.dispose();
 } finally {await server.close();}

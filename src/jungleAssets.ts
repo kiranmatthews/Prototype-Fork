@@ -9,6 +9,7 @@ import { NIGHTWORKS_MODULES } from "./nightworksModules";
 import { JUNGLE_EDITOR_ASSETS } from "./jungleEditorAssets";
 import { isJungleAssembly, jungleAssemblyParts, type JunglePartKind } from "./jungleAssemblies";
 import { addJungleDepthFade } from "./jungleGround";
+import { AssetCache, disposeTextures } from "./assetLifetime";
 
 export interface JungleAssetSpec {
   file: string; label: string; size: readonly [number,number,number]; wind: boolean;
@@ -72,11 +73,16 @@ export interface Template {
   geometry:THREE.BufferGeometry;lodGeometry?:THREE.BufferGeometry;map:THREE.Texture|null;
   normalMap?:THREE.Texture|null;roughnessMap?:THREE.Texture|null;
 }
-const templates=new Map<RenderKind,Promise<Template>>();
+function disposeTemplate(template:Template,kind:RenderKind):void {
+  // This view borrows the canopy's resources through its dependency lease.
+  if(kind==='junglebackdrop')return;
+  for(const geometry of new Set([template.geometry,template.lodGeometry]))geometry?.dispose();
+  if(kind!=='treehousecanopy')disposeTextures([template.map,template.normalMap,template.roughnessMap].filter((t):t is THREE.Texture=>!!t));
+}
+const templates=new AssetCache<RenderKind,Template>(createTemplate,disposeTemplate);
+export const createJungleAssetScope=()=>templates.scope();
 let compressedLoader:KTX2Loader|null=null;
-let assetRenderer:THREE.WebGLRenderer|null=null;
 export function configureJungleAssetRenderer(renderer:THREE.WebGLRenderer,loader?:KTX2Loader):void {
-  assetRenderer=renderer;
   if(!compressedLoader)compressedLoader=loader??new KTX2Loader().setTranscoderPath(import.meta.env.BASE_URL+"jungle-kit/basis/").setWorkerLimit(2).detectSupport(renderer);
 }
 function renderSpec(kind:RenderKind):JungleAssetSpec {
@@ -118,8 +124,7 @@ function finishGeometry(geometry:THREE.BufferGeometry,kind:RenderKind):THREE.Buf
   geometry.boundingBox!.expandByScalar(margin);geometry.boundingSphere!.radius+=margin;
   geometry.userData.shared=true;return geometry;
 }
-function loadTemplate(kind:RenderKind):Promise<Template> {
-  const cached=templates.get(kind);if(cached)return cached;
+function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Template>):Promise<Template> {
   const spec=renderSpec(kind);
   if(spec.matte && spec.image){
     // The plane is already normalized in X/Y, bottom-anchored, facing +Z.
@@ -127,22 +132,22 @@ function loadTemplate(kind:RenderKind):Promise<Template> {
     const geometry=finishGeometry(new THREE.PlaneGeometry(1,1).translate(0,.5,0),kind);
     const pending=new THREE.TextureLoader().loadAsync(import.meta.env.BASE_URL+spec.image).then(map=>{
       map.colorSpace=THREE.SRGBColorSpace;map.anisotropy=4;map.userData.shared=true;
-      assetRenderer?.initTexture(map);return {geometry,map};
-    }).catch(error=>{geometry.dispose();templates.delete(kind);throw error;});
-    templates.set(kind,pending);return pending;
+      return {geometry,map};
+    }).catch(error=>{geometry.dispose();throw error;});
+    return pending;
   }
   if(isClayPlant(kind)){
     const pending=Promise.resolve({geometry:finishGeometry(createClayPlantGeometry(kind),kind),lodGeometry:finishGeometry(createClayPlantGeometry(kind,true),kind),map:null});
-    templates.set(kind,pending);return pending;
+    return pending;
   }
   if(kind==='maparch'){
     const pending=Promise.resolve({geometry:finishGeometry(clayArchGeometry(),kind),lodGeometry:finishGeometry(clayArchGeometry(true),kind),map:null});
-    templates.set(kind,pending);return pending;
+    return pending;
   }
   if(kind==="junglebackdrop") {
-    const pending=loadTemplate("junglecanopy").then(source=>({...source,
+    const pending=dependency("junglecanopy").then(source=>({...source,
       geometry:source.lodGeometry??source.geometry,lodGeometry:undefined}));
-    templates.set(kind,pending);return pending;
+    return pending;
   }
   if(kind==="junglecliff") {
     const geometry=new THREE.IcosahedronGeometry(1,1);
@@ -157,15 +162,20 @@ function loadTemplate(kind:RenderKind):Promise<Template> {
     geometry.translate(-center.x,-bounds.min.y,-center.z);geometry.scale(1/size.x,1/size.y,1/size.z);
     geometry.computeVertexNormals();geometry.setAttribute('color',new THREE.BufferAttribute(colors,3));
     const pending=Promise.resolve({geometry:finishGeometry(geometry,kind),map:null});
-    templates.set(kind,pending);return pending;
+    return pending;
   }
   if(kind==="joint"||kind==="earth"||kind==="vine"||kind==="junglevine") {
     const geometry=kind==="joint"||kind==="earth"?new THREE.BoxGeometry(1,1,1).translate(0,.5,0):vineGeometry();
     const map=kind==="earth"?new THREE.TextureLoader().load(import.meta.env.BASE_URL+"jungle-kit/dirt.jpg"):null;
     if(map){map.wrapS=map.wrapT=THREE.RepeatWrapping;map.colorSpace=THREE.SRGBColorSpace;map.userData.shared=true;map.anisotropy=8;}
-    const promise=Promise.resolve({geometry:finishGeometry(geometry,kind),map});templates.set(kind,promise);return promise;
+    return Promise.resolve({geometry:finishGeometry(geometry,kind),map});
   }
   const loader=new GLTFLoader();if(compressedLoader)loader.setKTX2Loader(compressedLoader);
+  // The separated crown contains byte-identical tree atlases. Borrow them
+  // before decoding/uploading, retaining the tree until this crown is gone.
+  if(kind==='treehousecanopy')loader.register(()=>({name:'TreehouseSharedAtlas',
+    loadTexture:index=>index<2?dependency('treehousetree').then(tree=>index===0?tree.map!:tree.normalMap!):null,
+  }));
   const pending=loader.loadAsync(import.meta.env.BASE_URL+`jungle-kit/${spec.file}.glb`).then(gltf=>{
     const meshes:THREE.Mesh[]=[];gltf.scene.updateMatrixWorld(true);gltf.scene.traverse(o=>{if((o as THREE.Mesh).isMesh)meshes.push(o as THREE.Mesh);});
     const high=meshes.find(m=>m.name.endsWith("LOD0"))??meshes[0],low=meshes.find(m=>m.name.endsWith("LOD1"));
@@ -178,16 +188,13 @@ function loadTemplate(kind:RenderKind):Promise<Template> {
     const material=high.material as THREE.MeshStandardMaterial;
     const map=material.map!,normalMap=material.normalMap,roughnessMap=material.roughnessMap;
     if(map)map.colorSpace=THREE.SRGBColorSpace;
-    for(const texture of [map,normalMap,roughnessMap])if(texture){texture.userData.shared=true;texture.anisotropy=8;assetRenderer?.initTexture(texture);}
+    for(const texture of [map,normalMap,roughnessMap])if(texture){texture.userData.shared=true;texture.anisotropy=8;}
     for(const g of new Set(meshes.map(m=>m.geometry)))g.dispose();
     for(const m of new Set(meshes.flatMap(m=>Array.isArray(m.material)?m.material:[m.material])))m.dispose();
     return {geometry:finishGeometry(geometry,kind),lodGeometry:lodGeometry?finishGeometry(lodGeometry,kind):undefined,map,normalMap,roughnessMap};
-  }).catch(error=>{templates.delete(kind);throw error;});
-  templates.set(kind,pending);return pending;
+  });
+  return pending;
 }
-
-/** Shared cached Meshy geometry/textures for terrain whose transform moves. */
-export const loadJungleAssetTemplate = loadTemplate;
 
 const WIND = /* glsl */ `
 vec4 jungleOrigin = vec4(0.0, 0.0, 0.0, 1.0);
@@ -263,6 +270,7 @@ export function addJungleDapple(material: THREE.Material, time: { value: number 
 
 interface Bucket {kind:RenderKind;transforms:THREE.Matrix4[];colors:THREE.Color[];}
 export class JungleAssetKit {
+  private assets=createJungleAssetScope();
   readonly root=new THREE.Group();readonly time={value:0};readonly errors:string[]=[];
   private buckets=new Map<string,Bucket>();private jobs:Promise<void>[]=[];
   private materials=new Map<RenderKind,THREE.MeshStandardMaterial|THREE.MeshLambertMaterial|THREE.MeshBasicMaterial>();
@@ -351,7 +359,7 @@ export class JungleAssetKit {
     this.root.add(holder);this.loose.add(holder);
     const inverseAnchor=new THREE.Matrix4().makeTranslation(-c.p[0],-c.p[1],-c.p[2]);
     this.jobs.push(Promise.all(drawParts.map(async part=>{
-      const template=await loadTemplate(part.kind);if(this.disposed)return;
+      const template=await this.assets.load(part.kind);if(this.disposed)return;
       const mesh=new THREE.Mesh(template.geometry,this.material(part.kind,template));
       this.configure(mesh,part.kind);mesh.matrix.copy(inverseAnchor).multiply(part.matrix);mesh.matrixAutoUpdate=false;
       mesh.userData.editorIdx=holder.userData.editorIdx;holder.add(mesh);this.readyCount++;
@@ -360,7 +368,7 @@ export class JungleAssetKit {
   }
   flush():void {
     for(const bucket of this.buckets.values()){
-      this.jobs.push(loadTemplate(bucket.kind).then(template=>{
+      this.jobs.push(this.assets.load(bucket.kind).then(template=>{
         if(this.disposed)return;
         const center=new THREE.Vector3();for(const m of bucket.transforms)center.add(new THREE.Vector3().setFromMatrixPosition(m));center.multiplyScalar(1/bucket.transforms.length);
         const inverse=new THREE.Matrix4().makeTranslation(-center.x,-center.y,-center.z);
@@ -401,6 +409,7 @@ export class JungleAssetKit {
       compressedTextures,textureMiB:Math.round(textureBytes/1048576*100)/100,errors:[...this.errors],windTime:this.time.value};
   }
   dispose():void {
+    this.assets.dispose();this.jobs.length=0;
     if(this.disposed)return;this.disposed=true;
     this.root.traverse(o=>{if((o as THREE.InstancedMesh).isInstancedMesh)(o as THREE.InstancedMesh).dispose();});
     this.root.removeFromParent();this.root.clear();for(const holder of this.loose){holder.removeFromParent();holder.clear();}this.loose.clear();

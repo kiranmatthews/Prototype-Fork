@@ -68,7 +68,8 @@ globalThis.ProgressEvent??=class{constructor(type,data){this.type=type;Object.as
 globalThis.fetch=async input=>{const url=typeof input==='string'?input:input.url;if(url.startsWith('blob:'))return nativeFetch(input);const match=new URL(url,'http://headless.invalid').pathname.match(/\/((?:jungle-kit\/(?:(?:modular|editor)\/)?|map-kit\/|nightworks-kit\/|treehouse-trail\/)[\w-]+\.glb)$/);return match?new Response(await readFile(new URL('public/'+match[1],root))):new Response('',{status:404});};
 const server=await createServer({logLevel:'silent',server:{middlewareMode:true},appType:'custom'});
 try{
- const {JungleAssetKit,JUNGLE_ASSETS,JUNGLE_ASSET_KINDS,jungleAssetMatrix,loadJungleAssetTemplate}=await server.ssrLoadModule('/src/jungleAssets.ts');
+ const {JungleAssetKit,JUNGLE_ASSETS,JUNGLE_ASSET_KINDS,jungleAssetMatrix,createJungleAssetScope}=await server.ssrLoadModule('/src/jungleAssets.ts');
+ const inspection=createJungleAssetScope(),loadJungleAssetTemplate=inspection.load;
  const {templePavilionParts,templeArchParts}=await server.ssrLoadModule('/src/jungleAssemblies.ts');
  const {JUNGLE_MODULES}=await server.ssrLoadModule('/src/jungleModules.ts');
  for(const kind of ['roofedtemple','hangingarch','templewall','templeplatform'])assert.equal(JUNGLE_ASSETS[kind].file,'','assemblies cannot load a whole-building/facade GLB');
@@ -146,6 +147,6 @@ try{
  const copy=new Level(new THREE.Scene(),{id:'jungle-copy',name:'Copy',data:capture});assert.deepEqual(copy.captureData(),capture);assert.equal(copy.pitBoxes.length,level.pitBoxes.length);
  setEditorBuild(true);const editable=new Level(new THREE.Scene(),{id:'jungle-editor',name:'Editor',data:capture});await editable.prepareJungleAssets();let pickable=0;
  editable.pickRoot.traverse(o=>{if(o.isMesh&&o.userData.jungleAsset){pickable++;assert.ok(Number.isInteger(o.userData.editorIdx),'asynchronous module remains pickable');}});assert.ok(pickable>1000);
- editable.dispose();setEditorBuild(false);copy.dispose();level.dispose();kit.dispose();kit.dispose();
+ editable.dispose();setEditorBuild(false);copy.dispose();level.dispose();kit.dispose();kit.dispose();inspection.dispose();
  console.log(`Validated 17 original modules and 5 optional editor assets, compressed textures/LODs, ${samples} roof rays, arch joints, grass-edged dirt, invisible death volumes, black depth fade, wind, collision, disposal and editor reconstruction.`);
 }finally{await server.close();}

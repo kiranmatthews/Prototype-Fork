@@ -7,6 +7,7 @@ const READY = new URL('__offline_ready__', BASE).href;
 const ENTRIES = new Map(MANIFEST.entries.map(entry => [new URL(entry.url, BASE).href, entry]));
 const TOTAL = MANIFEST.entries.reduce((sum, entry) => sum + entry.size, 0);
 let status = { type: 'solProtoOffline', phase: 'saving', completed: 0, total: TOTAL };
+let lastProgressReport = 0;
 
 function key(entry) {
   const url = new URL(entry.url, BASE);
@@ -15,6 +16,11 @@ function key(entry) {
 }
 async function report(patch) {
   status = { ...status, ...patch };
+  // Hundreds of small cached files must not trigger hundreds of menu/CRT
+  // artwork invalidations. Phase changes and direct status requests stay immediate.
+  const now = Date.now();
+  if (!patch.phase && now - lastProgressReport < 250) return;
+  lastProgressReport = now;
   for (const client of await self.clients.matchAll({ includeUncontrolled: true, type: 'window' })) {
     if (client.url.startsWith(BASE)) client.postMessage(status);
   }
@@ -23,7 +29,7 @@ async function download(entry) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 60000);
   try {
-    const response = await fetch(key(entry), { cache: 'no-store', signal: controller.signal });
+    const response = await fetch(key(entry), { cache: 'no-store', signal: controller.signal, priority: 'low' });
     if (!response.ok || response.status === 206) throw new Error('Download failed');
     // A deploy can change un-hashed public filenames halfway through a save.
     // Never mark a mixed or incomplete release as safe for airplane mode.

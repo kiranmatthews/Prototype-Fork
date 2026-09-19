@@ -6,6 +6,7 @@ import {RoundedBoxGeometry} from 'three/examples/jsm/geometries/RoundedBoxGeomet
 import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import {CITY_MODULES} from './cityModules';
 import collisionData from './cityShapes.json';
+import {AssetCache,disposeTextures} from './assetLifetime';
 
 const PROPS={
  cityretaining:{label:"bolted concrete retaining panel",size:[6,13,.35],bounds:[[-3,0,-.175],[3,13,.175]],procedural:true},
@@ -72,9 +73,9 @@ function addCityRetainingFade(material:THREE.Material):void {
 }
 interface Part {geometry:THREE.BufferGeometry;material:THREE.MeshStandardMaterial;}
 interface Template {near:Part[];far:Part[];}
-let renderer:THREE.WebGLRenderer|null=null,ktx:KTX2Loader|null=null;
+let ktx:KTX2Loader|null=null;
 export function configureCityAssetRenderer(value:THREE.WebGLRenderer):void {
- renderer=value;ktx??=new KTX2Loader().setTranscoderPath(import.meta.env.BASE_URL+'jungle-kit/basis/').setWorkerLimit(2).detectSupport(value);
+ ktx??=new KTX2Loader().setTranscoderPath(import.meta.env.BASE_URL+'jungle-kit/basis/').setWorkerLimit(2).detectSupport(value);
 }
 const palette:Record<string,string>={MI_Concrete:'#ded3bd',MI_Asphalt:'#9ab5d1',MI_RedBrick:'#e09a7d',MI_RedBrick_Pale:'#d3ac90',MI_Trim:'#e7d3ac',MI_Trim_Green:'#77b9b3',MI_Trim_Dark:'#607d82',MI_Trim_MetalConcrete:'#8da7aa',MI_Ornaments:'#d8c69d'};
 function stylize(source:THREE.MeshStandardMaterial):THREE.MeshStandardMaterial {
@@ -84,7 +85,7 @@ function stylize(source:THREE.MeshStandardMaterial):THREE.MeshStandardMaterial {
  if(mat.name.includes('Glass')){mat.color.set('#6793b6');mat.roughness=.42;mat.opacity=1;mat.transparent=false;mat.depthWrite=true;}
  mat.onBeforeCompile=shader=>{shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',THREE.ShaderChunk.map_fragment.replace('vec4 sampledDiffuseColor = texture2D( map, vMapUv );','vec4 sampledDiffuseColor = texture2D( map, vMapUv, 0.4 );\n sampledDiffuseColor.rgb = mix(vec3(0.64),sampledDiffuseColor.rgb,0.86);'));};
  mat.customProgramCacheKey=()=> 'carlisle-painted-material-v2';
- for(const tex of [mat.map,mat.normalMap])if(tex){tex.userData.shared=true;tex.anisotropy=8;renderer?.initTexture(tex);}
+ for(const tex of [mat.map,mat.normalMap])if(tex){tex.userData.shared=true;tex.anisotropy=8;}
  addCityInstanceNormals(mat);
  return mat;
 }
@@ -114,11 +115,37 @@ function bareRoadParts(parts:Part[],kind:'cityroad2bare'|'cityroad4bare'):Part[]
  }
  return result;
 }
-let library:Promise<Map<CityKind,Template>>|null=null;
+function materialTextures(material:THREE.Material):THREE.Texture[] {
+ return Object.values(material).filter((value):value is THREE.Texture=>value instanceof THREE.Texture);
+}
+function releaseSource(scene:THREE.Object3D,templates:Iterable<Template>):void {
+ const retained=new Set([...templates].flatMap(t=>[...t.near,...t.far].flatMap(p=>materialTextures(p.material))));
+ const discarded=new Set<THREE.Texture>();
+ scene.traverse(o=>{const mesh=o as THREE.Mesh;if(!mesh.isMesh)return;mesh.geometry.dispose();
+  for(const m of Array.isArray(mesh.material)?mesh.material:[mesh.material]){for(const t of materialTextures(m))if(!retained.has(t))discarded.add(t);m.dispose();}
+ });
+ disposeTextures(discarded,retained);
+}
+const cityTemplates=new AssetCache<CityKind|'library',Map<CityKind,Template>>(async kind=>{
+ if(kind==='library')return loadLibrary();
+ if(CITY_ASSETS[kind].file)return new Map([[kind,await loadExtra(kind)]]);
+ // Collision uses CPU-only procedural prototypes too. Render leases own
+ // clones so retiring a pending generation cannot invalidate its successor.
+ const parts=proceduralTemplate(kind).near.map(part=>{
+  const material=part.material.clone();material.onBeforeCompile=part.material.onBeforeCompile;material.customProgramCacheKey=part.material.customProgramCacheKey;
+  return {geometry:part.geometry.clone(),material};
+ });
+ return new Map([[kind,{near:parts,far:parts}]]);
+},templates=>{
+ const parts=[...templates.values()].flatMap(t=>[...t.near,...t.far]);
+ for(const geometry of new Set(parts.map(p=>p.geometry)))geometry.dispose();
+ const materials=new Set(parts.map(p=>p.material));
+ disposeTextures([...materials].flatMap(materialTextures));
+ for(const material of materials)material.dispose();
+});
 function loadLibrary():Promise<Map<CityKind,Template>> {
- if(library)return library;
  const loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);if(ktx)loader.setKTX2Loader(ktx);
- library=loader.loadAsync(import.meta.env.BASE_URL+'carlisle-kit/city.glb').then(gltf=>{
+ return loader.loadAsync(import.meta.env.BASE_URL+'carlisle-kit/city.glb').then(gltf=>{
   gltf.scene.updateMatrixWorld(true);const result=new Map<CityKind,Template>(),materials=new Map<THREE.Material,THREE.MeshStandardMaterial>();
   for(const kind of Object.keys(CITY_MODULES) as CityKind[]){
    const spec=CITY_ASSETS[kind],lo=spec.bounds[0],hi=spec.bounds[1],normalize=new THREE.Matrix4().makeTranslation(-(lo[0]+hi[0])/2,-lo[1],-(lo[2]+hi[2])/2);
@@ -140,18 +167,18 @@ function loadLibrary():Promise<Map<CityKind,Template>> {
    for(const part of [...old.near,...old.far])part.geometry.dispose();
   }
   const taper=transformTaper;const road=result.get('cityroad4')!;result.set('citytaper',{near:road.near.map(p=>({material:p.material,geometry:taper(p.geometry.clone())})),far:road.near.map(p=>({material:p.material,geometry:taper(p.geometry.clone())}))});
-  gltf.scene.traverse(o=>{if((o as THREE.Mesh).isMesh)(o as THREE.Mesh).geometry.dispose();});
+  releaseSource(gltf.scene,result.values());
   return result;
- }).catch(error=>{library=null;throw error;});return library;
+ });
 }
-const extras=new Map<CityKind,Promise<Template>>();
 function loadExtra(kind:CityKind):Promise<Template>{
- let value=extras.get(kind);if(value)return value;const spec=CITY_ASSETS[kind];
- value=new GLTFLoader().loadAsync(import.meta.env.BASE_URL+'carlisle-kit/'+spec.file).then(gltf=>{
+ const spec=CITY_ASSETS[kind];
+ return new GLTFLoader().loadAsync(import.meta.env.BASE_URL+'carlisle-kit/'+spec.file).then(gltf=>{
   gltf.scene.updateMatrixWorld(true);const bounds=new THREE.Box3().setFromObject(gltf.scene),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
   const matrix=new THREE.Matrix4().makeScale(spec.size[0]/size.x,spec.size[1]/size.y,spec.size[2]/size.z).multiply(new THREE.Matrix4().makeTranslation(-center.x,-bounds.min.y,-center.z));
-  const parts:Part[]=[];gltf.scene.traverse(o=>{const mesh=o as THREE.Mesh;if(!mesh.isMesh)return;const source=(Array.isArray(mesh.material)?mesh.material[0]:mesh.material) as THREE.MeshStandardMaterial;const geometry=floatGeometry(mesh.geometry).applyMatrix4(mesh.matrixWorld).applyMatrix4(matrix);geometry.userData.shared=true;geometry.computeBoundingSphere();const material=stylize(source);material.emissive.set(0);material.color.set('#ffffff');material.normalScale.setScalar(.25);parts.push({geometry,material});mesh.geometry.dispose();});return {near:parts,far:parts};
- }).catch(e=>{extras.delete(kind);throw e;});extras.set(kind,value);return value;
+  const parts:Part[]=[];gltf.scene.traverse(o=>{const mesh=o as THREE.Mesh;if(!mesh.isMesh)return;const source=(Array.isArray(mesh.material)?mesh.material[0]:mesh.material) as THREE.MeshStandardMaterial;const geometry=floatGeometry(mesh.geometry).applyMatrix4(mesh.matrixWorld).applyMatrix4(matrix);geometry.userData.shared=true;geometry.computeBoundingSphere();const material=stylize(source);material.emissive.set(0);material.color.set('#ffffff');material.normalScale.setScalar(.25);parts.push({geometry,material});});
+  const result={near:parts,far:parts};releaseSource(gltf.scene,[result]);return result;
+ });
 }
 const procedural=new Map<CityKind,Template>();
 function box(w:number,h:number,d:number,x:number,y:number,z:number):THREE.BufferGeometry {return new RoundedBoxGeometry(w,h,d,2,Math.min(.035,w*.15,h*.15,d*.15)).translate(x,y,z);}
@@ -230,6 +257,7 @@ export function accelerateCityGround(mesh:THREE.Mesh):void {
  };
 }
 export class CityAssetKit {
+ private assets=cityTemplates.scope();
  readonly root=new THREE.Group();readonly errors:string[]=[];private buckets=new Map<string,Bucket>();private jobs:Promise<void>[]=[];private disposed=false;private count=0;private loaded=0;private loose=new Set<THREE.Group>();private ownedMaterials=new Set<THREE.Material>();
  constructor(private batched=true){this.root.name='Carlisle Coast city kit';}
  add(c:CityPlacement,centered=false):THREE.Group|null {
@@ -247,7 +275,7 @@ export class CityAssetKit {
    for(const part of template.near){const material=part.material.clone();material.onBeforeCompile=part.material.onBeforeCompile;material.customProgramCacheKey=part.material.customProgramCacheKey;material.color.multiply(new THREE.Color(c.color??'#ffffff'));this.ownedMaterials.add(material);const m=new THREE.Mesh(part.geometry,material);m.matrix.copy(inverse).multiply(matrix);m.matrixAutoUpdate=false;m.castShadow=m.receiveShadow=true;m.userData.editorIdx=holder.userData.editorIdx;holder.add(m);}this.loaded++;
   }).catch(e=>this.failed(c.dkind,e)));return holder;
  }
- private template(kind:CityKind):Promise<Template>{return CITY_ASSETS[kind].file?loadExtra(kind):CITY_ASSETS[kind].procedural?Promise.resolve(proceduralTemplate(kind)):loadLibrary().then(l=>l.get(kind)!);}
+ private template(kind:CityKind):Promise<Template>{return this.assets.load(CITY_ASSETS[kind].file||CITY_ASSETS[kind].procedural?kind:'library').then(l=>l.get(kind)!);}
  flush():void {
   for(const bucket of this.buckets.values())this.jobs.push(this.template(bucket.kind).then(template=>{if(this.disposed)return;
    const center=new THREE.Vector3();for(const m of bucket.matrices)center.add(new THREE.Vector3().setFromMatrixPosition(m));center.multiplyScalar(1/bucket.matrices.length);
@@ -266,7 +294,7 @@ export class CityAssetKit {
  }
  async ready():Promise<void>{await Promise.all(this.jobs);}
  get diagnostics(){return {placements:this.count,ready:this.loaded,errors:[...this.errors]};}
- dispose():void {this.disposed=true;this.root.traverse(o=>{if((o as THREE.InstancedMesh).isInstancedMesh)(o as THREE.InstancedMesh).dispose();});this.root.removeFromParent();this.root.clear();for(const holder of this.loose){holder.removeFromParent();holder.clear();}this.loose.clear();for(const m of this.ownedMaterials)m.dispose();this.ownedMaterials.clear();this.buckets.clear();}
+ dispose():void {this.disposed=true;this.root.traverse(o=>{if((o as THREE.InstancedMesh).isInstancedMesh)(o as THREE.InstancedMesh).dispose();});this.root.removeFromParent();this.root.clear();for(const holder of this.loose){holder.removeFromParent();holder.clear();}this.loose.clear();for(const m of this.ownedMaterials)m.dispose();this.ownedMaterials.clear();this.buckets.clear();this.assets.dispose();this.jobs.length=0;}
 }
 
 /** The skate contact layer rides 9 cm above a rail's authored centreline. */
