@@ -1,5 +1,7 @@
 import { startOfflineCache } from "./offline";
 import { installShadowTextureCleanup } from "./shadowTextureCleanup";
+import { resizeRendererSurface } from "./render-quality/surfaceSize";
+import { GraphicsRecovery } from "./graphicsRecovery";
 import { configureCityAssetRenderer } from "./cityAssets";
 import { addSkateReviewClips, loadSkateReviewCatalog, skateBoardVisibleAt, withSkatePresentationRig } from './animation/skateCatalog';
 import { Halfpipe } from './halfpipe';
@@ -176,9 +178,6 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 installShadowTextureCleanup(renderer);
 Level.setMaxAnisotropy(renderer.capabilities.getMaxAnisotropy());
 app.appendChild(renderer.domElement);
-
-// Save complete releases locally; service-worker updates wait until game windows close.
-startOfflineCache();
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x232634);
@@ -903,9 +902,13 @@ async function prepareActivePresentationAssets(): Promise<void> {
     animationPreparation,
   ]);
   await presentationAssets.waitUntilSettled();
+  await graphicsRecovery.ready();
   if (level.jungleAtmosphere) {
     scene.updateMatrixWorld(true);
-    await renderer.compileAsync(scene, camera);
+    // The hidden destination draw below finishes shader warm-up. r166's
+    // compileAsync polling can dereference discarded programs after a context
+    // reset, leaving the loading promise stranded forever.
+    renderer.compile(scene, camera);
   }
 }
 
@@ -940,10 +943,11 @@ let coastPostCreateCount = 0;
 let coastPostSuspendCount = 0;
 let coastPostResumeCount = 0;
 let renderQualityPanel: RenderQualityPanel | null = null;
+const initialViewportReady=window.innerWidth>0&&window.innerHeight>0;
 let renderQualitySizes: RenderQualitySizes =
   renderQualitySettings.computeSizes(
-    window.innerWidth,
-    window.innerHeight,
+    initialViewportReady?window.innerWidth:16,
+    initialViewportReady?window.innerHeight:9,
     TOUCH_PRESENTATION ? 1 : renderQualitySettings.outputMultiplier,
   );
 function configureCoastPost(enabled: boolean): void {
@@ -989,6 +993,7 @@ function renderPrimaryScene(
   prepareOcean = true,
   preCrtOverlay?: CoastPostPreCrtOverlay,
 ): void {
+  if(renderer.getContext().isContextLost())return;
   if (!preCrtOverlay) gameInterface.setComposited(false);
   configureCoastPost(
     levelPostEnabled ||
@@ -1135,6 +1140,7 @@ function renderVortexWithGameFlow(
   nowMs: number,
   context: NonNullable<GameFlowUI["vortexContext"]>,
 ): void {
+  if(renderer.getContext().isContextLost())return;
   const postRequested =
     !LITE_RENDER && (fixedResolutionActive() || crtGuestSettings.enabled);
   if (postRequested) configureCoastPost(false);
@@ -1172,6 +1178,9 @@ function renderVortexWithGameFlow(
 function resize(): void {
   const w = window.innerWidth;
   let h = window.innerHeight;
+  // A detached/background iOS viewport may briefly report zero. Treating its
+  // height as one would turn a fixed-height preset into an enormous texture.
+  if(!Number.isFinite(w)||!Number.isFinite(h)||w<=0||h<=0)return;
   // iOS standalone (home-screen) quirk: the layout viewport stops ABOVE the
   // home indicator and that strip never gets painted — a permanent black bar.
   // The screen knows the true height, so size the page past the viewport to
@@ -1192,9 +1201,7 @@ function resize(): void {
   // at inputWidth×inputHeight, while the canvas is the CRT's 1×/2×/3× output.
   // Pixel ratio must be one or the browser would multiply that output again.
   // Native/lite retain the original DPR contract for a trustworthy A/B path.
-  renderer.setPixelRatio(
-    optimized ? 1 : Math.min(window.devicePixelRatio || 1, 2),
-  );
+  const pixelRatio = optimized ? 1 : Math.min(window.devicePixelRatio || 1, 2);
   const nativeScale = LITE_RENDER ? 0.5 : 1;
   const renderW = optimized
     ? renderQualitySizes.outputWidth
@@ -1202,7 +1209,7 @@ function resize(): void {
   const renderH = optimized
     ? renderQualitySizes.outputHeight
     : Math.round(h * nativeScale);
-  renderer.setSize(renderW, renderH, false);
+  resizeRendererSurface(renderer, renderW, renderH, pixelRatio);
   syncPostResolution();
   renderQualityPanel?.setMetrics(renderQualitySizes, optimized);
   renderer.domElement.style.imageRendering = "";
@@ -1221,6 +1228,7 @@ function resize(): void {
 
 /** Compile and paint the actual loading path while the curtain is opaque. */
 async function prepareLoadingVortexPresentation(): Promise<void> {
+  await graphicsRecovery.ready();
   renderVortexWithGameFlow(0, performance.now(), "warp");
   await afterPresentationPaint();
   renderVortexWithGameFlow(0, performance.now(), "warp");
@@ -1228,6 +1236,7 @@ async function prepareLoadingVortexPresentation(): Promise<void> {
 
 /** Establish the spawn camera/pose and warm the complete final render path. */
 async function prepareDestinationPresentation(): Promise<void> {
+  await graphicsRecovery.ready();
   if (!gameFlow.vortexContext) {
     if (resultsPresentation) {
       resultsPresentation.update(0);
@@ -1257,6 +1266,7 @@ async function prepareDestinationPresentation(): Promise<void> {
   draw();
   // The first post/HUD draw can lazily request its own textures or models.
   await presentationAssets.waitUntilSettled();
+  await graphicsRecovery.ready();
   draw();
   await afterPresentationPaint();
 }
@@ -4331,6 +4341,17 @@ let stepTimer = 0;
 let stepIdx = 0;
 const GAMEPLAY_RENDER_HZ = 60;
 const renderFrameLimiter = new PresentationFrameLimiter(GAMEPLAY_RENDER_HZ);
+const graphicsRecovery = new GraphicsRecovery(renderer.domElement, () => {
+  sfx.stopLoops();
+  // Release the post graph's owners as well as the driver's lost storage.
+  // The next rendered frame recreates it with the same saved settings.
+  coastPost?.dispose();coastPost=null;
+}, () => {
+  acc=0;resetRenderFrameLimiter();input.consumeEdges();
+  player.snapRenderInterpolation();p2?.snapRenderInterpolation();
+  renderer.shadowMap.needsUpdate=true;
+  gameFlow.requestGameplayFrame();
+});
 
 function resetRenderFrameLimiter(): void {
   renderFrameLimiter.reset();
@@ -4494,6 +4515,7 @@ function writeRenderDiagnostics(): void {
 
 function frame(nowMs: number): void {
   requestAnimationFrame(frame);
+  if(graphicsRecovery.lost)return;
   if (!allowRenderFrame(nowMs)) return;
   const rawDt = clock.getDelta();
   const dt = Math.min(rawDt, 0.1);
@@ -4953,6 +4975,7 @@ requestAnimationFrame(frame);
   spinRingSettings,
   spinPanel,
   getRenderQualitySizes: () => ({ ...renderQualitySizes }),
+  getGraphicsRecoveryDiagnostics: () => graphicsRecovery.diagnostics,
   getRenderFrameLimiterStats: () => renderFrameLimiter.stats,
   getCrtDiagnostics: () => coastPost?.crt?.diagnostics ?? null,
   getGameHudDiagnostics: () => ui.gameHudDiagnostics,
@@ -5015,3 +5038,8 @@ requestAnimationFrame(frame);
   openAnimationStudio: openAnimationStudioTool,
   characterAnimationRuntime,
 };
+
+// Finish foreground decoding before the offline installer starts buffering
+// its release. Saving remains automatic, without competing with cold startup.
+void Promise.all([level.prepareJungleAssets(),player.preparePresentationAssets(),animationPreparation,document.fonts?.ready])
+  .then(()=>presentationAssets.waitUntilSettled()).then(startOfflineCache,startOfflineCache);

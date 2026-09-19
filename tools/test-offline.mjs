@@ -9,6 +9,8 @@ const base = 'https://example.test/Prototype-Fork/';
 const hash = text => createHash('sha256').update(text).digest('hex');
 const stores = new Map(), requests = [], messages = [];
 let network = new Map(), online = true, quotaFailure = false;
+let activeHashes=0,peakHashes=0,downloadClones=0;
+const boundedCrypto={subtle:{async digest(...args){activeHashes++;peakHashes=Math.max(peakHashes,activeHashes);try{await new Promise(resolve=>setTimeout(resolve,0));return await webcrypto.subtle.digest(...args);}finally{activeHashes--;}}}};
 const storage = {
   async keys() { return [...stores.keys()]; },
   async delete(name) { return stores.delete(name); },
@@ -16,10 +18,10 @@ const storage = {
     if (!stores.has(name)) stores.set(name, new Map());
     const entries = stores.get(name);
     return {
-      async match(key) { return entries.get(String(key))?.clone(); },
+      async match(key) { const row=entries.get(String(key));return row?new Response(row.bytes,row.init):undefined; },
       async put(key, response) {
         if (quotaFailure) { quotaFailure = false; throw new DOMException('Full', 'QuotaExceededError'); }
-        entries.set(String(key), response.clone());
+        entries.set(String(key), {bytes:await response.arrayBuffer(),init:{status:response.status,statusText:response.statusText,headers:[...response.headers]}});
       },
     };
   },
@@ -33,12 +35,13 @@ function release(version, files) {
     addEventListener(type, handler) { handlers[type] = handler; },
   };
   runInNewContext(source.replace('/* OFFLINE_MANIFEST */', JSON.stringify(manifest)), {
-    self, caches: storage, URL, Response, Headers, AbortController, crypto: webcrypto, setTimeout, clearTimeout, Date: {now:()=>1000},
+    self, caches: storage, URL, Response, Headers, AbortController, crypto: boundedCrypto, setTimeout, clearTimeout, Date: {now:()=>1000},
     async fetch(url) {
       requests.push(url);
       if (!online) throw new TypeError('Offline');
       const clean = new URL(url); clean.search = '';
-      return network.has(clean.href) ? new Response(network.get(clean.href)) : new Response('Missing', { status: 404 });
+      const response=network.has(clean.href) ? new Response(network.get(clean.href)) : new Response('Missing', { status: 404 });
+      const clone=response.clone.bind(response);response.clone=()=>{downloadClones++;return clone();};return response;
     },
   });
   return {
@@ -97,6 +100,12 @@ assert.ok(stores.has('other-game'), 'cleanup is scoped to this game path');
 online = false;
 assert.equal(await (await v2.fetch('./')).text(), v2Files['index.html']);
 assert.equal(await (await v2.fetch('new.glb')).text(), 'model two');
+online=true;const cachedV2=stores.get('solProtoOffline:/Prototype-Fork/:two');
+for(const key of cachedV2.keys())if(key.includes('new.glb'))cachedV2.delete(key);
+const beforeDuplicate=requests.length;
+const duplicate=await Promise.all([v2.fetch('new.glb'),v2.fetch('new.glb')]);
+assert.deepEqual(await Promise.all(duplicate.map(r=>r.text())),['model two','model two']);
+assert.equal(requests.length-beforeDuplicate,1,'runtime cache misses share one download/write');
 
 online = true;
 const changed = { ...v2Files, 'new.glb': 'model three' };
@@ -114,6 +123,10 @@ await burst.event('install');
 assert.equal(messages.at(-1).phase,'ready');
 assert.equal(messages.at(-1).completed,messages.at(-1).total,'throttling preserves exact final progress');
 assert.ok(messages.length-beforeBurst<20,'a small-file burst does not invalidate menu artwork once per file');
+assert.equal(peakHashes,1,'asset buffering/hashing is serial, including cache misses');
+assert.equal(downloadClones,0,'hashing never leaves a cloned response branch buffering the full download');
+assert.ok(!stores.has('solProtoOffline:/Prototype-Fork/:three'),'abandoned partial release removed');
+assert.ok(stores.has('solProtoOffline:/Prototype-Fork/:two'),'complete active release retained');
 
 const fonts = { bonus: 10, counter: 10 };
 for (const file of ['fonts/roo-bonus-v10.png', 'fonts/roo-counter-v10-light2.png', 'fonts/RooRegular.otf', 'jungle-kit/basis/basis_transcoder.wasm', 'animations/skate-review/catalog.json']) assert.ok(runtimeAsset(file, fonts), file);

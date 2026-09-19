@@ -7,6 +7,7 @@ import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import {CITY_MODULES} from './cityModules';
 import collisionData from './cityShapes.json';
 import {AssetCache,disposeTextures} from './assetLifetime';
+import {sceneryLoads} from './assetLoadQueue';
 
 const PROPS={
  cityretaining:{label:"bolted concrete retaining panel",size:[6,13,.35],bounds:[[-3,0,-.175],[3,13,.175]],procedural:true},
@@ -126,9 +127,9 @@ function releaseSource(scene:THREE.Object3D,templates:Iterable<Template>):void {
  });
  disposeTextures(discarded,retained);
 }
-const cityTemplates=new AssetCache<CityKind|'library',Map<CityKind,Template>>(async kind=>{
- if(kind==='library')return loadLibrary();
- if(CITY_ASSETS[kind].file)return new Map([[kind,await loadExtra(kind)]]);
+const cityTemplates=new AssetCache<CityKind|'library',Map<CityKind,Template>>(async (kind,_dependency,wanted)=>{
+ if(kind==='library')return loadLibrary(wanted);
+ if(CITY_ASSETS[kind].file)return new Map([[kind,await loadExtra(kind,wanted)]]);
  // Collision uses CPU-only procedural prototypes too. Render leases own
  // clones so retiring a pending generation cannot invalidate its successor.
  const parts=proceduralTemplate(kind).near.map(part=>{
@@ -143,9 +144,9 @@ const cityTemplates=new AssetCache<CityKind|'library',Map<CityKind,Template>>(as
  disposeTextures([...materials].flatMap(materialTextures));
  for(const material of materials)material.dispose();
 });
-function loadLibrary():Promise<Map<CityKind,Template>> {
+function loadLibrary(wanted:()=>boolean):Promise<Map<CityKind,Template>> {
  const loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);if(ktx)loader.setKTX2Loader(ktx);
- return loader.loadAsync(import.meta.env.BASE_URL+'carlisle-kit/city.glb').then(gltf=>{
+ return sceneryLoads.run(()=>loader.loadAsync(import.meta.env.BASE_URL+'carlisle-kit/city.glb'),wanted).then(gltf=>{
   gltf.scene.updateMatrixWorld(true);const result=new Map<CityKind,Template>(),materials=new Map<THREE.Material,THREE.MeshStandardMaterial>();
   for(const kind of Object.keys(CITY_MODULES) as CityKind[]){
    const spec=CITY_ASSETS[kind],lo=spec.bounds[0],hi=spec.bounds[1],normalize=new THREE.Matrix4().makeTranslation(-(lo[0]+hi[0])/2,-lo[1],-(lo[2]+hi[2])/2);
@@ -171,9 +172,9 @@ function loadLibrary():Promise<Map<CityKind,Template>> {
   return result;
  });
 }
-function loadExtra(kind:CityKind):Promise<Template>{
+function loadExtra(kind:CityKind,wanted:()=>boolean):Promise<Template>{
  const spec=CITY_ASSETS[kind];
- return new GLTFLoader().loadAsync(import.meta.env.BASE_URL+'carlisle-kit/'+spec.file).then(gltf=>{
+ return sceneryLoads.run(()=>new GLTFLoader().loadAsync(import.meta.env.BASE_URL+'carlisle-kit/'+spec.file),wanted).then(gltf=>{
   gltf.scene.updateMatrixWorld(true);const bounds=new THREE.Box3().setFromObject(gltf.scene),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
   const matrix=new THREE.Matrix4().makeScale(spec.size[0]/size.x,spec.size[1]/size.y,spec.size[2]/size.z).multiply(new THREE.Matrix4().makeTranslation(-center.x,-bounds.min.y,-center.z));
   const parts:Part[]=[];gltf.scene.traverse(o=>{const mesh=o as THREE.Mesh;if(!mesh.isMesh)return;const source=(Array.isArray(mesh.material)?mesh.material[0]:mesh.material) as THREE.MeshStandardMaterial;const geometry=floatGeometry(mesh.geometry).applyMatrix4(mesh.matrixWorld).applyMatrix4(matrix);geometry.userData.shared=true;geometry.computeBoundingSphere();const material=stylize(source);material.emissive.set(0);material.color.set('#ffffff');material.normalScale.setScalar(.25);parts.push({geometry,material});});

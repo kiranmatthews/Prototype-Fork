@@ -1,7 +1,7 @@
 /** One lease per asset per level, including loads still in flight. */
 export class AssetCache<K, V> {
   private entries = new Map<K, { users: number; promise: Promise<V>; value?: V; ready: boolean; dependencies: (() => void)[] }>();
-  constructor(private load: (key: K, dependency: (key: K) => Promise<V>) => Promise<V>, private destroy: (value: V, key: K) => void) {}
+  constructor(private load: (key: K, dependency: (key: K) => Promise<V>, wanted:()=>boolean) => Promise<V>, private destroy: (value: V, key: K) => void) {}
   acquire(key: K): { promise: Promise<V>; release: () => void } {
     let entry = this.entries.get(key);
     if (!entry) {
@@ -16,7 +16,7 @@ export class AssetCache<K, V> {
         const lease = this.acquire(dependency);
         created.dependencies.push(lease.release);
         return lease.promise;
-      })).then(value => {
+      },()=>created.users>0)).then(value => {
         created.value = value; created.ready = true;
         if (created.users === 0) cleanup();
         return value;

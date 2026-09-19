@@ -283,9 +283,32 @@
       "top": null
     }
   ],
-  "bytes": 2425360,
-  "sha256": "8f3d57bc72d75fa5a12f3aa32e08bd67665a15b6a44d12342c05e6b1b8722d84",
+  "bytes": 8340440,
+  "sha256": "f75bc6726a5d151860bac21624eb9ba9ae944ec40860ec07a49c42e9addaf6d0",
   "sourceSha256": "4db015166713a6c574a701bc0aca5bafeef73996738b9a40650badc9aea4c149",
   "albedoResolution": 2048,
-  "normalResolution": 1024
+  "normalResolution": 1024,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "51fca0ebbfb42d46e533c1079821b271d9707b4fe043a203996d933bc4a560cd",
+        "ktxSha256": "43201fd1aa60bfa25170bcb81ad6cce08312d4111916ea9b584803d425f07a5d",
+        "width": 2048,
+        "height": 2048,
+        "mipLevels": 12,
+        "astc4x4Bytes": 5592432,
+        "encodedBytes": 4930392
+      },
+      {
+        "fallbackSha256": "1a265f5bf6c781312aa6c15b6566b13a994b61d87dfa1d3ae2b96febec467e9c",
+        "ktxSha256": "da172621649663521a16913035ec790eed4efa7b74d283fee5b2fe7fae967bab",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 984300
+      }
+    ]
+  }
 }

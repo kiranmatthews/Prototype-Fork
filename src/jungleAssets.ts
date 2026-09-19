@@ -10,6 +10,7 @@ import { JUNGLE_EDITOR_ASSETS } from "./jungleEditorAssets";
 import { isJungleAssembly, jungleAssemblyParts, type JunglePartKind } from "./jungleAssemblies";
 import { addJungleDepthFade } from "./jungleGround";
 import { AssetCache, disposeTextures } from "./assetLifetime";
+import { sceneryLoads } from "./assetLoadQueue";
 
 export interface JungleAssetSpec {
   file: string; label: string; size: readonly [number,number,number]; wind: boolean;
@@ -124,13 +125,13 @@ function finishGeometry(geometry:THREE.BufferGeometry,kind:RenderKind):THREE.Buf
   geometry.boundingBox!.expandByScalar(margin);geometry.boundingSphere!.radius+=margin;
   geometry.userData.shared=true;return geometry;
 }
-function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Template>):Promise<Template> {
+function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Template>,wanted:()=>boolean):Promise<Template> {
   const spec=renderSpec(kind);
   if(spec.matte && spec.image){
     // The plane is already normalized in X/Y, bottom-anchored, facing +Z.
     // Skip GLB bounds normalization: a genuine flat card has zero Z extent.
     const geometry=finishGeometry(new THREE.PlaneGeometry(1,1).translate(0,.5,0),kind);
-    const pending=new THREE.TextureLoader().loadAsync(import.meta.env.BASE_URL+spec.image).then(map=>{
+    const pending=sceneryLoads.run(()=>new THREE.TextureLoader().loadAsync(import.meta.env.BASE_URL+spec.image),wanted).then(map=>{
       map.colorSpace=THREE.SRGBColorSpace;map.anisotropy=4;map.userData.shared=true;
       return {geometry,map};
     }).catch(error=>{geometry.dispose();throw error;});
@@ -173,10 +174,19 @@ function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Te
   const loader=new GLTFLoader();if(compressedLoader)loader.setKTX2Loader(compressedLoader);
   // The separated crown contains byte-identical tree atlases. Borrow them
   // before decoding/uploading, retaining the tree until this crown is gone.
-  if(kind==='treehousecanopy')loader.register(()=>({name:'TreehouseSharedAtlas',
-    loadTexture:index=>index<2?dependency('treehousetree').then(tree=>index===0?tree.map!:tree.normalMap!):null,
-  }));
-  const pending=loader.loadAsync(import.meta.env.BASE_URL+`jungle-kit/${spec.file}.glb`).then(gltf=>{
+  // Resolve the shared donor BEFORE reserving a decode slot, so dependencies
+  // cannot fill the queue with parents waiting for children behind them.
+  const donor=kind==='treehousecanopy'?dependency('treehousetree'):Promise.resolve(null);
+  const pending=donor.then(tree=>{
+    if(tree){
+      const loadTexture=(index:number)=>index<2?Promise.resolve(index===0?tree.map!:tree.normalMap!):null;
+      loader.register(()=>({name:'TreehouseSharedAtlas',loadTexture}));
+      // BasisU's built-in plugin runs before fallback image plugins. Override
+      // this asset's BasisU hook too, so its compressed atlases are borrowed.
+      loader.register(()=>({name:'KHR_texture_basisu',loadTexture}));
+    }
+    return sceneryLoads.run(()=>loader.loadAsync(import.meta.env.BASE_URL+`jungle-kit/${spec.file}.glb`),wanted);
+  }).then(gltf=>{
     const meshes:THREE.Mesh[]=[];gltf.scene.updateMatrixWorld(true);gltf.scene.traverse(o=>{if((o as THREE.Mesh).isMesh)meshes.push(o as THREE.Mesh);});
     const high=meshes.find(m=>m.name.endsWith("LOD0"))??meshes[0],low=meshes.find(m=>m.name.endsWith("LOD1"));
     if(!high)throw new Error(`Jungle asset ${kind} has no geometry`);

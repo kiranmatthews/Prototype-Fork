@@ -8,6 +8,8 @@ const ENTRIES = new Map(MANIFEST.entries.map(entry => [new URL(entry.url, BASE).
 const TOTAL = MANIFEST.entries.reduce((sum, entry) => sum + entry.size, 0);
 let status = { type: 'solProtoOffline', phase: 'saving', completed: 0, total: TOTAL };
 let lastProgressReport = 0;
+const pendingEntries = new Map();
+let storageWork = Promise.resolve();
 
 function key(entry) {
   const url = new URL(entry.url, BASE);
@@ -33,41 +35,61 @@ async function download(entry) {
     if (!response.ok || response.status === 206) throw new Error('Download failed');
     // A deploy can change un-hashed public filenames halfway through a save.
     // Never mark a mixed or incomplete release as safe for airplane mode.
-    const bytes = await response.clone().arrayBuffer();
+    // Read one body. clone() would tee the stream and buffer the entire unread
+    // branch while hashing, on top of the ArrayBuffer and cache write.
+    const bytes = await response.arrayBuffer();
     const digest = await crypto.subtle.digest('SHA-256', bytes);
     const revision = [...new Uint8Array(digest)].map(b => b.toString(16).padStart(2, '0')).join('');
     if (revision !== entry.revision) throw new Error('Game updated during download');
-    return response;
+    const headers = new Headers(response.headers);
+    headers.delete('content-encoding');
+    headers.set('Content-Length', String(bytes.byteLength));
+    return new Response(bytes, { status: response.status, statusText: response.statusText, headers });
   } finally { clearTimeout(timeout); }
+}
+// Installation and runtime misses share one bounded writer. Do not keep
+// several large GLBs/images buffered while the foreground decodes its level.
+function ensureEntry(cache, entry, previous = []) {
+  const request = key(entry), pending = pendingEntries.get(request);
+  if (pending) return pending;
+  const job = storageWork.then(async () => {
+    const existing = await cache.match(request);
+    if (existing) { await existing.body?.cancel(); return; }
+    let response;
+    for (const name of previous) {
+      response = await (await caches.open(name)).match(request);
+      if (response) break;
+    }
+    await cache.put(request, response || await download(entry));
+  });
+  storageWork = job.catch(() => {});
+  pendingEntries.set(request, job);
+  const release = () => pendingEntries.delete(request);
+  job.then(release, release);
+  return job;
 }
 async function installGame() {
   const cache = await caches.open(CACHE);
-  const previous = (await caches.keys()).filter(name => name.startsWith(PREFIX) && name !== CACHE);
-  let cursor = 0, stopped = false;
+  const previous = [];
+  for (const name of await caches.keys()) {
+    if (!name.startsWith(PREFIX) || name === CACHE) continue;
+    const ready = await (await caches.open(name)).match(READY);
+    // A failed older install can never serve a client. Keep this version's
+    // partial progress, but do not accumulate abandoned partial releases.
+    if (!ready) { await caches.delete(name); continue; }
+    await ready.body?.cancel();
+    previous.push(name);
+  }
   await report({ phase: 'saving', completed: 0 });
-  // Limit parallel transfers and hashing memory on phones. Interrupted saves
-  // reuse their completed files, as do updates with unchanged asset revisions.
-  const results = await Promise.allSettled(Array.from({ length: 4 }, async () => {
-    while (!stopped && cursor < MANIFEST.entries.length) {
-      const entry = MANIFEST.entries[cursor++], request = key(entry);
-      try {
-        let response = await cache.match(request);
-        if (!response) {
-          for (const name of previous) {
-            response = await (await caches.open(name)).match(request);
-            if (response) break;
-          }
-          await cache.put(request, response || await download(entry));
-        }
-        status.completed += entry.size;
-        await report({ completed: status.completed });
-      } catch (error) { stopped = true; throw error; }
+  try {
+    for (const entry of MANIFEST.entries) {
+      await ensureEntry(cache, entry, previous);
+      status.completed += entry.size;
+      await report({ completed: status.completed });
     }
-  }));
-  const failure = results.find(result => result.status === 'rejected');
-  if (failure) {
-    await report({ phase: 'error', reason: failure.reason?.name === 'QuotaExceededError' ? 'storage' : 'network' });
-    throw failure.reason;
+  } catch (error) {
+    await report({ phase: 'error', reason: error?.name === 'QuotaExceededError' ? 'storage' : 'network' });
+    throw error;
   }
   await cache.put(READY, new Response(MANIFEST.version));
   await report({ phase: 'ready', completed: TOTAL });
@@ -93,7 +115,7 @@ self.addEventListener('message', event => {
 async function rangedResponse(response, range) {
   const match = /^bytes=(\d*)-(\d*)$/.exec(range);
   if (!match || (!match[1] && !match[2])) return response;
-  const bytes = await response.arrayBuffer(), length = bytes.byteLength;
+  const body = await response.blob(), length = body.size;
   const start = match[1] ? Number(match[1]) : Math.max(0, length - Number(match[2]));
   const end = match[1] && match[2] ? Math.min(Number(match[2]), length - 1) : length - 1;
   if (start > end || start >= length) return new Response(null, { status: 416, headers: { 'Content-Range': `bytes */${length}` } });
@@ -102,7 +124,7 @@ async function rangedResponse(response, range) {
   headers.set('Accept-Ranges', 'bytes');
   headers.set('Content-Range', `bytes ${start}-${end}/${length}`);
   headers.set('Content-Length', String(end - start + 1));
-  return new Response(bytes.slice(start, end + 1), { status: 206, headers });
+  return new Response(body.slice(start, end + 1), { status: 206, headers });
 }
 self.addEventListener('fetch', event => {
   const request = event.request;
@@ -117,8 +139,9 @@ self.addEventListener('fetch', event => {
     const cache = await caches.open(CACHE);
     let response = await cache.match(key(entry));
     if (!response) {
-      response = await download(entry);
-      await cache.put(key(entry), response.clone());
+      await ensureEntry(cache, entry);
+      response = await cache.match(key(entry));
+      if (!response) throw new Error('Offline asset could not be stored');
     }
     const range = request.headers.get('range');
     return range ? rangedResponse(response, range) : response;

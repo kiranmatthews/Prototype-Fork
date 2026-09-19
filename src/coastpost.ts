@@ -497,6 +497,7 @@ export class CoastPostRenderer {
     if (this.disposed) {
       throw new Error("CoastPostRenderer.renderGameFlow() called after dispose()");
     }
+    this.syncPassEnablement();
     if (!this.gameFlowPostActive || this.renderer.getScissorTest()) return "direct";
 
     // This is an ownership switch, not a gameplay resume. Keep the composer at
@@ -835,6 +836,11 @@ export class CoastPostRenderer {
 
   private syncPassEnablement(): void {
     const crtActive = this.crtPass?.active ?? false;
+    if (!crtActive) {
+      this.crtPass?.releaseInactiveTargets();
+      this.crtOutputTarget?.dispose();
+      this.crtOutputTarget = null;
+    }
     const unityPostActive = this.enabledState && !this.liteState;
     // Entering an offscreen composer drops the WebGLRenderer's default-buffer
     // MSAA. Keep Unity SMAA High in front of either authored post path.

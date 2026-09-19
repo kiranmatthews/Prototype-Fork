@@ -541,6 +541,10 @@ export class UnityBloomPass extends Pass {
 
   private syncEnabled(): void {
     this.enabled = this.presentationEnabled && this.lookActive;
-    if (!this.enabled) this.lastDrawCount = 0;
+    if (!this.enabled) {
+      this.lastDrawCount = 0;
+      this.disposeTargets();
+      this.currentSpec = null;
+    }
   }
 }

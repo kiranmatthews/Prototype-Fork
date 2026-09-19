@@ -3,7 +3,14 @@
 The production game automatically saves a complete offline copy after loading.
 The title screen and Options show download progress and **Ready for offline play**
 only after every file in that release has been saved. Keep the game open and online
-until that message appears. The current copy is approximately 142 MiB.
+until that message appears. The current copy is approximately 201 MiB, including
+full-resolution GPU-compressed scenery and its original image fallbacks.
+
+Saving starts after foreground startup assets settle. Downloads, integrity
+checks and cache writes are serialized to bound temporary memory, and concurrent
+requests for one missing file share the same write. Abandoned incomplete older
+releases are removed; the complete working release and the current install's
+resumable progress are preserved. Game saves are separate and are not removed.
 
 ## iPhone and iPad
 

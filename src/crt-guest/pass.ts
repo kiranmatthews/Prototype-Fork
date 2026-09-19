@@ -424,6 +424,14 @@ export class CrtGuestPass extends Pass {
     this.lastHistoryResetReason = reason;
   }
 
+  /** Turning the effect off must release its frame/history buffers too. */
+  releaseInactiveTargets(): void {
+    if (this.active || !this.targets) return;
+    this.disposeTargets();
+    this.resetHistory("inactive CRT targets released");
+    this.lastDrawCount = 0;
+  }
+
   override setSize(width: number, height: number): void {
     this.setResolution(width, height, width, height);
   }
@@ -552,6 +560,7 @@ export class CrtGuestPass extends Pass {
     this.syncSettingsState();
 
     if (!this.active) {
+      this.releaseInactiveTargets();
       this.bypassCount += 1;
       this.lastDrawCount = 1;
       this.renderBypass(renderer, writeBuffer, readBuffer, maskActive);

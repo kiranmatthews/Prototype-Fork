@@ -92,3 +92,17 @@ opening camera preserves its horizontal composition in narrower app panes.
 This refinement used two additional Meshy tasks (30 credits). The new trunk
 reference was created with built-in imagegen; its exact prompt and the cabin
 reconstruction settings are recorded in `refinement-prompts.json`.
+
+## Mobile GPU storage
+
+Run `TREEHOUSE_TOKTX=/path/to/toktx python3 tools/treehouse-trail/compress_gpu.py`
+after packing the active models. This requires Pillow and Khronos toktx 4.4.2.
+It adds UASTC quality-2 textures with lossless Zstd storage and complete mipmaps,
+at the existing 2048² color / 1024² normal dimensions. Geometry, UVs, materials
+and original JPEG fallback bytes are preserved. It is safe to rerun; encoding
+is cached by source hash. Updated hashes/budgets are written to manifests and
+provenance without removing their source/reference metadata.
+
+`node tools/test-treehouse-gpu-textures.mjs` checks the packed assets. Typical
+ASTC/BC7 GPU storage is 6.67 MiB per texture pair instead of 26.67 MiB. Runtime
+shares the identical tree/canopy pair in both compressed and fallback paths.
