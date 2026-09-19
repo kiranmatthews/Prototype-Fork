@@ -6,6 +6,18 @@ interface CachedMeshBounds {
   morphs: number[];
   box: THREE.Box3;
 }
+interface CachedSkinVertices {
+  attributes: (THREE.BufferAttribute|THREE.InterleavedBufferAttribute)[];
+  versions: number[];
+  morphs: number[];
+  relative: boolean;
+  bind: number[];
+  positions: Float64Array;
+  morphDeltas: Float64Array[];
+  indices: Uint32Array;
+  weights: Float64Array;
+}
+const attributeVersion=(a:THREE.BufferAttribute|THREE.InterleavedBufferAttribute)=>'version' in a?a.version:a.data.version;
 
 /** Pickup/attack silhouette, independent of the level-authoring body collider.
  * Only the rider hierarchy participates: boards, shadows and attack VFX are
@@ -16,6 +28,9 @@ export class CharacterInteractionBounds {
   private readonly transformed = new THREE.Box3();
   private readonly instance = new THREE.Matrix4();
   private readonly world = new THREE.Matrix4();
+  private readonly skinPalettes = new WeakMap<THREE.Skeleton,THREE.Matrix4[]>();
+  private readonly skinVertices = new WeakMap<THREE.SkinnedMesh,CachedSkinVertices>();
+  private readonly skinBase = new THREE.Vector3();
   meshCount = 0;
   supportSamples = 0;
   private readonly supportCache = new WeakMap<THREE.BufferGeometry, Uint32Array>();
@@ -149,8 +164,7 @@ export class CharacterInteractionBounds {
     const geometry=mesh.geometry,positions=geometry.getAttribute('position');
     if(!positions)return null;
     if(mesh instanceof THREE.SkinnedMesh){
-      mesh.skeleton.update();mesh.computeBoundingBox();
-      return mesh.boundingBox;
+      return this.skinnedBounds(mesh);
     }
     const morphs=mesh.morphTargetInfluences??[];
     const version='version' in positions?positions.version:positions.data.version;
@@ -164,5 +178,66 @@ export class CharacterInteractionBounds {
       cached={geometry,version,morphs:[...morphs],box};this.cache.set(mesh,cached);
     }
     return cached.box;
+  }
+
+  /** Same full vertex/morph/skin measurement as SkinnedMesh.computeBoundingBox.
+   * Three's per-vertex getter multiplies bone world × inverse for every weight
+   * of every vertex. Each bone has one transform for this pose: calculate it
+   * once, then reuse it across all vertices without approximating the bounds. */
+  private skinnedBounds(mesh:THREE.SkinnedMesh):THREE.Box3 {
+    const skeleton=mesh.skeleton;
+    skeleton.update();
+    if(mesh.getVertexPosition!==THREE.SkinnedMesh.prototype.getVertexPosition){mesh.computeBoundingBox();return mesh.boundingBox!;}
+    let palette=this.skinPalettes.get(skeleton);
+    if(!palette){palette=[];this.skinPalettes.set(skeleton,palette);}
+    for(let i=0;i<skeleton.bones.length;i++){
+      (palette[i]??=new THREE.Matrix4()).multiplyMatrices(skeleton.bones[i].matrixWorld,skeleton.boneInverses[i]);
+    }
+    const geometry=mesh.geometry,positions=geometry.getAttribute('position');
+    const indices=geometry.getAttribute('skinIndex'),weights=geometry.getAttribute('skinWeight');
+    const attributes=[positions,indices,weights,...(geometry.morphAttributes.position??[])];
+    const morphs=mesh.morphTargetInfluences??[];
+    const bind=mesh.bindMatrix.elements,linearBind=bind[3]===0&&bind[7]===0&&bind[11]===0&&bind[15]===1;
+    let cached=this.skinVertices.get(mesh);
+    if(!cached||attributes.length!==cached.attributes.length||attributes.some((a,i)=>a!==cached!.attributes[i]||attributeVersion(a)!==cached!.versions[i])||
+      geometry.morphTargetsRelative!==cached.relative||(!linearBind&&(morphs.length!==cached.morphs.length||morphs.some((v,i)=>v!==cached!.morphs[i])))||bind.some((v,i)=>v!==cached!.bind[i])){
+      cached={attributes,versions:attributes.map(attributeVersion),morphs:[...morphs],relative:geometry.morphTargetsRelative,bind:[...mesh.bindMatrix.elements],
+        positions:new Float64Array(positions.count*3),morphDeltas:linearBind?(geometry.morphAttributes.position??[]).map(()=>new Float64Array(positions.count*3)):[],indices:new Uint32Array(positions.count*4),weights:new Float64Array(positions.count*4)};
+      for(let i=0;i<positions.count;i++){
+        // Morph and bind-space vertices only change on geometry/shape edits,
+        // not when a bone moves. Keep double precision, matching Vector3.
+        if(linearBind)this.skinBase.fromBufferAttribute(positions,i).applyMatrix4(mesh.bindMatrix);
+        else THREE.Mesh.prototype.getVertexPosition.call(mesh,i,this.skinBase).applyMatrix4(mesh.bindMatrix);
+        this.skinBase.toArray(cached.positions,i*3);
+        for(let m=0;m<cached.morphDeltas.length;m++){
+          const target=geometry.morphAttributes.position[m],relative=geometry.morphTargetsRelative;
+          const x=target.getX(i)-(relative?0:positions.getX(i)),y=target.getY(i)-(relative?0:positions.getY(i)),z=target.getZ(i)-(relative?0:positions.getZ(i));
+          const delta=cached.morphDeltas[m];delta[i*3]=bind[0]*x+bind[4]*y+bind[8]*z;delta[i*3+1]=bind[1]*x+bind[5]*y+bind[9]*z;delta[i*3+2]=bind[2]*x+bind[6]*y+bind[10]*z;
+        }
+        for(let c=0;c<4;c++){cached.indices[i*4+c]=indices.getComponent(i,c);cached.weights[i*4+c]=weights.getComponent(i,c);}
+      }
+      this.skinVertices.set(mesh,cached);
+    }
+    const box=mesh.boundingBox??=new THREE.Box3();box.makeEmpty();
+    const base=cached.positions,skinIndices=cached.indices,skinWeights=cached.weights,inv=mesh.bindMatrixInverse.elements;
+    for(let i=0;i<positions.count;i++){
+      let x=base[i*3],y=base[i*3+1],z=base[i*3+2],sx=0,sy=0,sz=0;
+      for(let m=0;m<cached.morphDeltas.length;m++){
+        const influence=morphs[m]??0;if(influence===0)continue;
+        const delta=cached.morphDeltas[m];x+=delta[i*3]*influence;y+=delta[i*3+1]*influence;z+=delta[i*3+2]*influence;
+      }
+      for(let c=0;c<4;c++){
+        const offset=i*4+c,weight=skinWeights[offset];if(weight===0)continue;
+        const m=palette[skinIndices[offset]].elements,w=1/(m[3]*x+m[7]*y+m[11]*z+m[15]);
+        sx+=(m[0]*x+m[4]*y+m[8]*z+m[12])*w*weight;
+        sy+=(m[1]*x+m[5]*y+m[9]*z+m[13])*w*weight;
+        sz+=(m[2]*x+m[6]*y+m[10]*z+m[14])*w*weight;
+      }
+      const w=1/(inv[3]*sx+inv[7]*sy+inv[11]*sz+inv[15]);
+      const px=(inv[0]*sx+inv[4]*sy+inv[8]*sz+inv[12])*w,py=(inv[1]*sx+inv[5]*sy+inv[9]*sz+inv[13])*w,pz=(inv[2]*sx+inv[6]*sy+inv[10]*sz+inv[14])*w;
+      box.min.x=Math.min(box.min.x,px);box.min.y=Math.min(box.min.y,py);box.min.z=Math.min(box.min.z,pz);
+      box.max.x=Math.max(box.max.x,px);box.max.y=Math.max(box.max.y,py);box.max.z=Math.max(box.max.z,pz);
+    }
+    return box;
   }
 }

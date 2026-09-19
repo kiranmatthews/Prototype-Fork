@@ -16,7 +16,11 @@ export class GameInterfaceSurface {
     const style = document.createElement("style");
     // Filter opacity preserves source CSS opacity (including fades), layout,
     // pointer capture and hit testing. Never hide via display/visibility here.
-    style.textContent = INK.split(", ").map(selector => `body.game-interface-composited ${selector}`).join(",") + " { filter:opacity(0) !important; }";
+    style.textContent = INK.split(", ").map(selector => `body.game-interface-composited ${selector}`).join(",") + " { filter:opacity(0) !important; }" +
+      // This DOM ink is already invisible and mirrored into WebGL. Leaving
+      // nine frosted-glass backdrops active still asks the browser to blur the
+      // moving canvas at native device resolution, even when the game is 540p.
+      "body.game-interface-composited :is(.tc-arrow,.tc-btn,.tc-pause) { -webkit-backdrop-filter:none !important; backdrop-filter:none !important; }";
     document.head.appendChild(style);
   }
   setComposited(value: boolean): void {
