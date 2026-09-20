@@ -6,12 +6,13 @@ import { gameFlowRasterSize } from '../gameFlowSurface';
 import { loadRooAtlases, RooAtlasPainter } from '../roo-type/atlas';
 import { rooMenuText, rooMenuPalette } from '../roo-type/menu';
 import { ROO_APPEARANCE_EVENT, rooLightPosition } from '../roo-type/settings';
+import type * as THREE from 'three';
+import {GameHudSurface} from '../gameHudSurface';
 
 /** Native ink for the competition's semantic DOM, drawn by the shared pre-CRT
  * interface pass. Layout/hit targets remain in DOM, just like the other menus. */
 export class CompetitionSurface {
-  private canvas: HTMLCanvasElement | null = null;
-  private ctx: CanvasRenderingContext2D | null = null;
+  private surface:GameHudSurface|null=null;
   private dirty = true;
   private active = false;
   private layout = '';
@@ -36,29 +37,32 @@ export class CompetitionSurface {
   }
   invalidate(): void { this.dirty = true; }
   deactivate(): void {
-    if(this.canvas && this.active){this.canvas.width=1;this.canvas.height=1;}
+    this.surface?.dispose();this.surface=null;
     this.active=false;this.dirty=true;this.layout='';
   }
-  get diagnostics() { return { active:this.active, paints:this.paints, width:this.canvas?.width??0, height:this.canvas?.height??0 }; }
-  paint(target: CanvasRenderingContext2D, size: {width:number;height:number}): void {
+  get diagnostics() { return { active:this.active, paints:this.paints, width:this.surface?.diagnostics.textureWidth??0, height:this.surface?.diagnostics.textureHeight??0 }; }
+  draw(renderer:THREE.WebGLRenderer,size:{width:number;height:number},target:THREE.WebGLRenderTarget|null):void {
     if(this.root.hidden || getComputedStyle(this.root).display==='none'){this.deactivate();return;}
-    const raster=gameFlowRasterSize(size.width,size.height);
-    const layout=`${raster.width}:${raster.height}:${window.innerWidth}:${window.innerHeight}`;
-    this.canvas ??= document.createElement('canvas');
-    this.ctx ??= this.canvas.getContext('2d');
-    if(!this.ctx)return;
-    if(this.layout!==layout){this.canvas.width=raster.width;this.canvas.height=raster.height;this.layout=layout;this.dirty=true;}
+    const ratio=target===null?renderer.getPixelRatio():1;
+    const raster=gameFlowRasterSize(size.width*ratio,size.height*ratio);
+    const clock=this.root.classList.contains('is-running')?this.root.querySelector<HTMLElement>('.comp-run-hud'):null;
+    const r=clock?.getBoundingClientRect(),sx=raster.width/window.innerWidth,sy=raster.height/window.innerHeight;
+    // Preserve the timer's shadow and native pixel density, without an extra
+    // viewport-sized canvas copy and upload through the touch-control layer.
+    const bounds=r?{x:(r.x-8)*sx,y:(r.y-8)*sy,width:(r.width+20)*sx,height:(r.height+20)*sy}:undefined;
+    const layout=JSON.stringify([raster,window.innerWidth,window.innerHeight,bounds]);
+    this.surface??=new GameHudSurface({lifeFaceUrl:''});
+    if(this.layout!==layout){this.layout=layout;this.dirty=true;}
     this.active=true;
     if(updateMenuPngFocus(this.root,performance.now(),this.dirty))this.dirty=true;
     const lightPhase=Math.round(rooLightPosition()*64);
     if(this.dirty||lightPhase!==this.lightPhase){
-      const ctx=this.ctx;
-      ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
-      ctx.scale(this.canvas.width/window.innerWidth,this.canvas.height/window.innerHeight);
-      this.paintElement(ctx,this.root);
+      this.surface.draw(raster,{rasterBounds:bounds,drawExtra:ctx=>{
+        ctx.scale(sx,sy);this.paintElement(ctx,this.root);
+      }});
       this.paints++;this.dirty=false;this.lightPhase=lightPhase;
     }
-    target.drawImage(this.canvas,0,0,window.innerWidth,window.innerHeight);
+    this.surface.composite(renderer,size,target);
   }
   private paintElement(ctx: CanvasRenderingContext2D, element: Element): void {
     const style=getComputedStyle(element),rect=element.getBoundingClientRect();

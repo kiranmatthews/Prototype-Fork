@@ -1004,7 +1004,12 @@ function renderPrimaryScene(
     coastPostResumeCount++;
   }
   if (prepareOcean) level.water?.renderPasses(renderer, scene, camera);
-  if (coastPost) coastPost.render(dt, preCrtOverlay);
+  if (coastPost) {
+    const frozenCup=competition&&!competition.simulating&&competition.phase!=="countdown"&&
+      !gameFlow.blocksGameplay&&!gameFlow.developerChromeVisible&&!editor.active;
+    coastPost.setFrozenScene(frozenCup?`${level.pickRoot.uuid}:${competition!.phase}:${competition!.runNumber}`:null);
+    coastPost.render(dt, preCrtOverlay);
+  }
   else renderer.render(scene, camera);
 }
 

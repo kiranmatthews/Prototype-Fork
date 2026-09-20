@@ -33,10 +33,14 @@ export class GameInterfaceSurface {
   }
   get diagnostics() { return { composited: this.composited, cursorDrawn: this.cursorDrawn, competition: this.competition?.diagnostics ?? null, surface: this.surface?.diagnostics ?? null }; }
   draw(renderer: THREE.WebGLRenderer, size: { width: number; height: number }, target: THREE.WebGLRenderTarget | null): void {
+    this.drawShared(renderer,size,target);
+    this.competition?.draw(renderer,size,target);
+  }
+  private drawShared(renderer: THREE.WebGLRenderer, size: { width: number; height: number }, target: THREE.WebGLRenderTarget | null): void {
     this.cursorDrawn = false;
     // Ordinary desktop gameplay has no map/touch/cursor ink. Do not upload
     // another full-screen transparent texture just to draw nothing.
-    const visible=[...document.querySelectorAll(INK)].filter(element=>this.visible(element));
+    const visible=[...document.querySelectorAll(INK)].filter(element=>!element.closest('.competition-host')&&this.visible(element));
     if(!visible.length){this.touchKey=null;return;}
     this.surface ??= new GameHudSurface();
     // A null render target is expressed in CSS pixels by Three.js, while its
@@ -61,7 +65,7 @@ export class GameInterfaceSurface {
     const drawn = this.surface.draw(raster, { drawExtra: ctx => {
       this.cursorDrawn = false;
       ctx.scale(raster.width / window.innerWidth, raster.height / window.innerHeight);
-      this.paintMap(ctx); this.paintTouch(ctx); this.competition?.paint(ctx,raster);
+      this.paintMap(ctx); this.paintTouch(ctx);
       paintInputPrompts(ctx,document,'.competition-host'); this.paintCursor(ctx);
     } });
     this.touchKey=touchKey;

@@ -70,6 +70,7 @@ await withSkateRuntime(async ({ server }) => {
   assert.doesNotMatch(ui.element.innerHTML,/BAILS|comp-bails/,'run HUD still shows a bail counter');
   const surface=await readFile('src/gameInterfaceSurface.ts','utf8');
   assert.match(surface,/INK = [^;]*\.competition-host/,'competition DOM ink is still above CRT');
-  assert.match(surface,/this.competition\?\.paint\(ctx,raster\)/,'competition does not enter the shared pre-CRT pass at its actual raster size');
+  assert.match(surface,/this.competition\?\.draw\(renderer,size,target\)/,'competition must compose its own texture at the shared pre-CRT seam');
+  assert.doesNotMatch(surface,/this.competition\?\.paint\(/,'the timer must not copy through the full-screen touch canvas');
   console.log('PASS competition selection/focus, four-way stick/D-pad, hold edges, pressed state, disabled judges, refresh/pause handoff and one in-run points UI.');
 });

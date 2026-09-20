@@ -16,7 +16,7 @@ import * as THREE from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import { Pass } from "three/examples/jsm/postprocessing/Pass.js";
-import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+import { FrozenScenePass } from './frozenScenePass';
 import { UNITY_POST_PROFILE, UnityPostPass } from "./unityPost";
 import { UnityBloomPass } from "./unityBloom";
 import { UnitySmaaPass } from "./unitySmaa";
@@ -140,7 +140,7 @@ export class CoastPostRenderer {
   private scene: THREE.Scene;
   private camera: THREE.Camera;
   private readonly composer: EffectComposer;
-  private readonly renderPass: RenderPass;
+  private readonly renderPass: FrozenScenePass;
   private readonly smaaPass: UnitySmaaPass;
   private readonly bloomPass: UnityBloomPass;
   private readonly unityPostPass: UnityPostPass;
@@ -226,7 +226,7 @@ export class CoastPostRenderer {
     this.composer.renderTarget1.samples = 0;
     this.composer.renderTarget2.samples = 0;
 
-    this.renderPass = new RenderPass(scene, camera);
+    this.renderPass = new FrozenScenePass(scene, camera);
     this.smaaPass = new UnitySmaaPass(
       this.width * this.pixelRatio,
       this.height * this.pixelRatio,
@@ -458,6 +458,7 @@ export class CoastPostRenderer {
    * during this interval, so the two render graphs never overlap at full size.
    */
   suspendForGameFlow(): void {
+    this.renderPass.setFrozen(null);
     if (this.disposed || this.suspendedForGameFlow) return;
     this.suspendedForGameFlow = true;
     this.configureComposer(1, 1, 1);
@@ -607,9 +608,12 @@ export class CoastPostRenderer {
     return "post";
   }
 
+  setFrozenScene(key:string|null):void {this.renderPass.setFrozen(key);}
+
   dispose(): void {
     if (this.disposed) return;
     this.disposed = true;
+    this.renderPass.dispose();
     this.smaaPass.dispose();
     this.bloomPass.dispose();
     this.unityPostPass.dispose();

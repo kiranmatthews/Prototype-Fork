@@ -21,7 +21,7 @@ export { SKY_BRIDGE_FOG_NEAR, SKY_BRIDGE_FOG_FAR } from "./levelAtmosphere";
 import { createCollectibleShell } from "./collectibleSpecular";
 import { createTimeMedal, timeMedalGeometry } from "./timeMedalModel";
 import { trackPresentationImage } from "./presentationLoading";
-import { Rail } from "./rails";
+import { Rail, batchRailVisuals } from "./rails";
 import { DiscardedBoards } from "./skateboard/discarded";
 import {
   PROP_SCALE,
@@ -4511,6 +4511,7 @@ export class Level {
         if (!m.isMesh) return;
         m.material = m.geometry.type === "CylinderGeometry" ? railMat : postMat;
       });
+      if(!EDITOR_BUILD)batchRailVisuals(rail.object);
     }
   }
 

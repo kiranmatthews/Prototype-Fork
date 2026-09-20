@@ -8,6 +8,7 @@ import { JUDGES, type JungleCupEvent, type Standing } from './event';
 import { CompetitionSurface } from './surface';
 import { TRICK_GUIDE_INTRO, TRICK_GUIDE_PAGE_COUNT, trickGuidePages } from '../skateTrickGuide';
 import { installRooMenuText } from '../roo-type/menu';
+import type * as THREE from 'three';
 
 export type CompetitionAction = 'start' | 'standings' | 'retry' | 'exit';
 export interface JudgePresentationHooks {
@@ -95,8 +96,11 @@ export class CompetitionPresentation {
   }
   private changeGuidePage(delta:number):void {this.guidePage=(this.guidePage+delta+TRICK_GUIDE_PAGE_COUNT)%TRICK_GUIDE_PAGE_COUNT;this.key='';this.render(this.event);}
   get diagnostics() { return { selected: this.buttons()[this.selected]?.dataset.action ?? null, ...this.surface.diagnostics }; }
-  paint(ctx: CanvasRenderingContext2D, size: {width:number;height:number}): void { this.surface.paint(ctx,size); }
-  setComposited(value: boolean): void { if(!value)this.surface.deactivate(); }
+  draw(renderer:THREE.WebGLRenderer,size:{width:number;height:number},target:THREE.WebGLRenderTarget|null):void {this.surface.draw(renderer,size,target);}
+  setComposited(value: boolean): void {
+    this.element.toggleAttribute('data-precrt-composited',value);
+    if(!value)this.surface.deactivate();
+  }
   private buttons(): HTMLButtonElement[] { return [...this.element.querySelectorAll<HTMLButtonElement>('button:not(:disabled):not([data-touch-close])')]; }
   private syncSelection(focus = true): void {
     const buttons=this.buttons();

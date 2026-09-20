@@ -3,6 +3,29 @@
 // length at a constant authored grind speed.
 
 import * as THREE from 'three';
+import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+
+/** Batch visual segments within each rail, keeping the gameplay polyline and
+ * independently moving/hidden rail groups untouched. No shape simplification. */
+export function batchRailVisuals(group:THREE.Group):void {
+  const cells=new Map<string,THREE.Mesh[]>();
+  for(const child of group.children){
+    if(!(child instanceof THREE.Mesh)||Array.isArray(child.material)||!child.visible)continue;
+    const key=`${child.material.uuid}:${Math.floor(child.position.x/16)}:${Math.floor(child.position.z/16)}`;
+    const cell=cells.get(key)??[];cell.push(child);cells.set(key,cell);
+  }
+  for(const pieces of cells.values()){
+    if(pieces.length<2)continue;
+    const geometries=pieces.map(mesh=>{mesh.updateMatrix();return mesh.geometry.clone().applyMatrix4(mesh.matrix);});
+    const geometry=mergeGeometries(geometries);geometries.forEach(g=>g.dispose());
+    if(!geometry)continue;
+    geometry.computeBoundingBox();geometry.computeBoundingSphere();
+    const mesh=new THREE.Mesh(geometry,pieces[0].material);mesh.name='Batched rail segments';
+    mesh.castShadow=pieces[0].castShadow;mesh.receiveShadow=pieces[0].receiveShadow;
+    group.add(mesh);
+    for(const piece of pieces){piece.removeFromParent();piece.geometry.dispose();}
+  }
+}
 
 export interface RailSample {
   t: number; // arc length along the rail
