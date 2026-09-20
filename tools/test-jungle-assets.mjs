@@ -113,6 +113,27 @@ try{
  const m=jungleAssetMatrix({dkind:'stoneblock',p:[2,3,4],s:[2,1,1]});assert.deepEqual(new THREE.Vector3(0,1,0).applyMatrix4(m).toArray(),[2,4,4]);
  const late=new JungleAssetKit(false,false);late.add({dkind:'jungleleaf',p:[0,0,0]});late.dispose();await late.ready();assert.equal(late.root.children.length,0);
 
+ const streamed=new JungleAssetKit(true,false,false,true);
+ for(const z of [0,-600])streamed.add({dkind:'stoneblock',p:[0,0,z]});
+ streamed.add({dkind:'treehousemattefar',p:[0,0,-1200]});streamed.flush();
+ assert.equal(streamed.root.children.length,0,'deferred cells cannot start all asset loads on construction');
+ streamed.setView(new THREE.Vector3(),155);await streamed.ready();
+ assert.equal(streamed.diagnostics.placements,3);assert.equal(streamed.diagnostics.ready,2,'only nearby scenery plus backdrop is resident');
+ const near=streamed.root.children.find(mesh=>mesh.userData.jungleAsset==='stoneblock');let retired=0;
+ near.addEventListener('dispose',()=>retired++);
+ streamed.setView(new THREE.Vector3(0,0,-600),155);await streamed.ready();
+ assert.equal(retired,1,'leaving a cell releases its instance buffer');
+ assert.equal(streamed.diagnostics.ready,2,'traversal must not accumulate distant cells');
+ assert.ok(streamed.root.children.some(mesh=>mesh.position.z===-600));
+ const targetGeometry=(await inspection.load('stoneblock')).geometry;
+ assert.equal(streamed.root.children.find(mesh=>mesh.userData.jungleAsset==='stoneblock').geometry,targetGeometry,'streaming keeps the exact authored mesh');
+ streamed.setView(new THREE.Vector3(),155);streamed.setView(new THREE.Vector3(0,0,-600),155);await streamed.ready();
+ assert.equal(streamed.diagnostics.ready,2,'late activation cannot resurrect a retired cell');
+ streamed.setView(new THREE.Vector3(),155,new THREE.Vector3(0,0,-600));await streamed.ready();
+ assert.equal(streamed.diagnostics.ready,3,'split-screen must retain both cameras');
+ assert.deepEqual(streamed.errors,[]);streamed.dispose();await streamed.ready();
+ assert.equal(streamed.root.children.length,0);
+
  const {Level,setEditorBuild}=await server.ssrLoadModule('/src/level.ts');
  const level=new Level(new THREE.Scene(),{id:'jungle',name:'Jungle Ruins'});await level.prepareJungleAssets();level.pickRoot.updateMatrixWorld(true);
  const capture=JSON.parse(JSON.stringify(level.captureData()));assert.equal(capture.jungleAtmosphere,true);

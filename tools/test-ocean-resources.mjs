@@ -22,6 +22,22 @@ THREE.TextureLoader.prototype.load = function (_url, ready) {
 };
 let cases = 0;
 try {
+  {
+    const ocean=new UnityOcean({seaLevel:-1,shoreDirX:1,shoreDirZ:0,shore:[{x:0,z:20},{x:0,z:-20}],quality:'full'});
+    let visible=false,deleted=0,passes=0,valid=true;
+    const gl={ANY_SAMPLES_PASSED_CONSERVATIVE:1,QUERY_RESULT_AVAILABLE:2,QUERY_RESULT:3,
+      isContextLost:()=>false,createQuery:()=>({}),beginQuery(){},endQuery(){},isQuery:()=>valid,
+      getQueryParameter:(_q,key)=>key===2?true:visible,deleteQuery:()=>deleted++};
+    const renderer={getContext:()=>gl},camera=new THREE.PerspectiveCamera();
+    ocean.update=()=>{};ocean.renderReflection=()=>passes++;ocean.renderPrepass=()=>passes++;
+    const draw=()=>{ocean.ribbon.onBeforeRender(renderer);ocean.ribbon.onAfterRender();};
+    ocean.renderPasses(renderer,new THREE.Scene(),camera);assert.equal(passes,2);
+    draw();ocean.renderPasses(renderer,new THREE.Scene(),camera);assert.equal(passes,2,'fully occluded water must not redraw the world twice');
+    draw();visible=true;ocean.renderPasses(renderer,new THREE.Scene(),camera);assert.equal(passes,4,'newly visible water resumes full-quality passes');
+    draw();visible=false;camera.position.x=10;ocean.renderPasses(renderer,new THREE.Scene(),camera);assert.equal(passes,6,'teleports need fresh buffers immediately');
+    draw();valid=false;ocean.renderPasses(renderer,new THREE.Scene(),camera);assert.equal(passes,8,'context reset must discard stale occlusion');
+    assert.equal(deleted,3);ocean.dispose();
+  }
   for (const quality of ["lite", "full"]) for (const lateLoad of [false, true]) {
     pending = [];
     const ocean = new UnityOcean({ seaLevel: -1, shoreDirX: 1, shoreDirZ: 0,

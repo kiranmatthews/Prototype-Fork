@@ -278,7 +278,7 @@ export function addJungleDapple(material: THREE.Material, time: { value: number 
   material.customProgramCacheKey = () => `jungle-dapple-v4-${wind}-${dirt}-${material.userData.jungleTrail===true}`;
 }
 
-interface Bucket {kind:RenderKind;transforms:THREE.Matrix4[];colors:THREE.Color[];}
+interface Bucket {kind:RenderKind;transforms:THREE.Matrix4[];colors:THREE.Color[];bounds:THREE.Box3;mesh?:THREE.InstancedMesh;assets?:ReturnType<typeof createJungleAssetScope>;}
 export class JungleAssetKit {
   private assets=createJungleAssetScope();
   readonly root=new THREE.Group();readonly time={value:0};readonly errors:string[]=[];
@@ -287,7 +287,13 @@ export class JungleAssetKit {
   private depths=new Map<RenderKind,THREE.MeshDepthMaterial>();
   private loose=new Set<THREE.Group>();private disposed=false;
   private sourceCount=0;private count=0;private readyCount=0;private skipped=0;
-  constructor(private batched:boolean,private lite:boolean,private depthFade=false){this.root.name="Jungle Ruins modular kit";}
+  private cells:Bucket[]=[];
+  private pending=new Set<Promise<void>>();
+  private kindUsers=new Map<RenderKind,number>();
+  private viewSet=false;
+  private lastViews:THREE.Vector3[]=[];
+  private lastRadius=0;
+  constructor(private batched:boolean,private lite:boolean,private depthFade=false,private streamed=false){this.root.name="Jungle Ruins modular kit";}
   private material(kind:RenderKind,template:Template):THREE.MeshStandardMaterial|THREE.MeshLambertMaterial|THREE.MeshBasicMaterial {
     const cached=this.materials.get(kind);if(cached)return cached;
     const spec=renderSpec(kind),isVine=kind==="vine"||kind==="junglevine";
@@ -360,8 +366,11 @@ export class JungleAssetKit {
         const cell=renderSpec(part.kind).lod?20:32;
         const key=`${part.kind}:${Math.floor(point.x/cell)}:${Math.floor(point.z/cell)}`;
         let bucket=this.buckets.get(key);
-        if(!bucket){bucket={kind:part.kind,transforms:[],colors:[]};this.buckets.set(key,bucket);}
+        if(!bucket){bucket={kind:part.kind,transforms:[],colors:[],bounds:new THREE.Box3()};this.buckets.set(key,bucket);}
         bucket.transforms.push(part.matrix);bucket.colors.push(new THREE.Color(part.color));
+        // Templates are normalized around X/Z and anchored at Y=0. Include
+        // wind and overhang before the actual mesh bounds become available.
+        bucket.bounds.union(new THREE.Box3(new THREE.Vector3(-.75,-.3,-.75),new THREE.Vector3(.75,1.5,.75)).applyMatrix4(part.matrix));
       }
       return null;
     }
@@ -377,9 +386,15 @@ export class JungleAssetKit {
     return holder;
   }
   flush():void {
-    for(const bucket of this.buckets.values()){
-      this.jobs.push(this.assets.load(bucket.kind).then(template=>{
-        if(this.disposed)return;
+    this.cells.push(...this.buckets.values());this.buckets.clear();
+    if(!this.streamed)for(const bucket of this.cells)this.activate(bucket);
+  }
+  private activate(bucket:Bucket):void {
+    if(bucket.assets||this.disposed)return;
+    const assets=bucket.assets=createJungleAssetScope();
+    this.kindUsers.set(bucket.kind,(this.kindUsers.get(bucket.kind)??0)+1);
+    const job=assets.load(bucket.kind).then(template=>{
+        if(this.disposed||bucket.assets!==assets)return;
         const center=new THREE.Vector3();for(const m of bucket.transforms)center.add(new THREE.Vector3().setFromMatrixPosition(m));center.multiplyScalar(1/bucket.transforms.length);
         const inverse=new THREE.Matrix4().makeTranslation(-center.x,-center.y,-center.z);
         const material=this.material(bucket.kind,template);
@@ -391,17 +406,53 @@ export class JungleAssetKit {
         };
         // Keep the authored mesh at every distance. Cell bounds still allow
         // frustum culling without changing silhouettes as the camera moves.
-        const mesh=make(template.geometry);mesh.position.copy(center);this.root.add(mesh);
+        const mesh=make(template.geometry);mesh.position.copy(center);this.root.add(mesh);bucket.mesh=mesh;
         this.readyCount+=bucket.transforms.length;
-      }).catch(error=>this.failed(bucket.kind,error)));
+      }).catch(error=>{if(bucket.assets===assets)this.failed(bucket.kind,error);}).finally(()=>this.pending.delete(job));
+    this.pending.add(job);
+  }
+  private retire(bucket:Bucket):void {
+    if(!bucket.assets)return;
+    if(bucket.mesh){bucket.mesh.removeFromParent();bucket.mesh.dispose();bucket.mesh=undefined;this.readyCount-=bucket.transforms.length;}
+    const users=(this.kindUsers.get(bucket.kind)??1)-1;
+    if(users)this.kindUsers.set(bucket.kind,users);
+    else{
+      this.kindUsers.delete(bucket.kind);
+      this.materials.get(bucket.kind)?.dispose();this.materials.delete(bucket.kind);
+      this.depths.get(bucket.kind)?.dispose();this.depths.delete(bucket.kind);
     }
-    this.buckets.clear();
+    bucket.assets.dispose();bucket.assets=undefined;
+  }
+  /** Retain exact authored meshes in nearby cells, with ample travel/shadow
+   * prefetch. Background silhouettes and painted mattes are always resident. */
+  setView(position:THREE.Vector3,visibleDistance:number,secondary?:THREE.Vector3):void {
+    if(!this.streamed||this.disposed)return;
+    const radius=Math.max(96,visibleDistance)+64;
+    this.viewSet=true;
+    const views=secondary?[position,secondary]:[position];
+    if(views.length===this.lastViews.length&&views.every((p,i)=>this.lastViews[i].distanceToSquared(p)<16)&&this.lastRadius===radius)return;
+    this.lastViews=views.map(p=>p.clone());this.lastRadius=radius;
+    const distanceTo=(cell:Bucket)=>Math.min(...views.map(p=>cell.bounds.distanceToPoint(p)));
+    for(const cell of this.cells){
+      const spec=renderSpec(cell.kind),distance=distanceTo(cell);
+      if(spec.backdrop||spec.matte||distance<=radius)this.activate(cell);
+    }
+    // Acquire incoming leases before releasing outgoing cells, so a camera
+    // warp can reuse common templates instead of decoding them a second time.
+    for(const cell of this.cells){
+      const spec=renderSpec(cell.kind);
+      if(!spec.backdrop&&!spec.matte&&distanceTo(cell)>radius+64)this.retire(cell);
+    }
   }
   private failed(kind:RenderKind,error:unknown):void {
     if(this.disposed||this.errors.includes(kind))return;this.errors.push(kind);
     const url=(error as {response?:{url?:string}}).response?.url;if(url!=="")console.error(`Jungle asset failed: ${kind}`,error);
   }
-  async ready():Promise<void>{await Promise.all(this.jobs);}
+  async ready():Promise<void>{
+    // Tools/editor consumers that do not supply a camera retain the full kit.
+    if(!this.viewSet)for(const cell of this.cells)this.activate(cell);
+    await Promise.all([...this.jobs,...this.pending]);
+  }
   update(dt:number):void{if(!this.disposed)this.time.value+=Math.max(0,Math.min(dt,.1));}
   get diagnostics(){
     let draws=0,triangles=0,highTriangles=0;const usedTextures=new Set<THREE.Texture>();
@@ -416,9 +467,11 @@ export class JungleAssetKit {
       else if(texture.image?.width&&texture.image?.height)textureBytes+=texture.image.width*texture.image.height*4*4/3;
     }
     return {components:this.sourceCount,placements:this.count,ready:this.readyCount,skipped:this.skipped,draws,triangles,allLodTriangles:highTriangles,
+      cells:this.cells.length,residentCells:this.cells.filter(c=>!!c.mesh).length,pendingCells:this.pending.size,
       compressedTextures,textureMiB:Math.round(textureBytes/1048576*100)/100,errors:[...this.errors],windTime:this.time.value};
   }
   dispose():void {
+    for(const cell of this.cells)this.retire(cell);this.cells.length=0;
     this.assets.dispose();this.jobs.length=0;
     if(this.disposed)return;this.disposed=true;
     this.root.traverse(o=>{if((o as THREE.InstancedMesh).isInstancedMesh)(o as THREE.InstancedMesh).dispose();});

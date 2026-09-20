@@ -25,7 +25,9 @@ export async function createBakedRooText(host:HTMLElement,options:RooTextOptions
   host.classList.add('roo-text-host');host.replaceChildren(svg);
   let destroyed=false,baked=true,currentText='';
   const updateLight=()=>{
-    if(!host.isConnected)return;
+    // Canvas already animates the visible copy beneath CRT. Updating hundreds
+    // of hidden SVG layers still costs style/raster work on mobile Safari.
+    if(!host.isConnected||(host.closest('[data-precrt-composited]')&&frames.every(frame=>frame.hasAttribute('opacity'))))return;
     const weights=baked&&frames.length===3?rooLightWeights():[1,0,0];
     for(const [i,frame]of frames.entries())frame.setAttribute('opacity',String(weights[i]??0));
   };

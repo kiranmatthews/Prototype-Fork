@@ -190,11 +190,16 @@ export interface GameHudSurfaceOptions {
   rooFontFamily?: string;
   /** Draw simple crate/fruit silhouettes when the 3D icon pass is unavailable. */
   drawIconFallbacks?: boolean;
+  /** Keep full pixel density while uploading only the occupied HUD rectangle. */
+  cropToElements?: boolean;
 }
 
 export interface GameHudSurfaceDiagnostics {
   width: number;
   height: number;
+  textureWidth:number;
+  textureHeight:number;
+  uploadedPixels:number;
   canvasFrames: number;
   textureUploads: number;
   textureReallocations: number;
@@ -307,11 +312,17 @@ export class GameHudSurface {
   private textureReallocations = 0;
   private compositeDraws = 0;
   private lastCanvasMs = 0;
+  private readonly cropToElements:boolean;
+  private renderWidth=1;
+  private renderHeight=1;
+  private uploadedPixels=0;
+  private crop:SurfaceRect|null=null;
 
   constructor(options: GameHudSurfaceOptions = {}) {
     this.elements = options.elements ?? {};
     this.fontFamily = options.rooFontFamily ?? "Roo";
     this.iconFallbacks = options.drawIconFallbacks ?? false;
+    this.cropToElements=options.cropToElements??false;
 
     this.canvas = document.createElement("canvas");
     this.canvas.width = 1;
@@ -368,8 +379,11 @@ export class GameHudSurface {
 
   get diagnostics(): GameHudSurfaceDiagnostics {
     return {
-      width: this.canvas.width,
-      height: this.canvas.height,
+      width: this.renderWidth,
+      height: this.renderHeight,
+      textureWidth:this.canvas.width,
+      textureHeight:this.canvas.height,
+      uploadedPixels:this.uploadedPixels,
       canvasFrames: this.canvasFrames,
       textureUploads: this.textureUploads,
       textureReallocations: this.textureReallocations,
@@ -395,7 +409,12 @@ export class GameHudSurface {
     const started = now();
     const width = validDimension(size.width);
     const height = validDimension(size.height);
-    this.ensureSize(width, height);
+    const layout = this.layout(width, height);
+    const crop=this.cropBounds(width,height,layout,frame);
+    this.renderWidth=width;this.renderHeight=height;this.crop=crop;
+    this.ensureSize(crop.width,crop.height);
+    this.quad.scale.set(crop.width/width,crop.height/height,1);
+    this.quad.position.set((crop.x+crop.width/2)*2/width-1,1-(crop.y+crop.height/2)*2/height,0);
 
     const ctx = this.context;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -403,10 +422,10 @@ export class GameHudSurface {
     ctx.globalCompositeOperation = "source-over";
     ctx.filter = "none";
     ctx.shadowColor = "transparent";
-    ctx.clearRect(0, 0, width, height);
+    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    ctx.setTransform(1,0,0,1,-crop.x,-crop.y);
     this.primitiveCount = 0;
 
-    const layout = this.layout(width, height);
     const time = frame.nowMs ?? now();
 
     // Same ascending z-order as ui.ts: halo behind persistent HUD; flash and
@@ -436,9 +455,40 @@ export class GameHudSurface {
     this.hasPixels = this.primitiveCount > 0;
     this.texture.needsUpdate = true;
     this.textureUploads++;
+    if(this.hasPixels)this.uploadedPixels+=this.canvas.width*this.canvas.height;
     this.canvasFrames++;
     this.lastCanvasMs = now() - started;
     return this.hasPixels;
+  }
+
+  private cropBounds(width:number,height:number,layout:LayoutMap,frame:Readonly<GameHudFrameState>):SurfaceRect {
+    const full={x:0,y:0,width,height};
+    if(!this.cropToElements||frame.drawExtra||(frame.flashAlpha??0)>0||(frame.fadeAlpha??0)>0||(frame.haloAlpha??0)>0)return full;
+    let x0=Infinity,y0=Infinity,x1=-Infinity,y1=-Infinity;
+    const ink=new Set(Object.entries(this.elements).filter(([key])=>key!=='viewport').map(([,el])=>el));
+    const opacities=new Map<HTMLElement,number>();
+    const opacity=(element:HTMLElement):number=>{
+      const cached=opacities.get(element);if(cached!==undefined)return cached;
+      // The outer .hud is deliberately hidden when its canvas is composited.
+      // Only ink owners (rows, messages, meters) control mirrored visibility.
+      const value=(ink.has(element)?elementOpacity(element,1):1)*(element.parentElement?opacity(element.parentElement):1);
+      opacities.set(element,value);return value;
+    };
+    for(const [key,element] of Object.entries(this.elements)){
+      if(key==='viewport'||!element||opacity(element)<=.001)continue;
+      const rect=this.rect(element,layout);if(!rect)continue;
+      x0=Math.min(x0,rect.x);y0=Math.min(y0,rect.y);x1=Math.max(x1,rect.x+rect.width);y1=Math.max(y1,rect.y+rect.height);
+    }
+    if(!Number.isFinite(x0))return full;
+    // Include all existing glyph overhangs, glow, portrait ring and reveal
+    // transforms. Quantization/hysteresis avoids reallocating during a pulse.
+    const pad=64*height/720,grid=32;
+    x0=Math.max(0,Math.floor((x0-pad)/grid)*grid);y0=Math.max(0,Math.floor((y0-pad)/grid)*grid);
+    x1=Math.min(width,Math.ceil((x1+pad)/grid)*grid);y1=Math.min(height,Math.ceil((y1+pad)/grid)*grid);
+    if(x1<=x0||y1<=y0)return full;
+    const next={x:x0,y:y0,width:x1-x0,height:y1-y0},old=this.crop;
+    if(old&&this.renderWidth===width&&this.renderHeight===height&&old.x<=x0&&old.y<=y0&&old.x+old.width>=x1&&old.y+old.height>=y1&&old.width*old.height<=next.width*next.height*2)return old;
+    return next;
   }
 
   private paintBonus(

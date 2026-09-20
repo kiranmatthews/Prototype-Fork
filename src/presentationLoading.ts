@@ -5,6 +5,94 @@ export const afterPresentationPaint = (): Promise<void> => new Promise((resolve)
   requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
 });
 
+/** RAF is not a GPU completion signal, especially on a tile-based phone GPU. */
+export async function waitForPresentationGpu(renderer:THREE.WebGLRenderer,paint=afterPresentationPaint):Promise<void> {
+  const gl=renderer.getContext() as WebGL2RenderingContext;
+  if(gl.isContextLost())return;
+  const fence=gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE,0);
+  if(!fence)return;
+  gl.flush();
+  try{
+    while(!gl.isContextLost()){
+      const status=gl.clientWaitSync(fence,0,0);
+      if(status===gl.ALREADY_SIGNALED||status===gl.CONDITION_SATISFIED||status===gl.WAIT_FAILED)return;
+      await paint();
+    }
+  }finally{gl.deleteSync(fence);}
+}
+
+/** Spread first-use texture uploads across paints while the destination is covered. */
+export async function warmPresentationTextures(renderer:THREE.WebGLRenderer,root:THREE.Object3D):Promise<void> {
+  const textures=new Set<THREE.Texture>();
+  root.traverseVisible(object=>{
+    const material=(object as THREE.Mesh).material;
+    for(const m of material?(Array.isArray(material)?material:[material]):[]){
+      for(const value of Object.values(m))if(value instanceof THREE.Texture&&!value.isRenderTargetTexture)textures.add(value);
+      for(const uniform of Object.values((m as THREE.ShaderMaterial).uniforms??{})){
+        const value=uniform.value;if(value instanceof THREE.Texture&&!value.isRenderTargetTexture)textures.add(value);
+      }
+    }
+  });
+  let started=performance.now();
+  for(const texture of textures){
+    if(renderer.getContext().isContextLost())return;
+    if(!texture.image)continue;
+    renderer.initTexture(texture);
+    if(performance.now()-started>=4){await afterPresentationPaint();started=performance.now();}
+  }
+  await waitForPresentationGpu(renderer);
+}
+
+/** Exercise real surface AND shadow programs/buffers in small covered batches.
+ * compile() alone misses depth variants and first-use vertex uploads. */
+export async function warmPresentationScene(renderer:THREE.WebGLRenderer,scene:THREE.Scene,camera:THREE.Camera):Promise<void> {
+  const meshes:THREE.Object3D[]=[],lights:THREE.Light[]=[];
+  scene.updateMatrixWorld(true);camera.updateMatrixWorld(true);
+  scene.traverseVisible(object=>{
+    if((object as THREE.Light).isLight&&object.layers.test(camera.layers))lights.push(object as THREE.Light);
+  });
+  const frustum=new THREE.Frustum().setFromProjectionMatrix(new THREE.Matrix4().multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));
+  const shadows=lights.flatMap(light=>{
+    const shadow=(light as THREE.DirectionalLight).shadow;
+    if(!light.castShadow||!shadow)return [];
+    shadow.updateMatrices(light);return [shadow.getFrustum()];
+  });
+  scene.traverseVisible(object=>{
+    if(!object.layers.test(camera.layers))return;
+    const mesh=object as THREE.Mesh;
+    if(mesh.isMesh||(object as THREE.Sprite).isSprite||(object as THREE.Line).isLine){
+      const intersects=(f:THREE.Frustum)=>(object as THREE.Sprite).isSprite?f.intersectsSprite(object as THREE.Sprite):f.intersectsObject(object);
+      if(!object.frustumCulled||intersects(frustum)||(object.castShadow&&shadows.some(intersects)))meshes.push(object);
+    }
+  });
+  const target=new THREE.WebGLRenderTarget(8,8);
+  const layer=1<<31,cameraMask=camera.layers.mask;
+  const masks=meshes.map(o=>o.layers.mask),culled=meshes.map(o=>o.frustumCulled),lightMasks=lights.map(o=>o.layers.mask);
+  const viewport=new THREE.Vector4(),scissor=new THREE.Vector4();
+  try{
+    for(let start=0;start<meshes.length;start+=24){
+      if(renderer.getContext().isContextLost())return;
+      const previous=renderer.getRenderTarget(),autoClear=renderer.autoClear,scissorTest=renderer.getScissorTest();
+      renderer.getViewport(viewport);renderer.getScissor(scissor);
+      try{
+        camera.layers.mask=layer;
+        lights.forEach(light=>light.layers.mask|=layer);
+        meshes.forEach(object=>object.layers.mask&=~layer);
+        for(let i=start;i<Math.min(start+24,meshes.length);i++){meshes[i].layers.mask=layer;meshes[i].frustumCulled=false;}
+        renderer.autoClear=true;renderer.setRenderTarget(target);renderer.setScissorTest(false);
+        renderer.render(scene,camera);
+      }finally{
+        camera.layers.mask=cameraMask;
+        lights.forEach((light,i)=>light.layers.mask=lightMasks[i]);
+        meshes.forEach((object,i)=>{object.layers.mask=masks[i];object.frustumCulled=culled[i];});
+        renderer.setRenderTarget(previous);renderer.setViewport(viewport);renderer.setScissor(scissor);renderer.setScissorTest(scissorTest);renderer.autoClear=autoClear;
+      }
+      await waitForPresentationGpu(renderer);
+      await afterPresentationPaint();
+    }
+  }finally{target.dispose();renderer.shadowMap.needsUpdate=true;}
+}
+
 /** Track nested GLTF/image/texture requests, not just the manager's first URL. */
 export class PresentationAssetReadiness {
   private pending = new Map<string, number>();
@@ -88,17 +176,22 @@ export async function runLoadingTransition(hooks: LoadingTransitionHooks, reduce
   hooks.phase("cover");
   await wait(fade);
   await paint();
+  let loading:Promise<void>|undefined;
   if (vortex) {
     hooks.phase("prepare-vortex");
     await hooks.prepareVortex();
+    // The synchronous level/collision build belongs under opaque black. Start
+    // it before revealing the animated loader; its asynchronous asset work
+    // continues while the vortex is visible.
+    loading=Promise.resolve(hooks.load());
+    void loading.catch(()=>{}); // handled by the awaited load below, after reveal
     await paint();
     hooks.phase("vortex");
     await wait(fade);
     await paint();
   }
   const visibleAt = now();
-  // Start destination work only after the vortex's reveal has actually painted.
-  await hooks.load();
+  await (loading??hooks.load());
   await hooks.waitForAssets();
   if (vortex) {
     await wait(Math.max(0, MINIMUM_VORTEX_MS - (now() - visibleAt)));

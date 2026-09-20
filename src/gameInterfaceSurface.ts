@@ -6,12 +6,15 @@ import { paintSilverSecondaryText } from "./secondaryText";
 import { paintInputPrompts } from "./inputPromptUI";
 import type { CompetitionPresentation } from "./competition/presentation";
 
-const INK = ".world-map-ui, .tc-zone, .tc-pause, .game-cartoon-cursor, .game-transition-curtain, .input-glyph, .input-prompt-row, .competition-host";
+// The black transition curtain is compositor-owned. Copying it into this
+// texture froze its opacity whenever the world stopped rendering.
+const INK = ".world-map-ui, .tc-zone, .tc-pause, .game-cartoon-cursor, .input-glyph, .input-prompt-row, .competition-host";
 
 export class GameInterfaceSurface {
   private surface: GameHudSurface | null = null;
   private composited = false;
   private cursorDrawn = false;
+  private touchKey:string|null=null;
   constructor(private competition?: CompetitionPresentation) {
     const style = document.createElement("style");
     // Filter opacity preserves source CSS opacity (including fades), layout,
@@ -33,7 +36,8 @@ export class GameInterfaceSurface {
     this.cursorDrawn = false;
     // Ordinary desktop gameplay has no map/touch/cursor ink. Do not upload
     // another full-screen transparent texture just to draw nothing.
-    if (![...document.querySelectorAll(INK)].some(element => this.visible(element))) return;
+    const visible=[...document.querySelectorAll(INK)].filter(element=>this.visible(element));
+    if(!visible.length){this.touchKey=null;return;}
     this.surface ??= new GameHudSurface();
     // A null render target is expressed in CSS pixels by Three.js, while its
     // drawing buffer is physical pixels. Match GameFlowSurface's direct-path
@@ -44,12 +48,23 @@ export class GameInterfaceSurface {
       width: Math.max(1, Math.round(size.width * pixelRatio)),
       height: Math.max(1, Math.round(size.height * pixelRatio)),
     };
+    // Read the actual paint inputs, including intermediate CSS-transition
+    // colors/transforms. Steady touch controls require no Canvas/GPU upload.
+    const touchOnly=visible.every(element=>element.matches('.tc-zone,.tc-pause')||element.closest('.tc-zone,.tc-pause'));
+    const touchKey=touchOnly?JSON.stringify([raster,window.innerWidth,window.innerHeight,
+      ...[...document.querySelectorAll<HTMLElement>('.tc-zone,.tc-pad,.tc-btn,.tc-pause,.tc-arrow,.tc-pause span')].map(element=>{
+        const rect=element.getBoundingClientRect(),style=getComputedStyle(element);
+        return [rect.x,rect.y,rect.width,rect.height,element.textContent,
+          ...['display','opacity','backgroundColor','borderTopWidth','borderTopColor','borderTopLeftRadius','borderTopRightRadius','borderBottomRightRadius','borderBottomLeftRadius','fontWeight','fontSize','fontFamily','textAlign','justifyContent','paddingLeft','paddingRight','letterSpacing','color','webkitTextStrokeWidth','webkitTextStrokeColor'].map(key=>(style as any)[key])];
+      })]):null;
+    if(touchKey!==null&&touchKey===this.touchKey){this.surface.composite(renderer,size,target);return;}
     const drawn = this.surface.draw(raster, { drawExtra: ctx => {
       this.cursorDrawn = false;
       ctx.scale(raster.width / window.innerWidth, raster.height / window.innerHeight);
       this.paintMap(ctx); this.paintTouch(ctx); this.competition?.paint(ctx,raster);
-      paintInputPrompts(ctx,document,'.competition-host'); this.paintCursor(ctx); this.paintCurtain(ctx);
+      paintInputPrompts(ctx,document,'.competition-host'); this.paintCursor(ctx);
     } });
+    this.touchKey=touchKey;
     if (drawn) this.surface.composite(renderer, size, target);
   }
 
@@ -148,9 +163,5 @@ export class GameInterfaceSurface {
     const path = new Path2D("M6 4 47 35 29 39 39 57 29 62 19 43 7 55Z");
     ctx.fillStyle="#ff8c22"; ctx.strokeStyle="#47190c"; ctx.lineWidth=5; ctx.stroke(path); ctx.fill(path);
     ctx.fillStyle="#ffd846"; ctx.fill(new Path2D("M11 12 37 33 24 35 31 49 27 51 18 36 11 44Z")); ctx.restore();
-  }
-  private paintCurtain(ctx: CanvasRenderingContext2D): void {
-    const curtain = document.querySelector(".game-transition-curtain");
-    if (this.visible(curtain)) this.box(ctx,curtain);
   }
 }

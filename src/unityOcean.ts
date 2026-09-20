@@ -232,6 +232,7 @@ export interface OceanStats {
   prepassHeight: number;
   reflectionRenders: number;
   prepassRenders: number;
+  occludedPassFrames: number;
   quality: OceanQuality;
 }
 
@@ -1107,6 +1108,11 @@ export class UnityOcean {
   private currentSkyUrl = "";
   private pendingTextureLoads = 0;
   private textureLoadFailed = false;
+  private visibilityGl:WebGL2RenderingContext|null=null;
+  private visibilityQuery:WebGLQuery|null=null;
+  private visibilityQueryActive=false;
+  private waterOccluded=false;
+  private visibilityCamera=new THREE.Vector3(Infinity,Infinity,Infinity);
 
   constructor(opts: CoastWaterOpts) {
     this.seaLevel = opts.seaLevel;
@@ -1314,6 +1320,19 @@ export class UnityOcean {
     );
     this.ribbon.name = "Unity curved shoreline ocean ribbon";
     this.ribbon.frustumCulled = false;
+    // Query the real wave surface against the completed opaque depth buffer.
+    // Hidden sea under a level must not cause two additional world renders.
+    // Keep drawing the ribbon: its next query detects exposure without waiting
+    // for a CPU guess about terrain/shoreline occlusion.
+    this.ribbon.onBeforeRender=renderer=>{
+      const gl=renderer.getContext() as WebGL2RenderingContext;
+      if(this.visibilityQuery||gl.isContextLost()||!(this.debug.reflection||this.debug.prepass))return;
+      this.visibilityGl=gl;this.visibilityQuery=gl.createQuery();
+      if(this.visibilityQuery){gl.beginQuery(gl.ANY_SAMPLES_PASSED_CONSERVATIVE,this.visibilityQuery);this.visibilityQueryActive=true;}
+    };
+    this.ribbon.onAfterRender=()=>{
+      if(this.visibilityQueryActive){this.visibilityGl!.endQuery(this.visibilityGl!.ANY_SAMPLES_PASSED_CONSERVATIVE);this.visibilityQueryActive=false;}
+    };
     this.ribbon.receiveShadow = true;
     this.ribbon.renderOrder = 0;
     this.group.name = "Unity MatrixRex ocean";
@@ -1324,6 +1343,7 @@ export class UnityOcean {
 
     const geometries = [this.horizon.geometry, this.ribbon.geometry];
     this.stats = {
+      occludedPassFrames:0,
       verts: geometries.reduce((sum, geometry) => sum + geometry.getAttribute("position").count, 0),
       tris: geometries.reduce((sum, geometry) => sum + (geometry.getIndex()?.count ?? 0) / 3, 0),
       shoreSamples: this.shore.length,
@@ -1914,6 +1934,19 @@ export class UnityOcean {
     // Paused/editor/model-studio frames bypass the normal water update but can
     // still move the camera. Refresh matrices without advancing wave time.
     this.update(0, camera);
+    const gl=this.visibilityGl,q=this.visibilityQuery;
+    if(gl&&q&&!this.visibilityQueryActive){
+      if(!gl.isQuery(q)){this.visibilityQuery=null;this.waterOccluded=false;}
+      else if(gl.getQueryParameter(q,gl.QUERY_RESULT_AVAILABLE)){
+        this.waterOccluded=!gl.getQueryParameter(q,gl.QUERY_RESULT);
+        gl.deleteQuery(q);this.visibilityQuery=null;
+      }
+    }
+    // Teleports/new shots need fresh buffers immediately. Ordinary motion
+    // refreshes them as soon as the non-blocking visibility result is ready.
+    const moved=this.visibilityCamera.distanceToSquared(camera.position)>16;
+    this.visibilityCamera.copy(camera.position);
+    if(this.waterOccluded&&!moved){this.stats.occludedPassFrames++;return;}
     this.renderReflection(renderer, scene, camera);
     this.renderPrepass(renderer, scene, camera);
   }
@@ -1957,6 +1990,8 @@ export class UnityOcean {
   }
 
   dispose(): void {
+    if(this.visibilityQuery)this.visibilityGl?.deleteQuery(this.visibilityQuery);
+    this.visibilityQuery=null;
     if (this.disposed) return;
     this.disposed = true;
     this.disposeTargets();

@@ -53,6 +53,13 @@ try {
   const player = new Player(scene);
   const runtime = createCharacterAnimationRuntime(player, createPlayerStarterAnimationSuite(
     RigBinding.fromSculptRuntime(player.animationRig.root, { strict: false }).definition));
+  player.respawn(level,true);
+  const beforeIdle=JSON.stringify([player.pos.toArray(),player.runTime,player.lives,player.fruit,player.cratesBroken]);
+  const pose=()=>{const values=[];player.animationRig.root.traverse(node=>values.push(...node.position.toArray(),...node.quaternion.toArray()));return JSON.stringify(values);};
+  player.prepareStartPresentation(level,1/60);const idlePose=pose();
+  for(let frame=0;frame<30;frame++)player.prepareStartPresentation(level,1/60);
+  assert.equal(JSON.stringify([player.pos.toArray(),player.runTime,player.lives,player.fruit,player.cratesBroken]),beforeIdle,'loading idle must never advance simulation');
+  assert.notEqual(pose(),idlePose,'loading must start idle before the reveal');
   const normal = { kind: 'normal', levelName: 'Results check', boxes: 0, totalBoxes: 1, firstClear: false, crystal: false, boxGem: false, comboGem: false };
   const trial = { kind: 'time-trial', levelName: 'Results check', actualTime: 60, relicTarget: 60, boxes: 0, totalBoxes: 1, bestTimes: [60] };
   const variants = [normal, { ...normal, crystal: true }, { ...normal, boxGem: true },

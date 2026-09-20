@@ -3098,13 +3098,15 @@ export class Player {
   }
 
   /** A clean spawn frame without consuming input or advancing gameplay. */
-  prepareStartPresentation(level: Level): void {
+  private idlePresentationOffset=0;
+  prepareStartPresentation(level: Level,dt=0): void {
     // A suspended parent may be hundreds of metres above the bonus floor.
     // Refresh this visual probe before the black curtain reveals its camera.
     this.shadowGroundY = this.queryShadowGround(level);
     if (level.hudMode === 'bonus' && this.runTime === 0)
       this.visualYaw = wrapAngle(Math.atan2(this.axisF.x, this.axisF.z) - Math.PI);
-    this.finishVisualStep({ moveX: 0, moveY: 0 } as Input, 0);
+    this.idlePresentationOffset+=dt;
+    this.finishVisualStep({ moveX: 0, moveY: 0 } as Input, dt);
     this.collapseRenderInterpolation();
   }
 
@@ -15750,7 +15752,7 @@ export class Player {
       ((this.state === 'grind' && crossRail ? 1 : 0) - this.grindCrossPose) *
       Math.min(1, 12 * dt);
     const swing = Math.sin(this.walkPhase) * 0.65 * Math.max(this.walkAmp, crawlMove * 0.6);
-    const breathe = Math.sin(this.runTime * 2.3);
+    const breathe = Math.sin((this.runTime+this.idlePresentationOffset) * 2.3);
     // Somersault phasing, straight from the reference: launch EXTENDED (the
     // arm-throw jump pose), then the whole 360 whips through the middle of
     // the arc — rotation lives in the 15%..80% window — and she's upright
@@ -16069,7 +16071,7 @@ export class Player {
             : 0)) *
           fwS -
         0.35 * this.stance * this.sidePose;
-      const counter = -swing * 0.22 + 0.1 * Math.sin(this.runTime * 0.7) * idleW; // idle: lazy shoulder wander
+      const counter = -swing * 0.22 + 0.1 * Math.sin((this.runTime+this.idlePresentationOffset) * 0.7) * idleW; // idle: lazy shoulder wander
       this.upperG.rotation.y +=
         (stance + counter - this.upperG.rotation.y) * Math.min(1, 10 * dt);
       // Crash runs chest-out, almost leaning BACK — never hunched forward.
@@ -16100,7 +16102,7 @@ export class Player {
       // Idling, she glances around the scene slowly instead.
       const ordinaryHeadYaw =
         -0.85 * this.stance * this.sidePose +
-        0.17 * Math.sin(this.runTime * 0.55) * idleW;
+        0.17 * Math.sin((this.runTime+this.idlePresentationOffset) * 0.55) * idleW;
       let grindTravelYaw = this.visualYaw;
       if (this.state === 'grind' && this.grindRail) {
         const tangent = this.grindRail.tangentAt(this.grindT);

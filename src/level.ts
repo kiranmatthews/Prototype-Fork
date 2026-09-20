@@ -5212,6 +5212,7 @@ export class Level {
     return chunks;
   }
 
+  private staticSurfaceMaterials=new Map<string,THREE.MeshLambertMaterial>();
   private buildSurfaceMesh(c: CustomComponent): void {
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute("position", new THREE.Float32BufferAttribute(c.vertices ?? [0, 0, 0, 4, 0, 0, 0, 0, -4], 3));
@@ -5267,6 +5268,18 @@ export class Level {
       map: c.tex === "solid" ? null : this.surfaceTexture(c.tex ?? "checker"),
     });
     material.userData.texKind = c.materialStyle === "unity-sand" ? "sand" : c.tex ?? "checker";
+    // These remain separate authoring components. Runtime-only visual pieces
+    // can share one draw per material/cell instead of one draw per rope/post.
+    if(!EDITOR_BUILD&&this.batchDecor&&c.solid===false&&!c.invisible&&!c.materialStyle&&
+      !c.colors&&!c.depthBias&&c.fog===undefined&&c.vert===undefined&&(c.opacity??1)===1){
+      const key=JSON.stringify([c.color??'#ffffff',c.emissive??'#000000',c.tex??'checker',!!c.doubleSided]);
+      let shared=this.staticSurfaceMaterials.get(key);
+      if(shared)material.dispose();else{shared=material as THREE.MeshLambertMaterial;this.staticSurfaceMaterials.set(key,shared);}
+      const matrix=new THREE.Matrix4().compose(new THREE.Vector3(...c.p),
+        new THREE.Quaternion().setFromAxisAngle(THREE.Object3D.DEFAULT_UP,THREE.MathUtils.degToRad(c.yaw??0)),new THREE.Vector3(...(c.s??[1,1,1])));
+      this.putDecor(`static surface ${key}:${Math.floor(c.p[0]/16)}:${Math.floor(c.p[2]/16)}`,geometry,shared,matrix);
+      return;
+    }
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(...c.p);
     mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0);
@@ -15192,6 +15205,11 @@ export class Level {
   }
 
   get jungleAssetDiagnostics() { return this.jungleAssets?.diagnostics ?? null; }
+  updateSceneryPresentation(dt:number):void {this.jungleAssets?.update(dt);}
+  updateSceneryView(camera:THREE.Camera,secondary?:THREE.Camera):void {
+    const far=(camera as THREE.PerspectiveCamera).far??400;
+    this.jungleAssets?.setView(camera.position,this.keepPlayFog?Math.min(far,this.theme.fogFar):far,secondary?.position);
+  }
   async prepareJungleAssets(): Promise<void> { await Promise.all([this.jungleAssets?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.milkCrate?.ready,crate.explosiveBundle?.ready])]); }
 
   private jungleAsset(c: CustomComponent): void {
@@ -15199,7 +15217,7 @@ export class Level {
     const { t: _type, p: _position, dkind, ...extra } = c;
     this.noteDecor(dkind, ...c.p, extra);
     if (!this.jungleAssets && !c.invisible) {
-      this.jungleAssets = new JungleAssetKit(!EDITOR_BUILD, this.liteDecor, this.jungleAtmosphere);
+      this.jungleAssets = new JungleAssetKit(!EDITOR_BUILD, this.liteDecor, this.jungleAtmosphere, !EDITOR_BUILD);
       this.root.add(this.jungleAssets.root);
     }
     const placement = { ...c, dkind, s: c.s ?? (dkind === "carvedlog" && c.len ? [c.len, 1.1, 1.3] as [number, number, number] : undefined) };

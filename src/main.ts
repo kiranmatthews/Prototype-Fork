@@ -16,7 +16,7 @@ import { CompetitionPresentation, type CompetitionAction } from "./competition/p
 import * as THREE from "three";
 import { SKY_PRESETS, resolveLevelAtmosphere, atmosphereColor, atmosphereColorHex } from "./levelAtmosphere";
 import { configureJungleAssetRenderer } from "./jungleAssets";
-import { afterPresentationPaint, presentationAssets } from "./presentationLoading";
+import { afterPresentationPaint, presentationAssets, warmPresentationTextures, warmPresentationScene, waitForPresentationGpu } from "./presentationLoading";
 import { installLocalResetListener } from "./localGameStorage";
 import { Input } from "./input";
 import { requiresTerrainSupportBuildCheck } from "./terrainSupportBudget";
@@ -888,6 +888,11 @@ function releaseBonusParallax(): void {
   bonusParallax = null;
 }
 async function prepareActivePresentationAssets(): Promise<void> {
+  if(resultsPresentation)resultsPresentation.frameCamera(camera,window.innerWidth,window.innerHeight,
+    gameFlow.resultsSceneViewport(window.innerWidth,window.innerHeight));
+  else updateCamera(1);
+  if(split2p)updateCamera2(1);
+  level.updateSceneryView(camera,split2p?camera2:undefined);
   // Ocean reflection art is normally requested by the first gameplay frame.
   // Start it here so that first visible frame never owns network loading.
   updateWaterPresentation(0);
@@ -903,13 +908,6 @@ async function prepareActivePresentationAssets(): Promise<void> {
   ]);
   await presentationAssets.waitUntilSettled();
   await graphicsRecovery.ready();
-  if (level.jungleAtmosphere) {
-    scene.updateMatrixWorld(true);
-    // The hidden destination draw below finishes shader warm-up. r166's
-    // compileAsync polling can dereference discarded programs after a context
-    // reset, leaving the loading promise stranded forever.
-    renderer.compile(scene, camera);
-  }
 }
 
 function updateWaterPresentation(dt: number): void {
@@ -994,6 +992,7 @@ function renderPrimaryScene(
   preCrtOverlay?: CoastPostPreCrtOverlay,
 ): void {
   if(renderer.getContext().isContextLost())return;
+  if(!editor?.active)level.updateSceneryView(camera,split2p?camera2:undefined);
   if (!preCrtOverlay) gameInterface.setComposited(false);
   configureCoastPost(
     levelPostEnabled ||
@@ -1243,8 +1242,8 @@ async function prepareDestinationPresentation(): Promise<void> {
       resultsPresentation.frameCamera(camera, window.innerWidth, window.innerHeight,
         gameFlow.resultsSceneViewport(window.innerWidth, window.innerHeight));
     } else {
-      player.prepareStartPresentation(level);
-      p2?.prepareStartPresentation(level);
+      player.prepareStartPresentation(level,1/60);
+      p2?.prepareStartPresentation(level,1/60);
       updateCamera(1);
       if (split2p) updateCamera2(1);
     }
@@ -1255,7 +1254,8 @@ async function prepareDestinationPresentation(): Promise<void> {
     updateWaterPresentation(0);
     updateSunShadow(player.pos.x, player.pos.y - 1, player.pos.z);
     ui.setHUD(currentHudState(), 0);
-    await renderer.compileAsync(scene, camera);
+    await warmPresentationTextures(renderer,scene);
+    await warmPresentationScene(renderer,scene,camera);
   }
   const draw = (): void => {
     const context = gameFlow.vortexContext;
@@ -1264,10 +1264,12 @@ async function prepareDestinationPresentation(): Promise<void> {
     else renderGameplayScene(0, true, level.hudMode !== "hub");
   };
   draw();
+  await waitForPresentationGpu(renderer);
   // The first post/HUD draw can lazily request its own textures or models.
   await presentationAssets.waitUntilSettled();
   await graphicsRecovery.ready();
   draw();
+  await waitForPresentationGpu(renderer);
   await afterPresentationPaint();
 }
 window.addEventListener("resize", resize);
@@ -4615,6 +4617,10 @@ function frame(nowMs: number): void {
       return;
     }
     gameFlowVortex.deactivate();
+    // Covered destination work owns its explicit warm-up draws. A results/map
+    // screen can already exist here before its uploads have been prepared;
+    // rendering it from RAF defeats the loading gate and causes first-use stalls.
+    if(gameFlow.loadingPhase&&gameFlow.loadingPhase!=="reveal")return;
     if (resultsPresentation && gameFlow.currentScreen === "results") {
       resultsPresentation.update(dt);
       resultsPresentation.frameCamera(camera, window.innerWidth, window.innerHeight,
@@ -4640,12 +4646,22 @@ function frame(nowMs: number): void {
       writeRenderDiagnostics();
       return;
     }
+    if(gameFlow.loadingPhase==='reveal'&&!gameFlow.currentScreen){
+      // Start the idle/world presentation under the fade, retaining the input
+      // lock and untouched gameplay/run clocks until the transition completes.
+      player.prepareStartPresentation(level,dt);
+      p2?.prepareStartPresentation(level,dt);
+      level.updateSceneryPresentation(dt);
+      updateWaterPresentation(dt);
+      renderGameplayScene(dt,true,level.hudMode!=="hub");
+      return;
+    }
     // Pause/menu worlds are intentionally frozen outside the map-utility case above.
     // Render one fresh frame on entry
     // (and after a fade swaps worlds), then let the browser hold that canvas.
     // This also avoids a WebGL -> Canvas2D pause-thumbnail copy every RAF.
     if (gameFlow.consumeGameplayFrameRequest()) {
-      if ((gameFlow.revealingDestination || gameFlow.loadingPhase === "cover") && !gameFlow.currentScreen)
+      if (gameFlow.revealingDestination && !gameFlow.currentScreen)
         renderGameplayScene(0, true, level.hudMode !== "hub");
       else renderGameplayWithGameFlow(dt);
       gameFlow.captureGameplay(renderer.domElement);
@@ -4878,6 +4894,7 @@ function frame(nowMs: number): void {
   // then opaque color+depth for refraction/intersection/caustics, then the
   // main water draw and coast-only post chain below. In lite/split mode the
   // ocean's quality switch makes these hooks a cheap feature-disable path.
+  level.updateSceneryView(camera,split2p?camera2:undefined);
   level.water?.renderPasses(renderer, scene, camera);
 
   if ((current.id !== "warproom" && !level.isCampaignMap) && split2p && p2) {
@@ -5041,5 +5058,7 @@ requestAnimationFrame(frame);
 
 // Finish foreground decoding before the offline installer starts buffering
 // its release. Saving remains automatic, without competing with cold startup.
+updateCamera(1);
+level.updateSceneryView(camera);
 void Promise.all([level.prepareJungleAssets(),player.preparePresentationAssets(),animationPreparation,document.fonts?.ready])
   .then(()=>presentationAssets.waitUntilSettled()).then(startOfflineCache,startOfflineCache);

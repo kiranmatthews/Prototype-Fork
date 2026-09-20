@@ -891,6 +891,7 @@ export class UI {
     );
 
     this.gameHudSurface = new GameHudSurface({
+      cropToElements:true,
       elements: {
         viewport: document.getElementById("app") ?? undefined,
         crateRow: this.crateRowEl,

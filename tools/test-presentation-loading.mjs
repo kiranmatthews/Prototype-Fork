@@ -5,7 +5,35 @@ import { createServer } from 'vite';
 
 const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true } });
 try {
-  const { runLoadingTransition, PresentationAssetReadiness, MINIMUM_VORTEX_MS } = await server.ssrLoadModule('/src/presentationLoading.ts');
+  const { runLoadingTransition, PresentationAssetReadiness, MINIMUM_VORTEX_MS, waitForPresentationGpu, warmPresentationScene } = await server.ssrLoadModule('/src/presentationLoading.ts');
+  for(const lost of [false,true]){
+    let painted=0,released=0,flushed=0;
+    const gl={SYNC_GPU_COMMANDS_COMPLETE:1,ALREADY_SIGNALED:2,CONDITION_SATISFIED:3,WAIT_FAILED:4,
+      isContextLost:()=>lost&&painted===2,fenceSync:()=>({}),flush:()=>flushed++,
+      clientWaitSync:()=>painted>=3?3:0,deleteSync:()=>released++};
+    await waitForPresentationGpu({getContext:()=>gl},async()=>{painted++;});
+    assert.equal(painted,lost?2:3,'reveal must wait for GPU completion but cannot hang on context loss');
+    assert.equal(released,1);assert.equal(flushed,1);
+  }
+  {
+    globalThis.requestAnimationFrame=callback=>{queueMicrotask(()=>callback(0));return 1;};
+    const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(60,1,.1,100);
+    camera.position.z=10;
+    const meshes=Array.from({length:50},()=>new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshBasicMaterial()));
+    scene.add(...meshes,new THREE.AmbientLight());
+    let draws=0,target=null,scissor=false;const initial={};target=initial;
+    const gl={SYNC_GPU_COMMANDS_COMPLETE:1,ALREADY_SIGNALED:2,CONDITION_SATISFIED:3,WAIT_FAILED:4,
+      isContextLost:()=>false,fenceSync:()=>({}),flush(){},clientWaitSync:()=>2,deleteSync(){}};
+    const renderer={autoClear:false,shadowMap:{needsUpdate:false},getContext:()=>gl,getRenderTarget:()=>target,setRenderTarget:value=>target=value,
+      getViewport:value=>value.set(3,4,960,540),getScissor:value=>value.set(3,4,960,540),getScissorTest:()=>scissor,
+      setViewport(){},setScissor(){},setScissorTest:value=>scissor=value,
+      render(){draws++;assert.ok(meshes.filter(mesh=>mesh.layers.test(camera.layers)).length<=24,'first-use geometry must be bounded per batch');if(draws===2)throw Error('context reset');}};
+    await assert.rejects(warmPresentationScene(renderer,scene,camera),/context reset/);
+    assert.equal(camera.layers.mask,1);assert.ok(meshes.every(mesh=>mesh.layers.mask===1&&mesh.frustumCulled));
+    assert.equal(target,initial);assert.equal(scissor,false);assert.equal(renderer.autoClear,false);
+    meshes.forEach(mesh=>{mesh.geometry.dispose();mesh.material.dispose();});
+    delete globalThis.requestAnimationFrame;
+  }
   assert.equal(MINIMUM_VORTEX_MS, 2000);
   for (const reduced of [false, true]) for (const loadMs of [0, 800, 6200]) {
     let clock = 0, loadAt = 0, assetsReadyAt = 0;
@@ -24,8 +52,8 @@ try {
     const at = name => phases.find(p => p.phase === name).time;
     const fade = reduced ? 20 : 360;
     assert.ok(at('vortex') >= at('prepare-vortex') + 700 + 32, 'vortex revealed before preparation painted');
-    assert.ok(loadAt >= at('vortex') + fade + 32, 'level build interrupted the vortex reveal');
-    assert.ok(at('cover-destination') - loadAt >= 2000, 'fast load shortened the visible vortex');
+    assert.ok(loadAt >= at('prepare-vortex') && loadAt < at('vortex'), 'synchronous build must happen under the opaque curtain');
+    assert.ok(at('cover-destination') - at('vortex') - fade - 32 >= 2000, 'fast load shortened the visible vortex');
     assert.ok(at('cover-destination') >= assetsReadyAt, 'vortex left before assets settled');
     assert.ok(at('prepare-destination') >= at('cover-destination') + fade + 32, 'destination rendered before opaque black');
     assert.ok(at('reveal') >= at('prepare-destination') + 450 + 32, 'destination revealed before warm-up painted');
@@ -85,7 +113,8 @@ try {
   assert.match(main, /waitForDestinationAssets: prepareActivePresentationAssets/);
   assert.match(main, /prepareDestinationFrame: prepareDestinationPresentation/);
   assert.match(main, /onTransitionComplete: guardGameplayFromMenu/);
-  assert.match(main, /await renderer\.compileAsync\(scene, camera\)/);
+  assert.match(main, /await warmPresentationTextures\(renderer,scene\)/);
+  assert.match(main, /await waitForPresentationGpu\(renderer\)/);
   assert.match(main, /player\.preparePresentationAssets\(\)/);
   assert.match(main, /sfx\.prepare\(\)/);
   assert.match(main, /waitForLevelData: \(\) => firstRunLevelSync/);
