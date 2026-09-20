@@ -90,14 +90,14 @@ assert.deepEqual(
   [],
   "campaign map edge endpoints and direction slots must stay valid",
 );
-const mainPath = ['treehouse-trail','jungle','test-course','sky-bridge','nightworks','jungle-cup','beachside-run','coastal','island-hopper','jungle-gate'];
+const mainPath = ['treehouse-trail','jungle','test-course','sky-bridge','slipstream','jungle-cup','beachside-run','coastal','island-hopper','jungle-gate'];
 for(let i=1;i<mainPath.length;i++) {
   const edge=campaign.CAMPAIGN_MAP_EDGES.find(e=>e.from===mainPath[i-1]&&e.to===mainPath[i]);
   assert.ok(edge);assert.equal(edge.fromDirection,'right');assert.equal(edge.toDirection,'left');
 }
 assert.deepEqual(campaign.CAMPAIGN_MAP_EDGES.filter(e=>campaign.campaignLevelByKey(e.from).mapPath!==campaign.campaignLevelByKey(e.to).mapPath)
   .map(e=>[e.from,e.to,e.fromDirection,e.toDirection]),[
-  ['test-course','slipstream','up','down'],['codex-switchback','sky-bridge','down','up'],['coastal','chimeworks','down','up'],
+  ['test-course','nightworks','up','down'],['codex-switchback','sky-bridge','down','up'],['coastal','chimeworks','down','up'],
 ]);
 
 const graph = new campaign.CampaignStore();
@@ -118,27 +118,27 @@ assert.equal(
 );
 graph.commitClear("test", { crystal: false, boxGem: false, comboGem: false });
 assert.equal(graph.levelUnlocked("sky-bridge"), true);
-assert.equal(graph.levelUnlocked("slipstream"), true);
-assert.equal(graph.levelUnlocked("nightworks"), false);
+assert.equal(graph.levelUnlocked("nightworks"), true);
+assert.equal(graph.levelUnlocked("slipstream"), false);
 graph.commitClear("sky", { crystal: false, boxGem: false, comboGem: false });
 assert.equal(
-  graph.levelUnlocked("nightworks"),
+  graph.levelUnlocked("slipstream"),
   true,
   "optional side levels must not block main-path progression",
 );
 assert.equal(graph.levelUnlocked("codex-switchback"), false);
-graph.commitClear("slip", { crystal: false, boxGem: false, comboGem: false });
+graph.commitClear("dark", { crystal: false, boxGem: false, comboGem: false });
 assert.equal(graph.levelUnlocked("codex-switchback"), true);
 graph.commitClear("codex-lab", { crystal: true });
 assert.equal(graph.levelProgress("codex-lab").crystal, true);
-graph.commitClear("dark", {}); graph.commitClear("beachfront", {});
+graph.commitClear("slip", {}); graph.commitClear("beachfront", {});
 assert.equal(graph.levelUnlocked("chimeworks"), false);
 graph.commitClear("coastal-street-run", {});
 assert.equal(graph.levelUnlocked("chimeworks"), true);
 graph.commitClear("astra-chimeworks", { crystal: true });
 assert.equal(graph.levelProgress("astra-chimeworks").crystal, true);
 assert.equal(
-  graph.levelUnlocked("nightworks"),
+  graph.levelUnlocked("slipstream"),
   true,
   "the all-cleared branch join did not unlock its finale hub",
 );

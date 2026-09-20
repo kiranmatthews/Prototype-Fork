@@ -106,7 +106,7 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     name: "Island 1",
     subtitle: "REGION 01",
     centre: [-95, 0, 0],
-    levelKeys: ["treehouse-trail", "jungle", "test-course", "sky-bridge", "slipstream", "codex-switchback", "nightworks", "jungle-cup"],
+    levelKeys: ["treehouse-trail", "jungle", "test-course", "sky-bridge", "nightworks", "codex-switchback", "slipstream", "jungle-cup"],
   },
   {
     id: "island-2",
@@ -164,7 +164,7 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
   },
   {
     from: "test-course",
-    to: "slipstream",
+    to: "nightworks",
     travel: "trail",
     fromDirection: "up",
     toDirection: "down",
@@ -172,14 +172,14 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
   },
   {
     from: "sky-bridge",
-    to: "nightworks",
+    to: "slipstream",
     travel: "trail",
     fromDirection: "right",
     toDirection: "left",
     waypoints: [[-51, 4.4, 24]],
   },
   {
-    from: "slipstream",
+    from: "nightworks",
     to: "codex-switchback",
     travel: "boardslide",
     fromDirection: "right",
@@ -195,7 +195,7 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     waypoints: [[-70, 8.6, 11]],
   },
   {
-    from: "nightworks",
+    from: "slipstream",
     to: "jungle-cup",
     travel: "trail",
     fromDirection: "right",
@@ -282,9 +282,9 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     name: "Slipstream",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-1",
-    mapPath: "upper-branch",
-    mapPosition: [-111, 9, -1],
-    unlockAfter: ["test-course"],
+    mapPath: "main",
+    mapPosition: [-47, 3, 22],
+    unlockAfter: ["sky-bridge"],
   },
   {
     progressKey: "nightworks",
@@ -292,9 +292,9 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     name: "Nightworks",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-1",
-    mapPath: "main",
-    mapPosition: [-47, 3, 22],
-    unlockAfter: ["sky-bridge"],
+    mapPath: "upper-branch",
+    mapPosition: [-111, 9, -1],
+    unlockAfter: ["test-course"],
   },
   {
     progressKey: "beachside-run",
@@ -348,7 +348,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     islandId: "island-1",
     mapPath: "upper-branch",
     mapPosition: [-71, 11, -1],
-    unlockAfter: ["slipstream"],
+    unlockAfter: ["nightworks"],
   },
   {
     progressKey: "chimeworks",
@@ -364,7 +364,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     progressKey: "jungle-cup", levelId: "jungle-cup", name: "Jungle Cup",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-1", mapPath: "main", mapPosition: [-31, 3.8, 22],
-    unlockAfter: ["nightworks"], boss: true, competition: true,
+    unlockAfter: ["slipstream"], boss: true, competition: true,
   },
   {
     progressKey: "treehouse-trail",

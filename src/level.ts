@@ -1049,6 +1049,15 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   }
   d.components = d.components.map((c) => {
     delete c.trafficRoad;
+    if (c.t === "worldmap" && c.pts?.length === 13) {
+      // Nightworks and Slipstream exchanged campaign-map slots. Move only an
+      // untouched default map; authored hub positions remain user-owned.
+      const defaults = worldMapComponentPoints();
+      const previousDefaults = defaults.map(p => [...p]);
+      [previousDefaults[3], previousDefaults[4]] = [previousDefaults[4], previousDefaults[3]];
+      if (c.pts.every((p, i) => p.length === 4 && p.every((v, j) => v === previousDefaults[i][j])))
+        return { ...c, pts: defaults };
+    }
     if(c.t==='worldmap'&&c.pts?.length===11) {
       const prior=[[-63,18,0,1.35],[-44,18,0,1.75],[-26,18,0,2.1],[-44,-3,0,2.55],[-9,18,0,2.85],[23,16,0,1.35],[42,14,0,1.75],[61,14,0,2.4],[79,14,0,3.1],[-26,-3,0,2.85],[42,26,0,2.3]];
       if(c.pts.every((p,i)=>p.length===4&&p.every((v,j)=>v===prior[i][j])))return {...c,pts:worldMapComponentPoints()};

@@ -45,7 +45,7 @@ try{
   assert.equal(runtime.activeClipId,'player.idle','map did not settle to Idle');
   // A scripted boardslide already owns its mounting/landing hops; it must
   // not enter gameplay Land or Skid when the map returns to walking/idle.
-  map.activate(level,'slipstream');assert.ok(map.travelTo('codex-switchback'));
+  map.activate(level,'nightworks');assert.ok(map.travelTo('codex-switchback'));
   let boardslide=0;
   for(let f=0;f<500;f++){
     map.step(1/60,input);level.update(1/60);

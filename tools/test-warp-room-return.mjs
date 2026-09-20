@@ -728,10 +728,10 @@ try {
     "test-course",
     "right did not select the first connected unlocked hub",
   );
-  const branch = new Set(["test-course", "sky-bridge", "slipstream"]);
+  const branch = new Set(["test-course", "sky-bridge", "nightworks"]);
   assert.equal(
     warpLevel.campaignMapNeighbor("test-course", 0, 1, (key) => branch.has(key)),
-    "slipstream",
+    "nightworks",
     "up did not select the upper-screen branch",
   );
   assert.equal(
@@ -889,13 +889,13 @@ try {
   assert.equal(controllerStore.recommendedMapLevelKey(), "test-course");
   assert.ok(controllerModes.includes("walk"));
 
-  for (const id of ["test", "sky", "slip"])
+  for (const id of ["test", "sky", "dark"])
     controllerStore.commitClear(id, {
       crystal: false,
       boxGem: false,
       comboGem: false,
     });
-  controller.activate(warpLevel, "slipstream");
+  controller.activate(warpLevel, "nightworks");
   controllerModes.length = 0;
   assert.equal(controller.navigate(1, 0), true);
   for (let frame = 0; frame < 240 && controller.moving; frame++)
@@ -903,8 +903,8 @@ try {
   assert.equal(controller.selectedKey, "codex-switchback");
   assert.ok(controllerModes.includes("walk"), "boardslide has no canned mount/landing beat");
   assert.ok(controllerModes.includes("boardslide"), "boardslide rail pose was never presented");
-  controller.revealUnlocks(["nightworks"]);
-  const revealedNode = warpLevel.campaignWorldMap.nodeByKey.get("nightworks");
+  controller.revealUnlocks(["slipstream"]);
+  const revealedNode = warpLevel.campaignWorldMap.nodeByKey.get("slipstream");
   assert.ok(revealedNode.unlockReveal > 2, "new path reveal did not arm its hub pulse");
   const revealBeforeTick = revealedNode.unlockReveal;
   warpLevel.update(0.25);
@@ -914,16 +914,16 @@ try {
   assert.deepEqual(entered, ["codex-lab"]);
   assert.deepEqual(sections, ["progress"]);
   controller.activate(warpLevel, "jungle");
-  assert.equal(controller.travelTo("nightworks"), true);
+  assert.equal(controller.travelTo("slipstream"), true);
   assert.equal(controller.enterSelected(), false, "a queued touch route entered a level mid-travel");
   for (let frame = 0; frame < 1200 && controller.moving; frame++) controller.step(1 / 60, neutralInput);
-  assert.equal(controller.selectedKey, "nightworks", "direct hub tap did not follow multiple unlocked edges");
-  assert.equal(controllerStore.recommendedMapLevelKey(), "nightworks");
+  assert.equal(controller.selectedKey, "slipstream", "direct hub tap did not follow multiple unlocked edges");
+  assert.equal(controllerStore.recommendedMapLevelKey(), "slipstream");
   // Side route: horizontal traversal stays within the branch; vertical slots
   // return only at the authored junctions. No accidental diagonal fallback.
   controller.activate(warpLevel, 'test-course');
-  for (const [x,y,key] of [[0,1,'slipstream'],[1,0,'codex-switchback'],[0,-1,'sky-bridge'],
-    [0,1,'codex-switchback'],[-1,0,'slipstream'],[0,-1,'test-course']]) {
+  for (const [x,y,key] of [[0,1,'nightworks'],[1,0,'codex-switchback'],[0,-1,'sky-bridge'],
+    [0,1,'codex-switchback'],[-1,0,'nightworks'],[0,-1,'test-course']]) {
     assert.equal(controller.navigate(x,y),true);
     for(let frame=0;frame<240&&controller.moving;frame++)controller.step(1/60,neutralInput);
     assert.equal(controller.selectedKey,key);
@@ -933,11 +933,11 @@ try {
   controller.activate(warpLevel, "test-course");
   controller.frameCamera(touchCamera, 1 / 60);
   touchCamera.updateMatrixWorld();
-  const projected = warpLevel.campaignMapPose("slipstream").position.clone().project(touchCamera);
+  const projected = warpLevel.campaignMapPose("nightworks").position.clone().project(touchCamera);
   assert.equal(controller.touchMap((projected.x + 1) * 422, (1 - projected.y) * 195, 844, 390, touchCamera), true);
   for (let frame = 0; frame < 600 && controller.moving; frame++) controller.step(1 / 60, neutralInput);
-  assert.equal(controller.selectedKey, "slipstream", "projected hub picking selected the wrong branch");
-  controllerStore.commitClear("dark", { crystal: false, boxGem: false, comboGem: false });
+  assert.equal(controller.selectedKey, "nightworks", "projected hub picking selected the wrong branch");
+  controllerStore.commitClear("slip", { crystal: false, boxGem: false, comboGem: false });
   controllerStore.commitCompetitionWin("jungle-cup");
   controller.activate(warpLevel, "jungle-cup");
   controller.frameCamera(touchCamera, 1 / 60);

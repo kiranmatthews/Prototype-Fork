@@ -50,7 +50,7 @@ try {
   assert.deepEqual(normalize(normalize(base())), normalize(base()), "migration must stay idempotent");
   const oldMap={...base(),components:[{t:'worldmap',p:[0,0,0],pts:api.worldMapComponentPoints().slice(0,9)}]};
   const expanded=normalize(oldMap);
-  assert.equal(expanded.components[0].pts.length,12,'legacy editable map lost its new branch hubs');
+  assert.equal(expanded.components[0].pts.length,api.worldMapComponentPoints().length,'legacy editable map lost its new hubs');
   assert.deepEqual(expanded.components[0].pts.slice(0,9),oldMap.components[0].pts,'legacy hub identities shifted');
   assert.deepEqual(normalize(expanded),expanded,'map expansion must be idempotent');
   assert.equal(oldMap.components[0].pts.length,9,'normalizing mutated the original map');
@@ -60,6 +60,12 @@ try {
   assert.deepEqual(normalize(priorBranchMap).components[0].pts,api.worldMapComponentPoints(),'old default map capture masked the island expansion');
   const authoredBranchMap=structuredClone(priorBranchMap);authoredBranchMap.components[0].pts[0][0]+=1;
   assert.deepEqual(normalize(authoredBranchMap).components[0].pts.slice(0,11),authoredBranchMap.components[0].pts,'island expansion overwrote custom hub positions');
+  const previousSwapDefaults=api.worldMapComponentPoints().map(point=>[...point]);
+  [previousSwapDefaults[3],previousSwapDefaults[4]]=[previousSwapDefaults[4],previousSwapDefaults[3]];
+  const previousSwapMap={...oldMap,components:[{t:'worldmap',p:[0,0,0],pts:previousSwapDefaults}]};
+  assert.deepEqual(normalize(previousSwapMap).components[0].pts,api.worldMapComponentPoints(),'old default map kept the pre-swap Nightworks and Slipstream positions');
+  const authoredSwapMap=structuredClone(previousSwapMap);authoredSwapMap.components[0].pts[0][0]+=1;
+  assert.deepEqual(normalize(authoredSwapMap).components[0].pts,authoredSwapMap.components[0].pts,'map swap overwrote custom hub positions');
   const occupied=structuredClone(oldMap);occupied.components[0].pts[0]=api.worldMapComponentPoints()[9];
   const occupiedMigrated=normalize(occupied);
   assert.deepEqual(occupiedMigrated.components[0].pts.slice(0,9),occupied.components[0].pts);
