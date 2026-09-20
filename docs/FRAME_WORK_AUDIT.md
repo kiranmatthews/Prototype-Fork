@@ -1,7 +1,7 @@
 # Mobile frame work and loading follow-up — 20 September 2026
 
 The previous memory fixes did not address all per-frame work. This pass measured
-actual submitted draws, triangles, texture uploads, GPU queries and the real
+draw submissions, geometry volume, texture uploads, GPU queries and the real
 finish/results path. It does not establish an iPhone or iPad frame rate.
 
 ## Confirmed waste and fixes
@@ -42,12 +42,12 @@ Jungle's baseline is normalized to a presented frame (three world passes).
 | Work per presented frame | Before | After |
 | --- | ---: | ---: |
 | Treehouse draws, including shadows/UI/post | 756 | 414 |
-| Treehouse submitted triangles | 633,386 | 633,386 |
+| Treehouse triangle estimate | 633,386 | 633,386 |
 | Treehouse world CPU submission | 3.25 ms | 2.10 ms |
 | Treehouse world GPU | 5.45 ms | 5.75 ms |
 | Jungle world passes, hidden sea at spawn | 3 | 1 |
 | Jungle draws, including shadows/UI/post | 1,969 | 597 |
-| Jungle submitted triangles | 10,486,969 | 2,229,737 |
+| Jungle triangle estimate | 10,486,969 | 2,229,737 |
 | Jungle world CPU submission | 20.19 ms | 3.12 ms |
 | Jungle world GPU | 21.56 ms | 8.56 ms |
 | Steady gameplay UI upload pixels | 1,036,800 | 20,480 |
@@ -57,6 +57,9 @@ Treehouse's GPU timing difference is within the variability of these samples;
 the supported Treehouse gains are draw submission and UI work, not a claimed
 GPU speedup. The UI upload reduction is 98%. Later Jungle temple sections remain
 more demanding than spawn because their visible authored masonry is dense.
+Triangle estimates count each submitted geometry's indices and instances;
+material groups/draw ranges can make actual GPU triangle counts lower. Draw
+submissions, world-pass counts and canvas upload pixels are measured directly.
 
 ## Validation
 

@@ -5271,7 +5271,8 @@ export class Level {
     // These remain separate authoring components. Runtime-only visual pieces
     // can share one draw per material/cell instead of one draw per rope/post.
     if(!EDITOR_BUILD&&this.batchDecor&&c.solid===false&&!c.invisible&&!c.materialStyle&&
-      !c.colors&&!c.depthBias&&c.fog===undefined&&c.vert===undefined&&(c.opacity??1)===1){
+      !c.colors&&!c.depthBias&&!c.cameraCutaway&&(c.s??[1,1,1]).every(scale=>scale>0)&&
+      c.fog===undefined&&c.vert===undefined&&(c.opacity??1)===1){
       const key=JSON.stringify([c.color??'#ffffff',c.emissive??'#000000',c.tex??'checker',!!c.doubleSided]);
       let shared=this.staticSurfaceMaterials.get(key);
       if(shared)material.dispose();else{shared=material as THREE.MeshLambertMaterial;this.staticSurfaceMaterials.set(key,shared);}
