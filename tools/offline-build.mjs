@@ -16,6 +16,8 @@ async function filesIn(directory, prefix = '') {
 // Derive font versions from the same metrics used by the game. Old atlases,
 // ZIP exports and provenance stay available online without filling phones.
 export function runtimeAsset(file, fontVersions) {
+  // An online escape hatch must remain reachable through stale cache-first workers.
+  if (file === 'update-game.html') return false;
   if (file === 'sw.js' || /(?:^|\/)(?:provenance|UpstreamSource)\//.test(file)) return false;
   if (!/\.(?:html|js|css|json|webmanifest|png|jpe?g|webp|svg|glb|gltf|bin|ktx2|wasm|wav|mp3|ogg|m4a|mp4|webm|otf|ttf|woff2?)$/.test(file)) return false;
   if (file.startsWith('fonts/')) {

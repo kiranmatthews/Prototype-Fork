@@ -84,3 +84,18 @@ forced recovery or simultaneous build/test work is excluded from the table.
 
 No authored art, gameplay tuning, regular render resolution or frame cap changed.
 Physical-device crash rate and sustained FPS still require an iPhone/iPad run.
+
+## Stale offline build found during public verification
+
+After the successful deployment, the public browser still showed
+`Codex/sol fork · build 09-14 23:20 UTC`. Its cache-first worker could keep an
+older release alive while game windows remained open. This makes an ordinary
+reload an unreliable way to receive performance fixes.
+
+`update-game.html` provides a deliberate, save-preserving update. It verifies
+connectivity, unregisters only this application's exact worker scope, then
+navigates to the current game. It never clears saves, settings, custom levels or
+cached asset files. The page is excluded from offline manifests so future stale
+workers cannot intercept it. Normal offline updates retain their existing
+mid-run protection. Focused tests cover scope isolation, connectivity failure,
+same-origin navigation and retained data.
