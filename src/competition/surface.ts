@@ -66,8 +66,9 @@ export class CompetitionSurface {
   }
   private paintElement(ctx: CanvasRenderingContext2D, element: Element): void {
     const style=getComputedStyle(element),rect=element.getBoundingClientRect();
-    if(style.display==='none'||style.visibility==='hidden'||rect.width<.1||rect.height<.1||Number(style.opacity)<.001)return;
-    ctx.save();ctx.globalAlpha*=Number(style.opacity);
+    const opacity=element===this.root&&this.root.hasAttribute('data-precrt-composited')?1:Number(style.opacity);
+    if(style.display==='none'||style.visibility==='hidden'||rect.width<.1||rect.height<.1||opacity<.001)return;
+    ctx.save();ctx.globalAlpha*=opacity;
     if(element.hasAttribute?.('data-roo-menu')){
       const text=element.querySelector('.roo-menu-source')?.textContent??'';
       const button=element.closest('.game-menu-button');

@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>Session report · Codex/sol fork</title>
+<style>body{margin:0;padding:24px;background:#101923;color:#f1f5f3;font:17px/1.5 system-ui,sans-serif}main{max-width:64rem;margin:auto}h1{font-size:28px}button,a{color:#182119;background:#ffd36c;padding:12px 18px;border:0;border-radius:6px;font:700 17px system-ui;text-decoration:none}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.5 monospace;background:#071018;padding:16px}small{color:#b2c8c1}</style></head>
+<body><main><h1>Last game sessions</h1><p>This report records the last loading and play stages, even if the game restarts. It stays on this device. Opening this page does not load the game.</p><button id="copy">Copy report</button> <a href="./update-game.html">Update game</a><p id="status" role="status"></p><pre id="report"></pre><small>A stopped session alone does not distinguish a crash from closing the browser.</small></main>
+<script>
+let text='No session report is available yet.';
+try{const data=JSON.parse(localStorage.getItem('solProtoStabilityV1')||'null');if(data)text=JSON.stringify(data,null,2);}catch{}
+document.getElementById('report').textContent=text;
+document.getElementById('copy').onclick=async()=>{try{await navigator.clipboard.writeText(text);document.getElementById('status').textContent='Report copied.';}catch{document.getElementById('status').textContent='Select and copy the report below.';}};
+</script></body></html>

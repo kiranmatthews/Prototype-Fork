@@ -72,7 +72,7 @@ assert.equal(stores.size,0,'automatic updates do not allocate a release cache');
 clientUrls=[base+'offline-save.html',base+'?playtest'];
 await assert.rejects(v1.event('install'),/game-open/);
 assert.equal(requests.length,0,'another game tab prevents bulk saving');
-clientUrls=[base+'offline-save.html'];
+clientUrls=[base+'offline-save.html',base+'stability-report.html'];
 await v1.event('install'); await v1.event('activate');
 assert.equal(requests.length, 4);
 assert.equal(messages.at(-1).phase, 'ready');

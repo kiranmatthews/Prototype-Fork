@@ -104,7 +104,7 @@ async function requireSaveScreen() {
     .filter(client => client.url.startsWith(BASE));
   const save = new URL('offline-save.html', BASE).pathname;
   if (!clients.some(client => new URL(client.url).pathname === save) ||
-      clients.some(client => !['offline-save.html', 'update-game.html'].some(page => new URL(client.url).pathname === new URL(page, BASE).pathname))) {
+      clients.some(client => !['offline-save.html', 'update-game.html', 'stability-report.html'].some(page => new URL(client.url).pathname === new URL(page, BASE).pathname))) {
     throw new Error('game-open');
   }
 }

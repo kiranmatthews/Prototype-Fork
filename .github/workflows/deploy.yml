@@ -41,7 +41,7 @@ jobs:
       - name: Offline cache regression
         run: npm run check:offline
       - name: Mobile resource regression
-        run: node tools/test-mobile-residency.mjs && node tools/test-idle-rope.mjs && node tools/test-audio-loops.mjs
+        run: node tools/test-mobile-residency.mjs && node tools/test-idle-rope.mjs && node tools/test-audio-loops.mjs && node tools/test-stability-report.mjs && node tools/test-jungle-cup-ui.mjs
       - run: npm run build
       - uses: actions/configure-pages@v5
         with:

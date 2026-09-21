@@ -41,6 +41,7 @@ export class CompetitionPresentation {
   private guideOpen = false;
   private guidePage = 0;
   private pointer = { x: NaN, y: NaN };
+  private inputBlocked=false;
   constructor(private action: (action: CompetitionAction) => void, readonly hooks: JudgePresentationHooks = {}) {
     this.element.className = 'competition-host'; this.element.hidden = true;
     const style = document.createElement('style'); style.textContent = CSS;
@@ -89,7 +90,8 @@ export class CompetitionPresentation {
       else if (e.code === 'Tab' && buttons.length) {e.preventDefault();if(!e.repeat)this.select(e.shiftKey?-1:1);}
     });
   }
-  get modalActive(): boolean { return !!this.event && !this.element.hidden && !this.event.simulating; }
+  get modalActive(): boolean { return !!this.event && !this.inputBlocked && !this.element.hidden && !this.event.simulating; }
+  setInputBlocked(blocked:boolean):void {if(this.inputBlocked===blocked)return;this.inputBlocked=blocked;this.seedInput=true;if(blocked)this.press(false);}
   private showGuide(open:boolean):void {
     this.guideOpen=open;this.key='';this.seedInput=true;this.render(this.event);
     if(!open){this.selected=Math.max(0,this.buttons().findIndex(button=>button.dataset.action==='guide'));this.syncSelection();}

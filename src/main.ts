@@ -1,4 +1,5 @@
 import { startOfflineCache } from "./offline";
+import { stabilityReport } from './stabilityReport';
 import { rooAtlasDiagnostics } from './roo-type/atlas';
 import { sceneryDecoderDiagnostics } from './sceneryTextureLoader';
 import { installShadowTextureCleanup } from "./shadowTextureCleanup";
@@ -893,6 +894,7 @@ async function prepareActivePresentationAssets(): Promise<void> {
   if(resultsPresentation)resultsPresentation.frameCamera(camera,window.innerWidth,window.innerHeight,
     gameFlow.resultsSceneViewport(window.innerWidth,window.innerHeight));
   else updateCamera(1);
+  if(competitionOverview())frameCompetitionOverview();
   if(split2p)updateCamera2(1);
   level.updateSceneryView(camera,split2p?camera2:undefined);
   // Ocean reflection art is normally requested by the first gameplay frame.
@@ -1008,7 +1010,7 @@ function renderPrimaryScene(
   if (prepareOcean) level.water?.renderPasses(renderer, scene, camera);
   if (coastPost) {
     const frozenCup=competition&&!competition.simulating&&competition.phase!=="countdown"&&
-      !gameFlow.blocksGameplay&&!gameFlow.developerChromeVisible&&!editor.active;
+      (!gameFlow.blocksGameplay||preparingCompetitionPresentation())&&!gameFlow.developerChromeVisible&&!editor.active;
     coastPost.setFrozenScene(frozenCup?`${level.pickRoot.uuid}:${competition!.phase}:${competition!.runNumber}`:null);
     coastPost.render(dt, preCrtOverlay);
   }
@@ -1243,6 +1245,13 @@ async function prepareLoadingVortexPresentation(): Promise<void> {
 /** Establish the spawn camera/pose and warm the complete final render path. */
 async function prepareDestinationPresentation(): Promise<void> {
   await graphicsRecovery.ready();
+  recordPresentationStage('destination:prepare');
+  configureCoastPost(levelPostEnabled||
+    (visualTreatmentActivity(visualTreatmentSettings.value).any&&!NO_COAST_POST));
+  gameInterface.setComposited(!split2p&&(coastPost?.active??false));
+  competitionUI.setInputBlocked(gameFlow.blocksGameplay);
+  competitionUI.render(competition,competitionPresentationSuppressed());
+  await presentationAssets.waitUntilSettled();
   if (!gameFlow.vortexContext) {
     if (resultsPresentation) {
       resultsPresentation.update(0);
@@ -1254,14 +1263,18 @@ async function prepareDestinationPresentation(): Promise<void> {
       updateCamera(1);
       if (split2p) updateCamera2(1);
     }
+    if(competitionOverview())frameCompetitionOverview();
     sky.position.copy(camera.position);
     skyMist.position.copy(camera.position);
     bonusParallax?.update(player.pos, 0, loadedLevelId);
     updateSeaHorizon();
     updateWaterPresentation(0);
-    updateSunShadow(player.pos.x, player.pos.y - 1, player.pos.z);
+    if(competitionOverview())updateSunShadow(0,0,-35);
+    else updateSunShadow(player.pos.x, player.pos.y - 1, player.pos.z);
     ui.setHUD(currentHudState(), 0);
+    recordPresentationStage('destination:texture-upload');
     await warmPresentationTextures(renderer,scene);
+    recordPresentationStage('destination:scene-warmup');
     await warmPresentationScene(renderer,scene,camera);
   }
   const draw = (): void => {
@@ -1270,6 +1283,7 @@ async function prepareDestinationPresentation(): Promise<void> {
     else if (gameFlow.currentScreen) renderGameplayWithGameFlow(0);
     else renderGameplayScene(0, true, level.hudMode !== "hub");
   };
+  recordPresentationStage('destination:first-frame');
   draw();
   await waitForPresentationGpu(renderer);
   // The first post/HUD draw can lazily request its own textures or models.
@@ -1278,6 +1292,7 @@ async function prepareDestinationPresentation(): Promise<void> {
   draw();
   await waitForPresentationGpu(renderer);
   await afterPresentationPaint();
+  recordPresentationStage('destination:ready');
 }
 window.addEventListener("resize", resize);
 // iOS standalone launches don't reliably fire 'resize' once the viewport
@@ -2302,6 +2317,20 @@ function syncCompetitionLevel(editing = false): void {
   }
 }
 
+function competitionOverview():boolean {
+  return !!competition&&!competition.simulating&&competition.phase!=="countdown"&&!editor.active;
+}
+function frameCompetitionOverview():void {
+  camera.position.set(90,85,54);camera.lookAt(0,1,-46);
+}
+function preparingCompetitionPresentation():boolean {
+  return !!competition&&!gameFlow.currentScreen&&
+    (gameFlow.loadingPhase==='prepare-destination'||gameFlow.loadingPhase==='reveal');
+}
+function competitionPresentationSuppressed():boolean {
+  return editor.active||(gameFlow.blocksGameplay&&!preparingCompetitionPresentation());
+}
+
 function commitCompetitionVictory(): void {
   if (!competition?.won || competition.resultCommitted) return;
   competition.resultCommitted = true;
@@ -2311,6 +2340,8 @@ function commitCompetitionVictory(): void {
 }
 
 function handleCompetitionAction(action: CompetitionAction): void {
+  if(gameFlow.loadingPhase)return;
+  recordPresentationStage('competition:'+action);
   if (!competition || current.id !== JUNGLE_CUP_ID) return;
   if (action === "retry") { competition = new JungleCupEvent(Math.random, () => sfx.countdownBeep()); action = "start"; }
   if (action === "start" && competition.startRun()) {
@@ -4351,11 +4382,13 @@ let stepIdx = 0;
 const GAMEPLAY_RENDER_HZ = 60;
 const renderFrameLimiter = new PresentationFrameLimiter(GAMEPLAY_RENDER_HZ);
 const graphicsRecovery = new GraphicsRecovery(renderer.domElement, () => {
+  recordPresentationStage('graphics-lost');
   sfx.stopLoops();
   // Release the post graph's owners as well as the driver's lost storage.
   // The next rendered frame recreates it with the same saved settings.
   coastPost?.dispose();coastPost=null;
 }, () => {
+  recordPresentationStage('graphics-restored');
   acc=0;resetRenderFrameLimiter();input.consumeEdges();
   player.snapRenderInterpolation();p2?.snapRenderInterpolation();
   renderer.shadowMap.needsUpdate=true;
@@ -4522,8 +4555,19 @@ function writeRenderDiagnostics(): void {
   });
 }
 
+function recordPresentationStage(stage:string):void {
+  stabilityReport.record(stage,{
+    level:current.id,loading:gameFlow.loadingPhase,competition:competition?.phase??null,
+    viewport:[window.innerWidth,window.innerHeight,window.devicePixelRatio],
+    render:[renderer.domElement.width,renderer.domElement.height],
+    resources:{...renderer.info.memory},font:rooAtlasDiagnostics(),decoder:sceneryDecoderDiagnostics(renderer),
+  });
+}
+let reportedPresentationStage='';
 function frame(nowMs: number): void {
   requestAnimationFrame(frame);
+  const reportStage=`${current.id}:${gameFlow.loadingPhase??gameFlow.currentScreen??competition?.phase??'play'}`;
+  if(reportStage!==reportedPresentationStage){reportedPresentationStage=reportStage;recordPresentationStage(reportStage);}
   if(graphicsRecovery.lost)return;
   if (!allowRenderFrame(nowMs)) return;
   const rawDt = clock.getDelta();
@@ -4557,7 +4601,8 @@ function frame(nowMs: number): void {
     }
   }
   gameFlow.update(nowMs);
-  competitionUI.render(competition, gameFlow.blocksGameplay || editor.active);
+  competitionUI.setInputBlocked(gameFlow.blocksGameplay||editor.active);
+  competitionUI.render(competition, competitionPresentationSuppressed());
   competitionUI.updateInput();
 
   // Controller-only players fire no keydown/pointer gesture, so the audio
@@ -4685,7 +4730,7 @@ function frame(nowMs: number): void {
     if ((competition.phase as string) !== "running") {
       input.consumeEdges(); acc = 0; sfx.stopLoops();
       if (competition.phase === "countdown") updateCamera(dt);
-      else { camera.position.set(90, 85, 54); camera.lookAt(0, 1, -46); }
+      else frameCompetitionOverview();
       sky.position.copy(camera.position); skyMist.position.copy(camera.position);
       updateSunShadow(0, 0, -35);
       // Keep the avatar/score in the same pass too: otherwise their fallback
@@ -5067,6 +5112,11 @@ requestAnimationFrame(frame);
 
 // Foreground decoding owns startup. Offline status observation does no downloads.
 updateCamera(1);
+if(competitionOverview())frameCompetitionOverview();
 level.updateSceneryView(camera);
+// A direct Cup playtest/reload needs the same covered preparation as entry
+// from the map. Never freeze a partially loaded park into the intro snapshot.
+if(shellBypass&&competition&&!editor.active)
+  void gameFlow.transition(()=>gameFlow.hide(),{vortex:false});
 void Promise.all([level.prepareJungleAssets(),player.preparePresentationAssets(),animationPreparation,document.fonts?.ready])
   .then(()=>presentationAssets.waitUntilSettled()).then(startOfflineCache,startOfflineCache);

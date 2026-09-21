@@ -66,7 +66,7 @@ function opacityOf(element: HTMLElement): number {
   for(let current: HTMLElement|null=element;current;current=current.parentElement){
     const style=getComputedStyle(current);
     if(style.display==='none'||style.visibility==='hidden'||current.hidden)return 0;
-    const composed=current.matches('.game-hud-layer.precrt-composited')||current.matches('.game-shell.precrt-composited .game-shell-panel');
+    const composed=current.matches('.game-hud-layer.precrt-composited')||current.matches('.game-shell.precrt-composited .game-shell-panel')||current.matches('.competition-host[data-precrt-composited]');
     if(!composed)opacity*=Number(style.opacity);
   }
   return opacity;

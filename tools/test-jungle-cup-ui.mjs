@@ -36,6 +36,10 @@ await withSkateRuntime(async ({ server }) => {
   const neutral=()=>ui.updateInput(pad());
   const tap=(x,y,held=[])=>{neutral();ui.updateInput(pad(x,y,held));neutral();};
   assert.deepEqual(selected(),['start']);assert.deepEqual(buttons().map(b=>b.tabIndex),[0,-1,-1]);
+  ui.setInputBlocked(true);assert.equal(ui.modalActive,false);
+  buttons()[0].click();tap(1,0);tap(0,0,[0]);
+  assert.deepEqual(calls,[],'covered preparation accepted an action');assert.deepEqual(selected(),['start']);
+  ui.setInputBlocked(false);assert.equal(ui.modalActive,true);
   ui.updateInput(pad(0,0,[0]));assert.deepEqual(calls,[],'held confirm activated the opening menu');
   tap(1,0);assert.deepEqual(selected(),['guide'],'horizontal stick lacks a visible selection');
   tap(1,0);assert.deepEqual(selected(),['exit']);

@@ -19,7 +19,11 @@ export class GameInterfaceSurface {
     const style = document.createElement("style");
     // Filter opacity preserves source CSS opacity (including fades), layout,
     // pointer capture and hit testing. Never hide via display/visibility here.
-    style.textContent = INK.split(", ").map(selector => `body.game-interface-composited ${selector}`).join(",") + " { filter:opacity(0) !important; }" +
+    style.textContent = INK.split(", ").filter(selector=>selector!=='.competition-host').map(selector => `body.game-interface-composited ${selector}`).join(",") + " { filter:opacity(0) !important; }" +
+      // The fullscreen competition root has no authored opacity animation.
+      // Zero opacity preserves input/layout and allows the browser to skip
+      // painting it entirely; a CSS filter can allocate an offscreen surface.
+      "body.game-interface-composited .competition-host { opacity:0 !important; filter:none !important; }" +
       // This DOM ink is already invisible and mirrored into WebGL. Leaving
       // nine frosted-glass backdrops active still asks the browser to blur the
       // moving canvas at native device resolution, even when the game is 540p.
