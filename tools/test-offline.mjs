@@ -9,12 +9,15 @@ const base = 'https://example.test/Prototype-Fork/';
 const hash = text => createHash('sha256').update(text).digest('hex');
 const stores = new Map(), requests = [], messages = [];
 let network = new Map(), online = true, quotaFailure = false;
+let clientUrls=[base+'offline-save.html'];
+let denyStorage=false,onRequest=()=>{};
 let activeHashes=0,peakHashes=0,downloadClones=0;
 const boundedCrypto={subtle:{async digest(...args){activeHashes++;peakHashes=Math.max(peakHashes,activeHashes);try{await new Promise(resolve=>setTimeout(resolve,0));return await webcrypto.subtle.digest(...args);}finally{activeHashes--;}}}};
 const storage = {
   async keys() { return [...stores.keys()]; },
   async delete(name) { return stores.delete(name); },
   async open(name) {
+    if(denyStorage)throw new Error('Storage unavailable');
     if (!stores.has(name)) stores.set(name, new Map());
     const entries = stores.get(name);
     return {
@@ -31,13 +34,13 @@ function release(version, files) {
   const handlers = {};
   const self = {
     registration: { scope: base },
-    clients: { async claim() {}, async matchAll() { return [{ url: base, postMessage(message) { messages.push({ ...message }); } }]; } },
+    clients: { async claim() {}, async matchAll() { return clientUrls.map(url=>({url,postMessage(message){messages.push({...message});}})); } },
     addEventListener(type, handler) { handlers[type] = handler; },
   };
   runInNewContext(source.replace('/* OFFLINE_MANIFEST */', JSON.stringify(manifest)), {
     self, caches: storage, URL, Response, Headers, AbortController, crypto: boundedCrypto, setTimeout, clearTimeout, Date: {now:()=>1000},
     async fetch(url) {
-      requests.push(url);
+      url=typeof url==='string'?url:url.url;requests.push(url);onRequest();
       if (!online) throw new TypeError('Offline');
       const clean = new URL(url); clean.search = '';
       const response=network.has(clean.href) ? new Response(network.get(clean.href)) : new Response('Missing', { status: 404 });
@@ -62,6 +65,14 @@ function serve(files) { network = new Map(Object.entries(files).map(([url, body]
 const v1Files = { 'index.html': '<h1>Build one</h1>', 'assets/game.js': 'start()', 'levels.json': '{"v":2}', 'sfx/jump.wav': '0123456789' };
 serve(v1Files);
 const v1 = release('one', v1Files);
+clientUrls=[base];
+await assert.rejects(v1.event('install'),/game-open/);
+assert.equal(requests.length,0,'automatic worker updates do not download alongside gameplay');
+assert.equal(stores.size,0,'automatic updates do not allocate a release cache');
+clientUrls=[base+'offline-save.html',base+'?playtest'];
+await assert.rejects(v1.event('install'),/game-open/);
+assert.equal(requests.length,0,'another game tab prevents bulk saving');
+clientUrls=[base+'offline-save.html'];
 await v1.event('install'); await v1.event('activate');
 assert.equal(requests.length, 4);
 assert.equal(messages.at(-1).phase, 'ready');
@@ -103,9 +114,12 @@ assert.equal(await (await v2.fetch('new.glb')).text(), 'model two');
 online=true;const cachedV2=stores.get('solProtoOffline:/Prototype-Fork/:two');
 for(const key of cachedV2.keys())if(key.includes('new.glb'))cachedV2.delete(key);
 const beforeDuplicate=requests.length;
+quotaFailure=true;
 const duplicate=await Promise.all([v2.fetch('new.glb'),v2.fetch('new.glb')]);
 assert.deepEqual(await Promise.all(duplicate.map(r=>r.text())),['model two','model two']);
-assert.equal(requests.length-beforeDuplicate,1,'runtime cache misses share one download/write');
+assert.equal(requests.length-beforeDuplicate,2,'foreground misses use ordinary HTTP without buffering or a cache-write queue');
+assert.equal(quotaFailure,true,'foreground assets load even when cache storage cannot be written');quotaFailure=false;
+denyStorage=true;assert.equal(await (await v2.fetch('new.glb')).text(),'model two','online play survives Cache API failures');denyStorage=false;
 
 online = true;
 const changed = { ...v2Files, 'new.glb': 'model three' };
@@ -127,8 +141,13 @@ assert.equal(peakHashes,1,'asset buffering/hashing is serial, including cache mi
 assert.equal(downloadClones,0,'hashing never leaves a cloned response branch buffering the full download');
 assert.ok(!stores.has('solProtoOffline:/Prototype-Fork/:three'),'abandoned partial release removed');
 assert.ok(stores.has('solProtoOffline:/Prototype-Fork/:two'),'complete active release retained');
+const interrupted=release('game-opened',{'first.glb':'one','second.glb':'two'});serve({'first.glb':'one','second.glb':'two'});
+const beforeGameOpened=requests.length;onRequest=()=>{clientUrls=[base+'offline-save.html',base];};
+await assert.rejects(interrupted.event('install'),/game-open/);
+assert.equal(requests.length-beforeGameOpened,1,'opening the game stops bulk saving at the next file boundary');
+assert.equal(messages.at(-1).reason,'game-open');onRequest=()=>{};clientUrls=[base+'offline-save.html'];
 
 const fonts = { bonus: 10, counter: 10 };
-for (const file of ['fonts/roo-bonus-v10.png', 'fonts/roo-counter-v10-light2.png', 'fonts/RooRegular.otf', 'jungle-kit/basis/basis_transcoder.wasm', 'animations/skate-review/catalog.json']) assert.ok(runtimeAsset(file, fonts), file);
-for (const file of ['fonts/roo-bonus-v9.png', 'fonts/roo-image-font-v10.zip', 'fonts/roo-font-v10-provenance.json', 'crt-guest/provenance/test.json', 'sw.js']) assert.ok(!runtimeAsset(file, fonts), file);
+for (const file of ['fonts/roo-bonus-v10.png', 'fonts/roo-counter-v10-light2.png', 'fonts/roo-bonus-v10-light1-cap128.png', 'fonts/roo-counter-v10-cap256.png', 'fonts/RooRegular.otf', 'jungle-kit/basis/basis_transcoder.wasm', 'animations/skate-review/catalog.json']) assert.ok(runtimeAsset(file, fonts), file);
+for (const file of ['fonts/roo-bonus-v9-cap128.png', 'fonts/roo-bonus-v9.png', 'fonts/roo-image-font-v10.zip', 'fonts/roo-font-v10-provenance.json', 'crt-guest/provenance/test.json', 'sw.js','offline-save.html']) assert.ok(!runtimeAsset(file, fonts), file);
 console.log('PASS offline install, reload/subpaths/queries, iOS byte ranges, scoped cache, interrupted resume, atomic updates, content validation, storage failure and current-font selection');

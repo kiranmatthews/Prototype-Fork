@@ -8567,6 +8567,10 @@ export class Level {
       } else if (r.state === "sag") {
         r.t = Math.max(0, r.t - dt * 1.6); // hopped off: recover toward taut
         if (r.t <= 0) r.state = "idle";
+      } else {
+        // Rest geometry is already current. Rebuilding every braided vertex
+        // and grind segment at 60 Hz used to dominate Sky's idle simulation.
+        continue;
       }
       const load = r.state === "sag" ? Math.min(1, r.t / 0.25) : 0;
       for (let i = 1; i < N; i++) {

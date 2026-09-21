@@ -83,6 +83,7 @@ class SfxEngine {
   private loops = new Map<string, LoopChannel>();
   private lastPlay = new Map<string, number>();
   private loading = false;
+  private loadController: AbortController | null = null;
   private preparation: Promise<void>;
 
   constructor() {
@@ -100,6 +101,15 @@ class SfxEngine {
     window.addEventListener('touchstart', unlock, { passive: true });
     window.addEventListener('touchend', unlock, { passive: true });
     window.addEventListener('gamepadconnected', unlock);
+    window.addEventListener('pagehide', () => {
+      // A bounded queue must not start its remaining fetches in a detached
+      // document when navigating to the lightweight offline saver.
+      this.loadController?.abort();this.stopLoops();
+      void this.ctx?.suspend().catch(()=>{});
+    });
+    window.addEventListener('pageshow', event => {
+      if(event.persisted)this.preparation=this.preparation.then(()=>this.init());
+    });
   }
 
   // Resume the context on any interaction (cheap no-op once it's running). Safe
@@ -124,6 +134,15 @@ class SfxEngine {
   /** Includes fetch and decode, without waiting for user-gesture playback. */
   prepare(): Promise<void> { return this.preparation; }
 
+  /** Settle in-flight requests while the document is still active (WebKit). */
+  async prepareToLeave(): Promise<void> {
+    this.loadController?.abort();this.stopLoops();
+    await this.preparation;
+    // Safari can leave suspend() pending on an already gesture-blocked context.
+    // Asset cancellation, not audio-session activation, gates navigation.
+    void this.ctx?.suspend().catch(()=>{});
+  }
+
   private async init(): Promise<void> {
     try {
       if (!this.ctx) {
@@ -144,22 +163,29 @@ class SfxEngine {
       if (this.ctx.state === 'suspended') void this.ctx.resume();
       if (this.loading) return;
       this.loading = true;
+      const controller=this.loadController=new AbortController();
+      const context=this.ctx;
       // The packed single-file build injects data URIs; the site fetches wavs.
       const embedded = (window as unknown as Record<string, unknown>).__SFX_DATA as
         | Record<string, string>
         | undefined;
-      await Promise.all(
-        Object.entries(FILES).map(async ([name, file]) => {
+      const pending = Object.entries(FILES).filter(([name])=>!this.buffers.has(name));
+      await Promise.all(Array.from({length:2},async()=>{
+        while(pending.length&&!controller.signal.aborted){
+          const [name,file]=pending.shift()!;
           try {
             const url = embedded?.[file] ?? 'sfx/' + file;
-            const res = await fetch(url);
+            const res = await fetch(url,{signal:controller.signal});
             const data = await res.arrayBuffer();
-            this.buffers.set(name, await this.ctx!.decodeAudioData(data));
+            if(controller.signal.aborted)break;
+            const buffer=await context.decodeAudioData(data);
+            if(!controller.signal.aborted)this.buffers.set(name,buffer);
           } catch {
-            console.warn('sfx: failed to load', file);
+            if(!controller.signal.aborted)console.warn('sfx: failed to load', file);
           }
-        }),
-      );
+        }
+      }));
+      this.loading=false;
     } catch {
       /* no audio — fine */
     }
@@ -183,6 +209,7 @@ class SfxEngine {
       gain.gain.value = vol;
       src.connect(gain);
       gain.connect(bus);
+      src.onended = () => { src.disconnect(); gain.disconnect(); };
       src.start();
     } catch {
       /* ignore */
@@ -213,6 +240,7 @@ class SfxEngine {
       if (!active || !ctx || !bus) {
         if (existing) {
           existing.src.stop();
+          existing.src.disconnect();existing.gain.disconnect();
           this.loops.delete(id);
         }
         return;
@@ -226,6 +254,7 @@ class SfxEngine {
       }
       if (existing) {
         existing.src.stop();
+        existing.src.disconnect();existing.gain.disconnect();
         this.loops.delete(id);
       }
       const src = ctx.createBufferSource();
@@ -242,6 +271,7 @@ class SfxEngine {
       gain.gain.value = vol;
       src.connect(gain);
       gain.connect(bus);
+      src.onended = () => { src.disconnect(); gain.disconnect(); };
       src.start();
       this.loops.set(id, { src, gain, name });
     } catch {
@@ -260,6 +290,7 @@ class SfxEngine {
     for (const loop of this.loops.values()) {
       try {
         loop.src.stop();
+        loop.src.disconnect();loop.gain.disconnect();
       } catch {
         // It may already have stopped between frames.
       }

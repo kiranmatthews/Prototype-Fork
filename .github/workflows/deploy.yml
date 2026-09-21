@@ -40,6 +40,8 @@ jobs:
         run: node tools/test-world-map-locomotion.mjs
       - name: Offline cache regression
         run: npm run check:offline
+      - name: Mobile resource regression
+        run: node tools/test-mobile-residency.mjs && node tools/test-idle-rope.mjs && node tools/test-audio-loops.mjs
       - run: npm run build
       - uses: actions/configure-pages@v5
         with:

@@ -1,4 +1,6 @@
 import { startOfflineCache } from "./offline";
+import { rooAtlasDiagnostics } from './roo-type/atlas';
+import { sceneryDecoderDiagnostics } from './sceneryTextureLoader';
 import { installShadowTextureCleanup } from "./shadowTextureCleanup";
 import { resizeRendererSurface } from "./render-quality/surfaceSize";
 import { GraphicsRecovery } from "./graphicsRecovery";
@@ -5048,6 +5050,8 @@ requestAnimationFrame(frame);
   showCampaignResults,
   showTimeTrialResults,
   getLoadingDiagnostics: () => ({ phase: gameFlow.loadingPhase, ...presentationAssets.diagnostics }),
+  getFontDiagnostics: rooAtlasDiagnostics,
+  getSceneryDecoderDiagnostics: () => sceneryDecoderDiagnostics(renderer),
   // debug: build/inspect the level list straight from the harness
   levelList,
   findLevel,
@@ -5061,8 +5065,7 @@ requestAnimationFrame(frame);
   characterAnimationRuntime,
 };
 
-// Finish foreground decoding before the offline installer starts buffering
-// its release. Saving remains automatic, without competing with cold startup.
+// Foreground decoding owns startup. Offline status observation does no downloads.
 updateCamera(1);
 level.updateSceneryView(camera);
 void Promise.all([level.prepareJungleAssets(),player.preparePresentationAssets(),animationPreparation,document.fonts?.ready])

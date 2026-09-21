@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader.js";
+import { sceneryTextureLoader } from './sceneryTextureLoader';
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { JUNGLE_MODULES } from "./jungleModules";
 import { MAP_MODULES } from "./mapModules";
@@ -84,7 +85,7 @@ const templates=new AssetCache<RenderKind,Template>(createTemplate,disposeTempla
 export const createJungleAssetScope=()=>templates.scope();
 let compressedLoader:KTX2Loader|null=null;
 export function configureJungleAssetRenderer(renderer:THREE.WebGLRenderer,loader?:KTX2Loader):void {
-  if(!compressedLoader)compressedLoader=loader??new KTX2Loader().setTranscoderPath(import.meta.env.BASE_URL+"jungle-kit/basis/").setWorkerLimit(2).detectSupport(renderer);
+  if(!compressedLoader)compressedLoader=loader??sceneryTextureLoader(renderer);
 }
 function renderSpec(kind:RenderKind):JungleAssetSpec {
   if(kind==="joint")return {file:"",label:"recessed masonry joints",size:[1,1,1],wind:false};

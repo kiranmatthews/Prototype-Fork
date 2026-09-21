@@ -1,4 +1,4 @@
-import { OFFLINE_STATUS_EVENT, offlineStatusText } from "./offline";
+import { OFFLINE_STATUS_EVENT, offlineStatusText, openOfflineSave } from "./offline";
 import { MENU_THEME_CSS } from './menuTheme';
 import {updateMenuPngFocus} from './menuPngFocus';
 // Game-owned menus and campaign screens. The live DOM remains the semantic
@@ -822,6 +822,7 @@ export class GameFlowUI {
         this.render();
       }),
     );
+    if (import.meta.env.PROD) actions.push(this.button('SAVE OFFLINE', openOfflineSave));
     menu.append(...actions);
     card.append(title, menu, this.offlineStatus());
     this.panel.appendChild(card);

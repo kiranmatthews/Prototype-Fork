@@ -6,7 +6,7 @@ const CACHE = PREFIX + MANIFEST.version;
 const READY = new URL('__offline_ready__', BASE).href;
 const ENTRIES = new Map(MANIFEST.entries.map(entry => [new URL(entry.url, BASE).href, entry]));
 const TOTAL = MANIFEST.entries.reduce((sum, entry) => sum + entry.size, 0);
-let status = { type: 'solProtoOffline', phase: 'saving', completed: 0, total: TOTAL };
+let status = { type: 'solProtoOffline', protocol: 2, phase: 'saving', completed: 0, total: TOTAL };
 let lastProgressReport = 0;
 const pendingEntries = new Map();
 let storageWork = Promise.resolve();
@@ -47,8 +47,7 @@ async function download(entry) {
     return new Response(bytes, { status: response.status, statusText: response.statusText, headers });
   } finally { clearTimeout(timeout); }
 }
-// Installation and runtime misses share one bounded writer. Do not keep
-// several large GLBs/images buffered while the foreground decodes its level.
+// One bounded installer writer; foreground misses bypass this path entirely.
 function ensureEntry(cache, entry, previous = []) {
   const request = key(entry), pending = pendingEntries.get(request);
   if (pending) return pending;
@@ -69,6 +68,7 @@ function ensureEntry(cache, entry, previous = []) {
   return job;
 }
 async function installGame() {
+  await requireSaveScreen();
   const cache = await caches.open(CACHE);
   const previous = [];
   for (const name of await caches.keys()) {
@@ -83,18 +83,30 @@ async function installGame() {
   await report({ phase: 'saving', completed: 0 });
   try {
     for (const entry of MANIFEST.entries) {
+      await requireSaveScreen();
       await ensureEntry(cache, entry, previous);
       status.completed += entry.size;
       await report({ completed: status.completed });
     }
   } catch (error) {
-    await report({ phase: 'error', reason: error?.name === 'QuotaExceededError' ? 'storage' : 'network' });
+    await report({ phase: 'error', reason: error?.name === 'QuotaExceededError' ? 'storage' : error?.message === 'game-open' ? 'game-open' : 'network' });
     throw error;
   }
   await cache.put(READY, new Response(MANIFEST.version));
   await report({ phase: 'ready', completed: TOTAL });
   // Updates wait for existing game windows to close. No mid-run reload and
   // no new worker serving old HTML with a different version of its assets.
+}
+// Browsers update workers on navigation independently of register(). Never
+// allocate a complete release alongside a live game, even on automatic update.
+async function requireSaveScreen() {
+  const clients = (await self.clients.matchAll({ includeUncontrolled: true, type: 'window' }))
+    .filter(client => client.url.startsWith(BASE));
+  const save = new URL('offline-save.html', BASE).pathname;
+  if (!clients.some(client => new URL(client.url).pathname === save) ||
+      clients.some(client => !['offline-save.html', 'update-game.html'].some(page => new URL(client.url).pathname === new URL(page, BASE).pathname))) {
+    throw new Error('game-open');
+  }
 }
 self.addEventListener('install', event => event.waitUntil(installGame()));
 self.addEventListener('activate', event => event.waitUntil((async () => {
@@ -108,6 +120,7 @@ self.addEventListener('message', event => {
   if (event.data?.type !== 'solProtoOfflineStatus') return;
   event.waitUntil((async () => {
     const ready = await (await caches.open(CACHE)).match(READY);
+    await ready?.body?.cancel();
     event.source?.postMessage(ready ? { ...status, phase: 'ready', completed: TOTAL } : status);
   })());
 });
@@ -136,12 +149,13 @@ self.addEventListener('fetch', event => {
   const entry = ENTRIES.get(url.href);
   if (!entry) return; // Never cache cloud sync, credentials or other projects.
   event.respondWith((async () => {
-    const cache = await caches.open(CACHE);
-    let response = await cache.match(key(entry));
+    let response;
+    try { response = await (await caches.open(CACHE)).match(key(entry)); }
+    catch { return fetch(request); } // storage restrictions cannot break online play
     if (!response) {
-      await ensureEntry(cache, entry);
-      response = await cache.match(key(entry));
-      if (!response) throw new Error('Offline asset could not be stored');
+      // Cache eviction/quota cannot gate a foreground load behind hashing,
+      // storage writes, or an installer queue. Normal HTTP handles this miss.
+      return fetch(request);
     }
     const range = request.headers.get('range');
     return range ? rangedResponse(response, range) : response;

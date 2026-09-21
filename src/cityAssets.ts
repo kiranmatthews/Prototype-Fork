@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {KTX2Loader} from 'three/examples/jsm/loaders/KTX2Loader.js';
+import {sceneryTextureLoader} from './sceneryTextureLoader';
 import {MeshoptDecoder} from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import {RoundedBoxGeometry} from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils.js';
@@ -76,7 +77,7 @@ interface Part {geometry:THREE.BufferGeometry;material:THREE.MeshStandardMateria
 interface Template {near:Part[];far:Part[];}
 let ktx:KTX2Loader|null=null;
 export function configureCityAssetRenderer(value:THREE.WebGLRenderer):void {
- ktx??=new KTX2Loader().setTranscoderPath(import.meta.env.BASE_URL+'jungle-kit/basis/').setWorkerLimit(2).detectSupport(value);
+ ktx??=sceneryTextureLoader(value);
 }
 const palette:Record<string,string>={MI_Concrete:'#ded3bd',MI_Asphalt:'#9ab5d1',MI_RedBrick:'#e09a7d',MI_RedBrick_Pale:'#d3ac90',MI_Trim:'#e7d3ac',MI_Trim_Green:'#77b9b3',MI_Trim_Dark:'#607d82',MI_Trim_MetalConcrete:'#8da7aa',MI_Ornaments:'#d8c69d'};
 function stylize(source:THREE.MeshStandardMaterial):THREE.MeshStandardMaterial {

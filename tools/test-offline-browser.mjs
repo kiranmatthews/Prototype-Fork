@@ -35,7 +35,7 @@ let context = await browserType.launchPersistentContext(profile, browserOptions)
 const errors = [], failures = [], cancelledRequests = [], results = [];
 const watchPage = page => {
   page.on('pageerror', error => errors.push(String(error)));
-  page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });
+  page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()+' '+msg.location().url+' ['+page.url()+']'); });
   page.on('requestfailed', request => {
     const failure = { url: request.url(), error: request.failure()?.errorText, page: page.url() };
     // Navigation/level replacement may cancel obsolete loaders. The awaited
@@ -50,20 +50,25 @@ try {
   await page.goto(base + '?lite', { waitUntil: 'load', timeout: 120000 });
   await page.waitForFunction(() => window.__game?.player, null, { timeout: 120000 });
   await page.evaluate(() => window.__game.gameFlow.showLaunch());
-  console.log(engine + ': game loaded; waiting for complete offline copy');
-  await page.waitForFunction(() => navigator.serviceWorker.controller && document.querySelector('.game-offline-status')?.textContent?.includes('Ready for offline play'), null, { timeout: 240000 });
-  const ready = await page.locator('.game-offline-status').innerText();
+  const stamp=await page.locator('.hud-build').textContent();
+  assert.match(stamp,/Codex\/sol fork/);
+  assert.equal(await page.evaluate(async()=>!!await navigator.serviceWorker.getRegistration()),false,'gameplay does not install a complete offline release');
+  await page.getByRole('button',{name:'SAVE OFFLINE',exact:true}).click();
+  await page.waitForURL('**/offline-save.html');
+  assert.equal(await page.locator('canvas').count(),0,'offline saving has no game/rendering context');
+  await page.getByRole('button',{name:'Save offline copy',exact:true}).click();
+  console.log(engine + ': lightweight save screen; waiting for complete offline copy');
+  await page.waitForFunction(() => navigator.serviceWorker.controller && document.querySelector('#status')?.textContent?.includes('Ready for offline play'), null, { timeout: 240000 });
+  const ready = await page.locator('#status').innerText();
   const snapshot = await page.evaluate(async () => ({
-    stamp: document.querySelector('.hud-build')?.textContent,
     caches: await Promise.all((await caches.keys()).map(async name => ({ name, count: (await (await caches.open(name)).keys()).length }))),
-    text: document.querySelector('.game-offline-status')?.textContent,
+    text: document.querySelector('#status')?.textContent,
   }));
-  assert.match(snapshot.stamp, /Codex\/sol fork/);
+  snapshot.stamp=stamp;
   assert.ok(snapshot.caches.some(cache => cache.count > 600));
   await page.screenshot({ path: `${output}/${engine}-offline-ready.png` });
   console.log(engine + ': ' + ready);
   await page.evaluate(() => localStorage.setItem('solProtoOfflineSmoke', 'persisted'));
-  await page.evaluate(() => Promise.all([window.__game.getLevel().prepareJungleAssets(), window.__game.player.preparePresentationAssets()]));
   // Restart the browser itself so only durable local caches can satisfy loads.
   await context.close();
   if (server) await new Promise(resolve => { server.close(resolve); server.closeAllConnections(); });

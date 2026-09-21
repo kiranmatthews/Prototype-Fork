@@ -1,5 +1,5 @@
 import { ROO_ATLAS_METRICS } from './atlas-metrics';
-import { layoutRooAtlas, loadRooAtlases, RooAtlasPainter, rooAtlasGlyphRect, rooAtlasUrl } from './atlas';
+import { layoutRooAtlas, loadRooAtlases, RooAtlasPainter, rooAtlasGlyphRect, rooAtlasUrl, ROO_ATLAS_EVENT } from './atlas';
 import type { RooTextHandle, RooTextOptions, RooPaletteName } from '../roo-text.js';
 import { getRooAppearance, ROO_APPEARANCE_EVENT, rooLightWeights, subscribeRooLight } from './settings';
 
@@ -63,5 +63,6 @@ export async function createBakedRooText(host:HTMLElement,options:RooTextOptions
   if(options.decorative)svg.setAttribute('aria-hidden','true');
   const unsubscribe=subscribeRooLight(updateLight),appearanceChanged=()=>void setText(currentText);
   window.addEventListener(ROO_APPEARANCE_EVENT,appearanceChanged);
-  return {element:svg,setText,destroy(){destroyed=true;unsubscribe();window.removeEventListener(ROO_APPEARANCE_EVENT,appearanceChanged);svg.remove();}};
+  window.addEventListener(ROO_ATLAS_EVENT,appearanceChanged);
+  return {element:svg,setText,destroy(){destroyed=true;unsubscribe();window.removeEventListener(ROO_APPEARANCE_EVENT,appearanceChanged);window.removeEventListener(ROO_ATLAS_EVENT,appearanceChanged);svg.remove();}};
 }

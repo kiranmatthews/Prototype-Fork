@@ -163,10 +163,11 @@ class LiquidMotion {
     this.acceleration.copy(velocity).sub(this.previous).multiplyScalar(1/dt);
     this.previous.copy(velocity);
     this.energy=Math.max(this.energy,Math.min(.7,this.acceleration.length()/180));
-    this.mesh.parent?.getWorldQuaternion(this.inverse);this.inverse.invert();
-    this.local.copy(velocity).applyQuaternion(this.inverse);
-    if(!upright&&speed>.05)this.target.setFromUnitVectors(up,this.local.normalize().negate());
-    else this.target.identity();
+    if(!upright&&speed>.05){
+      this.mesh.parent?.getWorldQuaternion(this.inverse);this.inverse.invert();
+      this.local.copy(velocity).applyQuaternion(this.inverse);
+      this.target.setFromUnitVectors(up,this.local.normalize().negate());
+    }else this.target.identity();
     this.mesh.quaternion.slerp(this.target,1-Math.exp(-10*dt));
     const steps=Math.max(1,Math.ceil(dt*120)),h=dt/steps;
     for(let i=0;i<steps;i++){
