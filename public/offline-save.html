@@ -19,7 +19,6 @@ function watch(worker){
   if(!worker)return;
   worker.addEventListener('statechange',()=>{
     if(worker.state==='redundant'){status.textContent='Save stopped. Close other game windows, check your connection, then try again.';button.disabled=false;}
-    if(worker.state==='installed')status.textContent=registration.waiting?'Copy saved. Close all game windows, including this one, then reopen to use the update.':'Copy saved. Opening offline play is now available.';
   });
 }
 if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',event=>show(event.data));
@@ -28,7 +27,14 @@ button.onclick=async()=>{
   try{
     registration=await navigator.serviceWorker.register(new URL('sw.js',location.href),{scope:'./',updateViaCache:'none'});
     registration.addEventListener('updatefound',()=>watch(registration.installing));watch(registration.installing);
-    (registration.installing||registration.waiting||registration.active)?.postMessage({type:'solProtoOfflineStatus'});
+    const worker=registration.installing||registration.waiting||registration.active;
+    if(!worker)throw Error('No worker');
+    if(worker.state==='installing')await new Promise((resolve,reject)=>{
+      const changed=()=>{if(worker.state==='installed'||worker.state==='activated'){worker.removeEventListener('statechange',changed);resolve();}
+        else if(worker.state==='redundant'){worker.removeEventListener('statechange',changed);reject(Error('Worker retired'));}};
+      worker.addEventListener('statechange',changed);changed();
+    });
+    worker.postMessage({type:'solProtoOfflineSave'});
   }catch{status.textContent='Could not start saving. Close other game windows, connect to the internet, then try again.';button.disabled=false;}
 };
 document.getElementById('back').onclick=event=>{event.preventDefault();location.replace('./');};

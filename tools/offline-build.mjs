@@ -17,7 +17,7 @@ async function filesIn(directory, prefix = '') {
 // ZIP exports and provenance stay available online without filling phones.
 export function runtimeAsset(file, fontVersions) {
   // An online escape hatch must remain reachable through stale cache-first workers.
-  if (file === 'update-game.html' || file === 'offline-save.html') return false;
+  if (file === 'update-game.html' || file === 'offline-save.html' || file === 'release.json') return false;
   if (file === 'sw.js' || /(?:^|\/)(?:provenance|UpstreamSource)\//.test(file)) return false;
   if (!/\.(?:html|js|css|json|webmanifest|png|jpe?g|webp|svg|glb|gltf|bin|ktx2|wasm|wav|mp3|ogg|m4a|mp4|webm|otf|ttf|woff2?)$/.test(file)) return false;
   if (file.startsWith('fonts/')) {
@@ -47,6 +47,12 @@ export function offlineBuild() {
       const version = hash(JSON.stringify(entries) + worker).slice(0, 20);
       const output = worker.replace('/* OFFLINE_MANIFEST */', JSON.stringify({ version, entries }));
       await writeFile(path.join(outDir, 'sw.js'), output);
+      const html = await readFile(path.join(outDir, 'index.html'), 'utf8');
+      const script = [...html.matchAll(/<script\b[^>]*>/g)].map(match => match[0])
+        .find(tag => /\btype=["']module["']/.test(tag));
+      const entry = script?.match(/\bsrc=["'](?:\.\/)?(assets\/index-[\w-]+\.js)["']/)?.[1];
+      if (!entry) throw new Error('Built game entry was not found for update discovery');
+      await writeFile(path.join(outDir, 'release.json'), JSON.stringify({ entry }));
       const total = entries.reduce((sum, entry) => sum + entry.size, 0);
       console.log(`Offline game: ${entries.length} files, ${(total / 1048576).toFixed(1)} MiB, version ${version}`);
     },

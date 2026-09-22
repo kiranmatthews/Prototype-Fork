@@ -84,3 +84,10 @@ are not scaled by animation. Sentry shots originate at the live barrel tip.
 The production build passes in an isolated checkout containing only task-owned
 changes. The existing `origin/main` GitHub Pages workflow publishes the result.
 No full test suite was requested or run.
+
+## Installed-copy and complete editor audit
+
+The follow-up [rollout audit](ENEMY_ROLLOUT_AUDIT.md) covers all 20 built-ins,
+four synced entries, real editor placement/import and pre-roster saved Jungle
+data. It also fixes the old palette icons and the installed-worker update path
+that could keep an older cube-enemy build active after deployment.

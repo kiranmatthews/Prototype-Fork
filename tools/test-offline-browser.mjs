@@ -32,12 +32,17 @@ const browserType = engine === 'webkit' ? webkit : chromium;
 const profile = await mkdtemp('/private/tmp/prototype-offline-profile-');
 const browserOptions = { headless: true, ...(engine === 'webkit' ? devices['iPhone 13'] : { channel: 'chrome', viewport: { width: 1280, height: 720 } }) };
 let context = await browserType.launchPersistentContext(profile, browserOptions);
-const errors = [], failures = [], cancelledRequests = [], results = [];
+const errors = [], failures = [], cancelledRequests = [], updateChecks = [], results = [];
+let offlineRun=false;
 const watchPage = page => {
   page.on('pageerror', error => errors.push(String(error)));
-  page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()+' '+msg.location().url+' ['+page.url()+']'); });
+  page.on('console', msg => { if (msg.type() === 'error') {
+    if(offlineRun&&msg.location().url?.includes('/release.json')){updateChecks.push(msg.text());return;}
+    errors.push(msg.text()+' '+msg.location().url+' ['+page.url()+']');
+  } });
   page.on('requestfailed', request => {
     const failure = { url: request.url(), error: request.failure()?.errorText, page: page.url() };
+    if(offlineRun&&new URL(failure.url).pathname.endsWith('/release.json')){updateChecks.push(failure);return;}
     // Navigation/level replacement may cancel obsolete loaders. The awaited
     // per-level readiness and error checks below cover all required assets.
     if (/ERR_ABORTED|cancelled|canceled/i.test(failure.error || '')) cancelledRequests.push(failure);
@@ -54,7 +59,7 @@ try {
   assert.match(stamp,/Codex\/sol fork/);
   assert.equal(await page.evaluate(async()=>!!await navigator.serviceWorker.getRegistration()),false,'gameplay does not install a complete offline release');
   await page.getByRole('button',{name:'SAVE OFFLINE',exact:true}).click();
-  await page.waitForURL('**/offline-save.html');
+  await page.waitForURL('**/offline-save.html*');
   assert.equal(await page.locator('canvas').count(),0,'offline saving has no game/rendering context');
   await page.getByRole('button',{name:'Save offline copy',exact:true}).click();
   console.log(engine + ': lightweight save screen; waiting for complete offline copy');
@@ -71,6 +76,7 @@ try {
   await page.evaluate(() => localStorage.setItem('solProtoOfflineSmoke', 'persisted'));
   // Restart the browser itself so only durable local caches can satisfy loads.
   await context.close();
+  offlineRun=true;
   if (server) await new Promise(resolve => { server.close(resolve); server.closeAllConnections(); });
   // Playwright WebKit's offline emulation also blocks service-worker responses
   // (reproduced with a minimal cached HTML page). Stop the actual origin instead.
@@ -109,11 +115,14 @@ try {
       let lods = 0, meshes = 0;
       level.root.traverse(object => { if (object.isLOD) lods++; if (object.isMesh) meshes++; });
       return { id: game.getCurrentLevel().id, lods, meshes,
+        enemies:level.enemies.map(enemy=>({kind:enemy.kind,status:enemy.visual.diagnostics.status,meshes:enemy.visual.diagnostics.meshes})),
         jungle: level.jungleAssets?.diagnostics, city: level.cityAssets?.diagnostics,
         rocks: level.nightworksRocks?.errors, spawn: level.spawnPos.toArray() };
     }, id);
     assert.equal(result.id, id); assert.equal(result.lods, 0); assert.ok(result.meshes > 0);
     assert.deepEqual(result.jungle?.errors || [], []); assert.deepEqual(result.city?.errors || [], []); assert.deepEqual(result.rocks || [], []);
+    assert.ok(result.enemies.every(enemy=>enemy.status==='ready'&&enemy.meshes>0),'every offline enemy uses its generated model');
+    if(id==='jungle')assert.equal(new Set(result.enemies.map(enemy=>enemy.kind)).size,8,'Jungle must load the complete replacement roster offline');
     results.push(result); console.log(engine + ': offline level ' + id + ' ready, no distance mesh swaps');
   }
   // Finish on the complete rendering path, still without a connection.
@@ -124,7 +133,7 @@ try {
   await page.screenshot({ path: `${output}/${engine}-offline-full.png` });
   assert.deepEqual(errors, [], 'no game console or runtime errors');
   assert.deepEqual(failures, [], 'all requested game assets load offline');
-  await writeFile(`${output}/${engine}.json`, JSON.stringify({ engine, base, originStopped: !!server, results, errors, failures, cancelledRequests }, null, 2));
+  await writeFile(`${output}/${engine}.json`, JSON.stringify({ engine, base, originStopped: !!server, results, errors, failures, cancelledRequests, updateChecks }, null, 2));
   console.log(engine + ': PASS cold offline restart, movement, checkpoints, unvisited levels, saves, full renderer');
 } catch (error) {
   await writeFile(`${output}/${engine}-failure.json`, JSON.stringify({ error: String(error), results, errors, failures }, null, 2));

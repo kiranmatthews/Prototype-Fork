@@ -1,0 +1,698 @@
+{
+  "rows": [
+    {
+      "source": "builtin",
+      "id": "treehouse-trail",
+      "editor": false,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "treehouse-trail",
+      "editor": true,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "jungle",
+      "editor": false,
+      "count": 8,
+      "kinds": [
+        "grunt",
+        "turtle",
+        "charger",
+        "hopper",
+        "sentry",
+        "spinner",
+        "floater",
+        "spiker"
+      ],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "jungle",
+      "editor": true,
+      "count": 8,
+      "kinds": [
+        "grunt",
+        "turtle",
+        "charger",
+        "hopper",
+        "sentry",
+        "spinner",
+        "floater",
+        "spiker"
+      ],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "flats",
+      "editor": false,
+      "count": 11,
+      "kinds": [
+        "grunt",
+        "spiker",
+        "turtle",
+        "charger",
+        "hopper",
+        "floater",
+        "sentry",
+        "spinner"
+      ],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "flats",
+      "editor": true,
+      "count": 11,
+      "kinds": [
+        "grunt",
+        "spiker",
+        "turtle",
+        "charger",
+        "hopper",
+        "floater",
+        "sentry",
+        "spinner"
+      ],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "sky",
+      "editor": false,
+      "count": 2,
+      "kinds": [
+        "floater",
+        "spiker"
+      ],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "sky",
+      "editor": true,
+      "count": 2,
+      "kinds": [
+        "floater",
+        "spiker"
+      ],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "slip",
+      "editor": false,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "slip",
+      "editor": true,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "test",
+      "editor": false,
+      "count": 28,
+      "kinds": [
+        "grunt",
+        "spiker",
+        "turtle",
+        "hopper",
+        "sentry",
+        "charger",
+        "floater",
+        "spinner"
+      ],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "test",
+      "editor": true,
+      "count": 28,
+      "kinds": [
+        "grunt",
+        "spiker",
+        "turtle",
+        "hopper",
+        "sentry",
+        "charger",
+        "floater",
+        "spinner"
+      ],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "dark",
+      "editor": false,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "dark",
+      "editor": true,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "warproom",
+      "editor": false,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "warproom",
+      "editor": true,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "descent",
+      "editor": false,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "descent",
+      "editor": true,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "beachfront",
+      "editor": false,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "beachfront",
+      "editor": true,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "bonus-level",
+      "editor": false,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "bonus-level",
+      "editor": true,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "coastal-street-run",
+      "editor": false,
+      "count": 16,
+      "kinds": [
+        "grunt",
+        "spinner"
+      ],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "coastal-street-run",
+      "editor": true,
+      "count": 16,
+      "kinds": [
+        "grunt",
+        "spinner"
+      ],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "island-hopper",
+      "editor": false,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "island-hopper",
+      "editor": true,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "jungle-gate-run",
+      "editor": false,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "jungle-gate-run",
+      "editor": true,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "meshylook-thorns",
+      "editor": false,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "meshylook-thorns",
+      "editor": true,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "bonus-easy",
+      "editor": false,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "bonus-easy",
+      "editor": true,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "codex-lab",
+      "editor": false,
+      "count": 12,
+      "kinds": [
+        "grunt",
+        "spiker",
+        "turtle",
+        "hopper"
+      ],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "codex-lab",
+      "editor": true,
+      "count": 12,
+      "kinds": [
+        "grunt",
+        "spiker",
+        "turtle",
+        "hopper"
+      ],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "jungle-cup",
+      "editor": false,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "jungle-cup",
+      "editor": true,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "astra-chimeworks",
+      "editor": false,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "astra-chimeworks",
+      "editor": true,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "backport-lab",
+      "editor": false,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "builtin",
+      "id": "backport-lab",
+      "editor": true,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "synced",
+      "id": "flats",
+      "editor": false,
+      "count": 3,
+      "kinds": [
+        "grunt",
+        "floater",
+        "spinner"
+      ],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "synced",
+      "id": "flats",
+      "editor": true,
+      "count": 3,
+      "kinds": [
+        "grunt",
+        "floater",
+        "spinner"
+      ],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "synced",
+      "id": "sky",
+      "editor": false,
+      "count": 2,
+      "kinds": [
+        "floater",
+        "spiker"
+      ],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "synced",
+      "id": "sky",
+      "editor": true,
+      "count": 2,
+      "kinds": [
+        "floater",
+        "spiker"
+      ],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "synced",
+      "id": "test",
+      "editor": false,
+      "count": 28,
+      "kinds": [
+        "grunt",
+        "spiker",
+        "turtle",
+        "hopper",
+        "sentry",
+        "charger",
+        "floater",
+        "spinner"
+      ],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "synced",
+      "id": "test",
+      "editor": true,
+      "count": 28,
+      "kinds": [
+        "grunt",
+        "spiker",
+        "turtle",
+        "hopper",
+        "sentry",
+        "charger",
+        "floater",
+        "spinner"
+      ],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "synced",
+      "id": "slip",
+      "editor": false,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    },
+    {
+      "source": "synced",
+      "id": "slip",
+      "editor": true,
+      "count": 0,
+      "kinds": [],
+      "ready": true,
+      "primitiveBoxes": 0,
+      "trianglesMatch": true
+    }
+  ],
+  "editorRoundtrip": {
+    "route": "real-editor-and-import",
+    "editor": [
+      {
+        "kind": "grunt",
+        "status": "ready"
+      },
+      {
+        "kind": "spiker",
+        "status": "ready"
+      },
+      {
+        "kind": "turtle",
+        "status": "ready"
+      },
+      {
+        "kind": "charger",
+        "status": "ready"
+      },
+      {
+        "kind": "hopper",
+        "status": "ready"
+      },
+      {
+        "kind": "floater",
+        "status": "ready"
+      },
+      {
+        "kind": "sentry",
+        "status": "ready"
+      },
+      {
+        "kind": "spinner",
+        "status": "ready"
+      }
+    ],
+    "play": [
+      {
+        "kind": "grunt",
+        "status": "ready"
+      },
+      {
+        "kind": "spiker",
+        "status": "ready"
+      },
+      {
+        "kind": "turtle",
+        "status": "ready"
+      },
+      {
+        "kind": "charger",
+        "status": "ready"
+      },
+      {
+        "kind": "hopper",
+        "status": "ready"
+      },
+      {
+        "kind": "floater",
+        "status": "ready"
+      },
+      {
+        "kind": "sentry",
+        "status": "ready"
+      },
+      {
+        "kind": "spinner",
+        "status": "ready"
+      }
+    ],
+    "imported": [
+      {
+        "kind": "grunt",
+        "status": "ready"
+      },
+      {
+        "kind": "spiker",
+        "status": "ready"
+      },
+      {
+        "kind": "turtle",
+        "status": "ready"
+      },
+      {
+        "kind": "charger",
+        "status": "ready"
+      },
+      {
+        "kind": "hopper",
+        "status": "ready"
+      },
+      {
+        "kind": "floater",
+        "status": "ready"
+      },
+      {
+        "kind": "sentry",
+        "status": "ready"
+      },
+      {
+        "kind": "spinner",
+        "status": "ready"
+      }
+    ]
+  },
+  "errors": []
+}

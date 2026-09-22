@@ -1,0 +1,61 @@
+{
+  "source": "Shipped enemy GLBs rendered with Three.js",
+  "icons": [
+    {
+      "kind": "grunt",
+      "modelSha256": "ccd19b258119470fcd2f9a113812cecbd8249079fc503e631cc9590652bbf100",
+      "pngSha256": "f433e09a17c2e8287ccb8788e88acac94f0b9e27bb1537e55762e22b3818bd46",
+      "width": 256,
+      "height": 256
+    },
+    {
+      "kind": "spiker",
+      "modelSha256": "1db4a9b0b85373f86da6d96b4e5ccaaa59ba9f4a4a27244349978d637cc0538d",
+      "pngSha256": "ffd31a35a509f3dda75a8314cf67b41f100a4240c2caaaa8031a05ea103cc237",
+      "width": 256,
+      "height": 256
+    },
+    {
+      "kind": "turtle",
+      "modelSha256": "2c691af26d06ad2b6d53b89ef2fc37c06165b439511b3cc66323a277021e5963",
+      "pngSha256": "1f885877f98d4b796e4718c3d9e80c9e1fe38c265fc551764be032ab64144653",
+      "width": 256,
+      "height": 256
+    },
+    {
+      "kind": "charger",
+      "modelSha256": "db3e62a7bbd7a54c3351278dc9a8d3aa41099a28eccfd9a9a023629a1ae22c54",
+      "pngSha256": "3b2f95161ceee2a407fd945ced5bfb631c65786fb9be13aa45e0eb0127b99589",
+      "width": 256,
+      "height": 256
+    },
+    {
+      "kind": "hopper",
+      "modelSha256": "4db06975d5ad7268a7bcae3a248a7b2347962f689056c734009b94d05f08440d",
+      "pngSha256": "4e1b9c45cbb085b18ed51259373d1a29bd7616c36e04047636c3ba6003dbcb48",
+      "width": 256,
+      "height": 256
+    },
+    {
+      "kind": "floater",
+      "modelSha256": "5d43d84c6caccb13b7d1af89b2fbcfacbba40425af470c184cb632708535757f",
+      "pngSha256": "cf7b3626e3ed5d230b4e154e74f0bb6b05a0370528b7f3f71ac7cad3787e0ddd",
+      "width": 256,
+      "height": 256
+    },
+    {
+      "kind": "sentry",
+      "modelSha256": "6144057f83442d884c7234b4491145bd702dc8a39a20101ab8369b2c3d9db541",
+      "pngSha256": "a86d515f413ee0c6f45c4584065d3986a7d02429fb61bd7663513990b1280782",
+      "width": 256,
+      "height": 256
+    },
+    {
+      "kind": "spinner",
+      "modelSha256": "8cbb5cfb22efd4cecd3f1d595322e5ea4f66dc79693cbd5dd478ecfc961afcb3",
+      "pngSha256": "5accef8a0ef482e8eb11519beadcc0594fee607c485abdb97687f6d1b9fa8da7",
+      "width": 256,
+      "height": 256
+    }
+  ]
+}

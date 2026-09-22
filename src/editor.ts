@@ -12,6 +12,8 @@
 // Everything autosaves to this browser; EXPORT shares the level as a file.
 
 import * as THREE from "three";
+import {ENEMY_KINDS} from './enemies/types';
+import {ENEMY_NAMES,enemyThumbnail} from './enemies/catalog';
 import { EditorEnvironment } from "./editorEnvironment";
 import { THORN_DEFAULT_SIZE, THORN_DEFAULT_COLOR } from "./proceduralThorns";
 import { withPortableAtmosphere } from "./levelAtmosphere";
@@ -89,7 +91,8 @@ interface Hooks {
 type Draw = (x: CanvasRenderingContext2D) => void;
 interface PalItem {
   label: string;
-  icon: Draw;
+  icon?: Draw;
+  thumbnail?: string;
   make?: (at: THREE.Vector3) => CustomComponent;
   penDraw?:
     | "platform"
@@ -1573,186 +1576,14 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
   {
     title: "FOES",
     items: [
-      {
-        label: "grunt",
-        icon: (x) => {
-          x.fillStyle = "#c03a2a";
-          x.fillRect(4, 7, 10, 8);
-          x.fillStyle = "#fff";
-          x.fillRect(6, 9, 2, 2);
-          x.fillRect(10, 9, 2, 2);
-        },
-        make: (at) => ({
-          t: "enemy",
-          p: [at.x, at.y + 0.5, at.z],
-          range: 5,
-          speed: 3,
-          foe: "grunt",
+      ...ENEMY_KINDS.map((kind):PalItem=>({
+        label: `${ENEMY_NAMES[kind]} (${kind})`,
+        thumbnail: enemyThumbnail(kind),
+        make: at=>({t:'enemy',p:[at.x,at.y+.5,at.z],foe:kind,
+          range: {grunt:5,spiker:5,turtle:4,charger:9,hopper:5,floater:5,sentry:0,spinner:0}[kind],
+          speed: {grunt:3,spiker:3,turtle:2.4,charger:4.5,hopper:3.4,floater:3,sentry:0,spinner:0}[kind],
         }),
-      },
-      {
-        label: "spiker (spin)",
-        icon: (x) => {
-          x.fillStyle = "#7a3a8a";
-          x.fillRect(4, 9, 10, 6);
-          x.fillStyle = "#e8e0f0";
-          for (let i = 0; i < 4; i++) {
-            x.beginPath();
-            x.moveTo(4 + i * 3, 9);
-            x.lineTo(5.5 + i * 3, 3);
-            x.lineTo(7 + i * 3, 9);
-            x.fill();
-          }
-        },
-        make: (at) => ({
-          t: "enemy",
-          p: [at.x, at.y + 0.5, at.z],
-          range: 5,
-          speed: 3,
-          foe: "spiker",
-        }),
-      },
-      {
-        label: "turtle (jump)",
-        icon: (x) => {
-          x.fillStyle = "#2f7a44";
-          x.beginPath();
-          x.arc(9, 12, 6, Math.PI, 0);
-          x.fill();
-          x.fillStyle = "#8a6a2a";
-          x.fillRect(2, 11, 2, 3);
-          x.fillRect(14, 11, 2, 3);
-          x.fillStyle = "#6cae5a";
-          x.fillRect(12, 8, 4, 3);
-        },
-        make: (at) => ({
-          t: "enemy",
-          p: [at.x, at.y + 0.5, at.z],
-          range: 4,
-          speed: 2.4,
-          foe: "turtle",
-        }),
-      },
-      {
-        label: "charger",
-        icon: (x) => {
-          x.fillStyle = "#8a4a26";
-          x.fillRect(3, 7, 11, 8);
-          x.fillStyle = "#f0e6d0";
-          x.beginPath();
-          x.moveTo(14, 8);
-          x.lineTo(18, 6);
-          x.lineTo(15, 10);
-          x.fill();
-          x.beginPath();
-          x.moveTo(14, 12);
-          x.lineTo(18, 13);
-          x.lineTo(15, 14);
-          x.fill();
-        },
-        make: (at) => ({
-          t: "enemy",
-          p: [at.x, at.y + 0.5, at.z],
-          range: 9,
-          speed: 4.5,
-          foe: "charger",
-        }),
-      },
-      {
-        label: "hopper",
-        icon: (x) => {
-          x.fillStyle = "#46a83a";
-          x.beginPath();
-          x.arc(9, 11, 5, 0, 7);
-          x.fill();
-          x.fillStyle = "#fff";
-          x.beginPath();
-          x.arc(6.5, 7, 2, 0, 7);
-          x.arc(11.5, 7, 2, 0, 7);
-          x.fill();
-          x.fillStyle = "#101010";
-          x.fillRect(6, 6.5, 1.4, 1.4);
-          x.fillRect(11, 6.5, 1.4, 1.4);
-        },
-        make: (at) => ({
-          t: "enemy",
-          p: [at.x, at.y + 0.5, at.z],
-          range: 5,
-          speed: 3.4,
-          foe: "hopper",
-        }),
-      },
-      {
-        label: "floater (spin)",
-        icon: (x) => {
-          x.strokeStyle = "#6c4ad0";
-          x.lineWidth = 1.5;
-          x.beginPath();
-          x.ellipse(9, 9, 7, 3, 0, 0, 7);
-          x.stroke();
-          x.fillStyle = "#9a6cff";
-          x.beginPath();
-          x.moveTo(9, 5);
-          x.lineTo(12, 9);
-          x.lineTo(9, 13);
-          x.lineTo(6, 9);
-          x.fill();
-          x.fillStyle = "#ffe27a";
-          x.fillRect(8, 8, 2, 2);
-        },
-        make: (at) => ({
-          t: "enemy",
-          p: [at.x, at.y + 0.5, at.z],
-          range: 5,
-          speed: 3,
-          foe: "floater",
-        }),
-      },
-      {
-        label: "sentry",
-        icon: (x) => {
-          x.fillStyle = "#4c525e";
-          x.fillRect(5, 12, 8, 4);
-          x.fillStyle = "#8a3a3a";
-          x.fillRect(6, 6, 6, 6);
-          x.fillStyle = "#33373f";
-          x.fillRect(11, 8, 5, 2);
-          x.fillStyle = "#ff6a3a";
-          x.fillRect(8, 8, 2, 2);
-        },
-        make: (at) => ({
-          t: "enemy",
-          p: [at.x, at.y + 0.5, at.z],
-          range: 0,
-          speed: 0,
-          foe: "sentry",
-        }),
-      },
-      {
-        label: "spinner",
-        icon: (x) => {
-          x.strokeStyle = "#d8dde2";
-          x.lineWidth = 2;
-          for (let i = 0; i < 4; i++) {
-            const a = (i * Math.PI) / 2 + 0.4;
-            x.beginPath();
-            x.moveTo(9, 9);
-            x.lineTo(9 + Math.cos(a) * 7, 9 + Math.sin(a) * 7);
-            x.stroke();
-          }
-          x.fillStyle = "#b08a2a";
-          x.beginPath();
-          x.arc(9, 9, 2.5, 0, 7);
-          x.fill();
-        },
-        make: (at) => ({
-          t: "enemy",
-          p: [at.x, at.y + 0.5, at.z],
-          range: 0,
-          speed: 0,
-          foe: "spinner",
-        }),
-      },
+      })),
       {
         label: "Grindosaurus",
         icon: (x) => {
@@ -6523,12 +6354,19 @@ export class Editor {
         const b = h(
           '<button class="ed-btn ed-palbtn"></button>',
         ) as HTMLButtonElement;
-        const cv = document.createElement("canvas");
-        cv.width = 18;
-        cv.height = 18;
-        const ctx = cv.getContext("2d");
-        if (ctx) p.icon(ctx);
-        b.appendChild(cv);
+        if (p.thumbnail) {
+          const image=document.createElement('img');
+          image.alt='';image.width=image.height=28;
+          image.loading='lazy';image.decoding='async';image.style.objectFit='contain';
+          image.src=p.thumbnail;
+          b.appendChild(image);
+        } else {
+          const cv = document.createElement("canvas");
+          cv.width = 18;cv.height = 18;
+          const ctx = cv.getContext("2d");
+          if (ctx) p.icon?.(ctx);
+          b.appendChild(cv);
+        }
         const lab = document.createElement("span");
         lab.textContent = p.label;
         b.appendChild(lab);
@@ -7056,7 +6894,7 @@ export class Editor {
     if (c.pts && c.pts.length >= 3) return `${c.t} · drawn`;
     if (c.t === "crate")
       return `crate · ${c.kind ?? "wood"}${c.outline ? " (outline)" : ""}`;
-    if (c.t === "enemy") return `foe · ${c.foe ?? "grunt"}`;
+    if (c.t === "enemy") return `foe · ${ENEMY_NAMES[c.foe ?? "grunt"]}`;
     if (c.t === "terrain") return `ground · ${c.pts?.length ?? 0} nodes`;
     if (c.t === "woodpath") return `wood path · ${c.pts?.length ?? 0} nodes`;
     if (c.t === "trickgate")
@@ -9376,7 +9214,7 @@ export class Editor {
       for (const f of FOE_KINDS) {
         const o = document.createElement("option");
         o.value = f.k;
-        o.textContent = f.label;
+        o.textContent = `${ENEMY_NAMES[f.k]} · ${f.label}`;
         if ((c.foe ?? "grunt") === f.k) o.selected = true;
         sel.appendChild(o);
       }

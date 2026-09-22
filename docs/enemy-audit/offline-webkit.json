@@ -1,0 +1,246 @@
+{
+  "engine": "webkit",
+  "originStopped": true,
+  "results": [
+    {
+      "movement": {
+        "before": [
+          0,
+          72,
+          28
+        ],
+        "after": [
+          0,
+          72,
+          23.316666666666666
+        ]
+      },
+      "checkpoint": {
+        "count": 8,
+        "warped": true,
+        "y": 24.451023383674748
+      },
+      "ranges": {
+        "status": 206,
+        "size": 32
+      }
+    },
+    {
+      "id": "treehouse-trail",
+      "enemies": [],
+      "meshes": 154
+    },
+    {
+      "id": "jungle",
+      "enemies": [
+        {
+          "kind": "grunt",
+          "status": "ready",
+          "meshes": 1
+        },
+        {
+          "kind": "turtle",
+          "status": "ready",
+          "meshes": 2
+        },
+        {
+          "kind": "charger",
+          "status": "ready",
+          "meshes": 1
+        },
+        {
+          "kind": "hopper",
+          "status": "ready",
+          "meshes": 1
+        },
+        {
+          "kind": "sentry",
+          "status": "ready",
+          "meshes": 6
+        },
+        {
+          "kind": "spinner",
+          "status": "ready",
+          "meshes": 6
+        },
+        {
+          "kind": "floater",
+          "status": "ready",
+          "meshes": 2
+        },
+        {
+          "kind": "spiker",
+          "status": "ready",
+          "meshes": 1
+        }
+      ],
+      "meshes": 557
+    },
+    {
+      "id": "test",
+      "enemies": [
+        {
+          "kind": "grunt",
+          "status": "ready",
+          "meshes": 1
+        },
+        {
+          "kind": "spiker",
+          "status": "ready",
+          "meshes": 1
+        },
+        {
+          "kind": "turtle",
+          "status": "ready",
+          "meshes": 2
+        },
+        {
+          "kind": "hopper",
+          "status": "ready",
+          "meshes": 1
+        },
+        {
+          "kind": "sentry",
+          "status": "ready",
+          "meshes": 6
+        },
+        {
+          "kind": "charger",
+          "status": "ready",
+          "meshes": 1
+        },
+        {
+          "kind": "grunt",
+          "status": "ready",
+          "meshes": 1
+        },
+        {
+          "kind": "floater",
+          "status": "ready",
+          "meshes": 2
+        },
+        {
+          "kind": "spinner",
+          "status": "ready",
+          "meshes": 6
+        },
+        {
+          "kind": "grunt",
+          "status": "ready",
+          "meshes": 1
+        },
+        {
+          "kind": "turtle",
+          "status": "ready",
+          "meshes": 2
+        },
+        {
+          "kind": "spiker",
+          "status": "ready",
+          "meshes": 1
+        },
+        {
+          "kind": "hopper",
+          "status": "ready",
+          "meshes": 1
+        },
+        {
+          "kind": "turtle",
+          "status": "ready",
+          "meshes": 2
+        },
+        {
+          "kind": "grunt",
+          "status": "ready",
+          "meshes": 1
+        },
+        {
+          "kind": "charger",
+          "status": "ready",
+          "meshes": 1
+        },
+        {
+          "kind": "spinner",
+          "status": "ready",
+          "meshes": 6
+        },
+        {
+          "kind": "sentry",
+          "status": "ready",
+          "meshes": 6
+        },
+        {
+          "kind": "hopper",
+          "status": "ready",
+          "meshes": 1
+        },
+        {
+          "kind": "grunt",
+          "status": "ready",
+          "meshes": 1
+        },
+        {
+          "kind": "grunt",
+          "status": "ready",
+          "meshes": 1
+        },
+        {
+          "kind": "spiker",
+          "status": "ready",
+          "meshes": 1
+        },
+        {
+          "kind": "spiker",
+          "status": "ready",
+          "meshes": 1
+        },
+        {
+          "kind": "spiker",
+          "status": "ready",
+          "meshes": 1
+        },
+        {
+          "kind": "spiker",
+          "status": "ready",
+          "meshes": 1
+        },
+        {
+          "kind": "turtle",
+          "status": "ready",
+          "meshes": 2
+        },
+        {
+          "kind": "charger",
+          "status": "ready",
+          "meshes": 1
+        },
+        {
+          "kind": "floater",
+          "status": "ready",
+          "meshes": 2
+        }
+      ],
+      "meshes": 6963
+    },
+    {
+      "id": "dark",
+      "enemies": [],
+      "meshes": 672
+    },
+    {
+      "id": "warproom",
+      "enemies": [],
+      "meshes": 319
+    }
+  ],
+  "errors": [],
+  "assetFailures": [],
+  "optionalUpdateChecks": [
+    {
+      "url": "http://127.0.0.1:57909/Prototype-Fork/release.json",
+      "error": "Could not connect to the server.",
+      "page": "http://127.0.0.1:57909/Prototype-Fork/?playtest=&level=jungle&airplane=full&__game_entry=index-BN_4UQ_2.js"
+    },
+    "Failed to load resource: Could not connect to the server."
+  ]
+}

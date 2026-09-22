@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { createEnemyVisual } from './runtime';
 import { ENEMY_KINDS, type EnemyKind, type EnemyAnimationFrame, type EnemyVisual } from './types';
+import {ENEMY_NAMES} from './catalog';
 
 const required=<T extends HTMLElement>(id:string):T=>{
   const element=document.getElementById(id);if(!element)throw new Error(`Enemy review element missing: ${id}`);
@@ -14,8 +15,7 @@ const speedInput=required<HTMLSelectElement>('playback-speed'),playButton=requir
 const diagnosticsElement=required<HTMLPreElement>('review-diagnostics');
 const query=new URLSearchParams(location.search);
 const FPS=60;
-const NAMES:Record<EnemyKind,string>={grunt:'Coral Crab',spiker:'Bristleback',turtle:'Mossback',charger:'Russet Bull',
-  hopper:'Spring Frog',floater:'Violet Watcher',sentry:'Ember Sentry',spinner:'Brass Whirler'};
+const NAMES=ENEMY_NAMES;
 interface Segment {state:string;frames:number;speed:number;}
 const CYCLES:Record<EnemyKind,readonly Segment[]>={
   grunt:[{state:'patrol',frames:180,speed:2.4}],spiker:[{state:'patrol',frames:180,speed:2.2}],

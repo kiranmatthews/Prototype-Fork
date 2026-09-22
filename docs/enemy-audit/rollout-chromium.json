@@ -1,0 +1,178 @@
+{
+  "base": "http://127.0.0.1:58040/Prototype-Fork/",
+  "results": [
+    {
+      "phase": "plain-reload-stays-old",
+      "stamp": "Codex/sol fork · build 09-22 22:38 UTC",
+      "controlled": true,
+      "enemies": [
+        {
+          "kind": "grunt",
+          "status": "legacy",
+          "boxes": 3,
+          "triangles": 36
+        },
+        {
+          "kind": "turtle",
+          "status": "legacy",
+          "boxes": 5,
+          "triangles": 190
+        },
+        {
+          "kind": "charger",
+          "status": "legacy",
+          "boxes": 4,
+          "triangles": 78
+        },
+        {
+          "kind": "hopper",
+          "status": "legacy",
+          "boxes": 2,
+          "triangles": 368
+        },
+        {
+          "kind": "sentry",
+          "status": "legacy",
+          "boxes": 1,
+          "triangles": 156
+        },
+        {
+          "kind": "spinner",
+          "status": "legacy",
+          "boxes": 4,
+          "triangles": 80
+        },
+        {
+          "kind": "floater",
+          "status": "legacy",
+          "boxes": 0,
+          "triangles": 280
+        },
+        {
+          "kind": "spiker",
+          "status": "legacy",
+          "boxes": 3,
+          "triangles": 96
+        }
+      ]
+    },
+    {
+      "phase": "app-close-reopen-new-models",
+      "stamp": "Codex/sol fork · build 09-22 23:31 UTC",
+      "controlled": true,
+      "enemies": [
+        {
+          "kind": "grunt",
+          "status": "ready",
+          "boxes": 0,
+          "triangles": 9248
+        },
+        {
+          "kind": "turtle",
+          "status": "ready",
+          "boxes": 0,
+          "triangles": 8241
+        },
+        {
+          "kind": "charger",
+          "status": "ready",
+          "boxes": 0,
+          "triangles": 7609
+        },
+        {
+          "kind": "hopper",
+          "status": "ready",
+          "boxes": 0,
+          "triangles": 9324
+        },
+        {
+          "kind": "sentry",
+          "status": "ready",
+          "boxes": 0,
+          "triangles": 8671
+        },
+        {
+          "kind": "spinner",
+          "status": "ready",
+          "boxes": 0,
+          "triangles": 8154
+        },
+        {
+          "kind": "floater",
+          "status": "ready",
+          "boxes": 0,
+          "triangles": 7077
+        },
+        {
+          "kind": "spiker",
+          "status": "ready",
+          "boxes": 0,
+          "triangles": 8817
+        }
+      ],
+      "automaticAssetDownloads": 0
+    },
+    {
+      "phase": "explicit-update-new-models",
+      "stamp": "Codex/sol fork · build 09-22 23:31 UTC",
+      "controlled": false,
+      "enemies": [
+        {
+          "kind": "grunt",
+          "status": "ready",
+          "boxes": 0,
+          "triangles": 9248
+        },
+        {
+          "kind": "turtle",
+          "status": "ready",
+          "boxes": 0,
+          "triangles": 8241
+        },
+        {
+          "kind": "charger",
+          "status": "ready",
+          "boxes": 0,
+          "triangles": 7609
+        },
+        {
+          "kind": "hopper",
+          "status": "ready",
+          "boxes": 0,
+          "triangles": 9324
+        },
+        {
+          "kind": "sentry",
+          "status": "ready",
+          "boxes": 0,
+          "triangles": 8671
+        },
+        {
+          "kind": "spinner",
+          "status": "ready",
+          "boxes": 0,
+          "triangles": 8154
+        },
+        {
+          "kind": "floater",
+          "status": "ready",
+          "boxes": 0,
+          "triangles": 7077
+        },
+        {
+          "kind": "spiker",
+          "status": "ready",
+          "boxes": 0,
+          "triangles": 8817
+        }
+      ],
+      "savesPreserved": true
+    },
+    {
+      "phase": "future-update-home-action",
+      "url": "http://127.0.0.1:58040/Prototype-Fork/update-game.html?v=1790120575758",
+      "canvasCount": 0
+    }
+  ],
+  "errors": []
+}

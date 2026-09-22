@@ -1,4 +1,4 @@
-import { OFFLINE_STATUS_EVENT, offlineStatusText, openOfflineSave } from "./offline";
+import { OFFLINE_STATUS_EVENT, offlineStatusText, openOfflineSave, gameUpdateAvailable, openGameUpdate } from "./offline";
 import { MENU_THEME_CSS } from './menuTheme';
 import {updateMenuPngFocus} from './menuPngFocus';
 // Game-owned menus and campaign screens. The live DOM remains the semantic
@@ -296,6 +296,10 @@ export class GameFlowUI {
     window.addEventListener("keydown", (event) => this.onKey(event));
     window.addEventListener(OFFLINE_STATUS_EVENT, () => {
       for (const node of this.panel.querySelectorAll<HTMLElement>(".game-offline-status")) node.textContent = offlineStatusText();
+      for (const button of this.panel.querySelectorAll<HTMLButtonElement>('[data-game-update-action]')) {
+        const label=gameUpdateAvailable()?'UPDATE GAME':'SAVE OFFLINE';
+        if (button.dataset.gameUpdateAction!==label) { button.textContent=label;button.dataset.gameUpdateAction=label; }
+      }
       this.invalidatePreCrt();
     });
     window.addEventListener("input-prompts-changed", () => this.invalidatePreCrt());
@@ -822,7 +826,11 @@ export class GameFlowUI {
         this.render();
       }),
     );
-    if (import.meta.env.PROD) actions.push(this.button('SAVE OFFLINE', openOfflineSave));
+    if (import.meta.env.PROD) {
+      const label=gameUpdateAvailable()?'UPDATE GAME':'SAVE OFFLINE';
+      const button=this.button(label,()=>{void (gameUpdateAvailable()?openGameUpdate():openOfflineSave());});
+      button.dataset.gameUpdateAction=label;actions.push(button);
+    }
     menu.append(...actions);
     card.append(title, menu, this.offlineStatus());
     this.panel.appendChild(card);
