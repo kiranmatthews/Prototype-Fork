@@ -1,0 +1,3020 @@
+{
+  "original": "ee24275fc11092e91ec30eabd6161611c2cffdd9",
+  "baseline": "d86c517a29ecab1f35d00d954c3c7033f439e62c",
+  "measurement": "Logical live requested WebGL storage, excluding default framebuffer, CPU images and driver/browser overhead",
+  "rows": [
+    {
+      "version": "original",
+      "level": "sky",
+      "budget": [
+        {
+          "logicalBytes": 52943642,
+          "logicalPeakBytes": 54718850,
+          "bytes": {
+            "texture": 39755768,
+            "renderbuffer": 12582912,
+            "buffer": 604962
+          },
+          "counts": {
+            "texture": 21,
+            "renderbuffer": 1,
+            "buffer": 913
+          },
+          "warnings": [],
+          "backbuffer": {
+            "width": 1280,
+            "height": 720,
+            "attributes": {
+              "alpha": true,
+              "antialias": true,
+              "depth": true,
+              "desynchronized": false,
+              "failIfMajorPerformanceCaveat": false,
+              "powerPreference": "default",
+              "premultipliedAlpha": true,
+              "preserveDrawingBuffer": false,
+              "stencil": false,
+              "xrCompatible": false
+            },
+            "samples": 4,
+            "excluded": true
+          },
+          "contextLost": false,
+          "largest": [
+            {
+              "id": 703,
+              "kind": "texture",
+              "bytes": 16777216,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 32856,
+                  "width": 2048,
+                  "height": 2048,
+                  "depth": 1,
+                  "bytes": 16777216,
+                  "compressed": false,
+                  "bpp": 4
+                }
+              },
+              "renderTarget": true,
+              "owners": [
+                ".shadowMap"
+              ]
+            },
+            {
+              "id": 704,
+              "kind": "renderbuffer",
+              "bytes": 12582912,
+              "levels": {},
+              "samples": 1,
+              "width": 2048,
+              "height": 2048,
+              "format": 33190,
+              "owners": [
+                ".shadowMap depth/MSAA attachment"
+              ]
+            },
+            {
+              "id": 955,
+              "kind": "texture",
+              "bytes": 8386716,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 35907,
+                  "width": 1774,
+                  "height": 887,
+                  "depth": 1,
+                  "bytes": 6294152,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:1": {
+                  "target": 3553,
+                  "level": 1,
+                  "internal": 35907,
+                  "width": 887,
+                  "height": 443,
+                  "depth": 1,
+                  "bytes": 1571764,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:2": {
+                  "target": 3553,
+                  "level": 2,
+                  "internal": 35907,
+                  "width": 443,
+                  "height": 221,
+                  "depth": 1,
+                  "bytes": 391612,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:3": {
+                  "target": 3553,
+                  "level": 3,
+                  "internal": 35907,
+                  "width": 221,
+                  "height": 110,
+                  "depth": 1,
+                  "bytes": 97240,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:4": {
+                  "target": 3553,
+                  "level": 4,
+                  "internal": 35907,
+                  "width": 110,
+                  "height": 55,
+                  "depth": 1,
+                  "bytes": 24200,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:5": {
+                  "target": 3553,
+                  "level": 5,
+                  "internal": 35907,
+                  "width": 55,
+                  "height": 27,
+                  "depth": 1,
+                  "bytes": 5940,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:6": {
+                  "target": 3553,
+                  "level": 6,
+                  "internal": 35907,
+                  "width": 27,
+                  "height": 13,
+                  "depth": 1,
+                  "bytes": 1404,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:7": {
+                  "target": 3553,
+                  "level": 7,
+                  "internal": 35907,
+                  "width": 13,
+                  "height": 6,
+                  "depth": 1,
+                  "bytes": 312,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:8": {
+                  "target": 3553,
+                  "level": 8,
+                  "internal": 35907,
+                  "width": 6,
+                  "height": 3,
+                  "depth": 1,
+                  "bytes": 72,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:9": {
+                  "target": 3553,
+                  "level": 9,
+                  "internal": 35907,
+                  "width": 3,
+                  "height": 1,
+                  "depth": 1,
+                  "bytes": 12,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:10": {
+                  "target": 3553,
+                  "level": 10,
+                  "internal": 35907,
+                  "width": 1,
+                  "height": 1,
+                  "depth": 1,
+                  "bytes": 4,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:11": {
+                  "target": 3553,
+                  "level": 11,
+                  "internal": 35907,
+                  "width": 1,
+                  "height": 1,
+                  "depth": 1,
+                  "bytes": 4,
+                  "compressed": false,
+                  "bpp": 4
+                }
+              },
+              "owners": [
+                "Mesh material map"
+              ]
+            },
+            {
+              "id": 956,
+              "kind": "texture",
+              "bytes": 8386716,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 35907,
+                  "width": 1774,
+                  "height": 887,
+                  "depth": 1,
+                  "bytes": 6294152,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:1": {
+                  "target": 3553,
+                  "level": 1,
+                  "internal": 35907,
+                  "width": 887,
+                  "height": 443,
+                  "depth": 1,
+                  "bytes": 1571764,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:2": {
+                  "target": 3553,
+                  "level": 2,
+                  "internal": 35907,
+                  "width": 443,
+                  "height": 221,
+                  "depth": 1,
+                  "bytes": 391612,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:3": {
+                  "target": 3553,
+                  "level": 3,
+                  "internal": 35907,
+                  "width": 221,
+                  "height": 110,
+                  "depth": 1,
+                  "bytes": 97240,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:4": {
+                  "target": 3553,
+                  "level": 4,
+                  "internal": 35907,
+                  "width": 110,
+                  "height": 55,
+                  "depth": 1,
+                  "bytes": 24200,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:5": {
+                  "target": 3553,
+                  "level": 5,
+                  "internal": 35907,
+                  "width": 55,
+                  "height": 27,
+                  "depth": 1,
+                  "bytes": 5940,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:6": {
+                  "target": 3553,
+                  "level": 6,
+                  "internal": 35907,
+                  "width": 27,
+                  "height": 13,
+                  "depth": 1,
+                  "bytes": 1404,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:7": {
+                  "target": 3553,
+                  "level": 7,
+                  "internal": 35907,
+                  "width": 13,
+                  "height": 6,
+                  "depth": 1,
+                  "bytes": 312,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:8": {
+                  "target": 3553,
+                  "level": 8,
+                  "internal": 35907,
+                  "width": 6,
+                  "height": 3,
+                  "depth": 1,
+                  "bytes": 72,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:9": {
+                  "target": 3553,
+                  "level": 9,
+                  "internal": 35907,
+                  "width": 3,
+                  "height": 1,
+                  "depth": 1,
+                  "bytes": 12,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:10": {
+                  "target": 3553,
+                  "level": 10,
+                  "internal": 35907,
+                  "width": 1,
+                  "height": 1,
+                  "depth": 1,
+                  "bytes": 4,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:11": {
+                  "target": 3553,
+                  "level": 11,
+                  "internal": 35907,
+                  "width": 1,
+                  "height": 1,
+                  "depth": 1,
+                  "bytes": 4,
+                  "compressed": false,
+                  "bpp": 4
+                }
+              },
+              "owners": [
+                "Mesh material map"
+              ]
+            },
+            {
+              "id": 710,
+              "kind": "texture",
+              "bytes": 1398100,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 35907,
+                  "width": 512,
+                  "height": 512,
+                  "depth": 1,
+                  "bytes": 1048576,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:1": {
+                  "target": 3553,
+                  "level": 1,
+                  "internal": 35907,
+                  "width": 256,
+                  "height": 256,
+                  "depth": 1,
+                  "bytes": 262144,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:2": {
+                  "target": 3553,
+                  "level": 2,
+                  "internal": 35907,
+                  "width": 128,
+                  "height": 128,
+                  "depth": 1,
+                  "bytes": 65536,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:3": {
+                  "target": 3553,
+                  "level": 3,
+                  "internal": 35907,
+                  "width": 64,
+                  "height": 64,
+                  "depth": 1,
+                  "bytes": 16384,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:4": {
+                  "target": 3553,
+                  "level": 4,
+                  "internal": 35907,
+                  "width": 32,
+                  "height": 32,
+                  "depth": 1,
+                  "bytes": 4096,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:5": {
+                  "target": 3553,
+                  "level": 5,
+                  "internal": 35907,
+                  "width": 16,
+                  "height": 16,
+                  "depth": 1,
+                  "bytes": 1024,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:6": {
+                  "target": 3553,
+                  "level": 6,
+                  "internal": 35907,
+                  "width": 8,
+                  "height": 8,
+                  "depth": 1,
+                  "bytes": 256,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:7": {
+                  "target": 3553,
+                  "level": 7,
+                  "internal": 35907,
+                  "width": 4,
+                  "height": 4,
+                  "depth": 1,
+                  "bytes": 64,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:8": {
+                  "target": 3553,
+                  "level": 8,
+                  "internal": 35907,
+                  "width": 2,
+                  "height": 2,
+                  "depth": 1,
+                  "bytes": 16,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:9": {
+                  "target": 3553,
+                  "level": 9,
+                  "internal": 35907,
+                  "width": 1,
+                  "height": 1,
+                  "depth": 1,
+                  "bytes": 4,
+                  "compressed": false,
+                  "bpp": 4
+                }
+              },
+              "owners": [
+                "plank material map",
+                "slippy plank material map",
+                "crumble pad material map"
+              ]
+            },
+            {
+              "id": 866,
+              "kind": "texture",
+              "bytes": 1398100,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 35907,
+                  "width": 512,
+                  "height": 512,
+                  "depth": 1,
+                  "bytes": 1048576,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:1": {
+                  "target": 3553,
+                  "level": 1,
+                  "internal": 35907,
+                  "width": 256,
+                  "height": 256,
+                  "depth": 1,
+                  "bytes": 262144,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:2": {
+                  "target": 3553,
+                  "level": 2,
+                  "internal": 35907,
+                  "width": 128,
+                  "height": 128,
+                  "depth": 1,
+                  "bytes": 65536,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:3": {
+                  "target": 3553,
+                  "level": 3,
+                  "internal": 35907,
+                  "width": 64,
+                  "height": 64,
+                  "depth": 1,
+                  "bytes": 16384,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:4": {
+                  "target": 3553,
+                  "level": 4,
+                  "internal": 35907,
+                  "width": 32,
+                  "height": 32,
+                  "depth": 1,
+                  "bytes": 4096,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:5": {
+                  "target": 3553,
+                  "level": 5,
+                  "internal": 35907,
+                  "width": 16,
+                  "height": 16,
+                  "depth": 1,
+                  "bytes": 1024,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:6": {
+                  "target": 3553,
+                  "level": 6,
+                  "internal": 35907,
+                  "width": 8,
+                  "height": 8,
+                  "depth": 1,
+                  "bytes": 256,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:7": {
+                  "target": 3553,
+                  "level": 7,
+                  "internal": 35907,
+                  "width": 4,
+                  "height": 4,
+                  "depth": 1,
+                  "bytes": 64,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:8": {
+                  "target": 3553,
+                  "level": 8,
+                  "internal": 35907,
+                  "width": 2,
+                  "height": 2,
+                  "depth": 1,
+                  "bytes": 16,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:9": {
+                  "target": 3553,
+                  "level": 9,
+                  "internal": 35907,
+                  "width": 1,
+                  "height": 1,
+                  "depth": 1,
+                  "bytes": 4,
+                  "compressed": false,
+                  "bpp": 4
+                }
+              },
+              "owners": [
+                "Mesh material map"
+              ]
+            }
+          ]
+        }
+      ],
+      "renderer": {
+        "geometries": 245,
+        "textures": 19,
+        "programs": 25
+      },
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "errors": [],
+      "scene": {
+        "meshCount": 266,
+        "triangles": 17570,
+        "visibleTriangles": 9441,
+        "visibilityDefinition": "Object and all ancestors visible; no camera-frustum/occlusion test",
+        "uniqueGeometries": 188,
+        "geometryBytes": 635282,
+        "materials": 128,
+        "textures": 42,
+        "top": [
+          {
+            "name": "(unnamed) / Group / Group / Scene",
+            "type": "Mesh",
+            "triangles": 931,
+            "vertices": 1690,
+            "instances": 1,
+            "visible": false,
+            "castShadow": false
+          },
+          {
+            "name": "(unnamed) / Group / Group / Group",
+            "type": "Mesh",
+            "triangles": 676,
+            "vertices": 2028,
+            "instances": 1,
+            "visible": true,
+            "castShadow": false
+          },
+          {
+            "name": "(unnamed) / Mesh / Scene",
+            "type": "Mesh",
+            "triangles": 658,
+            "vertices": 602,
+            "instances": 1,
+            "visible": false,
+            "castShadow": false
+          },
+          {
+            "name": "(unnamed) / Mesh / Mesh / Scene",
+            "type": "Mesh",
+            "triangles": 658,
+            "vertices": 602,
+            "instances": 1,
+            "visible": false,
+            "castShadow": false
+          },
+          {
+            "name": "(unnamed) / Scene",
+            "type": "Mesh",
+            "triangles": 540,
+            "vertices": 593,
+            "instances": 1,
+            "visible": false,
+            "castShadow": false
+          },
+          {
+            "name": "(unnamed) / Mesh / Scene",
+            "type": "Mesh",
+            "triangles": 540,
+            "vertices": 593,
+            "instances": 1,
+            "visible": false,
+            "castShadow": false
+          },
+          {
+            "name": "(unnamed) / Scene",
+            "type": "Mesh",
+            "triangles": 528,
+            "vertices": 325,
+            "instances": 1,
+            "visible": true,
+            "castShadow": false
+          },
+          {
+            "name": "(unnamed) / Scene",
+            "type": "Mesh",
+            "triangles": 528,
+            "vertices": 325,
+            "instances": 1,
+            "visible": true,
+            "castShadow": false
+          },
+          {
+            "name": "(unnamed) / Group / Group / Group",
+            "type": "SkinnedMesh",
+            "triangles": 333,
+            "vertices": 191,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "(unnamed) / Group / Group / Scene",
+            "type": "Mesh",
+            "triangles": 328,
+            "vertices": 360,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "(unnamed) / Group / Group / Scene",
+            "type": "Mesh",
+            "triangles": 328,
+            "vertices": 360,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "(unnamed) / Group / Group / Scene",
+            "type": "Mesh",
+            "triangles": 328,
+            "vertices": 360,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "(unnamed) / Group / Group / Scene",
+            "type": "Mesh",
+            "triangles": 328,
+            "vertices": 360,
+            "instances": 1,
+            "visible": false,
+            "castShadow": true
+          },
+          {
+            "name": "(unnamed) / Group / Group / Scene",
+            "type": "Mesh",
+            "triangles": 328,
+            "vertices": 360,
+            "instances": 1,
+            "visible": false,
+            "castShadow": true
+          },
+          {
+            "name": "(unnamed) / Group / Group / Scene",
+            "type": "Mesh",
+            "triangles": 328,
+            "vertices": 360,
+            "instances": 1,
+            "visible": false,
+            "castShadow": true
+          },
+          {
+            "name": "(unnamed) / Group / Group / Scene",
+            "type": "Mesh",
+            "triangles": 328,
+            "vertices": 360,
+            "instances": 1,
+            "visible": false,
+            "castShadow": true
+          },
+          {
+            "name": "(unnamed) / Group / Group / Scene",
+            "type": "Mesh",
+            "triangles": 328,
+            "vertices": 360,
+            "instances": 1,
+            "visible": false,
+            "castShadow": true
+          },
+          {
+            "name": "(unnamed) / Group / Group / Scene",
+            "type": "Mesh",
+            "triangles": 328,
+            "vertices": 360,
+            "instances": 1,
+            "visible": false,
+            "castShadow": true
+          },
+          {
+            "name": "(unnamed) / Group / Group / Scene",
+            "type": "Mesh",
+            "triangles": 328,
+            "vertices": 360,
+            "instances": 1,
+            "visible": false,
+            "castShadow": true
+          },
+          {
+            "name": "(unnamed) / Group / Group / Scene",
+            "type": "Mesh",
+            "triangles": 328,
+            "vertices": 360,
+            "instances": 1,
+            "visible": false,
+            "castShadow": true
+          }
+        ]
+      }
+    },
+    {
+      "version": "fork",
+      "level": "sky",
+      "budget": [
+        {
+          "logicalBytes": 176592898,
+          "logicalPeakBytes": 176592898,
+          "bytes": {
+            "texture": 115050872,
+            "renderbuffer": 55861248,
+            "buffer": 5680778
+          },
+          "counts": {
+            "texture": 45,
+            "renderbuffer": 3,
+            "buffer": 592
+          },
+          "warnings": [],
+          "backbuffer": {
+            "width": 2560,
+            "height": 1440,
+            "attributes": {
+              "alpha": true,
+              "antialias": true,
+              "depth": true,
+              "desynchronized": false,
+              "failIfMajorPerformanceCaveat": false,
+              "powerPreference": "default",
+              "premultipliedAlpha": true,
+              "preserveDrawingBuffer": false,
+              "stencil": false,
+              "xrCompatible": false
+            },
+            "samples": 4,
+            "excluded": true
+          },
+          "contextLost": false,
+          "largest": [
+            {
+              "id": 432,
+              "kind": "texture",
+              "bytes": 67108864,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 32856,
+                  "width": 4096,
+                  "height": 4096,
+                  "depth": 1,
+                  "bytes": 67108864,
+                  "compressed": false,
+                  "bpp": 4
+                }
+              },
+              "renderTarget": true,
+              "owners": [
+                ".shadowMap"
+              ]
+            },
+            {
+              "id": 433,
+              "kind": "renderbuffer",
+              "bytes": 50331648,
+              "levels": {},
+              "samples": 1,
+              "width": 4096,
+              "height": 4096,
+              "format": 33190,
+              "owners": [
+                ".shadowMap depth/MSAA attachment"
+              ]
+            },
+            {
+              "id": 6,
+              "kind": "texture",
+              "bytes": 7372800,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 34842,
+                  "width": 1280,
+                  "height": 720,
+                  "depth": 1,
+                  "bytes": 7372800,
+                  "compressed": false,
+                  "bpp": 8
+                }
+              },
+              "renderTarget": true,
+              "owners": [
+                "Offscreen render target (composer/SMAA/UI; exact owner not exposed)"
+              ]
+            },
+            {
+              "id": 585,
+              "kind": "texture",
+              "bytes": 7372800,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 34842,
+                  "width": 1280,
+                  "height": 720,
+                  "depth": 1,
+                  "bytes": 7372800,
+                  "compressed": false,
+                  "bpp": 8
+                }
+              },
+              "renderTarget": true,
+              "owners": [
+                "Offscreen render target (composer/SMAA/UI; exact owner not exposed)"
+              ]
+            },
+            {
+              "id": 590,
+              "kind": "texture",
+              "bytes": 7372800,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 34842,
+                  "width": 1280,
+                  "height": 720,
+                  "depth": 1,
+                  "bytes": 7372800,
+                  "compressed": false,
+                  "bpp": 8
+                }
+              },
+              "renderTarget": true,
+              "owners": [
+                "Offscreen render target (composer/SMAA/UI; exact owner not exposed)"
+              ]
+            },
+            {
+              "id": 643,
+              "kind": "texture",
+              "bytes": 5592404,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 35907,
+                  "width": 1024,
+                  "height": 1024,
+                  "depth": 1,
+                  "bytes": 4194304,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:1": {
+                  "target": 3553,
+                  "level": 1,
+                  "internal": 35907,
+                  "width": 512,
+                  "height": 512,
+                  "depth": 1,
+                  "bytes": 1048576,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:2": {
+                  "target": 3553,
+                  "level": 2,
+                  "internal": 35907,
+                  "width": 256,
+                  "height": 256,
+                  "depth": 1,
+                  "bytes": 262144,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:3": {
+                  "target": 3553,
+                  "level": 3,
+                  "internal": 35907,
+                  "width": 128,
+                  "height": 128,
+                  "depth": 1,
+                  "bytes": 65536,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:4": {
+                  "target": 3553,
+                  "level": 4,
+                  "internal": 35907,
+                  "width": 64,
+                  "height": 64,
+                  "depth": 1,
+                  "bytes": 16384,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:5": {
+                  "target": 3553,
+                  "level": 5,
+                  "internal": 35907,
+                  "width": 32,
+                  "height": 32,
+                  "depth": 1,
+                  "bytes": 4096,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:6": {
+                  "target": 3553,
+                  "level": 6,
+                  "internal": 35907,
+                  "width": 16,
+                  "height": 16,
+                  "depth": 1,
+                  "bytes": 1024,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:7": {
+                  "target": 3553,
+                  "level": 7,
+                  "internal": 35907,
+                  "width": 8,
+                  "height": 8,
+                  "depth": 1,
+                  "bytes": 256,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:8": {
+                  "target": 3553,
+                  "level": 8,
+                  "internal": 35907,
+                  "width": 4,
+                  "height": 4,
+                  "depth": 1,
+                  "bytes": 64,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:9": {
+                  "target": 3553,
+                  "level": 9,
+                  "internal": 35907,
+                  "width": 2,
+                  "height": 2,
+                  "depth": 1,
+                  "bytes": 16,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:10": {
+                  "target": 3553,
+                  "level": 10,
+                  "internal": 35907,
+                  "width": 1,
+                  "height": 1,
+                  "depth": 1,
+                  "bytes": 4,
+                  "compressed": false,
+                  "bpp": 4
+                }
+              },
+              "owners": [
+                "stone-circle-basecolor"
+              ]
+            }
+          ]
+        }
+      ],
+      "renderer": {
+        "geometries": 146,
+        "textures": 41,
+        "programs": 42
+      },
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "errors": [],
+      "scene": {
+        "meshCount": 239,
+        "triangles": 328455,
+        "visibleTriangles": 185312,
+        "visibilityDefinition": "Object and all ancestors visible; no camera-frustum/occlusion test",
+        "uniqueGeometries": 130,
+        "geometryBytes": 7024480,
+        "materials": 148,
+        "textures": 51,
+        "top": [
+          {
+            "name": "WhirlwindVixen020205 / Scene / WhirlwindVixen020205_Model / FoxSpinSmear_WhirlwindVixen020205_Web",
+            "type": "Mesh",
+            "triangles": 91530,
+            "vertices": 64196,
+            "instances": 1,
+            "visible": false,
+            "castShadow": false
+          },
+          {
+            "name": "meshy-head-surface / head-presentation / head / neck",
+            "type": "Mesh",
+            "triangles": 16536,
+            "vertices": 9930,
+            "instances": 1,
+            "visible": false,
+            "castShadow": true
+          },
+          {
+            "name": "meshy-boolieroo-alternate-head-surface / head-presentation / head / neck",
+            "type": "Mesh",
+            "triangles": 15634,
+            "vertices": 9689,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "artist-hand-surface-right_1 / artist-hand-surface-right / artist-hand-armature-right / artist-hand-right",
+            "type": "SkinnedMesh",
+            "triangles": 11552,
+            "vertices": 5778,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "artist-hand-surface-left_1 / artist-hand-surface-left / artist-hand-armature-left / artist-hand-left",
+            "type": "SkinnedMesh",
+            "triangles": 11552,
+            "vertices": 5778,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "meshy-torso-surface / procedural-rider / player-visual / Group",
+            "type": "SkinnedMesh",
+            "triangles": 10889,
+            "vertices": 6758,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "meshy-shorts-surface / procedural-rider / player-visual / Group",
+            "type": "SkinnedMesh",
+            "triangles": 10732,
+            "vertices": 8218,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "continuous braided hemp rope / Group / Group / Group",
+            "type": "Mesh",
+            "triangles": 10080,
+            "vertices": 5473,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "continuous braided hemp rope / Group / Group / Group",
+            "type": "Mesh",
+            "triangles": 10080,
+            "vertices": 5473,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "continuous braided hemp rope / Group / Group / Group",
+            "type": "Mesh",
+            "triangles": 10080,
+            "vertices": 5473,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "continuous braided hemp rope / Group / Group / Group",
+            "type": "Mesh",
+            "triangles": 10080,
+            "vertices": 5473,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "continuous braided hemp rope / Group / Group / Group",
+            "type": "Mesh",
+            "triangles": 10080,
+            "vertices": 5473,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "continuous braided hemp rope / Group / Group / Group",
+            "type": "Mesh",
+            "triangles": 10080,
+            "vertices": 5473,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "continuous braided hemp rope / Group / Group / Group",
+            "type": "Mesh",
+            "triangles": 10080,
+            "vertices": 5473,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "continuous braided hemp rope / Group / Group / Group",
+            "type": "Mesh",
+            "triangles": 10080,
+            "vertices": 5473,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "continuous braided hemp rope / Group / Group / Group",
+            "type": "Mesh",
+            "triangles": 10080,
+            "vertices": 5473,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "continuous braided hemp rope / Group / Group / Group",
+            "type": "Mesh",
+            "triangles": 10080,
+            "vertices": 5473,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "Deck_ContinuousRoundedKick / Skateboard_UniformAssembly / board / skateboard-scale-compensation",
+            "type": "Mesh",
+            "triangles": 6292,
+            "vertices": 3148,
+            "instances": 1,
+            "visible": false,
+            "castShadow": true
+          },
+          {
+            "name": "Meshy stone circle bonus platform / bonus platform / Group / Scene",
+            "type": "Mesh",
+            "triangles": 2511,
+            "vertices": 3276,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "(unnamed) / hovering milk / Group / Scene",
+            "type": "Mesh",
+            "triangles": 1472,
+            "vertices": 738,
+            "instances": 1,
+            "visible": true,
+            "castShadow": false
+          }
+        ]
+      },
+      "quality": {
+        "enabled": true,
+        "baseHeight": 720,
+        "outputMultiplier": 2,
+        "fixed60": true
+      }
+    },
+    {
+      "version": "fork",
+      "level": "jungle-cup",
+      "budget": [
+        {
+          "logicalBytes": 186947870,
+          "logicalPeakBytes": 188345970,
+          "bytes": {
+            "texture": 126721744,
+            "renderbuffer": 55861248,
+            "buffer": 4364878
+          },
+          "counts": {
+            "texture": 42,
+            "renderbuffer": 3,
+            "buffer": 609
+          },
+          "warnings": [],
+          "backbuffer": {
+            "width": 2560,
+            "height": 1440,
+            "attributes": {
+              "alpha": true,
+              "antialias": true,
+              "depth": true,
+              "desynchronized": false,
+              "failIfMajorPerformanceCaveat": false,
+              "powerPreference": "default",
+              "premultipliedAlpha": true,
+              "preserveDrawingBuffer": false,
+              "stencil": false,
+              "xrCompatible": false
+            },
+            "samples": 4,
+            "excluded": true
+          },
+          "contextLost": false,
+          "largest": [
+            {
+              "id": 432,
+              "kind": "texture",
+              "bytes": 67108864,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 32856,
+                  "width": 4096,
+                  "height": 4096,
+                  "depth": 1,
+                  "bytes": 67108864,
+                  "compressed": false,
+                  "bpp": 4
+                }
+              },
+              "renderTarget": true,
+              "owners": [
+                ".shadowMap"
+              ]
+            },
+            {
+              "id": 433,
+              "kind": "renderbuffer",
+              "bytes": 50331648,
+              "levels": {},
+              "samples": 1,
+              "width": 4096,
+              "height": 4096,
+              "format": 33190,
+              "owners": [
+                ".shadowMap depth/MSAA attachment"
+              ]
+            },
+            {
+              "id": 6,
+              "kind": "texture",
+              "bytes": 7372800,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 34842,
+                  "width": 1280,
+                  "height": 720,
+                  "depth": 1,
+                  "bytes": 7372800,
+                  "compressed": false,
+                  "bpp": 8
+                }
+              },
+              "renderTarget": true,
+              "owners": [
+                "Offscreen render target (composer/SMAA/UI; exact owner not exposed)"
+              ]
+            },
+            {
+              "id": 585,
+              "kind": "texture",
+              "bytes": 7372800,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 34842,
+                  "width": 1280,
+                  "height": 720,
+                  "depth": 1,
+                  "bytes": 7372800,
+                  "compressed": false,
+                  "bpp": 8
+                }
+              },
+              "renderTarget": true,
+              "owners": [
+                "Offscreen render target (composer/SMAA/UI; exact owner not exposed)"
+              ]
+            },
+            {
+              "id": 590,
+              "kind": "texture",
+              "bytes": 7372800,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 34842,
+                  "width": 1280,
+                  "height": 720,
+                  "depth": 1,
+                  "bytes": 7372800,
+                  "compressed": false,
+                  "bpp": 8
+                }
+              },
+              "renderTarget": true,
+              "owners": [
+                "Offscreen render target (composer/SMAA/UI; exact owner not exposed)"
+              ]
+            },
+            {
+              "id": 1031,
+              "kind": "texture",
+              "bytes": 7372800,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 34842,
+                  "width": 1280,
+                  "height": 720,
+                  "depth": 1,
+                  "bytes": 7372800,
+                  "compressed": false,
+                  "bpp": 8
+                }
+              },
+              "renderTarget": true,
+              "owners": [
+                "Offscreen render target (composer/SMAA/UI; exact owner not exposed)"
+              ]
+            }
+          ]
+        }
+      ],
+      "renderer": {
+        "geometries": 151,
+        "textures": 38,
+        "programs": 48
+      },
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "errors": [],
+      "scene": {
+        "meshCount": 325,
+        "triangles": 739565,
+        "visibleTriangles": 597478,
+        "visibilityDefinition": "Object and all ancestors visible; no camera-frustum/occlusion test",
+        "uniqueGeometries": 154,
+        "geometryBytes": 6740206,
+        "materials": 136,
+        "textures": 76,
+        "top": [
+          {
+            "name": "WhirlwindVixen020205 / Scene / WhirlwindVixen020205_Model / FoxSpinSmear_WhirlwindVixen020205_Web",
+            "type": "Mesh",
+            "triangles": 91530,
+            "vertices": 64196,
+            "instances": 1,
+            "visible": false,
+            "castShadow": false
+          },
+          {
+            "name": "sloping roof block / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 39066,
+            "vertices": 1554,
+            "instances": 51,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "sloping roof block / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 29874,
+            "vertices": 1554,
+            "instances": 39,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "sloping roof block / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 22214,
+            "vertices": 1554,
+            "instances": 29,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "meshy-head-surface / head-presentation / head / neck",
+            "type": "Mesh",
+            "triangles": 16536,
+            "vertices": 9930,
+            "instances": 1,
+            "visible": false,
+            "castShadow": true
+          },
+          {
+            "name": "stone paving slab / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 16008,
+            "vertices": 865,
+            "instances": 29,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "meshy-boolieroo-alternate-head-surface / head-presentation / head / neck",
+            "type": "Mesh",
+            "triangles": 15634,
+            "vertices": 9689,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "cut stone block / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 14868,
+            "vertices": 1145,
+            "instances": 21,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "stone paving slab / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 14352,
+            "vertices": 865,
+            "instances": 26,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "cut stone block / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 13452,
+            "vertices": 1145,
+            "instances": 19,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "sloping roof block / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 13022,
+            "vertices": 1554,
+            "instances": 17,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "cut stone block / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 12744,
+            "vertices": 1145,
+            "instances": 18,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "straight cornice / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 11947,
+            "vertices": 1678,
+            "instances": 13,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "artist-hand-surface-right_1 / artist-hand-surface-right / artist-hand-armature-right / artist-hand-right",
+            "type": "SkinnedMesh",
+            "triangles": 11552,
+            "vertices": 5778,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "artist-hand-surface-left_1 / artist-hand-surface-left / artist-hand-armature-left / artist-hand-left",
+            "type": "SkinnedMesh",
+            "triangles": 11552,
+            "vertices": 5778,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "carved lintel / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 11224,
+            "vertices": 1908,
+            "instances": 8,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "stone paving slab / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 11040,
+            "vertices": 865,
+            "instances": 20,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "meshy-torso-surface / procedural-rider / player-visual / Group",
+            "type": "SkinnedMesh",
+            "triangles": 10889,
+            "vertices": 6758,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "meshy-shorts-surface / procedural-rider / player-visual / Group",
+            "type": "SkinnedMesh",
+            "triangles": 10732,
+            "vertices": 8218,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "straight cornice / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 10109,
+            "vertices": 1678,
+            "instances": 11,
+            "visible": true,
+            "castShadow": true
+          }
+        ]
+      },
+      "quality": {
+        "enabled": true,
+        "baseHeight": 720,
+        "outputMultiplier": 2,
+        "fixed60": true
+      }
+    },
+    {
+      "version": "fork",
+      "level": "treehouse-trail",
+      "budget": [
+        {
+          "logicalBytes": 285997820,
+          "logicalPeakBytes": 285997820,
+          "bytes": {
+            "texture": 223089524,
+            "renderbuffer": 55861248,
+            "buffer": 7047048
+          },
+          "counts": {
+            "texture": 73,
+            "renderbuffer": 3,
+            "buffer": 695
+          },
+          "warnings": [],
+          "backbuffer": {
+            "width": 2560,
+            "height": 1440,
+            "attributes": {
+              "alpha": true,
+              "antialias": true,
+              "depth": true,
+              "desynchronized": false,
+              "failIfMajorPerformanceCaveat": false,
+              "powerPreference": "default",
+              "premultipliedAlpha": true,
+              "preserveDrawingBuffer": false,
+              "stencil": false,
+              "xrCompatible": false
+            },
+            "samples": 4,
+            "excluded": true
+          },
+          "contextLost": false,
+          "largest": [
+            {
+              "id": 432,
+              "kind": "texture",
+              "bytes": 67108864,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 32856,
+                  "width": 4096,
+                  "height": 4096,
+                  "depth": 1,
+                  "bytes": 67108864,
+                  "compressed": false,
+                  "bpp": 4
+                }
+              },
+              "renderTarget": true,
+              "owners": [
+                ".shadowMap"
+              ]
+            },
+            {
+              "id": 433,
+              "kind": "renderbuffer",
+              "bytes": 50331648,
+              "levels": {},
+              "samples": 1,
+              "width": 4096,
+              "height": 4096,
+              "format": 33190,
+              "owners": [
+                ".shadowMap depth/MSAA attachment"
+              ]
+            },
+            {
+              "id": 1277,
+              "kind": "texture",
+              "bytes": 8386716,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 35907,
+                  "width": 1774,
+                  "height": 887,
+                  "depth": 1,
+                  "bytes": 6294152,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:1": {
+                  "target": 3553,
+                  "level": 1,
+                  "internal": 35907,
+                  "width": 887,
+                  "height": 443,
+                  "depth": 1,
+                  "bytes": 1571764,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:2": {
+                  "target": 3553,
+                  "level": 2,
+                  "internal": 35907,
+                  "width": 443,
+                  "height": 221,
+                  "depth": 1,
+                  "bytes": 391612,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:3": {
+                  "target": 3553,
+                  "level": 3,
+                  "internal": 35907,
+                  "width": 221,
+                  "height": 110,
+                  "depth": 1,
+                  "bytes": 97240,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:4": {
+                  "target": 3553,
+                  "level": 4,
+                  "internal": 35907,
+                  "width": 110,
+                  "height": 55,
+                  "depth": 1,
+                  "bytes": 24200,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:5": {
+                  "target": 3553,
+                  "level": 5,
+                  "internal": 35907,
+                  "width": 55,
+                  "height": 27,
+                  "depth": 1,
+                  "bytes": 5940,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:6": {
+                  "target": 3553,
+                  "level": 6,
+                  "internal": 35907,
+                  "width": 27,
+                  "height": 13,
+                  "depth": 1,
+                  "bytes": 1404,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:7": {
+                  "target": 3553,
+                  "level": 7,
+                  "internal": 35907,
+                  "width": 13,
+                  "height": 6,
+                  "depth": 1,
+                  "bytes": 312,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:8": {
+                  "target": 3553,
+                  "level": 8,
+                  "internal": 35907,
+                  "width": 6,
+                  "height": 3,
+                  "depth": 1,
+                  "bytes": 72,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:9": {
+                  "target": 3553,
+                  "level": 9,
+                  "internal": 35907,
+                  "width": 3,
+                  "height": 1,
+                  "depth": 1,
+                  "bytes": 12,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:10": {
+                  "target": 3553,
+                  "level": 10,
+                  "internal": 35907,
+                  "width": 1,
+                  "height": 1,
+                  "depth": 1,
+                  "bytes": 4,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:11": {
+                  "target": 3553,
+                  "level": 11,
+                  "internal": 35907,
+                  "width": 1,
+                  "height": 1,
+                  "depth": 1,
+                  "bytes": 4,
+                  "compressed": false,
+                  "bpp": 4
+                }
+              },
+              "owners": [
+                "Mesh material map"
+              ]
+            },
+            {
+              "id": 1290,
+              "kind": "texture",
+              "bytes": 8386716,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 35907,
+                  "width": 1774,
+                  "height": 887,
+                  "depth": 1,
+                  "bytes": 6294152,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:1": {
+                  "target": 3553,
+                  "level": 1,
+                  "internal": 35907,
+                  "width": 887,
+                  "height": 443,
+                  "depth": 1,
+                  "bytes": 1571764,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:2": {
+                  "target": 3553,
+                  "level": 2,
+                  "internal": 35907,
+                  "width": 443,
+                  "height": 221,
+                  "depth": 1,
+                  "bytes": 391612,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:3": {
+                  "target": 3553,
+                  "level": 3,
+                  "internal": 35907,
+                  "width": 221,
+                  "height": 110,
+                  "depth": 1,
+                  "bytes": 97240,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:4": {
+                  "target": 3553,
+                  "level": 4,
+                  "internal": 35907,
+                  "width": 110,
+                  "height": 55,
+                  "depth": 1,
+                  "bytes": 24200,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:5": {
+                  "target": 3553,
+                  "level": 5,
+                  "internal": 35907,
+                  "width": 55,
+                  "height": 27,
+                  "depth": 1,
+                  "bytes": 5940,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:6": {
+                  "target": 3553,
+                  "level": 6,
+                  "internal": 35907,
+                  "width": 27,
+                  "height": 13,
+                  "depth": 1,
+                  "bytes": 1404,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:7": {
+                  "target": 3553,
+                  "level": 7,
+                  "internal": 35907,
+                  "width": 13,
+                  "height": 6,
+                  "depth": 1,
+                  "bytes": 312,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:8": {
+                  "target": 3553,
+                  "level": 8,
+                  "internal": 35907,
+                  "width": 6,
+                  "height": 3,
+                  "depth": 1,
+                  "bytes": 72,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:9": {
+                  "target": 3553,
+                  "level": 9,
+                  "internal": 35907,
+                  "width": 3,
+                  "height": 1,
+                  "depth": 1,
+                  "bytes": 12,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:10": {
+                  "target": 3553,
+                  "level": 10,
+                  "internal": 35907,
+                  "width": 1,
+                  "height": 1,
+                  "depth": 1,
+                  "bytes": 4,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:11": {
+                  "target": 3553,
+                  "level": 11,
+                  "internal": 35907,
+                  "width": 1,
+                  "height": 1,
+                  "depth": 1,
+                  "bytes": 4,
+                  "compressed": false,
+                  "bpp": 4
+                }
+              },
+              "owners": [
+                "Mesh material map"
+              ]
+            },
+            {
+              "id": 1318,
+              "kind": "texture",
+              "bytes": 8375200,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 35907,
+                  "width": 1942,
+                  "height": 809,
+                  "depth": 1,
+                  "bytes": 6284312,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:1": {
+                  "target": 3553,
+                  "level": 1,
+                  "internal": 35907,
+                  "width": 971,
+                  "height": 404,
+                  "depth": 1,
+                  "bytes": 1569136,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:2": {
+                  "target": 3553,
+                  "level": 2,
+                  "internal": 35907,
+                  "width": 485,
+                  "height": 202,
+                  "depth": 1,
+                  "bytes": 391880,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:3": {
+                  "target": 3553,
+                  "level": 3,
+                  "internal": 35907,
+                  "width": 242,
+                  "height": 101,
+                  "depth": 1,
+                  "bytes": 97768,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:4": {
+                  "target": 3553,
+                  "level": 4,
+                  "internal": 35907,
+                  "width": 121,
+                  "height": 50,
+                  "depth": 1,
+                  "bytes": 24200,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:5": {
+                  "target": 3553,
+                  "level": 5,
+                  "internal": 35907,
+                  "width": 60,
+                  "height": 25,
+                  "depth": 1,
+                  "bytes": 6000,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:6": {
+                  "target": 3553,
+                  "level": 6,
+                  "internal": 35907,
+                  "width": 30,
+                  "height": 12,
+                  "depth": 1,
+                  "bytes": 1440,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:7": {
+                  "target": 3553,
+                  "level": 7,
+                  "internal": 35907,
+                  "width": 15,
+                  "height": 6,
+                  "depth": 1,
+                  "bytes": 360,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:8": {
+                  "target": 3553,
+                  "level": 8,
+                  "internal": 35907,
+                  "width": 7,
+                  "height": 3,
+                  "depth": 1,
+                  "bytes": 84,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:9": {
+                  "target": 3553,
+                  "level": 9,
+                  "internal": 35907,
+                  "width": 3,
+                  "height": 1,
+                  "depth": 1,
+                  "bytes": 12,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:10": {
+                  "target": 3553,
+                  "level": 10,
+                  "internal": 35907,
+                  "width": 1,
+                  "height": 1,
+                  "depth": 1,
+                  "bytes": 4,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:11": {
+                  "target": 3553,
+                  "level": 11,
+                  "internal": 35907,
+                  "width": 1,
+                  "height": 1,
+                  "depth": 1,
+                  "bytes": 4,
+                  "compressed": false,
+                  "bpp": 4
+                }
+              },
+              "owners": [
+                "http://127.0.0.1:5192/treehouse-trail/matte-far.png"
+              ]
+            },
+            {
+              "id": 1320,
+              "kind": "texture",
+              "bytes": 8375200,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 35907,
+                  "width": 1942,
+                  "height": 809,
+                  "depth": 1,
+                  "bytes": 6284312,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:1": {
+                  "target": 3553,
+                  "level": 1,
+                  "internal": 35907,
+                  "width": 971,
+                  "height": 404,
+                  "depth": 1,
+                  "bytes": 1569136,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:2": {
+                  "target": 3553,
+                  "level": 2,
+                  "internal": 35907,
+                  "width": 485,
+                  "height": 202,
+                  "depth": 1,
+                  "bytes": 391880,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:3": {
+                  "target": 3553,
+                  "level": 3,
+                  "internal": 35907,
+                  "width": 242,
+                  "height": 101,
+                  "depth": 1,
+                  "bytes": 97768,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:4": {
+                  "target": 3553,
+                  "level": 4,
+                  "internal": 35907,
+                  "width": 121,
+                  "height": 50,
+                  "depth": 1,
+                  "bytes": 24200,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:5": {
+                  "target": 3553,
+                  "level": 5,
+                  "internal": 35907,
+                  "width": 60,
+                  "height": 25,
+                  "depth": 1,
+                  "bytes": 6000,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:6": {
+                  "target": 3553,
+                  "level": 6,
+                  "internal": 35907,
+                  "width": 30,
+                  "height": 12,
+                  "depth": 1,
+                  "bytes": 1440,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:7": {
+                  "target": 3553,
+                  "level": 7,
+                  "internal": 35907,
+                  "width": 15,
+                  "height": 6,
+                  "depth": 1,
+                  "bytes": 360,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:8": {
+                  "target": 3553,
+                  "level": 8,
+                  "internal": 35907,
+                  "width": 7,
+                  "height": 3,
+                  "depth": 1,
+                  "bytes": 84,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:9": {
+                  "target": 3553,
+                  "level": 9,
+                  "internal": 35907,
+                  "width": 3,
+                  "height": 1,
+                  "depth": 1,
+                  "bytes": 12,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:10": {
+                  "target": 3553,
+                  "level": 10,
+                  "internal": 35907,
+                  "width": 1,
+                  "height": 1,
+                  "depth": 1,
+                  "bytes": 4,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:11": {
+                  "target": 3553,
+                  "level": 11,
+                  "internal": 35907,
+                  "width": 1,
+                  "height": 1,
+                  "depth": 1,
+                  "bytes": 4,
+                  "compressed": false,
+                  "bpp": 4
+                }
+              },
+              "owners": [
+                "http://127.0.0.1:5192/treehouse-trail/matte-mid.png"
+              ]
+            }
+          ]
+        }
+      ],
+      "renderer": {
+        "geometries": 140,
+        "textures": 69,
+        "programs": 80
+      },
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "errors": [],
+      "scene": {
+        "meshCount": 338,
+        "triangles": 479715,
+        "visibleTriangles": 336798,
+        "visibilityDefinition": "Object and all ancestors visible; no camera-frustum/occlusion test",
+        "uniqueGeometries": 163,
+        "geometryBytes": 8416602,
+        "materials": 179,
+        "textures": 64,
+        "top": [
+          {
+            "name": "WhirlwindVixen020205 / Scene / WhirlwindVixen020205_Model / FoxSpinSmear_WhirlwindVixen020205_Web",
+            "type": "Mesh",
+            "triangles": 91530,
+            "vertices": 64196,
+            "instances": 1,
+            "visible": false,
+            "castShadow": false
+          },
+          {
+            "name": "meshy-head-surface / head-presentation / head / neck",
+            "type": "Mesh",
+            "triangles": 16536,
+            "vertices": 9930,
+            "instances": 1,
+            "visible": false,
+            "castShadow": true
+          },
+          {
+            "name": "meshy-boolieroo-alternate-head-surface / head-presentation / head / neck",
+            "type": "Mesh",
+            "triangles": 15634,
+            "vertices": 9689,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "artist-hand-surface-right_1 / artist-hand-surface-right / artist-hand-armature-right / artist-hand-right",
+            "type": "SkinnedMesh",
+            "triangles": 11552,
+            "vertices": 5778,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "artist-hand-surface-left_1 / artist-hand-surface-left / artist-hand-armature-left / artist-hand-left",
+            "type": "SkinnedMesh",
+            "triangles": 11552,
+            "vertices": 5778,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "meshy-torso-surface / procedural-rider / player-visual / Group",
+            "type": "SkinnedMesh",
+            "triangles": 10889,
+            "vertices": 6758,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "meshy-shorts-surface / procedural-rider / player-visual / Group",
+            "type": "SkinnedMesh",
+            "triangles": 10732,
+            "vertices": 8218,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "jungle fern / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 10308,
+            "vertices": 2256,
+            "instances": 6,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "jungle fern / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 10308,
+            "vertices": 2256,
+            "instances": 6,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "jungle fern / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 10308,
+            "vertices": 2256,
+            "instances": 6,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "jungle fern / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 10308,
+            "vertices": 2256,
+            "instances": 6,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "jungle fern / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 10308,
+            "vertices": 2256,
+            "instances": 6,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "jungle fern / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 10308,
+            "vertices": 2256,
+            "instances": 6,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "static surface [\"#b58d52\",\"#000000\",\"solid\",false]:-1:0 / Group / Scene",
+            "type": "Mesh",
+            "triangles": 9312,
+            "vertices": 27936,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "Detailed treehouse cabin body / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 7555,
+            "vertices": 8085,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "jungle fern / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 6872,
+            "vertices": 2256,
+            "instances": 4,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "jungle fern / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 6872,
+            "vertices": 2256,
+            "instances": 4,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "Treehouse supporting trunk and boughs / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 6662,
+            "vertices": 5093,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "Deck_ContinuousRoundedKick / Skateboard_UniformAssembly / board / skateboard-scale-compensation",
+            "type": "Mesh",
+            "triangles": 6292,
+            "vertices": 3148,
+            "instances": 1,
+            "visible": false,
+            "castShadow": true
+          },
+          {
+            "name": "Treehouse stair flight / Jungle Ruins modular kit / Group / Scene",
+            "type": "Mesh",
+            "triangles": 5640,
+            "vertices": 2737,
+            "instances": 3,
+            "visible": true,
+            "castShadow": true
+          }
+        ]
+      },
+      "quality": {
+        "enabled": true,
+        "baseHeight": 720,
+        "outputMultiplier": 2,
+        "fixed60": true
+      }
+    },
+    {
+      "version": "fork",
+      "level": "sky",
+      "budget": [
+        {
+          "logicalBytes": 178107542,
+          "logicalPeakBytes": 285997820,
+          "bytes": {
+            "texture": 116514508,
+            "renderbuffer": 55861248,
+            "buffer": 5731786
+          },
+          "counts": {
+            "texture": 46,
+            "renderbuffer": 3,
+            "buffer": 601
+          },
+          "warnings": [],
+          "backbuffer": {
+            "width": 2560,
+            "height": 1440,
+            "attributes": {
+              "alpha": true,
+              "antialias": true,
+              "depth": true,
+              "desynchronized": false,
+              "failIfMajorPerformanceCaveat": false,
+              "powerPreference": "default",
+              "premultipliedAlpha": true,
+              "preserveDrawingBuffer": false,
+              "stencil": false,
+              "xrCompatible": false
+            },
+            "samples": 4,
+            "excluded": true
+          },
+          "contextLost": false,
+          "largest": [
+            {
+              "id": 432,
+              "kind": "texture",
+              "bytes": 67108864,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 32856,
+                  "width": 4096,
+                  "height": 4096,
+                  "depth": 1,
+                  "bytes": 67108864,
+                  "compressed": false,
+                  "bpp": 4
+                }
+              },
+              "renderTarget": true,
+              "owners": [
+                ".shadowMap"
+              ]
+            },
+            {
+              "id": 433,
+              "kind": "renderbuffer",
+              "bytes": 50331648,
+              "levels": {},
+              "samples": 1,
+              "width": 4096,
+              "height": 4096,
+              "format": 33190,
+              "owners": [
+                ".shadowMap depth/MSAA attachment"
+              ]
+            },
+            {
+              "id": 6,
+              "kind": "texture",
+              "bytes": 7372800,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 34842,
+                  "width": 1280,
+                  "height": 720,
+                  "depth": 1,
+                  "bytes": 7372800,
+                  "compressed": false,
+                  "bpp": 8
+                }
+              },
+              "renderTarget": true,
+              "owners": [
+                "Offscreen render target (composer/SMAA/UI; exact owner not exposed)"
+              ]
+            },
+            {
+              "id": 585,
+              "kind": "texture",
+              "bytes": 7372800,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 34842,
+                  "width": 1280,
+                  "height": 720,
+                  "depth": 1,
+                  "bytes": 7372800,
+                  "compressed": false,
+                  "bpp": 8
+                }
+              },
+              "renderTarget": true,
+              "owners": [
+                "Offscreen render target (composer/SMAA/UI; exact owner not exposed)"
+              ]
+            },
+            {
+              "id": 590,
+              "kind": "texture",
+              "bytes": 7372800,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 34842,
+                  "width": 1280,
+                  "height": 720,
+                  "depth": 1,
+                  "bytes": 7372800,
+                  "compressed": false,
+                  "bpp": 8
+                }
+              },
+              "renderTarget": true,
+              "owners": [
+                "Offscreen render target (composer/SMAA/UI; exact owner not exposed)"
+              ]
+            },
+            {
+              "id": 643,
+              "kind": "texture",
+              "bytes": 5592404,
+              "levels": {
+                "3553:0": {
+                  "target": 3553,
+                  "level": 0,
+                  "internal": 35907,
+                  "width": 1024,
+                  "height": 1024,
+                  "depth": 1,
+                  "bytes": 4194304,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:1": {
+                  "target": 3553,
+                  "level": 1,
+                  "internal": 35907,
+                  "width": 512,
+                  "height": 512,
+                  "depth": 1,
+                  "bytes": 1048576,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:2": {
+                  "target": 3553,
+                  "level": 2,
+                  "internal": 35907,
+                  "width": 256,
+                  "height": 256,
+                  "depth": 1,
+                  "bytes": 262144,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:3": {
+                  "target": 3553,
+                  "level": 3,
+                  "internal": 35907,
+                  "width": 128,
+                  "height": 128,
+                  "depth": 1,
+                  "bytes": 65536,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:4": {
+                  "target": 3553,
+                  "level": 4,
+                  "internal": 35907,
+                  "width": 64,
+                  "height": 64,
+                  "depth": 1,
+                  "bytes": 16384,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:5": {
+                  "target": 3553,
+                  "level": 5,
+                  "internal": 35907,
+                  "width": 32,
+                  "height": 32,
+                  "depth": 1,
+                  "bytes": 4096,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:6": {
+                  "target": 3553,
+                  "level": 6,
+                  "internal": 35907,
+                  "width": 16,
+                  "height": 16,
+                  "depth": 1,
+                  "bytes": 1024,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:7": {
+                  "target": 3553,
+                  "level": 7,
+                  "internal": 35907,
+                  "width": 8,
+                  "height": 8,
+                  "depth": 1,
+                  "bytes": 256,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:8": {
+                  "target": 3553,
+                  "level": 8,
+                  "internal": 35907,
+                  "width": 4,
+                  "height": 4,
+                  "depth": 1,
+                  "bytes": 64,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:9": {
+                  "target": 3553,
+                  "level": 9,
+                  "internal": 35907,
+                  "width": 2,
+                  "height": 2,
+                  "depth": 1,
+                  "bytes": 16,
+                  "compressed": false,
+                  "bpp": 4
+                },
+                "3553:10": {
+                  "target": 3553,
+                  "level": 10,
+                  "internal": 35907,
+                  "width": 1,
+                  "height": 1,
+                  "depth": 1,
+                  "bytes": 4,
+                  "compressed": false,
+                  "bpp": 4
+                }
+              },
+              "owners": [
+                "stone-circle-basecolor"
+              ]
+            }
+          ]
+        }
+      ],
+      "renderer": {
+        "geometries": 149,
+        "textures": 42,
+        "programs": 61
+      },
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+      "errors": [],
+      "scene": {
+        "meshCount": 239,
+        "triangles": 328455,
+        "visibleTriangles": 185312,
+        "visibilityDefinition": "Object and all ancestors visible; no camera-frustum/occlusion test",
+        "uniqueGeometries": 130,
+        "geometryBytes": 7024480,
+        "materials": 148,
+        "textures": 51,
+        "top": [
+          {
+            "name": "WhirlwindVixen020205 / Scene / WhirlwindVixen020205_Model / FoxSpinSmear_WhirlwindVixen020205_Web",
+            "type": "Mesh",
+            "triangles": 91530,
+            "vertices": 64196,
+            "instances": 1,
+            "visible": false,
+            "castShadow": false
+          },
+          {
+            "name": "meshy-head-surface / head-presentation / head / neck",
+            "type": "Mesh",
+            "triangles": 16536,
+            "vertices": 9930,
+            "instances": 1,
+            "visible": false,
+            "castShadow": true
+          },
+          {
+            "name": "meshy-boolieroo-alternate-head-surface / head-presentation / head / neck",
+            "type": "Mesh",
+            "triangles": 15634,
+            "vertices": 9689,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "artist-hand-surface-right_1 / artist-hand-surface-right / artist-hand-armature-right / artist-hand-right",
+            "type": "SkinnedMesh",
+            "triangles": 11552,
+            "vertices": 5778,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "artist-hand-surface-left_1 / artist-hand-surface-left / artist-hand-armature-left / artist-hand-left",
+            "type": "SkinnedMesh",
+            "triangles": 11552,
+            "vertices": 5778,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "meshy-torso-surface / procedural-rider / player-visual / Group",
+            "type": "SkinnedMesh",
+            "triangles": 10889,
+            "vertices": 6758,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "meshy-shorts-surface / procedural-rider / player-visual / Group",
+            "type": "SkinnedMesh",
+            "triangles": 10732,
+            "vertices": 8218,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "continuous braided hemp rope / Group / Group / Group",
+            "type": "Mesh",
+            "triangles": 10080,
+            "vertices": 5473,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "continuous braided hemp rope / Group / Group / Group",
+            "type": "Mesh",
+            "triangles": 10080,
+            "vertices": 5473,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "continuous braided hemp rope / Group / Group / Group",
+            "type": "Mesh",
+            "triangles": 10080,
+            "vertices": 5473,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "continuous braided hemp rope / Group / Group / Group",
+            "type": "Mesh",
+            "triangles": 10080,
+            "vertices": 5473,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "continuous braided hemp rope / Group / Group / Group",
+            "type": "Mesh",
+            "triangles": 10080,
+            "vertices": 5473,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "continuous braided hemp rope / Group / Group / Group",
+            "type": "Mesh",
+            "triangles": 10080,
+            "vertices": 5473,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "continuous braided hemp rope / Group / Group / Group",
+            "type": "Mesh",
+            "triangles": 10080,
+            "vertices": 5473,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "continuous braided hemp rope / Group / Group / Group",
+            "type": "Mesh",
+            "triangles": 10080,
+            "vertices": 5473,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "continuous braided hemp rope / Group / Group / Group",
+            "type": "Mesh",
+            "triangles": 10080,
+            "vertices": 5473,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "continuous braided hemp rope / Group / Group / Group",
+            "type": "Mesh",
+            "triangles": 10080,
+            "vertices": 5473,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "Deck_ContinuousRoundedKick / Skateboard_UniformAssembly / board / skateboard-scale-compensation",
+            "type": "Mesh",
+            "triangles": 6292,
+            "vertices": 3148,
+            "instances": 1,
+            "visible": false,
+            "castShadow": true
+          },
+          {
+            "name": "Meshy stone circle bonus platform / bonus platform / Group / Scene",
+            "type": "Mesh",
+            "triangles": 2511,
+            "vertices": 3276,
+            "instances": 1,
+            "visible": true,
+            "castShadow": true
+          },
+          {
+            "name": "(unnamed) / hovering milk / Group / Scene",
+            "type": "Mesh",
+            "triangles": 1472,
+            "vertices": 738,
+            "instances": 1,
+            "visible": false,
+            "castShadow": false
+          }
+        ]
+      },
+      "quality": {
+        "enabled": true,
+        "baseHeight": 720,
+        "outputMultiplier": 2,
+        "fixed60": true
+      }
+    }
+  ],
+  "fork540": {
+    "logicalBytes": 161197570,
+    "bytes": {
+      "texture": 102074744,
+      "renderbuffer": 53442048,
+      "buffer": 5680778
+    },
+    "backbuffer": {
+      "width": 960,
+      "height": 540,
+      "attributes": {
+        "alpha": true,
+        "antialias": true,
+        "depth": true,
+        "desynchronized": false,
+        "failIfMajorPerformanceCaveat": false,
+        "powerPreference": "default",
+        "premultipliedAlpha": true,
+        "preserveDrawingBuffer": false,
+        "stencil": false,
+        "xrCompatible": false
+      },
+      "samples": 4,
+      "excluded": true
+    },
+    "quality": {
+      "enabled": true,
+      "baseHeight": 540,
+      "outputMultiplier": 1,
+      "fixed60": true
+    },
+    "errors": []
+  }
+}

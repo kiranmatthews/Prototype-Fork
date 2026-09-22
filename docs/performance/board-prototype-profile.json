@@ -1,0 +1,536 @@
+[
+  {
+    "version": "original",
+    "mode": "default",
+    "rafFps": 60.00300015000751,
+    "frames": 240,
+    "frameMedian": 16.69999999999709,
+    "frameP95": 16.700000000000728,
+    "cpu": {
+      "syncVisual": {
+        "ms": 0.05624999900658925,
+        "calls": 1.0041666666666667
+      },
+      "step": {
+        "ms": 0.16041665871938068,
+        "calls": 1.0041666666666667
+      },
+      "setHUD": {
+        "ms": 0.002500000596046448,
+        "calls": 1.0041666666666667
+      },
+      "shadowCPU": {
+        "ms": 0.15458333293596904,
+        "calls": 3.0125
+      },
+      "renderCPU": {
+        "ms": 1.212916664282481,
+        "calls": 3.0125
+      }
+    },
+    "draws": 228.0875,
+    "drawnTriangles": 10881.433333333332,
+    "scene": {
+      "meshes": 266,
+      "triangles": 17570,
+      "vertices": 24970,
+      "skinned": 1
+    },
+    "memory": {
+      "geometries": 245,
+      "textures": 19
+    },
+    "programs": 25,
+    "canvas": [
+      1280,
+      720
+    ],
+    "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+    "level": "sky",
+    "errors": []
+  },
+  {
+    "version": "fork",
+    "mode": "default",
+    "rafFps": 60.00150003750092,
+    "frames": 240,
+    "frameMedian": 16.700000000000728,
+    "frameP95": 16.799999999999272,
+    "cpu": {
+      "syncVisual": {
+        "ms": 1.23791666974624,
+        "calls": 1.0041666666666667
+      },
+      "interactionBounds": {
+        "ms": 1.2912499969204267,
+        "calls": 1.0041666666666667
+      },
+      "refreshCharacterBounds": {
+        "ms": 1.297083330154419,
+        "calls": 3.0125
+      },
+      "step": {
+        "ms": 2.7791666676600775,
+        "calls": 1.0041666666666667
+      },
+      "applyRenderInterpolation": {
+        "ms": 0.023333331942558287,
+        "calls": 1.0041666666666667
+      },
+      "setHUD": {
+        "ms": 0.047083336114883426,
+        "calls": 1.0041666666666667
+      },
+      "shadowCPU": {
+        "ms": 0.5041666661699613,
+        "calls": 7.029166666666667
+      },
+      "renderCPU": {
+        "ms": 1.8170833364129066,
+        "calls": 7.029166666666667
+      },
+      "drawGameHud": {
+        "ms": 0.5662500033775966,
+        "calls": 1.0041666666666667
+      },
+      "restoreRenderPose": {
+        "ms": 0.024583334227403005,
+        "calls": 1.0041666666666667
+      }
+    },
+    "draws": 314.325,
+    "drawnTriangles": 366120.2125,
+    "scene": {
+      "meshes": 239,
+      "triangles": 328455,
+      "vertices": 204355,
+      "skinned": 7
+    },
+    "memory": {
+      "geometries": 146,
+      "textures": 41
+    },
+    "programs": 42,
+    "canvas": [
+      2560,
+      1440
+    ],
+    "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+    "crt": {
+      "supported": true,
+      "capabilityReason": null,
+      "active": false,
+      "bypassReason": "disabled in CRT settings",
+      "forcedDisabled": false,
+      "lutsReady": true,
+      "runtimeFailure": null,
+      "variant": "hd",
+      "quality": "exact",
+      "width": 2560,
+      "height": 1440,
+      "sourceWidth": 1280,
+      "sourceHeight": 720,
+      "outputWidth": 2560,
+      "outputHeight": 1440,
+      "kernelWidth": 800,
+      "kernelHeight": 600,
+      "frameIndex": 0,
+      "renderCount": 0,
+      "bypassCount": 0,
+      "failureCount": 0,
+      "lastDrawCount": 0,
+      "historyClearPending": true,
+      "historyResetCount": 3,
+      "lastHistoryResetReason": "LUT set changed",
+      "settingsRevision": 1,
+      "historyRevision": 1,
+      "estimatedTargetBytes": 0,
+      "targets": {}
+    },
+    "quality": {
+      "enabled": true,
+      "baseHeight": 720,
+      "outputMultiplier": 2,
+      "fixed60": true
+    },
+    "look": {
+      "bloom": {
+        "active": false,
+        "mipCount": 0,
+        "sizes": [],
+        "drawCount": 0,
+        "estimatedBytes": 0
+      },
+      "lut": {
+        "dirty": true,
+        "rebuildCount": 0,
+        "width": 1024,
+        "height": 32
+      }
+    },
+    "level": "sky",
+    "errors": []
+  },
+  {
+    "version": "fork",
+    "mode": "crt-off",
+    "rafFps": 60.00200843542884,
+    "frames": 239,
+    "frameMedian": 16.69999999999709,
+    "frameP95": 16.799999999999272,
+    "cpu": {
+      "syncVisual": {
+        "ms": 1.226359835229658,
+        "calls": 1.00418410041841
+      },
+      "interactionBounds": {
+        "ms": 1.298326357637988,
+        "calls": 1.00418410041841
+      },
+      "refreshCharacterBounds": {
+        "ms": 1.3029288667016448,
+        "calls": 3.01255230125523
+      },
+      "step": {
+        "ms": 2.7686192465626545,
+        "calls": 1.00418410041841
+      },
+      "applyRenderInterpolation": {
+        "ms": 0.018410039247329264,
+        "calls": 1.00418410041841
+      },
+      "setHUD": {
+        "ms": 0.05983263578375014,
+        "calls": 1.00418410041841
+      },
+      "shadowCPU": {
+        "ms": 0.5033472766437291,
+        "calls": 7.02928870292887
+      },
+      "renderCPU": {
+        "ms": 1.807531387736109,
+        "calls": 7.02928870292887
+      },
+      "drawGameHud": {
+        "ms": 0.5870292895009827,
+        "calls": 1.00418410041841
+      },
+      "restoreRenderPose": {
+        "ms": 0.028451881149323913,
+        "calls": 1.00418410041841
+      }
+    },
+    "draws": 314,
+    "drawnTriangles": 366125.90794979077,
+    "scene": {
+      "meshes": 239,
+      "triangles": 328455,
+      "vertices": 204355,
+      "skinned": 7
+    },
+    "memory": {
+      "geometries": 146,
+      "textures": 41
+    },
+    "programs": 42,
+    "canvas": [
+      2560,
+      1440
+    ],
+    "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+    "crt": {
+      "supported": true,
+      "capabilityReason": null,
+      "active": false,
+      "bypassReason": "disabled in CRT settings",
+      "forcedDisabled": false,
+      "lutsReady": true,
+      "runtimeFailure": null,
+      "variant": "hd",
+      "quality": "exact",
+      "width": 2560,
+      "height": 1440,
+      "sourceWidth": 1280,
+      "sourceHeight": 720,
+      "outputWidth": 2560,
+      "outputHeight": 1440,
+      "kernelWidth": 800,
+      "kernelHeight": 600,
+      "frameIndex": 0,
+      "renderCount": 0,
+      "bypassCount": 0,
+      "failureCount": 0,
+      "lastDrawCount": 0,
+      "historyClearPending": true,
+      "historyResetCount": 3,
+      "lastHistoryResetReason": "LUT set changed",
+      "settingsRevision": 1,
+      "historyRevision": 1,
+      "estimatedTargetBytes": 0,
+      "targets": {}
+    },
+    "quality": {
+      "enabled": true,
+      "baseHeight": 720,
+      "outputMultiplier": 2,
+      "fixed60": true
+    },
+    "look": {
+      "bloom": {
+        "active": false,
+        "mipCount": 0,
+        "sizes": [],
+        "drawCount": 0,
+        "estimatedBytes": 0
+      },
+      "lut": {
+        "dirty": true,
+        "rebuildCount": 0,
+        "width": 1024,
+        "height": 32
+      }
+    },
+    "level": "sky",
+    "errors": []
+  },
+  {
+    "version": "fork",
+    "mode": "540p-crt-off",
+    "rafFps": 60.00200843542884,
+    "frames": 239,
+    "frameMedian": 16.69999999999709,
+    "frameP95": 16.700000000004366,
+    "cpu": {
+      "syncVisual": {
+        "ms": 1.229288709213544,
+        "calls": 1.00418410041841
+      },
+      "interactionBounds": {
+        "ms": 1.302510458056398,
+        "calls": 1.00418410041841
+      },
+      "refreshCharacterBounds": {
+        "ms": 1.3058577381916125,
+        "calls": 3.01255230125523
+      },
+      "step": {
+        "ms": 2.767782423286757,
+        "calls": 1.00418410041841
+      },
+      "applyRenderInterpolation": {
+        "ms": 0.020502092449236117,
+        "calls": 1.00418410041841
+      },
+      "setHUD": {
+        "ms": 0.05188284508852779,
+        "calls": 1.00418410041841
+      },
+      "shadowCPU": {
+        "ms": 0.5138075311812397,
+        "calls": 7.02928870292887
+      },
+      "renderCPU": {
+        "ms": 1.8221757272297368,
+        "calls": 7.02928870292887
+      },
+      "drawGameHud": {
+        "ms": 0.5761506273157926,
+        "calls": 1.00418410041841
+      },
+      "restoreRenderPose": {
+        "ms": 0.029707115065602578,
+        "calls": 1.00418410041841
+      }
+    },
+    "draws": 314.0376569037657,
+    "drawnTriangles": 366125.98326359835,
+    "scene": {
+      "meshes": 239,
+      "triangles": 328455,
+      "vertices": 204355,
+      "skinned": 7
+    },
+    "memory": {
+      "geometries": 146,
+      "textures": 41
+    },
+    "programs": 42,
+    "canvas": [
+      960,
+      540
+    ],
+    "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+    "crt": {
+      "supported": true,
+      "capabilityReason": null,
+      "active": false,
+      "bypassReason": "disabled in CRT settings",
+      "forcedDisabled": false,
+      "lutsReady": true,
+      "runtimeFailure": null,
+      "variant": "hd",
+      "quality": "exact",
+      "width": 960,
+      "height": 540,
+      "sourceWidth": 960,
+      "sourceHeight": 540,
+      "outputWidth": 960,
+      "outputHeight": 540,
+      "kernelWidth": 800,
+      "kernelHeight": 600,
+      "frameIndex": 0,
+      "renderCount": 0,
+      "bypassCount": 0,
+      "failureCount": 0,
+      "lastDrawCount": 0,
+      "historyClearPending": true,
+      "historyResetCount": 4,
+      "lastHistoryResetReason": "source size changed",
+      "settingsRevision": 1,
+      "historyRevision": 1,
+      "estimatedTargetBytes": 0,
+      "targets": {}
+    },
+    "quality": {
+      "enabled": true,
+      "baseHeight": 540,
+      "outputMultiplier": 1,
+      "fixed60": true
+    },
+    "look": {
+      "bloom": {
+        "active": false,
+        "mipCount": 0,
+        "sizes": [],
+        "drawCount": 0,
+        "estimatedBytes": 0
+      },
+      "lut": {
+        "dirty": true,
+        "rebuildCount": 0,
+        "width": 1024,
+        "height": 32
+      }
+    },
+    "level": "sky",
+    "errors": []
+  },
+  {
+    "version": "fork",
+    "mode": "no-post",
+    "rafFps": 60.0005020962518,
+    "frames": 239,
+    "frameMedian": 16.69999999999709,
+    "frameP95": 16.799999999995634,
+    "cpu": {
+      "syncVisual": {
+        "ms": 1.444769871284772,
+        "calls": 1.00418410041841
+      },
+      "interactionBounds": {
+        "ms": 1.3497908010642399,
+        "calls": 1.00418410041841
+      },
+      "refreshCharacterBounds": {
+        "ms": 1.3548117212670618,
+        "calls": 3.01255230125523
+      },
+      "step": {
+        "ms": 3.1025104627449642,
+        "calls": 1.00418410041841
+      },
+      "applyRenderInterpolation": {
+        "ms": 0.0171548118152379,
+        "calls": 1.00418410041841
+      },
+      "setHUD": {
+        "ms": 0.046025105600077734,
+        "calls": 1.00418410041841
+      },
+      "shadowCPU": {
+        "ms": 0.5995815912549964,
+        "calls": 1.00418410041841
+      },
+      "renderCPU": {
+        "ms": 1.8251046027099738,
+        "calls": 1.00418410041841
+      },
+      "restoreRenderPose": {
+        "ms": 0.026778244074418454,
+        "calls": 1.00418410041841
+      }
+    },
+    "draws": 308.12133891213387,
+    "drawnTriangles": 366119.1715481171,
+    "scene": {
+      "meshes": 239,
+      "triangles": 328455,
+      "vertices": 204355,
+      "skinned": 7
+    },
+    "memory": {
+      "geometries": 146,
+      "textures": 36
+    },
+    "programs": 65,
+    "canvas": [
+      1280,
+      720
+    ],
+    "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+    "crt": {
+      "supported": true,
+      "capabilityReason": null,
+      "active": false,
+      "bypassReason": "disabled in CRT settings",
+      "forcedDisabled": false,
+      "lutsReady": true,
+      "runtimeFailure": null,
+      "variant": "hd",
+      "quality": "exact",
+      "width": 1280,
+      "height": 720,
+      "sourceWidth": 1280,
+      "sourceHeight": 720,
+      "outputWidth": 1280,
+      "outputHeight": 720,
+      "kernelWidth": 800,
+      "kernelHeight": 600,
+      "frameIndex": 0,
+      "renderCount": 0,
+      "bypassCount": 0,
+      "failureCount": 0,
+      "lastDrawCount": 0,
+      "historyClearPending": true,
+      "historyResetCount": 6,
+      "lastHistoryResetReason": "source size changed",
+      "settingsRevision": 1,
+      "historyRevision": 1,
+      "estimatedTargetBytes": 0,
+      "targets": {}
+    },
+    "quality": {
+      "enabled": false,
+      "baseHeight": 540,
+      "outputMultiplier": 1,
+      "fixed60": true
+    },
+    "look": {
+      "bloom": {
+        "active": false,
+        "mipCount": 0,
+        "sizes": [],
+        "drawCount": 0,
+        "estimatedBytes": 0
+      },
+      "lut": {
+        "dirty": true,
+        "rebuildCount": 0,
+        "width": 1024,
+        "height": 32
+      }
+    },
+    "level": "sky",
+    "errors": []
+  }
+]

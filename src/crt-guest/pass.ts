@@ -139,7 +139,6 @@ interface CrtGuestMaterialSet {
 
 interface CrtGuestTargets {
   readonly encoded: THREE.WebGLRenderTarget;
-  readonly stock0: THREE.WebGLRenderTarget;
   readonly stock: THREE.WebGLRenderTarget;
   readonly pre: THREE.WebGLRenderTarget;
   readonly linear: THREE.WebGLRenderTarget;
@@ -154,10 +153,10 @@ interface CrtGuestTargets {
     THREE.WebGLRenderTarget,
     THREE.WebGLRenderTarget,
   ];
-  readonly average: readonly [
+  average: readonly [
     THREE.WebGLRenderTarget,
     THREE.WebGLRenderTarget,
-  ];
+  ] | null;
 }
 
 const SHADER_LIBRARY = CRT_GUEST_SHADERS as unknown as Record<
@@ -209,8 +208,9 @@ const COPY_FRAGMENT = /* glsl */ `
 /**
  * Literal WebGL2 execution of the Unity CRT Guest RenderGraph feature.
  *
- * Normal execution performs fourteen fullscreen draws: input conversion,
- * stock twice, afterglow, pre, two variant stages, four glow/bloom stages,
+ * The original fourteen fullscreen draws included two identical point-copy
+ * stock stages. One copy is idempotent, so execution needs thirteen draws:
+ * input conversion, stock, afterglow, pre, two variant stages, four glow/bloom stages,
  * main, deconvergence and output conversion. It belongs after the authored
  * Unity post stage and before Three's OutputPass.
  */
@@ -493,7 +493,8 @@ export class CrtGuestPass extends Pass {
       case "encoded":
         return targets.encoded.texture;
       case "stock0":
-        return targets.stock0.texture;
+        // Legacy review alias: both former stock stages produced the same pixels.
+        return targets.stock.texture;
       case "stock":
         return targets.stock.texture;
       case "afterglow-read":
@@ -503,9 +504,9 @@ export class CrtGuestPass extends Pass {
       case "pre":
         return targets.pre.texture;
       case "average-read":
-        return targets.average[read].texture;
+        return targets.average?.[read].texture ?? null;
       case "average-write":
-        return targets.average[write].texture;
+        return targets.average?.[write].texture ?? null;
       case "linear":
         return targets.linear.texture;
       case "glow-horizontal":
@@ -630,8 +631,8 @@ export class CrtGuestPass extends Pass {
     const writeIndex = this.historyPing ? 0 : 1;
     const afterglowRead = targets.afterglow[readIndex];
     const afterglowWrite = targets.afterglow[writeIndex];
-    const averageRead = targets.average[readIndex];
-    const averageWrite = targets.average[writeIndex];
+    const averageRead = targets.average?.[readIndex];
+    const averageWrite = targets.average?.[writeIndex];
     const [kernelWidth, kernelHeight] = kernelDimensions(this.quality);
     const bloomHorizontalHeight =
       this.variant === "advanced" ? kernelHeight : this.height;
@@ -654,9 +655,8 @@ export class CrtGuestPass extends Pass {
       this.frameIndex,
     );
     bindTexture(materials.stock, "Source", targets.encoded.texture);
-    this.draw(renderer, targets.stock0, materials.stock);
-    draws += 1;
-    bindTexture(materials.stock, "Source", targets.stock0.texture);
+    // Same-size RGBA8 point copies are idempotent. Preserve stock's opaque
+    // alpha conversion once; do not allocate/copy an identical intermediate.
     this.draw(renderer, targets.stock, materials.stock);
     draws += 1;
 
@@ -701,6 +701,9 @@ export class CrtGuestPass extends Pass {
     draws += 1;
 
     if (this.variant === "advanced") {
+      if (!averageRead || !averageWrite) {
+        throw new Error("Advanced luminance history was not allocated");
+      }
       configureStage(
         materials.variant4,
         this.width,
@@ -875,7 +878,7 @@ export class CrtGuestPass extends Pass {
     bindTexture(materials.main, "PrePass", targets.pre.texture);
     bindTexture(materials.main, "BloomPass", targets.bloom.texture);
     if (this.variant === "advanced") {
-      bindTexture(materials.main, "AvgLumPass", averageWrite.texture);
+      bindTexture(materials.main, "AvgLumPass", averageWrite!.texture);
     } else {
       bindTexture(materials.main, "Pass1", mainSource.texture);
     }
@@ -906,7 +909,7 @@ export class CrtGuestPass extends Pass {
       bindTexture(
         materials.deconvergence,
         "AvgLumPass",
-        averageWrite.texture,
+        averageWrite!.texture,
       );
     }
     this.draw(renderer, targets.deconvergence, materials.deconvergence);
@@ -971,7 +974,6 @@ export class CrtGuestPass extends Pass {
       makeTarget(1, 1, THREE.HalfFloatType, name);
     this.targets = {
       encoded: rgba8("CRTGuest.Encoded.RGBA8"),
-      stock0: rgba8("CRTGuest.Stock0.RGBA8"),
       stock: rgba8("CRTGuest.Stock.RGBA8"),
       pre: rgba8("CRTGuest.Pre.RGBA8"),
       linear: rgba16f("CRTGuest.Linear.RGBA16F"),
@@ -986,10 +988,7 @@ export class CrtGuestPass extends Pass {
         rgba8("CRTGuest.AfterglowA.RGBA8"),
         rgba8("CRTGuest.AfterglowB.RGBA8"),
       ],
-      average: [
-        rgba8("CRTGuest.AverageA.RGBA8"),
-        rgba8("CRTGuest.AverageB.RGBA8"),
-      ],
+      average: null,
     };
     this.resizeTargets(this.targets);
     this.resetHistory("targets allocated");
@@ -1003,14 +1002,28 @@ export class CrtGuestPass extends Pass {
     const bloomHeight =
       this.variant === "advanced" ? this.height : kernelHeight;
 
+    // Only Advanced reads luminance history. HD must not allocate or clear
+    // those two full-source textures; a return to Advanced starts fresh history.
+    if (this.variant === "advanced") {
+      targets.average ??= [
+        makeTarget(this.width, this.height, THREE.UnsignedByteType, "CRTGuest.AverageA.RGBA8"),
+        makeTarget(this.width, this.height, THREE.UnsignedByteType, "CRTGuest.AverageB.RGBA8"),
+      ];
+    } else if (targets.average) {
+      for (const target of targets.average) target.dispose();
+      targets.average = null;
+      bindTexture(this.materialSets.advanced.variant4, "AvgLumPassFeedback", null);
+      bindTexture(this.materialSets.advanced.main, "AvgLumPass", null);
+      bindTexture(this.materialSets.advanced.deconvergence, "AvgLumPass", null);
+    }
+
     for (const target of [
       targets.encoded,
-      targets.stock0,
       targets.stock,
       targets.pre,
       targets.linear,
       ...targets.afterglow,
-      ...targets.average,
+      ...(targets.average ?? []),
     ]) {
       resizeTarget(target, this.width, this.height);
     }
@@ -1059,7 +1072,7 @@ export class CrtGuestPass extends Pass {
     const previousAlpha = renderer.getClearAlpha();
     renderer.setClearColor(0x000000, 1);
     try {
-      for (const target of [...targets.afterglow, ...targets.average]) {
+      for (const target of [...targets.afterglow, ...(targets.average ?? [])]) {
         renderer.setRenderTarget(target);
         renderer.clear(true, false, false);
       }
@@ -1173,7 +1186,6 @@ export class CrtGuestPass extends Pass {
     const targets = this.targets;
     const all = new Set<THREE.WebGLRenderTarget>([
       targets.encoded,
-      targets.stock0,
       targets.stock,
       targets.pre,
       targets.linear,
@@ -1184,7 +1196,7 @@ export class CrtGuestPass extends Pass {
       targets.main,
       targets.deconvergence,
       ...targets.afterglow,
-      ...targets.average,
+      ...(targets.average ?? []),
     ]);
     if (targets.reconstruction) all.add(targets.reconstruction);
     for (const target of all) target.dispose();
@@ -1202,7 +1214,6 @@ export class CrtGuestPass extends Pass {
       Record<CrtGuestDebugTarget, CrtGuestTargetDiagnostic>
     > = {
       encoded: targetDiagnostic(targets.encoded, 4),
-      stock0: targetDiagnostic(targets.stock0, 4),
       stock: targetDiagnostic(targets.stock, 4),
       "afterglow-read": targetDiagnostic(targets.afterglow[read], 4),
       "afterglow-write": targetDiagnostic(targets.afterglow[write], 4),
@@ -1211,8 +1222,6 @@ export class CrtGuestPass extends Pass {
         4,
         this.variant === "advanced" ? 4 / 3 : 1,
       ),
-      "average-read": targetDiagnostic(targets.average[read], 4),
-      "average-write": targetDiagnostic(targets.average[write], 4),
       linear: targetDiagnostic(targets.linear, 8),
       "glow-horizontal": targetDiagnostic(targets.glowHorizontal, 8),
       glow: targetDiagnostic(targets.glow, 8),
@@ -1221,6 +1230,10 @@ export class CrtGuestPass extends Pass {
       main: targetDiagnostic(targets.main, 8),
       deconvergence: targetDiagnostic(targets.deconvergence, 8),
     };
+    if (targets.average) {
+      diagnostic["average-read"] = targetDiagnostic(targets.average[read], 4);
+      diagnostic["average-write"] = targetDiagnostic(targets.average[write], 4);
+    }
     if (targets.reconstruction) {
       diagnostic.reconstruction = targetDiagnostic(targets.reconstruction, 8);
     }

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
+import { setImmediate as settleLoads } from 'node:timers/promises';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { createServer } from 'vite';
@@ -94,7 +95,7 @@ try {
   const create = (url, kind = 'grunt') => { const visual = createEnemyVisual(kind, { url }); visuals.push(visual); return visual; };
 
   const a = create('fixture://shared'), b = create('fixture://shared');
-  await Promise.resolve();
+  await settleLoads();
   assert.equal(requests.get('fixture://shared').length, 1, 'same asset loaded twice');
   const shared = fixture();
   requests.get('fixture://shared')[0](shared.gltf);
@@ -145,7 +146,7 @@ try {
   // Source contact intervals supersede the old diagonal fallback: this
   // four-beat phase plants front-right while front-left is in swing.
   const contactVisual = create('fixture://contacts');
-  await Promise.resolve();
+  await settleLoads();
   const contactSource = fixture();
   contactSource.gltf.scene.getObjectByName('enemyRoot').userData.enemyRig.walkContacts = {
     frontLeft: [[.4, .6]], frontRight: [[.8, .3]], hindLeft: [[0, 1]], hindRight: [],
@@ -161,7 +162,7 @@ try {
   // A real walk-only rig has no idle action to crossfade into. Returning to
   // stand/telegraph must blend its animated pose back to rest over .12s.
   const fadeVisual = create('fixture://walk-fade', 'charger');
-  await Promise.resolve();
+  await settleLoads();
   const fadeSource = fixture();
   fadeSource.gltf.animations[0].tracks.push(
     new THREE.NumberKeyframeTrack('frontLowerLeft.rotation[x]', [0, .5, 1], [0, -.4, 0]));
@@ -242,9 +243,9 @@ try {
   // An old request finishes after its level was retired and a replacement
   // already acquired the same URL. It must neither attach nor evict the new one.
   const retired = create('fixture://race');
-  await Promise.resolve(); retired.dispose();
+  await settleLoads(); retired.dispose();
   const successor = create('fixture://race');
-  await Promise.resolve();
+  await settleLoads();
   assert.equal(requests.get('fixture://race').length, 2);
   const replacement = fixture(), late = fixture();
   requests.get('fixture://race')[1](replacement.gltf); await successor.ready;
@@ -264,7 +265,7 @@ try {
   const turret = create('fixture://sentry', 'sentry'), muzzle = new THREE.Vector3(9, 9, 9);
   assert.equal(turret.getMuzzlePosition(muzzle), false);
   assert.deepEqual(muzzle.toArray(), [9, 9, 9]);
-  await Promise.resolve();
+  await settleLoads();
   const turretSource = fixture(), rig = turretSource.gltf.scene.getObjectByName('enemyRoot');
   const chest = rig.getObjectByName('chestBone'), head = rig.getObjectByName('headBone');
   chest.position.x = .13; chest.position.z = -.17;

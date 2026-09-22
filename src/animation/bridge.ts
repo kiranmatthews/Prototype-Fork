@@ -219,10 +219,20 @@ export function resolvePlayerAnimationRig(root: THREE.Group): PlayerAnimationRig
     }
   }
 
+  const jointEntries = Object.entries(declaredJoints);
+  const requestedNames = new Set(jointEntries.map(([, name]) => name).filter((name): name is string => typeof name === 'string'));
+  const nodesByName = new Map<string, THREE.Object3D>();
+  // Match getObjectByName's first depth-first result, while walking the live
+  // hierarchy once instead of once per joint. Rebuild on every resolution so
+  // late-loaded parts, editor renames/reparenting and metadata edits stay live.
+  root.traverse((node) => {
+    if (requestedNames.has(node.name) && !nodesByName.has(node.name))
+      nodesByName.set(node.name, node);
+  });
   const liveById = new Map<string, THREE.Object3D>();
-  for (const [id, declaredName] of Object.entries(declaredJoints)) {
+  for (const [id, declaredName] of jointEntries) {
     if (typeof declaredName !== 'string') continue;
-    const node = root.getObjectByName(declaredName);
+    const node = nodesByName.get(declaredName);
     if (node) liveById.set(id, node);
   }
   const idByNode = new Map<THREE.Object3D, string>();

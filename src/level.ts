@@ -7296,6 +7296,7 @@ export class Level {
       const m = o as THREE.Mesh;
       if (
         m.geometry &&
+        !(o as THREE.Sprite).isSprite &&
         !m.geometry.userData.shared &&
         !preservedGeometry.has(m.geometry)
       )
@@ -9222,7 +9223,7 @@ export class Level {
         this.comboOrb.group.visible = this.runModesOn;
       }
       if (this.gemG) {
-        this.root.remove(this.gemG);
+        Level.disposeCollectible(this.gemG);
         this.gemG = null;
         this.gemPickup = null;
       }
@@ -16955,6 +16956,7 @@ export class Level {
     ctx.fillRect(0, 0, 64, 64);
     Level.glowTex = new THREE.CanvasTexture(canvas);
     Level.glowTex.magFilter = THREE.LinearFilter;
+    Level.glowTex.userData.shared = true;
     return Level.glowTex;
   }
 
@@ -17113,6 +17115,23 @@ export class Level {
     halo.scale.set(1.7 * scale, 1.6 * scale, 1);
     g.add(halo);
     return g;
+  }
+
+  /** Prize shells/materials are per pickup; halo maps and Sprite's quad are shared. */
+  private static disposeCollectible(group: THREE.Group): void {
+    group.removeFromParent();
+    const geometries = new Set<THREE.BufferGeometry>();
+    const materials = new Set<THREE.Material>();
+    group.traverse((object) => {
+      const mesh = object as THREE.Mesh;
+      if (mesh.isMesh && !mesh.geometry.userData.shared) geometries.add(mesh.geometry);
+      const material = (object as THREE.Mesh | THREE.Sprite).material;
+      for (const value of material ? (Array.isArray(material) ? material : [material]) : [])
+        if (!value.userData.shared) materials.add(value);
+    });
+    for (const geometry of geometries) geometry.dispose();
+    for (const material of materials) material.dispose();
+    group.clear();
   }
 
   static timeRelicGeometry(): THREE.BufferGeometry {
@@ -17411,7 +17430,7 @@ export class Level {
   removeComboGem(burst = false): void {
     if (!this.comboGem) return;
     if (burst) this.glimmerBurst(this.comboGem.group.position, 0x46e882);
-    this.root.remove(this.comboGem.group);
+    Level.disposeCollectible(this.comboGem.group);
     this.comboGem = null;
   }
 

@@ -68,7 +68,7 @@ assert.match(generatedApi, /a62d9cda9140294d22b6da5e4ff4187365890d42/);
 
 const pass = await text("src/crt-guest/pass.ts");
 for (const contract of [
-  "fourteen fullscreen draws",
+  "execution needs thirteen draws",
   "historyPing",
   "historyClearPending",
   "RGBA16F",

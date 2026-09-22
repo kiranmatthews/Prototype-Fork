@@ -3,6 +3,7 @@ import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { clone as cloneSkeleton } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import { AssetCache, disposeTextures } from '../assetLifetime';
+import { sceneryLoads } from '../assetLoadQueue';
 import { sampleEnemyElasticity, enemyElasticPulse } from './elasticity';
 import { ENEMY_LEGS, type EnemyAnimationFrame, type EnemyKind, type EnemyLeg,
   type EnemyNodeBinding, type EnemyNodeMap, type EnemyNodeRole, type EnemyVisual,
@@ -74,8 +75,8 @@ function disposeAsset(asset:EnemyAsset):void {
   for(const skeleton of skeletons)skeleton.dispose();
   disposeTextures(images);
 }
-const assets=new AssetCache<string,EnemyAsset>(async url=>{
-  const gltf:GLTF=await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(url);
+const assets=new AssetCache<string,EnemyAsset>(async (url,_dependency,wanted)=>{
+  const gltf:GLTF=await sceneryLoads.run(()=>new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(url),wanted);
   markShared(gltf.scene);
   return {scene:gltf.scene,animations:gltf.animations};
 },disposeAsset);

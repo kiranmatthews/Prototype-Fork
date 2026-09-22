@@ -1,0 +1,318 @@
+[
+  {
+    "version": "original",
+    "mode": "default",
+    "trial": 0,
+    "elapsed": 6506.700000047684,
+    "frames": 389,
+    "rafFps": 60.002159460751784,
+    "steps": 390,
+    "stepsPerFrame": 1,
+    "fixedStepsPerSecond": 59.93821752918406,
+    "frameMedian": 16.700000000000728,
+    "frameP95": 16.799999999999272,
+    "level": "sky",
+    "state": "ride",
+    "position": [
+      0,
+      0,
+      4
+    ],
+    "canvas": [
+      1280,
+      720
+    ],
+    "contextLost": false,
+    "errors": []
+  },
+  {
+    "version": "original",
+    "mode": "default",
+    "trial": 1,
+    "elapsed": 6502.800000071526,
+    "frames": 389,
+    "rafFps": 60.003084991516275,
+    "steps": 389,
+    "stepsPerFrame": 0.9974358974358974,
+    "fixedStepsPerSecond": 59.82038506423714,
+    "frameMedian": 16.69999999999709,
+    "frameP95": 16.700000000000728,
+    "level": "sky",
+    "state": "ride",
+    "position": [
+      0,
+      0,
+      4
+    ],
+    "canvas": [
+      1280,
+      720
+    ],
+    "contextLost": false,
+    "errors": []
+  },
+  {
+    "version": "baseline",
+    "mode": "default",
+    "trial": 0,
+    "elapsed": 6554.299999952316,
+    "frames": 120,
+    "rafFps": 18.462390571872547,
+    "steps": 393,
+    "stepsPerFrame": 3.2479338842975207,
+    "fixedStepsPerSecond": 59.960636529127314,
+    "frameMedian": 50,
+    "frameP95": 66.70000000000073,
+    "level": "sky",
+    "state": "ride",
+    "position": [
+      0,
+      0,
+      4
+    ],
+    "canvas": [
+      2560,
+      1440
+    ],
+    "quality": {
+      "enabled": true,
+      "baseHeight": 720,
+      "outputMultiplier": 2,
+      "fixed60": true
+    },
+    "crt": false,
+    "contextLost": false,
+    "errors": []
+  },
+  {
+    "version": "baseline",
+    "mode": "default",
+    "trial": 1,
+    "elapsed": 6564.899999976158,
+    "frames": 126,
+    "rafFps": 19.38521185267239,
+    "steps": 394,
+    "stepsPerFrame": 3.1023622047244093,
+    "fixedStepsPerSecond": 60.01614647617342,
+    "frameMedian": 50,
+    "frameP95": 66.70000000000073,
+    "level": "sky",
+    "state": "ride",
+    "position": [
+      0,
+      0,
+      4
+    ],
+    "canvas": [
+      2560,
+      1440
+    ],
+    "quality": {
+      "enabled": true,
+      "baseHeight": 720,
+      "outputMultiplier": 2,
+      "fixed60": true
+    },
+    "crt": false,
+    "contextLost": false,
+    "errors": []
+  },
+  {
+    "version": "baseline",
+    "mode": "540p-crt-off",
+    "trial": 0,
+    "elapsed": 6531.700000047684,
+    "frames": 127,
+    "rafFps": 19.58939396276473,
+    "steps": 392,
+    "stepsPerFrame": 3.0625,
+    "fixedStepsPerSecond": 60.01500375049961,
+    "frameMedian": 50,
+    "frameP95": 66.69999999999709,
+    "level": "sky",
+    "state": "ride",
+    "position": [
+      0,
+      0,
+      4
+    ],
+    "canvas": [
+      960,
+      540
+    ],
+    "quality": {
+      "enabled": true,
+      "baseHeight": 540,
+      "outputMultiplier": 1,
+      "fixed60": true
+    },
+    "crt": false,
+    "contextLost": false,
+    "errors": []
+  },
+  {
+    "version": "baseline",
+    "mode": "540p-crt-off",
+    "trial": 1,
+    "elapsed": 6530.5,
+    "frames": 131,
+    "rafFps": 20.20638274899354,
+    "steps": 392,
+    "stepsPerFrame": 2.9696969696969697,
+    "fixedStepsPerSecond": 60.026031697419796,
+    "frameMedian": 50,
+    "frameP95": 66.59999999999854,
+    "level": "sky",
+    "state": "ride",
+    "position": [
+      0,
+      0,
+      4
+    ],
+    "canvas": [
+      960,
+      540
+    ],
+    "quality": {
+      "enabled": true,
+      "baseHeight": 540,
+      "outputMultiplier": 1,
+      "fixed60": true
+    },
+    "crt": false,
+    "contextLost": false,
+    "errors": []
+  },
+  {
+    "version": "candidate",
+    "mode": "default",
+    "trial": 0,
+    "elapsed": 6545.600000023842,
+    "frames": 138,
+    "rafFps": 21.232075820050472,
+    "steps": 393,
+    "stepsPerFrame": 2.827338129496403,
+    "fixedStepsPerSecond": 60.04033243683826,
+    "frameMedian": 50,
+    "frameP95": 50.10000000000218,
+    "level": "sky",
+    "state": "ride",
+    "position": [
+      0,
+      0,
+      4
+    ],
+    "canvas": [
+      2560,
+      1440
+    ],
+    "quality": {
+      "enabled": true,
+      "baseHeight": 720,
+      "outputMultiplier": 2,
+      "fixed60": true
+    },
+    "crt": false,
+    "contextLost": false,
+    "errors": []
+  },
+  {
+    "version": "candidate",
+    "mode": "default",
+    "trial": 1,
+    "elapsed": 6528,
+    "frames": 143,
+    "rafFps": 22.057689341354312,
+    "steps": 392,
+    "stepsPerFrame": 2.7222222222222223,
+    "fixedStepsPerSecond": 60.04901960784314,
+    "frameMedian": 50,
+    "frameP95": 50.10000000000218,
+    "level": "sky",
+    "state": "ride",
+    "position": [
+      0,
+      0,
+      4
+    ],
+    "canvas": [
+      2560,
+      1440
+    ],
+    "quality": {
+      "enabled": true,
+      "baseHeight": 720,
+      "outputMultiplier": 2,
+      "fixed60": true
+    },
+    "crt": false,
+    "contextLost": false,
+    "errors": []
+  },
+  {
+    "version": "candidate",
+    "mode": "540p-crt-off",
+    "trial": 0,
+    "elapsed": 6507,
+    "frames": 147,
+    "rafFps": 22.733247761471027,
+    "steps": 391,
+    "stepsPerFrame": 2.641891891891892,
+    "fixedStepsPerSecond": 60.08913477793146,
+    "frameMedian": 50,
+    "frameP95": 50.099999999998545,
+    "level": "sky",
+    "state": "ride",
+    "position": [
+      0,
+      0,
+      4
+    ],
+    "canvas": [
+      960,
+      540
+    ],
+    "quality": {
+      "enabled": true,
+      "baseHeight": 540,
+      "outputMultiplier": 1,
+      "fixed60": true
+    },
+    "crt": false,
+    "contextLost": false,
+    "errors": []
+  },
+  {
+    "version": "candidate",
+    "mode": "540p-crt-off",
+    "trial": 1,
+    "elapsed": 6509.400000095367,
+    "frames": 153,
+    "rafFps": 23.660769516268708,
+    "steps": 391,
+    "stepsPerFrame": 2.538961038961039,
+    "fixedStepsPerSecond": 60.06698005872608,
+    "frameMedian": 49.900000000001455,
+    "frameP95": 50.099999999998545,
+    "level": "sky",
+    "state": "ride",
+    "position": [
+      0,
+      0,
+      4
+    ],
+    "canvas": [
+      960,
+      540
+    ],
+    "quality": {
+      "enabled": true,
+      "baseHeight": 540,
+      "outputMultiplier": 1,
+      "fixed60": true
+    },
+    "crt": false,
+    "contextLost": false,
+    "errors": []
+  }
+]
