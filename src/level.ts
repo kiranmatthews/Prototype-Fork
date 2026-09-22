@@ -14,6 +14,9 @@ import { cameraViewDirection, type CameraView } from "./cameraViews";
 // finish gate at the far end.
 
 import * as THREE from "three";
+import { createEnemyVisual } from "./enemies/runtime";
+import type { EnemyKind, EnemyVisual } from "./enemies/types";
+export type { EnemyKind } from "./enemies/types";
 import { resolveLevelAtmosphere, validAtmosphere, CUSTOM_LEVEL_THEME, JUNGLE_THEME_OVERRIDES, NIGHTWORKS_THEME_OVERRIDES,
   SKY_BRIDGE_FOG_NEAR, SKY_BRIDGE_FOG_FAR, type CustomAtmosphereData } from "./levelAtmosphere";
 export type { CustomAtmosphereData } from "./levelAtmosphere";
@@ -173,15 +176,6 @@ const NO_BROKEN_CRATES: Crate[] = [];
 // Functionally distinct foes. Defeat rules and movement differ per kind —
 // the level's update owns each FSM and publishes per-frame combat flags
 // (spinKill/stompKill/...) that the player's collision simply reads.
-export type EnemyKind =
-  | "grunt" // baseline: patrols, any attack kills, touch hurts
-  | "spiker" // SPIN-ONLY: spikes on top, stomping it hurts you
-  | "turtle" // STOMP-ONLY: hard shell, a spin just recoils it
-  | "charger" // bull: patrol → telegraph → dash (invincible) → recover
-  | "hopper" // frog: leaps in arcs; stompable only while grounded
-  | "floater" // drone: hovers above stomp range, swoops; spin it down
-  | "sentry" // turret: stationary, tracks + fires slow orbs on a cycle
-  | "spinner"; // sawblade: blades OUT = untouchable touch-kill, IN = vulnerable
 
 export interface Enemy {
   group: THREE.Group;
@@ -204,7 +198,9 @@ export interface Enemy {
   stateT: number; // seconds accumulated in the current state / cycle
   baseY: number; // deck level; hop/float/dash offsets work from here
   cross: number; // fixed cross-axis coordinate (facing / aim reference)
-  body: THREE.Mesh; // main body mesh, for squash/flash/state anims
+  body: THREE.Object3D; // stable aiming pivot; presentation owns segment deformation
+  visual: EnemyVisual;
+  defeatedT?: number;
   vy: number; // hopper vertical velocity
   // per-frame combat flags the player's collision reads (set each update):
   spinKill: boolean; // a spin attack defeats it now
@@ -7212,6 +7208,7 @@ export class Level {
     this.tropicalPlants?.dispose();
     this.tropicalPlants = null;
     this.discardedBoards.dispose(); // remove borrowed board resources before the level traversal
+    for (const enemy of this.enemies) enemy.visual.dispose();
     for (const courtyard of this.meshyCourtyards)
       releaseMeshyCourtyard(courtyard);
     this.meshyCourtyards.length = 0;
@@ -8753,7 +8750,7 @@ export class Level {
       if (this.explosions[i].t > 0.7) this.explosions.splice(i, 1);
     }
 
-    // Quick scale-pop for broken crates / squashed enemies.
+    // Quick scale-pop for broken crates; enemies deform their own segments.
     for (let i = this.pops.length - 1; i >= 0; i--) {
       const p = this.pops[i];
       p.t -= dt;
@@ -9127,7 +9124,7 @@ export class Level {
       // rather than a mesh blinking out.
       const ep = enemy.group.position;
       puffs.burst("enemyPoof", ep.x, ep.y + 0.35, ep.z, {});
-      this.pops.push({ obj: enemy.group, t: 0.12 });
+      enemy.defeatedT = 0;
       sfx.play("enemyDown", 0.7);
     }
   }
@@ -15225,7 +15222,7 @@ export class Level {
     const far=(camera as THREE.PerspectiveCamera).far??400;
     this.jungleAssets?.setView(camera.position,this.keepPlayFog?Math.min(far,this.theme.fogFar):far,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([this.jungleAssets?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.milkCrate?.ready,crate.explosiveBundle?.ready])]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([this.jungleAssets?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.milkCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
 
   private jungleAsset(c: CustomComponent): void {
     if (!isJungleAsset(c.dkind)) return;
@@ -17757,214 +17754,11 @@ export class Level {
     }
   }
 
-  // Two white pupil eyes on the front face at height y.
-  private enemyEyes(
-    group: THREE.Group,
-    y: number,
-    z = 0.56,
-    spread = 0.22,
-  ): void {
-    const eyeMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    for (const side of [-spread, spread]) {
-      const eye = new THREE.Mesh(
-        new THREE.BoxGeometry(0.14, 0.14, 0.1),
-        eyeMat,
-      );
-      eye.position.set(side, y, z);
-      group.add(eye);
-    }
-  }
-
-  // Build the mesh for a foe. Returns the group and the "body" — the mesh a
-  // kind squashes / flashes / spins for its state animation.
-  private enemyGroup(kind: EnemyKind): {
-    group: THREE.Group;
-    body: THREE.Mesh;
-  } {
-    const group = new THREE.Group();
-    const lam = (c: number, e = 0): THREE.MeshLambertMaterial =>
-      new THREE.MeshLambertMaterial({ color: c, emissive: e });
-    let body: THREE.Mesh;
-    if (kind === "spiker") {
-      // squat purple body wearing a crown of up-pointing spikes (land = ouch)
-      body = new THREE.Mesh(new THREE.BoxGeometry(1, 0.7, 1.05), lam(0x7a3a8a));
-      body.position.y = 0.42;
-      group.add(body);
-      const spikeMat = lam(0xe8e0f0);
-      for (const [sx, sz] of [
-        [-0.28, -0.28],
-        [0.28, -0.28],
-        [-0.28, 0.28],
-        [0.28, 0.28],
-        [0, 0],
-      ]) {
-        const spike = new THREE.Mesh(
-          new THREE.ConeGeometry(0.16, 0.42, 4),
-          spikeMat,
-        );
-        spike.position.set(sx, 0.86, sz);
-        group.add(spike);
-      }
-      this.enemyEyes(group, 0.55, 0.55);
-    } else if (kind === "turtle") {
-      // domed green shell (safe to land on), gold side plates, a poking head.
-      // NO top spikes — stomping is the ONLY way through it.
-      body = new THREE.Mesh(
-        new THREE.SphereGeometry(0.62, 10, 7, 0, Math.PI * 2, 0, Math.PI / 2),
-        lam(0x2f7a44),
-      );
-      body.scale.set(1, 0.75, 1.15);
-      body.position.y = 0.34;
-      group.add(body);
-      for (const side of [-1, 1]) {
-        const plate = new THREE.Mesh(
-          new THREE.BoxGeometry(0.12, 0.4, 0.9),
-          lam(0x8a6a2a),
-        );
-        plate.position.set(side * 0.6, 0.3, 0);
-        group.add(plate);
-      }
-      const head = new THREE.Mesh(
-        new THREE.BoxGeometry(0.4, 0.36, 0.4),
-        lam(0x6cae5a),
-      );
-      head.position.set(0, 0.34, 0.62);
-      group.add(head);
-      this.enemyEyes(group, 0.42, 0.82, 0.12);
-    } else if (kind === "charger") {
-      // bulky bull with forward horns — the reared-back telegraph reads clearly
-      body = new THREE.Mesh(
-        new THREE.BoxGeometry(1.25, 0.95, 1.45),
-        lam(0x8a4a26),
-      );
-      body.position.y = 0.6;
-      group.add(body);
-      for (const side of [-0.34, 0.34]) {
-        const horn = new THREE.Mesh(
-          new THREE.ConeGeometry(0.13, 0.5, 5),
-          lam(0xf0e6d0),
-        );
-        horn.position.set(side, 0.82, 0.82);
-        horn.rotation.x = Math.PI / 2.1;
-        group.add(horn);
-      }
-      const snout = new THREE.Mesh(
-        new THREE.BoxGeometry(0.6, 0.4, 0.3),
-        lam(0x6e3a1e),
-      );
-      snout.position.set(0, 0.42, 0.82);
-      group.add(snout);
-      this.enemyEyes(group, 0.82, 0.74, 0.28);
-    } else if (kind === "hopper") {
-      // rounded frog, eyes bulging on top, folded hind legs (springs on launch)
-      body = new THREE.Mesh(new THREE.SphereGeometry(0.5, 9, 7), lam(0x46a83a));
-      body.scale.set(1.1, 0.85, 1);
-      body.position.y = 0.46;
-      group.add(body);
-      const eyeMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-      const pupMat = new THREE.MeshBasicMaterial({ color: 0x101010 });
-      for (const side of [-0.24, 0.24]) {
-        const e = new THREE.Mesh(new THREE.SphereGeometry(0.17, 7, 6), eyeMat);
-        e.position.set(side, 0.86, 0.16);
-        group.add(e);
-        const p = new THREE.Mesh(new THREE.SphereGeometry(0.08, 6, 5), pupMat);
-        p.position.set(side, 0.9, 0.29);
-        group.add(p);
-      }
-      for (const side of [-0.4, 0.4]) {
-        const leg = new THREE.Mesh(
-          new THREE.BoxGeometry(0.18, 0.24, 0.4),
-          lam(0x35862c),
-        );
-        leg.position.set(side, 0.2, -0.18);
-        group.add(leg);
-      }
-    } else if (kind === "floater") {
-      // hovering drone: a violet core diamond ringed by a spinning rotor blur,
-      // a single wary eye. It never touches the ground.
-      body = new THREE.Mesh(
-        new THREE.OctahedronGeometry(0.42),
-        lam(0x9a6cff, 0x2a1466),
-      );
-      body.position.y = 0.05;
-      group.add(body);
-      const ring = new THREE.Mesh(
-        new THREE.TorusGeometry(0.62, 0.07, 6, 16),
-        lam(0x6c4ad0, 0x160a40),
-      );
-      ring.rotation.x = Math.PI / 2;
-      ring.position.y = 0.05;
-      ring.name = "rotor";
-      group.add(ring);
-      const eye = new THREE.Mesh(
-        new THREE.SphereGeometry(0.16, 8, 6),
-        new THREE.MeshBasicMaterial({ color: 0xffe27a }),
-      );
-      eye.position.set(0, 0.05, 0.4);
-      group.add(eye);
-    } else if (kind === "sentry") {
-      // fixed base + a rotating head with a barrel and a charge-eye that glows
-      const base = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.5, 0.62, 0.5, 8),
-        lam(0x4c525e),
-      );
-      base.position.y = 0.25;
-      group.add(base);
-      body = new THREE.Mesh(
-        new THREE.BoxGeometry(0.85, 0.6, 0.85),
-        lam(0x8a3a3a),
-      );
-      body.position.y = 0.72;
-      body.name = "head";
-      group.add(body);
-      const barrel = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.14, 0.14, 0.6, 8),
-        lam(0x33373f),
-      );
-      barrel.rotation.x = Math.PI / 2;
-      barrel.position.set(0, 0.72, 0.55);
-      barrel.name = "barrel";
-      body.add(barrel);
-      const eye = new THREE.Mesh(
-        new THREE.SphereGeometry(0.16, 8, 6),
-        new THREE.MeshBasicMaterial({ color: 0xff6a3a }),
-      );
-      eye.position.set(0, 0.72, 0.44);
-      eye.name = "eye";
-      body.add(eye);
-    } else if (kind === "spinner") {
-      // a brass hub with radial blades that telescope out (danger) and in (safe)
-      const hub = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.34, 0.34, 0.5, 8),
-        lam(0xb08a2a, 0x2a1e06),
-      );
-      hub.position.y = 0.55;
-      group.add(hub);
-      body = hub;
-      const bladeMat = lam(0xd8dde2, 0x22262a);
-      for (let i = 0; i < 4; i++) {
-        const pivot = new THREE.Group();
-        pivot.rotation.y = (i / 4) * Math.PI * 2;
-        pivot.position.y = 0.55;
-        pivot.name = "blade";
-        const blade = new THREE.Mesh(
-          new THREE.BoxGeometry(0.9, 0.12, 0.28),
-          bladeMat,
-        );
-        blade.position.x = 0.7;
-        pivot.add(blade);
-        group.add(pivot);
-      }
-    } else {
-      // grunt (default): the classic red box crab with two eyes
-      body = new THREE.Mesh(new THREE.BoxGeometry(1, 0.9, 1.1), lam(0xa03a3a));
-      body.position.y = 0.55;
-      group.add(body);
-      this.enemyEyes(group, 0.75);
-    }
-    body.userData.baseY = body.position.y; // rest height, for pose reset
-    this.root.add(group);
-    return { group, body };
+  /** Imported enemy artwork; gameplay roots and collision remain level-owned. */
+  private enemyGroup(kind: EnemyKind): EnemyVisual {
+    const visual = createEnemyVisual(kind);
+    this.root.add(visual.group);
+    return visual;
   }
 
   // Patrols a0..a1 along `axis` at the given cross coordinate (the Enemy
@@ -17979,7 +17773,8 @@ export class Level {
     axis: "x" | "z" = "x",
     kind: EnemyKind = "grunt",
   ): void {
-    const { group, body } = this.enemyGroup(kind);
+    const visual = this.enemyGroup(kind);
+    const { group, body } = visual;
     // snap to real ground (wavy jungle floors), then remember it for resets
     const mid = (a0 + a1) / 2;
     const gx = axis === "z" ? cross : mid;
@@ -18006,6 +17801,7 @@ export class Level {
       baseY: gy,
       cross,
       body,
+      visual,
       vy: 0,
       spinKill: true,
       stompKill: true,
@@ -18033,15 +17829,11 @@ export class Level {
     e.group.position.y = e.baseY;
     e.group.rotation.set(0, 0, 0);
     e.group.scale.setScalar(1);
-    e.body.rotation.set(0, 0, 0);
-    e.body.scale.setScalar(1);
-    e.body.position.y = e.body.userData.baseY ?? e.body.position.y;
+    e.defeatedT = undefined;
+    e.visual.reset();
     e.spinKill = e.stompKill = e.meleeKill = e.touchHurt = true;
     e.spinRecoil = false;
-    e.group.traverse((o) => {
-      if (o.name === "blade") o.scale.setScalar(1);
-      if (o.name === "eye") o.scale.setScalar(1);
-    });
+
   }
 
   // Facing yaw for an axis-bound walker given travel direction.
@@ -18090,7 +17882,16 @@ export class Level {
   // (spinKill/stompKill/meleeKill/touchHurt/spinRecoil) the player reads.
   private updateEnemies(dt: number): void {
     for (const e of this.enemies) {
-      if (!e.alive) continue;
+      if (!e.alive) {
+        if (!e.group.visible) continue; // finite defeat has finished; no hidden rig work
+        this.updateEnemyVisual(e, dt, 0);
+        if (e.defeatedT !== undefined) {
+          e.defeatedT += dt;
+          if (e.defeatedT >= 0.12) e.group.visible = false;
+        }
+        continue;
+      }
+      const beforeAlong = this.enemyAlong(e);
       // grunt defaults — each kind tweaks what differs
       e.spinKill = true;
       e.stompKill = true;
@@ -18139,6 +17940,7 @@ export class Level {
           cy = 0.55;
           break;
       }
+      this.updateEnemyVisual(e, dt, dt > 0 ? Math.abs(this.enemyAlong(e) - beforeAlong) / dt : 0);
       e.box.setFromCenterAndSize(
         new THREE.Vector3(
           e.group.position.x,
@@ -18150,6 +17952,15 @@ export class Level {
     }
   }
 
+  private updateEnemyVisual(e: Enemy, dt: number, speed: number): void {
+    e.visual.update(dt, {
+      kind: e.kind, state: e.state, stateTime: e.stateT, time: this.time,
+      speed, verticalVelocity: e.vy,
+      grounded: e.kind !== "floater" && e.group.position.y <= e.baseY + 0.06,
+      alive: e.alive, flung: e.flungT !== undefined,
+    });
+  }
+
   // BULL: amble → spot you in its lane → rear back (telegraph) → DASH (invincible,
   // touch-kill) → overshoot into a dizzy recover (safe to hit) → amble again.
   private chargerStep(e: Enemy, dt: number): void {
@@ -18159,8 +17970,6 @@ export class Level {
     const gap = pAlong - along; // +/- ahead along the lane
     const inLane = Math.abs(this.playerCross(e) - e.cross) < 3.6;
     if (e.state === "patrol") {
-      e.body.rotation.x = 0;
-      e.group.scale.setScalar(1);
       this.patrolStep(e, dt, 0.5);
       if (inLane && Math.abs(gap) > 2.5 && Math.abs(gap) < 26) {
         e.dir = Math.sign(gap) || 1;
@@ -18171,19 +17980,15 @@ export class Level {
       }
     } else if (e.state === "telegraph") {
       // rear back and shudder
-      e.body.rotation.x = -0.35;
-      e.group.scale.setScalar(1 + Math.sin(e.stateT * 40) * 0.06);
       if (e.stateT > 0.55) {
         e.state = "dash";
         e.stateT = 0;
-        e.group.scale.setScalar(1);
         sfx.play("crunch", 0.7, 0.8);
       }
     } else if (e.state === "dash") {
       e.spinKill = false;
       e.stompKill = false;
       e.meleeKill = false; // nothing stops a charge
-      e.body.rotation.x = 0.3;
       const key = e.axis === "z" ? "z" : "x";
       e.group.position[key] += e.dir * e.speed * 3.4 * dt;
       const hitBound =
@@ -18201,10 +18006,7 @@ export class Level {
     } else {
       // recover: dizzy, harmless, wide open
       e.touchHurt = false;
-      e.body.rotation.x = 0;
-      e.group.rotation.z = Math.sin(e.stateT * 18) * 0.18;
       if (e.stateT > 1.1) {
-        e.group.rotation.z = 0;
         e.state = "patrol";
         e.stateT = 0;
       }
@@ -18217,14 +18019,10 @@ export class Level {
     e.stateT += dt;
     const key = e.axis === "z" ? "z" : "x";
     if (e.state === "crouch") {
-      e.body.scale.set(1.15, 0.7, 1.0);
-      e.body.position.y = 0.36;
       if (e.stateT > 0.45) {
         e.state = "leap";
         e.stateT = 0;
         e.vy = 8.6;
-        e.body.scale.set(0.9, 1.2, 0.95);
-        e.body.position.y = 0.5;
         sfx.play("woosh3", 0.4, 1.3);
       }
     } else {
@@ -18245,8 +18043,6 @@ export class Level {
         e.vy = 0;
         e.state = "crouch";
         e.stateT = 0;
-        e.body.scale.set(1.15, 0.85, 1.0);
-        e.body.position.y = 0.46;
         sfx.play("crunch", 0.4, 1.4);
       }
     }
@@ -18259,8 +18055,6 @@ export class Level {
     e.stateT += dt;
     const hoverH = 1.65;
     this.patrolStep(e, dt);
-    const rotor = e.group.getObjectByName("rotor");
-    if (rotor) rotor.rotation.z += dt * 12;
     if (e.state === "hover") {
       e.group.position.y =
         e.baseY + hoverH + Math.sin(this.time * 3 + e.cross) * 0.18;
@@ -18296,8 +18090,11 @@ export class Level {
     while (dy > Math.PI) dy -= Math.PI * 2;
     while (dy < -Math.PI) dy += Math.PI * 2;
     head.rotation.y += dy * Math.min(1, dt * 6);
-    const eye = head.getObjectByName("eye");
-    const muzzle = SENTRY_MUZZLE.set(
+    // Refresh this frame's aiming pose before reading the exported barrel tip.
+    // The regular enemy update advances its animation once, after the FSM.
+    this.updateEnemyVisual(e, 0, 0);
+    const muzzle = SENTRY_MUZZLE;
+    if (!e.visual.getMuzzlePosition(muzzle)) muzzle.set(
       e.group.position.x + Math.sin(head.rotation.y) * 0.8,
       e.group.position.y + 0.72,
       e.group.position.z + Math.cos(head.rotation.y) * 0.8,
@@ -18312,7 +18109,6 @@ export class Level {
       muzzle.distanceTo(target) < SENTRY_ATTACK_RANGE &&
       verticalGap < 10;
     if (e.state === "track") {
-      if (eye) eye.scale.setScalar(1);
       if (
         e.stateT > 1.3 &&
         inRange &&
@@ -18322,7 +18118,6 @@ export class Level {
         e.stateT = 0;
       }
     } else if (e.state === "charge") {
-      if (eye) eye.scale.setScalar(1 + e.stateT * 2.4);
       if (e.stateT > 0.55) {
         if (inRange && !this.projectilePathBlocked(muzzle, target)) {
           e.state = "fire";
@@ -18331,11 +18126,9 @@ export class Level {
         } else {
           e.state = "track";
           e.stateT = 0;
-          if (eye) eye.scale.setScalar(1);
         }
       }
     } else if (e.state === "fire") {
-      if (eye) eye.scale.setScalar(1);
       if (e.stateT > 0.15) {
         e.state = "cooldown";
         e.stateT = 0;
@@ -18353,7 +18146,6 @@ export class Level {
   private spinnerStep(e: Enemy, dt: number): void {
     e.stateT += dt;
     if (e.state === "out") {
-      e.body.rotation.y += dt * 9;
       e.spinKill = false;
       e.stompKill = false;
       e.meleeKill = false;
@@ -18364,7 +18156,6 @@ export class Level {
         sfx.play("woosh", 0.4, 1.6);
       }
     } else {
-      e.body.rotation.y += dt * 1.5;
       e.touchHurt = false; // retracted: safe to brush, wide open to any hit
       if (e.stateT > 1.35) {
         e.state = "out";
@@ -18372,14 +18163,6 @@ export class Level {
         sfx.play("woosh2", 0.4, 0.7);
       }
     }
-    // lerp the blades over the first 0.2s of a state change for a mechanical feel
-    const cur =
-      e.state === "out"
-        ? Math.min(1, 0.2 + e.stateT * 4)
-        : Math.max(0.2, 1 - e.stateT * 4);
-    e.group.traverse((o) => {
-      if (o.name === "blade") o.scale.x = cur;
-    });
   }
 
   private projectilePathBlocked(

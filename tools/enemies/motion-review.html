@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Enemy roster · motion review</title>
+  <style>
+    :root{font:14px system-ui,sans-serif;color:#e9eee9;background:#0f1b23;color-scheme:dark;--muted:#a0b2b9;--line:#31434c;--mint:#b3e5be}
+    *{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button,select,input[type=number]{border:1px solid var(--line);border-radius:7px;background:#243640;color:inherit;padding:9px 10px}button{cursor:pointer}button:hover,button[aria-pressed=true]{border-color:var(--mint);color:var(--mint)}button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--mint);outline-offset:3px}a{color:var(--mint)}
+    header{height:83px;padding:18px 25px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);gap:20px}h1{font-size:23px;letter-spacing:-.6px;margin:0 0 5px}header p{margin:0;color:var(--muted);font-size:12px}.eyebrow{font-size:10px;letter-spacing:1.9px;color:var(--mint);text-transform:uppercase;margin-bottom:5px}.status{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:12px}.status strong{color:#e9eee9;font-weight:500}
+    main{display:grid;grid-template-columns:minmax(0,1fr) 325px;min-height:calc(100vh - 83px)}.preview{display:flex;flex-direction:column;min-width:0}.stage{position:relative;min-height:440px;height:calc(100vh - 232px);overflow:hidden}.stage canvas{display:block;width:100%;height:100%}.stage-note{position:absolute;top:17px;left:22px;pointer-events:none;color:var(--muted);font-size:11px;line-height:1.7}.stage-note strong{display:block;color:#e9eee9;font-size:13px;font-weight:500}.loading{position:absolute;bottom:18px;left:22px;max-width:450px;pointer-events:none;font-size:12px;color:#e9bd8e;line-height:1.6}.actor-label{position:absolute;transform:translate(-50%,-100%);font-size:11px;padding:4px 8px;background:#11202bdb;white-space:nowrap}.actor-label[data-status=error]{color:#e9a492;border-color:#805044}.actor-label[data-status=loading]{color:var(--muted)}
+    .transport{padding:16px 22px;background:#172832;border-top:1px solid var(--line)}.transport-top{display:flex;align-items:center;gap:8px}.primary{min-width:86px;background:#b3e5be;color:#132a21;border-color:#b3e5be;font-weight:600}.primary:hover{color:#132a21;background:#c7efcf}.time{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}.scrub{display:flex;align-items:center;gap:10px;margin-top:14px}.scrub input[type=range]{flex:1;min-width:30px;accent-color:var(--mint)}.scrub input[type=number]{width:72px;padding:5px 8px;font-variant-numeric:tabular-nums}.scrub label{color:var(--muted);font-size:12px}.transport small{display:block;color:var(--muted);font-size:11px;margin-top:9px}
+    aside{background:#1b2c36;border-left:1px solid var(--line);padding:22px;display:flex;flex-direction:column;gap:22px}h2{font-size:12px;text-transform:uppercase;letter-spacing:1.4px;margin:0 0 12px;color:#c5d2d6}.control{display:grid;gap:7px;margin-bottom:13px}.control label{font-size:12px;color:var(--muted)}select{width:100%}.views{display:grid;grid-template-columns:1fr 1fr;gap:7px}.check{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;margin-top:12px}.check input{accent-color:var(--mint)}.hint{font-size:12px;line-height:1.65;color:var(--muted);margin:10px 0 0}.legend{display:grid;gap:6px;font-size:11px;color:var(--muted)}.legend span:before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--mint);margin-right:8px}.legend span:last-child:before{background:#efba74}details{margin-top:auto;border-top:1px solid var(--line);padding-top:15px}summary{cursor:pointer;font-size:12px;color:#c5d2d6}pre{margin:12px 0 0;white-space:pre-wrap;overflow-wrap:anywhere;font-size:10px;line-height:1.6;color:var(--muted);max-height:420px;overflow:auto}.roster-status{font-size:11px;width:100%;border-collapse:collapse;margin-top:5px}.roster-status td{padding:6px 0;border-bottom:1px solid #2c3d46}.roster-status td:last-child{text-align:right;color:var(--muted)}
+    @media(max-width:900px){main{grid-template-columns:minmax(0,1fr) 280px}aside{padding:17px}.stage{height:520px}header{padding:16px 20px}.status a{display:none}}@media(max-width:680px){header{height:auto;align-items:flex-start;gap:10px}header p{max-width:230px}.status{flex-direction:column;align-items:flex-end;gap:5px}main{display:block}.stage{height:440px;min-height:350px}aside{border-left:0;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:22px}aside details{grid-column:1/-1;margin:0}.transport{padding:14px 16px}.stage-note{left:16px}.transport-top{gap:5px}.transport-top button{padding:8px}.primary{min-width:65px}.time{font-size:11px}.hint{font-size:11px}}
+    .primary[aria-pressed=true]{color:#132a21}
+    @media(min-width:681px){html,body{height:100%;overflow:hidden}body{height:100vh;height:100dvh;display:flex;flex-direction:column}header{flex:0 0 83px}main{flex:1;min-height:0;overflow:hidden}.preview{min-height:0;overflow:hidden}.stage{flex:1;min-height:0;height:auto}.transport{flex:0 0 auto}aside{min-height:0;overflow:auto;overscroll-behavior:contain}aside>section,aside>details{flex-shrink:0}}
+  </style>
+</head>
+<body>
+  <header>
+    <div><div class="eyebrow">Internal character review</div><h1>Enemy roster</h1><p>Inspect the generated surfaces, rigs and combat animations.</p></div>
+    <div class="status"><strong id="asset-status" role="status">Loading 8 assets…</strong><a href="design-review.html">Design references ↗</a></div>
+  </header>
+  <main>
+    <section class="preview" aria-label="3D enemy preview">
+      <div id="review-stage" class="stage">
+        <div class="stage-note"><strong id="view-title">Full roster</strong><span>Drag to orbit · scroll to zoom · ground grid = 1 metre</span></div>
+        <div id="loading-message" class="loading" role="status">Loading generated enemy models…</div>
+      </div>
+      <div class="transport">
+        <div class="transport-top"><button id="play-pause" class="primary">Pause</button><button id="previous-frame" title="Previous frame" aria-label="Previous frame">−1</button><button id="next-frame" title="Next frame" aria-label="Next frame">+1</button><button id="restart">Restart</button><output id="time-readout" class="time">0.00 / 0.00 s</output></div>
+        <div class="scrub"><input id="timeline" type="range" min="0" max="299" value="0" step="1" aria-label="Animation frame"><label for="frame-input">Frame</label><input id="frame-input" type="number" min="0" max="299" value="0" step="1"></div>
+        <small>60 fps sampling · root travel held in place · hop and hover height preserved</small>
+      </div>
+    </section>
+    <aside aria-label="Review controls">
+      <section>
+        <h2>Character & motion</h2>
+        <div class="control"><label for="enemy-kind">Character</label><select id="enemy-kind"><option value="all">Full roster · 8 enemies</option></select></div>
+        <div class="control"><label for="enemy-state">Animation state</label><select id="enemy-state"></select></div>
+        <div class="control"><label for="playback-speed">Playback speed</label><select id="playback-speed"><option value="0.25">0.25× · quarter speed</option><option value="0.5">0.5× · half speed</option><option value="1" selected>1× · gameplay speed</option><option value="2">2× · double speed</option></select></div>
+        <p id="motion-hint" class="hint">Cycle through each enemy’s authored combat states.</p>
+      </section>
+      <section>
+        <h2>View</h2>
+        <div class="views"><button data-camera="front">Front</button><button data-camera="quarter" aria-pressed="true">Quarter</button><button data-camera="side">Side</button><button data-camera="back">Back</button></div>
+        <label class="check"><input id="show-bounds" type="checkbox">Show gameplay bounds</label>
+        <label class="check"><input id="show-skeleton" type="checkbox">Show skeleton</label>
+        <label class="check"><input id="track-target" type="checkbox" checked>Sentry tracks a target</label>
+        <p class="hint">Select one enemy for a close view. Defeated models stay visible so their final pose can be checked.</p>
+      </section>
+      <section>
+        <h2>Asset readiness</h2>
+        <table class="roster-status" aria-label="Enemy loading status"><tbody id="roster-status"></tbody></table>
+        <button id="reload-assets" style="margin-top:13px;width:100%">Reload assets</button>
+        <p class="hint">Missing files are reported here. No substitute models are rendered.</p>
+      </section>
+      <details open><summary>Live diagnostics</summary><pre id="review-diagnostics" aria-label="Live enemy diagnostics"></pre></details>
+    </aside>
+  </main>
+  <script type="module" src="../../src/enemies/review.ts"></script>
+</body>
+</html>

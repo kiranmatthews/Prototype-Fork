@@ -1,0 +1,135 @@
+{
+  "maxSize": [
+    1.05,
+    1.15,
+    1.05
+  ],
+  "reviewedSource": ".img2threejs/enemies/review/sentry/: front, side, top, quarter and back; source geometry and component boundaries reviewed 2026-09-22",
+  "yawDegrees": 0,
+  "textureSize": 1024,
+  "textureQuality": 90,
+  "defaultPart": "head",
+  "cuts": [
+    {
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "offset": 0.34
+    }
+  ],
+  "parts": [
+    {
+      "name": "base",
+      "position": [
+        -0.04,
+        0.16,
+        -0.025
+      ],
+      "select": [
+        {
+          "islandBounds": {
+            "max": {
+              "y": [
+                -1,
+                0.312
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "barrel",
+      "position": [
+        -0.025,
+        0.512,
+        0.34
+      ],
+      "parent": "head",
+      "select": [
+        {
+          "bounds": {
+            "z": [
+              0.34,
+              2
+            ],
+            "y": [
+              0.35,
+              0.65
+            ]
+          }
+        }
+      ],
+      "seamColor": [
+        0.05,
+        0.043,
+        0.036
+      ]
+    },
+    {
+      "name": "charge",
+      "position": [
+        0.048,
+        0.661,
+        0.153
+      ],
+      "parent": "head",
+      "select": [
+        {
+          "islandBounds": {
+            "min": {
+              "x": [
+                -0.041,
+                -0.037
+              ],
+              "y": [
+                0.573,
+                0.577
+              ]
+            },
+            "max": {
+              "y": [
+                0.744,
+                0.748
+              ]
+            }
+          }
+        }
+      ],
+      "ownMaterial": true
+    },
+    {
+      "name": "torso",
+      "position": [
+        -0.04,
+        0.31,
+        -0.025
+      ]
+    },
+    {
+      "name": "head",
+      "position": [
+        -0.04,
+        0.55,
+        -0.025
+      ],
+      "parent": "torso"
+    }
+  ],
+  "enemyRig": {
+    "mapping": {
+      "base": "base",
+      "barrel": "barrel",
+      "charge": "charge",
+      "torso": "torso",
+      "head": "head"
+    }
+  },
+  "sourceSha256": "9636cdea98dcc6beaedbcc2609bc20a8c777d02e6e92ddbe2d429eee1b955640",
+  "providerTaskId": "01a0c8e2-3fbd-740f-acfc-7aba6165ac6b",
+  "authoringNotes": "Stationary base includes neck bearing. Barrel cut at 0.34m is capped inside the housing. The separate yellow lens has its own material for charging glow.",
+  "outputSha256": "6144057f83442d884c7234b4491145bd702dc8a39a20101ab8369b2c3d9db541",
+  "outputBytes": 576060
+}

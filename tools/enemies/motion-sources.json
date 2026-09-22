@@ -1,0 +1,82 @@
+{
+  "sources": [
+    {
+      "id": "battle-turtle",
+      "provider": "Meshy",
+      "provenance": "Existing user-owned Meshy quadruped export archive",
+      "archiveName": "Meshy_AI_Grinning_Battle_Turtl_quadruped.zip",
+      "archiveSha256": "b7f76de9afafb3ddb0335836d8e96c752958b0db637ea1927872084882f70c1c",
+      "files": [
+        {
+          "name": "Meshy_AI_Grinning_Battle_Turtl_quadruped_Animation_Walking_frame_rate_60.fbx",
+          "bytes": 5632908,
+          "sha256": "f985562d01f603a0a1107526e36bd7a9db84de0fc0bb6a36cf93cd5da4fc7567"
+        },
+        {
+          "name": "Meshy_AI_Grinning_Battle_Turtl_quadruped_Character_output.fbx",
+          "bytes": 5695452,
+          "sha256": "a0556ffa86d3394822216c5b6cb21a511ba143614c4a9c508fd2ddd0e69cce51"
+        },
+        {
+          "name": "Meshy_AI_Grinning_Battle_Turtl_quadruped_texture_0.png",
+          "bytes": 4848014,
+          "sha256": "389ce917553a67ebcf9d01cd2dd8a92339e676480044ef0a6880098440110e39"
+        },
+        {
+          "name": "Meshy_AI_Grinning_Battle_Turtl_quadruped_texture_0_metallic.png",
+          "bytes": 19852,
+          "sha256": "8bedb0d3a67569aa53c252a155944e998a909af0574916bea380035ba46828d8"
+        },
+        {
+          "name": "Meshy_AI_Grinning_Battle_Turtl_quadruped_texture_0_normal.png",
+          "bytes": 3513805,
+          "sha256": "f2ecacd07565c4d510fcea9e4925701a2f865f059983e31a11b8cc5f47f81a83"
+        },
+        {
+          "name": "Meshy_AI_Grinning_Battle_Turtl_quadruped_texture_0_roughness.png",
+          "bytes": 1368997,
+          "sha256": "ed5c710dadd388a09b39a5f406f343ad6c59567fd2926a56926e14cdfb536f9f"
+        }
+      ]
+    },
+    {
+      "id": "snarlug",
+      "provider": "Meshy",
+      "provenance": "Existing user-owned Meshy quadruped export archive",
+      "archiveName": "Meshy_AI_Snarlug_quadruped.zip",
+      "archiveSha256": "dc43ba1bac0da663e59f4fa7801305b9b5c3ea5ef507d86eaca7d6bfcaec67b1",
+      "files": [
+        {
+          "name": "Meshy_AI_Snarlug_quadruped_Animation_Walking_frame_rate_60.fbx",
+          "bytes": 6342796,
+          "sha256": "d53459c5264242248fc8e3ee5dfee009a21d70b3cf62a44b5518d79892b97a9d"
+        },
+        {
+          "name": "Meshy_AI_Snarlug_quadruped_Character_output.fbx",
+          "bytes": 6417468,
+          "sha256": "f5e8b48aa4acd6a4355c3cea453e8c586e0db66f58bde7d344b41a1046102d5c"
+        },
+        {
+          "name": "Meshy_AI_Snarlug_quadruped_texture_0.png",
+          "bytes": 5550304,
+          "sha256": "fdd9008b36fa686b818d611219d2bed25a4a9089d1fe2e2ed1ba4a9ee144cbf0"
+        },
+        {
+          "name": "Meshy_AI_Snarlug_quadruped_texture_0_metallic.png",
+          "bytes": 28998,
+          "sha256": "8741b0006d7c7f64923574dafbfbe1ddc19dda6dd246a367102c299dedb92bcd"
+        },
+        {
+          "name": "Meshy_AI_Snarlug_quadruped_texture_0_normal.png",
+          "bytes": 4090606,
+          "sha256": "98f6b825774a8b135d404bf8334906612562937c50d6dc5f1a1b81c195e38421"
+        },
+        {
+          "name": "Meshy_AI_Snarlug_quadruped_texture_0_roughness.png",
+          "bytes": 1243242,
+          "sha256": "32a7195b111c89eabfca0fe80530eb2f703da355736449431c2147a566b032b6"
+        }
+      ]
+    }
+  ]
+}

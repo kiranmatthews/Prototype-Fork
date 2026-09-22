@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "referenceGenerator": "OpenAI built-in image_gen",
+  "modelGenerationCredits": 120,
+  "runtimeBytes": 5307912,
+  "enemies": [
+    {
+      "kind": "grunt",
+      "name": "Coral Crab",
+      "file": "grunt.glb",
+      "sha256": "ccd19b258119470fcd2f9a113812cecbd8249079fc503e631cc9590652bbf100",
+      "bytes": 799804,
+      "provider": "Meshy",
+      "generationTaskId": "01a0c8e0-08bc-708d-8006-04d3f8af75c8",
+      "generatedSurfaceSha256": "cec014ef5188971d32ec1e94efe847296da342f2852b2db6ab4f2d847f7f53a5",
+      "rig": "Custom model-specific skin",
+      "triangles": 9248,
+      "clips": [
+        "Meshy Quadruped Walk"
+      ],
+      "walk": {
+        "provider": "Meshy",
+        "sourceFbxSha256": "f985562d01f603a0a1107526e36bd7a9db84de0fc0bb6a36cf93cd5da4fc7567",
+        "adaptation": "Model-specific IK retarget of existing user-owned quadruped walk",
+        "sourceFps": 60,
+        "sourceDurationSeconds": 1
+      }
+    },
+    {
+      "kind": "spiker",
+      "name": "Bristleback",
+      "file": "spiker.glb",
+      "sha256": "1db4a9b0b85373f86da6d96b4e5ccaaa59ba9f4a4a27244349978d637cc0538d",
+      "bytes": 707764,
+      "provider": "Meshy",
+      "generationTaskId": "01a0c8e2-7e30-731d-baaa-6dc5e48f3777",
+      "generatedSurfaceSha256": "e2ec9af2550031e4ebe867bf2cb889e1b4a9c8b12c8e548d726ad4151ea3e165",
+      "rig": "Custom model-specific skin",
+      "triangles": 8817,
+      "clips": [
+        "Meshy Quadruped Walk"
+      ],
+      "walk": {
+        "provider": "Meshy",
+        "sourceFbxSha256": "f985562d01f603a0a1107526e36bd7a9db84de0fc0bb6a36cf93cd5da4fc7567",
+        "adaptation": "Model-specific IK retarget of existing user-owned quadruped walk",
+        "sourceFps": 60,
+        "sourceDurationSeconds": 1
+      }
+    },
+    {
+      "kind": "turtle",
+      "name": "Mossback",
+      "file": "turtle.glb",
+      "sha256": "2c691af26d06ad2b6d53b89ef2fc37c06165b439511b3cc66323a277021e5963",
+      "bytes": 695900,
+      "provider": "Meshy",
+      "generationTaskId": "01a0c8e2-8e8e-74bc-8041-39e5d1627696",
+      "generatedSurfaceSha256": "4f9420fe375007d2c6d4d63a52cdb53022ca74bc38886f1a833cb4026808f36d",
+      "rig": "Custom model-specific skin",
+      "triangles": 8241,
+      "clips": [
+        "Meshy Quadruped Walk"
+      ],
+      "walk": {
+        "provider": "Meshy",
+        "sourceFbxSha256": "f985562d01f603a0a1107526e36bd7a9db84de0fc0bb6a36cf93cd5da4fc7567",
+        "adaptation": "Model-specific IK retarget of existing user-owned quadruped walk",
+        "sourceFps": 60,
+        "sourceDurationSeconds": 1
+      }
+    },
+    {
+      "kind": "charger",
+      "name": "Russet Bull",
+      "file": "charger.glb",
+      "sha256": "db3e62a7bbd7a54c3351278dc9a8d3aa41099a28eccfd9a9a023629a1ae22c54",
+      "bytes": 607888,
+      "provider": "Meshy",
+      "generationTaskId": "01a0c8e2-a07a-7567-aa15-d6e5f643a18e",
+      "generatedSurfaceSha256": "163ecd7ae98369d7264bdbcce8cec51a2e974a1cc07b270f63633747abe183b9",
+      "rig": "Custom model-specific skin",
+      "triangles": 7609,
+      "clips": [
+        "Meshy Quadruped Walk"
+      ],
+      "walk": {
+        "provider": "Meshy",
+        "sourceFbxSha256": "f985562d01f603a0a1107526e36bd7a9db84de0fc0bb6a36cf93cd5da4fc7567",
+        "adaptation": "Model-specific IK retarget of existing user-owned quadruped walk",
+        "sourceFps": 60,
+        "sourceDurationSeconds": 1
+      }
+    },
+    {
+      "kind": "hopper",
+      "name": "Spring Frog",
+      "file": "hopper.glb",
+      "sha256": "4db06975d5ad7268a7bcae3a248a7b2347962f689056c734009b94d05f08440d",
+      "bytes": 708892,
+      "provider": "Meshy",
+      "generationTaskId": "01a0c8e2-6af5-70f8-88d6-ff1161d26d05",
+      "generatedSurfaceSha256": "8572bb26cd5985a7da7ba1e9c7a9e3684e6bb90236e48f64a5dfbe69ca450222",
+      "rig": "Custom model-specific skin",
+      "triangles": 9324,
+      "clips": []
+    },
+    {
+      "kind": "floater",
+      "name": "Violet Watcher",
+      "file": "floater.glb",
+      "sha256": "5d43d84c6caccb13b7d1af89b2fbcfacbba40425af470c184cb632708535757f",
+      "bytes": 606532,
+      "provider": "Meshy",
+      "generationTaskId": "01a0c8e2-5bb0-7737-b3e9-4457489a1c9f",
+      "generatedSurfaceSha256": "adce98fa3db7328bab757ac24f7cf190591685fd717474037c9a7f9d98fc5e75",
+      "rig": "Articulated rigid parts",
+      "triangles": 7077,
+      "clips": []
+    },
+    {
+      "kind": "sentry",
+      "name": "Ember Sentry",
+      "file": "sentry.glb",
+      "sha256": "6144057f83442d884c7234b4491145bd702dc8a39a20101ab8369b2c3d9db541",
+      "bytes": 576060,
+      "provider": "Meshy",
+      "generationTaskId": "01a0c8e2-3fbd-740f-acfc-7aba6165ac6b",
+      "generatedSurfaceSha256": "9636cdea98dcc6beaedbcc2609bc20a8c777d02e6e92ddbe2d429eee1b955640",
+      "rig": "Articulated rigid parts",
+      "triangles": 8671,
+      "clips": []
+    },
+    {
+      "kind": "spinner",
+      "name": "Brass Whirler",
+      "file": "spinner.glb",
+      "sha256": "8cbb5cfb22efd4cecd3f1d595322e5ea4f66dc79693cbd5dd478ecfc961afcb3",
+      "bytes": 605072,
+      "provider": "Meshy",
+      "generationTaskId": "01a0c8e2-4d44-7275-b80a-0b8ef9939684",
+      "generatedSurfaceSha256": "c98c2bc3e6ee970148f1b535846bfbbf8cb8c686803c9cde8d46e0f58f6a8b7e",
+      "rig": "Articulated rigid parts",
+      "triangles": 8154,
+      "clips": []
+    }
+  ]
+}

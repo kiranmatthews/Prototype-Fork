@@ -1,0 +1,480 @@
+{
+  "maxSize": [
+    1.3,
+    1.1,
+    1.3
+  ],
+  "reviewedSource": ".img2threejs/enemies/review/hopper/: front, side, top, quarter and back; source geometry and component boundaries reviewed 2026-09-22",
+  "yawDegrees": 0,
+  "textureSize": 1024,
+  "textureQuality": 90,
+  "joints": [
+    {
+      "name": "torso",
+      "position": [
+        0,
+        0.42,
+        -0.18
+      ],
+      "fields": [
+        {
+          "radius": 10,
+          "islands": [
+            0
+          ],
+          "windows": {
+            "y": [
+              -2,
+              0.82,
+              0.18
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "head",
+      "position": [
+        0,
+        0.73,
+        0.16
+      ],
+      "parent": "torso",
+      "fields": [
+        {
+          "radius": 10,
+          "islands": [
+            0
+          ],
+          "windows": {
+            "y": [
+              0.64,
+              2,
+              0.18
+            ]
+          }
+        },
+        {
+          "radius": 10,
+          "islands": [
+            7,
+            8,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "name": "frontUpperLeft",
+      "parent": "torso",
+      "position": [
+        0.27,
+        0.58,
+        0.075
+      ],
+      "fields": [
+        {
+          "start": [
+            0.27,
+            0.58,
+            0.075
+          ],
+          "end": [
+            0.29,
+            0.27,
+            0.22
+          ],
+          "radius": 0.14,
+          "islands": [
+            2
+          ],
+          "windows": {
+            "y": [
+              0.18,
+              2,
+              0.1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "frontLowerLeft",
+      "parent": "frontUpperLeft",
+      "position": [
+        0.29,
+        0.27,
+        0.22
+      ],
+      "fields": [
+        {
+          "start": [
+            0.29,
+            0.27,
+            0.22
+          ],
+          "end": [
+            0.27,
+            0.045,
+            0.46
+          ],
+          "radius": 0.13,
+          "islands": [
+            2
+          ],
+          "windows": {
+            "y": [
+              0.035,
+              0.38,
+              0.1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "frontFootLeft",
+      "parent": "frontLowerLeft",
+      "position": [
+        0.27,
+        0.045,
+        0.46
+      ],
+      "fields": [
+        {
+          "start": [
+            0.27,
+            0.045,
+            0.46
+          ],
+          "end": [
+            0.27,
+            0.025,
+            0.56
+          ],
+          "radius": 0.19,
+          "islands": [
+            2
+          ],
+          "windows": {
+            "y": [
+              -1,
+              0.135,
+              0.08
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "hindUpperLeft",
+      "parent": "torso",
+      "position": [
+        0.27,
+        0.34,
+        -0.31
+      ],
+      "fields": [
+        {
+          "start": [
+            0.27,
+            0.34,
+            -0.31
+          ],
+          "end": [
+            0.5,
+            0.4,
+            0.0
+          ],
+          "radius": 10,
+          "islands": [
+            3
+          ],
+          "windows": {
+            "y": [
+              0.12,
+              2,
+              0.18
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "hindLowerLeft",
+      "parent": "hindUpperLeft",
+      "position": [
+        0.5,
+        0.4,
+        0.0
+      ],
+      "fields": [
+        {
+          "start": [
+            0.5,
+            0.4,
+            0.0
+          ],
+          "end": [
+            0.44,
+            0.065,
+            -0.28
+          ],
+          "radius": 10,
+          "strength": 1,
+          "islands": [
+            3
+          ],
+          "windows": {
+            "y": [
+              -1,
+              0.3,
+              0.18
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "hindFootLeft",
+      "parent": "hindLowerLeft",
+      "position": [
+        0.44,
+        0.065,
+        -0.28
+      ],
+      "fields": [
+        {
+          "radius": 10,
+          "islands": [
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "name": "frontUpperRight",
+      "parent": "torso",
+      "position": [
+        -0.27,
+        0.58,
+        0.075
+      ],
+      "fields": [
+        {
+          "start": [
+            -0.27,
+            0.58,
+            0.075
+          ],
+          "end": [
+            -0.29,
+            0.27,
+            0.22
+          ],
+          "radius": 0.14,
+          "islands": [
+            1
+          ],
+          "windows": {
+            "y": [
+              0.18,
+              2,
+              0.1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "frontLowerRight",
+      "parent": "frontUpperRight",
+      "position": [
+        -0.29,
+        0.27,
+        0.22
+      ],
+      "fields": [
+        {
+          "start": [
+            -0.29,
+            0.27,
+            0.22
+          ],
+          "end": [
+            -0.27,
+            0.045,
+            0.46
+          ],
+          "radius": 0.13,
+          "islands": [
+            1
+          ],
+          "windows": {
+            "y": [
+              0.035,
+              0.38,
+              0.1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "frontFootRight",
+      "parent": "frontLowerRight",
+      "position": [
+        -0.27,
+        0.045,
+        0.46
+      ],
+      "fields": [
+        {
+          "start": [
+            -0.27,
+            0.045,
+            0.46
+          ],
+          "end": [
+            -0.27,
+            0.025,
+            0.56
+          ],
+          "radius": 0.19,
+          "islands": [
+            1
+          ],
+          "windows": {
+            "y": [
+              -1,
+              0.135,
+              0.08
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "hindUpperRight",
+      "parent": "torso",
+      "position": [
+        -0.27,
+        0.34,
+        -0.31
+      ],
+      "fields": [
+        {
+          "start": [
+            -0.27,
+            0.34,
+            -0.31
+          ],
+          "end": [
+            -0.5,
+            0.4,
+            0.0
+          ],
+          "radius": 10,
+          "islands": [
+            4
+          ],
+          "windows": {
+            "y": [
+              0.12,
+              2,
+              0.18
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "hindLowerRight",
+      "parent": "hindUpperRight",
+      "position": [
+        -0.5,
+        0.4,
+        0.0
+      ],
+      "fields": [
+        {
+          "start": [
+            -0.5,
+            0.4,
+            0.0
+          ],
+          "end": [
+            -0.44,
+            0.065,
+            -0.28
+          ],
+          "radius": 10,
+          "strength": 1,
+          "islands": [
+            4
+          ],
+          "windows": {
+            "y": [
+              -1,
+              0.3,
+              0.18
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "hindFootRight",
+      "parent": "hindLowerRight",
+      "position": [
+        -0.44,
+        0.065,
+        -0.28
+      ],
+      "fields": [
+        {
+          "radius": 10,
+          "islands": [
+            6
+          ]
+        }
+      ]
+    }
+  ],
+  "enemyRig": {
+    "mapping": {
+      "torso": "torso",
+      "head": "head",
+      "frontUpperLeft": "frontUpperLeft",
+      "frontLowerLeft": "frontLowerLeft",
+      "frontFootLeft": "frontFootLeft",
+      "hindUpperLeft": {
+        "name": "hindUpperLeft",
+        "rotationSign": 0.55
+      },
+      "hindLowerLeft": {
+        "name": "hindLowerLeft",
+        "rotationSign": 0.35
+      },
+      "hindFootLeft": "hindFootLeft",
+      "frontUpperRight": "frontUpperRight",
+      "frontLowerRight": "frontLowerRight",
+      "frontFootRight": "frontFootRight",
+      "hindUpperRight": {
+        "name": "hindUpperRight",
+        "rotationSign": 0.55
+      },
+      "hindLowerRight": {
+        "name": "hindLowerRight",
+        "rotationSign": 0.35
+      },
+      "hindFootRight": "hindFootRight"
+    },
+    "walkSpeed": 2.4
+  },
+  "sourceSha256": "8572bb26cd5985a7da7ba1e9c7a9e3684e6bb90236e48f64a5dfbe69ca450222",
+  "providerTaskId": "01a0c8e2-6af5-70f8-88d6-ff1161d26d05",
+  "authoringNotes": "Four separate limb surfaces, hind feet, eyes and mouth retain source geometry. Calf tips and hind feet share lower-joint motion. Model-specific hind hinge gains prevent overfolding this naturally crouched source.",
+  "outputSha256": "4db06975d5ad7268a7bcae3a248a7b2347962f689056c734009b94d05f08440d",
+  "outputBytes": 708892
+}

@@ -1,0 +1,852 @@
+{
+  "reviewedSource": ".img2threejs/enemies/review/charger/: actual front,quarter,side,back,top source views reviewed 2026-09-23",
+  "maxSize": [
+    1.45,
+    1.1,
+    1.45
+  ],
+  "yawDegrees": 0,
+  "textureSize": 1024,
+  "textureQuality": 90,
+  "sourceSha256": "163ecd7ae98369d7264bdbcce8cec51a2e974a1cc07b270f63633747abe183b9",
+  "generatedSourceSha256": "163ecd7ae98369d7264bdbcce8cec51a2e974a1cc07b270f63633747abe183b9",
+  "providerTaskId": "01a0c8e2-a07a-7567-aa15-d6e5f643a18e",
+  "sourceAdjustments": [
+    {
+      "type": "compressBeyondPlane",
+      "axis": "z",
+      "pivot": -0.27,
+      "side": -1,
+      "scale": 0.35
+    }
+  ],
+  "fitExclude": [
+    {
+      "bounds": {
+        "z": [
+          -2,
+          -0.270001
+        ]
+      }
+    }
+  ],
+  "boundsExceptions": [
+    {
+      "role": "tail",
+      "axis": "z",
+      "negative": 0.25,
+      "positive": 0,
+      "reason": "Soft tail tip overhang; solid body, hooves, horns and face remain inside the combat envelope."
+    }
+  ],
+  "authoringNotes": "Reviewed tail shortened beyond source Z=-0.27 to35% of its generated length; body fitting excludes only that soft tail so bull retains bulk. Tail may overhang combat depth by at most0.25m. Removed source geometricislands1and3: redundant floating muscle/fur wraps produced black triangular cuts; complete underlyingbody preservesoriginalshape. Confirmedquarter/back/top repair renders.",
+  "removeSourceIslands": [
+    1,
+    3
+  ],
+  "joints": [
+    {
+      "name": "torso",
+      "position": [
+        0,
+        0.59,
+        -0.2
+      ],
+      "fields": [
+        {
+          "radius": 10,
+          "islands": [
+            0
+          ],
+          "windows": {
+            "y": [
+              0.32,
+              2,
+              0.18
+            ]
+          },
+          "planes": [
+            {
+              "normal": [
+                0,
+                0.7,
+                1
+              ],
+              "range": [
+                -3,
+                0.9
+              ],
+              "fade": 0.28
+            }
+          ]
+        },
+        {
+          "radius": 10,
+          "islands": [
+            0
+          ],
+          "windows": {
+            "x": [
+              -0.15,
+              0.15,
+              0.05
+            ],
+            "y": [
+              0.18,
+              0.52,
+              0.08
+            ]
+          }
+        },
+        {
+          "radius": 10,
+          "islands": [
+            1
+          ],
+          "planes": [
+            {
+              "normal": [
+                0,
+                0.7,
+                1
+              ],
+              "range": [
+                -3,
+                0.9
+              ],
+              "fade": 0.28
+            }
+          ]
+        },
+        {
+          "radius": 10,
+          "islands": [
+            8
+          ]
+        }
+      ]
+    },
+    {
+      "name": "head",
+      "parent": "torso",
+      "position": [
+        0,
+        0.75,
+        0.36
+      ],
+      "fields": [
+        {
+          "radius": 10,
+          "islands": [
+            0,
+            1
+          ],
+          "planes": [
+            {
+              "normal": [
+                0,
+                0.7,
+                1
+              ],
+              "range": [
+                0.62,
+                3
+              ],
+              "fade": 0.28
+            }
+          ]
+        },
+        {
+          "radius": 10,
+          "islands": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "name": "jaw",
+      "parent": "head",
+      "position": [
+        0,
+        0.65,
+        0.57
+      ],
+      "fields": [
+        {
+          "radius": 10,
+          "islands": [
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "name": "tail",
+      "parent": "torso",
+      "position": [
+        0,
+        0.69,
+        -0.57
+      ],
+      "fields": [
+        {
+          "radius": 10,
+          "strength": 100,
+          "islands": [
+            0
+          ],
+          "windows": {
+            "x": [
+              -0.1,
+              0.1,
+              0.025
+            ],
+            "y": [
+              0.38,
+              2,
+              0.08
+            ],
+            "z": [
+              -2,
+              -0.51,
+              0.1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "frontUpperLeft",
+      "parent": "torso",
+      "position": [
+        0.23,
+        0.57,
+        0.18
+      ],
+      "fields": [
+        {
+          "start": [
+            0.23,
+            0.57,
+            0.18
+          ],
+          "end": [
+            0.235,
+            0.3,
+            0.22
+          ],
+          "radius": 0.22,
+          "strength": 10,
+          "islands": [
+            0
+          ],
+          "windows": {
+            "x": [
+              0.085,
+              0.5,
+              0.065
+            ],
+            "z": [
+              -0.1,
+              0.42,
+              0.08
+            ],
+            "y": [
+              0.25,
+              0.66,
+              0.14
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "frontLowerLeft",
+      "parent": "frontUpperLeft",
+      "position": [
+        0.235,
+        0.3,
+        0.22
+      ],
+      "fields": [
+        {
+          "start": [
+            0.235,
+            0.3,
+            0.22
+          ],
+          "end": [
+            0.22,
+            0.065,
+            0.275
+          ],
+          "radius": 0.17,
+          "strength": 10,
+          "islands": [
+            0
+          ],
+          "windows": {
+            "x": [
+              0.085,
+              0.5,
+              0.065
+            ],
+            "z": [
+              -0.1,
+              0.42,
+              0.08
+            ],
+            "y": [
+              0.055,
+              0.44,
+              0.13
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "frontFootLeft",
+      "parent": "frontLowerLeft",
+      "position": [
+        0.22,
+        0.065,
+        0.275
+      ],
+      "fields": [
+        {
+          "start": [
+            0.22,
+            0.065,
+            0.275
+          ],
+          "end": [
+            0.22,
+            0.065,
+            0.275
+          ],
+          "radius": 10,
+          "strength": 10,
+          "islands": [
+            0
+          ],
+          "windows": {
+            "x": [
+              0.085,
+              0.5,
+              0.065
+            ],
+            "z": [
+              -0.1,
+              0.42,
+              0.08
+            ],
+            "y": [
+              -1,
+              0.145,
+              0.085
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "hindUpperLeft",
+      "parent": "torso",
+      "position": [
+        0.205,
+        0.63,
+        -0.47
+      ],
+      "fields": [
+        {
+          "start": [
+            0.205,
+            0.63,
+            -0.47
+          ],
+          "end": [
+            0.225,
+            0.31,
+            -0.61
+          ],
+          "radius": 0.22,
+          "strength": 10,
+          "islands": [
+            0
+          ],
+          "windows": {
+            "x": [
+              0.085,
+              0.5,
+              0.065
+            ],
+            "z": [
+              -0.8,
+              -0.3,
+              0.1
+            ],
+            "y": [
+              0.25,
+              0.72,
+              0.14
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "hindLowerLeft",
+      "parent": "hindUpperLeft",
+      "position": [
+        0.225,
+        0.31,
+        -0.61
+      ],
+      "fields": [
+        {
+          "start": [
+            0.225,
+            0.31,
+            -0.61
+          ],
+          "end": [
+            0.22,
+            0.065,
+            -0.645
+          ],
+          "radius": 0.17,
+          "strength": 10,
+          "islands": [
+            0
+          ],
+          "windows": {
+            "x": [
+              0.085,
+              0.5,
+              0.065
+            ],
+            "z": [
+              -0.8,
+              -0.3,
+              0.1
+            ],
+            "y": [
+              0.055,
+              0.44,
+              0.13
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "hindFootLeft",
+      "parent": "hindLowerLeft",
+      "position": [
+        0.22,
+        0.065,
+        -0.645
+      ],
+      "fields": [
+        {
+          "start": [
+            0.22,
+            0.065,
+            -0.645
+          ],
+          "end": [
+            0.22,
+            0.065,
+            -0.645
+          ],
+          "radius": 10,
+          "strength": 10,
+          "islands": [
+            0
+          ],
+          "windows": {
+            "x": [
+              0.085,
+              0.5,
+              0.065
+            ],
+            "z": [
+              -0.8,
+              -0.3,
+              0.1
+            ],
+            "y": [
+              -1,
+              0.145,
+              0.085
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "frontUpperRight",
+      "parent": "torso",
+      "position": [
+        -0.23,
+        0.57,
+        0.18
+      ],
+      "fields": [
+        {
+          "start": [
+            -0.23,
+            0.57,
+            0.18
+          ],
+          "end": [
+            -0.235,
+            0.3,
+            0.22
+          ],
+          "radius": 0.22,
+          "strength": 10,
+          "islands": [
+            0
+          ],
+          "windows": {
+            "x": [
+              -0.5,
+              -0.085,
+              0.065
+            ],
+            "z": [
+              -0.1,
+              0.42,
+              0.08
+            ],
+            "y": [
+              0.25,
+              0.66,
+              0.14
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "frontLowerRight",
+      "parent": "frontUpperRight",
+      "position": [
+        -0.235,
+        0.3,
+        0.22
+      ],
+      "fields": [
+        {
+          "start": [
+            -0.235,
+            0.3,
+            0.22
+          ],
+          "end": [
+            -0.22,
+            0.065,
+            0.275
+          ],
+          "radius": 0.17,
+          "strength": 10,
+          "islands": [
+            0
+          ],
+          "windows": {
+            "x": [
+              -0.5,
+              -0.085,
+              0.065
+            ],
+            "z": [
+              -0.1,
+              0.42,
+              0.08
+            ],
+            "y": [
+              0.055,
+              0.44,
+              0.13
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "frontFootRight",
+      "parent": "frontLowerRight",
+      "position": [
+        -0.22,
+        0.065,
+        0.275
+      ],
+      "fields": [
+        {
+          "start": [
+            -0.22,
+            0.065,
+            0.275
+          ],
+          "end": [
+            -0.22,
+            0.065,
+            0.275
+          ],
+          "radius": 10,
+          "strength": 10,
+          "islands": [
+            0
+          ],
+          "windows": {
+            "x": [
+              -0.5,
+              -0.085,
+              0.065
+            ],
+            "z": [
+              -0.1,
+              0.42,
+              0.08
+            ],
+            "y": [
+              -1,
+              0.145,
+              0.085
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "hindUpperRight",
+      "parent": "torso",
+      "position": [
+        -0.205,
+        0.63,
+        -0.47
+      ],
+      "fields": [
+        {
+          "start": [
+            -0.205,
+            0.63,
+            -0.47
+          ],
+          "end": [
+            -0.225,
+            0.31,
+            -0.61
+          ],
+          "radius": 0.22,
+          "strength": 10,
+          "islands": [
+            0
+          ],
+          "windows": {
+            "x": [
+              -0.5,
+              -0.085,
+              0.065
+            ],
+            "z": [
+              -0.8,
+              -0.3,
+              0.1
+            ],
+            "y": [
+              0.25,
+              0.72,
+              0.14
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "hindLowerRight",
+      "parent": "hindUpperRight",
+      "position": [
+        -0.225,
+        0.31,
+        -0.61
+      ],
+      "fields": [
+        {
+          "start": [
+            -0.225,
+            0.31,
+            -0.61
+          ],
+          "end": [
+            -0.22,
+            0.065,
+            -0.645
+          ],
+          "radius": 0.17,
+          "strength": 10,
+          "islands": [
+            0
+          ],
+          "windows": {
+            "x": [
+              -0.5,
+              -0.085,
+              0.065
+            ],
+            "z": [
+              -0.8,
+              -0.3,
+              0.1
+            ],
+            "y": [
+              0.055,
+              0.44,
+              0.13
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "hindFootRight",
+      "parent": "hindLowerRight",
+      "position": [
+        -0.22,
+        0.065,
+        -0.645
+      ],
+      "fields": [
+        {
+          "start": [
+            -0.22,
+            0.065,
+            -0.645
+          ],
+          "end": [
+            -0.22,
+            0.065,
+            -0.645
+          ],
+          "radius": 10,
+          "strength": 10,
+          "islands": [
+            0
+          ],
+          "windows": {
+            "x": [
+              -0.5,
+              -0.085,
+              0.065
+            ],
+            "z": [
+              -0.8,
+              -0.3,
+              0.1
+            ],
+            "y": [
+              -1,
+              0.145,
+              0.085
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "enemyRig": {
+    "mapping": {
+      "torso": "torso",
+      "head": "head",
+      "jaw": "jaw",
+      "tail": "tail",
+      "frontUpperLeft": "frontUpperLeft",
+      "frontLowerLeft": "frontLowerLeft",
+      "frontFootLeft": "frontFootLeft",
+      "hindUpperLeft": "hindUpperLeft",
+      "hindLowerLeft": "hindLowerLeft",
+      "hindFootLeft": "hindFootLeft",
+      "frontUpperRight": "frontUpperRight",
+      "frontLowerRight": "frontLowerRight",
+      "frontFootRight": "frontFootRight",
+      "hindUpperRight": "hindUpperRight",
+      "hindLowerRight": "hindLowerRight",
+      "hindFootRight": "hindFootRight"
+    },
+    "walkSpeed": 0.5972144659045765,
+    "walkClip": "Meshy Quadruped Walk",
+    "walkContacts": {
+      "frontLeft": [
+        [
+          0.0,
+          0.016666666666666666
+        ],
+        [
+          0.38333333333333336,
+          1.0
+        ]
+      ],
+      "frontRight": [
+        [
+          0.0,
+          0.5
+        ],
+        [
+          0.85,
+          1.0
+        ]
+      ],
+      "hindLeft": [
+        [
+          0.23333333333333334,
+          0.8166666666666667
+        ]
+      ],
+      "hindRight": [
+        [
+          0.0,
+          0.3
+        ],
+        [
+          0.7333333333333333,
+          1.0
+        ]
+      ]
+    },
+    "sourceSha256": "163ecd7ae98369d7264bdbcce8cec51a2e974a1cc07b270f63633747abe183b9",
+    "generatedSourceSha256": "163ecd7ae98369d7264bdbcce8cec51a2e974a1cc07b270f63633747abe183b9",
+    "motionProvenance": {
+      "provider": "Meshy",
+      "sourceFbxSha256": "f985562d01f603a0a1107526e36bd7a9db84de0fc0bb6a36cf93cd5da4fc7567",
+      "sourceArchiveSha256": "b7f76de9afafb3ddb0335836d8e96c752958b0db637ea1927872084882f70c1c",
+      "sourceId": "battle-turtle",
+      "sourceAction": "Armature|Armature|Armature|Armature|Armature|Unreal Take|baselayer",
+      "sourceFps": 60.0,
+      "sourceDuration": 1.0,
+      "adaptation": "Sampled foot trajectories with model-specific two-bone IK and ground-contact correction"
+    }
+  },
+  "outputSha256": "db3e62a7bbd7a54c3351278dc9a8d3aa41099a28eccfd9a9a023629a1ae22c54",
+  "outputBytes": 607888,
+  "walkSourceSha256": "f985562d01f603a0a1107526e36bd7a9db84de0fc0bb6a36cf93cd5da4fc7567",
+  "animationSource": "Existing user-owned Meshy quadruped FBX walk, retargeted with model-specific IK",
+  "walkRetarget": {
+    "sourceMotionJsonSha256": "120b17f11ace232b908f66fb3be3c9d215f1afb2453f87e0196a7dbc6b0d1c28",
+    "duration": 1.0,
+    "fps": 60.0,
+    "frames": 61,
+    "maxAnalyticIkError": 2.9634845277824204e-16,
+    "walkSpeed": 0.5972144659045765,
+    "stanceCenter": 0.5,
+    "sharedStanceSpeed": 0.5972144659045765,
+    "adaptation": "Halfway hip-centered walking stance; original bind anchors unchanged; source contact timing/vertical curves retained; equalized stance travel speed; per-paw sole clearance limits swing pitch."
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "maxSize": [
+    2.1,
+    1.1,
+    2.1
+  ],
+  "maxRadiusXZ": 1.05,
+  "reviewedSource": ".img2threejs/enemies/review/spinner/: front, side, top, quarter and back; source geometry and component boundaries reviewed 2026-09-22",
+  "yawDegrees": 0,
+  "textureSize": 1024,
+  "textureQuality": 90,
+  "defaultPart": "rotor",
+  "parts": [
+    {
+      "name": "base",
+      "position": [
+        0,
+        0.1,
+        0
+      ],
+      "select": [
+        {
+          "islandBounds": {
+            "max": {
+              "y": [
+                -1,
+                0.225
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "blade0",
+      "position": [
+        0,
+        0.465,
+        0
+      ],
+      "yaw": 0.7853981633974483,
+      "parent": "rotor",
+      "select": [
+        {
+          "islandRadiusXZ": [
+            0.4,
+            3
+          ],
+          "angleXZ": [
+            0,
+            90
+          ]
+        }
+      ]
+    },
+    {
+      "name": "blade1",
+      "position": [
+        0,
+        0.465,
+        0
+      ],
+      "yaw": 2.356194490192345,
+      "parent": "rotor",
+      "select": [
+        {
+          "islandRadiusXZ": [
+            0.4,
+            3
+          ],
+          "angleXZ": [
+            90,
+            180
+          ]
+        }
+      ]
+    },
+    {
+      "name": "blade2",
+      "position": [
+        0,
+        0.465,
+        0
+      ],
+      "yaw": 3.9269908169872414,
+      "parent": "rotor",
+      "select": [
+        {
+          "islandRadiusXZ": [
+            0.4,
+            3
+          ],
+          "angleXZ": [
+            180,
+            270
+          ]
+        }
+      ]
+    },
+    {
+      "name": "blade3",
+      "position": [
+        0,
+        0.465,
+        0
+      ],
+      "yaw": 5.497787143782138,
+      "parent": "rotor",
+      "select": [
+        {
+          "islandRadiusXZ": [
+            0.4,
+            3
+          ],
+          "angleXZ": [
+            270,
+            360
+          ]
+        }
+      ]
+    },
+    {
+      "name": "torso",
+      "position": [
+        0,
+        0.2,
+        0
+      ]
+    },
+    {
+      "name": "rotor",
+      "position": [
+        0,
+        0.46,
+        0
+      ],
+      "parent": "torso"
+    }
+  ],
+  "enemyRig": {
+    "mapping": {
+      "torso": "torso",
+      "rotor": "rotor",
+      "base": "base",
+      "blade0": "blade0",
+      "blade1": "blade1",
+      "blade2": "blade2",
+      "blade3": "blade3"
+    }
+  },
+  "sourceSha256": "c98c2bc3e6ee970148f1b535846bfbbf8cb8c686803c9cde8d46e0f58f6a8b7e",
+  "providerTaskId": "01a0c8e2-4d44-7275-b80a-0b8ef9939684",
+  "authoringNotes": "Four closed radial arm assemblies pivot at the centre and retract along local X. Runtime articulation must also contract local Z from 1 to 0.35 to hide crescent tips within the hub. Full-extension radius is 1.05m.",
+  "outputSha256": "8cbb5cfb22efd4cecd3f1d595322e5ea4f66dc79693cbd5dd478ecfc961afcb3",
+  "outputBytes": 605072
+}

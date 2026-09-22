@@ -1,0 +1,65 @@
+{
+  "maxSize": [
+    1.3,
+    1.1,
+    1.3
+  ],
+  "maxRadiusXZ": 0.65,
+  "centerY": 0.11,
+  "reviewedSource": ".img2threejs/enemies/review/floater/: front, side, top, quarter and back; source geometry and component boundaries reviewed 2026-09-22",
+  "yawDegrees": 0,
+  "textureSize": 1024,
+  "textureQuality": 90,
+  "defaultPart": "head",
+  "parts": [
+    {
+      "name": "rotor",
+      "position": [
+        -0.035,
+        -0.1,
+        -0.036
+      ],
+      "select": [
+        {
+          "islandBounds": {
+            "max": {
+              "y": [
+                -1.94,
+                -0.010000000000000009
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "torso",
+      "position": [
+        -0.034,
+        -0.07,
+        -0.043
+      ]
+    },
+    {
+      "name": "head",
+      "position": [
+        -0.034,
+        0.189,
+        -0.043
+      ],
+      "parent": "torso"
+    }
+  ],
+  "enemyRig": {
+    "mapping": {
+      "torso": "torso",
+      "head": "head",
+      "rotor": "rotor"
+    }
+  },
+  "sourceSha256": "adce98fa3db7328bab757ac24f7cf190591685fd717474037c9a7f9d98fc5e75",
+  "providerTaskId": "01a0c8e2-5bb0-7737-b3e9-4457489a1c9f",
+  "authoringNotes": "The complete lower ring, spokes, vanes and spindle rotate on their measured centre. A separate torso suspension moves the rigid spherical head. Presentation centre raised to Y=0.11 so the gameplay swoop root at Y=0.35 clears supported ground.",
+  "outputSha256": "5d43d84c6caccb13b7d1af89b2fbcfacbba40425af470c184cb632708535757f",
+  "outputBytes": 606532
+}

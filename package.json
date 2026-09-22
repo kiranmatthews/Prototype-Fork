@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "check:enemies": "node tools/test-enemy-assets.mjs && node tools/test-enemy-runtime.mjs --assets && node tools/test-enemy-gameplay.mjs --assets",
     "check:offline": "node tools/test-offline.mjs",
     "check:audio": "node tools/test-audio-loops.mjs",
     "check:levels": "node tools/validate-levels.mjs && node tools/test-tropical-plants.mjs && node tools/test-jungle-assets.mjs && node tools/test-jungle-enclosure.mjs && node tools/test-map-landscape-assets.mjs && node tools/test-map-clay-geometry.mjs",

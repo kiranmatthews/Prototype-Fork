@@ -1,0 +1,606 @@
+{
+  "reviewedSource": ".img2threejs/enemies/review/turtle/: actual front,quarter,side,back,top source views reviewed 2026-09-23",
+  "maxSize": [
+    1.3,
+    0.87,
+    1.3
+  ],
+  "yawDegrees": 0,
+  "textureSize": 1024,
+  "textureQuality": 90,
+  "sourceSha256": "4f9420fe375007d2c6d4d63a52cdb53022ca74bc38886f1a833cb4026808f36d",
+  "generatedSourceSha256": "4f9420fe375007d2c6d4d63a52cdb53022ca74bc38886f1a833cb4026808f36d",
+  "providerTaskId": "01a0c8e2-8e8e-74bc-8041-39e5d1627696",
+  "joints": [
+    {
+      "name": "torso",
+      "position": [
+        0,
+        0.32,
+        -0.06
+      ],
+      "fields": [
+        {
+          "radius": 10,
+          "islands": [
+            0,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            1000
+          ]
+        }
+      ],
+      "complementOf": [
+        "head"
+      ]
+    },
+    {
+      "name": "head",
+      "position": [
+        0,
+        0.34,
+        0.38
+      ],
+      "parent": "torso",
+      "fields": [
+        {
+          "radius": 10,
+          "islands": [
+            0,
+            1000
+          ],
+          "windows": {
+            "x": [
+              -0.24,
+              0.24,
+              0.025
+            ],
+            "z": [
+              0.34,
+              2,
+              0.045
+            ],
+            "y": [
+              0.19,
+              0.6,
+              0.035
+            ]
+          }
+        },
+        {
+          "radius": 10,
+          "islands": [
+            0,
+            1000
+          ],
+          "windows": {
+            "x": [
+              -0.205,
+              0.205,
+              0.025
+            ],
+            "z": [
+              0.2,
+              0.47,
+              0.04
+            ],
+            "y": [
+              0.15,
+              0.375,
+              0.025
+            ]
+          }
+        },
+        {
+          "radius": 10,
+          "islands": [
+            6,
+            7
+          ]
+        }
+      ],
+      "combineFields": "max"
+    },
+    {
+      "name": "tail",
+      "position": [
+        0,
+        0.22,
+        -0.37
+      ],
+      "parent": "torso",
+      "fields": [
+        {
+          "radius": 10,
+          "islands": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "name": "frontUpperLeft",
+      "parent": "torso",
+      "position": [
+        0.24,
+        0.28,
+        0.17
+      ],
+      "fields": [
+        {
+          "start": [
+            0.24,
+            0.28,
+            0.17
+          ],
+          "end": [
+            0.29,
+            0.15,
+            0.235
+          ],
+          "radius": 0.18,
+          "islands": [
+            4
+          ],
+          "windows": {
+            "y": [
+              0.15,
+              2,
+              0.1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "frontLowerLeft",
+      "parent": "frontUpperLeft",
+      "position": [
+        0.29,
+        0.15,
+        0.235
+      ],
+      "fields": [
+        {
+          "start": [
+            0.29,
+            0.15,
+            0.235
+          ],
+          "end": [
+            0.31,
+            0.035,
+            0.3
+          ],
+          "radius": 0.18,
+          "islands": [
+            4
+          ],
+          "windows": {
+            "y": [
+              0.035,
+              0.26,
+              0.1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "frontFootLeft",
+      "parent": "frontLowerLeft",
+      "position": [
+        0.31,
+        0.035,
+        0.3
+      ],
+      "fields": [
+        {
+          "radius": 10,
+          "islands": [
+            4
+          ],
+          "windows": {
+            "y": [
+              -1,
+              0.135,
+              0.08
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "hindUpperLeft",
+      "parent": "torso",
+      "position": [
+        0.24,
+        0.28,
+        -0.245
+      ],
+      "fields": [
+        {
+          "start": [
+            0.24,
+            0.28,
+            -0.245
+          ],
+          "end": [
+            0.29,
+            0.15,
+            -0.28
+          ],
+          "radius": 0.18,
+          "islands": [
+            5
+          ],
+          "windows": {
+            "y": [
+              0.15,
+              2,
+              0.1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "hindLowerLeft",
+      "parent": "hindUpperLeft",
+      "position": [
+        0.29,
+        0.15,
+        -0.28
+      ],
+      "fields": [
+        {
+          "start": [
+            0.29,
+            0.15,
+            -0.28
+          ],
+          "end": [
+            0.31,
+            0.035,
+            -0.315
+          ],
+          "radius": 0.18,
+          "islands": [
+            5
+          ],
+          "windows": {
+            "y": [
+              0.035,
+              0.26,
+              0.1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "hindFootLeft",
+      "parent": "hindLowerLeft",
+      "position": [
+        0.31,
+        0.035,
+        -0.315
+      ],
+      "fields": [
+        {
+          "radius": 10,
+          "islands": [
+            5
+          ],
+          "windows": {
+            "y": [
+              -1,
+              0.135,
+              0.08
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "frontUpperRight",
+      "parent": "torso",
+      "position": [
+        -0.24,
+        0.28,
+        0.17
+      ],
+      "fields": [
+        {
+          "start": [
+            -0.24,
+            0.28,
+            0.17
+          ],
+          "end": [
+            -0.29,
+            0.15,
+            0.235
+          ],
+          "radius": 0.18,
+          "islands": [
+            2
+          ],
+          "windows": {
+            "y": [
+              0.15,
+              2,
+              0.1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "frontLowerRight",
+      "parent": "frontUpperRight",
+      "position": [
+        -0.29,
+        0.15,
+        0.235
+      ],
+      "fields": [
+        {
+          "start": [
+            -0.29,
+            0.15,
+            0.235
+          ],
+          "end": [
+            -0.31,
+            0.035,
+            0.3
+          ],
+          "radius": 0.18,
+          "islands": [
+            2
+          ],
+          "windows": {
+            "y": [
+              0.035,
+              0.26,
+              0.1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "frontFootRight",
+      "parent": "frontLowerRight",
+      "position": [
+        -0.31,
+        0.035,
+        0.3
+      ],
+      "fields": [
+        {
+          "radius": 10,
+          "islands": [
+            2
+          ],
+          "windows": {
+            "y": [
+              -1,
+              0.135,
+              0.08
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "hindUpperRight",
+      "parent": "torso",
+      "position": [
+        -0.24,
+        0.28,
+        -0.245
+      ],
+      "fields": [
+        {
+          "start": [
+            -0.24,
+            0.28,
+            -0.245
+          ],
+          "end": [
+            -0.29,
+            0.15,
+            -0.28
+          ],
+          "radius": 0.18,
+          "islands": [
+            3
+          ],
+          "windows": {
+            "y": [
+              0.15,
+              2,
+              0.1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "hindLowerRight",
+      "parent": "hindUpperRight",
+      "position": [
+        -0.29,
+        0.15,
+        -0.28
+      ],
+      "fields": [
+        {
+          "start": [
+            -0.29,
+            0.15,
+            -0.28
+          ],
+          "end": [
+            -0.31,
+            0.035,
+            -0.315
+          ],
+          "radius": 0.18,
+          "islands": [
+            3
+          ],
+          "windows": {
+            "y": [
+              0.035,
+              0.26,
+              0.1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "hindFootRight",
+      "parent": "hindLowerRight",
+      "position": [
+        -0.31,
+        0.035,
+        -0.315
+      ],
+      "fields": [
+        {
+          "radius": 10,
+          "islands": [
+            3
+          ],
+          "windows": {
+            "y": [
+              -1,
+              0.135,
+              0.08
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "enemyRig": {
+    "mapping": {
+      "torso": "torso",
+      "head": "head",
+      "tail": "tail",
+      "frontUpperLeft": "frontUpperLeft",
+      "frontLowerLeft": "frontLowerLeft",
+      "frontFootLeft": "frontFootLeft",
+      "hindUpperLeft": "hindUpperLeft",
+      "hindLowerLeft": "hindLowerLeft",
+      "hindFootLeft": "hindFootLeft",
+      "frontUpperRight": "frontUpperRight",
+      "frontLowerRight": "frontLowerRight",
+      "frontFootRight": "frontFootRight",
+      "hindUpperRight": "hindUpperRight",
+      "hindLowerRight": "hindLowerRight",
+      "hindFootRight": "hindFootRight"
+    },
+    "walkSpeed": 0.2981056411536804,
+    "walkClip": "Meshy Quadruped Walk",
+    "walkContacts": {
+      "frontLeft": [
+        [
+          0.0,
+          0.016666666666666666
+        ],
+        [
+          0.38333333333333336,
+          1.0
+        ]
+      ],
+      "frontRight": [
+        [
+          0.0,
+          0.5
+        ],
+        [
+          0.85,
+          1.0
+        ]
+      ],
+      "hindLeft": [
+        [
+          0.23333333333333334,
+          0.8166666666666667
+        ]
+      ],
+      "hindRight": [
+        [
+          0.0,
+          0.3
+        ],
+        [
+          0.7333333333333333,
+          1.0
+        ]
+      ]
+    },
+    "sourceSha256": "4f9420fe375007d2c6d4d63a52cdb53022ca74bc38886f1a833cb4026808f36d",
+    "generatedSourceSha256": "4f9420fe375007d2c6d4d63a52cdb53022ca74bc38886f1a833cb4026808f36d",
+    "motionProvenance": {
+      "provider": "Meshy",
+      "sourceFbxSha256": "f985562d01f603a0a1107526e36bd7a9db84de0fc0bb6a36cf93cd5da4fc7567",
+      "sourceArchiveSha256": "b7f76de9afafb3ddb0335836d8e96c752958b0db637ea1927872084882f70c1c",
+      "sourceId": "battle-turtle",
+      "sourceAction": "Armature|Armature|Armature|Armature|Armature|Unreal Take|baselayer",
+      "sourceFps": 60.0,
+      "sourceDuration": 1.0,
+      "adaptation": "Sampled foot trajectories with model-specific two-bone IK and ground-contact correction"
+    }
+  },
+  "authoringNotes": "Four measured limb islands with independent upper/lower/foot blends. Rigid shell scutes and rim share torso skin; head and tail articulate at their genuine openings. Restsurface unchanged. Visible head and cream throat are assigned rigidly to head; complementary torso weights blend only inside the shell neck socket to avoid opening the generated throat bands. A small enclosed internalneck/socketlining fills generated cavities exposed whenforelegswithdraw; outerMeshysurface retained, liningalbedo samplesexistingcreamthroattexture. Lininginsideoriginalbodyenvelope.",
+  "outputSha256": "2c691af26d06ad2b6d53b89ef2fc37c06165b439511b3cc66323a277021e5963",
+  "outputBytes": 695900,
+  "walkSourceSha256": "f985562d01f603a0a1107526e36bd7a9db84de0fc0bb6a36cf93cd5da4fc7567",
+  "animationSource": "Existing user-owned Meshy quadruped FBX walk, retargeted with model-specific IK",
+  "walkRetarget": {
+    "sourceMotionJsonSha256": "120b17f11ace232b908f66fb3be3c9d215f1afb2453f87e0196a7dbc6b0d1c28",
+    "duration": 1.0,
+    "fps": 60.0,
+    "frames": 61,
+    "maxAnalyticIkError": 1.1443916996305594e-16,
+    "walkSpeed": 0.2981056411536804,
+    "stanceCenter": 0.5,
+    "sharedStanceSpeed": 0.29810564115368027,
+    "adaptation": "Halfway hip-centered walking stance; original bind anchors unchanged; source contact timing/vertical curves retained; equalized stance travel speed; per-paw sole clearance limits swing pitch."
+  },
+  "socketLinings": [
+    {
+      "name": "HiddenNeckSocketLining",
+      "islandId": 1000,
+      "center": [
+        0,
+        0.27,
+        0.25
+      ],
+      "radii": [
+        0.235,
+        0.105,
+        0.18
+      ],
+      "samplePoint": [
+        0,
+        0.19,
+        0.32
+      ]
+    }
+  ]
+}

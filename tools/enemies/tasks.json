@@ -1,0 +1,308 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "budgetCredits": 1691,
+  "startingBalance": 1691,
+  "tasks": {
+    "grunt": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "6c8162a3-043f-459d-8cee-c0726ab76224",
+      "createdAt": "2026-09-22T11:28:39.823629+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/enemies/references/grunt.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 8500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1691,
+      "reference": "tools/enemies/references/grunt.png",
+      "referenceSha256": "7fc85fe36e61f10bc5876a7e0ae481c020b8cbf6634fd56e7bddf197564efdd3",
+      "id": "01a0c8e0-08bc-708d-8006-04d3f8af75c8",
+      "checkedAt": "2026-09-22T11:32:23.646612+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1790076558241,
+      "expiresAt": 1790335758241,
+      "downloads": [
+        {
+          "path": ".img2threejs/enemies/grunt/downloads/model.glb",
+          "bytes": 6593880,
+          "sha256": "cec014ef5188971d32ec1e94efe847296da342f2852b2db6ab4f2d847f7f53a5"
+        }
+      ],
+      "sourceTriangles": 9248,
+      "sourceMeshes": 1
+    },
+    "sentry": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "b16a4323-0562-45d4-83ed-8dcbce057aef",
+      "createdAt": "2026-09-22T11:31:04.970436+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/enemies/references/sentry.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 8000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1676,
+      "reference": "tools/enemies/references/sentry.png",
+      "referenceSha256": "570fb696e7651db1084137a5114c40a17a26987299e63918db16327f1820cf34",
+      "id": "01a0c8e2-3fbd-740f-acfc-7aba6165ac6b",
+      "checkedAt": "2026-09-22T11:32:14.370012+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1790076712237,
+      "expiresAt": 1790335912237,
+      "downloads": [
+        {
+          "path": ".img2threejs/enemies/sentry/downloads/model.glb",
+          "bytes": 6678712,
+          "sha256": "9636cdea98dcc6beaedbcc2609bc20a8c777d02e6e92ddbe2d429eee1b955640"
+        }
+      ],
+      "sourceTriangles": 8164,
+      "sourceMeshes": 1
+    },
+    "spinner": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "0bf56537-772a-40e2-86ec-8335f7724bcc",
+      "createdAt": "2026-09-22T11:31:08.467162+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/enemies/references/spinner.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 8000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1661,
+      "reference": "tools/enemies/references/spinner.png",
+      "referenceSha256": "68bb2710b698295921211688ae7442b6c0c13108c59113eb35d78ac7c1ccf2ac",
+      "id": "01a0c8e2-4d44-7275-b80a-0b8ef9939684",
+      "checkedAt": "2026-09-22T11:32:16.628043+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1790076703817,
+      "expiresAt": 1790335903817,
+      "downloads": [
+        {
+          "path": ".img2threejs/enemies/spinner/downloads/model.glb",
+          "bytes": 7175088,
+          "sha256": "c98c2bc3e6ee970148f1b535846bfbbf8cb8c686803c9cde8d46e0f58f6a8b7e"
+        }
+      ],
+      "sourceTriangles": 8154,
+      "sourceMeshes": 1
+    },
+    "floater": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "75f004bc-fd7f-4034-a635-7c9edaf6645a",
+      "createdAt": "2026-09-22T11:31:12.029697+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/enemies/references/floater.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 7500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1646,
+      "reference": "tools/enemies/references/floater.png",
+      "referenceSha256": "be038f1ab29616d97766528c2b980f56420f808632a1cb0457b4b848b4736621",
+      "id": "01a0c8e2-5bb0-7737-b3e9-4457489a1c9f",
+      "checkedAt": "2026-09-22T11:32:19.111318+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1790076711441,
+      "expiresAt": 1790335911441,
+      "downloads": [
+        {
+          "path": ".img2threejs/enemies/floater/downloads/model.glb",
+          "bytes": 8145480,
+          "sha256": "adce98fa3db7328bab757ac24f7cf190591685fd717474037c9a7f9d98fc5e75"
+        }
+      ],
+      "sourceTriangles": 7077,
+      "sourceMeshes": 1
+    },
+    "hopper": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "0d60a522-6b9b-4669-a679-985f6d31dc14",
+      "createdAt": "2026-09-22T11:31:16.078818+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/enemies/references/hopper.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 8500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1631,
+      "reference": "tools/enemies/references/hopper.png",
+      "referenceSha256": "a286ac03ff60caeb96862854fdc4e25608e1dbbf4eb35b82d11d6efd482acd92",
+      "id": "01a0c8e2-6af5-70f8-88d6-ff1161d26d05",
+      "checkedAt": "2026-09-22T11:32:21.485680+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1790076717978,
+      "expiresAt": 1790335917978,
+      "downloads": [
+        {
+          "path": ".img2threejs/enemies/hopper/downloads/model.glb",
+          "bytes": 5801220,
+          "sha256": "8572bb26cd5985a7da7ba1e9c7a9e3684e6bb90236e48f64a5dfbe69ca450222"
+        }
+      ],
+      "sourceTriangles": 9324,
+      "sourceMeshes": 1
+    },
+    "spiker": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "5337e245-088e-4ee9-a13b-0b24b1c81969",
+      "createdAt": "2026-09-22T11:31:21.001113+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/enemies/references/spiker.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 8500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1616,
+      "reference": "tools/enemies/references/spiker.png",
+      "referenceSha256": "c1eabb8987a1829b43ae0c69cbf11d98a92e66538a92d4b1b5321e97deebcfaa",
+      "id": "01a0c8e2-7e30-731d-baaa-6dc5e48f3777",
+      "checkedAt": "2026-09-22T11:32:45.342451+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1790076721860,
+      "expiresAt": 1790335921860,
+      "downloads": [
+        {
+          "path": ".img2threejs/enemies/spiker/downloads/model.glb",
+          "bytes": 6299712,
+          "sha256": "e2ec9af2550031e4ebe867bf2cb889e1b4a9c8b12c8e548d726ad4151ea3e165"
+        }
+      ],
+      "sourceTriangles": 8817,
+      "sourceMeshes": 1
+    },
+    "turtle": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "c8575100-3c29-4f44-a2dc-4ba913cc808d",
+      "createdAt": "2026-09-22T11:31:25.188141+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/enemies/references/turtle.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 7500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1601,
+      "reference": "tools/enemies/references/turtle.png",
+      "referenceSha256": "48848a5bbfea03648a9664f7ce3db9329c1eac3b32797a89fd6a29d1bcaf3b78",
+      "id": "01a0c8e2-8e8e-74bc-8041-39e5d1627696",
+      "checkedAt": "2026-09-22T11:32:48.901119+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1790076728806,
+      "expiresAt": 1790335928806,
+      "downloads": [
+        {
+          "path": ".img2threejs/enemies/turtle/downloads/model.glb",
+          "bytes": 6630192,
+          "sha256": "4f9420fe375007d2c6d4d63a52cdb53022ca74bc38886f1a833cb4026808f36d"
+        }
+      ],
+      "sourceTriangles": 7713,
+      "sourceMeshes": 1
+    },
+    "charger": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "237e74ad-1b19-43b3-b704-649594497a41",
+      "createdAt": "2026-09-22T11:31:29.748763+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/enemies/references/charger.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 9000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1586,
+      "reference": "tools/enemies/references/charger.png",
+      "referenceSha256": "52e28600363762571caf182f6c8356a0e07d0f1611e1e5da49f0fe5438ab0265",
+      "id": "01a0c8e2-a07a-7567-aa15-d6e5f643a18e",
+      "checkedAt": "2026-09-22T11:32:52.344639+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1790076724902,
+      "expiresAt": 1790335924902,
+      "downloads": [
+        {
+          "path": ".img2threejs/enemies/charger/downloads/model.glb",
+          "bytes": 6271628,
+          "sha256": "163ecd7ae98369d7264bdbcce8cec51a2e974a1cc07b270f63633747abe183b9"
+        }
+      ],
+      "sourceTriangles": 8868,
+      "sourceMeshes": 1
+    }
+  },
+  "authorization": "User confirmed on 2026-09-22: spend as much Meshy credit as the account contains if needed.",
+  "lastBalance": 1571,
+  "consumedCredits": 120
+}

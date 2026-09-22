@@ -24,6 +24,11 @@ const PROFILES:Record<string,Amplitudes> = {
   slam:[.065,.030,.050,.045,.060], bail:[.045,.045,.060,.060,.080],
   death:[.040,.020,.030,.025,.035], spin:[.045,.030,.045,.025,.040],
 };
+/** Shared segment amplitudes for imported creature rigs as well as player clips.
+ * Callers receive a copy so per-character tuning cannot change player defaults. */
+export function characterElasticityAmplitudes(profile:string):Amplitudes {
+  return [...(PROFILES[profile]??PROFILES.idle)];
+}
 export const ELASTIC_LENGTH_CONTROLS = [
   ['deform.torso.length',0],
   ['deform.arm.upper.left.length',1],['deform.arm.upper.right.length',1],
