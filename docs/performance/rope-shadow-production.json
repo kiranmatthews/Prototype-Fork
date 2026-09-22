@@ -1,0 +1,176 @@
+[
+  {
+    "version": "baseline",
+    "phase": "draw-work",
+    "meta": {
+      "level": "sky",
+      "state": "ride",
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "canvas": [
+        960,
+        540
+      ],
+      "quality": {
+        "enabled": true,
+        "baseHeight": 540,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": false,
+      "shadow": [
+        4096,
+        4096
+      ],
+      "shadowType": 2,
+      "contextLost": false,
+      "memory": {
+        "geometries": 139,
+        "textures": 49
+      },
+      "build": "Codex/sol fork · build 09-22 14:59 UTC▶ REPLAY● REC"
+    },
+    "elapsed": 5003.199999928474,
+    "frames": 300,
+    "steps": 300,
+    "draws": 90243,
+    "triangles": 118722786,
+    "drawsPerFrame": 300.81,
+    "trianglesPerFrame": 395742.62,
+    "errors": []
+  },
+  {
+    "version": "baseline",
+    "phase": "cpu4x",
+    "trial": 0,
+    "elapsed": 6532.699999928474,
+    "frames": 221,
+    "steps": 392,
+    "fps": 33.8298100329756,
+    "fixedStepsPerSecond": 60.00581689106984,
+    "ticksPerFrame": 1.7737556561085972,
+    "frameMedian": 33.29999999999927,
+    "frameP95": 33.400000000001455,
+    "simulatedSeconds": 6.533333333332962,
+    "position": [
+      0,
+      0,
+      4
+    ],
+    "state": "ride",
+    "contextLost": false,
+    "errors": []
+  },
+  {
+    "version": "baseline",
+    "phase": "cpu4x",
+    "trial": 1,
+    "elapsed": 6528.600000023842,
+    "frames": 216,
+    "steps": 392,
+    "fps": 33.08519437539613,
+    "fixedStepsPerSecond": 60.04350090349668,
+    "ticksPerFrame": 1.8148148148148149,
+    "frameMedian": 33.29999999999927,
+    "frameP95": 33.400000000001455,
+    "simulatedSeconds": 6.5333333333329655,
+    "position": [
+      0,
+      0,
+      4
+    ],
+    "state": "ride",
+    "contextLost": false,
+    "errors": []
+  },
+  {
+    "version": "candidate",
+    "phase": "draw-work",
+    "meta": {
+      "level": "sky",
+      "state": "ride",
+      "position": [
+        0,
+        0,
+        4
+      ],
+      "canvas": [
+        960,
+        540
+      ],
+      "quality": {
+        "enabled": true,
+        "baseHeight": 540,
+        "outputMultiplier": 1,
+        "fixed60": true
+      },
+      "crt": false,
+      "shadow": [
+        2048,
+        2048
+      ],
+      "shadowType": 2,
+      "contextLost": false,
+      "memory": {
+        "geometries": 139,
+        "textures": 48
+      },
+      "build": "Codex/sol fork · build 09-22 16:05 UTC▶ REPLAY● REC"
+    },
+    "elapsed": 5003.600000023842,
+    "frames": 300,
+    "steps": 300,
+    "draws": 90260,
+    "triangles": 62850820,
+    "drawsPerFrame": 300.8666666666667,
+    "trianglesPerFrame": 209502.73333333334,
+    "errors": []
+  },
+  {
+    "version": "candidate",
+    "phase": "cpu4x",
+    "trial": 0,
+    "elapsed": 6514.300000071526,
+    "frames": 229,
+    "steps": 391,
+    "fps": 35.153431680684896,
+    "fixedStepsPerSecond": 60.021798197151945,
+    "ticksPerFrame": 1.7074235807860263,
+    "frameMedian": 33.29999999999927,
+    "frameP95": 33.400000000001455,
+    "simulatedSeconds": 6.516666666666296,
+    "position": [
+      0,
+      0,
+      4
+    ],
+    "state": "ride",
+    "contextLost": false,
+    "errors": []
+  },
+  {
+    "version": "candidate",
+    "phase": "cpu4x",
+    "trial": 1,
+    "elapsed": 6520,
+    "frames": 231,
+    "steps": 391,
+    "fps": 35.42944785276074,
+    "fixedStepsPerSecond": 59.969325153374236,
+    "ticksPerFrame": 1.6926406926406927,
+    "frameMedian": 33.29999999999927,
+    "frameP95": 33.400000000001455,
+    "simulatedSeconds": 6.5166666666663,
+    "position": [
+      0,
+      0,
+      4
+    ],
+    "state": "ride",
+    "contextLost": false,
+    "errors": []
+  }
+]

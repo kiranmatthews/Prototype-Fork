@@ -1,0 +1,98 @@
+[
+  {
+    "mode": "desktop",
+    "coarse": false,
+    "mapSize": [
+      4096,
+      4096
+    ],
+    "target": [
+      4096,
+      4096
+    ],
+    "depth": {
+      "width": 4096,
+      "height": 4096,
+      "format": 33190
+    },
+    "bias": -0.0002,
+    "normalBias": 0.035,
+    "filter": 2,
+    "frustum": {
+      "left": -96,
+      "right": 96,
+      "top": 96,
+      "bottom": -96,
+      "near": 1,
+      "far": 600
+    },
+    "contextLost": false,
+    "frame": 517,
+    "logicalShadowMiB": 112,
+    "errors": []
+  },
+  {
+    "mode": "touch-query",
+    "coarse": false,
+    "mapSize": [
+      2048,
+      2048
+    ],
+    "target": [
+      2048,
+      2048
+    ],
+    "depth": {
+      "width": 2048,
+      "height": 2048,
+      "format": 33190
+    },
+    "bias": -0.0002,
+    "normalBias": 0.035,
+    "filter": 2,
+    "frustum": {
+      "left": -96,
+      "right": 96,
+      "top": 96,
+      "bottom": -96,
+      "near": 1,
+      "far": 600
+    },
+    "contextLost": false,
+    "frame": 617,
+    "logicalShadowMiB": 28,
+    "errors": []
+  },
+  {
+    "mode": "coarse-pointer",
+    "coarse": true,
+    "mapSize": [
+      2048,
+      2048
+    ],
+    "target": [
+      2048,
+      2048
+    ],
+    "depth": {
+      "width": 2048,
+      "height": 2048,
+      "format": 33190
+    },
+    "bias": -0.0002,
+    "normalBias": 0.035,
+    "filter": 2,
+    "frustum": {
+      "left": -96,
+      "right": 96,
+      "top": 96,
+      "bottom": -96,
+      "near": 1,
+      "far": 600
+    },
+    "contextLost": false,
+    "frame": 616,
+    "logicalShadowMiB": 28,
+    "errors": []
+  }
+]

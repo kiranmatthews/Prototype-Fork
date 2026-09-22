@@ -161,6 +161,12 @@ published after the older crash reports and is not their historical cause.
 
 ## Changes requiring a visual/gameplay decision
 
+Follow-up: the user approved efficient mobile shadows and shader-based ropes on
+23 September. Those changes and an additional exact character CPU optimization
+are implemented in [ROPE_SHADOW_EFFICIENCY.md](ROPE_SHADOW_EFFICIENCY.md). The
+table below records the original options; character model LODs and approximate
+contact bounds have not been introduced.
+
 | Priority | Proposed change | Expected benefit | Tradeoff / verification |
 | --- | --- | --- | --- |
 | 1 | Use 2048² sun shadows on mobile; retain 4096² as high quality | Reclaim 84 MiB logical storage; quarter the shadow-map pixel budget | Softer/coarser shadows at the existing coverage; compare gameplay and Cup overview before acceptance |

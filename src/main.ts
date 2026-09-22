@@ -194,10 +194,12 @@ scene.add(sun);
 scene.add(sun.target);
 // SHADOWS. A directional light shadows the whole world through one ortho
 // frustum that follows the skater (see updateSunShadow). Cover distant scenery
-// as well as nearby obstacles: 192 metres across, with a 4096 map to retain
-// useful crate/contact detail across the larger footprint.
+// as well as nearby obstacles: 192 metres across. Touch presentation uses a
+// 2048 map to reduce storage; desktop retains its detailed 4096 map. Coverage
+// and contact offsets are shared, independent of the map's pixel count.
 sun.castShadow = true;
-sun.shadow.mapSize.set(4096, 4096);
+const SUN_SHADOW_MAP_SIZE = TOUCH_PRESENTATION ? 2048 : 4096;
+sun.shadow.mapSize.set(SUN_SHADOW_MAP_SIZE, SUN_SHADOW_MAP_SIZE);
 const SHADOW_HALF = 96;
 const MAP_SHADOW_HALF = 116;
 sun.shadow.camera.left = -SHADOW_HALF;

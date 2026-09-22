@@ -121,8 +121,9 @@ try {
                 level.ropePointAt(rope, rope.len, new THREE.Vector3()), "braided knot/contact endpoint", 1e-5);
               const ring = Math.floor(rope.visual.segments * .57), center = new THREE.Vector3();
               const positions = rope.visual.mesh.geometry.attributes.position;
-              for (let side = 0; side < 12; side++) center.add(new THREE.Vector3().fromBufferAttribute(positions, ring * 13 + side));
-              center.multiplyScalar(1 / 12).applyMatrix4(rope.visual.mesh.matrixWorld);
+              const sides = rope.visual.radialSegments;
+              for (let side = 0; side < sides; side++) center.add(new THREE.Vector3().fromBufferAttribute(positions, ring * (sides + 1) + side));
+              center.multiplyScalar(1 / sides).applyMatrix4(rope.visual.mesh.matrixWorld);
               const distance = ring / rope.visual.segments * rope.len;
               vectorNear(center, level.ropePointAt(rope, distance, new THREE.Vector3()), "braid centre/contact grip", 1e-5);
               assert.ok(Math.abs(level.ropeClosestDistance(rope, center) - distance) < .006,

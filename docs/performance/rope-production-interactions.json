@@ -1,0 +1,119 @@
+{
+  "results": [
+    {
+      "name": "chrome",
+      "entry": {
+        "caught": true,
+        "state": "grind",
+        "length": 24
+      },
+      "grind": {
+        "playerState": "grind",
+        "onRope": true,
+        "ropeState": "sag",
+        "sag": 0.8033992116061459,
+        "segments": 48,
+        "triangleCount": 768,
+        "contextLost": false,
+        "glError": 0
+      },
+      "hang": {
+        "state": "rope",
+        "distance": 2.9999999945446305,
+        "animation": {
+          "climbPhase": 0,
+          "climbDirection": 0,
+          "releaseElapsed": 0,
+          "releaseDuration": 0,
+          "releaseCharge": 0,
+          "leftGripError": 1.5327978876552503e-13,
+          "rightGripError": 3.5044324746874163e-13,
+          "gripRootOffsetY": -0.5599894422192868
+        }
+      },
+      "climb": {
+        "state": "rope",
+        "distance": 1.9999999945446296,
+        "animation": {
+          "climbPhase": 0.16447368637465543,
+          "climbDirection": 1,
+          "releaseElapsed": 0,
+          "releaseDuration": 0,
+          "releaseCharge": 0,
+          "leftGripError": 6.282245467155506e-11,
+          "rightGripError": 1.5040194592733568e-12,
+          "gripRootOffsetY": -0.5388049242896091
+        }
+      },
+      "descend": {
+        "state": "rope",
+        "distance": 2.9999999945446305,
+        "animation": {
+          "climbPhase": 0,
+          "climbDirection": -1,
+          "releaseElapsed": 0,
+          "releaseDuration": 0,
+          "releaseCharge": 0,
+          "leftGripError": 1.1108519894796643e-11,
+          "rightGripError": 3.3272839934264884e-12,
+          "gripRootOffsetY": -0.4806167925636249
+        }
+      },
+      "release": {
+        "state": "air",
+        "verticalVelocity": 11.799999999999997,
+        "animation": {
+          "climbPhase": 0,
+          "climbDirection": 0,
+          "releaseElapsed": 0.06666666666666667,
+          "releaseDuration": 1.6166667,
+          "releaseCharge": 1,
+          "leftGripError": 0,
+          "rightGripError": 0,
+          "gripRootOffsetY": -0.0959842608017227
+        }
+      },
+      "final": {
+        "contextLost": false,
+        "glError": 0,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 324
+        }
+      },
+      "errors": []
+    },
+    {
+      "name": "webkit",
+      "entry": {
+        "caught": true,
+        "state": "grind",
+        "length": 24
+      },
+      "grind": {
+        "playerState": "grind",
+        "onRope": true,
+        "ropeState": "sag",
+        "sag": 1.0636741750342231,
+        "segments": 48,
+        "triangleCount": 768,
+        "contextLost": false,
+        "glError": 0
+      },
+      "final": {
+        "contextLost": false,
+        "glError": 0,
+        "loading": {
+          "phase": null,
+          "pending": [],
+          "failed": [],
+          "revision": 324
+        }
+      },
+      "errors": []
+    }
+  ],
+  "errors": []
+}

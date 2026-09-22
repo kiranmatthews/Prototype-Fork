@@ -190,8 +190,11 @@ export class CharacterInteractionBounds {
     if(mesh.getVertexPosition!==THREE.SkinnedMesh.prototype.getVertexPosition){mesh.computeBoundingBox();return mesh.boundingBox!;}
     let palette=this.skinPalettes.get(skeleton);
     if(!palette){palette=[];this.skinPalettes.set(skeleton,palette);}
+    let affineSkin=true;
     for(let i=0;i<skeleton.bones.length;i++){
       (palette[i]??=new THREE.Matrix4()).multiplyMatrices(skeleton.bones[i].matrixWorld,skeleton.boneInverses[i]);
+      const m=palette[i].elements;
+      affineSkin&&=m[3]===0&&m[7]===0&&m[11]===0&&m[15]===1;
     }
     const geometry=mesh.geometry,positions=geometry.getAttribute('position');
     const indices=geometry.getAttribute('skinIndex'),weights=geometry.getAttribute('skinWeight');
@@ -220,20 +223,24 @@ export class CharacterInteractionBounds {
     }
     const box=mesh.boundingBox??=new THREE.Box3();box.makeEmpty();
     const base=cached.positions,skinIndices=cached.indices,skinWeights=cached.weights,inv=mesh.bindMatrixInverse.elements;
+    const affineInverse=inv[3]===0&&inv[7]===0&&inv[11]===0&&inv[15]===1;
     for(let i=0;i<positions.count;i++){
       let x=base[i*3],y=base[i*3+1],z=base[i*3+2],sx=0,sy=0,sz=0;
       for(let m=0;m<cached.morphDeltas.length;m++){
         const influence=morphs[m]??0;if(influence===0)continue;
         const delta=cached.morphDeltas[m];x+=delta[i*3]*influence;y+=delta[i*3+1]*influence;z+=delta[i*3+2]*influence;
       }
+      const affineVertex=affineSkin&&Number.isFinite(x)&&Number.isFinite(y)&&Number.isFinite(z);
       for(let c=0;c<4;c++){
         const offset=i*4+c,weight=skinWeights[offset];if(weight===0)continue;
-        const m=palette[skinIndices[offset]].elements,w=1/(m[3]*x+m[7]*y+m[11]*z+m[15]);
+        // Ordinary bone matrices have a homogeneous divisor of exactly one
+        // for finite inputs. Preserve custom projective/invalid-data behavior.
+        const m=palette[skinIndices[offset]].elements,w=affineVertex?1:1/(m[3]*x+m[7]*y+m[11]*z+m[15]);
         sx+=(m[0]*x+m[4]*y+m[8]*z+m[12])*w*weight;
         sy+=(m[1]*x+m[5]*y+m[9]*z+m[13])*w*weight;
         sz+=(m[2]*x+m[6]*y+m[10]*z+m[14])*w*weight;
       }
-      const w=1/(inv[3]*sx+inv[7]*sy+inv[11]*sz+inv[15]);
+      const w=affineInverse&&Number.isFinite(sx)&&Number.isFinite(sy)&&Number.isFinite(sz)?1:1/(inv[3]*sx+inv[7]*sy+inv[11]*sz+inv[15]);
       const px=(inv[0]*sx+inv[4]*sy+inv[8]*sz+inv[12])*w,py=(inv[1]*sx+inv[5]*sy+inv[9]*sz+inv[13])*w,pz=(inv[2]*sx+inv[6]*sy+inv[10]*sz+inv[14])*w;
       box.min.x=Math.min(box.min.x,px);box.min.y=Math.min(box.min.y,py);box.min.z=Math.min(box.min.z,pz);
       box.max.x=Math.max(box.max.x,px);box.max.y=Math.max(box.max.y,py);box.max.z=Math.max(box.max.z,pz);

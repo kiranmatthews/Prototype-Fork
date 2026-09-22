@@ -1,0 +1,524 @@
+[
+  {
+    "label": "baseline",
+    "base": "http://127.0.0.1:5192/",
+    "rows": [
+      {
+        "name": "vertical-close",
+        "geometry": {
+          "length": 3,
+          "radius": 0.1,
+          "segments": 66,
+          "tubeTriangles": 1584,
+          "knotTriangles": 576,
+          "vertices": 871,
+          "bufferBytes": 51808
+        },
+        "shape": {
+          "maximumCentreError": 5.418604076545819e-8,
+          "knotEndpointError": 0
+        },
+        "render": {
+          "frame": 3,
+          "calls": 2,
+          "triangles": 1586,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 2,
+          "textures": 2
+        },
+        "cameraPosition": [
+          0.18,
+          0.3,
+          0.95
+        ],
+        "contextLost": false,
+        "glError": 0
+      },
+      {
+        "name": "vertical-gameplay",
+        "geometry": {
+          "length": 10,
+          "radius": 0.1,
+          "segments": 220,
+          "tubeTriangles": 5280,
+          "knotTriangles": 576,
+          "vertices": 2873,
+          "bufferBytes": 138048
+        },
+        "shape": {
+          "maximumCentreError": 2.1674416395001117e-7,
+          "knotEndpointError": 0
+        },
+        "render": {
+          "frame": 6,
+          "calls": 3,
+          "triangles": 5858,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 3,
+          "textures": 2
+        },
+        "cameraPosition": [
+          4,
+          0.8,
+          17
+        ],
+        "contextLost": false,
+        "glError": 0
+      },
+      {
+        "name": "horizontal-close",
+        "geometry": {
+          "length": 8,
+          "radius": 0.1,
+          "segments": 176,
+          "tubeTriangles": 4224,
+          "knotTriangles": 576,
+          "vertices": 2301,
+          "bufferBytes": 113408
+        },
+        "shape": {
+          "maximumCentreError": 4.6648475012079105e-8,
+          "knotEndpointError": 0
+        },
+        "render": {
+          "frame": 9,
+          "calls": 2,
+          "triangles": 4226,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 2,
+          "textures": 2
+        },
+        "cameraPosition": [
+          0.4,
+          1.1,
+          1.6
+        ],
+        "contextLost": false,
+        "glError": 0
+      },
+      {
+        "name": "horizontal-gameplay",
+        "geometry": {
+          "length": 8,
+          "radius": 0.1,
+          "segments": 176,
+          "tubeTriangles": 4224,
+          "knotTriangles": 576,
+          "vertices": 2301,
+          "bufferBytes": 113408
+        },
+        "shape": {
+          "maximumCentreError": 4.6648475012079105e-8,
+          "knotEndpointError": 0
+        },
+        "render": {
+          "frame": 12,
+          "calls": 3,
+          "triangles": 4802,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 3,
+          "textures": 2
+        },
+        "cameraPosition": [
+          0,
+          3,
+          13
+        ],
+        "contextLost": false,
+        "glError": 0
+      },
+      {
+        "name": "knot-close",
+        "geometry": {
+          "length": 3,
+          "radius": 0.1,
+          "segments": 66,
+          "tubeTriangles": 1584,
+          "knotTriangles": 576,
+          "vertices": 871,
+          "bufferBytes": 51808
+        },
+        "shape": {
+          "maximumCentreError": 1.0837208153091638e-7,
+          "knotEndpointError": 0
+        },
+        "render": {
+          "frame": 15,
+          "calls": 3,
+          "triangles": 2162,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 3,
+          "textures": 2
+        },
+        "cameraPosition": [
+          0.38,
+          0.3,
+          0.7
+        ],
+        "contextLost": false,
+        "glError": 0
+      },
+      {
+        "name": "knot-gameplay",
+        "geometry": {
+          "length": 3,
+          "radius": 0.1,
+          "segments": 66,
+          "tubeTriangles": 1584,
+          "knotTriangles": 576,
+          "vertices": 871,
+          "bufferBytes": 51808
+        },
+        "shape": {
+          "maximumCentreError": 1.0837208153091638e-7,
+          "knotEndpointError": 0
+        },
+        "render": {
+          "frame": 18,
+          "calls": 3,
+          "triangles": 2162,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 3,
+          "textures": 2
+        },
+        "cameraPosition": [
+          2,
+          1,
+          7
+        ],
+        "contextLost": false,
+        "glError": 0
+      }
+    ],
+    "updateCpu": [
+      {
+        "length": 3,
+        "radius": 0.1,
+        "segments": 66,
+        "tubeTriangles": 1584,
+        "knotTriangles": 576,
+        "vertices": 871,
+        "bufferBytes": 51808,
+        "updateMedianMs": 0.09375,
+        "updateP95Ms": 0.09999999962747097,
+        "iterations": 960
+      },
+      {
+        "length": 8,
+        "radius": 0.1,
+        "segments": 176,
+        "tubeTriangles": 4224,
+        "knotTriangles": 576,
+        "vertices": 2301,
+        "bufferBytes": 113408,
+        "updateMedianMs": 0.24531250074505806,
+        "updateP95Ms": 0.24687499925494194,
+        "iterations": 960
+      },
+      {
+        "length": 16,
+        "radius": 0.1,
+        "segments": 352,
+        "tubeTriangles": 8448,
+        "knotTriangles": 576,
+        "vertices": 4589,
+        "bufferBytes": 211968,
+        "updateMedianMs": 0.48593750037252903,
+        "updateP95Ms": 0.49062499962747097,
+        "iterations": 960
+      },
+      {
+        "length": 24,
+        "radius": 0.1,
+        "segments": 420,
+        "tubeTriangles": 10080,
+        "knotTriangles": 576,
+        "vertices": 5473,
+        "bufferBytes": 250048,
+        "updateMedianMs": 0.5828125011175871,
+        "updateP95Ms": 0.5859375,
+        "iterations": 960
+      }
+    ],
+    "errors": []
+  },
+  {
+    "label": "candidate",
+    "base": "http://127.0.0.1:5193/",
+    "rows": [
+      {
+        "name": "vertical-close",
+        "geometry": {
+          "length": 3,
+          "radius": 0.1,
+          "segments": 24,
+          "tubeTriangles": 384,
+          "knotTriangles": 576,
+          "vertices": 225,
+          "bufferBytes": 23936
+        },
+        "shape": {
+          "maximumCentreError": 1.734723475976807e-18,
+          "knotEndpointError": 0
+        },
+        "render": {
+          "frame": 3,
+          "calls": 2,
+          "triangles": 386,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 2,
+          "textures": 1
+        },
+        "cameraPosition": [
+          0.18,
+          0.3,
+          0.95
+        ],
+        "contextLost": false,
+        "glError": 0
+      },
+      {
+        "name": "vertical-gameplay",
+        "geometry": {
+          "length": 10,
+          "radius": 0.1,
+          "segments": 24,
+          "tubeTriangles": 384,
+          "knotTriangles": 576,
+          "vertices": 225,
+          "bufferBytes": 23936
+        },
+        "shape": {
+          "maximumCentreError": 1.5894571969710114e-7,
+          "knotEndpointError": 0
+        },
+        "render": {
+          "frame": 6,
+          "calls": 3,
+          "triangles": 962,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 3,
+          "textures": 1
+        },
+        "cameraPosition": [
+          4,
+          0.8,
+          17
+        ],
+        "contextLost": false,
+        "glError": 0
+      },
+      {
+        "name": "horizontal-close",
+        "geometry": {
+          "length": 8,
+          "radius": 0.1,
+          "segments": 24,
+          "tubeTriangles": 384,
+          "knotTriangles": 576,
+          "vertices": 225,
+          "bufferBytes": 23936
+        },
+        "shape": {
+          "maximumCentreError": 3.3892748143919054e-8,
+          "knotEndpointError": 0
+        },
+        "render": {
+          "frame": 9,
+          "calls": 2,
+          "triangles": 386,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 2,
+          "textures": 1
+        },
+        "cameraPosition": [
+          0.4,
+          1.1,
+          1.6
+        ],
+        "contextLost": false,
+        "glError": 0
+      },
+      {
+        "name": "horizontal-gameplay",
+        "geometry": {
+          "length": 8,
+          "radius": 0.1,
+          "segments": 24,
+          "tubeTriangles": 384,
+          "knotTriangles": 576,
+          "vertices": 225,
+          "bufferBytes": 23936
+        },
+        "shape": {
+          "maximumCentreError": 3.3892748143919054e-8,
+          "knotEndpointError": 0
+        },
+        "render": {
+          "frame": 12,
+          "calls": 3,
+          "triangles": 962,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 3,
+          "textures": 1
+        },
+        "cameraPosition": [
+          0,
+          3,
+          13
+        ],
+        "contextLost": false,
+        "glError": 0
+      },
+      {
+        "name": "knot-close",
+        "geometry": {
+          "length": 3,
+          "radius": 0.1,
+          "segments": 24,
+          "tubeTriangles": 384,
+          "knotTriangles": 576,
+          "vertices": 225,
+          "bufferBytes": 23936
+        },
+        "shape": {
+          "maximumCentreError": 1.734723475976807e-18,
+          "knotEndpointError": 0
+        },
+        "render": {
+          "frame": 15,
+          "calls": 3,
+          "triangles": 962,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 3,
+          "textures": 1
+        },
+        "cameraPosition": [
+          0.38,
+          0.3,
+          0.7
+        ],
+        "contextLost": false,
+        "glError": 0
+      },
+      {
+        "name": "knot-gameplay",
+        "geometry": {
+          "length": 3,
+          "radius": 0.1,
+          "segments": 24,
+          "tubeTriangles": 384,
+          "knotTriangles": 576,
+          "vertices": 225,
+          "bufferBytes": 23936
+        },
+        "shape": {
+          "maximumCentreError": 1.734723475976807e-18,
+          "knotEndpointError": 0
+        },
+        "render": {
+          "frame": 18,
+          "calls": 3,
+          "triangles": 962,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 3,
+          "textures": 1
+        },
+        "cameraPosition": [
+          2,
+          1,
+          7
+        ],
+        "contextLost": false,
+        "glError": 0
+      }
+    ],
+    "updateCpu": [
+      {
+        "length": 3,
+        "radius": 0.1,
+        "segments": 24,
+        "tubeTriangles": 384,
+        "knotTriangles": 576,
+        "vertices": 225,
+        "bufferBytes": 23936,
+        "updateMedianMs": 0.01093750074505806,
+        "updateP95Ms": 0.01406249962747097,
+        "iterations": 960
+      },
+      {
+        "length": 8,
+        "radius": 0.1,
+        "segments": 24,
+        "tubeTriangles": 384,
+        "knotTriangles": 576,
+        "vertices": 225,
+        "bufferBytes": 23936,
+        "updateMedianMs": 0.01250000111758709,
+        "updateP95Ms": 0.01406250149011612,
+        "iterations": 960
+      },
+      {
+        "length": 16,
+        "radius": 0.1,
+        "segments": 32,
+        "tubeTriangles": 512,
+        "knotTriangles": 576,
+        "vertices": 297,
+        "bufferBytes": 27008,
+        "updateMedianMs": 0.01718750037252903,
+        "updateP95Ms": 0.01874999888241291,
+        "iterations": 960
+      },
+      {
+        "length": 24,
+        "radius": 0.1,
+        "segments": 48,
+        "tubeTriangles": 768,
+        "knotTriangles": 576,
+        "vertices": 441,
+        "bufferBytes": 33152,
+        "updateMedianMs": 0.02500000037252903,
+        "updateP95Ms": 0.02656250074505806,
+        "iterations": 960
+      }
+    ],
+    "errors": []
+  }
+]

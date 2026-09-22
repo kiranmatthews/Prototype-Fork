@@ -1,0 +1,13 @@
+{
+  "frames": 268,
+  "diffs": 0,
+  "maxError": 0,
+  "states": {
+    "ride": 156,
+    "air": 81,
+    "hang": 31
+  },
+  "unchanged": 0,
+  "contextLost": false,
+  "errors": []
+}

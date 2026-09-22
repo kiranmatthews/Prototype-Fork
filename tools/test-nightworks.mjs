@@ -158,7 +158,8 @@ try {
  const sky=bridge.ropes[0];for(let i=0;i<80;i++){bridge.grindRope(sky.rail);bridge.update(CONST.fixedStep);}
  assert.ok(sky.rail.points.some((p,i)=>p.y<sky.rest[i].y-.01),'loaded grind rope sags');
  const vertices=sky.visual.mesh.geometry.attributes.position;
- for(let i=0;i<=sky.visual.segments;i+=7){const center=new THREE.Vector3();for(let j=0;j<12;j++)center.add(new THREE.Vector3().fromBufferAttribute(vertices,i*13+j));center.multiplyScalar(1/12);
+ const ropeSides=sky.visual.radialSegments;
+ for(let i=0;i<=sky.visual.segments;i+=7){const center=new THREE.Vector3();for(let j=0;j<ropeSides;j++)center.add(new THREE.Vector3().fromBufferAttribute(vertices,i*(ropeSides+1)+j));center.multiplyScalar(1/ropeSides);
    assert.ok(center.distanceTo(sky.rail.pointAt(i/sky.visual.segments*sky.rail.totalLength))<.00002,'braid centre follows physical grind path');}
  bridge.dispose();
  // Falling below the authored void kills; the summit gate still completes the level.
