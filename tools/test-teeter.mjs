@@ -2,10 +2,16 @@ import assert from 'node:assert/strict';
 import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 
 await withSkateRuntime(async ({ server, THREE, Level, Player, TUNING }) => {
-  const { sampleTeeterMotion } = await server.ssrLoadModule('/src/teeterMotion.ts');
+  const { sampleTeeterMotion, probeTeeterEdge } = await server.ssrLoadModule('/src/teeterMotion.ts');
   const { TUNING_RANGES, TUNING_SECTIONS } = await server.ssrLoadModule('/src/tuning.ts');
   assert.ok(TUNING_SECTIONS.some(s => s.keys.includes('teeterEdgeDistance')));
   assert.ok(TUNING_RANGES.teeterEdgeDistance.min > 0);
+  // Oblique lips resolve their actual outward normal, not the nearest ray.
+  for (const angle of [.13, .37, 1.1, 2.6, 4.9]) {
+    const nx=Math.cos(angle), nz=Math.sin(angle);
+    const edge=probeTeeterEdge(.35,(x,z)=>x*nx+z*nz<=.22);
+    assert.ok(edge && (edge.x*nx+edge.z*nz)/Math.hypot(edge.x,edge.z)>.9999);
+  }
   const saved = { ...TUNING };
   const scene = new THREE.Scene();
   const level = new Level(scene, { id: 'teeter-test', name: 'Teeter test', data: {
@@ -50,6 +56,16 @@ await withSkateRuntime(async ({ server, THREE, Level, Player, TUNING }) => {
 
     }
     assert.ok(Math.abs(p.armL.rotation.x-p.armR.rotation.x)>.05,'arms still flap in sync');
+    const facingDot = () => -Math.sin(p.bodyGroup.rotation.y)*p.teeterDirection.x -
+      Math.cos(p.bodyGroup.rotation.y)*p.teeterDirection.z;
+    assert.ok(facingDot()>.999,'side approach did not turn the chest toward the edge');
+    place(30+diagonal,-diagonal,.35);
+    for(let f=0;f<60;f++)p.step(1/60,makeInput(),level);
+    assert.ok(facingDot()>.999,'rotated edge did not own facing');
+    p.freeSkate=true;p.sidePose=1;p.stance=1;
+    for(let f=0;f<60;f++)p.syncVisual(makeInput(),1/60);
+    assert.ok(facingDot()>.999,'skate stance turned the chest away from the edge');
+    p.freeSkate=false;
     // Recovery has an exact finite endpoint and resets the next catch clock.
     p.pos.set(0,0,0); p.prevPos.copy(p.pos);
     for(let frame=0;frame<20;frame++)p.step(1/60,makeInput(),level);

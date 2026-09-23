@@ -1,4 +1,4 @@
-import { sampleTeeterMotion, TEETER_PROBE_DIRECTIONS } from './teeterMotion';
+import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';
 import { SkateBalanceArms, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
 import { skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
 // Authored fake-physics board movement. No rigidbody, no forces: just a
@@ -6510,17 +6510,13 @@ export class Player {
       this.teetering = false;
       if (Math.abs(this.speed) < CONST.teeterSpeed && !steepHit &&
           !this.crawling && this.slideTimer <= 0 && !this.isBailing) {
-        let edgeX = 0, edgeZ = 0;
-        for (const [dx, dz] of TEETER_PROBE_DIRECTIONS) {
-          const support = this.queryGround(level, dx * TUNING.teeterEdgeDistance,
-            dz * TUNING.teeterEdgeDistance);
-          if (!support || support.y < hit.y - .8) {
-            this.teetering = true;
-            edgeX += dx; edgeZ += dz;
-          }
-        }
-        if (edgeX * edgeX + edgeZ * edgeZ > 1e-6)
-          this.teeterDirection.set(edgeX, 0, edgeZ).normalize();
+        const edge = probeTeeterEdge(TUNING.teeterEdgeDistance, (ox, oz) => {
+          const support = this.queryGround(level, ox, oz);
+          return support !== null && support.y >= hit.y - .8;
+        });
+        this.teetering = edge !== null;
+        if (edge && edge.x * edge.x + edge.z * edge.z > 1e-6)
+          this.teeterDirection.set(edge.x, 0, edge.z).normalize();
       }
     } else if (this.slideTimer > 0) {
       // CARTOON SLIDE: a canned slide carries you straight over a gap at a
@@ -15529,6 +15525,7 @@ export class Player {
       !this.grabbing &&
       !this.slamActive;
     const teeterAllowed = !this.isBailing && !this.slamActive && !this.grabbing &&
+      !this.spinning && !this.manualing && !this.wallriding && this.lipStallT <= 0 &&
       !this.crawling && this.slideTimer <= 0 && !this.resultsPose &&
       !this.playerAnimationBridge.previewActive && this.worldMapBaseScale === null &&
       (this.state === 'ride' || edgeGrace);
@@ -15595,6 +15592,12 @@ export class Player {
       // grabbed (captured in tryRopeGrab) and hold it — the swing never turns
       // you, and climbing up/down never turns you.
       targetYaw = this.ropeFaceYaw;
+    } else if (teeterActive && this.teetering) {
+      // Face outward, perpendicular to the actual lip, regardless of approach.
+      // Mounted stance adds a quarter-turn below; cancel it here so the chest
+      // still faces the edge while the feet/deck retain their contact solver.
+      targetYaw = wrapAngle(Math.atan2(this.teeterDirection.x, this.teeterDirection.z) -
+        Math.PI - this.stance * (Math.PI / 2) * this.sidePose);
     } else if (onFootRunReversal) {
       // Input leads a committed run turnaround while the root still slides
       // through old momentum. A four-frame pivot gets facing out of the way
@@ -16860,7 +16863,7 @@ export class Player {
     if (this.teeterPose > 0 && teeterAllowed) {
       // Convert the drop direction to the model's local frame, so a side/back
       // edge gets the same readable counterbalance without moving the soles.
-      const yaw = this.visualYaw;
+      const yaw = this.bodyGroup.rotation.y;
       const forward = -(this.teeterDirection.x * Math.sin(yaw) + this.teeterDirection.z * Math.cos(yaw));
       const side = -(this.teeterDirection.x * Math.cos(yaw) - this.teeterDirection.z * Math.sin(yaw));
       const teeter = sampleTeeterMotion(this.teeterPhase, this.teeterPose, forward, side);
