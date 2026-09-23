@@ -2,11 +2,11 @@ import type {LevelEntry} from '../level';
 
 // Only unchanged published snapshots follow the current source version.
 // Fingerprints cover normalized data, including names and every component:
-// Test Course and the two published Carlisle snapshots (1e8868c, 3b0c637).
+// Test Course and published Carlisle city snapshots, including the final box overhaul.
 // Any local edit, including a renamed copy, retains its authored data.
 const published = {
  'Test Course': [{length:31264,a:0x43b5749b,b:0x74039a85}],
- 'Carlisle Coast': [{length:299391,a:0x7a75368f,b:0x3e171a3f},{length:2197562,a:0xb7369587,b:0x23c6c391}],
+ 'Carlisle Coast': [{length:2206424,a:0x87923f0a,b:0x1dd4f258},{length:299391,a:0x7a75368f,b:0x3e171a3f},{length:2197562,a:0xb7369587,b:0x23c6c391}],
 } as const;
 const checked=new WeakMap<object,boolean>();
 export function isOriginalTestCourse(entry:LevelEntry):boolean {
