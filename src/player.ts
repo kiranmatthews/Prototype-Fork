@@ -1,3 +1,4 @@
+import { sampleTeeterMotion, TEETER_PROBE_DIRECTIONS } from './teeterMotion';
 import { SkateBalanceArms, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
 import { skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
 // Authored fake-physics board movement. No rigidbody, no forces: just a
@@ -1370,6 +1371,7 @@ export class Player {
   private teetering = false; // stopped on a ledge lip, Crash-style wobble
   private teeterPhase = 0;
   private teeterPose = 0;
+  private readonly teeterDirection = new THREE.Vector3(0, 0, -1);
   // Sine of the slope along travel (from the SMOOTHED ride plane):
   // > 0 climbing, < 0 descending. Bounded ±1 by construction, so vert walls
   // pull hard but never explode the way the old tan-based grade did.
@@ -6503,17 +6505,22 @@ export class Player {
         this.rideNormal.copy(hit.normal);
       } else this.rideNormal.lerp(hit.normal, ease).normalize();
 
-      // Crash teeter: slow/stopped with part of the board hanging over an
-      // edge — wobble as a warning; step back (or jump) to save yourself.
-      // Steep transitions don't count: their "edges" are just the next slab.
+      // A real drop near the support centre starts the warning. Sample diagonals
+      // as well, and treat lower landings as edges instead of seeing through them.
       this.teetering = false;
-      if (Math.abs(this.speed) < CONST.teeterSpeed && !steepHit) {
-        for (const [ox, oz] of [[0.55, 0], [-0.55, 0], [0, 0.55], [0, -0.55]]) {
-          if (!this.queryGround(level, ox, oz)) {
+      if (Math.abs(this.speed) < CONST.teeterSpeed && !steepHit &&
+          !this.crawling && this.slideTimer <= 0 && !this.isBailing) {
+        let edgeX = 0, edgeZ = 0;
+        for (const [dx, dz] of TEETER_PROBE_DIRECTIONS) {
+          const support = this.queryGround(level, dx * TUNING.teeterEdgeDistance,
+            dz * TUNING.teeterEdgeDistance);
+          if (!support || support.y < hit.y - .8) {
             this.teetering = true;
-            break;
+            edgeX += dx; edgeZ += dz;
           }
         }
+        if (edgeX * edgeX + edgeZ * edgeZ > 1e-6)
+          this.teeterDirection.set(edgeX, 0, edgeZ).normalize();
       }
     } else if (this.slideTimer > 0) {
       // CARTOON SLIDE: a canned slide carries you straight over a gap at a
@@ -6545,6 +6552,8 @@ export class Player {
         return back !== null && Math.abs(back.y - this.prevPos.y) < 1.0;
       })()
     ) {
+      if (this.pos.distanceToSquared(this.prevPos) > 1e-8)
+        this.teeterDirection.subVectors(this.pos, this.prevPos).setY(0).normalize();
       this.pos.copy(this.prevPos); // step back onto the ledge
       this.grounded = true;
       this.speed = 0;
@@ -15510,7 +15519,7 @@ export class Player {
           : -input.moveX * 0.12;
     this.lean += (targetLean - this.lean) * Math.min(1, 12 * dt);
 
-    // Edge panic: wobble while teetering on a lip, or flailing in the coyote
+    // Edge balance: catch on a lip, or reach during the coyote
     // grace right after rolling off — the visual cue that a jump still saves you.
     const edgeGrace =
       this.state === 'air' &&
@@ -15519,14 +15528,17 @@ export class Player {
       !this.isBailing &&
       !this.grabbing &&
       !this.slamActive;
-    let wobble = 0;
-    if (this.teetering || edgeGrace) {
-      this.teeterPhase += dt;
-      wobble = Math.sin(this.teeterPhase * 16) * (edgeGrace ? 0.3 : 0.22);
-    } else {
-      this.teeterPhase = 0;
-    }
-    this.teeterPose += ((this.teetering || edgeGrace ? 1 : 0) - this.teeterPose) * Math.min(1, 14 * dt);
+    const teeterAllowed = !this.isBailing && !this.slamActive && !this.grabbing &&
+      !this.crawling && this.slideTimer <= 0 && !this.resultsPose &&
+      !this.playerAnimationBridge.previewActive && this.worldMapBaseScale === null &&
+      (this.state === 'ride' || edgeGrace);
+    const teeterActive = teeterAllowed && (this.teetering || edgeGrace);
+    // Keep phase moving through the exit; resetting it early snaps the arms.
+    // Stepping back settles in 0.24 s; action poses take ownership immediately.
+    this.teeterPose = teeterActive ? Math.min(1, this.teeterPose + dt / .12)
+      : Math.max(0, this.teeterPose - dt / .24);
+    if (!teeterAllowed) this.teeterPose = 0;
+    this.teeterPhase = this.teeterPose > 0 ? this.teeterPhase + dt : 0;
     // Full euler reset every frame (y=PI is the model's base facing): the
     // hang-time premultiply below syncs back into rotation.x/y, so writing
     // only .z would compound last frame's tilt forever.
@@ -15542,7 +15554,7 @@ export class Player {
     // tip. Rolling about the heading itself is right everywhere, and is
     // numerically identical to the old code whenever the heading is -Z.
     this.group.rotation.set(0, Math.PI, 0);
-    const roll = this.lean + wobble;
+    const roll = this.lean;
     if (roll * roll > 1e-8 && this.lipStallT <= 0) {
       // visualYaw is updated below; a frame of lag on the AXIS is invisible
       // (the yaw is eased at 14/s) and keeps the euler reset above intact.
@@ -16190,9 +16202,8 @@ export class Player {
 
     // Arm channels. ANTI-symmetric: the run swing (arms counter the legs).
     // SYMMETRIC (both arms together): crawl hands to the ground, charge
-    // wind-up (arms swept back, loading the spring), flip tuck wrap, teeter
-    // windmill, pegged-needle flail, bail flail.
-    const windmill = this.teeterPose * Math.sin(this.teeterPhase * 13) * 1.3;
+    // wind-up (arms swept back, loading the spring), flip tuck wrap,
+    // pegged-needle flail and bail flail. Teeter layers after the authored pose.
     // Only GRINDS tip the spread arms sideways with the needle — a manual's
     // needle is fought in pitch (see manualPitch), so its arms stay symmetric.
     const railBal = this.state === 'grind' ? this.balance : 0;
@@ -16207,7 +16218,6 @@ export class Player {
         0.15 * crouchW - // squat: arms hang easy by the knees
         0.95 * this.chargePose +
         1.9 * flipTuck +
-        windmill +
         critFlail) *
       (1 - this.grabPose);
     // Slide: trailing hand drags behind, lead arm reaches ahead.
@@ -16558,8 +16568,7 @@ export class Player {
         0.6 * this.slidePose + // baseball slide: leaned back on the hip
         (0.75 * crawlMove + 0.16 * crouchW) * legacyLowPoseOuterWeight -
         0.55 * this.hangPose + // rear back: "...uh oh"
-        1.45 * bodyDropPose - // belly-first pancake; recovery moves this pitch to riderG
-        0.28 * this.teeterPose + // arms-back "whoa whoa" lean
+        1.45 * bodyDropPose + // belly-first pancake; recovery moves this pitch to riderG
         0.18 * this.skatePose + // athletic crouch over the board
         runLean +
         this.slopePose; // deck/truck pitch is owned by the contact frame below
@@ -16848,6 +16857,33 @@ export class Player {
     // and contacts. The bridge restores that base on the next fixed step,
     // so pose and deformation writes cannot accumulate into gameplay.
     this.playerAnimationBridge.applyOverlay(dt);
+    if (this.teeterPose > 0 && teeterAllowed) {
+      // Convert the drop direction to the model's local frame, so a side/back
+      // edge gets the same readable counterbalance without moving the soles.
+      const yaw = this.visualYaw;
+      const forward = -(this.teeterDirection.x * Math.sin(yaw) + this.teeterDirection.z * Math.cos(yaw));
+      const side = -(this.teeterDirection.x * Math.cos(yaw) - this.teeterDirection.z * Math.sin(yaw));
+      const teeter = sampleTeeterMotion(this.teeterPhase, this.teeterPose, forward, side);
+      if (this.spineG) {
+        this.spineG.rotation.x += teeter.chestPitch;
+        this.spineG.rotation.z += teeter.chestRoll;
+      }
+      if (this.headM) {
+        this.headM.rotation.x += teeter.headPitch;
+        this.headM.rotation.z += teeter.headRoll;
+      }
+      for (const [i, arm, elbow, wrist] of [
+        [0, this.armL, this.elbowL, this.wristL],
+        [1, this.armR, this.elbowR, this.wristR],
+      ] as const) {
+        const motion = teeter.arms[i];
+        if (arm) { arm.rotation.x += motion.swing; arm.rotation.z += motion.spread; }
+        if (elbow) elbow.rotation.x += motion.elbow;
+        if (wrist) wrist.rotation.x += motion.wrist;
+      }
+      this.playerAnimationBridge.modulateDeformations(teeter.deformations);
+    }
+
     // Restore the old independent stretch/catch/rebound, not its on-foot leg
     // pose. Appearance and final deck contacts consume the deformed lengths.
     const ollieMotion = this.skateOllieMotion.step(dt, {

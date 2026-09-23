@@ -16,6 +16,7 @@
     "check:ground": "node tools/validate-ground-acceleration.mjs",
     "check:crouch-jump": "node tools/test-crouch-jump-slam.mjs && node tools/test-crouch-stance.mjs && node tools/test-quaternius-crouch.mjs && node tools/test-slide-jump.mjs",
     "check:pipe": "node tools/test-halfpipe-contact.mjs && node tools/validate-halfpipe-safety.mjs && node tools/test-vert-ollie-sequence.mjs tools/fixtures/vert-ollie-release-edge-replay.json",
+    "check:teeter": "node tools/test-teeter.mjs",
     "check:ledge": "node tools/validate-ledge-traversal.mjs",
     "check:rope": "node tools/test-rope-board-transfer.mjs && node tools/test-rope-limb-mapping.mjs",
     "check:rail-air": "node tools/test-rail-air-transfer.mjs",

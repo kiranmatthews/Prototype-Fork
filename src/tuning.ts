@@ -108,6 +108,7 @@ export const TUNING = {
   boardSpeed: 8.5, // speed gate on the transition-carve SFX only — the board VISUAL and the rolling loop follow the skate state, not a speed
   skateHoldTime: 0.55, // X held this long (with a direction) before skate drive engages
   skateEntrySpeed: 5, // must also be moving this fast for the skate transition
+  teeterEdgeDistance: 0.35, // metres from the support centre to the edge-warning probe
   teeterCatchSpeed: 6, // roll off a LETHAL edge slower than this and you teeter at the brink instead of falling
   carveGripLow: 360, // omnidirectional skate turn rate at zero/low speed (deg/s); may be far higher than the high-speed endpoint
   carveGripHigh: 60, // skate turn rate at maxSpeed and above (deg/s); may be near zero for heavily damped high-speed steering
@@ -328,6 +329,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   boardSpeed: { min: 8, max: 30, step: 0.5 },
   skateHoldTime: { min: 0, max: 1, step: 0.05 },
   skateEntrySpeed: { min: 0, max: 15, step: 0.5 },
+  teeterEdgeDistance: { min: 0.05, max: 1, step: 0.025 },
   teeterCatchSpeed: { min: 0, max: 15, step: 0.5 },
   carveGripLow: { min: 0, max: 1440, step: 0.0625 },
   carveGripHigh: { min: 0, max: 1440, step: 0.0625 },
@@ -425,6 +427,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
 };
 
 export const TUNING_LABELS: Partial<Record<TuningKey, string>> = {
+  teeterEdgeDistance: 'Teeter Edge Distance (m)',
   parkCruiseSpeed: 'Park Cruise Speed (m/s)',
   parkChargeSpeed: 'Park Charged Speed (m/s)',
   parkCruiseAcceleration: 'Park Cruise Pickup (m/s²)',
@@ -646,6 +649,8 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     "Skate commit meter: X must be HELD this long (while pushing a direction) before the charge becomes the skate accelerator. Quick taps stay pure Crash hops.",
   skateEntrySpeed:
     "Second gate on the skate transition: you must already be moving this fast (walking counts) when the hold meter fills. Roughly 40% of walk speed feels right.",
+  teeterEdgeDistance:
+    'Distance from your ground-contact centre to a drop that starts the slow-speed teeter warning. Smaller = closer to the brink; larger = earlier warning. Applies on foot and on the board. The separate catch-speed control governs lethal-edge saves.',
   teeterCatchSpeed:
     "Ledge forgiveness: roll or skate off a LETHAL edge (a pit, not a step-down) slower than this and you're caught at the brink in a teeter wobble instead of yeeting off to your death. Above it you commit and fall. 0 = no catch, always fall.",
   carveGripLow:
@@ -822,7 +827,6 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'boardSpeed',
       'skateHoldTime',
       'skateEntrySpeed',
-      'teeterCatchSpeed',
       'carveGripLow',
       'carveGripHigh',
       'smashSpeed',
@@ -856,6 +860,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   },
   { title: 'SLIDES', keys: ['slideMinSpeed', 'slideDistance', 'slideSpeed', 'slideRecover', 'slideJumpHeight', 'slideJumpTravel', 'slideJumpGrace'] },
   { title: 'WALLRIDE', keys: ['wallrideMinSpeed', 'wallrideMaxAngle', 'wallrideGravity', 'wallrideFriction', 'wallrideMaxTime', 'wallKickUp', 'wallPumpBonus', 'wallChargeMax', 'wallKickOut'] },
+  { title: 'EDGE BALANCE', keys: ['teeterEdgeDistance', 'teeterCatchSpeed'] },
   { title: 'LEDGE GRAB', keys: ['ledgeGrabTime', 'ledgeClimbTime', 'ledgeClimbPop', 'ledgeReach'] },
   {
     title: 'GRINDS',
