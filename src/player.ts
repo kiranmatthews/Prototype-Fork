@@ -15304,12 +15304,14 @@ export class Player {
     const deck = this.freeSkate && this.boardG?.visible ? this.boardG : null;
     if (deck) { deck.updateWorldMatrix(true, false); _plantInv.copy(deck.matrixWorld).invert(); }
     const normal = this.groundHit?.normal ?? THREE.Object3D.DEFAULT_UP;
-    let clearance = Infinity;
+    let clearance = Infinity, toeAdvance = -Infinity;
     for (const { sole } of this.proceduralFootwear) {
       sole.updateWorldMatrix(true, false);
       const points = sole.geometry.getAttribute('position');
       for (let i=0; i<points.count; i++) {
         _plantV.fromBufferAttribute(points, i).applyMatrix4(sole.matrixWorld);
+        if (!deck) toeAdvance = Math.max(toeAdvance,
+          (_plantV.x-this.pos.x)*this.teeterDirection.x + (_plantV.z-this.pos.z)*this.teeterDirection.z);
         const height = deck ? _plantV.applyMatrix4(_plantInv).y - Number(deck.userData.gripTop ?? PLANT_DECK_TOP)
           : _plantV.sub(this.pos).dot(normal) / Math.max(.1, normal.y);
         clearance = Math.min(clearance, height);
@@ -15320,6 +15322,13 @@ export class Player {
     if (deck) {
       _plantO.set(0,0,0).applyMatrix4(deck.matrixWorld);
       _plantC.applyMatrix4(deck.matrixWorld).sub(_plantO);
+    }
+    if (!deck && Number.isFinite(toeAdvance)) {
+      // Put the toe row at the supported physics point. Pitching a flat shoe
+      // must not leave its new toe-only contact suspended beyond the lip.
+      _plantC.x -= this.teeterDirection.x * toeAdvance * w;
+      _plantC.z -= this.teeterDirection.z * toeAdvance * w;
+      _plantC.y -= (normal.x*_plantC.x + normal.z*_plantC.z) / Math.max(.1, normal.y);
     }
     this.riderG.parent.updateWorldMatrix(true,false);
     _plantInv.copy(this.riderG.parent.matrixWorld).invert();

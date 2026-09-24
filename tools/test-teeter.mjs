@@ -59,6 +59,7 @@ await withSkateRuntime(async ({ server, THREE, Level, Player, TUNING }) => {
         const delta=toeL.clone().sub(toeR);
         assert.ok(Math.abs(delta.dot(p.teeterDirection))<.008,'one foot leads the other');
         assert.ok(Math.abs(delta.y)<.008,'toe heights disagree');
+        assert.ok(toeL.clone().sub(p.pos).dot(p.teeterDirection)<.02,'toe contact hangs beyond the supported point');
         for(const side of ['left','right']){
           const toe=p.group.getObjectByName('socket-toe-'+side).getWorldPosition(new THREE.Vector3());
           const heel=p.group.getObjectByName('socket-heel-'+side).getWorldPosition(new THREE.Vector3());
