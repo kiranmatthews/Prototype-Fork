@@ -53,6 +53,27 @@ await withSkateRuntime(async ({ server, THREE, Level, Player, TUNING }) => {
       p.step(1/60,makeInput(),level);
       assert.ok(p.pos.distanceTo(start)<1e-8,'animation moved physical support');
       assert.ok(Math.abs(p.spineG.rotation.z)<.5,'spine accumulated rotation');
+      if(frame>45){
+        const toeL=p.group.getObjectByName('socket-toe-left').getWorldPosition(new THREE.Vector3());
+        const toeR=p.group.getObjectByName('socket-toe-right').getWorldPosition(new THREE.Vector3());
+        const delta=toeL.clone().sub(toeR);
+        assert.ok(Math.abs(delta.dot(p.teeterDirection))<.008,'one foot leads the other');
+        assert.ok(Math.abs(delta.y)<.008,'toe heights disagree');
+        for(const side of ['left','right']){
+          const toe=p.group.getObjectByName('socket-toe-'+side).getWorldPosition(new THREE.Vector3());
+          const heel=p.group.getObjectByName('socket-heel-'+side).getWorldPosition(new THREE.Vector3());
+          assert.ok(heel.y-toe.y>.16,'heel is not raised onto tiptoe');
+        }
+        assert.ok(p.headLookSocket.getWorldDirection(new THREE.Vector3()).y<-.4,'gaze is not down over the edge');
+        for(const {sole} of p.proceduralFootwear){
+          sole.updateWorldMatrix(true,false);
+          const points=sole.geometry.getAttribute('position');let low=Infinity;
+          for(let i=0;i<points.count;i++)low=Math.min(low,new THREE.Vector3().fromBufferAttribute(points,i).applyMatrix4(sole.matrixWorld).y);
+          assert.ok(Math.abs(low-p.pos.y-.006)<.008,'toe sole floats or penetrates support');
+        }
+
+      }
+
 
     }
     assert.ok(Math.abs(p.armL.rotation.x-p.armR.rotation.x)>.05,'arms still flap in sync');
@@ -83,6 +104,6 @@ await withSkateRuntime(async ({ server, THREE, Level, Player, TUNING }) => {
         assert.ok(Number.isFinite(value)&&value>.85&&value<1.15,'unsafe segment scale');
       }
     }
-    console.log('PASS teeter threshold, cardinal/corner direction, authored pose, stationary support, finite recovery, jump cancellation and bounded segment elasticity');
+    console.log('PASS teeter threshold, cardinal/corner direction, authored pose, stationary support, paired toe contacts/raised heels/downward gaze, finite recovery, jump cancellation and bounded segment elasticity');
   } finally { Object.assign(TUNING,saved); level.dispose(); }
 });

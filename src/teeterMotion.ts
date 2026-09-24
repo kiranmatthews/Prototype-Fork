@@ -1,13 +1,13 @@
 import { characterElasticityAmplitudes, ELASTIC_LENGTH_CONTROLS } from './animation/elasticity';
 
 /** Presentation only: a startled catch followed by slow, staggered corrections.
- * The hips, legs and root stay contact-owned. Weight reaches zero on recovery. */
+ * Toe contacts own the lower body; the shoulders fight the forward fall. */
 export function sampleTeeterMotion(time: number, weight: number, forward: number, side: number) {
   const w = Math.max(0, Math.min(1, weight));
   const cycle = time * Math.PI * 2 * .9;
   const catchBeat = Math.sin(Math.min(1, time / .6) * Math.PI) * Math.max(0, 1 - time / .6);
   const sway = Math.sin(cycle);
-  const correction = .11 + .065 * sway + .18 * catchBeat;
+  const correction = .34 + .10 * sway + .16 * catchBeat;
   const amplitudes = characterElasticityAmplitudes('teeter');
   const deformations: Record<string, number> = {};
   for (const [target, part] of ELASTIC_LENGTH_CONTROLS) {
@@ -18,17 +18,17 @@ export function sampleTeeterMotion(time: number, weight: number, forward: number
       (.55 * Math.sin(cycle - lag + opposite) - 1.2 * catchBeat);
   }
   return {
-    chestPitch: -forward * correction * w,
-    chestRoll: side * correction * w,
-    headPitch: (forward * correction * .55 + .09) * w,
-    headRoll: (-side * correction * .65 + .035 * Math.sin(cycle - .6)) * w,
+    chestPitch: forward * correction * w,
+    chestRoll: -side * correction * w,
+    headPitch: (.44 - forward * correction * .25) * w,
+    headRoll: (side * correction * .35 + .035 * Math.sin(cycle - .6)) * w,
     arms: [-1, 1].map(sign => {
       const phase = cycle + (sign === 1 ? 1.7 : 0);
       return {
-        swing: (-.3 + .48 * Math.sin(phase) - .4 * catchBeat) * w,
-        spread: sign * (.85 + .23 * Math.cos(phase) + .35 * catchBeat) * w,
-        elbow: -(.25 + .15 * Math.sin(phase - .5)) * w,
-        wrist: .18 * Math.sin(phase - .85) * w,
+        swing: (.2 + .95 * Math.sin(phase) - .5 * catchBeat) * w,
+        spread: sign * (.62 + .42 * Math.cos(phase) + .3 * catchBeat) * w,
+        elbow: -(.38 + .28 * Math.sin(phase - .5)) * w,
+        wrist: .30 * Math.sin(phase - .85) * w,
       };
     }),
     deformations,

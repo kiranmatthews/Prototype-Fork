@@ -15269,6 +15269,65 @@ export class Player {
     rg.position.add(corr);
   }
 
+  /** Both toe tips share a row, with the heels lifted. This final contact
+   * layer replaces the idle stride and the mounted foot split without moving
+   * the physics point. Actual sole geometry supplies the toe contact height. */
+  private plantTeeterToes(weight: number): void {
+    if (!this.legs || !this.riderG?.parent || !this.legR || !this.legL ||
+        !this.kneeR || !this.kneeL || !this.ankleR || !this.ankleL ||
+        this.proceduralFootwear.length !== 2) return;
+    const w = THREE.MathUtils.smoothstep(weight, 0, 1);
+    const blend = (from: number, to: number) => THREE.MathUtils.lerp(from, to, w);
+    // Square the pelvis too: an authored idle hip twist staggers the toes even
+    // when both leg angles are identical. Joint lengths retain authored stretch.
+    this.legs.rotation.set(this.legs.rotation.x * (1-w),
+      this.legs.rotation.y * (1-w), this.legs.rotation.z * (1-w));
+    this.bodyGroup.rotation.x *= 1-w;
+    const down = Math.min(
+      Math.abs(this.kneeR.position.y) + Math.abs(this.ankleR.position.y),
+      Math.abs(this.kneeL.position.y) + Math.abs(this.ankleL.position.y)) * .99;
+    const hipY = (this.legR.position.y + this.legL.position.y) / 2;
+    const toePitch = .67 + .025 * Math.sin(this.teeterPhase * Math.PI * 1.8);
+    for (const [leg, knee, ankle, base] of [
+      [this.legR, this.kneeR, this.ankleR, this.hipBaseR],
+      [this.legL, this.kneeL, this.ankleL, this.hipBaseL],
+    ] as const) {
+      const pose = solveSagittalLegTarget(down, 0, toePitch,
+        Math.abs(knee.position.y), Math.abs(ankle.position.y));
+      leg.position.set(blend(leg.position.x, base.x), blend(leg.position.y, hipY), blend(leg.position.z, 0));
+      leg.rotation.set(blend(leg.rotation.x, pose.hipPitch), leg.rotation.y*(1-w), leg.rotation.z*(1-w));
+      knee.rotation.set(blend(knee.rotation.x, pose.kneeFlex), knee.rotation.y*(1-w), knee.rotation.z*(1-w));
+      ankle.rotation.set(blend(ankle.rotation.x, pose.anklePitch), ankle.rotation.y*(1-w), ankle.rotation.z*(1-w));
+    }
+    // Measure in the support frame. On a skateboard the deck keeps its own
+    // position/rotation; only the rider translates onto the grip plane.
+    const deck = this.freeSkate && this.boardG?.visible ? this.boardG : null;
+    if (deck) { deck.updateWorldMatrix(true, false); _plantInv.copy(deck.matrixWorld).invert(); }
+    const normal = this.groundHit?.normal ?? THREE.Object3D.DEFAULT_UP;
+    let clearance = Infinity;
+    for (const { sole } of this.proceduralFootwear) {
+      sole.updateWorldMatrix(true, false);
+      const points = sole.geometry.getAttribute('position');
+      for (let i=0; i<points.count; i++) {
+        _plantV.fromBufferAttribute(points, i).applyMatrix4(sole.matrixWorld);
+        const height = deck ? _plantV.applyMatrix4(_plantInv).y - Number(deck.userData.gripTop ?? PLANT_DECK_TOP)
+          : _plantV.sub(this.pos).dot(normal) / Math.max(.1, normal.y);
+        clearance = Math.min(clearance, height);
+      }
+    }
+    if (!Number.isFinite(clearance)) return;
+    _plantC.set(0, (.006-clearance)*w, 0);
+    if (deck) {
+      _plantO.set(0,0,0).applyMatrix4(deck.matrixWorld);
+      _plantC.applyMatrix4(deck.matrixWorld).sub(_plantO);
+    }
+    this.riderG.parent.updateWorldMatrix(true,false);
+    _plantInv.copy(this.riderG.parent.matrixWorld).invert();
+    _plantO.set(0,0,0).applyMatrix4(_plantInv);
+    _plantC.applyMatrix4(_plantInv).sub(_plantO);
+    this.riderG.position.add(_plantC);
+  }
+
   /** Seat idle and walking on their support plane. Fade out using the same
    * Walk/Run blend as animation, leaving the authored running pose intact.
    * The rider-only translation never moves collision, the board or the rig's
@@ -16873,6 +16932,7 @@ export class Player {
       }
       if (this.headM) {
         this.headM.rotation.x += teeter.headPitch;
+        this.headM.rotation.y *= 1 - this.teeterPose;
         this.headM.rotation.z += teeter.headRoll;
       }
       for (const [i, arm, elbow, wrist] of [
@@ -17002,6 +17062,8 @@ export class Player {
       this.boardG.rotateX(deckTrickPose.pitch);
     }
     if(this.specialFlip&&this.flipT>0)this.applyBackflipPose(1-this.flipT/this.flipDuration);
+    if (this.teeterPose > 0 && teeterAllowed && this.grounded)
+      this.plantTeeterToes(this.teeterPose);
     this.seatOnFoot();
     // Apply lift AFTER deck planting; otherwise the contact solver cancels
     // the hop. The skateboard and physics point remain on their exact path.
