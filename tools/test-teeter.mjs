@@ -86,6 +86,13 @@ await withSkateRuntime(async ({ server, THREE, Level, Player, TUNING }) => {
     p.freeSkate=true;p.sidePose=1;p.stance=1;
     for(let f=0;f<60;f++)p.syncVisual(makeInput(),1/60);
     assert.ok(facingDot()>.999,'skate stance turned the chest away from the edge');
+    p.bodyGroup.rotation.x=.18;
+    const deckPosition=p.boardG.getWorldPosition(new THREE.Vector3());
+    const deckRotation=p.boardG.getWorldQuaternion(new THREE.Quaternion());
+    p.plantTeeterToes(1);
+    assert.ok(p.boardG.getWorldPosition(new THREE.Vector3()).distanceTo(deckPosition)<1e-8,'toe planting moved the deck');
+    assert.ok(p.boardG.getWorldQuaternion(new THREE.Quaternion()).angleTo(deckRotation)<1e-7,'toe planting tilted the deck');
+
     p.freeSkate=false;
     // Recovery has an exact finite endpoint and resets the next catch clock.
     p.pos.set(0,0,0); p.prevPos.copy(p.pos);

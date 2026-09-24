@@ -15282,7 +15282,7 @@ export class Player {
     // when both leg angles are identical. Joint lengths retain authored stretch.
     this.legs.rotation.set(this.legs.rotation.x * (1-w),
       this.legs.rotation.y * (1-w), this.legs.rotation.z * (1-w));
-    this.bodyGroup.rotation.x *= 1-w;
+    if (!this.freeSkate) this.bodyGroup.rotation.x *= 1-w;
     const down = Math.min(
       Math.abs(this.kneeR.position.y) + Math.abs(this.ankleR.position.y),
       Math.abs(this.kneeL.position.y) + Math.abs(this.ankleL.position.y)) * .99;
