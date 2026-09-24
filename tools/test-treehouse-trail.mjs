@@ -64,12 +64,12 @@ try {
   const route = treehouseReviewRoute(data,0);
   assert.equal(data.components.filter(c=>c.cameraView).length,1,'one composed opening view');
   assert.equal(data.components.filter(c=>c.t==='zone').length,0,'opening uses the view frame without competing zone remaps');
-  assert.ok(route[1].x>route[0].x && Math.abs(route[1].z-route[0].z)<.01,'opening lane runs to screen right');
+  assert.ok(data.spawn[1]>8,'opening starts on the supported balcony');
   let samples = 0, minGround = Infinity, lowest;
   for (let leg = 1; leg < route.length; leg++) {
     const a = route[leg - 1], b = route[leg], length = a.distanceTo(b);
     const side = new THREE.Vector3(-(b.z-a.z), 0, b.x-a.x).normalize();
-    for (let i = 0; i <= Math.ceil(length * 2); i++) for (const offset of [-2, -1, 0, 1, 2]) {
+    for (let i = 0; i <= Math.ceil(length * 2); i++) for (const offset of (a.x<0&&a.y>.3?[-.7,0,.7]:[-2,-1,0,1,2])) {
       const p = a.clone().lerp(b, i / Math.ceil(length * 2)).addScaledVector(side, offset), hit = ground(p.x, p.z);
       assert.ok(hit, `continuous trail support ${p.x.toFixed(2)}/${p.z.toFixed(2)}`);
       assert.ok(hit.point.y > level.killY + 3, 'safe floor above kill plane');
@@ -87,7 +87,7 @@ try {
 
   // Keep Right genuinely held through the opening: camera/input state is
   // allowed to persist, exactly as it does for a person using a controller.
-  reset(); const heldRight=makeInput({moveX:1});const startPosition=player.pos.clone();
+  reset(new THREE.Vector3(1,0,9)); const heldRight=makeInput({moveX:1});const startPosition=player.pos.clone();
   for(let i=0;i<180;i++){step(heldRight);safe('held-right opening');}
   assert.ok(player.pos.x>startPosition.x+8,'held Right makes substantial +X progress');
   assert.ok(Math.abs(player.pos.z-startPosition.z)<.2,'held Right remains screen-horizontal');
@@ -107,14 +107,15 @@ try {
   const targets = treehouseReviewRoute(data).slice(1);
   for (const target of targets) {
     step(neutral);let localTicks = 0;
-    while (Math.hypot(target.x-player.pos.x, target.z-player.pos.z) > 1.5 && player.state !== 'finished') {
+    while (Math.hypot(target.x-player.pos.x, target.z-player.pos.z) > (player.pos.x<0&&(player.pos.y>.3||target.y>.3)?.25:1.5) && player.state !== 'finished') {
       assert.ok(localTicks++ < 2400, `walking blocked before ${target.toArray()}, player ${player.pos.toArray()}, ${player.state}`);
       const dx=target.x-player.pos.x, dz=target.z-player.pos.z, magnitude=Math.hypot(dx,dz);
       // Intentional steering uses a fresh screen frame, while the independent
       // held-input checks above cover the camera's continuity lock.
       publishCamera();player.viewInput.reset();
       const forward=level.cameraDirAt(player.pos.x,player.pos.y,player.pos.z,cameraCursor)??{x:0,z:-1};
-      walk.moveX=(-dx*forward.z+dz*forward.x)/magnitude;walk.moveY=(dx*forward.x+dz*forward.z)/magnitude;
+      const pace=player.pos.x<0&&(player.pos.y>.3||target.y>.3)?.65:1;
+      walk.moveX=(-dx*forward.z+dz*forward.x)/magnitude*pace;walk.moveY=(dx*forward.x+dz*forward.z)/magnitude*pace;
       walk.spinPressed=ticks%45===0;
       step(walk); safe('whole trail walk'); minPlayerY=Math.min(minPlayerY,player.pos.y); ticks++;
     }
@@ -174,6 +175,16 @@ try {
   const pipeWorld=(x,y,z)=>new THREE.Vector3(hx+Math.cos(yaw)*x+Math.sin(yaw)*z,y,hz-Math.sin(yaw)*x+Math.cos(yaw)*z);
   const pipeLocal=p=>({x:Math.cos(yaw)*(p.x-hx)-Math.sin(yaw)*(p.z-hz),z:Math.sin(yaw)*(p.x-hx)+Math.cos(yaw)*(p.z-hz)});
   const pipeGround=(x,z)=>{const p=pipeWorld(x,0,z);return ground(p.x,p.z);};
+  assert.equal(half.yaw,0,'pipe cross-section is parallel to screen horizontal');
+  // Check real authored beam vertices, including their thickness, against the
+  // riding envelope. Supports must remain outside both vertical lips.
+  for(const beam of data.components.filter(c=>/Halfpipe (scaffold|exterior|lateral)/.test(c.nm??''))){
+    for(let i=0;i<beam.vertices.length;i+=3){
+      const point=new THREE.Vector3(beam.p[0]+beam.vertices[i],beam.p[1]+beam.vertices[i+1],beam.p[2]+beam.vertices[i+2]);
+      assert.ok(Math.abs(pipeLocal(point).x)>lip+.05,`${beam.nm} enters riding surface`);
+    }
+  }
+
   assert.ok(radius>=4,'reference halfpipe has tall transitions');
   assert.ok((half.arcSteps??8)>=24,'hero transition has a smooth authored profile');
   assert.ok((half.len??30)<8,'compact halfpipe does not read as a long chute');

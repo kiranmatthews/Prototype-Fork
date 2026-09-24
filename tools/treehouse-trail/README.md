@@ -59,8 +59,11 @@ sizes; its stair landings are at 0, 2.8, 5.6 and 8.4 metres. Three short flights
 ramps make the stair flights walkable without changing player tuning.
 
 A `cameraView` component stores `cameraPosition`, `cameraTarget` and `cameraFov`
-for the opening composition. Its spatial feather returns to the ordinary
-follow camera around the bend. Do not overlap this view with an E travel zone.
+for the opening composition. `cameraFollowDistance` brings the camera 14.5m
+from the player while preserving the shot direction; `cameraIntroDistance`
+blends into that follow over the first 4m of movement from the balcony.
+The blend latches until respawn, and does not run under the loader.
+Its spatial feather returns to the ordinary follow camera around the bend. Do not overlap this view with an E travel zone.
 
 The built-in imagegen tool created `public/treehouse-trail/matte-far.png` and
 `matte-mid.png`; exact prompts are in `matte-prompts.json`. These are separate

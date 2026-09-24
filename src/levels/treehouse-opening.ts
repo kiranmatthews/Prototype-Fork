@@ -65,11 +65,19 @@ export function openingHousePoint(p: Point): Point {
 // without coplanar grass/path/apron rectangles or transparent ground decals.
 const vertices: number[] = [], colors: number[] = [], uvs: number[] = [], indices: number[] = [];
 const nx = 80, nz = 40, x0 = -35, z0 = -28, dx = 1.25, dz = 1.5;
-const trail = [[-33, 16], [20, 16], [29, 12], [35, 3], [35, -24]];
+// Shared rounded clearing route: the dirt, lane and tree clearance all follow it.
+export const TREEHOUSE_CLEARING_ROUTE: Point[] = [
+  openingHousePoint([-2, 0, 9]), [1, 0, 9], [8, 0, 7], [20, 0, 7],
+  [26, 0, 6], [31, 0, 2], [34, 0, -4], [35, 0, -10], [35, 0, -16],
+];
+const trail = new THREE.CatmullRomCurve3(TREEHOUSE_CLEARING_ROUTE.map(p => new THREE.Vector3(...p)))
+  .getPoints(100).map(p => [p.x, p.z]);
+// An open, level apron feeds the pipe's front entrance from the clearing path.
+const pipeApproach = [[14, 7], [14, -5]];
 function distanceToTrail(x: number, z: number): number {
   let best = Infinity;
-  for (let i = 1; i < trail.length; i++) {
-    const a = trail[i - 1], b = trail[i], vx = b[0] - a[0], vz = b[1] - a[1];
+  for (const line of [trail, pipeApproach]) for (let i = 1; i < line.length; i++) {
+    const a = line[i - 1], b = line[i], vx = b[0] - a[0], vz = b[1] - a[1];
     const t = THREE.MathUtils.clamp(((x - a[0]) * vx + (z - a[1]) * vz) / (vx * vx + vz * vz), 0, 1);
     best = Math.min(best, Math.hypot(x - a[0] - t * vx, z - a[1] - t * vz));
   }
@@ -84,6 +92,8 @@ for (let iz = 0; iz <= nz; iz++) for (let ix = 0; ix <= nx; ix++) {
   const grass = THREE.MathUtils.smoothstep(trailDistance + noise, 4.7, 8.2);
   const color = new THREE.Color("#c2a478").lerp(new THREE.Color("#52673d"), grass);
   color.multiplyScalar(0.97 + Math.sin(x * 0.32 + z * 0.48) * 0.03);
+  // Exact endpoint tint removes the rectangular material seam at the trail.
+  color.lerp(new THREE.Color("#b99b60"), THREE.MathUtils.smoothstep(-z, 8, 16) * (1 - THREE.MathUtils.smoothstep(Math.abs(x - 35), 5, 8)));
   colors.push(color.r, color.g, color.b);
 }
 for (let iz = 0; iz < nz; iz++) for (let ix = 0; ix < nx; ix++) {
@@ -187,11 +197,11 @@ for (const component of C.slice(houseStart)) {
   component.yaw = (component.yaw ?? 0) + houseYaw;
 }
 
-// Deep, compact, angled timber halfpipe: a narrow flat, tall transitions and
+// Deep, compact, camera-aligned timber halfpipe: a narrow flat, tall transitions and
 // a real underside scaffold. Its floor sits 10cm above the clearing.
 export const TREEHOUSE_HALFPIPE: CustomComponent = { t: "vertramp", p: [14, 0.1, -0.8],
-  len: 5.8, w: 0.9, rise: 4.2, arc: 90, arcSteps: 32, deck: 1.5, vkind: "half", yaw: -20,
-  tex: "wood", color: "#bd8b53", nm: "Deep angled timber halfpipe", grp: G.pipe };
+  len: 5.8, w: 0.9, rise: 4.2, arc: 90, arcSteps: 32, deck: 1.5, vkind: "half", yaw: 0,
+  tex: "wood", color: "#bd8b53", nm: "Camera-aligned timber halfpipe", grp: G.pipe };
 add(TREEHOUSE_HALFPIPE);
 const pipeAngle = THREE.MathUtils.degToRad(TREEHOUSE_HALFPIPE.yaw!);
 const pipePoint = (x: number, y: number, z: number): Point => [
@@ -204,7 +214,9 @@ for (const side of [-1, 1]) {
     "Rounded timber coping", G.pipe, 0.12);
   for (const z of [-2.2, 2.2]) {
     timber(pipePoint(x, 0, z), pipePoint(x, 4.22, z), 0.38, 0.4, "Halfpipe scaffold upright", G.pipe);
-    timber(pipePoint(side * 2.3, 0.1, z), pipePoint(x, 4.15, z), 0.26, 0.3, "Halfpipe diagonal brace", G.pipe);
+    // Keep every brace behind the outer lip. A diagonal from the flat to
+    // the deck cuts straight through the concave riding surface.
+    timber(pipePoint(side * 5.35, 0.1, z), pipePoint(x, 4.05, z), 0.26, 0.3, "Halfpipe exterior diagonal brace", G.pipe);
   }
   timber(pipePoint(x, 0.25, -2.2), pipePoint(x, 4.1, 2.2), 0.22, 0.26, "Halfpipe lateral X brace", G.pipe);
   timber(pipePoint(x, 0.25, 2.2), pipePoint(x, 4.1, -2.2), 0.22, 0.26, "Halfpipe lateral X brace", G.pipe);
@@ -214,18 +226,18 @@ for (const side of [-1, 1]) {
 // load-bearing trunk visible. Peripheral trees never enter the roof volume.
 add({ t: "decor", dkind: "treehousecanopy", p: [-18, 16.7, -7], s: [31, 11, 24], yaw: -8,
   nm: "Separate canopy above the treehouse roof", grp: G.house });
-for (const [x, z, size, yaw] of [[-31, -10, 23, 35], [28, -9, 24, 195], [24, 10, 22, -35]] as const)
+for (const [x, z, size, yaw] of [[-31, -10, 23, 35], [48, -7, 22, 195], [48, 23, 20, -35]] as const)
   add({ t: "decor", dkind: "treehousetree", p: [x, 0, z], s: [size, size, size * 0.82], yaw,
     color: "#cad4c4", nm: "Framing jungle tree", grp: G.ground });
 for (const [x, z, size] of [[-30, 7, 1.4], [-24, 9, 1.1], [-26, -1, 1.35], [-9, -4, 0.9],
-  [-4, 4, 1.0], [1, 3, 0.8], [6, -6, 1.2], [21, -9, 1.1], [24, 7, 1],
-  [-28, 23, 1.15], [28, 24, 1.2], [-17, 8, 0.6], [-4, 10, 0.55]] as const)
+  [-4, 4, 1.0], [1, 3, 0.8], [6, -6, 1.2], [23, -12, 1.1], [26, 15, 1],
+  [-28, 23, 1.15], [43, 14, 1.2], [-17, 8, 0.6], [-5, 16, 0.55]] as const)
   add({ t: "decor", dkind: "treehousebush", p: [x, 0, z], w: size, yaw: x * 17,
     color: "#b8d0b7", nm: "Planted understory clump", grp: G.ground });
 for (const [i, x] of [-26, -20, -12, -5, 2, 9, 17, 24].entries())
   add({ t: "decor", dkind: "treehousebush", p: [x, 0, -18 + Math.sin(i * 2.3) * 2],
     s: [7.5, 3.5, 6], yaw: i * 71, color: "#7f9f87", nm: "Layered rear undergrowth", grp: G.ground });
-for (const [x, z, size] of [[-26, 8, 2.8], [-22.8, 9, 1.6], [24, -3, 1.8]] as const)
+for (const [x, z, size] of [[-26, 8, 2.8], [-22.8, 9, 1.6], [24, -8, 1.8]] as const)
   add({ t: "rock", p: [x, 0.45, z], s: [size, 1.5, size * 0.8], color: "#6f8987", seed: x * x,
     edgeGrinding: false, nm: "Mossy opening stones", grp: G.ground });
 add({ t: "decor", dkind: "treehousemattefar", p: [25, -205, -185], s: [960, 400, 1],

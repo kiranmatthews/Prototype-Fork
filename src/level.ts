@@ -750,6 +750,8 @@ export interface CustomComponent {
   cameraTarget?: [number, number, number]; // cameraView: optional world-space look target
   cameraFov?: number; // cameraView: optional vertical field of view in degrees
   cameraAspect?: number; // cameraView: keep the authored horizontal composition in narrower viewports
+  cameraFollowDistance?: number; // cameraView: follow subject at this distance, preserving authored direction
+  cameraIntroDistance?: number; // cameraView: metres from entry to dolly from the wide shot into follow
   radius?: number; // camnode: lane corner radius · stone: the boulder's radius
   materialStyle?: "unity-sand"; // mesh only: registered MatrixRex sand factory, never external assets
   emissive?: string; // bounded surface emission on EMISSIVE_COMPONENT_TYPES
@@ -2376,7 +2378,7 @@ const LEVEL_DATA_KEYS = new Set([
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "containment",
-  "edgeGrinding", "cameraView", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
+  "edgeGrinding", "cameraView", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid",
   "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "spacing",
@@ -2586,7 +2588,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     "len", "rise", "w", "yaw", "arc", "arcSteps", "deck", "lipRise", "outerBank", "depthBias", "bank", "shake", "range",
     "speed", "cycle", "phase", "travelPhase", "amp", "seed", "n", "vr", "tn", "spacing",
     "baySpacing", "supportDepth", "exitYaw", "coverage", "radius",
-    "collisionHeight", "supportBaseY", "shoreSeaLevel", "shorePhase",
+    "collisionHeight", "supportBaseY", "shoreSeaLevel", "shorePhase", "cameraFollowDistance", "cameraIntroDistance",
   ];
   if (source.sky !== undefined && !SKY_PRESETS.includes(source.sky)) return null;
   if (source.atmosphere !== undefined && !validAtmosphere(source.atmosphere)) return null;
@@ -3007,9 +3009,11 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     if (component.cameraView && (component.t !== "camnode" || !component.s)) return null;
     if (component.arcSteps !== undefined && (component.t !== "vertramp" ||
         !Number.isInteger(component.arcSteps) || component.arcSteps < 8 || component.arcSteps > 48)) return null;
-    if (component.cameraPosition !== undefined || component.cameraTarget !== undefined || component.cameraFov !== undefined || component.cameraAspect !== undefined) {
+    if (component.cameraPosition !== undefined || component.cameraTarget !== undefined || component.cameraFov !== undefined || component.cameraAspect !== undefined || component.cameraFollowDistance !== undefined || component.cameraIntroDistance !== undefined) {
       if (component.t !== "camnode" || !component.cameraView || !component.s) return null;
       if (!!component.cameraPosition !== !!component.cameraTarget) return null;
+      if (component.cameraFollowDistance !== undefined && (!component.cameraPosition || component.cameraFollowDistance < 2 || component.cameraFollowDistance > 100)) return null;
+      if (component.cameraIntroDistance !== undefined && (component.cameraFollowDistance === undefined || component.cameraIntroDistance < 0 || component.cameraIntroDistance > 100)) return null;
       if (component.cameraPosition && component.cameraTarget &&
           Math.hypot(...component.cameraPosition.map((v, i) => v - component.cameraTarget![i])) < 0.01) return null;
       if (component.cameraFov !== undefined && (!Number.isFinite(component.cameraFov) || component.cameraFov < 10 || component.cameraFov > 120)) return null;
@@ -6003,6 +6007,8 @@ export class Level {
       ...(view.cameraTarget ? { cameraTarget: [...view.cameraTarget] as [number, number, number] } : {}),
       ...(view.cameraFov !== undefined ? { cameraFov: view.cameraFov } : {}),
       ...(view.cameraAspect !== undefined ? { cameraAspect: view.cameraAspect } : {}),
+      ...(view.cameraFollowDistance !== undefined ? { cameraFollowDistance: view.cameraFollowDistance } : {}),
+      ...(view.cameraIntroDistance !== undefined ? { cameraIntroDistance: view.cameraIntroDistance } : {}),
     });
     // CAMERA LANE. The rig and the control frame ease along this spine, so a
     // level that loses it stops steering with the course — which is exactly
@@ -7089,7 +7095,9 @@ export class Level {
               ...(c.cameraPosition ? {cameraPosition:[...c.cameraPosition] as [number,number,number]} : {}),
               ...(c.cameraTarget ? {cameraTarget:[...c.cameraTarget] as [number,number,number]} : {}),
               ...(c.cameraFov !== undefined ? {cameraFov:c.cameraFov} : {}),
-              ...(c.cameraAspect !== undefined ? {cameraAspect:c.cameraAspect} : {})});
+              ...(c.cameraAspect !== undefined ? {cameraAspect:c.cameraAspect} : {}),
+              ...(c.cameraFollowDistance !== undefined ? {cameraFollowDistance:c.cameraFollowDistance} : {}),
+              ...(c.cameraIntroDistance !== undefined ? {cameraIntroDistance:c.cameraIntroDistance} : {})});
             const marker=new THREE.Mesh(new THREE.BoxGeometry(...c.s),new THREE.MeshBasicMaterial({color:0x52d7ed,wireframe:true,transparent:true,opacity:.3}));
             marker.position.fromArray(c.p);marker.rotation.y=THREE.MathUtils.degToRad(c.yaw??0);
             marker.visible=false;marker.userData.editorGhost=true;this.root.add(marker);

@@ -9,6 +9,7 @@ const player = game.player;
 game.campaign.startEphemeral();
 let route: THREE.Vector3[] = [], waypoint = 0, ticks = 0, walking = false, waypointRadius = 1.5;
 let heldIntent: {x:number;y:number;remaining:number;start:THREE.Vector3;label:string}|null = null;
+let checkpointSpinTicks = 0;
 let mode = 'Ready', minimumY = Infinity, startingDeaths = 0, frozen = false;
 const panel = document.createElement('details');
 panel.open = true;
@@ -39,7 +40,7 @@ const hold = (x:number,y:number,seconds:number,label:string) => {
 };
 add('Start', () => { place(level().spawnPos.clone()); mode = 'Start'; });
 add('Opening shot', () => { place(level().spawnPos.clone()); frozen=true;mode='Opening shot'; });
-add('Hold Right 3s', () => { place(level().spawnPos.clone());hold(1,0,3,'Held Right'); });
+add('Hold Right 3s', () => { place(new THREE.Vector3(1,0,9));hold(1,0,3,'Held Right'); });
 add('Forward after turn', () => {
   const data=level().captureData(),point=treehouseReviewRoute(data).find((p,i)=>i>0&&p.z<data.spawn[2]-25);
   if(!point){mode='No forward corridor';return;}
@@ -48,6 +49,31 @@ add('Forward after turn', () => {
 add('Walk whole trail', () => {
   place(level().spawnPos.clone()); buildRoute(); ticks = 0; waypoint = 0;
   minimumY = player.pos.y; startingDeaths = player.totalDeaths; walking = true; waypointRadius = 1.5; mode = 'Walking';
+});
+add('Stair follow', () => {
+  place(level().spawnPos.clone());route=treehouseReviewRoute(level().captureData()).slice(1,3);
+  ticks=0;waypoint=0;minimumY=player.pos.y;startingDeaths=player.totalDeaths;
+  walking=true;waypointRadius=.25;mode='Stair follow';
+});
+add('Descend to halfpipe', () => {
+  place(level().spawnPos.clone());
+  route=treehouseReviewRoute(level().captureData()).slice(1).filter(p=>p.x<10&&p.z>-16);
+  route.push(new THREE.Vector3(14,.1,5),new THREE.Vector3(14,.1,-.8));
+  ticks=0;waypoint=0;minimumY=player.pos.y;startingDeaths=player.totalDeaths;
+  walking=true;waypointRadius=.3;mode='Descending to halfpipe';
+});
+add('Inspect path join', () => {
+  const points=treehouseReviewRoute(level().captureData()).filter(p=>p.x>=20&&p.z>=-20);
+  place(points[0]);route=points.slice(1);ticks=0;waypoint=0;
+  minimumY=player.pos.y;startingDeaths=player.totalDeaths;walking=true;waypointRadius=.3;mode='Walking path join';
+});
+add('Bank checkpoint', () => {
+  const cp=level().checkpoints[0],center=cp.box.getCenter(new THREE.Vector3());
+  place(new THREE.Vector3(center.x,cp.spawnPos.y,center.z+.7));checkpointSpinTicks=60;mode='Bank checkpoint';
+});
+add('Pit respawn', () => {
+  stop();game.gameFlow.hide();player.pos.y=level().killY-3;player.prevPos.copy(player.pos);
+  player.grounded=false;player.state='air';mode='Pit respawn';
 });
 add('Manual', () => stop());
 add('Freeze pose', () => { stop('Frozen pose'); frozen = true; });
@@ -98,6 +124,7 @@ add('Hide controls', () => panel.open = false);
 const actualStep = player.step.bind(player);
 player.step = (dt: number, input: any, current: any) => {
   if (frozen) return;
+  if(checkpointSpinTicks>0){input.moveX=input.moveY=0;input.spinPressed=checkpointSpinTicks--%20===0;input.spinHeld=false;}
   if(heldIntent){
     ticks++;input.moveX=heldIntent.x;input.moveY=heldIntent.y;
     input.jumpHeld=input.jumpPressed=input.jumpReleased=input.grindHeld=input.grindPressed=input.spinHeld=input.spinPressed=false;
@@ -105,7 +132,9 @@ player.step = (dt: number, input: any, current: any) => {
   if (walking) {
     ticks++;
     let target = route[waypoint];
-    if (target && Math.hypot(target.x - player.pos.x, target.z - player.pos.z) < waypointRadius) target = route[++waypoint];
+    const onStairs=player.pos.x<0&&(player.pos.y>0.3||(target?.y??0)>.3);
+    const radius=onStairs?.25:waypointRadius;
+    if (target && Math.hypot(target.x - player.pos.x, target.z - player.pos.z) < radius) target = route[++waypoint];
     if (!target || player.state === 'finished') {
       const missedLanding=waypointRadius<1&&Math.abs(player.pos.y-route[route.length-1].y)>.45;
       stop(missedLanding?'FAIL: missed landing height':player.state === 'finished' ? 'PASS: finished' : 'PASS: route ended');
@@ -117,7 +146,7 @@ player.step = (dt: number, input: any, current: any) => {
       const forward=player.camDir.clone().setY(0).normalize(),right=new THREE.Vector3(-forward.z,0,forward.x);
       // Each input describes an intentional new world direction as the camera follows.
       player.viewInput.reset();
-      const pace=waypointRadius<1?0.65:1;
+      const pace=onStairs||waypointRadius<1?0.65:1;
       input.moveX = (dx * right.x + dz * right.z) / length * pace;
       input.moveY = (dx * forward.x + dz * forward.z) / length * pace;
       input.jumpHeld = input.jumpPressed = input.jumpReleased = false;

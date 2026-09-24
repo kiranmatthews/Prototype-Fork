@@ -55,9 +55,11 @@ try {
     : t === "rail" ? item.object.position.clone() : item.anchor.clone().sub(item.travel.base);
   check("camera framing validation, source/runtime capture and editor world-anchor transforms", () => {
     const view={t:"camnode",cameraView:true,p:[3,4,5],s:[40,60,30],yaw:0,radius:10,
-      cameraPosition:[0,9,39],cameraTarget:[0,6,-7],cameraFov:43};
+      cameraPosition:[0,9,39],cameraTarget:[0,6,-7],cameraFov:43,cameraFollowDistance:14.5,cameraIntroDistance:4};
     const data=fixture([view]);assert.ok(normalizeCustomLevelData(data));
     for(const patch of [{cameraPosition:[0,1]},{cameraPosition:[NaN,0,0]},{cameraTarget:undefined},
+      {cameraFollowDistance:NaN},{cameraFollowDistance:1},{cameraFollowDistance:101},
+      {cameraIntroDistance:-1},{cameraIntroDistance:"4"},{cameraFollowDistance:undefined},
       {cameraFov:"43"},{cameraFov:0},{cameraFov:121},{cameraTarget:view.cameraPosition},{t:"platform"},{cameraView:false}])
       assert.equal(normalizeCustomLevelData(fixture([{...view,...patch}])),null,`invalid framing accepted ${JSON.stringify(patch)}`);
     const native=build(data);
@@ -66,6 +68,7 @@ try {
         if(fromRuntime)native.builtFromData=null;
         const captured=native.captureData().components.find(c=>c.cameraView);
         assert.deepEqual(captured.cameraPosition,view.cameraPosition);assert.deepEqual(captured.cameraTarget,view.cameraTarget);assert.equal(captured.cameraFov,43);
+        assert.equal(captured.cameraFollowDistance,14.5);assert.equal(captured.cameraIntroDistance,4);
         const reopened=build(fixture([captured]));
         try {assert.deepEqual(reopened.cameraViews[0].cameraPosition,view.cameraPosition);assert.deepEqual(reopened.cameraViews[0].cameraTarget,view.cameraTarget);}
         finally {reopened.dispose();}

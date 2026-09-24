@@ -32,5 +32,5 @@ export function treehouseStairRoute(data: CustomLevelData): THREE.Vector3[] {
   const balcony = data.components.find(c => c.nm === 'Treehouse balcony support');
   if (!decks.length || !balcony) throw new Error('Missing treehouse support chunks');
   const top = (c: typeof balcony) => new THREE.Vector3(c.p[0], c.p[1] + (c.s?.[1] ?? 0) / 2, c.p[2]);
-  return [new THREE.Vector3(decks[0].p[0], 0, data.spawn[2]), ...decks.map(top), top(balcony)];
+  return [new THREE.Vector3(decks[0].p[0], 0, decks[0].p[2] + 3), ...decks.map(top), top(balcony)];
 }

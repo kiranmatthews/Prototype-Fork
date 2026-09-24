@@ -1903,10 +1903,11 @@ function stepPvp(dt: number): void {
 const cameraViewFraming2 = new CameraViewFraming();
 function updateCamera2(dt: number): void {
   if (!p2) return;
+  const framingSnap = cam2RenderSnapVersion !== p2.renderSnapVersion;
   cameraViewFraming2.restore(camera2);
   updateBaseCamera2(dt);
   const subject = p2.renderPosition;
-  cameraViewFraming2.apply(camera2, cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z));
+  cameraViewFraming2.apply(camera2, cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z), subject, framingSnap);
 }
 
 function updateBaseCamera2(dt: number): void {
@@ -4102,10 +4103,11 @@ const skateChaseCamera = new SkateChaseCamera();
 
 const cameraViewFraming = new CameraViewFraming();
 function updateCamera(dt: number): void {
+  const framingSnap = cameraRenderSnapVersion !== player.renderSnapVersion;
   cameraViewFraming.restore(camera);
   updateBaseCamera(dt);
   const subject = player.renderPosition;
-  cameraViewFraming.apply(camera, cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z));
+  cameraViewFraming.apply(camera, cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z), subject, framingSnap);
   // The chase rig has its own heading; authored view volumes still own the
   // canonical input direction, independently from this presentation layer.
   if ((level.skatepark || TUNING.chaseCam > 0.5) && !level.boulder && level.cameraViews.length) {

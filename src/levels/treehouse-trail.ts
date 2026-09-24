@@ -1,5 +1,5 @@
 import type { CustomComponent, CustomLevelData } from "../level";
-import { TREEHOUSE_OPENING_COMPONENTS } from "./treehouse-opening";
+import { TREEHOUSE_OPENING_COMPONENTS, TREEHOUSE_STAIR_LANDINGS, TREEHOUSE_CLEARING_ROUTE, openingHousePoint } from "./treehouse-opening";
 
 // A first outing through the bush. Both hollows have real, gently sloped
 // ground: missing a jump, grind or swing never drops the player into a hazard.
@@ -16,10 +16,10 @@ export const TREEHOUSE_TRAIL_ROUTE: readonly (readonly [number, number, number])
 ];
 
 add({ t: "platform", p: [0, -2.25, -68], s: [66, 2, 188],
-  tex: "jungle", color: "#5b7040", edgeGrinding: false, invisible: true,
+  tex: "jungle", color: "#5b7040", edgeGrinding: false,
   nm: "Soft forest floor beneath the entire trail", grp: GROUP.trail });
 add({ t: "terrain", p: [0, 0, -16], w: 10, amp: 0, berms: false,
-  curve: "corner", tex: "jungle", color: "#b99b60", edgeGrinding: false,
+  curve: "corner", tex: "dirt", color: "#b99b60", edgeGrinding: false,
   pts: TREEHOUSE_TRAIL_ROUTE.map(([x, y, z]) => [x, z + 16, 0, y]),
   nm: "Easy bush trail · two walk-out hollows", grp: GROUP.trail });
 
@@ -80,19 +80,25 @@ add({ t: "wallpath", p: [0, -1.25, 0], w: 1, rise: 24, closed: true,
   invisible: true, containment: true, curve: "corner",
   pts: [[-32, 27, 2], [60, 27, 3], [60, -157, 3], [10, -157, 3], [10, -26, 3], [-32, -26, 3]],
   nm: "Bush perimeter around opening and trail", grp: GROUP.backdrop });
-add({ t: "clock", p: [26, 0, 16], nm: "Trial start at the bush trail", grp: GROUP.rewards });
-add({ t: "comboorb", p: [29, 0, 14], nm: "Combo start at the bush trail", grp: GROUP.rewards });
+add({ t: "clock", p: [26, 0, 6], nm: "Trial start at the bush trail", grp: GROUP.rewards });
+add({ t: "comboorb", p: [29, 0, 3.5], nm: "Combo start at the bush trail", grp: GROUP.rewards });
 
-for (const [x, y, z, radius] of [[-30, 0, 16, 0], [-10, 0, 16, 0], [12, 0, 16, 0],
-  [24, 0, 16, 10], [35, 0, 3, 10], [35, 0, -20, 0], [35, 0, -45, 0], [35, 0, -65, 8],
+// Start on the balcony and follow every landing before joining the clearing.
+const balconySpawn = openingHousePoint([-16, 8.55, -0.5]);
+for (const p of [balconySpawn, ...[...TREEHOUSE_STAIR_LANDINGS].reverse()])
+  add({ t: "camnode", p: [...p], radius: 0, grp: GROUP.camera });
+for (const p of TREEHOUSE_CLEARING_ROUTE.slice(1))
+  add({ t: "camnode", p: [...p], radius: 2, grp: GROUP.camera });
+for (const [x, y, z, radius] of [[35, 0, -20, 0], [35, 0, -45, 0], [35, 0, -65, 8],
   [36.5, 0, -80, 8], [36.5, 0, -94, 8], [35, 0, -111, 8], [35, 0.35, -150, 0]] as const)
   add({ t: "camnode", p: [x, y, z], radius, grp: GROUP.camera });
-add({ t: "camnode", cameraView: true, p: [-5, 5, 16], s: [66, 60, 90], yaw: 0, radius: 12,
+add({ t: "camnode", cameraView: true, p: [-3, 5, 12], s: [78, 60, 72], yaw: 0, radius: 12,
   cameraPosition: [-1, 8.5, 36], cameraTarget: [-1, 5.5, -5], cameraFov: 46, cameraAspect: 16 / 9,
-  nm: "Reference opening shot · release into forward trail", grp: GROUP.camera });
+  cameraFollowDistance: 14.5, cameraIntroDistance: 4,
+  nm: "Opening reveal · close stair follow · square halfpipe view", grp: GROUP.camera });
 
 export const TREEHOUSE_TRAIL_LEVEL: CustomLevelData = {
-  v: 1, name: "Treehouse Trail", spawn: [-5.5, 0.15, 16], killY: -12,
+  v: 1, name: "Treehouse Trail", spawn: balconySpawn, killY: -12,
   sky: "day", jungleAtmosphere: true, keepPlayFog: true,
   medalTimes: { gold: 32, silver: 48, bronze: 70 },
   atmosphere: { fogEnabled: true, fogNear: 65, fogFar: 170, fogColor: "#497d75",
