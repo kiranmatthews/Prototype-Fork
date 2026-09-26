@@ -136,7 +136,7 @@ try {
   assert.ok(Math.abs(a.group.getObjectByName('chestBone').scale.y - 1) > .01,
     'contact test did not exercise torso deformation');
   for (const [name, target] of planted) {
-    target.y += .016;
+    target.y += .032; // Source vertical gait is presented at twice its authored size.
     near(worldPosition(a, name).distanceTo(target), 0, `elasticity moved planted ${name}`);
   }
   assert.ok(a.group.getObjectByName('headBone').quaternion.angleTo(bPose) > .05, 'head animation did not run');
@@ -278,6 +278,9 @@ try {
   requests.get('fixture://sentry')[0](turretSource.gltf); await turret.ready;
   turret.update(0, { ...frame, state: 'track', stateTime: 0, time: 0, speed: 0 });
   const bearing = worldPosition(turret, 'chestBone'), basePosition = worldPosition(turret, 'base');
+  near(bearing.x, .26, 'housing did not receive doubled presentation scale');
+  near(bearing.z, -.34, 'offset aim bearing did not scale with housing');
+  near(basePosition.y, .4, 'detached sentry base did not receive doubled presentation scale');
   const tip = turret.group.getObjectByName('barrel').localToWorld(new THREE.Vector3(0, 0, .4));
   assert.equal(turret.getMuzzlePosition(muzzle), true);
   near(muzzle.distanceTo(tip), 0, 'socket is not at positive-Z barrel tip');
@@ -348,7 +351,7 @@ try {
           if (height <= 0 && vy < 0) { sample('crouch', 0); break; }
           sample('leap', i / 60, { grounded: false, speed: 3.4, verticalVelocity: vy }, height);
         }
-        assert.ok(max.x < 1.36 && max.y < 1.25 && max.z < 1.34, 'frog animation exceeds expected surface envelope');
+        assert.ok(max.x < 2.72 && max.y < 2.5 && max.z < 2.68, 'frog animation exceeds doubled surface envelope');
         assert.ok(low.value >= -.002, 'hop/landing drove visible geometry into the deck');
       } else if (kind === 'floater') {
         const rotor = visual.group.getObjectByName('rotor'); assert.ok(rotor);
@@ -358,7 +361,7 @@ try {
           sample(state, t, { grounded: false, speed: 3.2 }, rootY);
           near(rotor.position.distanceTo(centre), 0, 'rotor pivot drifted from measured centre');
         }
-        assert.ok(max.x < 1.3 && max.z < 1.3, 'rotor sweeps outside the enemy envelope');
+        assert.ok(max.x < 2.6 && max.z < 2.6, 'rotor sweeps outside the doubled enemy envelope');
         assert.ok(low.value >= -.002, `drone ring enters deck at bottom of swoop: ${low.value.toFixed(4)}m`);
       } else if (kind === 'sentry') {
         const origin = worldPosition(visual, 'torso'), stationary = worldPosition(visual, 'base');
@@ -374,9 +377,9 @@ try {
       } else {
         for (const [state, length] of [['out', 132], ['in', 81]]) for (let i = 0; i <= length; i++) {
           const bounds = sample(state, i / 60), size = bounds.getSize(new THREE.Vector3());
-          if (state === 'in' && i >= 15) assert.ok(size.x < .8 && size.z < .8, 'retracted source blades remain outside safe collider');
+          if (state === 'in' && i >= 15) assert.ok(size.x < 1.6 && size.z < 1.6, 'retracted source blades exceed doubled presentation envelope');
         }
-        assert.ok(max.x < 2.12 && max.z < 2.12, 'extended blade sweep exceeds source enemy size');
+        assert.ok(max.x < 4.24 && max.z < 4.24, 'extended blade sweep exceeds doubled enemy size');
       }
       for (const flung of [false, true]) {
         visual.reset(); visual.group.position.y = 0;

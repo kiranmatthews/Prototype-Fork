@@ -166,7 +166,9 @@ function inPlaceClip(clip:THREE.AnimationClip,model:THREE.Object3D,nodes:BoundNo
 export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):EnemyVisual {
   const startState=kind==='hopper'?'crouch':kind==='floater'?'hover':kind==='sentry'?'track':kind==='spinner'?'out':'patrol';
   const group=new THREE.Group();group.name=`Enemy_${kind}`;
-  const body=new THREE.Group();body.name=`Enemy_${kind}_Aim`;group.add(body);
+  // Static artwork sizing stays outside animation bindings and gameplay resets.
+  const artwork=new THREE.Group();artwork.name=`Enemy_${kind}_Artwork`;artwork.scale.setScalar(2);group.add(artwork);
+  const body=new THREE.Group();body.name=`Enemy_${kind}_Aim`;artwork.add(body);
   const modelMount=new THREE.Group();modelMount.name=`Enemy_${kind}_ModelMount`;body.add(modelMount);
   const url=options.url??`${import.meta.env.BASE_URL}enemies/${kind}.glb`;
   const diagnostic:EnemyVisualDiagnostics={kind,status:'loading',url,clips:[],activeClip:null,
@@ -190,6 +192,9 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
   function install(asset:EnemyAsset):void {
     if(disposed)return;
     model=cloneSkeleton(asset.scene) as THREE.Group;
+    // The drone straddles its origin: grow upward from its original lower edge
+    // so the larger ring retains ground clearance at the bottom of a swoop.
+    if(kind==='floater')artwork.position.y=-new THREE.Box3().setFromObject(model,true).min.y;
     const metadata=assetMetadata(model);
     walkSpeed=options.walkSpeed??metadata.walkSpeed??2.4;
     walkContacts=options.walkContacts??metadata.walkContacts;
@@ -197,7 +202,7 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     // A fixed sentry base must not follow the gameplay-owned aiming pivot.
     const base=kind==='sentry'?nodes.base?.node:null;
     if(base){model.updateMatrixWorld(true);base.matrixWorld.decompose(position,rotation,delta);
-      base.removeFromParent();base.position.copy(position);base.quaternion.copy(rotation);base.scale.copy(delta);group.add(base);}
+      base.removeFromParent();base.position.copy(position);base.quaternion.copy(rotation);base.scale.copy(delta);artwork.add(base);}
     if(kind==='sentry'){
       // Generated housings need not be centred at X/Z zero. Turn around the
       // authored bearing while the inverse mount preserves the exact rest pose.

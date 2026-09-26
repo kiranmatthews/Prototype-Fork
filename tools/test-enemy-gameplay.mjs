@@ -151,7 +151,7 @@ try {
   const liveMuzzle = new THREE.Vector3();
   if (sentry.visual.getMuzzlePosition(liveMuzzle)) {
     near(shot.mesh.position.distanceTo(liveMuzzle), 0, 'shot did not start at visible barrel tip');
-    near(shot.mesh.position.y - sentry.group.position.y, .5124, 'source muzzle height', .02);
+    near(shot.mesh.position.y - sentry.group.position.y, 1.0248, 'doubled model muzzle height', .02);
   } else near(shot.mesh.position.y - sentry.group.position.y, .72, 'missing asset keeps fallback muzzle');
   tick(.16); assert.equal(sentry.state, 'cooldown'); tick(.71); assert.equal(sentry.state, 'track');
   level.killEnemy(sentry); assert.equal(level.projectiles.length, 0, 'defeated sentry clears its shots');

@@ -358,7 +358,7 @@ try {
         const moved = actualVertices(visual.group);
         assert.equal(moved.length, baseline.length);
         const movingCenter = center(moved);
-        assert.ok(Math.hypot(movingCenter.x - restCenter.x, movingCenter.z - restCenter.z) < .2,
+        assert.ok(Math.hypot(movingCenter.x - restCenter.x, movingCenter.z - restCenter.z) < .4,
           `${kind}: source walk carries the surface away from the gameplay root`);
         for (let i = 0; i < moved.length; i++) motion = Math.max(motion, moved[i].distanceTo(baseline[i]));
         assert.deepEqual(visual.group.position.toArray(), [0, 0, 0], `${kind}: clip moved gameplay root`);
@@ -367,7 +367,7 @@ try {
       assert.ok(motion > .01, `${kind}: loaded walk does not deform its actual surface`);
     }
     if (kind === 'spinner') {
-      for (const [state, limit] of [['out', 1.05], ['in', .4]]) {
+      for (const [state, limit] of [['out', 2.1], ['in', .8]]) {
         visual.reset();
         let swept = 0;
         for (let sample = 0; sample < 64; sample++) {
