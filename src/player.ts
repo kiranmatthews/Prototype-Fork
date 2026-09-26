@@ -446,6 +446,7 @@ interface GroundHit {
   moverId?: number; // standing on a moving platform: ride along with it
   crumbleId?: number; // standing on a crumble pad: it starts breaking
   slippy?: boolean; // an icy/slick plank: friction cut so you skate on and can't stop short
+  iceGrip?: number; // authored multiplier; absent retains the original ice controls
   vert?: boolean; // AUTHORED transition face: the level says "this is vert", overriding the normal.y guesswork
   finishPad?: boolean; // the warp pad's masonry: standing on it ends the run
   halfpipe?: Halfpipe; // the transition wall we're on (drives the pendulum + coping launch)
@@ -5624,6 +5625,7 @@ export class Player {
     // post-brake lock/recovery (whichever is more restrictive wins).
     const walkDir = input.moveX !== 0 || input.moveY !== 0;
     const slickWalk = this.groundHit !== null && !!this.groundHit.slippy;
+    const iceGrip = this.authoredIceGrip();
     if (this.freeSkate || this.crawling || slamFlat || this.slideTimer > 0) this.walkRamp = 0;
     else if (walkDir && TUNING.walkRampTime > 0)
       this.walkRamp = Math.min(1, this.walkRamp + dt / TUNING.walkRampTime);
@@ -5698,6 +5700,12 @@ export class Player {
 
       if (planted) {
         this.walkVelocity.set(0, 0, 0);
+        this.walkTurnaround = false;
+        this.walkIntent.set(0, 0, 0);
+      } else if (slickWalk && this.groundHit?.iceGrip !== undefined) {
+        // Authored ice carries the entire approach vector through release and
+        // steering. Counter-steer early; sideways input cannot erase inertia.
+        this.walkVelocity.lerp(this.walkTarget, Math.min(1, CONST.slipAccel * iceGrip * dt));
         this.walkTurnaround = false;
         this.walkIntent.set(0, 0, 0);
       } else if (slickWalk) {
@@ -5818,7 +5826,7 @@ export class Player {
         const s = Math.abs(this.speed);
         const ramp = Math.min(1, this.brakeT / TUNING.brakeRampTime);
         const ease = 0.25 + 0.75 * Math.min(1, s / Math.max(TUNING.cruiseSpeed, 1));
-        const rate = TUNING.turnaround * ramp * ramp * ease;
+        const rate = TUNING.turnaround * ramp * ramp * ease * iceGrip;
         this.speed = Math.sign(this.speed) * Math.max(0, s - rate * dt);
         braking = true;
         // screech only once the brake is really biting, not on a light tap
@@ -5842,7 +5850,8 @@ export class Player {
         if (this.grounded && this.groundHit && this.groundHit.slippy)
           this.greaseT = 0.35;
         else this.greaseT = Math.max(0, this.greaseT - dt);
-        const slick = this.greaseT > 0 ? 0.22 : 1; // greasy wheels: see greaseT
+        const slick = this.groundHit?.slippy && this.groundHit.iceGrip !== undefined
+          ? iceGrip : this.greaseT > 0 ? 0.22 : 1; // authored grip is relative to dry steering
         const rx = this.rawInput.moveX;
         const ry = this.manualing !== 0 ? 0 : this.rawInput.moveY;
         // (during a MANUAL, up/down is the balance pole ONLY — no accel, no
@@ -5932,12 +5941,12 @@ export class Player {
             // The charge only ADDS speed up to maxSpeed — it must never chop
             // hard-earned downhill overspeed back down (that read as greasy).
             if (this.charging && this.speed < TUNING.maxSpeed)
-              this.speed = Math.min(this.speed + TUNING.chargeBoost * dt, TUNING.maxSpeed);
+              this.speed = Math.min(this.speed + TUNING.chargeBoost * iceGrip * dt, TUNING.maxSpeed);
             else if (!this.charging && !onPipe) this.cruiseEase(dt, steepGround);
           }
         } else if (this.charging && this.speed > 1) {
           if (this.speed < TUNING.maxSpeed)
-            this.speed = Math.min(this.speed + TUNING.chargeBoost * dt, TUNING.maxSpeed);
+            this.speed = Math.min(this.speed + TUNING.chargeBoost * iceGrip * dt, TUNING.maxSpeed);
         } else {
           // TRULY idle (no stick, no X): friction bleeds you all the way to a
           // stop, below cruise. Coasting WITH a direction held (above) settles
@@ -6672,12 +6681,13 @@ export class Player {
   /** Park controls use the board's surface frame and the reference's kick,
    * brake and drag rules. Course/platforming tuning remains separate. */
   private stepParkGroundMotor(dt: number, input: Input): boolean {
+    const iceGrip = this.authoredIceGrip();
     const n = this.rideNormal;
     const slowSteep = n.y < 0.5 && this.speed < SKATE_PARK.slowSlopeSpeed;
     const braking = this.grindDropSteerT <= 0 && !this.manualing && !slowSteep &&
       (input.grabHeld || this.rawInput.moveY < -0.25);
     const turn = (this.grindDropSteerT > 0 ? 0 : -this.rawInput.moveX) *
-      (braking ? SKATE_PARK.sharpTurnRate : SKATE_PARK.turnRate) * dt;
+      (braking ? SKATE_PARK.sharpTurnRate : SKATE_PARK.turnRate) * iceGrip * dt;
     this.axisF.applyAxisAngle(VERT_UP, turn);
     if (slowSteep && Math.hypot(n.x, n.z) > 0.001) {
       const current = Math.atan2(this.axisF.x, this.axisF.z);
@@ -6703,13 +6713,13 @@ export class Player {
     const coasting = !input.jumpHeld && !this.manualing &&
       Math.hypot(this.rawInput.moveX, this.rawInput.moveY) < 0.05;
     if (braking) {
-      this.speed = Math.max(0, this.speed - SKATE_PARK.brake * dt);
+      this.speed = Math.max(0, this.speed - SKATE_PARK.brake * iceGrip * dt);
       this.brakeLockT = this.brakeRampT = 0;
     } else if (!coasting && !this.manualing && !slowSteep) {
       const crouching = input.jumpHeld;
       const target = crouching ? parkChargedSpeed() : parkCruiseSpeed();
       const acceleration = crouching ? TUNING.parkChargeAcceleration : TUNING.parkCruiseAcceleration;
-      if (this.speed < target) this.speed = Math.min(target, this.speed + acceleration * dt);
+      if (this.speed < target) this.speed = Math.min(target, this.speed + acceleration * iceGrip * dt);
     }
     if (coasting && !braking && n.y > 0.9) {
       this.frictionBleed(dt, false);
@@ -8102,6 +8112,12 @@ export class Player {
     else resetVertBoardRelease(this.vertBoardRelease);
   }
 
+  // Extra grip is opt-in: old Sky Bridge ice and every ordinary material keep
+  // their established response. Read contact so dry exit pads restore control.
+  private authoredIceGrip(): number {
+    return this.groundHit?.slippy ? this.groundHit.iceGrip ?? 1 : 1;
+  }
+
   // BASELINE CRUISE: while free-skating the board holds cruiseSpeed on its
   // own. Above it (a released charge, spent downhill speed) it settles back
   // down at chargeDecay; below it (a hill scrubbed you) the same rate eases
@@ -8122,7 +8138,7 @@ export class Player {
     // was to hold X forever. Overspeed now bleeds through the same friction
     // model whether you steer or coast; only the pick-up rate stays chargeDecay.
     if (Math.abs(this.speed) > cruise) this.frictionBleed(dt, steep);
-    else if (this.grounded) this.speed = Math.min(cruise, this.speed + TUNING.chargeDecay * dt);
+    else if (this.grounded) this.speed = Math.min(cruise, this.speed + TUNING.chargeDecay * this.authoredIceGrip() * dt);
   }
 
   // ROLL-OUT friction, THPS-shaped: explicitly tagged Beach sand gets the full
@@ -8146,7 +8162,7 @@ export class Player {
     }) * dt;
     // Slick planks (icy sky-bridge boards): almost no friction, so you keep
     // sliding and can't stop short of the gap — the precision hazard.
-    if (this.groundHit && this.groundHit.slippy) bleed *= CONST.slippyFriction;
+    if (this.groundHit && this.groundHit.slippy) bleed *= CONST.slippyFriction * this.authoredIceGrip();
     this.speed -= Math.sign(this.speed) * Math.min(bleed, s);
   }
 
@@ -14945,6 +14961,7 @@ export class Player {
       moverId: hit.object.userData.moverId as number | undefined,
       crumbleId: hit.object.userData.crumbleId as number | undefined,
       slippy: hit.object.userData.slippy as boolean | undefined,
+      iceGrip: hit.object.userData.iceGrip as number | undefined,
       vert: hit.object.userData.vert as boolean | undefined,
       finishPad: hit.object.userData.finishPad as boolean | undefined,
       trampolineBounce: hit.object.userData.trampolineBounce as number | undefined,

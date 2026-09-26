@@ -50,7 +50,7 @@ assert.deepEqual(
     ["coastal-street-run", "Coastal"],
     ["island-hopper", "Island Hopper"],
     ["jungle-gate-run", "Jungle Gate"],
-    ["codex-lab", "Codex Switchback"],
+    ["codex-lab", "Blockworks"],
     ["astra-chimeworks", "Chimeworks"],
     ["jungle-cup", "Jungle Cup"],
     ["treehouse-trail", "Treehouse Trail"],

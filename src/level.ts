@@ -647,7 +647,10 @@ export interface CustomComponent {
   p: [number, number, number];
   s?: [number, number, number];
   collisionHeight?: number; // wall/wallpath: optional collider height when visual height differs
-  slip?: boolean; // platform only: an icy/slick deck (friction cut, you can't stop short)
+  slip?: boolean; // platform/mesh: an icy/slick deck (friction cut, you can't stop short)
+  // Slip only, 0.02..1: fraction of dry skate steering/braking/drive; scales
+  // legacy ice run response and rollout drag. Explicit values enable vector run inertia.
+  iceGrip?: number;
   edgeGrinding?: boolean; // solid surface boundary grind paths (default true; false = explicit opt-out)
   trafficRoad?: boolean; // LEGACY only: removed by migration along with retired car enemies
   vertices?: number[];
@@ -2377,7 +2380,7 @@ const LEVEL_DATA_KEYS = new Set([
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
-  "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "containment",
+  "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "iceGrip", "containment",
   "edgeGrinding", "cameraView", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
   "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid",
@@ -2588,7 +2591,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     "len", "rise", "w", "yaw", "arc", "arcSteps", "deck", "lipRise", "outerBank", "depthBias", "bank", "shake", "range",
     "speed", "cycle", "phase", "travelPhase", "amp", "seed", "n", "vr", "tn", "spacing",
     "baySpacing", "supportDepth", "exitYaw", "coverage", "radius",
-    "collisionHeight", "supportBaseY", "shoreSeaLevel", "shorePhase", "cameraFollowDistance", "cameraIntroDistance",
+    "collisionHeight", "supportBaseY", "shoreSeaLevel", "shorePhase", "cameraFollowDistance", "cameraIntroDistance", "iceGrip",
   ];
   if (source.sky !== undefined && !SKY_PRESETS.includes(source.sky)) return null;
   if (source.atmosphere !== undefined && !validAtmosphere(source.atmosphere)) return null;
@@ -2785,6 +2788,9 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       if (typeof number === "number" && Math.abs(number) > MAX_ABS) return null;
     }
     if (
+      (component.iceGrip !== undefined &&
+        (component.iceGrip < 0.02 || component.iceGrip > 1 || component.slip !== true ||
+          !["platform", "mesh"].includes(component.t))) ||
       (component.axis !== undefined && !axes.has(component.axis)) ||
       (component.travelSign !== undefined &&
         ((component.travelSign !== 1 && component.travelSign !== -1) ||
@@ -5178,6 +5184,7 @@ export class Level {
         ...(m.userData.beachSandFriction ? { beachSand: true } : {}),
         ...(material.userData.unitySandTileMetres === UNITY_SAND_TILE_METRES ? { materialStyle: "unity-sand", tex: "sand" } : {}),
         ...(m.userData.slippy ? { slip: true } : {}),
+        ...(m.userData.iceGrip !== undefined ? { iceGrip: m.userData.iceGrip as number } : {}),
       };
       remap = new Map();
       chunks.push(component);
@@ -5300,6 +5307,7 @@ export class Level {
     if (c.fog !== undefined) mesh.userData.authoredFog = c.fog;
     if (c.solid === false) { mesh.userData.visualOnly = true; mesh.userData.edgeGrinding = false; }
     if (c.slip) mesh.userData.slippy = true;
+    if (c.iceGrip !== undefined) mesh.userData.iceGrip = c.iceGrip;
     if (c.beachSand) mesh.userData.beachSandFriction = true;
     if (c.edgeGrinding === false) mesh.userData.edgeGrinding = false;
     if (c.invisible) {
@@ -5462,6 +5470,7 @@ export class Level {
             // this a captured copy of that level turned every slippy plank
             // into ordinary wood and the level lost its whole point
             slip: m.userData.slippy === true ? true : undefined,
+            iceGrip: m.userData.iceGrip as number | undefined,
             ...edgeInfo(m),
           });
         }
@@ -6342,6 +6351,7 @@ export class Level {
             );
             mesh.name = c.slip ? "slippy plank" : "platform";
             if (c.slip) mesh.userData.slippy = true;
+            if (c.iceGrip !== undefined) mesh.userData.iceGrip = c.iceGrip;
             if (c.shoreProfile) {
               mesh.userData.shoreProfile = true;
               // Island Hopper's authored shore shelves are real beach sand.
@@ -6453,6 +6463,7 @@ export class Level {
             mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0); // ride surface is raycast: free spin is fine
             mesh.name = c.slip ? "slippy plank" : "platform";
             if (c.slip) mesh.userData.slippy = true; // friction cut: can't stop short
+            if (c.iceGrip !== undefined) mesh.userData.iceGrip = c.iceGrip;
             this.root.add(mesh);
             this.groundMeshes.push(mesh);
             // SIDE COLLISION: without it you clip into a thick platform's

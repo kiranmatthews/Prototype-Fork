@@ -343,7 +343,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
   {
     progressKey: "codex-switchback",
     levelId: "codex-lab",
-    name: "Codex Switchback",
+    name: "Blockworks",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-1",
     mapPath: "upper-branch",
