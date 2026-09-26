@@ -1,509 +1,225 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
-import { runInThisContext } from 'node:vm';
-import { createServer } from 'vite';
-import * as THREE from 'three';
-import { makeInput } from './jungle-cup-harness.mjs';
+import { writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { pathToFileURL } from 'node:url';
+import { withBlockworksRuntime } from './blockworks-runner.mjs';
 
-// Exercise authored geometry with the production controller. These are fixed
-// launch-state fixtures, not a solver which teleports between landing targets.
-const harness = await readFile(new URL('./test-crouch-jump-slam.mjs', import.meta.url), 'utf8');
-runInThisContext('const noop = () => {};' + harness.slice(
-  harness.indexOf('function installHeadlessDom()'), harness.indexOf('\nconst held'),
-) + '\ninstallHeadlessDom();');
-const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true } });
-const warn = console.warn, error = console.error;
-console.warn = (...a) => { if (!/failed|GLB|procedural skateboard/i.test(String(a[0]))) warn(...a); };
-console.error = (...a) => { if (!/failed|GLB/i.test(String(a[0]))) error(...a); };
-const fixtures = [], failures = [], evidence = [];
-function check(name, run) {
-  try { const detail = run(); evidence.push({ name, ...(detail ?? {}) }); }
-  catch (error) { failures.push(`${name}: ${error.message}`); }
+// Complete source world, real input, authored spawn: no resets, warps, velocity
+// changes, direct switch activation, or rotation into easier local axes.
+const station = p => 20 - p.pos.z;
+const round = n => Math.round(n * 1000) / 1000;
+function record(r, name, recordings) {
+  recordings.push({ name, level: 'codex-switchback', fixedStep: r.dt,
+    sourceSha256: createHash('sha256').update(JSON.stringify(r.source)).digest('hex'),
+    tuning: structuredClone(r.TUNING), frames: r.trace, actions: r.actions });
 }
-try {
-  const { Level } = await server.ssrLoadModule('/src/level.ts');
-  const { Player } = await server.ssrLoadModule('/src/player.ts');
-  const { TUNING, CONST } = await server.ssrLoadModule('/src/tuning.ts');
-  const { CODEX_LAB_LEVEL: source, BLOCKWORKS_SECTIONS: sections, BLOCKWORKS_CAMERA_ROUTE: route } =
-    await server.ssrLoadModule('/src/levels/codex-lab.ts');
-  const { CARLISLE_COAST_LEVEL: carlisle } = await server.ssrLoadModule('/src/levels/carlisle-coast.ts');
-  const dt = CONST.fixedStep;
-  const tuningBefore = JSON.stringify(TUNING);
-  const create = data => {
-    const scene = new THREE.Scene();
-    const level = new Level(scene, { id: 'blockworks-test', name: data.name, data });
-    scene.updateMatrixWorld(true);
-    const player = new Player(scene);
-    player.enterLevel('blockworks-test'); player.endlessDeaths = true;
-    player.rawInput = makeInput(); player.respawn(level, true);
-    const tick = overrides => {
-      const input = makeInput(overrides);
-      // Match Input.poll's unit clamp and replay quantization, including
-      // keyboard diagonals. Test pilots must not receive faster air steering.
-      const magnitude=Math.hypot(input.moveX,input.moveY);
-      if(magnitude>1){input.moveX/=magnitude;input.moveY/=magnitude;}
-      input.moveX=Math.round(input.moveX*100)/100;
-      input.moveY=Math.round(input.moveY*100)/100;
-      player.step(dt, input, level); level.update(dt);
+
+export function runStraightUpNegativeControl(r) {
+    const evidence = [];
+    r.until(() => r.p.state === 'dead', { moveY: 1, jumpHeld: true },
+      { maxFrames: 1200, allowDeath: true, label: 'straight input leaves the curved road' });
+    const deathStation = station(r.p);
+    assert.ok(deathStation < 120, `Up survived the first curved dry stretch to s${deathStation}`);
+    assert.ok(r.trace.every(row => row.input.moveX === 0 && !row.input.jumpReleased));
+    assert.ok(r.trace.some(row => row.speed > 5 && row.state === 'air'));
+    evidence.push({ test: 'Up alone cannot follow the road', deathStation: round(deathStation), frames: r.frame });
+    return evidence[0];
+}
+
+/** Continue the supplied live player from the authored spawn through s510. */
+export function runOpeningAndTerrace(r) {
+    const evidence = [];
+    const { p, l, THREE } = r;
+    const { routePoint, routeTangent, BLOCKWORKS_CLIMBS } = r.sourceModule;
+    const at = (s, y = 0, u = 0) => routePoint(s, y, u);
+    const progress = () => station(p);
+    const walkingFrames = [];
+    const walkFlowTo = (target, label) => {
+      const begin = r.frame;
+      r.until(() => r.distanceTo(target) < .9, () => {
+        assert.ok(p.grounded, `${label} lost roof support`);
+        // Run across the usable roof, then ease the real analog input over
+        // the last three metres before the short precision-placement beat.
+        const pace = Math.min(.8, Math.max(.2, r.distanceTo(target) * .8 / 3));
+        return r.steerToward(target, { pace });
+      }, { maxFrames:1800,label:`${label} · run and ease` });
+      r.walkTo(target, {maxFrames:600,label:`${label} · final placement`});
+      walkingFrames.push(...r.trace.slice(begin));
     };
-    const fixture = { level, player, tick };
-    fixtures.push(fixture); return fixture;
-  };
-  const full = create(source);
+    const entryOffset = s => s > 112 && s < 145 ? 2.2 * Math.sin(Math.PI * (s - 112) / 33) : 0;
+    r.skateAlong(s => at(s, 0, entryOffset(s)), { to: 164.7, progress, lookAhead: 9,
+      label: 'charge and carve from the authored spawn' });
+    const takeoff = r.snapshot();
+    assert.ok(p.grounded && p.freeSkate && p.speed > 21, `entry approach lost momentum: ${JSON.stringify(takeoff)}`);
+    r.releaseJump(r.steerToward(at(185, -2.4)));
+    assert.equal(p.state, 'air', 'charged gap release did not launch');
+    r.until(() => p.grounded, () => r.steerToward(at(185, -2.4)),
+      { maxFrames: 120, label: 'cross first 10.8m gap' });
+    const landing = r.snapshot();
+    assert.ok(progress() >= 176.8 && Math.abs(p.pos.y + 2.4) < .1,
+      `gap did not land on its far deck: ${JSON.stringify(landing)}`);
+    // Coasting leaves the released charge alone while carrying the landing
+    // directly through the next curve and into the foot-climb approach.
+    r.skateAlong(s => at(s, -2.4), { to: 244, progress, lookAhead: 9, charge: false,
+      label: 'carry the gap landing directly into Terrace canyon' });
+    const roadRun = r.trace.filter(row => 20-row.position[2] > 35 && 20-row.position[2] < 235 && row.grounded && row.speed > 10);
+    const headings = roadRun.map(row => Math.atan2(row.heading[0], -row.heading[2]) * 180 / Math.PI);
+    const steering = r.trace.filter(row => row.frame <= landing.frame && Math.abs(row.input.moveX) > .08).length;
+    assert.ok(steering > 100, 'positive route lacked lateral steering');
+    assert.ok(Math.max(...headings) - Math.min(...headings) > 25, 'physical heading never followed both sides of the bend');
+    assert.ok(roadRun.some(row=>row.input.moveX>.15) && roadRun.some(row=>row.input.moveX<-.15),
+      'curved entry did not require steering in both directions');
+    evidence.push({ test: 'continuous entry carving and charged gap', takeoffStation: round(20-takeoff.position[2]),
+      takeoffSpeed: round(takeoff.speed), landingStation: round(20-landing.position[2]),
+      lateralInputFrames: steering, headingSweepDegrees: round(Math.max(...headings)-Math.min(...headings)) });
 
-  check('Carlisle-sized route and ordered camera spine', () => {
-    const length = sections.reduce((total, s) => total + s.length, 0);
-    const coastGate = carlisle.components.find(c => c.t === 'gate');
-    const coastSpan = Math.hypot(coastGate.p[0] - carlisle.spawn[0], coastGate.p[2] - carlisle.spawn[2]);
-    assert.ok(length >= coastSpan * .9 && length <= coastSpan * 1.2, `route ${length}m vs Carlisle ${coastSpan}m`);
-    const camera = source.components.filter(c => c.t === 'camnode' && !c.cameraView);
-    for (let i = 1; i < camera.length; i++)
-      assert.ok(Math.hypot(camera[i].p[0]-camera[i-1].p[0], camera[i].p[2]-camera[i-1].p[2]) <= 7.01,
-        `camera gap at node ${i}`);
-    assert.ok(route.length > sections.length * 3);
-    return { metres: length, carlisleMetres: Math.round(coastSpan), cameraNodes: camera.length };
-  });
+    r.until(() => !p.freeSkate && Math.abs(p.speed) < .1, { grabHeld: true },
+      { maxFrames: 240, label: 'brake on the canyon approach' });
+    r.stepFor(45, {});
+    const climb = BLOCKWORKS_CLIMBS.find(c => c.name === 'Courtyard roof bays');
+    assert.ok(climb, 'source terrace traversal metadata is missing');
+    walkFlowTo(climb.start, 'approach the first roof bay');
 
-  check('Spawn and every checkpoint have actual collision support', () => {
-    const { player: p, level: l, tick } = full;
-    for (const at of [l.spawnPos, ...l.checkpoints.map(cp => cp.spawnPos)]) {
-      p.pos.copy(at); p.laneCursor.s = -1; p.settle(l);
-      for (let i=0;i<15;i++) tick({});
-      assert.ok(p.grounded && p.state === 'ride', `unsupported stop ${at.toArray()} -> ${p.pos.toArray()} ${p.state}`);
-      assert.ok(Math.abs(p.pos.y-at.y)<.65, `stop shifted vertically ${at.toArray()} -> ${p.pos.toArray()}`);
+    const ray = new THREE.Raycaster();
+    const groundAt = (q, expectedY) => {
+      ray.set(new THREE.Vector3(q[0], expectedY + 30, q[2]), new THREE.Vector3(0,-1,0));
+      const hit = ray.intersectObjects(l.groundMeshes, false).find(h =>
+        h.face && h.face.normal.clone().transformDirection(h.object.matrixWorld).y > .8);
+      return hit?.point.y;
+    };
+    const planRise = (roof, oldY) => {
+      const [fx,,fz] = routeTangent(roof.s), right = [-fz,fx], centre = roof.point;
+      const plans = [];
+      for (let u = -roof.width/2+.7; u <= roof.width/2-.7; u += .4)
+        for (const inset of [.65,.4]) for (const distance of [2.9,3,3.1]) {
+          const target = [centre[0]-fx*(roof.depth/2-inset)+right[0]*u,roof.top,
+            centre[2]-fz*(roof.depth/2-inset)+right[1]*u];
+          const launch = [target[0]-fx*distance,oldY,target[2]-fz*distance];
+          if (Math.abs((groundAt(launch,oldY)??Infinity)-oldY) > .08 ||
+              Math.abs((groundAt(target,roof.top)??Infinity)-roof.top) > .08) continue;
+          plans.push({launch,target,distance,cost:Math.hypot(launch[0]-p.pos.x,launch[2]-p.pos.z)+Math.abs(u)*.1});
+        }
+      plans.sort((a,b)=>a.cost-b.cost);
+      assert.ok(plans.length, `no supported 2.4m foot-jump launch reaches roof s${roof.s} from y${oldY}`);
+      return plans[0];
+    };
+    const roofLandings = [];
+    for (const roof of climb.steps) {
+      const plan = planRise(roof,p.pos.y);
+      walkFlowTo(plan.launch, `cross the lower roof for s${roof.s}`);
+      r.jumpTo(plan.target, { heightTolerance: .1, arrivalTolerance: .45,
+        label: `charged world-space roof jump at s${roof.s}` });
+      roofLandings.push({roof:roof.s,position:p.pos.toArray().map(round),plannedDistance:plan.distance});
     }
-    return { supportedStops: l.checkpoints.length + 1 };
-  });
+    walkFlowTo(climb.exit, 'cross the final roof into its curved departure');
+    assert.ok(Math.abs(p.pos.y-7.2)<.1, 'roof sequence did not reach the high curved road');
 
-  check('Switch groups isolate metal terrain and checkpoints preserve progress', () => {
-    const l = full.level;
-    l.reset(true);
-    const switches = l.crates.filter(c => c.bang);
-    assert.equal(switches.length, 5);
-    for (const sw of switches) {
-      l.reset(true);
-      const ids = sw.groupIds;
-      const controlled = l.crates.filter(c => c.metal && c.groupIds?.some(id => ids.includes(id)));
-      const outside = l.crates.filter(c => c.metal && !controlled.includes(c));
-      assert.ok(controlled.length >= 27);
-      assert.ok(controlled.every(c => c.pending));
-      l.triggerBang(sw);
-      assert.ok(controlled.every(c => c.alive && !c.pending));
-      assert.ok(outside.every(c => c.pending), 'a key opened another crossing');
-      const homes = controlled.map(c => c.mesh.position.clone());
-      for(let i=0;i<120;i++) l.update(dt);
-      controlled.forEach((c,i) => assert.ok(c.mesh.position.distanceTo(homes[i])<.001, 'materialized pier fell'));
-      l.activateCheckpoint(l.checkpoints[1], 0);
-      const other = switches.find(c => c !== sw);
-      l.triggerBang(other); l.reset(false);
-      assert.ok(sw.bangUsed && !other.bangUsed, 'checkpoint did not roll back later key');
-      assert.ok(controlled.every(c => !c.pending) && outside.every(c => c.pending));
-    }
-    l.reset(true);
-    return { independentKeys: switches.length };
-  });
-
-  // Rigidly rotate source sections to -Z so identical control samples can
-  // test north-, east- and westbound authored geometry. No dimensions change.
-  const sectionFixtures = new Map();
-  const localSection = index => {
-    if(sectionFixtures.has(index)) return sectionFixtures.get(index);
-    const s=sections[index], a=s.yaw*Math.PI/180, cs=Math.cos(a), sn=Math.sin(a);
-    const vector=(x,z)=>[cs*x-sn*z,sn*x+cs*z];
-    const local=p=>{const [x,z]=vector(p[0]-s.start[0],p[2]-s.start[2]);return [x,p[1],z];};
-    const components=source.components.filter(c=>{
-      if(c.grp===10+index)return !['camnode','zone'].includes(c.t);
-      const p=local(c.p);return c.grp>=100 && p[2]<=0 && p[2]>=-s.length && Math.abs(p[0])<35;
-    }).map(c=>{
-      const d=structuredClone(c);d.p=local(c.p);
-      if(d.yaw!==undefined)d.yaw=(d.yaw-s.yaw+360)%360;
-      if(d.t==='pit' && s.yaw%180!==0)d.s=[d.s[2],d.s[1],d.s[0]];
-      if(d.pts)d.pts=d.pts.map(p=>{const [x,z]=vector(p[0],p[1]);return [x,z,...p.slice(2)];});
-      return d;
-    });
-    // Finish is kept far from every traversal probe; the full source gate is
-    // tested separately below, including its normal finish-state transition.
-    for(let i=components.length-1;i>=0;i--)if(components[i].t==='gate')components.splice(i,1);
-    components.push({t:'gate',p:[500,0,-500]});
-    const f=create({...source,name:s.name,spawn:[0,s.start[1]+.02,-10],components});
-    sectionFixtures.set(index,f);return f;
-  };
-  const position = (f, x,y,v, board=false,speed=0) => {
-    const {player:p,level:l}=f;
-    p.pos.set(x,y+.02,-v);p.laneCursor.s=-1;p.settle(l);
-    p.groundHit=p.queryGround(l);p.freeSkate=board;p.speed=speed;
-    p.walkVelocity.set(0,0,-speed);p.walkRamp=1;
-    p.prevPos.copy(p.pos);p.lastPlanar=speed;
-  };
-  const jump = (f,{x=0,y,v,board=false,speed=9,moveX=0,moveY=1,frames=100,steer}) => {
-    position(f,x,y,v,board,speed);
-    const p=f.player;
-    assert.ok(p.groundHit && Math.abs(p.groundHit.y-y)<.06,
-      `unsupported launch ${[x,y,v]}: actual ground ${p.groundHit?.y}`);
-    // A charged release starts the arc; every subsequent position, collision,
-    // landing or bail comes from the unchanged production movement controller.
-    p.charging=true;p.chargeTimer=TUNING.jumpChargeTime;
-    f.tick({jumpReleased:true,moveX,moveY});
-    assert.equal(p.state,'air','charged release failed to launch');
-    const trace=[];
-    for(let i=0;i<frames;i++) {
-      f.tick(steer?.(i,p) ?? {moveX,moveY});trace.push({x:p.pos.x,y:p.pos.y,v:-p.pos.z,state:p.state,grounded:p.grounded});
-      if(p.grounded || ['dead','bail','hang','finished'].includes(p.state))break;
-    }
-    return {x:p.pos.x,y:p.pos.y,v:-p.pos.z,state:p.state,grounded:p.grounded,bailing:p.isBailing,trace};
-  };
-  const landing=(result,y,minV,label)=>{
-    assert.ok(result.grounded && !result.bailing && result.state==='ride' && result.y>=y-.08 && result.v>=minV,
-      `${label}: ${JSON.stringify({...result,trace:result.trace.slice(-3)})}`);
-  };
-
-  // Follow several pads without resetting position, velocity, charge, or
-  // contact state between hops. Foot-air input stops over the intended lid;
-  // the next neutral hold really charges through ordinary input samples.
-  const precisionRun=(f,start,targets)=>{
-    if(start)position(f,...start);
-    const p=f.player,landed=[];
-    assert.ok(p.grounded && p.groundHit && Math.abs(p.groundHit.y-p.pos.y)<.06,'precision run starts unsupported');
-    for(const [x,y,v]of targets) {
-      for(let frame=0;frame<26;frame++)f.tick({jumpHeld:true,jumpPressed:frame===0});
-      f.tick({jumpReleased:true});
-      assert.equal(p.state,'air','neutral hold/release failed');
-      for(let frame=0;frame<100 && p.state==='air';frame++) {
-        const dx=x-p.pos.x,dv=v+p.pos.z;
-        f.tick({moveX:Math.abs(dx)>.09?Math.sign(dx):0,moveY:Math.abs(dv)>.09?Math.sign(dv):0});
-      }
-      assert.ok(p.grounded && p.state==='ride' && !p.isBailing && Math.abs(p.pos.y-y)<.08,
-        `continuous target ${[x,y,v]} ended ${[p.pos.x,p.pos.y,-p.pos.z,p.state]}`);
-      assert.ok(Math.abs(p.pos.x-x)<1.4 && Math.abs(-p.pos.z-v)<1.4,
-        `wrong pad at ${[p.pos.x,p.pos.y,-p.pos.z]} for ${[x,y,v]}`);
-      landed.push([+p.pos.x.toFixed(2),+p.pos.y.toFixed(2),+(-p.pos.z).toFixed(2)]);
-    }
-    return landed;
-  };
-  const walkTo=(f,x,v)=>{
-    const p=f.player;
-    for(let frame=0;frame<420;frame++) {
-      const dx=x-p.pos.x,dv=v+p.pos.z;
-      if(Math.abs(dx)<.1 && Math.abs(dv)<.1)break;
-      f.tick({moveX:Math.abs(dx)>.09?Math.sign(dx)*.15:0,moveY:Math.abs(dv)>.09?Math.sign(dv)*.15:0});
-      assert.ok(p.grounded && !p.isBailing,'lost roof or balcony support while positioning for jump');
-    }
-    for(let frame=0;frame<30;frame++)f.tick({});
-    assert.ok(Math.abs(p.pos.x-x)<.15 && Math.abs(-p.pos.z-v)<.15,
-      `walk did not reach launch edge: target ${[x,v]} actual ${[p.pos.x,-p.pos.z]} speed ${p.speed} state ${p.state}`);
-  };
-
-  for(const [index,aId,bId,x,base,count,first,island,islandY,bFirst,bCount,exit] of [
-    [1,100,101,-6,0,4,46,65,3.84,71,6,102],
-    [11,103,104,6,2.4,5,47,71,7.2,77,7,113],
-  ]) check(`Continuous two-key scaffold and crossing: section ${index+1}`,()=>{
-    const f=localSection(index),l=f.level;
-    l.reset(true);
-    const key=id=>l.crates.find(c=>c.bang && c.groupIds?.includes(id));
-    assert.ok(key(aId)&&key(bId));
-    l.triggerBang(key(aId));
-    const targets=Array.from({length:count},(_,i)=>[x,base+(i+1)*.96,first+i*4.6]);
-    // Leave room around the still-solid B key when landing on its balcony.
-    targets.push([x+(x<0?1.25:-1.25),islandY,island]);
-    const scaffold=precisionRun(f,[x,base,first-5],targets);
-    f.tick({spinHeld:true,spinPressed:true});
-    assert.ok(key(bId).bangUsed,'real spin from B balcony did not activate B');
-    walkTo(f,f.player.pos.x,bFirst-4.5);
-    const bridgeY=index===1?4.8:7.2;
-    const piers=Array.from({length:bCount},(_,i)=>[
-      x-Math.sign(x)*Math.min(i,3)*2,bridgeY,bFirst+i*5.4,
-    ]);
-    piers.push([0,bridgeY,exit+1]);
-    const bridge=[];
-    for(let i=0;i<piers.length;i++) {
-      // A real diagonal uses Input.poll's normalized stick. Move within the
-      // current 2.88m deck before committing to the next 5.4m transfer.
-      if(i>0)walkTo(f,piers[i-1][0],piers[i-1][2]+.6);
-      bridge.push(...precisionRun(f,null,[piers[i]]));
-    }
-    return {scaffoldLandings:scaffold,bridgeLandings:bridge};
-  });
-
-  check('Frozen crossing requires its key and supports a continuous six-pier hop line',()=>{
-    const f=localSection(7),l=f.level;
-    l.reset(true);
-    const key=l.crates.find(c=>c.bang);
-    const metal=l.crates.filter(c=>c.metal);
-    assert.ok(metal.every(c=>c.pending));
-    l.triggerBang(key);
-    const targets=Array.from({length:6},(_,i)=>[0,.96,117+i*5.55]);
-    targets.push([0,0,150]);
-    return {landings:precisionRun(f,[0,0,112],targets)};
-  });
-
-  check('Charged board ollies climb all four 1.4m calibration shelves',()=>{
-    const f=localSection(0),landings=[];
-    for(let i=0;i<4;i++) {
-      const near=34.5+i*10;
-      const result=jump(f,{y:i*1.4,v:near-4.4,board:true,speed:12});
-      landing(result,(i+1)*1.4,near,`shelf ${i+1}`);landings.push(+result.v.toFixed(2));
-    }
-    return {landings};
-  });
-
-  for(const [index,edge,gap,x] of [[0,131,11.5,0],[2,145,11.5,3],[10,85,11,0],[12,82,11.5,0]])
-    check(`23m/s charged gap: section ${index+1}, ${gap}m`,()=>{
-      const result=jump(localSection(index),{x,y:0,v:edge-.65,board:true,speed:23});
-      landing(result,0,edge+gap,'flat skate gap');
-      return {landingV:+result.v.toFixed(2)};
-    });
-
-  // The new structures have joined roof treads. Measure each exposed 2.4m
-  // riser from supported takeoff positions, including the courtyard entry bar.
-  for(const [index,x,risers] of [[3,0,[30,39.6,49.2,58.8,68.4,78]],
-    [6,-4.8,[27,39.6,49.2,58.8]],[13,0,[26.8,36.4,46]]])
-    check(`Charged foot jumps climb 2.4m building risers: section ${index+1}`,()=>{
-      const f=localSection(index),landings=[];
-      for(let i=0;i<risers.length;i++) {
-        const near=risers[i],result=jump(f,{x,y:i*2.4,v:near-4.2});
-        landing(result,(i+1)*2.4,near,`building riser ${i+1}`);landings.push(+result.v.toFixed(2));
-      }
-      return {landings};
-    });
-
-  check('Aqueduct and transfer rails catch with held grind input',()=>{
-    const caught=[];
-    for(const [index,x,y,v] of [[4,-3,0,24],[5,0,0,37],[10,0,2.4,123],[13,0,7.2,127]]) {
-      const f=localSection(index);position(f,x,y,v,true,12);
-      for(let i=0;i<10 && f.player.state!=='grind';i++)f.tick({moveY:1,grindHeld:true,grindPressed:i===0});
-      assert.equal(f.player.state,'grind',`section ${index+1} rail failed to catch`);
-      caught.push(index+1);
-    }
-    return {sections:caught};
-  });
-
-  check('Continuous aqueduct, roof and crown grinds cross their lethal voids',()=>{
-    const runs=[];
-    for(const [index,x,y,v,end]of [[4,-3,0,24,158],[10,0,2.4,123,167],[13,0,7.2,127,158]]) {
-      const f=localSection(index),p=f.player;
-      position(f,x,y,v,true,23);
-      let grindFrames=0,airFrames=0,maxBalance=0;
-      for(let frame=0;frame<720;frame++) {
-        const correction=THREE.MathUtils.clamp(-p.balance*5-p.balanceVel*.7,-1,1);
-        f.tick({moveY:1,grindHeld:true,grindPressed:frame===0,moveX:p.state==='grind'?correction:0});
-        if(p.state==='grind'){grindFrames++;maxBalance=Math.max(maxBalance,Math.abs(p.balance));}
-        if(p.state==='air')airFrames++;
-        if(p.grounded && -p.pos.z>=end && p.state==='ride')break;
-        assert.ok(!p.isBailing && !['dead','gameover'].includes(p.state),`section ${index+1} failed over void`);
-      }
-      assert.ok(p.grounded && p.state==='ride' && -p.pos.z>=end,`section ${index+1} rail ended ${p.pos.toArray()} ${p.state}`);
-      assert.ok(grindFrames>50 && airFrames>0,'crossing did not use rail and natural exit');
-      assert.ok(p.speed<35,'disabled perfect-grind boost unexpectedly accelerated the route');
-      runs.push({section:index+1,grindSeconds:+(grindFrames/60).toFixed(2),maxBalance:+maxBalance.toFixed(3)});
-    }
-    return {runs};
-  });
-
-  check('Continuous viaduct rail-to-rail charged transfer and landing',()=>{
-    const f=localSection(5),p=f.player;
-    position(f,0,0,37,true,23);
-    let firstRail=null,receiver=false,released=false,airFrames=0;
-    for(let frame=0;frame<720;frame++) {
-      const v=-p.pos.z,grind=p.state==='grind';
-      const correction=THREE.MathUtils.clamp(-p.balance*5-p.balanceVel*.7,-1,1);
-      const hold=grind && !released && v>79;
-      const release=hold && v>94;
-      const receiverRail=firstRail && f.level.rails.find(rail=>rail!==firstRail);
-      const targetX=receiverRail?.closest(p.pos).point.x ?? 2;
-      f.tick({grindHeld:true,grindPressed:frame===0,moveY:1,
-        moveX:grind?correction:(p.state==='air' && Math.abs(p.pos.x-targetX)>.1?Math.sign(targetX-p.pos.x):0),
-        jumpHeld:hold&&!release,jumpReleased:release});
-      if(p.state==='grind') {
-        if(!firstRail)firstRail=p.grindRail;
-        else if(p.grindRail!==firstRail)receiver=true;
-      }
-      if(release)released=true;
-      if(p.state==='air')airFrames++;
-      if(p.grounded && p.state==='ride' && -p.pos.z>157)break;
-      assert.ok(!p.isBailing && !['dead','gameover'].includes(p.state),`transfer failed at ${p.pos.toArray()} ${p.state}`);
-    }
-    assert.ok(released && receiver && airFrames>8,'did not charge, pop, catch second rail and fly');
-    assert.ok(p.grounded && p.state==='ride' && -p.pos.z>157,`no landing ${p.pos.toArray()} ${p.state}`);
-    return {landing:[+p.pos.x.toFixed(2),+p.pos.y.toFixed(2),+(-p.pos.z).toFixed(2)],airFrames};
-  });
-
-  // Section 9's former isolated towers are now a machine hall; its complete
-  // paired-lift route is exercised by test-blockworks-movers.mjs.
-  for(const [index,risers,exitV]of [[3,[30,39.6,49.2,58.8,68.4,78],90],
-    [13,[26.8,36.4,46],60.4]])
-    check(`Continuous joined-building roof climb and walkable exit: section ${index+1}`,()=>{
-      const f=localSection(index),p=f.player,landings=[];
-      position(f,0,0,risers[0]-4);
-      for(let i=0;i<risers.length;i++) {
-        const near=risers[i];
-        if(i>0)walkTo(f,0,near-4);
-        landings.push(...precisionRun(f,null,[[0,(i+1)*2.4,near+.2]]));
-      }
-      // Walk across the last solid roof connection; no last-gap jump or
-      // invented airborne handoff may hide a seam in the authored building.
-      while(exitV+.2+p.pos.z>7)walkTo(f,0,-p.pos.z+6);
-      walkTo(f,0,exitV+.2);
-      assert.ok(Math.abs(p.pos.y-risers.length*2.4)<.06);
-      return {landings,walkedExit:[+p.pos.x.toFixed(2),+p.pos.y.toFixed(2),+(-p.pos.z).toFixed(2)]};
-    });
-
-  check('Continuous courtyard factory route climbs west wing, crosses headhouse and descends east roofs',()=>{
-    const f=localSection(6),p=f.player,landings=[];
-    const risers=[27,39.6,49.2,58.8];
-    position(f,-4.8,0,23);
-    for(let i=0;i<risers.length;i++) {
-      if(i>0)walkTo(f,-4.8,risers[i]-4);
-      landings.push(...precisionRun(f,null,[[-4.8,(i+1)*2.4,risers[i]+.2]]));
-    }
-    // The aligned roof at v69.6 connects both wings on the same cube grid.
-    walkTo(f,-4.8,65);walkTo(f,-4.8,69.6);
-    walkTo(f,0,69.6);walkTo(f,4.8,69.6);
-    assert.ok(Math.abs(p.pos.y-9.6)<.06,'headhouse crossing left the upper roof');
-    const crossCourt=[+p.pos.x.toFixed(2),+p.pos.y.toFixed(2),+(-p.pos.z).toFixed(2)];
-    walkTo(f,4.8,72.6);
-    landings.push(...precisionRun(f,null,[[4.8,7.2,78.1]]));
-    walkTo(f,4.8,84.5);
-    landings.push(...precisionRun(f,null,[[4.8,4.8,89.4]]));
-    walkTo(f,4.8,93);
-    landings.push(...precisionRun(f,null,[[4.8,7.2,97.4]]));
-    walkTo(f,4.8,103.2);walkTo(f,4.8,108.5);
-    landings.push(...precisionRun(f,null,[[4.8,4.8,113.4]]));
-    walkTo(f,4.8,121.4);
-    assert.ok(Math.abs(p.pos.y-4.8)<.06,'east roof failed to join the exit court');
-    return {landings,crossCourt,walkedExit:[+p.pos.x.toFixed(2),+p.pos.y.toFixed(2),+(-p.pos.z).toFixed(2)]};
-  });
-
-  check('Actual ramp approaches conserve climb into both kicker gaps',()=>{
-    const runs=[];
-    for(const [index,start,low,releaseV,landingV,landingY]of [[9,128,0,139,151.5,1.4],[12,123,0,140,153,0]]) {
-      const f=localSection(index),p=f.player;
-      position(f,0,low,start,true,23);
-      let frames=0;
-      while(-p.pos.z<releaseV && frames++<180)f.tick({moveY:1,jumpHeld:true,jumpPressed:frames===1});
-      const launchY=p.pos.y;
-      f.tick({moveY:1,jumpReleased:true});
-      assert.equal(p.state,'air','ramp charge did not launch');
-      assert.ok(p.vVel>TUNING.ollieVelocity+1,'ramp climb did not contribute to pop');
-      let peak=p.pos.y;
-      for(let i=0;i<180 && p.state==='air';i++) {f.tick({moveY:1});peak=Math.max(peak,p.pos.y);}
-      assert.ok(p.grounded && p.state==='ride' && !p.isBailing && -p.pos.z>=landingV && Math.abs(p.pos.y-landingY)<.1,
-        `section ${index+1} kicker failed: ${p.pos.toArray()} ${p.state}`);
-      runs.push({section:index+1,rise:+(peak-launchY).toFixed(2),landingV:+(-p.pos.z).toFixed(2)});
-    }
-    return {runs};
-  });
-
-  check('Walking into a puzzle void kills, then respawns at banked key state',()=>{
-    const f=localSection(1),l=f.level,p=f.player;
-    l.reset(true);
-    const a=l.crates.find(c=>c.bang && c.groupIds?.includes(100));
-    const b=l.crates.find(c=>c.bang && c.groupIds?.includes(101));
-    l.triggerBang(a);
-    const cp=l.checkpoints[0];l.activateCheckpoint(cp,0);
-    position(f,8,0,41, false,9);
-    let sawDeath=false,respawned=false;
-    for(let frame=0;frame<360;frame++) {
-      f.tick({moveY:sawDeath?0:1});
-      if(p.state==='dead')sawDeath=true;
-      if(sawDeath && p.state==='ride' && p.grounded && p.pos.distanceTo(cp.spawnPos)<.65){respawned=true;break;}
-    }
-    assert.ok(sawDeath && respawned,`death/respawn sequence absent: ${p.state} ${p.pos.toArray()}`);
-    assert.ok(a.bangUsed && !b.bangUsed,'death changed banked puzzle state');
-    return {respawn:p.pos.toArray().map(v=>+v.toFixed(2))};
-  });
-
-  check('Vert profiles provide continuous rideable floor, transition and coping',()=>{
-    const checked=[];
-    for(const [index,v,rise,flat,arc] of [[4,70,3.6,4,90],[9,88,3.2,5,70]]) {
-      const f=localSection(index),p=f.player;
-      for(const angle of [0,20,40,60,arc-1]) {
-        const theta=angle*Math.PI/180;
-        const x=flat+rise*Math.sin(theta),y=rise*(1-Math.cos(theta));
-        p.pos.set(x,y+.2,-v);const hit=p.queryGround(f.level);
-        assert.ok(hit && Math.abs(hit.y-y)<.14,`section ${index+1} profile hole at ${angle}°: ${hit?.y} expected ${y}`);
-        assert.ok(hit.vert,`section ${index+1} transition not tagged vert`);
-      }
-      checked.push(index+1);
-    }
-    return {sections:checked};
-  });
-
-  check('Pumped aqueduct wall launches into a coping grind and its raised exit rail',()=>{
-    const f=localSection(4),p=f.player,l=f.level;
-    const highRail=l.rails.find(rail=>{
-      const first=rail.pointAt(0);
-      return Math.abs(first.x-7.6)<.05 && Math.abs(first.y-3.72)<.03;
-    });
-    assert.ok(highRail,'authored high coping rail missing');
-    const attempts=[];
-    for(const [startV,angle]of [[82,55],[80,45],[86,65],[75,35],[88,75],[80,65]]) {
-      l.reset(true);position(f,0,0,startV,true,23);
-      const a=angle*Math.PI/180;
-      p.axisF.set(Math.sin(a),0,-Math.cos(a));p.axisL.set(p.axisF.z,0,-p.axisF.x);
-      let transition=false,vertAir=false,airFrames=0,coping=false,high=false,released=false,launchY=0,peak=0;
-      for(let frame=0;frame<900;frame++) {
-        const isGrind=p.state==='grind';
-        const release=!released && p.groundHit?.normal.y<.6;
-        const control=THREE.MathUtils.clamp(-p.balance*5-p.balanceVel*.7,-1,1);
-        f.tick({moveX:isGrind?control:Math.sin(a),moveY:isGrind?1:Math.cos(a),
-          jumpHeld:!released && !release,jumpPressed:frame===0,jumpReleased:release,
-          grindHeld:vertAir && airFrames>5});
-        if(release)released=true;
-        if(p.groundHit?.vert && p.groundHit.normal.y<.8)transition=true;
-        if(p.vertAir || p.pipeHang){if(!vertAir)launchY=p.pos.y;vertAir=true;airFrames++;peak=Math.max(peak,p.pos.y);}
-        if(p.state==='grind'){coping=true;if(p.grindRail===highRail)high=true;}
-        if(high && p.grounded && p.state==='ride' && -p.pos.z>156)break;
-        if(p.isBailing || ['dead','gameover','finished'].includes(p.state))break;
-      }
-      const result={startV,angle,transition,vertAir,coping,high,airFrames,vertRise:+(peak-launchY).toFixed(2),
-        end:[+p.pos.x.toFixed(2),+p.pos.y.toFixed(2),+(-p.pos.z).toFixed(2),p.state]};
-      attempts.push(result);
-      if(transition && vertAir && coping && high && p.grounded && p.state==='ride' && -p.pos.z>156)
-        return {successfulApproach:result};
-    }
-    assert.fail(JSON.stringify(attempts));
-  });
-
-  check('Ice run-up preserves speed; dry island brakes; second ice launches across its gap',()=>{
-    const f=localSection(2),p=f.player;
-    position(f,-3,0,40,true,23);
-    let minimumIceSpeed=Infinity;
-    for(let frame=0;frame<240 && -p.pos.z<94;frame++) {
-      f.tick({moveY:1});
-      if(-p.pos.z>46 && -p.pos.z<92)minimumIceSpeed=Math.min(minimumIceSpeed,p.speed);
-    }
-    assert.ok(minimumIceSpeed>21.5,`long ice coast lost speed: ${minimumIceSpeed}`);
-    for(let frame=0;frame<180 && p.speed>.1;frame++)f.tick({grabHeld:true,grabPressed:frame===0});
-    const brakeV=-p.pos.z;
-    assert.ok(p.grounded && brakeV>=94 && brakeV<111 && Math.abs(p.speed)<.15,
-      `dry island did not stop the board: ${[p.pos.x,p.pos.y,brakeV,p.speed,p.state]}`);
-    for(let frame=0;frame<45;frame++)f.tick({});
-    // Aim into the second patch's shared central lane before building speed.
-    walkTo(f,0,-p.pos.z);
-    let chargedFrames=0;
-    while(-p.pos.z<144.3 && chargedFrames++<420)
-      f.tick({moveY:1,jumpHeld:true,jumpPressed:chargedFrames===1});
-    const takeoffSpeed=p.speed;
-    f.tick({moveY:1,jumpReleased:true});
-    assert.equal(p.state,'air');
-    for(let frame=0;frame<120 && p.state==='air';frame++)f.tick({moveY:1});
-    assert.ok(p.grounded && p.state==='ride' && !p.isBailing && -p.pos.z>=156.5,
-      `continuous ice gap failed ${p.pos.toArray()} ${p.state} speed ${takeoffSpeed}; brakeV ${brakeV}`);
-    return {minimumIceSpeed:+minimumIceSpeed.toFixed(2),brakeV:+brakeV.toFixed(2),takeoffSpeed:+takeoffSpeed.toFixed(2),landingV:+(-p.pos.z).toFixed(2)};
-  });
-
-  check('Finish gate changes the real player state',()=>{
-    const {player:p,level:l,tick}=full;
-    const gate=source.components.find(c=>c.t==='gate');
-    p.pos.set(gate.p[0],gate.p[1]+.02,gate.p[2]+2);p.laneCursor.s=-1;p.settle(l);
-    for(let i=0;i<60 && p.state!=='finished';i++)tick({moveY:1});
-    assert.equal(p.state,'finished');
-  });
-  assert.equal(JSON.stringify(TUNING),tuningBefore,'level checks changed global movement tuning');
-  console.log(JSON.stringify({evidence,failures},null,2));
-  assert.equal(failures.length,0,failures.join('\n'));
-  console.log('PASS Blockworks authored support, puzzle state, measured jumps, rail catches, vert profiles and finish');
-} finally {
-  for(const f of fixtures)f.level.dispose();
-  await server.close();console.warn=warn;console.error=error;
+    // Ride the entire return curve and leave its authored endpoint naturally.
+    // Held charge stays held; the pilot never manufactures a rail-exit ollie.
+    r.until(() => p.state === 'grind', () => ({
+      ...r.steerToward(at(Math.min(374,progress()+5),7.2,2.8)), jumpHeld:true,grindHeld:true,
+    }), { maxFrames: 900, label: 'mount and catch the curved outer parapet' });
+    const railEntry = r.snapshot();
+    r.grindUntil(() => p.state !== 'grind', { buttons:{jumpHeld:true}, maxFrames:1800,
+      label:'balance through the parapet return and natural rail end' });
+    const railExit=r.snapshot();
+    assert.ok(p.state==='air' && progress()>=415.5 && p.vVel<=3,
+      'parapet did not produce its ordinary endpoint exit');
+    assert.ok(r.trace.slice(railEntry.frame,railExit.frame).every(row=>!row.input.jumpReleased),
+      'parapet exit used an artificial release-to-jump');
+    r.until(() => p.grounded, () => ({...r.steerToward(at(progress()+1,7.2,2.4)),jumpHeld:true}),
+      { maxFrames:180,label:'natural parapet exit lands on the roof'});
+    assert.ok(progress()>416 && Math.abs(p.pos.y-7.2)<.1,'natural parapet exit missed the roof');
+    const railLanding=r.snapshot();
+    r.skateAlong(s=>at(s,7.2,2.4), {to:426,progress,lookAhead:6,
+      buttons:{spinHeld:true},label:'collect the first well-spaced checkpoint'});
+    r.skateAlong(s=>at(s,0), {to:510,progress,lookAhead:9,label:'spend roof height through the descending curve'});
+    assert.equal(p.totalDeaths,0,'positive run respawned between districts');
+    assert.ok(l.checkpoints[0].active,'positive run never activated the first checkpoint');
+    assert.ok(p.grounded && progress()>=510,'positive run did not complete both adjacent districts');
+    assert.ok(r.trace.every(row=>!row.bailing && row.state!=='dead'),'positive run hid a bail or death');
+    const runningFrames=walkingFrames.filter(row=>Math.hypot(row.input.moveX,row.input.moveY)>.65 && row.grounded);
+    assert.ok(runningFrames.length>250,'roof journey relied only on precision-speed walking');
+    evidence.push({test:'continuous Terrace canyon and parapet',roofLandings,
+      railEntryStation:round(20-railEntry.position[2]),naturalRailExitStation:round(20-railExit.position[2]),
+      naturalRailLandingStation:round(20-railLanding.position[2]),endStation:round(progress()),
+      endSpeed:round(p.speed),frames:r.frame,roofRunningFrames:runningFrames.length,
+      checkpoints:l.checkpoints.filter(cp=>cp.active).length});
+    return evidence;
 }
+
+/** Continue the same board and clock through Frozen, banking its s750 checkpoint. */
+export function runFrozen(r) {
+  const {p,sourceModule:m}=r,begin=r.frame,entry=r.snapshot();
+  const progress=()=>station(p);
+  assert.ok(progress()>=510 && progress()<515 && p.grounded && p.freeSkate,
+    'Frozen must inherit the live Terrace exit');
+  assert.ok(p.speed>24,'Terrace must deliver its earned downhill speed into Frozen');
+  const steer=()=>r.steerToward(m.routePoint(progress()+14,0));
+  r.until(()=>progress()>=723.2,()=>({...steer(),jumpHeld:true}),
+    {maxFrames:1800,label:'carry Terrace momentum through all three frozen bends'});
+  const takeoff=r.snapshot();
+  assert.ok(p.grounded && p.freeSkate && p.speed>21.5,'ice approach lost its real launch speed');
+  r.releaseJump(steer());
+  assert.equal(p.state,'air','Frozen charged release did not launch');
+  r.until(()=>p.grounded,()=>({...steer(),jumpHeld:false}),
+    {maxFrames:120,label:'cross Frozen gap with inherited run state'});
+  const landing=r.snapshot(),gap=m.BLOCKWORKS_GAPS.find(g=>g.a===724);
+  assert.ok(progress()>=gap.b && Math.abs(p.pos.y)<.1,'Frozen gap missed its receiving deck');
+  const checkpointData=m.BLOCKWORKS_CHECKPOINTS.find(cp=>cp.s===750);
+  assert.ok(checkpointData,'Frozen checkpoint metadata is missing');
+  const checkpoint=r.l.checkpoints.find(cp=>Math.hypot(cp.spawnPos.x-checkpointData.p[0],cp.spawnPos.z-checkpointData.p[2])<.05);
+  assert.ok(checkpoint,'Frozen checkpoint has no live runtime object');
+  r.until(()=>checkpoint.active && progress()>=751,()=>({
+    ...r.steerToward(checkpoint.active?m.routePoint(progress()+10,0,2.4):checkpointData.p),
+    jumpHeld:true,spinHeld:r.distanceTo(checkpointData.p)<4,
+  }), {maxFrames:180,label:'carve onto the receiving deck and bank checkpoint750'});
+  assert.equal(r.l.activeCheckpoint,checkpoint,'Frozen did not bank its actual checkpoint');
+  const frames=r.trace.slice(begin);
+  const patches=[[575,599],[635,660],[687,714]].map(([a,b])=>{
+    const samples=frames.filter(row=>20-row.position[2]>=a+.5 && 20-row.position[2]<=b-.5);
+    assert.ok(samples.length>30,`ice patch ${a} lacked sustained contact`);
+    assert.ok(samples.every(row=>row.grounded && row.ground?.slippy && row.ground.iceGrip===.08),
+      `ice patch ${a} was bypassed or lost the authored grip`);
+    const entered=samples[0].speed,minimum=Math.min(...samples.map(row=>row.speed));
+    assert.ok(entered>21.5 && minimum>20,`ice patch ${a} lost momentum`);
+    const maxOffset=Math.max(...samples.map(row=>Math.abs(row.position[0]-m.routeX(20-row.position[2]))));
+    assert.ok(maxOffset<4.5,`ice patch ${a} exceeded its physical ribbon`);
+    return {a,b,frames:samples.length,entrySpeed:round(entered),minimumSpeed:round(minimum),maxWorldXOffset:round(maxOffset)};
+  });
+  assert.ok(Math.abs(patches[0].entrySpeed-23)<.1,'first ice did not receive normal full skating speed');
+  const minimumContinuousSpeed=Math.min(...frames.map(row=>row.speed));
+  assert.ok(minimumContinuousSpeed>=r.TUNING.cruiseSpeed-.1,
+    'continuous Terrace-to-Frozen traversal hid a stop or lost cruise speed');
+  assert.ok(frames.every(row=>!row.bailing && row.state!=='dead'),'Frozen hid a bail or respawn');
+  assert.equal(p.totalDeaths,0);
+  return {test:'continuous Terrace-to-Frozen momentum and gap',entrySpeed:round(entry.speed),patches,
+    takeoffSpeed:round(takeoff.speed),landingStation:round(20-landing.position[2]),
+    exitStation:round(progress()),exitSpeed:round(p.speed),minimumContinuousSpeed:round(minimumContinuousSpeed),
+    checkpointStation:750,checkpointBanked:checkpoint.active,seconds:round((r.frame-begin)*r.dt)};
+}
+
+export async function runBlockworksGameplayChecks() {
+  const evidence=[],recordings=[];
+  const tracePath=process.env.BLOCKWORKS_TRACE??'/tmp/blockworks-gameplay-trace.json';
+  let failure;
+  try {
+    await withBlockworksRuntime(r=>{
+      record(r,'negative control: hold Up and charge',recordings);
+      evidence.push(runStraightUpNegativeControl(r));
+    },{maxFrames:1300});
+    await withBlockworksRuntime(r=>{
+      record(r,'continuous spawn through Terrace and Frozen',recordings);
+      evidence.push(...runOpeningAndTerrace(r));
+      evidence.push(runFrozen(r));
+    },{maxFrames:24_000});
+  } catch(error) { failure=error; }
+  finally { await writeFile(tracePath,JSON.stringify({evidence,recordings},null,2)); }
+  console.log(JSON.stringify({evidence,tracePath},null,2));
+  if(failure)throw failure;
+  console.log('PASS continuous world-space spawn→750 carving, roof climb, inherited ice momentum and gaps; Up-only control fails');
+  return evidence;
+}
+
+if(process.argv[1] && import.meta.url===pathToFileURL(process.argv[1]).href)
+  await runBlockworksGameplayChecks();

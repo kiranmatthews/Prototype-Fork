@@ -1,359 +1,262 @@
 import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
+import { BLOCKWORKS_GROUND, ROUTE_END, emitPit, emitRibbon, routePoint, routeYaw, type Point } from './blockworks-geometry';
+export { BLOCKWORKS_GROUND, ROUTE_END, routePoint, routeTangent, routeYaw, routeX } from './blockworks-geometry';
 
-// BLOCKWORKS — a 2.53 km greybox, built from metre-scale source-owned parts.
-// 2.4 m cubes ask for a charged FOOT jump; 1.4 m shelves accept a charged
-// BOARD ollie (measured apex 1.779 m). Flat skate gaps stop at 11.5 m against
-// 13.8 m at 23 m/s. Long voids require the explicitly authored rail or switch.
-// No movement tuning is overridden. The route never crosses itself.
-type Point = [number, number, number];
-const C: CustomComponent[] = [];
-const groups: CustomGroup[] = [{ id: 1, nm: 'Ordered camera spine', editorOnly: true }];
-export const BLOCKWORKS_GROUND = -12;
-const grey = ['#aeb4bb', '#89939e', '#c8cdd2', '#74808d'];
-const ink = '#3d4855', amber = '#e2ad49', ice = '#a9e5ef';
-const r = (n: number) => Math.round(n * 1000) / 1000;
-const put = (c: CustomComponent) => C.push(c);
-const route: Point[] = [];
-export const BLOCKWORKS_SECTIONS: { name: string; start: Point; yaw: number; length: number; endY: number }[] = [];
-let origin: Point = [0, 0, 20], sectionId = 10, puzzleId = 100;
+// The road is a continuous physical curve. The control/camera chord remains
+// north-going: Up cannot secretly steer the bends, and the rider must carve.
+// Each district combines mechanics and hands its momentum into the next one.
+const C:CustomComponent[]=[];
+const groups:CustomGroup[]=[{id:1,nm:'Steady camera/control chord',editorOnly:true},{id:2,nm:'Shared excavated ground',editorOnly:true}];
+const GREY=['#aeb5bd','#8a96a2','#c5cbd0','#717f8d'];
+const AMBER='#d5a850',ICE='#a6dfe9';
+type Scalar=number|((s:number)=>number);
+const mix=(a:number,b:number,t:number)=>a+(b-a)*Math.max(0,Math.min(1,t));
+const smooth=(a:number,b:number,s:number)=>{const t=Math.max(0,Math.min(1,(s-a)/(b-a)));return t*t*(3-2*t);};
+const lerpY=(a:number,b:number,ya:number,yb:number)=>(s:number)=>mix(ya,yb,(s-a)/(b-a));
+const add=(c:CustomComponent)=>C.push(c);
+export const BLOCKWORKS_SECTIONS=[
+ {name:'01 · Sweeping entry',a:0,b:235,y:0},
+ {name:'02 · Terrace canyon',a:235,b:510,y:-2.4},
+ {name:'03 · Frozen bends',a:510,b:745,y:0},
+ {name:'04 · Curved aqueduct',a:745,b:1040,y:0},
+ {name:'05 · Switch foundry',a:1040,b:1300,y:3.6},
+ {name:'06 · Rail and machinery',a:1300,b:1560,y:8.4},
+ {name:'07 · Roof relay',a:1560,b:1870,y:13.2},
+ {name:'08 · Crown sweep',a:1870,b:2140,y:6},
+].map((d,i)=>({...d,grp:10+i,start:routePoint(d.a,d.y),yaw:0,length:d.b-d.a,endY:d.y}));
+for(const d of BLOCKWORKS_SECTIONS)groups.push({id:d.grp,nm:d.name,editorOnly:true});
+export const BLOCKWORKS_ROADS:{a:number;b:number;top:Scalar;width:Scalar;offset:Scalar;grp:number;ice:boolean}[]=[];
+export const BLOCKWORKS_GAPS:{a:number;b:number;y:number;width:number;kind:string}[]=[];
+export const BLOCKWORKS_CLIMBS:{name:string;grp:number;start:Point;steps:{s:number;top:number;u:number;width:number;depth:number;point:Point}[];exit:Point}[]=[];
+export const BLOCKWORKS_CHECKPOINTS:{s:number;p:Point;after:string}[]=[];
+export const BLOCKWORKS_SWITCHES:{name:string;group:number;p:Point}[]=[];
+export const BLOCKWORKS_MOVERS:CustomComponent[]=[];
 
-class Section {
-  readonly id = sectionId++;
-  readonly yaw: number;
-  readonly start: Point;
-  readonly f: [number, number];
-  readonly right: [number, number];
-  private voxels = new Set<string>();
-  constructor(readonly name: string, yaw: number, readonly length: number, readonly endY: number) {
-    this.start = [...origin]; this.yaw = yaw;
-    const a = yaw * Math.PI / 180;
-    this.f = [-Math.sin(a), -Math.cos(a)]; this.right = [Math.cos(a), -Math.sin(a)];
-    groups.push({ id: this.id, nm: name, editorOnly: true });
-    BLOCKWORKS_SECTIONS.push({ name, start: [...origin], yaw, length, endY });
-    this.camera(0, this.start[1]);
-    // Every district shares the same excavated ground datum. The visible
-    // ground is a real solid; a fall reaches the reset plane just above it.
-    this.box(0, BLOCKWORKS_GROUND, length/2, 66, length+28, 3, '#626b73', {nm:'Continuous ground stratum'});
-    put({t:'pit',p:this.p(0,BLOCKWORKS_GROUND+.35,length/2),
-      s:yaw%180===0?[66,1,length+28]:[length+28,1,66],invisible:true,grp:this.id,nm:'Ground-floor fall reset'});
-  }
-  p(u: number, y: number, v: number): Point {
-    return [r(this.start[0] + this.right[0] * u + this.f[0] * v), r(y), r(this.start[2] + this.right[1] * u + this.f[1] * v)];
-  }
-  box(u: number, top: number, v: number, width: number, depth: number, height = 1.2, color = grey[0], extra: Partial<CustomComponent> = {}) {
-    put({ t: 'platform', p: this.p(u, top - height / 2, v), s: [width, height, depth], yaw: this.yaw,
-      tex: 'solid', color, edgeGrinding: false, grp: this.id, ...extra });
-  }
-  deck(a: number, b: number, y: number, width = 14, u = 0, extra: Partial<CustomComponent> = {}) {
-    this.mass(u, y, (a+b)/2, width, b-a, grey[0], extra);
-  }
-  mass(u:number,top:number,v:number,width:number,depth:number,color=grey[1],extra:Partial<CustomComponent>={}) {
-    this.box(u,top,v,width,depth,top-BLOCKWORKS_GROUND,color,{nm:'Grounded building mass',...extra});
-  }
-  podium(a:number,b:number,top:number,width:number,u=0) {
-    this.mass(u,top-.03,(a+b)/2,width,b-a,grey[1],{nm:'Shared building podium'});
-  }
-  ramp(a: number, b: number, low: number, high: number, width = 12, u = 0) {
-    const ascending = high >= low;
-    this.mass(u,Math.min(low,high), (a+b)/2,width,b-a,grey[3],{nm:'Ramp retaining foundation'});
-    put({ t: 'ramp', p: this.p(u, Math.min(low,high), (a+b)/2), len: b-a, rise: Math.abs(high-low), w: width,
-      yaw: (this.yaw + (ascending ? 0 : 180)) % 360, tex: 'solid', color: grey[1], grp: this.id, edgeGrinding: false });
-  }
-  cube(u: number, base: number, v: number, layers = 1, width = 1, depth = 1) {
-    this.mass(u,base,v,width*2.4,depth*2.4,grey[1],{nm:'Cube-wing foundation'});
-    for (let h=0; h<layers; h++) for(let x=0;x<width;x++) for(let z=0;z<depth;z++) {
-      const cx=u+(x-(width-1)/2)*2.4,cz=v+(z-(depth-1)/2)*2.4,top=base+(h+1)*2.4;
-      const key=[cx,top,cz].map(r).join('/');if(this.voxels.has(key))continue;this.voxels.add(key);
-      this.box(cx,top,cz,2.4,2.4,2.4,grey[(h+x+z)%grey.length],{nm:'Joined modular building cell'});
-    }
-  }
-  pier(u:number,base:number,v:number,grp:number,pitY:number) {
-    // Switches construct steel portal legs as well as their deck. Permanent
-    // concrete footings stay BELOW the lethal channel until the key is used.
-    const layers=Math.ceil((base-pitY+1.5)/.96),foot=base-layers*.96;
-    this.mass(u,foot,v,2.88,2.88,grey[3],{nm:'Submerged switch-pier footing'});
-    for(let h=0;h<layers;h++)for(const x of [-.96,.96])this.crate(u+x,foot+h*.96,v,'metal',grp,true);
-    for(let x=-1;x<=1;x++)for(let z=-1;z<=1;z++)this.crate(u+x*.96,base,v+z*.96,'metal',grp,true);
-  }
-  mover(u:number,y:number,v:number,width:number,depth:number,axis:'x'|'y'|'z',amp:number,speed:number,phase:number,name:string,travelSign:1|-1=1) {
-    put({t:'mover',p:this.p(u,y,v),s:this.yaw%180===0?[width,.8,depth]:[depth,.8,width],
-      axis,amp,speed,phase,travelSign,grp:this.id,nm:name});
-  }
-  crate(u: number, y: number, v: number, kind: NonNullable<CustomComponent['kind']> = 'wood', grp = this.id, outline = false) {
-    put({ t: 'crate', p: this.p(u,y,v), kind, grp, ...(outline ? {outline:true} : {}) });
-  }
-  fruit(u:number,y:number,v:number) { put({t:'wumpa',p:this.p(u,y,v),grp:this.id}); }
-  line(a:number,b:number,y:number,u=0, spacing=9) { for(let v=a;v<=b;v+=spacing)this.fruit(u,y+1,v); }
-  rail(points: [number,number,number,number?][], name: string) {
-    const first=this.p(points[0][0],points[0][1],points[0][2]);
-    put({t:'rail',p:first,pts:points.map(p=>{const q=this.p(p[0],p[1],p[2]);return [r(q[0]-first[0]),r(q[2]-first[2]),p[3]??0,r(q[1]-first[1])];}),grp:this.id,nm:name});
-  }
-  cp(v:number,y:number,u=0) { put({t:'checkpoint',p:this.p(u,y,v),grp:this.id,nm:this.name}); }
-  enemy(u:number,y:number,v:number,foe:NonNullable<CustomComponent['foe']>,range=0,speed=0) {
-    put({t:'enemy',p:this.p(u,y,v),foe,range,speed,yaw:this.yaw,grp:this.id});
-  }
-  pit(a:number,b:number,y:number,width=24,u=0) { put({t:'pit',p:this.p(u,y,(a+b)/2),s: this.yaw%180===0?[width,1,b-a]:[b-a,1,width],color:ink,grp:this.id}); }
-  camera(v:number,y:number,u=0) { route.push(this.p(u,y,v)); }
-  paint(u:number,y:number,v:number,width:number,depth:number,color=amber) {
-    // Inlays are visual-only triangle meshes, never hidden collision bridges.
-    const x=width/2,z=depth/2;
-    put({t:'mesh',p:this.p(u,y+.028,v),yaw:this.yaw,vertices:[-x,0,-z,-x,0,z,x,0,z,x,0,-z],indices:[0,1,2,0,2,3],
-      tex:'solid',color,solid:false,edgeGrinding:false,grp:this.id});
-  }
-  marks(v:number,y:number,width=12,color=amber) { this.paint(0,y,v,width,.22,color); }
-  circuit(u:number,y:number,v:number,key:1|2,ghost=false) {
-    const color=key===1?amber:'#b6a0de';
-    this.paint(u,y,v,ghost?2.6:5,ghost?.14:.3,color);
-    if(key===2)this.paint(u,y,v+.48,ghost?2.6:5,.14,color);
-  }
-  ice(a:number,b:number,y:number,width=14,u=0) {
-    this.deck(a,b,y,width,u,{slip:true,iceGrip:.08,color:ice,nm:'Deep ice · retain momentum; use dry catch deck'});
-    for(let v=a+5;v<b;v+=10)this.paint(u,y,v,width-.5,.1,'#e4faff');
-  }
-  finish() { this.camera(this.length,this.endY); origin=this.p(0,this.endY,this.length); }
+function road(a:number,b:number,top:Scalar,width:Scalar,grp:number,offset:Scalar=0,ice=false,name='Curved roof road'){
+ const first=C.length;
+ emitRibbon(C,a,b,top,width,{grp,offset,color:ice?ICE:GREY[0],...(ice?{slip:true,iceGrip:.08}:{}),name});
+ if(name==='High curved roof walk'||name==='Crown departure')for(const c of C.slice(first))if(c.t==='mesh')c.depthBias=1;
+ BLOCKWORKS_ROADS.push({a,b,top,width,offset,grp,ice});
 }
-
-// 01. Introduce the visual grammar without throwing the player into a void.
-{
- const s=new Section('01 · Calibration court',0,170,0);
- s.deck(-16,32,0,22); s.line(4,27,0); s.crate(-5,0,14,'mask');
- put({t:'clock',p:s.p(5,0,7),grp:s.id}); put({t:'comboorb',p:s.p(-5,0,7),grp:s.id});
- // Board-sized staircase; the broad left cube wall offers a foot-climb line.
- for(let i=0;i<4;i++) { const v=38+i*10; s.mass(i%2?1.8:-1.8,(i+1)*1.4,v,8,10.4); s.fruit(i%2?1.8:-1.8,(i+1)*1.4+1,v); }
- s.podium(32,74,-1.4,22); s.deck(73.2,91,5.6,18); s.cp(79,5.6);
- s.podium(32,72,0,4.8,-10);
- s.cube(-10,0,41,1,2,2); s.cube(-10,0,51,2,2,2); s.cube(-10,0,63,3,2,2);
- s.ramp(91,114,5.6,0); s.deck(114,131,0); s.marks(130,0);
- s.pit(131,142.5,-6); s.deck(142.5,170,0,20); s.marks(143,0);
- s.line(117,129,0); s.fruit(0,2.4,137); s.cp(158,0);
- s.camera(35,1.4);s.camera(72,5.6);s.camera(104,2.4);s.camera(147,0);s.finish();
+function gap(a:number,b:number,y:number,width:number,grp:number,kind='charged gap'){
+ emitPit(C,a,b,y-6,width,grp);BLOCKWORKS_GAPS.push({a,b,y,width,kind});
 }
-
-// 02. Read A -> climb its scaffold -> hit B -> build the main bridge.
-// Neither switch shares gameplay ancestry; yellow routes are distinct.
-{
- const s=new Section('02 · Two-key foundry',0,170,4.8);
- const a=puzzleId++,b=puzzleId++;
- groups.push({id:a,nm:'A · access scaffold'},{id:b,nm:'B · crossing piers'});
- s.deck(0,42,0,22);s.cp(12,0);s.cube(-6,0,27,1,2,2);
- s.crate(-6,2.4,27,'bang',a);s.circuit(-6,2.4,27,1);s.line(6,21,0,-4);s.fruit(-6,3.5,27);
- // A's 3x3 metal pads rise .96 m at a time, visually building upward to B.
- for(let i=0;i<4;i++)s.pier(-6,i*.96,46+i*4.6,a,-7);
- s.mass(-6,3.84,65,5.8,7,grey[2]);s.crate(-6,3.84,65,'bang',b);s.circuit(-6,3.84,65,2);
- for(let i=0;i<4;i++)s.circuit(-6,(i+1)*.96,46+i*4.6,1,true);
- for(let i=0;i<6;i++)s.circuit(-6+Math.min(i,3)*2,4.8,71+i*5.4,2,true);
- // The first B pier overlaps the small B island, then bends across to centre.
- for(let i=0;i<6;i++)s.pier(-6+Math.min(i,3)*2,3.84,71+i*5.4,b,-7);
- s.pit(42,105,-7,32);s.deck(102,134,4.8,20);s.cp(115,4.8);s.line(108,132,4.8);
- s.enemy(4,4.8,129,'turtle',2,1.2); // separate from the blind bridge landing
- s.deck(134,170,4.8,18);s.crate(-4,4.8,143,'mystery');
- s.camera(35,0);s.camera(61,3.5);s.camera(91,4.8);s.camera(127,4.8);s.finish();
+function box(p:Point,top:number,width:number,depth:number,grp:number,yaw=0,color=GREY[1],name='Grounded building'){
+ add({t:'platform',p:[p[0],(top+BLOCKWORKS_GROUND)/2,p[2]],s:[width,top-BLOCKWORKS_GROUND,depth],yaw,tex:'solid',color,edgeGrinding:false,grp,nm:name});
 }
-
-// 03. Two ice drifts, a generous dry brake island, then a visible gap.
-{
- const s=new Section('03 · Ice brake laboratory',0,170,0);
- s.ramp(0,30,4.8,0,18);s.deck(30,44,0,20);s.cp(36,0);
- s.ice(44,94,0,18);s.line(48,87,0,-3);s.deck(94,132,0,24);s.marks(95,0,22);
- s.ice(132,145,0,16,3);s.line(135,141,0,3);s.pit(145,156.5,-7,28);
- s.deck(156.5,170,0,26);s.fruit(3,2.4,151);s.marks(144,0,14);s.cp(164,0);
- s.camera(32,0);s.camera(88,0);s.camera(125,0);s.camera(164,0);s.finish();
+function pad(s:number,top:number,width:number,depth:number,grp:number,u=0,color=GREY[1]){
+ box(routePoint(s,top,u),top,width,depth,grp,routeYaw(s),color);
 }
-
-// 04. One interlocking stepped building, not six detached tower islands.
-{
- const s=new Section('04 · Interlocking cube escarpment',270,170,0);
- s.deck(0,27,0,24);s.cp(12,0);s.podium(24,110,0,28);
- for(let i=0;i<6;i++) {
-   const v=36+i*9.6,y=(i+1)*2.4,u=i%2?2.4:-2.4;
-   // Neighbouring wings overlap a full cube bay in depth and two bays in
-   // width. The exposed roof remains a 2.4m riser with a generous tread.
-   s.cube(u,0,v,i+1,4,5);s.fruit(u,y+1,v);
+// The modules are visual faces over one identical solid cuboid. This keeps
+// the complete mass/collision while avoiding hundreds of tiny rotated walls.
+const cubeVertices:number[]=[],cubeIndices:number[]=[];
+for(const [normal,points] of [
+ [[1,0,0],[[.5,-.5,-.5],[.5,.5,-.5],[.5,.5,.5],[.5,-.5,.5]]],
+ [[-1,0,0],[[-.5,-.5,.5],[-.5,.5,.5],[-.5,.5,-.5],[-.5,-.5,-.5]]],
+ [[0,1,0],[[-.5,.5,.5],[.5,.5,.5],[.5,.5,-.5],[-.5,.5,-.5]]],
+ [[0,-1,0],[[-.5,-.5,-.5],[.5,-.5,-.5],[.5,-.5,.5],[-.5,-.5,.5]]],
+ [[0,0,1],[[-.5,-.5,.5],[.5,-.5,.5],[.5,.5,.5],[-.5,.5,.5]]],
+ [[0,0,-1],[[.5,-.5,-.5],[-.5,-.5,-.5],[-.5,.5,-.5],[.5,.5,-.5]]],
+] as [Point,Point[]][]) {
+ const i=cubeVertices.length/3;cubeVertices.push(...points.flat());
+ const a=points[1].map((v,k)=>v-points[0][k]),b=points[2].map((v,k)=>v-points[0][k]);
+ const dot=(a[1]*b[2]-a[2]*b[1])*normal[0]+(a[2]*b[0]-a[0]*b[2])*normal[1]+(a[0]*b[1]-a[1]*b[0])*normal[2];
+ cubeIndices.push(...(dot>0?[i,i+1,i+2,i,i+2,i+3]:[i,i+2,i+1,i,i+3,i+2]));
+}
+function assembly(s:number,base:number,layers:number,nx:number,nz:number,grp:number,u=0){
+ const centre=routePoint(s,base,u),angle=routeYaw(s)*Math.PI/180;
+ box(centre,base+layers*2.4,nx*2.4,nz*2.4,grp,routeYaw(s),GREY[3],'Solid modular building');
+ C[C.length-1].depthBias=1;
+ for(let h=0;h<layers;h++)for(let x=0;x<nx;x++)for(let z=0;z<nz;z++){
+  const dx=(x-(nx-1)/2)*2.4,dz=(z-(nz-1)/2)*2.4;
+  add({t:'mesh',p:[centre[0]+Math.cos(angle)*dx+Math.sin(angle)*dz,base+(h+.5)*2.4,centre[2]-Math.sin(angle)*dx+Math.cos(angle)*dz],
+   s:[2.4,2.4,2.4],yaw:routeYaw(s),vertices:cubeVertices,indices:cubeIndices,tex:'solid',color:GREY[(h+x+z)%4],solid:false,edgeGrinding:false,grp,nm:'Jump-sized roof module'});
  }
- // A thinner, joined staircase wraps the western facade into the roof.
- for(let i=0;i<12;i++)s.mass(-9,(i+1)*1.2,29.5+i*4.8,4.2,5.2,grey[2]);
- s.deck(90,110,14.4,24);s.cp(99,14.4);
- s.ramp(110,157,14.4,0,16);s.deck(157,170,0,26);
- s.enemy(5,14.4,105,'spiker');for(let v=112;v<154;v+=10)s.fruit(-3,14.4*(157-v)/47+1,v);
- s.camera(27,0);s.camera(61,9.6);s.camera(98,14.4);s.camera(139,5.5);s.finish();
 }
+const fruit=(s:number,y:number,grp:number,u=0)=>add({t:'wumpa',p:routePoint(s,y, u),grp});
+function fruitLine(a:number,b:number,y:Scalar,grp:number,u=0,spacing=14){for(let s=a;s<=b;s+=spacing)fruit(s,(typeof y==='function'?y(s):y)+1,grp,u);}
+function mark(s:number,y:number,grp:number,u=0,color=AMBER){
+ const a=routePoint(s,y+.025,u-1),b=routePoint(s,y+.025,u+1),c=routePoint(s+2,y+.025,u);
+ add({t:'mesh',p:a,vertices:[0,0,0,b[0]-a[0],0,b[2]-a[2],c[0]-a[0],0,c[2]-a[2]],indices:[0,1,2],tex:'solid',color,solid:false,doubleSided:true,edgeGrinding:false,grp,nm:'Travel arrow'});
+}
+function rail(points:[number,number,number][],grp:number,name:string){
+ const world=points.map(([s,y,u])=>routePoint(s,y,u)),p=world[0];
+ add({t:'rail',p,pts:world.map(q=>[q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]),grp,nm:name});
+}
+function railLine(a:number,b:number,y:Scalar,offset:Scalar,grp:number,name:string){
+ const n=Math.ceil((b-a)/5);rail(Array.from({length:n+1},(_,i)=>{const s=mix(a,b,i/n);return[s,typeof y==='function'?y(s):y,typeof offset==='function'?offset(s):offset];}),grp,name);
+}
+function crate(s:number,y:number,kind:NonNullable<CustomComponent['kind']>,grp:number,u=0){add({t:'crate',p:routePoint(s,y,u),kind,grp});}
+function enemy(s:number,y:number,foe:NonNullable<CustomComponent['foe']>,grp:number,u=0,range=0,speed=0){
+ add({t:'enemy',p:routePoint(s,y,u),foe,range,speed,grp});
+}
+function checkpoint(s:number,y:number,grp:number,after:string,u=3){
+ const p=routePoint(s,y,u);add({t:'checkpoint',p,grp,nm:after});BLOCKWORKS_CHECKPOINTS.push({s,p,after});
+}
+function switchBox(s:number,y:number,u:number,group:number,name:string){
+ const p=routePoint(s,y,u);groups.push({id:group,nm:name});add({t:'crate',p,kind:'bang',grp:group,nm:name});BLOCKWORKS_SWITCHES.push({name,group,p});
+}
+function steelPier(s:number,top:number,u:number,group:number,grp:number,pitY:number,size=3){
+ // All crates remain on the world grid. Their portal legs materialize with
+ // the deck; permanent feet stay below the lethal channel until activated.
+ const p=routePoint(s,top,u),base=top-.96,n=Math.ceil((base-pitY+1.5)/.96),foot=base-n*.96;
+ box(p,foot,size*.96,size*.96,grp,0,GREY[3],'Submerged steel footing');
+ const half=(size-1)*.48;
+ for(let h=0;h<n;h++)for(const dx of [-half,half])add({t:'crate',p:[p[0]+dx,foot+h*.96,p[2]],kind:'metal',outline:true,grp:group});
+ for(let x=0;x<size;x++)for(let z=0;z<size;z++)add({t:'crate',p:[p[0]+(x-(size-1)/2)*.96,base,p[2]+(z-(size-1)/2)*.96],kind:'metal',outline:true,grp:group});
+}
+function mover(c:CustomComponent){add(c);BLOCKWORKS_MOVERS.push(c);}
 
-// 05. A real vert trough; either climb the coping or set up on the entry rail.
+// Shared ground gives every road and building real depth. It is a reset
+// basin beneath the elevated course, not a bypass around its commitments.
+add({t:'platform',p:[0,BLOCKWORKS_GROUND-2,20-ROUTE_END/2],s:[250,4,ROUTE_END+80],tex:'solid',color:'#626c76',edgeGrinding:false,grp:2,nm:'Continuous ground stratum'});
+add({t:'pit',p:[0,BLOCKWORKS_GROUND+.35,20-ROUTE_END/2],s:[250,1,ROUTE_END+80],invisible:true,grp:2,nm:'Ground-floor reset'});
+
+// 1. The first bend is gameplay immediately: bank/roof on the inside,
+// turtle versus outside line, then carry the same run into a real gap.
 {
- const s=new Section('05 · Coping aqueduct',0,180,0);
- s.deck(0,27,0,26);s.cp(12,0);
- s.podium(27,113,-.02,21.2);
- put({t:'vertramp',p:s.p(0,0,70),vkind:'half',len:86,rise:3.6,w:4,arc:90,deck:3,yaw:s.yaw,tex:'solid',color:grey[1],grp:s.id,nm:'Vert trough · climb walls for upper coping line'});
- s.rail([[-3,.72,18],[-3,.72,92,6],[-6,1.8,114,7],[-1,1.1,137,8],[0,.72,153]],'Low aqueduct · learn grind, then cross');
- s.rail([[7.6,3.72,81],[7.6,4.3,107,5],[12,6,122,7],[7,3.8,137,5],[2,1,157]],'Coping reward · high line to landing');
- s.pit(113,151,-9,30);s.deck(151,180,0,24);s.cp(169,0);
- s.line(36,100,0,0,11);s.fruit(-3,1.8,112);s.fruit(-2,1.8,130);s.fruit(0,1.8,147);
- s.camera(30,0);s.camera(78,0);s.camera(119,1);s.camera(159,0);s.finish();
+ const g=10;
+ road(-12,120,0,s=>mix(14,9,s/90),g);road(120,166,lerpY(120,166,0,-2.4),9,g);
+ gap(166,176.8,-2.4,21,g);road(176.8,208,-2.4,s=>mix(14,10,(s-176.8)/31.2),g);road(208,235,-2.4,10,g);
+ const rp=routePoint(64,0,-3.4);add({t:'ramp',p:rp,len:14,rise:1.4,w:3.6,yaw:routeYaw(64),tex:'solid',color:GREY[2],grp:g,nm:'Inside-bank launch'});
+ pad(78,1.4,4.8,12,g,-3.4);pad(93,2.8,4.8,12,g,-3.4);pad(109,1.4,4.8,14,g,-3.4);
+ railLine(112,198,s=>mix(1,-1.6,(s-112)/86),-4.4,g,'Outside arc over the first gap');
+ enemy(130,-.52,'turtle',g,-1.5,1.2,.85);fruit(130,2.4,g,-1.5);fruitLine(20,60,0,g);fruitLine(145,163,lerpY(120,166,0,-2.4),g,0,9);
+ mark(153,-1.72,g);mark(164,-2.3,g);fruit(171,.3,g);crate(28,0,'mask',g,-4);
+ add({t:'clock',p:routePoint(8,0,4),grp:g});add({t:'comboorb',p:routePoint(8,0,-4),grp:g});
 }
 
-// 06. Readable rail transfer: long first rail, a five-metre pop, wide catcher.
+// 2. Buildings occupy the inside of a long physical crescent. The four
+// upper bays demand lateral set-up; there is no shared hold-Up stair strip.
 {
- const s=new Section('06 · Offset rail viaduct',0,180,0);
- s.deck(0,38,0,22);s.cp(22,0);s.enemy(0,0,13,'grunt',3,1);
- s.deck(38,51,0,12);s.rail([[0,.8,32],[-3,1.2,55,6],[-4,3,75,5],[0,2.8,96]],'Transfer launch');
- s.rail([[2,2.2,101],[6,2.6,113,4],[6,1.4,130,5],[0,.8,151]],'Transfer receiver · lower and offset two metres');
- s.pit(51,148,-10,34);s.deck(148,180,0,26);s.cp(163,0);s.marks(155,0,24);s.marks(159,0,24);s.marks(163,0,24);
- s.fruit(-.5,3.8,93);s.fruit(1,4.5,99);s.fruit(3,3.5,105);s.line(152,177,0);
- s.camera(40,0);s.camera(88,1.4);s.camera(123,1);s.camera(158,0);s.finish();
+ const g=11;
+ road(235,275,-2.4,11,g);road(275,354,-2.43,24,g,0,false,'Connected courtyard foundation');
+ const steps=[{s:286,top:0,u:-4.8},{s:304,top:2.4,u:3.6},{s:324,top:4.8,u:-3.6},{s:343,top:7.2,u:3.6}]
+  .map(p=>({...p,width:12,depth:26.4,point:routePoint(p.s,p.top,p.u)}));
+ for(let i=0;i<steps.length;i++){const p=steps[i];assembly(p.s,-2.4,i+1,5,11,g,p.u);fruit(p.s,p.top+1,g,p.u);}
+ // Lower wings join the stepped roofs into a substantial building envelope.
+ road(279,350,-.03,3.6,g,-10,false,'Lower west gallery');road(282,349,-.03,3.6,g,10,false,'Lower east gallery');
+ road(352,438,7.2,7.2,g,0,false,'High curved roof walk');
+ enemy(388,7.2,'spiker',g);railLine(367,416,8.1,s=>4.4*(1-smooth(396,416,s)),g,'Outer parapet returning to the roof');
+ road(438,510,lerpY(438,510,7.2,0),10,g);fruitLine(411,436,7.2,g);fruitLine(450,506,lerpY(438,510,7.2,0),g);
+ checkpoint(422,7.2,g,'Courtyard roof sequence complete',2.4);
+ BLOCKWORKS_CLIMBS.push({name:'Courtyard roof bays',grp:g,start:routePoint(273,-2.4,-4.8),steps,exit:routePoint(358,7.2)});
 }
 
-// 07. U-shaped courtyard factory: climb the west wing, cross its joined
-// headhouse, then descend the east roofs. The courtyard is part of the mass.
+// 3. Gentle frozen chords sit between dry bends; they retain the .08 ice
+// inertia without demanding impossible full-speed turns on tight ice.
 {
- const s=new Section('07 · Courtyard roofworks',90,180,4.8);
- s.deck(0,29,0,26);s.cp(14,0);s.podium(27,124,0,26);
- for(let i=0;i<4;i++) {const v=36+i*9.6;s.cube(-4.8,0,v,i+1,3,5);s.fruit(-4.8,(i+1)*2.4+1,v);}
- s.cube(0,0,69.6,4,5,3);s.line(68,72,9.6,0,4);
- // The lower east gallery runs back toward the entrance, enclosing a real
- // 4.8-metre-wide courtyard below the higher west stair and headhouse.
- s.cube(6,0,51.6,2,2,16);
- for(const [v,layers]of [[79.2,3],[91.2,2],[103.2,3],[115.2,2]]){s.cube(6,0,v,layers,4,5);s.fruit(4.8,layers*2.4+1,v);}
- // The low entry wing and headhouse connect both arms around an open court.
- s.mass(4.8,2.4,32.4,9.6,10.8,grey[2]);s.mass(0,2.4,29.4,19.2,4.8,grey[2]);
- s.deck(121.2,140,4.8,22);s.cp(134,4.8);
- s.deck(140,151,4.8,7);s.mass(-7,6,147,4,9);s.fruit(-7,7,147);
- s.enemy(0,4.8,146,'turtle',2,1.1);s.fruit(0,8,146);s.deck(151,180,4.8,24);s.crate(-5,4.8,160,'life');
- s.camera(25,0);s.camera(63,7.2);s.camera(99,6);s.camera(139,4.8);s.finish();
+ const g=12;
+ road(510,575,0,10,g);road(575,599,0,8,g,0,true,'Ice approach chord');
+ road(599,635,0,12,g);road(635,660,0,8,g,0,true,'Ice carry chord');
+ road(660,687,0,12,g);road(687,714,0,8,g,0,true,'Ice launch chord');
+ road(714,724,0,10,g);gap(724,734.8,0,22,g);road(734.8,755,0,14,g);
+ for(const s of [566,607,672,716])mark(s,0,g);
+ fruitLine(524,570,0,g);fruitLine(578,711,0,g,0,22);fruit(729,2.4,g);
+ checkpoint(750,0,g,'Frozen bends and launch complete',2.4);
 }
 
-// 08. Ice carries you PAST the obvious centre; dry side bays allow correction.
+// 4. The trough itself curves. Its flat bottom ends below the departure
+// road: use the wall/coping, then pop from one curving rail to the receiver.
 {
- const s=new Section('08 · Frozen switchyard',0,180,0);
- const g=puzzleId++;groups.push({id:g,nm:'C · frozen crossing'});
- s.ramp(0,25,4.8,0,20);s.deck(25,39,0,22);s.cp(30,0);
- s.ice(39,95,0,20);s.deck(73,95,0,5,-12.5);s.deck(73,95,0,5,12.5);
- s.cube(12,0,90,1,2,2);s.crate(12,2.4,90,'bang',g);s.circuit(12,2.4,90,1);s.line(54,90,0,8,8);
- s.deck(95,113,0,25);s.marks(96,0,23);s.pit(113,149,-8,34);
- for(let i=0;i<6;i++)s.pier(0,0,117+i*5.55,g,-8);
- for(let i=0;i<6;i++)s.circuit(0,.96,117+i*5.55,1,true);
- s.deck(148,180,0,26);s.cp(164,0);s.crate(-5,0,173,'mask');
- s.camera(34,0);s.camera(77,0);s.camera(105,0);s.camera(137,.96);s.finish();
+ const g=13,start=routePoint(770,0);
+ road(755,770,0,14,g);
+ road(770,920,-.04,23,g,0,false,'Aqueduct retaining mass');
+ const pts=Array.from({length:23},(_,i)=>{const s=mix(770,920,i/22),p=routePoint(s,0);return[p[0]-start[0],p[2]-start[2],0,0] as [number,number,number,number];});
+ add({t:'vertramp',p:start,pts,vkind:'half',curve:'spline',rise:3.6,w:3.6,arc:75,deck:4,tex:'solid',color:GREY[1],grp:g,nm:'Sweeping vert aqueduct'});
+ road(920,958,lerpY(920,944,3.6*(1-Math.cos(75*Math.PI/180)),3.6),8,g,s=>mix(9.2,4.2,smooth(920,958,s)),false,'Coping departure');
+ gap(958,1000,3.6,34,g,'rail transfer');
+ railLine(936,976,s=>mix(4.4,5,(s-936)/40),s=>mix(8.5,4.5,(s-936)/40),g,'High arc · transfer launch');
+ railLine(982,1012,s=>mix(4.25,4.4,(s-982)/30),s=>mix(2,0,(s-982)/30),g,'Lower curving receiver');
+ road(1000,1040,3.6,14,g);fruitLine(778,902,0,g,1.4,20);fruit(911,5,g,8.4);fruit(979,6.6,g,3);
+ mark(935,3.6,g,7);checkpoint(1030,3.6,g,'Vert exit and rail transfer complete',-4);
 }
 
-// 09. Paired lifts in one grounded machine hall. Ride A to B's low stop,
-// transfer, then ride B to the upper loading roof. All guide columns meet
-// the ground; the moving decks are the only disconnected mechanical parts.
+// 5. A route-reading foundry. The right switch builds a safe lower reward
+// perch; the left builds the ascent to the upper bridge switch. Ghost steel
+// makes both consequences visible, and every incomplete route can return.
+export const BLOCKWORKS_FOUNDRY={
+ approach:routePoint(1080,3.6),stairsKey:routePoint(1085,3.6,-4.8),rewardKey:routePoint(1085,3.6,4.8),bridgeKey:routePoint(1136,8.4,-5.4),
+ stairs:Array.from({length:5},(_,i)=>({s:1109.5+i*5,top:4.56+i*.96,u:-5.4})),
+ bridge:[...Array.from({length:9},(_,i)=>({s:1143+i*6,top:8.4,u:Math.min(0,-5.4+i*1.8)})),{s:1195,top:8.4,u:0}],
+ exit:routePoint(1200,8.4),groups:{stairs:100,reward:101,bridge:102},
+};
 {
- const s=new Section('09 · Twin-lift machine hall',0,180,9.6);
- s.deck(0,34,0,24);s.cp(17,0);
- s.mover(0,2.4,40,6,6,'y',2.4,.7,-Math.PI/2,'Lift A · lower apron to transfer');
- s.mover(0,7.2,48.8,6,6,'y',2.4,.7,Math.PI/2,'Lift B · transfer to roof');
- s.pit(34,54.8,-6,16);
- for(const v of [40,48.8])for(const u of [-4.8,4.8])s.mass(u,12,v,.6,7,grey[3],{nm:'Grounded lift guide'});
- s.mass(-9,12,51,6,12,grey[1]);s.mass(9,12,51,6,12,grey[1]);
- s.deck(54.8,76,9.6,24);s.cp(66,9.6);
- // Connected roof courts have perpendicular block bays, raised service
- // terraces and an open central lane aligned with the lift arrival.
- s.deck(76,135,9.6,22);
- s.cube(-8.4,9.6,84.4,1,3,6);s.cube(8.4,9.6,103.6,2,3,6);
- s.cube(-8.4,9.6,120.4,1,5,3);s.line(79,129,9.6,0,10);
- s.cp(127,9.6);s.deck(135,152,9.6,6);s.enemy(0,9.6,145,'spiker');
- s.deck(152,180,9.6,24);s.rail([[5,10.4,131],[5,10.4,174]],'Machine-hall parapet · bypass the spiker');s.line(134,173,10.4,5);
- s.camera(30,0);s.camera(40,2.4);s.camera(49,7.2);s.camera(61,9.6);s.camera(136,9.6);s.finish();
+ const g=14,f=BLOCKWORKS_FOUNDRY;
+ road(1040,1106,3.6,s=>s<1075?12:18,g);gap(1106,1198,3.6,42,g,'three-switch route puzzle');
+ switchBox(1085,3.6,-4.8,100,'Left key · upper access stair');switchBox(1085,3.6,4.8,101,'Right key · lower reward perch');
+ for(const p of f.stairs)steelPier(p.s,p.top,p.u,100,g,-2.4,4);
+ box(routePoint(1136,8.4,-5.4),8.4,7.2,7.2,g,0,GREY[2],'Upper switch tower');
+ switchBox(1136,8.4,-5.4,102,'Upper key · main curved crossing');
+ for(const p of f.bridge)steelPier(p.s,p.top,p.u,102,g,-2.4,4);
+ for(let i=0;i<4;i++)steelPier(1110.5+i*5,3.6,7+Math.min(i,2)*2,101,g,-2.4,4);
+ const reward=routePoint(1131,3.6,11);
+ box(reward,3.6,10,6,g,0,GREY[2],'Lower reward and bonus perch');crate(1131,3.6,'mask',g,11);fruit(1131,4.9,g,9);
+ add({t:'bonusplatform',p:[reward[0]+3,3.6,reward[2]],to:[reward[0]-1.6,3.7,reward[2]+1],grp:g,nm:'Optional foundry bonus'});
+ road(1198,1300,8.4,s=>mix(14,10,(s-1198)/60),g);
+ fruitLine(1050,1077,3.6,g);fruitLine(1220,1274,8.4,g);
+ mark(1098,3.6,g,-4.8);mark(1098,3.6,g,4.8,'#b59dd4');
+ checkpoint(1280,8.4,g,'Foundry crossing complete',3.5);
 }
 
-// 10. Downhill eastbound bowl, then a measured kicker gap.
+// 6. Machinery belongs to the route: a ferry carries through the curve,
+// then a quick lift reaches a loading roof. A demanding high grind rewards
+// riders who commit early instead of making everyone wait for a cycle.
+export const BLOCKWORKS_MACHINE={ferry:routePoint(1355,8.4),lift:routePoint(1410,10.8)};
 {
- const s=new Section('10 · Bank and launch',270,200,0);
- s.deck(0,24,9.6,26);s.cp(12,9.6);s.ramp(24,64,9.6,0,18);
- s.podium(64,112,-.02,20);
- put({t:'vertramp',p:s.p(0,0,88),vkind:'half',len:48,rise:3.2,w:5,arc:70,deck:2,yaw:s.yaw,tex:'solid',color:grey[1],grp:s.id});
- s.deck(112,128,0,18);s.ramp(128,140,0,2,14);s.pit(140,151.5,-7,26);
- s.deck(151.5,173,1.4,18);s.ramp(173,184,1.4,0,18);s.deck(184,200,0,26);s.cp(191,0);
- for(let v=32;v<60;v+=10)s.fruit(0,9.6*(64-v)/40+1,v);s.fruit(0,4,146);s.camera(35,7);s.camera(74,0);s.camera(115,0);s.camera(157,1.4);s.finish();
+ const g=15;
+ road(1300,1340,8.4,s=>mix(10,16,(s-1324)/16),g);gap(1340,1370,8.4,30,g,'freight crossing');
+ mover({t:'mover',p:BLOCKWORKS_MACHINE.ferry,s:[8,.8,8],axis:'z',travelSign:-1,amp:11,speed:.95,phase:-Math.PI/2,grp:g,nm:'Freight deck through the bend'});
+ road(1370,1406,8.4,14,g);gap(1406,1414,8.4,24,g,'loading lift');
+ mover({t:'mover',p:BLOCKWORKS_MACHINE.lift,s:[8,.8,8],axis:'y',amp:2.4,speed:1.1,phase:-Math.PI/2,grp:g,nm:'Fast loading lift'});
+ for(const sign of [-1,1]){const p=BLOCKWORKS_MACHINE.lift;box([p[0]+sign*5.2,0,p[2]],14.4,.6,9,g,0,GREY[3],'Grounded lift guide');}
+ road(1414,1520,13.2,9,g);road(1520,1560,13.2,12,g);
+ railLine(1320,1444,s=>mix(9.3,14.1,(s-1320)/124),s=>5.8*Math.sin(Math.PI*(s-1320)/124),g,'Machinery high line · rising S grind');
+ fruitLine(1303,1330,8.4,g);fruitLine(1425,1545,13.2,g);
+ checkpoint(1550,13.2,g,'Machinery and high roof complete',3.5);
 }
 
-// 11. Ice to dry cube roof, then an explicit grind across a longer void.
+// 7. Spend the height in one continuous run: descending bend -> short ice
+// carry -> gap -> enemy choice -> kicker -> narrow roof/parapet. No reset
+// plazas separate these commitments.
 {
- const s=new Section('11 · Cold roof transfer',0,180,2.4);
- s.deck(0,30,0,26);s.cp(10,0);s.ice(30,85,0,18);s.marks(84,0,16);
- s.pit(85,96,-7,28);s.deck(96,114,0,20);s.marks(97,0,18);s.cp(105,0);
- s.cube(0,0,122,1,4,4);s.mass(0,1.2,116,7,3.8,grey[2]);
- s.rail([[0,3.15,121],[-4,4,134,5],[1,5.6,147,5],[3,3.15,164]],'Roof rail · rising S-curve');
- s.pit(127,160,-8,30);s.deck(160,180,2.4,26);s.cp(171,2.4);
- s.fruit(0,2.4,91);s.fruit(0,4.2,137);s.fruit(2,4.2,151);
- s.camera(30,0);s.camera(88,0);s.camera(121,2.4);s.camera(157,2.4);s.finish();
+ const g=16;
+ road(1560,1634,lerpY(1560,1634,13.2,4.8),9,g);road(1634,1640,4.8,9,g);
+ road(1640,1664,4.8,8,g,0,true,'Roof-race ice carry');road(1664,1687,4.8,10,g);
+ gap(1687,1695.2,4.8,23,g);road(1695.2,1740,4.8,9,g);
+ road(1740,1754,lerpY(1740,1754,4.8,6.8),9,g,0,false,'Curved kicker');gap(1754,1766,6.8,22,g);
+ road(1766,1870,6,7.2,g);
+ enemy(1722,4.8,'grunt',g,-1.2,1,.9);enemy(1818,6,'turtle',g,-1.2,1,.7);fruit(1818,9,g,-1.2);
+ assembly(1728,4.8,1,2,4,g,5.5);assembly(1836,6,1,2,5,g,-5);
+ railLine(1776,1853,6.9,s=>4.4*Math.sin(Math.PI*(s-1776)/77),g,'Roof relay parapet');
+ fruitLine(1573,1628,lerpY(1560,1634,13.2,4.8),g);fruit(1692,7.2,g);fruit(1760,10,g);fruitLine(1780,1860,6,g,0,17);
+ mark(1678,4.8,g);mark(1685,4.8,g);mark(1750,6.23,g);
 }
 
-// 12. Final switch sequence: first key creates a side stair to the second key.
+// 8. The last sweep stays physically curved all the way to the tower.
+// Checkpoint precedes a complete finale, never another nearby checkpoint.
 {
- const s=new Section('12 · Counterweight gallery',90,190,7.2);
- const a=puzzleId++,b=puzzleId++;groups.push({id:a,nm:'D · gallery stair'},{id:b,nm:'E · upper crossing'});
- s.deck(0,43,2.4,26);s.cp(19,2.4);s.crate(6,2.4,29,'bang',a);s.circuit(6,2.4,29,1);
- for(let i=0;i<5;i++)s.pier(6,2.4+i*.96,47+i*4.6,a,-6);
- s.mass(6,7.2,71,7,6,grey[2]);s.crate(6,7.2,71,'bang',b);s.circuit(6,7.2,71,2);
- for(let i=0;i<5;i++)s.circuit(6,3.36+i*.96,47+i*4.6,1,true);
- for(let i=0;i<7;i++)s.circuit(6-Math.min(i,3)*2,7.2,77+i*5.4,2,true);
- for(let i=0;i<7;i++)s.pier(6-Math.min(i,3)*2,6.24,77+i*5.4,b,-6);
- s.pit(43,114,-6,35);s.deck(113,145,7.2,24);s.cp(127,7.2);
- s.enemy(3,7.2,143,'grunt',2,1.2);s.deck(145,150,7.2,24);
- s.mover(0,7.2,164,6,8,'x',9,.65,-Math.PI/2,'Freight shuttle · cross the loading trench',-1);
- s.pit(150,178,-6,26);s.deck(178,190,7.2,24);s.cp(184,7.2);s.crate(-5,7.2,184,'mystery');
- for(const v of [147,181])for(const u of [-9,9])s.mass(u,9.6,v,2.4,6,grey[3],{nm:'Loading-dock buttress'});
- s.camera(35,2.4);s.camera(66,7.2);s.camera(99,7.2);s.camera(146,7.2);s.finish();
+ const g=17;
+ road(1870,1985,6,9,g);checkpoint(1910,6,g,'Roof relay complete',2.7);
+ road(1985,2008,6,8,g,0,true,'Final ice chord');road(2008,2018,6,10,g);gap(2018,2028.8,6,24,g);
+ road(2028.8,2041,6,14,g);road(2041,2083,5.97,22,g,0,false,'Crown tower foundation');
+ const steps=[{s:2048,top:8.4,u:-2.4},{s:2061,top:10.8,u:2.4},{s:2074,top:13.2,u:-2.4}]
+  .map(p=>({...p,width:7.2,depth:12,point:routePoint(p.s,p.top,p.u)}));
+ for(let i=0;i<steps.length;i++){const p=steps[i];assembly(p.s,6,i+1,3,5,g,p.u);fruit(p.s,p.top+1,g,p.u);}
+ road(2078,2100,13.2,8,g,0,false,'Crown departure');gap(2100,2118,13.2,24,g,'finish grind');road(2118,2152,13.2,14,g);
+ railLine(2088,2125,14,s=>-3*Math.sin(Math.PI*(s-2088)/37),g,'Crown arc into the finish');
+ add({t:'crystal',p:routePoint(2129,14.5),grp:g});add({t:'gate',p:routePoint(2136,13.2),yaw:0,grp:g});
+ fruitLine(1882,1980,6,g);fruit(2023,8.4,g);mark(2016,6,g);
+ BLOCKWORKS_CLIMBS.push({name:'Crown roof bays',grp:g,start:routePoint(2039,6,-2.4),steps,exit:routePoint(2085,13.2)});
 }
 
-// 13. Release: one broad downhill run, two gaps and a long optional rail.
-{
- const s=new Section('13 · Momentum causeway',0,200,0);
- s.deck(0,20,7.2,24);s.cp(10,7.2);s.ramp(20,62,7.2,0,18);
- s.deck(62,82,0,18);s.marks(81,0,16);s.pit(82,93.5,-7,28);s.deck(93.5,123,0,20);
- s.enemy(5,0,118,'turtle',2,1);s.ramp(123,141,0,2.4,16);s.pit(141,153,-7,28);
- s.deck(153,178,0,20);s.deck(178,200,0,26);s.cp(186,0);
- s.rail([[-6,2.8,119],[-9,4,134,6],[-7,5.2,149,5],[-4,.9,174]],'High causeway bypass');
- s.fruit(0,2.4,87.5);s.fruit(0,4.5,147);for(let v=23;v<57;v+=10)s.fruit(-2,7.2*(62-v)/42+1,v);
- s.camera(31,5.3);s.camera(70,0);s.camera(110,0);s.camera(142,2.4);s.camera(181,0);s.finish();
-}
-
-// 14. Crown: remix block jumps, short ice, coping, then a generous finish court.
-{
- const s=new Section('14 · Blockworks crown',0,180,7.2);
- s.deck(0,28.2,0,26);s.cp(13,0);s.podium(25,68,0,28);
- s.cube(0,0,34,1,6,6);s.cube(1.2,0,43.6,2,5,6);s.cube(0,0,53.2,3,4,6);
- s.cube(-8.4,0,60.4,4,3,3);s.cube(8.4,0,60.4,4,3,3);
- for(let i=0;i<3;i++)s.fruit(0,(i+1)*2.4+1,34+i*9.6);
- s.deck(60.4,86,7.2,22);s.cp(76,7.2);
- s.ice(86,113,7.2,18);s.deck(113,131,7.2,22);s.marks(114,7.2,20);
- s.rail([[0,8,123],[-3,9.6,137,5],[0,8,154]],'Crown finish grind');s.pit(131,149,-4,30);
- s.deck(149,190,7.2,30);s.line(151,166,7.2);s.cp(157,7.2);
- put({t:'crystal',p:s.p(0,8.5,164),grp:s.id});put({t:'gate',p:s.p(0,7.2,174),yaw:s.yaw,grp:s.id});
- s.cube(-11,7.2,177,3,2,2);s.cube(11,7.2,177,3,2,2);
- s.camera(26,0);s.camera(56,7.2);s.camera(95,7.2);s.camera(139,7.2);s.finish();
-}
-
-// Dense, height-matched ordered camera samples keep turns predictable. Long
-// vectors between section ends/starts are never inferred from component order.
-// Round the eight course turns inside their broad dry courts before sampling.
-const unique=route.filter((p,i)=>i===0||Math.hypot(...p.map((v,k)=>v-route[i-1][k]))>.01);
-const cameraRoute:Point[]=[];
-for(let i=0;i<unique.length;i++) {
- const a=unique[i-1],b=unique[i],c=unique[i+1];
- if(!a||!c){cameraRoute.push(b);continue;}
- const da=Math.hypot(b[0]-a[0],b[2]-a[2]),dc=Math.hypot(c[0]-b[0],c[2]-b[2]);
- const dot=((b[0]-a[0])*(c[0]-b[0])+(b[2]-a[2])*(c[2]-b[2]))/(da*dc);
- if(dot>.5){cameraRoute.push(b);continue;}
- const reach=Math.min(10,da*.4,dc*.4),before=b.map((v,k)=>v+(a[k]-v)*reach/da),after=b.map((v,k)=>v+(c[k]-v)*reach/dc);
- for(let j=0;j<=8;j++){const t=j/8;cameraRoute.push(b.map((v,k)=>r((1-t)**2*before[k]+2*(1-t)*t*v+t*t*after[k])) as Point);}
-}
-export const BLOCKWORKS_CAMERA_ROUTE = cameraRoute;
-for(let i=0;i<cameraRoute.length-1;i++) {
- const a=cameraRoute[i],b=cameraRoute[i+1],d=Math.hypot(b[0]-a[0],b[2]-a[2]);
- if(d<.001)continue;
- const n=Math.max(1,Math.ceil(d/7));
- for(let j=0;j<n;j++)put({t:'camnode',p:a.map((v,k)=>r(v+(b[k]-v)*j/n)) as Point,grp:1});
-}
-put({t:'camnode',p:cameraRoute[cameraRoute.length-1],grp:1});
-
-export const CODEX_LAB_LEVEL = {
- v:1, name:'Blockworks · Greybox',spawn:[0,.15,16],killY:-18,sky:'day',
- keepPlayFog:true,
- atmosphere:{fogEnabled:true,fogNear:100,fogFar:330,fogColor:'#c1c9d1',backdrop:'fog',
-  ambientSky:'#e8f1ff',ambientGround:'#626d7d',ambientIntensity:1.1,sunColor:'#ffffff',sunIntensity:1.25,
-  fillColor:'#c8d9f0',fillIntensity:.35,drawDistance:500,shadowStrength:.65},
- medalTimes:{gold:240,silver:310,bronze:390},components:C,groups,
-} satisfies CustomLevelData;
+// A steady north-facing chord leaves the actual road curvature on screen.
+// The camera follows the rider's position along the bends, but never turns
+// the input frame to make a bend play like another straight corridor.
+export const BLOCKWORKS_CAMERA_ROUTE:Point[]=[];
+for(let s=-30;s<=ROUTE_END+40;s+=10){const p:Point=[0,0,20-s];BLOCKWORKS_CAMERA_ROUTE.push(p);add({t:'camnode',p,grp:1});}
+export const CODEX_LAB_LEVEL:CustomLevelData={
+ v:1,name:'Blockworks · Greybox',spawn:routePoint(2,.15),killY:-20,sky:'day',keepPlayFog:true,
+ atmosphere:{fogEnabled:true,fogNear:105,fogFar:230,fogColor:'#c1c9d1',backdrop:'fog',ambientSky:'#e8f1ff',ambientGround:'#626d7d',ambientIntensity:1.1,sunColor:'#ffffff',sunIntensity:1.25,fillColor:'#c8d9f0',fillIntensity:.35,drawDistance:360,shadowStrength:.65},
+ medalTimes:{gold:240,silver:300,bronze:390},components:C,groups,
+};

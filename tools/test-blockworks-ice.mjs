@@ -1,133 +1,58 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
-import { runInThisContext } from 'node:vm';
 import { createServer } from 'vite';
-import * as THREE from 'three';
-import { makeInput } from './jungle-cup-harness.mjs';
+import { withBlockworksRuntime } from './blockworks-runner.mjs';
 
-const harness = await readFile(new URL('./test-crouch-jump-slam.mjs', import.meta.url), 'utf8');
-runInThisContext('const noop=()=>{};' + harness.slice(harness.indexOf('function installHeadlessDom()'), harness.indexOf('\nconst held')) + '\ninstallHeadlessDom();');
-const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true } });
-const warn = console.warn, error = console.error;
-console.warn = (...a) => { if (!/failed|GLB|procedural skateboard/i.test(String(a[0]))) warn(...a); };
-console.error = (...a) => { if (!/failed|GLB/i.test(String(a[0]))) error(...a); };
-const evidence = [], failures = [];
-let level;
-try {
-  const { Level } = await server.ssrLoadModule('/src/level.ts');
-  const { Player } = await server.ssrLoadModule('/src/player.ts');
-  const { CONST, TUNING } = await server.ssrLoadModule('/src/tuning.ts');
-  const { CODEX_LAB_LEVEL: source, BLOCKWORKS_SECTIONS: sections } = await server.ssrLoadModule('/src/levels/codex-lab.ts');
-  const tuningBefore = JSON.stringify(TUNING), dt = CONST.fixedStep;
-  level = new Level(new THREE.Scene(), { id: 'blockworks-ice', name: source.name, data: source });
-  level.scene.updateMatrixWorld(true);
-  const world = (index, u, y, v) => {
-    const s = sections[index], a = s.yaw * Math.PI / 180;
-    return new THREE.Vector3(s.start[0] + Math.cos(a) * u - Math.sin(a) * v, y,
-      s.start[2] - Math.sin(a) * u - Math.cos(a) * v);
-  };
-  const local = (index, p) => {
-    const s = sections[index], a = s.yaw * Math.PI / 180;
-    const x = p.x - s.start[0], z = p.z - s.start[2];
-    return { u: x * Math.cos(a) - z * Math.sin(a), y: p.y, v: -x * Math.sin(a) - z * Math.cos(a) };
-  };
-  const start = (index, u, y, v, speed = 0) => {
-    level.reset(true);
-    const p = new Player(level.scene); p.enterLevel('blockworks-ice');
-    p.endlessDeaths = true; p.respawn(level, true);
-    p.pos.copy(world(index, u, y + .02, v)); p.laneCursor.s = -1; p.settle(level);
-    p.prevPos.copy(p.pos); p.groundHit = p.queryGround(level);
-    // Only the braking stress cases seed velocity; traversal begins on foot at rest.
-    if (speed) { p.freeSkate = true; p.speed = speed; p.lastPlanar = speed; }
-    assert.ok(p.grounded && p.groundHit && Math.abs(p.groundHit.y - y) < .06);
-    const tick = overrides => { p.step(dt, makeInput(overrides), level); level.update(dt); };
-    return { p, tick, at: () => local(index, p.pos) };
-  };
-  const platforms = index => source.components.filter(c => c.grp === index + 10 && c.t === 'platform')
-    .map(c => { const centre = local(index, new THREE.Vector3(...c.p)); return {
-      component: c, start: centre.v - c.s[2] / 2, end: centre.v + c.s[2] / 2,
-      top: c.p[1] + c.s[1] / 2,
-    }; }).sort((a, b) => a.start - b.start);
-  const icePatches = index => platforms(index).filter(p => p.component.slip);
-  const checkpointBefore = (index, v) => Math.max(...source.components
-    .filter(c => c.grp === index + 10 && c.t === 'checkpoint')
-    .map(c => local(index, new THREE.Vector3(...c.p)).v).filter(at => at < v));
-  const check = (name, run) => {
-    try { evidence.push({ name, ...run() }); }
-    catch (error) { failures.push({ name, error: error.message }); }
-  };
-  const safe = f => assert.ok(!f.p.isBailing && !['dead', 'gameover', 'hang'].includes(f.p.state),
-    `lost traversal: ${JSON.stringify({ ...f.at(), state: f.p.state, speed: f.p.speed })}`);
-
-  for (const [index, u] of [[2, 3], [10, 0]]) check(`Section ${index + 1}: rest to ice to charged gap`, () => {
-    const patches = icePatches(index), edge = patches.at(-1).end;
-    const startV = checkpointBefore(index, patches[0].start);
-    const landing = platforms(index).find(p => p.start > edge + 1).start;
-    const f = start(index, u, 0, startV), samples = [];
-    let priorSlip = false;
-    for (let frame = 0; frame < 1200 && f.at().v < edge - .7; frame++) {
-      f.tick({ moveY: 1, jumpHeld: true, jumpPressed: frame === 0 }); safe(f);
-      if (!!f.p.groundHit?.slippy !== priorSlip) {
-        samples.push({ v: +f.at().v.toFixed(2), speed: +f.p.speed.toFixed(2), ice: !!f.p.groundHit?.slippy });
-        priorSlip = !!f.p.groundHit?.slippy;
-      }
-    }
-    assert.ok(f.at().v >= edge - 1 && f.at().v < edge + .2, `never reached launch: ${JSON.stringify(f.at())}`);
-    const launch = { ...f.at(), speed: f.p.speed, charge: f.p.chargeTimer };
-    f.tick({ moveY: 1, jumpReleased: true });
-    assert.equal(f.p.state, 'air', 'charged release failed');
-    for (let frame = 0; frame < 120 && f.p.state === 'air'; frame++) {
-      f.tick({ moveY: 1 }); safe(f);
-    }
-    const result = { samples, launch, landing: { ...f.at(), state: f.p.state, speed: f.p.speed } };
-    assert.ok(f.p.grounded && f.p.state === 'ride' && f.at().v >= landing && Math.abs(f.at().y) < .08,
-      JSON.stringify(result));
-    // Keep the same motion after landing: the real adjoining court must also
-    // absorb the approach speed without a collision bail or falling off its end.
-    for (let frame = 0; frame < 300 && f.p.speed > .08; frame++) {
-      f.tick({ grabHeld: true, grabPressed: frame === 0 }); safe(f);
-    }
-    assert.ok(f.p.grounded && f.p.speed <= .08, 'landing court cannot absorb the approach speed');
-    result.dryStop = f.at();
-    return result;
-  });
-
-  for (const index of [2, 7, 13]) check(`Section ${index + 1}: 23m/s dry brake deck`, () => {
-    const ice = icePatches(index)[0], dryStart = ice.end;
-    const dry = platforms(index).find(p => !p.component.slip && Math.abs(p.start - dryStart) < .01);
-    assert.ok(dry, 'ice needs a contiguous dry catch deck');
-    const dryEnd = dry.end;
-    const f = start(index, 0, ice.top, dryStart - 3, 23);
-    while (f.at().v < dryStart + .05) { f.tick({ moveY: 1 }); safe(f); }
-    const brakeAt = f.at().v;
-    for (let frame = 0; frame < 300 && f.p.speed > .08; frame++) {
-      f.tick({ grabHeld: true, grabPressed: frame === 0 }); safe(f);
-    }
-    const result = { brakeAt, stoppedAt: f.at().v, distance: f.at().v - brakeAt, speed: f.p.speed, state: f.p.state };
-    assert.ok(f.p.speed <= .08 && f.at().v < dryEnd - .5 && f.p.grounded, JSON.stringify(result));
-    return result;
-  });
-
-  check('Crown: rest to ice, dry catch and finish rail', () => {
-    const ice = icePatches(13)[0];
-    const f = start(13, 0, ice.top, checkpointBefore(13, ice.start));
-    let iceFrames = 0, grindFrames = 0;
-    for (let frame = 0; frame < 1200; frame++) {
-      const at = f.at(), grinding = f.p.state === 'grind';
-      const correction = grinding ? THREE.MathUtils.clamp(-f.p.balance * 5 - f.p.balanceVel * .7, -1, 1) : 0;
-      f.tick({ moveY: 1, moveX: correction, jumpHeld: at.v < 121,
-        jumpPressed: frame === 0, grindHeld: at.v >= 119, grindPressed: at.v >= 119 && at.v < 119.5 });
-      safe(f);
-      if (f.p.groundHit?.slippy) iceFrames++;
-      if (f.p.state === 'grind') grindFrames++;
-      if (f.at().v >= 157 && f.p.grounded && f.p.state === 'ride') break;
-    }
-    const result = { iceFrames, grindFrames, landing: { ...f.at(), state: f.p.state, speed: f.p.speed } };
-    assert.ok(iceFrames > 60 && grindFrames > 30 && f.p.grounded && f.at().v >= 157, JSON.stringify(result));
-    return result;
-  });
-  assert.equal(JSON.stringify(TUNING), tuningBefore, 'ice traversal changed movement tuning');
-  console.log(JSON.stringify({ evidence, failures }, null, 2));
-  assert.equal(failures.length, 0, failures.map(f => `${f.name}: ${f.error}`).join('\n'));
-  console.log('PASS Blockworks continuous ice approaches, charged gap landings, dry brakes and crown rail');
-} finally { level?.dispose(); await server.close(); console.warn = warn; console.error = error; }
+// Each run starts once on a real dry approach. All acceleration, ice travel,
+// steering, takeoff and landing thereafter come from ordinary input samples.
+const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true}});
+const authored=await server.ssrLoadModule('/src/levels/codex-lab.ts');
+await server.close();
+const evidence=[],failures=[];
+for(const spec of [
+  {name:'Frozen bends: three ice patches and launch',start:510,y:0,edge:724,end:750,patches:[[575,599],[635,660],[687,714]],overspeed:false},
+  {name:'Roof relay: downhill overspeed through ice and gap',start:1560,y:13.2,edge:1687,end:1710,patches:[[1640,1664]],overspeed:true},
+  {name:'Crown sweep: ice, jump and dry brake before tower',start:1910,y:6,edge:2018,end:2041,patches:[[1985,2008]],overspeed:false,brake:true},
+]) {
+  const contacts=[];
+  try {
+    await withBlockworksRuntime(ctx=>{
+      const {p,sourceModule:m,until,releaseJump,steerToward,trace,TUNING}=ctx;
+      const original=JSON.stringify(TUNING),station=()=>20-p.pos.z;
+      const steer=()=>steerToward(m.routePoint(station()+14,0));
+      const alive=()=>assert.ok(!p.isBailing && !['dead','gameover','hang'].includes(p.state),JSON.stringify(ctx.snapshot()));
+      until(()=>station()>=spec.edge-.8,()=>({...steer(),jumpHeld:true}),{maxFrames:1800,label:spec.name+' approach'});
+      const launch=ctx.snapshot();
+      assert.ok(p.grounded && p.freeSkate,'approach must arrive on the board without a reset');
+      assert.ok(p.speed>21.5,'real approach must earn gap speed');
+      releaseJump(steer());assert.equal(p.state,'air','charged release must launch');
+      until(()=>p.grounded,()=>({...steer(),jumpHeld:false}),{maxFrames:120,label:spec.name+' landing'});
+      const receivingEdge=m.BLOCKWORKS_GAPS.find(gap=>gap.a===spec.edge).b;
+      assert.ok(station()>=receivingEdge && p.state==='ride','jump must land beyond the authored gap');
+      const landing=ctx.snapshot();
+      if(spec.brake) {
+        until(()=>p.speed<.08,()=>({...steer(),grabHeld:true}),{maxFrames:300,label:'dry brake before crown climb'});
+        assert.ok(p.grounded && station()<spec.end,'dry landing must stop the rider before the tower');
+      }else until(()=>station()>=spec.end,()=>({...steer(),jumpHeld:true}),{maxFrames:180,label:spec.name+' exit'});
+      alive();
+      const patchEvidence=spec.patches.map(([a,b])=>{
+        const samples=contacts.filter(t=>20-t.position[2]>=a+.5 && 20-t.position[2]<=b-.5);
+        assert.ok(samples.length>30,'ice crossing needs sustained contact');
+        assert.ok(samples.every(t=>t.grounded),'a patch was skipped by jumping/falling');
+        assert.ok(samples.every(t=>t.slippy && t.grip===.08),'the path must actually contact the authored deep ice');
+        const entered=samples[0].speed,minimum=Math.min(...samples.map(t=>t.speed));
+        assert.ok(entered>21.5 && minimum>20,'ice must carry the actual approach momentum');
+        const lateral=Math.max(...samples.map(t=>Math.abs(t.position[0]-m.routeX(20-t.position[2]))));
+        assert.ok(lateral<4.5,'ice line exceeded the physical ribbon width');
+        return {a,b,frames:samples.length,entrySpeed:+entered.toFixed(2),minimumSpeed:+minimum.toFixed(2),maxWorldXOffset:+lateral.toFixed(2)};
+      });
+      if(spec.overspeed)assert.ok(patchEvidence[0].entrySpeed>24,'downhill stress must genuinely exceed ordinary top speed');
+      assert.ok(trace.some(t=>Math.abs(t.input.moveX)>.15),'curves must require visible steering input');
+      assert.equal(p.totalDeaths,0);assert.equal(JSON.stringify(TUNING),original);
+      evidence.push({name:spec.name,seconds:+(ctx.frame*ctx.dt).toFixed(2),patches:patchEvidence,
+        takeoffSpeed:+launch.speed.toFixed(2),landingStation:+(20-landing.position[2]).toFixed(2),exit:ctx.snapshot().position});
+    },{start:authored.routePoint(spec.start,spec.y+.02),onTick:(sample,ctx)=>contacts.push({...sample,slippy:ctx.p.groundHit?.slippy,grip:ctx.p.groundHit?.iceGrip})});
+  }catch(error){failures.push({name:spec.name,error:error.message});}
+}
+console.log(JSON.stringify({evidence,failures},null,2));
+assert.equal(failures.length,0,failures.map(f=>`${f.name}: ${f.error}`).join('\n'));
+console.log('PASS continuous physically curved ice approaches, earned speed, steering, charged gaps and receiving bends');

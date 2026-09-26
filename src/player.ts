@@ -3134,7 +3134,7 @@ export class Player {
   prepareStartPresentation(level: Level,dt=0): void {
     // A suspended parent may be hundreds of metres above the bonus floor.
     // Refresh this visual probe before the black curtain reveals its camera.
-    this.shadowGroundY = this.queryShadowGround(level);
+    this.shadowGroundY = this.queryShadowGround(level, true);
     if (level.hudMode === 'bonus' && this.runTime === 0)
       this.visualYaw = wrapAngle(Math.atan2(this.axisF.x, this.axisF.z) - Math.PI);
     this.idlePresentationOffset+=dt;
@@ -6575,7 +6575,7 @@ export class Player {
       this.slideTimer <= 0 &&
       this.lastTy < TUNING.vertLip &&
       (() => {
-        const belowY = this.queryShadowGround(level);
+        const belowY = this.queryShadowGround(level, false);
         return belowY === null || belowY <= level.killY;
       })() &&
       (() => {
@@ -15077,17 +15077,19 @@ export class Player {
       this.floorX.visible = false;
       return;
     }
-    this.shadowGroundY = this.queryShadowGround(level);
+    this.shadowGroundY = this.queryShadowGround(level, true);
     if (this.shadowGroundY !== null) this.lastGroundY = this.shadowGroundY;
     this.syncFloorX();
   }
 
-  // Long-range floor probe under the player — landing indicator only, never
-  // gameplay (queryGround stays short so ground-follow is unchanged).
-  private queryShadowGround(level: Level): number | null {
+  // Long-range terrain probe. Teeter's lethal-drop decision retains its
+  // original mesh-only result; camera/shadow presentation explicitly includes
+  // live crate lids without making crates ordinary locomotion ground.
+  private queryShadowGround(level: Level, includeCrates = false): number | null {
     this.raycaster.set(new THREE.Vector3(this.pos.x, this.pos.y + 2.5, this.pos.z), DOWN);
     this.raycaster.far = 120;
     const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
+    let groundY: number | null = null;
     for (const hit of hits) {
       const pipe = hit.object.userData.halfpipe as Halfpipe | undefined;
       if (
@@ -15098,9 +15100,21 @@ export class Player {
         )
       )
         continue;
-      return hit.point.y;
+      groundY = hit.point.y;
+      break;
     }
-    return null;
+    if (!includeCrates) return groundY;
+    for (const crate of level.crates) {
+      if (!crate.alive || crate.pending || crate.nitro) continue;
+      const top = crate.box.max.y;
+      // A shadow is a downward projection, not permission to stand on an
+      // overhead stack. Match the existing crate-support reach at the feet.
+      if (top > this.pos.y + CRATE_STAND_REACH || top < this.pos.y + 2.5 - 120
+        || (groundY !== null && top <= groundY)
+        || !this.crateLidOverlapsSole(crate.box, this.pos.x, this.pos.z)) continue;
+      groundY = top;
+    }
+    return groundY;
   }
 
   /**

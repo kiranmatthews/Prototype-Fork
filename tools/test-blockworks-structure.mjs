@@ -4,235 +4,267 @@ import { runInThisContext } from 'node:vm';
 import { createServer } from 'vite';
 import * as THREE from 'three';
 
-// Cross-section topology checks use the complete production-built Level.
-// They complement controller traversal tests, which exercise local challenges.
 const harness = await readFile(new URL('./validate-editor-roundtrip.mjs', import.meta.url), 'utf8');
-runInThisContext(harness.slice(harness.indexOf('function installHeadlessDom()'),
-  harness.indexOf('\nfunction round(')) + '\ninstallHeadlessDom();');
+runInThisContext(harness.slice(harness.indexOf('function installHeadlessDom()'), harness.indexOf('\nfunction round(')) + '\ninstallHeadlessDom();');
 const server = await createServer({ logLevel: 'silent', server: { middlewareMode: true }, appType: 'custom' });
 let level;
+const failures = [], evidence = {};
+const check = (name, run) => { try { evidence[name] = run(); } catch (error) { failures.push(`${name}: ${error.message}`); } };
+const near = (a, b, why, tolerance = .025) => assert.ok(Math.abs(a - b) <= tolerance, `${why}: ${a} != ${b}`);
+const value = (v, s) => typeof v === 'function' ? v(s) : v;
 try {
   const { Level, normalizeCustomLevelData } = await server.ssrLoadModule('/src/level.ts');
-  const { CODEX_LAB_LEVEL: data, BLOCKWORKS_SECTIONS: sections, BLOCKWORKS_CAMERA_ROUTE: route, BLOCKWORKS_GROUND: groundDatum } =
-    await server.ssrLoadModule('/src/levels/codex-lab.ts');
-  const normalized=normalizeCustomLevelData(data);
-  assert.ok(normalized,'source level must survive editor validation');
-  assert.equal(normalized.components.length,data.components.length);
-  assert.equal(normalized.components.filter(c=>c.iceGrip===.08).length,data.components.filter(c=>c.iceGrip===.08).length);
+  const { TUNING } = await server.ssrLoadModule('/src/tuning.ts');
+  const { cameraRigFraming, setCameraRigAim } = await server.ssrLoadModule('/src/cameraRig.ts');
+  const { CODEX_LAB_LEVEL: data, BLOCKWORKS_ROADS: roads, BLOCKWORKS_GAPS: gaps,
+    BLOCKWORKS_CLIMBS: climbs, BLOCKWORKS_CHECKPOINTS: checkpoints,
+    BLOCKWORKS_GROUND: ground, ROUTE_END: end, routePoint } = await server.ssrLoadModule('/src/levels/codex-lab.ts');
+  const normalized = normalizeCustomLevelData(data);
+  check('editor normalization', () => { assert.ok(normalized, 'source must remain valid editor data'); return { components: normalized.components.length }; });
   level = new Level(new THREE.Scene(), { id: 'blockworks-structure', name: data.name, data });
   level.root.updateMatrixWorld(true);
   const ray = new THREE.Raycaster(), down = new THREE.Vector3(0, -1, 0);
   const staticGround = level.groundMeshes.filter(mesh => mesh.userData.moverId === undefined);
-  const floor = (x, z, fromY = 100) => {
-    ray.set(new THREE.Vector3(x, fromY, z), down); ray.near = 0; ray.far = 200;
-    return ray.intersectObjects(staticGround, false).find(hit => hit.face?.normal.y > .2)?.point.y;
+  const ribbons = staticGround.filter(mesh => {
+    const c = data.components[mesh.userData.editorIdx];
+    return c?.t === 'mesh' && c.solid !== false && c.vert === false;
+  });
+  const hits = (p, meshes = staticGround, fromY = 50) => {
+    ray.set(new THREE.Vector3(p[0], fromY, p[2]), down); ray.near = 0; ray.far = 150;
+    return ray.intersectObjects(meshes, false).filter(hit => hit.face.normal.y > .15);
   };
-  const deathTop = (x, z) => Math.max(level.killY, ...level.pitBoxes
-    .filter(box => x >= box.min.x && x <= box.max.x && z >= box.min.z && z <= box.max.z).map(box => box.max.y));
-  // Neighbour probes tolerate triangulation-edge precision at flush joins;
-  // real continuous walking is covered by test-blockworks.mjs.
-  const support = (x, z) => Math.max(...[[0, 0], [.04, .04], [-.04, -.04]].map(([dx, dz]) => floor(x + dx, z + dz) ?? -Infinity));
-  const world = (index, u, v) => {
-    const section = sections[index], a = section.yaw * Math.PI / 180;
-    return [section.start[0] + Math.cos(a) * u - Math.sin(a) * v,
-      section.start[2] - Math.sin(a) * u - Math.cos(a) * v];
-  };
-  const near = (actual, expected, message) => assert.ok(Math.abs(actual - expected) < .055, `${message}: ${actual} != ${expected}`);
-  assert.equal(level.perfectGrindBoost, false, 'ordinary rail exits must retain ordinary speed');
-  assert.equal(level.zones.length, 0, 'travel zones must not override camera turns');
-  assert.equal(level.cameraViews.length, 0, 'building routes must use the stable course camera without view-volume transitions');
+  const floor = (p, fromY = 50) => hits(p, staticGround, fromY)[0]?.point.y;
+  const deathTop = p => Math.max(level.killY, ...level.pitBoxes.filter(box =>
+    p[0] >= box.min.x && p[0] <= box.max.x && p[2] >= box.min.z && p[2] <= box.max.z
+    && !level.pitMissesPoly(box, p[0], p[2])).map(box => box.max.y));
+  const safeFloor = (p, fromY = 50) => { const y = floor(p, fromY); return y !== undefined && y > deathTop(p) + .08 ? y : null; };
 
-  let joinProbes = 0, cornerProbes = 0, gapProbes = 0, pickupProbes = 0;
-  const turnIndices = [];
-  for (let i = 1; i < sections.length; i++) {
-    const previous = sections[i - 1], next = sections[i];
-    const endpoint = world(i - 1, 0, previous.length);
-    near(endpoint[0], next.start[0], `section ${i + 1} x join`);
-    near(endpoint[1], next.start[2], `section ${i + 1} z join`);
-    near(previous.endY, next.start[1], `section ${i + 1} y join`);
-    for (const [index, from, to] of [[i - 1, previous.length - 6, previous.length], [i, 0, 6]])
-      for (const u of [-4, 0, 4]) {
-        let lastY;
-        for (let v = from; v <= to + .01; v += .5) {
-          const [x, z] = world(index, u, v), y = support(x, z);
-          assert.ok(Number.isFinite(y), `section ${i + 1} unsupported join u=${u} v=${v}`);
-          if (lastY !== undefined) assert.ok(Math.abs(lastY - y) < .2, `section ${i + 1} discontinuous join`);
-          if (v === 0 || v === previous.length) near(y, next.start[1], `section ${i + 1} join height`);
-          lastY = y; joinProbes++;
+  check('curved road support and chunk seams', () => {
+    let probes = 0, seams = 0, maxError = 0;
+    for (const road of roads) {
+      const samples = [];
+      for (let s = road.a + .2; s < road.b - .1; s += 1.1) samples.push(s);
+      for (let s = road.a + 64; s < road.b; s += 64) for (const d of [-.015, 0, .015]) { samples.push(s + d); seams += 3; }
+      for (const s of samples) for (const side of [-.43, 0, .43]) {
+        const top = value(road.top, s), width = value(road.width, s), offset = value(road.offset, s);
+        const p = routePoint(s, top, offset + side * width);
+        const hit = hits(p, ribbons, top + .1).find(hit => Math.abs(hit.point.y - top) < .04);
+        assert.ok(hit, `missing ribbon at s=${s.toFixed(3)}, side=${side}, expectedY=${top}`);
+        maxError = Math.max(maxError, Math.abs(hit.point.y - top)); probes++;
+      }
+    }
+    assert.ok(probes > 3000 && seams > 20);
+    for (const mesh of ribbons) {
+      mesh.geometry.computeBoundingBox();
+      near(mesh.geometry.boundingBox.min.y + mesh.position.y, ground, 'road mass does not reach shared ground', .001);
+      assert.equal(mesh.userData.vert, false); assert.equal(mesh.userData.edgeGrinding, false);
+    }
+    return { roads: roads.length, ribbonMeshes: ribbons.length, probes, seamProbes: seams, maxHeightError: maxError };
+  });
+
+  check('road-to-road joins', () => {
+    let joins = 0;
+    for (const before of roads) for (const after of roads) {
+      if (Math.abs(before.b - after.a) > .0001) continue;
+      const s = before.b, y0 = value(before.top, s), y1 = value(after.top, s);
+      const u0 = value(before.offset, s), u1 = value(after.offset, s);
+      const lo = Math.max(u0 - value(before.width, s) / 2, u1 - value(after.width, s) / 2) + .3;
+      const hi = Math.min(u0 + value(before.width, s) / 2, u1 + value(after.width, s) / 2) - .3;
+      if (hi < lo || Math.abs(y0 - y1) > .08) continue; // intentional raised exits are movement challenges
+      for (const u of [lo, (lo + hi) / 2, hi]) for (const delta of [-.02, 0, .02]) {
+        const y = delta < 0 ? value(before.top, s + delta) : value(after.top, s + delta);
+        assert.ok(hits(routePoint(s + delta, y, u), ribbons, y + .12).some(h => Math.abs(h.point.y - y) < .05),
+          `unsupported road join at station ${s}, u=${u}, offset=${delta}`); joins++;
+      }
+    }
+    return { joinProbes: joins };
+  });
+
+  check('shared ground, building foundations and climbing roofs', () => {
+    let groundProbes = 0, foundationProbes = 0, roofProbes = 0;
+    for (let s = 0; s <= end; s += 15) for (const u of [-25, 0, 25]) {
+      const p = routePoint(s, ground, u);
+      near(floor(p, ground + .05), ground, 'shared ground support', .002);
+      assert.ok(deathTop(p) > ground + .3, 'shared ground became a walkable bypass'); groundProbes++;
+    }
+    for (const c of data.components.filter(c => c.t === 'platform')) {
+      const bottom = c.p[1] - c.s[1] / 2;
+      if (bottom <= ground + .01) continue;
+      const a = (c.yaw ?? 0) * Math.PI / 180;
+      for (const [fx, fz] of [[0, 0], [-.35, -.35], [.35, -.35], [-.35, .35], [.35, .35]]) {
+        const dx = c.s[0] * fx, dz = c.s[2] * fz;
+        const p = [c.p[0] + Math.cos(a) * dx + Math.sin(a) * dz, bottom,
+          c.p[2] - Math.sin(a) * dx + Math.cos(a) * dz];
+        near(floor(p, bottom + .04), bottom, `floating module ${c.nm} at ${c.p}`, .055); foundationProbes++;
+      }
+    }
+    // Every visible LEGO cell must be enclosed by its actual solid building,
+    // even though the repeated cube faces do not each need another collider.
+    const buildings = data.components.filter(c => c.t === 'platform' && c.nm === 'Solid modular building');
+    const modules = data.components.filter(c => c.nm === 'Jump-sized roof module');
+    assert.ok(buildings.length >= 7 && modules.length > 300);
+    const contains = (body, p) => {
+      const a = (body.yaw ?? 0) * Math.PI / 180, dx = p[0] - body.p[0], dz = p[2] - body.p[2];
+      return Math.abs(Math.cos(a) * dx - Math.sin(a) * dz) <= body.s[0] / 2 + .002
+        && Math.abs(p[1] - body.p[1]) <= body.s[1] / 2 + .002
+        && Math.abs(Math.sin(a) * dx + Math.cos(a) * dz) <= body.s[2] / 2 + .002;
+    };
+    for (const module of modules) {
+      assert.equal(module.solid, false);
+      const a = (module.yaw ?? 0) * Math.PI / 180;
+      const points = [];
+      for (let i = 0; i < module.vertices.length; i += 3) {
+        const x = module.vertices[i] * module.s[0], y = module.vertices[i + 1] * module.s[1], z = module.vertices[i + 2] * module.s[2];
+        points.push([module.p[0] + Math.cos(a) * x + Math.sin(a) * z,
+          module.p[1] + y, module.p[2] - Math.sin(a) * x + Math.cos(a) * z]);
+      }
+      assert.ok(buildings.some(body => body.grp === module.grp && points.every(p => contains(body, p))),
+        `visible module has no enclosing solid mass at ${module.p}`);
+    }
+    for (const climb of climbs) {
+      for (const step of climb.steps) {
+        near(floor(step.point, step.top + .1), step.top, `${climb.name} landing roof`); roofProbes++;
+      }
+      near(floor(climb.start, climb.start[1] + .2), climb.start[1], `${climb.name} entry`);
+      near(floor(climb.exit, climb.exit[1] + .2), climb.exit[1], `${climb.name} exit`);
+    }
+    return { groundProbes, foundationProbes, roofProbes, solidBuildings: buildings.length, supportedVisualModules: modules.length, climbs: climbs.map(c => c.name) };
+  });
+
+  check('permanent hazards stay open and cannot be walked across', () => {
+    let gapProbes = 0;
+    const crossings = [];
+    for (const gap of gaps) {
+      // Ordinary jump/rail/mover channels must contain no hidden permanent
+      // centre bridge. The foundry intentionally contains two isolated towers.
+      if (!gap.kind.includes('switch')) for (let s = gap.a + .8; s < gap.b - .8; s += .7)
+        for (const u of [-2, 0, 2]) {
+          const p = routePoint(s, gap.y, u);
+          assert.equal(safeFloor(p), null, `${gap.kind} filled at ${s.toFixed(2)}, u=${u}`); gapProbes++;
+        }
+      // Flood actual supported cells rather than assuming that a pit label or
+      // long gap is sufficient. Includes permanent foundry islands and guides;
+      // pending metal and movers deliberately cannot form a permanent bypass.
+      const ds = 1, du = .8, a = gap.a - 2, b = gap.b + 2;
+      const rows = Math.ceil((b - a) / ds) + 1, columns = Math.ceil(gap.width / du) + 1;
+      const heights = Array.from({ length: rows }, (_, row) => Array.from({ length: columns }, (_, col) =>
+        safeFloor(routePoint(a + row * (b - a) / (rows - 1), gap.y, -gap.width / 2 + col * gap.width / (columns - 1)))));
+      const visited = new Set(), queue = [];
+      for (let col = 0; col < columns; col++) if (heights[0][col] !== null) { const id = col; visited.add(id); queue.push(id); }
+      for (let head = 0; head < queue.length; head++) {
+        const id = queue[head], row = Math.floor(id / columns), col = id % columns;
+        assert.ok(row < rows - 1, `permanent walking bypass across ${gap.kind} at ${gap.a}`);
+        for (const [dr, dc] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1]]) {
+          const r = row + dr, c = col + dc, next = r * columns + c;
+          if (r < 0 || r >= rows || c < 0 || c >= columns || visited.has(next) || heights[r][c] === null
+            || Math.abs(heights[r][c] - heights[row][col]) > .4) continue;
+          visited.add(next); queue.push(next);
         }
       }
-    if (previous.yaw !== next.yaw) turnIndices.push(i);
-  }
-  assert.equal(turnIndices.length, 8);
+      assert.ok(queue.length > 0, `hazard ${gap.kind} has no supported approach cells`);
+      crossings.push({ kind: gap.kind, station: gap.a, reachableApproachCells: queue.length });
+    }
+    return { gapProbes, crossings };
+  });
 
-  // Sample each rounded turn in route order; the camera may not reverse or
-  // produce a discontinuity, and its intended line stays over the dry court.
-  for (const index of turnIndices) {
-    const corner = sections[index].start;
-    const samples = route.filter(p => Math.hypot(p[0] - corner[0], p[2] - corner[2]) < 10.1);
-    assert.ok(samples.length >= 9, `section ${index + 1} lacks a rounded turn`);
-    let lastAngle;
-    for (let i = 0; i < samples.length - 1; i++) {
-      const a = samples[i], b = samples[i + 1], length = Math.hypot(b[0] - a[0], b[2] - a[2]);
-      const steps = Math.max(1, Math.ceil(length / .2));
-      for (let j = 0; j < steps; j++) {
-        const t = j / steps, p = a.map((value, k) => value + (b[k] - value) * t);
-        const direction = level.cameraDirAt(...p);
-        assert.ok(direction, 'camera turn has no direction');
-        const angle = Math.atan2(direction.x, direction.z);
-        if (lastAngle !== undefined) {
-          const difference = Math.atan2(Math.sin(angle - lastAngle), Math.cos(angle - lastAngle));
-          assert.ok(Math.abs(difference) < .13, `camera discontinuity near section ${index + 1}: ${difference}`);
+  check('checkpoints bank substantial completed challenges', () => {
+    assert.deepEqual(checkpoints.map(cp => cp.s), [422, 750, 1030, 1280, 1550, 1910]);
+    assert.equal(level.checkpoints.length, 6);
+    assert.equal(data.atmosphere.fogFar, 230);
+    for (const p of [data.spawn, ...checkpoints.map(cp => cp.p)]) {
+      const y = safeFloor(p, p[1] + .5); assert.ok(y !== null, `unsupported or lethal checkpoint ${p}`);
+      near(y, p[1], 'checkpoint deck', p === data.spawn ? .2 : .05);
+    }
+    const spans = [];
+    for (let i = 0; i < checkpoints.length - 1; i++) {
+      const a = checkpoints[i], b = checkpoints[i + 1], distance = new THREE.Vector3(...a.p).distanceTo(new THREE.Vector3(...b.p));
+      assert.ok(distance >= 250 && distance > data.atmosphere.fogFar, 'adjacent checkpoints are visible in the same short court');
+      // Euclidean spacing alone is insufficient: the tilted camera shortens
+      // fog depth. Use the production forward rig at its widest skate FOV and
+      // bound every idle-spin angle of the next checkpoint's actual cube.
+      const framing = cameraRigFraming(TUNING);
+      const maximumFov = TUNING.camFov + TUNING.camSpeedFovBoost;
+      const camera = new THREE.PerspectiveCamera(maximumFov, 16 / 9, .1, data.atmosphere.fogFar);
+      camera.position.set(a.p[0], a.p[1] + framing.height, a.p[2] + framing.distance);
+      const aim = new THREE.Vector3();
+      setCameraRigAim(aim, camera.position, { x: 0, z: -1 }, framing.pitch);
+      camera.lookAt(aim); camera.updateMatrixWorld(true);
+      const checkpointBox = level.checkpoints[i + 1].box;
+      const size = checkpointBox.getSize(new THREE.Vector3()), centre = checkpointBox.getCenter(new THREE.Vector3());
+      const diameter = Math.hypot(size.x, size.z);
+      const spinningBounds = new THREE.Box3().setFromCenterAndSize(centre, new THREE.Vector3(diameter, size.y, diameter));
+      const projection = new THREE.Matrix4().multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+      // A perspective far plane uses the same camera-space depth as linear
+      // scene fog; clipping at fogFar proves the entire visible cube is hidden.
+      assert.equal(new THREE.Frustum().setFromProjectionMatrix(projection).intersectsBox(spinningBounds), false,
+        `checkpoint ${b.s} remains visible from ${a.s} at maximum normal skate FOV`);
+      const depths = [];
+      for (const x of [spinningBounds.min.x, spinningBounds.max.x])
+        for (const y of [spinningBounds.min.y, spinningBounds.max.y])
+          for (const z of [spinningBounds.min.z, spinningBounds.max.z])
+            depths.push(-new THREE.Vector3(x, y, z).applyMatrix4(camera.matrixWorldInverse).z);
+      const minimumFogDepth = Math.min(...depths);
+      const challenges = gaps.filter(g => g.a > a.s && g.b < b.s);
+      assert.ok(challenges.length > 0, 'checkpoint span has no mandatory traversal break');
+      const blocking = [];
+      for (const [from, to] of [[a, b], [b, a]]) {
+        const count = Math.ceil(distance), previous = [...from.p]; let blocked;
+        for (let j = 1; j <= count; j++) {
+          const t = j / count, p = from.p.map((n, k) => n + (to.p[k] - n) * t);
+          const y = safeFloor(p, previous[1] + .35);
+          if (y === null || Math.abs(y - previous[1]) > .4) { blocked = { point: p.map(n => +n.toFixed(2)), reason: y === null ? 'lethal ground/void' : 'unwalkable height change' }; break; }
+          previous[0] = p[0]; previous[1] = y; previous[2] = p[2];
         }
-        lastAngle = angle;
-        near(support(p[0], p[2]), corner[1], `section ${index + 1} camera court`); cornerProbes++;
+        assert.ok(blocked, 'adjacent checkpoints share an uninterrupted walkable ground sightline'); blocking.push(blocked);
+      }
+      spans.push({ from: a.s, to: b.s, metres: +distance.toFixed(1), maximumFov, minimumFogDepth: +minimumFogDepth.toFixed(2), fogFar: data.atmosphere.fogFar, challenges: challenges.map(g => g.kind), blockedBothWays: blocking });
+    }
+    return spans;
+  });
+
+  check('crate construction and collectible placement', () => {
+    let crateProbes = 0, groundedPickups = 0, airbornePickups = 0;
+    const ordinary = data.components.filter(c => c.t === 'crate' && !c.outline);
+    for (const crate of ordinary) {
+      near(floor(crate.p, crate.p[1] + .1), crate.p[1], `unsupported authored ${crate.kind} crate`, .06); crateProbes++;
+    }
+    const footings = data.components.filter(c => c.t === 'platform' && c.nm === 'Submerged steel footing');
+    assert.ok(footings.length > 10);
+    for (const c of footings) {
+      const top = c.p[1] + c.s[1] / 2; assert.ok(top < deathTop(c.p) - .5, 'unactivated footing became safe terrain');
+    }
+    const steel = level.crates.filter(c => c.metal && c.wasOutline);
+    assert.ok(steel.length > 150 && steel.every(c => c.pending));
+    const boxes = [...footings.map(c => new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(...c.p), new THREE.Vector3(...c.s))), ...steel.map(c => c.box)];
+    const connected = new Set(footings.map((_, i) => i)), queue = [...connected];
+    const touching = (a, b) => {
+      const overlap = ['x', 'y', 'z'].map(k => Math.min(a.max[k], b.max[k]) - Math.max(a.min[k], b.min[k]));
+      return overlap.every(v => v >= -.012) && overlap.filter(v => v > .05).length >= 2;
+    };
+    for (let head = 0; head < queue.length; head++) for (let i = 0; i < boxes.length; i++)
+      if (!connected.has(i) && touching(boxes[queue[head]], boxes[i])) { connected.add(i); queue.push(i); }
+    assert.equal(connected.size, boxes.length, 'ghost steel contains disconnected floating construction');
+    for (const c of data.components.filter(c => ['wumpa', 'crystal', 'clock', 'comboorb'].includes(c.t))) {
+      const y = safeFloor(c.p);
+      if (y !== null) {
+        const clearance = c.p[1] - y;
+        assert.ok(clearance >= (c.t === 'clock' || c.t === 'comboorb' ? -.06 : .5), `buried ${c.t} at ${c.p}, floor ${y}`);
+        assert.ok(clearance <= 3.5, `unexplained high ${c.t} at ${c.p}, floor ${y}`); groundedPickups++;
+      } else {
+        // Air rewards must sit in an actual lethal crossing or next to a real rail.
+        const insideGap = level.pitBoxes.some(box => c.p[0] >= box.min.x && c.p[0] <= box.max.x
+          && c.p[2] >= box.min.z && c.p[2] <= box.max.z && box.max.y > ground + 2
+          && !level.pitMissesPoly(box, c.p[0], c.p[2]));
+        const onRail = level.rails.some(rail => {
+          for (let s = 0; s <= rail.totalLength; s += .5) if (rail.pointAt(s).distanceTo(new THREE.Vector3(...c.p)) < 2.5) return true;
+          return false;
+        });
+        assert.ok(insideGap || onRail, `unexplained unsupported pickup ${c.p}`); airbornePickups++;
       }
     }
-  }
-
-  const bounds = component => {
-    const size = [...component.s];
-    if (Math.round(component.yaw ?? 0) % 180 !== 0) [size[0], size[2]] = [size[2], size[0]];
-    return new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(...component.p), new THREE.Vector3(...size));
-  };
-  const touching = (a, b) => {
-    const overlap = ['x', 'y', 'z'].map(axis => Math.min(a.max[axis], b.max[axis]) - Math.max(a.min[axis], b.min[axis]));
-    // A face with nonzero area joins construction; corner-only contact does not.
-    return overlap.every(n => n > -.012) && overlap.filter(n => n > .04).length >= 2;
-  };
-  const flood = (boxes, seeds) => {
-    const reached = new Set(seeds), queue = [...seeds];
-    for (let cursor = 0; cursor < queue.length; cursor++)
-      for (let i = 0; i < boxes.length; i++) if (!reached.has(i) && touching(boxes[queue[cursor]], boxes[i])) {
-        reached.add(i); queue.push(i);
-      }
-    return reached;
-  };
-
-  // The excavated site is real collision geometry. All static building parts
-  // either reach that datum or seat on another solid, including cube stacks.
-  let groundProbes = 0, foundationProbes = 0, roofProbes = 0;
-  for (let index = 0; index < sections.length; index++)
-    for (let v = 0; v <= sections[index].length; v += 10) for (const u of [-30, 0, 30]) {
-      const [x, z] = world(index, u, v);
-      near(floor(x, z, groundDatum + .05), groundDatum, `section ${index + 1} shared ground`); groundProbes++;
-    }
-  for (const component of data.components.filter(c => c.t === 'platform')) {
-    const box = bounds(component);
-    if (box.min.y <= groundDatum + .01) continue;
-    for (const [fx, fz] of [[.5, .5], [.03, .03], [.97, .03], [.03, .97], [.97, .97]]) {
-      const x = THREE.MathUtils.lerp(box.min.x, box.max.x, fx), z = THREE.MathUtils.lerp(box.min.z, box.max.z, fz);
-      near(floor(x, z, box.min.y + .03), box.min.y, `unsupported underside of ${component.nm} at ${component.p}`); foundationProbes++;
-    }
-  }
-
-  const compounds = [
-    { index: 3, end: 95, path: Array.from({length:6}, (_,i) => [i%2?2.4:-2.4, 36+i*9.6, (i+1)*2.4]) },
-    { index: 6, end: 122, path: [...Array.from({length:4}, (_,i) => [-4.8,36+i*9.6,(i+1)*2.4]),
-      [0,69.6,9.6],[4.8,79.2,7.2],[4.8,91.2,4.8],[4.8,103.2,7.2],[4.8,115.2,4.8],[4.8,123,4.8]] },
-    { index: 13, end: 70, path: [[0,34,2.4],[0,43.6,4.8],[0,53.2,7.2],[0,64,7.2]] },
-  ];
-  const compoundEvidence = [];
-  for (const {index, end, path} of compounds) {
-    const s = sections[index], a = s.yaw*Math.PI/180;
-    const cells = data.components.filter(c => c.t === 'platform' && c.grp === index+10 && c.s.every(n => Math.abs(n-2.4)<.001)
-      && -Math.sin(a)*(c.p[0]-s.start[0])-Math.cos(a)*(c.p[2]-s.start[2]) < end);
-    assert.ok(cells.length > 50, `section ${index + 1} lacks its substantial modular building`);
-    const boxes = cells.map(bounds), joined = flood(boxes, [0]);
-    assert.equal(joined.size, cells.length, `section ${index + 1} modular wings are detached above their foundation`);
-    for(let i=0;i<boxes.length;i++)for(let j=i+1;j<boxes.length;j++) {
-      const overlaps=['x','y','z'].map(axis=>Math.min(boxes[i].max[axis],boxes[j].max[axis])-Math.max(boxes[i].min[axis],boxes[j].min[axis]));
-      assert.ok(!overlaps.every(length=>length>.001),
-        `section ${index+1} has overlapping modular cells at ${cells[i].p} and ${cells[j].p}; wings must meet on the grid`);
-    }
-    for (const [u,v,y] of path) {
-      const [x,z]=world(index,u,v);near(support(x,z),y,`section ${index+1} exposed climbing roof`);
-    }
-    for (let k=1;k<path.length;k++) {
-      const a=path[k-1],b=path[k],steps=Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/.2);let previous;
-      for(let j=0;j<=steps;j++) {
-        const t=j/steps,[x,z]=world(index,THREE.MathUtils.lerp(a[0],b[0],t),THREE.MathUtils.lerp(a[1],b[1],t)),y=support(x,z);
-        assert.ok(y>=2.35,`section ${index+1} roof route drops into a gap/podium`);
-        if(previous!==undefined)assert.ok(Math.abs(previous-y)<2.45,`section ${index+1} roof riser exceeds a cube jump`);
-        previous=y;roofProbes++;
-      }
-    }
-    compoundEvidence.push({section:index+1,joinedCells:joined.size});
-  }
-  // An actual courtyard has an open low interior bounded by built wings;
-  // filling it with a slab or reverting either wing to islands must fail.
-  let courtyardProbes=0,hallProbes=0;
-  for(let v=40;v<=64;v+=2) {
-    const west=world(6,-1.3,v),east=world(6,3.7,v);
-    for(const u of [-1.1,1.2,3.5]) {
-      const y=support(...world(6,u,v));
-      assert.ok(Math.abs(y+.03)<.004,`courtyard floor must stay recessed across its 4.8m width: ${y}`);courtyardProbes++;
-    }
-    assert.ok(support(...west)>=4.75 && support(...east)>=4.75,'courtyard lost its opposing connected wings');
-    courtyardProbes+=2;
-  }
-  for(const [v,y]of [[29.4,2.4],[69.6,9.6]])near(support(...world(6,1.2,v)),y,'courtyard end enclosure');
-  for(let v=55;v<135;v+=.5)for(const u of [-1,0,1]) {
-    near(support(...world(8,u,v)),9.6,'machine hall central roof lane');hallProbes++;
-  }
-
-  // Steel switch terrain forms connected portal frames which reach permanent
-  // footings. The footings themselves sit beneath the lethal channel, so
-  // adding believable supports cannot create a route before activation.
-  const footings = data.components.filter(c => c.t==='platform' && c.nm==='Submerged switch-pier footing').map(bounds);
-  const steel = level.crates.filter(c => c.wasOutline && c.metal);
-  assert.ok(footings.length>0 && steel.length>0);
-  for(const box of footings)assert.ok(box.max.y < deathTop(box.getCenter(new THREE.Vector3()).x,box.getCenter(new THREE.Vector3()).z)-.5,
-    'permanent switch footing is usable before the key');
-  const construction = [...footings,...steel.map(c=>c.box)];
-  const groundedSteel = flood(construction,footings.map((_,i)=>i));
-  assert.equal(groundedSteel.size,construction.length,'switch steel contains a disconnected floating part');
-  assert.ok(steel.every(c=>c.pending),'steel terrain must remain absent until its key is used');
-
-  // Probe the full assembled level to catch accidental support from inlays,
-  // neighboring sections or other geometry under essential gaps. Real site
-  // ground and pier footings are allowed only below the reset threshold.
-  // Movers are deliberate crossings, so this checks permanent support.
-  const gaps = [
-    [0, 131, 142.5, 7], [1, 43, 61, 9], [1, 69, 101.8, 9],
-    [2, 145, 156.5, 7], [4, 113, 151, 10], [5, 51, 148, 10],
-    [7, 113, 148, 10], [9, 140, 151.5, 8], [10, 85, 96, 8], [10, 127, 160, 8],
-    [8,34,54.8,4], [11, 43, 67.8, 10], [11, 74.2, 113, 10], [11,150,178,8],
-    [12, 82, 93.5, 8], [12, 141, 153, 8], [13, 131, 149, 9],
-  ];
-  for (const [index, from, to, halfWidth] of gaps)
-    for (let v = from + .15; v < to - .1; v += .6) for (let u = -halfWidth; u <= halfWidth; u += 1) {
-      const [x, z] = world(index, u, v), y = floor(x, z);
-      assert.ok(y!==undefined && y <= deathTop(x,z), `section ${index + 1} gap contains usable ground at u=${u} v=${v}, y=${y}`); gapProbes++;
-    }
-
-  const overVoid = [];
-  for (const pickup of data.components.filter(c => c.t === 'wumpa')) {
-    const [x, y, z] = pickup.p, ground = support(x, z);
-    if (!Number.isFinite(ground) || ground <= deathTop(x,z)) { overVoid.push(pickup); continue; }
-    assert.ok(y >= ground + .5, `pickup buried or intersects floor at ${pickup.p}: ground ${ground}`);
-    assert.ok(y <= ground + 3.3, `pickup inexplicably above walkable ground at ${pickup.p}: ground ${ground}`); pickupProbes++;
-  }
-  // Airborne collectibles belong to an authored rail or a tested gap, never
-  // to an unmarked hole caused by a misplaced platform or incorrect Y value.
-  for (const pickup of overVoid) {
-    const gap = gaps.some(([index, from, to, halfWidth]) => {
-      const s = sections[index], a = s.yaw * Math.PI / 180, dx = pickup.p[0] - s.start[0], dz = pickup.p[2] - s.start[2];
-      const u = Math.cos(a) * dx - Math.sin(a) * dz, v = -Math.sin(a) * dx - Math.cos(a) * dz;
-      return v >= from - .2 && v <= to + .2 && Math.abs(u) <= halfWidth;
-    });
-    const rail = level.rails.some(rail => {
-      for (let distance = 0; distance <= rail.totalLength; distance += .5)
-        if (rail.pointAt(distance).distanceTo(new THREE.Vector3(...pickup.p)) < 2.4) return true;
-      return false;
-    });
-    assert.ok(gap || rail, `unexplained unsupported pickup at ${pickup.p}`);
-  }
-  console.log(JSON.stringify({ joinProbes, roundedTurns: turnIndices.length, cornerProbes,
-    groundProbes,foundationProbes,roofProbes,courtyardProbes,hallProbes,compounds:compoundEvidence,groundedSteel:steel.length,
-    stableCameraViews: level.cameraViews.length, mandatoryGapProbes: gapProbes,
-    groundedPickups: pickupProbes, airbornePickups: overVoid.length }, null, 2));
-  console.log('PASS Blockworks grounded architecture, joined modular roofs, switch foundations, mandatory gaps, route joins and collectibles');
-} finally {
-  level?.dispose(); await server.close();
-}
+    return { groundedCrates: crateProbes, groundedSteel: steel.length, groundedPickups, airbornePickups };
+  });
+  console.log(JSON.stringify({ evidence, failures }, null, 2));
+  assert.equal(failures.length, 0, failures.join('\n'));
+  console.log('PASS curved Blockworks support/seams, grounded construction, mandatory hazards, sparse checkpoints and pickups');
+} finally { level?.dispose(); await server.close(); }
