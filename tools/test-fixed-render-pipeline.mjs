@@ -110,7 +110,7 @@ assert.equal(
   "gameplay and GameFlow must share one CRT pass owner",
 );
 assert.equal(
-  (coast.match(/new OutputPass\(/g) ?? []).length,
+  (coast.match(/new CrtGuestOutputPass\(/g) ?? []).length,
   1,
   "gameplay and GameFlow must share one Output pass owner",
 );
@@ -167,8 +167,8 @@ for (const contract of [
   "sourceWidth / downscale",
   "sourceHeight / downscale",
   "if (largest > UNITY_BLOOM_MAX_DIMENSION)",
-  "this.sourceWidth = Math.max(1, Math.floor(width))",
-  "this.sourceHeight = Math.max(1, Math.floor(height))",
+  "const nextWidth = Math.max(1, Math.floor(width))",
+  "const nextHeight = Math.max(1, Math.floor(height))",
 ]) {
   assert.ok(bloom.includes(contract), `fixed-input bloom sizing missing ${contract}`);
 }

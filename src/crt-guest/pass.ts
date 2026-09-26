@@ -48,6 +48,9 @@ export interface CrtGuestPassOptions {
   forceDisabled?: boolean;
   /** Honor `?nocrt` and `?lite`. Defaults to true in a browser. */
   respectDisableQuery?: boolean;
+  /** Leave the completed guest-sRGB texture for CrtGuestOutputPass. The caller
+   * owns final presentation; this mode never writes/swaps the input buffer. */
+  deferOutput?: boolean;
 }
 
 export type CrtGuestDebugTarget =
@@ -99,6 +102,7 @@ export interface CrtGuestPassDiagnostics {
   bypassCount: number;
   failureCount: number;
   lastDrawCount: number;
+  outputDeferred: boolean;
   historyClearPending: boolean;
   historyResetCount: number;
   lastHistoryResetReason: string;
@@ -123,7 +127,6 @@ interface CrtGuestShaderSet {
 }
 
 interface CrtGuestMaterialSet {
-  readonly stock: THREE.RawShaderMaterial;
   readonly afterglow: THREE.RawShaderMaterial;
   readonly pre: THREE.RawShaderMaterial;
   readonly variant4: THREE.RawShaderMaterial;
@@ -138,7 +141,6 @@ interface CrtGuestMaterialSet {
 }
 
 interface CrtGuestTargets {
-  readonly encoded: THREE.WebGLRenderTarget;
   readonly stock: THREE.WebGLRenderTarget;
   readonly pre: THREE.WebGLRenderTarget;
   readonly linear: THREE.WebGLRenderTarget;
@@ -209,8 +211,9 @@ const COPY_FRAGMENT = /* glsl */ `
  * Literal WebGL2 execution of the Unity CRT Guest RenderGraph feature.
  *
  * The original fourteen fullscreen draws included two identical point-copy
- * stock stages. One copy is idempotent, so execution needs thirteen draws:
- * input conversion, stock, afterglow, pre, two variant stages, four glow/bloom stages,
+ * stock stages. Encode directly into the opaque stock target: same-size point
+ * copies cannot change RGB, and OriginalHistory0 reads only RGB. Execution
+ * needs twelve draws: input/stock, afterglow, pre, two variant stages, four glow/bloom stages,
  * main, deconvergence and output conversion. It belongs after the authored
  * Unity post stage and before Three's OutputPass.
  */
@@ -219,6 +222,9 @@ export class CrtGuestPass extends Pass {
   private settings: CrtGuestSettingsLike;
   private luts: CrtGuestLuts | null;
   private readonly disposeLutsOnDispose: boolean;
+  private readonly deferOutput: boolean;
+  private deferredOutputTexture: THREE.Texture | null = null;
+  private completedOutputRevision: number | null = null;
   private readonly materialSets: Record<
     CrtGuestVariant,
     CrtGuestMaterialSet
@@ -270,6 +276,8 @@ export class CrtGuestPass extends Pass {
     this.settings = settings;
     this.luts = options.luts ?? null;
     this.disposeLutsOnDispose = options.disposeLutsOnDispose ?? false;
+    this.deferOutput = options.deferOutput ?? false;
+    this.needsSwap = !this.deferOutput;
     const legacyWidth = validDimension(options.width ?? 1);
     const legacyHeight = validDimension(options.height ?? 1);
     this.width = validDimension(options.sourceWidth ?? legacyWidth);
@@ -292,7 +300,7 @@ export class CrtGuestPass extends Pass {
 
     this.inputMaterial = makeMaterial(
       "CRTGuest.Input.LinearToSrgb",
-      CRT_GUEST_CONVERSION_SHADERS.linearToGuestSrgb,
+      opaqueStockInputShader(CRT_GUEST_CONVERSION_SHADERS.linearToGuestSrgb),
     );
     this.outputMaterial = makeMaterial(
       "CRTGuest.Output.SrgbToLinear",
@@ -305,6 +313,12 @@ export class CrtGuestPass extends Pass {
     };
     this.fsQuad = new FullScreenQuad(this.inputMaterial);
     this.bindLuts();
+  }
+
+  /** Completed current output, never a stale texture after bypass or failure. */
+  get deferredOutput(): THREE.Texture | null {
+    return this.active && this.completedOutputRevision === finiteRevision(this.settings.revision)
+      ? this.deferredOutputTexture : null;
   }
 
   get supported(): boolean {
@@ -350,6 +364,7 @@ export class CrtGuestPass extends Pass {
       bypassCount: this.bypassCount,
       failureCount: this.failureCount,
       lastDrawCount: this.lastDrawCount,
+      outputDeferred: this.deferOutput,
       historyClearPending: this.historyClearPending,
       historyResetCount: this.historyResetCount,
       lastHistoryResetReason: this.lastHistoryResetReason,
@@ -418,6 +433,7 @@ export class CrtGuestPass extends Pass {
   }
 
   resetHistory(reason = "requested by caller"): void {
+    this.deferredOutputTexture = null;
     this.historyPing = false;
     this.historyClearPending = true;
     this.historyResetCount += 1;
@@ -442,6 +458,7 @@ export class CrtGuestPass extends Pass {
     if (nextWidth === this.width && nextHeight === this.height) return;
     this.width = nextWidth;
     this.height = nextHeight;
+    this.deferredOutputTexture = null;
     if (this.targets) this.resizeTargets(this.targets);
     this.resetHistory("source size changed");
   }
@@ -457,6 +474,7 @@ export class CrtGuestPass extends Pass {
     }
     this.outputWidth = nextWidth;
     this.outputHeight = nextHeight;
+    this.deferredOutputTexture = null;
     if (this.targets) this.resizeTargets(this.targets);
   }
 
@@ -480,6 +498,7 @@ export class CrtGuestPass extends Pass {
     this.height = nextSourceHeight;
     this.outputWidth = nextOutputWidth;
     this.outputHeight = nextOutputHeight;
+    this.deferredOutputTexture = null;
     if (this.targets) this.resizeTargets(this.targets);
     if (sourceChanged) this.resetHistory("source size changed");
   }
@@ -491,9 +510,9 @@ export class CrtGuestPass extends Pass {
     const write = this.historyPing ? 0 : 1;
     switch (name) {
       case "encoded":
-        return targets.encoded.texture;
       case "stock0":
-        // Legacy review alias: both former stock stages produced the same pixels.
+        // Legacy RGB review aliases for the now-fused encoding/stock stages.
+        // Their downstream consumers never used the encoded source alpha.
         return targets.stock.texture;
       case "stock":
         return targets.stock.texture;
@@ -533,6 +552,7 @@ export class CrtGuestPass extends Pass {
     _deltaTime: number,
     maskActive: boolean,
   ): void {
+    this.deferredOutputTexture = null;
     if (this.disposed) return;
     if (renderer !== this.renderer) {
       this.recordFailure("rendered with a different WebGLRenderer");
@@ -540,14 +560,14 @@ export class CrtGuestPass extends Pass {
     if (readBuffer.width !== this.width || readBuffer.height !== this.height) {
       this.setInputSize(readBuffer.width, readBuffer.height);
     }
-    if (!this.renderToScreen) {
+    if (!this.deferOutput && !this.renderToScreen) {
       if (
         writeBuffer.width !== this.outputWidth ||
         writeBuffer.height !== this.outputHeight
       ) {
         this.setOutputSize(writeBuffer.width, writeBuffer.height);
       }
-    } else {
+    } else if (!this.deferOutput) {
       const drawingBufferSize = renderer.getDrawingBufferSize(
         this.outputSizeScratch,
       );
@@ -563,8 +583,8 @@ export class CrtGuestPass extends Pass {
     if (!this.active) {
       this.releaseInactiveTargets();
       this.bypassCount += 1;
-      this.lastDrawCount = 1;
-      this.renderBypass(renderer, writeBuffer, readBuffer, maskActive);
+      this.lastDrawCount = this.deferOutput ? 0 : 1;
+      if (!this.deferOutput) this.renderBypass(renderer, writeBuffer, readBuffer, maskActive);
       return;
     }
 
@@ -584,6 +604,10 @@ export class CrtGuestPass extends Pass {
         readBuffer,
         targets,
       );
+      if (this.deferOutput) {
+        this.deferredOutputTexture = targets.deconvergence.texture;
+        this.completedOutputRevision = finiteRevision(this.settings.revision);
+      }
       this.historyPing = !this.historyPing;
       this.historyClearPending = false;
       this.frameIndex = (this.frameIndex + 1) >>> 0;
@@ -597,8 +621,8 @@ export class CrtGuestPass extends Pass {
 
     if (failure !== null) {
       this.recordFailure(errorMessage(failure));
-      this.lastDrawCount = 1;
-      this.renderBypass(renderer, writeBuffer, readBuffer, maskActive);
+      this.lastDrawCount = this.deferOutput ? 0 : 1;
+      if (!this.deferOutput) this.renderBypass(renderer, writeBuffer, readBuffer, maskActive);
     }
   }
 
@@ -641,23 +665,9 @@ export class CrtGuestPass extends Pass {
     let draws = 0;
 
     bindTexture(this.inputMaterial, "Source", readBuffer.texture);
-    this.draw(renderer, targets.encoded, this.inputMaterial);
-    draws += 1;
-
-    configureStage(
-      materials.stock,
-      this.width,
-      this.height,
-      this.width,
-      this.height,
-      this.width,
-      this.height,
-      this.frameIndex,
-    );
-    bindTexture(materials.stock, "Source", targets.encoded.texture);
-    // Same-size RGBA8 point copies are idempotent. Preserve stock's opaque
-    // alpha conversion once; do not allocate/copy an identical intermediate.
-    this.draw(renderer, targets.stock, materials.stock);
+    // Preserve the canonical stock alpha while writing exactly the same
+    // quantized RGB that both old stock copies and history input consumed.
+    this.draw(renderer, targets.stock, this.inputMaterial);
     draws += 1;
 
     configureStage(
@@ -674,7 +684,7 @@ export class CrtGuestPass extends Pass {
     bindTexture(
       materials.afterglow,
       "OriginalHistory0",
-      targets.encoded.texture,
+      targets.stock.texture,
     );
     bindTexture(
       materials.afterglow,
@@ -915,6 +925,9 @@ export class CrtGuestPass extends Pass {
     this.draw(renderer, targets.deconvergence, materials.deconvergence);
     draws += 1;
 
+    // The presentation owner can combine decode and final display transfer,
+    // avoiding a full-output intermediate surface and its extra quantization.
+    if (this.deferOutput) return draws;
     bindTexture(
       this.outputMaterial,
       "Source",
@@ -973,7 +986,6 @@ export class CrtGuestPass extends Pass {
     const rgba16f = (name: string): THREE.WebGLRenderTarget =>
       makeTarget(1, 1, THREE.HalfFloatType, name);
     this.targets = {
-      encoded: rgba8("CRTGuest.Encoded.RGBA8"),
       stock: rgba8("CRTGuest.Stock.RGBA8"),
       pre: rgba8("CRTGuest.Pre.RGBA8"),
       linear: rgba16f("CRTGuest.Linear.RGBA16F"),
@@ -1018,7 +1030,6 @@ export class CrtGuestPass extends Pass {
     }
 
     for (const target of [
-      targets.encoded,
       targets.stock,
       targets.pre,
       targets.linear,
@@ -1182,10 +1193,10 @@ export class CrtGuestPass extends Pass {
   }
 
   private disposeTargets(): void {
+    this.deferredOutputTexture = null;
     if (!this.targets) return;
     const targets = this.targets;
     const all = new Set<THREE.WebGLRenderTarget>([
-      targets.encoded,
       targets.stock,
       targets.pre,
       targets.linear,
@@ -1213,7 +1224,6 @@ export class CrtGuestPass extends Pass {
     const diagnostic: Partial<
       Record<CrtGuestDebugTarget, CrtGuestTargetDiagnostic>
     > = {
-      encoded: targetDiagnostic(targets.encoded, 4),
       stock: targetDiagnostic(targets.stock, 4),
       "afterglow-read": targetDiagnostic(targets.afterglow[read], 4),
       "afterglow-write": targetDiagnostic(targets.afterglow[write], 4),
@@ -1248,7 +1258,6 @@ function makeMaterialSet(
   const make = (stage: keyof CrtGuestShaderSet): THREE.RawShaderMaterial =>
     makeMaterial(`CRTGuest.${variant}.${stage}`, shaders[stage]);
   const set = {
-    stock: make("stock"),
     afterglow: make("afterglow"),
     pre: make("pre"),
     variant4: make("variant4"),
@@ -1529,4 +1538,18 @@ function withoutVersionDirective(source: string): string {
 
 function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
+}
+
+/** Fuse the only stock operation (opaque alpha) into canonical input encoding.
+ * Keep generated shader sources untouched, and execute their original main
+ * before setting alpha so gamma, clamp and RGBA8 quantization stay identical. */
+function opaqueStockInputShader(source: string): string {
+  return `#define main crtGuestEncodeInput
+${source}
+#undef main
+void main() {
+  crtGuestEncodeInput();
+  FragColor.a = 1.0;
+}
+`;
 }

@@ -324,6 +324,8 @@ export class UnityBloomPass extends Pass {
   private sourceHeight = 1;
   private settings: Readonly<VisualBloomValue> = visualTreatmentSettings.value.bloom;
   private currentSpec: BloomPyramidSpec | null = null;
+  private targetsDirty = true;
+  private readonly tint = normalizedTint(this.settings.tint);
   private lookActive = false;
   private presentationEnabled = true;
   private disposed = false;
@@ -337,7 +339,15 @@ export class UnityBloomPass extends Pass {
     this.needsSwap = true;
     this.setSize(width, height);
     this.unsubscribe = visualTreatmentSettings.subscribe((value) => {
-      this.settings = value.bloom;
+      const next = value.bloom;
+      if (
+        next.downscale !== this.settings.downscale ||
+        next.maxIterations !== this.settings.maxIterations
+      ) {
+        this.targetsDirty = true;
+      }
+      this.settings = next;
+      this.tint.copy(normalizedTint(next.tint));
       this.lookActive = visualTreatmentActivity(value).bloom;
       this.syncEnabled();
     }, true);
@@ -345,6 +355,7 @@ export class UnityBloomPass extends Pass {
 
   /** Gates bloom with the owning presentation stack (including ?nopost). */
   setPresentationEnabled(enabled: boolean): void {
+    if (enabled === this.presentationEnabled) return;
     this.presentationEnabled = enabled;
     this.syncEnabled();
   }
@@ -364,9 +375,13 @@ export class UnityBloomPass extends Pass {
   }
 
   override setSize(width: number, height: number): void {
-    this.sourceWidth = Math.max(1, Math.floor(width));
-    this.sourceHeight = Math.max(1, Math.floor(height));
-    if (this.currentSpec) this.rebuildTargets();
+    const nextWidth = Math.max(1, Math.floor(width));
+    const nextHeight = Math.max(1, Math.floor(height));
+    if (nextWidth === this.sourceWidth && nextHeight === this.sourceHeight) return;
+    this.sourceWidth = nextWidth;
+    this.sourceHeight = nextHeight;
+    this.targetsDirty = true;
+    if (this.currentSpec) this.ensureTargets();
   }
 
   override render(
@@ -397,7 +412,8 @@ export class UnityBloomPass extends Pass {
     const draw = (shader: THREE.ShaderMaterial, target: THREE.WebGLRenderTarget | null): void => {
       this.fsQuad.material = shader;
       renderer.setRenderTarget(target);
-      renderer.clear();
+      // Every bloom shader writes every pixel with depth/blending disabled.
+      // A clear here only adds target bandwidth and a tile load/store boundary.
       this.fsQuad.render(renderer);
       this.lastDrawCount += 1;
     };
@@ -455,7 +471,7 @@ export class UnityBloomPass extends Pass {
       }
 
       const result = spec.mipCount === 1 ? this.downTargets[0] : this.upTargets[0];
-      const tint = normalizedTint(this.settings.tint);
+      const tint = this.tint;
       this.compositeMaterial.uniforms.tSource.value = readBuffer.texture;
       this.compositeMaterial.uniforms.tBloom.value = result.texture;
       (this.compositeMaterial.uniforms.uBloomTexelSize.value as THREE.Vector2).set(
@@ -495,12 +511,14 @@ export class UnityBloomPass extends Pass {
   }
 
   private ensureTargets(): void {
+    if (this.currentSpec && !this.targetsDirty) return;
     const next = unityBloomPyramidSpec(
       this.sourceWidth,
       this.sourceHeight,
       this.settings.downscale,
       this.settings.maxIterations,
     );
+    this.targetsDirty = false;
     if (
       this.currentSpec &&
       this.currentSpec.mipCount === next.mipCount &&
@@ -509,16 +527,6 @@ export class UnityBloomPass extends Pass {
     )
       return;
     this.currentSpec = next;
-    this.allocateTargets();
-  }
-
-  private rebuildTargets(): void {
-    this.currentSpec = unityBloomPyramidSpec(
-      this.sourceWidth,
-      this.sourceHeight,
-      this.settings.downscale,
-      this.settings.maxIterations,
-    );
     this.allocateTargets();
   }
 

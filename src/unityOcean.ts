@@ -8,6 +8,7 @@
  * CPU sampler so rendering and gameplay queries cannot drift apart.
  */
 import * as THREE from "three";
+import { OceanPrimaryPass } from "./oceanPrimaryPass";
 
 const TAU = Math.PI * 2;
 const GRAVITY = 9.8;
@@ -233,6 +234,9 @@ export interface OceanStats {
   reflectionRenders: number;
   prepassRenders: number;
   occludedPassFrames: number;
+  primaryReuseRenders: number;
+  primaryReuseFallbacks: number;
+  primaryReuseFallbackReason: string | null;
   quality: OceanQuality;
 }
 
@@ -1113,6 +1117,9 @@ export class UnityOcean {
   private visibilityQueryActive=false;
   private waterOccluded=false;
   private visibilityCamera=new THREE.Vector3(Infinity,Infinity,Infinity);
+  private readonly prepassHidden: THREE.Object3D[] = [];
+  private primaryPass: OceanPrimaryPass | null = null;
+  private readonly primarySizeScratch = new THREE.Vector2();
 
   constructor(opts: CoastWaterOpts) {
     this.seaLevel = opts.seaLevel;
@@ -1344,6 +1351,9 @@ export class UnityOcean {
     const geometries = [this.horizon.geometry, this.ribbon.geometry];
     this.stats = {
       occludedPassFrames:0,
+      primaryReuseRenders: 0,
+      primaryReuseFallbacks: 0,
+      primaryReuseFallbackReason: null,
       verts: geometries.reduce((sum, geometry) => sum + geometry.getAttribute("position").count, 0),
       tris: geometries.reduce((sum, geometry) => sum + (geometry.getIndex()?.count ?? 0) / 3, 0),
       shoreSamples: this.shore.length,
@@ -1844,7 +1854,8 @@ export class UnityOcean {
       this.group.visible = false;
       scene.fog = null;
       renderer.xr.enabled = false;
-      renderer.autoClear = true;
+      // Clear once explicitly; render() would otherwise clear the target again.
+      renderer.autoClear = false;
       renderer.shadowMap.enabled = false;
       renderer.shadowMap.autoUpdate = false;
       renderer.setRenderTarget(target);
@@ -1861,6 +1872,31 @@ export class UnityOcean {
       scene.fog = oldFog;
       this.group.visible = oldVisible;
     }
+  }
+
+  /** Match the renderer's visible-tree pruning without allocating per mesh. */
+  private hidePrepassTransparents(object: THREE.Object3D): void {
+    if (!object.visible) return;
+    const renderable = object as THREE.Object3D & { material?: THREE.Material | THREE.Material[] };
+    const material = renderable.material;
+    if (material && !object.userData.oceanOpaqueBackdrop) {
+      let transparent = false;
+      if (Array.isArray(material)) {
+        for (let i = 0; i < material.length; i++) {
+          if (material[i].transparent || material[i].opacity < 1) {
+            transparent = true;
+            break;
+          }
+        }
+      } else transparent = material.transparent || material.opacity < 1;
+      if (transparent) {
+        this.prepassHidden.push(object);
+        object.visible = false;
+        return;
+      }
+    }
+    for (let i = 0; i < object.children.length; i++)
+      this.hidePrepassTransparents(object.children[i]);
   }
 
   /**
@@ -1884,33 +1920,25 @@ export class UnityOcean {
       this.oceanMaterial.uniforms.uHasPrepass.value = 0;
       return;
     }
-    const hidden: THREE.Object3D[] = [];
-    scene.traverse((object) => {
-      if (!object.visible || object === this.group || this.group.getObjectById(object.id)) return;
-      const renderable = object as THREE.Object3D & { material?: THREE.Material | THREE.Material[] };
-      const materials = renderable.material
-        ? Array.isArray(renderable.material) ? renderable.material : [renderable.material]
-        : [];
-      if (
-        !object.userData.oceanOpaqueBackdrop &&
-        materials.some((material) => material.transparent || material.opacity < 1)
-      ) {
-        hidden.push(object);
-        object.visible = false;
-      }
-    });
     const oldTarget = renderer.getRenderTarget();
     const oldXr = renderer.xr.enabled;
     const oldAutoClear = renderer.autoClear;
     const oldShadowAutoUpdate = renderer.shadowMap.autoUpdate;
+    const oldShadowNeedsUpdate = renderer.shadowMap.needsUpdate;
     const oldVisible = this.group.visible;
     try {
+      // Hiding the root lets the walk skip the entire ocean subtree without
+      // a recursive getObjectById search for every object in the world.
       this.group.visible = false;
+      this.hidePrepassTransparents(scene);
       renderer.xr.enabled = false;
-      renderer.autoClear = true;
+      renderer.autoClear = false;
       // Unity copies the opaque buffer; it does not rerender its shadow map.
       // Reuse the previous/main shadow texture for this extra scene pass.
       renderer.shadowMap.autoUpdate = false;
+      // A pending main-pass refresh overrides autoUpdate=false in Three.
+      // Leave that request for the primary view, which includes all casters.
+      renderer.shadowMap.needsUpdate = false;
       renderer.setRenderTarget(target);
       renderer.clear(true, true, true);
       renderer.render(scene, camera);
@@ -1921,9 +1949,70 @@ export class UnityOcean {
       renderer.xr.enabled = oldXr;
       renderer.autoClear = oldAutoClear;
       renderer.shadowMap.autoUpdate = oldShadowAutoUpdate;
+      renderer.shadowMap.needsUpdate = oldShadowNeedsUpdate;
       this.group.visible = oldVisible;
-      for (const object of hidden) object.visible = true;
+      for (const object of this.prepassHidden) object.visible = true;
+      this.prepassHidden.length = 0;
     }
+  }
+
+  /** Reuse one current-shadow opaque draw for primary color and refraction.
+   * A false result leaves the caller on the established renderPasses + scene
+   * path. It is also used by FrozenScenePass only when the world needs a draw. */
+  renderPrimary(
+    renderer: THREE.WebGLRenderer,
+    scene: THREE.Scene,
+    camera: THREE.Camera,
+    target: THREE.WebGLRenderTarget | null,
+  ): boolean {
+    if (this.disposed || this.quality !== "full" || !this.debug.prepass || this.prepassScale !== 1)
+      return this.rejectPrimary("opaque prepass is disabled or reduced");
+    if (!target || target === this.prepassRenderTarget || target === this.reflectionRenderTarget ||
+      target.samples !== 0 || !target.depthBuffer || target.stencilBuffer ||
+      target.texture.type !== THREE.HalfFloatType || target.texture.format !== THREE.RGBAFormat ||
+      target.texture.colorSpace !== THREE.NoColorSpace || target.textures.length !== 1 ||
+      (target.depthTexture !== null && target.depthTexture.type !== THREE.UnsignedIntType))
+      return this.rejectPrimary("primary target is not compatible linear HDR plus depth");
+    if (renderer.getScissorTest() || target.scissorTest ||
+      target.viewport.x !== 0 || target.viewport.y !== 0 ||
+      target.viewport.z !== target.width || target.viewport.w !== target.height ||
+      renderer.xr.isPresenting || scene.overrideMaterial ||
+      !(camera instanceof THREE.PerspectiveCamera || camera instanceof THREE.OrthographicCamera))
+      return this.rejectPrimary("primary camera, viewport or material override requires the original path");
+    const size = renderer.getDrawingBufferSize(this.primarySizeScratch);
+    const width = this.preCrtWidth ?? size.x;
+    const height = this.preCrtHeight ?? size.y;
+    if (target.width !== width || target.height !== height)
+      return this.rejectPrimary("primary and opaque dimensions differ");
+    this.primaryPass ??= new OceanPrimaryPass();
+    if (!this.primaryPass.prepare(scene, camera, this.group))
+      return this.rejectPrimary("remaining opaque groups require original depth ordering");
+    this.ensureSize(renderer);
+    const opaque = this.prepassRenderTarget;
+    if (!opaque || opaque.width !== target.width || opaque.height !== target.height)
+      return this.rejectPrimary("opaque allocation does not match primary dimensions");
+    // Check motion once allocation/compatibility are settled: a teleport that
+    // invalidates the occlusion result must not lose its refresh to fallback.
+    if (!this.preparePasses(camera)) return this.rejectPrimary("water is occluded");
+    this.renderReflection(renderer, scene, camera);
+    const previousHasPrepass = this.oceanMaterial.uniforms.uHasPrepass.value;
+    this.oceanMaterial.uniforms.uHasPrepass.value = 1;
+    try {
+      this.primaryPass.render(renderer, scene, camera, target, opaque);
+    } catch (error) {
+      this.oceanMaterial.uniforms.uHasPrepass.value = previousHasPrepass;
+      throw error;
+    }
+    this.stats.prepassRenders++;
+    this.stats.primaryReuseRenders++;
+    this.stats.primaryReuseFallbackReason = null;
+    return true;
+  }
+
+  private rejectPrimary(reason: string): false {
+    this.stats.primaryReuseFallbacks++;
+    this.stats.primaryReuseFallbackReason = reason;
+    return false;
   }
 
   renderPasses(
@@ -1931,6 +2020,12 @@ export class UnityOcean {
     scene: THREE.Scene,
     camera: THREE.Camera,
   ): void {
+    if (!this.preparePasses(camera)) return;
+    this.renderReflection(renderer, scene, camera);
+    this.renderPrepass(renderer, scene, camera);
+  }
+
+  private preparePasses(camera: THREE.Camera): boolean {
     // Paused/editor/model-studio frames bypass the normal water update but can
     // still move the camera. Refresh matrices without advancing wave time.
     this.update(0, camera);
@@ -1946,9 +2041,8 @@ export class UnityOcean {
     // refreshes them as soon as the non-blocking visibility result is ready.
     const moved=this.visibilityCamera.distanceToSquared(camera.position)>16;
     this.visibilityCamera.copy(camera.position);
-    if(this.waterOccluded&&!moved){this.stats.occludedPassFrames++;return;}
-    this.renderReflection(renderer, scene, camera);
-    this.renderPrepass(renderer, scene, camera);
+    if(this.waterOccluded&&!moved){this.stats.occludedPassFrames++;return false;}
+    return true;
   }
 
   get reflectionTarget(): THREE.WebGLRenderTarget | null {
@@ -1995,6 +2089,8 @@ export class UnityOcean {
     if (this.disposed) return;
     this.disposed = true;
     this.disposeTargets();
+    this.primaryPass?.dispose();
+    this.primaryPass = null;
     this.ribbon.geometry.dispose();
     this.horizon.geometry.dispose();
     this.oceanMaterial.dispose();

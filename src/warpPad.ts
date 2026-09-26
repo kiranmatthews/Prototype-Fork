@@ -288,19 +288,40 @@ export function createWarpPad(): WarpPad {
       fog: false,
     }),
   );
-  const tongues: THREE.Mesh[] = [];
+  // All tongues share additive blending and never write depth. Their overlap
+  // is order-independent, so retain every cone in one instanced submission
+  // (including Three's separate front/back passes for this material).
+  const tongues = new THREE.InstancedMesh(tongueGeo, tongueMat, TONGUES);
+  tongues.name = 'warp flame tongues';
+  tongues.renderOrder = 3;
+  tongues.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  column.add(tongues);
+  const tongueTransforms: THREE.Object3D[] = [];
   const tonguePhase: number[] = [];
   for (let i = 0; i < TONGUES; i++) {
     const a = (i / TONGUES) * Math.PI * 2;
-    const m = new THREE.Mesh(tongueGeo, tongueMat);
+    const m = new THREE.Object3D();
     const h = 1.3 + rand() * 1.1; // multiplies the already-scaled cone
     m.scale.set(1, h, 1);
     m.position.set(Math.cos(a) * 2.4 * S, 0.5 * h * S, Math.sin(a) * 2.4 * S);
-    m.renderOrder = 3;
-    column.add(m);
-    tongues.push(m);
+    m.updateMatrix();
+    tongues.setMatrixAt(i, m.matrix);
+    tongueTransforms.push(m);
     tonguePhase.push(rand() * Math.PI * 2);
   }
+  tongues.computeBoundingBox();
+  // Initial seeded heights and every later flicker must fit the same bound:
+  // animated cones reach (centre .5 + half-height 1/6) * scale, scale <= 1.
+  tongues.boundingBox!.max.y = Math.max(tongues.boundingBox!.max.y, 2 / 3);
+  tongues.boundingBox!.expandByScalar(1e-5);
+  tongues.boundingSphere = tongues.boundingBox!.getBoundingSphere(new THREE.Sphere());
+  // Level disposal releases owned geometry directly; standalone previews use
+  // pad.dispose(). Both paths must also release the instance buffer exactly once.
+  const releaseTongues = (): void => {
+    tongueGeo.removeEventListener('dispose', releaseTongues);
+    tongues.dispose();
+  };
+  tongueGeo.addEventListener('dispose', releaseTongues);
 
   // Six thin bands sharing one geometry, each on its own rise phase. They fade
   // in low and out high, so the stack reads as a continuous climb rather than
@@ -368,10 +389,13 @@ export function createWarpPad(): WarpPad {
       const flick = 1 + 0.06 * Math.sin(t * 9.1) + 0.04 * Math.sin(t * 14.7);
       plume.scale.set(1, flick, 1);
       for (let i = 0; i < TONGUES; i++) {
-        const m = tongues[i];
+        const m = tongueTransforms[i];
         m.scale.y = m.scale.y * 0.0 + (0.75 + 0.25 * Math.sin(t * 11 + tonguePhase[i]));
         m.position.y = 0.5 * m.scale.y;
+        m.updateMatrix();
+        tongues.setMatrixAt(i, m.matrix);
       }
+      tongues.instanceMatrix.needsUpdate = true;
       // the bounce and the source agree
       light.intensity = 1.6 * flick;
     },

@@ -27,7 +27,8 @@ for (const contract of [
   "this.detachComposerTail()",
   "this.crtPass.render(",
   "this.outputPass.render(",
-  "preCrtOverlay({",
+  "this.preCrtOverlayPass.callback = preCrtOverlay",
+  "callback({",
   "makePreCrtOverlayRenderer(",
 ]) {
   assert.ok(

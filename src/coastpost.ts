@@ -8,15 +8,16 @@
 // Bloom owns a lazy capped HDR mip pyramid. UnityPostPass owns colored
 // vignette, source-order exposure/tonemapping, a change-driven 32^3 LDR LUT,
 // and dithering.
-// CRT Guest encodes that linear result into its expected sRGB working space,
-// runs the canonical chain, then decodes to linear again. OutputPass alone
-// performs the renderer's final display transfer.
+// CRT Guest encodes that linear result into its expected sRGB working space.
+// The shared OutputPass combines its final decode with display transfer,
+// retaining shader precision through the final display transfer.
 
 import * as THREE from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
-import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
+import { CrtGuestOutputPass } from "./crt-guest/output";
 import { Pass } from "three/examples/jsm/postprocessing/Pass.js";
-import { FrozenScenePass } from './frozenScenePass';
+import { FrozenScenePass, type SceneRenderCallback } from './frozenScenePass';
+export type { SceneRenderCallback } from './frozenScenePass';
 import { UNITY_POST_PROFILE, UnityPostPass } from "./unityPost";
 import { UnityBloomPass } from "./unityBloom";
 import { UnitySmaaPass } from "./unitySmaa";
@@ -147,8 +148,7 @@ export class CoastPostRenderer {
   private readonly preCrtOverlayPass: PreCrtOverlayPass;
   private readonly crtPass: CrtGuestPass | null;
   private readonly crtSettings: CrtGuestSettings | null;
-  private readonly outputPass: OutputPass;
-  private crtOutputTarget: THREE.WebGLRenderTarget | null = null;
+  private readonly outputPass: CrtGuestOutputPass;
   private gameFlowInputTarget: THREE.WebGLRenderTarget | null = null;
   private gameFlowSourceKey: string | null = null;
   private enabledState: boolean;
@@ -246,13 +246,14 @@ export class CoastPostRenderer {
     this.crtSettings = options.crtSettings ?? null;
     this.crtPass = options.crtSettings
       ? new CrtGuestPass(renderer, options.crtSettings, {
+          deferOutput: true,
           sourceWidth: this.inputWidth,
           sourceHeight: this.inputHeight,
           outputWidth: this.outputWidth,
           outputHeight: this.outputHeight,
         })
       : null;
-    this.outputPass = new OutputPass();
+    this.outputPass = new CrtGuestOutputPass(() => this.crtPass?.deferredOutput ?? null);
 
     this.composer.addPass(this.renderPass);
     this.composer.addPass(this.smaaPass);
@@ -464,8 +465,6 @@ export class CoastPostRenderer {
     this.configureComposer(1, 1, 1);
     this.crtPass?.setResolution(1, 1, 1, 1);
     this.crtPass?.resetHistory("game-flow presentation owns renderer");
-    this.crtOutputTarget?.dispose();
-    this.crtOutputTarget = null;
   }
 
   /**
@@ -502,7 +501,7 @@ export class CoastPostRenderer {
     if (!this.gameFlowPostActive || this.renderer.getScissorTest()) return "direct";
 
     // This is an ownership switch, not a gameplay resume. Keep the composer at
-    // 1x1 and retain only the dedicated GameFlow input plus shared CRT output.
+    // 1x1 and retain only the dedicated GameFlow input plus shared CRT graph.
     this.suspendForGameFlow();
     if (sourceKey !== this.gameFlowSourceKey) {
       this.gameFlowSourceKey = sourceKey;
@@ -536,7 +535,6 @@ export class CoastPostRenderer {
         target: source,
       });
 
-      let finalLinear = source;
       this.crtPass?.setResolution(
         source.width,
         source.height,
@@ -544,16 +542,14 @@ export class CoastPostRenderer {
         resolution.outputHeight,
       );
       if (this.crtPass?.active) {
-        const crtOutput = this.ensureCrtOutputTarget();
         this.crtPass.renderToScreen = false;
         this.crtPass.render(
           this.renderer,
-          crtOutput,
+          source,
           source,
           deltaSeconds,
           false,
         );
-        finalLinear = crtOutput;
       }
 
       // OutputPass remains the sole linear-to-display transfer. It also owns
@@ -565,7 +561,7 @@ export class CoastPostRenderer {
       this.outputPass.render(
         this.renderer,
         source,
-        finalLinear,
+        source,
         deltaSeconds,
         false,
       );
@@ -582,6 +578,7 @@ export class CoastPostRenderer {
   render(
     deltaSeconds = 0,
     preCrtOverlay?: CoastPostPreCrtOverlay,
+    sceneRender?: SceneRenderCallback,
   ): CoastPostRenderPath {
     if (this.disposed) {
       throw new Error("CoastPostRenderer.render() called after dispose()");
@@ -591,10 +588,12 @@ export class CoastPostRenderer {
     // EffectComposer owns a complete full-frame target. Preserve caller-owned
     // split-screen viewports by using the direct path while scissoring.
     if (!this.active || this.renderer.getScissorTest()) {
-      this.renderer.render(this.scene, this.camera);
+      if (!sceneRender?.(this.renderer, this.scene, this.camera, this.renderer.getRenderTarget()))
+        this.renderer.render(this.scene, this.camera);
       return "direct";
     }
     this.preCrtOverlayPass.callback = preCrtOverlay;
+    this.renderPass.sceneRender = sceneRender;
     try {
       if (this.resolutionMode === "fixed") {
         this.renderFixed(deltaSeconds);
@@ -604,6 +603,7 @@ export class CoastPostRenderer {
     } finally {
       // Never retain closures over live Player/UI state between frames.
       this.preCrtOverlayPass.callback = undefined;
+      this.renderPass.sceneRender = undefined;
     }
     return "post";
   }
@@ -618,8 +618,6 @@ export class CoastPostRenderer {
     this.bloomPass.dispose();
     this.unityPostPass.dispose();
     this.crtPass?.dispose();
-    this.crtOutputTarget?.dispose();
-    this.crtOutputTarget = null;
     this.releaseGameFlowInputTarget();
     if (this.crtLuts) {
       // The pass borrows these textures; this renderer owns the async load.
@@ -652,9 +650,7 @@ export class CoastPostRenderer {
         this.applyCrtResolution();
       }
 
-      let finalLinear = source;
       if (this.crtPass?.active) {
-        const crtOutput = this.ensureCrtOutputTarget();
         this.crtPass.setResolution(
           source.width,
           source.height,
@@ -664,12 +660,11 @@ export class CoastPostRenderer {
         this.crtPass.renderToScreen = false;
         this.crtPass.render(
           this.renderer,
-          crtOutput,
+          source,
           source,
           deltaSeconds,
           false,
         );
-        finalLinear = crtOutput;
       }
 
       // OutputPass remains the sole display transfer. With CRT bypassed it
@@ -681,7 +676,7 @@ export class CoastPostRenderer {
       this.outputPass.render(
         this.renderer,
         this.composer.writeBuffer,
-        finalLinear,
+        source,
         deltaSeconds,
         false,
       );
@@ -715,8 +710,6 @@ export class CoastPostRenderer {
       this.outputWidth,
       this.outputHeight,
     );
-    this.crtOutputTarget?.dispose();
-    this.crtOutputTarget = null;
   }
 
   private configureComposer(
@@ -742,25 +735,6 @@ export class CoastPostRenderer {
       this.outputWidth,
       this.outputHeight,
     );
-    if (this.crtOutputTarget) {
-      this.crtOutputTarget.setSize(this.outputWidth, this.outputHeight);
-    }
-  }
-
-  private ensureCrtOutputTarget(): THREE.WebGLRenderTarget {
-    if (!this.crtOutputTarget) {
-      this.crtOutputTarget = makeLinearTarget(
-        this.outputWidth,
-        this.outputHeight,
-        "CRTGuest.OutputLinear.RGBA16F",
-      );
-    } else if (
-      this.crtOutputTarget.width !== this.outputWidth ||
-      this.crtOutputTarget.height !== this.outputHeight
-    ) {
-      this.crtOutputTarget.setSize(this.outputWidth, this.outputHeight);
-    }
-    return this.crtOutputTarget;
   }
 
   private gameFlowResolution(): CoastPostResolutionState {
@@ -839,11 +813,13 @@ export class CoastPostRenderer {
   }
 
   private syncPassEnablement(): void {
+    // Probe readiness with the pass enabled so a settings toggle/LUT load can
+    // reactivate it. An inactive composer stage must be skipped, otherwise its
+    // bypass performs a full-resolution copy before the identical OutputPass.
+    if (this.crtPass) this.crtPass.enabled = true;
     const crtActive = this.crtPass?.active ?? false;
     if (!crtActive) {
       this.crtPass?.releaseInactiveTargets();
-      this.crtOutputTarget?.dispose();
-      this.crtOutputTarget = null;
     }
     const unityPostActive = this.enabledState && !this.liteState;
     // Entering an offscreen composer drops the WebGLRenderer's default-buffer
@@ -853,7 +829,7 @@ export class CoastPostRenderer {
       (this.resolutionMode === "fixed" || this.enabledState || crtActive);
     this.bloomPass.setPresentationEnabled(unityPostActive);
     this.unityPostPass.enabled = unityPostActive;
-    if (this.crtPass) this.crtPass.enabled = true;
+    if (this.crtPass) this.crtPass.enabled = crtActive;
   }
 
   private static validDimension(value: number): number {
@@ -911,41 +887,46 @@ function makePreCrtOverlayRenderer(
   // Present a DPR-1 physical-pixel facade to overlay helpers. The underlying
   // renderer multiplies viewport/scissor inputs by its real DPR even while an
   // offscreen target is bound, so the facade divides those writes back down.
+  const methods = new Map<PropertyKey, unknown>();
+  const boundMethods = new Map<PropertyKey, { source: Function; bound: Function }>();
+  const remember = <T>(property: PropertyKey, method: T): T => {
+    methods.set(property, method);
+    return method;
+  };
   return new Proxy(renderer, {
     get(target, property) {
+      if (methods.has(property)) return methods.get(property);
       if (property === "getSize") {
-        return (result: THREE.Vector2): THREE.Vector2 => {
+        return remember(property, (result: THREE.Vector2): THREE.Vector2 => {
           const size = inputSize();
           return result.set(size.width, size.height);
-        };
+        });
       }
       if (property === "getDrawingBufferSize") {
-        return (result: THREE.Vector2): THREE.Vector2 => {
+        return remember(property, (result: THREE.Vector2): THREE.Vector2 => {
           const size = inputSize();
           return result.set(size.width, size.height);
-        };
+        });
       }
-      if (property === "getPixelRatio") return (): number => 1;
+      if (property === "getPixelRatio") return remember(property, (): number => 1);
       if (property === "getViewport" || property === "getScissor") {
-        return (result: THREE.Vector4): THREE.Vector4 => {
-          const getter = property === "getViewport"
-            ? target.getViewport.bind(target)
-            : target.getScissor.bind(target);
-          getter(result);
+        return remember(property, (result: THREE.Vector4): THREE.Vector4 => {
+          if (property === "getViewport") target.getViewport(result);
+          else target.getScissor(result);
           return result.multiplyScalar(target.getPixelRatio());
-        };
+        });
       }
       if (property === "setViewport" || property === "setScissor") {
-        return (
+        const setter = property === "setViewport"
+          ? target.setViewport.bind(target)
+          : target.setScissor.bind(target);
+        return remember(property, (
           x: number | THREE.Vector4,
           y?: number,
           width?: number,
           height?: number,
         ): void => {
           const pixelRatio = target.getPixelRatio();
-          const setter = property === "setViewport"
-            ? target.setViewport.bind(target)
-            : target.setScissor.bind(target);
           if (x instanceof THREE.Vector4) {
             setter(
               x.x / pixelRatio,
@@ -961,12 +942,22 @@ function makePreCrtOverlayRenderer(
               (height ?? 0) / pixelRatio,
             );
           }
-        };
+        });
       }
       const value = Reflect.get(target, property, target) as unknown;
-      return typeof value === "function" ? value.bind(target) : value;
+      if (typeof value === "function") {
+        const cached = boundMethods.get(property);
+        if (cached?.source === value) return cached.bound;
+        const bound = value.bind(target);
+        boundMethods.set(property, { source: value, bound });
+        return bound;
+      }
+      boundMethods.delete(property);
+      return value;
     },
     set(target, property, value) {
+      methods.delete(property);
+      boundMethods.delete(property);
       return Reflect.set(target, property, value, target);
     },
   });

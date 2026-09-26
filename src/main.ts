@@ -4,6 +4,7 @@ import { rooAtlasDiagnostics } from './roo-type/atlas';
 import { sceneryDecoderDiagnostics } from './sceneryTextureLoader';
 import { installShadowTextureCleanup } from "./shadowTextureCleanup";
 import { resizeRendererSurface } from "./render-quality/surfaceSize";
+import { prepareWorldFrame, finishWorldFrame } from "./render-quality/worldFrame";
 import { GraphicsRecovery } from "./graphicsRecovery";
 import { configureCityAssetRenderer } from "./cityAssets";
 import { addSkateReviewClips, loadSkateReviewCatalog, skateBoardVisibleAt, withSkatePresentationRig } from './animation/skateCatalog';
@@ -157,6 +158,9 @@ const LITE_RENDER = window.location.search.includes("lite");
 const NO_COAST_POST = window.location.search.includes("nopost");
 const NO_OCEAN_PASSES = window.location.search.includes("nopasses");
 const renderer = new THREE.WebGLRenderer({ antialias: !LITE_RENDER });
+// Count the complete presentation (world, shadows, ocean, post and HUD).
+// Three's default reset-per-render reports only the final fullscreen triangle.
+renderer.info.autoReset = false;
 configureJungleAssetRenderer(renderer);
 configureCityAssetRenderer(renderer);
 // A zero-resource host. The actual Gouraud scene/render target exists only
@@ -183,6 +187,9 @@ Level.setMaxAnisotropy(renderer.capabilities.getMaxAnisotropy());
 app.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
+// The world root stays at identity. Avoid marking every descendant dirty on
+// every render; animated children still update their own transforms normally.
+scene.matrixAutoUpdate = false;
 scene.background = new THREE.Color(0x232634);
 scene.fog = new THREE.Fog(0x232634, 30, 170);
 
@@ -208,6 +215,7 @@ sun.shadow.camera.top = SHADOW_HALF;
 sun.shadow.camera.bottom = -SHADOW_HALF;
 sun.shadow.camera.near = 1;
 sun.shadow.camera.far = 600;
+sun.shadow.camera.updateProjectionMatrix();
 sun.shadow.bias = -0.0002; // preserve the world-space bias with the deeper frustum
 sun.shadow.normalBias = 0.035;
 // The sun rides a fixed offset from whatever it is lighting, so the frustum
@@ -228,6 +236,7 @@ function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
     sun.shadow.camera.right = shadowHalf;
     sun.shadow.camera.top = shadowHalf;
     sun.shadow.camera.bottom = -shadowHalf;
+    sun.shadow.camera.updateProjectionMatrix();
   }
   const offset = document.body.classList.contains("game-world-map")
     ? MAP_SUN_OFFSET
@@ -240,7 +249,6 @@ function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
     focusY + (heatSun?.[1] ?? offset.y) * 3,
     focusZ + (heatSun?.[2] ?? offset.z) * 3,
   );
-  sun.shadow.camera.updateProjectionMatrix();
 }
 // Cool fill from opposite the sun: faint sky-colored bounce so the faces the
 // key misses keep a hint of shape instead of going dead flat. No shadows.
@@ -992,6 +1000,21 @@ function releaseGameplayPostForGameFlow(): void {
   renderer.renderLists.dispose();
 }
 
+function renderOceanPrimaryScene(
+  activeRenderer: THREE.WebGLRenderer,
+  activeScene: THREE.Scene,
+  activeCamera: THREE.Camera,
+  target: THREE.WebGLRenderTarget | null,
+): boolean {
+  const water = level.water;
+  if (!water) return false;
+  if (water.renderPrimary(activeRenderer, activeScene, activeCamera, target)) return true;
+  // Reduced-resolution water and direct/scissored presentation retain their
+  // original passes when the opaque surface cannot be reused exactly.
+  water.renderPasses(activeRenderer, activeScene, activeCamera);
+  return false;
+}
+
 function renderPrimaryScene(
   dt = 0,
   prepareOcean = true,
@@ -1009,14 +1032,20 @@ function renderPrimaryScene(
     coastPost.resumeFromGameFlow();
     coastPostResumeCount++;
   }
-  if (prepareOcean) level.water?.renderPasses(renderer, scene, camera);
-  if (coastPost) {
-    const frozenCup=competition&&!competition.simulating&&competition.phase!=="countdown"&&
-      (!gameFlow.blocksGameplay||preparingCompetitionPresentation())&&!gameFlow.developerChromeVisible&&!editor.active;
-    coastPost.setFrozenScene(frozenCup?`${level.pickRoot.uuid}:${competition!.phase}:${competition!.runNumber}`:null);
-    coastPost.render(dt, preCrtOverlay);
+  const automaticWorldMatrices = prepareWorldFrame(scene);
+  try {
+    const sceneRender = prepareOcean && level.water ? renderOceanPrimaryScene : undefined;
+    if (coastPost) {
+      const frozenCup=competition&&!competition.simulating&&competition.phase!=="countdown"&&
+        (!gameFlow.blocksGameplay||preparingCompetitionPresentation())&&!gameFlow.developerChromeVisible&&!editor.active;
+      coastPost.setFrozenScene(frozenCup?`${level.pickRoot.uuid}:${competition!.phase}:${competition!.runNumber}`:null);
+      coastPost.render(dt, preCrtOverlay, sceneRender);
+    }
+    else if (!sceneRender?.(renderer, scene, camera, renderer.getRenderTarget()))
+      renderer.render(scene, camera);
+  } finally {
+    finishWorldFrame(scene, automaticWorldMatrices);
   }
-  else renderer.render(scene, camera);
 }
 
 /**
@@ -1024,6 +1053,7 @@ function renderPrimaryScene(
  * Developer/tool DOM stays outside this function and therefore remains sharp.
  */
 function renderGameplayScene(dt = 0, prepareOcean = true, showHud = true): void {
+  if (renderer.getContext().isContextLost()) return;
   // Touch remains native-resolution, but its UI belongs before CRT too.
   const wantsPreCrtUi = !split2p && (coastPost?.active ?? false);
   const wantsPreCrtHud = showHud && wantsPreCrtUi;
@@ -1116,6 +1146,7 @@ function drawGameFlowPreCrt(context: Parameters<CoastPostPreCrtOverlay>[0]): voi
  * then insert only the game-owned menu at the shared pre-CRT seam.
  */
 function renderGameplayWithGameFlow(dt: number): void {
+  if (renderer.getContext().isContextLost()) return;
   configureCoastPost(
     levelPostEnabled ||
       (visualTreatmentActivity(visualTreatmentSettings.value).any &&
@@ -4404,6 +4435,23 @@ function resetRenderFrameLimiter(): void {
   clock.getDelta(); // discard time spent changing/reallocating render targets
 }
 
+// A background tab has no playable wall-clock time. Do not return with six
+// catch-up simulation ticks, stale button edges or an interpolated old pose.
+document.addEventListener('visibilitychange', () => {
+  acc = 0;
+  resetRenderFrameLimiter();
+  input.consumeEdges();
+  input2.consumeEdges();
+  player.snapRenderInterpolation();
+  p2?.snapRenderInterpolation();
+  if (document.hidden) sfx.stopLoops();
+  else {
+    input.armMenuReleaseGuard();
+    input2.armMenuReleaseGuard();
+    gameFlow.requestGameplayFrame();
+  }
+});
+
 function allowRenderFrame(nowMs: number): boolean {
   return renderFrameLimiter.allow(
     nowMs,
@@ -4570,10 +4618,24 @@ function recordPresentationStage(stage:string):void {
 let reportedPresentationStage='';
 function frame(nowMs: number): void {
   requestAnimationFrame(frame);
+  if (document.hidden || graphicsRecovery.lost || renderer.getContext().isContextLost()) return;
+  try {
+    advanceFrame(nowMs);
+  } catch (error) {
+    // Loss can invalidate a shader program between two GL calls, before the
+    // browser delivers webglcontextlost. Three r166 then throws while reading
+    // its now-null shader log. The frame's finally blocks restore its pose and
+    // renderer state; ordinary application/shader errors still surface.
+    if (!renderer.getContext().isContextLost()) throw error;
+  }
+}
+
+function advanceFrame(nowMs: number): void {
   const reportStage=`${current.id}:${gameFlow.loadingPhase??gameFlow.currentScreen??competition?.phase??'play'}`;
   if(reportStage!==reportedPresentationStage){reportedPresentationStage=reportStage;recordPresentationStage(reportStage);}
   if(graphicsRecovery.lost)return;
   if (!allowRenderFrame(nowMs)) return;
+  renderer.info.reset();
   const rawDt = clock.getDelta();
   const dt = Math.min(rawDt, 0.1);
   // Animation Studio owns only presentation. Its chosen clip speed advances
@@ -4950,25 +5012,34 @@ function frame(nowMs: number): void {
   // then opaque color+depth for refraction/intersection/caustics, then the
   // main water draw and coast-only post chain below. In lite/split mode the
   // ocean's quality switch makes these hooks a cheap feature-disable path.
-  level.updateSceneryView(camera,split2p?camera2:undefined);
-  level.water?.renderPasses(renderer, scene, camera);
-
   if ((current.id !== "warproom" && !level.isCampaignMap) && split2p && p2) {
-    ui.setGameHudComposited(false);
-    gameInterface.setComposited(false);
-    const dw = renderer.domElement.width;
-    const dh = renderer.domElement.height;
-    renderer.setScissorTest(true);
-    renderer.setViewport(0, dh / 2, dw, dh / 2);
-    renderer.setScissor(0, dh / 2, dw, dh / 2);
-    renderer.render(scene, camera);
-    renderer.setViewport(0, 0, dw, dh / 2);
-    renderer.setScissor(0, 0, dw, dh / 2);
-    renderer.render(scene, camera2);
-    renderer.setScissorTest(false);
-    renderer.setViewport(0, 0, dw, dh);
+    level.updateSceneryView(camera, camera2);
+    const automaticWorldMatrices = prepareWorldFrame(scene);
+    const shadowAutoUpdate = renderer.shadowMap.autoUpdate;
+    try {
+      level.water?.renderPasses(renderer, scene, camera);
+      ui.setGameHudComposited(false);
+      gameInterface.setComposited(false);
+      const dw = renderer.domElement.width;
+      const dh = renderer.domElement.height;
+      renderer.setScissorTest(true);
+      renderer.setViewport(0, dh / 2, dw, dh / 2);
+      renderer.setScissor(0, dh / 2, dw, dh / 2);
+      renderer.render(scene, camera);
+      // Both cameras see the same light and pose. Keep the complete primary
+      // shadow map instead of drawing every caster a second time for P2.
+      renderer.shadowMap.autoUpdate = false;
+      renderer.setViewport(0, 0, dw, dh / 2);
+      renderer.setScissor(0, 0, dw, dh / 2);
+      renderer.render(scene, camera2);
+      renderer.setScissorTest(false);
+      renderer.setViewport(0, 0, dw, dh);
+    } finally {
+      renderer.shadowMap.autoUpdate = shadowAutoUpdate;
+      finishWorldFrame(scene, automaticWorldMatrices);
+    }
   } else {
-    renderGameplayScene(dt, false, level.hudMode !== "hub");
+    renderGameplayScene(dt, true, level.hudMode !== "hub");
   }
   // Single-player fruit/icons/HUD were composed together above. Split screen
   // retains its direct fallback, with each fruit flight confined to its half.
@@ -5050,6 +5121,7 @@ requestAnimationFrame(frame);
   getRenderQualitySizes: () => ({ ...renderQualitySizes }),
   getGraphicsRecoveryDiagnostics: () => graphicsRecovery.diagnostics,
   getRenderFrameLimiterStats: () => renderFrameLimiter.stats,
+  getRenderFrameStats: () => ({ ...renderer.info.render }),
   getCrtDiagnostics: () => coastPost?.crt?.diagnostics ?? null,
   getGameHudDiagnostics: () => ui.gameHudDiagnostics,
   mapSkateboardSettings,

@@ -407,7 +407,12 @@ export class JungleAssetKit {
         };
         // Keep the authored mesh at every distance. Cell bounds still allow
         // frustum culling without changing silhouettes as the camera moves.
-        const mesh=make(template.geometry);mesh.position.copy(center);this.root.add(mesh);bucket.mesh=mesh;
+        const mesh=make(template.geometry);mesh.position.copy(center);
+        // Placement is immutable after upload; wind moves vertices in the
+        // shader. Parent/world transforms still update normally for editor
+        // roots and level transitions, without recomposing every cell/pass.
+        mesh.updateMatrix();mesh.matrixAutoUpdate=false;
+        this.root.add(mesh);bucket.mesh=mesh;
         this.readyCount+=bucket.transforms.length;
       }).catch(error=>{if(bucket.assets===assets)this.failed(bucket.kind,error);}).finally(()=>this.pending.delete(job));
     this.pending.add(job);

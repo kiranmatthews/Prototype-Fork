@@ -1,28 +1,15 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { fileURLToPath, pathToFileURL } from "node:url";
-import path from "node:path";
-import ts from "typescript";
+import { createServer } from "vite";
 import * as THREE from "three";
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const source = readFileSync(path.join(root, "src/unityOcean.ts"), "utf8");
-const transpiled = ts.transpileModule(source, {
-  compilerOptions: {
-    target: ts.ScriptTarget.ES2020,
-    module: ts.ModuleKind.ESNext,
-  },
-  fileName: "unityOcean.ts",
-}).outputText;
-const threeUrl = pathToFileURL(
-  path.join(root, "node_modules/three/build/three.module.js"),
-).href;
-const executable = transpiled
-  .replace('from "three"', `from "${threeUrl}"`)
-  .replaceAll("import.meta.env.BASE_URL", '"/"');
-const moduleUrl = `data:text/javascript;base64,${Buffer.from(executable).toString("base64")}`;
-const { UnityOcean } = await import(moduleUrl);
-
+// Load the actual local dependency graph, including the primary-scene helper.
+const server = await createServer({ appType: "custom", logLevel: "silent", server: { middlewareMode: true } });
+let UnityOcean;
+try {
+  ({ UnityOcean } = await server.ssrLoadModule("/src/unityOcean.ts"));
+} finally {
+  await server.close();
+}
 const originalTextureLoad = THREE.TextureLoader.prototype.load;
 THREE.TextureLoader.prototype.load = function loadTextureWithoutDom() {
   return new THREE.Texture();

@@ -99,6 +99,21 @@ try{
  const kit=new JungleAssetKit(true,false);
  for(const kind of JUNGLE_ASSET_KINDS)for(let i=0;i<2;i++)kit.add({dkind:kind,p:[0,0,-i*12]});
  kit.flush();await kit.ready();assert.deepEqual(kit.errors,[]);assert.equal(kit.diagnostics.ready,kit.diagnostics.placements);
+ const cellMeshes=kit.root.children.filter(mesh=>mesh.isInstancedMesh);
+ assert.ok(cellMeshes.length>0);
+ let staticCompositions=0;
+ for(const mesh of cellMeshes){
+  assert.equal(mesh.matrixAutoUpdate,false,'shader wind must not recompose immutable cell transforms');
+  assert.deepEqual(mesh.matrix.elements,new THREE.Matrix4().compose(mesh.position,mesh.quaternion,mesh.scale).elements);
+  const originalUpdate=mesh.updateMatrix;mesh.updateMatrix=function(){staticCompositions++;return originalUpdate.call(this);};
+ }
+ for(const offset of [new THREE.Vector3(8,3,-11),new THREE.Vector3()]){
+  kit.root.position.copy(offset);kit.root.updateMatrixWorld(true);
+  for(const mesh of cellMeshes)assert.deepEqual(mesh.matrixWorld.elements,
+   new THREE.Matrix4().multiplyMatrices(kit.root.matrixWorld,mesh.matrix).elements,
+   'frozen cell locals must still follow a moving parent');
+ }
+ assert.equal(staticCompositions,0,'repeated scene passes must not compose static jungle cells');
  for(const kind of ['treehousemattefar','treehousemattemid']){
   const template=await loadJungleAssetTemplate(kind),position=template.geometry.attributes.position,normal=template.geometry.attributes.normal;
   assert.equal(template,(await loadJungleAssetTemplate(kind)),'matte texture and geometry are cached');

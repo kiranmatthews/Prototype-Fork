@@ -11,7 +11,7 @@ export interface PresentationFrameLimiterStats {
  * work without changing the deterministic simulation's fixed 60 Hz steps.
  */
 export class PresentationFrameLimiter {
-  private lastTimestampMs = 0;
+  private lastTimestampMs: number | null = null;
   private budgetMs = 0;
   private acceptedFrames = 0;
   private skippedFrames = 0;
@@ -28,31 +28,41 @@ export class PresentationFrameLimiter {
       this.acceptedFrames += 1;
       return true;
     }
-    if (this.lastTimestampMs === 0) {
+    if (this.lastTimestampMs === null) {
       this.lastTimestampMs = nowMs;
       this.acceptedFrames += 1;
       return true;
     }
-    const elapsed = Math.min(250, Math.max(0, nowMs - this.lastTimestampMs));
+    const elapsed = Math.max(0, nowMs - this.lastTimestampMs);
     this.lastTimestampMs = nowMs;
-    this.budgetMs += elapsed;
     const interval = 1000 / this.targetFps;
-    // Avoid reducing nominal 59.94/60 Hz rAF to 30 because of sub-ms jitter.
-    if (this.budgetMs < interval - 0.35) {
+    // A stalled callback has missed presentation deadlines. Start a fresh
+    // cadence now instead of spending the missed time on a burst of frames.
+    if (elapsed >= interval * 2) {
+      this.budgetMs = 0;
+      this.acceptedFrames += 1;
+      return true;
+    }
+    this.budgetMs += elapsed;
+    // Timestamp quantization and display-clock jitter must not turn a 60 Hz
+    // display into alternating held/catch-up frames. Early admission borrows
+    // time from the NEXT frame, preserving the long-run cap on faster panels.
+    const tolerance = Math.min(2.1, interval / 8);
+    if (this.budgetMs < interval - tolerance) {
       this.skippedFrames += 1;
       return false;
     }
-    // The tolerance can admit a timestamp fractionally below one interval;
-    // modulo would leave that near-full budget intact and then admit every
-    // subsequent high-refresh rAF. Consume it as a complete presentation.
-    this.budgetMs =
-      this.budgetMs >= interval ? this.budgetMs % interval : 0;
+    // Preserve phase across normal callbacks, including a negative early-frame
+    // balance. Modulo would discard a whole deadline when a slightly slower
+    // 59.94 Hz clock accumulates one interval and introduce an avoidable hitch.
+    // Retain at most one interval when the display cannot meet the target.
+    this.budgetMs = Math.min(this.budgetMs - interval, interval);
     this.acceptedFrames += 1;
     return true;
   }
 
   reset(): void {
-    this.lastTimestampMs = 0;
+    this.lastTimestampMs = null;
     this.budgetMs = 0;
     this.acceptedFrames = 0;
     this.skippedFrames = 0;
@@ -63,7 +73,7 @@ export class PresentationFrameLimiter {
       acceptedFrames: this.acceptedFrames,
       skippedFrames: this.skippedFrames,
       targetFps: this.targetFps,
-      lastTimestampMs: this.lastTimestampMs,
+      lastTimestampMs: this.lastTimestampMs ?? 0,
       budgetMs: this.budgetMs,
     });
   }

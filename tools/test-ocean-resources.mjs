@@ -1,18 +1,15 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
-import { fileURLToPath, pathToFileURL } from "node:url";
-import path from "node:path";
-import ts from "typescript";
+import { createServer } from "vite";
 import * as THREE from "three";
 
-const root = fileURLToPath(new URL("..", import.meta.url));
-const source = await readFile(path.join(root, "src/unityOcean.ts"), "utf8");
-const executable = ts.transpileModule(source, {
-  compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
-}).outputText
-  .replace('from "three"', `from "${pathToFileURL(path.join(root, "node_modules/three/build/three.module.js"))}"`)
-  .replaceAll("import.meta.env.BASE_URL", '"/"');
-const { UnityOcean } = await import(`data:text/javascript;base64,${Buffer.from(executable).toString("base64")}`);
+// Load the actual local dependency graph, including the primary-scene helper.
+const server = await createServer({ appType: "custom", logLevel: "silent", server: { middlewareMode: true } });
+let UnityOcean;
+try {
+  ({ UnityOcean } = await server.ssrLoadModule("/src/unityOcean.ts"));
+} finally {
+  await server.close();
+}
 const originalLoad = THREE.TextureLoader.prototype.load;
 let pending = [];
 THREE.TextureLoader.prototype.load = function (_url, ready) {
@@ -22,6 +19,79 @@ THREE.TextureLoader.prototype.load = function (_url, ready) {
 };
 let cases = 0;
 try {
+  {
+    const ocean = new UnityOcean({ seaLevel: -1, shoreDirX: 1, shoreDirZ: 0,
+      shore: [{ x: 0, z: 20 }, { x: 0, z: -20 }], quality: 'full' });
+    pending.forEach(ready => ready());
+    const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera();
+    camera.position.set(0, 4, 10);
+    const solid = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshBasicMaterial());
+    const glass = new THREE.Mesh(solid.geometry, new THREE.MeshBasicMaterial({ transparent: true }));
+    const faded = new THREE.Mesh(solid.geometry, new THREE.MeshBasicMaterial({ opacity: .5 }));
+    const mixed = new THREE.Mesh(solid.geometry, [solid.material, glass.material]);
+    const backdrop = new THREE.Mesh(solid.geometry, glass.material);
+    backdrop.userData.oceanOpaqueBackdrop = true;
+    const hidden = new THREE.Group(); hidden.visible = false;
+    const unvisited = new THREE.Object3D();
+    Object.defineProperty(unvisited, 'material', { get() { throw new Error('invisible branch was visited'); } });
+    hidden.add(unvisited);
+    const transparentChild = new THREE.Object3D();
+    Object.defineProperty(transparentChild, 'material', { get() { throw new Error('transparent branch was visited'); } });
+    glass.add(transparentChild);
+    scene.add(ocean.group, solid, glass, faded, mixed, backdrop, hidden);
+    scene.fog = new THREE.Fog(0xffffff, 1, 100);
+    const originalTarget = {}, originalFog = scene.fog;
+    let activeTarget = originalTarget, clears = 0, shadowDraws = 0, shouldThrow = false;
+    const renderer = {
+      xr: { enabled: true }, autoClear: true,
+      shadowMap: { enabled: true, autoUpdate: true, needsUpdate: true },
+      getDrawingBufferSize: size => size.set(320, 180), getPixelRatio: () => 1,
+      getRenderTarget: () => activeTarget, setRenderTarget: target => { activeTarget = target; },
+      clear: () => clears++,
+      render() {
+        if (this.autoClear) clears++;
+        if (this.shadowMap.enabled && (this.shadowMap.autoUpdate || this.shadowMap.needsUpdate)) {
+          shadowDraws++; this.shadowMap.needsUpdate = false;
+        }
+        assert.equal(ocean.group.visible, false);
+        if (activeTarget === ocean.prepassTarget) {
+          assert.equal(solid.visible, true); assert.equal(backdrop.visible, true);
+          assert.equal(glass.visible, false); assert.equal(faded.visible, false); assert.equal(mixed.visible, false);
+          assert.equal(hidden.visible, false); assert.equal(transparentChild.visible, true);
+        }
+        if (shouldThrow) throw new Error('synthetic render failure');
+      },
+    };
+    const assertRestored = () => {
+      assert.equal(activeTarget, originalTarget); assert.equal(renderer.xr.enabled, true);
+      assert.equal(renderer.autoClear, true); assert.equal(renderer.shadowMap.enabled, true);
+      assert.equal(renderer.shadowMap.autoUpdate, true); assert.equal(renderer.shadowMap.needsUpdate, true);
+      assert.equal(scene.fog, originalFog); assert.equal(ocean.group.visible, true);
+      for (const object of [solid, glass, faded, mixed, backdrop, transparentChild]) assert.equal(object.visible, true);
+      assert.equal(hidden.visible, false); assert.equal(ocean.prepassHidden.length, 0);
+    };
+    for (const failure of [false, true]) {
+      shouldThrow = failure;
+      for (const method of ['renderPrepass', 'renderReflection']) {
+        const before = clears;
+        if (failure) assert.throws(() => ocean[method](renderer, scene, camera), /synthetic render failure/);
+        else ocean[method](renderer, scene, camera);
+        assert.equal(clears, before + 1, 'each auxiliary pass clears exactly once');
+        assertRestored();
+      }
+    }
+    assert.equal(shadowDraws, 0, 'auxiliary views must preserve a pending primary shadow refresh');
+    shouldThrow = false;
+    // Material replacement and editor opacity changes apply on the next frame.
+    const replacement = new THREE.MeshBasicMaterial(); glass.remove(transparentChild); glass.material = replacement;
+    faded.material.opacity = 1; mixed.material = replacement;
+    renderer.render = () => {
+      assert.equal(glass.visible, true); assert.equal(faded.visible, true); assert.equal(mixed.visible, true);
+    };
+    ocean.renderPrepass(renderer, scene, camera); assertRestored();
+    for (const material of new Set([solid.material, backdrop.material, faded.material, replacement])) material.dispose();
+    solid.geometry.dispose(); ocean.dispose(); cases++;
+  }
   {
     const ocean=new UnityOcean({seaLevel:-1,shoreDirX:1,shoreDirZ:0,shore:[{x:0,z:20},{x:0,z:-20}],quality:'full'});
     let visible=false,deleted=0,passes=0,valid=true;
@@ -74,4 +144,4 @@ try {
     cases++;
   }
 } finally { THREE.TextureLoader.prototype.load = originalLoad; }
-console.log(`PASS ${cases} actual ocean sampler ownership, quality-switch, late-load and idempotent disposal cases`);
+console.log(`PASS ${cases} ocean pass visibility, shadow isolation, clear count, failure recovery, sampler ownership and disposal cases`);
