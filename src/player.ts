@@ -1,6 +1,7 @@
 import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';
 import { SkateBalanceArms, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
 import { skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
+import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
 // Authored fake-physics board movement. No rigidbody, no forces: just a
 // heading, a scalar speed, a vertical velocity, and hand-tuned numbers from
 // tuning.ts. Ground following is a single downward raycast; slopes only exist
@@ -289,6 +290,7 @@ export type PlayerAnimationClipHint =
   | 'player.swim-idle'
   | 'player.idle'
   | 'player.run'
+  | 'player.ice-walk'
   | 'player.jump'
   | 'player.double-jump'
   | 'player.slide-jump'
@@ -1836,6 +1838,14 @@ export class Player {
     }
     if (this.freeSkate || this.skatePose > 0.25 || this.deckPose > 0.25) return 'player.skate';
     if (this.charging && this.chargePlanted) return JUMP_CHARGE_CLIP_ID;
+    // Ice owns a separate foot cycle while pushing against low traction or
+    // coasting. Read self-propelled momentum, never platform carry or a new
+    // movement state. All action and board owners have already taken priority.
+    if (this.state === 'ride' && this.worldMapBaseScale === null && this.groundHit?.slippy &&
+        !this.slipping && !this.teetering && this.teeterPose < .01 &&
+        (this.animationPlanarSpeed > RUN_ANIMATION_THRESHOLD ||
+          Math.hypot(this.rawInput?.moveX ?? 0, this.rawInput?.moveY ?? 0) > .08))
+      return ICE_WALK_CLIP_ID;
     return this.walkTurnaround || this.animationPlanarSpeed > RUN_ANIMATION_THRESHOLD ? 'player.run' : 'player.idle';
   }
 
@@ -1957,6 +1967,13 @@ export class Player {
     }
     actionProgress = THREE.MathUtils.clamp(actionProgress, 0, 1);
     const travelSign = Math.sign(this.speed);
+    const iceWalking = clipId === ICE_WALK_CLIP_ID;
+    const iceEffort = iceWalking ? THREE.MathUtils.clamp(
+      Math.hypot(this.rawInput?.moveX ?? 0, this.rawInput?.moveY ?? 0) +
+      this.walkVelocity.distanceTo(this.walkTarget) / Math.max(.001, TUNING.walkSpeed), 0, 1) : 0;
+    const iceSideSlip = iceWalking ? THREE.MathUtils.clamp(
+      (this.walkVelocity.x * Math.cos(this.visualYaw) - this.walkVelocity.z * Math.sin(this.visualYaw)) /
+      Math.max(.001, TUNING.walkSpeed), -1, 1) : 0;
     return {
       clipId,
       presentation: this.worldMapBaseScale === null ? 'gameplay' : 'world-map',
@@ -1968,6 +1985,8 @@ export class Player {
         actionProgress,
         inputs: {
           travelSign,
+          iceEffort,
+          iceSideSlip,
           [RUN_MOVE_INTENT_INPUT]: this.worldMapBaseScale === null
             ? Math.min(1, Math.hypot(this.rawInput?.moveX ?? 0, this.rawInput?.moveY ?? 0)) : 0,
           swimCadence: this.swimming ? Math.max(.8, this.swimVelocity.length() / SWIMMING.speed) : 1,

@@ -1,5 +1,6 @@
 import type { Player, PlayerAnimationClipHint } from './player';
 import { JUMP_CHARGE_CLIP_ID } from './animation/jumpCharge';
+import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
 import { RUN_STOP_CLIP_ID, RUN_MOVE_INTENT_INPUT, RUN_STOP_COAST_FRACTION } from './animation/runStop';
 import {
   RigBinding,
@@ -150,6 +151,8 @@ const AIRBORNE_CLIP_IDS = new Set<ClipId>([
 
 function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId): number {
   if (!from) return 0;
+  if (to === ICE_WALK_CLIP_ID) return .18;
+  if (from === ICE_WALK_CLIP_ID) return .16;
   if (from === JUMP_CHARGE_CLIP_ID || to === JUMP_CHARGE_CLIP_ID) return .10;
   if (to === RUN_STOP_CLIP_ID) return .10;
   if (from === RUN_STOP_CLIP_ID) return .12;
@@ -508,7 +511,7 @@ export class CharacterAnimationRuntime {
         if (
           !grounded ||
           hint === 'player.bail' || hint === 'player.death' ||
-          (hint !== 'player.run' && hint !== 'player.idle')
+          (hint !== 'player.run' && hint !== 'player.idle' && hint !== ICE_WALK_CLIP_ID)
         ) {
           this.cancelTransient();
         }
@@ -1003,6 +1006,8 @@ export class CharacterAnimationRuntime {
     clip: AnimationClip,
     motion: ProceduralMotionContext,
   ): number {
+    if (this.manualClipId === null && clip.id === ICE_WALK_CLIP_ID)
+      return .55 + .55 * motion.normalizedSpeed + .3 * (motion.inputs?.iceEffort ?? 0);
     if (this.manualClipId === null && clip.id === 'player.swim')
       return Math.max(.8, Math.min(1.5, motion.inputs?.swimCadence ?? 1));
     if (this.manualClipId !== null || clip.id !== 'player.run') return 1;
@@ -1106,6 +1111,7 @@ export function createCharacterAnimationRuntime(
 /** The gameplay-owned routes, useful for diagnostics and completeness tests. */
 export const PLAYER_STATE_CLIP_IDS: readonly PlayerAnimationClipHint[] = [
   JUMP_CHARGE_CLIP_ID,
+  ICE_WALK_CLIP_ID,
   'player.swim',
   'player.swim-idle',
   'player.idle',

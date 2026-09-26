@@ -7,6 +7,7 @@ import { QUATERNIUS_SWIM_IDLE_DURATION, QUATERNIUS_SWIM_IDLE_ROOT_KEYS,
 import * as THREE from 'three';
 import { JUMP_CHARGE_CLIP_ID } from './jumpCharge';
 import { RUN_STOP_CLIP_ID, RUN_STOP_DURATION } from './runStop';
+import { buildIceWalkClip, ICE_WALK_CLIP_ID } from './iceWalk';
 import { QUATERNIUS_IDLE_DURATION, QUATERNIUS_IDLE_ROOT_KEYS,
   QUATERNIUS_IDLE_ROTATION_KEYS, QUATERNIUS_IDLE_SOURCE } from './quaterniusIdle.generated';
 import { CROUCH_CLIP_IDS, CROUCH_TRANSITION_DURATION, QUATERNIUS_CRAWL_PALMS, QUATERNIUS_LOW_POSE_OWNERSHIP } from './crouch';
@@ -106,6 +107,7 @@ export const PLAYER_DEFORMATION_CONTROLS = {
 export const PLAYER_STARTER_CLIP_IDS = [
   'player.idle',
   'player.walk',
+  ICE_WALK_CLIP_ID,
   'player.swim',
   'player.swim-idle',
   'player.run',
@@ -142,7 +144,7 @@ export const PLAYER_STARTER_CLIP_IDS = [
  * newly introduced starters and upgrade an exact untouched source starter,
  * without resurrecting deletions or overwriting browser-authored work.
  */
-export const PLAYER_STARTER_CATALOG_VERSION = 31;
+export const PLAYER_STARTER_CATALOG_VERSION = 32;
 export const UNITY_CRAWL_CONTACT_ADAPTATION =
   'runtime-and-studio palm-down ground socket IK';
 
@@ -402,6 +404,7 @@ const PLAYER_STARTER_CLIP_INTRODUCED_IN_VERSION: Record<
 > = {
   'player.idle': 1,
   'player.walk': 17,
+  [ICE_WALK_CLIP_ID]: 32,
   'player.swim': 20,
   'player.swim-idle': 20,
   'player.run': 1,
@@ -1529,6 +1532,7 @@ export function createPlayerStarterClips(
   return [
     buildIdle(rigId, includeTorsoRoot),
     buildWalk(rigId, includeTorsoRoot),
+    buildIceWalkClip(rigId, includeTorsoRoot),
     buildSwim(rigId, includeTorsoRoot, false),
     buildSwim(rigId, includeTorsoRoot, true),
     buildRun(rigId, includeTorsoRoot),

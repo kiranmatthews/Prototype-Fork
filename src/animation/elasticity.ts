@@ -10,6 +10,7 @@ export const CHARACTER_ELASTICITY_REVISION = 1;
 type Amplitudes = readonly [number,number,number,number,number];
 const PROFILES:Record<string,Amplitudes> = {
   idle:[.022,.012,.022,.008,.010], walk:[.040,.020,.035,.035,.048], run:[.070,.025,.050,.055,.080],
+  'ice-walk':[.045,.025,.055,.008,.012], // delayed balance arms, restrained leg lengths keep low scuffs
   'swim-idle':[.025,.035,.045,.015,.022], swim:[.055,.060,.090,.045,.060],
   'jump-charge':[.06,.04,.06,.035,.045], 'run-stop':[.05,.035,.05,.025,.04],
   jump:[.12,.08,.12,.12,.15], 'double-jump':[.12,.08,.12,.12,.15], 'slide-jump':[.12,.08,.12,.12,.15],
@@ -54,7 +55,7 @@ export function withCharacterElasticity(clip:AnimationClip,rig?:RigDefinition):A
     if(!amplitude||owned.has(target)||rig&&!rig.controls.some(c=>c.id===target))continue;
     const id=`${clip.id}:elasticity:${target}`;
     if(loop){
-      const cycles=name==='run'||name==='walk'||name==='crawl'?2:1;
+      const cycles=name==='run'||name==='walk'||name==='ice-walk'||name==='crawl'?2:1;
       drivers.push(createProceduralDriver('oscillator',{kind:'scalar',target,baseValue:1},{
         id,name:`Elasticity · ${target}`,order:700+drivers.length,blend:'multiply',source:'time',
         frequency:cycles/Math.max(.001,clip.duration),phase:part===2?.10:part===1?.05:0,
