@@ -38,6 +38,12 @@ try {
     player.rawInput = makeInput(); player.respawn(level, true);
     const tick = overrides => {
       const input = makeInput(overrides);
+      // Match Input.poll's unit clamp and replay quantization, including
+      // keyboard diagonals. Test pilots must not receive faster air steering.
+      const magnitude=Math.hypot(input.moveX,input.moveY);
+      if(magnitude>1){input.moveX/=magnitude;input.moveY/=magnitude;}
+      input.moveX=Math.round(input.moveX*100)/100;
+      input.moveY=Math.round(input.moveY*100)/100;
       player.step(dt, input, level); level.update(dt);
     };
     const fixture = { level, player, tick };
@@ -180,7 +186,7 @@ try {
       const dx=x-p.pos.x,dv=v+p.pos.z;
       if(Math.abs(dx)<.1 && Math.abs(dv)<.1)break;
       f.tick({moveX:Math.abs(dx)>.09?Math.sign(dx)*.15:0,moveY:Math.abs(dv)>.09?Math.sign(dv)*.15:0});
-      assert.ok(p.grounded && !p.isBailing,'lost balcony support while positioning for jump');
+      assert.ok(p.grounded && !p.isBailing,'lost roof or balcony support while positioning for jump');
     }
     for(let frame=0;frame<30;frame++)f.tick({});
     assert.ok(Math.abs(p.pos.x-x)<.15 && Math.abs(-p.pos.z-v)<.15,
@@ -208,7 +214,13 @@ try {
       x-Math.sign(x)*Math.min(i,3)*2,bridgeY,bFirst+i*5.4,
     ]);
     piers.push([0,bridgeY,exit+1]);
-    const bridge=precisionRun(f,null,piers);
+    const bridge=[];
+    for(let i=0;i<piers.length;i++) {
+      // A real diagonal uses Input.poll's normalized stick. Move within the
+      // current 2.88m deck before committing to the next 5.4m transfer.
+      if(i>0)walkTo(f,piers[i-1][0],piers[i-1][2]+.6);
+      bridge.push(...precisionRun(f,null,[piers[i]]));
+    }
     return {scaffoldLandings:scaffold,bridgeLandings:bridge};
   });
 
@@ -241,20 +253,15 @@ try {
       return {landingV:+result.v.toFixed(2)};
     });
 
-  // These are the narrowest rising routes: source cube footprints overlap in
-  // X, allowing deliberate edge launches without assuming diagonal overspeed.
-  for(const [index,centres,count] of [[3,[35,44,53,62,71,80],6],[6,[36,47,58,69],4],[13,[34,45,56],3]])
-    check(`2.4m rising cube sequence: section ${index+1}`,()=>{
+  // The new structures have joined roof treads. Measure each exposed 2.4m
+  // riser from supported takeoff positions, including the courtyard entry bar.
+  for(const [index,x,risers] of [[3,0,[30,39.6,49.2,58.8,68.4,78]],
+    [6,-4.8,[27,39.6,49.2,58.8]],[13,0,[26.8,36.4,46]]])
+    check(`Charged foot jumps climb 2.4m building risers: section ${index+1}`,()=>{
       const f=localSection(index),landings=[];
-      for(let i=0;i<count;i++) {
-        const near=centres[i]-3.59;
-        // Escarpment alternates across an almost-touching lateral seam;
-        // the other two masses have a central strip shared by both stacks.
-        const targetX=index===3?(i%2?.65:-.65):0;
-        const x=index===3 && i>0?-targetX:targetX;
-        const result=jump(f,{x,y:i*2.4,v:index===3 && i===0?26.85:near-4.2,
-          ...(index===3 && i>0?{steer:(_frame,p)=>({moveY:1,moveX:Math.abs(p.pos.x-targetX)>.1?Math.sign(targetX-p.pos.x):0})}:{})});
-        landing(result,(i+1)*2.4,near,`cube ${i+1}`);landings.push(+result.v.toFixed(2));
+      for(let i=0;i<risers.length;i++) {
+        const near=risers[i],result=jump(f,{x,y:i*2.4,v:near-4.2});
+        landing(result,(i+1)*2.4,near,`building riser ${i+1}`);landings.push(+result.v.toFixed(2));
       }
       return {landings};
     });
@@ -320,36 +327,51 @@ try {
     return {landing:[+p.pos.x.toFixed(2),+p.pos.y.toFixed(2),+(-p.pos.z).toFixed(2)],airFrames};
   });
 
-  check('Cathedral alternating cube shoulders are reachable from real support',()=>{
-    const f=localSection(8),landings=[];
-    for(let i=0;i<6;i++) {
-      const near=39+i*12-4.79,y=Math.min(i+1,4)*2.4,oldY=Math.min(i,4)*2.4;
-      const targetX=i%2?.65:-.65,x=i>0?-targetX:targetX;
-      const result=jump(f,{x,y:oldY,v:near-4.2,
-        ...(i>0?{steer:(_frame,p)=>({moveY:1,moveX:Math.abs(p.pos.x-targetX)>.1?Math.sign(targetX-p.pos.x):0})}:{})});
-      landing(result,y,near,`cathedral shoulder ${i+1}`);landings.push(+result.v.toFixed(2));
-    }
-    return {landings};
-  });
-
-  for(const [index,centres,depth,count,exitV]of [[3,[35,44,53,62,71,80],7.18,6,85],
-    [6,[36,47,58,69,80,91,102,113],7.18,8,121],
-    [8,[39,51,63,75,87,99],9.58,6,109],[13,[34,45,56],7.18,3,64]])
-    check(`Continuous charged cube climb with real terrace positioning: section ${index+1}`,()=>{
+  // Section 9's former isolated towers are now a machine hall; its complete
+  // paired-lift route is exercised by test-blockworks-movers.mjs.
+  for(const [index,risers,exitV]of [[3,[30,39.6,49.2,58.8,68.4,78],90],
+    [13,[26.8,36.4,46],60.4]])
+    check(`Continuous joined-building roof climb and walkable exit: section ${index+1}`,()=>{
       const f=localSection(index),p=f.player,landings=[];
-      const alternate=index===3 || index===8;
-      const firstNear=centres[0]-depth/2;
-      position(f,alternate?-.65:0,0,index===3?26.85:firstNear-4);
-      for(let i=0;i<count;i++) {
-        const near=centres[i]-depth/2,targetX=alternate?(i%2?.65:-.65):0;
-        if(i>0)walkTo(f,p.pos.x,near-4);
-        const top=index===8?Math.min(i+1,4)*2.4:index===6?[2.4,4.8,7.2,9.6,7.2,4.8,7.2,4.8][i]:(i+1)*2.4;
-        landings.push(...precisionRun(f,null,[[targetX,top,near+.2]]));
+      position(f,0,0,risers[0]-4);
+      for(let i=0;i<risers.length;i++) {
+        const near=risers[i];
+        if(i>0)walkTo(f,0,near-4);
+        landings.push(...precisionRun(f,null,[[0,(i+1)*2.4,near+.2]]));
       }
-      walkTo(f,p.pos.x,centres[count-1]+depth/2-.24);
-      landings.push(...precisionRun(f,null,[[p.pos.x,p.pos.y,exitV+.2]]));
-      return {landings};
+      // Walk across the last solid roof connection; no last-gap jump or
+      // invented airborne handoff may hide a seam in the authored building.
+      while(exitV+.2+p.pos.z>7)walkTo(f,0,-p.pos.z+6);
+      walkTo(f,0,exitV+.2);
+      assert.ok(Math.abs(p.pos.y-risers.length*2.4)<.06);
+      return {landings,walkedExit:[+p.pos.x.toFixed(2),+p.pos.y.toFixed(2),+(-p.pos.z).toFixed(2)]};
     });
+
+  check('Continuous courtyard factory route climbs west wing, crosses headhouse and descends east roofs',()=>{
+    const f=localSection(6),p=f.player,landings=[];
+    const risers=[27,39.6,49.2,58.8];
+    position(f,-4.8,0,23);
+    for(let i=0;i<risers.length;i++) {
+      if(i>0)walkTo(f,-4.8,risers[i]-4);
+      landings.push(...precisionRun(f,null,[[-4.8,(i+1)*2.4,risers[i]+.2]]));
+    }
+    // The aligned roof at v69.6 connects both wings on the same cube grid.
+    walkTo(f,-4.8,65);walkTo(f,-4.8,69.6);
+    walkTo(f,0,69.6);walkTo(f,4.8,69.6);
+    assert.ok(Math.abs(p.pos.y-9.6)<.06,'headhouse crossing left the upper roof');
+    const crossCourt=[+p.pos.x.toFixed(2),+p.pos.y.toFixed(2),+(-p.pos.z).toFixed(2)];
+    walkTo(f,4.8,72.6);
+    landings.push(...precisionRun(f,null,[[4.8,7.2,78.1]]));
+    walkTo(f,4.8,84.5);
+    landings.push(...precisionRun(f,null,[[4.8,4.8,89.4]]));
+    walkTo(f,4.8,93);
+    landings.push(...precisionRun(f,null,[[4.8,7.2,97.4]]));
+    walkTo(f,4.8,103.2);walkTo(f,4.8,108.5);
+    landings.push(...precisionRun(f,null,[[4.8,4.8,113.4]]));
+    walkTo(f,4.8,121.4);
+    assert.ok(Math.abs(p.pos.y-4.8)<.06,'east roof failed to join the exit court');
+    return {landings,crossCourt,walkedExit:[+p.pos.x.toFixed(2),+p.pos.y.toFixed(2),+(-p.pos.z).toFixed(2)]};
+  });
 
   check('Actual ramp approaches conserve climb into both kicker gaps',()=>{
     const runs=[];

@@ -1050,13 +1050,20 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   }
   d.components = d.components.map((c) => {
     delete c.trafficRoad;
-    if (c.t === "worldmap" && c.pts?.length === 13) {
-      // Nightworks and Slipstream exchanged campaign-map slots. Move only an
-      // untouched default map; authored hub positions remain user-owned.
+    if (c.t === "worldmap" && c.pts && (c.pts.length === 12 || c.pts.length === 13)) {
+      // Blockworks moved before the Island 2 finale. Its append-only identity
+      // is unchanged; untouched captures adopt the route, custom knots stay put.
       const defaults = worldMapComponentPoints();
-      const previousDefaults = defaults.map(p => [...p]);
-      [previousDefaults[3], previousDefaults[4]] = [previousDefaults[4], previousDefaults[3]];
-      if (c.pts.every((p, i) => p.length === 4 && p.every((v, j) => v === previousDefaults[i][j])))
+      const previousDefaults = defaults.slice(0, c.pts.length).map(p => [...p]);
+      previousDefaults[8] = [104, 14, 0, 3.1];
+      previousDefaults[9] = [-71, -1, 0, 11];
+      // Also recognize the earlier Nightworks/Slipstream slot exchange.
+      const previousNightworksOrder = previousDefaults.map(p => [...p]);
+      [previousNightworksOrder[3], previousNightworksOrder[4]] = [previousNightworksOrder[4], previousNightworksOrder[3]];
+      const swappedDefaults = defaults.slice(0, c.pts.length).map(p => [...p]);
+      [swappedDefaults[3], swappedDefaults[4]] = [swappedDefaults[4], swappedDefaults[3]];
+      if ([previousDefaults, previousNightworksOrder, swappedDefaults].some(prior =>
+        c.pts!.every((p, i) => p.length === 4 && p.every((v, j) => v === prior[i][j]))))
         return { ...c, pts: defaults };
     }
     if(c.t==='worldmap'&&c.pts?.length===11) {
@@ -1066,6 +1073,8 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
     if (c.t === "worldmap" && c.pts?.length === 11) {
       const defaults = worldMapComponentPoints();
       const previousDefaults = defaults.slice(0, 11).map(p => [...p]);
+      previousDefaults[8] = [104, 14, 0, 3.1];
+      previousDefaults[9] = [-71, -1, 0, 11];
       previousDefaults[4][0] = -31; // Nightworks' old island-end slot becomes the cup.
       if (c.pts.every((p,i) => p.length === 4 && p.every((v,j) => v === previousDefaults[i][j])))
         return {...c,pts:defaults};

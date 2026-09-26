@@ -403,7 +403,7 @@ console.error = (...args) => {
 
 let warpLevel = null;
 try {
-  const { BUILTIN_LEVELS, Level } = await server.ssrLoadModule("/src/level.ts");
+  const { BUILTIN_LEVELS, Level, normalizeCustomLevelData, worldMapComponentPoints } = await server.ssrLoadModule("/src/level.ts");
   const { Player } = await server.ssrLoadModule("/src/player.ts");
   const {
     CAMPAIGN_ISLANDS,
@@ -420,6 +420,20 @@ try {
   const { swirls } = await server.ssrLoadModule("/src/swirls.ts");
 
   assert.equal(CAMPAIGN_LEVELS.length, 13);
+  const previousMapPoints = [[-151,22,0,1.35],[-111,22,0,4],[-71,22,0,6],[-47,22,0,3],[-111,-1,0,9],
+    [48,16,0,1.35],[67,14,0,1.75],[86,14,0,2.4],[104,14,0,3.1],[-71,-1,0,11],[67,26,0,2.3],[-31,22,0,3.8],[-175,22,0,1.35]];
+  const previousMap = {v:1,name:'Previous default map',spawn:[0,1,0],killY:-20,hudMode:'hub',
+    components:[{t:'worldmap',p:[0,0,0],pts:previousMapPoints}]};
+  const upgradedMap = normalizeCustomLevelData(previousMap);
+  assert.deepEqual(upgradedMap.components[0].pts, worldMapComponentPoints(), 'default editor map must move Blockworks before the finale');
+  assert.deepEqual(normalizeCustomLevelData(upgradedMap), upgradedMap, 'map move must be idempotent');
+  const previousTwelveHubMap = structuredClone(previousMap); previousTwelveHubMap.components[0].pts.pop();
+  assert.deepEqual(normalizeCustomLevelData(previousTwelveHubMap).components[0].pts, worldMapComponentPoints(), 'pre-Treehouse default must move Blockworks while appending the new opening hub');
+  const oldSwapMap = structuredClone(previousMap);
+  [oldSwapMap.components[0].pts[3],oldSwapMap.components[0].pts[4]] = [oldSwapMap.components[0].pts[4],oldSwapMap.components[0].pts[3]];
+  assert.deepEqual(normalizeCustomLevelData(oldSwapMap).components[0].pts, worldMapComponentPoints(), 'earlier source map must migrate through both reorders');
+  const authoredMap = structuredClone(previousMap); authoredMap.components[0].pts[9][0] += 2;
+  assert.deepEqual(normalizeCustomLevelData(authoredMap).components[0].pts, authoredMap.components[0].pts, 'map move must preserve authored hub positions');
   assert.equal(
     new Set(CAMPAIGN_LEVELS.map(({ progressKey }) => progressKey)).size,
     CAMPAIGN_LEVELS.length,
@@ -895,14 +909,20 @@ try {
       boxGem: false,
       comboGem: false,
     });
-  controller.activate(warpLevel, "nightworks");
+  for (const id of ['beachfront','coastal-street-run']) controllerStore.commitClear(id, {});
+  controller.activate(warpLevel, "coastal");
   controllerModes.length = 0;
   assert.equal(controller.navigate(1, 0), true);
   for (let frame = 0; frame < 240 && controller.moving; frame++)
     controller.step(1 / 60, neutralInput);
-  assert.equal(controller.selectedKey, "codex-switchback");
+  assert.equal(controller.selectedKey, "island-hopper");
   assert.ok(controllerModes.includes("walk"), "boardslide has no canned mount/landing beat");
   assert.ok(controllerModes.includes("boardslide"), "boardslide rail pose was never presented");
+  controllerStore.commitClear('island-hopper', {}); controller.refresh();
+  assert.equal(controller.navigate(1,0), true, 'Island Hopper must lead right to Blockworks');
+  for(let frame=0;frame<240&&controller.moving;frame++)controller.step(1/60,neutralInput);
+  assert.equal(controller.selectedKey, 'codex-switchback');
+  assert.equal(controller.navigate(1,0), false, 'Jungle Gate must wait for the Blockworks clear');
   controller.revealUnlocks(["slipstream"]);
   const revealedNode = warpLevel.campaignWorldMap.nodeByKey.get("slipstream");
   assert.ok(revealedNode.unlockReveal > 2, "new path reveal did not arm its hub pulse");
@@ -913,17 +933,23 @@ try {
   controller.openSection("progress");
   assert.deepEqual(entered, ["codex-lab"]);
   assert.deepEqual(sections, ["progress"]);
+  controllerStore.commitClear('codex-lab', {crystal:true});controller.refresh();
+  assert.equal(controller.navigate(1,0), true, 'Blockworks clear must reveal Jungle Gate');
+  for(let frame=0;frame<240&&controller.moving;frame++)controller.step(1/60,neutralInput);
+  assert.equal(controller.selectedKey, 'jungle-gate');
+  assert.equal(controller.navigate(-1,0), true);
+  for(let frame=0;frame<240&&controller.moving;frame++)controller.step(1/60,neutralInput);
+  assert.equal(controller.selectedKey, 'codex-switchback', 'return from the finale must reach Blockworks');
   controller.activate(warpLevel, "jungle");
   assert.equal(controller.travelTo("slipstream"), true);
   assert.equal(controller.enterSelected(), false, "a queued touch route entered a level mid-travel");
   for (let frame = 0; frame < 1200 && controller.moving; frame++) controller.step(1 / 60, neutralInput);
   assert.equal(controller.selectedKey, "slipstream", "direct hub tap did not follow multiple unlocked edges");
   assert.equal(controllerStore.recommendedMapLevelKey(), "slipstream");
-  // Side route: horizontal traversal stays within the branch; vertical slots
-  // return only at the authored junctions. No accidental diagonal fallback.
+  // Nightworks is now an optional single-hub branch with the same entrance.
+  // It cannot route across the islands to Blockworks's historical identity.
   controller.activate(warpLevel, 'test-course');
-  for (const [x,y,key] of [[0,1,'nightworks'],[1,0,'codex-switchback'],[0,-1,'sky-bridge'],
-    [0,1,'codex-switchback'],[-1,0,'nightworks'],[0,-1,'test-course']]) {
+  for (const [x,y,key] of [[0,1,'nightworks'],[0,-1,'test-course']]) {
     assert.equal(controller.navigate(x,y),true);
     for(let frame=0;frame<240&&controller.moving;frame++)controller.step(1/60,neutralInput);
     assert.equal(controller.selectedKey,key);

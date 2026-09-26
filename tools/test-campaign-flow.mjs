@@ -69,8 +69,8 @@ assert.ok(
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ levelKeys }) => levelKeys.length),
-  [8, 5],
-  "the opening island must include Treehouse Trail without removing existing hubs",
+  [7, 6],
+  "Blockworks must move to Island 2 without removing existing hubs",
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ id, name }) => [id, name]),
@@ -90,15 +90,18 @@ assert.deepEqual(
   [],
   "campaign map edge endpoints and direction slots must stay valid",
 );
-const mainPath = ['treehouse-trail','jungle','test-course','sky-bridge','slipstream','jungle-cup','beachside-run','coastal','island-hopper','jungle-gate'];
+const mainPath = ['treehouse-trail','jungle','test-course','sky-bridge','slipstream','jungle-cup','beachside-run','coastal','island-hopper','codex-switchback','jungle-gate'];
 for(let i=1;i<mainPath.length;i++) {
   const edge=campaign.CAMPAIGN_MAP_EDGES.find(e=>e.from===mainPath[i-1]&&e.to===mainPath[i]);
   assert.ok(edge);assert.equal(edge.fromDirection,'right');assert.equal(edge.toDirection,'left');
 }
 assert.deepEqual(campaign.CAMPAIGN_MAP_EDGES.filter(e=>campaign.campaignLevelByKey(e.from).mapPath!==campaign.campaignLevelByKey(e.to).mapPath)
   .map(e=>[e.from,e.to,e.fromDirection,e.toDirection]),[
-  ['test-course','nightworks','up','down'],['codex-switchback','sky-bridge','down','up'],['coastal','chimeworks','down','up'],
+  ['test-course','nightworks','up','down'],['coastal','chimeworks','down','up'],
 ]);
+assert.deepEqual(campaign.CAMPAIGN_ISLANDS[1].levelKeys.slice(-3), ['island-hopper','codex-switchback','jungle-gate']);
+assert.equal(campaign.CAMPAIGN_LEVELS[9].progressKey, 'codex-switchback', 'editable hub identity must stay at index 9');
+assert.equal(campaign.campaignLevelById('codex-lab').islandId, 'island-2');
 
 const graph = new campaign.CampaignStore();
 graph.startEphemeral();
@@ -128,13 +131,18 @@ assert.equal(
 );
 assert.equal(graph.levelUnlocked("codex-switchback"), false);
 graph.commitClear("dark", { crystal: false, boxGem: false, comboGem: false });
-assert.equal(graph.levelUnlocked("codex-switchback"), true);
-graph.commitClear("codex-lab", { crystal: true });
-assert.equal(graph.levelProgress("codex-lab").crystal, true);
-graph.commitClear("slip", {}); graph.commitClear("beachfront", {});
+assert.equal(graph.levelUnlocked("codex-switchback"), false, 'Nightworks no longer unlocks Blockworks');
+graph.commitClear("slip", {}); graph.commitCompetitionWin("jungle-cup"); graph.commitClear("beachfront", {});
 assert.equal(graph.levelUnlocked("chimeworks"), false);
 graph.commitClear("coastal-street-run", {});
 assert.equal(graph.levelUnlocked("chimeworks"), true);
+assert.equal(graph.levelUnlocked("codex-switchback"), false);
+graph.commitClear("island-hopper", {});
+assert.equal(graph.levelUnlocked("codex-switchback"), true);
+assert.equal(graph.levelUnlocked("jungle-gate"), false, 'finale must follow Blockworks');
+graph.commitClear("codex-lab", { crystal: true });
+assert.equal(graph.levelProgress("codex-lab").crystal, true);
+assert.equal(graph.levelUnlocked("jungle-gate"), true);
 graph.commitClear("astra-chimeworks", { crystal: true });
 assert.equal(graph.levelProgress("astra-chimeworks").crystal, true);
 assert.equal(
@@ -520,4 +528,11 @@ for(const id of ['codex-lab','astra-chimeworks']) {
   assert.equal(branchReload.runModesUnlocked(id),true);
 }
 assert.equal(branchReload.recommendedMapLevelKey(),'chimeworks');
+assert.equal(branchReload.levelUnlocked('codex-lab'),true,'a previously cleared Blockworks must stay playable before the new prerequisite');
+branchReload.setMapFocus('codex-switchback');
+assert.equal(branchReload.recommendedMapLevelKey(),'codex-switchback','historical Blockworks focus must retain its stable key');
+const oldFinale=new campaign.CampaignStore();oldFinale.startEphemeral();
+oldFinale.commitClear('jungle-gate-run',{crystal:true});
+assert.equal(oldFinale.levelUnlocked('codex-lab'),false);
+assert.equal(oldFinale.levelUnlocked('jungle-gate-run'),true,'inserting Blockworks must not relock a completed finale');
 console.log("Validated campaign slots, branch identities/awards, working snapshots, autosave, progress and persistent Modern/Classic rules.");

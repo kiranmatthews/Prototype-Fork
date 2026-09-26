@@ -27,7 +27,7 @@ const buttons=document.createElement('div'),status=document.createElement('pre')
 const button=(label:string,fn:()=>void)=>{const b=document.createElement('button');b.textContent=label;b.onclick=fn;buttons.append(b);};
 button('Replay map taps',()=>{frame=0;skids=0;playing=true;map?.activate(game.getLevel(),'jungle');});
 button('Map idle',()=>{playing=false;});
-button('Boardslide route',()=>{playing=false;map?.activate(game.getLevel(),'nightworks');map?.travelTo('codex-switchback');});
+button('Boardslide route',()=>{playing=false;map?.activate(game.getLevel(),'coastal');map?.travelTo('island-hopper');});
 function report(){panel.inert=false;panel.removeAttribute('aria-hidden');const runtime=game.characterAnimationRuntime;
  status.textContent=JSON.stringify({frame,playing,selected:map?.selectedKey,moving:map?.moving,
   presentation:game.player.animationIntent.presentation,clip:runtime.activeClipId,transient:runtime.diagnostics.transientClipId,skidFrames:skids},null,2);

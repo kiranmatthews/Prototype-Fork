@@ -106,14 +106,14 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     name: "Island 1",
     subtitle: "REGION 01",
     centre: [-95, 0, 0],
-    levelKeys: ["treehouse-trail", "jungle", "test-course", "sky-bridge", "nightworks", "codex-switchback", "slipstream", "jungle-cup"],
+    levelKeys: ["treehouse-trail", "jungle", "test-course", "sky-bridge", "nightworks", "slipstream", "jungle-cup"],
   },
   {
     id: "island-2",
     name: "Island 2",
     subtitle: "REGION 02",
     centre: [75, 0, 9],
-    levelKeys: ["beachside-run", "coastal", "chimeworks", "island-hopper", "jungle-gate"],
+    levelKeys: ["beachside-run", "coastal", "chimeworks", "island-hopper", "codex-switchback", "jungle-gate"],
   },
 ] as const;
 
@@ -179,22 +179,6 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     waypoints: [[-51, 4.4, 24]],
   },
   {
-    from: "nightworks",
-    to: "codex-switchback",
-    travel: "boardslide",
-    fromDirection: "right",
-    toDirection: "left",
-    waypoints: [[-91, 13.5, -2]],
-  },
-  {
-    from: "codex-switchback",
-    to: "sky-bridge",
-    travel: "trail",
-    fromDirection: "down",
-    toDirection: "up",
-    waypoints: [[-70, 8.6, 11]],
-  },
-  {
     from: "slipstream",
     to: "jungle-cup",
     travel: "trail",
@@ -236,11 +220,19 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
   },
   {
     from: "island-hopper",
-    to: "jungle-gate",
+    to: "codex-switchback",
     travel: "trail",
     fromDirection: "right",
     toDirection: "left",
     waypoints: [[95, 2.8, 13]],
+  },
+  {
+    from: "codex-switchback",
+    to: "jungle-gate",
+    travel: "trail",
+    fromDirection: "right",
+    toDirection: "left",
+    waypoints: [[113, 3, 13]],
   },
 ] as const;
 
@@ -333,8 +325,8 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
     islandId: "island-2",
     mapPath: "main",
-    mapPosition: [104, 3.1, 14],
-    unlockAfter: ["island-hopper"],
+    mapPosition: [122, 3.1, 14],
+    unlockAfter: ["codex-switchback"],
     boss: true,
   },
   // Append-only identity order keeps existing editor hub indices stable.
@@ -345,10 +337,10 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     levelId: "codex-lab",
     name: "Blockworks",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
-    islandId: "island-1",
-    mapPath: "upper-branch",
-    mapPosition: [-71, 11, -1],
-    unlockAfter: ["nightworks"],
+    islandId: "island-2",
+    mapPath: "main",
+    mapPosition: [104, 2.8, 14],
+    unlockAfter: ["island-hopper"],
   },
   {
     progressKey: "chimeworks",
