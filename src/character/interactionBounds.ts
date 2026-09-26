@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { sharedSkinBoundsKernel, SkinBoundsKernel, type SkinBoundsVertices } from './skinBoundsKernel';
 
 interface CachedMeshBounds {
   geometry: THREE.BufferGeometry;
@@ -6,16 +7,12 @@ interface CachedMeshBounds {
   morphs: number[];
   box: THREE.Box3;
 }
-interface CachedSkinVertices {
+interface CachedSkinVertices extends SkinBoundsVertices {
   attributes: (THREE.BufferAttribute|THREE.InterleavedBufferAttribute)[];
   versions: number[];
   morphs: number[];
   relative: boolean;
   bind: number[];
-  positions: Float64Array;
-  morphDeltas: Float64Array[];
-  indices: Uint32Array;
-  weights: Float64Array;
 }
 const attributeVersion=(a:THREE.BufferAttribute|THREE.InterleavedBufferAttribute)=>'version' in a?a.version:a.data.version;
 
@@ -23,6 +20,7 @@ const attributeVersion=(a:THREE.BufferAttribute|THREE.InterleavedBufferAttribute
  * Only the rider hierarchy participates: boards, shadows and attack VFX are
  * siblings. Hidden alternate heads and comparison meshes cannot inflate it. */
 export class CharacterInteractionBounds {
+  constructor(private readonly boundsKernel:SkinBoundsKernel|null=sharedSkinBoundsKernel) {}
   private readonly cache = new WeakMap<THREE.Mesh,CachedMeshBounds>();
   private readonly point = new THREE.Vector3();
   private readonly transformed = new THREE.Box3();
@@ -190,11 +188,12 @@ export class CharacterInteractionBounds {
     if(mesh.getVertexPosition!==THREE.SkinnedMesh.prototype.getVertexPosition){mesh.computeBoundingBox();return mesh.boundingBox!;}
     let palette=this.skinPalettes.get(skeleton);
     if(!palette){palette=[];this.skinPalettes.set(skeleton,palette);}
-    let affineSkin=true;
+    let affineSkin=true,constantSkin=true;
     for(let i=0;i<skeleton.bones.length;i++){
       (palette[i]??=new THREE.Matrix4()).multiplyMatrices(skeleton.bones[i].matrixWorld,skeleton.boneInverses[i]);
       const m=palette[i].elements;
       affineSkin&&=m[3]===0&&m[7]===0&&m[11]===0&&m[15]===1;
+      constantSkin&&=m[3]===0&&m[7]===0&&m[11]===0&&m[15]!==0;
     }
     const geometry=mesh.geometry,positions=geometry.getAttribute('position');
     const indices=geometry.getAttribute('skinIndex'),weights=geometry.getAttribute('skinWeight');
@@ -205,25 +204,33 @@ export class CharacterInteractionBounds {
     if(!cached||attributes.length!==cached.attributes.length||attributes.some((a,i)=>a!==cached!.attributes[i]||attributeVersion(a)!==cached!.versions[i])||
       geometry.morphTargetsRelative!==cached.relative||(!linearBind&&(morphs.length!==cached.morphs.length||morphs.some((v,i)=>v!==cached!.morphs[i])))||bind.some((v,i)=>v!==cached!.bind[i])){
       cached={attributes,versions:attributes.map(attributeVersion),morphs:[...morphs],relative:geometry.morphTargetsRelative,bind:[...mesh.bindMatrix.elements],
-        positions:new Float64Array(positions.count*3),morphDeltas:linearBind?(geometry.morphAttributes.position??[]).map(()=>new Float64Array(positions.count*3)):[],indices:new Uint32Array(positions.count*4),weights:new Float64Array(positions.count*4)};
+        positions:new Float64Array(positions.count*3),morphDeltas:linearBind?(geometry.morphAttributes.position??[]).map(()=>new Float64Array(positions.count*3)):[],indices:new Uint32Array(positions.count*4),weights:new Float64Array(positions.count*4),kernelInputsFinite:true,highestWeightedIndex:-1};
       for(let i=0;i<positions.count;i++){
         // Morph and bind-space vertices only change on geometry/shape edits,
         // not when a bone moves. Keep double precision, matching Vector3.
         if(linearBind)this.skinBase.fromBufferAttribute(positions,i).applyMatrix4(mesh.bindMatrix);
         else THREE.Mesh.prototype.getVertexPosition.call(mesh,i,this.skinBase).applyMatrix4(mesh.bindMatrix);
         this.skinBase.toArray(cached.positions,i*3);
+        cached.kernelInputsFinite&&=Number.isFinite(this.skinBase.x)&&Number.isFinite(this.skinBase.y)&&Number.isFinite(this.skinBase.z);
         for(let m=0;m<cached.morphDeltas.length;m++){
           const target=geometry.morphAttributes.position[m],relative=geometry.morphTargetsRelative;
           const x=target.getX(i)-(relative?0:positions.getX(i)),y=target.getY(i)-(relative?0:positions.getY(i)),z=target.getZ(i)-(relative?0:positions.getZ(i));
           const delta=cached.morphDeltas[m];delta[i*3]=bind[0]*x+bind[4]*y+bind[8]*z;delta[i*3+1]=bind[1]*x+bind[5]*y+bind[9]*z;delta[i*3+2]=bind[2]*x+bind[6]*y+bind[10]*z;
+          cached.kernelInputsFinite&&=Number.isFinite(delta[i*3])&&Number.isFinite(delta[i*3+1])&&Number.isFinite(delta[i*3+2]);
         }
-        for(let c=0;c<4;c++){cached.indices[i*4+c]=indices.getComponent(i,c);cached.weights[i*4+c]=weights.getComponent(i,c);}
+        for(let c=0;c<4;c++){
+          const offset=i*4+c;cached.indices[offset]=indices.getComponent(i,c);cached.weights[offset]=weights.getComponent(i,c);
+          cached.kernelInputsFinite&&=Number.isFinite(cached.weights[offset]);
+          if(cached.weights[offset]!==0)cached.highestWeightedIndex=Math.max(cached.highestWeightedIndex,cached.indices[offset]);
+        }
       }
       this.skinVertices.set(mesh,cached);
     }
     const box=mesh.boundingBox??=new THREE.Box3();box.makeEmpty();
     const base=cached.positions,skinIndices=cached.indices,skinWeights=cached.weights,inv=mesh.bindMatrixInverse.elements;
     const affineInverse=inv[3]===0&&inv[7]===0&&inv[11]===0&&inv[15]===1;
+    const constantInverse=inv[3]===0&&inv[7]===0&&inv[11]===0&&inv[15]!==0;
+    if(this.boundsKernel?.measure(cached,morphs,palette,inv,box,linearBind&&constantSkin&&constantInverse))return box;
     for(let i=0;i<positions.count;i++){
       let x=base[i*3],y=base[i*3+1],z=base[i*3+2],sx=0,sy=0,sz=0;
       for(let m=0;m<cached.morphDeltas.length;m++){

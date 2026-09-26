@@ -37,7 +37,11 @@ try{
   if(id==='sky'){
    await page.evaluate(()=>window.__game.crtGuestSettings.setEnabled(true));
    await page.waitForFunction(()=>window.__game.getCrtDiagnostics()?.active);
-   assert.equal(await page.evaluate(()=>window.__game.getCrtDiagnostics().lastDrawCount),11,'gameplay uses fused CRT output');
+   assert.equal(await page.evaluate(()=>window.__game.getCrtDiagnostics().lastDrawCount),10,'gameplay fuses the final CRT stages');
+   const kernel=await page.evaluate(()=>window.__game.getSkinBoundsKernelDiagnostics());
+   assert.equal(kernel.status,'ready');assert.ok(kernel.calls>0);assert.ok(kernel.workspaceBytes<=kernel.maxWorkspaceBytes);
+   const batch=await page.evaluate(()=>window.__game.player.characterRenderBatchDiagnostics);
+   assert.ok(batch.savedDrawsPerPass>=31,'authored character surfaces use fewer draws');
    await page.screenshot({path:`${output}/sky-crt.png`});
    await page.keyboard.press('KeyP');await page.waitForFunction(()=>window.__game.gameFlow.blocksGameplay);
    await page.keyboard.press('KeyP');await ready();
@@ -82,6 +86,24 @@ try{
   await page.waitForFunction(()=>!window.__game.renderer.getContext().isContextLost(),null,{timeout:30000});await page.waitForTimeout(2000);
   rows.push({test:'graphics recovery',round,...recovery});
  }
+ await context.close();
+ const touchContext=await browser.newContext({viewport:{width:852,height:393},deviceScaleFactor:3,isMobile:true,hasTouch:true});
+ const touch=await touchContext.newPage();
+ touch.on('pageerror',e=>errors.push(e.stack||String(e)));touch.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+ await touch.goto(new URL('?touch&playtest&level=sky',base).href);
+ await touch.waitForFunction(()=>window.__game&&!window.__game.gameFlow.blocksGameplay,null,{timeout:120000});
+ await touch.evaluate(()=>{const g=window.__game;g.renderQualitySettings.setRegularResolution(540);g.crtGuestSettings.setEnabled(true);});
+ await touch.waitForFunction(()=>window.__game.getCrtDiagnostics()?.lastDrawCount===10);
+ const pause=await touch.locator('.tc-pause').boundingBox();assert.ok(pause);
+ await touch.touchscreen.tap(pause.x+pause.width/2,pause.y+pause.height/2);
+ await touch.waitForFunction(()=>window.__game.gameFlow.blocksGameplay);
+ await touch.screenshot({path:`${output}/touch-pause.png`});
+ await touch.keyboard.press('KeyP');
+ await touch.waitForFunction(()=>!window.__game.gameFlow.blocksGameplay);
+ await touch.waitForTimeout(500);
+ rows.push(await touch.evaluate(()=>{const g=window.__game;return {test:'touch 540p CRT pause/resume',canvas:[g.renderer.domElement.width,g.renderer.domElement.height],crtDraws:g.getCrtDiagnostics().lastDrawCount,kernel:g.getSkinBoundsKernelDiagnostics(),batches:g.player.characterRenderBatchDiagnostics};}));
+ assert.equal(rows.at(-1).canvas[1],540);assert.equal(rows.at(-1).crtDraws,10);
+ await touch.screenshot({path:`${output}/touch-play.png`});
  assert.deepEqual(errors,[]);
  console.log('PASS full/lite world rendering, traversal, checkpoint, respawn, finish, pause, split, sizing, suspension and graphics recovery');
 }finally{

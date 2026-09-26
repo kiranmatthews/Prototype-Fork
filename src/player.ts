@@ -126,6 +126,7 @@ import {
   stepVertBoardRelease,
 } from './vertBoardRelease';
 import { CharacterProportionLayer } from './character/proportionLayer';
+import { CharacterRigidMeshBatches } from './character/rigidMeshBatch';
 import {
   BASE_CHARACTER_HITBOX_HEIGHT,
   characterCollisionHeight,
@@ -1300,6 +1301,7 @@ export class Player {
   private characterUpperArmRestAngleWeight = 1;
   private meshyShorts: MeshyShortsComponent | null = null;
   private readonly proceduralFootwear: ProceduralFootwearComponent[] = [];
+  private characterRenderBatches: CharacterRigidMeshBatches | null = null;
   private headVisualCenter: THREE.Object3D | null = null;
   private headLookSocket: THREE.Object3D | null = null;
   private readonly headForward = new THREE.Vector3();
@@ -1500,6 +1502,7 @@ export class Player {
       this.syncCharacterAppearance();
       this.resetRenderInterpolation();
     }, true);
+    this.rebuildCharacterRenderBatches();
     if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
       this.riggedCartoonHandLoading = this.installRiggedCartoonHands();
     }
@@ -2458,6 +2461,7 @@ export class Player {
       this.riggedCartoonHandState = 'ready';
       removeProceduralCartoonGloveSurface(left);
       removeProceduralCartoonGloveSurface(right);
+      this.rebuildCharacterRenderBatches();
       // The new artist mark groups arrived after the last Character Lab pass.
       // Reapply immediately so X-placement sliders remain live even while the
       // simulation is paused in Character Lab or Animation Studio.
@@ -2804,6 +2808,7 @@ export class Player {
     // parent root still glides with the rider, but interpolating local poses
     // would turn the authored presentation into an ordinary smooth rotation.
     if (object === this.spinEffects?.root) return;
+    if (object.userData.characterRenderProxy) return;
     this.renderObjects.push(object);
     for (const child of object.children) this.collectRenderHierarchy(child);
   }
@@ -2851,6 +2856,30 @@ export class Player {
   restoreRenderPose(): void {
     this.renderInterpolator.restore();
     this.renderPosition.copy(this.pos);
+  }
+
+  get characterRenderBatchDiagnostics() {
+    return this.characterRenderBatches?.diagnostics ?? null;
+  }
+
+  /** A/B render validation; authored geometry and animation stay identical. */
+  setCharacterRenderBatching(enabled: boolean): void {
+    this.characterRenderBatches?.setEnabled(enabled);
+  }
+
+  private rebuildCharacterRenderBatches(): void {
+    const enabled = this.characterRenderBatches?.diagnostics.enabled ?? true;
+    this.characterRenderBatches?.dispose();
+    const sources: THREE.Mesh[] = [];
+    this.riderG?.traverseVisible((object) => {
+      if (object instanceof THREE.Mesh && (
+        object.name.startsWith('stretch-bone-') ||
+        object.userData.footwearSurface === true ||
+        object.name.startsWith('artist-hand-dorsal-x-')
+      )) sources.push(object);
+    });
+    this.characterRenderBatches = new CharacterRigidMeshBatches(this.bodyGroup, sources);
+    this.characterRenderBatches.setEnabled(enabled);
   }
 
   // Momentum-skate mode is live (board down, heading model driving) — used by

@@ -51,6 +51,14 @@ export interface CrtGuestPassOptions {
   /** Leave the completed guest-sRGB texture for CrtGuestOutputPass. The caller
    * owns final presentation; this mode never writes/swaps the input buffer. */
   deferOutput?: boolean;
+  /** Hand the configured final stage to the display owner. Requires deferOutput. */
+  deferDeconvergence?: boolean;
+}
+
+export interface CrtGuestDeferredDeconvergence {
+  readonly material: THREE.RawShaderMaterial;
+  readonly width: number;
+  readonly height: number;
 }
 
 export type CrtGuestDebugTarget =
@@ -103,6 +111,7 @@ export interface CrtGuestPassDiagnostics {
   failureCount: number;
   lastDrawCount: number;
   outputDeferred: boolean;
+  deconvergenceDeferred: boolean;
   historyClearPending: boolean;
   historyResetCount: number;
   lastHistoryResetReason: string;
@@ -150,7 +159,7 @@ interface CrtGuestTargets {
   readonly bloom: THREE.WebGLRenderTarget;
   reconstruction: THREE.WebGLRenderTarget | null;
   readonly main: THREE.WebGLRenderTarget;
-  readonly deconvergence: THREE.WebGLRenderTarget;
+  readonly deconvergence: THREE.WebGLRenderTarget | null;
   readonly afterglow: readonly [
     THREE.WebGLRenderTarget,
     THREE.WebGLRenderTarget,
@@ -223,6 +232,8 @@ export class CrtGuestPass extends Pass {
   private luts: CrtGuestLuts | null;
   private readonly disposeLutsOnDispose: boolean;
   private readonly deferOutput: boolean;
+  private readonly deferDeconvergence: boolean;
+  private deferredDeconvergenceStage: CrtGuestDeferredDeconvergence | null = null;
   private deferredOutputTexture: THREE.Texture | null = null;
   private completedOutputRevision: number | null = null;
   private readonly materialSets: Record<
@@ -277,6 +288,7 @@ export class CrtGuestPass extends Pass {
     this.luts = options.luts ?? null;
     this.disposeLutsOnDispose = options.disposeLutsOnDispose ?? false;
     this.deferOutput = options.deferOutput ?? false;
+    this.deferDeconvergence = this.deferOutput && (options.deferDeconvergence ?? false);
     this.needsSwap = !this.deferOutput;
     const legacyWidth = validDimension(options.width ?? 1);
     const legacyHeight = validDimension(options.height ?? 1);
@@ -319,6 +331,12 @@ export class CrtGuestPass extends Pass {
   get deferredOutput(): THREE.Texture | null {
     return this.active && this.completedOutputRevision === finiteRevision(this.settings.revision)
       ? this.deferredOutputTexture : null;
+  }
+
+  /** Borrowed final-stage material, valid only after a complete current graph. */
+  get deferredDeconvergence(): CrtGuestDeferredDeconvergence | null {
+    return this.active && this.completedOutputRevision === finiteRevision(this.settings.revision)
+      ? this.deferredDeconvergenceStage : null;
   }
 
   get supported(): boolean {
@@ -365,6 +383,7 @@ export class CrtGuestPass extends Pass {
       failureCount: this.failureCount,
       lastDrawCount: this.lastDrawCount,
       outputDeferred: this.deferOutput,
+      deconvergenceDeferred: this.deferDeconvergence,
       historyClearPending: this.historyClearPending,
       historyResetCount: this.historyResetCount,
       lastHistoryResetReason: this.lastHistoryResetReason,
@@ -434,6 +453,7 @@ export class CrtGuestPass extends Pass {
 
   resetHistory(reason = "requested by caller"): void {
     this.deferredOutputTexture = null;
+    this.deferredDeconvergenceStage = null;
     this.historyPing = false;
     this.historyClearPending = true;
     this.historyResetCount += 1;
@@ -459,6 +479,7 @@ export class CrtGuestPass extends Pass {
     this.width = nextWidth;
     this.height = nextHeight;
     this.deferredOutputTexture = null;
+    this.deferredDeconvergenceStage = null;
     if (this.targets) this.resizeTargets(this.targets);
     this.resetHistory("source size changed");
   }
@@ -475,6 +496,7 @@ export class CrtGuestPass extends Pass {
     this.outputWidth = nextWidth;
     this.outputHeight = nextHeight;
     this.deferredOutputTexture = null;
+    this.deferredDeconvergenceStage = null;
     if (this.targets) this.resizeTargets(this.targets);
   }
 
@@ -499,6 +521,7 @@ export class CrtGuestPass extends Pass {
     this.outputWidth = nextOutputWidth;
     this.outputHeight = nextOutputHeight;
     this.deferredOutputTexture = null;
+    this.deferredDeconvergenceStage = null;
     if (this.targets) this.resizeTargets(this.targets);
     if (sourceChanged) this.resetHistory("source size changed");
   }
@@ -541,7 +564,7 @@ export class CrtGuestPass extends Pass {
       case "main":
         return targets.main.texture;
       case "deconvergence":
-        return targets.deconvergence.texture;
+        return targets.deconvergence?.texture ?? null;
     }
   }
 
@@ -553,6 +576,7 @@ export class CrtGuestPass extends Pass {
     maskActive: boolean,
   ): void {
     this.deferredOutputTexture = null;
+    this.deferredDeconvergenceStage = null;
     if (this.disposed) return;
     if (renderer !== this.renderer) {
       this.recordFailure("rendered with a different WebGLRenderer");
@@ -605,7 +629,13 @@ export class CrtGuestPass extends Pass {
         targets,
       );
       if (this.deferOutput) {
-        this.deferredOutputTexture = targets.deconvergence.texture;
+        this.deferredOutputTexture = targets.deconvergence?.texture ?? null;
+        if (this.deferDeconvergence) {
+          this.deferredDeconvergenceStage = {
+            material: this.materialSets[this.variant].deconvergence,
+            width: this.outputWidth, height: this.outputHeight,
+          };
+        }
         this.completedOutputRevision = finiteRevision(this.settings.revision);
       }
       this.historyPing = !this.historyPing;
@@ -922,7 +952,12 @@ export class CrtGuestPass extends Pass {
         averageWrite!.texture,
       );
     }
-    this.draw(renderer, targets.deconvergence, materials.deconvergence);
+    // A same-size presentation can execute this configured stage together
+    // with decode/display, avoiding its full-output RGBA16F surface.
+    if (this.deferDeconvergence) return draws;
+    const deconvergence = targets.deconvergence;
+    if (!deconvergence) throw new Error("CRT deconvergence target is unavailable");
+    this.draw(renderer, deconvergence, materials.deconvergence);
     draws += 1;
 
     // The presentation owner can combine decode and final display transfer,
@@ -931,7 +966,7 @@ export class CrtGuestPass extends Pass {
     bindTexture(
       this.outputMaterial,
       "Source",
-      targets.deconvergence.texture,
+      deconvergence.texture,
     );
     this.draw(
       renderer,
@@ -995,7 +1030,7 @@ export class CrtGuestPass extends Pass {
       bloom: rgba16f("CRTGuest.Bloom.RGBA16F"),
       reconstruction: null,
       main: rgba16f("CRTGuest.Main.RGBA16F"),
-      deconvergence: rgba16f("CRTGuest.Deconvergence.RGBA16F"),
+      deconvergence: this.deferDeconvergence ? null : rgba16f("CRTGuest.Deconvergence.RGBA16F"),
       afterglow: [
         rgba8("CRTGuest.AfterglowA.RGBA8"),
         rgba8("CRTGuest.AfterglowB.RGBA8"),
@@ -1039,11 +1074,9 @@ export class CrtGuestPass extends Pass {
       resizeTarget(target, this.width, this.height);
     }
     resizeTarget(targets.main, this.outputWidth, this.outputHeight);
-    resizeTarget(
-      targets.deconvergence,
-      this.outputWidth,
-      this.outputHeight,
-    );
+    if (targets.deconvergence) {
+      resizeTarget(targets.deconvergence, this.outputWidth, this.outputHeight);
+    }
     configurePreMipmaps(targets.pre, this.variant === "advanced");
     resizeTarget(targets.glowHorizontal, kernelWidth, this.height);
     resizeTarget(targets.glow, kernelWidth, kernelHeight);
@@ -1194,6 +1227,7 @@ export class CrtGuestPass extends Pass {
 
   private disposeTargets(): void {
     this.deferredOutputTexture = null;
+    this.deferredDeconvergenceStage = null;
     if (!this.targets) return;
     const targets = this.targets;
     const all = new Set<THREE.WebGLRenderTarget>([
@@ -1205,7 +1239,7 @@ export class CrtGuestPass extends Pass {
       targets.bloomHorizontal,
       targets.bloom,
       targets.main,
-      targets.deconvergence,
+      ...(targets.deconvergence ? [targets.deconvergence] : []),
       ...targets.afterglow,
       ...(targets.average ?? []),
     ]);
@@ -1238,7 +1272,7 @@ export class CrtGuestPass extends Pass {
       "bloom-horizontal": targetDiagnostic(targets.bloomHorizontal, 8),
       bloom: targetDiagnostic(targets.bloom, 8),
       main: targetDiagnostic(targets.main, 8),
-      deconvergence: targetDiagnostic(targets.deconvergence, 8),
+      ...(targets.deconvergence ? { deconvergence: targetDiagnostic(targets.deconvergence, 8) } : {}),
     };
     if (targets.average) {
       diagnostic["average-read"] = targetDiagnostic(targets.average[read], 4);

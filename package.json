@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "check:renderer": "node tools/test-render-quality-settings.mjs && node tools/test-frame-limiter.mjs && node tools/test-world-render-frame.mjs && node tools/test-warp-pad-batching.mjs && node tools/test-ocean-resources.mjs && node tools/test-ocean-sizing.mjs && node tools/test-fixed-render-pipeline.mjs && node tools/test-crt-resolution.mjs && node tools/test-crt-guest-web.mjs && node tools/test-unity-post.mjs",
+    "check:renderer": "node tools/test-render-quality-settings.mjs && node tools/test-frame-limiter.mjs && node tools/test-world-render-frame.mjs && node tools/test-warp-pad-batching.mjs && node tools/test-ocean-resources.mjs && node tools/test-ocean-sizing.mjs && node tools/test-fixed-render-pipeline.mjs && node tools/test-crt-resolution.mjs && node tools/test-crt-guest-web.mjs && node tools/test-unity-post.mjs && node tools/test-character-rigid-batches.mjs && node tools/test-interface-paint-cache.mjs && node tools/test-skinned-interaction-bounds.mjs && node tools/test-input-prompts.mjs",
     "check:enemies": "node tools/test-enemy-assets.mjs && node tools/test-enemy-runtime.mjs --assets && node tools/test-enemy-gameplay.mjs --assets",
     "check:offline": "node tools/test-offline.mjs",
     "check:audio": "node tools/test-audio-loops.mjs",

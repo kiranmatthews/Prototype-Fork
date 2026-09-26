@@ -6,6 +6,7 @@ import { installShadowTextureCleanup } from "./shadowTextureCleanup";
 import { resizeRendererSurface } from "./render-quality/surfaceSize";
 import { prepareWorldFrame, finishWorldFrame } from "./render-quality/worldFrame";
 import { GraphicsRecovery } from "./graphicsRecovery";
+import { warmSkinBoundsKernel, skinBoundsKernelDiagnostics } from './character/skinBoundsKernel';
 import { configureCityAssetRenderer } from "./cityAssets";
 import { addSkateReviewClips, loadSkateReviewCatalog, skateBoardVisibleAt, withSkatePresentationRig } from './animation/skateCatalog';
 import { Halfpipe } from './halfpipe';
@@ -911,6 +912,7 @@ async function prepareActivePresentationAssets(): Promise<void> {
   // Start it here so that first visible frame never owns network loading.
   updateWaterPresentation(0);
   await Promise.all([
+    warmSkinBoundsKernel(),
     loadSky(activeSky),
     bonusParallax?.prepare() ?? Promise.resolve(),
     player.preparePresentationAssets(),
@@ -5120,6 +5122,7 @@ requestAnimationFrame(frame);
   spinPanel,
   getRenderQualitySizes: () => ({ ...renderQualitySizes }),
   getGraphicsRecoveryDiagnostics: () => graphicsRecovery.diagnostics,
+  getSkinBoundsKernelDiagnostics: skinBoundsKernelDiagnostics,
   getRenderFrameLimiterStats: () => renderFrameLimiter.stats,
   getRenderFrameStats: () => ({ ...renderer.info.render }),
   getCrtDiagnostics: () => coastPost?.crt?.diagnostics ?? null,

@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import { withSkateRuntime, makeInput } from './jungle-cup-harness.mjs';
 
 await withSkateRuntime(async ({THREE,server,Level,Player,TUNING})=>{
+  const {warmSkinBoundsKernel,skinBoundsKernelDiagnostics}=await server.ssrLoadModule('/src/character/skinBoundsKernel.ts');
+  assert.equal(await warmSkinBoundsKernel(),true,'contact regressions exercise the accelerated path');
   const {setMilkVariant}=await server.ssrLoadModule('/src/milk.ts');
   const {CharacterInteractionBounds}=await server.ssrLoadModule('/src/character/interactionBounds.ts');
   const measure=new CharacterInteractionBounds(),out=new THREE.Box3();
@@ -130,6 +132,7 @@ await withSkateRuntime(async ({THREE,server,Level,Player,TUNING})=>{
       p.updateFruit(1/60,level);
       if(i>120)assert.ok(milk.quaternion.angleTo(new THREE.Quaternion())<.01,'idle hover tilted the settled milk drop');
     }
+    assert.ok(skinBoundsKernelDiagnostics().calls>0,'real player contacts used native full-vertex bounds');
     console.log(`PASS live head/height/pose/morph/skin bounds; crown-only box smash; world magnet -> contact -> HUD; moving target, spin, death, snapshots, run modes and two-player ownership (${frames} magnet frames).`);
   }finally{TUNING.milkMagnetRange=initialMagnet;p.setCharacterHeadStyle(initialStyle);p.setCharacterProportions(initial);level.dispose();}
 });

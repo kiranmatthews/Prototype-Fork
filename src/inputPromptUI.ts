@@ -61,32 +61,72 @@ inputPrompts.subscribe(()=>{
   notify();
 });
 
-function opacityOf(element: HTMLElement): number {
-  let opacity=1;
-  for(let current: HTMLElement|null=element;current;current=current.parentElement){
-    const style=getComputedStyle(current);
-    if(style.display==='none'||style.visibility==='hidden'||current.hidden)return 0;
-    const composed=current.matches('.game-hud-layer.precrt-composited')||current.matches('.game-shell.precrt-composited .game-shell-panel')||current.matches('.competition-host[data-precrt-composited]');
-    if(!composed)opacity*=Number(style.opacity);
+type PromptPaintInput = string | number;
+interface PromptPaintRect { x: number; y: number; width: number; height: number; }
+interface PromptGlyphPaint {
+  rect: PromptPaintRect;
+  opacity: number;
+  image: HTMLImageElement;
+  ready: boolean;
+  label: string;
+}
+interface PromptWordPaint {
+  rect: PromptPaintRect;
+  opacity: number;
+  font: string;
+  color: string;
+  text: string;
+}
+/** The exact paint inputs, sampled once so comparisons and Canvas use one frame. */
+export interface InputPromptPaintFrame {
+  readonly inputs: readonly PromptPaintInput[];
+  readonly glyphs: readonly PromptGlyphPaint[];
+  readonly words: readonly PromptWordPaint[];
+}
+export function sampleInputPrompts(scope: ParentNode = document, exclude?: string): InputPromptPaintFrame {
+  const inputs: PromptPaintInput[] = [], glyphs: PromptGlyphPaint[] = [], words: PromptWordPaint[] = [];
+  const opacities = new Map<HTMLElement, number>();
+  const opacityOf = (element: HTMLElement): number => {
+    const cached = opacities.get(element);
+    if (cached !== undefined) return cached;
+    const style = getComputedStyle(element);
+    let opacity = 0;
+    if (style.display !== 'none' && style.visibility !== 'hidden' && !element.hidden) {
+      const composed = element.matches('.game-hud-layer.precrt-composited') || element.matches('.game-shell.precrt-composited .game-shell-panel') || element.matches('.competition-host[data-precrt-composited]');
+      opacity = (composed ? 1 : Number(style.opacity)) * (element.parentElement ? opacityOf(element.parentElement) : 1);
+    }
+    opacities.set(element, opacity);
+    return opacity;
+  };
+  for (const host of scope.querySelectorAll<HTMLElement>('.input-glyph')) {
+    if (exclude && host.closest(exclude)) continue;
+    const opacity = opacityOf(host); if (opacity < .001) continue;
+    const rect = host.getBoundingClientRect(); if (rect.width < 1 || rect.height < 1) continue;
+    const glyph = inputPrompts.resolve(host.dataset.inputAction as InputAction); if (!glyph) continue;
+    const image = imageFor(glyph), ready = image.complete && image.naturalWidth > 0;
+    glyphs.push({ rect, opacity, image, ready, label: glyph.label });
+    inputs.push('glyph', rect.x, rect.y, rect.width, rect.height, opacity, glyph.url, glyph.label, Number(ready));
   }
-  return opacity;
+  for (const word of scope.querySelectorAll<HTMLElement>('[data-prompt-word]')) {
+    if (exclude && word.closest(exclude)) continue;
+    const opacity = opacityOf(word); if (opacity < .001) continue;
+    const rect = word.getBoundingClientRect(), style = getComputedStyle(word);
+    const font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`, color = style.color, text = (word.textContent ?? '').trimEnd();
+    words.push({ rect, opacity, font, color, text });
+    inputs.push('word', rect.x, rect.y, rect.width, rect.height, opacity, font, color, text);
+  }
+  return { inputs, glyphs, words };
 }
 /** CSS-pixel coordinates in the shared pre-CRT interface renderer. */
-export function paintInputPrompts(ctx: CanvasRenderingContext2D, scope: ParentNode = document, exclude?: string): void {
-  for(const host of scope.querySelectorAll<HTMLElement>('.input-glyph')){
-    if(exclude&&host.closest(exclude))continue;
-    const opacity=opacityOf(host);if(opacity<.001)continue;
-    const rect=host.getBoundingClientRect();if(rect.width<1||rect.height<1)continue;
-    const glyph=inputPrompts.resolve(host.dataset.inputAction as InputAction);if(!glyph)continue;
-    const image=imageFor(glyph);ctx.save();ctx.globalAlpha*=opacity;
-    if(image.complete&&image.naturalWidth)ctx.drawImage(image,rect.x,rect.y,rect.width,rect.height);
-    else {ctx.fillStyle='#292929';ctx.beginPath();ctx.roundRect(rect.x+2,rect.y+2,rect.width-4,rect.height-4,rect.height/4);ctx.fill();ctx.fillStyle='#fff';ctx.font=`700 ${Math.max(8,rect.height*.28)}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(glyph.label,rect.x+rect.width/2,rect.y+rect.height/2,rect.width-6);}
+export function paintInputPrompts(ctx: CanvasRenderingContext2D, scope: ParentNode = document, exclude?: string, sampled?: InputPromptPaintFrame): void {
+  const frame = sampled ?? sampleInputPrompts(scope, exclude);
+  for (const { rect, opacity, image, ready, label } of frame.glyphs) {
+    ctx.save(); ctx.globalAlpha *= opacity;
+    if (ready) ctx.drawImage(image, rect.x, rect.y, rect.width, rect.height);
+    else { ctx.fillStyle = '#292929'; ctx.beginPath(); ctx.roundRect(rect.x + 2, rect.y + 2, rect.width - 4, rect.height - 4, rect.height / 4); ctx.fill(); ctx.fillStyle = '#fff'; ctx.font = `700 ${Math.max(8, rect.height * .28)}px sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, rect.x + rect.width / 2, rect.y + rect.height / 2, rect.width - 6); }
     ctx.restore();
   }
-  for(const word of scope.querySelectorAll<HTMLElement>('[data-prompt-word]')){
-    if(exclude&&word.closest(exclude))continue;
-    const opacity=opacityOf(word);if(opacity<.001)continue;
-    const rect=word.getBoundingClientRect(),style=getComputedStyle(word);
-    ctx.save();ctx.globalAlpha*=opacity;ctx.font=`${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;ctx.fillStyle=style.color;ctx.textBaseline='middle';ctx.textAlign='left';ctx.fillText((word.textContent??'').trimEnd(),rect.x,rect.y+rect.height/2,rect.width);ctx.restore();
+  for (const { rect, opacity, font, color, text } of frame.words) {
+    ctx.save(); ctx.globalAlpha *= opacity; ctx.font = font; ctx.fillStyle = color; ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillText(text, rect.x, rect.y + rect.height / 2, rect.width); ctx.restore();
   }
 }

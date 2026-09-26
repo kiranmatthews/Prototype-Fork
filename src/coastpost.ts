@@ -247,13 +247,17 @@ export class CoastPostRenderer {
     this.crtPass = options.crtSettings
       ? new CrtGuestPass(renderer, options.crtSettings, {
           deferOutput: true,
+          deferDeconvergence: true,
           sourceWidth: this.inputWidth,
           sourceHeight: this.inputHeight,
           outputWidth: this.outputWidth,
           outputHeight: this.outputHeight,
         })
       : null;
-    this.outputPass = new CrtGuestOutputPass(() => this.crtPass?.deferredOutput ?? null);
+    this.outputPass = new CrtGuestOutputPass(
+      () => this.crtPass?.deferredOutput ?? null,
+      () => this.crtPass?.deferredDeconvergence ?? null,
+    );
 
     this.composer.addPass(this.renderPass);
     this.composer.addPass(this.smaaPass);

@@ -94,15 +94,25 @@ export function rooAtlasGlyphRect(metrics:RooAtlasMetrics,entry:{char:string;x:n
 }
 
 /** Uses the existing Canvas2D/CRT pass: no new WebGL context, mesh, or per-frame bake. */
+interface RooTextRaster {
+  canvas: HTMLCanvasElement;
+  phase: number;
+  lights: Array<HTMLCanvasElement | undefined>;
+  bytes: number;
+}
 export class RooAtlasPainter {
-  private cache=new Map<string,{canvas:HTMLCanvasElement;phase:number}>();
+  private cache=new Map<string,RooTextRaster>();
   private cacheBytes=0;
   private frameCanvas:HTMLCanvasElement|null=null;
   private revision=-1;
   constructor(){void loadRooAtlases();}
   get ready(){return Boolean(images.bonus[0]&&images.counter[0]);}
   get lightingReady(){return (['bonus','counter'] as const).every(p=>[0,1,2].every(i=>!!images[p][i]));}
-  dispose(){for(const item of this.cache.values())item.canvas.width=item.canvas.height=1;this.cache.clear();this.cacheBytes=0;if(this.frameCanvas)this.frameCanvas.width=this.frameCanvas.height=1;this.frameCanvas=null;}
+  private release(item: RooTextRaster): void {
+    item.canvas.width=item.canvas.height=1;
+    for (const light of item.lights) if (light) light.width=light.height=1;
+  }
+  dispose(){for(const item of this.cache.values())this.release(item);this.cache.clear();this.cacheBytes=0;if(this.frameCanvas)this.frameCanvas.width=this.frameCanvas.height=1;this.frameCanvas=null;}
 
   draw(ctx:CanvasRenderingContext2D,text:string,x:number,y:number,style:RooAtlasStyle):boolean {
     if(this.revision!==revision){this.dispose();this.revision=revision;}
@@ -130,7 +140,7 @@ export class RooAtlasPainter {
       const height=(Math.max(...placed.map(p=>p.rect.y+p.rect.height))-minY)*size;
       const transform=ctx.getTransform(),ratio=Math.max(1,Math.min(3,Math.hypot(transform.a,transform.b)));
       const key=JSON.stringify([palette,text,size,tracking,ratio]);let item=this.cache.get(key);
-      if(!item){const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.ceil(width*ratio));canvas.height=Math.max(1,Math.ceil(height*ratio));item={canvas,phase:NaN};this.cache.set(key,item);this.cacheBytes+=canvas.width*canvas.height*4;}
+      if(!item){const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.ceil(width*ratio));canvas.height=Math.max(1,Math.ceil(height*ratio));item={canvas,phase:NaN,lights:[],bytes:canvas.width*canvas.height*4};this.cache.set(key,item);this.cacheBytes+=item.bytes;}
       if(item.phase!==phase){
         // Keep both intermediate surfaces on one raster backend. Chrome can
         // otherwise change downsampling during GPU/CPU transfers at small rims.
@@ -139,23 +149,40 @@ export class RooAtlasPainter {
         // Add weighted premultiplied pixels on an isolated transparent surface.
         // Ordinary source-over fades change edge alpha and make the rim pulse.
         mix.globalCompositeOperation='lighter';
-        this.frameCanvas??=document.createElement('canvas');
-        if(this.frameCanvas.width<item.canvas.width)this.frameCanvas.width=item.canvas.width;
-        if(this.frameCanvas.height<item.canvas.height)this.frameCanvas.height=item.canvas.height;
-        const frameCtx=this.frameCanvas.getContext('2d',{willReadFrequently:true})!;
+        const budget=cap===512?16*1048576:4*1048576;
+        const rasterBytes=item.canvas.width*item.canvas.height*4;
+        // Text layout is static while its three authored light images shimmer.
+        // Cache those exact rasters once instead of resampling every glyph from
+        // the large atlas on each phase. Count all three against the existing
+        // budget; oversized text retains the shared-scratch fallback.
+        const cacheLights=rasterBytes*4<=budget;
         for(const [frame,weight]of rooLightWeights(phase).entries())if(weight>0){
           mix.globalAlpha=weight;
-          frameCtx.setTransform(1,0,0,1,0,0);frameCtx.clearRect(0,0,item.canvas.width,item.canvas.height);frameCtx.setTransform(ratio,0,0,ratio,0,0);
-          frameCtx.imageSmoothingEnabled=true;frameCtx.imageSmoothingQuality='high';frameCtx.globalCompositeOperation='source-over';frameCtx.globalAlpha=1;
-          for(const {glyph,rect}of placed)frameCtx.drawImage(images[palette][frame],glyph.x*sourceX,glyph.y*sourceY,glyph.width*sourceX,glyph.height*sourceY,(rect.x-minX)*size,(rect.y-minY)*size,rect.width*size,rect.height*size);
-          mix.drawImage(this.frameCanvas,0,0,item.canvas.width,item.canvas.height,0,0,item.canvas.width,item.canvas.height);
+          let light=item.lights[frame];
+          if(!light){
+            if(cacheLights){
+              light=document.createElement('canvas');
+              light.width=item.canvas.width;light.height=item.canvas.height;
+              item.lights[frame]=light;item.bytes+=rasterBytes;this.cacheBytes+=rasterBytes;
+            }else{
+              this.frameCanvas??=document.createElement('canvas');
+              if(this.frameCanvas.width<item.canvas.width)this.frameCanvas.width=item.canvas.width;
+              if(this.frameCanvas.height<item.canvas.height)this.frameCanvas.height=item.canvas.height;
+              light=this.frameCanvas;
+            }
+            const frameCtx=light.getContext('2d',{willReadFrequently:true})!;
+            frameCtx.setTransform(1,0,0,1,0,0);frameCtx.clearRect(0,0,item.canvas.width,item.canvas.height);frameCtx.setTransform(ratio,0,0,ratio,0,0);
+            frameCtx.imageSmoothingEnabled=true;frameCtx.imageSmoothingQuality='high';frameCtx.globalCompositeOperation='source-over';frameCtx.globalAlpha=1;
+            for(const {glyph,rect}of placed)frameCtx.drawImage(images[palette][frame],glyph.x*sourceX,glyph.y*sourceY,glyph.width*sourceX,glyph.height*sourceY,(rect.x-minX)*size,(rect.y-minY)*size,rect.width*size,rect.height*size);
+          }
+          mix.drawImage(light,0,0,item.canvas.width,item.canvas.height,0,0,item.canvas.width,item.canvas.height);
         }
         item.phase=phase;
       }
       ctx.drawImage(item.canvas,left+minX*size,y-size/2+minY*size,item.canvas.width/ratio,item.canvas.height/ratio);
       this.cache.delete(key);this.cache.set(key,item);
       const budget=cap===512?16*1048576:4*1048576;
-      while(this.cache.size>32||this.cacheBytes>budget){const oldest=this.cache.keys().next().value!;const old=this.cache.get(oldest)!;this.cacheBytes-=old.canvas.width*old.canvas.height*4;old.canvas.width=old.canvas.height=1;this.cache.delete(oldest);}
+      while(this.cache.size>32||this.cacheBytes>budget){const oldest=this.cache.keys().next().value!;const old=this.cache.get(oldest)!;this.cacheBytes-=old.bytes;this.release(old);this.cache.delete(oldest);}
     }
     ctx.restore();return true;
   }

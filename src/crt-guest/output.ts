@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import type { CrtGuestDeferredDeconvergence } from './pass';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { OutputShader } from 'three/examples/jsm/shaders/OutputShader.js';
 import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js';
@@ -27,8 +28,14 @@ export class CrtGuestOutputPass extends OutputPass {
   private fallbackTarget: THREE.WebGLRenderTarget | null = null;
   private fallbackMaterial: THREE.RawShaderMaterial | null = null;
   private fallbackQuad: FullScreenQuad | null = null;
+  private deconvergenceTarget: THREE.WebGLRenderTarget | null = null;
+  private deconvergenceQuad: FullScreenQuad | null = null;
+  private readonly finalStages = new Map<THREE.RawShaderMaterial, OutputPass>();
 
-  constructor(private readonly getGuestSource: () => THREE.Texture | null) {
+  constructor(
+    private readonly getGuestSource: () => THREE.Texture | null,
+    private readonly getDeconvergence: () => CrtGuestDeferredDeconvergence | null = () => null,
+  ) {
     super();
     (this.uniforms as Record<string, THREE.IUniform>).uCrtGuestInput = this.guestUniform;
     this.material.name = 'CRT Guest decode and OutputPass';
@@ -50,7 +57,30 @@ export class CrtGuestOutputPass extends OutputPass {
     deltaSeconds: number,
     maskActive: boolean,
   ): void {
-    const source = this.getGuestSource();
+    const stage = this.getDeconvergence();
+    let source = this.getGuestSource();
+    if (stage) {
+      const viewport = this.renderToScreen ? renderer.getViewport(this.viewport) : writeBuffer.viewport;
+      const ratio = this.renderToScreen ? renderer.getPixelRatio() : 1;
+      if (Math.floor(viewport.z * ratio) === stage.width && Math.floor(viewport.w * ratio) === stage.height) {
+        this.releaseFallbackTarget();
+        this.releaseDeconvergenceTarget();
+        let finalStage = this.finalStages.get(stage.material);
+        if (!finalStage) {
+          finalStage = makeFinalStage(stage.material);
+          this.finalStages.set(stage.material, finalStage);
+        }
+        finalStage.renderToScreen = this.renderToScreen;
+        finalStage.clear = this.clear;
+        finalStage.render(renderer, writeBuffer, readBuffer, deltaSeconds, maskActive);
+        return;
+      }
+      // Extra resizing requires the canonical deconvergence write before
+      // decode and filtering. Allocate only while that uncommon path is used.
+      source = this.renderDeconvergence(renderer, stage);
+    } else {
+      this.releaseDeconvergenceTarget();
+    }
     this.guestUniform.value = source ? 1 : 0;
     this.guestInput.texture = source;
     if (source) {
@@ -75,6 +105,32 @@ export class CrtGuestOutputPass extends OutputPass {
     } finally {
       this.guestInput.texture = null;
     }
+  }
+
+  private renderDeconvergence(renderer: THREE.WebGLRenderer, stage: CrtGuestDeferredDeconvergence): THREE.Texture {
+    this.deconvergenceTarget ??= new THREE.WebGLRenderTarget(stage.width, stage.height, {
+      type: THREE.HalfFloatType, format: THREE.RGBAFormat,
+      minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter,
+      depthBuffer: false, stencilBuffer: false,
+    });
+    this.deconvergenceTarget.texture.name = 'CRTGuest.Deconvergence.ResizeFallback.RGBA16F';
+    this.deconvergenceTarget.setSize(stage.width, stage.height);
+    this.deconvergenceQuad ??= new FullScreenQuad(stage.material);
+    this.deconvergenceQuad.material = stage.material;
+    const autoClear = renderer.autoClear;
+    try {
+      renderer.autoClear = false;
+      renderer.setRenderTarget(this.deconvergenceTarget);
+      this.deconvergenceQuad.render(renderer);
+    } finally {
+      renderer.autoClear = autoClear;
+    }
+    return this.deconvergenceTarget.texture;
+  }
+
+  private releaseDeconvergenceTarget(): void {
+    this.deconvergenceTarget?.dispose();
+    this.deconvergenceTarget = null;
   }
 
   private decodeForResize(renderer: THREE.WebGLRenderer, source: THREE.Texture): THREE.Texture {
@@ -107,8 +163,46 @@ export class CrtGuestOutputPass extends OutputPass {
 
   override dispose(): void {
     this.releaseFallbackTarget();
+    this.releaseDeconvergenceTarget();
+    this.deconvergenceQuad?.dispose();
+    for (const stage of this.finalStages.values()) stage.dispose();
+    this.finalStages.clear();
     this.fallbackMaterial?.dispose();
     this.fallbackQuad?.dispose();
     super.dispose();
   }
+}
+
+/** Retain the generated Guest shader verbatim apart from its entry point,
+ * then append Three's own tone mapping/display sequence. Uniform objects are
+ * borrowed so settings and temporal/frame bindings have one authoritative owner. */
+function makeFinalStage(source: THREE.RawShaderMaterial): OutputPass {
+  const output = new OutputPass();
+  const sourceMain = /void\s+main\s*\(\s*\)/;
+  if (!sourceMain.test(source.fragmentShader)) throw new Error('CRT deconvergence entry point is unavailable');
+  const sampleEnd = OutputShader.fragmentShader.indexOf(sourceSample) + sourceSample.length;
+  const tailEnd = OutputShader.fragmentShader.lastIndexOf('}');
+  const display = OutputShader.fragmentShader.slice(sampleEnd, tailEnd).replace(/gl_FragColor/g, 'FragColor');
+  output.uniforms = { ...source.uniforms, ...output.uniforms };
+  output.material.name = 'CRT Guest deconvergence, decode and OutputPass';
+  output.material.glslVersion = THREE.GLSL3;
+  output.material.vertexShader = CRT_GUEST_FULLSCREEN_VERTEX_SHADER;
+  output.material.fragmentShader = `
+    precision highp float;
+    #include <tonemapping_pars_fragment>
+    #include <colorspace_pars_fragment>
+    ${decoder}
+    ${source.fragmentShader.replace(sourceMain, 'void crtGuestDeconvergence()')}
+    void main() {
+      crtGuestDeconvergence();
+      FragColor.rgb = crtGuestSrgbToLinear(clamp(FragColor.rgb, 0.0, 1.0));
+      ${display}
+    }
+  `;
+  output.material.uniforms = output.uniforms as Record<string, THREE.IUniform>;
+  output.material.depthTest = false;
+  output.material.depthWrite = false;
+  output.material.blending = THREE.NoBlending;
+  output.material.toneMapped = false;
+  return output;
 }
