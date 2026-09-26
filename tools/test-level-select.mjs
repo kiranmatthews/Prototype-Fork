@@ -66,6 +66,57 @@ try{
  input.armMenuReleaseGuard();input.update();assert.equal(input.mapLevelSelectPressed,false);
  pad.buttons[17].pressed=false;input.update();pad.buttons[17].pressed=true;input.update();assert.equal(input.mapLevelSelectPressed,true);
  input.consumeEdges();pad.buttons[17].pressed=false;input.update();document.body.classList.remove('world-map-active');pad.buttons[17].pressed=true;input.update();assert.equal(input.mapLevelSelectPressed,false,'map shortcut leaks into gameplay');
+ // Touch rows are the entry action when the keyboard/controller footer is hidden.
+ // Exercise the real click handlers, including selection before launch and Back.
+ inputPrompts.update(null,true);assert.equal(inputPrompts.family,'touch');
+ const touchCampaign=new CampaignStore();touchCampaign.startEphemeral();
+ const touchCalls=[];
+ const touchUI=new GameFlowUI(touchCampaign,{
+   ...callbacks,onResume:()=>touchCalls.push('resume'),onLevelSelect:id=>touchCalls.push(id),getLevelSelectFocus:()=> 'treehouse-trail',
+ },{sfxMuted:false,musicMuted:false});
+ const touchRow=key=>{
+   const row=touchUI.navButtons.find(button=>button.dataset.levelKey===key);
+   assert.ok(row,`missing touch level row ${key}`);return row;
+ };
+ const touchClose=()=>{
+   const close=touchUI.panel.querySelector('.game-map-close');
+   assert.ok(close,'touch menu has no corner Back action');
+   assert.equal(close.getAttribute('aria-label'),'Back');close.click();
+ };
+ touchUI.showMapSection('level-select');
+ assert.equal(touchRow('jungle').disabled,true);
+ touchRow('jungle').click();
+ assert.equal(touchUI.levelSelectKey,'treehouse-trail','locked touch row changed selection');
+ assert.deepEqual(touchCalls,[],'locked touch row launched a level');
+ touchCampaign.active.levels['treehouse-trail'].cleared=true;
+ touchUI.showMapSection('level-select');
+ assert.equal(touchRow('jungle').disabled,false);
+ touchRow('jungle').click();touchUI.update();touchUI.update();
+ assert.equal(touchUI.levelSelectKey,'jungle','touch tap did not select its destination');
+ assert.equal(touchRow('jungle').getAttribute('aria-selected'),'true');
+ assert.deepEqual(touchCalls,['jungle'],'one touch tap must launch its selected map level exactly once');
+ touchUI.showMapSection('level-select');touchClose();
+ assert.deepEqual(touchCalls,['jungle','resume'],'touch corner Back did not return to the map');
+ touchCalls.length=0;
+ touchUI.showPause({levelName:'Treehouse Trail',inWarpRoom:false});
+ touchUI.navButtons.find(button=>button.textContent==='LEVEL SELECT').click();
+ touchRow('jungle').click();
+ assert.equal(touchUI.currentScreen,'confirm-level-select','touch course switching bypassed confirmation');
+ assert.deepEqual(touchCalls,[],'touch course switching launched before confirmation');
+ touchUI.navButtons.find(button=>button.textContent==='CANCEL').click();
+ assert.equal(touchUI.currentScreen,'level-select','touch Cancel did not return to level selection');
+ assert.equal(touchUI.levelSelectKey,'jungle','touch Cancel lost the selected destination');
+ assert.deepEqual(touchCalls,[],'touch Cancel abandoned the paused run');
+ touchClose();assert.equal(touchUI.currentScreen,'pause','touch corner Back did not return to pause');
+ assert.deepEqual(touchCalls,[],'leaving touch level selection resumed or switched the paused run');
+ touchUI.navButtons.find(button=>button.textContent==='LEVEL SELECT').click();
+ touchRow('jungle').click();touchClose();
+ assert.equal(touchUI.currentScreen,'level-select','touch corner Back did not cancel the switch confirmation');
+ assert.deepEqual(touchCalls,[],'touch corner Back confirmed a level switch');
+ touchRow('jungle').click();
+ touchUI.navButtons.find(button=>button.textContent==='SWITCH LEVEL').click();
+ assert.deepEqual(touchCalls,['jungle'],'touch confirmation did not launch the selected level once');
+ touchUI.hide();inputPrompts.update(null,false);
  // Execute the real host callback: locked levels cannot launch, and a
  // gameplay switch carries the run-forfeit flag into the existing transition.
  const main=await readFile(new URL('../src/main.ts',import.meta.url),'utf8');
@@ -79,5 +130,5 @@ try{
    handler('treehouse-trail');
    assert.deepEqual(events,unlocked?['guard',['treehouse-trail',!isCampaignMap]]:[]);
  }
- console.log('PASS Level Select: pause/map access, island/level locks, remembered paging, saved stats, held confirm, PS4/PS5 Touchpad and View prompts, release guards, Treehouse artwork and confirmed course switching.');
+ console.log('PASS Level Select: pause/map access, island/level locks, remembered paging, saved stats, held confirm, PS4/PS5 Touchpad and View prompts, touch row launch/locks/Back/confirmation, release guards, Treehouse artwork and confirmed course switching.');
 }finally{await server.close();}
