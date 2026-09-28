@@ -2,11 +2,11 @@ import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
 import { BLOCKWORKS_GROUND, ROUTE_END, emitPit, emitRibbon, routePoint, routeYaw, type Point } from './blockworks-geometry';
 export { BLOCKWORKS_GROUND, ROUTE_END, routePoint, routeTangent, routeYaw, routeX } from './blockworks-geometry';
 
-// The road is a continuous physical curve. The control/camera chord remains
-// north-going: Up cannot secretly steer the bends, and the rider must carve.
+// The camera nodes follow the authored road, with straight headings across
+// jump gaps so forward input agrees with each takeoff-to-landing line.
 // Each district combines mechanics and hands its momentum into the next one.
 const C:CustomComponent[]=[];
-const groups:CustomGroup[]=[{id:1,nm:'Steady camera/control chord',editorOnly:true},{id:2,nm:'Shared excavated ground',editorOnly:true}];
+const groups:CustomGroup[]=[{id:1,nm:'Course-aligned camera nodes',editorOnly:true},{id:2,nm:'Shared excavated ground',editorOnly:true}];
 const GREY=['#aeb5bd','#8a96a2','#c5cbd0','#717f8d'];
 const AMBER='#d5a850',ICE='#a6dfe9';
 type Scalar=number|((s:number)=>number);
@@ -250,11 +250,25 @@ export const BLOCKWORKS_MACHINE={ferry:routePoint(1355,8.4),lift:routePoint(1410
  BLOCKWORKS_CLIMBS.push({name:'Crown roof bays',grp:g,start:routePoint(2039,6,-2.4),steps,exit:routePoint(2085,13.2)});
 }
 
-// A steady north-facing chord leaves the actual road curvature on screen.
-// The camera follows the rider's position along the bends, but never turns
-// the input frame to make a bend play like another straight corridor.
+// Follow the physical course. A short collinear run of nodes around each
+// jump gives the camera time to settle onto the landing line before takeoff.
+// These are ordinary editable camnodes; no camera or movement tuning changes.
+const cameraJumps=BLOCKWORKS_GAPS.filter(gap=>gap.kind==='charged gap');
+const cameraStations=new Set<number>();
+for(let s=-30;s<=ROUTE_END+40;s+=10)cameraStations.add(s);
+for(const gap of cameraJumps)for(const s of [gap.a-50,gap.a-35,gap.a,gap.b,gap.b+15,gap.b+30])cameraStations.add(s);
 export const BLOCKWORKS_CAMERA_ROUTE:Point[]=[];
-for(let s=-30;s<=ROUTE_END+40;s+=10){const p:Point=[0,0,20-s];BLOCKWORKS_CAMERA_ROUTE.push(p);add({t:'camnode',p,grp:1});}
+for(const s of [...cameraStations].sort((a,b)=>a-b)){
+ const p=routePoint(s,0);
+ for(const gap of cameraJumps){
+  if(s<gap.a-50||s>gap.b+30)continue;
+  const a=routePoint(gap.a,0),b=routePoint(gap.b,0);
+  const straightX=a[0]+(b[0]-a[0])*(s-gap.a)/(gap.b-gap.a);
+  const weight=smooth(gap.a-50,gap.a-35,s)*(1-smooth(gap.b+15,gap.b+30,s));
+  p[0]=mix(p[0],straightX,weight);
+ }
+ BLOCKWORKS_CAMERA_ROUTE.push(p);add({t:'camnode',p,grp:1});
+}
 export const CODEX_LAB_LEVEL:CustomLevelData={
  v:1,name:'Blockworks · Greybox',spawn:routePoint(2,.15),killY:-20,sky:'day',keepPlayFog:true,
  atmosphere:{fogEnabled:true,fogNear:105,fogFar:230,fogColor:'#c1c9d1',backdrop:'fog',ambientSky:'#e8f1ff',ambientGround:'#626d7d',ambientIntensity:1.1,sunColor:'#ffffff',sunIntensity:1.25,fillColor:'#c8d9f0',fillIntensity:.35,drawDistance:360,shadowStrength:.65},

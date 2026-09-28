@@ -11,11 +11,10 @@ connected districts. Its station coordinate is northward progress, not
 arclength: a ten-station gap on a diagonal bend can be considerably longer
 than ten world metres. Distances and jumps are verified in the complete world.
 
-The ordinary camera follows the rider's position but keeps a north-facing
-control chord. It does not turn the controls along the road. The skater must
-carve the visible bends; holding forward alone leaves the opening road.
-There are no travel zones or camera-framing volumes and no right-angle course
-junctions. Puzzle exploration retains that same stable frame. Live crate lids participate
+The ordinary camera follows editable nodes along the physical course. Around
+charged gaps, the node path settles onto the takeoff-to-landing line before
+the jump, so forward input needs no sideways correction in flight. There are
+no travel zones, camera-framing volumes or lens changes. Live crate lids participate
 in the presentation floor probe so the camera and landing marker use the
 steel deck height instead of the buried ground beneath it; the movement
 ground probe and teeter rules are unchanged.
@@ -94,10 +93,12 @@ after the crate-presentation correction, including position, velocity, contacts
 and checkpoint timing. Two full-render browser runs reach Course Clear with
 zero deaths. Standalone tests also exercise the optional reward
 return, real checkpoint death/respawn, mover arrival phases, ice overspeed,
-enemy responses and the hold-forward negative control.
+enemy responses. `tools/test-blockworks-camera.mjs` verifies all five charged
+gaps with zero sideways input over the final 20 m and throughout flight.
 
 For local review use `/blockworks-review.html?lite&playtest&level=codex-lab`,
-then omit `lite` for full rendering. The **Replay full route** button plays
-the saved 291-second continuous input take from `tools/fixtures/blockworks-journey.json`. The authoring overview is temporary and
-never changes the production camera. The normal game remains reachable from
+then omit `lite` for full rendering. The old saved full-route take predates the
+camera-node alignment and is retained as historical input evidence. For the
+current gap checks use `/camera-alignment-review.html?playtest&level=codex-lab`.
+The authoring overview is temporary. The normal game remains reachable from
 the campaign map and the published playtest link.

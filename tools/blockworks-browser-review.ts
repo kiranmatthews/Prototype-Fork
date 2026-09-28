@@ -16,8 +16,7 @@ acts.forEach((a,i)=>add(a.name,()=>{index=i;const q=routePoint(a.a+3,a.y+.1);pla
 add('Overview',()=>{const a=acts[index],s=a.a+80;drive=null;neutral();frozen=true;level().cameraViews.length=0;
  level().cameraViews.push({p:p.pos.toArray(),s:[1000,200,1000],yaw:0,feather:1,cameraPosition:[routeX(s)+100,a.y+83,20-s+110],cameraTarget:[routeX(s),a.y,20-s],cameraFov:58});mode='Overview';});
 add('Play entry curve',()=>{place(routePoint(2,.15));drive={kind:'entry',frames:0,jumped:false,air:false,startDeaths:p.totalDeaths,maxError:0,minSpeed:Infinity};mode='Entry curve: genuine steering';});
-add('Hold Up comparison',()=>{place(routePoint(2,.15));drive={kind:'up',frames:0,startDeaths:p.totalDeaths,maxError:0,minSpeed:Infinity};mode='Hold Up: no automatic steering';});
-add('Replay full route',()=>{void(async()=>{drive=null;frozen=false;neutral();level().cameraViews.length=0;g.gameFlow.hide();mode='Loading continuous input replay';const replay=await(await fetch('/tools/fixtures/blockworks-journey.json')).json();g.loadReplay(replay);mode='Continuous spawn-to-gate input replay';})().catch(error=>{mode=String(error);});});
+add('Hold Up comparison',()=>{place(routePoint(2,.15));drive={kind:'up',frames:0,startDeaths:p.totalDeaths,maxError:0,minSpeed:Infinity};mode='Forward-only run without jumping';});
 add('Freeze / live',()=>{level().cameraViews.length=0;drive=null;neutral();frozen=!frozen;mode=frozen?'Frozen':'Manual';});
 add('Checkpoint +',()=>{drive=null;level().cameraViews.length=0;neutral();g.gameFlow.hide();p.warpCheckpoint(level(),1);frozen=false;mode='Checkpoint';});
 add('Checkpoint -',()=>{drive=null;level().cameraViews.length=0;neutral();g.gameFlow.hide();p.warpCheckpoint(level(),-1);frozen=false;mode='Checkpoint';});
@@ -35,7 +34,8 @@ p.step=(dt:number,input:any,l:any)=>{
   if(drive.kind==='entry'){
    const ahead=s+10,offset=ahead>112&&ahead<145?2.2*Math.sin(Math.PI*(ahead-112)/33):0;
    const target=routePoint(ahead,0,offset),dx=target[0]-p.pos.x,dz=target[2]-p.pos.z,n=Math.max(.001,Math.hypot(dx,dz));
-   input.moveX=Math.round(dx/n*100)/100;input.moveY=Math.round(-dz/n*100)/100;
+   const f=l.cameraDirAt(p.pos.x,p.pos.y,p.pos.z)??{x:0,z:-1};
+   input.moveX=Math.round((dx*-f.z+dz*f.x)/n*100)/100;input.moveY=Math.round((dx*f.x+dz*f.z)/n*100)/100;
   }
   input.jumpHeld=!drive.jumped;input.jumpPressed=drive.frames===0;
   if(drive.kind==='entry'&&!drive.jumped&&s>=164.3){input.jumpHeld=false;input.jumpReleased=true;drive.jumped=true;}
