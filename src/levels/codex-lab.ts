@@ -158,13 +158,15 @@ add({t:'pit',p:[0,BLOCKWORKS_GROUND+.35,20-ROUTE_END/2],s:[250,1,ROUTE_END+80],i
 
 // 4. The trough itself curves. Its flat bottom ends below the departure
 // road: use the wall/coping, then pop from one curving rail to the receiver.
+// Full vertical lips keep airs on the transition; 24 profile segments match
+// the smooth park surfaces without altering shared vert movement.
 {
  const g=13,start=routePoint(770,0);
  road(755,770,0,14,g);
  road(770,920,-.04,23,g,0,false,'Aqueduct retaining mass');
  const pts=Array.from({length:23},(_,i)=>{const s=mix(770,920,i/22),p=routePoint(s,0);return[p[0]-start[0],p[2]-start[2],0,0] as [number,number,number,number];});
- add({t:'vertramp',p:start,pts,vkind:'half',curve:'spline',rise:3.6,w:3.6,arc:75,deck:4,tex:'solid',color:GREY[1],grp:g,nm:'Sweeping vert aqueduct'});
- road(920,958,lerpY(920,944,3.6*(1-Math.cos(75*Math.PI/180)),3.6),8,g,s=>mix(9.2,4.2,smooth(920,958,s)),false,'Coping departure');
+ add({t:'vertramp',p:start,pts,vkind:'half',curve:'spline',rise:3.6,w:3.6,arc:90,arcSteps:24,deck:4,tex:'solid',color:GREY[1],grp:g,nm:'Sweeping vert aqueduct'});
+ road(920,958,3.6,8,g,s=>mix(9.2,4.2,smooth(920,958,s)),false,'Coping departure');
  gap(958,1000,3.6,34,g,'rail transfer');
  railLine(936,976,s=>mix(4.4,5,(s-936)/40),s=>mix(8.5,4.5,(s-936)/40),g,'High arc · transfer launch');
  railLine(982,1012,s=>mix(4.25,4.4,(s-982)/30),s=>mix(2,0,(s-982)/30),g,'Lower curving receiver');
