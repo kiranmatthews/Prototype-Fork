@@ -193,6 +193,11 @@ export const BLOCKWORKS_FOUNDRY={
  const reward=routePoint(1131,3.6,11);
  box(reward,3.6,10,6,g,0,GREY[2],'Lower reward and bonus perch');crate(1131,3.6,'mask',g,11);fruit(1131,4.9,g,9);
  add({t:'bonusplatform',p:[reward[0]+3,3.6,reward[2]],to:[reward[0]-1.6,3.7,reward[2]+1],grp:g,nm:'Optional foundry bonus'});
+ // A modest precision detour: same-height 2.2m gap, narrower 2.4m landing,
+ // and an unobstructed return to the reward roof. Its column reaches ground.
+ const crystalPerch:Point=[reward[0]-8.4,3.6,reward[2]];
+ box(crystalPerch,3.6,2.4,2.4,g,0,'#b59dd4','Foundry crystal precision perch');
+ add({t:'crystal',p:[crystalPerch[0],5,crystalPerch[2]],grp:g,nm:'Foundry optional precision reward'});
  road(1198,1300,8.4,s=>mix(14,10,(s-1198)/60),g);
  fruitLine(1050,1077,3.6,g);fruitLine(1220,1274,8.4,g);
  mark(1098,3.6,g,-4.8);mark(1098,3.6,g,4.8,'#b59dd4');
@@ -245,7 +250,7 @@ export const BLOCKWORKS_MACHINE={ferry:routePoint(1355,8.4),lift:routePoint(1410
  for(let i=0;i<steps.length;i++){const p=steps[i];assembly(p.s,6,i+1,3,5,g,p.u);fruit(p.s,p.top+1,g,p.u);}
  road(2078,2100,13.2,8,g,0,false,'Crown departure');gap(2100,2118,13.2,24,g,'finish grind');road(2118,2152,13.2,14,g);
  railLine(2088,2125,14,s=>-3*Math.sin(Math.PI*(s-2088)/37),g,'Crown arc into the finish');
- add({t:'crystal',p:routePoint(2129,14.5),grp:g});add({t:'gate',p:routePoint(2136,13.2),yaw:0,grp:g});
+ add({t:'gate',p:routePoint(2136,13.2),yaw:0,grp:g});
  fruitLine(1882,1980,6,g);fruit(2023,8.4,g);mark(2016,6,g);
  BLOCKWORKS_CLIMBS.push({name:'Crown roof bays',grp:g,start:routePoint(2039,6,-2.4),steps,exit:routePoint(2085,13.2)});
 }

@@ -106,6 +106,17 @@ export function runFoundry(r,{exerciseReward=true,verifyRespawn=true}={}) {
   assert.ok(!mask.alive&&(p.masks>masksBefore||(masksBefore>=2&&p.uberTimer>0)),
     'the lower branch must award a mask or its normal third-mask power-up');
   assert.ok(keys.bridge.bangUsed!==true&&metal(f.groups.bridge).every(c=>c.pending),'reward perch must not open the main crossing');
+  assert.ok(!p.hasCrystal&&!l.crystalPickup.collected,'ordinary reward roof must not collect the crystal');
+  const crystal=l.crystalPickup.group.position;
+  const crystalPerch=pad([crystal.x,3.6,crystal.z],1.2);
+  // Use the actual 10m roof width here; the usual safe centre square would
+  // unnecessarily turn this short optional jump into a maximum-range leap.
+  walk([perch.q[0]-4.4,3.6,perch.q[2]],'crystal takeoff edge');
+  jump([crystal.x+.6,3.6,crystal.z],'precision jump to crystal');
+  walk(crystalPerch.q,'claim crystal on narrow perch');
+  assert.ok(p.hasCrystal&&l.crystalPickup.collected,'precision detour must award the crystal');
+  jump([perch.q[0]-4.4,3.6,perch.q[2]],'return from crystal perch');
+  walk(perch.q,'return to reward roof centre');
   hopFrom(perch,reward.at(-1),'return from reward perch');
   for(let i=reward.length-2;i>=0;i--)hopFrom(reward[i+1],reward[i],`return reward pier ${i+1}`);
   bankHop(reward[0],bankEdge-.65,3.6,8,false,'return to foundry bank');
@@ -124,6 +135,7 @@ export function runFoundry(r,{exerciseReward=true,verifyRespawn=true}={}) {
   const usedNames=exerciseReward?['reward','stairs','bridge']:['stairs','bridge'];
   assert.ok(usedNames.every(name=>keys[name].bangUsed),'chosen switches must have real input hits');
   assert.ok(usedNames.every(name=>metal(f.groups[name]).every(c=>!c.pending)),'constructed terrain must remain available');
+  if(!exerciseReward)assert.ok(!p.hasCrystal&&!l.crystalPickup.collected,'main crossing must not collect the optional crystal');
   if(!exerciseReward)assert.ok(!keys.reward.bangUsed&&metal(f.groups.reward).every(c=>c.pending),'direct route must leave the optional reward choice untouched');
   hopFrom(tower,bridge[0],'main bridge first pier');
   for(let i=1;i<bridge.length;i++)hopFrom(bridge[i-1],bridge[i],`main bridge pier ${i+1}`);
