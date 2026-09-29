@@ -16,6 +16,7 @@ export interface SkatePoseInput {
   dt: number; time: number; active: boolean; grounded: boolean; stance: number;
   yaw: number; deckYaw: number; speed: number; charge: number; balance: number;
   verticalVelocity?: number; launchVelocity?: number; mount?: number;
+  iceBrace?: number; // cosmetic knee bend; sole targets remain unchanged
   underWeight?: number;
   underReturning?: boolean;
   manual: number; grab: GrabTrickKind; grabWeight: number;
@@ -273,13 +274,14 @@ export class SkateAnimation {
     this.manualWeight += ((p.manual ? 1 : 0)-this.manualWeight)*(1-Math.exp(-12*p.dt));
     if (!p.manual && this.manualWeight < .001) this.manualWeight = 0;
     this.manualBalance += (clamp(p.balance,-1,1)-this.manualBalance)*(1-Math.exp(-10*p.dt));
-    const springFlex = this.bodySpring.step(p.dt, {
+    let springFlex = this.bodySpring.step(p.dt, {
       grounded:p.grounded || uprightGrind || p.darkslide || !!p.nineHundred,
       charge:backflip?0:p.revert ? p.revert.knee : p.nineHundred||p.lip?0:uprightGrind?p.charge*.35:p.charge,
       verticalVelocity:p.verticalVelocity??0, launchVelocity:p.launchVelocity??0,
       contactBounce:p.grounded||uprightGrind?bounce:0, mount:clamp(p.mount??0,0,1),
       manual:p.manual !== 0 || !!p.lip || uprightGrind,
     });
+    if (p.iceBrace) springFlex = Math.min(1.24, springFlex + clamp(p.iceBrace, 0, .5));
     const bodyFlex=waistGrab?THREE.MathUtils.lerp(springFlex,method?1.10:stalefish?1.05:melon||mute?.95:endGrab?1.05:.65,stalefish?smooth(gw/.65):smooth(gw)):backflip?THREE.MathUtils.lerp(springFlex,.62,backflip.compression):impossible?THREE.MathUtils.lerp(springFlex,.65,impossible.wrap):p.revert?Math.min(1.24,springFlex+.10*p.revert.knee):springFlex;
     if(p.nineHundred && gw>0 && this.spine){
       this.spineBefore=this.spine.quaternion.clone();

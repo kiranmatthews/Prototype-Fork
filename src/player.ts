@@ -18,6 +18,7 @@ import { TUNING, CONST } from './tuning';
 import { GRIND_TRICKS, GRIND_CONTACTS, LIP_CONTACTS, grabTrickInfo, grabTrickFromInput, sampleDeckTrick, sampleBackflip, sampleFootFlip, sampleImpossible, type GrabTrickKind, type GrindStyle, type LipStyle } from './skateTricks';
 import { SkateAnimation } from './skateAnimation';
 import { SkateOllieMotion } from './skateOllieMotion';
+import { IceSkateMotion } from './iceSkateMotion';
 import { trickRepeatFactor, extendHeldTrick, type HeldTrickScore } from './trickScoring';
 import { liveCarveGripAtSpeed } from './carveGrip';
 import { solveSkateSteering } from './skateSteering';
@@ -1359,6 +1360,8 @@ export class Player {
   private boardG: THREE.Group | null = null; // board + wheels: pulled up during grabs
   private skateAnimation: SkateAnimation | null = null;
   private readonly skateOllieMotion = new SkateOllieMotion();
+  private readonly iceSkateMotion = new IceSkateMotion();
+  private iceSkateSteering = 0; // observed steering demand, presentation only
   private grindApproachSide = 1;
   private lipStyle: LipStyle = 'axle';
   private lipYawPose = 0;
@@ -3269,6 +3272,8 @@ export class Player {
     this.deckYawOffset = 0;
     this.skateAnimation?.reset();
     this.skateOllieMotion.reset();
+    this.iceSkateMotion.reset();
+    this.iceSkateSteering = 0;
     this.lipYawPose = this.revertPoseT = 0;
     this.balanceArmMotion.reset();
     this.deckTricksThisAir.clear();
@@ -5916,6 +5921,7 @@ export class Player {
         else this.greaseT = Math.max(0, this.greaseT - dt);
         const slick = this.groundHit?.slippy && this.groundHit.iceGrip !== undefined
           ? iceGrip : this.greaseT > 0 ? 0.22 : 1; // authored grip is relative to dry steering
+        this.iceSkateSteering = 0;
         const rx = this.rawInput.moveX;
         const ry = this.manualing !== 0 ? 0 : this.rawInput.moveY;
         // (during a MANUAL, up/down is the balance pole ONLY — no accel, no
@@ -5947,6 +5953,7 @@ export class Player {
           // This distinction is resolved in the same camera/lane frame as the
           // target direction, so it survives bends and chase-camera rotation.
           const ang = steering.angle;
+          this.iceSkateSteering = ang;
           if (this.softSkateImpactT > 0 &&
               steering.targetX * this.softSkateImpactNormal.x + steering.targetZ * this.softSkateImpactNormal.z < -0.05) {
             // Stale approach input must not erase the rebound or turn it into
@@ -17088,6 +17095,37 @@ export class Player {
       }
     }
     if(this.boardG)this.boardG.userData.ollieMotion=ollieMotion;
+    const iceSkate = this.iceSkateMotion.step(dt, {
+      eligible: this.freeSkate && this.grounded && this.state === 'ride' &&
+        this.animationClipHint === 'player.skate' && this.skateMountT < 0 &&
+        !this.manualing && !this.wallriding && this.wallridePose < .01 && this.lipStallT <= 0 &&
+        this.revertPoseT <= 0 && this.teeterPose < .01 && !this.teetering &&
+        (this.groundHit?.normal.y ?? 0) > .9 && this.competitionFinishT < 0 &&
+        !this.resultsPose && this.worldMapBaseScale === null && !this.playerAnimationBridge.previewActive,
+      onIce: this.groundHit?.slippy === true,
+      speed: this.speed, grip: this.groundHit?.iceGrip ?? .22,
+      steering: this.iceSkateSteering * this.stance / (Math.PI / 2), braking: input.grabHeld || this.brakeT > .05,
+    });
+    if (iceSkate) {
+      if (this.spineG) {
+        this.spineG.rotation.x += iceSkate.chestPitch;
+        this.spineG.rotation.z += iceSkate.chestRoll;
+      }
+      if (this.headM) {
+        this.headM.rotation.x += iceSkate.headPitch;
+        this.headM.rotation.z += iceSkate.headRoll;
+      }
+      for (const [i, arm, elbow, wrist] of [[0, this.armL, this.elbowL, this.wristL],
+        [1, this.armR, this.elbowR, this.wristR]] as const) {
+        const motion = iceSkate.arms[i];
+        if (arm) { arm.rotation.x += motion.swing; arm.rotation.z += motion.spread; }
+        if (elbow) elbow.rotation.x += motion.elbow;
+        if (wrist) wrist.rotation.x += motion.wrist;
+      }
+      this.playerAnimationBridge.modulateDeformations(iceSkate.deformations);
+    }
+    if (this.boardG) this.boardG.userData.iceSkateMotion = iceSkate;
+
     if(this.grabPose>0&&!this.specialGrab&&!this.specialFlip)this.playerAnimationBridge.modulateDeformations(skateGrabTweakElasticity(this.grabKind,this.grabPose,this.stance));
     if(revertMotion)this.playerAnimationBridge.modulateDeformations(skateRevertElasticity(revertMotion,this.revertPoseSign));
     const nineHundred=this.specialGrab?.id==='the-900'||this.nineHundredPose&&this.grabPose>.001;
@@ -17151,6 +17189,7 @@ export class Player {
           (this.parkControls && this.vertAir && !this.grounded ? this.parkAutoTurn : 0),
         deckYaw: this.deckYawOffset, speed: this.speed, charge: this.chargePose, balance: this.balance,
         verticalVelocity: this.vVel, launchVelocity: this.launchVy,
+        iceBrace: iceSkate?.knee,
         underWeight: this.underK,
         underReturning: this.state==='grind'&&!this.railUnder,
         mount: mountPose.tuck + .75 * mountPose.settle,
