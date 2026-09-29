@@ -44,7 +44,7 @@ try {
   look.reset();
   assert.deepEqual(look.value, expected.look);
   const character = await server.ssrLoadModule('/src/character/settings.ts');
-  assert.equal(character.DEFAULT_CHARACTER_HEAD_STYLE, expected.headStyle);
+  assert.equal(character.DEFAULT_CHARACTER_HEAD_STYLE, 'skull');
   assert.equal(character.DEFAULT_CHARACTER_TAIL_VISIBLE, expected.tail);
   const proportions = new character.CharacterProportionSettings(null);
   proportions.setActiveHeadProfile('roo');

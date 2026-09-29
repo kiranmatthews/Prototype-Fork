@@ -92,7 +92,7 @@ export const CHARACTER_PROPORTION_STORAGE_KEY = 'solProtoCharacterProportions.v1
 export const CHARACTER_HAND_REST_REVISION = 1 as const;
 export const CHARACTER_PROPORTION_DEFAULTS_REVISION = 6 as const;
 export const DEFAULT_CHARACTER_TAIL_VISIBLE: boolean = false;
-export const DEFAULT_CHARACTER_HEAD_STYLE = 'alternate' as const;
+export const DEFAULT_CHARACTER_HEAD_STYLE = 'skull' as const;
 
 /** Identity presentation values used by the original Character Lab baseline. */
 export const IDENTITY_CHARACTER_PROPORTIONS: Readonly<CharacterProportionSettingsValue> =
