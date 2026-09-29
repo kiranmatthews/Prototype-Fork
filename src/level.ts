@@ -58,6 +58,7 @@ import { NightworksRocks, nightworksGeometry, isNightworksSurface } from "./nigh
 import { NIGHTWORKS_LEVEL } from "./levels/nightworks";
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
+import { BONE_YARD_LEVEL } from "./levels/bone-yard";
 import { TREEHOUSE_TRAIL_LEVEL } from "./levels/treehouse-trail";
 import { ASTRA_CHIMEWORKS_LEVEL } from "./levels/astra-chimeworks";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
@@ -2298,6 +2299,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
     data: CODEX_LAB_LEVEL,
   }, // source-owned long course for fast, isolated geometry iterations
   { id: "jungle-cup", name: JUNGLE_CUP_LEVEL.name, data: JUNGLE_CUP_LEVEL },
+  { id: "bone-yard", name: BONE_YARD_LEVEL.name, data: BONE_YARD_LEVEL },
   { id: "astra-chimeworks", name: ASTRA_CHIMEWORKS_LEVEL.name, data: ASTRA_CHIMEWORKS_LEVEL },
   {
     id: "backport-lab",

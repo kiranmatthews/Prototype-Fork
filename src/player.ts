@@ -128,6 +128,7 @@ import {
 } from './vertBoardRelease';
 import { CharacterProportionLayer } from './character/proportionLayer';
 import { CharacterRigidMeshBatches } from './character/rigidMeshBatch';
+import { CharacterBreakApart } from './character/breakApart';
 import {
   BASE_CHARACTER_HITBOX_HEIGHT,
   characterCollisionHeight,
@@ -828,6 +829,7 @@ export class Player {
   private bailing = false; // visible fatal fall through the death watch/fade
   private deathElapsed = 0;
   private deathRagdoll = false;
+  private breakApart: CharacterBreakApart | null = null;
   private deathPoseFrozen = false;
   private deathFacingYaw = 0;
   private deathSupport: GroundHit | null = null;
@@ -1500,6 +1502,7 @@ export class Player {
     this.playerAnimationBridge = new PlayerAnimationBridge(this.group, this.bodyGroup);
     this.characterProportionLayer = new CharacterProportionLayer(this.bodyGroup);
     characterProportionSettings.subscribe(() => {
+      this.breakApart?.reset();
       this.syncCharacterHitboxDimensions();
       this.syncCharacterAppearance();
       this.resetRenderInterpolation();
@@ -2057,6 +2060,8 @@ export class Player {
       settled: this.state === 'dead' && this.grounded, rotatingRagdoll: this.ragActive,
       mode: this.deathRagdoll ? 'ragdoll' : this.grounded ? 'canned' : 'falling', frozen: this.deathPoseFrozen, supportSamples: this.interactionMeasure.supportSamples };
   }
+
+  get breakApartDiagnostics() { return this.breakApart?.diagnostics ?? null; }
 
   get deathPresentationDelay(): number {
     return this.bailing ? CONST.deathWatchTime : 0;
@@ -2642,6 +2647,7 @@ export class Player {
    */
   enterAnimationPreview(): PlayerAnimationRig {
     this.restoreRenderPose();
+    this.breakApart?.reset();
     this.clearCharacterAppearance();
     this.resetRenderInterpolation();
     return this.playerAnimationBridge.enterPreview();
@@ -3211,6 +3217,7 @@ export class Player {
   // warp that skipped any of this would arrive still grinding a rail that is
   // now four hundred units behind you.
   private settle(level: Level, facing?: THREE.Vector3): void {
+    this.breakApart?.reset();
     this.competitionFinishT = -1;
     this.competitionParkedBoard?.removeFromParent();
     this.competitionParkedBoard = null; // shared board geometry/materials remain owned by the rider
@@ -3498,6 +3505,15 @@ export class Player {
 
   // One deterministic fixed step.
   step(dt: number, input: Input, level: Level): void {
+    // Detached sockets are a final presentation layer. Never let them enter
+    // the authored-pose baseline, interaction bounds or movement simulation.
+    this.breakApart?.restore();
+    this.stepSimulation(dt, input, level);
+    this.breakApart?.step(dt, level, this.bailRecoverT >= 0,
+      this.bailDownT / this.bailRush, this.isBailing);
+  }
+
+  private stepSimulation(dt: number, input: Input, level: Level): void {
     if (this.competitionFinishT >= 0) { this.stepCompetitionFinish(dt, level); return; }
     this.previousCharacterBounds.copy(this.characterBounds);
     this.parkControls = level.skatepark;
@@ -9351,6 +9367,8 @@ export class Player {
     // On-foot inertia, sideways slide-jumps, exact slides, and vert hang carry
     // live in world-vector channels rather than the course speed projection.
     const vectorOwned = this.captureWipeoutVelocity(BAIL_V);
+    this.breakApart ??= new CharacterBreakApart(this.bodyGroup);
+    this.breakApart.request('air', BAIL_V, this.state === 'dead', this.grounded ? this.groundHit : null);
     const planar = BAIL_V.length();
     if (vectorOwned && planar > 1e-4) {
       this.axisF.copy(BAIL_V).multiplyScalar(1 / planar);
@@ -9410,7 +9428,7 @@ export class Player {
     return true;
   }
 
-  private bail(masked = false): void {
+  private bail(masked = false, impactSpeed = this.speed): void {
     this.softSkateImpactT = 0;
     // capture BEFORE the flags change hands: a bail out of skating throws the
     // deck; the same crash on foot has no deck to throw
@@ -9427,6 +9445,11 @@ export class Player {
     // a longer, still-moving knockdown must not slide unprotected into a nitro.
     this.captureWipeoutVelocity(BAIL_V);
     const entryPlanar = BAIL_V.length();
+    this.breakApart ??= new CharacterBreakApart(this.bodyGroup);
+    // Wall separation may already have stopped the collider. Preserve the
+    // incoming speed for the loose pieces without changing rebound physics.
+    this.breakApart.request('air', hadBoard
+      ? BAIL_TARGET.copy(this.axisF).multiplyScalar(impactSpeed) : BAIL_V, false, this.grounded ? this.groundHit : null);
     const bailDuration =
       (CONST.bailDownTime + Math.min(0.9, entryPlanar * 0.035)) *
       (masked ? 0.55 : 1);
@@ -9474,6 +9497,13 @@ export class Player {
     poseSource: THREE.Object3D = this.bodyGroup,
     preserveTranslation = false,
   ): void {
+    this.breakApart?.request(kind, this.bailVelocity, this.state === 'dead');
+    if (kind === 'forward' && this.breakApart?.preparing && this.looseBoard) {
+      // Caught trucks leave the deck with the legs; the chest keeps flying.
+      this.flyBoardVel.multiplyScalar(.12);
+      this.flyBoardVel.y = 1.2;
+      this.flyBoardAng.multiplyScalar(.3);
+    }
     this.ragActive = true;
     this.ragBounces = 0;
     this.ragRollAcc = 0;
@@ -13168,7 +13198,7 @@ export class Player {
       // Wall impacts roll launch before bail(); the thrown board then consumes
       // its own deterministic samples, and carry is selected afterward.
       const launch = this.lowObstacleTripLaunch(s0);
-      this.bail();
+      this.bail(false, s0);
       this.startRagdoll('forward');
       this.vVel = Math.max(this.vVel, launch);
       this.speed = this.lowObstacleTripCarry(s0);
@@ -13181,7 +13211,7 @@ export class Player {
       this.emitSparks(8, 0xffd166, 2);
       return;
     }
-    this.bail();
+    this.bail(false, s0);
     this.startRagdoll('back');
     this.speed = -dir * Math.abs(s0) * 0.32; // bounce OFF the wall, flat on your back
     this.vVel = Math.max(this.vVel, 3.6);
