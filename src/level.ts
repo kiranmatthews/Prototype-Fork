@@ -703,7 +703,7 @@ export interface CustomComponent {
   lit?: boolean; // mover: carries a burning brazier (warm-iron deck, a moving light in the dark)
   berms?: boolean; // terrain: kerbs + grindable lips down both edges
   n?: number; // decor: strand/piece count (hanging vines)
-  outline?: boolean; // crate starts as a pass-through ghost; a grouped '!' makes it real
+  outline?: boolean; // crate/solid mesh starts as a pass-through ghost; a grouped '!' makes it real
   range?: number;
   speed?: number;
   foe?: EnemyKind; // enemy variant (grunt/spiker/turtle/charger/hopper/floater/sentry/spinner)
@@ -5240,8 +5240,23 @@ export class Level {
     return chunks;
   }
 
+  private outlinedSurfaces:{mesh:THREE.Mesh;component:CustomComponent;groups:number[];active:boolean;opacity:number;color:THREE.Color}[]=[];
+  private syncOutlinedSurfaces():void {
+    for(const surface of this.outlinedSurfaces){
+      const active=this.crates.some(c=>c.bang&&c.bangUsed&&!c.pending&&
+        (surface.groups.length?c.groupIds?.some(id=>surface.groups.includes(id)):!c.groupIds?.length));
+      if(active===surface.active)continue;
+      const material=surface.mesh.material as THREE.MeshLambertMaterial;
+      material.wireframe=!active;material.opacity=active?surface.opacity:.22;
+      material.transparent=material.opacity<1;material.depthWrite=active;
+      material.color.copy(active?surface.color:new THREE.Color('#e8c86c'));material.needsUpdate=true;
+      if(active&&!surface.active)this.groundMeshes.push(surface.mesh);
+      if(!active&&surface.active){const i=this.groundMeshes.indexOf(surface.mesh);if(i>=0)this.groundMeshes.splice(i,1);}
+      surface.active=active;
+    }
+  }
   private staticSurfaceMaterials=new Map<string,THREE.MeshLambertMaterial>();
-  private buildSurfaceMesh(c: CustomComponent): void {
+  private buildSurfaceMesh(c: CustomComponent, outlineGroups:number[]=[]): void {
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute("position", new THREE.Float32BufferAttribute(c.vertices ?? [0, 0, 0, 4, 0, 0, 0, 0, -4], 3));
     if (c.indices) geometry.setIndex(c.indices);
@@ -5309,6 +5324,7 @@ export class Level {
       this.putDecor(`static surface ${key}:${Math.floor(c.p[0]/16)}:${Math.floor(c.p[2]/16)}`,geometry,shared,matrix);
       return;
     }
+    if(c.outline&&c.materialStyle==='unity-sand')material=material.clone();
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(...c.p);
     mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0);
@@ -5326,7 +5342,12 @@ export class Level {
       mesh.userData.editorGhost = true;
     }
     this.root.add(mesh);
-    if (c.solid !== false) this.groundMeshes.push(mesh);
+    if(c.outline&&c.solid!==false){
+      mesh.userData.outlinedSurface=true;
+      this.outlinedSurfaces.push({mesh,component:JSON.parse(JSON.stringify(c)),groups:outlineGroups,
+        active:false,opacity:material.opacity,color:material.color.clone()});
+      material.wireframe=true;material.opacity=.22;material.transparent=true;material.depthWrite=false;material.color.set('#e8c86c');
+    }else if (c.solid !== false) this.groundMeshes.push(mesh);
   }
 
   captureData(): CustomLevelData {
@@ -5378,6 +5399,7 @@ export class Level {
     const phasePadMeshes = new Set(this.phasePads.map((pad) => pad.mesh));
     // decks, ramps, step blocks, metal crates — everything standable
     for (const m of this.groundMeshes) {
+      if(m.userData.outlinedSurface)continue;
       if (
         hpWalls.has(m) ||
         crumbleMeshes.has(m) ||
@@ -5557,6 +5579,9 @@ export class Level {
         ...matInfo(m),
       });
     });
+    for(const surface of this.outlinedSurfaces)C.push({...surface.component,
+      p:surface.mesh.position.toArray() as [number,number,number],yaw:r2(THREE.MathUtils.radToDeg(surface.mesh.rotation.y)),
+      s:surface.mesh.scale.toArray() as [number,number,number]});
     // halfpipes, with their true profile (flat half + radius). They come back
     // as the vert part, straight and 90°, which rebuilds on the same backing.
     for (const hp of this.halfpipes) {
@@ -6887,7 +6912,7 @@ export class Level {
           } else if (c.t === "coastwall") {
             this.buildCoastWall(c);
           } else if (c.t === "mesh") {
-            this.buildSurfaceMesh(c);
+            this.buildSurfaceMesh(c,gameplayGroupChainOf(c,data));
           } else if (c.t === "clock" || c.t === "comboorb") {
             // run-mode activators: just remember the authored spot — the
             // pickups build after every level's geometry (placeClock /
@@ -9081,6 +9106,7 @@ export class Level {
           : ids.some((id) => filter.includes(id));
       if (wired) this.setCratePending(c, false);
     }
+    this.syncOutlinedSurfaces();
   }
 
   // Flip a crate between ghost (outline) and real — both faces are kept so
@@ -9306,6 +9332,8 @@ export class Level {
         this.restoreBangFace(c);
       }
     }
+
+    this.syncOutlinedSurfaces();
 
     // the settle gate is a live COUNT — force the next scan so a restored
     // stack is re-evaluated rather than compared against a stale tally

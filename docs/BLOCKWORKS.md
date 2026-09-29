@@ -25,6 +25,14 @@ Invisible wallpath shells use those same edges for side and end collision.
 Roof buildings use a solid collision volume beneath visible 2.4 m modules.
 Adjacent mesh chunks share binary-grid vertices and smooth top normals.
 
+Nineteen partial-width wedge connections provide skate routes over the entry
+shelves, all courtyard and crown roof tiers, the east gallery, both raised
+relay roofs and the foundry stairs. Widths range from 1.8 to 3 m, leaving the
+remaining block edges available for jumps. The steel stairs have solid deck
+caps to keep wheels clear of crate fronts. Their ramps and caps share the
+existing switch groups and checkpoint state; ghosts are not rideable.
+
+
 ## Gameplay progression
 
 | District | Main sequence |

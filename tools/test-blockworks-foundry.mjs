@@ -73,9 +73,9 @@ export function runFoundry(r,{exerciseReward=true,verifyRespawn=true}={}) {
   }
   reward.sort((a,b)=>b.q[2]-a.q[2]);
   const perch=pad(point(1131,3.6,11),3);
-  const stairs=f.stairs.map(step=>pad(point(step.s,step.top,step.u),1.92));
+  const stairs=f.stairs.map(step=>pad(point(step.s,step.skateTop??step.top,step.u),1.92));
   const tower=pad(f.bridgeKey,3.6);
-  const bridge=f.bridge.map(step=>pad(point(step.s,step.top,step.u),1.92));
+  const bridge=f.bridge.map(step=>pad(point(step.s,step.skateTop??step.top,step.u),1.92));
 
   // Retire an inherited held charge through its ordinary release/landing,
   // then brake on the broad receiving road before precision foot platforming.

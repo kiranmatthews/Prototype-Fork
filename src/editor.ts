@@ -8091,6 +8091,7 @@ export class Editor {
           else delete c.materialStyle;
         }, "Surface texture"));
       boolRow("walkable collision", () => c.solid !== false, value => { c.solid = value; });
+      boolRow("starts as !-switch outline", () => c.outline === true, value => { c.outline = value; if(value)c.solid = true; });
       boolRow("material fog", () => c.fog ?? c.solid === false, value => { c.fog = value; });
       num("opacity", () => c.opacity ?? 1, value => { c.opacity = Math.max(0, Math.min(1, value)); }, .05);
       const count = Math.floor((c.vertices?.length ?? 0) / 3);

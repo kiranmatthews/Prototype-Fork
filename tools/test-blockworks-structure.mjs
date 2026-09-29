@@ -27,7 +27,8 @@ try {
   const staticGround = level.groundMeshes.filter(mesh => mesh.userData.moverId === undefined);
   const ribbons = staticGround.filter(mesh => {
     const c = data.components[mesh.userData.editorIdx];
-    return c?.t === 'mesh' && c.solid !== false && c.vert === false;
+    return c?.t === 'mesh' && c.solid !== false && c.vert === false && !c.outline
+      && !/wedge|skate tier|shelf access|shelf return/i.test(c.nm ?? '');
   });
   const hits = (p, meshes = staticGround, fromY = 50) => {
     ray.set(new THREE.Vector3(p[0], fromY, p[2]), down); ray.near = 0; ray.far = 150;

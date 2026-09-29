@@ -1,3 +1,4 @@
+import {addSkateWedge,addSkateLid,addWedgeBetween,type SkateBlock,type SkateWedge} from './blockworks-ramps';
 import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
 import { BLOCKWORKS_GROUND, ROUTE_END, emitPit, emitRibbon, routePoint, routeYaw, type Point } from './blockworks-geometry';
 export { BLOCKWORKS_GROUND, ROUTE_END, routePoint, routeTangent, routeYaw, routeX } from './blockworks-geometry';
@@ -118,7 +119,6 @@ add({t:'pit',p:[0,BLOCKWORKS_GROUND+.35,20-ROUTE_END/2],s:[250,1,ROUTE_END+80],i
  const g=10;
  road(-12,120,0,s=>mix(14,9,s/90),g);road(120,166,lerpY(120,166,0,-2.4),9,g);
  gap(166,176.8,-2.4,21,g);road(176.8,208,-2.4,s=>mix(14,10,(s-176.8)/31.2),g);road(208,235,-2.4,10,g);
- const rp=routePoint(64,0,-3.4);add({t:'ramp',p:rp,len:14,rise:1.4,w:3.6,yaw:routeYaw(64),tex:'solid',color:GREY[2],grp:g,nm:'Inside-bank launch'});
  pad(78,1.4,4.8,12,g,-3.4);pad(93,2.8,4.8,12,g,-3.4);pad(109,1.4,4.8,14,g,-3.4);
  railLine(112,198,s=>mix(1,-1.6,(s-112)/86),-4.4,g,'Outside arc over the first gap');
  enemy(130,-.52,'turtle',g,-1.5,1.2,.85);fruit(130,2.4,g,-1.5);fruitLine(20,60,0,g);fruitLine(145,163,lerpY(120,166,0,-2.4),g,0,9);
@@ -177,7 +177,7 @@ add({t:'pit',p:[0,BLOCKWORKS_GROUND+.35,20-ROUTE_END/2],s:[250,1,ROUTE_END+80],i
 // makes both consequences visible, and every incomplete route can return.
 export const BLOCKWORKS_FOUNDRY={
  approach:routePoint(1080,3.6),stairsKey:routePoint(1085,3.6,-4.8),rewardKey:routePoint(1085,3.6,4.8),bridgeKey:routePoint(1136,8.4,-5.4),
- stairs:Array.from({length:5},(_,i)=>({s:1109.5+i*5,top:4.56+i*.96,u:-5.4})),
+ stairs:Array.from({length:5},(_,i)=>({s:1109.5+i*5,top:4.56+i*.96,skateTop:4.76+i*.96,u:-5.4})),
  bridge:[...Array.from({length:9},(_,i)=>({s:1143+i*6,top:8.4,u:Math.min(0,-5.4+i*1.8)})),{s:1195,top:8.4,u:0}],
  exit:routePoint(1200,8.4),groups:{stairs:100,reward:101,bridge:102},
 };
@@ -249,6 +249,38 @@ export const BLOCKWORKS_MACHINE={ferry:routePoint(1355,8.4),lift:routePoint(1410
  fruitLine(1882,1980,6,g);fruit(2023,8.4,g);mark(2016,6,g);
  BLOCKWORKS_CLIMBS.push({name:'Crown roof bays',grp:g,start:routePoint(2039,6,-2.4),steps,exit:routePoint(2085,13.2)});
 }
+
+// Partial-width wedges keep the jump lines while making every block tier rideable.
+export const BLOCKWORKS_SKATE_RAMPS:SkateWedge[]=[];
+const skateBlock=(s:number,top:number,width:number,depth:number,u=0,yaw=routeYaw(s)):SkateBlock=>({p:routePoint(s,top,u),top,width,depth,yaw});
+const joinBlocks=(a:SkateBlock,b:SkateBlock,g:number,name:string,w=2.4,gated=false)=>addSkateWedge(C,BLOCKWORKS_SKATE_RAMPS,a,b,g,name,w,gated);
+const entryBlocks=[skateBlock(78,1.4,4.8,12,-3.4),skateBlock(93,2.8,4.8,12,-3.4),skateBlock(109,1.4,4.8,14,-3.4)];
+joinBlocks(skateBlock(66,0,4.8,12,-2.7),entryBlocks[0],10,'Entry shelf access',2.4);
+joinBlocks(entryBlocks[0],entryBlocks[1],10,'Entry upper shelf wedge',2.4);
+joinBlocks(entryBlocks[1],entryBlocks[2],10,'Entry descending shelf wedge',2.4);
+joinBlocks(skateBlock(123,0,8,14),entryBlocks[2],10,'Entry shelf return',2.4);
+for(const climb of BLOCKWORKS_CLIMBS){
+ const crown=climb.grp===17;
+ let previous=crown?skateBlock(2035,6,8.4,12):skateBlock(267,-2.4,10.8,16);
+ for(const [i,step]of climb.steps.entries()){
+  const next:SkateBlock={p:step.point,top:step.top,width:step.width,depth:step.depth,yaw:routeYaw(step.s)};
+  joinBlocks(previous,next,climb.grp,`${climb.name} · skate tier ${i+1}`,crown?2.4:3);
+  previous=next;
+ }
+}
+addWedgeBetween(C,BLOCKWORKS_SKATE_RAMPS,routePoint(275.3,-2.43,3.6),routePoint(282.15,-.03,9.5),2.2,11,'Courtyard east gallery wedge');
+joinBlocks(skateBlock(1718,4.8,8,14),skateBlock(1728,7.2,4.8,9.6,5.5),16,'Relay east roof wedge',2.2);
+joinBlocks(skateBlock(1823,6,7.2,14),skateBlock(1836,8.4,4.8,12,-5),16,'Relay west roof wedge',2.2);
+// The same switch owns the steel lids and ramps; there is no permanent bypass.
+const f=BLOCKWORKS_FOUNDRY;
+let previous=skateBlock(1100,3.6,5,12,-5.4);
+for(const [i,step]of f.stairs.entries()){
+ const next=skateBlock(step.s,step.skateTop,3.84,3.84,step.u,0);
+ addSkateLid(C,next,f.groups.stairs);
+ joinBlocks(previous,next,f.groups.stairs,`Switch stair wedge ${i+1}`,1.8,true);previous=next;
+}
+for(const step of f.bridge)addSkateLid(C,skateBlock(step.s,step.top+.035,3.84,3.84,step.u,0),f.groups.bridge);
+for(let i=0;i<4;i++)addSkateLid(C,skateBlock(1110.5+i*5,3.635,3.84,3.84,7+Math.min(i,2)*2,0),f.groups.reward);
 
 // Follow the physical course. A short collinear run of nodes around each
 // jump gives the camera time to settle onto the landing line before takeoff.
