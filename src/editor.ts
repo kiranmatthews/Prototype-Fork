@@ -8788,6 +8788,10 @@ export class Editor {
         () =>
           (c.vkind = (c.vkind ?? "quarter") === "quarter" ? "half" : "quarter"),
       );
+      toggle(
+        () => `coping rails: ${c.rails === false ? "off" : "on"}`,
+        () => (c.rails = c.rails === false),
+      );
       if (c.pts && c.pts.length > 2) {
         toggle(
           () => `path: ${c.closed ? "closed loop" : "open"}`,

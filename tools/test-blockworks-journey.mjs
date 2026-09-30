@@ -19,7 +19,7 @@ try{
    fixedStep:r.dt,tuning:structuredClone(r.TUNING),frames:r.trace,actions:r.actions};
   evidence.push(...runOpeningAndTerrace(r));
   stage='frozen bends';evidence.push(runFrozen(r));
-  stage='aqueduct';await runAqueduct(r);evidence.push({stage,frame:r.frame,position:r.p.pos.toArray(),speed:r.p.speed});
+  stage='aqueduct';evidence.push(await runAqueduct(r));
   stage='foundry';evidence.push(runFoundry(r,{exerciseReward:true,verifyRespawn:false}));
   stage='machinery';evidence.push(runMachinery(r));
   stage='finale';evidence.push(...runFinale(r));

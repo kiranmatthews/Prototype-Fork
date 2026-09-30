@@ -22,11 +22,26 @@ try{
  const {CameraLookOffset}=await server.ssrLoadModule('/src/cameraLook.ts');
  const {speedSkateFovTarget,stepSpeedSkateFov}=await server.ssrLoadModule('/src/cameraSpeedEffect.ts');
  const m=await server.ssrLoadModule('/src/levels/codex-lab.ts');
- level=new Level(new THREE.Scene(),{id:'crate-camera',name:m.CODEX_LAB_LEVEL.name,data:m.CODEX_LAB_LEVEL});
+ const first=m.BLOCKWORKS_FOUNDRY.bridge[7],second=m.BLOCKWORKS_FOUNDRY.bridge[8];
+ const pierPoints=[first,second].map(pier=>m.routePoint(pier.s,pier.top,pier.u));
+ // Production now overlays these crate piers with skate decks. This regression
+ // specifically exercises real crate support: omit only the two authored deck
+ // overlays in a fixture copy, retaining the crates, lower terrain and camera.
+ const overlays=m.CODEX_LAB_LEVEL.components.filter(component=>component.t==='mesh' &&
+  component.nm==='Switch-built skate deck' && component.grp===m.BLOCKWORKS_FOUNDRY.groups.bridge &&
+  pierPoints.some(point=>Math.abs(component.p[0]-point[0])<.01 && Math.abs(component.p[2]-point[2])<.01 &&
+   Math.abs(component.p[1]-point[1]-.035)<.005));
+ assert.equal(overlays.length,2,'expected one skate overlay over each tested crate pier');
+ const omitted=new Set(overlays);
+ // This regression intentionally exercises the shared ground-anchored camera,
+ // independent of the high-air course's presentation-only follow opt-in.
+ const fixtureLevel={...m.CODEX_LAB_LEVEL,cameraAirLift:undefined,components:m.CODEX_LAB_LEVEL.components.filter(component=>!omitted.has(component))};
+ assert.equal(fixtureLevel.components.filter(c=>c.t==='crate').length,
+  m.CODEX_LAB_LEVEL.components.filter(c=>c.t==='crate').length,'crate fixture removed actual crates');
+ level=new Level(new THREE.Scene(),{id:'crate-camera',name:fixtureLevel.name,data:fixtureLevel});
  // Fixture setup: present the real bridge after its normal puzzle activation.
  for(const key of level.crates.filter(c=>c.bang))level.triggerBang(key);
  level.root.updateMatrixWorld(true);
- const first=m.BLOCKWORKS_FOUNDRY.bridge[7],second=m.BLOCKWORKS_FOUNDRY.bridge[8];
  const p=new Player(level.scene);p.enterLevel('crate-camera');
  const firstPoint=m.routePoint(first.s,first.top+.02,first.u);
  p.respawn(level,true,false,{position:new THREE.Vector3(...firstPoint)});
@@ -74,8 +89,10 @@ try{
  const steer=q=>{const x=q[0]-p.pos.x,z=q[2]-p.pos.z,n=Math.hypot(x,z);return n<.08?{}:{moveX:x/n,moveY:-z/n};};
  for(let i=0;i<60;i++)tick({});
  assert.ok(p.grounded);assert.ok(Math.abs(p.groundBelowY-first.top)<.03);
+ assert.ok(p.groundHit?.crate,'standing fixture must exercise actual crate-lid support');
  const standing=samples[samples.length-1];
  const meshOnly=p.queryShadowGround(level,false);
+ assert.ok(meshOnly===null || meshOnly<first.top-1,'fixture must preserve a real crate-versus-terrain camera difference');
  assert.equal(p.queryShadowGround(level),meshOnly,'default probe must retain mesh-only teeter semantics');
  const saved=level.crates.map(crate=>({crate,alive:crate.alive,pending:crate.pending,nitro:crate.nitro}));
  const restore=()=>{for(const row of saved){row.crate.alive=row.alive;row.crate.pending=row.pending;row.crate.nitro=row.nitro;}};
@@ -104,6 +121,7 @@ try{
  assert.equal(p.state,'air');
  let airFrames=0;for(let i=0;i<120&&!p.grounded;i++){tick(steer(landing));airFrames++;}
  assert.ok(p.grounded&&Math.abs(p.pos.y-second.top)<.08,'real pier hop failed');
+ assert.ok(p.groundHit?.crate,'hop must land on a real crate lid rather than an overlay');
  for(let i=0;i<60;i++)tick({});
  assert.ok(standing.current.top<1&&standing.current.bottom>-1&&standing.current.horizontal<1,
   'actual standing character vertices leave the viewport');
@@ -111,6 +129,6 @@ try{
  assert.ok(Math.abs((standing.eyeY-standing.oldEyeY)-3.43212638565933)<.01,'measured camera correction changed');
  assert.ok(Math.abs(p.groundBelowY-second.top)<.03,'hop landing lost the actual crate surface');
  console.log(JSON.stringify({standing,airFrames,landingFloor:p.groundBelowY,
-  inactiveOverheadExcluded:true,teeterMeshOnlyPreserved:true},null,2));
+  omittedSkateOverlays:overlays.map(c=>c.p),inactiveOverheadExcluded:true,teeterMeshOnlyPreserved:true},null,2));
  console.log('PASS actual crate lids frame the standing character; inactive/overhead guards and mesh-only teeter remain intact');
 }finally{level?.dispose();await server.close();console.warn=warn;console.error=error;}

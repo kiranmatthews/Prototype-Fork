@@ -736,7 +736,7 @@ export interface CustomComponent {
   widths?: number[]; // woodpath: per-node deck width; absent entries use w
   scaffold?: boolean; // woodpath: bamboo posts/braces/handrails beneath and beside the deck
   supports?: boolean; // woodpath: generate terrain-reaching/fixed-depth support posts (default follows scaffold)
-  rails?: boolean; // woodpath: grindable bamboo handrails on both sides
+  rails?: boolean; // woodpath: handrails; vertramp: automatic coping rails (default true)
   spacing?: number; // woodpath: decorative plank spacing
   baySpacing?: number; // woodpath: distance between bamboo support/X-brace bays
   supportDepth?: number; // woodpath: fixed post depth below the deck
@@ -923,6 +923,8 @@ export interface CustomLevelData {
   allBalanceCrates?: boolean;
   perfectGrindBoost?: boolean;
   keepPlayFog?: boolean;
+  /** 0..1 camera-only airborne vertical follow; absent preserves shared camera tuning. */
+  cameraAirLift?: number;
   /** 0..1 level-authored widening of ledge reach/timing; absent keeps global feel. */
   ledgeAssist?: number;
   /** Legacy gold-medal benchmark; retained for existing level JSON. */
@@ -2393,7 +2395,7 @@ const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const LEVEL_DATA_KEYS = new Set([
   "v", "name", "spawn", "killY", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "atmosphere",
-  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark",
+  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "cameraAirLift",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "iceGrip", "containment",
@@ -2620,6 +2622,8 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   if (source.hudMode !== undefined && source.hudMode !== "bonus" && source.hudMode !== "hub") return null;
   for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark"] as const)
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
+  if (source.cameraAirLift !== undefined && (typeof source.cameraAirLift !== "number" ||
+      !Number.isFinite(source.cameraAirLift) || source.cameraAirLift < 0 || source.cameraAirLift > 1)) return null;
   if (source.relicTime !== undefined && !validRelicTime(source.relicTime)) return null;
   if (source.medalTimes !== undefined && !validMedalTimes(source.medalTimes)) return null;
   if (
@@ -3722,6 +3726,7 @@ export class Level {
   // tuning. One source course can widen its ledge catch envelope while every
   // other level retains the exact global grab feel.
   ledgeAssist = 0;
+  cameraAirLift: number | undefined; // presentation only; does not change lane/input frames
   skatepark = false;
   // Presentation semantics are authored with data so edited/copied bonus
   // stages retain their HUD without relying on a special registry id.
@@ -5633,6 +5638,7 @@ export class Level {
       if (!vc || capturedSweeps.has(vc)) continue;
       capturedSweeps.add(vc);
       C.push(JSON.parse(JSON.stringify(vc)) as CustomComponent);
+      if (vc.rails === false) continue;
       for (const line of (o.userData.vertCopings as
         | THREE.Vector3[][]
         | undefined) ?? [])
@@ -5646,6 +5652,7 @@ export class Level {
           line.every((q, i) => q.distanceToSquared(pts[i]) < 0.05),
       ) ||
       this.halfpipes.some((hp) => {
+        if (hp.object.userData.rails === false) return false;
         const y = hp.lipY + 0.05;
         return pts.every((p) => {
           const crossV = hp.axis === "z" ? p.x : p.z;
@@ -6115,6 +6122,7 @@ export class Level {
       allBalanceCrates: this.allBalanceCrates || undefined,
       perfectGrindBoost: this.perfectGrindBoost || undefined,
       keepPlayFog: this.keepPlayFog || undefined,
+      cameraAirLift: this.cameraAirLift,
       ...(this.capturedOceanSpec ? { ocean: JSON.parse(JSON.stringify(this.capturedOceanSpec)) as CustomOceanData } : {}),
       ledgeAssist: this.ledgeAssist > 0 ? r2(this.ledgeAssist) : undefined,
       relicTime: this.relicTime !== CAMPAIGN_TIME_RELIC_TARGET_SECONDS ? this.relicTime : undefined,
@@ -6239,6 +6247,7 @@ export class Level {
     this.allBalanceCrates = data.allBalanceCrates === true;
     this.perfectGrindBoost = data.perfectGrindBoost === true;
     this.keepPlayFog = data.keepPlayFog === true;
+    this.cameraAirLift = data.cameraAirLift;
     this.killY = data.killY;
     this.ledgeAssist = data.ledgeAssist ?? 0;
     this.finishZ = -1e9; // endless playground: no finish gate

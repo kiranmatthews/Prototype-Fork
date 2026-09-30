@@ -3,6 +3,7 @@ import { writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { pathToFileURL } from 'node:url';
 import { withBlockworksRuntime } from './blockworks-runner.mjs';
+import { skateRoofWedges } from './blockworks-skate-pilot.mjs';
 
 // Complete source world, real input, authored spawn: no resets, warps, velocity
 // changes, direct switch activation, or rotation into easier local axes.
@@ -17,23 +18,10 @@ function record(r, name, recordings) {
 /** Continue the supplied live player from the authored spawn through s510. */
 export function runOpeningAndTerrace(r) {
     const evidence = [];
-    const { p, l, THREE } = r;
-    const { routePoint, routeTangent, BLOCKWORKS_CLIMBS } = r.sourceModule;
+    const { p, l } = r;
+    const { routePoint, BLOCKWORKS_CLIMBS } = r.sourceModule;
     const at = (s, y = 0, u = 0) => routePoint(s, y, u);
     const progress = () => station(p);
-    const walkingFrames = [];
-    const walkFlowTo = (target, label) => {
-      const begin = r.frame;
-      r.until(() => r.distanceTo(target) < .9, () => {
-        assert.ok(p.grounded, `${label} lost roof support`);
-        // Run across the usable roof, then ease the real analog input over
-        // the last three metres before the short precision-placement beat.
-        const pace = Math.min(.8, Math.max(.2, r.distanceTo(target) * .8 / 3));
-        return r.steerToward(target, { pace });
-      }, { maxFrames:1800,label:`${label} · run and ease` });
-      r.walkTo(target, {maxFrames:600,label:`${label} · final placement`});
-      walkingFrames.push(...r.trace.slice(begin));
-    };
     const entryOffset = s => s > 112 && s < 145 ? 2.2 * Math.sin(Math.PI * (s - 112) / 33) : 0;
     r.skateAlong(s => at(s, 0, entryOffset(s)), { to: 164.7, progress, lookAhead: 9,
       label: 'charge and carve from the authored spawn' });
@@ -63,40 +51,7 @@ export function runOpeningAndTerrace(r) {
     r.stepFor(45, {});
     const climb = BLOCKWORKS_CLIMBS.find(c => c.name === 'Courtyard roof bays');
     assert.ok(climb, 'source terrace traversal metadata is missing');
-    walkFlowTo(climb.start, 'approach the first roof bay');
-
-    const ray = new THREE.Raycaster();
-    const groundAt = (q, expectedY) => {
-      ray.set(new THREE.Vector3(q[0], expectedY + 30, q[2]), new THREE.Vector3(0,-1,0));
-      const hit = ray.intersectObjects(l.groundMeshes, false).find(h =>
-        h.face && h.face.normal.clone().transformDirection(h.object.matrixWorld).y > .8);
-      return hit?.point.y;
-    };
-    const planRise = (roof, oldY) => {
-      const [fx,,fz] = routeTangent(roof.s), right = [-fz,fx], centre = roof.point;
-      const plans = [];
-      for (let u = -roof.width/2+.7; u <= roof.width/2-.7; u += .4)
-        for (const inset of [.65,.4]) for (const distance of [2.9,3,3.1]) {
-          const target = [centre[0]-fx*(roof.depth/2-inset)+right[0]*u,roof.top,
-            centre[2]-fz*(roof.depth/2-inset)+right[1]*u];
-          const launch = [target[0]-fx*distance,oldY,target[2]-fz*distance];
-          if (Math.abs((groundAt(launch,oldY)??Infinity)-oldY) > .08 ||
-              Math.abs((groundAt(target,roof.top)??Infinity)-roof.top) > .08) continue;
-          plans.push({launch,target,distance,cost:Math.hypot(launch[0]-p.pos.x,launch[2]-p.pos.z)+Math.abs(u)*.1});
-        }
-      plans.sort((a,b)=>a.cost-b.cost);
-      assert.ok(plans.length, `no supported 2.4m foot-jump launch reaches roof s${roof.s} from y${oldY}`);
-      return plans[0];
-    };
-    const roofLandings = [];
-    for (const roof of climb.steps) {
-      const plan = planRise(roof,p.pos.y);
-      walkFlowTo(plan.launch, `cross the lower roof for s${roof.s}`);
-      r.jumpTo(plan.target, { heightTolerance: .1, arrivalTolerance: .45,
-        label: `charged world-space roof jump at s${roof.s}` });
-      roofLandings.push({roof:roof.s,position:p.pos.toArray().map(round),plannedDistance:plan.distance});
-    }
-    walkFlowTo(climb.exit, 'cross the final roof into its curved departure');
+    const roofRun = skateRoofWedges(r, climb.name);
     assert.ok(Math.abs(p.pos.y-7.2)<.1, 'roof sequence did not reach the high curved road');
 
     // Ride the entire return curve and leave its authored endpoint naturally.
@@ -123,12 +78,10 @@ export function runOpeningAndTerrace(r) {
     assert.ok(l.checkpoints[0].active,'positive run never activated the first checkpoint');
     assert.ok(p.grounded && progress()>=510,'positive run did not complete both adjacent districts');
     assert.ok(r.trace.every(row=>!row.bailing && row.state!=='dead'),'positive run hid a bail or death');
-    const runningFrames=walkingFrames.filter(row=>Math.hypot(row.input.moveX,row.input.moveY)>.65 && row.grounded);
-    assert.ok(runningFrames.length>250,'roof journey relied only on precision-speed walking');
-    evidence.push({test:'continuous Terrace canyon and parapet',roofLandings,
+    evidence.push({test:'continuous Terrace wedge climb and parapet',roofRun,
       railEntryStation:round(20-railEntry.position[2]),naturalRailExitStation:round(20-railExit.position[2]),
       naturalRailLandingStation:round(20-railLanding.position[2]),endStation:round(progress()),
-      endSpeed:round(p.speed),frames:r.frame,roofRunningFrames:runningFrames.length,
+      endSpeed:round(p.speed),frames:r.frame,
       checkpoints:l.checkpoints.filter(cp=>cp.active).length});
     return evidence;
 }

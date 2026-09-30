@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { pathToFileURL } from 'node:url';
 import { createServer } from 'vite';
 import { withBlockworksRuntime } from './blockworks-runner.mjs';
+import { skateRoofWedges } from './blockworks-skate-pilot.mjs';
 
 const rounded = n => Math.round(n * 1000) / 1000;
 
@@ -13,7 +14,7 @@ const rounded = n => Math.round(n * 1000) / 1000;
  * The returned records can be appended to a complete-course evidence log. */
 export function runFinale(r, options = {}) {
   const evidence = options.evidence ?? [];
-  const { p, l, THREE, sourceModule: m } = r;
+  const { p, l, sourceModule: m } = r;
   const originalTuning = JSON.stringify(r.TUNING), station = () => 20 - p.pos.z;
   const at = (s, y = 0, u = 0) => m.routePoint(s, y, u);
   const follow = (lookAhead = 14, offset = () => 0) => r.steerToward(at(station() + lookAhead, 0, offset(station() + lookAhead)));
@@ -85,48 +86,21 @@ export function runFinale(r, options = {}) {
   note('Crown checkpoint');
   gapJump(2018, 'Crown ice gap');
   brake('dry brake before the crown roofs');
-  assert.ok(station() < 2041, 'landing cannot stop before the first tower'); note('Crown dry stop');
-
   const climb = m.BLOCKWORKS_CLIMBS.find(c => c.name === 'Crown roof bays');
-  assert.ok(climb, 'crown roof metadata missing');
-  const ray = new THREE.Raycaster();
-  const groundAt = (q, expectedY) => {
-    ray.set(new THREE.Vector3(q[0], expectedY + 30, q[2]), new THREE.Vector3(0, -1, 0));
-    const hit = ray.intersectObjects(l.groundMeshes, false).find(h => h.face &&
-      h.face.normal.clone().transformDirection(h.object.matrixWorld).y > .8);
-    return hit?.point.y;
-  };
-  const walkFlowTo = (target, label) => {
-    r.until(() => r.distanceTo(target) < .9, () => {
-      assert.ok(p.grounded, label + ' left the usable roof');
-      return r.steerToward(target, { pace: Math.min(.8, Math.max(.2, r.distanceTo(target) * .8 / 3)) });
-    }, { maxFrames: 1800, label: label + ' run' });
-    r.walkTo(target, { maxFrames: 600, label: label + ' final placement' });
-  };
-  const planRise = (roof, oldY) => {
-    const [fx, , fz] = m.routeTangent(roof.s), right = [-fz, fx], centre = roof.point, plans = [];
-    for (let u = -roof.width / 2 + .7; u <= roof.width / 2 - .7; u += .25)
-      for (const inset of [.65, .4]) for (const distance of [2.8, 2.9, 3, 3.1]) {
-        const target = [centre[0] - fx * (roof.depth / 2 - inset) + right[0] * u, roof.top,
-          centre[2] - fz * (roof.depth / 2 - inset) + right[1] * u];
-        const launch = [target[0] - fx * distance, oldY, target[2] - fz * distance];
-        if (Math.abs((groundAt(launch, oldY) ?? Infinity) - oldY) > .08
-          || Math.abs((groundAt(target, roof.top) ?? Infinity) - roof.top) > .08) continue;
-        plans.push({ launch, target, distance,
-          cost: Math.hypot(launch[0] - p.pos.x, launch[2] - p.pos.z) + Math.abs(u) * .1 });
-      }
-    plans.sort((a, b) => a.cost - b.cost);
-    assert.ok(plans.length, `no supported charged-foot launch for crown roof s${roof.s} from y${oldY}; position ${p.pos.toArray()}`);
-    return plans[0];
-  };
-  for (const roof of climb.steps) {
-    const plan = planRise(roof, p.pos.y);
-    walkFlowTo(plan.launch, `place for crown roof ${roof.s}`);
-    r.jumpTo(plan.target, { heightTolerance: .1, arrivalTolerance: .45,
-      label: `charged crown roof rise ${roof.s}` });
-    note(`Crown roof ${roof.s}`);
-  }
-  walkFlowTo(climb.exit, 'cross the last crown roof');
+  const firstRoof = climb?.steps[0];
+  assert.ok(firstRoof, 'crown roof metadata missing');
+  const [fx, , fz] = m.routeTangent(firstRoof.s);
+  const towardRoof = (p.pos.x - firstRoof.point[0]) * fx + (p.pos.z - firstRoof.point[2]) * fz;
+  assert.ok(p.grounded && !p.groundHit?.slippy && towardRoof < -firstRoof.depth / 2 && p.pos.y < firstRoof.top,
+    'landing must stop on the dry approach or its skate wedge before the first roof face');
+  note('Crown dry stop');
+
+  // These roofs now have authored partial-width skate wedges. Follow their
+  // real low/high contacts instead of jumping from the old unobstructed apron.
+  skateRoofWedges(r, 'Crown roof bays');
+  assert.ok(p.grounded && p.freeSkate && Math.abs(p.pos.y - climb.exit[1]) < .15,
+    'Crown wedges must deliver the live rider mounted onto the departure roof');
+  note('Crown roofs skate exit');
   r.until(() => p.state === 'grind', () => ({ ...follow(7), jumpHeld: true, grindHeld: true }),
     { maxFrames: 900, label: 'catch final crown arc' });
   note('Final grind catch');

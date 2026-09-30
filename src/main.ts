@@ -4340,7 +4340,9 @@ function updateBaseCamera(dt: number): void {
   // full-follow (the camera rises with the jump, so airs read small and snappy
   // on screen); 0 = pure ground anchor (the skater does all the on-screen
   // rising — same physics, but every air reads much bigger and floatier).
-  const airLift = player.swimming ? 1 : Math.max(TUNING.camAirLift, boulderF);
+  // High-air courses may opt into full vertical framing without changing
+  // global tuning, camera yaw, or the player's camera-relative input frame.
+  const airLift = player.swimming ? 1 : Math.max(level.cameraAirLift ?? TUNING.camAirLift, boulderF);
   const effY = THREE.MathUtils.lerp(camAnchorY, subject.y, airLift);
   camTarget.set(
     subject.x - camF.x * framing.distance,

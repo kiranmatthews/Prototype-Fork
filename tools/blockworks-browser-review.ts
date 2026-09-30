@@ -14,7 +14,7 @@ const neutral=()=>{for(const k of Object.keys(g.input))if(/Pressed|Held|Released
 const place=(position:number[])=>{drive=null;level().cameraViews.length=0;neutral();g.gameFlow.hide();p.respawn(level(),true,true,{position:new THREE.Vector3(...position),heading:new THREE.Vector3(0,0,-1)});frozen=false;};
 acts.forEach((a,i)=>add(a.name,()=>{index=i;const q=routePoint(a.a+3,a.y+.1);place(q);mode=a.name;}));
 add('Overview',()=>{const a=acts[index],s=a.a+80;drive=null;neutral();frozen=true;level().cameraViews.length=0;
- level().cameraViews.push({p:p.pos.toArray(),s:[1000,200,1000],yaw:0,feather:1,cameraPosition:[routeX(s)+100,a.y+83,20-s+110],cameraTarget:[routeX(s),a.y,20-s],cameraFov:58});mode='Overview';});
+ level().cameraViews.push({p:p.pos.toArray(),s:[1000,200,1000],yaw:0,feather:1,cameraPosition:[routeX(s)+28,a.y+28,20-s+37],cameraTarget:[routeX(s),a.y+6,20-s-10],cameraFov:58});mode='Overview';});
 add('Play entry curve',()=>{place(routePoint(2,.15));drive={kind:'entry',frames:0,jumped:false,air:false,startDeaths:p.totalDeaths,maxError:0,minSpeed:Infinity};mode='Entry curve: genuine steering';});
 add('Hold Up comparison',()=>{place(routePoint(2,.15));drive={kind:'up',frames:0,startDeaths:p.totalDeaths,maxError:0,minSpeed:Infinity};mode='Forward-only run without jumping';});
 add('Freeze / live',()=>{level().cameraViews.length=0;drive=null;neutral();frozen=!frozen;mode=frozen?'Frozen':'Manual';});

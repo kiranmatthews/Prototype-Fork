@@ -18,7 +18,8 @@ try {
   const { cameraRigFraming, setCameraRigAim } = await server.ssrLoadModule('/src/cameraRig.ts');
   const { CODEX_LAB_LEVEL: data, BLOCKWORKS_ROADS: roads, BLOCKWORKS_GAPS: gaps,
     BLOCKWORKS_CLIMBS: climbs, BLOCKWORKS_CHECKPOINTS: checkpoints,
-    BLOCKWORKS_GROUND: ground, ROUTE_END: end, routePoint } = await server.ssrLoadModule('/src/levels/codex-lab.ts');
+    BLOCKWORKS_VERT_AQUEDUCT: vertAqueduct,
+    BLOCKWORKS_GROUND: ground, BLOCKWORKS_GROUND_WIDTH: groundWidth, ROUTE_END: end, routePoint } = await server.ssrLoadModule('/src/levels/codex-lab.ts');
   const normalized = normalizeCustomLevelData(data);
   check('editor normalization', () => { assert.ok(normalized, 'source must remain valid editor data'); return { components: normalized.components.length }; });
   level = new Level(new THREE.Scene(), { id: 'blockworks-structure', name: data.name, data });
@@ -27,9 +28,12 @@ try {
   const staticGround = level.groundMeshes.filter(mesh => mesh.userData.moverId === undefined);
   const ribbons = staticGround.filter(mesh => {
     const c = data.components[mesh.userData.editorIdx];
-    return c?.t === 'mesh' && c.solid !== false && c.vert === false && !c.outline
+    // Skate wedges sit on supported architecture; the excavated road ribbons
+    // themselves are the masses whose sides must descend to shared ground.
+    return c?.grp !== 2 && c?.t === 'mesh' && c.solid !== false && c.vert === false && !c.outline
       && !/wedge|skate tier|shelf access|shelf return/i.test(c.nm ?? '');
   });
+  const earth = staticGround.filter(mesh => data.components[mesh.userData.editorIdx]?.grp === 2);
   const hits = (p, meshes = staticGround, fromY = 50) => {
     ray.set(new THREE.Vector3(p[0], fromY, p[2]), down); ray.near = 0; ray.far = 150;
     return ray.intersectObjects(meshes, false).filter(hit => hit.face.normal.y > .15);
@@ -41,7 +45,7 @@ try {
   const safeFloor = (p, fromY = 50) => { const y = floor(p, fromY); return y !== undefined && y > deathTop(p) + .08 ? y : null; };
 
   check('curved road support and chunk seams', () => {
-    let probes = 0, seams = 0, maxError = 0;
+    let probes = 0, seams = 0, maxError = 0, groundedMassProbes=0;
     for (const road of roads) {
       const samples = [];
       for (let s = road.a + .2; s < road.b - .1; s += 1.1) samples.push(s);
@@ -51,6 +55,9 @@ try {
         const p = routePoint(s, top, offset + side * width);
         const hit = hits(p, ribbons, top + .1).find(hit => Math.abs(hit.point.y - top) < .04);
         assert.ok(hit, `missing ribbon at s=${s.toFixed(3)}, side=${side}, expectedY=${top}`);
+        assert.ok(hits(p,earth,ground+.05).some(hit=>Math.abs(hit.point.y-ground)<.002),
+          `road foundation overhangs trimmed earth at s=${s.toFixed(3)}, u=${offset+side*width}`);
+        groundedMassProbes++;
         maxError = Math.max(maxError, Math.abs(hit.point.y - top)); probes++;
       }
     }
@@ -60,7 +67,7 @@ try {
       near(mesh.geometry.boundingBox.min.y + mesh.position.y, ground, 'road mass does not reach shared ground', .001);
       assert.equal(mesh.userData.vert, false); assert.equal(mesh.userData.edgeGrinding, false);
     }
-    return { roads: roads.length, ribbonMeshes: ribbons.length, probes, seamProbes: seams, maxHeightError: maxError };
+    return { roads: roads.length, ribbonMeshes: ribbons.length, probes, groundedMassProbes,seamProbes: seams, maxHeightError: maxError };
   });
 
   check('road-to-road joins', () => {
@@ -82,21 +89,49 @@ try {
   });
 
   check('shared ground, building foundations and climbing roofs', () => {
-    let groundProbes = 0, foundationProbes = 0, roofProbes = 0;
-    for (let s = 0; s <= end; s += 15) for (const u of [-25, 0, 25]) {
-      const p = routePoint(s, ground, u);
-      near(floor(p, ground + .05), ground, 'shared ground support', .002);
-      assert.ok(deathTop(p) > ground + .3, 'shared ground became a walkable bypass'); groundProbes++;
+    let groundProbes = 0, groundEdgeProbes = 0, foundationProbes = 0, roofProbes = 0;
+    let ordinaryWidthSamples=0,narrowWidthSamples=0;
+    assert.ok(earth.length>0 && typeof groundWidth==='function','ground must have an authored corridor footprint');
+    const widths=[];
+    for (let s = 0; s <= end; s += 10) {
+      const width=groundWidth(s);widths.push(width);
+      assert.ok(width>=18 && width<=36.1,'excavated ground widened beyond its local building/branch envelope');
+      for (const u of [-width/2+.75,0,width/2-.75]) {
+        const p = routePoint(s, ground, u);
+        const hit=hits(p,earth,ground+.05)[0];
+        assert.ok(hit,`ground corridor missing at s=${s}, u=${u}`);
+        near(hit.point.y, ground, 'shared ground support', .002);
+        assert.ok(deathTop(p) > ground + .3, 'shared ground became a walkable bypass'); groundProbes++;
+      }
+      for(const u of [-width/2-.75,width/2+.75]) {
+        assert.equal(hits(routePoint(s,ground,u),earth,ground+.05).length,0,
+          `unused ground extends outside the curved corridor at s=${s}, u=${u}`);groundEdgeProbes++;
+      }
     }
-    for (const c of data.components.filter(c => c.t === 'platform')) {
+    // Building courts are sized by their actual roof bays; ordinary traffic
+    // should not inherit those widths for long empty connecting stretches.
+    for(const road of roads) {
+      const buildingCourt=climbs.some(climb=>climb.grp===road.grp && road.a<=climb.steps[0].s && road.b>=climb.steps.at(-1).s
+        &&value(road.top,(road.a+road.b)/2)<climb.steps[0].top);
+      if(buildingCourt||road.grp===13)continue; // vert clearances have their own geometry/controller checks
+      for(let s=road.a+.5;s<road.b;s+=2) {
+        ordinaryWidthSamples++;if(value(road.width,s)<=10.01)narrowWidthSamples++;
+      }
+    }
+    assert.ok(narrowWidthSamples/ordinaryWidthSamples>=.85,'broad plazas dominate ordinary road traversal');
+    for (const c of data.components.filter(c => c.t === 'platform' && c.grp!==2)) {
       const bottom = c.p[1] - c.s[1] / 2;
-      if (bottom <= ground + .01) continue;
       const a = (c.yaw ?? 0) * Math.PI / 180;
-      for (const [fx, fz] of [[0, 0], [-.35, -.35], [.35, -.35], [-.35, .35], [.35, .35]]) {
+      for (const [fx, fz] of [[0, 0], [-.48, -.48], [.48, -.48], [-.48, .48], [.48, .48]]) {
         const dx = c.s[0] * fx, dz = c.s[2] * fz;
         const p = [c.p[0] + Math.cos(a) * dx + Math.sin(a) * dz, bottom,
           c.p[2] - Math.sin(a) * dx + Math.cos(a) * dz];
-        near(floor(p, bottom + .04), bottom, `floating module ${c.nm} at ${c.p}`, .055); foundationProbes++;
+        if(bottom<=ground+.01) {
+          const hit=hits(p,earth,ground+.05)[0];
+          assert.ok(hit,`foundation overhangs trimmed earth: ${c.nm} at ${p}`);
+          near(hit.point.y,ground,'foundation meets real earth',.002);
+        }else near(floor(p, bottom + .04), bottom, `floating module ${c.nm} at ${c.p}`, .055);
+        foundationProbes++;
       }
     }
     // Every visible LEGO cell must be enclosed by its actual solid building,
@@ -129,7 +164,9 @@ try {
       near(floor(climb.start, climb.start[1] + .2), climb.start[1], `${climb.name} entry`);
       near(floor(climb.exit, climb.exit[1] + .2), climb.exit[1], `${climb.name} exit`);
     }
-    return { groundProbes, foundationProbes, roofProbes, solidBuildings: buildings.length, supportedVisualModules: modules.length, climbs: climbs.map(c => c.name) };
+    return { groundProbes,groundEdgeProbes,groundWidths:[Math.min(...widths),Math.max(...widths)],
+      ordinaryRoadSamples:ordinaryWidthSamples,narrowRoadFraction:narrowWidthSamples/ordinaryWidthSamples,
+      foundationProbes, roofProbes, solidBuildings: buildings.length, supportedVisualModules: modules.length, climbs: climbs.map(c => c.name) };
   });
 
   check('permanent hazards stay open and cannot be walked across', () => {
@@ -175,6 +212,13 @@ try {
     for (const p of [data.spawn, ...checkpoints.map(cp => cp.p)]) {
       const y = safeFloor(p, p[1] + .5); assert.ok(y !== null, `unsupported or lethal checkpoint ${p}`);
       near(y, p[1], 'checkpoint deck', p === data.spawn ? .2 : .05);
+    }
+    // Narrowing the road must leave a body-sized supported stance around the
+    // checkpoint, rather than balancing its centre on the new outside edge.
+    for(const cp of checkpoints)for(let angle=0;angle<Math.PI*2;angle+=Math.PI/4) {
+      const p=[cp.p[0]+Math.cos(angle)*.75,cp.p[1],cp.p[2]+Math.sin(angle)*.75];
+      const y=safeFloor(p,p[1]+.2);assert.ok(y!==null,`checkpoint ${cp.s} lost standing clearance`);
+      near(y,cp.p[1],`checkpoint ${cp.s} standing ring`,.05);
     }
     const spans = [];
     for (let i = 0; i < checkpoints.length - 1; i++) {
@@ -224,9 +268,30 @@ try {
   });
 
   check('crate construction and collectible placement', () => {
-    let crateProbes = 0, groundedPickups = 0, airbornePickups = 0;
+    let crateProbes = 0, groundedPickups = 0, airbornePickups = 0, vertGuidePickups=0;
+    const samePoint=(a,b)=>a.length===b.length&&a.every((n,i)=>Math.abs(n-b[i])<.001);
+    const airTargets=vertAqueduct.targets;
+    assert.equal(airTargets.length,6,'the two high-air target rows must remain explicit');
+    const aerialCrates=airTargets.map(target=>{
+      const authored=data.components.find(c=>c.t==='crate'&&c.kind===target.kind&&c.nm===target.name&&samePoint(c.p,target.p));
+      assert.ok(authored,'missing specifically authored high-air target');
+      assert.ok(target.y>vertAqueduct.lipHeight+8,'vert target became an ordinary foot-height box');
+      const live=level.crates.find(c=>Math.hypot(c.mesh.position.x-target.p[0],c.mesh.position.z-target.p[2])<.001);
+      assert.ok(live,'high-air target was not built');
+      near(live.box.min.y,target.y,'native air-target base',.002);
+      near(live.mesh.userData.groundBaseY,target.y,'native air-target resting height',.002);
+      return{target,live,position:live.mesh.position.clone()};
+    });
+    for(let frame=0;frame<120;frame++)level.update(1/60);
+    for(const {target,live,position}of aerialCrates) {
+      assert.ok(live.alive&&!live.pending,'vert target disappeared without a player hit');
+      near(live.mesh.position.distanceTo(position),0,'air-target stability',.001);
+      near(live.box.min.y,target.y,'settled air-target base',.002);
+      near(live.mesh.userData.groundBaseY,target.y,'air-target groundBaseY survives updates',.002);
+    }
     const ordinary = data.components.filter(c => c.t === 'crate' && !c.outline);
     for (const crate of ordinary) {
+      if(airTargets.some(target=>crate.nm===target.name&&crate.kind===target.kind&&samePoint(crate.p,target.p)))continue;
       near(floor(crate.p, crate.p[1] + .1), crate.p[1], `unsupported authored ${crate.kind} crate`, .06); crateProbes++;
     }
     const footings = data.components.filter(c => c.t === 'platform' && c.nm === 'Submerged steel footing');
@@ -245,8 +310,21 @@ try {
     for (let head = 0; head < queue.length; head++) for (let i = 0; i < boxes.length; i++)
       if (!connected.has(i) && touching(boxes[queue[head]], boxes[i])) { connected.add(i); queue.push(i); }
     assert.equal(connected.size, boxes.length, 'ghost steel contains disconnected floating construction');
+    for(const side of [-1,1]) {
+      const guides=vertAqueduct.guides.filter(guide=>Math.sign(guide.u)===side).sort((a,b)=>a.y-b.y);
+      assert.ok(guides.length>=5&&Math.abs(guides[0].u)<vertAqueduct.flatHalf,'vert cues must start inside the riding floor');
+      assert.ok(guides.at(-1).y>vertAqueduct.lipHeight+7,'vert cues must lead above the coping');
+      assert.ok(guides.every(guide=>Math.abs(guide.u)<=vertAqueduct.lipOffset+.01),'vert cues stray outside the wall target line');
+      assert.ok(guides.at(-1).y<Math.min(...airTargets.filter(target=>Math.sign(target.u)===side).map(target=>target.y)),
+        'vert fruit sequence must lead up to, not beyond, its target row');
+    }
     for (const c of data.components.filter(c => ['wumpa', 'crystal', 'clock', 'comboorb'].includes(c.t))) {
       const y = safeFloor(c.p);
+      const vertGuide=c.t==='wumpa'&&c.nm==='High vert-air ascent cue'&&vertAqueduct.guides.some(guide=>samePoint(guide.p,c.p));
+      if(vertGuide) {
+        if(y!==null)assert.ok(c.p[1]>=y+.5,'a vert ascent cue is buried in its wall');
+        vertGuidePickups++;continue;
+      }
       if (y !== null) {
         const clearance = c.p[1] - y;
         assert.ok(clearance >= (c.t === 'clock' || c.t === 'comboorb' ? -.06 : .5), `buried ${c.t} at ${c.p}, floor ${y}`);
@@ -263,7 +341,8 @@ try {
         assert.ok(insideGap || onRail, `unexplained unsupported pickup ${c.p}`); airbornePickups++;
       }
     }
-    return { groundedCrates: crateProbes, groundedSteel: steel.length, groundedPickups, airbornePickups };
+    return { groundedCrates: crateProbes, intentionalAirTargets:aerialCrates.length,vertGuidePickups,
+      groundedSteel: steel.length, groundedPickups, airbornePickups };
   });
   console.log(JSON.stringify({ evidence, failures }, null, 2));
   assert.equal(failures.length, 0, failures.join('\n'));
