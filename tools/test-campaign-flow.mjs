@@ -30,7 +30,7 @@ const campaign = await import(
   `data:text/javascript;base64,${Buffer.from(output).toString("base64")}`
 );
 
-assert.equal(campaign.CAMPAIGN_LEVELS.length, 13);
+assert.equal(campaign.CAMPAIGN_LEVELS.length, 14);
 assert.equal(campaign.resolveRelicTime('jungle'), 60);
 assert.equal(campaign.resolveRelicTime('editor-course', { relicTime: 83.75 }), 83.75);
 assert.equal(campaign.resolveRelicTime('jungle', { relicTime: 45.125 }), 45.125);
@@ -54,12 +54,13 @@ assert.deepEqual(
     ["astra-chimeworks", "Chimeworks"],
     ["jungle-cup", "Jungle Cup"],
     ["treehouse-trail", "Treehouse Trail"],
+    ["waterpark", "Deadwater Park"],
   ],
   "canonical portal order or labels drifted",
 );
 assert.equal(
   new Set(campaign.CAMPAIGN_LEVELS.map((level) => level.progressKey)).size,
-  13,
+  14,
   "campaign progress keys must remain unique",
 );
 assert.equal(campaign.CAMPAIGN_TIME_RELIC_TARGET_SECONDS, 60);
@@ -69,8 +70,8 @@ assert.ok(
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ levelKeys }) => levelKeys.length),
-  [7, 6],
-  "Blockworks must move to Island 2 without removing existing hubs",
+  [7, 7],
+  "Deadwater Park must join Island 2 without removing existing hubs",
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ id, name }) => [id, name]),
@@ -97,10 +98,11 @@ for(let i=1;i<mainPath.length;i++) {
 }
 assert.deepEqual(campaign.CAMPAIGN_MAP_EDGES.filter(e=>campaign.campaignLevelByKey(e.from).mapPath!==campaign.campaignLevelByKey(e.to).mapPath)
   .map(e=>[e.from,e.to,e.fromDirection,e.toDirection]),[
-  ['test-course','nightworks','up','down'],['coastal','chimeworks','down','up'],
+  ['test-course','nightworks','up','down'],['coastal','chimeworks','down','up'],['island-hopper','waterpark','up','down'],
 ]);
-assert.deepEqual(campaign.CAMPAIGN_ISLANDS[1].levelKeys.slice(-3), ['island-hopper','codex-switchback','jungle-gate']);
+assert.deepEqual(campaign.CAMPAIGN_ISLANDS[1].levelKeys.slice(-4), ['island-hopper','waterpark','codex-switchback','jungle-gate']);
 assert.equal(campaign.CAMPAIGN_LEVELS[9].progressKey, 'codex-switchback', 'editable hub identity must stay at index 9');
+assert.equal(campaign.CAMPAIGN_LEVELS[13].progressKey, 'waterpark', 'new hubs must append after every saved editor identity');
 assert.equal(campaign.campaignLevelById('codex-lab').islandId, 'island-2');
 
 const graph = new campaign.CampaignStore();
@@ -137,12 +139,14 @@ assert.equal(graph.levelUnlocked("chimeworks"), false);
 graph.commitClear("coastal-street-run", {});
 assert.equal(graph.levelUnlocked("chimeworks"), true);
 assert.equal(graph.levelUnlocked("codex-switchback"), false);
+assert.equal(graph.levelUnlocked("waterpark"), false);
 graph.commitClear("island-hopper", {});
 assert.equal(graph.levelUnlocked("codex-switchback"), true);
+assert.equal(graph.levelUnlocked("waterpark"), true);
 assert.equal(graph.levelUnlocked("jungle-gate"), false, 'finale must follow Blockworks');
 graph.commitClear("codex-lab", { crystal: true });
 assert.equal(graph.levelProgress("codex-lab").crystal, true);
-assert.equal(graph.levelUnlocked("jungle-gate"), true);
+assert.equal(graph.levelUnlocked("jungle-gate"), true, 'Deadwater Park must remain optional for main-path progression');
 graph.commitClear("astra-chimeworks", { crystal: true });
 assert.equal(graph.levelProgress("astra-chimeworks").crystal, true);
 assert.equal(
@@ -515,13 +519,13 @@ for (const [modern,bonus,expected] of [[true,false,true],[false,false,false],[tr
 }
 const branches=new campaign.CampaignStore();branches.newGame(3);
 for(const id of ['jungle','test','sky','dark','beachfront','coastal-street-run'])branches.commitClear(id,{});
-for(const id of ['codex-lab','astra-chimeworks']) {
+for(const id of ['codex-lab','astra-chimeworks','waterpark']) {
   branches.commitClear(id,{crystal:true,boxGem:true});
   branches.commitTimeTrial(id,{time:55,medal:'gold'});
 }
 branches.setMapFocus('chimeworks');branches.saveActive();
 const branchReload=new campaign.CampaignStore();branchReload.load(3);
-for(const id of ['codex-lab','astra-chimeworks']) {
+for(const id of ['codex-lab','astra-chimeworks','waterpark']) {
   assert.equal(branchReload.levelProgress(id).crystal,true);
   assert.equal(branchReload.levelProgress(id).boxGem,true);
   assert.equal(branchReload.levelProgress(id).timeMedal,'gold');

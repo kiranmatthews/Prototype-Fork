@@ -113,7 +113,7 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     name: "Island 2",
     subtitle: "REGION 02",
     centre: [75, 0, 9],
-    levelKeys: ["beachside-run", "coastal", "chimeworks", "island-hopper", "codex-switchback", "jungle-gate"],
+    levelKeys: ["beachside-run", "coastal", "chimeworks", "island-hopper", "waterpark", "codex-switchback", "jungle-gate"],
   },
 ] as const;
 
@@ -217,6 +217,14 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     fromDirection: "right",
     toDirection: "left",
     waypoints: [[77, 4.2, 14]],
+  },
+  {
+    from: "island-hopper",
+    to: "waterpark",
+    travel: "trail",
+    fromDirection: "up",
+    toDirection: "down",
+    waypoints: [[86, 4.2, 9]],
   },
   {
     from: "island-hopper",
@@ -367,6 +375,16 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     mapPath: "main",
     mapPosition: [-175, 1.35, 22],
     unlockAfter: [],
+  },
+  {
+    progressKey: "waterpark",
+    levelId: "waterpark",
+    name: "Deadwater Park",
+    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
+    islandId: "island-2",
+    mapPath: "upper-branch",
+    mapPosition: [86, 6, 4],
+    unlockAfter: ["island-hopper"],
   },
 ] as const;
 

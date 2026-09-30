@@ -1,3 +1,4 @@
+import { LOOP_TURN, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';
 import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';
 import { SkateBalanceArms, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
 import { skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
@@ -617,6 +618,7 @@ export class Player {
   onRespawn: () => void = () => {};
   onCheckpoint: () => void = () => {};
   onRelic: (title: string, sub: string) => void = () => {};
+  onCourseHint: (title: string, sub: string) => void = () => {};
   onTrickGateBlocked: (trick: DeckTrickKind) => void = () => {};
   // TIME TRIAL: grab the stopwatch at spawn to start the clock, cross the
   // finish gate to stop it. Numbered time crates freeze it; dying restarts
@@ -1401,6 +1403,10 @@ export class Player {
   private shadowGroundY: number | null = null; // long-range floor probe for the blob shadow
   private lastGroundY = 0; // most recent real floor level — the landing X hovers here over a pit
   private groundHit: GroundHit | null = null;
+  private loopRide: { mesh: THREE.Object3D; shape: LoopShape; angle: number; lateral: number; recovering: boolean } | null = null;
+  private loopFall = false;
+  private readonly completedLoops = new Set<THREE.Object3D>();
+  private loopGateHintShown = false;
   private railCand: { rail: Rail; sample: RailSample } | null = null;
   private lean = 0;
 
@@ -3390,6 +3396,10 @@ export class Player {
     for (const f of this.fruits) this.retireFruit(f);
     this.characterBounds.makeEmpty();this.previousCharacterBounds.makeEmpty();
     this.groundHit = null;
+    this.loopRide = null;
+    this.loopFall = false;
+    this.completedLoops.clear();
+    this.loopGateHintShown = false;
     this.clearCoyoteJumpWindow();
     this.crateFloorT = 0; // a respawn never inherits "stood on a box"
     this.crateFloor = null;
@@ -4331,6 +4341,7 @@ export class Player {
         const stallApproach = wallPipe !== undefined && this.lipHeadOn(wallPipe);
         if (
           this.lipStallT <= 0 &&
+          !this.loopRide &&
           !stallApproach &&
           (input.grindPressed || input.grindHeld) &&
           this.tryGrind(input.grindPressed, level)
@@ -5406,7 +5417,119 @@ export class Player {
     }
   }
 
+  /** Only explicitly authored loops use analytic contact; all other skate tuning stays unchanged. */
+  private stepLoopRide(dt: number, input: Input, level: Level): boolean {
+    // A fallen rider may land on the lower ribbon. Let its curved floor roll
+    // them back to the base; ordinary walking snaps can otherwise fight gravity
+    // forever on a steep facet. Recovery never grants a completed-loop goal.
+    const landedLoop = this.loopFall && this.grounded ? this.groundHit?.mesh : null;
+    if (!this.isBailing && landedLoop?.userData.loopRadius) {
+      const shape: LoopShape = { radius: landedLoop.userData.loopRadius,
+        width: landedLoop.userData.loopWidth, offset: landedLoop.userData.loopOffset };
+      const local = landedLoop.worldToLocal(this.pos.clone());
+      const angle = (Math.atan2(-local.z, shape.radius - local.y) + LOOP_TURN) % LOOP_TURN;
+      if (Math.cos(angle) > 0.05) {
+        this.loopRide = { mesh: landedLoop, shape, angle,
+          lateral: local.x - sampleLoop(shape, angle).point[0], recovering: true };
+        this.freeSkate = true;
+        this.speed = (angle < Math.PI ? -1 : 1) * Math.max(2, Math.abs(this.speed));
+      }
+    }
+    this.loopFall = false;
+    if (!this.freeSkate || !this.grounded || this.isBailing) { this.loopRide = null; return false; }
+    if (!this.loopRide) {
+      for (const mesh of level.loopMeshes ?? []) {
+        const shape: LoopShape = { radius: mesh.userData.loopRadius,
+          width: mesh.userData.loopWidth, offset: mesh.userData.loopOffset };
+        const local = mesh.worldToLocal(this.pos.clone());
+        if (local.z > 0.8 || local.z < -shape.radius * 0.2 || Math.abs(local.y) > 1.1) continue;
+        const angle = Math.max(0, Math.atan2(-local.z, shape.radius - local.y));
+        if (angle > 0.2) continue;
+        const sample = sampleLoop(shape, angle);
+        const lateral = local.x - sample.point[0];
+        if (Math.abs(lateral) > shape.width / 2 - 0.25 || Math.abs(local.y - sample.point[1]) > 0.8) continue;
+        const tangent = new THREE.Vector3(...sample.tangent).transformDirection(mesh.matrixWorld);
+        if (this.axisF.dot(tangent) < 0.65 || this.speed < 2) continue;
+        this.loopRide = { mesh, shape, angle, lateral, recovering: false };
+        this.endManual();
+        this.vertAir = this.pipeHang = false;
+        this.clearCoyoteJumpWindow();
+        break;
+      }
+    }
+    const ride = this.loopRide;
+    if (!ride) return false;
+    this.charging = input.jumpHeld;
+    this.chargeTimer = input.jumpHeld
+      ? Math.min(TUNING.jumpChargeTime, this.chargeTimer + dt) : 0;
+    this.jumpBufferT = 0;
+    const charge = input.jumpHeld ? Math.min(1, this.chargeTimer / Math.max(0.01, TUNING.jumpChargeTime)) : 0;
+    const result = stepLoopMotion(ride.shape, { angle: ride.angle, speed: this.speed }, dt,
+      charge, input.grabHeld, { gravity: TUNING.groundGravity,
+        pump: TUNING.pipePumpGain + TUNING.chargeBoost, friction: TUNING.pipeFriction,
+        drag: TUNING.windDrag, braking: TUNING.turnaround }, ride.recovering);
+    ride.angle = result.angle;
+    // Gentle track-local steering preserves player agency through inversion.
+    ride.lateral += this.rawInput.moveX * Math.min(8, Math.abs(this.speed) * 0.14) * dt;
+    const sample = sampleLoop(ride.shape, ride.angle, ride.lateral);
+    this.pos.copy(ride.mesh.localToWorld(new THREE.Vector3(...sample.point)));
+    const normal = new THREE.Vector3(...sample.normal).transformDirection(ride.mesh.matrixWorld);
+    const tangent = new THREE.Vector3(...sample.tangent).transformDirection(ride.mesh.matrixWorld);
+    this.speed = result.speed;
+    this.rideNormal.copy(normal);
+    this.parkVelocity.copy(tangent).multiplyScalar(this.speed);
+    const planar = Math.hypot(tangent.x, tangent.z);
+    if (planar > 1e-5) this.axisF.set(tangent.x / planar, 0, tangent.z / planar);
+    this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+    this.groundHit = { y: this.pos.y, normal, name: ride.mesh.name, mesh: ride.mesh, vert: false };
+    this.surfaceName = ride.mesh.name;
+    this.vVel = 0;
+    this.lastTy = tangent.y;
+    this.teetering = false;
+    if (!result.attached || Math.abs(ride.lateral) > ride.shape.width / 2 - 0.1) {
+      // Loss of positive wheel pressure is an ordinary ballistic fall. No magnetic ceiling snap.
+      this.loopRide = null;
+      this.loopFall = true;
+      this.state = 'air';
+      this.grounded = false;
+      this.airFromSkate = true;
+      this.airGrav = 'board';
+      this.airMomentum = true;
+      this.floatAir = true;
+      this.vertAir = this.pipeHang = false;
+      this.vVel = tangent.y * result.speed;
+      this.speed = planar * result.speed;
+      this.pos.addScaledVector(normal, 0.08);
+      this.groundHit = null;
+      this.charging = false;
+      this.chargeTimer = 0;
+      this.jumpReleaseRearmRequired = true;
+      this.airborneT = 0;
+      this.airPeakY = this.pos.y;
+      this.clearCoyoteJumpWindow();
+    } else if (result.complete) {
+      if (!ride.recovering) {
+        this.completedLoops.add(ride.mesh);
+        this.loopGateHintShown = false;
+        this.onCourseHint('LOOP COMPLETE', 'Exit unlocked — ride out!');
+      }
+      this.loopRide = null;
+      // Recovery can leave backward at the entrance; preserve that real velocity.
+      if (this.speed < 0) { this.speed = -this.speed; this.axisF.negate(); this.axisL.negate(); tangent.negate(); }
+      this.pos.addScaledVector(tangent, 0.15);
+    }
+    return true;
+  }
+
+  get loopStatus(): { active: boolean; progress: number; pressure: number; completed: number } {
+    const ride = this.loopRide;
+    return { active: !!ride, progress: ride ? ride.angle / LOOP_TURN : 0,
+      pressure: ride ? loopContactPressure(ride.shape, ride.angle, this.speed, TUNING.groundGravity) : 0,
+      completed: this.completedLoops.size };
+  }
+
   private stepRide(dt: number, input: Input, level: Level): void {
+    if (this.stepLoopRide(dt, input, level)) return;
     // LIP STALL owns the whole frame: parked stationary on the coping,
     // BALANCING — the needle (up/down on the stick, the vertical meter) tips
     // between the pipe below and the deck out back. Points tick, combo alive.
@@ -6447,6 +6570,17 @@ export class Player {
         }
       }
     }
+    // A ramp placed on the flat of a bowl is a real exit. The analytic pipe
+    // must yield to a reachable authored floor instead of carrying the rider
+    // underneath its triangles until the next wall.
+    if (hit?.halfpipe && hit.normal.y > 0.98) {
+      const floor = this.queryGround(level);
+      if (floor && !floor.halfpipe && (floor.vert === false || floor.speedPadSpeed !== undefined) && floor.normal.y > 0 &&
+          floor.y > hit.y + 0.02 && floor.y <= hit.y + 0.8) {
+        hit = floor;
+        this.rideNormal.copy(floor.normal);
+      }
+    }
     if (!hit && this.freeSkate && this.groundHit?.vert === true && this.groundHit.mesh?.userData.vertRampMesh) {
       const mesh = this.groundHit.mesh;
       // Follow the face along its normal. A world-down feeler becomes
@@ -7367,6 +7501,7 @@ export class Player {
       !this.grabbing &&
       !this.slamActive &&
       !this.vertAir &&
+      !this.loopFall &&
       !(this.parkControls && this.airFromSkate) &&
       !this.slideJumpAir
     ) {
@@ -12156,7 +12291,13 @@ export class Player {
     // no touchdown required. The column's box starts above head height for
     // someone on the deck, so rolling past its shoulder still does nothing.
     const onPad = this.grounded && !!this.groundHit?.finishPad;
-    if (!this.competitionMode && (onPad || this.playerBox.intersectsBox(level.finishGlow))) {
+    const touchingFinish = onPad || this.playerBox.intersectsBox(level.finishGlow);
+    const loopGoalsComplete = !level.loopMeshes?.some(mesh => mesh.userData.loopRequired && !this.completedLoops.has(mesh));
+    if (touchingFinish && !loopGoalsComplete && !this.loopGateHintShown) {
+      this.loopGateHintShown = true;
+      this.onCourseHint('LOOP STILL CLOSED', 'Complete the Loop of Death to unlock the exit');
+    } else if (!touchingFinish) this.loopGateHintShown = false;
+    if (!this.competitionMode && loopGoalsComplete && touchingFinish) {
       this.bankCombo(); // whatever is pending counts as you arrive
       sfx.play('lifeGet', 1.0);
       this.state = 'finished';
@@ -14825,6 +14966,9 @@ export class Player {
   // from behind/under the shell (where there's no solid) never teleports you up.
   private pipeCrossHit(level: Level): GroundHit | null {
     for (const hp of level.halfpipes) {
+      // A committed vert hang owns its mouth. At a shared coping both shells
+      // overlap within contact tolerance; authoring order must not undo a transfer.
+      if ((this.vertAir || this.pipeHang) && this.hangPipe && hp !== this.hangPipe) continue;
       const along = hp.alongCoord(this.pos.x, this.pos.z);
       const previousAlong = hp.alongCoord(this.prevPos.x, this.prevPos.z);
       const lo = Math.min(hp.l0, hp.l1) - 0.5;
@@ -14979,7 +15123,10 @@ export class Player {
     let hit = null as (typeof hits)[number] | null;
     for (const h of hits) {
       if (h.point.y > maximumSurfaceY) continue;
+      if (h.object.userData.loopRadius && h.face &&
+          h.face.normal.clone().transformDirection(h.object.matrixWorld).y <= 0.05) continue;
       const candidatePipe = h.object.userData.halfpipe as Halfpipe | undefined;
+      if ((this.vertAir || this.pipeHang) && this.hangPipe && candidatePipe && candidatePipe !== this.hangPipe) continue;
       if (candidatePipe) {
         const currentCross = candidatePipe.crossCoord(cx, cz);
         const previousCross = candidatePipe.crossCoord(
@@ -15637,6 +15784,11 @@ export class Player {
       alignTarget = this.parkControls && this.freeSkate ? 1 : t * t * (3 - 2 * t);
       targetNormal = this.rideNormal;
     }
+    if (this.loopRide) {
+      this.landingAlignPose = this.alignPose = 1;
+      this.alignNormal.copy(this.rideNormal);
+      return;
+    }
     const ease = onPipe || this.pipeHang ? 24 : 12;
     this.landingAlignPose +=
       (alignTarget - this.landingAlignPose) * Math.min(1, ease * dt);
@@ -15750,7 +15902,12 @@ export class Player {
     // in hang time, so lip → hang → drop-in has no snap. Spins (bodyGroup yaw)
     // then run about the rig's own up = the surface normal, THPS-style.
     if (this.alignPose > 0.001 && this.lipStallT <= 0) {
-      VERT_Q.setFromUnitVectors(VERT_UP, this.alignNormal);
+      if (this.loopRide) {
+        // The authored full-turn frame remains continuous through upside-down;
+        // shortest-arc UP-to-normal rotation has an arbitrary axis at the apex.
+        VERT_Q.setFromAxisAngle(new THREE.Vector3(1, 0, 0)
+          .transformDirection(this.loopRide.mesh.matrixWorld), this.loopRide.angle);
+      } else VERT_Q.setFromUnitVectors(VERT_UP, this.alignNormal);
       VERT_Q2.identity().slerp(VERT_Q, this.alignPose);
       this.group.quaternion.premultiply(VERT_Q2);
     }
@@ -15771,6 +15928,13 @@ export class Player {
       this.walkIntent.lengthSq() > 1e-6;
     if (this.state === 'dead' || this.state === 'gameover') {
       targetYaw = this.deathFacingYaw;
+    } else if (this.loopRide) {
+      // Surface rotation already turns the board over. Resolve heading in that
+      // unrolled frame instead of applying a second 180-degree yaw at the top.
+      const tangent = new THREE.Vector3(...sampleLoop(this.loopRide.shape, this.loopRide.angle).tangent)
+        .transformDirection(this.loopRide.mesh.matrixWorld).multiplyScalar(Math.sign(this.speed || 1))
+        .applyQuaternion(VERT_Q.clone().invert());
+      targetYaw = wrapAngle(Math.atan2(tangent.x, tangent.z) - Math.PI);
     } else if (this.state === 'rope') {
       // On the swing rope, face the direction you were travelling when you
       // grabbed (captured in tryRopeGrab) and hold it — the swing never turns

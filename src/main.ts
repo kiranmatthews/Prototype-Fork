@@ -3975,6 +3975,7 @@ ui.onToggleEndlessDeaths = () => {
 player.onComboBank = (amount, labels) => {
   ui.comboBank(amount, labels);
 };
+player.onCourseHint = (title, sub) => ui.showMessage(title, sub, 2600);
 player.onComboBail = (labels, points, multiplier) => {
   ui.comboBail(labels, points, multiplier);
 };

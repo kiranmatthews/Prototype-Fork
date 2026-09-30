@@ -11,7 +11,7 @@ FakeElement.prototype.click=function(){if(!this.disabled)for(const listener of t
 const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true}});
 try{
  const {GameFlowUI}=await server.ssrLoadModule('/src/gameFlowUI.ts');
- const {CampaignStore,CAMPAIGN_LEVELS,campaignLevelById}=await server.ssrLoadModule('/src/campaign.ts');
+ const {CampaignStore,CAMPAIGN_LEVELS,CAMPAIGN_ISLANDS,campaignLevelById}=await server.ssrLoadModule('/src/campaign.ts');
  const {inputPrompts}=await server.ssrLoadModule('/src/inputPrompts.ts');
  const {Input}=await server.ssrLoadModule('/src/input.ts');
  const campaign=new CampaignStore();campaign.startEphemeral();
@@ -24,7 +24,7 @@ try{
  assert.equal(ui.currentScreen,'level-select');
  assert.equal(ui.levelSelectIslands().length,1);
  const rows=ui.navButtons.filter(b=>b.dataset.levelKey);
- assert.equal(rows.length,8);assert.equal(rows.filter(b=>!b.disabled).length,1);
+ assert.equal(rows.length,CAMPAIGN_ISLANDS[0].levelKeys.length);assert.equal(rows.filter(b=>!b.disabled).length,1);
  assert.equal(rows[0].dataset.levelKey,'treehouse-trail');
  assert.match(rows[0].textContent,/01  TREEHOUSE TRAIL/);
  assert.equal(ui.levelSelectKey,'treehouse-trail');
@@ -42,7 +42,11 @@ try{
  assert.match(ui.levelSelectPreview.src,/test-course\.jpg$/);
  ui.updateLevelSelectChoice('jungle-cup',true);assert.match(ui.levelSelectDetail.textContent,/JUNGLE CUP/);assert.doesNotMatch(ui.levelSelectDetail.textContent,/TIME TRIAL RECORDS/);
  ui.updateLevelSelectChoice('test-course',true);
- ui.changeLevelSelectIsland(1);assert.equal(ui.levelSelectIsland,'island-2');assert.equal(ui.navButtons.filter(b=>b.dataset.levelKey).length,5);
+ ui.changeLevelSelectIsland(1);assert.equal(ui.levelSelectIsland,'island-2');assert.equal(ui.navButtons.filter(b=>b.dataset.levelKey).length,CAMPAIGN_ISLANDS[1].levelKeys.length);
+ const waterparkRow=ui.navButtons.find(b=>b.dataset.levelKey==='waterpark');
+ assert.ok(waterparkRow && !waterparkRow.disabled,'Deadwater Park is missing from the unlocked Island 2 list');
+ assert.match(waterparkRow.textContent,/DEADWATER PARK/);
+ ui.updateLevelSelectChoice('waterpark',true);assert.match(ui.levelSelectPreview.src,/waterpark\.jpg$/);
  ui.changeLevelSelectIsland(-1);assert.equal(ui.levelSelectKey,'test-course','island selection was not remembered');
  const pad={id:'DualSense',mapping:'standard',connected:true,index:0,axes:[0,0,0,0],buttons:Array.from({length:18},()=>({pressed:false,value:0}))};
  inputPrompts.update(pad,false);

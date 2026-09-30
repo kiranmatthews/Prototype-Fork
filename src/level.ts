@@ -58,6 +58,7 @@ import { NightworksRocks, nightworksGeometry, isNightworksSurface } from "./nigh
 import { NIGHTWORKS_LEVEL } from "./levels/nightworks";
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
+import { WATERPARK_LEVEL } from "./levels/waterpark";
 import { BONE_YARD_LEVEL } from "./levels/bone-yard";
 import { TREEHOUSE_TRAIL_LEVEL } from "./levels/treehouse-trail";
 import { ASTRA_CHIMEWORKS_LEVEL } from "./levels/astra-chimeworks";
@@ -660,6 +661,9 @@ export interface CustomComponent {
   uvs?: number[];
   colors?: number[];
   doubleSided?: boolean;
+  loopRadius?: number; // mesh: analytic vertical loop matching createLoopMeshData, p = entry feet
+  loopOffset?: number; // loop: lateral separation between entry and exit, local +X
+  loopRequired?: boolean; // loop: finish gate unlocks after one complete supported turn
   beachSand?: boolean;
   len?: number;
   rise?: number;
@@ -2300,6 +2304,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   }, // source-owned long course for fast, isolated geometry iterations
   { id: "jungle-cup", name: JUNGLE_CUP_LEVEL.name, data: JUNGLE_CUP_LEVEL },
   { id: "bone-yard", name: BONE_YARD_LEVEL.name, data: BONE_YARD_LEVEL },
+  { id: "waterpark", name: WATERPARK_LEVEL.name, data: WATERPARK_LEVEL },
   { id: "astra-chimeworks", name: ASTRA_CHIMEWORKS_LEVEL.name, data: ASTRA_CHIMEWORKS_LEVEL },
   {
     id: "backport-lab",
@@ -2399,7 +2404,7 @@ const COMPONENT_DATA_KEYS = new Set([
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
   "trick", "exitYaw", "airOnly", "coverage", "radius", "color", "tex", "dir",
-  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand",
+  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand", "loopRadius", "loopOffset", "loopRequired",
 ]);
 const hasOnlyKeys = (value: object, keys: ReadonlySet<string>): boolean =>
   Object.keys(value).every((key) => keys.has(key));
@@ -2599,6 +2604,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   )
     return null;
   const numericKeys: (keyof CustomComponent)[] = [
+    "loopRadius", "loopOffset",
     "len", "rise", "w", "yaw", "arc", "arcSteps", "deck", "lipRise", "outerBank", "depthBias", "bank", "shake", "range",
     "speed", "cycle", "phase", "travelPhase", "amp", "seed", "n", "vr", "tn", "spacing",
     "baySpacing", "supportDepth", "exitYaw", "coverage", "radius",
@@ -2735,7 +2741,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     "fog",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "lk",
-    "shoreProfile", "cameraView", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "beachSand",
+    "shoreProfile", "cameraView", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "beachSand", "loopRequired",
   ];
   let aggregateNodes = source.ocean?.shore?.length ?? 0;
   let aggregateSamples = source.ocean
@@ -2847,6 +2853,14 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (!Number.isSafeInteger(component.layer) || component.layer < 0 || component.layer > MAX_EDITOR_ID)
     )
       return null;
+    if (component.loopRadius !== undefined || component.loopOffset !== undefined || component.loopRequired !== undefined) {
+      if (component.t !== "mesh" || !Number.isFinite(component.loopRadius) ||
+          component.loopRadius! < 4 || component.loopRadius! > 80 ||
+          !Number.isFinite(component.loopOffset) || Math.abs(component.loopOffset!) > 80 ||
+          !Number.isFinite(component.w) || component.w! < 2 || component.w! > 40 ||
+          component.solid === false || component.outline || component.vert === true ||
+          (component.s !== undefined && component.s.some(scale => scale !== 1))) return null;
+    }
     const meshFields = ["vertices", "indices", "normals", "uvs", "colors"] as const;
     if (component.t !== "mesh" && meshFields.some(key => component[key] !== undefined)) return null;
     if (component.t === "mesh") {
@@ -3662,6 +3676,7 @@ export function isEditUnlocked(): boolean {
 
 export class Level {
   groundMeshes: THREE.Mesh[] = [];
+  readonly loopMeshes: THREE.Mesh[] = []; // explicit analytic contacts; empty on ordinary courses
   private obstacleEdgeMeshes: THREE.Mesh[] = [];
   groundAccelerationStats!: GroundAccelerationStats;
   private acceleratedGroundGeometries = new Set<THREE.BufferGeometry>();
@@ -5331,6 +5346,15 @@ export class Level {
     mesh.scale.set(...(c.s ?? [1, 1, 1]));
     mesh.name = c.nm ?? "triangle surface";
     if (c.vert !== undefined) mesh.userData.vert = c.vert;
+    if (c.loopRadius !== undefined) {
+      this.loopMeshes.push(mesh);
+      mesh.userData.loopRadius = c.loopRadius;
+      mesh.userData.loopOffset = c.loopOffset ?? 0;
+      mesh.userData.loopWidth = c.w;
+      mesh.userData.loopRequired = c.loopRequired === true;
+      mesh.userData.vert = false;
+      mesh.userData.edgeGrinding = false;
+    }
     if (c.fog !== undefined) mesh.userData.authoredFog = c.fog;
     if (c.solid === false) { mesh.userData.visualOnly = true; mesh.userData.edgeGrinding = false; }
     if (c.slip) mesh.userData.slippy = true;
@@ -5597,6 +5621,7 @@ export class Level {
         w: r2(hp.flatHalf),
         rise: r2(hp.radius),
         vkind: "half",
+        ...(hp.object.userData.rails === false ? { rails: false } : {}),
       });
     }
     // swept vert parts (bowls, corners, spines, banked troughs) come back as
@@ -14602,13 +14627,14 @@ export class Level {
         cross,
         axis,
       );
+      hp.object.userData.rails = c.rails !== false;
       this.halfpipes.push(hp);
       this.root.add(hp.object);
       for (const wm of hp.walls) {
         wm.userData.vert = c.vert !== false; // the flag rides the analytic path too
         this.groundMeshes.push(wm);
       }
-      for (const side of [-1, 1]) {
+      for (const side of c.rails === false ? [] : [-1, 1]) {
         const lipC = cross + side * hp.lipX;
         const y = hp.lipY + 0.05;
         const a =
@@ -14657,7 +14683,7 @@ export class Level {
     // Copings are grindable — but only on a real transition. A banked road's
     // gutter lip is a kerb, not a coping; auto-railing every slide edge would
     // hijack the whole course.
-    if (c.vert !== false) {
+    if (c.vert !== false && c.rails !== false) {
       for (const cop of vr.copings) {
         if (cop.length < 2) continue;
         this.copingRail(
