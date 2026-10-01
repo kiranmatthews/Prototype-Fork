@@ -149,7 +149,9 @@ for(const [index,loop]of WATERPARK_LOOPS.entries()){
       mesh([0,0,0],new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points),72,.18,4,false),off===7.7?'#e7d8b2':'#426974','Loop outboard lattice chord',false,6);
     }
     for(let i=0;i<16;i++)edge(point(i/16*Math.PI*2,side*7.7),point((i+1)/16*Math.PI*2,side*9.5),'#a87450',.17,'Loop lattice diagonal');
-    for(const angle of [Math.PI/3,Math.PI*4/3]){
+    // Front-half supports stay left of the next approach; rear-half supports
+    // stay right of the entry. No diagonal steel crosses a connecting road.
+    for(const angle of side<0?[Math.PI/3,Math.PI*2/3]:[Math.PI*4/3,Math.PI*5/3]){
       const high=point(angle,side*9.5),x=high[0]+side*9,z=high[2],base=earthAt(z);
       foundation(x,z,4,4,base+.6,'Coaster concrete anchor','#aa9b7e');
       edge([x,base+.6,z],high,'#426974',.8,'Coaster splayed steel support');
