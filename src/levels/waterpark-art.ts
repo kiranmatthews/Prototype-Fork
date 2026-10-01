@@ -2,7 +2,49 @@ import * as THREE from 'three';
 import type { CustomComponent, CustomGroup } from '../level';
 
 export type ArtPoint = [number, number, number];
-export const WATERPARK_ART_GROUPS: CustomGroup[] = [{ id: 80, nm: 'Waterpark buildings, rides and coaster steel', editorOnly: true }];
+export type WaterparkArtSection = 'entry' | 'cyclone' | 'riptide' | 'boomerang' | 'flume' | 'loop';
+export interface WaterparkArtFrame { p: ArtPoint; yaw?: number }
+export interface WaterparkArtLayout {
+  frames: Record<WaterparkArtSection, WaterparkArtFrame>;
+  /** Source-frame offset for the readable sign beside the arrival descent. */
+  entrySignOffsetX?: number;
+  /** The linear ride has no raised promenade beside the Boomerang pools. */
+  boomerangPromenadeDetails?: boolean;
+  /** World-space physical centreline points. Separate arrays preserve the jump. */
+  flumePaths: ArtPoint[][];
+}
+const SECTIONS: WaterparkArtSection[] = ['entry','cyclone','riptide','boomerang','flume','loop'];
+export const WATERPARK_ART_GROUPS: CustomGroup[] = SECTIONS.map((name,i)=>({
+  id:80+i,nm:`Waterpark architecture · ${name}`,editorOnly:true,
+}));
+/** Source authoring frames preserve the approved buildings and ride details. */
+export const WATERPARK_ART_SOURCE_ANCHORS: Record<WaterparkArtSection,ArtPoint> = {
+  entry:[-48,12,44],cyclone:[16,12,-20],riptide:[51,12,-64],
+  boomerang:[0,18,-160],flume:[138,18,-128],loop:[138,0,0],
+};
+export const WATERPARK_ART_LINEAR_LAYOUT: WaterparkArtLayout = {
+  entrySignOffsetX:-9,
+  boomerangPromenadeDetails:false,
+  frames:{
+    entry:{p:[0,80,58]},cyclone:{p:[-42,48,-178]},riptide:{p:[42,34,-253]},
+    boomerang:{p:[0,34,-278],yaw:90},flume:{p:[0,18,-466],yaw:180},loop:{p:[0,0,-612],yaw:180},
+  },
+  flumePaths:[
+    [[0,18,-466],[0,4,-502],[0,4,-510],[0,12,-520]],
+    [[0,12,-538],[0,12,-554],[0,0,-590]],
+  ],
+};
+
+/** Rigid section placement: no scaling or vertex deformation. */
+export function transformArtComponent(c:CustomComponent,source:ArtPoint,target:WaterparkArtFrame):CustomComponent{
+  const a=(target.yaw??0)*Math.PI/180,x=c.p[0]-source[0],z=c.p[2]-source[2];
+  return {...c,p:[target.p[0]+x*Math.cos(a)+z*Math.sin(a),target.p[1]+c.p[1]-source[1],target.p[2]-x*Math.sin(a)+z*Math.cos(a)],yaw:(c.yaw??0)+(target.yaw??0)};
+}
+
+function pointInSourceFrame(p:ArtPoint,source:ArtPoint,target:WaterparkArtFrame):ArtPoint{
+  const a=(target.yaw??0)*Math.PI/180,x=p[0]-target.p[0],z=p[2]-target.p[2];
+  return[source[0]+x*Math.cos(a)-z*Math.sin(a),source[1]+p[1]-target.p[1],source[2]+x*Math.sin(a)+z*Math.cos(a)];
+}
 const PALETTE = {
   stone: '#c6ba9e', cream: '#f6e4b4', steel: '#426974', rust: '#915d46',
   orange: '#e99051', coral: '#d86146', aqua: '#63c4c2', blue: '#377eae',
@@ -222,9 +264,12 @@ function palm(p: ArtPoint, height: number, lean: number): CustomComponent[] {
   return C;
 }
 
-/** Original waterpark architecture; no gameplay colliders or camera volumes. */
-export function buildWaterparkArt(): CustomComponent[] {
-  const C: CustomComponent[] = [], P=PALETTE;
+/** The approved architecture follows the downhill course in independent
+ * rigid frames. Scenic slide coils are contained within their own terrace. */
+export function buildWaterparkArt(layout:WaterparkArtLayout=WATERPARK_ART_LINEAR_LAYOUT): CustomComponent[] {
+  const sections:Record<WaterparkArtSection,CustomComponent[]>={entry:[],cyclone:[],riptide:[],boomerang:[],flume:[],loop:[]};
+  let C=sections.entry;
+  const P=PALETTE;
   // Entrance courtyard: a real pair of gatehouses around the clear arrival lane.
   for(const x of [-68,-28]){
     C.push(artBox([x,12.4,57],[4,.8,4],P.stone,'Entrance pylon footing'));
@@ -242,12 +287,12 @@ export function buildWaterparkArt(): CustomComponent[] {
     C.push(artBox([-80.16+i*1.45,14.2,34.59],[.09,.38,.08],P.cream,'Locker handle'));
   }
   C.push(...standingSign('WAVE COURT',[-78,17,23],15,P.dark,P.yellow,12,20));
-  C.push(...standingSign('KEEP YOUR SPEED',[156,5,-10],17,P.cream,P.blue,-6,-90));
+  sections.loop.push(...standingSign('KEEP YOUR SPEED',[156,5,-10],17,P.cream,P.blue,-6,-90));
 
   // The first experience has a waterpark silhouette at normal close-camera
   // eye height. This retired small slide starts on the west promenade and
   // crosses the low first basin, away from the transfer lip at z=0.
-  C.push(...standingSign('WAVE POOLS',[-31,14.5,19],10,P.cream,P.blue,12,-15));
+  C.push(...standingSign('WAVE POOLS',[-31+(layout.entrySignOffsetX??0),14.5,19],10,P.cream,P.blue,12,-15));
   C.push(...tower([-75,12,9],7,'OLD RAPIDS',P.orange));
   const entryFlume:ArtPoint[]=[[-71,19,9],[-64,18,6],[-55,16.6,7],[-45,15.2,10],[-35,14.4,10],[-28,13.5,14]];
   C.push(artPipe(entryFlume,1.25,P.orange,'OLD RAPIDS closed flume over the first wave pool'));
@@ -261,6 +306,7 @@ export function buildWaterparkArt(): CustomComponent[] {
   C.push(artBeam([-29,12.6,15],[-27,14.6,15],.18,P.rust,'OLD RAPIDS boarded slide outlet'));
 
   // CYCLONE: orange descending helix wraps its own braced stair tower.
+  C=sections.cyclone;
   C.push(...tower([16,12,-20],24,'CYCLONE',P.coral));
   const spiral: ArtPoint[]=[[20,36,-20],[26,35.6,-20]];
   for(let i=0;i<=36;i++){
@@ -270,7 +316,7 @@ export function buildWaterparkArt(): CustomComponent[] {
   C.push(artPipe(spiral,1.75,P.orange,'CYCLONE orange spiral flume'));
   C.push(...tubeSeams(spiral,1.75,'CYCLONE'));
   const end=spiral[spiral.length-1];
-  C.push(...openFlume([end,[16,15,-38],[3,12,-40],[-9,8,-40]],4.2,1.5,P.coral,'CYCLONE spillway into the river'));
+  C.push(...openFlume([end,[16,15,-38],[3,12,-40],[-9,8,-40]],4.2,1.5,P.coral,'CYCLONE closed terrace spillway'));
   for(const t of [.1,.35,.65,.85]){
     const a=t*Math.PI*1.8,x=16+15*Math.cos(a),z=-20+15*Math.sin(a),y=35.5-18.5*t;
     C.push(artBox([x,12.3,z],[1.6,.6,1.6],P.stone,'CYCLONE flume footing'));
@@ -278,6 +324,7 @@ export function buildWaterparkArt(): CustomComponent[] {
   }
 
   // RIPTIDE: a second silhouette, with a broad funnel and a blue exit chute.
+  C=sections.riptide;
   C.push(...tower([51,12,-64],20,'RIPTIDE',P.blue));
   const feed: ArtPoint[]=[[46.5,32,-64],[42,31,-64],[39,28,-68],[38,26,-70]];
   C.push(artPipe(feed,1.45,P.yellow,'RIPTIDE yellow enclosed feed'),...tubeSeams(feed,1.45,'RIPTIDE feed'));
@@ -291,14 +338,15 @@ export function buildWaterparkArt(): CustomComponent[] {
   const lip=Array.from({length:41},(_,i)=>[31+9.5*Math.cos(i/40*Math.PI*2),26.5,-76+9.5*Math.sin(i/40*Math.PI*2)] as ArtPoint);
   C.push(artPipe(lip,.13,P.cream,'RIPTIDE white funnel rim'));
   const outlet: ArtPoint[]=[[31,22,-76],[36,20,-84],[45,17,-94],[50,11,-101],[52,8,-105]];
-  C.push(...openFlume(outlet,4.2,1.7,P.blue,'RIPTIDE river return chute'));
+  C.push(...openFlume(outlet,4.2,1.7,P.blue,'RIPTIDE downhill outfall chute'));
   for(const x of [24,38])for(const z of [-80,-72]){
     C.push(artBox([x,12.25,z],[1.6,.5,1.6],P.stone,'RIPTIDE bowl footing'));
     C.push(artBeam([x,12.5,z],[x,25,z],.38,P.steel,'RIPTIDE bowl pedestal'));
   }
   C.push(artBeam([24,13,-80],[38,24,-80],.2,P.rust,'RIPTIDE pedestal cross brace'));
 
-  // Back-of-park mega ride marquee, visible across the central courtyard.
+  // The Boomerang marquee runs along its own descending ride district.
+  C=sections.boomerang;
   for(const x of [10,91]){
     C.push(artBox([x,-5,-186],[3,2,3],P.stone,'Boomerang marquee foundation'));
     C.push(artBeam([x,-4,-186],[x,32,-186],.6,P.steel,'Boomerang marquee mast'));
@@ -307,27 +355,33 @@ export function buildWaterparkArt(): CustomComponent[] {
   C.push(...artSign('DUAL BOOMERANG',[51,30,-185.6],52,P.cream,P.coral));
   C.push(...artSign('01',[10,24,-185.5],4,P.dark,P.yellow),...artSign('02',[91,24,-185.5],4,P.dark,P.yellow));
 
-  // The playable blue chute keeps its original centre and jump. Curved side
-  // shoulders, white panel joints and braced piers supply the slide identity.
-  // Nothing spans the open launch gap from z=-78 to z=-58.
-  C.push(...flumeShoulders([[138,18,-128],[138,4,-101],[138,4,-96],[138,16,-78]],'Blue splash launch flume'));
-  C.push(...flumeShoulders([[138,14,-58],[138,14,-44],[138,0,-18]],'Blue splash catch and runout'));
-  const flumeSupports:[number,number][]=[[-150,18],[-132,18],[-117,12.3],[-102,4.52],[-96,4],[-79,15.33],[-57,14],[-45,14],[-32,7.54],[-19,.54]];
+  // Rebuild only the shoulders against the exact new physical profile. All
+  // other flume artwork is placed through the same rigid section frame.
+  C=sections.flume;
+  const flumePaths=layout.flumePaths.map(path=>path.map(p=>pointInSourceFrame(p,WATERPARK_ART_SOURCE_ANCHORS.flume,layout.frames.flume)));
+  C.push(...flumeShoulders(flumePaths[0],'Blue splash launch flume'));
+  C.push(...flumeShoulders(flumePaths[1],'Blue splash catch and runout'));
+  const flumeSupports:ArtPoint[]=[];
+  for(const path of flumePaths)for(let segment=0;segment<path.length-1;segment++){
+    const a=new THREE.Vector3(...path[segment]),b=new THREE.Vector3(...path[segment+1]),count=Math.max(1,Math.ceil(Math.abs(b.z-a.z)/14));
+    for(let i=segment===0?0:1;i<=count;i++)flumeSupports.push(a.clone().lerp(b,i/count).toArray() as ArtPoint);
+  }
   for(const side of [-1,1]){
-    for(const [z,top]of flumeSupports){
-      const x=138+side*13.5,base=z<=-140?5:-6;
+    for(const [cx,top,z]of flumeSupports){
+      const x=cx+side*13.5,base=-6;
       C.push(artBox([x,base+.25,z],[2,.5,2],P.stone,'Blue flume concrete pier footing'));
-      C.push(artBeam([x,base+.5,z],[138+side*11.7,top+2.1,z],.42,P.steel,'Blue flume splayed outboard pier'));
-      C.push(artBeam([x,base+1,z-2],[138+side*11.7,top+1.8,z+1],.19,P.rust,'Blue flume pier kicker brace'));
+      C.push(artBeam([x,base+.5,z],[cx+side*11.7,top+2.1,z],.42,P.steel,'Blue flume splayed outboard pier'));
+      C.push(artBeam([x,base+1,z-2],[cx+side*11.7,top+1.8,z+1],.19,P.rust,'Blue flume pier kicker brace'));
     }
-    for(const section of [[[-128,18],[-101,4],[-96,4],[-78,16]],[[-58,14],[-44,14],[-18,0]]]){
-      const rail=section.map(([z,y])=>[138+side*12.3,y-.4,z] as ArtPoint);
+    for(const section of flumePaths){
+      const rail=section.map(([x,y,z])=>[x+side*12.3,y-.4,z] as ArtPoint);
       C.push(artPipe(rail,.16,P.steel,'Blue flume outboard chassis rail'));
     }
   }
 
   // Coaster rim and trusses sit OUTSIDE the fourteen-metre riding ribbon.
   // Entry, exit and blue-flume ground corridors are kept entirely clear.
+  C=sections.loop;
   const loopPoint=(angle:number,side:number,drop=.7):ArtPoint=>[
     138-20*angle/(Math.PI*2)+side,
     26*(1-Math.cos(angle))-Math.cos(angle)*drop,
@@ -347,17 +401,25 @@ export function buildWaterparkArt(): CustomComponent[] {
   C.push(artBeam([164,-6,0],[164,20,0],.45,P.steel,'Death loop warning sign mast'));
   C.push(artBeam([164,-6,24],[164,20,24],.45,P.steel,'Death loop warning sign mast'));
 
-  // Purposeful service details follow paths and foundations, never the line.
-  for(const [x,y,z] of [[-84,12,34],[-22,12,34],[5,12,3],[55,12,2],[17,12,-75],[74,12,-137],[160,-6,57],[101,-6,57]])C.push(...palm([x,y,z],9+(x%3),x%2?1.3:-1));
-  for(const [x,y,z] of [[7,12,5],[53,12,5],[26,12,-81],[71,12,-138],[-76,12,8]]){
-    C.push(artBox([x,y+.01,z],[3,.03,1],P.dark,'Recessed deck drain'));
-    for(let bar=0;bar<8;bar++)C.push(artBox([x-1.3+bar*.37,y+.035,z],[.1,.035,.9],P.steel,'Deck drain grate bar'));
+  // Service details belong to their terrace, not the retired central hub.
+  const hasDetailSupport=(section:WaterparkArtSection)=>section!=='boomerang'||layout.boomerangPromenadeDetails!==false;
+  const planting:[WaterparkArtSection,ArtPoint][]=[['entry',[-84,12,34]],['entry',[-22,12,34]],
+    ['cyclone',[5,12,3]],['cyclone',[28,12,0]],['riptide',[62,12,-57]],
+    ['boomerang',[74,14,-137]],['loop',[160,-6,57]],['loop',[101,-6,57]]];
+  for(const [section,[x,y,z]]of planting)if(hasDetailSupport(section))sections[section].push(...palm([x,y,z],9+(x%3),x%2?1.3:-1));
+  const drains:[WaterparkArtSection,ArtPoint][]=[['cyclone',[7,12,5]],['riptide',[26,12,-81]],['boomerang',[71,16,-138]],['entry',[-76,12,8]]];
+  for(const [section,[x,y,z]]of drains){
+    if(!hasDetailSupport(section))continue;
+    sections[section].push(artBox([x,y+.01,z],[3,.03,1],P.dark,'Recessed deck drain'));
+    for(let bar=0;bar<8;bar++)sections[section].push(artBox([x-1.3+bar*.37,y+.035,z],[.1,.035,.9],P.steel,'Deck drain grate bar'));
   }
-  C.push(artPipe([[-78,12,17],[-78,13,9],[-77,13,1],[-75,9,-3]],.34,P.yellow,'Visible entrance service pipe'));
-  C.push(artPipe([[55,12,-65],[64,12,-66],[72,9,-72],[78,7,-78]],.46,P.aqua,'RIPTIDE drained return plumbing'));
-  for(const [x,z] of [[-80,27],[8,-1],[63,-136]]){
-    C.push(artBox([x,13.3,z],[4,.2,1.1],P.rust,'Abandoned concourse bench seat'));
-    for(const dx of [-1.5,1.5])C.push(artBox([x+dx,12.7,z],[.16,1.2,.65],P.steel,'Bench leg fixed to deck'));
+  sections.entry.push(artPipe([[-78,12,17],[-78,13,9],[-77,13,1],[-75,9,-3]],.34,P.yellow,'Visible entrance service pipe'));
+  sections.riptide.push(artPipe([[55,12,-65],[64,12,-66],[72,9,-72],[78,7,-78]],.46,P.aqua,'RIPTIDE drained return plumbing'));
+  const benches:[WaterparkArtSection,ArtPoint][]=[['entry',[-80,12,27]],['cyclone',[8,12,-1]],['boomerang',[63,16,-136]]];
+  for(const [section,[x,y,z]]of benches){
+    if(!hasDetailSupport(section))continue;
+    sections[section].push(artBox([x,y+1.3,z],[4,.2,1.1],P.rust,'Abandoned concourse bench seat'));
+    for(const dx of [-1.5,1.5])sections[section].push(artBox([x+dx,y+.7,z],[.16,1.2,.65],P.steel,'Bench leg fixed to deck'));
   }
-  return C;
+  return SECTIONS.flatMap((name,index)=>sections[name].map(c=>({...transformArtComponent(c,WATERPARK_ART_SOURCE_ANCHORS[name],layout.frames[name]),grp:80+index})));
 }

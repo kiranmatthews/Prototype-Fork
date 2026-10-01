@@ -1,208 +1,162 @@
 import * as THREE from 'three';
 import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
 import { createLoopMeshData, sampleLoop } from '../loopRide';
-import { WATERPARK_CORE, WATERPARK_SPAWN, WATERPARK_POOLS, WATERPARK_LOOP } from './waterpark-route';
-import { buildWaterparkArt, WATERPARK_ART_GROUPS, artSign, artBeam } from './waterpark-art';
-export { WATERPARK_POOLS, WATERPARK_JUMPS, WATERPARK_CHECKPOINTS, WATERPARK_LOOP, WATERPARK_SPAWN } from './waterpark-route';
+import { WATERPARK_CORE, WATERPARK_SPAWN, WATERPARK_POOLS, WATERPARK_LOOP, WATERPARK_CHECKPOINTS, WATERPARK_DOWNHILL, WATERPARK_GRADE, WATERPARK_JUMPS, WATERPARK_FINISH } from './waterpark-route';
+import { buildWaterparkArt, WATERPARK_ART_GROUPS, WATERPARK_ART_LINEAR_LAYOUT, artSign, artBeam } from './waterpark-art';
+export { WATERPARK_POOLS, WATERPARK_JUMPS, WATERPARK_CHECKPOINTS, WATERPARK_LOOP, WATERPARK_SPAWN, WATERPARK_DOWNHILL, WATERPARK_GRADE, WATERPARK_FINISH } from './waterpark-route';
 
-// A compact terraced park, not a row of disconnected stunt platforms. The
-// perimeter rides wrap a drained river/courtyard; the loop returns to the gate.
-// Reference analysis and the route's spatial contract: docs/DEADWATER_DESIGN.md.
-const C: CustomComponent[] = WATERPARK_CORE.map(c => ({ ...c,
-  ...(c.t === 'vertramp' ? { color: c.grp === 4 ? '#df9662' : '#84bab8', tex: 'pavement' } : {}),
-  ...(c.t === 'ramp' && c.grp === 5 ? { color:'#6da7b6',tex:'pavement' } : {}),
-  ...(c.t === 'platform' && c.grp !== 6 && c.grp !== 7 ? { tex: 'pavement', color: '#cbbd9e' } : {}),
-}));
-const groups: CustomGroup[] = [
-  {id:1,nm:'01 · Closed admission court',editorOnly:true}, {id:2,nm:'02 · Wavebreaker spine pools',editorOnly:true},
-  {id:3,nm:'03 · Fountain concourse',editorOnly:true}, {id:4,nm:'04 · Dual Boomerang',editorOnly:true},
-  {id:5,nm:'05 · Dry splash flume',editorOnly:true}, {id:6,nm:'06 · Deathloop station',editorOnly:true},
-  {id:7,nm:'07 · Return to the park gates',editorOnly:true}, {id:90,nm:'Ground, retaining walls and pool edging',editorOnly:true},
-  {id:91,nm:'Drained lazy river and courtyard',editorOnly:true}, {id:92,nm:'Course camera',editorOnly:true},
-  {id:100,nm:'Abandoned park architecture',editorOnly:true},
-  ...WATERPARK_ART_GROUPS,
-];
 type P=[number,number,number];
+// One forward route down a hillside. The retained waterpark architecture is
+// arranged along successive terraces, never around a hub or a return circuit.
+const C:CustomComponent[]=WATERPARK_CORE.map(c=>({...c,
+  ...(c.t==='vertramp'?{color:c.grp===4?'#df9662':'#84bab8',tex:'pavement'}:{}),
+  ...(c.t==='ramp'&&(c.grp===1||c.grp===3||c.grp===5)?{color:'#6da7b6',tex:'pavement'}:{}),
+  ...(c.t==='platform'?{color:'#cbbd9e',tex:'pavement'}:{}),
+}));
+const groups:CustomGroup[]=[
+  {id:1,nm:'01 · High admission tower',editorOnly:true},{id:2,nm:'02 · Descending Wavebreaker pools',editorOnly:true},
+  {id:3,nm:'03 · Mid-slope terrace',editorOnly:true},{id:4,nm:'04 · Downhill Boomerang',editorOnly:true},
+  {id:5,nm:'05 · Lower dry flume',editorOnly:true},{id:6,nm:'06 · Loop at the foot of the hill',editorOnly:true},
+  {id:7,nm:'07 · Finish beyond the loop',editorOnly:true},{id:90,nm:'Hillside, retaining walls and pool edging',editorOnly:true},
+  {id:91,nm:'Pocket terraces and drainage',editorOnly:true},{id:92,nm:'Forward course camera',editorOnly:true},...WATERPARK_ART_GROUPS,
+];
 const add=(c:CustomComponent)=>C.push(c);
-function box(p:P,s:P,color:string,nm:string,solid=true,grp=90,tex='pavement') {
-  if(solid)add({t:'platform',p,s,color,tex,edgeGrinding:false,grp,nm});
-  else mesh(p,new THREE.BoxGeometry(...s),color,nm,false,grp);
+export function waterparkGradeAt(z:number):number {
+  if(z>=WATERPARK_GRADE[0][2])return WATERPARK_GRADE[0][1];
+  for(let i=1;i<WATERPARK_GRADE.length;i++){const a=WATERPARK_GRADE[i-1],b=WATERPARK_GRADE[i];if(z>=b[2]){const t=(a[2]-z)/(a[2]-b[2]);return a[1]+(b[1]-a[1])*t;}}
+  return WATERPARK_GRADE[WATERPARK_GRADE.length-1][1];
 }
-function mesh(p:P,g:THREE.BufferGeometry,color:string,nm:string,solid=false,grp=90) {
-  const component:CustomComponent={t:'mesh',p,vertices:Array.from(g.getAttribute('position').array),
-    ...(g.index?{indices:Array.from(g.index.array)}:{}),normals:Array.from(g.getAttribute('normal').array),
-    color,tex:'solid',solid,doubleSided:true,edgeGrinding:false,grp,nm};
-  if(g.getAttribute('uv'))component.uvs=Array.from(g.getAttribute('uv').array);
-  add(component);g.dispose();
+const earthAt=(z:number)=>Math.max(-6,waterparkGradeAt(z)-22);
+function mesh(p:P,g:THREE.BufferGeometry,color:string,nm:string,solid=false,grp=90,tex='solid') {
+  const c:CustomComponent={t:'mesh',p,vertices:Array.from(g.getAttribute('position').array),...(g.index?{indices:Array.from(g.index.array)}:{}),color,tex,solid,doubleSided:true,edgeGrinding:false,grp,nm};
+  if(solid&&g.getAttribute('normal'))c.normals=Array.from(g.getAttribute('normal').array);
+  add(c);g.dispose();
+}
+function box(p:P,s:P,color:string,nm:string,solid=true,grp=90,tex='pavement') {
+  if(solid)add({t:'platform',p,s,color,tex,edgeGrinding:false,grp,nm});else mesh(p,new THREE.BoxGeometry(...s),color,nm,false,grp);
 }
 function foundation(x:number,z:number,w:number,d:number,top:number,nm:string,color='#cbbd9e') {
-  box([x,(top-6)/2,z],[w,top+6,d],color,nm);
+  const bottom=Math.min(earthAt(z-d/2),earthAt(z+d/2))-1;
+  box([x,(top+bottom)/2,z],[w,top-bottom,d],color,nm);
 }
-function arrow(p:P,yaw:number,nm='Painted ride route') {
-  add({t:'mesh',p:[p[0],p[1]+.035,p[2]],yaw,vertices:[-1.05,0,1.15,1.05,0,1.15,0,0,-1.6],indices:[0,1,2],
-    solid:false,doubleSided:true,tex:'solid',color:'#efd070',edgeGrinding:false,grp:90,nm});
+function arrow(p:P,yaw=0,nm='Painted downhill ride route') {
+  add({t:'mesh',p:[p[0],p[1]+.04,p[2]],yaw,vertices:[-1.05,0,1.15,1.05,0,1.15,0,0,-1.6],indices:[0,1,2],solid:false,doubleSided:true,tex:'solid',color:'#efd070',edgeGrinding:false,grp:90,nm});
 }
-function edging(a:P,b:P,width=.35,color='#e6ded0',nm='Ceramic pool coping') {
-  const va=new THREE.Vector3(...a),vb=new THREE.Vector3(...b),d=vb.clone().sub(va),g=new THREE.BoxGeometry(width,width,d.length());
-  g.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,0,1),d.normalize()));
-  const p=va.add(vb).multiplyScalar(.5).toArray() as P;mesh(p,g,color,nm);
-}
-function drain(p:P,yaw=0) {
-  add({t:'mesh',p,yaw,vertices:[-1,0,-.65,1,0,-.65,1,0,.65,-1,0,.65],indices:[0,2,1,0,3,2],
-    solid:false,doubleSided:true,tex:'metal',color:'#384747',edgeGrinding:false,grp:90,nm:'Dry pool drain'});
-  for(let n=-3;n<=3;n++)box([p[0]+n*.25,p[1]+.015,p[2]],[.05,.025,1.3],'#a8a99a','Drain grate',false);
+function edge(a:P,b:P,color='#e6ded0',w=.35,nm='Pool coping') {C.push(artBeam(a,b,w,color,nm));}
+function drain(p:P) {
+  box([p[0],p[1]+.025,p[2]],[2,.05,1.2],'#34494b','Dry pool drain',false);
+  for(let n=-3;n<=3;n++)box([p[0]+n*.25,p[1]+.06,p[2]],[.05,.04,1.2],'#a8a99a','Drain grate bar',false);
 }
 
-// Real earth and connected paved terraces give every attraction a foundation.
-// Only three localized maintenance wells are lethal; ordinary dry river floors
-// remain usable for recovery and exploration.
-box([36,-9,-63],[1200,6,1200],'#b4a081','Desert park ground',true,90,'sand');
-for(const [x,z,w,d,h] of [[-122,20,30,60,9],[-116,-115,25,70,12],[-64,-207,60,24,10],[40,-216,65,28,13],[153,-210,52,31,11],[191,-107,25,70,8],[187,20,20,44,7]]) {
-  add({t:'rock',p:[x,-6+h*.35,z],s:[w,h,d],seed:Math.abs(x+z),color:'#ae9474',tex:'sand',edgeGrinding:false,grp:90,nm:'Desert boundary rock outcrop'});
+// The earth itself descends. A depressed central bed leaves the authored
+// pools/flumes open, while broad shoulders give the park real hillside mass.
+const stations=[112,...Array.from({length:83},(_,i)=>72-i*10),-800];
+const cross=[-500,-130,-75,-26,-20,20,26,75,130,500],vertices:number[]=[],indices:number[]=[];
+for(const z of stations)for(const x of cross){const shoulder=Math.min(1,Math.max(0,(Math.abs(x)-26)/49));vertices.push(x,earthAt(z)+(waterparkGradeAt(z)-earthAt(z))*shoulder,z);}
+for(let i=0;i<stations.length-1;i++)for(let j=0;j<cross.length-1;j++){const a=i*cross.length+j,b=a+1,c=a+cross.length,d=c+1;indices.push(a,b,c,b,d,c);}
+const terrain=new THREE.BufferGeometry();terrain.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));terrain.setIndex(indices);terrain.computeVertexNormals();
+mesh([0,0,0],terrain,'#b4a081','Continuous downhill desert hillside',true,90,'sand');
+foundation(0,60,70,32,79.98,'High admission terrace foundation');
+for(const x of [-26,26])foundation(x,30,20,36,80,'Raised entry balcony');
+foundation(14,24,5,4,80,'Old Rapids stair landing support');
+// The admission sign cantilevers from the balcony over the descending slide.
+// Keep its structure above the rider instead of filling the chute with a slab.
+for(const [x,z]of [[4.33,32.02],[11.67,33.98]]){
+  edge([18,79.65,z],[x,79.65,z],'#426974',.6,'Wave Pools sign cantilever');
+  edge([18,78.1,z],[x,79.65,z],'#426974',.22,'Wave Pools sign bracket');
 }
-foundation(-48,44,58,40,11.98,'Admission terrace foundation');
-foundation(-84,-34,24,192,12,'West pool promenade');
-foundation(-48,-142,38,48,11.98,'Concourse retaining terrace');
-foundation(-23,-173,48,10,12,'Concourse queue shoulder');
-// A body's route remains in the open trough; exterior mass sits beyond the
-// analytic riding width, with different widths rather than copy-pasted bays.
-for(const [i,pool] of WATERPARK_POOLS.entries()) {
-  const span=2*(pool.radius+pool.flatHalf),floor=pool.p[1],top=pool.lipY;
-  if(pool.section==='A') {
-    const left=pool.p[0]-pool.length/2,right=pool.p[0]+pool.length/2;
-    foundation((-96+left)/2,pool.p[2],left+96,span,top,`Wave pool ${i+1} west retaining court`);
-    foundation((right-26)/2,pool.p[2],-26-right,span,top,`Wave pool ${i+1} river median`);
-    for(const x of [left-.15,right+.15])edging([x,top+.11,pool.nearLip],[x,top+.11,pool.farLip],.45);
-    edging([left,top+.11,pool.nearLip],[right,top+.11,pool.nearLip],.4);
-    drain([pool.p[0]+pool.length*.3,floor+.035,pool.p[2]]);
-    // Tall retaining faces get a recognizable blue tile course and depth ticks.
-    for(const x of [left-.02,right+.02]) {
-      box([x,top-.6,pool.p[2]],[.04,.85,span-.8],'#245c68','Faded blue waterline tile',false);
-      for(let z=pool.farLip+2;z<pool.nearLip-1;z+=4)box([x,top-.6,z],[.06,.85,.06],'#bdcfcb','Tile grout joint',false);
+foundation(-26,-369,2.4,2.4,10,'Lower Boomerang marquee pedestal');
+
+for(const [i,pool]of WATERPARK_POOLS.entries()){
+  const span=pool.nearLip-pool.farLip,half=pool.length/2,top=pool.lipY,floor=pool.p[1];
+  if(pool.section==='A'){
+    for(const side of [-1,1]){
+      foundation(side*(half+16),pool.p[2],32,span,top,`Wave pool ${i+1} hillside retaining court`);
+      edge([side*half,top+.1,pool.nearLip],[side*half,top+.1,pool.farLip],'#e6ded0',.45,'Ceramic wave-pool edging');
+      box([side*(half+.025),top-.6,pool.p[2]],[.05,.8,span-.4],'#245c68','Faded waterline tiles',false);
+      for(let z=pool.farLip+2;z<pool.nearLip;z+=4)box([side*(half+.06),top-.6,z],[.04,.8,.06],'#b8ccc6','Pool tile grout',false);
     }
-  } else {
-    // A thin curved fiberglass shell on open steel piers distinguishes the
-    // elevated boomerangs from the concrete sunken pools. No rectangular bins.
+    edge([-half,top+.1,pool.nearLip],[half,top+.1,pool.nearLip]);
+  }else{
     const profile:[number,number][]=[];
-    for(let n=18;n>=0;n--){const a=n/18*Math.PI/2;profile.push([pool.p[0]-pool.flatHalf-pool.radius*Math.sin(a),floor+pool.radius*(1-Math.cos(a))]);}
-    for(let n=0;n<=18;n++){const a=n/18*Math.PI/2;profile.push([pool.p[0]+pool.flatHalf+pool.radius*Math.sin(a),floor+pool.radius*(1-Math.cos(a))]);}
-    for(const z of [pool.p[2]-pool.length/2,pool.p[2]+pool.length/2]) {
-      const vertices:number[]=[],indices:number[]=[];
-      for(let n=0;n<profile.length-1;n++){
-        const [x,y]=profile[n],[nx,ny]=profile[n+1],k=vertices.length/3;
-        vertices.push(x,y,z,nx,ny,z,nx,ny-1.3,z,x,y-1.3,z);indices.push(k,k+1,k+2,k,k+2,k+3);
-        edging([x,y+.12,z],[nx,ny+.12,z],.42,'#f0dab6','Curved fiberglass slide rim');
-      }
-      const shell=new THREE.BufferGeometry();shell.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));shell.setIndex(indices);shell.computeVertexNormals();
-      mesh([0,0,0],shell,'#ba7851','Curved boomerang shell fascia');
-      for(let n=0;n<profile.length;n+=6){
-        const [x,y]=profile[n],oz=z+(z<pool.p[2]?-1:1);
-        box([x,-5.7,oz],[1.8,.6,1.8],'#a4977b','Slide pier footing');
-        edging([x,-5.4,oz],[x,y-1,oz],.5,'#50757b','Exposed boomerang steel column');
-        if(n>=6){const [px,py]=profile[n-6];edging([px,-5.3,oz],[x,y-1.1,oz],.22,'#a87450','Boomerang diagonal support');edging([x,-5.3,oz],[px,py-1.1,oz],.22,'#a87450','Boomerang cross brace');}
+    for(let n=18;n>=0;n--){const a=n/18*Math.PI/2;profile.push([pool.p[2]+pool.flatHalf+pool.radius*Math.sin(a),floor+pool.radius*(1-Math.cos(a))]);}
+    for(let n=0;n<=18;n++){const a=n/18*Math.PI/2;profile.push([pool.p[2]-pool.flatHalf-pool.radius*Math.sin(a),floor+pool.radius*(1-Math.cos(a))]);}
+    for(const side of [-1,1]){
+      const x=side*half,v:number[]=[],ind:number[]=[];
+      for(let n=0;n<profile.length-1;n++){const [z,y]=profile[n],[nz,ny]=profile[n+1],k=v.length/3;v.push(x,y,z,x,ny,nz,x,ny-1.3,nz,x,y-1.3,z);ind.push(k,k+1,k+2,k,k+2,k+3);edge([x,y+.1,z],[x,ny+.1,nz],'#f0dab6',.42,'Curved Boomerang fiberglass rim');}
+      const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(v,3));g.setIndex(ind);g.computeVertexNormals();mesh([0,0,0],g,'#ba7851','Curved Boomerang shell fascia');
+      for(let n=0;n<profile.length;n+=6){const [z,y]=profile[n],base=earthAt(z),sx=side*(half+1);
+        box([sx,base+.3,z],[1.8,.6,1.8],'#aa9b7e','Boomerang concrete pier');edge([sx,base+.6,z],[sx,y-1,z],'#50757b',.5,'Boomerang steel column');
+        if(n>=6){const [pz,py]=profile[n-6];edge([sx,earthAt(pz)+.6,pz],[sx,y-1,z],'#a87450',.2,'Boomerang diagonal brace');edge([sx,base+.6,z],[sx,py-1,pz],'#a87450',.2,'Boomerang cross brace');}
       }
     }
-    edging([pool.nearLip,top+.12,pool.p[2]-pool.length/2],[pool.nearLip,top+.12,pool.p[2]+pool.length/2],.4,'#f0dab6');
-    drain([pool.p[0],floor+.035,pool.p[2]+pool.length*.3]);
+    edge([-half,top+.1,pool.nearLip],[half,top+.1,pool.nearLip],'#f0dab6',.4);
+  }
+  drain([half*.65,floor+.03,pool.p[2]]);arrow(pool.p);
+  for(const dz of [-3,0,3])add({t:'wumpa',p:[0,floor+1,pool.p[2]+dz],grp:pool.section==='A'?2:4});
+}
+
+// Long downhill connectors are recognizable open slides, not empty turns.
+function shoulders(a:P,b:P,width:number){
+  const steps=8,r=1.3;
+  for(const side of [-1,1]){
+    const v:number[]=[],ind:number[]=[];
+    for(let along=0;along<=1;along++)for(let n=0;n<=steps;n++){const t=n/steps*Math.PI/2;v.push(side*(width/2+r*Math.sin(t)),a[1]+(b[1]-a[1])*along+r*(1-Math.cos(t)),a[2]+(b[2]-a[2])*along);}
+    for(let n=0;n<steps;n++){const j=n+steps+1;ind.push(n,n+1,j,n+1,j+1,j);}
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(v,3));g.setIndex(ind);g.computeVertexNormals();mesh([0,0,0],g,'#639eae','Downhill slide shoulder');
+    edge([side*(width/2+r),a[1]+r,a[2]],[side*(width/2+r),b[1]+r,b[2]],'#e8dfbf',.2,'Downhill slide rolled rim');
+    for(let z=a[2]-5;z>b[2];z-=16){const t=(a[2]-z)/(a[2]-b[2]),y=a[1]+(b[1]-a[1])*t,sx=side*(width/2+2),base=earthAt(z);
+      box([sx,base+.25,z],[2,.5,2],'#b5aa8e','Downhill slide pier footing');edge([sx,base+.5,z],[side*(width/2+1),y+.8,z],'#426974',.35,'Downhill slide pier');}
   }
 }
-// Low retaining courts support the big receiver/turn. Columns and diagonal
-// flume frames are supplied by the architectural layer rather than floating boxes.
-foundation(137,-160,30,40,5,'Boomerang receiver pump building','#9d9b84');
-foundation(138,-10,22,24,-.02,'Deathloop loading foundation','#bdb096');
-foundation(118,27,20,54,-.02,'Exit promenade foundation','#bdb096');
+for(const slope of WATERPARK_DOWNHILL.slice(0,3)){shoulders(slope.from,slope.to,20);for(let z=slope.from[2]-12;z>slope.to[2];z-=25){const t=(slope.from[2]-z)/(slope.from[2]-slope.to[2]);arrow([0,slope.from[1]+(slope.to[1]-slope.from[1])*t,z]);}}
 
-// The dry lazy river is a complete, skateable circulation loop around a real
-// raised island. Its shallow transitions are distinct from the giant rides.
-const river:P[]=[[-12,7,16],[-21,7,-28],[-12,7,-81],[16,7,-108],[61,7,-99],[91,7,-58],[89,7,-10],[65,7,26],[23,7,33]];
-add({t:'vertramp',p:[0,0,0],pts:river.map(p=>[p[0],p[2],13,p[1]]),closed:true,curve:'spline',
-  vkind:'half',rise:5,w:4,arc:90,arcSteps:20,deck:1.3,rails:true,tex:'pavement',color:'#a4d0c8',edgeGrinding:false,grp:91,nm:'Drained lazy river around fountain island'});
-add({t:'platform',p:[0,3,0],s:[1,18,1],pts:[[3,9],[-2,-25],[6,-72],[24,-85],[54,-79],[70,-53],[70,-14],[54,11],[24,17]],
-  color:'#d2c5a6',tex:'pavement',edgeGrinding:false,grp:91,nm:'Fountain courtyard island'});
-// Both crossing bridges meet the island. Their walkways/rails are visible from
-// the high rides and give the player a consistent landmark throughout the U.
-box([-11,15,-44],[28,1,10],'#d5c8a7','West lazy river bridge deck',true,91);
-add({t:'ramp',p:[-29.5,12,-44],len:9,rise:3.5,w:10,yaw:270,color:'#d5c8a7',tex:'pavement',edgeGrinding:false,grp:91,nm:'West bridge promenade approach'});
-add({t:'ramp',p:[7.5,12,-44],len:9,rise:3.5,w:10,yaw:90,color:'#d5c8a7',tex:'pavement',edgeGrinding:false,grp:91,nm:'West bridge island approach'});
-foundation(36,-137,130,14,12,'North courtyard promenade');
-box([36,15,-102],[12,1,38],'#d5c8a7','North lazy river bridge deck',true,91);
-add({t:'ramp',p:[36,12,-126.5],len:11,rise:3.5,w:12,yaw:180,color:'#d5c8a7',tex:'pavement',edgeGrinding:false,grp:91,nm:'North bridge promenade approach'});
-add({t:'ramp',p:[36,12,-78],len:10,rise:3.5,w:12,yaw:0,color:'#d5c8a7',tex:'pavement',edgeGrinding:false,grp:91,nm:'North bridge island approach'});
-for(const z of [-49,-39])add({t:'rail',p:[-34,12.9,z],pts:[[0,0],[9,0,0,3.5],[37,0,0,3.5],[46,0]],grp:91,nm:'Arched footbridge handrail'});
-for(const x of [30,42])add({t:'rail',p:[x,12.9,-132],pts:[[0,0],[0,11,0,3.5],[0,49,0,3.5],[0,59]],grp:91,nm:'North bridge handrail'});
-// An empty fountain bowl, a raised central pedestal, and four skateable banks.
-mesh([31,12.23,-45],new THREE.CylinderGeometry(12,12,.46,40),'#e2d8bd','Empty fountain stone rim',true,91);
-mesh([31,12.48,-45],new THREE.CylinderGeometry(10.8,10.8,.06,40),'#88bdbb','Stained fountain basin',false,91);
-mesh([31,13.25,-45],new THREE.CylinderGeometry(2.2,3,1.6,16),'#c7b895','Fountain central plinth',true,91);
-mesh([31,15,-45],new THREE.CylinderGeometry(.4,.7,2.1,12),'#538788','Dry fountain column',false,91);
-mesh([31,16.3,-45],new THREE.CylinderGeometry(3.1,1.1,.65,24),'#e0c789','Dry fountain crown',false,91);
-for(const yaw of [0,90,180,270]) {
-  const a=yaw*Math.PI/180;add({t:'ramp',p:[31+Math.sin(a)*15,12,-45+Math.cos(a)*15],yaw,len:6,rise:.46,w:8,
-    color:'#c3b597',tex:'pavement',edgeGrinding:false,grp:91,nm:'Fountain skating bank'});
-}
-// Small planters and cracked forecourts make the shared ground legible at
-// player height; planted props belong to actual supported surfaces.
-for(const [x,z] of [[5,-15],[6,-68],[57,-70],[59,1],[-80,21],[-80,-55],[-24,-136],[115,-122],[161,-48]]) {
-  const y=x>105? -6:12;
-  mesh([x,y+.5,z],new THREE.CylinderGeometry(3.2,3.5,1,12),'#bbac8d','Concrete planter',true,91);
-  add({t:'decor',dkind:'palm',p:[x,y+.9,z],w:.85,rise:11,grp:100,nm:'Palm growing from abandoned planter'});
-  add({t:'decor',dkind:'plants',p:[x+1.2,y+.95,z-1],w:.8,vr:2,grp:100,nm:'Overgrown planter'});
-}
-// Waterlogged service wells explain jump failures; the rest of the park is
-// drained and grounded, with no level-wide black death carpet.
-for(const [x,z,w,d] of [[-48,-109,34,17],[113,-160,17,31],[138,-68,18,19]]) {
-  add({t:'pit',p:[x,-4.2,z],s:[w,1,d],invisible:true,grp:90,nm:'Flooded maintenance well'});
-  const g=new THREE.PlaneGeometry(w,d);g.rotateX(-Math.PI/2);mesh([x,-4.05,z],g,'#476c63','Standing water in closed service well');
-}
+const cp1=WATERPARK_CHECKPOINTS[0].p;
+foundation(-42,cp1[2]-2,48,64,cp1[1],'CYCLONE pocket terrace');
+foundation(-19,cp1[2],10,18,cp1[1],'Mid-slope terrace connection');
+foundation(44,-248,66,50,34,'RIPTIDE lower terrace');
+// Fountain is a compact rest-stop landmark beside the forward run, not a hub.
+mesh([-29,cp1[1]+.23,cp1[2]-8],new THREE.CylinderGeometry(6.5,6.5,.46,28),'#ddcfaa','Dry rest-stop fountain rim',true,91);
+mesh([-29,cp1[1]+.49,cp1[2]-8],new THREE.CylinderGeometry(5.8,5.8,.04,28),'#8cbbb8','Dry fountain basin',false,91);
+mesh([-29,cp1[1]+1.5,cp1[2]-8],new THREE.CylinderGeometry(.8,1.7,2,14),'#c5b48f','Dry fountain pedestal',true,91);
+mesh([-29,cp1[1]+2.8,cp1[2]-8],new THREE.CylinderGeometry(2.2,.7,.6,20),'#dfc584','Dry fountain crown',false,91);
+add({t:'bonusplatform',p:[-26,cp1[1],cp1[2]+6],to:[-22,cp1[1]+.1,cp1[2]+6],grp:3,nm:'Closed arcade side entrance'});
+C.push(...artSign('ARCADE',[-29,cp1[1]+3,cp1[2]+1],9,'#f1d8aa','#356d72'));
+for(const x of [-32.8,-25.2])C.push(artBeam([x,cp1[1],cp1[2]+1],[x,cp1[1]+3.5,cp1[2]+1],.2,'#426974','Arcade notice posts'));
 
-// Clear painted ride directions; supplies sit off the fast line.
-for(const p of [[-48,12,35],[-48,4,12],[-48,0,-17],[-48,2,-48],[-48,-2,-81],[-48,12,-125]] as P[])arrow(p,0);
-for(const p of [[-23,13.4,-160],[17,6,-160],[54,2,-160],[89,8,-160]] as P[])arrow(p,270);
-for(const p of [[138,18,-138],[138,4,-98],[138,14,-49],[138,0,-15],[118,0,31]] as P[])arrow(p,180);
-for(let n=1;n<=4;n++){
-  const a=Math.PI+n/4*Math.PI/2,x=-23+25*Math.cos(a),z=-135+25*Math.sin(a);
-  arrow([x,12+Math.max(0,x+30)/26*6,z],-Math.atan2(-Math.sin(a),-Math.cos(a))*180/Math.PI,'Concourse turn paint');
+for(const [i,gap]of WATERPARK_JUMPS.entries()){
+  const edge=i<2?WATERPARK_POOLS[i===0?3:6].farLip:gap.takeoff[2],z=(edge+gap.landing[2])/2,d=edge-gap.landing[2];
+  const waterY=earthAt(z)+.6;add({t:'pit',p:[0,waterY,z],s:[34,1,d],invisible:true,grp:90,nm:'Flooded downhill maintenance well'});
+  const g=new THREE.PlaneGeometry(32,Math.max(1,d-.4));g.rotateX(-Math.PI/2);mesh([0,waterY+.12,z],g,'#476c63','Standing service-well water');
 }
-for(let n=1;n<=3;n++){
-  const a=-Math.PI/2+n/3*Math.PI/2;arrow([114+24*Math.cos(a),18,-136+24*Math.sin(a)],Math.atan2(Math.sin(a),-Math.cos(a))*180/Math.PI,'Dry flume turn paint');
-}
-for(const [x,y,z] of [[-57,12,43],[-39,12,43]] as P[])add({t:x<-48?'clock':'comboorb',p:[x,y,z],grp:1});
-for(const [x,y,z] of [[-59,12,-130],[-29,12,-137],[128,18,-164],[148,18,-164],[148,14,-51],[109,0,31]] as P[])add({t:'crate',p:[x,y,z],kind:'wood',grp:90,nm:'Park maintenance supplies'});
-add({t:'bonusplatform',p:[-60,12,-151],to:[-55,12.1,-151],grp:3,nm:'Abandoned arcade side entrance'});
-for(const pool of WATERPARK_POOLS)for(const offset of [-3,0,3])add({t:'wumpa',p:pool.section==='A'?[pool.p[0],pool.p[1]+1,pool.p[2]+offset]:[pool.p[0]+offset,pool.p[1]+1,pool.p[2]],grp:pool.section==='A'?2:4});
+for(const [x,z]of [[-66,6],[66,-114],[-84,-228],[82,-355],[-66,-468],[72,-555]])add({t:'rock',p:[x,waterparkGradeAt(z)+1,z],s:[24,7,35],seed:Math.abs(x+z),color:'#af9777',tex:'sand',edgeGrinding:false,grp:90,nm:'Hillside rock outcrop'});
+for(const [x,z,top]of [[-10,60,80],[10,60,80],[-11,cp1[2]-8,cp1[1]],[11,-414,30],[9,-546,12],[12,-646,0]])add({t:'crate',p:[x,top,z],kind:'wood',grp:90,nm:'Closed park maintenance supplies'});
+add({t:'clock',p:[-10,80,68],grp:1});add({t:'comboorb',p:[10,80,68],grp:1});
+for(const p of [[0,80,51],[0,60,-20],[0,cp1[1],cp1[2]+3],[0,34,-274],[0,30,-417],[0,12,-548],[0,0,-597],[20,0,-644]] as P[])arrow(p);
 
-add({t:'mesh',p:WATERPARK_LOOP.entry,yaw:WATERPARK_LOOP.yaw,...createLoopMeshData(WATERPARK_LOOP.radius,WATERPARK_LOOP.width,WATERPARK_LOOP.offset),w:WATERPARK_LOOP.width,
-  loopRadius:WATERPARK_LOOP.radius,loopOffset:WATERPARK_LOOP.offset,loopRequired:true,color:'#3f7380',emissive:'#102d32',tex:'metal',doubleSided:true,edgeGrinding:false,grp:6,nm:'Deathloop coaster riding ribbon'});
-add({t:'crystal',p:[118,1.2,41],grp:7,nm:'Coaster survivor crystal'});
-add({t:'gate',p:[118,0,48],yaw:180,grp:7,nm:'Deadwater park exit'});
+add({t:'mesh',p:WATERPARK_LOOP.entry,yaw:0,...createLoopMeshData(26,12,20),w:12,loopRadius:26,loopOffset:20,loopRequired:true,
+  color:'#3f7380',emissive:'#102d32',tex:'metal',doubleSided:true,edgeGrinding:false,grp:6,nm:'Deathloop at the bottom of the hill'});
+add({t:'crystal',p:[20,1.2,-653],grp:7,nm:'Downhill survivor crystal'});
+add({t:'gate',p:WATERPARK_FINISH,yaw:0,grp:7,nm:'Finish beyond the downhill loop'});
+foundation(0,-601,22,24,-.02,'Loop loading foundation');foundation(20,-640,20,56,-.02,'Finish promenade foundation');
+C.push(...artSign('KEEP SPEED',[6,2.7,-610],7,'#f5e7b7','#a2553c'));
+C.push(artBeam([6,0,-610],[6,3,-610],.18,'#426974','Loop speed notice post'));
 
-// Ordered lane: exact straight launch headings, a broad concourse turn, then
-// the real 3D loop path. No overview camera volumes or distant scripted shots.
-const lane:P[]=[[-61,12,62],[-48,12,34],[-48,12,24]];
-for(const pool of WATERPARK_POOLS.filter(p=>p.section==='A'))lane.push(pool.p,[-48,12,pool.farLip]);
-lane.push([-48,12,-118],[-48,12,-135]);
-for(let i=1;i<=8;i++){const a=Math.PI+i/8*Math.PI/2;lane.push([-23+25*Math.cos(a),12,-135+25*Math.sin(a)]);}
-lane.push([-4,18,-160],[0,18,-160]);
-for(const pool of WATERPARK_POOLS.filter(p=>p.section==='B'))lane.push(pool.p,[pool.farLip,18,-160]);
-lane.push([122,18,-160],[130,18,-160],[138,18,-153],[138,18,-138],[138,18,-128],[138,4,-96],[138,16,-78],[138,14,-58],[138,14,-44],[138,0,-18]);
-for(let i=0;i<=32;i++){const p=sampleLoop(WATERPARK_LOOP,i/32*Math.PI*2).point;lane.push([138-p[0],p[1],-p[2]]);}
-lane.push([118,0,18],[118,0,58]);
-export const WATERPARK_CAMERA_LANE=lane;
-for(const p of lane)add({t:'camnode',p,grp:92});
-C.push(...buildWaterparkArt());
-C.push(...artSign('ARCADE',[-61,15,-156],9,'#f1d8aa','#356d72'));
-C.push(...artSign('DRY FLUME',[138,21,-128],15,'#f7e7bc','#377eae',180));
-C.push(...artSign('KEEP SPEED',[144,2.7,-2],7,'#f5e7b7','#a2553c',180));
-for(const x of [-64.8,-57.2])C.push(artBeam([x,12,-156],[x,15.5,-156],.2,'#426974','Arcade notice posts'));
-for(const x of [130.5,145.5])C.push(artBeam([x,18,-128],[x,21.5,-128],.2,'#426974','Dry flume entry posts'));
-C.push(artBeam([144,0,-2],[144,3,-2],.18,'#426974','Loop speed notice post'));
-// Flat-colour scenery needs no UVs; normals are regenerated from its existing
-// indexed geometry. Keep the full park comfortably inside editor JSON limits.
+// Straight centreline all the way down; the mandatory vertical loop is the
+// only local reversal, followed by a separate forward finish lane.
+const lane:P[]=[[0,80,88],[0,80,44],[0,60,-16],[0,60,-24]];
+for(const p of WATERPARK_POOLS.filter(p=>p.section==='A'))lane.push(p.p,[0,p.lipY,p.farLip]);
+lane.push(WATERPARK_JUMPS[0].landing,[0,cp1[1],-190],[0,34,-270],[0,34,-278]);
+for(const p of WATERPARK_POOLS.filter(p=>p.section==='B'))lane.push(p.p,[0,p.lipY,p.farLip]);
+lane.push(WATERPARK_JUMPS[1].landing,[0,30,-424],[0,18,-466],[0,4,-502],[0,4,-510],WATERPARK_JUMPS[2].takeoff,WATERPARK_JUMPS[2].landing,[0,12,-554],[0,0,-590]);
+for(let i=0;i<=32;i++){const q=sampleLoop(WATERPARK_LOOP,i/32*Math.PI*2).point;lane.push([q[0],q[1],-612+q[2]]);}
+lane.push([20,0,-636],[20,0,-675]);
+export const WATERPARK_CAMERA_LANE=lane;for(const p of lane)add({t:'camnode',p,grp:92});
+const artLayout={...WATERPARK_ART_LINEAR_LAYOUT,frames:{...WATERPARK_ART_LINEAR_LAYOUT.frames,cyclone:{p:[-42,cp1[1],cp1[2]] as P}}};
+C.push(...buildWaterparkArt(artLayout));
 for(const c of C)if(c.t==='mesh'&&c.solid===false&&c.tex==='solid'){delete c.normals;delete c.uvs;}
-
 export const WATERPARK_LEVEL:CustomLevelData={
-  v:1,name:'Deadwater Park',spawn:WATERPARK_SPAWN,killY:-18,sky:'day',cameraAirLift:1,keepPlayFog:true,
-  atmosphere:{fogEnabled:true,fogNear:260,fogFar:700,fogColor:'#c9d3ce',backdrop:'sky',ambientSky:'#d5e6e4',ambientGround:'#8d7c60',ambientIntensity:.95,
-    sunColor:'#fff0cf',sunIntensity:1.65,fillColor:'#a8c9d0',fillIntensity:.4,drawDistance:800,shadowStrength:.8},
-  medalTimes:{gold:100,silver:135,bronze:180},components:C,groups,
+ v:1,name:'Deadwater Park',spawn:WATERPARK_SPAWN,killY:-30,sky:'day',cameraAirLift:1,keepPlayFog:true,
+ atmosphere:{fogEnabled:true,fogNear:290,fogFar:950,fogColor:'#c9d3ce',backdrop:'sky',ambientSky:'#d5e6e4',ambientGround:'#8d7c60',ambientIntensity:.95,sunColor:'#fff0cf',sunIntensity:1.65,fillColor:'#a8c9d0',fillIntensity:.4,drawDistance:1100,shadowStrength:.8},
+ medalTimes:{gold:105,silver:140,bronze:180},components:C,groups,
 };
