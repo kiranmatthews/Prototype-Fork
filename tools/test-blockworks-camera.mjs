@@ -19,6 +19,8 @@ try {
   const { Player } = await server.ssrLoadModule('/src/player.ts');
   const { TUNING } = await server.ssrLoadModule('/src/tuning.ts');
   const { cameraRigFraming, setCameraRigAim } = await server.ssrLoadModule('/src/cameraRig.ts');
+  const { LoopCameraFraming } = await server.ssrLoadModule('/src/loopCamera.ts');
+  const { CameraHeroFraming } = await server.ssrLoadModule('/src/cameraHeroFraming.ts');
   const { cameraViewAt, cameraViewDirection, CameraViewFraming } = await server.ssrLoadModule('/src/cameraViews.ts');
   const { CameraInputFrame } = await server.ssrLoadModule('/src/cameraViews.ts');
   const { CameraLookOffset } = await server.ssrLoadModule('/src/cameraLook.ts');
@@ -42,7 +44,7 @@ try {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
   }).outputText;
   const makeRig = new Function('deps', `
-    const {THREE,TUNING,cameraRigFraming,setCameraRigAim,cameraViewAt,cameraViewDirection,
+    const {THREE,TUNING,LoopCameraFraming,CameraHeroFraming,cameraRigFraming,setCameraRigAim,cameraViewAt,cameraViewDirection,
       CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,
       newLaneCursor,level,player,camera}=deps;
     const current={id:'codex-lab'}, worldMapController=null, oceanOverview=false, oceanReview=false;
@@ -55,7 +57,7 @@ try {
     ${cameraCode}
     return {step:updateCamera,heading:camControlDir};
   `);
-  const dependencies = { THREE, TUNING, cameraRigFraming, setCameraRigAim, cameraViewAt,
+  const dependencies = { THREE, TUNING, LoopCameraFraming, CameraHeroFraming, cameraRigFraming, setCameraRigAim, cameraViewAt,
     cameraViewDirection, CameraViewFraming, CameraLookOffset, speedSkateFovTarget,
     stepSpeedSkateFov, newLaneCursor };
   const jumps=gaps.filter(g=>g.kind==='charged gap');

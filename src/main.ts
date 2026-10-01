@@ -94,6 +94,8 @@ import {
 import { CameraLookOffset } from "./cameraLook";
 import { cameraViewAt, cameraViewDirection, CameraViewFraming } from "./cameraViews";
 import { cameraRigFraming, setCameraRigAim } from "./cameraRig";
+import { LoopCameraFraming } from "./loopCamera";
+import { CameraHeroFraming } from "./cameraHeroFraming";
 import { SkateChaseCamera } from "./skateChaseCamera";
 import { sfx } from "./audio";
 import { Recorder, Replayer, ReplayFile, camYawOf, isReplayFile } from "./replay";
@@ -1934,13 +1936,16 @@ function stepPvp(dt: number): void {
 // P2's rig: a light follow cam (lane-aware forward, ground-agnostic) — the
 // full Crash rig belongs to P1; this one just keeps P2 framed and onward.
 const cameraViewFraming2 = new CameraViewFraming();
+const loopCameraFraming2 = new LoopCameraFraming();
 function updateCamera2(dt: number): void {
   if (!p2) return;
   const framingSnap = cam2RenderSnapVersion !== p2.renderSnapVersion;
+  loopCameraFraming2.restore(camera2);
   cameraViewFraming2.restore(camera2);
   updateBaseCamera2(dt);
   const subject = p2.renderPosition;
   cameraViewFraming2.apply(camera2, cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z), subject, framingSnap);
+  loopCameraFraming2.apply(camera2, p2.loopPresentationFrame, subject, cameraRigFraming(TUNING, 0, 0, 0, true), dt, framingSnap);
 }
 
 function updateBaseCamera2(dt: number): void {
@@ -4136,8 +4141,11 @@ const camF = new THREE.Vector3(0, 0, -1);
 const skateChaseCamera = new SkateChaseCamera();
 
 const cameraViewFraming = new CameraViewFraming();
+const cameraHeroFraming = new CameraHeroFraming();
+const loopCameraFraming = new LoopCameraFraming();
 function updateCamera(dt: number): void {
   const framingSnap = cameraRenderSnapVersion !== player.renderSnapVersion;
+  loopCameraFraming.restore(camera);
   cameraViewFraming.restore(camera);
   updateBaseCamera(dt);
   const subject = player.renderPosition;
@@ -4148,6 +4156,7 @@ function updateCamera(dt: number): void {
     const forward = cameraViewDirection(level.cameraViews, subject.x, subject.y, subject.z, camControlDir);
     camControlDir.set(forward.x, 0, forward.z);
   }
+  loopCameraFraming.apply(camera, player.loopPresentationFrame, subject, cameraRigFraming(TUNING), dt, framingSnap);
 }
 
 function updateBaseCamera(dt: number): void {
@@ -4343,7 +4352,10 @@ function updateBaseCamera(dt: number): void {
   // High-air courses may opt into full vertical framing without changing
   // global tuning, camera yaw, or the player's camera-relative input frame.
   const airLift = player.swimming ? 1 : Math.max(level.cameraAirLift ?? TUNING.camAirLift, boulderF);
-  const effY = THREE.MathUtils.lerp(camAnchorY, subject.y, airLift);
+  // Full-follow centres the visible posed rider, not just the feet that own
+  // collision. The readonly pose offset is zero on ordinary upright support.
+  const poseYOffset = level.cameraAirLift === 1 ? (player.cameraPoseYOffset ?? 0) : 0;
+  const effY = THREE.MathUtils.lerp(camAnchorY, subject.y, airLift) + poseYOffset;
   camTarget.set(
     subject.x - camF.x * framing.distance,
     effY + framing.height,
@@ -4374,7 +4386,11 @@ function updateBaseCamera(dt: number): void {
     const kY = 1 - Math.exp(-THREE.MathUtils.lerp(6, 9, airLift) * dt);
     camera.position.x += camF.x * along * kAlong + perpX * lat * kLat;
     camera.position.z += camF.z * along * kAlong + perpZ * lat * kLat;
-    camera.position.y += (camTarget.y - camera.position.y) * kY;
+    // An authored full-follow course tracks the already-interpolated subject
+    // without a second Y delay, on ramps as well as in the air. The shared
+    // default and partial-follow courses retain their exact existing damping.
+    if (level.cameraAirLift === 1) camera.position.y = camTarget.y;
+    else camera.position.y += (camTarget.y - camera.position.y) * kY;
   }
 
   // camF already owns heading easing. Build the aim relative to the actual
@@ -4390,6 +4406,15 @@ function updateBaseCamera(dt: number): void {
   if (camControlDir.lengthSq() > 1e-6) camControlDir.normalize();
   else camControlDir.copy(camF);
   camera.lookAt(aimSmooth);
+  // A vert transfer can point the body back toward the close lens even after
+  // its visible centre is followed. Fit only the presentation pitch when that
+  // pose would clip; retain the canonical heading published above. Loop contact
+  // and its release already own a complete surface-relative camera frame.
+  if (level.cameraAirLift === 1 && !loopCameraFraming.active && !player.loopPresentationFrame &&
+      (player.state === 'air' || player.alignPose > .05)) {
+    cameraHeroFraming.apply(camera, player.cameraPoseBounds, dt, snapped);
+    camera.getWorldDirection(aimSmooth).add(camera.position);
+  } else cameraHeroFraming.reset();
   cameraLook.step(input.lookX, input.lookY, dt);
   cameraLook.apply(camera, aimSmooth);
 

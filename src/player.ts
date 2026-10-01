@@ -1,3 +1,4 @@
+import type { LoopCameraFrame } from './loopCamera';
 import { LOOP_TURN, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';
 import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';
 import { SkateBalanceArms, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
@@ -1404,6 +1405,15 @@ export class Player {
   private lastGroundY = 0; // most recent real floor level — the landing X hovers here over a pit
   private groundHit: GroundHit | null = null;
   private loopRide: { mesh: THREE.Object3D; shape: LoopShape; angle: number; lateral: number; recovering: boolean } | null = null;
+  private cameraPoseStandingCenter: number | null = null;
+  private readonly cameraRenderBounds = new THREE.Box3();
+  private readonly cameraRenderShift = new THREE.Vector3();
+  private readonly cameraPoseHip = new THREE.Vector3();
+  private readonly cameraPoseHead = new THREE.Vector3();
+  private readonly loopRenderLocal = new THREE.Vector3();
+  private readonly loopRenderFrame: LoopCameraFrame = {
+    normal: new THREE.Vector3(0, 1, 0), tangent: new THREE.Vector3(0, 0, -1),
+  };
   private loopFall = false;
   private readonly completedLoops = new Set<THREE.Object3D>();
   private loopGateHintShown = false;
@@ -3398,6 +3408,7 @@ export class Player {
     this.groundHit = null;
     this.loopRide = null;
     this.loopFall = false;
+    this.cameraPoseStandingCenter = null;
     this.completedLoops.clear();
     this.loopGateHintShown = false;
     this.clearCoyoteJumpWindow();
@@ -5519,6 +5530,49 @@ export class Player {
       this.pos.addScaledVector(tangent, 0.15);
     }
     return true;
+  }
+
+  /** Camera-only vertical offset of the rendered torso/head centre. Upright
+   * supported poses calibrate to zero; a transfer can carry the visible body
+   * below its physics feet without moving the camera's gameplay/control frame. */
+  get cameraPoseYOffset(): number {
+    const head = this.headVisualCenter ?? this.headM;
+    if (!this.legs || !head || this.loopRide) return 0;
+    this.legs.getWorldPosition(this.cameraPoseHip);
+    head.getWorldPosition(this.cameraPoseHead);
+    const center = (this.cameraPoseHip.y + this.cameraPoseHead.y) * .5 - this.renderPosition.y;
+    if (!Number.isFinite(center)) return 0;
+    if (this.cameraPoseStandingCenter === null ||
+        (this.grounded && this.state === 'ride' && this.rideNormal.y > .98 && this.alignPose < .05 && !this.isBailing)) {
+      this.cameraPoseStandingCenter = center;
+      return 0;
+    }
+    return center - this.cameraPoseStandingCenter;
+  }
+
+  /** Conservative render-time copy of already-measured body bounds. Reading
+   * this never refreshes or alters the collision/interaction pose cache. */
+  get cameraPoseBounds(): THREE.Box3 | null {
+    if (this.characterBounds.isEmpty()) return null;
+    this.cameraRenderBounds.copy(this.characterBounds).union(this.previousCharacterBounds);
+    return this.cameraRenderBounds.translate(this.cameraRenderShift.copy(this.renderPosition).sub(this.pos));
+  }
+
+  /** Surface frame at the interpolated render pose; never consumed by gameplay. */
+  get loopPresentationFrame(): LoopCameraFrame | null {
+    const ride = this.loopRide;
+    if (!ride || this.state !== 'ride' || !this.grounded) return null;
+    this.loopRenderLocal.copy(this.renderPosition);
+    ride.mesh.worldToLocal(this.loopRenderLocal);
+    const angle = Math.atan2(-this.loopRenderLocal.z, ride.shape.radius - this.loopRenderLocal.y);
+    const pitch = ride.shape.offset / LOOP_TURN;
+    const length = Math.hypot(ride.shape.radius, pitch);
+    this.loopRenderFrame.normal.set(0, Math.cos(angle), Math.sin(angle))
+      .transformDirection(ride.mesh.matrixWorld);
+    this.loopRenderFrame.tangent.set(pitch / length, ride.shape.radius * Math.sin(angle) / length,
+      -ride.shape.radius * Math.cos(angle) / length).transformDirection(ride.mesh.matrixWorld)
+      .multiplyScalar(Math.sign(this.speed || 1));
+    return this.loopRenderFrame;
   }
 
   get loopStatus(): { active: boolean; progress: number; pressure: number; completed: number } {
