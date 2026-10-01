@@ -25,19 +25,31 @@ try {
  const ray=new THREE.Raycaster();const down=new THREE.Vector3(0,-1,0);
  const floor=(x,z,y=120)=>{ray.set(new THREE.Vector3(x,y,z),down);ray.near=0;ray.far=200;return ray.intersectObjects(level.groundMeshes,false)[0];};
  assert.ok(Math.abs(floor(0,4).point.y)<.001,'supported spawn');
- // Sweep both sides of every old handoff, including airborne approaches.
- // Camera and player have independent cursors: neither may choose a cross-leg.
+ // Checkpoints are reading/run-up positions: rail manoeuvres must already be
+ // ahead of the player before acceleration. The rope ferry remains side-on.
  assert.equal(level.zones.length,0,'no competing side-scroll input remaps');
- let cameraSamples=0;
- for(const [x,y,z] of [[0,0,-48],[-47,12,-48],[-47,12,-112],[10,12,-112],[10,26,-202],[-48,26,-202],[-48,34,-278],[9,56,-278],[9,56,-324],[-43,64,-324]])
-   for(const dx of [-8,-.1,0,.1,8])for(const dz of [-8,-.1,0,.1,8])for(const dy of [0,4]){
-     const view=level.laneDirAt(x+dx,y+dy,z+dz);
-     assert.ok(view&&Math.abs(view.x)<1e-8&&Math.abs(view.z+1)<1e-8,'stable camera and input frame through a corner');cameraSamples++;
-   }
- assert.equal(cameraSamples,500);
+ const approaches=[
+   [[0,0,-44],[-1,0]],[[-47,12,-48],[0,-1]],[[-47,12,-112],[1,0]],
+   [[10,12,-112],[0,-1]],[[10,12,-170],[0,-1]],[[10,26,-202],[0,-1]],
+   [[-48,26,-202],[0,-1]],[[-48,34,-278],[1,0]],[[9,56,-278],[0,-1]],
+   [[9,56,-324],[-1,0]],[[-43,64,-324],[0,-1]],
+ ];
+ for(const [point,[fx,fz]] of approaches)for(const dy of [0,4,12]){
+   const view=level.cameraDirAt(point[0],point[1]+dy,point[2]);
+   assert.ok(view&&Math.abs(view.x-fx)<1e-8&&Math.abs(view.z-fz)<1e-8,`read the next obstacle from ${point}`);
+ }
+ // The spine itself follows each lateral leg, retaining the correct height so
+ // a reset/airborne query cannot choose another level of the stacked route.
+ for(const [point,[fx,fz]] of [
+   [[-24,6,-48],[-1,0]],[[-18,12,-112],[1,0]],[[-20,26,-202],[-1,0]],
+   [[-20,45,-278],[1,0]],[[-18,60,-324],[-1,0]],
+ ]){
+   const view=level.laneDirAt(...point);
+   assert.ok(view.x*fx+view.z*fz>.999,'route spine follows the authored crossing');
+ }
  // The two travelling rails retain exactly the same front view throughout
  // their full antiphase sideways sweep, including grind/hang heights.
- assert.equal(level.cameraViews.length,1);
+ assert.ok(level.cameraViews.length>1);
  const invalidView=JSON.parse(JSON.stringify(NIGHTWORKS_LEVEL));
  delete invalidView.components.find(c=>c.cameraView).s;
  assert.equal(normalizeCustomLevelData(invalidView),null,'view volumes require dimensions');
@@ -48,10 +60,47 @@ try {
  for(let x=-40;x<=4;x+=2)for(const z of [-118.5,-112,-105.5])for(const y of [8,13.7,24,34]){
    const view=level.cameraDirAt(x,y,z);assert.ok(Math.abs(view.x-1)<1e-8&&Math.abs(view.z)<1e-8,'steady forward rail view');
  }
- for(const p of [[0,0,4],[-47,12,-72],[10,26,-202],[-48,34,-278],[9,56,-324]]){
-   const view=level.cameraDirAt(...p);assert.ok(Math.abs(view.x)<1e-8&&Math.abs(view.z+1)<1e-8,'other sections retain their fixed view');
+ // The phase-rock exit and paired-rail sweep share a supported turn island.
+ // Conflicting overlapping views used to exchange priority here, jumping 45°
+ // in 2cm. Both approach and rail feathers must remain continuous across it.
+ for(const z of [-103,-105.5,-106.5])for(const y of [12,16]){
+   let previous=null;
+   for(let x=-47;x<=-38;x+=.02){
+     const view=level.cameraDirAt(x,y,z);
+     if(previous){
+       const change=Math.abs(Math.atan2(previous.x*view.z-previous.z*view.x,previous.x*view.x+previous.z*view.z))*180/Math.PI;
+       assert.ok(change<3,`continuous phase/rail approach at ${[x,y,z]}: ${change}°`);
+     }
+     previous=view;
+   }
  }
- const {CameraInputFrame}=await server.ssrLoadModule('/src/cameraViews.ts');
+ for(const p of [[0,0,4],[-47,12,-72],[10,26,-202],[-22,29,-202],[-36,29,-202]]){
+   const view=level.cameraDirAt(...p);assert.ok(Math.abs(view.x)<1e-8&&Math.abs(view.z+1)<1e-8,'corridors and rope ferry retain their forward/side view');
+ }
+ const {CameraInputFrame,cameraViewAt,CameraViewFraming}=await server.ssrLoadModule('/src/cameraViews.ts');
+ const {cameraRigFraming,setCameraRigAim}=await server.ssrLoadModule('/src/cameraRig.ts');
+ const {TUNING}=await server.ssrLoadModule('/src/tuning.ts');
+ const railsAt=z=>level.movingRails.filter(r=>Math.abs((r.rail.points[0].z+r.rail.points.at(-1).z)/2-r.object.position.z-z)<.01);
+ // Actual rail endpoints at both extremes of their motion must fit in the
+ // resting run-up shot. Checking only headings misses an unreadable obstacle.
+ for(const [point,rails] of [
+   [[-47,12,-112],railsAt(-112)],
+   [[10,12,-118],railsAt(-147)],
+   [[9,56,-278],railsAt(-296)],
+   [[9,56,-324],railsAt(-324)],
+ ]){
+   assert.ok(rails.length,'rail visibility fixture found its moving obstacle');
+   const forward=level.cameraDirAt(...point),framing=cameraRigFraming(TUNING),camera=new THREE.PerspectiveCamera(TUNING.camFov,16/9,.1,500);
+   camera.position.set(point[0]-forward.x*framing.distance,point[1]+framing.height,point[2]-forward.z*framing.distance);
+   camera.lookAt(setCameraRigAim(new THREE.Vector3(),camera.position,forward,framing.pitch));
+   new CameraViewFraming().apply(camera,cameraViewAt(level.cameraViews,...point),new THREE.Vector3(...point),true);
+   camera.updateMatrixWorld(true);
+   for(const moving of rails)for(const phase of [-1,1])for(const distance of [0,moving.rail.totalLength]){
+     const endpoint=moving.rail.pointAt(distance).clone().sub(moving.object.position).addScaledVector(moving.axisV,phase*moving.amp);
+     const projected=endpoint.project(camera);
+     assert.ok(Math.abs(projected.x)<.92&&Math.abs(projected.y)<.92&&projected.z>-1&&projected.z<1,`moving rail is readable at rest from ${point}: ${projected.toArray()}`);
+   }
+ }
  const held=new CameraInputFrame();held.sample(1,0,{x:0,z:-1});
  for(let i=0;i<=90;i++){
    const a=i*Math.PI/180,frame=held.sample(1,0,{x:Math.sin(a),z:-Math.cos(a)});
@@ -65,15 +114,18 @@ try {
    ...NIGHTWORKS_LEVEL.components.filter(c=>c.t==='camnode'||c.t==='zone'),
    {t:'platform',p:[-20,100,-190],s:[160,1,500]},{t:'gate',p:[0,100,-430]}]}});
  const cp=new Player(cs),ci={moveX:0,moveY:0,consumeEdges(){}};
- for(const [x,z] of [[0,-48],[-47,-48],[-47,-112],[10,-112],[10,-202],[-48,-202],[-48,-278],[9,-278],[9,-324],[-43,-324]])for(const sideways of [false,true]){
+ for(const [[x,,z],[fx,fz]] of approaches)for(const sideways of [false,true]){
    cp.pos.set(x-2,100.5,z+2);cp.prevPos.copy(cp.pos);cp.state='ride';cp.freeSkate=false;cp.speed=0;cp.walkVelocity.set(0,0,0);cp.laneCursor.s=-1;cp.settle(cl);
+   cp.camDir.set(fx,0,fz);cp.viewInput.reset();cp.viewInput.sample(0,0,{x:fx,z:fz});
    ci.moveX=sideways?1:0;ci.moveY=sideways?0:1;cp.rawInput=ci;const start=cp.pos.clone();
-   for(let frame=0;frame<90;frame++){cl.update(CONST.fixedStep);cp.step(CONST.fixedStep,ci,cl);}
-   assert.ok(sideways?cp.pos.x>start.x+3:cp.pos.z<start.z-3,'held input crosses the old transition');
-   assert.ok(Math.abs(sideways?cp.pos.z-start.z:cp.pos.x-start.x)<.001,'camera cannot hijack held run direction');
+   for(let frame=0;frame<90;frame++){const angle=frame/89*Math.PI/2;cp.camDir.set(fx*Math.cos(angle)-fz*Math.sin(angle),0,fx*Math.sin(angle)+fz*Math.cos(angle));cl.update(CONST.fixedStep);cp.step(CONST.fixedStep,ci,cl);}
+   const dx=cp.pos.x-start.x,dz=cp.pos.z-start.z,ux=sideways?-fz:fx,uz=sideways?fx:fz;
+   assert.ok(dx*ux+dz*uz>3,'held input crosses the camera transition');
+   assert.ok(Math.abs(dx*uz-dz*ux)<.001,'camera cannot hijack held run direction');
  }
  // Drive the real Player with a turning camera while right remains held.
  cp.pos.set(-40,100.5,-112);cp.prevPos.copy(cp.pos);cp.state='ride';cp.freeSkate=false;cp.speed=0;cp.walkVelocity.set(0,0,0);cp.viewInput.reset();cp.camDir.set(0,0,-1);cp.settle(cl);
+ cp.viewInput.sample(0,0,{x:0,z:-1});
  ci.moveX=1;ci.moveY=0;const heldStart=cp.pos.clone();
  for(let i=0;i<90;i++){const a=i/89*Math.PI/2;cp.camDir.set(Math.sin(a),0,-Math.cos(a));cl.update(CONST.fixedStep);cp.step(CONST.fixedStep,ci,cl);}
  assert.ok(cp.pos.x>heldStart.x+3&&Math.abs(cp.pos.z-heldStart.z)<.001,'camera blend cannot steer held running input');

@@ -56,6 +56,7 @@ import {
 import { BraidedRope, ropeLocalPoint, flexibleRopePoint, flexibleRopeVelocity, closestRopeDistance } from "./ropeGeometry";
 import { NightworksRocks, nightworksGeometry, isNightworksSurface } from "./nightworksRocks";
 import { NIGHTWORKS_LEVEL } from "./levels/nightworks";
+import { migrateSlipstreamCamera } from "./levels/slipstream-camera";
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
 import { WATERPARK_LEVEL } from "./levels/waterpark";
@@ -1039,6 +1040,7 @@ function defaultGateFor(d: CustomLevelData): CustomComponent {
 // already-current level cannot keep rewriting it, while old organizational
 // metadata remains visible in the modern group outliner.
 export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
+  migrateSlipstreamCamera(d);
   // Retired vehicles must not return through saved libraries or shared files.
   // Leave the road geometry, groups and other enemies available for editing.
   d.components = d.components.filter(c => c.t !== "enemy" || (c as { foe?: string }).foe !== "car");

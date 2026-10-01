@@ -175,16 +175,48 @@ export function createNightworksLevel(): CustomLevelData {
     b.crystal(-43, 70.6, -350);
     b.finishGate(70, -353, -43);
 
-    // Stable default view/input frame across switchbacks. Following the route's
-    // X bends made the camera steer held input, then side-scroll zones snapped
-    // it back again at the same landing. The player supplies the turn instead.
+    // Follow the actual route and its height bands. The checkpoint islands
+    // are the places to turn and read the next obstacle, before a speed run.
     const laneNodes: [number, number, number, number][] = [
       [0, 10, 0, 0],
-      [0, -363, 0, 70],
+      [0, -48, 4, 0],
+      [-47, -48, 4, 12],
+      [-47, -112, 4, 12],
+      [10, -112, 4, 12],
+      [10, -170, 0, 12],
+      [10, -202, 4, 26],
+      [-48, -202, 4, 26],
+      [-48, -254, 0, 26],
+      [-48, -278, 4, 34],
+      [9, -278, 4, 56],
+      [9, -324, 4, 56],
+      [-43, -324, 4, 64],
+      [-43, -353, 0, 70],
+      [-43, -363, 0, 70],
     ];
-  // Forward view along both travelling rails, including their full sideways
-  // cycle. Boundary blends sit over the approach/landing rock islands.
-  add({t:"camnode",cameraView:true,nm:"Moving rails: forward view",p:[-18.25,15,-112],s:[23,60,52.5],yaw:-90,radius:4});
+  // Each view finishes its turn on supported ground and holds the same heading
+  // over the obstacle's entire moving footprint. Neighbouring volumes meet at
+  // an island seam, rather than competing over the same rectangle. Held input
+  // already retains its world direction while these camera headings blend.
+  const view = (name:string,x0:number,x1:number,z0:number,z1:number,y:number,yaw:number,rail=false,feather=3):void => {
+    const width=x1-x0,depth=z1-z0,sideways=Math.abs(yaw)===90;
+    add({t:"camnode",cameraView:true,nm:name,p:[(x0+x1)/2,y,(z0+z1)/2],
+      s:[sideways?depth:width,60,sideways?width:depth],yaw,radius:feather,
+      ...(rail?{cameraFov:58,cameraAspect:16/9}:{}),});
+  };
+  view("First lift crossing: west",-40,8,-57,-38,12,90);
+  view("Phase-rock approach: forward",-59,-43,-107,-39,18,0);
+  view("Paired moving rails: east from the run-up",-58,7,-125,-107,18,-90,true);
+  // This short side feather settles before the spine's nearest-leg boundary
+  // at the wide island's northeast edge. The main run-up still blends over 3m.
+  view("Paired moving rails: full sideways sweep",-43,7,-126,-100,18,-90,true,1);
+  view("Moving rail and tower approach: forward",7,24,-197,-100,24,0,true);
+  view("Travelling ropes: side view",-41,22,-213,-197,30,0);
+  view("Upper phase-rock approach: forward",-60,-41,-273,-192,36,0);
+  view("Summit lift crossing: east",-59,0,-290,-273,48,-90);
+  view("Summit moving rail: forward from the island",0,23,-318,-267,60,0,true);
+  view("Final moving rail: west from the island",-38,22,-337,-318,64,90,true);
+  view("Summit gate approach: forward",-57,-38,-365,-312,70,0);
   for (const x of [-8,-22,-36]) add({t:"decor",dkind:"nightanchorrock",p:[x,30.2,-204.6],s:[2,2,2]});
   for (const [x,z,radius,y] of laneNodes) add({t:"camnode",p:[x,y,z],radius});
   // Far silhouettes frame each height band without occupying traversal space.
