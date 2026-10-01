@@ -2,6 +2,9 @@ import assert from 'node:assert/strict';
 import { createServer } from 'vite';
 import { withWaterparkRuntime } from './waterpark-runner.mjs';
 
+const scenarios=[];
+const scenario=(run,options={})=>scenarios.push({run,options});
+
 const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true } });
 try {
   const { stepLoopMotion, loopContactPressure, sampleLoop, createLoopMeshData, LOOP_TURN } =
@@ -21,7 +24,7 @@ try {
   };
   for (const dt of [1 / 30, 1 / 60, 1 / 120]) {
     const held = travel(64, 1, dt);
-    assert.equal(held.complete, true, 'A charged speed-pad approach must complete the loop');
+    assert.equal(held.complete, true, 'A charged gravity approach must complete the loop');
     assert.ok(held.minSpeed > 34, 'Successful run kept enough speed through the crown');
     const coast = travel(64, 0, dt);
     assert.equal(coast.attached, false, 'Uncharged launch must lose inward wheel pressure');
@@ -47,67 +50,112 @@ try {
   }
 } finally { await server.close(); }
 
-await withWaterparkRuntime(async ({ p, l, tick, directionInput, source }) => {
-  const validationServer = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true } });
-  try {
-    const { parseCustomLevelJson } = await validationServer.ssrLoadModule('/src/level.ts');
-    const captured = l.captureData();
-    const roundtrip = parseCustomLevelJson(JSON.stringify(captured));
-    assert.ok(roundtrip, 'Loop metadata must survive the published/editor schema');
-    const loop = roundtrip.components.find(c => c.loopRadius !== undefined);
-    assert.equal(loop.loopRadius, 26); assert.equal(loop.loopOffset, 20); assert.equal(loop.loopRequired, true);
-    assert.equal(JSON.stringify(loop.vertices), JSON.stringify(source.WATERPARK_LEVEL.components.find(c => c.loopRadius).vertices));
-    for (const mutation of [{ loopRadius: 0 }, { loopRadius: 81 }, { loopOffset: '20' },
-      { loopRequired: 1 }, { s: [2, 1, 1] }, { solid: false }, { vert: true }]) {
-      const invalid = structuredClone(captured);
-      Object.assign(invalid.components.find(c => c.loopRadius), mutation);
-      assert.equal(parseCustomLevelJson(JSON.stringify(invalid)), null, 'Malformed loop metadata was accepted');
+scenario(async r => {
+  const {p,l,source,server,THREE}=r;
+  const {parseCustomLevelJson}=await server.ssrLoadModule('/src/level.ts');
+  const captured=l.captureData(),roundtrip=parseCustomLevelJson(JSON.stringify(captured));
+  assert.ok(roundtrip,'Coaster geometry and momentum tags must survive editor serialization');
+  const loops=roundtrip.components.filter(c=>c.loopRadius!==undefined);
+  assert.equal(loops.length,3);assert.ok(loops.every(c=>c.loopRequired&&c.loopRadius===26));
+  assert.equal(roundtrip.components.filter(c=>c.t==='speedpad').length,0);
+  const tracks=roundtrip.components.filter(c=>c.gravityTrack);
+  assert.ok(tracks.length>=13&&tracks.every(c=>c.t==='mesh'&&c.vert===false));
+  for(const mutation of [{gravityTrack:'yes'},{solid:false},{vert:true}]){
+    const invalid=structuredClone(captured);Object.assign(invalid.components.find(c=>c.gravityTrack),mutation);
+    assert.equal(parseCustomLevelJson(JSON.stringify(invalid)),null);
+  }
+  for(const mutation of [{loopRadius:0},{loopRadius:81},{loopOffset:'20'},{loopRequired:1},{s:[2,1,1]},{solid:false},{vert:true}]){
+    const invalid=structuredClone(captured);Object.assign(invalid.components.find(c=>c.loopRadius),mutation);
+    assert.equal(parseCustomLevelJson(JSON.stringify(invalid)),null);
+  }
+  // Start from rest at every ramp's lower end and skate back to its summit.
+  for(const run of source.WATERPARK_COASTER_RAMPS){
+    p.respawn(l,true,false,{position:new THREE.Vector3(run.to[0],run.to[1]+.1,run.to[2]+1),heading:new THREE.Vector3(0,0,1)});
+    let climbed=false;
+    for(let i=0;i<2400;i++){
+      r.tick({...r.directionInput([0,0,1]),jumpHeld:true});
+      assert.ok(!p.isBailing&&p.totalDeaths===0,`${run.name} could not be re-climbed`);
+      if(p.pos.z>=run.from[2]-.5&&p.pos.y>=run.from[1]-.5){climbed=true;break;}
     }
-  } finally { await validationServer.close(); }
-  let inverted = false, complete = false;
-  for (let i = 0; i < 1600; i++) {
-    tick({ ...(p.loopStatus.active?{moveY:1}:directionInput([0,0,-1])), jumpHeld: true });
-    inverted ||= p.loopStatus.active && p.rideNormal.y < -0.9;
-    if (p.loopStatus.completed > 0) { complete = true; break; }
-    assert.equal(p.totalDeaths, 0, 'Charged approach unexpectedly died');
+    assert.ok(climbed,`${run.name} has a one-way or blocked return`);
   }
-  assert.ok(inverted, 'Production rider never reached the inverted track');
-  assert.ok(complete, 'Production contact never completed its full turn');
-  assert.ok(Math.abs(p.pos.x-20) < 2 && Math.abs(p.pos.y) < 1, 'Exit must return supported to the separate lane');
-  for (let i = 0; i < 600 && p.state !== 'finished'; i++) tick({ ...(p.loopStatus.active?{moveY:1}:directionInput([0,0,-1])), jumpHeld: true });
-  assert.equal(p.state, 'finished', 'Completed loop must unlock the real finish gate');
-  p.respawn(l, false);
-  assert.equal(p.loopStatus.completed, 0, 'Death/checkpoint respawn must reset the loop goal');
-  assert.equal(p.loopStatus.active, false);
-}, { start: [0, 0.1, -597], heading: [0,0,-1] });
+  // The tag does not drive the rider. Removing gravity removes the gain.
+  const gravity=r.TUNING.groundGravity;
+  try{
+    r.TUNING.groundGravity=0;
+    p.respawn(l,true,false,{position:new THREE.Vector3(0,12.1,-570),heading:new THREE.Vector3(0,0,-1)});
+    let reached=false;
+    for(let i=0;i<1800;i++){
+      r.tick({...r.directionInput([0,0,-1]),jumpHeld:true});
+      assert.ok(p.speed<=r.TUNING.maxSpeed+.01,'Gravity-track tag injected artificial launch speed');
+      if(p.pos.z<-658){reached=true;break;}
+    }
+    assert.ok(reached);
+  }finally{r.TUNING.groundGravity=gravity;}
+  console.log('Triple loop metadata, no-pad gravity gain and all four reverse ramp climbs pass.');
+});
 
-await withWaterparkRuntime(({ p, tick, directionInput }) => {
-  let entered = false, fell = false;
-  for (let i = 0; i < 1000; i++) {
-    const release = entered;
-    tick({ ...(p.loopStatus.active?{moveY:1}:directionInput([0,0,-1])), jumpHeld: !release });
+scenario(r=>{
+  const {p}=r;let entered=false,fell=false;
+  for(let i=0;i<1000;i++){
+    r.tick({...(p.loopStatus.active?{moveY:1}:r.directionInput([0,0,-1])),jumpHeld:!entered});
     entered ||= p.loopStatus.active;
-    if (entered && p.state === 'air' && !p.loopStatus.active) { fell = true; break; }
+    if(entered&&p.state==='air'&&!p.loopStatus.active){fell=true;break;}
   }
-  assert.ok(entered && fell, 'Releasing early must produce a real gravity fall');
-  assert.equal(p.grounded, false);
-  assert.equal(p.loopStatus.completed, 0);
-  let recovered = false;
-  for (let i = 0; i < 1200; i++) {
-    tick({});
-    assert.equal(p.loopStatus.completed, 0, 'A lower-ribbon recovery cannot earn the loop goal');
-    if (!p.loopStatus.active && p.grounded && p.pos.y < 1.1) { recovered = true; break; }
+  assert.ok(entered&&fell,'Releasing charge must lose real inward wheel pressure');
+  assert.equal(p.loopStatus.completed,0);
+  let recovered=false;
+  for(let i=0;i<1200;i++){
+    r.tick({});assert.equal(p.loopStatus.completed,0,'Falling onto a ribbon cannot grant completion');
+    if(!p.loopStatus.active&&p.grounded&&!p.isBailing){recovered=true;break;}
   }
-  assert.ok(recovered, `A failed loop must return to its base, never stick on the lower wall: ${JSON.stringify({position:p.pos.toArray(),state:p.state,grounded:p.grounded,loop:p.loopStatus})}`);
-}, { start: [0, 0.1, -597], heading: [0,0,-1] });
-await withWaterparkRuntime(({ p, tick, directionInput }) => {
-  let blocked = false;
-  p.onCourseHint = (title) => { blocked ||= title === 'LOOP STILL CLOSED'; };
-  for (let i = 0; i < 180; i++) {
-    tick({ ...(p.loopStatus.active?{moveY:1}:directionInput([0,0,-1])), jumpHeld: true });
-    assert.notEqual(p.state, 'finished', 'Exit-lane shortcut bypassed the required loop');
+  assert.ok(recovered,'A failed loop must regain a supported lower surface');
+},{start:[0,12.1,-570],heading:[0,0,-1]});
+
+scenario(r=>{
+  const {p}=r;let phase='miss',waypoint=0,supported=false;
+  const path=[[12,-110,-829.4],[12,-96,-775.8],[40,-96,-776]];
+  for(let i=0;i<2600;i++){
+    r.tick(phase==='miss'?r.directionInput([0,0,-1],.65):phase==='settle'?{}:{...r.toward(path[waypoint],waypoint===0?.7:1),jumpHeld:waypoint>0});
+    assert.ok(p.state!=='dead'&&p.totalDeaths===0,'Missed gap recovery must remain playable without a reset');
+    if(phase==='return')assert.equal(p.isBailing,false,'Return ramp must have no collision steps');
+    if(phase==='miss'&&p.pos.y<-107)phase='settle';
+    if(phase==='settle'&&p.grounded&&!p.isBailing&&p.state==='ride'){supported=true;phase='return';}
+    if(phase==='return'&&Math.hypot(p.pos.x-path[waypoint][0],p.pos.z-path[waypoint][2])<1&&Math.abs(p.pos.y-path[waypoint][1])<.6){
+      if(++waypoint===path.length)break;
+    }
   }
-  assert.equal(p.loopStatus.completed, 0);
-  assert.ok(blocked, 'Locked finish must explain the missing loop to the player');
-}, { start: [20, 0.1, -652], heading: [0,0,-1] });
-console.log('Loop contact: charged success, coast failure, physical pressure, geometry winding, production inversion and respawn passed.');
+  assert.ok(supported&&waypoint===3&&p.grounded&&p.pos.y>-97,'Service court and side bank must return a missed jump to the launch');
+  console.log('Missed ravine jump recovers on the service court and returns up its bank without death or reset.');
+},{start:[40,-93.9,-795],heading:[0,0,-1]});
+
+scenario(({p,tick,directionInput,l})=>{
+  let blocked=false;p.onCourseHint=title=>{blocked ||= title==='LOOP STILL CLOSED';};
+  // Even two completed turns do not open the final gate.
+  p.completedLoops.add(l.loopMeshes[0]);p.completedLoops.add(l.loopMeshes[1]);
+  for(let i=0;i<100;i++){
+    tick({...directionInput([0,0,-1]),jumpHeld:true});
+    assert.notEqual(p.state,'finished','Two-loop shortcut bypassed the third required inversion');
+  }
+  assert.ok(blocked);
+  p.respawn(l,false);assert.equal(p.loopStatus.completed,0,'Respawn resets the triple-loop goal');
+},{start:[60,-164.9,-1052],heading:[0,0,-1]});
+scenario(r=>{
+  const {p,l}=r;p.completedLoops.add(l.loopMeshes[0]);p.completedLoops.add(l.loopMeshes[1]);let entry=null;
+  for(let i=0;i<1400&&p.state!=='finished';i++){
+    r.tick({...(p.loopStatus.active?{moveY:1}:r.toward(p.loopStatus.completed<3?r.source.WATERPARK_LOOPS[2].entry:r.source.WATERPARK_FINISH)),jumpHeld:true});
+    if(p.loopStatus.active&&entry===null)entry=p.speed;
+    assert.ok(!p.isBailing&&p.totalDeaths===0);
+  }
+  assert.equal(p.state,'finished');assert.ok(entry>54,'Final ramp must rebuild loop speed from a stationary retry');
+},{start:[40,-99.9,-914],heading:[0,0,-1]});
+
+// Reuse one production scene/SSR runtime while resetting each independent
+// fixture. Repeated full waterpark imports retain unnecessary module graphs.
+await withWaterparkRuntime(async r=>{
+  for(const {run,options}of scenarios){
+    r.p.respawn(r.l,true,false,options.start?{position:new r.THREE.Vector3(...options.start),heading:new r.THREE.Vector3(...(options.heading??[0,0,-1]))}:undefined);
+    await run(r);
+  }
+});
+console.log('Triple loop: pressure, gap recovery, required turns, stationary retry and respawn checks passed.');

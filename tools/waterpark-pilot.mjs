@@ -1,9 +1,10 @@
 // Browser-safe adaptive controller. Only ordinary controller samples cross
 // this boundary; the pilot never changes position, velocity, tuning or camera.
 export function createWaterparkPilot(source,options={}) {
- let phase='tower descent',jump=0,currentAir=null,priorStage=0,priorPipe=-1;
+ let phase='tower descent',jump=options.startJump??0,currentAir=null,priorStage=0,priorPipe=-1,priorLoopActive=false;
+ const loops=source.WATERPARK_LOOPS??[source.WATERPARK_LOOP];
  const fastLine=options.fastLine===true||options.fastTurns===true;
- const evidence={transfers:[],jumps:[],phases:[],checkpoints:[],inverted:false,finished:false,backwardInputs:0,downhills:{}};
+ const evidence={transfers:[],jumps:[],phases:[],checkpoints:[],inverted:false,finished:false,backwardInputs:0,downhills:{},coasterRamps:{},loopEntries:[],inversions:[]};
  const position=p=>[p.pos.x,p.pos.y,p.pos.z];
  const distance=(p,q)=>Math.hypot(p.pos.x-q[0],p.pos.z-q[2]);
  const phaseTo=(next,p)=>{if(phase!==next){evidence.phases.push({from:phase,to:next,position:position(p)});phase=next;}};
@@ -15,10 +16,11 @@ export function createWaterparkPilot(source,options={}) {
  const toward=(p,l,q)=>direction(p,l,[q[0]-p.pos.x,0,q[2]-p.pos.z]);
  function sample(p,l){
   if(p.loopStatus.active){phaseTo('loop',p);return {moveY:1,jumpHeld:true};}
-  if(p.loopStatus.completed>0){phaseTo('finish',p);return {...toward(p,l,[source.WATERPARK_LOOP.exit[0],0,source.WATERPARK_FINISH?.[2]??source.WATERPARK_LOOP.entry[2]-52]),jumpHeld:true};}
+  if(p.loopStatus.completed>=loops.length){phaseTo('finish',p);return {...toward(p,l,source.WATERPARK_FINISH),jumpHeld:true};}
   const z=p.pos.z;
-  phaseTo(z>-24?'tower descent':z>-160?'wave pools':z>-278?'downhill connector':z>-400?'coaster pools':z>-466?'upper flume descent':z>-538?'dry flume':z>-590?'splashdown descent':'loop approach',p);
-  let input=toward(p,l,[0,p.pos.y,z-14]),jumpHeld=true,spinHeld=false;
+  phaseTo(z>-24?'tower descent':z>-160?'wave pools':z>-278?'downhill connector':z>-400?'coaster pools':z>-466?'upper flume descent':z>-538?'dry flume':z>-578?'loop summit':p.loopStatus.completed===0?'first gravity drop':p.loopStatus.completed===1?'second gravity drop':z>-798?'ravine launch':z>-920?'final loop gap':'third gravity drop',p);
+  const targetX=p.loopStatus.completed>0?loops[p.loopStatus.completed-1].exit[0]:0;
+  let input=toward(p,l,[targetX,p.pos.y,z-14]),jumpHeld=true,spinHeld=false;
   if(!p.grounded&&p.vertAir&&p.pipeHang){
    // Fresh press/release after the coping launch commits each forward spine.
    jumpHeld=options.holdThroughLanding&&p.vertBoardRelease.stage===2||
@@ -33,9 +35,9 @@ export function createWaterparkPilot(source,options={}) {
    }
   }
   const edge=source.WATERPARK_JUMPS[jump];
-  if(edge&&p.grounded&&!p.groundHit?.halfpipe){
+  if(edge&&(p.grounded||p.coyoteTimer>0)&&!p.groundHit?.halfpipe){
    const remaining=p.pos.z-edge.takeoff[2];
-   if(remaining<(options.releaseDistance??1.4)&&remaining>-.5){
+   if(remaining<(options.releaseDistance??(jump===3?3:1.4))&&remaining>-(jump===3?1.5:.5)){
     currentAir={index:jump,name:edge.name,start:position(p),peak:p.pos.y,airborne:false};
     jump++;jumpHeld=false;
    }
@@ -57,6 +59,14 @@ export function createWaterparkPilot(source,options={}) {
    const run=evidence.downhills[slope.name]??={frames:0,entry:position(p),exit:position(p),minSpeed:Infinity,maxSpeed:0,mounted:true};
    run.frames++;run.exit=position(p);run.minSpeed=Math.min(run.minSpeed,p.speed);run.maxSpeed=Math.max(run.maxSpeed,p.speed);run.mounted&&=p.freeSkate;
   }
+  for(const slope of source.WATERPARK_COASTER_RAMPS??[]){
+   if(p.loopStatus.active||!p.grounded||Math.abs(p.pos.x-slope.from[0])>8||p.pos.z>slope.from[2]||p.pos.z<slope.to[2])continue;
+   const run=evidence.coasterRamps[slope.name]??={frames:0,entry:position(p),exit:position(p),entrySpeed:p.speed,exitSpeed:p.speed,minSpeed:Infinity,mounted:true};
+   run.frames++;run.exit=position(p);run.exitSpeed=p.speed;run.minSpeed=Math.min(run.minSpeed,p.speed);run.mounted&&=p.freeSkate;
+  }
+  if(p.loopStatus.active&&!priorLoopActive)evidence.loopEntries.push({index:p.loopStatus.completed,speed:p.speed,position:position(p)});
+  priorLoopActive=p.loopStatus.active;
+  if(p.loopStatus.active&&p.rideNormal.y<-.9&&!evidence.inversions.includes(p.loopStatus.completed))evidence.inversions.push(p.loopStatus.completed);
   evidence.inverted ||= p.loopStatus.active&&p.rideNormal.y<-.9;
   evidence.finished=p.state==='finished';
  }

@@ -18,9 +18,10 @@ try{
   const source=await import('/src/levels/waterpark.ts'),{createWaterparkPilot}=await import('/tools/waterpark-pilot.mjs');
   p.respawn(l,true);
   const pilot=createWaterparkPilot(source,{fastLine:!checkpoints,holdThroughLanding});
-  const report=window.waterparkReview={frame:0,done:false,failed:null,phase:pilot.phase,peak:0,evidence:null,end:null,tuning:{...g.TUNING},loopFrames:0,loopFraming:[],airFraming:[]};
+  const report=window.waterparkReview={frame:0,done:false,failed:null,phase:pilot.phase,peak:0,evidence:null,end:null,tuning:{...g.TUNING},loopFrames:0,loopFraming:[],airFraming:[],rampFraming:[]};
   const render=g.renderer.render.bind(g.renderer),projected=p.pos.clone(),vertex=p.pos.clone(),instance=g.camera.matrixWorld.clone(),world=g.camera.matrixWorld.clone();
-  let lastAirFrame=-10,lastLoopFrame=-10;
+  let lastAirFrame=-10,lastLoopFrame=-10,lastRampFrame=-10;
+  const sightRay=new p.raycaster.constructor(),sightTarget=p.pos.clone(),sightDirection=p.pos.clone();
   const measureAir=()=>{
    const rider=p.riderRef;if(!rider)return;rider.updateWorldMatrix(true,true);rider.updateMatrixWorld(true);
    let minY=Infinity,maxY=-Infinity,minX=Infinity,maxX=-Infinity,vertices=0,behind=0;
@@ -43,11 +44,17 @@ try{
   };
   g.renderer.render=(scene,camera)=>{
    const result=render(scene,camera);
+   if(scene===g.scene&&camera===g.camera&&p.grounded&&p.groundHit?.gravityTrack&&report.frame-lastRampFrame>=6&&!report.done){
+    sightTarget.copy(p.renderPosition).addScaledVector(p.rideNormal,1.1);
+    sightDirection.subVectors(sightTarget,camera.position);sightRay.set(camera.position,sightDirection.clone().normalize());sightRay.near=.08;sightRay.far=sightDirection.length()-.35;
+    const blocking=sightRay.intersectObjects(l.groundMeshes,false).map(h=>h.object.name);
+    report.rampFraming.push({frame:report.frame,phase:pilot.phase,clearance:sightTarget.subVectors(camera.position,p.renderPosition).dot(p.rideNormal),blocking});lastRampFrame=report.frame;
+   }
    if(scene===g.scene&&camera===g.camera&&p.loopStatus.active&&report.frame-lastLoopFrame>=6&&!report.done){
     projected.copy(p.renderPosition).addScaledVector(p.rideNormal,.7).project(camera);
     report.loopFraming.push({frame:report.frame,distance:camera.position.distanceTo(p.renderPosition),fov:camera.fov,center:projected.toArray(),up:camera.up.toArray()});lastLoopFrame=report.frame;
    }
-   if(scene===g.scene&&camera===g.camera&&!p.grounded&&!p.loopStatus.active&&p.pos.y>10&&['wave pools','coaster pools','dry flume'].includes(pilot.phase)&&report.frame-lastAirFrame>=6&&!report.done){measureAir();lastAirFrame=report.frame;}
+   if(scene===g.scene&&camera===g.camera&&!p.grounded&&!p.loopStatus.active&&['wave pools','coaster pools','dry flume','ravine launch','final loop gap'].includes(pilot.phase)&&report.frame-lastAirFrame>=6&&!report.done){measureAir();lastAirFrame=report.frame;}
    return result;
   };
   const fields=['moveX','moveY','jumpHeld','jumpPressed','jumpReleased','grindHeld','grindPressed','spinHeld','spinPressed','grabHeld','grabPressed','transferHeld','transferPressed','restartPressed'];
@@ -79,8 +86,8 @@ try{
  const captured=new Set();
  for(let i=0;i<1200;i++){
   await page.waitForTimeout(250);
-  const r=await page.evaluate(()=>({done:window.waterparkReview.done,phase:window.waterparkReview.phase,frame:window.waterparkReview.frame,p:window.__game.player.pos.toArray(),normal:window.__game.player.rideNormal.toArray(),air:!window.__game.player.grounded,verticalSpeed:window.__game.player.vVel,lip:window.__game.player.hangPipe?.lipY??0,pump:window.__game.player.boardG?.userData.vertMotion?.pump??0,transfer:window.__game.player.boardG?.userData.vertMotion?.transfer?.progress??-1}));
-  const shot=r.pump>.9&&r.normal[1]>.3&&r.normal[1]<.7?'vert-charge':r.transfer>.35&&r.transfer<.65?'transfer-rollover':r.phase==='tower descent'&&r.p[2]<20?'tower-descent':r.phase==='wave pools'&&r.air&&r.p[1]>r.lip+3&&Math.abs(r.verticalSpeed)<7?'wave-spine':r.phase==='downhill connector'&&!r.air&&r.p[2]<-202?'downhill-connector':r.phase==='coaster pools'&&r.air&&r.p[1]>r.lip+3&&Math.abs(r.verticalSpeed)<7?'boomerang-spine':r.phase==='dry flume'&&r.air&&r.p[2]<-520?'flume-jump':r.phase==='loop'&&r.normal[1]<-.85?'loop-inverted':null;
+  const r=await page.evaluate(()=>({done:window.waterparkReview.done,phase:window.waterparkReview.phase,frame:window.waterparkReview.frame,p:window.__game.player.pos.toArray(),normal:window.__game.player.rideNormal.toArray(),air:!window.__game.player.grounded,verticalSpeed:window.__game.player.vVel,lip:window.__game.player.hangPipe?.lipY??0,pump:window.__game.player.boardG?.userData.vertMotion?.pump??0,transfer:window.__game.player.boardG?.userData.vertMotion?.transfer?.progress??-1,loops:window.__game.player.loopStatus.completed}));
+  const shot=r.pump>.9&&r.normal[1]>.3&&r.normal[1]<.7?'vert-charge':r.transfer>.35&&r.transfer<.65?'transfer-rollover':r.phase==='first gravity drop'&&r.p[2]<-598?'gravity-drop':r.phase==='third gravity drop'&&r.p[2]<-936?'final-gravity-drop':r.phase==='tower descent'&&r.p[2]<20?'tower-descent':r.phase==='wave pools'&&r.air&&r.p[1]>r.lip+3&&Math.abs(r.verticalSpeed)<7?'wave-spine':r.phase==='downhill connector'&&!r.air&&r.p[2]<-202?'downhill-connector':r.phase==='coaster pools'&&r.air&&r.p[1]>r.lip+3&&Math.abs(r.verticalSpeed)<7?'boomerang-spine':r.phase==='dry flume'&&r.air&&r.p[2]<-520?'flume-jump':r.phase==='final loop gap'&&r.air?'final-loop-gap':r.phase==='loop'&&r.normal[1]<-.85?`loop-${r.loops+1}-inverted`:null;
   if(shot&&!captured.has(shot)){await page.screenshot({path:`${output}/${shot}-${full?'full':'lite'}.png`});captured.add(shot);}
   if(i%100===0)console.log(JSON.stringify(r));if(r.done)break;
  }
@@ -89,12 +96,14 @@ try{
  await page.screenshot({path:`${output}/finish-${full?'full':'lite'}.png`});
  assert.equal(report.done,true,'Live waterpark pilot timed out');
  assert.equal(report.failed,null,JSON.stringify(report.failed));
- assert.equal(report.end.state,'finished');assert.equal(report.evidence.transfers.length,5);assert.equal(report.evidence.jumps.length,3);
- assert.ok(report.evidence.inverted&&report.loopFrames>100,'The actual rendered rider must complete the giant loop');
+ assert.equal(report.end.state,'finished');assert.equal(report.evidence.transfers.length,5);assert.equal(report.evidence.jumps.length,4);
+ assert.ok(report.evidence.inversions.length===3&&report.loopFrames>400,'The actual rendered rider must complete the giant loop');
+ assert.ok(report.rampFraming.length>40,'Review the steep gravity roads in the actual render camera');
+ assert.ok(report.rampFraming.every(f=>f.clearance>3.5&&f.blocking.length===0),`Coaster camera went under/behind a road: ${JSON.stringify(report.rampFraming.filter(f=>f.clearance<=3.5||f.blocking.length).slice(0,5))}`);
  assert.ok(report.evidence.checkpoints.includes(1),'The loop station checkpoint must be banked');
  if(checkpoints)assert.deepEqual(report.evidence.checkpoints,[0,1]);
  assert.equal(report.evidence.backwardInputs,0,'The linear course must never request reversing uphill');
- assert.equal(Object.keys(report.evidence.downhills).length,5,'All five downhill connectors must be traversed');
+ assert.equal(Object.keys(report.evidence.downhills).length,4,'All four upper downhill connectors must be traversed');
  for(const [name,run]of Object.entries(report.evidence.downhills))assert.ok(run.mounted&&run.frames>50&&run.minSpeed>12&&run.entry[1]>run.exit[1]+5,`${name} must be a supported momentum-carrying descent`);
  assert.ok(report.loopFraming.length>=10,'The loop needs actual rendered close-camera samples');
  const expectedDistance=Math.hypot(report.tuning.camDist,report.tuning.camHeight);

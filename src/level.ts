@@ -665,6 +665,7 @@ export interface CustomComponent {
   loopRadius?: number; // mesh: analytic vertical loop matching createLoopMeshData, p = entry feet
   loopOffset?: number; // loop: lateral separation between entry and exit, local +X
   loopRequired?: boolean; // loop: finish gate unlocks after one complete supported turn
+  gravityTrack?: boolean; // solid road mesh: retain gravity-earned speed above the ordinary road cap; never adds speed
   beachSand?: boolean;
   len?: number;
   rise?: number;
@@ -2408,7 +2409,7 @@ const COMPONENT_DATA_KEYS = new Set([
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
   "trick", "exitYaw", "airOnly", "coverage", "radius", "color", "tex", "dir",
-  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand", "loopRadius", "loopOffset", "loopRequired",
+  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack",
 ]);
 const hasOnlyKeys = (value: object, keys: ReadonlySet<string>): boolean =>
   Object.keys(value).every((key) => keys.has(key));
@@ -2747,7 +2748,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     "fog",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "lk",
-    "shoreProfile", "cameraView", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "beachSand", "loopRequired",
+    "shoreProfile", "cameraView", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "beachSand", "loopRequired", "gravityTrack",
   ];
   let aggregateNodes = source.ocean?.shore?.length ?? 0;
   let aggregateSamples = source.ocean
@@ -2859,6 +2860,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (!Number.isSafeInteger(component.layer) || component.layer < 0 || component.layer > MAX_EDITOR_ID)
     )
       return null;
+    if (component.gravityTrack !== undefined && (component.t !== 'mesh' || component.solid === false || component.vert !== false || component.loopRadius !== undefined)) return null;
     if (component.loopRadius !== undefined || component.loopOffset !== undefined || component.loopRequired !== undefined) {
       if (component.t !== "mesh" || !Number.isFinite(component.loopRadius) ||
           component.loopRadius! < 4 || component.loopRadius! > 80 ||
@@ -5218,6 +5220,7 @@ export class Level {
         ...(material.userData.unitySandTileMetres === UNITY_SAND_TILE_METRES ? { materialStyle: "unity-sand", tex: "sand" } : {}),
         ...(m.userData.slippy ? { slip: true } : {}),
         ...(m.userData.iceGrip !== undefined ? { iceGrip: m.userData.iceGrip as number } : {}),
+        ...(m.userData.gravityTrack ? { gravityTrack: true, vert: false } : {}),
       };
       remap = new Map();
       chunks.push(component);
@@ -5353,6 +5356,7 @@ export class Level {
     mesh.scale.set(...(c.s ?? [1, 1, 1]));
     mesh.name = c.nm ?? "triangle surface";
     if (c.vert !== undefined) mesh.userData.vert = c.vert;
+    if (c.gravityTrack) mesh.userData.gravityTrack = true;
     if (c.loopRadius !== undefined) {
       this.loopMeshes.push(mesh);
       mesh.userData.loopRadius = c.loopRadius;

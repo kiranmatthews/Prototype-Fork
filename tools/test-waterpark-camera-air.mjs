@@ -59,7 +59,7 @@ await withWaterparkRuntime(async r=>{
   p.applyRenderInterpolation(.5);
   const physical=JSON.stringify({p:p.pos.toArray(),speed:p.speed,axis:p.axisF.toArray(),state:p.state,bounds:p.interactionBoundsDiagnostics});
   rig.step(CONST.fixedStep);old.step(CONST.fixedStep);
-  if(!p.loopStatus.active&&p.loopStatus.completed===0&&pilot.phase!=='loop')
+  if(!p.loopPresentationFrame&&p.loopStatus.completed===0&&pilot.phase!=='loop')
    maxYFollowError=Math.max(maxYFollowError,Math.abs(camera.position.y-rig.target.y));
   for(const scope of scopes){
    scope.current.step(CONST.fixedStep);scope.previous.step(CONST.fixedStep);
@@ -86,7 +86,7 @@ await withWaterparkRuntime(async r=>{
   }
   p.restoreRenderPose();
   assert.ok(!p.isBailing&&p.totalDeaths===0,'flume camera test hid a failed jump');
-  if(pilot.evidence.jumps.length===3)landed=true;
+  if(pilot.evidence.jumps.length===source.WATERPARK_JUMPS.length)landed=true;
   if(p.state==='finished')break;
  }
  const result={released,airborne,landed,peak,samples,vertices,minY,maxY,maxX,oldMinY,oldMaxY,maxYFollowError,phases};

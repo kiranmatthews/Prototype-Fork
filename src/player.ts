@@ -450,6 +450,7 @@ interface GroundHit {
   name: string;
   surface?: SurfaceKind; // painted material; separate from structural names such as halfpipe
   beachSand?: boolean; // explicit gameplay tag; visual sand textures alone never add drag
+  gravityTrack?: boolean; // slope/drag still act; authored coaster roads retain earned overspeed
   crate?: Crate; // identity-bearing temporary lid support
   moverId?: number; // standing on a moving platform: ride along with it
   crumbleId?: number; // standing on a crumble pad: it starts breaking
@@ -944,6 +945,7 @@ export class Player {
   // jump, vert launch, skate edge-fall). Grabs are board tricks: a standing
   // Crash hop never offers them (the slam stays available from on-foot air).
   private airFromSkate = false;
+  private gravityTrackAir = false; // one launch retains the momentum earned on a tagged coaster road
   // WHICH GRAVITY THIS AIRTIME FLIES UNDER. A skate air and a platforming hop
   // are different arcs now, so the choice has to be a property of the LAUNCH,
   // declared once and never re-read from live state. Mounted state chooses a
@@ -3412,6 +3414,7 @@ export class Player {
     this.groundHit = null;
     this.loopRide = null;
     this.loopFall = false;
+    this.gravityTrackAir = false;
     this.cameraPoseStandingCenter = null;
     this.completedLoops.clear();
     this.loopGateHintShown = false;
@@ -4909,6 +4912,7 @@ export class Player {
   // jumpVelocity. The jump's IDENTITY is decided here, at release, from the
   // state and speed you're carrying — not from how X was pressed.
   private chargedJump(dt: number): void {
+    this.gravityTrackAir = this.freeSkate && (!!this.groundHit?.gravityTrack || !this.grounded&&this.gravityTrackAir);
     const airborneRelaunch = this.state === 'air' && !this.grounded;
     resetVertBoardRelease(this.vertBoardRelease);
     this.jumpReleaseRearmRequired = false;
@@ -5532,7 +5536,10 @@ export class Player {
       if (!ride.recovering) {
         this.completedLoops.add(ride.mesh);
         this.loopGateHintShown = false;
-        this.onCourseHint('LOOP COMPLETE', 'Exit unlocked — ride out!');
+        const required=level.loopMeshes.filter(mesh=>mesh.userData.loopRequired);
+        const remaining=required.filter(mesh=>!this.completedLoops.has(mesh)).length;
+        // Leave the next high-speed approach visible between chained loops.
+        if(remaining===0)this.onCourseHint(required.length>1?'ALL LOOPS CLEAR':'LOOP COMPLETE','Exit unlocked — ride out!');
       }
       this.loopRide = null;
       // Recovery can leave backward at the entrance; preserve that real velocity.
@@ -5547,7 +5554,7 @@ export class Player {
    * below its physics feet without moving the camera's gameplay/control frame. */
   get cameraPoseYOffset(): number {
     const head = this.headVisualCenter ?? this.headM;
-    if (!this.legs || !head || this.loopRide) return 0;
+    if (!this.legs || !head || this.loopRide || this.grounded&&this.groundHit?.gravityTrack) return 0;
     this.legs.getWorldPosition(this.cameraPoseHip);
     head.getWorldPosition(this.cameraPoseHead);
     const center = (this.cameraPoseHip.y + this.cameraPoseHead.y) * .5 - this.renderPosition.y;
@@ -5571,7 +5578,15 @@ export class Player {
   /** Surface frame at the interpolated render pose; never consumed by gameplay. */
   get loopPresentationFrame(): LoopCameraFrame | null {
     const ride = this.loopRide;
-    if (!ride || this.state !== 'ride' || !this.grounded) return null;
+    if (this.state !== 'ride' || !this.grounded) return null;
+    if(!ride){
+      if(!this.groundHit?.gravityTrack)return null;
+      this.loopRenderFrame.normal.copy(this.rideNormal);
+      // Keep the course's control heading even when riding back uphill. Only
+      // the close presentation frame pitches with the steep road beneath us.
+      skateSurfaceDirection(this.loopRenderFrame.tangent,this.camDir,this.rideNormal);
+      return this.loopRenderFrame;
+    }
     this.loopRenderLocal.copy(this.renderPosition);
     ride.mesh.worldToLocal(this.loopRenderLocal);
     const angle = Math.atan2(-this.loopRenderLocal.z, ride.shape.radius - this.loopRenderLocal.y);
@@ -5594,6 +5609,7 @@ export class Player {
 
   private stepRide(dt: number, input: Input, level: Level): void {
     if (this.stepLoopRide(dt, input, level)) return;
+    this.gravityTrackAir = !!this.groundHit?.gravityTrack;
     // LIP STALL owns the whole frame: parked stationary on the coping,
     // BALANCING — the needle (up/down on the stick, the vertical meter) tips
     // between the pipe below and the deck out back. Points tick, combo alive.
@@ -6342,6 +6358,7 @@ export class Player {
       // vert is where the big speed is supposed to live.
       const onTrans = this.onTransition;
       let hardCap = onTrans ? TUNING.vertMax : TUNING.downhillMax;
+      if (this.groundHit?.gravityTrack) hardCap = Math.max(hardCap,Math.abs(this.speed));
       // A perfect grind pays out ABOVE the normal ceiling, so for a moment the
       // clamp has to let it through — otherwise the launch would be confiscated
       // on the very next frame and the reward would be invisible. heavyDrag is
@@ -7598,7 +7615,7 @@ export class Player {
         // either direction.
         const opposing = input.moveY * this.speed < 0;
         const rate = opposing ? TUNING.airControl * CONST.airBrakeFactor : TUNING.airControl;
-        const cap = TUNING.downhillMax;
+        const cap = this.gravityTrackAir ? Math.max(TUNING.downhillMax,Math.abs(this.speed)) : TUNING.downhillMax;
         this.speed = THREE.MathUtils.clamp(this.speed + rate * input.moveY * dt, -cap, cap);
       }
       // A rail hop keeps its old horizontal freedom by default. R2 or a grab
@@ -7850,7 +7867,7 @@ export class Player {
           this.axisF.set(hx / hl, 0, hz / hl);
           this.axisL.set(this.axisF.z, 0, -this.axisF.x);
           const keep = THREE.MathUtils.lerp(Math.abs(this.speed), tangSpeed, TUNING.landingFlow);
-          this.speed = Math.min(keep, TUNING.downhillMax);
+          this.speed = hit.gravityTrack ? keep : Math.min(keep, TUNING.downhillMax);
         }
       }
       let parkLandingDot: number | null = null;
@@ -12364,7 +12381,8 @@ export class Player {
     const loopGoalsComplete = !level.loopMeshes?.some(mesh => mesh.userData.loopRequired && !this.completedLoops.has(mesh));
     if (touchingFinish && !loopGoalsComplete && !this.loopGateHintShown) {
       this.loopGateHintShown = true;
-      this.onCourseHint('LOOP STILL CLOSED', 'Complete the Loop of Death to unlock the exit');
+      const required=level.loopMeshes.filter(mesh=>mesh.userData.loopRequired).length;
+      this.onCourseHint('LOOP STILL CLOSED', required>1?`Complete all ${required} loops to unlock the exit`:'Complete the Loop of Death to unlock the exit');
     } else if (!touchingFinish) this.loopGateHintShown = false;
     if (!this.competitionMode && loopGoalsComplete && touchingFinish) {
       this.bankCombo(); // whatever is pending counts as you arrive
@@ -15259,6 +15277,7 @@ export class Player {
       name: structuralName,
       surface: surfaceKindFromGroundObject(hit.object, structuralName),
       beachSand: hit.object.userData.beachSandFriction === true,
+      gravityTrack: hit.object.userData.gravityTrack === true,
       moverId: hit.object.userData.moverId as number | undefined,
       crumbleId: hit.object.userData.crumbleId as number | undefined,
       slippy: hit.object.userData.slippy as boolean | undefined,
@@ -15854,7 +15873,7 @@ export class Player {
         0,
         1,
       );
-      alignTarget = this.parkControls && this.freeSkate ? 1 : t * t * (3 - 2 * t);
+      alignTarget = (this.parkControls || this.groundHit.gravityTrack) && this.freeSkate ? 1 : t * t * (3 - 2 * t);
       targetNormal = this.rideNormal;
     }
     if (this.loopRide) {

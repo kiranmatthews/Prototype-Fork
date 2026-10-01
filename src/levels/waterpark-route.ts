@@ -1,8 +1,19 @@
 import type { CustomComponent } from '../level';
 type Point = [number,number,number];
 export const WATERPARK_SPAWN: Point = [0,80.15,58];
-export const WATERPARK_FINISH: Point = [20,0,-660];
-export const WATERPARK_LOOP = { entry: [0,0,-612] as Point, radius: 26, width: 12, offset: 20, yaw: 0, exit: [20,0,-612] as Point };
+export const WATERPARK_LOOPS = [
+ {entry:[0,-58,-668] as Point,radius:26,width:12,offset:20,yaw:0,exit:[20,-58,-668] as Point},
+ {entry:[20,-80,-738] as Point,radius:26,width:12,offset:20,yaw:0,exit:[40,-80,-738] as Point},
+ {entry:[40,-165,-1006] as Point,radius:26,width:12,offset:20,yaw:0,exit:[60,-165,-1006] as Point},
+];
+export const WATERPARK_LOOP=WATERPARK_LOOPS[0];
+export const WATERPARK_FINISH: Point = [60,-165,-1060];
+export const WATERPARK_COASTER_RAMPS = [
+ {name:'First loop gravity drop',from:[0,12,-578] as Point,to:[0,-58,-658] as Point},
+ {name:'Second loop gravity drop',from:[20,-58,-672] as Point,to:[20,-80,-726] as Point},
+ {name:'Gap approach descent',from:[40,-80,-742] as Point,to:[40,-96,-776] as Point},
+ {name:'Third loop gravity drop',from:[40,-100,-920] as Point,to:[40,-165,-992] as Point},
+];
 export const WATERPARK_CORE: CustomComponent[] = [];
 const C=WATERPARK_CORE;
 const AQUA='#8acac4',TEAL='#5b999c',CREAM='#daceaf',RUST='#b87658';
@@ -30,17 +41,17 @@ export const WATERPARK_JUMPS = [
  {name:'Wavebreaker downhill vault',takeoff:[0,54.06,-148] as Point,landing:[0,48,-160] as Point,dir:[0,0,-1] as Point},
  {name:'Boomerang downhill vault',takeoff:[0,30.06,-382] as Point,landing:[0,30,-400] as Point,dir:[0,0,-1] as Point},
  {name:'Dry flume splash',takeoff:[0,12,-520] as Point,landing:[0,12,-538] as Point,dir:[0,0,-1] as Point},
+ {name:'Final loop ravine jump',takeoff:[40,-94,-798] as Point,landing:[40,-100,-830] as Point,dir:[0,0,-1] as Point},
 ];
 export const WATERPARK_CHECKPOINTS = [
  {p:[-4,48,-178] as Point,name:'Lower Wavebreaker checkpoint'},
- {p:[-4,0,-598] as Point,name:'Loop station checkpoint'},
+ {p:[-4,12,-566] as Point,name:'Triple loop summit checkpoint'},
 ];
 export const WATERPARK_DOWNHILL = [
  {from:[0,80,44] as Point,to:[0,60,-16] as Point,name:'High tower drop'},
  {from:[0,48,-190] as Point,to:[0,34,-270] as Point,name:'Downhill park connector'},
  {from:[0,30,-424] as Point,to:[0,18,-466] as Point,name:'Upper flume approach'},
  {from:[0,18,-466] as Point,to:[0,4,-502] as Point,name:'Dry flume descent'},
- {from:[0,12,-554] as Point,to:[0,0,-590] as Point,name:'Splashdown runout'},
 ];
 
 // Outer terrace/hillside grade for the architectural layer. Pool bowls remain
@@ -48,7 +59,9 @@ export const WATERPARK_DOWNHILL = [
 export const WATERPARK_GRADE: Point[] = [
  [0,80,72],[0,80,44],[0,60,-16],[0,60,-24],[0,58,-65],[0,56,-96],[0,54,-148],
  [0,48,-160],[0,48,-190],[0,34,-270],[0,34,-278],[0,32,-332],[0,30,-382],[0,30,-424],
- [0,18,-466],[0,12,-538],[0,12,-554],[0,0,-590],[0,0,-682],
+ [0,18,-466],[0,12,-538],[0,12,-578],[0,-58,-658],[0,-58,-672],
+ [0,-80,-726],[0,-80,-742],[0,-96,-776],[0,-100,-830],[0,-100,-920],
+ [0,-165,-992],[0,-165,-1080],
 ];
 
 deck(0,58,80,28,28,1,'High admission tower deck');
@@ -79,11 +92,33 @@ ramp([0,4,-484],36,14,18,180,5,'Descending dry flume');
 deck(0,-506,4,18,8,5,'Dry flume runout');
 ramp([0,4,-515],10,8,18,0,5,'Gravity splash kicker');
 deck(0,-546,12,26,16,5,'Dry splash catch deck',AQUA);
-ramp([0,0,-572],36,12,18,180,5,'Splashdown runout');
-deck(0,-601,0,18,22,6,'Loop station approach');
+deck(0,-566,12,24,24,6,'Triple loop summit station');
 C.push({t:'checkpoint',p:WATERPARK_CHECKPOINTS[1].p,grp:6,nm:WATERPARK_CHECKPOINTS[1].name});
-// One coaster launch motor remains: this finale still requires the player to
-// maintain charge/real inward wheel pressure throughout the giant inversion.
-C.push({t:'speedpad',p:[0,.025,-605],s:[12,.15,14],speed:64,cycle:.6,grp:6,nm:'Coaster loop launch motor'});
-deck(20,-639,0,16,54,7,'Downhill loop exit promenade',AQUA);
-C.push({t:'pit',p:[0,-16,-286],s:[160,1,780],invisible:true,grp:7,nm:'Drained downhill park fall basin'});
+
+/** A smooth road ribbon with zero slope at both ends. Gravity supplies its
+ * energy; the tag only prevents the ordinary road cap deleting that energy. */
+export function coasterRoad(from:Point,to:Point,width:number,name:string,curve=true):CustomComponent {
+  const vertices:number[]=[],indices:number[]=[],uvs:number[]=[],steps=curve?48:1;
+  for(let i=0;i<=steps;i++){
+    const t=i/steps,k=curve?(1-Math.cos(Math.PI*t))/2:t;
+    for(const side of [-1,1]){vertices.push(side*width/2,(to[1]-from[1])*k,(to[2]-from[2])*t);uvs.push(side<0?0:width/4,t*Math.hypot(to[1]-from[1],to[2]-from[2])/4);}
+    if(i<steps){const a=i*2;indices.push(a,a+1,a+2,a+1,a+3,a+2);}
+  }
+  return {t:'mesh',p:from,vertices,indices,uvs,vert:false,gravityTrack:true,edgeGrinding:false,doubleSided:true,tex:'pavement',color:'#6da7b6',grp:6,nm:name};
+}
+for(const run of WATERPARK_COASTER_RAMPS)C.push(coasterRoad(run.from,run.to,18,run.name));
+for(const [a,b]of [
+ [[0,-58,-658],[0,-58,-670]],[[20,-58,-668],[20,-58,-672]],[[20,-80,-726],[20,-80,-740]],
+ [[40,-80,-738],[40,-80,-742]],[[40,-96,-776],[40,-96,-778]],
+ [[40,-96,-778],[40,-94,-798]],[[40,-100,-830],[40,-100,-920]],
+ [[40,-165,-992],[40,-165,-1008]],[[60,-165,-1006],[60,-165,-1070]],
+ ] as [Point,Point][])C.push(coasterRoad(a,b,18,a[2]===-778?'Ravine jump kicker':'Coaster runout',false));
+for(const loop of WATERPARK_LOOPS)C.push(coasterRoad(
+  [loop.entry[0]+10,loop.entry[1],loop.entry[2]+8],
+  [loop.entry[0]+10,loop.entry[1],loop.entry[2]],42,'Loop base recovery crossing',false));
+// A missed jump lands on a service court. Its side bank returns to the launch
+// instead of forcing a death/checkpoint reset or a one-way climb.
+deck(40,-814,-110,58,32,6,'Ravine recovery court');
+C.push(coasterRoad([12,-96,-778],[12,-110,-830],14,'Ravine return bank',false));
+C.push(coasterRoad([26,-96,-772],[26,-96,-778],42,'Ravine return crossing',false));
+C.push({t:'pit',p:[20,-210,-500],s:[240,1,1200],invisible:true,grp:7,nm:'Deep park fall basin'});

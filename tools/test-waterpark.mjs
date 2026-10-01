@@ -15,8 +15,8 @@ for(const fastLine of [false,true])await withWaterparkRuntime(async r=>{
   assert.equal(a.lipY-b.lipY,2,'Each receiving spine pool must step downhill two metres');
  }
  assert.equal(source.WATERPARK_LEVEL.spawn[1],80.15);
- assert.equal(source.WATERPARK_FINISH[1],0);
- assert.equal(source.WATERPARK_LEVEL.components.filter(c=>c.t==='speedpad').length,1,'Gravity must power the ordinary course; only the final loop has a launch motor');
+ assert.equal(source.WATERPARK_FINISH[1],-165);
+ assert.equal(source.WATERPARK_LEVEL.components.filter(c=>c.t==='speedpad').length,0,'Every approach must earn speed from the ramps; no boost pads');
  assert.equal(l.checkpoints.length,2);
  assert.ok(l.checkpoints[0].spawnPos.distanceTo(l.spawnPos)>200,'The first checkpoint must follow the upper ride and its vault');
  assert.equal(l.cameraViews.length,0);
@@ -29,22 +29,26 @@ for(const fastLine of [false,true])await withWaterparkRuntime(async r=>{
  }
  const e=pilot.evidence;
  assert.deepEqual(e.transfers.map(t=>[t.from,t.to]),[[0,1],[1,2],[2,3],[4,5],[5,6]],'All five forward downhill spine transfers must succeed');
- assert.equal(e.jumps.length,3);
+ assert.equal(e.jumps.length,4);
  for(const flight of e.jumps){
   const gap=source.WATERPARK_JUMPS[flight.index];
   assert.ok(flight.end[2]<=gap.landing[2]+.05,`${gap.name} must reach its receiving deck`);
-  assert.ok(flight.peak>gap.takeoff[1]+3,`${gap.name} must make a substantial earned air`);
+  assert.ok(flight.peak>gap.takeoff[1]+(flight.index===3?1:3),`${gap.name} must make a substantial earned air`);
  }
  assert.deepEqual(e.checkpoints,fastLine?[1]:[0,1]);
  assert.equal(e.backwardInputs,0,'The downhill route must never request reversing or a turn back uphill');
- assert.equal(Object.keys(e.downhills).length,5);
+ assert.equal(Object.keys(e.downhills).length,4);
  for(const slope of source.WATERPARK_DOWNHILL){
   const run=e.downhills[slope.name];
   assert.ok(run.frames>50&&run.mounted&&run.minSpeed>12,`${slope.name} must retain continuous supported skating`);
   assert.ok(run.entry[1]-run.exit[1]>(slope.from[1]-slope.to[1])*.9,`${slope.name} must actually descend its authored height`);
  }
  assert.ok(e.inverted&&e.finished);
- assert.equal(p.loopStatus.completed,1);
+ assert.equal(p.loopStatus.completed,3);
+ assert.deepEqual(e.inversions,[0,1,2]);
+ assert.equal(e.loopEntries.length,3);
+ assert.ok(e.loopEntries.every(entry=>entry.speed>54),'Each real entry must carry enough ramp-earned momentum');
+ assert.equal(Object.keys(e.coasterRamps).length,4);
  assert.ok(trace.every(t=>t.rail===null));
  assert.equal(JSON.stringify(r.TUNING),before);
  let biggest=0,worstStep=null;
@@ -54,7 +58,7 @@ for(const fastLine of [false,true])await withWaterparkRuntime(async r=>{
  }
  assert.ok(biggest<3,`Unexpected large physics step ${biggest}: ${JSON.stringify(worstStep)}`);
  if(process.env.WATERPARK_TRACE)await writeFile(`${process.env.WATERPARK_TRACE}${fastLine?'.late':''}`,JSON.stringify({evidence:e,trace}));
- console.log(`Downhill Deadwater ${fastLine?'late-release line':'checkpoint line'}: 80 m descent, 5 downhill spines, 3 gravity jumps, final loop; ${(trace.length*r.CONST.fixedStep).toFixed(2)} s, largest step ${biggest.toFixed(3)} m.`);
+ console.log(`Downhill Deadwater ${fastLine?'late-release line':'checkpoint line'}: 5 downhill spines, 4 gravity jumps and triple loop; ${(trace.length*r.CONST.fixedStep).toFixed(2)} s, largest step ${biggest.toFixed(3)} m.`);
 });
 
 await withWaterparkRuntime(({p,l,tick,directionInput})=>{
