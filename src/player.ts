@@ -2,7 +2,7 @@ import type { LoopCameraFrame } from './loopCamera';
 import { LOOP_TURN, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';
 import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';
 import { SkateBalanceArms, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
-import { skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
+import { skateGrabTweakElasticity, skateUnderRailElasticity, skate900Elasticity, skateBackflipElasticity, skateFootFlipElasticity, skateImpossibleElasticity, skateRevertElasticity, skateVertElasticity, SKATE_UNDER_RAIL_ARM_LIMIT } from './animation/elasticity';
 import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
 // Authored fake-physics board movement. No rigidbody, no forces: just a
 // heading, a scalar speed, a vertical velocity, and hand-tuned numbers from
@@ -19,6 +19,7 @@ import { BONUS_FRUIT_FLIGHT_SECONDS } from './bonusPayout';
 import { TUNING, CONST } from './tuning';
 import { GRIND_TRICKS, GRIND_CONTACTS, LIP_CONTACTS, grabTrickInfo, grabTrickFromInput, sampleDeckTrick, sampleBackflip, sampleFootFlip, sampleImpossible, type GrabTrickKind, type GrindStyle, type LipStyle } from './skateTricks';
 import { SkateAnimation } from './skateAnimation';
+import { sampleSpineTransfer, spineTransferNormal } from './vertSkateMotion';
 import { SkateOllieMotion } from './skateOllieMotion';
 import { IceSkateMotion } from './iceSkateMotion';
 import { trickRepeatFactor, extendHeldTrick, type HeldTrickScore } from './trickScoring';
@@ -1084,6 +1085,9 @@ export class Player {
   // a DIFFERENT pipe = carried across the ridge.
   private hangPipe: Halfpipe | null = null;
   private transferCoolT = 0; // debounce after the one release-triggered spine transfer
+  private spinePoseElapsed = 0;
+  private spinePoseDuration = 0;
+  private readonly spinePoseFrom = new THREE.Vector3(0,1,0);
   // Where the follow camera is AIMING (XZ-projected, unit), fed by main every
   // frame. The lip stall projects its tip axis onto this so the balance meter
   // and the stick axis that fights it match what's on screen.
@@ -3656,19 +3660,25 @@ export class Player {
         grindHeld: false, grindPressed: false, transferHeld: false, transferPressed: false } as Input;
       this.rawInput = input;
     }
-    // An X press that began in air remains owned by that air until the button
-    // comes all the way back up. Sanitize it before ANY ground/crest/trick
-    // routing: doing this only inside the late charge block still let the
-    // release add a fresh vert pop earlier in stepRide.
+    // An X press that began in air owns its immediate landing release. A
+    // supported pipe may rebuild a full ground load; other attachments wait
+    // for X to come up. Consume owned edges before ground/crest routing.
     if (this.jumpReleaseRearmRequired) {
-      this.charging = false;
+      // The old air press cannot become a fresh ollie, but a mounted landing
+      // in a pipe must still let a HELD X pump the transition. Keep the release
+      // edge consumed while restoring the continuous motor/crouch immediately.
+      const pumpHeld = input.jumpHeld && this.state==='ride' && this.grounded &&
+        this.freeSkate && (!!this.groundHit?.halfpipe || this.charging&&this.chargeTimer>0) && !this.isBailing;
+      if(!pumpHeld){this.charging=false;this.chargeTimer=0;}
+      // A full, newly earned ground load is now an intentional next ollie.
+      // Only an immediate landing release remains owned by the preceding air.
+      if(pumpHeld&&this.chargeTimer>=TUNING.jumpChargeTime)this.jumpReleaseRearmRequired=false;
       this.chargePlanted = false;
-      this.chargeTimer = 0;
       this.jumpBufferT = 0;
       if (!input.jumpHeld) this.jumpReleaseRearmRequired = false;
       input = {
         ...input,
-        jumpHeld: false,
+        jumpHeld: pumpHeld,
         jumpPressed: false,
         jumpReleased: false,
       } as Input;
@@ -9290,6 +9300,11 @@ export class Player {
       this.prevPos.z = 2 * lipCross - previousCross;
       this.vertAnchor.z = 2 * lipCross - anchorCross;
     }
+    this.spinePoseFrom.copy(this.alignNormal);
+    this.spinePoseElapsed = 0;
+    const fallTime = (this.vVel + Math.sqrt(this.vVel*this.vVel +
+      2*TUNING.pipeAirGravity*Math.max(0,this.pos.y-target.lipY))) / Math.max(1,TUNING.pipeAirGravity);
+    this.spinePoseDuration = THREE.MathUtils.clamp(fallTime*.75,.3,1.05);
     this.vertNormal.negate(); // the far pipe's wall faces the other way
     // ...and the coping tangent is derived FROM the normal (tx=-n.z, tz=n.x),
     // so the mirror flips it — negate the drift scalar too or the same
@@ -15815,6 +15830,10 @@ export class Player {
   }
 
   private updateSurfaceAlignment(dt: number): void {
+    if(this.spinePoseDuration>0){
+      if(!this.vertAir||this.grounded||this.isBailing){this.spinePoseDuration=0;this.spinePoseElapsed=0;}
+      else this.spinePoseElapsed=Math.min(this.spinePoseDuration,this.spinePoseElapsed+dt);
+    }
     let alignTarget = 0;
     let targetNormal: THREE.Vector3 | null = null;
     const onPipe = this.groundHit !== null && this.groundHit.name.startsWith('halfpipe');
@@ -15850,7 +15869,9 @@ export class Player {
     // never reads this editor-visible field.
     this.alignPose = this.landingAlignPose;
     if (targetNormal) {
-      this.alignNormal.lerp(targetNormal, Math.min(1, ease * dt));
+      if(this.spinePoseDuration>0&&this.spinePoseElapsed<this.spinePoseDuration)
+        spineTransferNormal(this.spinePoseFrom,targetNormal,this.spinePoseElapsed/this.spinePoseDuration,this.alignNormal);
+      else this.alignNormal.lerp(targetNormal, Math.min(1, ease * dt));
       if (this.alignNormal.lengthSq() < 1e-6) this.alignNormal.copy(targetNormal);
       this.alignNormal.normalize();
     }
@@ -17344,6 +17365,11 @@ export class Player {
     }
     if (this.boardG) this.boardG.userData.iceSkateMotion = iceSkate;
 
+    const vertPump = this.freeSkate && this.grounded && this.onTransition && !this.isBailing ? this.chargePose : 0;
+    const spineMotion = this.spinePoseDuration>0 && this.spinePoseElapsed<this.spinePoseDuration &&
+      this.vertAir && !this.isBailing && this.grabPose<.01 && this.flipT<=0
+      ? sampleSpineTransfer(this.spinePoseElapsed,this.spinePoseDuration) : null;
+    if(vertPump>0||spineMotion)this.playerAnimationBridge.modulateDeformations(skateVertElasticity(vertPump,spineMotion));
     if(this.grabPose>0&&!this.specialGrab&&!this.specialFlip)this.playerAnimationBridge.modulateDeformations(skateGrabTweakElasticity(this.grabKind,this.grabPose,this.stance));
     if(revertMotion)this.playerAnimationBridge.modulateDeformations(skateRevertElasticity(revertMotion,this.revertPoseSign));
     const nineHundred=this.specialGrab?.id==='the-900'||this.nineHundredPose&&this.grabPose>.001;
@@ -17408,6 +17434,7 @@ export class Player {
         deckYaw: this.deckYawOffset, speed: this.speed, charge: this.chargePose, balance: this.balance,
         verticalVelocity: this.vVel, launchVelocity: this.launchVy,
         iceBrace: iceSkate?.knee,
+        vertPump, spineTransfer:spineMotion,
         underWeight: this.underK,
         underReturning: this.state==='grind'&&!this.railUnder,
         mount: mountPose.tuck + .75 * mountPose.settle,

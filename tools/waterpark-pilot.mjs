@@ -19,9 +19,10 @@ export function createWaterparkPilot(source,options={}) {
   const z=p.pos.z;
   phaseTo(z>-24?'tower descent':z>-160?'wave pools':z>-278?'downhill connector':z>-400?'coaster pools':z>-466?'upper flume descent':z>-538?'dry flume':z>-590?'splashdown descent':'loop approach',p);
   let input=toward(p,l,[0,p.pos.y,z-14]),jumpHeld=true,spinHeld=false;
-  if(p.vertAir&&p.pipeHang){
+  if(!p.grounded&&p.vertAir&&p.pipeHang){
    // Fresh press/release after the coping launch commits each forward spine.
-   jumpHeld=p.vertBoardRelease.stage===1&&p.pos.y>(p.hangPipe?.lipY??p.pos.y)+.5&&!p.vertBoardRelease.pressArmed;
+   jumpHeld=options.holdThroughLanding&&p.vertBoardRelease.stage===2||
+     p.vertBoardRelease.stage===1&&p.pos.y>(p.hangPipe?.lipY??p.pos.y)+.5&&!p.vertBoardRelease.pressArmed;
   }
   for(const [i,cp]of source.WATERPARK_CHECKPOINTS.entries()){
    if(i===0&&fastLine)continue;

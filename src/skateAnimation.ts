@@ -5,6 +5,7 @@ import { GRAB_CONTACTS, GRIND_CONTACTS, LIP_CONTACTS, skateContactBounce, sample
 import { DEFAULT_SKATEBOARD_SETTINGS, type SkateboardSettingsValue } from './skateboard/settings';
 import { evaluateSkateboardSurfaceHeight } from './skateboard/model';
 import type { Rail } from './rails';
+import type { SpineTransferMotion } from './vertSkateMotion';
 import { SkateBodySpring, skateOlliePitch, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_HEADROOM, sampleUnderRailMotion, sampleSkateRevert } from './skateBodyMotion';
 
 const X = new THREE.Vector3(1, 0, 0), Y = new THREE.Vector3(0, 1, 0), Z = new THREE.Vector3(0, 0, 1);
@@ -17,6 +18,8 @@ export interface SkatePoseInput {
   yaw: number; deckYaw: number; speed: number; charge: number; balance: number;
   verticalVelocity?: number; launchVelocity?: number; mount?: number;
   iceBrace?: number; // cosmetic knee bend; sole targets remain unchanged
+  vertPump?: number;
+  spineTransfer?: SpineTransferMotion | null;
   underWeight?: number;
   underReturning?: boolean;
   manual: number; grab: GrabTrickKind; grabWeight: number;
@@ -282,6 +285,14 @@ export class SkateAnimation {
       manual:p.manual !== 0 || !!p.lip || uprightGrind,
     });
     if (p.iceBrace) springFlex = Math.min(1.24, springFlex + clamp(p.iceBrace, 0, .5));
+    const vertLoad=clamp(p.vertPump??0,0,1),transfer=p.spineTransfer;
+    if(vertLoad>0||transfer){
+      springFlex=Math.min(1.72,springFlex+.52*vertLoad+.48*(transfer?.tuck??0)-.08*(transfer?.rebound??0));
+      if(this.spine){
+        this.spineBefore??=this.spine.quaternion.clone();
+        this.spine.rotation.x+=.24*vertLoad+.16*(transfer?.tuck??0);
+      }
+    }
     const bodyFlex=waistGrab?THREE.MathUtils.lerp(springFlex,method?1.10:stalefish?1.05:melon||mute?.95:endGrab?1.05:.65,stalefish?smooth(gw/.65):smooth(gw)):backflip?THREE.MathUtils.lerp(springFlex,.62,backflip.compression):impossible?THREE.MathUtils.lerp(springFlex,.65,impossible.wrap):p.revert?Math.min(1.24,springFlex+.10*p.revert.knee):springFlex;
     if(p.nineHundred && gw>0 && this.spine){
       this.spineBefore=this.spine.quaternion.clone();
@@ -635,6 +646,15 @@ export class SkateAnimation {
       }
     }
 
+    if((vertLoad>0||transfer)&&gw<.01&&!p.flip&&!p.grind){
+      for(let i=0;i<2;i++){
+        const hand=this.hands[i],side=i===0?1:-1;
+        hand.root.rotation.z+=side*(.16*vertLoad+.28*(transfer?.reach??0));
+        hand.root.rotation.x+=.18*vertLoad+(i===front?.23:-.16)*(transfer?.reach??0);
+        hand.mid.rotation.x+=.48*vertLoad+.34*(transfer?.tuck??0);
+      }
+    }
+    this.board.userData.vertMotion={pump:vertLoad,transfer:transfer??null,kneeFlex:bodyFlex};
     const inward=p.flip==='inward-heel';
     const balanceMotion=impossible??(scoopFlip?footFlip:null);
     if(balanceMotion&&balanceMotion.arms>0){

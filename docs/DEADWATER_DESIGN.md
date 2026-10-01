@@ -26,9 +26,9 @@ carving turn between attractions; the vertical loop is the final challenge.
 | Segment | Playable purpose | Spatial character |
 | --- | --- | --- |
 | Admission | Mount on the high deck, then descend from 80 to 60 m | Closed ticket buildings, lockers, ride signage and an overhead orange flume |
-| Wave Pools | Three forward spine transfers, with each receiving rim 2 m lower | Four sunken concrete pools; radii 8/12/10/14 m, rims at 60/58/56/54 m, varied depths and widths |
-| Mid-slope terrace | Charged vault onto a 48 m catch deck; first checkpoint, then a long descent to 34 m | CYCLONE tower, a small dry fountain and closed arcade alongside the route |
-| Dual Boomerang | Two forward spine transfers, then another charged vault | Three elevated orange fiberglass basins; radii 12/16/10 m, rims at 34/32/30 m, exposed curved steel supports |
+| Wave Pools | Three forward spine transfers, with each receiving rim 2 m lower | Four sunken concrete pools; radii 8/12/10/11 m, rims at 60/58/56/54 m, varied depths and widths |
+| Mid-slope terrace | The final bowl curves into a spillway jump onto the 48 m catch deck; first checkpoint, then a long descent to 34 m | CYCLONE tower, a small dry fountain and closed arcade alongside the route |
+| Dual Boomerang | Two forward spine transfers, then an integrated curved spillway jump | Three elevated orange fiberglass basins; radii 12/12/8 m, rims at 34/32/30 m, exposed curved steel supports |
 | Dry Flume | Descend through the blue chute, launch across the open splash gap, then roll down to ground level | A continuous supported ride with a shaped receiving deck |
 | Deathloop | Maintain speed/charge through a 52 m inversion, then continue forward to the finish | A braced coaster at the foot of the hill, loading station and separate exit lane |
 
@@ -57,6 +57,19 @@ controls and eases back on release/exit.
 collectibles and straight camera lane. Flat-colour scenery omits regenerable normals
 and unused UVs to remain within the existing editor/import budget.
 
+Analytic halfpipes own their opaque flat floors as well as their curved walls.
+The final bowl in each set has a smooth, matching-colour exit built into its
+profile, replacing the detached orange kickers. The second set's deepest bowl
+is 12 m rather than 16 m, so charge can build useful clearance over the coping.
+
+An air-owned X release cannot fire an immediate jump on landing, but holding X
+now resumes the pump and crouch on pipe contact. A full new ground load rearms
+the deliberate next ollie. Vert charge visibly folds the knees while keeping
+both soles planted. A spine transfer gathers, rolls through wheels-down and
+extends toward the receiving wall; rotation interpolation avoids the old
+opposite-normal stall/snap. Shared per-segment elasticity supplies compression
+and a finite rebound without altering the skeleton scale or movement tuning.
+
 ## Acceptance
 
 - Adaptive controller tests must cross all five spines and all three gaps,
@@ -68,6 +81,11 @@ and unused UVs to remain within the existing editor/import budget.
   and at the mid-slope terrace checkpoint afterward.
 - Insufficient loop pressure must cause a real fall; crossing the exit lane
   directly must not grant a finish.
+- A held-X run must cross all five spines without releasing to rearm the pump
+  after landing. Charge-versus-coast trials from identical starting momentum
+  must show greater height and repeated second-set coping clearance.
+- Deep charge and transfer poses must preserve sole contact, remain visible
+  in the close camera, and roll continuously through the transfer midpoint.
 - Browser review uses the actual loaded character, normal fixed-step/render
   loop, visible rider geometry and console. Screenshots must show a close
   rider, readable landing surfaces and recognizable waterpark structures.

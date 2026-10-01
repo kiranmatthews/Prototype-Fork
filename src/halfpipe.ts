@@ -34,7 +34,7 @@ export class Halfpipe {
   readonly uWall: number; // R·π/2 (arc length of one transition)
   readonly uLip: number; // F + uWall (centre → coping)
   readonly object: THREE.Group;
-  readonly walls: THREE.Mesh[] = []; // the two transition ribbons — pushed into groundMeshes so they're SOLID
+  readonly walls: THREE.Mesh[] = []; // transitions and flat floor; registered as one analytic surface
 
   constructor(
     l0: number,
@@ -215,7 +215,7 @@ export class Halfpipe {
     const wallMat = mat.clone();
     wallMat.side = THREE.DoubleSide;
     const tmp = new THREE.Vector3();
-    // Two smooth wall ribbons (the flat bottom is a separate floor slab). Each
+    // Two smooth wall ribbons. Each
     // is the quarter-circle sampled finely from the flat edge to the coping.
     for (const sign of [1, -1]) {
       const seg = 22; // arc samples per wall — plenty smooth
@@ -252,6 +252,23 @@ export class Halfpipe {
       mesh.userData.halfpipe = this;
       group.add(mesh);
       this.walls.push(mesh);
+    }
+    // The analytic collider already supports the trough, so its visible floor
+    // must belong to the same component too. A source-owned halfpipe must not
+    // depend on a separately authored slab to avoid skating over an open hole.
+    if (this.flatHalf > 0) {
+      const width = this.axis === 'z' ? this.flatHalf * 2 : Math.abs(this.l1 - this.l0);
+      const depth = this.axis === 'z' ? Math.abs(this.l1 - this.l0) : this.flatHalf * 2;
+      const geometry = new THREE.PlaneGeometry(width, depth);
+      geometry.rotateX(-Math.PI / 2);
+      const floor = new THREE.Mesh(geometry, wallMat);
+      floor.position.set(this.axis === 'z' ? this.cross : (this.l0 + this.l1) / 2,
+        this.yBottom, this.axis === 'z' ? (this.l0 + this.l1) / 2 : this.cross);
+      floor.name = 'halfpipe floor';
+      floor.receiveShadow = true;
+      floor.userData.halfpipe = this;
+      group.add(floor);
+      this.walls.push(floor);
     }
     return group;
   }

@@ -17,14 +17,18 @@ export const WATERPARK_POOLS = [
  {section:'A',p:[0,52,-36] as Point,radius:8,flatHalf:4,length:24,yaw:90,nearLip:-24,farLip:-48,lipY:60,dir:[0,0,-1] as Point},
  {section:'A',p:[0,46,-65] as Point,radius:12,flatHalf:5,length:30,yaw:90,nearLip:-48,farLip:-82,lipY:58,dir:[0,0,-1] as Point},
  {section:'A',p:[0,46,-96] as Point,radius:10,flatHalf:4,length:26,yaw:90,nearLip:-82,farLip:-110,lipY:56,dir:[0,0,-1] as Point},
- {section:'A',p:[0,40,-129] as Point,radius:14,flatHalf:5,length:34,yaw:90,nearLip:-110,farLip:-148,lipY:54,dir:[0,0,-1] as Point},
+ {section:'A',p:[0,43,-129] as Point,radius:11,flatHalf:8,length:34,yaw:90,nearLip:-110,farLip:-148,lipY:54,dir:[0,0,-1] as Point,spillway:true},
  {section:'B',p:[0,22,-295] as Point,radius:12,flatHalf:5,length:30,yaw:90,nearLip:-278,farLip:-312,lipY:34,dir:[0,0,-1] as Point},
- {section:'B',p:[0,16,-332] as Point,radius:16,flatHalf:4,length:38,yaw:90,nearLip:-312,farLip:-352,lipY:32,dir:[0,0,-1] as Point},
- {section:'B',p:[0,20,-367] as Point,radius:10,flatHalf:5,length:30,yaw:90,nearLip:-352,farLip:-382,lipY:30,dir:[0,0,-1] as Point},
+ {section:'B',p:[0,20,-332] as Point,radius:12,flatHalf:8,length:38,yaw:90,nearLip:-312,farLip:-352,lipY:32,dir:[0,0,-1] as Point},
+ {section:'B',p:[0,22,-367] as Point,radius:8,flatHalf:7,length:30,yaw:90,nearLip:-352,farLip:-382,lipY:30,dir:[0,0,-1] as Point,spillway:true},
 ];
+export function waterparkSpillwayY(pool:typeof WATERPARK_POOLS[number],z:number):number {
+  const start=pool.p[2]+pool.flatHalf,t=Math.max(0,Math.min(1,(start-z)/(start-pool.farLip)));
+  return pool.p[1]+.06+pool.radius*t*t;
+}
 export const WATERPARK_JUMPS = [
- {name:'Wavebreaker downhill vault',takeoff:[0,48.2,-130] as Point,landing:[0,48,-160] as Point,dir:[0,0,-1] as Point},
- {name:'Boomerang downhill vault',takeoff:[0,26,-373] as Point,landing:[0,30,-400] as Point,dir:[0,0,-1] as Point},
+ {name:'Wavebreaker downhill vault',takeoff:[0,54.06,-148] as Point,landing:[0,48,-160] as Point,dir:[0,0,-1] as Point},
+ {name:'Boomerang downhill vault',takeoff:[0,30.06,-382] as Point,landing:[0,30,-400] as Point,dir:[0,0,-1] as Point},
  {name:'Dry flume splash',takeoff:[0,12,-520] as Point,landing:[0,12,-538] as Point,dir:[0,0,-1] as Point},
 ];
 export const WATERPARK_CHECKPOINTS = [
@@ -52,15 +56,23 @@ ramp([0,60,14],60,20,20,180,1,'High tower downhill ramp');
 lipApron(-20,60,24,8,1,'First pool drop-in apron');
 ramp([0,60-Math.sqrt(28),-25],2,Math.sqrt(28),20,180,1,'First pool roll-in bevel');
 for(const [i,pool] of WATERPARK_POOLS.entries()) C.push({t:'vertramp',p:pool.p,yaw:pool.yaw,len:pool.length,rise:pool.radius,w:pool.flatHalf,vkind:'half',arc:90,deck:0,rails:false,edgeGrinding:false,tex:'solid',color:i%2?AQUA:TEAL,grp:pool.section==='A'?2:4,nm:`${pool.section==='A'?'Wave pools':'Boomerang pools'} ${i<4?i+1:i-3} · ${pool.radius} m downhill vert`});
-// Early kickers turn the last drop-in into a vault above the remaining bowl
-// wall. Their short climb keeps gravity-earned speed without launch motors.
-ramp([0,40.2,-126],8,8,18,0,2,'Wavebreaker gravity vault kicker');
+// The last bowl's exit IS the jump: a tangent-continuous curved spillway rises
+// out of the trough to its rim. No detached wedge blocks the middle of a pipe.
+function spillway(pool:typeof WATERPARK_POOLS[number],grp:number){
+  const start=pool.p[2]+pool.flatHalf,len=start-pool.farLip,segments=32;
+  const vertices:number[]=[],indices:number[]=[];
+  for(let i=0;i<=segments;i++){const t=i/segments;for(const x of [-pool.length/2,pool.length/2])vertices.push(x,waterparkSpillwayY(pool,start-len*t)-pool.p[1],-len*t);}
+  for(let i=0;i<segments;i++){const a=i*2;indices.push(a,a+1,a+2,a+1,a+3,a+2);}
+  C.push({t:'mesh',p:[0,pool.p[1],start],vertices,indices,vert:false,edgeGrinding:false,doubleSided:true,
+    tex:'pavement',color:grp===2?'#84bab8':'#df9662',grp,nm:'Integrated curved pool exit'});
+}
+spillway(WATERPARK_POOLS[3],2);
 deck(0,-175,48,32,30,3,'Wavebreaker catch terrace',AQUA);
 C.push({t:'checkpoint',p:WATERPARK_CHECKPOINTS[0].p,grp:3,nm:WATERPARK_CHECKPOINTS[0].name});
 ramp([0,34,-230],80,14,20,180,3,'Downhill park connector');
 lipApron(-274,34,24,8,3,'Boomerang drop-in apron');
 ramp([0,34-Math.sqrt(44),-279],2,Math.sqrt(44),20,180,3,'Boomerang roll-in bevel');
-ramp([0,20,-370],6,6,20,0,4,'Boomerang gravity vault kicker');
+spillway(WATERPARK_POOLS[6],4);
 deck(0,-412,30,32,24,5,'Boomerang catch terrace',AQUA);
 ramp([0,18,-445],42,12,20,180,5,'Upper flume downhill approach');
 ramp([0,4,-484],36,14,18,180,5,'Descending dry flume');

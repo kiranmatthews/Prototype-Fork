@@ -3,6 +3,7 @@ import {mkdir,writeFile} from 'node:fs/promises';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=process.argv.find(a=>/^https?:/.test(a))||'http://127.0.0.1:5201';
 const full=process.argv.includes('--full'),checkpoints=process.argv.includes('--checkpoints');
+const holdThroughLanding=process.argv.includes('--hold-charge');
 const output=process.env.WATERPARK_BROWSER_OUTPUT||'/private/tmp/waterpark-browser';
 await mkdir(output,{recursive:true});
 const browser=await chromium.launch({headless:true,channel:'chrome'});
@@ -12,11 +13,11 @@ try{
  await page.goto(new URL('?playtest&level=waterpark'+(full?'':'&lite'),base).href);
  await page.waitForFunction(()=>window.__game&&!window.__game.gameFlow.blocksGameplay,null,{timeout:90000});
  await page.screenshot({path:`${output}/entrance-${full?'full':'lite'}.png`});
- await page.evaluate(async checkpoints=>{
+ await page.evaluate(async ({checkpoints,holdThroughLanding})=>{
   const g=window.__game,l=g.getLevel(),p=g.player;
   const source=await import('/src/levels/waterpark.ts'),{createWaterparkPilot}=await import('/tools/waterpark-pilot.mjs');
   p.respawn(l,true);
-  const pilot=createWaterparkPilot(source,{fastLine:!checkpoints});
+  const pilot=createWaterparkPilot(source,{fastLine:!checkpoints,holdThroughLanding});
   const report=window.waterparkReview={frame:0,done:false,failed:null,phase:pilot.phase,peak:0,evidence:null,end:null,tuning:{...g.TUNING},loopFrames:0,loopFraming:[],airFraming:[]};
   const render=g.renderer.render.bind(g.renderer),projected=p.pos.clone(),vertex=p.pos.clone(),instance=g.camera.matrixWorld.clone(),world=g.camera.matrixWorld.clone();
   let lastAirFrame=-10,lastLoopFrame=-10;
@@ -74,12 +75,12 @@ try{
    if(p.state==='finished'){report.done=true;report.evidence=pilot.evidence;report.finalTuning={...g.TUNING};}
    if(report.frame>9000){report.failed={message:'Adaptive pilot exhausted its frame budget',snapshot:snapshot()};report.done=true;}
   };
- },checkpoints);
+ },{checkpoints,holdThroughLanding});
  const captured=new Set();
  for(let i=0;i<1200;i++){
   await page.waitForTimeout(250);
-  const r=await page.evaluate(()=>({done:window.waterparkReview.done,phase:window.waterparkReview.phase,frame:window.waterparkReview.frame,p:window.__game.player.pos.toArray(),normal:window.__game.player.rideNormal.toArray(),air:!window.__game.player.grounded,verticalSpeed:window.__game.player.vVel,lip:window.__game.player.hangPipe?.lipY??0}));
-  const shot=r.phase==='tower descent'&&r.p[2]<20?'tower-descent':r.phase==='wave pools'&&r.air&&r.p[1]>r.lip+3&&Math.abs(r.verticalSpeed)<7?'wave-spine':r.phase==='downhill connector'&&!r.air&&r.p[2]<-202?'downhill-connector':r.phase==='coaster pools'&&r.air&&r.p[1]>r.lip+3&&Math.abs(r.verticalSpeed)<7?'boomerang-spine':r.phase==='dry flume'&&r.air&&r.p[2]<-520?'flume-jump':r.phase==='loop'&&r.normal[1]<-.85?'loop-inverted':null;
+  const r=await page.evaluate(()=>({done:window.waterparkReview.done,phase:window.waterparkReview.phase,frame:window.waterparkReview.frame,p:window.__game.player.pos.toArray(),normal:window.__game.player.rideNormal.toArray(),air:!window.__game.player.grounded,verticalSpeed:window.__game.player.vVel,lip:window.__game.player.hangPipe?.lipY??0,pump:window.__game.player.boardG?.userData.vertMotion?.pump??0,transfer:window.__game.player.boardG?.userData.vertMotion?.transfer?.progress??-1}));
+  const shot=r.pump>.9&&r.normal[1]>.3&&r.normal[1]<.7?'vert-charge':r.transfer>.35&&r.transfer<.65?'transfer-rollover':r.phase==='tower descent'&&r.p[2]<20?'tower-descent':r.phase==='wave pools'&&r.air&&r.p[1]>r.lip+3&&Math.abs(r.verticalSpeed)<7?'wave-spine':r.phase==='downhill connector'&&!r.air&&r.p[2]<-202?'downhill-connector':r.phase==='coaster pools'&&r.air&&r.p[1]>r.lip+3&&Math.abs(r.verticalSpeed)<7?'boomerang-spine':r.phase==='dry flume'&&r.air&&r.p[2]<-520?'flume-jump':r.phase==='loop'&&r.normal[1]<-.85?'loop-inverted':null;
   if(shot&&!captured.has(shot)){await page.screenshot({path:`${output}/${shot}-${full?'full':'lite'}.png`});captured.add(shot);}
   if(i%100===0)console.log(JSON.stringify(r));if(r.done)break;
  }

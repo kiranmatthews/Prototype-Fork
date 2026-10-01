@@ -23,6 +23,18 @@ new Function("module", "exports", "require", output)(
 );
 const { Halfpipe } = module.exports;
 
+for(const axis of ['x','z']){
+  const bowl=new Halfpipe(-12,12,7,5,10,new THREE.MeshBasicMaterial(),30,axis);
+  bowl.object.updateMatrixWorld(true);
+  const ray=new THREE.Raycaster(new THREE.Vector3(axis==='z'?30:0,10,axis==='z'?0:30),new THREE.Vector3(0,-1,0));
+  const hits=ray.intersectObjects(bowl.walls,false);
+  assert.ok(hits.length>0,`${axis}-axis analytic bowl must render and collide at its flat bottom`);
+  assert.ok(Math.abs(hits[0].point.y-7)<1e-6);
+  assert.equal(hits[0].object.userData.halfpipe,bowl);
+  assert.equal(hits[0].object.material.opacity,1);
+  assert.equal(hits[0].object.material.transparent,false);
+}
+
 const meshIntersectionSource = await readFile(
   `${root}src/meshIntersections.ts`,
   "utf8",

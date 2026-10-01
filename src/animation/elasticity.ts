@@ -4,6 +4,7 @@ import { createProceduralDriver } from './document';
 import type { AnimationClip, AnimationTrack, RigDefinition } from './types';
 import { sampleUnderRailMotion, sampleSkateRevert } from '../skateBodyMotion';
 import { sampleBackflip, sampleFootFlip, sampleImpossible } from '../skateTricks';
+import type { SpineTransferMotion } from '../vertSkateMotion';
 
 export const CHARACTER_ELASTICITY_REVISION = 1;
 /** Torso, upper arm, forearm, thigh and shin. Zero protects a planted grip. */
@@ -11,6 +12,8 @@ type Amplitudes = readonly [number,number,number,number,number];
 const PROFILES:Record<string,Amplitudes> = {
   idle:[.022,.012,.022,.008,.010], walk:[.040,.020,.035,.035,.048], run:[.070,.025,.050,.055,.080],
   'ice-skate':[.040,.020,.045,0,0], // independent upper-body rebound; feet retain deck contact
+  'vert-pump':[.055,.025,.045,0,0],
+  'spine-transfer':[.065,.035,.055,0,0], // planted deck contacts keep both leg lengths
   'ice-walk':[.045,.025,.055,.008,.012], // delayed balance arms, restrained leg lengths keep low scuffs
   'swim-idle':[.025,.035,.045,.015,.022], swim:[.055,.060,.090,.045,.060],
   'jump-charge':[.06,.04,.06,.035,.045], 'run-stop':[.05,.035,.05,.025,.04],
@@ -84,6 +87,18 @@ export function skateRestElasticity(time:number):Record<string,number> {
   const values:Record<string,number>={};
   for(const [target,part] of ELASTIC_LENGTH_CONTROLS)
     values[target]=1-PROFILES.skate[part]*Math.sin(2*Math.PI*(time*.85+(part===2?.10:part===1?.05:0)));
+  return values;
+}
+
+/** Use the shared per-segment profiles for the loaded crouch and finite
+ * transfer rebound. Deck contact still owns the feet; never scale the rig. */
+export function skateVertElasticity(pump:number,transfer:SpineTransferMotion|null):Record<string,number>{
+  const values:Record<string,number>={};
+  for(const [target,part]of ELASTIC_LENGTH_CONTROLS){
+    const load=PROFILES['vert-pump'][part]*Math.max(0,Math.min(1,pump));
+    const air=PROFILES['spine-transfer'][part]*((transfer?.tuck??0)-.45*(transfer?.rebound??0));
+    values[target]=1-load-air;
+  }
   return values;
 }
 

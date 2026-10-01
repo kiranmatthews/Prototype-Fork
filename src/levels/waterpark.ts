@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
 import { createLoopMeshData, sampleLoop } from '../loopRide';
-import { WATERPARK_CORE, WATERPARK_SPAWN, WATERPARK_POOLS, WATERPARK_LOOP, WATERPARK_CHECKPOINTS, WATERPARK_DOWNHILL, WATERPARK_GRADE, WATERPARK_JUMPS, WATERPARK_FINISH } from './waterpark-route';
+import { WATERPARK_CORE, WATERPARK_SPAWN, WATERPARK_POOLS, WATERPARK_LOOP, WATERPARK_CHECKPOINTS, WATERPARK_DOWNHILL, WATERPARK_GRADE, WATERPARK_JUMPS, WATERPARK_FINISH, waterparkSpillwayY } from './waterpark-route';
 import { buildWaterparkArt, WATERPARK_ART_GROUPS, WATERPARK_ART_LINEAR_LAYOUT, artSign, artBeam } from './waterpark-art';
 export { WATERPARK_POOLS, WATERPARK_JUMPS, WATERPARK_CHECKPOINTS, WATERPARK_LOOP, WATERPARK_SPAWN, WATERPARK_DOWNHILL, WATERPARK_GRADE, WATERPARK_FINISH } from './waterpark-route';
 
@@ -80,7 +80,10 @@ for(const [i,pool]of WATERPARK_POOLS.entries()){
   }else{
     const profile:[number,number][]=[];
     for(let n=18;n>=0;n--){const a=n/18*Math.PI/2;profile.push([pool.p[2]+pool.flatHalf+pool.radius*Math.sin(a),floor+pool.radius*(1-Math.cos(a))]);}
-    for(let n=0;n<=18;n++){const a=n/18*Math.PI/2;profile.push([pool.p[2]-pool.flatHalf-pool.radius*Math.sin(a),floor+pool.radius*(1-Math.cos(a))]);}
+    for(let n=0;n<=18;n++){
+      if(pool.spillway){const z=pool.p[2]+pool.flatHalf-(pool.p[2]+pool.flatHalf-pool.farLip)*n/18;profile.push([z,waterparkSpillwayY(pool,z)]);}
+      else{const a=n/18*Math.PI/2;profile.push([pool.p[2]-pool.flatHalf-pool.radius*Math.sin(a),floor+pool.radius*(1-Math.cos(a))]);}
+    }
     for(const side of [-1,1]){
       const x=side*half,v:number[]=[],ind:number[]=[];
       for(let n=0;n<profile.length-1;n++){const [z,y]=profile[n],[nz,ny]=profile[n+1],k=v.length/3;v.push(x,y,z,x,ny,nz,x,ny-1.3,nz,x,y-1.3,z);ind.push(k,k+1,k+2,k,k+2,k+3);edge([x,y+.1,z],[x,ny+.1,nz],'#f0dab6',.42,'Curved Boomerang fiberglass rim');}
@@ -92,8 +95,10 @@ for(const [i,pool]of WATERPARK_POOLS.entries()){
     }
     edge([-half,top+.1,pool.nearLip],[half,top+.1,pool.nearLip],'#f0dab6',.4);
   }
-  drain([half*.65,floor+.03,pool.p[2]]);arrow(pool.p);
-  for(const dz of [-3,0,3])add({t:'wumpa',p:[0,floor+1,pool.p[2]+dz],grp:pool.section==='A'?2:4});
+  const surfaceY=(z:number)=>pool.spillway?waterparkSpillwayY(pool,z):floor;
+  if(!pool.spillway)drain([half*.65,floor+.03,pool.p[2]]);
+  arrow([0,surfaceY(pool.p[2]),pool.p[2]]);
+  for(const dz of [-3,0,3])add({t:'wumpa',p:[0,surfaceY(pool.p[2]+dz)+1,pool.p[2]+dz],grp:pool.section==='A'?2:4});
 }
 
 // Long downhill connectors are recognizable open slides, not empty turns.
