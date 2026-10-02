@@ -44,7 +44,7 @@ without a dark-blue overlay or backdrop blur in either Canvas or DOM. Keep its
 current type, layout and controls; replacement legibility artwork will be authored
 separately. Other menu backdrops retain their current treatment.
 
-For local visual review, open `menu-review.html?playtest&level=codex-lab&lite`, then repeat without `lite`. The catalogue exposes 25 screens, including every confirmation, both result types, the competition introduction, guide, judges, standings, win and loss. Save previews and competition results are memory-only fixtures. The review entry is excluded from the production build. Audit layout checks viewport bounds, clipped controls, page width and the full standings table. It does not replace visual inspection of text or actual gameplay navigation.
+For local visual review, open `menu-review.html?playtest&level=codex-lab&lite`, then repeat without `lite`. The catalogue exposes 26 screens, including home/map Options, every confirmation, both result types, the competition introduction, guide, judges, standings, win and loss. Save previews and competition results are memory-only fixtures. The review entry is excluded from the production build. Audit layout checks viewport bounds, clipped controls, touch targets, page width, table cells and the full standings table. It does not replace visual inspection of text or actual gameplay navigation.
 
 The Jungle Cup running clock uses the teal/blue Roo PNG atlas (`bonus` palette), through the shared DOM decorator and pre-CRT competition painter. Its live time remains semantic text; the run label keeps the existing secondary type.
 
@@ -56,3 +56,41 @@ The DOM and pre-CRT painter have no clock panel, border or rectangular shadow;
 text shadows retain contrast. Final-combo and urgent states keep the same compact
 footprint. `tools/test-competition-clock-mobile.mjs` reviews both Cups in phone
 portrait/landscape, lite/full rendering and desktop, including actual Pause taps.
+
+## Compact menus and presentation readiness
+
+Touch sizing also applies when a connected keyboard/controller owns the prompt
+family. All menu actions, island arrows, guide arrows and close actions retain
+48px targets. Headers, corner close actions and final result/Cup actions stay
+fixed; only assigned content regions scroll. Pause, Options and short-screen
+Home actions use bounded lists, and keyboard/controller focus reveals its action
+without scrolling the whole menu. Portrait Options stack labels and choices.
+Compact guides use fixed table columns; Canvas text bounds include cell padding.
+Recipe cells retain table layout and readable text, and mirrored prompt glyphs
+and words follow the same bounded scroll clipping as the DOM.
+Short Cup standings retain all six skaters in intrinsically sized content with
+bounded scrolling when necessary. Save bays remain a 2×2 grid.
+
+`src/roo-type/menuAssets.ts` requests both font faces and decoded PNG atlases before
+menu ink is published. A missing shimmer image reuses the neutral PNG; a missing
+neutral resolution tries the other shipped sizes, and reconnecting retries a
+degraded atlas. The existing PNG geometry, painter and focus phases are retained.
+
+Startup keeps the accessible HTML loading status and input lock until the actual
+title or direct-playtest frame is ready. Transitions retain the animated vortex
+through destination assets, texture uploads and shader/geometry warmup. A captured
+loading frame covers final post/HUD requests and GPU completion, then fades into
+the ready destination. Its fullscreen raster is released afterward. Shared
+prompt/map/touch ink is suppressed during loading, including cached Canvas ink.
+
+`tools/test-menus-responsive-browser.mjs` covers all 26 catalogue screens, all four
+guide pages, real touch actions, bounded swipes/focus, PNG labels and table cells.
+It supports `MENU_BROWSER=webkit`, `MENU_PROFILE=320x568,568x320,390x844`,
+`MENU_TOUCH=false` and `MENU_CUP=waterpark-cup` for additional compact/Cup checks.
+`tools/test-level-stats-touch.mjs` exercises actual map entry and course launch with
+touch, keyboard and PlayStation prompts. `tools/test-menu-loading-browser.mjs`
+delays fonts, assets, warmup and final preparation and checks retained loading
+pixels, prompt suppression, accessible startup status and failed shimmer images
+in lite/full rendering. `tools/test-roo-atlas-readiness.mjs` covers decode,
+alternate resolutions and reconnect recovery. `PLAYWRIGHT_MODULE` may point to a
+local Playwright runtime; keep separate output directories for each engine.

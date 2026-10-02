@@ -1,5 +1,5 @@
 import { ROO_ATLAS_METRICS } from './atlas-metrics';
-import { layoutRooAtlas, loadRooAtlases, RooAtlasPainter, rooAtlasGlyphRect, rooAtlasUrl, ROO_ATLAS_EVENT } from './atlas';
+import { layoutRooAtlas, loadRooAtlases, rooAtlasPaletteReady, rooAtlasGlyphRect, rooAtlasUrl, ROO_ATLAS_EVENT } from './atlas';
 import type { RooTextHandle, RooTextOptions, RooPaletteName } from '../roo-text.js';
 import { getRooAppearance, ROO_APPEARANCE_EVENT, rooLightWeights, subscribeRooLight } from './settings';
 
@@ -23,9 +23,8 @@ function node<K extends keyof SVGElementTagNameMap>(tag:K,attrs:Record<string,st
 /** Same baked glyphs and cap band for the direct DOM/lite and pre-CRT paths. */
 export async function createBakedRooText(host:HTMLElement,options:RooTextOptions):Promise<RooTextHandle|null> {
   await loadRooAtlases();
-  if(!new RooAtlasPainter().ready)return null;
   const palette=(options.palette??host.dataset.rooPalette??'bonus') as RooPaletteName,metrics=ROO_ATLAS_METRICS[palette];
-  if(!metrics)return null;
+  if(!metrics||!rooAtlasPaletteReady(palette))return null;
   const svg=node('svg',{class:'roo-text-svg is-ready',role:'img',preserveAspectRatio:'xMidYMid meet',overflow:'visible'});
   const defs=node('defs'),semantic=node('text',{'font-family':'Roo'}),art=node('g');
   art.style.isolation='isolate';svg.style.isolation='isolate';

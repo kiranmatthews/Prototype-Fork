@@ -1,6 +1,7 @@
 import { startOfflineCache } from "./offline";
 import { stabilityReport } from './stabilityReport';
 import { rooAtlasDiagnostics } from './roo-type/atlas';
+import { menuAssetsReady } from './roo-type/menuAssets';
 import { sceneryDecoderDiagnostics } from './sceneryTextureLoader';
 import { installShadowTextureCleanup } from "./shadowTextureCleanup";
 import { resizeRendererSurface } from "./render-quality/surfaceSize";
@@ -924,6 +925,7 @@ async function prepareActivePresentationAssets(): Promise<void> {
     document.fonts?.ready,
     sfx.prepare(),
     animationPreparation,
+    menuAssetsReady,
   ]);
   await presentationAssets.waitUntilSettled();
   await graphicsRecovery.ready();
@@ -1280,17 +1282,13 @@ async function prepareLoadingVortexPresentation(): Promise<void> {
   renderVortexWithGameFlow(0, performance.now(), "warp");
 }
 
-/** Establish the spawn camera/pose and warm the complete final render path. */
-async function prepareDestinationPresentation(): Promise<void> {
+/** Warm costly destination resources while the animated loading scene stays visible. */
+async function warmDestinationPresentation(): Promise<void> {
   await graphicsRecovery.ready();
-  recordPresentationStage('destination:prepare');
-  configureCoastPost(levelPostEnabled||
-    (visualTreatmentActivity(visualTreatmentSettings.value).any&&!NO_COAST_POST));
-  gameInterface.setComposited(!split2p&&(coastPost?.active??false));
-  competitionUI.setInputBlocked(gameFlow.blocksGameplay);
-  competitionUI.render(competition,competitionPresentationSuppressed());
+  recordPresentationStage('destination:warm');
+  await gameFlow.prepareMenuPresentation();
   await presentationAssets.waitUntilSettled();
-  if (!gameFlow.vortexContext) {
+  if (!gameFlow.destinationVortexContext) {
     if (resultsPresentation) {
       resultsPresentation.update(0);
       resultsPresentation.frameCamera(camera, window.innerWidth, window.innerHeight,
@@ -1315,6 +1313,29 @@ async function prepareDestinationPresentation(): Promise<void> {
     recordPresentationStage('destination:scene-warmup');
     await warmPresentationScene(renderer,scene,camera);
   }
+}
+
+/** Retain the last loader frame over first-use post/HUD work, then fade to ready pixels. */
+function captureLoadingPresentation(): HTMLCanvasElement | null {
+  renderVortexWithGameFlow(0,performance.now(),'warp');
+  const held = document.createElement('canvas');
+  held.width = renderer.domElement.width; held.height = renderer.domElement.height;
+  const context = held.getContext('2d');
+  if (!context) return null;
+  context.drawImage(renderer.domElement,0,0);
+  return held;
+}
+
+/** Establish and complete the final output path while the loading frame covers it. */
+async function prepareDestinationPresentation(): Promise<void> {
+  await graphicsRecovery.ready();
+  recordPresentationStage('destination:prepare');
+  configureCoastPost(levelPostEnabled||
+    (visualTreatmentActivity(visualTreatmentSettings.value).any&&!NO_COAST_POST));
+  gameInterface.setComposited(!split2p&&(coastPost?.active??false));
+  competitionUI.setInputBlocked(gameFlow.blocksGameplay);
+  competitionUI.render(competition,competitionPresentationSuppressed());
+  await gameFlow.prepareMenuPresentation();
   const draw = (): void => {
     const context = gameFlow.vortexContext;
     if (context) renderVortexWithGameFlow(0, performance.now(), context);
@@ -2087,11 +2108,14 @@ gameFlow = new GameFlowUI(
     prepareLoadingVortex: prepareLoadingVortexPresentation,
     waitForLevelData: () => firstRunLevelSync,
     waitForDestinationAssets: prepareActivePresentationAssets,
+    warmDestinationFrame: warmDestinationPresentation,
+    captureLoadingFrame: captureLoadingPresentation,
     prepareDestinationFrame: prepareDestinationPresentation,
     onTransitionComplete: guardGameplayFromMenu,
   },
   gameAudioOptions,
 );
+gameFlow.setStartupLoading(true);
 worldMapUI = new WorldMapUI(campaign, {
   getRelicTarget: (id) => resolveRelicTime(id, findLevel(id)?.data),
   getMedalTargets: (id) => resolveMedalTimes(id, findLevel(id)?.data),
@@ -5250,7 +5274,32 @@ if(competitionOverview())frameCompetitionOverview();
 level.updateSceneryView(camera);
 // A direct Cup playtest/reload needs the same covered preparation as entry
 // from the map. Never freeze a partially loaded park into the intro snapshot.
-if(shellBypass&&competition&&!editor.active)
-  void gameFlow.transition(()=>gameFlow.hide(),{vortex:false});
-void Promise.all([level.prepareJungleAssets(),player.preparePresentationAssets(),animationPreparation,document.fonts?.ready])
-  .then(()=>presentationAssets.waitUntilSettled()).then(startOfflineCache,startOfflineCache);
+async function prepareStartupPresentation(): Promise<void> {
+  await Promise.all([firstRunLevelSync, menuAssetsReady, level.prepareJungleAssets(),
+    player.preparePresentationAssets(), animationPreparation]);
+  await gameFlow.prepareMenuPresentation();
+  await presentationAssets.waitUntilSettled();
+  if(shellBypass&&!editor.active) {
+    // Direct playtests/reloads need the same readiness gates as menu entry.
+    await gameFlow.transition(()=>gameFlow.hide(),{vortex:false});
+  } else {
+    await graphicsRecovery.ready();
+    if(gameFlow.vortexContext)renderVortexWithGameFlow(0,performance.now(),gameFlow.vortexContext);
+    else renderGameplayWithGameFlow(0);
+    await waitForPresentationGpu(renderer);
+    await presentationAssets.waitUntilSettled();
+    if(gameFlow.vortexContext)renderVortexWithGameFlow(0,performance.now(),gameFlow.vortexContext);
+    else renderGameplayWithGameFlow(0);
+    await waitForPresentationGpu(renderer);
+    await afterPresentationPaint();
+  }
+  gameFlow.setStartupLoading(false);
+  document.getElementById('game-boot-loading')?.remove();
+  recordPresentationStage('startup:ready');
+  startOfflineCache();
+}
+void prepareStartupPresentation().catch(error=>{
+  console.error('Game startup failed.',error);
+  const status=document.querySelector('#game-boot-loading [role="status"]');
+  if(status){status.setAttribute('role','alert');status.textContent='Unable to start. Reload to try again.';}
+});

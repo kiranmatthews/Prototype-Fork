@@ -21,7 +21,7 @@ const menuLayout = await text("src/game-menu-layout.css");
 assert.match(gameFlow, /private backToMapOrPause\(\): void \{\s*if \(this\.mapDirect\) \{\s*this\.callbacks\.onResume\(\)/,
   "map-menu Back must resume the map without performing a pending quit/save action");
 assert.match(gameFlow, /menuHint\('BACK', \['back'\], back\)/, "level selection must expose the shared Back prompt/action");
-assert.match(gameFlow, /style\.textContent \+= menuLayoutStyle/, "the shared TV-safe sizing policy must follow legacy artwork styles");
+assert.match(gameFlow, /style\.textContent \+= (?:MENU_THEME_CSS \+ )?menuLayoutStyle/, "the shared TV-safe sizing policy must follow legacy artwork styles");
 assert.match(menuLayout, /\.game-shell-panel, body\.tc-on \.game-shell-panel\.game-map-menu-panel \{[^}]*overflow:hidden/s,
   "touch map utilities must retain fixed screen regions rather than whole-menu scrolling");
 assert.match(menuLayout, /\.game-scroll-segment \{[^}]*min-height:0[^}]*overflow:auto/s,
@@ -40,7 +40,8 @@ assert.match(secondaryLabel, /Math\.ceil\(Math\.hypot\(s.shadowX, s.shadowY\) \*
 assert.match(secondaryLabel, /linearGradient/);
 assert.match(worldMapUi, /silverSecondaryLabel\(label\)/);
 assert.match(worldMapUi, /\.world-map-actions \{[^}]*background: none; border: 0;/, "map hints must not regain a container");
-assert.match(worldMapUi, /grid-template-columns: repeat\(2, max-content\)/, "portrait labels need intrinsic-width columns");
+assert.match(worldMapUi, /body\.tc-on \.world-map-actions \{[^}]*grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/s,
+  "portrait touch actions must fit bounded equal-width columns");
 
 for (const contract of [
   "--tc-size: clamp(136px, 40dvh, 168px)",
@@ -91,9 +92,11 @@ assert.match(
 assert.doesNotMatch(main, /showHud && !TOUCH_PRESENTATION/);
 assert.match(
   main,
-  /renderQualitySettings\.enabled &&\s*!TOUCH_PRESENTATION/,
-  "touch must bypass fixed-resolution Render targets",
+  /function fixedResolutionActive\(\)[\s\S]{0,500}renderQualitySettings\.enabled &&\s*!LITE_RENDER &&\s*!split2p/,
+  "fixed resolution presets must exclude lite and split-screen rendering",
 );
+assert.match(main, /TOUCH_PRESENTATION \? 1 : renderQualitySettings\.outputMultiplier/,
+  "touch fixed-resolution output must stay at 1x");
 assert.match(main, /ui\.setPresentationTools\(\[/);
 assert.match(input, /new TouchControls\(\(\) => \{[\s\S]{0,160}this\.pausePressed = true;/);
 assert.match(input, /touchJumpPressed = tc\.consumeButtonPress\('x'\)/);

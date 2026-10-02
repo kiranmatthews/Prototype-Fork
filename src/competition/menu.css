@@ -136,8 +136,49 @@ body.tc-on .comp-run-hud > strong { font-size:24px; min-width:54px; }
 
 .comp-final .comp-award > span { width:5.5vh; flex:none; line-height:0; }
 .comp-guide-close { display:none; }
-body[data-prompt-family="touch"] .comp-guide-close { display:flex; justify-content:center; align-items:center; position:fixed; top:1.2vh; right:1.5vw; width:48px; height:48px; min-height:48px; padding:0; background:#243138; border:2px solid #e5e0cd; border-radius:10px; color:#fff7da; font:30px/1 Arial,sans-serif; }
+:is(body[data-prompt-family="touch"],body.tc-on) .comp-guide-close { display:flex; justify-content:center; align-items:center; position:fixed; top:max(8px,env(safe-area-inset-top)); right:max(12px,env(safe-area-inset-right)); width:48px; height:48px; min-height:48px; padding:0; background:#243138; border:2px solid #e5e0cd; border-radius:10px; color:#fff7da; font:30px/1 Arial,sans-serif; }
 
 .comp-guide th,.comp-guide td { padding:.4vh 1vw; }
 .comp-guide .input-glyph { --prompt-icon-size:1.5em; }
+.comp-guide td.input-prompt-row { display:table-cell; }
+.comp-guide td.input-prompt-row .input-glyph { margin-right:.28em; }
 .comp-guide h3 { margin:.6vh 0; }
+@media(max-width:600px) and (max-aspect-ratio:1/1) {
+  .comp-guide table { table-layout:fixed; font-size:14px; }
+  .comp-guide td,.comp-guide th { padding:6px 4px; vertical-align:middle; }
+  .comp-guide :is(td,th):nth-child(1) { width:34%; }
+  .comp-guide :is(td,th):nth-child(2) { width:46%; }
+  .comp-guide :is(td,th):nth-child(3) { width:20%; }
+}
+
+/* Keep Cup actions usable on short phones and share the bounded scroll policy. */
+:is(body[data-prompt-family="touch"],body.tc-on) .competition-host:not(.is-running) {
+  padding:max(12px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
+}
+:is(body[data-prompt-family="touch"],body.tc-on) .competition-host:has(.comp-guide) {
+  padding-top:max(60px,calc(env(safe-area-inset-top) + 56px));
+}
+:is(body[data-prompt-family="touch"],body.tc-on) .comp-card .game-menu-button {
+  min-width:48px; min-height:48px; flex-shrink:0; touch-action:manipulation;
+}
+:is(body[data-prompt-family="touch"],body.tc-on) .comp-card .comp-actions button {
+  min-height:48px; font-size:clamp(18px,4.8vw,30px); padding:8px 4px;
+}
+:is(body[data-prompt-family="touch"],body.tc-on) .comp-actions { gap:6px; padding-top:0; margin-top:10px; }
+:is(body[data-prompt-family="touch"],body.tc-on) .comp-hints { display:none; }
+:is(body[data-prompt-family="touch"],body.tc-on) .comp-content,
+:is(body[data-prompt-family="touch"],body.tc-on) .comp-guide-grid { touch-action:pan-y; }
+:is(body[data-prompt-family="touch"],body.tc-on) .comp-guide-pager button { padding:0; }
+@media(max-height:500px) and (min-aspect-ratio:1/1) {
+  :is(body[data-prompt-family="touch"],body.tc-on) .comp-card h1 { font-size:clamp(24px,7vh,34px); margin:0 0 8px; }
+  :is(body[data-prompt-family="touch"],body.tc-on) .competition-host .comp-card { padding:10px 12px; }
+  .comp-final .comp-content {
+    display:grid; grid-template-columns:minmax(0,.27fr) minmax(0,1fr);
+    grid-template-rows:auto auto auto; gap:.5vh 2vw; overflow-y:auto;
+  }
+  .comp-final .comp-podium { flex-direction:column; margin:0; }
+  .comp-final .comp-table-wrap { height:max-content; min-height:max-content; overflow-y:visible; }
+  .comp-final .comp-award { margin:0; }
+  .comp-final .comp-award h3 { font-size:12px; }
+  .comp-final .comp-note { font-size:12px; margin:0; }
+}

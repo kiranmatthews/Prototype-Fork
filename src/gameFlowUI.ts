@@ -11,7 +11,7 @@ import type * as THREE from "three";
 import type { ResultsViewport } from "./resultsPresentation";
 import { runLoadingTransition, type LoadingTransitionPhase } from "./presentationLoading";
 import { rooReady } from "./roofont";
-import { installRooMenuText } from './roo-type/menu';
+import { installRooMenuText, waitForRooMenuText } from './roo-type/menu';
 import { subscribeRooLight } from './roo-type/settings';
 import { inputPrompts, CONTROLLER_FAMILIES, PROMPT_FAMILY_NAMES } from "./inputPrompts";
 import { actionButtonDown } from "./inputBindings";
@@ -120,6 +120,8 @@ export interface GameFlowUICallbacks {
   prepareLoadingVortex?: () => Promise<void>;
   waitForLevelData?: () => Promise<void>;
   waitForDestinationAssets?: () => Promise<void>;
+  warmDestinationFrame?: () => Promise<void>;
+  captureLoadingFrame?: () => HTMLCanvasElement | null;
   prepareDestinationFrame?: () => Promise<void>;
   onTransitionComplete?: () => void;
 }
@@ -185,6 +187,7 @@ export class GameFlowUI {
   private levelSelectSlide = 0;
   private levelSelectSlideUntil = 0;
   private transitionActive = false;
+  private startupLoading = false;
   private loadingVortexActive = false;
   private destinationRevealing = false;
   private transitionPhase: LoadingTransitionPhase | null = null;
@@ -230,7 +233,7 @@ export class GameFlowUI {
           panel: this.panel,
           buttons: [...this.panel.querySelectorAll<HTMLButtonElement>(".game-menu-button")],
           screen: this.screen,
-          transitionActive: this.transitionActive && !this.destinationRevealing && this.transitionPhase !== "cover",
+          transitionActive: this.panel.hasAttribute('data-roo-menu-pending') || this.transitionActive && !this.destinationRevealing && this.transitionPhase !== "cover",
           thumbnail: this.thumbnail,
           thumbnailCaptured: this.thumbnailCaptured,
           maskReady: this.maskReady,
@@ -271,6 +274,7 @@ export class GameFlowUI {
       this.pointerClientX = event.clientX;
       this.pointerClientY = event.clientY;
       if (
+        event.pointerType === "touch" ||
         !this.screen ||
         this.transitionActive ||
         this.isDeveloperChromeTarget(event.target)
@@ -317,7 +321,19 @@ export class GameFlowUI {
   }
 
   get blocksGameplay(): boolean {
-    return this.transitionActive || this.screen !== null;
+    return this.startupLoading || this.transitionActive || this.screen !== null;
+  }
+
+  setStartupLoading(active: boolean): void {
+    this.startupLoading = active;
+    this.root.inert = active;
+    document.body.classList.toggle('game-startup-loading', active);
+    this.requestGameplayFrame();
+  }
+
+  async prepareMenuPresentation(): Promise<void> {
+    await waitForRooMenuText(this.panel);
+    this.invalidatePreCrt();
   }
 
   get currentScreen(): GameScreen | null {
@@ -349,6 +365,11 @@ export class GameFlowUI {
     // Loading wins while leaving Game Over, so the bone-mask stage is released
     // before the warp field carries the transition back to gameplay.
     if (this.loadingVortexActive) return "warp";
+    return this.destinationVortexContext;
+  }
+
+  /** Destination warmup may inspect its path while the visible loader owns it. */
+  get destinationVortexContext(): GameFlowVortexContext | null {
     if (this.screen === "gameover") return "gameover";
     if (
       this.screen === "launch" ||
@@ -637,7 +658,7 @@ export class GameFlowUI {
       }
     }
     const { up, down, left, right, accept, back } = this.readGamepad();
-    if (this.transitionActive) {
+    if (this.transitionActive || this.startupLoading) {
       Object.assign(this.previousPad, { up, down, left, right, accept, back });
       return;
     }
@@ -686,7 +707,15 @@ export class GameFlowUI {
             document.body.classList.add("game-shell-transitioning");
           }
           if (phase === "vortex") this.transitionCurtain.classList.add("vortex");
-          if (phase === "cover-destination") this.transitionCurtain.classList.remove("vortex");
+          if (phase === "cover-destination") {
+            const frame = this.callbacks.captureLoadingFrame?.();
+            if (frame) {
+              frame.className = 'game-loading-held-frame';
+              this.transitionCurtain.append(frame);
+              this.transitionCurtain.classList.add('holding-loading-frame');
+            }
+            this.transitionCurtain.classList.remove("vortex");
+          }
           if (phase === "prepare-destination") {
             this.loadingVortexActive = false;
             this.destinationRevealing = true;
@@ -701,6 +730,7 @@ export class GameFlowUI {
         prepareVortex: () => this.callbacks.prepareLoadingVortex?.() ?? Promise.resolve(),
         load: async () => { await this.callbacks.waitForLevelData?.(); await action(); },
         waitForAssets: () => this.callbacks.waitForDestinationAssets?.() ?? Promise.resolve(),
+        warmDestination: () => this.callbacks.warmDestinationFrame?.() ?? Promise.resolve(),
         prepareDestination: () => this.callbacks.prepareDestinationFrame?.() ?? Promise.resolve(),
       }, this.reducedMotion, options.vortex !== false);
     } finally {
@@ -710,6 +740,9 @@ export class GameFlowUI {
       this.syncVortexBodyClass();
       this.requestGameplayFrame();
       this.transitionCurtain.classList.remove("vortex", "active");
+      this.transitionCurtain.classList.remove('holding-loading-frame');
+      for (const frame of this.transitionCurtain.querySelectorAll('canvas')) frame.width = frame.height = 1;
+      this.transitionCurtain.replaceChildren();
       // The opacity transition has now finished. Removing the curtain from
       // layout releases its full-viewport compositor surface during gameplay.
       this.transitionCurtain.hidden = true;
@@ -1247,9 +1280,12 @@ export class GameFlowUI {
     for (const [index, definition] of definitions.entries()) {
       const unlocked = this.campaign.levelUnlocked(definition.progressKey);
       const progress = this.campaign.levelProgress(definition.levelId);
+      let touchActivation = false;
       const row = this.button('', () => {
         this.selected = this.navButtons.indexOf(row); this.syncSelection(false);
-        if (inputPrompts.family === 'touch') this.playSelectedLevel();
+        // A connected controller can own the prompts on a phone. Actual
+        // touch taps still need to enter, because its footer is hidden.
+        if (touchActivation || inputPrompts.family === 'touch') this.playSelectedLevel();
       });
       row.classList.add('game-level-row'); row.dataset.levelKey = definition.progressKey;
       row.disabled = !unlocked; row.setAttribute('role', 'option');
@@ -1257,7 +1293,11 @@ export class GameFlowUI {
       const label = element('span', 'game-level-label'); label.textContent = `${String(index + 1).padStart(2, '0')}  ${definition.name.toUpperCase()}`;
       const marker = element('span', 'game-level-mark'); marker.textContent = !unlocked ? '●' : progress?.cleared ? '✓' : '';
       row.append(label, marker);
-      row.addEventListener('dblclick', () => this.playSelectedLevel());
+      row.addEventListener('pointerdown', event => { touchActivation = event.pointerType === 'touch'; });
+      row.addEventListener('pointercancel', () => { touchActivation = false; });
+      row.addEventListener('dblclick', () => {
+        if (!touchActivation && inputPrompts.family !== 'touch' && row.isConnected && this.screen === 'level-select') this.playSelectedLevel();
+      });
       list.append(row);
       if (definition.progressKey === this.levelSelectKey) this.selected = this.navButtons.indexOf(row);
     }
@@ -1362,6 +1402,8 @@ export class GameFlowUI {
 
   /** Headers and actions are fixed; only explicitly bounded content can scroll. */
   private boundMenuSegments(): void {
+    for (const list of this.panel.querySelectorAll<HTMLElement>('.game-launch-card > .game-menu-list, .game-pause-actions .game-menu-list'))
+      list.classList.add('game-scroll-segment');
     for (const card of this.panel.querySelectorAll<HTMLElement>('.game-slot-card, .game-options-card, .game-results-card')) {
       const content = card.querySelector<HTMLElement>('.game-save-slots, .game-toggle-list, .game-results-tally');
       if (content) content.classList.add('game-scroll-segment');
@@ -1485,7 +1527,7 @@ export class GameFlowUI {
     const content = element('div', 'game-trick-content game-scroll-segment');
     content.innerHTML = trickGuidePages()[this.trickGuidePage];
     for (const heading of content.querySelectorAll<HTMLElement>('[data-guide-prompt]')) {
-      heading.classList.add('secondary-silver');
+      if (heading.matches('h3')) heading.classList.add('secondary-silver');
       setPromptText(heading, heading.dataset.guidePrompt!);
     }
     guide.append(title, pager, intro, content); this.panel.append(guide);
@@ -1633,11 +1675,11 @@ export class GameFlowUI {
     button.type = "button";
     button.textContent = label;
     button.addEventListener("click", () => {
-      if (button.disabled || this.transitionActive) return;
+      if (button.disabled || this.transitionActive || this.startupLoading) return;
       action();
     });
-    button.addEventListener("pointerenter", () => {
-      if (this.pointerSelectionArmed) this.selectPointerButton(button);
+    button.addEventListener("pointerenter", (event) => {
+      if (event.pointerType !== "touch" && this.pointerSelectionArmed) this.selectPointerButton(button);
     });
     button.addEventListener("pointerdown", () => this.cancelScheduledFocus());
     button.addEventListener("focus", () => {
@@ -1660,6 +1702,7 @@ export class GameFlowUI {
   }
 
   private onKey(event: KeyboardEvent): void {
+    if (this.startupLoading) return;
     const target = event.target as HTMLElement | null;
     const editing = target && ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName);
     if (editing && !(event.code === "KeyM" && target instanceof HTMLInputElement && ["checkbox", "range", "button"].includes(target.type))) return;
@@ -1812,7 +1855,13 @@ export class GameFlowUI {
     if (this.screen === 'level-select' && selected?.dataset.levelKey) this.updateLevelSelectChoice(selected.dataset.levelKey);
     this.cancelScheduledFocus();
     if (focusSelected && selected && !selected.disabled) {
-      if (this.screen === 'level-select') selected.scrollIntoView?.({ block: 'nearest' });
+      const segment = selected.closest<HTMLElement>('.game-scroll-segment');
+      if (segment && typeof segment.getBoundingClientRect === 'function' && typeof selected.getBoundingClientRect === 'function') {
+        const bounds = segment.getBoundingClientRect(), target = selected.getBoundingClientRect();
+        const top = bounds.top + segment.clientTop, bottom = top + segment.clientHeight;
+        if (target.top < top) segment.scrollTop -= top - target.top;
+        else if (target.bottom > bottom) segment.scrollTop += target.bottom - bottom;
+      }
       this.focusFrame = requestAnimationFrame(() => {
         this.focusFrame = null;
         if (
@@ -1892,7 +1941,8 @@ export class GameFlowUI {
       if (
         !(child instanceof HTMLElement) ||
         child === this.root ||
-        child === this.transitionCurtain
+        child === this.transitionCurtain ||
+        child.id === 'game-boot-loading'
       )
         continue;
       if (this.debugVisible && this.isDeveloperChromeHost(child)) {
@@ -2112,6 +2162,9 @@ export class GameFlowUI {
       .game-transition-curtain[hidden] { display: none !important; }
       .game-transition-curtain.active { opacity: 1; pointer-events: auto; }
       .game-transition-curtain.active.vortex { background-color: rgba(0,0,0,.16); }
+      .game-transition-curtain.holding-loading-frame { background-color: #171526; }
+      .game-loading-held-frame { position:absolute; inset:0; width:100%; height:100%; object-fit:fill; }
+      .game-transition-curtain.holding-loading-frame::after { content:'LOADING'; position:absolute; left:50%; bottom:max(6vh,env(safe-area-inset-bottom)); transform:translateX(-50%); color:#fff4d6; font:700 16px/1.4 ui-monospace,monospace; letter-spacing:.15em; }
       body.game-shell-transitioning .game-shell-panel { opacity: 0; pointer-events: none; }
       body.game-shell-transitioning .game-hud-layer,
       body.game-shell-transitioning .tc-zone,

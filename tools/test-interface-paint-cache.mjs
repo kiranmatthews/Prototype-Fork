@@ -96,12 +96,26 @@ const beforeDirect = paints;
 surface.draw(renderer, size, null); assert.equal(paints, beforeDirect + 1, 'direct Retina raster must invalidate 1x offscreen ink');
 surface.draw(renderer, size, null); assert.equal(paints, beforeDirect + 1);
 
+for (const loadingClass of ['game-shell-transitioning', 'game-startup-loading']) {
+  const beforeLoading = { paints, composites };
+  body.className = loadingClass;
+  draw();
+  assert.equal(paints, beforeLoading.paints, 'loading must not repaint menu hints');
+  assert.equal(composites, beforeLoading.composites, 'loading must not composite stale interface ink');
+  context.loadingPrompts = vm.runInContext('sampleInputPrompts(document)', context);
+  assert.equal(context.loadingPrompts.glyphs.length, 0);
+  assert.equal(context.loadingPrompts.words.length, 0);
+  body.className = '';
+  draw();
+  assert.equal(paints, beforeLoading.paints + 1, 'destination must replace the pre-loading interface cache');
+}
+
 // Prompt snapshots are immutable paint evidence even if the DOM changes before
 // painting. Shared ancestry is read once for all glyphs/words in one sample.
 glyphNodes = [prompt]; wordNodes = [word]; prompt.excluded = false; body.style.opacity = '1'; root.style.opacity = '1';
 cssReads = 0;
 const frame = vm.runInContext('sampleInputPrompts(document)', context);
-assert.equal(cssReads, 5, 'one read per glyph, word and ancestor plus word text style');
+assert.equal(cssReads, 4, 'one shared style read per glyph, word and ancestor');
 const oldWord = frame.words[0].text, oldX = frame.glyphs[0].rect.x;
 word.textContent = 'Changed later'; prompt.rect.x += 100;
 context.frame = frame;
@@ -110,4 +124,21 @@ vm.runInContext('paintInputPrompts(globalCanvas, document, undefined, frame)', O
 assert.equal(cssReads, readsBeforePaint, 'painting a snapshot must not reread DOM');
 assert.equal(frame.words[0].text, oldWord); assert.equal(frame.glyphs[0].rect.x, oldX);
 assert.ok(calls.some(call => call[0] === 'fillText' && call[1] === oldWord));
+
+// A guide recipe's mirrored glyphs/words obey the bounded scroll viewport,
+// including partial clipping and complete removal after a swipe.
+root.style.overflowX = root.style.overflowY = 'auto';
+root.rect = { x: 0, y: 40, width: 150, height: 40 };
+prompt.rect = word.rect = { x: 10, y: 30, width: 80, height: 30 };
+context.clippedFrame = vm.runInContext('sampleInputPrompts(document)', context);
+assert.equal(context.clippedFrame.glyphs.length, 1);
+assert.deepEqual(JSON.parse(JSON.stringify(context.clippedFrame.glyphs[0].clip)), root.rect);
+assert.deepEqual(JSON.parse(JSON.stringify(context.clippedFrame.words[0].clip)), root.rect);
+const clipsBefore = calls.filter(call => call[0] === 'clip').length;
+vm.runInContext('paintInputPrompts(globalCanvas, document, undefined, clippedFrame)', context);
+assert.equal(calls.filter(call => call[0] === 'clip').length, clipsBefore + 2);
+prompt.rect.y = word.rect.y = 0;
+context.hiddenFrame = vm.runInContext('sampleInputPrompts(document)', context);
+assert.equal(context.hiddenFrame.glyphs.length, 0);
+assert.equal(context.hiddenFrame.words.length, 0);
 console.log('PASS exact interface texture reuse, CSS/focus/content/asset/font/viewport/DPR/context invalidation, hidden reveal, prompt snapshot parity and shared ancestor reads');

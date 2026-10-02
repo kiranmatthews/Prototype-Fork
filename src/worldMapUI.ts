@@ -234,9 +234,14 @@ export class WorldMapUI {
       body.tc-on .world-map-enter-touch:disabled { opacity:.35; cursor:default; }
       body.tc-on .world-map-enter-touch:focus-visible { outline:3px solid white; outline-offset:3px; }
       @media (orientation:portrait) {
-        body.tc-on .world-map-action .input-glyph { --prompt-icon-size:28px; }
-        body.tc-on:not([data-prompt-family="touch"]) .world-map-action { padding-inline:4px; gap:4px; }
-        body.tc-on .world-map-actions { grid-template-columns:repeat(2,max-content); column-gap:12px; }
+        body.tc-on .world-map-actions {
+          left:max(12px,env(safe-area-inset-left)); right:max(12px,env(safe-area-inset-right));
+          width:auto; max-width:none; transform:none;
+          grid-template-columns:repeat(2,minmax(0,1fr)); column-gap:8px;
+        }
+        body.tc-on .world-map-action { min-width:0; padding-inline:2px; gap:4px; justify-content:center; }
+        body.tc-on .world-map-action strong { font-size:clamp(14px,4vw,20px); }
+        body.tc-on .world-map-action .input-glyph { --prompt-icon-size:clamp(22px,6vw,28px); }
       }
     `;
     document.head.appendChild(style);

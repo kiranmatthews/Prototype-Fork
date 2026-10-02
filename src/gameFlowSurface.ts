@@ -79,6 +79,9 @@ export interface GameFlowSurfaceButton {
   valueColor: string;
   pngFilter?: string;
   stacked?: boolean;
+  paddingLeft?: number;
+  paddingRight?: number;
+  gap?: number;
   opacity: number;
   fontFamily: string;
   fontSize: number;
@@ -342,7 +345,7 @@ export function snapshotGameFlowSurface(
     // box. Keep the menu logo aligned with its CSS layout after rasterisation.
     const launchEyebrow = node.matches(".game-launch-card .game-eyebrow");
     const logoRow = node.matches(".game-logo > span, .game-logo > strong");
-    const rect = measuredRect && (launchEyebrow || logoRow)
+    let rect = measuredRect && (launchEyebrow || logoRow)
       ? Object.freeze({
           ...measuredRect,
           y:
@@ -353,6 +356,12 @@ export function snapshotGameFlowSurface(
     if (!text || !rect) continue;
     const style = getComputedStyle(node);
     if (style.display === "none" || style.visibility === "hidden") continue;
+    if (node.matches('.game-trick-content td, .game-trick-content th')) {
+      const left=finiteCssNumber(style.paddingLeft,0),right=finiteCssNumber(style.paddingRight,0);
+      const top=finiteCssNumber(style.paddingTop,0),bottom=finiteCssNumber(style.paddingBottom,0);
+      rect=Object.freeze({...rect,x:rect.x+left,y:rect.y+top,
+        width:Math.max(1,rect.width-left-right),height:Math.max(1,rect.height-top-bottom)});
+    }
     const size = finiteCssNumber(style.fontSize, 16);
     const strokeWidth = finiteCssNumber(
       style.getPropertyValue("-webkit-text-stroke-width"),
@@ -434,6 +443,9 @@ export function snapshotGameFlowSurface(
               .trim(),
         valueLabel: (value?.textContent ?? "").trim(),
         stacked: toggle && style.flexDirection === "column",
+        paddingLeft: finiteCssNumber(style.paddingLeft, 25),
+        paddingRight: finiteCssNumber(style.paddingRight, 25),
+        gap: finiteCssNumber(style.columnGap, 12),
         color: levelRow || button.closest(".game-progress-ledger, .game-level-header") ? style.color : stableButtonColor(button, style.color),
         valueColor: value
           ? disabled
@@ -843,8 +855,9 @@ export class GameFlowSurface {
         // The Canvas mirror does not inherit flexbox shrinking/wrapping.
         // Fit the label and choice together, reserving a real gap even for
         // long values such as CLASSIC on a narrow options card.
-        const gap = 12;
-        const available = Math.max(1, rect.width - 50 - gap);
+        const left = button.paddingLeft ?? 25, right = button.paddingRight ?? 25;
+        const gap = button.gap ?? 12;
+        const available = Math.max(1, rect.width - left - right - gap);
         const usesRoo=/\bRoo\b/.test(button.fontFamily);
         const measure=(text:string)=>usesRoo?(layoutRooAtlas(ROO_ATLAS_METRICS.counter,rooMenuText(text),getRooAppearance().tracking)?.width??0)*button.fontSize*.882:ctx.measureText(text).width;
         const textWidth = measure(button.label)+measure(button.valueLabel);
@@ -852,12 +865,12 @@ export class GameFlowSurface {
         ctx.font = `${button.fontWeight} ${button.fontSize * fit}px ${button.fontFamily}`;
         ctx.textAlign = "left";
         ctx.fillStyle = button.color;
-        if(!usesRoo||!png(rooMenuText(button.label),rect.x+25,rect.y+rect.height/2,{size:button.fontSize*fit*.882,palette:button.rooPalette,align:'left'}))ctx.fillText(button.label,rect.x+25,rect.y+rect.height/2);
+        if(!usesRoo||!png(rooMenuText(button.label),rect.x+left,rect.y+rect.height/2,{size:button.fontSize*fit*.882,palette:button.rooPalette,align:'left'}))ctx.fillText(button.label,rect.x+left,rect.y+rect.height/2);
         ctx.textAlign = "right";
         ctx.fillStyle = button.valueColor;
-        if(!usesRoo||!png(rooMenuText(button.valueLabel),rect.x+rect.width-25,rect.y+rect.height/2,{size:button.fontSize*fit*.882,palette:button.rooPalette,align:'right'}))ctx.fillText(
+        if(!usesRoo||!png(rooMenuText(button.valueLabel),rect.x+rect.width-right,rect.y+rect.height/2,{size:button.fontSize*fit*.882,palette:button.rooPalette,align:'right'}))ctx.fillText(
           button.valueLabel,
-          rect.x + rect.width - 25,
+          rect.x + rect.width - right,
           rect.y + rect.height / 2,
         );
       } else {

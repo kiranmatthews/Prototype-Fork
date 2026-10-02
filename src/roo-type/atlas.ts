@@ -19,10 +19,29 @@ type Palette = 'bonus' | 'counter';
 let images: Record<Palette,HTMLImageElement[]>={bonus:[],counter:[]};
 let loading:Promise<void>|null=null;
 let cap = displayAtlasCap(), revision = 0;
+let degraded = false;
 export const ROO_ATLAS_EVENT = 'roo-atlas-resolution-change';
 
 export function rooAtlasDiagnostics() {
-  return { cap, revision, decodedBytes: Object.values(images).flat().reduce((sum, image) => sum + image.naturalWidth * image.naturalHeight * 4, 0) };
+  return { cap, revision, ready: rooAtlasPaletteReady('bonus') && rooAtlasPaletteReady('counter'), degraded, decodedBytes: [...new Set(Object.values(images).flat())].reduce((sum, image) => sum + image.naturalWidth * image.naturalHeight * 4, 0) };
+}
+
+export const rooAtlasPaletteReady = (palette: Palette): boolean => !!images[palette][0]?.naturalWidth;
+
+async function decodedAtlas(palette: Palette, frame: number, size: RooAtlasCap): Promise<HTMLImageElement | null> {
+  return new Promise(resolve => {
+    const image = new Image(); image.decoding = 'async';
+    const url = atlasUrl(palette, frame, size);
+    trackPresentationImage(image, url);
+    image.onload = async () => {
+      // A load event can precede image decoding on Safari. Do not publish an
+      // SVG/Canvas atlas until its pixels can actually be painted.
+      try { await image.decode?.(); } catch { /* Loaded pixels remain usable. */ }
+      resolve(image.naturalWidth ? image : null);
+    };
+    image.onerror = () => resolve(null);
+    image.src = url;
+  });
 }
 
 export function loadRooAtlases():Promise<void> {
@@ -30,20 +49,31 @@ export function loadRooAtlases():Promise<void> {
   if(!loading) loading=(async()=>{
     const requested = displayAtlasCap();
     const next: typeof images = {bonus:[],counter:[]};
+    let incomplete = false;
     // Six simultaneous full-size decodes used to add ~190 MiB at startup.
-    for (const palette of ['bonus','counter'] as const) for (let frame=0;frame<(ROO_ATLAS_METRICS[palette].lightFrames??1);frame++) {
-      await new Promise<void>(resolve=>{
-        const image=new Image();image.decoding='async';
-        const url=atlasUrl(palette,frame,requested);
-        trackPresentationImage(image,url);
-        image.onload=()=>{next[palette][frame]=image;resolve();};
-        image.onerror=()=>resolve();
-        image.src=url;
-      });
+    for (const palette of ['bonus','counter'] as const) {
+      let size = requested, neutral = await decodedAtlas(palette, 0, size);
+      // A stale/offline cache can contain another resolution. A missing light
+      // frame must never throw away the successfully decoded neutral letters.
+      for (const fallback of [128,256,512] as const) {
+        if (neutral) break;
+        if (fallback === requested) continue;
+        size = fallback; neutral = await decodedAtlas(palette, 0, size);
+      }
+      if (!neutral) { incomplete = true; continue; }
+      if (size !== requested) incomplete = true;
+      next[palette][0] = neutral;
+      for (let frame=1;frame<(ROO_ATLAS_METRICS[palette].lightFrames??1);frame++) {
+        const light = await decodedAtlas(palette,frame,size);
+        if (!light) incomplete = true;
+        next[palette][frame] = light ?? neutral;
+      }
     }
-    // Publish a complete set together; never mix lighting frames/resolutions.
-    if ((['bonus','counter'] as const).every(p=>next[p].filter(Boolean).length===(ROO_ATLAS_METRICS[p].lightFrames??1))) {
-      images=next;cap=requested;revision++;
+    degraded = incomplete;
+    // Publish once, retaining an existing good palette if an upgrade failed.
+    if ((['bonus','counter'] as const).some(p=>next[p][0])) {
+      for (const palette of ['bonus','counter'] as const) if (next[palette][0]) images[palette] = next[palette];
+      cap=requested;revision++;
       window.dispatchEvent(new Event(ROO_ATLAS_EVENT));
     }
   })();
@@ -51,6 +81,10 @@ export function loadRooAtlases():Promise<void> {
 }
 
 if (typeof window !== 'undefined') {
+  window.addEventListener('online', async () => {
+    await loading;
+    if(degraded){loading=null;await loadRooAtlases();}
+  });
   let resizeTimer: ReturnType<typeof setTimeout>;
   window.addEventListener('resize',()=>{
     clearTimeout(resizeTimer);
@@ -86,7 +120,7 @@ export function layoutRooAtlas(metrics:RooAtlasMetrics,raw:string,tracking=0) {
 }
 
 function atlasUrl(palette:Palette,frame:number,size:RooAtlasCap){return `${import.meta.env.BASE_URL}fonts/roo-${palette}-v${ROO_ATLAS_METRICS[palette].version}${frame?'-light'+frame:''}${size===512?'':'-cap'+size}.png`;}
-export function rooAtlasUrl(palette:Palette,frame=0){return atlasUrl(palette,frame,cap);}
+export function rooAtlasUrl(palette:Palette,frame=0){return images[palette][frame]?.src ?? atlasUrl(palette,frame,cap);}
 
 export function rooAtlasGlyphRect(metrics:RooAtlasMetrics,entry:{char:string;x:number;y:number;sx:number;sy:number}){
   const g=metrics.glyphs[entry.char];
@@ -106,7 +140,7 @@ export class RooAtlasPainter {
   private frameCanvas:HTMLCanvasElement|null=null;
   private revision=-1;
   constructor(){void loadRooAtlases();}
-  get ready(){return Boolean(images.bonus[0]&&images.counter[0]);}
+  get ready(){return rooAtlasPaletteReady('bonus')&&rooAtlasPaletteReady('counter');}
   get lightingReady(){return (['bonus','counter'] as const).every(p=>[0,1,2].every(i=>!!images[p][i]));}
   private release(item: RooTextRaster): void {
     item.canvas.width=item.canvas.height=1;

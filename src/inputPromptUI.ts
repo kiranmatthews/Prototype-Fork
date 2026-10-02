@@ -65,6 +65,7 @@ type PromptPaintInput = string | number;
 interface PromptPaintRect { x: number; y: number; width: number; height: number; }
 interface PromptGlyphPaint {
   rect: PromptPaintRect;
+  clip: PromptPaintRect;
   opacity: number;
   image: HTMLImageElement;
   ready: boolean;
@@ -72,6 +73,7 @@ interface PromptGlyphPaint {
 }
 interface PromptWordPaint {
   rect: PromptPaintRect;
+  clip: PromptPaintRect;
   opacity: number;
   font: string;
   color: string;
@@ -85,11 +87,42 @@ export interface InputPromptPaintFrame {
 }
 export function sampleInputPrompts(scope: ParentNode = document, exclude?: string): InputPromptPaintFrame {
   const inputs: PromptPaintInput[] = [], glyphs: PromptGlyphPaint[] = [], words: PromptWordPaint[] = [];
+  // The pre-CRT panel's opacity is deliberately ignored below. Loading also
+  // hides that panel, so its explicit owner must suppress the mirrored hints.
+  if (document.body.classList.contains('game-shell-transitioning') || document.body.classList.contains('game-startup-loading')) return { inputs, glyphs, words };
   const opacities = new Map<HTMLElement, number>();
+  const styles = new Map<HTMLElement, CSSStyleDeclaration>();
+  const styleOf = (element: HTMLElement): CSSStyleDeclaration => {
+    let style=styles.get(element);
+    if(!style){style=getComputedStyle(element);styles.set(element,style);}
+    return style;
+  };
+  const clips = new Map<HTMLElement, PromptPaintRect>();
+  const viewport = {x:0,y:0,width:window.innerWidth,height:window.innerHeight};
+  const clipOf = (element: HTMLElement): PromptPaintRect => {
+    const cached=clips.get(element);if(cached)return cached;
+    const parent=element.parentElement;
+    if(!parent)return viewport;
+    const inherited=clipOf(parent),style=styleOf(parent);
+    const clipsX=/^(auto|scroll|hidden|clip)$/.test(style.overflowX||style.overflow);
+    const clipsY=/^(auto|scroll|hidden|clip)$/.test(style.overflowY||style.overflow);
+    let clip=inherited;
+    if(clipsX||clipsY){
+      const r=parent.getBoundingClientRect(),left=r.x+(parent.clientLeft||0),top=r.y+(parent.clientTop||0);
+      const width=Number.isFinite(parent.clientWidth)?parent.clientWidth:r.width;
+      const height=Number.isFinite(parent.clientHeight)?parent.clientHeight:r.height;
+      const x=clipsX?Math.max(inherited.x,left):inherited.x,y=clipsY?Math.max(inherited.y,top):inherited.y;
+      const right=clipsX?Math.min(inherited.x+inherited.width,left+width):inherited.x+inherited.width;
+      const bottom=clipsY?Math.min(inherited.y+inherited.height,top+height):inherited.y+inherited.height;
+      clip={x,y,width:Math.max(0,right-x),height:Math.max(0,bottom-y)};
+    }
+    clips.set(element,clip);return clip;
+  };
+  const intersects=(rect:PromptPaintRect,clip:PromptPaintRect)=>clip.width>0&&clip.height>0&&rect.x+rect.width>clip.x&&rect.x<clip.x+clip.width&&rect.y+rect.height>clip.y&&rect.y<clip.y+clip.height;
   const opacityOf = (element: HTMLElement): number => {
     const cached = opacities.get(element);
     if (cached !== undefined) return cached;
-    const style = getComputedStyle(element);
+    const style = styleOf(element);
     let opacity = 0;
     if (style.display !== 'none' && style.visibility !== 'hidden' && !element.hidden) {
       const composed = element.matches('.game-hud-layer.precrt-composited') || element.matches('.game-shell.precrt-composited .game-shell-panel') || element.matches('.competition-host[data-precrt-composited]');
@@ -102,31 +135,34 @@ export function sampleInputPrompts(scope: ParentNode = document, exclude?: strin
     if (exclude && host.closest(exclude)) continue;
     const opacity = opacityOf(host); if (opacity < .001) continue;
     const rect = host.getBoundingClientRect(); if (rect.width < 1 || rect.height < 1) continue;
+    const clip=clipOf(host);if(!intersects(rect,clip))continue;
     const glyph = inputPrompts.resolve(host.dataset.inputAction as InputAction); if (!glyph) continue;
     const image = imageFor(glyph), ready = image.complete && image.naturalWidth > 0;
-    glyphs.push({ rect, opacity, image, ready, label: glyph.label });
-    inputs.push('glyph', rect.x, rect.y, rect.width, rect.height, opacity, glyph.url, glyph.label, Number(ready));
+    glyphs.push({ rect, clip, opacity, image, ready, label: glyph.label });
+    inputs.push('glyph', rect.x, rect.y, rect.width, rect.height, clip.x,clip.y,clip.width,clip.height,opacity, glyph.url, glyph.label, Number(ready));
   }
   for (const word of scope.querySelectorAll<HTMLElement>('[data-prompt-word]')) {
     if (exclude && word.closest(exclude)) continue;
     const opacity = opacityOf(word); if (opacity < .001) continue;
-    const rect = word.getBoundingClientRect(), style = getComputedStyle(word);
+    const rect = word.getBoundingClientRect(), style = styleOf(word),clip=clipOf(word);
+    if(!intersects(rect,clip))continue;
     const font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`, color = style.color, text = (word.textContent ?? '').trimEnd();
-    words.push({ rect, opacity, font, color, text });
-    inputs.push('word', rect.x, rect.y, rect.width, rect.height, opacity, font, color, text);
+    words.push({ rect, clip, opacity, font, color, text });
+    inputs.push('word', rect.x, rect.y, rect.width, rect.height,clip.x,clip.y,clip.width,clip.height, opacity, font, color, text);
   }
   return { inputs, glyphs, words };
 }
 /** CSS-pixel coordinates in the shared pre-CRT interface renderer. */
 export function paintInputPrompts(ctx: CanvasRenderingContext2D, scope: ParentNode = document, exclude?: string, sampled?: InputPromptPaintFrame): void {
   const frame = sampled ?? sampleInputPrompts(scope, exclude);
-  for (const { rect, opacity, image, ready, label } of frame.glyphs) {
+  for (const { rect, clip, opacity, image, ready, label } of frame.glyphs) {
     ctx.save(); ctx.globalAlpha *= opacity;
+    ctx.beginPath();ctx.rect(clip.x,clip.y,clip.width,clip.height);ctx.clip();
     if (ready) ctx.drawImage(image, rect.x, rect.y, rect.width, rect.height);
     else { ctx.fillStyle = '#292929'; ctx.beginPath(); ctx.roundRect(rect.x + 2, rect.y + 2, rect.width - 4, rect.height - 4, rect.height / 4); ctx.fill(); ctx.fillStyle = '#fff'; ctx.font = `700 ${Math.max(8, rect.height * .28)}px sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, rect.x + rect.width / 2, rect.y + rect.height / 2, rect.width - 6); }
     ctx.restore();
   }
-  for (const { rect, opacity, font, color, text } of frame.words) {
-    ctx.save(); ctx.globalAlpha *= opacity; ctx.font = font; ctx.fillStyle = color; ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillText(text, rect.x, rect.y + rect.height / 2, rect.width); ctx.restore();
+  for (const { rect, clip, opacity, font, color, text } of frame.words) {
+    ctx.save(); ctx.globalAlpha *= opacity;ctx.beginPath();ctx.rect(clip.x,clip.y,clip.width,clip.height);ctx.clip();ctx.font = font; ctx.fillStyle = color; ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillText(text, rect.x, rect.y + rect.height / 2, rect.width); ctx.restore();
   }
 }

@@ -66,6 +66,13 @@ export class GameInterfaceSurface {
   private drawShared(renderer: THREE.WebGLRenderer, size: { width: number; height: number }, target: THREE.WebGLRenderTarget | null): void {
     this.cursorDrawn = false;
     this.measurements.clear();
+    // Retire the cached menu/map/touch ink while the loading scene owns the
+    // framebuffer. Reopening it must sample a fresh destination frame.
+    if (document.body.classList.contains('game-shell-transitioning') || document.body.classList.contains('game-startup-loading')) {
+      this.paintInputs = null;
+      this.cachedCursorDrawn = false;
+      return;
+    }
     if (this.observedRenderer !== renderer) {
       this.observedRenderer?.domElement.removeEventListener('webglcontextrestored', this.invalidate);
       this.observedRenderer = renderer;

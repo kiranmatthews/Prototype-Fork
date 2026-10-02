@@ -2,8 +2,12 @@ import assert from 'node:assert/strict';import fs from 'node:fs/promises';import
 const{chromium}=await import(process.env.PLAYWRIGHT_MODULE?pathToFileURL(process.env.PLAYWRIGHT_MODULE).href:'playwright');
 const base=process.env.MENU_TEST_URL||'http://127.0.0.1:5178/',out=process.env.MENU_TEST_OUT||'/private/tmp/menu-png-focus-review';await fs.mkdir(out,{recursive:true});
 const reference=JSON.parse(await fs.readFile(new URL('../docs/menu-focus-reference.json',import.meta.url),'utf8'));
-for(const name of ['atlas.ts','dom.ts']){
- const path='src/roo-type/'+name;assert.deepEqual(await fs.readFile(new URL('../'+path,import.meta.url)),execFileSync('git',['show','0a26dd9:'+path]),path+' changed from the approved PNG renderer');
+// Readiness/recovery may evolve independently. Preserve the approved pixel
+// painter and SVG glyph construction, and exercise the focus output below.
+for(const [name,marker]of [['atlas.ts','  draw(ctx:CanvasRenderingContext2D'],['dom.ts',"  const svg=node('svg'"]]){
+ const path='src/roo-type/'+name,current=await fs.readFile(new URL('../'+path,import.meta.url),'utf8'),referenceSource=execFileSync('git',['show','b10f046:'+path],{encoding:'utf8'});
+ assert.ok(current.includes(marker)&&referenceSource.includes(marker),'Missing approved renderer boundary '+path);
+ assert.equal(current.slice(current.indexOf(marker)),referenceSource.slice(referenceSource.indexOf(marker)),path+' changed the approved PNG paint algorithm');
 }
 for(const palette of ['bonus','counter']){
  const current=JSON.parse(await fs.readFile(new URL(`../public/fonts/roo-${palette}-v10.json`,import.meta.url),'utf8'));

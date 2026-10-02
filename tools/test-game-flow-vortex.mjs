@@ -146,14 +146,16 @@ assert.match(
   "full-screen cover must use the selected context preset's radius",
 );
 
-const policy = flow.match(/get vortexContext\(\): GameFlowVortexContext \| null \{[\s\S]*?\n  \}/)?.[0] ?? "";
-assert.match(policy, /if \(this\.loadingVortexActive\) return "warp";/);
+const owner = flow.match(/get vortexContext\(\): GameFlowVortexContext \| null \{[\s\S]*?\n  \}/)?.[0] ?? "";
+assert.match(owner, /if \(this\.loadingVortexActive\) return "warp";/);
+assert.match(owner, /return this\.destinationVortexContext;/);
+const policy = flow.match(/get destinationVortexContext\(\): GameFlowVortexContext \| null \{[\s\S]*?\n  \}/)?.[0] ?? "";
 assert.match(policy, /if \(this\.screen === "gameover"\) return "gameover";/);
 for (const screen of ["launch", "new-slots", "load-slots", "confirm-new"])
   assert.ok(policy.includes(`this.screen === "${screen}"`), `${screen} lost menu-vortex ownership`);
 assert.match(policy, /return "menu";/);
 assert.ok(
-  policy.indexOf("this.loadingVortexActive") < policy.indexOf('this.screen === "gameover"'),
+  owner.indexOf("this.loadingVortexActive") < owner.indexOf('return this.destinationVortexContext'),
   "warp/loading must take precedence while leaving Game Over",
 );
 assert.ok(!policy.includes('this.screen === "pause"'), "Pause must retain frozen gameplay");

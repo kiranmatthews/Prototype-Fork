@@ -149,8 +149,8 @@
 .game-progress-grid strong { font-size:clamp(18px,3.6vh,40px); }
 .game-progress-grid small { font:clamp(10px,2vh,22px)/1.3 Roo,Impact,sans-serif; color:#ffda8f; }
 .game-progress-cleared { display:block; flex:none; font-size:clamp(10px,1.8vh,20px); text-align:center; margin:2vh 0 0; }
-body[data-prompt-family="touch"] .game-control-hint { display:none !important; }
-body[data-prompt-family="touch"] .game-menu-button.game-map-close {
+:is(body[data-prompt-family="touch"],body.tc-on) .game-control-hint { display:none !important; }
+:is(body[data-prompt-family="touch"],body.tc-on) .game-menu-button.game-map-close {
   display:flex; align-items:center; justify-content:center; position:absolute;
   top:1.2vh; right:1.5vw; width:48px; height:48px; min-height:48px; padding:0;
 }
@@ -344,46 +344,158 @@ body.game-flow-vortex .game-shell:has(.game-screen-launch)::before {
 .game-screen-results { place-items:center end; }
 .game-trick-content th,.game-trick-content td { padding:.4vh 1vw; }
 .game-trick-content .input-glyph { --prompt-icon-size:1.5em; }
+.game-trick-content td.input-prompt-row { display:table-cell; }
+.game-trick-content td.input-prompt-row .input-glyph { margin-right:.28em; }
 @media(max-aspect-ratio:1/1) { .game-screen-results { place-items:end center; } }
+@media(max-width:600px) and (max-aspect-ratio:1/1) {
+  .game-trick-content table { table-layout:fixed; font-size:14px; }
+  .game-trick-content td,.game-trick-content th { padding:6px 4px; vertical-align:middle; }
+  .game-trick-content :is(td,th):nth-child(1) { width:34%; }
+  .game-trick-content :is(td,th):nth-child(2) { width:46%; }
+  .game-trick-content :is(td,th):nth-child(3) { width:20%; }
+}
+
+/* Touch menus use physical targets rather than shrinking with viewport height.
+   Their middle regions may scroll; titles, close and final actions stay fixed. */
+:is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel {
+  padding:max(60px,calc(env(safe-area-inset-top) + 56px)) max(16px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
+}
+:is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel:is(.game-screen-launch,.game-screen-results,.game-screen-gameover) {
+  padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
+}
+:is(body[data-prompt-family="touch"],body.tc-on) .game-shell .game-menu-button {
+  min-width:48px; min-height:48px; flex-shrink:0; touch-action:manipulation;
+}
+:is(body[data-prompt-family="touch"],body.tc-on) .game-menu-hints { display:none; }
+:is(body[data-prompt-family="touch"],body.tc-on) .game-shell .game-map-close {
+  top:max(8px,env(safe-area-inset-top)); right:max(12px,env(safe-area-inset-right));
+}
+.game-pause-actions .game-menu-list,.game-options-layout .game-toggle-list {
+  overflow-x:hidden; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin;
+}
+.game-options-layout .game-toggle-list > *,.game-pause-actions .game-menu-list > .game-menu-button {
+  flex-shrink:0;
+}
+:is(body[data-prompt-family="touch"],body.tc-on) .game-pause-actions .game-menu-list {
+  justify-content:flex-start; gap:6px; touch-action:pan-y;
+}
+:is(body[data-prompt-family="touch"],body.tc-on) .game-pause-actions .game-menu-button {
+  flex:none; font-size:clamp(18px,4.7vw,30px); padding:8px 4px;
+}
+:is(body[data-prompt-family="touch"],body.tc-on) .game-options-layout .game-toggle-list {
+  justify-content:flex-start; gap:6px; touch-action:pan-y;
+}
+:is(body[data-prompt-family="touch"],body.tc-on) .game-options-layout .game-menu-button {
+  font-size:clamp(17px,4.5vw,27px); padding:8px 4px;
+}
+:is(body[data-prompt-family="touch"],body.tc-on) .game-options-layout .game-toggle {
+  min-height:48px; gap:6px; flex-direction:row; flex-wrap:wrap; justify-content:space-between;
+}
+:is(body[data-prompt-family="touch"],body.tc-on) .game-options-layout .game-panel-subtitle {
+  font-size:clamp(12px,3.4vw,17px); line-height:1.3;
+}
+:is(body[data-prompt-family="touch"],body.tc-on) .game-launch-card {
+  width:100%; padding:0; display:flex; flex-direction:column;
+}
+:is(body[data-prompt-family="touch"],body.tc-on) .game-launch-card .game-logo { flex:none; margin:0 0 16px; }
+:is(body[data-prompt-family="touch"],body.tc-on) .game-launch-card > .game-menu-list {
+  min-height:0; gap:6px; overflow:auto; overscroll-behavior:contain; touch-action:pan-y;
+}
+:is(body[data-prompt-family="touch"],body.tc-on) .game-launch-card .game-menu-button { padding:8px; }
+:is(body[data-prompt-family="touch"],body.tc-on) .game-slot-card.game-save-browser { padding:0; }
+:is(body[data-prompt-family="touch"],body.tc-on) .game-save-browser .game-save-slots { gap:10px; }
+:is(body[data-prompt-family="touch"],body.tc-on) .game-save-actions { gap:8px; margin-top:10px; }
+:is(body[data-prompt-family="touch"],body.tc-on) .game-save-actions .game-menu-button {
+  flex:1; font-size:clamp(16px,4.5vw,24px); padding:6px;
+}
+:is(body[data-prompt-family="touch"],body.tc-on) .game-save-browser .game-slot-date { font-size:clamp(10px,2.6vw,14px); }
+:is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel[class*="game-screen-confirm-"] .game-options-card {
+  width:min(900px,100%); padding:16px; gap:12px;
+}
+:is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel[class*="game-screen-confirm-"] .game-panel-title {
+  font-size:clamp(26px,6.8vw,42px); line-height:1.05;
+}
+:is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel[class*="game-screen-confirm-"] .game-panel-subtitle {
+  margin:0; font-size:clamp(14px,3.8vw,20px); line-height:1.3;
+}
+:is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel[class*="game-screen-confirm-"] .game-menu-list {
+  min-height:0; gap:6px;
+}
+:is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel[class*="game-screen-confirm-"] .game-menu-button {
+  font-size:clamp(18px,4.8vw,28px); padding:8px;
+}
+:is(body[data-prompt-family="touch"],body.tc-on) .game-trick-pager .game-menu-button { padding:0; }
+:is(body[data-prompt-family="touch"],body.tc-on) .game-trick-content { touch-action:pan-y; overflow-x:hidden; }
+:is(body[data-prompt-family="touch"],body.tc-on) .game-results-card { max-height:100%; }
+:is(body[data-prompt-family="touch"],body.tc-on) .game-results-actions { gap:6px; margin-top:8px; }
+:is(body[data-prompt-family="touch"],body.tc-on) .game-results-actions .game-menu-button {
+  font-size:clamp(18px,5vw,30px); padding:8px;
+}
+:is(body[data-prompt-family="touch"],body.tc-on) .game-over-actions { width:max(96px,26vw); }
+@media(max-aspect-ratio:1/1) {
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-options-layout .game-toggle {
+    flex-direction:column; flex-wrap:nowrap; justify-content:center; min-height:68px;
+  }
+}
+@media(max-height:500px) and (min-aspect-ratio:1/1) {
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-launch-card { width:min(800px,100%); }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-launch-card .game-logo span { font-size:clamp(40px,20vh,90px); }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-launch-card > .game-menu-list {
+    width:100%; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); grid-auto-rows:minmax(48px,1fr);
+  }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel[class*="game-screen-confirm-"] .game-options-card { gap:8px; padding:12px; }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel[class*="game-screen-confirm-"] .game-panel-title { font-size:26px; }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel[class*="game-screen-confirm-"] .game-panel-subtitle { font-size:15px; }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel[class*="game-screen-confirm-"] .game-menu-list {
+    display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-screen-confirm-quit-main .game-menu-list { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-save-browser .game-slot-number,
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-save-browser .game-slot-detail { font-size:16px; }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-save-browser .game-slot-level { font-size:14px; }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-save-browser .game-panel-subtitle { margin:6px 0; }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-results-actions { flex-direction:row; }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-results-actions .game-menu-button { flex:1; }
+}
 
 /* Touch needs real hit targets; only the level list scrolls inside the TV frame. */
-body[data-prompt-family="touch"] .game-shell-panel.game-screen-level-select {
+:is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel.game-screen-level-select {
   padding:max(12px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
 }
-body[data-prompt-family="touch"] .game-level-select-layout {
+:is(body[data-prompt-family="touch"],body.tc-on) .game-level-select-layout {
   grid-template-rows:64px minmax(0,1fr); gap:12px;
 }
-body[data-prompt-family="touch"] .game-level-header {
+:is(body[data-prompt-family="touch"],body.tc-on) .game-level-header {
   width:100%; box-sizing:border-box; padding-inline:56px;
   grid-template-columns:48px minmax(0,1fr) 48px;
 }
-body[data-prompt-family="touch"] .game-island-arrow { min-width:48px; min-height:48px; padding:0; }
-body[data-prompt-family="touch"] .game-island-pages { margin:4px 0 0; }
-body[data-prompt-family="touch"] .game-level-footer { display:none; }
-body[data-prompt-family="touch"] .game-level-browser { grid-template-rows:minmax(0,.4fr) minmax(0,1fr); }
-body[data-prompt-family="touch"] .game-level-list {
+:is(body[data-prompt-family="touch"],body.tc-on) .game-island-arrow { min-width:48px; min-height:48px; padding:0; }
+:is(body[data-prompt-family="touch"],body.tc-on) .game-island-pages { margin:4px 0 0; }
+:is(body[data-prompt-family="touch"],body.tc-on) .game-level-footer { display:none; }
+:is(body[data-prompt-family="touch"],body.tc-on) .game-level-browser { grid-template-rows:minmax(0,.4fr) minmax(0,1fr); }
+:is(body[data-prompt-family="touch"],body.tc-on) .game-level-list {
   grid-auto-rows:minmax(48px,1fr); gap:6px; overflow-x:hidden; touch-action:pan-y;
 }
-body[data-prompt-family="touch"] .game-level-row {
+:is(body[data-prompt-family="touch"],body.tc-on) .game-level-row {
   display:flex; align-items:center; justify-content:space-between; min-width:0; padding:6px 12px;
 }
-body[data-prompt-family="touch"] .game-level-label { min-width:0; }
-body[data-prompt-family="touch"] .game-level-mark { flex:none; }
-body[data-prompt-family="touch"] .game-screen-level-select .game-map-close {
+:is(body[data-prompt-family="touch"],body.tc-on) .game-level-label { min-width:0; }
+:is(body[data-prompt-family="touch"],body.tc-on) .game-level-mark { flex:none; }
+:is(body[data-prompt-family="touch"],body.tc-on) .game-screen-level-select .game-map-close {
   top:max(12px,env(safe-area-inset-top)); right:max(16px,env(safe-area-inset-right));
 }
 @media(max-aspect-ratio:1/1) {
-  body[data-prompt-family="touch"] .game-level-columns {
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-level-columns {
     grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);
     grid-template-rows:minmax(0,.7fr) minmax(0,1fr); gap:12px;
   }
-  body[data-prompt-family="touch"] .game-level-browser { display:contents; }
-  body[data-prompt-family="touch"] .game-level-preview { grid-column:1; grid-row:1; box-sizing:border-box; }
-  body[data-prompt-family="touch"] .game-level-detail { grid-column:2; grid-row:1; }
-  body[data-prompt-family="touch"] .game-level-list { grid-column:1/-1; grid-row:2; }
-  body[data-prompt-family="touch"] .game-level-rewards { gap:4px; margin:4px 0; }
-  body[data-prompt-family="touch"] .game-level-records { gap:2px; margin-top:4px; }
-  body[data-prompt-family="touch"] .game-reward-caption { font-size:clamp(10px,2.5vw,18px); white-space:nowrap; }
-  body[data-prompt-family="touch"] .game-level-record { font-size:clamp(12px,3.5vw,20px); }
-  body[data-prompt-family="touch"] .game-level-record-title { font-size:clamp(12px,3.5vw,20px); }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-level-browser { display:contents; }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-level-preview { grid-column:1; grid-row:1; box-sizing:border-box; }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-level-detail { grid-column:2; grid-row:1; }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-level-list { grid-column:1/-1; grid-row:2; }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-level-rewards { gap:4px; margin:4px 0; }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-level-records { gap:2px; margin-top:4px; }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-reward-caption { font-size:clamp(10px,2.5vw,18px); white-space:nowrap; }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-level-record { font-size:clamp(12px,3.5vw,20px); }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-level-record-title { font-size:clamp(12px,3.5vw,20px); }
 }

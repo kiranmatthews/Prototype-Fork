@@ -46,15 +46,17 @@ try {
       prepareVortex: async () => { clock += 700; },
       load: async () => { loadAt = clock; clock += loadMs; },
       waitForAssets: async () => { clock += 100; assetsReadyAt = clock; },
+      warmDestination: async () => { clock += 4500; },
       prepareDestination: async () => { clock += 450; },
     }, reduced);
-    assert.deepEqual(phases.map(p => p.phase), ['cover', 'prepare-vortex', 'vortex', 'cover-destination', 'prepare-destination', 'reveal']);
+    assert.deepEqual(phases.map(p => p.phase), ['cover', 'prepare-vortex', 'vortex', 'warm-destination', 'cover-destination', 'prepare-destination', 'reveal']);
     const at = name => phases.find(p => p.phase === name).time;
     const fade = reduced ? 20 : 360;
     assert.ok(at('vortex') >= at('prepare-vortex') + 700 + 32, 'vortex revealed before preparation painted');
     assert.ok(loadAt >= at('prepare-vortex') && loadAt < at('vortex'), 'synchronous build must happen under the opaque curtain');
     assert.ok(at('cover-destination') - at('vortex') - fade - 32 >= 2000, 'fast load shortened the visible vortex');
     assert.ok(at('cover-destination') >= assetsReadyAt, 'vortex left before assets settled');
+    assert.ok(at('cover-destination') >= at('warm-destination') + 4500, 'loader retired before destination GPU warmup');
     assert.ok(at('prepare-destination') >= at('cover-destination') + fade + 32, 'destination rendered before opaque black');
     assert.ok(at('reveal') >= at('prepare-destination') + 450 + 32, 'destination revealed before warm-up painted');
     assert.ok(clock >= at('reveal') + (reduced ? 20 : 520) + 32, 'input unlocked before reveal finished');
@@ -73,19 +75,20 @@ try {
     assert.deepEqual(phases, ['cover', 'prepare-destination', 'reveal']);
     assert.equal(clock, (reduced ? 40 : 880) + 150, 'black-only transition inherited a vortex dwell');
   }
-  const vortex = deferred(), load = deferred(), assets = deferred(), warm = deferred();
+  const vortex = deferred(), load = deferred(), assets = deferred(), warm = deferred(), destination = deferred();
   const flush = async () => { for (let i = 0; i < 20; i++) await Promise.resolve(); };
   const phases = [];
   const pending = runLoadingTransition({
     phase: phase => phases.push(phase), now: () => 0, wait: async () => {}, paint: async () => {},
     prepareVortex: () => vortex.promise, load: () => load.promise,
-    waitForAssets: () => assets.promise, prepareDestination: () => warm.promise,
+    waitForAssets: () => assets.promise, warmDestination: () => warm.promise, prepareDestination: () => destination.promise,
   }, false);
   await flush(); assert.equal(phases.at(-1), 'prepare-vortex');
   vortex.resolve(); await flush(); assert.equal(phases.at(-1), 'vortex');
   load.resolve(); await flush(); assert.equal(phases.at(-1), 'vortex');
-  assets.resolve(); await flush(); assert.equal(phases.at(-1), 'prepare-destination');
-  warm.resolve(); await pending; assert.equal(phases.at(-1), 'reveal');
+  assets.resolve(); await flush(); assert.equal(phases.at(-1), 'warm-destination');
+  warm.resolve(); await flush(); assert.equal(phases.at(-1), 'prepare-destination');
+  destination.resolve(); await pending; assert.equal(phases.at(-1), 'reveal');
 
   const manager = new THREE.LoadingManager();
   let starts = 0, ends = 0, errors = 0;

@@ -149,11 +149,13 @@ export function trackPresentationImage(image: HTMLImageElement, url: string): vo
     if (failed) manager.itemError(url);
     manager.itemEnd(url);
   };
-  image.addEventListener("load", () => finish(false), { once: true });
+  image.addEventListener("load", () => {
+    void Promise.resolve(image.decode?.()).catch(() => {}).then(() => finish(!image.naturalWidth));
+  }, { once: true });
   image.addEventListener("error", () => finish(true), { once: true });
 }
 
-export type LoadingTransitionPhase = "cover" | "prepare-vortex" | "vortex" | "cover-destination" | "prepare-destination" | "reveal";
+export type LoadingTransitionPhase = "cover" | "prepare-vortex" | "vortex" | "warm-destination" | "cover-destination" | "prepare-destination" | "reveal";
 export const MINIMUM_VORTEX_MS = 2000;
 
 export interface LoadingTransitionHooks {
@@ -161,6 +163,8 @@ export interface LoadingTransitionHooks {
   prepareVortex: () => Promise<void>;
   load: () => void | Promise<void>;
   waitForAssets: () => Promise<void>;
+  /** Upload/compile while the loader remains visible; do not replace its frame. */
+  warmDestination?: () => Promise<void>;
   prepareDestination: () => Promise<void>;
   now?: () => number;
   wait?: (milliseconds: number) => Promise<void>;
@@ -194,11 +198,14 @@ export async function runLoadingTransition(hooks: LoadingTransitionHooks, reduce
   await (loading??hooks.load());
   await hooks.waitForAssets();
   if (vortex) {
+    hooks.phase("warm-destination");
+    await hooks.warmDestination?.();
     await wait(Math.max(0, MINIMUM_VORTEX_MS - (now() - visibleAt)));
     hooks.phase("cover-destination");
     await wait(fade);
     await paint();
   }
+  else await hooks.warmDestination?.();
   hooks.phase("prepare-destination");
   await hooks.prepareDestination();
   await paint();
