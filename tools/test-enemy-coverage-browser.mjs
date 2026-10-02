@@ -6,6 +6,7 @@ const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=process.argv[2]||'http://127.0.0.1:5197/';
 const output=process.env.ENEMY_COVERAGE_OUTPUT||'/private/tmp/enemy-coverage';await mkdir(output,{recursive:true});
 const manifest=JSON.parse(await readFile(new URL('../public/enemies/manifest.json',import.meta.url),'utf8'));
+const nightworks=JSON.parse(await readFile(new URL('../public/enemies/nightworks-manifest.json',import.meta.url),'utf8'));
 const browser=await chromium.launch({headless:true,channel:'chrome'}),rows=[],errors=[];
 try{
  const page=await browser.newPage({viewport:{width:1280,height:720}});
@@ -26,14 +27,14 @@ try{
     level=new Level(scene,entry);await level.prepareJungleAssets();scene.updateMatrixWorld(true);
     const actors=level.enemies.map(e=>{let triangles=0,primitiveBoxes=0;const meshes=[];
      e.group.traverse(o=>{if(o.isMesh){triangles+=(o.geometry.index?.count??o.geometry.attributes.position.count)/3;meshes.push(o.name);if(o.geometry.type==='BoxGeometry')primitiveBoxes++;}});
-     return {kind:e.kind,status:e.visual.diagnostics.status,url:e.visual.diagnostics.url,meshes,triangles,primitiveBoxes};});
+     return {kind:e.kind,appearance:e.visual.diagnostics.appearance,status:e.visual.diagnostics.status,url:e.visual.diagnostics.url,meshes,triangles,primitiveBoxes};});
     const camera=g.camera.clone();for(const enemy of level.enemies){camera.position.copy(enemy.group.position).add({x:2.7,y:1.8,z:3.7});camera.lookAt(enemy.group.position.x,enemy.group.position.y+.6,enemy.group.position.z);g.renderer.render(scene,camera);}
     const capture=level.captureData();
     return {source,id:entry.id,editor,actors,capturedKinds:capture.components.filter(c=>c.t==='enemy').map(c=>c.foe??'grunt'),glError:g.renderer.getContext().getError()};
    }finally{level?.dispose();setEditorBuild(false);}
   },{index,editor});
   assert.equal(row.glError,0);
-  for(const actor of row.actors){const expected=manifest.enemies.find(e=>e.kind===actor.kind);assert.ok(expected);assert.equal(actor.status,'ready',`${row.id}/${actor.kind}`);assert.equal(actor.triangles,expected.triangles);assert.equal(actor.primitiveBoxes,0);assert.ok(actor.url.includes(`enemies/${actor.kind}.glb`));}
+  for(const actor of row.actors){const expected=actor.appearance==='nightworks'?nightworks:manifest.enemies.find(e=>e.kind===actor.kind);assert.ok(expected);assert.equal(actor.status,'ready',`${row.id}/${actor.kind}`);assert.equal(actor.triangles,expected.triangles);assert.equal(actor.primitiveBoxes,0);assert.ok(actor.url.includes(`enemies/${actor.appearance==='nightworks'?'nightworks-snot-goblin':actor.kind}.glb`));}
   assert.deepEqual(row.capturedKinds.sort(),row.actors.map(a=>a.kind).sort(),`${row.id} lost enemy identity in capture`);
   rows.push(row);console.log(`${row.source} ${row.id} ${editor?'editor':'play'}: ${row.actors.length} generated enemies verified`);
  }

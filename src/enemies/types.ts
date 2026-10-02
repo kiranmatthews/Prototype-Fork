@@ -22,6 +22,8 @@ export interface EnemyNodeBinding {
 }
 export type EnemyNodeMap = Partial<Record<EnemyNodeRole,string | EnemyNodeBinding>>;
 export interface EnemyVisualOptions {
+  /** Nightworks quarry crew; gameplay kind and takedown rules stay independent. */
+  appearance?: "nightworks";
   /** Files are baked to metres, Y-up, forward +Z before runtime loading. */
   url?: string;
   mapping?: EnemyNodeMap;
@@ -51,6 +53,7 @@ export interface EnemyVisualDiagnostics {
   kind: EnemyKind;
   status: 'loading' | 'ready' | 'error' | 'disposed';
   url: string;
+  appearance?: "nightworks";
   error?: string;
   clips: string[];
   activeClip: string | null;

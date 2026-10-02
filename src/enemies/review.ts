@@ -15,7 +15,9 @@ const speedInput=required<HTMLSelectElement>('playback-speed'),playButton=requir
 const diagnosticsElement=required<HTMLPreElement>('review-diagnostics');
 const query=new URLSearchParams(location.search);
 const FPS=60;
-const NAMES=ENEMY_NAMES;
+const appearance=query.get('appearance')==='nightworks'?'nightworks':undefined;
+const ROSTER:readonly EnemyKind[]=appearance?['grunt','hopper']:ENEMY_KINDS;
+const NAMES=appearance?Object.fromEntries(ENEMY_KINDS.map(kind=>[kind,kind==='hopper'?'Snot Goblin · spring miner':'Snot Goblin · night watch'])) as Record<EnemyKind,string>:ENEMY_NAMES;
 interface Segment {state:string;frames:number;speed:number;}
 const CYCLES:Record<EnemyKind,readonly Segment[]>={
   grunt:[{state:'patrol',frames:180,speed:2.4}],spiker:[{state:'patrol',frames:180,speed:2.2}],
@@ -28,7 +30,7 @@ const CYCLES:Record<EnemyKind,readonly Segment[]>={
 };
 type View='front'|'quarter'|'side'|'back'|'orbit';
 const initialKind=query.get('kind');
-const review={kind:ENEMY_KINDS.includes(initialKind as EnemyKind)?initialKind as EnemyKind:'all' as EnemyKind|'all',
+const review={kind:ROSTER.includes(initialKind as EnemyKind)?initialKind as EnemyKind:'all' as EnemyKind|'all',
   motion:query.get('state')??'cycle',frame:0,playing:query.get('paused')!=='1',speed:1,
   camera:(['front','quarter','side','back'].includes(query.get('view')??'')?query.get('view'):'quarter') as View,
   showBounds:false,showSkeleton:false,trackTarget:true};
@@ -53,9 +55,9 @@ interface Actor {kind:EnemyKind;visual:EnemyVisual;home:THREE.Vector3;label:HTML
   bounds:THREE.Box3;boundsHelper:THREE.Box3Helper;skeleton:THREE.SkeletonHelper|null;frame:EnemyAnimationFrame;}
 const actors:Actor[]=[];
 const siteRoot=new URL('../../',location.href);
-for(const [index,kind] of ENEMY_KINDS.entries()){
+for(const [index,kind] of ROSTER.entries()){
   const option=document.createElement('option');option.value=kind;option.textContent=`${NAMES[kind]} · ${kind}`;kindInput.append(option);
-  const visual=createEnemyVisual(kind,{url:new URL(`enemies/${kind}.glb`,siteRoot).href});
+  const visual=createEnemyVisual(kind,{appearance,url:new URL(`enemies/${appearance?'nightworks-snot-goblin':kind}.glb`,siteRoot).href});
   scene.add(visual.group);
   const label=document.createElement('button');label.className='actor-label';label.textContent=NAMES[kind];
   label.addEventListener('click',()=>setKind(kind));stage.append(label);
@@ -69,7 +71,7 @@ for(const [index,kind] of ENEMY_KINDS.entries()){
 function cycleFrames(kind:EnemyKind):number{return CYCLES[kind].reduce((sum,part)=>sum+part.frames,0);}
 function durationFrames():number {
   if(review.motion==='defeat')return 60;if(review.motion==='flung')return 96;if(review.motion==='idle')return 180;
-  if(review.motion==='cycle')return review.kind==='all'?Math.max(...ENEMY_KINDS.map(cycleFrames)):cycleFrames(review.kind);
+  if(review.motion==='cycle')return review.kind==='all'?Math.max(...ROSTER.map(cycleFrames)):cycleFrames(review.kind);
   if(review.kind==='all')return 180;
   return CYCLES[review.kind].find(part=>part.state===review.motion)?.frames??180;
 }
@@ -174,9 +176,9 @@ function diagnostics():Record<string,unknown> {
 function updateDiagnostics():void {
   const ready=actors.filter(actor=>actor.visual.diagnostics.status==='ready').length;
   const failed=actors.filter(actor=>actor.visual.diagnostics.status==='error').length;
-  required('asset-status').textContent=`${ready} / 8 models ready${failed?` · ${failed} missing`:''}`;
+  required('asset-status').textContent=`${ready} / ${ROSTER.length} models ready${failed?` · ${failed} missing`:''}`;
   required('loading-message').textContent=failed?`${failed} asset${failed===1?' is':'s are'} unavailable. Place the baked GLBs in public/enemies/ and reload assets.`
-    :ready<8?'Loading generated enemy models…':'';
+    :ready<ROSTER.length?'Loading generated enemy models…':'';
   for(const actor of actors){const info=actor.visual.diagnostics;actor.status.textContent=info.status==='ready'?'Ready':info.status==='error'?'Missing / failed':'Loading…';
     actor.label.dataset.status=info.status;actor.label.title=`${actor.kind} · ${info.status}${info.error?` · ${info.error}`:''}`;}
   diagnosticsElement.textContent=JSON.stringify(diagnostics(),null,2);

@@ -300,6 +300,71 @@
       ],
       "sourceTriangles": 8868,
       "sourceMeshes": 1
+    },
+    "nightworks-snot-goblin": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "3e9b8f51-2e57-4af2-bf47-117dda900c85",
+      "createdAt": "2026-10-02T10:28:22.623513+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/.codex/worktrees/nightworks-skate-sequel/Prototype Fork/tools/enemies/references/nightworks-snot-goblin.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 8500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1571,
+      "reference": "tools/enemies/references/nightworks-snot-goblin.png",
+      "referenceSha256": "c8d7a0540384523656e3181ee777c1fce4e8302fa8435bd8cafc91e98716d048",
+      "id": "01a0fc28-6faa-713c-99d4-ccd248420b00",
+      "checkedAt": "2026-10-02T10:30:05.044786+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1790936946338,
+      "expiresAt": 1791196146338,
+      "downloads": [
+        {
+          "path": ".img2threejs/enemies/nightworks-snot-goblin/downloads/model.glb",
+          "bytes": 8174892,
+          "sha256": "d20091bd29f1cfb2f9ddc73cec39fc7e8e0499b5dec0fa9c302eea83ad0b91f0"
+        }
+      ]
+    },
+    "nightworks-snot-goblin-rig": {
+      "resource": "rigging",
+      "state": "SUCCEEDED",
+      "operationId": "0c20d11e-18c0-4b04-a645-2b12d6cd704a",
+      "createdAt": "2026-10-02T10:29:58.960631+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "input_task_id": "01a0fc28-6faa-713c-99d4-ccd248420b00",
+        "height_meters": 1.4
+      },
+      "balanceBefore": 1556,
+      "id": "01a0fc29-e787-764e-87e8-0898a88df65e",
+      "checkedAt": "2026-10-02T10:33:51.483512+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1790937049759,
+      "expiresAt": 1791196249759,
+      "downloads": [
+        {
+          "path": ".img2threejs/enemies/nightworks-snot-goblin-rig/downloads/rigged_character.glb",
+          "bytes": 7054412,
+          "sha256": "69ccc68f864b3cb117e300983d361075cb4d9c161d9287ab959b3ceee6962ee2"
+        },
+        {
+          "path": ".img2threejs/enemies/nightworks-snot-goblin-rig/downloads/walking_glb.glb",
+          "bytes": 7067184,
+          "sha256": "849643e58997bdd084bf0e0cfd50c6558cf4e01458dcacb4bcca7caef7c52ebf"
+        }
+      ]
     }
   },
   "authorization": "User confirmed on 2026-09-22: spend as much Meshy credit as the account contains if needed.",

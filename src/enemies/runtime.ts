@@ -4,7 +4,7 @@ import { clone as cloneSkeleton } from 'three/examples/jsm/utils/SkeletonUtils.j
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import { AssetCache, disposeTextures } from '../assetLifetime';
 import { sceneryLoads } from '../assetLoadQueue';
-import { sampleEnemyElasticity, enemyElasticPulse } from './elasticity';
+import { sampleEnemyElasticity, enemyElasticPulse, NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE } from './elasticity';
 import { ENEMY_LEGS, type EnemyAnimationFrame, type EnemyKind, type EnemyLeg,
   type EnemyNodeBinding, type EnemyNodeMap, type EnemyNodeRole, type EnemyVisual,
   type EnemyVisualDiagnostics, type EnemyVisualOptions } from './types';
@@ -170,8 +170,8 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
   const artwork=new THREE.Group();artwork.name=`Enemy_${kind}_Artwork`;artwork.scale.setScalar(2);group.add(artwork);
   const body=new THREE.Group();body.name=`Enemy_${kind}_Aim`;artwork.add(body);
   const modelMount=new THREE.Group();modelMount.name=`Enemy_${kind}_ModelMount`;body.add(modelMount);
-  const url=options.url??`${import.meta.env.BASE_URL}enemies/${kind}.glb`;
-  const diagnostic:EnemyVisualDiagnostics={kind,status:'loading',url,clips:[],activeClip:null,
+  const url=options.url??`${import.meta.env.BASE_URL}enemies/${options.appearance==='nightworks'?'nightworks-snot-goblin':kind}.glb`;
+  const diagnostic:EnemyVisualDiagnostics={kind,status:'loading',url,appearance:options.appearance,clips:[],activeClip:null,
     mappedNodes:{},skinnedMeshes:0,meshes:0,animationTime:0,gaitPhase:0,state:startState};
   group.userData.enemyVisual=diagnostic;
   let disposed=false,model:THREE.Group|null=null,mixer:THREE.AnimationMixer|null=null;
@@ -250,6 +250,8 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
   function contacts(frame:EnemyAnimationFrame):Partial<Record<EnemyLeg,boolean>> {
     const result:Partial<Record<EnemyLeg,boolean>>={};
     for(const leg of ENEMY_LEGS){
+      // Goblins are bipedal: arm bindings receive deformation, never foot pins.
+      if(options.appearance==='nightworks'&&leg.startsWith('front')){result[leg]=false;continue;}
       const diagonal=leg==='frontLeft'||leg==='hindRight';
       const intervals=currentAction===walk&&walk?walkContacts?.[leg]:undefined;
       const contact=intervals?intervals.some(([start,end])=>start<=end
@@ -407,7 +409,8 @@ export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):
     customGait(frame);
     const planted=contacts(frame);rememberFeet(planted);
     customPose(frame,step);
-    const elastic=sampleEnemyElasticity(kind,frame,phase,planted,deathTime);
+    const elastic=sampleEnemyElasticity(kind,frame,phase,planted,deathTime,
+      options.appearance==='nightworks'?NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE:undefined);
     segment(nodes.torso,elastic.torso);
     for(const leg of ENEMY_LEGS){const [upper,lower]=legRoles(leg);segment(nodes[upper],elastic.legs[leg].upper);segment(nodes[lower],elastic.legs[leg].lower);}
     plantFeet();group.updateMatrixWorld(true);

@@ -106,7 +106,7 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     name: "Island 1",
     subtitle: "REGION 01",
     centre: [-95, 0, 0],
-    levelKeys: ["treehouse-trail", "jungle", "test-course", "sky-bridge", "nightworks", "slipstream", "jungle-cup"],
+    levelKeys: ["treehouse-trail", "jungle", "test-course", "sky-bridge", "nightworks", "nightworks-after-hours", "slipstream", "jungle-cup"],
   },
   {
     id: "island-2",
@@ -176,6 +176,10 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     fromDirection: "up",
     toDirection: "down",
     waypoints: [[-112, 6.5, 11]],
+  },
+  {
+    from: "nightworks", to: "nightworks-after-hours", travel: "boardslide",
+    fromDirection: "right", toDirection: "left", waypoints: [[-96,12,-1]],
   },
   {
     from: "sky-bridge",
@@ -447,6 +451,10 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     progressKey: "clockwork-gauntlet", levelId: "clockwork-gauntlet", name: "Clockwork Gauntlet",
     relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS, islandId: "puzzle-trials",
     mapPath: "main", mapPosition: [235, 3.1, 14], unlockAfter: [],
+  },
+  {
+    progressKey:"nightworks-after-hours",levelId:"nightworks-after-hours",name:"Nightworks: After Hours",
+    relicTime:35,islandId:"island-1",mapPath:"upper-branch",mapPosition:[-81,10,-1],unlockAfter:["nightworks"],
   },
 ] as const;
 

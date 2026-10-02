@@ -1,0 +1,44 @@
+{
+  "mapping": {
+    "torso": {
+      "name": "Spine02",
+      "lengthAxis": "y"
+    },
+    "head": "Head",
+    "motionRoot": "Hips",
+    "frontUpperLeft": {
+      "name": "LeftArm",
+      "lengthAxis": "y"
+    },
+    "frontLowerLeft": {
+      "name": "LeftForeArm",
+      "lengthAxis": "y"
+    },
+    "frontUpperRight": {
+      "name": "RightArm",
+      "lengthAxis": "y"
+    },
+    "frontLowerRight": {
+      "name": "RightForeArm",
+      "lengthAxis": "y"
+    },
+    "hindUpperLeft": {
+      "name": "LeftUpLeg",
+      "lengthAxis": "y"
+    },
+    "hindLowerLeft": {
+      "name": "LeftLeg",
+      "lengthAxis": "y"
+    },
+    "hindFootLeft": "LeftFoot",
+    "hindUpperRight": {
+      "name": "RightUpLeg",
+      "lengthAxis": "y"
+    },
+    "hindLowerRight": {
+      "name": "RightLeg",
+      "lengthAxis": "y"
+    },
+    "hindFootRight": "RightFoot"
+  }
+}

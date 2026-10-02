@@ -30,7 +30,7 @@ const campaign = await import(
   `data:text/javascript;base64,${Buffer.from(output).toString("base64")}`
 );
 
-assert.equal(campaign.CAMPAIGN_LEVELS.length, 18);
+assert.equal(campaign.CAMPAIGN_LEVELS.length, 19);
 assert.equal(campaign.resolveRelicTime('jungle'), 60);
 assert.equal(campaign.resolveRelicTime('editor-course', { relicTime: 83.75 }), 83.75);
 assert.equal(campaign.resolveRelicTime('jungle', { relicTime: 45.125 }), 45.125);
@@ -59,22 +59,23 @@ assert.deepEqual(
     ["crate-primer", "Crate Primer"],
     ["switchyard", "Switchyard"],
     ["clockwork-gauntlet", "Clockwork Gauntlet"],
+    ["nightworks-after-hours", "Nightworks: After Hours"],
   ],
   "canonical portal order or labels drifted",
 );
 assert.equal(
   new Set(campaign.CAMPAIGN_LEVELS.map((level) => level.progressKey)).size,
-  18,
+  19,
   "campaign progress keys must remain unique",
 );
 assert.equal(campaign.CAMPAIGN_TIME_RELIC_TARGET_SECONDS, 60);
 assert.ok(
-  campaign.CAMPAIGN_LEVELS.every((level) => level.relicTime === 60),
-  "all placeholder relic targets must be exactly one minute",
+  campaign.CAMPAIGN_LEVELS.every((level) => level.relicTime === (level.progressKey==='nightworks-after-hours'?35:60)),
+  "existing placeholder targets remain one minute; After Hours has an authored skate benchmark",
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ levelKeys }) => levelKeys.length),
-  [7, 8, 3],
+  [8, 8, 3],
   "Puzzle Trials must append without removing existing island hubs",
 );
 assert.deepEqual(
@@ -110,11 +111,13 @@ assert.equal(campaign.CAMPAIGN_LEVELS[13].progressKey, 'waterpark', 'new hubs mu
 assert.deepEqual(campaign.campaignLevelById('waterpark').mapPosition,[86,6,4]);
 assert.equal(campaign.CAMPAIGN_LEVELS[14].progressKey,'waterpark-cup');
 assert.equal(campaign.CAMPAIGN_LEVELS[14].competition,true);
+assert.equal(campaign.CAMPAIGN_LEVELS[18].progressKey,"nightworks-after-hours");
+assert.deepEqual(campaign.campaignLevelByKey("nightworks-after-hours").unlockAfter,["nightworks"]);
 assert.equal(campaign.campaignLevelById('codex-lab').islandId, 'island-2');
 
 const graph = new campaign.CampaignStore();
 graph.startEphemeral();
-assert.deepEqual(campaign.CAMPAIGN_LEVELS.slice(15).map(level=>level.progressKey),
+assert.deepEqual(campaign.CAMPAIGN_LEVELS.slice(15,18).map(level=>level.progressKey),
   ['crate-primer','switchyard','clockwork-gauntlet'],'research hubs must append after all saved identities');
 for(const key of campaign.CAMPAIGN_ISLANDS[2].levelKeys){
   assert.equal(graph.levelUnlocked(key),true,`${key} is unavailable on a fresh save`);

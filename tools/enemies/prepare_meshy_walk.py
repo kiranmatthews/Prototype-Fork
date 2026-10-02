@@ -24,7 +24,7 @@ from glb_rig import Glb
 
 ROOT = Path(__file__).resolve().parents[2]
 WORK = ROOT / '.img2threejs/enemies'
-ENVELOPES = {'grunt': [1.3, 1.1, 1.3], 'spiker': [1.3, 1.1, 1.3],
+ENVELOPES = {'nightworks-snot-goblin': [.9, .72, .52], 'grunt': [1.3, 1.1, 1.3], 'spiker': [1.3, 1.1, 1.3],
              'turtle': [1.3, .87, 1.3], 'charger': [1.45, 1.1, 1.45]}
 
 
@@ -239,7 +239,7 @@ def prepare(args):
     scene['nodes'] = [len(doc['nodes'])]
     doc['nodes'].append(wrapper)
     scene.setdefault('extras', {})['enemyRig'] = {'mapping': mapping, 'walkClip': walk,
-        'walkSpeed': args.walk_speed, 'provenance': 'Meshy quadruped rig and walk',
+        'walkSpeed': args.walk_speed, 'provenance': 'Meshy humanoid rig and walk' if args.kind == 'nightworks-snot-goblin' else 'Meshy quadruped rig and walk',
         'sourceSha256': sha256(args.source.read_bytes())}
     texture_report = compact_textures(glb, args.texture_size, args.quality)
     output = args.output or ROOT / 'public/enemies' / (args.kind + '.glb')

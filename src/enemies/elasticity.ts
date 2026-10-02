@@ -21,6 +21,10 @@ export const ENEMY_ELASTICITY_PROFILES: Record<EnemyKind,EnemyElasticityProfile>
   sentry:  {idle:.3,walk:0,anticipation:.55,rebound:.65,landing:0,defeat:.5},
   spinner: {idle:.2,walk:0,anticipation:.35,rebound:.5,landing:0,defeat:.4},
 };
+/** Quarry goblins share the character curves with their own editable strengths. */
+export const NIGHTWORKS_GOBLIN_ELASTICITY_PROFILE: EnemyElasticityProfile = {
+  idle:1.15,walk:1.1,anticipation:1.35,rebound:1.3,landing:1.2,defeat:1.15,
+};
 export interface EnemyElasticitySample {
   torso: number;
   legs: Record<EnemyLeg,{upper:number;lower:number}>;
@@ -42,8 +46,8 @@ export function enemyElasticPulse(time:number,duration:number):number {
 }
 /** Segment ratios only. Never returns a scale for the actor or whole rig. */
 export function sampleEnemyElasticity(kind:EnemyKind,frame:EnemyAnimationFrame,
-  phase:number,planted:Partial<Record<EnemyLeg,boolean>>={},defeatTime=0):EnemyElasticitySample {
-  const profile=ENEMY_ELASTICITY_PROFILES[kind];
+  phase:number,planted:Partial<Record<EnemyLeg,boolean>>={},defeatTime=0,
+  profile=ENEMY_ELASTICITY_PROFILES[kind]):EnemyElasticitySample {
   const moving=frame.speed>.05&&frame.grounded&&frame.alive;
   const amplitudes=moving?SHARED.walk:SHARED.idle;
   const strength=moving?profile.walk:profile.idle;

@@ -57,6 +57,7 @@ import {
 import { BraidedRope, ropeLocalPoint, flexibleRopePoint, flexibleRopeVelocity, closestRopeDistance } from "./ropeGeometry";
 import { NightworksRocks, nightworksGeometry, isNightworksSurface } from "./nightworksRocks";
 import { NIGHTWORKS_LEVEL } from "./levels/nightworks";
+import { NIGHTWORKS_AFTER_HOURS_LEVEL } from "./levels/nightworks-after-hours";
 import { migrateSlipstreamCamera } from "./levels/slipstream-camera";
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
@@ -1066,7 +1067,7 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   }
   d.components = d.components.map((c) => {
     delete c.trafficRoad;
-    if(c.t==='worldmap'&&c.pts?.length===14){
+    if(c.t==='worldmap'&&c.pts&&c.pts.length>=14&&c.pts.length<CAMPAIGN_LEVELS.length){
       const defaults=worldMapComponentPoints();
       if(c.pts.every((p,i)=>p.length===4&&p.every((v,j)=>v===defaults[i][j])))return {...c,pts:defaults};
     }
@@ -2306,7 +2307,8 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "sky", name: "Sky Bridge" },
   { id: "slip", name: "The Slipstream" }, // banked ribbon slide high over the sea
   {id:"test",name:CARLISLE_COAST_LEVEL.name,data:CARLISLE_COAST_LEVEL},
-  { id: "dark", name: "The Nightworks" }, // torch-lit machine hall: cycling platforms, phase pads, travelling rails and ropes
+  { id: "dark", name: "The Nightworks" }, // cycling platforms, phase rocks and torch-lit ferries
+  { id: "nightworks-after-hours", name: NIGHTWORKS_AFTER_HOURS_LEVEL.name, data: NIGHTWORKS_AFTER_HOURS_LEVEL },
   { id: "warproom", name: "Island World Map" }, // legacy id, graph-driven map runtime
   { id: "descent", name: "The Descent" }, // two-lane mountain road, very long, very downhill
   { id: "beachfront", name: "Beachside Run" },
@@ -2917,7 +2919,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       singletonKinds.add(component.t);
       if (component.t === "worldmap") {
         if (source.ocean || (component.pts &&
-            (![9, 11, 12, 13, 14, 15, CAMPAIGN_LEVELS.length].includes(component.pts.length) || component.pts.some(point =>
+            (!(component.pts.length===9||(component.pts.length>=11&&component.pts.length<=CAMPAIGN_LEVELS.length)) || component.pts.some(point =>
               Math.abs(point[0]) > 256 || Math.abs(point[1]) > 256 || Math.abs(point[3] ?? 0) > 128))))
           return null;
         if (component.pts) for (let i = 0; i < component.pts.length; i++) {
@@ -17919,7 +17921,7 @@ export class Level {
 
   /** Imported enemy artwork; gameplay roots and collision remain level-owned. */
   private enemyGroup(kind: EnemyKind): EnemyVisual {
-    const visual = createEnemyVisual(kind);
+    const visual = createEnemyVisual(kind, { appearance: this.nightworksRocks ? "nightworks" : undefined });
     this.root.add(visual.group);
     return visual;
   }

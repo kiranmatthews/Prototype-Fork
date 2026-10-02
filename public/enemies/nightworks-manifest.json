@@ -1,0 +1,28 @@
+{
+  "v": 1,
+  "name": "Nightworks Snot Goblin",
+  "appearance": "nightworks",
+  "provider": "Meshy",
+  "pipeline": "generative-assist",
+  "file": "nightworks-snot-goblin.glb",
+  "sha256": "7f6a50feb6111a92f324c9e9417f40dfaa5e3a4fcce6fe406e94f33820e92801",
+  "bytes": 798900,
+  "triangles": 8877,
+  "generatedTaskId": "01a0fc28-6faa-713c-99d4-ccd248420b00",
+  "rigTaskId": "01a0fc29-e787-764e-87e8-0898a88df65e",
+  "consumedCredits": 20,
+  "rig": "Meshy humanoid, 24 joints",
+  "animation": "Meshy basic humanoid walk; runtime hop and finite defeat",
+  "textureSize": 1024,
+  "referenceSha256": "c8d7a0540384523656e3181ee777c1fce4e8302fa8435bd8cafc91e98716d048",
+  "sourceWalkSha256": "849643e58997bdd084bf0e0cfd50c6558cf4e01458dcacb4bcca7caef7c52ebf",
+  "sourceNodesBindingsAndAnimationSamplesUnchanged": true,
+  "variants": [
+    "grunt",
+    "hopper"
+  ],
+  "levels": [
+    "dark",
+    "nightworks-after-hours"
+  ]
+}

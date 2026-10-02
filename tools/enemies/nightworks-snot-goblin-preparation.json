@@ -1,0 +1,68 @@
+{
+  "kind": "nightworks-snot-goblin",
+  "source": ".img2threejs/enemies/nightworks-snot-goblin-rig/downloads/walking_glb.glb",
+  "output": "/Users/kiki/.codex/worktrees/nightworks-skate-sequel/Prototype Fork/public/enemies/nightworks-snot-goblin.glb",
+  "sourceSha256": "849643e58997bdd084bf0e0cfd50c6558cf4e01458dcacb4bcca7caef7c52ebf",
+  "outputSha256": "7f6a50feb6111a92f324c9e9417f40dfaa5e3a4fcce6fe406e94f33820e92801",
+  "sourceBytes": 7067184,
+  "outputBytes": 798900,
+  "yawDegrees": 0,
+  "uniformScale": 0.5142857670508731,
+  "normalizationEnvelope": [
+    0.9,
+    0.72,
+    0.52
+  ],
+  "sourceBounds": [
+    [
+      -0.639593034337939,
+      -8.605495505132393e-08,
+      -0.4090037020099406
+    ],
+    [
+      0.6395931791635255,
+      1.3999997703065716,
+      0.40900378424148603
+    ]
+  ],
+  "outputBounds": [
+    [
+      -0.32893363150575144,
+      2.512677564655756e-17,
+      -0.21034480376008582
+    ],
+    [
+      0.32893363150575133,
+      0.7200000000000002,
+      0.21034480376008588
+    ]
+  ],
+  "clips": [
+    {
+      "name": "Armature|walking_man|baselayer",
+      "channels": 72,
+      "start": 0.03333333507180214,
+      "end": 1.0666667222976685,
+      "duration": 1.033333420753479
+    }
+  ],
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 319383
+    }
+  ],
+  "preservedAccessors": 81,
+  "preservedNodes": 26,
+  "preservedSkins": 1,
+  "sourceNodesBindingsAndAnimationSamplesUnchanged": true
+}
