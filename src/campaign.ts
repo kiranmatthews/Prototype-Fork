@@ -106,7 +106,7 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     name: "Island 1",
     subtitle: "REGION 01",
     centre: [-95, 0, 0],
-    levelKeys: ["treehouse-trail", "jungle", "test-course", "sky-bridge", "nightworks", "nightworks-after-hours", "slipstream", "jungle-cup"],
+    levelKeys: ["treehouse-trail", "jungle", "jungle-terraces", "jungle-skyline", "test-course", "sky-bridge", "nightworks", "nightworks-after-hours", "slipstream", "jungle-cup"],
   },
   {
     id: "island-2",
@@ -138,6 +138,10 @@ export interface CampaignMapEdgeDefinition {
  * are traversable in both directions once both endpoint hubs are unlocked.
  */
 export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
+  { from: "jungle", to: "jungle-terraces", travel: "trail", fromDirection: "up", toDirection: "down",
+    waypoints: [[-151, 4.2, 14]] },
+  { from: "jungle-terraces", to: "jungle-skyline", travel: "boardslide", fromDirection: "right", toDirection: "left",
+    waypoints: [[-141, 10, 7]] },
   {
     from: "treehouse-trail",
     to: "jungle",
@@ -449,6 +453,10 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     progressKey:"nightworks-after-hours",levelId:"nightworks-after-hours",name:"Nightworks: After Hours",
     relicTime:35,islandId:"island-1",mapPath:"upper-branch",mapPosition:[-81,10,-1],unlockAfter:["nightworks"],
   },
+  { progressKey: "jungle-terraces", levelId: "jungle-terraces", name: "Temple Terraces", relicTime: 105,
+    islandId: "island-1", mapPath: "upper-branch", mapPosition: [-151, 7, 7], unlockAfter: ["jungle"] },
+  { progressKey: "jungle-skyline", levelId: "jungle-skyline", name: "Temple Skyline", relicTime: 125,
+    islandId: "island-1", mapPath: "upper-branch", mapPosition: [-131, 11, 7], unlockAfter: ["jungle-terraces"] },
 ] as const;
 
 const LEVEL_BY_ID = new Map<string, CampaignLevelDefinition>();

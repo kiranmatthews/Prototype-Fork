@@ -30,7 +30,7 @@ const campaign = await import(
   `data:text/javascript;base64,${Buffer.from(output).toString("base64")}`
 );
 
-assert.equal(campaign.CAMPAIGN_LEVELS.length, 19);
+assert.equal(campaign.CAMPAIGN_LEVELS.length, 21);
 assert.equal(campaign.resolveRelicTime('jungle'), 60);
 assert.equal(campaign.resolveRelicTime('editor-course', { relicTime: 83.75 }), 83.75);
 assert.equal(campaign.resolveRelicTime('jungle', { relicTime: 45.125 }), 45.125);
@@ -60,22 +60,24 @@ assert.deepEqual(
     ["switchyard", "Switchyard"],
     ["clockwork-gauntlet", "Clockwork Gauntlet"],
     ["nightworks-after-hours", "Nightworks: After Hours"],
+    ["jungle-terraces", "Temple Terraces"],
+    ["jungle-skyline", "Temple Skyline"],
   ],
   "canonical portal order or labels drifted",
 );
 assert.equal(
   new Set(campaign.CAMPAIGN_LEVELS.map((level) => level.progressKey)).size,
-  19,
+  21,
   "campaign progress keys must remain unique",
 );
 assert.equal(campaign.CAMPAIGN_TIME_RELIC_TARGET_SECONDS, 60);
 assert.ok(
-  campaign.CAMPAIGN_LEVELS.every((level) => level.relicTime === (level.progressKey==='nightworks-after-hours'?35:60)),
+  campaign.CAMPAIGN_LEVELS.slice(0,19).every((level) => level.relicTime === (level.progressKey==='nightworks-after-hours'?35:60)),
   "existing placeholder targets remain one minute; After Hours has an authored skate benchmark",
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ levelKeys }) => levelKeys.length),
-  [8, 11],
+  [10, 11],
   "The three levels join the existing main-map island",
 );
 assert.deepEqual(
@@ -103,9 +105,10 @@ for(let i=1;i<mainPath.length;i++) {
 }
 assert.deepEqual(campaign.CAMPAIGN_MAP_EDGES.filter(e=>campaign.campaignLevelByKey(e.from).mapPath!==campaign.campaignLevelByKey(e.to).mapPath)
   .map(e=>[e.from,e.to,e.fromDirection,e.toDirection]),[
+  ['jungle','jungle-terraces','up','down'],
   ['test-course','nightworks','up','down'],['coastal','chimeworks','down','up'],['island-hopper','waterpark','up','down'],
 ]);
-assert.deepEqual(campaign.CAMPAIGN_ISLANDS[1].levelKeys.slice(-5), ['island-hopper','waterpark','waterpark-cup','codex-switchback','jungle-gate']);
+assert.deepEqual(campaign.CAMPAIGN_ISLANDS[1].levelKeys.slice(3,8), ['island-hopper','waterpark','waterpark-cup','codex-switchback','jungle-gate']);
 assert.equal(campaign.CAMPAIGN_LEVELS[9].progressKey, 'codex-switchback', 'editable hub identity must stay at index 9');
 assert.equal(campaign.CAMPAIGN_LEVELS[13].progressKey, 'waterpark', 'new hubs must append after every saved editor identity');
 assert.deepEqual(campaign.campaignLevelById('waterpark').mapPosition,[86,6,4]);
@@ -119,7 +122,7 @@ const graph = new campaign.CampaignStore();
 graph.startEphemeral();
 assert.deepEqual(campaign.CAMPAIGN_LEVELS.slice(15,18).map(level=>level.progressKey),
   ['crate-primer','switchyard','clockwork-gauntlet'],'research hubs must append after all saved identities');
-for(const key of campaign.CAMPAIGN_ISLANDS[2].levelKeys){
+for(const key of ['crate-primer','switchyard','clockwork-gauntlet']){
   assert.equal(graph.levelUnlocked(key),true,`${key} is unavailable on a fresh save`);
   assert.equal(campaign.campaignLevelById(key).islandId,'island-2');
 }

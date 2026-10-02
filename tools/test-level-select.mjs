@@ -41,10 +41,12 @@ try{
  ui.goBack();assert.equal(ui.currentScreen,'level-select');
  ui.goBack();assert.equal(ui.currentScreen,'pause');
  for(const def of CAMPAIGN_LEVELS)campaign.active.levels[def.progressKey]={cleared:true,crystal:true,boxGem:false,comboGem:true,timeRelic:false,timeMedal:'silver',bestTime:64.15,trialTimes:[64.15,68.3,72.8],...(def.competition?{cup:true}:{})};
- ui.openLevelSelect();ui.moveLevelSelectRow(1);assert.equal(ui.levelSelectKey,'test-course');
+ ui.openLevelSelect();ui.moveLevelSelectRow(1);assert.equal(ui.levelSelectKey,'jungle-terraces');
  assert.match(ui.levelSelectDetail.textContent,/1:04.15/);assert.ok(ui.levelSelectDetail.querySelectorAll('.game-reward-slot').some(slot=>slot.dataset.medal==='silver'));
  assert.doesNotMatch(ui.levelSelectDetail.textContent,/NOT COLLECTED|NOT EARNED/);
- assert.match(ui.levelSelectPreview.src,/test-course\.jpg$/);
+ assert.match(ui.levelSelectPreview.src,/jungle-terraces\.jpg$/);
+ ui.moveLevelSelectRow(1);assert.equal(ui.levelSelectKey,'jungle-skyline');
+ assert.match(ui.levelSelectPreview.src,/jungle-skyline\.jpg$/);
  ui.updateLevelSelectChoice('jungle-cup',true);assert.match(ui.levelSelectDetail.textContent,/JUNGLE CUP/);assert.doesNotMatch(ui.levelSelectDetail.textContent,/TIME TRIAL RECORDS/);
  ui.updateLevelSelectChoice('test-course',true);
  ui.changeLevelSelectIsland(1);assert.equal(ui.levelSelectIsland,'island-2');assert.equal(ui.navButtons.filter(b=>b.dataset.levelKey).length,CAMPAIGN_ISLANDS[1].levelKeys.length);

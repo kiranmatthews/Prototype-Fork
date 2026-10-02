@@ -60,6 +60,7 @@ import { NIGHTWORKS_LEVEL } from "./levels/nightworks";
 import { NIGHTWORKS_AFTER_HOURS_LEVEL } from "./levels/nightworks-after-hours";
 import { migrateSlipstreamCamera } from "./levels/slipstream-camera";
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
+import { JUNGLE_TERRACES_LEVEL, JUNGLE_SKYLINE_LEVEL } from "./levels/jungle-sequels";
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
 import { PUZZLE_LEVELS } from './levels/puzzle-trilogy';
 import { WATERPARK_LEVEL } from "./levels/waterpark";
@@ -2303,6 +2304,8 @@ export interface LevelEntry {
 export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "treehouse-trail", name: TREEHOUSE_TRAIL_LEVEL.name, data: TREEHOUSE_TRAIL_LEVEL },
   { id: "jungle", name: "Jungle Ruins" }, // enclosed corridor: pit hops, a trunk grind, a temple climb
+  { id: "jungle-terraces", name: JUNGLE_TERRACES_LEVEL.name, data: JUNGLE_TERRACES_LEVEL },
+  { id: "jungle-skyline", name: JUNGLE_SKYLINE_LEVEL.name, data: JUNGLE_SKYLINE_LEVEL },
   { id: "flats", name: "Flats & Pipes" }, // sky-deck runway opening into the transition yard
   { id: "sky", name: "Sky Bridge" },
   { id: "slip", name: "The Slipstream" }, // banked ribbon slide high over the sea
