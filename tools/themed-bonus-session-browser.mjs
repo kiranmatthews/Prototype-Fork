@@ -15,6 +15,12 @@ try{
   await page.goto(new URL(`?playtest&level=${parentId}`,base).href);
   await page.waitForFunction(id=>window.__game?.getCurrentLevel().id===id&&!window.__game.gameFlow.blocksGameplay,parentId,{timeout:120000});
   const before=await page.evaluate(()=>{const g=window.__game;window.bonusParent=g.getLevel();window.bonusEvent=g.getCompetition();return {id:g.getCurrentLevel().id,lives:g.player.lives,fruit:g.player.fruit,phase:g.getCompetition()?.phase};});
+  if(!await page.evaluate(()=>window.__game.getLevel().allowsBonus)){
+   assert.equal(await page.locator('.competition-host button[data-action="bonus"]').count(),0);
+   await page.evaluate(()=>window.__game.enterBonusRound());
+   assert.equal(await page.evaluate(()=>window.__game.getCurrentLevel().id),parentId);
+   assert.deepEqual(errors,[]);reports.push({parentId,bonusBlocked:true});await page.close();continue;
+  }
   if(parentId.endsWith('cup')){
    for(const [width,height] of [[1280,720],[390,844],[844,390]]){
     await page.setViewportSize({width,height});await page.waitForTimeout(350);

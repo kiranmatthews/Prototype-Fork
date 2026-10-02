@@ -26,11 +26,24 @@
   },
   "checks": [
     "boss schema/combat/respawn",
-    "real bonus dock and return",
+    "boss bonus source/runtime/editor-copy exclusion",
     "themed bonus lifecycle",
     "check:levels",
     "build"
   ],
   "movementTuningChanged": false,
-  "fullSuiteRun": false
+  "fullSuiteRun": false,
+  "bossBonusPolicy": {
+    "allowed": false,
+    "platform": null,
+    "bonusCrates": 0,
+    "blockedCampaignParents": 4,
+    "activeThemedBonusRooms": 20,
+    "fullRenderSmoke": {
+      "frames": 3996,
+      "hits": 9,
+      "deaths": 0,
+      "consoleErrors": 0
+    }
+  }
 }

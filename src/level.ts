@@ -90,7 +90,7 @@ import {
   validRelicTime,
   resolveMedalTimes, validMedalTimes, defaultMedalTimes,
   type MedalTimes, type TimeMedal,
-  isCampaignLevel,
+  isCampaignLevel, levelAllowsBonus,
   type CampaignLevelProgress,
 } from "./campaign";
 import {
@@ -3714,6 +3714,7 @@ export function isEditUnlocked(): boolean {
 }
 
 export class Level {
+  readonly allowsBonus: boolean;
   boss: CrabChiefEncounter | null = null;
   groundMeshes: THREE.Mesh[] = [];
   readonly loopMeshes: THREE.Mesh[] = []; // explicit analytic contacts; empty on ordinary courses
@@ -4606,6 +4607,7 @@ export class Level {
       sfx.play('skateHalt', 0.4, removed ? 1.6 : 0.65);
     };
     this.name = entry.name;
+    this.allowsBonus = levelAllowsBonus(entry.id) && !entry.data?.encounter && !isCompetitionLevel(entry.id);
     this.relicTime = resolveRelicTime(entry.id, entry.data);
     this.medalTimes = resolveMedalTimes(entry.id, entry.data);
     // A user level carries its own component data and builds through the same
@@ -4651,7 +4653,7 @@ export class Level {
     }
     if (isCampaignLevel(entry.id) && !isCompetitionLevel(entry.id)) {
       if (!this.crystalPickup) this.placeCampaignCrystal();
-      if (!this.bonusPlatform) this.placeDefaultBonusPlatform();
+      if (this.allowsBonus && !this.bonusPlatform) this.placeDefaultBonusPlatform();
     }
     // The entrance and the parent gem tally resolve the same authored room.
     // Explicit editor entrances use the fallback when their parent is unknown.
@@ -11316,6 +11318,7 @@ export class Level {
   }
 
   private buildBonusPlatform(c: CustomComponent, laneFraction = 0.5): void {
+    if (!this.allowsBonus) return;
     const [x, deckY, z] = c.p;
     const group = new THREE.Group();
     group.name = "bonus platform";

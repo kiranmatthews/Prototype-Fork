@@ -23,7 +23,7 @@ const server = await createServer({ appType: 'custom', logLevel: 'silent',
   server: { middlewareMode: true, hmr: false, ws: false } });
 try {
   const { Level, findLevel } = await server.ssrLoadModule('/src/level.ts');
-  const { CAMPAIGN_LEVELS, campaignLevelById, isCampaignLevel, mergeCompletedBonusInventory } =
+  const { CAMPAIGN_LEVELS, campaignLevelById, levelAllowsBonus, isCampaignLevel, mergeCompletedBonusInventory } =
     await server.ssrLoadModule('/src/campaign.ts');
   const { BONUS_LEVEL_ENTRIES, resolveBonusLevel, bonusCrateCount } =
     await server.ssrLoadModule('/src/levels/themed-bonuses.ts');
@@ -33,12 +33,12 @@ try {
   assert.equal(resolveBonusLevel('unknown-editor-parent'), EASY_BONUS_LEVEL);
   for (const entry of BONUS_LEVEL_ENTRIES)
     assert.equal(findLevel(entry.id)?.data, entry.data, `room ${entry.id} has no direct editor entry`);
-  for (const parent of CAMPAIGN_LEVELS) {
+  for (const parent of CAMPAIGN_LEVELS.filter(entry => levelAllowsBonus(entry.levelId))) {
     assert.notEqual(resolveBonusLevel(parent.levelId), EASY_BONUS_LEVEL, `${parent.name} still uses the shared fallback`);
     if (parent.fallbackLevelId) assert.equal(resolveBonusLevel(parent.fallbackLevelId), resolveBonusLevel(parent.levelId));
   }
 
-  let rooms = 0;
+  let rooms = 0, blocked = 0;
   for (const parentId of [...CAMPAIGN_LEVELS.map(entry => entry.levelId), 'unknown-editor-parent']) {
     // A tiny parent isolates session restoration and the authored bonus tally
     // from the unrelated geometry of the campaign course itself.
@@ -101,6 +101,22 @@ try {
     };
     runInNewContext(code, context);
     try {
+      if (!parentLevel.allowsBonus) {
+        assert.equal(parentLevel.bonusPlatformDiagnostics, null, `${parentId} retained an authored bonus pad`);
+        assert.equal(parentLevel.bonusCrateTotal, 0);
+        assert.equal(bonusCrateCount(parentId), 0);
+        assert.ok(!BONUS_LEVEL_ENTRIES.some(entry => entry.id === `bonus-${campaignLevelById(parentId)?.progressKey}`));
+        for (const phase of ['intro', 'running', 'countdown', 'standings', 'final']) {
+          if (parentCompetition) parentCompetition.phase = phase;
+          context.enterBonusRound();
+          if (parentCompetition) context.handleCompetitionAction('bonus');
+          assert.equal(context.transition, undefined, `boss ${parentId} accepted a bonus detour`);
+        }
+        assert.equal(context.level, parentLevel);
+        assert.equal(context.competition, parentCompetition);
+        if (parentBoss) assert.equal(JSON.stringify(parentBoss.diagnostics), bossBefore);
+        blocked++; continue;
+      }
       if (isCup) {
         for (const phase of ['running', 'finishing', 'countdown']) {
           parentCompetition.phase = phase;
@@ -177,5 +193,5 @@ try {
       parentLevel.dispose();
     }
   }
-  console.log(`PASS themed bonus flow: ${rooms} selected rooms, exact parent tallies, cup-event and boss preservation, direct editor entries, failed retry, successful payout, parent restoration and authored skies`);
+  console.log(`PASS themed bonus flow: ${rooms} selected rooms, exact parent tallies, ${blocked} blocked boss/competition detours, direct editor entries, failed retry, successful payout, parent restoration and authored skies`);
 } finally { await server.close(); }

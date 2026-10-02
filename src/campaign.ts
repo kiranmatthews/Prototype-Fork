@@ -529,6 +529,12 @@ export function campaignLevelByKey(key: string): CampaignLevelDefinition | null 
   return LEVEL_BY_KEY.get(key) ?? null;
 }
 
+/** Boss hubs and three-run competition bosses never have bonus detours. */
+export function levelAllowsBonus(id: string): boolean {
+  const definition = campaignLevelById(id) ?? campaignLevelByKey(id);
+  return !definition?.boss && !definition?.competition;
+}
+
 export function isCampaignLevel(id: string): boolean {
   return LEVEL_BY_ID.has(id);
 }

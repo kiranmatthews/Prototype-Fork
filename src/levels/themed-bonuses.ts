@@ -1,5 +1,5 @@
 import type { CustomLevelData, LevelEntry, SkyPreset } from '../level';
-import { campaignLevelById, campaignLevelByKey } from '../campaign';
+import { campaignLevelById, campaignLevelByKey, levelAllowsBonus } from '../campaign';
 import { EASY_BONUS_LEVEL } from './bonus-easy';
 import { makeBonusCourse, type BonusPattern } from './bonus-course-kit';
 import { bonusCourseArt, bonusArtAtmosphere, type BonusArtTheme } from './bonus-course-art';
@@ -39,8 +39,6 @@ export const THEMED_BONUS_RECIPES: readonly BonusRecipe[] = [
     patterns:['finite','fuse'],color:'#d2a286',accent:'#6dabb3',tex:'pavement',sky:'coast'},
   {parentId:'island-hopper',key:'island-hopper',name:'Bonus: Lagoon Relay',theme:'islands',
     patterns:['relay','upper','return'],color:'#c9be8d',accent:'#5caa93',tex:'plank',sky:'coast'},
-  {parentId:'jungle-gate-run',key:'jungle-gate',name:'Bonus: Keeper of the Gates',theme:'gate',
-    patterns:['bridge','relay','finite'],color:'#abac7b',accent:'#d0b973',tex:'jungle',sky:'day',jungleAtmosphere:true},
   {parentId:'codex-lab',key:'codex-switchback',name:'Bonus: Blockworks Reassembly',theme:'blockworks',
     patterns:['return','bridge','finite'],color:'#a7aaab',accent:'#e2a34d',tex:'stone',sky:'day'},
   {parentId:'astra-chimeworks',key:'chimeworks',name:'Bonus: Belfry Counterweights',theme:'chimeworks',
@@ -49,10 +47,6 @@ export const THEMED_BONUS_RECIPES: readonly BonusRecipe[] = [
     patterns:['fuse','bridge','return'],color:'#85b6bb',accent:'#df9d77',tex:'pavement',sky:'day'},
   {parentId:'nightworks-after-hours',key:'nightworks-after-hours',name:'Bonus: After Hours Dispatch',theme:'afterhours',
     patterns:['relay','fuse','return'],color:'#666b81',accent:'#73d5ca',tex:'stone',sky:'night'},
-  {parentId:'jungle-cup',key:'jungle-cup',name:'Bonus: Jade Cup Equipment Vault',theme:'junglecup',
-    patterns:['bridge','finite','relay'],color:'#bfb095',accent:'#88b8a2',tex:'jungle',sky:'day',jungleAtmosphere:true},
-  {parentId:'waterpark-cup',key:'waterpark-cup',name:'Bonus: Cup Drainage Works',theme:'waterparkcup',
-    patterns:['return','fuse','relay'],color:'#8baeb6',accent:'#cf916d',tex:'pavement',sky:'day'},
   {parentId:'crate-primer',key:'crate-primer',name:'Bonus: Apprentice Storehouse',theme:'primer',
     patterns:['upper','finite'],color:'#bba37a',accent:'#b2cd94',tex:'wood',sky:'day'},
   {parentId:'switchyard',key:'switchyard',name:'Bonus: Signal Cabin',theme:'switchyard',
@@ -67,11 +61,9 @@ export const THEMED_BONUS_RECIPES: readonly BonusRecipe[] = [
     patterns:['return','fuse','bridge'],color:'#a67e52',accent:'#d2b572',tex:'plank',sky:'night'},
   {parentId:'bone-yard',key:'bone-yard',name:'Bonus: Ivory Salvage',theme:'boneyard',
     patterns:['relay','finite','return'],color:'#c5b58e',accent:'#73b3a3',tex:'stone',sky:'sunset'},
-  {parentId:'crab-chief',key:'crab-chief',name:'Bonus: Pearl Tribute',theme:'reefchief',
-    patterns:['upper','fuse','bridge'],color:'#d7b685',accent:'#68b2a6',tex:'stone',sky:'sunset'},
 ];
 
-export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.map(recipe => {
+export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => levelAllowsBonus(recipe.parentId)).map(recipe => {
   const {name,patterns,color,accent,tex,sky,jungleAtmosphere}=recipe;
   const course=makeBonusCourse({name,patterns,style:{color,accent,tex,sky,jungleAtmosphere}});
   const gate=course.data.components.find(component=>component.t==='gate')!;
@@ -93,6 +85,7 @@ export function resolveBonusLevel(parentId:string):CustomLevelData {
 
 const UNCOUNTED_CRATES=new Set(['metal','metalbounce','bang','nitrobang']);
 export function bonusCrateCount(parentId:string):number {
+  if (!levelAllowsBonus(parentId)) return 0;
   return resolveBonusLevel(parentId).components.filter(component=>component.t==='checkpoint'||component.t==='outline'||
     (component.t==='crate'&&!UNCOUNTED_CRATES.has(component.kind??'wood'))).length;
 }

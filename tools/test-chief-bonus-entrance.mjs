@@ -1,46 +1,23 @@
 import assert from 'node:assert/strict';
-import { writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
-import { installChiefAssetFiles } from './crab-chief-harness.mjs';
-import { withBlockworksRuntime } from './blockworks-runner.mjs';
-
-let entries = 0;
-const restoreFiles = installChiefAssetFiles();
-try { await withBlockworksRuntime(async r => {
-  await r.l.prepareJungleAssets();
-  const { p, l } = r;
-  r.stepFor(30);
-  const spawn = p.pos.toArray(), boss = l.boss, parentState = p.captureRunState();
-  assert.ok(p.grounded && boss && boss.state === 'waiting');
-  assert.deepEqual(l.bonusReturnPoint().toArray(), [0, .1, 15]);
-  r.walkTo([0, 0, 15], { pace: .16, label: 'walk up the existing arrival pier' });
-  r.walkTo([3.6, 0, 15], { pace: .16, label: 'walk from pier onto the supported side dock' });
-  assert.equal(entries, 0, 'walking beside the raised stone triggered a bonus');
-  const approach = p.pos.toArray();
-  r.jumpTo([6, 1.05, 15], { pace: .25, chargeFrames: 18, arrivalTolerance: 1.45,
-    heightTolerance: .15, label: 'deliberate jump onto the tribute stone' });
-  r.stepFor(10);
-  assert.equal(entries, 1, 'the actual jump landing must enter exactly once');
-  assert.equal(l.bonusPlatformAt(p.pos), true);
-  assert.equal(boss.state, 'waiting', 'the bonus approach started the fight');
-  assert.equal(boss.health, 9); assert.equal(boss.playerHealth, 3);
-  const landing = p.pos.toArray();
-  p.resumeSuspendedLevel(l, l.bonusReturnPoint(), parentState);
-  r.stepFor(30);
-  assert.ok(p.grounded && !p.isBailing && p.state !== 'finished');
-  assert.equal(l.boss, boss); assert.equal(boss.state, 'waiting');
-  assert.ok(p.pos.distanceTo(new r.THREE.Vector3(0, 0, 15)) < .15);
-  const report = { spawn, approach, landing, entries, returned: p.pos.toArray(),
-    chiefState: boss.state, chiefHealth: boss.health, frames: r.frame };
-  await writeFile(join(tmpdir(), 'chief-bonus-entrance-evidence.json'), JSON.stringify(report, null, 2));
-  console.log(JSON.stringify(report));
-  console.log('PASS source-spawn walk across the dock, deliberate raised-pad entry and supported pre-fight return');
-}, {
-  modulePath: '/src/levels/crab-chief.ts', source: m => m.CRAB_CHIEF_LEVEL, levelId: 'crab-chief',
-  controlFrame: () => ({ x: 0, z: -1 }),
-  onTick: (row, r) => {
-    if (r.l.consumeBonusLanding(r.p.pos, { enabled: true, grounded: r.p.grounded,
-      jump: row.input.jumpPressed || row.input.jumpReleased, rising: r.p.vVel > .2 })) entries++;
-  },
-}); } finally { restoreFiles(); }
+import * as THREE from 'three';
+import { withChiefRuntime } from './crab-chief-harness.mjs';
+await withChiefRuntime(async ({l,p,tick,source,module}) => {
+  assert.ok(!source.components.some(component=>component.t==='bonusplatform'));
+  assert.equal(l.allowsBonus,false);
+  assert.equal(l.bonusPlatformDiagnostics,null);
+  assert.equal(l.bonusCrateTotal,0);
+  for(let i=0;i<30;i++)tick();
+  assert.ok(p.grounded);
+  // An older editor export cannot restore its boss's retired entrance.
+  const copied = {...source,components:[...source.components,
+    {t:'bonusplatform',p:[0,0,15],to:[0,.1,15]}]};
+  const clone = new module.Level(new THREE.Scene(),{id:'editor-chief-copy',name:copied.name,data:copied});
+  try {
+    await clone.prepareJungleAssets();
+    assert.equal(clone.allowsBonus,false);
+    assert.equal(clone.bonusPlatformDiagnostics,null);
+    assert.equal(clone.bonusCrateTotal,0);
+    assert.equal(clone.consumeBonusLanding(new THREE.Vector3(0,1.05,15),{enabled:true,grounded:true,jump:true,rising:true}),false);
+  } finally {clone.dispose();}
+  console.log('PASS boss source, automatic-pad exclusion and old editor-copy exclusion; supported arrival and zero bonus-box tally.');
+});

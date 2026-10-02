@@ -1341,7 +1341,7 @@ input2.rival = input;
 const ui = new UI();
 let competition: JungleCupEvent | null = null;
 const competitionUI = new CompetitionPresentation(handleCompetitionAction, {
-  bonusAvailable: () => !level.bonusRoundCompleted,
+  bonusAvailable: () => level.allowsBonus && !level.bonusRoundCompleted,
 });
 const bossUI = new BossPresentation();
 const gameInterface = new GameInterfaceSurface(competitionUI, bossUI);
@@ -2820,7 +2820,7 @@ function enterCampaignLevel(targetId: string, forfeitCurrentRun = false): void {
 }
 
 function enterBonusRound(): void {
-  if (bonusSession || level.bonusRoundCompleted || player.ttActive || level.timeTrial ||
+  if (!level.allowsBonus || bonusSession || level.bonusRoundCompleted || player.ttActive || level.timeTrial ||
       (competition && (competition.simulating || competition.phase === "countdown")) ||
       (!isCampaignLevel(current.id) && !level.bonusPlatformDiagnostics)) return;
   ui.hideMessage();
