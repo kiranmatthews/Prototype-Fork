@@ -75,9 +75,9 @@ export const WATERPARK_GRADE: Point[] = [
 
 deck(-18,178,130,32,46,1,'Giant vert admission deck');
 C.push(coasterRoad(WATERPARK_GIANT.leftDrop.from,WATERPARK_GIANT.leftDrop.to,18,'Giant vert left entry drop'));
-C.push(coasterRoad([-18,70,108],[-18,70,100],18,'Giant vert left runout',false));
+C.push({...coasterRoad([-18,70,108],[-18,70,100],18,'Giant vert left runout',false),skateCamera:true});
 C.push({t:'vertramp',p:WATERPARK_GIANT.p,yaw:90,len:88,rise:32,w:0,vkind:'quarter',arc:90,arcSteps:48,deck:0,
-  gravityTrack:true,vert:true,rails:false,edgeGrinding:false,tex:'pavement',color:'#7eb8b6',grp:1,nm:'Giant shared vert wall — left entry, right exit'});
+  gravityTrack:true,skateCamera:true,vert:true,rails:false,edgeGrinding:false,tex:'pavement',color:'#7eb8b6',grp:1,nm:'Giant shared vert wall — left entry, right exit'});
 {
  const vertices:number[]=[],indices:number[]=[],uvs:number[]=[];
  for(let i=0;i<=80;i++){
@@ -86,7 +86,7 @@ C.push({t:'vertramp',p:WATERPARK_GIANT.p,yaw:90,len:88,rise:32,w:0,vkind:'quarte
   for(const side of [-1,1]){vertices.push(p[0]-t.z/length*side*half,p[1],p[2]+t.x/length*side*half);uvs.push(side<0?0:half/2,i/80*giantExitCurve.getLength()/4);}
   if(i<80){const a=i*2;indices.push(a,a+1,a+2,a+1,a+3,a+2);}
  }
- C.push({t:'mesh',p:[0,0,0],vertices,indices,uvs,vert:false,edgeGrinding:false,doubleSided:true,tex:'pavement',color:'#6da7b6',grp:1,nm:'Giant vert right exit chute'});
+ C.push({t:'mesh',p:[0,0,0],vertices,indices,uvs,vert:false,edgeGrinding:false,doubleSided:true,tex:'pavement',color:'#6da7b6',grp:1,skateCamera:true,nm:'Giant vert right exit chute'});
 }
 lipApron(-20,60,24,8,1,'First pool drop-in apron');
 ramp([0,60-Math.sqrt(28),-25],2,Math.sqrt(28),20,180,1,'First pool roll-in bevel');

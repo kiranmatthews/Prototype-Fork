@@ -139,3 +139,31 @@ export class SkateChaseCamera {
     this.forward.normalize();
   }
 }
+
+/** Reuse the park's unmodified vert swing on an authored course surface.
+ * Restoring before the course rig runs keeps its input heading independent. */
+export class SkateChaseCameraOverlay {
+  private readonly rig = new SkateChaseCamera();
+  get aim():THREE.Vector3 { return this.rig.aim; }
+  private readonly eye = new THREE.Vector3();
+  private readonly up = new THREE.Vector3();
+  private readonly rotation = new THREE.Quaternion();
+  private fov = 49;
+  private applied = false;
+  private active = false;
+
+  restore(camera:THREE.PerspectiveCamera):void {
+    if(!this.applied)return;
+    camera.position.copy(this.eye);camera.up.copy(this.up);camera.quaternion.copy(this.rotation);
+    if(camera.fov!==this.fov){camera.fov=this.fov;camera.updateProjectionMatrix();}
+    this.applied=false;
+  }
+
+  apply(camera:THREE.PerspectiveCamera,rider:SkateCameraSubject|null,dt:number,snap:boolean,
+    surfaces:THREE.Object3D[],framing:SkateGroundFraming):void {
+    if(!rider){this.active=false;return;}
+    this.eye.copy(camera.position);this.up.copy(camera.up);this.rotation.copy(camera.quaternion);this.fov=camera.fov;
+    this.rig.update(camera,rider,dt,snap||!this.active,surfaces,framing);
+    this.applied=this.active=true;
+  }
+}

@@ -51,6 +51,14 @@ loop speed from rest when approached from its supported summit.
 
 ## Camera and implementation
 
+The giant quarterpipe and its flat approach/receiving chute use the existing
+competition `SkateChaseCamera`, including its calibrated wall swing and look
+back down the wall during vert air. Surface metadata selects that rig through
+takeoff and landing. A presentation overlay restores the underlying course
+camera before each update, preserving movement and the course's input heading.
+Frame-for-frame comparison against the competition rig verifies this reuse.
+The steep entry drop retains its surface-following road shot.
+
 The distant 28 m follow and static loop overview volumes are removed. Ordered
 camera nodes follow the real route and all launch headings. The normal lens
 and 5.05 m trailing offset remain. Deadwater opts into full vertical follow for

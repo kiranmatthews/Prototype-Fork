@@ -33,7 +33,7 @@ await withWaterparkRuntime(async r=>{
     for(let i=0;i<10;i++){p.step(1/60,makeInput(),l);l.update(1/60);p.commitRenderStep(l);}
     assert.ok(p.grounded&&Math.abs(p.pos.y-12)<.1,'Cup spawn is unsupported');
     // A real run on an original bridge rail earns live competition points.
-    p.respawn(l,true,false,{position:new THREE.Vector3(30,12.1,-131),heading:new THREE.Vector3(0,0,1)});p.competitionMode=true;
+    p.respawn(l,true,false,{position:new THREE.Vector3(30,15.6,-104),heading:new THREE.Vector3(0,0,1)});p.competitionMode=true;
     let grinded=false,scored=false;
     for(let i=0;i<180;i++){
       p.step(1/60,makeInput({moveY:1,moveX:p.state==='grind'?-Math.sign(p.balance)*.3:0,jumpHeld:true,grindHeld:true,grindPressed:i===0}),l);l.update(1/60);p.commitRenderStep(l);

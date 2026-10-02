@@ -10,13 +10,13 @@ const end=main.indexOf('\ncamera.position\n  .copy(player.renderPosition)',begin
 assert.ok(begin>=0&&end>begin);
 const code=ts.transpileModule(main.slice(begin,end),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText;
 const rigFactory=cameraCode=>new Function('deps',`
- const {THREE,TUNING,LoopCameraFraming,CameraHeroFraming,cameraRigFraming,setCameraRigAim,cameraViewAt,cameraViewDirection,
+ const {THREE,TUNING,LoopCameraFraming,CameraHeroFraming,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,cameraViewAt,cameraViewDirection,
  CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,newLaneCursor,level,player,camera}=deps;
  const current={id:'waterpark'},worldMapController=null,oceanOverview=false,oceanReview=false,BOULDER_FOV=27,input={lookX:0,lookY:0};
  const cameraLook=new CameraLookOffset(),cameraLaneCursor=newLaneCursor(),camF=new THREE.Vector3(0,0,1),camControlDir=new THREE.Vector3(0,0,1),prevPlayerPos=new THREE.Vector3(),camTarget=new THREE.Vector3(),aimSmooth=new THREE.Vector3();
  let cameraRenderSnapVersion=-1,camAnchorY=player.renderPosition.y,camBack=0,sideF=0,boulderF=0,camSpeedFovBoost=0,cam2SpeedFovBoost=0,camRoll=0;
  ${cameraCode}
- return {step:updateCamera,heading:camControlDir,target:camTarget,get surfaceOverlayActive(){return loopCameraFraming.active;}};`);
+ return {step:updateCamera,heading:camControlDir,target:camTarget,get surfaceOverlayActive(){return loopCameraFraming.active||player.authoredSkateCamera;}};`);
 const makeRig=rigFactory(code);
 // Preserve the exact previous damping as the reference for every non-opt-in
 // path, including a user who sets the global tuning slider to full follow.
@@ -28,6 +28,7 @@ await withWaterparkRuntime(async r=>{
  const {p,l,server,THREE,TUNING,CONST,source}=r,tuningBefore=JSON.stringify(TUNING);
  const {newLaneCursor}=await server.ssrLoadModule('/src/level.ts');
  const {LoopCameraFraming}=await server.ssrLoadModule('/src/loopCamera.ts');
+ const {SkateChaseCameraOverlay,SkateChaseCamera}=await server.ssrLoadModule('/src/skateChaseCamera.ts');
   const { CameraHeroFraming } = await server.ssrLoadModule('/src/cameraHeroFraming.ts');
  const {cameraRigFraming,setCameraRigAim}=await server.ssrLoadModule('/src/cameraRig.ts');
  const {cameraViewAt,cameraViewDirection,CameraViewFraming}=await server.ssrLoadModule('/src/cameraViews.ts');
@@ -38,7 +39,7 @@ await withWaterparkRuntime(async r=>{
  assert.equal(TUNING.camAirLift,0,'Deadwater authored follow must leave the shared camera default unchanged');
  const full=l;
  const partial=new Proxy(l,{get:(target,key)=>key==='cameraAirLift'?.8:Reflect.get(target,key,target)});
- const deps={THREE,TUNING,LoopCameraFraming,CameraHeroFraming,cameraRigFraming,setCameraRigAim,cameraViewAt,cameraViewDirection,
+ const deps={THREE,TUNING,LoopCameraFraming,CameraHeroFraming,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,cameraViewAt,cameraViewDirection,
  CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,newLaneCursor,player:p};
  const rig=makeRig({...deps,level:full,camera}),old=makeRig({...deps,level:partial,camera:partialCamera});
  const scopes=[{name:'ordinary default',value:undefined,global:TUNING.camAirLift},
@@ -52,13 +53,23 @@ await withWaterparkRuntime(async r=>{
  const gap=source.WATERPARK_JUMPS[2],pilot=createWaterparkPilot(source,{fastTurns:true}),phases={};
  assert.equal(l.cameraViews.length,0,'normal close camera must have no spectator override');
  let released=false,airborne=false,landed=false,peak=0,maxY=-Infinity,minY=Infinity,maxX=0,oldMaxY=-Infinity,oldMinY=Infinity,samples=0,vertices=0,maxYFollowError=0;
- const point=new THREE.Vector3();
+ const point=new THREE.Vector3(),referenceCamera=camera.clone(),referenceSwing=new SkateChaseCamera();
+ let swingWasActive=false,swingVersion=-1,swingFrames=0,swingAirFrames=0;
  for(let frame=0;frame<5000;frame++){
   r.tick(pilot.sample(p,l));pilot.observe(p,l);
   released ||= p.state==='air';airborne ||= !p.grounded;
   p.applyRenderInterpolation(.5);
   const physical=JSON.stringify({p:p.pos.toArray(),speed:p.speed,axis:p.axisF.toArray(),state:p.state,bounds:p.interactionBoundsDiagnostics});
   rig.step(CONST.fixedStep);old.step(CONST.fixedStep);
+  if(p.authoredSkateCamera){
+   referenceSwing.update(referenceCamera,{position:p.renderPosition,heading:p.skateCameraHeading,up:p.skateCameraUp,
+    vertAir:p.vertAir,vertNormal:p.vertNormal,verticalSpeed:p.vVel,speed:p.cameraSkateSpeed,grounded:p.skateCameraSupported,bailing:p.skateCameraBailing},
+    CONST.fixedStep,!swingWasActive||swingVersion!==p.renderSnapVersion,l.groundMeshes,
+    {camDist:TUNING.parkCamDist,camHeight:TUNING.parkCamHeight,camPitch:TUNING.parkCamPitch,camFov:TUNING.parkCamFov});
+   assert.ok(camera.position.distanceTo(referenceCamera.position)<1e-8&&camera.quaternion.angleTo(referenceCamera.quaternion)<1e-7,'Giant vert must use the competition swing unchanged');
+   assert.equal(camera.fov,referenceCamera.fov);swingFrames++;swingAirFrames+=p.vertAir;
+  }
+  swingWasActive=p.authoredSkateCamera;swingVersion=p.renderSnapVersion;
   if(!rig.surfaceOverlayActive)
    maxYFollowError=Math.max(maxYFollowError,Math.abs(camera.position.y-rig.target.y));
   for(const scope of scopes){
@@ -89,7 +100,8 @@ await withWaterparkRuntime(async r=>{
   if(pilot.evidence.jumps.length===source.WATERPARK_JUMPS.length)landed=true;
   if(p.state==='finished')break;
  }
- const result={released,airborne,landed,peak,samples,vertices,minY,maxY,maxX,oldMinY,oldMaxY,maxYFollowError,phases};
+ assert.ok(swingFrames>200&&swingAirFrames>60);
+ const result={swingFrames,swingAirFrames,released,airborne,landed,peak,samples,vertices,minY,maxY,maxX,oldMinY,oldMaxY,maxYFollowError,phases};
  console.log(JSON.stringify(result,null,2));
  assert.ok(landed&&peak>gap.takeoff[1]+3&&samples>20,'test must traverse the actual flume ramp air');
  assert.ok(minY>-1&&maxY<1&&maxX<1,'actual close-camera ordinary-air rider left the viewport');

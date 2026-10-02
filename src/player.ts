@@ -452,6 +452,8 @@ interface GroundHit {
   beachSand?: boolean; // explicit gameplay tag; visual sand textures alone never add drag
   gravityTrack?: boolean; // slope/drag still act; authored coaster roads retain earned overspeed
   lethal?: boolean;
+  outOfBounds?: boolean;
+  skateCamera?: boolean;
   crate?: Crate; // identity-bearing temporary lid support
   moverId?: number; // standing on a moving platform: ride along with it
   crumbleId?: number; // standing on a crumble pad: it starts breaking
@@ -946,6 +948,12 @@ export class Player {
   // jump, vert launch, skate edge-fall). Grabs are board tricks: a standing
   // Crash hop never offers them (the slam stays available from on-foot air).
   private airFromSkate = false;
+  private skateCameraAir = false;
+  private readonly recoveryAnchor = new THREE.Vector3();
+  private readonly recoveryHeading = new THREE.Vector3(0,0,-1);
+  private readonly recoveryCandidate = new THREE.Vector3();
+  private readonly recoveryCandidateHeading = new THREE.Vector3(0,0,-1);
+  private recoverySampleTime = 0;
   private gravityTrackAir = false; // one launch retains the momentum earned on a tagged coaster road
   private readonly gravityRideDirection = new THREE.Vector3();
   // WHICH GRAVITY THIS AIRTIME FLIES UNDER. A skate air and a platforming hop
@@ -1785,10 +1793,11 @@ export class Player {
     if (this.state === 'grind' && this.grindRail)
       return this.parkCameraForward.copy(this.grindRail.tangentAt(this.grindT))
         .multiplyScalar(this.grindDir);
-    if (this.parkControls && this.grounded)
+    if ((this.parkControls || this.authoredSkateCamera) && this.grounded)
       return skateSurfaceDirection(this.parkCameraForward, this.axisF, this.skateCameraUp);
     return this.axisF;
   }
+  get authoredSkateCamera(): boolean { return this.grounded ? this.groundHit?.skateCamera === true || this.groundHit?.halfpipe?.object.userData.skateCamera === true : this.skateCameraAir; }
   get skateCameraSupported(): boolean { return this.grounded || this.state === 'grind'; }
   get skateCameraBailing(): boolean { return this.isBailing; }
   private readonly skateCameraUpVector = new THREE.Vector3(0, 1, 0);
@@ -3143,6 +3152,8 @@ export class Player {
     }
     if (endlessScore !== null) this.points = endlessScore;
     this.settle(level, placement?.heading);
+    this.recoveryAnchor.copy(level.spawnPos);this.recoveryCandidate.copy(level.spawnPos);
+    this.recoveryHeading.set(0,0,-1);this.recoveryCandidateHeading.copy(this.recoveryHeading);this.recoverySampleTime=0;
     this.onRespawn();
   }
 
@@ -3419,6 +3430,7 @@ export class Player {
     this.loopFall = false;
     this.loopFailure = null;
     this.gravityTrackAir = false;
+    this.skateCameraAir = false;
     this.cameraPoseStandingCenter = null;
     this.completedLoops.clear();
     this.loopGateHintShown = false;
@@ -4505,6 +4517,7 @@ export class Player {
     else if(!this.group.position.equals(this.pos)){
       this.group.position.copy(this.pos);this.refreshCharacterBounds();
     }
+    this.recordSafeRecovery(level,dt);
     this.seatOnCarton(level, dt);
     const water = level.swimmingSurfaceAt(this.pos.x, this.pos.z);
     const wet = water !== null && this.pos.y < water - .08 &&
@@ -5643,9 +5656,37 @@ export class Player {
     return fall;
   }
 
+  private recordSafeRecovery(level:Level,dt:number):void {
+    if(!level.hasOutOfBoundsSurfaces)return;
+    const hit=this.groundHit;
+    if(!this.grounded||this.state!=='ride'||this.isBailing||!hit||hit.outOfBounds||hit.lethal||hit.normal.y<.95||hit.speedPadId){this.recoverySampleTime=0;return;}
+    this.recoverySampleTime+=dt;if(this.recoverySampleTime<.45)return;this.recoverySampleTime=0;
+    // Keep one sample behind the rider and require a supported footprint, so
+    // returning from a fall cannot place them on the very edge they just left.
+    for(const [x,z]of [[-1.3,-1.3],[1.3,-1.3],[-1.3,1.3],[1.3,1.3]]){
+      const support=this.queryGround(level,x,z,this.pos.y+.5);
+      if(!support||support.outOfBounds||support.lethal||support.normal.y<.9||Math.abs(support.y-this.pos.y)>.6)return;
+    }
+    this.recoveryAnchor.copy(this.recoveryCandidate);this.recoveryHeading.copy(this.recoveryCandidateHeading);
+    this.recoveryCandidate.copy(this.pos);this.recoveryCandidateHeading.copy(this.axisF);
+  }
+
+  private returnFromOutOfBounds(level:Level):void {
+    this.loseCombo();this.grindBoostT=0;
+    this.pos.copy(this.recoveryAnchor);this.laneCursor.s=-1;this.viewInput.reset();
+    this.settle(level,this.recoveryHeading);
+    this.axisF.copy(this.recoveryHeading);this.axisL.set(this.axisF.z,0,-this.axisF.x);
+    this.groundHit=this.queryGround(level);this.grounded=!!this.groundHit;
+    if(this.groundHit){this.pos.y=this.groundHit.y;this.rideNormal.copy(this.groundHit.normal);}
+    this.prevPos.copy(this.pos);level.playerPos.copy(this.pos);this.recoverySampleTime=0;
+    this.snapRenderInterpolation();this.onRespawn();
+    this.onCourseHint('OUT OF BOUNDS','Combo ended — score kept');
+  }
+
   private stepRide(dt: number, input: Input, level: Level): void {
     if (this.stepLoopRide(dt, input, level)) return;
     this.gravityTrackAir = !!this.groundHit?.gravityTrack;
+    this.skateCameraAir = this.authoredSkateCamera;
     // LIP STALL owns the whole frame: parked stationary on the coping,
     // BALANCING — the needle (up/down on the stick, the vertical meter) tips
     // between the pipe below and the deck out back. Points tick, combo alive.
@@ -6688,6 +6729,7 @@ export class Player {
             name: 'halfpipe',
             halfpipe: ridingPipe,
             gravityTrack: ridingPipe.object.userData.gravityTrack === true,
+            skateCamera: ridingPipe.object.userData.skateCamera === true,
           };
           // the analytic normal IS smooth — track it exactly, no easing lag
           this.rideNormal.copy(hit.normal);
@@ -6719,7 +6761,7 @@ export class Player {
         const normal = contact.face.normal.clone().transformDirection(mesh.matrixWorld);
         if (normal.y >= 0 && contact.point.distanceTo(this.pos) < 0.7) {
           this.pos.copy(contact.point);
-          hit = { y: contact.point.y, normal, name: mesh.name, vert: mesh.userData.vert, gravityTrack:mesh.userData.gravityTrack===true, mesh };
+          hit = { y: contact.point.y, normal, name: mesh.name, vert: mesh.userData.vert, gravityTrack:mesh.userData.gravityTrack===true, skateCamera:mesh.userData.skateCamera===true, mesh };
           this.rideNormal.copy(normal);
         }
       }
@@ -6728,6 +6770,7 @@ export class Player {
     const steepHit = hit !== null && hit.normal.y < CONST.steepSnapNormal;
     const upWindow = steepHit ? TUNING.wallStick : 0.8;
     const downWindow = steepHit ? TUNING.wallStick : 1.4;
+    if(hit?.outOfBounds&&hit.y>=this.pos.y-downWindow&&hit.y<=this.pos.y+upWindow){this.returnFromOutOfBounds(level);return;}
     if(hit?.lethal&&hit.y>=this.pos.y-downWindow&&hit.y<=this.pos.y+upWindow){
       this.pos.y=hit.y;this.groundHit=hit;this.grounded=true;this.die();return;
     }
@@ -6830,6 +6873,7 @@ export class Player {
       this.pos.y = hit.y;
       this.groundHit = hit;
       this.grounded = true;
+      if(hit.outOfBounds){this.returnFromOutOfBounds(level);return;}
       if(hit.lethal){this.die();return;}
       this.surfaceName = hit.name;
       this.crateFloor = hit.crate ?? null;
@@ -7777,6 +7821,7 @@ export class Player {
       }
     }
     if (landNow && hit) {
+      if(hit.outOfBounds){this.returnFromOutOfBounds(level);return;}
       if(hit.lethal){this.pos.y=hit.y;this.groundHit=hit;this.grounded=true;this.die();return;}
       if (this.isBailing) {
         // A bail that existed BEFORE this surface contact owns it completely.
@@ -15204,7 +15249,7 @@ export class Player {
       if (normal.y < 0 || normal.dot(VERT_RAY_D) >= -1e-4) continue;
       this.pos.copy(hit.point);
       return { y: hit.point.y, normal, name: hit.object.name,
-        mesh: hit.object, vert: hit.object.userData.vert, gravityTrack:hit.object.userData.gravityTrack===true };
+        mesh: hit.object, vert: hit.object.userData.vert, gravityTrack:hit.object.userData.gravityTrack===true, skateCamera:hit.object.userData.skateCamera===true };
     }
     return null;
   }
@@ -15331,6 +15376,8 @@ export class Player {
       beachSand: hit.object.userData.beachSandFriction === true,
       gravityTrack: hit.object.userData.gravityTrack === true,
       lethal: hit.object.userData.lethal === true,
+      outOfBounds: hit.object.userData.outOfBounds === true,
+      skateCamera: hit.object.userData.skateCamera === true,
       moverId: hit.object.userData.moverId as number | undefined,
       crumbleId: hit.object.userData.crumbleId as number | undefined,
       slippy: hit.object.userData.slippy as boolean | undefined,

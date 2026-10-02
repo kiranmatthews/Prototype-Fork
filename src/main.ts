@@ -97,7 +97,7 @@ import { cameraViewAt, cameraViewDirection, CameraViewFraming } from "./cameraVi
 import { cameraRigFraming, setCameraRigAim } from "./cameraRig";
 import { LoopCameraFraming } from "./loopCamera";
 import { CameraHeroFraming } from "./cameraHeroFraming";
-import { SkateChaseCamera } from "./skateChaseCamera";
+import { SkateChaseCamera, SkateChaseCameraOverlay } from "./skateChaseCamera";
 import { sfx } from "./audio";
 import { Recorder, Replayer, ReplayFile, camYawOf, isReplayFile } from "./replay";
 import { Editor } from "./editor";
@@ -1937,19 +1937,29 @@ function stepPvp(dt: number): void {
 // P2's rig: a light follow cam (lane-aware forward, ground-agnostic) — the
 // full Crash rig belongs to P1; this one just keeps P2 framed and onward.
 const cameraViewFraming2 = new CameraViewFraming();
+const authoredSkateCamera2 = new SkateChaseCameraOverlay();
 const loopCameraFraming2 = new LoopCameraFraming();
 const cameraOverlayHeroFraming2 = new CameraHeroFraming();
 function updateCamera2(dt: number): void {
   if (!p2) return;
   const framingSnap = cam2RenderSnapVersion !== p2.renderSnapVersion;
+  authoredSkateCamera2.restore(camera2);
   loopCameraFraming2.restore(camera2);
   cameraViewFraming2.restore(camera2);
   updateBaseCamera2(dt);
   const subject = p2.renderPosition;
   cameraViewFraming2.apply(camera2, cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z), subject, framingSnap);
-  loopCameraFraming2.apply(camera2, p2.loopPresentationFrame, subject, cameraRigFraming(TUNING, 0, 0, 0, true), dt, framingSnap,p2.loopFallPresentation);
-  if(level.cameraAirLift===1&&p2.vertAir&&loopCameraFraming2.active)cameraOverlayHeroFraming2.apply(camera2,p2.cameraPoseBounds,dt,framingSnap);
+  loopCameraFraming2.apply(camera2, p2.authoredSkateCamera ? null : p2.loopPresentationFrame, subject, cameraRigFraming(TUNING, 0, 0, 0, true), dt, framingSnap||p2.authoredSkateCamera,p2.loopFallPresentation);
+  if(!p2.authoredSkateCamera&&level.cameraAirLift===1&&p2.vertAir&&loopCameraFraming2.active)cameraOverlayHeroFraming2.apply(camera2,p2.cameraPoseBounds,dt,framingSnap);
   else cameraOverlayHeroFraming2.reset();
+  authoredSkateCamera2.apply(camera2, p2.authoredSkateCamera ? {
+    position:subject,heading:p2.skateCameraHeading,up:p2.skateCameraUp,
+    vertAir:p2.vertAir,vertNormal:p2.vertNormal,verticalSpeed:p2.vVel,
+    speed:p2.cameraSkateSpeed,grounded:p2.skateCameraSupported,bailing:p2.skateCameraBailing,
+  } : null,dt,framingSnap,level.groundMeshes,{
+    camDist:TUNING.parkCamDist,camHeight:TUNING.parkCamHeight,camPitch:TUNING.parkCamPitch,camFov:TUNING.parkCamFov,
+  });
+  if(p2.authoredSkateCamera)cam2Look.apply(camera2,authoredSkateCamera2.aim);
 }
 
 function updateBaseCamera2(dt: number): void {
@@ -4145,11 +4155,13 @@ const camF = new THREE.Vector3(0, 0, -1);
 const skateChaseCamera = new SkateChaseCamera();
 
 const cameraViewFraming = new CameraViewFraming();
+const authoredSkateCamera = new SkateChaseCameraOverlay();
 const cameraHeroFraming = new CameraHeroFraming();
 const loopCameraFraming = new LoopCameraFraming();
 const cameraOverlayHeroFraming = new CameraHeroFraming();
 function updateCamera(dt: number): void {
   const framingSnap = cameraRenderSnapVersion !== player.renderSnapVersion;
+  authoredSkateCamera.restore(camera);
   loopCameraFraming.restore(camera);
   cameraViewFraming.restore(camera);
   updateBaseCamera(dt);
@@ -4161,9 +4173,17 @@ function updateCamera(dt: number): void {
     const forward = cameraViewDirection(level.cameraViews, subject.x, subject.y, subject.z, camControlDir);
     camControlDir.set(forward.x, 0, forward.z);
   }
-  loopCameraFraming.apply(camera, player.loopPresentationFrame, subject, cameraRigFraming(TUNING), dt, framingSnap,player.loopFallPresentation);
-  if(level.cameraAirLift===1&&player.vertAir&&loopCameraFraming.active)cameraOverlayHeroFraming.apply(camera,player.cameraPoseBounds,dt,framingSnap);
+  loopCameraFraming.apply(camera, player.authoredSkateCamera ? null : player.loopPresentationFrame, subject, cameraRigFraming(TUNING), dt, framingSnap||player.authoredSkateCamera,player.loopFallPresentation);
+  if(!player.authoredSkateCamera&&level.cameraAirLift===1&&player.vertAir&&loopCameraFraming.active)cameraOverlayHeroFraming.apply(camera,player.cameraPoseBounds,dt,framingSnap);
   else cameraOverlayHeroFraming.reset();
+  authoredSkateCamera.apply(camera, player.authoredSkateCamera ? {
+    position:subject,heading:player.skateCameraHeading,up:player.skateCameraUp,
+    vertAir:player.vertAir,vertNormal:player.vertNormal,verticalSpeed:player.vVel,
+    speed:player.cameraSkateSpeed,grounded:player.skateCameraSupported,bailing:player.skateCameraBailing,
+  } : null,dt,framingSnap,level.groundMeshes,{
+    camDist:TUNING.parkCamDist,camHeight:TUNING.parkCamHeight,camPitch:TUNING.parkCamPitch,camFov:TUNING.parkCamFov,
+  });
+  if(player.authoredSkateCamera)cameraLook.apply(camera,authoredSkateCamera.aim);
 }
 
 function updateBaseCamera(dt: number): void {

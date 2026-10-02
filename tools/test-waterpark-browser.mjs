@@ -48,7 +48,7 @@ try{
     sightTarget.copy(p.renderPosition).addScaledVector(p.rideNormal,1.1);
     sightDirection.subVectors(sightTarget,camera.position);sightRay.set(camera.position,sightDirection.clone().normalize());sightRay.near=.08;sightRay.far=sightDirection.length()-.35;
     const blocking=sightRay.intersectObjects(l.groundMeshes,false).map(h=>h.object.name);
-    report.rampFraming.push({frame:report.frame,phase:pilot.phase,clearance:sightTarget.subVectors(camera.position,p.renderPosition).dot(p.rideNormal),blocking});lastRampFrame=report.frame;
+    report.rampFraming.push({frame:report.frame,phase:pilot.phase,nativeVert:p.authoredSkateCamera,clearance:sightTarget.subVectors(camera.position,p.renderPosition).dot(p.rideNormal),blocking});lastRampFrame=report.frame;
    }
    if(scene===g.scene&&camera===g.camera&&p.loopStatus.active&&report.frame-lastLoopFrame>=6&&!report.done){
     projected.copy(p.renderPosition).addScaledVector(p.rideNormal,.7).project(camera);
@@ -100,7 +100,7 @@ try{
  assert.equal(report.end.state,'finished');assert.equal(report.evidence.transfers.length,5);assert.equal(report.evidence.jumps.length,4);
  assert.ok(report.evidence.inversions.length===3&&report.loopFrames>400,'The actual rendered rider must complete the giant loop');
  assert.ok(report.rampFraming.length>40,'Review the steep gravity roads in the actual render camera');
- assert.ok(report.rampFraming.every(f=>f.clearance>3.5&&f.blocking.length===0),`Coaster camera went under/behind a road: ${JSON.stringify(report.rampFraming.filter(f=>f.clearance<=3.5||f.blocking.length).slice(0,5))}`);
+ assert.ok(report.rampFraming.every(f=>f.clearance>(f.nativeVert?.3:3.5)&&f.blocking.length===0),`Coaster camera went under/behind a road: ${JSON.stringify(report.rampFraming.filter(f=>f.clearance<=(f.nativeVert?.3:3.5)||f.blocking.length).slice(0,5))}`);
  assert.ok(report.evidence.checkpoints.includes(1),'The loop station checkpoint must be banked');
  if(checkpoints)assert.deepEqual(report.evidence.checkpoints,[0,1]);
  assert.equal(report.evidence.backwardInputs,0,'The linear course must never request reversing uphill');

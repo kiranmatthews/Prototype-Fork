@@ -668,6 +668,8 @@ export interface CustomComponent {
   loopOffset?: number; // loop: lateral separation between entry and exit, local +X
   loopRequired?: boolean; // loop: finish gate unlocks after one complete supported turn
   gravityTrack?: boolean; // authored ride surface: retain gravity-earned speed above the ordinary cap; never adds speed
+  skateCamera?: boolean; // authored mesh/vert surface: use the existing competition vert camera, including its outgoing air
+  outOfBounds?: boolean; // solid mesh: break the combo and return to safe ground without a score/death penalty
   lethal?: boolean; // solid mesh: touching its surface causes a death instead of a safe landing
   beachSand?: boolean;
   len?: number;
@@ -2417,7 +2419,7 @@ const COMPONENT_DATA_KEYS = new Set([
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
   "trick", "exitYaw", "airOnly", "coverage", "radius", "color", "tex", "dir",
-  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack", "lethal",
+  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
 ]);
 const hasOnlyKeys = (value: object, keys: ReadonlySet<string>): boolean =>
   Object.keys(value).every((key) => keys.has(key));
@@ -2756,7 +2758,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     "fog",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "lk",
-    "shoreProfile", "cameraView", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "beachSand", "loopRequired", "gravityTrack", "lethal",
+    "shoreProfile", "cameraView", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "beachSand", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
   ];
   let aggregateNodes = source.ocean?.shore?.length ?? 0;
   let aggregateSamples = source.ocean
@@ -2869,6 +2871,8 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     )
       return null;
     if (component.gravityTrack !== undefined && (!['mesh','vertramp'].includes(component.t) || component.solid === false || component.loopRadius !== undefined)) return null;
+    if (component.skateCamera !== undefined && (!['mesh','vertramp'].includes(component.t) || component.solid === false)) return null;
+    if (component.outOfBounds !== undefined && (component.t !== 'mesh' || component.solid === false || component.lethal === true)) return null;
     if (component.lethal !== undefined && (component.t !== 'mesh' || component.solid === false)) return null;
     if (component.loopRadius !== undefined || component.loopOffset !== undefined || component.loopRequired !== undefined) {
       if (component.t !== "mesh" || !Number.isFinite(component.loopRadius) ||
@@ -3778,6 +3782,7 @@ export class Level {
     { tricks: Set<DeckTrickKind>; comboLive: boolean }
   >();
   returnPortals: ReturnPortal[] = [];
+  hasOutOfBoundsSurfaces = false;
   grindosauri: Grindosaurus[] = [];
   angryBalls: AngryBall[] = [];
   private grindosaurusByRail = new Map<Rail, Grindosaurus>();
@@ -5231,6 +5236,8 @@ export class Level {
         ...(m.userData.iceGrip !== undefined ? { iceGrip: m.userData.iceGrip as number } : {}),
         ...(m.userData.gravityTrack ? { gravityTrack: true } : {}),
         ...(m.userData.lethal ? { lethal: true } : {}),
+        ...(m.userData.skateCamera ? { skateCamera: true } : {}),
+        ...(m.userData.outOfBounds ? { outOfBounds: true } : {}),
       };
       remap = new Map();
       chunks.push(component);
@@ -5368,6 +5375,8 @@ export class Level {
     if (c.vert !== undefined) mesh.userData.vert = c.vert;
     if (c.gravityTrack) mesh.userData.gravityTrack = true;
     if (c.lethal) mesh.userData.lethal = true;
+    if (c.skateCamera) mesh.userData.skateCamera = true;
+    if (c.outOfBounds) {mesh.userData.outOfBounds = true;this.hasOutOfBoundsSurfaces = true;}
     if (c.loopRadius !== undefined) {
       this.loopMeshes.push(mesh);
       mesh.userData.loopRadius = c.loopRadius;
@@ -14656,11 +14665,13 @@ export class Level {
       );
       hp.object.userData.rails = c.rails !== false;
       hp.object.userData.gravityTrack = c.gravityTrack === true;
+      hp.object.userData.skateCamera = c.skateCamera === true;
       this.halfpipes.push(hp);
       this.root.add(hp.object);
       for (const wm of hp.walls) {
         wm.userData.vert = c.vert !== false; // the flag rides the analytic path too
         wm.userData.gravityTrack = c.gravityTrack === true;
+        wm.userData.skateCamera = c.skateCamera === true;
         this.groundMeshes.push(wm);
       }
       for (const side of c.rails === false ? [] : [-1, 1]) {
@@ -14697,6 +14708,7 @@ export class Level {
     mesh.name = c.vert === false ? "slide deck" : "vertramp";
     mesh.userData.vertRampMesh = true; // capture: its vertramp component rebuilds it
     mesh.userData.gravityTrack = c.gravityTrack === true;
+    mesh.userData.skateCamera = c.skateCamera === true;
     // THE POINT OF ALL THIS: the level DECLARES what this is, so the physics
     // stops guessing from normal.y. And it declares it BOTH ways — `false` is
     // not "unflagged", it is "this is a ROAD", which is what keeps a slide's

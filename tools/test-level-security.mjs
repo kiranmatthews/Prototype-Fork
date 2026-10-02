@@ -38,6 +38,12 @@ try {
   assert.ok(normalize({...base(),components:[visualMesh]}));
   assert.ok(normalize({...base(),components:[{...visualMesh,solid:true,lethal:true}]}));
   rejectComponent({...visualMesh,lethal:true},'a lethal surface must be solid');
+  for(const field of ['outOfBounds','skateCamera']){
+    assert.ok(normalize({...base(),components:[{...visualMesh,solid:true,[field]:true}]}));
+    rejectComponent({...visualMesh,[field]:true},field+' requires a solid ride surface');
+    rejectComponent({...visualMesh,solid:true,[field]:'true'},field+' requires a boolean');
+  }
+  rejectComponent({...visualMesh,solid:true,outOfBounds:true,lethal:true},'a surface cannot be both a safe return and a death');
   rejectComponent({...visualMesh,solid:true,lethal:'yes'},'lethal contact requires a boolean');
   rejectComponent({t:'platform',p:[0,0,0],lethal:true},'lethal contact is restricted to explicit meshes');
   for(const emissive of ["url(https://example.invalid/x)",0,null,"#12345g"])
