@@ -32,7 +32,7 @@ await withWaterparkRuntime(async r=>{
     assert.equal(l.crystalPickup,null);assert.equal(l.crates.length,0);assert.ok(l.warpPads.every(w=>!w.group.visible));
     for(let i=0;i<10;i++){p.step(1/60,makeInput(),l);l.update(1/60);p.commitRenderStep(l);}
     assert.ok(p.grounded&&Math.abs(p.pos.y-12)<.1,'Cup spawn is unsupported');
-    // A real run on an original bridge rail can bank competition points.
+    // A real run on an original bridge rail earns live competition points.
     p.respawn(l,true,false,{position:new THREE.Vector3(30,12.1,-131),heading:new THREE.Vector3(0,0,1)});p.competitionMode=true;
     let grinded=false,scored=false;
     for(let i=0;i<180;i++){
@@ -40,6 +40,16 @@ await withWaterparkRuntime(async r=>{
       grinded ||= p.state==='grind';scored ||= p.points+p.comboPoints>0;assert.notEqual(p.state,'dead');
     }
     assert.ok(grinded&&scored,'Recovered bridge rails are not scoring rides');
+    // Park speed limits must not erase the original loop launch motor.
+    p.respawn(l,true,false,{position:new THREE.Vector3(138,.1,-14),heading:new THREE.Vector3(0,0,1)});
+    p.axisF.set(0,0,1);p.axisL.set(1,0,0);
+    const hints=[];p.onCourseHint=(...hint)=>hints.push(hint);let loopEntered=false;
+    for(let i=0;i<900&&!p.loopStatus.completed;i++){
+      p.step(1/60,makeInput({moveY:1,jumpHeld:true}),l);l.update(1/60);p.commitRenderStep(l);
+      loopEntered ||= p.loopStatus.active;assert.ok(!p.isBailing&&p.state!=='dead');
+    }
+    assert.ok(loopEntered&&p.loopStatus.completed===1&&p.points+p.comboPoints>=1000,'The recovered loop must be a usable scoring ride');
+    assert.deepEqual(hints,[],'An optional competition loop cannot announce a course exit');
   }finally{l.dispose();}
   const cup=new JungleCupEvent(()=>.5,()=>{},competitionCourse('waterpark-cup'));
   for(let heat=0;heat<3;heat++){

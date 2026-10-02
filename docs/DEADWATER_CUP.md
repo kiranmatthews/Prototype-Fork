@@ -12,6 +12,8 @@ loop, a hidden service gate and perimeter containment. The recovered seven pools
 U-shaped ride route, circular lazy river, fountain island and bridges retain their
 original placement. The original launch rollers belong only to this recovered
 park; the linear course still uses gravity ramps exclusively.
+Competition skating preserves each roller's authored speed for its finite launch
+window; ordinary park speed, steering and braking retain their existing limits.
 
 The venue uses the existing park controls, chase camera, three 60-second runs,
 three judges, bail penalties, overtime and best-two total. Day, sunset and night
@@ -26,8 +28,8 @@ saved map gains the new node. Custom map positions are preserved. Both Level
 Select previews are captured from the actual current geometry.
 
 Verification covers recovered pool dimensions, working rail scoring, supported
-spawn, removed collectibles and scenery, separate trophies, three-run event
+spawn, a complete motor-fed loop with its 1,000-point award, removed collectibles and scenery, separate trophies, three-run event
 results, map graph and saved-map migration. Real Chrome checks cover the intro,
-keyboard skating, all three judging/standings screens and final trophy UI. The
+keyboard skating, actual loop inversion and ride-out, all three judging/standings screens and final trophy UI. The
 browser results check seeds score and shortens the clock to inspect presentation;
 actual rail scoring is tested separately using the production Player.

@@ -7015,6 +7015,9 @@ export class Player {
    * brake and drag rules. Course/platforming tuning remains separate. */
   private stepParkGroundMotor(dt: number, input: Input): boolean {
     const iceGrip = this.authoredIceGrip();
+    // An authored launch motor owns the same finite overspeed window in a
+    // competition as in a course. It must survive the approach to its ride.
+    const launchCap = this.grindBoostT > 0 ? this.speedPadCap : 0;
     const n = this.rideNormal;
     const slowSteep = n.y < 0.5 && this.speed < SKATE_PARK.slowSlopeSpeed;
     const braking = this.grindDropSteerT <= 0 && !this.manualing && !slowSteep &&
@@ -7060,12 +7063,12 @@ export class Player {
     } else {
       // A raised drive target must remain reachable without changing the
       // park's existing downhill headroom or its drag curve above that target.
-      const softLimit = Math.max(SKATE_PARK.softSpeedLimit, parkChargedSpeed());
+      const softLimit = Math.max(SKATE_PARK.softSpeedLimit, parkChargedSpeed(), launchCap);
       const drag = this.speed > softLimit ? SKATE_PARK.heavyDrag :
         input.jumpHeld ? SKATE_PARK.crouchingDrag : SKATE_PARK.standingDrag;
       this.speed = Math.max(0, this.speed - drag * this.speed * this.speed * dt);
     }
-    this.speed = Math.min(this.speed, Math.max(SKATE_PARK.hardSpeedLimit, parkChargedSpeed()));
+    this.speed = Math.min(this.speed, Math.max(SKATE_PARK.hardSpeedLimit, parkChargedSpeed(), launchCap));
     this.lastTy = skateSurfaceDirection(this.parkCameraForward, this.axisF, n).y;
     this.liftTy = this.lastTy;
     this.liftTyT = 0;
