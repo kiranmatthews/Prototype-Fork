@@ -1,0 +1,22 @@
+{
+  "provider": "OpenAI built-in imagegen",
+  "purpose": "Original image references supplied to the recorded Meshy jobs",
+  "notes": "Descriptions record the selected authoring direction, not a verbatim prompt transcript.",
+  "references": [
+    {
+      "file": "tools/crab-chief-assets/references/chief-v2.png",
+      "sha256": "f4efbfb906a30d32e964804cab3504acef708d9b86a8bea5f7a7cd9b048b739a",
+      "authoringIntent": "Full-body stylized Pacific reef crab humanoid, neutral A pose, exactly two broad planted crab boots, oversized asymmetrical pincers, chunky orange shell with turquoise accents, coral and ivory shell crown, carved shoulder mantle, woven skirt and circular pearl medallion; isolated neutral background, low-poly PS1/PS2 model reference."
+    },
+    {
+      "file": "tools/crab-chief-assets/references/pavilion-v2.png",
+      "sha256": "f36d769059045b2fcd41930253a297eae346747d7c27c60e933218fa420d92cd",
+      "authoringIntent": "Open four-post island chief throne pavilion, carved timber, layered thatch canopy, coral and ivory shell throne with claw armrests, turquoise and orange woven hangings; isolated whole structure, no people, low-poly textured game model reference."
+    },
+    {
+      "file": "tools/crab-chief-assets/references/brazier-v2.png",
+      "sha256": "ab24b6fdf0794be9c4470f10b2bc404776176e23c4a5346e46cd9fad046ba4d2",
+      "authoringIntent": "Single orange and ivory conch-shell ceremonial brazier on a rope-wrapped carved timber and aged brass pedestal with turquoise accents; isolated whole object, low-poly textured game prop reference."
+    }
+  ]
+}

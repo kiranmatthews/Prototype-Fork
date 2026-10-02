@@ -1,0 +1,36 @@
+{
+  "revision": "Meshy chief / existing native coastline",
+  "providerCredits": 45,
+  "nodeJourney": {
+    "frames": 3997,
+    "hits": 9,
+    "deaths": 0,
+    "realGrindMetres": 98.7556573389468
+  },
+  "fullChrome": {
+    "frames": 3985,
+    "hits": 9,
+    "deaths": 0,
+    "framingSamples": 266,
+    "riderClipping": 0,
+    "chiefCombatClipping": 0,
+    "preCrtCombatSamples": 233
+  },
+  "skin": {
+    "samples": 900,
+    "verticesPerSample": 9640,
+    "plantedSoleVertices": 156,
+    "maximumSoleDriftMetres": 2.19e-08,
+    "minimumLocalYMetres": 0,
+    "finiteDefeatSettle": true
+  },
+  "checks": [
+    "boss schema/combat/respawn",
+    "real bonus dock and return",
+    "themed bonus lifecycle",
+    "check:levels",
+    "build"
+  ],
+  "movementTuningChanged": false,
+  "fullSuiteRun": false
+}

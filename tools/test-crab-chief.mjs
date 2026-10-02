@@ -20,7 +20,7 @@ await withChiefRuntime(async ({ l, p, tick, source, module }) => {
   // Body collision and both real grind paths use ordinary Player controls.
   p.respawn(l, true, false, { position: new THREE.Vector3(0, .1, -21) });
   for (let i = 0; i < 150; i++) tick({ moveY: 1 });
-  assert.ok(p.pos.z >= -25.1 && p.grounded, 'rider passed through the carapace');
+  assert.ok(p.pos.z >= boss.bodyBox.max.z+.35 && p.grounded, 'rider passed through the carapace');
   for (const side of [-1, 1]) {
     p.respawn(l, true, false, { position: new THREE.Vector3(side * 10.8, .1, 4.5) });
     for (let i = 0; i < 200; i++) {
@@ -37,14 +37,17 @@ await withChiefRuntime(async ({ l, p, tick, source, module }) => {
   // Return onto the entrance pier before walking into the lagoon, avoiding
   // the intentionally solid pearl rail and raised terrace on the side court.
   for (let i = 0; i < 70; i++) tick({ moveY: -1 });
-  for (let i = 0; i < 230 && p.state !== 'dead'; i++) tick({ moveX: 1, jumpPressed: i === 40, jumpHeld: i === 40 });
+  // The existing walking model teeters safely at a ledge. Charge and
+  // release a real board ollie to leave the new sloping shoreline.
+  for (let i = 0; i < 400 && p.state !== 'dead'; i++) tick({ moveX: 1, jumpHeld: i >= 220 && i < 270 });
   assert.equal(p.state, 'dead', 'deep lagoon did not kill a fall');
   for (let i = 0; i < 240 && p.state === 'dead'; i++) tick();
   assert.equal(p.state, 'ride'); assert.ok(p.pos.distanceTo(saved) < 1, 'lagoon death missed the earned checkpoint');
   p.respawn(l, true);
 
   const model = boss.model, toes = model.diagnostics.toes;
-  assert.ok(model.diagnostics.triangles < 5000, 'boss exceeded the low-poly budget');
+  assert.ok(model.diagnostics.triangles < 8500, 'boss exceeded the low-poly budget');
+  assert.equal(model.diagnostics.provider,'Meshy');assert.ok(model.diagnostics.joints>=20);
   const states = ['intro', 'idle', 'slam-tell', 'slam', 'recover', 'hurt', 'volley-tell', 'volley', 'sweep-tell', 'sweep', 'phase', 'defeated'];
   for (const state of states) for (let i = 0; i <= 180; i++) {
     const time = i / 60;
@@ -82,7 +85,7 @@ await withChiefRuntime(async ({ l, p, tick, source, module }) => {
         assert.equal(boss.charge, 0); actor.speed = 0; }
       charge(); actor.position.copy(boss.pearl); until(() => boss.exposed);
     }
-    actor.attacking = true; assert.equal(step().strike, true); actor.attacking = false;
+    actor.position.copy(boss.pearl); actor.attacking = true; assert.equal(step().strike, true); actor.attacking = false;
     assert.equal(boss.health, hp - 1); for (let i = 0; i < 4; i++) step(); assert.equal(boss.health, hp - 1, 'one opening accepted multiple strikes');
     if (hit === 3) { until(() => boss.state !== 'hurt'); boss.reset(false); assert.equal(boss.phase, 2); assert.equal(boss.health, 6); assert.equal(boss.playerHealth, 3); }
     if (hit === 3) { // Complete the restored phase's lost test hit so the

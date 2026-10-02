@@ -7,18 +7,20 @@ panel.style.cssText = 'position:fixed;bottom:8px;left:8px;z-index:999;background
 const start = document.createElement('button'); start.textContent = 'Run input-only boss fight'; start.disabled = true;
 const resume = document.createElement('button'); resume.textContent = 'Resume visual hold'; resume.hidden = true;
 const photo = document.createElement('button'); photo.textContent = 'Save fight screenshot'; photo.hidden = true;
+const preview = document.createElement('button'); preview.textContent = 'Save level preview'; preview.disabled = true;
+preview.onclick = () => { previewWanted = true; };
 const hold = new URLSearchParams(location.search).get('hold');
-let holding = false, heldOnce = false, photoWanted = false, photoQueued = false;
+let holding = false, heldOnce = false, photoWanted = false, previewWanted = false, photoQueued = false;
 resume.onclick = () => { holding = false; resume.hidden = photo.hidden = true; };
 photo.onclick = () => { photoWanted = true; };
 const report = document.createElement('output'); report.style.display = 'block'; report.textContent = 'Loading production player…';
 const evidence = document.createElement('script'); evidence.type = 'application/json'; evidence.id = 'chief-review-evidence'; document.body.append(evidence);
-panel.append(start, resume, photo, report); document.body.append(panel);
+panel.append(start, resume, photo, preview, report); document.body.append(panel);
 let g;
 function ready() {
   g = window.__game;
   if (!g?.getLevel()?.boss || g.gameFlow.blocksGameplay) { requestAnimationFrame(ready); return; }
-  start.disabled = false; report.textContent = 'Ready · actual Player + chief · no state or health edits';
+  start.disabled = preview.disabled = false; report.textContent = 'Ready · actual Player + chief · no state or health edits';
 }
 requestAnimationFrame(ready);
 start.onclick = () => {
@@ -71,13 +73,24 @@ start.onclick = () => {
   };
   g.renderer.render = (scene, camera) => {
     const result = render(scene, camera);
-    if (photoWanted && !photoQueued && g.renderer.getRenderTarget() === null) {
+    if ((photoWanted || previewWanted) && !photoQueued && g.renderer.getRenderTarget() === null) {
       photoQueued = true;
       queueMicrotask(() => {
         // Run after all frame passes, before the browser swaps the buffer.
-        const link = document.createElement('a'); link.download = `tidebreak-phase-${boss.phase}.png`;
-        link.href = g.renderer.domElement.toDataURL('image/png'); link.click();
-        photoWanted = photoQueued = false;
+        if (photoWanted) {
+          const link = document.createElement('a'); link.download = `tidebreak-phase-${boss.phase}.png`;
+          link.href = g.renderer.domElement.toDataURL('image/png'); link.click();
+        }
+        if (previewWanted) {
+          // Crop the completed production frame so the Level Select image uses
+          // the real depth/water/CRT passes and excludes the top/bottom HUD.
+          const source=g.renderer.domElement, height=source.height*.66, width=height*16/9;
+          const canvas=document.createElement('canvas');canvas.width=960;canvas.height=540;
+          canvas.getContext('2d').drawImage(source,(source.width-width)/2,source.height*.15,width,height,0,0,960,540);
+          const link=document.createElement('a');link.download='crab-chief-meshy-preview.jpg';
+          link.href=canvas.toDataURL('image/jpeg',.92);link.click();
+        }
+        photoWanted = previewWanted = photoQueued = false;
       });
     }
     if (scene === g.scene && camera === g.camera && !review.done && review.frame - lastFrame >= 15) {

@@ -1,23 +1,28 @@
 import { readFile } from 'node:fs/promises';
 import { createServer } from 'vite';
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { makeInput } from './jungle-cup-harness.mjs';
 
 export async function withChiefRuntime(run) {
   const fixture = await readFile(new URL('./test-crouch-jump-slam.mjs', import.meta.url), 'utf8');
   const dom = fixture.slice(fixture.indexOf('function installHeadlessDom()'), fixture.indexOf('\nconst held'));
   new Function('noop', dom + '\ninstallHeadlessDom();')(() => {});
+  navigator.userAgent='Chief physics fixture';
+  globalThis.self=globalThis;
   const server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true } });
   const warn = console.warn, error = console.error;
   console.warn = (...args) => { if (!/failed|GLB|procedural skateboard/i.test(String(args[0]))) warn(...args); };
   console.error = (...args) => { if (!/failed|GLB/i.test(String(args[0]))) error(...args); };
   let l;
+  const restoreFiles = installChiefAssetFiles();
   try {
     const module = await server.ssrLoadModule('/src/level.ts');
     const { Player } = await server.ssrLoadModule('/src/player.ts');
     const { CRAB_CHIEF_LEVEL } = await server.ssrLoadModule('/src/levels/crab-chief.ts');
     const { CONST, TUNING } = await server.ssrLoadModule('/src/tuning.ts');
     const scene = new THREE.Scene(); l = new module.Level(scene, { id: 'crab-chief', name: CRAB_CHIEF_LEVEL.name, data: CRAB_CHIEF_LEVEL });
+    await l.prepareJungleAssets();
     const p = new Player(scene); p.enterLevel('crab-chief'); p.rawInput = makeInput(); p.respawn(l, true);
     let frame = 0, previous = {}, trace = [];
     const tick = (sample = {}) => {
@@ -31,7 +36,7 @@ export async function withChiefRuntime(run) {
       trace.push(row); return row;
     };
     return await run({ l, p, tick, trace, scene, module, source: CRAB_CHIEF_LEVEL, TUNING, get frame() { return frame; } });
-  } finally { l?.dispose(); await server.close(); await new Promise(resolve => setImmediate(resolve)); console.warn = warn; console.error = error; }
+  } finally { l?.dispose(); await server.close(); await new Promise(resolve => setImmediate(resolve)); console.warn = warn; console.error = error;restoreFiles(); }
 }
 export function chiefInput(sample = {}, previous = {}) {
   const input = makeInput(sample);
@@ -41,4 +46,19 @@ export function chiefInput(sample = {}, previous = {}) {
   }
   if (!('jumpReleased' in sample)) input.jumpReleased = !input.jumpHeld && !!previous.jumpHeld;
   return input;
+}
+
+/** Real local Meshy geometry for Node physics tests; texture pixels are reviewed in Chrome. */
+export function installChiefAssetFiles() {
+  globalThis.self=globalThis;
+  const originalLoad = GLTFLoader.prototype.loadAsync;
+  GLTFLoader.prototype.loadAsync = async function(url,...args) {
+    const file=String(url).match(/(?:^|\/)boss\/([a-z-]+\.glb)$/)?.[1];
+    if(!file)return originalLoad.call(this,url,...args);
+    navigator.userAgent ??= 'Chief physics fixture';
+    const bytes=await readFile(new URL('../public/boss/'+file,import.meta.url));
+    return new GLTFLoader().register(()=>({name:'PhysicsWithoutTexturePixels',loadTexture:()=>Promise.resolve(null)}))
+      .parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),'');
+  };
+  return () => { GLTFLoader.prototype.loadAsync=originalLoad; };
 }

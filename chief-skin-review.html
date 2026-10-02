@@ -1,0 +1,18 @@
+<!doctype html><html><head><title>Meshy chief motion review</title><style>body{margin:0;background:#173d49;color:#eee;font:14px system-ui}canvas{display:block}aside{position:fixed;top:12px;left:12px;background:#16303eee;padding:12px}label{display:block;margin:8px}select,input,button{font:inherit}output{display:block;font:12px monospace;max-width:480px}</style></head><body><aside><label>Pose <select id="pose"><option>idle</option><option>bind</option><option>slam-tell</option><option>slam</option><option>recover</option><option>hurt</option><option>volley-tell</option><option>volley</option><option>sweep-tell</option><option>sweep</option><option>phase</option><option>defeated</option></select></label><label>Time <input id="time" type="range" min="0" max="6" step="0.01" value="1.2"></label><label>View <select id="view"><option>Front</option><option>Right</option><option>Back</option><option>Left</option></select></label><label><input type="checkbox" id="motion"> Animate motion</label><output id="evidence">Loading real Meshy skin…</output></aside><script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
+import {MeshyChiefModel} from '/src/boss/meshyChiefModel.ts';
+const scene=new THREE.Scene();scene.background=new THREE.Color('#81adba');
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(devicePixelRatio);renderer.shadowMap.enabled=true;document.body.prepend(renderer.domElement);
+const camera=new THREE.PerspectiveCamera(38,innerWidth/innerHeight,.1,100);
+scene.add(new THREE.HemisphereLight('#d4f4fc','#5e4c38',2));const light=new THREE.DirectionalLight('#ffefc8',2.8);light.position.set(-9,14,12);scene.add(light);
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(70,70),new THREE.MeshStandardMaterial({color:'#beac82',roughness:1}));ground.rotation.x=-Math.PI/2;ground.position.y=-.01;scene.add(ground);
+const model=new MeshyChiefModel();scene.add(model.root);await model.ready;
+const pose=document.querySelector('#pose'),time=document.querySelector('#time'),view=document.querySelector('#view'),motion=document.querySelector('#motion'),evidence=document.querySelector('#evidence');
+const bind=(await new GLTFLoader().loadAsync('/boss/crab-chief.glb')).scene;scene.add(bind);bind.visible=false;
+const clock=new THREE.Clock();let elapsed=0;function render(){requestAnimationFrame(render);elapsed+=clock.getDelta();if(motion.checked)time.value=String(elapsed%6);
+ const state=pose.value,t=Number(time.value);model.pose({state,stateTime:t,time:t,phase:3,target:new THREE.Vector3(5,0,-15),left:true,exposed:state==='recover'&&t>.7,defeated:state==='defeated'});
+ model.root.visible=state!=='bind';bind.visible=state==='bind';bind.position.copy(model.root.position);
+ const a=['Front','Right','Back','Left'].indexOf(view.value)*Math.PI/2;camera.position.copy(model.root.position).add(new THREE.Vector3(Math.sin(a)*19,7.5,Math.cos(a)*19));camera.lookAt(model.root.position.clone().add(new THREE.Vector3(0,3.7,0)));renderer.render(scene,camera);
+ evidence.textContent=JSON.stringify({...model.diagnostics,state,time:t});}render();
+</script></body></html>

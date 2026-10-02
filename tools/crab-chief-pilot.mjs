@@ -44,8 +44,8 @@ export function* runChiefJourney(context) {
         const side = boss.target.x >= 0 ? -1 : 1;
         input = toward(side * 5.3, -17.5);
       } else if (boss.exposed) {
-        input = toward(0, -19);
-        if (distance(0, -19) < 2.5) input.spinPressed = frame % 20 === 0;
+        input = toward(boss.pearl.x, boss.pearl.z);
+        if (distance(boss.pearl.x, boss.pearl.z) < 2.5) input.spinPressed = frame % 20 === 0;
       } else input = toward(0, -17.7, .5);
     } else {
       context.stage = `phase ${boss.phase} · ${boss.charged ? 'opening approach' : 'pearl rail'}`;
@@ -57,8 +57,8 @@ export function* runChiefJourney(context) {
           if (distance(10.8, 4.5) < 1) railApproach = true;
         } else input = { ...toward(14, -10), grindHeld: true };
       } else {
-        input = toward(0, -19, .85);
-        if (boss.exposed && distance(0, -19) < 2.5) input.spinPressed = frame % 20 === 0;
+        input = boss.exposed ? toward(boss.pearl.x, boss.pearl.z, .85) : toward(0,-17.7,.6);
+        if (boss.exposed && distance(boss.pearl.x, boss.pearl.z) < 2.5) input.spinPressed = frame % 20 === 0;
       }
     }
     if (p.state !== 'grind' && !boss.defeated && jumpNeeded() && frame - lastJump > 28) {

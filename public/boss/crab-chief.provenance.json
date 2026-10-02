@@ -1,0 +1,37 @@
+{
+  "sourceSha256": "acaf94dad3b001dbc96c5800db45e1d42f4c28bcb0d5f3b0e38fb83c278c3bb9",
+  "outputSha256": "0e303a2032f0870dfc13167a81bd7b33c9327294b7530bc62c1b06356d673884",
+  "joints": 21,
+  "triangles": 7667,
+  "vertices": 9640,
+  "bytes": 1138324,
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 382355
+    }
+  ],
+  "minimumWeightSum": 0.9999999999999998,
+  "maximumWeightSum": 1.0000000000000002,
+  "bounds": [
+    [
+      -4.037425768375396,
+      0.0,
+      -1.657752940058708
+    ],
+    [
+      4.024806034564971,
+      8.2,
+      1.643148848414421
+    ]
+  ]
+}

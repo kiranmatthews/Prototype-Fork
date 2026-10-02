@@ -4636,7 +4636,10 @@ export class Level {
     else if (entry.id === "descent") this.buildDescent();
     else if (entry.id === "beachfront") this.buildUnityBeachfront();
     else this.buildJungle(); // "jungle": the enclosed corridor course
-    if (this.builtFromData?.encounter === 'crab-chief') this.boss = new CrabChiefEncounter(this.root);
+    if (this.builtFromData?.encounter === 'crab-chief') {
+      this.boss = new CrabChiefEncounter(this.root);
+      this.walls.push(this.boss.bodyBox);
+    }
     // Older published Sky Bridge data inherits the native sightline defaults.
     // Explicit atmosphere/material-fog fields can override them; copy/export
     // materializes the effective defaults before assigning a different ID.
@@ -7334,7 +7337,8 @@ export class Level {
   }
 
   dispose(preserveResourcesFrom?: Level): void {
-    this.boss = null; // its level-owned geometry is disposed by the root traversal below
+    this.boss?.dispose();
+    this.boss = null; // Meshy leases are released before the ordinary root traversal.
     if(this.bonusPlatform)this.bonusPlatform.group.userData.bonusStoneDisposed=true;
     for (const crate of this.crates) {
       if (crate.milkCrate) disposeMilkCrate(crate.milkCrate);
@@ -15380,7 +15384,7 @@ export class Level {
     const far=(camera as THREE.PerspectiveCamera).far??400;
     this.jungleAssets?.setView(camera.position,this.keepPlayFog?Math.min(far,this.theme.fogFar):far,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([this.jungleAssets?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.milkCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.milkCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
 
   private jungleAsset(c: CustomComponent): void {
     if (!isJungleAsset(c.dkind)) return;

@@ -1,0 +1,26 @@
+{
+  "source": ".img2threejs/crab-chief/brazier-v2.glb",
+  "output": "public/boss/reef-brazier.glb",
+  "triangles": 1562,
+  "bytes": 188640,
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 104443
+    }
+  ],
+  "skins": 0,
+  "animations": [],
+  "sourceSha256": "bda3153030e5cbaa156127d312d8b87949b5d4866581fb76e68cf717449be84e",
+  "outputSha256": "ba03f4fe1ad5db3e6ef30114e207f3558e0b7d9235847aa9c2a4215aee6ba6f8",
+  "accessorsPreserved": true
+}

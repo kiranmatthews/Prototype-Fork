@@ -2755,7 +2755,7 @@ function showCampaignResults(): void {
     ...(definition
       ? {
           // commitClear above has just satisfied the clear-only run-mode gate.
-          timeTrialUnlocked: firstClear,
+          timeTrialUnlocked: firstClear && !!level.clockPickup,
           relicTarget: level.relicTime,
           medalTimes: level.medalTimes,
         }

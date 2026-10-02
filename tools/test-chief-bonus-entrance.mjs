@@ -2,10 +2,13 @@ import assert from 'node:assert/strict';
 import { writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { installChiefAssetFiles } from './crab-chief-harness.mjs';
 import { withBlockworksRuntime } from './blockworks-runner.mjs';
 
 let entries = 0;
-await withBlockworksRuntime(async r => {
+const restoreFiles = installChiefAssetFiles();
+try { await withBlockworksRuntime(async r => {
+  await r.l.prepareJungleAssets();
   const { p, l } = r;
   r.stepFor(30);
   const spawn = p.pos.toArray(), boss = l.boss, parentState = p.captureRunState();
@@ -40,4 +43,4 @@ await withBlockworksRuntime(async r => {
     if (r.l.consumeBonusLanding(r.p.pos, { enabled: true, grounded: r.p.grounded,
       jump: row.input.jumpPressed || row.input.jumpReleased, rising: r.p.vVel > .2 })) entries++;
   },
-});
+}); } finally { restoreFiles(); }

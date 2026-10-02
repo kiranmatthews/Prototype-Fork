@@ -1,0 +1,26 @@
+{
+  "source": ".img2threejs/crab-chief/pavilion-v2.glb",
+  "output": "public/boss/reef-pavilion.glb",
+  "triangles": 2843,
+  "bytes": 483476,
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 305135
+    }
+  ],
+  "skins": 0,
+  "animations": [],
+  "sourceSha256": "614abe95d701c7c7c1d7b10a1e28a9d7ceb2c0a43635111e63fafa2d0103ec88",
+  "outputSha256": "ac4b55d5e93c6c735b8958287827a68cde8d8e8ea279f86c45306b3fce320b3c",
+  "accessorsPreserved": true
+}

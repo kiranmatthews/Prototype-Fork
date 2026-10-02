@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { sfx } from '../audio';
 import { REEF } from '../levels/crab-chief';
-import { CrabChiefModel } from './crabChiefModel';
+import { MeshyChiefModel } from './meshyChiefModel';
 import { ReefScenery } from './reefScenery';
 import { ReefGeometry, REEF_COLORS as C } from './reefGeometry';
 
@@ -29,10 +29,11 @@ const clamp = THREE.MathUtils.clamp;
 export class CrabChiefEncounter {
   readonly root = new THREE.Group();
   readonly kit = new ReefGeometry();
-  readonly model = new CrabChiefModel(this.kit);
-  readonly scenery = new ReefScenery(this.kit);
+  readonly model = new MeshyChiefModel();
+  readonly scenery = new ReefScenery();
   readonly target = new THREE.Vector3(0, 0, -14);
   readonly pearl = new THREE.Vector3(...REEF.pearl);
+  readonly bodyBox = new THREE.Box3();
   state: ChiefState = 'waiting';
   stateTime = 0;
   time = 0;
@@ -251,14 +252,17 @@ export class CrabChiefEncounter {
     this.scenery.update(this.time, this.phase === 3 ? 1 : 0);
     this.model.pose({ time: this.time, stateTime: this.stateTime, state: this.state, phase: this.phase,
       target: this.target, left: this.left, exposed: this.exposed, defeated: this.defeated });
+    if(this.model.diagnostics.ready)this.pearl.copy(this.model.pearl);
+    const body=this.model.root.position;
+    this.bodyBox.min.set(body.x-1.65,body.y,body.z-1.0);this.bodyBox.max.set(body.x+1.65,body.y+5.7,body.z+1.8);
     this.marker.visible = this.state === 'slam-tell' || this.state === 'slam'; this.marker.position.copy(this.target); this.marker.position.y = .07;
     this.marker.rotation.y = this.time * .9;
-    this.opening.visible = this.exposed; this.opening.scale.setScalar(1 + Math.sin(this.time * 8) * .035);
+    this.opening.visible = this.exposed; this.opening.position.set(this.pearl.x,.06,this.pearl.z);this.opening.scale.setScalar(1 + Math.sin(this.time * 8) * .035);
     this.sweep.visible = this.state === 'sweep-tell' || this.state === 'sweep';
     // Arc dots stay stationary; only the large sweep line traverses the floor.
     const line = this.sweep.children[0]; line.rotation.y = this.state === 'sweep' ? this.sweepPrevious : -1.3;
     line.position.x = Math.sin(line.rotation.y) * 11; line.position.z = Math.cos(line.rotation.y) * 11;
-    this.shield.visible = this.phase > 1 && this.exposed && !this.charged; this.shield.rotation.y = this.time;
+    this.shield.visible = this.phase > 1 && this.exposed && !this.charged;this.shield.position.copy(this.pearl); this.shield.rotation.y = this.time;
     this.seal.visible = !this.canFinish; this.seal.rotation.z = this.time * .18;
     this.aura.visible = this.charged && !this.defeated; this.aura.position.copy(this.actorPosition); this.aura.position.y += .9; this.aura.rotation.y = this.time * 3;
     for (const wave of this.waves) { wave.mesh.visible = wave.life > 0; wave.mesh.position.copy(wave.centre); wave.mesh.position.y = .15;
@@ -285,6 +289,8 @@ export class CrabChiefEncounter {
     for (const spark of this.sparks) spark.life = 0;
     this.present(0);
   }
+  prepareAssets():Promise<void> {return Promise.all([this.model.ready,this.scenery.ready]).then(()=>{});}
+  dispose():void {this.model.dispose();this.scenery.dispose();}
   get diagnostics() { return { state: this.state, stateTime: this.stateTime, phase: this.phase, health: this.health,
     playerHealth: this.playerHealth, charged: this.charged, charge: this.charge, canFinish: this.canFinish,
     hits: this.hits, playerHits: this.playerHits, grindDistance: this.grindDistance, skateDistance: this.skateDistance,

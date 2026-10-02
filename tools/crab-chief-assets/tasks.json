@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "budgetCredits": 50,
+  "startingBalance": 1506,
+  "tasks": {
+    "chief-v2": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "c3956b04-aaad-483f-b54e-d19291443f37",
+      "createdAt": "2026-10-02T12:11:43.480080+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "tools/crab-chief-assets/references/chief-v2.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 7500,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ],
+        "pose_mode": "a-pose"
+      },
+      "balanceBefore": 1506,
+      "reference": "tools/crab-chief-assets/references/chief-v2.png",
+      "referenceSha256": "f4efbfb906a30d32e964804cab3504acef708d9b86a8bea5f7a7cd9b048b739a",
+      "id": "01a0fc87-0dbf-71be-b1d2-76ba0c02411c",
+      "checkedAt": "2026-10-02T12:18:19.258229+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1790943274632,
+      "expiresAt": 1791202474632,
+      "downloads": [
+        {
+          "path": ".img2threejs/crab-chief/chief-v2/downloads/model.glb",
+          "bytes": 4598944,
+          "sha256": "acaf94dad3b001dbc96c5800db45e1d42f4c28bcb0d5f3b0e38fb83c278c3bb9"
+        }
+      ]
+    },
+    "pavilion-v2": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "c416ad19-6a75-420b-bacf-9d60d57efcd2",
+      "createdAt": "2026-10-02T12:12:56.855897+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "tools/crab-chief-assets/references/pavilion-v2.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 3000,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1491,
+      "reference": "tools/crab-chief-assets/references/pavilion-v2.png",
+      "referenceSha256": "f36d769059045b2fcd41930253a297eae346747d7c27c60e933218fa420d92cd",
+      "id": "01a0fc88-2c0a-7150-96ef-07a4ea7819a4",
+      "checkedAt": "2026-10-02T12:28:02.331253+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1790943321402,
+      "expiresAt": 1791202521402,
+      "downloads": [
+        {
+          "path": ".img2threejs/crab-chief/pavilion-v2/downloads/model.glb",
+          "bytes": 3966588,
+          "sha256": "614abe95d701c7c7c1d7b10a1e28a9d7ceb2c0a43635111e63fafa2d0103ec88"
+        }
+      ]
+    },
+    "chief-v2-rig": {
+      "resource": "rigging",
+      "state": "FAILED",
+      "operationId": "0c7623f3-c608-4d5f-b77c-6ac5e036c8db",
+      "createdAt": "2026-10-02T12:18:28.400300+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "input_task_id": "01a0fc87-0dbf-71be-b1d2-76ba0c02411c",
+        "height_meters": 8.2
+      },
+      "balanceBefore": 1476,
+      "id": "01a0fc8d-3b3b-71fe-9039-ef82bcc4b204",
+      "checkedAt": "2026-10-02T12:28:47.085483+00:00",
+      "progress": 90,
+      "consumedCredits": 0,
+      "finishedAt": 1790944115589,
+      "expiresAt": 1791203315589,
+      "providerErrorCode": null
+    },
+    "brazier-v2": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "97588b4c-30c6-4d60-8852-8926c5f0d9ad",
+      "createdAt": "2026-10-02T12:24:13.335584+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "tools/crab-chief-assets/references/brazier-v2.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 1500,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1471,
+      "reference": "tools/crab-chief-assets/references/brazier-v2.png",
+      "referenceSha256": "ab24b6fdf0794be9c4470f10b2bc404776176e23c4a5346e46cd9fad046ba4d2",
+      "id": "01a0fc92-7eb1-7400-b01c-9148795b1f8a",
+      "checkedAt": "2026-10-02T12:54:40.027258+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1790943938871,
+      "expiresAt": 1791203138871,
+      "downloads": [
+        {
+          "path": ".img2threejs/crab-chief/brazier-v2/downloads/model.glb",
+          "bytes": 4117960,
+          "sha256": "bda3153030e5cbaa156127d312d8b87949b5d4866581fb76e68cf717449be84e"
+        }
+      ]
+    }
+  },
+  "creditPolicy": "Existing Meshy credits only; no purchase or upgrade. 50-credit internal submission guard, 45 actual credits consumed."
+}
