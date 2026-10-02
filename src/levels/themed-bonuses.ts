@@ -26,7 +26,7 @@ export const THEMED_BONUS_RECIPES: readonly BonusRecipe[] = [
   {parentId:'jungle',key:'jungle',name:'Bonus: Fern Reliquary',theme:'jungle',
     patterns:['upper','bridge'],color:'#b1b38c',accent:'#83b792',tex:'jungle',sky:'day',jungleAtmosphere:true},
   {parentId:'test',key:'test-course',name:'Bonus: Quayside Cargo',theme:'coast',
-    patterns:['fuse','bridge'],color:'#ba976e',accent:'#7ba6b4',tex:'brick',sky:'coast'},
+    patterns:['fuse','bridge'],color:'#ba976e',accent:'#7ba6b4',tex:'stone',sky:'coast'},
   {parentId:'sky',key:'sky-bridge',name:'Bonus: Cloudtop Lockers',theme:'cloud',
     patterns:['relay','finite'],color:'#d4dde3',accent:'#9dbace',tex:'stone',sky:'day'},
   {parentId:'slip',key:'slipstream',name:'Bonus: Slipstream Airlocks',theme:'slipstream',

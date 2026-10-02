@@ -1,5 +1,7 @@
 # Themed bonus stages and return flow
 
+Bonus stages retain side scrolling, with an 18m follow distance instead of the earlier 42m view. Their look target sits 4.5m above the supported feet so the closer camera shows both the character and overhead crate goals; the existing movement frame stays unchanged. Main Temple Terraces and Temple Skyline use close route-following cameras through their winding 3D architecture.
+
 Bonus entrances use a Meshy-generated circular stone pedestal, 3.2 m across and 1.05 m high. Steep circular sides block running approaches; the flat top supports a deliberate jump. Entry requires an actual rising jump command followed by a grounded landing inside the top area. Walking, standing, falling without a jump command, and landing elsewhere cannot enter. A jump arms only one landing; deaths, resets, trial mode and locks clear it. Board riders charge and release an ollie to clear the raised deck. Default placements stay off the route centre and check room around walls, crates, checkpoints, enemies and individual rail segments. Narrow bridges can use a farther side pad. If a forward return point is over a gap, the supported approach point is retained for return.
 
 The generated model is in `public/props/bonus-platform/stone-circle.glb`, with Meshy task/source hashes in `provenance.json`. Trial mode hides both art and all platform collision; locked completed platforms remain physical but do not accept entry. Suspended parent levels retain the shared artwork correctly.

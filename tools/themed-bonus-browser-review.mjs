@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, writeFile, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 
 // Visual fixtures only: each course starts from its actual source entry, then
@@ -13,14 +13,19 @@ const browser = await chromium.launch({ headless: true, channel: 'chrome' });
 const reports = [];
 const failures = [];
 try {
+  const inventory=process.argv.find(arg=>arg.startsWith('--inventory='))?.slice(12);
+  let courses;
+  if(inventory)courses=JSON.parse(await readFile(inventory,'utf8'));
+  else {
   const inventoryContext = await browser.newContext();
   const inventoryPage = await inventoryContext.newPage();
   await inventoryPage.goto(base);
-  const courses = await inventoryPage.evaluate(async () => {
+  courses = await inventoryPage.evaluate(async () => {
     const { THEMED_BONUS_COURSES } = await import('/src/levels/themed-bonuses.ts');
     return THEMED_BONUS_COURSES.map(({ id, parentId, theme, data, rooms }) => ({ id, parentId, theme, name: data.name, rooms }));
   });
   await inventoryContext.close();
+  }
   for (const course of courses.filter(course => !selected || selected === course.id)) {
     const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
     const page = await context.newPage(), errors = [], parallaxRequests = [];

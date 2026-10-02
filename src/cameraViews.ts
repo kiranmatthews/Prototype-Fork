@@ -12,6 +12,8 @@ export interface CameraView {
   cameraAspect?: number;
   /** Dolly from the authored establishing shot into a translation-only follow. */
   cameraFollowDistance?: number;
+  /** Relative target height keeps tall crate goals visible at a close lens. */
+  cameraFollowTargetHeight?: number;
   /** Metres travelled from entry before the follow composition fully takes over. */
   cameraIntroDistance?: number;
 }
@@ -71,7 +73,7 @@ export class CameraViewFraming {
     if(view.cameraPosition&&view.cameraTarget){
       this.shotEye.fromArray(view.cameraPosition);this.shotTarget.fromArray(view.cameraTarget);
       if(view.cameraFollowDistance!==undefined&&subject){
-        this.followTarget.copy(subject);this.followTarget.y+=1.3;
+        this.followTarget.copy(subject);this.followTarget.y+=view.cameraFollowTargetHeight??1.3;
         this.followEye.copy(this.shotEye).sub(this.shotTarget).setLength(view.cameraFollowDistance).add(this.followTarget);
         const distance=view.cameraIntroDistance??0;
         this.introProgress=Math.max(this.introProgress,distance>0?THREE.MathUtils.smoothstep(Math.hypot(subject.x-this.entry.x,subject.z-this.entry.z),0,distance):1);

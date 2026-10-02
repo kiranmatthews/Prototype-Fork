@@ -1,7 +1,7 @@
 import { tmpdir } from 'node:os';
 import assert from 'node:assert/strict';
 import { writeFile } from 'node:fs/promises';
-import { withBlockworksRuntime } from './blockworks-runner.mjs';
+import { withTempleRuntime as withBlockworksRuntime } from './temple-test-runtime.mjs';
 import { puzzleControls } from './puzzle-controls.mjs';
 
 const MODULE = '/src/levels/jungle-sequels.ts';
@@ -75,8 +75,8 @@ function* roomWrong(r, index) {
 }
 
 function* crownCorrect(r) {
-  const c = puzzleControls(r), { p } = r, x = 354, y = 69, z = -2.3;
-  const arrow = c.crateSpecAt(x, y), cap = c.crateSpecAt(x, 78.4);
+  const c = puzzleControls(r), { p } = r, x = 354, y = 34.5, z = -2.3;
+  const arrow = c.crateSpecAt(x, y), cap = c.crateSpecAt(x, 43.9);
   yield* c.stepFor(20);
   yield* c.walk([x - 1.65, y, z], 'crown arrow takeoff');
   yield* c.charge(); yield* c.tick({ jumpReleased: true });
@@ -97,20 +97,20 @@ function* crownCorrect(r) {
 
 function* crownWrong(r) {
   const c = puzzleControls(r), { p } = r;
-  const arrow = c.crateSpecAt(354, 69), cap = c.crateSpecAt(354, 78.4);
+  const arrow = c.crateSpecAt(354, 34.5), cap = c.crateSpecAt(354, 43.9);
   yield* c.stepFor(20);
   yield* c.hit(arrow, 'wrong order: remove the crown donor before its high target');
-  yield* c.walk([354, 69, -2.3], 'stand under the inaccessible crown reward');
+  yield* c.walk([354, 34.5, -2.3], 'stand under the inaccessible crown reward');
   const attempts = [];
   for (const timing of [7, 3, .5, -1.5]) {
     const first = r.frame;
     yield* c.charge(); yield* c.tick({ jumpReleased: true });
     yield* c.until(() => p.vVel <= timing, {}, { label: 'ordinary jump toward the crown target', limit: 100 });
     yield* c.tick({ jumpHeld: true }); yield* c.tick({ jumpReleased: true });
-    yield* c.until(() => p.grounded, () => ({ spinHeld: p.pos.y > 72.8 }),
+    yield* c.until(() => p.grounded, () => ({ spinHeld: p.pos.y > 38.3 }),
       { label: 'try double jump and air spin without the crown donor', limit: 180 });
     assert.ok(cap.alive, 'ordinary double jump collected the crown without its donor');
-    attempts.push({ timing, peak: Math.max(...r.trace.slice(first).map(row => row.position[1])), capY: 78.4 });
+    attempts.push({ timing, peak: Math.max(...r.trace.slice(first).map(row => row.position[1])), capY: 43.9 });
     yield* c.stepFor(25);
   }
   assert.equal(p.totalDeaths, 0);
@@ -148,13 +148,13 @@ function* tntRefuge(r, x, y) {
 
 const cases = [
   ['terraces-upper', 0, [25.9, .12, -2.3], r => roomCorrect(r, 0)],
-  ['skyline-return', 1, [28.9, 34.62, -2.3], r => roomCorrect(r, 1)],
+  ['skyline-return', 1, [28.9, .12, -2.3], r => roomCorrect(r, 1)],
   ['terraces-wrong', 0, [25.9, .12, -2.3], r => roomWrong(r, 0)],
-  ['skyline-wrong', 1, [28.9, 34.62, -2.3], r => roomWrong(r, 1)],
-  ['skyline-crown', 1, [351.9, 69.12, -2.3], crownCorrect],
-  ['skyline-crown-wrong', 1, [351.9, 69.12, -2.3], crownWrong],
+  ['skyline-wrong', 1, [28.9, .12, -2.3], r => roomWrong(r, 1)],
+  ['skyline-crown', 1, [351.9, 34.62, -2.3], crownCorrect],
+  ['skyline-crown-wrong', 1, [351.9, 34.62, -2.3], crownWrong],
   ['terraces-tnt', 0, [363.7, 34.62, -2.3], r => tntRefuge(r, 366, 34.5)],
-  ['skyline-tnt', 1, [236.7, 51.87, -2.3], r => tntRefuge(r, 239, 51.75)],
+  ['skyline-tnt', 1, [236.7, 17.37, -2.3], r => tntRefuge(r, 239, 17.25)],
 ];
 for (const [name, index, start, pilot] of cases) {
   if (requestedCase && requestedCase !== name) continue;

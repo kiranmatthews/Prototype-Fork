@@ -1,13 +1,14 @@
 import { tmpdir } from 'node:os';
 // Capture the source-owned sequel temples with the game's renderer. The public
 // thumbnails use a wide architectural camera; review shots retain gameplay's
-// authored side-view camera and complete post-processing pipeline.
+// close winding-route camera and complete post-processing pipeline.
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
+import { pathToFileURL } from 'node:url';
 
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const base = process.argv[2] || 'http://127.0.0.1:5173/';
-const output = new URL('../public/level-previews/', import.meta.url);
+const output = process.env.JUNGLE_PREVIEW_OUTPUT?pathToFileURL(process.env.JUNGLE_PREVIEW_OUTPUT+'/'):new URL('../public/level-previews/', import.meta.url);
 const review = process.env.JUNGLE_SEQUEL_REVIEW_OUTPUT || `${tmpdir()}/jungle-sequel-review`;
 await mkdir(output, { recursive: true });
 await mkdir(review, { recursive: true });
@@ -18,8 +19,8 @@ try {
   page.on('pageerror', error => errors.push(String(error)));
   page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
   for (const scene of [
-    { id: 'jungle-terraces', summit: [362, 34.62, 1.25], eye: [324, 31, 62], target: [354, 20, -16] },
-    { id: 'jungle-skyline', summit: [348, 69.12, 1.25], eye: [295, 56, 87], target: [340, 39, -20] },
+    { id: 'jungle-terraces', summit: [86,34.62,50], eye: [142,77,82], target: [66,22,-7] },
+    { id: 'jungle-skyline', summit: [25.2,69.12,1.4], eye: [147,110,72], target: [56,42,-15] },
   ]) {
     const url = new URL(base); url.search = `?playtest&level=${scene.id}`;
     await page.goto(url.href);
@@ -39,6 +40,7 @@ try {
       g.gameFlow.showPause({ levelName: level.name, inWarpRoom: false });
       await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
       const renderer = g.renderer, previous = renderer.getRenderTarget();
+      const fog=g.scene.fog;g.scene.fog=null;
       const renderTarget = new THREE.WebGLRenderTarget(960, 540);
       renderTarget.texture.colorSpace = THREE.SRGBColorSpace;
       const camera = new THREE.PerspectiveCamera(48, 16 / 9, .1, 900);
@@ -52,7 +54,7 @@ try {
         for (let y = 0; y < 540; y++) pixels.data.set(bytes.subarray((539 - y) * 960 * 4, (540 - y) * 960 * 4), y * 960 * 4);
         ctx.putImageData(pixels, 0, 0);
         return canvas.toDataURL('image/jpeg', .92).split(',')[1];
-      } finally { renderer.setRenderTarget(previous); renderTarget.dispose(); }
+      } finally { renderer.setRenderTarget(previous); g.scene.fog=fog; renderTarget.dispose(); }
     }, scene);
     await writeFile(new URL(`${scene.id}.jpg`, output), Buffer.from(data, 'base64'));
     console.log(`Captured ${scene.id}.jpg and ${review}/${scene.id}-summit-full.png`);
