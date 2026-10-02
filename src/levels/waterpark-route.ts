@@ -1,6 +1,15 @@
 import type { CustomComponent } from '../level';
+import * as THREE from 'three';
 type Point = [number,number,number];
-export const WATERPARK_SPAWN: Point = [0,80.15,58];
+export const WATERPARK_SPAWN: Point = [-18,130.15,184];
+export const WATERPARK_GIANT = {p:[0,70,100] as Point,radius:32,width:88,lipY:102,lipZ:68,
+  leftDrop:{from:[-18,130,155] as Point,to:[-18,70,108] as Point},
+  rightMouth:[24,74,86] as Point};
+const giantExitCurve=new THREE.CatmullRomCurve3([
+ [24,74,86],[24,70,100],[24,68,126],[42,66,152],[76,63,136],[88,60,60],[60,60,10],[22,60,12],[0,60,2],[0,60,-16],
+].map(p=>new THREE.Vector3(...p)),false,'centripetal');
+export const WATERPARK_GIANT_EXIT=Array.from({length:81},(_,i)=>giantExitCurve.getPointAt(i/80).toArray() as Point);
+export const WATERPARK_GIANT_EXIT_WIDTHS=Array.from({length:81},(_,i)=>48-30*THREE.MathUtils.smoothstep(i/80,.06,.18));
 export const WATERPARK_LOOPS = [
  {entry:[0,-58,-668] as Point,radius:26,width:12,offset:20,yaw:0,exit:[20,-58,-668] as Point},
  {entry:[20,-80,-738] as Point,radius:26,width:12,offset:20,yaw:0,exit:[40,-80,-738] as Point},
@@ -48,7 +57,7 @@ export const WATERPARK_CHECKPOINTS = [
  {p:[-4,12,-566] as Point,name:'Triple loop summit checkpoint'},
 ];
 export const WATERPARK_DOWNHILL = [
- {from:[0,80,44] as Point,to:[0,60,-16] as Point,name:'High tower drop'},
+ {...WATERPARK_GIANT.leftDrop,name:'Giant vert left entry drop'},
  {from:[0,48,-190] as Point,to:[0,34,-270] as Point,name:'Downhill park connector'},
  {from:[0,30,-424] as Point,to:[0,18,-466] as Point,name:'Upper flume approach'},
  {from:[0,18,-466] as Point,to:[0,4,-502] as Point,name:'Dry flume descent'},
@@ -57,15 +66,28 @@ export const WATERPARK_DOWNHILL = [
 // Outer terrace/hillside grade for the architectural layer. Pool bowls remain
 // excavated below this envelope; never fill their playable interiors with it.
 export const WATERPARK_GRADE: Point[] = [
- [0,80,72],[0,80,44],[0,60,-16],[0,60,-24],[0,58,-65],[0,56,-96],[0,54,-148],
+ [0,130,224],[0,130,155],[0,70,108],[0,70,100],[0,80,68],[0,80,44],[0,60,-16],[0,60,-24],[0,58,-65],[0,56,-96],[0,54,-148],
  [0,48,-160],[0,48,-190],[0,34,-270],[0,34,-278],[0,32,-332],[0,30,-382],[0,30,-424],
  [0,18,-466],[0,12,-538],[0,12,-578],[0,-58,-658],[0,-58,-672],
  [0,-80,-726],[0,-80,-742],[0,-96,-776],[0,-100,-830],[0,-100,-920],
  [0,-165,-992],[0,-165,-1080],
 ];
 
-deck(0,58,80,28,28,1,'High admission tower deck');
-ramp([0,60,14],60,20,20,180,1,'High tower downhill ramp');
+deck(-18,178,130,32,46,1,'Giant vert admission deck');
+C.push(coasterRoad(WATERPARK_GIANT.leftDrop.from,WATERPARK_GIANT.leftDrop.to,18,'Giant vert left entry drop'));
+C.push(coasterRoad([-18,70,108],[-18,70,100],18,'Giant vert left runout',false));
+C.push({t:'vertramp',p:WATERPARK_GIANT.p,yaw:90,len:88,rise:32,w:0,vkind:'quarter',arc:90,arcSteps:48,deck:0,
+  gravityTrack:true,vert:true,rails:false,edgeGrinding:false,tex:'pavement',color:'#7eb8b6',grp:1,nm:'Giant shared vert wall — left entry, right exit'});
+{
+ const vertices:number[]=[],indices:number[]=[],uvs:number[]=[];
+ for(let i=0;i<=80;i++){
+  const p=WATERPARK_GIANT_EXIT[i],t=giantExitCurve.getTangentAt(i/80),length=Math.hypot(t.x,t.z)||1;
+  const half=WATERPARK_GIANT_EXIT_WIDTHS[i]/2;
+  for(const side of [-1,1]){vertices.push(p[0]-t.z/length*side*half,p[1],p[2]+t.x/length*side*half);uvs.push(side<0?0:half/2,i/80*giantExitCurve.getLength()/4);}
+  if(i<80){const a=i*2;indices.push(a,a+1,a+2,a+1,a+3,a+2);}
+ }
+ C.push({t:'mesh',p:[0,0,0],vertices,indices,uvs,vert:false,edgeGrinding:false,doubleSided:true,tex:'pavement',color:'#6da7b6',grp:1,nm:'Giant vert right exit chute'});
+}
 lipApron(-20,60,24,8,1,'First pool drop-in apron');
 ramp([0,60-Math.sqrt(28),-25],2,Math.sqrt(28),20,180,1,'First pool roll-in bevel');
 for(const [i,pool] of WATERPARK_POOLS.entries()) C.push({t:'vertramp',p:pool.p,yaw:pool.yaw,len:pool.length,rise:pool.radius,w:pool.flatHalf,vkind:'half',arc:90,deck:0,rails:false,edgeGrinding:false,tex:'solid',color:i%2?AQUA:TEAL,grp:pool.section==='A'?2:4,nm:`${pool.section==='A'?'Wave pools':'Boomerang pools'} ${i<4?i+1:i-3} · ${pool.radius} m downhill vert`});
@@ -116,9 +138,6 @@ for(const [a,b]of [
 for(const loop of WATERPARK_LOOPS)C.push(coasterRoad(
   [loop.entry[0]+10,loop.entry[1],loop.entry[2]+8],
   [loop.entry[0]+10,loop.entry[1],loop.entry[2]],42,'Loop base recovery crossing',false));
-// A missed jump lands on a service court. Its side bank returns to the launch
-// instead of forcing a death/checkpoint reset or a one-way climb.
-deck(40,-814,-110,58,32,6,'Ravine recovery court');
-C.push(coasterRoad([12,-96,-778],[12,-110,-830],14,'Ravine return bank',false));
-C.push(coasterRoad([26,-96,-772],[26,-96,-778],42,'Ravine return crossing',false));
+// Off-course ground is lethal. The summit checkpoint owns failed attempts.
+C.push({t:'coastwall',p:[48,-165,-1002],pts:[[0,0],[0,-70],[24,-70],[24,0]],w:.65,rise:10,grp:7,nm:'Enclosed finish court safety boundary'});
 C.push({t:'pit',p:[20,-210,-500],s:[240,1,1200],invisible:true,grp:7,nm:'Deep park fall basin'});

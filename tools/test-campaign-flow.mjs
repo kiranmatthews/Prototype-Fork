@@ -30,7 +30,7 @@ const campaign = await import(
   `data:text/javascript;base64,${Buffer.from(output).toString("base64")}`
 );
 
-assert.equal(campaign.CAMPAIGN_LEVELS.length, 14);
+assert.equal(campaign.CAMPAIGN_LEVELS.length, 15);
 assert.equal(campaign.resolveRelicTime('jungle'), 60);
 assert.equal(campaign.resolveRelicTime('editor-course', { relicTime: 83.75 }), 83.75);
 assert.equal(campaign.resolveRelicTime('jungle', { relicTime: 45.125 }), 45.125);
@@ -55,12 +55,13 @@ assert.deepEqual(
     ["jungle-cup", "Jungle Cup"],
     ["treehouse-trail", "Treehouse Trail"],
     ["waterpark", "Deadwater Park"],
+    ["waterpark-cup", "Deadwater Cup"],
   ],
   "canonical portal order or labels drifted",
 );
 assert.equal(
   new Set(campaign.CAMPAIGN_LEVELS.map((level) => level.progressKey)).size,
-  14,
+  15,
   "campaign progress keys must remain unique",
 );
 assert.equal(campaign.CAMPAIGN_TIME_RELIC_TARGET_SECONDS, 60);
@@ -70,8 +71,8 @@ assert.ok(
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ levelKeys }) => levelKeys.length),
-  [7, 7],
-  "Deadwater Park must join Island 2 without removing existing hubs",
+  [7, 8],
+  "Both Deadwater venues must join Island 2 without removing existing hubs",
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ id, name }) => [id, name]),
@@ -100,9 +101,12 @@ assert.deepEqual(campaign.CAMPAIGN_MAP_EDGES.filter(e=>campaign.campaignLevelByK
   .map(e=>[e.from,e.to,e.fromDirection,e.toDirection]),[
   ['test-course','nightworks','up','down'],['coastal','chimeworks','down','up'],['island-hopper','waterpark','up','down'],
 ]);
-assert.deepEqual(campaign.CAMPAIGN_ISLANDS[1].levelKeys.slice(-4), ['island-hopper','waterpark','codex-switchback','jungle-gate']);
+assert.deepEqual(campaign.CAMPAIGN_ISLANDS[1].levelKeys.slice(-5), ['island-hopper','waterpark','waterpark-cup','codex-switchback','jungle-gate']);
 assert.equal(campaign.CAMPAIGN_LEVELS[9].progressKey, 'codex-switchback', 'editable hub identity must stay at index 9');
 assert.equal(campaign.CAMPAIGN_LEVELS[13].progressKey, 'waterpark', 'new hubs must append after every saved editor identity');
+assert.deepEqual(campaign.campaignLevelById('waterpark').mapPosition,[86,6,4]);
+assert.equal(campaign.CAMPAIGN_LEVELS[14].progressKey,'waterpark-cup');
+assert.equal(campaign.CAMPAIGN_LEVELS[14].competition,true);
 assert.equal(campaign.campaignLevelById('codex-lab').islandId, 'island-2');
 
 const graph = new campaign.CampaignStore();

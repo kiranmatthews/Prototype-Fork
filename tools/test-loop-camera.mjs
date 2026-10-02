@@ -108,7 +108,7 @@ try {
     const l=new Level(new THREE.Scene(),{id:'loop-camera-fixture',name:source.name,data:source});levels.push(l);l.root.updateMatrixWorld(true);
     const p=new Player(l.scene);p.enterLevel('loop-camera-fixture');p.respawn(l,true,false,{position:new THREE.Vector3(...source.spawn),heading:new THREE.Vector3(0,0,1)});
     const camera=new THREE.PerspectiveCamera(TUNING.camFov,16/9,.1,500),oldCamera=camera.clone();
-    const unchanged=new Proxy(p,{get:(target,key)=>key==='loopPresentationFrame'?null:Reflect.get(target,key,target)});
+    const unchanged=new Proxy(p,{get:(target,key)=>(key==='loopPresentationFrame'||key==='loopFallPresentation')?null:Reflect.get(target,key,target)});
     const rig=makeRig({...deps,level:l,player:p,camera}),ordinary=makeRig({...deps,level:l,player:unchanged,camera:oldCamera});
     let previous={},entered=false,detached=false,after=0,maxDistance=0,minY=Infinity,maxY=-Infinity,vertices=0;
     const releaseBounds={minY:Infinity,maxY:-Infinity,samples:0};
@@ -144,12 +144,13 @@ try {
           });
       }
       p.restoreRenderPose();
-      assert.ok(!p.isBailing&&p.totalDeaths===0,'camera fixture did not keep a clean rider');
+      assert.equal(p.totalDeaths,0);
+      if(!coast)assert.equal(p.isBailing,false,'charged camera fixture did not keep a clean rider');
       if((!coast&&p.loopStatus.completed)||(coast&&detached)) {if(++after>25)break;}
     }
     assert.ok(entered&&vertices>100,'fixture never rendered a mounted loop rider');
     assert.ok(minY>-1&&maxY<1,`actual close-loop rider left viewport: ${JSON.stringify({coast,minY,maxY,releaseBounds})}`);
-    if(coast){assert.ok(detached);assert.equal(p.loopPresentationFrame,null,'failed loop retained contact presentation');}
+    if(coast){assert.ok(detached&&p.isBailing&&p.loopFallPresentation);assert.equal(p.freeSkate,false);assert.equal(p.loopPresentationFrame,null,'failed loop retained contact presentation');assert.ok(camera.up.y>.85,'fall horizon did not level');}
     else {assert.equal(quarters.size,4,'charged fixture missed a quarter of the loop');assert.equal(p.loopStatus.completed,1);assert.ok(Math.abs(p.pos.x-118)<7,'yaw180 loop exited on the wrong world side');}
     assert.equal(JSON.stringify(TUNING),tuningBefore);
     results.push({coast,quarters:[...quarters],maxDistance,minY,maxY,vertices,releaseBounds,completed:p.loopStatus.completed,detached});p.group.removeFromParent();

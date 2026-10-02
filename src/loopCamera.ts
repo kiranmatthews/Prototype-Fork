@@ -5,6 +5,7 @@ export interface LoopCameraFrame {
   readonly normal: THREE.Vector3;
   readonly tangent: THREE.Vector3;
 }
+export interface LoopFallCameraFrame { readonly elapsed:number; readonly side:THREE.Vector3; readonly backward:THREE.Vector3; readonly normal:THREE.Vector3; readonly focus:THREE.Vector3 }
 export interface LoopCameraFramingOptions { distance: number; height: number; pitch: number }
 
 /** Normal close skating composition transported around the loop's ride plane.
@@ -29,8 +30,16 @@ export class LoopCameraFraming {
   private readonly offset = new THREE.Vector3();
   private readonly normalOffset = new THREE.Vector3();
   private readonly xAxis = new THREE.Vector3(1, 0, 0);
+  private falling=false;
+  private fallAge=0;
+  private readonly fallStartOffset=new THREE.Vector3();
+  private readonly presentedUp=new THREE.Vector3(0,1,0);
+  private readonly fallStartUp=new THREE.Quaternion();
+  private readonly fallUp=new THREE.Quaternion();
+  private readonly fallTarget=new THREE.Vector3();
+  private readonly fallOffset=new THREE.Vector3();
 
-  get active(): boolean { return this.releaseWeight > 0 || this.followReleaseTime > 0; }
+  get active(): boolean { return this.falling || this.releaseWeight > 0 || this.followReleaseTime > 0; }
 
   restore(camera: THREE.PerspectiveCamera): void {
     if (!this.applied) return;
@@ -41,9 +50,33 @@ export class LoopCameraFraming {
   }
 
   apply(camera: THREE.PerspectiveCamera, frame: LoopCameraFrame | null | undefined,
-    subject: THREE.Vector3, framing: LoopCameraFramingOptions, dt: number, snap = false): void {
+    subject: THREE.Vector3, framing: LoopCameraFramingOptions, dt: number, snap = false, fall?:LoopFallCameraFrame|null): void {
     // A checkpoint/level change cannot inherit a previous inverted horizon.
-    if (snap) this.releaseWeight = this.followReleaseTime = 0;
+    if (snap) {this.releaseWeight = this.followReleaseTime = 0;this.falling=false;}
+    if(fall){
+      if(!this.falling){
+        this.fallAge=0;
+        this.fallStartOffset.copy(this.offset).add(subject).sub(fall.focus);
+        if(this.fallStartOffset.lengthSq()<1)this.fallStartOffset.subVectors(camera.position,fall.focus);
+        this.fallStartUp.setFromUnitVectors(new THREE.Vector3(0,1,0),this.presentedUp);
+      }
+      this.falling=true;this.fallAge+=Math.max(0,dt);
+      this.savedPosition.copy(camera.position);this.savedOrientation.copy(camera.quaternion);this.savedUp.copy(camera.up);this.applied=true;
+      // Move outside the riding ribbon first, then settle the horizon. The
+      // whole-body tumble reads against the track instead of through it.
+      const inward=1-THREE.MathUtils.smoothstep(this.fallAge,.35,.95);
+      this.fallOffset.copy(fall.side).multiplyScalar(8).addScaledVector(fall.backward,2).addScaledVector(fall.normal,4*inward);
+      this.fallOffset.y+=4.3*(1-inward);
+      this.offset.copy(this.fallStartOffset).lerp(this.fallOffset,THREE.MathUtils.smoothstep(this.fallAge,0,.28));
+      camera.position.copy(fall.focus).add(this.offset);
+      this.fallUp.copy(this.fallStartUp).slerp(new THREE.Quaternion(),THREE.MathUtils.smoothstep(this.fallAge,0,.45));
+      camera.up.set(0,1,0).applyQuaternion(this.fallUp);
+      this.fallTarget.copy(fall.focus);
+      this.basis.lookAt(camera.position,this.fallTarget,camera.up);camera.quaternion.setFromRotationMatrix(this.basis);
+      this.presentedUp.copy(camera.up);this.releaseWeight=0;this.followReleaseTime=.8;
+      return;
+    }
+    this.falling=false;
     if (frame) {
       this.normal.copy(frame.normal).normalize();
       this.back.copy(frame.tangent).negate().normalize();
@@ -88,5 +121,6 @@ export class LoopCameraFraming {
     this.pitchRotation.setFromAxisAngle(this.xAxis, -pitch);
     camera.quaternion.copy(this.blendedFrame).multiply(this.pitchRotation);
     camera.up.set(0, 1, 0).applyQuaternion(this.blendedFrame);
+    this.presentedUp.copy(camera.up);
   }
 }

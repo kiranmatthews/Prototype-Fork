@@ -14,7 +14,7 @@ for(const fastLine of [false,true])await withWaterparkRuntime(async r=>{
   assert.equal(a.farLip,b.nearLip,'Adjacent spine lips must share the exact forward station');
   assert.equal(a.lipY-b.lipY,2,'Each receiving spine pool must step downhill two metres');
  }
- assert.equal(source.WATERPARK_LEVEL.spawn[1],80.15);
+ assert.equal(source.WATERPARK_LEVEL.spawn[1],130.15);
  assert.equal(source.WATERPARK_FINISH[1],-165);
  assert.equal(source.WATERPARK_LEVEL.components.filter(c=>c.t==='speedpad').length,0,'Every approach must earn speed from the ramps; no boost pads');
  assert.equal(l.checkpoints.length,2);
@@ -30,6 +30,7 @@ for(const fastLine of [false,true])await withWaterparkRuntime(async r=>{
  const e=pilot.evidence;
  assert.deepEqual(e.transfers.map(t=>[t.from,t.to]),[[0,1],[1,2],[2,3],[4,5],[5,6]],'All five forward downhill spine transfers must succeed');
  assert.equal(e.jumps.length,4);
+ assert.ok(e.giant.air&&e.giant.landedRight&&e.giant.exited&&e.giant.peak>source.WATERPARK_GIANT.lipY+8,'Giant vert must launch from the left, land on the right and feed its exit chute');
  for(const flight of e.jumps){
   const gap=source.WATERPARK_JUMPS[flight.index];
   assert.ok(flight.end[2]<=gap.landing[2]+.05,`${gap.name} must reach its receiving deck`);

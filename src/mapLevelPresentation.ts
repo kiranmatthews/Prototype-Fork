@@ -235,7 +235,7 @@ export class MapLevelPresentation {
     if (data.competition) {
       ctx.textAlign = "center"; ctx.textBaseline = "middle";
       ctx.fillStyle = "#f7d06f"; ctx.font = '75px "Staging Secondary", Arial, sans-serif';
-      ctx.fillText(data.cup ? "🏆 JUNGLE CUP EARNED" : "3 RUNS · FINISH 1ST", 768, 360);
+      ctx.fillText(data.cup ? `🏆 ${data.name.toUpperCase()} EARNED` : "3 RUNS · FINISH 1ST", 768, 360);
     }
     ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.lineJoin = "round";
     let fontSize = this.boardSettings.value.mapTitleSize ?? 156;

@@ -135,7 +135,7 @@ export class WorldMapUI {
     if (definition.competition) {
       this.collectibleRow.replaceChildren();
       const cup = node("span", `world-map-collectible${progress?.cup ? " earned" : ""}`);
-      cup.textContent = progress?.cup ? "🏆 JUNGLE CUP EARNED" : "WIN THE JUNGLE CUP";
+      cup.textContent = progress?.cup ? `🏆 ${definition.name.toUpperCase()} EARNED` : `WIN THE ${definition.name.toUpperCase()}`;
       this.collectibleRow.append(cup);
     }
     const trialUnlocked = this.campaign.runModesUnlocked(definition.levelId);

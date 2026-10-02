@@ -10,6 +10,8 @@ export interface WaterparkArtLayout {
   entrySignOffsetX?: number;
   /** The linear ride has no raised promenade beside the Boomerang pools. */
   boomerangPromenadeDetails?: boolean;
+  scenicRides?: boolean;
+  entrySignText?: string;
   /** World-space physical centreline points. Separate arrays preserve the jump. */
   flumePaths: ArtPoint[][];
 }
@@ -292,7 +294,8 @@ export function buildWaterparkArt(layout:WaterparkArtLayout=WATERPARK_ART_LINEAR
   // The first experience has a waterpark silhouette at normal close-camera
   // eye height. This retired small slide starts on the west promenade and
   // crosses the low first basin, away from the transfer lip at z=0.
-  C.push(...standingSign('WAVE POOLS',[-31+(layout.entrySignOffsetX??0),14.5,19],10,P.cream,P.blue,12,-15));
+  C.push(...standingSign(layout.entrySignText??'WAVE POOLS',[-31+(layout.entrySignOffsetX??0),14.5,19],10,P.cream,P.blue,12,-15));
+  if(layout.scenicRides!==false){
   C.push(...tower([-75,12,9],7,'OLD RAPIDS',P.orange));
   const entryFlume:ArtPoint[]=[[-71,19,9],[-64,18,6],[-55,16.6,7],[-45,15.2,10],[-35,14.4,10],[-28,13.5,14]];
   C.push(artPipe(entryFlume,1.25,P.orange,'OLD RAPIDS closed flume over the first wave pool'));
@@ -304,6 +307,7 @@ export function buildWaterparkArt(layout:WaterparkArtLayout=WATERPARK_ART_LINEAR
   }
   C.push(...artSign('CLOSED',[-28,13.6,15.3],3.3,P.cream,P.coral));
   C.push(artBeam([-29,12.6,15],[-27,14.6,15],.18,P.rust,'OLD RAPIDS boarded slide outlet'));
+  }
 
   // CYCLONE: orange descending helix wraps its own braced stair tower.
   C=sections.cyclone;
@@ -421,5 +425,6 @@ export function buildWaterparkArt(layout:WaterparkArtLayout=WATERPARK_ART_LINEAR
     sections[section].push(artBox([x,y+1.3,z],[4,.2,1.1],P.rust,'Abandoned concourse bench seat'));
     for(const dx of [-1.5,1.5])sections[section].push(artBox([x+dx,y+.7,z],[.16,1.2,.65],P.steel,'Bench leg fixed to deck'));
   }
-  return SECTIONS.flatMap((name,index)=>sections[name].map(c=>({...transformArtComponent(c,WATERPARK_ART_SOURCE_ANCHORS[name],layout.frames[name]),grp:80+index})));
+  return SECTIONS.flatMap((name,index)=>layout.scenicRides===false&&(name==='cyclone'||name==='riptide')?[]:
+    sections[name].map(c=>({...transformArtComponent(c,WATERPARK_ART_SOURCE_ANCHORS[name],layout.frames[name]),grp:80+index})));
 }

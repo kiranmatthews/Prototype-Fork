@@ -1,4 +1,5 @@
-/** One handcrafted three-run competition; all tuning is local to this event. */
+import {competitionCourse,type CompetitionCourse} from './courses';
+/** Shared three-run competition; each venue owns its identity and framing. */
 export const JUNGLE_CUP_ID = 'jungle-cup';
 export const COMPETITION_TUNING = {
   runSeconds: 60,
@@ -107,7 +108,8 @@ export class JungleCupEvent {
     ...COMPETITORS.map(c => ({ id: c.id as string, name: c.name as string, portrait: c.portrait as string, runs: [] as number[] })),
   ];
   constructor(private readonly rng: () => number = Math.random,
-    private readonly onFinalSecond: (second: number) => void = () => {}) {}
+    private readonly onFinalSecond: (second: number) => void = () => {},
+    readonly course:CompetitionCourse=competitionCourse(JUNGLE_CUP_ID)) {}
   get runNumber(): number { return Math.min(3, this.runs.length + (['running','finishing','countdown','intro'].includes(this.phase) ? 1 : 0)); }
   get simulating(): boolean { return this.phase === 'running' || this.phase === 'finishing'; }
   get heatLook() { return COMPETITION_HEATS[Math.max(0, this.runNumber - 1)]; }

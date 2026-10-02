@@ -53,7 +53,7 @@ await withSkateRuntime(async ({server,player:p})=>{
   const paint=life=>surface.paintCounters({}, {},1280,720,{crates:null,fruit:null,life},0);
   paint(null);assert.equal(faces,1);assert.deepEqual(numbers,[]);assert.deepEqual(labels,[]);
   paint({value:7,deathsMode:true});assert.equal(faces,2);assert.deepEqual(numbers,[]);assert.deepEqual(labels,[]);
-  avatarOnly=false;paint({value:7,deathsMode:true});assert.deepEqual(numbers,['7']);assert.deepEqual(labels,['DEATHS']);
+  avatarOnly=false;paint({value:7,deathsMode:true});assert.deepEqual(numbers,['7 DEATHS']);assert.deepEqual(labels,[]);
   console.log(`PASS judging: huge score marks ${[0,1,2,3].map(b=>mark(huge,b)).join('/')} for 0–3 bails; 20s idle costs 8, 25s costs ${fine.inactivityPenalty.toFixed(3)}; no pause/overtime penalty, retained separate gaps, reset and day/sunset/night heat sequence.`);
   console.log('PASS avatar-only Canvas HUD: portrait retained, both numeric modes suppressed, ordinary counters restored.');
 });

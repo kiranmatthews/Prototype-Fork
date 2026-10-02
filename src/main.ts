@@ -13,7 +13,8 @@ import { Halfpipe } from './halfpipe';
 import { parkCruiseSpeed, parkChargedSpeed } from './skateParkTuning';
 import { MenuRewardsPresentation } from "./menuPresentation";
 import { mapSkateboardSettings } from "./skateboard/mapSettings";
-import { JungleCupEvent, JUNGLE_CUP_ID, COMPETITION_TUNING, COMPETITORS, JUDGES } from "./competition/event";
+import { isCompetitionLevel, competitionCourse } from './competition/courses';
+import { JungleCupEvent, COMPETITION_TUNING, COMPETITORS, JUDGES } from "./competition/event";
 import { CompetitionPresentation, type CompetitionAction } from "./competition/presentation";
 // Entry point: renderer, Crash-style corridor camera, and the deterministic
 // fixed-step game loop.
@@ -244,7 +245,7 @@ function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
   const offset = document.body.classList.contains("game-world-map")
     ? MAP_SUN_OFFSET
     : level.jungleAtmosphere ? JUNGLE_SUN_OFFSET : activeSky === "coast" ? COAST_SUN_OFFSET : SUN_OFFSET;
-  const heatSun = competition && current.id === JUNGLE_CUP_ID && !editorViewActive ? competition.heatLook.sunOffset : null;
+  const heatSun = competition && isCompetitionLevel(current.id) && !editorViewActive ? competition.heatLook.sunOffset : null;
   sun.target.position.set(focusX, focusY, focusZ);
   sun.target.updateMatrixWorld();
   sun.position.set(
@@ -767,7 +768,7 @@ let levelPostEnabled = false;
 
 function applyTheme(): void {
   const t = level.theme;
-  const heat = competition && current.id === JUNGLE_CUP_ID && !editorViewActive ? competition.heatLook : null;
+  const heat = competition && isCompetitionLevel(current.id) && !editorViewActive ? competition.heatLook : null;
   const skyPreset = heat?.sky ?? level.skyPreset;
   const atmosphere = resolveLevelAtmosphere(heat ? { theme: level.theme, skyPreset,
     jungleAtmosphere: level.jungleAtmosphere, isCampaignMap: level.isCampaignMap, skyBackdrop: level.skyBackdrop,
@@ -1797,7 +1798,7 @@ function applyRunModes(): void {
 }
 
 function set2P(on: boolean, force = false): void {
-  if (on && current.id === JUNGLE_CUP_ID) return;
+  if (on && isCompetitionLevel(current.id)) return;
   if (on === split2p) return;
   if (on) {
     const pads = navigator.getGamepads
@@ -1937,6 +1938,7 @@ function stepPvp(dt: number): void {
 // full Crash rig belongs to P1; this one just keeps P2 framed and onward.
 const cameraViewFraming2 = new CameraViewFraming();
 const loopCameraFraming2 = new LoopCameraFraming();
+const cameraOverlayHeroFraming2 = new CameraHeroFraming();
 function updateCamera2(dt: number): void {
   if (!p2) return;
   const framingSnap = cam2RenderSnapVersion !== p2.renderSnapVersion;
@@ -1945,7 +1947,9 @@ function updateCamera2(dt: number): void {
   updateBaseCamera2(dt);
   const subject = p2.renderPosition;
   cameraViewFraming2.apply(camera2, cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z), subject, framingSnap);
-  loopCameraFraming2.apply(camera2, p2.loopPresentationFrame, subject, cameraRigFraming(TUNING, 0, 0, 0, true), dt, framingSnap);
+  loopCameraFraming2.apply(camera2, p2.loopPresentationFrame, subject, cameraRigFraming(TUNING, 0, 0, 0, true), dt, framingSnap,p2.loopFallPresentation);
+  if(level.cameraAirLift===1&&p2.vertAir&&loopCameraFraming2.active)cameraOverlayHeroFraming2.apply(camera2,p2.cameraPoseBounds,dt,framingSnap);
+  else cameraOverlayHeroFraming2.reset();
 }
 
 function updateBaseCamera2(dt: number): void {
@@ -2289,7 +2293,7 @@ function switchLevel(
   player.enterLevel(entry.id);
   player.bonusMode = false;
   player.hubMode = (entry.id === "warproom" || level.isCampaignMap);
-  player.competitionMode = entry.id === JUNGLE_CUP_ID;
+  player.competitionMode = isCompetitionLevel(entry.id);
   currentRunBonusBoxes = 0;
   player.respawn(level, true, preserveInventory, warpReturnPose ?? undefined);
   syncCampaignPortalProgress();
@@ -2348,9 +2352,9 @@ function switchLevel(
 }
 
 function syncCompetitionLevel(editing = false): void {
-  player.competitionMode = current.id === JUNGLE_CUP_ID && !editing;
+  player.competitionMode = isCompetitionLevel(current.id) && !editing;
   if (player.competitionMode && split2p) set2P(false);
-  competition = player.competitionMode ? new JungleCupEvent(Math.random, () => sfx.countdownBeep()) : null;
+  competition = player.competitionMode ? new JungleCupEvent(Math.random, () => sfx.countdownBeep(),competitionCourse(current.id)) : null;
   competitionUI.render(competition, gameFlow.blocksGameplay || editing);
   if (competition) {
     ui.setLevel(current.id, "competition", player.fruitCollectionRevision, input.inventoryHeld);
@@ -2362,7 +2366,7 @@ function competitionOverview():boolean {
   return !!competition&&!competition.simulating&&competition.phase!=="countdown"&&!editor.active;
 }
 function frameCompetitionOverview():void {
-  camera.position.set(90,85,54);camera.lookAt(0,1,-46);
+  const course=competitionCourse(current.id);camera.up.set(0,1,0);camera.position.set(...course.overviewEye);camera.lookAt(...course.overviewTarget);
 }
 function preparingCompetitionPresentation():boolean {
   return !!competition&&!gameFlow.currentScreen&&
@@ -2383,8 +2387,8 @@ function commitCompetitionVictory(): void {
 function handleCompetitionAction(action: CompetitionAction): void {
   if(gameFlow.loadingPhase)return;
   recordPresentationStage('competition:'+action);
-  if (!competition || current.id !== JUNGLE_CUP_ID) return;
-  if (action === "retry") { competition = new JungleCupEvent(Math.random, () => sfx.countdownBeep()); action = "start"; }
+  if (!competition || !isCompetitionLevel(current.id)) return;
+  if (action === "retry") { competition = new JungleCupEvent(Math.random, () => sfx.countdownBeep(),competitionCourse(current.id)); action = "start"; }
   if (action === "start" && competition.startRun()) {
     applyTheme();
     player.respawn(level, true, true);
@@ -2572,7 +2576,7 @@ function restartCurrentRun(): void {
       applyRunModes();
       ui.setHUD(currentHudState(), 0);
     }
-    if (current.id === JUNGLE_CUP_ID) syncCompetitionLevel(false);
+    if (isCompetitionLevel(current.id)) syncCompetitionLevel(false);
     await prepareActivePresentationAssets();
     gameFlow.hide();
   });
@@ -2922,7 +2926,7 @@ function returnFromBonus(completed: boolean): void {
 }
 
 function checkCampaignEntrances(): void {
-  if (current.id === JUNGLE_CUP_ID) return;
+  if (isCompetitionLevel(current.id)) return;
   if(player.state === "dead" || player.state === "gameover" || player.state === "finished") {level.cancelBonusEntry();return;}
   if (gameFlow.blocksGameplay || paused || editor.active)
     return;
@@ -4143,6 +4147,7 @@ const skateChaseCamera = new SkateChaseCamera();
 const cameraViewFraming = new CameraViewFraming();
 const cameraHeroFraming = new CameraHeroFraming();
 const loopCameraFraming = new LoopCameraFraming();
+const cameraOverlayHeroFraming = new CameraHeroFraming();
 function updateCamera(dt: number): void {
   const framingSnap = cameraRenderSnapVersion !== player.renderSnapVersion;
   loopCameraFraming.restore(camera);
@@ -4156,7 +4161,9 @@ function updateCamera(dt: number): void {
     const forward = cameraViewDirection(level.cameraViews, subject.x, subject.y, subject.z, camControlDir);
     camControlDir.set(forward.x, 0, forward.z);
   }
-  loopCameraFraming.apply(camera, player.loopPresentationFrame, subject, cameraRigFraming(TUNING), dt, framingSnap);
+  loopCameraFraming.apply(camera, player.loopPresentationFrame, subject, cameraRigFraming(TUNING), dt, framingSnap,player.loopFallPresentation);
+  if(level.cameraAirLift===1&&player.vertAir&&loopCameraFraming.active)cameraOverlayHeroFraming.apply(camera,player.cameraPoseBounds,dt,framingSnap);
+  else cameraOverlayHeroFraming.reset();
 }
 
 function updateBaseCamera(dt: number): void {

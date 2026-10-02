@@ -1,4 +1,4 @@
-import type { LoopCameraFrame } from './loopCamera';
+import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';
 import { LOOP_TURN, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';
 import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';
 import { SkateBalanceArms, SKATE_UNDER_RAIL_DEPTH, SKATE_UNDER_RAIL_TRANSITION, sampleUnderRailMotion, SKATE_REVERT_DURATION, sampleSkateRevert } from './skateBodyMotion';
@@ -451,6 +451,7 @@ interface GroundHit {
   surface?: SurfaceKind; // painted material; separate from structural names such as halfpipe
   beachSand?: boolean; // explicit gameplay tag; visual sand textures alone never add drag
   gravityTrack?: boolean; // slope/drag still act; authored coaster roads retain earned overspeed
+  lethal?: boolean;
   crate?: Crate; // identity-bearing temporary lid support
   moverId?: number; // standing on a moving platform: ride along with it
   crumbleId?: number; // standing on a crumble pad: it starts breaking
@@ -946,6 +947,7 @@ export class Player {
   // Crash hop never offers them (the slam stays available from on-foot air).
   private airFromSkate = false;
   private gravityTrackAir = false; // one launch retains the momentum earned on a tagged coaster road
+  private readonly gravityRideDirection = new THREE.Vector3();
   // WHICH GRAVITY THIS AIRTIME FLIES UNDER. A skate air and a platforming hop
   // are different arcs now, so the choice has to be a property of the LAUNCH,
   // declared once and never re-read from live state. Mounted state chooses a
@@ -1421,6 +1423,7 @@ export class Player {
     normal: new THREE.Vector3(0, 1, 0), tangent: new THREE.Vector3(0, 0, -1),
   };
   private loopFall = false;
+  private loopFailure: {elapsed:number;tumbleStarted:boolean;side:THREE.Vector3;backward:THREE.Vector3;normal:THREE.Vector3;focus:THREE.Vector3;rollAxis:THREE.Vector3}|null=null;
   private readonly completedLoops = new Set<THREE.Object3D>();
   private loopGateHintShown = false;
   private railCand: { rail: Rail; sample: RailSample } | null = null;
@@ -3414,6 +3417,7 @@ export class Player {
     this.groundHit = null;
     this.loopRide = null;
     this.loopFall = false;
+    this.loopFailure = null;
     this.gravityTrackAir = false;
     this.cameraPoseStandingCenter = null;
     this.completedLoops.clear();
@@ -3915,6 +3919,13 @@ export class Player {
     this.liftTyT = Math.max(0, this.liftTyT - dt);
     if (this.liftTyT === 0) this.liftTy = 0;
     this.regrindCd = Math.max(0, this.regrindCd - dt);
+    if(this.loopFailure){
+      this.loopFailure.elapsed+=dt;
+      if(!this.loopFailure.tumbleStarted&&this.loopFailure.elapsed>=.2){
+        this.loopFailure.tumbleStarted=true;this.ragAngVel.copy(this.loopFailure.rollAxis).multiplyScalar(1.7);this.ragAngVel.y=.2;
+      }
+      if(this.state==='ride'&&this.grounded&&!this.isBailing)this.loopFailure=null;
+    }
     // Letting Triangle go re-arms it: the rail you left is grabbable again.
     if (!input.grindHeld) this.grindLatched = false;
     this.grindBoostT = Math.max(0, this.grindBoostT - dt);
@@ -5532,6 +5543,22 @@ export class Player {
       this.airborneT = 0;
       this.airPeakY = this.pos.y;
       this.clearCoyoteJumpWindow();
+      const rollAxis=new THREE.Vector3(1,0,0).transformDirection(ride.mesh.matrixWorld);
+      const edgeFall=Math.abs(ride.lateral)>ride.shape.width/2-.1;
+      // A small peel-away reaction separates the falling body from the ribbon;
+      // preserve its carried tangent and lateral motion rather than parking it.
+      const fallVelocity=tangent.clone().multiplyScalar(result.speed).addScaledVector(normal,3.5)
+        .addScaledVector(rollAxis,this.rawInput.moveX*Math.min(8,Math.abs(result.speed)*.14));
+      const retainedSpeed=Math.hypot(fallVelocity.x,fallVelocity.z),retainedVertical=fallVelocity.y;
+      if(retainedSpeed>.001){this.axisF.set(fallVelocity.x/retainedSpeed,0,fallVelocity.z/retainedSpeed);this.axisL.set(this.axisF.z,0,-this.axisF.x);}
+      this.loopFailure={elapsed:0,tumbleStarted:false,
+        side:rollAxis.clone().multiplyScalar(edgeFall?Math.sign(ride.lateral):-Math.sign(ride.shape.offset||1)),rollAxis,
+        backward:new THREE.Vector3(-tangent.x,0,-tangent.z).normalize(),normal:normal.clone(),focus:this.pos.clone()};
+      this.bail(false,result.speed);
+      this.speed=retainedSpeed;this.vVel=retainedVertical;
+      this.bailVelocity.copy(this.axisF).multiplyScalar(this.speed);
+      this.airMomentum=true;this.airGrav='board';this.floatAir=true;
+      this.ragAngVel.set(0,0,0); // a short readable loss-of-footing beat before the tumble
     } else if (result.complete) {
       if (!ride.recovering) {
         this.completedLoops.add(ride.mesh);
@@ -5539,7 +5566,8 @@ export class Player {
         const required=level.loopMeshes.filter(mesh=>mesh.userData.loopRequired);
         const remaining=required.filter(mesh=>!this.completedLoops.has(mesh)).length;
         // Leave the next high-speed approach visible between chained loops.
-        if(remaining===0)this.onCourseHint(required.length>1?'ALL LOOPS CLEAR':'LOOP COMPLETE','Exit unlocked — ride out!');
+        if(this.competitionMode)this.score(1000,'Loop of Death');
+        else if(remaining===0)this.onCourseHint(required.length>1?'ALL LOOPS CLEAR':'LOOP COMPLETE','Exit unlocked — ride out!');
       }
       this.loopRide = null;
       // Recovery can leave backward at the entrance; preserve that real velocity.
@@ -5605,6 +5633,14 @@ export class Player {
     return { active: !!ride, progress: ride ? ride.angle / LOOP_TURN : 0,
       pressure: ride ? loopContactPressure(ride.shape, ride.angle, this.speed, TUNING.groundGravity) : 0,
       completed: this.completedLoops.size };
+  }
+  get loopFallPresentation():LoopFallCameraFrame|null {
+    const fall=this.loopFailure;if(!fall)return null;
+    if(this.legs&&this.headM){
+      this.legs.getWorldPosition(this.cameraPoseHip);this.headM.getWorldPosition(this.cameraPoseHead);
+      fall.focus.copy(this.cameraPoseHip).lerp(this.cameraPoseHead,.35);
+    }else fall.focus.copy(this.renderPosition).addScaledVector(VERT_UP,.8);
+    return fall;
   }
 
   private stepRide(dt: number, input: Input, level: Level): void {
@@ -6267,7 +6303,9 @@ export class Player {
       // travel. Bounded ±1, so a vert wall pulls hard but never explodes;
       // sign-safe, so stalling on a ramp rolls you back down it.
       let ty = 0;
-      if (this.groundHit) {
+      if (this.groundHit?.gravityTrack && this.onTransition) {
+        ty=skateSurfaceDirection(this.gravityRideDirection,this.axisF,this.rideNormal).y;
+      } else if (this.groundHit) {
         const n = this.rideNormal;
         const fdotn = this.axisF.x * n.x + this.axisF.z * n.z; // axisF.y is 0
         const tx = this.axisF.x - n.x * fdotn;
@@ -6529,6 +6567,10 @@ export class Player {
       this.pos.addScaledVector(this.slideVec, slideStepDistance);
     } else if (this.parkControls && this.freeSkate && this.grounded) {
       this.pos.addScaledVector(this.parkVelocity, dt);
+    } else if(this.freeSkate&&this.grounded&&this.groundHit?.gravityTrack&&this.onTransition){
+      // A giant authored face carries angled approaches in its own frame;
+      // projection would turn an almost-vertical descent into a sideways skid.
+      this.pos.addScaledVector(skateSurfaceDirection(this.gravityRideDirection,this.axisF,this.rideNormal),this.speed*dt);
     } else if (this.freeSkate && this.grounded && this.groundHit && this.rideNormal.y < 0.995) {
       const n = this.rideNormal;
       const fdotn = this.axisF.x * n.x + this.axisF.z * n.z;
@@ -6645,6 +6687,7 @@ export class Player {
             normal: ridingPipe.normalAt(pr.u, new THREE.Vector3()),
             name: 'halfpipe',
             halfpipe: ridingPipe,
+            gravityTrack: ridingPipe.object.userData.gravityTrack === true,
           };
           // the analytic normal IS smooth — track it exactly, no easing lag
           this.rideNormal.copy(hit.normal);
@@ -6676,7 +6719,7 @@ export class Player {
         const normal = contact.face.normal.clone().transformDirection(mesh.matrixWorld);
         if (normal.y >= 0 && contact.point.distanceTo(this.pos) < 0.7) {
           this.pos.copy(contact.point);
-          hit = { y: contact.point.y, normal, name: mesh.name, vert: mesh.userData.vert, mesh };
+          hit = { y: contact.point.y, normal, name: mesh.name, vert: mesh.userData.vert, gravityTrack:mesh.userData.gravityTrack===true, mesh };
           this.rideNormal.copy(normal);
         }
       }
@@ -6685,6 +6728,9 @@ export class Player {
     const steepHit = hit !== null && hit.normal.y < CONST.steepSnapNormal;
     const upWindow = steepHit ? TUNING.wallStick : 0.8;
     const downWindow = steepHit ? TUNING.wallStick : 1.4;
+    if(hit?.lethal&&hit.y>=this.pos.y-downWindow&&hit.y<=this.pos.y+upWindow){
+      this.pos.y=hit.y;this.groundHit=hit;this.grounded=true;this.die();return;
+    }
     // Cresting a vert lip: the board was climbing a near-vertical face; now the
     // surface ahead has gone flat (the coping's backside). Convert the climb
     // straight into UP-air — the vertical launch IS the climb rate you earned.
@@ -6784,6 +6830,7 @@ export class Player {
       this.pos.y = hit.y;
       this.groundHit = hit;
       this.grounded = true;
+      if(hit.lethal){this.die();return;}
       this.surfaceName = hit.name;
       this.crateFloor = hit.crate ?? null;
       // Ease the ride plane toward the facet under the board: segmented
@@ -7569,7 +7616,7 @@ export class Player {
     // A wipeout/board-abandon air gets its own dependable rescue steering.
     // It is independent of the skate airControl tuner (which may legitimately
     // be zero) and leaves vertical gravity untouched.
-    const rescueAirControl = this.stepAirRescueControl(dt, level);
+    const rescueAirControl = this.loopFailure ? true : this.stepAirRescueControl(dt, level);
 
     // Crash-style directional air control: up/down stretches or shortens the
     // jump (down brakes extra hard for precision), left/right sidesteps
@@ -7727,6 +7774,7 @@ export class Player {
       }
     }
     if (landNow && hit) {
+      if(hit.lethal){this.pos.y=hit.y;this.groundHit=hit;this.grounded=true;this.die();return;}
       if (this.isBailing) {
         // A bail that existed BEFORE this surface contact owns it completely.
         // Consume obsolete eject evidence only after the ragdoll response has
@@ -7865,6 +7913,7 @@ export class Player {
           }
           const hl = Math.hypot(hx, hz) || 1;
           this.axisF.set(hx / hl, 0, hz / hl);
+          if(hit.gravityTrack&&hit.vert)skateSurfaceHeading(this.axisF,this.gravityRideDirection.set(tvx,tvy,tvz),n);
           this.axisL.set(this.axisF.z, 0, -this.axisF.x);
           const keep = THREE.MathUtils.lerp(Math.abs(this.speed), tangSpeed, TUNING.landingFlow);
           this.speed = hit.gravityTrack ? keep : Math.min(keep, TUNING.downhillMax);
@@ -9595,8 +9644,8 @@ export class Player {
     // On-foot inertia, sideways slide-jumps, exact slides, and vert hang carry
     // live in world-vector channels rather than the course speed projection.
     const vectorOwned = this.captureWipeoutVelocity(BAIL_V);
-    this.breakApart ??= new CharacterBreakApart(this.bodyGroup);
-    this.breakApart.request('air', BAIL_V, this.state === 'dead', this.grounded ? this.groundHit : null);
+    if(!this.loopFailure)this.breakApart ??= new CharacterBreakApart(this.bodyGroup);
+    if(!this.loopFailure)this.breakApart!.request('air', BAIL_V, this.state === 'dead', this.grounded ? this.groundHit : null);
     const planar = BAIL_V.length();
     if (vectorOwned && planar > 1e-4) {
       this.axisF.copy(BAIL_V).multiplyScalar(1 / planar);
@@ -9676,7 +9725,7 @@ export class Player {
     this.breakApart ??= new CharacterBreakApart(this.bodyGroup);
     // Wall separation may already have stopped the collider. Preserve the
     // incoming speed for the loose pieces without changing rebound physics.
-    this.breakApart.request('air', hadBoard
+    if(!this.loopFailure)this.breakApart!.request('air', hadBoard
       ? BAIL_TARGET.copy(this.axisF).multiplyScalar(impactSpeed) : BAIL_V, false, this.grounded ? this.groundHit : null);
     const bailDuration =
       (CONST.bailDownTime + Math.min(0.9, entryPlanar * 0.035)) *
@@ -9725,7 +9774,7 @@ export class Player {
     poseSource: THREE.Object3D = this.bodyGroup,
     preserveTranslation = false,
   ): void {
-    this.breakApart?.request(kind, this.bailVelocity, this.state === 'dead');
+    if(!this.loopFailure)this.breakApart?.request(kind, this.bailVelocity, this.state === 'dead');
     if (kind === 'forward' && this.breakApart?.preparing && this.looseBoard) {
       // Caught trucks leave the deck with the legs; the chest keeps flying.
       this.flyBoardVel.multiplyScalar(.12);
@@ -15152,7 +15201,7 @@ export class Player {
       if (normal.y < 0 || normal.dot(VERT_RAY_D) >= -1e-4) continue;
       this.pos.copy(hit.point);
       return { y: hit.point.y, normal, name: hit.object.name,
-        mesh: hit.object, vert: hit.object.userData.vert };
+        mesh: hit.object, vert: hit.object.userData.vert, gravityTrack:hit.object.userData.gravityTrack===true };
     }
     return null;
   }
@@ -15278,6 +15327,7 @@ export class Player {
       surface: surfaceKindFromGroundObject(hit.object, structuralName),
       beachSand: hit.object.userData.beachSandFriction === true,
       gravityTrack: hit.object.userData.gravityTrack === true,
+      lethal: hit.object.userData.lethal === true,
       moverId: hit.object.userData.moverId as number | undefined,
       crumbleId: hit.object.userData.crumbleId as number | undefined,
       slippy: hit.object.userData.slippy as boolean | undefined,

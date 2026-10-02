@@ -36,6 +36,10 @@ try {
   const visualMesh = {t:"mesh",p:[0,0,0],vertices:[0,0,0,1,0,0,0,1,0],solid:false,
     emissive:"#223344",opacity:.5,fog:false};
   assert.ok(normalize({...base(),components:[visualMesh]}));
+  assert.ok(normalize({...base(),components:[{...visualMesh,solid:true,lethal:true}]}));
+  rejectComponent({...visualMesh,lethal:true},'a lethal surface must be solid');
+  rejectComponent({...visualMesh,solid:true,lethal:'yes'},'lethal contact requires a boolean');
+  rejectComponent({t:'platform',p:[0,0,0],lethal:true},'lethal contact is restricted to explicit meshes');
   for(const emissive of ["url(https://example.invalid/x)",0,null,"#12345g"])
     rejectComponent({...visualMesh,emissive},"invalid emissive input");
   for(const opacity of [-1,1.01,NaN,Infinity,"0.5",null])
@@ -60,7 +64,7 @@ try {
   assert.deepEqual(normalize(priorBranchMap).components[0].pts,api.worldMapComponentPoints(),'old default map capture masked the island expansion');
   const authoredBranchMap=structuredClone(priorBranchMap);authoredBranchMap.components[0].pts[0][0]+=1;
   assert.deepEqual(normalize(authoredBranchMap).components[0].pts.slice(0,11),authoredBranchMap.components[0].pts,'island expansion overwrote custom hub positions');
-  const previousSwapDefaults=api.worldMapComponentPoints().map(point=>[...point]);
+  const previousSwapDefaults=api.worldMapComponentPoints().slice(0,13).map(point=>[...point]);
   [previousSwapDefaults[3],previousSwapDefaults[4]]=[previousSwapDefaults[4],previousSwapDefaults[3]];
   const previousSwapMap={...oldMap,components:[{t:'worldmap',p:[0,0,0],pts:previousSwapDefaults}]};
   assert.deepEqual(normalize(previousSwapMap).components[0].pts,api.worldMapComponentPoints(),'old default map kept the pre-swap Nightworks and Slipstream positions');

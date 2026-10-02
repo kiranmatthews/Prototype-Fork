@@ -16,7 +16,7 @@ const rigFactory=cameraCode=>new Function('deps',`
  const cameraLook=new CameraLookOffset(),cameraLaneCursor=newLaneCursor(),camF=new THREE.Vector3(0,0,1),camControlDir=new THREE.Vector3(0,0,1),prevPlayerPos=new THREE.Vector3(),camTarget=new THREE.Vector3(),aimSmooth=new THREE.Vector3();
  let cameraRenderSnapVersion=-1,camAnchorY=player.renderPosition.y,camBack=0,sideF=0,boulderF=0,camSpeedFovBoost=0,cam2SpeedFovBoost=0,camRoll=0;
  ${cameraCode}
- return {step:updateCamera,heading:camControlDir,target:camTarget};`);
+ return {step:updateCamera,heading:camControlDir,target:camTarget,get surfaceOverlayActive(){return loopCameraFraming.active;}};`);
 const makeRig=rigFactory(code);
 // Preserve the exact previous damping as the reference for every non-opt-in
 // path, including a user who sets the global tuning slider to full follow.
@@ -59,7 +59,7 @@ await withWaterparkRuntime(async r=>{
   p.applyRenderInterpolation(.5);
   const physical=JSON.stringify({p:p.pos.toArray(),speed:p.speed,axis:p.axisF.toArray(),state:p.state,bounds:p.interactionBoundsDiagnostics});
   rig.step(CONST.fixedStep);old.step(CONST.fixedStep);
-  if(!p.loopPresentationFrame&&p.loopStatus.completed===0&&pilot.phase!=='loop')
+  if(!rig.surfaceOverlayActive)
    maxYFollowError=Math.max(maxYFollowError,Math.abs(camera.position.y-rig.target.y));
   for(const scope of scopes){
    scope.current.step(CONST.fixedStep);scope.previous.step(CONST.fixedStep);
@@ -93,7 +93,7 @@ await withWaterparkRuntime(async r=>{
  console.log(JSON.stringify(result,null,2));
  assert.ok(landed&&peak>gap.takeoff[1]+3&&samples>20,'test must traverse the actual flume ramp air');
  assert.ok(minY>-1&&maxY<1&&maxX<1,'actual close-camera ordinary-air rider left the viewport');
- assert.equal(maxYFollowError,0,'authored full follow must exactly track the interpolated Y target onground and airborne');
+ assert.equal(maxYFollowError,0,'ordinary full follow must exactly track interpolated Y outside the surface overlay');
  assert.equal(JSON.stringify(TUNING),tuningBefore);
  console.log('PASS complete close-camera spine/transfer/ramp-air route, exact fullfollowY, and unchanged default/partial/global-slider camera behavior');
 });

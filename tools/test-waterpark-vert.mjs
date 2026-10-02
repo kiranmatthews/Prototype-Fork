@@ -2,8 +2,9 @@ import assert from 'node:assert/strict';
 import {withWaterparkRuntime} from './waterpark-runner.mjs';
 import {createWaterparkPilot} from './waterpark-pilot.mjs';
 
-const pumpResults=[];
-for(const held of [false,true])await withWaterparkRuntime(r=>{
+const pumpResults=[],scenarios=[];
+const scenario=run=>scenarios.push(run);
+for(const held of [false,true])scenario(r=>{
   const {p,l,THREE}=r,hp=l.halfpipes[5];
   p.respawn(l,true,false,{position:new THREE.Vector3(0,hp.yBottom+.05,hp.cross),heading:new THREE.Vector3(0,0,-1)});
   p.freeSkate=true;p.speed=12;p.skateMountT=-1;
@@ -17,10 +18,9 @@ for(const held of [false,true])await withWaterparkRuntime(r=>{
   }
   pumpResults.push({held,peak,lip:hp.lipY,airs});
 });
-assert.ok(pumpResults[1].peak>pumpResults[0].peak+5,'Held X must earn visibly more height than coasting from identical momentum');
-assert.ok(pumpResults[1].peak>pumpResults[1].lip+2&&pumpResults[1].airs>=2,'Held X alone must repeatedly clear the second-set coping');
 
-await withWaterparkRuntime(r=>{
+
+scenario(r=>{
   const {p,l}=r,pilot=createWaterparkPilot(r.source,{holdThroughLanding:true});
   let pumpingAfterAir=0,loadedFrames=0,rolloverFrames=0,upright=false,maxTurn=0,maxFootError=0;
   let previousNormal=null;
@@ -50,14 +50,14 @@ await withWaterparkRuntime(r=>{
   assert.ok(maxFootError<.04,`Deep charge/transfer poses lost deck contact: ${maxFootError}`);
   console.log('Held-X pump and transfer presentation:',{pumpingAfterAir,loadedFrames,rolloverFrames,maxTurn,maxFootError});
 });
-console.log('Second-set charge/coast comparison:',pumpResults);
 
-await withWaterparkRuntime(r=>{
+
+scenario(r=>{
   const {p,l}=r,pilot=createWaterparkPilot(r.source,{holdThroughLanding:true});
   let landed=false;
-  for(let frame=0;frame<600;frame++){
+  for(let frame=0;frame<2400;frame++){
     r.tick(pilot.sample(p,l));pilot.observe(p,l);
-    if(p.grounded&&p.jumpReleaseRearmRequired){landed=true;break;}
+    if(pilot.phase==='wave pools'&&p.grounded&&p.groundHit?.halfpipe&&p.jumpReleaseRearmRequired){landed=true;break;}
   }
   assert.ok(landed,'Fixture must hold an armed air press into a real pipe landing');
   for(let i=0;i<8;i++)r.tick({...r.directionInput([0,0,-1]),jumpHeld:true});
@@ -69,3 +69,11 @@ await withWaterparkRuntime(r=>{
   assert.ok(p.charging&&p.chargeTimer>=r.TUNING.jumpChargeTime,'A fresh deliberate charge must rearm normally');
   console.log('Pipe landing release ownership: immediate release consumed; held pump and next deliberate charge preserved.');
 });
+
+// Reuse the production scene; four separate SSR imports retain large asset graphs.
+await withWaterparkRuntime(async r=>{
+  for(const run of scenarios){r.p.respawn(r.l,true);await run(r);}
+});
+assert.ok(pumpResults[1].peak>pumpResults[0].peak+5,'Held X must earn visibly more height than coasting from identical momentum');
+assert.ok(pumpResults[1].peak>pumpResults[1].lip+2&&pumpResults[1].airs>=2,'Held X alone must repeatedly clear the second-set coping');
+console.log('Second-set charge/coast comparison:',pumpResults);

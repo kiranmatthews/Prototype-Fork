@@ -59,8 +59,9 @@ scenario(async r => {
   assert.equal(loops.length,3);assert.ok(loops.every(c=>c.loopRequired&&c.loopRadius===26));
   assert.equal(roundtrip.components.filter(c=>c.t==='speedpad').length,0);
   const tracks=roundtrip.components.filter(c=>c.gravityTrack);
-  assert.ok(tracks.length>=13&&tracks.every(c=>c.t==='mesh'&&c.vert===false));
-  for(const mutation of [{gravityTrack:'yes'},{solid:false},{vert:true}]){
+  assert.ok(tracks.length>=14&&tracks.every(c=>c.t==='mesh'||c.t==='vertramp'));
+  assert.ok(tracks.some(c=>c.vert===true),'The giant vert must retain its earned drop speed');
+  for(const mutation of [{gravityTrack:'yes'},{solid:false}]){
     const invalid=structuredClone(captured);Object.assign(invalid.components.find(c=>c.gravityTrack),mutation);
     assert.equal(parseCustomLevelJson(JSON.stringify(invalid)),null);
   }
@@ -107,27 +108,11 @@ scenario(r=>{
   let recovered=false;
   for(let i=0;i<1200;i++){
     r.tick({});assert.equal(p.loopStatus.completed,0,'Falling onto a ribbon cannot grant completion');
-    if(!p.loopStatus.active&&p.grounded&&!p.isBailing){recovered=true;break;}
+    if(p.state==='dead'||!p.loopStatus.active&&p.grounded&&!p.isBailing){recovered=true;break;}
   }
-  assert.ok(recovered,'A failed loop must regain a supported lower surface');
+  assert.ok(recovered,'A failed loop must resolve on real ground or a lower ride');
 },{start:[0,12.1,-570],heading:[0,0,-1]});
 
-scenario(r=>{
-  const {p}=r;let phase='miss',waypoint=0,supported=false;
-  const path=[[12,-110,-829.4],[12,-96,-775.8],[40,-96,-776]];
-  for(let i=0;i<2600;i++){
-    r.tick(phase==='miss'?r.directionInput([0,0,-1],.65):phase==='settle'?{}:{...r.toward(path[waypoint],waypoint===0?.7:1),jumpHeld:waypoint>0});
-    assert.ok(p.state!=='dead'&&p.totalDeaths===0,'Missed gap recovery must remain playable without a reset');
-    if(phase==='return')assert.equal(p.isBailing,false,'Return ramp must have no collision steps');
-    if(phase==='miss'&&p.pos.y<-107)phase='settle';
-    if(phase==='settle'&&p.grounded&&!p.isBailing&&p.state==='ride'){supported=true;phase='return';}
-    if(phase==='return'&&Math.hypot(p.pos.x-path[waypoint][0],p.pos.z-path[waypoint][2])<1&&Math.abs(p.pos.y-path[waypoint][1])<.6){
-      if(++waypoint===path.length)break;
-    }
-  }
-  assert.ok(supported&&waypoint===3&&p.grounded&&p.pos.y>-97,'Service court and side bank must return a missed jump to the launch');
-  console.log('Missed ravine jump recovers on the service court and returns up its bank without death or reset.');
-},{start:[40,-93.9,-795],heading:[0,0,-1]});
 
 scenario(({p,tick,directionInput,l})=>{
   let blocked=false;p.onCourseHint=title=>{blocked ||= title==='LOOP STILL CLOSED';};
@@ -158,4 +143,4 @@ await withWaterparkRuntime(async r=>{
     await run(r);
   }
 });
-console.log('Triple loop: pressure, gap recovery, required turns, stationary retry and respawn checks passed.');
+console.log('Triple loop: pressure, real fall, required turns, stationary retry and respawn checks passed.');

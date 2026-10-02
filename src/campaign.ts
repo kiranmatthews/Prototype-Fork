@@ -113,7 +113,7 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     name: "Island 2",
     subtitle: "REGION 02",
     centre: [75, 0, 9],
-    levelKeys: ["beachside-run", "coastal", "chimeworks", "island-hopper", "waterpark", "codex-switchback", "jungle-gate"],
+    levelKeys: ["beachside-run", "coastal", "chimeworks", "island-hopper", "waterpark", "waterpark-cup", "codex-switchback", "jungle-gate"],
   },
 ] as const;
 
@@ -225,6 +225,14 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     fromDirection: "up",
     toDirection: "down",
     waypoints: [[86, 4.2, 9]],
+  },
+  {
+    from: "waterpark",
+    to: "waterpark-cup",
+    travel: "trail",
+    fromDirection: "right",
+    toDirection: "left",
+    waypoints: [[97, 9, 4]],
   },
   {
     from: "island-hopper",
@@ -386,6 +394,11 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     mapPosition: [86, 6, 4],
     unlockAfter: ["island-hopper"],
   },
+  {
+    progressKey:"waterpark-cup",levelId:"waterpark-cup",name:"Deadwater Cup",
+    relicTime:CAMPAIGN_TIME_RELIC_TARGET_SECONDS,islandId:"island-2",
+    mapPath:"upper-branch",mapPosition:[109,12,4],unlockAfter:["waterpark"],competition:true,
+  },
 ] as const;
 
 const LEVEL_BY_ID = new Map<string, CampaignLevelDefinition>();
@@ -456,7 +469,7 @@ export interface CampaignLevelProgress {
   boxGem: boolean;
   comboGem: boolean;
   timeRelic: boolean;
-  /** Unique Jungle Cup trophy; only an overall competition win awards it. */
+  /** Venue trophy; only an overall competition win awards it. */
   cup?: boolean;
   /** Highest earned tier. Missing on old saves: timeRelic=true means gold. */
   timeMedal?: TimeMedal;

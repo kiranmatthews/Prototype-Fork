@@ -3,18 +3,40 @@
 export function createWaterparkPilot(source,options={}) {
  let phase='tower descent',jump=options.startJump??0,currentAir=null,priorStage=0,priorPipe=-1,priorLoopActive=false;
  const loops=source.WATERPARK_LOOPS??[source.WATERPARK_LOOP];
+ let giantPhase=source.WATERPARK_GIANT?'drop':'done',giantReleased=false,giantExitIndex=0;
  const fastLine=options.fastLine===true||options.fastTurns===true;
- const evidence={transfers:[],jumps:[],phases:[],checkpoints:[],inverted:false,finished:false,backwardInputs:0,downhills:{},coasterRamps:{},loopEntries:[],inversions:[]};
+ const evidence={transfers:[],jumps:[],phases:[],checkpoints:[],inverted:false,finished:false,backwardInputs:0,downhills:{},coasterRamps:{},loopEntries:[],inversions:[],giant:{air:false,landedRight:false,exited:false,peak:0,landing:null}};
  const position=p=>[p.pos.x,p.pos.y,p.pos.z];
  const distance=(p,q)=>Math.hypot(p.pos.x-q[0],p.pos.z-q[2]);
  const phaseTo=(next,p)=>{if(phase!==next){evidence.phases.push({from:phase,to:next,position:position(p)});phase=next;}};
  function direction(p,l,d,pace=1){
-  if(d[2]>.01)evidence.backwardInputs++;
+  if(d[2]>.01&&giantPhase==='done')evidence.backwardInputs++;
   const f=p.courseInputDirection(l)??p.camDir,n=Math.hypot(d[0],d[2])||1,fn=Math.hypot(f.x,f.z)||1;
   return {moveX:(d[0]*-f.z+d[2]*f.x)/n/fn*pace,moveY:(d[0]*f.x+d[2]*f.z)/n/fn*pace};
  }
  const toward=(p,l,q)=>direction(p,l,[q[0]-p.pos.x,0,q[2]-p.pos.z]);
  function sample(p,l){
+  if(giantPhase!=='done'&&p.pos.z<-12){giantPhase='done';evidence.giant.exited=evidence.giant.air;}
+  if(giantPhase!=='done'){
+   if(giantPhase==='drop'&&p.pos.z<106)giantPhase='climb';
+   if(giantPhase==='climb'&&p.vertAir){giantPhase='air';evidence.giant.air=true;}
+   if(giantPhase==='air'){
+    evidence.giant.peak=Math.max(evidence.giant.peak,p.pos.y);
+    if(p.grounded){giantPhase='catch';evidence.giant.landing=position(p);evidence.giant.landedRight=p.pos.x>0;}
+   }
+   if(giantPhase==='catch'&&p.grounded&&p.groundHit?.name==='Giant vert right exit chute')giantPhase='exit';
+   phaseTo(`giant ${giantPhase}`,p);
+   if(giantPhase==='drop')return {...direction(p,l,[0,0,-1]),jumpHeld:true};
+   if(giantPhase==='climb'){
+    const release=!giantReleased&&p.pos.y>100&&p.grounded;if(release)giantReleased=true;
+    return {...direction(p,l,[options.giantAngle??.22,0,-1]),jumpHeld:!release};
+   }
+   if(giantPhase==='air')return {jumpHeld:true};
+   if(giantPhase==='catch')return {...toward(p,l,[24,70,108]),jumpHeld:true};
+   const path=source.WATERPARK_GIANT_EXIT;let best=Infinity;
+   for(let i=giantExitIndex;i<path.length;i++){const d=distance(p,path[i]);if(d<best){best=d;giantExitIndex=i;}}
+   return {...toward(p,l,giantExitIndex>76?[0,60,-30]:path[Math.min(path.length-1,giantExitIndex+3)]),jumpHeld:true};
+  }
   if(p.loopStatus.active){phaseTo('loop',p);return {moveY:1,jumpHeld:true};}
   if(p.loopStatus.completed>=loops.length){phaseTo('finish',p);return {...toward(p,l,source.WATERPARK_FINISH),jumpHeld:true};}
   const z=p.pos.z;
@@ -55,7 +77,7 @@ export function createWaterparkPilot(source,options={}) {
   for(const [i,cp]of l.checkpoints.entries())if(cp.active&&!evidence.checkpoints.includes(i))evidence.checkpoints.push(i);
   for(const slope of source.WATERPARK_DOWNHILL??[]){
    if(p.loopStatus.active||p.loopStatus.completed>0)continue;
-   if(p.pos.z>slope.from[2]||p.pos.z<slope.to[2]||!p.grounded)continue;
+   if(p.pos.z>slope.from[2]||p.pos.z<slope.to[2]||Math.abs(p.pos.x-slope.from[0])>8||!p.grounded)continue;
    const run=evidence.downhills[slope.name]??={frames:0,entry:position(p),exit:position(p),minSpeed:Infinity,maxSpeed:0,mounted:true};
    run.frames++;run.exit=position(p);run.minSpeed=Math.min(run.minSpeed,p.speed);run.maxSpeed=Math.max(run.maxSpeed,p.speed);run.mounted&&=p.freeSkate;
   }

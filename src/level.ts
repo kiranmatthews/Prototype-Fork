@@ -6,6 +6,7 @@ import { createMilkCrate, setMilkCrateState, disposeMilkCrate, type MilkCrate } 
 import {attachBonusStone,BonusJumpGate,BONUS_PLATFORM_HEIGHT,BONUS_PLATFORM_RADIUS,BONUS_LANDING_RADIUS} from './bonusPlatform';
 import { DECK_TRICKS, deckTrickInfo, type DeckTrickKind } from './skateTricks';
 import { createJungleCupTrophy } from "./competition/trophy";
+import { isCompetitionLevel } from './competition/courses';
 import { cameraViewDirection, type CameraView } from "./cameraViews";
 // Every level in the game, plus the toolkit they are all assembled from.
 // Built-ins are hand-coded builders picked by id; user levels carry component
@@ -60,6 +61,7 @@ import { migrateSlipstreamCamera } from "./levels/slipstream-camera";
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
 import { WATERPARK_LEVEL } from "./levels/waterpark";
+import { WATERPARK_CUP_LEVEL } from './levels/waterpark-cup';
 import { BONE_YARD_LEVEL } from "./levels/bone-yard";
 import { TREEHOUSE_TRAIL_LEVEL } from "./levels/treehouse-trail";
 import { ASTRA_CHIMEWORKS_LEVEL } from "./levels/astra-chimeworks";
@@ -665,7 +667,8 @@ export interface CustomComponent {
   loopRadius?: number; // mesh: analytic vertical loop matching createLoopMeshData, p = entry feet
   loopOffset?: number; // loop: lateral separation between entry and exit, local +X
   loopRequired?: boolean; // loop: finish gate unlocks after one complete supported turn
-  gravityTrack?: boolean; // solid road mesh: retain gravity-earned speed above the ordinary road cap; never adds speed
+  gravityTrack?: boolean; // authored ride surface: retain gravity-earned speed above the ordinary cap; never adds speed
+  lethal?: boolean; // solid mesh: touching its surface causes a death instead of a safe landing
   beachSand?: boolean;
   len?: number;
   rise?: number;
@@ -1060,6 +1063,10 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   }
   d.components = d.components.map((c) => {
     delete c.trafficRoad;
+    if(c.t==='worldmap'&&c.pts?.length===14){
+      const defaults=worldMapComponentPoints();
+      if(c.pts.every((p,i)=>p.length===4&&p.every((v,j)=>v===defaults[i][j])))return {...c,pts:defaults};
+    }
     if (c.t === "worldmap" && c.pts && (c.pts.length === 12 || c.pts.length === 13)) {
       // Blockworks moved before the Island 2 finale. Its append-only identity
       // is unchanged; untouched captures adopt the route, custom knots stay put.
@@ -2310,6 +2317,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "jungle-cup", name: JUNGLE_CUP_LEVEL.name, data: JUNGLE_CUP_LEVEL },
   { id: "bone-yard", name: BONE_YARD_LEVEL.name, data: BONE_YARD_LEVEL },
   { id: "waterpark", name: WATERPARK_LEVEL.name, data: WATERPARK_LEVEL },
+  { id: 'waterpark-cup', name: WATERPARK_CUP_LEVEL.name, data: WATERPARK_CUP_LEVEL },
   { id: "astra-chimeworks", name: ASTRA_CHIMEWORKS_LEVEL.name, data: ASTRA_CHIMEWORKS_LEVEL },
   {
     id: "backport-lab",
@@ -2409,7 +2417,7 @@ const COMPONENT_DATA_KEYS = new Set([
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
   "trick", "exitYaw", "airOnly", "coverage", "radius", "color", "tex", "dir",
-  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack",
+  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack", "lethal",
 ]);
 const hasOnlyKeys = (value: object, keys: ReadonlySet<string>): boolean =>
   Object.keys(value).every((key) => keys.has(key));
@@ -2748,7 +2756,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     "fog",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "lk",
-    "shoreProfile", "cameraView", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "beachSand", "loopRequired", "gravityTrack",
+    "shoreProfile", "cameraView", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "beachSand", "loopRequired", "gravityTrack", "lethal",
   ];
   let aggregateNodes = source.ocean?.shore?.length ?? 0;
   let aggregateSamples = source.ocean
@@ -2860,7 +2868,8 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (!Number.isSafeInteger(component.layer) || component.layer < 0 || component.layer > MAX_EDITOR_ID)
     )
       return null;
-    if (component.gravityTrack !== undefined && (component.t !== 'mesh' || component.solid === false || component.vert !== false || component.loopRadius !== undefined)) return null;
+    if (component.gravityTrack !== undefined && (!['mesh','vertramp'].includes(component.t) || component.solid === false || component.loopRadius !== undefined)) return null;
+    if (component.lethal !== undefined && (component.t !== 'mesh' || component.solid === false)) return null;
     if (component.loopRadius !== undefined || component.loopOffset !== undefined || component.loopRequired !== undefined) {
       if (component.t !== "mesh" || !Number.isFinite(component.loopRadius) ||
           component.loopRadius! < 4 || component.loopRadius! > 80 ||
@@ -2902,7 +2911,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       singletonKinds.add(component.t);
       if (component.t === "worldmap") {
         if (source.ocean || (component.pts &&
-            (![9, 11, 12, CAMPAIGN_LEVELS.length].includes(component.pts.length) || component.pts.some(point =>
+            (![9, 11, 12, 13, 14, CAMPAIGN_LEVELS.length].includes(component.pts.length) || component.pts.some(point =>
               Math.abs(point[0]) > 256 || Math.abs(point[1]) > 256 || Math.abs(point[3] ?? 0) > 128))))
           return null;
         if (component.pts) for (let i = 0; i < component.pts.length; i++) {
@@ -4610,7 +4619,7 @@ export class Level {
       this.theme.fogNear = SKY_BRIDGE_FOG_NEAR;
       this.theme.fogFar = SKY_BRIDGE_FOG_FAR;
     }
-    if (isCampaignLevel(entry.id) && entry.id !== "jungle-cup") {
+    if (isCampaignLevel(entry.id) && !isCompetitionLevel(entry.id)) {
       if (!this.crystalPickup) this.placeCampaignCrystal();
       if (!this.bonusPlatform) this.placeDefaultBonusPlatform();
     }
@@ -4623,7 +4632,7 @@ export class Level {
     this.buildSystemicSurfaceEdgeRails(); // ordinary solid boundaries grind by default
     this.dressRails(); // every builder is done adding rails by now
     this.syncTrickPrimitives(new Set<DeckTrickKind>(), false);
-    if (this.hudMode !== "bonus" && this.hudMode !== "hub" && !this.skatepark && entry.id !== "jungle-cup") {
+    if (this.hudMode !== "bonus" && this.hudMode !== "hub" && !this.skatepark && !isCompetitionLevel(entry.id)) {
       this.placeClock(); // time-trial stopwatch near spawn (only where a finish gate exists)
       this.placeComboOrb(); // combo-run orb, the other side of the racing line
     }
@@ -5220,7 +5229,8 @@ export class Level {
         ...(material.userData.unitySandTileMetres === UNITY_SAND_TILE_METRES ? { materialStyle: "unity-sand", tex: "sand" } : {}),
         ...(m.userData.slippy ? { slip: true } : {}),
         ...(m.userData.iceGrip !== undefined ? { iceGrip: m.userData.iceGrip as number } : {}),
-        ...(m.userData.gravityTrack ? { gravityTrack: true, vert: false } : {}),
+        ...(m.userData.gravityTrack ? { gravityTrack: true } : {}),
+        ...(m.userData.lethal ? { lethal: true } : {}),
       };
       remap = new Map();
       chunks.push(component);
@@ -5357,6 +5367,7 @@ export class Level {
     mesh.name = c.nm ?? "triangle surface";
     if (c.vert !== undefined) mesh.userData.vert = c.vert;
     if (c.gravityTrack) mesh.userData.gravityTrack = true;
+    if (c.lethal) mesh.userData.lethal = true;
     if (c.loopRadius !== undefined) {
       this.loopMeshes.push(mesh);
       mesh.userData.loopRadius = c.loopRadius;
@@ -6943,6 +6954,7 @@ export class Level {
             // finish gate: crossing its plane ends the run (and the time trial)
             this.finishZ = c.p[2];
             this.finishGate(c.p[1], c.p[2], c.p[0], c.yaw ?? 0);
+            if(c.invisible){const pad=this.warpPads[this.warpPads.length-1];if(pad){pad.group.visible=false;pad.group.userData.editorGhost=true;}}
           } else if (c.t === "bonusplatform") {
             this.buildBonusPlatform(c);
           } else if (c.t === "worldmap") {
@@ -14643,10 +14655,12 @@ export class Level {
         axis,
       );
       hp.object.userData.rails = c.rails !== false;
+      hp.object.userData.gravityTrack = c.gravityTrack === true;
       this.halfpipes.push(hp);
       this.root.add(hp.object);
       for (const wm of hp.walls) {
         wm.userData.vert = c.vert !== false; // the flag rides the analytic path too
+        wm.userData.gravityTrack = c.gravityTrack === true;
         this.groundMeshes.push(wm);
       }
       for (const side of c.rails === false ? [] : [-1, 1]) {
@@ -14682,6 +14696,7 @@ export class Level {
     const mesh = new THREE.Mesh(vr.geometry, mat);
     mesh.name = c.vert === false ? "slide deck" : "vertramp";
     mesh.userData.vertRampMesh = true; // capture: its vertramp component rebuilds it
+    mesh.userData.gravityTrack = c.gravityTrack === true;
     // THE POINT OF ALL THIS: the level DECLARES what this is, so the physics
     // stops guessing from normal.y. And it declares it BOTH ways — `false` is
     // not "unflagged", it is "this is a ROAD", which is what keeps a slide's

@@ -54,7 +54,7 @@ try{
     projected.copy(p.renderPosition).addScaledVector(p.rideNormal,.7).project(camera);
     report.loopFraming.push({frame:report.frame,distance:camera.position.distanceTo(p.renderPosition),fov:camera.fov,center:projected.toArray(),up:camera.up.toArray()});lastLoopFrame=report.frame;
    }
-   if(scene===g.scene&&camera===g.camera&&!p.grounded&&!p.loopStatus.active&&['wave pools','coaster pools','dry flume','ravine launch','final loop gap'].includes(pilot.phase)&&report.frame-lastAirFrame>=6&&!report.done){measureAir();lastAirFrame=report.frame;}
+   if(scene===g.scene&&camera===g.camera&&!p.grounded&&!p.loopStatus.active&&['giant air','giant catch','wave pools','coaster pools','dry flume','ravine launch','final loop gap'].includes(pilot.phase)&&report.frame-lastAirFrame>=6&&!report.done){measureAir();lastAirFrame=report.frame;}
    return result;
   };
   const fields=['moveX','moveY','jumpHeld','jumpPressed','jumpReleased','grindHeld','grindPressed','spinHeld','spinPressed','grabHeld','grabPressed','transferHeld','transferPressed','restartPressed'];
@@ -87,7 +87,7 @@ try{
  for(let i=0;i<1200;i++){
   await page.waitForTimeout(250);
   const r=await page.evaluate(()=>({done:window.waterparkReview.done,phase:window.waterparkReview.phase,frame:window.waterparkReview.frame,p:window.__game.player.pos.toArray(),normal:window.__game.player.rideNormal.toArray(),air:!window.__game.player.grounded,verticalSpeed:window.__game.player.vVel,lip:window.__game.player.hangPipe?.lipY??0,pump:window.__game.player.boardG?.userData.vertMotion?.pump??0,transfer:window.__game.player.boardG?.userData.vertMotion?.transfer?.progress??-1,loops:window.__game.player.loopStatus.completed}));
-  const shot=r.pump>.9&&r.normal[1]>.3&&r.normal[1]<.7?'vert-charge':r.transfer>.35&&r.transfer<.65?'transfer-rollover':r.phase==='first gravity drop'&&r.p[2]<-598?'gravity-drop':r.phase==='third gravity drop'&&r.p[2]<-936?'final-gravity-drop':r.phase==='tower descent'&&r.p[2]<20?'tower-descent':r.phase==='wave pools'&&r.air&&r.p[1]>r.lip+3&&Math.abs(r.verticalSpeed)<7?'wave-spine':r.phase==='downhill connector'&&!r.air&&r.p[2]<-202?'downhill-connector':r.phase==='coaster pools'&&r.air&&r.p[1]>r.lip+3&&Math.abs(r.verticalSpeed)<7?'boomerang-spine':r.phase==='dry flume'&&r.air&&r.p[2]<-520?'flume-jump':r.phase==='final loop gap'&&r.air?'final-loop-gap':r.phase==='loop'&&r.normal[1]<-.85?`loop-${r.loops+1}-inverted`:null;
+  const shot=r.pump>.9&&r.normal[1]>.3&&r.normal[1]<.7?'vert-charge':r.transfer>.35&&r.transfer<.65?'transfer-rollover':r.phase==='giant drop'&&r.p[2]<140?'giant-entry':r.phase==='giant air'&&r.p[1]>115?'giant-air':r.phase==='giant catch'&&r.p[0]>0?'giant-right-landing':r.phase==='giant exit'&&r.p[2]>100?'giant-exit':r.phase==='first gravity drop'&&r.p[2]<-598?'gravity-drop':r.phase==='third gravity drop'&&r.p[2]<-936?'final-gravity-drop':r.phase==='tower descent'&&r.p[2]<20?'tower-descent':r.phase==='wave pools'&&r.air&&r.p[1]>r.lip+3&&Math.abs(r.verticalSpeed)<7?'wave-spine':r.phase==='downhill connector'&&!r.air&&r.p[2]<-202?'downhill-connector':r.phase==='coaster pools'&&r.air&&r.p[1]>r.lip+3&&Math.abs(r.verticalSpeed)<7?'boomerang-spine':r.phase==='dry flume'&&r.air&&r.p[2]<-520?'flume-jump':r.phase==='final loop gap'&&r.air?'final-loop-gap':r.phase==='loop'&&r.normal[1]<-.85?`loop-${r.loops+1}-inverted`:null;
   if(shot&&!captured.has(shot)){await page.screenshot({path:`${output}/${shot}-${full?'full':'lite'}.png`});captured.add(shot);}
   if(i%100===0)console.log(JSON.stringify(r));if(r.done)break;
  }
@@ -96,6 +96,7 @@ try{
  await page.screenshot({path:`${output}/finish-${full?'full':'lite'}.png`});
  assert.equal(report.done,true,'Live waterpark pilot timed out');
  assert.equal(report.failed,null,JSON.stringify(report.failed));
+ assert.ok(report.evidence.giant.air&&report.evidence.giant.landedRight&&report.evidence.giant.exited);
  assert.equal(report.end.state,'finished');assert.equal(report.evidence.transfers.length,5);assert.equal(report.evidence.jumps.length,4);
  assert.ok(report.evidence.inversions.length===3&&report.loopFrames>400,'The actual rendered rider must complete the giant loop');
  assert.ok(report.rampFraming.length>40,'Review the steep gravity roads in the actual render camera');

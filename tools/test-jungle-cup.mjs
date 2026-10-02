@@ -2,7 +2,12 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import ts from 'typescript';
 const load = async path => {
- const code=ts.transpileModule(await readFile(new URL('../'+path,import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.ES2020}}).outputText;
+ let code=ts.transpileModule(await readFile(new URL('../'+path,import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.ES2020}}).outputText;
+ if(path==='src/competition/event.ts'){
+  const dep=ts.transpileModule(await readFile(new URL('../src/competition/courses.ts',import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.ES2020}}).outputText;
+  const url=JSON.stringify('data:text/javascript;base64,'+Buffer.from(dep).toString('base64'));
+  code=code.replace("'./courses'",url).replace('"./courses"',url);
+ }
  return import('data:text/javascript;base64,'+Buffer.from(code).toString('base64'));
 };
 const {JungleCupEvent,judgeRun,bestTwo,rivalRun,COMPETITION_TUNING:T}=await load('src/competition/event.ts');
@@ -79,7 +84,7 @@ const storage = new Map();
 globalThis.localStorage = {getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,String(v)),removeItem:k=>storage.delete(k)};
 const campaign = await load('src/campaign.ts');
 const save = new campaign.CampaignStore();save.newGame(1);
-for(const id of ['jungle','test','sky','dark'])save.commitClear(id,{crystal:false,boxGem:false,comboGem:false});
+for(const id of ['treehouse-trail','jungle','test','sky','dark','slip'])save.commitClear(id,{crystal:false,boxGem:false,comboGem:false});
 assert.equal(save.levelUnlocked('jungle-cup'),true);
 assert.equal(save.levelUnlocked('beachfront'),false);
 save.commitClear('jungle-cup',{crystal:true,boxGem:true,comboGem:true});
@@ -91,5 +96,5 @@ assert.equal(save.levelUnlocked('beachfront'),true);
 assert.equal(save.runModesUnlocked('jungle-cup'),false,'competition exposed unrelated trial collectibles');
 const loaded=new campaign.CampaignStore();loaded.load(1);
 assert.equal(loaded.levelProgress('jungle-cup').cup,true,'cup did not survive save/load');
-assert.equal(loaded.totals().maxCrystals,campaign.CAMPAIGN_LEVELS.length-1);
+assert.equal(loaded.totals().maxCrystals,campaign.CAMPAIGN_LEVELS.filter(level=>!level.competition).length);
 console.log('PASS Jungle Cup: exact 60-second runs, all three judges, bail curve, reveal gates, best two, rival consistency/placement, ordinary caps, and arena structure.');

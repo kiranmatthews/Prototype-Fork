@@ -47,6 +47,7 @@ try{
  assert.ok(waterparkRow && !waterparkRow.disabled,'Deadwater Park is missing from the unlocked Island 2 list');
  assert.match(waterparkRow.textContent,/DEADWATER PARK/);
  ui.updateLevelSelectChoice('waterpark',true);assert.match(ui.levelSelectPreview.src,/waterpark\.jpg$/);
+ ui.updateLevelSelectChoice('waterpark-cup',true);assert.match(ui.levelSelectPreview.src,/waterpark-cup\.jpg$/);assert.match(ui.levelSelectDetail.textContent,/DEADWATER CUP/);assert.doesNotMatch(ui.levelSelectDetail.textContent,/TIME TRIAL RECORDS/);
  ui.changeLevelSelectIsland(-1);assert.equal(ui.levelSelectKey,'test-course','island selection was not remembered');
  const pad={id:'DualSense',mapping:'standard',connected:true,index:0,axes:[0,0,0,0],buttons:Array.from({length:18},()=>({pressed:false,value:0}))};
  inputPrompts.update(pad,false);
