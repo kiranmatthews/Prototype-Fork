@@ -69,6 +69,7 @@ import { oceanTuning } from "./oceanTuning";
 import type { WaterStudioHandle } from "./waterstudio";
 import { inputPrompts } from "./inputPrompts";
 import { GameInterfaceSurface } from "./gameInterfaceSurface";
+import { BossPresentation } from './boss/presentation';
 import { ResultsPresentation } from "./resultsPresentation";
 import { GameFlowVortexHost } from "./gameFlowVortex";
 import {
@@ -1371,7 +1372,8 @@ input2.rival = input;
 const ui = new UI();
 let competition: JungleCupEvent | null = null;
 const competitionUI = new CompetitionPresentation(handleCompetitionAction);
-const gameInterface = new GameInterfaceSurface(competitionUI);
+const bossUI = new BossPresentation();
+const gameInterface = new GameInterfaceSurface(competitionUI, bossUI);
 const campaign = new CampaignStore();
 let worldMapController: WorldMapController | null = null;
 let worldMapUI: WorldMapUI | null = null;
@@ -4748,6 +4750,7 @@ function advanceFrame(nowMs: number): void {
     }
   }
   gameFlow.update(nowMs);
+  bossUI.render(level.boss, gameFlow.blocksGameplay || editor.active || paused);
   competitionUI.setInputBlocked(gameFlow.blocksGameplay||editor.active);
   competitionUI.render(competition, competitionPresentationSuppressed());
   competitionUI.updateInput();
@@ -5175,6 +5178,8 @@ requestAnimationFrame(frame);
   getGameFlowVortexDiagnostics: () => gameFlowVortex.diagnostics,
   getGameFlowSurfaceDiagnostics: () => gameFlow.gameFlowSurfaceDiagnostics,
   getInterfaceSurfaceDiagnostics: () => gameInterface.diagnostics,
+  getBossDiagnostics: () => level.boss?.diagnostics ?? null,
+  bossUI,
   player,
   level,
   getCompetition: () => competition,
