@@ -8,6 +8,7 @@ import { rooMenuText, rooMenuPalette } from '../roo-type/menu';
 import { ROO_APPEARANCE_EVENT, rooLightPosition } from '../roo-type/settings';
 import type * as THREE from 'three';
 import {GameHudSurface} from '../gameHudSurface';
+import { presentationCssViewport } from '../presentationCssViewport';
 
 /** Native ink for the competition's semantic DOM, drawn by the shared pre-CRT
  * interface pass. Layout/hit targets remain in DOM, just like the other menus. */
@@ -46,11 +47,12 @@ export class CompetitionSurface {
     const ratio=target===null?renderer.getPixelRatio():1;
     const raster=gameFlowRasterSize(size.width*ratio,size.height*ratio);
     const clock=this.root.classList.contains('is-running')?this.root.querySelector<HTMLElement>('.comp-run-hud'):null;
-    const r=clock?.getBoundingClientRect(),sx=raster.width/window.innerWidth,sy=raster.height/window.innerHeight;
+    const display=presentationCssViewport();
+    const r=clock?.getBoundingClientRect(),sx=raster.width/display.width,sy=raster.height/display.height;
     // Preserve the timer's shadow and native pixel density, without an extra
     // viewport-sized canvas copy and upload through the touch-control layer.
-    const bounds=r?{x:(r.x-8)*sx,y:(r.y-8)*sy,width:(r.width+20)*sx,height:(r.height+20)*sy}:undefined;
-    const layout=JSON.stringify([raster,window.innerWidth,window.innerHeight,bounds]);
+    const bounds=r?{x:(r.x-display.left-8)*sx,y:(r.y-display.top-8)*sy,width:(r.width+20)*sx,height:(r.height+20)*sy}:undefined;
+    const layout=JSON.stringify([raster,display,bounds]);
     this.surface??=new GameHudSurface({lifeFaceUrl:''});
     if(this.layout!==layout){this.layout=layout;this.dirty=true;}
     this.active=true;
@@ -58,7 +60,7 @@ export class CompetitionSurface {
     const lightPhase=Math.round(rooLightPosition()*64);
     if(this.dirty||lightPhase!==this.lightPhase){
       this.surface.draw(raster,{rasterBounds:bounds,drawExtra:ctx=>{
-        ctx.scale(sx,sy);this.paintElement(ctx,this.root);
+        ctx.scale(sx,sy);ctx.translate(-display.left,-display.top);this.paintElement(ctx,this.root);
       }});
       this.paints++;this.dirty=false;this.lightPhase=lightPhase;
     }
@@ -105,7 +107,10 @@ export class CompetitionSurface {
   private paintBox(ctx: CanvasRenderingContext2D, element: Element, r: DOMRect, style: CSSStyleDeclaration): void {
     const running=element.classList.contains('is-running');
     let fill: string|CanvasGradient=style.backgroundColor;
-    if(element===this.root&&!running){paintMenuBackdrop(ctx,r.width,r.height);return;}
+    if(element===this.root&&!running){
+      const display=presentationCssViewport();
+      ctx.save();ctx.translate(display.left,display.top);paintMenuBackdrop(ctx,display.width,display.height);ctx.restore();return;
+    }
     if(element.classList.contains('comp-card')){paintMenuPanel(ctx,r);return;}
     ctx.fillStyle=fill;ctx.fillRect(r.x,r.y,r.width,r.height);
     const borders=[

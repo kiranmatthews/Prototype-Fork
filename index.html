@@ -51,15 +51,10 @@
       /* image-rendering is set live from main.ts's resize(): pixelated only
          when renderScale drops below 0.7, smooth linear upscale otherwise. */
       #app canvas { width: 100% !important; height: 100% !important; display: block; }
-      #game-boot-loading { position:fixed; inset:0; z-index:110; display:grid; place-content:center; justify-items:center; gap:24px; background:#171526; color:#fff4d6; font:700 16px/1.4 ui-monospace,monospace; letter-spacing:.15em; }
-      #game-boot-loading::before { content:''; width:44px; height:44px; border:4px solid #423750; border-top-color:#ffbd43; border-radius:50%; animation:boot-spin 1s linear infinite; }
-      @keyframes boot-spin { to { transform:rotate(1turn); } }
-      @media (prefers-reduced-motion:reduce) { #game-boot-loading::before { animation:none; } }
     </style>
   </head>
   <body>
     <div id="app"></div>
-    <div id="game-boot-loading" aria-label="Loading game"><span role="status">LOADING</span></div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

@@ -26,14 +26,14 @@
 .game-level-header .game-panel-title { font-size:var(--menu-title); color:#ffd531; }
 .game-island-arrow { color:#ff9b20; font-size:clamp(24px,4vh,45px); min-height:0; }
 .game-island-pages { margin:1vh 0 0; font-size:clamp(10px,1.7vh,20px); color:#f7b54b; }
-.game-level-columns { min-height:0; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); gap:5vw; }
-.game-level-browser { min-height:0; display:grid; grid-template-rows:minmax(0,.88fr) minmax(0,1fr); gap:1.5vh; }
-.game-level-preview { display:block; width:100%; height:100%; min-height:0; object-fit:cover; border:4px solid #dcad64; box-shadow:0 5px 0 #4b2515,0 8px 15px #0007; background:#12343d; }
-.game-level-list { display:grid; grid-auto-rows:minmax(0,1fr); gap:.6vh; padding:0; }
+.game-level-columns { min-width:0; min-height:0; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); grid-template-rows:minmax(0,.68fr) minmax(0,1fr); gap:1.5vh 5vw; }
+.game-level-preview-frame { grid-column:1; grid-row:1; position:relative; min-width:0; min-height:0; overflow:hidden; border:4px solid #dcad64; box-shadow:0 5px 0 #4b2515,0 8px 15px #0007; background:#12343d; pointer-events:none; }
+.game-level-preview { position:absolute; inset:0; display:block; width:100%; height:100%; max-width:100%; max-height:100%; object-fit:cover; border:0; }
+.game-level-list { grid-column:1; grid-row:2; min-width:0; min-height:0; display:grid; grid-auto-rows:minmax(0,1fr); gap:.6vh; padding:0; }
 .game-level-row { min-height:0; height:100%; padding:.45vh 1vw; gap:1vw; font-size:var(--menu-section); border-radius:2px; color:#fff4d6; background:linear-gradient(#347b80,#153e4b); border:1px solid #52908b; }
 .game-level-row.chosen,.game-level-row.selected { background:linear-gradient(#ffe6a0,#efaa4e); color:#542615; }
 .game-level-mark { color:#f5c761; font-size:clamp(10px,2vh,22px); }
-.game-level-detail { padding:0; display:grid; grid-template-rows:auto minmax(0,1fr) auto; min-height:0; }
+.game-level-detail { grid-column:2; grid-row:1/3; padding:0; display:grid; grid-template-rows:auto minmax(0,1fr) auto; min-width:0; min-height:0; }
 .game-level-name { color:#ffd575; font-size:var(--menu-section); margin:0; text-align:center; }
 .game-level-rewards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); grid-auto-rows:minmax(0,1fr); gap:1vh 2vw; min-height:0; margin:1vh 0; }
 .game-level-prize { display:flex; flex-direction:column; align-items:center; min-height:0; }
@@ -104,7 +104,7 @@
   .game-shell-panel,body.tc-on .game-shell-panel.game-map-menu-panel { padding:3vh 4vw 11vh; }
   .game-level-header { width:100%; }
   .game-level-columns { gap:3vw; grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
-  .game-level-browser { grid-template-rows:minmax(0,.5fr) minmax(0,1fr); }
+  .game-level-columns { grid-template-rows:minmax(0,.5fr) minmax(0,1fr); }
   .game-level-row { font-size:clamp(11px,3.1vw,22px); }
   .game-level-name { font-size:clamp(14px,4vw,24px); }
   .game-level-records { width:100%; }
@@ -274,7 +274,6 @@ body.game-flow-vortex .game-shell:has(.game-screen-launch)::before {
   background:linear-gradient(#17323e,#0a1c27) !important; border-color:#49616a !important;
 }
 .game-level-mark { font-size:var(--menu-caption); }
-.game-level-browser { grid-template-rows:minmax(0,.68fr) minmax(0,1fr); }
 .game-island-pages { font-size:var(--menu-caption); }
 .game-screen-trick-guide { background:transparent; }
 .game-trick-guide { width:100%; }
@@ -338,7 +337,7 @@ body.game-flow-vortex .game-shell:has(.game-screen-launch)::before {
 
 .game-save-browser .game-save-slot,.png-menu-focus .game-save-slot.selected { background:#0c2029 !important; }
 .game-level-select-layout { grid-template-rows:17% minmax(0,1fr) 8%; }
-.game-level-browser { grid-template-rows:minmax(0,.58fr) minmax(0,1fr); }
+.game-level-columns { grid-template-rows:minmax(0,.58fr) minmax(0,1fr); }
 
 .game-screen-level-select,.game-screen-progress,.game-screen-trick-guide { background:linear-gradient(#07141b,#02070f); }
 .game-screen-results { place-items:center end; }
@@ -357,7 +356,8 @@ body.game-flow-vortex .game-shell:has(.game-screen-launch)::before {
 
 /* Touch menus use physical targets rather than shrinking with viewport height.
    Their middle regions may scroll; titles, close and final actions stay fixed. */
-:is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel {
+:is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel,
+:is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel.game-map-menu-panel {
   padding:max(60px,calc(env(safe-area-inset-top) + 56px)) max(16px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
 }
 :is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel:is(.game-screen-launch,.game-screen-results,.game-screen-gameover) {
@@ -472,7 +472,7 @@ body.game-flow-vortex .game-shell:has(.game-screen-launch)::before {
 :is(body[data-prompt-family="touch"],body.tc-on) .game-island-arrow { min-width:48px; min-height:48px; padding:0; }
 :is(body[data-prompt-family="touch"],body.tc-on) .game-island-pages { margin:4px 0 0; }
 :is(body[data-prompt-family="touch"],body.tc-on) .game-level-footer { display:none; }
-:is(body[data-prompt-family="touch"],body.tc-on) .game-level-browser { grid-template-rows:minmax(0,.4fr) minmax(0,1fr); }
+:is(body[data-prompt-family="touch"],body.tc-on) .game-level-columns { grid-template-rows:minmax(0,.4fr) minmax(0,1fr); }
 :is(body[data-prompt-family="touch"],body.tc-on) .game-level-list {
   grid-auto-rows:minmax(48px,1fr); gap:6px; overflow-x:hidden; touch-action:pan-y;
 }
@@ -489,8 +489,7 @@ body.game-flow-vortex .game-shell:has(.game-screen-launch)::before {
     grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);
     grid-template-rows:minmax(0,.7fr) minmax(0,1fr); gap:12px;
   }
-  :is(body[data-prompt-family="touch"],body.tc-on) .game-level-browser { display:contents; }
-  :is(body[data-prompt-family="touch"],body.tc-on) .game-level-preview { grid-column:1; grid-row:1; box-sizing:border-box; }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-level-preview-frame { grid-column:1; grid-row:1; }
   :is(body[data-prompt-family="touch"],body.tc-on) .game-level-detail { grid-column:2; grid-row:1; }
   :is(body[data-prompt-family="touch"],body.tc-on) .game-level-list { grid-column:1/-1; grid-row:2; }
   :is(body[data-prompt-family="touch"],body.tc-on) .game-level-rewards { gap:4px; margin:4px 0; }

@@ -5,6 +5,7 @@ import { GameHudSurface } from "./gameHudSurface";
 import { paintSilverSecondaryText } from "./secondaryText";
 import { paintInputPrompts, sampleInputPrompts } from "./inputPromptUI";
 import { secondaryTextSettings } from "./secondaryTextSettings";
+import { presentationCssViewport } from './presentationCssViewport';
 import type { CompetitionPresentation } from "./competition/presentation";
 
 // The black transition curtain is compositor-owned. Copying it into this
@@ -94,7 +95,8 @@ export class GameInterfaceSurface {
       height: Math.max(1, Math.round(size.height * pixelRatio)),
     };
     const prompts = sampleInputPrompts(document, '.competition-host');
-    const inputs: PaintInput[] = [raster.width, raster.height, window.innerWidth, window.innerHeight, this.paintRevision];
+    const display = presentationCssViewport();
+    const inputs: PaintInput[] = [raster.width, raster.height, display.left, display.top, display.width, display.height, this.paintRevision];
     for (const element of document.querySelectorAll<HTMLElement>(PAINT_NODES)) {
       const { rect, style } = this.measure(element);
       inputs.push(element.tagName, element.className, rect.x, rect.y, rect.width, rect.height, element.textContent ?? '', element.firstChild?.textContent ?? '',
@@ -109,7 +111,8 @@ export class GameInterfaceSurface {
     }
     const drawn = this.surface.draw(raster, { drawExtra: ctx => {
       this.cursorDrawn = false;
-      ctx.scale(raster.width / window.innerWidth, raster.height / window.innerHeight);
+      ctx.scale(raster.width / display.width, raster.height / display.height);
+      ctx.translate(-display.left,-display.top);
       this.paintMap(ctx); this.paintTouch(ctx);
       paintInputPrompts(ctx,document,'.competition-host',prompts); this.paintCursor(ctx);
     } });

@@ -14,6 +14,7 @@ import { loadRooAtlases, RooAtlasPainter, layoutRooAtlas, type RooAtlasStyle } f
 import { ROO_ATLAS_METRICS } from './roo-type/atlas-metrics';
 import { getRooAppearance, ROO_APPEARANCE_EVENT, rooLightPosition } from './roo-type/settings';
 import { rooMenuText, rooMenuPalette } from './roo-type/menu';
+import { presentationCssViewport } from './presentationCssViewport';
 
 export type GameFlowSurfaceScreen =
   | "launch"
@@ -301,11 +302,12 @@ export function snapshotGameFlowSurface(
   source: Readonly<GameFlowSurfaceDomSource>,
 ): GameFlowSurfaceRenderState {
   const rootRect = source.root.getBoundingClientRect();
-  const sourceWidth = Math.max(1, rootRect.width || window.innerWidth || 1);
-  const sourceHeight = Math.max(1, rootRect.height || window.innerHeight || 1);
+  const display = presentationCssViewport(rootRect);
+  const sourceWidth = display.width;
+  const sourceHeight = display.height;
   const origin = {
-    left: Number.isFinite(rootRect.left) ? rootRect.left : 0,
-    top: Number.isFinite(rootRect.top) ? rootRect.top : 0,
+    left: display.left,
+    top: display.top,
   };
   const visible =
     source.screen !== null && !source.transitionActive && !source.root.hidden;
@@ -475,8 +477,9 @@ export function snapshotGameFlowSurface(
 
   const preview = source.panel.querySelector<HTMLImageElement>(".game-level-preview");
   const image = preview ?? source.thumbnail;
-  const thumbnailRect = image
-    ? rectFrom(image, origin)
+  const thumbnailNode = preview?.closest<HTMLElement>('.game-level-preview-frame') ?? image;
+  const thumbnailRect = thumbnailNode
+    ? rectFrom(thumbnailNode, origin)
     : null;
   const thumbnail = image && thumbnailRect
     ? Object.freeze({
@@ -540,6 +543,7 @@ export class GameFlowSurface {
   private maskImageReady = false;
   private readonly rooAtlas=new RooAtlasPainter();
   private lightPhase=NaN;
+  private displayKey = '';
   private readonly appearanceChanged=()=>{this.invalidate();this.onAsyncInvalidate();};
 
   constructor(
@@ -595,6 +599,9 @@ export class GameFlowSurface {
     // physical pixels. Render-target inputs are already expressed in pixels.
     const pixelRatio = target === null ? renderer.getPixelRatio() : 1;
     const raster = gameFlowRasterSize(targetWidth * pixelRatio, targetHeight * pixelRatio);
+    const display = presentationCssViewport();
+    const displayKey = `${display.left}:${display.top}:${display.width}:${display.height}`;
+    if (displayKey !== this.displayKey) { this.displayKey = displayKey; this.invalidate(); }
     const state = this.state ?? this.readState();
     this.state = state;
     this.screen = state.screen;
@@ -723,10 +730,10 @@ export class GameFlowSurface {
     };
     for (const card of state.cards) clipped(card, () => this.paintCard(ctx, card));
     for (const block of state.blocks) clipped(block, () => this.paintBlock(ctx, block));
+    if (state.thumbnail) clipped(state.thumbnail.rect, () => this.paintThumbnail(ctx, state.thumbnail!));
     for (const button of state.buttons) clipped(button.rect, () => this.paintButton(ctx, button));
     for (const socket of state.sockets ?? []) clipped(socket.rect, () => this.paintSocket(ctx, socket.rect, socket.kind));
     if (state.progress) this.paintProgress(ctx, state.progress);
-    if (state.thumbnail) this.paintThumbnail(ctx, state.thumbnail);
     for (const preview of state.slotPreviews ?? []) clipped(preview.rect, () => this.paintThumbnail(ctx, preview));
     if (state.maskFallback) this.paintMask(ctx, state.maskFallback);
     for (const text of state.texts) clipped(text.rect, () => {

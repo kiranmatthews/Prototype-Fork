@@ -233,7 +233,7 @@ export class GameFlowUI {
           panel: this.panel,
           buttons: [...this.panel.querySelectorAll<HTMLButtonElement>(".game-menu-button")],
           screen: this.screen,
-          transitionActive: this.panel.hasAttribute('data-roo-menu-pending') || this.transitionActive && !this.destinationRevealing && this.transitionPhase !== "cover",
+          transitionActive: this.panel.hasAttribute('data-roo-menu-pending') || this.startupLoading && !this.destinationRevealing || this.transitionActive && !this.destinationRevealing && this.transitionPhase !== "cover",
           thumbnail: this.thumbnail,
           thumbnailCaptured: this.thumbnailCaptured,
           maskReady: this.maskReady,
@@ -328,6 +328,9 @@ export class GameFlowUI {
     this.startupLoading = active;
     this.root.inert = active;
     document.body.classList.toggle('game-startup-loading', active);
+    if(!this.transitionActive)document.body.classList.toggle('game-shell-transitioning',active);
+    this.syncVortexBodyClass();
+    this.invalidatePreCrt();
     this.requestGameplayFrame();
   }
 
@@ -365,6 +368,7 @@ export class GameFlowUI {
     // Loading wins while leaving Game Over, so the bone-mask stage is released
     // before the warp field carries the transition back to gameplay.
     if (this.loadingVortexActive) return "warp";
+    if (this.startupLoading && !this.destinationRevealing) return this.destinationVortexContext ?? "warp";
     return this.destinationVortexContext;
   }
 
@@ -719,7 +723,7 @@ export class GameFlowUI {
           if (phase === "prepare-destination") {
             this.loadingVortexActive = false;
             this.destinationRevealing = true;
-            // Restore HUD/menu under opaque black, so it fades with the scene.
+            // Restore HUD/menu beneath the retained loading artwork.
             document.body.classList.remove("game-shell-transitioning");
           }
           if (phase === "reveal") this.transitionCurtain.classList.remove("vortex", "active");
@@ -1272,7 +1276,7 @@ export class GameFlowUI {
     layout.dataset.island = island.id;
     const columns = element('div', 'game-level-columns');
     if (this.levelSelectSlide) columns.classList.add(this.levelSelectSlide > 0 ? 'island-from-right' : 'island-from-left');
-    const left = element('section', 'game-level-browser');
+    const previewFrame = element('div', 'game-level-preview-frame');
     this.levelSelectPreview = element('img', 'game-level-preview');
     this.levelSelectPreview.addEventListener('load', () => this.invalidatePreCrt());
     const list = element('div', 'game-level-list game-scroll-segment');
@@ -1304,7 +1308,8 @@ export class GameFlowUI {
     this.levelSelectDetail = element('section', 'game-level-detail');
     this.levelSelectDetail.setAttribute('aria-label', 'Selected level progress');
     this.levelSelectDetail.setAttribute('aria-live', 'polite');
-    left.append(this.levelSelectPreview, list); columns.append(left, this.levelSelectDetail); layout.append(columns);
+    previewFrame.append(this.levelSelectPreview);
+    columns.append(previewFrame, this.levelSelectDetail, list); layout.append(columns);
     const footer = element('footer', 'game-level-footer');
     this.levelSelectPlay = this.button('SELECT', () => this.playSelectedLevel());
     menuHint('SELECT', ['confirm'], this.levelSelectPlay);
@@ -1941,8 +1946,7 @@ export class GameFlowUI {
       if (
         !(child instanceof HTMLElement) ||
         child === this.root ||
-        child === this.transitionCurtain ||
-        child.id === 'game-boot-loading'
+        child === this.transitionCurtain
       )
         continue;
       if (this.debugVisible && this.isDeveloperChromeHost(child)) {
@@ -2164,7 +2168,6 @@ export class GameFlowUI {
       .game-transition-curtain.active.vortex { background-color: rgba(0,0,0,.16); }
       .game-transition-curtain.holding-loading-frame { background-color: #171526; }
       .game-loading-held-frame { position:absolute; inset:0; width:100%; height:100%; object-fit:fill; }
-      .game-transition-curtain.holding-loading-frame::after { content:'LOADING'; position:absolute; left:50%; bottom:max(6vh,env(safe-area-inset-bottom)); transform:translateX(-50%); color:#fff4d6; font:700 16px/1.4 ui-monospace,monospace; letter-spacing:.15em; }
       body.game-shell-transitioning .game-shell-panel { opacity: 0; pointer-events: none; }
       body.game-shell-transitioning .game-hud-layer,
       body.game-shell-transitioning .tc-zone,

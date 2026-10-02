@@ -15,13 +15,11 @@ try{
   const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:2});
   await context.addInitScript(()=>{
    window.__menuStartup=[];
-   window.__menuBootAccessibility=[];
    const sample=()=>{
-    const g=window.__game,boot=document.querySelector('#game-boot-loading');
+    const g=window.__game;
     if(g&&g.gameFlow.currentScreen==='launch'){
      const root=document.querySelector('.game-shell'),r=root?.getBoundingClientRect(),s=root&&getComputedStyle(root);
-     const covered=!!boot&&!boot.hidden&&getComputedStyle(boot).display!=='none';
-     if(covered)window.__menuBootAccessibility.push(!boot.inert&&!boot.closest('[aria-hidden="true"]'));
+     const covered=g.gameFlow.startupLoading||document.body.classList.contains('game-shell-transitioning');
      const visible=!!r?.width&&s.display!=='none'&&s.visibility!=='hidden'&&Number(s.opacity)>0&&!covered;
      if(visible)window.__menuStartup.push({ready:g.getFontDiagnostics().ready,pending:document.querySelectorAll('.game-shell [data-roo-menu]:not([data-ready])').length,loading:g.gameFlow.loadingPhase});
     }
@@ -36,16 +34,15 @@ try{
    await new Promise(resolve=>setTimeout(resolve,500));await route.continue();
   });
   await page.goto(base+'?'+(lite?'lite':''));
-  await page.waitForFunction(lite=>window.__game&&(lite||window.__game.gameFlow.currentScreen==='launch')&&!document.querySelector('#game-boot-loading')&&!window.__game.gameFlow.loadingPhase,lite,{timeout}).catch(async error=>{
-   const failed=await page.evaluate(()=>({screen:window.__game?.gameFlow.currentScreen,loading:window.__game?.getLoadingDiagnostics(),font:window.__game?.getFontDiagnostics(),boot:document.querySelector('#game-boot-loading')?.textContent,pending:document.querySelectorAll('[data-roo-menu-pending]').length,report:localStorage.getItem('solProtoStabilityV1')}));
+  await page.waitForFunction(lite=>window.__game&&(lite||window.__game.gameFlow.currentScreen==='launch')&&!window.__game.gameFlow.startupLoading&&!window.__game.gameFlow.loadingPhase,lite,{timeout}).catch(async error=>{
+   const failed=await page.evaluate(()=>({screen:window.__game?.gameFlow.currentScreen,loading:window.__game?.getLoadingDiagnostics(),font:window.__game?.getFontDiagnostics(),pending:document.querySelectorAll('[data-roo-menu-pending]').length,report:localStorage.getItem('solProtoStabilityV1')}));
    rows.push({failed});console.log(JSON.stringify(failed));throw error;
   });
   if(lite)await page.evaluate(async()=>{window.__game.gameFlow.showLaunch();await window.__game.gameFlow.prepareMenuPresentation();});
   await page.waitForTimeout(300);
-  const startup=await page.evaluate(()=>({samples:window.__menuStartup,accessible:window.__menuBootAccessibility,font:window.__game.getFontDiagnostics(),labels:document.querySelectorAll('.game-shell [data-roo-menu][data-ready]').length,pending:document.querySelectorAll('.game-shell [data-roo-menu]:not([data-ready])').length,loading:window.__game.getLoadingDiagnostics()}));
+  const startup=await page.evaluate(()=>({samples:window.__menuStartup,font:window.__game.getFontDiagnostics(),labels:document.querySelectorAll('.game-shell [data-roo-menu][data-ready]').length,pending:document.querySelectorAll('.game-shell [data-roo-menu]:not([data-ready])').length,loading:window.__game.getLoadingDiagnostics()}));
   assert.ok(startup.samples.length>0,'title never became visible');
   assert.ok(startup.samples.every(s=>s.ready&&s.pending===0&&!s.loading),'title exposed fallback/pending font ink');
-  if(!lite)assert.ok(startup.accessible.length&&startup.accessible.every(Boolean),'loading status was hidden from assistive technology');
   assert.equal(startup.pending,0);assert.ok(startup.labels>=4);assert.deepEqual(startup.loading.pending,[]);
   await page.screenshot({path:`${output}/${engine}-${lite?'lite':'full'}-cold-title.png`});
   // Exercise real destination preparation, prolonging both assets and GPU
@@ -99,7 +96,7 @@ try{
  const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
  await page.route(/\/fonts\/roo-counter-v[^/]*-light1[^/]*\.png$/,route=>route.abort());
  await page.goto(base);
- await page.waitForFunction(()=>window.__game?.gameFlow.currentScreen==='launch'&&!document.querySelector('#game-boot-loading'),null,{timeout:120000});
+ await page.waitForFunction(()=>window.__game?.gameFlow.currentScreen==='launch'&&!window.__game.gameFlow.startupLoading,null,{timeout:120000});
  const degraded=await page.evaluate(()=>({font:window.__game.getFontDiagnostics(),pending:document.querySelectorAll('.game-shell [data-roo-menu]:not([data-ready])').length,labels:document.querySelectorAll('.game-shell [data-roo-menu][data-ready]').length}));
  assert.equal(degraded.font.ready,true);assert.equal(degraded.pending,0);assert.ok(degraded.labels>=4);
  await page.screenshot({path:`${output}/${engine}-missing-light.png`});rows.push({degraded});await context.close();

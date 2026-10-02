@@ -5281,9 +5281,11 @@ async function prepareStartupPresentation(): Promise<void> {
   await presentationAssets.waitUntilSettled();
   if(shellBypass&&!editor.active) {
     // Direct playtests/reloads need the same readiness gates as menu entry.
-    await gameFlow.transition(()=>gameFlow.hide(),{vortex:false});
+    await gameFlow.transition(()=>gameFlow.hide());
   } else {
     await graphicsRecovery.ready();
+    // Keep the authored vortex visible until the complete title ink is ready.
+    gameFlow.setStartupLoading(false);
     if(gameFlow.vortexContext)renderVortexWithGameFlow(0,performance.now(),gameFlow.vortexContext);
     else renderGameplayWithGameFlow(0);
     await waitForPresentationGpu(renderer);
@@ -5294,12 +5296,9 @@ async function prepareStartupPresentation(): Promise<void> {
     await afterPresentationPaint();
   }
   gameFlow.setStartupLoading(false);
-  document.getElementById('game-boot-loading')?.remove();
   recordPresentationStage('startup:ready');
   startOfflineCache();
 }
 void prepareStartupPresentation().catch(error=>{
   console.error('Game startup failed.',error);
-  const status=document.querySelector('#game-boot-loading [role="status"]');
-  if(status){status.setAttribute('role','alert');status.textContent='Unable to start. Reload to try again.';}
 });

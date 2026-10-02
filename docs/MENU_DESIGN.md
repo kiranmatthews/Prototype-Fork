@@ -76,8 +76,9 @@ menu ink is published. A missing shimmer image reuses the neutral PNG; a missing
 neutral resolution tries the other shipped sizes, and reconnecting retries a
 degraded atlas. The existing PNG geometry, painter and focus phases are retained.
 
-Startup keeps the accessible HTML loading status and input lock until the actual
-title or direct-playtest frame is ready. Transitions retain the animated vortex
+Startup keeps the original title/loading vortex and input lock until the actual
+title or direct-playtest frame is ready; do not add another spinner or loading
+label. Transitions retain the animated vortex
 through destination assets, texture uploads and shader/geometry warmup. A captured
 loading frame covers final post/HUD requests and GPU completion, then fades into
 the ready destination. Its fullscreen raster is released afterward. Shared
@@ -90,7 +91,19 @@ It supports `MENU_BROWSER=webkit`, `MENU_PROFILE=320x568,568x320,390x844`,
 `tools/test-level-stats-touch.mjs` exercises actual map entry and course launch with
 touch, keyboard and PlayStation prompts. `tools/test-menu-loading-browser.mjs`
 delays fonts, assets, warmup and final preparation and checks retained loading
-pixels, prompt suppression, accessible startup status and failed shimmer images
+pixels, prompt suppression, startup readiness and failed shimmer images
 in lite/full rendering. `tools/test-roo-atlas-readiness.mjs` covers decode,
 alternate resolutions and reconnect recovery. `PLAYWRIGHT_MODULE` may point to a
 local Playwright runtime; keep separate output directories for each engine.
+
+Phone screenshots are stronger evidence than viewport-bounds assertions. Level
+Select uses three direct grid children (bounded preview frame, rewards, list),
+with an absolutely fitted image; never size a replaced preview image directly
+against percentage grid tracks or flatten its parent with `display:contents`.
+The Canvas preview uses the frame bounds, clips, and paints before rows.
+`src/presentationCssViewport.ts` supplies the actual displayed canvas bounds to
+menu, prompt, reward and Cup painters. iOS home-screen canvas height can exceed
+`innerHeight`; stretching semantic menu coordinates to that height misaligns
+visible labels and touch targets. Try Island 2, rotate the same open menu, swipe
+to the last row and tap its visible lettering. Inspect settled previews and
+actual pixels; synthetic taps on invisible DOM targets do not prove usability.

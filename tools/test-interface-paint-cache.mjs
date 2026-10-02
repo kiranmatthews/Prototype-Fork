@@ -52,7 +52,7 @@ class GameHudSurface {
 const calls = [];
 const canvas = new Proxy({}, { get(target, key) { return target[key] ?? ((...args) => calls.push([key, ...args])); }, set(target, key, value) { target[key] = value; return true; } });
 const context = vm.createContext({ document, window: { innerWidth: 800, innerHeight: 600 }, HTMLElement: Element, Image, Map, Event: class {}, inputPrompts, INPUT_BINDINGS: { jump: {} }, trackPresentationImage() {}, getComputedStyle(element) { cssReads++; return element.style; }, GameHudSurface, paintSilverSecondaryText() {}, secondaryTextSettings: { subscribe(listener) { fontRevision = listener; } } });
-for (const path of ['src/inputPromptUI.ts', 'src/gameInterfaceSurface.ts']) {
+for (const path of ['src/presentationCssViewport.ts', 'src/inputPromptUI.ts', 'src/gameInterfaceSurface.ts']) {
   const source = (await readFile(new URL(`../${path}`, import.meta.url), 'utf8')).replace(/^import .*$/gm, '').replace(/^export /gm, '');
   const js = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.None } }).outputText;
   vm.runInContext(js, context, { filename: path });

@@ -6,6 +6,7 @@ import type { TimeMedal } from './campaign';
 import { createInputGlyph } from './inputPromptUI';
 import { silverSecondaryLabel } from './secondaryText';
 import type { InputAction } from './inputBindings';
+import { presentationCssViewport } from './presentationCssViewport';
 
 export type MenuReward = 'crystal' | 'gem' | 'combo' | 'medal' | 'cup';
 export function rewardSlot(kind: MenuReward, earned: boolean, medal?: TimeMedal | null): HTMLElement {
@@ -37,6 +38,7 @@ export class MenuRewardsPresentation {
   draw(renderer: THREE.WebGLRenderer, size: {width:number;height:number}, target: THREE.WebGLRenderTarget|null): void {
     const shell = document.querySelector<HTMLElement>('.game-shell:not([hidden])');
     if (!shell || document.body.classList.contains('game-shell-transitioning')) return;
+    const display = presentationCssViewport();
     const hosts = [...shell.querySelectorAll<HTMLElement>('.game-reward-slot[data-earned="true"]')];
     for (const item of this.pool) item.root.visible = false;
     const used = new Set<object>();
@@ -58,13 +60,13 @@ export class MenuRewardsPresentation {
       }
       used.add(item); item.root.visible = true;
       if (kind === 'medal') setTimeMedalTier(item.model, (host.dataset.medal as TimeMedal) || 'gold');
-      item.root.position.set(rect.x + rect.width/2 - window.innerWidth/2, window.innerHeight/2 - rect.y - rect.height/2, 0);
+      item.root.position.set(rect.x - display.left + rect.width/2 - display.width/2, display.height/2 - (rect.y - display.top) - rect.height/2, 0);
       item.root.scale.setScalar(Math.min(rect.width,rect.height) * .82 * item.unit);
       item.root.rotation.set(.13, matchMedia('(prefers-reduced-motion: reduce)').matches ? .35 : performance.now() * .0007, 0);
     }
     if (!used.size) return;
-    this.camera.left = -window.innerWidth/2; this.camera.right = window.innerWidth/2;
-    this.camera.top = window.innerHeight/2; this.camera.bottom = -window.innerHeight/2; this.camera.updateProjectionMatrix();
+    this.camera.left = -display.width/2; this.camera.right = display.width/2;
+    this.camera.top = display.height/2; this.camera.bottom = -display.height/2; this.camera.updateProjectionMatrix();
     const previous = renderer.getRenderTarget(), face = renderer.getActiveCubeFace(), mip = renderer.getActiveMipmapLevel();
     const viewport = renderer.getViewport(new THREE.Vector4()), scissor = renderer.getScissor(new THREE.Vector4());
     const test = renderer.getScissorTest(), auto = renderer.autoClear;
