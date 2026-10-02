@@ -75,13 +75,13 @@ assert.ok(
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ levelKeys }) => levelKeys.length),
-  [8, 8, 3],
-  "Puzzle Trials must append without removing existing island hubs",
+  [8, 11],
+  "The three levels join the existing main-map island",
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ id, name }) => [id, name]),
-  [["island-1", "Island 1"], ["island-2", "Island 2"], ["puzzle-trials", "Puzzle Trials"]],
-  "the new puzzle island must preserve the existing region identities",
+  [["island-1", "Island 1"], ["island-2", "Island 2"]],
+  "the existing region identities must remain unchanged",
 );
 assert.ok(
   campaign.CAMPAIGN_LEVELS.filter(({ boss }) => boss).length === 2,
@@ -121,7 +121,7 @@ assert.deepEqual(campaign.CAMPAIGN_LEVELS.slice(15,18).map(level=>level.progress
   ['crate-primer','switchyard','clockwork-gauntlet'],'research hubs must append after all saved identities');
 for(const key of campaign.CAMPAIGN_ISLANDS[2].levelKeys){
   assert.equal(graph.levelUnlocked(key),true,`${key} is unavailable on a fresh save`);
-  assert.equal(campaign.campaignLevelById(key).islandId,'puzzle-trials');
+  assert.equal(campaign.campaignLevelById(key).islandId,'island-2');
 }
 assert.equal(graph.recommendedMapLevelKey(), "treehouse-trail");
 assert.equal(campaign.CAMPAIGN_ISLANDS[0].levelKeys[0], "treehouse-trail");

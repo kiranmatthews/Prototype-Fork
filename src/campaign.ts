@@ -90,7 +90,7 @@ export interface CampaignLevelDefinition {
   competition?: boolean;
 }
 
-export type CampaignIslandId = "island-1" | "island-2" | "puzzle-trials";
+export type CampaignIslandId = "island-1" | "island-2";
 
 export interface CampaignIslandDefinition {
   id: CampaignIslandId;
@@ -112,15 +112,8 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     id: "island-2",
     name: "Island 2",
     subtitle: "REGION 02",
-    centre: [75, 0, 9],
-    levelKeys: ["beachside-run", "coastal", "chimeworks", "island-hopper", "waterpark", "waterpark-cup", "codex-switchback", "jungle-gate"],
-  },
-  {
-    id: "puzzle-trials",
-    name: "Puzzle Trials",
-    subtitle: "CRATES · COMBAT · TIMING",
-    centre: [208, 0, 14],
-    levelKeys: ["crate-primer", "switchyard", "clockwork-gauntlet"],
+    centre: [100, 0, 9],
+    levelKeys: ["beachside-run", "coastal", "chimeworks", "island-hopper", "waterpark", "waterpark-cup", "codex-switchback", "jungle-gate", "crate-primer", "switchyard", "clockwork-gauntlet"],
   },
 ] as const;
 
@@ -264,10 +257,10 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
   {
     from: "jungle-gate",
     to: "crate-primer",
-    travel: "boardslide",
-    fromDirection: "right",
-    toDirection: "left",
-    waypoints: [[142, 9, 14], [165, 9, 14]],
+    travel: "trail",
+    fromDirection: "down",
+    toDirection: "up",
+    waypoints: [[136, 2.1, 22]],
   },
   {
     from: "crate-primer",
@@ -275,7 +268,7 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     travel: "trail",
     fromDirection: "right",
     toDirection: "left",
-    waypoints: [[194, 2.1, 14]],
+    waypoints: [[150, 2.1, 31]],
   },
   {
     from: "switchyard",
@@ -283,7 +276,7 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     travel: "trail",
     fromDirection: "right",
     toDirection: "left",
-    waypoints: [[221, 2.8, 14]],
+    waypoints: [[164, 2.6, 33]],
   },
 ] as const;
 
@@ -435,22 +428,22 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     mapPath:"upper-branch",mapPosition:[109,12,4],unlockAfter:["waterpark"],competition:true,
   },
   // The research trilogy is available immediately from Level Select. Its
-  // ordered map trail keeps the rising difficulty visible without making the
+  // existing Island 2 trail keeps the rising difficulty visible without making the
   // existing campaign a prerequisite for trying the new examples.
   {
     progressKey: "crate-primer", levelId: "crate-primer", name: "Crate Primer",
-    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS, islandId: "puzzle-trials",
-    mapPath: "main", mapPosition: [181, 1.35, 14], unlockAfter: [],
+    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS, islandId: "island-2",
+    mapPath: "main", mapPosition: [143, 2.1, 29], unlockAfter: [],
   },
   {
     progressKey: "switchyard", levelId: "switchyard", name: "Switchyard",
-    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS, islandId: "puzzle-trials",
-    mapPath: "main", mapPosition: [208, 2.4, 14], unlockAfter: [],
+    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS, islandId: "island-2",
+    mapPath: "main", mapPosition: [157, 2.4, 34], unlockAfter: [],
   },
   {
     progressKey: "clockwork-gauntlet", levelId: "clockwork-gauntlet", name: "Clockwork Gauntlet",
-    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS, islandId: "puzzle-trials",
-    mapPath: "main", mapPosition: [235, 3.1, 14], unlockAfter: [],
+    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS, islandId: "island-2",
+    mapPath: "main", mapPosition: [171, 3.1, 29], unlockAfter: [],
   },
   {
     progressKey:"nightworks-after-hours",levelId:"nightworks-after-hours",name:"Nightworks: After Hours",

@@ -29,8 +29,8 @@ try{
  assert.match(rows[0].textContent,/01  TREEHOUSE TRAIL/);
  assert.equal(ui.levelSelectKey,'treehouse-trail');
  assert.match(ui.levelSelectPreview.src,/treehouse-trail\.jpg$/);
- ui.changeLevelSelectIsland(1);assert.equal(ui.levelSelectIsland,'puzzle-trials');
- const puzzleRows=ui.navButtons.filter(b=>b.dataset.levelKey);
+ ui.changeLevelSelectIsland(1);assert.equal(ui.levelSelectIsland,'island-2');
+ const puzzleRows=ui.navButtons.filter(b=>['crate-primer','switchyard','clockwork-gauntlet'].includes(b.dataset.levelKey));
  assert.deepEqual(puzzleRows.map(row=>row.dataset.levelKey),['crate-primer','switchyard','clockwork-gauntlet']);
  assert.ok(puzzleRows.every(row=>!row.disabled),'research levels must be immediately selectable');
  ui.updateLevelSelectChoice('clockwork-gauntlet',true);assert.match(ui.levelSelectPreview.src,/clockwork-gauntlet\.jpg$/);

@@ -27,15 +27,15 @@ try{
   if(id==='crate-primer'){
    await page.keyboard.press('Escape');
    await page.getByRole('button',{name:'LEVEL SELECT',exact:true}).click();
-   for(let turn=0;turn<3&&!await page.locator('[data-island="puzzle-trials"]').count();turn++)
+   for(let turn=0;turn<3&&!await page.locator('[data-island="island-2"]').count();turn++)
     await page.getByRole('button',{name:'Next island',exact:true}).click();
-   await page.getByText(/^PUZZLE TRIALS$/i,{exact:true}).waitFor();
+   await page.getByText(/^ISLAND 2$/i,{exact:true}).waitFor();
    const text=await page.locator('body').innerText();
    for(const name of ['Crate Primer','Switchyard','Clockwork Gauntlet'])assert.ok(text.toLowerCase().includes(name.toLowerCase()));
-   await page.screenshot({path:`${out}/puzzle-trials-level-select.png`});report.menu='All three available on Puzzle Trials';
+   await page.screenshot({path:`${out}/island-2-level-select.png`});report.menu='All three available on the existing Island 2 main map';
   }
   assert.deepEqual(errors,[]);reports.push({...report,errors});await page.close();
  }
  await writeFile(`${out}/verified.json`,JSON.stringify({base,reports},null,2));
- console.log(JSON.stringify(reports,null,2));console.log('PASS deployed full-render trilogy, supported spawns, final targets, build stamp and real Puzzle Trials menu.');
+ console.log(JSON.stringify(reports,null,2));console.log('PASS deployed full-render trilogy, supported spawns, final targets, build stamp and existing Island 2 main map.');
 }finally{await browser.close();}

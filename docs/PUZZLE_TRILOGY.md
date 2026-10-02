@@ -1,6 +1,6 @@
-# Puzzle Trials: layouts and all-box solutions
+# Side-view crate courses: layouts and all-box solutions
 
-These three original side-view courses translate the resource and action-order relationships in [the research dossier](PLATFORMER_PUZZLE_RESEARCH.md) into the fork's existing movement and crate toolkit. They are available immediately on the **Puzzle Trials** island in Level Select, and as direct `?playtest&level=...` links. Clearing the exit and earning the all-box gem are different goals, as in Crash. The intended perfect routes below collect every breakable crate and both/four checkpoint boxes.
+These three original side-view courses translate the resource and action-order relationships in [the research dossier](PLATFORMER_PUZZLE_RESEARCH.md) into the fork's existing movement and crate toolkit. They are available immediately on the existing **Island 2** main map and Level Select, and as direct `?playtest&level=...` links. Clearing the exit and earning the all-box gem are different goals, as in Crash. The intended perfect routes below collect every breakable crate and both/four checkpoint boxes.
 
 | Course | Breakable boxes | Checkpoint boxes | Main ordering demand |
 | --- | ---: | ---: | --- |

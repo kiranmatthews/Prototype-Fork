@@ -20,7 +20,7 @@ export async function captureLevelPreviews(g:any, report:(text:string)=>void):Pr
       camera.position.copy(spawn).add(new THREE.Vector3(7,6,9));camera.lookAt(spawn.x,spawn.y+1,spawn.z-20);
       if(def.competition){camera.position.set(30,19,-18);camera.lookAt(-12,2,-68);}
       if(def.levelId==='sky'){camera.position.copy(spawn).add(new THREE.Vector3(2,4,4));camera.lookAt(spawn.x,spawn.y-1,spawn.z-12);}
-      if(def.islandId==='puzzle-trials'){
+      if(['crate-primer','switchyard','clockwork-gauntlet'].includes(def.levelId)){
         camera.position.copy(spawn).add(new THREE.Vector3(20,9,22));
         camera.lookAt(spawn.x+22,spawn.y+1,spawn.z);
       }
