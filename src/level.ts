@@ -62,6 +62,8 @@ import { migrateSlipstreamCamera } from "./levels/slipstream-camera";
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
 import { PUZZLE_LEVELS } from './levels/puzzle-trilogy';
+import { CRAB_CHIEF_LEVEL } from './levels/crab-chief';
+import { CrabChiefEncounter } from './boss/crabChief';
 import { WATERPARK_LEVEL } from "./levels/waterpark";
 import { WATERPARK_CUP_LEVEL } from './levels/waterpark-cup';
 import { BONE_YARD_LEVEL } from "./levels/bone-yard";
@@ -925,6 +927,8 @@ export interface CustomLevelData {
   name: string;
   spawn: [number, number, number];
   killY: number;
+  /** Source-authored boss, retained by editor copy/export/import. */
+  encounter?: 'crab-chief';
   /** Continuous park: always-mounted rider-relative skating/chase camera, no course finish or run-mode pickups. */
   skatepark?: boolean;
   /** Bonus stages opt into their distinct persistent collection HUD. */
@@ -2315,6 +2319,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   ...UNITY_PORT_LEVELS,
   { id: "bonus-easy", name: EASY_BONUS_LEVEL.name, data: EASY_BONUS_LEVEL },
   ...PUZZLE_LEVELS,
+  { id: 'crab-chief', name: CRAB_CHIEF_LEVEL.name, data: CRAB_CHIEF_LEVEL },
   {
     id: "codex-lab",
     name: CODEX_LAB_LEVEL.name,
@@ -2410,6 +2415,7 @@ export const MAX_USER_LEVELS = 128;
 const MAX_LEVEL_LABEL_LENGTH = 120;
 const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const LEVEL_DATA_KEYS = new Set([
+  'encounter',
   "v", "name", "spawn", "killY", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "atmosphere",
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "cameraAirLift",
@@ -2630,6 +2636,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     "collisionHeight", "supportBaseY", "shoreSeaLevel", "shorePhase", "cameraFollowDistance", "cameraIntroDistance", "iceGrip",
   ];
   if (source.sky !== undefined && !SKY_PRESETS.includes(source.sky)) return null;
+  if (source.encounter !== undefined && source.encounter !== 'crab-chief') return null;
   if (source.atmosphere !== undefined && !validAtmosphere(source.atmosphere)) return null;
   if (source.jungleAtmosphere !== undefined && typeof source.jungleAtmosphere !== "boolean")
     return null;
@@ -3700,6 +3707,7 @@ export function isEditUnlocked(): boolean {
 }
 
 export class Level {
+  boss: CrabChiefEncounter | null = null;
   groundMeshes: THREE.Mesh[] = [];
   readonly loopMeshes: THREE.Mesh[] = []; // explicit analytic contacts; empty on ordinary courses
   private obstacleEdgeMeshes: THREE.Mesh[] = [];
@@ -4619,6 +4627,7 @@ export class Level {
     else if (entry.id === "descent") this.buildDescent();
     else if (entry.id === "beachfront") this.buildUnityBeachfront();
     else this.buildJungle(); // "jungle": the enclosed corridor course
+    if (this.builtFromData?.encounter === 'crab-chief') this.boss = new CrabChiefEncounter(this.root);
     // Older published Sky Bridge data inherits the native sightline defaults.
     // Explicit atmosphere/material-fog fields can override them; copy/export
     // materializes the effective defaults before assigning a different ID.
@@ -4641,7 +4650,7 @@ export class Level {
     this.buildSystemicSurfaceEdgeRails(); // ordinary solid boundaries grind by default
     this.dressRails(); // every builder is done adding rails by now
     this.syncTrickPrimitives(new Set<DeckTrickKind>(), false);
-    if (this.hudMode !== "bonus" && this.hudMode !== "hub" && !this.skatepark && !isCompetitionLevel(entry.id)) {
+    if (this.hudMode !== "bonus" && this.hudMode !== "hub" && !this.skatepark && !this.boss && !isCompetitionLevel(entry.id)) {
       this.placeClock(); // time-trial stopwatch near spawn (only where a finish gate exists)
       this.placeComboOrb(); // combo-run orb, the other side of the racing line
     }
@@ -7313,6 +7322,7 @@ export class Level {
   }
 
   dispose(preserveResourcesFrom?: Level): void {
+    this.boss = null; // its level-owned geometry is disposed by the root traversal below
     if(this.bonusPlatform)this.bonusPlatform.group.userData.bonusStoneDisposed=true;
     for (const crate of this.crates) {
       if (crate.milkCrate) disposeMilkCrate(crate.milkCrate);
@@ -8257,6 +8267,7 @@ export class Level {
   }
 
   update(dt: number): void {
+    this.boss?.present(dt);
     this.tropicalPlants?.update(dt);
     this.jungleAssets?.update(dt);
     this.jungleTime.value += Math.max(0, Math.min(dt, 0.1));
@@ -9324,6 +9335,7 @@ export class Level {
   // back; banked checkpoints stay consumed. Hard reset (R / new run) revives
   // everything and relights every checkpoint box.
   reset(hard: boolean): void {
+    this.boss?.reset(hard);
     this.cancelBonusEntry();
     this.discardedBoards.clear(); // no debris from the previous life/run
     // Hard reset restores the committed crystal baseline and clears any

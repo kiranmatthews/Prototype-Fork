@@ -3744,6 +3744,7 @@ export class Player {
         return;
       }
       this.stepRope(dt, input, level);
+      this.stepBossEncounter(dt, level);
       this.blastCheck(level); // a bomb under the rope/ledge still gets you
       this.updateSpin(dt, input); // Square spins on the rope: mid-air smash
       this.updateSparks(dt);
@@ -3760,6 +3761,7 @@ export class Player {
         return;
       }
       this.stepHang(dt, input, level);
+      this.stepBossEncounter(dt, level);
       this.blastCheck(level); // a bomb under the rope/ledge still gets you
       this.updateSparks(dt);
       this.updatePuffs();
@@ -4509,6 +4511,9 @@ export class Player {
       if (this.pos.y < level.killY) this.die();
     }
 
+    // Like blast hazards, the encounter also advances while hanging or on a
+    // rope. A ledge grip must not pause every chief attack in mid-flight.
+    this.stepBossEncounter(dt, level);
     this.blastCheck(level);
 
     // Re-arm the wallride once you've touched the ground or caught a rail grind
@@ -4854,6 +4859,20 @@ export class Player {
     this.comboHasTrick = false;
     this.clearComboTrickHistory();
     this.deckTricksThisCombo.clear();
+  }
+
+  private stepBossEncounter(dt: number, level: Level): void {
+    if (!level.boss) return;
+    const result = level.boss.step(dt, {
+      position: this.pos, state: this.state, speed: Math.abs(this.state === 'grind' ? this.grindVel : this.speed),
+      grounded: this.grounded, skating: this.freeSkate || this.airFromSkate,
+      grinding: this.state === 'grind', attacking: this.spinning || this.flipT > 0 || this.slamActive || this.slamSquash > 0,
+      immune: this.invulnTimer > 0 || this.uberTimer > 0, shielded: this.masks > 0,
+    });
+    if (result.hurt && !this.spendMask()) {
+      if (result.fatal) this.die();
+      else { this.invulnTimer = 1.65; this.invulnSilent = false; this.emitSparks(8, 0xffa56d, 2); }
+    }
   }
 
   // Crash mask rules: masks come from mask crates only. The first two are
@@ -12495,7 +12514,7 @@ export class Player {
       const required=level.loopMeshes.filter(mesh=>mesh.userData.loopRequired).length;
       this.onCourseHint('LOOP STILL CLOSED', required>1?`Complete all ${required} loops to unlock the exit`:'Complete the Loop of Death to unlock the exit');
     } else if (!touchingFinish) this.loopGateHintShown = false;
-    if (!this.competitionMode && loopGoalsComplete && touchingFinish) {
+    if (!this.competitionMode && loopGoalsComplete && touchingFinish && (level.boss?.canFinish ?? true)) {
       this.bankCombo(); // whatever is pending counts as you arrive
       sfx.play('lifeGet', 1.0);
       this.state = 'finished';
