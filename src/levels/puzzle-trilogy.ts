@@ -1,4 +1,5 @@
 import type { CustomComponent, CustomGroup, CustomLevelData, LevelEntry } from '../level';
+import { puzzleBonusEntrance } from './puzzle-bonus-entrances';
 
 /** Source-owned experiments derived from docs/PLATFORMER_PUZZLE_RESEARCH.md.
  * All contacts, attack rules, timers and rewards use the existing toolkit.
@@ -101,7 +102,7 @@ function course(index:number,name:string,end:number) {
     }
   };
   const data=():CustomLevelData=>({v:1,name,spawn:[-5,.12,0],killY:-12,
-    sky:colors.sky,components,groups});
+    sky:colors.sky,components:puzzleBonusEntrance(components,index),groups});
   return {add,deck,shelf,crate,fruit,arc,enemy,checkpoint,section,jump,bridge,anchors,clear,flip,finish,data,actions,sections};
 }
 
