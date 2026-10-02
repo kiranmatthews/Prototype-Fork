@@ -36,7 +36,7 @@ export async function runTrilogyChecks({journey=true}={}) {
       r.stepFor(20);
       assert.ok(r.p.grounded&&!r.p.isBailing,`${id} spawn is unsupported`);
       assert.ok(Math.abs(r.p.pos.z)<.1,`${id} spawn left its side-scrolling line`);
-      assert.equal(r.l.cameraViews.length,1,`${id} needs its authored puzzle preview camera`);
+      assert.equal(r.l.cameraViews.length,0,`${id} must use the shared normal side-scroll POV`);
       const probe=new r.THREE.Raycaster(),down=new r.THREE.Vector3(0,-1,0);let probes=0;
       for(let frame=0;frame<600;frame++) {
         r.l.update(r.dt);

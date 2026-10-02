@@ -31,6 +31,12 @@ for(const entry of PUZZLE_LEVELS){
     body+=text(cx,cy-.9,c.t,'font-size="10" fill="#e5d6b6" text-anchor="middle"');
    }
    if(cx<min||cx>max)continue;
+   if(c.t==='spinbridge'){
+    const direction=Math.cos((c.yaw??0)*Math.PI/180),span=c.s[0],thickness=c.s[1];
+    body+=rect(cx+direction*thickness/2,cy+span/2,thickness,span,'#a87645','stroke="#e6b46b"');
+    body+=rect(cx+direction*span/2,cy-thickness/2,span,thickness,'none','stroke="#95d071" stroke-dasharray="4 3"');
+    body+=text(cx,cy+1,'SPIN','font-size="10" fill="#95d071" text-anchor="middle"');
+   }
    if(c.t==='crate'){
     const outline=[10,11,12].includes(c.grp)&&!['bang','nitrobang'].includes(c.kind);
     body+=rect(cx,cy+.48,.96,.96,outline?'none':colors[c.kind],`stroke="${outline?'#e8c66f':'#172332'}" ${outline?'stroke-dasharray="3 2"':''}`);

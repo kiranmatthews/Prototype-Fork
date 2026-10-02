@@ -1,5 +1,4 @@
 import type { CustomComponent, CustomGroup, CustomLevelData, LevelEntry } from '../level';
-import { puzzleBonusEntrance } from './puzzle-bonus-entrances';
 
 /** Source-owned experiments derived from docs/PLATFORMER_PUZZLE_RESEARCH.md.
  * All contacts, attack rules, timers and rewards use the existing toolkit.
@@ -9,7 +8,7 @@ type Kind = NonNullable<CustomComponent['kind']>;
 type Foe = NonNullable<CustomComponent['foe']>;
 export interface PuzzleSection { name:string; a:number; b:number; y:number; idea:string }
 export interface PuzzleAction {
-  kind:'walk'|'jump'|'switch'|'bounce'|'enemy'|'tnt'|'mover'|'phase'|'crumble';
+  kind:'walk'|'jump'|'switch'|'bounce'|'enemy'|'tnt'|'mover'|'phase'|'crumble'|'spinbridge';
   x:number; y:number; to?:number; top?:number; foe?:Foe; note:string;
 }
 const CUBE = {
@@ -81,12 +80,15 @@ function course(index:number,name:string,end:number) {
     crate(x,y,'nitrobang','Green ! clears the visible Nitro field');
     actions.push({kind:'switch',x,y,note:'Green ! detonates all Nitro, using the existing level-wide rule.'});
   };
+  const flip=(x:number,y:number,span:number,nm:string,yaw=0)=>{
+    add({t:'spinbridge',p:[x,y,0],s:[span,.34,1.6],yaw,cycle:.55,tex:'wood',color:'#b77c43',grp:4,nm});
+    actions.push({kind:'spinbridge',x,y,to:x+Math.cos(yaw*Math.PI/180)*span,top:y,
+      note:'Spin the upright timber directly. It rotates into a solid bridge and stays deployed; a later checkpoint banks the changed route.'});
+  };
   const finish=(x:number,y:number)=>{
     add({t:'gate',p:[x,y,0],yaw:90,grp:1,nm:'Finish after the final safe landing'});
     for(const z of [-.83,.83])add({t:'wall',p:[end/2,-14,z],s:[end+32,44,.6],invisible:true,grp:3,nm:'One-line side-scrolling boundary'});
-    add({t:'camnode',p:[end/2,8,0],s:[end+32,48,18],cameraView:true,yaw:0,radius:1,
-      cameraPosition:[0,5,24],cameraTarget:[0,2,0],cameraFollowDistance:42,cameraIntroDistance:0,
-      cameraFov:48,cameraAspect:16/9,grp:3,nm:'Wide side composition: preview launch, cap and recovery together'});
+    add({t:'zone',p:[end/2,0,0],s:[end+32,1,18],dir:'E',grp:3,nm:'Normal eastbound side-scroll view'});
     add({t:'camnode',p:[-12,0,0],radius:5,grp:3});
     add({t:'camnode',p:[end+8,0,0],radius:5,grp:3});
     // Repeating recessed arches give depth without concealing the silhouette.
@@ -99,8 +101,8 @@ function course(index:number,name:string,end:number) {
     }
   };
   const data=():CustomLevelData=>({v:1,name,spawn:[-5,.12,0],killY:-12,hudMode:'bonus',
-    sky:colors.sky,cameraAirLift:.85,components:puzzleBonusEntrance(components,index),groups});
-  return {add,deck,shelf,crate,fruit,arc,enemy,checkpoint,section,jump,bridge,anchors,clear,finish,data,actions,sections};
+    sky:colors.sky,components,groups});
+  return {add,deck,shelf,crate,fruit,arc,enemy,checkpoint,section,jump,bridge,anchors,clear,flip,finish,data,actions,sections};
 }
 
 const a=course(0,'Crate Primer',160);
@@ -116,10 +118,12 @@ a.deck(20,42,.6,'Shell lesson landing');
 a.enemy(28,.6,'turtle',1.7,1.1);
 a.crate(35,.6,'bouncy','Hold jump for the high reward');
 a.crate(35,9.8,'life','Upper box: collect before destroying its wooden arrow');
-a.section('3 · Keep your footing',42,56,.6,'Destroying a reward reveals permanent bridge anchors.');
-a.anchors(43,55,.6,3.2);
-a.jump(40,.6,44,.6,'Land on the wood above an unbreakable anchor; preserve support while collecting.');
-a.jump(44,.6,47.2);a.jump(47.2,.6,50.4);a.jump(50.4,.6,53.6);a.jump(53.6,.6,57);
+a.section('3 · Change the crossing',42,56,.6,'Spin two upright timbers into permanent bridges; the route you create supports the rewards and the return trip.');
+a.flip(42,.6,6,'First timber crossing — spin to deploy');
+a.deck(48,50,.6,'Safe hinge-to-hinge rest pier');
+a.flip(50,.6,6,'Second timber crossing — spin to deploy');
+for(const x of [43.8,47,51.2,54.4])a.crate(x,.6,'wood','Reward on the newly deployed timber route');
+a.arc(42.5,55.5,.6,.3);
 a.section('4 · Preserve the key',56,100,.6,'Keep the wooden arrow, reach the high !, collect the upper boxes, then return to clear the arrow.');
 a.deck(56,80,.6,'Key-room staging terrace');a.checkpoint(59,.6);
 a.crate(63,.6,'bouncy','Preserve this launch until the upper key and boxes are claimed');
@@ -168,8 +172,9 @@ b.crate(105,2.8,'wood','Safe retreat reward');b.crate(109,2.8,'tnt','Second sepa
 b.enemy(115,2.8,'spinner',0,1);
 b.actions.push({kind:'tnt',x:101,y:2.8,to:112,note:'Take the stacked wood, prime TNT, retreat; do not spin an explosive stack.'});
 b.section('4 · Machinery crossing',120,151,2.8,'A moving receiver is visible from a safe waiting terrace.');
-b.add({t:'mover',p:[125,2.8,0],s:[3.8,.6,5.4],axis:'x',amp:2.4,speed:.75,phase:0,color:'#d3a864',tex:'stone',grp:4,nm:'Horizontal receiver over a ten-metre gap'});
-b.actions.push({kind:'mover',x:118,y:2.8,to:132,top:2.8,note:'Wait for the receiver to approach, jump aboard, then leave for the broad right terrace.'});
+b.flip(120,2.8,4.5,'Workshop entry drawbridge — permanently deployed');
+b.deck(124.5,126.5,2.8,'Workshop bridge lever pier');
+b.flip(126.5,2.8,3.5,'Workshop exit drawbridge — permanently deployed');
 b.arc(119,125,2.8);b.arc(125,131,2.8);b.deck(130,151,2.8,'Machinery checkpoint');b.checkpoint(134,2.8);
 b.crate(136,2.8,'bouncy','Return-loop launch: save it until after the far !');
 b.bridge(151,169,2.8,147,2.8,11,'Independent workshop circuit');
@@ -202,6 +207,8 @@ c.deck(77,104,1.6,'Armor and blade gallery');c.checkpoint(80,1.6);c.enemy(87,1.6
 c.section('4 · Phase windows',104,145,1.6,'Two phased crossings separated by a permanent rest island.');
 for(const [x,phase] of [[107,0],[119,.5]])c.add({t:'phasepad',p:[x,1.6,0],s:[4.2,.6,5.4],cycle:4.8,amp:.68,phase,color:'#d6a25c',grp:4,nm:'Read the pulse from a permanent waiting deck'});
 c.deck(110,116,1.6,'Phase relay rest island');c.deck(122,145,2.8,'Phase exit and charge apron');c.checkpoint(126,2.8);
+c.flip(110,1.66,6,'Phase relay return shortcut — spin open once',180);
+c.flip(122,2.86,6,'Upper phase return shortcut — spin open once',180);
 c.actions.push({kind:'phase',x:102,y:1.6,to:112,top:1.6,note:'Wait on permanent floor; use each lit solid window and depart before its warning ends, with a separate rest island.'});
 c.actions.push({kind:'phase',x:114,y:1.6,to:124,top:2.8,note:'The offset phase prevents one memorised input cadence from solving both crossings.'});
 c.enemy(136,2.8,'charger',3.4,2);

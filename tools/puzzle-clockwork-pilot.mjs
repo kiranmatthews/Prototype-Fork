@@ -98,7 +98,7 @@ export function* runClockworkJourney(r) {
       return pad.on&&(pad.duty-k)*pad.cycle>2;
     },{}, {label:`${label} wait for a fresh readable solid window`,limit:900});
     yield* c.hop([padX,1.6,0],`${label} board phased footing`);
-    yield* c.hop(landing,`${label} leave for permanent footing`);
+    yield* c.hop(landing,`${label} spin the far timber and leave for permanent footing`,{airButtons:{spinHeld:true}});
   }
   yield* phaseCross(0,[103.3,1.6,0],107,[112,1.6,0],'first phase relay');
   yield* phaseCross(1,[115.25,1.6,0],119,[123,2.8,0],'offset phase relay');

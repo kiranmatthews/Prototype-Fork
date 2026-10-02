@@ -11515,6 +11515,7 @@ export class Player {
     if (this.spinning) {
       this.spinBox.expandByVector(new THREE.Vector3(CONST.spinReach, 0, CONST.spinReach));
       level.discardedBoards.spinAttack(this.spinBox, this.debrisSpinToken);
+      level.triggerSpinBridges(this.spinBox);
     }
 
     const trickGateAperture = Math.hypot(

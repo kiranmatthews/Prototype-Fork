@@ -116,13 +116,13 @@ export function* runSwitchyardJourney(r) {
   yield* prime(at(109, 2.8), [105, 2.8, 0], 'second workshop fuse');
   yield* c.enemy(foeAt(115), 'workshop blade window');
 
-  yield* c.walk([118.4, 2.8, 0], 'moving receiver waiting bank');
-  const mover = l.movers[0];
-  yield* c.until(() => mover.mesh.position.x < 123.25, {}, { label: 'receiver near approach', limit: 600 });
-  yield* c.hop(() => [mover.mesh.position.x, 2.8, 0], 'board horizontal receiver',
-    { tolerance: 1.3, heightTolerance: .2 });
-  yield* c.until(() => mover.mesh.position.x > 125.8, {}, { label: 'receiver carries across void', limit: 600 });
-  yield* c.hop([132, 2.8, 0], 'moving receiver departure');
+  yield* c.walk([119,2.8,0],'workshop timber hinge approach');
+  for(const [index,target] of [[0,125.5],[1,132]]) {
+    const bridge=l.spinBridges[index];
+    yield* c.tick({spinHeld:true});
+    yield* c.until(()=>bridge.deployed,{}, {label:'deploy permanent workshop crossing',limit:90});
+    yield* c.walk([target,2.8,0],'cross stable workshop timber');
+  }
   yield* c.checkpoint(134, 'machinery checkpoint');
 
   const returnLaunch = named('Return-loop launch: save it until after the far !');

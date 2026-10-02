@@ -392,3 +392,7 @@ For mandatory movement, begin comfortably within locally measured jump reach. Ti
 - The schematics encode sourced relationships and observed counts. They do not invent metric distances, tile positions or missing crates. Original levels must be dimensioned around this prototype's measured movement.
 - Primary developer accounts substantiate intention and process. Specialist guides substantiate particular puzzle sequences. Our taxonomy, progression and proposed adaptations are explicitly design inference.
 - The research covers nine platformer families and several different crate-puzzle mechanisms. It is broad and detailed within the supplied sources; a claim to have exhaustively catalogued every puzzle in every release would exceed the evidence.
+
+## Great Gate interaction added in the follow-up
+
+The Great Gate combines a directly struck upright wooden plank with a horizontal landing and an iron-arrow ascent. [Prima](https://primagames.com/eguides/crash-bandicoot-n-sane-trilogy-eguide/n-sanity-island/the-great-gate) and [Gamepressure](https://www.gamepressure.com/crash-bandicoot-n-sane-trilogy/the-great-gate/z49eb4) describe a short horizontal window in N. Sane. Our follow-up intentionally latches the timber open, as requested: direct spin contact visibly changes the level into stable footing, with checkpoint restoration of the changed state. This is an adaptation, not a claim that the commercial plank has the same permanence.

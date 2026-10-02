@@ -12,15 +12,16 @@ export function* runPrimer(r) {
   yield* c.enemy(l.enemies[1],'turtle stomp lesson');
   const highLife=r.source.components.find(component=>component.t==='crate'&&component.p[0]===35&&component.kind==='life');
   yield* c.highArrowBox(at(35,.6),at(35,highLife.p[1]),'first upper-before-lower room');
-  yield* c.walk([41.35,.6,0],'crate-anchor bridge takeoff');
-  const anchors=[43.8,47,50.2,53.4];
-  for(let i=0;i<anchors.length;i++) {
-    yield* c.hop([anchors[i],1.58,0],`preserve metal and collect anchor reward ${i+1}`,
-      {airButtons:{spinHeld:true},heightTolerance:.16});
-    c.check(!at(anchors[i],1.56).alive,'anchor reward survived its airborne spin');
-    c.check(at(anchors[i],.6).alive,'permanent anchor broke');
+  yield* c.walk([41,.6,0],'first timber hinge approach');
+  for(const [index,landing,rewards] of [[0,49,[43.8,47]],[1,56.8,[51.2,54.4]]]) {
+    const bridge=l.spinBridges[index];
+    yield* c.tick({spinHeld:true});
+    yield* c.until(()=>bridge.deployed,{}, {label:'spin and wait for permanent timber footing',limit:90});
+    for(const x of rewards)if(at(x,.6).alive)yield* c.hit(at(x,.6),'timber-route reward');
+    yield* c.walk([landing,.6,0],'cross the deployed timber');
+    c.check(bridge.activated&&bridge.deployed,'timber did not retain its deployed state');
+    if(index===0)yield* c.walk([49, .6, 0],'second timber hinge approach');
   }
-  yield* c.hop([56.8,.6,0],'leave last crate anchor');
   yield* c.checkpoint(59,'bank before the preserve-and-return key room');
   const highY=r.source.components.find(c=>c.nm==='High key gallery').p[1]+.3;
   const arrow=at(63,.6),key=at(72,highY);

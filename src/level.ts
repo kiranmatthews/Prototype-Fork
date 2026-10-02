@@ -8,6 +8,7 @@ import { DECK_TRICKS, deckTrickInfo, type DeckTrickKind } from './skateTricks';
 import { createJungleCupTrophy } from "./competition/trophy";
 import { isCompetitionLevel } from './competition/courses';
 import { cameraViewDirection, type CameraView } from "./cameraViews";
+import { SpinBridge } from './spinBridge';
 // Every level in the game, plus the toolkit they are all assembled from.
 // Built-ins are hand-coded builders picked by id; user levels carry component
 // data and build through the same pipeline the editor writes. Courses run
@@ -590,6 +591,7 @@ export interface Checkpoint {
   savedPending: boolean[]; // outline-ghost states captured alongside
   savedBangUsed: boolean[]; // '!' switch states captured alongside
   savedHitsRemaining: (number | undefined)[]; // partial multi-hit progress
+  savedSpinBridges: boolean[]; // banked one-shot timber bridge latches
   savedCratesBroken: number; // crate counter captured when this was broken
   savedFruit: number; // wumpa counter captured when this was broken
   savedMasks: number;
@@ -632,6 +634,7 @@ export interface CustomComponent {
     | "enemy" // patrols along X around p, range each way
     | "crusher" // stomping block: p = [x, deckY, z], s = [w,-,d], cycle seconds, phase
     | "mover" // moving platform: p = [x, topY, z], s = [w,-,d], axis x/y/z, amp = travel each way, speed, phase
+    | "spinbridge" // spin-deployed timber: p = hinge/deployed deck height, s = [span,thickness,width], local +X before yaw, cycle = opening seconds; latches until reset
     | "torch" // fire on a bracket: p = base of the post, rise = post height, w = flame scale. THE light source in a dark level — it burns, flickers, throws embers and lights what's around it
     | "phasepad" // platform that FLIPS between solid+burning and ghost+dark: p = top center, s = [w,-,d], cycle = seconds for a full on/off round, phase offsets it, amp = the on-share of that round (0.5 = half lit). Runs a warning pulse before it goes
     | "stone" // rolling boulder: p = [x, floorY, z] (patrol center), range = half the travel along Z, speed, radius
@@ -790,7 +793,7 @@ export interface CustomComponent {
 
 /** Only surfaces whose builders implement this material property expose it. */
 export const EMISSIVE_COMPONENT_TYPES: readonly CustomComponent["t"][] = Object.freeze([
-  "mesh", "platform", "ramp", "wall", "wallpath", "rock", "terrain", "vertramp", "crumble",
+  "mesh", "platform", "ramp", "wall", "wallpath", "rock", "terrain", "vertramp", "crumble", "spinbridge",
 ]);
 
 // EDITOR BUILD MODE. Scenery batches into one mesh per shape for play, which
@@ -2394,7 +2397,7 @@ function retainUserLevelEntry(entry: LevelEntry): LevelEntry {
 export const CUSTOM_COMPONENT_TYPES = new Set<CustomComponent["t"]>([
   "platform", "ramp", "wall", "wallpath", "rail", "pipe", "vertramp", "crumble",
   "pit", "crate", "metal", "rock", "camnode", "outline", "checkpoint",
-  "enemy", "crusher", "mover", "torch", "phasepad", "stone", "pendulum",
+  "enemy", "crusher", "mover", "spinbridge", "torch", "phasepad", "stone", "pendulum",
   "ropeswing", "gate", "clock", "comboorb", "zone", "rope", "terrain",
   "woodpath", "trampoline", "speedpad", "trickgate", "trickrail",
   "returnportal", "grindosaurus", "angryball", "thorn", "decor", "wumpa", "crystal",
@@ -2800,7 +2803,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   const singletonKinds = new Set<string>();
   const dynamicKinds = new Set(["enemy", "crusher", "mover", "torch", "phasepad",
     "stone", "pendulum", "ropeswing", "grindosaurus", "angryball", "crumble",
-    "rope", "trickgate", "returnportal", "thorn"]);
+    "rope", "trickgate", "returnportal", "thorn", "spinbridge"]);
   for (const component of source.components) {
     if (
       !component ||
@@ -2818,6 +2821,9 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
           !component.pts.every((point) => finiteTuple(point, 2, 5))))
     )
       return null;
+    if (component.t === 'spinbridge' && (component.s?.some(value => value <= 0) ||
+      component.outline || component.solid === false ||
+      (component.cycle !== undefined && component.cycle <= 0))) return null;
     aggregateNodes +=
       (component.pts?.length ?? 0) + (component.widths?.length ?? 0);
     if (aggregateNodes > MAX_AGGREGATE_NODES) return null;
@@ -3725,6 +3731,8 @@ export class Level {
   private terrainSupportTriangleTests = 0;
   private terrainSupportRayWork = 0;
   crates: Crate[] = [];
+  readonly spinBridges: SpinBridge[] = [];
+  private readonly spinBridgeFloors = new Set<SpinBridge>();
   enemies: Enemy[] = [];
   projectiles: Projectile[] = []; // sentry orbs in flight
   stones: Stone[] = [];
@@ -6377,6 +6385,7 @@ export class Level {
       "coastwall",
       "mesh",
     ]);
+    geomPass.add('spinbridge');
     const laneVis: THREE.Vector3[] = []; // camnode positions, in chain order
     const laneRaw: [number, number, number, number][] = []; // [x, z, corner radius, y] per node
     // '!' WIRING IS THE GROUPING: every group that holds (or contains, via
@@ -7002,6 +7011,13 @@ export class Level {
             this.buildTumbleZone(c);
           } else if (c.t === "coastwall") {
             this.buildCoastWall(c);
+          } else if (c.t === "spinbridge") {
+            const size = c.s ?? [5, .36, 1.2];
+            const material = this.patterned(new THREE.MeshLambertMaterial({
+              color: c.color ?? '#a77c4b', emissive: c.emissive ?? '#000000',
+            }), size[0], size[2], c.tex ?? 'wood');
+            const bridge = new SpinBridge(this.root, c, material);
+            this.spinBridges.push(bridge); this.walls.push(bridge.wallBox);
           } else if (c.t === "mesh") {
             this.buildSurfaceMesh(c,gameplayGroupChainOf(c,data));
           } else if (c.t === "clock" || c.t === "comboorb") {
@@ -8285,7 +8301,31 @@ export class Level {
     this.campaignWorldMap?.update(dt);
   }
 
+  /** Ordinary player-spin contact is the only route-changing trigger. */
+  triggerSpinBridges(hitBox: THREE.Box3): boolean {
+    let triggered = false;
+    for (const bridge of this.spinBridges) if (bridge.trigger(hitBox)) {
+      triggered = true; sfx.play('woosh2', .7, .9);
+    }
+    return triggered;
+  }
+
+  private syncSpinBridgeFloors(): void {
+    for (const bridge of this.spinBridges) {
+      const registered = this.spinBridgeFloors.has(bridge);
+      if (bridge.deployed && !registered) {
+        this.groundMeshes.push(bridge.mesh); this.spinBridgeFloors.add(bridge);
+      } else if (!bridge.deployed && registered) {
+        const index = this.groundMeshes.indexOf(bridge.mesh);
+        if (index >= 0) this.groundMeshes.splice(index, 1);
+        this.spinBridgeFloors.delete(bridge);
+      }
+    }
+  }
+
   update(dt: number): void {
+    for (const bridge of this.spinBridges) bridge.update(dt);
+    this.syncSpinBridgeFloors();
     this.boss?.present(dt);
     this.tropicalPlants?.update(dt);
     this.jungleAssets?.update(dt);
@@ -9298,6 +9338,7 @@ export class Level {
     cp.savedPending = this.crates.map((c) => !!c.pending);
     cp.savedBangUsed = this.crates.map((c) => !!c.bangUsed);
     cp.savedHitsRemaining = this.crates.map((c) => c.hitsRemaining);
+    cp.savedSpinBridges = this.spinBridges.map(bridge => bridge.activated);
     cp.savedCratesBroken = cratesBroken;
     cp.savedFruit = fruit;
     cp.savedMasks = masks;
@@ -9354,6 +9395,9 @@ export class Level {
   // back; banked checkpoints stay consumed. Hard reset (R / new run) revives
   // everything and relights every checkpoint box.
   reset(hard: boolean): void {
+    this.spinBridges.forEach((bridge, index) => bridge.restore(
+      !hard && this.activeCheckpoint ? this.activeCheckpoint.savedSpinBridges?.[index] ?? false : false));
+    this.syncSpinBridgeFloors();
     this.boss?.reset(hard);
     this.cancelBonusEntry();
     this.discardedBoards.clear(); // no debris from the previous life/run
@@ -18511,6 +18555,7 @@ export class Level {
       savedPending: [],
       savedBangUsed: [],
       savedHitsRemaining: [],
+      savedSpinBridges: [],
       savedCratesBroken: 0,
       savedFruit: 0,
       savedMasks: 0,
