@@ -47,3 +47,12 @@ separately. Other menu backdrops retain their current treatment.
 For local visual review, open `menu-review.html?playtest&level=codex-lab&lite`, then repeat without `lite`. The catalogue exposes 25 screens, including every confirmation, both result types, the competition introduction, guide, judges, standings, win and loss. Save previews and competition results are memory-only fixtures. The review entry is excluded from the production build. Audit layout checks viewport bounds, clipped controls, page width and the full standings table. It does not replace visual inspection of text or actual gameplay navigation.
 
 The Jungle Cup running clock uses the teal/blue Roo PNG atlas (`bonus` palette), through the shared DOM decorator and pre-CRT competition painter. Its live time remains semantic text; the run label keeps the existing secondary type.
+
+
+Cup gameplay clocks sit at the upper left as compact, unboxed text: 28px time
+on desktop and 24px on touch/narrow screens, with a smaller run label. Touch
+placement clears the 48px Pause button and safe-area inset in both orientations.
+The DOM and pre-CRT painter have no clock panel, border or rectangular shadow;
+text shadows retain contrast. Final-combo and urgent states keep the same compact
+footprint. `tools/test-competition-clock-mobile.mjs` reviews both Cups in phone
+portrait/landscape, lite/full rendering and desktop, including actual Pause taps.

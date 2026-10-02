@@ -57,7 +57,10 @@ back down the wall during vert air. Surface metadata selects that rig through
 takeoff and landing. A presentation overlay restores the underlying course
 camera before each update, preserving movement and the course's input heading.
 Frame-for-frame comparison against the competition rig verifies this reuse.
-The steep entry drop retains its surface-following road shot.
+The steep entry drop retains its surface-following road shot. Returning from
+vert air uses the wall's downhill input frame across its full width. This prevents
+a left-side landing from selecting the nearby uphill camera lane. The receiving
+chute reseeds the ordinary lane, and respawn clears the local return frame.
 
 The distant 28 m follow and static loop overview volumes are removed. Ordered
 camera nodes follow the real route and all launch headings. The normal lens

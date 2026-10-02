@@ -107,9 +107,6 @@ export class CompetitionSurface {
     let fill: string|CanvasGradient=style.backgroundColor;
     if(element===this.root&&!running){paintMenuBackdrop(ctx,r.width,r.height);return;}
     if(element.classList.contains('comp-card')){paintMenuPanel(ctx,r);return;}
-    if(element.classList.contains('comp-run-hud')){
-      ctx.fillStyle='#0006';ctx.fillRect(r.x+4,r.y+4,r.width,r.height);
-    }
     ctx.fillStyle=fill;ctx.fillRect(r.x,r.y,r.width,r.height);
     const borders=[
       [style.borderTopWidth,style.borderTopColor,r.x,r.y,r.width,0],
@@ -143,6 +140,7 @@ export class CompetitionSurface {
     }
     ctx.save();ctx.font=`${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
     ctx.fillStyle=style.color;ctx.textAlign='left';ctx.textBaseline='middle';
+    if(node.parentElement?.closest('.comp-run-hud')){ctx.shadowColor='#000c';ctx.shadowBlur=3;ctx.shadowOffsetY=1;}
     ctx.letterSpacing=style.letterSpacing==='normal'?'0px':style.letterSpacing;
     for(const line of lines){
       range.setStart(node,line.start);range.setEnd(node,line.end);

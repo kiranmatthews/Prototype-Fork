@@ -63,11 +63,11 @@
 .comp-guide th { font-size:var(--menu-caption); color:#e8d5ad; }
 .comp-guide td:last-child { text-align:right; white-space:nowrap; color:#ffd575; }
 .comp-guide .input-glyph { --input-glyph-size:clamp(22px,4vh,46px); }
-.competition-host.is-running { background:none; pointer-events:none; display:flex; align-items:flex-start; justify-content:center; padding:16px; }
-.comp-run-hud { display:flex; align-items:center; gap:24px; background:#0c2029ee; border:2px solid #87683d; padding:9px 20px; }
-.comp-run-hud > strong { font:36px/1 Roo,Impact,sans-serif; color:#6cdecf; min-width:80px; text-align:center; }
-.comp-run-hud > span { font-size:18px; }
-.comp-run-hud small { display:block; font-size:14px; color:#e8d5ad; }
+.competition-host.is-running { background:none; pointer-events:none; display:block; padding:0; }
+.comp-run-hud { position:absolute; top:max(14px,env(safe-area-inset-top)); left:max(20px,env(safe-area-inset-left)); display:flex; align-items:center; gap:10px; background:none; border:0; padding:0; text-shadow:0 1px 3px #000c; }
+.comp-run-hud > strong { font:28px/1 Roo,Impact,sans-serif; color:#6cdecf; min-width:62px; text-align:left; }
+.comp-run-hud > span { font-size:12px; line-height:1.15; white-space:nowrap; }
+.comp-run-hud small { display:block; margin-top:3px; font-size:10px; color:#e8d5ad; }
 .comp-run-hud.urgent > strong { color:#ff8864; }
 .comp-countdown { text-align:center; max-width:86vw; }
 .comp-countdown > span,.comp-countdown > p { display:block; font-size:var(--menu-section); }
@@ -93,13 +93,22 @@
   .comp-podium .comp-avatar { width:7vw; height:7vw; }
   .comp-guide td,.comp-guide th { padding:.7vh .5vw; }
 }
-@media(max-width:620px) {
-  .competition-host.is-running { justify-content:flex-start; padding:12px 14px 0 28px; }
-  .comp-run-hud { display:grid; grid-template-columns:1fr auto; gap:2px 8px; width:min(255px,calc(100vw - 165px)); padding:8px 10px; }
-  .comp-run-hud > span { font-size:12px; white-space:nowrap; }
-  .comp-run-hud small { font-size:9px; }
-  .comp-run-hud > strong { grid-column:2; grid-row:1 / span 2; min-width:0; font-size:28px; }
+/* Reserve the actual 48px touch Pause target in both phone orientations. */
+body.tc-on .comp-run-hud {
+  top:max(14px,calc(env(safe-area-inset-top) + 6px));
+  left:max(72px,calc(env(safe-area-inset-left) + 64px));
+  gap:7px;
 }
+body.tc-on .comp-run-hud > span { font-size:11px; }
+body.tc-on .comp-run-hud small { font-size:9px; }
+body.tc-on .comp-run-hud > strong { font-size:24px; min-width:54px; }
+@media(max-width:620px) {
+  .comp-run-hud { gap:7px; }
+  .comp-run-hud > span { font-size:11px; }
+  .comp-run-hud small { font-size:9px; }
+  .comp-run-hud > strong { font-size:24px; min-width:54px; }
+}
+
 .competition-host .comp-card { color:#fff0d0; }
 .comp-final .comp-content { display:grid; grid-template-columns:minmax(0,.32fr) minmax(0,1fr); grid-template-rows:auto minmax(0,1fr) auto; gap:1vh 2vw; }
 .comp-final .comp-content > h2 { grid-column:1/-1; margin-bottom:1vh; }

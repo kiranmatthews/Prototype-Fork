@@ -949,6 +949,7 @@ export class Player {
   // Crash hop never offers them (the slam stays available from on-foot air).
   private airFromSkate = false;
   private skateCameraAir = false;
+  private authoredVertReturnInput: {x:number;z:number}|null = null;
   private readonly recoveryAnchor = new THREE.Vector3();
   private readonly recoveryHeading = new THREE.Vector3(0,0,-1);
   private readonly recoveryCandidate = new THREE.Vector3();
@@ -3431,6 +3432,7 @@ export class Player {
     this.loopFailure = null;
     this.gravityTrackAir = false;
     this.skateCameraAir = false;
+    this.authoredVertReturnInput = null;
     this.cameraPoseStandingCenter = null;
     this.completedLoops.clear();
     this.loopGateHintShown = false;
@@ -5347,6 +5349,14 @@ export class Player {
 
   private courseInputDirection(level:Level):{x:number;z:number}|null {
     if (level.skatepark || (TUNING.chaseCam > .5 && !level.boulder)) { this.viewInput.reset(); return null; }
+    if(this.authoredVertReturnInput){
+      // The same wall has an uphill approach and a downhill exit lane. A
+      // left-side return must not select the nearby uphill lane after the
+      // vert camera swings behind the descending board.
+      if(this.authoredSkateCamera&&(!this.grounded||this.groundHit?.vert||this.groundHit?.gravityTrack))
+        return this.authoredVertReturnInput;
+      this.authoredVertReturnInput=null;this.laneCursor.s=-1;
+    }
     if(!level.cameraViews.length) {
       this.viewInput.reset();
       return level.laneDirAt(this.pos.x,this.pos.y,this.pos.z,this.laneCursor);
@@ -7987,6 +7997,10 @@ export class Player {
       // And for a beat, the stick you were still holding to CLIMB (now opposite
       // travel) must not read as a pull-back brake — the drop-in flows.
       if (wasPipeHang) this.pipeLandGraceT = 0.4;
+      if((wasPipeHang||this.vertAir)&&hit.skateCamera&&hit.vert){
+        const horizontal=Math.hypot(hit.normal.x,hit.normal.z);
+        if(horizontal>.1)this.authoredVertReturnInput={x:hit.normal.x/horizontal,z:hit.normal.z/horizontal};
+      }
       // A slide taken from your feet lands back ON your feet — clamp the
       // carried burst at the touchdown instant (not next frame) so nothing
       // downstream can read the unclamped speed and flip out the board.
