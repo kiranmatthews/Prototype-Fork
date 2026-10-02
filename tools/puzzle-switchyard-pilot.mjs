@@ -1,6 +1,6 @@
 import { puzzleControls } from './puzzle-trilogy-pilot.mjs';
 
-/** One continuous input-only all-box route from the authored spawn. */
+/** Continuous input-only main route with every local box; linked bonus is separate. */
 export function* runSwitchyardJourney(r) {
   const c = puzzleControls(r), { p, l } = r;
   const at = (x, y) => c.crateSpecAt(x, y);
@@ -151,11 +151,8 @@ export function* runSwitchyardJourney(r) {
   yield* c.enemy(foeAt(208), 'final armored stomp');
   yield* c.enemy(foeAt(218), 'final spike spin');
   if (at(224, 4).alive) yield* c.hit(at(224, 4), 'final mastery reward');
-  yield* c.clearAll('Switchyard complete all-box dependency route');
-  yield* c.until(() => p.state === 'finished', { moveX: 1 },
-    { label: 'finish plane crossing', limit: 200 });
-  c.check(p.cratesBroken === l.totalCrates, 'Switchyard finish lost its all-box count');
-  c.check(p.gemEarned, 'Switchyard finished without collecting its actual all-box gem');
-  return { id: r.id, done: true, state: p.state, cratesBroken: p.cratesBroken,
+  yield* c.clearAll('Switchyard active-stage crate dependency route');
+  const completion=yield* c.finish('finish plane crossing',{limit:200});
+  return { ...completion, id: r.id, done: true, state: p.state, cratesBroken: p.cratesBroken,
     totalCrates: l.totalCrates, gemEarned: p.gemEarned, deaths: p.totalDeaths };
 }

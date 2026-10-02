@@ -46,6 +46,7 @@ function templeCourse(variant: 1 | 2, profile: readonly Point[], end: number) {
     add({t:'rail',p:[a,ya,z],pts:[[0,0],[b-a,0,0,yb-ya]],color:GOLD,grp:3,nm});
   };
   const checkpoint = (x:number,y:number,nm:string) => add({t:'checkpoint',p:[x,y,1.1],grp:5,nm});
+  const bonus = (x:number,y:number,nm:string) => add({t:'bonusplatform',p:[x,y,-1.7],to:[x+3.8,y+.12,1.25],grp:5,nm});
   const pipe = (a:number,b:number,lipY:number,radius:number,nm:string) => {
     const arc=60, deck=2, angle=arc*Math.PI/180;
     const baseY=round(lipY-radius*(1-Math.cos(angle)));
@@ -124,7 +125,7 @@ function templeCourse(variant: 1 | 2, profile: readonly Point[], end: number) {
         jungleAtmosphere:true,cameraAirLift:.8,relicTime:variant===1?105:125,
         medalTimes:variant===1?{gold:105,silver:145,bronze:200}:{gold:125,silver:175,bronze:240},groups,components}};
   };
-  return {slab,slope,crate,line,rail,checkpoint,pipe,gap,preserve,recovery,finish,result};
+  return {slab,slope,crate,line,rail,checkpoint,bonus,pipe,gap,preserve,recovery,finish,result};
 }
 
 const TERRACES_PROFILE: readonly Point[] = [[-20,0],[34,0],[80,9],[164,9],[234,22.5],[294,22.5],[354,34.5],[490,34.5]];
@@ -143,6 +144,7 @@ a.slope(164,234,9,22.5,'Second temple processional bank');a.line(170,226,10.16,2
 a.rail(176,218,12.1,20.2,'Ascending aqueduct grind',-2.5);
 a.slab(234,256,22.5,'Switch court: bridge and landing are both visible');
 a.crate(239,22.5,'wood','Slow down at the switch court');
+a.bonus(242,22.5,'Jade Reservoir bonus entrance off the skating line');
 a.gap(256,268,22.5,'Jade bridge trial',249,20);
 a.slab(268,294,22.5,'Jade bridge reward terrace');
 for(const x of [275,278,281])a.crate(x,22.5,'wood','Rewards after the created bridge',1.25);
@@ -175,6 +177,7 @@ b.slope(250,340,51.75,69,'Six-times-high temple crown bank');b.line(258,332,53.2
 b.rail(268,323,56.1,66.64,'Crown bank gold grind',-2.5);
 b.slab(340,384,69,'Crown court: visible bridge then uninterrupted pipe line');
 b.checkpoint(346,69,'Crown court checkpoint before final skating sequence');
+b.bonus(362,69,'Sun-Crown Treasury bonus entrance off the skating line');
 b.crate(354,69,'bouncy','Preserve crown arrow for the upper life crate',-2.3);
 b.crate(354,78.4,'life','Crown upper target before destroying its arrow',-2.3);
 b.gap(384,396,69,'Crown bridge',374,31);

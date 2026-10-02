@@ -88,7 +88,7 @@ import {
   type GameAudioOptions,
   type GamePlayMode,
 } from "./campaign";
-import { EASY_BONUS_LEVEL as BONUS_LEVEL } from "./levels/bonus-easy";
+import { resolveBonusLevel } from "./levels/themed-bonuses";
 import { TUNING, CONST } from "./tuning";
 import {
   speedSkateFovTarget,
@@ -135,10 +135,6 @@ import {
   visualTreatmentActivity,
   visualTreatmentSettings,
 } from "./visual-treatment/settings";
-import {
-  createBonusParallax,
-  type BonusParallax,
-} from "./bonusParallax";
 import { touchControlsRequested } from "./touch";
 import {
   RigBinding,
@@ -733,15 +729,12 @@ let editorViewActive = false;
 let editorPlayFog: THREE.Scene["fog"] = null;
 function syncSkyBackdropVisibility(): void {
   const fogBackdrop = resolveLevelAtmosphere(level).backdrop === "fog" && !editorViewActive;
-  const bonusBackdropActive =
-    (current.data?.hudMode === "bonus" || current.id === "bonus-level" || current.id.startsWith("bonus:")) && !LITE && !fogBackdrop;
   const preset = SKY_PRESETS[activeSky] ?? SKY_PRESETS[DEFAULT_SKY];
-  sky.visible = !LITE && !bonusBackdropActive && !fogBackdrop;
+  sky.visible = !LITE && !fogBackdrop;
   skyMist.visible =
     skyCache.has(activeSky) &&
     !LITE &&
     !preset.seaHorizon &&
-    !bonusBackdropActive &&
     !fogBackdrop;
 }
 function setEditorView(editing: boolean, changed = false): void {
@@ -775,15 +768,6 @@ function applyTheme(): void {
   const atmosphere = resolveLevelAtmosphere(heat ? { theme: level.theme, skyPreset,
     jungleAtmosphere: level.jungleAtmosphere, isCampaignMap: level.isCampaignMap, skyBackdrop: level.skyBackdrop,
     atmosphere: { ...level.atmosphere, ...heat.lighting, fogColor: heat.fogColor } } : level);
-  const bonusBackdropActive =
-    (current.data?.hudMode === "bonus" || current.id === "bonus-level" || current.id.startsWith("bonus:")) && !LITE && !(atmosphere.backdrop === "fog" && !editorViewActive);
-  if (bonusBackdropActive) {
-    const backdrop = ensureBonusParallax();
-    if (!backdrop.visible) backdrop.reset(player.pos, loadedLevelId);
-    backdrop.setVisible(true);
-  } else {
-    releaseBonusParallax();
-  }
   activeSky = skyPreset;
   retainOnlyActiveSky();
   // Sky Bridge is a true whiteout: its distance is the fog-coloured scene
@@ -893,19 +877,6 @@ function applyTheme(): void {
 // crushing to a foreshortened sliver at the horizon.
 const BOULDER_FOV = 27;
 const camera = new THREE.PerspectiveCamera(TUNING.camFov, 1, 0.1, 400);
-// Bonus art is a level-scoped asset, not app furniture. Its four 1672×941
-// layers are requested only under the loading fade on bonus entry, then the
-// whole controller is disposed on return so ordinary levels retain none of it.
-let bonusParallax: BonusParallax | null = null;
-function ensureBonusParallax(): BonusParallax {
-  if (!bonusParallax)
-    bonusParallax = createBonusParallax(scene, camera, { visible: false });
-  return bonusParallax;
-}
-function releaseBonusParallax(): void {
-  bonusParallax?.dispose();
-  bonusParallax = null;
-}
 async function prepareActivePresentationAssets(): Promise<void> {
   if(resultsPresentation)resultsPresentation.frameCamera(camera,window.innerWidth,window.innerHeight,
     gameFlow.resultsSceneViewport(window.innerWidth,window.innerHeight));
@@ -919,7 +890,6 @@ async function prepareActivePresentationAssets(): Promise<void> {
   await Promise.all([
     warmSkinBoundsKernel(),
     loadSky(activeSky),
-    bonusParallax?.prepare() ?? Promise.resolve(),
     player.preparePresentationAssets(),
     level.prepareJungleAssets(),
     p2?.preparePresentationAssets(),
@@ -1303,7 +1273,6 @@ async function warmDestinationPresentation(): Promise<void> {
     if(competitionOverview())frameCompetitionOverview();
     sky.position.copy(camera.position);
     skyMist.position.copy(camera.position);
-    bonusParallax?.update(player.pos, 0, loadedLevelId);
     updateSeaHorizon();
     updateWaterPresentation(0);
     if(competitionOverview())updateSunShadow(0,0,-35);
@@ -1371,7 +1340,9 @@ input.rival = input2;
 input2.rival = input;
 const ui = new UI();
 let competition: JungleCupEvent | null = null;
-const competitionUI = new CompetitionPresentation(handleCompetitionAction);
+const competitionUI = new CompetitionPresentation(handleCompetitionAction, {
+  bonusAvailable: () => !level.bonusRoundCompleted,
+});
 const bossUI = new BossPresentation();
 const gameInterface = new GameInterfaceSurface(competitionUI, bossUI);
 const campaign = new CampaignStore();
@@ -2187,6 +2158,10 @@ interface BonusSession {
   parentState: PlayerRunState;
   returnPoint: THREE.Vector3;
   parentFruit: PlayerWorldFruitSnapshot[];
+  parentCompetition: JungleCupEvent | null;
+  parentBonusMode: boolean;
+  parentHubMode: boolean;
+  parentCompetitionMode: boolean;
 }
 
 let bonusSession: BonusSession | null = null;
@@ -2219,13 +2194,15 @@ function syncCampaignPortalProgress(): void {
 }
 
 function adoptCommittedCampaignProgress(levelId: string): void {
+  level.setBonusPlatformLocked(false);
+  currentRunBonusBoxes = 0;
+  player.bonusCrates = 0;
   const progress = campaign.levelProgress(levelId);
   level.setCommittedCollectibles({
     crystal: progress?.crystal ?? false,
     boxGem: progress?.boxGem ?? false,
   });
   if (!progress) {
-    currentRunBonusBoxes = 0;
     runStartRewards = {
       crystal: false,
       boxGem: false,
@@ -2244,9 +2221,6 @@ function adoptCommittedCampaignProgress(levelId: string): void {
       gem: progress.boxGem,
       combo: progress.comboGem,
     });
-  level.setBonusPlatformLocked(false);
-  currentRunBonusBoxes = 0;
-  player.bonusCrates = 0;
   runStartRewards = {
     crystal: progress.crystal,
     boxGem: progress.boxGem,
@@ -2424,7 +2398,15 @@ function handleCompetitionAction(action: CompetitionAction): void {
   if(gameFlow.loadingPhase)return;
   recordPresentationStage('competition:'+action);
   if (!competition || !isCompetitionLevel(current.id)) return;
-  if (action === "retry") { competition = new JungleCupEvent(Math.random, () => sfx.countdownBeep(),competitionCourse(current.id)); action = "start"; }
+  if (action === "bonus") {
+    if (!competition.simulating && competition.phase !== "countdown") enterBonusRound();
+    return;
+  }
+  if (action === "retry") {
+    competition = new JungleCupEvent(Math.random, () => sfx.countdownBeep(),competitionCourse(current.id));
+    adoptCommittedCampaignProgress(current.id);
+    action = "start";
+  }
   if (action === "start" && competition.startRun()) {
     applyTheme();
     player.respawn(level, true, true);
@@ -2628,7 +2610,10 @@ function discardSuspendedBonus(): void {
   level = session.parentLevel;
   current = session.parentEntry;
   loadedLevelId = current.id;
-  player.bonusMode = false;
+  competition = session.parentCompetition ?? null;
+  player.bonusMode = session.parentBonusMode ?? false;
+  player.hubMode = session.parentHubMode ?? false;
+  player.competitionMode = session.parentCompetitionMode ?? false;
   applyEndlessDeaths();
 }
 
@@ -2835,7 +2820,9 @@ function enterCampaignLevel(targetId: string, forfeitCurrentRun = false): void {
 }
 
 function enterBonusRound(): void {
-  if (bonusSession || player.ttActive || level.timeTrial || (!isCampaignLevel(current.id) && !level.bonusPlatformDiagnostics)) return;
+  if (bonusSession || level.bonusRoundCompleted || player.ttActive || level.timeTrial ||
+      (competition && (competition.simulating || competition.phase === "countdown")) ||
+      (!isCampaignLevel(current.id) && !level.bonusPlatformDiagnostics)) return;
   ui.hideMessage();
   player.bankFlyingFruit();
   const parentEntry = current;
@@ -2843,6 +2830,10 @@ function enterBonusRound(): void {
   const parentState = player.captureRunState();
   const parentFruit = player.captureIdleFruit();
   const returnPoint = parentLevel.bonusReturnPoint();
+  const parentCompetition = competition;
+  const parentBonusMode = player.bonusMode;
+  const parentHubMode = player.hubMode;
+  const parentCompetitionMode = player.competitionMode;
   void gameFlow.transition(async () => {
     bonusSession = {
       parentLevel,
@@ -2850,7 +2841,14 @@ function enterBonusRound(): void {
       parentState,
       returnPoint,
       parentFruit,
+      parentCompetition,
+      parentBonusMode,
+      parentHubMode,
+      parentCompetitionMode,
     };
+    competition = null;
+    player.competitionMode = false;
+    competitionUI.render(null, true);
     parentLevel.setActive(false);
     puffs.clear();
     swirls.clear();
@@ -2859,7 +2857,7 @@ function enterBonusRound(): void {
     current = {
       id: `bonus:${parentEntry.id}`,
       name: `${parentName} Bonus`,
-      data: BONUS_LEVEL,
+      data: resolveBonusLevel(parentEntry.id),
     };
     level = new Level(scene, current);
     loadedLevelId = current.id;
@@ -2878,7 +2876,7 @@ function enterBonusRound(): void {
     player.bonusCrates = 0;
     applyRunModes();
     applyTheme();
-    // Bonus travel stays behind black until its parallax and assets are ready.
+    // The selected room stays behind black until its scenery and assets are ready.
     await prepareActivePresentationAssets();
     applyShadowFlags();
     ui.setLevel(
@@ -2936,7 +2934,10 @@ function returnFromBonus(completed: boolean): void {
       level.discardedBoards.clear();
     }
     player.resumeSuspendedLevel(level, session.returnPoint, state);
-    player.hubMode = false;
+    competition = session.parentCompetition;
+    player.bonusMode = session.parentBonusMode;
+    player.hubMode = session.parentHubMode;
+    player.competitionMode = session.parentCompetitionMode;
     applyEndlessDeaths();
     player.restoreIdleFruit(session.parentFruit);
     if (completed) {
@@ -2945,11 +2946,12 @@ function returnFromBonus(completed: boolean): void {
     }
     applyRunModes();
     applyTheme();
+    competitionUI.render(competition, gameFlow.blocksGameplay);
     await prepareActivePresentationAssets();
     applyShadowFlags();
     ui.setLevel(
       current.id,
-      level.hudMode,
+      competition ? "competition" : level.hudMode,
       player.fruitCollectionRevision,
       input.inventoryHeld,
     );
@@ -4668,7 +4670,7 @@ function writeRenderDiagnostics(): void {
       activeSky,
       cachedSkies: [...skyCache.keys()],
       pendingSkies: [...skyPending.keys()],
-      bonusParallax: bonusParallax?.diagnostics ?? null,
+      bonusParallax: null,
     },
     rendererMemory: {
       geometries: renderer.info.memory.geometries,
@@ -4777,8 +4779,6 @@ function advanceFrame(nowMs: number): void {
     acc = 0;
     sky.position.copy(camera.position);
     skyMist.position.copy(camera.position);
-    if (bonusParallax?.visible)
-      bonusParallax.update(player.pos, dt, loadedLevelId);
     updateSeaHorizon();
     ui.setGameHudComposited(false);
     renderPrimaryScene(dt);
@@ -5036,8 +5036,6 @@ function advanceFrame(nowMs: number): void {
   updateAudio(dt);
   sky.position.copy(camera.position);
   skyMist.position.copy(camera.position);
-  if (bonusParallax?.visible)
-    bonusParallax.update(player.pos, dt, loadedLevelId);
   updateSeaHorizon();
 
   // The hub has no HUD by design; do not lay out, repaint, and upload its

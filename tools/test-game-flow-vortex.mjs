@@ -251,12 +251,12 @@ assert.match(
   /texture\.dispose\(\);[\s\S]{0,420}canvas\.width = 1;[\s\S]{0,80}canvas\.height = 1;/,
   "sky eviction must release GPU and decoded-canvas backing",
 );
-assert.match(
+assert.doesNotMatch(
   main,
-  /let bonusParallax: BonusParallax \| null = null/,
-  "bonus backdrop must have no app-start asset owner",
+  /createBonusParallax|ensureBonusParallax|releaseBonusParallax|bonusParallax\?\./,
+  "bonus rooms must use their authored atmosphere without loading the retired painted backdrop",
 );
-assert.match(main, /function releaseBonusParallax\(\): void/);
+assert.match(main, /bonusParallax: null/, "legacy diagnostics expose no backdrop asset owner");
 assert.match(main, /async function prepareActivePresentationAssets\(\): Promise<void>/);
 assert.match(main, /await prepareActivePresentationAssets\(\);/);
 assert.match(

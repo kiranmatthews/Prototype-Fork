@@ -10,8 +10,9 @@ import { TRICK_GUIDE_INTRO, TRICK_GUIDE_PAGE_COUNT, trickGuidePages } from '../s
 import { installRooMenuText } from '../roo-type/menu';
 import type * as THREE from 'three';
 
-export type CompetitionAction = 'start' | 'standings' | 'retry' | 'exit';
+export type CompetitionAction = 'start' | 'standings' | 'retry' | 'exit' | 'bonus';
 export interface JudgePresentationHooks {
+  bonusAvailable?: () => boolean;
   portraitUrl?: (id: string) => string | undefined;
   onReveal?: (id: string, score: number) => void;
   dialogue?: (id: string, score: number) => string;
@@ -155,7 +156,8 @@ export class CompetitionPresentation {
     if(!event)return;
     if(event.simulating||event.phase==='countdown')this.guideOpen=false;
     const view=this.guideOpen?'guide':event.phase;
-    const key=[view,event.runs.length,Math.ceil(event.remaining),Math.ceil(event.countdown),event.revealedJudges,event.bails,event.cupAwarded,event.overtime,event.finalComboActive].join(':');
+    const bonusAvailable=this.hooks.bonusAvailable?.()===true;
+    const key=[bonusAvailable,view,event.runs.length,Math.ceil(event.remaining),Math.ceil(event.countdown),event.revealedJudges,event.bails,event.cupAwarded,event.overtime,event.finalComboActive].join(':');
     if(key===this.key)return;this.key=key;
     const phaseChanged=this.phase!==view;this.phase=view;
     if(phaseChanged)this.seedInput=true;
@@ -164,6 +166,7 @@ export class CompetitionPresentation {
     this.element.setAttribute('aria-label',event.course.name+' skate competition');
     this.element.setAttribute('aria-modal',String(!event.simulating));
     const header=`<div class="comp-eyebrow">${esc(event.course.island)} · SKATE COMPETITION</div><h1>${esc(event.course.name.toUpperCase())}</h1>`;
+    const bonusButton=bonusAvailable?'<button data-action="bonus">BONUS ROUND</button>':'';
     const button=(label:string,action:CompetitionAction|'guide'|'guide-back',disabled=false)=>`<button data-action="${action}"${disabled?' disabled':''}>${label}</button>`;
     let html='';
     const reveals: {id:string;score:number}[]=[];
@@ -175,7 +178,7 @@ export class CompetitionPresentation {
     } else if(event.phase==='countdown') {
       html=`<div class="comp-countdown"><span>RUN ${event.runNumber} / 3</span><strong>${Math.max(1,Math.ceil(event.countdown))}</strong><p>MAKE IT COUNT</p></div>`;
     } else if(event.phase==='intro') {
-      html=`<section class="timber-card comp-card comp-intro">${header}<div class="comp-intro-body"><div class="comp-cup">${CUP_TROPHY_SVG}</div><div><h2>BEAT YOUR RIVAL. TAKE THE CUP.</h2><div class="comp-rules"><b>3 RUNS</b><b>60 SECONDS EACH</b><b>BEST 2 COUNT</b></div><p>Link grinds, airs and manuals. Every bail costs judge points; your board returns automatically. Finish your last combo when the clock hits zero.</p><p>Only <strong>1st overall</strong> wins the ${esc(event.course.name)}.</p></div></div><div class="comp-actions">${button('START RUN 1','start')}${button('TRICK GUIDE','guide')}${button('ISLAND MAP','exit')}</div></section>`;
+      html=`<section class="timber-card comp-card comp-intro">${header}<div class="comp-intro-body"><div class="comp-cup">${CUP_TROPHY_SVG}</div><div><h2>BEAT YOUR RIVAL. TAKE THE CUP.</h2><div class="comp-rules"><b>3 RUNS</b><b>60 SECONDS EACH</b><b>BEST 2 COUNT</b></div><p>Link grinds, airs and manuals. Every bail costs judge points; your board returns automatically. Finish your last combo when the clock hits zero.</p><p>Only <strong>1st overall</strong> wins the ${esc(event.course.name)}.</p></div></div><div class="comp-actions">${button('START RUN 1','start')}${button('TRICK GUIDE','guide')}${bonusButton}${button('ISLAND MAP','exit')}</div></section>`;
     } else if(event.phase==='judges') {
       const run=event.runs[event.runs.length-1]!, all=event.revealedJudges===3;
       if(this.revealRun!==event.runs.length){this.revealRun=event.runs.length;this.revealed=0;}
@@ -187,7 +190,7 @@ export class CompetitionPresentation {
       }).join('')}</div><div class="comp-run-summary"><span>${run.gameplayScore.toLocaleString()} POINTS · ${run.bails} BAIL${run.bails===1?'':'S'}</span><strong>AVERAGE ${all?mark(run.score):'—'}</strong><span>${all?`CURRENT RANK ${ordinal(event.rank)}`:'JUDGING…'}</span></div><div class="comp-history">${event.runs.map((r,i)=>`<span>RUN ${i+1} <b>${i<event.runs.length-1||all?mark(r.score):'—'}</b></span>`).join('')}</div><div class="comp-actions">${button('VIEW STANDINGS','standings',!all)}</div></section>`;
     } else {
       const final=event.phase==='final',rows=event.standings,player=rows.find(r=>r.id==='player')!;
-      html=`<section class="timber-card comp-card comp-standings${final?' comp-final':''}">${header}<h2>${final?(event.won?'YOU BEAT YOUR RIVAL!':`${ordinal(event.rank)} OVERALL · THE RIVAL WINS`):`AFTER RUN ${event.runs.length}`}</h2>${final?`<div class="comp-podium">${rows.slice(0,3).map(r=>`<div><b>${ordinal(r.rank)}</b><span class="comp-avatar">${portrait(r.portrait,this.hooks)}</span><strong>${esc(r.name)}</strong><small>${mark(r.total)}</small></div>`).join('')}</div>`:''}${this.leaderboard(rows)}<p class="comp-note">${final?`Your best two: <strong>${mark(player.total)}</strong> · Discarded run ${(player.discarded??0)+1} (${mark(player.runs[player.discarded??0])}).`:'Provisional total uses completed runs. After Run 3, everyone drops their lowest score.'}</p>${final&&event.won?`<div class="comp-award"><span>${CUP_TROPHY_SVG}</span><div><h3>${esc(event.course.name.toUpperCase())} ${event.cupAwarded?'EARNED':'WON'}</h3><p>Your one-off trophy is shown in Progress.</p></div></div>`:''}<div class="comp-actions">${final?(event.won?button('ISLAND MAP','exit')+button('COMPETE AGAIN','retry'):button('RETRY CUP','retry')+button('ISLAND MAP','exit')):button(`START RUN ${event.runs.length+1}`,'start')+button('ISLAND MAP','exit')}</div></section>`;
+      html=`<section class="timber-card comp-card comp-standings${final?' comp-final':''}">${header}<h2>${final?(event.won?'YOU BEAT YOUR RIVAL!':`${ordinal(event.rank)} OVERALL · THE RIVAL WINS`):`AFTER RUN ${event.runs.length}`}</h2>${final?`<div class="comp-podium">${rows.slice(0,3).map(r=>`<div><b>${ordinal(r.rank)}</b><span class="comp-avatar">${portrait(r.portrait,this.hooks)}</span><strong>${esc(r.name)}</strong><small>${mark(r.total)}</small></div>`).join('')}</div>`:''}${this.leaderboard(rows)}<p class="comp-note">${final?`Your best two: <strong>${mark(player.total)}</strong> · Discarded run ${(player.discarded??0)+1} (${mark(player.runs[player.discarded??0])}).`:'Provisional total uses completed runs. After Run 3, everyone drops their lowest score.'}</p>${final&&event.won?`<div class="comp-award"><span>${CUP_TROPHY_SVG}</span><div><h3>${esc(event.course.name.toUpperCase())} ${event.cupAwarded?'EARNED':'WON'}</h3><p>Your one-off trophy is shown in Progress.</p></div></div>`:''}<div class="comp-actions">${final?(event.won?button('ISLAND MAP','exit')+button('COMPETE AGAIN','retry'):button('RETRY CUP','retry')+button('ISLAND MAP','exit')):button(`START RUN ${event.runs.length+1}`,'start')+button('ISLAND MAP','exit')}${bonusButton}</div></section>`;
     }
     const focused=!phaseChanged?this.buttons()[this.selected]?.dataset.action:undefined;
     this.element.innerHTML=html;this.selected=0;

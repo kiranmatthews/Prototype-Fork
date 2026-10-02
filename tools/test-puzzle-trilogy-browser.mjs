@@ -1,12 +1,14 @@
 import assert from 'node:assert/strict';
 import { mkdir,writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 const playwright=process.env.PLAYWRIGHT_MODULE||'playwright';
 const {chromium}=await import(playwright);
 const base=process.argv.find(a=>/^https?:/.test(a))||'http://127.0.0.1:5173';
 const full=process.argv.includes('--full');
 const selected=process.argv.find(a=>a.startsWith('--level='))?.slice(8);
 const ids=selected?[selected]:['crate-primer','switchyard','clockwork-gauntlet'];
-const output=process.env.PUZZLE_BROWSER_OUTPUT||'/private/tmp/puzzle-trilogy-browser';
+const output=process.env.PUZZLE_BROWSER_OUTPUT||join(tmpdir(),'puzzle-trilogy-browser');
 await mkdir(output,{recursive:true});
 const browser=await chromium.launch({headless:true,channel:'chrome'});
 const reports=[];
@@ -125,7 +127,9 @@ try {
     assert.equal(report.done,true,`${id} browser pilot timed out`);
     assert.equal(report.failed,null,`${id} browser assertions failed: ${JSON.stringify(report.failed)}`);
     assert.equal(report.end.state,'finished',`${id} did not reach the real finish gate`);
-    assert.equal(report.end.gemEarned,true,`${id} did not collect its real all-box gem before finish`);
+    assert.equal(report.result.bonusCrates,0,`${id} main-route pilot unexpectedly received bonus crates`);
+    assert.equal(report.end.gemEarned,report.result.bonusCrateTotal===0,`${id} main-route clear did not respect its linked-bonus gem requirement`);
+    assert.equal(report.result.cratesBroken,report.result.activeStageCrates,`${id} left a main-route crate`);
     assert.ok(report.framing.length>20,`${id} has insufficient live rendered-rider framing evidence`);
     const sampled=report.framing.filter(row=>row.vertices>100&&row.frame>45);
     assert.ok(sampled.every(row=>row.behind===0&&row.minX>-1.1&&row.maxX<1.1),`${id} rider leaves horizontal view`);
@@ -139,5 +143,5 @@ try {
     await page.close();
   }
   console.log(JSON.stringify({mode:full?'full':'lite',reports},null,2));
-  console.log('PASS real Chrome input-only trilogy routes, full rider framing and error-free finish');
+  console.log('PASS real Chrome input-only trilogy main-route clears, linked-bonus reward requirement, rider framing and error-free finish');
 } finally {await browser.close();}

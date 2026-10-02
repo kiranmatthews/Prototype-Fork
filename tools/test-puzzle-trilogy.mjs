@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { writeFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { withBlockworksRuntime } from './blockworks-runner.mjs';
 import { runPuzzleJourney } from './puzzle-trilogy-pilot.mjs';
 export { runPuzzleJourney } from './puzzle-trilogy-pilot.mjs';
@@ -51,13 +53,13 @@ export async function runTrilogyChecks({journey=true}={}) {
     });
     if(journey) reports.push(await withPuzzleRuntime(id,async r=>{
       try{return runInputPilot(r,runPuzzleJourney);}
-      catch(error){await writeFile(`/private/tmp/${id}-journey-failure.json`,JSON.stringify({error:error.message,report:r.report,trace:r.trace},null,2));throw error;}
+      catch(error){await writeFile(join(tmpdir(),`${id}-journey-failure.json`),JSON.stringify({error:error.message,report:r.report,trace:r.trace},null,2));throw error;}
     },{maxFrames:40000}));
   }
-  await writeFile('/private/tmp/puzzle-trilogy-physics.json',JSON.stringify(reports,null,2));
-  console.log(JSON.stringify(reports.map(({id,test,frames,seconds,probes,cratesBroken,totalCrates,deaths,state})=>
-    ({id,test,frames,seconds,probes,cratesBroken,totalCrates,deaths,state})),null,2));
-  console.log(`PASS trilogy source spawns and supported enemy cycles${journey?' with continuous input-only journeys':''}`);
+  await writeFile(join(tmpdir(),'puzzle-trilogy-physics.json'),JSON.stringify(reports,null,2));
+  console.log(JSON.stringify(reports.map(({id,test,frames,seconds,probes,cratesBroken,totalCrates,activeStageCrates,bonusCrateTotal,completionScope,gemEarned,deaths,state})=>
+    ({id,test,frames,seconds,probes,cratesBroken,totalCrates,activeStageCrates,bonusCrateTotal,completionScope,gemEarned,deaths,state})),null,2));
+  console.log(`PASS trilogy source spawns and supported enemy cycles${journey?' with continuous input-only main-route clears; linked bonus crates remain uncollected':''}`);
   return reports;
 }
 

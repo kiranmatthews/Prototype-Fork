@@ -1,6 +1,7 @@
 import { puzzleControls } from './puzzle-controls.mjs';
 
-/** Production-input journey from the authored spawn to every box and gate.
+/** Production-input main route from authored spawn through all local boxes to the gate.
+ * The linked bonus remains a separate required detour for the course gem.
  * Reads live collision/machinery state; never edits position, crate state,
  * checkpoints, tuning or enemy state to advance the route.
  */
@@ -200,11 +201,10 @@ export function* runClockworkJourney(r) {
   yield* c.hop([259,4,0],'board the familiar crumble receiver');
   yield* c.hop([264.2,5.2,0],'leave crumble before it disappears',{heightTolerance:.2});
   for(const x of [271,275])if(at(x,5.2).alive)yield* c.hit(at(x,5.2),`final permanent-floor reward ${x}`);
-  yield* c.clearAll('Clockwork actual all-box completion');
-  yield* c.until(()=>p.state==='finished',{moveX:1},{label:'cross the real Clockwork gate',limit:220});
+  yield* c.clearAll('Clockwork active-stage crate route');
+  const completion=yield* c.finish('cross the real Clockwork gate',{limit:220});
   c.check(p.totalDeaths===deaths,'Clockwork positive journey concealed a reset/death');
-  c.check(p.gemEarned,'Clockwork finished without collecting the real all-box gem');
-  return {id:r.id,cratesBroken:p.cratesBroken,totalCrates:l.totalCrates,deaths:p.totalDeaths-deaths,state:p.state,gemEarned:p.gemEarned};
+  return {...completion,id:r.id,cratesBroken:p.cratesBroken,totalCrates:l.totalCrates,deaths:p.totalDeaths-deaths,state:p.state,gemEarned:p.gemEarned};
 }
 
 /** Wrong-order proof from the actual source spawn: remove the intake tool,

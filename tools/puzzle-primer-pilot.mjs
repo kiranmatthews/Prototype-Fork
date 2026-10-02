@@ -1,6 +1,6 @@
 import { puzzleControls } from './puzzle-controls.mjs';
 
-/** One continuous source spawn-to-gate route, including every breakable box. */
+/** Continuous source-spawn main route with every local box; linked bonus is separate. */
 export function* runPrimer(r) {
   const {p,l}=r,c=puzzleControls(r),at=c.crateSpecAt;
   const beginDeaths=p.totalDeaths;
@@ -57,9 +57,8 @@ export function* runPrimer(r) {
   for(const x of [144,145,146])c.check(!at(x,1.2).alive,`Nitro ${x} remains`);
   yield* c.hop([140.2,1.2,0],'hop over the spent solid green switch');
   if(at(149,1.2).alive)yield* c.hit(at(149,1.2),'final mystery reward');
-  yield* c.clearAll('Primer actual all-box completion');
-  yield* c.until(()=>p.state==='finished',{moveX:1},{label:'cross the real Primer finish gate',limit:200});
+  yield* c.clearAll('Primer active-stage crate route');
+  const completion=yield* c.finish('cross the real Primer finish gate',{limit:200});
   c.check(p.totalDeaths===beginDeaths,'Primer positive route hid a death/reset');
-  c.check(p.gemEarned,'Primer missed its all-box completion gem');
-  return {id:r.id,cratesBroken:p.cratesBroken,totalCrates:l.totalCrates,deaths:p.totalDeaths-beginDeaths,state:p.state,gemEarned:p.gemEarned};
+  return {...completion,id:r.id,cratesBroken:p.cratesBroken,totalCrates:l.totalCrates,deaths:p.totalDeaths-beginDeaths,state:p.state,gemEarned:p.gemEarned};
 }

@@ -150,13 +150,26 @@ export function puzzleControls(r) {
     yield* hit(launcher,`${label} support last`);
     r.report.evidence.push({action:label,upperAlive:reward.alive,launcherAlive:launcher.alive});
   }
-  function* clearAll(label='all authored boxes') {
+  function* clearAll(label='all crates in the active stage') {
     const remaining=l.crates.filter(c=>!c.bang&&!c.nitroBang&&!c.metalBounce&&!c.metal&&c.alive);
     check(!remaining.length,`${label} left boxes at ${JSON.stringify(remaining.map(c=>[c.mesh.position.x,c.box.min.y]))}`);
     check(l.checkpoints.every(cp=>cp.active),`${label} missed a checkpoint box`);
-    yield* stepFor(2);check(p.cratesBroken===l.totalCrates,`${label} counter does not match actual cleared boxes`);
-    r.report.evidence.push({action:label,totalCrates:l.totalCrates,cratesBroken:p.cratesBroken,remaining:0});
+    const activeStageCrates=l.totalCrates-l.bonusCrateTotal;
+    yield* stepFor(2);check(p.cratesBroken===activeStageCrates,`${label} counter does not match actual active-stage boxes`);
+    r.report.evidence.push({action:label,totalCrates:l.totalCrates,activeStageCrates,bonusCrateTotal:l.bonusCrateTotal,cratesBroken:p.cratesBroken,remaining:0});
+  }
+  function* finish(label='cross the real finish gate',{limit=220}={}) {
+    yield* until(()=>p.state==='finished',{moveX:1},{label,limit});
+    const bonusCrateTotal=l.bonusCrateTotal,activeStageCrates=l.totalCrates-bonusCrateTotal;
+    check(p.cratesBroken===activeStageCrates,'finish lost an active-stage crate');
+    check(p.bonusCrates===0,'active-stage pilot must not invent banked bonus rewards');
+    const needsLocalGem=!p.bonusMode&&bonusCrateTotal===0;
+    check(p.gemEarned===needsLocalGem,p.bonusMode
+      ?'bonus detour awarded a local gem instead of returning its boxes to the parent'
+      :bonusCrateTotal>0?'main-only clear awarded a gem despite uncollected linked-bonus crates'
+      :'complete standalone stage did not collect its actual all-box gem');
+    return {completionScope:p.bonusMode?'bonus-detour':bonusCrateTotal>0?'main-route-only':'complete-stage',activeStageCrates,bonusCrateTotal,bonusCrates:p.bonusCrates,gemEarned:p.gemEarned};
   }
   return { pose, check, live, resolve, distance, steer, tick, stepFor, until, walk, charge, hop, hit, bounce, enemy,
-    crateAt,crateNamed,crateSpecAt,checkpoint,highArrowBox,clearAll };
+    crateAt,crateNamed,crateSpecAt,checkpoint,highArrowBox,clearAll,finish };
 }

@@ -74,7 +74,8 @@ import { ASTRA_CHIMEWORKS_LEVEL } from "./levels/astra-chimeworks";
 import { BACKPORT_LAB_LEVEL } from "./levels/backport-lab";
 import { BEACHFRONT_RUN_LEVEL } from "./levels/beachfront-run";
 import { UNITY_PORT_LEVELS } from "./levels/unity-ports";
-import { EASY_BONUS_LEVEL, DEFAULT_BONUS_CRATE_COUNT } from "./levels/bonus-easy";
+import { EASY_BONUS_LEVEL } from "./levels/bonus-easy";
+import { BONUS_LEVEL_ENTRIES, bonusCrateCount } from "./levels/themed-bonuses";
 import { TropicalPlantKit, TROPICAL_PLANT_KINDS, TROPICAL_PLANT_LABELS } from "./tropicalPlants";
 import { JungleAssetKit, JUNGLE_ASSET_KINDS, JUNGLE_ASSET_LABELS, isJungleAsset, addJungleDapple, jungleAssetMatrix } from "./jungleAssets";
 import { jungleShore } from "./levels/jungle-shore";
@@ -2323,6 +2324,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   ...UNITY_PORT_LEVELS,
   { id: 'drowned-crown', name: PIRATE_WRECK_LEVEL.name, data: PIRATE_WRECK_LEVEL },
   { id: "bonus-easy", name: EASY_BONUS_LEVEL.name, data: EASY_BONUS_LEVEL },
+  ...BONUS_LEVEL_ENTRIES,
   ...PUZZLE_LEVELS,
   { id: 'crab-chief', name: CRAB_CHIEF_LEVEL.name, data: CRAB_CHIEF_LEVEL },
   {
@@ -3881,6 +3883,8 @@ export class Level {
   } | null = null;
   /** Main-level tally extension supplied by its linked bonus stage. */
   bonusCrateTotal = 0;
+  /** Completion lock also serves competition cards, which have no walk-up pad. */
+  bonusRoundCompleted = false;
   relicTime = CAMPAIGN_TIME_RELIC_TARGET_SECONDS;
   medalTimes: MedalTimes = defaultMedalTimes();
 
@@ -4644,8 +4648,11 @@ export class Level {
     }
     if (isCampaignLevel(entry.id) && !isCompetitionLevel(entry.id)) {
       if (!this.crystalPickup) this.placeCampaignCrystal();
-      if (!this.bonusPlatform && this.hudMode !== 'bonus') this.placeDefaultBonusPlatform();
+      if (!this.bonusPlatform) this.placeDefaultBonusPlatform();
     }
+    // The entrance and the parent gem tally resolve the same authored room.
+    // Explicit editor entrances use the fallback when their parent is unknown.
+    if (this.bonusPlatform) this.bonusCrateTotal = bonusCrateCount(entry.id);
     // Nitro belongs to the Level instance that owns it. Derive its clear
     // switch after every builder has finished so ordinary courses, published
     // replacements, user levels, and the separately-constructed bonus stage
@@ -7715,6 +7722,7 @@ export class Level {
   }
 
   setBonusPlatformLocked(locked: boolean): void {
+    this.bonusRoundCompleted = locked;
     const platform = this.bonusPlatform;
     if (!platform || platform.locked === locked) return;
     platform.locked = locked;
@@ -11336,7 +11344,6 @@ export class Level {
       laneFraction,
       entry:new BonusJumpGate(),
     };
-    this.bonusCrateTotal = DEFAULT_BONUS_CRATE_COUNT;
   }
 
   // THE WORLD MAP. The public level id remains `warproom` so old saves and

@@ -15,6 +15,11 @@ add({ t: 'platform', p: [0, -1.15, -14], s: [1, 2.3, 1], pts: outline,
 add({ t: 'woodpath', p: [0, 0, 23], pts: [[0, 0, 0, 0], [0, -17, 0, 0]], widths: [6, 6],
   w: 6, supportDepth: 3, baySpacing: 3, structureStyle: 'island',
   edgeGrinding: false, nm: 'Arrival canoe pier' });
+// The optional tribute room is reached before the arena's z<6 trigger. A
+// side dock joins the pier at x=3 and keeps its raised stone off the main line.
+add({ t: 'platform', p: [6.5, -.5, 15], s: [7, 1, 8], color: '#b59b71', tex: 'plank',
+  edgeGrinding: false, nm: 'Supported pearl tribute side dock' });
+add({ t: 'bonusplatform', p: [6, 0, 15], to: [0, .1, 15], nm: 'Pearl tribute before the chief' });
 add({ t: 'platform', p: [0, -.55, -43], s: [14, 1.1, 15], color: '#628d84', tex: 'solid',
   edgeGrinding: false, nm: 'Victory causeway' });
 add({ t: 'gate', p: [0, 0, -49], nm: 'Reef crown exit · sealed until chief yields' });

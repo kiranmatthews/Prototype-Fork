@@ -8,7 +8,9 @@ These three original side-view courses translate the resource and action-order r
 | Switchyard | 24 | 2 | Collect upper targets before collapsing finite supports; activate an upper return route before going back for it. |
 | Clockwork Gauntlet | 32 | 4 | Retain a launcher across two separate state changes: clear Nitro, activate the far circuit, then return for the final high row. |
 
-The counts exclude ordinary metal, metal arrows and permanent switches. TNT and Nitro count. There is no unrelated automatically generated bonus stage hidden in these totals. Campaign crystal placement remains the normal shared behavior.
+The table counts the main route only. Each course now has a dedicated themed bonus reached through a final-court alcove: Apprentice Storehouse (6 boxes), Signal Cabin (9), and Furnace Reserve (10). Complete-course all-box totals are therefore 28, 35, and 46; an ordinary main-route finish does not earn that gem without the linked bonus. See [bonus stages and return flow](BONUS_FLOW.md).
+
+The counts exclude ordinary metal, metal arrows and permanent switches. TNT and Nitro count. The linked bonus count comes from its actual authored layout. Campaign crystal placement remains the normal shared behavior.
 
 ## Exact source maps
 

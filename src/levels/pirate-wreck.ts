@@ -150,6 +150,9 @@ for(const p of [[11,8,-116],[-11,8,-127],[-10,8,-190],[11,8,-199]] as P[]){
 }
 for(const p of [[4,8,-120],[-4,8,-144],[10,8,-189],[-6,8,-211]] as P[])M.lantern(p);
 fruit([4,8,-109],[4,8,-127],6);
+// Broad afterdeck footing gives the optional ledger room a deliberate jump
+// entrance without placing its stone beneath the sloping hatch's overhang.
+add({t:'bonusplatform',p:[-6,8,-121],to:[-3.5,8.1,-124],nm:'Afterdeck ledger bonus'});
 checkpoint([-6,8,-129],'02 · The broken galleon');
 // Suspended rope swing and grindable port rope reward leaving the central trail.
 add({t:'rope',p:[-12,13,-165],len:31,yaw:0,amp:2,nm:'Port rigging treasure shortcut'});
