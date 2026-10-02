@@ -3,6 +3,7 @@ import type { CampaignIslandId } from './campaign';
 /** Map-only landscape design. No ocean parameters or gameplay collision. */
 export const MAP_LANDSCAPES = {
   'island-1': { minAxes: [88, 60], crater: [-88, -24, 15, 16.5] },
+  'hidden-shores': { minAxes: [48, 29], crater: null },
   'island-2': { minAxes: [47, 34], crater: null },
 } as const;
 
@@ -31,6 +32,7 @@ export function mapReliefHeight(x:number,z:number,id:CampaignIslandId):number {
     const caldera=profile(r,[[0,15],[7,15],[9,17],[11.5,35],[14,37],[17.5,36.5],[19.5,30],[23,28.5],[26,17.5],[30,16],[33,6],[43,0]]);
     return Math.max(caldera,butte(x,z,-137,-15,23,20,25,.25),butte(x,z,-40,-11,23,23,23,.65));
   }
+  if(id==='hidden-shores') return Math.max(butte(x,z,315,-8,25,17,21,.35),butte(x,z,346,-3,19,19,16,.6));
   return Math.max(butte(x,z,79,-10,22,23,30,.15),butte(x,z,57,-6,20,18,19,.6),butte(x,z,101,-7,18,23,22,.3));
 }
 

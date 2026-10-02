@@ -1,0 +1,10 @@
+<!doctype html><html><head><title>Pirate Meshy prop review</title><style>body{margin:0;background:#1b2831;color:#fff;font:16px system-ui}canvas{display:block}label{position:absolute;top:14px;text-align:center;width:33.33%}</style></head><body><label>CANNON · 2,610 triangles</label><label style="left:33.33%">TREASURE · 2,325 triangles</label><label style="left:66.66%">SKULL GATE · 2,698 triangles</label><script type="module">
+import * as THREE from '/node_modules/three/build/three.module.js';import {PIRATE_PROPS} from '/src/levels/pirate-props.generated.ts';
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setSize(1500,620);renderer.setClearColor('#1b2831');document.body.append(renderer.domElement);renderer.setScissorTest(true);
+for(const [i,[name,parts]] of Object.entries(PIRATE_PROPS).entries()){
+ const scene=new THREE.Scene();scene.add(new THREE.AmbientLight('#e1eafa',2.2));const sun=new THREE.DirectionalLight('#ffe5c5',2);sun.position.set(3,4,5);scene.add(sun);
+ for(const part of parts){const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(part.vertices,3));geo.setIndex(part.indices);geo.computeVertexNormals();scene.add(new THREE.Mesh(geo,new THREE.MeshLambertMaterial({color:part.color,side:THREE.DoubleSide})));}
+ const camera=new THREE.PerspectiveCamera(42,500/620,.01,100);camera.position.set(1.5,1.1,2);camera.lookAt(0,.4,0);renderer.setViewport(i*500,0,500,620);renderer.setScissor(i*500,0,500,620);renderer.render(scene,camera);
+}
+window.ready=true;
+</script></body></html>

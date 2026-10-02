@@ -30,7 +30,7 @@ const campaign = await import(
   `data:text/javascript;base64,${Buffer.from(output).toString("base64")}`
 );
 
-assert.equal(campaign.CAMPAIGN_LEVELS.length, 21);
+assert.ok(campaign.CAMPAIGN_LEVELS.length >= 24);
 assert.equal(campaign.resolveRelicTime('jungle'), 60);
 assert.equal(campaign.resolveRelicTime('editor-course', { relicTime: 83.75 }), 83.75);
 assert.equal(campaign.resolveRelicTime('jungle', { relicTime: 45.125 }), 45.125);
@@ -39,7 +39,7 @@ for (const relicTime of [0, -1, NaN, Infinity, '70', null, 86401]) {
   assert.equal(campaign.resolveRelicTime('jungle', { relicTime }), 60);
 }
 assert.deepEqual(
-  campaign.CAMPAIGN_LEVELS.map(({ levelId, name }) => [levelId, name]),
+  campaign.CAMPAIGN_LEVELS.slice(0,21).map(({ levelId, name }) => [levelId, name]),
   [
     ["jungle", "Jungle Ruins"],
     ["test", "Carlisle Coast"],
@@ -67,7 +67,7 @@ assert.deepEqual(
 );
 assert.equal(
   new Set(campaign.CAMPAIGN_LEVELS.map((level) => level.progressKey)).size,
-  21,
+  campaign.CAMPAIGN_LEVELS.length,
   "campaign progress keys must remain unique",
 );
 assert.equal(campaign.CAMPAIGN_TIME_RELIC_TARGET_SECONDS, 60);
@@ -77,16 +77,16 @@ assert.ok(
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ levelKeys }) => levelKeys.length),
-  [10, 11],
+  [10, 11, 3],
   "The three levels join the existing main-map island",
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ id, name }) => [id, name]),
-  [["island-1", "Island 1"], ["island-2", "Island 2"]],
+  [["island-1", "Island 1"], ["island-2", "Island 2"], ["hidden-shores", "Hidden Shores"]],
   "the existing region identities must remain unchanged",
 );
 assert.ok(
-  campaign.CAMPAIGN_LEVELS.filter(({ boss }) => boss).length === 2,
+  campaign.CAMPAIGN_LEVELS.filter(({ boss }) => boss).length === 3,
   "each prototype island needs a boss hub",
 );
 assert.ok(
@@ -118,6 +118,8 @@ assert.equal(campaign.CAMPAIGN_LEVELS[18].progressKey,"nightworks-after-hours");
 assert.deepEqual(campaign.campaignLevelByKey("nightworks-after-hours").unlockAfter,["nightworks"]);
 assert.equal(campaign.campaignLevelById('codex-lab').islandId, 'island-2');
 
+assert.deepEqual(campaign.CAMPAIGN_ISLANDS.find(island=>island.id==='hidden-shores').levelKeys,['drowned-crown','bone-yard','crab-chief']);
+for(const id of ['drowned-crown','bone-yard','crab-chief'])assert.equal(campaign.campaignLevelById(id).islandId,'hidden-shores');
 const graph = new campaign.CampaignStore();
 graph.startEphemeral();
 assert.deepEqual(campaign.CAMPAIGN_LEVELS.slice(15,18).map(level=>level.progressKey),

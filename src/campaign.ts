@@ -90,7 +90,7 @@ export interface CampaignLevelDefinition {
   competition?: boolean;
 }
 
-export type CampaignIslandId = "island-1" | "island-2";
+export type CampaignIslandId = "island-1" | "island-2" | "hidden-shores";
 
 export interface CampaignIslandDefinition {
   id: CampaignIslandId;
@@ -115,6 +115,8 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     centre: [100, 0, 9],
     levelKeys: ["beachside-run", "coastal", "chimeworks", "island-hopper", "waterpark", "waterpark-cup", "codex-switchback", "jungle-gate", "crate-primer", "switchyard", "clockwork-gauntlet"],
   },
+  { id: "hidden-shores", name: "Hidden Shores", subtitle: "WRECKS · RELICS · REEFS",
+    centre: [322, 0, 14], levelKeys: ["drowned-crown", "bone-yard", "crab-chief"] },
 ] as const;
 
 export type CampaignMapTravelStyle = "trail" | "boardslide";
@@ -142,6 +144,10 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     waypoints: [[-151, 4.2, 14]] },
   { from: "jungle-terraces", to: "jungle-skyline", travel: "boardslide", fromDirection: "right", toDirection: "left",
     waypoints: [[-141, 10, 7]] },
+  { from: "clockwork-gauntlet", to: "drowned-crown", travel: "boardslide", fromDirection: "right", toDirection: "left",
+    waypoints: [[236, 8, 21], [275, 8, 14]] },
+  { from: "drowned-crown", to: "bone-yard", travel: "trail", fromDirection: "right", toDirection: "left" },
+  { from: "bone-yard", to: "crab-chief", travel: "trail", fromDirection: "right", toDirection: "left" },
   {
     from: "treehouse-trail",
     to: "jungle",
@@ -457,6 +463,12 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     islandId: "island-1", mapPath: "upper-branch", mapPosition: [-151, 7, 7], unlockAfter: ["jungle"] },
   { progressKey: "jungle-skyline", levelId: "jungle-skyline", name: "Temple Skyline", relicTime: 125,
     islandId: "island-1", mapPath: "upper-branch", mapPosition: [-131, 11, 7], unlockAfter: ["jungle-terraces"] },
+  { progressKey: "drowned-crown", levelId: "drowned-crown", name: "The Drowned Crown", relicTime: 150,
+    islandId: "hidden-shores", mapPath: "main", mapPosition: [294, 1.4, 14], unlockAfter: [] },
+  { progressKey: "bone-yard", levelId: "bone-yard", name: "The Bone Yard", relicTime: 60,
+    islandId: "hidden-shores", mapPath: "main", mapPosition: [322, 3, 14], unlockAfter: [] },
+  { progressKey: "crab-chief", levelId: "crab-chief", name: "Tidebreak · Crab Chief", relicTime: 120,
+    islandId: "hidden-shores", mapPath: "main", mapPosition: [350, 2, 14], unlockAfter: [], boss: true },
 ] as const;
 
 const LEVEL_BY_ID = new Map<string, CampaignLevelDefinition>();

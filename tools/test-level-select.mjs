@@ -22,7 +22,7 @@ try{
  assert.ok(ui.navButtons.some(b=>b.textContent==='LEVEL SELECT'));
  ui.navButtons.find(b=>b.textContent==='LEVEL SELECT').click();
  assert.equal(ui.currentScreen,'level-select');
- assert.equal(ui.levelSelectIslands().length,2,'fresh saves must expose the independent Puzzle Trials island');
+ assert.equal(ui.levelSelectIslands().length,3,'fresh saves must expose the new destinations');
  const rows=ui.navButtons.filter(b=>b.dataset.levelKey);
  assert.equal(rows.length,CAMPAIGN_ISLANDS[0].levelKeys.length);assert.equal(rows.filter(b=>!b.disabled).length,1);
  assert.equal(rows[0].dataset.levelKey,'treehouse-trail');
@@ -34,7 +34,11 @@ try{
  assert.deepEqual(puzzleRows.map(row=>row.dataset.levelKey),['crate-primer','switchyard','clockwork-gauntlet']);
  assert.ok(puzzleRows.every(row=>!row.disabled),'research levels must be immediately selectable');
  ui.updateLevelSelectChoice('clockwork-gauntlet',true);assert.match(ui.levelSelectPreview.src,/clockwork-gauntlet\.jpg$/);
- ui.changeLevelSelectIsland(-1);assert.equal(ui.levelSelectIsland,'island-1');
+ ui.changeLevelSelectIsland(1);assert.equal(ui.levelSelectIsland,'hidden-shores');
+ assert.deepEqual(ui.navButtons.filter(b=>b.dataset.levelKey).map(b=>b.dataset.levelKey),['drowned-crown','bone-yard','crab-chief']);
+ assert.ok(ui.navButtons.filter(b=>b.dataset.levelKey).every(b=>!b.disabled));
+ ui.updateLevelSelectChoice('drowned-crown',true);assert.match(ui.levelSelectPreview.src,/drowned-crown\.jpg$/);
+ ui.changeLevelSelectIsland(-1);ui.changeLevelSelectIsland(-1);assert.equal(ui.levelSelectIsland,'island-1');
  ui.levelSelectKey='test-course';ui.playSelectedLevel();assert.deepEqual(calls,[],'locked level launched');
  ui.updateLevelSelectChoice('treehouse-trail',true);ui.playSelectedLevel();
  assert.equal(ui.currentScreen,'confirm-level-select','changing the active course bypassed confirmation');

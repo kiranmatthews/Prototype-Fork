@@ -1,0 +1,261 @@
+{
+  "frame": 5663,
+  "done": true,
+  "failure": null,
+  "result": {
+    "state": "finished",
+    "deaths": 0,
+    "checkpoints": 4,
+    "position": [
+      32.00004028228803,
+      12.726666669150193,
+      -317.3894653938616
+    ],
+    "evidence": [
+      {
+        "name": "Into the mine",
+        "position": [
+          -48.00734720832125,
+          0,
+          20.08973102358815
+        ],
+        "ground": "Excavated smugglers trail"
+      },
+      {
+        "name": "First tunnel bend",
+        "position": [
+          -34.03595779790618,
+          -2.99072817535859,
+          -7.909808057679329
+        ],
+        "ground": "Excavated smugglers trail"
+      },
+      {
+        "name": "Fissure takeoff",
+        "position": [
+          -34.68930744029018,
+          -4.069322185819535,
+          -18.694794596992907
+        ],
+        "ground": "Fissure near bank"
+      },
+      {
+        "name": "Tidal fissure jump",
+        "position": [
+          -35.20425919340863,
+          -4.727484931333299,
+          -25.27113789934972
+        ],
+        "ground": "Fissure far bank"
+      },
+      {
+        "name": "Lower tunnel",
+        "position": [
+          -36.006512459803886,
+          -5.990767782705704,
+          -37.906830086763485
+        ],
+        "ground": "Fissure far bank"
+      },
+      {
+        "name": "Moonpool turn",
+        "position": [
+          -20.057449761115507,
+          -6,
+          -57.91119790977173
+        ],
+        "ground": "Excavated smugglers trail"
+      },
+      {
+        "name": "Moonpool checkpoint",
+        "position": [
+          -19.993463674841426,
+          -6,
+          -66.6904062420827
+        ],
+        "ground": "Excavated smugglers trail"
+      },
+      {
+        "name": "Boarding gangway",
+        "position": [
+          -20.009408550567407,
+          -6,
+          -74.90424024669967
+        ],
+        "ground": "Excavated smugglers trail"
+      },
+      {
+        "name": "Climb onto the wreck",
+        "position": [
+          -0.043436922557531746,
+          8,
+          -105.9169425392468
+        ],
+        "ground": "Afterdeck"
+      },
+      {
+        "name": "Avoid the aft mast",
+        "position": [
+          3.948374889532933,
+          8,
+          -110.92445842055484
+        ],
+        "ground": "Afterdeck"
+      },
+      {
+        "name": "Main deck",
+        "position": [
+          4.008692342840592,
+          8,
+          -123.89531248193909
+        ],
+        "ground": "Afterdeck"
+      },
+      {
+        "name": "Ship checkpoint",
+        "position": [
+          -5.904763019090277,
+          8,
+          -127.77213912890723
+        ],
+        "ground": "Afterdeck"
+      },
+      {
+        "name": "Enter broken hatch",
+        "position": [
+          -7.972799481618948,
+          7.637444090401163,
+          -132.9063897739971
+        ],
+        "ground": "Splintered hatch descent"
+      },
+      {
+        "name": "Descend into the hull",
+        "position": [
+          -8.001657938606554,
+          -3.960869178027133,
+          -161.90217294506783
+        ],
+        "ground": "Splintered hatch descent"
+      },
+      {
+        "name": "Across the broken keel",
+        "position": [
+          -8.011999538194946,
+          -4,
+          -180.8898308439142
+        ],
+        "ground": "Keel bridge through wreck"
+      },
+      {
+        "name": "Through the cargo hold",
+        "position": [
+          0.9073712015666796,
+          -4,
+          -189.93756496563125
+        ],
+        "ground": "Flooded lower cargo hold"
+      },
+      {
+        "name": "Cargo checkpoint",
+        "position": [
+          2.9755341208224046,
+          -4,
+          -199.70016561641
+        ],
+        "ground": "Flooded lower cargo hold"
+      },
+      {
+        "name": "Bow hatch ramp",
+        "position": [
+          7.937815685978316,
+          -4,
+          -203.9352256620716
+        ],
+        "ground": "Flooded lower cargo hold"
+      },
+      {
+        "name": "Climb out of the hold",
+        "position": [
+          8.015148372914668,
+          8,
+          -238.9058462342662
+        ],
+        "ground": "Bow hatch receiving deck"
+      },
+      {
+        "name": "Figurehead lookout",
+        "position": [
+          0.06367583391940534,
+          8.111081830603048,
+          -244.92887217683537
+        ],
+        "ground": "Bow escape landing"
+      },
+      {
+        "name": "Escape bridge",
+        "position": [
+          5.928685537723709,
+          8.397255681047628,
+          -251.94098997452375
+        ],
+        "ground": "Bow escape landing"
+      },
+      {
+        "name": "Broken bridge takeoff",
+        "position": [
+          14.926069063154394,
+          8.980216295319135,
+          -259.141539438732
+        ],
+        "ground": "Rope bridge near bank"
+      },
+      {
+        "name": "Broken bridge jump",
+        "position": [
+          20.020466346273466,
+          9.381436677242391,
+          -263.2162656108094
+        ],
+        "ground": "Rope bridge far bank"
+      },
+      {
+        "name": "Treasure tunnel",
+        "position": [
+          29.920508261556208,
+          10,
+          -269.9258519186845
+        ],
+        "ground": "Treasure grotto path"
+      },
+      {
+        "name": "Treasure checkpoint",
+        "position": [
+          31.982598886676065,
+          10,
+          -277.7117007945556
+        ],
+        "ground": "Treasure grotto path"
+      },
+      {
+        "name": "Enter the hoard",
+        "position": [
+          32.002222143546184,
+          10,
+          -293.890937217045
+        ],
+        "ground": "Royal treasure chamber"
+      },
+      {
+        "name": "Climb the treasure dais",
+        "position": [
+          32.000114506536335,
+          12,
+          -306.88946539412547
+        ],
+        "ground": "Treasure dais"
+      }
+    ]
+  },
+  "errors": []
+}

@@ -61,6 +61,7 @@ import { NIGHTWORKS_AFTER_HOURS_LEVEL } from "./levels/nightworks-after-hours";
 import { migrateSlipstreamCamera } from "./levels/slipstream-camera";
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL, JUNGLE_SKYLINE_LEVEL } from "./levels/jungle-sequels";
+import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
 import { PUZZLE_LEVELS } from './levels/puzzle-trilogy';
 import { WATERPARK_LEVEL } from "./levels/waterpark";
@@ -2316,6 +2317,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "descent", name: "The Descent" }, // two-lane mountain road, very long, very downhill
   { id: "beachfront", name: "Beachside Run" },
   ...UNITY_PORT_LEVELS,
+  { id: 'drowned-crown', name: PIRATE_WRECK_LEVEL.name, data: PIRATE_WRECK_LEVEL },
   { id: "bonus-easy", name: EASY_BONUS_LEVEL.name, data: EASY_BONUS_LEVEL },
   ...PUZZLE_LEVELS,
   {

@@ -1,0 +1,55 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "authorization": "User explicitly approved all Meshy jobs with positive existing balance; no purchases or upgrades.",
+  "tasks": {
+    "cannon": {
+      "operation": "37f9cb71-12b4-4b16-8170-c5a23d970775",
+      "prompt": "Stylized low poly ancient pirate naval cannon on a chunky wooden wheeled carriage. Long dark iron barrel with a flared muzzle, brass bands, two large wooden wheels, weathered oak carriage, rope fastening. Strong clear silhouette, handcrafted polygonal game asset, no ground, no background, no people. Single isolated prop.",
+      "status": "SUCCEEDED",
+      "balanceBefore": 1551,
+      "id": "01a0fc50-0a51-7350-82dd-a18b2e7b25b5",
+      "credits": 5
+    },
+    "treasure": {
+      "operation": "b1d0b5a8-2e4f-4130-8e0a-ae1528e078a0",
+      "prompt": "Stylized low poly pirate treasure chest, open lid with ornate thick gold straps and a skull lock, weathered dark oak, overflowing with large gold coins, rubies and emeralds. Broad readable polygonal silhouette, charming 1980s treasure adventure game prop, no ground, no people, no background. Single isolated chest.",
+      "status": "SUCCEEDED",
+      "balanceBefore": 1546,
+      "id": "01a0fc50-1e08-7296-99bb-7f63476eeb12",
+      "credits": 5
+    },
+    "skull-gate": {
+      "operation": "896030e5-3ccc-4a22-9b37-cf4d74953fca",
+      "prompt": "Stylized low poly monumental pirate skull cave doorway carved from ancient stone. Hollow dark eye sockets, enormous open mouth wide enough to walk through, broken teeth around the opening, rough faceted stone arch integrated around skull. Moss in cracks, weathered sea cave artifact. Isolated freestanding arch, open passage through mouth, no floor, no background, no people.",
+      "status": "SUCCEEDED",
+      "balanceBefore": 1541,
+      "id": "01a0fc50-2e44-76a1-8dd6-1d82d7cef997",
+      "credits": 5
+    },
+    "cannon-textured": {
+      "operation": "04e03136-21d4-4961-9ef3-5bd391610367",
+      "prompt": "Stylized low poly ancient pirate naval cannon on a chunky wooden wheeled carriage. Long dark iron barrel with a flared muzzle, brass bands, two large wooden wheels, weathered oak carriage, rope fastening. Strong clear silhouette, handcrafted polygonal game asset, no ground, no background, no people. Single isolated prop.",
+      "status": "SUCCEEDED",
+      "balanceBefore": 1536,
+      "id": "01a0fc51-d6bf-75fa-a38f-e70b4146f7ac",
+      "credits": 10
+    },
+    "treasure-textured": {
+      "operation": "80aacafc-3abd-4f5d-9f11-4815a23db45b",
+      "prompt": "Stylized low poly pirate treasure chest, open lid with ornate thick gold straps and a skull lock, weathered dark oak, overflowing with large gold coins, rubies and emeralds. Broad readable polygonal silhouette, charming 1980s treasure adventure game prop, no ground, no people, no background. Single isolated chest.",
+      "status": "SUCCEEDED",
+      "balanceBefore": 1526,
+      "id": "01a0fc51-e7cf-77b1-bbdd-c0017ba4e7d1",
+      "credits": 10
+    },
+    "skull-gate-textured": {
+      "operation": "53c2c409-fade-4e94-8067-f0555a104efc",
+      "prompt": "Stylized low poly monumental pirate skull cave doorway carved from ancient stone. Hollow dark eye sockets, enormous open mouth wide enough to walk through, broken teeth around the opening, rough faceted stone arch integrated around skull. Moss in cracks, weathered sea cave artifact. Isolated freestanding arch, open passage through mouth, no floor, no background, no people.",
+      "status": "SUCCEEDED",
+      "balanceBefore": 1516,
+      "id": "01a0fc51-ef2e-7335-8adc-d9a730360939",
+      "credits": 10
+    }
+  }
+}
