@@ -258,8 +258,8 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     from: "jungle-gate",
     to: "crate-primer",
     travel: "trail",
-    fromDirection: "down",
-    toDirection: "up",
+    fromDirection: "right",
+    toDirection: "left",
     waypoints: [[136, 2.1, 22]],
   },
   {
