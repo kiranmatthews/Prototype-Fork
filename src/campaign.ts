@@ -90,7 +90,7 @@ export interface CampaignLevelDefinition {
   competition?: boolean;
 }
 
-export type CampaignIslandId = "island-1" | "island-2";
+export type CampaignIslandId = "island-1" | "island-2" | "puzzle-trials";
 
 export interface CampaignIslandDefinition {
   id: CampaignIslandId;
@@ -114,6 +114,13 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     subtitle: "REGION 02",
     centre: [75, 0, 9],
     levelKeys: ["beachside-run", "coastal", "chimeworks", "island-hopper", "waterpark", "waterpark-cup", "codex-switchback", "jungle-gate"],
+  },
+  {
+    id: "puzzle-trials",
+    name: "Puzzle Trials",
+    subtitle: "CRATES · COMBAT · TIMING",
+    centre: [208, 0, 14],
+    levelKeys: ["crate-primer", "switchyard", "clockwork-gauntlet"],
   },
 ] as const;
 
@@ -249,6 +256,30 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     fromDirection: "right",
     toDirection: "left",
     waypoints: [[113, 3, 13]],
+  },
+  {
+    from: "jungle-gate",
+    to: "crate-primer",
+    travel: "boardslide",
+    fromDirection: "right",
+    toDirection: "left",
+    waypoints: [[142, 9, 14], [165, 9, 14]],
+  },
+  {
+    from: "crate-primer",
+    to: "switchyard",
+    travel: "trail",
+    fromDirection: "right",
+    toDirection: "left",
+    waypoints: [[194, 2.1, 14]],
+  },
+  {
+    from: "switchyard",
+    to: "clockwork-gauntlet",
+    travel: "trail",
+    fromDirection: "right",
+    toDirection: "left",
+    waypoints: [[221, 2.8, 14]],
   },
 ] as const;
 
@@ -398,6 +429,24 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     progressKey:"waterpark-cup",levelId:"waterpark-cup",name:"Deadwater Cup",
     relicTime:CAMPAIGN_TIME_RELIC_TARGET_SECONDS,islandId:"island-2",
     mapPath:"upper-branch",mapPosition:[109,12,4],unlockAfter:["waterpark"],competition:true,
+  },
+  // The research trilogy is available immediately from Level Select. Its
+  // ordered map trail keeps the rising difficulty visible without making the
+  // existing campaign a prerequisite for trying the new examples.
+  {
+    progressKey: "crate-primer", levelId: "crate-primer", name: "Crate Primer",
+    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS, islandId: "puzzle-trials",
+    mapPath: "main", mapPosition: [181, 1.35, 14], unlockAfter: [],
+  },
+  {
+    progressKey: "switchyard", levelId: "switchyard", name: "Switchyard",
+    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS, islandId: "puzzle-trials",
+    mapPath: "main", mapPosition: [208, 2.4, 14], unlockAfter: [],
+  },
+  {
+    progressKey: "clockwork-gauntlet", levelId: "clockwork-gauntlet", name: "Clockwork Gauntlet",
+    relicTime: CAMPAIGN_TIME_RELIC_TARGET_SECONDS, islandId: "puzzle-trials",
+    mapPath: "main", mapPosition: [235, 3.1, 14], unlockAfter: [],
   },
 ] as const;
 

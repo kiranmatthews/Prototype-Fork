@@ -1,0 +1,120 @@
+{
+  "levelId": "crate-primer",
+  "validation": {
+    "tests": [
+      "tools/test-puzzle-trilogy.mjs",
+      "tools/test-puzzle-order.mjs",
+      "tools/test-puzzle-trilogy-browser.mjs --full"
+    ],
+    "inputOnly": true,
+    "placementsAfterRunStart": 0
+  },
+  "positive": {
+    "frames": 4728,
+    "simulatedSeconds": 78.8,
+    "actualBoxesCleared": 22,
+    "totalBoxes": 22,
+    "checkpoints": 2,
+    "deaths": 0,
+    "finishState": "finished",
+    "gemEarned": true
+  },
+  "negative": {
+    "incorrectOrder": {
+      "action": "incorrect order remains incomplete",
+      "peak": 5.098333285649614,
+      "launcherAlive": false,
+      "keyUsed": false,
+      "ledgeCaught": false,
+      "upperBoxesAlive": [
+        false,
+        true
+      ]
+    },
+    "realRetry": {
+      "action": "checkpoint restores failed dependency",
+      "deaths": 1,
+      "position": [
+        59,
+        0.699999952316284,
+        0
+      ],
+      "launcherAlive": true
+    },
+    "correctedRoomCleared": true,
+    "actualMaterializedBridgeCrossed": true,
+    "upperRewardDonorLoss": {
+      "targetStillAlive": true,
+      "launcherAlive": false,
+      "attempts": [
+        {
+          "timing": 7,
+          "peakFeet": 4.645833285649616,
+          "capAlive": true
+        },
+        {
+          "timing": 3,
+          "peakFeet": 5.124166618982948,
+          "capAlive": true
+        },
+        {
+          "timing": 0.5,
+          "peakFeet": 5.190833285649615,
+          "capAlive": true
+        },
+        {
+          "timing": -1.5,
+          "peakFeet": 5.081666618982948,
+          "capAlive": true
+        }
+      ],
+      "deaths": 0
+    }
+  },
+  "browser": {
+    "renderer": "full",
+    "frames": 4749,
+    "finishState": "finished",
+    "actualBoxesCleared": 22,
+    "totalBoxes": 22,
+    "errors": [],
+    "liveRenderedRiderSamples": 317,
+    "upperTargetPreviewSamples": 72,
+    "assertionsPassed": true,
+    "completionPayoutValidatedSeparately": true
+  },
+  "source": {
+    "path": "src/levels/puzzle-trilogy.ts",
+    "sha256": "91e90e6ca7ec5527e3b6c54aa035cf332fa45428ff521e0242eddca816cb1071"
+  },
+  "completionPayout": {
+    "regression": "tools/test-puzzle-crate-support.mjs",
+    "actualLastBoxBroken": true,
+    "gemCollectedThroughPlayerContact": true,
+    "gemCollectedBeforeFinish": true,
+    "containedDepth": true,
+    "fullRouteNodeGemEarned": true
+  },
+  "finalPresentation": {
+    "test": "tools/test-puzzle-previews-browser.mjs",
+    "renderer": "full",
+    "cameraFollowDistance": 42,
+    "compositions": [
+      {
+        "name": "upper-reward",
+        "upperTargets": 1,
+        "headerOverlaps": 0,
+        "fullRenderedRiderVisible": true,
+        "riderVertices": 44508
+      },
+      {
+        "name": "high-key",
+        "upperTargets": 3,
+        "headerOverlaps": 0,
+        "fullRenderedRiderVisible": true,
+        "riderVertices": 44508
+      }
+    ],
+    "errors": []
+  }
+}

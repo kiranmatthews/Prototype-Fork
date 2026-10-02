@@ -62,9 +62,9 @@ export async function withBlockworksRuntime(run, options = {}) {
     const { Level } = await server.ssrLoadModule('/src/level.ts');
     const { Player } = await server.ssrLoadModule('/src/player.ts');
     const { CONST, TUNING } = await server.ssrLoadModule('/src/tuning.ts');
-    const sourceModule = await server.ssrLoadModule('/src/levels/codex-lab.ts');
-    const source = sourceModule.CODEX_LAB_LEVEL;
-    if (!source?.components) throw new Error('CODEX_LAB_LEVEL is not available');
+    const sourceModule = await server.ssrLoadModule(options.modulePath ?? '/src/levels/codex-lab.ts');
+    const source = options.source ? options.source(sourceModule) : sourceModule.CODEX_LAB_LEVEL;
+    if (!source?.components) throw new Error('Source-owned level is not available');
     const scene = new THREE.Scene();
     const id = options.levelId ?? 'codex-lab';
     l = new Level(scene, { id, name: source.name, data: source });

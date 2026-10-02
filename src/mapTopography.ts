@@ -4,6 +4,7 @@ import type { CampaignIslandId } from './campaign';
 export const MAP_LANDSCAPES = {
   'island-1': { minAxes: [88, 60], crater: [-88, -24, 15, 16.5] },
   'island-2': { minAxes: [47, 34], crater: null },
+  'puzzle-trials': { minAxes: [43, 27], crater: null },
 } as const;
 
 const smooth=(a:number,b:number,x:number)=>{const t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-2*t)};
@@ -31,6 +32,8 @@ export function mapReliefHeight(x:number,z:number,id:CampaignIslandId):number {
     const caldera=profile(r,[[0,15],[7,15],[9,17],[11.5,35],[14,37],[17.5,36.5],[19.5,30],[23,28.5],[26,17.5],[30,16],[33,6],[43,0]]);
     return Math.max(caldera,butte(x,z,-137,-15,23,20,25,.25),butte(x,z,-40,-11,23,23,23,.65));
   }
+  if(id==='puzzle-trials') return Math.max(
+    butte(x,z,205,-7,24,16,17,.3),butte(x,z,235,-1,16,17,12,.6));
   return Math.max(butte(x,z,79,-10,22,23,30,.15),butte(x,z,57,-6,20,18,19,.6),butte(x,z,101,-7,18,23,22,.3));
 }
 

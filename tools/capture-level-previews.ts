@@ -20,8 +20,25 @@ export async function captureLevelPreviews(g:any, report:(text:string)=>void):Pr
       camera.position.copy(spawn).add(new THREE.Vector3(7,6,9));camera.lookAt(spawn.x,spawn.y+1,spawn.z-20);
       if(def.competition){camera.position.set(30,19,-18);camera.lookAt(-12,2,-68);}
       if(def.levelId==='sky'){camera.position.copy(spawn).add(new THREE.Vector3(2,4,4));camera.lookAt(spawn.x,spawn.y-1,spawn.z-12);}
+      if(def.islandId==='puzzle-trials'){
+        camera.position.copy(spawn).add(new THREE.Vector3(20,9,22));
+        camera.lookAt(spawn.x+22,spawn.y+1,spawn.z);
+      }
+      camera.updateMatrixWorld(true);
+      const backdrop=g.scene.getObjectByName('BonusParallax_CameraQuad');
+      const backdropPose=backdrop?{position:backdrop.position.clone(),quaternion:backdrop.quaternion.clone(),scale:backdrop.scale.clone(),aspect:backdrop.material.uniforms.uViewportAspect.value}:null;
+      if(backdrop){
+        const depth=camera.far*.98,height=2*depth*Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
+        backdrop.position.copy(camera.position).addScaledVector(camera.getWorldDirection(new THREE.Vector3()),depth);
+        backdrop.quaternion.copy(camera.quaternion);backdrop.scale.set(height*camera.aspect,height,1);
+        backdrop.material.uniforms.uViewportAspect.value=camera.aspect;
+      }
       const previous=g.renderer.getRenderTarget();
-      g.renderer.setRenderTarget(target);g.renderer.clear();g.renderer.render(g.scene,camera);g.renderer.readRenderTargetPixels(target,0,0,640,360,bytes);g.renderer.setRenderTarget(previous);
+      try{g.renderer.setRenderTarget(target);g.renderer.clear();g.renderer.render(g.scene,camera);g.renderer.readRenderTargetPixels(target,0,0,640,360,bytes);}
+      finally{
+        g.renderer.setRenderTarget(previous);
+        if(backdrop&&backdropPose){backdrop.position.copy(backdropPose.position);backdrop.quaternion.copy(backdropPose.quaternion);backdrop.scale.copy(backdropPose.scale);backdrop.material.uniforms.uViewportAspect.value=backdropPose.aspect;}
+      }
       for(let y=0;y<360;y++)pixels.data.set(bytes.subarray((359-y)*640*4,(360-y)*640*4),y*640*4);
       ctx.putImageData(pixels,0,0);
       const response=await fetch('http://127.0.0.1:5174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:def.progressKey,image:canvas.toDataURL('image/jpeg',.9)})});

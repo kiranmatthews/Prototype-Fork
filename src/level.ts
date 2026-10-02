@@ -60,6 +60,7 @@ import { NIGHTWORKS_LEVEL } from "./levels/nightworks";
 import { migrateSlipstreamCamera } from "./levels/slipstream-camera";
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
+import { PUZZLE_LEVELS } from './levels/puzzle-trilogy';
 import { WATERPARK_LEVEL } from "./levels/waterpark";
 import { WATERPARK_CUP_LEVEL } from './levels/waterpark-cup';
 import { BONE_YARD_LEVEL } from "./levels/bone-yard";
@@ -2311,6 +2312,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "beachfront", name: "Beachside Run" },
   ...UNITY_PORT_LEVELS,
   { id: "bonus-easy", name: EASY_BONUS_LEVEL.name, data: EASY_BONUS_LEVEL },
+  ...PUZZLE_LEVELS,
   {
     id: "codex-lab",
     name: CODEX_LAB_LEVEL.name,
@@ -2915,7 +2917,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       singletonKinds.add(component.t);
       if (component.t === "worldmap") {
         if (source.ocean || (component.pts &&
-            (![9, 11, 12, 13, 14, CAMPAIGN_LEVELS.length].includes(component.pts.length) || component.pts.some(point =>
+            (![9, 11, 12, 13, 14, 15, CAMPAIGN_LEVELS.length].includes(component.pts.length) || component.pts.some(point =>
               Math.abs(point[0]) > 256 || Math.abs(point[1]) > 256 || Math.abs(point[3] ?? 0) > 128))))
           return null;
         if (component.pts) for (let i = 0; i < component.pts.length; i++) {
@@ -4626,7 +4628,7 @@ export class Level {
     }
     if (isCampaignLevel(entry.id) && !isCompetitionLevel(entry.id)) {
       if (!this.crystalPickup) this.placeCampaignCrystal();
-      if (!this.bonusPlatform) this.placeDefaultBonusPlatform();
+      if (!this.bonusPlatform && this.hudMode !== 'bonus') this.placeDefaultBonusPlatform();
     }
     // Nitro belongs to the Level instance that owns it. Derive its clear
     // switch after every builder has finished so ordinary courses, published
@@ -8354,7 +8356,7 @@ export class Level {
           if (c.nitro || c.tnt) this.detonate(c);
           else {
             this.breakCrate(c);
-            this.blastBroken.push(c); // player tallies it like blast debris
+            if (!c.alive) this.blastBroken.push(c); // intact steel earns no reward
           }
         }
       }
@@ -8853,7 +8855,10 @@ export class Level {
               this.triggerBang(c); // a blast can flip either switch
             else {
               this.breakCrate(c);
-              this.blastBroken.push(c);
+              // Plain steel survives a blast. Only a box actually cleared
+              // belongs in the reward/tally queue; otherwise every growing
+              // blast tick could count the same intact steel again.
+              if (!c.alive) this.blastBroken.push(c);
             }
           }
         }
@@ -17750,9 +17755,22 @@ export class Level {
     if (this.gateSpec) {
       // one gem-width along the gate's own tangent, so it stands beside the
       // combo prize (which parks on the gate's normal) instead of inside it
-      const yawR = THREE.MathUtils.degToRad(this.gateYaw);
-      x = this.gateSpec.x + Math.cos(yawR) * 2.6;
-      z = this.gateSpec.z - Math.sin(yawR) * 2.6;
+      if (this.hudMode === 'bonus') {
+        // A side-view bonus may confine depth to one line. Keep its earned
+        // prize on the supported approach, before touching the finish pad.
+        let dx = pos.x - this.gateSpec.x, dz = pos.z - this.gateSpec.z;
+        if (Math.hypot(dx, dz) < .01) {
+          dx = this.spawnPos.x - this.gateSpec.x;
+          dz = this.spawnPos.z - this.gateSpec.z;
+        }
+        const distance = Math.hypot(dx, dz) || 1;
+        x = this.gateSpec.x + dx / distance * 3.4;
+        z = this.gateSpec.z + dz / distance * 3.4;
+      } else {
+        const yawR = THREE.MathUtils.degToRad(this.gateYaw);
+        x = this.gateSpec.x + Math.cos(yawR) * 2.6;
+        z = this.gateSpec.z - Math.sin(yawR) * 2.6;
+      }
       y = this.gateSpec.y + 1.5;
       placed = "gate";
     } else {

@@ -422,19 +422,18 @@ try {
       1,
       `${entry.name} does not have exactly one Nitro clear switch`,
     );
-    assert.equal(
-      diagnostics.generated,
-      1,
-      `${entry.name} did not derive its Nitro clear switch`,
-    );
-    assert.ok(
+    const authored = entry.data?.components.some(component =>
+      component.t === 'crate' && component.kind === 'nitrobang');
+    assert.equal(diagnostics.generated, authored ? 0 : 1,
+      `${entry.name} did not preserve its authored-or-derived Nitro switch ownership`);
+    if (!authored) assert.ok(
       diagnostics.gateDistance >= 3 && diagnostics.gateDistance <= 25,
-      `${entry.name} placed its Nitro switch outside the finish approach`,
+      `${entry.name} placed its derived Nitro switch outside the finish approach`,
     );
-    const generated = generatedSwitches(level)[0];
+    const generated = level.crates.find(crate => crate.nitroBang);
     assert.ok(
       generated && Number.isFinite(generated.box.min.y),
-      `${entry.name} generated an unsupported Nitro switch`,
+      `${entry.name} has an invalid Nitro switch height`,
     );
   }
 

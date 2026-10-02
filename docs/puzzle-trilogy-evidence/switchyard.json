@@ -1,0 +1,117 @@
+{
+  "level": "Switchyard",
+  "source": {
+    "path": "src/levels/puzzle-trilogy.ts",
+    "sha256": "91e90e6ca7ec5527e3b6c54aa035cf332fa45428ff521e0242eddca816cb1071"
+  },
+  "runner": "tools/puzzle-switchyard-pilot.mjs",
+  "verification": "Production Player and source Level with input-only fixed-step physics; confirmed again in full-render Chrome with actual presentation assets.",
+  "continuousRun": {
+    "start": "authored source spawn",
+    "end": "finished",
+    "frames": 7327,
+    "seconds": 122.12,
+    "cratesBroken": 26,
+    "totalCrates": 26,
+    "deaths": 0,
+    "checkpoints": [
+      78,
+      134
+    ],
+    "tallyMatchesActualClearedObjects": true,
+    "gemEarned": true
+  },
+  "dependencies": [
+    {
+      "room": "Finite striped supports",
+      "correctOrder": "Preserve both supports, rebound and double-jump to the 9m cap, then clear supports.",
+      "negativeAttempts": [
+        {
+          "kind": "floor-double",
+          "maximumFeet": 4.5908,
+          "maximumAnimatedCrown": 7.6092,
+          "capStillAlive": true
+        },
+        {
+          "kind": "single-support",
+          "maximumFeet": 5.5708,
+          "maximumAnimatedCrown": 8.5643,
+          "capStillAlive": true
+        }
+      ]
+    },
+    {
+      "room": "High bridge key",
+      "correctOrder": "Preserve launcher32, boosted rebound plus double to gallery9, hit key38, return and destroy launcher."
+    },
+    {
+      "room": "Fuse stack",
+      "correctOrder": "Rebound from wood on intact TNT101, double to cap11.8, then prime TNT and retreat."
+    },
+    {
+      "room": "Outward and return circuit",
+      "correctOrder": "Pass launcher136 intact, hit key147, return to launcher, boosted rebound plus double to activated shelf11.2, clear three floating rewards at12.4, descend and destroy launcher last.",
+      "negativeAttempts": [
+        {
+          "kind": "spent-switch-support",
+          "maximumFeet": 8.3708,
+          "maximumAnimatedCrown": 11.3645,
+          "launcherDestroyed": true,
+          "remainingRewards": 3,
+          "rewardBases": [
+            12.4,
+            12.4,
+            12.4
+          ]
+        }
+      ]
+    }
+  ],
+  "traversal": [
+    "Horizontal receiver approached, boarded, carried and exited using ordinary input.",
+    "Enemy spin/stomp and timing rules traversed without death.",
+    "Spent switches jumped as permanent obstacles.",
+    "Crumble pad used for two distinct jumps before its collapse."
+  ],
+  "browser": {
+    "engine": "Chrome",
+    "renderMode": "full",
+    "frames": 7369,
+    "endState": "finished",
+    "deaths": 0,
+    "cratesBroken": 26,
+    "totalCrates": 26,
+    "consoleErrors": [],
+    "wholeRiderFramingSamples": 492,
+    "targetPreviewSamples": 142
+  },
+  "finalPresentation": {
+    "test": "tools/test-puzzle-previews-browser.mjs",
+    "renderer": "full",
+    "cameraFollowDistance": 42,
+    "compositions": [
+      {
+        "name": "finite-cap",
+        "upperTargets": 1,
+        "headerOverlaps": 0,
+        "fullRenderedRiderVisible": true,
+        "riderVertices": 44508
+      },
+      {
+        "name": "fuse-cap",
+        "upperTargets": 1,
+        "headerOverlaps": 0,
+        "fullRenderedRiderVisible": true,
+        "riderVertices": 44508
+      },
+      {
+        "name": "return-row",
+        "upperTargets": 3,
+        "headerOverlaps": 0,
+        "fullRenderedRiderVisible": true,
+        "riderVertices": 44508
+      }
+    ],
+    "errors": []
+  }
+}

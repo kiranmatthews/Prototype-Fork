@@ -1,0 +1,493 @@
+{
+  "level": "clockwork-gauntlet",
+  "sourceSha256": "91e90e6ca7ec5527e3b6c54aa035cf332fa45428ff521e0242eddca816cb1071",
+  "method": "Production Player and Level driven by ordinary input samples from authored source spawn. No teleports, gameplay-state mutations, tuning changes or skipped simulation steps.",
+  "sourceGeometry": {
+    "intakeArrow": [
+      17,
+      0,
+      0
+    ],
+    "intakeReward": [
+      17,
+      9.2,
+      0
+    ],
+    "firstRelayArrow": [
+      27,
+      0,
+      0
+    ],
+    "upperReturnTargets": [
+      [
+        165,
+        13.6,
+        0
+      ],
+      [
+        167,
+        13.6,
+        0
+      ],
+      [
+        168,
+        13.6,
+        0
+      ]
+    ],
+    "highNitroKey": [
+      221,
+      12.1,
+      0
+    ],
+    "farReturnSwitch": [
+      233.5,
+      4,
+      0
+    ],
+    "finalReturnTargets": [
+      [
+        201,
+        13.6,
+        0
+      ],
+      [
+        204,
+        13.6,
+        0
+      ],
+      [
+        208,
+        13.6,
+        0
+      ]
+    ]
+  },
+  "positive": {
+    "state": "finished",
+    "gemEarned": true,
+    "cratesBroken": 36,
+    "totalCrates": 36,
+    "remaining": 0,
+    "deaths": 0,
+    "frames": 8922,
+    "seconds": 148.7,
+    "checkpoints": [
+      {
+        "x": 41,
+        "active": true
+      },
+      {
+        "x": 80,
+        "active": true
+      },
+      {
+        "x": 126,
+        "active": true
+      },
+      {
+        "x": 195,
+        "active": true
+      }
+    ],
+    "firstFinalArrowUse": {
+      "action": "preserve arrow for high Nitro clear and return",
+      "contact": {
+        "frame": 6196,
+        "position": [
+          215.97203333333445,
+          4.98,
+          7.472878303452552e-19
+        ],
+        "state": "air",
+        "grounded": false,
+        "bailing": false,
+        "speed": 0,
+        "verticalSpeed": 20,
+        "deaths": 0,
+        "ground": "platform"
+      },
+      "landing": [
+        219.34750000000122,
+        12.400000011920929,
+        7.472878303452552e-19
+      ],
+      "launcherAlive": true
+    },
+    "greenVsFarSwitch": {
+      "action": "green clearance preserves the separate far-switch dependency",
+      "greenUsed": true,
+      "farSwitchUsed": false,
+      "nitroRemaining": 0
+    },
+    "farSwitchAfterExplicitHit": {
+      "action": "far switch materializes the backward upper sweep",
+      "before": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": false
+      },
+      "after": {
+        "alive": true,
+        "pending": false,
+        "bangUsed": true
+      }
+    },
+    "sentryOpening": {
+      "action": "commit to the sentry only after its shot and while it recovers",
+      "sentryState": "cooldown",
+      "position": [
+        242.77294444444468,
+        4,
+        7.472878303452552e-19
+      ],
+      "approachingProjectiles": 0
+    },
+    "priorityEnemyOrder": {
+      "action": "defeat the ranged enemy before committing to the long upper return",
+      "sentryAlive": false,
+      "returnArrowAlive": true,
+      "farSwitchUsed": true,
+      "sentryProjectiles": 0
+    },
+    "secondFinalArrowUse": {
+      "action": "same conserved arrow for the far-switch return",
+      "contact": {
+        "frame": 7504,
+        "position": [
+          216.02874444444467,
+          4.98,
+          7.472878303452552e-19
+        ],
+        "state": "air",
+        "grounded": false,
+        "bailing": false,
+        "speed": 0,
+        "verticalSpeed": 20,
+        "deaths": 0,
+        "ground": "platform"
+      },
+      "landing": [
+        208.2553111111111,
+        12.4,
+        7.472878303452552e-19
+      ],
+      "launcherAlive": true
+    },
+    "outwardRewardHandling": "Clear crate232 if still alive before approaching the far switch. After activation, clear surviving TNT, wait outside the sentry for its shot/recovery opening, and defeat it before returning to preserved arrow216."
+  },
+  "intakeWrongOrder": {
+    "test": "destroyed intake arrow blocks ordinary charged-double/air-spin harvesting",
+    "deaths": 0,
+    "arrowAlive": false,
+    "capAlive": true,
+    "attempts": [
+      {
+        "doubleAtVelocity": 7,
+        "peakFeet": 4.125833333333332,
+        "capAlive": true
+      },
+      {
+        "doubleAtVelocity": 4,
+        "peakFeet": 4.483333333333331,
+        "capAlive": true
+      },
+      {
+        "doubleAtVelocity": 1,
+        "peakFeet": 4.5958333333333306,
+        "capAlive": true
+      },
+      {
+        "doubleAtVelocity": 0,
+        "peakFeet": 4.5527777777777745,
+        "capAlive": true
+      },
+      {
+        "doubleAtVelocity": -2,
+        "peakFeet": 4.481666666666663,
+        "capAlive": true
+      }
+    ]
+  },
+  "greenIsolation": {
+    "test": "successful green clearance does not activate the far return switch",
+    "deaths": 0,
+    "greenUsed": true,
+    "farSwitchUsed": false,
+    "nitroRemaining": 0,
+    "returnLauncherAlive": true,
+    "frames": 6392,
+    "seconds": 106.53333333333333
+  },
+  "sourceSha256AtGameplayGeometryValidation": "7bbbc65d53e495477f04a08234bb38d10853690ea716a0a8cdbff96f228a0b99",
+  "browserMotion": {
+    "method": "Real Chrome full rendering with loaded character and enemy assets; ordinary input pilot from authored spawn.",
+    "cameraFollowDistance": 24,
+    "presentationScope": "Complete motion pass used the previous 24-metre follow distance. Final 42-metre presentation was checked separately against the actual HUD and full rendered rider.",
+    "state": "finished",
+    "gemEarned": true,
+    "cratesBroken": 36,
+    "totalCrates": 36,
+    "deaths": 0,
+    "frames": 8903,
+    "renderedRiderFramingSamples": 589,
+    "upperTargetPreviewSamples": 258,
+    "consoleErrors": [],
+    "checkpoints": [
+      {
+        "x": 41,
+        "active": true
+      },
+      {
+        "x": 80,
+        "active": true
+      },
+      {
+        "x": 126,
+        "active": true
+      },
+      {
+        "x": 195,
+        "active": true
+      }
+    ],
+    "sentryOpening": {
+      "action": "commit to the sentry only after its shot and while it recovers",
+      "sentryState": "cooldown",
+      "position": [
+        242.7729444441666,
+        4,
+        -0.002798729573647826
+      ],
+      "approachingProjectiles": 0
+    },
+    "priorityEnemyOrder": {
+      "action": "defeat the ranged enemy before committing to the long upper return",
+      "sentryAlive": false,
+      "returnArrowAlive": true,
+      "farSwitchUsed": true,
+      "sentryProjectiles": 0
+    }
+  },
+  "finalPresentation": {
+    "cameraFollowDistance": 42,
+    "method": "Full-render static composition checks with loaded character/enemy assets. Each target collider is projected against the actual padded BONUS header.",
+    "views": [
+      {
+        "name": "high-green",
+        "playerPosition": [
+          214.3,
+          4,
+          0
+        ],
+        "renderedRiderVertices": 44508,
+        "riderFullyInsideView": true,
+        "targets": [
+          {
+            "name": "Green ! clears the visible Nitro field",
+            "position": [
+              221,
+              12.88000001192093,
+              0
+            ],
+            "pending": false,
+            "headerOverlap": false,
+            "ndc": {
+              "minX": 0.18892172075910002,
+              "maxX": 0.22384720184135307,
+              "minY": 0.3452691870983029,
+              "maxY": 0.3959774956789622,
+              "maxZ": 0.9956907272200086
+            },
+            "pixels": {
+              "left": 856.0236389465521,
+              "right": 881.1699853257742,
+              "top": 271.8101269444671,
+              "bottom": 294.6288658057637
+            }
+          }
+        ],
+        "header": {
+          "left": 422.4296875,
+          "right": 1017.5703125,
+          "top": 4,
+          "bottom": 234.78125
+        }
+      },
+      {
+        "name": "upper-return",
+        "playerPosition": [
+          159.7,
+          4,
+          0
+        ],
+        "renderedRiderVertices": 44508,
+        "riderFullyInsideView": true,
+        "targets": [
+          {
+            "name": "Activated upper row: preserve launch and return",
+            "position": [
+              165,
+              14.08,
+              0
+            ],
+            "pending": true,
+            "headerOverlap": false,
+            "ndc": {
+              "minX": 0.1469248882017676,
+              "maxX": 0.18086441708970666,
+              "minY": 0.40458325065772377,
+              "maxY": 0.45705284147212133,
+              "maxZ": 0.995673455952689
+            },
+            "pixels": {
+              "left": 825.7859195052727,
+              "right": 850.2223803045888,
+              "top": 244.3262213375454,
+              "bottom": 267.9375372040243
+            }
+          },
+          {
+            "name": "Activated upper row: preserve launch and return",
+            "position": [
+              167,
+              14.08,
+              0
+            ],
+            "pending": true,
+            "headerOverlap": false,
+            "ndc": {
+              "minX": 0.20788957210291606,
+              "maxX": 0.2434472603733425,
+              "minY": 0.40458325065772377,
+              "maxY": 0.45705284147212133,
+              "maxZ": 0.995673455952689
+            },
+            "pixels": {
+              "left": 869.6804919140997,
+              "right": 895.2820274688065,
+              "top": 244.3262213375454,
+              "bottom": 267.9375372040243
+            }
+          },
+          {
+            "name": "Activated upper row: preserve launch and return",
+            "position": [
+              168,
+              14.08,
+              0
+            ],
+            "pending": true,
+            "headerOverlap": false,
+            "ndc": {
+              "minX": 0.23837191405349029,
+              "maxX": 0.27473868201516044,
+              "minY": 0.40458325065772377,
+              "maxY": 0.45705284147212133,
+              "maxZ": 0.995673455952689
+            },
+            "pixels": {
+              "left": 891.627778118513,
+              "right": 917.8118510509156,
+              "top": 244.3262213375454,
+              "bottom": 267.9375372040243
+            }
+          }
+        ],
+        "header": {
+          "left": 422.4296875,
+          "right": 1017.5703125,
+          "top": 4,
+          "bottom": 234.78125
+        }
+      },
+      {
+        "name": "final-return",
+        "playerPosition": [
+          217.7,
+          4,
+          0
+        ],
+        "renderedRiderVertices": 44508,
+        "riderFullyInsideView": true,
+        "targets": [
+          {
+            "name": "Last return row: appears only after the far !",
+            "position": [
+              201,
+              14.08,
+              0
+            ],
+            "pending": true,
+            "headerOverlap": false,
+            "ndc": {
+              "minX": -0.5375866238064319,
+              "maxX": -0.49442358643831485,
+              "minY": 0.40458325065772377,
+              "maxY": 0.45705284147212133,
+              "maxZ": 0.995673455952689
+            },
+            "pixels": {
+              "left": 332.93763085936905,
+              "right": 364.0150177644133,
+              "top": 244.3262213375454,
+              "bottom": 267.9375372040243
+            }
+          },
+          {
+            "name": "Last return row: appears only after the far !",
+            "position": [
+              204,
+              14.08,
+              0
+            ],
+            "pending": true,
+            "headerOverlap": false,
+            "ndc": {
+              "minX": -0.4437123588809782,
+              "maxX": -0.40297656058659215,
+              "minY": 0.40458325065772377,
+              "maxY": 0.45705284147212133,
+              "maxZ": 0.995673455952689
+            },
+            "pixels": {
+              "left": 400.52710160569575,
+              "right": 429.85687637765363,
+              "top": 244.3262213375454,
+              "bottom": 267.9375372040243
+            }
+          },
+          {
+            "name": "Last return row: appears only after the far !",
+            "position": [
+              208,
+              14.08,
+              0
+            ],
+            "pending": true,
+            "headerOverlap": false,
+            "ndc": {
+              "minX": -0.3185466723137066,
+              "maxX": -0.28104719278429524,
+              "minY": 0.40458325065772377,
+              "maxY": 0.45705284147212133,
+              "maxZ": 0.995673455952689
+            },
+            "pixels": {
+              "left": 490.64639593413125,
+              "right": 517.6460211953074,
+              "top": 244.3262213375454,
+              "bottom": 267.9375372040243
+            }
+          }
+        ],
+        "header": {
+          "left": 422.4296875,
+          "right": 1017.5703125,
+          "top": 4,
+          "bottom": 234.78125
+        }
+      }
+    ]
+  }
+}

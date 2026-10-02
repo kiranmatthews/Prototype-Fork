@@ -30,7 +30,7 @@ const campaign = await import(
   `data:text/javascript;base64,${Buffer.from(output).toString("base64")}`
 );
 
-assert.equal(campaign.CAMPAIGN_LEVELS.length, 15);
+assert.equal(campaign.CAMPAIGN_LEVELS.length, 18);
 assert.equal(campaign.resolveRelicTime('jungle'), 60);
 assert.equal(campaign.resolveRelicTime('editor-course', { relicTime: 83.75 }), 83.75);
 assert.equal(campaign.resolveRelicTime('jungle', { relicTime: 45.125 }), 45.125);
@@ -56,12 +56,15 @@ assert.deepEqual(
     ["treehouse-trail", "Treehouse Trail"],
     ["waterpark", "Deadwater Park"],
     ["waterpark-cup", "Deadwater Cup"],
+    ["crate-primer", "Crate Primer"],
+    ["switchyard", "Switchyard"],
+    ["clockwork-gauntlet", "Clockwork Gauntlet"],
   ],
   "canonical portal order or labels drifted",
 );
 assert.equal(
   new Set(campaign.CAMPAIGN_LEVELS.map((level) => level.progressKey)).size,
-  15,
+  18,
   "campaign progress keys must remain unique",
 );
 assert.equal(campaign.CAMPAIGN_TIME_RELIC_TARGET_SECONDS, 60);
@@ -71,13 +74,13 @@ assert.ok(
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ levelKeys }) => levelKeys.length),
-  [7, 8],
-  "Both Deadwater venues must join Island 2 without removing existing hubs",
+  [7, 8, 3],
+  "Puzzle Trials must append without removing existing island hubs",
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ id, name }) => [id, name]),
-  [["island-1", "Island 1"], ["island-2", "Island 2"]],
-  "temporary island naming must stay generic until the setting is authored",
+  [["island-1", "Island 1"], ["island-2", "Island 2"], ["puzzle-trials", "Puzzle Trials"]],
+  "the new puzzle island must preserve the existing region identities",
 );
 assert.ok(
   campaign.CAMPAIGN_LEVELS.filter(({ boss }) => boss).length === 2,
@@ -111,6 +114,12 @@ assert.equal(campaign.campaignLevelById('codex-lab').islandId, 'island-2');
 
 const graph = new campaign.CampaignStore();
 graph.startEphemeral();
+assert.deepEqual(campaign.CAMPAIGN_LEVELS.slice(15).map(level=>level.progressKey),
+  ['crate-primer','switchyard','clockwork-gauntlet'],'research hubs must append after all saved identities');
+for(const key of campaign.CAMPAIGN_ISLANDS[2].levelKeys){
+  assert.equal(graph.levelUnlocked(key),true,`${key} is unavailable on a fresh save`);
+  assert.equal(campaign.campaignLevelById(key).islandId,'puzzle-trials');
+}
 assert.equal(graph.recommendedMapLevelKey(), "treehouse-trail");
 assert.equal(campaign.CAMPAIGN_ISLANDS[0].levelKeys[0], "treehouse-trail");
 assert.equal(graph.levelUnlocked("treehouse-trail"), true);
