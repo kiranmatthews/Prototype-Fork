@@ -1315,12 +1315,14 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   // the same way the spawn and the gate are — old saves get them beside the
   // spawn (move them wherever afterwards); duplicates collapse to the last.
   if (d.hudMode !== "bonus" && d.hudMode !== "hub" && !d.skatepark) {
+    const sideSpawn = d.components.some(c => c.t === "zone" && (c.dir === "E" || c.dir === "W") && c.s &&
+      Math.abs(d.spawn[0] - c.p[0]) <= c.s[0] / 2 && Math.abs(d.spawn[2] - c.p[2]) <= c.s[2] / 2);
     for (const t of ["clock", "comboorb"] as const) {
       const last = d.components.map((c) => c.t).lastIndexOf(t);
       if (last === -1)
         d.components.push({
           t,
-          p: [d.spawn[0] + (t === "clock" ? 2 : -2), d.spawn[1], d.spawn[2] - 5],
+          p: [d.spawn[0] + (t === "clock" ? 2 : -2), d.spawn[1], d.spawn[2] - (sideSpawn ? 0 : 5)],
         });
       else d.components = d.components.filter((c, i) => c.t !== t || i === last);
     }
@@ -3423,6 +3425,10 @@ export function levelList(): LevelEntry[] {
   const out = BUILTIN_LEVELS.map((builtin) => {
     const override = edited.get(builtin.id);
     if (!override || isOriginalTestCourse(override)) return builtin;
+    // Early published copies mislabeled these campaign courses as bonuses.
+    // Repair their presentation while retaining all locally edited geometry.
+    if (override.data?.hudMode === "bonus" && PUZZLE_LEVELS.some(level => level.id === builtin.id))
+      return { ...override, data: { ...override.data, hudMode: undefined } };
     // Old edited copies predate semantic HUD metadata. Inherit only a missing
     // built-in presentation tag without mutating the saved object; an explicit
     // tag on the override remains authoritative.
@@ -17836,8 +17842,9 @@ export class Level {
     if (this.gateSpec) {
       // one gem-width along the gate's own tangent, so it stands beside the
       // combo prize (which parks on the gate's normal) instead of inside it
-      if (this.hudMode === 'bonus') {
-        // A side-view bonus may confine depth to one line. Keep its earned
+      const finishDir = this.zoneAt(this.gateSpec.x, this.gateSpec.z)?.dir;
+      if (this.hudMode === 'bonus' || finishDir === 'E' || finishDir === 'W') {
+        // Side-view courses may confine depth to one line. Keep their earned
         // prize on the supported approach, before touching the finish pad.
         let dx = pos.x - this.gateSpec.x, dz = pos.z - this.gateSpec.z;
         if (Math.hypot(dx, dz) < .01) {

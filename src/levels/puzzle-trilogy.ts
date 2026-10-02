@@ -100,7 +100,7 @@ function course(index:number,name:string,end:number) {
       if(index===2)add({t:'torch',p:[x,-.6,-3.6],rise:3,w:.5,grp:5,nm:'Foundry lantern'});
     }
   };
-  const data=():CustomLevelData=>({v:1,name,spawn:[-5,.12,0],killY:-12,hudMode:'bonus',
+  const data=():CustomLevelData=>({v:1,name,spawn:[-5,.12,0],killY:-12,
     sky:colors.sky,components,groups});
   return {add,deck,shelf,crate,fruit,arc,enemy,checkpoint,section,jump,bridge,anchors,clear,flip,finish,data,actions,sections};
 }
