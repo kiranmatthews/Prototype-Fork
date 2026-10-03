@@ -10,11 +10,11 @@ export interface CameraView {
   cameraTarget?: readonly [number, number, number];
   cameraFov?: number;
   cameraAspect?: number;
-  /** Dolly from the authored establishing shot into a translation-only follow. */
+  /** Translation-only follow distance, capped at the close gameplay limit. */
   cameraFollowDistance?: number;
   /** Relative target height keeps tall crate goals visible at a close lens. */
   cameraFollowTargetHeight?: number;
-  /** Metres travelled from entry before the follow composition fully takes over. */
+  /** Legacy authoring metadata; gameplay no longer starts with a distant establishing shot. */
   cameraIntroDistance?: number;
 }
 
@@ -47,11 +47,8 @@ export class CameraViewFraming {
   private readonly shotMatrix=new THREE.Matrix4();
   private readonly shotOrientation=new THREE.Quaternion();
   private readonly worldUp=new THREE.Vector3(0,1,0);
-  private activeView:CameraView|null=null;
-  private readonly entry=new THREE.Vector3();
   private readonly followEye=new THREE.Vector3();
   private readonly followTarget=new THREE.Vector3();
-  private introProgress=0;
 
   restore(camera:THREE.PerspectiveCamera):void {
     if(!this.applied)return;
@@ -60,28 +57,20 @@ export class CameraViewFraming {
     this.applied=false;
   }
 
-  apply(camera:THREE.PerspectiveCamera,match:CameraViewMatch|null,subject?:THREE.Vector3,snap=false):void {
+  apply(camera:THREE.PerspectiveCamera,match:CameraViewMatch|null,subject?:THREE.Vector3,_snap=false):void {
     if(!match)return;
     const {view,weight}=match;
-    if(this.activeView!==view||snap){
-      this.activeView=view;this.introProgress=0;
-      if(subject)this.entry.copy(subject);
-    }
     if(!view.cameraPosition&&!view.cameraTarget&&view.cameraFov===undefined)return;
     this.position.copy(camera.position);this.orientation.copy(camera.quaternion);this.up.copy(camera.up);this.fov=camera.fov;
     this.applied=true;
     if(view.cameraPosition&&view.cameraTarget){
       this.shotEye.fromArray(view.cameraPosition);this.shotTarget.fromArray(view.cameraTarget);
-      if(view.cameraFollowDistance!==undefined&&subject){
+      const distance=Math.min(18,view.cameraFollowDistance??this.shotEye.distanceTo(this.shotTarget));
+      if(subject){
         this.followTarget.copy(subject);this.followTarget.y+=view.cameraFollowTargetHeight??1.3;
-        this.followEye.copy(this.shotEye).sub(this.shotTarget).setLength(view.cameraFollowDistance).add(this.followTarget);
-        const distance=view.cameraIntroDistance??0;
-        this.introProgress=Math.max(this.introProgress,distance>0?THREE.MathUtils.smoothstep(Math.hypot(subject.x-this.entry.x,subject.z-this.entry.z),0,distance):1);
-        // Equal eye/target interpolation preserves the exact authored direction.
-        // Progress latches, so retracing stairs cannot zoom back out.
-        this.shotEye.lerp(this.followEye,this.introProgress);
-        this.shotTarget.lerp(this.followTarget,this.introProgress);
-      }
+        this.followEye.copy(this.shotEye).sub(this.shotTarget).setLength(distance).add(this.followTarget);
+        this.shotEye.copy(this.followEye);this.shotTarget.copy(this.followTarget);
+      }else this.shotEye.sub(this.shotTarget).setLength(distance).add(this.shotTarget);
       this.shotMatrix.lookAt(this.shotEye,this.shotTarget,this.worldUp);
       this.shotOrientation.setFromRotationMatrix(this.shotMatrix);
       camera.position.lerp(this.shotEye,weight);
@@ -89,9 +78,8 @@ export class CameraViewFraming {
       camera.up.lerp(this.worldUp,weight).normalize();
     }
     if(view.cameraFov!==undefined){
-      const fit=Math.max(1,(view.cameraAspect??camera.aspect)/camera.aspect);
-      const fov=fit>1?Math.min(120,THREE.MathUtils.radToDeg(2*Math.atan(Math.tan(THREE.MathUtils.degToRad(view.cameraFov)*.5)*fit))):view.cameraFov;
-      camera.fov=THREE.MathUtils.lerp(camera.fov,fov,weight);camera.updateProjectionMatrix();
+      // Portrait fitting must not widen the gameplay lens into an overview.
+      camera.fov=THREE.MathUtils.lerp(camera.fov,Math.min(this.fov,view.cameraFov),weight);camera.updateProjectionMatrix();
     }
   }
 }

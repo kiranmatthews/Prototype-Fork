@@ -8,10 +8,12 @@ await withChiefRuntime(async ({ l, p, tick, source, module }) => {
   assert.equal(module.normalizeCustomLevelData({ ...source, encounter: 'remote-code' }), null);
   assert.equal(l.captureData().encounter, 'crab-chief');
   assert.equal(source.components.filter(c => c.t === 'gate').length, 1);
+  assert.equal(l.crystalPickup,null); assert.equal(l.cameraViews.length,0);
+  assert.ok(!l.groundMeshes.some(mesh=>mesh.userData.finishPad));
   assert.equal(l.rails.length, 2); assert.equal(l.clockPickup, null); assert.equal(l.comboOrb, null);
   for (let i = 0; i < 30; i++) tick();
   assert.equal(p.grounded, true); assert.equal(p.state, 'ride'); assert.ok(Math.abs(p.pos.y) < .01);
-  // A gate fixture proves that the production finish-pad path is locked. It
+  // The old finish location cannot end an undefeated boss encounter. It
   // makes no claim about travelling there; the journey test owns that proof.
   p.respawn(l, true, false, { position: new THREE.Vector3(0, .1, -49) });
   for (let i = 0; i < 30; i++) tick();
@@ -110,5 +112,5 @@ await withChiefRuntime(async ({ l, p, tick, source, module }) => {
   boss.reset(true); actor.shielded = false; actor.position.set(0, 0, -16);
   let fatal = false; for (let i = 0; i < 2500 && !fatal; i++) fatal = step().fatal;
   assert.equal(fatal, true); assert.equal(boss.playerHealth, 0);
-  console.log(`PASS Crab Chief: bounded editor round-trip, supported spawn, locked real gate, ${model.diagnostics.triangles} triangles, planted toes, finite animation settle, three-phase FSM, armor/charge, one-hit openings, phase/victory retry, telegraph lock and damage/mask rules.`);
+  console.log(`PASS Crab Chief: bounded editor round-trip, supported spawn, no crystal/warp pad and defeat-driven completion, ${model.diagnostics.triangles} triangles, planted toes, finite animation settle, three-phase FSM, armor/charge, one-hit openings, phase/victory retry, telegraph lock and damage/mask rules.`);
 });

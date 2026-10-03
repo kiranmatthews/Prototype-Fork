@@ -15,6 +15,8 @@ await withChiefRuntime(async context => {
       }
     }
     assert.equal(context.p.state, 'finished'); assert.equal(context.l.boss.canFinish, true);
+    assert.ok(context.p.pos.z>-35,'victory still required visiting the old warp location');
+    assert.equal(context.l.crystalPickup,null);assert.equal(context.p.hasCrystal,false);
     assert.equal(context.l.boss.health, 0); assert.equal(context.p.totalDeaths, 0);
     assert.equal(context.p.isBailing, false); assert.equal(context.l.boss.hits, 9);
     assert.deepEqual(context.l.boss.strikes.map(row => row.phase), [1,1,1,2,2,2,3,3,3]);

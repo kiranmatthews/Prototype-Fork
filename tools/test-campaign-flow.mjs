@@ -561,3 +561,18 @@ oldFinale.commitClear('jungle-gate-run',{crystal:true});
 assert.equal(oldFinale.levelUnlocked('codex-lab'),false);
 assert.equal(oldFinale.levelUnlocked('jungle-gate-run'),true,'inserting Blockworks must not relock a completed finale');
 console.log("Validated campaign slots, branch identities/awards, working snapshots, autosave, progress and persistent Modern/Classic rules.");
+
+const bossRewardStore=new campaign.CampaignStore();const legacyBossSave=bossRewardStore.startEphemeral();
+const bosses=campaign.CAMPAIGN_LEVELS.filter(level=>!campaign.levelAllowsBonus(level.levelId));
+for(const boss of bosses){
+  const progress=bossRewardStore.levelProgress(boss.levelId);progress.crystal=true;
+  if(!boss.competition){bossRewardStore.commitClear(boss.levelId,{crystal:true,boxGem:false,comboGem:false});assert.equal(progress.crystal,false);}
+  progress.crystal=true;progress.boxGem=true;
+}
+legacyBossSave.levels.jungle.crystal=true;legacyBossSave.slot=1;
+memory.set('solProtoCampaignSavesV1',JSON.stringify([legacyBossSave]));
+const migratedBossStore=new campaign.CampaignStore(),migratedBossSave=migratedBossStore.listSlots()[0];
+for(const boss of bosses){assert.equal(migratedBossSave.levels[boss.progressKey].crystal,false);assert.equal(migratedBossSave.levels[boss.progressKey].boxGem,true);}
+assert.equal(migratedBossSave.levels.jungle.crystal,true);
+assert.equal(migratedBossStore.totals(migratedBossSave).maxCrystals,campaign.CAMPAIGN_LEVELS.filter(level=>campaign.levelAllowsBonus(level.levelId)).length);
+console.log('PASS boss crystal award/legacy-slot exclusion preserves ordinary crystals and other saved rewards.');

@@ -8,13 +8,17 @@
     "realGrindMetres": 98.7556573389468
   },
   "fullChrome": {
-    "frames": 3985,
+    "frames": 3982,
     "hits": 9,
     "deaths": 0,
-    "framingSamples": 266,
-    "riderClipping": 0,
-    "chiefCombatClipping": 0,
-    "preCrtCombatSamples": 233
+    "completionPosition": [
+      -2.1849574113251267,
+      0,
+      -24.203236921428942
+    ],
+    "camera": "normal close follow",
+    "crystalAward": false,
+    "warpPad": false
   },
   "skin": {
     "samples": 900,
@@ -45,5 +49,23 @@
       "deaths": 0,
       "consoleErrors": 0
     }
+  },
+  "bossPresentation": {
+    "camera": "normal close follow",
+    "authoredMaximumDistanceMetres": 18,
+    "distantIntro": false,
+    "portraitLensWidening": false,
+    "crystal": false,
+    "warpPad": false,
+    "completion": "chief defeat animation settles in place",
+    "nodeJourneyFrames": 3950,
+    "completionPosition": [
+      -2.0846341119999416,
+      0,
+      -24.11535818394599
+    ],
+    "hits": 9,
+    "deaths": 0,
+    "legacyBossCrystalsExcluded": true
   }
 }

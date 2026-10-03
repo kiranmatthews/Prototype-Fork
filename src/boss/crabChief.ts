@@ -113,7 +113,7 @@ export class CrabChiefEncounter {
   get exposed(): boolean { return this.state === 'recover' && this.stateTime > .7; }
   get charged(): boolean { return this.charge >= 1; }
   get hint(): string {
-    if (this.defeated) return this.canFinish ? 'THE REEF IS FREE · Skate through the shell arch' : 'THE CHIEF YIELDS';
+    if (this.defeated) return this.canFinish ? 'THE REEF IS FREE · VICTORY' : 'THE CHIEF YIELDS';
     if (this.state === 'waiting' || this.state === 'intro') return 'TIDEBREAK · Chief of the Reef';
     if (this.state === 'phase') return `PHASE ${this.phase} · ${CHIEF_PHASES[this.phase - 1].name}`;
     if (this.state === 'hurt') return 'PEARL CRACKED!';

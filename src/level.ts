@@ -777,7 +777,7 @@ export interface CustomComponent {
   cameraAspect?: number; // cameraView: keep the authored horizontal composition in narrower viewports
   cameraFollowTargetHeight?: number; // cameraView: follow look-target height above the subject, 0..8m
   cameraFollowDistance?: number; // cameraView: follow subject at this distance, preserving authored direction
-  cameraIntroDistance?: number; // cameraView: metres from entry to dolly from the wide shot into follow
+  cameraIntroDistance?: number; // legacy authoring value; gameplay starts in close follow
   radius?: number; // camnode: lane corner radius · stone: the boulder's radius
   materialStyle?: "unity-sand"; // mesh only: registered MatrixRex sand factory, never external assets
   emissive?: string; // bounded surface emission on EMISSIVE_COMPONENT_TYPES
@@ -3728,6 +3728,7 @@ export function isEditUnlocked(): boolean {
 }
 
 export class Level {
+  readonly isBossLevel: boolean;
   readonly allowsBonus: boolean;
   boss: CrabChiefEncounter | null = null;
   groundMeshes: THREE.Mesh[] = [];
@@ -4623,7 +4624,8 @@ export class Level {
       sfx.play('skateHalt', 0.4, removed ? 1.6 : 0.65);
     };
     this.name = entry.name;
-    this.allowsBonus = levelAllowsBonus(entry.id) && !entry.data?.encounter && !isCompetitionLevel(entry.id);
+    this.isBossLevel = !levelAllowsBonus(entry.id) || !!entry.data?.encounter || isCompetitionLevel(entry.id);
+    this.allowsBonus = !this.isBossLevel;
     this.relicTime = resolveRelicTime(entry.id, entry.data);
     this.medalTimes = resolveMedalTimes(entry.id, entry.data);
     // A user level carries its own component data and builds through the same
@@ -4668,7 +4670,7 @@ export class Level {
       this.theme.fogFar = SKY_BRIDGE_FOG_FAR;
     }
     if (isCampaignLevel(entry.id) && !isCompetitionLevel(entry.id)) {
-      if (!this.crystalPickup) this.placeCampaignCrystal();
+      if (!this.isBossLevel && !this.crystalPickup) this.placeCampaignCrystal();
       if (this.allowsBonus && !this.bonusPlatform) this.placeDefaultBonusPlatform();
     }
     // The entrance and the parent gem tally resolve the same authored room.
@@ -17396,6 +17398,7 @@ export class Level {
 
   // Main-route crystal: faceted specular shell, with pickup glints in update.
   private crystal(x: number, y: number, z: number): void {
+    if (this.isBossLevel) return;
     const g = Level.crystalMesh(1);
     // belt sits at the group origin; the long bottom point reaches ~1.5 below,
     // so float the group up to keep the tip hovering just above the ground
@@ -19505,6 +19508,13 @@ export class Level {
       new THREE.Vector3(cx, deckY + 15, z),
       new THREE.Vector3(hx * 2, 30, hz * 2),
     );
+    if (this.isBossLevel) {
+      // Encounter bosses finish on defeat. Legacy boss-labelled courses keep
+      // an invisible end boundary, with no warp artwork or pad collision.
+      if (!this.builtFromData?.encounter) this.finishGlow.setFromCenterAndSize(
+        new THREE.Vector3(cx,deckY+1.5,z),new THREE.Vector3(hx*2,3,hz*2));
+      return;
+    }
     // every piece hangs off one group in gate-local space, so yaw is one turn
     const gate = new THREE.Group();
     gate.position.set(cx, deckY, z);

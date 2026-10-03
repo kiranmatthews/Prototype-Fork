@@ -4862,6 +4862,7 @@ export class Player {
   }
 
   private stepBossEncounter(dt: number, level: Level): void {
+    if (level.isBossLevel) this.hasCrystal = false;
     if (!level.boss) return;
     const result = level.boss.step(dt, {
       position: this.pos, state: this.state, speed: Math.abs(this.state === 'grind' ? this.grindVel : this.speed),
@@ -10229,9 +10230,9 @@ export class Player {
     // midair hover after the run is already over. Clamp across the gate's
     // WIDE axis (post to post), whichever world axis that is after its yaw.
     const fb = level.finishBox;
-    if (fb.max.x - fb.min.x >= fb.max.z - fb.min.z) {
+    if (!level.boss && fb.max.x - fb.min.x >= fb.max.z - fb.min.z) {
       this.pos.x = THREE.MathUtils.clamp(this.pos.x, fb.min.x + 1.5, fb.max.x - 1.5);
-    } else {
+    } else if (!level.boss) {
       this.pos.z = THREE.MathUtils.clamp(this.pos.z, fb.min.z + 1.5, fb.max.z - 1.5);
     }
     if (this.pos.z < level.endWallZ + 1) {
@@ -12515,14 +12516,14 @@ export class Player {
       const required=level.loopMeshes.filter(mesh=>mesh.userData.loopRequired).length;
       this.onCourseHint('LOOP STILL CLOSED', required>1?`Complete all ${required} loops to unlock the exit`:'Complete the Loop of Death to unlock the exit');
     } else if (!touchingFinish) this.loopGateHintShown = false;
-    if (!this.competitionMode && loopGoalsComplete && touchingFinish && (level.boss?.canFinish ?? true)) {
+    if (!this.competitionMode && loopGoalsComplete && (level.boss ? level.boss.canFinish : touchingFinish)) {
       this.bankCombo(); // whatever is pending counts as you arrive
       sfx.play('lifeGet', 1.0);
       this.state = 'finished';
       // Planted, not coasting — but only when you actually landed on it.
       // Killing the speed of someone who jumped THROUGH the glow would stop
       // them dead in mid-air.
-      if (onPad) this.speed = 0;
+      if (onPad || level.boss) this.speed = 0;
       // A COMBO RUN ends on the line too. bankCombo() above just closed the
       // chain, so without this the watchdog below sees "comboRun live, combo
       // just ended, gem still out there", calls failComboRun, and 1.2s after

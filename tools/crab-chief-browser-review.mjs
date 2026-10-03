@@ -48,7 +48,7 @@ start.onclick = () => {
       bailing: p.isBailing, boss: boss.state, phase: boss.phase, health: boss.health, playerHealth: boss.playerHealth, charge: boss.charge });
     try { next = generator.next(); if (next.done) { review.done = true; review.result = next.value; } }
     catch (error) { review.failed = String(error); review.done = true; }
-    report.textContent = review.failed ? `FAIL ${review.failed}` : review.done ? `PASS · ${review.frame} frames · 9 strikes · real gate finish · ${p.totalDeaths} deaths` :
+    report.textContent = review.failed ? `FAIL ${review.failed}` : review.done ? `PASS · ${review.frame} frames · 9 strikes · boss victory completion · ${p.totalDeaths} deaths` :
       `${review.stage} · frame ${review.frame} · chief ${boss.health}/9 · hearts ${boss.playerHealth}/3`;
     if (review.done) { review.boss = boss.diagnostics; review.states = [...review.states]; report.dataset.outcome = review.failed ? 'failed' : 'passed'; evidence.textContent = JSON.stringify(review); }
   };
@@ -83,10 +83,10 @@ start.onclick = () => {
         }
         if (previewWanted) {
           // Crop the completed production frame so the Level Select image uses
-          // the real depth/water/CRT passes and excludes the top/bottom HUD.
-          const source=g.renderer.domElement, height=source.height*.66, width=height*16/9;
+          // the real depth/water/CRT passes and the close combat view.
+          const source=g.renderer.domElement, height=source.height, width=Math.min(source.width,height*16/9);
           const canvas=document.createElement('canvas');canvas.width=960;canvas.height=540;
-          canvas.getContext('2d').drawImage(source,(source.width-width)/2,source.height*.15,width,height,0,0,960,540);
+          canvas.getContext('2d').drawImage(source,(source.width-width)/2,0,width,height,0,0,960,540);
           const link=document.createElement('a');link.download='crab-chief-meshy-preview.jpg';
           link.href=canvas.toDataURL('image/jpeg',.92);link.click();
         }

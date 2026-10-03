@@ -711,7 +711,7 @@ function cloneSlots(
   return slots.map((save) => (save ? cloneSave(save) : null));
 }
 
-function normalizeLevelProgress(value: unknown): CampaignLevelProgress {
+function normalizeLevelProgress(value: unknown, levelId: string): CampaignLevelProgress {
   const raw = value && typeof value === "object"
     ? value as Partial<CampaignLevelProgress>
     : {};
@@ -719,7 +719,7 @@ function normalizeLevelProgress(value: unknown): CampaignLevelProgress {
   const timeMedal = earnedTimeMedal(raw);
   return {
     cleared: raw.cleared === true,
-    crystal: raw.crystal === true,
+    crystal: levelAllowsBonus(levelId) && raw.crystal === true,
     boxGem: raw.boxGem === true,
     comboGem: raw.comboGem === true,
     timeRelic: timeMedal !== null,
@@ -743,7 +743,7 @@ function normalizeSave(value: unknown, slot: number): CampaignSaveV1 | null {
   const levels = emptyLevels();
   const incoming = raw.levels && typeof raw.levels === "object" ? raw.levels : {};
   for (const level of CAMPAIGN_LEVELS)
-    levels[level.progressKey] = normalizeLevelProgress(incoming[level.progressKey]);
+    levels[level.progressKey] = normalizeLevelProgress(incoming[level.progressKey],level.levelId);
   const rawLives =
     typeof raw.lives === "number" && Number.isFinite(raw.lives)
       ? Math.floor(raw.lives)
@@ -1083,7 +1083,7 @@ export class CampaignStore {
     const finishedChanged = this.updateLastFinishedLevel(levelId);
     const before = { ...progress };
     progress.cleared = true;
-    progress.crystal = progress.crystal || rewards.crystal;
+    progress.crystal = levelAllowsBonus(levelId) && (progress.crystal || rewards.crystal);
     progress.boxGem = progress.boxGem || rewards.boxGem;
     progress.comboGem = progress.comboGem || rewards.comboGem;
     if (
@@ -1166,7 +1166,8 @@ export class CampaignStore {
     let earned = 0, cups = 0;
     const maxCups = CAMPAIGN_LEVELS.filter(level => level.competition).length;
     const ordinaryLevels = CAMPAIGN_LEVELS.length - maxCups;
-    const maxMilestones = ordinaryLevels * 5 + maxCups * 2;
+    const crystalLevels = CAMPAIGN_LEVELS.filter(level => levelAllowsBonus(level.levelId)).length;
+    const maxMilestones = ordinaryLevels * 4 + crystalLevels + maxCups * 2;
     if (save) {
       for (const level of CAMPAIGN_LEVELS) {
         const progress = save.levels[level.progressKey] ?? emptyLevelProgress();
@@ -1175,7 +1176,7 @@ export class CampaignStore {
           if (progress.cup) { cups++; earned++; }
           continue;
         }
-        if (progress.crystal) { crystals++; earned++; }
+        if (levelAllowsBonus(level.levelId) && progress.crystal) { crystals++; earned++; }
         if (progress.boxGem) { gems++; earned++; }
         if (progress.comboGem) { gems++; earned++; }
         if (earnedTimeMedal(progress)) { relics++; earned++; }
@@ -1189,7 +1190,7 @@ export class CampaignStore {
       relics,
       maxLevels: CAMPAIGN_LEVELS.length,
       maxGems: ordinaryLevels * 2,
-      maxCrystals: ordinaryLevels, maxRelics: ordinaryLevels, cups, maxCups,
+      maxCrystals: crystalLevels, maxRelics: ordinaryLevels, cups, maxCups,
     };
   }
 

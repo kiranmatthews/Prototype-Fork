@@ -30,11 +30,8 @@ export function* runChiefJourney(context) {
     let input = {};
     if (boss.health !== lastHealth) { railApproach = false; lastHealth = boss.health; }
     if (boss.defeated) {
-      context.stage = 'victory causeway';
-      if (p.pos.z > -33 && p.pos.x < 9) input = toward(11, -25);
-      else if (p.pos.z > -33) input = toward(11, -34);
-      else if (Math.abs(p.pos.x) > 1.2) input = toward(0, -34, .6);
-      else input = toward(0, -49, .6);
+      context.stage = 'chief defeat settle';
+      input = {grabHeld:true};
     } else if (boss.phase === 1) {
       context.stage = `phase 1 · ${boss.state}`;
       if (boss.state === 'waiting' || boss.state === 'intro') {

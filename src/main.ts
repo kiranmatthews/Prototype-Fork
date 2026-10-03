@@ -2376,7 +2376,11 @@ function competitionOverview():boolean {
   return !!competition&&!competition.simulating&&competition.phase!=="countdown"&&!editor.active;
 }
 function frameCompetitionOverview():void {
-  const course=competitionCourse(current.id);camera.up.set(0,1,0);camera.position.set(...course.overviewEye);camera.lookAt(...course.overviewTarget);
+  const forward=camF.clone();forward.y=0;forward.normalize();
+  camera.up.set(0,1,0);
+  camera.position.copy(player.pos).addScaledVector(forward,-TUNING.camDist);camera.position.y+=TUNING.camHeight;
+  const aim=new THREE.Vector3();setCameraRigAim(aim,camera.position,forward,TUNING.camPitch);camera.lookAt(aim);
+  camera.fov=TUNING.camFov;camera.updateProjectionMatrix();
 }
 function preparingCompetitionPresentation():boolean {
   return !!competition&&!gameFlow.currentScreen&&
@@ -2730,7 +2734,7 @@ function showCampaignResults(): void {
   if (definition?.competition) return;
   if (definition)
     campaign.commitClear(current.id, {
-      crystal: player.hasCrystal,
+      crystal: !level.isBossLevel && player.hasCrystal,
       boxGem: player.gemEarned,
       comboGem: player.comboGemEarned,
     });
@@ -2748,7 +2752,7 @@ function showCampaignResults(): void {
     levelName: definition?.name ?? current.name,
     boxes,
     totalBoxes: level.totalCrates,
-    crystal: player.hasCrystal && !runStartRewards.crystal,
+    crystal: !level.isBossLevel && player.hasCrystal && !runStartRewards.crystal,
     boxGem: player.gemEarned && !runStartRewards.boxGem,
     comboGem: player.comboGemEarned && !runStartRewards.comboGem,
     firstClear,
@@ -4620,7 +4624,7 @@ function currentHudState(): HudState {
     // L2 shows this run's carried rewards, not the banked map collection.
     // Keep the start-of-run snapshot: committing results must not erase the
     // pickup from this run's presentation before its exit/retry boundary.
-    hasCrystal: player.hasCrystal && !runStartRewards.crystal,
+    hasCrystal: !level.isBossLevel && player.hasCrystal && !runStartRewards.crystal,
     hasGem: player.gemEarned && !runStartRewards.boxGem,
     hasComboGem: player.comboGemEarned && !runStartRewards.comboGem,
     inventoryHeld: input.inventoryHeld,

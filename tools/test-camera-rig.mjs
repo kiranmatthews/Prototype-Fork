@@ -69,7 +69,7 @@ try {
   near(cameraViewAt([view],15,0,0).weight,.5,'shot feather disagrees with its boundary');
   assert.equal(cameraViewAt([view],20,0,0),null,'shot leaks outside its bounds');
   const fixedHeading=cameraViewDirection([view],0,0,0,{x:1,z:0});near(fixedHeading.x,0,"fixed heading X");near(fixedHeading.z,-1,"fixed heading Z");
-  const expected=new THREE.PerspectiveCamera();expected.position.fromArray(view.cameraPosition);expected.lookAt(...view.cameraTarget);
+  const expected=new THREE.PerspectiveCamera();expected.position.fromArray(view.cameraPosition).sub(new THREE.Vector3(...view.cameraTarget)).setLength(18).add(new THREE.Vector3(...view.cameraTarget));expected.lookAt(...view.cameraTarget);
   layer.apply(camera,cameraViewAt([view],0,0,0));
   near(camera.position.distanceTo(expected.position),0,'fixed view eye');
   near(camera.quaternion.angleTo(expected.quaternion),0,'fixed view target',1e-7);
@@ -92,25 +92,21 @@ try {
   const beforeLegacy=camera.position.clone();layer.apply(camera,cameraViewAt([headingOnly],0,0,0));
   near(camera.position.distanceTo(beforeLegacy),0,'legacy heading-only view changed framing');
 
-  // A narrow app panel must still show both ends of an authored wide shot.
+  // Old authored panoramas stay close and cannot widen the portrait lens.
   const wideShot={...view,cameraPosition:[-1,8.5,36],cameraTarget:[-1,5.5,-5],cameraFov:46,cameraAspect:16/9};
-  const projected=[];
   for(const aspect of [16/9,4/3,1,390/844]){
     const panelCamera=new THREE.PerspectiveCamera(49,aspect,.1,400),panelLayer=new CameraViewFraming();
-    panelLayer.apply(panelCamera,{view:wideShot,weight:1});panelCamera.updateMatrixWorld(true);
-    const edges=[new THREE.Vector3(-24,8,-5),new THREE.Vector3(21,4,0)].map(p=>p.project(panelCamera).x);
-    assert.ok(edges.every(x=>Math.abs(x)<.95),'narrow panel cropped a landmark');
-    projected.push(edges);
+    panelLayer.apply(panelCamera,{view:wideShot,weight:1});
+    near(panelCamera.position.distanceTo(new THREE.Vector3(...wideShot.cameraTarget)),18,'old panorama escaped close distance');
+    near(panelCamera.fov,46,'portrait view widened its lens');
   }
-  for(const edges of projected.slice(1))for(let i=0;i<2;i++)near(edges[i],projected[0][i],'horizontal shot composition changed');
-
-  // The opening remains wide until movement, then dollies in without a yaw
-  // or pitch change and tracks a descending player. Backtracking stays close.
+  // The first frame already follows the subject. Walking backwards cannot
+  // restore an old establishing shot.
   const tracking={...wideShot,cameraFollowDistance:14.5,cameraIntroDistance:4};
   const follower=new CameraViewFraming(),subject=new THREE.Vector3(-17,8.4,0);
   const heading=new THREE.Vector3().fromArray(tracking.cameraTarget).sub(new THREE.Vector3().fromArray(tracking.cameraPosition)).normalize();
   follower.apply(camera,{view:tracking,weight:1},subject,true);
-  near(camera.position.distanceTo(new THREE.Vector3(...tracking.cameraPosition)),0,'opening pose changed before movement');
+  near(camera.position.distanceTo(subject.clone().add(new THREE.Vector3(0,1.3,0))),14.5,'opening did not start close');
   follower.restore(camera);
   for(let i=1;i<=80;i++){
     subject.set(-17+i*.1,8.4-i*.07,i*.04);
@@ -125,7 +121,7 @@ try {
   near(camera.position.distanceTo(subject.clone().add(new THREE.Vector3(0,1.3,0))),14.5,'return to balcony zoomed out');
   follower.restore(camera);
   follower.apply(camera,{view:tracking,weight:1},subject,true);
-  near(camera.position.distanceTo(new THREE.Vector3(...tracking.cameraPosition)),0,'restart did not restore establishing shot');
+  near(camera.position.distanceTo(subject.clone().add(new THREE.Vector3(0,1.3,0))),14.5,'restart restored a distant establishing shot');
   follower.restore(camera);
 
   const legacy = { camDist: 3.8, camHeight: 5.1, camTilt: 3.3, camOffset: -1.25 };

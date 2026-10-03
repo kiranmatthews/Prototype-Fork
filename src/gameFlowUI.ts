@@ -1344,6 +1344,7 @@ export class GameFlowUI {
     else {
       const entries = [['crystal', !!progress?.crystal, 'CRYSTAL'], ['gem', !!progress?.boxGem, 'ALL BOXES'], ['combo', !!progress?.comboGem, 'COMBO'], ['medal', !!medal, 'TIME TRIAL']] as const;
       for (const [kind, earned, label] of entries) {
+        if (kind === 'crystal' && definition.boss) continue;
         const item = element('div', 'game-level-prize');
         item.append(rewardSlot(kind, earned, medal), text('span', label, 'game-reward-caption')); rewards.append(item);
       }

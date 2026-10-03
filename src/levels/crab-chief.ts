@@ -34,7 +34,7 @@ add({ t: 'woodpath', p: [0, 0, 23], pts: [[0, 0, 0, 0], [0, -17, 0, 0]], widths:
 add({ t: 'platform', p: [0, -.55, -43], s: [14, 1.1, 15], color: '#628d84', tex: 'solid',
   edgeGrinding: false, nm: 'Victory causeway' });
 add({t:'platform',p:[0,-.65,-59],s:[17,1.3,16],color:'#b1b5a2',tex:'stone',edgeGrinding:false,nm:'Throne-islet foundation beyond victory arch'});
-add({ t: 'gate', p: [0, 0, -49], nm: 'Reef crown exit · sealed until chief yields' });
+add({ t: 'gate', p: [0, 0, -49], invisible:true, nm: 'Logical boss boundary · victory completes at the chief' });
 add({ t: 'checkpoint', p: [0, 0, 5.5], nm: 'Arena arrival · phase progress survives a retry' });
 add({ t: 'pit', p: [0, -2.8, -15], s: [130, 1, 130], invisible: true, nm: 'Deep lagoon respawn' });
 // Broad ramps offer a skating line back from both elevated reef terraces.
@@ -82,11 +82,6 @@ for (const side of [-1,1]) for (let i=0;i<5;i++) {
 for(const side of [-1,1]) for(const z of [-4,-24])
   add({t:'decor',dkind:'mapcliff',p:[side*30,-1.6,z],s:[6.5,3.8,7],yaw:side*19,solid:false,
     color:'#b9c5b5',nm:'Existing map-kit shoreline rock'});
-// An authored arena shot keeps the whole chief, the attack floor and rider in
-// view. Translation-only following preserves that composition at the edges.
-add({ t: 'camnode', p: [0, 4, -16], s: [64, 30, 86], yaw: 0, radius: 3, cameraView: true,
-  cameraPosition: [0, 30, 39], cameraTarget: [0, 2, -14], cameraFov: 55, cameraAspect: 1.6,
-  cameraFollowDistance: 38, cameraIntroDistance: 15, nm: 'Chief establishing shot and arena follow' });
 
 export const CRAB_CHIEF_LEVEL: CustomLevelData = {
   v: 1, name: 'Tidebreak · Crab Chief', encounter: 'crab-chief',
