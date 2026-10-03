@@ -1,0 +1,9 @@
+<!doctype html><html><head><title>Chief HUD portrait</title><style>body{background:#496672;color:white;font:18px system-ui}canvas{background:repeating-conic-gradient(#596d7b 0% 25%,#738795 0% 50%) 50%/24px 24px;display:block}button{margin:20px;font:inherit}</style></head><body><button disabled>Save chief portrait</button><button id="preview" disabled>Save combat preview</button><script type="module">
+import * as THREE from 'three';import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
+const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true});renderer.setSize(384,384);renderer.setClearColor(0,0);document.body.append(renderer.domElement);
+const scene=new THREE.Scene(),camera=new THREE.OrthographicCamera(-1.8,1.8,1.8,-1.8,.1,40);camera.position.set(.1,6.95,12);camera.lookAt(0,6.75,0);
+scene.add(new THREE.HemisphereLight('#e4f8ff','#70533b',2));const sun=new THREE.DirectionalLight('#ffdfa7',3);sun.position.set(-4,10,9);scene.add(sun);
+const gltf=await new GLTFLoader().loadAsync('/boss/crab-chief.glb');scene.add(gltf.scene);renderer.render(scene,camera);
+const capture=new Image();capture.src='/docs/crab-chief-focused.png';const preview=document.querySelector('#preview');capture.onload=()=>{preview.disabled=false;};preview.onclick=()=>{const canvas=document.createElement('canvas');canvas.width=960;canvas.height=540;canvas.getContext('2d').drawImage(capture,0,0,960,540);const link=document.createElement('a');link.download='crab-chief-focus-preview.jpg';link.href=canvas.toDataURL('image/jpeg',.92);link.click();};
+const button=document.querySelector('button');button.disabled=false;button.onclick=()=>{renderer.render(scene,camera);const a=document.createElement('a');a.download='chief-portrait.png';a.href=renderer.domElement.toDataURL('image/png');a.click();};
+</script></body></html>

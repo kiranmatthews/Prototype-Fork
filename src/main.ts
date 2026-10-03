@@ -70,6 +70,7 @@ import type { WaterStudioHandle } from "./waterstudio";
 import { inputPrompts } from "./inputPrompts";
 import { GameInterfaceSurface } from "./gameInterfaceSurface";
 import { BossPresentation } from './boss/presentation';
+import { ChiefCamera } from './boss/camera';
 import { ResultsPresentation } from "./resultsPresentation";
 import { GameFlowVortexHost } from "./gameFlowVortex";
 import {
@@ -1931,12 +1932,14 @@ function stepPvp(dt: number): void {
 // P2's rig: a light follow cam (lane-aware forward, ground-agnostic) — the
 // full Crash rig belongs to P1; this one just keeps P2 framed and onward.
 const cameraViewFraming2 = new CameraViewFraming();
+const chiefCamera2 = new ChiefCamera();
 const authoredSkateCamera2 = new SkateChaseCameraOverlay();
 const loopCameraFraming2 = new LoopCameraFraming();
 const cameraOverlayHeroFraming2 = new CameraHeroFraming();
 function updateCamera2(dt: number): void {
   if (!p2) return;
   const framingSnap = cam2RenderSnapVersion !== p2.renderSnapVersion;
+  chiefCamera2.restore(camera2);
   authoredSkateCamera2.restore(camera2);
   loopCameraFraming2.restore(camera2);
   cameraViewFraming2.restore(camera2);
@@ -1954,6 +1957,7 @@ function updateCamera2(dt: number): void {
     camDist:TUNING.parkCamDist,camHeight:TUNING.parkCamHeight,camPitch:TUNING.parkCamPitch,camFov:TUNING.parkCamFov,
   });
   if(p2.authoredSkateCamera)cam2Look.apply(camera2,authoredSkateCamera2.aim);
+  chiefCamera2.apply(camera2,level.boss,subject,dt,framingSnap);
 }
 
 function updateBaseCamera2(dt: number): void {
@@ -4026,7 +4030,7 @@ ui.onToggleEndlessDeaths = () => {
 player.onComboBank = (amount, labels) => {
   ui.comboBank(amount, labels);
 };
-player.onCourseHint = (title, sub) => ui.showMessage(title, sub, 2600);
+player.onCourseHint = (title, sub) => { if (!level.boss) ui.showMessage(title, sub, 2600); };
 player.onComboBail = (labels, points, multiplier) => {
   ui.comboBail(labels, points, multiplier);
 };
@@ -4187,12 +4191,14 @@ const camF = new THREE.Vector3(0, 0, -1);
 const skateChaseCamera = new SkateChaseCamera();
 
 const cameraViewFraming = new CameraViewFraming();
+const chiefCamera = new ChiefCamera();
 const authoredSkateCamera = new SkateChaseCameraOverlay();
 const cameraHeroFraming = new CameraHeroFraming();
 const loopCameraFraming = new LoopCameraFraming();
 const cameraOverlayHeroFraming = new CameraHeroFraming();
 function updateCamera(dt: number): void {
   const framingSnap = cameraRenderSnapVersion !== player.renderSnapVersion;
+  chiefCamera.restore(camera);
   authoredSkateCamera.restore(camera);
   loopCameraFraming.restore(camera);
   cameraViewFraming.restore(camera);
@@ -4216,6 +4222,7 @@ function updateCamera(dt: number): void {
     camDist:TUNING.parkCamDist,camHeight:TUNING.parkCamHeight,camPitch:TUNING.parkCamPitch,camFov:TUNING.parkCamFov,
   });
   if(player.authoredSkateCamera)cameraLook.apply(camera,authoredSkateCamera.aim);
+  chiefCamera.apply(camera,level.boss,subject,dt,framingSnap);
 }
 
 function updateBaseCamera(dt: number): void {

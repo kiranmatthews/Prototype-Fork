@@ -16,6 +16,7 @@ export class MeshyChiefModel {
   readonly root=new THREE.Group();
   readonly ready:Promise<void>;
   readonly pearl=new THREE.Vector3(...REEF.pearl);
+  readonly cameraTop=new THREE.Vector3(0,8.2,REEF.chiefZ);
   readonly arms=[{side:-1,wrist:new THREE.Vector3(-3,2.7,0)},{side:1,wrist:new THREE.Vector3(3,2.7,0)}];
   private readonly lease=chiefAssets.acquire(bossAssetUrl('crab-chief.glb'));
   private metadata:RigMetadata|null=null;
@@ -85,7 +86,9 @@ export class MeshyChiefModel {
       frame.defeated?.2:state==='phase'?-.18*Math.sin(Math.PI*Math.min(1,t/3)):0,
       Math.atan2(frame.target.x-this.root.position.x,Math.max(5,frame.target.z-this.root.position.z))*.18,0)));
     this.joint('head',head,headQ);
-    this.joint('crown',point(m.joints.crown).sub(point(m.joints.head)).applyQuaternion(headQ).add(head),headQ);
+    const crown=point(m.joints.crown).sub(point(m.joints.head)).applyQuaternion(headQ).add(head);
+    this.joint('crown',crown,headQ);
+    this.cameraTop.copy(crown).add(new THREE.Vector3(0,1.15,0)).add(this.root.position);
     for(const name of ['skirtFront','skirtBack','skirtLeft','skirtRight']){
       const p=point(m.joints[name]);p.y-=kneel*.35;
       const sway=frame.defeated?0:Math.sin(time*2.5+name.length)*.07+hit*.09;

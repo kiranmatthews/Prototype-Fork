@@ -67,5 +67,27 @@
     "hits": 9,
     "deaths": 0,
     "legacyBossCrystalsExcluded": true
+  },
+  "bossCameraHud": {
+    "camera": "close radial chief-facing presentation",
+    "distanceRangeMetres": [
+      6.5,
+      9
+    ],
+    "cameraSamples": 128,
+    "baseRigRestored": true,
+    "movementTuningChanged": false,
+    "controlsChanged": false,
+    "hud": "portrait, name, continuous gradient health, fight-heart icons",
+    "instructions": false,
+    "controlPrompts": false,
+    "phaseChargeHints": false,
+    "portrait": "rendered from existing Meshy chief",
+    "fullBrowser": {
+      "frames": 3949,
+      "hits": 9,
+      "deaths": 0,
+      "hints": 0
+    }
   }
 }

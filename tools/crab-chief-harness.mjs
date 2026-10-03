@@ -23,11 +23,14 @@ export async function withChiefRuntime(run) {
     const { CONST, TUNING } = await server.ssrLoadModule('/src/tuning.ts');
     const scene = new THREE.Scene(); l = new module.Level(scene, { id: 'crab-chief', name: CRAB_CHIEF_LEVEL.name, data: CRAB_CHIEF_LEVEL });
     await l.prepareJungleAssets();
+    const {ChiefCamera}=await server.ssrLoadModule('/src/boss/camera.ts');
+    const camera=new THREE.PerspectiveCamera(49,16/9,.1,400),bossCamera=new ChiefCamera();
     const p = new Player(scene); p.enterLevel('crab-chief'); p.rawInput = makeInput(); p.respawn(l, true);
     let frame = 0, previous = {}, trace = [];
     const tick = (sample = {}) => {
       const input = chiefInput(sample, previous), consumed = { ...input };
-      p.step(CONST.fixedStep, input, l); l.update(CONST.fixedStep); p.commitRenderStep(l); input.consumeEdges();
+      p.rawInput=input;
+      p.step(CONST.fixedStep, input, l); l.update(CONST.fixedStep); p.commitRenderStep(l);bossCamera.restore(camera);bossCamera.apply(camera,l.boss,p.renderPosition,CONST.fixedStep,frame===0);input.consumeEdges();
       frame++; previous = consumed;
       const row = { frame, position: p.pos.toArray(), state: p.state, speed: p.speed, grounded: p.grounded,
         deaths: p.totalDeaths, bailing: p.isBailing, rail: p.grindRail ? l.rails.indexOf(p.grindRail) : null,
@@ -35,7 +38,7 @@ export async function withChiefRuntime(run) {
         playerHealth: l.boss.playerHealth, charge: l.boss.charge, input: sample };
       trace.push(row); return row;
     };
-    return await run({ l, p, tick, trace, scene, module, source: CRAB_CHIEF_LEVEL, TUNING, get frame() { return frame; } });
+    return await run({ l, p, tick, trace, scene, module, server, camera, bossCamera, source: CRAB_CHIEF_LEVEL, TUNING, get frame() { return frame; } });
   } finally { l?.dispose(); await server.close(); await new Promise(resolve => setImmediate(resolve)); console.warn = warn; console.error = error;restoreFiles(); }
 }
 export function chiefInput(sample = {}, previous = {}) {
