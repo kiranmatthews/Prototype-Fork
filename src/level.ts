@@ -4658,6 +4658,8 @@ export class Level {
     else this.buildJungle(); // "jungle": the enclosed corridor course
     if (this.builtFromData?.encounter === 'crab-chief') {
       this.boss = new CrabChiefEncounter(this.root);
+      const sand=this.groundMeshes.flatMap(mesh=>Array.isArray(mesh.material)?mesh.material:[mesh.material]).find(material=>material.userData.unitySandTileMetres);
+      this.boss.phaseGeometry.install({rails:this.rails,groundMeshes:this.groundMeshes,sandMaterial:sand});
       this.walls.push(this.boss.bodyBox);
     }
     // Older published Sky Bridge data inherits the native sightline defaults.

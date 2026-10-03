@@ -11,7 +11,6 @@ export class BossPresentation {
   private readonly bar=document.createElement('div');
   private readonly fill=document.createElement('div');
   private readonly name=document.createElement('div');
-  private readonly hearts=document.createElement('div');
   private surface:GameHudSurface|null=null;
   private boss:CrabChiefEncounter|null=null;
   private key='';
@@ -23,21 +22,19 @@ export class BossPresentation {
     this.bar.className='boss-health';this.bar.setAttribute('role','meter');this.bar.setAttribute('aria-label','Chief health');
     this.bar.setAttribute('aria-valuemin','0');this.bar.setAttribute('aria-valuemax','9');
     this.fill.className='boss-health-fill';this.name.className='boss-name';this.name.textContent='CRAB CHIEF';
-    this.hearts.className='boss-hearts';this.hearts.setAttribute('aria-label','Fight hearts');
-    this.bar.append(this.fill,this.name);this.root.append(this.bar,this.portrait,this.hearts);document.body.append(this.root);
+    this.bar.append(this.fill,this.name);this.root.append(this.bar,this.portrait);document.body.append(this.root);
   }
   render(boss:CrabChiefEncounter|null,suppressed:boolean):void {
     this.boss=suppressed?null:boss;this.root.hidden=!this.boss;
     if(!this.boss){this.key='';return;}
     this.bar.setAttribute('aria-valuenow',String(this.boss.health));this.fill.style.width=`${this.boss.health/9*100}%`;
-    this.hearts.textContent='♥'.repeat(this.boss.playerHealth)+'♡'.repeat(3-this.boss.playerHealth);
   }
   setComposited(value:boolean):void{this.composited=value;this.root.classList.toggle('boss-composited',value);}
   draw(renderer:THREE.WebGLRenderer,size:{width:number;height:number},target:THREE.WebGLRenderTarget|null):void {
     if(!this.boss)return;this.surface??=new GameHudSurface();
     const ratio=target===null?renderer.getPixelRatio():1;
     const raster={width:Math.round(size.width*ratio),height:Math.round(size.height*ratio)};
-    const key=[raster.width,raster.height,window.innerWidth,window.innerHeight,this.boss.health,this.boss.playerHealth,this.portrait.complete,this.portrait.naturalWidth].join(':');
+    const key=[raster.width,raster.height,window.innerWidth,window.innerHeight,this.boss.health,this.portrait.complete,this.portrait.naturalWidth].join(':');
     if(key!==this.key){this.surface.draw(raster,{drawExtra:ctx=>{
       ctx.scale(raster.width/window.innerWidth,raster.height/window.innerHeight);
       const width=window.innerWidth,small=width<700||window.innerHeight<480;
@@ -49,8 +46,6 @@ export class BossPresentation {
       ctx.fillStyle=gradient;ctx.fillRect(left,top,barWidth,barHeight);ctx.restore();ctx.strokeRect(left,top,barWidth,barHeight);
       ctx.fillStyle='#101000';ctx.font=`bold ${small?18:23}px Roo,sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('CRAB CHIEF',left+barWidth*.5,top+barHeight*.54);
       if(this.portrait.complete&&this.portrait.naturalWidth)ctx.drawImage(this.portrait,x,y,face,face);
-      ctx.fillStyle='#ffe099';ctx.strokeStyle='#30221c';ctx.lineWidth=2;ctx.textAlign='left';ctx.font=`bold ${small?15:17}px Roo,sans-serif`;
-      const hearts='♥'.repeat(this.boss!.playerHealth)+'♡'.repeat(3-this.boss!.playerHealth);ctx.strokeText(hearts,left+4,top+barHeight+15);ctx.fillText(hearts,left+4,top+barHeight+15);
     }});this.key=key;}
     this.surface.composite(renderer,size,target);
   }

@@ -63,8 +63,8 @@ export class MeshyChiefModel {
     let desired=new THREE.Vector3(0,0,REEF.chiefZ);
     const sign=frame.left?-1:1, tellDuration=frame.phase===3?.95:1.3;
     if(state==='slam-tell'||state==='slam')desired.set(frame.target.x-sign*2.2,0,frame.target.z-3.4);
-    else if(state==='recover'||state==='hurt')desired.set(0,0,-24);
-    else if(state==='sweep-tell'||state==='sweep'||state==='volley-tell'||state==='volley')desired.z=-26;
+    else if(state==='recover'||state==='hurt'||state.startsWith('tongue')||state.startsWith('ramp'))desired.set(0,0,-24);
+    else if(frame.phase>1)desired.z=-24;
     const travel=ease(t/(state==='slam-tell'?tellDuration:state==='recover'?.6:.4));
     this.root.position.copy(this.startRoot).lerp(desired,travel);
     if(state==='slam-tell')this.root.position.y+=Math.sin(Math.PI*Math.min(1,t/tellDuration))*1.6;
@@ -73,7 +73,7 @@ export class MeshyChiefModel {
     const m=this.metadata, idle=characterElasticityAmplitudes('idle'), load=characterElasticityAmplitudes('jump');
     const anticipation=state.endsWith('tell')?ease(t/(state==='slam-tell'?tellDuration:1.2)):0;
     const hit=state==='hurt'?enemyElasticPulse(t,.9):state==='slam'?enemyElasticPulse(t,.55):0;
-    const opening=state==='recover'?ease((t-.3)/.6):state==='hurt'?1-ease(t/.7):0;
+    const opening=frame.phase===1?(state==='recover'?ease((t-.3)/.6):state==='hurt'?1-ease(t/.7):0):0;
     const kneel=frame.defeated?ease(t/2.5):opening*.65;
     const breath=frame.defeated?0:Math.sin(time*2.3)*idle[0];
     const hip=point(m.joints.torso);hip.y-=kneel*1.6+anticipation*.28-hit*.25;

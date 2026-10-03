@@ -10,7 +10,10 @@ const photo = document.createElement('button'); photo.textContent = 'Save fight 
 const preview = document.createElement('button'); preview.textContent = 'Save level preview'; preview.disabled = true;
 preview.onclick = () => { previewWanted = true; };
 const hold = new URLSearchParams(location.search).get('hold');
-let holding = false, heldOnce = false, photoWanted = false, previewWanted = false, photoQueued = false;
+const holdAt=Number(new URLSearchParams(location.search).get('holdAt')??.8);
+const holds=(hold??'').split(',').map(value=>value.split(':'));
+const heldStates=new Set();
+let holding = false, photoWanted = false, previewWanted = false, photoQueued = false;
 resume.onclick = () => { holding = false; resume.hidden = photo.hidden = true; };
 photo.onclick = () => { photoWanted = true; };
 const report = document.createElement('output'); report.style.display = 'block'; report.textContent = 'Loading production player…';
@@ -32,12 +35,14 @@ start.onclick = () => {
   const step = p.step.bind(p), commit = p.commitRenderStep.bind(p);
   p.step = (dt, input, level) => {
     if (review.done) return;
-    if (!heldOnce && hold === `${boss.phase}:${boss.state}` && boss.stateTime > .8) {
-      heldOnce = holding = true; resume.hidden = photo.hidden = false;
+    const stateKey=`${boss.phase}:${boss.state}`,wanted=holds.find(parts=>`${parts[0]}:${parts[1]}`===stateKey);
+    if (!heldStates.has(stateKey) && wanted && boss.stateTime > Number(wanted[2]??holdAt)) {
+      heldStates.add(stateKey);holding = true; resume.hidden = photo.hidden = false;
       report.textContent = `VISUAL HOLD · phase ${boss.phase} · ${boss.state} · frame ${review.frame}`;
     }
     if (holding) return; // art inspection only; never a completion result
-    try { const sample = chiefInput(next.value ?? {}, last); last = { ...sample };
+    try { const world=next.value??{},device=p.state==='grind'?world:{...world,...p.bossInputForWorld(world.moveX??0,-(world.moveY??0))};
+      const sample = chiefInput(device, last); last = { ...sample };
       Object.assign(input, sample); step(dt, input, level); advanced = true; }
     catch (error) { review.failed = String(error); review.done = true; }
   };
@@ -45,11 +50,11 @@ start.onclick = () => {
     commit(...args); if (!advanced || review.done) return; advanced = false; review.frame++;
     review.stage = context.stage; review.states.add(`${boss.phase}:${boss.state}`);
     review.trace.push({ frame: review.frame, position: p.pos.toArray(), state: p.state, deaths: p.totalDeaths,
-      bailing: p.isBailing, boss: boss.state, phase: boss.phase, health: boss.health, playerHealth: boss.playerHealth, charge: boss.charge });
+      bailing: p.isBailing, boss: boss.state, phase: boss.phase, health: boss.health, masks:p.masks, charge: boss.charge });
     try { next = generator.next(); if (next.done) { review.done = true; review.result = next.value; } }
     catch (error) { review.failed = String(error); review.done = true; }
     report.textContent = review.failed ? `FAIL ${review.failed}` : review.done ? `PASS · ${review.frame} frames · 9 strikes · boss victory completion · ${p.totalDeaths} deaths` :
-      `${review.stage} · frame ${review.frame} · chief ${boss.health}/9 · hearts ${boss.playerHealth}/3`;
+      `${review.stage} · frame ${review.frame} · chief ${boss.health}/9 · masks ${p.masks}`;
     if (review.done) { review.boss = boss.diagnostics; review.states = [...review.states]; report.dataset.outcome = review.failed ? 'failed' : 'passed'; evidence.textContent = JSON.stringify(review); }
   };
   let lastFrame = -15;

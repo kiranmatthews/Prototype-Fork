@@ -4,5 +4,4 @@
 .boss-health{position:absolute;left:60px;top:28px;width:258px;height:37px;border:3px solid #17100d;box-sizing:border-box;background:#b67b32}
 .boss-health-fill{height:100%;background:linear-gradient(90deg,#70eb00,#b7dc00 55%,#fa9a00)}
 .boss-name{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#101000;font-size:23px;font-weight:bold}
-.boss-hearts{position:absolute;left:64px;top:69px;color:#ffe099;font-size:17px;text-shadow:2px 2px #30221c}
-@media(max-width:699px),(max-height:479px){.boss-hud{left:10px;top:12px;width:calc(100% - 100px);height:88px}.boss-portrait{width:64px;height:64px}.boss-health{left:44px;top:20px;width:min(218px,calc(100vw - 110px));height:30px}.boss-name{font-size:18px}.boss-hearts{left:48px;top:53px;font-size:15px}}
+@media(max-width:699px),(max-height:479px){.boss-hud{left:10px;top:12px;width:calc(100% - 100px);height:88px}.boss-portrait{width:64px;height:64px}.boss-health{left:44px;top:20px;width:min(218px,calc(100vw - 110px));height:30px}.boss-name{font-size:18px}}

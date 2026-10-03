@@ -44,21 +44,33 @@ export function* runChiefJourney(context) {
         input = toward(boss.pearl.x, boss.pearl.z);
         if (distance(boss.pearl.x, boss.pearl.z) < 2.5) input.spinPressed = frame % 20 === 0;
       } else input = toward(0, -17.7, .5);
-    } else {
-      context.stage = `phase ${boss.phase} · ${boss.charged ? 'opening approach' : 'pearl rail'}`;
-      if (p.state === 'grind') {
-        input = { moveY: 1, moveX: clamp(-p.balance * 1.9, -.75, .75), grindHeld: true };
-      } else if (!boss.charged) {
-        if (!railApproach) {
-          input = toward(10.8, 4.5);
-          if (distance(10.8, 4.5) < 1) railApproach = true;
-        } else input = { ...toward(14, -10), grindHeld: true };
-      } else {
-        input = boss.exposed ? toward(boss.pearl.x, boss.pearl.z, .85) : toward(0,-17.7,.6);
-        if (boss.exposed && distance(boss.pearl.x, boss.pearl.z) < 2.5) input.spinPressed = frame % 20 === 0;
+    } else if(boss.phase===2) {
+      context.stage=`phase 2 · ${boss.state}`;
+      if(p.grounded&&p.freeSkate&&boss.state!=='tongue-form'&&boss.state!=='tongue-open')input={grabHeld:true};
+      else if(p.state==='grind')input={moveY:1,moveX:clamp(-p.balance*1.9-p.balanceVel*.65,-.9,.9),grindHeld:true,jumpHeld:true};
+      else if(boss.state==='tongue-form'||boss.state==='tongue-open'){
+        if(!railApproach){
+          input=p.grounded&&p.freeSkate?{grabHeld:true}:toward(0,3,.85);
+          if(!p.freeSkate&&distance(0,3)<.8)railApproach=true;
+        }else input={moveY:1,jumpHeld:true,grindHeld:boss.state==='tongue-open'};
       }
+      else if(p.state==='air')input={};
+      else if(boss.state==='slam-tell'||boss.state==='slam')input=toward(boss.target.x>=0?-6:6,3,.7);
+      else input=toward(0,3,.8);
+    } else {
+      context.stage=`phase 3 · ${boss.state}`;
+      if(p.grounded&&p.freeSkate&&!railApproach&&distance(0,7)>1)input={grabHeld:true};
+      else if(boss.state==='ramp-open'){
+        if(!railApproach){input=toward(0,7,.85);if(distance(0,7)<.8){railApproach=true;lastJump=frame;}}
+        else{
+          input={moveY:1,jumpHeld:p.pos.z>-17};
+          if(p.state==='air'&&p.pos.z<-19)input.spinPressed=frame%10===0;
+        }
+      }else if(p.state==='air')input={};
+      else if(boss.state==='slam-tell'||boss.state==='slam')input=toward(boss.target.x>=0?-6:6,7,.8);
+      else input=toward(0,7,.75);
     }
-    if (p.state !== 'grind' && !boss.defeated && jumpNeeded() && frame - lastJump > 28) {
+    if (p.state !== 'grind' && !boss.defeated && boss.phase!==3 && jumpNeeded() && frame - lastJump > 28) {
       input.jumpHeld = true; input.jumpPressed = true; lastJump = frame;
     }
     yield input;

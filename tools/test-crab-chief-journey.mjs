@@ -10,7 +10,7 @@ await withChiefRuntime(async context => {
     while (!step.done) {
       context.tick(step.value); step = generator.next();
       if (context.stage !== oldStage && context.l.boss.state !== 'slam-tell') {
-        console.log(JSON.stringify({ stage: context.stage, frame: context.frame, p: context.p.pos.toArray(), hp: context.l.boss.health, hearts: context.l.boss.playerHealth, charge: context.l.boss.charge }));
+        console.log(JSON.stringify({ stage: context.stage, frame: context.frame, p: context.p.pos.toArray(), hp: context.l.boss.health, masks: context.p.masks, charge: context.l.boss.charge }));
         oldStage = context.stage;
       }
     }
@@ -21,6 +21,9 @@ await withChiefRuntime(async context => {
     assert.equal(context.p.isBailing, false); assert.equal(context.l.boss.hits, 9);
     assert.deepEqual(context.l.boss.strikes.map(row => row.phase), [1,1,1,2,2,2,3,3,3]);
     assert.ok(context.l.boss.strikes.filter(row => row.phase > 1).every(row => row.charged));
+    assert.deepEqual(context.l.boss.strikes.map(row=>row.kind), ['pearl','pearl','pearl','tongue','tongue','tongue','sand-spin','sand-spin','sand-spin']);
+    assert.ok(context.l.boss.strikes.filter(row=>row.phase===2).every(row=>row.tongueMetres>=6));
+    assert.ok(context.l.boss.strikes.filter(row=>row.phase===3).every(row=>row.rampSpeed>=context.l.boss.phaseGeometry.requiredSpeed));
     assert.ok(context.trace.filter(row => row.state === 'grind').length > 180);
     assert.ok(context.l.activeCheckpoint, 'real checkpoint was never activated');
     await writeFile(`${output}/journey.json`, JSON.stringify({ result: step.value, trace: context.trace, boss: context.l.boss.diagnostics }, null, 2));

@@ -1958,6 +1958,7 @@ function updateCamera2(dt: number): void {
   });
   if(p2.authoredSkateCamera)cam2Look.apply(camera2,authoredSkateCamera2.aim);
   chiefCamera2.apply(camera2,level.boss,subject,dt,framingSnap);
+  if(level.boss)p2.camDir.copy(chiefCamera2.heading);
 }
 
 function updateBaseCamera2(dt: number): void {
@@ -4223,6 +4224,7 @@ function updateCamera(dt: number): void {
   });
   if(player.authoredSkateCamera)cameraLook.apply(camera,authoredSkateCamera.aim);
   chiefCamera.apply(camera,level.boss,subject,dt,framingSnap);
+  if(level.boss)camControlDir.copy(chiefCamera.heading);
 }
 
 function updateBaseCamera(dt: number): void {

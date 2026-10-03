@@ -14,6 +14,7 @@ import { SwimEffects } from './swimEffects';
 import { SWIMMING, stepSwimVelocity, stepSwimBuoyancy } from './swimming';
 import { CharacterInteractionBounds } from './character/interactionBounds';
 import { CameraInputFrame } from "./cameraViews";
+import { ChiefInputFrame, type ChiefDeviceInput, type ChiefInputDirection } from './boss/inputFrame';
 import { softSkateRebound, sampleSoftSkateImpact, SOFT_SKATE_IMPACT_SECONDS } from './skateImpact';
 import { BONUS_FRUIT_FLIGHT_SECONDS } from './bonusPayout';
 import { TUNING, CONST } from './tuning';
@@ -569,6 +570,7 @@ export class Player {
   // don't drag each other's frame around (see Level.laneDirAt)
   readonly laneCursor: LaneCursor = newLaneCursor();
   private viewInput = new CameraInputFrame();
+  private readonly chiefInput = new ChiefInputFrame();
   speed = 0; // signed along-course velocity (+ = forward, - = toward camera)
   vVel = 0;
   state: MoveState = 'ride';
@@ -3100,7 +3102,7 @@ export class Player {
     // A respawn teleports you: the camera lane must forget where it thought
     // you were, or the continuity bias pins the frame to the stretch you just
     // left. -1 means "take the global best next query".
-    this.laneCursor.s = -1; this.viewInput.reset();
+    this.laneCursor.s = -1; this.viewInput.reset();this.chiefInput.reset();
     // any respawn drops a live trial or combo run: back to normal dress
     if (this.ttActive || level.timeTrial) {
       this.ttActive = false;
@@ -3145,7 +3147,7 @@ export class Player {
     this.fruit = hard
       ? 0
       : preservedFruit;
-    this.masks = level.activeCheckpoint ? level.activeCheckpoint.savedMasks : 0;
+    this.masks = level.boss ? 2 : level.activeCheckpoint ? level.activeCheckpoint.savedMasks : 0;
     this.points = level.activeCheckpoint ? level.activeCheckpoint.savedPoints : 0;
     if (hard && preserveInventory) {
       this.lives = preservedLives;
@@ -3181,7 +3183,7 @@ export class Player {
     this.comboGemEarned = state.comboGem;
     this.gemSpawned = state.gemSpawned;
     this.simSeed = state.simSeed;
-    this.laneCursor.s = -1; this.viewInput.reset();
+    this.laneCursor.s = -1; this.viewInput.reset();this.chiefInput.reset();
     this.pos.copy(position);
     level.playerPos.copy(this.pos);
     this.settle(level);
@@ -3543,7 +3545,7 @@ export class Player {
     const i = near + (dir < 0 ? -1 : 1);
     if (i < 0 || i >= stops.length) return false;
     const stop = stops[i];
-    this.laneCursor.s = -1; this.viewInput.reset(); // a teleport invalidates the lane's continuity bias
+    this.laneCursor.s = -1; this.viewInput.reset();this.chiefInput.reset(); // a teleport invalidates the lane's continuity bias
     this.pos.copy(stop.at);
     level.playerPos.copy(this.pos);
     level.clearProjectiles(); // no orange orb may follow a debug warp from the old section
@@ -3832,8 +3834,10 @@ export class Player {
         ? (this.courseInputDirection(level) ??
           (chaseMode ? (level.skatepark ? this.axisF : this.camDir) : null))
         : null;
-    if (laneDir) {
-      const k = level.cameraViews.length && !chaseMode ? 1 : Math.min(1, 6 * dt);
+    if (laneDir && (!level.boss || this.grounded && this.state === 'ride' && this.slideTimer <= 0 && !this.isBailing && !this.wallriding)) {
+      // The chief camera may orbit through 180 degrees during a jump. Input
+      // changes its screen frame, never the physical launch/board heading.
+      const k = level.boss || level.cameraViews.length && !chaseMode ? 1 : Math.min(1, 6 * dt);
       this.axisF.x += (laneDir.x - this.axisF.x) * k;
       this.axisF.z += (laneDir.z - this.axisF.z) * k;
       this.axisF.y = 0;
@@ -3895,7 +3899,14 @@ export class Player {
         : this.travelDir === 'E'
           ? ({ ...input, moveY: input.moveX, moveX: input.moveY } as unknown as Input)
           : ({ ...input, moveY: -input.moveX, moveX: input.moveY } as unknown as Input);
-    if (this.freeSkate && !this.parkControls) {
+    if (level.boss && this.state !== 'grind') {
+      const cf = this.courseInputDirection(level)!;
+      const scale = 1 / Math.max(1, Math.hypot(input.moveX, input.moveY));
+      const wx = (cf.x * input.moveY - cf.z * input.moveX) * scale;
+      const wz = (cf.z * input.moveY + cf.x * input.moveX) * scale;
+      ctl = { ...input, moveY: wx * this.axisF.x + wz * this.axisF.z,
+        moveX: wx * this.axisL.x + wz * this.axisL.z } as Input;
+    } else if (this.freeSkate && !this.parkControls) {
       // Decompose the screen-space stick onto the CURRENT heading axes, so
       // downstream code (acceleration, slides, air control, lean) reads
       // "forward" as "along the board" no matter where it points.
@@ -4867,9 +4878,26 @@ export class Player {
     const result = level.boss.step(dt, {
       position: this.pos, state: this.state, speed: Math.abs(this.state === 'grind' ? this.grindVel : this.speed),
       grounded: this.grounded, skating: this.freeSkate || this.airFromSkate,
+      rail:this.grindRail,support:this.groundHit?.mesh,spinning:this.spinning,
       grinding: this.state === 'grind', attacking: this.spinning || this.flipT > 0 || this.slamActive || this.slamSquash > 0,
       immune: this.invulnTimer > 0 || this.uberTimer > 0, shielded: this.masks > 0,
     });
+    if (result.strike && level.boss.phase > 1) {
+      // An earned mouth grind or airborne spin rebounds into the arena.
+      // The run-up/grind supplies the hit; this response keeps a successful
+      // attack from carrying the rider through the chief's solid body.
+      if (this.state === 'grind') this.exitGrind(4, level);
+      const away = this.pos.clone().sub(level.boss.model.root.position).setY(0);
+      if (away.lengthSq() < .01) away.set(0, 0, 1);
+      this.axisF.copy(away.normalize());
+      this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+      this.speed = 8.5; this.vVel = 4;
+      this.state = 'air'; this.grounded = false;
+      this.airFromSkate = this.freeSkate = this.airMomentum = true;
+      this.airGrav = 'board'; this.airPeakY = this.pos.y;
+      this.airborneT = 0; this.launchVy = this.vVel;
+      this.charging = false; this.chargeTimer = 0;
+    }
     if (result.hurt && !this.spendMask()) {
       if (result.fatal) this.die();
       else { this.invulnTimer = 1.65; this.invulnSilent = false; this.emitSparks(8, 0xffa56d, 2); }
@@ -5367,8 +5395,15 @@ export class Player {
     this.speed = velocity;
   }
 
+  /** Active held screen frame for boss movement; reading it does not re-aim a held stick. */
+  get bossInputBasis():ChiefInputDirection {return this.chiefInput.basis;}
+
+  /** Convert world intent to genuine device samples for authoring/review pilots. */
+  bossInputForWorld(x:number,z:number):ChiefDeviceInput {return this.chiefInput.inputForWorld(x,z,this.camDir);}
+
   private courseInputDirection(level:Level):{x:number;z:number}|null {
-    if (level.skatepark || (TUNING.chaseCam > .5 && !level.boulder)) { this.viewInput.reset(); return null; }
+    if (level.boss) return this.chiefInput.sample(this.rawInput?.moveX??0,this.rawInput?.moveY??0,this.camDir);
+    if (level.skatepark || (TUNING.chaseCam > .5 && !level.boulder)) { this.viewInput.reset();this.chiefInput.reset(); return null; }
     if(this.authoredVertReturnInput){
       // The same wall has an uphill approach and a downhill exit lane. A
       // left-side return must not select the nearby uphill lane after the
@@ -5378,7 +5413,7 @@ export class Player {
       this.authoredVertReturnInput=null;this.laneCursor.s=-1;
     }
     if(!level.cameraViews.length) {
-      this.viewInput.reset();
+      this.viewInput.reset();this.chiefInput.reset();
       return level.laneDirAt(this.pos.x,this.pos.y,this.pos.z,this.laneCursor);
     }
     const camera=this.viewInput.needsSeed
@@ -5703,7 +5738,7 @@ export class Player {
 
   private returnFromOutOfBounds(level:Level):void {
     this.loseCombo();this.grindBoostT=0;
-    this.pos.copy(this.recoveryAnchor);this.laneCursor.s=-1;this.viewInput.reset();
+    this.pos.copy(this.recoveryAnchor);this.laneCursor.s=-1;this.viewInput.reset();this.chiefInput.reset();
     this.settle(level,this.recoveryHeading);
     this.axisF.copy(this.recoveryHeading);this.axisL.set(this.axisF.z,0,-this.axisF.x);
     this.groundHit=this.queryGround(level);this.grounded=!!this.groundHit;
@@ -7717,7 +7752,7 @@ export class Player {
         Math.abs(this.speed) <= TUNING.walkSpeed + 0.5;
       const doubleScale = this.doubleJumpAir ? TUNING.doubleJumpHorizontalScale : 1;
       // Digital diagonals in the air get the same normalization as the walk.
-      const diag = footAir && input.moveX !== 0 && input.moveY !== 0 ? Math.SQRT1_2 : 1;
+      const diag = !level.boss && footAir && input.moveX !== 0 && input.moveY !== 0 ? Math.SQRT1_2 : 1;
       const railSpinInPlace =
         input.transferHeld || input.grabHeld || input.grabPressed || this.grabbing;
       const railExitStrafe =
@@ -11458,7 +11493,7 @@ export class Player {
         this.launchVy = this.vVel;
         this.airFromSkate = portalBoard;
         this.airMomentum = portalBoard;
-        this.laneCursor.s = -1; this.viewInput.reset();
+        this.laneCursor.s = -1; this.viewInput.reset();this.chiefInput.reset();
         this.returnPortalCoolT = 0.35;
         this.emitSparks(12, 0x9f72ff, 2);
         sfx.play('woosh2', 0.85, 1.2);

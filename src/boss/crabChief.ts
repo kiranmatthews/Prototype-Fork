@@ -1,15 +1,18 @@
 import * as THREE from 'three';
 import { sfx } from '../audio';
 import { REEF } from '../levels/crab-chief';
+import { ChiefPhaseGeometry } from './phaseGeometry';
+import type { Rail } from '../rails';
 import { MeshyChiefModel } from './meshyChiefModel';
 import { ReefScenery } from './reefScenery';
 import { ReefGeometry, REEF_COLORS as C } from './reefGeometry';
 
 export type ChiefState = 'waiting' | 'intro' | 'idle' | 'slam-tell' | 'slam' | 'volley-tell' |
-  'volley' | 'sweep-tell' | 'sweep' | 'recover' | 'hurt' | 'phase' | 'defeated';
+  'volley' | 'sweep-tell' | 'sweep' | 'recover' | 'tongue-form' | 'tongue-open' | 'ramp-form' | 'ramp-open' | 'hurt' | 'phase' | 'defeated';
 export interface BossPlayerSample {
   position: THREE.Vector3; state: string; speed: number; grounded: boolean;
-  skating: boolean; grinding: boolean; attacking: boolean; immune: boolean; shielded: boolean;
+  skating: boolean; grinding: boolean; attacking: boolean; spinning?: boolean; immune: boolean; shielded: boolean;
+  rail?: Rail | null; support?: THREE.Object3D | null;
 }
 export interface BossStepResult { hurt: boolean; fatal: boolean; strike: boolean; }
 type Wave = { mesh: THREE.Mesh; centre: THREE.Vector3; radius: number; previous: number; life: number; speed: number; };
@@ -17,8 +20,8 @@ type Bubble = { mesh: THREE.Mesh; velocity: THREE.Vector3; previous: THREE.Vecto
 type Spark = { mesh: THREE.Mesh; velocity: THREE.Vector3; life: number; total: number; };
 export const CHIEF_PHASES = [
   { name: 'CLAWBREAKER', subtitle: 'Jump the ripples. Spin the lowered pearl.', color: '#f1b467' },
-  { name: 'REEF RIDER', subtitle: 'Grind a pearl rail, then strike the opening.', color: '#70e9db' },
-  { name: 'STORM CROWN', subtitle: 'Charge by grinding or fast skating. Jump the sweep.', color: '#ffa7a0' },
+  { name: 'TONGUE RIDER', subtitle: 'Ride the unfurled tongue to the chief.', color: '#70e9db' },
+  { name: 'SAND LAUNCH', subtitle: 'Use the formed sand kicker to reach the chief with a spin.', color: '#ffa7a0' },
 ] as const;
 const blank = (): BossStepResult => ({ hurt: false, fatal: false, strike: false });
 const clamp = THREE.MathUtils.clamp;
@@ -30,6 +33,7 @@ export class CrabChiefEncounter {
   readonly root = new THREE.Group();
   readonly kit = new ReefGeometry();
   readonly model = new MeshyChiefModel();
+  readonly phaseGeometry = new ChiefPhaseGeometry(this.root);
   readonly scenery = new ReefScenery();
   readonly target = new THREE.Vector3(0, 0, -14);
   readonly pearl = new THREE.Vector3(...REEF.pearl);
@@ -39,14 +43,13 @@ export class CrabChiefEncounter {
   time = 0;
   phase = 1;
   health = 9;
-  playerHealth = 3;
   charge = 0;
   hits = 0;
   playerHits = 0;
   grindDistance = 0;
   skateDistance = 0;
   readonly history: { time: number; state: ChiefState; phase: number; health: number }[] = [];
-  readonly strikes: { time: number; phase: number; speed: number; skating: boolean; grinding: boolean; charged: boolean; }[] = [];
+  readonly strikes: { time: number; phase: number; speed: number; skating: boolean; grinding: boolean; charged: boolean; kind: 'pearl' | 'tongue' | 'sand-spin'; tongueMetres:number; rampSpeed:number; }[] = [];
   private checkpointPhase = 1;
   private checkpointDefeated = false;
   private ordinal = 0;
@@ -57,12 +60,16 @@ export class CrabChiefEncounter {
   private lastPosition: THREE.Vector3 | null = null;
   private actorPosition = new THREE.Vector3();
   private actorSkating = false;
+  private tongueRun = 0;
+  private attachedTongue = false;
+  private rampSupported = false;
+  private rampLipSpeed = 0;
+  private launchTime = 0;
+  private rampFormed = false;
   private readonly marker: THREE.Group;
   private readonly opening: THREE.Mesh;
   private readonly sweep: THREE.Group;
   private readonly shield: THREE.Group;
-  private readonly seal: THREE.Group;
-  private readonly aura: THREE.Group;
   private readonly waves: Wave[] = [];
   private readonly bubbles: Bubble[] = [];
   private readonly sparks: Spark[] = [];
@@ -88,13 +95,6 @@ export class CrabChiefEncounter {
     for (let i = 0; i < 6; i++) {
       const ring = torus(1.55, .045, C.teal, .6); ring.rotation.y = i * Math.PI / 3; this.shield.add(ring);
     }
-    this.seal = new THREE.Group(); this.seal.position.set(0, 2.4, -48.5); this.root.add(this.seal);
-    const ring = torus(3.1, .12, C.teal); this.seal.add(ring);
-    for (let i = 0; i < 9; i++) { const a = i * Math.PI * 2 / 9;
-      this.kit.mesh(this.seal, 'ball', C.cream, [Math.sin(a) * 3.1, Math.cos(a) * 3.1, 0], [.23, .23, .23], .4); }
-    for (let i = -2; i <= 2; i++) this.kit.mesh(this.seal, 'box', C.teal, [i * .85, 0, 0], [.04, 5.2 - Math.abs(i) * .5, .04], .5);
-    this.aura = new THREE.Group(); this.root.add(this.aura);
-    for (const tilt of [-.6, .6]) { const ring = torus(.85, .05, C.teal, .8); ring.rotation.x = tilt; this.aura.add(ring); }
     for (let i = 0; i < 5; i++) {
       const mesh = torus(1, .22, C.teal, .7); mesh.rotation.x = Math.PI / 2; mesh.visible = false; mesh.frustumCulled = false;
       mesh.geometry.userData.waveRest = new Float32Array(mesh.geometry.getAttribute('position').array); this.root.add(mesh);
@@ -110,7 +110,7 @@ export class CrabChiefEncounter {
   }
   get defeated(): boolean { return this.state === 'defeated'; }
   get canFinish(): boolean { return this.defeated && this.stateTime >= 3.4; }
-  get exposed(): boolean { return this.state === 'recover' && this.stateTime > .7; }
+  get exposed(): boolean { return (this.phase===1&&this.state==='recover'&&this.stateTime>.7)||this.state==='tongue-open'||this.state==='ramp-open'; }
   get charged(): boolean { return this.charge >= 1; }
   get hint(): string {
     if (this.defeated) return this.canFinish ? 'THE REEF IS FREE · VICTORY' : 'THE CHIEF YIELDS';
@@ -152,12 +152,18 @@ export class CrabChiefEncounter {
     this.actorSkating = p.skating;
     const movement = this.lastPosition ? Math.min(this.lastPosition.distanceTo(p.position), p.speed * dt * 1.3) : 0;
     this.lastPosition ??= p.position.clone(); this.lastPosition.copy(p.position);
-    if (!this.defeated) {
-      const before = this.charge;
-      if (p.grinding && p.speed > 1) { this.grindDistance += movement; this.charge = Math.min(1, this.charge + movement / 8); }
-      else if (this.phase === 3 && p.skating && p.grounded && p.speed >= 10) { this.skateDistance += movement; this.charge = Math.min(1, this.charge + movement / 26); }
-      if (before < 1 && this.charged) { this.burst(p.position.clone().add(new THREE.Vector3(0, 1, 0)), 12); sfx.play('railLand', .7, 1.5); }
+    this.attachedTongue = p.grinding && p.rail === this.phaseGeometry.tongueRail;
+    if(this.attachedTongue && this.state==='tongue-open') {this.grindDistance+=movement;this.tongueRun+=movement;}
+    const rampContact=p.grounded&&p.support===this.phaseGeometry.sandRamp;
+    if(this.phase===3&&rampContact&&p.skating){
+      this.skateDistance+=movement;
+      if(this.phaseGeometry.launchZone.containsPoint(p.position)&&p.speed>=this.phaseGeometry.requiredSpeed)this.rampLipSpeed=p.speed;
     }
+    if(this.rampSupported&&!p.grounded&&p.state==='air'&&this.rampLipSpeed>=this.phaseGeometry.requiredSpeed)this.launchTime=2.0;
+    this.rampSupported=rampContact;
+    this.launchTime=Math.max(0,this.launchTime-dt);
+    if(p.grounded&&!rampContact){this.rampLipSpeed=0;this.launchTime=0;}
+    this.charge=this.phase===2?Math.min(1,this.tongueRun/6):this.phase===3&&this.launchTime>0?1:0;
     let danger = false;
     for (const wave of this.waves) if (wave.life > 0) {
       wave.previous = wave.radius; wave.radius += dt * wave.speed; wave.life -= dt;
@@ -179,11 +185,11 @@ export class CrabChiefEncounter {
       case 'slam-tell': if (t > (this.phase === 3 ? .95 : 1.3)) this.enter('slam'); break;
       case 'slam':
         if (t > .17 && t < .4 && p.position.y < 2.3 && Math.hypot(p.position.x - this.target.x, p.position.z - this.target.z) < 3.05) danger = true;
-        if (t > .6) this.enter('recover'); break;
+        if (t > .6) this.beginOpening(); break;
       case 'volley-tell': if (t > 1.15) this.enter('volley'); break;
       case 'volley':
         if (t >= this.fired * .5 && this.fired < 3) { this.fireVolley(); this.fired++; }
-        if (t > 1.6) this.enter('recover'); break;
+        if (t > 1.6) this.beginOpening(); break;
       case 'sweep-tell': if (t > 1.4) this.enter('sweep'); break;
       case 'sweep': {
         const angle = -1.3 + clamp(t / 1.8, 0, 1) * 2.6;
@@ -191,12 +197,16 @@ export class CrabChiefEncounter {
         if (p.position.y < 1.05 && distance > 6 && distance < 21 && a > this.sweepPrevious - .09 && a < angle + .09) danger = true;
         if (this.sweepPrevious < 0 && angle >= 0) this.emitWave(new THREE.Vector3(0, 0, -23), 11);
         this.sweepPrevious = angle;
-        if (t > 1.9) this.enter('recover'); break;
+        if (t > 1.9) this.beginOpening(); break;
       }
       case 'recover': if (t > 6.5) this.enter('idle'); break;
+      case 'tongue-form': if(t>1.2)this.enter('tongue-open'); break;
+      case 'tongue-open': if(t>12)this.enter('idle'); break;
+      case 'ramp-form': if(t>1.8){this.rampFormed=true;this.enter('ramp-open');} break;
+      case 'ramp-open': if(t>13)this.enter('idle'); break;
       case 'hurt': if (t > 1.05) {
         if (this.health > 0 && this.health % 3 === 0) { this.phase++; this.checkpointPhase = this.phase; this.charge = 0;
-          this.playerHealth = 3; this.clearAttacks(); this.enter('phase'); sfx.play('maskGet', .7, .8); }
+          this.clearAttacks(); this.enter('phase'); sfx.play('maskGet', .7, .8); }
         else this.enter('idle');
       } break;
       case 'phase': if (t > 3) this.enter('idle'); break;
@@ -204,24 +214,32 @@ export class CrabChiefEncounter {
     }
     // Every opening accepts one fresh hit. A held spin cannot drain the bar,
     // a walk into the pearl cannot hurt it, and armor requires earned charge.
-    const inReach = Math.hypot(p.position.x - this.pearl.x, p.position.z - this.pearl.z) < 2.65 && p.position.y > -.2 && p.position.y < 3.2;
-    const attacking = p.attacking || (p.skating && p.speed >= 8);
-    if (this.exposed && inReach && attacking && (this.phase === 1 || this.charged)) {
-      result.strike = true; this.hits++; this.health--;
-      this.strikes.push({ time: this.time, phase: this.phase, speed: p.speed, skating: p.skating, grinding: p.grinding, charged: this.charged });
-      this.charge = 0; this.clearAttacks(); this.burst(this.pearl, 28); this.invulnerability = Math.max(this.invulnerability, .6);
-      sfx.play('crateBreak1', .9, .65);
-      if (this.health === 0) { this.checkpointDefeated = true; this.enter('defeated'); this.playerHealth = 3; this.burst(this.pearl, 34); sfx.play('lifeGet', .9, .9); }
-      else this.enter('hurt');
-      danger = false;
+    const inReach = Math.hypot(p.position.x-this.pearl.x,p.position.z-this.pearl.z)<2.65&&p.position.y>-.2&&p.position.y<3.2;
+    const attack=p.attacking||(p.skating&&p.speed>=8);
+    const tongueHit=this.state==='tongue-open'&&this.attachedTongue&&this.tongueRun>=6&&this.phaseGeometry.tongueFraction(p.position)>.94;
+    const sandHit=this.state==='ramp-open'&&this.launchTime>0&&p.state==='air'&&p.spinning===true&&p.position.y>=4&&p.position.y<=10&&
+      Math.hypot(p.position.x-this.model.root.position.x,p.position.z-this.model.root.position.z)<3.3;
+    if((this.phase===1&&this.exposed&&inReach&&attack)||tongueHit||sandHit){
+      result.strike=true;this.hits++;this.health--;
+      this.strikes.push({time:this.time,phase:this.phase,speed:p.speed,skating:p.skating,grinding:p.grinding,charged:this.phase>1,
+        kind:this.phase===1?'pearl':this.phase===2?'tongue':'sand-spin',tongueMetres:this.tongueRun,rampSpeed:this.rampLipSpeed});
+      this.charge=0;this.launchTime=0;this.clearAttacks();this.burst(tongueHit?this.phaseGeometry.tongueMouth:this.pearl,28);this.invulnerability=Math.max(this.invulnerability,.6);
+      sfx.play('crateBreak1',.9,.65);
+      if(this.health===0){this.checkpointDefeated=true;this.enter('defeated');this.burst(this.pearl,34);sfx.play('lifeGet',.9,.9);}
+      else this.enter('hurt');danger=false;
     }
     if (danger && !this.defeated && !p.immune && this.invulnerability <= 0) {
       result.hurt = true; this.invulnerability = 1.65; this.playerHits++;
-      if (!p.shielded) this.playerHealth--;
-      result.fatal = this.playerHealth <= 0;
+      result.fatal = !p.shielded;
       this.burst(p.position.clone().add(new THREE.Vector3(0, .8, 0)), 8); sfx.play('takeDamage', .65, .95);
     }
     return result;
+  }
+  private beginOpening():void {
+    // Phase one keeps its original propagating slam ripple during recovery.
+    if(this.phase>1)this.clearAttacks();
+    this.tongueRun=0;this.rampLipSpeed=0;this.launchTime=0;
+    this.enter(this.phase===1?'recover':this.phase===2?'tongue-form':this.rampFormed?'ramp-open':'ramp-form');
   }
   private clearAttacks(): void { for (const wave of this.waves) wave.life = 0; for (const bubble of this.bubbles) bubble.life = 0; }
   private emitWave(centre: THREE.Vector3, speed: number): void {
@@ -257,14 +275,20 @@ export class CrabChiefEncounter {
     this.bodyBox.min.set(body.x-1.65,body.y,body.z-1.0);this.bodyBox.max.set(body.x+1.65,body.y+5.7,body.z+1.8);
     this.marker.visible = this.state === 'slam-tell' || this.state === 'slam'; this.marker.position.copy(this.target); this.marker.position.y = .07;
     this.marker.rotation.y = this.time * .9;
-    this.opening.visible = this.exposed; this.opening.position.set(this.pearl.x,.06,this.pearl.z);this.opening.scale.setScalar(1 + Math.sin(this.time * 8) * .035);
+    this.opening.visible = this.exposed&&this.phase===1; this.opening.position.set(this.pearl.x,.06,this.pearl.z);this.opening.scale.setScalar(1 + Math.sin(this.time * 8) * .035);
     this.sweep.visible = this.state === 'sweep-tell' || this.state === 'sweep';
     // Arc dots stay stationary; only the large sweep line traverses the floor.
     const line = this.sweep.children[0]; line.rotation.y = this.state === 'sweep' ? this.sweepPrevious : -1.3;
     line.position.x = Math.sin(line.rotation.y) * 11; line.position.z = Math.cos(line.rotation.y) * 11;
-    this.shield.visible = this.phase > 1 && this.exposed && !this.charged;this.shield.position.copy(this.pearl); this.shield.rotation.y = this.time;
-    this.seal.visible = !this.canFinish; this.seal.rotation.z = this.time * .18;
-    this.aura.visible = this.charged && !this.defeated; this.aura.position.copy(this.actorPosition); this.aura.position.y += .9; this.aura.rotation.y = this.time * 3;
+    this.shield.visible = this.phase > 1 && !this.exposed && !this.defeated;this.shield.position.copy(this.pearl); this.shield.rotation.y = this.time;
+    if(this.phase===2&&(this.state==='tongue-form'||this.state==='tongue-open'||(this.state==='hurt'&&this.attachedTongue))){
+      const progress=this.state==='tongue-form'?clamp(this.stateTime/1.2,0,1):1;
+      this.phaseGeometry.setTongue(new THREE.Vector3(0,6.4,-23),progress,this.stateTime);
+    }else this.phaseGeometry.hideTongue();
+    if(this.phase===3&&!this.defeated){
+      const progress=this.rampFormed?1:this.state==='ramp-form'?clamp(this.stateTime/1.8,0,1):0;
+      this.phaseGeometry.setRamp(progress,this.stateTime);
+    }else this.phaseGeometry.hideRamp();
     for (const wave of this.waves) { wave.mesh.visible = wave.life > 0; wave.mesh.position.copy(wave.centre); wave.mesh.position.y = .15;
       if (wave.life <= 0) continue;
       const positions = wave.mesh.geometry.getAttribute('position') as THREE.BufferAttribute;
@@ -283,17 +307,18 @@ export class CrabChiefEncounter {
     if (hard) { this.checkpointPhase = 1; this.checkpointDefeated = false; this.hits = this.playerHits = this.grindDistance = this.skateDistance = 0;
       this.history.length = this.strikes.length = 0; this.time = 0; }
     this.phase = this.checkpointPhase; this.health = (4 - this.phase) * 3;
-    this.playerHealth = 3; this.charge = 0; this.invulnerability = 0; this.ordinal = 0;
-    this.lastPosition = null; this.clearAttacks(); this.enter('waiting');
+    this.charge = 0; this.invulnerability = 0; this.ordinal = 0;
+    this.lastPosition = null;this.tongueRun=0;this.attachedTongue=false;this.rampSupported=false;this.rampLipSpeed=0;this.launchTime=0;this.rampFormed=false;this.phaseGeometry.reset();this.clearAttacks(); this.enter('waiting');
     if (this.checkpointDefeated) { this.health = 0; this.enter('defeated'); this.stateTime = 4; }
     for (const spark of this.sparks) spark.life = 0;
     this.present(0);
   }
   prepareAssets():Promise<void> {return Promise.all([this.model.ready,this.scenery.ready]).then(()=>{});}
-  dispose():void {this.model.dispose();this.scenery.dispose();}
+  dispose():void {this.phaseGeometry.dispose();this.model.dispose();this.scenery.dispose();}
   get diagnostics() { return { state: this.state, stateTime: this.stateTime, phase: this.phase, health: this.health,
-    playerHealth: this.playerHealth, charged: this.charged, charge: this.charge, canFinish: this.canFinish,
+    charged: this.charged, charge: this.charge, canFinish: this.canFinish,
     hits: this.hits, playerHits: this.playerHits, grindDistance: this.grindDistance, skateDistance: this.skateDistance,
+    tongueRun:this.tongueRun,tongueActive:this.phaseGeometry.tongueActive,tongueProgress:this.phaseGeometry.tongueProgress,rampActive:this.phaseGeometry.rampActive,rampProgress:this.phaseGeometry.rampProgress,launchTime:this.launchTime,rampSpeed:this.rampLipSpeed,
     activeWaves: this.waves.filter(w => w.life > 0).map(w => ({ radius: w.radius, previous: w.previous, centre: w.centre.toArray() })),
     activeBubbles: this.bubbles.filter(b => b.life > 0).length, target: this.target.toArray(),
     history: [...this.history], strikes: [...this.strikes], model: this.model.diagnostics }; }

@@ -28,14 +28,15 @@ export async function withChiefRuntime(run) {
     const p = new Player(scene); p.enterLevel('crab-chief'); p.rawInput = makeInput(); p.respawn(l, true);
     let frame = 0, previous = {}, trace = [];
     const tick = (sample = {}) => {
-      const input = chiefInput(sample, previous), consumed = { ...input };
+      const device=p.state==='grind'?sample:{...sample,...p.bossInputForWorld(sample.moveX??0,-(sample.moveY??0))};
+      const input = chiefInput(device, previous), consumed = { ...input };
       p.rawInput=input;
-      p.step(CONST.fixedStep, input, l); l.update(CONST.fixedStep); p.commitRenderStep(l);bossCamera.restore(camera);bossCamera.apply(camera,l.boss,p.renderPosition,CONST.fixedStep,frame===0);input.consumeEdges();
+      p.step(CONST.fixedStep, input, l); l.update(CONST.fixedStep); p.commitRenderStep(l);bossCamera.restore(camera);bossCamera.apply(camera,l.boss,p.renderPosition,CONST.fixedStep,frame===0);p.camDir.copy(bossCamera.heading);input.consumeEdges();
       frame++; previous = consumed;
       const row = { frame, position: p.pos.toArray(), state: p.state, speed: p.speed, grounded: p.grounded,
         deaths: p.totalDeaths, bailing: p.isBailing, rail: p.grindRail ? l.rails.indexOf(p.grindRail) : null,
         phase: l.boss.phase, boss: l.boss.state, bossTime: l.boss.stateTime, health: l.boss.health,
-        playerHealth: l.boss.playerHealth, charge: l.boss.charge, input: sample };
+        masks:p.masks, charge: l.boss.charge, input: sample };
       trace.push(row); return row;
     };
     return await run({ l, p, tick, trace, scene, module, server, camera, bossCamera, source: CRAB_CHIEF_LEVEL, TUNING, get frame() { return frame; } });
