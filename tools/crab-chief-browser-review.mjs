@@ -29,7 +29,7 @@ requestAnimationFrame(ready);
 start.onclick = () => {
   start.disabled = true;
   const p = g.player, l = g.getLevel(), boss = l.boss;
-  const review = window.chiefReview = { done: false, failed: null, frame: 0, stage: 'arrival', trace: [], framing: [], states: new Set(), result: null };
+  const review = window.chiefReview = { done: false, failed: null, frame: 0, stage: 'arrival', checkpointCount:l.checkpoints.length, trace: [], framing: [], states: new Set(), result: null };
   const context = { p, l, stage: 'arrival' }, generator = runChiefJourney(context);
   let next = generator.next(), last = {}, advanced = false;
   const step = p.step.bind(p), commit = p.commitRenderStep.bind(p);
@@ -50,7 +50,9 @@ start.onclick = () => {
     commit(...args); if (!advanced || review.done) return; advanced = false; review.frame++;
     review.stage = context.stage; review.states.add(`${boss.phase}:${boss.state}`);
     review.trace.push({ frame: review.frame, position: p.pos.toArray(), state: p.state, deaths: p.totalDeaths,
-      bailing: p.isBailing, boss: boss.state, phase: boss.phase, health: boss.health, masks:p.masks, charge: boss.charge });
+      bailing: p.isBailing, boss: boss.state, phase: boss.phase, health: boss.health, masks:p.masks, charge: boss.charge,
+      input:{moveX:last.moveX,moveY:last.moveY,grindHeld:last.grindHeld,jumpHeld:last.jumpHeld},balanceMeter:p.balanceMeter,
+      activeBubbles:boss.diagnostics.activeBubbles });
     try { next = generator.next(); if (next.done) { review.done = true; review.result = next.value; } }
     catch (error) { review.failed = String(error); review.done = true; }
     report.textContent = review.failed ? `FAIL ${review.failed}` : review.done ? `PASS · ${review.frame} frames · 9 strikes · boss victory completion · ${p.totalDeaths} deaths` :

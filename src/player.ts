@@ -4366,6 +4366,12 @@ export class Player {
     // grindRails = the authored bars PLUS the tops of any crate runs. The
     // on-foot rail block and the fall-onto-a-bar smack keep reading
     // level.rails, so a crate still behaves like a crate for both of those.
+    // A fresh unfurl is a new offer, even when Triangle stayed down after the
+    // previous mouth hit. Do not carry an endpoint latch across its absence.
+    if (this.lastRail?.chiefTongueAssist && !this.lastRail.grindable) {
+      this.grindLatched = false;
+      this.lastRail = null;
+    }
     this.railCand = nearestRail(level.grindRails, this.pos);
     this.railCandidateDist = this.railCand ? this.railCand.sample.distance : Infinity;
 
@@ -9267,7 +9273,8 @@ export class Player {
     // Warn before the brink; with zero bail grace there is no live pegged
     // frame left to display the old last-chance glow.
     const critical = Math.abs(this.balance) >= 0.7 || this.balanceCritT > 0;
-    if (this.state === 'grind') return { mode: 'grind', bal: this.balance, crit: critical };
+    if (this.state === 'grind') return this.grindRail?.chiefTongueAssist
+      ? null : { mode: 'grind', bal: this.balance, crit: critical };
     if (this.lipStallT > 0)
       // stall: whichever bar reads true on screen ('grind' = the horizontal
       // bar, 'manual' = the vertical one), needle signed to the screen too
@@ -9998,6 +10005,12 @@ export class Player {
 
   private stepGrind(dt: number, input: Input, level: Level): void {
     const rail = this.grindRail!;
+    // Retiring transient encounter geometry must never leave an invisible
+    // rider attachment. A live rider normally keeps the unfurl open instead.
+    if (rail.chiefTongueAssist && !rail.grindable) {
+      this.exitGrind(1.2, level);
+      return;
+    }
     this.grindTime += dt;
     this.balanceAge += dt;
     this.balanceEntryAge += dt;
@@ -10061,7 +10074,7 @@ export class Player {
           : this.grindStyle === 'crook'
             ? TUNING.grindDrag * 0.55
             : TUNING.grindDrag;
-      this.grindVel = Math.max(CONST.grindMinSpeed, this.grindVel - drag * dt);
+      this.grindVel = Math.max(rail.chiefTongueAssist?.minSpeed ?? CONST.grindMinSpeed, this.grindVel - drag * dt);
     }
     // SLOPED RAILS: gravity works the grind line — descending segments feed
     // speed, climbs bleed it (the same knobs as ground slopes), capped like
@@ -10069,7 +10082,7 @@ export class Player {
     const railSlope = rail.tangentAt(this.grindT).y * this.grindDir; // + = climbing
     if (Math.abs(railSlope) > 1e-3) {
       this.grindVel -= railSlope * TUNING.groundGravity * dt;
-      this.grindVel = THREE.MathUtils.clamp(this.grindVel, CONST.grindMinSpeed, TUNING.downhillMax);
+      this.grindVel = THREE.MathUtils.clamp(this.grindVel, rail.chiefTongueAssist?.minSpeed ?? CONST.grindMinSpeed, TUNING.downhillMax);
     }
 
     // THPS balance: the needle is an unstable equilibrium that runs away from
@@ -10113,7 +10126,7 @@ export class Player {
     let control = this.rawInput.moveX * TUNING.balanceControl;
     control *= this.safeGain(this.balanceEntryAge, control, runSign);
     this.stepBalanceCore(dt, runSign, instability * calm, control, ramp, calm);
-    if (this.uberTimer > 0 || this.balanceBoostT > 0) {
+    if (rail.chiefTongueAssist || this.uberTimer > 0 || this.balanceBoostT > 0) {
       this.balance = 0;
       this.balanceVel = 0;
     } // perfect balance
@@ -10325,7 +10338,11 @@ export class Player {
     // position so a fast step snaps onto the point actually under our feet,
     // not where we were 1-2 units ago.
     const s = this.railCand.rail.closest(this.pos);
-    if (s.distance > TUNING.railSnapDistance) return false;
+    const tongueEntry = this.railCand.rail.chiefTongueAssist &&
+      s.t <= this.railCand.rail.chiefTongueAssist.entryLength;
+    const catchRadius = tongueEntry
+      ? this.railCand.rail.chiefTongueAssist!.catchRadius : TUNING.railSnapDistance;
+    if (s.distance > catchRadius) return false;
     // Deck-level grabs are the normal case (rails sit ~1u above the deck);
     // only block grabbing from far beneath the rail.
     if (this.pos.y < s.point.y - 2.0) return false;
@@ -10337,7 +10354,7 @@ export class Player {
     // blocking cannot turn it into a stationary catch on the following tick.
     const approach = Math.hypot(this.lastVelX, this.lastVelZ);
     const railPlanar = Math.hypot(s.tangent.x, s.tangent.z);
-    if (approach > 1e-4 && railPlanar > 1e-4) {
+    if (!tongueEntry && approach > 1e-4 && railPlanar > 1e-4) {
       const alignment = Math.abs(
         (this.lastVelX * s.tangent.x + this.lastVelZ * s.tangent.z) /
           (approach * railPlanar),
@@ -10357,7 +10374,7 @@ export class Player {
     const vx = vertVelocity ? -this.vertNormal.z * this.vertLatVel : this.axisF.x * this.speed;
     const vz = vertVelocity ? this.vertNormal.x * this.vertLatVel : this.axisF.z * this.speed;
     const along = vx * s.tangent.x + vz * s.tangent.z;
-    const remaining = along >= 0 ? this.railCand.rail.totalLength - s.t : s.t;
+    const remaining = tongueEntry || along >= 0 ? this.railCand.rail.totalLength - s.t : s.t;
     if (remaining <= Math.max(.08, Math.abs(along) * CONST.fixedStep * 2)) return false;
     this.enterGrind(this.railCand.rail, s, level);
     return true;
@@ -10450,7 +10467,8 @@ export class Player {
     // lets you meet a rail at any angle — a perpendicular clip should give a
     // gentle grind, never rocket you down the rail at full cross-speed.
     const alongVel = worldVx * sample.tangent.x + worldVz * sample.tangent.z;
-    this.grindDir = alongVel >= 0 ? 1 : -1;
+    this.grindDir = rail.chiefTongueAssist && sample.t <= rail.chiefTongueAssist.entryLength
+      ? 1 : alongVel >= 0 ? 1 : -1;
     this.state = 'grind';
     this.grounded = false;
     this.vVel = 0;
@@ -10550,7 +10568,7 @@ export class Player {
     const alongFrac = planarIn > 0.01 ? Math.min(1, Math.abs(alongVel) / planarIn) : 1;
     this.grindVel = THREE.MathUtils.clamp(
       planarIn * (0.72 + 0.28 * alongFrac) + TUNING.railSpeedBoost,
-      CONST.grindMinSpeed,
+      rail.chiefTongueAssist?.minSpeed ?? CONST.grindMinSpeed,
       TUNING.downhillMax,
     );
     this.speed = this.grindVel;
@@ -13664,6 +13682,7 @@ export class Player {
     const smackReach = CONST.playerHalf.x + CONST.railBlockRadius;
     for (const rail of level.rails) {
       if (!rail.grindable) continue;
+      if (rail.chiefTongueAssist) continue; // a missed soft tongue catch is a fair fall, not a metal-bar bail
       const s = rail.closestXZ(this.pos);
       if (s.distXZ > smackReach) continue; // past the skin is a genuine graze
       // the fall must cross the rail line THIS step
@@ -14946,6 +14965,7 @@ export class Player {
     const reach = half.x + CONST.railBlockRadius;
     for (const rail of level.rails) {
       if (!rail.grindable) continue;
+      if (rail.chiefTongueAssist) continue; // the low tongue is an offer to grind, never a shin-trip barrier
       const s = rail.closestXZ(this.pos);
       if (s.distXZ > reach) continue;
       // THPS coping rules: the rail along a lip never fences the transition.

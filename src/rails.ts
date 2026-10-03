@@ -43,6 +43,15 @@ export interface RailSharpCorner {
   outgoing: THREE.Vector3;
 }
 
+/** The chief's broad, moving tongue carries a caught board toward his mouth.
+ * This authored assist belongs to that encounter rail; street/terrace rails
+ * continue to use their normal angle, speed and balance rules. */
+export interface ChiefTongueRailAssist {
+  entryLength: number;
+  catchRadius: number;
+  minSpeed: number;
+}
+
 export class Rail {
   readonly points: THREE.Vector3[];
   totalLength: number;
@@ -52,6 +61,7 @@ export class Rail {
   // plunge left them — a grindable line hanging in empty air where nothing is
   // drawn. Clearing this takes it out of every grind query until it restrings.
   grindable = true;
+  chiefTongueAssist: ChiefTongueRailAssist | null = null;
   // A ramp's flush lip is a grind target, not a freestanding street barrier.
   coping = false;
   private hasVisual = true;

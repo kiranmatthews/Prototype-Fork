@@ -1,6 +1,5 @@
 // Shared Node/browser input pilot. Never sets actor position, velocity,
 // health, phase, charge, state, invulnerability or tuning.
-const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 export function* runChiefJourney(context) {
   const { p, l } = context, boss = l.boss;
   let railApproach = false, lastJump = -100, frame = 0, lastHealth = 9;
@@ -36,7 +35,6 @@ export function* runChiefJourney(context) {
       context.stage = `phase 1 · ${boss.state}`;
       if (boss.state === 'waiting' || boss.state === 'intro') {
         input = toward(0, -17.7);
-        if (!l.activeCheckpoint && p.pos.z < 8) input.spinPressed = frame % 24 === 0;
       } else if (boss.state === 'slam-tell' || boss.state === 'slam') {
         const side = boss.target.x >= 0 ? -1 : 1;
         input = toward(side * 5.3, -17.5);
@@ -47,15 +45,16 @@ export function* runChiefJourney(context) {
     } else if(boss.phase===2) {
       context.stage=`phase 2 · ${boss.state}`;
       if(p.grounded&&p.freeSkate&&boss.state!=='tongue-form'&&boss.state!=='tongue-open')input={grabHeld:true};
-      else if(p.state==='grind')input={moveY:1,moveX:clamp(-p.balance*1.9-p.balanceVel*.65,-.9,.9),grindHeld:true,jumpHeld:true};
+      else if(p.state==='grind')input={moveY:1,grindHeld:true};
       else if(boss.state==='tongue-form'||boss.state==='tongue-open'){
         if(!railApproach){
           input=p.grounded&&p.freeSkate?{grabHeld:true}:toward(0,3,.85);
           if(!p.freeSkate&&distance(0,3)<.8)railApproach=true;
-        }else input={moveY:1,jumpHeld:true,grindHeld:boss.state==='tongue-open'};
+        }else input={moveY:1,grindHeld:true};
       }
       else if(p.state==='air')input={};
       else if(boss.state==='slam-tell'||boss.state==='slam')input=toward(boss.target.x>=0?-6:6,3,.7);
+      else if(boss.state==='volley-tell'||boss.state==='volley')input=toward(0,12,.85);
       else input=toward(0,3,.8);
     } else {
       context.stage=`phase 3 · ${boss.state}`;

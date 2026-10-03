@@ -25,7 +25,9 @@ await withChiefRuntime(async context => {
     assert.ok(context.l.boss.strikes.filter(row=>row.phase===2).every(row=>row.tongueMetres>=6));
     assert.ok(context.l.boss.strikes.filter(row=>row.phase===3).every(row=>row.rampSpeed>=context.l.boss.phaseGeometry.requiredSpeed));
     assert.ok(context.trace.filter(row => row.state === 'grind').length > 180);
-    assert.ok(context.l.activeCheckpoint, 'real checkpoint was never activated');
+    assert.equal(context.l.checkpoints.length,0);assert.equal(context.l.activeCheckpoint,null);
+    assert.ok(context.l.currentSpawn.equals(context.l.spawnPos),'fight moved the original arrival spawn');
+    assert.ok(!context.l.captureData().components.some(component=>component.t==='checkpoint'));
     await writeFile(`${output}/journey.json`, JSON.stringify({ result: step.value, trace: context.trace, boss: context.l.boss.diagnostics }, null, 2));
     console.log('PASS production Player input-only boss journey', JSON.stringify(step.value));
   } catch (error) {

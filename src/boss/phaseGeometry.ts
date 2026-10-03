@@ -32,7 +32,7 @@ export class ChiefPhaseGeometry {
   readonly tongueMesh: THREE.Mesh;
   readonly sandRamp: THREE.Mesh;
   private readonly mouthOpening: THREE.Mesh;
-  readonly tongueEntry = new THREE.Vector3(0,.66,-4);
+  readonly tongueEntry = new THREE.Vector3(0,.32,-4);
   readonly tongueMouth = new THREE.Vector3(0,6.4,-23);
   readonly launchPoint = new THREE.Vector3(0,4.1,-18);
   readonly launchZone = new THREE.Box3();
@@ -62,6 +62,7 @@ export class ChiefPhaseGeometry {
       new THREE.Vector3(this.rampSpec.width*.5,this.rampSpec.rise+.9,this.launchPoint.z+1.5));
     this.launchZone.translate(new THREE.Vector3(this.launchPoint.x,0,0));
     this.tongueRail=new Rail(this.fullTongue,false);this.tongueRail.object.name='Crab chief tongue · real uphill grind';this.tongueRail.grindable=false;
+    this.tongueRail.chiefTongueAssist={entryLength:4.5,catchRadius:2.3,minSpeed:6.5};
     this.root.add(this.tongueRail.object);this.tongueRail.object.visible=false;
     // Rail(false) currently owns no render resources. Register any future
     // visual descendants explicitly, so this encounter always owns cleanup.
@@ -113,11 +114,11 @@ export class ChiefPhaseGeometry {
   get tongueProgress():number {return this.tongueProgressValue;}
   get rampProgress():number {return this.rampProgressValue;}
   /** Unfurl from the live Meshy mouth. `progress` reaches one over ~1 second;
-   * the end settles, then the ordinary rail becomes catchable. Entry is low
-   * enough for a normal board ollie; the tongue climbs toward the mouth. */
+   * the end settles, then the rail becomes catchable. Its broad, low tip
+   * accepts a held grind button directly from walking or skating. */
   setTongue(mouth:THREE.Vector3,progress:number,time=0):void {
     if(this.disposed)return;
-    this.tongueMouth.copy(mouth);this.tongueEntry.set(mouth.x,.66,Math.max(-7,mouth.z+19));
+    this.tongueMouth.copy(mouth);this.tongueEntry.set(mouth.x,.32,Math.max(-7,mouth.z+19));
     const p=clamp(progress,0,1);this.tongueProgressValue=p;this.tongueMesh.visible=p>0;
     const mouthOpen=ease(p/.16);this.mouthOpening.visible=p>0;
     this.mouthOpening.position.copy(mouth).add(new THREE.Vector3(0,-.14,-.025));
@@ -143,7 +144,9 @@ export class ChiefPhaseGeometry {
       const centre=this.tongueCentres[i],next=this.tongueCentres[Math.min(TONGUE_SEGMENTS,i+1)],prev=this.tongueCentres[Math.max(0,i-1)];
       const tangent=next.clone().sub(prev).normalize();if(tangent.lengthSq()<.1)tangent.set(0,0,-1);
       const across=new THREE.Vector3().crossVectors(tangent,UP).normalize(),normal=new THREE.Vector3().crossVectors(across,tangent).normalize();
-      const u=i/TONGUE_SEGMENTS,roundTip=.5+.5*clamp(u*12,0,1),width=(.54+.16*u)*roundTip;
+      // A rounded, three-metre-wide landing tongue narrows into the mouth.
+      // The catch skin includes the rider's width around this visible tip.
+      const u=i/TONGUE_SEGMENTS,roundTip=.85+.15*clamp(u*12,0,1),width=(.7+.95*Math.exp(-u*10))*roundTip;
       for(let side=0;side<TONGUE_SIDES;side++){
         const angle=side/TONGUE_SIDES*Math.PI*2;
         const v=centre.clone().addScaledVector(across,Math.cos(angle)*width).addScaledVector(normal,Math.sin(angle)*.12-.14);

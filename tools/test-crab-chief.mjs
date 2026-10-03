@@ -7,6 +7,9 @@ await withChiefRuntime(async ({ l, p, tick, source, module }) => {
   assert.equal(module.parseCustomLevelJson(JSON.stringify(source)).encounter, 'crab-chief');
   assert.equal(module.normalizeCustomLevelData({ ...source, encounter: 'remote-code' }), null);
   assert.equal(l.captureData().encounter, 'crab-chief');
+  assert.ok(!source.components.some(component=>component.t==='checkpoint'));
+  assert.equal(l.checkpoints.length,0);assert.equal(l.activeCheckpoint,null);
+  assert.ok(!l.captureData().components.some(component=>component.t==='checkpoint'));
   assert.equal(source.components.filter(c => c.t === 'gate').length, 1);
   assert.equal(l.crystalPickup,null); assert.equal(l.cameraViews.length,0);
   assert.ok(!l.groundMeshes.some(mesh=>mesh.userData.finishPad));
@@ -39,16 +42,19 @@ await withChiefRuntime(async ({ l, p, tick, source, module }) => {
     assert.equal(p.totalDeaths, 0); assert.equal(p.isBailing, false);
   }
   p.respawn(l, true);
-  for (let i = 0; i < 130; i++) tick({ moveY: 1, spinPressed: i % 24 === 0 });
-  assert.ok(l.activeCheckpoint, 'arrival checkpoint was not reachable'); const saved = l.currentSpawn.clone();
+  const saved=l.spawnPos.clone();
+  for (let i = 0; i < 90; i++) tick({ moveY: 1 });
+  assert.ok(p.pos.distanceTo(saved)>3,'rider never left the original arrival spawn');
+  assert.equal(l.activeCheckpoint,null);assert.ok(l.currentSpawn.equals(saved));
   // This hazard fixture starts outside the native shelf, inside the authored
-  // deep lagoon. The real fall/death path must return to the earned checkpoint;
+  // deep lagoon. The real fall/death path must return to the original spawn;
   // traversal through the arena remains the input-only journey's responsibility.
   p.respawn(l,false,false,{position:new THREE.Vector3(48,2,14)});
   for (let i = 0; i < 240 && p.state !== 'dead'; i++) tick();
   assert.equal(p.state, 'dead', 'deep lagoon did not kill a fall');
   for (let i = 0; i < 240 && p.state === 'dead'; i++) tick();
-  assert.equal(p.state, 'ride'); assert.ok(p.pos.distanceTo(saved) < 1, 'lagoon death missed the earned checkpoint');assert.equal(p.masks,2);
+  assert.equal(p.state, 'ride'); assert.ok(p.pos.distanceTo(saved) < 1, 'lagoon death missed the original spawn');assert.equal(p.masks,2);
+  assert.equal(p.grounded,true);assert.equal(l.checkpoints.length,0);assert.equal(l.activeCheckpoint,null);
   p.respawn(l, true);
 
   const model = boss.model, toes = model.diagnostics.toes;
@@ -132,6 +138,7 @@ await withChiefRuntime(async ({ l, p, tick, source, module }) => {
     for(let i=0;i<4;i++){assert.equal(step().strike,false);assert.equal(boss.health,hp-1,'one pearl opening accepted multiple strikes');}
   }
   rest();until(()=>boss.phase===2);p.masks=0;p.respawn(l,false);assert.equal(boss.phase,2);assert.equal(boss.health,6);assert.equal(p.masks,2);
+  assert.ok(p.pos.equals(saved),'phase retry moved the original arrival spawn');assert.equal(l.activeCheckpoint,null);
   assert.equal(geometry.tongueActive,false);assert.equal(geometry.rampActive,false);assert.equal('playerHealth' in boss,false);
   for(let hit=0;hit<3;hit++)strikeTongue();
   rest();until(()=>boss.phase===3);boss.reset(false);assert.equal(boss.phase,3);assert.equal(boss.health,3);assert.equal(geometry.rampActive,false);
@@ -157,5 +164,5 @@ await withChiefRuntime(async ({ l, p, tick, source, module }) => {
   assert.deepEqual(maskStates,[2,1,0]);assert.equal(p.state,'dead');assert.equal(p.lives,startingLives-1,'third unmasked hit did not cost a life');assert.equal(boss.playerHits,3);
   const stopped=boss.time;for(let i=0;i<10;i++)tick();assert.equal(boss.time,stopped,'fight advanced during the death fade');
   p.respawn(l,false);assert.equal(p.masks,2);
-  console.log(`PASS Crab Chief: editor schema, supported spawn, body/checkpoint/lagoon rules, no crystal/warp pad, ${model.diagnostics.triangles} triangles and all new poses finite; nine phase-specific strikes, irrelevant terrace rails, required tongue arc/end, fast sand contact→air ticket→spin/height/range, phase/victory retries, locked telegraphs and two-mask→fatal damage with no hearts.`);
+  console.log(`PASS Crab Chief: editor schema, supported original spawn/lagoon retry, no checkpoint crate/crystal/warp pad, ${model.diagnostics.triangles} triangles and all new poses finite; nine phase-specific strikes, irrelevant terrace rails, required tongue arc/end, fast sand contact→air ticket→spin/height/range, phase/victory retries, locked telegraphs and two-mask→fatal damage with no hearts.`);
 });

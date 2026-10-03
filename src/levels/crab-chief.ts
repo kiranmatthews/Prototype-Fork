@@ -35,7 +35,6 @@ add({ t: 'platform', p: [0, -.55, -43], s: [14, 1.1, 15], color: '#628d84', tex:
   edgeGrinding: false, nm: 'Victory causeway' });
 add({t:'platform',p:[0,-.65,-59],s:[17,1.3,16],color:'#b1b5a2',tex:'stone',edgeGrinding:false,nm:'Throne-islet foundation beyond victory arch'});
 add({ t: 'gate', p: [0, 0, -49], invisible:true, nm: 'Logical boss boundary · victory completes at the chief' });
-add({ t: 'checkpoint', p: [0, 0, 5.5], nm: 'Arena arrival · phase progress survives a retry' });
 add({ t: 'pit', p: [0, -2.8, -15], s: [130, 1, 130], invisible: true, nm: 'Deep lagoon respawn' });
 // Broad ramps offer a skating line back from both elevated reef terraces.
 for (const side of [-1, 1]) {

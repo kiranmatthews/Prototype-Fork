@@ -1060,6 +1060,10 @@ function defaultGateFor(d: CustomLevelData): CustomComponent {
 // metadata remains visible in the modern group outliner.
 export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   migrateSlipstreamCamera(d);
+  // Boss retries bank phase progress in the encounter and start on the pier.
+  // Old editor copies must not restore the retired physical checkpoint crate.
+  if (d.encounter === 'crab-chief')
+    d.components = d.components.filter(component => component.t !== 'checkpoint');
   // Retired vehicles must not return through saved libraries or shared files.
   // Leave the road geometry, groups and other enemies available for editing.
   d.components = d.components.filter(c => c.t !== "enemy" || (c as { foe?: string }).foe !== "car");

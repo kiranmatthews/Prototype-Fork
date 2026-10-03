@@ -56,6 +56,7 @@ export class CrabChiefEncounter {
   private left = true;
   private invulnerability = 0;
   private fired = 0;
+  private volleyFinish = 1.6;
   private sweepPrevious = -1.3;
   private lastPosition: THREE.Vector3 | null = null;
   private actorPosition = new THREE.Vector3();
@@ -131,12 +132,17 @@ export class CrabChiefEncounter {
     this.history.push({ time: this.time, state, phase: this.phase, health: this.health });
     if (this.history.length > 160) this.history.shift();
     if (state === 'slam-tell') { this.left = !this.left; sfx.play('woosh', .5, .55); }
-    if (state === 'slam') { this.emitWave(this.target, this.phase === 3 ? 12 : 9); this.burst(this.target, 12); sfx.play('tntBoom', .38, .8); }
-    if (state === 'volley') this.fired = 0;
+    if (state === 'slam') { this.emitWave(this.target, this.phase === 3 ? 12 : 9, this.phase === 2 ? 3 : 4); this.burst(this.target, 12); sfx.play('tntBoom', .38, .8); }
+    if (state === 'volley') { this.fired = 0; this.volleyFinish = 1.6; }
     if (state === 'sweep-tell') { this.sweepPrevious = -1.3; sfx.play('woosh2', .6, .65); }
     if (state === 'sweep') this.emitWave(new THREE.Vector3(0, 0, -23), 10);
   }
-  private lockTarget(p: BossPlayerSample): void { this.target.set(clamp(p.position.x, -13.5, 13.5), 0, clamp(p.position.z, -22, -6)); }
+  private lockTarget(p: BossPlayerSample): void {
+    // The tongue approach includes the front court. Lock the real position
+    // at the tell, so standing outside the old pearl court is not a safe spot.
+    if(this.phase===2)this.target.set(p.position.x,0,p.position.z);
+    else this.target.set(clamp(p.position.x, -13.5, 13.5), 0, clamp(p.position.z, -22, -6));
+  }
   private nextAttack(p: BossPlayerSample): void {
     this.ordinal++; this.lockTarget(p);
     this.enter(this.phase === 1 ? 'slam-tell' : this.phase === 2 ? (this.ordinal % 2 ? 'volley-tell' : 'slam-tell') :
@@ -185,11 +191,11 @@ export class CrabChiefEncounter {
       case 'slam-tell': if (t > (this.phase === 3 ? .95 : 1.3)) this.enter('slam'); break;
       case 'slam':
         if (t > .17 && t < .4 && p.position.y < 2.3 && Math.hypot(p.position.x - this.target.x, p.position.z - this.target.z) < 3.05) danger = true;
-        if (t > .6) this.beginOpening(); break;
+        if (t > (this.phase===2?3.15:.6)) this.beginOpening(); break;
       case 'volley-tell': if (t > 1.15) this.enter('volley'); break;
       case 'volley':
         if (t >= this.fired * .5 && this.fired < 3) { this.fireVolley(); this.fired++; }
-        if (t > 1.6) this.beginOpening(); break;
+        if (t > this.volleyFinish) this.beginOpening(); break;
       case 'sweep-tell': if (t > 1.4) this.enter('sweep'); break;
       case 'sweep': {
         const angle = -1.3 + clamp(t / 1.8, 0, 1) * 2.6;
@@ -201,7 +207,7 @@ export class CrabChiefEncounter {
       }
       case 'recover': if (t > 6.5) this.enter('idle'); break;
       case 'tongue-form': if(t>1.2)this.enter('tongue-open'); break;
-      case 'tongue-open': if(t>12)this.enter('idle'); break;
+      case 'tongue-open': if(t>12&&!this.attachedTongue)this.enter('idle'); break;
       case 'ramp-form': if(t>1.8){this.rampFormed=true;this.enter('ramp-open');} break;
       case 'ramp-open': if(t>13)this.enter('idle'); break;
       case 'hurt': if (t > 1.05) {
@@ -242,18 +248,25 @@ export class CrabChiefEncounter {
     this.enter(this.phase===1?'recover':this.phase===2?'tongue-form':this.rampFormed?'ramp-open':'ramp-form');
   }
   private clearAttacks(): void { for (const wave of this.waves) wave.life = 0; for (const bubble of this.bubbles) bubble.life = 0; }
-  private emitWave(centre: THREE.Vector3, speed: number): void {
+  private emitWave(centre: THREE.Vector3, speed: number, life=4): void {
     const wave = this.waves.find(value => value.life <= 0); if (!wave) return;
-    wave.centre.copy(centre); wave.radius = 0; wave.previous = 0; wave.life = 4; wave.speed = speed;
+    wave.centre.copy(centre); wave.radius = 0; wave.previous = 0; wave.life = life; wave.speed = speed;
   }
   private fireVolley(): void {
     const arm = this.model.arms[this.fired % 2], origin = arm.wrist.clone().add(this.model.root.position);
     origin.z += 1.5; // visible pincer tip, not an invisible floor emitter
     const base = Math.atan2(this.target.x - origin.x, this.target.z - origin.z);
-    const drop = (.85 - origin.y) / Math.max(4, Math.hypot(this.target.x - origin.x, this.target.z - origin.z));
+    const distance = Math.hypot(this.target.x - origin.x, this.target.z - origin.z);
+    const drop = (.85 - origin.y) / Math.max(4, distance);
+    const travel = Math.hypot(distance,.85-origin.y)/8.5;
+    // Let the last aimed row reach the locked player before clearing hazards
+    // and presenting the tongue. The former 1.6s window deleted every row in
+    // flight when the rider waited in the front court.
+    const life = this.phase===2 ? travel+.55 : 5;
+    if(this.phase===2)this.volleyFinish=Math.max(this.volleyFinish,this.stateTime+life+.15);
     for (let i = -2; i <= 2; i++) {
       const bubble = this.bubbles.find(value => value.life <= 0); if (!bubble) break;
-      bubble.mesh.position.copy(origin); bubble.previous.copy(origin); bubble.life = 5;
+      bubble.mesh.position.copy(origin); bubble.previous.copy(origin); bubble.life = life;
       const angle = base + i * .22; bubble.velocity.set(Math.sin(angle), drop, Math.cos(angle)).setLength(8.5);
     }
     this.burst(origin, 5); sfx.play('woosh3', .4, 1.6);
@@ -283,7 +296,7 @@ export class CrabChiefEncounter {
     this.shield.visible = this.phase > 1 && !this.exposed && !this.defeated;this.shield.position.copy(this.pearl); this.shield.rotation.y = this.time;
     if(this.phase===2&&(this.state==='tongue-form'||this.state==='tongue-open'||(this.state==='hurt'&&this.attachedTongue))){
       const progress=this.state==='tongue-form'?clamp(this.stateTime/1.2,0,1):1;
-      this.phaseGeometry.setTongue(new THREE.Vector3(0,6.4,-23),progress,this.stateTime);
+      this.phaseGeometry.setTongue(this.model.root.position.clone().add(new THREE.Vector3(0,6.4,1)),progress,this.stateTime);
     }else this.phaseGeometry.hideTongue();
     if(this.phase===3&&!this.defeated){
       const progress=this.rampFormed?1:this.state==='ramp-form'?clamp(this.stateTime/1.8,0,1):0;
@@ -320,6 +333,7 @@ export class CrabChiefEncounter {
     hits: this.hits, playerHits: this.playerHits, grindDistance: this.grindDistance, skateDistance: this.skateDistance,
     tongueRun:this.tongueRun,tongueActive:this.phaseGeometry.tongueActive,tongueProgress:this.phaseGeometry.tongueProgress,rampActive:this.phaseGeometry.rampActive,rampProgress:this.phaseGeometry.rampProgress,launchTime:this.launchTime,rampSpeed:this.rampLipSpeed,
     activeWaves: this.waves.filter(w => w.life > 0).map(w => ({ radius: w.radius, previous: w.previous, centre: w.centre.toArray() })),
-    activeBubbles: this.bubbles.filter(b => b.life > 0).length, target: this.target.toArray(),
+    activeBubbles: this.bubbles.filter(b => b.life > 0).length,
+    bubblePositions:this.bubbles.filter(b=>b.life>0).map(b=>b.mesh.position.toArray()), target: this.target.toArray(),
     history: [...this.history], strikes: [...this.strikes], model: this.model.diagnostics }; }
 }

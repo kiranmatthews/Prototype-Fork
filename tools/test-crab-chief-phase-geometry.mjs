@@ -28,14 +28,13 @@ await withChiefRuntime(async ({l,p,server})=>{
   p.respawn(l,true,false,{position:new THREE.Vector3(0,.12,1)});
   let tongueContact=false,tongueHigh=false,tongueMaxY=0,tongueFrames=0;
   for(let i=0;i<550;i++){
-    const grinding=p.state==='grind';
-    tick({moveY:1,grindHeld:true,jumpHeld:true,
-      moveX:grinding?Math.max(-.7,Math.min(.7,-p.balance*1.9)):0});
+    tick({moveY:1,grindHeld:true});
     if(p.grindRail===geometry.tongueRail){tongueContact=true;tongueFrames++;tongueMaxY=Math.max(tongueMaxY,p.pos.y);if(p.pos.y>5)tongueHigh=true;}
     if(tongueHigh&&p.state==='air')break;
   }
   assert.ok(tongueContact,'normal Player controls never caught the real tongue Rail');
   assert.ok(tongueHigh,'normal grind failed to climb the tongue to the chief');
+  assert.equal(p.balanceMeter,null,'assisted tongue still advertises a balance challenge');
   geometry.hideTongue();assert.equal(geometry.tongueRail.grindable,false);
   geometry.setRamp(.5,.5);assert.equal(geometry.rampActive,false);assert.equal(l.groundMeshes.length,originalGround);
   geometry.setRamp(1,1.2);assert.equal(geometry.rampActive,true);assert.equal(l.groundMeshes.length,originalGround+1);
