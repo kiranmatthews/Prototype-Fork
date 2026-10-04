@@ -1,0 +1,19 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="icon" href="data:,"/><title>Ghost train Meshy asset review</title>
+<style>body{margin:0;background:#100b20;color:#e6e0f4;font:14px system-ui}header{position:absolute;padding:14px;z-index:1}canvas{display:block}select{background:#211a34;color:white;padding:7px;border:1px solid #67567f}#facts{white-space:pre}</style></head>
+<body><header><select id="asset"><option>castle-arch</option><option>ghost-cart</option><option>banquet-turkey</option><option>banquet-cake</option><option>clockwork-knight</option></select><select id="angle"><option value="0">Front (+Z)</option><option value="40">40 degrees</option><option value="90">Side (+X)</option><option value="180">Rear (-Z)</option></select><div id="facts"></div></header>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+const scene=new THREE.Scene();scene.background=new THREE.Color('#100b20');
+const camera=new THREE.PerspectiveCamera(36,innerWidth/innerHeight,.01,100);
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(1);renderer.outputColorSpace=THREE.SRGBColorSpace;document.body.append(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xdcd4ff,0x51433c,2.1));let light=new THREE.DirectionalLight(0xffffff,3.5);light.position.set(2,4,4);scene.add(light);let rim=new THREE.DirectionalLight(0x8580ff,1.5);rim.position.set(-2,2,-3);scene.add(rim);
+const grid=new THREE.GridHelper(3,12,0x7f6b93,0x302439);scene.add(grid);
+let model;const loader=new GLTFLoader();
+function view(){const angle=+document.querySelector('#angle').value*Math.PI/180;camera.position.set(Math.sin(angle)*2.2,.92,Math.cos(angle)*2.2);camera.lookAt(0,.48,0)}
+async function load(){if(model)scene.remove(model);const name=document.querySelector('#asset').value;const gltf=await loader.loadAsync('/ghost-train/'+name+'.glb');model=gltf.scene;scene.add(model);const box=new THREE.Box3().setFromObject(model);document.querySelector('#facts').textContent=name+'\n'+JSON.stringify({min:box.min.toArray(),max:box.max.toArray()});window.assetReady=name;view();}
+document.querySelector('#asset').onchange=load;document.querySelector('#angle').onchange=view;
+const params=new URLSearchParams(location.search);if(params.has('asset'))document.querySelector('#asset').value=params.get('asset');if(params.has('angle'))document.querySelector('#angle').value=params.get('angle');
+await load();function render(){requestAnimationFrame(render);renderer.render(scene,camera)}render();
+</script></body></html>

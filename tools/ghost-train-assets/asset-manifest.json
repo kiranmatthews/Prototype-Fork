@@ -1,0 +1,316 @@
+{
+  "castle-arch": {
+    "provider": "Meshy",
+    "generation": "text-to-3d",
+    "aiModel": "meshy-t2",
+    "taskId": "01a10537-dbbd-75a9-b593-eff0855f1e3a",
+    "previewTaskId": "01a10536-756f-70e7-85fd-b42e4dee81e4",
+    "sourceSha256": "363dde87f255e085b7b0ef09e9ab6d64860cc21712eec1a8731fd659c128829e",
+    "outputSha256": "d481b8726653ae161f1f074d34ef2dd93e28f0a199ab7dbdff21b172e366cebc",
+    "triangles": 3458,
+    "bytes": 232448,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 33633
+      }
+    ],
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.4705359935760498,
+        -0.22422200441360474
+      ],
+      "max": [
+        0.5,
+        0.46830299496650696,
+        0.22029900550842285
+      ]
+    },
+    "bounds": {
+      "min": [
+        -0.5,
+        0.0,
+        -0.2222605049610138
+      ],
+      "max": [
+        0.5,
+        0.9388389587402344,
+        0.2222605049610138
+      ]
+    },
+    "size": [
+      1.0,
+      0.9388389587402344,
+      0.4445210099220276
+    ],
+    "yawAppliedRadians": 0,
+    "axes": "Y-up, +Z-forward, centered X/Z, ground Y=0, maximum dimension 1"
+  },
+  "ghost-cart": {
+    "provider": "Meshy",
+    "generation": "text-to-3d",
+    "aiModel": "meshy-t2",
+    "taskId": "01a1053d-fc24-7080-acd4-ff50f49076da",
+    "previewTaskId": "01a1053c-6be2-7673-8cf0-ca66f67b1daf",
+    "sourceSha256": "67a7456247279cbe2e68d26fdf3bde9a1e8f8955377c091e107fd452f60f44b1",
+    "outputSha256": "05f46bddfc6857569664feac9b831e4727695f1066fe6cecf84680b13ce65647",
+    "triangles": 2982,
+    "bytes": 220432,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 77245
+      }
+    ],
+    "sourceBounds": {
+      "min": [
+        -0.25582200288772583,
+        -0.25085899233818054,
+        -0.5
+      ],
+      "max": [
+        0.2559719979763031,
+        0.25008198618888855,
+        0.5
+      ]
+    },
+    "bounds": {
+      "min": [
+        -0.25589698553085327,
+        0.0,
+        -0.5
+      ],
+      "max": [
+        0.25589698553085327,
+        0.5009409785270691,
+        0.5
+      ]
+    },
+    "size": [
+      0.5117939710617065,
+      0.5009409785270691,
+      1.0
+    ],
+    "yawAppliedRadians": -1.5707963267948966,
+    "axes": "Y-up, +Z-forward, centered X/Z, ground Y=0, maximum dimension 1"
+  },
+  "banquet-turkey": {
+    "provider": "Meshy",
+    "generation": "text-to-3d",
+    "aiModel": "meshy-t2",
+    "taskId": "01a10537-f7af-765d-bf0c-6040051039e9",
+    "previewTaskId": "01a10536-ea19-7127-93e1-82e16bb13334",
+    "sourceSha256": "1894b8c2b9f5693200dad8b79fdbf9a53957ee4013aefe495337b1c4a4fb548c",
+    "outputSha256": "6b147e9636e311ed695ee4a6f917a755f921408aa22167d87f3ea99bb1b0e0a1",
+    "triangles": 3104,
+    "bytes": 217352,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 70759
+      }
+    ],
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.3598729968070984,
+        -0.5
+      ],
+      "max": [
+        0.5,
+        0.3573789894580841,
+        0.5
+      ]
+    },
+    "bounds": {
+      "min": [
+        -0.5,
+        0.0,
+        -0.5
+      ],
+      "max": [
+        0.5,
+        0.7172520160675049,
+        0.5
+      ]
+    },
+    "size": [
+      1.0,
+      0.7172520160675049,
+      1.0
+    ],
+    "yawAppliedRadians": 0,
+    "axes": "Y-up, +Z-forward, centered X/Z, ground Y=0, maximum dimension 1"
+  },
+  "banquet-cake": {
+    "provider": "Meshy",
+    "generation": "text-to-3d",
+    "aiModel": "meshy-t2",
+    "taskId": "01a10538-0525-76be-b387-238e939ae12e",
+    "previewTaskId": "01a10536-f775-7135-98d6-090b6ea96f61",
+    "sourceSha256": "78621b02ab34e3edb28dc7781b60949e8312b35c845fb6b5ae6ef589b4addc0e",
+    "outputSha256": "c9d6820379816245d61eb5754faa22d5e7a418846a025fbf1d4e301da8a81892",
+    "triangles": 2194,
+    "bytes": 200236,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 88210
+      }
+    ],
+    "sourceBounds": {
+      "min": [
+        -0.2782669961452484,
+        -0.5,
+        -0.27823200821876526
+      ],
+      "max": [
+        0.277538001537323,
+        0.5,
+        0.27820199728012085
+      ]
+    },
+    "bounds": {
+      "min": [
+        -0.2779024839401245,
+        0.0,
+        -0.27821701765060425
+      ],
+      "max": [
+        0.2779024839401245,
+        1.0,
+        0.27821701765060425
+      ]
+    },
+    "size": [
+      0.555804967880249,
+      1.0,
+      0.5564340353012085
+    ],
+    "yawAppliedRadians": 0,
+    "axes": "Y-up, +Z-forward, centered X/Z, ground Y=0, maximum dimension 1"
+  },
+  "clockwork-knight": {
+    "provider": "Meshy",
+    "generation": "text-to-3d",
+    "aiModel": "meshy-t2",
+    "taskId": "01a10538-1231-740d-9183-6ee7d66b499d",
+    "previewTaskId": "01a10537-05a2-74ab-a2b0-8e7087e7fdee",
+    "sourceSha256": "1bca58e3c74db150fb1618b3f0696a8c5bc977be7afc82cb3d5bea40a049189f",
+    "outputSha256": "cd5a9607f7194bf338c5d8c385cf23064fbc8d4d04e3d067282f7892112295b0",
+    "triangles": 5904,
+    "bytes": 302252,
+    "textures": [
+      {
+        "image": 0,
+        "sourceSize": [
+          2048,
+          2048
+        ],
+        "size": [
+          512,
+          512
+        ],
+        "mimeType": "image/jpeg",
+        "bytes": 69477
+      }
+    ],
+    "sourceBounds": {
+      "min": [
+        -0.37779200077056885,
+        -0.5,
+        -0.26080700755119324
+      ],
+      "max": [
+        0.3768549859523773,
+        0.5,
+        0.261370986700058
+      ]
+    },
+    "bounds": {
+      "min": [
+        -0.3773235082626343,
+        0.0,
+        -0.2610889971256256
+      ],
+      "max": [
+        0.3773235082626343,
+        1.0,
+        0.2610889971256256
+      ]
+    },
+    "size": [
+      0.7546470165252686,
+      1.0,
+      0.5221779942512512
+    ],
+    "yawAppliedRadians": 0,
+    "axes": "Y-up, +Z-forward, centered X/Z, ground Y=0, maximum dimension 1",
+    "semanticRigidSegments": [
+      "Torso",
+      "Head",
+      "LeftUpperArm",
+      "LeftForearm",
+      "RightUpperArm",
+      "RightForearm",
+      "LeftThigh",
+      "LeftShin",
+      "LeftFoot",
+      "RightThigh",
+      "RightShin",
+      "RightFoot"
+    ],
+    "trianglesByRegion": {
+      "Torso": 1524,
+      "Head": 1054,
+      "LeftUpperArm": 449,
+      "LeftForearm": 535,
+      "RightUpperArm": 448,
+      "RightForearm": 544,
+      "LeftThigh": 248,
+      "LeftShin": 211,
+      "LeftFoot": 221,
+      "RightThigh": 246,
+      "RightShin": 213,
+      "RightFoot": 211
+    },
+    "restTrianglesPreserved": true
+  }
+}

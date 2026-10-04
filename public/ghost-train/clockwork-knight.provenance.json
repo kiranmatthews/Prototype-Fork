@@ -1,0 +1,86 @@
+{
+  "provider": "Meshy",
+  "generation": "text-to-3d",
+  "aiModel": "meshy-t2",
+  "taskId": "01a10538-1231-740d-9183-6ee7d66b499d",
+  "previewTaskId": "01a10537-05a2-74ab-a2b0-8e7087e7fdee",
+  "sourceSha256": "1bca58e3c74db150fb1618b3f0696a8c5bc977be7afc82cb3d5bea40a049189f",
+  "outputSha256": "cd5a9607f7194bf338c5d8c385cf23064fbc8d4d04e3d067282f7892112295b0",
+  "triangles": 5904,
+  "bytes": 302252,
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 69477
+    }
+  ],
+  "sourceBounds": {
+    "min": [
+      -0.37779200077056885,
+      -0.5,
+      -0.26080700755119324
+    ],
+    "max": [
+      0.3768549859523773,
+      0.5,
+      0.261370986700058
+    ]
+  },
+  "bounds": {
+    "min": [
+      -0.3773235082626343,
+      0.0,
+      -0.2610889971256256
+    ],
+    "max": [
+      0.3773235082626343,
+      1.0,
+      0.2610889971256256
+    ]
+  },
+  "size": [
+    0.7546470165252686,
+    1.0,
+    0.5221779942512512
+  ],
+  "yawAppliedRadians": 0,
+  "axes": "Y-up, +Z-forward, centered X/Z, ground Y=0, maximum dimension 1",
+  "semanticRigidSegments": [
+    "Torso",
+    "Head",
+    "LeftUpperArm",
+    "LeftForearm",
+    "RightUpperArm",
+    "RightForearm",
+    "LeftThigh",
+    "LeftShin",
+    "LeftFoot",
+    "RightThigh",
+    "RightShin",
+    "RightFoot"
+  ],
+  "trianglesByRegion": {
+    "Torso": 1524,
+    "Head": 1054,
+    "LeftUpperArm": 449,
+    "LeftForearm": 535,
+    "RightUpperArm": 448,
+    "RightForearm": 544,
+    "LeftThigh": 248,
+    "LeftShin": 211,
+    "LeftFoot": 221,
+    "RightThigh": 246,
+    "RightShin": 213,
+    "RightFoot": 211
+  },
+  "restTrianglesPreserved": true
+}

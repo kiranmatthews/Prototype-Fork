@@ -17,6 +17,8 @@ import { SpinBridge } from './spinBridge';
 
 import * as THREE from "three";
 import { createEnemyVisual } from "./enemies/runtime";
+import { GhostTrainAssetKit, GHOST_DECOR_KINDS, GHOST_DECOR_LABELS, createGhostEnemyVisual } from './ghostTrain';
+import { GHOST_TRAIN_LEVEL } from './levels/ghost-train';
 import type { EnemyKind, EnemyVisual } from "./enemies/types";
 export type { EnemyKind } from "./enemies/types";
 import { resolveLevelAtmosphere, validAtmosphere, CUSTOM_LEVEL_THEME, JUNGLE_THEME_OVERRIDES, NIGHTWORKS_THEME_OVERRIDES,
@@ -815,6 +817,7 @@ export function setEditorBuild(on: boolean): boolean {
 // editor builds its FOLIAGE palette straight off this list, so a new one shows
 // up in the add panel the moment it is added here and wired in decorProp().
 export const DECOR_KINDS = [
+  ...GHOST_DECOR_KINDS,
   ...JUNGLE_ASSET_KINDS,
   ...CITY_ASSET_KINDS,
   ...TROPICAL_PLANT_KINDS,
@@ -850,6 +853,7 @@ export const DECOR_KINDS = [
 export type DecorKind = (typeof DECOR_KINDS)[number];
 /** Human labels for the palette + the props dropdown. */
 export const DECOR_LABELS: Record<DecorKind, string> = {
+  ...GHOST_DECOR_LABELS,
   ...JUNGLE_ASSET_LABELS,
   ...CITY_ASSET_LABELS,
   ...TROPICAL_PLANT_LABELS,
@@ -2337,6 +2341,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   ...BONUS_LEVEL_ENTRIES,
   ...PUZZLE_LEVELS,
   { id: 'crab-chief', name: CRAB_CHIEF_LEVEL.name, data: CRAB_CHIEF_LEVEL },
+  { id:'ghost-train', name:GHOST_TRAIN_LEVEL.name, data:GHOST_TRAIN_LEVEL },
   {
     id: "codex-lab",
     name: CODEX_LAB_LEVEL.name,
@@ -3812,6 +3817,7 @@ export class Level {
   ropes: SkyRope[] = [];
   crushers: Crusher[] = [];
   pendulums: Pendulum[] = [];
+  private ghostTrainAssets: GhostTrainAssetKit | null = null;
   ropeSwings: RopeSwing[] = [];
   torches: Torch[] = [];
   phasePads: PhasePad[] = [];
@@ -5918,6 +5924,7 @@ export class Level {
               speed: r2(e.speed),
               foe,
               yaw: 90,
+              dkind: e.group.userData.ghostSkin as CustomComponent['dkind'],
             }
           : {
               t: "enemy",
@@ -5929,6 +5936,7 @@ export class Level {
               range,
               speed: r2(e.speed),
               foe,
+              dkind: e.group.userData.ghostSkin as CustomComponent['dkind'],
             },
       );
     }
@@ -5997,6 +6005,8 @@ export class Level {
         phase: mv.phase,
         ...(mv.axisV.x + mv.axisV.y + mv.axisV.z < 0 ? { travelSign: -1 as const } : {}),
         lit: mv.torch ? true : undefined,
+        dkind: mv.mesh.userData.ghostSkin as CustomComponent['dkind'],
+        yaw: mv.mesh.userData.ghostSkin ? THREE.MathUtils.radToDeg(mv.mesh.rotation.y) : undefined,
       });
     }
     // Torches carried BY a phase pad or riding a mover are that component's
@@ -6090,6 +6100,7 @@ export class Level {
         speed: r2(pe.speed),
         phase: r2(pe.phase),
         yaw: pe.yaw ? Math.round(THREE.MathUtils.radToDeg(pe.yaw)) : undefined,
+        dkind: pe.pivot.userData.ghostSkin as CustomComponent['dkind'],
       });
     }
     for (const rs of this.ropeSwings) {
@@ -7146,6 +7157,7 @@ export class Level {
                 c.speed ?? 3,
                 "z",
                 foe,
+                c.dkind,
               );
             } else {
               this.enemy(
@@ -7156,6 +7168,7 @@ export class Level {
                 c.speed ?? 3,
                 "x",
                 foe,
+                c.dkind,
               );
             }
           } else if (c.t === "grindosaurus") {
@@ -7179,6 +7192,7 @@ export class Level {
               c.travelSign ?? 1,
             );
             if(c.dkind==="citydeck")this.dressCityMovingDeck(this.movers[this.movers.length-1].mesh,c,s[1]);
+            if(c.dkind==='ghostcart')this.ghostKit().cart(this.movers[this.movers.length-1].mesh,c,s[1]);
           } else if (c.t === "torch") {
             this.torch(c.p[0], c.p[1], c.p[2], c.rise ?? 2.2, c.w ?? 1);
           } else if (c.t === "phasepad") {
@@ -7259,6 +7273,7 @@ export class Level {
               c.phase ?? 0,
               c.yaw ?? 0,
             );
+            if(c.dkind==='ghostaxe')this.ghostKit().axe(this.pendulums[this.pendulums.length-1].pivot,c.len??5);
           } else if (c.t === "wumpa") {
             this.pickup(c.p[0], c.p[1], c.p[2]);
           } else if (c.t === "camnode" && c.cameraView && c.s) {
@@ -7391,6 +7406,7 @@ export class Level {
     this.tropicalPlants = null;
     this.discardedBoards.dispose(); // remove borrowed board resources before the level traversal
     for (const enemy of this.enemies) enemy.visual.dispose();
+    this.ghostTrainAssets?.dispose();this.ghostTrainAssets=null;
     for (const courtyard of this.meshyCourtyards)
       releaseMeshyCourtyard(courtyard);
     this.meshyCourtyards.length = 0;
@@ -15449,7 +15465,10 @@ export class Level {
     const far=(camera as THREE.PerspectiveCamera).far??400;
     this.jungleAssets?.setView(camera.position,this.keepPlayFog?Math.min(far,this.theme.fogFar):far,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.milkCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.milkCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
+  get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts}))};}
+  private ghostKit():GhostTrainAssetKit {return this.ghostTrainAssets??=new GhostTrainAssetKit(this.root);}
 
   private jungleAsset(c: CustomComponent): void {
     if (!isJungleAsset(c.dkind)) return;
@@ -15539,6 +15558,7 @@ export class Level {
   }
 
   private buildDecorProp(c: CustomComponent): void {
+    if(GHOST_DECOR_KINDS.includes(c.dkind as typeof GHOST_DECOR_KINDS[number])) {this.noteDecor(c.dkind!,...c.p,{s:c.s,w:c.w,yaw:c.yaw,len:c.len});this.ghostKit().decorate(c);return;}
     if (isJungleAsset(c.dkind)) return this.jungleAsset(c);
     const [x, y, z] = c.p;
     const s = c.w ?? 1;
@@ -18015,8 +18035,8 @@ export class Level {
   }
 
   /** Imported enemy artwork; gameplay roots and collision remain level-owned. */
-  private enemyGroup(kind: EnemyKind): EnemyVisual {
-    const visual = createEnemyVisual(kind, { appearance: this.nightworksRocks ? "nightworks" : undefined });
+  private enemyGroup(kind: EnemyKind, skin?:CustomComponent['dkind']): EnemyVisual {
+    const visual = skin==='ghostknight'||skin==='ghostfood'||skin==='ghostcake'?createGhostEnemyVisual(kind,skin):createEnemyVisual(kind, { appearance: this.nightworksRocks ? "nightworks" : undefined });
     this.root.add(visual.group);
     return visual;
   }
@@ -18032,8 +18052,9 @@ export class Level {
     speed: number,
     axis: "x" | "z" = "x",
     kind: EnemyKind = "grunt",
+    skin?:CustomComponent['dkind'],
   ): void {
-    const visual = this.enemyGroup(kind);
+    const visual = this.enemyGroup(kind,skin);
     const { group, body } = visual;
     // snap to real ground (wavy jungle floors), then remember it for resets
     const mid = (a0 + a1) / 2;
@@ -18201,6 +18222,8 @@ export class Level {
           break;
       }
       this.updateEnemyVisual(e, dt, dt > 0 ? Math.abs(this.enemyAlong(e) - beforeAlong) / dt : 0);
+      if(e.group.userData.ghostSkin==='ghostknight'){boxW=1.35;boxH=2.55;cy=1.275;}
+      else if(e.group.userData.ghostSkin==='ghostfood'||e.group.userData.ghostSkin==='ghostcake'){boxW=1.3;boxH=1.45;cy=.725;}
       e.box.setFromCenterAndSize(
         new THREE.Vector3(
           e.group.position.x,

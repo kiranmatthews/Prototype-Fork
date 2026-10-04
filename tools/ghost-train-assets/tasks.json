@@ -1,0 +1,383 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "authorization": "User requested new Meshy assets for a haunted castle ghost train level. Existing balance only; no purchase or upgrade.",
+  "budgetCredits": 180,
+  "startingBalance": 1461,
+  "tasks": {
+    "castle-arch": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "c6dc1473-62ef-439d-b93e-2febc817a96b",
+      "createdAt": "2026-10-04T04:40:16.680897+00:00",
+      "estimatedCredits": 20,
+      "payload": {
+        "mode": "preview",
+        "prompt": "Single isolated freestanding gothic haunted castle archway game prop. Huge open pointed arch passage, chunky faceted dark purple stone voussoirs, two square buttress pillars, carved grimacing gargoyle capitals, weathered stone chipped corners and curling dead ivy. Grand theatrical haunted attraction, spooky playful cinematic theme park castle. Symmetric modular entrance, clear empty opening, no door, no floor, no roof, no environment. Beautiful low poly polygonal geometry with crisp planar facets, broad readable silhouette.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 3500,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1461,
+      "id": "01a10536-756f-70e7-85fd-b42e4dee81e4",
+      "checkedAt": "2026-10-04T04:41:30.899359+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791088829905
+    },
+    "ghost-cart": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "fa6231e7-db2d-40c5-9760-4f3103ec6a2c",
+      "createdAt": "2026-10-04T04:40:41.666376+00:00",
+      "estimatedCredits": 20,
+      "payload": {
+        "mode": "preview",
+        "prompt": "Single isolated low poly haunted castle ghost train ride cart, empty open passenger car, chunky antique black iron body with deep plum panels, ornate gold scroll trim, four small metal flanged railroad wheels, broad flat footwell with two narrow bench seats along sides, ominous grinning skull carved on the front. Short rectangular rail vehicle with broad open top suitable for standing and jumping on. Cinematic spooky theme park attraction, charming angular readable silhouette, faceted handmade game asset. No track, no ground, no people, no background.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 3200,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1456,
+      "id": "01a10536-d71d-767d-9880-a7b4256d2515",
+      "checkedAt": "2026-10-04T04:41:31.794480+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791088855894
+    },
+    "banquet-turkey": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "cf076ead-4cc6-41c0-9e0d-be029801624b",
+      "createdAt": "2026-10-04T04:40:46.590652+00:00",
+      "estimatedCredits": 20,
+      "payload": {
+        "mode": "preview",
+        "prompt": "Single isolated stylized low poly animatronic haunted banquet roast turkey monster on a silver platter. Huge golden roast turkey body, two drumsticks like squat mechanical feet, bony wing claws extended sideways, angry carved wide mouth full of pointed ivory teeth in the front of the roast, two glowing lime green eyes above mouth. Theatrical mechanical haunted attraction food monster, menacing but playful, chunky angular polygonal game asset, beautifully detailed clear silhouette. No people, no table, no ground, no background.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 3000,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1451,
+      "id": "01a10536-ea19-7127-93e1-82e16bb13334",
+      "checkedAt": "2026-10-04T04:41:32.677358+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791088860394
+    },
+    "banquet-cake": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "ebbb7b84-4bba-4c0f-9579-1bdb94ec3ec9",
+      "createdAt": "2026-10-04T04:40:49.988282+00:00",
+      "estimatedCredits": 20,
+      "payload": {
+        "mode": "preview",
+        "prompt": "Single isolated stylized low poly haunted banquet cake monster, tall crooked three tier purple frosted cake on silver platter, icing dripping like poisonous slime, strawberry red cherries and candles atop, wide jagged mouth with pointed white teeth on bottom tier, two evil glowing lime green eyes on middle tier. Tiny angular mechanical claw feet protrude under platter. Spooky playful cinematic haunted theme park animatronic dessert. Clear chunky readable polygonal silhouette, no table, no floor, no background, no people.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 2400,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1446,
+      "id": "01a10536-f775-7135-98d6-090b6ea96f61",
+      "checkedAt": "2026-10-04T04:41:33.565629+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791088861197
+    },
+    "clockwork-knight": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "6d68c6f2-c8b7-4fac-bbc6-3683e5791947",
+      "createdAt": "2026-10-04T04:40:53.632483+00:00",
+      "estimatedCredits": 20,
+      "payload": {
+        "mode": "preview",
+        "prompt": "Single isolated full body humanoid haunted castle animatronic suit of medieval knight armor in symmetric A pose. Empty bulky angular blackened steel plate armor with distinct articulated shoulders elbows wrists hips knees ankles, gauntlets and heavy sabatons. Closed pointed visor helmet, two narrow eerie glowing lime green eye slits, sharp shoulder pauldrons, gothic embossed breastplate, purple tattered waist cloth. Menacing tall robotic haunted attraction guardian. No sword, no shield, no pedestal, no ground, no person visible. High quality low poly game asset, crisp planar facets.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 5500,
+        "target_formats": [
+          "glb"
+        ],
+        "pose_mode": "a-pose"
+      },
+      "balanceBefore": 1441,
+      "id": "01a10537-05a2-74ab-a2b0-8e7087e7fdee",
+      "checkedAt": "2026-10-04T04:42:33.498162+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791088867064,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train/clockwork-knight/downloads/model.glb",
+          "bytes": 108400,
+          "sha256": "40ccb18c741bb40e240de2782eea09e9341ec608970e7f4813ff1977f6248bfa"
+        },
+        {
+          "path": ".img2threejs/ghost-train/clockwork-knight/downloads/thumbnail.png",
+          "bytes": 96635,
+          "sha256": "36baf703e604e57704bdd32cf493240d2425d91a121c13f3876d030d77e19ef5"
+        }
+      ]
+    },
+    "castle-arch-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "8869451f-bf93-4581-8f4f-0e614acc4dcc",
+      "createdAt": "2026-10-04T04:41:48.419922+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a10536-756f-70e7-85fd-b42e4dee81e4",
+        "texture_prompt": "Hand painted haunted castle stone. Desaturated plum slate blocks, dark violet mortar, green moss accents, cool grey chipped edges, bronze gargoyle details. Distinct broad color regions, fine weathering painted in texture. No baked light or shadow.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1436,
+      "id": "01a10537-dbbd-75a9-b593-eff0855f1e3a",
+      "checkedAt": "2026-10-04T04:43:57.047928+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791088954843,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train/castle-arch-textured/downloads/model.glb",
+          "bytes": 2532916,
+          "sha256": "363dde87f255e085b7b0ef09e9ab6d64860cc21712eec1a8731fd659c128829e"
+        },
+        {
+          "path": ".img2threejs/ghost-train/castle-arch-textured/downloads/thumbnail.png",
+          "bytes": 161112,
+          "sha256": "f261841044a0bf4e73ecf4db95f8c642257d2fdf3d9bacb063c3538f5c32e3a6"
+        }
+      ]
+    },
+    "ghost-cart-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "88761d27-2ac4-432e-b023-af511ba224f5",
+      "createdAt": "2026-10-04T04:41:51.831268+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a10536-d71d-767d-9880-a7b4256d2515",
+        "texture_prompt": "Antique iron ghost train cart, deep purple enamel panels with gold filigree and brass trim, chipped dark metal edges, burgundy bench cushions, pale skull front ornament. Hand painted low poly game style with broad readable color areas. No baked shadows.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1426,
+      "id": "01a10537-e8f6-71d0-a1d7-fa5952082be1",
+      "checkedAt": "2026-10-04T04:43:59.357299+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791088944171,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train/ghost-cart-textured/downloads/model.glb",
+          "bytes": 3002664,
+          "sha256": "4f31fac409de049cb59ff9331bd9d5ae40b1852c14b7818af9e2438d9156905d"
+        },
+        {
+          "path": ".img2threejs/ghost-train/ghost-cart-textured/downloads/thumbnail.png",
+          "bytes": 130061,
+          "sha256": "bee128185772742e7be23bf1aaca758a0f563ba538e846fab6f2c6d8e31594f6"
+        }
+      ]
+    },
+    "banquet-turkey-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "e915d6b5-0e48-41f9-9892-0fd12a960fcd",
+      "createdAt": "2026-10-04T04:41:55.596639+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a10536-ea19-7127-93e1-82e16bb13334",
+        "texture_prompt": "Caramel brown glazed roast turkey, deep golden crisp skin, cream bone ends, dark red gaping mouth with ivory fangs, neon acid green eye discs, tarnished silver platter. Hand painted game texture with rich food detail and crisp broad color regions. No baked lighting.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1416,
+      "id": "01a10537-f7af-765d-bf0c-6040051039e9",
+      "checkedAt": "2026-10-04T04:44:01.700138+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791088950149,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train/banquet-turkey-textured/downloads/model.glb",
+          "bytes": 2945496,
+          "sha256": "1894b8c2b9f5693200dad8b79fdbf9a53957ee4013aefe495337b1c4a4fb548c"
+        },
+        {
+          "path": ".img2threejs/ghost-train/banquet-turkey-textured/downloads/thumbnail.png",
+          "bytes": 118145,
+          "sha256": "90ebfa39fc8d029c5b815181e1648f3a659a3847e1f31c512e0f5d91c11195f2"
+        }
+      ]
+    },
+    "banquet-cake-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "06c215dc-10f5-4a0d-a5e7-e0535b74f316",
+      "createdAt": "2026-10-04T04:41:59.020236+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a10536-f775-7135-98d6-090b6ea96f61",
+        "texture_prompt": "Rich violet cake frosting, pale bone white cream icing with lime green drips, red cherries, dark burgundy mouth with ivory fangs, acid green glowing eyes, antique silver serving plate. Hand painted low polygon game texture with no baked lighting.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1406,
+      "id": "01a10538-0525-76be-b387-238e939ae12e",
+      "checkedAt": "2026-10-04T04:44:03.908710+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791088949368,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train/banquet-cake-textured/downloads/model.glb",
+          "bytes": 2877472,
+          "sha256": "78621b02ab34e3edb28dc7781b60949e8312b35c845fb6b5ae6ef589b4addc0e"
+        },
+        {
+          "path": ".img2threejs/ghost-train/banquet-cake-textured/downloads/thumbnail.png",
+          "bytes": 126489,
+          "sha256": "76c372ed0045b8c34a35338b28b0393a6ef78fd1ef7bf84c02bb73fad6a702e5"
+        }
+      ]
+    },
+    "clockwork-knight-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "f310e7dd-2277-4866-9d84-7500a82927df",
+      "createdAt": "2026-10-04T04:42:02.381254+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a10537-05a2-74ab-a2b0-8e7087e7fdee",
+        "texture_prompt": "Dark aged steel armor with cool silver chipped edges, bronze gothic engraved accents, plum tattered waist cloth, pure bright lime green eye slits with dark face opening. Hand painted rich armor detail, broad readable metallic regions, no baked shadows.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1396,
+      "id": "01a10538-1231-740d-9183-6ee7d66b499d",
+      "checkedAt": "2026-10-04T04:44:06.131019+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791088953826,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train/clockwork-knight-textured/downloads/model.glb",
+          "bytes": 3239804,
+          "sha256": "1bca58e3c74db150fb1618b3f0696a8c5bc977be7afc82cb3d5bea40a049189f"
+        },
+        {
+          "path": ".img2threejs/ghost-train/clockwork-knight-textured/downloads/thumbnail.png",
+          "bytes": 104763,
+          "sha256": "b9927a5f62b489cabdbb3779697f71c946953437bb15aff5d2c0d607e7d76008"
+        }
+      ]
+    },
+    "ghost-cart-v2": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "9b0b77a3-d4fb-441e-a20b-9c33c8efdc3f",
+      "createdAt": "2026-10-04T04:46:47.460560+00:00",
+      "estimatedCredits": 20,
+      "payload": {
+        "mode": "preview",
+        "prompt": "A single SMALL OPEN TOP ghost train ride car, NOT a train carriage. Very short squat rectangular iron bathtub-shaped cart for two riders, four exposed small flanged rail wheels, low solid purple side walls and a completely OPEN EMPTY top. There is NO ROOF, NO CANOPY, NO WINDOWS, NO TALL UPRIGHTS. Flat empty interior footwell, two little side benches. Front has a big grinning skull ornament. A small gothic theme park ride cart with aged brass edges and black iron scrollwork. Low poly faceted game prop, no rails, no floor, no ground, no riders, no environment.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 2800,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1386,
+      "id": "01a1053c-6be2-7673-8cf0-ca66f67b1daf",
+      "checkedAt": "2026-10-04T04:48:29.051487+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791089222609
+    },
+    "ghost-cart-v2-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "8ea3150d-6b96-4727-a279-f6eaeff18822",
+      "createdAt": "2026-10-04T04:48:29.945906+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a1053c-6be2-7673-8cf0-ca66f67b1daf",
+        "texture_prompt": "Purple enameled low side walls with brass trim and gothic gold scrolls, black wrought iron undercarriage, burgundy bench cushions, polished silver skull front. Low poly hand painted game asset. No baked lighting.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1381,
+      "id": "01a1053d-fc24-7080-acd4-ff50f49076da",
+      "checkedAt": "2026-10-04T04:52:06.048568+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791089347483,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train/ghost-cart-v2-textured/downloads/model.glb",
+          "bytes": 2964388,
+          "sha256": "67a7456247279cbe2e68d26fdf3bde9a1e8f8955377c091e107fd452f60f44b1"
+        },
+        {
+          "path": ".img2threejs/ghost-train/ghost-cart-v2-textured/downloads/thumbnail.png",
+          "bytes": 119639,
+          "sha256": "d7ca026656bb8e5a3f97c88bd4c42a2d5588fcec9fff5ed974f79c9431d181da"
+        }
+      ]
+    }
+  }
+}

@@ -183,6 +183,12 @@ const manyDots = (x: CanvasRenderingContext2D): void => {
   }
 };
 const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
+  ghostcart:x=>{x.fillStyle='#89613b';x.fillRect(2,5,14,8);x.fillStyle='#c9b686';x.fillRect(2,4,14,2);x.fillStyle='#21212b';for(const cx of [5,13]){x.beginPath();x.arc(cx,15,2,0,7);x.fill();}x.fillStyle='#9dfa43';x.fillRect(3,6,2,2);x.fillRect(13,6,2,2);},
+  ghostaxe:x=>{x.fillStyle='#967345';x.fillRect(8,1,2,16);x.fillStyle='#c5c9d4';x.beginPath();x.moveTo(8,7);x.lineTo(2,5);x.lineTo(1,13);x.lineTo(8,11);x.moveTo(10,7);x.lineTo(16,5);x.lineTo(17,13);x.lineTo(10,11);x.fill();},
+  ghostknight:x=>{x.fillStyle='#9394a4';x.fillRect(5,1,8,5);x.fillRect(4,7,10,6);x.fillRect(4,13,4,5);x.fillRect(10,13,4,5);x.fillStyle='#a1ff43';x.fillRect(6,3,2,1);x.fillRect(10,3,2,1);},
+  ghostfood:x=>{x.fillStyle='#bc733b';x.beginPath();x.ellipse(9,10,7,5,0,0,7);x.fill();x.fillStyle='#f1daa0';x.fillRect(4,14,2,3);x.fillRect(12,14,2,3);x.fillStyle='#a1ff43';x.fillRect(5,7,2,2);x.fillRect(11,7,2,2);},
+  ghostcake:x=>{x.fillStyle='#dfc5a0';x.fillRect(3,7,12,9);x.fillStyle='#954548';x.fillRect(3,10,12,2);x.fillStyle='#b7ff55';for(const cx of [5,9,13])x.fillRect(cx,2,1,5);},
+  ghostarch:x=>{x.fillStyle='#9a849f';x.fillRect(2,6,4,12);x.fillRect(12,6,4,12);x.beginPath();x.arc(9,7,7,Math.PI,0);x.lineTo(12,7);x.arc(9,7,3,0,Math.PI,true);x.fill();},
   ...Object.fromEntries(CITY_ASSET_KINDS.map(kind => [kind, (x: CanvasRenderingContext2D) => { x.fillStyle="#c8a879"; x.fillRect(2,3,14,14); x.fillStyle="#497b8c"; for(let j=0;j<3;j++)for(let i=0;i<3;i++)x.fillRect(4+i*4,5+j*4,2,2); }])) as Record<CityKind, Draw>,
   junglecup: x => { x.fillStyle="#eabb58"; x.fillRect(5,2,8,8); x.fillRect(8,9,2,6); x.fillRect(4,15,10,3); x.strokeStyle="#eabb58"; x.strokeRect(2,4,14,5); },
   pine: x => { x.fillStyle = "#856044"; x.fillRect(8, 9, 2, 8); x.fillStyle = "#58a66a";
@@ -472,6 +478,9 @@ const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
 // What a freshly dropped prop looks like: the same numbers the hand-coded
 // levels plant with, so a new one matches the ones already standing there.
 const DECOR_DEFAULTS: Record<DecorKind, Partial<CustomComponent>> = {
+  ghostcart:{s:[4,1.8,5],yaw:0,solid:false},ghostaxe:{len:5,yaw:0,solid:false},
+  ghostknight:{yaw:0,solid:false},ghostfood:{yaw:0,solid:false},ghostcake:{yaw:0,solid:false},
+  ghostarch:{s:[12,9,1.6],yaw:0,solid:false},
   ...Object.fromEntries(CITY_ASSET_KINDS.map(kind => [kind, {s:[...CITY_ASSETS[kind].size],w:1,yaw:0,solid:!!(CITY_ASSETS[kind].building||CITY_ASSETS[kind].ground)}])) as Record<CityKind,Partial<CustomComponent>>,
   junglecup: {s:[2,2,2],yaw:0},
   pine: { w: 1, yaw: 0 },

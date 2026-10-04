@@ -1,0 +1,57 @@
+{
+  "provider": "Meshy",
+  "generation": "text-to-3d",
+  "aiModel": "meshy-t2",
+  "taskId": "01a10537-f7af-765d-bf0c-6040051039e9",
+  "previewTaskId": "01a10536-ea19-7127-93e1-82e16bb13334",
+  "sourceSha256": "1894b8c2b9f5693200dad8b79fdbf9a53957ee4013aefe495337b1c4a4fb548c",
+  "outputSha256": "6b147e9636e311ed695ee4a6f917a755f921408aa22167d87f3ea99bb1b0e0a1",
+  "triangles": 3104,
+  "bytes": 217352,
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 70759
+    }
+  ],
+  "sourceBounds": {
+    "min": [
+      -0.5,
+      -0.3598729968070984,
+      -0.5
+    ],
+    "max": [
+      0.5,
+      0.3573789894580841,
+      0.5
+    ]
+  },
+  "bounds": {
+    "min": [
+      -0.5,
+      0.0,
+      -0.5
+    ],
+    "max": [
+      0.5,
+      0.7172520160675049,
+      0.5
+    ]
+  },
+  "size": [
+    1.0,
+    0.7172520160675049,
+    1.0
+  ],
+  "yawAppliedRadians": 0,
+  "axes": "Y-up, +Z-forward, centered X/Z, ground Y=0, maximum dimension 1"
+}

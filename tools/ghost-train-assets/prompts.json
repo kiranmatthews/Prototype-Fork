@@ -1,0 +1,35 @@
+{
+  "castle-arch": {
+    "triangles": 3500,
+    "prompt": "Single isolated freestanding gothic haunted castle archway game prop. Huge open pointed arch passage, chunky faceted dark purple stone voussoirs, two square buttress pillars, carved grimacing gargoyle capitals, weathered stone chipped corners and curling dead ivy. Grand theatrical haunted attraction, spooky playful cinematic theme park castle. Symmetric modular entrance, clear empty opening, no door, no floor, no roof, no environment. Beautiful low poly polygonal geometry with crisp planar facets, broad readable silhouette.",
+    "texture": "Hand painted haunted castle stone. Desaturated plum slate blocks, dark violet mortar, green moss accents, cool grey chipped edges, bronze gargoyle details. Distinct broad color regions, fine weathering painted in texture. No baked light or shadow."
+  },
+  "ghost-cart": {
+    "triangles": 3200,
+    "prompt": "Single isolated low poly haunted castle ghost train ride cart, empty open passenger car, chunky antique black iron body with deep plum panels, ornate gold scroll trim, four small metal flanged railroad wheels, broad flat footwell with two narrow bench seats along sides, ominous grinning skull carved on the front. Short rectangular rail vehicle with broad open top suitable for standing and jumping on. Cinematic spooky theme park attraction, charming angular readable silhouette, faceted handmade game asset. No track, no ground, no people, no background.",
+    "texture": "Antique iron ghost train cart, deep purple enamel panels with gold filigree and brass trim, chipped dark metal edges, burgundy bench cushions, pale skull front ornament. Hand painted low poly game style with broad readable color areas. No baked shadows."
+  },
+  "banquet-turkey": {
+    "triangles": 3000,
+    "prompt": "Single isolated stylized low poly animatronic haunted banquet roast turkey monster on a silver platter. Huge golden roast turkey body, two drumsticks like squat mechanical feet, bony wing claws extended sideways, angry carved wide mouth full of pointed ivory teeth in the front of the roast, two glowing lime green eyes above mouth. Theatrical mechanical haunted attraction food monster, menacing but playful, chunky angular polygonal game asset, beautifully detailed clear silhouette. No people, no table, no ground, no background.",
+    "texture": "Caramel brown glazed roast turkey, deep golden crisp skin, cream bone ends, dark red gaping mouth with ivory fangs, neon acid green eye discs, tarnished silver platter. Hand painted game texture with rich food detail and crisp broad color regions. No baked lighting."
+  },
+  "banquet-cake": {
+    "triangles": 2400,
+    "prompt": "Single isolated stylized low poly haunted banquet cake monster, tall crooked three tier purple frosted cake on silver platter, icing dripping like poisonous slime, strawberry red cherries and candles atop, wide jagged mouth with pointed white teeth on bottom tier, two evil glowing lime green eyes on middle tier. Tiny angular mechanical claw feet protrude under platter. Spooky playful cinematic haunted theme park animatronic dessert. Clear chunky readable polygonal silhouette, no table, no floor, no background, no people.",
+    "texture": "Rich violet cake frosting, pale bone white cream icing with lime green drips, red cherries, dark burgundy mouth with ivory fangs, acid green glowing eyes, antique silver serving plate. Hand painted low polygon game texture with no baked lighting."
+  },
+  "ghost-cart-v2": {
+    "triangles": 2800,
+    "shippingName": "ghost-cart",
+    "yaw": -1.5707963267948966,
+    "prompt": "A single SMALL OPEN TOP ghost train ride car, NOT a train carriage. Very short squat rectangular iron bathtub-shaped cart for two riders, four exposed small flanged rail wheels, low solid purple side walls and a completely OPEN EMPTY top. There is NO ROOF, NO CANOPY, NO WINDOWS, NO TALL UPRIGHTS. Flat empty interior footwell, two little side benches. Front has a big grinning skull ornament. A small gothic theme park ride cart with aged brass edges and black iron scrollwork. Low poly faceted game prop, no rails, no floor, no ground, no riders, no environment.",
+    "texture": "Purple enameled low side walls with brass trim and gothic gold scrolls, black wrought iron undercarriage, burgundy bench cushions, polished silver skull front. Low poly hand painted game asset. No baked lighting."
+  },
+  "clockwork-knight": {
+    "triangles": 5500,
+    "pose": "a-pose",
+    "prompt": "Single isolated full body humanoid haunted castle animatronic suit of medieval knight armor in symmetric A pose. Empty bulky angular blackened steel plate armor with distinct articulated shoulders elbows wrists hips knees ankles, gauntlets and heavy sabatons. Closed pointed visor helmet, two narrow eerie glowing lime green eye slits, sharp shoulder pauldrons, gothic embossed breastplate, purple tattered waist cloth. Menacing tall robotic haunted attraction guardian. No sword, no shield, no pedestal, no ground, no person visible. High quality low poly game asset, crisp planar facets.",
+    "texture": "Dark aged steel armor with cool silver chipped edges, bronze gothic engraved accents, plum tattered waist cloth, pure bright lime green eye slits with dark face opening. Hand painted rich armor detail, broad readable metallic regions, no baked shadows."
+  }
+}
