@@ -106,7 +106,7 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     name: "Island 1",
     subtitle: "REGION 01",
     centre: [-95, 0, 0],
-    levelKeys: ["treehouse-trail", "jungle", "jungle-terraces", "jungle-skyline", "test-course", "sky-bridge", "nightworks", "nightworks-after-hours", "slipstream", "jungle-cup"],
+    levelKeys: ["treehouse-trail", "jungle", "jungle-terraces", "jungle-skyline", "test-course", "custard-creek", "sky-bridge", "nightworks", "nightworks-after-hours", "slipstream", "jungle-cup"],
   },
   {
     id: "island-2",
@@ -140,6 +140,8 @@ export interface CampaignMapEdgeDefinition {
  * are traversable in both directions once both endpoint hubs are unlocked.
  */
 export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
+  { from: "test-course", to: "custard-creek", travel: "trail", fromDirection: "down", toDirection: "up",
+    waypoints: [[-110, 3, 35]] },
   { from: "jungle", to: "jungle-terraces", travel: "trail", fromDirection: "up", toDirection: "down",
     waypoints: [[-151, 4.2, 14]] },
   { from: "jungle-terraces", to: "jungle-skyline", travel: "boardslide", fromDirection: "right", toDirection: "left",
@@ -473,6 +475,9 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     islandId: "hidden-shores", mapPath: "main", mapPosition: [350, 2, 14], unlockAfter: [], boss: true },
   { progressKey: "ghost-train", levelId: "ghost-train", name: "Ghost Train", relicTime: 340,
     islandId: "hidden-shores", mapPath: "lower-branch", mapPosition: [322, 6, 34], unlockAfter: [] },
+  // Append the identity to preserve every published editor/map point index.
+  { progressKey: "custard-creek", levelId: "custard-creek", name: "Custard Creek", relicTime: 180,
+    islandId: "island-1", mapPath: "lower-branch", mapPosition: [-111, 2.4, 46], unlockAfter: ["test-course"] },
 ] as const;
 
 const LEVEL_BY_ID = new Map<string, CampaignLevelDefinition>();

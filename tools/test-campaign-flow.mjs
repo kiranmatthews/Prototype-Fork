@@ -77,8 +77,8 @@ assert.ok(
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ levelKeys }) => levelKeys.length),
-  [10, 11, 4],
-  "The three levels join the existing main-map island",
+  [11, 11, 4],
+  "Custard Creek joins Island 1 beside Carlisle Coast",
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ id, name }) => [id, name]),
@@ -105,6 +105,7 @@ for(let i=1;i<mainPath.length;i++) {
 }
 assert.deepEqual(campaign.CAMPAIGN_MAP_EDGES.filter(e=>campaign.campaignLevelByKey(e.from).mapPath!==campaign.campaignLevelByKey(e.to).mapPath)
   .map(e=>[e.from,e.to,e.fromDirection,e.toDirection]),[
+  ['test-course','custard-creek','down','up'],
   ['jungle','jungle-terraces','up','down'],
   ['bone-yard','ghost-train','down','up'],
   ['test-course','nightworks','up','down'],['coastal','chimeworks','down','up'],['island-hopper','waterpark','up','down'],
@@ -121,7 +122,8 @@ assert.equal(campaign.campaignLevelById('codex-lab').islandId, 'island-2');
 
 assert.deepEqual(campaign.CAMPAIGN_ISLANDS.find(island=>island.id==='hidden-shores').levelKeys,['drowned-crown','bone-yard','ghost-train','crab-chief']);
 for(const id of ['drowned-crown','bone-yard','ghost-train','crab-chief'])assert.equal(campaign.campaignLevelById(id).islandId,'hidden-shores');
-assert.equal(campaign.CAMPAIGN_LEVELS.at(-1).progressKey,'ghost-train','new map identity must append after existing saved hub indices');
+assert.equal(campaign.CAMPAIGN_LEVELS.at(-2).progressKey,'ghost-train','existing Ghost Train hub index stays fixed');
+assert.equal(campaign.CAMPAIGN_LEVELS.at(-1).progressKey,'custard-creek','new map identity appends after existing saved hub indices');
 assert.equal(campaign.resolveRelicTime('ghost-train'),340);
 const graph = new campaign.CampaignStore();
 graph.startEphemeral();
