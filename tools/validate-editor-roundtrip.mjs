@@ -1469,7 +1469,7 @@ function assertTestEnemyReset(data, level) {
 
 try {
   const levelModule = await server.ssrLoadModule("/src/level.ts");
-  const { CAMPAIGN_LEVELS } = await server.ssrLoadModule("/src/campaign.ts");
+  const { CAMPAIGN_LEVELS, CAMPAIGN_MAP_EDGES } = await server.ssrLoadModule("/src/campaign.ts");
   const { swirls } = await server.ssrLoadModule("/src/swirls.ts");
   const beachfrontCourseModule = await server.ssrLoadModule(
     "/src/beachfrontCourse.ts",
@@ -1664,8 +1664,8 @@ try {
     );
   }
 
-  // Every mutable campaign destination needs a supported bonus platform near
-  // the middle of its actual route. Build against source entries when present
+  // Ordinary campaign destinations keep their authored or default bonus pad;
+  // bosses and competitions exclude the detour. Build against source entries
   // and the published pack for editor-owned destinations such as Test Course.
   for (const definition of CAMPAIGN_LEVELS) {
     const source =
@@ -1679,8 +1679,9 @@ try {
     });
     try {
       const placement = campaignLevel.bonusPlatformDiagnostics;
-      if (definition.competition) {
-        assert.equal(placement, null, "competition must stay in its three-run event");
+      if (!campaignLevel.allowsBonus) {
+        assert.equal(placement, null, `${definition.name} must exclude bonus entrances`);
+        assert.equal(campaignLevel.bonusCrateTotal, 0, `${definition.name} must exclude bonus boxes`);
         continue;
       }
       assert.ok(placement, `${definition.name} has no supported bonus platform`);
@@ -1702,7 +1703,7 @@ try {
       campaignLevel.dispose();
     }
   }
-  console.log("Validated midpoint bonus platforms across all canonical levels.");
+  console.log("Validated ordinary campaign bonus platforms and boss/competition exclusions.");
 
   const warpEntry = BUILTIN_LEVELS.find((entry) => entry.id === "warproom");
   assert.ok(warpEntry, "world map source entry is missing");
@@ -1731,12 +1732,12 @@ try {
     warpLevel.root.traverse(({ name }) => names.push(name));
     assert.equal(
       names.filter((name) => name === "world map glowing route").length,
-      12,
+      CAMPAIGN_MAP_EDGES.length,
       "campaign graph routes did not survive the shared Level build pipeline",
     );
     assert.equal(
       names.filter((name) => name === "world map boardslide rail").length,
-      3,
+      CAMPAIGN_MAP_EDGES.filter(edge => edge.travel === "boardslide").length,
       "authored map boardslide edges were not constructed",
     );
     assert.ok(warpLevel.water, "world map lost the shared Unity ocean owner");

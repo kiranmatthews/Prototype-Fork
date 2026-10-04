@@ -67,6 +67,18 @@ try {
   assert.deepEqual(expanded.components[0].pts.slice(0,9),oldMap.components[0].pts,'legacy hub identities shifted');
   assert.deepEqual(normalize(expanded),expanded,'map expansion must be idempotent');
   assert.equal(oldMap.components[0].pts.length,9,'normalizing mutated the original map');
+  const currentMap={...oldMap,components:[{t:'worldmap',p:[0,0,0],pts:api.worldMapComponentPoints()}]};
+  assert.deepEqual(normalize(currentMap).components[0].pts,currentMap.components[0].pts,
+    'current Hidden Shores hubs must survive editor import and reopen');
+  for(const [axis,limit] of [[0,512],[1,512],[3,128]]) {
+    for(const sign of [-1,1]) {
+      const boundaryMap=structuredClone(currentMap);
+      boundaryMap.components[0].pts[0][axis]=sign*limit;
+      assert.ok(normalize(boundaryMap),'bounded custom map position was rejected');
+      boundaryMap.components[0].pts[0][axis]=sign*(limit+.01);
+      reject(boundaryMap,'world-map coordinate exceeded its allocation bound');
+    }
+  }
   const unchangedMap={...oldMap,components:[{t:'worldmap',p:[0,0,0],pts:[[-45,27,0,1.35],[-30,18,0,1.75],[-14,28,0,3.1],[-13,7,0,2.55],[-29,-3,0,5.25],[13,2,0,1.35],[27,16,0,1.75],[46,5,0,3.05],[32,-13,0,5.1]]}]};
   assert.deepEqual(normalize(unchangedMap).components[0].pts,api.worldMapComponentPoints(),'unchanged old defaults masked the new layout');
   const priorBranchMap={...oldMap,components:[{t:'worldmap',p:[0,0,0],pts:[[-63,18,0,1.35],[-44,18,0,1.75],[-26,18,0,2.1],[-44,-3,0,2.55],[-9,18,0,2.85],[23,16,0,1.35],[42,14,0,1.75],[61,14,0,2.4],[79,14,0,3.1],[-26,-3,0,2.85],[42,26,0,2.3]]}]};

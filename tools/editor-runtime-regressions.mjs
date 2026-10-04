@@ -71,7 +71,9 @@ export function assertEditorRuntimeAuthoring({ Level, setEditorBuild, worldMapCo
     const bonusData = makeData([{ t: "bonusplatform", p: [4, 2, -5], to: [6, 3, -2] }]);
     const bonus = create(bonusData);
     try {
-      assert.equal(bonus.bonusPlatformAt(new THREE.Vector3(4, 2.42, -5)), true);
+      assert.equal(bonus.bonusPlatformAt(new THREE.Vector3(4, 3.05, -5)), true);
+      assert.equal(bonus.bonusPlatformAt(new THREE.Vector3(4, 2.42, -5)), false,
+        "the retired low deck must not count as landing on the raised stone");
       assert.deepEqual(bonus.bonusReturnPoint().toArray(), [6, 3, -2]);
       bonus.builtFromData = null;
       const captured = bonus.captureData();
@@ -81,8 +83,8 @@ export function assertEditorRuntimeAuthoring({ Level, setEditorBuild, worldMapCo
       const movedData = makeData([{ t: "bonusplatform", p: [14, 7, -15], to: [16, 8, -12] }]);
       const moved = create(movedData);
       try {
-        assert.equal(moved.bonusPlatformAt(new THREE.Vector3(4, 2.42, -5)), false);
-        assert.equal(moved.bonusPlatformAt(new THREE.Vector3(14, 7.42, -15)), true);
+        assert.equal(moved.bonusPlatformAt(new THREE.Vector3(4, 3.05, -5)), false);
+        assert.equal(moved.bonusPlatformAt(new THREE.Vector3(14, 8.05, -15)), true);
         assert.deepEqual(moved.bonusReturnPoint().toArray(), [16, 8, -12]);
       } finally { moved.dispose(); }
     } finally { bonus.dispose(); }

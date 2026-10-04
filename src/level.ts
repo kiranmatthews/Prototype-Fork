@@ -2957,7 +2957,9 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       if (component.t === "worldmap") {
         if (source.ocean || (component.pts &&
             (!(component.pts.length===9||(component.pts.length>=11&&component.pts.length<=CAMPAIGN_LEVELS.length)) || component.pts.some(point =>
-              Math.abs(point[0]) > 256 || Math.abs(point[1]) > 256 || Math.abs(point[3] ?? 0) > 128))))
+              // Hidden Shores extends the authored map to x=350. Keep the
+              // editable diorama bounded while admitting every built-in hub.
+              Math.abs(point[0]) > 512 || Math.abs(point[1]) > 512 || Math.abs(point[3] ?? 0) > 128))))
           return null;
         if (component.pts) for (let i = 0; i < component.pts.length; i++) {
           for (let j = i + 1; j < component.pts.length; j++) {
