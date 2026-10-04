@@ -19,7 +19,7 @@ for (const [medal, expected] of [[null, 0], ['bronze', 1], ['silver', 2], ['gold
   assert.deepEqual(labels.slice(0, 8), ['TIME TRIAL', 'YOUR BEST TIMES', '1ST', mapTrialTime(times[0]), '2ND', mapTrialTime(times[1]), '3RD', mapTrialTime(times[2])], 'medals hid or replaced personal records');
   assert.equal(labels.length, 15, 'three ranked records plus three medal rows');
 }
-const data = key => ({ key, name: key, earned: [false, false, false, false], trialUnlocked: false, times: [], target: 60 });
+const data = key => ({ key, name: key, earned: [false, false, false], trialUnlocked: false, times: [], target: 60 });
 const flip = new MapDeckFlip();
 flip.select(data('a')); assert.equal(flip.active, false);
 flip.select(data('b')); assert.equal(flip.active, true);
@@ -29,7 +29,7 @@ flip.select(data('c')); flip.step(duration * .5);
 assert.equal(flip.shown.key, 'b', 'late input snapped the visible printing');
 assert.equal(flip.active, true, 'late input needs its own reveal');
 flip.step(duration); assert.equal(flip.shown.key, 'c'); assert.equal(flip.active, false);
-flip.select({ ...data('c'), earned: [true, false, false, false] });
+flip.select({ ...data('c'), earned: [true, false, false] });
 assert.equal(flip.active, false, 'progress refresh restarted the selection animation');
 assert.equal(flip.shown.earned[0], true);
 flip.select(data('d')); flip.step(-1); assert.equal(flip.phase, 0);
@@ -38,7 +38,8 @@ assert.equal(mapTrialTime(65.8), '1:05.80');
 assert.equal(mapTrialTime(59.999), '0:59.99');
 assert.equal(mapTrialTime(undefined), '—:——.——');
 assert.equal(mapTrialTime(NaN), '—:——.——');
-for (const factory of ['createSkateboardPresentation(', 'Level.crystalMesh()', 'Level.gemMesh()', 'Level.gemMesh(1, COMBO_GEM_TINT)', 'Level.timeRelicMesh()']) assert.ok(source.includes(factory), `missing game-owned asset: ${factory}`);
+for (const factory of ['createSkateboardPresentation(', 'Level.crystalMesh()', 'Level.gemMesh()', 'Level.timeRelicMesh()']) assert.ok(source.includes(factory), `missing game-owned asset: ${factory}`);
+assert.doesNotMatch(source, /COMBO_GEM_TINT/, 'retired compulsory combo slot returned to the map');
 assert.doesNotMatch(source, /new THREE.WebGLRenderer/, 'map cards must share the existing renderer');
 const ui = await readFile(new URL('../src/worldMapUI.ts', import.meta.url), 'utf8');
 assert.match(ui, /Your best times:.*mapTrialTime\(times\[i\]\)/, 'accessible map records omitted personal times');

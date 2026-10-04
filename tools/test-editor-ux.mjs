@@ -229,13 +229,13 @@ try {
     assert.ok(findLevel(oldFork), "undo on the imported level deleted an unrelated prior fork");
   });
   check("HUD migration keeps working indices, preview geometry and persisted data aligned", () => {
-    const data = migrateCustomLevel(base([
+    const data = migrateCustomLevel({ ...base([
       { t: "platform", p: [0, 0, 0], s: [12, 1, 12] },
       { t: "clock", p: [2, 1, -3] },
       { t: "crate", p: [0, 1, -2] },
       { t: "comboorb", p: [-2, 1, -3] },
       { t: "gate", p: [0, 1, -8] },
-    ]));
+    ]), secretComboGem: true });
     const id = saveUserLevel({ id: "", name: data.name, data });
     const editor = editorFor(data); editor.targetId = id; editor.initialTargetId = id;
     editor.commit = Editor.prototype.commit.bind(editor);
@@ -262,8 +262,16 @@ try {
     editor.hooks.preflight = () => !!normalizeCustomLevelData(editor.data);
     editor.sel = [0]; editor.deleteSelected();
     assert.equal(editor.data.hudMode, undefined);
-    assert.deepEqual(editor.data.components.map(c => c.t), ["gate", "clock", "comboorb"]);
+    assert.deepEqual(editor.data.components.map(c => c.t), ["gate", "clock"]);
     assert.deepEqual(findLevel(id).data, editor.data);
+  });
+  check("secret combo activators opt in on placement and stay deleted", () => {
+    const editor = editorFor(migrateCustomLevel(base([])));
+    editor.addBatch([{ t: "comboorb", p: [-2, 0, 0] }]);
+    assert.equal(editor.data.secretComboGem, true);
+    assert.equal(editor.data.components[editor.selectedIndex].t, "comboorb");
+    editor.deleteSelected();
+    assert.ok(!migrateCustomLevel(editor.data).components.some(c => c.t === "comboorb"));
   });
   check("node deletion retains shape minimums and aligned wood-path widths", () => {
     const editor = editorFor(base([{ t: "woodpath", p: [0, 0, 0], pts: [[0, 0], [0, -4], [0, -8]], widths: [4, 6, 8] }]));

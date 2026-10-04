@@ -3351,9 +3351,13 @@ export class Editor {
     const previousSelection = [...this.sel];
     const previousResize = this.resizeIdx;
     const previousNodes = new Set(this.selVtxs);
+    const previousSecretComboGem = this.data.secretComboGem;
+    if (replacing.has("comboorb")) this.data.secretComboGem = true;
     this.remapGroups(clean, sourceGroups);
     this.data.components = [...retained, ...clean];
     if (commit && !this.commit()) {
+      if (previousSecretComboGem === undefined) delete this.data.secretComboGem;
+      else this.data.secretComboGem = previousSecretComboGem;
       this.setSelection(previousSelection);
       this.resizeIdx = previousResize;
       this.selVtxs = previousNodes;
@@ -3367,9 +3371,9 @@ export class Editor {
 
   private deleteSelected(): void {
     if (this.sel.length === 0) return;
-    // the gate + run-mode activators are level furniture like the spawn
-    // point — move them, never delete them (a load would regrow them anyway)
-    const KEEP = new Set(["gate", "clock", "comboorb"]);
+    // The gate and stopwatch are required furniture; secret activators are
+    // ordinary optional components and can be deleted without regrowing.
+    const KEEP = new Set(["gate", "clock"]);
     const dying = [...this.sel]
       .filter((i) => this.data.components[i] && !this.isLockedIdx(i) &&
         !KEEP.has(this.data.components[i].t))
@@ -3377,7 +3381,7 @@ export class Editor {
     if (this.sel.some(i => KEEP.has(this.data.components[i]?.t)))
       this.showMessage(
         "GATE & ACTIVATORS STAY",
-        "every level keeps its gate, stopwatch and combo orb — move them instead",
+        "every level keeps its gate and stopwatch — move them instead",
       );
     if (dying.length === 0) return;
     for (const i of dying) this.data.components.splice(i, 1);
@@ -8692,7 +8696,7 @@ export class Editor {
       const note = document.createElement("div");
       note.className = "ed-dim";
       note.textContent =
-        "combo-run activator — skating through the green plus starts a one-combo run to the gem at the gate (one per level, lives near spawn)";
+        "optional secret-gem challenge — skating through the green plus starts a one-combo run to the gem at the gate (at most one per level; removable)";
       this.propsEl.appendChild(note);
     } else if (c.t === "zone") {
       sizeRow(0, "width");

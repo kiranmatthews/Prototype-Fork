@@ -77,7 +77,7 @@ function arch(x: number, y: number, z: number, w: number, height: number) {
 // I. OVERTURE: a forgiving runway, broad steering arcs, then one clean jump.
 deck('Overture / launch balcony', 0, 48, 12, 18, 24, G.overture);
 add({ t: 'clock', p: [4, 48, 16], grp: G.overture });
-add({ t: 'comboorb', p: [-4, 48, 16], grp: G.overture });
+
 box(-5, 48, 7, 'mask', G.overture);
 box(5, 48, 7, 'life', G.overture);
 path('Overture / brass downhill', overture, 14, G.overture, true);

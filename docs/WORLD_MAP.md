@@ -111,12 +111,16 @@ Changing hubs performs a 0.64-second kickflip; name/reward data swaps halfway
 through while the grip is facing away. Repeated progress refreshes do not
 restart the animation, and later selections queue without exposing wrong text.
 
-Four screen-printed sockets show crystal, box gem, combo gem and the highest
+Three screen-printed sockets show crystal, box gem and the highest
 earned time-trial medal (bronze, silver or gold).
 Uncollected slots use dark flat silhouettes. Collected slots use
-`Level.crystalMesh`, `Level.gemMesh` (including the green combo tint), and
+`Level.crystalMesh`, `Level.gemMesh`, and
 the round medal factory (no ribbon or loop), with world halo sprites removed and continuous idle
 rotation. No reward models have been restored to the level hubs themselves.
+
+The former compulsory combo-gem slot and its contribution to standard 100%
+completion are retired. Saved combo ownership remains stored for compatibility;
+secret challenges are authored individually. See [SECRET_COMBO_GEMS.md](SECRET_COMBO_GEMS.md).
 
 The in-level L2 inventory shows only rewards newly carried in the current run,
 not this banked map collection. HUD ownership is filtered against the rewards

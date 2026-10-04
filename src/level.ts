@@ -645,7 +645,7 @@ export interface CustomComponent {
     | "ropeswing" // swinging grab-rope: p = [x, anchorY, z], len rope, amp radians, speed (0 = natural pendulum), phase, yaw = swing plane. `range` + `cycle` send the whole anchor TRAVELLING along `axis` — a swing that also ferries
     | "gate" // finish gate: crossing its plane ends the run; p = [x, deckY, z], yaw turns it with the course. One per level.
     | "clock" // time-trial activator: the gold stopwatch near the start; p = [x, deckY, z]. One per level.
-    | "comboorb" // combo-run activator: the green plus near the start; p = [x, deckY, z]. One per level.
+    | "comboorb" // optional secret combo-gem activator; p = [x, deckY, z]. At most one per level.
     | "zone" // travel zone: inside its rect the course runs dir 'E'/'W' (side-scroll) or 'N' (run AT the camera); p = center, s = [w,-,d]
     | "rope" // sagging grindable rope: p = center (rope height), len along yaw, amp = sag, shake = grind-seconds before it snaps
     | "terrain" // DISPLACED GROUND STRIP: a rolling, winding, bumpy floor. p = the near end (highest z), pts = centreline nodes in the rail convention ([dx, dz, corner radius, dy]) relative to p, w = width across, amp = bump height, berms = mossy kerbs + grindable lips down both sides, curve:'spline' eases the whole cross-section through its nodes. The one component that is not a flat box.
@@ -946,6 +946,8 @@ export interface CustomLevelData {
   skatepark?: boolean;
   /** Bonus stages opt into their distinct persistent collection HUD. */
   hudMode?: "bonus" | "hub";
+  /** Explicit opt-in for an authored secret combo-gem challenge. */
+  secretComboGem?: boolean;
   allBalanceCrates?: boolean;
   perfectGrindBoost?: boolean;
   keepPlayFog?: boolean;
@@ -1321,18 +1323,21 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
     d.components = d.components.filter(
       (c, i) => c.t !== "gate" || i === lastGate,
     );
-  // RUN-MODE ACTIVATORS: the stopwatch and the combo orb are level furniture
-  // the same way the spawn and the gate are — old saves get them beside the
-  // spawn (move them wherever afterwards); duplicates collapse to the last.
+  // Ordinary courses gain a trial stopwatch. Secret combo challenges require
+  // an explicitly authored activator; migration must never invent one.
+  // Old editor snapshots contain the former compulsory plus: retire it unless
+  // the author has explicitly opted this level into a secret challenge.
+  if (d.secretComboGem !== true)
+    d.components = d.components.filter(component => component.t !== "comboorb");
   if (d.hudMode !== "bonus" && d.hudMode !== "hub" && !d.skatepark) {
     const sideSpawn = d.components.some(c => c.t === "zone" && (c.dir === "E" || c.dir === "W") && c.s &&
       Math.abs(d.spawn[0] - c.p[0]) <= c.s[0] / 2 && Math.abs(d.spawn[2] - c.p[2]) <= c.s[2] / 2);
     for (const t of ["clock", "comboorb"] as const) {
       const last = d.components.map((c) => c.t).lastIndexOf(t);
-      if (last === -1)
+      if (last === -1 && t === "clock")
         d.components.push({
           t,
-          p: [d.spawn[0] + (t === "clock" ? 2 : -2), d.spawn[1], d.spawn[2] - (sideSpawn ? 0 : 5)],
+          p: [d.spawn[0] + 2, d.spawn[1], d.spawn[2] - (sideSpawn ? 0 : 5)],
         });
       else d.components = d.components.filter((c, i) => c.t !== t || i === last);
     }
@@ -1375,7 +1380,6 @@ export function starterCustomLevel(): CustomLevelData {
       { t: "crystal", p: [0, 0.5, -24] },
       { t: "gate", p: [0, 0.5, -26] },
       { t: "clock", p: [2, 0.6, 15] },
-      { t: "comboorb", p: [-2, 0.6, 15] },
     ],
   };
 }
@@ -2442,7 +2446,7 @@ const LEVEL_DATA_KEYS = new Set([
   'encounter',
   "v", "name", "spawn", "killY", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "atmosphere",
-  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "cameraAirLift",
+  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "cameraAirLift", "secretComboGem",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "iceGrip", "containment",
@@ -2671,7 +2675,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (!source.medalTimes || !hasOnlyKeys(source.medalTimes, new Set(["gold", "silver", "bronze"]))))
     return null;
   if (source.hudMode !== undefined && source.hudMode !== "bonus" && source.hudMode !== "hub") return null;
-  for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark"] as const)
+  for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "secretComboGem"] as const)
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
   if (source.cameraAirLift !== undefined && (typeof source.cameraAirLift !== "number" ||
       !Number.isFinite(source.cameraAirLift) || source.cameraAirLift < 0 || source.cameraAirLift > 1)) return null;
@@ -4707,7 +4711,7 @@ export class Level {
     this.syncTrickPrimitives(new Set<DeckTrickKind>(), false);
     if (this.hudMode !== "bonus" && this.hudMode !== "hub" && !this.skatepark && !this.boss && !isCompetitionLevel(entry.id)) {
       this.placeClock(); // time-trial stopwatch near spawn (only where a finish gate exists)
-      this.placeComboOrb(); // combo-run orb, the other side of the racing line
+      this.placeComboOrb(); // optional, explicitly authored secret challenge
     }
     this.bakeDecor(); // any batched decor the builder didn't flush itself
     this.jungleAssets?.flush();
@@ -17612,16 +17616,15 @@ export class Level {
   }
 
   // ------------------------------------------------------------ combo run --
-  // The green orb floats opposite the stopwatch at spawn. Touch it and the
+  // An authored secret challenge may place a green plus. Touch it and the
   // green gem appears at the finish gate — yours if you reach it in ONE combo.
   private placeComboOrb(): void {
-    if (this.finishZ < -1e8 || !this.gateSpec) return;
+    if (!this.orbSpot || this.finishZ < -1e8 || !this.gateSpec) return;
     this.root.updateMatrixWorld(true);
     const spot = this.orbSpot;
-    const dir = this.chaseCam ? 1 : -1;
-    const x = spot ? spot.x : this.spawnPos.x - 3; // the far side, same reason
-    const z = spot ? spot.z : this.spawnPos.z + dir * 5;
-    const y = this.floorY(x, z, spot ? spot.y : this.spawnPos.y);
+    const x = spot.x;
+    const z = spot.z;
+    const y = this.floorY(x, z, spot.y);
     const before = this.root.children.length;
     const g = new THREE.Group();
     // a chunky 3D plus, spinning on the spot (bobSpin drives the turn)

@@ -154,7 +154,6 @@ export const BACKPORT_LAB_LEVEL: CustomLevelData = {
     },
     { t: "gate", p: [0, 0, -124], grp: 4 },
     { t: "clock", p: [2.8, 0, 12], grp: 1 },
-    { t: "comboorb", p: [-2.8, 0, 12], grp: 1 },
     { t: "camnode", p: [0, 2, 18], radius: 5, grp: 5 },
     { t: "camnode", p: [0, 2, -4], radius: 7, grp: 5 },
     { t: "camnode", p: [0, 3, -35], radius: 8, grp: 5 },

@@ -80,7 +80,7 @@ on selection. Clearing the seed restores the original variation. A separate,
 smaller `pit` owns lethal collision; select both when moving or rotating the
 whole hazard. Rotations preserve the thorn's variation and pulse timing.
 
-Legacy `outline` and `pipe` primitives migrate to modern crate/vertramp data before building. Legacy layers migrate into named groups while preserving locks. Group duplicates, dangling parents, and cycles are normalized safely; nesting beyond 64 levels is rejected. Migration preserves component data and is idempotent. Ordinary courses gain missing finish/run-mode objects; bonus and hub HUD modes omit run-mode activators, and hubs do not gain an automatic finish gate.
+Legacy `outline` and `pipe` primitives migrate to modern crate/vertramp data before building. Legacy layers migrate into named groups while preserving locks. Group duplicates, dangling parents, and cycles are normalized safely; nesting beyond 64 levels is rejected. Migration is idempotent. Ordinary courses gain a missing finish gate and trial stopwatch; bonus and hub HUD modes omit run-mode activators, and hubs do not gain an automatic finish gate. The optional `secretComboGem: true` metadata enables an explicitly authored `comboorb` for a secret challenge. Without that opt-in, migration removes the retired compulsory combo activators from old snapshots; it never adds one. Editor placement opts in automatically, and deleting the activator stays deleted. See [SECRET_COMBO_GEMS.md](SECRET_COMBO_GEMS.md).
 
 Ocean `geometryVersion: 2` uses world Three coordinates and editor yaw consistently. Older ocean data migrates once while preserving its rendered footprint; changing between straight and node-based shorelines preserves the endpoint positions and sea side.
 

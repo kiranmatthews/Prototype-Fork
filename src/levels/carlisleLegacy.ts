@@ -5,8 +5,9 @@ import type {LevelEntry} from '../level';
 // Test Course and published Carlisle city snapshots, including the final box overhaul.
 // Any local edit, including a renamed copy, retains its authored data.
 const published = {
- 'Test Course': [{length:31264,a:0x43b5749b,b:0x74039a85}],
- 'Carlisle Coast': [{length:2206424,a:0x87923f0a,b:0x1dd4f258},{length:299391,a:0x7a75368f,b:0x3e171a3f},{length:2197562,a:0xb7369587,b:0x23c6c391}],
+ 'Test Course': [{length:31264,a:0x43b5749b,b:0x74039a85},{length:31233,a:0x55c65ad1,b:0xccd03e69}],
+ 'Carlisle Coast': [{length:2206424,a:0x87923f0a,b:0x1dd4f258},{length:299391,a:0x7a75368f,b:0x3e171a3f},{length:2197562,a:0xb7369587,b:0x23c6c391},
+  {length:2206370,a:0x20f109ec,b:0x5c885b28},{length:2197508,a:0x583ddc25,b:0x04685239},{length:299353,a:0xf3e388db,b:0x9c49c21d}],
 } as const;
 const checked=new WeakMap<object,boolean>();
 export function isOriginalTestCourse(entry:LevelEntry):boolean {

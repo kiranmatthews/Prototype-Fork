@@ -1171,7 +1171,9 @@ export class CampaignStore {
     const maxCups = CAMPAIGN_LEVELS.filter(level => level.competition).length;
     const ordinaryLevels = CAMPAIGN_LEVELS.length - maxCups;
     const crystalLevels = CAMPAIGN_LEVELS.filter(level => levelAllowsBonus(level.levelId)).length;
-    const maxMilestones = ordinaryLevels * 4 + crystalLevels + maxCups * 2;
+    // Secret combo gems retain their save plumbing but are optional awards,
+    // outside the standard completion ledger.
+    const maxMilestones = ordinaryLevels * 3 + crystalLevels + maxCups * 2;
     if (save) {
       for (const level of CAMPAIGN_LEVELS) {
         const progress = save.levels[level.progressKey] ?? emptyLevelProgress();
@@ -1182,7 +1184,6 @@ export class CampaignStore {
         }
         if (levelAllowsBonus(level.levelId) && progress.crystal) { crystals++; earned++; }
         if (progress.boxGem) { gems++; earned++; }
-        if (progress.comboGem) { gems++; earned++; }
         if (earnedTimeMedal(progress)) { relics++; earned++; }
       }
     }
@@ -1193,7 +1194,7 @@ export class CampaignStore {
       gems,
       relics,
       maxLevels: CAMPAIGN_LEVELS.length,
-      maxGems: ordinaryLevels * 2,
+      maxGems: ordinaryLevels,
       maxCrystals: crystalLevels, maxRelics: ordinaryLevels, cups, maxCups,
     };
   }

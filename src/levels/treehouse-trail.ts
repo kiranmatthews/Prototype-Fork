@@ -81,7 +81,7 @@ add({ t: "wallpath", p: [0, -1.25, 0], w: 1, rise: 24, closed: true,
   pts: [[-32, 27, 2], [60, 27, 3], [60, -157, 3], [10, -157, 3], [10, -26, 3], [-32, -26, 3]],
   nm: "Bush perimeter around opening and trail", grp: GROUP.backdrop });
 add({ t: "clock", p: [26, 0, 6], nm: "Trial start at the bush trail", grp: GROUP.rewards });
-add({ t: "comboorb", p: [29, 0, 3.5], nm: "Combo start at the bush trail", grp: GROUP.rewards });
+
 
 // Start on the balcony and follow every landing before joining the clearing.
 const balconySpawn = openingHousePoint([-16, 8.55, -0.5]);

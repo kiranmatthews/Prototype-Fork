@@ -580,3 +580,16 @@ for(const boss of bosses){assert.equal(migratedBossSave.levels[boss.progressKey]
 assert.equal(migratedBossSave.levels.jungle.crystal,true);
 assert.equal(migratedBossStore.totals(migratedBossSave).maxCrystals,campaign.CAMPAIGN_LEVELS.filter(level=>campaign.levelAllowsBonus(level.levelId)).length);
 console.log('PASS boss crystal award/legacy-slot exclusion preserves ordinary crystals and other saved rewards.');
+
+const completeStore = new campaign.CampaignStore();
+const completeSave = completeStore.startEphemeral();
+for (const definition of campaign.CAMPAIGN_LEVELS) Object.assign(completeSave.levels[definition.progressKey], {
+  cleared: true, crystal: true, boxGem: true, timeMedal: 'gold', cup: true, comboGem: false,
+});
+const standardTotals = completeStore.totals();
+assert.equal(standardTotals.percent, 100, 'standard completion still requires secret combo gems');
+assert.equal(standardTotals.gems, standardTotals.maxGems);
+for (const progress of Object.values(completeSave.levels)) progress.comboGem = true;
+assert.deepEqual(completeStore.totals(), standardTotals, 'legacy combo awards inflate standard progress');
+assert.equal(completeStore.levelProgress('jungle').comboGem, true, 'optional award ownership was erased');
+console.log('PASS standard 100% without secret gems; legacy awards remain stored without inflating quotas.');

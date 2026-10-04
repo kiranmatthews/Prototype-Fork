@@ -121,7 +121,6 @@ export class WorldMapUI {
     const rewards = [
       ["CRYSTAL", progress?.crystal === true],
       ["BOX GEM", progress?.boxGem === true],
-      ["COMBO GEM", progress?.comboGem === true],
       [medal ? `${medal.toUpperCase()} MEDAL` : "TIME MEDAL", medal !== null],
     ] as const;
     this.collectibleRow.replaceChildren();

@@ -106,7 +106,7 @@ function templeCourse(variant: 1 | 2, profile: readonly Point[], end: number) {
     // Deliberate step back from spawn; neither optional mode intersects the
     // ordinary forward skating line (their contact boxes are two metres wide).
     add({t:'clock',p:[-18,startY,-2.5],grp:5});
-    add({t:'comboorb',p:[-18,startY,2.5],grp:5});
+
   };
   const result = ():TempleRoute => {
     const id=variant===1?'jungle-terraces':'jungle-skyline';

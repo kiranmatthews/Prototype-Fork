@@ -366,13 +366,12 @@ export class UI {
     statsWrap.appendChild(mpBtn);
     this.mpBtn = mpBtn;
 
-    // RUN MODES (playtest): the trial stopwatch and the combo orb sit near
-    // every spawn and start their mode the moment you walk into one, which is
-    // exactly wrong when you are testing plain platforming. Off hides both and
-    // cancels anything already running; the setting sticks across reloads.
+    // RUN MODES (playtest): hide trial and any authored secret challenge
+    // activators while testing plain platforming. Off also cancels a running
+    // mode; the setting sticks across reloads.
     const runBtn = document.createElement("button");
     runBtn.className = "hud-levelbtn hud-editbtn";
-    runBtn.title = "hide the trial stopwatch and the combo orb";
+    runBtn.title = "hide run-mode activators";
     runBtn.addEventListener("click", () => {
       if (this.onToggleRunModes) this.onToggleRunModes();
       runBtn.blur();

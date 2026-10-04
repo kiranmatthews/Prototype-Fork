@@ -50,6 +50,8 @@ try{
  ui.openLevelSelect();ui.moveLevelSelectRow(1);assert.equal(ui.levelSelectKey,'jungle-terraces');
  assert.match(ui.levelSelectDetail.textContent,/1:04.15/);assert.ok(ui.levelSelectDetail.querySelectorAll('.game-reward-slot').some(slot=>slot.dataset.medal==='silver'));
  assert.doesNotMatch(ui.levelSelectDetail.textContent,/NOT COLLECTED|NOT EARNED/);
+ assert.doesNotMatch(ui.levelSelectDetail.textContent,/COMBO/);
+ assert.equal(ui.levelSelectDetail.querySelectorAll('.game-reward-slot').length,3,'legacy combo awards restored a standard reward slot');
  assert.match(ui.levelSelectPreview.src,/jungle-terraces\.jpg$/);
  ui.moveLevelSelectRow(1);assert.equal(ui.levelSelectKey,'jungle-skyline');
  assert.match(ui.levelSelectPreview.src,/jungle-skyline\.jpg$/);

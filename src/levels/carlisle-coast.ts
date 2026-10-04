@@ -8,7 +8,7 @@ const original=originalEntry.data as unknown as CustomLevelData;
 const range=(a:number,b:number)=>Array.from({length:b-a+1},(_,i)=>a+i);
 export const CARLISLE_REMOVED_PARK_INDICES=[1,...range(20,30),...range(71,86),...range(121,123),175,176,...range(242,253),276,490,493,499,502];
 const removed=new Set(CARLISLE_REMOVED_PARK_INDICES);
-export const CARLISLE_ORIGINAL_INDICES=original.components.map((_,i)=>i).filter(i=>!removed.has(i)&&original.components[i].t!=='crate');
+export const CARLISLE_ORIGINAL_INDICES=original.components.map((_,i)=>i).filter(i=>!removed.has(i)&&original.components[i].t!=='crate'&&original.components[i].t!=='comboorb');
 const C:CustomComponent[]=CARLISLE_ORIGINAL_INDICES.map(index=>{
  const c=JSON.parse(JSON.stringify(original.components[index])) as CustomComponent;
  c.nm=`Test Course ${index}`;

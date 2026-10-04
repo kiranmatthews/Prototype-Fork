@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { loadRooAtlases, RooAtlasPainter } from './roo-type/atlas';
 import { ROO_APPEARANCE_EVENT, rooLightPosition } from './roo-type/settings';
-import { Level, COMBO_GEM_TINT } from "./level";
+import { Level } from "./level";
 import { createSkateboardPresentation, rebuildSkateboardPresentation } from "./skateboard/model";
 import { type SkateboardSettings } from "./skateboard/settings";
 import { mapSkateboardSettings, DEFAULT_MAP_SKATEBOARD_SETTINGS } from "./skateboard/mapSettings";
@@ -71,7 +71,7 @@ function silhouette(ctx: CanvasRenderingContext2D, index: number, x: number, y: 
   if (index === 0) {
     ctx.moveTo(0, -53); ctx.lineTo(24, -25); ctx.lineTo(20, 13);
     ctx.lineTo(0, 56); ctx.lineTo(-20, 13); ctx.lineTo(-24, -25); ctx.closePath();
-  } else if (index === 3) {
+  } else if (index === 2) {
     ctx.arc(0, 0, 38, 0, Math.PI * 2);
   } else {
     ctx.moveTo(-42, -16); ctx.lineTo(-24, -38); ctx.lineTo(24, -38);
@@ -112,7 +112,7 @@ export class MapLevelPresentation {
     mount.add(board); this.deckPivot.add(mount);
     const face = this.face = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 0.534), new THREE.MeshStandardMaterial({ map: this.faceTexture, roughness: 0.95, transparent: true, depthWrite: false }));
     face.position.z = 0.075; this.deckPivot.add(face);
-    const factories = [() => Level.crystalMesh(), () => Level.gemMesh(), () => Level.gemMesh(1, COMBO_GEM_TINT), () => Level.timeRelicMesh()];
+    const factories = [() => Level.crystalMesh(), () => Level.gemMesh(), () => Level.timeRelicMesh()];
     for (const [i, make] of factories.entries()) {
       const model = make();
       for (const object of [...model.children]) if ((object as THREE.Sprite).isSprite) model.remove(object);
@@ -122,7 +122,7 @@ export class MapLevelPresentation {
       const spin = new THREE.Group(); spin.add(model);
       spin.scale.setScalar(0.205 / Math.max(size.y, Math.hypot(size.x, size.z)));
       const pivot = new THREE.Group(); pivot.add(spin);
-      pivot.position.set(-0.51 + i * 0.34, -0.115, 0.22);
+      pivot.position.set(-0.34 + i * 0.34, -0.115, 0.22);
       pivot.rotation.x = 0.12;
       this.deckPivot.add(pivot); this.rewards.push(pivot);
     }
@@ -223,12 +223,12 @@ export class MapLevelPresentation {
   }
 
   private paint(data: MapLevelCardData,updateTrial=true): void {
-    setTimeMedalTier(this.rewards[3], data.medal ?? 'gold');
+    setTimeMedalTier(this.rewards[2], data.medal ?? 'gold');
     const ctx = this.faceTexture.image.getContext("2d")!;
     ctx.clearRect(0, 0, 1536, 512);
     // Warm screen-printed reward sockets; missing shapes stay flat and dark.
-    for (let i = 0; i < (data.competition ? 0 : 4); i++) {
-      const x = 278 + i * 326.4;
+    for (let i = 0; i < (data.competition ? 0 : 3); i++) {
+      const x = 441.2 + i * 326.4;
       ctx.fillStyle = "#9e9b8b"; ctx.beginPath(); ctx.ellipse(x, 366, 109, 105, -0.08, 0, Math.PI * 2); ctx.fill();
       if (!data.earned[i]) silhouette(ctx, i, x, 366);
     }

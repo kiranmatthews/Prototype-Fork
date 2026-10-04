@@ -104,15 +104,16 @@ try {
 
   // Accept/reopen must obey one contract. Legacy migration adds mandatory
   // furniture and per-node widths; validate its result, not only its input.
-  for (const spawn of [[100_000, 1, 0], [-100_000, 1, 0], [0, 1, -100_000]])
+  for (const spawn of [[100_000, 1, 0], [0, 1, -100_000]])
     reject({ ...base(), spawn }, "migration placed required furniture outside coordinate limits");
+  assert.ok(normalize({ ...base(), spawn: [-100_000, 1, 0] }), 'retired combo furniture still excludes the negative-X boundary');
   reject({ ...base(), components: [{ t: "platform", p: [0, 100_000, 0], s: [8, 2, 8] }] },
     "migration placed default gate above coordinate limits");
   reject({ ...base(), components: Array.from({ length: 10_000 }, () => ({ t: "platform", p: [0, 0, 0] })) },
     "migration exceeded component count");
-  const nearComponentLimit = { ...base(), components: Array.from({ length: 9997 }, () => ({ t: "platform", p: [0, 0, 0] })) };
+  const nearComponentLimit = { ...base(), components: Array.from({ length: 9998 }, () => ({ t: "platform", p: [0, 0, 0] })) };
   const canonicalLimit = normalize(nearComponentLimit);
-  assert.ok(canonicalLimit, "limit must still allow the three required objects");
+  assert.ok(canonicalLimit, "limit must still allow the two required objects");
   assert.equal(canonicalLimit.components.length, 10_000);
   assert.deepEqual(normalize(canonicalLimit), canonicalLimit, "accepted limit cannot fail on reopen");
   const retitledLegacy = parse(JSON.stringify({ name: "Test Course", data: { ...base(),

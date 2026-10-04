@@ -261,7 +261,7 @@ pit(1442,1580,'Hanging crypt railway abyss','rail');rail(1432,1480,0,'Hanging ra
 pit(2180,2214,'Last shattered vault track','rail');rail(2170,2194,0,'Last vault · outgoing');rail(2196.4,2224,0,'Last vault · receiving');waypoint(2192.2,'jump',ghostRouteHeight(2192.2)+.48);
 for(const f of GHOST_TRAIN_FLOORS){if(f.b-f.a>6)track(f.a,f.b);}
 
-add({t:'clock',p:ghostRoutePoint(8,undefined,2.1),grp:10});add({t:'comboorb',p:ghostRoutePoint(8,undefined,-2.1),grp:10});add({t:'crate',p:ghostRoutePoint(26,undefined,-1.9),kind:'mask',grp:10,nm:'Boarding safety mask'});
+add({t:'clock',p:ghostRoutePoint(8,undefined,2.1),grp:10});add({t:'crate',p:ghostRoutePoint(26,undefined,-1.9),kind:'mask',grp:10,nm:'Boarding safety mask'});
 for(const s of [28,52,123,137]){const y=ghostRouteHeight(s);art.box(ghostRoutePoint(s,y+.5,2.7),[.9,1,3.2],P.red,10,'Station velvet waiting bench',ghostRouteYaw(s));art.box(ghostRoutePoint(s,y+2.8,-3.3),[.25,2.3,3.4],P.brass,10,'Ticket window brass grille',ghostRouteYaw(s));}
 for(const [i,s]of [121,176,246,287,404,495,507,1720,1781,1918].entries())axe(s,i%3===0?.65:i%3===1?-.65:0,i*.84);
 for(const s of [694,712])for(const side of [-1,1])banquet(s,side*2.9,Math.floor(s)%3);

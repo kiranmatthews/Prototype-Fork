@@ -1342,7 +1342,7 @@ export class GameFlowUI {
     const medal = earnedTimeMedal(progress);
     if (definition.competition) rewards.append(rewardSlot('cup', !!progress?.cup));
     else {
-      const entries = [['crystal', !!progress?.crystal, 'CRYSTAL'], ['gem', !!progress?.boxGem, 'ALL BOXES'], ['combo', !!progress?.comboGem, 'COMBO'], ['medal', !!medal, 'TIME TRIAL']] as const;
+      const entries = [['crystal', !!progress?.crystal, 'CRYSTAL'], ['gem', !!progress?.boxGem, 'ALL BOXES'], ['medal', !!medal, 'TIME TRIAL']] as const;
       for (const [kind, earned, label] of entries) {
         if (kind === 'crystal' && definition.boss) continue;
         const item = element('div', 'game-level-prize');
@@ -1617,7 +1617,7 @@ export class GameFlowUI {
     }
     const rewardNames = state.kind === "time-trial"
       ? (() => { const medal = medalForTime(state.actualTime, state.medalTimes ?? defaultMedalTimes(state.relicTarget)); return medal ? [`${medal} medal`] : []; })()
-      : [state.crystal && "Crystal", state.boxGem && "Box gem", state.comboGem && "Combo gem"].filter(Boolean);
+      : [state.crystal && "Crystal", state.boxGem && "Box gem", state.comboGem && "Secret gem"].filter(Boolean);
     card.setAttribute("aria-label", rewardNames.length ? `Rewards earned: ${rewardNames.join(", ")}` : "No new collectibles earned");
     const actions = element("div", "game-menu-list game-results-actions");
     actions.append(

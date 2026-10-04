@@ -11,17 +11,17 @@ const original = JSON.parse(await readFile(new URL('carlisle-coast/original-cour
 const range = (a, b) => Array.from({length: b - a + 1}, (_, i) => a + i);
 const removed = new Set([1, ...range(20, 30), ...range(71, 86), ...range(121, 123), 175, 176,
   ...range(242, 253), 276, 490, 493, 499, 502]);
-const expectedIndices = original.data.components.map((_, i) => i).filter(i => !removed.has(i) && original.data.components[i].t !== 'crate');
+const expectedIndices = original.data.components.map((_, i) => i).filter(i => !removed.has(i) && !['crate', 'comboorb'].includes(original.data.components[i].t));
 const expected = expectedIndices.map(i => original.data.components[i]);
 const json = value => JSON.parse(JSON.stringify(value));
 const countBy = (components, key) => components.reduce((out, c) => {
   const value = key(c); out[value] = (out[value] ?? 0) + 1; return out;
 }, {});
 assert.equal(original.data.components.length, 508, 'the immutable original snapshot has 508 components');
-assert.equal(expectedIndices.length, 288, 'original non-box components survive the playground removal and authorized box overhaul');
+assert.equal(expectedIndices.length, 287, 'original non-box components survive except the removed playground and retired compulsory combo activator');
 assert.deepEqual(countBy(expected, c => c.t), {
   platform: 48, ramp: 9, wall: 10, vertramp: 1, rail: 73, gate: 1, clock: 1,
-  comboorb: 1, crumble: 14, enemy: 28, checkpoint: 14, wumpa: 74,
+  crumble: 14, enemy: 28, checkpoint: 14, wumpa: 74,
   mover: 2, stone: 5, crusher: 2, pendulum: 2, ropeswing: 1, zone: 1, crystal: 1,
 }, 'independent original challenge inventory');
 assert.deepEqual(countBy(expected.filter(c => c.t === 'enemy'), c => c.foe ?? 'grunt'), {
@@ -412,7 +412,7 @@ try {
   assert.ok(['shake', 'fall', 'gone'].every(state => crumbleStates.has(state)), 'attached decks are checked through shake, tumble and disappearance');
   assert.ok(city.crumbles.every(c => c.state === 'gone' && !c.mesh.visible), 'all broken deck skins vanish with their original pads');
   assert.ok(normalizeCustomLevelData(city.captureData()), 'editor capture remains a valid complete level');
-  console.log(`PASS Carlisle restoration: all 288 retained non-box originals match independently (hill rail clearance exception); 28 enemies, 73 rails, 9 slopes, 14 crumble pads, 14 checkpoints; ${supportProbes} real support probes (${rampProbes} slope probes), ${joinProbes} join body-clearance probes, ${gapProbes} open-gap and ${visualGapProbes} rendered-gap probes, ${ledgeProbes} Player ledge probes (${ledgeCatches} matching catches), ${skinChecks} attached moving-deck checks, timed obstacle parity, original E side-scroll, source/published parity.`);
+  console.log(`PASS Carlisle restoration: all 287 retained non-box originals match independently (hill rail clearance exception); 28 enemies, 73 rails, 9 slopes, 14 crumble pads, 14 checkpoints; ${supportProbes} real support probes (${rampProbes} slope probes), ${joinProbes} join body-clearance probes, ${gapProbes} open-gap and ${visualGapProbes} rendered-gap probes, ${ledgeProbes} Player ledge probes (${ledgeCatches} matching catches), ${skinChecks} attached moving-deck checks, timed obstacle parity, original E side-scroll, source/published parity.`);
 } finally {
   city?.dispose(); oracle?.dispose(); await server.close();
 }

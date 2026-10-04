@@ -183,7 +183,7 @@ add({
 add({ t: "crystal", p: [398, 13.95, 0], nm: "Gate crystal", grp: GROUP.actors });
 add({ t: "gate", p: [428, 13.25, 0], yaw: 90, grp: GROUP.actors });
 add({ t: "clock", p: [-15, 0, -2.5], grp: GROUP.actors });
-add({ t: "comboorb", p: [-15, 0, 2.5], grp: GROUP.actors });
+
 
 // Invisible depth boundaries reproduce the guarded 8.5 m side-view lane.
 for (const z of [-4.55, 4.55]) {

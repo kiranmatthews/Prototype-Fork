@@ -319,7 +319,7 @@ add({
   grp: GROUP.actors,
 });
 add({ t: "clock", p: offsetFromFrame(15, 3), grp: GROUP.actors });
-add({ t: "comboorb", p: offsetFromFrame(15, -3), grp: GROUP.actors });
+
 
 // The source scene uses 129 points. Seventeen authored camera knots preserve
 // the same S-curve while keeping editor selection and validation lightweight.

@@ -129,7 +129,7 @@ add({t:'pit',p:[0,BLOCKWORKS_GROUND+.35,20-ROUTE_END/2],s:[250,1,ROUTE_END+80],i
  railLine(112,198,s=>mix(1,-1.6,(s-112)/86),-4.4,g,'Outside arc over the first gap');
  enemy(130,-.52,'turtle',g,-1.5,1.2,.85);fruit(130,2.4,g,-1.5);fruitLine(20,60,0,g);fruitLine(145,163,lerpY(120,166,0,-2.4),g,0,9);
  mark(153,-1.72,g);mark(164,-2.3,g);fruit(171,.3,g);crate(28,0,'mask',g,-4);
- add({t:'clock',p:routePoint(8,0,4),grp:g});add({t:'comboorb',p:routePoint(8,0,-4),grp:g});
+ add({t:'clock',p:routePoint(8,0,4),grp:g});
 }
 
 // 2. Buildings occupy the inside of a long physical crescent. The four

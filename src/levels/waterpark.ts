@@ -148,7 +148,7 @@ for(const [i,gap]of WATERPARK_JUMPS.slice(0,3).entries()){
 }
 for(const [x,z]of [[-66,6],[66,-114],[-84,-228],[82,-355],[-66,-468],[72,-555]])add({t:'rock',p:[x,waterparkGradeAt(z)+1,z],s:[24,7,35],seed:Math.abs(x+z),color:'#af9777',tex:'sand',edgeGrinding:false,grp:90,nm:'Hillside rock outcrop'});
 for(const [x,z,top]of [[-29,186,130],[-7,186,130],[-11,cp1[2]-8,cp1[1]],[11,-414,30],[9,-546,12]])add({t:'crate',p:[x,top,z],kind:'wood',grp:90,nm:'Closed park maintenance supplies'});
-add({t:'clock',p:[-28,130,194],grp:1});add({t:'comboorb',p:[-8,130,194],grp:1});
+add({t:'clock',p:[-28,130,194],grp:1});
 for(const p of [[-18,130,165],[0,60,-20],[0,cp1[1],cp1[2]+3],[0,34,-274],[0,30,-417],[0,12,-548],[0,12,-574],[60,-165,-1040]] as P[])arrow(p);
 
 for(const [index,loop]of WATERPARK_LOOPS.entries()){

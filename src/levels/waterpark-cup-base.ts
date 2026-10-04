@@ -168,7 +168,7 @@ for(let n=1;n<=4;n++){
 for(let n=1;n<=3;n++){
   const a=-Math.PI/2+n/3*Math.PI/2;arrow([114+24*Math.cos(a),18,-136+24*Math.sin(a)],Math.atan2(Math.sin(a),-Math.cos(a))*180/Math.PI,'Dry flume turn paint');
 }
-for(const [x,y,z] of [[-57,12,43],[-39,12,43]] as P[])add({t:x<-48?'clock':'comboorb',p:[x,y,z],grp:1});
+add({t:'clock',p:[-57,12,43],grp:1});
 for(const [x,y,z] of [[-59,12,-130],[-29,12,-137],[128,18,-164],[148,18,-164],[148,14,-51],[109,0,31]] as P[])add({t:'crate',p:[x,y,z],kind:'wood',grp:90,nm:'Park maintenance supplies'});
 add({t:'bonusplatform',p:[-60,12,-151],to:[-55,12.1,-151],grp:3,nm:'Abandoned arcade side entrance'});
 for(const pool of WATERPARK_POOLS)for(const offset of [-3,0,3])add({t:'wumpa',p:pool.section==='A'?[pool.p[0],pool.p[1]+1,pool.p[2]+offset]:[pool.p[0]+offset,pool.p[1]+1,pool.p[2]],grp:pool.section==='A'?2:4});
