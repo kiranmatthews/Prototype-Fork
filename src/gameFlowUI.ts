@@ -111,7 +111,7 @@ export interface GameFlowUICallbacks {
   onAudioOptions: (options: GameAudioOptions) => void;
   getCrtEnabled: () => boolean;
   onCrtEnabled: (enabled: boolean) => void;
-  getRenderResolution: () => 540 | 720 | 1080 | "max";
+  getRenderResolution: () => 540 | 720 | 1080 | "max" | "custom";
   onRenderResolution: (resolution: 540 | 720 | 1080 | "max") => void;
   getPlayMode: () => GamePlayMode;
   onPlayMode: (mode: GamePlayMode) => void;
@@ -339,6 +339,21 @@ export class GameFlowUI {
 
   get currentScreen(): GameScreen | null {
     return this.screen;
+  }
+
+  /** Developer changes and restored preferences must not leave a stale preset. */
+  refreshRenderResolution(): void {
+    const button = this.panel.querySelector<HTMLButtonElement>(".game-resolution");
+    if (!button) return;
+    this.syncRenderResolutionButton(button);
+    this.invalidatePreCrt();
+  }
+
+  private syncRenderResolutionButton(button: HTMLButtonElement): void {
+    const resolution = this.callbacks.getRenderResolution();
+    button.querySelector("strong")!.textContent =
+      resolution === "max" ? "MAX" : resolution === "custom" ? "CUSTOM" : `${resolution}P`;
+    button.setAttribute("aria-label", `Render resolution: ${resolution === "max" ? "maximum native" : resolution === "custom" ? "custom" : `${resolution}p, ${resolution} physical pixels on the short edge`}. Activate to change.`);
   }
 
   /** Map utilities cover a live scenic background, not a paused gameplay run. */
@@ -1478,19 +1493,15 @@ export class GameFlowUI {
         const modes = [540, 720, 1080, "max"] as const;
         const button = this.button("", () => {
           const current = this.callbacks.getRenderResolution();
-          const next = modes[(modes.indexOf(current) + 1) % modes.length];
+          const next = current === "custom" ? modes[0]
+            : modes[(modes.indexOf(current) + 1) % modes.length];
           this.callbacks.onRenderResolution(next);
           sync();
           this.invalidatePreCrt();
         });
         button.classList.add("game-toggle", "game-resolution");
         button.innerHTML = "<span>RESOLUTION</span><strong></strong>";
-        const sync = () => {
-          const resolution = this.callbacks.getRenderResolution();
-          button.querySelector("strong")!.textContent =
-            resolution === "max" ? "MAX" : `${resolution}P`;
-          button.setAttribute("aria-label", `Render resolution: ${resolution === "max" ? "maximum" : `${resolution}p`}. Activate to change.`);
-        };
+        const sync = () => this.syncRenderResolutionButton(button);
         sync();
         return button;
       })(),

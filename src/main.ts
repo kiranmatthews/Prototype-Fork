@@ -169,10 +169,8 @@ configureCityAssetRenderer(renderer);
 // A zero-resource host. The actual Gouraud scene/render target exists only
 // while title/loading/Game Over owns the framebuffer.
 const gameFlowVortex = new GameFlowVortexHost();
-// NATIVE RESOLUTION. The device pixel ratio is the baseline — on a Retina
-// panel that is 2x the CSS grid, and rendering below it was the single biggest
-// thing making the game look cheap. Capped at 2: past that the pixels are far
-// too small to see and it is pure fill-rate.
+// Fixed presets own physical pixels. Only MAX/native follows display DPR,
+// capped at 2 to retain the existing native fill-rate budget.
 renderer.setPixelRatio(
   renderQualitySettings.enabled && !LITE_RENDER
     ? 1
@@ -939,7 +937,6 @@ let renderQualitySizes: RenderQualitySizes =
   renderQualitySettings.computeSizes(
     initialViewportReady?window.innerWidth:16,
     initialViewportReady?window.innerHeight:9,
-    TOUCH_PRESENTATION ? 1 : renderQualitySettings.outputMultiplier,
   );
 function configureCoastPost(enabled: boolean): void {
   if (coastPost) {
@@ -1033,7 +1030,7 @@ function renderPrimaryScene(
  */
 function renderGameplayScene(dt = 0, prepareOcean = true, showHud = true): void {
   if (renderer.getContext().isContextLost()) return;
-  // Touch remains native-resolution, but its UI belongs before CRT too.
+  // Game-owned UI shares the world resolution on every device.
   const wantsPreCrtUi = !split2p && (coastPost?.active ?? false);
   const wantsPreCrtHud = showHud && wantsPreCrtUi;
   let overlayRan = false;
@@ -1076,8 +1073,7 @@ function renderGameplayScene(dt = 0, prepareOcean = true, showHud = true): void 
 function fixedResolutionActive(): boolean {
   // Split screen owns two scissored cameras and deliberately remains on its
   // direct renderer path until it gets two independent pre-CRT surfaces.
-  // Regular mobile resolution presets use a 1× output, so touch devices can
-  // use this path without allocating the old oversized 2× phone target.
+  // Its canvas still obeys the preset, even while the composer is bypassed.
   return (
     renderQualitySettings.enabled &&
     !LITE_RENDER &&
@@ -1209,29 +1205,28 @@ function resize(): void {
     (navigator as unknown as { standalone?: boolean }).standalone === true;
   if (standalone && h > w && window.screen.height > h) h = window.screen.height;
   document.documentElement.style.setProperty("--vh", h + "px");
-  // Phone presets name the actual canvas height. Ignore any older/debug 2×
-  // multiplier so 540P remains a 540-pixel output on a Retina display.
+  // Presets name physical short-edge pixels, independent of DPR or input type.
   renderQualitySizes = renderQualitySettings.computeSizes(
     w,
     h,
-    TOUCH_PRESENTATION ? 1 : renderQualitySettings.outputMultiplier,
   );
   const optimized = fixedResolutionActive();
+  const fixedSurface = renderQualitySettings.enabled && !LITE_RENDER;
   // Optimized mode owns exact physical pixels: the world/post composer renders
   // at inputWidth×inputHeight, while the canvas is the CRT's 1×/2×/3× output.
   // Pixel ratio must be one or the browser would multiply that output again.
   // Native/lite retain the original DPR contract for a trustworthy A/B path.
-  const pixelRatio = optimized ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+  const pixelRatio = fixedSurface ? 1 : Math.min(window.devicePixelRatio || 1, 2);
   const nativeScale = LITE_RENDER ? 0.5 : 1;
-  const renderW = optimized
+  const renderW = fixedSurface
     ? renderQualitySizes.outputWidth
     : Math.round(w * nativeScale);
-  const renderH = optimized
+  const renderH = fixedSurface
     ? renderQualitySizes.outputHeight
     : Math.round(h * nativeScale);
   resizeRendererSurface(renderer, renderW, renderH, pixelRatio);
   syncPostResolution();
-  renderQualityPanel?.setMetrics(renderQualitySizes, optimized);
+  renderQualityPanel?.setMetrics(renderQualitySizes, optimized, fixedSurface);
   renderer.domElement.style.imageRendering = "";
   const playAspect = split2p ? w / (h / 2) : w / h;
   // The editor owns the full canvas even when the retained run is split-screen.
@@ -1378,6 +1373,7 @@ renderQualityPanel.setMetrics(renderQualitySizes, fixedResolutionActive());
 renderQualitySettings.subscribe(() => {
   resetRenderFrameLimiter();
   resize();
+  gameFlow?.refreshRenderResolution();
 });
 const skateboardPanel = createSkateboardTuningPanel({
   settings: skateboardSettings,
@@ -2088,11 +2084,7 @@ gameFlow = new GameFlowUI(
       crtGuestSettings.setEnabled(enabled);
       gameFlow.requestGameplayFrame();
     },
-    getRenderResolution: () => renderQualitySettings.enabled
-      ? renderQualitySettings.baseHeight === 540 || renderQualitySettings.baseHeight === 720
-        ? renderQualitySettings.baseHeight
-        : 1080
-      : "max",
+    getRenderResolution: () => renderQualitySettings.regularResolution,
     onRenderResolution: (resolution) => {
       renderQualitySettings.setRegularResolution(
         resolution === "max" ? null : resolution,

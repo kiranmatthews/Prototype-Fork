@@ -1,11 +1,13 @@
 export const RENDER_QUALITY_STORAGE_KEY = "solProtoRenderQuality.v1";
-export const RENDER_QUALITY_VERSION = 1;
+// Keep the fork-owned storage key so existing preferences and local reset work.
+export const RENDER_QUALITY_VERSION = 2;
 export const RENDER_BASE_HEIGHTS = [540, 720, 900, 1080] as const;
 export const RENDER_OUTPUT_MULTIPLIERS = [1, 2, 3] as const;
 
 export type RenderBaseHeight = (typeof RENDER_BASE_HEIGHTS)[number];
 export type RenderOutputMultiplier =
   (typeof RENDER_OUTPUT_MULTIPLIERS)[number];
+export type RegularRenderResolution = 540 | 720 | 1080 | "max";
 
 export interface RenderQualityState {
   enabled: boolean;
@@ -43,7 +45,7 @@ export type RenderQualityListener = (
 const DEFAULTS: Readonly<RenderQualityState> = Object.freeze({
   enabled: true,
   baseHeight: 720,
-  outputMultiplier: 2,
+  outputMultiplier: 1,
   fixed60: true,
 });
 
@@ -73,7 +75,7 @@ function isOutputMultiplier(value: unknown): value is RenderOutputMultiplier {
 function parseState(value: unknown): RenderQualityState | null {
   if (!value || typeof value !== "object") return null;
   const row = value as Record<string, unknown>;
-  if (row.version !== RENDER_QUALITY_VERSION) return null;
+  if (row.version !== 1 && row.version !== RENDER_QUALITY_VERSION) return null;
   if (
     typeof row.enabled !== "boolean" ||
     !isBaseHeight(row.baseHeight) ||
@@ -84,7 +86,9 @@ function parseState(value: unknown): RenderQualityState | null {
   return {
     enabled: row.enabled,
     baseHeight: row.baseHeight,
-    outputMultiplier: row.outputMultiplier,
+    // V1 advertised a preset while silently scaling desktop output and
+    // overriding touch output. Start both on the advertised 1x resolution.
+    outputMultiplier: row.version === 1 ? 1 : row.outputMultiplier,
     fixed60: row.fixed60,
   };
 }
@@ -133,6 +137,13 @@ export class RenderQualitySettings {
     return this.state.fixed60;
   }
 
+  get regularResolution(): RegularRenderResolution | "custom" {
+    if (!this.state.enabled) return "max";
+    if (this.state.outputMultiplier !== 1 || this.state.baseHeight === 900)
+      return "custom";
+    return this.state.baseHeight;
+  }
+
   snapshot(): Readonly<RenderQualityState> {
     return Object.freeze({ ...this.state });
   }
@@ -156,9 +167,11 @@ export class RenderQualitySettings {
     return this.replace({ ...this.state, fixed60 });
   }
 
-  /** Regular Options preset: one click enables fixed rendering at its named
-   * output height. Null restores the native device-resolution path. */
+  /** Fixed physical short edge, at 1x, on every device and orientation.
+   * Null restores the native device-resolution path. */
   setRegularResolution(baseHeight: RenderBaseHeight | null): boolean {
+    if (baseHeight !== null && !isBaseHeight(baseHeight))
+      throw new Error("Unsupported base height");
     return this.replace(baseHeight === null
       ? { ...this.state, enabled: false }
       : { ...this.state, enabled: true, baseHeight, outputMultiplier: 1 });
@@ -175,11 +188,12 @@ export class RenderQualitySettings {
   ): RenderQualitySizes {
     const vw = validDimension(viewportWidth);
     const vh = validDimension(viewportHeight);
-    const aspect = vw / vh;
-    const inputHeight = this.state.baseHeight;
-    // Preserve the live viewport aspect. A 16:9 viewport is exactly 1280×720;
-    // portrait and ultrawide screens keep their composition without stretching.
-    const inputWidth = validDimension(inputHeight * aspect);
+    // "720p" means a 720-pixel short edge: landscape 1280x720 becomes
+    // portrait 720x1280. Rotation transposes the buffer, preserving its pixel
+    // count and density; DPR never enters this physical-pixel calculation.
+    const shortEdge = this.state.baseHeight;
+    const inputWidth = vw <= vh ? shortEdge : validDimension(shortEdge * vw / vh);
+    const inputHeight = vh <= vw ? shortEdge : validDimension(shortEdge * vh / vw);
     return {
       viewportWidth: vw,
       viewportHeight: vh,

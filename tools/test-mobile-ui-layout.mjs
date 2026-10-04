@@ -95,8 +95,10 @@ assert.match(
   /function fixedResolutionActive\(\)[\s\S]{0,500}renderQualitySettings\.enabled &&\s*!LITE_RENDER &&\s*!split2p/,
   "fixed resolution presets must exclude lite and split-screen rendering",
 );
-assert.match(main, /TOUCH_PRESENTATION \? 1 : renderQualitySettings\.outputMultiplier/,
-  "touch fixed-resolution output must stay at 1x");
+assert.doesNotMatch(main, /TOUCH_PRESENTATION \? 1 : renderQualitySettings\.outputMultiplier/,
+  "resolution controls must apply the same output scale on every device");
+assert.match(main, /const fixedSurface = renderQualitySettings\.enabled && !LITE_RENDER/,
+  "split-screen canvas must retain the fixed physical-pixel preset");
 assert.match(main, /ui\.setPresentationTools\(\[/);
 assert.match(input, /new TouchControls\(\(\) => \{[\s\S]{0,160}this\.pausePressed = true;/);
 assert.match(input, /touchJumpPressed = tc\.consumeButtonPress\('x'\)/);
@@ -231,5 +233,5 @@ try {
 } finally { await secondaryServer.close(); }
 
 console.log(
-  "Validated mobile native-HUD/Render bypass, rotation-safe HUD texture allocation, safe-area touch geometry, life-ring clearance, and coordinated presentation tools.",
+  "Validated mobile pre-CRT HUD, device-independent resolution controls, rotation-safe texture allocation, safe-area touch geometry and coordinated presentation tools.",
 );

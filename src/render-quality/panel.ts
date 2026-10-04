@@ -96,7 +96,7 @@ export class RenderQualityPanel {
       (checked) => this.settings.setEnabled(checked),
     );
 
-    const base = this.row(body, "Pre-CRT input height");
+    const base = this.row(body, "Pre-CRT input · physical short edge");
     const baseButtons = document.createElement("div");
     baseButtons.className = "buttons";
     for (const value of RENDER_BASE_HEIGHTS) {
@@ -131,7 +131,7 @@ export class RenderQualityPanel {
     this.metrics.className = "metrics";
     this.metrics.textContent = "Waiting for renderer dimensions…";
     body.appendChild(this.metrics);
-    const reset = this.button("Restore 720p · 2× · 60 FPS");
+    const reset = this.button("Restore 720p · 1× · 60 FPS");
     reset.addEventListener("click", () => this.settings.reset());
     body.appendChild(reset);
     const hint = document.createElement("p");
@@ -146,14 +146,18 @@ export class RenderQualityPanel {
     this.setOpen(options.initiallyOpen ?? false);
   }
 
-  setMetrics(sizes: RenderQualitySizes, optimized: boolean): void {
+  setMetrics(sizes: RenderQualitySizes, optimized: boolean, fixedSurface = optimized): void {
     this.metrics.textContent = optimized
       ? `viewport  ${sizes.viewportWidth}×${sizes.viewportHeight}\n` +
         `world     ${sizes.inputWidth}×${sizes.inputHeight}\n` +
         `water FX  ${sizes.inputWidth}×${sizes.inputHeight}\n` +
         `CRT out   ${sizes.outputWidth}×${sizes.outputHeight}`
-      : `viewport  ${sizes.viewportWidth}×${sizes.viewportHeight}\n` +
-        "pipeline  native renderer resolution";
+      : fixedSurface
+        ? `viewport  ${sizes.viewportWidth}×${sizes.viewportHeight}\n` +
+          `direct    ${sizes.outputWidth}×${sizes.outputHeight}\n` +
+          "pipeline  fixed canvas · scissored cameras"
+        : `viewport  ${sizes.viewportWidth}×${sizes.viewportHeight}\n` +
+          "pipeline  native renderer resolution";
   }
 
   setOpen(open: boolean): void {
