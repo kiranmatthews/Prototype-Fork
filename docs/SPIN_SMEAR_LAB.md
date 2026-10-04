@@ -33,6 +33,11 @@ style. **Download baked GLB** exports the model currently used by gameplay.
 Ring tuning remains available from the lab's Ring tuning button. Reduced motion
 starts with the spin preview paused.
 
+Character ring ribbons stand upright, like tape wrapped around a ball. Their
+width follows each ring's tilted normal; the circular paths, central gaps,
+spacing, contours and glow tuning stay the same. Grounded skateboard rings
+retain their flat, ground-hugging width.
+
 Bakes use the fork-owned `solProtoSpinSmear.v1` IndexedDB store. Local-data reset
 backs up and clears that binary; Undo restores it exactly. If storage is blocked,
 the lab reports that the bake is limited to the current session and offers the

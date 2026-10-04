@@ -15,6 +15,8 @@ export interface SpinRingBounds {
   readonly size: THREE.Vector3;
 }
 
+export type SpinRingRibbonOrientation = "upright" | "flat";
+
 export interface SpinRingGeometryStats {
   readonly rings: number;
   readonly segments: number;
@@ -88,8 +90,8 @@ function currentBrightness(
 }
 
 /**
- * Exact browser evaluator for Unity's five-row SourceSwirl-style orbital
- * ribbons. Only the dynamic position/color buffers are uploaded each tick.
+ * Unity's five-row SourceSwirl-style ribbons, with upright tape-like width
+ * for character spins. Only dynamic position/color buffers upload each tick.
  */
 export class SpinOrbitalRings extends THREE.Group {
   readonly mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>;
@@ -110,6 +112,7 @@ export class SpinOrbitalRings extends THREE.Group {
   constructor(
     settings: Readonly<SpinRingSettingsValue> = DEFAULT_SPIN_RING_SETTINGS,
     bounds: Readonly<SpinRingBounds> = DEFAULT_SPIN_PREVIEW_BOUNDS,
+    private readonly ribbonOrientation: SpinRingRibbonOrientation = "upright",
   ) {
     super();
     this.name = "SpinOrbitalRings_Additive";
@@ -272,6 +275,7 @@ export class SpinOrbitalRings extends THREE.Group {
     const plane = new THREE.Quaternion();
     const axisU = new THREE.Vector3();
     const axisV = new THREE.Vector3();
+    const ribbonNormal = new THREE.Vector3();
     const radial = new THREE.Vector3();
     const center = new THREE.Vector3();
     const yAxis = new THREE.Vector3(0, 1, 0);
@@ -384,6 +388,7 @@ export class SpinOrbitalRings extends THREE.Group {
       plane.copy(qAzimuth).multiply(qTilt);
       axisU.set(1, 0, 0).applyQuaternion(plane);
       axisV.set(0, 0, 1).applyQuaternion(plane);
+      ribbonNormal.copy(yAxis).applyQuaternion(plane);
       const verticalSlot =
         this.activeRingCount === 1
           ? 0
@@ -409,11 +414,15 @@ export class SpinOrbitalRings extends THREE.Group {
           .addScaledVector(axisV, Math.sin(radialAngle));
         for (let row = 0; row < RING_ROWS; row++) {
           const vertex = baseVertex + row * this.segmentCount + j;
-          const rowRadius = Math.max(0, middle + offsets[row]);
+          // Keep the same ring path and gap; turn only its ribbon width upright.
+          const rowRadius = Math.max(
+            0, middle + (this.ribbonOrientation === "flat" ? offsets[row] : 0),
+          );
+          const rowHeight = this.ribbonOrientation === "upright" ? offsets[row] : 0;
           const p = vertex * 3;
-          this.positions[p] = center.x + radial.x * rowRadius;
-          this.positions[p + 1] = center.y + radial.y * rowRadius;
-          this.positions[p + 2] = center.z + radial.z * rowRadius;
+          this.positions[p] = center.x + radial.x * rowRadius + ribbonNormal.x * rowHeight;
+          this.positions[p + 1] = center.y + radial.y * rowRadius + ribbonNormal.y * rowHeight;
+          this.positions[p + 2] = center.z + radial.z * rowRadius + ribbonNormal.z * rowHeight;
           const c = vertex * 4;
           if (row === 2) {
             this.colors[c] = line.r * brightness;

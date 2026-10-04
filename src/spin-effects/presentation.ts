@@ -101,6 +101,7 @@ export class SpinEffectsPresentation {
     this.groundedSkateRings = new SpinOrbitalRings(
       this.groundedSkateSettings.value,
       DEFAULT_GROUNDED_SKATE_SPIN_BOUNDS,
+      "flat",
     );
     this.groundedSkateRings.name =
       "GroundedSkateSpinOrbitalRings_Additive_Web";
