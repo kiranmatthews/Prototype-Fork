@@ -66,8 +66,6 @@ import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL, JUNGLE_SKYLINE_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
-import { SPLAT_VALLEY_LEVEL } from './levels/splat-valley';
-import { SplatScenery, validSplatScenery, type SplatSceneryData } from './splatScenery';
 import { PUZZLE_LEVELS } from './levels/puzzle-trilogy';
 import { CRAB_CHIEF_LEVEL } from './levels/crab-chief';
 import { CrabChiefEncounter } from './boss/crabChief';
@@ -963,7 +961,6 @@ export interface CustomLevelData {
   sky?: SkyPreset; // time of day; absent = sunset (what every level was before)
   jungleAtmosphere?: boolean; // authored enclosed jungle lighting + canopy shade
   atmosphere?: CustomAtmosphereData; // bounded final fog/light/backdrop overrides
-  splatScenery?: SplatSceneryData; // local Gaussian splat background; never collision
   components: CustomComponent[];
   layers?: CustomLayer[];
   groups?: CustomGroup[];
@@ -2343,7 +2340,6 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "bonus-easy", name: EASY_BONUS_LEVEL.name, data: EASY_BONUS_LEVEL },
   ...BONUS_LEVEL_ENTRIES,
   ...PUZZLE_LEVELS,
-  { id: 'splat-valley', name: SPLAT_VALLEY_LEVEL.name, data: SPLAT_VALLEY_LEVEL },
   { id: 'crab-chief', name: CRAB_CHIEF_LEVEL.name, data: CRAB_CHIEF_LEVEL },
   { id:'ghost-train', name:GHOST_TRAIN_LEVEL.name, data:GHOST_TRAIN_LEVEL },
   {
@@ -2443,7 +2439,7 @@ const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const LEVEL_DATA_KEYS = new Set([
   'encounter',
   "v", "name", "spawn", "killY", "hudMode", "ledgeAssist", "relicTime",
-  "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "atmosphere", "splatScenery",
+  "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "atmosphere",
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "cameraAirLift",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
@@ -2638,6 +2634,9 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   const MAX_GENERATED_SAMPLES = 500_000;
   const MAX_PATH_LENGTH = 20_000;
   const source = value as CustomLevelData | null;
+  // Preserve saved/editor geometry from the retired scenery experiment.
+  if (source && typeof source === 'object' && !Array.isArray(source))
+    delete (source as CustomLevelData & { splatScenery?: unknown }).splatScenery;
   if (
     !source ||
     source.v !== 1 ||
@@ -2664,7 +2663,6 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   if (source.sky !== undefined && !SKY_PRESETS.includes(source.sky)) return null;
   if (source.encounter !== undefined && source.encounter !== 'crab-chief') return null;
   if (source.atmosphere !== undefined && !validAtmosphere(source.atmosphere)) return null;
-  if (source.splatScenery !== undefined && !validSplatScenery(source.splatScenery)) return null;
   if (source.jungleAtmosphere !== undefined && typeof source.jungleAtmosphere !== "boolean")
     return null;
   if (source.medalTimes !== undefined &&
@@ -3455,7 +3453,8 @@ export function levelList(): LevelEntry[] {
   });
   // Retired built-in overrides may remain in local/exported editor archives,
   // but must not resurrect a deleted game level as a new custom menu row.
-  for (const u of user) if (!isBuiltin(u.id) && u.id !== "jungle-cliff") out.push(u);
+  for (const u of user)
+    if (!isBuiltin(u.id) && u.id !== "jungle-cliff" && u.id !== "splat-valley") out.push(u);
   return out;
 }
 
@@ -3742,7 +3741,6 @@ export function isEditUnlocked(): boolean {
 }
 
 export class Level {
-  splatScenery: SplatScenery | null = null;
   readonly isBossLevel: boolean;
   readonly allowsBonus: boolean;
   boss: CrabChiefEncounter | null = null;
@@ -6352,7 +6350,6 @@ export class Level {
     this.endWallZ = -1e9;
     this.theme = { ...CUSTOM_LEVEL_THEME };
     this.atmosphere = data.atmosphere;
-    if (data.splatScenery) this.splatScenery = new SplatScenery(this.root, data.splatScenery);
 
     this.spawnPos.set(data.spawn[0], data.spawn[1], data.spawn[2]);
     this.currentSpawn.copy(this.spawnPos);
@@ -7395,8 +7392,6 @@ export class Level {
   }
 
   dispose(preserveResourcesFrom?: Level): void {
-    this.splatScenery?.dispose();
-    this.splatScenery = null;
     this.boss?.dispose();
     this.boss = null; // Meshy leases are released before the ordinary root traversal.
     if(this.bonusPlatform)this.bonusPlatform.group.userData.bonusStoneDisposed=true;
@@ -15474,7 +15469,7 @@ export class Level {
     const far=(camera as THREE.PerspectiveCamera).far??400;
     this.jungleAssets?.setView(camera.position,this.keepPlayFog?Math.min(far,this.theme.fogFar):far,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([this.splatScenery?.ready(),this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.milkCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.milkCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
   get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts}))};}
   private ghostKit():GhostTrainAssetKit {return this.ghostTrainAssets??=new GhostTrainAssetKit(this.root);}

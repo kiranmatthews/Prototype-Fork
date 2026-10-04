@@ -77,7 +77,7 @@ assert.ok(
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ levelKeys }) => levelKeys.length),
-  [11, 11, 3],
+  [10, 11, 3],
   "The three levels join the existing main-map island",
 );
 assert.deepEqual(
@@ -105,7 +105,6 @@ for(let i=1;i<mainPath.length;i++) {
 }
 assert.deepEqual(campaign.CAMPAIGN_MAP_EDGES.filter(e=>campaign.campaignLevelByKey(e.from).mapPath!==campaign.campaignLevelByKey(e.to).mapPath)
   .map(e=>[e.from,e.to,e.fromDirection,e.toDirection]),[
-  ['treehouse-trail','splat-valley','down','up'],
   ['jungle','jungle-terraces','up','down'],
   ['test-course','nightworks','up','down'],['coastal','chimeworks','down','up'],['island-hopper','waterpark','up','down'],
 ]);

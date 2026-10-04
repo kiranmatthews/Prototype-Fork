@@ -33,6 +33,9 @@ try {
   };
   const rejectComponent = (component, reason) => reject({ ...base(), components: [component] }, reason);
   assert.ok(normalize(base()));
+  const archivedSplatCopy = { ...base(), splatScenery: { asset: 'valley', p: [0, 10, -50], scale: 18 } };
+  assert.deepEqual(normalize(archivedSplatCopy), normalize(base()), 'retired scenery must leave saved geometry intact');
+  assert.ok(archivedSplatCopy.splatScenery, 'normalization must not mutate an editor archive');
   const visualMesh = {t:"mesh",p:[0,0,0],vertices:[0,0,0,1,0,0,0,1,0],solid:false,
     emissive:"#223344",opacity:.5,fog:false};
   assert.ok(normalize({...base(),components:[visualMesh]}));
