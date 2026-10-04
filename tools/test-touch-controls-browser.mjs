@@ -171,6 +171,8 @@ try {
           fixed:[...document.querySelectorAll('.tc-pause,.tc-trigger,.hud-bonus-title')].map(box)};
       });
       const overlaps=(a,b)=>a.x<b.right-1&&a.right>b.x+1&&a.y<b.bottom-1&&a.bottom>b.y+1;
+      const title=bonus.fixed.at(-1);
+      for(const control of bonus.fixed.slice(0,-1)) assert.equal(overlaps(title,control),false,'Bonus title covers a touch control');
       for(const [i,row] of bonus.rows.entries()) {
         assert.ok(row.x>=0&&row.y>=0&&row.right<=width+1&&row.bottom<=height+1,'offscreen Bonus counter');
         for(const fixed of [...bonus.fixed,...bonus.rows.slice(i+1)]) assert.equal(overlaps(row,fixed),false,'Bonus counter overlaps another readout or a control');

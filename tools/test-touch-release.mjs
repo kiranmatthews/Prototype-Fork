@@ -95,6 +95,10 @@ up(3); assert.equal(tc.consumeJumpRelease(), true);
 button('x', 2); move(2, 360, 240); assert.equal(tc.grabHeld, true); assert.equal(tc.jumpHeld, false);
 cancel(2); assert.equal(tc.consumeButtonPress('x'), false); assert.equal(tc.consumeJumpRelease(), false);
 assert.equal(tc.consumeButtonPress('o'), false); reset();
+button('x',2); button('tri',3); button('o',2);
+assert.equal(tc.jumpHeld,false); assert.equal(tc.grabHeld,true); assert.equal(tc.grindHeld,true);
+assert.equal(tc.consumeButtonPress('x'),false,'fresh contact inherits stale ownership');
+assert.equal(tc.consumeButtonPress('o'),true); up(2); up(3); reset();
 
 // All sectors and wrap boundaries, radial/angular hysteresis, off-zone moves.
 down(left, 1, 50, 50);
@@ -178,6 +182,8 @@ assert.equal(tc.moveX, -1); assert.equal(tc.grindHeld, false); up(10); neutral()
 left.emit('pointerdown', event(1, 50, 0, { button: 2, pointerType: 'mouse' })); neutral();
 left.emit('pointerdown', event(1, NaN, 0)); neutral();
 down(left, 1, 50, 0); move(1, 50, 0, { pointerType: 'mouse', buttons: 0 }); neutral();
+const pen=event(1,50,0,{pointerType:'pen'});window.emit('pointerdown',pen);left.emit('pointerdown',pen);
+move(1,50,0,{pointerType:'pen',buttons:0});neutral();
 window.location.search = '?notouch'; assert.equal(exports.touchControlsRequested(), false);
 
 // Execute the real merged Input with the controls, proving a short Jump has

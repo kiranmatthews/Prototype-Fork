@@ -20,6 +20,8 @@ IDs. Cancelling one contact cannot erase a completed tap or another owner's
 pending press. A Jump tap queues both press and release, including down/up
 between render frames. Merged input does not release a still-held keyboard or
 controller Jump. R2 taps queue their press even after the finger has lifted.
+Fresh contacts recover stale ownership of their reused ID independently, and
+mouse/pen hover with no depressed buttons clears a missed lift.
 Direct trigger holds remain held until release; an Inventory tap and legacy
 swipes retain the existing 450 ms pulse window. A pulse waits for its first
 input poll before starting that window, so a long frame cannot lose it unread.
@@ -45,7 +47,8 @@ edges and above the home indicator. Pressed states change ink immediately and
 keep exactly the same target bounds. Dark plates, pale edges/lettering and warm
 active ink remain visible over bright and dark scenes. The D-pad contact marker
 shows steering displacement, and camera dragging shows an anchored contact cue.
-Bonus reward rows clear the shoulder controls.
+Bonus reward rows clear the shoulder controls, and the portrait heading sits
+below Pause.
 
 The native DOM and Canvas mirror below CRT use the same geometry and ink.
 Controls use no backdrop blur or perpetual animation. Pointer moves reuse cached
@@ -86,7 +89,8 @@ suppression, Pause/resume, Inventory and rotation. Profiles cover 320×568,
 `touch-controls-review.html` harness and the actual Input/controls without a
 WebGL startup dependency. It checks WebKit and Chrome native layouts, real touch
 taps, edge consumption, three independently routed browser pointer contacts,
-gesture/context suppression, modal/blur cleanup and rotation. Injected contacts
+gesture/context suppression, modal/blur cleanup and rotation, including touch
+taps through the production compositor's transparent semantic layer. Injected contacts
 and lifecycle events are explicitly different evidence from physical OS input.
 Use `TOUCH_BROWSER=webkit` to select Safari's engine. The harness is excluded from
 production entry points and stores no game data.

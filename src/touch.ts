@@ -303,7 +303,7 @@ export class TouchControls {
     window.addEventListener('pointermove', e => {
       if (!this.ownsPointer(e.pointerId)) return;
       this.syncAvailability();
-      if (e.pointerType === 'mouse' && e.buttons === 0) {
+      if ((e.pointerType === 'mouse' || e.pointerType === 'pen') && e.buttons === 0) {
         this.releasePointer(e.pointerId, true); return;
       }
       if (!Number.isFinite(e.clientX) || !Number.isFinite(e.clientY)) return;
@@ -316,6 +316,9 @@ export class TouchControls {
     // time out held fingers: long steering/grind holds are valid input.
     window.addEventListener('pointerdown', e => {
       if (e.pointerType === 'touch' && e.isPrimary) this.releaseAll(false);
+      // A fresh down with an already-owned ID starts a new contact. Recover
+      // that finger independently when its preceding release was lost.
+      else if (this.ownsPointer(e.pointerId)) this.releasePointer(e.pointerId, true);
     }, true);
     document.addEventListener('touchstart', e => {
       const live = new Set(Array.from(e.touches, t => t.identifier));
@@ -978,6 +981,9 @@ export class TouchControls {
         bottom: calc(var(--tc-bottom-edge) + var(--tc-size) + 68px);
       }
       @media (orientation: portrait) {
+        body.tc-on .game-hud-layer.hud-bonus .hud-bonus-title {
+          top: calc(var(--tc-top-edge) + 60px);
+        }
         body.tc-on .game-hud-layer.hud-bonus .hud-crate-row {
           left: var(--tc-left-edge);
           bottom: calc(var(--tc-bottom-edge) + var(--tc-size) + 96px);
