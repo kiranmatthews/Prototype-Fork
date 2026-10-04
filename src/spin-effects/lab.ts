@@ -10,6 +10,7 @@ import {
   type SpinSmearSettings,
 } from './smear';
 import { exportSpinSmear, loadSpinSmearModel, saveSpinSmearModel } from './smearStore';
+import { SPIN_SMEAR_POSE_REVISION } from './storageKeys';
 
 const app = document.getElementById('app')!;
 installLocalResetListener();
@@ -149,13 +150,17 @@ function frame(now: number): void {
 requestAnimationFrame(frame);
 async function initialize(): Promise<void> {
   await player.preparePresentationAssets(); player.syncCharacterAppearance();
-  source = player.captureSpinSmearSource(); currentRoot.add(source);
+  currentRoot.add(player.captureSpinSmearSource(false));
+  source = player.captureSpinSmearSource();
   const previous = await loadSpinSmearModel(), savedSettings = previous?.userData.spinSmear?.settings;
   if (savedSettings) setSettings(normalizeSpinSmear(savedSettings));
   rebuildDraft();
   production = new SpinEffectsPresentation({ parent: productionRoot, createSource: () => cloneSpinModel(source!) });
   await production.prepare();
-  status.textContent = previous ? 'Saved bake loaded. Edit the draft, then bake to replace it.' : 'Current character loaded. Edit the draft, then bake for gameplay.';
+  status.textContent = previous?.userData.spinSmear?.poseRevision === SPIN_SMEAR_POSE_REVISION
+    ? 'Saved bake loaded. Edit the draft, then bake to replace it.'
+    : previous ? 'Saved settings loaded with the new T-pose. Bake to save the updated model.'
+    : 'T-pose spin character loaded. Edit the draft, then bake for gameplay.';
   bakeButton.disabled = downloadButton.disabled = false;
 }
 void initialize().catch(error => { status.textContent = `Character could not load: ${String(error)}`; });

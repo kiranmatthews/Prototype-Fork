@@ -134,6 +134,8 @@ import {
 import { CharacterProportionLayer } from './character/proportionLayer';
 import { CharacterRigidMeshBatches } from './character/rigidMeshBatch';
 import { captureSpinCharacter } from './spin-effects/smear';
+import { withSpinArmPose, SPIN_ELBOW_BEND_DEGREES } from './spin-effects/armPose';
+import { SPIN_SMEAR_POSE_REVISION } from './spin-effects/storageKeys';
 import { CharacterBreakApart } from './character/breakApart';
 import {
   BASE_CHARACTER_HITBOX_HEIGHT,
@@ -3199,9 +3201,24 @@ export class Player {
   }
 
   /** A frozen surface in the player's local metre frame for the Spin Lab. */
-  captureSpinSmearSource(): THREE.Group {
+  captureSpinSmearSource(spinPose = true): THREE.Group {
     if (!this.riderG) throw new Error('The character is not ready to bake.');
-    return captureSpinCharacter(this.riderG, this.bodyGroup, this.bodyGroup.scale);
+    const capture = () => {
+      const source = captureSpinCharacter(this.riderG!, this.bodyGroup, this.bodyGroup.scale);
+      if (spinPose) {
+        const inverse = this.bodyGroup.matrixWorld.clone().invert();
+        const landmarks: Record<string, number[]> = {};
+        for (const side of ['left', 'right']) for (const joint of ['shoulder', 'elbow', 'wrist']) {
+          const name = `${joint}-${side}`;
+          landmarks[name] = this.riderG!.getObjectByName(name)!.getWorldPosition(new THREE.Vector3())
+            .applyMatrix4(inverse).multiply(this.bodyGroup.scale).toArray();
+        }
+        source.userData.spinArmPose = { elbowBendDegrees: SPIN_ELBOW_BEND_DEGREES, landmarks };
+        source.userData.spinPoseRevision = SPIN_SMEAR_POSE_REVISION;
+      }
+      return source;
+    };
+    return spinPose ? withSpinArmPose(this.riderG, this.bodyGroup, capture, () => this.syncRiggedCartoonHands()) : capture();
   }
 
   /** A clean spawn frame without consuming input or advancing gameplay. */

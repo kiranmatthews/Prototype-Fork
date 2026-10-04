@@ -1,6 +1,7 @@
 import * as THREE from "three";
-import { bakeSpinSmear, cloneSpinModel, DEFAULT_SPIN_SMEAR, disposeSpinModel, spinModelStats } from './smear';
+import { bakeSpinSmear, cloneSpinModel, DEFAULT_SPIN_SMEAR, disposeSpinModel, normalizeSpinSmear, spinModelStats } from './smear';
 import { loadSpinSmearModel, subscribeSpinSmear } from './smearStore';
+import { SPIN_SMEAR_POSE_REVISION } from './storageKeys';
 import {
   DEFAULT_GROUNDED_SKATE_SPIN_BOUNDS,
   SpinOrbitalRings,
@@ -234,10 +235,11 @@ export class SpinEffectsPresentation {
       await this.prepareSource?.();
       if (this.disposed) return;
       let instance: THREE.Group;
-      if (template) instance = cloneSpinModel(template);
+      const currentBake = template?.userData.spinSmear?.poseRevision === SPIN_SMEAR_POSE_REVISION;
+      if (template && (currentBake || !this.createSource)) instance = cloneSpinModel(template);
       else if (this.createSource) {
         const source = this.createSource();
-        try { instance = bakeSpinSmear(source, DEFAULT_SPIN_SMEAR); }
+        try { instance = bakeSpinSmear(source, normalizeSpinSmear(template?.userData.spinSmear?.settings ?? DEFAULT_SPIN_SMEAR)); }
         finally { disposeSpinModel(source); }
       } else return;
       instance.traverse((object) => {
@@ -256,7 +258,7 @@ export class SpinEffectsPresentation {
       this.characterRings.setSourceBounds({ center: neutralCenter, size: neutralSize });
       this.assetReady = true;
       this.assetError = null;
-      this.modelSource = template ? 'baked' : 'current-character';
+      this.modelSource = template && currentBake ? 'baked' : 'current-character';
       this.modelVertices = spinModelStats(instance).vertices;
       this.root.userData.assetReady = true;
     } catch (error) {

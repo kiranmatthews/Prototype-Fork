@@ -78,7 +78,11 @@ export function captureSpinCharacter(
     if (!(object instanceof THREE.Mesh) || object.userData.characterRenderProxy) return;
     const position = object.geometry.getAttribute('position');
     if (!position || !position.count) return;
-    if (object instanceof THREE.SkinnedMesh) object.skeleton.update();
+    if (object instanceof THREE.SkinnedMesh) {
+      // updateWorldMatrix alone bypasses SkinnedMesh's bind-inverse refresh.
+      object.updateMatrixWorld(true);
+      object.skeleton.update();
+    }
     const matrix = new THREE.Matrix4().multiplyMatrices(inverse, object.matrixWorld);
     const geometry = object.geometry.clone();
     const vertices = new Float32Array(position.count * 3);
@@ -167,7 +171,7 @@ export function bakeSpinSmear(source: THREE.Group, value: Readonly<SpinSmearSett
     if (object instanceof THREE.Mesh) object.geometry.translate(0, -bottom, 0);
   });
   addRotatedBlurCopies(result, settings);
-  result.userData.spinSmear = { version: 1, settings };
+  result.userData.spinSmear = { version: 1, settings, poseRevision: source.userData.spinPoseRevision ?? 0 };
   return result;
 }
 

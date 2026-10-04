@@ -4,6 +4,13 @@ Open `spin-lab.html`, or use **M → SPIN → Open smear lab** in the game.
 The three previews show the current Character Lab design, the editable draft,
 and the baked model used during spin. Drag to orbit, or select Front, Side or Top.
 
+The spin source uses a T-pose with horizontal upper arms and a 12° forward
+elbow bend. The current-character preview keeps its normal pose. Pose capture
+temporarily rotates only the arm joints, synchronizes the skinned hands, freezes
+the surface and restores the live rig, preserving proportions and animation.
+Older bakes are rebuilt for display with this pose and their existing smear
+settings; press Bake to replace their stored geometry with the updated model.
+
 Radial smear, height twist, radial stretch, height, waist flare, distortion and
 falloff deform the character's actual surfaces. **Blur copies** duplicates the
 entire distorted model around the same vertical axis. **Blur angular spread**

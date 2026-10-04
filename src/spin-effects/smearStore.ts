@@ -8,7 +8,7 @@ let template: THREE.Group | null = null;
 let pending: Promise<THREE.Group | null> | null = null;
 let epoch = 0;
 
-interface SavedModel { version: 1; glb: ArrayBuffer; settings: SpinSmearSettings }
+interface SavedModel { version: 1; glb: ArrayBuffer; settings: SpinSmearSettings; poseRevision?: number }
 
 async function database(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -62,7 +62,7 @@ export function loadSpinSmearModel(): Promise<THREE.Group | null> {
       const saved = await readModel();
       if (saved) {
         next = await parseModel(saved.glb);
-        next.userData.spinSmear = { version: 1, settings: normalizeSpinSmear(saved.settings), saved: true };
+        next.userData.spinSmear = { version: 1, settings: normalizeSpinSmear(saved.settings), saved: true, poseRevision: saved.poseRevision ?? 0 };
       }
     } catch { /* A blocked/corrupt local store uses the current character. */ }
     if (generation !== epoch) {
@@ -92,12 +92,13 @@ export async function saveSpinSmearModel(model: THREE.Group, settings: SpinSmear
 }> {
   const glb = await exportSpinSmear(model);
   const next = await parseModel(glb);
+  const poseRevision = model.userData.spinSmear?.poseRevision ?? 0;
   let persisted = true;
-  try { await writeModel({ version: 1, glb, settings: normalizeSpinSmear(settings) }); }
+  try { await writeModel({ version: 1, glb, settings: normalizeSpinSmear(settings), poseRevision }); }
   catch { persisted = false; }
   epoch++;
   const previous = template;
-  next.userData.spinSmear = { version: 1, settings: normalizeSpinSmear(settings), saved: persisted };
+  next.userData.spinSmear = { version: 1, settings: normalizeSpinSmear(settings), saved: persisted, poseRevision };
   template = next;
   pending = Promise.resolve(next);
   for (const listener of listeners) listener();

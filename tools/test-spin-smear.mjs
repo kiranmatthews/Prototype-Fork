@@ -43,6 +43,15 @@ const outward = new THREE.Vector3().fromBufferAttribute(capturedGeometry.attribu
 assert.ok(new THREE.Vector3().fromBufferAttribute(capturedGeometry.attributes.normal, 0).dot(outward) > 0,
   'a reflected limb was baked inside out');
 const frozenPosition = source.children[0].geometry.attributes.position.array.slice();
+// Move the skin's enclosing frame without the renderer's updateMatrixWorld
+// pass. Surface capture must refresh its attached bind inverse itself.
+reference.position.x += 3; reference.rotation.y += .4;
+const moved = captureSpinCharacter(rider, reference);
+const originalSkin = source.children[1].geometry.attributes.position.array;
+const movedSkin = moved.children[1].geometry.attributes.position.array;
+for (let i = 0; i < originalSkin.length; i++) assert.ok(Math.abs(originalSkin[i] - movedSkin[i]) < 1e-5,
+  'the skinned surface detached after its enclosing frame moved');
+disposeSpinModel(moved);
 mesh.position.x = 8; mesh.morphTargetInfluences[0] = 1;
 assert.deepEqual(source.children[0].geometry.attributes.position.array, frozenPosition, 'the snapshot follows the live character');
 const expectedSkin = skin.getVertexPosition(1, new THREE.Vector3());
