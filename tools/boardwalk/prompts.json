@@ -1,0 +1,62 @@
+{
+  "plank-split": {
+    "family": "plank",
+    "triangles": 300,
+    "prompt": "One isolated long thin wooden boardwalk floor plank, horizontal and straight, length six times its width, thickness one quarter its width. Rustic cartoon clay game asset, low poly chunky hand sculpted bevels, weathered uneven edges, a deep narrow split at one end and chipped corners, broad nearly flat walking face with carved lengthwise grain. One single solid plank only, no platform, no nails, no ground, no extra objects.",
+    "texture": "Matte hand painted cartoon clay wood, warm sun bleached honey oak, broad amber grain streaks running along the entire length, dark umber in the end split and carved grain, creamy rubbed bevels, salt weathering. Simple chunky readable marks, no photorealism, no directional lighting or baked shadows, no shine."
+  },
+  "plank-worn": {
+    "family": "plank",
+    "triangles": 280,
+    "prompt": "One isolated long thin straight wooden boardwalk plank lying horizontally. Length six times width, thickness a quarter of width. Stylized low poly clay cartoon beach game prop. Hand hewn irregular bevels, broad flat top, worn rounded corners, a small missing chip on one long edge, one oval wood knot and subtle carved lengthwise grooves. A complete sturdy plank, single object, no platform, no ground, no extra objects.",
+    "texture": "Hand painted matte clay style weathered timber. Warm sandy tan driftwood, cinnamon lengthwise wood grain, dark small oval knot, cream worn edges, subtle grey salt streaks. Broad simple cartoon color shapes, no realistic photo noise, no baked shadows or directional light, no shine."
+  },
+  "plank-chipped": {
+    "family": "plank",
+    "triangles": 320,
+    "prompt": "Single thin long straight rustic wooden floor plank, horizontal, six times longer than wide, thickness a quarter of width. Low poly cartoon clay sculpted beach boardwalk asset. Irregular polygonal hand cut outline, flat walking surface, splintered jagged short ends, shallow lengthwise crack and gouges, a chipped corner. Still a complete usable timber plank. No assembly, no ground, no other objects.",
+    "texture": "Matte hand painted cartoon clay wood in warm toasted caramel brown, large simple ochre wood grain following the long axis, dark brown cracks, dusty cream exposed chips and sun faded edges. Rustic salt weathered oak, no photorealistic noise, no baked lighting or shadows, no gloss."
+  },
+  "beam-hewn": {
+    "reference": "tools/boardwalk/references/beam-hewn.png",
+    "texturedJob": "beam-hewn-image-v2",
+    "family": "timber",
+    "triangles": 220,
+    "prompt": "A single long straight heavy timber scaffolding beam, square cross section, ten times longer than wide, standing vertically. Rustic low poly clay cartoon wooden pier asset, thick hand hewn bevels, slightly irregular sides, broad carved grain, rough splintered flat ends and one shallow lengthwise split. No branches, no platform, no ground, no other objects.",
+    "texture": "Matte hand painted chunky clay game timber, warm aged chestnut and honey brown, carved dark lengthwise grain, pale weathered bevels, darker rough end grain, salt washed wood. Broad readable cartoon marks, no photorealism, no shine, no baked shadows or directional lighting."
+  },
+  "beam-driftwood": {
+    "family": "timber",
+    "triangles": 240,
+    "prompt": "One single straight thick driftwood support beam standing vertically, ten times longer than wide, roughly square polygonal cross section. Charming low poly clay cartoon wooden boardwalk prop, faceted weathered edges, one broad oval knot, shallow carved grooves, chipped flat end caps, slight taper. Sturdy straight pole, no branches, no roots, no ground, no extra objects.",
+    "texture": "Matte cartoon clay salt weathered wood, warm sun bleached sandy tan with muted cinnamon brown grain running along its length, creamy raised facets and a dark knot, dusty brown end grain. Broad readable hand painted color regions, no realistic noise, no shine, no baked shadows."
+  },
+  "beam-split": {
+    "family": "timber",
+    "triangles": 260,
+    "prompt": "One isolated long straight squared wooden pier beam standing vertically, ten times longer than wide, low poly clay cartoon rustic game prop. Chunky beveled polygonal timber, weathered chisel marks, a visible narrow end split and chipped corners, rough flat end caps, broad lengthwise carved grain. Single sturdy timber, no branches, no ground, no extra objects.",
+    "texture": "Rustic matte clay cartoon timber in warm toasted oak brown, gold tan worn edge facets, deep umber narrow splits, bold long wood grain strokes, lighter exposed chips and weathered salt marks. Hand painted low poly game style, no photorealism or shine, no directional light or baked shadows."
+  },
+  "rope-twist": {
+    "reference": "tools/boardwalk/references/rope-twist.png",
+    "texturedJob": "rope-twist-image",
+    "family": "rope",
+    "triangles": 300,
+    "prompt": "One single straight length of thick three strand twisted natural hemp rope, stretched horizontally from left to right, twelve times longer than diameter. Low poly chunky clay cartoon nautical boardwalk prop. Clearly sculpted spiral strands, continuous round rope with flat cut ends, no coil, no loop, no knots, no metal, no ground, no other objects.",
+    "texture": "Hand painted matte clay cartoon natural hemp rope, warm golden sandy beige strands, muted cinnamon grooves between twists, pale creamy strand highlights, lightly salt weathered. Large readable spiral stripe pattern, no noisy realistic fibers, no shine, no baked shadows or directional lighting."
+  },
+  "rope-weathered": {
+    "reference": "tools/boardwalk/references/rope-weathered.png",
+    "texturedJob": "rope-weathered-image",
+    "family": "rope",
+    "triangles": 320,
+    "prompt": "One isolated straight horizontal length of thick weathered twisted ship rope, twelve times longer than its diameter. Stylized low poly clay cartoon nautical asset, broad sculpted twisted strands and a few small frayed tufts along the rope, straight continuous core, simple flat cut ends. No coil, no loops, no knots, no metal, no ground or other objects.",
+    "texture": "Matte hand painted clay style old hemp rope, warm pale sandy tan, ochre and dusty cinnamon twist grooves, sun bleached cream edges, a few light frayed fibers. Broad simple cartoon marks, no photorealism, no shine, no baked lighting or shadows."
+  },
+  "rope-braid": {
+    "family": "rope",
+    "triangles": 340,
+    "prompt": "One single straight horizontal length of chunky braided natural hemp rope for a rustic beach pier handrail, twelve times longer than diameter. Low poly hand sculpted clay cartoon asset. Thick clearly defined interwoven strands, slightly irregular weathered braid, clean cut ends, no knots, no loops, no coils, no ground, no other objects.",
+    "texture": "Warm hand painted matte cartoon clay natural rope, honey beige and sandy cream braided strands with muted umber between the broad woven ridges, salt weathered edges. Clear chunky color shapes, no realistic noisy fibers, no shine, no baked shadows or lighting."
+  }
+}

@@ -134,6 +134,11 @@ import {
   type WoodPathProfile,
 } from "./woodPathKit";
 import {
+  buildWoodPathMeshes,
+  WOOD_PATH_PLANK_WEIGHTS,
+  WOOD_PATH_POLE_WEIGHTS,
+} from "./woodPathMeshes";
+import {
   createIslandShoreFoam,
   type IslandShoreFoam,
   type IslandShoreFoamOval,
@@ -766,8 +771,8 @@ export interface CustomComponent {
   supportBaseY?: number; // woodpath: absolute fallback foot height when a terrain probe misses
   terrainSupports?: boolean; // woodpath: raycast each post to ground instead of fixed depth
   structureStyle?: "light" | "island" | "beach"; // woodpath topology/plank profile
-  plankPalette?: string; // future fitted mesh palette id; placeholder box is the fallback
-  polePalette?: string; // future fitted mesh palette id; placeholder cylinder is the fallback
+  plankPalette?: string; // fitted plank palette; legacy placeholder IDs resolve to the rustic Meshy kit
+  polePalette?: string; // scaffold timber and rope palette; visuals are independent of collision
   shoreProfile?: boolean; // polygon platform: Unity four-ring island shelf instead of a flat extrusion
   shoreSeaLevel?: number; // shoreProfile waterline; defaults to centerY - 1.41
   shorePhase?: number; // deterministic organic outline/height phase
@@ -7519,6 +7524,8 @@ export class Level {
     };
     this.root.traverse((o) => {
       const m = o as THREE.Mesh;
+      if (m.userData.woodPathMeshFamily && (m as THREE.InstancedMesh).isInstancedMesh)
+        (m as THREE.InstancedMesh).dispose();
       if (
         m.geometry &&
         !(o as THREE.Sprite).isSprite &&
@@ -13175,6 +13182,8 @@ export class Level {
         profile,
         plankSeed: c.seed ?? 7319,
         poleSeed: (c.seed ?? 7319) ^ 0x6f2b,
+        plankVariantWeights: WOOD_PATH_PLANK_WEIGHTS,
+        poleVariantWeights: WOOD_PATH_POLE_WEIGHTS,
         fallbackBaseY: c.supportBaseY,
         fallbackSupportDepth: c.supportDepth ?? c.rise ?? 3.5,
         includeSupports: makeSupports,
@@ -13204,49 +13213,10 @@ export class Level {
       },
     );
 
-    // One fallback board batch today; semantic envelopes + palette IDs make
-    // a fitted textured-GLB swap a renderer concern, never a topology rewrite.
-    const plankGeometry = new THREE.BoxGeometry(1, 1, 1);
-    const plankMaterial = new THREE.MeshLambertMaterial({ color: 0xffffff });
-    const planks = new THREE.InstancedMesh(
-      plankGeometry,
-      plankMaterial,
-      layout.planks.length,
+    const [planks, poles] = buildWoodPathMeshes(
+      layout, c.seed ?? 7319, c.plankPalette, c.polePalette,
     );
-    planks.name = "woodpath parts · planks";
-    planks.userData.woodPathPartRole = "plank";
-    planks.userData.woodPathPalette = c.plankPalette ?? "placeholder-board";
-    planks.userData.woodPathVariants = layout.planks.map((piece) => piece.variantIndex);
-    const matrix = new THREE.Matrix4();
-    const basis = new THREE.Matrix4();
-    const quaternion = new THREE.Quaternion();
-    const scale = new THREE.Vector3();
-    layout.planks.forEach((piece, index) => {
-      basis.makeBasis(
-        new THREE.Vector3().fromArray(piece.basis.right),
-        new THREE.Vector3().fromArray(piece.basis.up),
-        new THREE.Vector3().fromArray(piece.basis.forward),
-      );
-      quaternion.setFromRotationMatrix(basis);
-      scale.fromArray(piece.size);
-      matrix.compose(
-        new THREE.Vector3().fromArray(piece.center),
-        quaternion,
-        scale,
-      );
-      planks.setMatrixAt(index, matrix);
-      planks.setColorAt(
-        index,
-        new THREE.Color().setHSL(
-          0.078,
-          0.48,
-          0.27 + piece.tonalBucket * 0.035,
-        ),
-      );
-    });
-    planks.instanceMatrix.needsUpdate = true;
-    if (planks.instanceColor) planks.instanceColor.needsUpdate = true;
-    this.root.add(planks);
+    this.root.add(planks, poles);
 
     if (makeRails) {
       for (const railLayout of layout.rails) {
@@ -13293,46 +13263,6 @@ export class Level {
             ])
             .expandByScalar(pole.radius + 0.015),
         );
-    }
-    const yAxis = new THREE.Vector3(0, 1, 0);
-    if (layout.poles.length > 0) {
-      const geometry = new THREE.CylinderGeometry(1, 1, 1, 7);
-      const material = new THREE.MeshLambertMaterial({ color: 0xffffff });
-      const instances = new THREE.InstancedMesh(
-        geometry,
-        material,
-        layout.poles.length,
-      );
-      instances.name = "woodpath parts · poles";
-      instances.userData.woodPathPartRole = "pole";
-      instances.userData.woodPathPalette = c.polePalette ?? "placeholder-pole";
-      instances.userData.woodPathRoles = layout.poles.map((piece) => piece.role);
-      instances.userData.woodPathVariants = layout.poles.map(
-        (piece) => piece.variantIndex,
-      );
-      layout.poles.forEach((pole, index) => {
-        quaternion.setFromUnitVectors(
-          yAxis,
-          new THREE.Vector3().fromArray(pole.direction),
-        );
-        matrix.compose(
-          new THREE.Vector3().fromArray(pole.center),
-          quaternion,
-          new THREE.Vector3(pole.radius, pole.length, pole.radius),
-        );
-        instances.setMatrixAt(index, matrix);
-        instances.setColorAt(
-          index,
-          new THREE.Color().setHSL(
-            0.12,
-            0.34,
-            0.49 + pole.tonalBucket * 0.035,
-          ),
-        );
-      });
-      instances.instanceMatrix.needsUpdate = true;
-      if (instances.instanceColor) instances.instanceColor.needsUpdate = true;
-      this.root.add(instances);
     }
   }
 

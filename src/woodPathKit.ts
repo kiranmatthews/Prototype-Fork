@@ -2,10 +2,9 @@
  * Pure layout kernel for source-faithful procedural wood paths.
  *
  * This module deliberately owns no Three.js geometry or collision objects.
- * It emits fitted-piece envelopes and semantic member roles, allowing the
- * runtime to batch placeholder boxes/cylinders today and substitute weighted
- * textured mesh variants later without changing gameplay collision or level
- * data.
+ * It emits fitted-piece envelopes, seeded variants and semantic member roles.
+ * The rustic Meshy renderer fits planks, timber and rope into these envelopes
+ * without changing gameplay collision or level data.
  */
 
 export type WoodPathVec3 = [x: number, y: number, z: number];

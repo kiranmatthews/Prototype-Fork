@@ -131,8 +131,8 @@ portals beneath a jump or bonus route.
   ],
   "widths": [6, 6.5, 5.5, 6],
   "structureStyle": "light",
-  "plankPalette": "placeholder-board",
-  "polePalette": "placeholder-pole",
+  "plankPalette": "rustic-planks",
+  "polePalette": "rustic-timber-rope",
   "spacing": 0.55,
   "baySpacing": 4.5,
   "scaffold": true,
@@ -152,12 +152,27 @@ This avoids both wheel-catching collision seams and coplanar deck/plank shimmer.
 Unity light-boardwalk default; `island` and `beach` retain each source level's
 deck and plank dimensions. The shared layout kernel emits semantic envelopes
 for every plank, support post, crossbeam, handrail post, longitudinal ledger,
-side brace, midheight cross brace and top-rail segment. Placeholder boards and
-seven-sided poles are currently instanced from those envelopes. `plankPalette`
-and `polePalette` are stable palette identifiers stored on the batches; a
-future weighted textured-mesh palette can fit its own pivots, axes and bounds
-into the same envelopes without changing path topology, collision or level
-data.
+side brace, midheight cross brace and top-rail segment. Three original Meshy
+planks, three weathered squared timbers and three twisted/braided rope lengths
+are fitted into those envelopes. Weighted selection uses the authored path
+seed; boards can turn end-for-end and beams rotate about their length. Timber
+owns the scaffold and handrail posts; rope owns the top rails. All nine meshes
+share a local 1024px clay-painted atlas, with sampled vertex paint available
+while it loads. Instances are grouped by model and 24 m path section for
+frustum culling. `plankPalette` and `polePalette` keep their stable identifiers;
+the legacy `placeholder-board`/`placeholder-pole` IDs automatically resolve to
+`rustic-planks`/`rustic-timber-rope`, including previously saved editor levels.
+The mesh swap changes neither path topology nor collision.
+
+`tools/boardwalk/meshy_jobs.py` uses the repository's official Meshy CLI adapter;
+prompts, reviewed references, task IDs and source hashes live beside it. The
+three rejected text silhouettes are recorded and excluded from the shipped
+kit. `bake_kit.py` applies provider node transforms, fits principal axes and
+packs paint into `public/boardwalk/rustic-atlas.webp` plus the native geometry
+in `src/boardwalkMeshes.generated.ts`. Authoring GLBs, signed URLs and
+credentials remain outside the published assets. `boardwalk-review.html`
+shows every variant and the assembled curved scaffold; the focused check is
+`node tools/test-wood-path-meshes.mjs`.
 
 The light scaffold uses 4.5 m nominal bays. Each bent has two posts, an
 under-deck crossbeam with 0.48 m overhang and two 1.05 m handrail posts. Each

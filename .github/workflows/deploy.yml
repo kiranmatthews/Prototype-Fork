@@ -38,6 +38,8 @@ jobs:
         run: npm run check:all
       - name: World-map startup regression
         run: node tools/test-world-map-locomotion.mjs
+      - name: Boardwalk mesh regression
+        run: node tools/test-wood-path-kit.mjs && node tools/test-wood-path-meshes.mjs && node tools/test-wood-path-level.mjs
       - name: Renderer frame graph regression
         run: npm run check:renderer
       - name: Offline cache regression

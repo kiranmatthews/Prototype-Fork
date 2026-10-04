@@ -1,0 +1,703 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "budgetCredits": 150,
+  "tasks": {
+    "plank-split": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "9e89b820-70b3-4887-8f14-3c98f6e2857e",
+      "createdAt": "2026-10-04T12:01:41.716234+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One isolated long thin wooden boardwalk floor plank, horizontal and straight, length six times its width, thickness one quarter its width. Rustic cartoon clay game asset, low poly chunky hand sculpted bevels, weathered uneven edges, a deep narrow split at one end and chipped corners, broad nearly flat walking face with carved lengthwise grain. One single solid plank only, no platform, no nails, no ground, no extra objects.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 300,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1211,
+      "id": "01a106ca-97ad-7674-89fe-89fd718982e0",
+      "checkedAt": "2026-10-04T12:04:14.586081+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791115313982,
+      "downloads": [
+        {
+          "path": ".img2threejs/boardwalk/plank-split/downloads/model.glb",
+          "bytes": 6584,
+          "sha256": "f4b6d4edc2da1c2c924d8fb1893f20b5e927a71c4a22016aab5e1dac4b00c8b5"
+        },
+        {
+          "path": ".img2threejs/boardwalk/plank-split/downloads/thumbnail.png",
+          "bytes": 24522,
+          "sha256": "23a9330e4f26bbbf93b471abebe6fafa99903164671859530144ac19a0454101"
+        }
+      ]
+    },
+    "plank-worn": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "c189d630-570b-48bf-9ce2-4c742885a9cd",
+      "createdAt": "2026-10-04T12:01:46.213584+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One isolated long thin straight wooden boardwalk plank lying horizontally. Length six times width, thickness a quarter of width. Stylized low poly clay cartoon beach game prop. Hand hewn irregular bevels, broad flat top, worn rounded corners, a small missing chip on one long edge, one oval wood knot and subtle carved lengthwise grooves. A complete sturdy plank, single object, no platform, no ground, no extra objects.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 280,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1206,
+      "id": "01a106ca-aabd-7743-80af-5841ed4784c2",
+      "checkedAt": "2026-10-04T12:04:16.528044+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791115316125,
+      "downloads": [
+        {
+          "path": ".img2threejs/boardwalk/plank-worn/downloads/model.glb",
+          "bytes": 6272,
+          "sha256": "80fe372fcb407152c02b4361d2e17f538e20942adc18a1e2719ada86edffaf9c"
+        },
+        {
+          "path": ".img2threejs/boardwalk/plank-worn/downloads/thumbnail.png",
+          "bytes": 15706,
+          "sha256": "f6e13b23ed05e982b56ee28743fd03ad1ce073333577c80ed8431e7a149df543"
+        }
+      ]
+    },
+    "plank-chipped": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "d3486c37-e882-4475-ba1f-fde0f18fe5d2",
+      "createdAt": "2026-10-04T12:01:51.849077+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "Single thin long straight rustic wooden floor plank, horizontal, six times longer than wide, thickness a quarter of width. Low poly cartoon clay sculpted beach boardwalk asset. Irregular polygonal hand cut outline, flat walking surface, splintered jagged short ends, shallow lengthwise crack and gouges, a chipped corner. Still a complete usable timber plank. No assembly, no ground, no other objects.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 320,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1201,
+      "id": "01a106ca-cdf1-769c-b01d-4c53b272d0ed",
+      "checkedAt": "2026-10-04T12:04:18.554923+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791115328171,
+      "downloads": [
+        {
+          "path": ".img2threejs/boardwalk/plank-chipped/downloads/model.glb",
+          "bytes": 6804,
+          "sha256": "d483bb63e8683b40b58682e3dd5f2d5861d600bfdc80c83620a452306b37c35f"
+        },
+        {
+          "path": ".img2threejs/boardwalk/plank-chipped/downloads/thumbnail.png",
+          "bytes": 14056,
+          "sha256": "0c1ae94649183f33235f43d57b257956964546fc5b47b4383c06bed3fcdcc9fb"
+        }
+      ]
+    },
+    "beam-hewn": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "bba21490-305a-4e41-b222-e52c55ee7d65",
+      "createdAt": "2026-10-04T12:02:00.910331+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "A single long straight heavy timber scaffolding beam, square cross section, ten times longer than wide, standing vertically. Rustic low poly clay cartoon wooden pier asset, thick hand hewn bevels, slightly irregular sides, broad carved grain, rough splintered flat ends and one shallow lengthwise split. No branches, no platform, no ground, no other objects.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 220,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1196,
+      "id": "01a106ca-f4a0-732f-9507-513b660c2cdc",
+      "checkedAt": "2026-10-04T12:04:20.513347+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791115334930,
+      "downloads": [
+        {
+          "path": ".img2threejs/boardwalk/beam-hewn/downloads/model.glb",
+          "bytes": 4988,
+          "sha256": "5fa9a02ce2e158c9eb8c6d59e6bac29c62239b2396872ea4afc75f30681106be"
+        },
+        {
+          "path": ".img2threejs/boardwalk/beam-hewn/downloads/thumbnail.png",
+          "bytes": 45237,
+          "sha256": "9d7e658ba839ef302af2903463ae61351cad0334496c78cdf18f88b650e0ddd0"
+        }
+      ],
+      "review": "Rejected silhouette; replaced by single-object image reference"
+    },
+    "beam-driftwood": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "6b209716-bc68-4b82-92a6-789630844862",
+      "createdAt": "2026-10-04T12:02:15.810564+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One single straight thick driftwood support beam standing vertically, ten times longer than wide, roughly square polygonal cross section. Charming low poly clay cartoon wooden boardwalk prop, faceted weathered edges, one broad oval knot, shallow carved grooves, chipped flat end caps, slight taper. Sturdy straight pole, no branches, no roots, no ground, no extra objects.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 240,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1191,
+      "id": "01a106cb-2c76-7683-821e-0f510d3b9199",
+      "checkedAt": "2026-10-04T12:04:23.263139+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791115352917,
+      "downloads": [
+        {
+          "path": ".img2threejs/boardwalk/beam-driftwood/downloads/model.glb",
+          "bytes": 5444,
+          "sha256": "db45b00e69877fac206745591f0a5237c029ab318673fd7cf8b5475ae051277d"
+        },
+        {
+          "path": ".img2threejs/boardwalk/beam-driftwood/downloads/thumbnail.png",
+          "bytes": 30326,
+          "sha256": "ae6c94fe71c61af5c59a59d175c9dae96c817d174908a997fd43cbd0210756d8"
+        }
+      ]
+    },
+    "beam-split": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "99901728-3320-4f1b-8ade-d9d27fbb5635",
+      "createdAt": "2026-10-04T12:02:28.109702+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One isolated long straight squared wooden pier beam standing vertically, ten times longer than wide, low poly clay cartoon rustic game prop. Chunky beveled polygonal timber, weathered chisel marks, a visible narrow end split and chipped corners, rough flat end caps, broad lengthwise carved grain. Single sturdy timber, no branches, no ground, no extra objects.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 260,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1186,
+      "id": "01a106cb-5d4c-760d-90a7-221b4435104d",
+      "checkedAt": "2026-10-04T12:04:26.441821+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791115369549,
+      "downloads": [
+        {
+          "path": ".img2threejs/boardwalk/beam-split/downloads/model.glb",
+          "bytes": 5720,
+          "sha256": "fde2c858c8b8d3a9e53f844bf1549c1fdb18c3f7d8c0305309e3a0eef96a39d3"
+        },
+        {
+          "path": ".img2threejs/boardwalk/beam-split/downloads/thumbnail.png",
+          "bytes": 20889,
+          "sha256": "5b90f37ac86ced2f7487b924422983218a997237931f82ea072fd7036beb05cc"
+        }
+      ]
+    },
+    "rope-twist": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "12a70419-7602-4fd9-8783-f9ad1dab4af4",
+      "createdAt": "2026-10-04T12:02:43.786439+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One single straight length of thick three strand twisted natural hemp rope, stretched horizontally from left to right, twelve times longer than diameter. Low poly chunky clay cartoon nautical boardwalk prop. Clearly sculpted spiral strands, continuous round rope with flat cut ends, no coil, no loop, no knots, no metal, no ground, no other objects.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 300,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1181,
+      "id": "01a106cb-8b69-714f-9650-38a709f12f60",
+      "checkedAt": "2026-10-04T12:04:29.031613+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791115383053,
+      "downloads": [
+        {
+          "path": ".img2threejs/boardwalk/rope-twist/downloads/model.glb",
+          "bytes": 6692,
+          "sha256": "ca0b59d3da33971b85250f0957056af2417f6a8701ae37ea7921f05a9441ac63"
+        },
+        {
+          "path": ".img2threejs/boardwalk/rope-twist/downloads/thumbnail.png",
+          "bytes": 24833,
+          "sha256": "fea30e73c05a04389f9681c842112f2d8225a16d81fd5795f42e7e54b466ef91"
+        }
+      ],
+      "review": "Rejected silhouette; replaced by single-object image reference"
+    },
+    "rope-weathered": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "97b5942e-1332-4884-8430-8a27e0a8c4b9",
+      "createdAt": "2026-10-04T12:02:50.095835+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One isolated straight horizontal length of thick weathered twisted ship rope, twelve times longer than its diameter. Stylized low poly clay cartoon nautical asset, broad sculpted twisted strands and a few small frayed tufts along the rope, straight continuous core, simple flat cut ends. No coil, no loops, no knots, no metal, no ground or other objects.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 320,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1176,
+      "id": "01a106cb-a29a-76f8-ac8d-0c51eaf675c4",
+      "checkedAt": "2026-10-04T12:04:31.175363+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791115379533,
+      "downloads": [
+        {
+          "path": ".img2threejs/boardwalk/rope-weathered/downloads/model.glb",
+          "bytes": 6512,
+          "sha256": "4aa70e1a8d94e926b63b6ae1df664733b1b8f870730ff9d3e588e9073ae7f694"
+        },
+        {
+          "path": ".img2threejs/boardwalk/rope-weathered/downloads/thumbnail.png",
+          "bytes": 29177,
+          "sha256": "81b41f1d140a86f032e7278b0c677deea2774fb09883dcd28227212a83a1df66"
+        }
+      ],
+      "review": "Rejected silhouette; replaced by single-object image reference"
+    },
+    "rope-braid": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "ed94f128-713f-42c2-9cc9-9d7755760268",
+      "createdAt": "2026-10-04T12:02:53.856860+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One single straight horizontal length of chunky braided natural hemp rope for a rustic beach pier handrail, twelve times longer than diameter. Low poly hand sculpted clay cartoon asset. Thick clearly defined interwoven strands, slightly irregular weathered braid, clean cut ends, no knots, no loops, no coils, no ground, no other objects.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 340,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1171,
+      "id": "01a106cb-b1f7-7506-b29d-c822c70add59",
+      "checkedAt": "2026-10-04T12:04:33.454406+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791115389736,
+      "downloads": [
+        {
+          "path": ".img2threejs/boardwalk/rope-braid/downloads/model.glb",
+          "bytes": 7500,
+          "sha256": "863112cbf373b54637479fe62842328594a1fb2af07e11d7c32dc2be9c0fd401"
+        },
+        {
+          "path": ".img2threejs/boardwalk/rope-braid/downloads/thumbnail.png",
+          "bytes": 28615,
+          "sha256": "73ee2c2eafd48b468627dfbdb13bb9905fb6a1c8b9b0fd78f3d3ac078357b900"
+        }
+      ]
+    },
+    "plank-split-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "a6f63423-f22c-4460-ac34-15ffc89de489",
+      "createdAt": "2026-10-04T12:10:31.570873+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a106ca-97ad-7674-89fe-89fd718982e0",
+        "texture_prompt": "Matte hand painted cartoon clay wood, warm sun bleached honey oak, broad amber grain streaks running along the entire length, dark umber in the end split and carved grain, creamy rubbed bevels, salt weathering. Simple chunky readable marks, no photorealism, no directional lighting or baked shadows, no shine.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1166,
+      "id": "01a106d2-e609-7071-b122-5c455079b126",
+      "checkedAt": "2026-10-04T12:17:42.680118+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791115898342,
+      "downloads": [
+        {
+          "path": ".img2threejs/boardwalk/plank-split-textured/downloads/model.glb",
+          "bytes": 2193672,
+          "sha256": "02ccfddb213d3ac8a1a1e2d01d4b68e7b2cceec83745d23da2804be18eb110bf"
+        },
+        {
+          "path": ".img2threejs/boardwalk/plank-split-textured/downloads/thumbnail.png",
+          "bytes": 34758,
+          "sha256": "cd966e3340dfd9b88c2bab740177fab1f3f8ee94201aec1e3c7125a6abe90eac"
+        }
+      ]
+    },
+    "plank-worn-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "b003692b-068a-428a-82f5-05fbf8afe189",
+      "createdAt": "2026-10-04T12:11:09.258544+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a106ca-aabd-7743-80af-5841ed4784c2",
+        "texture_prompt": "Hand painted matte clay style weathered timber. Warm sandy tan driftwood, cinnamon lengthwise wood grain, dark small oval knot, cream worn edges, subtle grey salt streaks. Broad simple cartoon color shapes, no realistic photo noise, no baked shadows or directional light, no shine.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1156,
+      "id": "01a106d3-90aa-74ea-bf31-6a9c69dff091",
+      "checkedAt": "2026-10-04T12:17:48.038909+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791115955810,
+      "downloads": [
+        {
+          "path": ".img2threejs/boardwalk/plank-worn-textured/downloads/model.glb",
+          "bytes": 1552088,
+          "sha256": "fa17fbe87311a12b74a24d533f292e8379c7c319a1324657a4dc0b64cbca2bbb"
+        },
+        {
+          "path": ".img2threejs/boardwalk/plank-worn-textured/downloads/thumbnail.png",
+          "bytes": 17155,
+          "sha256": "494ca40902f0c911e3817fdfe9fe0dbeb2341a00730bc49acbf16ae1a1aa3474"
+        }
+      ]
+    },
+    "plank-chipped-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "d2d20f25-86c7-4030-ae85-923bdcd1dd7d",
+      "createdAt": "2026-10-04T12:12:09.282110+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a106ca-cdf1-769c-b01d-4c53b272d0ed",
+        "texture_prompt": "Matte hand painted cartoon clay wood in warm toasted caramel brown, large simple ochre wood grain following the long axis, dark brown cracks, dusty cream exposed chips and sun faded edges. Rustic salt weathered oak, no photorealistic noise, no baked lighting or shadows, no gloss.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1146,
+      "id": "01a106d4-956d-712e-95d2-f8870f3599d1",
+      "checkedAt": "2026-10-04T12:17:53.196972+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791116031731,
+      "downloads": [
+        {
+          "path": ".img2threejs/boardwalk/plank-chipped-textured/downloads/model.glb",
+          "bytes": 2025068,
+          "sha256": "87e2ef7ff4a85d665ef315f11080191942ac32b51af0e6fbefea44e3f7d02213"
+        },
+        {
+          "path": ".img2threejs/boardwalk/plank-chipped-textured/downloads/thumbnail.png",
+          "bytes": 22865,
+          "sha256": "5805897873ae7565168376d2875c9cfa90a442f8393af831bee758a2dfea2a50"
+        }
+      ]
+    },
+    "beam-driftwood-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "adff0de7-2b4a-41f3-8e8f-fc7aa23098d8",
+      "createdAt": "2026-10-04T12:12:51.237938+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a106cb-2c76-7683-821e-0f510d3b9199",
+        "texture_prompt": "Matte cartoon clay salt weathered wood, warm sun bleached sandy tan with muted cinnamon brown grain running along its length, creamy raised facets and a dark knot, dusty brown end grain. Broad readable hand painted color regions, no realistic noise, no shine, no baked shadows.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1136,
+      "id": "01a106d5-1380-745c-b6d0-4f3117d19eba",
+      "checkedAt": "2026-10-04T12:18:09.930251+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791116071569,
+      "downloads": [
+        {
+          "path": ".img2threejs/boardwalk/beam-driftwood-textured/downloads/model.glb",
+          "bytes": 2588116,
+          "sha256": "07460c9d3c41e89ba581420db4268e383565276781ad1ddee4e9ea623625a069"
+        },
+        {
+          "path": ".img2threejs/boardwalk/beam-driftwood-textured/downloads/thumbnail.png",
+          "bytes": 46454,
+          "sha256": "aebd6d2ee9aad4a3a724ccb2774bb8e9b0da3279aad30219535b6e1a0c64d311"
+        }
+      ]
+    },
+    "beam-hewn-image": {
+      "resource": "image-to-3d",
+      "state": "rejected",
+      "operationId": "312def32-fa13-4a6e-84a6-d918e74a8d33",
+      "createdAt": "2026-10-04T12:13:31.098394+00:00",
+      "estimatedCredits": 0,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/boardwalk/references/beam-hewn.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 220,
+        "should_texture": true,
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1126,
+      "reference": "tools/boardwalk/references/beam-hewn.png",
+      "referenceSha256": "80a08a1a68e2cad43e39f79f6c636bd8d3521d8fee79fc5100a60c04e4f65c7b",
+      "error": {
+        "code": "validation",
+        "httpStatus": 400
+      },
+      "review": "HTTP 400 rejected unsupported remove_lighting option before task creation; no task ID returned. Corrected in beam-hewn-image-v2."
+    },
+    "beam-split-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "496dab83-ee1d-4fe2-af3f-42ae51508753",
+      "createdAt": "2026-10-04T12:14:16.331255+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a106cb-5d4c-760d-90a7-221b4435104d",
+        "texture_prompt": "Rustic matte clay cartoon timber in warm toasted oak brown, gold tan worn edge facets, deep umber narrow splits, bold long wood grain strokes, lighter exposed chips and weathered salt marks. Hand painted low poly game style, no photorealism or shine, no directional light or baked shadows.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1126,
+      "id": "01a106d6-3c1d-74b7-8a56-a0078f3f7e45",
+      "checkedAt": "2026-10-04T12:18:18.180588+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791116167123,
+      "downloads": [
+        {
+          "path": ".img2threejs/boardwalk/beam-split-textured/downloads/model.glb",
+          "bytes": 1565204,
+          "sha256": "2cd32e9dbc2154b1be2686d2708344e49e939497a7dc15cc5e024e01f2048252"
+        },
+        {
+          "path": ".img2threejs/boardwalk/beam-split-textured/downloads/thumbnail.png",
+          "bytes": 47451,
+          "sha256": "5fdb8c9c97c8627bb1469d005dcf8283ecdfb628f956d9e61039c21952a03ed0"
+        }
+      ]
+    },
+    "rope-braid-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "6bdf8c89-ba5c-4c64-bf67-678aa4900302",
+      "createdAt": "2026-10-04T12:14:42.849377+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a106cb-b1f7-7506-b29d-c822c70add59",
+        "texture_prompt": "Warm hand painted matte cartoon clay natural rope, honey beige and sandy cream braided strands with muted umber between the broad woven ridges, salt weathered edges. Clear chunky color shapes, no realistic noisy fibers, no shine, no baked shadows or lighting.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1116,
+      "id": "01a106d6-b61e-7350-a7d4-5b0eb0bad2e3",
+      "checkedAt": "2026-10-04T12:19:02.197727+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791116189304,
+      "downloads": [
+        {
+          "path": ".img2threejs/boardwalk/rope-braid-textured/downloads/model.glb",
+          "bytes": 2805196,
+          "sha256": "668159520a9f85e9af94c3543491bcff17028931a38565a9f45b2eac3ae2eb8e"
+        },
+        {
+          "path": ".img2threejs/boardwalk/rope-braid-textured/downloads/thumbnail.png",
+          "bytes": 31855,
+          "sha256": "757e76c45317d15becfe91d756d9ca600c31e02b96984c72f845d305e27e2127"
+        }
+      ]
+    },
+    "beam-hewn-image-v2": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "d78ef470-583c-4fc1-b0f8-def27477a27e",
+      "createdAt": "2026-10-04T12:16:17.600607+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/boardwalk/references/beam-hewn.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 220,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1086,
+      "reference": "tools/boardwalk/references/beam-hewn.png",
+      "referenceSha256": "80a08a1a68e2cad43e39f79f6c636bd8d3521d8fee79fc5100a60c04e4f65c7b",
+      "id": "01a106d7-fa99-7605-b9e2-6bd7069bbb0c",
+      "checkedAt": "2026-10-04T12:18:02.077362+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791116274805,
+      "expiresAt": 1791375474805,
+      "downloads": [
+        {
+          "path": ".img2threejs/boardwalk/beam-hewn-image-v2/downloads/model.glb",
+          "bytes": 2621708,
+          "sha256": "f6ab1d957b005757bad0251cb7c1533b15893348ffadc0896549ba2009a2d389"
+        },
+        {
+          "path": ".img2threejs/boardwalk/beam-hewn-image-v2/downloads/thumbnail.png",
+          "bytes": 37920,
+          "sha256": "786c92f315bc3ba11952b6e82d01bf52c6b2e63f7770bde9d370d1478975ca36"
+        }
+      ]
+    },
+    "rope-twist-image": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "eef4476a-5726-497a-8985-9c077c2842c7",
+      "createdAt": "2026-10-04T12:16:25.315424+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/boardwalk/references/rope-twist.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 300,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1071,
+      "reference": "tools/boardwalk/references/rope-twist.png",
+      "referenceSha256": "427df17823eb5aba63ee787629f17a7c5ba1f7ac82b7276ffabb5210679230a0",
+      "id": "01a106d8-165d-7041-bc9d-b2630b670d42",
+      "checkedAt": "2026-10-04T12:18:29.412563+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791116275981,
+      "expiresAt": 1791375475981,
+      "downloads": [
+        {
+          "path": ".img2threejs/boardwalk/rope-twist-image/downloads/model.glb",
+          "bytes": 3682768,
+          "sha256": "64607719171c3c47ceceb4fd05e2b49985d0b7e865206da80c2fc0f61ad04826"
+        },
+        {
+          "path": ".img2threejs/boardwalk/rope-twist-image/downloads/thumbnail.png",
+          "bytes": 45978,
+          "sha256": "e721740e23cc41551b7f4d5c106805481edceb8262ddcb26acf8382fbd652782"
+        }
+      ]
+    },
+    "rope-weathered-image": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "39ee307d-a929-413d-b606-f44ddde1a55d",
+      "createdAt": "2026-10-04T12:16:29.915570+00:00",
+      "estimatedCredits": 15,
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/boardwalk/references/rope-weathered.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 320,
+        "should_texture": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1056,
+      "reference": "tools/boardwalk/references/rope-weathered.png",
+      "referenceSha256": "7eeeba42d2df8f439f1e60c010e401682a6af49c0547596017d893cc15a4a37a",
+      "id": "01a106d8-2835-7411-ba4b-37d1e8fa57d1",
+      "checkedAt": "2026-10-04T12:18:41.079855+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791116280976,
+      "expiresAt": 1791375480976,
+      "downloads": [
+        {
+          "path": ".img2threejs/boardwalk/rope-weathered-image/downloads/model.glb",
+          "bytes": 2746444,
+          "sha256": "e680bd895691b1f0db64a0f7fa9f1fa2ef9bf00372d026b1f189d3450bd2d56a"
+        },
+        {
+          "path": ".img2threejs/boardwalk/rope-weathered-image/downloads/thumbnail.png",
+          "bytes": 49195,
+          "sha256": "ae6d20abe54fe3cc0d434d04db7fbee6a1c54d5cd039b34b8bff4db6af3364fb"
+        }
+      ]
+    }
+  }
+}
