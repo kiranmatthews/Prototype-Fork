@@ -11,6 +11,7 @@
 // free and replays record touch play like any other input.
 
 import { sfx } from './audio';
+import { TouchScreenAwake } from './touchScreenAwake';
 
 // 8 sectors, 45° apart, index 0 = East, counter-clockwise (atan2 space).
 // Diagonals emit both axes at ±1; Input's unit-clamp normalizes them.
@@ -107,6 +108,8 @@ export class TouchControls {
   private directionOwner: number | null = null;
   private mapMode = false;
   private graphicsBlocked = false;
+  private screenAwake = new TouchScreenAwake();
+  private pageActive = true;
   private captures = new Map<number, HTMLElement>();
   private pointerOwners = new Map<number, number>();
   private pointerStarts = new Map<number, { x: number; y: number; type: string }>();
@@ -204,6 +207,7 @@ export class TouchControls {
 
   /** Recheck synchronously before polling, including between observer turns. */
   syncAvailability(): void {
+    this.screenAwake.sync(this.pageActive && !this.controlsBlocked());
     const now = performance.now();
     for (const [owner, pulse] of this.triggerPulses) if (!pulse.pending && pulse.until <= now) this.triggerPulses.delete(owner);
     if (this.controlsBlocked()) this.releaseAll(true);
@@ -351,9 +355,16 @@ export class TouchControls {
     };
     document.addEventListener('touchend', e => nativeRelease(e, false), { capture: true, passive: true });
     document.addEventListener('touchcancel', e => nativeRelease(e, true), { capture: true, passive: true });
-    window.addEventListener('blur', () => this.releaseAll(true));
-    window.addEventListener('pagehide', () => this.releaseAll(true));
-    window.addEventListener('pageshow', () => { this.layoutDirty = true; this.releaseAll(true); });
+    window.addEventListener('blur', () => {
+      this.pageActive = false; this.screenAwake.sync(false); this.releaseAll(true);
+    });
+    window.addEventListener('focus', () => { this.pageActive = true; this.syncAvailability(); });
+    window.addEventListener('pagehide', () => {
+      this.pageActive = false; this.screenAwake.sync(false); this.releaseAll(true);
+    });
+    window.addEventListener('pageshow', () => {
+      this.pageActive = true; this.layoutDirty = true; this.releaseAll(true); this.syncAvailability();
+    });
     const graphics = (e: Event, blocked: boolean): void => {
       if (!(e.target as Element | null)?.closest?.('#app')) return;
       this.graphicsBlocked = blocked;
@@ -373,7 +384,8 @@ export class TouchControls {
     window.addEventListener('resize', resize);
     window.visualViewport?.addEventListener('resize', resize);
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden) this.releaseAll(true);
+      if (document.hidden) { this.screenAwake.sync(false); this.releaseAll(true); }
+      else this.syncAvailability();
     });
     new MutationObserver(() => this.syncAvailability())
       .observe(document.body, { attributes: true, attributeFilter: ['class'] });
@@ -632,6 +644,7 @@ export class TouchControls {
       el.addEventListener('click', event => {
         event.preventDefault(); el.blur();
         if (event.detail === 0 && !this.buttonsBlocked()) {
+          this.screenAwake.activate(this.pageActive && !this.controlsBlocked());
           const owner = ++this.nextOwner;
           this.pressedBtn[b.key].add(owner);
           if (b.key === 'x') this.jumpReleases.add(owner);
@@ -723,6 +736,7 @@ export class TouchControls {
       el.addEventListener('click', event => {
         event.preventDefault(); el.blur();
         if (event.detail === 0 && !this.buttonsBlocked()) {
+          this.screenAwake.activate(this.pageActive && !this.controlsBlocked());
           const owner = ++this.nextOwner;
           if (key === 'transfer') this.transferPresses.add(owner);
           this.triggerPulses.set(owner, { key, until: performance.now() + SWIPE_HOLD_MS, pending: true });
@@ -786,6 +800,7 @@ export class TouchControls {
   // Pointer capture keeps move/up events flowing when the thumb wanders off
   // the zone; synthetic test events carry ids the browser doesn't know.
   private capture(el: HTMLElement, e: PointerEvent): void {
+    this.screenAwake.activate(this.pageActive && !this.controlsBlocked());
     this.startOwnership(e);
     this.captures.set(e.pointerId, el);
     try {

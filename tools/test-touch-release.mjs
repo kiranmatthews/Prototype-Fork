@@ -28,8 +28,11 @@ const observers = []; class MutationObserver { constructor(f) { observers.push(f
 const source = await readFile(new URL('../src/touch.ts', import.meta.url), 'utf8');
 const output = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
 const exports = {};
+const awakeExports = {};
+const awakeSource = await readFile(new URL('../src/touchScreenAwake.ts', import.meta.url), 'utf8');
+new Function('exports', ts.transpileModule(awakeSource, {compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText)(awakeExports);
 new Function('require', 'exports', 'window', 'document', 'MutationObserver', 'performance', output)(
-  () => ({ sfx: { play() {} } }), exports, window, document, MutationObserver, { now: () => now },
+  key => key === './touchScreenAwake' ? awakeExports : { sfx: { play() {} } }, exports, window, document, MutationObserver, { now: () => now },
 );
 const tc = new exports.TouchControls();
 const left = document.body.children.find(e => e.className === 'tc-zone tc-left');

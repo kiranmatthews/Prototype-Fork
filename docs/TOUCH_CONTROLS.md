@@ -66,6 +66,16 @@ menus and tap highlights, and cancel game-surface gesture/double-click events.
 The page's existing overscroll and viewport policy remains in place. Bounded menu
 lists and editor fields retain their normal interactions.
 
+After the first gameplay gesture, supported browsers request a screen wake lock
+to prevent dimming/auto-lock during play. Pause, map/loading/tool screens,
+backgrounding and blur release it; returning to gameplay/foreground can reacquire
+it. No lock is requested at page load. Unsupported or denied requests stay quiet
+and never interrupt input. Revocation/denial does not create a per-frame retry
+loop; a later gesture or availability transition may retry. Late grants after
+backgrounding are released, including rapid hide/show request races. The
+[Screen Wake Lock specification](https://www.w3.org/TR/screen-wake-lock/)
+defines the browser-controlled grant and release lifecycle.
+
 These are protections within the browser's control. They cannot certify that an
 operating system will never take an edge gesture or system interruption. Physical
 Safari/Chrome checks remain required for OS-owned gestures, app switching and
@@ -122,3 +132,9 @@ The historical locomotion replay fixture fails its recovery assertion on the
 unchanged release as well. Comparing every simulated frame of both legacy takes
 before/after this fix produces identical movement and physical trajectory
 hashes; its existing fixture expectations were retained.
+
+`tools/test-touch-screen-awake.mjs` covers 3,000 duplicate/revoked/denied polls,
+late grants, rapid lifecycle races and unsupported/throwing implementations.
+`tools/test-touch-screen-awake-browser.mjs` verifies actual granted locks in
+Chrome and WebKit gameplay, release on pause/blur and reacquisition on
+resume/focus. This confirms API behavior, not physical-device battery/OS policy.
