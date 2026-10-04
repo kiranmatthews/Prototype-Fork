@@ -8,7 +8,7 @@
 }
 .game-shell-panel, body.tc-on .game-shell-panel.game-map-menu-panel {
   --menu-unit:min(1vw,1.78vh);
-  display:grid; place-items:center; overflow:hidden; pointer-events:none;
+  display:grid; grid-template-rows:minmax(0,1fr); place-items:center; overflow:hidden; pointer-events:none;
   padding:4vh 5vw 10vh; min-width:0; min-height:0;
 }
 .game-shell-panel > * { min-width:0; min-height:0; max-width:100%; max-height:100%; }
@@ -25,12 +25,14 @@
 .game-level-header { display:grid; grid-template-columns:8vw minmax(0,1fr) 8vw; justify-self:center; width:70%; padding:0; align-items:center; }
 .game-level-header .game-panel-title { font-size:var(--menu-title); color:#ffd531; }
 .game-island-arrow { color:#ff9b20; font-size:clamp(24px,4vh,45px); min-height:0; }
-.game-island-pages { margin:1vh 0 0; font-size:clamp(10px,1.7vh,20px); color:#f7b54b; }
+.game-island-pages { margin:1vh 0 0; text-align:center; font-size:clamp(10px,1.7vh,20px); color:#f7b54b; }
 .game-level-columns { min-width:0; min-height:0; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); grid-template-rows:minmax(0,.68fr) minmax(0,1fr); gap:1.5vh 5vw; }
 .game-level-preview-frame { grid-column:1; grid-row:1; position:relative; min-width:0; min-height:0; overflow:hidden; border:4px solid #dcad64; box-shadow:0 5px 0 #4b2515,0 8px 15px #0007; background:#12343d; pointer-events:none; }
 .game-level-preview { position:absolute; inset:0; display:block; width:100%; height:100%; max-width:100%; max-height:100%; object-fit:cover; border:0; }
-.game-level-list { grid-column:1; grid-row:2; min-width:0; min-height:0; display:grid; grid-auto-rows:minmax(0,1fr); gap:.6vh; padding:0; }
-.game-level-row { min-height:0; height:100%; padding:.45vh 1vw; gap:1vw; font-size:var(--menu-section); border-radius:2px; color:#fff4d6; background:linear-gradient(#347b80,#153e4b); border:1px solid #52908b; }
+.game-level-list { grid-column:1; grid-row:2; min-width:0; min-height:0; display:grid; grid-auto-rows:minmax(max(44px,6vh),1fr); gap:.6vh; padding:0; overflow-x:hidden; }
+.game-level-list .game-level-row { display:flex; align-items:center; justify-content:space-between; min-width:0; min-height:0; height:100%; padding:.45vh 1vw; gap:1vw; font-size:var(--menu-section); border-radius:2px; color:#fff4d6; background:linear-gradient(#347b80,#153e4b); border:1px solid #52908b; }
+.game-level-label { min-width:0; text-align:left; }
+.game-level-mark { flex:none; }
 .game-level-row.chosen,.game-level-row.selected { background:linear-gradient(#ffe6a0,#efaa4e); color:#542615; }
 .game-level-mark { color:#f5c761; font-size:clamp(10px,2vh,22px); }
 .game-level-detail { grid-column:2; grid-row:1/3; padding:0; display:grid; grid-template-rows:auto minmax(0,1fr) auto; min-width:0; min-height:0; }
@@ -497,4 +499,67 @@ body.game-flow-vortex .game-shell:has(.game-screen-launch)::before {
   :is(body[data-prompt-family="touch"],body.tc-on) .game-reward-caption { font-size:clamp(10px,2.5vw,18px); white-space:nowrap; }
   :is(body[data-prompt-family="touch"],body.tc-on) .game-level-record { font-size:clamp(12px,3.5vw,20px); }
   :is(body[data-prompt-family="touch"],body.tc-on) .game-level-record-title { font-size:clamp(12px,3.5vw,20px); }
+}
+
+/* Roomy screens keep TV proportions regardless of the active input device.
+   Phone layout, 48px touch targets and bounded swipe regions remain above. */
+@media(min-width:1000px) and (min-height:600px) and (min-aspect-ratio:1/1) {
+  .game-options-layout .game-menu-button { min-height:6.8vh; padding:.5vh .7vw; }
+  .game-options-layout .game-toggle-list { gap:.8vh; }
+  .game-shell-panel[class*="game-screen-confirm-"] .game-options-card .game-menu-button {
+    font-size:var(--menu-action); min-height:8vh;
+  }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel,
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel.game-map-menu-panel {
+    padding:max(64px,4vh,env(safe-area-inset-top)) max(5vw,env(safe-area-inset-right)) max(4vh,env(safe-area-inset-bottom)) max(5vw,env(safe-area-inset-left));
+  }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel:is(.game-screen-launch,.game-screen-results,.game-screen-gameover) {
+    padding:4vh 5vw;
+  }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-pause-actions .game-menu-list {
+    justify-content:space-evenly; gap:1vh;
+  }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-pause-actions .game-menu-button {
+    flex:1; font-size:var(--menu-action); padding:.5vh 1vw;
+  }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-options-layout .game-toggle-list {
+    justify-content:space-evenly; gap:.8vh;
+  }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-options-layout .game-menu-button {
+    font-size:clamp(23px,5vh,60px); min-height:max(48px,6.8vh); padding:.5vh .7vw;
+  }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-options-layout .game-panel-subtitle {
+    font-size:var(--menu-caption);
+  }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel[class*="game-screen-confirm-"] .game-options-card {
+    width:min(1100px,100%); padding:4vh 4vw; gap:1.5vh;
+  }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel[class*="game-screen-confirm-"] .game-panel-title {
+    font-size:var(--menu-title);
+  }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel[class*="game-screen-confirm-"] .game-panel-subtitle {
+    font-size:var(--menu-caption);
+  }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel[class*="game-screen-confirm-"] .game-options-card .game-menu-button,
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-results-actions .game-menu-button {
+    font-size:var(--menu-action); min-height:8vh;
+  }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-save-actions .game-menu-button {
+    font-size:var(--menu-section); min-height:7vh;
+  }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-save-browser .game-slot-date {
+    font-size:var(--menu-caption);
+  }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel.game-screen-level-select {
+    padding:3vh 6vw;
+  }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-level-select-layout {
+    grid-template-rows:max(88px,17%) minmax(0,1fr); gap:2vh;
+  }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-level-header {
+    width:80%; padding-inline:0; grid-template-columns:8vw minmax(0,1fr) 8vw;
+  }
+  :is(body[data-prompt-family="touch"],body.tc-on) .game-level-list {
+    grid-auto-rows:minmax(max(48px,6vh),1fr);
+  }
 }

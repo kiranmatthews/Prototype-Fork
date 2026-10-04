@@ -7,7 +7,7 @@ const flow=g.gameFlow, campaign=g.campaign;
 let reviewInput='keyboard';
 const nativeTouch=navigator.maxTouchPoints>0;
 const updatePrompts=g.inputPrompts.update.bind(g.inputPrompts);
-g.inputPrompts.update=()=>updatePrompts(null,nativeTouch||reviewInput==='touch');
+g.inputPrompts.update=(pad:Gamepad|null)=>updatePrompts(pad,nativeTouch||reviewInput==='touch');
 // All save previews are memory-only fixtures, including writes from UI callbacks.
 const save=campaign.startEphemeral();save.slot=1;save.lastFinishedLevel='treehouse-trail';
 for(const level of Object.values(save.levels) as any[]){level.completed=true;level.cleared=true;level.crystal=true;}
@@ -74,6 +74,14 @@ function audit(){
   for(const button of root.querySelectorAll('button')){
     const r=button.getBoundingClientRect();if(!visible(button))continue;
     const scroll=scrollHost(button);
+    if(button.matches('.game-map-close,.comp-guide-close')&&(Math.abs(r.width-48)>.5||Math.abs(r.height-48)>.5))
+      problems.push('close action lost its fixed 48px target');
+    // Bounds alone missed desktop rows whose PNG ink overlapped adjacent rows.
+    for(const ink of button.querySelectorAll('.roo-menu-art')){
+      const box=ink.getBoundingClientRect();
+      if(box.top<r.top-1||box.bottom>r.bottom+1||box.left<r.left-1||box.right>r.right+1)
+        problems.push('ink outside target '+(button.getAttribute('aria-label')||button.textContent.trim()));
+    }
     if(document.body.classList.contains('tc-on')||document.body.dataset.promptFamily==='touch')
       if(r.width<47.5||r.height<47.5)problems.push('small target '+(button.getAttribute('aria-label')||button.textContent.trim()));
     for(let parent=button.parentElement;parent&&parent!==root;parent=parent.parentElement){

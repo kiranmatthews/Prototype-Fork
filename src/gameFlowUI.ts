@@ -1228,6 +1228,10 @@ export class GameFlowUI {
         this.button("QUIT LEVEL", this.callbacks.onQuitLevel, "danger"),
       );
     }
+    const debug = this.button(this.debugVisible ? "HIDE DEBUG MENUS" : "SHOW DEBUG MENUS", () => this.toggleDeveloperChrome());
+    debug.classList.add("game-debug-toggle");
+    debug.setAttribute("aria-pressed", String(this.debugVisible));
+    list.append(debug);
     const name = element("p", "game-panel-subtitle"); name.textContent = state.levelName;
     actions.append(paused, name, list);
 
@@ -1716,19 +1720,39 @@ export class GameFlowUI {
     this.syncSelection(false);
   }
 
+  /** Pause and M share one persisted switch, including debug focus ownership. */
+  private toggleDeveloperChrome(): void {
+    const restoreMenuFocus = this.isDeveloperChromeTarget(document.activeElement);
+    this.debugVisible = !this.debugVisible;
+    document.body.classList.toggle("game-debug-hidden", !this.debugVisible);
+    document.body.classList.toggle("game-debug-visible", this.debugVisible);
+    localStorage.setItem("solProtoDebugChrome", this.debugVisible ? "visible" : "hidden");
+    this.root.setAttribute("aria-modal", String(!this.debugVisible));
+    const button = this.panel.querySelector<HTMLButtonElement>(".game-debug-toggle");
+    if (button) {
+      button.textContent = this.debugVisible ? "HIDE DEBUG MENUS" : "SHOW DEBUG MENUS";
+      button.setAttribute("aria-pressed", String(this.debugVisible));
+    }
+    if (this.debugVisible) this.cancelScheduledFocus();
+    if (this.screen) {
+      this.claimModalFocus();
+      if (!this.debugVisible && restoreMenuFocus) {
+        // Hiding chrome can expose the stationary pointer over a menu row,
+        // cancelling queued pointer/keyboard focus. Restore this focus now.
+        this.syncSelection(false);
+        this.navButtons[this.selected]?.focus({ preventScroll: true });
+      }
+    }
+    this.invalidatePreCrt();
+  }
+
   private onKey(event: KeyboardEvent): void {
     if (this.startupLoading) return;
     const target = event.target as HTMLElement | null;
     const editing = target && ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName);
     if (editing && !(event.code === "KeyM" && target instanceof HTMLInputElement && ["checkbox", "range", "button"].includes(target.type))) return;
     if (event.code === "KeyM" && !event.repeat) {
-      this.debugVisible = !this.debugVisible;
-      document.body.classList.toggle("game-debug-hidden", !this.debugVisible);
-      document.body.classList.toggle("game-debug-visible", this.debugVisible);
-      localStorage.setItem("solProtoDebugChrome", this.debugVisible ? "visible" : "hidden");
-      this.root.setAttribute("aria-modal", String(!this.debugVisible));
-      if (this.debugVisible) this.cancelScheduledFocus();
-      if (this.screen) this.claimModalFocus();
+      this.toggleDeveloperChrome();
       return;
     }
     if (this.isDeveloperChromeTarget(target)) return;

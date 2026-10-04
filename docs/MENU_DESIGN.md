@@ -112,3 +112,31 @@ menu, prompt, reward and Cup painters. iOS home-screen canvas height can exceed
 visible labels and touch targets. Try Island 2, rotate the same open menu, swipe
 to the last row and tap its visible lettering. Inspect settled previews and
 actual pixels; synthetic taps on invisible DOM targets do not prove usability.
+
+## Desktop/TV and hybrid touch layout
+
+Level Select keeps its section-sized lettering in rows at least 44px / 6vh high.
+The level list alone scrolls when an island has more entries than fit beneath the
+preview. Controller/keyboard selection reveals the chosen row; mouse wheel and
+click/double-click retain selection and confirmation behavior. The island pips
+are centered beneath the heading. The general action font must not override the
+level row font or squeeze rows to fit an entire island.
+
+Landscape viewports at least 1000×600 use the TV action scale even with touch
+hardware or controller prompts. Pause, Options, confirmations, save actions,
+results and Cup actions retain that scale. Touch close actions remain fixed
+48px squares, and safe areas and bounded swipe regions remain active. Compact
+phone and portrait layouts keep their existing sizing and two-column save bays.
+
+Pause includes **Show Debug Menus / Hide Debug Menus**. It shares the M shortcut's
+persisted `solProtoDebugChrome` state, debug shortcut gating and modal-focus rules.
+It keeps the run paused, updates the current action in place, and can be operated
+with touch, mouse, keyboard or controller. M also updates its label while Pause
+is open; dismissing a focused debug panel returns focus to the menu.
+
+The catalogue audit checks PNG ink inside each hit target, as viewport bounds
+alone cannot detect overlapping lettering. `MENU_TOUCH=true` allows large-touch
+runs, and `MENU_PROMPTS=ps5` exercises hybrid touch/controller layouts.
+`tools/test-menu-desktop-inputs.mjs` exercises actual browser D-pad/stick edges,
+held Confirm, keyboard/mouse, the last scrollable level, confirmation cancellation,
+2×2 save navigation and debug persistence in lite/full rendering.

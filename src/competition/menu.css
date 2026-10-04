@@ -182,3 +182,17 @@ body.tc-on .comp-run-hud > strong { font-size:24px; min-width:54px; }
   .comp-final .comp-award h3 { font-size:12px; }
   .comp-final .comp-note { font-size:12px; margin:0; }
 }
+
+/* A touch-capable TV/tablet uses the same readable action scale as desktop. */
+@media(min-width:1000px) and (min-height:600px) and (min-aspect-ratio:1/1) {
+  :is(body[data-prompt-family="touch"],body.tc-on) .competition-host:not(.is-running) {
+    padding:4vh 5vw;
+  }
+  :is(body[data-prompt-family="touch"],body.tc-on) .competition-host:has(.comp-guide) {
+    padding-top:max(64px,4vh,env(safe-area-inset-top));
+  }
+  :is(body[data-prompt-family="touch"],body.tc-on) .comp-card .comp-actions button {
+    font-size:var(--menu-action); min-height:max(48px,8vh); padding:1vh .5vw;
+  }
+  :is(body[data-prompt-family="touch"],body.tc-on) .comp-actions { gap:2vw; margin-top:2vh; }
+}

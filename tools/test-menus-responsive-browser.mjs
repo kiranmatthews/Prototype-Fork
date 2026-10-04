@@ -19,7 +19,7 @@ const configurations=[
  {width:1280,height:720,touch:false,prompts:'keyboard'},
  {width:1920,height:1080,touch:false,prompts:'ps5'},
  {width:1024,height:768,touch:false,prompts:'ps5'},
-].map(c=>process.env.MENU_TOUCH==='false'?{...c,touch:false,prompts:process.env.MENU_PROMPTS||'keyboard'}:c);
+].map(c=>process.env.MENU_TOUCH?{...c,touch:process.env.MENU_TOUCH==='true',prompts:process.env.MENU_PROMPTS||(process.env.MENU_TOUCH==='true'?'touch':'keyboard')}:c);
 try {
  for(const lite of [true,false]){
   for(const configuration of configurations.filter(c=>(lite||process.env.MENU_FULL_PROFILE==='true'||(c.width===390||c.width===844||c.width===1280))&&
@@ -164,6 +164,21 @@ try {
     return {label:b.textContent.trim(),visible:r.top>=s.top-1&&r.bottom<=s.bottom+1};
    });
    assert.equal(last.label,'TRICK GUIDE');assert.equal(last.visible,true,'focused Options action must scroll into view');
+   // The pause switch uses the same visibility, persistence and focus path as M.
+   await page.evaluate(()=>window.__menuReview.show('pause'));
+   const debug=page.locator('.game-debug-toggle');
+   await debug[touch?'tap':'click']();
+   assert.equal(await debug.getAttribute('aria-pressed'),'true');
+   assert.equal(await debug.textContent(),'HIDE DEBUG MENUS');
+   assert.equal(await page.evaluate(()=>window.__game.gameFlow.developerChromeVisible),true);
+   assert.equal(await page.locator('.game-shell').getAttribute('aria-modal'),'false');
+   assert.equal(await page.evaluate(()=>localStorage.getItem('solProtoDebugChrome')),'visible');
+   await page.keyboard.press('KeyM');
+   assert.equal(await debug.getAttribute('aria-pressed'),'false');
+   assert.equal(await debug.textContent(),'SHOW DEBUG MENUS');
+   assert.equal(await page.locator('.game-shell').getAttribute('aria-modal'),'true');
+   assert.equal(await page.evaluate(()=>window.__game.gameFlow.currentScreen),'pause');
+   report.navigation.push({lite,width,height,debugToggle:true});
    await context.close();
   }
  }
