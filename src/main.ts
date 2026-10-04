@@ -736,7 +736,9 @@ function syncSkyBackdropVisibility(): void {
     skyCache.has(activeSky) &&
     !LITE &&
     !preset.seaHorizon &&
-    !fogBackdrop;
+    !fogBackdrop &&
+    // Splats carry their own sky/depth; a depthless cloud overlay masks them.
+    (!level.splatScenery || level.splatScenery.diagnostics.status === 'fallback');
 }
 function setEditorView(editing: boolean, changed = false): void {
   editorViewActive = editing;

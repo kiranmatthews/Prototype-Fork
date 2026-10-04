@@ -24,7 +24,7 @@ try{
  assert.equal(ui.currentScreen,'level-select');
  assert.equal(ui.levelSelectIslands().length,3,'fresh saves must expose the new destinations');
  const rows=ui.navButtons.filter(b=>b.dataset.levelKey);
- assert.equal(rows.length,CAMPAIGN_ISLANDS[0].levelKeys.length);assert.equal(rows.filter(b=>!b.disabled).length,1);
+ assert.equal(rows.length,CAMPAIGN_ISLANDS[0].levelKeys.length);assert.equal(rows.filter(b=>!b.disabled).length,2);
  assert.equal(rows[0].dataset.levelKey,'treehouse-trail');
  assert.match(rows[0].textContent,/01  TREEHOUSE TRAIL/);
  assert.equal(ui.levelSelectKey,'treehouse-trail');

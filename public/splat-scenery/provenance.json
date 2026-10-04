@@ -1,0 +1,29 @@
+{
+  "source": "https://sparkjs.dev/assets/splats/valley.spz",
+  "sourceOwner": "World Labs",
+  "sourceType": "Official public Spark valley environment sample; no fresh image-to-world generation claimed",
+  "importedWith": {
+    "repository": "https://github.com/neilsonnn/image-blaster",
+    "commit": "4acb43ba126a12358f71838d1b1a05e856b10eaf",
+    "command": "node .claude/scripts/project/ensure-local-assets.mjs --from worlds/splat-valley/output/world/0-world.json"
+  },
+  "sourceSplats": 500000,
+  "sourceSha256": "565768b0b758698a641521654ac0947a74c85cb69ee0f034e6c928fbefa97833",
+  "variants": [
+    {
+      "file": "valley-250k.spz",
+      "splats": 250000,
+      "bytes": 3532134,
+      "sha256": "e981273b5a1185c55fda2dbff8e893af65291d41375544a9f12a012bb1b81e45"
+    },
+    {
+      "file": "valley-150k.spz",
+      "splats": 150000,
+      "bytes": 2155299,
+      "sha256": "befc8634d2800f2caedcc509fda8fb5f79644e4c9ea6b3e4b0f42bb21614bd0c"
+    }
+  ],
+  "modifications": "Deterministic spatially distributed thinning; enlarged Gaussian scales for retained coverage; original colors/opacity/rotation/position preserved",
+  "runtime": "@mkkellogg/gaussian-splats-3d 0.4.7, MIT, lazy loaded; existing Three.js 0.166.1",
+  "generationRequests": 0
+}

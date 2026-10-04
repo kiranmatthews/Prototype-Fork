@@ -19,7 +19,7 @@ export function runtimeAsset(file, fontVersions) {
   // An online escape hatch must remain reachable through stale cache-first workers.
   if (file === 'update-game.html' || file === 'offline-save.html' || file === 'release.json') return false;
   if (file === 'sw.js' || /(?:^|\/)(?:provenance|UpstreamSource)\//.test(file)) return false;
-  if (!/\.(?:html|js|css|json|webmanifest|png|jpe?g|webp|svg|glb|gltf|bin|ktx2|wasm|wav|mp3|ogg|m4a|mp4|webm|otf|ttf|woff2?)$/.test(file)) return false;
+  if (!/\.(?:html|js|css|json|webmanifest|png|jpe?g|webp|svg|glb|gltf|bin|spz|ktx2|wasm|wav|mp3|ogg|m4a|mp4|webm|otf|ttf|woff2?)$/.test(file)) return false;
   if (file.startsWith('fonts/')) {
     if (/\.(?:otf|ttf|woff2?)$/.test(file)) return true;
     const atlas = file.match(/^fonts\/roo-(bonus|counter)-v(\d+)(?:-light\d+)?(?:-cap(?:128|256))?\.png$/);

@@ -106,7 +106,7 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     name: "Island 1",
     subtitle: "REGION 01",
     centre: [-95, 0, 0],
-    levelKeys: ["treehouse-trail", "jungle", "jungle-terraces", "jungle-skyline", "test-course", "sky-bridge", "nightworks", "nightworks-after-hours", "slipstream", "jungle-cup"],
+    levelKeys: ["treehouse-trail", "jungle", "jungle-terraces", "jungle-skyline", "test-course", "sky-bridge", "nightworks", "nightworks-after-hours", "slipstream", "jungle-cup", "splat-valley"],
   },
   {
     id: "island-2",
@@ -140,6 +140,7 @@ export interface CampaignMapEdgeDefinition {
  * are traversable in both directions once both endpoint hubs are unlocked.
  */
 export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
+  { from: 'treehouse-trail', to: 'splat-valley', travel: 'trail', fromDirection: 'down', toDirection: 'up' },
   { from: "jungle", to: "jungle-terraces", travel: "trail", fromDirection: "up", toDirection: "down",
     waypoints: [[-151, 4.2, 14]] },
   { from: "jungle-terraces", to: "jungle-skyline", travel: "boardslide", fromDirection: "right", toDirection: "left",
@@ -469,6 +470,9 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     islandId: "hidden-shores", mapPath: "main", mapPosition: [322, 3, 14], unlockAfter: [] },
   { progressKey: "crab-chief", levelId: "crab-chief", name: "Tidebreak · Crab Chief", relicTime: 120,
     islandId: "hidden-shores", mapPath: "main", mapPosition: [350, 2, 14], unlockAfter: [], boss: true },
+  // Append to retain existing saved world-map indices.
+  { progressKey: 'splat-valley', levelId: 'splat-valley', name: 'Splat Valley', relicTime: 22,
+    islandId: 'island-1', mapPath: 'lower-branch', mapPosition: [-175, 2.1, 42], unlockAfter: [] },
 ] as const;
 
 const LEVEL_BY_ID = new Map<string, CampaignLevelDefinition>();

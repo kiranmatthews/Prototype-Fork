@@ -69,6 +69,7 @@
     "check:blockworks-wedges": "node tools/test-blockworks-wedges.mjs && node tools/test-blockworks-skate-lines.mjs"
   },
   "dependencies": {
+    "@mkkellogg/gaussian-splats-3d": "0.4.7",
     "three": "^0.166.1",
     "three-mesh-bvh": "0.9.14"
   },
