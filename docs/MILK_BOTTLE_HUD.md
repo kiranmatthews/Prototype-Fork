@@ -1,3 +1,5 @@
+> This filling-bottle experiment has been retired. The fruit HUD now uses the shared orange 3D pickup; the 101 bottle frames are no longer shipped. See [WOOD_CRATES.md](WOOD_CRATES.md) and `npm run check:fruit-hud`.
+
 # Milk bottle HUD
 
 The user-supplied `BONEMAN_milk_complete/frames_256` set is copied unchanged into `public/hud/milk-bottle/`: 101 transparent 256×256 PNGs, named `milk_000.png` through `milk_100.png`. The fixed bottle replaces the rotating fruit in the existing icon slot. Its supplied angle and colours are retained; the icon uses the same fades, layout, droplet target and pre-CRT render pass as before.

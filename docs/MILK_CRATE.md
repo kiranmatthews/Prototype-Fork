@@ -1,3 +1,5 @@
+> This milk-carrier experiment has been retired. Ordinary and five-hit crates now use the classic Meshy wood model described in [WOOD_CRATES.md](WOOD_CRATES.md); the milk carrier assets are no longer shipped.
+
 # Five-bounce milk crate
 
 The existing `multihit` crate now uses the supplied blue storage crate and red-capped milk bottle models. Its full assembly and collider are both 0.96 × 0.96 × 0.96 metres. The blue rack is 82% of that height; upright bottles fill the remaining height in a 3×3 grid. Bottles occupy 27% of the cube width on 28.2% centres, leaving small gaps. Bottle width and height are fitted independently so nine bottles fit without growing the gameplay cube.

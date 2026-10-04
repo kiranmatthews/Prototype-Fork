@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=process.argv.find(arg=>/^https?:/.test(arg))||'http://127.0.0.1:5187';
-const output=new URL('../../docs/wood-crate-evidence/',import.meta.url).pathname;
+const output=fileURLToPath(new URL('../../docs/wood-crate-evidence/',import.meta.url));
 await mkdir(output,{recursive:true});
 const browser=await chromium.launch({headless:true,channel:'chrome'});
 const reports=[];
@@ -31,7 +32,7 @@ try {
       const input=g.input.update.bind(g.input);g.input.update=()=>{input();g.input.inventoryHeld=true;};
       p.fruit=42;g.ui.resetHudTransients(p.fruitCollectionRevision,false);
       const c=l.crates.find(c=>c.woodCrate&&!c.multiHit);
-      p.step=()=>{};p.group.visible=false;
+      p.step=()=>{};
       const render=g.renderer.render.bind(g.renderer);
       g.renderer.render=(scene,camera)=>{
         if(scene===g.scene&&camera===g.camera){
@@ -45,7 +46,7 @@ try {
     const hud=await page.evaluate(()=>({label:window.__game.ui.wumpaIcon.getAttribute('aria-label'),
       fruit:window.__game.player.fruit,bottle:!!window.__game.ui.milkBottle,
       iconName:window.__game.ui.iconSlots[1].spin.children[0].name,
-      visibility:window.__game.ui.hudVisibilityFrame,fruitRect:window.__game.ui.wumpaIcon.getBoundingClientRect().toJSON()}));
+      visibility:window.__game.ui.hudVisibilityFrame,rowClass:window.__game.ui.wumpaRowEl.className,rowOpacity:getComputedStyle(window.__game.ui.wumpaRowEl).opacity,rowsHidden:window.__game.ui.runRowsHidden,hudDiagnostics:window.__game.ui.gameHudDiagnostics,fruitRect:window.__game.ui.wumpaIcon.getBoundingClientRect().toJSON()}));
     assert.ok(hud.visibility.showFruit, 'fruit HUD must be visible');assert.equal(hud.label,'Orange fruit: 42/100');assert.equal(hud.bottle,false);assert.match(hud.iconName,/orange fruit/);
     await page.screenshot({path:`${output}/crate-hud-${full?'full':'lite'}.png`});
     const variants=await page.evaluate(async()=>{

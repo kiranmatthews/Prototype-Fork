@@ -1,0 +1,144 @@
+[
+  {
+    "full": false,
+    "initial": {
+      "level": "jungle",
+      "crateCount": 36,
+      "loaded": true,
+      "noCartons": true,
+      "triangles": 182,
+      "sharedGeometry": true,
+      "sharedMaterial": true,
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 398
+      }
+    },
+    "hud": {
+      "label": "Orange fruit: 42/100",
+      "fruit": 42,
+      "bottle": false,
+      "iconName": "hovering orange fruit",
+      "visibility": {
+        "showLife": true,
+        "showBonusTitle": false,
+        "showFruit": true,
+        "showBoxes": true,
+        "showEarnedRelics": false,
+        "showScore": true
+      },
+      "rowClass": "hud-counter hud-reveal hud-fruit-row hud-reveal-visible",
+      "rowOpacity": "1",
+      "rowsHidden": false,
+      "hudDiagnostics": {
+        "width": 1,
+        "height": 1,
+        "textureWidth": 1,
+        "textureHeight": 1,
+        "uploadedPixels": 0,
+        "canvasFrames": 0,
+        "textureUploads": 0,
+        "textureReallocations": 0,
+        "compositeDraws": 0,
+        "primitives": 0,
+        "lastCanvasMs": 0,
+        "lifeFaceReady": true,
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "fruitRect": {
+        "x": 34,
+        "y": 37.56636047363281,
+        "width": 85.59375,
+        "height": 85.59375,
+        "top": 37.56636047363281,
+        "right": 119.59375,
+        "bottom": 123.16011047363281,
+        "left": 34
+      }
+    },
+    "variants": {
+      "trial": true,
+      "restored": true,
+      "multiSequence": [],
+      "rollover": 0,
+      "award": true
+    },
+    "milkRequests": [],
+    "errors": []
+  },
+  {
+    "full": true,
+    "initial": {
+      "level": "jungle",
+      "crateCount": 36,
+      "loaded": true,
+      "noCartons": true,
+      "triangles": 182,
+      "sharedGeometry": true,
+      "sharedMaterial": true,
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 416
+      }
+    },
+    "hud": {
+      "label": "Orange fruit: 42/100",
+      "fruit": 42,
+      "bottle": false,
+      "iconName": "hovering orange fruit",
+      "visibility": {
+        "showLife": true,
+        "showBonusTitle": false,
+        "showFruit": true,
+        "showBoxes": true,
+        "showEarnedRelics": false,
+        "showScore": true
+      },
+      "rowClass": "hud-counter hud-reveal hud-fruit-row hud-reveal-visible",
+      "rowOpacity": "1",
+      "rowsHidden": false,
+      "hudDiagnostics": {
+        "width": 1152,
+        "height": 720,
+        "textureWidth": 1152,
+        "textureHeight": 320,
+        "uploadedPixels": 37847040,
+        "canvasFrames": 138,
+        "textureUploads": 138,
+        "textureReallocations": 2,
+        "compositeDraws": 138,
+        "primitives": 8,
+        "lastCanvasMs": 2.099999997764826,
+        "lifeFaceReady": true,
+        "rooFontReady": true,
+        "rooAtlasReady": true,
+        "disposed": false
+      },
+      "fruitRect": {
+        "x": 34,
+        "y": 35.262550354003906,
+        "width": 85.59375,
+        "height": 85.59375,
+        "top": 35.262550354003906,
+        "right": 119.59375,
+        "bottom": 120.8563003540039,
+        "left": 34
+      }
+    },
+    "variants": {
+      "trial": true,
+      "restored": true,
+      "multiSequence": [],
+      "rollover": 0,
+      "award": true
+    },
+    "milkRequests": [],
+    "errors": []
+  }
+]

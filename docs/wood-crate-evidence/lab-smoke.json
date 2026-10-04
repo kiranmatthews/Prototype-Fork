@@ -1,0 +1,51 @@
+{
+  "spawn": {
+    "id": "codex-lab",
+    "name": "Blockworks · Greybox",
+    "grounded": true,
+    "position": [
+      0.5712883843718615,
+      0,
+      18
+    ],
+    "floor": 0,
+    "crates": 4,
+    "loaded": true
+  },
+  "checkpoint": {
+    "active": true,
+    "position": [
+      -66.12787406345001,
+      7.2999511718750005,
+      -402.77397664781984
+    ],
+    "spawn": [
+      -66.12787406345001,
+      7.2999511718750005,
+      -402.77397664781984
+    ]
+  },
+  "respawn": {
+    "deaths": 0,
+    "position": [
+      -66.12787406345001,
+      7.199951171875,
+      -402.77397664781984
+    ],
+    "distance": 0.10000000000000053
+  },
+  "contact": {
+    "alive": false,
+    "awarded": 1,
+    "bounce": 14
+  },
+  "finish": {
+    "gate": [
+      62.68849476955042,
+      13.2,
+      -2116
+    ],
+    "yaw": 0
+  },
+  "errors": []
+}
