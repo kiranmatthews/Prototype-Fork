@@ -34,6 +34,7 @@ export class Input {
   // so a press between fixed steps is never dropped.
   jumpPressed = false;
   jumpReleased = false;
+  jumpCancelled = false; // interruption aborts charging; it never means a lift
   grindPressed = false;
   spinPressed = false;
   grabPressed = false;
@@ -70,6 +71,9 @@ export class Input {
   private keys = new Set<string>();
   private touch: TouchControls | null = null;
   private prevJump = false;
+  private prevOtherJump = false;
+  private otherJumpPressed = false;
+  private otherJumpReleased = false;
   private prevGrind = false;
   private prevSpin = false;
   private prevGrab = false;
@@ -101,7 +105,7 @@ export class Input {
       // Edge flags are set straight from the event so even a press shorter
       // than one frame is never dropped.
       if (!e.repeat) {
-        if (e.code === INPUT_BINDINGS.jump.key) this.jumpPressed = true;
+        if (e.code === INPUT_BINDINGS.jump.key) this.jumpPressed = this.otherJumpPressed = true;
         if (e.code === INPUT_BINDINGS.grind.key) this.grindPressed = true;
         if (e.code === INPUT_BINDINGS.spin.key) this.spinPressed = true;
         if (e.code === INPUT_BINDINGS.grab.key) this.grabPressed = true;
@@ -128,9 +132,14 @@ export class Input {
     });
     window.addEventListener('keyup', (e) => {
       const wasHeld = this.keys.delete(e.code);
-      if (wasHeld && e.code === INPUT_BINDINGS.jump.key) this.jumpReleased = true;
+      if (wasHeld && e.code === INPUT_BINDINGS.jump.key) this.jumpReleased = this.otherJumpReleased = true;
     });
-    window.addEventListener('blur', () => this.keys.clear());
+    window.addEventListener('blur', () => {
+      if (this.jumpHeld || this.keys.has(INPUT_BINDINGS.jump.key)) this.jumpCancelled = true;
+      this.keys.clear();
+      this.jumpPressed = this.jumpReleased = this.otherJumpPressed = this.otherJumpReleased = false;
+      this.prevJump = this.prevOtherJump = false;
+    });
     window.addEventListener('gamepadconnected', (e) => {
       this.gamepadName = e.gamepad.id;
     });
@@ -165,6 +174,7 @@ export class Input {
     let touchGrabPressed = false;
     let touchJumpReleased = false;
     let touchTransferPressed = false;
+    let touchJumpCancelled = false;
 
     const pad = this.pollGamepad();
     if (!this.padOnly) inputPrompts.update(pad, this.touch?.enabled ?? false);
@@ -203,6 +213,10 @@ export class Input {
 
     // Touch overlay merges like a second gamepad: the D-pad only speaks when
     // touched, and edge flags fall out of the shared prev* comparison below.
+    const otherJumpHeld = jump;
+    this.otherJumpPressed ||= otherJumpHeld && !this.prevOtherJump;
+    this.otherJumpReleased ||= !otherJumpHeld && this.prevOtherJump;
+    this.prevOtherJump = otherJumpHeld;
     const tc = this.touch;
     if (tc && tc.enabled) {
       tc.setMapMode(document.body.classList.contains('world-map-active'));
@@ -227,9 +241,17 @@ export class Input {
       touchGrindPressed = tc.consumeButtonPress('tri');
       touchJumpReleased = tc.consumeJumpRelease();
       touchTransferPressed = tc.consumeTransferPress();
+      touchJumpCancelled = tc.consumeJumpCancellation();
       const mapDirection = tc.consumeDirectionTap();
       if (mapDirection) [this.mapDirectionX, this.mapDirectionY] = mapDirection;
       if (this.gamepadName === 'no controller') this.gamepadName = 'touch';
+    }
+    if (touchJumpCancelled && !otherJumpHeld && !this.otherJumpPressed && !this.otherJumpReleased) {
+      this.jumpCancelled = true;
+      // Remove edges already polled from the cancelled contact, while fresh
+      // completed touch taps below retain their independent sequence owners.
+      this.jumpPressed = this.jumpReleased = false;
+      this.prevJump = false;
     }
 
     // A button used to close a modal must return to neutral before it can drive
@@ -267,7 +289,7 @@ export class Input {
       this.prevRestart = restart;
       this.prevPause = false;
       this.prevLevelSelect = levelSelect;
-      this.consumeEdges();
+      this.consumeEdges(true);
       if (!stillHeld) this.menuReleaseGuard = false;
       return;
     }
@@ -332,6 +354,7 @@ export class Input {
   }
 
   armMenuReleaseGuard(): void {
+    if (this.jumpHeld || this.prevJump) this.jumpCancelled = true;
     this.menuReleaseGuard = true;
     this.moveX = 0;
     this.moveY = 0;
@@ -343,14 +366,16 @@ export class Input {
     this.grabHeld = false;
     this.transferHeld = false;
     this.inventoryHeld = false;
-    this.consumeEdges();
+    this.consumeEdges(true);
   }
 
   // Called after the first fixed step of each frame so a single press only
   // fires once.
-  consumeEdges(): void {
+  consumeEdges(preserveJumpCancellation = false): void {
     this.jumpPressed = false;
     this.jumpReleased = false;
+    if (!preserveJumpCancellation) this.jumpCancelled = false;
+    this.otherJumpPressed = this.otherJumpReleased = false;
     this.grindPressed = false;
     this.spinPressed = false;
     this.grabPressed = false;

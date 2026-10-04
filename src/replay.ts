@@ -52,9 +52,11 @@ const CHANNELS = [
   'restartPressed',
   'transferHeld',
   'transferPressed',
+  'jumpCancelled',
 ] as const;
 
-type InputLike = { moveX: number; moveY: number } & Record<(typeof CHANNELS)[number], boolean>;
+type InputLike = { moveX: number; moveY: number; jumpCancelled?: boolean } &
+  Record<Exclude<(typeof CHANNELS)[number], 'jumpCancelled'>, boolean>;
 // player.camDir, structurally — replay.ts stays free of a three.js import
 type AimLike = { x: number; z: number; set(x: number, y: number, z: number): unknown };
 

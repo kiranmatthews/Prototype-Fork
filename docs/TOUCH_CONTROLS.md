@@ -22,6 +22,12 @@ between render frames. Merged input does not release a still-held keyboard or
 controller Jump. R2 taps queue their press even after the finger has lifted.
 Fresh contacts recover stale ownership of their reused ID independently, and
 mouse/pen hover with no depressed buttons clears a missed lift.
+Cancelling the final Jump contact emits an abort, rather than a lift. The
+simulation clears only its queued charge/tap/launch intent, retaining movement
+and velocity. Aborts survive menu, visibility and graphics-recovery edge drains
+until a fixed step consumes them. Other held or queued keyboard/controller Jump
+intent and independent completed touch taps remain valid. Replay bit 12 records
+the abort; all previous bit positions and legacy playback remain unchanged.
 Direct trigger holds remain held until release; an Inventory tap and legacy
 swipes retain the existing 450 ms pulse window. A pulse waits for its first
 input poll before starting that window, so a long frame cannot lose it unread.
@@ -95,8 +101,24 @@ and lifecycle events are explicitly different evidence from physical OS input.
 Use `TOUCH_BROWSER=webkit` to select Safari's engine. The harness is excluded from
 production entry points and stores no game data.
 
-WebKit's first complete-game attempt lost its graphics context during startup
-and failed before touch checks. Native WebKit input coverage does not establish
-full-game WebKit rendering or physical iOS behavior. The isolated production
-build, interface texture-cache regression, mobile layout and existing keyboard/
-controller/skate input checks are separate gates; the full suite remains opt-in.
+An earlier WebKit complete-game attempt lost its graphics context during startup.
+Rechecking the current published release passes full-render 390×844 gameplay,
+input, Pause/resume, rotation and Bonus layout with no console errors and zero
+additional control texture uploads across six rendered frames. This establishes
+desktop WebKit coverage; full-render 844×390 landscape also passes. Physical
+iOS/Android OS behavior remains unverified.
+
+`tools/test-touch-jump-cancellation-browser.mjs` uses the real Input/Player to
+compare ordinary lifts with cancellation, blur, rotation and pause/resume in
+Chrome and WebKit. Before the fix, cancellation and blur launched the same
+approximately 2.4 m jump as an intentional lift. Interrupted charges now stay
+grounded; ordinary lifts still jump. `tools/test-jump-cancellation-replay.mjs`
+covers faithful abort recording/playback, legacy release bits and unknown-bit
+rejection and runs in the Pages workflow. The isolated production build,
+texture-cache/mobile layout and keyboard/controller/skate checks are separate
+gates; the full suite remains opt-in.
+
+The historical locomotion replay fixture fails its recovery assertion on the
+unchanged release as well. Comparing every simulated frame of both legacy takes
+before/after this fix produces identical movement and physical trajectory
+hashes; its existing fixture expectations were retained.

@@ -228,4 +228,20 @@ const p2=new inputExports.Input(true); assert.equal(p2.touch,null,'touch overlay
 window.emit('keydown',{code:'Space',repeat:false,target:{tagName:'INPUT'},preventDefault(){}});
 window.emit('keyup',{code:'Space'}); input.update(); assert.equal(input.jumpReleased,false,'typing in a field emits a gameplay Jump release');
 
+// A consumed charge must abort when its last contact is cancelled. UI drains
+// retain that abort until a fixed step consumes it; normal lifts still pop.
+iz.emit('pointerdown',event(997,xr.left+40,xr.top+40)); input.update(); input.consumeEdges();
+cancel(997); input.update(); assert.equal(input.jumpCancelled,true); assert.equal(input.jumpReleased,false); assert.equal(input.jumpPressed,false);
+input.consumeEdges(true); assert.equal(input.jumpCancelled,true,'UI drain loses an unconsumed jump abort');
+input.armMenuReleaseGuard(); input.update(); assert.equal(input.jumpCancelled,true); input.consumeEdges();
+assert.equal(input.jumpCancelled,false);
+iz.emit('pointerdown',event(997,xr.left+40,xr.top+40)); input.update(); input.consumeEdges();
+window.emit('keydown',{code:'Space',repeat:false,preventDefault(){}}); input.update(); input.consumeEdges();
+cancel(997); input.update(); assert.equal(input.jumpHeld,true); assert.equal(input.jumpCancelled,false,'touch cancellation aborts another held source');
+window.emit('keyup',{code:'Space'}); input.update(); assert.equal(input.jumpReleased,true); input.consumeEdges();
+iz.emit('pointerdown',event(997,xr.left+40,xr.top+40)); input.update(); input.consumeEdges();
+cancel(997); tap('x',996); input.update();
+assert.equal(input.jumpCancelled,true); assert.equal(input.jumpPressed,true); assert.equal(input.jumpReleased,true,'cancelled charge erases an independently completed tap');
+input.consumeEdges();
+
 console.log('PASS touch ownership, short/completed taps, ID reuse, concurrent cancellation, 8-way hysteresis, 4,000 layout-free moves, capture/native fallback, long holds, triggers, lifecycle/mode/viewport recovery and merged keyboard/gamepad/fixed-step edges');

@@ -3575,6 +3575,15 @@ export class Player {
   }
 
   private stepSimulation(dt: number, input: Input, level: Level): void {
+    // OS/capture cancellation is distinct from intentionally lifting X.
+    // Abort only queued jump gestures; retain velocity, support and movement.
+    if (input.jumpCancelled) {
+      this.charging = this.chargePlanted = false;
+      this.chargeTimer = this.jumpBufferT = this.jumpBufferCharge = this.airTapT = this.vertLaunchT = 0;
+      this.coyoteReleaseT = 0;
+      this.emergencyEjectCharging = this.ropeJumpArm = false;
+      this.emergencyEjectChargeT = 0;
+    }
     if (this.competitionFinishT >= 0) { this.stepCompetitionFinish(dt, level); return; }
     this.previousCharacterBounds.copy(this.characterBounds);
     this.parkControls = level.skatepark;

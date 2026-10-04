@@ -2443,7 +2443,7 @@ function handleCompetitionAction(action: CompetitionAction): void {
     player.commitRenderStep(level);
     ui.deathFade(false);
     ui.resetHudTransients(player.fruitCollectionRevision, false);
-    input.consumeEdges(); acc = 0;
+    input.consumeEdges(true); acc = 0;
   } else if (action === "standings" && competition.showStandings()) {
     if (competition.phase === 'final') campaign.recordLevelFinished(current.id);
     commitCompetitionVictory();
@@ -4563,7 +4563,7 @@ const graphicsRecovery = new GraphicsRecovery(renderer.domElement, () => {
   coastPost?.dispose();coastPost=null;
 }, () => {
   recordPresentationStage('graphics-restored');
-  acc=0;resetRenderFrameLimiter();input.consumeEdges();
+  acc=0;resetRenderFrameLimiter();input.consumeEdges(true);
   player.snapRenderInterpolation();p2?.snapRenderInterpolation();
   renderer.shadowMap.needsUpdate=true;
   gameFlow.requestGameplayFrame();
@@ -4579,8 +4579,8 @@ function resetRenderFrameLimiter(): void {
 document.addEventListener('visibilitychange', () => {
   acc = 0;
   resetRenderFrameLimiter();
-  input.consumeEdges();
-  input2.consumeEdges();
+  input.consumeEdges(true);
+  input2.consumeEdges(true);
   player.snapRenderInterpolation();
   p2?.snapRenderInterpolation();
   if (document.hidden) sfx.stopLoops();
@@ -4829,7 +4829,7 @@ function advanceFrame(nowMs: number): void {
   if (editor.active) {
     editor.update();
     level.updateCityVisibility(camera.position);
-    input.consumeEdges();
+    input.consumeEdges(true);
     acc = 0;
     sky.position.copy(camera.position);
     skyMist.position.copy(camera.position);
@@ -4861,8 +4861,8 @@ function advanceFrame(nowMs: number): void {
   }
 
   if (gameFlow.blocksGameplay) {
-    input.consumeEdges();
-    if (split2p) input2.consumeEdges();
+    input.consumeEdges(true);
+    if (split2p) input2.consumeEdges(true);
     acc = 0;
     sfx.stopLoops();
     const vortexContext = gameFlow.vortexContext;
@@ -4932,7 +4932,7 @@ function advanceFrame(nowMs: number): void {
     competition.stepPresentation(dt);
     competitionUI.render(competition);
     if ((competition.phase as string) !== "running") {
-      input.consumeEdges(); acc = 0; sfx.stopLoops();
+      input.consumeEdges(true); acc = 0; sfx.stopLoops();
       if (competition.phase === "countdown") updateCamera(dt);
       else frameCompetitionOverview();
       sky.position.copy(camera.position); skyMist.position.copy(camera.position);

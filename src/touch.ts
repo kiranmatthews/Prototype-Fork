@@ -101,6 +101,7 @@ export class TouchControls {
   // erase a completed tap (or a shared held button) belonging to another.
   private pressedBtn = buttonPresses();
   private jumpReleases = new Set<number>();
+  private jumpCancellation = false;
   private transferPresses = new Set<number>();
   private directionTap: [number, number] | null = null;
   private directionOwner: number | null = null;
@@ -177,6 +178,12 @@ export class TouchControls {
     const released = this.jumpReleases.size > 0;
     this.jumpReleases.clear();
     return released;
+  }
+
+  consumeJumpCancellation(): boolean {
+    const cancelled = this.jumpCancellation;
+    this.jumpCancellation = false;
+    return cancelled;
   }
 
   consumeTransferPress(): boolean {
@@ -259,7 +266,9 @@ export class TouchControls {
     if (id === this.lookPointer) this.clearLook();
     const touch = this.rightTouches.get(id);
     if (touch) {
+      const wasJump = this.jumpHeld;
       this.rightTouches.delete(id); this.refreshButtons(cancelled ? null : owner);
+      if (cancelled && wasJump && !this.jumpHeld) this.jumpCancellation = true;
     }
     const trigger = this.triggerTouches.get(id);
     if (trigger === 'inventory' && !cancelled) {
