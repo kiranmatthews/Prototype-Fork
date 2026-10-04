@@ -5,6 +5,8 @@ import copy,hashlib,io,json,math,sys
 import numpy as np
 from PIL import Image
 ROOT=Path(__file__).resolve().parents[2];HERE=Path(__file__).resolve().parent
+WORK=ROOT/'.img2threejs/ghost-train-v2'
+SOURCE_STAGES={}
 sys.path.insert(0,str(ROOT/'tools/enemies'))
 from glb_rig import Glb
 from prepare_meshy_walk import compact_textures
@@ -23,9 +25,9 @@ def rotation(name):
  return np.array([[c,0,s],[0,1,0],[-s,0,c]])@np.array([[1,0,0],[0,a,-b],[0,b,a]]),yaw,pitch
 
 def pack(name):
- ledger=json.loads((HERE/'tasks.json').read_text())['tasks'];source_key=name+'-textured'
+ ledger=json.loads((HERE/'tasks.json').read_text())['tasks'];source_key=SOURCE_STAGES.get(name,name+'-textured')
  if name=='banquet-table-v2' and ledger.get('banquet-table-v2-cloth',{}).get('state')=='SUCCEEDED':source_key='banquet-table-v2-cloth'
- source=ROOT/'.img2threejs/ghost-train-v2'/source_key/'downloads/model.glb'
+ source=WORK/source_key/'downloads/model.glb'
  output=ROOT/'public/ghost-train'/(name+'.glb');output.parent.mkdir(parents=True,exist_ok=True)
  glb=Glb(source);original=copy.deepcopy(glb.document);binary=bytes(glb.binary)
  if original.get('skins') or original.get('animations'):raise ValueError('Static kit pack cannot flatten a deformation rig')
@@ -55,7 +57,7 @@ def pack(name):
  all_positions=np.concatenate([p['attributes']['POSITION'] for p in surfaces]);low,high=all_positions.min(0),all_positions.max(0);span=high-low;origin=(low+high)/2;origin[1]=low[1];scale=float(max(span))
  for surface in surfaces:surface['attributes']['POSITION']=((surface['attributes']['POSITION']-origin)/scale).astype('<f4')
  doc=glb.document;doc['accessors']=[];doc['bufferViews']=[];doc['nodes']=[];doc['meshes']=[];glb.binary=bytearray()
- atlas_directory=ROOT/'.img2threejs/ghost-train-v2/atlases';atlas_directory.mkdir(exist_ok=True)
+ atlas_directory=WORK/'atlases';atlas_directory.mkdir(exist_ok=True)
  exported=[]
  for image_index,image in enumerate(doc.get('images',[])):
   previous=original['bufferViews'][image['bufferView']];offset=previous.get('byteOffset',0);encoded=binary[offset:offset+previous['byteLength']]

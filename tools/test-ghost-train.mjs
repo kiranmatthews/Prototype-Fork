@@ -3,7 +3,7 @@ import {writeFile} from 'node:fs/promises';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
 
 const options={modulePath:'/src/levels/ghost-train.ts',levelId:'ghost-train',
-  source:m=>m.GHOST_TRAIN_LEVEL,controlFrame:r=>r.p.freeSkate?{x:r.p.axisF.x,z:r.p.axisF.z}:r.p.courseInputDirection(r.l)??r.l.cameraDirAt(r.p.pos.x,r.p.pos.y,r.p.pos.z)??{x:0,z:-1}};
+  source:m=>m.GHOST_TRAIN_LEVEL,controlFrame:r=>r.p.courseInputDirection(r.l)??{x:r.p.camDir.x,z:r.p.camDir.z}};
 const reports=[];
 await withBlockworksRuntime(async r=>{
   const {normalizeCustomLevelData}=await r.server.ssrLoadModule('/src/level.ts');

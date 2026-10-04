@@ -183,6 +183,14 @@ const manyDots = (x: CanvasRenderingContext2D): void => {
   }
 };
 const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
+  ghostbathwall:x=>{x.fillStyle='#4e8e87';x.fillRect(2,1,14,17);x.strokeStyle='#b8c3a0';for(let i=4;i<18;i+=4){x.beginPath();x.moveTo(2,i);x.lineTo(16,i);x.stroke();}},
+  ghostbatharch:x=>{x.strokeStyle='#70ab92';x.lineWidth=4;x.beginPath();x.moveTo(3,18);x.lineTo(3,8);x.bezierCurveTo(3,0,15,0,15,8);x.lineTo(15,18);x.stroke();},
+  ghostjunk:x=>{x.fillStyle='#34403f';for(const a of [5,12]){x.beginPath();x.arc(a,12,5,0,7);x.fill();}x.fillStyle='#c7bea2';x.fillRect(6,13,7,3);},
+  ghostboiler:x=>{x.fillStyle='#46806c';x.fillRect(4,5,11,12);x.strokeStyle='#bf754a';x.lineWidth=3;x.strokeRect(10,1,5,8);x.fillStyle='#9cff58';x.fillRect(7,10,4,4);},
+  ghoststeam:x=>{x.strokeStyle='#82d99a';x.lineWidth=3;for(const a of [4,9,14]){x.beginPath();x.moveTo(a,17);x.bezierCurveTo(a-5,11,a+4,7,a,1);x.stroke();}},
+  ghostgraffiti:x=>{x.strokeStyle='#c165eb';x.lineWidth=3;x.beginPath();x.moveTo(2,4);x.lineTo(15,8);x.lineTo(4,13);x.lineTo(16,16);x.stroke();},
+  ghostneon:x=>{x.strokeStyle='#9aff62';x.lineWidth=2;x.strokeRect(1,4,16,11);x.beginPath();x.moveTo(4,13);x.lineTo(4,7);x.lineTo(13,13);x.lineTo(13,7);x.stroke();},
+  ghostslime:x=>{x.fillStyle='#54bc76';x.beginPath();x.ellipse(9,11,8,5,0,0,7);x.fill();x.strokeStyle='#b1ff9a';x.beginPath();x.ellipse(8,10,4,2,0,0,7);x.stroke();},
   ghostwallbay:x=>{x.fillStyle='#a59c80';x.fillRect(2,1,14,17);x.fillStyle='#497264';x.fillRect(6,6,6,10);x.beginPath();x.moveTo(6,6);x.lineTo(9,2);x.lineTo(12,6);x.fill();},
   ghostbanquettable:x=>{x.fillStyle='#97484d';x.fillRect(1,5,16,5);x.fillStyle='#c5a678';x.fillRect(3,10,2,7);x.fillRect(13,10,2,7);},
   ghostchandelier:x=>{x.strokeStyle='#c5a678';x.lineWidth=2;x.beginPath();x.moveTo(9,1);x.lineTo(9,10);x.moveTo(2,7);x.lineTo(5,12);x.lineTo(13,12);x.lineTo(16,7);x.stroke();},
@@ -486,6 +494,10 @@ const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
 // What a freshly dropped prop looks like: the same numbers the hand-coded
 // levels plant with, so a new one matches the ones already standing there.
 const DECOR_DEFAULTS: Record<DecorKind, Partial<CustomComponent>> = {
+  ghostbathwall:{s:[2.63,4.5,.53],yaw:0,solid:false},ghostbatharch:{s:[4.9,4.1,3.63],yaw:0,solid:false},
+  ghostjunk:{s:[1.73,1,1.7],yaw:0,solid:false},ghostboiler:{s:[1.58,2.4,1.35],yaw:0,solid:false},
+  ghoststeam:{w:4,rise:2.4,amp:.4,phase:0,solid:false},ghostgraffiti:{w:3.2,rise:2,vr:0,color:'#bc62e8',yaw:0,solid:false},
+  ghostneon:{w:4.2,rise:1.5,vr:0,color:'#98ff53',yaw:0,solid:false},ghostslime:{s:[4,.01,8],color:'#31ce64',yaw:0,solid:false},
   ghostwallbay:{s:[2.72,5.4,2.40],yaw:0,solid:false},ghostbanquettable:{s:[1.67,1.3,3.40],yaw:0,solid:false},
   ghostchandelier:{s:[3.24,3.2,3.24],yaw:0,solid:false},ghosttrestle:{s:[2.15,1.49,6],yaw:0,solid:false},
   ghostmonsterportal:{s:[9,9,8.84],yaw:0,solid:false},ghostflagstone:{s:[2.4,.0961,2.15],yaw:0,solid:false},

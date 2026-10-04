@@ -83,7 +83,7 @@ try{
       // normalized held-button samples and native Player/Level fixed steps.
       p.respawn(l,true,false,{position:new THREE.Vector3(...start)});
       const assetsBefore=l.ghostTrainDiagnostics;
-      const options={maxFrames:18000,controlFrame:r=>r.p.freeSkate?{x:r.p.axisF.x,z:r.p.axisF.z}:r.p.courseInputDirection(r.l)??r.l.cameraDirAt(r.p.pos.x,r.p.pos.y,r.p.pos.z)??{x:0,z:-1}};
+      const options={maxFrames:18000,controlFrame:r=>r.p.courseInputDirection(r.l)??{x:r.p.camDir.x,z:r.p.camDir.z}};
       const nativeRun=new Function('THREE','CONST','TUNING','sourceModule','p','l','options','run',
         `${makeSource}\n${inputSource}\nconst server=null,Level=l.constructor,Player=p.constructor,scene=window.__game.scene,source=sourceModule.GHOST_TRAIN_LEVEL;\nreturn async()=>{${runnerSource}};`
       )(THREE,CONST,TUNING,sourceModule,p,l,options,r=>{

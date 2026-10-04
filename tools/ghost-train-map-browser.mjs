@@ -9,7 +9,7 @@ const browser=await chromium.launch({headless:true,channel:'chrome'}),errors=[],
 const page=await browser.newPage({viewport:{width:1280,height:720}});
 page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
 const ready=()=>page.waitForFunction(()=>window.__game&&!window.__game.gameFlow.blocksGameplay,null,{timeout:120000});
-const meshReady=()=>page.waitForFunction(()=>{const d=window.__game.getLevel().ghostTrainDiagnostics;return d&&Object.keys(d.scenery.assets).length===14&&Object.values(d.scenery.assets).every(a=>a.status==='ready')&&d.enemies.every(a=>a.status==='ready')&&['stone','floor','timber'].every(k=>d.textures[k]==='ready');},null,{timeout:120000});
+const meshReady=()=>page.waitForFunction(()=>{const d=window.__game.getLevel().ghostTrainDiagnostics;return d&&Object.keys(d.scenery.assets).length>=17&&Object.values(d.scenery.assets).every(a=>a.status==='ready')&&d.enemies.every(a=>a.status==='ready')&&['stone','floor','timber','bath'].every(k=>d.textures[k]==='ready');},null,{timeout:120000});
 try{
  if(capture){
   await page.goto(`${base}/?playtest&level=ghost-train`);await ready();
@@ -68,7 +68,7 @@ try{
   for(const r of [...mobile.rows.map(r=>r.rect),mobile.preview])assert.ok(r.x>=0&&r.y>=0&&r.right<=391&&r.bottom<=845,'mobile row or preview leaves its viewport');for(const r of mobile.rows)assert.ok(r.rect.height>=47.99,'mobile row lacks the 48px touch target');
   await touch.screenshot({path:output+'/level-select-ghost-train-390x844.png'});await touch.locator('[data-level-key="ghost-train"]').tap();
   await touch.waitForFunction(()=>window.__game.getCurrentLevel().id==='ghost-train'&&!window.__game.gameFlow.blocksGameplay,null,{timeout:120000});await touch.evaluate(async()=>await window.__game.getLevel().prepareGhostTrainAssets());
-  mobile.entry=await touch.evaluate(()=>({level:window.__game.getCurrentLevel().id,grounded:window.__game.player.grounded,deaths:window.__game.player.totalDeaths,readyAssets:Object.values(window.__game.getLevel().ghostTrainDiagnostics.scenery.assets).filter(a=>a.status==='ready').length}));assert.equal(mobile.entry.level,'ghost-train');assert.equal(mobile.entry.grounded,true);assert.equal(mobile.entry.deaths,0);assert.equal(mobile.entry.readyAssets,14);await touch.screenshot({path:output+'/ghost-train-entry-390x844.png'});report.mobile=mobile;report.checks.push('390x844 touch list keeps all four rows/preview in view and tap enters Ghost Train');await context.close();
+  mobile.entry=await touch.evaluate(()=>({level:window.__game.getCurrentLevel().id,grounded:window.__game.player.grounded,deaths:window.__game.player.totalDeaths,readyAssets:Object.values(window.__game.getLevel().ghostTrainDiagnostics.scenery.assets).filter(a=>a.status==='ready').length}));assert.equal(mobile.entry.level,'ghost-train');assert.equal(mobile.entry.grounded,true);assert.equal(mobile.entry.deaths,0);assert.ok(mobile.entry.readyAssets>=17);await touch.screenshot({path:output+'/ghost-train-entry-390x844.png'});report.mobile=mobile;report.checks.push('390x844 touch list keeps all four rows/preview in view and tap enters Ghost Train');await context.close();
  }
  assert.deepEqual(errors,[],'Ghost Train preview and map UI console must stay clean');console.log(JSON.stringify({checks:report.checks,preview:report.preview,travel:report.travel,entry:report.entry?.level,errors,output}));
 }finally{await writeFile(output+'/report.json',JSON.stringify(report,null,2));await browser.close();}

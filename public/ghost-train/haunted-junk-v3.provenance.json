@@ -1,0 +1,86 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "taskId": "01a106e0-84dc-7730-9256-9b09eb5f084f",
+  "previewTaskId": "01a106d7-2ba5-719a-9755-5e6df890e299",
+  "sourceSha256": "e1e7e9a4d1867b651f7db5e96316912e09dac2120db87570f95b13244369d457",
+  "outputSha256": "e44866ff0ea7f506ed89263714b70f22552df0c29e516270cd4538860d6d5037",
+  "bytes": 159952,
+  "trianglesBefore": 1132,
+  "trianglesRemoved": 0,
+  "triangles": 1132,
+  "originalUVsPreserved": true,
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 89229
+    }
+  ],
+  "originalAtlases": [
+    {
+      "path": ".img2threejs/ghost-train-v3/atlases/haunted-junk-v3-atlas-0.png",
+      "size": [
+        2048,
+        2048
+      ],
+      "sha256": "38a2b0523b74cd1fde4648efeb122ae93adf2a7a50648360b85f1a2abc822bea"
+    }
+  ],
+  "bounds": {
+    "min": [
+      -0.5,
+      0.0,
+      -0.49102750420570374
+    ],
+    "max": [
+      0.5,
+      0.5775760412216187,
+      0.49102750420570374
+    ]
+  },
+  "size": [
+    1.0,
+    0.5775760412216187,
+    0.9820550084114075
+  ],
+  "targetMetres": [
+    2,
+    1,
+    1.6
+  ],
+  "suggestedUniformScale": 1.7313737869262695,
+  "suggestedUniformMetres": [
+    1.7313737869262695,
+    1.0,
+    1.7003042697906494
+  ],
+  "transform": {
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.2908869981765747,
+        -0.486844003200531
+      ],
+      "max": [
+        0.5,
+        0.28668901324272156,
+        0.49521100521087646
+      ]
+    },
+    "yawRadians": 0,
+    "pitchRadians": 0,
+    "maxDimensionScale": 1.0,
+    "trim": null
+  },
+  "axes": "Y-up,+Z-front,centeredXZ,bottomY0,max dimension1",
+  "sourceStage": "haunted-junk-v3-textured"
+}

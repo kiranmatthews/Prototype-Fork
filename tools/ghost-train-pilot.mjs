@@ -4,7 +4,7 @@ import {createServer} from 'vite';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
 
 const options={modulePath:'/src/levels/ghost-train.ts',levelId:'ghost-train',source:m=>m.GHOST_TRAIN_LEVEL,
-  controlFrame:r=>r.p.freeSkate?{x:r.p.axisF.x,z:r.p.axisF.z}:r.p.courseInputDirection(r.l)??r.l.cameraDirAt(r.p.pos.x,r.p.pos.y,r.p.pos.z)??{x:0,z:-1},maxFrames:54000};
+  controlFrame:r=>r.p.courseInputDirection(r.l)??{x:r.p.camDir.x,z:r.p.camDir.z},maxFrames:54000};
 const station=r=>r.sourceModule.ghostRouteProgress(r.p.pos);
 const safe=r=>assert.ok(!r.p.isBailing&&!['dead','gameover'].includes(r.p.state),JSON.stringify(r.snapshot()));
 const top=m=>m.mesh.position.y+m.mesh.geometry.parameters.height/2;
@@ -15,6 +15,7 @@ export function runGhostCartRelay(r,relay){
   const begin=r.frame,deaths=r.p.totalDeaths,fixtures=r.sourceModule.GHOST_TRAIN_CARTS.filter(c=>c.relay===relay);
   const carts=fixtures.map(c=>r.l.movers.find(m=>Math.hypot(m.base.x-c.p[0],m.base.z-c.p[2])<.03));
   assert.ok(carts.every(Boolean),'all authored moving carts must exist');
+  const gap=r.sourceModule.GHOST_TRAIN_GAPS.filter(g=>g.kind==='cart')[relay];
   const cartAim=target=>{const input=r.steerToward(target);if(Math.abs(input.moveX)<.12)input.moveX=0;return input;};
   const walk=(target,name)=>{
     r.until(()=>r.distanceTo(target)<.16,()=>{
@@ -23,6 +24,8 @@ export function runGhostCartRelay(r,relay){
     },{maxFrames:1800,label:name});
     r.stepFor(24);safe(r);assert.ok(r.p.grounded,`${name}: settle must stay supported`);
   };
+  r.until(()=>r.sourceModule.ghostRouteProgress(local(r,carts[0],0,3.3))<gap.a-.8&&carts[0].lastDelta.z>=-.001,{},
+    {maxFrames:720,label:'wait on the loading dock for the incoming train'});
   walk(()=>local(r,carts[0],0,3.3),'approach open carriage boarding end');
   r.charge(26);r.releaseJump(cartAim(()=>local(r,carts[0],0,.3)));
   r.until(()=>{const q=carts[0].mesh.worldToLocal(r.p.pos.clone()),par=carts[0].mesh.geometry.parameters;return r.p.grounded&&Math.abs(q.x)<par.width/2-.04&&Math.abs(q.z)<par.depth/2-.08&&Math.abs(r.p.pos.y-top(carts[0]))<.12;},
@@ -48,10 +51,13 @@ export function runGhostCartRelay(r,relay){
     r.until(()=>!r.p.freeSkate&&Math.abs(r.p.speed)<.08,{grabHeld:true},{maxFrames:240,label:'brake the earned jump momentum on the receiving cart'});
     r.stepFor(18);safe(r);
   }
-  const gap=r.sourceModule.GHOST_TRAIN_GAPS.filter(g=>g.kind==='cart')[relay];
   // Leave the visible forward end wall with an ordinary charged hop.
-  walk(()=>local(r,carts.at(-1),0,.3),'line up the last carriage exit');
-  r.charge(26);r.releaseJump(cartAim(r.sourceModule.ghostRoutePoint(gap.b+5)));
+  r.until(()=>gap.b-r.sourceModule.ghostRouteProgress(local(r,carts.at(-1),0,0))<6&&carts.at(-1).lastDelta.z<=.001,{},
+    {maxFrames:720,label:'ride the last carriage into the illuminated exit window'});
+  walk(()=>local(r,carts.at(-1),0,1.7),'line up the last carriage exit');
+  r.stepFor(18,()=>cartAim(r.sourceModule.ghostRoutePoint(gap.b+6)));
+  r.charge(26,()=>({...cartAim(r.sourceModule.ghostRoutePoint(gap.b+6)),jumpHeld:true}));
+  r.releaseJump(cartAim(r.sourceModule.ghostRoutePoint(gap.b+5)));
   r.until(()=>r.p.grounded&&station(r)>gap.b+2,()=>cartAim(r.sourceModule.ghostRoutePoint(gap.b+8)),{maxFrames:240,label:'jump out onto the station island'});
   assert.equal(r.p.totalDeaths,deaths,'relay must clear without respawn');
   assert.ok(r.trace.slice(begin).filter(t=>t.state==='air').length>30,'three actual airborne transfers were required');
@@ -92,10 +98,10 @@ export function runGhostAxe(r,component){
 
 export function runGhostFloorGap(r,gap){
   const begin=r.frame,deaths=r.p.totalDeaths,m=r.sourceModule;
-  r.until(()=>station(r)>=gap.a-2,()=>({...r.steerToward(m.ghostRoutePoint(station(r)+10)),jumpHeld:true}),{maxFrames:600,label:'earn approach speed on execution-gallery flagstones'});
+  r.until(()=>station(r)>=gap.a-2,()=>({...r.steerToward(m.ghostRoutePoint(station(r)+10)),jumpHeld:true,spinHeld:Math.floor(r.frame/18)%2===0}),{maxFrames:600,label:'earn approach speed on broken bathhouse paving'});
   assert.ok(r.p.grounded,'flagstone takeoff must remain on real floor');
   r.releaseJump(r.steerToward(m.ghostRoutePoint(gap.b+8)));
-  assert.ok(r.p.state==='air'&&r.p.vVel>0,'flagstone gap needs an actual upward jump');
+  assert.ok(r.p.state==='air'&&r.p.vVel>0,`gap ${gap.a} needs an actual upward jump: ${JSON.stringify(r.snapshot())}`);
   r.until(()=>r.p.grounded&&station(r)>gap.b,()=>r.steerToward(m.ghostRoutePoint(station(r)+8)),{maxFrames:180,label:'land beyond the collapsed flagstones'});
   assert.equal(r.p.groundHit?.moverId,undefined,'flagstone receiver is ordinary floor');
   assert.equal(r.p.totalDeaths,deaths,'flagstone jump must survive');
@@ -113,6 +119,9 @@ export function runGhostJourney(r){
     return-Math.sign(near.p[0]-m.ghostRouteX(18-near.p[2]))*1.65*Math.sin((1-d/9)*Math.PI/2);
   };
   const walkRoute=to=>{
+    // Closely linked jumps may already carry the rider past the next run-up
+    // marker. Keep that earned momentum instead of braking at the next edge.
+    if(station(r)>=to-.08)return;
     brake();r.until(()=>p.state==='finished'||station(r)>=to-.08||r.distanceTo(m.ghostRoutePoint(to,undefined,offset(to)))<.18,()=>{
       const s=station(r),ahead=Math.min(to,s+3.8),target=m.ghostRoutePoint(ahead,undefined,offset(ahead));
       return{...r.steerToward(target,{pace:Math.min(.88,.22+(to-s)*.18)}),spinHeld:Math.floor(r.frame/18)%2===0};
@@ -121,7 +130,7 @@ export function runGhostJourney(r){
   const actions=[];
   for(const [i,g]of m.GHOST_TRAIN_GAPS.filter(g=>g.kind==='cart').entries())actions.push({s:g.a-8,name:`convoy ${i}`,run:()=>runGhostCartRelay(r,i)});
   for(const c of m.GHOST_TRAIN_AXES)actions.push({s:18-c.p[2]-7,name:c.nm,run:()=>runGhostAxe(r,c)});
-  for(const g of m.GHOST_TRAIN_GAPS.filter(g=>g.kind==='jump'))actions.push({s:g.a-18,name:g.name,run:()=>runGhostFloorGap(r,g)});
+  for(const g of m.GHOST_TRAIN_GAPS.filter(g=>g.kind==='jump'))actions.push({s:g.a-18,name:g.name,flow:true,run:()=>runGhostFloorGap(r,g)});
   for(const [a,b]of [[998,1052],[1432,1590],[2170,2224]])actions.push({s:a-6,name:`rail vault ${a}`,run:()=>runGhostBrokenRails(r,m.GHOST_TRAIN_RAILS.filter(q=>q.a>=a&&q.b<=b))});
   for(const cp of m.GHOST_TRAIN_CHECKPOINTS)actions.push({s:cp.s-2,name:cp.name,run:()=>{
     brake();const target=[cp.p[0]-1.3,cp.p[1],cp.p[2]];
@@ -132,7 +141,7 @@ export function runGhostJourney(r){
   actions.sort((a,b)=>a.s-b.s);
   for(const action of actions){
     if(station(r)<action.s)walkRoute(action.s);
-    brake();r.stepFor(8);const report=action.run();evidence.push(report);safe(r);
+    if(!action.flow){brake();r.stepFor(8);}const report=action.run();evidence.push(report);safe(r);
     if(process.env.GHOST_JOURNEY_PROGRESS)console.log('JOURNEY',action.name,station(r).toFixed(2),r.frame);
   }
   brake();walkRoute(2255);r.until(()=>p.state==='finished',{moveY:.4},{maxFrames:240,label:'cross the actual emerald throne finish gate'});
@@ -155,11 +164,14 @@ const run=async(name,pilot,start,wait=0)=>{
 const allPhases=process.argv.includes('--phases');
 const jumpsOnly=process.argv.includes('--jumps-only');
 const journeyOnly=process.argv.includes('--journey');
+const bonusOnly=process.argv.includes('--bonus-only');
+if(bonusOnly)for(const line of sourceModule.GHOST_TRAIN_BONUS_LINES)
+  await run(`optional high line ${line.a}–${line.b}`,r=>runGhostBrokenRails(r,[line]),sourceModule.ghostRoutePoint(line.a-6,sourceModule.ghostRouteHeight(line.a-6)+.12,line.u));
 if(journeyOnly){
   let recording;try{await withBlockworksRuntime(r=>{recording=r.trace;r.stepFor(20);reports.push(runGhostJourney(r));},{...options});}catch(error){failures.push({name:'continuous ghost train journey',error:error.message});}
   await writeFile('/private/tmp/ghost-train-v2-journey-trace.json',JSON.stringify(recording));
 }
-if(!jumpsOnly&&!journeyOnly){
+if(!jumpsOnly&&!journeyOnly&&!bonusOnly){
 if(!process.argv.includes('--mechanics-only')&&!process.argv.includes('--rails-only')){
   for(const relay of process.env.GHOST_RELAY?[Number(process.env.GHOST_RELAY)]:[0,1,2,3]){
   const gap=sourceModule.GHOST_TRAIN_GAPS.filter(g=>g.kind==='cart')[relay];
@@ -175,7 +187,7 @@ const axe=sourceModule.GHOST_TRAIN_AXES[0],axeStation=18-axe.p[2];
 if(!process.argv.includes('--rails-only'))for(const wait of [0,1.7,3.4])await run('swinging execution axe',r=>runGhostAxe(r,axe),sourceModule.ghostRoutePoint(axeStation-7,sourceModule.ghostRouteHeight(axeStation-7)+.12),wait);
 }
 }
-if(!process.argv.includes('--carts-only')&&!process.argv.includes('--rails-only')&&!journeyOnly)for(const gap of sourceModule.GHOST_TRAIN_GAPS.filter(g=>g.kind==='jump'))await run(gap.name,r=>runGhostFloorGap(r,gap),sourceModule.ghostRoutePoint(gap.a-18,sourceModule.ghostRouteHeight(gap.a-18)+.12));
+if(!process.argv.includes('--carts-only')&&!process.argv.includes('--rails-only')&&!journeyOnly&&!bonusOnly)for(const gap of sourceModule.GHOST_TRAIN_GAPS.filter(g=>g.kind==='jump'&&(!process.env.GHOST_JUMP||g.a===Number(process.env.GHOST_JUMP))))await run(gap.name+' '+gap.a,r=>runGhostFloorGap(r,gap),sourceModule.ghostRoutePoint(gap.a-8,sourceModule.ghostRouteHeight(gap.a-8)+.12));
 await writeFile(process.env.GHOST_REPORT??(journeyOnly?'/private/tmp/ghost-train-v2-journey.json':jumpsOnly?'/private/tmp/ghost-train-flagstones.json':'/private/tmp/ghost-train-pilot.json'),JSON.stringify({reports,failures},null,2));
 console.log(JSON.stringify({reports,failures},null,2));
 assert.equal(failures.length,0,failures.map(f=>`${f.name}: ${f.error}`).join('\n'));

@@ -1,0 +1,322 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "budgetCredits": 80,
+  "tasks": {
+    "bathhouse-wall-v3": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "e847d4af-2f34-44c8-85be-a6419d257368",
+      "createdAt": "2026-10-04T12:14:24.528145+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "Low poly modular abandoned Turkish bathhouse wall panel, rectangular upright 3 meters wide and 4 meters tall, flat thin back. Lower half old turquoise square ceramic tiles, upper half cracked peeling cream plaster revealing masonry. Missing tiles, black damp streaks, chipped edges, small broken brass pipe, violet and green spray-painted ghost graffiti. One complete solid wall panel, no ground, no room, front facing, game environment prop. Strong chunky faceted silhouette.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 1600,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1126,
+      "id": "01a106d6-7226-747f-9570-4e81cbede13a",
+      "checkedAt": "2026-10-04T12:22:35.458897+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791116090459
+    },
+    "bathhouse-arch-v3": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "c8b9bd47-f2bc-4227-8d6d-b226d0a23e37",
+      "createdAt": "2026-10-04T12:14:57.754418+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "Low poly abandoned Turkish bathhouse horseshoe arch doorway, EMPTY OPEN walkthrough hole 3 meters wide 5 meters tall, two narrow ornate columns and curved arch top, no back wall no door no floor. Turquoise ceramic mosaic and chipped cream stone, exposed crumbling brick, corroded brass pipes, small broken neon tube on the arch. Gothic carnival renovation of an old spa. Thick chunky visible ruin silhouette, standalone modular game asset front facing.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 2800,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1111,
+      "id": "01a106d6-eb7f-7259-a815-175797733954",
+      "checkedAt": "2026-10-04T12:23:04.493437+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791116128208
+    },
+    "haunted-junk-v3": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "2075e8c0-0229-485c-91e7-a30926203acb",
+      "createdAt": "2026-10-04T12:15:23.411305+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "Low poly compact abandoned amusement park rubbish pile, two lumpy tied black garbage bags, rusty dented small bin tipped sideways spilling crumpled tickets, disposable cups and cans, crooked broken cream tile pieces, tangled cable. Grounded low broad asymmetrical cluster 2 meters wide and 1 meter tall, distinct readable silhouettes. No ground plane, no people, no giant backdrop. Game environment asset.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 1200,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1096,
+      "id": "01a106d7-2ba5-719a-9755-5e6df890e299",
+      "checkedAt": "2026-10-04T12:23:18.574646+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791116143849
+    },
+    "haunted-boiler-v3": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "40469e18-0036-4aa8-ad35-fa924a0bec13",
+      "createdAt": "2026-10-04T12:15:31.959932+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "Low poly abandoned bathhouse steam boiler prop, squat rusted cylindrical green iron tank on four short feet, thick crooked copper steam pipes, big red handwheel valve, cracked pressure dial, torn metal cover exposing a dark rectangular furnace opening. Distinct mechanical shapes, theatrical haunted theme park scenery. 2 meters tall and 1.5 meters wide. No environment, no ground plane, no smoke geometry.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 1800,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1091,
+      "id": "01a106d7-46e4-71be-9732-8a733c866c3f",
+      "checkedAt": "2026-10-04T12:23:44.393949+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791116146443
+    },
+    "bathhouse-wall-v3-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "40c9c712-cc28-4217-aefb-e732d3abc885",
+      "createdAt": "2026-10-04T12:25:02.762337+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a106d6-7226-747f-9570-4e81cbede13a",
+        "texture_prompt": "Weathered turquoise and faded cream ceramic, dark cracked grout, peeling cream plaster, green mildew and dark brown water streaks. Neon violet and acid lime ghost doodle spraypaint tags and paint drips. Derelict campy abandoned funfair bathhouse. Hand painted game albedo, no baked lighting.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1041,
+      "id": "01a106e0-0e7d-7744-b6e8-5c3ec4f75b16",
+      "checkedAt": "2026-10-04T12:37:52.091215+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791116801690,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v3/bathhouse-wall-v3-textured/downloads/model.glb",
+          "bytes": 1650268,
+          "sha256": "fd07690a09c96d5170a2e36859d669169a02805eb0bc3bb6905dbab3da44ffa3"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v3/bathhouse-wall-v3-textured/downloads/thumbnail.png",
+          "bytes": 88183,
+          "sha256": "9cf0881bec6b2b0118852425463329d04fd0047abe71b798f6df420e5e316ca9"
+        }
+      ]
+    },
+    "bathhouse-arch-v3-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "1e929699-a9b7-45a6-a69a-a033e898fbfc",
+      "createdAt": "2026-10-04T12:25:18.804777+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a106d6-eb7f-7259-a815-175797733954",
+        "texture_prompt": "Chipped deep turquoise mosaic tiles, dirty ivory stone, black damp weathering, rusting brass pipe, small acid green broken neon glass tubes. Sparse fluorescent purple graffiti scrawls and lime paint splashes, worn red trim. Handpainted low poly haunted amusement ride material, no baked lighting.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1031,
+      "id": "01a106e0-50f9-74c2-bc52-763dd96ba5c3",
+      "checkedAt": "2026-10-04T12:38:09.252481+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791116826341,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v3/bathhouse-arch-v3-textured/downloads/model.glb",
+          "bytes": 2655684,
+          "sha256": "769e51b72c752ebcb66463f2e1ebfd54141d0f35df9a5ec903a8db20a8ed618b"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v3/bathhouse-arch-v3-textured/downloads/thumbnail.png",
+          "bytes": 257889,
+          "sha256": "90c767891b625559b07f414691bdc9400dc356a51b6063933054895fa1e83afa"
+        }
+      ]
+    },
+    "haunted-junk-v3-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "48d8cc6a-f538-4fed-951b-f214f97e000b",
+      "createdAt": "2026-10-04T12:25:35.902866+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a106d7-2ba5-719a-9755-5e6df890e299",
+        "texture_prompt": "Grimy glossy black plastic rubbish bags, corroded dark teal bin with peeling paint, dirty off-white ticket paper and red striped paper cups, crumpled silver cans, broken turquoise ceramic tiles. Hand painted dirty but colorful low poly game prop. Sparse lime spray paint. No baked lighting.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1021,
+      "id": "01a106e0-84dc-7730-9256-9b09eb5f084f",
+      "checkedAt": "2026-10-04T12:38:36.011896+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791116823605,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v3/haunted-junk-v3-textured/downloads/model.glb",
+          "bytes": 3012392,
+          "sha256": "e1e7e9a4d1867b651f7db5e96316912e09dac2120db87570f95b13244369d457"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v3/haunted-junk-v3-textured/downloads/thumbnail.png",
+          "bytes": 154261,
+          "sha256": "260570f45ec16a0eebc89a9b1259906a5c28dd31d38aff9b34848ede22eca4e3"
+        }
+      ]
+    },
+    "haunted-boiler-v3-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "825593e8-920c-44e9-b336-5b93d11ca4d3",
+      "createdAt": "2026-10-04T12:25:45.828751+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a106d7-46e4-71be-9732-8a733c866c3f",
+        "texture_prompt": "Old flaking dark teal green iron, orange rust patches, corroded copper pipes, chipped scarlet valve wheel, stained ivory pressure gauge. Green slime leaks. Black furnace hole with acid green inner glow painted only inside opening. Dirty hand painted low poly game albedo, no baked lighting.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1011,
+      "id": "01a106e0-afb8-754e-a20b-74d42bb1b10e",
+      "checkedAt": "2026-10-04T12:39:21.916874+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791116831384,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v3/haunted-boiler-v3-textured/downloads/model.glb",
+          "bytes": 2903948,
+          "sha256": "9a0cfc4d32ea335611e6c37ed4d1a97508df6960005d290b2e69cc486aa89684"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v3/haunted-boiler-v3-textured/downloads/thumbnail.png",
+          "bytes": 125648,
+          "sha256": "eb1bd1c8ec36fd753b5ac017474959694ea9e24574c80f76b10afe6098060d26"
+        }
+      ]
+    },
+    "bathhouse-wall-v3-repaint": {
+      "resource": "retexture",
+      "state": "SUCCEEDED",
+      "operationId": "726c9c16-37fc-4de7-9355-7652fcf2d2bc",
+      "createdAt": "2026-10-04T12:48:02.130397+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "input_task_id": "01a106e0-0e7d-7744-b6e8-5c3ec4f75b16",
+        "text_style_prompt": "ENTIRE broad wall face covered in old small SQUARE TURQUOISE CERAMIC MOSAIC TILES with dark visible grout grid. Broken missing tiles expose dark brown mortar. Strong green mildew, black vertical water streaks, cracking and dirt everywhere. Large purple and acid lime SPRAY PAINT GRAFFITI ghost face and angular tags across tiles. Worn ivory upper tile border. This is a very dirty abandoned Turkish bathhouse, not a clean metal door. Strong turquoise tiled pattern over every broad surface. Preserve original mesh and UVs. No baked lighting.",
+        "enable_original_uv": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1001,
+      "id": "01a106f5-1bbb-73df-bd92-b0a99855120a",
+      "checkedAt": "2026-10-04T13:00:31.229872+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791118194320,
+      "expiresAt": 1791377394320,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v3/bathhouse-wall-v3-repaint/downloads/model.glb",
+          "bytes": 2049912,
+          "sha256": "0bfaf30f2ae6a6d97018127c881229a57d848ca157b327aee16874c1371959a7"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v3/bathhouse-wall-v3-repaint/downloads/thumbnail.png",
+          "bytes": 177465,
+          "sha256": "9aeebdea2c7517fac398613226adbc787d06bed8ce44b254845611a5bf1c1eec"
+        }
+      ]
+    },
+    "bathhouse-arch-v3-repaint": {
+      "resource": "retexture",
+      "state": "SUCCEEDED",
+      "operationId": "cc2adafb-ad52-40eb-917c-ae4b95d15bdd",
+      "createdAt": "2026-10-04T12:48:13.854174+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "input_task_id": "01a106e0-50f9-74c2-bc52-763dd96ba5c3",
+        "text_style_prompt": "Ruined Turkish bathhouse arch heavily patterned in SMALL TURQUOISE CERAMIC MOSAIC TILES with black grout grid on all wall and arch surfaces. Chipped dirty cream columns and broken brown masonry edges. Strong black water damage, lime-green mold and purple fluorescent spraypaint graffiti all over lower sections. Bright green neon glass only on the small horizontal pipe. Colorful campy derelict haunted ride scenery. Preserve original geometry and UVs. No baked lighting.",
+        "enable_original_uv": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 991,
+      "id": "01a106f5-3a8b-7667-9c43-b372ea3d4bf5",
+      "checkedAt": "2026-10-04T13:00:34.831874+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791118204818,
+      "expiresAt": 1791377404818,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v3/bathhouse-arch-v3-repaint/downloads/model.glb",
+          "bytes": 2474572,
+          "sha256": "94ae90663e4d44b437c48655ab695bbb4d8cd317f7e967d5d8fc793b582b3fca"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v3/bathhouse-arch-v3-repaint/downloads/thumbnail.png",
+          "bytes": 243699,
+          "sha256": "28f432ff309237cf9ee79cb9ec67f21d96838572341d12c8da0d7f887bdc5da0"
+        }
+      ]
+    }
+  }
+}

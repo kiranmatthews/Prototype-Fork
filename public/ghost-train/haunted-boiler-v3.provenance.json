@@ -1,0 +1,86 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "taskId": "01a106e0-afb8-754e-a20b-74d42bb1b10e",
+  "previewTaskId": "01a106d7-46e4-71be-9732-8a733c866c3f",
+  "sourceSha256": "9a0cfc4d32ea335611e6c37ed4d1a97508df6960005d290b2e69cc486aa89684",
+  "outputSha256": "848a3b942e00d7b68b815a142355f3ae9bbd41775adeaecc122238b82d2016aa",
+  "bytes": 160224,
+  "trianglesBefore": 1794,
+  "trianglesRemoved": 0,
+  "triangles": 1794,
+  "originalUVsPreserved": true,
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 64484
+    }
+  ],
+  "originalAtlases": [
+    {
+      "path": ".img2threejs/ghost-train-v3/atlases/haunted-boiler-v3-atlas-0.png",
+      "size": [
+        2048,
+        2048
+      ],
+      "sha256": "c32c3fab2c2b08700890c82de3719e21bf7f9e761db9b37b4d35436e6f0e1cec"
+    }
+  ],
+  "bounds": {
+    "min": [
+      -0.32833901047706604,
+      0.0,
+      -0.28091001510620117
+    ],
+    "max": [
+      0.32833901047706604,
+      1.0,
+      0.28091001510620117
+    ]
+  },
+  "size": [
+    0.6566780209541321,
+    1.0,
+    0.5618200302124023
+  ],
+  "targetMetres": [
+    1.8,
+    2.4,
+    1.6
+  ],
+  "suggestedUniformScale": 2.4000000953674316,
+  "suggestedUniformMetres": [
+    1.576027274131775,
+    2.4000000953674316,
+    1.3483681678771973
+  ],
+  "transform": {
+    "sourceBounds": {
+      "min": [
+        -0.3279910087585449,
+        -0.5,
+        -0.28060299158096313
+      ],
+      "max": [
+        0.32868701219558716,
+        0.5,
+        0.2812170088291168
+      ]
+    },
+    "yawRadians": 0,
+    "pitchRadians": 0,
+    "maxDimensionScale": 1.0,
+    "trim": null
+  },
+  "axes": "Y-up,+Z-front,centeredXZ,bottomY0,max dimension1",
+  "sourceStage": "haunted-boiler-v3-textured"
+}

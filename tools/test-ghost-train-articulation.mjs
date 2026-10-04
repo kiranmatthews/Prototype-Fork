@@ -67,6 +67,7 @@ try{
   const axePivot=new THREE.Group();axePivot.position.set(0,6,0);scene.add(axePivot);kit.axe(axePivot,4.5);
   kit.decorate({t:'decor',dkind:'ghostclockwork',p:[-5,0,-20],w:5,yaw:0});
   kit.decorate({t:'decor',dkind:'ghostarch',p:[40,0,-20],s:[6.2,7.3,1.4]});
+  for(const [kind,x]of [['ghostbathwall',-12],['ghostbatharch',12],['ghostjunk',-8],['ghostboiler',8]])kit.decorate({t:'decor',dkind:kind,p:[x,0,-12],yaw:0});
   await kit.ready();kit.update(1/60,new THREE.Vector3(0,0,0));
   assert.deepEqual(kit.diagnostics.showLights,{pool:3,shadowed:1,cues:4,active:3},'fixed indoor show lighting topology');
   assert.deepEqual(kit.diagnostics.lightTargets[0].target,[0,5,-6],'authored high sculpture light was retargeted at the player');
@@ -94,7 +95,7 @@ try{
   assert.ok(measured&&measured.scale.x===measured.scale.y&&measured.scale.y===measured.scale.z,'Meshy carriage was stretched');
   assert.equal(measured.userData.ghostCartTriangles,2982,'carriage source triangles were replaced or duplicated');
   const wheelRegions=[];measured.traverse(node=>{if(node.userData.ghostCartWheel)wheelRegions.push(node);});assert.equal(wheelRegions.length,4,'four original Meshy wheel regions');
-  let renderedCartMeshes=0;cart.traverse(node=>{if(node.isMesh&&node.visible&&node.material.visible)renderedCartMeshes++;});assert.equal(renderedCartMeshes,7,'carriage has unnecessary mini draws');
+  let renderedCartMeshes=0,cartHalos=0;cart.traverse(node=>{if(node.userData.ghostBillboard)cartHalos++;else if(node.isMesh&&node.visible&&node.material.visible)renderedCartMeshes++;});assert.equal(renderedCartMeshes,7,'carriage has unnecessary mini draws');assert.equal(cartHalos,4,'carriage corner lights need four local glow halos');
   const face=cart.getObjectByName('Actual Meshy demon carriage mask');assert.ok(face?.userData.meshyCartFace);assert.equal(face.userData.sourceTriangles,1396,'carriage lost its genuine Meshy face region');
   const bounds=new THREE.Box3().setFromObject(body),span=bounds.getSize(new THREE.Vector3());assert.ok(Math.abs(span.z-6.2)<.02&&span.y>3,'open cart has believable original proportions');
   const before=cabin.walls[0].clone(),wheelAngle=wheelRegions[0].rotation.x;cart.position.z=.5;kit.update(1/60,new THREE.Vector3());
@@ -105,8 +106,14 @@ try{
   const angle=jaw.rotation.x,gearAngle=clock.getObjectByName('ClockMainWheel measured axle').quaternion.clone();kit.update(.4,new THREE.Vector3());assert.notEqual(jaw.rotation.x,angle,'banquet display food is frozen');
   assert.ok(clock.getObjectByName('ClockMainWheel measured axle').quaternion.angleTo(gearAngle)>.1,'actual Meshy gear did not advance its servo step');
   assert.ok(Object.values(kit.diagnostics.assets).every(a=>a.status==='ready'),'one of the fourteen actual Meshy assets failed to load');
+  for(let i=0;i<40;i++)kit.decorate({t:'decor',dkind:'ghoststeam',p:[i%5,0,-5-i%3],w:4,rise:2.4,amp:.4,phase:i*.13});
+  kit.update(.1,new THREE.Vector3());const steam=scene.getObjectByName('Bounded drifting green steam'),firstCloud=Array.from(steam.instanceMatrix.array);
+  assert.equal(steam.count,128,'nearby steam sources must respect the fixed GPU particle budget');
+  kit.update(.25,new THREE.Vector3());assert.notDeepEqual(Array.from(steam.instanceMatrix.array),firstCloud,'steam is a frozen billboard');
+  kit.update(.1,new THREE.Vector3(1000,0,1000));assert.equal(steam.count,0,'distant steam sources still draw');
+  let steamReleased=0;steam.addEventListener('dispose',()=>steamReleased++);
   let released=0;for(const entry of kit.lightPool){if(!entry.light.castShadow)continue;entry.light.shadow.map=new THREE.WebGLRenderTarget(4,4);entry.light.shadow.map.addEventListener('dispose',()=>released++);entry.light.shadow.mapPass=new THREE.WebGLRenderTarget(4,4);entry.light.shadow.mapPass.addEventListener('dispose',()=>released++);}
   let instanceReleased=0;for(const mesh of kit.instanceMeshes)mesh.addEventListener('dispose',()=>instanceReleased++);const instanceDraws=kit.diagnostics.instanceDraws;
-  kit.dispose();assert.equal(released,2,'indoor shadow render targets leaked');assert.equal(instanceReleased,instanceDraws,'instanced model buffers leaked');assert.equal(scene.children.filter(o=>o.isLight).length,0,'show lights survived level disposal');
+  kit.dispose();assert.equal(steamReleased,1,'steam instance buffers leaked');assert.equal(released,2,'indoor shadow render targets leaked');assert.equal(instanceReleased,instanceDraws,'instanced model buffers leaked');assert.equal(scene.children.filter(o=>o.isLight).length,0,'show lights survived level disposal');
   console.log(JSON.stringify({test:'actual Meshy articulation, compact open carriage, moving cabin collisions, staged lights and lifetime',knightTriangles:a.group.userData.ghostTriangles,regionMeshes:a.diagnostics.meshes,plantedSamples:plants,maximumFootError:maximumError,cartBody:span.toArray(),cartInterior:[widths.width,widths.depth],shadowTargetsReleased:released,food:[turkey.group.userData.ghostTriangles,cake.group.userData.ghostTriangles]},null,2));
 }finally{for(const v of visuals)v.dispose();GLTFLoader.prototype.load=original;await server.close();}

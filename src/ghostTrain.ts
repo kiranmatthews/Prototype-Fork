@@ -6,11 +6,12 @@ import type { EnemyAnimationFrame, EnemyKind, EnemyVisual, EnemyVisualDiagnostic
 import { characterElasticityAmplitudes } from './animation/elasticity';
 import { enemyElasticPulse } from './enemies/elasticity';
 import { createGhostClockwork, type GhostClockwork } from './ghostClockwork';
+import { GhostAtmosphere, GHOST_EFFECT_KINDS, ghostFlicker, ghostGlow } from './ghostAtmosphere';
 
 /** Presentation skins only. Movement, contacts and pendulum timing stay native. */
-export const GHOST_STATIC_KINDS=['ghostwallbay','ghostbanquettable','ghostchandelier','ghosttrestle','ghostmonsterportal','ghostflagstone'] as const;
+export const GHOST_STATIC_KINDS=['ghostwallbay','ghostbanquettable','ghostchandelier','ghosttrestle','ghostmonsterportal','ghostflagstone','ghostbathwall','ghostbatharch','ghostjunk','ghostboiler'] as const;
 type GhostStaticKind=typeof GHOST_STATIC_KINDS[number];
-export const GHOST_DECOR_KINDS = ['ghostcart','ghostaxe','ghostknight','ghostfood','ghostcake','ghostarch','ghostshowlight','ghostclockwork',...GHOST_STATIC_KINDS] as const;
+export const GHOST_DECOR_KINDS = ['ghostcart','ghostaxe','ghostknight','ghostfood','ghostcake','ghostarch','ghostshowlight','ghostclockwork',...GHOST_STATIC_KINDS,...GHOST_EFFECT_KINDS] as const;
 export type GhostDecorKind = typeof GHOST_DECOR_KINDS[number];
 export const GHOST_DECOR_LABELS:Record<GhostDecorKind,string> = {
   ghostcart:'Ghost train cart',ghostaxe:'Castle swinging axe',ghostknight:'Clockwork haunted armour',
@@ -19,6 +20,8 @@ export const GHOST_DECOR_LABELS:Record<GhostDecorKind,string> = {
   ghostclockwork:'Animated castle counterweight machine',
   ghostwallbay:'Meshy carved castle window bay',ghostbanquettable:'Meshy ornate banquet table',ghostchandelier:'Meshy castle chandelier',
   ghosttrestle:'Meshy ruined railway trestle',ghostmonsterportal:'Meshy monster-faced portal',ghostflagstone:'Meshy worn castle flagstone',
+  ghostbathwall:'Meshy derelict bathhouse tiles',ghostbatharch:'Meshy ruined bathhouse arch',ghostjunk:'Meshy abandoned ride rubbish',ghostboiler:'Meshy leaking bathhouse boiler',
+  ghoststeam:'Drifting green ghost steam',ghostgraffiti:'Derelict ride spray paint',ghostneon:'Flickering ghost train neon',ghostslime:'Glowing stagnant bath water',
 };
 export const GHOST_ASSETS = {
   ghostcart:'ghost-train/ghost-cart.glb',ghostarch:'ghost-train/castle-arch.glb',
@@ -29,10 +32,13 @@ export const GHOST_ASSETS = {
   ghosttrestle:'ghost-train/broken-rail-trestle-v2.glb',ghostmonsterportal:'ghost-train/monster-face-portal-v2.glb',
   ghostclockwork:'ghost-train/castle-clockwork-v2.glb',ghostflagstone:'ghost-train/castle-flagstone-v2.glb',
   ghostcartface:'ghost-train/demon-cart-face-v2.glb',
+  ghostbathwall:'ghost-train/bathhouse-wall-v3.glb',ghostbatharch:'ghost-train/bathhouse-arch-v3.glb',
+  ghostjunk:'ghost-train/haunted-junk-v3.glb',ghostboiler:'ghost-train/haunted-boiler-v3.glb',
 } as const;
 export const GHOST_STATIC_SIZES:Record<GhostStaticKind,[number,number,number]>={
   ghostwallbay:[2.72,5.4,2.40],ghostbanquettable:[1.67,1.3,3.40],ghostchandelier:[3.24,3.2,3.24],
   ghosttrestle:[2.15,1.49,6],ghostmonsterportal:[9,9,8.84],ghostflagstone:[2.4,.0961,2.15],
+  ghostbathwall:[2.63,4.5,.53],ghostbatharch:[4.9,4.1,3.63],ghostjunk:[2,1,1.6],ghostboiler:[1.8,2.4,1.6],
 };
 type AssetKind=keyof typeof GHOST_ASSETS;
 type AssetStatus='loading'|'ready'|'error';
@@ -55,7 +61,7 @@ function asset(kind:AssetKind):AssetEntry {
       if(mesh.name==='WindowGlass'||mesh.name==='PortalEyes'){
         const source=Array.isArray(mesh.material)?mesh.material:[mesh.material];
         const glowing=source.map(material=>{const own=material.clone() as THREE.MeshStandardMaterial;
-          own.emissive.set(mesh.name==='WindowGlass'?'#355de7':'#73ff47');own.emissiveIntensity=mesh.name==='WindowGlass'?.90:.80;own.emissiveMap=null;
+          own.emissive.set(mesh.name==='WindowGlass'?'#56d77d':'#85ff39');own.emissiveIntensity=mesh.name==='WindowGlass'?1.4:2.2;own.emissiveMap=null;
           own.roughness=mesh.name==='WindowGlass'?.42:.55;own.metalness=0;own.userData.ghostEmissionRegion=mesh.name;return own;});
         mesh.material=Array.isArray(mesh.material)?glowing:glowing[0];
       }
@@ -160,7 +166,7 @@ function carriage(a:Asset,depth:number,wheels:THREE.Group[]):THREE.Group {
 function mergeRigidParts(root:THREE.Group):THREE.BufferGeometry[] {
   root.updateWorldMatrix(true,true);const inverse=root.matrixWorld.clone().invert(),groups=new Map<THREE.Material,THREE.BufferGeometry[]>();
   const created:THREE.BufferGeometry[]=[];
-  for(const child of [...root.children]){const mesh=child as THREE.Mesh;if(!mesh.isMesh||(mesh as THREE.InstancedMesh).isInstancedMesh||Array.isArray(mesh.material))continue;
+  for(const child of [...root.children]){const mesh=child as THREE.Mesh;if(!mesh.isMesh||mesh.userData.ghostBillboard||(mesh as THREE.InstancedMesh).isInstancedMesh||Array.isArray(mesh.material))continue;
     const part=mesh.geometry.clone().applyMatrix4(inverse.clone().multiply(mesh.matrixWorld)),list=groups.get(mesh.material)??[];list.push(part);groups.set(mesh.material,list);
     mesh.geometry.dispose();mesh.removeFromParent();
   }
@@ -169,7 +175,8 @@ function mergeRigidParts(root:THREE.Group):THREE.BufferGeometry[] {
   return created;
 }
 function greenLamp(parent:THREE.Object3D,p:[number,number,number],size=.1):THREE.Mesh {
-  const m=new THREE.Mesh(new THREE.SphereGeometry(size,8,6),new THREE.MeshBasicMaterial({color:0x8cff3d}));m.position.set(...p);parent.add(m);
+  const m=new THREE.Mesh(new THREE.SphereGeometry(size,8,6),new THREE.MeshBasicMaterial({color:0xb2ff59,toneMapped:false}));m.position.set(...p);parent.add(m);
+  const halo=ghostGlow('#77ff40',size*8);halo.position.set(...p);halo.userData.ghostBillboard=true;parent.add(halo);
   return m;
 }
 function fallbackCart(w:number,d:number,h:number):THREE.Group {
@@ -220,9 +227,12 @@ export class GhostTrainAssetKit {
   private cues:{p:THREE.Vector3;to:THREE.Vector3;color:THREE.Color;power:number;cone:number;range:number;family:number;fixed:boolean}[]=[];
   private lightPool:{light:THREE.SpotLight;cue:number}[]=[];
   private candleLight:THREE.PointLight;
+  private atmosphere:GhostAtmosphere;
+  private fixtureHalos:{material:THREE.ShaderMaterial;seed:number}[]=[];
   private time=0;
   private focus=new THREE.Vector3();
   constructor(private levelRoot:THREE.Group,private actors:()=>readonly THREE.Object3D[]=()=>[],private instanced=true){
+    this.atmosphere=new GhostAtmosphere(levelRoot);
     // Allocate the exact light topology before the first scene render. Moving
     // among show rooms never changes shader light counts or recompiles PBR art.
     for(let i=0;i<3;i++){
@@ -312,6 +322,7 @@ export class GhostTrainAssetKit {
     }));
   }
   decorate(c:CustomComponent):void {
+    if(this.atmosphere.add(c))return;
     if(GHOST_STATIC_KINDS.includes(c.dkind as GhostStaticKind)){this.staticDecor(c);return;}
     if(c.dkind==='ghostclockwork'){
       const visual=createGhostClockwork(c.s??[6,7,3],c.yaw??0),merged:THREE.BufferGeometry[]=[];
@@ -348,7 +359,9 @@ export class GhostTrainAssetKit {
       for(let i=0;i<6;i++){const a=i*Math.PI/3;box(fixture,[.028,.44,.028],[Math.cos(a)*.205,0,Math.sin(a)*.205],iron);}
       const hook=new THREE.Mesh(new THREE.TorusGeometry(.075,.014,4,8),brass);hook.position.y=.46;fixture.add(hook);
       const bracket=cylinder(fixture,.022,.022,.46,[0,.06,.25],iron,6);bracket.rotation.x=Math.PI/2;
-      fixture.rotation.y=Math.atan2(p.x-to.x,p.z-to.z);mergeRigidParts(fixture);return;
+      fixture.rotation.y=Math.atan2(p.x-to.x,p.z-to.z);mergeRigidParts(fixture);
+      const halo=ghostGlow(c.color??'#87ff66',2.4);halo.userData.ghostBillboard=true;fixture.add(halo);
+      this.fixtureHalos.push({material:halo.material as THREE.ShaderMaterial,seed:this.cues.length*.61});return;
     }
     if(c.dkind==='ghostaxe'){
       const root=axeVisual(c.len??4);root.position.fromArray(c.p);root.rotation.y=THREE.MathUtils.degToRad(c.yaw??0);this.levelRoot.add(root);return;
@@ -360,15 +373,19 @@ export class GhostTrainAssetKit {
     }
     if(c.dkind==='ghostcart'){
       const depth=c.w??c.s?.[2]??6.2,root=this.install('ghostcart',this.levelRoot,fallbackCart(depth*.511794,depth,depth*.500941),depth*.500941,undefined,a=>carriage(a,depth,[]));
-      root.position.fromArray(c.p);root.rotation.y=THREE.MathUtils.degToRad(c.yaw??0);this.cartFace(root,depth);return;
+      root.position.fromArray(c.p);root.rotation.y=THREE.MathUtils.degToRad(c.yaw??0);root.rotation.z=THREE.MathUtils.degToRad(c.amp??0);this.cartFace(root,depth);return;
     }
     const size=c.s??[12,9,1.6],root=this.install('ghostarch',this.levelRoot,fallbackArch(...size),size[1],size);root.position.fromArray(c.p);root.rotation.y=THREE.MathUtils.degToRad(c.yaw??0);
   }
   async ready():Promise<void>{await Promise.all(this.pending);}
   update(dt:number,playerPos:THREE.Vector3):void {
     if(this.released)return;this.time+=Math.max(0,dt);this.focus.copy(playerPos);
-    for(const display of this.displays)display.visual.update(dt,{state:'display',stateTime:this.time,time:this.time+display.seed,speed:0,verticalVelocity:0,grounded:true,alive:true,flung:false});
-    for(const machine of this.machines)machine.visual.update(this.time);
+    this.atmosphere.update(dt,playerPos);
+    for(const halo of this.fixtureHalos)halo.material.uniforms.opacity.value=.70*ghostFlicker(this.time,halo.seed);
+    for(const root of this.roots)if(root.userData.ghostStaticAsset||root.name==='Indoor castle stage lamp')root.visible=root.position.distanceToSquared(playerPos)<130*130;
+    for(const display of this.displays){display.visual.group.visible=display.visual.group.position.distanceToSquared(playerPos)<105*105;
+      if(display.visual.group.visible)display.visual.update(dt,{state:'display',stateTime:this.time,time:this.time+display.seed,speed:0,verticalVelocity:0,grounded:true,alive:true,flung:false});}
+    for(const machine of this.machines){machine.visual.group.visible=machine.visual.group.position.distanceToSquared(playerPos)<105*105;if(machine.visual.group.visible)machine.visual.update(this.time);}
     for(const car of this.carts){const delta=car.mesh.position.clone().sub(car.last),yaw=car.mesh.rotation.y;
       const travel=delta.x*Math.sin(yaw)+delta.z*Math.cos(yaw);for(const wheel of car.wheels)wheel.rotation.x+=travel/car.radius;car.last.copy(car.mesh.position);
       car.mesh.updateWorldMatrix(true,true);for(const wall of car.walls)wall.box.setFromObject(wall.mesh);
@@ -392,7 +409,7 @@ export class GhostTrainAssetKit {
       // sconce farther from the performer. This is bounded local light power,
       // not a global exposure or an extra light added for each character.
       const gain=THREE.MathUtils.clamp(cue.p.distanceToSquared(aim)/36,1,slot===0?3.8:3.0);
-      light.intensity=Math.min(cue.fixed?1600:520,cue.power*(slot===0?1:.9)*gain*(cue.fixed?2.1:1));light.distance=cue.range;light.angle=cue.fixed?Math.max(.72,cue.cone):cue.cone;
+      light.intensity=Math.min(cue.fixed?1600:620,cue.power*(slot===0?1:.9)*gain*(cue.fixed?2.1:1))*ghostFlicker(this.time,(best+1)*.61);light.distance=cue.range;light.angle=cue.fixed?Math.max(.72,cue.cone):cue.cone;
       if(light.shadow.camera.far!==cue.range){light.shadow.camera.far=cue.range;light.shadow.camera.updateProjectionMatrix();}light.target.updateMatrixWorld();
     }
     const chandeliers=this.staticJobs.get('ghostchandelier');let nearest:THREE.Vector3|undefined,near=Infinity;
@@ -401,9 +418,9 @@ export class GhostTrainAssetKit {
     if(nearest){this.candleLight.position.copy(nearest);this.candleLight.intensity=34;}else this.candleLight.intensity=0;
   }
   get diagnostics() {
-    return {instances:this.roots.size,staticModels:[...this.staticJobs].map(([kind,job])=>({kind,placements:job.rows.length,status:job.status})),instanceDraws:this.instanceMeshes.size,showLights:{pool:this.lightPool.length,shadowed:this.lightPool.filter(p=>p.light.castShadow).length,cues:this.cues.length,active:this.lightPool.filter(p=>p.cue>=0).length},candleBounce:{power:this.candleLight.intensity,origin:this.candleLight.position.toArray()},lightTargets:this.lightPool.map(p=>({cue:p.cue,power:p.light.intensity,origin:p.light.position.toArray(),target:p.light.target.position.toArray(),fixed:p.cue>=0&&this.cues[p.cue].fixed})),carts:this.carts.map(c=>c.mesh.userData.ghostCartProportions),assets:Object.fromEntries([...templates].map(([kind,entry])=>[kind,{status:entry.status,...(entry.error?{error:entry.error}:{})}]))};
+    return {atmosphere:this.atmosphere.diagnostics,instances:this.roots.size,staticModels:[...this.staticJobs].map(([kind,job])=>({kind,placements:job.rows.length,status:job.status})),instanceDraws:this.instanceMeshes.size,showLights:{pool:this.lightPool.length,shadowed:this.lightPool.filter(p=>p.light.castShadow).length,cues:this.cues.length,active:this.lightPool.filter(p=>p.cue>=0).length},candleBounce:{power:this.candleLight.intensity,origin:this.candleLight.position.toArray()},lightTargets:this.lightPool.map(p=>({cue:p.cue,power:p.light.intensity,origin:p.light.position.toArray(),target:p.light.target.position.toArray(),fixed:p.cue>=0&&this.cues[p.cue].fixed})),carts:this.carts.map(c=>c.mesh.userData.ghostCartProportions),assets:Object.fromEntries([...templates].map(([kind,entry])=>[kind,{status:entry.status,...(entry.error?{error:entry.error}:{})}]))};
   }
-  dispose():void{this.released=true;for(const visual of this.visuals)visual.dispose();this.visuals.clear();for(const root of this.roots)disposeOwned(root);this.roots.clear();
+  dispose():void{this.released=true;this.atmosphere.dispose();this.fixtureHalos.length=0;for(const visual of this.visuals)visual.dispose();this.visuals.clear();for(const root of this.roots)disposeOwned(root);this.roots.clear();
     for(const mesh of this.instanceMeshes)mesh.dispose();this.instanceMeshes.clear();this.staticJobs.clear();
     for(const machine of this.machines){for(const geometry of machine.merged)geometry.dispose();machine.visual.dispose();}this.machines.length=0;
     for(const {light}of this.lightPool){light.shadow.map?.dispose();light.shadow.mapPass?.dispose();light.shadow.map=null;light.shadow.mapPass=null;light.removeFromParent();light.target.removeFromParent();}this.candleLight.removeFromParent();this.lightPool.length=0;this.carts.length=0;this.cues.length=0;}

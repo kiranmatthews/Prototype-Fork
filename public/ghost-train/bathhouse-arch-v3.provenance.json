@@ -1,0 +1,87 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "taskId": "01a106f5-3a8b-7667-9c43-b372ea3d4bf5",
+  "previewTaskId": "01a106d6-eb7f-7259-a815-175797733954",
+  "sourceSha256": "94ae90663e4d44b437c48655ab695bbb4d8cd317f7e967d5d8fc793b582b3fca",
+  "outputSha256": "84d100a31a5eb31b801902a8bf8ff70175ace43940c86103daa523553aa98d07",
+  "bytes": 329416,
+  "trianglesBefore": 2095,
+  "trianglesRemoved": 0,
+  "triangles": 2095,
+  "originalUVsPreserved": true,
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 204732
+    }
+  ],
+  "originalAtlases": [
+    {
+      "path": ".img2threejs/ghost-train-v3/atlases/bathhouse-arch-v3-atlas-0.png",
+      "size": [
+        2048,
+        2048
+      ],
+      "sha256": "2a4a1430cc59c4c569e552f4dcd0ae0724cea05c7281f88987b1f9e6df2b5acc"
+    }
+  ],
+  "bounds": {
+    "min": [
+      -0.5,
+      0.0,
+      -0.36993300914764404
+    ],
+    "max": [
+      0.5,
+      0.8359100222587585,
+      0.36993300914764404
+    ]
+  },
+  "size": [
+    1.0,
+    0.8359100222587585,
+    0.7398660182952881
+  ],
+  "targetMetres": [
+    4.9,
+    4.1,
+    3.63
+  ],
+  "suggestedUniformScale": 4.904834121884511,
+  "suggestedUniformMetres": [
+    4.904834121884511,
+    4.1,
+    3.6289200921575584
+  ],
+  "transform": {
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.42079201340675354,
+        -0.37227100133895874
+      ],
+      "max": [
+        0.5,
+        0.415118008852005,
+        0.36759498715400696
+      ]
+    },
+    "yawRadians": 0,
+    "pitchRadians": 0,
+    "maxDimensionScale": 1.0,
+    "trim": null
+  },
+  "axes": "Y-up,+Z-front,centeredXZ,bottomY0,max dimension1",
+  "sourceStage": "bathhouse-arch-v3-repaint",
+  "placementNote": "Deep closed facade used as a side alcove; never a walk-through doorway."
+}

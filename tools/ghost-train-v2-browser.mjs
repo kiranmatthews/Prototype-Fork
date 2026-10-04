@@ -56,7 +56,7 @@ try{
   await page.waitForFunction(()=>{
     const diagnostics=window.__game?.getLevel().ghostTrainDiagnostics;
     return diagnostics&&Object.keys(diagnostics.scenery.assets).length>=12&&Object.values(diagnostics.scenery.assets).every(asset=>asset.status==='ready')
-      &&diagnostics.enemies.every(enemy=>enemy.status==='ready')&&['stone','floor','timber'].every(kind=>diagnostics.textures[kind]==='ready');
+      &&diagnostics.enemies.every(enemy=>enemy.status==='ready')&&['stone','floor','timber','bath'].every(kind=>diagnostics.textures[kind]==='ready');
   },null,{timeout:120000});
   for(const fixture of fixtures){
     const firstError=consoleErrors.length;

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import type { CustomComponent } from './level';
 
-export const CASTLE_TEXTURE_KINDS = ['castle-stone', 'castle-floor', 'castle-timber'] as const;
+export const CASTLE_TEXTURE_KINDS = ['castle-stone', 'castle-floor', 'castle-timber', 'castle-bath'] as const;
 type CastleTexture = typeof CASTLE_TEXTURE_KINDS[number];
 export function isCastleTexture(value: unknown): value is CastleTexture {
   return typeof value === 'string' && (CASTLE_TEXTURE_KINDS as readonly string[]).includes(value);
@@ -24,12 +24,12 @@ function paint(kind: CastleTexture): THREE.DataTexture {
       const knotX = 28 + plank * 64, knotY = 65 + (plank % 2) * 100;
       const knot = Math.hypot((x - knotX) * 1.5, (y - knotY) * .4);
       if (knot < 11) rgb = rgb.map(v => v * (.62 + .22 * Math.sin(knot * 1.8)));
-    } else if (kind === 'castle-floor') {
+    } else if (kind === 'castle-floor' || kind === 'castle-bath') {
       const row = Math.floor(y / 64), col = Math.floor((x + (row % 2) * 32) / 64);
       const fx = (x + (row % 2) * 32) % 64, fy = y % 64;
       const edge = Math.min(fx, 63 - fx, fy, 63 - fy);
       const light = (row + col) % 2 === 0;
-      const base = light ? [129, 121, 102] : [74, 70, 70];
+      const base = kind==='castle-bath' ? (light?[80,131,112]:[129,145,114]) : light ? [129, 121, 102] : [74, 70, 70];
       const wear = (grain - .5) * 11 + noise(col, row) * 10;
       rgb = base.map(v => edge < 1.5 ? 32 : v + wear + (edge < 4 ? 7 : 0));
     } else {
@@ -65,6 +65,7 @@ const MESHY_PAINT: Record<CastleTexture, string> = {
   'castle-stone': 'ghost-train/meshy-castle-stone-v2.png',
   'castle-floor': 'ghost-train/meshy-castle-floor-v2.png',
   'castle-timber': 'ghost-train/meshy-castle-timber-v2.png',
+  'castle-bath': 'ghost-train/meshy-bath-tiles-v3.png',
 };
 function textureSlot(kind: CastleTexture): {value: THREE.Texture} {
   let slot = slots.get(kind);
@@ -105,7 +106,7 @@ export function createCastleMaterial(c: CustomComponent): THREE.MeshStandardMate
   const slot = textureSlot(kind);
   const stoneJoints = kind === 'castle-stone' ? textureSlot('castle-floor') : null;
   const material = new THREE.MeshStandardMaterial({
-    color: c.color ?? '#ffffff', roughness: kind === 'castle-floor' ? .74 : .93,
+    color: c.color ?? '#ffffff', roughness: kind === 'castle-bath' ? .58 : kind === 'castle-floor' ? .74 : .93,
     metalness: 0, emissive: c.emissive ?? '#000000',
     vertexColors: !!c.colors, opacity: c.opacity ?? 1,
     transparent: (c.opacity ?? 1) < 1, fog: c.fog !== false,
@@ -128,7 +129,7 @@ export function createCastleMaterial(c: CustomComponent): THREE.MeshStandardMate
   material.onBeforeCompile = shader => {
     shader.uniforms.uCastlePaint = slot;
     if (stoneJoints) shader.uniforms.uCastleStoneJoints = stoneJoints;
-    shader.uniforms.uCastleTileSize = {value: kind === 'castle-floor' ? 2.4 : kind === 'castle-timber' ? 2.0 : 3.0};
+    shader.uniforms.uCastleTileSize = {value: kind === 'castle-floor'||kind==='castle-bath' ? 2.4 : kind === 'castle-timber' ? 2.0 : 3.0};
     shader.vertexShader = 'varying vec3 vCastleWorld;\nvarying vec3 vCastleWorldNormal;\n' + shader.vertexShader;
     shader.vertexShader = shader.vertexShader.replace('#include <project_vertex>', `#include <project_vertex>
       vec4 castleWorld = vec4(transformed, 1.0);
@@ -140,7 +141,11 @@ export function createCastleMaterial(c: CustomComponent): THREE.MeshStandardMate
       vCastleWorld = (modelMatrix * castleWorld).xyz;
       vCastleWorldNormal = normalize(mat3(modelMatrix) * castleNormal);`);
     shader.fragmentShader = 'varying vec3 vCastleWorld;\nvarying vec3 vCastleWorldNormal;\nuniform sampler2D uCastlePaint;\nuniform float uCastleTileSize;\n' +
-      (stoneJoints ? 'uniform sampler2D uCastleStoneJoints;\n' : '') + shader.fragmentShader;
+      (stoneJoints ? 'uniform sampler2D uCastleStoneJoints;\n' : '') + `
+      float castleDirtHash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+      float castleDirtNoise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+        return mix(mix(castleDirtHash(i),castleDirtHash(i+vec2(1.,0.)),f.x),mix(castleDirtHash(i+vec2(0.,1.)),castleDirtHash(i+1.),f.x),f.y);}
+      ` + shader.fragmentShader;
     shader.fragmentShader = shader.fragmentShader.replace('#include <map_fragment>', `
       vec3 castleWeights = pow(abs(normalize(vCastleWorldNormal)), vec3(5.0));
       castleWeights /= max(dot(castleWeights, vec3(1.0)), .001);
@@ -154,8 +159,16 @@ export function createCastleMaterial(c: CustomComponent): THREE.MeshStandardMate
       vec3 jointZ = texture2D(uCastleStoneJoints, vCastleWorld.xy / 3.6).rgb;
       vec3 jointPaint = jointX * castleWeights.x + jointY * castleWeights.y + jointZ * castleWeights.z;
       castlePaint = mix(castlePaint, jointPaint, .72);` : ''}
+      vec2 dirtUV=vCastleWorld.zy*castleWeights.x+vCastleWorld.xz*castleWeights.y+vCastleWorld.xy*castleWeights.z;
+      float castleDamp=smoothstep(.35,.78,castleDirtNoise(dirtUV*.31)+castleDirtNoise(dirtUV*.91)*.18);
+      float drips=smoothstep(.60,.87,castleDirtNoise(dirtUV*vec2(3.4,.10)))*(1.-castleWeights.y);
+      float lichen=smoothstep(.66,.91,castleDirtNoise(dirtUV*2.8))*castleDamp;
+      castlePaint*=mix(vec3(1.),vec3(.34,.53,.39),castleDamp*.66+drips*.25);
+      castlePaint=mix(castlePaint,vec3(.10,.19,.09),lichen*.27);
       diffuseColor.rgb *= castlePaint;
       float castleRelief = dot(castlePaint, vec3(.299, .587, .114));`);
+    shader.fragmentShader=shader.fragmentShader.replace('#include <roughnessmap_fragment>',`#include <roughnessmap_fragment>
+      roughnessFactor=max(.24,roughnessFactor*(1.-castleDamp*.42));`);
     shader.fragmentShader = shader.fragmentShader.replace('#include <normal_fragment_maps>', `#include <normal_fragment_maps>
       vec3 castleDx = dFdx(-vViewPosition), castleDy = dFdy(-vViewPosition);
       vec3 castleR1 = cross(castleDy, normal), castleR2 = cross(normal, castleDx);
@@ -163,12 +176,12 @@ export function createCastleMaterial(c: CustomComponent): THREE.MeshStandardMate
       vec3 castleGradient = sign(castleDet) * (dFdx(castleRelief) * castleR1 + dFdy(castleRelief) * castleR2);
       normal = normalize(abs(castleDet) * normal - castleGradient * .018);`);
   };
-  material.customProgramCacheKey = () => `ghost-castle-metric-meshy-paint-v3:${kind}`;
+  material.customProgramCacheKey = () => `ghost-castle-damp-meshy-paint-v4:${kind}`;
   return material;
 }
 export async function prepareCastleTextures(): Promise<void> { await Promise.all(ready.values()); }
 export function castleTextureDiagnostics() {
   return {stone: status.get('castle-stone') ?? 'idle', floor: status.get('castle-floor') ?? 'idle',
-    timber: status.get('castle-timber') ?? 'idle', source: 'Meshy model albedo and original UVs',
+    timber: status.get('castle-timber') ?? 'idle', bath:status.get('castle-bath')??'idle', source: 'Meshy model albedo and original UVs',
     textureKinds: [...slots.keys()], materialRefs};
 }

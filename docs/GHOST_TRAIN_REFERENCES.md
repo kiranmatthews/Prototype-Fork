@@ -25,3 +25,21 @@ The three mockups establish the authored composition targets:
 
 These images are concept mockups. Validation and actual gameplay captures are
 kept separately so the rendered game can be judged against the intended design.
+
+
+## Derelict bathhouse revision
+
+The newer direction draws on the abandoned Blossom Street Turkish Baths from
+*Batman & Robin* (1997), alongside the existing Spooky Island research.
+
+- [Production screenplay](https://assets.scriptslug.com/live/pdf/scripts/batman-and-robin-1997.pdf): the abandoned bathhouse setting and its later theatrical transformation.
+- [Live Design interview with Stephen Goldblatt and the lighting team](https://www.livedesignonline.com/gotham-city-gear-dp-stephen-goldblatt-and-phoebus-lighting-accessorize-batman-robin-effects-and): deliberately stylized practical/effects lighting, including magenta effects in the Turkish Bath set.
+
+The authored game combines acid-green illumination and steam with restrained
+purple accents, tiled surfaces, exposed pipework, vandalism and discarded ride
+scenery. It uses original Meshy props and original in-game graffiti. Film
+frames and production reference art are not shipped as runtime textures.
+
+The new [ImageGen triptych](ghost-train-concepts/derelict-baths-v3.png) and its
+[exact prompt](ghost-train-concepts/derelict-baths-v3-prompt.json) are concept
+evidence; gameplay screenshots remain separate.

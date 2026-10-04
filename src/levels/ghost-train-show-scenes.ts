@@ -47,11 +47,11 @@ export function addGhostTrainShowScenes(C:CustomComponent[],q:ShowContext):void 
   for(const side of [-1,1]) {
     for(const s of [108,119,139])wall(s,side*5.7,height(s)+.08,yaw(s)+(side<0?90:-90),boarding);
     display('ghostknight',120,side*3.35,height(120)+.1,2.7,yaw(120)+(side<0?-28:28),boarding);
-    for(const s of [109,115,132,140])light(s,side*4.35,3.6,point(s+5,height(s+5)+2,side*2.9),side<0?'#668bff':'#ff4569',90,side<0?1:2,boarding);
+    for(const s of [109,115,132,140])light(s,side*4.35,3.6,point(s+5,height(s+5)+2,side*2.9),side<0?'#40d889':'#ac43cb',90,side<0?1:2,boarding);
   }
   chandelier(116,height(116)+8.3,3.4,boarding);
-  light(118,-3.5,5.4,point(125,doorY+4.8),'#ff4c64',140,0,boarding);
-  light(128,3.5,5.0,point(125,doorY+4.8),'#67b3ff',95,1,boarding);
+  light(118,-3.5,5.4,point(125,doorY+4.8),'#83ff46',140,0,boarding);
+  light(128,3.5,5.0,point(125,doorY+4.8),'#35c78f',95,1,boarding);
 
   // One banquet theatre instead of a row of identical dining rooms. The
   // center line remains open; a low U-shaped feast dais forms its backdrop.
@@ -63,15 +63,15 @@ export function addGhostTrainShowScenes(C:CustomComponent[],q:ShowContext):void 
     dais(614,side*5.3,top,3.5,8.4,feast);
     for(const s of [611.7,615.1])table(s,side*5.3,top+1.30,feast);
     display('ghostknight',603,side*7.5,height(603)+.4,3.0,yaw(603)+(side<0?-65:65),feast);
-    light(600,side*7.8,5.2,point(604,height(604)+3,side*5.2),side<0?'#648dff':'#ff436a',130,side<0?1:2,feast);
+    light(600,side*7.8,5.2,point(604,height(604)+3,side*5.2),side<0?'#76f64f':'#b65abe',130,side<0?1:2,feast);
   }
   display('ghostcake',590,-5.1,height(590)+1.33,2.2,yaw(590)+28,feast,1);
   display('ghostfood',614,-5.3,height(614)+1.89,2.05,yaw(614)+25,feast,0);
   display('ghostcake',614,5.3,height(614)+1.89,1.6,yaw(614)-25,feast,2);
   chandelier(603,height(603)+8.2,4.1,feast);
   prop('ghostmonsterportal',625,0,height(625),8.0,yaw(625),'Feast theatre monstrous fireplace passage',feast);
-  light(593,-7,4.4,point(590,height(590)+2.6,-5.1),'#ffc780',140,0,feast);
-  light(616,-7.5,5.5,point(614,height(614)+2.9,-5.3),'#ff6946',140,0,feast);
+  light(593,-7,4.4,point(590,height(590)+2.6,-5.1),'#b5ff6a',140,0,feast);
+  light(616,-7.5,5.5,point(614,height(614)+2.9,-5.3),'#74ff9b',140,0,feast);
   light(621,4.6,6.5,point(625,height(625)+4.5),'#b77aff',110,2,feast);
 
   // Layered crypt silhouettes: near props establish scale, low ruined bays
@@ -84,12 +84,12 @@ export function addGhostTrainShowScenes(C:CustomComponent[],q:ShowContext):void 
       wall(s+5,side*8.8,height(s)-7.8,yaw(s)+(side<0?90:-90),crypt,5.4);
     }
     display('ghostknight',1454,side*4.5,height(1454)+.1,3.1,yaw(1454)+(side<0?-55:55),crypt);
-    light(1475,side*7.5,4.8,point(1480,height(1480)+1.4),side<0?'#63a9ff':'#ff557c',140,side<0?1:2,crypt);
+    light(1475,side*7.5,4.8,point(1480,height(1480)+1.4),side<0?'#5af3a0':'#cf58e8',140,side<0?1:2,crypt);
   }
   prop('ghostclockwork',1487,6.9,height(1487)-.45,5.0,yaw(1487)-35,'Meshy clockwork side-track drive',crypt);
   prop('ghostcart',1492,6.9,height(1492)-1.36,6.2,yaw(1492),'Retired Meshy side-track carriage',crypt);
   chandelier(1484,height(1484)+9.0,3.7,crypt);
-  light(1487,9.5,4.9,point(1487,height(1487)+2.2,6.9),'#ffc179',150,0,crypt);
-  light(1498,-4.4,6.0,point(1505,railY+4.5),'#75ffc4',140,1,crypt);
+  light(1487,9.5,4.9,point(1487,height(1487)+2.2,6.9),'#94e871',150,0,crypt);
+  light(1498,-4.4,6.0,point(1505,railY+4.5),'#87ff42',140,1,crypt);
   light(1511,4.0,5.5,point(1505,railY+4.0),'#bc78ff',120,2,crypt);
 }

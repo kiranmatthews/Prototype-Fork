@@ -1,0 +1,53 @@
+{
+  "path": "tools/ghost-train-assets-v3/proof/bath-wall-uv.png",
+  "sourceModel": "bathhouse-wall-v3",
+  "operation": "Reproject actual Meshy albedo through original triangle UVs; no painted/replaced content",
+  "axis": 2,
+  "sign": -1,
+  "projectionAxes": [
+    0,
+    1
+  ],
+  "sampleBounds": {
+    "min": [
+      -0.2927049994468689,
+      0.0,
+      -0.059027500450611115
+    ],
+    "max": [
+      0.2927049994468689,
+      1.0,
+      0.059027500450611115
+    ]
+  },
+  "coverage": 0.9915304183959961,
+  "uvBounds": {
+    "min": [
+      4.999999873689376e-06,
+      0.008948028087615967
+    ],
+    "max": [
+      0.9999179840087891,
+      0.9998900294303894
+    ]
+  },
+  "size": [
+    1024,
+    1024
+  ],
+  "sha256": "b4e7b363ad06bfadbfcaaca24f7f75f2789cc1ffb085b829d1c7a150912a0797",
+  "output": "public/ghost-train/meshy-bath-tiles-v3.png",
+  "cropPixels": [
+    143,
+    102,
+    901,
+    573
+  ],
+  "outputSize": [
+    512,
+    512
+  ],
+  "region": "Upper broad ceramic panel, excluding the metal edge frame and lower push bar",
+  "outputSha256": "091e78e39475c5b2c246502d8c0a07f4ba847e9e871a2b09001990a52405b370",
+  "sourceModelSha256": "5c6ec7dc59da2ce8e20a607eb0b88ad485685b02e49b17f0faae2a1f3dbde45c"
+}

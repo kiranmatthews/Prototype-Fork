@@ -1,0 +1,44 @@
+{
+  "bathhouse-wall-v3": {
+    "triangles": 1600,
+    "prompt": "Low poly modular abandoned Turkish bathhouse wall panel, rectangular upright 3 meters wide and 4 meters tall, flat thin back. Lower half old turquoise square ceramic tiles, upper half cracked peeling cream plaster revealing masonry. Missing tiles, black damp streaks, chipped edges, small broken brass pipe, violet and green spray-painted ghost graffiti. One complete solid wall panel, no ground, no room, front facing, game environment prop. Strong chunky faceted silhouette.",
+    "texture": "Weathered turquoise and faded cream ceramic, dark cracked grout, peeling cream plaster, green mildew and dark brown water streaks. Neon violet and acid lime ghost doodle spraypaint tags and paint drips. Derelict campy abandoned funfair bathhouse. Hand painted game albedo, no baked lighting.",
+    "dimensions": [
+      3.4,
+      4.5,
+      0.5
+    ],
+    "repaint": "ENTIRE broad wall face covered in old small SQUARE TURQUOISE CERAMIC MOSAIC TILES with dark visible grout grid. Broken missing tiles expose dark brown mortar. Strong green mildew, black vertical water streaks, cracking and dirt everywhere. Large purple and acid lime SPRAY PAINT GRAFFITI ghost face and angular tags across tiles. Worn ivory upper tile border. This is a very dirty abandoned Turkish bathhouse, not a clean metal door. Strong turquoise tiled pattern over every broad surface. Preserve original mesh and UVs. No baked lighting."
+  },
+  "bathhouse-arch-v3": {
+    "triangles": 2800,
+    "prompt": "Low poly abandoned Turkish bathhouse horseshoe arch doorway, EMPTY OPEN walkthrough hole 3 meters wide 5 meters tall, two narrow ornate columns and curved arch top, no back wall no door no floor. Turquoise ceramic mosaic and chipped cream stone, exposed crumbling brick, corroded brass pipes, small broken neon tube on the arch. Gothic carnival renovation of an old spa. Thick chunky visible ruin silhouette, standalone modular game asset front facing.",
+    "texture": "Chipped deep turquoise mosaic tiles, dirty ivory stone, black damp weathering, rusting brass pipe, small acid green broken neon glass tubes. Sparse fluorescent purple graffiti scrawls and lime paint splashes, worn red trim. Handpainted low poly haunted amusement ride material, no baked lighting.",
+    "dimensions": [
+      4.9,
+      4.1,
+      3.63
+    ],
+    "repaint": "Ruined Turkish bathhouse arch heavily patterned in SMALL TURQUOISE CERAMIC MOSAIC TILES with black grout grid on all wall and arch surfaces. Chipped dirty cream columns and broken brown masonry edges. Strong black water damage, lime-green mold and purple fluorescent spraypaint graffiti all over lower sections. Bright green neon glass only on the small horizontal pipe. Colorful campy derelict haunted ride scenery. Preserve original geometry and UVs. No baked lighting."
+  },
+  "haunted-junk-v3": {
+    "triangles": 1200,
+    "prompt": "Low poly compact abandoned amusement park rubbish pile, two lumpy tied black garbage bags, rusty dented small bin tipped sideways spilling crumpled tickets, disposable cups and cans, crooked broken cream tile pieces, tangled cable. Grounded low broad asymmetrical cluster 2 meters wide and 1 meter tall, distinct readable silhouettes. No ground plane, no people, no giant backdrop. Game environment asset.",
+    "texture": "Grimy glossy black plastic rubbish bags, corroded dark teal bin with peeling paint, dirty off-white ticket paper and red striped paper cups, crumpled silver cans, broken turquoise ceramic tiles. Hand painted dirty but colorful low poly game prop. Sparse lime spray paint. No baked lighting.",
+    "dimensions": [
+      2,
+      1,
+      1.6
+    ]
+  },
+  "haunted-boiler-v3": {
+    "triangles": 1800,
+    "prompt": "Low poly abandoned bathhouse steam boiler prop, squat rusted cylindrical green iron tank on four short feet, thick crooked copper steam pipes, big red handwheel valve, cracked pressure dial, torn metal cover exposing a dark rectangular furnace opening. Distinct mechanical shapes, theatrical haunted theme park scenery. 2 meters tall and 1.5 meters wide. No environment, no ground plane, no smoke geometry.",
+    "texture": "Old flaking dark teal green iron, orange rust patches, corroded copper pipes, chipped scarlet valve wheel, stained ivory pressure gauge. Green slime leaks. Black furnace hole with acid green inner glow painted only inside opening. Dirty hand painted low poly game albedo, no baked lighting.",
+    "dimensions": [
+      1.8,
+      2.4,
+      1.6
+    ]
+  }
+}

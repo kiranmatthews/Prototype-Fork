@@ -1,0 +1,86 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "taskId": "01a106f5-1bbb-73df-bd92-b0a99855120a",
+  "previewTaskId": "01a106d6-7226-747f-9570-4e81cbede13a",
+  "sourceSha256": "0bfaf30f2ae6a6d97018127c881229a57d848ca157b327aee16874c1371959a7",
+  "outputSha256": "5c6ec7dc59da2ce8e20a607eb0b88ad485685b02e49b17f0faae2a1f3dbde45c",
+  "bytes": 235832,
+  "trianglesBefore": 879,
+  "trianglesRemoved": 0,
+  "triangles": 879,
+  "originalUVsPreserved": true,
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 185145
+    }
+  ],
+  "originalAtlases": [
+    {
+      "path": ".img2threejs/ghost-train-v3/atlases/bathhouse-wall-v3-atlas-0.png",
+      "size": [
+        2048,
+        2048
+      ],
+      "sha256": "419f29155d95d45e20b0d24d08aeaad9327ca00a655e12dd34301ea59dad33a3"
+    }
+  ],
+  "bounds": {
+    "min": [
+      -0.2927049994468689,
+      0.0,
+      -0.059027500450611115
+    ],
+    "max": [
+      0.2927049994468689,
+      1.0,
+      0.059027500450611115
+    ]
+  },
+  "size": [
+    0.5854099988937378,
+    1.0,
+    0.11805500090122223
+  ],
+  "targetMetres": [
+    3.4,
+    4.5,
+    0.5
+  ],
+  "suggestedUniformScale": 4.5,
+  "suggestedUniformMetres": [
+    2.634345054626465,
+    4.5,
+    0.5312474966049194
+  ],
+  "transform": {
+    "sourceBounds": {
+      "min": [
+        -0.2924480140209198,
+        -0.5,
+        -0.06290899962186813
+      ],
+      "max": [
+        0.2929620146751404,
+        0.5,
+        0.055146001279354095
+      ]
+    },
+    "yawRadians": 0,
+    "pitchRadians": 0,
+    "maxDimensionScale": 1.0,
+    "trim": null
+  },
+  "axes": "Y-up,+Z-front,centeredXZ,bottomY0,max dimension1",
+  "sourceStage": "bathhouse-wall-v3-repaint"
+}
