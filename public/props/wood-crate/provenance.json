@@ -1,0 +1,20 @@
+{
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "taskIds": [
+    "01a106c5-f8e3-7739-a23c-fd34e88c516c",
+    "01a106c7-0abe-70f4-a7d5-88eb3369d34b"
+  ],
+  "credits": 15,
+  "sourceSha256": "27fabe8b71d2344ac34492a309dec44d180c5f7337e66eb3f5c6d4464682ac86",
+  "runtimeSha256": "40f2617d5288836a285bc682321ea721c2fa9ca5054eeff56e66d3062a94722e",
+  "triangles": 182,
+  "draws": 1,
+  "textureSize": [
+    256,
+    256
+  ],
+  "sourceBytes": 2715964,
+  "runtimeBytes": 45692,
+  "geometry": "Original Meshy vertices, normals, UVs and indices; centred and fitted to the existing cube at runtime."
+}

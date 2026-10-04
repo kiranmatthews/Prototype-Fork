@@ -491,7 +491,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   parkCamSpeedFovBoost: 'Skate parks only. Extra FOV degrees between the actual park cruise and charged targets. 0 disables the effect. Steep/vert framing stays unchanged.',
 
 
-  milkMagnetRange: 'Distance from your current character bounds to a milk orb’s centre that starts attraction. Higher reaches farther; 0 requires direct contact. Applies to placed milk and crate drops, including two-player pickups. Milk already moving toward you finishes its flight.',
+  milkMagnetRange: 'Distance from your current character bounds to a fruit’s centre that starts attraction. Higher reaches farther; 0 requires direct contact. Applies to placed fruit and crate drops, including two-player pickups. Fruit already moving toward you finishes its flight.',
   maxSpeed:
     'Top skate speed from CHARGING. Downhill/pipe riding can exceed it up to the downhillMax slider before bleeding back on the flat.',
   walkSpeed:
@@ -889,7 +889,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
       'tripCarryMin', 'tripCarryMax',
     ],
   },
-  { title: 'MILK', keys: ['milkMagnetRange'] },
+  { title: 'FRUIT', keys: ['milkMagnetRange'] },
   { title: 'CRATES', keys: ['crateBounce', 'crateHopSpeed', 'crateHopGravity', 'arrowBounce', 'arrowBoostMult', 'nitroRadius', 'tntRadius'] },
   { title: 'CAMERA', keys: ['chaseCam', 'camHeight', 'camDist', 'camPitch', 'camFov', 'camSpeedFovBoost', 'camAirLift', 'camBalanceRoll'] },
   { title: 'WORLD', keys: ['boulderSpeed'] },

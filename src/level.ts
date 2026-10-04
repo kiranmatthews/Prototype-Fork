@@ -2,7 +2,7 @@ import { CARLISLE_COAST_LEVEL } from "./levels/carlisle-coast";
 import { isOriginalTestCourse } from "./levels/carlisleLegacy";
 import { CityAssetKit, CITY_ASSETS, CITY_ASSET_KINDS, CITY_ASSET_LABELS, isCityAsset, cityMatrix, cityCollisionGeometry, cityRailVisual, accelerateCityGround } from "./cityAssets";
 import { createExplosiveBundle, updateExplosiveBundle, disposeExplosiveBundle, type ExplosiveBundle } from "./explosiveBundle";
-import { createMilkCrate, setMilkCrateState, disposeMilkCrate, type MilkCrate } from "./milkCrate";
+import { createWoodCrate, setWoodCrateState, disposeWoodCrate, woodCrateTexture, type WoodCrate } from "./woodCrate";
 import {attachBonusStone,BonusJumpGate,BONUS_PLATFORM_HEIGHT,BONUS_PLATFORM_RADIUS,BONUS_LANDING_RADIUS} from './bonusPlatform';
 import { DECK_TRICKS, deckTrickInfo, type DeckTrickKind } from './skateTricks';
 import { createJungleCupTrophy } from "./competition/trophy";
@@ -154,12 +154,12 @@ import {
 } from "./unitySandMaterial";
 
 import { milkBlob, updateMilkMotion, MILK_SIZE } from "./milk";
-import { createMilkCarton, milkCartonTexture, pressMilkCarton, renderMilkCarton, setCartonExpansion, updateMilkCarton, CARTON_TOP_HEIGHT, type MilkCarton } from "./milkCarton";
+import { pressMilkCarton, renderMilkCarton, setCartonExpansion, updateMilkCarton, CARTON_TOP_HEIGHT, type MilkCarton } from "./milkCarton";
 
 export interface Crate {
   mesh: THREE.Mesh;
   explosiveBundle?: ExplosiveBundle; // TNT/Nitro visual; the original cube owns contacts
-  milkCrate?: MilkCrate; // same cube collider, imported blue rack and nine instanced bottles
+  woodCrate?: WoodCrate; // shared Meshy art; the original cube still owns contact
   carton?: MilkCarton; // plain wood's visual replacement; the existing box owns all contact
   box: THREE.Box3;
   alive: boolean;
@@ -172,7 +172,7 @@ export interface Crate {
   mask?: boolean; // Aku crate: breaking it grants a protective mask
   mystery?: boolean; // ? crate: random reward (wumpa burst, mask, or a life)
   life?: boolean; // extra-life crate: breaking it grants one life
-  multiHit?: boolean; // milk crate: five stomps/head-bumps, two milk each
+  multiHit?: boolean; // wood crate: five stomps/head-bumps, two fruit each
   hitsRemaining?: number; // live multi-hit counter (starts at five)
   hitPulse?: number; // presentation squash after a non-breaking hit
   bang?: boolean; // metal '!' SWITCH: hitting it materializes its group's outline crates; never breaks, uncounted
@@ -7424,7 +7424,7 @@ export class Level {
     this.boss = null; // Meshy leases are released before the ordinary root traversal.
     if(this.bonusPlatform)this.bonusPlatform.group.userData.bonusStoneDisposed=true;
     for (const crate of this.crates) {
-      if (crate.milkCrate) disposeMilkCrate(crate.milkCrate);
+      if (crate.woodCrate) disposeWoodCrate(crate.woodCrate);
       if (crate.explosiveBundle) disposeExplosiveBundle(crate.explosiveBundle);
     }
     this.nightworksRocks?.dispose();
@@ -9265,14 +9265,14 @@ export class Level {
     sfx.play(Math.random() < 0.5 ? "crateBreak1" : "crateBreak2", 0.8);
   }
 
-  /** One non-destructive stomp/head-bump on a five-hit milk crate. */
+  /** One non-destructive stomp/head-bump on a five-hit wood crate. */
   hitMultiCrate(crate: Crate): number {
     if (!crate.alive || !crate.multiHit || crate.pending)
       return crate.hitsRemaining ?? 0;
     const remaining = Math.max(0, (crate.hitsRemaining ?? 5) - 1);
     crate.hitsRemaining = remaining;
     crate.hitPulse = 0.14;
-    if (crate.milkCrate) setMilkCrateState(crate.milkCrate, remaining, !!crate.pending, crate.ttOrigMap !== undefined);
+    if (crate.woodCrate) setWoodCrateState(crate.woodCrate, remaining, !!crate.pending, crate.ttOrigMap !== undefined);
     return remaining;
   }
 
@@ -9342,7 +9342,7 @@ export class Level {
     if (c.realMat && c.ghostMat)
       c.mesh.material = pending ? c.ghostMat : c.realMat;
     if (c.ghostEdges) c.ghostEdges.visible = pending;
-    if (c.milkCrate) setMilkCrateState(c.milkCrate, c.hitsRemaining ?? 5, pending, c.ttOrigMap !== undefined);
+    if (c.woodCrate) setWoodCrateState(c.woodCrate, c.hitsRemaining ?? 5, pending, c.ttOrigMap !== undefined);
     if (c.explosiveBundle) updateExplosiveBundle(c.explosiveBundle, c.fuse, this.time, pending);
   }
 
@@ -9500,7 +9500,7 @@ export class Level {
     if (!c.multiHit) return;
     c.hitPulse = 0;
     c.mesh.scale.setScalar(1);
-    if (c.milkCrate) setMilkCrateState(c.milkCrate, c.hitsRemaining ?? 5, !!c.pending, c.ttOrigMap !== undefined);
+    if (c.woodCrate) setWoodCrateState(c.woodCrate, c.hitsRemaining ?? 5, !!c.pending, c.ttOrigMap !== undefined);
   }
 
   // Soft reset (death): restore the crate world to the last checkpoint's
@@ -15468,7 +15468,7 @@ export class Level {
     const far=(camera as THREE.PerspectiveCamera).far??400;
     this.jungleAssets?.setView(camera.position,this.keepPlayFog?Math.min(far,this.theme.fogFar):far,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.milkCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
   get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,textures:castleTextureDiagnostics(),enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts,servo:e.group.userData.ghostServo,height:e.group.userData.ghostHeight}))};}
   private ghostKit():GhostTrainAssetKit {return this.ghostTrainAssets??=new GhostTrainAssetKit(this.root,()=>this.enemies.filter(e=>e.alive&&e.group.userData.ghostSkin).map(e=>e.group),!EDITOR_BUILD);}
@@ -16483,12 +16483,11 @@ export class Level {
     // pointing at the player who is already standing on it, and the one on the
     // bottom is never seen at all. BoxGeometry group order is +X, -X, +Y, -Y,
     // +Z, -Z, so indices 2 and 3 are the two that lose it.
-    const carton = !kind ? createMilkCarton(size) : undefined;
-    const milkCrate = kind === 'multihit' ? createMilkCrate(size) : undefined;
+    const woodCrate = !kind || kind === 'multihit' ? createWoodCrate(size, kind === 'multihit') : undefined;
     const explosiveBundle = kind === 'tnt' || kind === 'nitro' ? createExplosiveBundle(kind === 'nitro',size) : undefined;
     let mat: THREE.Material | THREE.Material[];
-    if (carton) {
-      mat = carton.body.material;
+    if (woodCrate) {
+      mat = woodCrate.body.material;
     } else if (explosiveBundle) {
       mat = explosiveBundle.body.material;
     } else if (kind === "bouncy" || kind === "metalbounce") {
@@ -16530,8 +16529,6 @@ export class Level {
         color: 0xffffff,
         map: this.lifeTexture(),
       });
-    } else if (milkCrate) {
-      mat = milkCrate.body.material;
     } else if (kind === "mystery") {
       mat = new THREE.MeshLambertMaterial({
         color: 0xffffff,
@@ -16599,7 +16596,7 @@ export class Level {
           ? (this.crateRestSurface(x, z, deckY) ?? deckY)
           : this.floorY(x, z, deckY));
     }
-    const mesh = carton?.body ?? milkCrate?.body ?? explosiveBundle?.body ?? new THREE.Mesh(new THREE.BoxGeometry(size, size, size), mat);
+    const mesh = woodCrate?.body ?? explosiveBundle?.body ?? new THREE.Mesh(new THREE.BoxGeometry(size, size, size), mat);
     mesh.position.set(x, base + size / 2, z);
     mesh.userData.baseY = mesh.position.y;
     mesh.userData.groundBaseY = groundBase; // the floor of this crate's column
@@ -16615,8 +16612,7 @@ export class Level {
     );
     const entry: Crate = {
       mesh,
-      carton,
-      milkCrate,
+      woodCrate,
       explosiveBundle,
       box,
       alive: true,
@@ -16653,8 +16649,7 @@ export class Level {
       );
       mesh.add(edges);
       entry.ghostEdges = edges;
-      if (carton) updateMilkCarton(carton, 0, true, true);
-      if (milkCrate) setMilkCrateState(milkCrate, 5, true);
+      if (woodCrate) setWoodCrateState(woodCrate, woodCrate.hitsRemaining, true);
       if (explosiveBundle) updateExplosiveBundle(explosiveBundle,undefined,this.time,true);
     }
     this.crates.push(entry);
@@ -16827,7 +16822,7 @@ export class Level {
     return tex;
   }
 
-  // Plain crates now wear the milk print; specialized crate faces remain distinct.
+  // Wood faces also serve the run-mode proxy; special crate faces remain distinct.
   private plainTexture(): THREE.CanvasTexture {
     if (!this.plainTex) this.plainTex = Level.plainCrateTexture();
     return this.plainTex;
@@ -16835,7 +16830,7 @@ export class Level {
 
   /** The plain crate face, owned by the class so the HUD can have one too. */
   static plainCrateTexture(): THREE.CanvasTexture {
-    return milkCartonTexture();
+    return woodCrateTexture();
   }
 
   /**
@@ -16846,11 +16841,7 @@ export class Level {
    */
   static crateMesh(size = 1): THREE.Group {
     const g = new THREE.Group();
-    const carton = createMilkCarton(size);
-    // Fit the complete silhouette in the existing counter icon slot.
-    carton.body.scale.setScalar(1 / (1 + CARTON_TOP_HEIGHT));
-    carton.body.position.y = -size*CARTON_TOP_HEIGHT / (2*(1+CARTON_TOP_HEIGHT));
-    g.add(carton.body);
+    g.add(createWoodCrate(size).body);
     return g;
   }
 
@@ -17767,7 +17758,7 @@ export class Level {
         c.timeSecs = undefined;
         c.boost = undefined;
       }
-      if (c.milkCrate) setMilkCrateState(c.milkCrate, c.hitsRemaining ?? 5, !!c.pending, on);
+      if (c.woodCrate) setWoodCrateState(c.woodCrate, c.hitsRemaining ?? 5, !!c.pending, on);
       i++;
     }
   }

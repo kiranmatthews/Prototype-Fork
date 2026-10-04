@@ -8,20 +8,20 @@ vec3 n = normalize(vMilkNormal);
 vec3 eye = normalize(vMilkEye);
 float wrap = clamp((dot(n, normalize(vec3(-0.45, 0.65, 0.6))) + 0.55) / 1.55, 0.0, 1.0);
 float edge = pow(1.0 - max(dot(n, eye), 0.0), 3.0);
-// Opaque milk: cool body shadows, warm cream in the light, no glass centre.
-vec3 body = mix(vec3(0.48, 0.59, 0.66), vec3(0.96, 0.94, 0.87), wrap);
+// Juicy orange fruit: burnt-orange shade and a golden sunlit body.
+vec3 body = mix(vec3(0.34, 0.035, 0.006), vec3(1.0, 0.30, 0.012), wrap);
 vec3 reflection = reflect(-eye, n);
 float key = max(dot(reflection, normalize(vec3(-0.48, 0.65, 0.65))), 0.0);
 float fill = max(dot(reflection, normalize(vec3(0.8, 0.15, 0.6))), 0.0);
 float wet = 0.28 * pow(key, 10.0) + 0.52 * pow(key, 48.0) + 0.16 * pow(fill, 22.0);
-vec3 outgoingLight = body * diffuseColor.rgb + vec3(wet) + vec3(0.11, 0.13, 0.14) * edge;
+vec3 outgoingLight = body * diffuseColor.rgb + vec3(1.0, 0.75, 0.32) * wet + vec3(0.15, 0.055, 0.005) * edge;
 `;
 
-/** Texture-free creamy body and broad wet reflections; native fog/fades retained. */
+/** Texture-free orange body and broad juicy reflections; native fog/fades retained. */
 export class MilkMaterial extends THREE.MeshBasicMaterial {
   constructor() {
     super({ color: 0xffffff, toneMapped: false });
-    this.name = 'opaque milk';
+    this.name = 'juicy orange fruit';
     // This material serves every level and HUD flight. Scenery-only depth
     // blackening must never turn low-altitude pickups into silhouettes.
     this.userData.levelDepthFade = false;
@@ -33,7 +33,7 @@ export class MilkMaterial extends THREE.MeshBasicMaterial {
         .replace('vec3 outgoingLight = reflectedLight.indirectDiffuse;', optics);
     };
   }
-  customProgramCacheKey(): string { return 'milk-opaque-motion-v3'; }
+  customProgramCacheKey(): string { return 'orange-fruit-motion-v1'; }
 }
 
 /** Closed, smooth radial surfaces, normalized inside a one-unit pickup envelope. */
@@ -61,7 +61,7 @@ export function buildMilkGeometry(_variant = 0): THREE.BufferGeometry {
   // Motion can extend beyond the resting pickup envelope. Keep visual culling
   // conservative; gameplay contact remains the original 0.7 m volume.
   geometry.boundingSphere!.set(new THREE.Vector3(), 1.25);
-  geometry.name = 'upright milk teardrop';
+  geometry.name = 'upright orange fruit drop';
   geometry.userData.shared = true;
   return geometry;
 }
@@ -120,7 +120,7 @@ export function milkBlob(size = 1, variant = nextVariant++): THREE.Group {
   motions.set(mesh, new LiquidMotion(mesh));
   meshCache.set(group, mesh);
   setMilkVariant(group, variant);
-  group.name = 'hovering milk';
+  group.name = 'hovering orange fruit';
   return group;
 }
 

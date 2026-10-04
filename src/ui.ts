@@ -17,7 +17,7 @@ import {
 import { COMBO_GEM_TINT, Level, levelList, MAX_LEVEL_FILE_BYTES } from "./level";
 import { RooLabel, ROO_HUD, ROO_TT } from "./rootext";
 import { ROO_COUNTER_TRACKING, ROO_NUMBER_VH, ROO_TITLE_VH } from "./roo-type/typography";
-import { MilkBottleHud } from "./milkBottleHud";
+import { milkBlob } from "./milk";
 import {
   COMBO_CASH_IN_EXTRA_HOLD_MS,
   advanceComboCashInDisplay,
@@ -128,7 +128,6 @@ export class UI {
   private comboGemIcon!: HTMLElement;
   private crateIcon!: HTMLElement;
   private wumpaIcon!: HTMLElement;
-  private readonly milkBottle = new MilkBottleHud();
   // Every 3D HUD icon lives in ONE scene with ONE camera; each is drawn into
   // its own host element's rectangle, one slot visible at a time. See
   // buildIcons/drawIcons.
@@ -659,7 +658,7 @@ export class UI {
 
     // ---- game HUD: contextual Crash counters + THPS trick plate ----
     // top-left: fruit pickup pop-up and L2 inventory
-    // The crate model and fixed milk PNG share drawIcons and these layout hosts.
+    // The wood crate and orange fruit share drawIcons and these layout hosts.
     const tl = div("hud-tl");
     const crateRow = div("hud-counter hud-reveal hud-crate-row");
     this.crateRowEl = crateRow;
@@ -1141,7 +1140,7 @@ export class UI {
     // aspect horizontally, so fitting art to a box is one scale factor.
     this.iconCam = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, -500, 500);
     // Gems/crystals use their own cheap vertex-specular studio rig and ignore
-    // these lights, as does the supplied bottle PNG. The crate uses Lambert
+    // these lights, as does the orange fruit. The crate uses Lambert
     // world shading and still needs the icon lighting rig.
     //
     // Lit HOTTER than the world, deliberately. These icons have no drop
@@ -1172,7 +1171,7 @@ export class UI {
     }[] = [
       // the crate shows its top face: you look DOWN on crates in this game
       { host: this.crateIcon, revealHost: this.crateRowEl, make: () => Level.crateMesh(1), lean: -0.42, rate: 0.6, fill: 0.66, relic: false },
-      { host: this.wumpaIcon, revealHost: this.wumpaRowEl, make: () => this.milkBottle.group, lean: 0, rate: 0, fill: 1.12, relic: false },
+      { host: this.wumpaIcon, revealHost: this.wumpaRowEl, make: () => milkBlob(1), lean: 0, rate: 0.6, fill: 0.86, relic: false },
       { host: this.crystalIcon, revealHost: this.relicRowEl, make: () => Level.crystalMesh(1), lean: -0.2, rate: 1.5, fill: 0.9, relic: true },
       { host: this.gemIcon, revealHost: this.relicRowEl, make: () => Level.gemMesh(1), lean: -0.2, rate: 1.5, fill: 0.9, relic: true },
       { host: this.comboGemIcon, revealHost: this.relicRowEl, make: () => Level.gemMesh(1, COMBO_GEM_TINT), lean: -0.2, rate: 1.5, fill: 0.9, relic: true },
@@ -1403,7 +1402,6 @@ export class UI {
   setHUD(s: HudState, deltaSeconds = 1 / 60): void {
     const hudNow = performance.now();
     const payout = this.bonusPayout;
-    let bottlePayoutDelta:number|undefined;
     if (payout) {
       const launchedBefore = payout.fruitLaunched;
       const paidBefore = payout.fruitPaid;
@@ -1413,7 +1411,6 @@ export class UI {
       // up, so interrupted reveals and new pickups cannot lose or duplicate loot.
       s = { ...s, ...display, lives: s.endlessDeaths ? s.lives : display.lives,
         deaths: payout.displayDeaths(s.deaths), inventoryHeld: true };
-      bottlePayoutDelta=payout.fruitPaid-paidBefore;
       const launches = payout.fruitLaunched - launchedBefore;
       if (launches > 0) this.onBonusFruitFlight(launches);
       for (let fruit = paidBefore; fruit < payout.fruitPaid; fruit++)
@@ -1479,9 +1476,7 @@ export class UI {
       pop(this.cratesEl);
       this.prevHud.crates = crateKey;
     }
-    this.milkBottle.update(s.fruit,s.fruitCollectionRevision,deltaSeconds,bottlePayoutDelta);
-    this.wumpaIcon.dataset.milkFrame=String(this.milkBottle.displayedFrame??'loading');
-    this.wumpaIcon.setAttribute('aria-label',`Milk bottle: ${s.fruit}/100`);
+    this.wumpaIcon.setAttribute('aria-label', `Orange fruit: ${s.fruit}/100`);
     if (s.fruit !== this.prevHud.fruit) {
       this.rooWumpa.set(String(s.fruit));
       pop(this.wumpaEl);
@@ -1708,7 +1703,6 @@ export class UI {
     fruitCollectionRevision = 0,
     inventoryHeld = false,
   ): void {
-    this.milkBottle.reset();
     this.endCombo();
     this.lastComboActionRevision = -1;
     this.lastComboPreviewSequence = -1;

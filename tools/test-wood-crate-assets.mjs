@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+const raw=await readFile(new URL('../public/props/wood-crate/classic-wood-crate.glb',import.meta.url));
+const provenance=JSON.parse(await readFile(new URL('../public/props/wood-crate/provenance.json',import.meta.url),'utf8'));
+assert.equal(raw.readUInt32LE(0),0x46546c67);assert.equal(raw.readUInt32LE(4),2);assert.equal(raw.readUInt32LE(8),raw.length);
+const length=raw.readUInt32LE(12),data=JSON.parse(raw.subarray(20,20+length).toString());
+const primitives=data.meshes.flatMap(mesh=>mesh.primitives),triangles=primitives.reduce((n,p)=>n+data.accessors[p.indices].count/3,0);
+assert.equal(primitives.length,1,'one crate should require one draw');assert.ok(triangles<=256,'crate exceeds ultra low-poly budget');
+assert.equal(data.materials.length,1);assert.equal(data.images.length,1,'crate should need one diffuse texture');
+assert.deepEqual(Object.keys(data.materials[0]).sort(),['alphaMode','doubleSided','name','pbrMetallicRoughness']);
+assert.equal(data.materials[0].doubleSided,false);assert.equal(data.materials[0].alphaMode,'OPAQUE');
+assert.ok(raw.length<64*1024,'crate exceeds download budget');
+assert.deepEqual(provenance.textureSize,[256,256]);assert.equal(provenance.triangles,triangles);
+assert.equal(provenance.runtimeSha256,createHash('sha256').update(raw).digest('hex'));
+assert.equal(provenance.provider,'Meshy');assert.equal(provenance.taskIds.length,2);
+console.log(`PASS actual Meshy wood asset: ${triangles} triangles, one draw, one 256px diffuse map, ${raw.length} bytes, verified provenance.`);

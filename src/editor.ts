@@ -1011,7 +1011,7 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
         }),
       },
       {
-        label: "5-bounce milk",
+        label: "5-hit wood",
         icon: (x) => {
           box(x, "#216dd1", "#123e85");
           for (let row = 0; row < 3; row++) for (let col = 0; col < 3; col++) {
@@ -8853,7 +8853,7 @@ export class Editor {
               : k === "life"
                 ? "extra life"
                 : k === "multihit"
-                  ? "5-bounce milk"
+                  ? "5-hit wood"
                   : k;
         if ((c.kind ?? "wood") === k) o.selected = true;
         sel.appendChild(o);

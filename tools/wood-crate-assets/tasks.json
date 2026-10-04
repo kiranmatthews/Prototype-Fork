@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "budgetCredits": 250,
+  "startingBalance": 1691,
+  "tasks": {
+    "classic-wood-crate": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "7a8e1059-12a2-4059-811b-fa694d708d70",
+      "createdAt": "2026-10-04T11:56:39.102374+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One classic wooden shipping crate. Perfect CLOSED CUBE, equally wide tall and deep. Warm honey oak planks. Thick square timber frame at all twelve edges, broad diagonal X braces on all four vertical faces, flat closed wooden plank top and bottom. Subtle bevels, few dark iron nail heads. Strong clean iconic game silhouette, charming handcrafted low poly platformer prop. Extremely simple solid geometry, no contents, gaps, handles, lid protrusions, markings, text, background, ground or props. All detail fits inside cube. 240 triangle game mesh.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 240,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1226,
+      "id": "01a106c5-f8e3-7739-a23c-fd34e88c516c",
+      "checkedAt": "2026-10-04T11:58:29.454315+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791115016158,
+      "downloads": [
+        {
+          "path": ".img2threejs/wood-crate/classic-wood-crate/downloads/model.glb",
+          "bytes": 4524,
+          "sha256": "9e1fe59e31fe1083ac63c73772a2e238dfe923c1715402d6873d335c3ce7ce93"
+        },
+        {
+          "path": ".img2threejs/wood-crate/classic-wood-crate/downloads/thumbnail.png",
+          "bytes": 116949,
+          "sha256": "74518d4fcc2cfe40fc1a234306d57cfecfe64ddd8b256932555f68abfa1ee039"
+        }
+      ]
+    },
+    "classic-wood-crate-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "a0393e18-7161-4640-9069-4e5fa653b4a3",
+      "createdAt": "2026-10-04T11:57:49.215531+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a106c5-f8e3-7739-a23c-fd34e88c516c",
+        "texture_prompt": "Beautiful hand painted classic wood crate, honey amber oak planks, warm chestnut timber frame and diagonal X braces. Clear dark narrow plank seams, subtle long grain and tiny knots, worn pale golden edges, restrained dark iron nail heads. All six faces wooden, top and bottom closed plank panels. Crisp broad readable warm wood regions, restrained contrast. No letters, logos, stickers, milk, plastic, cast shadows or directional lighting. Original cartoon platformer prop.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1221,
+      "id": "01a106c7-0abe-70f4-a7d5-88eb3369d34b",
+      "checkedAt": "2026-10-04T12:05:00.038214+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791115131736,
+      "downloads": [
+        {
+          "path": ".img2threejs/wood-crate/classic-wood-crate-textured/downloads/model.glb",
+          "bytes": 2715964,
+          "sha256": "27fabe8b71d2344ac34492a309dec44d180c5f7337e66eb3f5c6d4464682ac86"
+        },
+        {
+          "path": ".img2threejs/wood-crate/classic-wood-crate-textured/downloads/thumbnail.png",
+          "bytes": 306429,
+          "sha256": "289c331accad6d6baeda3194efbbb444aa3db7beaefc3730bcac613b2d288a70"
+        }
+      ]
+    }
+  }
+}
