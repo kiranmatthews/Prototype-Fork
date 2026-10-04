@@ -183,6 +183,14 @@ const manyDots = (x: CanvasRenderingContext2D): void => {
   }
 };
 const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
+  ghostwallbay:x=>{x.fillStyle='#a59c80';x.fillRect(2,1,14,17);x.fillStyle='#497264';x.fillRect(6,6,6,10);x.beginPath();x.moveTo(6,6);x.lineTo(9,2);x.lineTo(12,6);x.fill();},
+  ghostbanquettable:x=>{x.fillStyle='#97484d';x.fillRect(1,5,16,5);x.fillStyle='#c5a678';x.fillRect(3,10,2,7);x.fillRect(13,10,2,7);},
+  ghostchandelier:x=>{x.strokeStyle='#c5a678';x.lineWidth=2;x.beginPath();x.moveTo(9,1);x.lineTo(9,10);x.moveTo(2,7);x.lineTo(5,12);x.lineTo(13,12);x.lineTo(16,7);x.stroke();},
+  ghosttrestle:x=>{x.strokeStyle='#a5adb5';x.lineWidth=2;x.beginPath();x.moveTo(1,3);x.lineTo(17,3);x.moveTo(4,4);x.lineTo(4,17);x.lineTo(14,4);x.lineTo(14,17);x.lineTo(4,4);x.stroke();},
+  ghostmonsterportal:x=>{x.fillStyle='#8e8b7b';x.fillRect(1,1,16,17);x.fillStyle='#262128';x.fillRect(5,9,8,9);x.fillStyle='#99ff71';x.fillRect(3,4,4,2);x.fillRect(11,4,4,2);},
+  ghostflagstone:x=>{x.fillStyle='#a99e84';x.fillRect(1,5,16,11);x.strokeStyle='#544b43';x.strokeRect(2,6,7,8);x.strokeRect(9,6,7,8);},
+  ghostclockwork:x=>{x.strokeStyle='#cfac64';x.lineWidth=3;x.beginPath();x.arc(8,11,5,0,7);x.stroke();x.beginPath();x.arc(13,4,2.5,0,7);x.stroke();x.fillStyle='#adb6bc';x.fillRect(7,9,2,4);},
+  ghostshowlight:x=>{x.fillStyle='#c5aa70';x.fillRect(5,2,8,5);x.fillStyle='#bdebbc';x.beginPath();x.moveTo(7,8);x.lineTo(2,17);x.lineTo(16,17);x.lineTo(11,8);x.closePath();x.fill();},
   ghostcart:x=>{x.fillStyle='#89613b';x.fillRect(2,5,14,8);x.fillStyle='#c9b686';x.fillRect(2,4,14,2);x.fillStyle='#21212b';for(const cx of [5,13]){x.beginPath();x.arc(cx,15,2,0,7);x.fill();}x.fillStyle='#9dfa43';x.fillRect(3,6,2,2);x.fillRect(13,6,2,2);},
   ghostaxe:x=>{x.fillStyle='#967345';x.fillRect(8,1,2,16);x.fillStyle='#c5c9d4';x.beginPath();x.moveTo(8,7);x.lineTo(2,5);x.lineTo(1,13);x.lineTo(8,11);x.moveTo(10,7);x.lineTo(16,5);x.lineTo(17,13);x.lineTo(10,11);x.fill();},
   ghostknight:x=>{x.fillStyle='#9394a4';x.fillRect(5,1,8,5);x.fillRect(4,7,10,6);x.fillRect(4,13,4,5);x.fillRect(10,13,4,5);x.fillStyle='#a1ff43';x.fillRect(6,3,2,1);x.fillRect(10,3,2,1);},
@@ -478,6 +486,11 @@ const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
 // What a freshly dropped prop looks like: the same numbers the hand-coded
 // levels plant with, so a new one matches the ones already standing there.
 const DECOR_DEFAULTS: Record<DecorKind, Partial<CustomComponent>> = {
+  ghostwallbay:{s:[2.72,5.4,2.40],yaw:0,solid:false},ghostbanquettable:{s:[1.67,1.3,3.40],yaw:0,solid:false},
+  ghostchandelier:{s:[3.24,3.2,3.24],yaw:0,solid:false},ghosttrestle:{s:[2.15,1.49,6],yaw:0,solid:false},
+  ghostmonsterportal:{s:[9,9,8.84],yaw:0,solid:false},ghostflagstone:{s:[2.4,.0961,2.15],yaw:0,solid:false},
+  ghostclockwork:{s:[6,7,3],yaw:0,solid:false},
+  ghostshowlight:{color:'#ffc98b',amp:120,w:.6,rise:32,vr:0,solid:false},
   ghostcart:{s:[4,1.8,5],yaw:0,solid:false},ghostaxe:{len:5,yaw:0,solid:false},
   ghostknight:{yaw:0,solid:false},ghostfood:{yaw:0,solid:false},ghostcake:{yaw:0,solid:false},
   ghostarch:{s:[12,9,1.6],yaw:0,solid:false},

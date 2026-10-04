@@ -2,9 +2,13 @@
 
 The models in this directory are original Meshy T2 Smart Topology generations
 requested by the project owner for the indoor haunted castle ghost train.
-They use low polygon geometry with compact embedded hand-painted base-color
-textures. Generation prompts, task records, hashes and measured bounds are
-recorded in `tools/ghost-train-assets/` and the adjacent provenance JSON files.
+They use low polygon geometry with compact embedded base-color textures.
+The original five models are joined by nine castle-kit generations; the open
+cart also reuses a measured face region from the generated demon carriage.
+Generation prompts, task records, hashes and measured bounds are recorded in
+`tools/ghost-train-assets/`, `tools/ghost-train-assets-v2/` and the adjacent
+provenance JSON files. The stone, flagstone and timber maps come from actual
+Meshy albedo through the models' original UV coordinates.
 
 **Models created with [Meshy](https://www.meshy.ai/) —
 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).**

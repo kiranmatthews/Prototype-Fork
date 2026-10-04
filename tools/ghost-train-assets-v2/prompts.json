@@ -1,0 +1,56 @@
+{
+  "castle-wall-window-v2": {
+    "triangles": 2400,
+    "dimensions": [4.8, 5.4, 0.85],
+    "prompt": "One isolated modular gothic castle wall segment, rectangular vertical facade. Broad uninterrupted rough ashlar limestone panel on left, deeply recessed pointed arched window on right with blue purple stained glass and chunky carved stone tracery, one square buttress pillar at the end. Chipped stone bevels, carved capitals, delicate cobweb in upper corner. Full flat back for repeating along a wall, open base at ground. Original spooky medieval theatre architecture, handcrafted faceted low poly game asset. No floor, room, background, people or lettering.",
+    "texture": "Coherent hand painted theatrical haunted castle kit: exaggerated large warm grey taupe ashlar blocks, charcoal mortar, cool chipped edges, sparse muted lichen and grime. Entire BACK and buttress faces are uninterrupted pure limestone masonry. Front window dark indigo and plum glass with irregular insect wing leadlight veins, aged brass details. Rich diffuse material texture, no cast shadows or baked lighting."
+  },
+  "banquet-table-v2": {
+    "triangles": 3200,
+    "dimensions": [3.0, 1.3, 6.4],
+    "prompt": "One isolated ornate medieval haunted banquet table, long thin rectangular polished oak tabletop on FOUR distinct carved oak legs, open empty space underneath. Thick carved apron with grotesque little faces, lion claw feet, age worn brass edges. Deep burgundy cloth runner with narrow gold embroidered trim rests along tabletop center and hangs slightly over short ends. Beautiful detailed polygonal game prop, human dining table proportions, clearly thin slab and separated legs. No food, chairs, dishes, people, floor, background or room. Original low poly theatrical gothic design.",
+    "texture": "Coherent hand painted haunted castle kit. Rich dark honey oak wood grain, rubbed warm golden edges, ornate aged brass apron trim, burgundy velvet cloth runner with gold stitched edging, deep carved recesses. Broad readable surface regions and fine painted wear. Diffuse texture only, no baked directional light or cast shadows."
+  },
+  "skull-axe-head-v2": {
+    "triangles": 2500,
+    "dimensions": [2.2, 1.7, 0.42],
+    "prompt": "One isolated massive gothic double bladed execution AXE HEAD ONLY. NO HANDLE, NO SHAFT. Broad crescent steel blades sweep to sharp hooked lower points on both sides of an ornate central grotesque skull with hollow eye sockets and jagged teeth. Brass edging and dark iron rivets. A clear round vertical handle socket through the center skull. Plane of blade is vertical; front skull faces viewer. Menacing antique haunted castle mechanical trap, original design, highly readable faceted low poly game prop. No ground, background, people or environment.",
+    "texture": "Coherent hand painted haunted castle kit. Cold weathered silver steel blade faces, bright pale sharpened bevels, blackened iron skull recesses, aged bronze sockets and rivets, restrained green tarnish. Broad sculpted highlights painted nondirectionally, diffuse surface material only, no cast shadow or baked lighting."
+  },
+  "castle-chandelier-v2": {
+    "triangles": 3800,
+    "dimensions": [4.2, 3.2, 4.2],
+    "prompt": "One isolated elaborate gothic bronze candle chandelier for a haunted medieval castle. Two open concentric iron and brass rings, twelve distinct curved radial arms ending in open candle sockets with ivory candles. Carved gargoyle hooks and delicate angular scroll brackets. Open airy center, central vertical hanging stem with short chain ending at a ceiling hook. No glass shade, solid lantern box, ceiling, room, floor or people. Beautiful original handcrafted low poly faceted game prop, clear circular symmetrical horizontal rings and readable ornate silhouette.",
+    "texture": "Coherent hand painted haunted castle kit. Antiqued golden bronze, dark wrought iron structure, verdigris in carved crevices, ivory wax candles with subtle red brown wax drips, pale amber candle tips. Rich broad readable materials with painted antique wear. Diffuse only, no dramatic baked light or shadows."
+  },
+  "broken-rail-trestle-v2": {
+    "triangles": 3400,
+    "dimensions": [2.5, 4.5, 6.0],
+    "prompt": "One isolated short straight ruined medieval ghost train RAILWAY TRESTLE section. Two parallel narrow polished iron rails run LENGTHWISE along the top on chunky dark oak sleepers. Tall narrow iron and oak support legs descend below track, with diagonal cross braces. Broken splintered rail ends and chipped timbers; a few hanging chains. Clearly traversable top twin rails, six metre track length, three metre supports, no solid floor deck. Faceted detailed low poly haunted castle game prop. No ground, stone base, room, people or background.",
+    "texture": "Coherent hand painted haunted castle kit. Cold silver polished rail tops, black rusty iron sides and brackets, weathered dark honey oak sleepers with chipped cream wood ends, dark iron support frame and worn bronze fasteners. Painted grime in joints and broad readable colours. No cast shadows or baked directional lighting."
+  },
+  "monster-face-portal-v2": {
+    "triangles": 4500,
+    "dimensions": [8.0, 10.0, 2.0],
+    "prompt": "One isolated colossal original gothic monster face DOORWAY for a haunted castle attraction. Deeply carved grotesque stone face with raised brow and inset emerald green eyes. Screaming OPEN MOUTH is a large EMPTY passage all the way through, wide and tall enough for people and a rail cart. Curled iron fangs frame opening without blocking it. Chunky irregular stone arch and massive side pillars surround face, jagged crest and cobweb details. Clear hollow doorway, no door, wall sealing mouth, floor, room, background or lettering. Beautiful detailed faceted low poly game prop.",
+    "texture": "Coherent hand painted haunted castle kit. Warm grey taupe aged limestone, charcoal carved recesses, cool silver chipped edges, sparse muted moss, blackened iron mouth fangs and emerald eye inlays. Menacing expressive original sculpt. Broad hand painted diffuse material regions, no baked shadows or directional lighting."
+  },
+  "castle-clockwork-v2": {
+    "triangles": 4500,
+    "dimensions": [6.0, 7.0, 2.4],
+    "prompt": "One isolated original gothic bronze and iron CLOCKWORK MECHANISM stage prop. Huge clearly separate open spoked toothed gear, smaller meshing toothed gear above right, exposed axle hubs, two separate vertical steel piston rods and a hanging heavy iron counterweight on a cable. Riveted iron vertical support frame and small bedplate beneath. Mechanical parts visibly separated with clean negative space for later animation, broad gear faces visible toward front. Antique haunted castle machinery, beautiful detailed faceted low poly game prop. No clock dial, room, background or people.",
+    "texture": "Coherent hand painted haunted castle kit. Warm aged bronze gear teeth with bright pale gold bevels, cool worn silver axles and piston rods, dark blackened iron frame and weight, small verdigris and rust accents. Crisp readable faceted materials, diffuse surface texture only, no cast shadows or baked directional lighting."
+  },
+  "demon-ghost-cart-v2": {
+    "triangles": 4200,
+    "dimensions": [3.2, 2.4, 6.2],
+    "prompt": "One compact ROOFLESS gothic ghost train ride car, six metres long, three wide, two high. HUGE sculpted original mischievous demon jester face covers the entire FRONT: curled cheek rolls, pointed ears, arched brow, wide grin with ivory fangs. Burgundy and gold moulded shell with ornamental scroll sides, FOUR clearly exposed flanged rail wheels. Fully OPEN top with empty interior floor and two low passenger benches. NO ROOF, canopy, windows, tall uprights, riders, track or scenery. Clear faceted low poly game asset, believable human ride proportions, no logo or copied character.",
+    "texture": "Coherent hand painted haunted castle kit. Deep burgundy purple enamel shell, aged gold embossed trim, pale silver ivory sculpted demon face with strong charcoal carved recesses, amber eye inlays, ivory teeth, dark iron underframe and exposed silver wheels. Low benches in dark velvet. Rich broad readable textured regions, no cast shadows or baked lighting."
+  },
+  "castle-flagstone-v2": {
+    "triangles": 800,
+    "dimensions": [2.4, 0.12, 2.4],
+    "prompt": "One isolated square thin gothic castle FLOOR PATCH, only rough grey flagstones on a very thin square foundation slab. Four by four large irregular roughly rectangular limestone flagstones fit closely with dark narrow seams, worn subtly chipped bevels, mostly flat walkable top. No raised props, border frame, grass, dirt piles, furniture or anything beyond the slab. Original simple handcrafted faceted low poly game asset, 800 triangles, full unobstructed stone top surface useful for a repeatable game floor texture. No floor around it, ground, room or background.",
+    "texture": "Coherent hand painted haunted castle kit. Warm grey taupe worn limestone flagstones, broad uneven cool grey face tones, dark narrow mortar seams, subtle scuffs and grit, tiny muted brown grime in cracks. Entire top only grey flagstones. Diffuse surface material texture with no cast shadows, directional lighting, lettering or emblems."
+  }
+}

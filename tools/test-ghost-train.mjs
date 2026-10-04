@@ -3,7 +3,7 @@ import {writeFile} from 'node:fs/promises';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
 
 const options={modulePath:'/src/levels/ghost-train.ts',levelId:'ghost-train',
-  source:m=>m.GHOST_TRAIN_LEVEL,controlFrame:r=>r.l.laneDirAt(r.p.pos.x,r.p.pos.y,r.p.pos.z)??{x:0,z:-1}};
+  source:m=>m.GHOST_TRAIN_LEVEL,controlFrame:r=>r.p.freeSkate?{x:r.p.axisF.x,z:r.p.axisF.z}:r.p.courseInputDirection(r.l)??r.l.cameraDirAt(r.p.pos.x,r.p.pos.y,r.p.pos.z)??{x:0,z:-1}};
 const reports=[];
 await withBlockworksRuntime(async r=>{
   const {normalizeCustomLevelData}=await r.server.ssrLoadModule('/src/level.ts');
@@ -38,8 +38,10 @@ await withBlockworksRuntime(async r=>{
 const {createServer}=await import('vite');const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true}});
 let source;try{source=(await server.ssrLoadModule('/src/levels/ghost-train.ts')).GHOST_TRAIN_LEVEL;}finally{await server.close();}
 const carts=source.components.filter(c=>c.t==='mover'&&c.dkind==='ghostcart');
-for(const c of [carts[0],carts[Math.floor(carts.length/2)]]){
-  const start=[c.p[0],c.p[1]+.05,c.p[2]+Math.sin(c.phase??0)*(c.amp??0)];
+// The middle car stays over the trench through its entire motion cycle.
+// End cars deliberately overlap the stationary boarding/disembark platforms.
+for(const c of [carts[1],carts[Math.floor(carts.length/2)+1]]){
+  const start=[c.p[0],c.p[1]+.05,c.p[2]+(c.travelSign??1)*Math.sin(c.phase??0)*(c.amp??0)];
   await withBlockworksRuntime(r=>{
     r.stepFor(30);const mover=r.l.movers.find(m=>Math.abs(m.base.z-c.p[2])<.01);
     assert.ok(mover,'cart fixture exists');
@@ -57,8 +59,9 @@ const gate=source.components.find(c=>c.t==='gate');
 const checkpoint=source.components.find(c=>c.t==='checkpoint');
 await withBlockworksRuntime(r=>{
   r.stepFor(20);
-  r.walkTo([checkpoint.p[0],checkpoint.p[1],checkpoint.p[2]+1.3],{pace:.15});
-  r.until(()=>r.l.checkpoints[0].active,()=>({...r.steerToward(checkpoint.p,{pace:.3}),spinHeld:true}),{maxFrames:120,label:'Reach and break actual checkpoint'});
+  r.walkTo([checkpoint.p[0]-1.3,checkpoint.p[1],checkpoint.p[2]],{pace:.35,arrivalTolerance:.3});
+  r.tick({spinHeld:true});r.stepFor(24);
+  assert.ok(r.l.checkpoints[0].active,'Reach and break actual checkpoint');
   assert.ok(r.l.currentSpawn.distanceTo(r.l.checkpoints[0].spawnPos)<.01,'checkpoint banks its respawn point');
   reports.push({test:'input-only checkpoint contact and banked respawn',active:r.l.checkpoints[0].active});
 },{...options,start:[checkpoint.p[0],checkpoint.p[1]+.1,checkpoint.p[2]+4]});

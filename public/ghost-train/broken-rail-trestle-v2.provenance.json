@@ -1,0 +1,123 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "taskId": "01a105d9-5b85-7462-8f51-03e8e7183e53",
+  "previewTaskId": "01a105cb-21b4-7085-898e-6854172f104a",
+  "sourceSha256": "6e8e6be40a9b72fa2ea68d11051d6da4d1086958e76f1ac34f88a29e4f84ca11",
+  "outputSha256": "ad5f85599588b6a50137a395380e8f829f41954c91d36bb25d60924bf2c7efe9",
+  "bytes": 237036,
+  "trianglesBefore": 3477,
+  "trianglesRemoved": 0,
+  "triangles": 3477,
+  "originalUVsPreserved": true,
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 70606
+    }
+  ],
+  "originalAtlases": [
+    {
+      "path": ".img2threejs/ghost-train-v2/atlases/broken-rail-trestle-v2-atlas-0.png",
+      "size": [
+        2048,
+        2048
+      ],
+      "sha256": "7f39c97f84ca41b44c42eb79d0c6ca59ff61752e8c617e5d3f36e729b2715556"
+    }
+  ],
+  "bounds": {
+    "min": [
+      -0.1784600019454956,
+      0.0,
+      -0.5
+    ],
+    "max": [
+      0.1784600019454956,
+      0.24822300672531128,
+      0.5
+    ]
+  },
+  "size": [
+    0.3569200038909912,
+    0.24822300672531128,
+    1.0
+  ],
+  "targetMetres": [
+    2.5,
+    4.5,
+    6.0
+  ],
+  "suggestedUniformScale": 6.0,
+  "suggestedUniformMetres": [
+    2.1415200233459473,
+    1.4893380403518677,
+    6.0
+  ],
+  "transform": {
+    "sourceBounds": {
+      "min": [
+        -0.1787739992141724,
+        -0.12579800188541412,
+        -0.5
+      ],
+      "max": [
+        0.17814600467681888,
+        0.12242499738931656,
+        0.5
+      ]
+    },
+    "yawRadians": -1.5707963267948966,
+    "pitchRadians": 0,
+    "maxDimensionScale": 1.0,
+    "trim": null
+  },
+  "axes": "Y-up,+Z-front,centeredXZ,bottomY0,max dimension1",
+  "functional": {
+    "bounds": {
+      "min": [
+        -0.1784600019454956,
+        0.0,
+        -0.5
+      ],
+      "max": [
+        0.1784600019454956,
+        0.24822300672531128,
+        0.5
+      ]
+    },
+    "size": [
+      0.3569200038909912,
+      0.24822300672531128,
+      1.0
+    ],
+    "uniformMetres": [
+      2.1415200233459473,
+      1.4893380403518677,
+      6.0
+    ],
+    "railTop": {
+      "y": 0.248,
+      "area": 0.02527773380279541,
+      "min": [
+        -0.11982899904251099,
+        0.2475619912147522,
+        -0.5
+      ],
+      "max": [
+        0.1184919998049736,
+        0.24822300672531128,
+        0.5
+      ]
+    }
+  }
+}

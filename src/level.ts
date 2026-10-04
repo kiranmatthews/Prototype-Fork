@@ -18,6 +18,7 @@ import { SpinBridge } from './spinBridge';
 import * as THREE from "three";
 import { createEnemyVisual } from "./enemies/runtime";
 import { GhostTrainAssetKit, GHOST_DECOR_KINDS, GHOST_DECOR_LABELS, createGhostEnemyVisual } from './ghostTrain';
+import { CASTLE_TEXTURE_KINDS, isCastleTexture, createCastleMaterial, prepareCastleTextures, castleTextureDiagnostics } from './ghostCastleMaterials';
 import { GHOST_TRAIN_LEVEL } from './levels/ghost-train';
 import type { EnemyKind, EnemyVisual } from "./enemies/types";
 export type { EnemyKind } from "./enemies/types";
@@ -887,6 +888,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
 // Every paintable surface kind the texture system offers. The editor's
 // texture dropdown is built from this list; 'checker' is the classic default.
 export const TEX_KINDS = [
+  ...CASTLE_TEXTURE_KINDS,
   "checker",
   "grass",
   "jungle",
@@ -5361,7 +5363,7 @@ export class Level {
       surface.active=active;
     }
   }
-  private staticSurfaceMaterials=new Map<string,THREE.MeshLambertMaterial>();
+  private staticSurfaceMaterials=new Map<string,THREE.MeshLambertMaterial|THREE.MeshStandardMaterial>();
   private buildSurfaceMesh(c: CustomComponent, outlineGroups:number[]=[]): void {
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute("position", new THREE.Float32BufferAttribute(c.vertices ?? [0, 0, 0, 4, 0, 0, 0, 0, -4], 3));
@@ -5409,7 +5411,8 @@ export class Level {
         this.meshSandMaterials.set(key, sand);
         material = sand;
       }
-    } else material = new THREE.MeshLambertMaterial({
+    } else if(isCastleTexture(c.tex))material=createCastleMaterial(c);
+    else material = new THREE.MeshLambertMaterial({
       color: c.color ?? "#ffffff", vertexColors: !!c.colors,
       emissive: c.emissive ?? "#000000", opacity: c.opacity ?? 1,
       transparent: (c.opacity ?? 1) < 1, fog: c.fog !== false,
@@ -5424,7 +5427,7 @@ export class Level {
       c.fog===undefined&&c.vert===undefined&&(c.opacity??1)===1){
       const key=JSON.stringify([c.color??'#ffffff',c.emissive??'#000000',c.tex??'checker',!!c.doubleSided]);
       let shared=this.staticSurfaceMaterials.get(key);
-      if(shared)material.dispose();else{shared=material as THREE.MeshLambertMaterial;this.staticSurfaceMaterials.set(key,shared);}
+      if(shared)material.dispose();else{shared=material;this.staticSurfaceMaterials.set(key,shared);}
       const matrix=new THREE.Matrix4().compose(new THREE.Vector3(...c.p),
         new THREE.Quaternion().setFromAxisAngle(THREE.Object3D.DEFAULT_UP,THREE.MathUtils.degToRad(c.yaw??0)),new THREE.Vector3(...(c.s??[1,1,1])));
       this.putDecor(`static surface ${key}:${Math.floor(c.p[0]/16)}:${Math.floor(c.p[2]/16)}`,geometry,shared,matrix);
@@ -5929,6 +5932,7 @@ export class Level {
               foe,
               yaw: 90,
               dkind: e.group.userData.ghostSkin as CustomComponent['dkind'],
+              ...(e.group.userData.ghostSkin?{s:[1,e.group.userData.ghostHeight,1] as [number,number,number],vr:e.group.userData.ghostVariant}:{}),
             }
           : {
               t: "enemy",
@@ -5941,6 +5945,7 @@ export class Level {
               speed: r2(e.speed),
               foe,
               dkind: e.group.userData.ghostSkin as CustomComponent['dkind'],
+              ...(e.group.userData.ghostSkin?{s:[1,e.group.userData.ghostHeight,1] as [number,number,number],vr:e.group.userData.ghostVariant}:{}),
             },
       );
     }
@@ -5997,7 +6002,7 @@ export class Level {
           r2(mv.base.y + par.height / 2),
           r2(mv.base.z),
         ], // base is the deck CENTER; p is its top
-        s: [r2(par.width), r2(par.height), r2(par.depth)],
+        s: mv.mesh.userData.ghostCartSize??[r2(par.width), r2(par.height), r2(par.depth)],
         axis:
           Math.abs(mv.axisV.x) > 0.5
             ? "x"
@@ -6825,7 +6830,7 @@ export class Level {
               // tinted / textured / spun wall: own mesh so the yaw can rotate it
               const mesh = new THREE.Mesh(
                 new THREE.BoxGeometry(s[0], s[1], s[2]),
-                this.patterned(
+                isCastleTexture(c.tex) ? createCastleMaterial(c) : this.patterned(
                   new THREE.MeshLambertMaterial({
                     color: c.color
                       ? new THREE.Color(c.color)
@@ -7162,6 +7167,7 @@ export class Level {
                 "z",
                 foe,
                 c.dkind,
+                c.s?.[1],c.vr,
               );
             } else {
               this.enemy(
@@ -7173,6 +7179,7 @@ export class Level {
                 "x",
                 foe,
                 c.dkind,
+                c.s?.[1],c.vr,
               );
             }
           } else if (c.t === "grindosaurus") {
@@ -7196,7 +7203,7 @@ export class Level {
               c.travelSign ?? 1,
             );
             if(c.dkind==="citydeck")this.dressCityMovingDeck(this.movers[this.movers.length-1].mesh,c,s[1]);
-            if(c.dkind==='ghostcart')this.ghostKit().cart(this.movers[this.movers.length-1].mesh,c,s[1]);
+            if(c.dkind==='ghostcart'){const cabin=this.ghostKit().cart(this.movers[this.movers.length-1].mesh,c,s[1]);this.groundMeshes.push(...cabin.support);this.walls.push(...cabin.walls);}
           } else if (c.t === "torch") {
             this.torch(c.p[0], c.p[1], c.p[2], c.rise ?? 2.2, c.w ?? 1);
           } else if (c.t === "phasepad") {
@@ -8590,6 +8597,7 @@ export class Level {
         m.torch.lightAt.add(m.lastDelta);
       }
     }
+    this.ghostTrainAssets?.update(dt,this.playerPos);
 
     // TRAVELLING RAILS: rigid translation only. The rail baked its segment
     // directions and arc length at construction, and translation leaves both
@@ -15469,10 +15477,10 @@ export class Level {
     const far=(camera as THREE.PerspectiveCamera).far??400;
     this.jungleAssets?.setView(camera.position,this.keepPlayFog?Math.min(far,this.theme.fogFar):far,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.milkCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
-  async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
-  get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts}))};}
-  private ghostKit():GhostTrainAssetKit {return this.ghostTrainAssets??=new GhostTrainAssetKit(this.root);}
+  async prepareJungleAssets(): Promise<void> { await Promise.all([this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.milkCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
+  get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,textures:castleTextureDiagnostics(),enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts,servo:e.group.userData.ghostServo,height:e.group.userData.ghostHeight}))};}
+  private ghostKit():GhostTrainAssetKit {return this.ghostTrainAssets??=new GhostTrainAssetKit(this.root,()=>this.enemies.filter(e=>e.alive&&e.group.userData.ghostSkin).map(e=>e.group),!EDITOR_BUILD);}
 
   private jungleAsset(c: CustomComponent): void {
     if (!isJungleAsset(c.dkind)) return;
@@ -15562,7 +15570,7 @@ export class Level {
   }
 
   private buildDecorProp(c: CustomComponent): void {
-    if(GHOST_DECOR_KINDS.includes(c.dkind as typeof GHOST_DECOR_KINDS[number])) {this.noteDecor(c.dkind!,...c.p,{s:c.s,w:c.w,yaw:c.yaw,len:c.len});this.ghostKit().decorate(c);return;}
+    if(GHOST_DECOR_KINDS.includes(c.dkind as typeof GHOST_DECOR_KINDS[number])) {this.noteDecor(c.dkind!,...c.p,{s:c.s,w:c.w,yaw:c.yaw,len:c.len,to:c.to,color:c.color,amp:c.amp,rise:c.rise,vr:c.vr,phase:c.phase,n:c.n});this.ghostKit().decorate(c);return;}
     if (isJungleAsset(c.dkind)) return this.jungleAsset(c);
     const [x, y, z] = c.p;
     const s = c.w ?? 1;
@@ -18039,8 +18047,8 @@ export class Level {
   }
 
   /** Imported enemy artwork; gameplay roots and collision remain level-owned. */
-  private enemyGroup(kind: EnemyKind, skin?:CustomComponent['dkind']): EnemyVisual {
-    const visual = skin==='ghostknight'||skin==='ghostfood'||skin==='ghostcake'?createGhostEnemyVisual(kind,skin):createEnemyVisual(kind, { appearance: this.nightworksRocks ? "nightworks" : undefined });
+  private enemyGroup(kind: EnemyKind, skin?:CustomComponent['dkind'],height?:number,variant?:number): EnemyVisual {
+    const visual = skin==='ghostknight'||skin==='ghostfood'||skin==='ghostcake'?createGhostEnemyVisual(kind,skin,{height,variant,lookAt:()=>this.playerPos}):createEnemyVisual(kind, { appearance: this.nightworksRocks ? "nightworks" : undefined });
     this.root.add(visual.group);
     return visual;
   }
@@ -18057,8 +18065,9 @@ export class Level {
     axis: "x" | "z" = "x",
     kind: EnemyKind = "grunt",
     skin?:CustomComponent['dkind'],
+    height?:number,variant?:number,
   ): void {
-    const visual = this.enemyGroup(kind,skin);
+    const visual = this.enemyGroup(kind,skin,height,variant);
     const { group, body } = visual;
     // snap to real ground (wavy jungle floors), then remember it for resets
     const mid = (a0 + a1) / 2;
@@ -18226,8 +18235,8 @@ export class Level {
           break;
       }
       this.updateEnemyVisual(e, dt, dt > 0 ? Math.abs(this.enemyAlong(e) - beforeAlong) / dt : 0);
-      if(e.group.userData.ghostSkin==='ghostknight'){boxW=1.35;boxH=2.55;cy=1.275;}
-      else if(e.group.userData.ghostSkin==='ghostfood'||e.group.userData.ghostSkin==='ghostcake'){boxW=1.3;boxH=1.45;cy=.725;}
+      if(e.group.userData.ghostSkin==='ghostknight'){boxH=e.group.userData.ghostHeight??3.05;boxW=1.35*boxH/2.62;cy=boxH/2;}
+      else if(e.group.userData.ghostSkin==='ghostfood'||e.group.userData.ghostSkin==='ghostcake'){boxH=e.group.userData.ghostHeight??1.8;boxW=1.05*boxH;cy=boxH/2;}
       e.box.setFromCenterAndSize(
         new THREE.Vector3(
           e.group.position.x,

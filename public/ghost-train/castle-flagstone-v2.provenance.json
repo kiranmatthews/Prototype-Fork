@@ -1,0 +1,123 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "taskId": "01a105d9-9c68-7589-97c2-427500bc60d3",
+  "previewTaskId": "01a105cb-4c80-77ee-82f9-534a2d41e9d6",
+  "sourceSha256": "6aa25b1bfb099b10a0253c10d34f4533845a830283d64208d2357633f32bcafc",
+  "outputSha256": "d39ec796f014122bd1a3312b530749f5308fed7fbb0dc0c3bd54d0b395fbdec5",
+  "bytes": 310672,
+  "trianglesBefore": 872,
+  "trianglesRemoved": 0,
+  "triangles": 872,
+  "originalUVsPreserved": true,
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 251314
+    }
+  ],
+  "originalAtlases": [
+    {
+      "path": ".img2threejs/ghost-train-v2/atlases/castle-flagstone-v2-atlas-0.png",
+      "size": [
+        2048,
+        2048
+      ],
+      "sha256": "2b7f798c828039867e4a822b0310a36a1d10b1ba3023e6ee9a756125ca3acf26"
+    }
+  ],
+  "bounds": {
+    "min": [
+      -0.5,
+      0.0,
+      -0.4477604925632477
+    ],
+    "max": [
+      0.5,
+      0.04005200043320656,
+      0.4477604925632477
+    ]
+  },
+  "size": [
+    1.0,
+    0.04005200043320656,
+    0.8955209851264954
+  ],
+  "targetMetres": [
+    2.4,
+    0.12,
+    2.4
+  ],
+  "suggestedUniformScale": 2.4000000953674316,
+  "suggestedUniformMetres": [
+    2.4000000953674316,
+    0.0961248055100441,
+    2.1492505073547363
+  ],
+  "transform": {
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.01971499994397166,
+        -0.4481149911880493
+      ],
+      "max": [
+        0.5,
+        0.020337000489234952,
+        0.44740599393844604
+      ]
+    },
+    "yawRadians": 0,
+    "pitchRadians": -1.5707963267948966,
+    "maxDimensionScale": 1.0,
+    "trim": null
+  },
+  "axes": "Y-up,+Z-front,centeredXZ,bottomY0,max dimension1",
+  "functional": {
+    "bounds": {
+      "min": [
+        -0.5,
+        0.0,
+        -0.4477604925632477
+      ],
+      "max": [
+        0.5,
+        0.04005200043320656,
+        0.4477604925632477
+      ]
+    },
+    "size": [
+      1.0,
+      0.04005200043320656,
+      0.8955209851264954
+    ],
+    "uniformMetres": [
+      2.4000000953674316,
+      0.0961248055100441,
+      2.1492505073547363
+    ],
+    "stoneTop": {
+      "y": 0.038,
+      "area": 0.4782671630382538,
+      "min": [
+        -0.5,
+        0.036593999713659286,
+        -0.4377104938030243
+      ],
+      "max": [
+        0.5,
+        0.039406001567840576,
+        0.43895649909973145
+      ]
+    }
+  }
+}

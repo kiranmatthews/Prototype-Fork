@@ -1,0 +1,165 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "taskId": "01a105d9-1d58-7732-902f-55a189216f64",
+  "previewTaskId": "01a105ca-e990-7392-84ba-740e7e32c8e9",
+  "sourceSha256": "45aaa49c90ade59ea026af11b2c0e32d5ebc8f88d5965a775a45ed7468a90736",
+  "outputSha256": "ed551f7c05a2de6c8c3b821edfd2fb2f6f62012d2118f5ddf272306dce6a3e61",
+  "bytes": 389620,
+  "trianglesBefore": 2421,
+  "trianglesRemoved": 0,
+  "triangles": 2421,
+  "originalUVsPreserved": true,
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 235897
+    }
+  ],
+  "originalAtlases": [
+    {
+      "path": ".img2threejs/ghost-train-v2/atlases/castle-wall-window-v2-atlas-0.png",
+      "size": [
+        2048,
+        2048
+      ],
+      "sha256": "71f031f4a08e45f124c8013a546c3b3309e1872db9eb2a75a63f3144daea53dd"
+    }
+  ],
+  "bounds": {
+    "min": [
+      -0.2516059875488281,
+      0.0,
+      -0.22179800271987915
+    ],
+    "max": [
+      0.2516059875488281,
+      1.0,
+      0.22179800271987915
+    ]
+  },
+  "size": [
+    0.5032119750976562,
+    1.0,
+    0.4435960054397583
+  ],
+  "targetMetres": [
+    4.8,
+    5.4,
+    0.85
+  ],
+  "suggestedUniformScale": 5.400000095367432,
+  "suggestedUniformMetres": [
+    2.7173447608947754,
+    5.400000095367432,
+    2.395418405532837
+  ],
+  "transform": {
+    "sourceBounds": {
+      "min": [
+        -0.25203999876976013,
+        -0.5,
+        -0.22213099896907806
+      ],
+      "max": [
+        0.2511720061302185,
+        0.5,
+        0.22146500647068024
+      ]
+    },
+    "yawRadians": 0,
+    "pitchRadians": 0,
+    "maxDimensionScale": 1.0,
+    "trim": null
+  },
+  "axes": "Y-up,+Z-front,centeredXZ,bottomY0,max dimension1",
+  "functional": {
+    "bounds": {
+      "min": [
+        -0.2516059875488281,
+        0.0,
+        -0.22179800271987915
+      ],
+      "max": [
+        0.2516059875488281,
+        1.0,
+        0.22179800271987915
+      ]
+    },
+    "size": [
+      0.5032119750976562,
+      1.0,
+      0.4435960054397583
+    ],
+    "uniformMetres": [
+      2.7173447608947754,
+      5.400000095367432,
+      2.395418405532837
+    ],
+    "backPlane": {
+      "z": -0.157,
+      "area": 0.07754231244325638,
+      "min": [
+        -0.23843200504779816,
+        0.009840995073318481,
+        -0.16025900840759277
+      ],
+      "max": [
+        0.23656100034713745,
+        1.0,
+        -0.1531050056219101
+      ]
+    }
+  },
+  "selectiveEmission": {
+    "node": "WindowGlass",
+    "materialName": "Meshy_WindowGlass",
+    "kind": "glass",
+    "triangles": 31,
+    "bounds": {
+      "min": [
+        -0.1324699968099594,
+        0.12174901366233826,
+        -0.06554800271987915
+      ],
+      "max": [
+        0.12672699987888336,
+        0.9091030359268188,
+        0.0797019973397255
+      ]
+    },
+    "uvBounds": {
+      "min": [
+        0.009476999752223492,
+        0.03338199853897095
+      ],
+      "max": [
+        0.9880179762840271,
+        0.9906430244445801
+      ]
+    },
+    "originalAlbedoAndUVsPreserved": true,
+    "facadeNormals": [
+      [
+        0,
+        0,
+        1
+      ],
+      [
+        0,
+        0,
+        -1
+      ]
+    ],
+    "operation": "Original painted-triangle selection only; runtime may adjust emission on this material"
+  }
+}

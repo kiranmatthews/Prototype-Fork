@@ -31,7 +31,7 @@ const sourceHash=createHash('sha256').update(pilotSource+inputSource+runnerSourc
 
 const cases=[
   {name:'moving-cart-relay-0',kind:'cart',relay:0},
-  {name:'long-crypt-broken-rails',kind:'rail',a:1426,b:1583},
+  {name:'long-crypt-broken-rails',kind:'rail',a:1432,b:1590},
   {name:'swinging-execution-axe',kind:'axe',index:0},
 ];
 const browser=await chromium.launch({headless:true,channel:'chrome'});
@@ -66,23 +66,24 @@ try{
       let start,pilot;
       if(focused.kind==='cart'){
         const gap=sourceModule.GHOST_TRAIN_GAPS.filter(gap=>gap.kind==='cart')[focused.relay];
-        start=sourceModule.ghostRoutePoint(gap.a-4,.12);
+        start=sourceModule.ghostRoutePoint(gap.a-8,sourceModule.ghostRouteHeight(gap.a-8)+.12);
         pilot=r=>pilots.runGhostCartRelay(r,focused.relay);
       }else if(focused.kind==='rail'){
         const rails=sourceModule.GHOST_TRAIN_RAILS.filter(rail=>rail.a>=focused.a&&rail.b<=focused.b);
         assert.ok(rails.length>=3,'long crypt must contain at least three receiving segments');
-        start=sourceModule.ghostRoutePoint(focused.a-6,.12);
+        start=sourceModule.ghostRoutePoint(focused.a-6,sourceModule.ghostRouteHeight(focused.a-6)+.12);
         pilot=r=>pilots.runGhostBrokenRails(r,rails);
       }else{
         const axe=sourceModule.GHOST_TRAIN_AXES[focused.index];
-        start=sourceModule.ghostRoutePoint(18-axe.p[2]-7,.12);
+        const station=18-axe.p[2]-7;
+        start=sourceModule.ghostRoutePoint(station,sourceModule.ghostRouteHeight(station)+.12);
         pilot=r=>pilots.runGhostAxe(r,axe);
       }
       // Exactly one focused initial placement; all subsequent motion comes from
       // normalized held-button samples and native Player/Level fixed steps.
       p.respawn(l,true,false,{position:new THREE.Vector3(...start)});
       const assetsBefore=l.ghostTrainDiagnostics;
-      const options={maxFrames:18000,controlFrame:r=>r.l.laneDirAt(r.p.pos.x,r.p.pos.y,r.p.pos.z)??{x:0,z:-1}};
+      const options={maxFrames:18000,controlFrame:r=>r.p.freeSkate?{x:r.p.axisF.x,z:r.p.axisF.z}:r.p.courseInputDirection(r.l)??r.l.cameraDirAt(r.p.pos.x,r.p.pos.y,r.p.pos.z)??{x:0,z:-1}};
       const nativeRun=new Function('THREE','CONST','TUNING','sourceModule','p','l','options','run',
         `${makeSource}\n${inputSource}\nconst server=null,Level=l.constructor,Player=p.constructor,scene=window.__game.scene,source=sourceModule.GHOST_TRAIN_LEVEL;\nreturn async()=>{${runnerSource}};`
       )(THREE,CONST,TUNING,sourceModule,p,l,options,r=>{

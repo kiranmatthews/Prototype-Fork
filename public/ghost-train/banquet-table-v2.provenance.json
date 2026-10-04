@@ -1,0 +1,124 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "taskId": "01a105ed-ee5f-74c4-b053-aa0fb34d90bc",
+  "previewTaskId": "01a105ca-f8e0-7451-adbc-db84fced94be",
+  "sourceSha256": "ec3e66b9966ff2d1fab7530fdccc2474844b81f3b388b587a2d295f420cdfd64",
+  "outputSha256": "eb857fac589b27f45572fa1fe59aa41524f8f67295a05d8706d7587ccf21ddf5",
+  "bytes": 301524,
+  "trianglesBefore": 3179,
+  "trianglesRemoved": 0,
+  "triangles": 3179,
+  "originalUVsPreserved": true,
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 163674
+    }
+  ],
+  "originalAtlases": [
+    {
+      "path": ".img2threejs/ghost-train-v2/atlases/banquet-table-v2-atlas-0.png",
+      "size": [
+        2048,
+        2048
+      ],
+      "sha256": "a130d72bfa50b67c069fec8215c283bf4d88f623efc9580b36b1e4e313822d54"
+    }
+  ],
+  "bounds": {
+    "min": [
+      -0.24467098712921143,
+      0.0,
+      -0.5
+    ],
+    "max": [
+      0.24467098712921143,
+      0.3831859827041626,
+      0.5
+    ]
+  },
+  "size": [
+    0.48934197425842285,
+    0.3831859827041626,
+    1.0
+  ],
+  "targetMetres": [
+    3.0,
+    1.3,
+    6.4
+  ],
+  "suggestedUniformScale": 3.392608404159546,
+  "suggestedUniformMetres": [
+    1.66014564037323,
+    1.2999999523162842,
+    3.392608404159546
+  ],
+  "transform": {
+    "sourceBounds": {
+      "min": [
+        -0.2450329959392548,
+        -0.19190099835395813,
+        -0.5
+      ],
+      "max": [
+        0.24430899322032926,
+        0.19128499925136566,
+        0.5
+      ]
+    },
+    "yawRadians": -1.5707963267948966,
+    "pitchRadians": 0,
+    "maxDimensionScale": 1.0,
+    "trim": null
+  },
+  "axes": "Y-up,+Z-front,centeredXZ,bottomY0,max dimension1",
+  "sourceStage": "banquet-table-v2-cloth",
+  "functional": {
+    "bounds": {
+      "min": [
+        -0.24467098712921143,
+        0.0,
+        -0.5
+      ],
+      "max": [
+        0.24467098712921143,
+        0.3831859827041626,
+        0.5
+      ]
+    },
+    "size": [
+      0.48934197425842285,
+      0.3831859827041626,
+      1.0
+    ],
+    "uniformMetres": [
+      1.66014564037323,
+      1.2999999523162842,
+      3.392608404159546
+    ],
+    "tabletop": {
+      "y": 0.382,
+      "area": 0.39789503812789917,
+      "min": [
+        -0.21105998754501343,
+        0.38141798973083496,
+        -0.47139298915863037
+      ],
+      "max": [
+        0.21090799570083618,
+        0.3831859827041626,
+        0.4729369878768921
+      ]
+    }
+  }
+}

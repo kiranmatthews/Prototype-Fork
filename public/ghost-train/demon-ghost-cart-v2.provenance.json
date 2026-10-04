@@ -1,0 +1,109 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "taskId": "01a105d9-8def-7573-bf81-790d5a5dc2f4",
+  "previewTaskId": "01a105cf-d395-7710-a061-33f6170924c2",
+  "sourceSha256": "e5db14054ee6d604fd1cbaa12853bdc8074dfb3a5e4894e6b8f8132b5c5e8d22",
+  "outputSha256": "3aca76c8e9636425a099ce6568f9cf226e636ed3dd0c73a9a18fca9e18bc1c17",
+  "bytes": 459144,
+  "trianglesBefore": 4342,
+  "trianglesRemoved": 299,
+  "triangles": 4043,
+  "originalUVsPreserved": true,
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        1024,
+        1024
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 240037
+    }
+  ],
+  "originalAtlases": [
+    {
+      "path": ".img2threejs/ghost-train-v2/atlases/demon-ghost-cart-v2-atlas-0.png",
+      "size": [
+        2048,
+        2048
+      ],
+      "sha256": "60e2e3a9c2704cb5f3f24713b22615691dba3efc87b3debc493a0bf076a5605c"
+    }
+  ],
+  "bounds": {
+    "min": [
+      -0.37698450684547424,
+      0.0,
+      -0.5
+    ],
+    "max": [
+      0.37698450684547424,
+      0.7481659650802612,
+      0.5
+    ]
+  },
+  "size": [
+    0.7539690136909485,
+    0.7481659650802612,
+    1.0
+  ],
+  "targetMetres": [
+    3.2,
+    2.4,
+    6.2
+  ],
+  "suggestedUniformScale": 6.199999809265137,
+  "suggestedUniformMetres": [
+    4.674607753753662,
+    4.638628959655762,
+    6.199999809265137
+  ],
+  "transform": {
+    "sourceBounds": {
+      "min": [
+        -0.40746501088142395,
+        -0.37409499287605286,
+        -0.5
+      ],
+      "max": [
+        0.34650400280952454,
+        0.37407100200653076,
+        0.5
+      ]
+    },
+    "yawRadians": 1.5707963267948966,
+    "pitchRadians": 0,
+    "maxDimensionScale": 1.0,
+    "trim": "Remove upper rear driver/canopy frame, source centroidX>-.10 andY>.10"
+  },
+  "axes": "Y-up,+Z-front,centeredXZ,bottomY0,max dimension1",
+  "functional": {
+    "bounds": {
+      "min": [
+        -0.37698450684547424,
+        0.0,
+        -0.5
+      ],
+      "max": [
+        0.37698450684547424,
+        0.7481659650802612,
+        0.5
+      ]
+    },
+    "size": [
+      0.7539690136909485,
+      0.7481659650802612,
+      1.0
+    ],
+    "uniformMetres": [
+      4.674607753753662,
+      4.638628959655762,
+      6.199999809265137
+    ]
+  }
+}

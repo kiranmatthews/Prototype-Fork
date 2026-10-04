@@ -1,0 +1,81 @@
+{
+  "castle-wall-window-v2": {
+    "node": "WindowGlass",
+    "materialName": "Meshy_WindowGlass",
+    "kind": "glass",
+    "triangles": 31,
+    "bounds": {
+      "min": [
+        -0.1324699968099594,
+        0.12174901366233826,
+        -0.06554800271987915
+      ],
+      "max": [
+        0.12672699987888336,
+        0.9091030359268188,
+        0.0797019973397255
+      ]
+    },
+    "uvBounds": {
+      "min": [
+        0.009476999752223492,
+        0.03338199853897095
+      ],
+      "max": [
+        0.9880179762840271,
+        0.9906430244445801
+      ]
+    },
+    "originalAlbedoAndUVsPreserved": true,
+    "facadeNormals": [
+      [
+        0,
+        0,
+        1
+      ],
+      [
+        0,
+        0,
+        -1
+      ]
+    ],
+    "operation": "Original painted-triangle selection only; runtime may adjust emission on this material"
+  },
+  "monster-face-portal-v2": {
+    "node": "PortalEyes",
+    "materialName": "Meshy_PortalEyes",
+    "kind": "eyes",
+    "triangles": 16,
+    "bounds": {
+      "min": [
+        -0.14306999742984772,
+        0.7690219879150391,
+        0.31367748975753784
+      ],
+      "max": [
+        0.1375889927148819,
+        0.8185880184173584,
+        0.3351585268974304
+      ]
+    },
+    "uvBounds": {
+      "min": [
+        0.09233199805021286,
+        0.11302202939987183
+      ],
+      "max": [
+        0.8172079920768738,
+        0.887997031211853
+      ]
+    },
+    "originalAlbedoAndUVsPreserved": true,
+    "facadeNormals": [
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    "operation": "Original painted-triangle selection only; runtime may adjust emission on this material"
+  }
+}

@@ -1,0 +1,223 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "taskId": "01a105d9-7eff-724d-a8fe-49f645d4f67a",
+  "previewTaskId": "01a105cb-3da9-732e-8c8a-346208512923",
+  "sourceSha256": "c1b9ca0dbb45aa353caa61c07e016b5348d7bb10f3949084c708e522a624a1f6",
+  "outputSha256": "de674362f2271d06381898efe7e4c49be2b3baa7a0bad02ca0587c62a07d9267",
+  "bytes": 331484,
+  "trianglesBefore": 4478,
+  "trianglesRemoved": 0,
+  "triangles": 4478,
+  "originalUVsPreserved": true,
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 65855
+    }
+  ],
+  "originalAtlases": [
+    {
+      "path": ".img2threejs/ghost-train-v2/atlases/castle-clockwork-v2-atlas-0.png",
+      "size": [
+        2048,
+        2048
+      ],
+      "sha256": "dd536dafbedbd038321faf1feae4fb672a87f825ff992303721e29a83b39c43d"
+    }
+  ],
+  "bounds": {
+    "min": [
+      -0.457708477973938,
+      0.0,
+      -0.4628154933452606
+    ],
+    "max": [
+      0.457708477973938,
+      1.0,
+      0.4628154933452606
+    ]
+  },
+  "size": [
+    0.915416955947876,
+    1.0,
+    0.9256309866905212
+  ],
+  "targetMetres": [
+    6.0,
+    7.0,
+    2.4
+  ],
+  "suggestedUniformScale": 7.0,
+  "suggestedUniformMetres": [
+    6.407918930053711,
+    7.0,
+    6.479416847229004
+  ],
+  "transform": {
+    "sourceBounds": {
+      "min": [
+        -0.45491600036621094,
+        -0.5,
+        -0.46154800057411194
+      ],
+      "max": [
+        0.4605009853839874,
+        0.5,
+        0.4640829861164093
+      ]
+    },
+    "yawRadians": 1.5707963267948966,
+    "pitchRadians": 0,
+    "maxDimensionScale": 1.0,
+    "trim": null
+  },
+  "axes": "Y-up,+Z-front,centeredXZ,bottomY0,max dimension1",
+  "functional": {
+    "bounds": {
+      "min": [
+        -0.457708477973938,
+        0.0,
+        -0.4628154933452606
+      ],
+      "max": [
+        0.457708477973938,
+        1.0,
+        0.4628154933452606
+      ]
+    },
+    "size": [
+      0.915416955947876,
+      1.0,
+      0.9256309866905212
+    ],
+    "uniformMetres": [
+      6.407918930053711,
+      7.0,
+      6.479416847229004
+    ],
+    "rigidPivots": {
+      "ClockMainWheel": {
+        "point": [
+          -0.067,
+          0.387,
+          0.334
+        ],
+        "axis": [
+          0,
+          0,
+          1
+        ]
+      },
+      "ClockUpperPulley": {
+        "point": [
+          0.332,
+          0.634,
+          -0.329
+        ],
+        "axis": [
+          1,
+          0,
+          0
+        ]
+      },
+      "ClockLowerPulley": {
+        "point": [
+          0.332,
+          0.388,
+          -0.329
+        ],
+        "axis": [
+          1,
+          0,
+          0
+        ]
+      },
+      "ClockCounterweight": {
+        "point": [
+          0.39,
+          0.147,
+          -0.315
+        ],
+        "axis": [
+          0,
+          1,
+          0
+        ]
+      }
+    },
+    "rigidRegions": {
+      "ClockCounterweight": 108,
+      "ClockMainWheel": 768,
+      "ClockUpperPulley": 164,
+      "ClockLowerPulley": 94,
+      "ClockFrame": 3344
+    }
+  },
+  "rigidRegions": {
+    "ClockCounterweight": 108,
+    "ClockMainWheel": 768,
+    "ClockUpperPulley": 164,
+    "ClockLowerPulley": 94,
+    "ClockFrame": 3344
+  },
+  "rigidPivots": {
+    "ClockMainWheel": {
+      "point": [
+        -0.067,
+        0.387,
+        0.334
+      ],
+      "axis": [
+        0,
+        0,
+        1
+      ]
+    },
+    "ClockUpperPulley": {
+      "point": [
+        0.332,
+        0.634,
+        -0.329
+      ],
+      "axis": [
+        1,
+        0,
+        0
+      ]
+    },
+    "ClockLowerPulley": {
+      "point": [
+        0.332,
+        0.388,
+        -0.329
+      ],
+      "axis": [
+        1,
+        0,
+        0
+      ]
+    },
+    "ClockCounterweight": {
+      "point": [
+        0.39,
+        0.147,
+        -0.315
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ]
+    }
+  }
+}

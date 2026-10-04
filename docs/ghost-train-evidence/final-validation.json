@@ -1,0 +1,1230 @@
+{
+  "baselineCommit": "fccf04e92d7a847a35754806c447026f63e792c3",
+  "authoredLevelSha256": "6509b8b4a125f5e22f930ae1da5cfd92a9b2af0ee6a82ca657a4589fa0a75228",
+  "firstCompleteMeshyPreviewHours": 2.5,
+  "build": "passed",
+  "checkLevels": "passed",
+  "continuousJourney": {
+    "reports": [
+      {
+        "test": "continuous input-only ghost train journey",
+        "state": "finished",
+        "frames": 24561,
+        "seconds": 409.35,
+        "distance": 2447.4307150957616,
+        "largestStep": 0.7385583579202474,
+        "checkpoints": 16,
+        "evidence": [
+          {
+            "test": "input-only moving-cart relay",
+            "relay": 0,
+            "landings": [
+              {
+                "cart": 2,
+                "frame": 959,
+                "position": [
+                  -8.999039881473669,
+                  0.04003905951976777,
+                  -71.20356231194098
+                ],
+                "mover": 1,
+                "overlappingExitIsland": false
+              },
+              {
+                "cart": 3,
+                "frame": 1217,
+                "position": [
+                  -8.999039881473669,
+                  0.04003905951976777,
+                  -81.50783289956729
+                ],
+                "mover": 2,
+                "overlappingExitIsland": false
+              },
+              {
+                "cart": 4,
+                "frame": 1388,
+                "position": [
+                  -8.999039881473669,
+                  0.04003905951976777,
+                  -86.81765671011844
+                ],
+                "mover": 3,
+                "overlappingExitIsland": false
+              }
+            ],
+            "exitStation": 110.04664629759364,
+            "frames": 891,
+            "deaths": 0
+          },
+          {
+            "test": "input-only swinging axe crossing",
+            "initialAxePhase": 0,
+            "exitStation": 127.14085740870507,
+            "frames": 169
+          },
+          {
+            "test": "checkpoint banked through inputs",
+            "name": "Last Departure",
+            "station": 130.12540383153424
+          },
+          {
+            "test": "input-only swinging axe crossing",
+            "initialAxePhase": 0.84,
+            "exitStation": 182.29507072260316,
+            "frames": 292
+          },
+          {
+            "test": "checkpoint banked through inputs",
+            "name": "Under the castle",
+            "station": 223.1256381380612
+          },
+          {
+            "test": "input-only swinging axe crossing",
+            "initialAxePhase": 1.68,
+            "exitStation": 252.0995901729123,
+            "frames": 166
+          },
+          {
+            "test": "input-only swinging axe crossing",
+            "initialAxePhase": 2.52,
+            "exitStation": 293.1437344139631,
+            "frames": 262
+          },
+          {
+            "test": "checkpoint banked through inputs",
+            "name": "Execution flags",
+            "station": 331.70905223985545
+          },
+          {
+            "test": "input-only execution-gallery floor jump",
+            "gap": [
+              373,
+              376.2
+            ],
+            "landingStation": 382.2136706846453,
+            "frames": 155,
+            "deaths": 0
+          },
+          {
+            "test": "input-only swinging axe crossing",
+            "initialAxePhase": 3.36,
+            "exitStation": 410.1639743576785,
+            "frames": 315
+          },
+          {
+            "test": "input-only execution-gallery floor jump",
+            "gap": [
+              462,
+              465.2
+            ],
+            "landingStation": 471.21721056289704,
+            "frames": 155,
+            "deaths": 0
+          },
+          {
+            "test": "checkpoint banked through inputs",
+            "name": "Flagstone crossings complete",
+            "station": 482.1280113430837
+          },
+          {
+            "test": "input-only swinging axe crossing",
+            "initialAxePhase": 4.2,
+            "exitStation": 501.0069040492503,
+            "frames": 333
+          },
+          {
+            "test": "input-only swinging axe crossing",
+            "initialAxePhase": 5.04,
+            "exitStation": 513.136655352638,
+            "frames": 215
+          },
+          {
+            "test": "checkpoint banked through inputs",
+            "name": "Butler entrance",
+            "station": 560.135502970415
+          },
+          {
+            "test": "input-only execution-gallery floor jump",
+            "gap": [
+              637,
+              639.2
+            ],
+            "landingStation": 646.2197078545773,
+            "frames": 155,
+            "deaths": 0
+          },
+          {
+            "test": "checkpoint banked through inputs",
+            "name": "Banquet runway cleared",
+            "station": 705.1590243904874
+          },
+          {
+            "test": "checkpoint banked through inputs",
+            "name": "Serving stair complete",
+            "station": 817.1650856667482
+          },
+          {
+            "test": "checkpoint banked through inputs",
+            "name": "Armour procession",
+            "station": 983.5739858244619
+          },
+          {
+            "test": "input-only broken railway grind transfers",
+            "catches": [
+              {
+                "frame": 11098,
+                "rail": 0,
+                "station": 1000.1247161346548
+              },
+              {
+                "frame": 11233,
+                "rail": 1,
+                "station": 1029.3065146098618
+              }
+            ],
+            "exitStation": 1055.274020941874,
+            "frames": 342,
+            "deaths": 0
+          },
+          {
+            "test": "checkpoint banked through inputs",
+            "name": "Drawbridge cleared",
+            "station": 1059.8369300547954
+          },
+          {
+            "test": "input-only moving-cart relay",
+            "relay": 1,
+            "landings": [
+              {
+                "cart": 2,
+                "frame": 12760,
+                "position": [
+                  -7.996322005726002,
+                  2.040039059519768,
+                  -1155.7391640221501
+                ],
+                "mover": 5,
+                "overlappingExitIsland": false
+              },
+              {
+                "cart": 3,
+                "frame": 12931,
+                "position": [
+                  -7.996322005726002,
+                  2.040039059519768,
+                  -1163.8688542021966
+                ],
+                "mover": 6,
+                "overlappingExitIsland": false
+              },
+              {
+                "cart": 4,
+                "frame": 13189,
+                "position": [
+                  -7.996322005726002,
+                  2.040039059519768,
+                  -1175.9013512855254
+                ],
+                "mover": 7,
+                "overlappingExitIsland": false
+              }
+            ],
+            "exitStation": 1198.6480291882986,
+            "frames": 1024,
+            "deaths": 0
+          },
+          {
+            "test": "checkpoint banked through inputs",
+            "name": "Freight transfer island",
+            "station": 1210.1676571312473
+          },
+          {
+            "test": "input-only moving-cart relay",
+            "relay": 2,
+            "landings": [
+              {
+                "cart": 2,
+                "frame": 14818,
+                "position": [
+                  8.001795075343143,
+                  -3.959960940480232,
+                  -1300.8864851083163
+                ],
+                "mover": 9,
+                "overlappingExitIsland": false
+              },
+              {
+                "cart": 3,
+                "frame": 14988,
+                "position": [
+                  8.001795075343143,
+                  -3.959960940480232,
+                  -1306.2865670993579
+                ],
+                "mover": 10,
+                "overlappingExitIsland": false
+              },
+              {
+                "cart": 4,
+                "frame": 15159,
+                "position": [
+                  8.001795075343143,
+                  -3.959960940480232,
+                  -1313.7747200856268
+                ],
+                "mover": 11,
+                "overlappingExitIsland": false
+              }
+            ],
+            "exitStation": 1341.7083496844198,
+            "frames": 943,
+            "deaths": 0
+          },
+          {
+            "test": "checkpoint banked through inputs",
+            "name": "Funeral train cleared",
+            "station": 1351.1271630221602
+          },
+          {
+            "test": "input-only broken railway grind transfers",
+            "catches": [
+              {
+                "frame": 16345,
+                "rail": 2,
+                "station": 1434.1650557283383
+              },
+              {
+                "frame": 16587,
+                "rail": 3,
+                "station": 1485.001147850002
+              },
+              {
+                "frame": 16848,
+                "rail": 4,
+                "station": 1529.8909804453556
+              }
+            ],
+            "exitStation": 1593.1083333333343,
+            "frames": 1365,
+            "deaths": 0
+          },
+          {
+            "test": "checkpoint banked through inputs",
+            "name": "Hanging railway complete",
+            "station": 1598.1520262405643
+          },
+          {
+            "test": "checkpoint banked through inputs",
+            "name": "Clockworks entrance",
+            "station": 1690.1347032359893
+          },
+          {
+            "test": "input-only swinging axe crossing",
+            "initialAxePhase": 5.88,
+            "exitStation": 1726.012036569335,
+            "frames": 219
+          },
+          {
+            "test": "input-only swinging axe crossing",
+            "initialAxePhase": 6.72,
+            "exitStation": 1787.1318368576196,
+            "frames": 117
+          },
+          {
+            "test": "input-only moving-cart relay",
+            "relay": 3,
+            "landings": [
+              {
+                "cart": 2,
+                "frame": 20345,
+                "position": [
+                  0.0034712865111436605,
+                  10.040039059519767,
+                  -1822.4236339462157
+                ],
+                "mover": 13,
+                "overlappingExitIsland": false
+              },
+              {
+                "cart": 3,
+                "frame": 20602,
+                "position": [
+                  0.0034712865111436605,
+                  10.040039059519767,
+                  -1833.1012022156733
+                ],
+                "mover": 14,
+                "overlappingExitIsland": false
+              },
+              {
+                "cart": 4,
+                "frame": 20860,
+                "position": [
+                  0.0034712865111436605,
+                  10.040039059519767,
+                  -1842.1675739212346
+                ],
+                "mover": 15,
+                "overlappingExitIsland": false
+              }
+            ],
+            "exitStation": 1864.601608478424,
+            "frames": 1017,
+            "deaths": 0
+          },
+          {
+            "test": "checkpoint banked through inputs",
+            "name": "High convoy complete",
+            "station": 1870.1675364213713
+          },
+          {
+            "test": "input-only swinging axe crossing",
+            "initialAxePhase": 7.56,
+            "exitStation": 1924.0049390569623,
+            "frames": 261
+          },
+          {
+            "test": "checkpoint banked through inputs",
+            "name": "Throne antechamber",
+            "station": 2019.1676152616556
+          },
+          {
+            "test": "checkpoint banked through inputs",
+            "name": "Last vault departure",
+            "station": 2156.9616947357827
+          },
+          {
+            "test": "input-only broken railway grind transfers",
+            "catches": [
+              {
+                "frame": 24125,
+                "rail": 5,
+                "station": 2172.1641766309576
+              },
+              {
+                "frame": 24251,
+                "rail": 6,
+                "station": 2199.4546979847446
+              }
+            ],
+            "exitStation": 2227.274862562455,
+            "frames": 342,
+            "deaths": 0
+          }
+        ],
+        "deaths": 0
+      }
+    ],
+    "failures": []
+  },
+  "phaseMetrics": {
+    "cases": 21,
+    "failures": 0,
+    "cartLandings": 36,
+    "railCatches": 7,
+    "axePhases": 3,
+    "floorJumps": 3,
+    "deaths": 0
+  },
+  "sourceSupport": [
+    {
+      "test": "source contracts, spawn, checkpoints, enemy patrol support",
+      "movers": 16,
+      "axes": 10,
+      "enemies": 15,
+      "checkpoints": 16
+    },
+    {
+      "test": "moving cart rider carry",
+      "name": "Last Departure · coupled carriage 2",
+      "carried": 7.65,
+      "deaths": 0
+    },
+    {
+      "test": "moving cart rider carry",
+      "name": "Funeral Freight · coupled carriage 2",
+      "carried": 7.65,
+      "deaths": 0
+    },
+    {
+      "test": "input-only checkpoint contact and banked respawn",
+      "active": true
+    },
+    {
+      "test": "broken rail pit death and supported respawn",
+      "deaths": 1,
+      "grounded": true
+    },
+    {
+      "test": "reachable production finish gate",
+      "state": "finished"
+    }
+  ],
+  "actualMeshyArticulation": {
+    "test": "actual Meshy articulation, compact open carriage, moving cabin collisions, staged lights and lifetime",
+    "knightTriangles": 5904,
+    "regionMeshes": 16,
+    "plantedSamples": 360,
+    "maximumFootError": 0,
+    "cartBody": [
+      3.1731226205825807,
+      3.1058340598464014,
+      6.214697732734681
+    ],
+    "cartInterior": [
+      2.4960000000000004,
+      5.084
+    ],
+    "shadowTargetsReleased": 2,
+    "food": [
+      3104,
+      2194
+    ]
+  },
+  "nativeChromePilots": {
+    "sourceHash": "17d517dc24371e52feead39475e5eb48450ab2e67d5ca820b42f49b98e26b771",
+    "reports": [
+      {
+        "name": "moving-cart-relay-0",
+        "ok": true,
+        "initial": {
+          "frame": 20,
+          "time": 0.3333333333333333,
+          "position": [
+            -8.96875,
+            0,
+            -56
+          ],
+          "heading": [
+            -0.000007346410206643587,
+            0,
+            -0.9999999999730151
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "Supported castle paving and ramp",
+            "y": 0,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "spinHeld": false,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        "evidence": {
+          "test": "input-only moving-cart relay",
+          "relay": 0,
+          "landings": [
+            {
+              "cart": 2,
+              "frame": 375,
+              "position": [
+                -8.995839624513144,
+                0.04003905951976777,
+                -73.61693466336035
+              ],
+              "mover": 1,
+              "overlappingExitIsland": false
+            },
+            {
+              "cart": 3,
+              "frame": 633,
+              "position": [
+                -8.9959159335534,
+                0.04003905951976777,
+                -78.40659334382762
+              ],
+              "mover": 2,
+              "overlappingExitIsland": false
+            },
+            {
+              "cart": 4,
+              "frame": 804,
+              "position": [
+                -8.995977808693397,
+                0.04003905951976777,
+                -85.73210621361149
+              ],
+              "mover": 3,
+              "overlappingExitIsland": false
+            }
+          ],
+          "exitStation": 113.59498784433572,
+          "frames": 1006,
+          "deaths": 0
+        },
+        "final": {
+          "frame": 1026,
+          "time": 17.1,
+          "position": [
+            -8.996041569330393,
+            0,
+            -95.59498784433572
+          ],
+          "heading": [
+            -0.000007346410206643587,
+            0,
+            -0.9999999999730151
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 9,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "Supported castle paving and ramp",
+            "y": 0,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "spinHeld": false,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        "stats": {
+          "frames": 1026,
+          "airborneFrames": 195,
+          "grindFrames": 0,
+          "movingSupports": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "railCatches": [],
+          "deaths": 0,
+          "actions": [
+            {
+              "name": "approach open carriage boarding end",
+              "firstFrame": 20,
+              "lastFrame": 125,
+              "seconds": 1.75
+            },
+            {
+              "name": "jump into the first compact carriage",
+              "firstFrame": 176,
+              "lastFrame": 215,
+              "seconds": 0.65
+            },
+            {
+              "name": "settle inside boarding carriage",
+              "firstFrame": 215,
+              "lastFrame": 215,
+              "seconds": 0
+            },
+            {
+              "name": "walk cart 1 to its run-up",
+              "firstFrame": 215,
+              "lastFrame": 267,
+              "seconds": 0.8666666666666667
+            },
+            {
+              "name": "land inside cart 2",
+              "firstFrame": 336,
+              "lastFrame": 375,
+              "seconds": 0.65
+            },
+            {
+              "name": "brake the earned jump momentum on the receiving cart",
+              "firstFrame": 375,
+              "lastFrame": 384,
+              "seconds": 0.15
+            },
+            {
+              "name": "walk cart 2 to its run-up",
+              "firstFrame": 402,
+              "lastFrame": 525,
+              "seconds": 2.05
+            },
+            {
+              "name": "land inside cart 3",
+              "firstFrame": 594,
+              "lastFrame": 633,
+              "seconds": 0.65
+            },
+            {
+              "name": "brake the earned jump momentum on the receiving cart",
+              "firstFrame": 633,
+              "lastFrame": 633,
+              "seconds": 0
+            },
+            {
+              "name": "walk cart 3 to its run-up",
+              "firstFrame": 651,
+              "lastFrame": 696,
+              "seconds": 0.75
+            },
+            {
+              "name": "land inside cart 4",
+              "firstFrame": 765,
+              "lastFrame": 804,
+              "seconds": 0.65
+            },
+            {
+              "name": "brake the earned jump momentum on the receiving cart",
+              "firstFrame": 804,
+              "lastFrame": 814,
+              "seconds": 0.16666666666666666
+            },
+            {
+              "name": "line up the last carriage exit",
+              "firstFrame": 832,
+              "lastFrame": 936,
+              "seconds": 1.7333333333333334
+            },
+            {
+              "name": "jump out onto the station island",
+              "firstFrame": 987,
+              "lastFrame": 1026,
+              "seconds": 0.65
+            }
+          ]
+        },
+        "initialPlacementCount": 1,
+        "inputOnly": true,
+        "assets": {
+          "ghostcart": {
+            "status": "ready"
+          },
+          "ghostcartface": {
+            "status": "ready"
+          },
+          "ghostchandelier": {
+            "status": "ready"
+          },
+          "ghostwallbay": {
+            "status": "ready"
+          },
+          "ghostarch": {
+            "status": "ready"
+          },
+          "ghosttrestle": {
+            "status": "ready"
+          },
+          "ghostaxe": {
+            "status": "ready"
+          },
+          "ghostbanquettable": {
+            "status": "ready"
+          },
+          "ghostfood": {
+            "status": "ready"
+          },
+          "ghostcake": {
+            "status": "ready"
+          },
+          "ghostknight": {
+            "status": "ready"
+          },
+          "ghostclockwork": {
+            "status": "ready"
+          },
+          "ghostmonsterportal": {
+            "status": "ready"
+          },
+          "ghostflagstone": {
+            "status": "ready"
+          }
+        },
+        "animatronicsReady": 15,
+        "fullRender": true,
+        "consoleErrors": []
+      },
+      {
+        "name": "long-crypt-broken-rails",
+        "ok": true,
+        "initial": {
+          "frame": 20,
+          "time": 0.3333333333333333,
+          "position": [
+            -6,
+            -4,
+            -1408
+          ],
+          "heading": [
+            -0.000007346410206643587,
+            0,
+            -0.9999999999730151
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "Supported castle paving and ramp",
+            "y": -4,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "spinHeld": false,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        "evidence": {
+          "test": "input-only broken railway grind transfers",
+          "catches": [
+            {
+              "frame": 108,
+              "rail": 2,
+              "station": 1434.2158333331117
+            },
+            {
+              "frame": 350,
+              "rail": 3,
+              "station": 1485.0443351450156
+            },
+            {
+              "frame": 611,
+              "rail": 4,
+              "station": 1529.910869905866
+            }
+          ],
+          "exitStation": 1593.108333333274,
+          "frames": 1366,
+          "deaths": 0
+        },
+        "final": {
+          "frame": 1386,
+          "time": 23.1,
+          "position": [
+            -5.000016406982799,
+            -2,
+            -1575.108333333274
+          ],
+          "heading": [
+            -0.000007346410206643587,
+            0,
+            -0.9999999999730151
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 7.500000000000005,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "Supported castle paving and ramp",
+            "y": -2,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": true,
+            "spinHeld": false,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        "stats": {
+          "frames": 1386,
+          "airborneFrames": 81,
+          "grindFrames": 1173,
+          "movingSupports": [],
+          "railCatches": [
+            2,
+            3,
+            4
+          ],
+          "deaths": 0,
+          "actions": [
+            {
+              "name": "approach broken railway",
+              "firstFrame": 20,
+              "lastFrame": 107,
+              "seconds": 1.45
+            },
+            {
+              "name": "catch first cartless rail",
+              "firstFrame": 108,
+              "lastFrame": 108,
+              "seconds": 0
+            },
+            {
+              "name": "grind to broken rail 1 end",
+              "firstFrame": 108,
+              "lastFrame": 315,
+              "seconds": 3.4499999999999997
+            },
+            {
+              "name": "catch receiving broken railway",
+              "firstFrame": 316,
+              "lastFrame": 350,
+              "seconds": 0.5666666666666667
+            },
+            {
+              "name": "grind to broken rail 2 end",
+              "firstFrame": 350,
+              "lastFrame": 578,
+              "seconds": 3.8
+            },
+            {
+              "name": "catch receiving broken railway",
+              "firstFrame": 579,
+              "lastFrame": 611,
+              "seconds": 0.5333333333333333
+            },
+            {
+              "name": "ride broken track exit onto actual floor",
+              "firstFrame": 611,
+              "lastFrame": 1386,
+              "seconds": 12.916666666666666
+            }
+          ]
+        },
+        "initialPlacementCount": 1,
+        "inputOnly": true,
+        "assets": {
+          "ghostcart": {
+            "status": "ready"
+          },
+          "ghostcartface": {
+            "status": "ready"
+          },
+          "ghostchandelier": {
+            "status": "ready"
+          },
+          "ghostwallbay": {
+            "status": "ready"
+          },
+          "ghostarch": {
+            "status": "ready"
+          },
+          "ghosttrestle": {
+            "status": "ready"
+          },
+          "ghostaxe": {
+            "status": "ready"
+          },
+          "ghostbanquettable": {
+            "status": "ready"
+          },
+          "ghostfood": {
+            "status": "ready"
+          },
+          "ghostcake": {
+            "status": "ready"
+          },
+          "ghostknight": {
+            "status": "ready"
+          },
+          "ghostclockwork": {
+            "status": "ready"
+          },
+          "ghostmonsterportal": {
+            "status": "ready"
+          },
+          "ghostflagstone": {
+            "status": "ready"
+          }
+        },
+        "animatronicsReady": 15,
+        "fullRender": true,
+        "consoleErrors": []
+      },
+      {
+        "name": "swinging-execution-axe",
+        "ok": true,
+        "initial": {
+          "frame": 20,
+          "time": 0.3333333333333333,
+          "position": [
+            -9,
+            0,
+            -96
+          ],
+          "heading": [
+            -0.000007346410206643587,
+            0,
+            -0.9999999999730151
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "Supported castle paving and ramp",
+            "y": 0,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0,
+            "moveY": 0,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "spinHeld": false,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        "evidence": {
+          "test": "input-only swinging axe crossing",
+          "initialAxePhase": 0,
+          "exitStation": 127.04999999964807,
+          "frames": 354
+        },
+        "final": {
+          "frame": 374,
+          "time": 6.233333333333333,
+          "position": [
+            -9.000095870653249,
+            0,
+            -109.04999999964807
+          ],
+          "heading": [
+            -0.000007346410206643587,
+            0,
+            -0.9999999999730151
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 9,
+          "verticalSpeed": 0,
+          "bailing": false,
+          "deaths": 0,
+          "mover": null,
+          "ground": {
+            "name": "Supported castle paving and ramp",
+            "y": 0,
+            "normal": [
+              0,
+              1,
+              0
+            ],
+            "slippy": false,
+            "iceGrip": null
+          },
+          "rail": null,
+          "railDistance": null,
+          "balance": 0,
+          "input": {
+            "moveX": 0,
+            "moveY": 1,
+            "jumpHeld": false,
+            "grindHeld": false,
+            "spinHeld": false,
+            "grabHeld": false,
+            "transferHeld": false,
+            "jumpPressed": false,
+            "jumpReleased": false,
+            "grindPressed": false,
+            "spinPressed": false,
+            "grabPressed": false,
+            "transferPressed": false,
+            "restartPressed": false
+          }
+        },
+        "stats": {
+          "frames": 374,
+          "airborneFrames": 0,
+          "grindFrames": 0,
+          "movingSupports": [],
+          "railCatches": [],
+          "deaths": 0,
+          "actions": [
+            {
+              "name": "wait for execution axe safe timing window",
+              "firstFrame": 20,
+              "lastFrame": 265,
+              "seconds": 4.083333333333333
+            },
+            {
+              "name": "walk through swinging axe timing window",
+              "firstFrame": 265,
+              "lastFrame": 374,
+              "seconds": 1.8166666666666667
+            }
+          ]
+        },
+        "initialPlacementCount": 1,
+        "inputOnly": true,
+        "assets": {
+          "ghostcart": {
+            "status": "ready"
+          },
+          "ghostcartface": {
+            "status": "ready"
+          },
+          "ghostchandelier": {
+            "status": "ready"
+          },
+          "ghostwallbay": {
+            "status": "ready"
+          },
+          "ghostarch": {
+            "status": "ready"
+          },
+          "ghosttrestle": {
+            "status": "ready"
+          },
+          "ghostaxe": {
+            "status": "ready"
+          },
+          "ghostbanquettable": {
+            "status": "ready"
+          },
+          "ghostfood": {
+            "status": "ready"
+          },
+          "ghostcake": {
+            "status": "ready"
+          },
+          "ghostknight": {
+            "status": "ready"
+          },
+          "ghostclockwork": {
+            "status": "ready"
+          },
+          "ghostmonsterportal": {
+            "status": "ready"
+          },
+          "ghostflagstone": {
+            "status": "ready"
+          }
+        },
+        "animatronicsReady": 15,
+        "fullRender": true,
+        "consoleErrors": []
+      }
+    ],
+    "consoleErrors": []
+  },
+  "provenance": {
+    "selfContainedGlbs": 15,
+    "sensitiveCredentialOrSignedUrlMatches": 0,
+    "newGenerationTriangles": 29362,
+    "newGenerationBytes": 2958928,
+    "generatedTextureHashMatches": 3,
+    "creditsUsed": 145
+  },
+  "additionalCheck": {
+    "test": "tools/test-level-security.mjs",
+    "result": "existing legacy world-map migration failure at line 66",
+    "reproducedOnCleanBaseline": true
+  },
+  "visualReleaseReview": "Approved after corrected wall-material production captures; all explicit requirements satisfied.",
+  "conceptImageNote": "The three ImageGen chamber mockups are original concept art; actual gameplay evidence is separate.",
+  "correctedGameplayCaptures": [
+    "banquet.png",
+    "machinery.png",
+    "crypt.png"
+  ],
+  "productionCamera": {
+    "scenes": 8,
+    "sourceSha256": "6509b8b4a125f5e22f930ae1da5cfd92a9b2af0ee6a82ca657a4589fa0a75228",
+    "consoleErrors": [],
+    "failures": []
+  }
+}

@@ -8,35 +8,35 @@ const unit = (p:GhostPoint):GhostPoint => {const n=Math.hypot(...p)||1;return p.
 
 /** Authored scenery stays ordinary editable mesh data, batched by room/material. */
 export class GhostArt {
-  private batches = new Map<string,{p:GhostPoint;vertices:number[];indices:number[];grp:number;color:string;emissive?:string;name:string}>();
+  private batches = new Map<string,{p:GhostPoint;vertices:number[];indices:number[];grp:number;color:string;emissive?:string;name:string;tex:string}>();
   constructor(private readonly C:CustomComponent[],private readonly cellLength=72) {}
-  face(points:GhostPoint[],color:string,grp:number,name:string,emissive?:string):void {
+  face(points:GhostPoint[],color:string,grp:number,name:string,emissive?:string,tex='solid'):void {
     const ix:number[]=[];for(let i=1;i<points.length-1;i++)ix.push(0,i,i+1);
-    this.indexed(points,ix,color,grp,name,emissive);
+    this.indexed(points,ix,color,grp,name,emissive,tex);
   }
-  private indexed(points:GhostPoint[],indices:number[],color:string,grp:number,name:string,emissive?:string):void {
+  private indexed(points:GhostPoint[],indices:number[],color:string,grp:number,name:string,emissive?:string,tex='solid'):void {
     const centre=points.reduce((p,q)=>[p[0]+q[0]/points.length,p[1]+q[1]/points.length,p[2]+q[2]/points.length] as GhostPoint,[0,0,0] as GhostPoint);
-    const cell=Math.floor(-centre[2]/this.cellLength),key=`${grp}:${cell}:${color}:${emissive??''}`;
+    const cell=Math.floor(-centre[2]/this.cellLength),key=`${grp}:${cell}:${color}:${emissive??''}:${tex}`;
     let batch=this.batches.get(key);
     if(batch&&batch.vertices.length/3+points.length>4000){this.flush(key);batch=undefined;}
-    if(!batch){batch={p:[r(centre[0]),0,r(centre[2])],vertices:[],indices:[],grp,color,emissive,name};this.batches.set(key,batch);}
+    if(!batch){batch={p:[r(centre[0]),0,r(centre[2])],vertices:[],indices:[],grp,color,emissive,name,tex};this.batches.set(key,batch);}
     const n=batch.vertices.length/3;
     for(const p of points)batch.vertices.push(r(p[0]-batch.p[0]),r(p[1]),r(p[2]-batch.p[2]));
     batch.indices.push(...indices.map(i=>n+i));
   }
-  box(p:GhostPoint,size:GhostPoint,color:string,grp:number,name:string,yaw=0,emissive?:string):void {
+  box(p:GhostPoint,size:GhostPoint,color:string,grp:number,name:string,yaw=0,emissive?:string,tex='solid'):void {
     const [w,h,d]=size.map(v=>v/2),a=yaw*Math.PI/180,c=Math.cos(a),s=Math.sin(a);
     const q=(x:number,y:number,z:number):GhostPoint=>[p[0]+x*c+z*s,p[1]+y,p[2]-x*s+z*c];
     const v=[q(-w,-h,-d),q(w,-h,-d),q(w,h,-d),q(-w,h,-d),q(-w,-h,d),q(w,-h,d),q(w,h,d),q(-w,h,d)];
     // Shared box corners give the stonework a slight carved highlight and
     // keep the entire 2.3 km authored interchange inside its vertex budget.
-    this.indexed(v,[0,3,2,0,2,1,4,5,6,4,6,7,0,4,7,0,7,3,1,2,6,1,6,5,3,7,6,3,6,2,0,1,5,0,5,4],color,grp,name,emissive);
+    this.indexed(v,[0,3,2,0,2,1,4,5,6,4,6,7,0,4,7,0,7,3,1,2,6,1,6,5,3,7,6,3,6,2,0,1,5,0,5,4],color,grp,name,emissive,tex);
   }
-  beam(a:GhostPoint,b:GhostPoint,width:number,color:string,grp:number,name:string,depth=width):void {
+  beam(a:GhostPoint,b:GhostPoint,width:number,color:string,grp:number,name:string,depth=width,tex='solid'):void {
     const d=unit(sub(b,a)),u=unit(cross(d,Math.abs(d[1])>.95?[1,0,0]:[0,1,0])),v=unit(cross(u,d));
     const at=(p:GhostPoint,x:number,y:number):GhostPoint=>[p[0]+u[0]*x+v[0]*y,p[1]+u[1]*x+v[1]*y,p[2]+u[2]*x+v[2]*y];
     const w=width/2,h=depth/2,q=[at(a,-w,-h),at(a,w,-h),at(a,w,h),at(a,-w,h),at(b,-w,-h),at(b,w,-h),at(b,w,h),at(b,-w,h)];
-    this.indexed(q,[0,3,2,0,2,1,4,5,6,4,6,7,0,4,7,0,7,3,1,2,6,1,6,5,3,7,6,3,6,2,0,1,5,0,5,4],color,grp,name);
+    this.indexed(q,[0,3,2,0,2,1,4,5,6,4,6,7,0,4,7,0,7,3,1,2,6,1,6,5,3,7,6,3,6,2,0,1,5,0,5,4],color,grp,name,undefined,tex);
   }
   ring(p:GhostPoint,radius:number,tube:number,color:string,grp:number,name:string,yaw=0,vertical=false,segments=12):void {
     const a=yaw*Math.PI/180,c=Math.cos(a),s=Math.sin(a);
@@ -51,7 +51,7 @@ export class GhostArt {
   }
   private flush(key:string):void {
     const b=this.batches.get(key);if(!b)return;
-    this.C.push({t:'mesh',p:b.p,vertices:b.vertices,indices:b.indices,tex:'solid',color:b.color,
+    this.C.push({t:'mesh',p:b.p,vertices:b.vertices,indices:b.indices,tex:b.tex,color:b.color,
       ...(b.emissive?{emissive:b.emissive}:{}),solid:false,doubleSided:true,edgeGrinding:false,grp:b.grp,nm:b.name});
     this.batches.delete(key);
   }

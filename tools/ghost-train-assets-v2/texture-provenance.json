@@ -1,0 +1,134 @@
+{
+  "stone": {
+    "path": "public/ghost-train/meshy-castle-stone-v2.png",
+    "sourceModel": "castle-wall-window-v2",
+    "operation": "Exact crop of actual Meshy UV-reprojected stone pixels; no content painting",
+    "axis": 2,
+    "sign": -1,
+    "projectionAxes": [
+      0,
+      1
+    ],
+    "sampleBounds": {
+      "min": [
+        -0.2516059875488281,
+        0.0,
+        -0.22179800271987915
+      ],
+      "max": [
+        0.2516059875488281,
+        1.0,
+        0.22179800271987915
+      ]
+    },
+    "coverage": 0.893874274359809,
+    "uvBounds": {
+      "min": [
+        1.2999999853491317e-05,
+        0.005657970905303955
+      ],
+      "max": [
+        0.9999759793281555,
+        0.9999740123748779
+      ]
+    },
+    "size": [
+      183,
+      861
+    ],
+    "sha256": "62218d223caf78d53518a8587f4dbce277be0da20622a723fa14b631fbea8f2d",
+    "sourceProjection": "public/ghost-train/meshy-castle-window-uv-v2.png",
+    "cropPixels": [
+      61,
+      399,
+      244,
+      1260
+    ],
+    "region": "Pure limestone face of left window-bay column, excluding glass/tracery"
+  },
+  "floor": {
+    "path": "public/ghost-train/meshy-castle-floor-v2.png",
+    "sourceModel": "castle-flagstone-v2",
+    "operation": "Reproject actual Meshy albedo through original triangle UVs; no painted/replaced content",
+    "axis": 1,
+    "sign": 1,
+    "projectionAxes": [
+      0,
+      2
+    ],
+    "sampleBounds": {
+      "min": [
+        -0.5,
+        0.0,
+        -0.4477604925632477
+      ],
+      "max": [
+        0.5,
+        0.04005200043320656,
+        0.4477604925632477
+      ]
+    },
+    "coverage": 0.9689311981201172,
+    "uvBounds": {
+      "min": [
+        4.199999966658652e-05,
+        3.993511199951172e-06
+      ],
+      "max": [
+        0.9982680082321167,
+        0.9999020099639893
+      ]
+    },
+    "size": [
+      1024,
+      1024
+    ],
+    "sha256": "6c5ba0f8dfb9f4760861740029c7decb6c5b367d6f552755dc54772fa043d6f7"
+  },
+  "timber": {
+    "path": "public/ghost-train/meshy-castle-timber-v2.png",
+    "sourceModel": "banquet-table-v2",
+    "operation": "Reproject actual Meshy albedo through original triangle UVs; no painted/replaced content",
+    "axis": 1,
+    "sign": -1,
+    "projectionAxes": [
+      0,
+      2
+    ],
+    "sampleBounds": {
+      "min": [
+        -0.24467098712921143,
+        0.0,
+        -0.5
+      ],
+      "max": [
+        0.24467098712921143,
+        0.3831859827041626,
+        0.5
+      ]
+    },
+    "coverage": 0.9979562759399414,
+    "uvBounds": {
+      "min": [
+        2.9000000722589903e-05,
+        0.0031279921531677246
+      ],
+      "max": [
+        0.9998739957809448,
+        0.9999939799308777
+      ]
+    },
+    "size": [
+      614,
+      614
+    ],
+    "sha256": "2b5ccd6ff98add985570283b612a8a337422b0fc7ec3278f07685bee405bd494",
+    "cropPixels": [
+      205,
+      205,
+      819,
+      819
+    ],
+    "region": "Unobstructed oak underside centre; excludes feet and future red-cloth tabletop"
+  }
+}

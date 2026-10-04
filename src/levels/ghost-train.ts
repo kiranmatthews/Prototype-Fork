@@ -1,304 +1,346 @@
-import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
-import { GhostArt, type GhostPoint } from './ghost-train-art';
+import type {CustomComponent, CustomGroup, CustomLevelData} from '../level';
+import {GhostArt, type GhostPoint} from './ghost-train-art';
+import {addGhostTrainShowScenes} from './ghost-train-show-scenes';
 
-/** A source-owned 2.3 km indoor dark ride; movement uses the ordinary toolkit. */
-export const GHOST_TRAIN_END = 2250;
-const C:CustomComponent[]=[];
-const groups:CustomGroup[]=[{id:1,nm:'Ghost Train · ordered camera lane',editorOnly:true}];
-const art=new GhostArt(C);
-const P={stone:'#4c4163',dark:'#292235',light:'#776988',mortar:'#353044',floor:'#625a70',iron:'#313745',steel:'#9eabb3',brass:'#c8a363',red:'#863446',green:'#72ff9b',gold:'#e2bf79',wood:'#725047',bone:'#d7cab0',black:'#161520'};
-const clamp=(n:number)=>Math.max(0,Math.min(1,n));
-const mix=(a:number,b:number,t:number)=>a+(b-a)*clamp(t);
+/** A 2.3 km dark ride built as close staged chambers, with genuine elevation. */
+export const GHOST_TRAIN_END=2250;
+const C:CustomComponent[]=[],groups:CustomGroup[]=[{id:1,nm:'Indoor ride camera choreography',editorOnly:true}],art=new GhostArt(C,48);
+const WALL_PANES:{room:number;a:number;b:number;side:number;spring:number}[]=[];
+const P={stone:'#e5dce9',dark:'#aaa0b7',light:'#f0e5d7',floor:'#eee0c9',iron:'#3a4249',steel:'#9faaa7',brass:'#b49760',red:'#793448',green:'#80ff9c',gold:'#e3c68d',wood:'#e8d6bb',bone:'#e9ddc3',black:'#1d1a25'};
+type Scalar=number|((s:number)=>number);
+const at=(v:Scalar,s:number)=>typeof v==='function'?v(s):v;
+const clamp=(v:number)=>Math.max(0,Math.min(1,v));
 const add=(c:CustomComponent)=>C.push(c);
-const round=(p:GhostPoint):GhostPoint=>p.map(n=>Math.round(n*4096)/4096) as GhostPoint;
+const grid=(p:GhostPoint):GhostPoint=>p.map(v=>Math.round(v*4096)/4096) as GhostPoint;
+const mix=(a:number,b:number,t:number)=>a+(b-a)*clamp(t);
+const smooth=(a:number,b:number,s:number)=>{const t=clamp((s-a)/(b-a));return t*t*(3-2*t);};
 
-export function ghostRouteX(s:number):number{return 38*Math.sin(s*Math.PI*2/850)+14*Math.sin(s*Math.PI*2/1320);}
-export function ghostRouteTangent(s:number):GhostPoint{
-  const dx=38*Math.PI*2/850*Math.cos(s*Math.PI*2/850)+14*Math.PI*2/1320*Math.cos(s*Math.PI*2/1320),n=Math.hypot(dx,1);
-  return[dx/n,0,-1/n];
+const X:[number,number][]=[[0,0],[46,0],[75,-9],[146,-9],[195,5],[242,5],[280,15],[320,15],[354,-3],[399,-3],[443,8],[513,8],[546,-5],[578,-5],[616,4],[653,4],[691,-5],[732,-5],[766,7],[835,7],[872,-7],[909,-7],[944,8],[976,8],[1000,0],[1060,0],[1100,8],[1138,-8],[1223,-8],[1265,8],[1370,8],[1410,-6],[1454,-6],[1496,2],[1543,2],[1587,-5],[1630,-5],[1690,8],[1740,8],[1794,0],[1874,0],[1910,-8],[1964,-8],[2001,4],[2042,4],[2087,-5],[2130,-5],[2170,0],[2290,0]];
+const Y:[number,number][]=[[-30,0],[146,0],[220,-2],[285,-2],[346,2],[601,2],[615,3.4],[671,3.4],[685,2],[746,2],[826,6],[1102,6],[1152,2],[1228,2],[1290,-4],[1409,-4],[1450,-4],[1586,-2],[1695,-2],[1787,10],[1968,10],[2038,8],[2290,8]];
+function interpolate(knots:[number,number][],s:number):number{
+  if(s<=knots[0][0])return knots[0][1];
+  for(let i=1;i<knots.length;i++)if(s<=knots[i][0])return mix(knots[i-1][1],knots[i][1],smooth(knots[i-1][0],knots[i][0],s));
+  return knots[knots.length-1][1];
 }
-export function ghostRoutePoint(s:number,y=0,u=0):GhostPoint{
-  const [x,,z]=ghostRouteTangent(s);return round([ghostRouteX(s)-z*u,y,18-s+x*u]);
+export const ghostRouteX=(s:number)=>interpolate(X,s);
+export const ghostRouteHeight=(s:number)=>interpolate(Y,s);
+export const routeHeight=ghostRouteHeight;
+export function ghostRouteTangent(s:number):GhostPoint{const dx=(ghostRouteX(s+.025)-ghostRouteX(s-.025))/.05,n=Math.hypot(dx,1);return[dx/n,0,-1/n];}
+export function ghostRoutePoint(s:number,y=ghostRouteHeight(s),u=0):GhostPoint{const [x,,z]=ghostRouteTangent(s);return grid([ghostRouteX(s)-z*u,y,18-s+x*u]);}
+export const ghostRouteYaw=(s:number)=>{const [x,,z]=ghostRouteTangent(s);return-Math.atan2(x,-z)*180/Math.PI;};
+export function ghostRouteProgress(p:GhostPoint|{x:number;y:number;z:number}):number{
+  const x=Array.isArray(p)?p[0]:p.x,z=Array.isArray(p)?p[2]:p.z,base=18-z;let s=base;
+  for(let i=0;i<5;i++){
+    const derivative=(ghostRouteX(s+.025)-ghostRouteX(s-.025))/.05,curvature=(ghostRouteX(s+.05)-2*ghostRouteX(s)+ghostRouteX(s-.05))/.0025;
+    const step=((ghostRouteX(s)-x)*derivative+s-base)/Math.max(.25,1+derivative*derivative+(ghostRouteX(s)-x)*curvature);
+    s-=Math.max(-4,Math.min(4,step));
+  }
+  return s;
 }
-export function ghostRouteYaw(s:number):number{const [x,,z]=ghostRouteTangent(s);return-Math.atan2(x,-z)*180/Math.PI;}
-export const GHOST_TRAIN_ROUTE=Array.from({length:229},(_,i)=>({s:-20+i*10,p:ghostRoutePoint(-20+i*10),yaw:ghostRouteYaw(-20+i*10)}));
+export const routeProgress=ghostRouteProgress;
+export const GHOST_TRAIN_ROUTE=Array.from({length:575},(_,i)=>{const s=-20+i*4;return{s,p:ghostRoutePoint(s),yaw:ghostRouteYaw(s)};});
 export const GHOST_TRAIN_SECTIONS=[
-  {name:'01 · Last Departure',a:-20,b:250,width:22,ceiling:15,theme:'station'},
-  {name:'02 · The Execution Gallery',a:250,b:535,width:22,ceiling:14,theme:'axes'},
-  {name:'03 · Feast of the Uninvited',a:535,b:840,width:32,ceiling:19,theme:'banquet'},
-  {name:'04 · The Iron Procession',a:840,b:1110,width:24,ceiling:16,theme:'armour'},
-  {name:'05 · Phantom Freight',a:1110,b:1400,width:25,ceiling:17,theme:'transit'},
-  {name:'06 · Track of the Forgotten',a:1400,b:1680,width:26,ceiling:16,theme:'crypt'},
-  {name:'07 · The Black Clockworks',a:1680,b:1980,width:24,ceiling:18,theme:'machinery'},
-  {name:'08 · The Emerald Throne',a:1980,b:2280,width:30,ceiling:20,theme:'throne'},
-].map((s,i)=>({...s,grp:10+i,start:ghostRoutePoint(s.a),end:ghostRoutePoint(s.b)}));
-for(const section of GHOST_TRAIN_SECTIONS)groups.push({id:section.grp,nm:section.name,editorOnly:true});
-const district=(s:number)=>GHOST_TRAIN_SECTIONS.find(d=>s>=d.a&&s<d.b)??GHOST_TRAIN_SECTIONS[GHOST_TRAIN_SECTIONS.length-1];
-
-export interface GhostWaypoint {s:number;p:GhostPoint;kind:'walk'|'cart'|'rail'|'jump'|'checkpoint'|'gate';name?:string;componentIndex?:number}
-export const GHOST_TRAIN_WAYPOINTS:GhostWaypoint[]=[];
-export const GHOST_TRAIN_CHECKPOINTS:{s:number;p:GhostPoint;name:string}[]=[];
-export const GHOST_TRAIN_CARTS:{s:number;p:GhostPoint;component:CustomComponent;relay:number;componentIndex:number}[]=[];
-export const GHOST_TRAIN_RAILS:{a:number;b:number;y:number;u:number;points:GhostPoint[]}[]=[];
-export const GHOST_TRAIN_GAPS:{a:number;b:number;kind:'cart'|'rail'|'jump';name:string}[]=[];
-export const GHOST_TRAIN_AXES:CustomComponent[]=[];
-export const GHOST_TRAIN_ENEMIES:CustomComponent[]=[];
-export const GHOST_TRAIN_FLOORS:{a:number;b:number;width:number}[]=[];
-
-function waypoint(s:number,kind:GhostWaypoint['kind'],y=0,u=0,name?:string,componentIndex?:number):void{
-  GHOST_TRAIN_WAYPOINTS.push({s,p:ghostRoutePoint(s,y+.14,u),kind,...(name?{name}:{}),...(componentIndex===undefined?{}:{componentIndex})});
+  {name:'01 · Last Departure',a:-20,b:230,theme:'station'},{name:'02 · Execution Gallery',a:230,b:510,theme:'axes'},
+  {name:'03 · Feast of the Uninvited',a:510,b:830,theme:'banquet'},{name:'04 · Iron Procession',a:830,b:1100,theme:'armour'},
+  {name:'05 · Phantom Freight',a:1100,b:1390,theme:'freight'},{name:'06 · Track of the Forgotten',a:1390,b:1680,theme:'crypt'},
+  {name:'07 · Black Clockworks',a:1680,b:1960,theme:'machinery'},{name:'08 · Emerald Throne',a:1960,b:2290,theme:'throne'},
+].map((d,i)=>({...d,grp:10+i,start:ghostRoutePoint(d.a),end:ghostRoutePoint(d.b)}));
+for(const d of GHOST_TRAIN_SECTIONS)groups.push({id:d.grp,nm:d.name,editorOnly:true});
+const district=(s:number)=>GHOST_TRAIN_SECTIONS.find(d=>s>=d.a&&s<d.b)??GHOST_TRAIN_SECTIONS[7];
+export const GHOST_TRAIN_ROOMS=[
+ ['Ticket vestibule',-20,68,8.8,8.8,'vault'],['Last departure platform',68,104,8.8,10,'timber'],['Monster gate and execution court',104,148,14.2,13,'hero'],['Under the castle',148,230,7,7.8,'flat'],
+ ['Headsman arcade',230,322,7.5,8.6,'vault'],['Shattered flagstones',322,412,8.2,9.2,'flat'],['Crimson blade court',412,510,9,10,'ribbed'],
+ ['The butler door',510,575,8,9,'vault'],['Banquet of the uninvited',575,627,22,15.5,'hero'],['Raised serving gallery',627,722,8.5,9.2,'timber'],['Scullery and serving stair',722,830,8,8.5,'timber'],
+ ['Armour vestibule',830,910,8,9,'flat'],['Hall of false mirrors',910,995,11,11.5,'ribbed'],['The ruined drawbridge',995,1100,9,12,'vault'],
+ ['Freight descent',1100,1160,7.5,8,'timber'],['Phantom transfer depot',1160,1260,9.5,10,'flat'],['Funeral carriage shed',1260,1390,9.5,11,'timber'],
+ ['Narrow crypt entry',1390,1450,7.8,8,'vault'],['The hanging railway abyss',1450,1502,21,16,'hero'],['Upper tomb bridges',1502,1548,13.2,18,'ribbed'],['Emerald maw vault',1548,1588,17,15,'hero'],['Tomb of the watchman',1588,1680,7.8,8.6,'vault'],
+ ['Clockwork gearing hall',1680,1770,8.5,11,'timber'],['Counterweight balcony',1770,1875,12.4,12,'ribbed'],['Behind the clock face',1875,1960,8,10,'flat'],
+ ['Throne antechamber',1960,2040,8.5,10.5,'vault'],['The emerald court',2040,2160,21,16,'hero'],['Last shattered vault',2160,2290,9.8,11,'ribbed'],
+].map(([name,a,b,width,ceiling,style],i)=>({name:name as string,a:a as number,b:b as number,width:width as number,ceiling:ceiling as number,style:style as string,grp:district(a as number).grp,id:i}));
+const roomAt=(s:number)=>GHOST_TRAIN_ROOMS.find(r=>s>=r.a&&s<r.b)??GHOST_TRAIN_ROOMS[GHOST_TRAIN_ROOMS.length-1];
+const roomWidth=(room:typeof GHOST_TRAIN_ROOMS[number],s:number)=>{
+  if(room.style!=='hero')return room.width;
+  const t=clamp((s-room.a)/(room.b-room.a)),edge=Math.min(1,t/.24,(1-t)/.24);
+  return room.width*(.60+.40*edge);
+};
+export const GHOST_TRAIN_WALL_OPENINGS:{room:number;a:number;b:number;side:number;bottom:number;top:number;name:string}[]=[];
+export const GHOST_TRAIN_PREVIEW_POINTS=[
+  {id:'station',name:'Monster gate and execution court',roomId:1,s:113,u:0},
+  {id:'axes',name:'Headsman arcade',roomId:3,s:279,u:0},
+  {id:'banquet',name:'Feast of the uninvited',roomId:7,s:586,u:0},
+  {id:'armour',name:'The iron procession',roomId:10,s:935,u:0},
+  {id:'freight',name:'Phantom transfer depot',roomId:13,s:1164,u:0},
+  {id:'crypt',name:'The hanging railway abyss',roomId:16,s:1440,u:0},
+  {id:'machinery',name:'Counterweight balcony',roomId:19,s:1825,u:0},
+  {id:'throne',name:'Emerald throne arrival',roomId:23,s:2238,u:0},
+].map(p=>({...p,roomId:roomAt(p.s).id,y:ghostRouteHeight(p.s)+.12,previewPoint:ghostRoutePoint(p.s,ghostRouteHeight(p.s)+.12,p.u),heading:ghostRouteTangent(p.s),lookAhead:10}));
+type MeshyScenery='ghostwallbay'|'ghostbanquettable'|'ghostchandelier'|'ghosttrestle'|'ghostmonsterportal'|'ghostflagstone';
+const SCENE_SIZE:Record<MeshyScenery,GhostPoint>={ghostwallbay:[2.717344,5.4,2.395418],ghostbanquettable:[1.66529,1.3,3.40314],ghostchandelier:[4.2,4.14351,4.2],ghosttrestle:[2.14152,1.489338,6],ghostmonsterportal:[9,9,8.842023],ghostflagstone:[2,.080104,1.791042]};
+function meshy(kind:MeshyScenery,s:number,u:number,feet:number,size=SCENE_SIZE[kind],yaw=ghostRouteYaw(s),name?:string){add({t:'decor',dkind:kind,p:ghostRoutePoint(s,feet,u),s:size,yaw,solid:false,grp:district(s).grp,nm:name??`Meshy ${kind} staged castle scenery`});}
+export interface GhostWaypoint{s:number;p:GhostPoint;kind:'walk'|'cart'|'rail'|'jump'|'checkpoint'|'gate';name?:string;componentIndex?:number}
+export const GHOST_TRAIN_WAYPOINTS:GhostWaypoint[]=[],GHOST_TRAIN_CHECKPOINTS:{s:number;p:GhostPoint;name:string}[]=[],GHOST_TRAIN_CARTS:{s:number;p:GhostPoint;component:CustomComponent;relay:number;componentIndex:number}[]=[],GHOST_TRAIN_RAILS:{a:number;b:number;y:number;u:number;points:GhostPoint[]}[]=[],GHOST_TRAIN_GAPS:{a:number;b:number;kind:'cart'|'rail'|'jump';name:string}[]=[],GHOST_TRAIN_AXES:CustomComponent[]=[],GHOST_TRAIN_ENEMIES:CustomComponent[]=[],GHOST_TRAIN_FLOORS:{a:number;b:number;width:number;top:Scalar;offset:number}[]=[];
+function waypoint(s:number,kind:GhostWaypoint['kind'],y=ghostRouteHeight(s),u=0,name?:string,componentIndex?:number){GHOST_TRAIN_WAYPOINTS.push({s,p:ghostRoutePoint(s,y+.1,u),kind,...(name?{name}:{}),...(componentIndex===undefined?{}:{componentIndex})});}
+function showlight(s:number,u:number,height:number,color='#ffc784',targetS=s+7,targetU=0,intensity=62,vr=0){
+  const y=ghostRouteHeight(s);add({t:'decor',dkind:'ghostshowlight',p:ghostRoutePoint(s,y+height,u),to:ghostRoutePoint(targetS,ghostRouteHeight(targetS)+1.1,targetU),color,amp:vr===0?Math.max(110,intensity):Math.min(65,intensity),w:.6,rise:32,vr,grp:district(s).grp,nm:'Dark ride theatrical light'});
+  art.box(ghostRoutePoint(s,y+height,u),[.24,.4,.3],P.brass,district(s).grp,'Wall sconce brass body',ghostRouteYaw(s));
+  art.box(ghostRoutePoint(s,y+height+.1,u),[.14,.24,.14],color,district(s).grp,'Wall sconce lit lantern',ghostRouteYaw(s),color);
 }
-function checkpoint(s:number,name:string,u=2.8):void{
-  const p=ghostRoutePoint(s,0,u);add({t:'checkpoint',p,grp:district(s).grp,nm:name});
-  GHOST_TRAIN_CHECKPOINTS.push({s,p,name});waypoint(s,'checkpoint',0,u,name);
-  // Brass-and-green paving makes safe islands readable amid the dark ride.
-  art.box(ghostRoutePoint(s,-.012),[9.8,.035,4.2],P.brass,district(s).grp,'Checkpoint brass arrival carpet',ghostRouteYaw(s));
-  for(const side of [-1,1])art.box(ghostRoutePoint(s,.025,side*4.7),[.15,.08,4.2],P.green,district(s).grp,'Checkpoint emerald edge',ghostRouteYaw(s),P.green);
+function checkpoint(s:number,name:string,u=1.65){
+  const p=ghostRoutePoint(s,undefined,u);add({t:'checkpoint',p,grp:district(s).grp,nm:name});GHOST_TRAIN_CHECKPOINTS.push({s,p,name});waypoint(s,'checkpoint',p[1],u,name);
+  art.box(ghostRoutePoint(s,p[1]+.015),[Math.min(5.8,roomAt(s).width-.8),.03,3],P.brass,district(s).grp,'Safe arrival brass carpet',ghostRouteYaw(s));
+  showlight(s,-2.4,4.2,'#89ffc5',s,u,44,1);
 }
-
-/** Closed floor masses share rounded vertices; wide halls have real side walls. */
-function floor(a:number,b:number,width=12,color=P.floor):void{
-  GHOST_TRAIN_FLOORS.push({a,b,width});
-  for(let from=a;from<b;from+=48){
-    const to=Math.min(b,from+48),n=Math.max(1,Math.ceil((to-from)/8)),origin=ghostRoutePoint(from),v:number[]=[],ix:number[]=[];
-    const face=(points:GhostPoint[])=>{const j=v.length/3;for(const p of points)v.push(...round([p[0]-origin[0],p[1],p[2]-origin[2]]));for(let k=1;k<points.length-1;k++)ix.push(j,j+k,j+k+1);};
+function floor(a:number,b:number,width=6.2,top:Scalar=ghostRouteHeight,offset=0,tex='castle-floor'){
+  GHOST_TRAIN_FLOORS.push({a,b,width,top,offset});
+  for(let from=a;from<b;from+=40){
+    const to=Math.min(b,from+40),n=Math.max(1,Math.ceil((to-from)/4)),origin=ghostRoutePoint(from,0),v:number[]=[],ix:number[]=[];
+    const face=(q:GhostPoint[])=>{const j=v.length/3;for(const p of q)v.push(...grid([p[0]-origin[0],p[1],p[2]-origin[2]]));for(let k=1;k<q.length-1;k++)ix.push(j,j+k,j+k+1);};
     for(let i=0;i<n;i++){
-      const sa=from+(to-from)*i/n,sb=from+(to-from)*(i+1)/n;
-      const l0=ghostRoutePoint(sa,0,-width/2),r0=ghostRoutePoint(sa,0,width/2),l1=ghostRoutePoint(sb,0,-width/2),r1=ghostRoutePoint(sb,0,width/2);
-      const down=(p:GhostPoint):GhostPoint=>[p[0],-.9,p[2]];
-      face([l0,r0,r1,l1]);face([down(l0),down(l1),down(r1),down(r0)]);
-      face([l0,l1,down(l1),down(l0)]);face([r1,r0,down(r0),down(r1)]);
-      if(i===0)face([r0,l0,down(l0),down(r0)]);
-      if(i===n-1)face([l1,r1,down(r1),down(l1)]);
+      const sa=mix(from,to,i/n),sb=mix(from,to,(i+1)/n),l0=ghostRoutePoint(sa,at(top,sa),offset-width/2),r0=ghostRoutePoint(sa,at(top,sa),offset+width/2),l1=ghostRoutePoint(sb,at(top,sb),offset-width/2),r1=ghostRoutePoint(sb,at(top,sb),offset+width/2),down=(p:GhostPoint):GhostPoint=>[p[0],p[1]-1.2,p[2]];
+      face([l0,r0,r1,l1]);face([l0,l1,down(l1),down(l0)]);face([r1,r0,down(r0),down(r1)]);
+      if(i===0)face([r0,l0,down(l0),down(r0)]);if(i===n-1)face([l1,r1,down(r1),down(l1)]);
     }
-    add({t:'mesh',p:origin,vertices:v,indices:ix,tex:'solid',color,edgeGrinding:false,grp:district(from).grp,nm:'Castle stone floor · closed collision mass'});
-  }
-  // A subtle paving rhythm remains visible under the theatrical lighting.
-  for(let s=Math.ceil(a/8)*8;s<b;s+=8)art.box(ghostRoutePoint(s,.006),[width-.08,.012,.055],P.mortar,district(s).grp,'Stone floor cross joints',ghostRouteYaw(s));
-}
-function pit(a:number,b:number,name:string,kind:GhostWaypoint['kind']='jump'):void{
-  const half=18,points=[ghostRoutePoint(a,-4,-half),ghostRoutePoint(b,-4,-half),ghostRoutePoint(b,-4,half),ghostRoutePoint(a,-4,half)],p=points[0];
-  add({t:'pit',p,pts:points.map(q=>[q[0]-p[0],q[2]-p[2]]),s:[1,1,1],color:P.black,grp:district(a).grp,nm:name});
-  GHOST_TRAIN_GAPS.push({a,b,kind:kind==='rail'?'rail':kind==='cart'?'cart':'jump',name});
-}
-function rail(a:number,b:number,y=.6,u=0,name='Cartless ghost rail'):void{
-  const n=Math.ceil((b-a)/5),points=Array.from({length:n+1},(_,i)=>ghostRoutePoint(a+(b-a)*i/n,y,u)),p=points[0];
-  add({t:'rail',p,pts:points.map(q=>[q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]),grp:district(a).grp,nm:name});
-  GHOST_TRAIN_RAILS.push({a,b,y,u,points});
-  for(let s=a;s<b;s+=16)waypoint(s,'rail',y,u,name);
-}
-function track(a:number,b:number,y=-.09):void{
-  for(let s=a;s<b;s+=7.2){
-    const g=district(s).grp;art.box(ghostRoutePoint(s,y-.08),[4.3,.22,.46],P.wood,g,'Low-poly railway sleepers',ghostRouteYaw(s));
-    for(const side of [-1,1])art.beam(ghostRoutePoint(s,y+.07,side*1.32),ghostRoutePoint(Math.min(b,s+7.25),y+.07,side*1.32),.1,P.steel,g,'Twin polished ghost-train tracks',.14);
+    add({t:'mesh',p:origin,vertices:v,indices:ix,tex,color:P.floor,edgeGrinding:false,grp:district(from).grp,nm:tex==='castle-timber'?'Supported serving-table runway':'Supported castle paving and ramp'});
   }
 }
-function axe(s:number,u=0,phase=0):void{
-  const c:CustomComponent={t:'pendulum',dkind:'ghostaxe',p:ghostRoutePoint(s,7.2,u),len:6,amp:.92,speed:1.32,phase,yaw:ghostRouteYaw(s),grp:district(s).grp,nm:'Swinging execution axe'};
-  add(c);GHOST_TRAIN_AXES.push(c);
-  art.beam(ghostRoutePoint(s,7.5,-6.6),ghostRoutePoint(s,7.5,6.6),.55,P.iron,district(s).grp,'Execution axe gantry',.7);
-  for(const side of [-1,1])art.box(ghostRoutePoint(s,3.75,side*6.6),[.65,7.5,.75],P.dark,district(s).grp,'Axe gantry upright',ghostRouteYaw(s));
+function pit(a:number,b:number,name:string,kind:'cart'|'rail'|'jump'){
+  const width=roomAt((a+b)/2).width+2,y=Math.min(ghostRouteHeight(a),ghostRouteHeight(b))-5,points=[ghostRoutePoint(a,y,-width/2),ghostRoutePoint(b,y,-width/2),ghostRoutePoint(b,y,width/2),ghostRoutePoint(a,y,width/2)],p=points[0];
+  add({t:'pit',p,pts:points.map(q=>[q[0]-p[0],q[2]-p[2]]),s:[1,1,1],color:P.black,grp:district(a).grp,nm:name});GHOST_TRAIN_GAPS.push({a,b,kind,name});
 }
-function enemy(s:number,kind:'ghostknight'|'ghostfood'|'ghostcake',u=0,vr=0,range=2.8):void{
-  const c:CustomComponent={t:'enemy',dkind:kind,p:ghostRoutePoint(s,0,u),foe:kind==='ghostknight'?'grunt':'hopper',range,speed:kind==='ghostknight'?.88:1.35,vr,grp:district(s).grp,nm:kind==='ghostknight'?'Emerald-eyed robotic armour':'Banquet animatronic food'};
+function rail(a:number,b:number,u=0,name='Shattered ghost railway'){
+  const n=Math.ceil((b-a)/3),points=Array.from({length:n+1},(_,i)=>{const s=mix(a,b,i/n);return ghostRoutePoint(s,ghostRouteHeight(s)+.48,u);}),p=points[0];
+  add({t:'rail',p,pts:points.map(q=>[q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]),grp:district(a).grp,nm:name});GHOST_TRAIN_RAILS.push({a,b,y:p[1],u,points});
+  for(let s=a;s<b;s+=12)waypoint(s,'rail',ghostRouteHeight(s)+.48,u,name);
+  track(a,b,s=>ghostRouteHeight(s)+.36,true);
+  // Broken ends have fallen splinters and bent rail pieces beside the safe tip.
+  for(const [s,sign]of [[a,-1],[b,1]])for(const side of [-1,1])art.beam(ghostRoutePoint(s,ghostRouteHeight(s)+.34,side*.76),ghostRoutePoint(s+sign*1.2,ghostRouteHeight(s)-.55,side*1.15),.12,P.iron,district(s).grp,'Bent snapped railway end',.16);
+}
+function track(a:number,b:number,y:Scalar=(s)=>ghostRouteHeight(s)+.045,hanging=false){
+  if(hanging){
+    for(let from=a;from<b;from+=6){const to=Math.min(b,from+6),s=(from+to)/2,length=to-from;meshy('ghosttrestle',s,0,at(y,s)-.248*length,[.35692*length,.248223*length,length],ghostRouteYaw(s),'Meshy suspended broken railway and skull trestle');}
+    return;
+  }
+  const step=hanging?2.7:5.5;
+  for(let s=a;s<b;s+=step){
+    const g=district(s).grp,yy=at(y,s);art.box(ghostRoutePoint(s,yy-.13),[2.3,.22,.27],P.wood,g,'Railway sleeper',ghostRouteYaw(s),undefined,'castle-timber');
+    for(const side of [-1,1])art.beam(ghostRoutePoint(s,yy,side*.76),ghostRoutePoint(Math.min(b,s+step+.02),at(y,Math.min(b,s+step+.02)),side*.76),.07,P.steel,g,'Polished twin train rails',.11);
+    if(hanging&&Math.floor((s-a)/2.7)%3===0){
+      const lo=yy-4.8;for(const side of [-1,1]){
+        art.beam(ghostRoutePoint(s,lo,side*1.15),ghostRoutePoint(s,yy-.25,side*1.15),.18,P.iron,g,'Hanging railway trestle');
+        art.beam(ghostRoutePoint(s,lo,side*1.15),ghostRoutePoint(Math.min(b,s+8.1),at(y,Math.min(b,s+8.1))-.25,side*1.15),.13,P.iron,g,'Suspended track diagonal truss');
+      }
+      art.beam(ghostRoutePoint(s,lo,-1.15),ghostRoutePoint(s,lo,1.15),.16,P.iron,g,'Track trestle cross brace');
+    }
+  }
+}
+function axe(s:number,u=0,phase=0){
+  const y=ghostRouteHeight(s),c:CustomComponent={t:'pendulum',dkind:'ghostaxe',p:ghostRoutePoint(s,y+5.8,u),len:4.5,amp:.82,speed:1.35,phase,yaw:ghostRouteYaw(s),grp:district(s).grp,nm:'Close execution axe'};
+  add(c);GHOST_TRAIN_AXES.push(c);showlight(s-4,-2.7,4.4,'#ffc37a',s,u,85);
+}
+function enemy(s:number,kind:'ghostknight'|'ghostfood'|'ghostcake',u=0,vr=0,range=1.1){
+  const c:CustomComponent={t:'enemy',dkind:kind,p:ghostRoutePoint(s,undefined,u),s:kind==='ghostknight'?[1.3,2.75,1.25]:[1.55,1.6,1.45],foe:kind==='ghostknight'?'grunt':'hopper',range,speed:kind==='ghostknight'?.85:1.05,vr,grp:district(s).grp,nm:kind==='ghostknight'?'Emerald-eyed mechanical armour':'Banquet food animatronic'};
   add(c);GHOST_TRAIN_ENEMIES.push(c);
 }
-function cartRelay(a:number,b:number,id:number,name:string):void{
-  // 15 m decks on 18 m centres leave a constant 3 m transfer. Identical
-  // phases keep those gaps fair while all the visible carts actually move.
-  pit(a,b,`${name} · empty rail trench`,'cart');track(a-10,b+10,-1.1);
-  const centres=[a+4,a+22,a+40,a+58],deck=15;
-  for(const s of centres){
-    const c:CustomComponent={t:'mover',dkind:'ghostcart',p:ghostRoutePoint(s,0),s:[8.4,.8,deck],axis:'z',travelSign:-1,amp:2,speed:.76,phase:-Math.PI/2,grp:district(s).grp,nm:`${name} · carriage ${GHOST_TRAIN_CARTS.length+1}`};
-    const componentIndex=C.length;add(c);GHOST_TRAIN_CARTS.push({s,p:c.p,component:c,relay:id,componentIndex});
-    waypoint(s,'cart',0,0,c.nm,componentIndex);
+function display(s:number,kind:'ghostknight'|'ghostfood'|'ghostcake',u:number,top:number,height:number,vr=0){add({t:'decor',dkind:kind,p:ghostRoutePoint(s,top,u),s:[height*.65,height,height*.6],vr,yaw:ghostRouteYaw(s)+(u>0?90:-90),grp:district(s).grp,nm:'Close staged haunted castle performer'});}
+function cartRelay(a:number,id:number,name:string){
+  // Four centimetres of true clearance makes the moving cabin own support
+  // where its entry/exit overlaps a stationary loading dock.
+  const b=a+25,y=ghostRouteHeight(a)+.04;pit(a,b,`${name} empty track trench`,'cart');track(a-7,b+8,y-1.25,true);
+  for(let i=0;i<4;i++){
+    const s=a+.2+i*8.2,c:CustomComponent={t:'mover',dkind:'ghostcart',p:ghostRoutePoint(s,y),s:[3.2,.35,6.2],axis:'z',travelSign:-1,amp:2.2,speed:.5,phase:-Math.PI/2,grp:district(a).grp,nm:`${name} · coupled carriage ${i+1}`},componentIndex=C.length;
+    add(c);GHOST_TRAIN_CARTS.push({s,p:c.p,component:c,relay:id,componentIndex});waypoint(s,'cart',y,0,c.nm,componentIndex);
+    if(i<3)waypoint(s+2,'jump',y,0,'Compact carriage transfer');
   }
-  // Floors overlap the end carts by at least two metres throughout a cycle.
-  waypoint(a-2,'walk',0,0,`${name} embark`);waypoint(a+10.9,'jump',0,0,`${name} first transfer`);waypoint(a+28.9,'jump',0,0,`${name} second transfer`);waypoint(a+46.9,'jump',0,0,`${name} third transfer`);waypoint(b+9,'walk',0,0,`${name} disembark`);
+  waypoint(a-2,'walk',y,0,'Board train');waypoint(b+6,'walk',y,0,'Leave train');
+  for(const s of [a-5,b+4])showlight(s,-3.4,4.3,'#ffc784',s+3,0,85);
 }
 
-// The architecture is genuinely enclosed. Render-only masonry and vault ribs
-// share batches; continuous wallpaths provide uncluttered collision boundaries.
-function hall(a:number,b:number,width:number,ceiling:number,g:number,theme:string):void{
+function solidFurniture(s:number,u:number,_width:number,depth:number,top:number,name:string){
+  const base=ghostRouteHeight(s),g=district(s).grp,h=top-base;
+  const scale=h/.382,unitW=.489341974*scale,unitD=scale,count=Math.max(1,Math.round(depth/unitD));
+  for(let i=0;i<count;i++){
+    const station=s+(i-(count-1)/2)*unitD;
+    add({t:'platform',p:ghostRoutePoint(station,base+h/2,u),s:[unitW,h,unitD],yaw:ghostRouteYaw(s),invisible:true,tex:'castle-timber',color:P.wood,edgeGrinding:false,grp:g,nm:name});
+    meshy('ghostbanquettable',station,u,base,[unitW,h,unitD],ghostRouteYaw(s),name);
+  }
+  for(const z of [-depth*.28,0,depth*.28]){
+    art.ring(ghostRoutePoint(s+z,top+.045,u),.58,.17,P.bone,g,'Golden-rim feast platter',0,false,8);
+    art.ring(ghostRoutePoint(s+z,top+.052,u),.7,.06,P.brass,g,'Golden-rim feast platter',0,false,8);
+  }
+}
+function banquet(s:number,u:number,vr=0){
+  const y=ghostRouteHeight(s),g=district(s).grp;solidFurniture(s,u,3,6.4,y+1.3,'Solid Meshy carved banquet table');
+  display(s,'ghostfood',u,y+1.32,1.55,vr);display(s+2,'ghostcake',u,y+1.32,1.2,vr+1);
+  for(const z of [-4,4]){
+    const chairU=u+Math.sign(u)*2.0;art.box(ghostRoutePoint(s+z,y+.55,chairU),[.9,.18,.85],P.red,g,'Banquet chair cushion',ghostRouteYaw(s));
+    art.box(ghostRoutePoint(s+z,y+1.1,chairU+Math.sign(u)*.42),[.95,1.8,.15],P.wood,g,'High backed feast chair',ghostRouteYaw(s),undefined,'castle-timber');
+  }
+}
+function coffin(s:number,u:number){const y=ghostRouteHeight(s),g=district(s).grp;art.box(ghostRoutePoint(s,y+.45,u),[1.35,.9,2.9],P.dark,g,'Carved stone sarcophagus',ghostRouteYaw(s),undefined,'castle-stone');art.box(ghostRoutePoint(s,y+.97,u),[1.5,.2,3.05],P.light,g,'Sarcophagus lid',ghostRouteYaw(s),undefined,'castle-stone');art.box(ghostRoutePoint(s,y+1.09,u),[.15,.04,2.1],P.brass,g,'Sarcophagus gold inlay',ghostRouteYaw(s));}
+function chandelier(s:number,radius:number){const room=roomAt(s),base=ghostRouteHeight(s),y=base+(room.style==='hero'?4.6:room.ceiling-3.7),g=district(s).grp,width=radius*2;meshy('ghostchandelier',s,0,y,[width,width*.98655,width]);art.beam(ghostRoutePoint(s,y+width*.98655),ghostRoutePoint(s,base+room.ceiling),.05,P.iron,g,'Chandelier suspension chain');}
+
+function doorway(s:number,width:number,height:number,g:number){
+  const y=ghostRouteHeight(s),opening=Math.min(5.8,width-1),yaw=ghostRouteYaw(s),panel=(width-opening)/2;
+  if(panel>.1)for(const side of [-1,1])add({t:'wall',p:ghostRoutePoint(s,y-.6,side*(opening+panel)/2),s:[panel,height+.6,1.2],yaw,tex:'castle-stone',color:P.dark,edgeGrinding:false,grp:g,nm:'Solid reveal doorway wing'});
+  add({t:'wall',p:ghostRoutePoint(s,y+6.7),s:[opening,height-6.7,1.2],yaw,tex:'castle-stone',color:P.dark,edgeGrinding:false,grp:g,nm:'Solid reveal doorway lintel'});
+  add({t:'decor',dkind:'ghostarch',p:ghostRoutePoint(s,y),s:[opening+.4,7.3,1.4],yaw,solid:false,grp:g,nm:'Meshy close gothic reveal portal'});
+  showlight(s-3,-opening*.48,4.7,'#ffc784',s+3,0,72);
+}
+function chamber(room:typeof GHOST_TRAIN_ROOMS[number]){
+  const {a,b,width:w,ceiling:h,grp:g,style,id}=room;
   for(const side of [-1,1]){
-    const knots=Array.from({length:Math.ceil((b-a)/12)+1},(_,i)=>ghostRoutePoint(mix(a,b,i/Math.ceil((b-a)/12)),-.9,side*width/2)),p=knots[0];
-    add({t:'wallpath',p,pts:knots.map(q=>[q[0]-p[0],q[2]-p[2],0]),w:.55,rise:ceiling,invisible:true,edgeGrinding:false,containment:true,grp:g,nm:'Enclosed castle interior boundary'});
+    const n=Math.ceil((b-a)/8),knots=Array.from({length:n+1},(_,i)=>{const s=mix(a,b,i/n);return ghostRoutePoint(s,ghostRouteHeight(s)-6,side*(roomWidth(room,s)/2-.2));}),p=knots[0];
+    add({t:'wallpath',p,pts:knots.map(q=>[q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]),w:.4,rise:h+6,containment:true,invisible:true,edgeGrinding:false,grp:g,nm:'Close enclosing chamber boundary'});
   }
-  for(let s=a;s<b;s+=18){
-    const next=Math.min(b,s+18),wallTop=ceiling*.64;
+  for(let s=a;s<b;s+=12){
+    const next=Math.min(b,s+12),spring=style==='flat'||style==='timber'?h:h*.7;
     for(const side of [-1,1]){
-      const u=side*width/2,q=[ghostRoutePoint(s,-1,u),ghostRoutePoint(next,-1,u),ghostRoutePoint(next,wallTop,u),ghostRoutePoint(s,wallTop,u)];
-      art.face(q,P.dark,g,'Castle interior wall backing');
-      // Large irregular coursed stone gives relief without thousands of props.
-      for(let row=0;row<2;row++)art.box(ghostRoutePoint(s+9,2.05+row*3.55,u-side*.13),[.32,3.4,17.6],row%2?P.stone:P.mortar,g,'Purple ashlar wall courses',ghostRouteYaw(s+9));
-      art.box(ghostRoutePoint(s+9,1,u-side*.2),[.44,.2,18.15],P.light,g,'Castle dado moulding',ghostRouteYaw(s+9));
-      art.box(ghostRoutePoint(s+9,wallTop-.2,u-side*.16),[.6,.35,18.15],P.light,g,'Stone vault spring moulding',ghostRouteYaw(s+9));
+      WALL_PANES.push({room:id,a:s,b:next,side,spring});
+      const mid=(s+next)/2;art.box(ghostRoutePoint(mid,ghostRouteHeight(mid)+.9,side*(roomWidth(room,mid)/2-.12)),[.24,.18,next-s+.12],P.light,g,'Carved stone dado',ghostRouteYaw(mid),undefined,'castle-stone');
+      if(style!=='flat')art.box(ghostRoutePoint(mid,ghostRouteHeight(mid)+spring-.08,side*(roomWidth(room,mid)/2-.14)),[.32,.23,next-s+.12],P.light,g,'Vault spring stone moulding',ghostRouteYaw(mid),undefined,'castle-stone');
     }
-    // A pointed, faceted barrel vault rises well above the chase camera.
-    const crown=[[-.5,wallTop],[-.36,ceiling*.86],[-.15,ceiling*.97],[0,ceiling],[.15,ceiling*.97],[.36,ceiling*.86],[.5,wallTop]];
-    for(let k=0;k<crown.length-1;k++)art.face([ghostRoutePoint(s,crown[k][1],width*crown[k][0]),ghostRoutePoint(next,crown[k][1],width*crown[k][0]),ghostRoutePoint(next,crown[k+1][1],width*crown[k+1][0]),ghostRoutePoint(s,crown[k+1][1],width*crown[k+1][0])],k%2?P.stone:P.dark,g,'Faceted pointed barrel vault');
+    const crown=style==='flat'||style==='timber'?[[-.5,h],[.5,h]]:[[-.5,spring],[-.28,h*.94],[0,h],[.28,h*.94],[.5,spring]];
+    for(let k=0;k<crown.length-1;k++)art.face([ghostRoutePoint(s,ghostRouteHeight(s)+crown[k][1],roomWidth(room,s)*crown[k][0]),ghostRoutePoint(next,ghostRouteHeight(next)+crown[k][1],roomWidth(room,next)*crown[k][0]),ghostRoutePoint(next,ghostRouteHeight(next)+crown[k+1][1],roomWidth(room,next)*crown[k+1][0]),ghostRoutePoint(s,ghostRouteHeight(s)+crown[k+1][1],roomWidth(room,s)*crown[k+1][0])],P.dark,g,'Enclosed chamber ceiling',undefined,style==='timber'?'castle-timber':'castle-stone');
   }
-  for(let s=Math.ceil(a/40)*40;s<b;s+=40){
-    const spring=ceiling*.64;
+  const rhythm=style==='hero'?18:style==='ribbed'?12:22;
+  for(let s=a+8;s<b-5;s+=rhythm){
+    const y=ghostRouteHeight(s),spring=style==='flat'||style==='timber'?h:h*.7,span=roomWidth(room,s);
     for(const side of [-1,1]){
-      const u=side*(width/2-.45);
-      art.box(ghostRoutePoint(s,spring/2,u),[1.1,spring,1.5],P.light,g,'Gothic pier shaft',ghostRouteYaw(s));
-      art.box(ghostRoutePoint(s,.3,u),[1.9,.6,2.2],P.stone,g,'Gothic pier base',ghostRouteYaw(s));
-      art.box(ghostRoutePoint(s,spring-.15,u),[1.8,.6,2.15],P.brass,g,'Gothic pier capital',ghostRouteYaw(s));
+      art.box(ghostRoutePoint(s,y+spring/2,side*(span/2-.25)),[.6,spring,.72],P.light,g,'Distinct chamber buttress',ghostRouteYaw(s),undefined,'castle-stone');
+      art.box(ghostRoutePoint(s,y+.3,side*(span/2-.25)),[1,.6,1.15],P.dark,g,'Buttress plinth',ghostRouteYaw(s),undefined,'castle-stone');
+      if((id+Math.floor(s/rhythm))%2===0){
+        const u=side*(span/2-.27);art.face([ghostRoutePoint(s+2,y+5.4,u),ghostRoutePoint(s+3.9,y+5.4,u),ghostRoutePoint(s+3.9,y+2.55,u),ghostRoutePoint(s+3,y+1.95,u),ghostRoutePoint(s+2,y+2.55,u)],P.red,g,'Close crimson heraldic pennant');
+      }
     }
-    const rib=[[-.48,spring],[-.35,ceiling*.86],[-.15,ceiling*.97],[0,ceiling+.03],[.15,ceiling*.97],[.35,ceiling*.86],[.48,spring]];
-    for(let k=0;k<rib.length-1;k++)art.beam(ghostRoutePoint(s,rib[k][1],width*rib[k][0]),ghostRoutePoint(s,rib[k+1][1],width*rib[k+1][0]),.4,P.light,g,'Pointed vault ribs',.6);
-    if(Math.floor(s/40)%2===0)for(const side of [-1,1]){
-      const u=side*(width/2-.65),a0=ghostRoutePoint(s+10,3.8,u),a1=ghostRoutePoint(s+13,8.2,u),a2=ghostRoutePoint(s+16,3.8,u);
-      art.face([a0,a1,a2],P.green,g,'Emerald stained glass lancet',P.green);
-      art.beam(a0,a1,.25,P.brass,g,'Lancet brass tracery');art.beam(a1,a2,.25,P.brass,g,'Lancet brass tracery');art.beam(a2,a0,.25,P.brass,g,'Lancet brass sill');
-      // Pennants keep the theatrical haunted-castle palette coherent.
-      const bannerU=side*(width/2-.85);art.face([ghostRoutePoint(s+4,8,bannerU),ghostRoutePoint(s+7.5,8,bannerU),ghostRoutePoint(s+7.5,4.2,bannerU),ghostRoutePoint(s+5.75,3.1,bannerU),ghostRoutePoint(s+4,4.2,bannerU)],P.red,g,'Crimson swallowtail castle banner');
+    if(style==='timber')art.beam(ghostRoutePoint(s,y+h-.25,-span/2),ghostRoutePoint(s,y+h-.25,span/2),.32,P.wood,g,'Heavy oak service ceiling beam',.4,'castle-timber');
+    else if(style==='ribbed'||style==='hero'){
+      for(const side of [-1,1])art.beam(ghostRoutePoint(s,y+spring,side*span/2),ghostRoutePoint(s,y+h,0),.25,P.light,g,'Pointed carved vault rib',.3,'castle-stone');
     }
   }
-  for(let s=a+32;s<b;s+=100)chandelier(s,ceiling-4,g,theme==='banquet'||theme==='throne'?3.3:2.2);
-}
-function chandelier(s:number,y:number,g:number,radius:number):void{
-  const p=ghostRoutePoint(s,y);art.ring(p,radius,.22,P.brass,g,'Low-poly brass chandelier');
-  art.beam(ghostRoutePoint(s,y),ghostRoutePoint(s,y+3.6),.1,P.iron,g,'Chandelier suspension');
-  for(let i=0;i<8;i++){
-    const a=i*Math.PI/4,q:GhostPoint=[p[0]+Math.cos(a)*radius,y,p[2]+Math.sin(a)*radius];
-    art.beam(p,q,.1,P.brass,g,'Chandelier radial arms');art.box([q[0],q[1]+.38,q[2]],[.14,.72,.14],P.bone,g,'Chandelier candles');
-    art.box([q[0],q[1]+.8,q[2]],[.14,.28,.14],P.gold,g,'Chandelier warm flames',0,P.gold);
-  }
-}
-function plate(s:number,u:number,y:number,radius:number,g:number):void{
-  const p=ghostRoutePoint(s,y,u);art.ring(p,radius,.3,P.bone,g,'Banquet porcelain platter',0,false,10);art.ring([p[0],p[1]+.015,p[2]],radius+.14,.08,P.brass,g,'Banquet gold platter rim',0,false,10);
-}
-function banquet(a:number,b:number,g:number,royal=false):void{
-  for(let s=a+15;s<b-8;s+=36)for(const side of [-1,1]){
-    const u=side*(royal?9.8:10.7),yaw=ghostRouteYaw(s);
-    art.box(ghostRoutePoint(s,1.8,u),[4.7,.45,17],P.wood,g,'Long haunted banquet table',yaw);
-    art.box(ghostRoutePoint(s,2.035,u),[4.5,.03,16.8],P.red,g,'Banquet crimson tablecloth',yaw);
-    for(const z of [-6.5,6.5])for(const x of [-1.5,1.5])art.box(ghostRoutePoint(s+z,.85,u+x),[.4,1.7,.4],P.brass,g,'Banquet carved table legs',yaw);
-    for(const z of [-5,0,5]){
-      plate(s+z,u,2.1,1.2,g);art.box(ghostRoutePoint(s+z,2.4,u),[.85,.55,1.35],z===0?P.gold:P.bone,g,'Oversized theatrical feast dishes',yaw);
-    }
-    for(const inner of [-1,1])for(const z of [-5,0,5]){
-      const seatU=u+inner*3.3;art.box(ghostRoutePoint(s+z,.7,seatU),[1.5,.28,1.4],P.red,g,'Banquet chairs',yaw);art.box(ghostRoutePoint(s+z,1.3,seatU+inner*.65),[.15,2.1,1.5],P.wood,g,'Banquet high chair backs',yaw);
+  if(style!=='hero'&&id%3===0)chandelier((a+b)/2,1.0);
+  if(style!=='hero')for(let s=a+10;s<b-7;s+=18)for(const side of [-1,1])meshy('ghostwallbay',s,side*(roomWidth(room,s)/2+.8),ghostRouteHeight(s)+.05,SCENE_SIZE.ghostwallbay,ghostRouteYaw(s)+(side<0?90:-90),'Meshy inset carved window and door bay');
+  if([2,3,4,9,11,15,17,20,23].includes(id)){
+    const s=a+12,y=ghostRouteHeight(s)+h-.8,u=roomWidth(room,s)/2-.5,anchor=ghostRoutePoint(s,y,u);
+    const ends=[ghostRoutePoint(s+3,y,u),ghostRoutePoint(s+2,y-1.8,u),ghostRoutePoint(s,y-2.5,u)];
+    for(const end of ends)art.beam(anchor,end,.017,P.bone,g,'Cobweb corner radial silk');
+    for(const t of [.35,.7])for(let k=0;k<2;k++){
+      const q=(end:GhostPoint):GhostPoint=>end.map((v,j)=>anchor[j]+(v-anchor[j])*t) as GhostPoint;
+      art.beam(q(ends[k]),q(ends[k+1]),.012,P.bone,g,'Cobweb corner cross silk');
     }
   }
-}
-function coffin(s:number,u:number,g:number):void{
-  const y=.55,yaw=ghostRouteYaw(s);
-  art.box(ghostRoutePoint(s,y,u),[2.5,1.1,5.4],P.dark,g,'Hexed crypt sarcophagus',yaw);art.box(ghostRoutePoint(s,1.2,u),[2.7,.25,5.6],P.light,g,'Sarcophagus stone lid',yaw);
-  art.box(ghostRoutePoint(s,1.35,u),[.25,.06,3.8],P.brass,g,'Sarcophagus brass inlay',yaw);art.box(ghostRoutePoint(s-.8,1.35,u),[1.4,.06,.25],P.brass,g,'Sarcophagus brass crossbar',yaw);
-}
-function machinery(s:number,u:number,g:number):void{
-  const p=ghostRoutePoint(s,4,u),yaw=ghostRouteYaw(s);
-  art.ring(p,3.4,1.15,P.brass,g,'Clockworks faceted gear',yaw,true,16);art.ring(p,1.2,.65,P.iron,g,'Clockworks central bearing',yaw,true,12);
-  for(let i=0;i<8;i++){
-    const a=i*Math.PI/4;art.beam(p,[p[0]+Math.cos(a)*3,p[1]+Math.sin(a)*3,p[2]],.32,P.iron,g,'Clockworks wheel spokes');
-  }
-  art.box(ghostRoutePoint(s,1,u),[6,2,3],P.dark,g,'Clockworks machinery foundation',yaw);
+  // Every room has an arrival and a mid-room key, matched to actual fixtures.
+  showlight(a+14,-Math.min(3.7,w/2-.3),4.7,id%4===1?'#94f9bd':'#ffc784',a+22,0,style==='hero'?98:68,id%4===1?1:0);
+  showlight(b-18,Math.min(3.7,w/2-.3),4.4,'#bc9cff',b-7,0,42,2);
+  if(id>0)doorway(a+2,roomWidth(room,a+2),h,g);
+  const mid=(a+b)/2,fy=ghostRouteHeight(mid),high=/hanging railway|tomb bridges|maw vault/i.test(room.name);
+  add({t:'camnode',p:ghostRoutePoint(mid,fy+3),s:[w+4,32,b-a+12],yaw:ghostRouteYaw(mid),cameraView:true,radius:5,
+    cameraPosition:ghostRoutePoint(mid-6,fy+(high?8.3:5.6)),cameraTarget:ghostRoutePoint(mid+9,fy+(high?6.1:4.1)),cameraFollowDistance:high?8:6.1,cameraFollowTargetHeight:high?3:2.4,cameraFov:64,grp:1,nm:`Camera · ${room.name}`});
 }
 
-// Floors deliberately end at the ride trenches. There is no hidden ground
-// under the cart transfers or the broken-rail sequences.
-floor(-20,78,18);floor(136,250,13);cartRelay(78,136,0,'Station departure');
-floor(250,357,12);floor(361,437,12);floor(441,535,12);pit(357,361,'Execution-gallery broken flagstones');pit(437,441,'Execution-gallery second flagstone gap');
-floor(535,840,27);floor(840,1018,13);floor(1048,1110,13);pit(1018,1048,'Armour gallery collapsed bridge','rail');
-floor(1110,1163,15);floor(1221,1302,15);floor(1360,1400,15);cartRelay(1163,1221,1,'Phantom freight transfer');cartRelay(1302,1360,2,'Funeral freight transfer');
-floor(1400,1436,14);floor(1572,1680,14);pit(1436,1572,'Crypt cartless broken railway','rail');
-floor(1680,1842,13);floor(1900,1980,13);cartRelay(1842,1900,3,'Clockworks cart escape');
-floor(1980,2170,25);floor(2214,2280,25);pit(2170,2214,'Emerald throne final shattered track','rail');
-
-for(const d of GHOST_TRAIN_SECTIONS)hall(d.a,d.b,d.width,d.ceiling,d.grp,d.theme);
-for(const f of GHOST_TRAIN_FLOORS)track(f.a,f.b);
-
-// 1. Boarding immediately introduces the moving train before the first axe.
-add({t:'clock',p:ghostRoutePoint(8,0,5),grp:10});add({t:'comboorb',p:ghostRoutePoint(8,0,-5),grp:10});
-add({t:'crate',p:ghostRoutePoint(23,0,-3.7),kind:'mask',grp:10,nm:'Departure safety mask'});
-for(const s of [20,48,155,188,222])for(const side of [-1,1])art.box(ghostRoutePoint(s,.5,side*7.8),[1.3,1,9],P.red,10,'Station upholstered waiting bench',ghostRouteYaw(s));
-axe(176,0,.4);axe(224,1.2,2.6);checkpoint(153,'Last Departure · train cleared');
-
-// 2. Alternating sweep timing and two honest four-metre floor jumps.
-for(const [i,s]of [282,317,391,412,478,509].entries())axe(s,i%2?-1.4:1.4,i*.92);
-checkpoint(267,'Execution Gallery · enter');checkpoint(464,'Execution Gallery · blades cleared');
-for(const s of [355,435]){waypoint(s-2,'walk');waypoint(s+1,'jump');waypoint(s+8,'walk');}
-
-// 3. Oversized food props belong to long dressed tables, while smaller
-// animated enemies spill onto the central lane in a readable stagger.
-banquet(550,825,12);for(const [i,s]of [581,626,672,719,770,808].entries())enemy(s,i%3===1?'ghostcake':'ghostfood',i%2?-1.9:1.9,i%3,3);
-checkpoint(549,'Feast of the Uninvited · entrance',4);checkpoint(742,'Feast of the Uninvited · banquet cleared',4);
-add({t:'crate',p:ghostRoutePoint(689,0,-4.5),kind:'mystery',grp:12,nm:'Banquet guest prize'});
-
-// 4. Armour crosses the aisle mechanically; the ruined footbridge has a
-// 3 m rail-to-rail jump rather than an invisible floor bypass.
-for(const [i,s]of [875,918,963,998,1081].entries())enemy(s,'ghostknight',i%2?-2.2:2.2,0,3.1);
-rail(1008,1031,.55,-.5,'Armour bridge · outgoing rail');rail(1034,1059,.55,.5,'Armour bridge · receiving rail');
-track(1018,1048,-.8);waypoint(1029,'jump',.55,-.5,'Armour bridge rail jump');waypoint(1036,'rail',.55,.5);
-checkpoint(857,'The Iron Procession · enter');checkpoint(1060,'The Iron Procession · broken bridge cleared');
-for(let s=860;s<1100;s+=42)for(const side of [-1,1]){
-  const u=side*9.3;art.box(ghostRoutePoint(s,.7,u),[3,1.4,3],P.stone,13,'Armour display plinth',ghostRouteYaw(s));
-  art.box(ghostRoutePoint(s,3,u),[1.8,3.2,.45],P.red,13,'Armour alcove crimson backdrop',ghostRouteYaw(s));
+// Four compact coupled convoys. Straight centerlines make cabin-scale jumps
+// fair; doorways and switchbacks on either side provide the spatial variety.
+const relaySpecs=[{a:82,id:0,name:'Last Departure'},{a:1168,id:1,name:'Phantom Freight'},{a:1310,id:2,name:'Funeral Freight'},{a:1835,id:3,name:'Counterweight Escape'}];
+const exclusions=[...relaySpecs.map(r=>({a:r.a,b:r.a+25,kind:'cart' as const})),{a:373,b:376.2,kind:'jump' as const},{a:462,b:465.2,kind:'jump' as const},{a:637,b:639.2,kind:'jump' as const},{a:1008,b:1042,kind:'rail' as const},{a:1442,b:1580,kind:'rail' as const},{a:2180,b:2214,kind:'rail' as const}].sort((a,b)=>a.a-b.a);
+for(const room of GHOST_TRAIN_ROOMS){
+  let cursor=room.a;const width=room.width-.8;
+  for(const e of exclusions){if(e.b<=cursor||e.a>=room.b)continue;if(e.a>cursor)floor(cursor,Math.min(e.a,room.b),width);cursor=Math.max(cursor,e.b);}
+  if(cursor<room.b)floor(cursor,room.b,width);
+  chamber(room);
 }
-
-// 5. Two moving convoys are separated by a generous safe island. Other
-// retired carriage bodies occupy the side platforms as set dressing.
-checkpoint(1130,'Phantom Freight · boarding');checkpoint(1240,'Phantom Freight · transfer island');checkpoint(1378,'Phantom Freight · disembarked');
-for(const s of [1138,1255,1386])for(const side of [-1,1]){
-  art.box(ghostRoutePoint(s,.8,side*9),[3.8,1.5,8.5],P.red,14,'Retired ghost carriage sides',ghostRouteYaw(s));
-  art.box(ghostRoutePoint(s,1.61,side*9),[3.2,.1,7.8],P.black,14,'Retired carriage open interior',ghostRouteYaw(s));
+// Transverse masonry closes changes in vault height and room width. The
+// pointed Meshy entrances sit inside a genuine supported passage opening.
+for(let i=0;i<GHOST_TRAIN_ROOMS.length-1;i++){
+  const from=GHOST_TRAIN_ROOMS[i],to=GHOST_TRAIN_ROOMS[i+1],s=from.b,y=ghostRouteHeight(s),span=Math.max(roomWidth(from,s),roomWidth(to,s)),h=Math.max(from.ceiling,to.ceiling),opening=Math.min(5.8,roomWidth(from,s)-.5,roomWidth(to,s)-.5),head=6.7,panel=(span-opening)/2,yaw=ghostRouteYaw(s),g=to.grp;
+  for(const side of [-1,1])if(panel>.01)add({t:'wall',p:ghostRoutePoint(s,y-6,side*(opening+panel)/2),s:[panel,h+6,.6],yaw,tex:'castle-stone',color:P.stone,edgeGrinding:false,grp:g,nm:'Closed chamber transition masonry'});
+  add({t:'wall',p:ghostRoutePoint(s,y+head),s:[opening,h-head,.6],yaw,tex:'castle-stone',color:P.stone,edgeGrinding:false,grp:g,nm:'Closed vault transition above passage'});
 }
+for(const r of relaySpecs)cartRelay(r.a,r.id,r.name);
+for(const e of exclusions.filter(e=>e.kind==='jump')){pit(e.a,e.b,e.a===637?'Broken serving table':'Collapsed execution flagstones','jump');waypoint(e.a-1.5,'jump');waypoint(e.b+2,'walk');}
+pit(1008,1042,'Ruined armour drawbridge','rail');rail(998,1024,0,'Drawbridge departure rail');rail(1026.4,1052,0,'Drawbridge receiving rail');waypoint(1022.5,'jump',ghostRouteHeight(1022.5)+.48);
+pit(1442,1580,'Hanging crypt railway abyss','rail');rail(1432,1480,0,'Hanging railway · outgoing');rail(1482.4,1527,0,'Hanging railway · middle');rail(1529.4,1590,0,'Hanging railway · receiving');for(const s of [1478.2,1525.2])waypoint(s,'jump',ghostRouteHeight(s)+.48);
+pit(2180,2214,'Last shattered vault track','rail');rail(2170,2194,0,'Last vault · outgoing');rail(2196.4,2224,0,'Last vault · receiving');waypoint(2192.2,'jump',ghostRouteHeight(2192.2)+.48);
+for(const f of GHOST_TRAIN_FLOORS){if(f.b-f.a>6)track(f.a,f.b);}
 
-// 6. Cartless train tracks hang over the crypt. The 3 m breaks are visible
-// and marked with emerald guide lights; three rails chain the whole vault.
-rail(1426,1480,.58,0,'Crypt broken track · first rail');rail(1483,1526,.58,0,'Crypt broken track · second rail');rail(1529,1583,.58,0,'Crypt broken track · third rail');
-track(1436,1480,-.75);track(1483,1526,-.75);track(1529,1572,-.75);
-for(const [a,b]of [[1480,1483],[1526,1529]]){waypoint(a-1.6,'jump',.58,0,'Broken crypt rail launch');waypoint(b+1.8,'rail',.58,0,'Broken crypt rail catch');}
-for(let s=1415;s<1670;s+=30)for(const side of [-1,1])coffin(s,side*9.8,15);
-for(const s of [1460,1532,1628])for(const side of [-1,1])art.box(ghostRoutePoint(s,3.5,side*10.5),[.2,6.5,3.2],P.green,15,'Emerald crypt light slit',ghostRouteYaw(s),P.green);
-checkpoint(1592,'Track of the Forgotten · grind complete');enemy(1642,'ghostknight',0,0,3.2);
-
-// 7. A short execution aisle feeds the machinery convoy.
-for(const [i,s]of [1720,1760,1802].entries())axe(s,i%2?-1.1:1.1,i*1.1);
-for(let s=1700;s<1970;s+=35)machinery(s,s%70?-9.2:9.2,16);
-checkpoint(1700,'The Black Clockworks · enter');axe(1950,0,.8);
-
-// 8. An ornate feast and marching guard lead to a final broken-track leap,
-// then a full arrival carpet beneath the throne and finish gate.
-banquet(1987,2135,17,true);for(const [i,s]of [2016,2065,2100,2142].entries())enemy(s,i===2?'ghostfood':'ghostknight',i%2?-2.7:2.7,i%3,3);
-checkpoint(1992,'The Emerald Throne · enter',4);checkpoint(2152,'The Emerald Throne · final track');
-rail(2159,2191,.58,0,'Throne rail · departure');rail(2194,2225,.58,0,'Throne rail · arrival');track(2170,2191,-.75);track(2194,2214,-.75);
-waypoint(2189.4,'jump',.58,0,'Final shattered rail leap');waypoint(2196,'rail',.58,0,'Final shattered rail catch');
-add({t:'gate',p:ghostRoutePoint(2250),yaw:ghostRouteYaw(2250),grp:17,nm:'Emerald throne · ghost train finish'});waypoint(2250,'gate',0,0,'Ghost train finish');
+add({t:'clock',p:ghostRoutePoint(8,undefined,2.1),grp:10});add({t:'comboorb',p:ghostRoutePoint(8,undefined,-2.1),grp:10});add({t:'crate',p:ghostRoutePoint(26,undefined,-1.9),kind:'mask',grp:10,nm:'Boarding safety mask'});
+for(const s of [28,52,123,137]){const y=ghostRouteHeight(s);art.box(ghostRoutePoint(s,y+.5,2.7),[.9,1,3.2],P.red,10,'Station velvet waiting bench',ghostRouteYaw(s));art.box(ghostRoutePoint(s,y+2.8,-3.3),[.25,2.3,3.4],P.brass,10,'Ticket window brass grille',ghostRouteYaw(s));}
+for(const [i,s]of [121,176,246,287,404,495,507,1720,1781,1918].entries())axe(s,i%3===0?.65:i%3===1?-.65:0,i*.84);
+for(const s of [694,712])for(const side of [-1,1])banquet(s,side*2.9,Math.floor(s)%3);
+for(const [i,s]of [550,587,672,725].entries())enemy(s,i%2?'ghostcake':'ghostfood',i%2?1.35:-1.35,i,1.0);
+// A real rising gallery hands the feast theatre into the service passage.
+for(const [i,s]of [855,888,945,979,1073,1617,1655,1988,2099,2135].entries())enemy(s,'ghostknight',i%2?1.35:-1.35,0,1.1);
+for(const s of [847,898,927,966,1081,1977,2026])for(const side of [-1,1]){
+  const u=side*(roomAt(s).width/2-1.05),y=ghostRouteHeight(s);art.box(ghostRoutePoint(s,y+.18,u),[1.25,.36,1.35],P.dark,district(s).grp,'Armour alcove carved plinth',ghostRouteYaw(s),undefined,'castle-stone');display(s,'ghostknight',u,y+.36,2.5);showlight(s-2,u,3.8,'#82f8ad',s,u,45,1);
+}
+for(const s of [1402,1425,1598,1628,1663])for(const side of [-1,1])coffin(s,side*2.7);
+for(const s of [1472,1514,1559])for(const side of [-1,1]){
+  const g=district(s).grp,y=ghostRouteHeight(s);art.box(ghostRoutePoint(s,y-3,side*5.3),[1.6,10,2],P.dark,g,'Abyss ruined masonry pier',ghostRouteYaw(s),undefined,'castle-stone');
+  showlight(s,side*4.3,2.3,'#74e9b4',s+7,0,78,1);
+}
+for(const s of [1705,1745,1804,1885,1940])add({t:'decor',dkind:'ghostclockwork',p:ghostRoutePoint(s,undefined,s%2?2.8:-2.8),w:3.2,s:[2.962,3.2,2.929],yaw:ghostRouteYaw(s),grp:16,nm:'Meshy castle drive and counterweight mechanism'});
+add({t:'decor',dkind:'ghostclockwork',p:ghostRoutePoint(1831,undefined,-3.8),s:[4.2579,4.6,4.2109],w:4.6,yaw:ghostRouteYaw(1831),grp:16,nm:'Meshy clockwork counterweight tableau'});
+showlight(1827,2.8,5.3,'#ffc784',1831,-3.8,136);showlight(1835,-4.8,4.4,'#94aefb',1831,-3.8,62,2);
+for(const s of [2054,2086,2120])banquet(s,4.9,0);enemy(2072,'ghostcake',-1.2,2,1.2);
 for(const side of [-1,1]){
-  art.box(ghostRoutePoint(2260,2.5,side*5.7),[1.8,5,2],P.brass,17,'Emerald throne flanking pillars',ghostRouteYaw(2260));
-  art.box(ghostRoutePoint(2260,5.3,side*5.7),[2.2,.6,2.4],P.green,17,'Emerald throne luminous capitals',ghostRouteYaw(2260),P.green);
+  const y=ghostRouteHeight(2255),u=side*3.2;art.box(ghostRoutePoint(2255,y+2.8,u),[1.1,5.6,1.4],P.brass,17,'Emerald throne herald pillars',ghostRouteYaw(2255));display(2255,'ghostknight',u,y,2.95);
 }
-art.box(ghostRoutePoint(2267,1.6),[9,3.2,4.8],P.dark,17,'Throne dais',ghostRouteYaw(2267));
-art.box(ghostRoutePoint(2268,5),[4.5,5.4,.85],P.red,17,'Crimson throne back',ghostRouteYaw(2268));
-art.box(ghostRoutePoint(2267,3),[4.5,.65,3],P.brass,17,'Throne brass seat',ghostRouteYaw(2267));
-
-// Meshy architecture assets punctuate the handmade shell; the same original
-// low-poly vocabulary carries through the animatronics and moving carts.
-for(const s of [0,250,535,840,1110,1400,1680,1980,2236])add({t:'decor',dkind:'ghostarch',p:ghostRoutePoint(s),s:[10,12,2.2],yaw:ghostRouteYaw(s),solid:false,grp:district(s).grp,nm:'Meshy haunted castle pointed gateway'});
-
-// Sparse route pickups guide the correct supported lane without covering art.
-for(let s=34;s<2240;s+=27){
-  if(GHOST_TRAIN_GAPS.some(g=>s>g.a-5&&s<g.b+5))continue;
-  add({t:'wumpa',p:ghostRoutePoint(s,1.05),grp:district(s).grp});
+art.box(ghostRoutePoint(2267,9.0),[5.2,2,3.5],P.dark,17,'Throne dais',ghostRouteYaw(2267),undefined,'castle-stone');art.box(ghostRoutePoint(2268,12.0),[3.0,4.2,.7],P.red,17,'Crimson royal throne back',ghostRouteYaw(2268));art.box(ghostRoutePoint(2267,10.1),[3.0,.45,2.2],P.brass,17,'Brass throne seat',ghostRouteYaw(2267));
+for(const [s,name,u]of [[130,'Last Departure',1.2],[223,'Under the castle',1.5],[331,'Execution flags',1.65],[482,'Flagstone crossings complete',1.65],[560,'Butler entrance',1.55],[705,'Banquet runway cleared',1.6],[817,'Serving stair complete',1.5],[983,'Armour procession',1.6],[1060,'Drawbridge cleared',1.5],[1210,'Freight transfer island',1.5],[1351,'Funeral train cleared',1.5],[1598,'Hanging railway complete',1.5],[1690,'Clockworks entrance',1.5],[1870,'High convoy complete',1.5],[2019,'Throne antechamber',1.5],[2157,'Last vault departure',1.5]] as [number,string,number][])checkpoint(s,name,u);
+add({t:'gate',p:ghostRoutePoint(2250),yaw:ghostRouteYaw(2250),grp:17,nm:'Emerald throne ghost train finish'});waypoint(2250,'gate');
+add({t:'crystal',p:ghostRoutePoint(699,ghostRouteHeight(699)+1.2,-2.3),grp:12,nm:'The uninvited guest reward'});
+for(let s=34;s<2240;s+=22){if(GHOST_TRAIN_GAPS.some(g=>s>g.a-4&&s<g.b+4))continue;add({t:'wumpa',p:ghostRoutePoint(s,ghostRouteHeight(s)+1.05),grp:district(s).grp});}
+addGhostTrainShowScenes(C,{point:ghostRoutePoint,height:ghostRouteHeight,yaw:ghostRouteYaw,rooms:GHOST_TRAIN_ROOMS});
+// Match the solid faces to the actual, uniformly scaled Meshy sculptures.
+// The measured monster-mouth rectangle is conservative and remains passable.
+for(const c of [...C]){
+  if(c.t==='platform'&&c.nm==='Supported raised feast dais'){c.invisible=false;c.tex='castle-stone';c.color='#e1d4be';}
+  if(c.t!=='decor')continue;
+  if(c.dkind==='ghostwallbay'){
+    const scale=c.w??c.s?.[1]??5.4;
+    add({t:'wall',p:[...c.p],s:[.503211975*scale,scale,.443596005*scale],yaw:c.yaw??0,invisible:true,edgeGrinding:false,grp:c.grp,nm:'Measured Meshy window-bay collision'});
+    const s=ghostRouteProgress(c.p),r=roomAt(s),centre=ghostRoutePoint(s),t=ghostRouteTangent(s),cross=(c.p[0]-centre[0])*-t[2]+(c.p[2]-centre[2])*t[0],side=Math.sign(cross)||1;
+    GHOST_TRAIN_WALL_OPENINGS.push({room:r.id,a:Math.max(r.a,s-1.1),b:Math.min(r.b,s+1.1),side,bottom:c.p[1]+.85,top:c.p[1]+scale-.4,name:c.nm??'Meshy leadlight recess'});
+  }
+  if(c.dkind==='ghostmonsterportal'){
+    const scale=c.w??c.s?.[1]??9,opening=.37378*scale,clearance=.49706*scale,depth=.982447028*scale,panel=(scale-opening)/2,a=(c.yaw??0)*Math.PI/180;
+    for(const side of [-1,1]){
+      const x=side*(opening+panel)/2;
+      add({t:'wall',p:[c.p[0]+x*Math.cos(a),c.p[1],c.p[2]-x*Math.sin(a)],s:[panel,scale,depth],yaw:c.yaw??0,invisible:true,edgeGrinding:false,grp:c.grp,nm:'Measured monster-mouth side collision'});
+    }
+    add({t:'wall',p:[c.p[0],c.p[1]+clearance,c.p[2]],s:[opening,scale-clearance,depth],yaw:c.yaw??0,invisible:true,edgeGrinding:false,grp:c.grp,nm:'Measured monster-mouth arch collision'});
+  }
 }
-add({t:'crystal',p:ghostRoutePoint(795,1.4,-5.4),grp:12,nm:'Uninvited guest crystal'});
+// Cut the render wall in front of the genuine recessed Meshy leadlight.
+// Five stone recess faces seal every opening behind it, even at grazing views;
+// the continuous invisible containment boundary still owns collision.
+for(const pane of WALL_PANES){
+  const r=GHOST_TRAIN_ROOMS[pane.room],openings=GHOST_TRAIN_WALL_OPENINGS.filter(o=>o.room===pane.room&&o.side===pane.side&&o.b>pane.a&&o.a<pane.b),cuts=[pane.a,pane.b,...openings.flatMap(o=>[Math.max(pane.a,o.a),Math.min(pane.b,o.b)])].sort((a,b)=>a-b);
+  const edge=(s:number,y:number,extra=0)=>ghostRoutePoint(s,y,pane.side*(roomWidth(r,s)/2+extra));
+  const band=(a:number,b:number,lo:(s:number)=>number,hi:(s:number)=>number)=>{if(hi((a+b)/2)-lo((a+b)/2)<.002)return;art.face([edge(a,lo(a)),edge(b,lo(b)),edge(b,hi(b)),edge(a,hi(a))],P.stone,r.grp,'Castle stone wall around real leadlight',undefined,'castle-stone');};
+  for(let i=1;i<cuts.length;i++){
+    const a=cuts[i-1],b=cuts[i];if(b-a<.001)continue;const mid=(a+b)/2,base=(s:number)=>ghostRouteHeight(s)-6,top=(s:number)=>ghostRouteHeight(s)+pane.spring,holes=openings.filter(o=>mid>o.a-.001&&mid<o.b+.001).sort((x,y)=>x.bottom-y.bottom);let low=base;
+    for(const hole of holes){const bottom=(s:number)=>Math.max(base(s),hole.bottom),upper=(s:number)=>Math.min(top(s),hole.top);band(a,b,low,bottom);low=upper;}
+    band(a,b,low,top);
+  }
+}
+for(const opening of GHOST_TRAIN_WALL_OPENINGS){
+  const r=GHOST_TRAIN_ROOMS[opening.room],{a,b,side,bottom:y0,top:y1}=opening,depth=2.6;
+  const p=(s:number,y:number,extra:number)=>ghostRoutePoint(s,y,side*(roomWidth(r,s)/2+extra));
+  const front=[p(a,y0,0),p(b,y0,0),p(b,y1,0),p(a,y1,0)],back=[p(a,y0,depth),p(b,y0,depth),p(b,y1,depth),p(a,y1,depth)];
+  art.face(back,P.dark,r.grp,'Sealed leadlight niche back wall',undefined,'castle-stone');
+  for(const [i,j]of [[0,1],[1,2],[2,3],[3,0]])art.face([front[i],front[j],back[j],back[i]],P.dark,r.grp,'Carved leadlight recess jamb',undefined,'castle-stone');
+}
+// Actual Meshy pavers cover the supported foreground surfaces of the reveals.
+// Native continuous paving supplies collision beneath their irregular seams.
+for(const f of GHOST_TRAIN_FLOORS){
+  const r=roomAt((f.a+f.b)/2);if(r.style!=='hero'&&r.name!=='Last shattered vault')continue;
+  for(let s=f.a+1;s<f.b-.9;s+=1.84){
+    if(Math.abs(ghostRouteHeight(s+1)-ghostRouteHeight(s-1))>.06)continue;
+    for(const u of [-2,0,2]){if(Math.abs(u)+1>f.width/2)continue;meshy('ghostflagstone',s,u,ghostRouteHeight(s)-.080104,SCENE_SIZE.ghostflagstone,ghostRouteYaw(s),'Meshy irregular flagstones at native feet height');}
+  }
+}
 art.finish();
-
-// This remains a chase-camera level: only ordinary ordered camnodes steer
-// controls. Pointed ceilings stay safely above the camera's full air rise.
-for(let s=-30;s<=GHOST_TRAIN_END+40;s+=12)add({t:'camnode',p:ghostRoutePoint(s),radius:8,grp:1,nm:'Ghost train indoor chase lane'});
-for(let s=0;s<GHOST_TRAIN_END;s+=18){
-  if(GHOST_TRAIN_GAPS.some(g=>s>g.a-2&&s<g.b+2))continue;
-  waypoint(s,'walk');
-}
-GHOST_TRAIN_WAYPOINTS.sort((a,b)=>a.s-b.s);
-
-export const GHOST_TRAIN_LEVEL:CustomLevelData={
-  v:1,name:'Haunted Castle · Ghost Train',spawn:ghostRoutePoint(2,.15),killY:-18,sky:'night',keepPlayFog:true,cameraAirLift:.35,
-  atmosphere:{fogEnabled:true,fogNear:46,fogFar:175,fogColor:'#19132b',backdrop:'fog',ambientSky:'#c7bbdf',ambientGround:'#526071',ambientIntensity:1.15,sunColor:'#dcd3ff',sunIntensity:.52,fillColor:'#91d9b2',fillIntensity:.38,drawDistance:245,shadowStrength:.48},
-  medalTimes:{gold:310,silver:405,bronze:530},components:C,groups,
-};
+for(let s=-30;s<=2295;s+=5)add({t:'camnode',p:ghostRoutePoint(s),radius:5,grp:1,nm:'Ordered close castle camera lane'});
+for(let s=0;s<2250;s+=12)if(!GHOST_TRAIN_GAPS.some(g=>s>g.a-2&&s<g.b+2))waypoint(s,'walk');GHOST_TRAIN_WAYPOINTS.sort((a,b)=>a.s-b.s);
+export const GHOST_TRAIN_LEVEL:CustomLevelData={v:1,name:'Haunted Castle · Ghost Train',spawn:ghostRoutePoint(2,.15),killY:-25,sky:'night',keepPlayFog:true,cameraAirLift:.28,
+  atmosphere:{fogEnabled:true,fogNear:28,fogFar:112,fogColor:'#1e1829',backdrop:'fog',ambientSky:'#d6c8de',ambientGround:'#716774',ambientIntensity:.45,sunColor:'#eeded0',sunIntensity:.10,fillColor:'#b6c7c5',fillIntensity:.12,drawDistance:180,shadowStrength:.65},
+  medalTimes:{gold:340,silver:430,bronze:560},components:C,groups};

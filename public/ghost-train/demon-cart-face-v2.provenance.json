@@ -1,0 +1,53 @@
+{
+  "triangles": 1396,
+  "regions": {
+    "DemonCartFace": 1396
+  },
+  "sourceBounds": {
+    "min": [
+      -0.37698450684547424,
+      0.1580909937620163,
+      0.0024850000627338886
+    ],
+    "max": [
+      0.37698450684547424,
+      0.7481659650802612,
+      0.4623290002346039
+    ]
+  },
+  "origin": [
+    0.0,
+    0.1580909937620163,
+    0.23240700364112854
+  ],
+  "scale": 0.7539690136909485,
+  "bounds": {
+    "min": [
+      -0.5,
+      0.0,
+      -0.3049488663673401
+    ],
+    "max": [
+      0.5,
+      0.7826249599456787,
+      0.3049488663673401
+    ]
+  },
+  "bytes": 311908,
+  "sha256": "094cd51253fe74a0f3a59e1cef1623418b52af240eb322e14ee55b1c89da00bc",
+  "provider": "Meshy",
+  "taskId": "01a105d9-8def-7573-bf81-790d5a5dc2f4",
+  "originalUVsPreserved": true,
+  "operation": "Triangle-region extraction only; no new generated/painted content",
+  "sourceModel": "demon-ghost-cart-v2",
+  "sourceSha256": "3aca76c8e9636425a099ce6568f9cf226e636ed3dd0c73a9a18fca9e18bc1c17",
+  "attachment": {
+    "canonicalFront": "+Z",
+    "boundsCentre": [
+      0.0,
+      0.39131247997283936,
+      0.0
+    ],
+    "suggestedWidthMetres": 2.0
+  }
+}

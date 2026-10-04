@@ -1,0 +1,695 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "authorization": "User explicitly requested Meshy for actual models and texturing. Eight original castle kit preview/texture pairs; existing credits only, no purchases or upgrades. Root authorized sensible retries below 150 credits.",
+  "budgetCredits": 145,
+  "startingBalance": 1371,
+  "tasks": {
+    "castle-wall-window-v2": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "951430e6-8590-4ddb-b9a6-ffa96d67c701",
+      "createdAt": "2026-10-04T07:22:25.434581+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One isolated modular gothic castle wall segment, rectangular vertical facade. Broad uninterrupted rough ashlar limestone panel on left, deeply recessed pointed arched window on right with blue purple stained glass and chunky carved stone tracery, one square buttress pillar at the end. Chipped stone bevels, carved capitals, delicate cobweb in upper corner. Full flat back for repeating along a wall, open base at ground. Original spooky medieval theatre architecture, handcrafted faceted low poly game asset. No floor, room, background, people or lettering.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 2400,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1371,
+      "id": "01a105ca-e990-7392-84ba-740e7e32c8e9",
+      "checkedAt": "2026-10-04T07:27:58.482297+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791098561006,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v2/castle-wall-window-v2/downloads/model.glb",
+          "bytes": 46308,
+          "sha256": "9c07de2b0ebfaef63faa4bf6c0b51eabe6e3f2f65248f5f29026bee8d83e1771"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v2/castle-wall-window-v2/downloads/thumbnail.png",
+          "bytes": 125606,
+          "sha256": "b197236bd7ce682c0b43cc4c6b39a587497c76295e0d0f65dac69bb64ce1f078"
+        }
+      ]
+    },
+    "banquet-table-v2": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "d62c8820-ca3c-4522-a8d6-c52fc10d32cb",
+      "createdAt": "2026-10-04T07:22:29.556639+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One isolated ornate medieval haunted banquet table, long thin rectangular polished oak tabletop on FOUR distinct carved oak legs, open empty space underneath. Thick carved apron with grotesque little faces, lion claw feet, age worn brass edges. Deep burgundy cloth runner with narrow gold embroidered trim rests along tabletop center and hangs slightly over short ends. Beautiful detailed polygonal game prop, human dining table proportions, clearly thin slab and separated legs. No food, chairs, dishes, people, floor, background or room. Original low poly theatrical gothic design.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 3200,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1366,
+      "id": "01a105ca-f8e0-7451-adbc-db84fced94be",
+      "checkedAt": "2026-10-04T07:28:00.367353+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791098562464,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v2/banquet-table-v2/downloads/model.glb",
+          "bytes": 60196,
+          "sha256": "a9e70e3b8773c40f41fc5cd1dc5409f69f82785b11225076154fcfa1758e3237"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v2/banquet-table-v2/downloads/thumbnail.png",
+          "bytes": 51230,
+          "sha256": "689a756743a06eff4cda9ffb68496e6210fc8122de401f80bdbd58c2d99bae57"
+        }
+      ]
+    },
+    "skull-axe-head-v2": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "be9453ba-7ed4-44cd-9157-5ae9d019715b",
+      "createdAt": "2026-10-04T07:22:32.755924+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One isolated massive gothic double bladed execution AXE HEAD ONLY. NO HANDLE, NO SHAFT. Broad crescent steel blades sweep to sharp hooked lower points on both sides of an ornate central grotesque skull with hollow eye sockets and jagged teeth. Brass edging and dark iron rivets. A clear round vertical handle socket through the center skull. Plane of blade is vertical; front skull faces viewer. Menacing antique haunted castle mechanical trap, original design, highly readable faceted low poly game prop. No ground, background, people or environment.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 2500,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1361,
+      "id": "01a105cb-0556-7730-98c7-ebc8ed9d1370",
+      "checkedAt": "2026-10-04T07:28:02.258058+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791098566254,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v2/skull-axe-head-v2/downloads/model.glb",
+          "bytes": 49464,
+          "sha256": "80984fb5a7100747fd6ae640beea93a02814b10d7a9156e3dabcfe17b012c2b7"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v2/skull-axe-head-v2/downloads/thumbnail.png",
+          "bytes": 66800,
+          "sha256": "34ea60163ce6b0c754392e9d1c74c83da51c624b045f5a03c785de2cdf62f6b6"
+        }
+      ]
+    },
+    "castle-chandelier-v2": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "c1aa6025-b209-4165-affb-ee561ddf3efa",
+      "createdAt": "2026-10-04T07:22:36.795010+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One isolated elaborate gothic bronze candle chandelier for a haunted medieval castle. Two open concentric iron and brass rings, twelve distinct curved radial arms ending in open candle sockets with ivory candles. Carved gargoyle hooks and delicate angular scroll brackets. Open airy center, central vertical hanging stem with short chain ending at a ceiling hook. No glass shade, solid lantern box, ceiling, room, floor or people. Beautiful original handcrafted low poly faceted game prop, clear circular symmetrical horizontal rings and readable ornate silhouette.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 3800,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1356,
+      "id": "01a105cb-14f1-7064-a194-d1b61027938c",
+      "checkedAt": "2026-10-04T07:33:46.852347+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791098569504,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v2/castle-chandelier-v2/downloads/model.glb",
+          "bytes": 72392,
+          "sha256": "b82e1cef2ddcd89a9cd3ea2ee6f4f4a4ac4225e3262e99f8509a63a7cb49bab7"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v2/castle-chandelier-v2/downloads/thumbnail.png",
+          "bytes": 117156,
+          "sha256": "a0c96c30fb5646e3de906e6ca56553362d4e6cde39fb9e58be8c857c1e638a13"
+        }
+      ]
+    },
+    "broken-rail-trestle-v2": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "12b459ff-56fc-44f4-b02e-1dc5c29547b2",
+      "createdAt": "2026-10-04T07:22:40.061598+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One isolated short straight ruined medieval ghost train RAILWAY TRESTLE section. Two parallel narrow polished iron rails run LENGTHWISE along the top on chunky dark oak sleepers. Tall narrow iron and oak support legs descend below track, with diagonal cross braces. Broken splintered rail ends and chipped timbers; a few hanging chains. Clearly traversable top twin rails, six metre track length, three metre supports, no solid floor deck. Faceted detailed low poly haunted castle game prop. No ground, stone base, room, people or background.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 3400,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1351,
+      "id": "01a105cb-21b4-7085-898e-6854172f104a",
+      "checkedAt": "2026-10-04T07:33:48.716572+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791098569784,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v2/broken-rail-trestle-v2/downloads/model.glb",
+          "bytes": 64996,
+          "sha256": "8187cb7a7975ba17052fe6f4be6d3c72a15cab53dbe961f110a0b444e882f1f6"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v2/broken-rail-trestle-v2/downloads/thumbnail.png",
+          "bytes": 38943,
+          "sha256": "b357ee26dae4f1261e103c4fbcff59df6fcd409217b6916f08abbc8b44cb0a09"
+        }
+      ]
+    },
+    "monster-face-portal-v2": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "df120dd9-48dc-4efa-8b1d-056d8c02b9ba",
+      "createdAt": "2026-10-04T07:22:43.161326+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One isolated colossal original gothic monster face DOORWAY for a haunted castle attraction. Deeply carved grotesque stone face with raised brow and inset emerald green eyes. Screaming OPEN MOUTH is a large EMPTY passage all the way through, wide and tall enough for people and a rail cart. Curled iron fangs frame opening without blocking it. Chunky irregular stone arch and massive side pillars surround face, jagged crest and cobweb details. Clear hollow doorway, no door, wall sealing mouth, floor, room, background or lettering. Beautiful detailed faceted low poly game prop.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 4500,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1346,
+      "id": "01a105cb-2e1c-7167-9dde-18e4ed4559d8",
+      "checkedAt": "2026-10-04T07:28:04.035051+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791098576949,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v2/monster-face-portal-v2/downloads/model.glb",
+          "bytes": 87236,
+          "sha256": "3530cccb6a3854578ca440c2a00eca92616e740fe7a0341670c9c9ac0275ee77"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v2/monster-face-portal-v2/downloads/thumbnail.png",
+          "bytes": 166454,
+          "sha256": "43acc9678cc771dbb72e6b3c228da6d76a508509be3791ec0356e8979bf62054"
+        }
+      ]
+    },
+    "castle-clockwork-v2": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "18840bbb-cc46-490d-a475-50a02e8b5ab9",
+      "createdAt": "2026-10-04T07:22:47.184433+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One isolated original gothic bronze and iron CLOCKWORK MECHANISM stage prop. Huge clearly separate open spoked toothed gear, smaller meshing toothed gear above right, exposed axle hubs, two separate vertical steel piston rods and a hanging heavy iron counterweight on a cable. Riveted iron vertical support frame and small bedplate beneath. Mechanical parts visibly separated with clean negative space for later animation, broad gear faces visible toward front. Antique haunted castle machinery, beautiful detailed faceted low poly game prop. No clock dial, room, background or people.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 4500,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1341,
+      "id": "01a105cb-3da9-732e-8c8a-346208512923",
+      "checkedAt": "2026-10-04T07:33:50.424397+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791098580620,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v2/castle-clockwork-v2/downloads/model.glb",
+          "bytes": 86364,
+          "sha256": "fb05d3f035e330e57ef01be54f74d07440fcc3869150b18035116f6bea5541ea"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v2/castle-clockwork-v2/downloads/thumbnail.png",
+          "bytes": 145860,
+          "sha256": "5d66c3e9bb3b78dfc490e46ab6b08b6ea4df6b47fe269bb8f77b93affaf7863c"
+        }
+      ]
+    },
+    "castle-flagstone-v2": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "86efa82a-a7bc-480d-aa9a-a89dabdf8aae",
+      "createdAt": "2026-10-04T07:22:50.979178+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One isolated square thin gothic castle FLOOR PATCH, only rough grey flagstones on a very thin square foundation slab. Four by four large irregular roughly rectangular limestone flagstones fit closely with dark narrow seams, worn subtly chipped bevels, mostly flat walkable top. No raised props, border frame, grass, dirt piles, furniture or anything beyond the slab. Original simple handcrafted faceted low poly game asset, 800 triangles, full unobstructed stone top surface useful for a repeatable game floor texture. No floor around it, ground, room or background.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 800,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1336,
+      "id": "01a105cb-4c80-77ee-82f9-534a2d41e9d6",
+      "checkedAt": "2026-10-04T07:33:52.309508+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791098583231,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v2/castle-flagstone-v2/downloads/model.glb",
+          "bytes": 16536,
+          "sha256": "324848f554396f6c4415528019933f7f8c1fe648d75721b99d1acc1ac1601c10"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v2/castle-flagstone-v2/downloads/thumbnail.png",
+          "bytes": 38045,
+          "sha256": "ecdb91cadc9fd354a275f3dfece77a88c206beb803bf37e4081f9a8695db6023"
+        }
+      ]
+    },
+    "demon-ghost-cart-v2": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "3055dac3-8a0a-4dbb-bd7b-e2e2929fc5a6",
+      "createdAt": "2026-10-04T07:27:47.752561+00:00",
+      "estimatedCredits": 5,
+      "payload": {
+        "mode": "preview",
+        "prompt": "One compact ROOFLESS gothic ghost train ride car, six metres long, three wide, two high. HUGE sculpted original mischievous demon jester face covers the entire FRONT: curled cheek rolls, pointed ears, arched brow, wide grin with ivory fangs. Burgundy and gold moulded shell with ornamental scroll sides, FOUR clearly exposed flanged rail wheels. Fully OPEN top with empty interior floor and two low passenger benches. NO ROOF, canopy, windows, tall uprights, riders, track or scenery. Clear faceted low poly game asset, believable human ride proportions, no logo or copied character.",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "topology": "triangle",
+        "target_polycount": 4200,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1331,
+      "id": "01a105cf-d395-7710-a061-33f6170924c2",
+      "checkedAt": "2026-10-04T07:33:54.867500+00:00",
+      "progress": 100,
+      "consumedCredits": 5,
+      "finishedAt": 1791098881022,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v2/demon-ghost-cart-v2/downloads/model.glb",
+          "bytes": 81720,
+          "sha256": "b346c77d131f38173797f38ad11bf76d3bd068e539a4b7c57dee0c0228dac8ec"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v2/demon-ghost-cart-v2/downloads/thumbnail.png",
+          "bytes": 112843,
+          "sha256": "19ff0451c4468c1b2d362aa1035bb75c253efdde1538c07533b33ca0223bad2e"
+        }
+      ]
+    },
+    "castle-wall-window-v2-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "f4ae717a-4a5b-4c46-8b65-3e563d81a13e",
+      "createdAt": "2026-10-04T07:37:56.445245+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a105ca-e990-7392-84ba-740e7e32c8e9",
+        "texture_prompt": "Coherent hand painted theatrical haunted castle kit: exaggerated large warm grey taupe ashlar blocks, charcoal mortar, cool chipped edges, sparse muted lichen and grime. Entire BACK and buttress faces are uninterrupted pure limestone masonry. Front window dark indigo and plum glass with irregular insect wing leadlight veins, aged brass details. Rich diffuse material texture, no cast shadows or baked lighting.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1326,
+      "id": "01a105d9-1d58-7732-902f-55a189216f64",
+      "checkedAt": "2026-10-04T07:45:57.394576+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791099514635,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v2/castle-wall-window-v2-textured/downloads/model.glb",
+          "bytes": 2451332,
+          "sha256": "45aaa49c90ade59ea026af11b2c0e32d5ebc8f88d5965a775a45ed7468a90736"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v2/castle-wall-window-v2-textured/downloads/thumbnail.png",
+          "bytes": 161655,
+          "sha256": "fe7b71c4821dd5246c171d5fdfa1464c783cf5fa3d20a4740eb121d8eeb06ca1"
+        }
+      ]
+    },
+    "banquet-table-v2-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "ab3d143d-29a3-4d70-a5fd-2afd41231089",
+      "createdAt": "2026-10-04T07:38:00.879942+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a105ca-f8e0-7451-adbc-db84fced94be",
+        "texture_prompt": "Coherent hand painted haunted castle kit. Rich dark honey oak wood grain, rubbed warm golden edges, ornate aged brass apron trim, burgundy velvet cloth runner with gold stitched edging, deep carved recesses. Broad readable surface regions and fine painted wear. Diffuse texture only, no baked directional light or cast shadows.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1316,
+      "id": "01a105d9-2e80-719d-83e2-fd9ae129a8bd",
+      "checkedAt": "2026-10-04T07:45:59.644469+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791099514592,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v2/banquet-table-v2-textured/downloads/model.glb",
+          "bytes": 3322024,
+          "sha256": "dd4f44d0f98542fba92554d47c0af296a4dcc0e804542e3f1f89a998cc63f7a2"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v2/banquet-table-v2-textured/downloads/thumbnail.png",
+          "bytes": 59729,
+          "sha256": "b332220abebaab794e850833c724fcb183560c1d6490d073378d75c0fb2adcd7"
+        }
+      ]
+    },
+    "skull-axe-head-v2-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "dde1896c-660c-4e93-a2d2-ed3ac79302b8",
+      "createdAt": "2026-10-04T07:38:04.039235+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a105cb-0556-7730-98c7-ebc8ed9d1370",
+        "texture_prompt": "Coherent hand painted haunted castle kit. Cold weathered silver steel blade faces, bright pale sharpened bevels, blackened iron skull recesses, aged bronze sockets and rivets, restrained green tarnish. Broad sculpted highlights painted nondirectionally, diffuse surface material only, no cast shadow or baked lighting.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1306,
+      "id": "01a105d9-3ad7-77de-aca7-736e29703fcb",
+      "checkedAt": "2026-10-04T07:46:01.620146+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791099520049,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v2/skull-axe-head-v2-textured/downloads/model.glb",
+          "bytes": 3951224,
+          "sha256": "6cf599155b4ea75327ff68d9e4b69b35dbb195aaefbcdc66ba65011b4a7995e9"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v2/skull-axe-head-v2-textured/downloads/thumbnail.png",
+          "bytes": 82879,
+          "sha256": "c1a62f8416acbe3230049f76e12f7892a58abee29bcffea598a032b21a0a4628"
+        }
+      ]
+    },
+    "castle-chandelier-v2-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "a394481d-1f52-475b-a8d7-7cbd3df6151f",
+      "createdAt": "2026-10-04T07:38:07.846766+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a105cb-14f1-7064-a194-d1b61027938c",
+        "texture_prompt": "Coherent hand painted haunted castle kit. Antiqued golden bronze, dark wrought iron structure, verdigris in carved crevices, ivory wax candles with subtle red brown wax drips, pale amber candle tips. Rich broad readable materials with painted antique wear. Diffuse only, no dramatic baked light or shadows.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1296,
+      "id": "01a105d9-49bb-714b-b2f6-5e19bda8682f",
+      "checkedAt": "2026-10-04T07:46:03.862983+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791099526063,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v2/castle-chandelier-v2-textured/downloads/model.glb",
+          "bytes": 3995272,
+          "sha256": "4e82723d5a8ae354032afb71a1a273dfa12ebd98aa94d093691a77d987031e80"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v2/castle-chandelier-v2-textured/downloads/thumbnail.png",
+          "bytes": 128213,
+          "sha256": "3fd39fe0d0443297f3bd338bd791f45223ed0e64e66bb9ee779a5a1a2176531d"
+        }
+      ]
+    },
+    "broken-rail-trestle-v2-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "bff59bad-46f5-4b2a-af87-75fbb918622c",
+      "createdAt": "2026-10-04T07:38:12.403194+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a105cb-21b4-7085-898e-6854172f104a",
+        "texture_prompt": "Coherent hand painted haunted castle kit. Cold silver polished rail tops, black rusty iron sides and brackets, weathered dark honey oak sleepers with chipped cream wood ends, dark iron support frame and worn bronze fasteners. Painted grime in joints and broad readable colours. No cast shadows or baked directional lighting.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1286,
+      "id": "01a105d9-5b85-7462-8f51-03e8e7183e53",
+      "checkedAt": "2026-10-04T07:46:06.158742+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791099524104,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v2/broken-rail-trestle-v2-textured/downloads/model.glb",
+          "bytes": 2513056,
+          "sha256": "6e8e6be40a9b72fa2ea68d11051d6da4d1086958e76f1ac34f88a29e4f84ca11"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v2/broken-rail-trestle-v2-textured/downloads/thumbnail.png",
+          "bytes": 52059,
+          "sha256": "7298e4c9692218926f301cdc6c6a8965846f5c8ca1ced1cc78b7cc59a9845efa"
+        }
+      ]
+    },
+    "monster-face-portal-v2-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "badff201-987b-485d-a0a8-e791e3b7db74",
+      "createdAt": "2026-10-04T07:38:17.000504+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a105cb-2e1c-7167-9dde-18e4ed4559d8",
+        "texture_prompt": "Coherent hand painted haunted castle kit. Warm grey taupe aged limestone, charcoal carved recesses, cool silver chipped edges, sparse muted moss, blackened iron mouth fangs and emerald eye inlays. Menacing expressive original sculpt. Broad hand painted diffuse material regions, no baked shadows or directional lighting.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1276,
+      "id": "01a105d9-6da4-73a9-9b64-93d071a75cad",
+      "checkedAt": "2026-10-04T07:46:08.097892+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791099548191,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v2/monster-face-portal-v2-textured/downloads/model.glb",
+          "bytes": 2769832,
+          "sha256": "a91da404a19cfa814d561e28256b1d0d2615bdaa811fb130339a5dd8158b7c8c"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v2/monster-face-portal-v2-textured/downloads/thumbnail.png",
+          "bytes": 285862,
+          "sha256": "ba98e1fb663fec4ae9bed15947ef33628cabfade392e6c6fe306f6f80087d814"
+        }
+      ]
+    },
+    "castle-clockwork-v2-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "9da40c74-9654-421c-9341-e71a8e300c9a",
+      "createdAt": "2026-10-04T07:38:21.443508+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a105cb-3da9-732e-8c8a-346208512923",
+        "texture_prompt": "Coherent hand painted haunted castle kit. Warm aged bronze gear teeth with bright pale gold bevels, cool worn silver axles and piston rods, dark blackened iron frame and weight, small verdigris and rust accents. Crisp readable faceted materials, diffuse surface texture only, no cast shadows or baked directional lighting.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1266,
+      "id": "01a105d9-7eff-724d-a8fe-49f645d4f67a",
+      "checkedAt": "2026-10-04T07:46:10.282247+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791099539533,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v2/castle-clockwork-v2-textured/downloads/model.glb",
+          "bytes": 3357716,
+          "sha256": "c1b9ca0dbb45aa353caa61c07e016b5348d7bb10f3949084c708e522a624a1f6"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v2/castle-clockwork-v2-textured/downloads/thumbnail.png",
+          "bytes": 184922,
+          "sha256": "950cd0cecdde8045dd6ad786225b74f632c4f68b65f9dc636793423f05b335d9"
+        }
+      ]
+    },
+    "demon-ghost-cart-v2-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "fb2650c2-f120-4b62-a974-a299311f6d74",
+      "createdAt": "2026-10-04T07:38:25.273181+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a105cf-d395-7710-a061-33f6170924c2",
+        "texture_prompt": "Coherent hand painted haunted castle kit. Deep burgundy purple enamel shell, aged gold embossed trim, pale silver ivory sculpted demon face with strong charcoal carved recesses, amber eye inlays, ivory teeth, dark iron underframe and exposed silver wheels. Low benches in dark velvet. Rich broad readable textured regions, no cast shadows or baked lighting.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1256,
+      "id": "01a105d9-8def-7573-bf81-790d5a5dc2f4",
+      "checkedAt": "2026-10-04T07:46:12.560078+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791099538404,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v2/demon-ghost-cart-v2-textured/downloads/model.glb",
+          "bytes": 3161668,
+          "sha256": "e5db14054ee6d604fd1cbaa12853bdc8074dfb3a5e4894e6b8f8132b5c5e8d22"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v2/demon-ghost-cart-v2-textured/downloads/thumbnail.png",
+          "bytes": 125399,
+          "sha256": "113b2380e225c367da0eb53692640d7f256addd9bef07ece97870f13bb45f1cf"
+        }
+      ]
+    },
+    "castle-flagstone-v2-textured": {
+      "resource": "text-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "a08e37d8-adc2-4d86-93c4-394815f335da",
+      "createdAt": "2026-10-04T07:38:28.984258+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "mode": "refine",
+        "preview_task_id": "01a105cb-4c80-77ee-82f9-534a2d41e9d6",
+        "texture_prompt": "Coherent hand painted haunted castle kit. Warm grey taupe worn limestone flagstones, broad uneven cool grey face tones, dark narrow mortar seams, subtle scuffs and grit, tiny muted brown grime in cracks. Entire top only grey flagstones. Diffuse surface material texture with no cast shadows, directional lighting, lettering or emblems.",
+        "texture_resolution": "2k",
+        "enable_pbr": false,
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1246,
+      "id": "01a105d9-9c68-7589-97c2-427500bc60d3",
+      "checkedAt": "2026-10-04T07:46:14.760292+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791099553121,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v2/castle-flagstone-v2-textured/downloads/model.glb",
+          "bytes": 3052744,
+          "sha256": "6aa25b1bfb099b10a0253c10d34f4533845a830283d64208d2357633f32bcafc"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v2/castle-flagstone-v2-textured/downloads/thumbnail.png",
+          "bytes": 179866,
+          "sha256": "496b5cf3b6d4b13abe7b90b5085f861ba66b99b5fbc5e2246d12e16531230089"
+        }
+      ]
+    },
+    "banquet-table-v2-cloth": {
+      "resource": "retexture",
+      "state": "SUCCEEDED",
+      "operationId": "006a913b-152e-43e4-b8c8-5fdea1df30bd",
+      "createdAt": "2026-10-04T08:00:40.744743+00:00",
+      "estimatedCredits": 10,
+      "payload": {
+        "input_task_id": "01a105d9-2e80-719d-83e2-fd9ae129a8bd",
+        "text_style_prompt": "Hand painted gothic haunted banquet table. MOST OF THE TABLETOP is covered by a rich deep burgundy purple velvet tablecloth runner, ornate visible GOLD embroidered scrollwork and gold edging across the tabletop and down the thin apron sides. Dark honey oak wood only on carved claw legs and narrow tabletop borders. Worn antique gold metal accents. Clear strong burgundy red and gold surface regions, handcrafted rich game texture. Preserve all original geometry and UV layout. No heavy black baked shadows, no directional light.",
+        "enable_original_uv": true,
+        "enable_pbr": false,
+        "texture_resolution": "2k",
+        "remove_lighting": true,
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "balanceBefore": 1236,
+      "id": "01a105ed-ee5f-74c4-b053-aa0fb34d90bc",
+      "checkedAt": "2026-10-04T08:22:04.844364+00:00",
+      "progress": 100,
+      "consumedCredits": 10,
+      "finishedAt": 1791100871634,
+      "expiresAt": 1791360071634,
+      "downloads": [
+        {
+          "path": ".img2threejs/ghost-train-v2/banquet-table-v2-cloth/downloads/model.glb",
+          "bytes": 2814436,
+          "sha256": "ec3e66b9966ff2d1fab7530fdccc2474844b81f3b388b587a2d295f420cdfd64"
+        },
+        {
+          "path": ".img2threejs/ghost-train-v2/banquet-table-v2-cloth/downloads/thumbnail.png",
+          "bytes": 52133,
+          "sha256": "330be797c675d73b82578f86174955706086c4657a0cf0a5b495259e074caf69"
+        }
+      ]
+    }
+  }
+}

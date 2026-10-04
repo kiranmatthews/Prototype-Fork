@@ -1,0 +1,82 @@
+{
+  "POSITION": {
+    "sourceShape": [
+      3065,
+      3
+    ],
+    "targetShape": [
+      3065,
+      3
+    ],
+    "maxDifference": 0.0
+  },
+  "NORMAL": {
+    "sourceShape": [
+      3065,
+      3
+    ],
+    "targetShape": [
+      3065,
+      3
+    ],
+    "maxDifference": 1.1920928955078125e-07
+  },
+  "TEXCOORD_0": {
+    "sourceShape": [
+      3065,
+      2
+    ],
+    "targetShape": [
+      3065,
+      2
+    ],
+    "maxDifference": 0.0
+  },
+  "indicesEqual": true,
+  "sourceNodes": [
+    {
+      "mesh": 0,
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    }
+  ],
+  "targetNodes": [
+    {
+      "mesh": 0,
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    }
+  ]
+}

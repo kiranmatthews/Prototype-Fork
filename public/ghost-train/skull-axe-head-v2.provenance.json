@@ -1,0 +1,121 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "taskId": "01a105d9-3ad7-77de-aca7-736e29703fcb",
+  "previewTaskId": "01a105cb-0556-7730-98c7-ebc8ed9d1370",
+  "sourceSha256": "6cf599155b4ea75327ff68d9e4b69b35dbb195aaefbcdc66ba65011b4a7995e9",
+  "outputSha256": "559f3925cdaed730ed46c183c08290b6662b5d1c43a75f98d6d7f5359d9e51e1",
+  "bytes": 202740,
+  "trianglesBefore": 2660,
+  "trianglesRemoved": 243,
+  "triangles": 2417,
+  "originalUVsPreserved": true,
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 91960
+    }
+  ],
+  "originalAtlases": [
+    {
+      "path": ".img2threejs/ghost-train-v2/atlases/skull-axe-head-v2-atlas-0.png",
+      "size": [
+        2048,
+        2048
+      ],
+      "sha256": "0f35358e330d2f331540b1eb1cb1d39138e5bf23990a3317eed9442098f7b2bb"
+    }
+  ],
+  "bounds": {
+    "min": [
+      -0.5,
+      0.0,
+      -0.315636545419693
+    ],
+    "max": [
+      0.5,
+      0.9909685254096985,
+      0.315636545419693
+    ]
+  },
+  "size": [
+    1.0,
+    0.9909685254096985,
+    0.631273090839386
+  ],
+  "targetMetres": [
+    2.2,
+    1.7,
+    0.42
+  ],
+  "suggestedUniformScale": 1.7154934406280518,
+  "suggestedUniformMetres": [
+    1.7154934406280518,
+    1.7000000476837158,
+    1.0829448699951172
+  ],
+  "transform": {
+    "sourceBounds": {
+      "min": [
+        -0.27239200472831726,
+        -0.03731999918818474,
+        -0.17106600105762482
+      ],
+      "max": [
+        0.2698250114917755,
+        0.5,
+        0.17122100293636322
+      ]
+    },
+    "yawRadians": 0,
+    "pitchRadians": 0,
+    "maxDimensionScale": 0.5422170162200928,
+    "trim": "Drop generated grip triangles below source Y=-.10"
+  },
+  "axes": "Y-up,+Z-front,centeredXZ,bottomY0,max dimension1",
+  "sourceStage": "skull-axe-head-v2-textured",
+  "functional": {
+    "bounds": {
+      "min": [
+        -0.5,
+        0.0,
+        -0.315636545419693
+      ],
+      "max": [
+        0.5,
+        0.9909685254096985,
+        0.315636545419693
+      ]
+    },
+    "size": [
+      1.0,
+      0.9909685254096985,
+      0.631273090839386
+    ],
+    "uniformMetres": [
+      1.7154934406280518,
+      1.7000000476837158,
+      1.0829448699951172
+    ],
+    "shaftSocket": [
+      0,
+      0,
+      0
+    ],
+    "headCentre": [
+      0,
+      0.49548426270484924,
+      0
+    ],
+    "mountingHint": "Grip removed. RotateZ PI for a downward pendulum; translate head centre to existing blade collider."
+  }
+}

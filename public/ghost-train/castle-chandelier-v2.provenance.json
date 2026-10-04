@@ -1,0 +1,115 @@
+{
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "taskId": "01a105d9-49bb-714b-b2f6-5e19bda8682f",
+  "previewTaskId": "01a105cb-14f1-7064-a194-d1b61027938c",
+  "sourceSha256": "4e82723d5a8ae354032afb71a1a273dfa12ebd98aa94d093691a77d987031e80",
+  "outputSha256": "7519aa5b6259da8d480e2443f3c3ecc7b08d163ff79b478489cb54cee66f3026",
+  "bytes": 272396,
+  "trianglesBefore": 3906,
+  "trianglesRemoved": 0,
+  "triangles": 3906,
+  "originalUVsPreserved": true,
+  "textures": [
+    {
+      "image": 0,
+      "sourceSize": [
+        2048,
+        2048
+      ],
+      "size": [
+        512,
+        512
+      ],
+      "mimeType": "image/jpeg",
+      "bytes": 101272
+    }
+  ],
+  "originalAtlases": [
+    {
+      "path": ".img2threejs/ghost-train-v2/atlases/castle-chandelier-v2-atlas-0.png",
+      "size": [
+        2048,
+        2048
+      ],
+      "sha256": "7a76e5f3a32ef710b07573d92df9ef5db6d888270df91eecd67bb01155f951c9"
+    }
+  ],
+  "bounds": {
+    "min": [
+      -0.5,
+      0.0,
+      -0.5
+    ],
+    "max": [
+      0.5,
+      0.986549973487854,
+      0.5
+    ]
+  },
+  "size": [
+    1.0,
+    0.986549973487854,
+    1.0
+  ],
+  "targetMetres": [
+    4.2,
+    3.2,
+    4.2
+  ],
+  "suggestedUniformScale": 3.243626832962036,
+  "suggestedUniformMetres": [
+    3.243626832962036,
+    3.200000047683716,
+    3.243626832962036
+  ],
+  "transform": {
+    "sourceBounds": {
+      "min": [
+        -0.5,
+        -0.4914889931678772,
+        -0.5
+      ],
+      "max": [
+        0.5,
+        0.4950610101222992,
+        0.5
+      ]
+    },
+    "yawRadians": 0,
+    "pitchRadians": 0,
+    "maxDimensionScale": 1.0,
+    "trim": null
+  },
+  "axes": "Y-up,+Z-front,centeredXZ,bottomY0,max dimension1",
+  "functional": {
+    "bounds": {
+      "min": [
+        -0.5,
+        0.0,
+        -0.5
+      ],
+      "max": [
+        0.5,
+        0.986549973487854,
+        0.5
+      ]
+    },
+    "size": [
+      1.0,
+      0.986549973487854,
+      1.0
+    ],
+    "uniformMetres": [
+      3.243626832962036,
+      3.200000047683716,
+      3.243626832962036
+    ],
+    "hangingHook": [
+      0,
+      0.986549973487854,
+      0
+    ],
+    "bottomY": 0
+  }
+}
