@@ -44,16 +44,16 @@ assert.match(worldMapUi, /body\.tc-on \.world-map-actions \{[^}]*grid-template-c
   "portrait touch actions must fit bounded equal-width columns");
 
 for (const contract of [
-  "--tc-size: clamp(136px, 40dvh, 168px)",
-  "--tc-left-edge: max(12px, env(safe-area-inset-left))",
-  "--tc-right-edge: max(12px, env(safe-area-inset-right))",
-  "--tc-bottom-edge: max(10px, env(safe-area-inset-bottom))",
+  "--tc-size: min(clamp(144px, 40dvh, 176px)",
+  "--tc-left-edge: max(16px, calc(env(safe-area-inset-left) + 8px))",
+  "--tc-right-edge: max(16px, calc(env(safe-area-inset-right) + 8px))",
+  "--tc-bottom-edge: max(18px, calc(env(safe-area-inset-bottom) + 10px))",
   "--tc-top-edge: max(8px, env(safe-area-inset-top))",
   "button.className = 'tc-pause'",
   "button.setAttribute('aria-label', 'Pause game')",
   "consumeButtonPress(key: BtnDef['key'])",
   "consumeDirectionTap(): [number, number] | null",
-  "this.pressedBtn[b.key] = true",
+  "this.pressedBtn[b.key].add(this.pointerOwners.get(id)!)",
   "this.directionTap = [this.moveX, this.moveY]",
   "width: 48px; height: 48px",
   "body.game-shell-modal .tc-pause",
@@ -108,7 +108,7 @@ assert.match(
   /body\.tc-on \.world-map-actions \{[^}]*bottom:max\(16px, env\(safe-area-inset-bottom\)\)/,
   "touch map actions belong at the bottom without a virtual controller gap",
 );
-assert.match(touch, /body\.world-map-active \.tc-zone,[\s\S]*?body\.world-map-active \.tc-pause \{ display:none !important; \}/);
+assert.match(touch, /body:is\(\.world-map-active,[\s\S]*?:is\(\.tc-zone,\.tc-look,\.tc-pause\) \{ display:none !important; \}/);
 assert.match(worldMapUi, /createInputGlyph\(action\)/, "map glyph visibility must use the shared device policy");
 assert.match(worldMapUi, /this\.enterButton\.disabled = this\.moving \|\| !unlocked/);
 assert.match(worldMapUi, /tap\.canceled/);
@@ -134,10 +134,10 @@ const clamp = (minimum, value, maximum) =>
   Math.max(minimum, Math.min(maximum, value));
 
 function landscapeLayout(width, height, safe = { left: 0, right: 0, bottom: 0 }) {
-  const size = clamp(136, height * 0.4, 168);
-  const left = Math.max(12, safe.left);
-  const right = Math.max(12, safe.right);
-  const bottom = Math.max(10, safe.bottom);
+  const left = Math.max(16, safe.left + 8);
+  const right = Math.max(16, safe.right + 8);
+  const bottom = Math.max(18, safe.bottom + 10);
+  const size = Math.min(clamp(144, height * 0.4, 176), (width - left - right - 16) / 2);
   const top = height - bottom - size;
   const pad = { left, top, width: size, height: size };
   const cluster = {
@@ -147,19 +147,20 @@ function landscapeLayout(width, height, safe = { left: 0, right: 0, bottom: 0 })
     height: size,
   };
   const faceDiameter = size * 0.38;
-  const lifeBottomEdge = height - (bottom + size + 10);
+  const lifeBottomEdge = height - (bottom + size + 68);
   return { size, pad, cluster, faceDiameter, lifeBottomEdge };
 }
 
 for (const [width, height, expected] of [
   [844, 390, 156],
   [667, 375, 150],
-  [932, 430, 168],
-  [1280, 720, 168],
+  [932, 430, 172],
+  [1280, 720, 176],
+  [320, 568, 136],
 ]) {
   const layout = landscapeLayout(width, height);
   assert.equal(layout.size, expected, `${width}×${height} control size`);
-  assert.ok(layout.faceDiameter >= 44, `${width}×${height} face target too small`);
+  assert.ok(layout.faceDiameter >= 48, `${width}×${height} face target too small`);
   for (const rect of [layout.pad, layout.cluster]) {
     assert.ok(rect.left >= 0 && rect.top >= 0);
     assert.ok(rect.left + rect.width <= width);
@@ -167,20 +168,20 @@ for (const [width, height, expected] of [
   }
   assert.equal(
     layout.pad.top - layout.lifeBottomEdge,
-    10,
-    `${width}×${height} life-ring/control gap`,
+    68,
+    `${width}×${height} bonus readout/control gap including 48px triggers`,
   );
 }
 
 assert.deepEqual(landscapeLayout(844, 390).pad, {
-  left: 12,
-  top: 224,
+  left: 16,
+  top: 216,
   width: 156,
   height: 156,
 });
 assert.deepEqual(landscapeLayout(844, 390).cluster, {
-  left: 676,
-  top: 224,
+  left: 672,
+  top: 216,
   width: 156,
   height: 156,
 });
@@ -189,9 +190,9 @@ const inset = landscapeLayout(844, 390, {
   right: 21,
   bottom: 18,
 });
-assert.equal(inset.pad.left, 47);
-assert.equal(inset.cluster.left + inset.cluster.width, 844 - 21);
-assert.equal(inset.pad.top + inset.pad.height, 390 - 18);
+assert.equal(inset.pad.left, 55);
+assert.equal(inset.cluster.left + inset.cluster.width, 844 - 29);
+assert.equal(inset.pad.top + inset.pad.height, 390 - 28);
 
 for (const [height, safeTop, safeLeft] of [[390, 0, 0], [375, 18, 21], [430, 47, 47]]) {
   const top = Math.max(8, safeTop);

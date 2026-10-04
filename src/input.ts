@@ -127,8 +127,8 @@ export class Input {
       }
     });
     window.addEventListener('keyup', (e) => {
-      this.keys.delete(e.code);
-      if (e.code === INPUT_BINDINGS.jump.key) this.jumpReleased = true;
+      const wasHeld = this.keys.delete(e.code);
+      if (wasHeld && e.code === INPUT_BINDINGS.jump.key) this.jumpReleased = true;
     });
     window.addEventListener('blur', () => this.keys.clear());
     window.addEventListener('gamepadconnected', (e) => {
@@ -163,6 +163,8 @@ export class Input {
     let touchGrindPressed = false;
     let touchSpinPressed = false;
     let touchGrabPressed = false;
+    let touchJumpReleased = false;
+    let touchTransferPressed = false;
 
     const pad = this.pollGamepad();
     if (!this.padOnly) inputPrompts.update(pad, this.touch?.enabled ?? false);
@@ -204,6 +206,7 @@ export class Input {
     const tc = this.touch;
     if (tc && tc.enabled) {
       tc.setMapMode(document.body.classList.contains('world-map-active'));
+      tc.beginFrame();
       if (tc.moveX !== 0 || tc.moveY !== 0) {
         moveX = tc.moveX;
         moveY = tc.moveY;
@@ -222,6 +225,8 @@ export class Input {
       touchGrabPressed = tc.consumeButtonPress('o');
       touchSpinPressed = tc.consumeButtonPress('sq');
       touchGrindPressed = tc.consumeButtonPress('tri');
+      touchJumpReleased = tc.consumeJumpRelease();
+      touchTransferPressed = tc.consumeTransferPress();
       const mapDirection = tc.consumeDirectionTap();
       if (mapDirection) [this.mapDirectionX, this.mapDirectionY] = mapDirection;
       if (this.gamepadName === 'no controller') this.gamepadName = 'touch';
@@ -295,11 +300,13 @@ export class Input {
     this.inventoryHeld = inventory;
 
     this.jumpPressed = this.jumpPressed || touchJumpPressed || (jump && !this.prevJump);
-    this.jumpReleased = this.jumpReleased || (!jump && this.prevJump);
+    // Release belongs to the merged button. A keyboard lift or a completed
+    // touch tap cannot pop a jump that another input source still holds.
+    this.jumpReleased = !jump && (this.jumpReleased || touchJumpReleased || this.prevJump);
     this.grindPressed = this.grindPressed || touchGrindPressed || (grind && !this.prevGrind);
     this.spinPressed = this.spinPressed || touchSpinPressed || (spin && !this.prevSpin);
     this.grabPressed = this.grabPressed || touchGrabPressed || (grab && !this.prevGrab);
-    this.transferPressed = this.transferPressed || (transfer && !this.prevTransfer);
+    this.transferPressed = this.transferPressed || touchTransferPressed || (transfer && !this.prevTransfer);
     // Drop disabled edges, but track the raw held state below. Enabling debug
     // while Share/R is held must require release + a new press, not reset.
     this.restartPressed = allowRestart &&

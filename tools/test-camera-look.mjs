@@ -173,11 +173,14 @@ try {
     'touch look is not confined to the upper 38% surface');
   assert.ok(controlSurface && Number(lookSurface[1]) < Number(controlSurface[1]),
     'touch look can intercept the established controls');
+  for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) {
+    assert.match(touchSource, new RegExp(`window\\.addEventListener\\('${type}'`),
+      `touch look has no global ${type} release route`);
+  }
+  assert.match(touchSource, /if \(id === this\.lookPointer\) this\.clearLook\(\)/,
+    'the shared pointer release route does not clear look ownership');
   assert.match(touchSource,
-    /zone\.addEventListener\('pointerup', up\);\s*zone\.addEventListener\('pointercancel', up\);\s*zone\.addEventListener\('lostpointercapture', up\);/,
-    'touch look does not clear on every pointer-release path');
-  assert.match(touchSource,
-    /window\.addEventListener\('blur', \(\) => this\.clearLook\(\)\)/,
+    /window\.addEventListener\('blur', \(\) => this\.releaseAll\(true\)\)/,
     'touch look does not clear when the app backgrounds');
   for (const blockedClass of [
     'game-shell-modal',

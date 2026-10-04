@@ -11,12 +11,12 @@ import type { BossPresentation } from './boss/presentation';
 
 // The black transition curtain is compositor-owned. Copying it into this
 // texture froze its opacity whenever the world stopped rendering.
-const INK = ".world-map-ui, .tc-zone, .tc-pause, .game-cartoon-cursor, .input-glyph, .input-prompt-row, .competition-host";
+const INK = ".world-map-ui, .tc-zone, .tc-look, .tc-pause, .game-cartoon-cursor, .input-glyph, .input-prompt-row, .competition-host";
 
 // Include only semantic nodes whose ink the painters below actually read.
 // Layout/style values are sampled every rendered frame: CSS transitions and
 // hover/focus never wait for a mutation observer or a lower-rate UI clock.
-const PAINT_NODES = ".world-map-ui, .world-map-level-card, .world-map-enter-touch, .world-map-action, .world-map-action .secondary-silver, .world-map-action > span, .world-map-action kbd, .tc-zone, .tc-pad, .tc-btn, .tc-pause, .tc-arrow, .tc-pause span, .game-cartoon-cursor";
+const PAINT_NODES = ".world-map-ui, .world-map-level-card, .world-map-enter-touch, .world-map-action, .world-map-action .secondary-silver, .world-map-action > span, .world-map-action kbd, .tc-zone, .tc-pad, .tc-btn, .tc-trigger, .tc-glyph, .tc-label, .tc-contact, .tc-look-cue, .tc-pause, .tc-arrow, .tc-pause span, .game-cartoon-cursor";
 const PAINT_STYLES = [
   'display', 'opacity', 'backgroundColor', 'borderTopWidth', 'borderTopColor',
   'borderTopLeftRadius', 'borderTopRightRadius', 'borderBottomRightRadius', 'borderBottomLeftRadius',
@@ -207,15 +207,31 @@ export class GameInterfaceSurface {
     }
   }
   private paintTouch(ctx: CanvasRenderingContext2D): void {
-    for (const pad of document.querySelectorAll<HTMLElement>(".tc-pad, .tc-btn, .tc-pause")) {
-      const zone = pad.closest(".tc-zone");
+    for (const pad of document.querySelectorAll<HTMLElement>(".tc-pad, .tc-btn, .tc-trigger, .tc-look-cue, .tc-pause")) {
+      const zone = pad.closest(".tc-zone, .tc-look");
       if (!this.visible(pad) || (zone && !this.visible(zone))) continue;
       this.box(ctx,pad);
       if (pad.matches(".tc-pad")) {
         for (const arrow of pad.querySelectorAll<HTMLElement>(".tc-arrow")) { this.box(ctx,arrow); this.text(ctx,arrow); }
+        const contact = pad.querySelector<HTMLElement>('.tc-contact');
+        if (this.visible(contact)) this.box(ctx,contact);
       } else if (pad.matches(".tc-pause")) {
         for (const bar of pad.querySelectorAll<HTMLElement>("span")) this.box(ctx,bar);
-      } else this.text(ctx,pad);
+      } else if (pad.matches('.tc-look-cue')) {
+        const contact = pad.querySelector<HTMLElement>('.tc-contact');
+        if (this.visible(contact)) this.box(ctx,contact);
+      } else {
+        const ink = pad.querySelectorAll<HTMLElement>('.tc-glyph, .tc-label');
+        if (ink.length) for (const label of ink) this.text(ctx,label);
+        else this.text(ctx,pad);
+      }
+      if (pad.matches(':focus-visible')) {
+        const { rect: r, style } = this.measure(pad);
+        ctx.save(); ctx.strokeStyle = '#ffd278'; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.roundRect(r.x-4.5,r.y-4.5,r.width+9,r.height+9,
+          Math.min((r.height+9)/2,(parseFloat(style.borderTopLeftRadius)||0)+4.5));
+        ctx.stroke(); ctx.restore();
+      }
     }
   }
   private paintCursor(ctx: CanvasRenderingContext2D): void {

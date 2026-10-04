@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <title>Touch controls review</title>
+  <style>
+    html,body,#app { margin:0; width:100%; height:100%; overflow:hidden; overscroll-behavior:none; }
+    body { background:linear-gradient(125deg,#d9e8e6,#567c86 55%,#092632); color:#fff; font:16px system-ui; touch-action:manipulation; }
+    * { -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; -webkit-tap-highlight-color:transparent; }
+    #app p { margin:0; position:absolute; top:42%; left:16px; right:16px; text-align:center; pointer-events:none; }
+    .review-scroll { display:none; position:fixed; inset:25% 15%; height:40%; overflow:auto; touch-action:pan-y; background:#123; z-index:20; }
+    body.game-shell-modal .review-scroll { display:block; }
+    .review-scroll div { height:100px; padding:12px; }
+  </style>
+</head>
+<body>
+  <div id="app"><p>Production touch input · native presentation review</p></div>
+  <div class="review-scroll"><div>Bounded menu list</div><div>Scroll here</div><div>More rows</div><div>Last row</div></div>
+  <script type="module" src="/tools/touch-controls-review.ts"></script>
+</body>
+</html>

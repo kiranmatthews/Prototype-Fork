@@ -42,6 +42,8 @@ jobs:
         run: node tools/test-wood-path-kit.mjs && node tools/test-wood-path-meshes.mjs && node tools/test-wood-path-level.mjs
       - name: Renderer frame graph regression
         run: npm run check:renderer
+      - name: Touch ownership and responsive layout regression
+        run: node tools/test-touch-release.mjs && node tools/test-mobile-ui-layout.mjs
       - name: Offline cache regression
         run: npm run check:offline
       - name: Enemy presentation and update regression
