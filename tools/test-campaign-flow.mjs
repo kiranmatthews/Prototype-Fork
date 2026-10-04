@@ -77,7 +77,7 @@ assert.ok(
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ levelKeys }) => levelKeys.length),
-  [10, 11, 3],
+  [10, 11, 4],
   "The three levels join the existing main-map island",
 );
 assert.deepEqual(
@@ -106,6 +106,7 @@ for(let i=1;i<mainPath.length;i++) {
 assert.deepEqual(campaign.CAMPAIGN_MAP_EDGES.filter(e=>campaign.campaignLevelByKey(e.from).mapPath!==campaign.campaignLevelByKey(e.to).mapPath)
   .map(e=>[e.from,e.to,e.fromDirection,e.toDirection]),[
   ['jungle','jungle-terraces','up','down'],
+  ['bone-yard','ghost-train','down','up'],
   ['test-course','nightworks','up','down'],['coastal','chimeworks','down','up'],['island-hopper','waterpark','up','down'],
 ]);
 assert.deepEqual(campaign.CAMPAIGN_ISLANDS[1].levelKeys.slice(3,8), ['island-hopper','waterpark','waterpark-cup','codex-switchback','jungle-gate']);
@@ -118,10 +119,13 @@ assert.equal(campaign.CAMPAIGN_LEVELS[18].progressKey,"nightworks-after-hours");
 assert.deepEqual(campaign.campaignLevelByKey("nightworks-after-hours").unlockAfter,["nightworks"]);
 assert.equal(campaign.campaignLevelById('codex-lab').islandId, 'island-2');
 
-assert.deepEqual(campaign.CAMPAIGN_ISLANDS.find(island=>island.id==='hidden-shores').levelKeys,['drowned-crown','bone-yard','crab-chief']);
-for(const id of ['drowned-crown','bone-yard','crab-chief'])assert.equal(campaign.campaignLevelById(id).islandId,'hidden-shores');
+assert.deepEqual(campaign.CAMPAIGN_ISLANDS.find(island=>island.id==='hidden-shores').levelKeys,['drowned-crown','bone-yard','ghost-train','crab-chief']);
+for(const id of ['drowned-crown','bone-yard','ghost-train','crab-chief'])assert.equal(campaign.campaignLevelById(id).islandId,'hidden-shores');
+assert.equal(campaign.CAMPAIGN_LEVELS.at(-1).progressKey,'ghost-train','new map identity must append after existing saved hub indices');
+assert.equal(campaign.resolveRelicTime('ghost-train'),340);
 const graph = new campaign.CampaignStore();
 graph.startEphemeral();
+assert.equal(graph.levelUnlocked('ghost-train'),true,'Ghost Train must be available on fresh saves');
 assert.deepEqual(campaign.CAMPAIGN_LEVELS.slice(15,18).map(level=>level.progressKey),
   ['crate-primer','switchyard','clockwork-gauntlet'],'research hubs must append after all saved identities');
 for(const key of ['crate-primer','switchyard','clockwork-gauntlet']){

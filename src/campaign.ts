@@ -116,7 +116,7 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     levelKeys: ["beachside-run", "coastal", "chimeworks", "island-hopper", "waterpark", "waterpark-cup", "codex-switchback", "jungle-gate", "crate-primer", "switchyard", "clockwork-gauntlet"],
   },
   { id: "hidden-shores", name: "Hidden Shores", subtitle: "WRECKS · RELICS · REEFS",
-    centre: [322, 0, 14], levelKeys: ["drowned-crown", "bone-yard", "crab-chief"] },
+    centre: [322, 0, 14], levelKeys: ["drowned-crown", "bone-yard", "ghost-train", "crab-chief"] },
 ] as const;
 
 export type CampaignMapTravelStyle = "trail" | "boardslide";
@@ -148,6 +148,8 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     waypoints: [[236, 8, 21], [275, 8, 14]] },
   { from: "drowned-crown", to: "bone-yard", travel: "trail", fromDirection: "right", toDirection: "left" },
   { from: "bone-yard", to: "crab-chief", travel: "trail", fromDirection: "right", toDirection: "left" },
+  { from: "bone-yard", to: "ghost-train", travel: "trail", fromDirection: "down", toDirection: "up",
+    waypoints: [[326, 4.5, 24]] },
   {
     from: "treehouse-trail",
     to: "jungle",
@@ -469,6 +471,8 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
     islandId: "hidden-shores", mapPath: "main", mapPosition: [322, 3, 14], unlockAfter: [] },
   { progressKey: "crab-chief", levelId: "crab-chief", name: "Tidebreak · Crab Chief", relicTime: 120,
     islandId: "hidden-shores", mapPath: "main", mapPosition: [350, 2, 14], unlockAfter: [], boss: true },
+  { progressKey: "ghost-train", levelId: "ghost-train", name: "Ghost Train", relicTime: 340,
+    islandId: "hidden-shores", mapPath: "lower-branch", mapPosition: [322, 6, 34], unlockAfter: [] },
 ] as const;
 
 const LEVEL_BY_ID = new Map<string, CampaignLevelDefinition>();

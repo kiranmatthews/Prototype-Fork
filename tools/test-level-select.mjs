@@ -35,9 +35,11 @@ try{
  assert.ok(puzzleRows.every(row=>!row.disabled),'research levels must be immediately selectable');
  ui.updateLevelSelectChoice('clockwork-gauntlet',true);assert.match(ui.levelSelectPreview.src,/clockwork-gauntlet\.jpg$/);
  ui.changeLevelSelectIsland(1);assert.equal(ui.levelSelectIsland,'hidden-shores');
- assert.deepEqual(ui.navButtons.filter(b=>b.dataset.levelKey).map(b=>b.dataset.levelKey),['drowned-crown','bone-yard','crab-chief']);
+ assert.deepEqual(ui.navButtons.filter(b=>b.dataset.levelKey).map(b=>b.dataset.levelKey),['drowned-crown','bone-yard','ghost-train','crab-chief']);
  assert.ok(ui.navButtons.filter(b=>b.dataset.levelKey).every(b=>!b.disabled));
  ui.updateLevelSelectChoice('drowned-crown',true);assert.match(ui.levelSelectPreview.src,/drowned-crown\.jpg$/);
+ ui.updateLevelSelectChoice('ghost-train',true);assert.match(ui.levelSelectPreview.src,/ghost-train\.jpg$/);
+ assert.match(ui.levelSelectDetail.textContent,/GHOST TRAIN/);
  ui.changeLevelSelectIsland(-1);ui.changeLevelSelectIsland(-1);assert.equal(ui.levelSelectIsland,'island-1');
  ui.levelSelectKey='test-course';ui.playSelectedLevel();assert.deepEqual(calls,[],'locked level launched');
  ui.updateLevelSelectChoice('treehouse-trail',true);ui.playSelectedLevel();

@@ -10,6 +10,11 @@ Open `/?playtest&level=ghost-train` for the complete renderer; add `&lite` for
 fast section checks. The level is registered as `ghost-train` and is available
 through the developer level menu. Its source is `src/levels/ghost-train.ts`.
 
+The Island Map and Level Select expose **Ghost Train** in **Hidden Shores**.
+On the map, travel down from The Bone Yard to its branch. It is available on
+fresh saves, uses an actual banquet-chamber preview, and keeps existing saved
+hub identities in their original order.
+
 ## Art direction
 
 [Original production artwork and attraction imagery](GHOST_TRAIN_REFERENCES.md)
@@ -69,6 +74,8 @@ geometry, lighting and release verification followed. This is an authoring
 record, not a timed benchmark. Final validation is recorded in
 `docs/ghost-train-evidence/final-validation.json`.
 
-The additional editor-security check has an existing legacy world-map
-migration failure at line 66, reproduced on clean main commit `fccf04e`. It is
-outside this level update; required level checks and the production build pass.
+The follow-up map integration widens the bounded world-map horizontal coordinates to
+include Hidden Shores. This also resolves the earlier legacy-map migration
+failure reproduced on `fccf04e`. The focused editor-security check now passes
+180 cases, including old default maps, custom hub positions and current-map
+round trips.
