@@ -34,6 +34,11 @@ try {
   for (const entry of BONUS_LEVEL_ENTRIES)
     assert.equal(findLevel(entry.id)?.data, entry.data, `room ${entry.id} has no direct editor entry`);
   for (const parent of CAMPAIGN_LEVELS.filter(entry => levelAllowsBonus(entry.levelId))) {
+    // Ghost Train was published after the themed pack and uses its safe fallback.
+    if (parent.levelId === 'ghost-train') {
+      assert.equal(resolveBonusLevel(parent.levelId), EASY_BONUS_LEVEL);
+      continue;
+    }
     assert.notEqual(resolveBonusLevel(parent.levelId), EASY_BONUS_LEVEL, `${parent.name} still uses the shared fallback`);
     if (parent.fallbackLevelId) assert.equal(resolveBonusLevel(parent.fallbackLevelId), resolveBonusLevel(parent.levelId));
   }
@@ -166,6 +171,11 @@ try {
         assert.equal(player.bonusCrates, completed ? count : 0);
         assert.equal(context.currentRunBonusBoxes, completed ? count : 0);
         assert.equal(parentLevel.bonusRoundCompleted, completed, 'failed bonus cannot be retried or completed bonus can pay twice');
+        if (completed) {
+          assert.deepEqual(parentLevel.currentSpawn.toArray(), player.pos.toArray(), 'bonus clear did not bank its return point');
+          assert.equal(parentLevel.activeCheckpoint.savedCratesBroken, 1);
+          assert.equal(parentLevel.activeCheckpoint.savedMasks, 1);
+        } else assert.equal(parentLevel.activeCheckpoint, null, 'failed bonus created a checkpoint');
         assert.equal(events.filter(event => event[0] === 'payout').length, completed ? 1 : 0);
       }
       const paidEvents = events.length;

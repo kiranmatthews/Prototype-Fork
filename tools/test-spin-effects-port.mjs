@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import ts from "typescript";
@@ -209,32 +208,6 @@ assert.equal(routeFrame.state.route, "board", "board air remains effect-free");
 routeFrame = advanceRoute(routeFrame.state, 61, true, true, true);
 assert.equal(routeFrame.state.route, "board", "air-started spin cannot flash on landing");
 
-const modelBytes = await readFile(`${root}public/spin/whirlwind-vixen.glb`);
-assert.equal(
-  createHash("sha256").update(modelBytes).digest("hex"),
-  "9ce1697301045b5e307a30a2624116f2372a007afe4b81196fac2aafd9f2bf26",
-);
-assert.equal(modelBytes.toString("ascii", 0, 4), "glTF");
-const jsonLength = modelBytes.readUInt32LE(12);
-const json = JSON.parse(modelBytes.toString("utf8", 20, 20 + jsonLength));
-assert.equal(json.accessors[0].count, 64196);
-assert.equal(json.accessors[2].count, 274590);
-assert.deepEqual(json.accessors[0].min, [
-  -0.7534340023994446,
-  -0.9545801281929016,
-  -0.5384699702262878,
-]);
-assert.deepEqual(json.accessors[0].max, [
-  0.7524750232696533,
-  0.9487830996513367,
-  0.5768750309944153,
-]);
-const textureBytes = await readFile(`${root}public/spin/whirlwind-vixen.webp`);
-assert.equal(
-  createHash("sha256").update(textureBytes).digest("hex"),
-  "892d93031e384699b315ef759fa18d7c5f5d9b65c66e302baff0f0dc9f1ae17f",
-);
-
 const player = await text("src/player.ts");
 const presentation = await text("src/spin-effects/presentation.ts");
 const panelSource = await text("src/spin-effects/panel.ts");
@@ -268,12 +241,10 @@ assert.match(panelSource, /CHARACTER SPIN/);
 assert.match(panelSource, /GROUND SKATE/);
 assert.match(panelSource, /this\.activeSettings\.patch/);
 assert.match(panelSource, /grounded-skate-spin-ring-tuning\.json/);
-assert.match(labSource, /GroundedSkateSpin_PersistentPreview/);
-assert.match(labSource, /GroundedSkateSpin_LoopingPreview/);
-assert.match(labSource, /BOARD AIR · NO SPIN HALO/);
-assert.match(labSource, /groundedProduction/);
-assert.match(labSource, /groundedSettings: groundedSkateSpinRingSettings/);
-assert.match(index, /spin\/whirlwind-vixen\.glb/);
+assert.match(labSource, /captureSpinSmearSource/);
+assert.match(labSource, /saveSpinSmearModel/);
+assert.match(presentation, /loadSpinSmearModel/);
+assert.doesNotMatch(presentation + index, /whirlwind-vixen|WhirlwindVixen/);
 assert.doesNotMatch(index, /preload[^\n]+models\/smear\.glb/);
 assert.match(await text("spin-lab.html"), /src\/spin-effects\/lab\.ts/);
 

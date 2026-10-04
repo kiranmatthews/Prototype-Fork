@@ -12,14 +12,16 @@ screen when they receive the reset signal.
 
 The action clears this fork's `solProto*` local/session settings, save slots,
 progress, time-trial records, local custom levels and editor data, plus records
-in `solProtoAnimation.animationDrafts`. Fork-prefixed Cache Storage entries and
+in `solProtoAnimation.animationDrafts` and the baked spin model in
+`solProtoSpinSmear.v1.models`. Fork-prefixed Cache Storage entries and
 service workers scoped to this application's URL are removed when present.
 It does not erase the browser's entire HTTP cache, unrelated origin data,
 published/cloud levels, local files, or `solProtoGHToken`.
 
 A single durable backup per site is written to
 `solProtoResetRecoveryV1.recovery` before anything is cleared. **Undo last
-reset** restores those local/session entries and animation records. It never
+reset** restores those local/session entries, animation records and the exact
+binary spin bake. Older V1 backups without a spin model still restore correctly. It never
 copies the sync credential. A failed backup prevents deletion; a partial reset
 failure retains the backup and reports the error instead of claiming success.
 

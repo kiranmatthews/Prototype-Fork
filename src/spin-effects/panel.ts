@@ -21,6 +21,7 @@ export interface SpinTuningPanelOptions {
   readonly parent?: HTMLElement;
   readonly initiallyOpen?: boolean;
   readonly labMode?: boolean;
+  readonly hideLauncher?: boolean;
 }
 
 const GLOBAL_SECTIONS: readonly {
@@ -235,7 +236,7 @@ export class SpinTuningPanel {
     this.shadow.append(style);
     const launcher = this.button("SPIN", "launcher");
     launcher.setAttribute("aria-label", "Open spin effects tuning panel");
-    launcher.hidden = document.body.classList.contains("tc-on");
+    launcher.hidden = options.hideLauncher === true || document.body.classList.contains("tc-on");
     launcher.addEventListener("click", () => this.setOpen(true));
     this.shadow.append(launcher);
 
@@ -278,7 +279,7 @@ export class SpinTuningPanel {
     this.intro = this.make("div", "intro");
     panel.append(this.intro);
     const actions = this.make("div", "actions");
-    const route = this.button(options.labMode ? "Back to game" : "Open full lab");
+    const route = this.button(options.labMode ? "Back to game" : "Open smear lab");
     route.addEventListener("click", () => {
       window.location.href = new URL(
         options.labMode ? "./" : "./spin-lab.html",

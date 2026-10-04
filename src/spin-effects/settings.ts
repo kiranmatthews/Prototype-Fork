@@ -64,8 +64,6 @@ export interface SavedSpinRingTuning {
 export const SPIN_RING_STORAGE_KEY = "solProtoSpinOrbitalRingTuning.v1";
 export const GROUNDED_SKATE_SPIN_RING_STORAGE_KEY =
   "solProtoGroundedSkateSpinOrbitalRingTuning.v1";
-export const SPIN_MODEL_PATH = "spin/whirlwind-vixen.glb";
-export const SPIN_MODEL_TEXTURE_PATH = "spin/whirlwind-vixen.webp";
 export const SPIN_RING_MAX_OVERRIDES = 8;
 export const SPIN_PRESENTATION_HZ = 60;
 export const SPIN_RING_LINGER_TICKS = 15;

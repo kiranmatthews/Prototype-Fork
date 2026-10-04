@@ -44,6 +44,11 @@ without a dark-blue overlay or backdrop blur in either Canvas or DOM. Keep its
 current type, layout and controls; replacement legibility artwork will be authored
 separately. Other menu backdrops retain their current treatment.
 
+Home actions form one vertical column at every aspect ratio, including short
+touch landscape. Overflow stays inside the bounded action list. Home has no
+Save Offline action or offline-save status copy. Update Game appears only when
+an actual new release is available.
+
 For local visual review, open `menu-review.html?playtest&level=codex-lab&lite`, then repeat without `lite`. The catalogue exposes 26 screens, including home/map Options, every confirmation, both result types, the competition introduction, guide, judges, standings, win and loss. Save previews and competition results are memory-only fixtures. The review entry is excluded from the production build. Audit layout checks viewport bounds, clipped controls, touch targets, page width, table cells and the full standings table. It does not replace visual inspection of text or actual gameplay navigation.
 
 The Jungle Cup running clock uses the teal/blue Roo PNG atlas (`bonus` palette), through the shared DOM decorator and pre-CRT competition painter. Its live time remains semantic text; the run label keeps the existing secondary type.

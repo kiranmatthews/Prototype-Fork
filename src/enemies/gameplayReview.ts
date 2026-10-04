@@ -35,7 +35,7 @@ function snapshot():Record<string,unknown> {
   const p=game.player,l=game.getLevel(),e=l.enemies.find(value=>value.kind===selected);
   return {level:game.getCurrentLevel().id,blocked:game.gameFlow.blocksGameplay,screen:game.gameFlow.currentScreen,
     player:{state:p.state,position:position(p.pos),grounded:p.grounded,surface:p.surfaceName,speed:round(p.speed),verticalVelocity:round(p.vVel),lives:p.lives,deaths:p.totalDeaths,points:p.points,masks:p.masks,spinning:p.spinTimer>0},
-    checkpoint:l.activeCheckpoint?l.checkpoints.indexOf(l.activeCheckpoint):null,currentSpawn:position(l.currentSpawn),
+    checkpoint:l.activeCheckpoint?l.checkpoints.findIndex(cp=>cp===l.activeCheckpoint):null,currentSpawn:position(l.currentSpawn),
     selected:selected,enemy:e?{alive:e.alive,state:e.state,position:position(e.group.position),flags:{spin:e.spinKill,stomp:e.stompKill,melee:e.meleeKill,touchHurt:e.touchHurt},model:structuredClone(e.visual.diagnostics)}:null,
     readyModels:l.enemies.filter(value=>value.visual.diagnostics.status==='ready').length,totalEnemies:l.enemies.length,
     camera:position(game.camera.position),events:eventId};

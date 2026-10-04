@@ -1,5 +1,6 @@
 import * as THREE from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { bakeSpinSmear, cloneSpinModel, DEFAULT_SPIN_SMEAR, disposeSpinModel, spinModelStats } from './smear';
+import { loadSpinSmearModel, subscribeSpinSmear } from './smearStore';
 import {
   DEFAULT_GROUNDED_SKATE_SPIN_BOUNDS,
   SpinOrbitalRings,
@@ -7,8 +8,6 @@ import {
 } from "./rings";
 import {
   groundedSkateSpinRingSettings,
-  SPIN_MODEL_PATH,
-  SPIN_MODEL_TEXTURE_PATH,
   SPIN_RING_LINGER_TICKS,
   SpinRingSettings,
   spinRingSettings,
@@ -24,8 +23,6 @@ import {
 export type { SpinPresentationRoute } from "./routing";
 
 const SOURCE_RADIANS_PER_SECOND = 30 * 2.399;
-const NEUTRAL_HORIZONTAL_SCALE = 1.15;
-const NEUTRAL_VERTICAL_SCALE = 1.5;
 
 export interface SpinPresentationSample {
   readonly step: number;
@@ -49,45 +46,12 @@ export interface SpinPresentationDiagnostics {
   readonly pulse: number;
   readonly characterRingStats: SpinRingGeometryStats;
   readonly groundedSkateRingStats: SpinRingGeometryStats;
-}
-
-const assetUrl = (path: string): string => {
-  if (/^(?:https?:|data:|blob:)/i.test(path)) return path;
-  return `${import.meta.env.BASE_URL}${path.replace(/^\.?\//, "")}`;
-};
-
-let modelTemplatePromise: Promise<THREE.Group> | null = null;
-let baseTexture: THREE.Texture | null = null;
-
-function getBaseTexture(): THREE.Texture {
-  if (baseTexture) return baseTexture;
-  baseTexture = new THREE.TextureLoader().load(assetUrl(SPIN_MODEL_TEXTURE_PATH));
-  baseTexture.name = "WhirlwindVixen020205_BaseColor_Web";
-  baseTexture.colorSpace = THREE.SRGBColorSpace;
-  baseTexture.flipY = false;
-  baseTexture.wrapS = baseTexture.wrapT = THREE.RepeatWrapping;
-  baseTexture.minFilter = THREE.LinearMipmapLinearFilter;
-  baseTexture.magFilter = THREE.LinearFilter;
-  baseTexture.generateMipmaps = true;
-  baseTexture.anisotropy = 8;
-  return baseTexture;
-}
-
-function getModelTemplate(): Promise<THREE.Group> {
-  if (modelTemplatePromise) return modelTemplatePromise;
-  modelTemplatePromise = new Promise((resolve, reject) => {
-    new GLTFLoader().load(
-      assetUrl(SPIN_MODEL_PATH),
-      (gltf) => resolve(gltf.scene),
-      undefined,
-      reject,
-    );
-  });
-  return modelTemplatePromise;
+  readonly modelSource: 'current-character' | 'baked' | null;
+  readonly modelVertices: number;
 }
 
 /**
- * Presentation-only controller for the current Unity spin sculpture, its
+ * Presentation-only controller for the baked current-character sculpture, its
  * independent character rings, and a separate ground-only skate-ring route.
  */
 export class SpinEffectsPresentation {
@@ -103,20 +67,31 @@ export class SpinEffectsPresentation {
   private assetError: string | null = null;
   private routeState: SpinPresentationRouteState = createSpinPresentationRouteState();
   private pulse = 0;
+  private readonly createSource?: () => THREE.Group;
+  private readonly prepareSource?: () => Promise<void>;
+  private modelSource: SpinPresentationDiagnostics['modelSource'] = null;
+  private modelVertices = 0;
+  private disposed = false;
+  private loading: Promise<void> | null = null;
+  private reloadRequested = false;
 
   constructor(options: {
     parent: THREE.Object3D;
     settings?: SpinRingSettings;
     groundedSkateSettings?: SpinRingSettings;
     targetBottom?: number;
+    createSource?: () => THREE.Group;
+    prepareSource?: () => Promise<void>;
   }) {
     this.settings = options.settings ?? spinRingSettings;
     this.groundedSkateSettings =
       options.groundedSkateSettings ?? groundedSkateSpinRingSettings;
     this.targetBottom = options.targetBottom ?? 0;
-    this.root.name = "FoxSpinSmear_WhirlwindVixen020205_Web";
+    this.createSource = options.createSource;
+    this.prepareSource = options.prepareSource;
+    this.root.name = "CurrentCharacter_RadialSpinSmear";
     this.root.userData.noShadow = true;
-    this.sculpture.name = "WhirlwindVixen020205_Model";
+    this.sculpture.name = "BakedCharacter_StaticSpinModel";
     this.sculpture.visible = false;
     this.root.add(this.sculpture);
     this.characterRings = new SpinOrbitalRings(this.settings.value);
@@ -137,8 +112,23 @@ export class SpinEffectsPresentation {
       this.groundedSkateSettings.subscribe((value) =>
         this.applyGroundedSkateSettings(value),
       ),
+      subscribeSpinSmear(() => {
+        this.reloadRequested = true;
+        void this.prepare();
+      }),
     );
-    void this.loadSculpture();
+    // A microtask lets the owning Player finish constructing its rig first.
+    void Promise.resolve().then(() => this.prepare());
+  }
+
+  prepare(): Promise<void> {
+    if (this.disposed || this.assetReady && !this.reloadRequested) return Promise.resolve();
+    return this.loading ??= (async () => {
+      do {
+        this.reloadRequested = false;
+        await this.loadSculpture();
+      } while (this.reloadRequested && !this.disposed);
+    })().finally(() => { this.loading = null; });
   }
 
   get sculptureVisible(): boolean {
@@ -168,6 +158,8 @@ export class SpinEffectsPresentation {
       pulse: this.pulse,
       characterRingStats: this.characterRings.geometryStats,
       groundedSkateRingStats: this.groundedSkateRings.geometryStats,
+      modelSource: this.modelSource,
+      modelVertices: this.modelVertices,
     };
   }
 
@@ -185,13 +177,7 @@ export class SpinEffectsPresentation {
       SPIN_RING_LINGER_TICKS,
     );
     this.routeState = frame.state;
-    this.pulse = Math.sin(step * (SOURCE_RADIANS_PER_SECOND / 60) * 2) * 0.09;
     this.sculpture.rotation.y = step * (SOURCE_RADIANS_PER_SECOND / 60);
-    this.sculpture.scale.set(
-      NEUTRAL_HORIZONTAL_SCALE * (1 + this.pulse),
-      NEUTRAL_VERTICAL_SCALE * (1 - this.pulse),
-      NEUTRAL_HORIZONTAL_SCALE * (1 + this.pulse),
-    );
     this.sculpture.visible =
       frame.characterActive && sample.bodyVisible && this.assetReady;
 
@@ -216,11 +202,7 @@ export class SpinEffectsPresentation {
     this.pulse = 0;
     this.sculpture.visible = false;
     this.sculpture.rotation.set(0, 0, 0);
-    this.sculpture.scale.set(
-      NEUTRAL_HORIZONTAL_SCALE,
-      NEUTRAL_VERTICAL_SCALE,
-      NEUTRAL_HORIZONTAL_SCALE,
-    );
+    this.sculpture.scale.setScalar(1);
     this.characterRings.visible = false;
     this.groundedSkateRings.visible = false;
     this.characterRings.resetPresentationState();
@@ -228,16 +210,11 @@ export class SpinEffectsPresentation {
   }
 
   dispose(): void {
+    this.disposed = true;
     for (const unsubscribe of this.unsubscribes.splice(0)) unsubscribe();
     this.characterRings.dispose();
     this.groundedSkateRings.dispose();
-    this.root.traverse((object) => {
-      if (!(object instanceof THREE.Mesh)) return;
-      const materials = Array.isArray(object.material)
-        ? object.material
-        : [object.material];
-      for (const material of materials) material.dispose();
-    });
+    disposeSpinModel(this.sculpture);
     this.root.removeFromParent();
   }
 
@@ -253,50 +230,39 @@ export class SpinEffectsPresentation {
 
   private async loadSculpture(): Promise<void> {
     try {
-      const template = await getModelTemplate();
-      const instance = template.clone(true);
-      const texture = getBaseTexture();
+      const template = await loadSpinSmearModel();
+      await this.prepareSource?.();
+      if (this.disposed) return;
+      let instance: THREE.Group;
+      if (template) instance = cloneSpinModel(template);
+      else if (this.createSource) {
+        const source = this.createSource();
+        try { instance = bakeSpinSmear(source, DEFAULT_SPIN_SMEAR); }
+        finally { disposeSpinModel(source); }
+      } else return;
       instance.traverse((object) => {
         if (!(object instanceof THREE.Mesh)) return;
-        object.material = new THREE.MeshBasicMaterial({
-          name: "WhirlwindVixen020205_HeroFlat_Web",
-          map: texture,
-          color: 0xffffff,
-          side: THREE.FrontSide,
-        });
         object.castShadow = false;
         object.receiveShadow = false;
         object.userData.noShadow = true;
       });
       const bounds = new THREE.Box3().setFromObject(instance);
-      this.sculpture.position.set(
-        0,
-        this.targetBottom - bounds.min.y * NEUTRAL_VERTICAL_SCALE,
-        0,
-      );
+      for (const child of [...this.sculpture.children]) disposeSpinModel(child);
+      this.sculpture.position.set(0, this.targetBottom - bounds.min.y, 0);
       this.sculpture.add(instance);
-      const neutralCenter = bounds.getCenter(new THREE.Vector3()).multiply(
-        new THREE.Vector3(
-          NEUTRAL_HORIZONTAL_SCALE,
-          NEUTRAL_VERTICAL_SCALE,
-          NEUTRAL_HORIZONTAL_SCALE,
-        ),
-      );
+      const neutralCenter = bounds.getCenter(new THREE.Vector3());
       neutralCenter.add(this.sculpture.position);
-      const neutralSize = bounds.getSize(new THREE.Vector3()).multiply(
-        new THREE.Vector3(
-          NEUTRAL_HORIZONTAL_SCALE,
-          NEUTRAL_VERTICAL_SCALE,
-          NEUTRAL_HORIZONTAL_SCALE,
-        ),
-      );
+      const neutralSize = bounds.getSize(new THREE.Vector3());
       this.characterRings.setSourceBounds({ center: neutralCenter, size: neutralSize });
       this.assetReady = true;
+      this.assetError = null;
+      this.modelSource = template ? 'baked' : 'current-character';
+      this.modelVertices = spinModelStats(instance).vertices;
       this.root.userData.assetReady = true;
     } catch (error) {
       this.assetError = String(error);
       this.root.userData.assetError = this.assetError;
-      console.warn("Whirlwind Vixen spin model failed to load", error);
+      console.warn("Current character spin model failed to bake", error);
     }
   }
 }

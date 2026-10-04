@@ -16,8 +16,8 @@ export function offlineStatusText(): string {
   if (state.phase === 'ready') return updateWaiting
     ? 'Offline update saved. Close all game windows, then reopen.' : 'Ready for offline play.';
   if (state.phase === 'saving') return 'Offline save in progress. Use the offline save screen to finish.';
-  if (state.olderCopy) return 'An older offline copy is saved. Save Offline updates it.';
-  return 'Save a copy for offline play from Home.';
+  if (state.olderCopy) return 'An older offline copy is saved.';
+  return '';
 }
 export async function openOfflineSave(): Promise<void> {
   // Replace, rather than retain a full game behind the downloader in history.

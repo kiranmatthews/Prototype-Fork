@@ -1,6 +1,7 @@
 import {
   isResettableGameKey, LOCAL_RESET_MARKER, LOCAL_RESET_RECEIPT, LOCAL_RESET_SIGNAL,
 } from './localGameStorage';
+import { SPIN_SMEAR_DATABASE } from './spin-effects/storageKeys';
 
 type Entries = Array<[string, string]>;
 export interface LocalGameBackup {
@@ -10,12 +11,14 @@ export interface LocalGameBackup {
   local: Entries;
   session: Entries;
   animationDrafts: unknown[];
+  spinModels?: unknown[];
 }
 export interface ResetDependencies {
   local: Storage;
   session: Storage;
   site: string;
   drafts: { read(): Promise<unknown[]>; replace(records: unknown[]): Promise<void> };
+  spinModels?: { read(): Promise<unknown[]>; replace(records: unknown[]): Promise<void> };
   recovery: { read(): Promise<LocalGameBackup | null>; write(value: LocalGameBackup): Promise<void> };
   clearCaches(): Promise<void>;
 }
@@ -47,11 +50,13 @@ export async function resetLocalGameData(deps: ResetDependencies) {
     version: 1, site: deps.site, createdAt,
     local: entries(deps.local), session: entries(deps.session),
     animationDrafts: await deps.drafts.read(),
+    spinModels: await deps.spinModels?.read() ?? [],
   };
   // Never delete data until the recoverable snapshot is durably written.
   await deps.recovery.write(backup);
   deps.local.setItem(LOCAL_RESET_SIGNAL, createdAt);
   await deps.drafts.replace([]);
+  await deps.spinModels?.replace([]);
   clearGameKeys(deps.local);
   clearGameKeys(deps.session);
   // Preserve other projects' unprefixed drafts but stop importing them here.
@@ -61,8 +66,10 @@ export async function resetLocalGameData(deps: ResetDependencies) {
     throw new Error('Another game tab wrote data during the reset. Close it and retry.');
   if ((await deps.drafts.read()).length)
     throw new Error('Animation drafts were written during the reset. Close other game tabs and retry.');
+  if ((await deps.spinModels?.read())?.length)
+    throw new Error('A spin model was baked during the reset. Close other game tabs and retry.');
   const receipt = { createdAt, localKeys: backup.local.length, sessionKeys: backup.session.length,
-    animationDrafts: backup.animationDrafts.length, backupAvailable: true };
+    animationDrafts: backup.animationDrafts.length, spinModels: backup.spinModels?.length ?? 0, backupAvailable: true };
   deps.session.setItem(LOCAL_RESET_RECEIPT, JSON.stringify(receipt));
   return receipt;
 }
@@ -75,16 +82,18 @@ export async function undoLocalGameReset(deps: ResetDependencies): Promise<void>
     throw new Error('The backup contains an invalid or unrelated storage key.');
   deps.local.setItem(LOCAL_RESET_SIGNAL, new Date().toISOString());
   await deps.drafts.replace(backup.animationDrafts);
+  await deps.spinModels?.replace(backup.spinModels ?? []);
   clearGameKeys(deps.local); clearGameKeys(deps.session);
   for (const [key, value] of backup.local) deps.local.setItem(key, value);
   for (const [key, value] of backup.session) deps.session.setItem(key, value);
 }
 
-function openStore(database: string, store: string): Promise<IDBDatabase> {
+function openStore(database: string, store: string, externalKey = false): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(database);
     request.onupgradeneeded = () => {
-      if (!request.result.objectStoreNames.contains(store)) request.result.createObjectStore(store, { keyPath: 'id' });
+      if (!request.result.objectStoreNames.contains(store))
+        request.result.createObjectStore(store, externalKey ? undefined : { keyPath: 'id' });
     };
     request.onerror = () => reject(request.error ?? new Error('Browser database unavailable'));
     request.onblocked = () => reject(new Error('Close other game/animation tabs and retry.'));
@@ -97,8 +106,8 @@ function openStore(database: string, store: string): Promise<IDBDatabase> {
   });
 }
 
-async function readRecords(database: string, store: string): Promise<unknown[]> {
-  const db = await openStore(database, store);
+async function readRecords(database: string, store: string, externalKey = false): Promise<unknown[]> {
+  const db = await openStore(database, store, externalKey);
   try {
     return await new Promise((resolve, reject) => {
       const tx = db.transaction(store, 'readonly');
@@ -111,14 +120,18 @@ async function readRecords(database: string, store: string): Promise<unknown[]> 
   } finally { db.close(); }
 }
 
-async function replaceRecords(database: string, store: string, records: unknown[], replace = true): Promise<void> {
-  const db = await openStore(database, store);
+async function replaceRecords(database: string, store: string, records: unknown[], replace = true, externalKey = false): Promise<void> {
+  if (externalKey && records.length > 1) throw new Error('Expected at most one active spin model.');
+  const db = await openStore(database, store, externalKey);
   try {
     await new Promise<void>((resolve, reject) => {
       const tx = db.transaction(store, 'readwrite');
       const target = tx.objectStore(store);
       if (replace) target.clear();
-      for (const record of records) target.put(record);
+      for (const record of records) {
+        if (externalKey) target.put(record, 'active');
+        else target.put(record);
+      }
       tx.oncomplete = () => resolve();
       tx.onerror = tx.onabort = () => reject(tx.error ?? new Error('Could not update local game records'));
     });
@@ -134,6 +147,10 @@ export function browserResetDependencies(): ResetDependencies {
     drafts: {
       read: () => readRecords('solProtoAnimation', 'animationDrafts'),
       replace: (records) => replaceRecords('solProtoAnimation', 'animationDrafts', records),
+    },
+    spinModels: {
+      read: () => readRecords(SPIN_SMEAR_DATABASE, 'models', true),
+      replace: records => replaceRecords(SPIN_SMEAR_DATABASE, 'models', records, true, true),
     },
     recovery: {
       read: async () => {

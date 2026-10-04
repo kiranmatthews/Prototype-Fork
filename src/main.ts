@@ -2950,7 +2950,7 @@ function returnFromBonus(completed: boolean): void {
     applyEndlessDeaths();
     player.restoreIdleFruit(session.parentFruit);
     if (completed) {
-      level.setBonusPlatformLocked(true);
+      level.activateBonusCheckpoint(session.returnPoint, state.cratesBroken, state.fruit, state.masks, state.points);
       campaign.updateInventory(state.lives, state.fruit);
     }
     applyRunModes();

@@ -39,6 +39,8 @@ Parent all-box totals use the selected room's actual breakable crates, excluding
 
 Unknown editor courses retain Easy Street as a safe fallback. The original Unity bonus and Easy Street remain available as editor entries with normal world backgrounds. `bonus-<progressKey>` entries expose every new room for direct playtesting, while actual detours retain the established `bonus:<parentId>` session identity.
 
+A completed bonus also acts as a checkpoint crate: the supported return point becomes the respawn point, and the parent crate, outline, switch, partial multi-hit and deployed-bridge states are banked together with its box count, masks and score. Banking adds no extra physical crate or box to the level's total. Later deaths restore this snapshot and retain the completed bonus tally and locked entrance. A failed bonus preserves the previous checkpoint; a fresh run clears the bonus checkpoint and reopens the entrance. Reward inventory continues through the existing campaign autosave preference.
+
 Discarded boards survive a successful bonus detour, but a bonus death clears the suspended parent's pile on return, matching normal death/respawn cleanup.
 
 Masks and remaining third-mask invincibility carry into the bonus and back out at their current values, on both completion and failure. Bonus damage can therefore consume a carried mask, and bonus pickups can add protection. Loading fades do not consume invincibility time. Restarting or abandoning the entire parent run still follows the ordinary fresh-run rules.

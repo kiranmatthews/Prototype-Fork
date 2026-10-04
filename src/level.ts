@@ -585,10 +585,7 @@ export interface Pickup {
   magnetOwner?: object;
 }
 
-export interface Checkpoint {
-  mesh: THREE.Mesh;
-  box: THREE.Box3;
-  active: boolean;
+export interface CheckpointSnapshot {
   spawnPos: THREE.Vector3;
   savedAlive: boolean[]; // crate alive-states captured when this was broken
   savedPending: boolean[]; // outline-ghost states captured alongside
@@ -599,6 +596,12 @@ export interface Checkpoint {
   savedFruit: number; // wumpa counter captured when this was broken
   savedMasks: number;
   savedPoints: number;
+}
+
+export interface Checkpoint extends CheckpointSnapshot {
+  mesh: THREE.Mesh;
+  box: THREE.Box3;
+  active: boolean;
 }
 
 interface BonusCourseRoute {
@@ -3789,7 +3792,7 @@ export class Level {
   endWallZ = -1021; // authored hard stop after the finish gate
   spawnPos = new THREE.Vector3(0, 0.1, 0);
   currentSpawn = new THREE.Vector3(0, 0.1, 0); // last activated checkpoint
-  activeCheckpoint: Checkpoint | null = null; // owns the respawn snapshot
+  activeCheckpoint: CheckpointSnapshot | null = null; // crate or completed bonus
   walls: THREE.Box3[] = []; // solid barriers: bump = full stop, never break
   containmentWalls: THREE.Box3[] = []; // closed-course safety barriers; resolved together at corners
   vertBacks: THREE.Box3[] = []; // accepted analytic-pipe backing slabs
@@ -9386,20 +9389,47 @@ export class Level {
     points = 0,
   ): void {
     cp.active = true;
-    cp.savedAlive = this.crates.map((c) => c.alive);
-    cp.savedPending = this.crates.map((c) => !!c.pending);
-    cp.savedBangUsed = this.crates.map((c) => !!c.bangUsed);
-    cp.savedHitsRemaining = this.crates.map((c) => c.hitsRemaining);
-    cp.savedSpinBridges = this.spinBridges.map(bridge => bridge.activated);
-    cp.savedCratesBroken = cratesBroken;
-    cp.savedFruit = fruit;
-    cp.savedMasks = masks;
-    cp.savedPoints = points;
-    this.currentSpawn.copy(cp.spawnPos);
+    Object.assign(cp, this.bankCheckpointSnapshot(cp.spawnPos, cratesBroken, fruit, masks, points));
     this.activeCheckpoint = cp;
     cp.mesh.scale.setScalar(1);
     this.pops.push({ obj: cp.mesh, t: 0.12 }); // break it like a crate
     sfx.play("lifeGet", 0.8);
+  }
+
+  /** A cleared bonus banks the supported return point without adding a box. */
+  activateBonusCheckpoint(
+    position: THREE.Vector3,
+    cratesBroken: number,
+    fruit: number,
+    masks: number,
+    points: number,
+  ): void {
+    this.setBonusPlatformLocked(true);
+    this.bankCheckpointSnapshot(position, cratesBroken, fruit, masks, points);
+  }
+
+  private bankCheckpointSnapshot(
+    position: THREE.Vector3,
+    cratesBroken: number,
+    fruit: number,
+    masks: number,
+    points: number,
+  ): CheckpointSnapshot {
+    const snapshot: CheckpointSnapshot = {
+      spawnPos: position.clone(),
+      savedAlive: this.crates.map(c => c.alive),
+      savedPending: this.crates.map(c => !!c.pending),
+      savedBangUsed: this.crates.map(c => !!c.bangUsed),
+      savedHitsRemaining: this.crates.map(c => c.hitsRemaining),
+      savedSpinBridges: this.spinBridges.map(bridge => bridge.activated),
+      savedCratesBroken: cratesBroken,
+      savedFruit: fruit,
+      savedMasks: masks,
+      savedPoints: points,
+    };
+    this.currentSpawn.copy(position);
+    this.activeCheckpoint = snapshot;
+    return snapshot;
   }
 
   // A '!' switch's face follows its bangUsed flag — both colours of switch, and
@@ -9610,6 +9640,7 @@ export class Level {
     if (hard) {
       this.activeCheckpoint = null;
       this.currentSpawn.copy(this.spawnPos);
+      this.setBonusPlatformLocked(false);
     }
 
     // Crumble pads grow back whole.

@@ -441,7 +441,7 @@ body.game-flow-vortex .game-shell:has(.game-screen-launch)::before {
   :is(body[data-prompt-family="touch"],body.tc-on) .game-launch-card { width:min(800px,100%); }
   :is(body[data-prompt-family="touch"],body.tc-on) .game-launch-card .game-logo span { font-size:clamp(40px,20vh,90px); }
   :is(body[data-prompt-family="touch"],body.tc-on) .game-launch-card > .game-menu-list {
-    width:100%; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); grid-auto-rows:minmax(48px,1fr);
+    width:100%; display:flex; flex-direction:column;
   }
   :is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel[class*="game-screen-confirm-"] .game-options-card { gap:8px; padding:12px; }
   :is(body[data-prompt-family="touch"],body.tc-on) .game-shell-panel[class*="game-screen-confirm-"] .game-panel-title { font-size:26px; }

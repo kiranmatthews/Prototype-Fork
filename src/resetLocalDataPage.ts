@@ -35,7 +35,7 @@ async function run(restoring: boolean): Promise<void> {
       status.dataset.resetComplete = 'restored';
     } else {
       const receipt = await resetLocalGameData(deps);
-      status.textContent = `Reset complete. Cleared ${receipt.localKeys} saved settings/data entries, ${receipt.sessionKeys} session entries and ${receipt.animationDrafts} animation drafts.\nReturn to the game to load the current defaults. Undo is available below.`;
+      status.textContent = `Reset complete. Cleared ${receipt.localKeys} saved settings/data entries, ${receipt.sessionKeys} session entries, ${receipt.animationDrafts} animation drafts and ${receipt.spinModels} baked spin models.\nReturn to the game to load the current defaults. Undo is available below.`;
       status.dataset.resetComplete = 'true';
     }
     back.textContent = 'Return to game';

@@ -2,23 +2,73 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#17271f" />
-    <title>Spin Orbital Rings Lab</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#142b31" />
+    <title>Character Spin Smear Lab · BONEMAN</title>
+    <link rel="icon" href="data:," />
     <style>
-      html, body, #app { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #17271f; }
-      body { color: #f5f3ed; font: 12px/1.35 ui-monospace, Menlo, Consolas, monospace; }
-      canvas { display: block; width: 100% !important; height: 100% !important; touch-action: none; }
-      #lab-title { position: fixed; left: 12px; bottom: 10px; z-index: 20; pointer-events: none;
-        color: #fff4e8; text-shadow: 0 2px 3px #000; }
-      #lab-diagnostics { position: fixed; left: 12px; top: 10px; z-index: 20; margin: 0;
-        color: #fff0f6; text-shadow: 0 2px 3px #000; pointer-events: none; }
+      * { box-sizing: border-box; }
+      html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #142b31; }
+      body { display: grid; grid-template-columns: minmax(0, 1fr) 350px; color: #f5f3ed; font: 14px/1.4 system-ui, sans-serif; }
+      #app { position: relative; min-width: 0; min-height: 0; overflow: hidden; }
+      canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+      .views { position: absolute; top: 18px; left: 18px; display: flex; gap: 6px; }
+      .labels { position: absolute; bottom: 28px; left: 4%; right: 4%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); text-align: center; pointer-events: none; font-size: 12px; font-weight: 750; letter-spacing: .09em; color: #d5e6e6; }
+      .labels span:nth-child(2) { color: #ffc782; } .labels span:nth-child(3) { color: #89ecd4; }
+      aside { display: flex; flex-direction: column; min-height: 0; padding: 22px; background: #0c1b21; border-left: 1px solid #38565b; }
+      header { flex: none; } h1 { margin: 8px 0 12px; font-size: 27px; line-height: 1.1; }
+      .eyebrow { color: #89ecd4; font-size: 11px; letter-spacing: .16em; font-weight: 750; }
+      p { color: #abbfc3; margin: 10px 0 16px; font-size: 13px; }
+      .edit-region { min-height: 0; overflow: auto; overscroll-behavior: contain; padding-right: 4px; }
+      .smear-control { display: grid; grid-template-columns: minmax(0, 1fr) 65px; gap: 6px 10px; padding: 12px 0; border-bottom: 1px solid #244047; }
+      .smear-control label { grid-column: 1 / -1; color: #d5e6e6; }
+      input[type=range] { width: 100%; min-width: 0; accent-color: #ffc782; }
+      input[type=number] { width: 65px; padding: 5px; background: #172e35; color: #fff; border: 1px solid #456068; border-radius: 3px; font: inherit; }
+      button, a { font: inherit; } button { min-height: 40px; padding: 8px 12px; cursor: pointer; color: #e6eded; background: #203b43; border: 1px solid #49636b; border-radius: 4px; }
+      button:hover { background: #30535b; } button:focus-visible, a:focus-visible { outline: 2px solid #ffc782; outline-offset: 3px; }
+      button:disabled { cursor: wait; opacity: .5; }
+      .actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; } .actions button { font-size: 12px; }
+      .toggles { display: flex; flex-wrap: wrap; gap: 14px; margin: 12px 0; } .toggles label { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+      footer { flex: none; padding-top: 14px; border-top: 1px solid #38565b; }
+      #bake-model { width: 100%; min-height: 48px; background: #ffc782; border-color: #ffc782; color: #182a2f; font-weight: 750; }
+      #bake-model:hover { background: #ffdbac; }
+      #lab-status { min-height: 38px; margin: 10px 0; color: #bde9da; font-size: 12px; }
+      #lab-diagnostics { color: #8caaaf; font-size: 11px; }
+      .footer-links { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+      .footer-links a { color: #d5e6e6; font-size: 12px; } .footer-links button { font-size: 12px; }
+      @media (max-width: 760px) {
+        body { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(180px, 46%) minmax(0, 1fr); }
+        aside { padding: 12px 18px; border-left: 0; border-top: 1px solid #38565b; }
+        h1 { font-size: 20px; margin: 2px 0; } header p { margin: 6px 0; font-size: 12px; }
+        .smear-control { padding: 8px 0; } footer { padding-top: 8px; }
+        #lab-status { min-height: 0; margin: 7px 0; } .labels { bottom: 12px; font-size: 9px; }
+        .views { top: 8px; left: 8px; } .views button { min-height: 36px; font-size: 12px; }
+      }
+      @media (max-height: 500px) and (min-aspect-ratio: 1/1) {
+        body { grid-template-columns: minmax(0, 1fr) min(48vw, 300px); grid-template-rows: minmax(0, 1fr); }
+        aside { padding: 8px 12px; border-left: 1px solid #38565b; border-top: 0; }
+        h1 { font-size: 20px; margin: 2px 0 8px; } header p { display: none; }
+        .eyebrow { font-size: 9px; } #lab-status { min-height: 0; margin: 6px 0; font-size: 11px; }
+        .footer-links button { min-height: 32px; font-size: 10px; padding: 4px 6px; }
+        .footer-links a { font-size: 11px; } footer { padding-top: 8px; }
+        .labels { bottom: 12px; font-size: 8px; letter-spacing: 0; }
+        .views { top: 8px; left: 8px; } .views button { min-height: 32px; font-size: 11px; padding: 4px 8px; }
+      }
     </style>
   </head>
   <body>
-    <div id="app"></div>
-    <pre id="lab-diagnostics">Spin effects: loading production sculpture…</pre>
-    <div id="lab-title">SPIN ORBITAL RINGS · persistent rings + looping production handoff · drag to orbit</div>
+    <main id="app" aria-label="Current character, draft smear and baked spin previews">
+      <div class="views" aria-label="Preview angle"><button data-view="front">Front</button><button data-view="side">Side</button><button data-view="top">Top</button></div>
+      <div class="labels"><span>CURRENT CHARACTER</span><span>DRAFT SMEAR</span><span>BAKED · SPIN</span></div>
+    </main>
+    <aside aria-label="Spin model authoring">
+      <header><div class="eyebrow">BONEMAN · CHARACTER LAB</div><h1>Radial Spin Smear</h1><p>Distort your character and overlap rotated copies for 3D motion blur. Drag the scene to orbit.</p></header>
+      <div class="edit-region"><div id="smear-controls"></div>
+        <div class="toggles"><label><input type="checkbox" id="spin-preview" checked />Spin preview</label><label><input type="checkbox" id="show-rings" />Show rings</label></div>
+        <div class="actions"><button id="reset-smear">Reset draft</button><button id="reload-character">Reload character</button><button id="ring-tuning">Ring tuning</button></div><div id="lab-diagnostics"></div>
+      </div>
+      <footer><button id="bake-model" disabled>Bake updated model</button><p id="lab-status" role="status" aria-live="polite">Loading current character…</p><div class="footer-links"><a href="./">Back to game</a><button id="download-model" disabled>Download baked GLB</button></div></footer>
+    </aside>
     <script type="module" src="/src/spin-effects/lab.ts"></script>
   </body>
 </html>

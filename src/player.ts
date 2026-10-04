@@ -133,6 +133,7 @@ import {
 } from './vertBoardRelease';
 import { CharacterProportionLayer } from './character/proportionLayer';
 import { CharacterRigidMeshBatches } from './character/rigidMeshBatch';
+import { captureSpinCharacter } from './spin-effects/smear';
 import { CharacterBreakApart } from './character/breakApart';
 import {
   BASE_CHARACTER_HITBOX_HEIGHT,
@@ -1550,7 +1551,7 @@ export class Player {
     if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
       this.riggedCartoonHandLoading = this.installRiggedCartoonHands();
     }
-    this.installSpinEffects(); // Unity Whirlwind Vixen + orbital rings
+    this.installSpinEffects(); // current-character static smear + orbital rings
 
     // Landing X: a small cross pinned to the floor under the skater — the
     // precise "you land HERE" mark. There used to be a soft dark blob under it
@@ -2869,7 +2870,7 @@ export class Player {
 
   /** Capture the visual pose after every completed fixed step. */
   private collectRenderHierarchy(object: THREE.Object3D): void {
-    // The Unity whirlwind deliberately holds at authoritative 60 Hz. Its
+    // The baked spin sculpture holds at authoritative 60 Hz. Its
     // parent root still glides with the rider, but interpolating local poses
     // would turn the authored presentation into an ordinary smooth rotation.
     if (object === this.spinEffects?.root) return;
@@ -3194,6 +3195,13 @@ export class Player {
   /** Wait for asynchronous attachment work as well as the texture loader. */
   async preparePresentationAssets(): Promise<void> {
     await Promise.all([this.riggedCartoonHandLoading, this.meshyBoolieRooHeadLoading]);
+    await this.spinEffects?.prepare();
+  }
+
+  /** A frozen surface in the player's local metre frame for the Spin Lab. */
+  captureSpinSmearSource(): THREE.Group {
+    if (!this.riderG) throw new Error('The character is not ready to bake.');
+    return captureSpinCharacter(this.riderG, this.bodyGroup, this.bodyGroup.scale);
   }
 
   /** A clean spawn frame without consuming input or advancing gameplay. */
@@ -17082,7 +17090,7 @@ export class Player {
         this.invulnSilent ||
         Math.sin(this.runTime * 45) > -0.2 ||
         this.state === 'dead';
-    // On foot, an ordinary attack replaces the rider with the Whirlwind Vixen
+    // On foot, an ordinary attack replaces the rider with the baked character
     // sculpture and character rings. A spin that STARTS while genuinely
     // grounded on the skateboard keeps the native rider/deck rotation and gets
     // its own low ring instance; board air, grinds, grabs and wallrides remain
@@ -17982,11 +17990,15 @@ export class Player {
     );
   }
 
-  // ——— Unity production spin presentation ———————————————————————————————
+  // ——— Baked character spin presentation ———————————————————————————————
   private installSpinEffects(): void {
     if (!this.boardG) return;
     this.spinEffects = new SpinEffectsPresentation({
       parent: this.group,
+      createSource: () => this.captureSpinSmearSource(),
+      prepareSource: async () => {
+        await Promise.all([this.riggedCartoonHandLoading, this.meshyBoolieRooHeadLoading]);
+      },
     });
   }
 
