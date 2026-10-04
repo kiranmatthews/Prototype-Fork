@@ -269,17 +269,39 @@ export function slipstreamCameraComponents(): CustomComponent[] {
   return SLIPSTREAM_CAMERA.map(p => ({ t: 'camnode', p: [...p] }));
 }
 
-/** Repair only the exact shipped lane; preserve all unrelated level edits. */
+const CAMERA_EDITOR_KEYS = new Set(['t', 'p', 'grp', 'nm', 'lk']);
+export const SLIPSTREAM_CAMERA_LOOK_AHEAD = 15;
+
+/** Repair known shipped coordinates, including grouped/locked editor copies. */
 export function migrateSlipstreamCamera(data: CustomLevelData): void {
   const nodes = data.components.filter(c => c.t === 'camnode');
+  // Native editor capture rounds coordinates to centimetres. Its geometry and
+  // order still identify the repaired spine; a deliberate framing override wins.
+  if (data.cameraLookAhead === undefined && nodes.length === SLIPSTREAM_CAMERA.length &&
+      nodes.every((node, i) => !node.cameraView && !node.radius &&
+        node.p.every((n, j) => n === SLIPSTREAM_CAMERA[i][j] || n === Math.round(SLIPSTREAM_CAMERA[i][j] * 100) / 100)))
+    data.cameraLookAhead = SLIPSTREAM_CAMERA_LOOK_AHEAD;
   if (nodes.length !== LEGACY_SLIPSTREAM_CAMERA.length ||
-      !nodes.every((node, i) => Object.keys(node).length === 2 &&
+      !nodes.every((node, i) => Object.keys(node).every(key => CAMERA_EDITOR_KEYS.has(key)) &&
         node.p.length === 3 && node.p.every((n, j) => n === LEGACY_SLIPSTREAM_CAMERA[i][j]))) return;
-  let inserted = false;
+  data.cameraLookAhead ??= SLIPSTREAM_CAMERA_LOOK_AHEAD;
+  // Each legacy anchor belongs to an exact ordered sample on the dense spine.
+  // Expand it in place, retaining editor groups/locks and the anchor's name.
+  const anchors = LEGACY_SLIPSTREAM_CAMERA.map(p => {
+    let best = Infinity, at = 0;
+    for (let i = 0; i < SLIPSTREAM_CAMERA.length; i++) {
+      const q = SLIPSTREAM_CAMERA[i], d = (p[0]-q[0])**2 + (p[2]-q[2])**2;
+      if (d < best) { best = d; at = i; }
+    }
+    return at;
+  });
+  let index = 0;
   data.components = data.components.flatMap(component => {
     if (component.t !== 'camnode') return [component];
-    if (inserted) return [];
-    inserted = true;
-    return slipstreamCameraComponents();
+    const start = anchors[index], end = anchors[++index] ?? SLIPSTREAM_CAMERA.length;
+    const { nm, ...metadata } = component;
+    return SLIPSTREAM_CAMERA.slice(start, end).map((p, offset): CustomComponent => ({
+      ...metadata, p: [...p], ...(!offset && nm !== undefined ? { nm } : {}),
+    }));
   });
 }

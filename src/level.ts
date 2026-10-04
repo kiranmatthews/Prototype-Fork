@@ -62,7 +62,7 @@ import { BraidedRope, ropeLocalPoint, flexibleRopePoint, flexibleRopeVelocity, c
 import { NightworksRocks, nightworksGeometry, isNightworksSurface } from "./nightworksRocks";
 import { NIGHTWORKS_LEVEL } from "./levels/nightworks";
 import { NIGHTWORKS_AFTER_HOURS_LEVEL } from "./levels/nightworks-after-hours";
-import { migrateSlipstreamCamera } from "./levels/slipstream-camera";
+import { migrateSlipstreamCamera, SLIPSTREAM_CAMERA_LOOK_AHEAD } from "./levels/slipstream-camera";
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL, JUNGLE_SKYLINE_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
@@ -956,6 +956,8 @@ export interface CustomLevelData {
   keepPlayFog?: boolean;
   /** 0..1 camera-only airborne vertical follow; absent preserves shared camera tuning. */
   cameraAirLift?: number;
+  /** Presentation-only distance along the camera lane to keep the next bend visible. */
+  cameraLookAhead?: number;
   /** 0..1 level-authored widening of ledge reach/timing; absent keeps global feel. */
   ledgeAssist?: number;
   /** Legacy gold-medal benchmark; retained for existing level JSON. */
@@ -2449,7 +2451,7 @@ const LEVEL_DATA_KEYS = new Set([
   'encounter',
   "v", "name", "spawn", "killY", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "atmosphere",
-  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "cameraAirLift", "secretComboGem",
+  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "cameraAirLift", "secretComboGem", "cameraLookAhead",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "iceGrip", "containment",
@@ -2680,6 +2682,8 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   if (source.hudMode !== undefined && source.hudMode !== "bonus" && source.hudMode !== "hub") return null;
   for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "secretComboGem"] as const)
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
+  if (source.cameraLookAhead !== undefined && (typeof source.cameraLookAhead !== "number" ||
+      !Number.isFinite(source.cameraLookAhead) || source.cameraLookAhead < 0 || source.cameraLookAhead > 30)) return null;
   if (source.cameraAirLift !== undefined && (typeof source.cameraAirLift !== "number" ||
       !Number.isFinite(source.cameraAirLift) || source.cameraAirLift < 0 || source.cameraAirLift > 1)) return null;
   if (source.relicTime !== undefined && !validRelicTime(source.relicTime)) return null;
@@ -3804,6 +3808,7 @@ export class Level {
   // tuning. One source course can widen its ledge catch envelope while every
   // other level retains the exact global grab feel.
   ledgeAssist = 0;
+  cameraLookAhead: number | undefined; // presentation only; lane/input direction stays local
   cameraAirLift: number | undefined; // presentation only; does not change lane/input frames
   skatepark = false;
   // Presentation semantics are authored with data so edited/copied bonus
@@ -6233,6 +6238,7 @@ export class Level {
       perfectGrindBoost: this.perfectGrindBoost || undefined,
       keepPlayFog: this.keepPlayFog || undefined,
       cameraAirLift: this.cameraAirLift,
+      cameraLookAhead: this.cameraLookAhead,
       ...(this.capturedOceanSpec ? { ocean: JSON.parse(JSON.stringify(this.capturedOceanSpec)) as CustomOceanData } : {}),
       ledgeAssist: this.ledgeAssist > 0 ? r2(this.ledgeAssist) : undefined,
       relicTime: this.relicTime !== CAMPAIGN_TIME_RELIC_TARGET_SECONDS ? this.relicTime : undefined,
@@ -6358,6 +6364,7 @@ export class Level {
     this.perfectGrindBoost = data.perfectGrindBoost === true;
     this.keepPlayFog = data.keepPlayFog === true;
     this.cameraAirLift = data.cameraAirLift;
+    this.cameraLookAhead = data.cameraLookAhead;
     this.killY = data.killY;
     this.ledgeAssist = data.ledgeAssist ?? 0;
     this.finishZ = -1e9; // endless playground: no finish gate
@@ -8348,6 +8355,23 @@ export class Level {
     const rz = cur.z * (1 - w) + lean.z * w;
     const rl = Math.hypot(rx, rz);
     return rl > 1e-4 ? { x: rx / rl, z: rz / rl } : cur;
+  }
+
+  /** Sample the same ordered branch selected by the camera, without moving its cursor. */
+  cameraLanePointAhead(cursor: LaneCursor, distance: number, target: THREE.Vector3): THREE.Vector3 | null {
+    if (cursor.s < 0 || this.lanePts.length < 2) return null;
+    const last = this.laneArc.length - 1;
+    const s = THREE.MathUtils.clamp(cursor.s + distance, 0, this.laneArc[last]);
+    let lo = 0, hi = last;
+    while (hi - lo > 1) {
+      const mid = (lo + hi) >>> 1;
+      if (this.laneArc[mid] <= s) lo = mid;
+      else hi = mid;
+    }
+    const a = this.lanePts[lo], b = this.lanePts[hi];
+    const span = this.laneArc[hi] - this.laneArc[lo];
+    const t = span > 1e-6 ? (s - this.laneArc[lo]) / span : 0;
+    return target.set(a.x + (b.x-a.x)*t, a.y + (b.y-a.y)*t, a.z + (b.z-a.z)*t);
   }
 
   /** Map scenery only: no actors, crates, discarded-board physics or run clock. */
@@ -19256,6 +19280,7 @@ export class Level {
   }
 
   private buildSlipstream(): void {
+    this.cameraLookAhead = SLIPSTREAM_CAMERA_LOOK_AHEAD;
     this.allBalanceCrates = true; // one long combo line: every crate = balance
     this.perfectGrindBoost = true; // ...and riding a whole rail pays out in speed
     this.theme = {

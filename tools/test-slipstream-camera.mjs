@@ -26,12 +26,14 @@ try {
   const old = { ...clone(published.data), components: [
     ...clone(withoutCameras(published.data)), ...LEGACY_SLIPSTREAM_CAMERA.map(p => ({ t: 'camnode', p: [...p] })),
   ] };
+  delete old.cameraLookAhead;
   // An unrelated saved rope/geometry edit survives the narrowly fingerprinted repair.
   old.components.find(c => c.t === 'ropeswing').speed = 1.27;
   old.components.find(c => c.t === 'platform').color = '#123456';
   const before = clone(withoutCameras(old));
   const migrated = migrateCustomLevel(clone(old));
   assert.deepEqual(cameras(migrated).map(c => c.p), SLIPSTREAM_CAMERA);
+  assert.equal(migrated.cameraLookAhead, 15);
   assert.deepEqual(withoutCameras(migrated), before, 'migration rewrote geometry or the saved rope');
   assert.deepEqual(migrateCustomLevel(clone(migrated)), migrated, 'migration is not idempotent');
   assert.deepEqual(cameras(normalizeCustomLevelData(old)).map(c => c.p), SLIPSTREAM_CAMERA, 'import validation skipped the repair');
@@ -42,7 +44,6 @@ try {
   for (const edit of [
     d => { cameras(d)[30].p[0] += .001; },
     d => { cameras(d)[30].radius = 2; },
-    d => { cameras(d)[30].grp = 1; },
     d => { d.components.push({ t: 'camnode', p: [0, 0, -890] }); },
     d => { const nodes = cameras(d); [nodes[20].p, nodes[21].p] = [nodes[21].p, nodes[20].p]; },
   ]) {
@@ -51,8 +52,31 @@ try {
     assert.deepEqual(custom, saved, 'a hand-edited camera path was replaced');
   }
 
+  const grouped = clone(old), groupId = 987;
+  grouped.groups ??= [];
+  grouped.groups.push({ id: groupId, nm: 'My camera folder', editorOnly: true });
+  cameras(grouped).forEach((node, i) => Object.assign(node, { grp: groupId, lk: true, nm: `Anchor ${i}` }));
+  const groupedBefore = clone(withoutCameras(grouped)), groupsBefore = clone(grouped.groups);
+  const repairedGrouped = migrateCustomLevel(grouped);
+  assert.deepEqual(cameras(repairedGrouped).map(c => c.p), SLIPSTREAM_CAMERA, 'editor grouping bypassed the old-camera repair');
+  assert.ok(cameras(repairedGrouped).every(c => c.grp === groupId && c.lk === true), 'camera folder/locks were lost');
+  assert.deepEqual(cameras(repairedGrouped).filter(c => c.nm).map(c => c.nm), LEGACY_SLIPSTREAM_CAMERA.map((_, i) => `Anchor ${i}`));
+  assert.deepEqual(repairedGrouped.groups, groupsBefore);
+  assert.deepEqual(withoutCameras(repairedGrouped), groupedBefore);
+  assert.ok(normalizeCustomLevelData(repairedGrouped), 'grouped migration does not round-trip');
+  const cached = clone(published.data); delete cached.cameraLookAhead;
+  migrateSlipstreamCamera(cached); assert.equal(cached.cameraLookAhead, 15, 'last fix cached without look-ahead was not upgraded');
+  const disabled = clone(cached); disabled.cameraLookAhead = 0;
+  migrateSlipstreamCamera(disabled); assert.equal(disabled.cameraLookAhead, 0, 'deliberate framing override was overwritten');
+  for (const invalid of [-1, 31, Infinity, '15']) {
+    const bad = clone(cached); bad.cameraLookAhead = invalid;
+    assert.equal(normalizeCustomLevelData(bad), null, 'invalid look-ahead was accepted');
+  }
+
   const native = new Level(new THREE.Scene(), { id: 'slip', name: 'Native Slipstream' }); levels.push(native);
   const current = new Level(new THREE.Scene(), published); levels.push(current);
+  assert.equal(native.captureData().cameraLookAhead, 15);
+  assert.equal(current.captureData().cameraLookAhead, 15);
   assert.equal(current.cameraViews.length, 0, 'a volume changed the course input model');
   assert.equal(current.zones.length, 0);
   assert.equal(current.lanePts.length, native.lanePts.length, 'a centreline sample was dropped');

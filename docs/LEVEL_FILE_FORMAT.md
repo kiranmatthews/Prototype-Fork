@@ -168,3 +168,5 @@ A `camnode` with `cameraView: true` is a fixed-view volume rather than a point i
 ### Playable water
 
 An `ocean` may opt into swimming with `swimBounds: [minX, minZ, maxX, maxZ]` in world Three XZ coordinates. The four finite values must be ordered and within the existing coordinate limits. The bounds describe playable water, independently of the longer visual horizon. Actual surface height uses the ocean wave sample. Omit this property to retain a presentation-only ocean. See [SWIMMING.md](SWIMMING.md).
+
+`cameraLookAhead` is an optional level-wide presentation distance in metres (0–30). A positive value keeps that point ahead on the ordered camera lane in view, using the same branch cursor through crossings. It changes the shot’s yaw and trailing position without changing local course input, replay heading, pitch, lens, or physics. Slipstream uses 15 metres; omission keeps the existing camera. Native capture, copies, imports and saved-level migrations retain it.
