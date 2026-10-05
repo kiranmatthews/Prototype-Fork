@@ -1,0 +1,53 @@
+{
+  "name": "porchhut",
+  "triangles": 7645,
+  "lodTriangles": 2446,
+  "sourceSpanGltf": [
+    0.9653019905090332,
+    0.6937260031700134,
+    1.0
+  ],
+  "sourceBoundsBlender": [
+    [
+      -0.4826050102710724,
+      -0.5,
+      -0.3487760126590729
+    ],
+    [
+      0.4826970100402832,
+      0.5,
+      0.34494999051094055
+    ]
+  ],
+  "sourceMeshCount": 1,
+  "materials": 1,
+  "placement": "Bottom anchored; front +Z in glTF. Collision is authored separately.",
+  "bytes": 8321820,
+  "sha256": "cac4986f2a462b2842da1079b2fcd113ea5e688a81ec5c534e2ac0a184821d8a",
+  "sourceSha256": "ad7cde95087573d363eb10d45f3760165cc6a5b1a9947ded20ac0a8c0ad83342",
+  "albedoResolution": 2048,
+  "normalResolution": 1024,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "07558375210778a9d39a0406a03d243f6d4074414ff7ed145780c67924d3064e",
+        "ktxSha256": "7f1779f548066fbba37b0dca4698370207653fbc5df6e50d2dbc4d777b0bc37f",
+        "width": 2048,
+        "height": 2048,
+        "mipLevels": 12,
+        "astc4x4Bytes": 5592432,
+        "encodedBytes": 4684975
+      },
+      {
+        "fallbackSha256": "9da30e9d05b23861da694ba493607d31068e6c052378823fc404b67faeaa795d",
+        "ktxSha256": "172ac7515eb306ca64ecaf18d1e80b41747a81fa3405fd32456039bf0491920a",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1011346
+      }
+    ]
+  }
+}

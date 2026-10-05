@@ -1,0 +1,53 @@
+{
+  "name": "rocksteps",
+  "triangles": 3494,
+  "lodTriangles": 1118,
+  "sourceSpanGltf": [
+    0.5046280026435852,
+    0.2652370035648346,
+    1.0
+  ],
+  "sourceBoundsBlender": [
+    [
+      -0.25247201323509216,
+      -0.5,
+      -0.13201500475406647
+    ],
+    [
+      0.25215598940849304,
+      0.5,
+      0.13322199881076813
+    ]
+  ],
+  "sourceMeshCount": 1,
+  "materials": 1,
+  "placement": "Bottom anchored; front +Z in glTF. Collision is authored separately.",
+  "bytes": 2138628,
+  "sha256": "2c38e8c7403ad057018aed474875f659e5c7d41a2232ba99cffcc30f385091ac",
+  "sourceSha256": "41776d0aa676bceb875180cad7e2a7072224d84f6eba0164909d7503a2a54c40",
+  "albedoResolution": 1024,
+  "normalResolution": 512,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "0d9b4c85db1bea34ac426b353ef25389c18ffd4c26216bb3b83f173be8571839",
+        "ktxSha256": "9658c3676f5384312e70e1d7418851508a66eb902037811428744b2de411187b",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1238515
+      },
+      {
+        "fallbackSha256": "f4880cd1f0a871f12d81104005353a861a1f799be16d070a311896b07f60a883",
+        "ktxSha256": "e02eda5fab098645e6fc4ba9bd55d5fcd0af75237c5b6b5aeaa1760a1f3e94db",
+        "width": 512,
+        "height": 512,
+        "mipLevels": 10,
+        "astc4x4Bytes": 349552,
+        "encodedBytes": 218312
+      }
+    ]
+  }
+}

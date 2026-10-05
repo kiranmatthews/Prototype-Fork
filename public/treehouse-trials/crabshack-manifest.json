@@ -1,0 +1,53 @@
+{
+  "name": "crabshack",
+  "triangles": 7736,
+  "lodTriangles": 2475,
+  "sourceSpanGltf": [
+    1.0,
+    0.9481189846992493,
+    0.9054210186004639
+  ],
+  "sourceBoundsBlender": [
+    [
+      -0.5,
+      -0.45765599608421326,
+      -0.47453999519348145
+    ],
+    [
+      0.5,
+      0.4477649927139282,
+      0.4735789895057678
+    ]
+  ],
+  "sourceMeshCount": 1,
+  "materials": 1,
+  "placement": "Bottom anchored; front +Z in glTF. Collision is authored separately.",
+  "bytes": 8378784,
+  "sha256": "8bac5fa6cd307775add999157392e2c8980b8a5deed311bf245345186dd6b9a4",
+  "sourceSha256": "fb456f19194854b5e86fe92770099b1d7d23abf5480fb44153f631a4dc402193",
+  "albedoResolution": 2048,
+  "normalResolution": 1024,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "eb0b866bca989cc5fb6773d1cee2488db7ee1735088f18b2cdf19f45b23fdb62",
+        "ktxSha256": "724ede9168f1f16f76f66233067d267392074557e508fc7e53655dc895daeef7",
+        "width": 2048,
+        "height": 2048,
+        "mipLevels": 12,
+        "astc4x4Bytes": 5592432,
+        "encodedBytes": 4763988
+      },
+      {
+        "fallbackSha256": "befc00f33b55603d3321c3353b0b00fe4d6982380fd158bc9c2a5a8aaed66647",
+        "ktxSha256": "13406634a23a216d690d5b63522eb1d410d50f546b41f503073c9d4e2139ff16",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1009710
+      }
+    ]
+  }
+}

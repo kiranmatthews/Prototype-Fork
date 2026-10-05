@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+  "source": "Exact current opaque WebP fallback images. No asset generation or credits.",
+  "images": [
+    {
+      "name": "forest-depth",
+      "path": "treehouse-trials/forest-depth.ktx2",
+      "fallback": "treehouse-trials/forest-depth.webp",
+      "width": 1942,
+      "height": 809,
+      "mipLevels": 11,
+      "bytes": 1617043,
+      "sha256": "a5d613851567af5cfaf6754a7628143549536a4af071e9e349011f74c24fc235",
+      "fallbackBytes": 201692,
+      "fallbackSha256": "169e344c0d89c120363444a0ffae5c2ef5047e1d10358be58c59c76de7736e10",
+      "astc4x4Bytes": 2104848,
+      "rgba8Bytes": 8375196,
+      "orientation": "ru: lower-left origin physically flipped to match WebP flipY=true",
+      "colorSpace": "sRGB"
+    },
+    {
+      "name": "coast-depth",
+      "path": "treehouse-trials/coast-depth.ktx2",
+      "fallback": "treehouse-trials/coast-depth.webp",
+      "width": 1942,
+      "height": 809,
+      "mipLevels": 11,
+      "bytes": 1438617,
+      "sha256": "3e0172cd806f8ccd748134dfe70be690010efef8d75beff6965b6578d6e3e887",
+      "fallbackBytes": 171980,
+      "fallbackSha256": "7f560374f194de741141ae7d001e9ef6ef05a29bab7450e9750bea3fb22e9b32",
+      "astc4x4Bytes": 2104848,
+      "rgba8Bytes": 8375196,
+      "orientation": "ru: lower-left origin physically flipped to match WebP flipY=true",
+      "colorSpace": "sRGB"
+    },
+    {
+      "name": "cavern-depth",
+      "path": "treehouse-trials/cavern-depth.ktx2",
+      "fallback": "treehouse-trials/cavern-depth.webp",
+      "width": 1942,
+      "height": 809,
+      "mipLevels": 11,
+      "bytes": 1737289,
+      "sha256": "a5d85fe60bff384b60ee2dc51dd0394dcd76f9dad1e9142317e1b248f49f082c",
+      "fallbackBytes": 272510,
+      "fallbackSha256": "329eaf7c4f28542fffd6779329de78d170ed62b57f9bc77789eedeff568465d3",
+      "astc4x4Bytes": 2104848,
+      "rgba8Bytes": 8375196,
+      "orientation": "ru: lower-left origin physically flipped to match WebP flipY=true",
+      "colorSpace": "sRGB"
+    },
+    {
+      "name": "timber-albedo",
+      "path": "treehouse-trials/timber-albedo.ktx2",
+      "fallback": "treehouse-trials/timber-albedo.webp",
+      "width": 1024,
+      "height": 1024,
+      "mipLevels": 11,
+      "bytes": 940212,
+      "sha256": "4674e71c45f45c1ea7a799a87b56d17a3f0de752a38fbcadd60e04bde1a34881",
+      "fallbackBytes": 112980,
+      "fallbackSha256": "4b62d25524209ca6ade66ca6f5908937235ab4cae47906f3b49d6231d76b3b26",
+      "astc4x4Bytes": 1398128,
+      "rgba8Bytes": 5592404,
+      "orientation": "ru: lower-left origin physically flipped to match WebP flipY=true",
+      "colorSpace": "sRGB"
+    }
+  ],
+  "total": {
+    "encodedBytes": 5733161,
+    "astc4x4Bytes": 7712672,
+    "rgba8Bytes": 30717992
+  }
+}

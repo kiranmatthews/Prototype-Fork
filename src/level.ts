@@ -55,6 +55,8 @@ import { puffs, PUFF_PRESETS } from "./puffs";
 import { swirls, SWIRL_PRESETS, type Swirl } from "./swirls";
 import { CoastWater, type ShoreSample } from "./water";
 import { createStandingWaterMaterial, isStandingWater, refineStandingWater } from './standingWater';
+import { createJungleStreamMaterial, JungleStreamReflectionOwner } from './jungleStream';
+import { addTreehouseTrialsMaterialLook } from './treehouseTrialsPresentation';
 import { createUnityBeachfrontReference } from "./beachfront";
 import {
   BEACHFRONT_COURSE_LENGTH,
@@ -794,7 +796,7 @@ export interface CustomComponent {
   cameraFollowDistance?: number; // cameraView: follow subject at this distance, preserving authored direction
   cameraIntroDistance?: number; // legacy authoring value; gameplay starts in close follow
   radius?: number; // camnode: lane corner radius · stone: the boulder's radius
-  materialStyle?: "unity-sand" | "water"; // mesh only: registered sand or sheltered water factory
+  materialStyle?: "unity-sand" | "water" | "jungle-stream"; // mesh only: registered sand or water factory
   castShadow?: boolean; // mesh: visual overlays can receive light without casting onto their support
   emissive?: string; // bounded surface emission on EMISSIVE_COMPONENT_TYPES
   opacity?: number; // mesh: 0..1; lower values enable transparency
@@ -913,6 +915,9 @@ export const TEX_KINDS = [
   "wood",
   "coast-moss",
   "coast-stone",
+  "treehouse-timber",
+  "treehouse-stone",
+  "treehouse-loam",
   "plank",
   "pavement",
   "asphalt",
@@ -2919,7 +2924,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (component.t !== "mesh" && (component.opacity !== undefined || component.fog !== undefined || component.materialStyle !== undefined || component.castShadow !== undefined)) ||
       (component.materialStyle !== undefined && !(
         (component.materialStyle === "unity-sand" && (component.tex === undefined || component.tex === "sand")) ||
-        (component.materialStyle === "water" && component.solid === false && (component.tex === undefined || component.tex === "solid")))) ||
+        ((component.materialStyle === "water" || component.materialStyle === "jungle-stream") && component.solid === false && (component.tex === undefined || component.tex === "solid")))) ||
       (component.emissive !== undefined && !EMISSIVE_COMPONENT_TYPES.includes(component.t)) ||
       (component.emissive !== undefined &&
         (typeof component.emissive !== "string" || !/^#[0-9a-f]{6}$/i.test(component.emissive))) ||
@@ -4171,6 +4176,16 @@ export class Level {
       const texture=Level.finishTex(new THREE.TextureLoader().load(import.meta.env.BASE_URL+`carlisle-coast/${file}-albedo.webp`));
       this.surfTexCache.set(kind,texture);return texture;
     }
+    if(kind==='treehouse-loam'){
+      const texture=Level.finishTex(new THREE.TextureLoader().load(import.meta.env.BASE_URL+'treehouse-trials-v2/loam-albedo.webp'));
+      this.surfTexCache.set(kind,texture);return texture;
+    }
+    if (kind === "treehouse-timber" || kind === "treehouse-stone") {
+      const name = kind === "treehouse-timber" ? "timber" : "stone";
+      const texture = Level.finishTex(new THREE.TextureLoader().load(import.meta.env.BASE_URL + `treehouse-trials/${name}-albedo.webp`));
+      this.surfTexCache.set(kind, texture);
+      return texture;
+    }
     if (kind === "sunsoil" || (this.jungleAtmosphere && kind === "dirt")) {
       const texture = Level.finishTex(new THREE.TextureLoader().load(import.meta.env.BASE_URL + `jungle-kit/${this.jungleAtmosphere ? "dirt" : "sunsoil"}.jpg`));
       this.surfTexCache.set(kind, texture);
@@ -4549,6 +4564,9 @@ export class Level {
     wood: { spec: 0x1e1c18, shine: 10 },
     "coast-moss": { spec: 0x101a10, shine: 3 },
     "coast-stone": { spec: 0x24251d, shine: 7 },
+    "treehouse-timber": { spec: 0x1e1c18, shine: 10 },
+    "treehouse-stone": { spec: 0x202620, shine: 8 },
+    "treehouse-loam": { spec: 0x0d100e, shine: 3 },
     sand: { spec: 0x141414, shine: 4 },
     sunsoil: { spec: 0x10100b, shine: 3 },
     dirt: { spec: 0x121212, shine: 3 },
@@ -4601,14 +4619,16 @@ export class Level {
         ? 8.5 // soft 128px kinds tile larger so blobs read
         : kind === "jungle"
           ? 8
-          : kind === "wood"
+          : kind === "wood" || kind === "treehouse-timber"
             ? 3.2
             : kind === "plank"
               ? 3.4
               : kind === "sand" || kind === "sunsoil"
                 ? 7.5
-                : kind === "dirt"
-                  ? 7
+                  : kind === "dirt"
+                    ? 7
+                    : kind === "treehouse-loam"
+                      ? 6.5
                   : kind === "moss"
                     ? 6
                     : kind === "pavement"
@@ -5386,7 +5406,7 @@ export class Level {
         ...(material.side === THREE.DoubleSide ? { doubleSided: true } : {}),
         ...(m.userData.beachSandFriction ? { beachSand: true } : {}),
         ...(material.userData.unitySandTileMetres === UNITY_SAND_TILE_METRES ? { materialStyle: "unity-sand", tex: "sand" } : {}),
-        ...(material.userData.waterSurface ? { materialStyle: "water", tex: "solid", solid: false } : {}),
+        ...(material.userData.waterSurface ? { materialStyle: material.userData.jungleStream ? "jungle-stream" : "water", tex: "solid", solid: false } : {}),
         ...(typeof m.userData.castShadow==='boolean'?{castShadow:m.userData.castShadow as boolean}:{}),
         ...(m.userData.slippy ? { slip: true } : {}),
         ...(m.userData.iceGrip !== undefined ? { iceGrip: m.userData.iceGrip as number } : {}),
@@ -5455,6 +5475,7 @@ export class Level {
   }
   private staticSurfaceMaterials=new Map<string,THREE.MeshLambertMaterial|THREE.MeshStandardMaterial>();
   private readonly standingWaterClock={value:0};
+  private jungleStreamReflections:JungleStreamReflectionOwner|null=null;
   private buildSurfaceMesh(c: CustomComponent, outlineGroups:number[]=[]): void {
     let geometry = new THREE.BufferGeometry();
     geometry.setAttribute("position", new THREE.Float32BufferAttribute(c.vertices ?? [0, 0, 0, 4, 0, 0, 0, 0, -4], 3));
@@ -5475,7 +5496,13 @@ export class Level {
     geometry.computeBoundingSphere();
     let material: THREE.MeshLambertMaterial | THREE.MeshStandardMaterial;
     const standingWater=isStandingWater(c);
-    if(standingWater) {
+    const jungleStream=c.materialStyle==='jungle-stream';
+    if(jungleStream){
+      this.jungleStreamReflections??=new JungleStreamReflectionOwner();
+      material=createJungleStreamMaterial(this.standingWaterClock,c,geometry,this.builtFromData?.components??[],this.jungleStreamReflections);
+      if(this.jungleStyle==='painterly'){material.userData.junglePainterly=true;addTreehouseTrialsMaterialLook(material);}
+    }
+    else if(standingWater) {
       const flowingWater=c.nm==='Custard Creek water ribbon';
       if(flowingWater)geometry=refineStandingWater(geometry);
       material=createStandingWaterMaterial(this.standingWaterClock,c.color??'#476c63',c.emissive,geometry,flowingWater);
@@ -5518,7 +5545,7 @@ export class Level {
       map: c.tex === "solid" ? null : this.surfaceTexture(c.tex ?? "checker"),
     });
     material.userData.texKind = c.materialStyle === "unity-sand" ? "sand" : c.tex ?? "checker";
-    if(this.jungleStyle==='painterly'&&!standingWater){
+    if(this.jungleStyle==='painterly'&&!standingWater&&!jungleStream){
       material.userData.junglePainterly=true;material.userData.jungleDapple=true;
       addJungleDapple(material,this.jungleTime);
     }
@@ -5542,7 +5569,8 @@ export class Level {
     mesh.scale.set(...(c.s ?? [1, 1, 1]));
     mesh.name = c.nm ?? "triangle surface";
     if(c.castShadow!==undefined)mesh.userData.castShadow=c.castShadow;
-    if(standingWater)mesh.userData.noWaterShore=true;
+    if(standingWater||jungleStream)mesh.userData.noWaterShore=true;
+    if(jungleStream){mesh.userData.castShadow=false;mesh.userData.receiveShadow=true;}
     if (c.vert !== undefined) mesh.userData.vert = c.vert;
     if (c.gravityTrack) mesh.userData.gravityTrack = true;
     if (c.lethal) mesh.userData.lethal = true;
@@ -7521,6 +7549,7 @@ export class Level {
     this.cityAssets?.dispose();this.cityAssets=null;this.cityCutawayObjects.length=0;
     this.jungleAssets?.dispose();
     this.jungleAssets = null;
+    this.jungleStreamReflections?.dispose();this.jungleStreamReflections=null;
     this.campaignWorldMap?.dispose();
     this.campaignWorldMap = null;
     this.tropicalPlants?.dispose();
@@ -14875,6 +14904,7 @@ export class Level {
       hp.object.userData.rails = c.rails !== false;
       hp.object.userData.gravityTrack = c.gravityTrack === true;
       hp.object.userData.skateCamera = c.skateCamera === true;
+      if(c.invisible){hp.object.visible=false;hp.object.userData.editorGhost=true;}
       this.halfpipes.push(hp);
       this.root.add(hp.object);
       for (const wm of hp.walls) {
@@ -14918,6 +14948,7 @@ export class Level {
     mesh.userData.vertRampMesh = true; // capture: its vertramp component rebuilds it
     mesh.userData.gravityTrack = c.gravityTrack === true;
     mesh.userData.skateCamera = c.skateCamera === true;
+    if(c.invisible){mesh.visible=false;mesh.userData.editorGhost=true;}
     // THE POINT OF ALL THIS: the level DECLARES what this is, so the physics
     // stops guessing from normal.y. And it declares it BOTH ways — `false` is
     // not "unflagged", it is "this is a ROAD", which is what keeps a slide's
@@ -15558,7 +15589,7 @@ export class Level {
     const far=(camera as THREE.PerspectiveCamera).far??400;
     this.jungleAssets?.setView(camera.position,this.keepPlayFog&&!clearInspectionView?Math.min(far,this.theme.fogFar):far,secondary?.position);
   }
-  async prepareJungleAssets(): Promise<void> { await Promise.all([this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
+  async prepareJungleAssets(): Promise<void> { await Promise.all([this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}
   get ghostTrainDiagnostics() {return {scenery:this.ghostTrainAssets?.diagnostics??null,textures:castleTextureDiagnostics(),enemies:this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>({skin:e.group.userData.ghostSkin,...e.visual.diagnostics,articulation:e.group.userData.ghostArticulation,contacts:e.group.userData.ghostFootContacts,servo:e.group.userData.ghostServo,height:e.group.userData.ghostHeight}))};}
   private ghostKit():GhostTrainAssetKit {return this.ghostTrainAssets??=new GhostTrainAssetKit(this.root,()=>this.enemies.filter(e=>e.alive&&e.group.userData.ghostSkin).map(e=>e.group),!EDITOR_BUILD);}

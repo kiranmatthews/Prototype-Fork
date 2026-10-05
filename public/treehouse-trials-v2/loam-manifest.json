@@ -1,0 +1,19 @@
+{
+  "width": 1024,
+  "height": 1024,
+  "mipLevels": 11,
+  "orientation": "ru",
+  "generator": "Built-in image_gen, extracted loam from 00_STYLE_MASTER and 09_CAVE_EXIT_JUNGLE_PATH",
+  "sourceSha256": "a4cb1dffd8d17bd27f4a5eaf918b5ef290a9b717c5fecca8ecee0d5337ef1764",
+  "files": {
+    "loam-albedo.webp": {
+      "bytes": 148176,
+      "sha256": "94a6a0d93c0f5d5d0788178d4b9647d54380eb98175f56a73f8a7e660a2ddfc6"
+    },
+    "loam-albedo.ktx2": {
+      "bytes": 1088913,
+      "sha256": "79cb81739e0bbd4f245faf90f75c95d6a95e98009400d639fb2974599aeb8b08"
+    }
+  },
+  "astc4x4Bytes": 1398128
+}

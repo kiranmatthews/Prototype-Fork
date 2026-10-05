@@ -1,0 +1,741 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "officialCliVersion": "0.3.1",
+  "model": "meshy-t2",
+  "modelType": "smart-topology",
+  "textureGeneratedResolution": "2k",
+  "referenceGenerator": "Built-in image_gen",
+  "prompts": "tools/treehouse-trials-assets/prompts.json",
+  "styleMasterSha256": "e97f8b751f8b3b282a143a2636dde1b690e6ee14acd5af0d6871f5eb5924a774",
+  "request": "Production low-poly textured environment kit matching the Treehouse Trials style master.",
+  "tasks": {
+    "cavearch": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "619eddc0-9897-455f-9806-5a17bfb834f6",
+      "createdAt": "2026-10-05T05:08:10.323827+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 981,
+      "reference": "tools/treehouse-trials-assets/references/cavearch.png",
+      "referenceSha256": "52030204cf2aa37a7f6398b948798abf14ba2fc3547412174059c6be3c052b74",
+      "targetTriangles": 6500,
+      "size": [
+        14,
+        10,
+        5
+      ],
+      "kind": "treehousecavearch",
+      "previousAttempts": [
+        {
+          "resource": "image-to-3d",
+          "state": "rejected",
+          "operationId": "dd8555f8-573d-4f3a-8827-5d05eb54ae32",
+          "createdAt": "2026-10-05T05:06:27.664961+00:00",
+          "estimatedCredits": 15,
+          "balanceBefore": 981,
+          "reference": "tools/treehouse-trials-assets/references/cavearch.png",
+          "referenceSha256": "52030204cf2aa37a7f6398b948798abf14ba2fc3547412174059c6be3c052b74",
+          "targetTriangles": 6500,
+          "size": [
+            14,
+            10,
+            5
+          ],
+          "kind": "treehousecavearch",
+          "errorCode": "validation",
+          "consumedCredits": 0
+        }
+      ],
+      "id": "01a10a76-5b43-7534-b7cc-2337a6645cdb",
+      "checkedAt": "2026-10-05T05:09:37.585882+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791176938022,
+      "sourceSha256": "35c5a4ce3bfbb336f5e59c98ff1375150c5e202162ca7bb7949f28f4c5738da4",
+      "sourceBytes": 7158792
+    },
+    "cavewall": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "c3cbfc60-26ef-4d97-b195-7f060f36206c",
+      "createdAt": "2026-10-05T05:08:15.877739+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 966,
+      "reference": "tools/treehouse-trials-assets/references/cavewall.png",
+      "referenceSha256": "3d0960e6227a5b67aedd83a9f90d53d1e76ea2e49cd30713783cd805495b7e42",
+      "targetTriangles": 4500,
+      "size": [
+        12,
+        10,
+        6
+      ],
+      "kind": "treehousecavewall",
+      "id": "01a10a76-7086-71b4-945f-a694c961fe20",
+      "checkedAt": "2026-10-05T05:09:39.529507+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791176950692,
+      "sourceSha256": "6f6ec798aaad23c3da9762de114a9e57fa6330465cdf1bed646b260740de6318",
+      "sourceBytes": 6995268
+    },
+    "rocksteps": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "dc37f446-168a-43a4-8763-921817c2ab2a",
+      "createdAt": "2026-10-05T05:08:19.474822+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 951,
+      "reference": "tools/treehouse-trials-assets/references/rocksteps.png",
+      "referenceSha256": "0298bc0f8556cc5e44e5d6d3a13843ef423416886d963e44c2520f348f7670b7",
+      "targetTriangles": 4000,
+      "size": [
+        6,
+        2.5,
+        7
+      ],
+      "kind": "treehouserocksteps",
+      "id": "01a10a76-7e92-721f-8302-196e1bbdee27",
+      "checkedAt": "2026-10-05T05:09:41.275916+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791176938346,
+      "sourceSha256": "41776d0aa676bceb875180cad7e2a7072224d84f6eba0164909d7503a2a54c40",
+      "sourceBytes": 5662896
+    },
+    "porchhut": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "a95d9fba-698e-4187-8e58-b4b2b0843c93",
+      "createdAt": "2026-10-05T05:08:22.620798+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 936,
+      "reference": "tools/treehouse-trials-assets/references/porchhut.png",
+      "referenceSha256": "a8b7d70e540a7d101de0da2f3480413f9677af5b3d7d8b9aa58e2bc72643c1b8",
+      "targetTriangles": 7500,
+      "size": [
+        7,
+        5,
+        6
+      ],
+      "kind": "treehouseporchhut",
+      "id": "01a10a76-8ace-7754-9336-b8d6ae98ce84",
+      "checkedAt": "2026-10-05T05:09:43.531576+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791176956228,
+      "sourceSha256": "ad7cde95087573d363eb10d45f3760165cc6a5b1a9947ded20ac0a8c0ad83342",
+      "sourceBytes": 7406132
+    },
+    "sugarcane": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "e8eacfb5-e943-4e6c-873a-70f3a2998600",
+      "createdAt": "2026-10-05T05:08:25.890904+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 921,
+      "reference": "tools/treehouse-trials-assets/references/sugarcane.png",
+      "referenceSha256": "0cc53bf02ec97a0c7cad6ad64811f148c46c9219bff33db9f529eecd2385116e",
+      "targetTriangles": 3500,
+      "size": [
+        4,
+        5,
+        3
+      ],
+      "kind": "treehousesugarcane",
+      "id": "01a10a76-97a2-7037-b3cf-d4128fcd02f4",
+      "checkedAt": "2026-10-05T05:09:46.263811+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791176942200,
+      "sourceSha256": "79dd287501f01e6ce9896be82fa58b9d2a517684cae2642a5b976efc0e309493",
+      "sourceBytes": 6781172
+    },
+    "bridgeend": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "232f0886-ccfd-4eec-8d3e-6273fca33ecd",
+      "createdAt": "2026-10-05T05:08:29.211666+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 906,
+      "reference": "tools/treehouse-trials-assets/references/bridgeend.png",
+      "referenceSha256": "b9644733e7a6a1079cef3572b210916e1fc5a196d3e2f58154d847880c1bccd8",
+      "targetTriangles": 4500,
+      "size": [
+        7,
+        2.5,
+        4
+      ],
+      "kind": "treehousebridgeend",
+      "id": "01a10a76-a496-747e-9971-08a6ea3829f7",
+      "checkedAt": "2026-10-05T05:09:48.492601+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791176949212,
+      "sourceSha256": "5327015d459f7ccb7d68c6f6e783590c0494eccf54cac65c8954191dec7446ac",
+      "sourceBytes": 6800376
+    },
+    "boulder": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "2f95ef0e-5469-4d19-929d-8ddb40940f0b",
+      "createdAt": "2026-10-05T05:08:32.419609+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 891,
+      "reference": "tools/treehouse-trials-assets/references/boulder.png",
+      "referenceSha256": "ec82c46baf65da2f49d2d7d805d79a04640252dd035e36c4a00978a75108c019",
+      "targetTriangles": 2800,
+      "size": [
+        5,
+        3,
+        4
+      ],
+      "kind": "treehousemossrock",
+      "id": "01a10a76-b10e-770d-b571-6d19e3797ef1",
+      "checkedAt": "2026-10-05T05:09:50.921006+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791176947805,
+      "sourceSha256": "d7c25f330c9e023ace3ed9eacb2ed5571ccb1b2996e33ce24a3bb862de84807c",
+      "sourceBytes": 5216380
+    },
+    "crabshack": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "37473132-3642-4587-9c15-3507aacdec70",
+      "createdAt": "2026-10-05T05:08:35.875259+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 891,
+      "reference": "tools/treehouse-trials-assets/references/crabshack.png",
+      "referenceSha256": "e8e0ec8990f846c4c45390b2c379af44054ba412fc84b71dc86fadcf2bd59589",
+      "targetTriangles": 8000,
+      "size": [
+        9,
+        7,
+        8
+      ],
+      "kind": "treehousecrabshack",
+      "id": "01a10a76-be95-7469-878a-9708cc341fbf",
+      "checkedAt": "2026-10-05T05:09:52.994898+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791176963823,
+      "sourceSha256": "fb456f19194854b5e86fe92770099b1d7d23abf5480fb44153f631a4dc402193",
+      "sourceBytes": 7210532
+    }
+  },
+  "models": [
+    {
+      "name": "cavearch",
+      "triangles": 6920,
+      "lodTriangles": 2214,
+      "sourceSpanGltf": [
+        1.0,
+        0.7111480236053467,
+        0.5067390203475952
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.5,
+          -0.253387987613678,
+          -0.3584040105342865
+        ],
+        [
+          0.5,
+          0.25335100293159485,
+          0.3527440130710602
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "placement": "Bottom anchored; front +Z in glTF. Collision is authored separately.",
+      "bytes": 8195240,
+      "sha256": "69fb0c4c90dddaf63e87113e5e85476d05edb57563054bcb623fbe6ba9e2d1da",
+      "sourceSha256": "35c5a4ce3bfbb336f5e59c98ff1375150c5e202162ca7bb7949f28f4c5738da4",
+      "albedoResolution": 2048,
+      "normalResolution": 1024,
+      "gpuTextures": {
+        "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+        "textures": [
+          {
+            "fallbackSha256": "16cdb8ea710c515ccecb3fbf1586096fa1ccf0f9acdfaa0f66cd4cddfa68fb0e",
+            "ktxSha256": "abf78249807f6071a44d296c4b6111547f5052cd36faa53ea6cd7d69e2d8a625",
+            "width": 2048,
+            "height": 2048,
+            "mipLevels": 12,
+            "astc4x4Bytes": 5592432,
+            "encodedBytes": 4810010
+          },
+          {
+            "fallbackSha256": "1826a75138ff37af4a5785e8ca4e2ba48f55eb0fb1f3873ec47a9f31167af60c",
+            "ktxSha256": "9bba69861c17d25020de212c0689f9401cfd77ac4ad266c1d453a06967c2acad",
+            "width": 1024,
+            "height": 1024,
+            "mipLevels": 11,
+            "astc4x4Bytes": 1398128,
+            "encodedBytes": 952787
+          }
+        ]
+      },
+      "path": "cavearch.glb",
+      "kind": "treehousecavearch",
+      "size": [
+        14,
+        10,
+        5
+      ],
+      "taskId": "01a10a76-5b43-7534-b7cc-2337a6645cdb",
+      "referenceSha256": "52030204cf2aa37a7f6398b948798abf14ba2fc3547412174059c6be3c052b74"
+    },
+    {
+      "name": "cavewall",
+      "triangles": 4680,
+      "lodTriangles": 1497,
+      "sourceSpanGltf": [
+        1.0,
+        0.7137789726257324,
+        0.9032670259475708
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.5,
+          -0.4534499943256378,
+          -0.3594039976596832
+        ],
+        [
+          0.5,
+          0.4498170018196106,
+          0.3543750047683716
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "placement": "Bottom anchored; front +Z in glTF. Collision is authored separately.",
+      "bytes": 2304780,
+      "sha256": "a6ac355578fc613c7e4feeb4ef2668203391e855c4968da363a405ef891c5524",
+      "sourceSha256": "6f6ec798aaad23c3da9762de114a9e57fa6330465cdf1bed646b260740de6318",
+      "albedoResolution": 1024,
+      "normalResolution": 512,
+      "gpuTextures": {
+        "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+        "textures": [
+          {
+            "fallbackSha256": "81f77f1abeed3363886163fa7f23ad7c7aea1da9010023b07bd04798b0a268cb",
+            "ktxSha256": "5adddf61e7adc1b958d6336495cac73b4178fa0707dbc85fc333f3ff4a2ee3b3",
+            "width": 1024,
+            "height": 1024,
+            "mipLevels": 11,
+            "astc4x4Bytes": 1398128,
+            "encodedBytes": 1266890
+          },
+          {
+            "fallbackSha256": "339d3c68f38f201d1fe56e627cd66710e26f498c712cf0ab24f5cd7d2aeacb5e",
+            "ktxSha256": "e7e7423a676e2aded29899e284b86ad0da05825af96f8ba71769dc7fb25a764c",
+            "width": 512,
+            "height": 512,
+            "mipLevels": 10,
+            "astc4x4Bytes": 349552,
+            "encodedBytes": 239367
+          }
+        ]
+      },
+      "path": "cavewall.glb",
+      "kind": "treehousecavewall",
+      "size": [
+        12,
+        10,
+        6
+      ],
+      "taskId": "01a10a76-7086-71b4-945f-a694c961fe20",
+      "referenceSha256": "3d0960e6227a5b67aedd83a9f90d53d1e76ea2e49cd30713783cd805495b7e42"
+    },
+    {
+      "name": "rocksteps",
+      "triangles": 3494,
+      "lodTriangles": 1118,
+      "sourceSpanGltf": [
+        0.5046280026435852,
+        0.2652370035648346,
+        1.0
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.25247201323509216,
+          -0.5,
+          -0.13201500475406647
+        ],
+        [
+          0.25215598940849304,
+          0.5,
+          0.13322199881076813
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "placement": "Bottom anchored; front +Z in glTF. Collision is authored separately.",
+      "bytes": 2138628,
+      "sha256": "2c38e8c7403ad057018aed474875f659e5c7d41a2232ba99cffcc30f385091ac",
+      "sourceSha256": "41776d0aa676bceb875180cad7e2a7072224d84f6eba0164909d7503a2a54c40",
+      "albedoResolution": 1024,
+      "normalResolution": 512,
+      "gpuTextures": {
+        "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+        "textures": [
+          {
+            "fallbackSha256": "0d9b4c85db1bea34ac426b353ef25389c18ffd4c26216bb3b83f173be8571839",
+            "ktxSha256": "9658c3676f5384312e70e1d7418851508a66eb902037811428744b2de411187b",
+            "width": 1024,
+            "height": 1024,
+            "mipLevels": 11,
+            "astc4x4Bytes": 1398128,
+            "encodedBytes": 1238515
+          },
+          {
+            "fallbackSha256": "f4880cd1f0a871f12d81104005353a861a1f799be16d070a311896b07f60a883",
+            "ktxSha256": "e02eda5fab098645e6fc4ba9bd55d5fcd0af75237c5b6b5aeaa1760a1f3e94db",
+            "width": 512,
+            "height": 512,
+            "mipLevels": 10,
+            "astc4x4Bytes": 349552,
+            "encodedBytes": 218312
+          }
+        ]
+      },
+      "path": "rocksteps.glb",
+      "kind": "treehouserocksteps",
+      "size": [
+        6,
+        2.5,
+        7
+      ],
+      "taskId": "01a10a76-7e92-721f-8302-196e1bbdee27",
+      "referenceSha256": "0298bc0f8556cc5e44e5d6d3a13843ef423416886d963e44c2520f348f7670b7"
+    },
+    {
+      "name": "porchhut",
+      "triangles": 7645,
+      "lodTriangles": 2446,
+      "sourceSpanGltf": [
+        0.9653019905090332,
+        0.6937260031700134,
+        1.0
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.4826050102710724,
+          -0.5,
+          -0.3487760126590729
+        ],
+        [
+          0.4826970100402832,
+          0.5,
+          0.34494999051094055
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "placement": "Bottom anchored; front +Z in glTF. Collision is authored separately.",
+      "bytes": 8321820,
+      "sha256": "cac4986f2a462b2842da1079b2fcd113ea5e688a81ec5c534e2ac0a184821d8a",
+      "sourceSha256": "ad7cde95087573d363eb10d45f3760165cc6a5b1a9947ded20ac0a8c0ad83342",
+      "albedoResolution": 2048,
+      "normalResolution": 1024,
+      "gpuTextures": {
+        "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+        "textures": [
+          {
+            "fallbackSha256": "07558375210778a9d39a0406a03d243f6d4074414ff7ed145780c67924d3064e",
+            "ktxSha256": "7f1779f548066fbba37b0dca4698370207653fbc5df6e50d2dbc4d777b0bc37f",
+            "width": 2048,
+            "height": 2048,
+            "mipLevels": 12,
+            "astc4x4Bytes": 5592432,
+            "encodedBytes": 4684975
+          },
+          {
+            "fallbackSha256": "9da30e9d05b23861da694ba493607d31068e6c052378823fc404b67faeaa795d",
+            "ktxSha256": "172ac7515eb306ca64ecaf18d1e80b41747a81fa3405fd32456039bf0491920a",
+            "width": 1024,
+            "height": 1024,
+            "mipLevels": 11,
+            "astc4x4Bytes": 1398128,
+            "encodedBytes": 1011346
+          }
+        ]
+      },
+      "path": "porchhut.glb",
+      "kind": "treehouseporchhut",
+      "size": [
+        7,
+        5,
+        6
+      ],
+      "taskId": "01a10a76-8ace-7754-9336-b8d6ae98ce84",
+      "referenceSha256": "a8b7d70e540a7d101de0da2f3480413f9677af5b3d7d8b9aa58e2bc72643c1b8"
+    },
+    {
+      "name": "sugarcane",
+      "triangles": 3447,
+      "lodTriangles": 1103,
+      "sourceSpanGltf": [
+        0.8394709825515747,
+        1.0,
+        0.7622960209846497
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.4189800024032593,
+          -0.3821150064468384,
+          -0.5
+        ],
+        [
+          0.4204910099506378,
+          0.3801810145378113,
+          0.5
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "placement": "Bottom anchored; front +Z in glTF. Collision is authored separately.",
+      "bytes": 2331152,
+      "sha256": "0abad842bebb700c42bf64d04be22db3369b51dccedc7a3247836e998490a49f",
+      "sourceSha256": "79dd287501f01e6ce9896be82fa58b9d2a517684cae2642a5b976efc0e309493",
+      "albedoResolution": 1024,
+      "normalResolution": 512,
+      "gpuTextures": {
+        "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+        "textures": [
+          {
+            "fallbackSha256": "7c43867869d78544747533597629cbadf1cd2ea51ce1095cb1354907a909de15",
+            "ktxSha256": "ffd166c9fe43dff47fe8fb68a9954c73b0dfb5425f1a4378245fc313542f4b03",
+            "width": 1024,
+            "height": 1024,
+            "mipLevels": 11,
+            "astc4x4Bytes": 1398128,
+            "encodedBytes": 1269801
+          },
+          {
+            "fallbackSha256": "aac0b377bcf952fedaaaa2b7abaf2654ed6a59168d5dc63b8c2a02d0a175425d",
+            "ktxSha256": "2e0c98ba86755333b18b71520132b561b1883bdf9ea0d1112b74e0d1a03c3104",
+            "width": 512,
+            "height": 512,
+            "mipLevels": 10,
+            "astc4x4Bytes": 349552,
+            "encodedBytes": 254554
+          }
+        ]
+      },
+      "path": "sugarcane.glb",
+      "kind": "treehousesugarcane",
+      "size": [
+        4,
+        5,
+        3
+      ],
+      "taskId": "01a10a76-97a2-7037-b3cf-d4128fcd02f4",
+      "referenceSha256": "0cc53bf02ec97a0c7cad6ad64811f148c46c9219bff33db9f529eecd2385116e"
+    },
+    {
+      "name": "bridgeend",
+      "triangles": 4885,
+      "lodTriangles": 1563,
+      "sourceSpanGltf": [
+        1.0,
+        0.724219024181366,
+        0.9810470342636108
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.5,
+          -0.4926359951496124,
+          -0.36246201395988464
+        ],
+        [
+          0.5,
+          0.488411009311676,
+          0.3617570102214813
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "placement": "Bottom anchored; front +Z in glTF. Collision is authored separately.",
+      "bytes": 2366952,
+      "sha256": "c2cc9ea7759b4e7da78974070f851dacbf0f6bf96c9ef7be3618d0a97679bd9c",
+      "sourceSha256": "5327015d459f7ccb7d68c6f6e783590c0494eccf54cac65c8954191dec7446ac",
+      "albedoResolution": 1024,
+      "normalResolution": 512,
+      "gpuTextures": {
+        "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+        "textures": [
+          {
+            "fallbackSha256": "cc1204a7c81e411d0eec4954c1403458febf56a24c76a196a8117ac84db7f1f1",
+            "ktxSha256": "a882fdd00e8a431ff9303946b58de4d7b5978f5f50e477ddeae94d61d4b6c047",
+            "width": 1024,
+            "height": 1024,
+            "mipLevels": 11,
+            "astc4x4Bytes": 1398128,
+            "encodedBytes": 1232532
+          },
+          {
+            "fallbackSha256": "28795087c6c93fea17e4fc0518d9cdc2fbd938ae09f963057aa441e9d95b9e61",
+            "ktxSha256": "fc0933306b142835e047f94ec660745c47f3625645d95c760ed9ce3f7d42efc6",
+            "width": 512,
+            "height": 512,
+            "mipLevels": 10,
+            "astc4x4Bytes": 349552,
+            "encodedBytes": 249686
+          }
+        ]
+      },
+      "path": "bridgeend.glb",
+      "kind": "treehousebridgeend",
+      "size": [
+        7,
+        2.5,
+        4
+      ],
+      "taskId": "01a10a76-a496-747e-9971-08a6ea3829f7",
+      "referenceSha256": "b9644733e7a6a1079cef3572b210916e1fc5a196d3e2f58154d847880c1bccd8"
+    },
+    {
+      "name": "boulder",
+      "triangles": 2914,
+      "lodTriangles": 932,
+      "sourceSpanGltf": [
+        1.0,
+        0.3972790241241455,
+        0.9296910166740417
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.5,
+          -0.4664880037307739,
+          -0.19952300190925598
+        ],
+        [
+          0.5,
+          0.4632030129432678,
+          0.19775600731372833
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "placement": "Bottom anchored; front +Z in glTF. Collision is authored separately.",
+      "bytes": 1858196,
+      "sha256": "383d32aa033320fc21ab1e14983742192e58e305a2a14bc9151151c84449d10c",
+      "sourceSha256": "d7c25f330c9e023ace3ed9eacb2ed5571ccb1b2996e33ce24a3bb862de84807c",
+      "albedoResolution": 1024,
+      "normalResolution": 512,
+      "gpuTextures": {
+        "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+        "textures": [
+          {
+            "fallbackSha256": "20ebd44803a0d18c181c9ecea2398481da474499f6412a0a6a9ab3b0872b8385",
+            "ktxSha256": "0f20ed7c3a55cc2987984bb8c126ae703ab18657c114f27280e5c9f2343f428e",
+            "width": 1024,
+            "height": 1024,
+            "mipLevels": 11,
+            "astc4x4Bytes": 1398128,
+            "encodedBytes": 1142665
+          },
+          {
+            "fallbackSha256": "1dc7c029733b5adb0cb2355529ef63e53173df0dedbdcfec5927fad4f6ece06f",
+            "ktxSha256": "cc011388fd0e1de00e6bf2a820bd3edea633e4ee7e2ca0465fbbf6e9ad1a41c8",
+            "width": 512,
+            "height": 512,
+            "mipLevels": 10,
+            "astc4x4Bytes": 349552,
+            "encodedBytes": 180871
+          }
+        ]
+      },
+      "path": "boulder.glb",
+      "kind": "treehousemossrock",
+      "size": [
+        5,
+        3,
+        4
+      ],
+      "taskId": "01a10a76-b10e-770d-b571-6d19e3797ef1",
+      "referenceSha256": "ec82c46baf65da2f49d2d7d805d79a04640252dd035e36c4a00978a75108c019"
+    },
+    {
+      "name": "crabshack",
+      "triangles": 7736,
+      "lodTriangles": 2475,
+      "sourceSpanGltf": [
+        1.0,
+        0.9481189846992493,
+        0.9054210186004639
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.5,
+          -0.45765599608421326,
+          -0.47453999519348145
+        ],
+        [
+          0.5,
+          0.4477649927139282,
+          0.4735789895057678
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "placement": "Bottom anchored; front +Z in glTF. Collision is authored separately.",
+      "bytes": 8378784,
+      "sha256": "8bac5fa6cd307775add999157392e2c8980b8a5deed311bf245345186dd6b9a4",
+      "sourceSha256": "fb456f19194854b5e86fe92770099b1d7d23abf5480fb44153f631a4dc402193",
+      "albedoResolution": 2048,
+      "normalResolution": 1024,
+      "gpuTextures": {
+        "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+        "textures": [
+          {
+            "fallbackSha256": "eb0b866bca989cc5fb6773d1cee2488db7ee1735088f18b2cdf19f45b23fdb62",
+            "ktxSha256": "724ede9168f1f16f76f66233067d267392074557e508fc7e53655dc895daeef7",
+            "width": 2048,
+            "height": 2048,
+            "mipLevels": 12,
+            "astc4x4Bytes": 5592432,
+            "encodedBytes": 4763988
+          },
+          {
+            "fallbackSha256": "befc00f33b55603d3321c3353b0b00fe4d6982380fd158bc9c2a5a8aaed66647",
+            "ktxSha256": "13406634a23a216d690d5b63522eb1d410d50f546b41f503073c9d4e2139ff16",
+            "width": 1024,
+            "height": 1024,
+            "mipLevels": 11,
+            "astc4x4Bytes": 1398128,
+            "encodedBytes": 1009710
+          }
+        ]
+      },
+      "path": "crabshack.glb",
+      "kind": "treehousecrabshack",
+      "size": [
+        9,
+        7,
+        8
+      ],
+      "taskId": "01a10a76-be95-7469-878a-9708cc341fbf",
+      "referenceSha256": "e8e0ec8990f846c4c45390b2c379af44054ba412fc84b71dc86fadcf2bd59589"
+    }
+  ],
+  "credits": {
+    "startingBalance": 981,
+    "endingBalance": 861,
+    "consumed": 120,
+    "validationRejected": 0,
+    "evidence": "Official CLI consumed_credits for all eight task handles and balance audit."
+  },
+  "budgets": {
+    "modelBytes": 35895552,
+    "nearTriangles": 41721,
+    "farTriangles": 13348,
+    "gpuAstc4x4Bytes": 29710080
+  },
+  "textureEncoding": "UASTC quality 2 / lossless Zstd 18 with full mip chains and retained JPEG fallback. Geometry and UV bytes unchanged.",
+  "placementContract": "One merged LOD0 and one LOD1, a shared atlas material, bottom anchored by runtime normalization, fronts +Z; level data owns collision.",
+  "review": "Each generated source was reviewed from front and rear in Blender; review renders remain in ignored .img2threejs/treehouse-trials."
+}

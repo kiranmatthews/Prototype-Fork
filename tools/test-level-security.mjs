@@ -137,6 +137,13 @@ try {
   reject({ ...base(), payload: "<script>alert(1)</script>" }, "unknown level field");
   rejectComponent({ t: "platform", p: [0, 0, 0], url: "https://evil.example/asset" }, "arbitrary URL field");
   reject({ ...base(), jungleAtmosphere: "false" }, "mistyped atmosphere flag");
+  reject({ ...base(), jungleDepthFade: "false" }, "mistyped jungle depth-fade flag");
+  reject({ ...base(), jungleStyle: "photo" }, "unrecognized jungle style");
+  reject({ ...base(), jungleStyle: true }, "mistyped jungle style");
+  assert.equal(normalize({ ...base(), jungleStyle:'painterly' })?.jungleStyle,'painterly',
+    "scoped painterly materials must remain portable");
+  for(const jungleDepthFade of [true,false])assert.equal(normalize({ ...base(), jungleDepthFade })?.jungleDepthFade,jungleDepthFade,
+    "boolean jungle depth-fade override must remain portable");
   reject({ ...base(), name: "x".repeat(121) }, "unbounded level title");
   rejectComponent({ t: "decor", dkind: "vines", p: [0, 0, 0], n: 100_000 }, "strand expansion");
   for (const [dkind, s] of [

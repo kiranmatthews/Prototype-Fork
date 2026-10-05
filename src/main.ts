@@ -807,13 +807,20 @@ function applyTheme(): void {
     camera2.far = atmosphere.drawDistance;
     camera2.updateProjectionMatrix();
   }
+  // A short authored draw distance must still contain the camera-centred sky.
+  // Scaling the backdrop preserves its angular painting and the world's
+  // culling/streaming budget instead of exposing the flat fog clear colour.
+  const skyScale = Math.min(1, camera.far * 0.94 / 370);
+  sky.scale.setScalar(skyScale);
+  skyMist.scale.setScalar(skyScale);
   hemi.color.copy(atmosphereColor(atmosphere.ambientSky));
   hemi.groundColor.copy(atmosphereColor(atmosphere.ambientGround));
   hemi.intensity = atmosphere.ambientIntensity;
   sun.color.copy(atmosphereColor(atmosphere.sunColor));
   sun.intensity = atmosphere.sunIntensity;
   sun.shadow.intensity = atmosphere.shadowStrength;
-  // The opted-in shader's fixed disk scales with map density.
+  // The opted-in scenery shader uses the existing shadowRadius uniform for
+  // its fixed disk kernel. Scale with map density for the same metre softness.
   sun.shadow.radius = level.jungleStyle === 'painterly' ? 6 * SUN_SHADOW_MAP_SIZE / 4096 : 1;
   fill.color.copy(atmosphereColor(atmosphere.fillColor));
   fill.intensity = atmosphere.fillIntensity;
@@ -825,6 +832,8 @@ function applyTheme(): void {
   // in the preset's colours so day and night still read right without the art.
   const mat = sky.material as THREE.MeshBasicMaterial;
   const mistMat = skyMist.material as THREE.MeshBasicMaterial;
+  // Painterly jungle references have an open blue sky, without the stock
+  // floating-island cloud sea. Their world layers own the distant canopy.
   const layers = level.jungleStyle === 'painterly' ? undefined : skyCache.get(activeSky);
   if (layers) {
     mat.transparent = true;

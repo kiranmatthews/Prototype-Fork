@@ -1,0 +1,53 @@
+{
+  "name": "sugarcane",
+  "triangles": 3447,
+  "lodTriangles": 1103,
+  "sourceSpanGltf": [
+    0.8394709825515747,
+    1.0,
+    0.7622960209846497
+  ],
+  "sourceBoundsBlender": [
+    [
+      -0.4189800024032593,
+      -0.3821150064468384,
+      -0.5
+    ],
+    [
+      0.4204910099506378,
+      0.3801810145378113,
+      0.5
+    ]
+  ],
+  "sourceMeshCount": 1,
+  "materials": 1,
+  "placement": "Bottom anchored; front +Z in glTF. Collision is authored separately.",
+  "bytes": 2331152,
+  "sha256": "0abad842bebb700c42bf64d04be22db3369b51dccedc7a3247836e998490a49f",
+  "sourceSha256": "79dd287501f01e6ce9896be82fa58b9d2a517684cae2642a5b976efc0e309493",
+  "albedoResolution": 1024,
+  "normalResolution": 512,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "7c43867869d78544747533597629cbadf1cd2ea51ce1095cb1354907a909de15",
+        "ktxSha256": "ffd166c9fe43dff47fe8fb68a9954c73b0dfb5425f1a4378245fc313542f4b03",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1269801
+      },
+      {
+        "fallbackSha256": "aac0b377bcf952fedaaaa2b7abaf2654ed6a59168d5dc63b8c2a02d0a175425d",
+        "ktxSha256": "2e0c98ba86755333b18b71520132b561b1883bdf9ea0d1112b74e0d1a03c3104",
+        "width": 512,
+        "height": 512,
+        "mipLevels": 10,
+        "astc4x4Bytes": 349552,
+        "encodedBytes": 254554
+      }
+    ]
+  }
+}

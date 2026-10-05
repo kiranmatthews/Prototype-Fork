@@ -1,0 +1,111 @@
+{
+  "errors": [],
+  "scenes": [
+    {
+      "position": [
+        -16.97026,
+        8.400000000372529,
+        -0.40991
+      ],
+      "grounded": true,
+      "assets": {
+        "components": 539,
+        "placements": 539,
+        "ready": 266,
+        "skipped": 0,
+        "draws": 154,
+        "triangles": 296502,
+        "allLodTriangles": 660601,
+        "cells": 311,
+        "residentCells": 154,
+        "pendingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 102.35,
+        "errors": [],
+        "windTime": 2.5664666666636826
+      },
+      "render": {
+        "frame": 1753,
+        "calls": 183,
+        "triangles": 401140,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "position": [
+        35,
+        -14,
+        -195
+      ],
+      "grounded": true,
+      "assets": {
+        "components": 539,
+        "placements": 539,
+        "ready": 495,
+        "skipped": 0,
+        "draws": 283,
+        "triangles": 808174,
+        "allLodTriangles": 1266568,
+        "cells": 311,
+        "residentCells": 283,
+        "pendingCells": 0,
+        "compressedTextures": 69,
+        "textureMiB": 129.01,
+        "errors": [],
+        "windTime": 4.233133333330343
+      },
+      "render": {
+        "frame": 2537,
+        "calls": 296,
+        "triangles": 916746,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "position": [
+        35,
+        -7.199999809265137,
+        -333
+      ],
+      "grounded": true,
+      "assets": {
+        "components": 539,
+        "placements": 539,
+        "ready": 486,
+        "skipped": 0,
+        "draws": 282,
+        "triangles": 663246,
+        "allLodTriangles": 1301801,
+        "cells": 311,
+        "residentCells": 282,
+        "pendingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 82.35,
+        "errors": [],
+        "windTime": 5.899799999997004
+      },
+      "render": {
+        "frame": 3321,
+        "calls": 317,
+        "triangles": 755518,
+        "points": 0,
+        "lines": 0
+      }
+    }
+  ],
+  "mode": "Phone-sized full renderer visual check; physical device performance unmeasured",
+  "releaseBaseCommit": "73aedc4",
+  "referenceOrder": [
+    "Treehouse clearing",
+    "Steep downhill",
+    "Coastal settlement",
+    "Enclosed huts",
+    "Shallow river",
+    "Natural cave climb",
+    "Cavern halfpipe",
+    "Broken rope bridge",
+    "Jungle exit"
+  ]
+}

@@ -1,0 +1,258 @@
+{
+  "name": "riverstone-b",
+  "triangles": 1626,
+  "lodTriangles": 520,
+  "sourceSpanGltf": [
+    1.0,
+    0.1788180023431778,
+    1.0
+  ],
+  "sourceBoundsBlender": [
+    [
+      -0.5,
+      -0.5,
+      -0.09363999962806702
+    ],
+    [
+      0.5,
+      0.5,
+      0.08517800271511078
+    ]
+  ],
+  "sourceMeshCount": 1,
+  "materials": 1,
+  "uniformScaleSizeAtDefaultWidth": [
+    5,
+    0.894,
+    5.0
+  ],
+  "contactCenterline": [
+    {
+      "alongFromPositiveZ": 0.0,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.025,
+      "y": 0.50933
+    },
+    {
+      "alongFromPositiveZ": 0.05,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.075,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.1,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.125,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.15,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.175,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.2,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.225,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.25,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.275,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.3,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.325,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.35,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.375,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.4,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.425,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.45,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.475,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.5,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.525,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.55,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.575,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.6,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.625,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.65,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.675,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.7,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.725,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.75,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.775,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.8,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.825,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.85,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.875,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.9,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.925,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.95,
+      "y": 1.0
+    },
+    {
+      "alongFromPositiveZ": 0.975,
+      "y": 0.51434
+    },
+    {
+      "alongFromPositiveZ": 1.0,
+      "y": null
+    }
+  ],
+  "broadTopPlaneNormalizedY": 1.0,
+  "suggestedBoxNormalized": {
+    "center": [
+      0,
+      0.96,
+      0
+    ],
+    "size": [
+      0.6,
+      0.08,
+      0.58
+    ]
+  },
+  "placement": "Bottom anchored; front +Z in glTF. Collision is authored separately.",
+  "indirectAO": [
+    {
+      "mesh": "riverstone-b_LOD0",
+      "min": 0.8,
+      "max": 1.0,
+      "mean": 0.9963161169881767,
+      "raysPerVertex": 5,
+      "radiusRelativeToLargestSpan": 0.14,
+      "offsetRelativeToLargestSpan": 0.0018
+    },
+    {
+      "mesh": "riverstone-b_LOD1",
+      "min": 0.8,
+      "max": 1.0,
+      "mean": 0.9829007633587785,
+      "raysPerVertex": 5,
+      "radiusRelativeToLargestSpan": 0.14,
+      "offsetRelativeToLargestSpan": 0.0018
+    }
+  ],
+  "contactFit": "Broad riverstone upper vertices fitted to one contact plane; other original source surfaces retained.",
+  "bytes": 1788240,
+  "sha256": "253f8b7b8fe12312652c1ddb76b41d7cfd2f9d1ea5dab7bfcec05258310a97e5",
+  "sourceSha256": "5d7638bc2552394001dfa77d995fa281e7a78c815c4ddc8c1a3b8eb80dd7d2ed",
+  "albedoResolution": 1024,
+  "normalResolution": 512,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "5d96aff43c67ab4e328815d14f38e5d0ab40f748fd7964c80efbfa7d8b1a77f6",
+        "ktxSha256": "5327bddebcc88aaaaa9ce9de4692c1b9ad81142bd455ffe209d1d80d25203295",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1148877
+      },
+      {
+        "fallbackSha256": "a942d52e0ae8730eea4d37d0f34bea81127648ffd9018f0f29c2b521d4554cc4",
+        "ktxSha256": "5a904b871c115ff562c6f8d690ab69a80ff18959675aab3755a27fe93be03580",
+        "width": 512,
+        "height": 512,
+        "mipLevels": 10,
+        "astc4x4Bytes": 349552,
+        "encodedBytes": 153186
+      }
+    ]
+  }
+}

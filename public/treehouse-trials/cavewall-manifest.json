@@ -1,0 +1,53 @@
+{
+  "name": "cavewall",
+  "triangles": 4680,
+  "lodTriangles": 1497,
+  "sourceSpanGltf": [
+    1.0,
+    0.7137789726257324,
+    0.9032670259475708
+  ],
+  "sourceBoundsBlender": [
+    [
+      -0.5,
+      -0.4534499943256378,
+      -0.3594039976596832
+    ],
+    [
+      0.5,
+      0.4498170018196106,
+      0.3543750047683716
+    ]
+  ],
+  "sourceMeshCount": 1,
+  "materials": 1,
+  "placement": "Bottom anchored; front +Z in glTF. Collision is authored separately.",
+  "bytes": 2304780,
+  "sha256": "a6ac355578fc613c7e4feeb4ef2668203391e855c4968da363a405ef891c5524",
+  "sourceSha256": "6f6ec798aaad23c3da9762de114a9e57fa6330465cdf1bed646b260740de6318",
+  "albedoResolution": 1024,
+  "normalResolution": 512,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "81f77f1abeed3363886163fa7f23ad7c7aea1da9010023b07bd04798b0a268cb",
+        "ktxSha256": "5adddf61e7adc1b958d6336495cac73b4178fa0707dbc85fc333f3ff4a2ee3b3",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1266890
+      },
+      {
+        "fallbackSha256": "339d3c68f38f201d1fe56e627cd66710e26f498c712cf0ab24f5cd7d2aeacb5e",
+        "ktxSha256": "e7e7423a676e2aded29899e284b86ad0da05825af96f8ba71769dc7fb25a764c",
+        "width": 512,
+        "height": 512,
+        "mipLevels": 10,
+        "astc4x4Bytes": 349552,
+        "encodedBytes": 239367
+      }
+    ]
+  }
+}

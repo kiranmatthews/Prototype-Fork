@@ -8220,10 +8220,10 @@ export class Editor {
         delete c.gravityTrack; delete c.skateCamera; delete c.outOfBounds; delete c.lethal;
         clearLoop();
       };
-      this.propsEl.appendChild(this.pickRow("material style", [["unity-sand", "Unity shoreline sand"], ["water", "Still water"]],
+      this.propsEl.appendChild(this.pickRow("material style", [["unity-sand", "Unity shoreline sand"], ["water", "Still water"], ["jungle-stream", "Clear jungle stream"]],
         () => c.materialStyle ?? "", value => {
           if (value === "unity-sand") { c.materialStyle = value; c.tex = "sand"; }
-          else if (value === "water") {c.materialStyle = value; c.tex = "solid"; makeScenery();}
+          else if (value === "water" || value === "jungle-stream") {c.materialStyle = value; c.tex = "solid"; makeScenery();}
           else delete c.materialStyle;
         }, "Surface texture"));
       boolRow("walkable collision", () => c.solid !== false, value => {
@@ -8237,6 +8237,7 @@ export class Editor {
         this.renderProps();
       });
       boolRow("material fog", () => c.fog ?? true, value => { c.fog = value; });
+      if(c.materialStyle!=='jungle-stream')boolRow("cast sun shadow",()=>c.castShadow??true,value=>{c.castShadow=value;});
       num("opacity", () => c.opacity ?? (String(c.materialStyle) === "jungle-stream" ? 0.48 : 1), value => { c.opacity = Math.max(0, Math.min(1, value)); }, .05);
       const count = Math.floor((c.vertices?.length ?? 0) / 3);
       const note = document.createElement("div");

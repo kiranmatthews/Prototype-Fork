@@ -1,0 +1,943 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "model": "meshy-t2",
+  "modelType": "smart-topology",
+  "startingBalance": 861,
+  "request": "Reference-extracted V2 modular environment kit matching exact Treehouse Trials silhouettes, painterly palette, surface contacts and soft indirect shading.",
+  "estimatedBatchCredits": 375,
+  "tasks": {
+    "tree-a": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "263ca782-3857-4349-a47a-4cfb32a02808",
+      "createdAt": "2026-10-05T06:49:33.497468+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 861,
+      "reference": "tools/treehouse-trials-assets-v2/references/tree-a.png",
+      "referenceSha256": "a44bbc57d0f9ce473ab1c8f85c577e1f45dfc84564510c2a765d76c56b86e87e",
+      "targetTriangles": 6500,
+      "size": [
+        26,
+        24,
+        20
+      ],
+      "kind": "trialsv2treea",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/tree-a.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 6500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad3-2e0d-7000-baa5-c8c0a5b412a4",
+      "checkedAt": "2026-10-05T06:55:30.994409+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183007368,
+      "sourceSha256": "00726cc6dd4964546fd060addac6d22516ca9f11648c16bb629979250a8649ee",
+      "sourceBytes": 6271768
+    },
+    "tree-b": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "918bda82-a1a9-41e6-8312-090f16885926",
+      "createdAt": "2026-10-05T06:49:39.150905+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 846,
+      "reference": "tools/treehouse-trials-assets-v2/references/tree-b.png",
+      "referenceSha256": "971883e9cf6e55ca0e10ea2b826cb35fe3f2e66522dbeb19c4500e580f81ea60",
+      "targetTriangles": 6500,
+      "size": [
+        26,
+        24,
+        20
+      ],
+      "kind": "trialsv2treeb",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/tree-b.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 6500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad3-4437-77c1-8a08-1afc9aad7d15",
+      "checkedAt": "2026-10-05T06:55:33.205663+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183015656,
+      "sourceSha256": "65b89fb1523baa0e7ff10c4b23ebbe6d2e9dd35eebf680e36d17e0f44a6e9db8",
+      "sourceBytes": 6546592
+    },
+    "crown-a": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "70903fd2-bf35-4dc0-8973-3b2a7afd6482",
+      "createdAt": "2026-10-05T06:49:43.551249+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 831,
+      "reference": "tools/treehouse-trials-assets-v2/references/crown-a.png",
+      "referenceSha256": "9738a05384337dfe4e17e927b8c79fe1c4c05a5d27e251e837dfa71133688202",
+      "targetTriangles": 4000,
+      "size": [
+        26,
+        11,
+        22
+      ],
+      "kind": "trialsv2crowna",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/crown-a.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 4000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad3-54ca-76f2-b480-f10c765a0d1b",
+      "checkedAt": "2026-10-05T06:55:35.275446+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183016502,
+      "sourceSha256": "e3200fd8d3f05845b1b57eae7a5b7ffc7e3b839a7c87a90da7b260a802bc061d",
+      "sourceBytes": 3625972
+    },
+    "crown-b": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "3277cc1c-5818-4ef1-b991-e2527d55d22b",
+      "createdAt": "2026-10-05T06:49:46.905881+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 816,
+      "reference": "tools/treehouse-trials-assets-v2/references/crown-b.png",
+      "referenceSha256": "88b9f0da6a7f1ef8016d17be789d906b294635c056c24d90a88e95cd6a3a7b33",
+      "targetTriangles": 4000,
+      "size": [
+        26,
+        11,
+        22
+      ],
+      "kind": "trialsv2crownb",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/crown-b.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 4000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad3-61ef-7622-adef-4961800c6516",
+      "checkedAt": "2026-10-05T06:55:37.180358+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183023854,
+      "sourceSha256": "0e346a93540534fef0d11e47495af328bea5dc4bbaade370804ce7705d8c3d63",
+      "sourceBytes": 6236836
+    },
+    "groundcover-a": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "fe84f35b-669f-42bd-b0bf-4414e8e2ebac",
+      "createdAt": "2026-10-05T06:49:50.512296+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 801,
+      "reference": "tools/treehouse-trials-assets-v2/references/groundcover-a.png",
+      "referenceSha256": "285bbea1a6224bcff36eeb4c681e3d619ace7b206689e093aa346904e41a4208",
+      "targetTriangles": 2500,
+      "size": [
+        5,
+        1.2,
+        3
+      ],
+      "kind": "trialsv2groundcovera",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/groundcover-a.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 2500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad3-6ff2-7762-91b2-1326371e246f",
+      "checkedAt": "2026-10-05T06:55:39.126399+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183028797,
+      "sourceSha256": "21b65c72de5177e8db64bc5b1d0db6e8c3822a29432d589028e8f0122df07a11",
+      "sourceBytes": 6250500
+    },
+    "groundcover-b": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "a9ebd2d6-25ca-495f-bfa8-c7951438c08b",
+      "createdAt": "2026-10-05T06:49:53.956875+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 786,
+      "reference": "tools/treehouse-trials-assets-v2/references/groundcover-b.png",
+      "referenceSha256": "28e9339bc980438ca964dbe0ee682cce11b5569bc8d1055634ae4ae0d4937250",
+      "targetTriangles": 2500,
+      "size": [
+        5,
+        1.2,
+        3
+      ],
+      "kind": "trialsv2groundcoverb",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/groundcover-b.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 2500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad3-7d83-7433-ab32-c810090431c7",
+      "checkedAt": "2026-10-05T06:55:41.194619+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183044647,
+      "sourceSha256": "b1260842210e0d092e68012e195dcaaa7dea89c2bdbcb5a07c48d0602e983e47",
+      "sourceBytes": 5707020
+    },
+    "fern-a": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "d6fc3d8d-3f98-44c0-8c79-8cf0eee45211",
+      "createdAt": "2026-10-05T06:49:57.427534+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 771,
+      "reference": "tools/treehouse-trials-assets-v2/references/fern-a.png",
+      "referenceSha256": "6825625491eb3448c1e15d89754c0777eef72efd6468e932cdfd7ee0e98bf9b8",
+      "targetTriangles": 2200,
+      "size": [
+        3,
+        2,
+        3
+      ],
+      "kind": "trialsv2ferna",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/fern-a.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 2200,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad3-8ae8-7631-bfa6-5eec613dddf1",
+      "checkedAt": "2026-10-05T06:55:43.883159+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183054964,
+      "sourceSha256": "a822db5f985fe67134c2a7bd6a2b4e48072efe8012a146f51e7f97ba1b81c7b5",
+      "sourceBytes": 4637256
+    },
+    "fern-b": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "a8d1d4d9-eba4-42a0-aa05-c8f9e8e42367",
+      "createdAt": "2026-10-05T06:50:01.134958+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 756,
+      "reference": "tools/treehouse-trials-assets-v2/references/fern-b.png",
+      "referenceSha256": "10477882043e7229e325fd4adc351a5e6b343072f6f64d8cf4f6d8aacd422465",
+      "targetTriangles": 2200,
+      "size": [
+        3,
+        2,
+        3
+      ],
+      "kind": "trialsv2fernb",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/fern-b.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 2200,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad3-997d-773e-a620-579ed9434424",
+      "checkedAt": "2026-10-05T06:55:46.141010+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183057739,
+      "sourceSha256": "2c7108d40f583ee390d84ff72b05a5fcdcce1275eed71f0cec8146a8458ca62c",
+      "sourceBytes": 5638176
+    },
+    "earthbank-a": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "38b85b87-0912-48d3-bdc2-9c4e42fdaa9b",
+      "createdAt": "2026-10-05T06:50:04.577715+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 741,
+      "reference": "tools/treehouse-trials-assets-v2/references/earthbank-a.png",
+      "referenceSha256": "734439b986c096e861cd24e08558788a34281bcec357d31006fd6166971fded1",
+      "targetTriangles": 2800,
+      "size": [
+        8,
+        2.5,
+        4
+      ],
+      "kind": "trialsv2earthbanka",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/earthbank-a.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 2800,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad3-a6e0-737d-9c83-5e396b524328",
+      "checkedAt": "2026-10-05T06:55:48.256286+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183053735,
+      "sourceSha256": "d752a5ed96d6ca80bed16182f9775d70f2cf8dbb786e01d4a9a57a77a07878db",
+      "sourceBytes": 5543564
+    },
+    "earthbank-b": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "e86c7c6e-c1d1-45ee-9a80-c98ac8cb850f",
+      "createdAt": "2026-10-05T06:50:07.878050+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 726,
+      "reference": "tools/treehouse-trials-assets-v2/references/earthbank-b.png",
+      "referenceSha256": "3a67dede388f66f4889619ad14e254dfeccf2db4a8411ad021d4d741385f83f2",
+      "targetTriangles": 2800,
+      "size": [
+        8,
+        2.5,
+        4
+      ],
+      "kind": "trialsv2earthbankb",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/earthbank-b.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 2800,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad3-b3bc-7022-8cf6-f7992901bc42",
+      "checkedAt": "2026-10-05T06:55:50.421833+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183059390,
+      "sourceSha256": "7111206331926901dc7e9f2ad5fa67c799ed5e2f5c4b1b57b5fad15dbff0eaa5",
+      "sourceBytes": 6286104
+    },
+    "riverstone-a": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "2c700c84-995d-45f3-a3fa-48776d023394",
+      "createdAt": "2026-10-05T06:50:11.112953+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 711,
+      "reference": "tools/treehouse-trials-assets-v2/references/riverstone-a.png",
+      "referenceSha256": "e65a1edcac3b49130af2cdd0b163e836bf717162736ba459967db50c8f0d1559",
+      "targetTriangles": 1600,
+      "size": [
+        5,
+        0.7,
+        4
+      ],
+      "kind": "trialsv2riverstonea",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/riverstone-a.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 1600,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad3-c063-721a-abc5-1482d6a3495e",
+      "checkedAt": "2026-10-05T06:55:52.595700+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183070014,
+      "sourceSha256": "aafea00576e4d0dc37bd8318d5b5afead4d371483e2954750dcaa1ebd47849a5",
+      "sourceBytes": 5223540,
+      "qualityReview": {
+        "accepted": "Original Meshy nearly-flat top: median normalizedY0.97507, broad deviation0.03436. All source textures/UVs retained.",
+        "rejectedUnbilledEdits": "Flattened complete bevel / flattened upward vertices produced coplanar top artifacts and were discarded."
+      }
+    },
+    "riverstone-b": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "4ea3fb0c-6bdc-4339-801a-f1729f7b4d7e",
+      "createdAt": "2026-10-05T06:50:14.529695+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 696,
+      "reference": "tools/treehouse-trials-assets-v2/references/riverstone-b.png",
+      "referenceSha256": "aebbb5cd65c9c40a9ae382014226a2e12a132896ae297e7b2cf6345c389eb4d8",
+      "targetTriangles": 1600,
+      "size": [
+        5,
+        0.7,
+        4
+      ],
+      "kind": "trialsv2riverstoneb",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/riverstone-b.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 1600,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad3-cdd9-7254-9b29-a4464c798503",
+      "checkedAt": "2026-10-05T06:55:54.770377+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183071613,
+      "sourceSha256": "5d7638bc2552394001dfa77d995fa281e7a78c815c4ddc8c1a3b8eb80dd7d2ed",
+      "sourceBytes": 5020040
+    },
+    "riverstone-c": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "f4ad4cd6-17e9-4110-94d6-660bf5d9a9ce",
+      "createdAt": "2026-10-05T06:50:17.927546+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 681,
+      "reference": "tools/treehouse-trials-assets-v2/references/riverstone-c.png",
+      "referenceSha256": "8dde59e5a0abbef0f8541335b846184271443cef3e2425c8b03acae3a21d7fb3",
+      "targetTriangles": 1600,
+      "size": [
+        5,
+        0.7,
+        4
+      ],
+      "kind": "trialsv2riverstonec",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/riverstone-c.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 1600,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad3-db29-7307-afc4-0ac80e564d94",
+      "checkedAt": "2026-10-05T06:55:56.860926+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183072611,
+      "sourceSha256": "5395f89d1057bdfcde313a9a8676bca93d7ca513289521cb88d89f91af876c4a",
+      "sourceBytes": 5010124
+    },
+    "cavewall-a": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "3099921d-b7aa-4f25-9cd8-3258d9c661d0",
+      "createdAt": "2026-10-05T06:50:21.225870+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 666,
+      "reference": "tools/treehouse-trials-assets-v2/references/cavewall-a.png",
+      "referenceSha256": "24d524ec80b655df19ee7e2dba6c4a95a60290b10f8c05f6504d0e6773048a82",
+      "targetTriangles": 3500,
+      "size": [
+        12,
+        10,
+        6
+      ],
+      "kind": "trialsv2cavewalla",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/cavewall-a.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 3500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad3-e804-764c-b62c-52dae802c5ee",
+      "checkedAt": "2026-10-05T06:55:59.134957+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183075535,
+      "sourceSha256": "59c8e6f8afa29eb6cc32db52a03744b563772fc717a00e1539f43f6ca1885aba",
+      "sourceBytes": 5578208
+    },
+    "cavewall-b": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "8175cd1e-e8d1-485f-b014-8f730532777e",
+      "createdAt": "2026-10-05T06:50:24.742688+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 651,
+      "reference": "tools/treehouse-trials-assets-v2/references/cavewall-b.png",
+      "referenceSha256": "aaee34c1158b9fdf754dd8b90a1d4166d0eef9c374af6279a82b19c01852a118",
+      "targetTriangles": 3500,
+      "size": [
+        12,
+        10,
+        6
+      ],
+      "kind": "trialsv2cavewallb",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/cavewall-b.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 3500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad3-f630-701e-b266-3d0eaa9bf5b3",
+      "checkedAt": "2026-10-05T06:56:01.250251+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183086917,
+      "sourceSha256": "fa63d469b98fae796f3aaffd19fc24d4be9b97c527bb7e8bf99e3044b7f736a1",
+      "sourceBytes": 5363636
+    },
+    "caveroof-a": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "af01dfc4-e2fb-4cc1-bfd4-a52db99a5f2e",
+      "createdAt": "2026-10-05T06:50:28.497229+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 636,
+      "reference": "tools/treehouse-trials-assets-v2/references/caveroof-a.png",
+      "referenceSha256": "a8d001de2e63d1b6d849127670bb03367ec703f829f5a02e94bbe7d5602de9b9",
+      "targetTriangles": 3500,
+      "size": [
+        18,
+        5,
+        8
+      ],
+      "kind": "trialsv2caveroofa",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/caveroof-a.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 3500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad4-0462-71e5-bdf2-178541f3b3b7",
+      "checkedAt": "2026-10-05T06:56:03.570329+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183088479,
+      "sourceSha256": "7b571bee5ce59c998e8f8a1d16b9bddfbc001af42701b4ba7830c3530df0c401",
+      "sourceBytes": 4153328
+    },
+    "caveroof-b": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "aa9ebd75-a3bf-4044-bb4f-73d71e9c67bf",
+      "createdAt": "2026-10-05T06:50:32.074810+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 621,
+      "reference": "tools/treehouse-trials-assets-v2/references/caveroof-b.png",
+      "referenceSha256": "3487a0e00e62fc7eb9c232e119f306e11578602c45c5a667a2b2091bc153099d",
+      "targetTriangles": 3500,
+      "size": [
+        18,
+        5,
+        8
+      ],
+      "kind": "trialsv2caveroofb",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/caveroof-b.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 3500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad4-124d-77db-9283-0be584874a54",
+      "checkedAt": "2026-10-05T06:56:05.497818+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183092247,
+      "sourceSha256": "a48a8431a5c65d6e9882a9856346718531054183e61b6cdf2bb0d7423ed7dda7",
+      "sourceBytes": 4461316
+    },
+    "rocksteps-a": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "36800a79-3db2-49c5-85cd-ed4c954f9c91",
+      "createdAt": "2026-10-05T06:50:35.493542+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 606,
+      "reference": "tools/treehouse-trials-assets-v2/references/rocksteps-a.png",
+      "referenceSha256": "24f0e6f3f6006a38ddf04ecfd67750b7bebf2cd84d741c33e432d5e1b2a2b90d",
+      "targetTriangles": 3500,
+      "size": [
+        7,
+        2.5,
+        8
+      ],
+      "kind": "trialsv2rockstepsa",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/rocksteps-a.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 3500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad4-203c-73c7-be9e-7c1047d50a49",
+      "checkedAt": "2026-10-05T06:56:07.440320+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183104006,
+      "sourceSha256": "ca99c197e725f665cf06642fb6ea7deddcb8f0241d00482f6f29ce615ee25cdf",
+      "sourceBytes": 5646580
+    },
+    "rocksteps-b": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "fc17b42b-687c-475d-8d6f-8d292c1c25ca",
+      "createdAt": "2026-10-05T06:50:40.492391+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 591,
+      "reference": "tools/treehouse-trials-assets-v2/references/rocksteps-b.png",
+      "referenceSha256": "1336d794f28f59b4b74a7368a2b7ae5146a63d3d381c46fe7999fdcf553b0f6c",
+      "targetTriangles": 3500,
+      "size": [
+        7,
+        2.5,
+        8
+      ],
+      "kind": "trialsv2rockstepsb",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/rocksteps-b.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 3500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad4-3359-75c8-9611-456909cef732",
+      "checkedAt": "2026-10-05T06:56:09.491185+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183104367,
+      "sourceSha256": "0155ed51daea19e106dd32e264bc9c30e8f788b0f7ee0f15ed9a4ca0ca03bd49",
+      "sourceBytes": 5681488
+    },
+    "halfpipe-end": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "5fbeb869-736a-4b5f-b313-81b9ac269fcf",
+      "createdAt": "2026-10-05T06:50:45.553852+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 576,
+      "reference": "tools/treehouse-trials-assets-v2/references/halfpipe-end.png",
+      "referenceSha256": "c6300e07806ad8bdafffcd6d3fc3076988cc40f0b62aa30c8b05f9d4d1027673",
+      "targetTriangles": 3500,
+      "size": [
+        8,
+        4,
+        2.5
+      ],
+      "kind": "trialsv2halfpipeend",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/halfpipe-end.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 3500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad4-4781-70df-95e2-5d4b8ad6c93f",
+      "checkedAt": "2026-10-05T06:56:11.692020+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183109507,
+      "sourceSha256": "b6e44cbc4ca0e82b5fd6696fd465103270bb954e85c1607ba4d8f193e3731d0e",
+      "sourceBytes": 6503624
+    },
+    "plank": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "1d94f5f3-15c1-43ff-a264-08d0b9710691",
+      "createdAt": "2026-10-05T06:50:49.626701+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 561,
+      "reference": "tools/treehouse-trials-assets-v2/references/plank.png",
+      "referenceSha256": "2eec6bfd77952f22a3c1be9dab1fc951707da7cd5a3ce5a2455d932f74b3389a",
+      "targetTriangles": 800,
+      "size": [
+        5,
+        0.18,
+        0.35
+      ],
+      "kind": "trialsv2plank",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/plank.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 800,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad4-5761-73b7-9a99-928a0a772e0b",
+      "checkedAt": "2026-10-05T06:56:14.230046+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183110516,
+      "sourceSha256": "10a32a2612c5bb252627ab04c8153bc053e6a7dc258f6b65c106c672b7212577",
+      "sourceBytes": 5050452
+    },
+    "beam": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "f1b09ce9-f5b7-48f7-bb7a-d0ad446372d3",
+      "createdAt": "2026-10-05T06:50:53.074113+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 546,
+      "reference": "tools/treehouse-trials-assets-v2/references/beam.png",
+      "referenceSha256": "f823b4fea55aff8458c0dac8fbe09f5e45dd0964ca446bed01d9073eeb539460",
+      "targetTriangles": 700,
+      "size": [
+        4,
+        0.35,
+        0.35
+      ],
+      "kind": "trialsv2beam",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/beam.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 700,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad4-64e1-712f-adff-00c8f42e23c3",
+      "checkedAt": "2026-10-05T06:56:16.378796+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183114436,
+      "sourceSha256": "f7423a754cb79839e95e8ff1b4715689aad1b44ab223a859bccc10dbc48de70a",
+      "sourceBytes": 5224812
+    },
+    "porchhut": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "b1fa8c7f-f0ae-4a58-b605-839b5538c532",
+      "createdAt": "2026-10-05T06:50:56.515653+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 531,
+      "reference": "tools/treehouse-trials-assets-v2/references/porchhut.png",
+      "referenceSha256": "9aa74185cd9908caccef1278aad87fb38dbb2e062ecd3d3691d0d578715dba3a",
+      "targetTriangles": 8000,
+      "size": [
+        8,
+        5.5,
+        7
+      ],
+      "kind": "trialsv2porchhut",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/porchhut.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 8000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad4-71dd-7688-933b-56c1acd4a5c1",
+      "checkedAt": "2026-10-05T06:56:18.680650+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183127336,
+      "sourceSha256": "a58b4cb068eadd26f2975337e6beb2620df2cf9171d97a3f30f8c88715efd91c",
+      "sourceBytes": 6765520
+    },
+    "crabshack": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "2ecc4696-d08e-4ded-9d2c-dd291ddba9a1",
+      "createdAt": "2026-10-05T06:51:00.864017+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 516,
+      "reference": "tools/treehouse-trials-assets-v2/references/crabshack.png",
+      "referenceSha256": "af58becae522f3249cb907058a7e5002cbfd8e2d24ef775d5575b932c85b6f9a",
+      "targetTriangles": 8000,
+      "size": [
+        10,
+        8,
+        9
+      ],
+      "kind": "trialsv2crabshack",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/crabshack.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 8000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad4-82c8-709e-9095-a0bfad57ddea",
+      "checkedAt": "2026-10-05T06:56:21.018842+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183131233,
+      "sourceSha256": "88c0d4226129f109fbc0a16eb5fae2f92e35cf8be97571f62f07f95ad014758c",
+      "sourceBytes": 6544388
+    },
+    "awning": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "a14a79c1-bd62-4129-928b-71d681474aa0",
+      "createdAt": "2026-10-05T06:55:27.675238+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 501,
+      "reference": "tools/treehouse-trials-assets-v2/references/awning.png",
+      "referenceSha256": "0ee66ca00a2c6fe975190d0fca669627b4c95f9edcf2f23d0e2e676a56c76a79",
+      "targetTriangles": 1000,
+      "size": [
+        4.5,
+        0.5,
+        2.2
+      ],
+      "kind": "trialsv2awning",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/treehouse-trials-assets-v2/references/awning.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 1000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the input reference colors and painted material regions exactly: dark vivid controlled emerald leaves, ochre warm-grey rock, warm natural weathered timber. Smooth broad brush shading, restrained self-occlusion, no directional cast sun, photorealism, noisy microdetail or grit. Keep broad source marks; do not invent material detail.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10ad8-950b-706e-a893-eff148d5cb08",
+      "checkedAt": "2026-10-05T06:56:23.484306+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183352482,
+      "sourceSha256": "db921801e58e5c1cb016b7292440f5b9eba810a4c2b45ed12fc794d5e3fe8eee",
+      "sourceBytes": 5870520
+    }
+  },
+  "latestBalance": 486,
+  "balanceCheckedAt": "2026-10-05T07:00:17.859375+00:00"
+}

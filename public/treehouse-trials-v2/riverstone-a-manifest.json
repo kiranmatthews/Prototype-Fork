@@ -1,0 +1,258 @@
+{
+  "name": "riverstone-a",
+  "triangles": 1622,
+  "lodTriangles": 519,
+  "sourceSpanGltf": [
+    1.0,
+    0.20625899732112885,
+    0.9979920387268066
+  ],
+  "sourceBoundsBlender": [
+    [
+      -0.5,
+      -0.49799200892448425,
+      -0.1054069995880127
+    ],
+    [
+      0.5,
+      0.5,
+      0.10085199773311615
+    ]
+  ],
+  "sourceMeshCount": 1,
+  "materials": 1,
+  "uniformScaleSizeAtDefaultWidth": [
+    5,
+    1.031,
+    4.99
+  ],
+  "contactCenterline": [
+    {
+      "alongFromPositiveZ": 0.0,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.025,
+      "y": 0.50063
+    },
+    {
+      "alongFromPositiveZ": 0.05,
+      "y": 0.96097
+    },
+    {
+      "alongFromPositiveZ": 0.075,
+      "y": 0.99029
+    },
+    {
+      "alongFromPositiveZ": 0.1,
+      "y": 0.98938
+    },
+    {
+      "alongFromPositiveZ": 0.125,
+      "y": 0.98757
+    },
+    {
+      "alongFromPositiveZ": 0.15,
+      "y": 0.98431
+    },
+    {
+      "alongFromPositiveZ": 0.175,
+      "y": 0.98136
+    },
+    {
+      "alongFromPositiveZ": 0.2,
+      "y": 0.97911
+    },
+    {
+      "alongFromPositiveZ": 0.225,
+      "y": 0.98018
+    },
+    {
+      "alongFromPositiveZ": 0.25,
+      "y": 0.97883
+    },
+    {
+      "alongFromPositiveZ": 0.275,
+      "y": 0.97777
+    },
+    {
+      "alongFromPositiveZ": 0.3,
+      "y": 0.97669
+    },
+    {
+      "alongFromPositiveZ": 0.325,
+      "y": 0.97468
+    },
+    {
+      "alongFromPositiveZ": 0.35,
+      "y": 0.97324
+    },
+    {
+      "alongFromPositiveZ": 0.375,
+      "y": 0.97241
+    },
+    {
+      "alongFromPositiveZ": 0.4,
+      "y": 0.9712
+    },
+    {
+      "alongFromPositiveZ": 0.425,
+      "y": 0.97101
+    },
+    {
+      "alongFromPositiveZ": 0.45,
+      "y": 0.96973
+    },
+    {
+      "alongFromPositiveZ": 0.475,
+      "y": 0.96962
+    },
+    {
+      "alongFromPositiveZ": 0.5,
+      "y": 0.96985
+    },
+    {
+      "alongFromPositiveZ": 0.525,
+      "y": 0.97031
+    },
+    {
+      "alongFromPositiveZ": 0.55,
+      "y": 0.97034
+    },
+    {
+      "alongFromPositiveZ": 0.575,
+      "y": 0.97186
+    },
+    {
+      "alongFromPositiveZ": 0.6,
+      "y": 0.97196
+    },
+    {
+      "alongFromPositiveZ": 0.625,
+      "y": 0.97161
+    },
+    {
+      "alongFromPositiveZ": 0.65,
+      "y": 0.97142
+    },
+    {
+      "alongFromPositiveZ": 0.675,
+      "y": 0.97186
+    },
+    {
+      "alongFromPositiveZ": 0.7,
+      "y": 0.97239
+    },
+    {
+      "alongFromPositiveZ": 0.725,
+      "y": 0.97265
+    },
+    {
+      "alongFromPositiveZ": 0.75,
+      "y": 0.97485
+    },
+    {
+      "alongFromPositiveZ": 0.775,
+      "y": 0.97565
+    },
+    {
+      "alongFromPositiveZ": 0.8,
+      "y": 0.97758
+    },
+    {
+      "alongFromPositiveZ": 0.825,
+      "y": 0.97942
+    },
+    {
+      "alongFromPositiveZ": 0.85,
+      "y": 0.981
+    },
+    {
+      "alongFromPositiveZ": 0.875,
+      "y": 0.98249
+    },
+    {
+      "alongFromPositiveZ": 0.9,
+      "y": 0.98342
+    },
+    {
+      "alongFromPositiveZ": 0.925,
+      "y": 0.95173
+    },
+    {
+      "alongFromPositiveZ": 0.95,
+      "y": 0.47161
+    },
+    {
+      "alongFromPositiveZ": 0.975,
+      "y": 0.53998
+    },
+    {
+      "alongFromPositiveZ": 1.0,
+      "y": null
+    }
+  ],
+  "broadTopPlaneNormalizedY": 0.97507,
+  "suggestedBoxNormalized": {
+    "center": [
+      0,
+      0.93507,
+      0
+    ],
+    "size": [
+      0.6,
+      0.08,
+      0.58
+    ]
+  },
+  "placement": "Bottom anchored; front +Z in glTF. Collision is authored separately.",
+  "indirectAO": [
+    {
+      "mesh": "riverstone-a_LOD0",
+      "min": 0.8,
+      "max": 1.0,
+      "mean": 0.9870927835051546,
+      "raysPerVertex": 5,
+      "radiusRelativeToLargestSpan": 0.14,
+      "offsetRelativeToLargestSpan": 0.0018
+    },
+    {
+      "mesh": "riverstone-a_LOD1",
+      "min": 0.8,
+      "max": 1.0,
+      "mean": 0.937548125633232,
+      "raysPerVertex": 5,
+      "radiusRelativeToLargestSpan": 0.14,
+      "offsetRelativeToLargestSpan": 0.0018
+    }
+  ],
+  "contactFit": "Original riverstone A surface retained; attempted flat fit was visually rejected for creating coplanar triangles. Natural top deviation is measured.",
+  "bytes": 1880928,
+  "sha256": "d82017508233c086e1de99be4ea02c65b9af9fd757405bd9763c3c549c70b017",
+  "sourceSha256": "aafea00576e4d0dc37bd8318d5b5afead4d371483e2954750dcaa1ebd47849a5",
+  "albedoResolution": 1024,
+  "normalResolution": 512,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "eb55f73bd0b5e3da37f870a012db1e983e6bc2e64b47bd50ffe2c29145b37b6b",
+        "ktxSha256": "a17662bea21232b42b436af15ba2ee72de2ec4776e32117a9fd8841dcbbab1bd",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1176251
+      },
+      {
+        "fallbackSha256": "8fb1e21d041548f4acbb342a9b1b158cd7db3bb498bd1e650939f37f80e8aad0",
+        "ktxSha256": "acc7a3d78a9167745a10a39386d79759582f5b1752ddacfaeb51e38eca67f7a1",
+        "width": 512,
+        "height": 512,
+        "mipLevels": 10,
+        "astc4x4Bytes": 349552,
+        "encodedBytes": 167379
+      }
+    ]
+  }
+}

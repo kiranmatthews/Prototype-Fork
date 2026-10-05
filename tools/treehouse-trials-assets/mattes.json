@@ -1,0 +1,52 @@
+[
+  {
+    "file": "public/treehouse-trials/forest-depth.webp",
+    "generator": "OpenAI built-in imagegen",
+    "sourceSha256": "d7f8a1b4004e19e06ec9f9ee249eeaf03765b10702ad4cda1448c890e9a72a7e",
+    "sha256": "169e344c0d89c120363444a0ffae5c2ef5047e1d10358be58c59c76de7736e10",
+    "width": 1942,
+    "height": 809,
+    "bytes": 201692,
+    "role": "Opaque distant scenery matte; 3D gameplay and foreground remain source-owned."
+  },
+  {
+    "file": "public/treehouse-trials/coast-depth.webp",
+    "generator": "OpenAI built-in imagegen",
+    "sourceSha256": "0ad7b23a45fefe940ca3929e7232d01489616d5c9ba60ecbb1fb0cdd3f46e6f8",
+    "sha256": "7f560374f194de741141ae7d001e9ef6ef05a29bab7450e9750bea3fb22e9b32",
+    "width": 1942,
+    "height": 809,
+    "bytes": 171980,
+    "role": "Opaque distant scenery matte; 3D gameplay and foreground remain source-owned."
+  },
+  {
+    "file": "public/treehouse-trials/cavern-depth.webp",
+    "generator": "OpenAI built-in imagegen",
+    "sourceSha256": "d4ebe1ddb4f2ef3a5b23a6ecd3e6e50af5ac8660bed063805b292e86f8670d7b",
+    "sha256": "329eaf7c4f28542fffd6779329de78d170ed62b57f9bc77789eedeff568465d3",
+    "width": 1942,
+    "height": 809,
+    "bytes": 272510,
+    "role": "Opaque distant scenery matte; 3D gameplay and foreground remain source-owned."
+  },
+  {
+    "file": "public/treehouse-trials/timber-albedo.webp",
+    "generator": "OpenAI built-in imagegen",
+    "sourceSha256": "4781e19ac362d9b5fedda2c302e40b4d5bd37d280cf74618230db746bae19b70",
+    "sha256": "4b62d25524209ca6ade66ca6f5908937235ab4cae47906f3b49d6231d76b3b26",
+    "width": 1024,
+    "height": 1024,
+    "bytes": 112980,
+    "role": "Painterly board albedo for both wooden halfpipes."
+  },
+  {
+    "file": "public/treehouse-trials/stone-albedo.webp",
+    "generator": "OpenAI built-in imagegen",
+    "sourceSha256": "10c3c6741cf2053277f1dc1f38b109bc7ef4c7274b680b03e156e2f4f81afc1c",
+    "sha256": "db3b2bf06825ae3adf6d142d4ba747b2e7e3c51003bcbcfa60dfea4b213212df",
+    "width": 1024,
+    "height": 1024,
+    "bytes": 156946,
+    "role": "Natural rock albedo for cave ground and stepping stones; replaces masonry pattern."
+  }
+]

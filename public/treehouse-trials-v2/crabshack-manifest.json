@@ -1,0 +1,247 @@
+{
+  "name": "crabshack",
+  "triangles": 7521,
+  "lodTriangles": 2406,
+  "sourceSpanGltf": [
+    1.0,
+    0.8817319869995117,
+    0.9865549802780151
+  ],
+  "sourceBoundsBlender": [
+    [
+      -0.5,
+      -0.4988830089569092,
+      -0.4440160095691681
+    ],
+    [
+      0.5,
+      0.48767200112342834,
+      0.437716007232666
+    ]
+  ],
+  "sourceMeshCount": 1,
+  "materials": 1,
+  "uniformScaleSizeAtDefaultWidth": [
+    10,
+    8.817,
+    9.866
+  ],
+  "contactCenterline": [
+    {
+      "alongFromPositiveZ": 0.0,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.025,
+      "y": 0.08372
+    },
+    {
+      "alongFromPositiveZ": 0.05,
+      "y": 0.08375
+    },
+    {
+      "alongFromPositiveZ": 0.075,
+      "y": 0.4854
+    },
+    {
+      "alongFromPositiveZ": 0.1,
+      "y": 0.49021
+    },
+    {
+      "alongFromPositiveZ": 0.125,
+      "y": 0.49503
+    },
+    {
+      "alongFromPositiveZ": 0.15,
+      "y": 0.50036
+    },
+    {
+      "alongFromPositiveZ": 0.175,
+      "y": 0.51075
+    },
+    {
+      "alongFromPositiveZ": 0.2,
+      "y": 0.63825
+    },
+    {
+      "alongFromPositiveZ": 0.225,
+      "y": 0.66333
+    },
+    {
+      "alongFromPositiveZ": 0.25,
+      "y": 0.70891
+    },
+    {
+      "alongFromPositiveZ": 0.275,
+      "y": 0.72621
+    },
+    {
+      "alongFromPositiveZ": 0.3,
+      "y": 0.74281
+    },
+    {
+      "alongFromPositiveZ": 0.325,
+      "y": 0.7573
+    },
+    {
+      "alongFromPositiveZ": 0.35,
+      "y": 0.76619
+    },
+    {
+      "alongFromPositiveZ": 0.375,
+      "y": 0.77409
+    },
+    {
+      "alongFromPositiveZ": 0.4,
+      "y": 0.77575
+    },
+    {
+      "alongFromPositiveZ": 0.425,
+      "y": 0.94502
+    },
+    {
+      "alongFromPositiveZ": 0.45,
+      "y": 0.91528
+    },
+    {
+      "alongFromPositiveZ": 0.475,
+      "y": 0.82365
+    },
+    {
+      "alongFromPositiveZ": 0.5,
+      "y": 0.80489
+    },
+    {
+      "alongFromPositiveZ": 0.525,
+      "y": 0.7999
+    },
+    {
+      "alongFromPositiveZ": 0.55,
+      "y": 0.80817
+    },
+    {
+      "alongFromPositiveZ": 0.575,
+      "y": 0.8095
+    },
+    {
+      "alongFromPositiveZ": 0.6,
+      "y": 0.81157
+    },
+    {
+      "alongFromPositiveZ": 0.625,
+      "y": 0.80616
+    },
+    {
+      "alongFromPositiveZ": 0.65,
+      "y": 0.80177
+    },
+    {
+      "alongFromPositiveZ": 0.675,
+      "y": 0.79338
+    },
+    {
+      "alongFromPositiveZ": 0.7,
+      "y": 0.7795
+    },
+    {
+      "alongFromPositiveZ": 0.725,
+      "y": 0.76496
+    },
+    {
+      "alongFromPositiveZ": 0.75,
+      "y": 0.75037
+    },
+    {
+      "alongFromPositiveZ": 0.775,
+      "y": 0.73435
+    },
+    {
+      "alongFromPositiveZ": 0.8,
+      "y": 0.71667
+    },
+    {
+      "alongFromPositiveZ": 0.825,
+      "y": 0.70126
+    },
+    {
+      "alongFromPositiveZ": 0.85,
+      "y": 0.6578
+    },
+    {
+      "alongFromPositiveZ": 0.875,
+      "y": 0.64035
+    },
+    {
+      "alongFromPositiveZ": 0.9,
+      "y": 0.61752
+    },
+    {
+      "alongFromPositiveZ": 0.925,
+      "y": 0.5927
+    },
+    {
+      "alongFromPositiveZ": 0.95,
+      "y": 0.57302
+    },
+    {
+      "alongFromPositiveZ": 0.975,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 1.0,
+      "y": null
+    }
+  ],
+  "broadTopPlaneNormalizedY": null,
+  "suggestedBoxNormalized": null,
+  "placement": "Bottom anchored; front +Z in glTF. Collision is authored separately.",
+  "indirectAO": [
+    {
+      "mesh": "crabshack_LOD0",
+      "min": 0.8,
+      "max": 1.0,
+      "mean": 0.8936456167232133,
+      "raysPerVertex": 5,
+      "radiusRelativeToLargestSpan": 0.14,
+      "offsetRelativeToLargestSpan": 0.0018
+    },
+    {
+      "mesh": "crabshack_LOD1",
+      "min": 0.8,
+      "max": 1.0,
+      "mean": 0.8910846343467543,
+      "raysPerVertex": 5,
+      "radiusRelativeToLargestSpan": 0.14,
+      "offsetRelativeToLargestSpan": 0.0018
+    }
+  ],
+  "contactFit": "Original source surface retained.",
+  "bytes": 7874596,
+  "sha256": "c84b5445ec59d76d4097935cabc39d96d8b5ba6307c3af3d759d0d3c57516d2c",
+  "sourceSha256": "88c0d4226129f109fbc0a16eb5fae2f92e35cf8be97571f62f07f95ad014758c",
+  "albedoResolution": 2048,
+  "normalResolution": 1024,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "6a9eeab834218252cf32b469ab037b4d21d5e003732f52e180f87fd8c1b2317e",
+        "ktxSha256": "51b76379e676efe78cdeccb14c3ec84a01b122183c3013c1a7a268fdf4d44af3",
+        "width": 2048,
+        "height": 2048,
+        "mipLevels": 12,
+        "astc4x4Bytes": 5592432,
+        "encodedBytes": 4425393
+      },
+      {
+        "fallbackSha256": "77296e466d33bf1070eff61fdd1df97d494edc33e397c2b7db0e2930bfd496a6",
+        "ktxSha256": "75b0f012911ec9d074ae8ed8eaec7f8d89c833b8f20dd0cff259538961ff15b0",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 916067
+      }
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "name": "boulder",
+  "triangles": 2914,
+  "lodTriangles": 932,
+  "sourceSpanGltf": [
+    1.0,
+    0.3972790241241455,
+    0.9296910166740417
+  ],
+  "sourceBoundsBlender": [
+    [
+      -0.5,
+      -0.4664880037307739,
+      -0.19952300190925598
+    ],
+    [
+      0.5,
+      0.4632030129432678,
+      0.19775600731372833
+    ]
+  ],
+  "sourceMeshCount": 1,
+  "materials": 1,
+  "placement": "Bottom anchored; front +Z in glTF. Collision is authored separately.",
+  "bytes": 1858196,
+  "sha256": "383d32aa033320fc21ab1e14983742192e58e305a2a14bc9151151c84449d10c",
+  "sourceSha256": "d7c25f330c9e023ace3ed9eacb2ed5571ccb1b2996e33ce24a3bb862de84807c",
+  "albedoResolution": 1024,
+  "normalResolution": 512,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "20ebd44803a0d18c181c9ecea2398481da474499f6412a0a6a9ab3b0872b8385",
+        "ktxSha256": "0f20ed7c3a55cc2987984bb8c126ae703ab18657c114f27280e5c9f2343f428e",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1142665
+      },
+      {
+        "fallbackSha256": "1dc7c029733b5adb0cb2355529ef63e53173df0dedbdcfec5927fad4f6ece06f",
+        "ktxSha256": "cc011388fd0e1de00e6bf2a820bd3edea633e4ee7e2ca0465fbbf6e9ad1a41c8",
+        "width": 512,
+        "height": 512,
+        "mipLevels": 10,
+        "astc4x4Bytes": 349552,
+        "encodedBytes": 180871
+      }
+    ]
+  }
+}

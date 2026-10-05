@@ -1,0 +1,53 @@
+{
+  "name": "cavearch",
+  "triangles": 6920,
+  "lodTriangles": 2214,
+  "sourceSpanGltf": [
+    1.0,
+    0.7111480236053467,
+    0.5067390203475952
+  ],
+  "sourceBoundsBlender": [
+    [
+      -0.5,
+      -0.253387987613678,
+      -0.3584040105342865
+    ],
+    [
+      0.5,
+      0.25335100293159485,
+      0.3527440130710602
+    ]
+  ],
+  "sourceMeshCount": 1,
+  "materials": 1,
+  "placement": "Bottom anchored; front +Z in glTF. Collision is authored separately.",
+  "bytes": 8195240,
+  "sha256": "69fb0c4c90dddaf63e87113e5e85476d05edb57563054bcb623fbe6ba9e2d1da",
+  "sourceSha256": "35c5a4ce3bfbb336f5e59c98ff1375150c5e202162ca7bb7949f28f4c5738da4",
+  "albedoResolution": 2048,
+  "normalResolution": 1024,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "16cdb8ea710c515ccecb3fbf1586096fa1ccf0f9acdfaa0f66cd4cddfa68fb0e",
+        "ktxSha256": "abf78249807f6071a44d296c4b6111547f5052cd36faa53ea6cd7d69e2d8a625",
+        "width": 2048,
+        "height": 2048,
+        "mipLevels": 12,
+        "astc4x4Bytes": 5592432,
+        "encodedBytes": 4810010
+      },
+      {
+        "fallbackSha256": "1826a75138ff37af4a5785e8ca4e2ba48f55eb0fb1f3873ec47a9f31167af60c",
+        "ktxSha256": "9bba69861c17d25020de212c0689f9401cfd77ac4ad266c1d453a06967c2acad",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 952787
+      }
+    ]
+  }
+}

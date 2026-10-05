@@ -1,0 +1,13 @@
+{
+  "generator": "OpenAI built-in imagegen",
+  "styleReferences": [
+    "references/00_STYLE_MASTER.png",
+    "references/05_SHALLOW_RIVER_STEPPING_STONES.png"
+  ],
+  "sourceSha256": "338f7fce6e97a70c4185cad8e72912f80fa84f529ef8ec5d3f8e53051dd0cc84",
+  "file": "public/treehouse-trials-v2/forest-water-probe.webp",
+  "sha256": "c85bab6c5c71bf506b218dc0e4430c923fdd39349a54c24aece7599681701d00",
+  "width": 1774,
+  "height": 887,
+  "prompt": "Use case: stylized-concept. Asset type: 2:1 equirectangular environment reflection texture for shallow water in a painterly low-poly jungle adventure, 2048 by 1024. The supplied images are palette and broad-form references only. Create a continuous 360 degree panorama: upper 45 percent soft blue sky with two quiet diffuse cream clouds and faint golden skylight; an irregular dense band of distant gigantic umbrella rainforest crowns and twisting branches surrounding the horizon; lower 40 percent quiet deep green fern and leafy shadow masses. No close ground, path, huts, water surface, foreground props, characters, signs, text or border. Dark emerald and cool teal foliage interiors, controlled yellow-green canopy light; sculptural angular hand-painted leaf tiers, broad simplified silhouettes, soft shaded forms. Match the exact broad foliage language of the river reference. This is a calm reflection environment, not a scenic illustration with a focal point. Keep the far canopy low contrast, no noisy tiny leaves or dramatic sun disc. Left and right edges must join seamlessly. The whole rectangle is opaque."
+}

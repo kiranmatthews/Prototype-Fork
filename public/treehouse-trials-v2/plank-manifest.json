@@ -1,0 +1,247 @@
+{
+  "name": "plank",
+  "triangles": 868,
+  "lodTriangles": 277,
+  "sourceSpanGltf": [
+    1.0,
+    0.040710002183914185,
+    0.12590301036834717
+  ],
+  "sourceBoundsBlender": [
+    [
+      -0.5,
+      -0.06527702510356903,
+      -0.01970599964261055
+    ],
+    [
+      0.5,
+      0.06062598526477814,
+      0.021004000678658485
+    ]
+  ],
+  "sourceMeshCount": 1,
+  "materials": 1,
+  "uniformScaleSizeAtDefaultWidth": [
+    5,
+    0.204,
+    0.63
+  ],
+  "contactCenterline": [
+    {
+      "alongFromPositiveZ": 0.0,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.025,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.05,
+      "y": 0.9037
+    },
+    {
+      "alongFromPositiveZ": 0.075,
+      "y": 0.90647
+    },
+    {
+      "alongFromPositiveZ": 0.1,
+      "y": 0.90842
+    },
+    {
+      "alongFromPositiveZ": 0.125,
+      "y": 0.91037
+    },
+    {
+      "alongFromPositiveZ": 0.15,
+      "y": 0.91231
+    },
+    {
+      "alongFromPositiveZ": 0.175,
+      "y": 0.91552
+    },
+    {
+      "alongFromPositiveZ": 0.2,
+      "y": 0.92123
+    },
+    {
+      "alongFromPositiveZ": 0.225,
+      "y": 0.92343
+    },
+    {
+      "alongFromPositiveZ": 0.25,
+      "y": 0.92559
+    },
+    {
+      "alongFromPositiveZ": 0.275,
+      "y": 0.93118
+    },
+    {
+      "alongFromPositiveZ": 0.3,
+      "y": 0.93689
+    },
+    {
+      "alongFromPositiveZ": 0.325,
+      "y": 0.91069
+    },
+    {
+      "alongFromPositiveZ": 0.35,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.375,
+      "y": 0.90755
+    },
+    {
+      "alongFromPositiveZ": 0.4,
+      "y": 0.9113
+    },
+    {
+      "alongFromPositiveZ": 0.425,
+      "y": 0.91171
+    },
+    {
+      "alongFromPositiveZ": 0.45,
+      "y": 0.91212
+    },
+    {
+      "alongFromPositiveZ": 0.475,
+      "y": 0.91253
+    },
+    {
+      "alongFromPositiveZ": 0.5,
+      "y": 0.91295
+    },
+    {
+      "alongFromPositiveZ": 0.525,
+      "y": 0.91338
+    },
+    {
+      "alongFromPositiveZ": 0.55,
+      "y": 0.9138
+    },
+    {
+      "alongFromPositiveZ": 0.575,
+      "y": 0.91423
+    },
+    {
+      "alongFromPositiveZ": 0.6,
+      "y": 0.91465
+    },
+    {
+      "alongFromPositiveZ": 0.625,
+      "y": 0.89391
+    },
+    {
+      "alongFromPositiveZ": 0.65,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.675,
+      "y": 0.90421
+    },
+    {
+      "alongFromPositiveZ": 0.7,
+      "y": 0.91453
+    },
+    {
+      "alongFromPositiveZ": 0.725,
+      "y": 0.91441
+    },
+    {
+      "alongFromPositiveZ": 0.75,
+      "y": 0.91429
+    },
+    {
+      "alongFromPositiveZ": 0.775,
+      "y": 0.91417
+    },
+    {
+      "alongFromPositiveZ": 0.8,
+      "y": 0.91406
+    },
+    {
+      "alongFromPositiveZ": 0.825,
+      "y": 0.91394
+    },
+    {
+      "alongFromPositiveZ": 0.85,
+      "y": 0.91316
+    },
+    {
+      "alongFromPositiveZ": 0.875,
+      "y": 0.91217
+    },
+    {
+      "alongFromPositiveZ": 0.9,
+      "y": 0.91097
+    },
+    {
+      "alongFromPositiveZ": 0.925,
+      "y": 0.90693
+    },
+    {
+      "alongFromPositiveZ": 0.95,
+      "y": 0.90041
+    },
+    {
+      "alongFromPositiveZ": 0.975,
+      "y": 0.87798
+    },
+    {
+      "alongFromPositiveZ": 1.0,
+      "y": null
+    }
+  ],
+  "broadTopPlaneNormalizedY": null,
+  "suggestedBoxNormalized": null,
+  "placement": "Bottom anchored; front +Z in glTF. Collision is authored separately.",
+  "indirectAO": [
+    {
+      "mesh": "plank_LOD0",
+      "min": 0.8,
+      "max": 1.0,
+      "mean": 0.956213830308975,
+      "raysPerVertex": 5,
+      "radiusRelativeToLargestSpan": 0.14,
+      "offsetRelativeToLargestSpan": 0.0018
+    },
+    {
+      "mesh": "plank_LOD1",
+      "min": 0.8,
+      "max": 1.0,
+      "mean": 0.9475778078484438,
+      "raysPerVertex": 5,
+      "radiusRelativeToLargestSpan": 0.14,
+      "offsetRelativeToLargestSpan": 0.0018
+    }
+  ],
+  "contactFit": "Original source surface retained.",
+  "bytes": 1951432,
+  "sha256": "72f6ec515397b43f5ab3eab23106a52fff7e1dffaefc900437d3a18d6ee0f539",
+  "sourceSha256": "10a32a2612c5bb252627ab04c8153bc053e6a7dc258f6b65c106c672b7212577",
+  "albedoResolution": 1024,
+  "normalResolution": 512,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "66bf64afdf3d9932e042d60dccedcb6a0ad78622e6799c63b1e29e3cc682b949",
+        "ktxSha256": "311a62cc5d77166565c8f4134ff516afbdabbd4c8ced25d7f603c9775236de60",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1156269
+      },
+      {
+        "fallbackSha256": "40354ffc547932fe5cef61e1c5c6f15e30e78e63b21cb4ec08835a881193c494",
+        "ktxSha256": "97bbc28015d841ef32bcd2d25ebc66ca75e0c662aa0ed3b2583a2321ffc02191",
+        "width": 512,
+        "height": 512,
+        "mipLevels": 10,
+        "astc4x4Bytes": 349552,
+        "encodedBytes": 225841
+      }
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "name": "forest-water-probe",
+  "path": "treehouse-trials-v2/forest-water-probe.ktx2",
+  "fallback": "treehouse-trials-v2/forest-water-probe.webp",
+  "width": 1774,
+  "height": 887,
+  "mipLevels": 11,
+  "colorSpace": "sRGB",
+  "orientation": "ru: lower-left physically flipped to match ordinary WebP flipY=true",
+  "encoder": "Khronos toktx4.4.2 / UASTC quality2 / lossless Zstd18",
+  "bytes": 1327949,
+  "sha256": "01b11842d36b63bf6cfe4658cf08bc49693c6db3caf37fa8cf6e922cdb3cc168",
+  "fallbackBytes": 207066,
+  "fallbackSha256": "c85bab6c5c71bf506b218dc0e4430c923fdd39349a54c24aece7599681701d00",
+  "astc4x4Bytes": 2104384,
+  "rgba8Bytes": 8386712,
+  "credits": 0,
+  "source": "Existing generated V2 WebP; no generation request or geometry changes."
+}

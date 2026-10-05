@@ -32,13 +32,46 @@ export interface JungleAssetSpec {
   alphaCutout?: boolean;
   edgeFade?: number;
   windowGlow?: boolean;
+  /** Soft additive environmental light card; shares the ordinary decor path. */
+  shaft?: boolean;
+  /** Attachment mask comes from the source mesh; billow only in local Y. */
+  cloth?: boolean;
 }
+const TREEHOUSE_TRIALS_V2_ASSETS = {
+  trialsv2treea:{file:"../treehouse-trials-v2/tree-a",label:"Treehouse Trials broad ancient tree A",size:[26,24,20],wind:true,normalStrength:.09,lod:true,distanceLod:true,doubleSided:false},
+  trialsv2treeb:{file:"../treehouse-trials-v2/tree-b",label:"Treehouse Trials broad ancient tree B",size:[26,24,20],wind:true,normalStrength:.09,lod:true,distanceLod:true,doubleSided:false},
+  trialsv2crowna:{file:"../treehouse-trials-v2/crown-a",label:"Treehouse Trials loose leaf crown A",size:[26,11,22],wind:true,normalStrength:.07,lod:true,distanceLod:true,doubleSided:false},
+  trialsv2crownb:{file:"../treehouse-trials-v2/crown-b",label:"Treehouse Trials loose leaf crown B",size:[26,11,22],wind:true,normalStrength:.07,lod:true,distanceLod:true,doubleSided:false},
+  trialsv2groundcovera:{file:"../treehouse-trials-v2/groundcover-a",label:"Treehouse Trials low forest carpet A",size:[5,1.2,3],wind:true,normalStrength:.08,lod:true,distanceLod:true,doubleSided:false},
+  trialsv2groundcoverb:{file:"../treehouse-trials-v2/groundcover-b",label:"Treehouse Trials low forest carpet B",size:[5,1.2,3],wind:true,normalStrength:.08,lod:true,distanceLod:true,doubleSided:false},
+  trialsv2ferna:{file:"../treehouse-trials-v2/fern-a",label:"Treehouse Trials broad fern A",size:[3,2,3],wind:true,normalStrength:.08,lod:true,distanceLod:true,doubleSided:false},
+  trialsv2fernb:{file:"../treehouse-trials-v2/fern-b",label:"Treehouse Trials broad fern B",size:[3,2,3],wind:true,normalStrength:.08,lod:true,distanceLod:true,doubleSided:false},
+  trialsv2earthbanka:{file:"../treehouse-trials-v2/earthbank-a",label:"Treehouse Trials mossy earth bank A",size:[8,2.5,4],wind:true,normalStrength:.13,lod:true,distanceLod:true,doubleSided:false},
+  trialsv2earthbankb:{file:"../treehouse-trials-v2/earthbank-b",label:"Treehouse Trials mossy earth bank B",size:[8,2.5,4],wind:true,normalStrength:.13,lod:true,distanceLod:true,doubleSided:false},
+  trialsv2riverstonea:{file:"../treehouse-trials-v2/riverstone-a",label:"Treehouse Trials broad river stone A",size:[5,.7,4],wind:false,normalStrength:.1,lod:true,doubleSided:false},
+  trialsv2riverstoneb:{file:"../treehouse-trials-v2/riverstone-b",label:"Treehouse Trials broad river stone B",size:[5,.7,4],wind:false,normalStrength:.1,lod:true,doubleSided:false},
+  trialsv2riverstonec:{file:"../treehouse-trials-v2/riverstone-c",label:"Treehouse Trials broad river stone C",size:[5,.7,4],wind:false,normalStrength:.1,lod:true,doubleSided:false},
+  trialsv2cavewalla:{file:"../treehouse-trials-v2/cavewall-a",label:"Treehouse Trials layered cave wall A",size:[12,10,6],wind:false,normalStrength:.13,lod:true,doubleSided:false},
+  trialsv2cavewallb:{file:"../treehouse-trials-v2/cavewall-b",label:"Treehouse Trials layered cave wall B",size:[12,10,6],wind:false,normalStrength:.13,lod:true,doubleSided:false},
+  trialsv2caveroofa:{file:"../treehouse-trials-v2/caveroof-a",label:"Treehouse Trials broad cave roof A",size:[18,5,8],wind:false,normalStrength:.13,lod:true,doubleSided:false},
+  trialsv2caveroofb:{file:"../treehouse-trials-v2/caveroof-b",label:"Treehouse Trials broad cave roof B",size:[18,5,8],wind:false,normalStrength:.13,lod:true,doubleSided:false},
+  trialsv2rockstepsa:{file:"../treehouse-trials-v2/rocksteps-a",label:"Treehouse Trials rounded rock climb A",size:[7,2.5,8],wind:false,normalStrength:.12,lod:true,doubleSided:false},
+  trialsv2rockstepsb:{file:"../treehouse-trials-v2/rocksteps-b",label:"Treehouse Trials rounded rock climb B",size:[7,2.5,8],wind:false,normalStrength:.12,lod:true,doubleSided:false},
+  trialsv2halfpipeend:{file:"../treehouse-trials-v2/halfpipe-end",label:"Treehouse Trials halfpipe timber frame",size:[8,4,2.5],wind:false,normalStrength:.1,lod:true,doubleSided:false},
+  trialsv2plank:{file:"../treehouse-trials-v2/plank",label:"Treehouse Trials worn timber plank",size:[5,.18,.35],wind:false,normalStrength:.08,lod:true,doubleSided:false},
+  trialsv2beam:{file:"../treehouse-trials-v2/beam",label:"Treehouse Trials hand-hewn beam",size:[4,.35,.35],wind:false,normalStrength:.08,lod:true,doubleSided:false},
+  trialsv2porchhut:{file:"../treehouse-trials-v2/porchhut",label:"Treehouse Trials warm layered porch hut",size:[8,5.5,7],wind:false,normalStrength:.1,lod:true,doubleSided:false,windowGlow:true},
+  trialsv2crabshack:{file:"../treehouse-trials-v2/crabshack",label:"Treehouse Trials coastal crab shack",size:[10,8,9],wind:false,normalStrength:.1,lod:true,doubleSided:false,windowGlow:true},
+  trialsv2awning:{file:"../treehouse-trials-v2/awning",label:"Treehouse Trials frayed coral cloth awning",size:[4.5,.5,2.2],wind:true,normalStrength:.06,lod:true,doubleSided:true,cloth:true},
+  trialsv2waterreflection:{file:"",image:"treehouse-trials-v2/forest-water-probe.ktx2",imageFallback:"treehouse-trials-v2/forest-water-probe.webp",label:"Treehouse Trials forest water reflection",size:[120,60,.02],wind:false,matte:true},
+} as const;
 const ASSETS = {
   ...CARLISLE_ASSETS,
   ...JUNGLE_MODULES,
   ...MAP_MODULES,
   ...NIGHTWORKS_MODULES,
   ...JUNGLE_EDITOR_ASSETS,
+  ...TREEHOUSE_TRIALS_V2_ASSETS,
   treehousebody: {file:"../treehouse-trail/body-v2",label:"Detailed treehouse cabin body",size:[7,5.2,5.5],wind:false,normalStrength:0.14,lod:true,doubleSided:false,windowGlow:true},
   treehousehost: {file:"../treehouse-trail/host",label:"Treehouse supporting trunk and boughs",size:[15.5,15,10],wind:false,normalStrength:0.18,lod:true,doubleSided:false},
   treehousebalconydeck: {file:"../treehouse-trail/balcony-deck",label:"Treehouse balcony deck without rails",size:[14.5,0.35,3],wind:false,normalStrength:0.14,lod:true,doubleSided:false},
@@ -50,6 +83,18 @@ const ASSETS = {
   treehousebush: {file:"../treehouse-trail/bush",label:"Treehouse lush bush cluster",size:[5,2.8,4.5],wind:true,normalStrength:0.12,lod:true,doubleSided:false},
   treehousemattefar: {file:"",image:"treehouse-trail/matte-far.png",label:"Treehouse distant painted jungle",size:[120,50,.02],wind:false,matte:true},
   treehousemattemid: {file:"",image:"treehouse-trail/matte-mid.png",label:"Treehouse painted forest layer",size:[85,38,.02],wind:false,matte:true,alphaCutout:true,edgeFade:0.1},
+  treehousecavearch: {file:"../treehouse-trials/cavearch",label:"Treehouse Trials natural cave arch",size:[14,10,5],wind:false,normalStrength:0.2,lod:true,doubleSided:false},
+  treehousecavewall: {file:"../treehouse-trials/cavewall",label:"Treehouse Trials mossy cave wall",size:[12,10,6],wind:false,normalStrength:0.2,lod:true,doubleSided:false},
+  treehouserocksteps: {file:"../treehouse-trials/rocksteps",label:"Treehouse Trials broad rock steps",size:[6,2.5,7],wind:false,normalStrength:0.18,lod:true,doubleSided:false},
+  treehouseporchhut: {file:"../treehouse-trials/porchhut",label:"Treehouse Trials coastal porch hut",size:[7,5,6],wind:false,normalStrength:0.16,lod:true,doubleSided:false,windowGlow:true},
+  treehousecrabshack: {file:"../treehouse-trials/crabshack",label:"Treehouse Trials painted crab shack",size:[9,7,8],wind:false,normalStrength:0.16,lod:true,doubleSided:false,windowGlow:true},
+  treehousesugarcane: {file:"../treehouse-trials/sugarcane",label:"Treehouse Trials sugar cane clump",size:[4,5,3],wind:true,normalStrength:0.1,lod:true,doubleSided:true},
+  treehousebridgeend: {file:"../treehouse-trials/bridgeend",label:"Treehouse Trials broken bridge abutment",size:[7,2.5,4],wind:false,normalStrength:0.16,lod:true,doubleSided:false},
+  treehousemossrock: {file:"../treehouse-trials/boulder",label:"Treehouse Trials broad mossy rock",size:[5,3,4],wind:false,normalStrength:0.18,lod:true,doubleSided:false},
+  treehousetrialsforestmatte: {file:"",image:"treehouse-trials/forest-depth.ktx2",imageFallback:"treehouse-trials/forest-depth.webp",label:"Treehouse Trials layered forest depth",size:[150,65,.02],wind:false,matte:true,edgeFade:0.12},
+  treehousetrialscoastmatte: {file:"",image:"treehouse-trials/coast-depth.ktx2",imageFallback:"treehouse-trials/coast-depth.webp",label:"Treehouse Trials distant coast",size:[150,65,.02],wind:false,matte:true,edgeFade:0.08},
+  treehousetrialscavematte: {file:"",image:"treehouse-trials/cavern-depth.ktx2",imageFallback:"treehouse-trials/cavern-depth.webp",label:"Treehouse Trials cavern depth",size:[65,36,.02],wind:false,matte:true,edgeFade:0.08},
+  treehousetrialssunshaft: {file:"",label:"Treehouse Trials soft cavern light shaft",size:[3,14,.02],wind:false,shaft:true},
   junglecliff: {file:"",label:"jungle cliff face",size:[28,32,30],wind:false,backdrop:true},
   junglebackdrop: {file:"",label:"outer jungle canopy",size:[42,44,40],wind:false,backdrop:true},
   jungleleaf: {file:"broadleaf",label:"jungle broadleaf",size:[4.2,2.6,4.2],wind:true},
@@ -129,17 +174,18 @@ function finishGeometry(geometry:THREE.BufferGeometry,kind:RenderKind):THREE.Buf
   if(renderSpec(kind).wind)for(let i=0;i<positions.count;i++) {
     const y=positions.getY(i),radial=Math.hypot(positions.getX(i),positions.getZ(i));
     const sourceFlex=authoredFlex?.getX(i);
-    flex[i]=sourceFlex!==undefined?Number.isFinite(sourceFlex)?THREE.MathUtils.clamp(sourceFlex,0,1)*THREE.MathUtils.smoothstep(y,0,.035):0
+    flex[i]=sourceFlex!==undefined?Number.isFinite(sourceFlex)?THREE.MathUtils.clamp(sourceFlex,0,1)*(renderSpec(kind).cloth?1:THREE.MathUtils.smoothstep(y,0,.035)):0
       :geometry.hasAttribute('aClayLeaf')?geometry.attributes.aClayLeaf.getX(i):kind==="vine"||kind==="junglevine"?Math.max(0,1-y):kind==="junglepalmtree"
       ?Math.pow(THREE.MathUtils.smoothstep(y,.48,1),1.2)*.6+y*y*.08
       :kind==="treehousetree"?Math.pow(THREE.MathUtils.smoothstep(y,.42,.86),1.5)*.34
+      :kind==="treehousesugarcane"?Math.pow(THREE.MathUtils.smoothstep(y,.02,.98),1.7)*.72
       :Math.min(1,Math.pow(radial*1.6+y*.45,1.5))*THREE.MathUtils.smoothstep(y,0,.12);
   }
   geometry.setAttribute("aJungleFlex",new THREE.BufferAttribute(flex,1));
   geometry.setAttribute("aJungleAO",new THREE.BufferAttribute(ao,1));
   geometry.deleteAttribute('_wind_flex');geometry.deleteAttribute('_jungle_ao');
   geometry.computeBoundingBox();geometry.computeBoundingSphere();
-  const margin=renderSpec(kind).wind ? .085 : .002;
+  const margin=renderSpec(kind).cloth ? .3 : renderSpec(kind).wind ? .085 : .002;
   geometry.boundingBox!.expandByScalar(margin);geometry.boundingSphere!.radius+=margin;
   geometry.userData.shared=true;return geometry;
 }
@@ -159,6 +205,11 @@ function combineAssetMeshes(meshes:THREE.Mesh[],kind:RenderKind):THREE.BufferGeo
 }
 function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Template>,wanted:()=>boolean):Promise<Template> {
   const spec=renderSpec(kind);
+  if(spec.shaft){
+    const geometry=new THREE.PlaneGeometry(1,1).translate(0,.5,0);
+    geometry.setAttribute('aJungleShaftUv',geometry.attributes.uv);
+    return Promise.resolve({geometry:finishGeometry(geometry,kind),map:null});
+  }
   if(spec.matte && spec.image){
     // The plane is already normalized in X/Y, bottom-anchored, facing +Z.
     // Skip GLB bounds normalization: a genuine flat card has zero Z extent.
@@ -174,6 +225,7 @@ function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Te
         return fallback();
       }):fallback(),wanted).then(map=>{
       map.colorSpace=THREE.SRGBColorSpace;map.anisotropy=4;map.userData.shared=true;
+      if(kind==='trialsv2waterreflection')map.wrapS=THREE.RepeatWrapping;
       return {geometry,map};
     }).catch(error=>{geometry.dispose();throw error;});
     return pending;
@@ -277,6 +329,15 @@ transformed.x += jungleGust * aJungleFlex * uJungleWindScale;
 transformed.z += cos(junglePhase * 0.73 + position.x * 3.0) * 0.02 * aJungleFlex * uJungleWindScale;
 transformed.y += sin(junglePhase * 1.42 + position.z * 5.0) * 0.012 * aJungleFlex * uJungleWindScale;
 `;
+const CLOTH_WIND = /* glsl */ `
+vec4 jungleOrigin = vec4(0.0, 0.0, 0.0, 1.0);
+#ifdef USE_INSTANCING
+  jungleOrigin = instanceMatrix * jungleOrigin;
+#endif
+jungleOrigin = modelMatrix * jungleOrigin;
+float junglePhase = uJungleTime * uJungleWindFrequency * 0.6 + jungleOrigin.x * 0.17 + jungleOrigin.z * 0.11;
+transformed.y += (sin(junglePhase + position.z * 1.9) * 0.12 + sin(junglePhase * 0.63 + position.x * 1.4) * 0.06) * aJungleFlex * uJungleWindScale;
+`;
 const WORLD = /* glsl */ `
 vec4 jungleWorld = vec4(transformed, 1.0);
 #ifdef USE_INSTANCING
@@ -286,7 +347,7 @@ vJungleWorld = (modelMatrix * jungleWorld).xyz;
 `;
 
 /** Moving canopy shade costs a few ALU operations, with no extra render pass. */
-export function addJungleDapple(material: THREE.Material, time: { value: number }, wind = false): void {
+export function addJungleDapple(material: THREE.Material, time: { value: number }, wind = false, cloth = false): void {
   const dirt = material.userData.jungleDirt === true;
   const painterly = material.userData.junglePainterly === true;
   const previous = material.onBeforeCompile;
@@ -297,7 +358,7 @@ export function addJungleDapple(material: THREE.Material, time: { value: number 
     shader.uniforms.uJungleTime = time;
     if(wind){shader.uniforms.uJungleWindScale={value:painterly?1.65:1};shader.uniforms.uJungleWindFrequency={value:painterly?.72:1.15};}
     shader.vertexShader = `uniform float uJungleTime;\n${wind ? 'attribute float aJungleFlex; uniform float uJungleWindScale; uniform float uJungleWindFrequency;' : ''}\n${trail?'attribute vec2 aJungleTrail; varying vec2 vJungleTrail;':''}\nvarying vec3 vJungleWorld;\n` + shader.vertexShader;
-    shader.vertexShader = shader.vertexShader.replace("#include <begin_vertex>", `#include <begin_vertex>\n${trail?'vJungleTrail = aJungleTrail;':''}\n${wind ? WIND : ''}\n${WORLD}`);
+    shader.vertexShader = shader.vertexShader.replace("#include <begin_vertex>", `#include <begin_vertex>\n${trail?'vJungleTrail = aJungleTrail;':''}\n${wind ? cloth?CLOTH_WIND:WIND : ''}\n${WORLD}`);
     shader.fragmentShader = 'uniform float uJungleTime;\nvarying vec3 vJungleWorld;\n'+(trail?'uniform sampler2D uJungleGrass; varying vec2 vJungleTrail;\n':'') + shader.fragmentShader;
     if (dirt) shader.fragmentShader = shader.fragmentShader.replace("#include <map_fragment>", /* glsl */ `
       #ifdef USE_MAP
@@ -336,7 +397,7 @@ export function addJungleDapple(material: THREE.Material, time: { value: number 
       #endif
     `);
   };
-  material.customProgramCacheKey = () => `jungle-dapple-v6-${wind}-${dirt}-${material.userData.jungleTrail===true}-${painterly}`;
+  material.customProgramCacheKey = () => `jungle-dapple-v6-${wind}-${cloth}-${dirt}-${material.userData.jungleTrail===true}-${painterly}`;
   if(painterly)addTreehouseTrialsMaterialLook(material);
 }
 
@@ -360,6 +421,21 @@ export class JungleAssetKit {
   private material(kind:RenderKind,template:Template):THREE.MeshStandardMaterial|THREE.MeshLambertMaterial|THREE.MeshBasicMaterial {
     const cached=this.materials.get(kind);if(cached)return cached;
     const spec=renderSpec(kind),isVine=kind==="vine"||kind==="junglevine";
+    if(spec.shaft){
+      const material=new THREE.MeshBasicMaterial({color:0xffdfa8,transparent:true,opacity:.055,depthWrite:false,
+        blending:THREE.AdditiveBlending,fog:true,toneMapped:false,side:THREE.DoubleSide});
+      material.forceSinglePass=true;
+      material.onBeforeCompile=shader=>{
+        shader.uniforms.uJungleTime=this.time;
+        shader.vertexShader='attribute vec2 aJungleShaftUv;\nvarying vec2 vJungleShaftUv;\n'+shader.vertexShader;
+        shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\nvJungleShaftUv = aJungleShaftUv;');
+        shader.fragmentShader='uniform float uJungleTime;\nvarying vec2 vJungleShaftUv;\n'+shader.fragmentShader;
+        shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>', '#include <color_fragment>\nfloat shaftEdge = min(vJungleShaftUv.x, 1.0-vJungleShaftUv.x);\nfloat shaftEnds = smoothstep(0.0,0.16,vJungleShaftUv.y) * smoothstep(0.0,0.12,1.0-vJungleShaftUv.y);\ndiffuseColor.a *= smoothstep(0.0,0.18,shaftEdge) * shaftEnds * (0.92 + 0.08*sin(uJungleTime*0.17+vJungleShaftUv.y*3.0));');
+      };
+      material.customProgramCacheKey=()=>"shaft-v1";
+      material.name=spec.label;material.userData.jungleAsset=true;
+      this.materials.set(kind,material);return material;
+    }
     if(spec.matte){
       const material=new THREE.MeshBasicMaterial({map:template.map,fog:false,toneMapped:false,
         side:THREE.FrontSide,alphaTest:spec.edgeFade?0.005:spec.alphaCutout?.35:0,transparent:!!spec.edgeFade,depthWrite:!spec.edgeFade});
@@ -390,7 +466,7 @@ export class JungleAssetKit {
     m.name=spec.label;m.userData.jungleAsset=true;
     m.userData.junglePainterly=this.style==='painterly';m.userData.jungleAO=true;
     if(kind==="earth")m.userData.jungleDirt=true;
-    addJungleDapple(m,this.time,spec.wind);
+    addJungleDapple(m,this.time,spec.wind,spec.cloth);
     if(spec.windowGlow){
       const compile=m.onBeforeCompile,key=m.customProgramCacheKey.bind(m);
       m.onBeforeCompile=(shader,renderer)=>{
@@ -405,7 +481,7 @@ export class JungleAssetKit {
   }
   private configure(mesh:THREE.Mesh,kind:RenderKind):void {
     const spec=renderSpec(kind);mesh.name=spec.label;mesh.userData.jungleAsset=kind;
-    if(spec.matte){mesh.castShadow=false;mesh.receiveShadow=false;return;}
+    if(spec.matte||spec.shaft){mesh.castShadow=false;mesh.receiveShadow=false;return;}
     mesh.castShadow=!this.lite&&!spec.backdrop&&kind!=="joint"&&kind!=="earth"&&kind!=="coastcarpet"&&kind!=="coastfern"&&kind!=="coastfoliage";
     if(kind.startsWith("coast"))mesh.userData.castShadow=mesh.castShadow;
     mesh.receiveShadow=!this.lite&&!spec.backdrop;
@@ -416,8 +492,8 @@ export class JungleAssetKit {
       depth.onBeforeCompile=shader=>{shader.uniforms.uJungleTime=this.time;
         shader.uniforms.uJungleWindScale={value:this.style==='painterly'?1.65:1};shader.uniforms.uJungleWindFrequency={value:this.style==='painterly'?.72:1.15};
         shader.vertexShader='uniform float uJungleTime;\nuniform float uJungleWindScale;\nuniform float uJungleWindFrequency;\nattribute float aJungleFlex;\n'+shader.vertexShader;
-        shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\n'+WIND);};
-      depth.customProgramCacheKey=()=>`jungle-wind-depth-v4-${this.style??'native'}`;this.depths.set(kind,depth);
+        shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\n'+(spec.cloth?CLOTH_WIND:WIND));};
+      depth.customProgramCacheKey=()=>`jungle-wind-depth-v4-${this.style??'native'}-${spec.cloth===true}`;this.depths.set(kind,depth);
     }
     mesh.customDepthMaterial=depth;
   }

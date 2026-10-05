@@ -1,0 +1,328 @@
+{
+  "tree-a": {
+    "triangles": 6500,
+    "size": [
+      26,
+      24,
+      20
+    ],
+    "kind": "trialsv2treea",
+    "reference": "references/01_TREEHOUSE_CLEARING.png",
+    "prompt": "Extract the whole ancient umbrella jungle tree silhouette beside and behind the treehouse. One independent gigantic tree only, no house, path or props: strong thick twisting irregular ochre-brown trunk, sweeping sinuous load-bearing boughs, big hooked roots, low spreading umbrella crown with many large drooping pointed broad leaves grouped into four horizontal emerald canopy tiers. Leaves are dark forest green undersides and muted vivid yellow-green upward planes, exactly the source's painted broad leaf shape. Trunk visibly forks asymmetrically and branches horizontally, no straight cylinder or pine tree. Broad crown wider than total tree height. No random tiny leaf particles. Match the particular broad layered old jungle tree forms in the reference.",
+    "hero": true,
+    "wind": true
+  },
+  "tree-b": {
+    "triangles": 6500,
+    "size": [
+      26,
+      24,
+      20
+    ],
+    "kind": "trialsv2treeb",
+    "reference": "references/09_CAVE_EXIT_JUNGLE_PATH.png",
+    "prompt": "Extract one second ancient twisting umbrella tree from the reference: leaning wide gnarled ochre-brown trunk, large visible S-shaped horizontal boughs and spreading buttress roots, open branch negative space beneath a wide layered emerald drooping canopy, three off-center umbrella crowns at different heights. A distinct reusable sister tree, preserve the source's bold broad leaf curtains and warm brown hand-painted trunk, deep dark green undersides. Crown wider than tree height; no perfectly spherical blob canopy, no pine silhouette.",
+    "hero": true,
+    "wind": true
+  },
+  "crown-a": {
+    "triangles": 4000,
+    "size": [
+      26,
+      11,
+      22
+    ],
+    "kind": "trialsv2crowna",
+    "reference": "references/00_STYLE_MASTER.png",
+    "prompt": "Extract only one broad detached umbrella canopy leaf crown from the huge jungle tree on the right of the source, without trunk or ground. Big flat arching umbrella top broken into broad drooping downward leaf blades and three overlapping layers, dark deep emerald undersides and soft muted yellow-green tops, hand-painted simple material regions. Free-standing leaf crown prop, wide and low. Preserve distinctive hanging leaf skirt, no cloud-like smooth blobs or tiny realistic leaves.",
+    "hero": false,
+    "wind": true
+  },
+  "crown-b": {
+    "triangles": 4000,
+    "size": [
+      26,
+      11,
+      22
+    ],
+    "kind": "trialsv2crownb",
+    "reference": "references/09_CAVE_EXIT_JUNGLE_PATH.png",
+    "prompt": "Extract one detached wide horizontal layered jungle crown, no trunk or ground, from the middle distant trees. Asymmetrical sweeping umbrella foliage mass with a low hanging fringe of broad spear-like leaves, several visible separate overlapping leaf tier silhouettes with deep forest-green shade and lime-green upper faces. Shape is wide and low, painterly broad leaf geometry, restrained flat painted texture bands, no realistic noisy leaf particles.",
+    "hero": false,
+    "wind": true
+  },
+  "groundcover-a": {
+    "triangles": 2500,
+    "size": [
+      5,
+      1.2,
+      3
+    ],
+    "kind": "trialsv2groundcovera",
+    "reference": "references/05_SHALLOW_RIVER_STEPPING_STONES.png",
+    "prompt": "Extract one continuous dense low groundcover bank strip from the river-edge foreground, no water or rocks: layered broad dark emerald pointed leaves, overlapping medium-leaf fans, smaller bright green coarse grass at its low front edge. Wide low bank silhouette, chunky leaves rooted together in a narrow tiny earthy base; outer shape irregular rather than a radial flower. Exact source green planes and painterly simplified broad leaf surface.",
+    "hero": false,
+    "wind": true
+  },
+  "groundcover-b": {
+    "triangles": 2500,
+    "size": [
+      5,
+      1.2,
+      3
+    ],
+    "kind": "trialsv2groundcoverb",
+    "reference": "references/09_CAVE_EXIT_JUNGLE_PATH.png",
+    "prompt": "Extract one wide low leafy jungle groundcover border clump from the path's lower right: contiguous mass of deep forest-green large overlapping lance leaves and two arching brighter leaf fans, short simple jagged grass at bottom. Asymmetrical strip, no rocks or scene. Match broad restrained hand-painted leaves and cool dark inner silhouette. No thousands of fine blades or photoreal weeds.",
+    "hero": false,
+    "wind": true
+  },
+  "fern-a": {
+    "triangles": 2200,
+    "size": [
+      3,
+      2,
+      3
+    ],
+    "kind": "trialsv2ferna",
+    "reference": "references/06_CAVE_ROUGH_UPHILL_STEPS.png",
+    "prompt": "Extract one isolated low fern and broadleaf plant grouping from the left foreground of the cave stair reference. One single connected plant cluster with four large arching broad lobed fern fronds, emerald main leaves and one small muted red-orange leaf spray at side. Each leaf has a bold continuous readable silhouette and just coarse veins, deep green rooted stems. No ground plane or stone.",
+    "hero": false,
+    "wind": true
+  },
+  "fern-b": {
+    "triangles": 2200,
+    "size": [
+      3,
+      2,
+      3
+    ],
+    "kind": "trialsv2fernb",
+    "reference": "references/04_HUT_CORRIDOR.png",
+    "prompt": "Extract one second low plant clump from the hut corridor undergrowth. Five broad green downward arching split leaves, a small two-frond red-leaf accent low on one side, compact asymmetric planted cluster. Hand-painted deep emerald greens, soft controlled lime highlights, restrained broad veins. No realism, no tiny leaf noise, no hut or other props.",
+    "hero": false,
+    "wind": true
+  },
+  "earthbank-a": {
+    "triangles": 2800,
+    "size": [
+      8,
+      2.5,
+      4
+    ],
+    "kind": "trialsv2earthbanka",
+    "reference": "references/09_CAVE_EXIT_JUNGLE_PATH.png",
+    "prompt": "Create one independent long low natural earth-bank shelf matching the warm dirt path banks in the source: flat-ish broad ochre loam upper lip, low gently rounded dirt sidewall with two large exposed twisting roots, an uneven overhanging mossy dark-green grassy edge on one long side. Continuous mound with large smooth planes, no cobblestones or hard masonry. Front-facing long bank face. No plants except short coarse moss at lip, no scene. Useful path shoulder prop with grounded flat bottom.",
+    "hero": false,
+    "wind": false
+  },
+  "earthbank-b": {
+    "triangles": 2800,
+    "size": [
+      8,
+      2.5,
+      4
+    ],
+    "kind": "trialsv2earthbankb",
+    "reference": "references/05_SHALLOW_RIVER_STEPPING_STONES.png",
+    "prompt": "Create one sister low riverbank earthen shelf matching the reference banks: long rounded warm grey-ochre soil mound, broad level dirt upper shoulder with dark green moss draped over irregular lip, two thick old root segments partly exposed on one face, shallow inset natural stone lobe at one end. Long softly meandering profile with broad readable contours, no noisy pebbles or tiny grass. Flat grounded bottom. One isolated bank chunk.",
+    "hero": false,
+    "wind": false
+  },
+  "riverstone-a": {
+    "triangles": 1600,
+    "size": [
+      5,
+      0.7,
+      4
+    ],
+    "kind": "trialsv2riverstonea",
+    "reference": "references/05_SHALLOW_RIVER_STEPPING_STONES.png",
+    "prompt": "Extract just the closest oversized flat stepping stone from the shallow river reference. One squat broad rounded irregular oval rock, nearly level large top supporting a player, chunky softly faceted dark warm-grey sidewall, warm ochre-grey worn top, minimal broad moss around lower edge. Top is very flat with only subtle surface irregularity, no bumpy dome, top occupies 80 percent of height with a small beveled rim above. No water, plants or baseplate.",
+    "hero": false,
+    "wind": false
+  },
+  "riverstone-b": {
+    "triangles": 1600,
+    "size": [
+      5,
+      0.7,
+      4
+    ],
+    "kind": "trialsv2riverstoneb",
+    "reference": "references/05_SHALLOW_RIVER_STEPPING_STONES.png",
+    "prompt": "Extract just the second oversized shallow-river stepping stone. One squat wide irregular rounded trapezoid rock with broad nearly planar warm ochre-grey top, softly chipped corners and broad cool-grey sides, tiny dark moss band near bottom. A distinct flat-topped riverstone variant, no domed upper surface. Thick organic low edge shape and generous uncluttered top. No water or other props.",
+    "hero": false,
+    "wind": false
+  },
+  "riverstone-c": {
+    "triangles": 1600,
+    "size": [
+      5,
+      0.7,
+      4
+    ],
+    "kind": "trialsv2riverstonec",
+    "reference": "references/05_SHALLOW_RIVER_STEPPING_STONES.png",
+    "prompt": "Extract just the furthest oversized river stepping stone. One very low wide rounded pentagonal natural rock slab, a large flat softly painted warm taupe stone top, slightly broken shallow beveled rim, cool dark grey lower side, sparse moss patches only at base. Top broad and nearly level, intended gameplay platform; no raised rocks or pebbles. Third distinct coherent variant. No water or ground.",
+    "hero": false,
+    "wind": false
+  },
+  "cavewall-a": {
+    "triangles": 3500,
+    "size": [
+      12,
+      10,
+      6
+    ],
+    "kind": "trialsv2cavewalla",
+    "reference": "references/07_SUNLIT_CAVERN_HALFPIPE.png",
+    "prompt": "Extract one continuous cave-side rock wall chunk from the cavern reference. Broad warm grey-ochre rounded layered rock wall, giant smooth weathered stone lobes and shallow deep vertical creases, gently overhanging upper shoulder, subdued moss only in a few upper cracks. A single contiguous wall panel, flat back for modular placement, broad concave visible front, roughly flat bottom. No individual stacked cubes, no crystalline spikes, no steps, arches, ground or plants. Match soft massive cavern surfaces.",
+    "hero": false,
+    "wind": false
+  },
+  "cavewall-b": {
+    "triangles": 3500,
+    "size": [
+      12,
+      10,
+      6
+    ],
+    "kind": "trialsv2cavewallb",
+    "reference": "references/08_BROKEN_BRIDGE_ROPE_GRIND.png",
+    "prompt": "Extract one sister cavern wall massif from the river cavern. Tall continuous smooth rounded warm-grey rock slab with two broad shallow slanting strata and an asymmetric upper shoulder, concave visible face with large unbusy creases, moss limited to one sheltered notch. Flat modular back, grounded flat base, soft worn broad facets. No generic jagged cliff shards, no wall bricks, no water or props.",
+    "hero": false,
+    "wind": false
+  },
+  "caveroof-a": {
+    "triangles": 3500,
+    "size": [
+      18,
+      5,
+      8
+    ],
+    "kind": "trialsv2caveroofa",
+    "reference": "references/07_SUNLIT_CAVERN_HALFPIPE.png",
+    "prompt": "Extract one independent horizontal natural cavern ceiling rock beam from the reference upper right. Wide thick continuous weathered ochre-grey stone overhang, low arching organic underside broken into three broad rounded contiguous rock lobes, gently irregular upper surface. Asymmetric chunky roof chunk can connect two cave walls; broad softened planes, deep moss-dark underside but no baked sun shaft or directional cast shadow. No pillars, floor, foliage, tunnel or entire cave.",
+    "hero": false,
+    "wind": false
+  },
+  "caveroof-b": {
+    "triangles": 3500,
+    "size": [
+      18,
+      5,
+      8
+    ],
+    "kind": "trialsv2caveroofb",
+    "reference": "references/08_BROKEN_BRIDGE_ROPE_GRIND.png",
+    "prompt": "Extract one independent sister cavern ceiling overhang beam, long horizontal low arc and an offset broad lower lobe at one end, three continuous naturally rounded rock strata, warm taupe-grey painterly top and restrained cool grey-green underside. Single ceiling chunk only, no complete arch with feet. Soft broad worn forms, no stalactites, spikes or busy cracks.",
+    "hero": false,
+    "wind": false
+  },
+  "rocksteps-a": {
+    "triangles": 3500,
+    "size": [
+      7,
+      2.5,
+      8
+    ],
+    "kind": "trialsv2rockstepsa",
+    "reference": "references/06_CAVE_ROUGH_UPHILL_STEPS.png",
+    "prompt": "Extract just a short row of five meandering natural rock step ledges from the cave reference, no cave or surrounding scene. Huge irregular softly worn stone shelves, each roughly flat generous top offset left or right slightly, variable tread depths, broad moss between outside shoulders. They form one connected low ascending natural rock outcrop, lowest ledge at front highest at rear; warm grey-ochre rough-cut top planes, thick rounded irregular edges. Not geometric staircase or stacked masonry.",
+    "hero": false,
+    "wind": false
+  },
+  "rocksteps-b": {
+    "triangles": 3500,
+    "size": [
+      7,
+      2.5,
+      8
+    ],
+    "kind": "trialsv2rockstepsb",
+    "reference": "references/06_CAVE_ROUGH_UPHILL_STEPS.png",
+    "prompt": "Extract a second ascending row of five chunky natural rock ledges from the upper cave steps. Meandering connected rock shelves with asymmetrical broad worn top platforms, irregular heights and alternating wider shoulders, moderate curves and a little moss in outside creases. Very broad low worn rock surfaces, lowest shelf front highest rear. Distinct sister row, not mathematical rectangular staircase, no brick blocks or uniform risers.",
+    "hero": false,
+    "wind": false
+  },
+  "halfpipe-end": {
+    "triangles": 3500,
+    "size": [
+      8,
+      4,
+      2.5
+    ],
+    "kind": "trialsv2halfpipeend",
+    "reference": "references/01_TREEHOUSE_CLEARING.png",
+    "prompt": "Extract just one detached end scaffold frame supporting the homemade wooden halfpipe. One broad U-shaped exposed timber rib truss, two upright outer posts and two short rough top deck platforms, three diagonal timber braces, weathered uneven rounded wood and rope lashings. Open central lower gap and no solid riding skin across the U: this is the structural end frame alone. No complete long halfpipe, no ground plane. Match actual rough improvised timber in source.",
+    "hero": false,
+    "wind": false
+  },
+  "plank": {
+    "triangles": 800,
+    "size": [
+      5,
+      0.18,
+      0.35
+    ],
+    "kind": "trialsv2plank",
+    "reference": "references/07_SUNLIT_CAVERN_HALFPIPE.png",
+    "prompt": "Extract one single long broad weathered halfpipe timber plank, very long and thin rectangular board, irregular softly chipped ends, subtle broad warp, hand-painted medium warm golden-brown wood grain streaks with one coarse knot. Dimensions long5, thickness0.18, width0.35. No metal nails, no cracks that break collision, no attached props, no wood pile, no background scene. One sturdy rustic game board.",
+    "hero": false,
+    "wind": false
+  },
+  "beam": {
+    "triangles": 700,
+    "size": [
+      4,
+      0.35,
+      0.35
+    ],
+    "kind": "trialsv2beam",
+    "reference": "references/01_TREEHOUSE_CLEARING.png",
+    "prompt": "Extract one single long irregular chunky wooden support beam from treehouse posts/braces. Slightly bowed but generally straight rounded square timber, softly worn edges and flat sawn ends, broad warm ochre brown painted wood stripes and one coarse knot, restrained dark weathered edge accents. Dimensions length4 thickness0.35 width0.35. No ropes, no nails, no attached platform or scene. Single modular timber beam.",
+    "hero": false,
+    "wind": false
+  },
+  "porchhut": {
+    "triangles": 8000,
+    "size": [
+      8,
+      5.5,
+      7
+    ],
+    "kind": "trialsv2porchhut",
+    "reference": "references/04_HUT_CORRIDOR.png",
+    "prompt": "Extract only the foreground left handmade round jungle hut with porch from the source, preserve its distinctive exact proportions and surfaces, no surrounding tree or plants. Round pale cream plaster body with thick circular timber door frame and arched warm brown board door, two circular amber windows, layered drooping yellow-green leaf thatch roof, faded red ochre cloth porch awning on stout crooked posts, broad rough front deck with asymmetrical steps and thick rope rails. Warm inhabited simple source look, no signs or extra lantern clutter, broad painterly material regions.",
+    "hero": true,
+    "wind": false
+  },
+  "crabshack": {
+    "triangles": 8000,
+    "size": [
+      10,
+      8,
+      9
+    ],
+    "kind": "trialsv2crabshack",
+    "reference": "references/04_HUT_CORRIDOR.png",
+    "prompt": "Refine one humble handmade jungle seafood hut using the exact architecture language and material simplicity of this hut reference: broad squat round-ish cream plaster cabin, thick irregular dark wood frames, arched opening service window, layered yellow-green thatch roof and small faded coral cloth porch awning, short generous rough-board pier porch raised on four irregular timber stilts. One simple muted red sculpted crab silhouette sits on roof ridge, broad readable chunky body/claws. Rope porch rails only. No text, signs, water, beach, props or trees. Match rounded lived-in source art, never a generic shiny seafood restaurant.",
+    "hero": true,
+    "wind": false
+  },
+  "awning": {
+    "triangles": 1000,
+    "size": [
+      4.5,
+      0.5,
+      2.2
+    ],
+    "kind": "trialsv2awning",
+    "reference": "references/04_HUT_CORRIDOR.png",
+    "prompt": "Extract just one separate faded coral-red cloth awning panel from the porch in the supplied hut corridor reference. One single broad shallow gently sagging rectangular fabric sheet stretched between four corners, hand-painted muted warm red cotton with two broad faded ochre repair bands, a slightly irregular frayed free front hem. No poles, ropes, cabin, nails, holes, logos or scene. Fabric is sturdy broad low-poly cloth with two very shallow longitudinal folds, no noisy wrinkles. Width4.5, depth2.2, height/ripple0.5. Back long edge is -Z fixed; front long edge +Z free, show front at viewer. Four corner contact points are geometrically clear. Pale ivory studio background and even diffuse light. Preserve exact broad patched cloth appearance of the reference.",
+    "hero": false,
+    "wind": true,
+    "cloth": true
+  }
+}

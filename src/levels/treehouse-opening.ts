@@ -201,7 +201,7 @@ for (const component of C.slice(houseStart)) {
 // a real underside scaffold. Its floor sits 10cm above the clearing.
 export const TREEHOUSE_HALFPIPE: CustomComponent = { t: "vertramp", p: [14, 0.1, -0.8],
   len: 5.8, w: 0.9, rise: 4.2, arc: 90, arcSteps: 32, deck: 1.5, vkind: "half", yaw: 0,
-  tex: "wood", color: "#bd8b53", nm: "Camera-aligned timber halfpipe", grp: G.pipe };
+  tex: "treehouse-timber", color: "#e0d0b3", nm: "Camera-aligned timber halfpipe", grp: G.pipe };
 add(TREEHOUSE_HALFPIPE);
 const pipeAngle = THREE.MathUtils.degToRad(TREEHOUSE_HALFPIPE.yaw!);
 const pipePoint = (x: number, y: number, z: number): Point => [
