@@ -1277,7 +1277,12 @@ export class Player {
   private revertT = 0; // beat after a vert-air touchdown where R2 = Revert (the THPS3+/THUG combo bridge)
   private pipeEndFly = false; // flew off a pipe's END mid-hang: the landing judges it — a vert/rail/wall catch saves it, flat ground is the bail
   private rollOffT = 0; // rode out a pipe's open END partway up the wall: seconds left of the gradual level-out — land before the wheels are down and the tilt is judged like a fly-off
-  private grindExitAir = false; // this air left a RAIL: held R2 may add transfer strafe; left/right alone only rotates
+  private grindExitAir = false; // rail airs keep their launch velocity; airborne input owns tricks
+  private grindOllieAir = false; // deliberate top-side pop can return to the departing rail
+  private grindOllieCatchArmed = false; // each ollie needs a fresh airborne Grind press
+  private grindAirLat = 0;
+  private grindSpinInput = 0; // pre-held transfer direction must be released before it spins
+  private readonly grindJumpInput = new THREE.Vector2();
   private floatAir = false; // this air left the ground off a ramp/kicker/slope: fall at rampFallGravity (ballistic), not the flat-ollie snap
   private grabTickT = 0; // THPS accrual while the grab is held
   private grindStyleT = 0;
@@ -3411,6 +3416,10 @@ export class Player {
     this.airFromSkate = false;
     this.airGrav = 'foot';
     this.grindExitAir = false;
+    this.grindOllieAir = false;
+    this.grindOllieCatchArmed = false;
+    this.grindAirLat = this.grindSpinInput = 0;
+    this.grindJumpInput.set(0, 0);
     this.boardOllieAir = false;
     this.emergencyEjectChargeT = 0;
     this.emergencyEjectCharging = false;
@@ -7700,7 +7709,8 @@ export class Player {
       const g = this.parkFlightGravity;
       this.vVel -= g * dt;
       parkGravityCorrection = 0.5 * g * dt * dt;
-      this.parkSpinHold = Math.abs(this.rawInput.moveX) > 0.1 ? this.parkSpinHold + dt : 0;
+      const spinInput = this.grindExitAir ? this.spinStick() : this.rawInput.moveX;
+      this.parkSpinHold = Math.abs(spinInput) > 0.1 ? this.parkSpinHold + dt : 0;
     } else if (this.slamActive) {
       if (this.slamHangT > 0) {
         // the cartoon hang: no gravity, forward motion screeches off
@@ -7788,6 +7798,7 @@ export class Player {
       !this.vertAir &&
       !this.loopFall &&
       !(this.parkControls && this.airFromSkate) &&
+      !this.grindExitAir &&
       !this.slideJumpAir
     ) {
       const footAir =
@@ -7798,10 +7809,6 @@ export class Player {
       const doubleScale = this.doubleJumpAir ? TUNING.doubleJumpHorizontalScale : 1;
       // Digital diagonals in the air get the same normalization as the walk.
       const diag = !level.boss && footAir && input.moveX !== 0 && input.moveY !== 0 ? Math.SQRT1_2 : 1;
-      const railSpinInPlace =
-        input.transferHeld || input.grabHeld || input.grabPressed || this.grabbing;
-      const railExitStrafe =
-        this.grindExitAir && !railSpinInPlace && !this.isBailing;
       if (footAir) {
         // On-foot air control is DIRECT DRIVE like the walk: zero inertia, so
         // precision hops (bouncy crates!) never drift. After a double jump the
@@ -7822,10 +7829,7 @@ export class Player {
         const cap = this.gravityTrackAir ? Math.max(TUNING.downhillMax,Math.abs(this.speed)) : TUNING.downhillMax;
         this.speed = THREE.MathUtils.clamp(this.speed + rate * input.moveY * dt, -cap, cap);
       }
-      // A rail hop keeps its old horizontal freedom by default. R2 or a grab
-      // says the opposite explicitly: stay on the rail's flight line so the
-      // same left/right input can spin without drifting off-axis.
-      if ((footAir || railExitStrafe) && Math.abs(input.moveX) > 0.05) {
+      if (footAir && Math.abs(input.moveX) > 0.05) {
         this.pos.addScaledVector(
           this.axisL,
           input.moveX * TUNING.walkSpeed * diag * doubleScale * dt,
@@ -7837,6 +7841,10 @@ export class Player {
       this.pos.x -= this.vertNormal.z * this.vertLatVel * dt;
       this.pos.z += this.vertNormal.x * this.vertLatVel * dt;
     } else this.pos.addScaledVector(this.axisF, this.speed * dt);
+    // A side-hop is a launch impulse, independent of later spin/grab input.
+    // Both campaign and park controls carry it through the complete flight.
+    const railTransferAir = this.grindExitAir && this.airFromSkate && !this.isBailing && this.grindAirLat !== 0;
+    if (railTransferAir) this.pos.addScaledVector(this.axisL, this.grindAirLat * dt);
     if (this.slideAirLat !== 0) this.pos.addScaledVector(this.axisL, this.slideAirLat * dt); // slide-jump cross-heading launch
     this.pos.y += this.vVel * dt + parkGravityCorrection;
     if (this.parkControls && this.vertAir && !this.isBailing) this.stepParkVertInput(dt, input, level);
@@ -7996,7 +8004,10 @@ export class Player {
       this.airMomentum = false; // touchdown: normal ground rules resume
       this.airGrav = 'foot'; // the next air re-declares; a site that forgets gets the platforming arc, not this one's
       this.floatAir = false; // the ballistic tag belongs to the air that just ended
-      this.grindExitAir = false; // the rail-hop strafe window closes at the wheels
+      this.grindExitAir = false;
+      this.grindOllieAir = false;
+      this.grindOllieCatchArmed = false;
+      this.grindAirLat = this.grindSpinInput = 0;
       this.liftTy = 0; // this landing's ramp memory belongs to this landing
       this.liftTyT = 0;
       this.slideAirLat = 0; // slide-jump arc is done
@@ -8023,6 +8034,13 @@ export class Player {
         : null;
       const preFx = this.axisF.x; // heading BEFORE the landing projection — a
       const preFz = this.axisF.z; // reversal against it = landed riding fakie
+      if (railTransferAir && !this.parkControls) {
+        // Carry the complete side-hop into the roll-out, just as park
+        // landings already project their measured incoming velocity below.
+        this.speed = Math.hypot(incomingPlanarX, incomingPlanarZ);
+        this.axisF.set(incomingPlanarX, 0, incomingPlanarZ).normalize();
+        this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+      }
       // Landing out of a lateral hang: keep the sideways momentum so a gap
       // transfer flows on the far side instead of stalling. Seed it as speed
       // along the coping BEFORE the projection below folds in any fall energy.
@@ -10044,6 +10062,8 @@ export class Player {
 
   private stepGrind(dt: number, input: Input, level: Level): void {
     const rail = this.grindRail!;
+    const previousX = this.grindJumpInput.x, previousY = this.grindJumpInput.y;
+    this.grindJumpInput.set(this.rawInput.moveX, this.rawInput.moveY);
     // Retiring transient encounter geometry must never leave an invisible
     // rider attachment. A live rider normally keeps the unfurl open instead.
     if (rail.chiefTongueAssist && !rail.grindable) {
@@ -10295,6 +10315,13 @@ export class Player {
       this.lastJumpType = this.underK > 0.5 ? 'Under-Rail Drop' : 'Grind Exit';
       sfx.play('ollie', 0.7);
       const perfect = this.perfectGrindRun(rail, level);
+      // Read intent before the release edge. A direction first pressed on
+      // takeoff belongs to the air trick, not an accidental lateral launch.
+      const side = this.grindJumpSide(level, this.rawInput.moveX, this.rawInput.moveY);
+      const previousSide = this.grindJumpSide(level, previousX, previousY);
+      const topOllie = this.underK <= 0.5;
+      const transfer = topOllie && side * previousSide > 0
+        ? side * TUNING.grindTransferSpeed * THREE.MathUtils.lerp(0.8, 1, t) : 0;
       // from underneath, X lets go — a small drop away, never a pop up
       // through the rail overhead
       this.exitGrind(
@@ -10302,6 +10329,8 @@ export class Player {
           ? 1.0
           : THREE.MathUtils.lerp(TUNING.grindJumpForce * 0.72, TUNING.grindJumpForce, t),
         level,
+        transfer,
+        topOllie,
       );
       if (perfect) this.applyPerfectGrind();
       // grind exits are board airs: no somersault
@@ -10348,6 +10377,12 @@ export class Player {
   }
 
   private tryGrind(pressed: boolean, level: Level): boolean {
+    // The takeoff hold belongs to the grind we left. A fresh press can arm
+    // the next catch early (even during cooldown), then be held to contact.
+    if (this.grindExitAir && this.grindOllieAir) {
+      if (pressed) this.grindOllieCatchArmed = true;
+      if (!this.grindOllieCatchArmed) return false;
+    }
     // A flopped bail can't grab a rail — the lip bail ejects you right over
     // the coping with Triangle still held, and snapping it would turn the
     // punishment into a free 50-50.
@@ -10369,14 +10404,24 @@ export class Player {
     // off the end of a short rail (the jungle log) leaves you inside that
     // rail's own snap radius with the button still down: it snapped straight
     // back on, ran off the end again, and snapped back, over and over, and you
-    // could not fall off it at all. A fresh PRESS still re-grabs immediately;
-    // a hold has to let go once. Only the rail you left is blocked, so holding
-    // Triangle through a rail-to-rail transfer is untouched.
-    if (!pressed && this.grindLatched && this.railCand.rail === this.lastRail) return false;
+    // could not fall off it at all. A fresh PRESS re-arms a run-off catch;
+    // intentional ollies use the fresh-press gate above plus the landing
+    // envelope below. A run-off can still hold through to a different rail.
+    const returningOllie = this.grindExitAir && this.grindOllieAir && this.railCand.rail === this.lastRail;
+    if (!pressed && this.grindLatched && this.railCand.rail === this.lastRail && !returningOllie) return false;
     // railCand was sampled at the START of this step; re-close on the CURRENT
     // position so a fast step snaps onto the point actually under our feet,
     // not where we were 1-2 units ago.
     const s = this.railCand.rail.closest(this.pos);
+    if (returningOllie) {
+      // Catch the return at rail height, never cancel the rising pop or
+      // magnet a side-exit back onto its source. Endpoint run-offs retain
+      // their ordinary release latch because they are not deliberate ollies.
+      const height = this.pos.y - (s.point.y + CONST.railRideHeight);
+      const lateral = Math.hypot(this.pos.x - s.point.x, this.pos.z - s.point.z);
+      const contactWidth = CONST.playerHalf.x + CONST.railBlockRadius;
+      if (this.vVel > 0 || height < -0.15 || height > 0.45 || lateral > contactWidth) return false;
+    }
     const tongueEntry = this.railCand.rail.chiefTongueAssist &&
       s.t <= this.railCand.rail.chiefTongueAssist.entryLength;
     const catchRadius = tongueEntry
@@ -10473,9 +10518,10 @@ export class Player {
     // Capture that real incoming velocity before ending the flight so either
     // catch direction retains its speed rather than reversing at the rail.
     const fromParkVert = this.parkControls && this.vertAir && !this.grounded;
-    const worldVx = fromParkVert ? -this.vertNormal.z * this.vertLatVel : this.axisF.x * this.speed;
-    const worldVz = fromParkVert ? this.vertNormal.x * this.vertLatVel : this.axisF.z * this.speed;
-    const planarIn = fromParkVert ? Math.hypot(worldVx, worldVz) : Math.abs(this.speed);
+    const railLat = this.grindExitAir ? this.grindAirLat : 0;
+    const worldVx = fromParkVert ? -this.vertNormal.z * this.vertLatVel : this.axisF.x * this.speed + this.axisL.x * railLat;
+    const worldVz = fromParkVert ? this.vertNormal.x * this.vertLatVel : this.axisF.z * this.speed + this.axisL.z * railLat;
+    const planarIn = fromParkVert || railLat !== 0 ? Math.hypot(worldVx, worldVz) : Math.abs(this.speed);
     this.retireHeldVertRelease();
     // A rail catch ends the flight immediately, including the first rendered
     // catch frame. The next step's general non-air cleanup is too late for
@@ -10579,6 +10625,10 @@ export class Player {
     this.pipeEndFly = false; // a rail catch SAVES a pipe-end fly-off
     this.rollOffT = 0;
     this.grindExitAir = false; // (re-set by the next exit — the hop window is per-air)
+    this.grindOllieAir = false;
+    this.grindOllieCatchArmed = false;
+    this.grindAirLat = this.grindSpinInput = 0;
+    this.grindJumpInput.set(0, 0);
     // The trick is scored the moment you lock in — the rail then RACKS UP
     // points for as long as you hold it (see stepGrind), THPS-style.
     this.score(
@@ -10695,12 +10745,29 @@ export class Player {
     this.grindCrate = best;
   }
 
-  private exitGrind(vVel: number, level?: Level): void {
+  private grindJumpSide(level: Level, x: number, y: number): number {
+    const t = this.grindRail!.tangentAt(this.grindT).multiplyScalar(this.grindDir);
+    const length = Math.hypot(t.x, t.z);
+    if (length < 0.05) return 0;
+    const camera = this.parkControls ? this.camDir
+      : this.courseInputDirection(level) ?? (TUNING.chaseCam > 0.5 ? this.camDir : { x: 0, z: -1 });
+    const scale = 1 / (Math.max(1, Math.hypot(x, y)) * (Math.hypot(camera.x, camera.z) || 1));
+    const wx = (camera.x * y - camera.z * x) * scale;
+    const wz = (camera.z * y + camera.x * x) * scale;
+    const side = (wx * t.z - wz * t.x) / length;
+    return Math.abs(side) > 0.3 ? side : 0;
+  }
+
+  private exitGrind(vVel: number, level?: Level, lateral = 0, ollie = false): void {
     this.airFromSkate = true; // leaving a rail is a board air: tricks live
     this.airGrav = 'board';
-    // RAIL-HOP window: left/right may translate across the air by default.
-    // R2 or a grab suppresses that translation for an in-place spin.
     this.grindExitAir = true;
+    this.grindOllieAir = ollie;
+    this.grindOllieCatchArmed = false;
+    this.grindAirLat = lateral;
+    this.grindSpinInput = lateral !== 0 && Math.abs(this.rawInput.moveX) > 0.3
+      ? Math.sign(this.rawInput.moveX) : 0;
+    this.parkSpinHold = 0;
 
     // ...and the last box goes with the manoeuvre. Every earlier one already
     // broke as the rider cleared it (tickGrindCrate); this is the one still
@@ -11125,6 +11192,10 @@ export class Player {
   // down the pipe. One stick meaning everywhere: left/right = rotate.)
   private spinStick(): number {
     const rx = this.rawInput.moveX;
+    if (this.grindExitAir && this.grindSpinInput !== 0) {
+      if (Math.abs(rx) > 0.3 && Math.sign(rx) === this.grindSpinInput) return 0;
+      this.grindSpinInput = 0;
+    }
     return Math.abs(rx) > 0.3 ? rx : 0;
   }
 
@@ -13719,7 +13790,9 @@ export class Player {
     if (!this.airRose && this.vVel > -3) return false;
     if (!this.airFromSkate && !this.freeSkate) return false;
     if (this.isBailing || this.slamActive) return false;
-    if (input.grindHeld || input.grindPressed) return false;
+    const grindRequested = (input.grindHeld || input.grindPressed) &&
+      (!this.grindExitAir || !this.grindOllieAir || this.grindOllieCatchArmed);
+    if (grindRequested) return false;
     if (this.regrindCd > 0 || this.vertLandGraceT > 0 || this.vertAir || this.pipeHang) return false;
     // Same contact skin the on-foot rail block uses (playerHalf + blockRadius,
     // 0.7): the bar is as wide to FALL onto as it is to skate into. The first

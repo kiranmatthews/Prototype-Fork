@@ -50,12 +50,12 @@ outside the published browser bundle.
 | Action | PS4 controller | Keyboard |
 | --- | --- | --- |
 | Forward / back up | Left stick or d-pad up/down | Up/Down (W/S) |
-| Sidestep (axis-locked, works in air) | Left stick left/right | Left/Right (A/D) |
+| On-foot sidestep (ground / air) | Left stick left/right | Left/Right (A/D) |
 | Jump / vert transfer / board abandon | X (Cross) | Space |
 | Grind (hold near/over a rail) | Triangle | E |
 | Spin attack / trick | Square | F |
 | Air grab (speed boost on landing) | Circle | Q |
-| Rail-air transfer modifier / revert / lip exit | R2 | T |
+| Revert / lip exit | R2 | T |
 | Restart | Share / Create | R |
 | Pause | Options | P / Escape |
 
@@ -64,6 +64,16 @@ neutral = Kickflip, left-only = Heelflip, right-only = Pop Shove-It, forward =
 Impossible, and back = Varial Flip. Forward/back takes priority over sideways
 input. Trick gates display both the required move and its input recipe on the
 lock.
+
+On a rail, hold a direction before releasing Jump to hop toward that side.
+Release Jump from neutral to keep the rail's launch line; left/right pressed
+after takeoff spins without moving you sideways. Press Grind again in the air
+and hold it to catch the same rail on descent or a neighbouring rail during a
+transfer. Keeping the old Grind hold does not count; landing on a rail without
+the new press bails. A held transfer direction does not also spin: release it,
+then press again to add a rotation.
+Jump charge and stick deflection control transfer distance; R2 and grabs do
+not change the flight path.
 
 During an ordinary board ollie, press and release Jump a second time to perform
 the risky emergency eject. The menu’s **STANDARD RULE** switch selects classic

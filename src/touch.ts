@@ -56,8 +56,8 @@ const buttonPresses = (): Record<BtnDef['key'], Set<number>> => ({
 const SWIPE_MIN_PX = 64;
 const SWIPE_MAX_MS = 320;
 const SWIPE_MIN_VEL = 0.35; // px per ms
-// Touch has no physical trigger to keep depressed. Hold the emulated R2 long
-// enough to cover an in-place rail-air spin without lateral transfer.
+// Touch has no physical trigger to keep depressed. Preserve a short trigger
+// pulse across input polling; rail-ollie trajectories never depend on R2.
 const SWIPE_HOLD_MS = 450;
 // The unobstructed upper screen is a small, anchored virtual right stick.
 // Reaching full intent should take a deliberate drag, not a tiny camera nudge.
