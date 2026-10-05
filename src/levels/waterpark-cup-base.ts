@@ -154,7 +154,7 @@ for(const [x,z] of [[5,-15],[6,-68],[57,-70],[59,1],[-80,21],[-80,-55],[-24,-136
 // drained and grounded, with no level-wide black death carpet.
 for(const [x,z,w,d] of [[-48,-109,34,17],[113,-160,17,31],[138,-68,18,19]]) {
   add({t:'pit',p:[x,-4.2,z],s:[w,1,d],invisible:true,grp:90,nm:'Flooded maintenance well'});
-  const g=new THREE.PlaneGeometry(w,d);g.rotateX(-Math.PI/2);mesh([x,-4.05,z],g,'#476c63','Standing water in closed service well');
+  const g=new THREE.PlaneGeometry(w,d);g.rotateX(-Math.PI/2);mesh([x,-4.05,z],g,'#476c63','Standing water in closed service well');C[C.length-1].materialStyle='water';
 }
 
 // Clear painted ride directions; supplies sit off the fast line.

@@ -1,0 +1,47 @@
+{
+  "reference": "https://github.com/dgreenheck/tidewater",
+  "method": "Local in-app Chromium, full water fixture, fresh Three program keys; driver caching may apply. First-render time is the CPU duration of the render call, not total game loading time.",
+  "viewport": [1280, 720],
+  "fixture": {
+    "buildMs": 35.1,
+    "shaderCompileAsyncMs": 303.7,
+    "firstRenderMs": 1312.4,
+    "sceneAndPassPrograms": 8,
+    "shoreFieldBuildMs": 24.6,
+    "glError": 0
+  },
+  "gpuCpuSurfaceComparison": {
+    "samples": 192,
+    "timesSeconds": [0, 1.8, 4.2, 8.7],
+    "maximumHeightErrorMetres": 0.000439279052778796,
+    "maximumNormalComponentError": 0.00023136967566105004,
+    "glError": 0
+  },
+  "sourceScenesReviewed": ["warproom", "beachfront", "descent", "island-hopper", "coastal-street-run", "jungle", "slip", "drowned-crown", "waterpark", "custard-creek", "ghost-train", "crab-chief"],
+  "builtGameSmoke": {
+    "level": "Blockworks · Greybox (source lab)",
+    "supportedSpawn": true,
+    "checkpointWarpAndBank": true,
+    "pitDeath": true,
+    "bankedCheckpointRespawn": true,
+    "finishGate": true,
+    "browserErrors": 0
+  },
+  "builtFullGameplay": {
+    "level": "beachfront",
+    "scenePixels": [1280, 720],
+    "reflectionPixels": [384, 216],
+    "sampleFrames": 240,
+    "averageFrameMs": 17.26375,
+    "medianFrameMs": 16.5,
+    "p95FrameMs": 26.7,
+    "verifiedReflectionAndPrepassRenders": 3376,
+    "supportedSpawn": true,
+    "browserErrors": 0
+  },
+  "notes": [
+    "All reviewed water programs rendered without WebGL or shader errors.",
+    "Animated swimming regression covers entry, idle, return to shore, hard falls, resets and fast boundary approaches.",
+    "The broad editor-material test fails its existing Nightworks LOD-count assertion with both the release-base Level source and this change. Water-specific roundtrip and material checks pass."
+  ]
+}

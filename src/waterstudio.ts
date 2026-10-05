@@ -69,6 +69,15 @@ const rgba = (key: ColorKey, label: string, rgbHi = 1): Field[] => [
 
 const GROUPS: Group[] = [
   {
+    title: "COASTAL SURF",
+    fields: [
+      n("surfHeight", "breaker height (m)", 0, 1, 0.01),
+      n("surfPeriod", "wave period (s)", 2, 16, 0.1),
+      n("surfWidth", "surf width (m)", 1, 30, 0.5),
+      n("foamStrength", "foam", 0, 1, 0.01),
+    ],
+  },
+  {
     title: "GERSTNER WAVE 1",
     fields: [
       n("wave1Length", "length", 1, 120, 0.1),

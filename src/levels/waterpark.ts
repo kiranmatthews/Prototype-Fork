@@ -144,7 +144,7 @@ for(const x of [-32.8,-25.2])C.push(artBeam([x,cp1[1],cp1[2]+1],[x,cp1[1]+3.5,cp
 for(const [i,gap]of WATERPARK_JUMPS.slice(0,3).entries()){
   const edge=i<2?WATERPARK_POOLS[i===0?3:6].farLip:gap.takeoff[2],z=(edge+gap.landing[2])/2,d=edge-gap.landing[2];
   const waterY=earthAt(z)+.6;add({t:'pit',p:[0,waterY,z],s:[34,1,d],invisible:true,grp:90,nm:'Flooded downhill maintenance well'});
-  const g=new THREE.PlaneGeometry(32,Math.max(1,d-.4));g.rotateX(-Math.PI/2);mesh([0,waterY+.12,z],g,'#476c63','Standing service-well water');
+  const g=new THREE.PlaneGeometry(32,Math.max(1,d-.4));g.rotateX(-Math.PI/2);mesh([0,waterY+.12,z],g,'#476c63','Standing service-well water');C[C.length-1].materialStyle='water';
 }
 for(const [x,z]of [[-66,6],[66,-114],[-84,-228],[82,-355],[-66,-468],[72,-555]])add({t:'rock',p:[x,waterparkGradeAt(z)+1,z],s:[24,7,35],seed:Math.abs(x+z),color:'#af9777',tex:'sand',edgeGrinding:false,grp:90,nm:'Hillside rock outcrop'});
 for(const [x,z,top]of [[-29,186,130],[-7,186,130],[-11,cp1[2]-8,cp1[1]],[11,-414,30],[9,-546,12]])add({t:'crate',p:[x,top,z],kind:'wood',grp:90,nm:'Closed park maintenance supplies'});

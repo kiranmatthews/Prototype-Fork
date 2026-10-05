@@ -4,11 +4,12 @@
  * Provenance: this module is a clean Three.js implementation from the audited
  * MatrixRex Unity material and OceanPlaneGenerator values.  It deliberately
  * does not reuse the former four-wave/swash/wet-sand CoastWater simulation.
- * The same two Gerstner equations are evaluated in the GPU and by the public
- * CPU sampler so rendering and gameplay queries cannot drift apart.
+ * Tidewater-inspired analytic swells and depth-limited surf extend the shared
+ * renderer. The small fixed wave stack is shared by GPU and gameplay queries.
  */
 import * as THREE from "three";
 import { OceanPrimaryPass } from "./oceanPrimaryPass";
+import { SURF_DEFAULTS, SURF_GLSL, SWELL_GLSL, sampleSurf, sampleRunup, createShoreField, type ShoreField, type SurfParams } from './coastalSurf';
 
 const TAU = Math.PI * 2;
 const GRAVITY = 9.8;
@@ -67,7 +68,7 @@ export interface OceanColor {
   a: number;
 }
 
-export interface UnityOceanParams {
+export interface UnityOceanParams extends SurfParams {
   wave1Length: number;
   wave1Height: number;
   wave1Speed: number;
@@ -127,29 +128,30 @@ export interface UnityOceanParams {
 }
 
 export const UNITY_OCEAN_DEFAULTS: UnityOceanParams = {
+  ...SURF_DEFAULTS,
   wave1Length: 59.3,
-  wave1Height: 0.01,
-  wave1Speed: 0.1,
+  wave1Height: 0.28,
+  wave1Speed: 0.48,
   wave1DirX: 1,
   wave1DirZ: 0,
   wave1Sharpness: 1,
   wave2Length: 45.8,
-  wave2Height: 0.015,
-  wave2Speed: 0.15,
+  wave2Height: 0.16,
+  wave2Speed: 0.57,
   wave2DirX: -0.49,
   wave2DirZ: 1,
   wave2Sharpness: 0.699,
   shallow: { r: 0.02352938, g: 0.82328343, b: 0.9882353, a: 0.688 },
   deep: { r: 0, g: 0.2462014, b: 0.503, a: 1 },
-  depthDistance: 0.3,
+  depthDistance: 0.9,
   distanceStart: 0,
   distanceFade: 10,
   shoreFadeSmoothness: 0.033,
   peak: { r: 0.542453, g: 0.850634, b: 1, a: 0.47 },
-  normalStrength: 7.79,
+  normalStrength: 2.4,
   normalPan: 0.31,
   normalScale: 0.32,
-  normalDistanceStrength: 7.04,
+  normalDistanceStrength: 2.1,
   shadow: { r: 0, g: 0, b: 0, a: 0.649 },
   specular: { r: 14.27, g: 22.6274, b: 24.66, a: 1 },
   specularSpread: 0.145,
@@ -214,6 +216,8 @@ export interface OceanDebug {
 }
 
 export interface OceanStats {
+  shoreContourSegments: number;
+  shoreFieldBuildMs: number;
   verts: number;
   tris: number;
   shoreSamples: number;
@@ -274,46 +278,45 @@ varying float vOceanTangentW;
 varying float vShoreDistance;
 varying float vViewDepth;
 varying vec4 vClipPosition;
+varying vec2 vBaseXZ;
+varying vec4 vCoast;
+uniform sampler2D uCoastMap;
+uniform vec4 uCoastBounds;
+uniform float uHasCoastMap;
 #include <common>
 #include <shadowmap_pars_vertex>
-
-void unityGerstner(
-  vec2 worldXZ,
-  vec4 wave,
-  vec2 rawDirection,
-  inout vec3 displacement,
-  inout vec3 normalSum
-) {
-  float k = 6.283185307179586 / wave.x;
-  vec2 direction = normalize(rawDirection);
-  float phi = dot(worldXZ, direction * k)
-    - sqrt(9.8 * k) * uTime * wave.z;
-  // Exact audited Unity displacement:
-  // (0,H*cos(phi),0) - normalize(dir)*(sharp/k)*sin(phi)
-  displacement.y += wave.y * cos(phi);
-  displacement.xz -= direction * (wave.w / k) * sin(phi);
-  // Exact audited Unity normal contribution; the two bands are summed.
-  normalSum += vec3(
-    direction.x * k * wave.y * sin(phi),
-    1.0 - wave.w * cos(phi),
-    direction.y * k * wave.y * sin(phi)
-  );
-}
+${SURF_GLSL}
+${SWELL_GLSL}
 
 void main() {
   vec4 baseWorld = modelMatrix * vec4(position, 1.0);
   vec3 displacement = vec3(0.0);
-  vec3 normalSum = vec3(0.0);
-  unityGerstner(baseWorld.xz, uWave1, uWave1Dir, displacement, normalSum);
-  unityGerstner(baseWorld.xz, uWave2, uWave2Dir, displacement, normalSum);
+  vec4 coast = vec4(32.0, 1.0, 0.0, 8.0);
+  if (uHasCoastMap > 0.5) coast = texture2D(uCoastMap,
+    clamp((baseWorld.xz - uCoastBounds.xy) / uCoastBounds.zw, 0.0, 1.0));
+  vec2 slope = vec2(0.0);
+  float bedFade = smoothstep(0.035, 1.2, coast.w);
+  coastSwells(baseWorld.xz, coast.x, uTime, uWave1 * vec4(1.0, bedFade, 1.0, 1.0), uWave1Dir,
+    uWave2 * vec4(1.0, bedFade, 1.0, 1.0), uWave2Dir, displacement, slope);
+  vec3 surf = surfProfileDepth(coast.x, coast.w, baseWorld.xz, uTime);
+  displacement.y += surf.x;
+  slope -= coast.yz * surf.y;
+  vec3 normalSum = vec3(slope.x, 1.0, slope.y);
+  vBaseXZ = baseWorld.xz;
+  vCoast = coast;
   vec4 world = baseWorld;
   world.xyz += displacement;
+  // A few centimetres of swash run onto the local beach slope. Steep walls
+  // retain the ordinary water intersection instead of growing a water sheet.
+  float wetFront = coast.x + surfRunup(baseWorld.xz, uTime);
+  float beachSlope = abs(coast.w) / max(abs(coast.x), 0.25);
+  float film = smoothstep(-0.15, 0.15, wetFront) * (1.0 - smoothstep(0.5, 0.8, beachSlope));
+  if (coast.x < 0.0) world.y += max(-coast.w + 0.028, 0.0) * film;
   // Meshes are authored at sea level. Keep the uniform in the interface for
   // reflection/depth consumers and protect against transformed authoring.
   world.y += uSeaLevel - (modelMatrix * vec4(0.0, uSeaLevel, 0.0, 1.0)).y;
   vWorld = world.xyz;
-  // Shader Graph interpolates the raw summed vertex normal and renormalizes in
-  // BuildSurfaceDescriptionInputs; normalizing per vertex changes that blend.
+  // Leave normalization to the fragment/sample consumers.
   vWaveNormal = mat3(modelMatrix) * normalSum;
   vOceanTangent = normalize(mat3(modelMatrix) * aOceanTangent.xyz);
   vOceanTangentW = aOceanTangent.w;
@@ -324,7 +327,7 @@ void main() {
   vClipPosition = gl_Position;
 
   // Three's shadow chunk expects the same intermediates as its stock vertex
-  // path. Feed it the displaced MatrixRex world position and wave normal.
+  // path. Feed it the displaced world position and wave normal.
   vec3 transformedNormal = normalize(normalMatrix * normalSum);
   vec4 worldPosition = world;
   #include <shadowmap_vertex>
@@ -347,6 +350,9 @@ uniform mat4 uInverseView;
 uniform float uTime;
 uniform float uHasPrepass;
 uniform float uHasReflection;
+uniform sampler2D uCoastMap;
+uniform vec4 uCoastBounds;
+uniform float uHasCoastMap;
 uniform float uRefractionOn;
 uniform float uCausticsOn;
 uniform float uIntersectionOn;
@@ -409,12 +415,17 @@ varying float vOceanTangentW;
 varying float vShoreDistance;
 varying float vViewDepth;
 varying vec4 vClipPosition;
+varying vec2 vBaseXZ;
+varying vec4 vCoast;
 uniform vec3 fogColor;
 uniform float fogNear;
 uniform float fogFar;
 #include <common>
 #include <packing>
 #include <shadowmap_pars_fragment>
+${SURF_GLSL}
+${SWELL_GLSL}
+vec4 pixelCoast;
 
 float distanceMask(float start, float fade) {
   return saturate((distance(cameraPosition, vWorld) - start)
@@ -439,7 +450,7 @@ float sceneEyeDepth(vec2 uv) {
 
 // MatrixRex DepthFadeWorldPosition with _WorldSpaceDepth enabled.
 float waterDepth01(vec2 uv) {
-  if (uHasPrepass < 0.5) return 0.0;
+  if (uHasPrepass < 0.5) return exp(-max(pixelCoast.w, 0.0) / max(uDepthDistance, 0.001));
   float vertical = sceneWorldPosition(uv).y - vWorld.y;
   return saturate(exp(vertical / max(uDepthDistance, 0.000001)));
 }
@@ -456,14 +467,6 @@ vec4 colorLayerAlpha(vec4 base, vec4 layer, float layerMask) {
   return mix(base, layer, layerMask * layer.a);
 }
 
-float gerstnerHeight(vec2 worldXZ, vec4 wave, vec2 rawDirection) {
-  float k = 6.283185307179586 / wave.x;
-  vec2 direction = normalize(rawDirection);
-  float phi = dot(worldXZ, direction * k)
-    - sqrt(9.8 * k) * uTime * wave.z;
-  return wave.y * cos(phi);
-}
-
 vec2 parallaxUv(float parallaxDepth, vec3 viewTs) {
   vec3 v = normalize(viewTs);
   v.z += 0.42;
@@ -475,6 +478,11 @@ vec2 parallaxUv(float parallaxDepth, vec3 viewTs) {
 }
 
 void main() {
+  // Sampling per pixel keeps lite's broad triangles from exposing the seabed
+  // or drawing angular foam across small islets and concave shorelines.
+  pixelCoast = vCoast;
+  if (uHasCoastMap > 0.5) pixelCoast = texture2D(uCoastMap,
+    clamp((vBaseXZ - uCoastBounds.xy) / uCoastBounds.zw, 0.0, 1.0));
   vec2 screenUv = vClipPosition.xy / max(abs(vClipPosition.w), 0.0001);
   screenUv = screenUv * 0.5 + 0.5;
 
@@ -499,7 +507,14 @@ void main() {
     rawNormalTs.xy * normalStrength,
     mix(1.0, rawNormalTs.z, saturate(normalStrength))
   );
-  vec3 geometricN = normalize(vWaveNormal);
+  vec3 fragmentDisplacement = vec3(0.0);
+  vec2 fragmentSlope = vec2(0.0);
+  float bedFade = smoothstep(0.035, 1.2, pixelCoast.w);
+  coastSwells(vBaseXZ, pixelCoast.x, uTime, uWave1 * vec4(1.0, bedFade, 1.0, 1.0), uWave1Dir,
+    uWave2 * vec4(1.0, bedFade, 1.0, 1.0), uWave2Dir, fragmentDisplacement, fragmentSlope);
+  vec3 surf = surfProfileDepth(pixelCoast.x, pixelCoast.w, vBaseXZ, uTime);
+  fragmentSlope -= pixelCoast.yz * surf.y;
+  vec3 geometricN = normalize(vec3(fragmentSlope.x, 1.0, fragmentSlope.y));
   vec3 T = normalize(vOceanTangent);
   vec3 B = normalize(vOceanTangentW * cross(geometricN, T));
   vec3 detailN = normalize(T * normalTs.x + B * normalTs.y + geometricN * normalTs.z);
@@ -513,6 +528,9 @@ void main() {
     max(uShoreFadeSmoothness, 0.000001),
     saturate(1.0 - directDepth)
   );
+  // A thin draining film at the shore; no opaque straight cut at sea level.
+  float front = pixelCoast.x + surfRunup(vBaseXZ, uTime);
+  shoreAlpha *= smoothstep(-0.15, 0.35, front);
 
   // MatrixRex screen refraction: camera-distance strength, raw tangent normal,
   // and a depth validity test that rejects foreground-crossing offsets.
@@ -615,12 +633,9 @@ void main() {
   // Shoreline is enabled in Unity but its approved color alpha is exactly 0,
   // so the entire subgraph is mathematically inert in the active variant.
 
-  // Wave-top layer uses summed vertical displacement at the fragment. The
-  // Shader Graph Lerp is intentionally not saturated, so troughs extrapolate.
-  float fragmentWaveHeight =
-    gerstnerHeight(vWorld.xz, uWave1, uWave1Dir)
-    + gerstnerHeight(vWorld.xz, uWave2, uWave2Dir);
-  waterColor = colorLayerAlpha(waterColor, uPeak, fragmentWaveHeight * 10.0);
+  // Keep the authored peak tint, bounded to the visible swell crests.
+  float fragmentWaveHeight = fragmentDisplacement.y + surf.x;
+  waterColor = colorLayerAlpha(waterColor, uPeak, saturate(fragmentWaveHeight * 1.8));
 
   // Refraction layer alpha is the depth-color alpha after intersection. It is
   // separate from the final material opacity, which is shoreAlpha below.
@@ -656,7 +671,7 @@ void main() {
     finalColor = mix(
       finalColor,
       reflectionColor,
-      fresnel * uReflectionStrength
+      saturate(fresnel * uReflectionStrength)
     );
   }
 
@@ -672,6 +687,15 @@ void main() {
   );
   float specularMask = mix(specRaw, specCut, uSpecularHardness);
   finalColor += uSpecular.rgb * specularMask;
+  // Reuse our existing noise map for patchy breaker foam and trailing lace.
+  // Foam is applied after reflections/specular so whitewater stays diffuse.
+  float laceNoise = texture2D(uShoreNoise, vBaseXZ * 0.38
+    + vec2(uTime * 0.024, -uTime * 0.018)).r;
+  float surfMask = surfFoamDepth(pixelCoast.x, pixelCoast.w, vBaseXZ, uTime, laceNoise);
+  float whitecap = smoothstep(0.22, 0.4, fragmentWaveHeight)
+    * smoothstep(0.57, 0.78, laceNoise) * smoothstep(8.0, 24.0, pixelCoast.x) * 0.28;
+  finalColor = mix(finalColor, uIntersection.rgb, max(surfMask, whitecap) * uIntersection.a);
+  shoreAlpha = max(shoreAlpha, surfMask * 0.88);
 
   // Main-light shadow attenuation, with Unity's authored translucent black
   // overlay. Three supplies the live directional shadow map to this material.
@@ -713,11 +737,19 @@ varying float vHorizon;
 varying float vAlpha;
 varying vec2 vWorldXZ;
 varying float vViewDepth;
+uniform vec4 uWave1;
+uniform vec2 uWave1Dir;
+uniform vec4 uWave2;
+uniform vec2 uWave2Dir;
+${SWELL_GLSL}
 void main() {
   vec4 world = modelMatrix * vec4(position, 1.0);
   vHorizon = aHorizon;
   vAlpha = aAlpha;
-  vWorldXZ = vec2(world.x, world.z * uSourceZSign);
+  vWorldXZ = world.xz;
+  vec3 swell = vec3(0.0);vec2 slope = vec2(0.0);
+  coastSwells(world.xz,32.0,uTime,uWave1,uWave1Dir,uWave2,uWave2Dir,swell,slope);
+  world.y += swell.y * (1.0 - smoothstep(0.2,1.0,aHorizon));
   vec4 mvPosition = viewMatrix * world;
   vViewDepth = -mvPosition.z;
   gl_Position = projectionMatrix * mvPosition;
@@ -735,12 +767,21 @@ varying float vViewDepth;
 uniform vec3 fogColor;
 uniform float fogNear;
 uniform float fogFar;
+uniform vec4 uWave1;
+uniform vec2 uWave1Dir;
+uniform vec4 uWave2;
+uniform vec2 uWave2Dir;
+uniform vec4 uPeak;
+${SWELL_GLSL}
 void main() {
-  float horizon = clamp(vHorizon * 1.12, 0.0, 1.0);
+  // Distance from the camera, not from the ribbon edge: the Slipstream runs
+  // above this outer surface and must still see rolling water underneath it.
+  float horizon = smoothstep(180.0, 650.0, vViewDepth);
   vec3 color = mix(uNearColor, uFarFogColor, horizon);
-  float ripple = sin(vWorldXZ.x * 0.037 + uTime * 0.17)
-    + sin(vWorldXZ.y * 0.029 - uTime * 0.11);
-  color += ripple * 0.008 * (1.0 - horizon);
+  vec3 swell = vec3(0.0);vec2 slope = vec2(0.0);
+  coastSwells(vWorldXZ,32.0,uTime,uWave1,uWave1Dir,uWave2,uWave2Dir,swell,slope);
+  color = mix(color,uPeak.rgb,clamp(swell.y*1.8,0.0,1.0)*uPeak.a*(1.0-horizon));
+  color *= 1.0 + clamp(dot(slope,vec2(-0.8,0.3)),-0.08,0.08)*(1.0-horizon);
   float fogFactor = clamp(
     (vViewDepth - fogNear) / max(fogFar - fogNear, 0.000001),
     0.0,
@@ -776,6 +817,7 @@ function evaluateWavePair(
   time: number,
   p: UnityOceanParams,
   sourceZSign = 1,
+  attenuation = 1,
 ): WaveEvaluation {
   let height = 0;
   let dx = 0;
@@ -786,21 +828,26 @@ function evaluateWavePair(
   const waves: [number, number, number, number, number, number][] = [
     [p.wave1Length, p.wave1Height, p.wave1Speed, p.wave1DirX, p.wave1DirZ, p.wave1Sharpness],
     [p.wave2Length, p.wave2Height, p.wave2Speed, p.wave2DirX, p.wave2DirZ, p.wave2Sharpness],
+    [17, (Math.abs(p.wave1Height) + Math.abs(p.wave2Height)) * 0.16, 0.65, 0.8, 0.6 * sourceZSign, 0.45],
+    [7.1, (Math.abs(p.wave1Height) + Math.abs(p.wave2Height)) * 0.072, 0.82, -0.4, 0.9165 * sourceZSign, 0.35],
   ];
   for (const [length, waveHeight, speed, rawX, rawSourceZ, sharpness] of waves) {
-    const k = TAU / Math.max(length, 1e-5);
+    const k = TAU / Math.max(length, 0.01);
     const rawZ = rawSourceZ * sourceZSign;
-    const [dirX, dirZ] = unit2(rawX, rawZ);
+    const directionLength=Math.hypot(rawX,rawZ);
+    const [dirX, dirZ] = directionLength<0.00001?[1,0]:[rawX/directionLength,rawZ/directionLength];
     const phi = (x * dirX + z * dirZ) * k - Math.sqrt(GRAVITY * k) * time * speed;
     const sinPhi = Math.sin(phi);
     const cosPhi = Math.cos(phi);
-    height += waveHeight * cosPhi;
-    dx -= dirX * (sharpness / k) * sinPhi;
-    dz -= dirZ * (sharpness / k) * sinPhi;
-    nx += dirX * k * waveHeight * sinPhi;
-    ny += 1 - sharpness * cosPhi;
-    nz += dirZ * k * waveHeight * sinPhi;
+    const amplitude = waveHeight * attenuation;
+    height += amplitude * cosPhi;
+    const q = Math.min(Math.max(sharpness, 0), 0.75, 0.35/Math.max(k*Math.abs(amplitude),0.001));
+    dx -= dirX * amplitude * q * sinPhi;
+    dz -= dirZ * amplitude * q * sinPhi;
+    nx += dirX * k * amplitude * sinPhi / Math.max(1 - q * k * amplitude * cosPhi, 0.35);
+    nz += dirZ * k * amplitude * sinPhi / Math.max(1 - q * k * amplitude * cosPhi, 0.35);
   }
+  ny = 1;
   const normalLength = Math.hypot(nx, ny, nz) || 1;
   return {
     height,
@@ -1120,6 +1167,7 @@ export class UnityOcean {
   private readonly prepassHidden: THREE.Object3D[] = [];
   private primaryPass: OceanPrimaryPass | null = null;
   private readonly primarySizeScratch = new THREE.Vector2();
+  private shoreField: ShoreField | null = null;
 
   constructor(opts: CoastWaterOpts) {
     this.seaLevel = opts.seaLevel;
@@ -1140,7 +1188,7 @@ export class UnityOcean {
       Math.round(opts.lateralSegments ?? LATERAL_SEGMENTS),
     );
     const ribbonLateralSegments = lite
-      ? Math.min(16, requestedLateralSegments)
+      ? Math.min(64, requestedLateralSegments)
       : requestedLateralSegments;
     const sourceShore = opts.extendUnityTails
       ? extendUnityShoreTails(opts.shore)
@@ -1151,7 +1199,7 @@ export class UnityOcean {
           sourceShore,
           fallbackDirection[0],
           fallbackDirection[1],
-          lite ? Math.max(8, shoreSampleMetres) : shoreSampleMetres,
+          lite ? Math.max(4, shoreSampleMetres) : shoreSampleMetres,
         );
     const renderShore = lite
       ? this.shore.filter(
@@ -1202,6 +1250,10 @@ export class UnityOcean {
         // unused originals while the rendered clones retain GPU allocations
         // on every editor rebuild (and every coastal level switch).
         uTime: { value: 0 },
+        uSurf: { value: new THREE.Vector4() },
+        uCoastMap: { value: this.fallbackColor },
+        uCoastBounds: { value: new THREE.Vector4(0, 0, 1, 1) },
+        uHasCoastMap: { value: 0 },
         uSeaLevel: { value: this.seaLevel },
         uWave1: { value: new THREE.Vector4() },
         uWave1Dir: { value: new THREE.Vector2() },
@@ -1306,6 +1358,9 @@ export class UnityOcean {
       ]),
     });
 
+    for(const key of ['uWave1','uWave1Dir','uWave2','uWave2Dir','uPeak'])
+      this.horizonMaterial.uniforms[key]=this.oceanMaterial.uniforms[key];
+
     this.horizon = new THREE.Mesh(
       makeHorizonGeometry(renderShore, this.seaLevel),
       this.horizonMaterial,
@@ -1350,6 +1405,8 @@ export class UnityOcean {
 
     const geometries = [this.horizon.geometry, this.ribbon.geometry];
     this.stats = {
+      shoreContourSegments: 0,
+      shoreFieldBuildMs: 0,
       occludedPassFrames:0,
       primaryReuseRenders: 0,
       primaryReuseFallbacks: 0,
@@ -1409,6 +1466,7 @@ export class UnityOcean {
     const p = this.params;
     const uniforms = this.oceanMaterial.uniforms;
     uniforms.uTime.value = this.time;
+    uniforms.uSurf.value.set(p.surfHeight, p.surfPeriod, p.surfWidth, p.foamStrength);
     uniforms.uSeaLevel.value = this.seaLevel;
     (uniforms.uWave1.value as THREE.Vector4).set(
       p.wave1Length, p.wave1Height, p.wave1Speed, p.wave1Sharpness,
@@ -1506,18 +1564,75 @@ export class UnityOcean {
   }
 
   sampleWaterSurface(x: number, z: number, time = this.time): SurfaceSample {
-    const wave = evaluateWavePair(x, z, time, this.params, this.sourceZSign);
+    // Resolve the displaced surface at a fixed world point, rather than
+    // sampling the undisplaced parameter coordinate (swimming and ripples).
+    let bx=x,bz=z;
+    for(let i=0;i<3;i++) {
+      const coast=this.shoreField?.sample(bx,bz) ?? {distance:32,depth:8};
+      const a=THREE.MathUtils.smoothstep(coast.distance,0,12)*THREE.MathUtils.smoothstep(coast.depth,.035,1.2);
+      const w=evaluateWavePair(bx,bz,time,this.params,this.sourceZSign,a);
+      bx=x-w.dx;bz=z-w.dz;
+    }
+    const coast=this.shoreField?.sample(bx,bz) ?? {distance:32,nx:1,nz:0,slope:0.25,depth:8};
+    const wave = evaluateWavePair(bx, bz, time, this.params, this.sourceZSign,
+      THREE.MathUtils.smoothstep(coast.distance,0,12)*THREE.MathUtils.smoothstep(coast.depth,.035,1.2));
+    const surf=sampleSurf(coast.distance,bx,bz,time,this.params,coast.depth);
+    const film=THREE.MathUtils.smoothstep(coast.distance+sampleRunup(bx,bz,time,this.params),-.15,.15)
+      *(1-THREE.MathUtils.smoothstep(coast.slope,.5,.8));
+    const swashHeight=coast.distance<0?Math.max(-coast.depth+.028,0)*film:0;
+    const nx=wave.nx/Math.max(wave.ny,0.001)-coast.nx*surf.slope;
+    const nz=wave.nz/Math.max(wave.ny,0.001)-coast.nz*surf.slope;
+    const norm=Math.hypot(nx,1,nz);
     return {
-      height: this.seaLevel + wave.height,
-      nx: wave.nx,
-      ny: wave.ny,
-      nz: wave.nz,
-      depth: 0,
-      shorePhase: 0,
-      shoreInfluence: 0,
+      height: this.seaLevel + wave.height + surf.height + swashHeight,
+      nx: nx/norm,
+      ny: 1/norm,
+      nz: nz/norm,
+      depth: Math.max(coast.depth,0),
+      shorePhase: surf.phase,
+      shoreInfluence: surf.influence,
       displacementX: wave.dx,
       displacementZ: wave.dz,
     };
+  }
+
+  /** Rebuild only after authored geometry changes, never per animation frame. */
+  setShoreGeometry(meshes: readonly THREE.Mesh[]): void {
+    if(this.disposed)return;
+    const started=performance.now();
+    this.ribbon.geometry.computeBoundingBox();
+    const bounds=this.ribbon.geometry.boundingBox!.clone().applyMatrix4(this.ribbon.matrixWorld);
+    const field=createShoreField(meshes,this.seaLevel,bounds);
+    this.shoreField?.texture.dispose();this.shoreField=field;
+    const u=this.oceanMaterial.uniforms;
+    u.uCoastMap.value=field.texture;u.uCoastBounds.value.copy(field.bounds);u.uHasCoastMap.value=field.segments>0||field.hasBed?1:0;
+    this.stats.shoreContourSegments=field.segments;this.stats.shoreFieldBuildMs=performance.now()-started;
+    const materials=new Set(meshes.flatMap(mesh=>Array.isArray(mesh.material)?mesh.material:[mesh.material]));
+    for(const material of materials) {
+      if(!material.userData.unitySandTileMetres || material.userData.mapBeachClock || material.userData.coastalWetSand)continue;
+      material.userData.coastalWetSand=true;
+      const previous=material.onBeforeCompile,cacheKey=material.customProgramCacheKey();
+      material.onBeforeCompile=(shader,renderer)=>{
+        previous.call(material,shader,renderer);
+        shader.uniforms.uSurf=u.uSurf;shader.uniforms.uSandTime=u.uTime;
+        shader.uniforms.uSandCoast=u.uCoastMap;shader.uniforms.uSandBounds=u.uCoastBounds;
+        shader.uniforms.uSandSea={value:this.seaLevel};
+        shader.vertexShader='varying vec3 vSandWorld;\n'+shader.vertexShader.replace('#include <begin_vertex>',
+          '#include <begin_vertex>\nvSandWorld=(modelMatrix*vec4(transformed,1.0)).xyz;');
+        shader.fragmentShader=`varying vec3 vSandWorld; uniform float uSandTime; uniform float uSandSea;
+          uniform sampler2D uSandCoast; uniform vec4 uSandBounds;\n${SURF_GLSL}\n`+shader.fragmentShader;
+        shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
+          float sandShore=texture2D(uSandCoast,clamp((vSandWorld.xz-uSandBounds.xy)/uSandBounds.zw,0.0,1.0)).r;
+          float runup=surfRunup(vSandWorld.xz,uSandTime);
+          float freshWet=1.0-smoothstep(runup-0.15,runup+0.35,-sandShore);
+          float damp=(1.0-smoothstep(1.5,3.2,-sandShore))*0.42;
+          float sandWet=max(freshWet,damp)*(1.0-smoothstep(uSandSea+0.7,uSandSea+1.4,vSandWorld.y));
+          diffuseColor.rgb*=mix(vec3(1.0),vec3(0.58,0.67,0.71),sandWet*0.8);`);
+        shader.fragmentShader=shader.fragmentShader.replace('#include <roughnessmap_fragment>',
+          '#include <roughnessmap_fragment>\nroughnessFactor=mix(roughnessFactor,0.24,sandWet);');
+      };
+      material.customProgramCacheKey=()=>cacheKey+'-coastal-wet-sand-v1';material.needsUpdate=true;
+    }
   }
 
   heightAt(x: number, z: number, time = this.time): number {
@@ -2066,6 +2181,11 @@ export class UnityOcean {
     return true;
   }
 
+  /** Shared clock/settings keep sand and authored foam on the same uprush. */
+  get surfUniforms(): {time: THREE.IUniform<number>; surf: THREE.IUniform<THREE.Vector4>} {
+    return {time:this.oceanMaterial.uniforms.uTime,surf:this.oceanMaterial.uniforms.uSurf};
+  }
+
   private disposeTargets(): void {
     this.reflectionRenderTarget?.dispose();
     this.prepassRenderTarget?.depthTexture?.dispose();
@@ -2094,6 +2214,7 @@ export class UnityOcean {
     this.ribbon.geometry.dispose();
     this.horizon.geometry.dispose();
     this.oceanMaterial.dispose();
+    this.shoreField?.texture.dispose();this.shoreField=null;
     this.horizonMaterial.dispose();
     for (const texture of this.ownedTextures) texture.dispose();
     this.group.clear();

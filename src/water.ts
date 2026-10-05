@@ -1,7 +1,5 @@
-// Compatibility entry point. The former custom four-wave CoastWater,
-// shoreline solver, breaker ribbon, swash and wet-sand implementation was
-// intentionally removed. The runtime now comes from the complete Unity
-// Beachfront ocean port in unityOcean.ts.
+// All oceans share the Unity-derived renderer, extended with compact analytic
+// swells, contour-following surf, draining foam and synchronized wet sand.
 export {
   CoastWater,
   UnityOcean,

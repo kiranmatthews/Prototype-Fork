@@ -13,6 +13,7 @@ import {
   type CampaignIslandId,
 } from "./campaign";
 import { CoastWater } from "./water";
+import { SURF_GLSL } from './coastalSurf';
 import { createUnitySandMaterial, applyUnitySandMetricUvs } from "./unitySandMaterial";
 import { createIslandShoreFoam, type IslandShoreFoam } from "./islandShoreFoam";
 import { createMapOceanDefaults } from "./mapOceanPreset";
@@ -224,7 +225,9 @@ function shallowShelfGeometry(
   const rings = Array.from({length:65},(_,index)=>{
     const radius=THREE.MathUtils.lerp(4,1.01,index/64);
     const offshore=THREE.MathUtils.clamp((radius-1.3)/2.6,0,1);
-    const depth=0.11+0.11*THREE.MathUtils.smoothstep(radius,1.01,1.3)+6.8*Math.pow(offshore,2.05);
+    // Keep the long colour transition, with enough physical depth for the
+    // swell troughs. The former 11 cm overlay was exposed by rolling water.
+    const depth=0.35+1.0*THREE.MathUtils.smoothstep(radius,1.01,1.3)+6.8*Math.pow(offshore,2.05);
     const color=mixColor(0xf8dfa1,0x529da2,THREE.MathUtils.smoothstep(radius,1.15,2.4))
       .lerp(new THREE.Color(0x254e69),THREE.MathUtils.smoothstep(radius,2.2,4));
     return {radius,y:-depth,color};
@@ -258,7 +261,7 @@ function shallowShelfGeometry(
     }
   }
   const centre = positions.length / 3;
-  positions.push(0, -0.1, 0);
+  positions.push(0, -0.35, 0);
   const centreColor = new THREE.Color(0xf9e5ad);
   colors.push(centreColor.r, centreColor.g, centreColor.b);
   uvs.push(0, 0);
@@ -309,7 +312,7 @@ function bindBeachCoordinates(
   return coast;
 }
 
-function mapSandMaterial(beachTime:{value:number}): THREE.MeshStandardMaterial {
+function mapSandMaterial(beachTime:{value:number},water:CoastWater): THREE.MeshStandardMaterial {
   const owner = createUnitySandMaterial({name:"World map fine sand and pebbles"});
   const material = owner.material;
   material.vertexColors = true;
@@ -322,15 +325,15 @@ function mapSandMaterial(beachTime:{value:number}): THREE.MeshStandardMaterial {
     map.minFilter = THREE.LinearMipmapLinearFilter;
   }
   material.onBeforeCompile = (shader) => {
-    shader.uniforms.uMapBeachTime=beachTime;
+    shader.uniforms.uMapBeachTime=water.surfUniforms.time;
+    shader.uniforms.uSurf=water.surfUniforms.surf;
     shader.vertexShader='attribute float aRockBlend; varying float vMapRock;\n'+shader.vertexShader;
     shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvMapRock=aRockBlend;');
-    shader.vertexShader = "attribute float aSandBlend;\nattribute vec2 aMapBeach;\nvarying vec2 vMapBeach;\nvarying float vMapSand;\n" +
-      shader.vertexShader.replace("#include <begin_vertex>", "#include <begin_vertex>\nvMapSand = aSandBlend;\nvMapBeach = aMapBeach;");
-    shader.fragmentShader = "varying float vMapRock;\nuniform float uMapBeachTime;\nvarying vec2 vMapBeach;\nvarying float vMapSand;\n" + shader.fragmentShader
+    shader.vertexShader = "attribute float aSandBlend;\nattribute vec2 aMapBeach;\nvarying vec2 vMapBeach;\nvarying vec2 vMapBeachWorld;\nvarying float vMapSand;\n" +
+      shader.vertexShader.replace("#include <begin_vertex>", "#include <begin_vertex>\nvMapSand = aSandBlend;\nvMapBeach = aMapBeach;\nvMapBeachWorld=(modelMatrix*vec4(transformed,1.0)).xz;");
+    shader.fragmentShader = "varying float vMapRock;\nuniform float uMapBeachTime;\nvarying vec2 vMapBeach;\nvarying vec2 vMapBeachWorld;\nvarying float vMapSand;\n" + SURF_GLSL + shader.fragmentShader
       .replace("#include <map_fragment>", `
-        float mapLap = 0.5 + 0.5 * sin(uMapBeachTime * 1.130973 + vMapBeach.y);
-        float mapLapFront = 0.35 + pow(mapLap, 1.5) * 1.45;
+        float mapLapFront = surfRunup(vMapBeachWorld,uMapBeachTime);
         float mapFreshWet = 1.0 - smoothstep(mapLapFront - 0.2, mapLapFront + 0.4, vMapBeach.x);
         float mapDampSand = (1.0 - smoothstep(1.7, 3.6, vMapBeach.x)) * 0.42;
         float mapWetness = max(mapFreshWet, mapDampSand) * vMapSand;
@@ -356,7 +359,7 @@ function mapSandMaterial(beachTime:{value:number}): THREE.MeshStandardMaterial {
         "mix(1.0, texture2D( aoMap, vAoMapUv ).g, vMapSand)",
       ));
   };
-  material.customProgramCacheKey = () => "world-map-sculpted-clay-and-wet-sand-v4";
+  material.customProgramCacheKey = () => "world-map-sculpted-clay-and-wet-sand-v5";
   return material;
 }
 
@@ -694,6 +697,7 @@ export function createCampaignWorldMap(
   };
   const groundMeshes: THREE.Mesh[] = [];
   const landMeshes: THREE.Mesh[] = [];
+  const seabedMeshes:THREE.Mesh[]=[];
   const terrainSupports = levels.map((level) => new THREE.Vector3(...level.mapPosition));
   const edgeCurves = new Map(CAMPAIGN_MAP_EDGES.map((edge) => [edge, makeEdgeCurve(edge, levels)]));
   for (const [edge, curve] of edgeCurves) {
@@ -732,7 +736,7 @@ export function createCampaignWorldMap(
   parentRoot.add(water.group);
 
   const beachTime={value:0};
-  const islandMaterial = mapSandMaterial(beachTime);
+  const islandMaterial = mapSandMaterial(beachTime,water);
   const coastlines:THREE.Vector3[][]=[];
   const shelfMaterial = new THREE.MeshStandardMaterial({
     vertexColors: true,
@@ -787,6 +791,7 @@ export function createCampaignWorldMap(
     shelf.userData.oceanOpaqueBackdrop = true;
     shelf.receiveShadow = true;
     root.add(shelf);
+    seabedMeshes.push(shelf);
     const geometry = islandGeometry(spec.rx, spec.rz, spec.seed, spec.scenic ? [] :
       terrainSupports.map((point) => point.clone().sub(new THREE.Vector3(spec.x, 0, spec.z))),
       spec.campaignIslandId ? {id:spec.campaignIslandId,x:spec.x,z:spec.z} : undefined);
@@ -828,6 +833,9 @@ export function createCampaignWorldMap(
   shoreline.mesh.name="world map white shoreline";
   oceanTuning.applyOutline(shoreline);
   root.add(shoreline.group);
+  shoreline.bindSurf(water.surfUniforms);
+  parentRoot.updateMatrixWorld(true);
+  water.setShoreGeometry([...landMeshes,...seabedMeshes]);
 
   const scenery = new JungleAssetKit(true,false,false);
   scenery.root.name='world map modular landscape kit';root.add(scenery.root);

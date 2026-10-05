@@ -6,7 +6,10 @@ try {
   const {OceanTuningStore,OCEAN_TUNING_KEY,cloneOceanParams}=await server.ssrLoadModule('/src/oceanTuning.ts');
   const {createMapOceanDefaults}=await server.ssrLoadModule('/src/mapOceanPreset.ts');
   const {UNITY_OCEAN_DEFAULTS}=await server.ssrLoadModule('/src/unityOcean.ts');
-  assert.deepEqual(createMapOceanDefaults(),JSON.parse(await readFile(new URL('./fixtures/map-ocean-2026-09-07.json',import.meta.url),'utf8')),'map defaults differ from supplied preset');
+  const originalMap=JSON.parse(await readFile(new URL('./fixtures/map-ocean-2026-09-07.json',import.meta.url),'utf8'));
+  assert.deepEqual(createMapOceanDefaults(),{...originalMap,wave1Height:.22,wave1Speed:.48,wave2Height:.13,wave2Speed:.57,
+    normalStrength:.7,normalDistanceStrength:1.8,surfHeight:.26,surfPeriod:7.2,surfWidth:18,foamStrength:.68},
+    'coastal upgrade must retain the authored map palette and existing pass settings');
   const data=new Map(),storage={getItem:key=>data.get(key)??null,setItem:(key,value)=>data.set(key,value)};
   const water=base=>({params:cloneOceanParams(base),debug:{},stats:{quality:'full'},marks:0,markWavesDirty(){this.marks++}});
   const store=new OceanTuningStore(storage), map=water(createMapOceanDefaults()),level=water(UNITY_OCEAN_DEFAULTS);

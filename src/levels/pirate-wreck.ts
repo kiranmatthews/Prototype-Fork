@@ -62,7 +62,7 @@ checkpoint([-20,-6,-68],'01 · Moonpool lookout');
 M.barrel([-24,-6,-69]);M.barrel([-25,-6,-67],.8);
 section(2);
 // A 240 m chamber surrounds the 156 m wreck; all rocks are bespoke faceted meshes.
-const water:number[]=[];M.quad(water,[-100,-10,80],[100,-10,80],[100,-10,-345],[-100,-10,-345]);M.mesh('Still luminous underground sea',water,'#246d78',false,{emissive:'#082e37'});
+const water:number[]=[];M.quad(water,[-100,-10,80],[100,-10,80],[100,-10,-345],[-100,-10,-345]);M.mesh('Still luminous underground sea',water,'#246d78',false,{emissive:'#082e37',materialStyle:'water'});
 add({t:'pit',p:[0,-10.2,-132],s:[205,1,440],invisible:true,nm:'Cold bottomless moonpool'});
 for(let side=-1;side<=1;side+=2)for(let i=0;i<22;i++){
  const z=50-i*19,x=side*(72+Math.sin(i*1.31)*10),y=-9;

@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { SURF_GLSL, SURF_DEFAULTS, sampleSurfFoam } from './coastalSurf';
 
 const TAU = Math.PI * 2;
 const DEFAULT_SEGMENTS = 72;
@@ -125,6 +126,7 @@ uniform float uSourceZSign;
 uniform float uTime;
 varying vec2 vUv;
 varying vec3 vWorldPosition;
+${SURF_GLSL}
 
 void main() {
   float phase = vUv.y * 6.28318530718 * uDetailFrequency
@@ -138,7 +140,9 @@ void main() {
     clamp(sin(clamp(vUv.x, 0.0, 1.0) * 3.14159265359), 0.0, 1.0),
     max(0.25, uEdgePower)
   );
-  float animatedAlpha = mix(1.0 - uPulseAmount, 1.0, motion);
+  float distanceToShore=(vUv.x-0.25)*3.0;
+  float advancingFoam=surfFoam(distanceToShore,vWorldPosition.xz,uTime,motion);
+  float animatedAlpha = mix(1.0 - uPulseAmount, 1.0, motion) * (0.12 + advancingFoam * 0.88);
   float brightness = mix(0.92, 1.12, motion * uPulseAmount);
   gl_FragColor = vec4(
     clamp(uBaseColor.rgb * brightness, 0.0, 1.0),
@@ -337,7 +341,8 @@ export function evaluateIslandShoreFoam(
     clamp01(Math.sin(clamp01(finite(uv[0], "sample uv.x")) * Math.PI)),
     Math.max(0.25, resolved.edgePower),
   );
-  const animatedAlpha = THREE.MathUtils.lerp(1 - resolved.pulseAmount, 1, motion);
+  const advancingFoam=sampleSurfFoam((uv[0]-0.25)*3,worldX,worldZ,time,motion,SURF_DEFAULTS);
+  const animatedAlpha = THREE.MathUtils.lerp(1 - resolved.pulseAmount, 1, motion)*(0.12+advancingFoam*0.88);
   const brightness = THREE.MathUtils.lerp(0.92, 1.12, motion * resolved.pulseAmount);
   return {
     r: clamp01(resolved.color[0] * brightness),
@@ -364,6 +369,7 @@ export class IslandShoreFoam {
   private readonly sourceZSign: -1 | 1;
   private elapsed = 0;
   private disposed = false;
+  private linkedClock = false;
 
   constructor(
     sources: readonly IslandShoreFoamOval[],
@@ -379,6 +385,7 @@ export class IslandShoreFoam {
       vertexShader: VERTEX_SHADER,
       fragmentShader: FRAGMENT_SHADER,
       uniforms: {
+        uSurf: {value:new THREE.Vector4(SURF_DEFAULTS.surfHeight,SURF_DEFAULTS.surfPeriod,SURF_DEFAULTS.surfWidth,SURF_DEFAULTS.foamStrength)},
         uBaseColor: {
           value: new THREE.Vector4(
             resolved.color[0],
@@ -411,9 +418,14 @@ export class IslandShoreFoam {
   }
 
   update(dt: number): void {
+    if(this.linkedClock)return;
     if (this.disposed || !Number.isFinite(dt) || dt <= 0) return;
     this.elapsed += dt;
     this.material.uniforms.uTime.value = this.elapsed;
+  }
+
+  bindSurf(uniforms: {time:THREE.IUniform<number>;surf:THREE.IUniform<THREE.Vector4>}):void {
+    this.linkedClock=true;this.material.uniforms.uTime=uniforms.time;this.material.uniforms.uSurf=uniforms.surf;
   }
 
   setTime(seconds: number): void {
@@ -431,7 +443,7 @@ export class IslandShoreFoam {
       drawCalls: this.disposed ? 0 : 1,
       sourceZSign: this.sourceZSign,
       renderOrder: this.mesh.renderOrder,
-      time: this.elapsed,
+      time: this.material.uniforms.uTime.value,
       disposed: this.disposed,
     };
   }

@@ -38,7 +38,8 @@ await withSkateRuntime(async ({THREE, server, Level, Player, CONST}) => {
   assert.ok(capture.ocean.swimBounds);assert.ok(capture.components.some(c=>c.nm==='Jungle cove beach and seabed'));
   assert.equal(level.swimmingSurfaceAt(0,-100),null,'water leaked into original jungle route');
   const lives=player.lives;
-  const tick=input=>{level.update(CONST.fixedStep);player.step(CONST.fixedStep,input,level);input.consumeEdges();
+  const waterCamera=new THREE.PerspectiveCamera();
+  const tick=input=>{level.update(CONST.fixedStep);level.water.update(CONST.fixedStep,waterCamera);player.step(CONST.fixedStep,input,level);input.consumeEdges();
     assert.equal(player.lives,lives,'swimming consumed a life');assert.notEqual(player.state,'dead');
     assert.ok(player.pos.toArray().every(Number.isFinite));};
   let entered=false,exit=false;
@@ -81,7 +82,7 @@ await withSkateRuntime(async ({THREE, server, Level, Player, CONST}) => {
     assert.ok(player.pos.x>b[0]&&player.pos.x<b[2]&&player.pos.z<b[3],'escaped swimming boundary');
   }
   player.respawn(level,true);assert.equal(player.swimming,false);assert.equal(player.swimVelocity.length(),0);
-  console.log('PASS swim source loops/migration, 30/60/120 Hz buoyancy/drag, spawn → wade → swim → idle → shore, hard-fall recovery, reset, five fast edge approaches and ocean capture.');
+  console.log('PASS animated-wave swimming, source loops/migration, 30/60/120 Hz buoyancy/drag, spawn → wade → swim → idle → shore, hard-fall recovery, reset, five fast edge approaches and ocean capture.');
   console.log('Water/head range', level.water.seaLevel, headYs.length? [Math.min(...headYs),Math.max(...headYs)]:[]);
   runtime.dispose();level.dispose();
 });

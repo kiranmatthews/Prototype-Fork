@@ -54,6 +54,7 @@ import { rooReady, rooLoaded } from "./roofont"; // crate stencils are set in Ro
 import { puffs, PUFF_PRESETS } from "./puffs";
 import { swirls, SWIRL_PRESETS, type Swirl } from "./swirls";
 import { CoastWater, type ShoreSample } from "./water";
+import { createStandingWaterMaterial, isStandingWater, refineStandingWater } from './standingWater';
 import { createUnityBeachfrontReference } from "./beachfront";
 import {
   BEACHFRONT_COURSE_LENGTH,
@@ -791,7 +792,7 @@ export interface CustomComponent {
   cameraFollowDistance?: number; // cameraView: follow subject at this distance, preserving authored direction
   cameraIntroDistance?: number; // legacy authoring value; gameplay starts in close follow
   radius?: number; // camnode: lane corner radius · stone: the boulder's radius
-  materialStyle?: "unity-sand"; // mesh only: registered MatrixRex sand factory, never external assets
+  materialStyle?: "unity-sand" | "water"; // mesh only: registered sand or sheltered water factory
   emissive?: string; // bounded surface emission on EMISSIVE_COMPONENT_TYPES
   opacity?: number; // mesh: 0..1; lower values enable transparency
   fog?: boolean; // mesh: explicit material fog participation
@@ -1101,6 +1102,7 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   }
   d.components = d.components.map((c) => {
     delete c.trafficRoad;
+    if(isStandingWater(c))c.materialStyle='water';
     if(c.t==='worldmap'&&c.pts&&c.pts.length>=14&&c.pts.length<CAMPAIGN_LEVELS.length){
       const defaults=worldMapComponentPoints();
       if(c.pts.every((p,i)=>p.length===4&&p.every((v,j)=>v===defaults[i][j])))return {...c,pts:defaults};
@@ -2904,8 +2906,9 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       (component.tex !== undefined &&
         (typeof component.tex !== "string" || !textureKinds.has(component.tex))) ||
       (component.t !== "mesh" && (component.opacity !== undefined || component.fog !== undefined || component.materialStyle !== undefined)) ||
-      (component.materialStyle !== undefined && (component.materialStyle !== "unity-sand" ||
-        (component.tex !== undefined && component.tex !== "sand"))) ||
+      (component.materialStyle !== undefined && !(
+        (component.materialStyle === "unity-sand" && (component.tex === undefined || component.tex === "sand")) ||
+        (component.materialStyle === "water" && component.solid === false && (component.tex === undefined || component.tex === "solid")))) ||
       (component.emissive !== undefined && !EMISSIVE_COMPONENT_TYPES.includes(component.t)) ||
       (component.emissive !== undefined &&
         (typeof component.emissive !== "string" || !/^#[0-9a-f]{6}$/i.test(component.emissive))) ||
@@ -4764,6 +4767,15 @@ export class Level {
     // accelerated Mesh.raycast contract with no first-query hitch.
     this.root.updateMatrixWorld(true);
     this.installGroundAcceleration(this.groundMeshes);
+    if (this.water && !this.campaignWorldMap) {
+      const shorelineMeshes:THREE.Mesh[]=[];
+      this.root.traverse(object=>{
+        const mesh=object as THREE.Mesh;
+        if(mesh.isMesh && !mesh.userData.editorGhost && mesh.visible && !mesh.userData.noWaterShore)shorelineMeshes.push(mesh);
+      });
+      this.water.setShoreGeometry(shorelineMeshes);
+      this.islandShoreFoam?.bindSurf(this.water.surfUniforms);
+    }
   }
 
   private installGroundAcceleration(meshes: readonly THREE.Mesh[]): void {
@@ -5319,6 +5331,7 @@ export class Level {
         ...(material.side === THREE.DoubleSide ? { doubleSided: true } : {}),
         ...(m.userData.beachSandFriction ? { beachSand: true } : {}),
         ...(material.userData.unitySandTileMetres === UNITY_SAND_TILE_METRES ? { materialStyle: "unity-sand", tex: "sand" } : {}),
+        ...(material.userData.waterSurface ? { materialStyle: "water", tex: "solid", solid: false } : {}),
         ...(m.userData.slippy ? { slip: true } : {}),
         ...(m.userData.iceGrip !== undefined ? { iceGrip: m.userData.iceGrip as number } : {}),
         ...(m.userData.gravityTrack ? { gravityTrack: true } : {}),
@@ -5385,8 +5398,9 @@ export class Level {
     }
   }
   private staticSurfaceMaterials=new Map<string,THREE.MeshLambertMaterial|THREE.MeshStandardMaterial>();
+  private readonly standingWaterClock={value:0};
   private buildSurfaceMesh(c: CustomComponent, outlineGroups:number[]=[]): void {
-    const geometry = new THREE.BufferGeometry();
+    let geometry = new THREE.BufferGeometry();
     geometry.setAttribute("position", new THREE.Float32BufferAttribute(c.vertices ?? [0, 0, 0, 4, 0, 0, 0, 0, -4], 3));
     if (c.indices) geometry.setIndex(c.indices);
     if (c.normals) geometry.setAttribute("normal", new THREE.Float32BufferAttribute(c.normals, 3));
@@ -5404,7 +5418,12 @@ export class Level {
     geometry.computeBoundingBox();
     geometry.computeBoundingSphere();
     let material: THREE.MeshLambertMaterial | THREE.MeshStandardMaterial;
-    if (c.materialStyle === "unity-sand") {
+    const standingWater=isStandingWater(c);
+    if(standingWater) {
+      geometry=refineStandingWater(geometry);
+      material=createStandingWaterMaterial(this.standingWaterClock,c.color??'#476c63',c.emissive,geometry);
+      material.vertexColors=!!c.colors;material.fog=c.fog!==false;material.opacity=c.opacity??1;material.transparent=material.opacity<1;
+    } else if (c.materialStyle === "unity-sand") {
       const uv = geometry.getAttribute("uv");
       geometry.setAttribute("uv1", uv.clone());
       geometry.setAttribute("uv2", uv.clone());
@@ -5443,7 +5462,7 @@ export class Level {
     material.userData.texKind = c.materialStyle === "unity-sand" ? "sand" : c.tex ?? "checker";
     // These remain separate authoring components. Runtime-only visual pieces
     // can share one draw per material/cell instead of one draw per rope/post.
-    if(!EDITOR_BUILD&&this.batchDecor&&c.solid===false&&!c.invisible&&!c.materialStyle&&
+    if(!EDITOR_BUILD&&this.batchDecor&&c.solid===false&&!c.invisible&&!c.materialStyle&&!standingWater&&
       !c.colors&&!c.depthBias&&!c.cameraCutaway&&(c.s??[1,1,1]).every(scale=>scale>0)&&
       c.fog===undefined&&c.vert===undefined&&(c.opacity??1)===1){
       const key=JSON.stringify([c.color??'#ffffff',c.emissive??'#000000',c.tex??'checker',!!c.doubleSided]);
@@ -5460,6 +5479,7 @@ export class Level {
     mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0);
     mesh.scale.set(...(c.s ?? [1, 1, 1]));
     mesh.name = c.nm ?? "triangle surface";
+    if(standingWater)mesh.userData.noWaterShore=true;
     if (c.vert !== undefined) mesh.userData.vert = c.vert;
     if (c.gravityTrack) mesh.userData.gravityTrack = true;
     if (c.lethal) mesh.userData.lethal = true;
@@ -8411,6 +8431,7 @@ export class Level {
   }
 
   update(dt: number): void {
+    this.standingWaterClock.value+=Math.max(0,Math.min(dt,0.1));
     for (const bridge of this.spinBridges) bridge.update(dt);
     this.syncSpinBridgeFloors();
     this.boss?.present(dt);

@@ -1,24 +1,13 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { fileURLToPath } from "node:url";
 import path from "node:path";
-import ts from "typescript";
 import * as THREE from "three";
+import {createServer} from 'vite';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const source = readFileSync(path.join(root, "src/islandShoreFoam.ts"), "utf8");
-const transpiled = ts.transpileModule(source, {
-  compilerOptions: {
-    target: ts.ScriptTarget.ES2020,
-    module: ts.ModuleKind.ESNext,
-  },
-  fileName: "islandShoreFoam.ts",
-}).outputText;
-const threeUrl = pathToFileURL(
-  path.join(root, "node_modules/three/build/three.module.js"),
-).href;
-const executable = transpiled.replace('from "three"', `from "${threeUrl}"`);
-const moduleUrl = `data:text/javascript;base64,${Buffer.from(executable).toString("base64")}`;
+const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true,hmr:false,ws:false}});
 const {
   ISLAND_SHORE_FOAM_GEOMETRY,
   ISLAND_SHORE_FOAM_LOOK,
@@ -26,7 +15,9 @@ const {
   buildIslandShoreFoamGeometry,
   createIslandShoreFoam,
   evaluateIslandShoreFoam,
-} = await import(moduleUrl);
+} = await server.ssrLoadModule('/src/islandShoreFoam.ts');
+const {sampleSurfFoam,SURF_DEFAULTS}=await server.ssrLoadModule('/src/coastalSurf.ts');
+await server.close();
 
 const axes = [
   [17.5, 23],
@@ -141,7 +132,8 @@ const broad = Math.sin(mirroredPhase);
 const fine = Math.sin(mirroredPhase * 1.79 + Math.sin(mirroredPhase * 0.43) * 1.6);
 const motion = Math.max(0, Math.min(1, 0.58 + broad * 0.27 + fine * 0.15));
 const edge = Math.pow(Math.sin(Math.PI * 0.5), 0.62);
-const alpha = 0.78 * edge * ((1 - 0.42) + motion * 0.42);
+const alpha = 0.78 * edge * ((1 - 0.42) + motion * 0.42)
+  *(0.12+sampleSurfFoam((.5-.25)*3,12,-23,1.25,motion,SURF_DEFAULTS)*.88);
 const brightness = 0.92 + (1.12 - 0.92) * motion * 0.42;
 close(sample.motion, motion, 1e-12);
 close(sample.edge, edge, 1e-12);
