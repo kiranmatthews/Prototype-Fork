@@ -1,0 +1,957 @@
+{
+  "profile": "1280x720 desktop Chrome; 90 measured RAF frames per stationary scene; portrait is viewport only",
+  "scenes": [
+    {
+      "id": "jungle-terraces",
+      "name": "entry",
+      "s": -14,
+      "placement": {
+        "position": [
+          1.25,
+          0.15,
+          84
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ]
+      },
+      "medianMs": 16.600000008940697,
+      "p95Ms": 19.799999997019768,
+      "render": {
+        "frame": 2019,
+        "calls": 486,
+        "triangles": 1831446,
+        "points": 0,
+        "lines": 0
+      },
+      "grounded": true,
+      "position": [
+        1.25,
+        0.03500000014901161,
+        84
+      ],
+      "state": "ride",
+      "stamp": "Codex/sol fork \u00b7 build 10-05 11:32 UTC"
+    },
+    {
+      "id": "jungle-terraces",
+      "name": "reservoir",
+      "s": 124,
+      "placement": {
+        "position": [
+          1.25,
+          6.15,
+          -54
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ]
+      },
+      "medianMs": 16.5,
+      "p95Ms": 20,
+      "render": {
+        "frame": 3248,
+        "calls": 477,
+        "triangles": 1581179,
+        "points": 0,
+        "lines": 300
+      },
+      "grounded": true,
+      "position": [
+        1.25,
+        6,
+        -54
+      ],
+      "state": "ride",
+      "stamp": "Codex/sol fork \u00b7 build 10-05 11:32 UTC"
+    },
+    {
+      "id": "jungle-terraces",
+      "name": "steps",
+      "s": 200,
+      "placement": {
+        "position": [
+          36,
+          18.15,
+          -101.5
+        ],
+        "heading": [
+          1,
+          0,
+          0
+        ]
+      },
+      "medianMs": 16.700000002980232,
+      "p95Ms": 21.299999997019768,
+      "render": {
+        "frame": 4389,
+        "calls": 422,
+        "triangles": 1398165,
+        "points": 0,
+        "lines": 600
+      },
+      "grounded": true,
+      "position": [
+        36,
+        15.78499984741211,
+        -101.5
+      ],
+      "state": "ride",
+      "stamp": "Codex/sol fork \u00b7 build 10-05 11:32 UTC"
+    },
+    {
+      "id": "jungle-terraces",
+      "name": "bridge-court",
+      "s": 239,
+      "placement": {
+        "position": [
+          68.73015309946747,
+          22.65,
+          -82.65292760853603
+        ],
+        "heading": [
+          0.06073745195684089,
+          0,
+          0.9981537766946487
+        ]
+      },
+      "medianMs": 16.5,
+      "p95Ms": 20.900000005960464,
+      "render": {
+        "frame": 5551,
+        "calls": 666,
+        "triangles": 2526392,
+        "points": 0,
+        "lines": 600
+      },
+      "grounded": true,
+      "position": [
+        68.73015309946747,
+        22.53499984741211,
+        -82.65292760853603
+      ],
+      "state": "ride",
+      "stamp": "Codex/sol fork \u00b7 build 10-05 11:32 UTC"
+    },
+    {
+      "id": "jungle-terraces",
+      "name": "sanctuary",
+      "s": 470,
+      "placement": {
+        "position": [
+          98,
+          34.65,
+          48.75
+        ],
+        "heading": [
+          -1,
+          0,
+          0
+        ]
+      },
+      "medianMs": 16.299999997019768,
+      "p95Ms": 24.900000005960464,
+      "render": {
+        "frame": 6664,
+        "calls": 649,
+        "triangles": 2419472,
+        "points": 0,
+        "lines": 300
+      },
+      "grounded": true,
+      "position": [
+        98,
+        34.53499984741211,
+        48.75
+      ],
+      "state": "ride",
+      "stamp": "Codex/sol fork \u00b7 build 10-05 11:32 UTC"
+    },
+    {
+      "id": "jungle-skyline",
+      "name": "entry",
+      "s": -14,
+      "placement": {
+        "position": [
+          1.25,
+          0.15,
+          94
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ]
+      },
+      "medianMs": 16.5,
+      "p95Ms": 22.600000008940697,
+      "render": {
+        "frame": 2069,
+        "calls": 538,
+        "triangles": 2793825,
+        "points": 0,
+        "lines": 300
+      },
+      "grounded": true,
+      "position": [
+        1.25,
+        0.03500000014901161,
+        94
+      ],
+      "state": "ride",
+      "stamp": "Codex/sol fork \u00b7 build 10-05 11:32 UTC"
+    },
+    {
+      "id": "jungle-skyline",
+      "name": "reservoir",
+      "s": 195,
+      "placement": {
+        "position": [
+          55,
+          11.4,
+          -58.75
+        ],
+        "heading": [
+          1,
+          0,
+          0
+        ]
+      },
+      "medianMs": 16.399999991059303,
+      "p95Ms": 26,
+      "render": {
+        "frame": 3325,
+        "calls": 673,
+        "triangles": 3241188,
+        "points": 0,
+        "lines": 0
+      },
+      "grounded": true,
+      "position": [
+        55,
+        11.25,
+        -58.75
+      ],
+      "state": "ride",
+      "stamp": "Codex/sol fork \u00b7 build 10-05 11:32 UTC"
+    },
+    {
+      "id": "jungle-skyline",
+      "name": "steps",
+      "s": 290,
+      "placement": {
+        "position": [
+          117.5,
+          26.025,
+          -20
+        ],
+        "heading": [
+          0,
+          0,
+          1
+        ]
+      },
+      "medianMs": 16.200000002980232,
+      "p95Ms": 30.099999994039536,
+      "render": {
+        "frame": 4578,
+        "calls": 742,
+        "triangles": 3640595,
+        "points": 0,
+        "lines": 600
+      },
+      "grounded": true,
+      "position": [
+        117.5,
+        25.90999984741211,
+        -20
+      ],
+      "state": "ride",
+      "stamp": "Codex/sol fork \u00b7 build 10-05 11:32 UTC"
+    },
+    {
+      "id": "jungle-skyline",
+      "name": "crown-court",
+      "s": 347,
+      "placement": {
+        "position": [
+          96,
+          34.65,
+          28.75
+        ],
+        "heading": [
+          -1,
+          0,
+          0
+        ]
+      },
+      "medianMs": 18.30000001192093,
+      "p95Ms": 38.5,
+      "render": {
+        "frame": 5719,
+        "calls": 882,
+        "triangles": 4141096,
+        "points": 0,
+        "lines": 324
+      },
+      "grounded": true,
+      "position": [
+        96,
+        34.53499984741211,
+        28.75
+      ],
+      "state": "ride",
+      "stamp": "Codex/sol fork \u00b7 build 10-05 11:32 UTC"
+    },
+    {
+      "id": "jungle-skyline",
+      "name": "giant-reservoir",
+      "s": 540,
+      "placement": {
+        "position": [
+          84.62400963032933,
+          37.15,
+          21.14375732263703
+        ],
+        "heading": [
+          0.7071067811865475,
+          0,
+          -0.7071067811865475
+        ]
+      },
+      "medianMs": 18.299999997019768,
+      "p95Ms": 36.599999994039536,
+      "render": {
+        "frame": 7143,
+        "calls": 774,
+        "triangles": 3665929,
+        "points": 0,
+        "lines": 300
+      },
+      "grounded": true,
+      "position": [
+        84.62400963032933,
+        37,
+        21.14375732263703
+      ],
+      "state": "ride",
+      "stamp": "Codex/sol fork \u00b7 build 10-05 11:32 UTC"
+    },
+    {
+      "id": "jungle-skyline",
+      "name": "sanctuary",
+      "s": 799,
+      "placement": {
+        "position": [
+          24.217795034657197,
+          69.15,
+          -9.219546766713702
+        ],
+        "heading": [
+          -0.1950903220161286,
+          0,
+          0.9807852804032304
+        ]
+      },
+      "medianMs": 19.599999994039536,
+      "p95Ms": 39.29999999701977,
+      "render": {
+        "frame": 8515,
+        "calls": 925,
+        "triangles": 4159027,
+        "points": 0,
+        "lines": 24
+      },
+      "grounded": true,
+      "position": [
+        24.217795034657197,
+        69.03500366210938,
+        -9.219546766713702
+      ],
+      "state": "ride",
+      "stamp": "Codex/sol fork \u00b7 build 10-05 11:32 UTC"
+    }
+  ],
+  "errors": [],
+  "sourceHashes": {
+    "src/levels/jungle-sequels.ts": "42ad9b1774602fe0436d45b99f206fb972a633851125ab977a352d2f3dab48cc",
+    "src/levels/jungle-temple-space.ts": "5446056accc04fac5a4c5aad55098acc56e1b0b6815030557eaf5738ef95f57c",
+    "src/levels/jungle-sequel-art.ts": "02fee164b8605b45e652d67c44de4ae27a710b3f7a59b22745c91f43739a0cd0"
+  },
+  "journeys": [
+    {
+      "id": "jungle-terraces",
+      "mode": "lite",
+      "frames": 2643,
+      "result": {
+        "state": "finished",
+        "deaths": 0,
+        "position": [
+          86.90468844279292,
+          35.22666666915019,
+          48.73580262474312
+        ]
+      },
+      "errors": []
+    },
+    {
+      "id": "jungle-skyline",
+      "mode": "lite",
+      "frames": 4693,
+      "result": {
+        "state": "finished",
+        "deaths": 0,
+        "position": [
+          24.00652313299787,
+          69.72666666915019,
+          0.43247024598245576
+        ]
+      },
+      "errors": []
+    },
+    {
+      "id": "jungle-terraces",
+      "mode": "full",
+      "frames": 2643,
+      "result": {
+        "state": "finished",
+        "deaths": 0,
+        "position": [
+          86.90468844279292,
+          35.22666666915019,
+          48.73580262474312
+        ]
+      },
+      "errors": []
+    },
+    {
+      "id": "jungle-skyline",
+      "mode": "full",
+      "frames": 4693,
+      "result": {
+        "state": "finished",
+        "deaths": 0,
+        "position": [
+          24.00652313299787,
+          69.72666666915019,
+          0.43247024598245576
+        ]
+      },
+      "errors": []
+    }
+  ],
+  "nativeJourneys": [
+    {
+      "id": "jungle-terraces",
+      "frames": 2658,
+      "seconds": 44.3,
+      "deaths": 0,
+      "finish": [
+        86.91389478069088,
+        35.22666666915019,
+        48.73462381887377
+      ],
+      "highest": 36.31407569547668,
+      "minPipeContact": [
+        {
+          "name": "Jade teaching halfpipe",
+          "lowest": 6
+        },
+        {
+          "name": "High sanctuary halfpipe",
+          "lowest": 30
+        }
+      ],
+      "maxSpeed": 23
+    },
+    {
+      "id": "jungle-skyline",
+      "frames": 4698,
+      "seconds": 78.3,
+      "deaths": 0,
+      "finish": [
+        24.00652311508291,
+        69.72666666915019,
+        0.43246963887890194
+      ],
+      "highest": 69.72666666915019,
+      "minPipeContact": [
+        {
+          "name": "Cloud aqueduct halfpipe",
+          "lowest": 11.25
+        },
+        {
+          "name": "Sun crown halfpipe",
+          "lowest": 27.5
+        },
+        {
+          "name": "Giant jade halfpipe",
+          "lowest": 37
+        }
+      ],
+      "maxSpeed": 28.95537636747137
+    }
+  ],
+  "climbs": [
+    {
+      "stage": "rejoin the main temple court",
+      "actions": [
+        {
+          "name": "approach the footpath fork",
+          "firstFrame": 25,
+          "lastFrame": 119
+        },
+        {
+          "name": "jump onto the stair approach",
+          "firstFrame": 164,
+          "lastFrame": 203
+        },
+        {
+          "name": "approach step 1",
+          "firstFrame": 203,
+          "lastFrame": 308
+        },
+        {
+          "name": "climb step 1",
+          "firstFrame": 353,
+          "lastFrame": 385
+        },
+        {
+          "name": "approach step 2",
+          "firstFrame": 385,
+          "lastFrame": 528
+        },
+        {
+          "name": "climb step 2",
+          "firstFrame": 573,
+          "lastFrame": 605
+        },
+        {
+          "name": "approach step 3",
+          "firstFrame": 605,
+          "lastFrame": 728
+        },
+        {
+          "name": "climb step 3",
+          "firstFrame": 773,
+          "lastFrame": 805
+        },
+        {
+          "name": "approach step 4",
+          "firstFrame": 805,
+          "lastFrame": 928
+        },
+        {
+          "name": "climb step 4",
+          "firstFrame": 973,
+          "lastFrame": 1005
+        },
+        {
+          "name": "approach step 5",
+          "firstFrame": 1005,
+          "lastFrame": 1128
+        },
+        {
+          "name": "climb step 5",
+          "firstFrame": 1173,
+          "lastFrame": 1205
+        },
+        {
+          "name": "approach step 6",
+          "firstFrame": 1205,
+          "lastFrame": 1326
+        },
+        {
+          "name": "climb step 6",
+          "firstFrame": 1371,
+          "lastFrame": 1403
+        },
+        {
+          "name": "reach the top landing",
+          "firstFrame": 1403,
+          "lastFrame": 1663
+        },
+        {
+          "name": "rejoin the main temple court",
+          "firstFrame": 1708,
+          "lastFrame": 1747
+        }
+      ],
+      "evidence": [
+        {
+          "action": "jump onto the stair approach",
+          "launch": [
+            160.0037429311587,
+            9.03499984741211,
+            -3.1270414362891232
+          ],
+          "landing": [
+            161.88424338526124,
+            9.03499984741211,
+            -6.293123201958704
+          ],
+          "ground": "Overgrown stair approach"
+        },
+        {
+          "action": "climb step 1",
+          "launch": [
+            166.59726487509397,
+            9.03499984741211,
+            -7.491764249596621
+          ],
+          "landing": [
+            169.08095202401995,
+            11.28499984741211,
+            -7.59363545501744
+          ],
+          "ground": "Jungle temple climbing step 1"
+        },
+        {
+          "action": "climb step 2",
+          "launch": [
+            177.56738425186512,
+            11.28499984741211,
+            -7.509846439229321
+          ],
+          "landing": [
+            180.47991214862154,
+            13.53499984741211,
+            -7.525360857257795
+          ],
+          "ground": "Jungle temple climbing step 2"
+        },
+        {
+          "action": "climb step 3",
+          "launch": [
+            188.5739785523004,
+            13.53499984741211,
+            -7.50111056187464
+          ],
+          "landing": [
+            191.57247855230037,
+            15.78499984741211,
+            -7.501110562690229
+          ],
+          "ground": "Jungle temple climbing step 3"
+        },
+        {
+          "action": "climb step 4",
+          "launch": [
+            199.58692299674487,
+            15.78499984741211,
+            -7.501110562696198
+          ],
+          "landing": [
+            202.56592299674486,
+            18.03499984741211,
+            -7.501110562696198
+          ],
+          "ground": "Jungle temple climbing step 4"
+        },
+        {
+          "action": "climb step 5",
+          "launch": [
+            210.58636744118934,
+            18.03499984741211,
+            -7.501110562696198
+          ],
+          "landing": [
+            213.56686744118932,
+            20.28499984741211,
+            -7.501110562696198
+          ],
+          "ground": "Jungle temple climbing step 5"
+        },
+        {
+          "action": "climb step 6",
+          "launch": [
+            221.57007841553042,
+            20.28499984741211,
+            -7.500949141839968
+          ],
+          "landing": [
+            223.49982016390206,
+            22.53499984741211,
+            -7.5638979296396345
+          ],
+          "ground": "Jungle temple climbing step 6"
+        },
+        {
+          "action": "rejoin the main temple court",
+          "launch": [
+            235.9256795265399,
+            22.53499984741211,
+            -7.504069427697094
+          ],
+          "landing": [
+            235.99891672979913,
+            22.53499984741211,
+            -3.5540362978714692
+          ],
+          "ground": "Switch court: bridge and landing are both visible"
+        }
+      ]
+    },
+    {
+      "stage": "rejoin the main temple court",
+      "actions": [
+        {
+          "name": "approach the footpath fork",
+          "firstFrame": 25,
+          "lastFrame": 119
+        },
+        {
+          "name": "jump onto the stair approach",
+          "firstFrame": 164,
+          "lastFrame": 203
+        },
+        {
+          "name": "approach step 1",
+          "firstFrame": 203,
+          "lastFrame": 310
+        },
+        {
+          "name": "climb step 1",
+          "firstFrame": 355,
+          "lastFrame": 387
+        },
+        {
+          "name": "approach step 2",
+          "firstFrame": 387,
+          "lastFrame": 514
+        },
+        {
+          "name": "climb step 2",
+          "firstFrame": 559,
+          "lastFrame": 591
+        },
+        {
+          "name": "approach step 3",
+          "firstFrame": 591,
+          "lastFrame": 708
+        },
+        {
+          "name": "climb step 3",
+          "firstFrame": 753,
+          "lastFrame": 785
+        },
+        {
+          "name": "approach step 4",
+          "firstFrame": 785,
+          "lastFrame": 902
+        },
+        {
+          "name": "climb step 4",
+          "firstFrame": 947,
+          "lastFrame": 979
+        },
+        {
+          "name": "approach step 5",
+          "firstFrame": 979,
+          "lastFrame": 1096
+        },
+        {
+          "name": "climb step 5",
+          "firstFrame": 1141,
+          "lastFrame": 1173
+        },
+        {
+          "name": "approach step 6",
+          "firstFrame": 1173,
+          "lastFrame": 1290
+        },
+        {
+          "name": "climb step 6",
+          "firstFrame": 1335,
+          "lastFrame": 1367
+        },
+        {
+          "name": "approach step 7",
+          "firstFrame": 1367,
+          "lastFrame": 1484
+        },
+        {
+          "name": "climb step 7",
+          "firstFrame": 1529,
+          "lastFrame": 1561
+        },
+        {
+          "name": "approach step 8",
+          "firstFrame": 1561,
+          "lastFrame": 1678
+        },
+        {
+          "name": "climb step 8",
+          "firstFrame": 1723,
+          "lastFrame": 1755
+        },
+        {
+          "name": "reach the top landing",
+          "firstFrame": 1755,
+          "lastFrame": 2004
+        },
+        {
+          "name": "rejoin the main temple court",
+          "firstFrame": 2049,
+          "lastFrame": 2088
+        }
+      ],
+      "evidence": [
+        {
+          "action": "jump onto the stair approach",
+          "launch": [
+            250.00366949703272,
+            17.286056466375953,
+            -3.1270414578566905
+          ],
+          "landing": [
+            251.91749239722972,
+            17.28499984741211,
+            -6.272625350499556
+          ],
+          "ground": "Overgrown stair approach"
+        },
+        {
+          "action": "climb step 1",
+          "launch": [
+            256.5976631696792,
+            17.28499984741211,
+            -7.488571423971493
+          ],
+          "landing": [
+            259.1252574883343,
+            19.44124984741211,
+            -7.597784976055666
+          ],
+          "ground": "Jungle temple climbing step 1"
+        },
+        {
+          "action": "climb step 2",
+          "launch": [
+            266.8297366409725,
+            19.44124984741211,
+            -7.504752922203664
+          ],
+          "landing": [
+            269.78512185111435,
+            21.59749984741211,
+            -7.510351080059124
+          ],
+          "ground": "Jungle temple climbing step 2"
+        },
+        {
+          "action": "climb step 3",
+          "launch": [
+            277.0796893412592,
+            21.59749984741211,
+            -7.50059338221007
+          ],
+          "landing": [
+            280.0661893412592,
+            23.75374984741211,
+            -7.500593382218483
+          ],
+          "ground": "Jungle temple climbing step 3"
+        },
+        {
+          "action": "climb step 4",
+          "launch": [
+            287.3336337857037,
+            23.75374984741211,
+            -7.500593382218483
+          ],
+          "landing": [
+            290.3171337857037,
+            25.90999984741211,
+            -7.500593382218483
+          ],
+          "ground": "Jungle temple climbing step 4"
+        },
+        {
+          "action": "climb step 5",
+          "launch": [
+            297.58307823014815,
+            25.90999984741211,
+            -7.500593382218483
+          ],
+          "landing": [
+            300.56657823014814,
+            28.06624984741211,
+            -7.500593382218483
+          ],
+          "ground": "Jungle temple climbing step 5"
+        },
+        {
+          "action": "climb step 6",
+          "launch": [
+            307.8340226745926,
+            28.06624984741211,
+            -7.500593382218483
+          ],
+          "landing": [
+            310.81602267459255,
+            30.22249984741211,
+            -7.500593382218483
+          ],
+          "ground": "Jungle temple climbing step 6"
+        },
+        {
+          "action": "climb step 7",
+          "launch": [
+            318.08346711903704,
+            30.22249984741211,
+            -7.500593382218483
+          ],
+          "landing": [
+            321.06696711903703,
+            32.37874984741211,
+            -7.500593382218483
+          ],
+          "ground": "Jungle temple climbing step 7"
+        },
+        {
+          "action": "climb step 8",
+          "launch": [
+            328.3144661485055,
+            32.37874984741211,
+            -7.499090452620891
+          ],
+          "landing": [
+            330.3390701272993,
+            34.53499984741211,
+            -7.555589751349318
+          ],
+          "ground": "Jungle temple climbing step 8"
+        },
+        {
+          "action": "rejoin the main temple court",
+          "launch": [
+            341.9188484303913,
+            34.53499984741211,
+            -7.507098524466365
+          ],
+          "landing": [
+            341.9951014171645,
+            34.53499984741211,
+            -3.5183168973181793
+          ],
+          "ground": "Crown court: visible bridge then uninterrupted pipe line"
+        }
+      ]
+    }
+  ],
+  "validation": {
+    "routeSupportProbes": 2040,
+    "actualGapFallsAndRespawns": 4,
+    "supportedCheckpoints": 8,
+    "crateOrderAndTntScenarios": 8,
+    "nativeClimbingSteps": [
+      6,
+      8
+    ]
+  }
+}

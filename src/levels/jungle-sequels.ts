@@ -6,9 +6,10 @@ type Kind = NonNullable<CustomComponent['kind']>;
 export interface TemplePipe { name: string; a: number; b: number; lipY: number; radius: number; arc: number; baseY: number; }
 export interface TempleGap { a: number; b: number; y: number; switchX?: number; group?: number; }
 export interface TempleRoom { name: string; x: number; y: number; launchX: number; capY: number; switchX?: number; group?: number; }
+export interface TempleClimb { a: number; b: number; base: number; top: number; steps: number; side: number; }
 export interface TempleRoute {
   id: string; data: CustomLevelData; sourceComponents:CustomComponent[]; toWorld:(s:number,y:number,z?:number)=>[number,number,number]; toLocal:(p:readonly number[])=>[number,number,number]; frameAt:(s:number)=>ReturnType<typeof templeFrame>; groundAt:(s:number)=>number; profile: readonly Point[]; pipes: TemplePipe[];
-  gaps: TempleGap[]; rooms: TempleRoom[]; peak: number; end: number;
+  gaps: TempleGap[]; rooms: TempleRoom[]; climbs: TempleClimb[]; peak: number; end: number;
 }
 
 // Jungle Ruins' playable temple terrace is 11.5m high. These routes reach
@@ -19,6 +20,7 @@ const round = (n: number) => Math.round(n * 10000) / 10000;
 
 function templeCourse(variant: 1 | 2, profile: readonly Point[], end: number) {
   const components: CustomComponent[] = [], pipes: TemplePipe[] = [], gaps: TempleGap[] = [], rooms: TempleRoom[] = [];
+  const climbs: TempleClimb[] = [];
   const groups: CustomGroup[] = [
     {id:1,nm:'Temple masonry and continuous skating lines',editorOnly:true},
     {id:2,nm:'Jade transition pipes',editorOnly:true},
@@ -28,6 +30,10 @@ function templeCourse(variant: 1 | 2, profile: readonly Point[], end: number) {
     {id:6,nm:'Winding temple camera spine',editorOnly:true},
     {id:7,nm:'Solid temple storeys and sanctuary halls',editorOnly:true},
     {id:90,nm:'Jungle temple scenery',editorOnly:true},
+    {id:91,nm:'Planted earth banks and canopy',editorOnly:true},
+    {id:92,nm:'Weathered paving and reservoir gateways',editorOnly:true},
+    {id:93,nm:'Roofed courts and sanctuaries',editorOnly:true},
+    {id:94,nm:'Enclosing jungle ravine',editorOnly:true},
   ];
   const add = (c: CustomComponent) => components.push(c);
   const slab = (a: number, b: number, y: number, nm: string, z = 0, depth = WIDTH) => {
@@ -36,6 +42,17 @@ function templeCourse(variant: 1 | 2, profile: readonly Point[], end: number) {
   const slope = (a: number, b: number, ya: number, yb: number, nm: string) => {
     add({t:'ramp',p:[(a+b)/2,Math.min(ya,yb),0],len:b-a,rise:Math.abs(yb-ya),w:WIDTH,
       yaw:yb>=ya?-90:90,edgeGrinding:false,tex:'jungle',color:STONE,grp:1,nm});
+  };
+  const climb = (a:number,b:number,base:number,top:number,steps:number) => {
+    const side=-7.5,span=(b-a)/steps;
+    climbs.push({a,b,base,top,steps,side});
+    slab(a-10,a,base,'Overgrown stair approach',side,5);
+    for(let i=0;i<steps;i++){
+      const y=base+(top-base)*(i+1)/steps;
+      slab(a+i*span,a+(i+1)*span,y,`Jungle temple climbing step ${i+1}`,side,5);
+      components.push({t:'wumpa',p:[a+(i+.55)*span,y+1,side],grp:4,nm:'Stepped ascent fruit trail'});
+    }
+    slab(b,b+8,top,'Stair route reunion terrace',side,5);
   };
   const crate = (x: number, y: number, kind: Kind, nm: string, z = -2, grp = 4, outline = false) =>
     add({t:'crate',p:[x,y,z],kind,nm,grp,...(outline?{outline:true}:{})});
@@ -114,14 +131,16 @@ function templeCourse(variant: 1 | 2, profile: readonly Point[], end: number) {
     const sourceComponents=components;
     const world=makeTempleWorld(sourceComponents,profile,variant);
     const toWorld=(s:number,y:number,z=0)=>templePoint(s,y,z,variant);
-    return {id,profile,pipes,gaps,rooms,peak:Math.max(...profile.map(p=>p[1])),end,sourceComponents,toWorld,
+    return {id,profile,pipes,gaps,rooms,climbs,peak:Math.max(...profile.map(p=>p[1])),end,sourceComponents,toWorld,
       toLocal:(p:readonly number[])=>templeLocal(p,variant,sourceComponents,profile),
       frameAt:(s:number)=>templeFrame(s,variant),groundAt:(s:number)=>templeSourceHeight(sourceComponents,profile,s),
-      data:{v:1,name,spawn:toWorld(-14,profile[0][1]+.12,1.25),killY:-18,sky:variant===1?'day':'sunset',
-        jungleAtmosphere:true,cameraAirLift:.8,relicTime:variant===1?105:125,
+      data:{v:1,name,spawn:toWorld(-14,profile[0][1]+.12,1.25),killY:-18,sky:'day',
+        jungleAtmosphere:true,keepPlayFog:true,cameraAirLift:.8,relicTime:variant===1?105:125,
+        atmosphere:{fogNear:30,fogFar:155,fogColor:'#6b957c',ambientSky:'#aed8b7',ambientGround:'#645035',
+          ambientIntensity:1.15,sunColor:'#fff0c2',sunIntensity:1.5},
         medalTimes:variant===1?{gold:105,silver:145,bronze:200}:{gold:125,silver:175,bronze:240},groups,components:world}};
   };
-  return {slab,slope,crate,line,rail,checkpoint,bonus,pipe,gap,preserve,recovery,finish,result};
+  return {slab,slope,climb,crate,line,rail,checkpoint,bonus,pipe,gap,preserve,recovery,finish,result};
 }
 
 const TERRACES_PROFILE: readonly Point[] = [[-20,0],[34,0],[80,9],[164,9],[234,22.5],[294,22.5],[354,34.5],[490,34.5]];
@@ -137,6 +156,7 @@ a.crate(88,9,'multihit','Optional striped rhythm on the quiet back edge');
 a.pipe(108,144,9,6,'Jade teaching halfpipe');
 a.slab(144,164,9,'Wide halfpipe recovery');a.checkpoint(151,9,'Lower aqueduct checkpoint');
 a.slope(164,234,9,22.5,'Second temple processional bank');a.line(170,226,10.16,20.96);
+a.climb(168,234,9,22.5,6);
 a.rail(176,218,12.1,20.2,'Ascending aqueduct grind',-2.5);
 a.slab(234,256,22.5,'Switch court: bridge and landing are both visible');
 a.crate(239,22.5,'wood','Slow down at the switch court');
@@ -170,6 +190,7 @@ b.pipe(172,222,17.25,12,'Cloud aqueduct halfpipe');
 b.slab(222,250,17.25,'Cloud aqueduct recovery and checkpoint');b.checkpoint(231,17.25,'Cloud aqueduct checkpoint');
 b.recovery(239,17.25,'Cloud fuse lesson reprise');
 b.slope(250,340,17.25,34.5,'Six-times-high temple crown bank');b.line(258,332,18.78,32.97);
+b.climb(258,340,17.25,34.5,8);
 b.rail(268,323,21.6,32.14,'Crown bank gold grind',-2.5);
 b.slab(340,384,34.5,'Crown court: visible bridge then uninterrupted pipe line');
 b.checkpoint(346,34.5,'Crown court checkpoint before final skating sequence');
@@ -190,6 +211,7 @@ b.gap(650,657,57.5,'Seven-metre final skate jump');b.rail(642,665,58.2,58.2,'Fin
 b.slab(657,694,57.5,'Deep sanctuary landing after the skyline run');
 for(const x of [667,670,673])b.crate(x,57.5,'mystery','Finish rewards beyond the clear touchdown',-2.3);
 b.slope(694,764,57.5,69,'Last temple storey: climb onto the sanctuary core');
+b.line(702,754,58.8143,67.3571);
 b.slab(764,818,69,'Upper temple terrace and playable sanctuary hall');
 b.checkpoint(771,69,'Sanctuary core checkpoint');
 b.finish(69);

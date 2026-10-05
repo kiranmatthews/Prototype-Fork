@@ -17,6 +17,15 @@ for(const id of ['jungle-terraces','jungle-skyline'])await withBlockworksRuntime
  assert.ok(Math.max(...corners.map(p=>p[2]))-Math.min(...corners.map(p=>p[2]))>150);
  const ray=new THREE.Raycaster(),down=new THREE.Vector3(0,-1,0);
  const floorAt=(q,depth=1)=>{ray.set(new THREE.Vector3(...q).add(new THREE.Vector3(0,.3,0)),down);ray.far=depth;return ray.intersectObjects(l.groundMeshes,false)[0]?.point.y;};
+ // A visible chasm must remain lethal, including before its bridge is revealed.
+ // Drop into the actual authored opening, rather than only testing killY.
+ for(const gap of route.gaps){
+  const deaths=p.totalDeaths;
+  p.respawn(l,false,true,{position:new THREE.Vector3(...route.toWorld((gap.a+gap.b)/2,gap.y+.2,0))});
+  r.until(()=>p.totalDeaths>deaths,{}, {allowDeath:true,maxFrames:300});
+  r.until(()=>p.grounded&&p.state==='ride',{}, {allowDeath:true,maxFrames:480});
+  assert.ok(p.pos.distanceTo(l.currentSpawn)<.5,`${id}: chasm must return to the banked spawn`);
+ }
  // Source height is a measurement target; probe the generated world mesh.
  for(const box of l.crates.filter(c=>c.bang))l.triggerBang(box);l.root.updateMatrixWorld(true);
  let probes=0;

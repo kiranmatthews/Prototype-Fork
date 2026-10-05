@@ -1,6 +1,6 @@
 import { tmpdir } from 'node:os';
 // Capture the source-owned sequel temples with the game's renderer. The public
-// thumbnails use a wide architectural camera; review shots retain gameplay's
+// thumbnails show the reservoir and sanctuary at human scale; review shots retain gameplay's
 // close winding-route camera and complete post-processing pipeline.
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
@@ -19,8 +19,8 @@ try {
   page.on('pageerror', error => errors.push(String(error)));
   page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
   for (const scene of [
-    { id: 'jungle-terraces', summit: [86,34.62,50], eye: [142,77,82], target: [66,22,-7] },
-    { id: 'jungle-skyline', summit: [25.2,69.12,1.4], eye: [147,110,72], target: [56,42,-15] },
+    { id: 'jungle-terraces', summit: [1.25,9.15,-21], eye: [5,16,-15], target: [0,9,-70] },
+    { id: 'jungle-skyline', summit: [26.46,69.15,-10.6], eye: [31.2,77,-19], target: [25.2,73,12] },
   ]) {
     const url = new URL(base); url.search = `?playtest&level=${scene.id}`;
     await page.goto(url.href);
