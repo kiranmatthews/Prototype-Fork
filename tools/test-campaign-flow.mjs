@@ -72,7 +72,7 @@ assert.equal(
 );
 assert.equal(campaign.CAMPAIGN_TIME_RELIC_TARGET_SECONDS, 60);
 assert.ok(
-  campaign.CAMPAIGN_LEVELS.slice(0,19).every((level) => level.relicTime === (level.progressKey==='nightworks-after-hours'?35:60)),
+  campaign.CAMPAIGN_LEVELS.slice(0,19).every((level) => level.relicTime === (level.progressKey==='nightworks-after-hours'?75:60)),
   "existing placeholder targets remain one minute; After Hours has an authored skate benchmark",
 );
 assert.deepEqual(

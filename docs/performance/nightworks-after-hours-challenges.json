@@ -1,0 +1,385 @@
+{
+  "level": "nightworks-after-hours",
+  "recordedAt": "2026-10-05T11:43:48.030860+00:00",
+  "status": "validated_locally",
+  "sourceSha256": "f19d3fa826ab644eac89d8512de3d6582a8d8c312d2eef1cc315f8058cf1ed4c",
+  "playerSha256": "289b814a5dbcc62609cb627ff717dee2136981f930d4bff0b3e7c26b369ebff2",
+  "tuningSha256": "f06c99fede5097695309dd9a2e1b8d28fe3dac1e615335aa91fc63d45d4f5759",
+  "sourceHashScope": "Source snapshot at artifact recording. Refresh hashes and rerun affected checks after any subsequent geometry or movement change.",
+  "promptTiming": {
+    "promptReceivedAt": "2026-10-05T07:37:22Z",
+    "firstFullNativeFinishAtApproximate": "2026-10-05T10:24:00Z",
+    "elapsedMinutesApproximate": 166.6,
+    "reportedElapsedMinutesRounded": 170,
+    "scope": "First joined native playable; browser and release QA follows. This is not prompt-to-browser completion.",
+    "firstFullBrowserFinishAt": "2026-10-05T11:13:03.934114+00:00"
+  },
+  "authoredCourse": {
+    "chapters": [
+      {
+        "id": "freight",
+        "firstFrame": 1,
+        "lastFrame": 345,
+        "requiredDecision": "Set the board heading before two offset freight ollies; realign on supported receiving rock."
+      },
+      {
+        "id": "ferries",
+        "firstFrame": 346,
+        "lastFrame": 645,
+        "requiredDecision": "Read opposing lateral delivery decks, catch all three moving rocks, and control speed before the next pop."
+      },
+      {
+        "id": "cutbacks",
+        "firstFrame": 646,
+        "lastFrame": 1412,
+        "requiredDecision": "Brake and carve four banked cutbacks with real void inside the corners."
+      },
+      {
+        "id": "shift-lights",
+        "firstFrame": 1413,
+        "lastFrame": 1689,
+        "requiredDecision": "Read solid versus ghost fire teams; change lanes and time charged hops through four stations."
+      },
+      {
+        "id": "rail-ferry",
+        "firstFrame": 1690,
+        "lastFrame": 2174,
+        "requiredDecision": "Catch, balance, pop and laterally recatch counter-moving ridges across a sideways gulf."
+      },
+      {
+        "id": "workbay",
+        "firstFrame": 2175,
+        "lastFrame": 2740,
+        "requiredDecision": "Weave around alternating quarry stacks, choose the safe side of two pendulums, and deal with the hopper."
+      },
+      {
+        "id": "crown",
+        "firstFrame": 2741,
+        "lastFrame": 3143,
+        "requiredDecision": "Preserve climb momentum and aim two uphill launches onto higher, offset shelves."
+      },
+      {
+        "id": "last-shift",
+        "firstFrame": 3144,
+        "lastFrame": 3711,
+        "requiredDecision": "Combine a lit phase approach, a moving-ridge catch and a higher summit pop before the finish pad."
+      }
+    ],
+    "checkpointCount": 7,
+    "floatingIslandAesthetic": "Existing torch-lit Nightworks rock kit, hanging island bodies and distant arches retained.",
+    "cues": [
+      "Stable camera headings during committed jumps and moving catches; heading changes on supported docks.",
+      "Lit solid phase rock versus visibly ghost wireframe; complementary lanes offer a readable choice.",
+      "Travelling braziers identify moving deck targets; stationary fruit removed from moving catch lines.",
+      "Pale actual grind crests, stable receiving fruit, and lit quarry obstructions reveal the required line."
+    ],
+    "movementTuningChanged": false,
+    "unnecessaryForwardRoadRemoved": true,
+    "optionalCrystal": "Raised summit quarter/coping reward route; actual native collection and browser visibility remain pending."
+  },
+  "nativeJourney": {
+    "command": "node tools/test-nightworks-after-hours.mjs",
+    "frames": 3705,
+    "seconds": 61.75,
+    "normalMode": true,
+    "finished": true,
+    "checkpointsBanked": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "dismountedFramesAfterPushOff": 0,
+    "bailFrames": 0,
+    "deaths": 0,
+    "endPosition": [
+      132.0025817378549,
+      36.72666666915019,
+      -682.4444282133394
+    ],
+    "inputOnly": true,
+    "directPlayerCheckpointOrClockMutations": false,
+    "movingDeckContacts": [
+      {
+        "mover": 0,
+        "component": 30,
+        "time": 6.983333333333314
+      },
+      {
+        "mover": 1,
+        "component": 31,
+        "time": 8.299999999999992
+      },
+      {
+        "mover": 2,
+        "component": 32,
+        "time": 9.550000000000054
+      }
+    ],
+    "phaseStationContacts": [
+      {
+        "station": 0,
+        "lane": 1,
+        "lit": true
+      },
+      {
+        "station": 1,
+        "lane": 0,
+        "lit": true
+      },
+      {
+        "station": 2,
+        "lane": 0,
+        "lit": true
+      },
+      {
+        "station": 3,
+        "lane": 1,
+        "lit": true
+      }
+    ],
+    "counterweightRailContacts": [
+      "Counterweight ridge 1",
+      "Counterweight ridge 2"
+    ],
+    "finalPhaseContact": true,
+    "finalMovingRailContact": [
+      "Last-shift moving ridge"
+    ],
+    "traceSha256": "dbf075518a9523835b0a6a4b64947213c841e2277fe7aa82805c63729a211ccc",
+    "traceCapture": "/private/tmp/nightworks-final-native-proof.json",
+    "logSha256": "259e94a120fcc1f0e8dac48ff3a43caff8a01742a47afd621e697a9d352c5ac6"
+  },
+  "negativeControls": {
+    "scope": "Four blind traversal strategies fail physically; this does not claim exhaustive speedrun-shortcut rejection.",
+    "cases": [
+      {
+        "strategy": "forward",
+        "state": "dead",
+        "failurePositionRounded": [
+          0,
+          -35.5,
+          -60.8
+        ]
+      },
+      {
+        "strategy": "gate-homing",
+        "state": "dead",
+        "failurePositionRounded": [
+          13.2,
+          -35.7,
+          -58.1
+        ]
+      },
+      {
+        "strategy": "automatic-ollies",
+        "state": "dead",
+        "failurePositionRounded": [
+          0,
+          -35.2,
+          -60.0
+        ]
+      },
+      {
+        "strategy": "homing-ollies",
+        "state": "dead",
+        "failurePositionRounded": [
+          16.3,
+          -35.2,
+          -84.2
+        ]
+      }
+    ]
+  },
+  "checkpointRecovery": {
+    "command": "node tools/test-nightworks-checkpoint-recovery.mjs",
+    "passed": true,
+    "cases": [
+      {
+        "id": "ferries",
+        "bankFrame": 67,
+        "deathFrame": 200,
+        "recoveredFrame": 343,
+        "supportedPosition": [
+          -8,
+          12,
+          -89
+        ],
+        "grounded": true,
+        "livesBefore": 4,
+        "livesAfter": 3
+      },
+      {
+        "id": "cutbacks",
+        "bankFrame": 67,
+        "deathFrame": 197,
+        "recoveredFrame": 340,
+        "supportedPosition": [
+          -8,
+          12,
+          -176
+        ],
+        "grounded": true,
+        "livesBefore": 4,
+        "livesAfter": 3
+      },
+      {
+        "id": "shift-lights",
+        "bankFrame": 67,
+        "deathFrame": 205,
+        "recoveredFrame": 348,
+        "supportedPosition": [
+          20,
+          14,
+          -279
+        ],
+        "grounded": true,
+        "livesBefore": 4,
+        "livesAfter": 3
+      },
+      {
+        "id": "rail-ferry",
+        "bankFrame": 67,
+        "deathFrame": 206,
+        "recoveredFrame": 349,
+        "supportedPosition": [
+          20,
+          14,
+          -375
+        ],
+        "grounded": true,
+        "livesBefore": 4,
+        "livesAfter": 3
+      },
+      {
+        "id": "workbay",
+        "bankFrame": 67,
+        "deathFrame": 205,
+        "recoveredFrame": 348,
+        "supportedPosition": [
+          114,
+          14,
+          -381
+        ],
+        "grounded": true,
+        "livesBefore": 4,
+        "livesAfter": 3
+      },
+      {
+        "id": "crown",
+        "bankFrame": 67,
+        "deathFrame": 202,
+        "recoveredFrame": 345,
+        "supportedPosition": [
+          114,
+          14,
+          -477
+        ],
+        "grounded": true,
+        "livesBefore": 4,
+        "livesAfter": 3
+      },
+      {
+        "id": "last-shift",
+        "bankFrame": 67,
+        "deathFrame": 225,
+        "recoveredFrame": 368,
+        "supportedPosition": [
+          120,
+          34,
+          -589
+        ],
+        "grounded": true,
+        "livesBefore": 4,
+        "livesAfter": 3
+      }
+    ],
+    "method": "Native mounted bank, real void fall/death, automatic respawn and supported settle at every checkpoint; no direct checkpoint/player/clock changes.",
+    "logSha256": "d0ae994c9b77f9100ba1c148503de54333f1f94fce8686b9bd1f607fd6d91724"
+  },
+  "focusedChecks": {
+    "structure": {
+      "command": "node tools/test-nightworks-challenge-structure.mjs",
+      "passed": true,
+      "motionPhaseCases": 26,
+      "supportedSpawnAndCheckpointDocks": true,
+      "liveMovingAndPhaseCollision": true
+    },
+    "goblins": {
+      "command": "node tools/test-nightworks-goblins.mjs",
+      "passed": true,
+      "supportedPatrolSamples": 335,
+      "basis": "Root-reported focused check; themed appearances and takedown/reset paths retained in both levels."
+    },
+    "campaign": {
+      "passed": true,
+      "legacyMapAndSequelIdentityPreserved": true,
+      "basis": "Root-reported campaign check and accepted native legacy/custom-map assertions."
+    },
+    "productionBuild": {
+      "command": "npm run build",
+      "passed": true,
+      "logSha256": "78d27b470952b0f7ad1895b8ebf7fa23a2985d2857a7cfb5270871dbe7a920a1",
+      "integratedBase": "c95d861"
+    },
+    "fullSuiteRun": false
+  },
+  "browser": {
+    "status": "passed",
+    "passed": true,
+    "liteFullRoutePassed": true,
+    "fullRenderPassed": true,
+    "inheritedStateJourneyPassed": true,
+    "consoleErrors": [],
+    "fullFrames": 3668,
+    "fullSeconds": 61.13333333333333,
+    "fullInitialWorldTime": 0.8666666666666677,
+    "liteFrames": 3384,
+    "actualRequiredContacts": true,
+    "fullRockAssetsReady": 29,
+    "fullThemedGoblinsReady": 4,
+    "originalNightworksThemedGoblinsReady": 8,
+    "evidence": {
+      "fullReportSha256": "432a0578c1c6fe2450829349ed081e07379386538621b974144834f733e2f7ad",
+      "liteReportSha256": "3847981647ff7b2c02da34f9f6f62c0ac61b96c1f099cd94a38bd466d5fa2d86"
+    },
+    "note": "Full run uses the final merged runtime and fitted-roof input forecast; the prior lite run verifies the same authored course.",
+    "additionalFullRun": {
+      "initialWorldTime": 0.4666666666666666,
+      "frames": 3390,
+      "passed": true,
+      "reportSha256": "da00587a2bacd2e9c2afef695750bfb81bc10c9ae28c1308c51399c45d636745"
+    }
+  },
+  "optionalCrystal": {
+    "status": "passed",
+    "nativeCollected": true,
+    "copingCatchAndChargedPop": true,
+    "supportedMountedReturn": true,
+    "finished": true,
+    "bails": 0,
+    "deaths": 0,
+    "footFramesOnlyAfterReturn": 26,
+    "command": "node tools/test-nightworks-summit-crystal.mjs",
+    "evidenceSha256": "9cc3746ed06b1834165c69e561dc0f4f411dd0c333a0fed04afbba8c381520a7",
+    "note": "The optional final gate turn steps onto feet; the main course remains continuously mounted."
+  },
+  "finalCheckpointRetry": {
+    "passed": true,
+    "actualBankVoidDeathAndRespawn": true,
+    "neutralReadingSeconds": 2.4,
+    "mountedFinale": true,
+    "commandDescription": "Real bank/fall/respawn, then neutral timing read and native finale inputs",
+    "evidenceSha256": "9bba6045865e9ce361d6cadd9292dd6e3d2a4b42aa6373e0f4c775c123061f94",
+    "noDirectRuntimeWrites": true
+  },
+  "delivery": {
+    "branch": "origin/main",
+    "workflow": "Deploy to GitHub Pages",
+    "levelUrl": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=nightworks-after-hours",
+    "verification": "Live deployment is verified after this locally validated record is committed."
+  }
+}

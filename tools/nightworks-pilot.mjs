@@ -1,34 +1,34 @@
-// Input-only, adaptive production-controller pilot. The three gap releases are
-// deliberate ollies; all other sections keep charge and wheel contact.
-export function createAfterHoursPilot(source) {
- let jump=0,air=null,mounted=false;
- const evidence={gaps:[],checkpoints:[],mountedFrames:0,footFrames:0,finished:false};
- const direction=(p,l,x,z)=>{
-  const f=p.courseInputDirection(l)??p.camDir,n=Math.hypot(x,z)||1,fn=Math.hypot(f.x,f.z)||1;
-  return {moveX:(x*-f.z+z*f.x)/n/fn,moveY:(x*f.x+z*f.z)/n/fn};
- };
- const snakeX=z=>{
-  const q=source.AFTER_HOURS_SNAKE;
-  if(z>=q[0][2]||z<=q.at(-1)[2])return 0;
-  for(let i=0;i<q.length-1;i++)if(z<=q[i][2]&&z>=q[i+1][2]){
-   const t=(q[i][2]-z)/(q[i][2]-q[i+1][2]);return q[i][0]+(q[i+1][0]-q[i][0])*t;
-  }
-  return 0;
- };
- return {evidence,sample(p,l){
-  const z=p.pos.z,targetZ=z-11,targetX=snakeX(targetZ);
-  let jumpHeld=true;
-  const gap=source.AFTER_HOURS_GAPS[jump];
-  if(gap&&(p.grounded||p.coyoteTimer>0)&&z-gap.takeoff[2]<1.2&&z>gap.takeoff[2]-.7){
-   air={name:gap.name,index:jump,start:p.pos.toArray(),peak:p.pos.y,airborne:false};jump++;jumpHeld=false;
-  }
-  return {...direction(p,l,targetX-p.pos.x,-11),jumpHeld};
- },observe(p,l){
-  mounted ||= p.boardRolling;
-  if(mounted){if(p.boardRolling)evidence.mountedFrames++;else if(p.state!=='finished')evidence.footFrames++;}
-  if(air){air.peak=Math.max(air.peak,p.pos.y);air.airborne||=!p.grounded;
-   if(air.airborne&&p.grounded){evidence.gaps.push({...air,end:p.pos.toArray()});air=null;}}
-  for(const [i,cp]of l.checkpoints.entries())if(cp.active&&!evidence.checkpoints.includes(i))evidence.checkpoints.push(i);
-  evidence.finished=p.state==='finished';
- }};
+import {createAfterHoursFreightPilot,createAfterHoursCutbackPilot,createAfterHoursWorkbayPilot,createAfterHoursCrownPilot} from './nightworks-ground-pilot.mjs';
+import {createNightworksFerryPilot} from './nightworks-ferry-pilot.mjs';
+import {createAfterHoursPhasePilot} from './nightworks-phase-pilot.mjs';
+import {createCounterweightPilot,createFinaleRailPilot} from './nightworks-rail-pilot.mjs';
+
+// Full-course input composition: no warped positions, fake velocity, restored
+// lives, advanced phase clocks or direct checkpoint activations. Every chapter
+// inherits the production rider and clock left by the preceding challenge.
+export function createAfterHoursPilot(source,options={}) {
+ const factories=[()=>createAfterHoursFreightPilot(),()=>createNightworksFerryPilot(source,{tuning:options.tuning,fixedStep:options.fixedStep}),
+  ()=>createAfterHoursCutbackPilot(source),()=>createAfterHoursPhasePilot(source,{tuning:options.tuning,fixedStep:options.fixedStep}),()=>createCounterweightPilot(source),
+  ()=>createAfterHoursWorkbayPilot(),()=>createAfterHoursCrownPilot(),()=>createFinaleRailPilot(source)];
+ let stage=0,helper=factories[0](),frame=0,mounted=false;
+ const evidence={chapters:[{id:source.AFTER_HOURS_STAGES[0].id,firstFrame:1,lastFrame:null}],checkpoints:[],footFrames:0,mountedFrames:0,finished:false,chapterEvidence:{}};
+ const result={evidence,get stage(){return stage;},get helper(){return helper;},
+  sample(p,l){
+   const sample=helper.sample(p,l);
+   // The checkpoint crate uses the game's actual spin/break rules; a slow
+   // reading approach must bank it rather than trip over an inactive crate.
+   if(p.grounded&&l.checkpoints.some(cp=>!cp.active&&Math.hypot(p.pos.x-cp.spawnPos.x,p.pos.z-cp.spawnPos.z)<2.5))sample.spinHeld=true;
+   return sample;
+  },observe(p,l){
+   frame++;helper.observe(p,l);mounted||=p.boardRolling;
+   if(mounted){if(p.boardRolling)evidence.mountedFrames++;else if(p.state!=='finished')evidence.footFrames++;}
+   for(const [i,cp]of l.checkpoints.entries())if(cp.active&&!evidence.checkpoints.includes(i))evidence.checkpoints.push(i);
+   evidence.finished=p.state==='finished';
+   if((helper.evidence.complete||helper.evidence.done||helper.done)&&stage<factories.length-1){
+    evidence.chapters.at(-1).lastFrame=frame;evidence.chapterEvidence[source.AFTER_HOURS_STAGES[stage].id]=helper.evidence;
+    stage++;helper=factories[stage]();evidence.chapters.push({id:source.AFTER_HOURS_STAGES[stage].id,firstFrame:frame+1,lastFrame:null});
+   }
+   if(evidence.finished){evidence.chapters.at(-1).lastFrame=frame;evidence.chapterEvidence[source.AFTER_HOURS_STAGES[stage].id]=helper.evidence;}
+  }};
+ return result;
 }

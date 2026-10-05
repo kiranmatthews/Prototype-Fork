@@ -16,20 +16,22 @@ export async function withAfterHoursRuntime(run, options = {}) {
   console.error = (...a) => { if (!/failed|GLB/i.test(String(a[0]))) error(...a); };
   let level;
   try {
-    const { Level } = await server.ssrLoadModule('/src/level.ts');
+    const { Level, vertRampSpine } = await server.ssrLoadModule('/src/level.ts');
     const { Player } = await server.ssrLoadModule('/src/player.ts');
     const { CONST, TUNING } = await server.ssrLoadModule('/src/tuning.ts');
-    const source = await server.ssrLoadModule('/src/levels/nightworks-after-hours.ts');
+    const authored = await server.ssrLoadModule('/src/levels/nightworks-after-hours.ts');
+    const source={...authored,AFTER_HOURS_CUTBACK_PATH:vertRampSpine(authored.NIGHTWORKS_AFTER_HOURS_LEVEL.components.find(c=>c.nm==='Four quarry cutbacks')).map(q=>[q.x,q.y,q.z])};
     const scene = new THREE.Scene();
     level = new Level(scene, { id: 'nightworks-after-hours', name: source.NIGHTWORKS_AFTER_HOURS_LEVEL.name, data: source.NIGHTWORKS_AFTER_HOURS_LEVEL });
-    level.update(0); scene.updateMatrixWorld(true);
+    level.update(options.timeOffset??0); scene.updateMatrixWorld(true);
     const player = new Player(scene);
     player.enterLevel('nightworks-after-hours');
     player.rawInput = makeInput();
     player.respawn(level,true,false,options.start ? { position: new THREE.Vector3(...options.start), heading: new THREE.Vector3(...(options.heading??[0,0,-1])) } : undefined);
     let last = makeInput(), frame = 0;
     const trace = [];
-    const snapshot = () => ({ frame, position: player.pos.toArray(), state: player.state, grounded: player.grounded,
+    const componentOf=object=>{for(let node=object;node;node=node.parent)if(Number.isInteger(node.userData?.editorIdx))return node.userData.editorIdx;return null;};
+    const snapshot = () => ({ frame, time:frame*CONST.fixedStep, input:{moveX:last.moveX,moveY:last.moveY,jumpHeld:last.jumpHeld,jumpPressed:last.jumpPressed,jumpReleased:last.jumpReleased,grindHeld:last.grindHeld,grindPressed:last.grindPressed,spinHeld:last.spinHeld,spinPressed:last.spinPressed,grabHeld:last.grabHeld,grabPressed:last.grabPressed,transferHeld:last.transferHeld,transferPressed:last.transferPressed,restartPressed:last.restartPressed}, supportComponent:player.grounded?componentOf(player.groundHit?.mesh):null,railComponent:player.state==='grind'?componentOf(player.grindRail?.object):null, mover:player.groundHit?.moverId??null,heading:player.axisF.toArray(),normal:player.rideNormal.toArray(), position: player.pos.toArray(), state: player.state, grounded: player.grounded,
       speed: player.speed, verticalSpeed: player.vVel, pipe: level.halfpipes.indexOf(player.groundHit?.halfpipe ?? player.hangPipe),
       vertAir: player.vertAir, pipeHang: player.pipeHang, releaseStage: player.vertBoardRelease.stage, bailing: player.isBailing,
       deaths: player.totalDeaths, freeSkate: player.boardRolling, rail: player.grindRail ? level.rails.indexOf(player.grindRail) : null });

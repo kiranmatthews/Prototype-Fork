@@ -465,7 +465,7 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
   },
   {
     progressKey:"nightworks-after-hours",levelId:"nightworks-after-hours",name:"Nightworks: After Hours",
-    relicTime:35,islandId:"island-1",mapPath:"upper-branch",mapPosition:[-81,10,-1],unlockAfter:["nightworks"],
+    relicTime:75,islandId:"island-1",mapPath:"upper-branch",mapPosition:[-81,10,-1],unlockAfter:["nightworks"],
   },
   { progressKey: "jungle-terraces", levelId: "jungle-terraces", name: "Temple Terraces", relicTime: 105,
     islandId: "island-1", mapPath: "upper-branch", mapPosition: [-151, 7, 7], unlockAfter: ["jungle"] },
