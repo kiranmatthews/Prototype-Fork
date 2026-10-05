@@ -261,6 +261,11 @@ const FRUIT_MAGNET_CENTER = new THREE.Vector3();
 const FRUIT_REACH = new THREE.Box3(); // scratch: the player's body box, this frame
 const REACH_C = new THREE.Vector3();
 const REACH_S = new THREE.Vector3();
+// A little reach forgiveness for deliberate crate attacks. Keep body contact
+// exact so nearby hazards and idle bumps do not acquire a larger hitbox.
+const CRATE_SPIN_MARGIN = 0.35;
+// The baseline sole extends 0.5 m from centre; leave at least 0.15 m on the lid.
+const CRATE_STOMP_MARGIN = 0.35;
 const FRUIT_SIZE = new THREE.Vector2(); // scratch: renderer size, split-screen draw
 const FRUIT_PREV = new THREE.Vector4(); // scratch: viewport to put back
 const FRUIT_GRAB = new THREE.Vector3(WUMPA_SIZE, WUMPA_SIZE, WUMPA_SIZE); // physical fruit size; the magnet supplies the generous outer range
@@ -13190,6 +13195,12 @@ export class Player {
     this.interactionShift.copy(this.pos).sub(this.interactionAt);
     this.crateBodyBox.copy(this.characterBounds).translate(this.interactionShift);
     this.crateAttackBox.copy(this.crateBodyBox);
+    if (this.spinning) {
+      this.crateAttackBox.min.x -= CRATE_SPIN_MARGIN;
+      this.crateAttackBox.max.x += CRATE_SPIN_MARGIN;
+      this.crateAttackBox.min.z -= CRATE_SPIN_MARGIN;
+      this.crateAttackBox.max.z += CRATE_SPIN_MARGIN;
+    }
   }
 
   private reach(grow: number): THREE.Box3 {
@@ -13486,18 +13497,19 @@ export class Player {
 
   // Falling and our feet are near the target's top face = a stomp. The window
   // is deep enough that a max-speed fall can't step past it in one tick. A
-  // height-only test called high side scrapes stomps; the feet must be over
-  // the authored lid footprint and must have approached from its top side.
-  private isStomping(box: THREE.Box3): boolean {
+  // height-only test called high side scrapes stomps; the feet must overlap
+  // the lid and must have approached from its top side. Wooden crates allow
+  // a small sole overlap; enemies and typed solid/hazard boxes keep zero margin.
+  private isStomping(box: THREE.Box3, lidMargin = 0): boolean {
     return (
       this.state === 'air' &&
       this.vVel < 0 &&
       this.pos.y > box.max.y - 0.75 &&
       this.prevPos.y >= box.max.y - 0.05 &&
-      this.pos.x >= box.min.x &&
-      this.pos.x <= box.max.x &&
-      this.pos.z >= box.min.z &&
-      this.pos.z <= box.max.z
+      this.pos.x >= box.min.x - lidMargin &&
+      this.pos.x <= box.max.x + lidMargin &&
+      this.pos.z >= box.min.z - lidMargin &&
+      this.pos.z <= box.max.z + lidMargin
     );
   }
 
@@ -13521,7 +13533,8 @@ export class Player {
       // A crossed sole/lid is a swept landing contact even when the airborne
       // pose lifts its visible feet above the final sampled box.
       if (this.vVel < 0) {
-        if (this.playerBox.intersectsBox(c.box) && this.isStomping(c.box))
+        const lidMargin = solid || c.nitro || c.tnt ? 0 : CRATE_STOMP_MARGIN;
+        if (this.playerBox.intersectsBox(c.box) && this.isStomping(c.box, lidMargin))
           faces.push({ crate: c, index, face: c.box.max.y });
       } else {
         if ((solid?this.playerBox:this.crateBodyBox).intersectsBox(c.box) && this.isBonking(c.box,!solid))
