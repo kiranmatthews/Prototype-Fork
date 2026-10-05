@@ -3462,6 +3462,35 @@ export function userLevelStorageHealthy(): boolean {
   return LAST_USER_WRITE_OK;
 }
 
+// Only the unchanged carving-course snapshots published by 04557f6 follow
+// the redesigned source. The second signature includes parser water tags.
+// Names, component metadata and every coordinate are part of both hashes;
+// an edited or renamed local copy remains the player's authored level.
+const CUSTARD_CARVING_SNAPSHOTS = [
+  { length: 3111245, a: 0x56d3de51, b: 0x9e9d8f25 },
+  { length: 3111533, a: 0xe38da879, b: 0x9bcdbc1d },
+] as const;
+const CUSTARD_SNAPSHOT_CACHE = new WeakMap<object, boolean>();
+export function isOriginalCustardCreek(entry: LevelEntry): boolean {
+  if (entry.id !== "custard-creek" || entry.name !== "Custard Creek" ||
+      entry.data?.name !== "Custard Creek") return false;
+  const cacheable = CANONICAL_USER_DATA.has(entry.data);
+  const cached = cacheable ? CUSTARD_SNAPSHOT_CACHE.get(entry.data) : undefined;
+  if (cached !== undefined) return cached;
+  const json = JSON.stringify(entry.data);
+  let a = 2166136261, b = 2246822519;
+  if (CUSTARD_CARVING_SNAPSHOTS.some(snapshot => snapshot.length === json.length))
+    for (let i = 0; i < json.length; i++) {
+      const code = json.charCodeAt(i);
+      a = Math.imul(a ^ code, 16777619);
+      b = Math.imul(b ^ code, 3266489917);
+    }
+  const pristine = CUSTARD_CARVING_SNAPSHOTS.some(snapshot =>
+    snapshot.length === json.length && snapshot.a === (a >>> 0) && snapshot.b === (b >>> 0));
+  if (cacheable) CUSTARD_SNAPSHOT_CACHE.set(entry.data, pristine);
+  return pristine;
+}
+
 /**
  * Built-ins first (in their fixed order), then user levels in the order they
  * were added. A built-in that has been EDITED is stored under its own id, and
@@ -3474,7 +3503,7 @@ export function levelList(): LevelEntry[] {
   const edited = new Map(user.map((l) => [l.id, l]));
   const out = BUILTIN_LEVELS.map((builtin) => {
     const override = edited.get(builtin.id);
-    if (!override || isOriginalTestCourse(override)) return builtin;
+    if (!override || isOriginalTestCourse(override) || isOriginalCustardCreek(override)) return builtin;
     // Early published copies mislabeled these campaign courses as bonuses.
     // Repair their presentation while retaining all locally edited geometry.
     if (override.data?.hudMode === "bonus" && PUZZLE_LEVELS.some(level => level.id === builtin.id))
@@ -3498,7 +3527,8 @@ export function levelList(): LevelEntry[] {
 
 /** True when this built-in has been edited and is building from data. */
 export function isOverridden(id: string): boolean {
-  return isBuiltin(id) && getUserLevels().some((l) => l.id === id && !isOriginalTestCourse(l));
+  return isBuiltin(id) && getUserLevels().some((l) => l.id === id &&
+    !isOriginalTestCourse(l) && !isOriginalCustardCreek(l));
 }
 
 export function findLevel(id: string): LevelEntry | null {

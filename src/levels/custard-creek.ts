@@ -1,174 +1,204 @@
-import type {CustomComponent, CustomGroup, CustomLevelData} from '../level';
+import type {CustomComponent, CustomLevelData} from '../level';
+import {buildCarlisleBoxes} from './carlisle-boxes';
+import originalEntry from '../../tools/carlisle-coast/original-course.json';
 
-// A sister course to Carlisle: metre-scale, long downhill journey, breathing
-// room between encounters. The road, boxes and camera share one smooth spine.
-// Native mesh/rail/woodpath data keeps the entire course editable/exportable.
-type Point = [number, number, number];
-const C: CustomComponent[] = [];
-const groups: CustomGroup[] = [];
-const round = (v:number) => Math.round(v * 4096) / 4096;
-const clamp = (v:number) => Math.max(0, Math.min(1, v));
-const smooth = (v:number) => {const t=clamp(v); return t*t*(3-2*t);};
-export const CUSTARD_CREEK_END = 2240;
-const Y: [number,number][] = [[-20,0],[38,0],[105,-5],[228,-5],[295,-13],
-  [670,-13],[790,-16],[875,-22],[1060,-22],[1225,-16],[1320,-13],
-  [1450,-13],[1560,-19],[1715,-19],[1840,-26],[2280,-26]];
-export function custardHeight(s:number):number {
-  for(let i=1;i<Y.length;i++) if(s<=Y[i][0]) {
-    const a=Y[i-1],b=Y[i]; return a[1]+(b[1]-a[1])*smooth((s-a[0])/(b[0]-a[0]));
+type Point=[number,number,number];
+const rad=Math.PI/180;
+const round=(v:number)=>Math.round(v*4096)/4096;
+// Keep the coast's full gameplay topology: jumps, dangerous crate choices,
+// timed crossings, foot routes and compulsory grinds. Bend geometry, not feel.
+const bend=(s:number)=>22*(Math.sin((s+100)*2*Math.PI/310)-Math.sin(100*2*Math.PI/310))
+  +5*(Math.sin((s+42.5)*2*Math.PI/560)-Math.sin(42.5*2*Math.PI/560));
+const crossBend=(x:number)=>8*Math.sin(x*2*Math.PI/152);
+export function custardWarp(p:Point):Point {
+  return [p[0]+bend(-p[2]),p[1],p[2]+crossBend(p[0])].map(round) as Point;
+}
+export const CUSTARD_CREEK_END=2447;
+const C:CustomComponent[]=[];
+const clone=<T>(v:T):T=>JSON.parse(JSON.stringify(v));
+const reference=originalEntry.data as unknown as CustomLevelData;
+const range=(a:number,b:number)=>Array.from({length:b-a+1},(_,i)=>a+i);
+const removed=new Set([1,...range(20,30),...range(71,86),...range(121,123),175,176,...range(242,253),276,490,493,499,502]);
+const core=reference.components.flatMap((source,i)=>{
+  if(removed.has(i)||source.t==='crate'||source.t==='comboorb')return [];
+  const c=clone(source);c.nm=`Test Course ${i}`;
+  if(i===132)c.pts=[[0,0,0,0],[0,-23,0,2.98],[0,-63,0,3.2],[0,-88,0,5.96],[0,-128,0,6.2],[0,-150,0,9]];
+  if(i===92)c.cameraCutaway=true;
+  if(i===69){c.p[0]=0;c.s![0]=22;}
+  return [c];
+});
+const boxes=buildCarlisleBoxes(reference);
+// Pin the authored gameplay reference rather than borrowing mutable runtime
+// art or editor state from another level under active development.
+const original:CustomLevelData={...clone(reference),components:[...core,...boxes.components],groups:[...(reference.groups??[]),...boxes.groups]};
+const sourceTop=(c:CustomComponent,x:number,z:number)=>{
+  const yaw=(c.yaw??0)*rad,dx=x-c.p[0],dz=z-c.p[2];
+  const lx=dx*Math.cos(yaw)-dz*Math.sin(yaw),lz=dx*Math.sin(yaw)+dz*Math.cos(yaw);
+  if(c.t==='platform'&&c.s&&Math.abs(lx)<=c.s[0]/2+.01&&Math.abs(lz)<=c.s[2]/2+.01)return c.p[1]+c.s[1]/2;
+  if(c.t==='ramp'&&Math.abs(lx)<=(c.w??12)/2+.01&&Math.abs(lz)<=(c.len??40)/2+.01)
+    return c.p[1]+(c.rise??4)*(.5-lz/(c.len??40));
+  return null;
+};
+function floorHeight(x:number,z:number):number {
+  const heights=original.components.map(c=>sourceTop(c,x,z)).filter((h):h is number=>h!==null);
+  if(heights.length)return Math.max(...heights);
+  const nearest=original.components.filter(c=>c.t==='platform'&&c.s)
+    .sort((a,b)=>Math.hypot(a.p[0]-x,a.p[2]-z)-Math.hypot(b.p[0]-x,b.p[2]-z))[0];
+  return nearest?nearest.p[1]+nearest.s![1]/2:0;
+}
+function guideHeight(x:number,z:number):number {
+  // The higher optional crate ledge must not lift the main camera lane.
+  if(x>=118&&x<=136&&Math.abs(z+1720)<12)return -16.6;
+  return floorHeight(x,z);
+}
+function localWorld(c:CustomComponent,x:number,y:number,z:number):Point {
+  const a=(c.yaw??0)*rad;
+  return [c.p[0]+x*Math.cos(a)+z*Math.sin(a),c.p[1]+y,c.p[2]-x*Math.sin(a)+z*Math.cos(a)];
+}
+// Closed, sampled solids preserve original top heights and actual gaps.
+// Nothing fills the missing ground under the coast's challenge crossings.
+function surface(c:CustomComponent):CustomComponent {
+  const w=c.t==='ramp'?(c.w??12):c.s![0],d=c.t==='ramp'?(c.len??40):c.s![2];
+  const top=(z:number)=>c.t==='ramp'?(c.rise??4)*(.5-z/d):c.s![1]/2;
+  const bottom=c.t==='ramp'?Math.min(0,c.rise??4)-1:-c.s![1]/2;
+  const nx=Math.max(1,Math.ceil(w/3)),nz=Math.max(1,Math.ceil(d/2));
+  const p=custardWarp(c.p),vertices:number[]=[],indices:number[]=[],uvs:number[]=[];
+  for(const lower of [false,true])for(let iz=0;iz<=nz;iz++)for(let ix=0;ix<=nx;ix++) {
+    const x=-w/2+w*ix/nx,z=d/2-d*iz/nz,q=custardWarp(localWorld(c,x,lower?bottom:top(z),z));
+    vertices.push(round(q[0]-p[0]),round(q[1]-p[1]),round(q[2]-p[2]));uvs.push(x/4,z/4);
   }
-  return Y[Y.length-1][1];
-}
-export const custardX = (s:number) => 29*Math.sin(s*2*Math.PI/280)+11*Math.sin(s*2*Math.PI/620);
-const derivative = (s:number) => 29*2*Math.PI/280*Math.cos(s*2*Math.PI/280)+11*2*Math.PI/620*Math.cos(s*2*Math.PI/620);
-export function custardTangent(s:number):Point {const d=derivative(s),n=Math.hypot(d,1);return [d/n,0,-1/n];}
-// Up to six degrees of crossfall: the outside of each turn rises gently.
-export const custardBank = (s:number) => .095*Math.sin(s*2*Math.PI/280)+.012*Math.sin(s*2*Math.PI/620);
-export function custardPoint(s:number,u=0,lift=0):Point {
-  const [x,,z]=custardTangent(s);
-  return [custardX(s)-z*u,custardHeight(s)+custardBank(s)*u+lift,-s+x*u].map(round) as Point;
-}
-export const custardYaw = (s:number) => -Math.atan2(derivative(s),1)*180/Math.PI;
-export function custardProgress(p:Point|{x:number;z:number}):number {
-  const x=Array.isArray(p)?p[0]:p.x,z=Array.isArray(p)?p[2]:p.z;
-  let s=-z;
-  for(let i=0;i<5;i++) {
-    const d=derivative(s),dd=(derivative(s+.05)-derivative(s-.05))/.1;
-    s-=Math.max(-5,Math.min(5,((custardX(s)-x)*d+s+z)/Math.max(.3,1+d*d+(custardX(s)-x)*dd)));
+  const row=nx+1,count=row*(nz+1);
+  const quad=(a:number,b:number,c:number,d:number)=>indices.push(a,b,c,c,b,d);
+  for(let iz=0;iz<nz;iz++)for(let ix=0;ix<nx;ix++) {
+    const a=iz*row+ix,b=a+1,n=a+row;quad(a,b,n,n+1);quad(a+count,n+count,b+count,n+count+1);
   }
-  return s;
+  const edge:number[]=[];
+  for(let ix=0;ix<=nx;ix++)edge.push(ix);
+  for(let iz=1;iz<=nz;iz++)edge.push(iz*row+nx);
+  for(let ix=nx-1;ix>=0;ix--)edge.push(nz*row+ix);
+  for(let iz=nz-1;iz>0;iz--)edge.push(iz*row);
+  for(let i=0;i<edge.length;i++) {const a=edge[i],b=edge[(i+1)%edge.length];quad(b,a,b+count,a+count);}
+  return {t:'mesh',p,vertices,indices,uvs,color:c.color,tex:c.tex,edgeGrinding:false,
+    ...(c.invisible?{invisible:true}:{}),...(c.grp!==undefined?{grp:c.grp}:{}),nm:c.nm};
 }
-export const CUSTARD_CREEK_REACHES = [
-  {name:'Custard Headwaters',a:-16,b:280}, {name:'Willow Weave',a:280,b:560},
-  {name:'Golden Meanders',a:560,b:840}, {name:'Low Creek',a:840,b:1120},
-  {name:'Sunlit Rise',a:1120,b:1400}, {name:'Orchard Roll',a:1400,b:1680},
-  {name:'Creekside Switches',a:1680,b:1960}, {name:'The Home Carve',a:1960,b:2260},
-].map((r,i)=>({...r,grp:20+i}));
-for(const r of CUSTARD_CREEK_REACHES) groups.push({id:r.grp,nm:r.name,editorOnly:true});
-const reach=(s:number)=>CUSTARD_CREEK_REACHES.find(r=>s>=r.a&&s<r.b)??CUSTARD_CREEK_REACHES[7];
-const add=(c:CustomComponent)=>C.push(c);
-const width=(s:number)=>13+2*smooth((s-2170)/55)+2*Math.exp(-(((s-1045)/65)**2));
-export const CUSTARD_CREEK_GAPS = [
-  {a:430,b:435,name:'Willow brook hop'}, {a:1124,b:1130,name:'Sunlit creek hop'},
-  {a:1714,b:1720,name:'Orchard creek hop'},
-];
-
-// One-metre samples, shared seam vertices and no collider plank seams. Four
-// cross-road cells include the centreline, so banked box support is exact.
-function strip(a:number,b:number,us:number[],height:(s:number,u:number,j:number)=>number,
-    color:string,tex:string,name:string,solid=true) {
-  const vertices:number[]=[],indices:number[]=[],uvs:number[]=[];
-  const rows=Math.ceil(b-a),origin=custardPoint(a);
-  for(let i=0;i<=rows;i++) {
-    const s=a+(b-a)*i/rows;
-    for(const [j,ratio] of us.entries()) {
-      const u=ratio*width(s)/2,p=custardPoint(s,u);
-      vertices.push(round(p[0]-origin[0]),round(height(s,u,j)-origin[1]),round(p[2]-origin[2]));
-      uvs.push(u/4,s/4);
+// Ground raycasts own support; thin boundary walls keep a jumping body out
+// of the closed floors' sides. Their tops sit below the riding face, as in
+// the ordinary platform collider, so supported carving never hits a wall.
+function surfaceSideColliders(c:CustomComponent):CustomComponent[] {
+  const ramp=c.t==='ramp',w=ramp?(c.w??12):c.s![0],d=ramp?(c.len??40):c.s![2];
+  const thickness=.12,inset=thickness/2;
+  const top=(z:number)=>ramp?(c.rise??4)*(.5-z/d):c.s![1]/2;
+  const height=ramp?1:c.s![1];
+  if(height<=.25)return [];
+  const points:Point[][]=[];
+  const edge=(a:[number,number],b:[number,number])=>{
+    const count=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/2));
+    return Array.from({length:count+1},(_,i)=>{
+      const x=a[0]+(b[0]-a[0])*i/count,z=a[1]+(b[1]-a[1])*i/count;
+      return custardWarp(localWorld(c,x,top(z)-height,z));
+    });
+  };
+  const corners:[number,number][]=[[-w/2+inset,d/2-inset],[w/2-inset,d/2-inset],
+    [w/2-inset,-d/2+inset],[-w/2+inset,-d/2+inset]];
+  if(ramp)for(let i=0;i<4;i++)points.push(edge(corners[i],corners[(i+1)%4]));
+  else points.push(corners.flatMap((a,i)=>edge(a,corners[(i+1)%4]).slice(0,-1)));
+  return points.map((outline,i)=>{
+    const p=outline[0];
+    return {t:'wallpath',p,w:thickness,rise:height-.05,collisionHeight:height-.05,
+      invisible:true,curve:'corner',closed:!ramp,edgeGrinding:false,
+      ...(c.grp!==undefined?{grp:c.grp}:{}),nm:`${c.nm} side collision${ramp?' '+i:''}`,
+      pts:outline.map(q=>[round(q[0]-p[0]),round(q[2]-p[2]),0,round(q[1]-p[1])])};
+  });
+}
+function warpedCrumble(c:CustomComponent):CustomComponent {
+  const size=c.s??[3,1,3],a=custardWarp(localWorld(c,0,0,size[2]/2)),b=custardWarp(localWorld(c,0,0,-size[2]/2));
+  // A rigid pad follows the warped centreline chord. Fitting its original
+  // end points keeps the coast's small seams instead of opening side gaps.
+  return {...c,p:[round((a[0]+b[0])/2),c.p[1],round((a[2]+b[2])/2)],
+    yaw:round(Math.atan2(a[0]-b[0],a[2]-b[2])/rad),s:[size[0],size[1],round(Math.hypot(a[0]-b[0],a[2]-b[2]))]};
+}
+function warpedPath(c:CustomComponent):CustomComponent {
+  let knots:Point[];
+  if(c.pts?.length) {
+    const raw=c.pts.map(q=>localWorld(c,q[0],q[3]??0,q[1]));knots=[raw[0]];
+    for(let i=1;i<raw.length-1;i++) {
+      const a=raw[i-1],b=raw[i],d=raw[i+1],before=Math.hypot(...b.map((v,j)=>v-a[j])),after=Math.hypot(...d.map((v,j)=>v-b[j]));
+      const cut=Math.min(c.pts[i][2]??0,before*.49,after*.49);
+      if(cut<.001){knots.push(b);continue;}
+      const entry=b.map((v,j)=>v+(a[j]-v)*cut/before) as Point,exit=b.map((v,j)=>v+(d[j]-v)*cut/after) as Point;
+      const n=Math.max(3,Math.ceil(cut*2));
+      for(let j=0;j<=n;j++){const t=j/n;knots.push(entry.map((v,k)=>v*(1-t)*(1-t)+2*b[k]*t*(1-t)+exit[k]*t*t) as Point);}
     }
-    if(i) for(let j=0;j<us.length-1;j++) {
-      const q=(i-1)*us.length+j,n=q+us.length;
-      indices.push(q,q+1,n,n,q+1,n+1);
-    }
+    knots.push(raw[raw.length-1]);
   }
-  add({t:'mesh',p:origin,vertices,indices,uvs,color,tex,solid,edgeGrinding:false,...(!solid?{doubleSided:true}:{}),
-    grp:reach((a+b)/2).grp,nm:name});
-}
-const cuts=[-16,280,430,435,560,840,1120,1124,1130,1400,1680,1714,1720,1960,2260];
-for(let i=1;i<cuts.length;i++) {
-  const a=cuts[i-1],b=cuts[i];
-  if(CUSTARD_CREEK_GAPS.some(g=>a>=g.a&&b<=g.b))continue;
-  strip(a,b,[-1,-.5,0,.5,1],(s,u)=>custardHeight(s)+custardBank(s)*u,
-    '#e2c484','sand',`${reach(a).name} · smooth banked road`);
-  // A low grass verge leaves room to recover a wide carve before the bank.
-  for(const side of [-1,1]) {
-    strip(a,b,[side,side*1.45,side*2.1].sort((x,y)=>x-y),(s,u)=>custardHeight(s)+custardBank(s)*u-.12-Math.max(0,Math.abs(u)-width(s)/2)*.16,
-      side<0?'#7eaa66':'#91b86b','grass',`${reach(a).name} · forgiving grass verge`);
-    strip(a,b,[side*2.1,side*2.1],(s,u,j)=>j?custardHeight(s)-6:custardHeight(s)+custardBank(s)*u-.12-(Math.abs(u)-width(s)/2)*.16,
-      '#b59b71','stone',`${reach(a).name} · creek bank`,false);
+  else {const len=c.len??20;knots=[localWorld(c,0,0,len/2),localWorld(c,0,0,-len/2)];}
+  const points:Point[]=[];
+  for(let i=1;i<knots.length;i++) {
+    const a=knots[i-1],b=knots[i],n=Math.max(1,Math.ceil(Math.hypot(...b.map((v,j)=>v-a[j]))/3));
+    for(let j=0;j<n;j++)points.push(custardWarp(a.map((v,k)=>v+(b[k]-v)*j/n) as Point));
   }
+  points.push(custardWarp(knots[knots.length-1]));
+  const p=points[0];
+  return {...c,p,yaw:0,pts:points.map(q=>[round(q[0]-p[0]),round(q[2]-p[2]),0,round(q[1]-p[1])]),
+    ...(c.t==='vertramp'?{curve:'spline' as const}:{} )};
 }
-
-// Visible blue-green creek below the right bank. It follows every meander;
-// it never overlays the road or disguises a supported surface as a death pit.
-for(let a=-16;a<2260;a+=200) {
-  const b=Math.min(2260,a+200);
-  strip(a,b,[2.15,3.05],s=>custardHeight(s)-4,'#68a8a1','solid','Custard Creek water ribbon',false);
+function warpedWall(c:CustomComponent):CustomComponent {
+  const w=c.s![0],d=c.s![2],length=Math.max(w,d),n=Math.max(1,Math.ceil(length/3)),outline:Point[]=[];
+  for(let i=0;i<=n;i++)outline.push(custardWarp(localWorld(c,w>=d?-w/2+w*i/n:0,0,w>=d?0:d/2-d*i/n)));
+  const p=custardWarp(c.p);
+  return {t:'wallpath',p,w:Math.min(w,d),rise:c.s![1],collisionHeight:c.collisionHeight??c.s![1],
+    color:c.color,tex:c.tex,invisible:c.invisible,cameraCutaway:c.cameraCutaway,grp:c.grp,nm:c.nm,
+    pts:outline.map(q=>[round(q[0]-p[0]),round(q[2]-p[2])]),curve:'corner'};
 }
-for(const gap of CUSTARD_CREEK_GAPS) {
-  const a=gap.a-16,b=gap.b+16,p=custardPoint(a,3.9),pts:NonNullable<CustomComponent['pts']>=[];
-  for(let s=a;s<=b;s+=1) {
-    const q=custardPoint(s,3.9);pts.push([q[0]-p[0],q[2]-p[2],0,q[1]-p[1],-Math.atan(custardBank(s))*180/Math.PI]);
+function warpedSceneryMesh(c:CustomComponent):CustomComponent {
+  const p=custardWarp(c.p),v=c.vertices??[],scale=c.s??[1,1,1],vertices:number[]=[];
+  for(let i=0;i<v.length;i+=3) {
+    const q=custardWarp(localWorld(c,v[i]*scale[0],v[i+1]*scale[1],v[i+2]*scale[2]));
+    vertices.push(round(q[0]-p[0]),round(q[1]-p[1]),round(q[2]-p[2]));
   }
-  add({t:'woodpath',p,pts,w:3.4,curve:'corner',scaffold:true,supports:true,rails:false,
-    supportDepth:4.5,terrainSupports:false,spacing:1.2,baySpacing:8,s:[1,.32,1],
-    color:'#c5a36f',tex:'wood',edgeGrinding:false,grp:reach(a).grp,
-    nm:`${gap.name} · continuous outer boardwalk`});
+  const out={...c,p,vertices,yaw:0,s:[1,1,1] as Point};delete out.normals;return out;
 }
-
-export const CUSTARD_CREEK_BOX_LINES = [
-  [24,120],[170,266],[302,386],[468,564],[620,716],[770,866],[920,1016],
-  [1050,1098],[1174,1258],[1286,1366],[1410,1494],[1540,1624],[1644,1692],
-  [1760,1856],[1898,1982],[2020,2104],[2144,2216],
-].map(([a,b],i)=>({a,b,name:`${reach(a).name} · carving string ${i+1}`,grp:100+i,
-  boxes:[] as {s:number;u:number;component:CustomComponent}[]}));
-// Normal breakable crates only on the rolling line. Its lateral drift is
-// slower than the road turns; strings remain readable at coast cruising speed.
-export const custardBoxOffset=(s:number)=>2*Math.sin(s*2*Math.PI/180);
-for(const [i,line] of CUSTARD_CREEK_BOX_LINES.entries()) {
-  groups.push({id:line.grp,nm:line.name,editorOnly:true});
-  const count=Math.floor((line.b-line.a)/9)+1;
-  for(let j=0;j<count;j++) {
-    const s=line.a+(line.b-line.a)*j/Math.max(1,count-1),u=custardBoxOffset(s);
-    const kind:CustomComponent['kind']=j===count-1&&i%4===1?'mask':j===count-1&&i%4===3?'life':'wood';
-    const component:CustomComponent={t:'crate',p:custardPoint(s,u),kind,grp:line.grp,nm:`${line.name} · box ${j+1}`};
-    line.boxes.push({s,u,component});add(component);
-  }
+export const CUSTARD_CREEK_SOURCE_COMPONENTS=clone(original.components);
+// Original rolling hazards keep their speeds and ranges. Widen only their
+// landing arenas enough to support their existing world-axis patrols.
+for(const c of CUSTARD_CREEK_SOURCE_COMPONENTS) {
+  if(c.nm==='Test Course 4'&&c.s)c.s[0]=15;
+  if(c.nm==='Test Course 40'&&c.s)c.s[0]=16;
+  if(c.nm==='Test Course 66'&&c.s)c.s[0]=14;
+  if(c.t==='stone'&&c.p[0]<30)c.p[0]=0;
 }
-// A few deliberate side rewards, reached without blocking the main string.
-for(const s of [204,676,1000,1312,1596,1918,2172]) {
-  const u=-4.8;
-  add({t:'crate',p:custardPoint(s,u),kind:'wood',grp:reach(s).grp,nm:'Creekside reward stack · base'});
-  add({t:'crate',p:custardPoint(s,u,.96),kind:'mystery',grp:reach(s).grp,nm:'Creekside reward stack · prize'});
+for(const source of CUSTARD_CREEK_SOURCE_COMPONENTS) {
+  const c=clone(source);
+  if(c.t==='zone'||c.t==='camnode')continue;
+  if(c.t==='checkpoint')c.p[1]=floorHeight(c.p[0],c.p[2]);
+  // The swept halfpipe owns the visible flat. Keep the original underlay
+  // collision, but avoid two coplanar material skins fighting in play.
+  if(c.nm==='Test Course 11')c.invisible=true;
+  c.nm=(c.nm??c.t).replace('Test Course','Creek encounter');
+  if(c.t==='platform'||c.t==='ramp')C.push(surface(c),...surfaceSideColliders(c));
+  else if(c.t==='crumble')C.push(warpedCrumble(c));
+  else if(c.t==='rail'||c.t==='rope'||c.t==='vertramp')C.push(warpedPath(c));
+  else if(c.t==='wall'&&c.s)C.push(warpedWall(c));
+  else if(c.t==='mesh')C.push(warpedSceneryMesh(c));
+  else {c.p=custardWarp(c.p);C.push(c);}
 }
-
-export const CUSTARD_CREEK_CHECKPOINTS = [154,294,458,606,752,906,1034,1160,1272,1394,1524,1634,1748,1880,2006,2128]
-  .map((s,i)=>({s,p:custardPoint(s,0),name:`${reach(s).name} · checkpoint ${i+1}`}));
-for(const cp of CUSTARD_CREEK_CHECKPOINTS)add({t:'checkpoint',p:cp.p,grp:reach(cp.s).grp,nm:cp.name});
-for(let s=-16;s<=2260;s+=8)add({t:'camnode',p:custardPoint(s,0,.8),radius:0,nm:'Ordered creek camera spine'});
-// Extend the last camera node and support beyond the finish plane.
-add({t:'camnode',p:custardPoint(2260,0,.8),nm:'Creek camera end'});
-for(let s=18;s<2230;s+=24)add({t:'wumpa',p:custardPoint(s,custardBoxOffset(s),1.25),grp:reach(s).grp,nm:'Carving trail fruit'});
-add({t:'crystal',p:custardPoint(1360,0,1.35),grp:reach(1360).grp,nm:'Sunlit rise crystal'});
-add({t:'clock',p:custardPoint(9,-3.8),nm:'Creek time trial'});
-
-
-export const CUSTARD_CREEK_RAILS = [
-  {a:340,b:406,u:-4.6},{a:646,b:728,u:4.6},{a:942,b:1024,u:-4.6},
-  {a:1196,b:1264,u:4.6},{a:1550,b:1624,u:-4.6},{a:2036,b:2112,u:4.6},
-];
-for(const r of CUSTARD_CREEK_RAILS) {
-  const p=custardPoint(r.a,r.u,.65),pts:NonNullable<CustomComponent['pts']>=[];
-  const steps=Math.ceil((r.b-r.a)/4);
-  for(let i=0;i<=steps;i++) {
-    const q=custardPoint(r.a+(r.b-r.a)*i/steps,r.u,.65);
-    pts.push([q[0]-p[0],q[2]-p[2],2,q[1]-p[1]]);
-  }
-  add({t:'rail',p,pts,color:'#c8a675',grp:reach(r.a).grp,nm:'Meander rail · optional flowing grind'});
-}
-
-// Reuse the coast's scenery vocabulary. All solids remain off the recovery
-// verge; gaps in the trees let the player read the next opposing curve.
-for(let s=30,i=0;s<2230;s+=28,i++) for(const side of [-1,1]) {
-  const u=side*(16+(i%3)*2.5),p=custardPoint(s,u,-2.5);
-  add({t:'decor',dkind:i%4===0?'palm':'pine',p,w:1.5+(i%3)*.2,rise:6.5+(i%4),yaw:i*47,
-    grp:reach(s).grp,nm:'Creek bank trees'});
-  if(i%3===0)add({t:'decor',dkind:'flowers',p:custardPoint(s+6,side*10,-.65),w:1.4,rise:1.1,grp:reach(s).grp,nm:'Custard wildflowers'});
-  if(i%4===0)add({t:'rock',p:custardPoint(s+8,side*12,-1.7),s:[2.8,2.8,3.6],color:'#c7b68b',seed:i+14,grp:reach(s).grp,nm:'Creek bank boulder'});
-}
-add({t:'gate',p:custardPoint(CUSTARD_CREEK_END),yaw:custardYaw(CUSTARD_CREEK_END),nm:'Custard Creek finish'});
-
+const lane:Point[]=[];
+for(let z=8;z>=-1704;z-=8)lane.push([0,guideHeight(0,z)+.8,z]);
+for(let i=1;i<=12;i++) {const a=i*Math.PI/24,x=16-16*Math.cos(a),z=-1704-16*Math.sin(a);lane.push([x,guideHeight(x,z)+.8,z]);}
+for(let x=24;x<=140;x+=8)lane.push([x,guideHeight(x,-1720)+.8,-1720]);
+for(let i=1;i<=12;i++) {const a=i*Math.PI/24,x=140+12*Math.sin(a),z=-1732+12*Math.cos(a);lane.push([x,guideHeight(x,z)+.8,z]);}
+for(let z=-1740;z>=-2310;z-=8)lane.push([152,guideHeight(152,z)+.8,z]);
+lane.push([152,-25.2,-2310]);
+export const CUSTARD_CREEK_CAMERA=lane.map((p,i)=>{
+  let height=0,weight=0;
+  for(let j=Math.max(0,i-2);j<=Math.min(lane.length-1,i+2);j++){const w=3-Math.abs(j-i);height+=lane[j][1]*w;weight+=w;}
+  return custardWarp([p[0],height/weight,p[2]]);
+});
+for(const p of CUSTARD_CREEK_CAMERA)C.push({t:'camnode',p,radius:0,nm:'Creek continuous course camera'});
+export const CUSTARD_CREEK_GAMEPLAY=Object.fromEntries(
+  ['enemy','stone','crusher','pendulum','mover','ropeswing','crumble','rail','vertramp','checkpoint','crate','gate'].map(t=>[t,C.filter(c=>c.t===t).length]));
+export const CUSTARD_CREEK_BOX_SECTIONS=boxes.sections;
 export const CUSTARD_CREEK_LEVEL:CustomLevelData={
-  v:1,name:'Custard Creek',spawn:custardPoint(0,0,.12),killY:-48,sky:'coast',
-  medalTimes:{gold:180,silver:210,bronze:255},groups,components:C,
+  ...clone(original),name:'Custard Creek',sky:'coast',spawn:custardWarp(original.spawn),
+  medalTimes:{gold:180,silver:210,bronze:255},components:C,
 };
