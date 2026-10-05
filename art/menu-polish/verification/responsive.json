@@ -1,0 +1,3270 @@
+{
+  "layouts": [
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "launch",
+      "pngLabels": 5
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "new-slots",
+      "pngLabels": 13
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "load-slots",
+      "pngLabels": 13
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "pause",
+      "pngLabels": 17
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "map-pause",
+      "pngLabels": 17
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "options",
+      "pngLabels": 22
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "home-options",
+      "pngLabels": 24
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "map-options",
+      "pngLabels": 24
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "level-select",
+      "pngLabels": 18
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "progress",
+      "pngLabels": 22
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "save-load",
+      "pngLabels": 16
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "confirm-new",
+      "pngLabels": 3
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "confirm-save",
+      "pngLabels": 3
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "confirm-load",
+      "pngLabels": 3
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "confirm-quit-main",
+      "pngLabels": 4
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "confirm-level-select",
+      "pngLabels": 3
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "trick-guide",
+      "pngLabels": 1
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "gameover",
+      "pngLabels": 4
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "results",
+      "pngLabels": 6
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "time-trial",
+      "pngLabels": 9
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-intro",
+      "pngLabels": 9
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-guide",
+      "pngLabels": 1
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-judges",
+      "pngLabels": 9
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-standings",
+      "pngLabels": 5
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-final-win",
+      "pngLabels": 6
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-final-loss",
+      "pngLabels": 4
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "launch",
+      "pngLabels": 5
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "new-slots",
+      "pngLabels": 13
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "load-slots",
+      "pngLabels": 13
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "pause",
+      "pngLabels": 17
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "map-pause",
+      "pngLabels": 17
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "options",
+      "pngLabels": 22
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "home-options",
+      "pngLabels": 24
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "map-options",
+      "pngLabels": 24
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "level-select",
+      "pngLabels": 18
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "progress",
+      "pngLabels": 22
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "save-load",
+      "pngLabels": 16
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "confirm-new",
+      "pngLabels": 3
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "confirm-save",
+      "pngLabels": 3
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "confirm-load",
+      "pngLabels": 3
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "confirm-quit-main",
+      "pngLabels": 4
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "confirm-level-select",
+      "pngLabels": 3
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "trick-guide",
+      "pngLabels": 1
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "gameover",
+      "pngLabels": 4
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "results",
+      "pngLabels": 6
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "time-trial",
+      "pngLabels": 9
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-intro",
+      "pngLabels": 9
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-guide",
+      "pngLabels": 1
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-judges",
+      "pngLabels": 9
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-standings",
+      "pngLabels": 5
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-final-win",
+      "pngLabels": 6
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-final-loss",
+      "pngLabels": 4
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "launch",
+      "pngLabels": 5
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "new-slots",
+      "pngLabels": 13
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "load-slots",
+      "pngLabels": 13
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "pause",
+      "pngLabels": 17
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "map-pause",
+      "pngLabels": 17
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "options",
+      "pngLabels": 22
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "home-options",
+      "pngLabels": 24
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "map-options",
+      "pngLabels": 24
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "level-select",
+      "pngLabels": 18
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "progress",
+      "pngLabels": 22
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "save-load",
+      "pngLabels": 16
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "confirm-new",
+      "pngLabels": 3
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "confirm-save",
+      "pngLabels": 3
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "confirm-load",
+      "pngLabels": 3
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "confirm-quit-main",
+      "pngLabels": 4
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "confirm-level-select",
+      "pngLabels": 3
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "trick-guide",
+      "pngLabels": 1
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "gameover",
+      "pngLabels": 4
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "results",
+      "pngLabels": 6
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "time-trial",
+      "pngLabels": 9
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-intro",
+      "pngLabels": 9
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-guide",
+      "pngLabels": 1
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-judges",
+      "pngLabels": 9
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-standings",
+      "pngLabels": 5
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-final-win",
+      "pngLabels": 6
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-final-loss",
+      "pngLabels": 4
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "launch",
+      "pngLabels": 5
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "new-slots",
+      "pngLabels": 13
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "load-slots",
+      "pngLabels": 13
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "pause",
+      "pngLabels": 17
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "map-pause",
+      "pngLabels": 17
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "options",
+      "pngLabels": 22
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "home-options",
+      "pngLabels": 24
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "map-options",
+      "pngLabels": 24
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "level-select",
+      "pngLabels": 18
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "progress",
+      "pngLabels": 22
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "save-load",
+      "pngLabels": 16
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "confirm-new",
+      "pngLabels": 3
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "confirm-save",
+      "pngLabels": 3
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "confirm-load",
+      "pngLabels": 3
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "confirm-quit-main",
+      "pngLabels": 4
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "confirm-level-select",
+      "pngLabels": 3
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "trick-guide",
+      "pngLabels": 1
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "gameover",
+      "pngLabels": 4
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "results",
+      "pngLabels": 6
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "time-trial",
+      "pngLabels": 9
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "cup-intro",
+      "pngLabels": 9
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "cup-guide",
+      "pngLabels": 1
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "cup-judges",
+      "pngLabels": 9
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "cup-standings",
+      "pngLabels": 5
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "cup-final-win",
+      "pngLabels": 6
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "cup-final-loss",
+      "pngLabels": 4
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "launch",
+      "pngLabels": 5
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "new-slots",
+      "pngLabels": 13
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "load-slots",
+      "pngLabels": 13
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "pause",
+      "pngLabels": 17
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "map-pause",
+      "pngLabels": 17
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "options",
+      "pngLabels": 22
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "home-options",
+      "pngLabels": 24
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "map-options",
+      "pngLabels": 24
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "level-select",
+      "pngLabels": 18
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "progress",
+      "pngLabels": 22
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "save-load",
+      "pngLabels": 16
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "confirm-new",
+      "pngLabels": 3
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "confirm-save",
+      "pngLabels": 3
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "confirm-load",
+      "pngLabels": 3
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "confirm-quit-main",
+      "pngLabels": 4
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "confirm-level-select",
+      "pngLabels": 3
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "trick-guide",
+      "pngLabels": 1
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "gameover",
+      "pngLabels": 4
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "results",
+      "pngLabels": 6
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "time-trial",
+      "pngLabels": 9
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-intro",
+      "pngLabels": 9
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-guide",
+      "pngLabels": 1
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-judges",
+      "pngLabels": 9
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-standings",
+      "pngLabels": 5
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-final-win",
+      "pngLabels": 6
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "prompts": "touch",
+      "lite": true,
+      "screen": "cup-final-loss",
+      "pngLabels": 4
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "launch",
+      "pngLabels": 5
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "new-slots",
+      "pngLabels": 13
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "load-slots",
+      "pngLabels": 13
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "pause",
+      "pngLabels": 17
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "map-pause",
+      "pngLabels": 17
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "options",
+      "pngLabels": 22
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "home-options",
+      "pngLabels": 24
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "map-options",
+      "pngLabels": 24
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "level-select",
+      "pngLabels": 18
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "progress",
+      "pngLabels": 22
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "save-load",
+      "pngLabels": 16
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "confirm-new",
+      "pngLabels": 3
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "confirm-save",
+      "pngLabels": 3
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "confirm-load",
+      "pngLabels": 3
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "confirm-quit-main",
+      "pngLabels": 4
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "confirm-level-select",
+      "pngLabels": 3
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "trick-guide",
+      "pngLabels": 1
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "gameover",
+      "pngLabels": 4
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "results",
+      "pngLabels": 6
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "time-trial",
+      "pngLabels": 9
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "cup-intro",
+      "pngLabels": 9
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "cup-guide",
+      "pngLabels": 1
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "cup-judges",
+      "pngLabels": 9
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "cup-standings",
+      "pngLabels": 5
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "cup-final-win",
+      "pngLabels": 6
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": true,
+      "screen": "cup-final-loss",
+      "pngLabels": 4
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "launch",
+      "pngLabels": 5
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "new-slots",
+      "pngLabels": 13
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "load-slots",
+      "pngLabels": 13
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "pause",
+      "pngLabels": 17
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "map-pause",
+      "pngLabels": 17
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "options",
+      "pngLabels": 22
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "home-options",
+      "pngLabels": 24
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "map-options",
+      "pngLabels": 24
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "level-select",
+      "pngLabels": 18
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "progress",
+      "pngLabels": 22
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "save-load",
+      "pngLabels": 16
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "confirm-new",
+      "pngLabels": 3
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "confirm-save",
+      "pngLabels": 3
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "confirm-load",
+      "pngLabels": 3
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "confirm-quit-main",
+      "pngLabels": 4
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "confirm-level-select",
+      "pngLabels": 3
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "trick-guide",
+      "pngLabels": 1
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "gameover",
+      "pngLabels": 4
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "results",
+      "pngLabels": 6
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "time-trial",
+      "pngLabels": 9
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "cup-intro",
+      "pngLabels": 9
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "cup-guide",
+      "pngLabels": 1
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "cup-judges",
+      "pngLabels": 9
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "cup-standings",
+      "pngLabels": 5
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "cup-final-win",
+      "pngLabels": 6
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "cup-final-loss",
+      "pngLabels": 4
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "launch",
+      "pngLabels": 5
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "new-slots",
+      "pngLabels": 13
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "load-slots",
+      "pngLabels": 13
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "pause",
+      "pngLabels": 17
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "map-pause",
+      "pngLabels": 17
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "options",
+      "pngLabels": 22
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "home-options",
+      "pngLabels": 24
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "map-options",
+      "pngLabels": 24
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "level-select",
+      "pngLabels": 18
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "progress",
+      "pngLabels": 22
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "save-load",
+      "pngLabels": 16
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "confirm-new",
+      "pngLabels": 3
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "confirm-save",
+      "pngLabels": 3
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "confirm-load",
+      "pngLabels": 3
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "confirm-quit-main",
+      "pngLabels": 4
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "confirm-level-select",
+      "pngLabels": 3
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "trick-guide",
+      "pngLabels": 1
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "gameover",
+      "pngLabels": 4
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "results",
+      "pngLabels": 6
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "time-trial",
+      "pngLabels": 9
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "cup-intro",
+      "pngLabels": 9
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "cup-guide",
+      "pngLabels": 1
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "cup-judges",
+      "pngLabels": 9
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "cup-standings",
+      "pngLabels": 5
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "cup-final-win",
+      "pngLabels": 6
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "prompts": "ps5",
+      "lite": true,
+      "screen": "cup-final-loss",
+      "pngLabels": 4
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "launch",
+      "pngLabels": 5
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "new-slots",
+      "pngLabels": 13
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "load-slots",
+      "pngLabels": 13
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "pause",
+      "pngLabels": 17
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "map-pause",
+      "pngLabels": 17
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "options",
+      "pngLabels": 22
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "home-options",
+      "pngLabels": 24
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "map-options",
+      "pngLabels": 24
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "level-select",
+      "pngLabels": 18
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "progress",
+      "pngLabels": 22
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "save-load",
+      "pngLabels": 16
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "confirm-new",
+      "pngLabels": 3
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "confirm-save",
+      "pngLabels": 3
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "confirm-load",
+      "pngLabels": 3
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "confirm-quit-main",
+      "pngLabels": 4
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "confirm-level-select",
+      "pngLabels": 3
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "trick-guide",
+      "pngLabels": 1
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "gameover",
+      "pngLabels": 4
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "results",
+      "pngLabels": 6
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "time-trial",
+      "pngLabels": 9
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "cup-intro",
+      "pngLabels": 9
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "cup-guide",
+      "pngLabels": 1
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "cup-judges",
+      "pngLabels": 9
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "cup-standings",
+      "pngLabels": 5
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "cup-final-win",
+      "pngLabels": 6
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "prompts": "touch",
+      "lite": false,
+      "screen": "cup-final-loss",
+      "pngLabels": 4
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "launch",
+      "pngLabels": 5
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "new-slots",
+      "pngLabels": 13
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "load-slots",
+      "pngLabels": 13
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "pause",
+      "pngLabels": 17
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "map-pause",
+      "pngLabels": 17
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "options",
+      "pngLabels": 22
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "home-options",
+      "pngLabels": 24
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "map-options",
+      "pngLabels": 24
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "level-select",
+      "pngLabels": 18
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "progress",
+      "pngLabels": 22
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "save-load",
+      "pngLabels": 16
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "confirm-new",
+      "pngLabels": 3
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "confirm-save",
+      "pngLabels": 3
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "confirm-load",
+      "pngLabels": 3
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "confirm-quit-main",
+      "pngLabels": 4
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "confirm-level-select",
+      "pngLabels": 3
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "trick-guide",
+      "pngLabels": 1
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "gameover",
+      "pngLabels": 4
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "results",
+      "pngLabels": 6
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "time-trial",
+      "pngLabels": 9
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "cup-intro",
+      "pngLabels": 9
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "cup-guide",
+      "pngLabels": 1
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "cup-judges",
+      "pngLabels": 9
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "cup-standings",
+      "pngLabels": 5
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "cup-final-win",
+      "pngLabels": 6
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "touch": true,
+      "prompts": "ps5",
+      "lite": false,
+      "screen": "cup-final-loss",
+      "pngLabels": 4
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "launch",
+      "pngLabels": 5
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "new-slots",
+      "pngLabels": 13
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "load-slots",
+      "pngLabels": 13
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "pause",
+      "pngLabels": 17
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "map-pause",
+      "pngLabels": 17
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "options",
+      "pngLabels": 22
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "home-options",
+      "pngLabels": 24
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "map-options",
+      "pngLabels": 24
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "level-select",
+      "pngLabels": 18
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "progress",
+      "pngLabels": 22
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "save-load",
+      "pngLabels": 16
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "confirm-new",
+      "pngLabels": 3
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "confirm-save",
+      "pngLabels": 3
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "confirm-load",
+      "pngLabels": 3
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "confirm-quit-main",
+      "pngLabels": 4
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "confirm-level-select",
+      "pngLabels": 3
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "trick-guide",
+      "pngLabels": 1
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "gameover",
+      "pngLabels": 4
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "results",
+      "pngLabels": 6
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "time-trial",
+      "pngLabels": 9
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "cup-intro",
+      "pngLabels": 9
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "cup-guide",
+      "pngLabels": 1
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "cup-judges",
+      "pngLabels": 9
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "cup-standings",
+      "pngLabels": 5
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "cup-final-win",
+      "pngLabels": 6
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "touch": false,
+      "prompts": "keyboard",
+      "lite": false,
+      "screen": "cup-final-loss",
+      "pngLabels": 4
+    }
+  ],
+  "navigation": [
+    {
+      "lite": true,
+      "width": 320,
+      "height": 568,
+      "screen": "home-options",
+      "swipe": true
+    },
+    {
+      "lite": true,
+      "width": 320,
+      "height": 568,
+      "screen": "trick-guide",
+      "pages": 4,
+      "close": true
+    },
+    {
+      "lite": true,
+      "width": 320,
+      "height": 568,
+      "screen": "cup-guide",
+      "pages": 4,
+      "close": true
+    },
+    {
+      "lite": true,
+      "width": 320,
+      "height": 568,
+      "screen": "cup-standings",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 320,
+      "height": 568,
+      "screen": "cup-final-win",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 320,
+      "height": 568,
+      "screen": "cup-final-loss",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 320,
+      "height": 568,
+      "results": true,
+      "gameover": true,
+      "saveBays": true
+    },
+    {
+      "lite": true,
+      "width": 320,
+      "height": 568,
+      "debugToggle": true
+    },
+    {
+      "lite": true,
+      "width": 568,
+      "height": 320,
+      "screen": "home-options",
+      "swipe": true
+    },
+    {
+      "lite": true,
+      "width": 568,
+      "height": 320,
+      "screen": "trick-guide",
+      "pages": 4,
+      "close": true
+    },
+    {
+      "lite": true,
+      "width": 568,
+      "height": 320,
+      "screen": "cup-guide",
+      "pages": 4,
+      "close": true
+    },
+    {
+      "lite": true,
+      "width": 568,
+      "height": 320,
+      "screen": "cup-standings",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 568,
+      "height": 320,
+      "screen": "cup-final-win",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 568,
+      "height": 320,
+      "screen": "cup-final-loss",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 568,
+      "height": 320,
+      "results": true,
+      "gameover": true,
+      "saveBays": true
+    },
+    {
+      "lite": true,
+      "width": 568,
+      "height": 320,
+      "debugToggle": true
+    },
+    {
+      "lite": true,
+      "width": 390,
+      "height": 844,
+      "screen": "trick-guide",
+      "pages": 4,
+      "close": true
+    },
+    {
+      "lite": true,
+      "width": 390,
+      "height": 844,
+      "screen": "cup-guide",
+      "pages": 4,
+      "close": true
+    },
+    {
+      "lite": true,
+      "width": 390,
+      "height": 844,
+      "screen": "cup-standings",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 390,
+      "height": 844,
+      "screen": "cup-final-win",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 390,
+      "height": 844,
+      "screen": "cup-final-loss",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 390,
+      "height": 844,
+      "results": true,
+      "gameover": true,
+      "saveBays": true
+    },
+    {
+      "lite": true,
+      "width": 390,
+      "height": 844,
+      "debugToggle": true
+    },
+    {
+      "lite": true,
+      "width": 844,
+      "height": 390,
+      "screen": "home-options",
+      "swipe": true
+    },
+    {
+      "lite": true,
+      "width": 844,
+      "height": 390,
+      "screen": "trick-guide",
+      "pages": 4,
+      "close": true
+    },
+    {
+      "lite": true,
+      "width": 844,
+      "height": 390,
+      "screen": "cup-guide",
+      "pages": 4,
+      "close": true
+    },
+    {
+      "lite": true,
+      "width": 844,
+      "height": 390,
+      "screen": "cup-standings",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 844,
+      "height": 390,
+      "screen": "cup-final-win",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 844,
+      "height": 390,
+      "screen": "cup-final-loss",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 844,
+      "height": 390,
+      "results": true,
+      "gameover": true,
+      "saveBays": true
+    },
+    {
+      "lite": true,
+      "width": 844,
+      "height": 390,
+      "debugToggle": true
+    },
+    {
+      "lite": true,
+      "width": 768,
+      "height": 1024,
+      "screen": "trick-guide",
+      "pages": 4,
+      "close": true
+    },
+    {
+      "lite": true,
+      "width": 768,
+      "height": 1024,
+      "screen": "cup-guide",
+      "pages": 4,
+      "close": true
+    },
+    {
+      "lite": true,
+      "width": 768,
+      "height": 1024,
+      "screen": "cup-standings",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 768,
+      "height": 1024,
+      "screen": "cup-final-win",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 768,
+      "height": 1024,
+      "screen": "cup-final-loss",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 768,
+      "height": 1024,
+      "results": true,
+      "gameover": true,
+      "saveBays": true
+    },
+    {
+      "lite": true,
+      "width": 768,
+      "height": 1024,
+      "debugToggle": true
+    },
+    {
+      "lite": true,
+      "width": 1280,
+      "height": 720,
+      "screen": "trick-guide",
+      "pages": 4,
+      "close": false
+    },
+    {
+      "lite": true,
+      "width": 1280,
+      "height": 720,
+      "screen": "cup-guide",
+      "pages": 4,
+      "close": false
+    },
+    {
+      "lite": true,
+      "width": 1280,
+      "height": 720,
+      "screen": "cup-standings",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 1280,
+      "height": 720,
+      "screen": "cup-final-win",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 1280,
+      "height": 720,
+      "screen": "cup-final-loss",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 1280,
+      "height": 720,
+      "debugToggle": true
+    },
+    {
+      "lite": true,
+      "width": 1920,
+      "height": 1080,
+      "screen": "trick-guide",
+      "pages": 4,
+      "close": false
+    },
+    {
+      "lite": true,
+      "width": 1920,
+      "height": 1080,
+      "screen": "cup-guide",
+      "pages": 4,
+      "close": false
+    },
+    {
+      "lite": true,
+      "width": 1920,
+      "height": 1080,
+      "screen": "cup-standings",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 1920,
+      "height": 1080,
+      "screen": "cup-final-win",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 1920,
+      "height": 1080,
+      "screen": "cup-final-loss",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 1920,
+      "height": 1080,
+      "debugToggle": true
+    },
+    {
+      "lite": true,
+      "width": 1024,
+      "height": 768,
+      "screen": "trick-guide",
+      "pages": 4,
+      "close": false
+    },
+    {
+      "lite": true,
+      "width": 1024,
+      "height": 768,
+      "screen": "cup-guide",
+      "pages": 4,
+      "close": false
+    },
+    {
+      "lite": true,
+      "width": 1024,
+      "height": 768,
+      "screen": "cup-standings",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 1024,
+      "height": 768,
+      "screen": "cup-final-win",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 1024,
+      "height": 768,
+      "screen": "cup-final-loss",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": true,
+      "width": 1024,
+      "height": 768,
+      "debugToggle": true
+    },
+    {
+      "lite": false,
+      "width": 390,
+      "height": 844,
+      "screen": "trick-guide",
+      "pages": 4,
+      "close": true
+    },
+    {
+      "lite": false,
+      "width": 390,
+      "height": 844,
+      "screen": "cup-guide",
+      "pages": 4,
+      "close": true
+    },
+    {
+      "lite": false,
+      "width": 390,
+      "height": 844,
+      "screen": "cup-standings",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": false,
+      "width": 390,
+      "height": 844,
+      "screen": "cup-final-win",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": false,
+      "width": 390,
+      "height": 844,
+      "screen": "cup-final-loss",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": false,
+      "width": 390,
+      "height": 844,
+      "results": true,
+      "gameover": true,
+      "saveBays": true
+    },
+    {
+      "lite": false,
+      "width": 390,
+      "height": 844,
+      "debugToggle": true
+    },
+    {
+      "lite": false,
+      "width": 844,
+      "height": 390,
+      "screen": "home-options",
+      "swipe": true
+    },
+    {
+      "lite": false,
+      "width": 844,
+      "height": 390,
+      "screen": "trick-guide",
+      "pages": 4,
+      "close": true
+    },
+    {
+      "lite": false,
+      "width": 844,
+      "height": 390,
+      "screen": "cup-guide",
+      "pages": 4,
+      "close": true
+    },
+    {
+      "lite": false,
+      "width": 844,
+      "height": 390,
+      "screen": "cup-standings",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": false,
+      "width": 844,
+      "height": 390,
+      "screen": "cup-final-win",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": false,
+      "width": 844,
+      "height": 390,
+      "screen": "cup-final-loss",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": false,
+      "width": 844,
+      "height": 390,
+      "results": true,
+      "gameover": true,
+      "saveBays": true
+    },
+    {
+      "lite": false,
+      "width": 844,
+      "height": 390,
+      "debugToggle": true
+    },
+    {
+      "lite": false,
+      "width": 1280,
+      "height": 720,
+      "screen": "trick-guide",
+      "pages": 4,
+      "close": false
+    },
+    {
+      "lite": false,
+      "width": 1280,
+      "height": 720,
+      "screen": "cup-guide",
+      "pages": 4,
+      "close": false
+    },
+    {
+      "lite": false,
+      "width": 1280,
+      "height": 720,
+      "screen": "cup-standings",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": false,
+      "width": 1280,
+      "height": 720,
+      "screen": "cup-final-win",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": false,
+      "width": 1280,
+      "height": 720,
+      "screen": "cup-final-loss",
+      "table": {
+        "count": 6,
+        "lastVisible": true,
+        "fullVisible": true
+      }
+    },
+    {
+      "lite": false,
+      "width": 1280,
+      "height": 720,
+      "debugToggle": true
+    }
+  ],
+  "errors": []
+}

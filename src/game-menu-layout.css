@@ -229,7 +229,7 @@ body.game-shell-modal .tc-zone { display:none !important; }
 /* Crash reference proportions: headline 7–8% and actions 5–6% of a TV frame.
    These rules also style the DOM fallback; menuTheme.ts paints the same panels. */
 .game-shell::before,body.game-flow-vortex .game-shell::before {
-  background:linear-gradient(var(--menu-backdrop-top),var(--menu-backdrop-bottom));
+  background:var(--menu-backdrop-art) center / 100% 100% no-repeat,linear-gradient(var(--menu-backdrop-top),var(--menu-backdrop-bottom));
 }
 /* Match the clear home background in the Canvas compositor. */
 .game-shell:has(.game-screen-launch)::before,
@@ -237,13 +237,46 @@ body.game-flow-vortex .game-shell:has(.game-screen-launch)::before {
   background:none; filter:none; -webkit-backdrop-filter:none; backdrop-filter:none;
 }
 .game-shell .timber-card {
-  border:4px solid var(--menu-edge); border-radius:13px;
-  background:linear-gradient(var(--menu-panel-top),var(--menu-panel-middle) 56%,var(--menu-panel-bottom));
-  color:#fff0d0; box-shadow:0 12px 28px #000a; text-shadow:none;
+  border:4px solid var(--menu-edge); border-radius:0;
+  border-image:var(--menu-panel-art) 12% fill / var(--menu-frame) / 0 stretch;
+  background:linear-gradient(var(--menu-panel-top),var(--menu-panel-bottom)); background-clip:padding-box;
+  color:#fff0d0; box-shadow:0 10px 24px #0009; text-shadow:none;
 }
-.game-shell .timber-card::before,.game-shell .timber-card::after { background:var(--menu-rivet); border-color:var(--menu-shadow); }
+.game-shell .timber-card::before,.game-shell .timber-card::after { display:none; }
 .game-menu-button { font-size:var(--menu-action); color:#ffe6a7; text-shadow:none; }
 .game-eyebrow,.game-pause-actions .game-eyebrow { font-size:var(--menu-section); color:#ffd575; }
+.game-pause-actions .game-eyebrow { font-size:var(--menu-title); }
+/* Decoration never changes the hit regions or contributes a selection cue. */
+.game-pause-actions > .game-eyebrow,.game-progress-head,.game-options-card > .game-panel-title,
+.game-level-name,.game-level-record-title,.game-toggle-list > .game-toggle { position:relative; }
+.game-pause-actions > .game-eyebrow::after,.game-progress-head::after,
+.game-options-card > .game-panel-title::after,.game-level-name::after,.game-level-record-title::after,
+.game-toggle-list > .game-toggle::after {
+  content:''; position:absolute; pointer-events:none; left:10%; right:10%; bottom:-4px; height:1px;
+  background:linear-gradient(90deg,transparent,#47819780 25%,#9ac6ccaa 50%,#47819780 75%,transparent);
+}
+.game-pause-layout .game-progress-grid,.game-options-layout .game-progress-grid {
+  position:relative;
+  background:linear-gradient(90deg,transparent calc(50% - .5px),#5b9aab26 50%,transparent calc(50% + .5px)),
+    linear-gradient(transparent calc(50% - .5px),#5b9aab26 50%,transparent calc(50% + .5px));
+  outline:1px solid #5b9aab26; outline-offset:-1px;
+}
+.game-progress-grid .game-reward-slot,.game-level-rewards .game-reward-slot {
+  background:radial-gradient(closest-side,#16425324,transparent);
+}
+.game-progress-grid .game-reward-slot[data-earned="true"],.game-level-rewards .game-reward-slot[data-earned="true"] {
+  background:radial-gradient(closest-side,#27b9cf30,#12829816 55%,transparent);
+}
+.game-reward-slot { position:relative; }
+.game-reward-socket { position:absolute; width:80%; height:80%; left:10%; top:10%; overflow:visible; }
+.game-level-preview-frame,.game-slot-preview,.game-slot-empty {
+  border-color:var(--menu-edge);
+  border-image:var(--menu-panel-art) 12% / min(10px,calc(var(--menu-frame) * .23)) / 0 stretch;
+}
+.game-save-browser .game-save-slot,.png-menu-focus .game-save-browser .game-save-slot.selected {
+  border-radius:0; background:linear-gradient(var(--menu-panel-top),var(--menu-panel-bottom)) !important;
+  border-image:var(--menu-panel-art) 12% fill / var(--menu-frame) / 0 stretch;
+}
 .game-panel-subtitle,.game-save-status,.game-operation-status,.game-progress-cleared,.game-slot-date {
   font-family:'Staging Secondary',Impact,sans-serif; font-weight:400; font-size:var(--menu-caption); color:#efe3cc;
 }
@@ -273,7 +306,8 @@ body.game-flow-vortex .game-shell:has(.game-screen-launch)::before {
 .game-save-browser .game-slot-date { font-size:var(--menu-caption); }
 .game-save-actions .game-menu-button { font-size:var(--menu-section); min-height:7vh; }
 .game-level-row,.png-menu-focus .game-level-row.chosen,.png-menu-focus .game-level-row.selected {
-  background:linear-gradient(#17323e,#0a1c27) !important; border-color:#49616a !important;
+  background:linear-gradient(#163746,#091d2c) !important; border-color:#356173 !important;
+  border-radius:0; clip-path:polygon(5px 0,calc(100% - 5px) 0,100% 5px,100% calc(100% - 5px),calc(100% - 5px) 100%,5px 100%,0 calc(100% - 5px),0 5px);
 }
 .game-level-mark { font-size:var(--menu-caption); }
 .game-island-pages { font-size:var(--menu-caption); }

@@ -9,12 +9,25 @@ import type { InputAction } from './inputBindings';
 import { presentationCssViewport } from './presentationCssViewport';
 
 export type MenuReward = 'crystal' | 'gem' | 'combo' | 'medal' | 'cup';
+let socketId = 0;
 export function rewardSlot(kind: MenuReward, earned: boolean, medal?: TimeMedal | null): HTMLElement {
   const slot = document.createElement('span');
   slot.className = 'game-reward-slot'; slot.dataset.reward = kind;
   slot.dataset.earned = String(earned); if (medal) slot.dataset.medal = medal;
   slot.setAttribute('role', 'img');
   slot.setAttribute('aria-label', `${medal ?? kind}${earned ? ' earned' : ' empty socket'}`);
+  if (!earned) {
+    // Semantic fallback only: the cached pre-CRT painter uses the same silhouette.
+    const paths = {
+      crystal:'M50 5 73 28 69 68 50 96 31 68 27 28Z',
+      gem:'M10 34 26 14 74 14 90 34 50 92Z',
+      combo:'M10 34 26 14 74 14 90 34 50 92Z',
+      medal:'M85 50a35 35 0 1 1-70 0a35 35 0 1 1 70 0',
+      cup:'M20 10H80Q78 54 57 62V78H78V92H22V78H43V62Q22 54 20 10Z',
+    };
+    const id=`menu-socket-${++socketId}`;
+    slot.innerHTML=`<svg class="game-reward-socket" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="${id}" x2="0" y2="1"><stop stop-color="#010711"/><stop offset="1" stop-color="#102c3c"/></linearGradient></defs><path d="${paths[kind]}" fill="none" stroke="#79aec477" stroke-width="6" transform="translate(0 3)"/><path d="${paths[kind]}" fill="url(#${id})" stroke="#010710" stroke-width="3"/></svg>`;
+  }
   return slot;
 }
 export function menuHint(label: string, actions: InputAction[], host: HTMLElement = document.createElement('span')): HTMLElement {

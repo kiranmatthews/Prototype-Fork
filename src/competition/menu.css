@@ -1,8 +1,9 @@
 /* Jungle Cup uses the same TV type scale, dark panels and PNG focus as GameFlow. */
-.competition-host { position:fixed; inset:0; z-index:65; display:grid; place-items:center; padding:4vh 5vw 10vh; background:linear-gradient(var(--menu-backdrop-top),var(--menu-backdrop-bottom)); color:#fff0d0; font:var(--menu-body)/1.3 'Staging Secondary',Impact,sans-serif; }
+.competition-host { position:fixed; inset:0; z-index:65; display:grid; place-items:center; padding:4vh 5vw 10vh; background:var(--menu-backdrop-art) center / 100% 100% no-repeat,linear-gradient(var(--menu-backdrop-top),var(--menu-backdrop-bottom)); color:#fff0d0; font:var(--menu-body)/1.3 'Staging Secondary',Impact,sans-serif; }
 .competition-host,.competition-host * { box-sizing:border-box; }
 .competition-host[hidden],body.game-shell-modal .competition-host,body.ed-active .competition-host { display:none!important; }
-.competition-host .comp-card { position:relative; width:100%; height:100%; min-height:0; overflow:hidden; display:flex; flex-direction:column; padding:2vh 3vw; border:4px solid var(--menu-edge); border-radius:13px; background:linear-gradient(var(--menu-panel-top),var(--menu-panel-middle) 56%,var(--menu-panel-bottom)); box-shadow:0 12px 28px #000a; }
+.competition-host .comp-card { position:relative; width:100%; height:100%; min-height:0; overflow:hidden; display:flex; flex-direction:column; padding:2vh 3vw; border:4px solid var(--menu-edge); border-radius:0; border-image:var(--menu-panel-art) 12% fill / var(--menu-frame) / 0 stretch; background:linear-gradient(var(--menu-panel-top),var(--menu-panel-bottom)); background-clip:padding-box; box-shadow:0 10px 24px #0009; }
+.competition-host .comp-card::before,.competition-host .comp-card::after { display:none; }
 .comp-card > .comp-eyebrow,.comp-card > h1,.comp-card > .comp-actions { flex:none; }
 .comp-eyebrow { color:#e8d5ad; text-align:center; font-size:var(--menu-caption); letter-spacing:.08em; }
 .comp-card h1 { font:var(--menu-title)/1 Roo,Impact,sans-serif; text-align:center; color:#ffd575; margin:1vh 0 2vh; }

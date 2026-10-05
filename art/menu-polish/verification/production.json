@@ -1,0 +1,283 @@
+{
+  "runs": [
+    {
+      "lite": true,
+      "checks": [
+        {
+          "screen": "level-select",
+          "stamp": "Codex/sol fork · build 10-05 12:43 UTC",
+          "pending": 0,
+          "surface": {
+            "active": true,
+            "resident": true,
+            "dirty": false,
+            "width": 640,
+            "height": 360,
+            "screen": "level-select",
+            "revision": 281,
+            "paintedRevision": 281,
+            "canvasFrames": 44,
+            "textureUploads": 44,
+            "textureReallocations": 1,
+            "compositeDraws": 44,
+            "primitiveCount": 28,
+            "releaseCount": 0,
+            "lastCanvasMs": 0.9000000059604645,
+            "disposed": false,
+            "composited": true
+          },
+          "earned": [
+            "crystal",
+            "gem",
+            "medal"
+          ],
+          "models": 40,
+          "assets": [
+            "http://127.0.0.1:5256/ui/menu/painted-panel.webp",
+            "http://127.0.0.1:5256/ui/menu/stone-backdrop.webp"
+          ],
+          "back": true
+        },
+        {
+          "screen": "options",
+          "stamp": "Codex/sol fork · build 10-05 12:43 UTC",
+          "pending": 0,
+          "surface": {
+            "active": true,
+            "resident": true,
+            "dirty": false,
+            "width": 640,
+            "height": 360,
+            "screen": "options",
+            "revision": 391,
+            "paintedRevision": 391,
+            "canvasFrames": 97,
+            "textureUploads": 97,
+            "textureReallocations": 2,
+            "compositeDraws": 107,
+            "primitiveCount": 26,
+            "releaseCount": 1,
+            "lastCanvasMs": 1.0999999940395355,
+            "disposed": false,
+            "composited": true
+          },
+          "earned": [
+            "crystal",
+            "gem",
+            "medal",
+            "cup"
+          ],
+          "models": 40,
+          "assets": [
+            "http://127.0.0.1:5256/ui/menu/painted-panel.webp",
+            "http://127.0.0.1:5256/ui/menu/stone-backdrop.webp"
+          ],
+          "back": true
+        },
+        {
+          "screen": "save-load",
+          "stamp": "Codex/sol fork · build 10-05 12:43 UTC",
+          "pending": 0,
+          "surface": {
+            "active": true,
+            "resident": true,
+            "dirty": false,
+            "width": 640,
+            "height": 360,
+            "screen": "save-load",
+            "revision": 487,
+            "paintedRevision": 487,
+            "canvasFrames": 164,
+            "textureUploads": 164,
+            "textureReallocations": 3,
+            "compositeDraws": 191,
+            "primitiveCount": 28,
+            "releaseCount": 2,
+            "lastCanvasMs": 0.9000000059604645,
+            "disposed": false,
+            "composited": true
+          },
+          "earned": [],
+          "models": 40,
+          "assets": [
+            "http://127.0.0.1:5256/ui/menu/painted-panel.webp",
+            "http://127.0.0.1:5256/ui/menu/stone-backdrop.webp"
+          ],
+          "back": true
+        },
+        {
+          "screen": "confirm-quit-main",
+          "stamp": "Codex/sol fork · build 10-05 12:43 UTC",
+          "pending": 0,
+          "surface": {
+            "active": true,
+            "resident": true,
+            "dirty": false,
+            "width": 640,
+            "height": 360,
+            "screen": "confirm-quit-main",
+            "revision": 533,
+            "paintedRevision": 533,
+            "canvasFrames": 222,
+            "textureUploads": 222,
+            "textureReallocations": 4,
+            "compositeDraws": 251,
+            "primitiveCount": 10,
+            "releaseCount": 3,
+            "lastCanvasMs": 0.5999999940395355,
+            "disposed": false,
+            "composited": true
+          },
+          "earned": [],
+          "models": 40,
+          "assets": [
+            "http://127.0.0.1:5256/ui/menu/painted-panel.webp",
+            "http://127.0.0.1:5256/ui/menu/stone-backdrop.webp"
+          ],
+          "back": true
+        }
+      ],
+      "pauseAndResume": true
+    },
+    {
+      "lite": false,
+      "checks": [
+        {
+          "screen": "level-select",
+          "stamp": "Codex/sol fork · build 10-05 12:43 UTC",
+          "pending": 0,
+          "surface": {
+            "active": true,
+            "resident": true,
+            "dirty": false,
+            "width": 1280,
+            "height": 720,
+            "screen": "level-select",
+            "revision": 114,
+            "paintedRevision": 114,
+            "canvasFrames": 43,
+            "textureUploads": 43,
+            "textureReallocations": 1,
+            "compositeDraws": 58,
+            "primitiveCount": 28,
+            "releaseCount": 0,
+            "lastCanvasMs": 1.3999999910593033,
+            "disposed": false,
+            "composited": true
+          },
+          "earned": [
+            "crystal",
+            "gem",
+            "medal"
+          ],
+          "models": 40,
+          "assets": [
+            "http://127.0.0.1:5256/ui/menu/painted-panel.webp",
+            "http://127.0.0.1:5256/ui/menu/stone-backdrop.webp"
+          ],
+          "back": true
+        },
+        {
+          "screen": "options",
+          "stamp": "Codex/sol fork · build 10-05 12:43 UTC",
+          "pending": 0,
+          "surface": {
+            "active": true,
+            "resident": true,
+            "dirty": false,
+            "width": 1280,
+            "height": 720,
+            "screen": "options",
+            "revision": 240,
+            "paintedRevision": 240,
+            "canvasFrames": 156,
+            "textureUploads": 156,
+            "textureReallocations": 2,
+            "compositeDraws": 179,
+            "primitiveCount": 26,
+            "releaseCount": 1,
+            "lastCanvasMs": 1.2000000029802322,
+            "disposed": false,
+            "composited": true
+          },
+          "earned": [
+            "crystal",
+            "gem",
+            "medal",
+            "cup"
+          ],
+          "models": 40,
+          "assets": [
+            "http://127.0.0.1:5256/ui/menu/painted-panel.webp",
+            "http://127.0.0.1:5256/ui/menu/stone-backdrop.webp"
+          ],
+          "back": true
+        },
+        {
+          "screen": "save-load",
+          "stamp": "Codex/sol fork · build 10-05 12:43 UTC",
+          "pending": 0,
+          "surface": {
+            "active": true,
+            "resident": true,
+            "dirty": false,
+            "width": 1280,
+            "height": 720,
+            "screen": "save-load",
+            "revision": 341,
+            "paintedRevision": 341,
+            "canvasFrames": 237,
+            "textureUploads": 237,
+            "textureReallocations": 3,
+            "compositeDraws": 272,
+            "primitiveCount": 28,
+            "releaseCount": 2,
+            "lastCanvasMs": 1,
+            "disposed": false,
+            "composited": true
+          },
+          "earned": [],
+          "models": 40,
+          "assets": [
+            "http://127.0.0.1:5256/ui/menu/painted-panel.webp",
+            "http://127.0.0.1:5256/ui/menu/stone-backdrop.webp"
+          ],
+          "back": true
+        },
+        {
+          "screen": "confirm-quit-main",
+          "stamp": "Codex/sol fork · build 10-05 12:43 UTC",
+          "pending": 0,
+          "surface": {
+            "active": true,
+            "resident": true,
+            "dirty": false,
+            "width": 1280,
+            "height": 720,
+            "screen": "confirm-quit-main",
+            "revision": 402,
+            "paintedRevision": 402,
+            "canvasFrames": 326,
+            "textureUploads": 326,
+            "textureReallocations": 4,
+            "compositeDraws": 365,
+            "primitiveCount": 10,
+            "releaseCount": 3,
+            "lastCanvasMs": 0.5,
+            "disposed": false,
+            "composited": true
+          },
+          "earned": [],
+          "models": 40,
+          "assets": [
+            "http://127.0.0.1:5256/ui/menu/painted-panel.webp",
+            "http://127.0.0.1:5256/ui/menu/stone-backdrop.webp"
+          ],
+          "back": true
+        }
+      ],
+      "pauseAndResume": true
+    }
+  ],
+  "errors": []
+}

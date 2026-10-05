@@ -1,4 +1,4 @@
-import { paintMenuBackdrop, paintMenuPanel } from '../menuTheme';
+import { loadMenuArtwork, paintMenuBackdrop, paintMenuPanel } from '../menuTheme';
 import { updateMenuPngFocus } from '../menuPngFocus';
 import { paintSilverSecondaryText } from "../secondaryText";
 import { paintInputPrompts } from '../inputPromptUI';
@@ -23,6 +23,7 @@ export class CompetitionSurface {
   private lightPhase=NaN;
   constructor(private root: HTMLElement) {
     void loadRooAtlases().then(()=>this.invalidate());
+    void loadMenuArtwork().then(()=>this.invalidate());
     window.addEventListener(ROO_APPEARANCE_EVENT,()=>this.invalidate());
     root.addEventListener('scroll', () => this.invalidate(), true);
     root.addEventListener('load', () => this.invalidate(), true);

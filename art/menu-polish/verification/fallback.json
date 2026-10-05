@@ -1,0 +1,35 @@
+{
+  "expectedFailedAssets": 2,
+  "resume": true,
+  "errors": [],
+  "state": {
+    "loading": {
+      "phase": null,
+      "pending": [],
+      "failed": [
+        "./ui/menu/painted-panel.webp",
+        "./ui/menu/stone-backdrop.webp"
+      ],
+      "revision": 142
+    },
+    "surface": {
+      "active": true,
+      "resident": true,
+      "dirty": false,
+      "width": 640,
+      "height": 360,
+      "screen": "pause",
+      "revision": 306,
+      "paintedRevision": 306,
+      "canvasFrames": 8,
+      "textureUploads": 8,
+      "textureReallocations": 1,
+      "compositeDraws": 9,
+      "primitiveCount": 29,
+      "releaseCount": 0,
+      "lastCanvasMs": 1.1000000089406967,
+      "disposed": false,
+      "composited": true
+    }
+  }
+}

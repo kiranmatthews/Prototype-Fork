@@ -140,3 +140,23 @@ runs, and `MENU_PROMPTS=ps5` exercises hybrid touch/controller layouts.
 `tools/test-menu-desktop-inputs.mjs` exercises actual browser D-pad/stick edges,
 held Confirm, keyboard/mouse, the last scrollable level, confirmation cancellation,
 2×2 save navigation and debug persistence in lite/full rendering.
+
+## Painted stone and brass finish
+
+The October 2026 pass uses five [ImageGen menu studies](../art/menu-polish/README.md)
+to refine Pause and the four map submenus. Existing compositions and Roo PNG
+lettering remain authoritative. The runtime adds painted midnight-blue panels,
+small brass corner caps, cyan bevels, engraved dividers, recessed sockets and
+soft reward wells. Pause uses the common title size. Level Stats keeps its
+unboxed heading, preview/list and rewards/records split; Save / Load retains
+its four fixed bays. Home keeps its authored vortex.
+
+`menuTheme.ts` loads two shared WebP material assets through presentation
+readiness. Its nine-slice panel painter keeps corner details square across
+aspect ratios; the semantic DOM uses matching border images. Both pre-CRT
+painters reuse the existing Canvas/WebGL resources. Failed artwork falls back
+to the dark panel palette. Decorative rules and wells follow bounded clipping
+and remain independent of focus. Actual earned collectible models and their
+animation are unchanged. The PNG atlases, glyph measurements and focus profile
+are also unchanged; reference-frame verification remains the font acceptance
+check. See the study folder for the prompts, production captures and validation.

@@ -1,4 +1,4 @@
-import { paintMenuBackdrop, paintMenuPanel } from './menuTheme';
+import { loadMenuArtwork, paintMenuBackdrop, paintMenuPanel, paintMenuInset, paintMenuPictureFrame, paintMenuRule, paintMenuCollectionGrid, paintMenuRewardWell } from './menuTheme';
 // Cached Canvas2D mirror for the game-owned modal UI.
 //
 // GameFlowUI remains the only interaction/accessibility owner. This surface
@@ -117,6 +117,9 @@ export interface GameFlowSurfaceRenderState {
   thumbnail: GameFlowSurfaceThumbnail | null;
   slotPreviews?: readonly GameFlowSurfaceThumbnail[];
   sockets?: readonly {rect: GameFlowSurfaceRect; kind:string}[];
+  rules?: readonly GameFlowSurfaceRect[];
+  collectionGrids?: readonly GameFlowSurfaceRect[];
+  rewardWells?: readonly {rect: GameFlowSurfaceRect; earned:boolean}[];
   maskFallback: (GameFlowSurfaceRect & { opacity: number }) | null;
 }
 
@@ -507,6 +510,9 @@ export function snapshotGameFlowSurface(
     sourceWidth,
     sourceHeight,
     sockets: [...source.panel.querySelectorAll<HTMLElement>('.game-reward-slot[data-earned="false"]')].map(host => ({rect:rectFrom(host,origin),kind:host.dataset.reward!})).filter((item): item is {rect:GameFlowSurfaceRect;kind:string} => !!item.rect),
+    rules: [...source.panel.querySelectorAll<HTMLElement>('.game-pause-actions > .game-eyebrow, .game-progress-head, .game-options-card > .game-panel-title, .game-level-name, .game-level-record-title, .game-toggle-list > .game-toggle')].map(host => rectFrom(host,origin)).filter((rect): rect is GameFlowSurfaceRect => !!rect),
+    collectionGrids: [...source.panel.querySelectorAll<HTMLElement>('.game-pause-layout .game-progress-grid, .game-options-layout .game-progress-grid')].map(host => rectFrom(host,origin)).filter((rect): rect is GameFlowSurfaceRect => !!rect),
+    rewardWells: [...source.panel.querySelectorAll<HTMLElement>('.game-progress-grid .game-reward-slot, .game-level-rewards .game-reward-slot')].map(host => ({rect:rectFrom(host,origin),earned:host.dataset.earned === 'true'})).filter((item): item is {rect:GameFlowSurfaceRect;earned:boolean} => !!item.rect),
     cards: immutableArray(cards),
     blocks: immutableArray(blocks),
     buttons: immutableArray(buttons),
@@ -552,6 +558,7 @@ export class GameFlowSurface {
   ) {
     window.addEventListener(ROO_APPEARANCE_EVENT,this.appearanceChanged);
     void loadRooAtlases().then(()=>{if(!this.disposed)this.appearanceChanged();});
+    void loadMenuArtwork().then(()=>{if(!this.disposed)this.appearanceChanged();});
   }
 
   get diagnostics(): GameFlowSurfaceDiagnostics {
@@ -729,6 +736,9 @@ export class GameFlowSurface {
       ctx.save(); if (rect.clip) { const c=rect.clip;ctx.beginPath();ctx.rect(c.x,c.y,c.width,c.height);ctx.clip(); } paint();ctx.restore();
     };
     for (const card of state.cards) clipped(card, () => this.paintCard(ctx, card));
+    for (const grid of state.collectionGrids ?? []) clipped(grid, () => paintMenuCollectionGrid(ctx,grid));
+    for (const rule of state.rules ?? []) clipped(rule, () => paintMenuRule(ctx,rule));
+    for (const well of state.rewardWells ?? []) clipped(well.rect, () => paintMenuRewardWell(ctx,well.rect,well.earned));
     for (const block of state.blocks) clipped(block, () => this.paintBlock(ctx, block));
     if (state.thumbnail) clipped(state.thumbnail.rect, () => this.paintThumbnail(ctx, state.thumbnail!));
     for (const button of state.buttons) clipped(button.rect, () => this.paintButton(ctx, button));
@@ -758,9 +768,10 @@ export class GameFlowSurface {
     else if (kind === 'medal') path.arc(0,0,35,0,Math.PI*2);
     else if (kind === 'cup') { path.moveTo(-30,-40);path.lineTo(30,-40);path.quadraticCurveTo(28,4,7,12);path.lineTo(7,28);path.lineTo(28,28);path.lineTo(28,42);path.lineTo(-28,42);path.lineTo(-28,28);path.lineTo(-7,28);path.lineTo(-7,12);path.quadraticCurveTo(-28,4,-30,-40);path.closePath(); }
     else { path.moveTo(-40,-16);path.lineTo(-24,-36);path.lineTo(24,-36);path.lineTo(40,-16);path.lineTo(0,42);path.closePath(); }
-    ctx.translate(0,2);ctx.strokeStyle='#99b6b344';ctx.lineWidth=5;ctx.stroke(path);ctx.translate(0,-2);
-    const fill=ctx.createLinearGradient(0,-45,0,45);fill.addColorStop(0,'#020a12');fill.addColorStop(1,'#1b3e49');ctx.fillStyle=fill;ctx.fill(path);
-    ctx.strokeStyle='#01070c';ctx.lineWidth=2;ctx.stroke(path);ctx.restore();this.primitiveCount++;
+    ctx.translate(0,3);ctx.strokeStyle='#79aec477';ctx.lineWidth=6;ctx.stroke(path);ctx.translate(0,-3);
+    const fill=ctx.createLinearGradient(0,-45,0,45);fill.addColorStop(0,'#010711');fill.addColorStop(1,'#102c3c');ctx.fillStyle=fill;ctx.fill(path);
+    ctx.strokeStyle='#010710';ctx.lineWidth=3;ctx.stroke(path);
+    ctx.scale(.91,.91);ctx.strokeStyle='#35546855';ctx.lineWidth=1;ctx.stroke(path);ctx.restore();this.primitiveCount++;
   }
 
   private paintBackdrop(
@@ -827,9 +838,7 @@ export class GameFlowSurface {
       ctx.restore(); this.primitiveCount++; return;
     }
     if (button.kind === "level") {
-      roundedRect(ctx, rect, 7);
-      const gradient=ctx.createLinearGradient(0,rect.y,0,rect.y+rect.height);gradient.addColorStop(0,'#17323e');gradient.addColorStop(1,'#0a1c27');ctx.fillStyle=gradient;
-      ctx.fill();ctx.strokeStyle='rgba(109,51,23,.26)';ctx.lineWidth=1;ctx.stroke();
+      paintMenuInset(ctx,rect);
       ctx.font = `${button.fontWeight} ${button.fontSize}px ${button.fontFamily}`;
       ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillStyle = button.selected ? '#542615' : '#fff4d6';
       const labelWidth=Math.max(1,rect.width-(button.valueLabel?45:28));
@@ -839,12 +848,7 @@ export class GameFlowSurface {
       ctx.restore(); this.primitiveCount++; return;
     }
     if (button.kind === "slot") {
-      roundedRect(ctx, rect, 10);
-      ctx.fillStyle = "#0c2029";
-      ctx.fill();
-      ctx.strokeStyle = "#bf9656";
-      ctx.lineWidth = 3;
-      ctx.stroke();
+      paintMenuPanel(ctx,rect);
     }
     if (button.kind !== "slot") {
       ctx.font = `${button.fontWeight} ${button.fontSize}px ${button.fontFamily}`;
@@ -942,9 +946,7 @@ export class GameFlowSurface {
         // A transient/lost source frame leaves the readable dark card in place.
       }
     }
-    ctx.strokeStyle = "#54280f";
-    ctx.lineWidth = 4;
-    ctx.strokeRect(rect.x + 2, rect.y + 2, rect.width - 4, rect.height - 4);
+    paintMenuPictureFrame(ctx,rect);
     ctx.restore();
     this.primitiveCount++;
   }
