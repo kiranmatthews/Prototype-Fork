@@ -1,11 +1,11 @@
 {
   "base": "http://127.0.0.1:5242",
-  "variant": "full",
+  "variant": "portrait",
   "lite": false,
-  "portrait": false,
+  "portrait": true,
   "baseline": false,
   "warmupFrames": 30,
-  "started": "2026-10-05T14:28:19.194Z",
+  "started": "2026-10-05T14:30:08.788Z",
   "errors": [],
   "scenes": [
     {
@@ -39,12 +39,12 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 3.133333333333327
+        "windTime": 3.0666666666666607
       },
       "render": {
-        "frame": 1910,
-        "calls": 289,
-        "triangles": 1314842,
+        "frame": 1888,
+        "calls": 285,
+        "triangles": 1288264,
         "points": 0,
         "lines": 0
       },
@@ -61,28 +61,28 @@
       "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
       "warmup": {
         "frames": 30,
-        "medianMs": 16.5,
-        "p95Ms": 18.299999997019768,
+        "medianMs": 17,
+        "p95Ms": 18,
         "calls": {
-          "min": 289,
-          "max": 289
+          "min": 285,
+          "max": 285
         },
         "triangles": {
-          "min": 1314842,
-          "max": 1314842
+          "min": 1288264,
+          "max": 1288264
         }
       },
       "timing": {
         "frames": 60,
-        "medianMs": 16.700000002980232,
-        "p95Ms": 17.900000005960464,
+        "medianMs": 16.600000008940697,
+        "p95Ms": 18.299999997019768,
         "calls": {
-          "min": 289,
-          "max": 289
+          "min": 285,
+          "max": 285
         },
         "triangles": {
-          "min": 1314842,
-          "max": 1314842
+          "min": 1288264,
+          "max": 1288264
         }
       }
     },
@@ -117,12 +117,12 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 5.966666666666651
+        "windTime": 5.416666666666653
       },
       "render": {
-        "frame": 3046,
-        "calls": 330,
-        "triangles": 1416113,
+        "frame": 2840,
+        "calls": 322,
+        "triangles": 1421501,
         "points": 0,
         "lines": 0
       },
@@ -132,22 +132,22 @@
         "programs": 49
       },
       "camera": [
-        -0.988090598878297,
+        -0.9893115031929168,
         0.01499999999999968,
         -179.95
       ],
       "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
       "warmup": {
         "frames": 30,
-        "medianMs": 16.700000002980232,
-        "p95Ms": 18,
+        "medianMs": 16.5,
+        "p95Ms": 18.30000001192093,
         "calls": {
-          "min": 330,
-          "max": 330
+          "min": 322,
+          "max": 322
         },
         "triangles": {
-          "min": 1416113,
-          "max": 1416113
+          "min": 1421501,
+          "max": 1421501
         }
       },
       "timing": {
@@ -155,12 +155,12 @@
         "medianMs": 16.700000002980232,
         "p95Ms": 18,
         "calls": {
-          "min": 330,
-          "max": 330
+          "min": 322,
+          "max": 322
         },
         "triangles": {
-          "min": 1416113,
-          "max": 1416113
+          "min": 1421501,
+          "max": 1421501
         }
       }
     },
@@ -195,50 +195,50 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 2.9999999999999942
+        "windTime": 7.749999999999978
       },
       "render": {
-        "frame": 1870,
-        "calls": 289,
-        "triangles": 1249209,
+        "frame": 3820,
+        "calls": 288,
+        "triangles": 1257178,
         "points": 0,
         "lines": 0
       },
       "memory": {
-        "geometries": 103,
-        "textures": 114,
-        "programs": 47
+        "geometries": 132,
+        "textures": 115,
+        "programs": 50
       },
       "camera": [
-        -0.9886596393809841,
+        -0.9892497598011499,
         -7.499999961853028,
         -419.95
       ],
-      "stamp": "Codex/sol fork · build 10-05 14:47 UTC",
+      "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
       "warmup": {
         "frames": 30,
         "medianMs": 16.700000002980232,
-        "p95Ms": 18,
+        "p95Ms": 18.100000008940697,
         "calls": {
-          "min": 289,
-          "max": 289
+          "min": 288,
+          "max": 288
         },
         "triangles": {
-          "min": 1249209,
-          "max": 1249209
+          "min": 1257178,
+          "max": 1257178
         }
       },
       "timing": {
         "frames": 60,
         "medianMs": 16.700000002980232,
-        "p95Ms": 18.400000005960464,
+        "p95Ms": 18.200000002980232,
         "calls": {
-          "min": 289,
-          "max": 289
+          "min": 288,
+          "max": 288
         },
         "triangles": {
-          "min": 1249209,
-          "max": 1249209
+          "min": 1257178,
+          "max": 1257178
         }
       }
     },
@@ -273,50 +273,50 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 5.883333333333318
+        "windTime": 10.066666666666746
       },
       "render": {
-        "frame": 3053,
-        "calls": 287,
-        "triangles": 1365045,
+        "frame": 4793,
+        "calls": 286,
+        "triangles": 1365610,
         "points": 0,
         "lines": 0
       },
       "memory": {
-        "geometries": 130,
-        "textures": 114,
-        "programs": 49
+        "geometries": 159,
+        "textures": 115,
+        "programs": 52
       },
       "camera": [
-        -0.9892428774452011,
+        -0.9892222039298775,
         -8.015000009536744,
         -664.95
       ],
-      "stamp": "Codex/sol fork · build 10-05 14:47 UTC",
+      "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
       "warmup": {
         "frames": 30,
-        "medianMs": 16.700000002980232,
-        "p95Ms": 17.899999991059303,
+        "medianMs": 16.599999994039536,
+        "p95Ms": 17.700000002980232,
         "calls": {
-          "min": 287,
-          "max": 287
+          "min": 286,
+          "max": 286
         },
         "triangles": {
-          "min": 1365045,
-          "max": 1365045
+          "min": 1365610,
+          "max": 1365610
         }
       },
       "timing": {
         "frames": 60,
-        "medianMs": 16.69999998807907,
-        "p95Ms": 18.100000008940697,
+        "medianMs": 16.600000008940697,
+        "p95Ms": 17.799999997019768,
         "calls": {
-          "min": 287,
-          "max": 287
+          "min": 286,
+          "max": 286
         },
         "triangles": {
-          "min": 1365045,
-          "max": 1365045
+          "min": 1365610,
+          "max": 1365610
         }
       }
     },
@@ -351,50 +351,50 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 8.78333333333335
+        "windTime": 12.400000000000196
       },
       "render": {
-        "frame": 4250,
-        "calls": 287,
-        "triangles": 1261538,
+        "frame": 5773,
+        "calls": 285,
+        "triangles": 1262135,
         "points": 0,
         "lines": 0
       },
       "memory": {
-        "geometries": 150,
-        "textures": 114,
-        "programs": 49
+        "geometries": 179,
+        "textures": 115,
+        "programs": 52
       },
       "camera": [
-        -0.9890489567322763,
+        -0.9889714064137994,
         -8.4,
         -916.95
       ],
-      "stamp": "Codex/sol fork · build 10-05 14:47 UTC",
+      "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
       "warmup": {
         "frames": 30,
         "medianMs": 16.700000002980232,
-        "p95Ms": 17.900000005960464,
+        "p95Ms": 17.700000002980232,
         "calls": {
-          "min": 287,
-          "max": 287
+          "min": 285,
+          "max": 285
         },
         "triangles": {
-          "min": 1261538,
-          "max": 1261538
+          "min": 1262135,
+          "max": 1262135
         }
       },
       "timing": {
         "frames": 60,
-        "medianMs": 16.700000002980232,
-        "p95Ms": 18,
+        "medianMs": 16.599999994039536,
+        "p95Ms": 18.399999991059303,
         "calls": {
-          "min": 287,
-          "max": 287
+          "min": 285,
+          "max": 285
         },
         "triangles": {
-          "min": 1261538,
-          "max": 1261538
+          "min": 1262135,
+          "max": 1262135
         }
       }
     },
@@ -429,12 +429,12 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 16.900000000000322
+        "windTime": 14.716666666666978
       },
       "render": {
-        "frame": 7584,
-        "calls": 298,
-        "triangles": 1324479,
+        "frame": 6746,
+        "calls": 295,
+        "triangles": 1308000,
         "points": 0,
         "lines": 0
       },
@@ -444,35 +444,35 @@
         "programs": 52
       },
       "camera": [
-        -0.9888012282973164,
+        -0.9890162242547353,
         -16.50499997615814,
         -1232.95
       ],
       "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
       "warmup": {
         "frames": 30,
-        "medianMs": 16.69999998807907,
-        "p95Ms": 18,
+        "medianMs": 16.799999997019768,
+        "p95Ms": 17.799999997019768,
         "calls": {
-          "min": 298,
-          "max": 298
+          "min": 295,
+          "max": 295
         },
         "triangles": {
-          "min": 1324479,
-          "max": 1324479
+          "min": 1308000,
+          "max": 1308000
         }
       },
       "timing": {
         "frames": 60,
-        "medianMs": 16.700000002980232,
-        "p95Ms": 18,
+        "medianMs": 16.799999997019768,
+        "p95Ms": 17.799999997019768,
         "calls": {
-          "min": 297,
-          "max": 298
+          "min": 294,
+          "max": 295
         },
         "triangles": {
-          "min": 1313759,
-          "max": 1324479
+          "min": 1305431,
+          "max": 1308000
         }
       }
     },
@@ -507,12 +507,12 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 19.450000000000177
+        "windTime": 17.050000000000313
       },
       "render": {
-        "frame": 8655,
-        "calls": 326,
-        "triangles": 1346539,
+        "frame": 7726,
+        "calls": 321,
+        "triangles": 1331909,
         "points": 0,
         "lines": 0
       },
@@ -522,35 +522,35 @@
         "programs": 54
       },
       "camera": [
-        -0.9892842303848872,
+        -0.9892635113054569,
         -10.540000057220459,
         -1365.95
       ],
       "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
       "warmup": {
         "frames": 30,
-        "medianMs": 16.700000002980232,
-        "p95Ms": 18,
+        "medianMs": 16.799999997019768,
+        "p95Ms": 18.200000002980232,
         "calls": {
-          "min": 326,
-          "max": 326
+          "min": 321,
+          "max": 321
         },
         "triangles": {
-          "min": 1346539,
-          "max": 1346539
+          "min": 1331909,
+          "max": 1331909
         }
       },
       "timing": {
         "frames": 60,
-        "medianMs": 16.599999994039536,
-        "p95Ms": 18.400000005960464,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 18.200000002980232,
         "calls": {
-          "min": 326,
-          "max": 326
+          "min": 321,
+          "max": 321
         },
         "triangles": {
-          "min": 1346539,
-          "max": 1346539
+          "min": 1331909,
+          "max": 1331909
         }
       }
     },
@@ -585,12 +585,12 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 21.983333333333366
+        "windTime": 19.383333333333514
       },
       "render": {
-        "frame": 9719,
-        "calls": 317,
-        "triangles": 1315076,
+        "frame": 8706,
+        "calls": 316,
+        "triangles": 1312507,
         "points": 0,
         "lines": 0
       },
@@ -600,35 +600,35 @@
         "programs": 54
       },
       "camera": [
-        -0.98934801642694,
+        -0.9890111078995292,
         -7.480000013113022,
         -1397.95
       ],
       "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
       "warmup": {
         "frames": 30,
-        "medianMs": 16.700000002980232,
-        "p95Ms": 18,
+        "medianMs": 16.600000008940697,
+        "p95Ms": 18.299999997019768,
         "calls": {
-          "min": 317,
-          "max": 317
+          "min": 316,
+          "max": 316
         },
         "triangles": {
-          "min": 1315076,
-          "max": 1315076
+          "min": 1312507,
+          "max": 1312507
         }
       },
       "timing": {
         "frames": 60,
         "medianMs": 16.700000002980232,
-        "p95Ms": 18.299999997019768,
+        "p95Ms": 18.19999998807907,
         "calls": {
-          "min": 317,
-          "max": 317
+          "min": 316,
+          "max": 316
         },
         "triangles": {
-          "min": 1315076,
-          "max": 1315076
+          "min": 1312507,
+          "max": 1312507
         }
       }
     },
@@ -663,50 +663,50 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 24.49999999999989
+        "windTime": 21.716666666666715
       },
       "render": {
-        "frame": 10776,
-        "calls": 349,
-        "triangles": 1368994,
+        "frame": 9686,
+        "calls": 330,
+        "triangles": 1308028,
         "points": 0,
         "lines": 0
       },
       "memory": {
-        "geometries": 269,
+        "geometries": 268,
         "textures": 118,
         "programs": 56
       },
       "camera": [
-        -4.411102818323841,
+        -4.411180933161792,
         -7.460000013113023,
         -1534.95
       ],
       "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
       "warmup": {
         "frames": 30,
-        "medianMs": 16.700000002980232,
-        "p95Ms": 18.599999994039536,
+        "medianMs": 16.599999994039536,
+        "p95Ms": 18,
         "calls": {
-          "min": 347,
-          "max": 349
+          "min": 328,
+          "max": 330
         },
         "triangles": {
-          "min": 1368990,
-          "max": 1368994
+          "min": 1308024,
+          "max": 1308028
         }
       },
       "timing": {
         "frames": 60,
-        "medianMs": 16.700000002980232,
-        "p95Ms": 18.299999997019768,
+        "medianMs": 16.600000008940697,
+        "p95Ms": 18,
         "calls": {
-          "min": 347,
-          "max": 349
+          "min": 328,
+          "max": 330
         },
         "triangles": {
-          "min": 1368990,
-          "max": 1368994
+          "min": 1308024,
+          "max": 1308028
         }
       }
     },
@@ -741,22 +741,22 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 27.399999999999725
+        "windTime": 24.049999999999915
       },
       "render": {
-        "frame": 11994,
-        "calls": 329,
-        "triangles": 1461331,
+        "frame": 10666,
+        "calls": 267,
+        "triangles": 1335834,
         "points": 0,
         "lines": 0
       },
       "memory": {
-        "geometries": 282,
+        "geometries": 273,
         "textures": 118,
         "programs": 56
       },
       "camera": [
-        -4.989923974612371,
+        -4.988978063682032,
         -13.524999980926514,
         -1623.95
       ],
@@ -764,27 +764,27 @@
       "warmup": {
         "frames": 30,
         "medianMs": 16.700000002980232,
-        "p95Ms": 18,
+        "p95Ms": 17.700000002980232,
         "calls": {
-          "min": 327,
-          "max": 329
+          "min": 267,
+          "max": 268
         },
         "triangles": {
-          "min": 1460411,
-          "max": 1461331
+          "min": 1335834,
+          "max": 1335836
         }
       },
       "timing": {
         "frames": 60,
-        "medianMs": 16.600000008940697,
+        "medianMs": 16.700000002980232,
         "p95Ms": 18,
         "calls": {
-          "min": 327,
-          "max": 331
+          "min": 264,
+          "max": 268
         },
         "triangles": {
-          "min": 1461327,
-          "max": 1461667
+          "min": 1332608,
+          "max": 1335836
         }
       }
     },
@@ -819,50 +819,50 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 30.03333333333291
+        "windTime": 26.383333333333116
       },
       "render": {
-        "frame": 13100,
-        "calls": 265,
-        "triangles": 1242394,
+        "frame": 11646,
+        "calls": 189,
+        "triangles": 1007237,
         "points": 0,
         "lines": 0
       },
       "memory": {
-        "geometries": 314,
-        "textures": 119,
-        "programs": 57
+        "geometries": 295,
+        "textures": 118,
+        "programs": 56
       },
       "camera": [
-        68.00001103516229,
+        68.00001091479244,
         -11.41,
         -1712.024
       ],
       "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
       "warmup": {
         "frames": 30,
-        "medianMs": 16.599999994039536,
-        "p95Ms": 17.899999991059303,
+        "medianMs": 16.5,
+        "p95Ms": 18.099999994039536,
         "calls": {
-          "min": 265,
-          "max": 265
+          "min": 189,
+          "max": 189
         },
         "triangles": {
-          "min": 1242394,
-          "max": 1242394
+          "min": 1007237,
+          "max": 1007237
         }
       },
       "timing": {
         "frames": 60,
-        "medianMs": 16.69999998807907,
-        "p95Ms": 18.200000002980232,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 17.80000001192093,
         "calls": {
-          "min": 265,
-          "max": 265
+          "min": 189,
+          "max": 189
         },
         "triangles": {
-          "min": 1242394,
-          "max": 1242394
+          "min": 1007237,
+          "max": 1007237
         }
       }
     },
@@ -897,50 +897,50 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 32.6166666666661
+        "windTime": 28.74999999999965
       },
       "render": {
-        "frame": 14185,
-        "calls": 273,
-        "triangles": 1231841,
+        "frame": 12640,
+        "calls": 272,
+        "triangles": 1230109,
         "points": 0,
         "lines": 0
       },
       "memory": {
-        "geometries": 329,
-        "textures": 119,
-        "programs": 57
+        "geometries": 325,
+        "textures": 118,
+        "programs": 56
       },
       "camera": [
-        151.01118783964696,
+        151.01093058484204,
         -20.489999947547915,
         -1846.95
       ],
       "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
       "warmup": {
         "frames": 30,
-        "medianMs": 16.700000002980232,
-        "p95Ms": 18.400000005960464,
+        "medianMs": 16.799999997019768,
+        "p95Ms": 18,
         "calls": {
-          "min": 273,
-          "max": 273
+          "min": 272,
+          "max": 272
         },
         "triangles": {
-          "min": 1231841,
-          "max": 1231841
+          "min": 1230109,
+          "max": 1230109
         }
       },
       "timing": {
         "frames": 60,
-        "medianMs": 16.600000008940697,
-        "p95Ms": 18.100000008940697,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 17.799999997019768,
         "calls": {
-          "min": 273,
-          "max": 273
+          "min": 272,
+          "max": 272
         },
         "triangles": {
-          "min": 1231841,
-          "max": 1231841
+          "min": 1230109,
+          "max": 1230109
         }
       }
     },
@@ -975,50 +975,50 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 35.23333333333262
+        "windTime": 31.08333333333285
       },
       "render": {
-        "frame": 15277,
-        "calls": 443,
-        "triangles": 1586314,
+        "frame": 13620,
+        "calls": 432,
+        "triangles": 1557593,
         "points": 0,
         "lines": 72
       },
       "memory": {
-        "geometries": 368,
-        "textures": 120,
-        "programs": 59
+        "geometries": 364,
+        "textures": 119,
+        "programs": 58
       },
       "camera": [
-        151.01029242408032,
+        151.01080109177278,
         -20.9,
         -1979.95
       ],
       "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
       "warmup": {
         "frames": 30,
-        "medianMs": 16.600000008940697,
-        "p95Ms": 18.400000005960464,
+        "medianMs": 16.799999997019768,
+        "p95Ms": 17.899999991059303,
         "calls": {
-          "min": 443,
-          "max": 443
+          "min": 432,
+          "max": 432
         },
         "triangles": {
-          "min": 1586314,
-          "max": 1586314
+          "min": 1557593,
+          "max": 1557593
         }
       },
       "timing": {
         "frames": 60,
-        "medianMs": 16.69999998807907,
-        "p95Ms": 18.599999994039536,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 18.099999994039536,
         "calls": {
-          "min": 443,
-          "max": 443
+          "min": 432,
+          "max": 432
         },
         "triangles": {
-          "min": 1586314,
-          "max": 1586314
+          "min": 1557593,
+          "max": 1557593
         }
       }
     },
@@ -1053,50 +1053,50 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 37.999999999999126
+        "windTime": 33.43333333333272
       },
       "render": {
-        "frame": 16432,
-        "calls": 429,
-        "triangles": 1533403,
+        "frame": 14607,
+        "calls": 427,
+        "triangles": 1530459,
         "points": 0,
         "lines": 0
       },
       "memory": {
-        "geometries": 385,
-        "textures": 120,
-        "programs": 59
+        "geometries": 381,
+        "textures": 119,
+        "programs": 58
       },
       "camera": [
-        151.01125386001328,
+        151.0109760143676,
         -20.9,
         -2044.95
       ],
       "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
       "warmup": {
         "frames": 30,
-        "medianMs": 16.600000008940697,
-        "p95Ms": 18.100000008940697,
+        "medianMs": 17,
+        "p95Ms": 17.900000005960464,
         "calls": {
           "min": 427,
-          "max": 429
+          "max": 427
         },
         "triangles": {
-          "min": 1533251,
-          "max": 1533403
+          "min": 1530459,
+          "max": 1530459
         }
       },
       "timing": {
         "frames": 60,
-        "medianMs": 16.69999998807907,
-        "p95Ms": 18.200000002980232,
+        "medianMs": 16.599999994039536,
+        "p95Ms": 18.399999991059303,
         "calls": {
-          "min": 427,
-          "max": 429
+          "min": 424,
+          "max": 427
         },
         "triangles": {
-          "min": 1533251,
-          "max": 1533403
+          "min": 1530167,
+          "max": 1530459
         }
       }
     },
@@ -1131,50 +1131,50 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 41.64999999999892
+        "windTime": 35.783333333332585
       },
       "render": {
-        "frame": 17911,
-        "calls": 299,
-        "triangles": 1289000,
+        "frame": 15580,
+        "calls": 296,
+        "triangles": 1288596,
         "points": 0,
         "lines": 0
       },
       "memory": {
-        "geometries": 405,
-        "textures": 123,
-        "programs": 65
+        "geometries": 401,
+        "textures": 122,
+        "programs": 64
       },
       "camera": [
-        151.0087063104206,
+        151.01072961954003,
         -20.9,
         -2159.95
       ],
       "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
       "warmup": {
         "frames": 30,
-        "medianMs": 16.700000002980232,
-        "p95Ms": 18.299999997019768,
+        "medianMs": 16.600000008940697,
+        "p95Ms": 18,
         "calls": {
-          "min": 299,
-          "max": 299
+          "min": 296,
+          "max": 296
         },
         "triangles": {
-          "min": 1289000,
-          "max": 1289000
+          "min": 1288596,
+          "max": 1288596
         }
       },
       "timing": {
         "frames": 60,
         "medianMs": 16.700000002980232,
-        "p95Ms": 18.19999998807907,
+        "p95Ms": 18.200000002980232,
         "calls": {
-          "min": 297,
-          "max": 299
+          "min": 294,
+          "max": 296
         },
         "triangles": {
-          "min": 1281923,
-          "max": 1289000
+          "min": 1281519,
+          "max": 1288596
         }
       }
     },
@@ -1198,61 +1198,61 @@
       "assets": {
         "components": 3540,
         "placements": 3540,
-        "ready": 573,
+        "ready": 488,
         "skipped": 0,
-        "draws": 276,
-        "triangles": 1173002,
-        "allLodTriangles": 2807639,
+        "draws": 241,
+        "triangles": 1074778,
+        "allLodTriangles": 2462326,
         "cells": 1329,
-        "residentCells": 276,
+        "residentCells": 241,
         "pendingCells": 0,
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 11.400000000000146
+        "windTime": 38.116666666665786
       },
       "render": {
-        "frame": 5349,
-        "calls": 274,
-        "triangles": 1405929,
+        "frame": 16560,
+        "calls": 264,
+        "triangles": 1332657,
         "points": 0,
         "lines": 0
       },
       "memory": {
-        "geometries": 152,
-        "textures": 114,
-        "programs": 49
+        "geometries": 401,
+        "textures": 122,
+        "programs": 64
       },
       "camera": [
         0,
         -8.4,
         -764.95
       ],
-      "stamp": "Codex/sol fork · build 10-05 14:47 UTC",
+      "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
       "warmup": {
         "frames": 30,
-        "medianMs": 16.600000008940697,
-        "p95Ms": 17.400000005960464,
+        "medianMs": 16.799999997019768,
+        "p95Ms": 17.900000005960464,
         "calls": {
-          "min": 274,
-          "max": 274
+          "min": 264,
+          "max": 264
         },
         "triangles": {
-          "min": 1405929,
-          "max": 1405929
+          "min": 1332657,
+          "max": 1332657
         }
       },
       "timing": {
         "frames": 60,
-        "medianMs": 16.700000002980232,
-        "p95Ms": 17.899999991059303,
+        "medianMs": 16.600000008940697,
+        "p95Ms": 17.900000005960464,
         "calls": {
-          "min": 274,
-          "max": 274
+          "min": 264,
+          "max": 264
         },
         "triangles": {
-          "min": 1405929,
-          "max": 1405929
+          "min": 1332657,
+          "max": 1332657
         }
       }
     },
@@ -1287,19 +1287,19 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 47.98333333333189
+        "windTime": 40.44999999999899
       },
       "render": {
-        "frame": 20561,
-        "calls": 330,
-        "triangles": 1381059,
+        "frame": 17603,
+        "calls": 327,
+        "triangles": 1359437,
         "points": 0,
         "lines": 0
       },
       "memory": {
-        "geometries": 415,
-        "textures": 124,
-        "programs": 68
+        "geometries": 411,
+        "textures": 123,
+        "programs": 67
       },
       "camera": [
         0,
@@ -1309,28 +1309,28 @@
       "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
       "warmup": {
         "frames": 30,
-        "medianMs": 16.799999997019768,
-        "p95Ms": 17.700000002980232,
+        "medianMs": 16.900000005960464,
+        "p95Ms": 18,
         "calls": {
-          "min": 329,
-          "max": 330
+          "min": 326,
+          "max": 327
         },
         "triangles": {
-          "min": 1380919,
-          "max": 1381059
+          "min": 1359297,
+          "max": 1359437
         }
       },
       "timing": {
         "frames": 60,
         "medianMs": 16.700000002980232,
-        "p95Ms": 18,
+        "p95Ms": 18.30000001192093,
         "calls": {
-          "min": 330,
-          "max": 330
+          "min": 327,
+          "max": 327
         },
         "triangles": {
-          "min": 1381059,
-          "max": 1381059
+          "min": 1359437,
+          "max": 1359437
         }
       }
     },
@@ -1365,19 +1365,19 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 50.933333333331724
+        "windTime": 42.79999999999885
       },
       "render": {
-        "frame": 21856,
-        "calls": 412,
-        "triangles": 1490578,
+        "frame": 18648,
+        "calls": 396,
+        "triangles": 1464832,
         "points": 0,
         "lines": 0
       },
       "memory": {
-        "geometries": 415,
-        "textures": 124,
-        "programs": 68
+        "geometries": 411,
+        "textures": 123,
+        "programs": 67
       },
       "camera": [
         146.5,
@@ -1388,27 +1388,27 @@
       "warmup": {
         "frames": 30,
         "medianMs": 16.700000002980232,
-        "p95Ms": 18.600000008940697,
+        "p95Ms": 17.700000002980232,
         "calls": {
-          "min": 412,
-          "max": 412
+          "min": 396,
+          "max": 398
         },
         "triangles": {
-          "min": 1490578,
-          "max": 1490578
+          "min": 1464832,
+          "max": 1465112
         }
       },
       "timing": {
         "frames": 60,
-        "medianMs": 16.799999997019768,
-        "p95Ms": 19,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 18.299999997019768,
         "calls": {
-          "min": 409,
-          "max": 411
+          "min": 396,
+          "max": 397
         },
         "triangles": {
-          "min": 1490158,
-          "max": 1490438
+          "min": 1464832,
+          "max": 1464972
         }
       }
     },
@@ -1443,19 +1443,19 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 55.84999999999811
+        "windTime": 45.14999999999872
       },
       "render": {
-        "frame": 23843,
-        "calls": 199,
-        "triangles": 1100936,
+        "frame": 19635,
+        "calls": 195,
+        "triangles": 1096372,
         "points": 0,
         "lines": 0
       },
       "memory": {
-        "geometries": 415,
-        "textures": 124,
-        "programs": 68
+        "geometries": 411,
+        "textures": 123,
+        "programs": 67
       },
       "camera": [
         152,
@@ -1465,28 +1465,28 @@
       "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
       "warmup": {
         "frames": 30,
-        "medianMs": 16.599999994039536,
-        "p95Ms": 18.099999994039536,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 18.399999991059303,
         "calls": {
-          "min": 199,
-          "max": 200
+          "min": 195,
+          "max": 196
         },
         "triangles": {
-          "min": 1100936,
-          "max": 1101076
+          "min": 1096372,
+          "max": 1096512
         }
       },
       "timing": {
         "frames": 60,
-        "medianMs": 16.80000001192093,
-        "p95Ms": 18.099999994039536,
+        "medianMs": 16.600000008940697,
+        "p95Ms": 18.200000002980232,
         "calls": {
-          "min": 199,
-          "max": 200
+          "min": 195,
+          "max": 196
         },
         "triangles": {
-          "min": 1100936,
-          "max": 1101076
+          "min": 1096372,
+          "max": 1096512
         }
       }
     },
@@ -1521,19 +1521,19 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 59.34999999999791
+        "windTime": 47.48333333333192
       },
       "render": {
-        "frame": 25266,
-        "calls": 331,
-        "triangles": 1370535,
+        "frame": 20615,
+        "calls": 324,
+        "triangles": 1356747,
         "points": 0,
         "lines": 0
       },
       "memory": {
-        "geometries": 415,
-        "textures": 124,
-        "programs": 68
+        "geometries": 411,
+        "textures": 123,
+        "programs": 67
       },
       "camera": [
         0,
@@ -1543,28 +1543,28 @@
       "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
       "warmup": {
         "frames": 30,
-        "medianMs": 16.599999994039536,
-        "p95Ms": 18.5,
+        "medianMs": 16.899999991059303,
+        "p95Ms": 17.80000001192093,
         "calls": {
-          "min": 331,
-          "max": 331
+          "min": 324,
+          "max": 324
         },
         "triangles": {
-          "min": 1370535,
-          "max": 1370535
+          "min": 1356747,
+          "max": 1356747
         }
       },
       "timing": {
         "frames": 60,
         "medianMs": 16.600000008940697,
-        "p95Ms": 20.30000001192093,
+        "p95Ms": 18.299999997019768,
         "calls": {
-          "min": 331,
-          "max": 331
+          "min": 324,
+          "max": 324
         },
         "triangles": {
-          "min": 1370535,
-          "max": 1370535
+          "min": 1356747,
+          "max": 1356747
         }
       }
     },
@@ -1599,19 +1599,19 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 62.28333333333108
+        "windTime": 49.81666666666512
       },
       "render": {
-        "frame": 26476,
-        "calls": 282,
-        "triangles": 1305269,
+        "frame": 21595,
+        "calls": 277,
+        "triangles": 1295863,
         "points": 0,
         "lines": 0
       },
       "memory": {
-        "geometries": 415,
-        "textures": 124,
-        "programs": 68
+        "geometries": 411,
+        "textures": 123,
+        "programs": 67
       },
       "camera": [
         0,
@@ -1621,28 +1621,28 @@
       "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
       "warmup": {
         "frames": 30,
-        "medianMs": 16.799999997019768,
-        "p95Ms": 18.19999998807907,
+        "medianMs": 16.899999991059303,
+        "p95Ms": 17.700000002980232,
         "calls": {
-          "min": 282,
-          "max": 282
+          "min": 277,
+          "max": 277
         },
         "triangles": {
-          "min": 1305269,
-          "max": 1305269
+          "min": 1295863,
+          "max": 1295863
         }
       },
       "timing": {
         "frames": 60,
         "medianMs": 16.700000002980232,
-        "p95Ms": 18.599999994039536,
+        "p95Ms": 18.100000008940697,
         "calls": {
-          "min": 282,
-          "max": 282
+          "min": 277,
+          "max": 277
         },
         "triangles": {
-          "min": 1305269,
-          "max": 1305269
+          "min": 1295863,
+          "max": 1295863
         }
       }
     },
@@ -1677,19 +1677,19 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 65.19999999999759
+        "windTime": 52.14999999999832
       },
       "render": {
-        "frame": 27681,
-        "calls": 290,
-        "triangles": 1383248,
+        "frame": 22575,
+        "calls": 211,
+        "triangles": 1107957,
         "points": 0,
         "lines": 0
       },
       "memory": {
-        "geometries": 417,
-        "textures": 124,
-        "programs": 68
+        "geometries": 415,
+        "textures": 123,
+        "programs": 67
       },
       "camera": [
         109,
@@ -1699,28 +1699,28 @@
       "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
       "warmup": {
         "frames": 30,
-        "medianMs": 16.600000008940697,
-        "p95Ms": 18.400000005960464,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 18.30000001192093,
         "calls": {
-          "min": 290,
-          "max": 290
+          "min": 211,
+          "max": 211
         },
         "triangles": {
-          "min": 1383248,
-          "max": 1383248
+          "min": 1107957,
+          "max": 1107957
         }
       },
       "timing": {
         "frames": 60,
-        "medianMs": 16.799999997019768,
-        "p95Ms": 18.299999997019768,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 18.5,
         "calls": {
-          "min": 290,
-          "max": 291
+          "min": 211,
+          "max": 212
         },
         "triangles": {
-          "min": 1383248,
-          "max": 1383328
+          "min": 1107957,
+          "max": 1108037
         }
       }
     },
@@ -1755,17 +1755,17 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 68.08333333333076
+        "windTime": 54.48333333333152
       },
       "render": {
-        "frame": 28871,
-        "calls": 293,
-        "triangles": 1421549,
+        "frame": 23555,
+        "calls": 270,
+        "triangles": 1308984,
         "points": 0,
         "lines": 0
       },
       "memory": {
-        "geometries": 425,
+        "geometries": 419,
         "textures": 124,
         "programs": 68
       },
@@ -1777,28 +1777,28 @@
       "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
       "warmup": {
         "frames": 30,
-        "medianMs": 16.799999997019768,
-        "p95Ms": 18.399999991059303,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 18,
         "calls": {
-          "min": 293,
-          "max": 293
+          "min": 270,
+          "max": 270
         },
         "triangles": {
-          "min": 1421549,
-          "max": 1421549
+          "min": 1308984,
+          "max": 1308984
         }
       },
       "timing": {
         "frames": 60,
-        "medianMs": 16.700000002980232,
-        "p95Ms": 18.200000002980232,
+        "medianMs": 16.599999994039536,
+        "p95Ms": 18.100000008940697,
         "calls": {
-          "min": 293,
-          "max": 293
+          "min": 270,
+          "max": 270
         },
         "triangles": {
-          "min": 1421549,
-          "max": 1421549
+          "min": 1308984,
+          "max": 1308984
         }
       }
     },
@@ -1833,17 +1833,17 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 70.98333333333059
+        "windTime": 56.849999999998055
       },
       "render": {
-        "frame": 30069,
-        "calls": 319,
-        "triangles": 1347842,
+        "frame": 24542,
+        "calls": 317,
+        "triangles": 1343302,
         "points": 0,
         "lines": 0
       },
       "memory": {
-        "geometries": 425,
+        "geometries": 419,
         "textures": 124,
         "programs": 68
       },
@@ -1856,27 +1856,27 @@
       "warmup": {
         "frames": 30,
         "medianMs": 16.600000008940697,
-        "p95Ms": 18.299999997019768,
+        "p95Ms": 17.700000002980232,
         "calls": {
-          "min": 319,
-          "max": 319
+          "min": 317,
+          "max": 317
         },
         "triangles": {
-          "min": 1347842,
-          "max": 1347842
+          "min": 1343302,
+          "max": 1343302
         }
       },
       "timing": {
         "frames": 60,
         "medianMs": 16.700000002980232,
-        "p95Ms": 18.5,
+        "p95Ms": 18.200000002980232,
         "calls": {
-          "min": 319,
-          "max": 319
+          "min": 317,
+          "max": 317
         },
         "triangles": {
-          "min": 1347842,
-          "max": 1347842
+          "min": 1343302,
+          "max": 1343302
         }
       }
     }
@@ -1912,12 +1912,12 @@
       "compressedTextures": 18,
       "textureMiB": 31.33,
       "errors": [],
-      "windTime": 1.9166666666666647
+      "windTime": 1.8333333333333317
     },
     "render": {
-      "frame": 1399,
-      "calls": 289,
-      "triangles": 1314842,
+      "frame": 1370,
+      "calls": 285,
+      "triangles": 1288264,
       "points": 0,
       "lines": 0
     },
@@ -1937,8 +1937,8 @@
     "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
     "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
     "viewport": [
-      1280,
-      720
+      390,
+      844
     ],
     "quality": {
       "enabled": true,
@@ -1947,136 +1947,14 @@
       "fixed60": true
     },
     "resolution": {
-      "viewportWidth": 1280,
-      "viewportHeight": 720,
-      "inputWidth": 1280,
-      "inputHeight": 720,
-      "outputWidth": 1280,
-      "outputHeight": 720
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "inputWidth": 720,
+      "inputHeight": 1558,
+      "outputWidth": 720,
+      "outputHeight": 1558
     }
   },
-  "previews": [
-    {
-      "scene": "00-spawn",
-      "path": "/private/tmp/carlisle-fidelity-release-evidence/full/preview-00-spawn.png",
-      "camera": [
-        0,
-        5.1,
-        5.05
-      ],
-      "actualRuntime": true
-    },
-    {
-      "scene": "02-checkpoint",
-      "path": "/private/tmp/carlisle-fidelity-release-evidence/full/preview-02-checkpoint.png",
-      "camera": [
-        -0.9886596393809841,
-        -7.499999961853028,
-        -419.95
-      ],
-      "actualRuntime": true
-    },
-    {
-      "scene": "03-checkpoint",
-      "path": "/private/tmp/carlisle-fidelity-release-evidence/full/preview-03-checkpoint.png",
-      "camera": [
-        -0.9892428774452011,
-        -8.015000009536744,
-        -664.95
-      ],
-      "actualRuntime": true
-    },
-    {
-      "scene": "13-checkpoint",
-      "path": "/private/tmp/carlisle-fidelity-release-evidence/full/preview-13-checkpoint.png",
-      "camera": [
-        151.01125386001328,
-        -20.9,
-        -2044.95
-      ],
-      "actualRuntime": true
-    },
-    {
-      "scene": "15-halfpipe",
-      "path": "/private/tmp/carlisle-fidelity-release-evidence/full/preview-15-halfpipe.png",
-      "camera": [
-        0,
-        -8.4,
-        -764.95
-      ],
-      "actualRuntime": true
-    },
-    {
-      "scene": "17-split-dock",
-      "path": "/private/tmp/carlisle-fidelity-release-evidence/full/preview-17-split-dock.png",
-      "camera": [
-        146.5,
-        -20.9,
-        -2072.95
-      ],
-      "actualRuntime": true
-    },
-    {
-      "scene": "18-finish-approach",
-      "path": "/private/tmp/carlisle-fidelity-release-evidence/full/preview-18-finish-approach.png",
-      "camera": [
-        152,
-        -20.9,
-        -2276.95
-      ],
-      "actualRuntime": true
-    },
-    {
-      "scene": "20-first-pit-face",
-      "path": "/private/tmp/carlisle-fidelity-release-evidence/full/preview-20-first-pit-face.png",
-      "camera": [
-        0,
-        0.4800000429153439,
-        -142.95
-      ],
-      "actualRuntime": true
-    },
-    {
-      "scene": "21-ramp",
-      "path": "/private/tmp/carlisle-fidelity-release-evidence/full/preview-21-ramp.png",
-      "camera": [
-        0,
-        -6.500000023841858,
-        -464.95
-      ],
-      "actualRuntime": true
-    },
-    {
-      "scene": "22-side-crossing",
-      "path": "/private/tmp/carlisle-fidelity-release-evidence/full/preview-22-side-crossing.png",
-      "camera": [
-        109,
-        -11.41,
-        -1712.024
-      ],
-      "actualRuntime": true
-    },
-    {
-      "scene": "23-last-E-landing",
-      "path": "/private/tmp/carlisle-fidelity-release-evidence/full/preview-23-last-E-landing.png",
-      "camera": [
-        138.75,
-        -11.41,
-        -1712.024
-      ],
-      "actualRuntime": true
-    },
-    {
-      "scene": "24-first-pit-landing",
-      "path": "/private/tmp/carlisle-fidelity-release-evidence/full/preview-24-first-pit-landing.png",
-      "camera": [
-        0,
-        0.014999999999999673,
-        -160.95
-      ],
-      "actualRuntime": true
-    }
-  ],
   "idle": {
     "returned": {
       "position": [
@@ -2108,17 +1986,17 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 73.38333333333046
+        "windTime": 58.683333333331284
       },
       "render": {
-        "frame": 31057,
-        "calls": 285,
-        "triangles": 1251450,
+        "frame": 25312,
+        "calls": 281,
+        "triangles": 1224872,
         "points": 0,
         "lines": 0
       },
       "memory": {
-        "geometries": 425,
+        "geometries": 419,
         "textures": 124,
         "programs": 68
       },
@@ -2159,17 +2037,17 @@
         "compressedTextures": 18,
         "textureMiB": 31.33,
         "errors": [],
-        "windTime": 74.88333333333037
+        "windTime": 60.1833333333312
       },
       "render": {
-        "frame": 31687,
-        "calls": 285,
-        "triangles": 1251450,
+        "frame": 25942,
+        "calls": 281,
+        "triangles": 1224872,
         "points": 0,
         "lines": 0
       },
       "memory": {
-        "geometries": 425,
+        "geometries": 419,
         "textures": 124,
         "programs": 68
       },
@@ -2182,551 +2060,5 @@
     }
   },
   "pass": true,
-  "finished": "2026-10-05T14:48:48.119Z",
-  "out": "/private/tmp/carlisle-fidelity-release-evidence/full",
-  "finalBuildStamp": "Codex/sol fork · build 10-05 14:47 UTC",
-  "measurementProvenance": {
-    "scope": "Twenty-four route views measured for 60 frames after 30 warmup frames; four channel-related views repeated on the final production bundle. All raw reports and previous channel samples are retained.",
-    "initial": {
-      "report": "https://github.com/kiranmatthews/Prototype-Fork/blob/main/docs/performance/carlisle-coast-full-initial.json",
-      "sha256": "11ed81e3820313d2217cda4876c2d1d3384652fb73d4c26ecff2089aba38949b",
-      "started": "2026-10-05T14:28:19.194Z",
-      "finished": "2026-10-05T14:29:43.451Z",
-      "buildStamp": "Codex/sol fork · build 10-05 14:27 UTC",
-      "localCaptureReport": "/private/tmp/carlisle-fidelity-postmerge-full/report.json",
-      "repositoryPath": "docs/performance/carlisle-coast-full-initial.json"
-    },
-    "finalChannelRefresh": {
-      "report": "https://github.com/kiranmatthews/Prototype-Fork/blob/main/docs/performance/carlisle-coast-channel-full.json",
-      "sha256": "cd35a039752d2d6cc2ffb2f81b81ea901c2d6476217a639d4fb2fea825ea198f",
-      "started": "2026-10-05T14:48:23.526Z",
-      "finished": "2026-10-05T14:48:48.119Z",
-      "buildStamp": "Codex/sol fork · build 10-05 14:47 UTC",
-      "localCaptureReport": "/private/tmp/carlisle-fidelity-final-channel-full/report.json",
-      "repositoryPath": "docs/performance/carlisle-coast-channel-full.json"
-    },
-    "refreshedScenes": [
-      "02-checkpoint",
-      "03-checkpoint",
-      "04-checkpoint",
-      "15-halfpipe"
-    ],
-    "presentationChange": "Remove component-wide polygon offset from native channel 95, retain offset factor/units 1 only on its coincident flat floor, and use arc-length foundation UVs. Geometry, analytic contact and all regions outside the channel are unchanged.",
-    "previousChannelSamples": [
-      {
-        "name": "02-checkpoint",
-        "position": [
-          -1,
-          -12.599999961853028,
-          -425
-        ],
-        "grounded": true,
-        "state": "ride",
-        "deaths": 0,
-        "lives": 30,
-        "currentSpawn": [
-          0,
-          0.1,
-          0
-        ],
-        "checkpoint": false,
-        "assets": {
-          "components": 3540,
-          "placements": 3540,
-          "ready": 660,
-          "skipped": 0,
-          "draws": 276,
-          "triangles": 956084,
-          "allLodTriangles": 2742561,
-          "cells": 1329,
-          "residentCells": 276,
-          "pendingCells": 0,
-          "compressedTextures": 18,
-          "textureMiB": 31.33,
-          "errors": [],
-          "windTime": 8.566666666666672
-        },
-        "render": {
-          "frame": 4138,
-          "calls": 289,
-          "triangles": 1249209,
-          "points": 0,
-          "lines": 0
-        },
-        "memory": {
-          "geometries": 132,
-          "textures": 115,
-          "programs": 50
-        },
-        "camera": [
-          -0.9891836141644818,
-          -7.499999961853028,
-          -419.95
-        ],
-        "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
-        "warmup": {
-          "frames": 30,
-          "medianMs": 16.799999997019768,
-          "p95Ms": 17.80000001192093,
-          "calls": {
-            "min": 289,
-            "max": 289
-          },
-          "triangles": {
-            "min": 1249209,
-            "max": 1249209
-          }
-        },
-        "timing": {
-          "frames": 60,
-          "medianMs": 16.600000008940697,
-          "p95Ms": 18.200000002980232,
-          "calls": {
-            "min": 289,
-            "max": 289
-          },
-          "triangles": {
-            "min": 1249209,
-            "max": 1249209
-          }
-        }
-      },
-      {
-        "name": "03-checkpoint",
-        "position": [
-          -1,
-          -13.115000009536743,
-          -670
-        ],
-        "grounded": true,
-        "state": "ride",
-        "deaths": 0,
-        "lives": 30,
-        "currentSpawn": [
-          0,
-          0.1,
-          0
-        ],
-        "checkpoint": false,
-        "assets": {
-          "components": 3540,
-          "placements": 3540,
-          "ready": 565,
-          "skipped": 0,
-          "draws": 268,
-          "triangles": 1028315,
-          "allLodTriangles": 2838089,
-          "cells": 1329,
-          "residentCells": 268,
-          "pendingCells": 0,
-          "compressedTextures": 18,
-          "textureMiB": 31.33,
-          "errors": [],
-          "windTime": 11.416666666666814
-        },
-        "render": {
-          "frame": 5309,
-          "calls": 287,
-          "triangles": 1365045,
-          "points": 0,
-          "lines": 0
-        },
-        "memory": {
-          "geometries": 159,
-          "textures": 115,
-          "programs": 52
-        },
-        "camera": [
-          -0.9892531993274549,
-          -8.015000009536744,
-          -664.95
-        ],
-        "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
-        "warmup": {
-          "frames": 30,
-          "medianMs": 16.69999998807907,
-          "p95Ms": 18.299999997019768,
-          "calls": {
-            "min": 287,
-            "max": 287
-          },
-          "triangles": {
-            "min": 1365045,
-            "max": 1365045
-          }
-        },
-        "timing": {
-          "frames": 60,
-          "medianMs": 16.600000008940697,
-          "p95Ms": 18.099999994039536,
-          "calls": {
-            "min": 287,
-            "max": 287
-          },
-          "triangles": {
-            "min": 1365045,
-            "max": 1365045
-          }
-        }
-      },
-      {
-        "name": "04-checkpoint",
-        "position": [
-          -1,
-          -13.5,
-          -922
-        ],
-        "grounded": true,
-        "state": "ride",
-        "deaths": 0,
-        "lives": 30,
-        "currentSpawn": [
-          0,
-          0.1,
-          0
-        ],
-        "checkpoint": false,
-        "assets": {
-          "components": 3540,
-          "placements": 3540,
-          "ready": 663,
-          "skipped": 0,
-          "draws": 291,
-          "triangles": 991244,
-          "allLodTriangles": 2925696,
-          "cells": 1329,
-          "residentCells": 291,
-          "pendingCells": 0,
-          "compressedTextures": 18,
-          "textureMiB": 31.33,
-          "errors": [],
-          "windTime": 14.333333333333625
-        },
-        "render": {
-          "frame": 6506,
-          "calls": 287,
-          "triangles": 1261538,
-          "points": 0,
-          "lines": 0
-        },
-        "memory": {
-          "geometries": 179,
-          "textures": 115,
-          "programs": 52
-        },
-        "camera": [
-          -0.9882198870897823,
-          -8.4,
-          -916.95
-        ],
-        "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
-        "warmup": {
-          "frames": 30,
-          "medianMs": 16.80000001192093,
-          "p95Ms": 17.600000008940697,
-          "calls": {
-            "min": 287,
-            "max": 287
-          },
-          "triangles": {
-            "min": 1261538,
-            "max": 1261538
-          }
-        },
-        "timing": {
-          "frames": 60,
-          "medianMs": 16.700000002980232,
-          "p95Ms": 18.200000002980232,
-          "calls": {
-            "min": 287,
-            "max": 287
-          },
-          "triangles": {
-            "min": 1261538,
-            "max": 1261538
-          }
-        }
-      },
-      {
-        "name": "15-halfpipe",
-        "position": [
-          0,
-          -13.5,
-          -770
-        ],
-        "grounded": true,
-        "state": "ride",
-        "deaths": 0,
-        "lives": 30,
-        "currentSpawn": [
-          0,
-          0.1,
-          0
-        ],
-        "checkpoint": false,
-        "assets": {
-          "components": 3540,
-          "placements": 3540,
-          "ready": 488,
-          "skipped": 0,
-          "draws": 241,
-          "triangles": 1074778,
-          "allLodTriangles": 2462326,
-          "cells": 1329,
-          "residentCells": 241,
-          "pendingCells": 0,
-          "compressedTextures": 18,
-          "textureMiB": 31.33,
-          "errors": [],
-          "windTime": 44.3333333333321
-        },
-        "render": {
-          "frame": 19038,
-          "calls": 274,
-          "triangles": 1371849,
-          "points": 0,
-          "lines": 0
-        },
-        "memory": {
-          "geometries": 405,
-          "textures": 123,
-          "programs": 65
-        },
-        "camera": [
-          0,
-          -8.4,
-          -764.95
-        ],
-        "stamp": "Codex/sol fork · build 10-05 14:27 UTC",
-        "warmup": {
-          "frames": 30,
-          "medianMs": 16.700000002980232,
-          "p95Ms": 18.400000005960464,
-          "calls": {
-            "min": 274,
-            "max": 274
-          },
-          "triangles": {
-            "min": 1371849,
-            "max": 1371849
-          }
-        },
-        "timing": {
-          "frames": 60,
-          "medianMs": 16.599999994039536,
-          "p95Ms": 18.400000005960464,
-          "calls": {
-            "min": 274,
-            "max": 274
-          },
-          "triangles": {
-            "min": 1371849,
-            "max": 1371849
-          }
-        }
-      }
-    ],
-    "sceneSources": [
-      {
-        "scene": "00-spawn",
-        "stage": "initial"
-      },
-      {
-        "scene": "01-checkpoint",
-        "stage": "initial"
-      },
-      {
-        "scene": "02-checkpoint",
-        "stage": "finalChannelRefresh"
-      },
-      {
-        "scene": "03-checkpoint",
-        "stage": "finalChannelRefresh"
-      },
-      {
-        "scene": "04-checkpoint",
-        "stage": "finalChannelRefresh"
-      },
-      {
-        "scene": "05-checkpoint",
-        "stage": "initial"
-      },
-      {
-        "scene": "06-checkpoint",
-        "stage": "initial"
-      },
-      {
-        "scene": "07-checkpoint",
-        "stage": "initial"
-      },
-      {
-        "scene": "08-checkpoint",
-        "stage": "initial"
-      },
-      {
-        "scene": "09-checkpoint",
-        "stage": "initial"
-      },
-      {
-        "scene": "10-checkpoint",
-        "stage": "initial"
-      },
-      {
-        "scene": "11-checkpoint",
-        "stage": "initial"
-      },
-      {
-        "scene": "12-checkpoint",
-        "stage": "initial"
-      },
-      {
-        "scene": "13-checkpoint",
-        "stage": "initial"
-      },
-      {
-        "scene": "14-checkpoint",
-        "stage": "initial"
-      },
-      {
-        "scene": "15-halfpipe",
-        "stage": "finalChannelRefresh"
-      },
-      {
-        "scene": "16-market",
-        "stage": "initial"
-      },
-      {
-        "scene": "17-split-dock",
-        "stage": "initial"
-      },
-      {
-        "scene": "18-finish-approach",
-        "stage": "initial"
-      },
-      {
-        "scene": "20-first-pit-face",
-        "stage": "initial"
-      },
-      {
-        "scene": "21-ramp",
-        "stage": "initial"
-      },
-      {
-        "scene": "22-side-crossing",
-        "stage": "initial"
-      },
-      {
-        "scene": "23-last-E-landing",
-        "stage": "initial"
-      },
-      {
-        "scene": "24-first-pit-landing",
-        "stage": "initial"
-      }
-    ],
-    "finalRefreshIdle": {
-      "returned": {
-        "position": [
-          0,
-          0,
-          0
-        ],
-        "grounded": true,
-        "state": "ride",
-        "deaths": 0,
-        "lives": 30,
-        "currentSpawn": [
-          0,
-          0.1,
-          0
-        ],
-        "checkpoint": false,
-        "assets": {
-          "components": 3540,
-          "placements": 3540,
-          "ready": 454,
-          "skipped": 0,
-          "draws": 141,
-          "triangles": 636952,
-          "allLodTriangles": 1496431,
-          "cells": 1329,
-          "residentCells": 141,
-          "pendingCells": 0,
-          "compressedTextures": 18,
-          "textureMiB": 31.33,
-          "errors": [],
-          "windTime": 13.850000000000268
-        },
-        "render": {
-          "frame": 6358,
-          "calls": 284,
-          "triangles": 1212970,
-          "points": 0,
-          "lines": 0
-        },
-        "memory": {
-          "geometries": 152,
-          "textures": 114,
-          "programs": 49
-        },
-        "camera": [
-          0,
-          5.1,
-          5.05
-        ],
-        "stamp": "Codex/sol fork · build 10-05 14:47 UTC"
-      },
-      "idle": {
-        "position": [
-          0,
-          0,
-          0
-        ],
-        "grounded": true,
-        "state": "ride",
-        "deaths": 0,
-        "lives": 30,
-        "currentSpawn": [
-          0,
-          0.1,
-          0
-        ],
-        "checkpoint": false,
-        "assets": {
-          "components": 3540,
-          "placements": 3540,
-          "ready": 454,
-          "skipped": 0,
-          "draws": 141,
-          "triangles": 636952,
-          "allLodTriangles": 1496431,
-          "cells": 1329,
-          "residentCells": 141,
-          "pendingCells": 0,
-          "compressedTextures": 18,
-          "textureMiB": 31.33,
-          "errors": [],
-          "windTime": 15.350000000000342
-        },
-        "render": {
-          "frame": 6988,
-          "calls": 284,
-          "triangles": 1212970,
-          "points": 0,
-          "lines": 0
-        },
-        "memory": {
-          "geometries": 152,
-          "textures": 114,
-          "programs": 49
-        },
-        "camera": [
-          0,
-          5.1,
-          5.05
-        ],
-        "stamp": "Codex/sol fork · build 10-05 14:47 UTC"
-      }
-    }
-  }
+  "finished": "2026-10-05T14:31:18.150Z"
 }

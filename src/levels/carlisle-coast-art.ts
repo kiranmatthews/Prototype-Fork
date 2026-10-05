@@ -1,140 +1,155 @@
-import type { CustomComponent, CustomGroup } from '../level';
-import { CARLISLE_ASSETS } from '../carlisleAssets';
+import * as THREE from 'three';
+import type {CustomComponent,CustomGroup} from '../level';
+import {CARLISLE_ASSETS} from '../carlisleAssets';
 
 type P=[number,number,number];
 type Kind=keyof typeof CARLISLE_ASSETS;
 const G={stone:90,garden:91,ruins:92,surface:93};
-const round=(v:number)=>Math.round(v*10000)/10000;
-const wave=(v:number)=>Math.sin(v*1.731)*.5+Math.sin(v*.613+2.1)*.5;
+const r=(v:number)=>Math.round(v*10000)/10000;
+const rnd=(n:number)=>{const a=Math.sin(n*127.13+7.1)*43758.5453;return a-Math.floor(a);};
+const wave=(n:number)=>Math.sin(n*.17)*.63+Math.sin(n*.057+1.9)*.37;
 export const CARLISLE_ART_GROUPS:CustomGroup[]=[
- {id:G.stone,nm:'Ravine · sandstone and coastal rock'},
- {id:G.garden,nm:'Gardens · moss ferns and canopy'},
- {id:G.ruins,nm:'Temple · carved thresholds'},
- {id:G.surface,nm:'Surfaces · exact supported moss'},
+ {id:90,nm:'Geology · massive eroded canyon'},
+ {id:91,nm:'Ecology · fine turf and rooted plants'},
+ {id:92,nm:'Ruins · weathered carved remnants'},
+ {id:93,nm:'Terrain · carved stone and living caps'},
 ];
 
-/** Visuals follow the existing platforms, never infer or create support.
- * Every gap retains its complete footprint. All dressing is non-solid. */
-export function buildCarlisleArt(course:readonly CustomComponent[]):CustomComponent[]{
+/** Compose actual rock mass around the carved supports. The scene deliberately
+ * has no flat rectangular top overlays or planar hanging side panels. */
+export function buildCarlisleArt(native:readonly CustomComponent[],
+ _supports:readonly CustomComponent[],caps:readonly CustomComponent[]):CustomComponent[]{
  const out:CustomComponent[]=[];
- function prop(kind:Kind,p:P,width:number,name:string,yaw=0,group=G.stone,cutaway=false,tint='#ffffff'){
+ function prop(kind:Kind,p:P,width:number,name:string,yaw=0,group=G.stone,cutaway=false,color='#ffffff',castShadow?:boolean){
   const size=CARLISLE_ASSETS[kind].size,k=width/size[0];
-  out.push({t:'decor',dkind:kind,p:p.map(round) as P,s:size.map(v=>round(v*k)) as P,
-   yaw:round(yaw),color:tint,solid:false,cameraCutaway:cutaway||undefined,nm:name,grp:group});
+  out.push({t:'decor',dkind:kind,p:p.map(r) as P,s:size.map(v=>r(v*k)) as P,yaw:r(yaw),
+   color,solid:false,cameraCutaway:cutaway||undefined,castShadow,nm:name,grp:group});
  }
- function mesh(p:P,v:number[],ix:number[],uv:number[],name:string,tex:string,color:string,cutaway=false,group=G.surface){
-  out.push({t:'mesh',p,vertices:v.map(round),indices:ix,uvs:uv.map(round),solid:false,
-   edgeGrinding:false,castShadow:false,tex,color,nm:name,grp:group,cameraCutaway:cutaway||undefined,
-   depthBias:tex==='coast-moss'?-1:undefined});
- }
- // Top overlays sit 3mm above actual support, wholly inside its footprint.
- // Long sides become broken deep stone pedestals rather than thin floating boxes.
- for(const c of course){
-  if(c.t!=='platform'||!c.s||c.invisible)continue;
-  const [width,height,length]=c.s,[x,y,z]=c.p,top=y+height/2;
-  if(width<5||length<8||c.tex==='wood')continue;
-  const rows=Math.max(2,Math.ceil(length/5)),v:number[]=[],uv:number[]=[],ix:number[]=[];
-  for(let row=0;row<=rows;row++){
-   const t=row/rows,dz=(t-.5)*length;
-   const fringe=.05+.11*(.5+.5*wave(z+row));
-   for(const side of [-1,1]){v.push(side*(width/2-fringe),0,dz);uv.push((x+side*width/2)/7,(z+dz)/7);}
+ // Rooted fine grass uses area-weighted sampling, rather than multiplying
+ // tufts when support tessellation is refined. The eroded verge gets most of
+ // the clumps; the walking line stays quiet and the source budget stays fixed.
+ for(const cap of caps){
+  if(!cap.nm?.startsWith('Carlisle moss cap')||!cap.vertices||!cap.indices)continue;
+  const v=cap.vertices,seed=Number(cap.nm.match(/\d+$/)?.[0])||0;
+  const yaw=THREE.MathUtils.degToRad(cap.yaw??0),cos=Math.cos(yaw),sin=Math.sin(yaw),cross=seed>=49&&seed<=56;
+  const bands=new Map<number,number>();
+  for(let i=0;i<v.length;i+=3){const along=cross?v[i]:v[i+2],across=Math.abs(cross?v[i+2]:v[i]);const k=Math.round(along*10);bands.set(k,Math.max(bands.get(k)??0,across));}
+  const rows=[...bands].map(([k,half])=>({along:k/10,half}));
+  const candidates:{point:P;rank:number;i:number;edge:boolean}[]=[];let areaSum=0;
+  for(let i=0;i<cap.indices.length;i+=3){
+   const a=cap.indices[i]*3,b=cap.indices[i+1]*3,c=cap.indices[i+2]*3;
+   const ax=v[b]-v[a],ay=v[b+1]-v[a+1],az=v[b+2]-v[a+2],bx=v[c]-v[a],by=v[c+1]-v[a+1],bz=v[c+2]-v[a+2];
+   const ny=az*bx-ax*bz,area=Math.hypot(ay*bz-az*by,ny,ax*by-ay*bx)/2;if(ny<=0||area<.1)continue;areaSum+=area;
+   let u=.18+rnd(i+seed)*.5,w=.15+rnd(i*2+seed)*.5;if(u+w>.88)w=.88-u;
+   const x=v[a]+ax*u+bx*w,z=v[a+2]+az*u+bz*w,y=v[a+1]+ay*u+by*w;
+   const along=cross?x:z,across=Math.abs(cross?z:x);let nearest=rows[0],distance=Infinity;
+   for(const row of rows){const d=Math.abs(row.along-along);if(d<distance){nearest=row;distance=d;}}
+   const edge=across>nearest.half*.72;
+   const rank=-Math.log(Math.max(.0001,rnd(i+seed*21)))/(area*(edge?5.0:1));
+   candidates.push({point:[cap.p[0]+x*cos+z*sin,cap.p[1]+y-.006,cap.p[2]-x*sin+z*cos],rank,i,edge});
   }
-  for(let row=0;row<rows;row++){const a=row*2;ix.push(a,a+2,a+1,a+1,a+2,a+3);}
-  mesh([x,round(top+.003),z],v,ix,uv,`Carlisle supported moss · ${c.nm}`,'coast-moss','#c0c7a0');
-  for(const side of [-1,1]){
-   const sv:number[]=[],su:number[]=[],si:number[]=[];
-   for(let row=0;row<=rows;row++){
-    const dz=(row/rows-.5)*length,notch=.14+.2*(.5+.5*wave(z+row*2));
-    for(const band of [0,1,2]){
-     const yy=band===0?top-.07:band===1?top-2.5:Math.max(-44,top-8-wave(z+row)*1.7);
-     const xx=side*(width/2+(band===0?.018:band===1?notch:.4+notch));
-     sv.push(xx,yy-top,dz);su.push((z+dz)/6,yy/6);
-    }
+  candidates.sort((a,b)=>a.rank-b.rank);
+  for(const c of candidates.slice(0,Math.min(100,Math.ceil(areaSum*.16)))){
+   prop(rnd(c.i+seed*3)>.35?'coastv2grass':'coastv2grassb',c.point,
+    (c.edge?.94:.72)+rnd(c.i+37)*.28,`Carlisle rooted turf ${seed} ${c.i}`,rnd(c.i+seed*41)*360,G.garden,false,'#dde0bb');
+  }
+ }
+ // Deep landing fingers mask no collision. Their cap is buried below the
+ // sculpted support; their full 3D tapered roots interrupt procedural courses.
+ for(const c of native){
+  if(c.t!=='platform'||!c.s||c.tex==='wood')continue;
+  const index=Number(c.nm?.match(/\d+$/)?.[0]),[w,h,d]=c.s,[x,y,z]=c.p;
+  const width=Math.min(8,Math.min(w,d)*.55),height=CARLISLE_ASSETS.coastv2ledge.size[1]*width/10;
+  const depth=CARLISLE_ASSETS.coastv2ledge.size[2]*width/10;
+  const top=y+h/2,across=index>=49&&index<=56;
+  const ends=d>18||across?[-1,1]:[0];
+  for(const side of ends){
+   const p:P=across?[x+side*(w/2-depth/2-.13),top-.98905*height-.2,z]
+    :[x+wave(index)*.27,top-.98905*height-.2,z+side*(d/2-depth/2-.13)];
+   prop('coastv2ledge',p,width,`Carlisle cliff finger ${index} ${side}`,across?side*90:side>0?0:180,G.stone,false,'#e0d4bc');
+  }
+ }
+ const nativeFloor=(x:number,z:number)=>{
+  for(const c of native){
+   if(c.t==='platform'&&c.s&&Math.abs(c.p[0]-x)<c.s[0]/2&&Math.abs(c.p[2]-z)<c.s[2]/2)return c.p[1]+c.s[1]/2;
+   if(c.t==='ramp'&&Math.abs(c.p[0]-x)<(c.w??12)/2&&Math.abs(c.p[2]-z)<(c.len??12)/2)
+    return c.p[1]+(c.rise??0)*((c.p[2]+(c.len??12)/2-z)/(c.len??12));
+  }
+  const points= native.filter(c=>c.t==='checkpoint');let best=points[0],dist=Infinity;
+  for(const p of points){const dd=Math.abs(p.p[2]-z);if(dd<dist){best=p;dist=dd;}}
+  return best?.p[1]??0;
+ };
+ function breathingRoom(x:number,z:number){
+  let width=5.0+wave(z+11)*.65;
+  if(z>-44)width=9.4+wave(z)*.65;
+  if(z<-180&&z>-220)width=7.0;
+  if(z<-1078&&z>-1130)width=8.2;
+  if(z<-1633&&z>-1700)width=8.8;
+  if(z<-1980&&z>-2055)width=8.1;
+  if(z<-710&&z>-830)width=11.0;
+  for(const c of native)if(c.t==='platform'&&c.s&&Math.abs(c.p[0]-x)<.1&&Math.abs(c.p[2]-z)<c.s[2]/2)
+   width=Math.max(width,c.s[0]*.38+1.2);
+  return width;
+ }
+ // Broad asymmetric masses overlap in depth and height. Stations are not a
+ // uniform two-tier wall; larger corners occlude the far runway and reveal the
+ // next few carved ledges against the mist.
+ function canyon(x:number,near:number,far:number){
+  for(let z=near,i=0;z>far;z-=17.5+rnd(i+9)*5.8,i++)for(const side of [-1,1]){
+   const f=nativeFloor(x,z),width=20+rnd(i+side*37)*5.5;
+   const kind:Kind=i%5===3?'coastv2cavewall':'coastv2buttress';
+   const spec=CARLISLE_ASSETS[kind].size,depth=spec[2]*width/spec[0];
+   const inner=breathingRoom(x,z)+(side<0?.2:1.05)+wave(z+side*30)*.4;
+   prop(kind,[x+side*(inner+depth/2-.7),f-4.5-rnd(i+side)*2.5,z+side*2.4],width,
+    `Carlisle canyon mass ${x} ${i} ${side}`,side<0?88+wave(z)*5:-88+wave(z+8)*5,G.stone,false,'#dbd0b8');
+   // Deep backing connects the cliff to the mist-filled chasm. Offset layers
+   // seal the source models' tapered corners without repeating a flat wall.
+   const backWidth=27+rnd(i+side*21)*3.5;
+   for(const [level,base] of [[0,-28],[1,-51]] as const)
+    prop('coastv2buttress',[x+side*(inner+backWidth/2+1.8),f+base,z+3+level*2.4],backWidth,
+     `Carlisle deep bedrock ${x} ${i} ${side} ${level}`,side<0?91:-91,G.stone,false,level?'#a29c89':'#bbb09c',false);
+   if(i%3===0)prop('coastbeachrock' ,[x+side*(inner+2.3),f-5,z+5],8.6+rnd(i)*2,
+    `Carlisle fractured toe ${x} ${i} ${side}`,side*73,G.stone,false,'#c3b89f');
+   if(i%2===0)prop('coastv2earthbank',[x+side*(inner+1.6),f-.7,z-3],6.2,
+    `Carlisle earthy fissure ${x} ${i} ${side}`,side<0?90:-90,G.stone,false,'#c2b99a');
+   if(i%4===1){
+    prop('coastfern',[x+side*(inner+.6),f+.1,z+5],1.7,
+     `Carlisle crevice fern ${x} ${i} ${side}`,side*70,G.garden,false,'#c9c7a2');
+    prop('coastfoliage',[x+side*(inner+1.7),f+.8,z+1],1.9,
+     `Carlisle red leaf fissure ${x} ${i} ${side}`,side*90,G.garden,false,'#b4b7a0');
    }
-   for(let row=0;row<rows;row++)for(let band=0;band<2;band++){
-    const a=row*3+band,b=a+1,d=a+3,e=d+1;
-    if(side>0)si.push(a,d,b,b,d,e);else si.push(a,b,d,b,e,d);
+   if(i%6===2)prop('coastpillar',[x+side*(inner+1.4),f-1.1,z-3],2.6,
+    `Carlisle worn cliff relief ${x} ${i} ${side}`,side<0?76:-76,G.ruins,false,'#d2cbb8');
+   if(i%8===5){
+    prop('coasttree',[x+side*(inner+12),f+10,z-4],24,`Carlisle distant canopy ${x} ${i} ${side}`,i*37,G.garden,false,'#b8b89b');
+    prop('coastcrown',[x+side*(inner+4),f+13,z+2],15,`Carlisle loose hanging leaves ${x} ${i} ${side}`,i*29,G.garden,false,'#b6b69b');
    }
-   mesh([x,round(top),z],sv,si,su,`Carlisle fractured shelf side · ${c.nm} · ${side}`,'coast-stone','#b6b19a');
-  }
-  // One fern rhythm per ledge; all roots remain outside the support rectangle.
-  const crossLane=z<-1700&&z>-1740;
-  for(let j=0;!crossLane&&j<Math.ceil(length/11);j++)for(const side of [-1,1]){
-   const dz=-length/2+3+j*11;if(dz>length/2-2)continue;
-   const at=z+dz,scale=2.4+.55*wave(at*2+side);
-   prop(j%3===0?'coastfoliage':'coastcarpet',[x+side*(width/2+.5),top-.05,at],scale,
-    `Carlisle ledge garden · ${c.nm} · ${j} · ${side}`,wave(at)*35,G.garden,false,side<0?'#b9d0aa':'#ced4ae');
   }
  }
- const profile:P[]=[[0,0,15],[0,0,-40],[0,-5,-80],[0,-5.5,-235],[0,-13,-275],
-  [0,-13,-655],[0,-13.5,-945],[0,-22,-1013],[0,-22,-1245],
-  [0,-13,-1395],[0,-13,-1555],[0,-19,-1565],[0,-19,-1690],
-  [152,-16,-1730],[152,-26,-1800],[152,-26,-2320]];
- function floor(z:number){
-  // The E crossing is dressed separately; the adjoining N legs keep their heights.
-  for(let i=1;i<profile.length;i++)if(z<=profile[i-1][2]&&z>=profile[i][2]){
-   const a=profile[i-1],b=profile[i],t=(z-a[2])/(b[2]-a[2]);return a[1]+(b[1]-a[1])*t;
-  }return z>15?0:-26;
+ canyon(0,18,-1695);canyon(152,-1741,-2330);
+ // Deliberate carved remnants, not a giant identical arch at every checkpoint.
+ for(const [x,y,z] of [[0,0,-28],[0,-13.5,-928],[0,-22,-1110],[0,-19,-1655],[152,-26,-2024],[152,-26,-2308]] as P[]){
+  const room=breathingRoom(x,z);
+  for(const side of [-1,1])prop('coastpillar',[x+side*(room+.8),y-1,z],3.1,
+   `Carlisle temple remnant ${z} ${side}`,side*8,G.ruins,false,'#d7cbb2');
  }
- // Canyon bays alternate broad walls, natural Beachside formations and spires.
- // The entire row sits outside the widest 22m playable landings.
- function corridor(x:number,near:number,far:number){
-  for(let z=near,i=0;z>=far;z-=13.2,i++)for(const side of [-1,1]){
-   const f=floor(z),wide=z>-45||z<-1635&&z>-1700?18:13.5;
-   const inset=wide+2.3*wave(z*.4+side),width=13.8+1.8*wave(z+side),height=23+3*wave(z*.5);
-   const kind:Kind=i%7===4?'coastspire':'coastcliff';
-   const spec=CARLISLE_ASSETS[kind].size;
-   out.push({t:'decor',dkind:kind,p:[round(x+side*inset),round(f-6),round(z)],
-    s:[round(width),round(kind==='coastcliff'?spec[1]*width/spec[0]:height),round(spec[2]*width/spec[0])],yaw:side<0?90:-90,
-    color:i%3===0?'#d0c9b2':'#e5d8bc',solid:false,nm:`Carlisle canyon bay ${x} ${i} ${side}`,grp:G.stone});
-   if(kind==='coastcliff')prop('coastcliff',[x+side*(inset+1.8),f+3.2,z+.8],width*1.12,
-    `Carlisle upper canyon crown ${x} ${i} ${side}`,side<0?94:-86,G.stone,false,'#d8d1b7');
-   if(i%3===0)prop('coastbeachrock',[x+side*(wide+.2),f-4.7,z+2],10+2*wave(z),
-    `Carlisle Beachside rock ${x} ${i} ${side}`,side<0?84:-83,G.stone,false,'#bdbd9b');
-   if(i%2===0){
-    prop('coastfern',[x+side*(wide-3),f-.65,z+3],3.6+.6*wave(z),`Carlisle fern bank ${x} ${i} ${side}`,side*40,G.garden,false,'#a8c19a');
-    prop('coastfoliage',[x+side*(wide-1),f+1,z-3],3.3,`Carlisle coral accent ${x} ${i} ${side}`,side*80,G.garden);
-   }
-   if(i%7===0){
-    prop('coasttree',[x+side*(wide+12),f+8,z-4],25,`Carlisle outer canopy tree ${x} ${i} ${side}`,i*23,G.garden,false,'#b3c4a2');
-    prop('coastcrown',[x+side*(wide+2),f+15,z+3],18,`Carlisle hanging crown ${x} ${i} ${side}`,i*31,G.garden,false,'#c2c8a2');
-   }
-   if(i%6===2)prop('coastpillar',[x+side*(wide-2.5),f-.8,z],3.6,
-    `Carlisle eroded shrine ${x} ${i} ${side}`,side<0?70:-70,G.ruins);
-  }
+ // Side-view canyon has real deep-rooted ledges and permanent rear mass.
+ // The near bank and foreground planting cut away without changing support.
+ for(let x=6,i=0;x<164;x+=19+rnd(i+51)*3,i++)for(const side of [-1,1]){
+  const y=x<40?-19:-16,cutaway=side>0,width=21+rnd(i)*4;
+  prop('coastv2buttress',[x,y-6,-1720+side*(8.5+width/2)],width,
+   `Carlisle E canyon mass ${i} ${side}`,side>0?179:2,G.stone,cutaway,'#d7ceb8');
+  for(const [level,base] of [[0,-30],[1,-53]] as const)prop('coastv2buttress',[x+3,y+base,-1720+side*24],29,
+   `Carlisle E deep foundation ${i} ${side} ${level}`,side>0?178:-2,G.stone,cutaway,level?'#a49f8d':'#bbb29f',false);
+  if(i%3===0)prop('coastv2cavewall',[x+8,y-8,-1720+side*19],18,
+   `Carlisle E fractured corner ${i} ${side}`,side>0?181:-3,G.stone,cutaway,'#cfc7b3');
+  if(i%2===0)prop('coastfern',[x+1,y+.3,-1720+side*6.6],1.9,
+   `Carlisle E crevice plant ${i} ${side}`,i*29,G.garden,cutaway,'#c4c4a7');
  }
- corridor(0,22,-1680);corridor(152,-1748,-2330);
- // Composed thresholds mark the authored changes in rhythm, without adding
- // travel zones or blocking the camera's line through the gateway.
- for(const [x,z,y] of [[0,-24,0],[0,-178,-5.5],[0,-410,-13],[0,-690,-13.5],
-  [0,-924,-13.5],[0,-1132,-22],[0,-1398,-13],[0,-1648,-19],
-  [152,-1847,-26],[152,-1990,-26],[152,-2188,-26],[152,-2308,-26]] as P[]){
-  const supportWidth=Math.max(12,...course.filter(c=>c.t==='platform'&&c.s&&c.p[0]===x&&Math.abs(c.p[2]-z)<=c.s[2]/2).map(c=>c.s![0]));
-  // The measured aperture is 11.588m at18m mesh width. Columns must
-  // stay beyond the complete playable pad, including its outer skating line.
-  const archWidth=Math.max(22,(supportWidth+1)*18/11.588);
-  prop('coastarch',[x,y-1,z],archWidth,`Carlisle temple threshold ${z}`,0,G.ruins);
-  for(const side of [-1,1]){
-   prop('coastpillar',[x+side*(supportWidth/2+2.5),y-.8,z+6],3,`Carlisle threshold guardian ${z} ${side}`,side*9,G.ruins);
-   prop('coastshelf',[x+side*(supportWidth/2+4),y-4,z+2],7,`Carlisle moss ruin base ${z} ${side}`,side*30,G.stone);
-  }
+ for(const z of [-707,-743,-782,-817])for(const side of [-1,1]){
+  prop('coastv2buttress',[side*20.6,-23,z],25,`Carlisle halfpipe outer geology ${z} ${side}`,side<0?87:-87,G.stone,false,'#d2c5af');
+  prop('coastv2buttress',[side*23.5,-46,z+4],29,`Carlisle halfpipe deep buttress ${z} ${side}`,side<0?93:-93,G.stone,false,'#aca58f',false);
  }
- // E/W camera: rear wall is permanent, nearest row cuts away per batch.
- // Pillars deliberately leave the original lift and moving crossing clear.
- for(let x=7,i=0;x<157;x+=13.2,i++)for(const side of [-1,1]){
-  const y=x<40?-19:x<120?-16:-16;
-  const cutaway=side>0;
-  prop('coastcliff',[x,y-7,-1720+side*17],14.8,`Carlisle E ravine bay ${i} ${side}`,side>0?180:0,G.stone,cutaway,'#d8d0b3');
-  prop('coastcliff',[x,y+3,-1720+side*18],16.2,`Carlisle E upper canyon ${i} ${side}`,side>0?180:0,G.stone,cutaway,'#dad3b8');
-  prop('coastbeachrock',[x+2,y-6,-1720+side*11],8.2,`Carlisle E coastal buttress ${i} ${side}`,i*13,G.stone,cutaway,'#c2c1a3');
-  prop('coastfoliage',[x,y-.5,-1720+side*7.5],3.4,`Carlisle E lip garden ${i} ${side}`,i*23,G.garden,cutaway);
-  if(i%3===0)prop('coastpillar',[x,y-1,-1732],3.5,`Carlisle E shrine relief ${i}`,0,G.ruins);
- }
- // Finish sanctuary has a readable framed gate and a closed scenic horizon.
- for(const side of [-1,1]){
-  prop('coastspire',[152+side*22,-33,-2314],10,`Carlisle sanctuary pinnacle ${side}`,side*17,G.ruins);
-  prop('coasttree',[152+side*30,-21,-2290],32,`Carlisle sanctuary canopy ${side}`,side*35,G.garden);
- }
- prop('coastcliff',[152,-32,-2343],28,'Carlisle sanctuary rear canyon',0,G.stone);
+ prop('coastv2buttress',[152,-34,-2340],35,'Carlisle sanctuary closed bedrock',0,G.stone,false,'#cec7b5');
  return out;
 }

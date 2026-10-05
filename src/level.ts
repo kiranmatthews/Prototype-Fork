@@ -57,6 +57,8 @@ import { CoastWater, type ShoreSample } from "./water";
 import { createStandingWaterMaterial, isStandingWater, refineStandingWater } from './standingWater';
 import { createJungleStreamMaterial, JungleStreamReflectionOwner } from './jungleStream';
 import { addTreehouseTrialsMaterialLook } from './treehouseTrialsPresentation';
+import {addCarlisleTerrainLook,applyCarlisleChannelUV} from './carlislePresentation';
+import {dressCarlisleTimberDeck,dressCarlisleTimberBeam,disposeCarlisleTimberDeck,estimateCarlisleTimberWork} from './carlisleTimber';
 import { createUnityBeachfrontReference } from "./beachfront";
 import {
   BEACHFRONT_COURSE_LENGTH,
@@ -913,6 +915,10 @@ export const TEX_KINDS = [
   "sunsoil",
   "stone",
   "wood",
+  "coast-terrain",
+  "coast-turf",
+  "coast-bedrock",
+  "coast-timber",
   "coast-moss",
   "coast-stone",
   "treehouse-timber",
@@ -2466,7 +2472,7 @@ const finiteTuple = (
   value.every((number) => typeof number === "number" && Number.isFinite(number));
 
 /** Public interchange limits apply before parsing, migration or geometry work. */
-export const MAX_LEVEL_FILE_BYTES = 5 * 1024 * 1024;
+export const MAX_LEVEL_FILE_BYTES = 8 * 1024 * 1024;
 export const MAX_LEVEL_PACK_BYTES = 16 * 1024 * 1024;
 export const MAX_USER_LEVELS = 128;
 const MAX_LEVEL_LABEL_LENGTH = 120;
@@ -2545,10 +2551,14 @@ function simpleLevelPolygon(points: readonly (readonly number[])[]): boolean {
  */
 function cloneBoundedLevelJson(value: unknown): unknown {
   const active = new WeakSet<object>();
+  // The existing 100k vertices / 100k triangles workload can legitimately
+  // carry 1.4m numeric entries (position, normal, colour, UV and index). Bound
+  // interchange to that workload plus component metadata, without dropping
+  // sculpted geometry; file, depth, key, array and generated-work caps remain.
   let nodes = 0;
   let bytes = 0;
   const copy = (input: unknown, depth: number): unknown => {
-    if (++nodes > 400_000 || depth > 12) throw new Error("Level JSON is too complex");
+    if (++nodes > 1_800_000 || depth > 12) throw new Error("Level JSON is too complex");
     if (input === null || typeof input === "boolean") return input;
     if (typeof input === "number") {
       if (!Number.isFinite(input)) throw new Error("Non-finite level number");
@@ -2583,7 +2593,7 @@ function cloneBoundedLevelJson(value: unknown): unknown {
         throw new Error("Expected JSON data property");
       if (property.value === undefined && !array) continue;
       bytes += key.length * 3 + 4;
-      if (bytes > MAX_LEVEL_PACK_BYTES) throw new Error("Level JSON is too large");
+      if (bytes > 64 * 1024 * 1024) throw new Error("Level JSON allocation is too large");
       (out as Record<string, unknown>)[key] = copy(property.value, depth + 1);
       arrayItems++;
     }
@@ -2605,6 +2615,8 @@ export function levelJsonTextWithinLimits(
 ): boolean {
   if (typeof text !== "string" || text.length > maxBytes ||
       new TextEncoder().encode(text).byteLength > maxBytes) return false;
+  // Packs hold several independently bounded levels inside the retained 16 MiB cap.
+  const maxSeparators=maxBytes>MAX_LEVEL_FILE_BYTES?3_000_000:1_500_000;
   let depth = 0, containers = 0, separators = 0, stringLength = 0;
   let quoted = false, escaped = false;
   for (let i = 0; i < text.length; i++) {
@@ -2621,7 +2633,7 @@ export function levelJsonTextWithinLimits(
       if (++depth > maxDepth || ++containers > 100_000) return false;
     } else if (char === "}" || char === "]") {
       if (--depth < 0) return false;
-    } else if ((char === "," || char === ":") && ++separators > 800_000) return false;
+    } else if ((char === "," || char === ":") && ++separators > maxSeparators) return false;
   }
   return !quoted && depth === 0;
 }
@@ -2921,7 +2933,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     if (
       (component.tex !== undefined &&
         (typeof component.tex !== "string" || !textureKinds.has(component.tex))) ||
-      (component.t !== "mesh" && (component.opacity !== undefined || component.fog !== undefined || component.materialStyle !== undefined || component.castShadow !== undefined)) ||
+      (component.t !== "mesh" && (component.opacity !== undefined || component.fog !== undefined || component.materialStyle !== undefined || (component.castShadow !== undefined && component.t!=="decor"))) ||
       (component.materialStyle !== undefined && !(
         (component.materialStyle === "unity-sand" && (component.tex === undefined || component.tex === "sand")) ||
         ((component.materialStyle === "water" || component.materialStyle === "jungle-stream") && component.solid === false && (component.tex === undefined || component.tex === "solid")))) ||
@@ -3108,6 +3120,11 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       supportOverlapTriangles += component.t === "mesh" ? terrainSupportMeshOverlap(component) : triangles;
       if (supportProbeCount * supportOverlapTriangles > MAX_TERRAIN_SUPPORT_TRIANGLE_TESTS ||
           supportProbeCount * supportGroundTriangles > MAX_TERRAIN_SUPPORT_RAW_TRIANGLES) return null;
+    }
+    if(component.tex==='coast-timber'&&['platform','crumble','mover'].includes(component.t)&&!component.pts){
+      const depth=component.s?.[2]??(component.t==='platform'?8:component.t==='mover'?6:3);
+      if(depth>MAX_PATH_LENGTH)return null;
+      aggregateSamples+=estimateCarlisleTimberWork(depth,component.t!=='platform');
     }
     if (aggregateSamples > MAX_GENERATED_SAMPLES) return null;
     // Polygon walls and spun slabs use the complete scanline collider below.
@@ -4171,6 +4188,13 @@ export class Level {
     if (kind === "checker") return this.checkerTexture();
     const cached = this.surfTexCache.get(kind);
     if (cached) return cached;
+    if(kind==='coast-timber')return this.surfaceTexture('wood');
+    if(kind==='coast-terrain')return this.surfaceTexture('coast-bedrock');
+    if(kind==='coast-turf'||kind==='coast-bedrock'){
+      const file=kind==='coast-turf'?'turf':'sandstone';
+      const texture=Level.finishTex(new THREE.TextureLoader().load(import.meta.env.BASE_URL+`carlisle-coast-fidelity/${file}-albedo.webp`));
+      this.surfTexCache.set(kind,texture);return texture;
+    }
     if(kind==='coast-moss'||kind==='coast-stone'){
       const file=kind==='coast-moss'?'moss':'stone';
       const texture=Level.finishTex(new THREE.TextureLoader().load(import.meta.env.BASE_URL+`carlisle-coast/${file}-albedo.webp`));
@@ -4562,6 +4586,9 @@ export class Level {
     checker: { spec: 0x34383e, shine: 26 },
     plank: { spec: 0x22201c, shine: 12 },
     wood: { spec: 0x1e1c18, shine: 10 },
+    "coast-terrain": { spec: 0x24251d, shine: 7 },
+    "coast-turf": { spec: 0x101a10, shine: 3 },
+    "coast-bedrock": { spec: 0x24251d, shine: 7 },
     "coast-moss": { spec: 0x101a10, shine: 3 },
     "coast-stone": { spec: 0x24251d, shine: 7 },
     "treehouse-timber": { spec: 0x1e1c18, shine: 10 },
@@ -4712,12 +4739,15 @@ export class Level {
       color: 0x3c424e,
       emissive: 0x11141a,
     });
+    let rockCopingMat:THREE.MeshStandardMaterial|undefined;
     for (const rail of this.rails) {
       if (rail.object.userData.nightworksRock || rail.object.userData.cityRail) continue;
       rail.object.traverse((o) => {
         const m = o as THREE.Mesh;
         if (!m.isMesh) return;
-        m.material = m.geometry.type === "CylinderGeometry" ? railMat : postMat;
+        m.material = rail.object.userData.carlisleRockCoping
+          ? (rockCopingMat??=new THREE.MeshStandardMaterial({color:0x968c72,roughness:.94,metalness:0}))
+          : m.geometry.type === "CylinderGeometry" ? railMat : postMat;
       });
       if(!EDITOR_BUILD)batchRailVisuals(rail.object);
     }
@@ -5549,6 +5579,7 @@ export class Level {
       material.userData.junglePainterly=true;material.userData.jungleDapple=true;
       addJungleDapple(material,this.jungleTime);
     }
+    if(c.tex==='coast-terrain')addCarlisleTerrainLook(material,this.surfaceTexture('coast-turf'));
     // These remain separate authoring components. Runtime-only visual pieces
     // can share one draw per material/cell instead of one draw per rope/post.
     if(!EDITOR_BUILD&&this.batchDecor&&c.solid===false&&!c.invisible&&!c.materialStyle&&!standingWater&&
@@ -6774,6 +6805,7 @@ export class Level {
             mesh.name = c.slip ? "slippy plank" : "platform";
             if (c.slip) mesh.userData.slippy = true; // friction cut: can't stop short
             if (c.iceGrip !== undefined) mesh.userData.iceGrip = c.iceGrip;
+            if(c.tex==='coast-timber')dressCarlisleTimberDeck(mesh,c,false);
             this.root.add(mesh);
             this.groundMeshes.push(mesh);
             // SIDE COLLISION: without it you clip into a thick platform's
@@ -7262,6 +7294,7 @@ export class Level {
               c.emissive,
             );
             if(c.dkind==="citydeck")this.dressCityMovingDeck(this.crumbles[this.crumbles.length-1].mesh,c,.5);
+            if(c.tex==='coast-timber')dressCarlisleTimberDeck(this.crumbles[this.crumbles.length-1].mesh,c,true);
           } else if (c.t === "crate") {
             const gids = gameplayGroupChainOf(c, data);
             // sharing a group with a '!' switch ghosts the crate until the
@@ -7341,6 +7374,7 @@ export class Level {
               c.travelSign ?? 1,
             );
             if(c.dkind==="citydeck")this.dressCityMovingDeck(this.movers[this.movers.length-1].mesh,c,s[1]);
+            if(c.tex==='coast-timber')dressCarlisleTimberDeck(this.movers[this.movers.length-1].mesh,c,true);
             if(c.dkind==='ghostcart'){const cabin=this.ghostKit().cart(this.movers[this.movers.length-1].mesh,c,s[1]);this.groundMeshes.push(...cabin.support);this.walls.push(...cabin.walls);}
           } else if (c.t === "torch") {
             this.torch(c.p[0], c.p[1], c.p[2], c.rise ?? 2.2, c.w ?? 1);
@@ -7421,6 +7455,7 @@ export class Level {
               c.speed ?? 1.6,
               c.phase ?? 0,
               c.yaw ?? 0,
+              c.tex==='coast-timber',
             );
             if(c.dkind==='ghostaxe')this.ghostKit().axe(this.pendulums[this.pendulums.length-1].pivot,c.len??5);
           } else if (c.t === "wumpa") {
@@ -7640,6 +7675,9 @@ export class Level {
       }
       x.dispose();
     };
+    this.root.traverse((o) => {
+      if((o as THREE.Mesh).isMesh)disposeCarlisleTimberDeck(o as THREE.Mesh);
+    });
     this.root.traverse((o) => {
       const m = o as THREE.Mesh;
       if (m.userData.woodPathMeshFamily && (m as THREE.InstancedMesh).isInstancedMesh)
@@ -14766,6 +14804,7 @@ export class Level {
     speed = 1.6,
     phase = 0,
     yawDeg = 0,
+    coastTimber = false,
   ): void {
     const yaw = THREE.MathUtils.degToRad(yawDeg);
     const mat = new THREE.MeshLambertMaterial({ color: 0x6a7078 });
@@ -14797,6 +14836,7 @@ export class Level {
       const dx = side * (len + 1.2);
       post.position.set(x + dx * cos, pivotY - postH / 2 + 0.8, z - dx * sin);
       post.rotation.y = yaw;
+      if(coastTimber)dressCarlisleTimberBeam(post,503+side);
       this.root.add(post);
     }
     const beam = new THREE.Mesh(
@@ -14805,6 +14845,7 @@ export class Level {
     );
     beam.position.set(x, pivotY + 0.3, z);
     beam.rotation.y = yaw;
+    if(coastTimber)dressCarlisleTimberBeam(beam,504);
     this.root.add(beam);
     this.pendulums.push({
       pivot,
@@ -14901,6 +14942,7 @@ export class Level {
         cross,
         axis,
       );
+      if(c.tex==='coast-bedrock')applyCarlisleChannelUV(hp);
       hp.object.userData.rails = c.rails !== false;
       hp.object.userData.gravityTrack = c.gravityTrack === true;
       hp.object.userData.skateCamera = c.skateCamera === true;
@@ -14924,7 +14966,9 @@ export class Level {
           axis === "z"
             ? new THREE.Vector3(lipC, y, along - len / 2)
             : new THREE.Vector3(along - len / 2, y, lipC);
+        const before=this.rails.length;
         this.copingRail([a, b]);
+        if(c.tex==='coast-bedrock')for(const rail of this.rails.slice(before))rail.object.userData.carlisleRockCoping=true;
       }
       return null;
     }

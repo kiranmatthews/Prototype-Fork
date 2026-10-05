@@ -1,0 +1,196 @@
+{
+  "base": "http://127.0.0.1:5242",
+  "started": "2026-10-05T14:52:03.479Z",
+  "captureOnlyGrace": false,
+  "errors": [],
+  "profile": {
+    "radius": 4.5,
+    "flatHalf": 3,
+    "length": 120,
+    "lipX": 7.5,
+    "lipY": -9,
+    "selectedAlong": -814
+  },
+  "start": {
+    "position": [
+      -2.4,
+      -13.5,
+      -814
+    ],
+    "grounded": true,
+    "state": "ride",
+    "freeSkate": false,
+    "speed": 0,
+    "lives": 30,
+    "deaths": 0,
+    "lipStallT": 0,
+    "pipeHang": false,
+    "ground": "halfpipe",
+    "analyticContact": true,
+    "rideNormal": [
+      0,
+      1,
+      0
+    ],
+    "heading": [
+      0,
+      0,
+      -1
+    ],
+    "radius": 4.5,
+    "lipX": 7.5,
+    "lipY": -9
+  },
+  "commit": {
+    "position": [
+      -0.4739166666666661,
+      -13.5,
+      -814
+    ],
+    "grounded": true,
+    "state": "ride",
+    "freeSkate": true,
+    "speed": 7.670000000000002,
+    "lives": 30,
+    "deaths": 0,
+    "lipStallT": 0,
+    "pipeHang": false,
+    "ground": "halfpipe",
+    "analyticContact": true,
+    "rideNormal": [
+      0,
+      1,
+      0
+    ],
+    "heading": [
+      1,
+      0,
+      0
+    ],
+    "radius": 4.5,
+    "lipX": 7.5,
+    "lipY": -9
+  },
+  "bank": {
+    "position": [
+      4.790953430553737,
+      -13.128254571800024,
+      -814
+    ],
+    "grounded": true,
+    "state": "ride",
+    "freeSkate": true,
+    "speed": 11.143015447541718,
+    "lives": 30,
+    "deaths": 0,
+    "lipStallT": 0,
+    "pipeHang": false,
+    "ground": "halfpipe",
+    "analyticContact": true,
+    "rideNormal": [
+      -0.3979896512341637,
+      0.9173899048444498,
+      0
+    ],
+    "heading": [
+      1,
+      0,
+      0
+    ],
+    "radius": 4.5,
+    "lipX": 7.5,
+    "lipY": -9
+  },
+  "lip": {
+    "position": [
+      7.5,
+      -9,
+      -814
+    ],
+    "grounded": true,
+    "state": "ride",
+    "freeSkate": true,
+    "speed": 0,
+    "lives": 30,
+    "deaths": 0,
+    "lipStallT": 11.949999999999998,
+    "pipeHang": false,
+    "ground": "halfpipe",
+    "analyticContact": true,
+    "rideNormal": [
+      0,
+      1,
+      0
+    ],
+    "heading": [
+      1,
+      0,
+      0
+    ],
+    "radius": 4.5,
+    "lipX": 7.5,
+    "lipY": -9
+  },
+  "drop": {
+    "position": [
+      6.9,
+      -9.3,
+      -814
+    ],
+    "grounded": false,
+    "state": "air",
+    "freeSkate": true,
+    "speed": 4,
+    "lives": 30,
+    "deaths": 0,
+    "lipStallT": 0,
+    "pipeHang": false,
+    "ground": "halfpipe",
+    "analyticContact": true,
+    "rideNormal": [
+      0,
+      1,
+      0
+    ],
+    "heading": [
+      -1,
+      0,
+      0
+    ],
+    "radius": 4.5,
+    "lipX": 7.5,
+    "lipY": -9
+  },
+  "recovered": {
+    "position": [
+      1.0499999999999954,
+      -13.5,
+      -814
+    ],
+    "grounded": true,
+    "state": "ride",
+    "freeSkate": true,
+    "speed": 11.2,
+    "lives": 30,
+    "deaths": 0,
+    "lipStallT": 0,
+    "pipeHang": false,
+    "ground": "halfpipe",
+    "analyticContact": true,
+    "rideNormal": [
+      0,
+      1,
+      0
+    ],
+    "heading": [
+      -1,
+      0,
+      0
+    ],
+    "radius": 4.5,
+    "lipX": 7.5,
+    "lipY": -9
+  },
+  "pass": true,
+  "finished": "2026-10-05T14:52:17.539Z"
+}

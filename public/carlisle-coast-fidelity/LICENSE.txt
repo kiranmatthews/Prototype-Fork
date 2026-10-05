@@ -1,0 +1,19 @@
+Carlisle Coast higher-fidelity original generated sculpture kit
+
+This Meshy attribution notice applies to ledge-root.glb and canyon-buttress.glb.
+The separately code-authored grass-tuft-a.glb and grass-tuft-b.glb are Apache-2.0;
+their authoring source and individual manifests record their separate license.
+
+The project owner commissioned these original concept references through OpenAI
+image generation and the 3D scenery models through their existing Meshy credits.
+No third-party model geometry or textures were copied from the reference video.
+
+Created with Meshy (https://www.meshy.ai/) and OpenAI image generation for the
+project owner. The account plan tier is not recorded by the task outputs;
+publication retains the conservative Meshy attribution basis, CC BY 4.0:
+https://creativecommons.org/licenses/by/4.0/
+
+The original authoring sources and provider responses remain in the ignored
+.img2threejs/carlisle-coast-fidelity directory. Exact task handles, consumed
+credits, reference/source hashes and packed geometry/texture budgets are recorded
+in provenance.json. No credentials or signed download links are published.

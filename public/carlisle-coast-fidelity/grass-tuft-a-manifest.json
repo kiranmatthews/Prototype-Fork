@@ -1,0 +1,62 @@
+{
+  "name": "grass-tuft-a",
+  "codeAuthored": true,
+  "license": "Apache-2.0",
+  "authoringSource": "tools/carlisle-coast-fidelity-assets/make-grass.mjs",
+  "triangles": 672,
+  "lodTriangles": 160,
+  "blades": 72,
+  "lodBlades": 32,
+  "bendSegments": 4,
+  "lodBendSegments": 3,
+  "foldedNearBlades": 24,
+  "originalBladeWidthMetres": [
+    0.015,
+    0.036
+  ],
+  "oliveLinearRootMinimum": [
+    0.35,
+    0.45,
+    0.14
+  ],
+  "oliveLinearTipMinimum": [
+    0.48,
+    0.55,
+    0.22
+  ],
+  "originalMetreSpan": [
+    0.952912691566109,
+    0.32483219517365797,
+    0.9066271718457173
+  ],
+  "originalHeightMetres": 0.32483219517365797,
+  "defaultSize": [
+    1.15,
+    0.32,
+    1.15
+  ],
+  "normalizedBoundsGltf": [
+    [
+      -0.5,
+      0,
+      -0.5
+    ],
+    [
+      0.5,
+      1,
+      0.5
+    ]
+  ],
+  "materials": 1,
+  "textureBytes": 0,
+  "alphaMode": "OPAQUE",
+  "doubleSided": true,
+  "attributes": {
+    "COLOR_0": "linear RGB olive/straw root-to-tip colour",
+    "_WIND_FLEX": "exactly zero at planted roots, smooth t^1.8 to exactly one at each tip",
+    "_JUNGLE_AO": "analytic contact gradient 0.82 at root to 1 at tip; indirect light only"
+  },
+  "bytes": 58300,
+  "sha256": "a9c288ffb26db611c1072679eb648b6af2ca74e88eebdaec176889e70604e45b",
+  "placement": "Normalized X/Z [-.5,.5], Y [0,1], bottom anchored. Fine individual opaque blades; no support collision."
+}

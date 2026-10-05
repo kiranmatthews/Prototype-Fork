@@ -3,7 +3,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader.js";
 import { sceneryTextureLoader } from './sceneryTextureLoader';
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
-import { addCarlisleMaterialLook } from "./carlislePresentation";
+import { addCarlisleMaterialLook,addCarlisleGrassLook } from "./carlislePresentation";
 import { CARLISLE_ASSETS } from "./carlisleAssets";
 import { JUNGLE_MODULES } from "./jungleModules";
 import { MAP_MODULES } from "./mapModules";
@@ -115,7 +115,7 @@ export const JUNGLE_ASSET_LABELS = Object.fromEntries(JUNGLE_ASSET_KINDS.map(k=>
 export function isJungleAsset(kind:string|undefined):kind is JungleAssetKind {return !!kind&&Object.prototype.hasOwnProperty.call(ASSETS,kind);}
 export interface JunglePlacement {
   dkind:JungleAssetKind;p:[number,number,number];s?:[number,number,number];w?:number;
-  yaw?:number;amp?:number;color?:string;vr?:number;seed?:number;cameraCutaway?:boolean;
+  yaw?:number;amp?:number;color?:string;vr?:number;seed?:number;cameraCutaway?:boolean;castShadow?:boolean;
 }
 export function jungleAssetMatrix(c:JunglePlacement):THREE.Matrix4 {
   return new THREE.Matrix4().compose(new THREE.Vector3(...c.p),
@@ -401,7 +401,7 @@ export function addJungleDapple(material: THREE.Material, time: { value: number 
   if(painterly)addTreehouseTrialsMaterialLook(material);
 }
 
-interface Bucket {cameraCutaway?:boolean;far?:boolean;farMesh?:THREE.InstancedMesh;kind:RenderKind;transforms:THREE.Matrix4[];colors:THREE.Color[];bounds:THREE.Box3;mesh?:THREE.InstancedMesh;assets?:ReturnType<typeof createJungleAssetScope>;}
+interface Bucket {castShadow?:boolean;cameraCutaway?:boolean;far?:boolean;farMesh?:THREE.InstancedMesh;kind:RenderKind;transforms:THREE.Matrix4[];colors:THREE.Color[];bounds:THREE.Box3;mesh?:THREE.InstancedMesh;assets?:ReturnType<typeof createJungleAssetScope>;}
 export class JungleAssetKit {
   private assets=createJungleAssetScope();
   readonly root=new THREE.Group();readonly time={value:0};readonly errors:string[]=[];
@@ -475,14 +475,15 @@ export class JungleAssetKit {
       };
       m.customProgramCacheKey=()=>key()+'|amber-window-v1';
     }
-    if(kind.startsWith("coast"))addCarlisleMaterialLook(m);
+    if(kind.startsWith("coastv2grass"))addCarlisleGrassLook(m);
+    else if(kind.startsWith("coast"))addCarlisleMaterialLook(m);
     if(this.depthFade)addJungleDepthFade(m);
     this.materials.set(kind,m);return m;
   }
   private configure(mesh:THREE.Mesh,kind:RenderKind):void {
     const spec=renderSpec(kind);mesh.name=spec.label;mesh.userData.jungleAsset=kind;
     if(spec.matte||spec.shaft){mesh.castShadow=false;mesh.receiveShadow=false;return;}
-    mesh.castShadow=!this.lite&&!spec.backdrop&&kind!=="joint"&&kind!=="earth"&&kind!=="coastcarpet"&&kind!=="coastfern"&&kind!=="coastfoliage";
+    mesh.castShadow=!this.lite&&!spec.backdrop&&kind!=="joint"&&kind!=="earth"&&kind!=="coastcarpet"&&kind!=="coastfern"&&kind!=="coastfoliage"&&kind!=="coastv2grass"&&kind!=="coastv2grassb";
     if(kind.startsWith("coast"))mesh.userData.castShadow=mesh.castShadow;
     mesh.receiveShadow=!this.lite&&!spec.backdrop;
     if(!spec.wind)return;
@@ -510,9 +511,9 @@ export class JungleAssetKit {
         const point=new THREE.Vector3().setFromMatrixPosition(part.matrix);
         // Fine cells keep a detailed temple bay from dragging the whole temple into view.
         const cell=renderSpec(part.kind).lod?20:32;
-        const key=`${part.kind}:${Math.floor(point.x/cell)}:${Math.floor(point.z/cell)}:${c.cameraCutaway===true}`;
+        const key=`${part.kind}:${Math.floor(point.x/cell)}:${Math.floor(point.z/cell)}:${c.cameraCutaway===true}:${c.castShadow!==false}`;
         let bucket=this.buckets.get(key);
-        if(!bucket){bucket={kind:part.kind,cameraCutaway:c.cameraCutaway,transforms:[],colors:[],bounds:new THREE.Box3()};this.buckets.set(key,bucket);}
+        if(!bucket){bucket={kind:part.kind,castShadow:c.castShadow,cameraCutaway:c.cameraCutaway,transforms:[],colors:[],bounds:new THREE.Box3()};this.buckets.set(key,bucket);}
         bucket.transforms.push(part.matrix);bucket.colors.push(new THREE.Color(part.color));
         // Templates are normalized around X/Z and anchored at Y=0. Include
         // wind and overhang before the actual mesh bounds become available.
@@ -548,7 +549,8 @@ export class JungleAssetKit {
           const mesh=new THREE.InstancedMesh(geometry,material,bucket.transforms.length);
           bucket.transforms.forEach((matrix,i)=>{mesh.setMatrixAt(i,inverse.clone().multiply(matrix));mesh.setColorAt(i,bucket.colors[i]);});
           mesh.instanceMatrix.needsUpdate=true;if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;
-          mesh.computeBoundingBox();mesh.computeBoundingSphere();this.configure(mesh,bucket.kind);return mesh;
+          mesh.computeBoundingBox();mesh.computeBoundingSphere();this.configure(mesh,bucket.kind);
+          if(bucket.castShadow===false){mesh.castShadow=false;mesh.userData.castShadow=false;}return mesh;
         };
         // Keep the authored mesh at every distance. Cell bounds still allow
         // frustum culling without changing silhouettes as the camera moves.

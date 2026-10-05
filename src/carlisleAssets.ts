@@ -2,6 +2,12 @@
  * Reused forms keep their measured proportions; their placements/palette are
  * authored independently of Treehouse Trials. No scenery owns collision. */
 export const CARLISLE_ASSETS = {
+  coastv2ledge:{file:'../carlisle-coast-fidelity/ledge-root',label:'Carlisle deep eroded ledge root',size:[10,10.115,8.597],wind:false,distanceLod:true,normalStrength:.25,lod:true,doubleSided:false},
+  coastv2buttress:{file:'../carlisle-coast-fidelity/canyon-buttress',label:'Carlisle massive sandstone buttress',size:[14,12.975,14],wind:false,distanceLod:true,normalStrength:.25,lod:true,doubleSided:false},
+  coastv2cavewall:{file:'../treehouse-trials-v2/cavewall-b',label:'Carlisle fractured bedrock corner',size:[12,11.708,7.415],wind:false,distanceLod:true,normalStrength:.18,lod:true,doubleSided:false},
+  coastv2earthbank:{file:'../treehouse-trials-v2/earthbank-b',label:'Carlisle eroded soil and stone lip',size:[8,1.628,3.149],wind:false,distanceLod:true,normalStrength:.18,lod:true,doubleSided:false},
+  coastv2grass:{file:'../carlisle-coast-fidelity/grass-tuft-a',label:'Carlisle fine olive grass tuft',size:[1.15,.32,1.15],wind:true,distanceLod:true,normalStrength:0,lod:true,doubleSided:true},
+  coastv2grassb:{file:'../carlisle-coast-fidelity/grass-tuft-b',label:'Carlisle fine dry grass tuft',size:[1.1,.39,1.1],wind:true,distanceLod:true,normalStrength:0,lod:true,doubleSided:true},
   coastcliff:{file:'../carlisle-coast/cliff-bay',label:'Carlisle fractured sandstone cliff',size:[16,12.381,9.877],wind:false,distanceLod:true,normalStrength:.18,lod:true,doubleSided:false},
   coastspire:{file:'../carlisle-coast/canyon-spire',label:'Carlisle weathered canyon spire',size:[9,13.943,6.832],wind:false,distanceLod:true,normalStrength:.16,lod:true,doubleSided:false},
   coastshelf:{file:'../carlisle-coast/moss-shelf',label:'Carlisle moss crowned rocky shelf',size:[10,2.936,4.339],wind:false,distanceLod:true,normalStrength:.16,lod:true,doubleSided:false},

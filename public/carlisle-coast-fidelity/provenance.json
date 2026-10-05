@@ -1,0 +1,623 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "officialCliVersion": "0.3.1",
+  "model": "meshy-t2",
+  "modelType": "smart-topology",
+  "textureGeneratedResolution": "2k",
+  "referenceGenerator": "Built-in image_gen original isolated 3D reference concepts inspired by supplied Tiki Pits video",
+  "prompts": "tools/carlisle-coast-fidelity-assets/prompts.json",
+  "request": "Carlisle Coast higher-fidelity sculpture kit: two coherent original sandstone masses inspired by the broad geometry and palette of the supplied Tiki Pits reference.",
+  "tasks": {
+    "ledge-root": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "908f1feb-bd3d-490a-a577-13f8404b1349",
+      "createdAt": "2026-10-05T10:11:38.870557+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 396,
+      "reference": "tools/carlisle-coast-fidelity-assets/references/ledge-root.png",
+      "referenceSha256": "3fe191fc9a56c680725eed897a3794f5b329dde31f75ac20883f0bc7dc4c1d9c",
+      "targetTriangles": 8000,
+      "size": [
+        10,
+        8,
+        8
+      ],
+      "kind": "coastv2ledge",
+      "id": "01a10b8c-32f0-74cf-a029-7403f641f424",
+      "checkedAt": "2026-10-05T10:13:19.346141+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791195146787,
+      "sourceSha256": "8e74118a71d635ad4146c053ca1231d27711a92c0f89decb014a4bcd5c72fb0a",
+      "sourceBytes": 7736432
+    },
+    "canyon-buttress": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "aa5710cd-f257-4247-9237-d6f338486ba9",
+      "createdAt": "2026-10-05T10:11:45.620660+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 381,
+      "reference": "tools/carlisle-coast-fidelity-assets/references/canyon-buttress.png",
+      "referenceSha256": "644d12602457d99f1dd3e2a98dab45626f88c17706ee59093a3d5f0627539f98",
+      "targetTriangles": 10000,
+      "size": [
+        14,
+        18,
+        9
+      ],
+      "kind": "coastv2buttress",
+      "id": "01a10b8c-4ce1-7780-9843-5a1e3f3b242f",
+      "checkedAt": "2026-10-05T10:13:22.067561+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791195154376,
+      "sourceSha256": "e2cd964a998b6b5d07a992cf468406a5a8437a89e446676fdb719350632480db",
+      "sourceBytes": 7722176
+    }
+  },
+  "models": [
+    {
+      "name": "ledge-root",
+      "triangles": 8717,
+      "lodTriangles": 1800,
+      "sourceSpanGltf": [
+        0.9833359718322754,
+        0.9946620464324951,
+        0.8453869819641113
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.4930900037288666,
+          -0.4232580065727234,
+          -0.4989570081233978
+        ],
+        [
+          0.4902459979057312,
+          0.4221290051937103,
+          0.4957050085067749
+        ]
+      ],
+      "normalizedBoundsGltf": [
+        [
+          -0.5,
+          0,
+          -0.5
+        ],
+        [
+          0.5,
+          1,
+          0.5
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "uniformScaleSizeAtDefaultWidth": [
+        10,
+        10.115,
+        8.597
+      ],
+      "contactCenterline": [
+        {
+          "alongFromPositiveZ": 0.0,
+          "y": null
+        },
+        {
+          "alongFromPositiveZ": 0.025,
+          "y": null
+        },
+        {
+          "alongFromPositiveZ": 0.05,
+          "y": 0.98854
+        },
+        {
+          "alongFromPositiveZ": 0.075,
+          "y": 0.98906
+        },
+        {
+          "alongFromPositiveZ": 0.1,
+          "y": 0.98957
+        },
+        {
+          "alongFromPositiveZ": 0.125,
+          "y": 0.98944
+        },
+        {
+          "alongFromPositiveZ": 0.15,
+          "y": 0.98959
+        },
+        {
+          "alongFromPositiveZ": 0.175,
+          "y": 0.98954
+        },
+        {
+          "alongFromPositiveZ": 0.2,
+          "y": 0.98967
+        },
+        {
+          "alongFromPositiveZ": 0.225,
+          "y": 0.98968
+        },
+        {
+          "alongFromPositiveZ": 0.25,
+          "y": 0.98971
+        },
+        {
+          "alongFromPositiveZ": 0.275,
+          "y": 0.98977
+        },
+        {
+          "alongFromPositiveZ": 0.3,
+          "y": 0.98971
+        },
+        {
+          "alongFromPositiveZ": 0.325,
+          "y": 0.98964
+        },
+        {
+          "alongFromPositiveZ": 0.35,
+          "y": 0.98966
+        },
+        {
+          "alongFromPositiveZ": 0.375,
+          "y": 0.98955
+        },
+        {
+          "alongFromPositiveZ": 0.4,
+          "y": 0.98941
+        },
+        {
+          "alongFromPositiveZ": 0.425,
+          "y": 0.98927
+        },
+        {
+          "alongFromPositiveZ": 0.45,
+          "y": 0.98913
+        },
+        {
+          "alongFromPositiveZ": 0.475,
+          "y": 0.98899
+        },
+        {
+          "alongFromPositiveZ": 0.5,
+          "y": 0.98885
+        },
+        {
+          "alongFromPositiveZ": 0.525,
+          "y": 0.98871
+        },
+        {
+          "alongFromPositiveZ": 0.55,
+          "y": 0.98866
+        },
+        {
+          "alongFromPositiveZ": 0.575,
+          "y": 0.98861
+        },
+        {
+          "alongFromPositiveZ": 0.6,
+          "y": 0.98859
+        },
+        {
+          "alongFromPositiveZ": 0.625,
+          "y": 0.98866
+        },
+        {
+          "alongFromPositiveZ": 0.65,
+          "y": 0.98846
+        },
+        {
+          "alongFromPositiveZ": 0.675,
+          "y": 0.98856
+        },
+        {
+          "alongFromPositiveZ": 0.7,
+          "y": 0.98863
+        },
+        {
+          "alongFromPositiveZ": 0.725,
+          "y": 0.98875
+        },
+        {
+          "alongFromPositiveZ": 0.75,
+          "y": 0.98882
+        },
+        {
+          "alongFromPositiveZ": 0.775,
+          "y": 0.98889
+        },
+        {
+          "alongFromPositiveZ": 0.8,
+          "y": 0.98896
+        },
+        {
+          "alongFromPositiveZ": 0.825,
+          "y": 0.98903
+        },
+        {
+          "alongFromPositiveZ": 0.85,
+          "y": 0.98933
+        },
+        {
+          "alongFromPositiveZ": 0.875,
+          "y": 0.98941
+        },
+        {
+          "alongFromPositiveZ": 0.9,
+          "y": 0.99009
+        },
+        {
+          "alongFromPositiveZ": 0.925,
+          "y": 0.99058
+        },
+        {
+          "alongFromPositiveZ": 0.95,
+          "y": 0.99021
+        },
+        {
+          "alongFromPositiveZ": 0.975,
+          "y": null
+        },
+        {
+          "alongFromPositiveZ": 1.0,
+          "y": null
+        }
+      ],
+      "broadTopPlaneNormalizedY": null,
+      "suggestedBoxNormalized": null,
+      "placement": "Physically normalized X/Z[-.5,.5],Y[0,1]; front+Z; no collision.",
+      "openingMeasured": null,
+      "indirectAO": [
+        {
+          "mesh": "ledge-root_LOD0",
+          "min": 0.8,
+          "max": 1.0,
+          "mean": 0.9514219114219113,
+          "raysPerVertex": 5,
+          "radiusRelativeToLargestSpan": 0.14,
+          "offsetRelativeToLargestSpan": 0.0018
+        },
+        {
+          "mesh": "ledge-root_LOD1",
+          "min": 0.8,
+          "max": 1.0,
+          "mean": 0.9412381382738364,
+          "raysPerVertex": 5,
+          "radiusRelativeToLargestSpan": 0.14,
+          "offsetRelativeToLargestSpan": 0.0018
+        }
+      ],
+      "contactFit": "Original source surface retained.",
+      "bytes": 8549792,
+      "sha256": "e150f21e4ccb2bf2962e0ceb2e6dfa7ba447fdce032bcbede32b2d6c6e5baf36",
+      "sourceSha256": "8e74118a71d635ad4146c053ca1231d27711a92c0f89decb014a4bcd5c72fb0a",
+      "albedoResolution": 2048,
+      "normalResolution": 1024,
+      "gpuTextures": {
+        "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+        "textures": [
+          {
+            "fallbackSha256": "c0a3d9f4b6da36126135992c4b2a8915bdb59c6232606581d1a562b3a83cf210",
+            "ktxSha256": "7a4a3fd243ca68985b3109987d38713156ecbbf5f090ee90611e0c0faa2f225f",
+            "width": 2048,
+            "height": 2048,
+            "mipLevels": 12,
+            "astc4x4Bytes": 5592432,
+            "encodedBytes": 4820425
+          },
+          {
+            "fallbackSha256": "7319e4f5250e2f08d4a6e4ceef8a18d1d84f22bd6549b9aab5328b03b3ca575f",
+            "ktxSha256": "0324732f4618e4bed0d71de2c83a398a98e9ecb2a9f36739962dd16267d9fcc3",
+            "width": 1024,
+            "height": 1024,
+            "mipLevels": 11,
+            "astc4x4Bytes": 1398128,
+            "encodedBytes": 990043
+          }
+        ]
+      },
+      "path": "ledge-root.glb",
+      "kind": "coastv2ledge",
+      "size": [
+        10,
+        8,
+        8
+      ],
+      "taskId": "01a10b8c-32f0-74cf-a029-7403f641f424",
+      "referenceSha256": "3fe191fc9a56c680725eed897a3794f5b329dde31f75ac20883f0bc7dc4c1d9c"
+    },
+    {
+      "name": "canyon-buttress",
+      "triangles": 10720,
+      "lodTriangles": 2200,
+      "sourceSpanGltf": [
+        1.0,
+        0.9268150329589844,
+        1.0
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.5,
+          -0.5,
+          -0.46503499150276184
+        ],
+        [
+          0.5,
+          0.5,
+          0.46178001165390015
+        ]
+      ],
+      "normalizedBoundsGltf": [
+        [
+          -0.5,
+          0,
+          -0.5
+        ],
+        [
+          0.5,
+          1,
+          0.5
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "uniformScaleSizeAtDefaultWidth": [
+        14,
+        12.975,
+        14.0
+      ],
+      "contactCenterline": [
+        {
+          "alongFromPositiveZ": 0.0,
+          "y": null
+        },
+        {
+          "alongFromPositiveZ": 0.025,
+          "y": null
+        },
+        {
+          "alongFromPositiveZ": 0.05,
+          "y": 0.23849
+        },
+        {
+          "alongFromPositiveZ": 0.075,
+          "y": 0.2546
+        },
+        {
+          "alongFromPositiveZ": 0.1,
+          "y": 0.30349
+        },
+        {
+          "alongFromPositiveZ": 0.125,
+          "y": 0.87903
+        },
+        {
+          "alongFromPositiveZ": 0.15,
+          "y": 0.87992
+        },
+        {
+          "alongFromPositiveZ": 0.175,
+          "y": 0.87055
+        },
+        {
+          "alongFromPositiveZ": 0.2,
+          "y": 0.88138
+        },
+        {
+          "alongFromPositiveZ": 0.225,
+          "y": 0.87329
+        },
+        {
+          "alongFromPositiveZ": 0.25,
+          "y": 0.95354
+        },
+        {
+          "alongFromPositiveZ": 0.275,
+          "y": 0.95243
+        },
+        {
+          "alongFromPositiveZ": 0.3,
+          "y": 0.95175
+        },
+        {
+          "alongFromPositiveZ": 0.325,
+          "y": 0.94459
+        },
+        {
+          "alongFromPositiveZ": 0.35,
+          "y": 0.93729
+        },
+        {
+          "alongFromPositiveZ": 0.375,
+          "y": 0.9134
+        },
+        {
+          "alongFromPositiveZ": 0.4,
+          "y": 0.91263
+        },
+        {
+          "alongFromPositiveZ": 0.425,
+          "y": 0.91006
+        },
+        {
+          "alongFromPositiveZ": 0.45,
+          "y": 0.9055
+        },
+        {
+          "alongFromPositiveZ": 0.475,
+          "y": 0.87916
+        },
+        {
+          "alongFromPositiveZ": 0.5,
+          "y": 0.87899
+        },
+        {
+          "alongFromPositiveZ": 0.525,
+          "y": 0.87938
+        },
+        {
+          "alongFromPositiveZ": 0.55,
+          "y": 0.87731
+        },
+        {
+          "alongFromPositiveZ": 0.575,
+          "y": 0.8839
+        },
+        {
+          "alongFromPositiveZ": 0.6,
+          "y": 0.88049
+        },
+        {
+          "alongFromPositiveZ": 0.625,
+          "y": 0.87934
+        },
+        {
+          "alongFromPositiveZ": 0.65,
+          "y": 0.84459
+        },
+        {
+          "alongFromPositiveZ": 0.675,
+          "y": 0.83573
+        },
+        {
+          "alongFromPositiveZ": 0.7,
+          "y": 0.85649
+        },
+        {
+          "alongFromPositiveZ": 0.725,
+          "y": 0.86198
+        },
+        {
+          "alongFromPositiveZ": 0.75,
+          "y": 0.84556
+        },
+        {
+          "alongFromPositiveZ": 0.775,
+          "y": 0.83656
+        },
+        {
+          "alongFromPositiveZ": 0.8,
+          "y": 0.76221
+        },
+        {
+          "alongFromPositiveZ": 0.825,
+          "y": 0.76111
+        },
+        {
+          "alongFromPositiveZ": 0.85,
+          "y": 0.82402
+        },
+        {
+          "alongFromPositiveZ": 0.875,
+          "y": 0.82542
+        },
+        {
+          "alongFromPositiveZ": 0.9,
+          "y": 0.82065
+        },
+        {
+          "alongFromPositiveZ": 0.925,
+          "y": 0.81113
+        },
+        {
+          "alongFromPositiveZ": 0.95,
+          "y": 0.7444
+        },
+        {
+          "alongFromPositiveZ": 0.975,
+          "y": 0.68802
+        },
+        {
+          "alongFromPositiveZ": 1.0,
+          "y": null
+        }
+      ],
+      "broadTopPlaneNormalizedY": null,
+      "suggestedBoxNormalized": null,
+      "placement": "Physically normalized X/Z[-.5,.5],Y[0,1]; front+Z; no collision.",
+      "openingMeasured": null,
+      "indirectAO": [
+        {
+          "mesh": "canyon-buttress_LOD0",
+          "min": 0.8,
+          "max": 1.0,
+          "mean": 0.9467203532926355,
+          "raysPerVertex": 5,
+          "radiusRelativeToLargestSpan": 0.14,
+          "offsetRelativeToLargestSpan": 0.0018
+        },
+        {
+          "mesh": "canyon-buttress_LOD1",
+          "min": 0.8,
+          "max": 1.0,
+          "mean": 0.9348285599031868,
+          "raysPerVertex": 5,
+          "radiusRelativeToLargestSpan": 0.14,
+          "offsetRelativeToLargestSpan": 0.0018
+        }
+      ],
+      "contactFit": "Original source surface retained.",
+      "bytes": 8441684,
+      "sha256": "85127a8484842d606b421dd540c6a35370d64783799dfa05a0e31c247492c0a8",
+      "sourceSha256": "e2cd964a998b6b5d07a992cf468406a5a8437a89e446676fdb719350632480db",
+      "albedoResolution": 2048,
+      "normalResolution": 1024,
+      "gpuTextures": {
+        "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+        "textures": [
+          {
+            "fallbackSha256": "071d12b7fb66455944caa109604f74ace8894e5a327caaaecc69ead39f81c258",
+            "ktxSha256": "c9dc1afacdc4e8e607c2dbd754f83771378b71e9fe468fa44f94c0c4db311ed2",
+            "width": 2048,
+            "height": 2048,
+            "mipLevels": 12,
+            "astc4x4Bytes": 5592432,
+            "encodedBytes": 4695719
+          },
+          {
+            "fallbackSha256": "2f7e639784f6d7c26005aa6a0c6a66a905e08fe61e4d771c5cd713727e77d82a",
+            "ktxSha256": "6eb11f9eacb4b008960bb9a5b4b8fb17319a01e6587b2ff08e3c16cb52daa1e3",
+            "width": 1024,
+            "height": 1024,
+            "mipLevels": 11,
+            "astc4x4Bytes": 1398128,
+            "encodedBytes": 983790
+          }
+        ]
+      },
+      "path": "canyon-buttress.glb",
+      "kind": "coastv2buttress",
+      "size": [
+        14,
+        18,
+        9
+      ],
+      "taskId": "01a10b8c-4ce1-7780-9843-5a1e3f3b242f",
+      "referenceSha256": "644d12602457d99f1dd3e2a98dab45626f88c17706ee59093a3d5f0627539f98"
+    }
+  ],
+  "credits": {
+    "startingBalance": 396,
+    "endingBalance": 366,
+    "consumed": 30,
+    "validationRejected": 0,
+    "evidence": "Official CLI consumed_credits for both task handles and balance audit."
+  },
+  "budgets": {
+    "modelBytes": 16991476,
+    "nearTriangles": 19437,
+    "farTriangles": 4000,
+    "gpuAstc4x4Bytes": 13981120
+  },
+  "textureEncoding": "UASTC quality 2 / lossless Zstd 18 with full mip chains and retained JPEG fallback. Geometry and UV bytes unchanged.",
+  "placementContract": "One merged LOD0 and one LOD1, one atlas material, _JUNGLE_AO indirect-only scalar and _WIND_FLEX zero mask. Contact grids and profiles are measured from actual generated surfaces. Bottom anchored; fronts +Z.",
+  "contactSurfaces": "contact-surfaces.json",
+  "heroTextureLimit": 2,
+  "customAttributes": {
+    "_JUNGLE_AO": "Scalar0.8\u20131.0 from5hemisphere rays, indirect light only; radius0.14largest span/offset0.0018span.",
+    "_WIND_FLEX": "Zero scalar: the sandstone masses and fixed turf contain no wind-deforming parts."
+  },
+  "review": "Each generated source was reviewed from front, rear and side in Blender at measured natural proportions; review renders remain in ignored .img2threejs/carlisle-coast-fidelity."
+}

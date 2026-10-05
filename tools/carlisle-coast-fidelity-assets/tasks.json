@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "model": "meshy-t2",
+  "modelType": "smart-topology",
+  "startingBalance": 396,
+  "request": "Carlisle Coast higher-fidelity sculpture kit: two coherent original sandstone masses inspired by the broad geometry and palette of the supplied Tiki Pits reference.",
+  "estimatedBatchCredits": 30,
+  "tasks": {
+    "ledge-root": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "908f1feb-bd3d-490a-a577-13f8404b1349",
+      "createdAt": "2026-10-05T10:11:38.870557+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 396,
+      "reference": "tools/carlisle-coast-fidelity-assets/references/ledge-root.png",
+      "referenceSha256": "3fe191fc9a56c680725eed897a3794f5b329dde31f75ac20883f0bc7dc4c1d9c",
+      "targetTriangles": 8000,
+      "size": [
+        10,
+        8,
+        8
+      ],
+      "kind": "coastv2ledge",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/carlisle-coast-fidelity-assets/references/ledge-root.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 8000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the reference broad sculpted form and matte painted colors: massive warm ochre sandstone, three broad thick rock courses with dark recessed creases, rounded fractured corners, subtle worn sediment bands, small quiet patches of desaturated olive moss confined to crevices. If present, grass is short matte muted olive turf with tan stony rim, never bright emerald carpet. Preserve large quiet material regions, soft artistic painted gradients and clean silhouette; no baked directional shadows, glossy stone, gritty noise, tiny pancake strata, leaves or ornament added.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10b8c-32f0-74cf-a029-7403f641f424",
+      "checkedAt": "2026-10-05T10:13:19.346141+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791195146787,
+      "sourceSha256": "8e74118a71d635ad4146c053ca1231d27711a92c0f89decb014a4bcd5c72fb0a",
+      "sourceBytes": 7736432
+    },
+    "canyon-buttress": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "aa5710cd-f257-4247-9237-d6f338486ba9",
+      "createdAt": "2026-10-05T10:11:45.620660+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 381,
+      "reference": "tools/carlisle-coast-fidelity-assets/references/canyon-buttress.png",
+      "referenceSha256": "644d12602457d99f1dd3e2a98dab45626f88c17706ee59093a3d5f0627539f98",
+      "targetTriangles": 10000,
+      "size": [
+        14,
+        18,
+        9
+      ],
+      "kind": "coastv2buttress",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/carlisle-coast-fidelity-assets/references/canyon-buttress.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 10000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the reference broad sculpted form and matte painted colors: massive warm ochre sandstone, three broad thick rock courses with dark recessed creases, rounded fractured corners, subtle worn sediment bands, small quiet patches of desaturated olive moss confined to crevices. If present, grass is short matte muted olive turf with tan stony rim, never bright emerald carpet. Preserve large quiet material regions, soft artistic painted gradients and clean silhouette; no baked directional shadows, glossy stone, gritty noise, tiny pancake strata, leaves or ornament added.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10b8c-4ce1-7780-9843-5a1e3f3b242f",
+      "checkedAt": "2026-10-05T10:13:22.067561+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791195154376,
+      "sourceSha256": "e2cd964a998b6b5d07a992cf468406a5a8437a89e446676fdb719350632480db",
+      "sourceBytes": 7722176
+    }
+  },
+  "latestBalance": 366,
+  "balanceCheckedAt": "2026-10-05T10:15:40.785037+00:00"
+}

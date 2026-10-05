@@ -1,0 +1,28 @@
+{
+  "ledge-root": {
+    "kind": "coastv2ledge",
+    "size": [
+      10,
+      8,
+      8
+    ],
+    "triangles": 8000,
+    "farTriangles": 1800,
+    "wind": false,
+    "hero": true,
+    "role": "Broad irregular broken sandstone landing, short matte olive grass and exposed thin stone-cap rim, deep tapered root with three broad courses. Collision authored from measured surface."
+  },
+  "canyon-buttress": {
+    "kind": "coastv2buttress",
+    "size": [
+      14,
+      18,
+      9
+    ],
+    "triangles": 10000,
+    "farTriangles": 2200,
+    "wind": false,
+    "hero": true,
+    "role": "Enormous coherent canyon buttress, three broad rounded rock courses, fractured corners and deeply recessed intersections, quiet warm ochre paint and muted olive moss only in crevices."
+  }
+}

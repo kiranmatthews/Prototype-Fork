@@ -1,0 +1,16 @@
+{
+  "generator": "built-in image_gen",
+  "surfaces": [
+    {
+      "file": "public/carlisle-coast-fidelity/turf-albedo.webp",
+      "source": "exec-acc731c6-5012-4575-8d01-4564855b2677.png",
+      "prompt": "Square seamlessly tiling top-down game ground albedo. Dense fine short fibrous grass, velvety low turf mixed with compact sandy grey ochre soil. Quiet low-contrast muted olive and dusty grey-green, soft dry taupe undergrowth and restrained warm highlights. No large leaves, moss carpets, decorative clusters, stones or cracks forming large repeating shapes; uniform ambient illumination, no cast shadow or vignette. Fine hand-painted game realism, periodic edges, no perspective, text or scene."
+    },
+    {
+      "file": "public/carlisle-coast-fidelity/sandstone-albedo.webp",
+      "source": "exec-7e071b08-b0db-4202-97a8-fa5a6c9f6ecf.png",
+      "prompt": "Square seamless continuous warm grey-ochre sandstone material albedo. Subtle broad sediment veins, worn patches, warm umber and olive-grey mineral undertones, restrained fine painterly stone grain. No brick courses, block outlines or large dark joints; geometry supplies fractures, rounded edges and shadows. Low contrast, neutral uniform light, periodic edges, no scene, perspective, text or margin."
+    }
+  ],
+  "processing": "Copy original generated PNG, resize to1024 square with Pillow LANCZOS, encode RGB WebP quality94. Texture detail only; geometry and terrain contact are actual source meshes."
+}
