@@ -18,7 +18,9 @@ try {
   const { Level, newLaneCursor } = await server.ssrLoadModule('/src/level.ts');
   const { Player } = await server.ssrLoadModule('/src/player.ts');
   const { TUNING } = await server.ssrLoadModule('/src/tuning.ts');
-  const { cameraRigFraming, setCameraRigAim } = await server.ssrLoadModule('/src/cameraRig.ts');
+  const { cameraRigFraming, setCameraRigAim, CourseCameraHeading, fitCameraRigHorizontal } = await server.ssrLoadModule('/src/cameraRig.ts');
+  const { ChiefCamera } = await server.ssrLoadModule('/src/boss/camera.ts');
+  const { SkateChaseCamera, SkateChaseCameraOverlay } = await server.ssrLoadModule('/src/skateChaseCamera.ts');
   const { LoopCameraFraming } = await server.ssrLoadModule('/src/loopCamera.ts');
   const { CameraHeroFraming } = await server.ssrLoadModule('/src/cameraHeroFraming.ts');
   const { cameraViewAt, cameraViewDirection, CameraViewFraming } = await server.ssrLoadModule('/src/cameraViews.ts');
@@ -44,7 +46,7 @@ try {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
   }).outputText;
   const makeRig = new Function('deps', `
-    const {THREE,TUNING,LoopCameraFraming,CameraHeroFraming,cameraRigFraming,setCameraRigAim,cameraViewAt,cameraViewDirection,
+    const {THREE,TUNING,LoopCameraFraming,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,
       CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,
       newLaneCursor,level,player,camera}=deps;
     const current={id:'codex-lab'}, worldMapController=null, oceanOverview=false, oceanReview=false;
@@ -52,12 +54,13 @@ try {
     const cameraLook=new CameraLookOffset(), cameraLaneCursor=newLaneCursor();
     const camF=new THREE.Vector3(0,0,-1),camControlDir=new THREE.Vector3(0,0,-1);
     const prevPlayerPos=new THREE.Vector3(),camTarget=new THREE.Vector3(),aimSmooth=new THREE.Vector3();
+    const cameraLaneTarget=new THREE.Vector3(),cameraViewForward=new THREE.Vector3(),cameraLaneOrigin=new THREE.Vector3(),cameraLaneHeading=new CourseCameraHeading(),skateChaseCamera=new SkateChaseCamera();
     let cameraRenderSnapVersion=-1,camAnchorY=player.renderPosition.y,camBack=0,sideF=0,boulderF=0;
     let camSpeedFovBoost=0,cam2SpeedFovBoost=0,camRoll=0;
     ${cameraCode}
     return {step:updateCamera,heading:camControlDir};
   `);
-  const dependencies = { THREE, TUNING, LoopCameraFraming, CameraHeroFraming, cameraRigFraming, setCameraRigAim, cameraViewAt,
+  const dependencies = { THREE, TUNING, LoopCameraFraming, CameraHeroFraming, ChiefCamera, SkateChaseCamera, SkateChaseCameraOverlay, cameraRigFraming, setCameraRigAim, CourseCameraHeading, fitCameraRigHorizontal, cameraViewAt,
     cameraViewDirection, CameraViewFraming, CameraLookOffset, speedSkateFovTarget,
     stepSpeedSkateFov, newLaneCursor };
   const jumps=gaps.filter(g=>g.kind==='charged gap');

@@ -1,0 +1,354 @@
+const camTarget = new THREE.Vector3();
+const cameraLaneTarget = new THREE.Vector3();
+const cameraViewForward = new THREE.Vector3();
+// Canonical, un-peeked view direction. Gameplay/replays consume this while
+// the visible camera may carry a small presentation-only right-stick offset.
+const camControlDir = new THREE.Vector3(0, 0, -1);
+const cameraLook = new CameraLookOffset();
+let camAnchorY = 0; // the rig's vertical anchor: the ground under the skater, eased
+let camRoll = 0; // eased dutch roll tracking the grind balance needle (radians)
+const aimSmooth = new THREE.Vector3(); // aim built from the current eye + explicit orientation
+let camBack = 0; // 0 = facing down-course, eases to 1 while travelling at the camera
+let sideF = 0; // eases to 1 on turned (X-running) stretches: wider framing only
+let boulderF = 0; // eases to 1 on boulder-chase levels: tipped-down framing
+let camSpeedFovBoost = 0; // additive high-speed skate lens push, eased in/out
+const prevPlayerPos = new THREE.Vector3();
+const cameraLaneCursor = newLaneCursor();
+let cameraRenderSnapVersion = -1;
+// The rig's "down-course" forward. Fixed at -Z normally; on levels with a
+// drawn CAMERA LANE it eases along the lane's local tangent, turning the
+// whole rig through winding corridors (Crash 3 camera rails).
+const camF = new THREE.Vector3(0, 0, -1);
+const skateChaseCamera = new SkateChaseCamera();
+
+const cameraViewFraming = new CameraViewFraming();
+const chiefCamera = new ChiefCamera();
+const authoredSkateCamera = new SkateChaseCameraOverlay();
+const cameraHeroFraming = new CameraHeroFraming();
+const loopCameraFraming = new LoopCameraFraming();
+const cameraOverlayHeroFraming = new CameraHeroFraming();
+function updateCamera(dt: number): void {
+  const framingSnap = cameraRenderSnapVersion !== player.renderSnapVersion;
+  chiefCamera.restore(camera);
+  authoredSkateCamera.restore(camera);
+  loopCameraFraming.restore(camera);
+  cameraViewFraming.restore(camera);
+  updateBaseCamera(dt);
+  const subject = player.renderPosition;
+  cameraViewFraming.apply(camera, cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z), subject, framingSnap);
+  // The chase rig has its own heading; authored view volumes still own the
+  // canonical input direction, independently from this presentation layer.
+  if ((level.skatepark || TUNING.chaseCam > 0.5) && !level.boulder && level.cameraViews.length) {
+    const forward = cameraViewDirection(level.cameraViews, subject.x, subject.y, subject.z, camControlDir);
+    camControlDir.set(forward.x, 0, forward.z);
+  }
+  loopCameraFraming.apply(camera, player.authoredSkateCamera ? null : player.loopPresentationFrame, subject, cameraRigFraming(TUNING), dt, framingSnap||player.authoredSkateCamera,player.loopFallPresentation);
+  if(!player.authoredSkateCamera&&level.cameraAirLift===1&&player.vertAir&&loopCameraFraming.active)cameraOverlayHeroFraming.apply(camera,player.cameraPoseBounds,dt,framingSnap);
+  else cameraOverlayHeroFraming.reset();
+  authoredSkateCamera.apply(camera, player.authoredSkateCamera ? {
+    position:subject,heading:player.skateCameraHeading,up:player.skateCameraUp,
+    vertAir:player.vertAir,vertNormal:player.vertNormal,verticalSpeed:player.vVel,
+    speed:player.cameraSkateSpeed,grounded:player.skateCameraSupported,bailing:player.skateCameraBailing,
+  } : null,dt,framingSnap,level.groundMeshes,{
+    camDist:TUNING.parkCamDist,camHeight:TUNING.parkCamHeight,camPitch:TUNING.parkCamPitch,camFov:TUNING.parkCamFov,
+  });
+  if(player.authoredSkateCamera)cameraLook.apply(camera,authoredSkateCamera.aim);
+  chiefCamera.apply(camera,level.boss,subject,dt,framingSnap);
+  if(level.boss)camControlDir.copy(chiefCamera.heading);
+}
+
+function updateBaseCamera(dt: number): void {
+  const subject = player.renderPosition;
+  if ((current.id === "warproom" || level.isCampaignMap) && worldMapController?.active) {
+    worldMapController.frameCamera(camera, dt);
+    camControlDir
+      .set(
+        worldMapController.moving ? player.renderPosition.x - camera.position.x : 0,
+        0,
+        worldMapController.moving ? player.renderPosition.z - camera.position.z : -1,
+      )
+      .normalize();
+    cameraLook.reset();
+    camSpeedFovBoost = 0;
+    cam2SpeedFovBoost = 0;
+    prevPlayerPos.copy(subject);
+    return;
+  }
+  const snapped = cameraRenderSnapVersion !== player.renderSnapVersion;
+  if (snapped) {
+    cameraRenderSnapVersion = player.renderSnapVersion;
+    prevPlayerPos.copy(subject);
+    cameraLaneCursor.s = -1;
+    cameraLook.reset();
+  }
+  if (oceanOverview && current.id === "beachfront") {
+    // Frozen Unity d300 seaward golden-camera coordinates.
+    camera.fov = 50;
+    camera.position.set(-19.7656, 18, -258.4284);
+    camera.up.set(0, 1, 0);
+    camera.lookAt(0.4741, 1, -314.9205);
+    camControlDir
+      .set(
+        0.4741 - camera.position.x,
+        0,
+        -314.9205 - camera.position.z,
+      )
+      .normalize();
+    cameraLook.reset();
+    camera.updateProjectionMatrix();
+    camSpeedFovBoost = 0;
+    cam2SpeedFovBoost = 0;
+    prevPlayerPos.copy(subject);
+    return;
+  }
+  if (oceanReview && current.id === "beachfront") {
+    // Exact authoritative Unity gameplay-spawn capture framing, used by the
+    // parity URL. The normal menu level keeps the live course-spine camera.
+    camera.fov = 43;
+    camera.position.set(1.415, 5.5, 13.852);
+    camera.up.set(0, 1, 0);
+    camera.lookAt(4.065, 0, 2.148);
+    camControlDir
+      .set(4.065 - camera.position.x, 0, 2.148 - camera.position.z)
+      .normalize();
+    cameraLook.reset();
+    camera.updateProjectionMatrix();
+    camSpeedFovBoost = 0;
+    cam2SpeedFovBoost = 0;
+    prevPlayerPos.copy(subject);
+    return;
+  }
+  // ONE rig, always facing down -Z. When the path right-angles into an
+  // X-running stretch, the same camera sees it side-on — no yaw, just a
+  // slightly wider, higher frame with less forward lead.
+  // CHASE CAM ignores zones — the rig yaws behind the player instead.
+  const chaseOn = (level.skatepark || TUNING.chaseCam > 0.5) && !level.boulder;
+  if (chaseOn) {
+    const speed = player.cameraSkateSpeed;
+    camSpeedFovBoost = stepSpeedSkateFov(camSpeedFovBoost,
+      speedSkateFovTarget(speed, speed > 0,
+        level.skatepark ? parkCruiseSpeed() : TUNING.cruiseSpeed,
+        level.skatepark ? parkChargedSpeed() : TUNING.maxSpeed,
+        level.skatepark ? TUNING.parkCamSpeedFovBoost : TUNING.camSpeedFovBoost),
+      dt, snapped);
+    if (!level.skatepark) {
+      camera.fov = TUNING.camFov + 7 + camSpeedFovBoost;
+      camera.updateProjectionMatrix();
+    }
+    skateChaseCamera.update(camera, {
+      position: subject, heading: player.skateCameraHeading,
+      up: player.skateCameraUp,
+      vertAir: player.vertAir, vertNormal: player.vertNormal,
+      verticalSpeed: player.vVel, speed, grounded: player.skateCameraSupported,
+      bailing: player.skateCameraBailing,
+    }, dt, snapped, level.groundMeshes, level.skatepark ? {
+      camDist:TUNING.parkCamDist,camHeight:TUNING.parkCamHeight,camPitch:TUNING.parkCamPitch,
+      camFov:TUNING.parkCamFov+camSpeedFovBoost,
+    } : undefined);
+    camControlDir.copy(skateChaseCamera.forward);
+    cameraLook.step(input.lookX, input.lookY, dt);
+    cameraLook.apply(camera, skateChaseCamera.aim);
+    prevPlayerPos.copy(subject);
+    return;
+  }
+  // side framing only on E/W stretches — a run-at-camera ('N') zone keeps the
+  // normal corridor shot: the fixed lens IS the chase framing there
+  const znHere = level.zoneAt(subject.x, subject.z);
+  const inTurn =
+    znHere !== null && (znHere.dir === "E" || znHere.dir === "W");
+  sideF += ((inTurn ? 1 : 0) - sideF) * (snapped ? 1 : Math.min(1, 3.5 * dt));
+
+  // Boulder-chase framing is a proper cinematographic shot, not just a further
+  // dolly-back. The skater runs TOWARD camera, so "ahead" is the foreground the
+  // wide lens crushes flat. The rig: a LONG telephoto lens (27deg) shot from a
+  // LOW, FAR-back camera tilted UP the corridor — dollying back while zooming in
+  // (the long lens compensates so the hero keeps its size) compresses depth hard
+  // so the runway lays out flat and reads, and the low tilted-up angle keeps the
+  // chasing boulder up-course pinned to the top of frame. The
+  // look point aims well down-course (+Z, where you're heading) which floats the
+  // hero HIGH up the screen, well off centre, with all the lead room below him
+  // for the crates/gaps rushing up.
+  boulderF +=
+    ((level.boulder ? 1 : 0) - boulderF) *
+    (snapped ? 1 : Math.min(1, 3 * dt));
+  const cameraSkateSpeed = player.cameraSkateSpeed;
+  const speedFovGoal = speedSkateFovTarget(
+    cameraSkateSpeed,
+    cameraSkateSpeed > 0 && !level.boulder,
+    TUNING.cruiseSpeed,
+    TUNING.maxSpeed,
+    TUNING.camSpeedFovBoost,
+  );
+  camSpeedFovBoost = stepSpeedSkateFov(
+    camSpeedFovBoost,
+    speedFovGoal,
+    dt,
+    snapped,
+  );
+  const authoredFov = TUNING.camFov;
+  const targetFov = THREE.MathUtils.lerp(
+    authoredFov + camSpeedFovBoost,
+    BOULDER_FOV + TUNING.camFov - 49,
+    boulderF,
+  );
+  if (Math.abs(camera.fov - targetFov) > 0.005) {
+    camera.fov = targetFov;
+    camera.updateProjectionMatrix();
+  }
+
+  // Course cameras retain their authored lane; the skate rig returned above.
+  const lf = level.cameraDirAt(subject.x, subject.y, subject.z, cameraLaneCursor);
+  const turnK = snapped ? 1 : Math.min(1, 3.5 * dt);
+  camF.x += ((lf ? lf.x : 0) - camF.x) * turnK;
+  camF.z += ((lf ? lf.z : -1) - camF.z) * turnK;
+  camF.y = 0;
+  if (camF.lengthSq() < 1e-4) camF.set(lf ? lf.x : 0, 0, lf ? lf.z : -1); // 180° pinch guard
+  camF.normalize();
+
+  const vAlong =
+    dt > 0
+      ? ((subject.x - prevPlayerPos.x) * camF.x +
+          (subject.z - prevPlayerPos.z) * camF.z) /
+        dt
+      : 0;
+  prevPlayerPos.copy(subject);
+  const movingBack =
+    vAlong < -2.5 || (player.grounded && player.speed < -1.5);
+  camBack +=
+    ((movingBack ? 1 : 0) - camBack) *
+    (snapped ? 1 : Math.min(1, 3 * dt));
+  const back = camBack * (1 - sideF) * (1 - boulderF); // corridor thing only
+
+  const framing = cameraRigFraming(TUNING, sideF, back, boulderF);
+  // CRASH RIG VERTICAL: the camera's height anchors to the GROUND under the
+  // skater, not the skater — a jump rises THROUGH the frame
+  // instead of yanking the whole rig skyward and pulling the
+  // landing spot out of shot. FRAME-AWARE: how far a jump may rise before
+  // the rig starts lifting scales with the lens — a telephoto zoom-in has a
+  // tiny frame, so the rig gives sooner and an ollie never rockets across
+  // the whole screen. The anchor eases along slopes/steps, follows the
+  // player when there's no floor below (pits), and big verts stay framed.
+  // The boulder shot keeps its authored full-follow.
+  const frameHalf = Math.tan((camera.fov * Math.PI) / 360) * Math.max(0.5, Math.abs(TUNING.camDist));
+  const maxRise = THREE.MathUtils.clamp(frameHalf * 1.5, 1.5, 7);
+  // No floor below = this fall ends in the void: the rig HOLDS its height
+  // instead of chasing the body down (and clipping through the level floor).
+  // A rising jump over the gap can still lift it via the maxRise term.
+  const floorY = player.groundBelowY;
+  const anchorGoal =
+    player.swimming ? subject.y :
+    floorY !== null
+      ? Math.max(floorY, subject.y - maxRise)
+      : Math.max(camAnchorY, subject.y - maxRise);
+  camAnchorY +=
+    (anchorGoal - camAnchorY) *
+    (snapped ? 1 : Math.min(1, 4.5 * dt));
+  // camAirLift: how much the rig rides UP with airborne height. 1 = classic
+  // full-follow (the camera rises with the jump, so airs read small and snappy
+  // on screen); 0 = pure ground anchor (the skater does all the on-screen
+  // rising — same physics, but every air reads much bigger and floatier).
+  // High-air courses may opt into full vertical framing without changing
+  // global tuning, camera yaw, or the player's camera-relative input frame.
+  const airLift = player.swimming ? 1 : Math.max(level.cameraAirLift ?? TUNING.camAirLift, boulderF);
+  // Full-follow centres the visible posed rider, not just the feet that own
+  // collision. The readonly pose offset is zero on ordinary upright support.
+  const poseYOffset = level.cameraAirLift === 1 ? (player.cameraPoseYOffset ?? 0) : 0;
+  const effY = THREE.MathUtils.lerp(camAnchorY, subject.y, airLift) + poseYOffset;
+  // Course controls keep the local tangent. The authored look-ahead affects
+  // only the shot, bringing the upcoming bend into narrow screens as well.
+  const laneTarget = level.cameraLookAhead && lf && !znHere
+    ? level.cameraLanePointAhead(cameraLaneCursor, level.cameraLookAhead, cameraLaneTarget)
+    : null;
+  cameraViewForward.copy(camF);
+  if (laneTarget) {
+    cameraViewForward.set(laneTarget.x - subject.x, 0, laneTarget.z - subject.z);
+    if (cameraViewForward.lengthSq() < 1e-4) cameraViewForward.copy(camF);
+    else cameraViewForward.normalize();
+  }
+  camTarget.set(
+    subject.x - cameraViewForward.x * framing.distance,
+    effY + framing.height,
+    subject.z - cameraViewForward.z * framing.distance,
+  );
+
+  // Snap after respawn teleports; damp otherwise.
+  if (snapped || camera.position.distanceTo(camTarget) > 30) {
+    camera.position.copy(camTarget);
+    camAnchorY = anchorGoal;
+  } else {
+    // CRASH RIG TRANSLATION: HARD along the travel axis — down-course
+    // normally, the turned axis through side-scroll zones, the chase heading
+    // in chase mode — and GENTLE across it, so strafes pan the view instead
+    // of sliding the world sideways.
+    const perpX = -camF.z;
+    const perpZ = camF.x;
+    const dx = camTarget.x - camera.position.x;
+    const dz = camTarget.z - camera.position.z;
+    const along = dx * camF.x + dz * camF.z;
+    const lat = dx * perpX + dz * perpZ;
+    const kAlong = 1 - Math.exp(-9 * dt);
+    const kLat =
+      1 -
+      Math.exp(-THREE.MathUtils.lerp(3.2, 9, Math.max(sideF, boulderF)) * dt);
+    // full air-lift also restores the classic stiffer vertical chase — a soft
+    // y-spring on a followed jump reads as extra float
+    const kY = 1 - Math.exp(-THREE.MathUtils.lerp(6, 9, airLift) * dt);
+    camera.position.x += camF.x * along * kAlong + perpX * lat * kLat;
+    camera.position.z += camF.z * along * kAlong + perpZ * lat * kLat;
+    // An authored full-follow course tracks the already-interpolated subject
+    // without a second Y delay, on ramps as well as in the air. The shared
+    // default and partial-follow courses retain their exact existing damping.
+    if (level.cameraAirLift === 1) camera.position.y = camTarget.y;
+    else camera.position.y += (camTarget.y - camera.position.y) * kY;
+  }
+
+  // Build explicit pitch from the damped eye. A lane look-ahead adjusts only
+  // presentation yaw; airborne height never pitches the shot with the road.
+  if (laneTarget) {
+    // Retain the eased trailing distance, but keep the eye on the chord through
+    // the rider and next bend. Lateral lag otherwise clips the rider in portrait.
+    const trailing = Math.max(framing.distance,
+      (subject.x-camera.position.x)*cameraViewForward.x + (subject.z-camera.position.z)*cameraViewForward.z);
+    camera.position.x = subject.x - cameraViewForward.x * trailing;
+    camera.position.z = subject.z - cameraViewForward.z * trailing;
+    cameraViewForward.set(laneTarget.x - camera.position.x, 0, laneTarget.z - camera.position.z);
+    if (cameraViewForward.lengthSq() < 1e-4) cameraViewForward.copy(camF);
+  }
+  setCameraRigAim(aimSmooth, camera.position, cameraViewForward, framing.pitch);
+
+  // Publish the unchanged local course frame. Lane anticipation and manual
+  // peeking are presentation-only and must not steer gameplay or replay yaw.
+  if (laneTarget) camControlDir.copy(camF);
+  else camControlDir.subVectors(aimSmooth, camera.position);
+  camControlDir.y = 0;
+  if (camControlDir.lengthSq() > 1e-6) camControlDir.normalize();
+  else camControlDir.copy(camF);
+  camera.lookAt(aimSmooth);
+  // A vert transfer can point the body back toward the close lens even after
+  // its visible centre is followed. Fit only the presentation pitch when that
+  // pose would clip; retain the canonical heading published above. Loop contact
+  // and its release already own a complete surface-relative camera frame.
+  if (level.cameraAirLift === 1 && !loopCameraFraming.active && !player.loopPresentationFrame &&
+      (player.state === 'air' || player.alignPose > .05)) {
+    cameraHeroFraming.apply(camera, player.cameraPoseBounds, dt, snapped);
+    camera.getWorldDirection(aimSmooth).add(camera.position);
+  } else cameraHeroFraming.reset();
+  cameraLook.step(input.lookX, input.lookY, dt);
+  cameraLook.apply(camera, aimSmooth);
+
+  // GRIND BALANCE ROLLS THE SHOT. The needle is a horizontal lean, so the
+  // horizon leans with it: a rail you are losing shows up in the frame itself
+  // and not only in the meter, and catching it rights the world back up. Only
+  // the horizontal meters do this — a manual's needle is nose-to-tail, and a
+  // roll would say nothing about it. Applied AFTER lookAt, which rewrites the
+  // orientation from scratch each frame, so the roll is about the view axis and
+  // never accumulates.
+  const meter = player.balanceMeter;
+  const rollGoal =
+    meter && meter.mode === "grind"
+      ? -meter.bal * THREE.MathUtils.degToRad(TUNING.camBalanceRoll)
+      : 0;
+  // eased in and out, so stepping onto and off a rail is a lean rather than a snap
+  camRoll += (rollGoal - camRoll) * (1 - Math.exp(-7 * dt));
+  if (Math.abs(camRoll) > 1e-4) camera.rotateZ(camRoll);
+}

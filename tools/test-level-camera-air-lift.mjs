@@ -13,7 +13,7 @@ const code = ts.transpileModule(main.slice(begin, end), {
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
 }).outputText;
 const makeRig = new Function('deps', `
-  const {THREE,TUNING,LoopCameraFraming,CameraHeroFraming,cameraRigFraming,setCameraRigAim,cameraViewAt,cameraViewDirection,
+  const {THREE,TUNING,LoopCameraFraming,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,
     CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,
     newLaneCursor,level,player,camera}=deps;
   const current={id:'codex-lab'},worldMapController=null,oceanOverview=false,oceanReview=false;
@@ -21,6 +21,7 @@ const makeRig = new Function('deps', `
   const cameraLook=new CameraLookOffset(),cameraLaneCursor=newLaneCursor();
   const camF=new THREE.Vector3(0,0,-1),camControlDir=new THREE.Vector3(0,0,-1);
   const prevPlayerPos=new THREE.Vector3(),camTarget=new THREE.Vector3(),aimSmooth=new THREE.Vector3();
+  const cameraLaneTarget=new THREE.Vector3(),cameraViewForward=new THREE.Vector3(),cameraLaneOrigin=new THREE.Vector3(),cameraLaneHeading=new CourseCameraHeading(),skateChaseCamera=new SkateChaseCamera();
   let cameraRenderSnapVersion=-1,camAnchorY=player.renderPosition.y,camBack=0,sideF=0,boulderF=0;
   let camSpeedFovBoost=0,cam2SpeedFovBoost=0,camRoll=0;
   ${code}
@@ -32,7 +33,9 @@ await withBlockworksRuntime(async r => {
   const { p, l, THREE, TUNING, source, server } = r;
   const tuningBefore = JSON.stringify(TUNING);
   const { Level, newLaneCursor, normalizeCustomLevelData } = await server.ssrLoadModule('/src/level.ts');
-  const { cameraRigFraming, setCameraRigAim } = await server.ssrLoadModule('/src/cameraRig.ts');
+  const { cameraRigFraming, setCameraRigAim, CourseCameraHeading, fitCameraRigHorizontal } = await server.ssrLoadModule('/src/cameraRig.ts');
+  const { ChiefCamera } = await server.ssrLoadModule('/src/boss/camera.ts');
+  const { SkateChaseCamera, SkateChaseCameraOverlay } = await server.ssrLoadModule('/src/skateChaseCamera.ts');
   const { LoopCameraFraming } = await server.ssrLoadModule('/src/loopCamera.ts');
   const { CameraHeroFraming } = await server.ssrLoadModule('/src/cameraHeroFraming.ts');
   const { cameraViewAt, cameraViewDirection, CameraViewFraming } = await server.ssrLoadModule('/src/cameraViews.ts');
@@ -55,7 +58,7 @@ await withBlockworksRuntime(async r => {
   const camera = new THREE.PerspectiveCamera(TUNING.camFov, 16/9, .1, 500);
   const previousCamera = camera.clone();
   const defaults = new Proxy(l, { get: (target, key) => key === 'cameraAirLift' ? undefined : Reflect.get(target, key, target) });
-  const deps = { THREE,TUNING,LoopCameraFraming,CameraHeroFraming,cameraRigFraming,setCameraRigAim,cameraViewAt,cameraViewDirection,
+  const deps = { THREE,TUNING,LoopCameraFraming,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,
     CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,newLaneCursor,player:p };
   const rig = makeRig({ ...deps, level:l, camera });
   const legacy = makeRig({ ...deps, level:defaults, camera:previousCamera });

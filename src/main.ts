@@ -97,7 +97,7 @@ import {
 } from "./cameraSpeedEffect";
 import { CameraLookOffset } from "./cameraLook";
 import { cameraViewAt, cameraViewDirection, CameraViewFraming } from "./cameraViews";
-import { cameraRigFraming, setCameraRigAim } from "./cameraRig";
+import { cameraRigFraming, setCameraRigAim, CourseCameraHeading, fitCameraRigHorizontal } from "./cameraRig";
 import { LoopCameraFraming } from "./loopCamera";
 import { CameraHeroFraming } from "./cameraHeroFraming";
 import { SkateChaseCamera, SkateChaseCameraOverlay } from "./skateChaseCamera";
@@ -1929,6 +1929,8 @@ function stepPvp(dt: number): void {
 // full Crash rig belongs to P1; this one just keeps P2 framed and onward.
 const cam2LaneTarget = new THREE.Vector3();
 const cam2ViewForward = new THREE.Vector3();
+const cam2LaneOrigin = new THREE.Vector3();
+const cam2LaneHeading = new CourseCameraHeading();
 const cameraViewFraming2 = new CameraViewFraming();
 const chiefCamera2 = new ChiefCamera();
 const authoredSkateCamera2 = new SkateChaseCameraOverlay();
@@ -2014,12 +2016,8 @@ function updateBaseCamera2(dt: number): void {
   const laneTarget = level.cameraLookAhead && !level.zoneAt(subject.x, subject.z)
     ? level.cameraLanePointAhead(cam2LaneCursor, level.cameraLookAhead, cam2LaneTarget)
     : null;
-  cam2ViewForward.copy(cam2F);
-  if (laneTarget) {
-    cam2ViewForward.set(laneTarget.x - subject.x, 0, laneTarget.z - subject.z);
-    if (cam2ViewForward.lengthSq() < 1e-4) cam2ViewForward.copy(cam2F);
-    else cam2ViewForward.normalize();
-  }
+  const laneOrigin = laneTarget ? level.cameraLanePointAhead(cam2LaneCursor, 0, cam2LaneOrigin) : null;
+  cam2ViewForward.copy(cam2LaneHeading.step(laneOrigin, laneTarget, cam2F, dt, snapped));
   const tx = subject.x - cam2ViewForward.x * framing.distance;
   const tz = subject.z - cam2ViewForward.z * framing.distance;
   const ty = subject.y + framing.height;
@@ -2028,12 +2026,8 @@ function updateBaseCamera2(dt: number): void {
   camera2.position.y += (ty - camera2.position.y) * k;
   camera2.position.z += (tz - camera2.position.z) * k;
   if (laneTarget) {
-    const trailing = Math.max(framing.distance,
-      (subject.x-camera2.position.x)*cam2ViewForward.x + (subject.z-camera2.position.z)*cam2ViewForward.z);
-    camera2.position.x = subject.x - cam2ViewForward.x * trailing;
-    camera2.position.z = subject.z - cam2ViewForward.z * trailing;
-    cam2ViewForward.set(laneTarget.x - camera2.position.x, 0, laneTarget.z - camera2.position.z);
-    if (cam2ViewForward.lengthSq() < 1e-4) cam2ViewForward.copy(cam2F);
+    fitCameraRigHorizontal(camera2.position, cam2ViewForward, framing.pitch,
+      camera2.fov, camera2.aspect, subject, p2.cameraPoseBounds);
   }
   setCameraRigAim(cam2Aim, camera2.position, cam2ViewForward, framing.pitch);
   camera2.lookAt(cam2Aim);
@@ -4184,6 +4178,8 @@ player.onGameOver = () => {
 const camTarget = new THREE.Vector3();
 const cameraLaneTarget = new THREE.Vector3();
 const cameraViewForward = new THREE.Vector3();
+const cameraLaneOrigin = new THREE.Vector3();
+const cameraLaneHeading = new CourseCameraHeading();
 // Canonical, un-peeked view direction. Gameplay/replays consume this while
 // the visible camera may carry a small presentation-only right-stick offset.
 const camControlDir = new THREE.Vector3(0, 0, -1);
@@ -4442,12 +4438,8 @@ function updateBaseCamera(dt: number): void {
   const laneTarget = level.cameraLookAhead && lf && !znHere
     ? level.cameraLanePointAhead(cameraLaneCursor, level.cameraLookAhead, cameraLaneTarget)
     : null;
-  cameraViewForward.copy(camF);
-  if (laneTarget) {
-    cameraViewForward.set(laneTarget.x - subject.x, 0, laneTarget.z - subject.z);
-    if (cameraViewForward.lengthSq() < 1e-4) cameraViewForward.copy(camF);
-    else cameraViewForward.normalize();
-  }
+  const laneOrigin = laneTarget ? level.cameraLanePointAhead(cameraLaneCursor, 0, cameraLaneOrigin) : null;
+  cameraViewForward.copy(cameraLaneHeading.step(laneOrigin, laneTarget, camF, dt, snapped));
   camTarget.set(
     subject.x - cameraViewForward.x * framing.distance,
     effY + framing.height,
@@ -4488,14 +4480,8 @@ function updateBaseCamera(dt: number): void {
   // Build explicit pitch from the damped eye. A lane look-ahead adjusts only
   // presentation yaw; airborne height never pitches the shot with the road.
   if (laneTarget) {
-    // Retain the eased trailing distance, but keep the eye on the chord through
-    // the rider and next bend. Lateral lag otherwise clips the rider in portrait.
-    const trailing = Math.max(framing.distance,
-      (subject.x-camera.position.x)*cameraViewForward.x + (subject.z-camera.position.z)*cameraViewForward.z);
-    camera.position.x = subject.x - cameraViewForward.x * trailing;
-    camera.position.z = subject.z - cameraViewForward.z * trailing;
-    cameraViewForward.set(laneTarget.x - camera.position.x, 0, laneTarget.z - camera.position.z);
-    if (cameraViewForward.lengthSq() < 1e-4) cameraViewForward.copy(camF);
+    fitCameraRigHorizontal(camera.position, cameraViewForward, framing.pitch,
+      camera.fov, camera.aspect, subject, player.cameraPoseBounds);
   }
   setCameraRigAim(aimSmooth, camera.position, cameraViewForward, framing.pitch);
 

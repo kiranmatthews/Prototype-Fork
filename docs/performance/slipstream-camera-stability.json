@@ -1,0 +1,163 @@
+{
+  "recordedAt": "2026-10-05T03:27:38.939Z",
+  "mainSha256": "697e6ae346de02629003ce795b4157e092183a8c8a11e07a3650ef286a91e6e1",
+  "cameraRigSha256": "7edfd980656005a7762804f09382c32268f43ccb8b9f703dcb38eeef7814467a",
+  "publishedLevelsSha256": "c9c25a79eebd306e7cdaaaf83f5fdfd1eec24294e397c889dc0b143ff1b38c68",
+  "tuningSha256": "f06c99fede5097695309dd9a2e1b8d28fe3dac1e615335aa91fc63d45d4f5759",
+  "native": {
+    "openingYawErrorDegrees": 7.211591186379176e-15,
+    "historicalOpeningYawErrorDegrees": 26.56505117707799,
+    "historicalOpeningYawRateDegreesPerSecond": 34.37632186100911,
+    "canonicalYawDifference": 0,
+    "pitchDifference": 3.9745984281580604e-14,
+    "lensDifference": 0,
+    "eyeHeightDifference": 0,
+    "firstDropAndCorkscrewFrames": 3100,
+    "deaths": 0,
+    "lateralSweeps": 28,
+    "secondPlayerSweeps": 8,
+    "independentHeadingResets": true,
+    "cursorStress": {
+      "samples": 6606,
+      "maximumProjectionError": 5.781409721066666,
+      "maximumArcStep": 5.118849838472897
+    }
+  },
+  "browser": {
+    "beforeStrafeDegrees": 19.79887635452485,
+    "afterStrafeDegrees": 0,
+    "positive": {
+      "frames": 2634,
+      "seconds": 43.9,
+      "state": "finished",
+      "checkpoints": [
+        0,
+        1
+      ],
+      "jump": {
+        "frame": 2370,
+        "phase": "final flight",
+        "position": [
+          5.335286913936596,
+          7.074102970114177,
+          -735.3011361655231
+        ],
+        "speed": 26.306402479191043,
+        "state": "ride",
+        "grounded": true,
+        "board": true,
+        "bailing": false,
+        "cursor": 1115.9088896075332,
+        "ground": {
+          "height": 7.074102970114177,
+          "gravityTrack": false
+        }
+      },
+      "landing": {
+        "frame": 2448,
+        "phase": "final flight",
+        "position": [
+          9.513718909391644,
+          0.6632957304664404,
+          -768.9864401858038
+        ],
+        "speed": 26.11571695669596,
+        "state": "ride",
+        "grounded": true,
+        "board": true,
+        "bailing": false,
+        "cursor": 1115.9088896075332,
+        "ground": {
+          "height": 0.6632957304664404,
+          "gravityTrack": false
+        }
+      },
+      "padJump": {
+        "frame": 2610,
+        "phase": "finish pad flight",
+        "position": [
+          1.4356669856162612,
+          0.2,
+          -831.1433344536085
+        ],
+        "speed": 23,
+        "state": "ride",
+        "grounded": true,
+        "board": true,
+        "bailing": false,
+        "cursor": 1213.4909374718993,
+        "ground": {
+          "height": 0.2,
+          "gravityTrack": false
+        }
+      },
+      "deaths": [],
+      "tuningUnchanged": true,
+      "renderedFrames": 2625,
+      "heroMaxX": 0.21504868153373757
+    },
+    "negative": {
+      "frames": 4133,
+      "deaths": [
+        {
+          "frame": 3998,
+          "phase": "foot flight",
+          "position": [
+            6.069984535896306,
+            -26.597468434363865,
+            -742.0116855489676
+          ],
+          "speed": 3.1826168478156465,
+          "state": "dead",
+          "grounded": false,
+          "board": false,
+          "bailing": true,
+          "cursor": 1134.4361120753254,
+          "ground": null,
+          "checkpoint": [
+            -12.780325943523117,
+            30.710443983660397,
+            -588.7497904490439
+          ],
+          "killY": -26
+        }
+      ],
+      "recovery": {
+        "frame": 4133,
+        "phase": "respawn",
+        "position": [
+          -12.780325943523117,
+          30.610443983660396,
+          -588.7497904490439
+        ],
+        "speed": 0,
+        "state": "ride",
+        "grounded": true,
+        "board": false,
+        "bailing": false,
+        "cursor": 965.7283109341447,
+        "ground": {
+          "height": 30.610443983660396,
+          "gravityTrack": false
+        },
+        "checkpoint": [
+          -12.780325943523117,
+          30.710443983660397,
+          -588.7497904490439
+        ],
+        "distance": 0.10000000000000142
+      },
+      "tuningUnchanged": true
+    },
+    "slipstream2": {
+      "frames": 9551,
+      "state": "finished",
+      "temple": 24,
+      "movers": 6,
+      "gaps": 12,
+      "checkpoints": 16,
+      "errors": []
+    },
+    "errors": []
+  }
+}

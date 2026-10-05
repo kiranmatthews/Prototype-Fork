@@ -67,6 +67,59 @@ export function setCameraRigAim(
   );
 }
 
+/** Anticipate the authored road, independently of the rider's lateral carve.
+ * The returned heading is presentation only; controls retain the local lane. */
+export class CourseCameraHeading {
+  private yaw = 0;
+  private active = false;
+  readonly forward = new THREE.Vector3(0, 0, -1);
+
+  step(origin: THREE.Vector3 | null, ahead: THREE.Vector3 | null,
+    local: { x: number; z: number }, dt: number, snap: boolean): THREE.Vector3 {
+    if (!origin || !ahead) {
+      this.active = false;
+      return this.forward.set(local.x, 0, local.z);
+    }
+    const dx = ahead.x - origin.x, dz = ahead.z - origin.z;
+    const target = Math.hypot(dx, dz) > .001 ? Math.atan2(dx, dz) : Math.atan2(local.x, local.z);
+    if (snap) this.yaw = target;
+    else {
+      if (!this.active) this.yaw = Math.atan2(local.x, local.z);
+      const turn = Math.atan2(Math.sin(target - this.yaw), Math.cos(target - this.yaw));
+      this.yaw += turn * (1 - Math.exp(-6 * Math.max(0, dt)));
+    }
+    this.active = true;
+    return this.forward.set(Math.sin(this.yaw), 0, Math.cos(this.yaw));
+  }
+}
+
+/** Preserve lateral camera easing until the rendered rider would clip.
+ * Only pan by the minimum necessary amount; never orbit, zoom or pitch. */
+export function fitCameraRigHorizontal(eye: THREE.Vector3, forward: { x: number; z: number },
+  pitchDegrees: number, fov: number, aspect: number, subject: THREE.Vector3,
+  bounds?: THREE.Box3 | null): number {
+  if (bounds?.isEmpty()) bounds = null;
+  const length = Math.hypot(forward.x, forward.z) || 1;
+  const fx = forward.x / length, fz = forward.z / length, rx = -fz, rz = fx;
+  const pitch = THREE.MathUtils.degToRad(pitchDegrees), cp = Math.cos(pitch), sp = Math.sin(pitch);
+  const lens = Math.tan(THREE.MathUtils.degToRad(fov) / 2) * aspect * .94;
+  const minX = bounds?.min.x ?? subject.x - .7, maxX = bounds?.max.x ?? subject.x + .7;
+  const minY = bounds?.min.y ?? subject.y, maxY = bounds?.max.y ?? subject.y + 2.8;
+  const minZ = bounds?.min.z ?? subject.z - .7, maxZ = bounds?.max.z ?? subject.z + .7;
+  let low = -Infinity, high = Infinity;
+  for (const x of [minX, maxX]) for (const y of [minY, maxY]) for (const z of [minZ, maxZ]) {
+    const dx = x - eye.x, dy = y - eye.y, dz = z - eye.z;
+    const depth = (dx * fx + dz * fz) * cp - dy * sp;
+    if (depth <= .1) continue;
+    const side = dx * rx + dz * rz, halfWidth = depth * lens;
+    low = Math.max(low, side - halfWidth); high = Math.min(high, side + halfWidth);
+  }
+  if (!Number.isFinite(low) || !Number.isFinite(high)) return 0;
+  const pan = low <= high ? THREE.MathUtils.clamp(0, low, high) : (low + high) / 2;
+  eye.x += rx * pan; eye.z += rz * pan;
+  return pan;
+}
+
 /** Convert a complete old camera snapshot, including mid-replay edits. */
 export function legacyCameraRigTuning(values: Readonly<Record<string, number>>): CameraRigTuning | null {
   if (Number.isFinite(values.camPitch) ||

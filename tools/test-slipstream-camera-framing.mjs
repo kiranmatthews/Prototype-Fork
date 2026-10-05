@@ -27,7 +27,7 @@ try {
   assert.ok(begin>=0&&end>begin,'production camera extraction points changed');
   const code = ts.transpileModule(main.slice(begin,end),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText;
   const makeRig=new Function('deps',`
-    const {THREE,TUNING,newLaneCursor,cameraRigFraming,setCameraRigAim,LoopCameraFraming,CameraHeroFraming,cameraViewAt,cameraViewDirection,CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,level,player,camera}=deps;
+    const {THREE,TUNING,newLaneCursor,cameraRigFraming,setCameraRigAim,CourseCameraHeading,fitCameraRigHorizontal,LoopCameraFraming,CameraHeroFraming,cameraViewAt,cameraViewDirection,CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,level,player,camera}=deps;
     const current={id:'slip'},worldMapController=null,oceanOverview=false,oceanReview=false,BOULDER_FOV=27,input={lookX:0,lookY:0};
     ${code}
     return {step:updateCamera,heading:camControlDir,cursor:cameraLaneCursor};`);
@@ -54,7 +54,7 @@ try {
       if(Math.abs(oldAhead.x)>1)outside++;
       const error=angle(rig.heading,oldRig.heading);maxInput=Math.max(maxInput,error);
       assert.ok(error<.000001,'look-ahead changed the canonical input/replay direction');
-      assert.ok(Math.abs(ahead.x)<.01 && Math.abs(ahead.y)<1,'upcoming course leaves the shot');
+      assert.ok(Math.abs(ahead.x)<1 && Math.abs(ahead.y)<1,JSON.stringify({reason:'upcoming course leaves the shot',hz,aspect,speed,s,ahead:ahead.toArray()}));
       assert.equal(camera.fov,oldCamera.fov,'anticipation changed the lens');
       assert.equal(camera.position.y,oldCamera.position.y,'anticipation changed vertical jump framing');
       const direction=camera.getWorldDirection(new THREE.Vector3()),oldDirection=oldCamera.getWorldDirection(new THREE.Vector3());
