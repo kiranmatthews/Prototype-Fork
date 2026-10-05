@@ -42,14 +42,14 @@ export function refineStandingWater(geometry: THREE.BufferGeometry): THREE.Buffe
   geometry.dispose();return grid;
 }
 
-/** Sheltered water uses the same analytic waves/surf cues with smaller
- * amplitudes, and retains each level's authored colour and emissive light. */
+/** Pools stay flat and quiet. Only a flowing surface opts into wave shaders. */
 export function createStandingWaterMaterial(clock: {value:number}, color: string, emissive: string | undefined,
-  geometry: THREE.BufferGeometry): THREE.MeshStandardMaterial {
+  geometry: THREE.BufferGeometry, flowing = false): THREE.MeshStandardMaterial {
   geometry.computeBoundingBox();const b=geometry.boundingBox!;
   const material=new THREE.MeshStandardMaterial({color,emissive:emissive??'#000000',roughness:0.38,
     metalness:0.04,side:THREE.DoubleSide});
   material.userData.waterSurface=true;material.userData.noWaterShore=true;
+  if(!flowing)return material;
   material.onBeforeCompile=shader=>{
     shader.uniforms.uStillTime=clock;
     shader.uniforms.uStillBounds={value:new THREE.Vector4(b.min.x,b.min.z,b.max.x,b.max.z)};

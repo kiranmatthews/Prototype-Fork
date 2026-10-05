@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import type {CustomComponent} from './level';
-import { SURF_GLSL, SWELL_GLSL } from './coastalSurf';
 
 export const GHOST_EFFECT_KINDS=['ghoststeam','ghostgraffiti','ghostneon','ghostslime'] as const;
 const fract=(n:number)=>n-Math.floor(n);
@@ -109,24 +108,15 @@ export class GhostAtmosphere {
     }
     if(c.dkind==='ghostslime'){
       const width=c.s?.[0]??4,depth=c.s?.[2]??8;
-      const shared=`uniform float time;uniform vec2 poolSize;varying vec2 vUv;varying vec2 vWaterXZ;varying float vWaterEdge;
-        ${SURF_GLSL}\n${SWELL_GLSL}\n`;
-      const material=new THREE.ShaderMaterial({uniforms:{time:{value:0},tint:{value:new THREE.Color(c.color??'#31ce64')},
-        poolSize:{value:new THREE.Vector2(width,depth)},uSurf:{value:new THREE.Vector4(.035,7.2,1.3,.18)}},
-        vertexShader:shared+`void main(){vUv=uv;vec4 world=modelMatrix*vec4(position,1.);
-          vWaterXZ=world.xz;vec2 edge=min(uv,1.-uv)*poolSize;vWaterEdge=min(edge.x,edge.y);
-          vec3 disp=vec3(0.);vec2 slope=vec2(0.);
-          coastSwells(world.xz,vWaterEdge*8.,time,vec4(6.,.018,.3,.4),vec2(.8,.6),
-            vec4(2.7,.009,.36,.25),vec2(-.6,.8),disp,slope);
-          world.y+=disp.y;gl_Position=projectionMatrix*viewMatrix*world;}`,
-        fragmentShader:shared+`uniform vec3 tint;void main(){
-          float ripple=sin(vUv.x*42.+sin(vUv.y*16.+time*.6)*2.)*.5+.5;
+      const material=new THREE.ShaderMaterial({uniforms:{tint:{value:new THREE.Color(c.color??'#31ce64')}},
+        vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+        fragmentShader:`varying vec2 vUv;uniform vec3 tint;void main(){
+          float stain=sin(vUv.x*42.+sin(vUv.y*16.)*2.)*.5+.5;
           float pool=smoothstep(0.,.08,min(min(vUv.x,1.-vUv.x),min(vUv.y,1.-vUv.y)));
-          float foam=surfFoam(vWaterEdge,vWaterXZ,time,ripple);
-          gl_FragColor=vec4(tint*(.14+ripple*.16+foam*.26),pool*.86);
+          gl_FragColor=vec4(tint*(.14+stain*.16),pool*.86);
           #include <colorspace_fragment>
         }`,transparent:true,depthWrite:false,toneMapped:false,side:THREE.DoubleSide});
-      const mesh=new THREE.Mesh(new THREE.PlaneGeometry(width,depth,Math.min(64,Math.ceil(width)),Math.min(64,Math.ceil(depth))),material);
+      const mesh=new THREE.Mesh(new THREE.PlaneGeometry(width,depth),material);
       mesh.rotation.set(-Math.PI/2,0,-THREE.MathUtils.degToRad(c.yaw??0));mesh.position.fromArray(c.p);mesh.name='Glowing stagnant bath water';this.root.add(mesh);return true;
     }
     if(c.dkind!=='ghostgraffiti'&&c.dkind!=='ghostneon')return false;

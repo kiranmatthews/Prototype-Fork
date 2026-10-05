@@ -9,7 +9,7 @@ THREE.TextureLoader.prototype.load=function(_url,ready){const t=new THREE.Textur
 try{
  const {createShoreField,sampleSurf,sampleRunup,SURF_DEFAULTS}=await server.ssrLoadModule('/src/coastalSurf.ts');
  const {UnityOcean}=await server.ssrLoadModule('/src/unityOcean.ts');
- const {refineStandingWater,isStandingWater}=await server.ssrLoadModule('/src/standingWater.ts');
+ const {refineStandingWater,isStandingWater,createStandingWaterMaterial}=await server.ssrLoadModule('/src/standingWater.ts');
  const {migrateCustomLevel,parseCustomLevelJson:parseCustomLevel,BUILTIN_LEVELS}=await server.ssrLoadModule('/src/level.ts');
  const geometry=new THREE.PlaneGeometry(40,50,20,25);geometry.rotateX(-Math.PI/2);
  const pos=geometry.getAttribute('position');for(let i=0;i<pos.count;i++)pos.setY(i,-pos.getX(i)*.14);geometry.computeVertexNormals();
@@ -41,6 +41,11 @@ try{
  ocean.setShoreGeometry([mesh]);assert.equal(disposed,1,'rebuild must free old field');const replacement=ocean.oceanMaterial.uniforms.uCoastMap.value;replacement.addEventListener('dispose',()=>disposed++);
  ocean.dispose();ocean.dispose();assert.equal(disposed,2,'each field must dispose exactly once');
  const rectangle=new THREE.PlaneGeometry(30,24).rotateX(-Math.PI/2),refined=refineStandingWater(rectangle);
+ const still=createStandingWaterMaterial({value:0},'#476c63',undefined,refined);
+ assert.equal(still.onBeforeCompile,THREE.Material.prototype.onBeforeCompile,'stagnant water must not install wave, foam or time shaders');
+ const flow=createStandingWaterMaterial({value:0},'#68a8a1',undefined,refined,true);
+ assert.notEqual(flow.onBeforeCompile,still.onBeforeCompile,'the flowing creek retains its animated material');
+ still.dispose();flow.dispose();
  assert.ok(refined.getAttribute('position').count>100);refined.computeBoundingBox();assert.equal(refined.boundingBox.min.x,-15);refined.dispose();
  const triangle=new THREE.BufferGeometry().setAttribute('position',new THREE.Float32BufferAttribute([0,0,0,9,0,0,0,0,9],3));triangle.computeVertexNormals();const shaped=refineStandingWater(triangle);
  const shapedPos=shaped.getAttribute('position');for(let i=0;i<shapedPos.count;i++)assert.ok(shapedPos.getX(i)+shapedPos.getZ(i)<=9.00001,'refinement must preserve custom outline');shaped.dispose();
@@ -61,9 +66,10 @@ try{
  const ghostRoot=new THREE.Group(),atmosphere=new GhostAtmosphere(ghostRoot);
  atmosphere.add({t:'decor',dkind:'ghostslime',p:[0,0,0],s:[4,.01,8]});
  const bath=ghostRoot.getObjectByName('Glowing stagnant bath water');
- assert.ok(bath.geometry.attributes.position.count>4&&bath.geometry.attributes.position.count<=4225);
+ assert.equal(bath.geometry.attributes.position.count,4,'stagnant baths do not need wave subdivisions');
  const green=bath.material.uniforms.tint.value.clone();atmosphere.update(.25,new THREE.Vector3());
- assert.equal(bath.material.uniforms.time.value,.25);assert.ok(bath.material.uniforms.tint.value.equals(green));
+ assert.equal(bath.material.uniforms.time,undefined);assert.equal(bath.material.uniforms.uSurf,undefined);
+ assert.ok(bath.material.uniforms.tint.value.equals(green));
  atmosphere.dispose();assert.equal(ghostRoot.children.length,0);
  field.texture.dispose();geometry.dispose();mesh.material.dispose();
  console.log('PASS coastline signs/directions/slope, depth-limited moving surf/runup, bounded rolling waves, full/lite CPU invariance, field lifetime, exact water outlines and source/editor migration');

@@ -5420,8 +5420,9 @@ export class Level {
     let material: THREE.MeshLambertMaterial | THREE.MeshStandardMaterial;
     const standingWater=isStandingWater(c);
     if(standingWater) {
-      geometry=refineStandingWater(geometry);
-      material=createStandingWaterMaterial(this.standingWaterClock,c.color??'#476c63',c.emissive,geometry);
+      const flowingWater=c.nm==='Custard Creek water ribbon';
+      if(flowingWater)geometry=refineStandingWater(geometry);
+      material=createStandingWaterMaterial(this.standingWaterClock,c.color??'#476c63',c.emissive,geometry,flowingWater);
       material.vertexColors=!!c.colors;material.fog=c.fog!==false;material.opacity=c.opacity??1;material.transparent=material.opacity<1;
     } else if (c.materialStyle === "unity-sand") {
       const uv = geometry.getAttribute("uv");

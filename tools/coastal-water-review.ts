@@ -3,7 +3,7 @@ import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
 import {UnityOcean} from '../src/unityOcean';
 import {Level,BUILTIN_LEVELS} from '../src/level';
 import {createUnitySandMaterial} from '../src/unitySandMaterial';
-import {createStandingWaterMaterial,refineStandingWater} from '../src/standingWater';
+import {createStandingWaterMaterial} from '../src/standingWater';
 
 const query=new URLSearchParams(location.search),quality=query.has('lite')?'lite':'full';
 const renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
@@ -20,7 +20,7 @@ const select=document.querySelector<HTMLSelectElement>('#course')!;
 const clock={value:0};let paused=false,level:Level|null=null,ocean:UnityOcean|null=null;
 let building=false;
 let fixture:THREE.Group|null=null;let summary:Record<string,unknown>={};
-const scenes=[['fixture','Curved surf + sheltered pool'],['warproom','Island world map'],['beachfront','Beachside Run'],
+const scenes=[['fixture','Curved surf + still pool'],['warproom','Island world map'],['beachfront','Beachside Run'],
   ['descent','The Descent coast'],['island-hopper','Island Hopper'],['coastal-street-run','Coastal Street Run'],
   ['jungle','Jungle Ruins swimming cove'],['slip','Slipstream open sea'],['drowned-crown','Drowned Crown moonpool'],
   ['waterpark','Deadwater service wells'],['custard-creek','Custard Creek'],['ghost-train','Ghost Train baths'],['crab-chief','Crab Chief reef']];
@@ -42,7 +42,7 @@ async function build(id:string):Promise<void>{
     const sand=createUnitySandMaterial().material,sandMesh=new THREE.Mesh(sandGeo,sand);fixture.add(sandMesh);
     ocean=new UnityOcean({seaLevel:0,shoreDirX:1,shoreDirZ:0,shore:[{x:0,z:42,sx:1,sz:0,bedSlope:.14,beachSlope:.14},{x:0,z:-62,sx:1,sz:0,bedSlope:.14,beachSlope:.14}],course:[],terrainHeight:()=>-4,quality});
     fixture.add(ocean.group);fixture.updateMatrixWorld(true);ocean.setShoreGeometry([sandMesh]);
-    const poolGeo=refineStandingWater(new THREE.PlaneGeometry(12,14).rotateX(-Math.PI/2));
+    const poolGeo=new THREE.PlaneGeometry(12,14).rotateX(-Math.PI/2);
     const pool=new THREE.Mesh(poolGeo,createStandingWaterMaterial(clock,'#476c63',undefined,poolGeo));pool.position.set(-15,3,-14);fixture.add(pool);pool.name='Sheltered pool';
     camera.position.set(27,12,28);controls.target.set(5,0,-13);
   }else{

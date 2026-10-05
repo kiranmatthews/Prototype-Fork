@@ -8123,7 +8123,7 @@ export class Editor {
       note.textContent = "Visual warning only. Select its pit too when moving or rotating the complete hazard.";
       this.propsEl.appendChild(note);
     } else if (c.t === "mesh") {
-      this.propsEl.appendChild(this.pickRow("material style", [["unity-sand", "Unity shoreline sand"], ["water", "Sheltered water"]],
+      this.propsEl.appendChild(this.pickRow("material style", [["unity-sand", "Unity shoreline sand"], ["water", "Still water"]],
         () => c.materialStyle ?? "", value => {
           if (value === "unity-sand") { c.materialStyle = value; c.tex = "sand"; }
           else if (value === "water") {c.materialStyle = value; c.tex = "solid"; c.solid = false; delete c.outline;}

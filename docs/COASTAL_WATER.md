@@ -3,8 +3,8 @@
 The shared ocean now has rolling swells, shoaling crests, moving whitewater,
 backwash, and a wet sand transition. It retains the fork's MatrixRex textures,
 authored turquoise/blue palettes, reflection/refraction passes, caustics, sky,
-and CRT presentation. Sheltered pools and the wreck's moonpool retain their
-own colours and use smaller waves.
+and CRT presentation. Stagnant pools, service wells and the wreck's moonpool
+retain their own colours and stay flat, without waves, foam or run-up.
 
 The reference was [Tidewater](https://github.com/dgreenheck/tidewater), especially
 [ShoreWaves](https://github.com/dgreenheck/tidewater/blob/main/src/ocean/ShoreWaves.js)
@@ -33,11 +33,12 @@ Tidewater's engine, FFT, compute simulations, assets, or shader composition.
 - The map's visual seabed shelves sit deep enough for the swell troughs. Far
   ocean fill uses the same wave bands and camera-distance haze, including the
   sea beneath the original Slipstream course.
-- `materialStyle: "water"` is the editor-persistent, non-solid sheltered-water
-  material. Rectangles receive a bounded grid; other outlines receive triangle
-  subdivision without changing their footprint. Known old published water
-  components migrate to the tag, including the creek ribbon when present.
-  Water material selection is available in the mesh inspector.
+- `materialStyle: "water"` is the editor-persistent, non-solid still-water
+  material. Stagnant surfaces keep their original geometry and have no water
+  animation shader. Custard Creek explicitly opts into the flowing treatment;
+  its outlines receive bounded subdivision without changing their footprint.
+  Known old published water components migrate to the tag. Still-water
+  material selection is available in the mesh inspector.
 - Ocean passes, render sizing, movement tuning, hazards and swimming rules
   retain their existing interfaces. The CPU sampler supplies the new surface
   height to the existing swimming buoyancy and ripple effects.
@@ -50,8 +51,8 @@ the Jungle swimming cove, Crab Chief reef, Slipstream scenery, and editor/custom
 oceans. Tagged sheltered surfaces include the wreck moonpool and Deadwater
 maintenance wells. Recovered park authoring data also carries the tag;
 Deadwater Cup deliberately removes those wells and remains drained. Custard
-Creek's reaches use the sheltered material; Ghost Train baths use the shared
-wave/foam functions with their existing green glow and very small amplitudes.
+Creek's reaches retain the flowing treatment. Ghost Train baths keep their
+green glow and static stained surface, with no displacement or animated foam.
 
 ## Review and checks
 
@@ -61,7 +62,7 @@ and first-draw timing, WebGL error reporting, and a GPU/CPU sampler comparison.
 `?lite` selects the reduced path, `?cold` uses fresh Three program keys, and
 `?verify` runs the sampler comparison. Driver caching can still apply.
 
-The final full fixture at 1280×720 used eight scene/pass programs, reported
+The initial water release's full fixture at 1280×720 used eight scene/pass programs, reported
 303.7 ms for `compileAsync` and 1312.4 ms for its first render call, including
 the reflection/refraction views. It reported zero WebGL errors. At 192 GPU
 sample points over four wave times, maximum height error was 0.000440 m and
