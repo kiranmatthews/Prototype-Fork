@@ -1,7 +1,7 @@
 {
   "level": "nightworks-after-hours",
   "recordedAt": "2026-10-05T11:43:48.030860+00:00",
-  "status": "validated_locally",
+  "status": "validated_live",
   "sourceSha256": "f19d3fa826ab644eac89d8512de3d6582a8d8c312d2eef1cc315f8058cf1ed4c",
   "playerSha256": "289b814a5dbcc62609cb627ff717dee2136981f930d4bff0b3e7c26b369ebff2",
   "tuningSha256": "f06c99fede5097695309dd9a2e1b8d28fe3dac1e615335aa91fc63d45d4f5759",
@@ -352,7 +352,8 @@
       "frames": 3390,
       "passed": true,
       "reportSha256": "da00587a2bacd2e9c2afef695750bfb81bc10c9ae28c1308c51399c45d636745"
-    }
+    },
+    "quarryValidation": "Each alternating obstacle records its open-side/overflight crossing with normal production collision; fitted rounded corners allow a diagonal line inside the conservative bounding box."
   },
   "optionalCrystal": {
     "status": "passed",
@@ -380,6 +381,22 @@
     "branch": "origin/main",
     "workflow": "Deploy to GitHub Pages",
     "levelUrl": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=nightworks-after-hours",
-    "verification": "Live deployment is verified after this locally validated record is committed."
+    "verification": "Live full-render traversal and authored-data comparison passed after publication."
+  },
+  "publication": {
+    "status": "verified",
+    "gameReleaseCommit": "bc783b691cb53e0e1c6d844288aab45a275728a5",
+    "workflowUrl": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/37305255820",
+    "levelUrl": "https://kiranmatthews.github.io/Prototype-Fork/?playtest&level=nightworks-after-hours",
+    "fullNativeTicks": 3373,
+    "boardFootFrames": 0,
+    "consoleErrors": [],
+    "sourceFloatTolerance": 1e-09,
+    "buildStamp": "Codex/sol fork \u00b7 build 10-05 11:50 UTC",
+    "originalNightworksRockAssetsReady": 66,
+    "originalNightworksGoblinsReady": 8,
+    "reportSha256": "40d670a1e33a391b00ccb59599b20d323e0b035f4c8efc45f8286255fefe90f5",
+    "verifiedAt": "2026-10-05T12:22:47.776Z",
+    "scope": "This follow-up changes validation and evidence only; playable source matches the verified game release."
   }
 }
