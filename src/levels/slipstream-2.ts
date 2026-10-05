@@ -54,6 +54,7 @@ add({t:'camnode',p:[0,base+18,-9],s:[52,65,35],cameraView:true,radius:2,
   cameraPosition:[0,base+20,32],cameraTarget:[0,base+18,-7],cameraFollowDistance:20,cameraFollowTargetHeight:2.2,cameraFov:58,cameraAspect:16/9,grp:2,nm:'Temple facade · side-on climbing view'});
 
 export const SLIPSTREAM_2_END=2330;
+export const SLIPSTREAM_2_GAP_SCALE=.9;
 export const SLIPSTREAM_2_GAPS=[
   {a:150,b:172,name:'Sun Gate',width:22}, {a:337,b:363,name:'Cloud Split',width:26},
   {a:527,b:551,name:'Broken Aqueduct',width:24}, {a:717,b:747,name:'Sky Channel',width:30},
@@ -88,13 +89,14 @@ function qAt(s:number) {
 // The bend map uses raw q, so the same gap stations must use raw q too.
 for(const g of SLIPSTREAM_2_GAPS) {
   const a=arc[Math.round(g.a)].s*SLIPSTREAM_2_END/accumulated,b=arc[Math.round(g.b)].s*SLIPSTREAM_2_END/accumulated;
-  g.a=a;g.width=Math.max(28,b-a);g.b=a+g.width;
+  g.a=a;g.width=Math.max(28,b-a)*SLIPSTREAM_2_GAP_SCALE;g.b=a+g.width;
 }
 // Larger flights receive a lower catch. The height budget belongs to the
 // course: these discrete drops replace part of the gradual descent, keeping
 // the sea-level finish while requiring a charged, moving board at every lip.
 const approachDrop=14;
-const flightDrop=(g:{width:number})=>Math.max(0,.15*g.width-3);
+// Move the receiving decks closer while retaining their authored drop heights.
+const flightDrop=(g:{width:number})=>Math.max(0,.15*(g.width/SLIPSTREAM_2_GAP_SCALE)-3);
 const gradualDescent=(summit[1]-SLIPSTREAM_2_GAPS.reduce((sum,g)=>sum+approachDrop+flightDrop(g),0))/SLIPSTREAM_2_END;
 export function slipstream2Height(s:number) {
   let y=summit[1]-gradualDescent*s;

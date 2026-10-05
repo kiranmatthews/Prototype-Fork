@@ -1,17 +1,38 @@
 {
   "level": "slipstream-2",
-  "recordedAt": "2026-10-05T00:27:50.062Z",
-  "sourceSha256": "1ab7f313e6c999f838d7e85fadaeabcf4a2971e541edc8c58b25e00ce08b5fc7",
-  "playerSha256": "ce19d045fe28d636ed6fe146cf27d92b4f1d95cfd74d793b9138e5bcc427247f",
+  "recordedAt": "2026-10-05T08:10:05.839Z",
+  "sourceSha256": "5ab6633da1395bad9136ab10387218a9a4733d10ffb6b89597686f38e2d62319",
+  "playerSha256": "289b814a5dbcc62609cb627ff717dee2136981f930d4bff0b3e7c26b369ebff2",
   "tuningSha256": "f06c99fede5097695309dd9a2e1b8d28fe3dac1e615335aa91fc63d45d4f5759",
   "authoredVerticalDropSafety": {
     "hugeDropDistanceMetres": 24,
     "minimumNormalImpactMetresPerSecond": 20
   },
   "publishedLevelMatchesSource": true,
-  "playableLengthMetres": 2494.5603301359724,
+  "gapReduction": {
+    "baselineRevision": "59db917eb74d7d173b799db5b5a44eb07e2ed45f",
+    "runtimeBaselineRevision": "58186803e962245829fb8954e674d8651ee07e55",
+    "widthScale": 0.9,
+    "oldWidthMetres": [
+      27.999999999997144,
+      33.898063589758074
+    ],
+    "newWidthMetres": [
+      25.2,
+      30.508257230784103
+    ],
+    "physicalWidthRatios": [
+      0.8999999999999951,
+      0.9000000000000072
+    ],
+    "unchangedTemple": true,
+    "unchangedTakeoffs": true,
+    "unchangedVerticalDrops": true,
+    "unchangedRuntimeAndTuning": true
+  },
+  "playableLengthMetres": 2494.84885750182,
   "originalPlayableLengthMetres": 1222.7357393865784,
-  "lengthRatio": 2.0401467379921705,
+  "lengthRatio": 2.0403827066946083,
   "geometry": {
     "templeRisingLedges": 18,
     "retractingLedges": 6,
@@ -19,8 +40,8 @@
     "templeRiseMetres": 37.8,
     "skateGaps": 12,
     "gapWidthMetres": [
-      28,
-      33.89806358976011
+      25.2,
+      30.508257230784103
     ],
     "approachDescentMetres": 14,
     "approachLengthMetres": 40,
@@ -31,15 +52,15 @@
   },
   "nativeJourney": {
     "command": "node tools/test-slipstream-2.mjs",
-    "frames": 9570,
-    "seconds": 159.5,
+    "frames": 9583,
+    "seconds": 159.71666666666667,
     "deaths": 0,
     "state": "finished",
     "templeLandings": 24,
     "movingLedgeLandings": 6,
     "gapLandings": 12,
     "bankedCheckpoints": 16,
-    "maxSpeedMetresPerSecond": 37.505665191998744
+    "maxSpeedMetresPerSecond": 37.333456682473106
   },
   "gapControls": {
     "command": "node tools/test-slipstream-2-gaps.mjs",
@@ -47,15 +68,16 @@
     "fastChargedSuccessful": 12,
     "slowChargedFailed": 12,
     "noReleaseFailed": 12,
+    "noReleaseSuccessful": 0,
     "fastTakeoffSpeedMetresPerSecond": [
-      33.66648945465615,
-      34.01368572402381
+      33.67245414081614,
+      34.03147372699352
     ],
     "slowTakeoffSpeedMetresPerSecond": [
-      11.090195052502377,
-      11.573002611668784
+      11.08082625258586,
+      11.55974384937286
     ],
-    "minimumLandingMarginMetres": 6.720096799358544,
+    "minimumLandingMarginMetres": 10.203087472028074,
     "inputsOnly": true,
     "runtimeTuningUnmodifiedByPilots": true
   },

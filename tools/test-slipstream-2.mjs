@@ -5,6 +5,7 @@ import { withBlockworksRuntime } from './blockworks-runner.mjs';
 import { createSlipstream2Pilot } from './slipstream-2-pilot.mjs';
 import { slipstreamPlayableLength } from './slipstream-course-length.mjs';
 import { createHash } from 'node:crypto';
+import { verifySlipstream2GapReduction } from './slipstream-2-gap-baseline.mjs';
 
 const sourceSha256 = createHash('sha256').update(await readFile(new URL('../src/levels/slipstream-2.ts', import.meta.url))).digest('hex');
 const playerSha256 = createHash('sha256').update(await readFile(new URL('../src/player.ts', import.meta.url))).digest('hex');
@@ -13,6 +14,7 @@ const tuningSha256 = createHash('sha256').update(await readFile(new URL('../src/
 await withBlockworksRuntime(async r => {
   const m = r.sourceModule, p = r.p, l = r.l, before = JSON.stringify(r.TUNING);
   const pilot = createSlipstream2Pilot(m, { nodeCamera: true });
+  const gapReduction = await verifySlipstream2GapReduction(m);
   const pack = JSON.parse(await readFile(new URL('../public/levels.json', import.meta.url), 'utf8'));
   const original = pack.levels.find(e => e.id === 'slip').data;
   assert.deepEqual(pack.levels.find(e => e.id === 'slipstream-2').data, JSON.parse(JSON.stringify(r.source)), 'Published snapshot must equal source data');
@@ -21,7 +23,7 @@ await withBlockworksRuntime(async r => {
   const lengthRatio = laneLength / originalLength;
   assert.ok(lengthRatio >= 2 && lengthRatio <= 2.1, `Sequel playable length ratio ${lengthRatio} is outside 2.0–2.1`);
   assert.equal(m.SLIPSTREAM_2_GAPS.length, 12);
-  assert.ok(m.SLIPSTREAM_2_GAPS.every(g => g.width >= 28));
+  assert.ok(m.SLIPSTREAM_2_GAPS.every(g => g.width >= 25.2 - 1e-9));
   const errors = [];
   try {
     while (p.state !== 'finished') {
@@ -30,7 +32,7 @@ await withBlockworksRuntime(async r => {
     }
   } catch (error) { errors.push(String(error)); }
   const report = { sourceSha256, playerSha256, tuningSha256, authoredHugeDropDistance: r.TUNING.hugeDropDistance,
-    authoredHugeDropImpact: r.TUNING.hugeDropImpact, publishedMatchesSource: true, laneLength, originalLength, lengthRatio, frames: r.frame, seconds: r.frame * r.dt,
+    authoredHugeDropImpact: r.TUNING.hugeDropImpact, gapReduction, publishedMatchesSource: true, laneLength, originalLength, lengthRatio, frames: r.frame, seconds: r.frame * r.dt,
     state: p.state, phase: pilot.phase, position: p.pos.toArray(), deaths: p.totalDeaths,
     evidence: pilot.evidence, errors, traceTail: r.trace.slice(-100) };
   await writeFile(`${tmpdir()}/slipstream-2-journey.json`, JSON.stringify(report, null, 2));

@@ -95,7 +95,7 @@ The moving sequence should remain readable after an imperfect approach. A player
 
 ## Original skate continuation
 
-After the on-foot summit, twelve flights interrupt the winding aqueduct. Their final clear centreline widths range from 28 m to 33.898 m. Each run-up permanently descends 14 m over 40 m, immediately followed by a 9 m long kicker rising 2.5 m and a 6 m flat launch shelf. The descent earns speed through the existing gravity-track rules; geometry supplies the energy rather than a boost component. A flat lip makes simply rolling off insufficient.
+After the on-foot summit, twelve flights interrupt the winding aqueduct. Their current clear centreline widths range from 25.2 m to 30.508 m after the requested 10% reduction from the original 28–33.898 m spans. Takeoff stations, run-up heights and authored landing drops are retained. Each run-up permanently descends 14 m over 40 m, immediately followed by a 9 m long kicker rising 2.5 m and a 6 m flat launch shelf. The descent earns speed through the existing gravity-track rules; geometry supplies the energy rather than a boost component. A flat lip makes simply rolling off insufficient.
 
 The amber stripe spans stations a−9 through a−7, centred 8 m before each gap edge a. It teaches the player to release the charged jump on the rising face. The native pilot releases at a−7.75. The launch markers sit beside the stripe and the fruit arc exposes the intended airborne direction.
 
@@ -110,8 +110,8 @@ The frozen level source SHA-256 is `1ab7f313e6c999f838d7e85fadaeabcf4a2971e541ed
 | Complete input journey | 9,570 frames / 159.5 s; finish reached with zero deaths and no runtime errors. |
 | Temple route | All 24 supported route landings, including all six retracting mechanisms. |
 | Skate route | All twelve airborne gap landings and all sixteen ordered checkpoints. |
-| Twelve fast charged probes | Every gap clears at measured release speeds of 33.666–34.014 m/s. |
-| Twelve slow charged controls | Every gap fails at measured release speeds of 11.090–11.573 m/s. |
+| Twelve fast charged probes | Every shorter gap clears at measured release speeds of 33.672–34.032 m/s. |
+| Twelve slow charged controls | Every shorter gap fails at measured release speeds of 11.080–11.560 m/s. |
 | Twelve rolling controls | Every gap fails when the jump is held but never deliberately released. |
 | Idle retraction control | Support is lost, wall penetration is prevented, full retraction occurs, and the rider falls. |
 | Published editor snapshot | Native journey verifies equality with source-owned level data. |
@@ -120,6 +120,6 @@ The three checks are `tools/test-slipstream-2.mjs`, `tools/test-slipstream-2-gap
 
 The user subsequently approved more forgiving huge-drop judgement. Tuning version 25 raises the apex-to-touchdown descent threshold from 12 m to 24 m and retains the 20 m/s impact threshold. `tools/test-huge-drop-bail.mjs` verifies nine natural flat drops: on-foot 12/20/23.99 m drops remain safe, 24/24.01/40 m drops bail, and the board boundary likewise distinguishes 23.99 m from 24/24.01 m. An aligned 30.473 m ramp descent remains safe because its measured impact into the surface normal is only 2.683 m/s. Five checks of the actual saved-settings loader verify untouched historical defaults adopt 24 m while deliberate distance and impact overrides survive.
 
-The complete journey, all 36 flight controls, and retraction test were rerun under the final 24 m default with unchanged successful results. `docs/performance/slipstream-2.json` fingerprints the level, Player, and final tuning sources; its recorded tuning SHA-256 is `f06c99fede5097695309dd9a2e1b8d28fe3dac1e615335aa91fc63d45d4f5759`.
+The complete journey, all 36 flight controls, and retraction test were rerun after the 10% gap reduction under the final 24 m default, with zero journey deaths and a minimum fast-jump landing margin of 10.20 m. `docs/performance/slipstream-2.json` fingerprints the level, Player, and final tuning sources; its recorded tuning SHA-256 is `f06c99fede5097695309dd9a2e1b8d28fe3dac1e615335aa91fc63d45d4f5759`.
 
 Browser visual review, console inspection, and deployed-page verification are separate release evidence recorded in `docs/LEVEL_ITERATIONS.md`. The Crash recordings establish the temple reference; the prototype's own traversal evidence establishes its skate flights.
