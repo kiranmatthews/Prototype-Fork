@@ -106,7 +106,7 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     name: "Island 1",
     subtitle: "REGION 01",
     centre: [-95, 0, 0],
-    levelKeys: ["treehouse-trail", "jungle", "jungle-terraces", "jungle-skyline", "test-course", "custard-creek", "sky-bridge", "nightworks", "nightworks-after-hours", "slipstream", "jungle-cup"],
+    levelKeys: ["treehouse-trail", "jungle", "jungle-terraces", "jungle-skyline", "test-course", "custard-creek", "sky-bridge", "nightworks", "nightworks-after-hours", "slipstream", "slipstream-2", "jungle-cup"],
   },
   {
     id: "island-2",
@@ -203,6 +203,10 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     fromDirection: "right",
     toDirection: "left",
     waypoints: [[-39, 3.4, 22]],
+  },
+  {
+    from: "slipstream", to: "slipstream-2", travel: "trail",
+    fromDirection: "up", toDirection: "down", waypoints: [[-47, 7.5, 11]],
   },
   {
     from: "jungle-cup",
@@ -478,6 +482,8 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
   // Append the identity to preserve every published editor/map point index.
   { progressKey: "custard-creek", levelId: "custard-creek", name: "Custard Creek", relicTime: 180,
     islandId: "island-1", mapPath: "lower-branch", mapPosition: [-111, 2.4, 46], unlockAfter: ["test-course"] },
+  { progressKey: "slipstream-2", levelId: "slipstream-2", name: "Slipstream 2", relicTime: 155,
+    islandId: "island-1", mapPath: "upper-branch", mapPosition: [-47, 11, -1], unlockAfter: ["slipstream"] },
 ] as const;
 
 const LEVEL_BY_ID = new Map<string, CampaignLevelDefinition>();

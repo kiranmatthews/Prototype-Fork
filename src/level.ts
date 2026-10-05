@@ -65,6 +65,7 @@ import { NightworksRocks, nightworksGeometry, isNightworksSurface } from "./nigh
 import { NIGHTWORKS_LEVEL } from "./levels/nightworks";
 import { NIGHTWORKS_AFTER_HOURS_LEVEL } from "./levels/nightworks-after-hours";
 import { migrateSlipstreamCamera, SLIPSTREAM_CAMERA_LOOK_AHEAD } from "./levels/slipstream-camera";
+import { SLIPSTREAM_2_LEVEL } from "./levels/slipstream-2";
 import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL, JUNGLE_SKYLINE_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
@@ -2348,6 +2349,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "flats", name: "Flats & Pipes" }, // sky-deck runway opening into the transition yard
   { id: "sky", name: "Sky Bridge" },
   { id: "slip", name: "The Slipstream" }, // banked ribbon slide high over the sea
+  { id: "slipstream-2", name: SLIPSTREAM_2_LEVEL.name, data: SLIPSTREAM_2_LEVEL },
   {id:"test",name:CARLISLE_COAST_LEVEL.name,data:CARLISLE_COAST_LEVEL},
   {id:"custard-creek",name:CUSTARD_CREEK_LEVEL.name,data:CUSTARD_CREEK_LEVEL},
   { id: "dark", name: "The Nightworks" }, // cycling platforms, phase rocks and torch-lit ferries

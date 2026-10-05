@@ -185,7 +185,7 @@ export const TUNING = {
   tripLiftVariation: 0.12, // deterministic +/- variation around generic trip lift
   tripCarryMin: 0.58, // minimum entry-speed fraction carried through a low trip
   tripCarryMax: 0.72, // maximum entry-speed fraction carried through a low trip
-  hugeDropDistance: 12, // apex-to-touchdown descent required for a heavy-landing bail
+  hugeDropDistance: 24, // only a truly huge apex-to-touchdown descent can trigger a heavy-landing bail
   hugeDropImpact: 20, // minimum velocity into the landing normal for a heavy-landing bail
   crateTripSpeed: 6, // skate into a wood crate at or above this (but below smashSpeed) = trip and tumble OVER it
   // Shared grind/manual/lip dynamics: a controllable middle, escalating edge
@@ -224,7 +224,8 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 24; // v24: restore park feel; only speed/acceleration, coast-to-stop and camera tuning
+export const TUNING_VERSION = 25; // v25: huge-drop bails require 24 m of descent; untouched saved defaults follow this build
+// v24: restore park feel; only speed/acceleration, coast-to-stop and camera tuning
 // v17: captured Chrome carve grip and balance defaults
 // v16: tunable high-speed skating FOV push
 // v15: independent low/high skate carve grip replaces the coupled ratio
@@ -765,7 +766,7 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   tripCarryMin: 'Minimum fraction of entry momentum carried through a generic forward trip.',
   tripCarryMax: 'Maximum fraction of entry momentum carried through a generic forward trip.',
   hugeDropDistance:
-    'Apex-to-touchdown descent required before a heavy landing can trigger a bail.',
+    'Apex-to-touchdown descent required before a heavy landing can trigger a bail. Default 24 m; the impact-speed threshold must also be met, so well-aligned transition catches remain safe.',
   hugeDropImpact:
     'Minimum velocity into the landing surface for a huge-drop bail. A fast but well-aligned transition landing remains safe.',
   crateTripSpeed:

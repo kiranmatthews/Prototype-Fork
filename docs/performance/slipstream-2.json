@@ -1,0 +1,69 @@
+{
+  "level": "slipstream-2",
+  "recordedAt": "2026-10-05T00:27:50.062Z",
+  "sourceSha256": "1ab7f313e6c999f838d7e85fadaeabcf4a2971e541edc8c58b25e00ce08b5fc7",
+  "playerSha256": "ce19d045fe28d636ed6fe146cf27d92b4f1d95cfd74d793b9138e5bcc427247f",
+  "tuningSha256": "f06c99fede5097695309dd9a2e1b8d28fe3dac1e615335aa91fc63d45d4f5759",
+  "authoredVerticalDropSafety": {
+    "hugeDropDistanceMetres": 24,
+    "minimumNormalImpactMetresPerSecond": 20
+  },
+  "publishedLevelMatchesSource": true,
+  "playableLengthMetres": 2494.5603301359724,
+  "originalPlayableLengthMetres": 1222.7357393865784,
+  "lengthRatio": 2.0401467379921705,
+  "geometry": {
+    "templeRisingLedges": 18,
+    "retractingLedges": 6,
+    "templeTierCount": 3,
+    "templeRiseMetres": 37.8,
+    "skateGaps": 12,
+    "gapWidthMetres": [
+      28,
+      33.89806358976011
+    ],
+    "approachDescentMetres": 14,
+    "approachLengthMetres": 40,
+    "kickerRiseMetres": 2.5,
+    "kickerLengthMetres": 9,
+    "flatLaunchShelfMetres": 6,
+    "markedReleaseBeforeEdgeMetres": 8
+  },
+  "nativeJourney": {
+    "command": "node tools/test-slipstream-2.mjs",
+    "frames": 9570,
+    "seconds": 159.5,
+    "deaths": 0,
+    "state": "finished",
+    "templeLandings": 24,
+    "movingLedgeLandings": 6,
+    "gapLandings": 12,
+    "bankedCheckpoints": 16,
+    "maxSpeedMetresPerSecond": 37.505665191998744
+  },
+  "gapControls": {
+    "command": "node tools/test-slipstream-2-gaps.mjs",
+    "probes": 36,
+    "fastChargedSuccessful": 12,
+    "slowChargedFailed": 12,
+    "noReleaseFailed": 12,
+    "fastTakeoffSpeedMetresPerSecond": [
+      33.66648945465615,
+      34.01368572402381
+    ],
+    "slowTakeoffSpeedMetresPerSecond": [
+      11.090195052502377,
+      11.573002611668784
+    ],
+    "minimumLandingMarginMetres": 6.720096799358544,
+    "inputsOnly": true,
+    "runtimeTuningUnmodifiedByPilots": true
+  },
+  "retraction": {
+    "command": "node tools/test-slipstream-2-retraction.mjs",
+    "idleRiderLostSupport": true,
+    "wallPenetration": false,
+    "retractedCentreZ": -4.999992467189356,
+    "fatalFalls": 1
+  }
+}

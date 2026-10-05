@@ -77,8 +77,8 @@ assert.ok(
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ levelKeys }) => levelKeys.length),
-  [11, 11, 4],
-  "Custard Creek joins Island 1 beside Carlisle Coast",
+  [12, 11, 4],
+  "Slipstream 2 joins Island 1 above Slipstream",
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ id, name }) => [id, name]),
@@ -108,7 +108,7 @@ assert.deepEqual(campaign.CAMPAIGN_MAP_EDGES.filter(e=>campaign.campaignLevelByK
   ['test-course','custard-creek','down','up'],
   ['jungle','jungle-terraces','up','down'],
   ['bone-yard','ghost-train','down','up'],
-  ['test-course','nightworks','up','down'],['coastal','chimeworks','down','up'],['island-hopper','waterpark','up','down'],
+  ['test-course','nightworks','up','down'],['slipstream','slipstream-2','up','down'],['coastal','chimeworks','down','up'],['island-hopper','waterpark','up','down'],
 ]);
 assert.deepEqual(campaign.CAMPAIGN_ISLANDS[1].levelKeys.slice(3,8), ['island-hopper','waterpark','waterpark-cup','codex-switchback','jungle-gate']);
 assert.equal(campaign.CAMPAIGN_LEVELS[9].progressKey, 'codex-switchback', 'editable hub identity must stay at index 9');
@@ -122,8 +122,11 @@ assert.equal(campaign.campaignLevelById('codex-lab').islandId, 'island-2');
 
 assert.deepEqual(campaign.CAMPAIGN_ISLANDS.find(island=>island.id==='hidden-shores').levelKeys,['drowned-crown','bone-yard','ghost-train','crab-chief']);
 for(const id of ['drowned-crown','bone-yard','ghost-train','crab-chief'])assert.equal(campaign.campaignLevelById(id).islandId,'hidden-shores');
-assert.equal(campaign.CAMPAIGN_LEVELS.at(-2).progressKey,'ghost-train','existing Ghost Train hub index stays fixed');
-assert.equal(campaign.CAMPAIGN_LEVELS.at(-1).progressKey,'custard-creek','new map identity appends after existing saved hub indices');
+assert.equal(campaign.CAMPAIGN_LEVELS[24].progressKey,'ghost-train','existing Ghost Train hub index stays fixed');
+assert.equal(campaign.CAMPAIGN_LEVELS[25].progressKey,'custard-creek','existing Custard Creek hub index stays fixed');
+assert.equal(campaign.CAMPAIGN_LEVELS.at(-1).progressKey,'slipstream-2','new map identity appends after existing saved hub indices');
+assert.deepEqual(campaign.campaignLevelById('slipstream-2').mapPosition,[-47,11,-1]);
+assert.deepEqual(campaign.campaignLevelById('slipstream-2').unlockAfter,['slipstream']);
 assert.equal(campaign.resolveRelicTime('ghost-train'),340);
 const graph = new campaign.CampaignStore();
 graph.startEphemeral();
@@ -138,6 +141,7 @@ assert.equal(graph.recommendedMapLevelKey(), "treehouse-trail");
 assert.equal(campaign.CAMPAIGN_ISLANDS[0].levelKeys[0], "treehouse-trail");
 assert.equal(graph.levelUnlocked("treehouse-trail"), true);
 assert.equal(graph.levelUnlocked("jungle"), false);
+assert.equal(graph.levelUnlocked("slipstream-2"), false);
 graph.commitClear("treehouse-trail", {});
 assert.equal(graph.levelUnlocked("jungle"), true);
 assert.equal(graph.levelUnlocked("test-course"), false);
@@ -161,7 +165,9 @@ assert.equal(
 assert.equal(graph.levelUnlocked("codex-switchback"), false);
 graph.commitClear("dark", { crystal: false, boxGem: false, comboGem: false });
 assert.equal(graph.levelUnlocked("codex-switchback"), false, 'Nightworks no longer unlocks Blockworks');
-graph.commitClear("slip", {}); graph.commitCompetitionWin("jungle-cup"); graph.commitClear("beachfront", {});
+graph.commitClear("slip", {});
+assert.equal(graph.levelUnlocked("slipstream-2"), true, 'the sequel unlocks after completing Slipstream');
+graph.commitCompetitionWin("jungle-cup"); graph.commitClear("beachfront", {});
 assert.equal(graph.levelUnlocked("chimeworks"), false);
 graph.commitClear("coastal-street-run", {});
 assert.equal(graph.levelUnlocked("chimeworks"), true);
