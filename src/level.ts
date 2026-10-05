@@ -3494,13 +3494,14 @@ export function userLevelStorageHealthy(): boolean {
   return LAST_USER_WRITE_OK;
 }
 
-// Only the unchanged carving-course snapshots published by 04557f6 follow
-// the redesigned source. The second signature includes parser water tags.
+// Only unchanged snapshots published by 04557f6 and 73aedc4 follow the
+// current source. The second v1 signature includes parser water tags.
 // Names, component metadata and every coordinate are part of both hashes;
 // an edited or renamed local copy remains the player's authored level.
 const CUSTARD_CARVING_SNAPSHOTS = [
   { length: 3111245, a: 0x56d3de51, b: 0x9e9d8f25 },
   { length: 3111533, a: 0xe38da879, b: 0x9bcdbc1d },
+  { length: 1208879, a: 0x1f403b53, b: 0x72a1667b },
 ] as const;
 const CUSTARD_SNAPSHOT_CACHE = new WeakMap<object, boolean>();
 export function isOriginalCustardCreek(entry: LevelEntry): boolean {

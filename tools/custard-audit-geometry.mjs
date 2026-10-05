@@ -1,118 +1,65 @@
-import {writeFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
+import {readFile,writeFile} from 'node:fs/promises';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
-
 await withBlockworksRuntime(async r=>{
- const {THREE,l,source,sourceModule:m}=r;
- const {CARLISLE_COAST_LEVEL:coast}=await r.server.ssrLoadModule('/src/levels/carlisle-coast.ts');
- const {normalizeCustomLevelData}=await r.server.ssrLoadModule('/src/level.ts');
- assert.ok(normalizeCustomLevelData(structuredClone(source)),'the complete level remains within native geometry/collision budgets');
- const oracle=new r.Level(new THREE.Scene(),{id:'custard-audit-oracle',name:coast.name,data:coast});
- oracle.root.updateMatrixWorld(true);l.root.updateMatrixWorld(true);
- const ray=new THREE.Raycaster(),down=new THREE.Vector3(0,-1,0);
- const floor=(level,x,y,z,far=5)=>{ray.set(new THREE.Vector3(x,y+.15,z),down);ray.near=0;ray.far=far;return ray.intersectObjects(level.groundMeshes,false).find(h=>h.face&&h.face.normal.y>.6);};
- const xyz=p=>p.toArray().map(v=>Math.round(v*1e4)/1e4);
- const report={enemyPaths:[],stonePaths:[],railClearance:[],floorSides:[],actualSideContacts:[],supportedTopContacts:{probes:0,failures:[]},crumbleSeams:{},walls:[],camera:{}};
- const enemySources=source.components.filter(c=>c.t==='enemy');
+ const {THREE,l,source,sourceModule:m}=r,{normalizeCustomLevelData}=await r.server.ssrLoadModule('/src/level.ts');
+ assert.ok(normalizeCustomLevelData(structuredClone(source)));
+ for(const [type,array] of [['enemy',l.enemies],['stone',l.stones],['crusher',l.crushers],['pendulum',l.pendulums],['mover',l.movers],['crumble',l.crumbles]])
+  assert.equal(array.length,source.components.filter(c=>c.t===type).length,type+' fixtures cover every authored runtime instance');
+ assert.doesNotMatch(await readFile(new URL('../src/levels/custard-creek.ts',import.meta.url),'utf8'),/original-course|buildCarlisleBoxes|custardWarp/);
+ const ray=new THREE.Raycaster(),down=new THREE.Vector3(0,-1,0);l.root.updateMatrixWorld(true);
+ const floor=(p,meshes=l.groundMeshes,above=6,far=12)=>{ray.set(new THREE.Vector3(p[0],p[1]+above,p[2]),down);ray.near=0;ray.far=far;return ray.intersectObjects(meshes,false).find(h=>h.face&&h.face.normal.clone().transformDirection(h.object.matrixWorld).y>.6);};
+ const val=(v,s)=>typeof v==='function'?v(s):v,vec=p=>p.toArray().map(v=>Math.round(v*1e4)/1e4);
+ const report={inventory:m.CUSTARD_CREEK_GAMEPLAY,route:{length:m.CUSTARD_CREEK_END,heightRange:[],headingReversals:0,maxYawRateAt23:0,minRadius:Infinity},roads:{expected:0,probes:0,failures:[]},pipe:{expected:0,probes:0,failures:[]},gaps:{expected:0,probes:0,failures:[]},enemies:[],stones:[],rails:[],camera:{expected:0,probes:0,maxError:0,failures:[]},contacts:{expectedTops:0,tops:0,expectedSides:0,sides:0,minSideMove:Infinity,minOutwardMove:Infinity,failures:[]},ferry:[]};
+ const heights=[];let last=m.custardTangent(0),turned=0;
+ for(let s=0;s<=m.CUSTARD_CREEK_END;s++){
+  heights.push(m.custardHeight(s));const a=m.custardTangent(s-.5),b=m.custardTangent(s+.5),d=m.custardTangent(s),angle=Math.acos(Math.max(-1,Math.min(1,a[0]*b[0]+a[2]*b[2])));
+  if(angle>1e-7){report.route.minRadius=Math.min(report.route.minRadius,1/angle);report.route.maxYawRateAt23=Math.max(report.route.maxYawRateAt23,angle*23*180/Math.PI);}
+  turned+=Math.atan2(last[0]*d[2]-last[2]*d[0],last[0]*d[0]+last[2]*d[2]);if(Math.abs(turned)>=Math.PI*.9){report.route.headingReversals++;turned=0;}last=d;
+ }
+ report.route.heightRange=[Math.min(...heights),Math.max(...heights)];
+ for(const road of m.CUSTARD_CREEK_ROADS){
+  const meshes=l.groundMeshes.filter(o=>{const c=source.components[o.userData.editorIdx];return c?.t==='mesh'&&c.solid!==false&&c.nm===road.name;});
+  for(let s=road.a+.05;s<=road.b-.05;s+=1)for(const side of [-.42,0,.42]){
+   report.roads.expected++;const p=m.custardPoint(s,m.custardHeight(s),val(road.offset,s)+side*val(road.width,s)),hit=floor(p,meshes,.3,.8);report.roads.probes++;
+   if(!hit||Math.abs(hit.point.y-p[1])>.035)report.roads.failures.push({name:road.name,s,side,p,y:hit?.point.y??null});
+  }
+ }
+ const pipeMeshes=l.groundMeshes.filter(o=>source.components[o.userData.editorIdx]?.t==='vertramp');
+ for(let s=850.1;s<=1159.9;s+=1)for(const u of [-3,0,3]){report.pipe.expected++;const p=m.custardPoint(s,m.custardHeight(s),u),hit=floor(p,pipeMeshes,.3,.8);report.pipe.probes++;if(!hit||Math.abs(hit.point.y-p[1])>.035)report.pipe.failures.push({s,u,p,y:hit?.point.y??null});}
+ const statics=l.groundMeshes.filter(o=>{const c=source.components[o.userData.editorIdx];return c&&!['mover','crumble'].includes(c.t)&&c.solid!==false;});
+ for(const gap of m.CUSTARD_CREEK_GAPS)for(let s=gap.a+.2;s<gap.b-.2;s+=.5)for(const u of [-2.4,0,2.4]){report.gaps.expected++;const p=m.custardPoint(s,m.custardHeight(s),gap.u+u),hit=floor(p,statics,.3,10);report.gaps.probes++;if(hit)report.gaps.failures.push({name:gap.name,s,u,p,y:hit.point.y,mesh:hit.object.name});}
+ for(const rail of l.rails){const c=source.components[rail.object.userData.editorIdx];if(c?.t!=='rail')continue;const steps=Math.ceil(rail.totalLength/.5),q={name:c.nm,expected:steps+1,probes:0,minClearance:Infinity,failures:[]};for(let i=0;i<=steps;i++){const p=rail.pointAt(rail.totalLength*i/steps),hit=floor(p.toArray());q.probes++;if(hit){const clear=p.y-hit.point.y;q.minClearance=Math.min(q.minClearance,clear);if(clear<.25)q.failures.push({p:vec(p),clear});}}if(!Number.isFinite(q.minClearance))q.minClearance=null;report.rails.push(q);}
  for(const [i,e] of l.enemies.entries()){
-  const pts=[];let supported=0,worst=0;
-  for(let j=0;j<=100;j++){
-   const t=e.x0+(e.x1-e.x0)*j/100,x=e.axis==='x'?t:e.cross,z=e.axis==='z'?t:e.cross,hit=floor(l,x,e.baseY,z);
-   const delta=hit?e.baseY-hit.point.y:null;
-   if(hit&&Math.abs(delta)<.12)supported++;else if(pts.length<6)pts.push({x,z,baseY:e.baseY,floorY:hit?.point.y??null});
-   if(hit)worst=Math.max(worst,Math.abs(delta));
-  }
-  report.enemyPaths.push({i,nm:enemySources[i]?.nm,kind:e.kind,axis:e.axis,range:[e.x0,e.x1],baseY:e.baseY,supported,total:101,worst,failures:pts});
+  const q={i,kind:e.kind,range:e.x1-e.x0,speed:e.speed,expected:81,probes:0,maxHeightError:0,failures:[]};
+  for(let j=0;j<81;j++){const t=e.x0+(e.x1-e.x0)*j/80,p=e.axis==='x'?[t,e.baseY,e.cross]:[e.cross,e.baseY,t],hit=floor(p);q.probes++;if(hit)q.maxHeightError=Math.max(q.maxHeightError,Math.abs(hit.point.y-e.baseY));if(!hit||Math.abs(hit.point.y-e.baseY)>.16)q.failures.push({p,y:hit?.point.y??null});}
+  report.enemies.push(q);
  }
- assert.equal(report.enemyPaths.length,28);
- assert.ok(report.enemyPaths.every(q=>q.supported===q.total),'every retained enemy patrol remains on supported ground');
- const stoneSources=source.components.filter(c=>c.t==='stone');
- for(const [i,s] of l.stones.entries()){
-  const pts=[];let supported=0,footSupported=0,worst=0;
-  const a=s.axis==='x'?s.x1:s.z1,b=s.axis==='x'?s.x0:s.z0,y=s.mesh.position.y-s.r;
-  for(let j=0;j<=100;j++){
-   const t=a+(b-a)*j/100,x=s.axis==='x'?t:s.x,z=s.axis==='z'?t:s.z,hit=floor(l,x,y,z);
-   if(hit&&Math.abs(y-hit.point.y)<.12)supported++;else if(pts.length<6)pts.push({x,z,y,floorY:hit?.point.y??null});
-   if(hit)worst=Math.max(worst,Math.abs(y-hit.point.y));
-   for(const dx of [-s.r*.7,0,s.r*.7])for(const dz of [-s.r*.7,0,s.r*.7]){const h=floor(l,x+dx,y,z+dz);if(h&&Math.abs(y-h.point.y)<.12)footSupported++;}
-  }
-  report.stonePaths.push({i,nm:stoneSources[i]?.nm,axis:s.axis,r:s.r,range:[a,b],y,supported,total:101,footSupported,footTotal:909,worst,failures:pts});
+ for(const [i,st] of l.stones.entries()){
+  const q={i,axis:st.axis,expected:81*9,probes:0,maxHeightError:0,failures:[]},a=st.axis==='x'?st.x1:st.z1,b=st.axis==='x'?st.x0:st.z0,y=st.mesh.position.y-st.r;
+  for(let j=0;j<81;j++)for(const dx of [-st.r*.7,0,st.r*.7])for(const dz of [-st.r*.7,0,st.r*.7]){const t=a+(b-a)*j/80,p=[(st.axis==='x'?t:st.x)+dx,y,(st.axis==='z'?t:st.z)+dz],hit=floor(p);q.probes++;if(hit)q.maxHeightError=Math.max(q.maxHeightError,Math.abs(hit.point.y-y));if(!hit||Math.abs(hit.point.y-y)>.18)q.failures.push({p,y:hit?.point.y??null});}report.stones.push(q);
  }
- assert.equal(report.stonePaths.length,5);
- assert.ok(report.stonePaths.every(q=>q.supported===q.total),'every retained rolling stone path remains on supported ground');
- for(const [key,level,transform] of [['source',oracle,p=>p],['custard',l,m.custardWarp]]){
-  const gaps=[];let open=null;
-  for(let distance=2055;distance<=2145;distance+=.01){
-   const q=transform([152,-26,-distance]),hit=floor(level,q[0],q[1],q[2],.4);
-   const supported=hit&&Math.abs(hit.point.y+26)<.02;
-   if(!supported&&open===null)open=distance;
-   if(supported&&open!==null){gaps.push({from:open,to:distance,width:distance-open});open=null;}
-  }
-  if(open!==null)gaps.push({from:open,to:2145,width:2145-open});
-  report.crumbleSeams[key]=gaps;
+ const cursor={s:-1};for(let s=0;s<=m.CUSTARD_CREEK_END;s+=2)for(const u of [-4,0,4]){
+  report.camera.expected++;const p=m.custardPoint(s,m.custardHeight(s)+.8,u),d=l.laneDirAt(...p,cursor),want=m.custardTangent(s);report.camera.probes++;const err=d?Math.acos(Math.max(-1,Math.min(1,d.x*want[0]+d.z*want[2])))*180/Math.PI:180;report.camera.maxError=Math.max(report.camera.maxError,err);if(err>7)report.camera.failures.push({s,u,p,err});
  }
- assert.ok(Math.max(...report.crumbleSeams.custard.map(q=>q.width))<=Math.max(...report.crumbleSeams.source.map(q=>q.width))+.021,
-  'fitting rigid timed pads retains the original tiny dock seams within two sample steps');
- for(const rail of l.rails){
-  const idx=rail.object.userData.editorIdx,c=source.components[idx];if(c?.t!=='rail')continue;
-  let min=Infinity,buried=0;const failures=[];
-  for(let s=0;s<=rail.totalLength;s+=.25){
-   const p=rail.pointAt(s),hit=floor(l,p.x,p.y+12,p.z,20);if(!hit)continue;
-   const clearance=p.y-hit.point.y;min=Math.min(min,clearance);
-   if(clearance<.04){buried++;if(failures.length<3)failures.push({s,p:xyz(p),floorY:hit.point.y,clearance});}
-  }
-  const old=oracle.rails.find(q=>coast.components[q.object.userData.editorIdx]?.nm===c.nm.replace('Creek encounter','Test Course'));
-  let oracleMin=Infinity,oracleBuried=0;
-  if(old)for(let s=0;s<=old.totalLength;s+=.25){const p=old.pointAt(s),hit=floor(oracle,p.x,p.y+12,p.z,20);if(hit){const clearance=p.y-hit.point.y;oracleMin=Math.min(oracleMin,clearance);if(clearance<.04)oracleBuried++;}}
-  report.railClearance.push({idx,nm:c.nm,length:rail.totalLength,minClearance:Number.isFinite(min)?min:null,buried,oracleMin:Number.isFinite(oracleMin)?oracleMin:null,oracleBuried,failures});
+ for(const road of m.CUSTARD_CREEK_ROADS){
+  const data=source.components.filter(c=>c.nm===road.name||c.nm?.startsWith(road.name+' ·'));
+  const isolated=new r.Level(new THREE.Scene(),{id:'custard-own-road-probes',name:'Custard support probes',data:{...source,components:data}});isolated.root.updateMatrixWorld(true);
+  for(const t of [.16,.5,.84])for(const side of [-1,1]){
+   const s=road.a+(road.b-road.a)*t,u=val(road.offset,s)+side*val(road.width,s)/2,top=m.custardPoint(s,m.custardHeight(s)+.08,u-side*.12);
+   report.contacts.expectedTops++;r.p.respawn(isolated,true,true,{position:new THREE.Vector3(...top)});r.p.pos.set(...top);r.p.prevPos.set(...top);r.p.state='ride';r.p.grounded=true;r.p.speed=0;r.p.rawInput.grindHeld=false;r.p.collide(isolated);report.contacts.tops++;if(r.p.pos.distanceTo(new THREE.Vector3(...top))>.005)report.contacts.failures.push({type:'own top',name:road.name,s,side,p:top,after:vec(r.p.pos)});
+   const at=m.custardPoint(s,m.custardHeight(s)-.7,u-side*.015),before=m.custardPoint(s,m.custardHeight(s)-.7,u+side*1.2);
+   report.contacts.expectedSides++;r.p.respawn(isolated,true,true,{position:new THREE.Vector3(...at)});r.p.pos.set(...at);r.p.prevPos.set(...before);r.p.state='air';r.p.grounded=false;r.p.vVel=0;r.p.speed=0;r.p.rawInput.grindHeld=true;r.p.collide(isolated);report.contacts.sides++;
+   const shift=r.p.pos.clone().sub(new THREE.Vector3(...at)),d=m.custardTangent(s),outward=side*(-d[2]*shift.x+d[0]*shift.z);report.contacts.minSideMove=Math.min(report.contacts.minSideMove,shift.length());report.contacts.minOutwardMove=Math.min(report.contacts.minOutwardMove,outward);
+   if(shift.length()<.05||outward<.025)report.contacts.failures.push({type:'side',name:road.name,s,side,p:at,after:vec(r.p.pos),outward});
+  }isolated.dispose();
  }
- const sourceFloors=m.CUSTARD_CREEK_SOURCE_COMPONENTS.filter(c=>c.t==='platform');
- for(const c of sourceFloors){
-  const x=c.p[0]+c.s[0]/2,y=c.p[1]+c.s[1]/2-.6,z=c.p[2],p=m.custardWarp([x,y,z]);
-  const before=oracle.walls.some(b=>b.containsPoint(new THREE.Vector3(x,y,z)));
-  const after=l.walls.some(b=>b.containsPoint(new THREE.Vector3(...p)));
-  if(before&&!after)report.floorSides.push({nm:c.nm,original:[x,y,z],warped:p,sourceThickness:c.s[1]});
- }
- assert.deepEqual(report.floorSides,[],'the original platform side contacts survive the warp');
- for(const c of sourceFloors.filter(c=>['Test Course 0','Test Course 16','Test Course 17','Test Course 18','Test Course 19','Test Course 48','Test Course 53','Test Course 54'].includes(c.nm))){
-  const x=c.p[0]+c.s[0]/2,y=c.p[1]+c.s[1]/2-.6,z=c.p[2],now=m.custardWarp([x-.015,y,z]),before=m.custardWarp([x+.8,y,z]);
-  r.p.respawn(l,true,true,{position:new THREE.Vector3(...now)});r.p.pos.set(...now);r.p.prevPos.set(...before);
-  r.p.rawInput.grindHeld=true;r.p.state='air';r.p.grounded=false;r.p.vVel=0;r.p.speed=0;r.p.invulnTimer=99;
-  r.p.collide(l);
-  const after=xyz(r.p.pos),motion=r.p.pos.distanceTo(new THREE.Vector3(...now));
-  report.actualSideContacts.push({nm:c.nm,before:now,after,motion,state:r.p.state});
-  assert.ok(motion>.2,`${c.nm} actual Player collide resolves the floor side`);
- }
- for(const c of m.CUSTARD_CREEK_SOURCE_COMPONENTS.filter(c=>c.t==='platform'||c.t==='ramp')){
-  const name=c.nm.replace('Test Course','Creek encounter'),justFloors=source.components.filter(q=>q.nm===name||q.nm?.startsWith(name+' side collision'));
-  const floorLevel=new r.Level(new THREE.Scene(),{id:'custard-audit-tops',name:'Custard floor audit',data:{...source,components:justFloors}});
-  floorLevel.root.updateMatrixWorld(true);
-  const w=c.t==='ramp'?c.w:c.s[0],d=c.t==='ramp'?c.len:c.s[2],a=(c.yaw??0)*Math.PI/180;
-  for(const sx of [-.49,0,.49])for(const sz of [-.49,0,.49]){
-   const x=sx*w,z=sz*d,y=c.t==='ramp'?c.rise*(.5-z/d):c.s[1]/2;
-   const q=m.custardWarp([c.p[0]+x*Math.cos(a)+z*Math.sin(a),c.p[1]+y,c.p[2]-x*Math.sin(a)+z*Math.cos(a)]),hit=floor(floorLevel,q[0],q[1],q[2],.3);
-   if(!hit||Math.abs(hit.point.y-q[1])>.04)continue;
-   const now=new THREE.Vector3(q[0],hit.point.y+.08,q[2]);
-   r.p.respawn(floorLevel,true,true,{position:now});r.p.pos.copy(now);r.p.prevPos.copy(now);r.p.state='ride';r.p.grounded=true;r.p.rawInput.grindHeld=false;r.p.speed=0;
-   r.p.collide(floorLevel);report.supportedTopContacts.probes++;
-   if(r.p.pos.distanceTo(now)>.005)report.supportedTopContacts.failures.push({nm:c.nm,sx,sz,p:xyz(now),after:xyz(r.p.pos)});
-  }
-  floorLevel.dispose();
- }
- assert.equal(report.supportedTopContacts.probes,513,'all 57 authored support surfaces retain nine usable top-contact probes');
- assert.deepEqual(report.supportedTopContacts.failures,[],'boundary side colliders never shove riders standing on the top');
- for(const c of source.components.filter(c=>c.t==='wallpath')){
-  const idx=source.components.indexOf(c);
-  const meshes=[];l.root.traverse(o=>{if(o.isMesh&&o.userData.editorIdx===idx)meshes.push(o);});
-  report.walls.push({nm:c.nm,y:c.p[1],h:c.rise,w:c.w,meshBounds:meshes.map(o=>{const b=new THREE.Box3().setFromObject(o);return [xyz(b.min),xyz(b.max)];})});
- }
- const camera=m.CUSTARD_CREEK_CAMERA,segments=[];
- for(let i=1;i<camera.length;i++){
-  const a=camera[i-1],b=camera[i],xz=Math.hypot(b[0]-a[0],b[2]-a[2]),dy=b[1]-a[1];
-  if(Math.abs(dy)>3||xz<.001)segments.push({i,a,b,xz,dy});
- }
- report.camera={nodes:camera.length,heightJumps:segments,maxDy:Math.max(...camera.slice(1).map((b,i)=>Math.abs(b[1]-camera[i][1])))};
+ for(const mover of l.movers){const c=source.components[mover.mesh.userData.editorIdx];if(c?.nm!=='Reedbed ferry')continue;const positions=[-1,1].map(sign=>mover.base.clone().addScaledVector(mover.axisV,mover.amp*sign));report.ferry.push({axis:vec(mover.axisV),ends:[1622,1662].map(s=>{const p=m.custardPoint(s);return{s,minGap:Math.min(...positions.map(q=>Math.hypot(Math.max(0,Math.abs(p[0]-q.x)-5),Math.max(0,Math.abs(p[2]-q.z)-5))))};})});}
  await writeFile('/private/tmp/custard-audit-geometry.json',JSON.stringify(report,null,2));
- console.log(JSON.stringify({enemyFailures:report.enemyPaths.filter(q=>q.supported<q.total),stonePaths:report.stonePaths,buriedRails:report.railClearance.filter(q=>q.buried),floorSides:report.floorSides,actualSideContacts:report.actualSideContacts,supportedTopContacts:report.supportedTopContacts,camera:report.camera},null,2));
- oracle.dispose();
+ console.log(JSON.stringify({inventory:report.inventory,route:report.route,roads:{probes:report.roads.probes,failures:report.roads.failures.slice(0,8)},pipe:{probes:report.pipe.probes,failures:report.pipe.failures.slice(0,8)},gaps:{probes:report.gaps.probes,failures:report.gaps.failures.slice(0,8)},enemies:report.enemies.map(q=>({...q,failures:q.failures.slice(0,4)})),stones:report.stones.map(q=>({...q,failures:q.failures.slice(0,4)})),rails:report.rails,camera:{...report.camera,failures:report.camera.failures.slice(0,8)},contacts:{...report.contacts,failures:report.contacts.failures.slice(0,8)},ferry:report.ferry},null,2));
+ assert.ok(report.route.headingReversals>=3);assert.ok(m.CUSTARD_CREEK_END>=2200&&m.CUSTARD_CREEK_END<=2700);assert.ok(report.route.heightRange[1]>=16&&report.route.heightRange[0]<=-8);
+ for(const name of ['roads','pipe','gaps','camera']){assert.equal(report[name].probes,report[name].expected);assert.deepEqual(report[name].failures,[],name+' probes must all pass');}
+ assert.ok(report.enemies.every(q=>q.probes===q.expected&&q.failures.length===0));assert.ok(report.enemies.filter(q=>q.kind==='charger').every(q=>q.speed>0&&q.range>0));assert.ok(report.stones.every(q=>q.probes===q.expected&&q.failures.length===0));
+ assert.equal(report.rails.length,source.components.filter(c=>c.t==='rail').length);assert.ok(report.rails.every(q=>q.probes===q.expected&&q.failures.length===0));
+ assert.equal(report.contacts.tops,report.contacts.expectedTops);assert.equal(report.contacts.sides,report.contacts.expectedSides);assert.deepEqual(report.contacts.failures,[]);
 },{modulePath:'/src/levels/custard-creek.ts',levelId:'custard-creek',source:m=>m.CUSTARD_CREEK_LEVEL});

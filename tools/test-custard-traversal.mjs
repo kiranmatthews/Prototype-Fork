@@ -1,135 +1,118 @@
+// Independent folded-creek pilots. Every action after the initial fixture is
+// a normalized production Player input; no pose, state, tuning or hazard edits.
 import assert from 'node:assert/strict';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
+import {createServer} from 'vite';
 import {withBlockworksRuntime} from './blockworks-runner.mjs';
-const output=process.env.CUSTARD_TRAVERSAL_OUTPUT||'/private/tmp/custard-creek-traversal';await mkdir(output,{recursive:true});
-const bend=s=>22*(Math.sin((s+100)*2*Math.PI/310)-Math.sin(100*2*Math.PI/310))+5*(Math.sin((s+42.5)*2*Math.PI/560)-Math.sin(42.5*2*Math.PI/560));
-const cross=x=>8*Math.sin(x*2*Math.PI/152);
-const warp=q=>[q[0]+bend(-q[2]),q[1],q[2]+cross(q[0])];
-const inverse=p=>{let z=p.z,x=p.x;for(let i=0;i<20;i++){x=p.x-bend(-z);z=p.z-cross(x);}return {x,y:p.y,z};};
-const headingAt=q=>{const a=warp(q),b=warp([q[0],q[1],q[2]-1]);return b.map((v,i)=>v-a[i]);};
-const results=[];
-async function encounter(name,start,body,heading){
- let report={name,start,startHeading:heading??headingAt(start)},trace=[];
+const output=process.env.CUSTARD_TRAVERSAL_OUTPUT||'/private/tmp/custard-creek-independent-traversal';await mkdir(output,{recursive:true});
+const author=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true}});
+let course;try{course=await author.ssrLoadModule('/src/levels/custard-creek.ts');}finally{await author.close();}
+assert.equal(course.CUSTARD_CREEK_END,2430,'independent course owns its route length');
+assert.ok(typeof course.custardPoint==='function'&&typeof course.custardProgress==='function','arc-length authoring interface');
+const nativeWarn=console.warn;console.warn=(...args)=>{if(!String(args[0]).includes('BufferGeometry is already non-indexed'))nativeWarn(...args);};
+const results=[],chosen=new Set(process.argv.slice(2));
+const checks=new Set(['lockyard','inner-bank','outer-bank','mill-rail','spillway','sluice','ferry','boulder-run','backwater-finish','continuous-chapter','mill-roof-lift']);
+for(const name of chosen)assert.ok(checks.has(name),`Unknown creek pilot: ${name}`);
+const selected=n=>chosen.size===0||chosen.has(n);
+const point=(s,u=0,y)=>course.custardPoint(s,y??course.custardHeight(s),u);
+const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
+const splitOffset=(s,side)=>side*6*(1-smooth((s-500)/60));
+async function encounter(name,station,offset,body){
+ const startWorld=point(station,offset,course.custardHeight(station)+.12),a=point(station),b=point(station+1),startHeading=b.map((v,i)=>v-a[i]);
+ let report={name,course:'independent-folded-creek',startStation:station,startOffset:offset,startWorld,startHeading},trace=[];
  try{await withBlockworksRuntime(async r=>{
-  trace=r.trace;
-  const w=q=>r.sourceModule.custardWarp(q),src=()=>inverse(r.p.pos);
-  const follow=(x,look=8,buttons={})=>({...r.steerToward(w([x,r.p.pos.y,src().z-look])),...buttons});
-  const ground=(label)=>{assert.equal(r.p.grounded,true,label);assert.equal(r.p.isBailing,false,label);assert.ok(!['dead','gameover'].includes(r.p.state),label);};
-  const grind=(x,look=8,buttons={})=>({...follow(x,look,buttons),grindHeld:true,...(r.p.state==='grind'?{moveY:0,moveX:Math.max(-1,Math.min(1,-r.p.balance*5-r.p.balanceVel*.7))}:{})});
-  r.stepFor(30);ground('supported independent starting fixture');report.initial=r.snapshot();
-  await body({r,w,src,follow,grind,ground,report});
-  report.final=r.snapshot();report.pass=true;
-  report.states=[...new Set(trace.map(v=>v.state))];report.grounds=[...new Set(trace.map(v=>v.ground?.name).filter(Boolean))];
-  report.rails=[...new Set(trace.map(v=>v.rail).filter(v=>v!==null))];report.movers=[...new Set(trace.map(v=>v.mover).filter(v=>v!==null))];
-  report.cratesBroken=r.p.cratesBroken;report.seconds=r.frame*r.dt;
- },{modulePath:'/src/levels/custard-creek.ts',levelId:'custard-creek',source:m=>m.CUSTARD_CREEK_LEVEL,start:warp(start),heading:heading??headingAt(start),controlFrame:r=>r.p.courseInputDirection(r.l)??r.l.laneDirAt(r.p.pos.x,r.p.pos.y,r.p.pos.z)??{x:0,z:-1}});}catch(e){report.pass=false;report.failure=e.message;report.last=trace.at(-1);}
- await writeFile(output+'/'+name+'-trace.json',JSON.stringify(trace));
- results.push(report);console.log(JSON.stringify({name:report.name,pass:report.pass,seconds:report.seconds,states:report.states,grounds:report.grounds,rails:report.rails,movers:report.movers,cratesBroken:report.cratesBroken,...(!report.pass?{failure:report.failure}: {})}));
+  trace=r.trace;const m=r.sourceModule,s=()=>m.custardProgress(r.p.pos),pt=(station,u=0,y)=>m.custardPoint(station,y??m.custardHeight(station),u);
+  const follow=(u=0,look=8,buttons={},pace=1)=>({...r.steerToward(pt(Math.min(m.CUSTARD_CREEK_END+12,s()+look),typeof u==='function'?u(s()+look):u),{pace}),...buttons});
+  const attack=()=>({spinHeld:r.frame%12===0});
+  const skate=(u=0,look=8)=>follow(u,look,{jumpHeld:true,...attack()});
+  const grind=(u=0,look=8,buttons={})=>({...follow(u,look,buttons),grindHeld:true,...(r.p.state==='grind'?{moveY:0,moveX:Math.max(-1,Math.min(1,-r.p.balance*5-r.p.balanceVel*.7))}:{})});
+  const ground=label=>{assert.equal(r.p.grounded,true,label);assert.equal(r.p.isBailing,false,label);assert.ok(!['dead','gameover'].includes(r.p.state),label);};
+  const until=(to,input=()=>skate(),label='follow creek')=>r.until(()=>s()>=to,input,{maxFrames:6000,label});
+  const hop=(takeoff,landing,u=0,label='creek hop')=>{
+   until(takeoff,()=>skate(u),label+' run-up');report[label+' takeoff']=r.snapshot();r.releaseJump(follow(u));
+   r.until(()=>s()>landing&&r.p.grounded,()=>follow(u),{maxFrames:600,label:label+' landing'});ground(label+' supported landing');
+  };
+  r.stepFor(30);ground('supported independent starting fixture');report.initial=r.snapshot();report.initialProgress=s();
+  await body({r,m,s,pt,follow,skate,grind,attack,ground,until,hop,report});
+  report.final=r.snapshot();report.finalProgress=s();report.pass=true;
+  report.states=[...new Set(trace.map(v=>v.state))];report.grounds=[...new Set(trace.map(v=>v.ground?.name).filter(Boolean))];report.rails=[...new Set(trace.map(v=>v.rail).filter(v=>v!==null))];report.movers=[...new Set(trace.map(v=>v.mover).filter(v=>v!==null))];report.cratesBroken=r.p.cratesBroken;report.seconds=r.frame*r.dt;
+  report.headingExtents={x:[Math.min(...trace.map(t=>t.heading[0])),Math.max(...trace.map(t=>t.heading[0]))],z:[Math.min(...trace.map(t=>t.heading[2])),Math.max(...trace.map(t=>t.heading[2]))]};
+ },{modulePath:'/src/levels/custard-creek.ts',levelId:'custard-creek',source:m=>m.CUSTARD_CREEK_LEVEL,start:startWorld,heading:startHeading,maxFrames:30000,onTick:(_state,r)=>{r.trace[r.trace.length-1].cameraYaw=Math.round(Math.atan2(r.p.camDir.x,r.p.camDir.z)*1e4)/1e4;},controlFrame:r=>r.p.courseInputDirection(r.l)??r.l.laneDirAt(r.p.pos.x,r.p.pos.y,r.p.pos.z)??{x:0,z:-1}});}catch(e){report.pass=false;report.failure=e.message;report.last=trace.at(-1);}
+ await writeFile(output+'/'+name+'-trace.json',JSON.stringify(trace));results.push(report);console.log(JSON.stringify({name:report.name,pass:report.pass,seconds:report.seconds,progress:report.finalProgress,states:report.states,grounds:report.grounds,rails:report.rails,movers:report.movers,cratesBroken:report.cratesBroken,...(!report.pass?{failure:report.failure}: {})}));
 }
-const chosen=new Set(process.argv.slice(2));const selected=n=>chosen.size===0||chosen.has(n);
-if(selected('first-gap'))await encounter('first-gap',[0,-4.5,-134],({r,w,src,follow,ground,report})=>{
- r.until(()=>src().z<-138,()=>follow(0),{maxFrames:600});
- r.until(()=>src().z<-152.6,()=>follow(0,8,{jumpHeld:true}),{maxFrames:600});
- report.takeoff=r.snapshot();r.releaseJump(follow(0));
- r.until(()=>src().z<-166&&r.p.grounded,()=>follow(0),{maxFrames:600});ground('gap landing');
+if(selected('lockyard'))await encounter('lockyard',0,0,({r,s,skate,ground,until,report})=>{
+ const line=s=>s>75&&s<115?-5.5:s>131&&s<174?5.5:s>174&&s<219?4.2:0;
+ until(238,()=>skate(line,8),'lockyard crusher chicane');ground('lockyard exit');assert.ok(r.p.cratesBroken>=3,'early section offers a continuously skatable crate line');
 });
-if(selected('first-rail'))await encounter('first-rail',[0,-12.45,-326],({r,w,src,follow,grind,ground,report})=>{
- r.until(()=>r.p.state==='grind',()=>grind(0,10,{jumpHeld:true}),{maxFrames:600,label:'catch first rail'});
- report.catch=r.snapshot();
- r.until(()=>src().z<-412,()=>grind(0,8,{jumpHeld:true}),{maxFrames:1200,label:'first rail crossing'});
- r.until(()=>r.p.grounded&&r.p.state!=='grind',()=>follow(0),{maxFrames:300,label:'rail landing'});ground('rail landing');
+if(selected('inner-bank'))await encounter('inner-bank',275,-6,({r,s,skate,follow,ground,until,hop,report})=>{
+ hop(339.2,353,-6,'inner bank first gap');hop(426.2,440,-6,'inner bank second gap');
+ until(554,()=>skate(s=>s>444&&s<484?-3.7:splitOffset(s,-1),8),'inner bank spiker choice and merge');ground('inner bank merge');assert.ok(r.p.cratesBroken>=7);
 });
-if(selected('slalom-rail'))await encounter('slalom-rail',[-3,-12.45,-544],({r,w,src,follow,grind,ground,report})=>{
- r.until(()=>r.p.state==='grind',()=>grind(src().z>-563?-3:0,8,{jumpHeld:true,spinHeld:r.frame%12===0}),{maxFrames:600,label:'catch slalom rail'});report.catch=r.snapshot();
- r.until(()=>src().z<-657,()=>grind(0,8,{jumpHeld:true}),{maxFrames:1200,label:'curved rail crossing'});
- r.until(()=>r.p.grounded&&r.p.state!=='grind',()=>follow(0),{maxFrames:300,label:'slalom rail landing'});ground('rail landing');
+if(selected('outer-bank'))await encounter('outer-bank',275,6,({r,s,skate,ground,until,report})=>{
+ until(554,()=>skate(s=>s>350&&s<384?8.2:splitOffset(s,1),7),'outer bank collapsing plank route');ground('outer bank merge');assert.ok(r.trace.some(t=>t.ground?.name==='crumble pad'),'outer route actually touches collapsing planks');assert.ok(r.p.cratesBroken>=8);
 });
-if(selected('halfpipe'))await encounter('halfpipe',[0,-13.4,-708],({r,w,src,follow,grind,ground,report})=>{
- r.until(()=>src().z<-832,()=>follow(0,10,{jumpHeld:true,spinHeld:r.frame%12===0}),{maxFrames:1800,label:'halfpipe carving'});
- report.exit=r.snapshot();ground('halfpipe exit landing');
- r.until(()=>r.p.state==='grind',()=>grind(0,8,{jumpHeld:true}),{maxFrames:300,label:'catch triple rails'});report.catch=r.snapshot();
- r.until(()=>src().z<-911,()=>grind(0,8,{jumpHeld:true}),{maxFrames:1200,label:'triple rail pit crossing'});
- r.until(()=>r.p.grounded&&r.p.state!=='grind',()=>follow(0),{maxFrames:300,label:'triple rail landing'});ground('triple rail landing');
+if(selected('mill-rail'))await encounter('mill-rail',630,0,({r,s,grind,follow,ground,until,report})=>{
+ r.until(()=>r.p.state==='grind',()=>grind(0,8,{jumpHeld:true}),{maxFrames:600,label:'catch crown aqueduct rail'});report.catch=r.snapshot();
+ until(734,()=>grind(0,8,{jumpHeld:true}),'long crown aqueduct grind');
+ r.until(()=>r.p.grounded&&r.p.state!=='grind',()=>follow(0),{maxFrames:600,label:'crown terrace landing'});ground('crown terrace landing');assert.ok(s()>720);
 });
-if(selected('last-kicker'))await encounter('last-kicker',[0,-12.45,-1538],({r,w,src,follow,ground,report})=>{
- r.until(()=>src().z<-1554.2,()=>follow(0,8,{jumpHeld:true,spinHeld:r.frame%12===0}),{maxFrames:600,label:'last kicker charge run-up'});
- report.takeoff=r.snapshot();assert.equal(r.p.groundHit?.name,'Creek encounter 42');r.releaseJump(follow(0));
- r.until(()=>src().z<-1567&&r.p.grounded,()=>follow(0),{maxFrames:600,label:'last kicker landing'});ground('last kicker lower landing');assert.equal(r.p.groundHit?.name,'Creek encounter 43');
+if(selected('spillway'))await encounter('spillway',856,0,({r,s,skate,ground,until,report})=>{
+ until(1170,()=>skate(s=>2.4*Math.sin((s-856)/43),8),'descending return-bend halfpipe');ground('spillway supported exit');assert.ok(r.p.cratesBroken>=3);assert.ok(r.p.pos.y<report.initial.position[1]-10);
 });
-if(selected('late-weave-rail'))await encounter('late-weave-rail',[149,-25.9,-1856],({r,w,src,follow,grind,ground,report})=>{
- r.until(()=>src().z<-1864.7,()=>follow(149,8,{jumpHeld:true}),{maxFrames:600,label:'weave rail charge run-up'});
- report.takeoff=r.snapshot();r.releaseJump(grind(149));
- r.until(()=>r.p.state==='grind',()=>grind(149),{maxFrames:300,label:'catch late weave rail'});report.catch=r.snapshot();
- r.until(()=>src().z<-1955&&r.p.grounded&&r.p.state!=='grind',()=>grind(149.5),{maxFrames:1800,label:'late weave rail far landing'});ground('late weave landing');assert.equal(r.p.groundHit?.name,'Creek encounter 60');
+if(selected('sluice'))await encounter('sluice',1210,0,({r,s,skate,follow,ground,until,hop,report})=>{
+ hop(1239.2,1254,0,'first sluice basin');
+ until(1319,()=>skate(s=>2.5*Math.sin((s-1251)/32),8),'first sluice island rewards');
+ hop(1335.2,1350,0,'second sluice basin');
+ until(1440,()=>skate(s=>-2*Math.sin((s-1347)/32),8),'returning island sentry approach');
+ until(1484,()=>skate(s=>1.2*Math.sin((s-1440)/12),7),'collapsing sluice crescent');ground('sluice crescent exit');assert.ok(r.trace.some(t=>t.ground?.name==='crumble pad'));
 });
-if(selected('crumble'))await encounter('crumble',[1.5,-12.45,-1480],({r,w,src,follow,ground,report})=>{
- r.until(()=>src().z<-1495.8,()=>follow(1.5,8,{jumpHeld:true}),{maxFrames:600});
- r.until(()=>src().z<-1499.5,()=>({...r.steerToward(w([0,-12.56,-1513])),jumpHeld:true}),{maxFrames:600});
- report.takeoff=r.snapshot();assert.equal(r.p.groundHit?.name,'crumble pad');r.releaseJump(r.steerToward(w([0,-12.56,-1513])));
- r.until(()=>src().z<-1512&&r.p.grounded,()=>follow(0,8),{maxFrames:600,label:'crumble jump landing'});ground('crumble landing');
- report.touched=r.l.crumbles.map((c,i)=>({i,state:c.state,t:c.t}));
+if(selected('ferry'))await encounter('ferry',1600,4,({r,m,s,pt,follow,skate,ground,until,report})=>{
+ const ferry=r.l.movers.find(v=>v.axisV.y===0),id=r.l.movers.indexOf(ferry),top=()=>ferry.mesh.position.y+.4;
+ r.walkTo(pt(1620,4),{pace:.35,label:'ferry lip approach'});
+ r.until(()=>ferry.mesh.position.z>ferry.base.z+13.7,{}, {maxFrames:1200,label:'wait for ferry near bank'});
+ const aim=()=>[ferry.mesh.position.x,top(),ferry.mesh.position.z];r.charge(26);r.releaseJump(r.steerToward(aim));r.stepFor(18,()=>r.steerToward(aim));r.charge(5,()=>r.steerToward(aim));r.releaseJump(r.steerToward(aim));
+ r.until(()=>r.p.grounded,()=>r.steerToward(aim),{maxFrames:300,label:'board reedbed ferry'});assert.equal(r.p.groundHit?.moverId,id);report.boarded=r.snapshot();
+ r.walkTo(aim,{pace:.3,arrivalTolerance:.65,label:'walk to ferry deck centre'});
+ const corner=()=>[ferry.mesh.position.x+3.6,top(),ferry.mesh.position.z-3.6];r.walkTo(corner,{pace:.3,arrivalTolerance:.65,label:'walk to receiver departure corner'});
+ r.stepFor(25);r.until(()=>ferry.mesh.position.z<ferry.base.z-14.5,{}, {maxFrames:1200,label:'ride ferry to receiver'});report.farPhase=r.snapshot();
+ const exit=pt(1665,-5.7);r.charge(26);r.releaseJump(r.steerToward(exit));
+ r.until(()=>r.p.grounded&&r.p.groundHit?.moverId===undefined,()=>r.steerToward(exit),{maxFrames:300,label:'ferry receiver landing'});ground('ferry receiver');assert.ok(s()>1662);
 });
-if(selected('lift'))await encounter('lift',[-5,-18.5,-1616],({r,w,src,follow,ground,report})=>{
- const mover=r.l.movers[0],top=()=>mover.mesh.position.y+.4;
- r.walkTo(w([-5,-18.625,-1619.4]),{pace:.35,label:'walk to lift approach'});
- r.until(()=>top()<-17.7,{}, {maxFrames:900,label:'wait for lift low phase'});
- report.lowPhase=r.snapshot();
- r.jumpTo(()=>[mover.mesh.position.x,top(),mover.mesh.position.z],{arrivalTolerance:2,heightTolerance:.2,label:'board lift'});
- assert.equal(r.p.groundHit?.moverId,0);report.boarded=r.snapshot();
- r.until(()=>top()>-10,{}, {maxFrames:700,label:'ride rising lift'});report.highPhase=r.snapshot();
- r.walkTo(w([-5,top(),-1624.2]),{pace:.3,label:'walk to lift departure edge'});
- const exit=w([-5,-9,-1629.5]);r.charge(26);r.releaseJump(r.steerToward(exit));
- r.stepFor(18,()=>r.steerToward(exit));r.charge(5,()=>r.steerToward(exit));r.releaseJump(r.steerToward(exit));
- r.until(()=>r.p.grounded,()=>r.steerToward(exit),{maxFrames:300,label:'doublejump to reward balcony'});
- assert.equal(r.p.groundHit?.name,'Creek encounter 45');ground('lift reward balcony');
+if(selected('boulder-run'))await encounter('boulder-run',1825,0,({r,s,skate,ground,until,report})=>{
+ until(2098,()=>skate(s=>5.3*Math.sin((s-1840)/38),8),'boulder quarry carving');ground('boulder-run exit');assert.ok(r.p.cratesBroken>=5);
 });
-if(selected('moving-crossing'))await encounter('moving-crossing',[69,-15.9,-1720],({r,w,src,follow,grind,ground,report})=>{
- const mover=r.l.movers[1],top=()=>mover.mesh.position.y+.4;
- r.walkTo(w([73,-16,-1720]),{pace:.35,label:'walk to moving bridge approach'});
- r.until(()=>mover.mesh.position.x<mover.base.x-5.7,{}, {maxFrames:900,label:'wait for moving bridge near phase'});
- const target=()=>[mover.mesh.position.x,top(),mover.mesh.position.z];
- r.charge(26);r.releaseJump(r.steerToward(target));r.stepFor(18,()=>r.steerToward(target));
- r.charge(5,()=>r.steerToward(target));r.releaseJump(r.steerToward(target));
- r.until(()=>r.p.grounded,()=>r.steerToward(target),{maxFrames:300,label:'board moving bridge'});
- assert.equal(r.p.groundHit?.moverId,1);report.boarded=r.snapshot();
- r.stepFor(25);r.until(()=>mover.mesh.position.x>mover.base.x+2.5,{}, {maxFrames:900,label:'ride moving bridge to far phase'});report.farPhase=r.snapshot();
- const exit=w([101,-16,-1720]);r.charge(40,()=>r.steerToward(exit));r.releaseJump({...r.steerToward(exit),grindHeld:true});
- r.until(()=>r.p.state==='grind',()=>({...r.steerToward(exit),grindHeld:true}),{maxFrames:300,label:'jump from moving bridge to crossing rail'});report.catch=r.snapshot();
- r.until(()=>src().x>97.5,()=>({moveY:0,moveX:Math.max(-1,Math.min(1,-r.p.balance*5-r.p.balanceVel*.7)),grindHeld:true,jumpHeld:true}),{maxFrames:300,label:'charge on crossing rail'});
- r.releaseJump({...r.steerToward(w([106,-16,-1720])),grindHeld:true});
- r.until(()=>src().x>101&&r.p.grounded&&r.p.state!=='grind',()=>({...r.steerToward(w([106,-16,-1720])),spinHeld:r.frame%12===0}),{maxFrames:900,label:'moving crossing far landing'});
- ground('moving bridge landing');assert.equal(r.p.groundHit?.name,'Creek encounter 52');
-},warp([70,0,-1720]).map((v,i)=>v-warp([69,0,-1720])[i]));
-if(selected('crusher'))await encounter('crusher',[155,-25.45,-1802],({r,w,src,follow,ground,report})=>{
- r.until(()=>src().z<-1820,()=>follow(155,7,{jumpHeld:true,spinHeld:r.frame%12===0}),{maxFrames:900,label:'first crusher timing lane'});
- r.until(()=>src().z<-1841,()=>follow(149,6,{jumpHeld:true,spinHeld:r.frame%12===0}),{maxFrames:900,label:'second crusher timing lane'});ground('crusher landing');
+if(selected('backwater-finish'))await encounter('backwater-finish',2110,3,({r,s,skate,grind,follow,ground,until,report})=>{
+ until(2266,()=>skate(s=>s<2184?4.2:-4.2,8),'backwater pendulum approach');
+ r.until(()=>r.p.state==='grind',()=>grind(0,8,{jumpHeld:true}),{maxFrames:600,label:'catch final crown rail'});report.catch=r.snapshot();
+ until(2383,()=>grind(0,8,{jumpHeld:true}),'final exposed crescent grind');
+ r.until(()=>r.p.grounded&&r.p.state!=='grind',()=>follow(0),{maxFrames:600,label:'final island landing'});ground('final island landing');
+ r.until(()=>r.p.state==='finished',()=>skate(0,8),{maxFrames:900,label:'finish island crate line and gate'});assert.equal(r.p.state,'finished');
 });
-if(selected('split-dock'))await encounter('split-dock',[152,-25.9,-2020],({r,w,src,follow,ground,report})=>{
- r.until(()=>src().z<-2147,()=>follow(152,5,{jumpHeld:true,spinHeld:r.frame%12===0}),{maxFrames:1500,label:'central collapsing dock line'});ground('split dock exit');
- report.crumbleStates=r.l.crumbles.map((c,i)=>({i,state:c.state,t:c.t}));
+if(selected('continuous-chapter'))await encounter('continuous-chapter',250,0,({r,m,s,pt,follow,skate,grind,attack,ground,until,hop,report})=>{
+ until(276,()=>skate(-6,8),'split-bank entry run-up');ground('inner bank entry');
+ hop(339.2,353,-6,'inner bank first gap');hop(426.2,440,-6,'inner bank second gap');
+ until(554,()=>skate(s=>s>444&&s<484?-3.7:splitOffset(s,-1),8),'inner bank spiker bypass and merge');ground('inner bank merge');
+ until(630,()=>skate(s=>-3*Math.sin((s-575)/35),8),'ascending mill charger bypass');
+ r.until(()=>r.p.state==='grind',()=>grind(0,8,{jumpHeld:true}),{maxFrames:600,label:'catch crown aqueduct rail'});report.catch=r.snapshot();
+ until(734,()=>grind(0,8,{jumpHeld:true}),'long crown aqueduct grind');
+ r.until(()=>r.p.grounded&&r.p.state!=='grind',()=>follow(0),{maxFrames:600,label:'crown terrace landing'});ground('crown terrace landing');
+ until(850,()=>skate(3,8),'upper mill terrace crate arc and ascent');ground('highest terrace');report.highTerrace=r.snapshot();
+ until(1190,()=>skate(s=>2.4*Math.sin((s-856)/43),8),'descending return-bend spillway and runout');ground('spillway chapter exit');
+ assert.ok(r.p.cratesBroken>=20,'continuous chapter retains sustained skating reward lines');
+ assert.ok(Math.max(...r.trace.map(t=>t.heading[2]))>.8&&Math.min(...r.trace.map(t=>t.heading[2]))<-.8,'actual inputs traverse a broad direction reversal');
+ assert.ok(Math.max(...r.trace.map(t=>t.position[1]))>17,'the continuous route actually reaches the high mill');
 });
-if(selected('pendulum-finish'))await encounter('pendulum-finish',[152,-25.45,-2198],({r,w,src,follow,ground,report})=>{
- r.stepFor(30);
- r.until(()=>r.p.state==='finished',()=>follow(152,8,{jumpHeld:true,spinHeld:r.frame%12===0}),{maxFrames:1200,label:'finish carving'});assert.equal(r.p.state,'finished');
-});
-if(selected('rail-chapter'))await encounter('rail-chapter',[0,-12.45,-326],({r,w,src,follow,grind,ground,report})=>{
- r.until(()=>r.p.state==='grind',()=>grind(0,10,{jumpHeld:true}),{maxFrames:600,label:'catch first rail'});
- r.until(()=>src().z<-412,()=>grind(0,8,{jumpHeld:true}),{maxFrames:1200,label:'first rail crossing'});
- r.until(()=>r.p.grounded&&r.p.state!=='grind',()=>follow(0),{maxFrames:300,label:'first rail landing'});ground('first rail landing');
- r.until(()=>src().z<-474.2,()=>follow(0,8,{jumpHeld:true,spinHeld:r.frame%12===0}),{maxFrames:900,label:'first rail landing enemy and ramp approach'});
- report.rampTakeoff=r.snapshot();r.releaseJump(follow(0));
- r.until(()=>src().z<-489&&r.p.grounded,()=>follow(0),{maxFrames:600,label:'ramp gap landing'});ground('ramp gap landing');
- r.until(()=>src().z<-543,()=>follow(-3,8,{jumpHeld:true,spinHeld:r.frame%12===0}),{maxFrames:900,label:'warehouse crate line'});
- r.until(()=>r.p.state==='grind',()=>grind(src().z>-563?-3:0,8,{jumpHeld:true,spinHeld:r.frame%12===0}),{maxFrames:600,label:'catch slalom rail'});
- r.until(()=>src().z<-657,()=>grind(0,8,{jumpHeld:true}),{maxFrames:1200,label:'slalom rail crossing'});
- r.until(()=>r.p.grounded&&r.p.state!=='grind',()=>follow(0),{maxFrames:300,label:'slalom rail landing'});ground('slalom rail landing');
- r.until(()=>src().z<-832,()=>follow(0,10,{jumpHeld:true,spinHeld:r.frame%12===0}),{maxFrames:1800,label:'halfpipe carving'});ground('halfpipe exit');
- r.until(()=>r.p.state==='grind',()=>grind(0,8,{jumpHeld:true}),{maxFrames:300,label:'triple rail entry'});
- r.until(()=>src().z<-911,()=>grind(0,8,{jumpHeld:true}),{maxFrames:1200,label:'triple rail crossing'});
- r.until(()=>r.p.grounded&&r.p.state!=='grind',()=>follow(0),{maxFrames:300,label:'triple rail landing'});ground('triple rail landing');
+if(selected('mill-roof-lift'))await encounter('mill-roof-lift',785,-4,({r,m,s,pt,ground,report})=>{
+ const lift=r.l.movers.find(v=>v.axisV.y!==0),id=r.l.movers.indexOf(lift),floor=m.custardHeight(791),top=()=>lift.mesh.position.y+.4;
+ r.walkTo(pt(791,-5.4),{pace:.35,label:'mill lift lip approach'});
+ r.until(()=>top()<floor+.35,{}, {maxFrames:900,label:'wait for mill lift low phase'});
+ const aim=()=>[lift.mesh.position.x-1.3,top(),lift.mesh.position.z];
+ r.jumpTo(aim,{arrivalTolerance:1.4,heightTolerance:.3,label:'board mill roof lift'});assert.equal(r.p.groundHit?.moverId,id);report.boarded=r.snapshot();
+ r.until(()=>top()>floor+4.4,{}, {maxFrames:900,label:'ride mill lift to roof height'});
+ const corner=()=>[lift.mesh.position.x+1.4,top(),lift.mesh.position.z];r.walkTo(corner,{pace:.3,arrivalTolerance:.65,label:'walk across lift deck'});
+ const exit=pt(791,-14.2,floor+5);r.jumpTo(exit,{arrivalTolerance:1.4,heightTolerance:.3,label:'mill roof landing'});ground('mill reward roof');
 });
 
 const prior=JSON.parse(await readFile(output+'/report.json','utf8').catch(()=> '[]'));
- const combined=[...prior.filter(p=>!results.some(r=>r.name===p.name)),...results];
- await writeFile(output+'/report.json',JSON.stringify(combined,null,2));
-if(results.some(r=>!r.pass))process.exitCode=1;
+const current=prior.filter(p=>p.course==='independent-folded-creek'&&!results.some(r=>r.name===p.name));await writeFile(output+'/report.json',JSON.stringify([...current,...results],null,2));
+console.warn=nativeWarn;if(results.some(r=>!r.pass))process.exitCode=1;
