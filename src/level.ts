@@ -795,6 +795,7 @@ export interface CustomComponent {
   cameraIntroDistance?: number; // legacy authoring value; gameplay starts in close follow
   radius?: number; // camnode: lane corner radius · stone: the boulder's radius
   materialStyle?: "unity-sand" | "water"; // mesh only: registered sand or sheltered water factory
+  castShadow?: boolean; // mesh: visual overlays can receive light without casting onto their support
   emissive?: string; // bounded surface emission on EMISSIVE_COMPONENT_TYPES
   opacity?: number; // mesh: 0..1; lower values enable transparency
   fog?: boolean; // mesh: explicit material fog participation
@@ -910,6 +911,8 @@ export const TEX_KINDS = [
   "sunsoil",
   "stone",
   "wood",
+  "coast-moss",
+  "coast-stone",
   "plank",
   "pavement",
   "asphalt",
@@ -978,6 +981,10 @@ export interface CustomLevelData {
   shoreFoam?: IslandShoreFoamOval[];
   sky?: SkyPreset; // time of day; absent = sunset (what every level was before)
   jungleAtmosphere?: boolean; // authored enclosed jungle lighting + canopy shade
+  /** Legacy Jungle death-pit darkening; false permits sunlit scenery below Y=-10. */
+  jungleDepthFade?: boolean;
+  /** Scoped scenery materials; native Jungle rendering remains the default. */
+  jungleStyle?: 'painterly';
   atmosphere?: CustomAtmosphereData; // bounded final fog/light/backdrop overrides
   components: CustomComponent[];
   layers?: CustomLayer[];
@@ -2462,7 +2469,7 @@ const FORBIDDEN_JSON_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const LEVEL_DATA_KEYS = new Set([
   'encounter',
   "v", "name", "spawn", "killY", "hudMode", "ledgeAssist", "relicTime",
-  "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "atmosphere",
+  "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
   "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "cameraAirLift", "secretComboGem", "cameraLookAhead",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
@@ -2474,7 +2481,7 @@ const COMPONENT_DATA_KEYS = new Set([
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
   "trick", "exitYaw", "airOnly", "coverage", "radius", "color", "tex", "dir",
-  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
+  "layer", "grp", "lk", "nm", "trafficRoad", "materialStyle", "castShadow", "emissive", "opacity", "fog", "vertices", "indices", "normals", "uvs", "colors", "doubleSided", "beachSand", "loopRadius", "loopOffset", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
 ]);
 const hasOnlyKeys = (value: object, keys: ReadonlySet<string>): boolean =>
   Object.keys(value).every((key) => keys.has(key));
@@ -2688,11 +2695,12 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   if (source.atmosphere !== undefined && !validAtmosphere(source.atmosphere)) return null;
   if (source.jungleAtmosphere !== undefined && typeof source.jungleAtmosphere !== "boolean")
     return null;
+  if(source.jungleStyle!==undefined&&source.jungleStyle!=='painterly')return null;
   if (source.medalTimes !== undefined &&
       (!source.medalTimes || !hasOnlyKeys(source.medalTimes, new Set(["gold", "silver", "bronze"]))))
     return null;
   if (source.hudMode !== undefined && source.hudMode !== "bonus" && source.hudMode !== "hub") return null;
-  for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "secretComboGem"] as const)
+  for (const key of ["allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "secretComboGem", "jungleDepthFade"] as const)
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
   if (source.cameraLookAhead !== undefined && (typeof source.cameraLookAhead !== "number" ||
       !Number.isFinite(source.cameraLookAhead) || source.cameraLookAhead < 0 || source.cameraLookAhead > 30)) return null;
@@ -2819,7 +2827,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     "fog",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
     "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "lk",
-    "shoreProfile", "cameraView", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "beachSand", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
+    "shoreProfile", "cameraView", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "castShadow", "beachSand", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
   ];
   let aggregateNodes = source.ocean?.shore?.length ?? 0;
   let aggregateSamples = source.ocean
@@ -2908,7 +2916,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     if (
       (component.tex !== undefined &&
         (typeof component.tex !== "string" || !textureKinds.has(component.tex))) ||
-      (component.t !== "mesh" && (component.opacity !== undefined || component.fog !== undefined || component.materialStyle !== undefined)) ||
+      (component.t !== "mesh" && (component.opacity !== undefined || component.fog !== undefined || component.materialStyle !== undefined || component.castShadow !== undefined)) ||
       (component.materialStyle !== undefined && !(
         (component.materialStyle === "unity-sand" && (component.tex === undefined || component.tex === "sand")) ||
         (component.materialStyle === "water" && component.solid === false && (component.tex === undefined || component.tex === "solid")))) ||
@@ -3971,6 +3979,8 @@ export class Level {
   private cityCutawayObjects:{object:THREE.Object3D;visible:boolean}[]=[];
   nightworksRocks: NightworksRocks | null = null;
   jungleAtmosphere = false;
+  jungleDepthFade = true;
+  jungleStyle:'painterly'|undefined;
   private jungleTime = { value: 0 };
   private sceneryCaptureGroups: CustomGroup[] = [];
   private meshyCourtyards: THREE.Group[] = [];
@@ -4126,6 +4136,11 @@ export class Level {
     if (kind === "checker") return this.checkerTexture();
     const cached = this.surfTexCache.get(kind);
     if (cached) return cached;
+    if(kind==='coast-moss'||kind==='coast-stone'){
+      const file=kind==='coast-moss'?'moss':'stone';
+      const texture=Level.finishTex(new THREE.TextureLoader().load(import.meta.env.BASE_URL+`carlisle-coast/${file}-albedo.webp`));
+      this.surfTexCache.set(kind,texture);return texture;
+    }
     if (kind === "sunsoil" || (this.jungleAtmosphere && kind === "dirt")) {
       const texture = Level.finishTex(new THREE.TextureLoader().load(import.meta.env.BASE_URL + `jungle-kit/${this.jungleAtmosphere ? "dirt" : "sunsoil"}.jpg`));
       this.surfTexCache.set(kind, texture);
@@ -4502,6 +4517,8 @@ export class Level {
     checker: { spec: 0x34383e, shine: 26 },
     plank: { spec: 0x22201c, shine: 12 },
     wood: { spec: 0x1e1c18, shine: 10 },
+    "coast-moss": { spec: 0x101a10, shine: 3 },
+    "coast-stone": { spec: 0x24251d, shine: 7 },
     sand: { spec: 0x141414, shine: 4 },
     sunsoil: { spec: 0x10100b, shine: 3 },
     dirt: { spec: 0x121212, shine: 3 },
@@ -4531,6 +4548,7 @@ export class Level {
         (l as unknown as { flatShading?: boolean }).flatShading ?? false,
     });
     m.userData = { ...src.userData };
+    m.userData.junglePainterly=this.jungleStyle==='painterly';
     return m;
   }
 
@@ -4606,6 +4624,7 @@ export class Level {
       specular: sheen.spec,
       shininess: sheen.shine,
     });
+    m.userData.junglePainterly=this.jungleStyle==='painterly';
     if (kind !== "") {
       const tex = this.surfaceTexture(kind).clone();
       tex.repeat.set(rx, ry);
@@ -4746,11 +4765,12 @@ export class Level {
         for (const material of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
           if (material.userData.jungleDapple) continue;
           material.userData.jungleDapple = true;
+          material.userData.junglePainterly=this.jungleStyle==='painterly';
           material.userData.jungleDirt = material.userData.texKind === "dirt" || material.userData.texKind === "sunsoil";
           addJungleDapple(material, this.jungleTime);
         }
       }
-      this.root.traverse(object=>{
+      if(this.jungleDepthFade)this.root.traverse(object=>{
         const mesh=object as THREE.Mesh;
         if(mesh.isMesh)for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material])addJungleDepthFade(material);
       });
@@ -5337,6 +5357,7 @@ export class Level {
         ...(m.userData.beachSandFriction ? { beachSand: true } : {}),
         ...(material.userData.unitySandTileMetres === UNITY_SAND_TILE_METRES ? { materialStyle: "unity-sand", tex: "sand" } : {}),
         ...(material.userData.waterSurface ? { materialStyle: "water", tex: "solid", solid: false } : {}),
+        ...(typeof m.userData.castShadow==='boolean'?{castShadow:m.userData.castShadow as boolean}:{}),
         ...(m.userData.slippy ? { slip: true } : {}),
         ...(m.userData.iceGrip !== undefined ? { iceGrip: m.userData.iceGrip as number } : {}),
         ...(m.userData.gravityTrack ? { gravityTrack: true } : {}),
@@ -5467,10 +5488,14 @@ export class Level {
       map: c.tex === "solid" ? null : this.surfaceTexture(c.tex ?? "checker"),
     });
     material.userData.texKind = c.materialStyle === "unity-sand" ? "sand" : c.tex ?? "checker";
+    if(this.jungleStyle==='painterly'&&!standingWater){
+      material.userData.junglePainterly=true;material.userData.jungleDapple=true;
+      addJungleDapple(material,this.jungleTime);
+    }
     // These remain separate authoring components. Runtime-only visual pieces
     // can share one draw per material/cell instead of one draw per rope/post.
     if(!EDITOR_BUILD&&this.batchDecor&&c.solid===false&&!c.invisible&&!c.materialStyle&&!standingWater&&
-      !c.colors&&!c.depthBias&&!c.cameraCutaway&&(c.s??[1,1,1]).every(scale=>scale>0)&&
+      !c.colors&&!c.depthBias&&!c.cameraCutaway&&c.castShadow===undefined&&(c.s??[1,1,1]).every(scale=>scale>0)&&
       c.fog===undefined&&c.vert===undefined&&(c.opacity??1)===1){
       const key=JSON.stringify([c.color??'#ffffff',c.emissive??'#000000',c.tex??'checker',!!c.doubleSided]);
       let shared=this.staticSurfaceMaterials.get(key);
@@ -5486,6 +5511,7 @@ export class Level {
     mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0);
     mesh.scale.set(...(c.s ?? [1, 1, 1]));
     mesh.name = c.nm ?? "triangle surface";
+    if(c.castShadow!==undefined)mesh.userData.castShadow=c.castShadow;
     if(standingWater)mesh.userData.noWaterShore=true;
     if (c.vert !== undefined) mesh.userData.vert = c.vert;
     if (c.gravityTrack) mesh.userData.gravityTrack = true;
@@ -6280,6 +6306,8 @@ export class Level {
       // only when it isn't the default, so the saved JSON stays quiet
       sky: this.skyPreset === DEFAULT_SKY ? undefined : this.skyPreset,
       jungleAtmosphere: this.jungleAtmosphere || undefined,
+      jungleDepthFade: this.jungleDepthFade ? undefined : false,
+      jungleStyle:this.jungleStyle,
       atmosphere: resolveLevelAtmosphere(this),
       components: C,
       groups,
@@ -6390,6 +6418,8 @@ export class Level {
     // explicitly; never overwrite a material the editor or a shared file chose.
     this.builtFromData = data; // captureData: a data-built level IS its own capture
     this.jungleAtmosphere = data.jungleAtmosphere === true;
+    this.jungleDepthFade = data.jungleDepthFade !== false;
+    this.jungleStyle=data.jungleStyle;
     if (this.jungleAtmosphere) this.bermTint = 0xd9c5a6;
     this.skyPreset = asSkyPreset(data.sky); // unknown/absent -> sunset
     this.hudMode = data.hudMode ?? "standard";
@@ -6442,8 +6472,8 @@ export class Level {
           this.root.children[c].visible = false;
           this.root.children[c].userData.editorGhost = true;
         }
-        if (data.components[idx].cameraCutaway && this.root.children[c] !== this.cityAssets?.root)
-          this.cityCutawayObjects.push({object:this.root.children[c],visible:this.root.children[c].visible});
+        if (data.components[idx].cameraCutaway && this.root.children[c] !== this.cityAssets?.root && this.root.children[c] !== this.jungleAssets?.root)
+          {this.root.children[c].userData.cameraCutaway=true;this.cityCutawayObjects.push({object:this.root.children[c],visible:this.root.children[c].visible});}
       }
     };
     const geomPass = new Set([
@@ -15469,7 +15499,7 @@ export class Level {
     for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material])material.visible=false;
     this.cityAssets.attach(mesh,{dkind:'citydeck',p:[0,-height/2,0],s:[c.s?.[0]??4,height,c.s?.[2]??4]});
   }
-  updateCityVisibility(position:THREE.Vector3,sideScroll=false):void {this.cityAssets?.updateVisibility(position,sideScroll);for(const entry of this.cityCutawayObjects)entry.object.visible=entry.visible&&!sideScroll;}
+  updateCityVisibility(position:THREE.Vector3,sideScroll=false):void {this.cityAssets?.updateVisibility(position,sideScroll);this.jungleAssets?.setCutaway(sideScroll);for(const entry of this.cityCutawayObjects)entry.object.visible=entry.visible&&!sideScroll;}
   get cityAssetDiagnostics(){return this.cityAssets?.diagnostics??null;}
   private buildCityAsset(c:CustomComponent):void {
     if(!isCityAsset(c.dkind))return;
@@ -15508,7 +15538,7 @@ export class Level {
     const { t: _type, p: _position, dkind, ...extra } = c;
     this.noteDecor(dkind, ...c.p, extra);
     if (!this.jungleAssets && !c.invisible) {
-      this.jungleAssets = new JungleAssetKit(!EDITOR_BUILD, this.liteDecor, this.jungleAtmosphere, !EDITOR_BUILD);
+      this.jungleAssets = new JungleAssetKit(!EDITOR_BUILD, this.liteDecor, this.jungleAtmosphere && this.jungleDepthFade, !EDITOR_BUILD,this.jungleStyle);
       this.root.add(this.jungleAssets.root);
     }
     const placement = { ...c, dkind, s: c.s ?? (dkind === "carvedlog" && c.len ? [c.len, 1.1, 1.3] as [number, number, number] : undefined) };

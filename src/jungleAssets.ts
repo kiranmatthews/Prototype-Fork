@@ -3,6 +3,8 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader.js";
 import { sceneryTextureLoader } from './sceneryTextureLoader';
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
+import { addCarlisleMaterialLook } from "./carlislePresentation";
+import { CARLISLE_ASSETS } from "./carlisleAssets";
 import { JUNGLE_MODULES } from "./jungleModules";
 import { MAP_MODULES } from "./mapModules";
 import { clayArchGeometry, createClayPlantGeometry, isClayPlant } from "./mapClayGeometry";
@@ -12,21 +14,27 @@ import { isJungleAssembly, jungleAssemblyParts, type JunglePartKind } from "./ju
 import { addJungleDepthFade } from "./jungleGround";
 import { AssetCache, disposeTextures } from "./assetLifetime";
 import { sceneryLoads } from "./assetLoadQueue";
+import { addTreehouseTrialsMaterialLook } from "./treehouseTrialsPresentation";
 
 export interface JungleAssetSpec {
   file: string; label: string; size: readonly [number,number,number]; wind: boolean;
   normalStrength?: number; lod?: boolean;
+  /** Carlisle alone uses authored low geometry beyond the close view. */
+  distanceLod?: boolean;
   doubleSided?: boolean;
   backdrop?: boolean;
   clay?: boolean;
   /** Painted scenery cards share the kit's cache, instancing and editor path. */
   matte?: boolean;
   image?: string;
+  /** Portable full-resolution image when GPU compression is unavailable. */
+  imageFallback?: string;
   alphaCutout?: boolean;
   edgeFade?: number;
   windowGlow?: boolean;
 }
 const ASSETS = {
+  ...CARLISLE_ASSETS,
   ...JUNGLE_MODULES,
   ...MAP_MODULES,
   ...NIGHTWORKS_MODULES,
@@ -62,7 +70,7 @@ export const JUNGLE_ASSET_LABELS = Object.fromEntries(JUNGLE_ASSET_KINDS.map(k=>
 export function isJungleAsset(kind:string|undefined):kind is JungleAssetKind {return !!kind&&Object.prototype.hasOwnProperty.call(ASSETS,kind);}
 export interface JunglePlacement {
   dkind:JungleAssetKind;p:[number,number,number];s?:[number,number,number];w?:number;
-  yaw?:number;amp?:number;color?:string;vr?:number;seed?:number;
+  yaw?:number;amp?:number;color?:string;vr?:number;seed?:number;cameraCutaway?:boolean;
 }
 export function jungleAssetMatrix(c:JunglePlacement):THREE.Matrix4 {
   return new THREE.Matrix4().compose(new THREE.Vector3(...c.p),
@@ -84,6 +92,7 @@ function disposeTemplate(template:Template,kind:RenderKind):void {
 const templates=new AssetCache<RenderKind,Template>(createTemplate,disposeTemplate);
 export const createJungleAssetScope=()=>templates.scope();
 let compressedLoader:KTX2Loader|null=null;
+const matteFallbackWarnings=new Set<RenderKind>();
 export function configureJungleAssetRenderer(renderer:THREE.WebGLRenderer,loader?:KTX2Loader):void {
   if(!compressedLoader)compressedLoader=loader??sceneryTextureLoader(renderer);
 }
@@ -112,19 +121,41 @@ function vineGeometry():THREE.BufferGeometry {
   return result;
 }
 function finishGeometry(geometry:THREE.BufferGeometry,kind:RenderKind):THREE.BufferGeometry {
-  const positions=geometry.attributes.position,flex=new Float32Array(positions.count);
+  const positions=geometry.attributes.position,flex=new Float32Array(positions.count),ao=new Float32Array(positions.count);
+  const authoredFlex=geometry.attributes._wind_flex,authoredAO=geometry.attributes._jungle_ao;
+  for(let i=0;i<positions.count;i++){
+    const value=authoredAO?.getX(i)??1;ao[i]=Number.isFinite(value)?THREE.MathUtils.clamp(value,.2,1):1;
+  }
   if(renderSpec(kind).wind)for(let i=0;i<positions.count;i++) {
     const y=positions.getY(i),radial=Math.hypot(positions.getX(i),positions.getZ(i));
-    flex[i]=geometry.hasAttribute('aClayLeaf')?geometry.attributes.aClayLeaf.getX(i):kind==="vine"||kind==="junglevine"?Math.max(0,1-y):kind==="junglepalmtree"
+    const sourceFlex=authoredFlex?.getX(i);
+    flex[i]=sourceFlex!==undefined?Number.isFinite(sourceFlex)?THREE.MathUtils.clamp(sourceFlex,0,1)*THREE.MathUtils.smoothstep(y,0,.035):0
+      :geometry.hasAttribute('aClayLeaf')?geometry.attributes.aClayLeaf.getX(i):kind==="vine"||kind==="junglevine"?Math.max(0,1-y):kind==="junglepalmtree"
       ?Math.pow(THREE.MathUtils.smoothstep(y,.48,1),1.2)*.6+y*y*.08
       :kind==="treehousetree"?Math.pow(THREE.MathUtils.smoothstep(y,.42,.86),1.5)*.34
       :Math.min(1,Math.pow(radial*1.6+y*.45,1.5))*THREE.MathUtils.smoothstep(y,0,.12);
   }
   geometry.setAttribute("aJungleFlex",new THREE.BufferAttribute(flex,1));
+  geometry.setAttribute("aJungleAO",new THREE.BufferAttribute(ao,1));
+  geometry.deleteAttribute('_wind_flex');geometry.deleteAttribute('_jungle_ao');
   geometry.computeBoundingBox();geometry.computeBoundingSphere();
-  const margin=renderSpec(kind).wind ? .065 : .002;
+  const margin=renderSpec(kind).wind ? .085 : .002;
   geometry.boundingBox!.expandByScalar(margin);geometry.boundingSphere!.radius+=margin;
   geometry.userData.shared=true;return geometry;
+}
+function hasAssetLod(mesh:THREE.Object3D,lod:0|1):boolean {
+  for(let node:THREE.Object3D|null=mesh;node;node=node.parent)if(node.name.endsWith(`LOD${lod}`))return true;
+  return false;
+}
+/** A generated asset may arrive as several primitives beneath its LOD node.
+ * Preserve every primitive rather than silently rendering the first mesh. */
+function combineAssetMeshes(meshes:THREE.Mesh[],kind:RenderKind):THREE.BufferGeometry {
+  const parts=meshes.map(mesh=>mesh.geometry.clone().applyMatrix4(mesh.matrixWorld));
+  if(parts.length===1)return parts[0];
+  const merged=mergeGeometries(parts,false);
+  for(const part of parts)part.dispose();
+  if(!merged)throw new Error(`Jungle asset ${kind} has incompatible mesh attributes; export one atlas mesh per LOD`);
+  return merged;
 }
 function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Template>,wanted:()=>boolean):Promise<Template> {
   const spec=renderSpec(kind);
@@ -132,7 +163,16 @@ function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Te
     // The plane is already normalized in X/Y, bottom-anchored, facing +Z.
     // Skip GLB bounds normalization: a genuine flat card has zero Z extent.
     const geometry=finishGeometry(new THREE.PlaneGeometry(1,1).translate(0,.5,0),kind);
-    const pending=sceneryLoads.run(()=>new THREE.TextureLoader().loadAsync(import.meta.env.BASE_URL+spec.image),wanted).then(map=>{
+    const fallback=()=>new THREE.TextureLoader().loadAsync(import.meta.env.BASE_URL+(spec.imageFallback??spec.image));
+    const pending=sceneryLoads.run(()=>spec.imageFallback&&compressedLoader
+      ?compressedLoader.loadAsync(import.meta.env.BASE_URL+spec.image).catch(error=>{
+        if(!wanted())throw error;
+        if(!matteFallbackWarnings.has(kind)){
+          matteFallbackWarnings.add(kind);
+          console.warn(`Jungle matte ${kind} compressed texture unavailable; loading its portable image.`);
+        }
+        return fallback();
+      }):fallback(),wanted).then(map=>{
       map.colorSpace=THREE.SRGBColorSpace;map.anisotropy=4;map.userData.shared=true;
       return {geometry,map};
     }).catch(error=>{geometry.dispose();throw error;});
@@ -178,8 +218,10 @@ function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Te
   // Resolve the shared donor BEFORE reserving a decode slot, so dependencies
   // cannot fill the queue with parents waiting for children behind them.
   const donor=kind==='treehousecanopy'?dependency('treehousetree'):Promise.resolve(null);
+  const borrowedTextures:THREE.Texture[]=[];
   const pending=donor.then(tree=>{
     if(tree){
+      for(const texture of [tree.map,tree.normalMap])if(texture)borrowedTextures.push(texture);
       const loadTexture=(index:number)=>index<2?Promise.resolve(index===0?tree.map!:tree.normalMap!):null;
       loader.register(()=>({name:'TreehouseSharedAtlas',loadTexture}));
       // BasisU's built-in plugin runs before fallback image plugins. Override
@@ -189,20 +231,36 @@ function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Te
     return sceneryLoads.run(()=>loader.loadAsync(import.meta.env.BASE_URL+`jungle-kit/${spec.file}.glb`),wanted);
   }).then(gltf=>{
     const meshes:THREE.Mesh[]=[];gltf.scene.updateMatrixWorld(true);gltf.scene.traverse(o=>{if((o as THREE.Mesh).isMesh)meshes.push(o as THREE.Mesh);});
-    const high=meshes.find(m=>m.name.endsWith("LOD0"))??meshes[0],low=meshes.find(m=>m.name.endsWith("LOD1"));
-    if(!high)throw new Error(`Jungle asset ${kind} has no geometry`);
-    const geometry=high.geometry.clone().applyMatrix4(high.matrixWorld);geometry.computeBoundingBox();
-    const bounds=geometry.boundingBox!,size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
-    const normalize=kind.startsWith("night") ? new THREE.Matrix4() : new THREE.Matrix4().makeScale(1/size.x,1/size.y,1/size.z).multiply(new THREE.Matrix4().makeTranslation(-center.x,-bounds.min.y,-center.z));
-    geometry.applyMatrix4(normalize);
-    const lodGeometry=low?low.geometry.clone().applyMatrix4(low.matrixWorld).applyMatrix4(normalize):undefined;
-    const material=high.material as THREE.MeshStandardMaterial;
-    const map=material.map!,normalMap=material.normalMap,roughnessMap=material.roughnessMap;
-    if(map)map.colorSpace=THREE.SRGBColorSpace;
-    for(const texture of [map,normalMap,roughnessMap])if(texture){texture.userData.shared=true;texture.anisotropy=8;}
-    for(const g of new Set(meshes.map(m=>m.geometry)))g.dispose();
-    for(const m of new Set(meshes.flatMap(m=>Array.isArray(m.material)?m.material:[m.material])))m.dispose();
-    return {geometry:finishGeometry(geometry,kind),lodGeometry:lodGeometry?finishGeometry(lodGeometry,kind):undefined,map,normalMap,roughnessMap};
+    const highParts=meshes.filter(m=>hasAssetLod(m,0));
+    const high=highParts.length?highParts:meshes.filter(m=>!hasAssetLod(m,1)),low=meshes.filter(m=>hasAssetLod(m,1));
+    const sourceMaterials=new Set(meshes.flatMap(m=>Array.isArray(m.material)?m.material:[m.material]));
+    const sourceTextures=new Set<THREE.Texture>();
+    for(const material of sourceMaterials)for(const value of Object.values(material))if(value instanceof THREE.Texture)sourceTextures.add(value);
+    let geometry:THREE.BufferGeometry|undefined,lodGeometry:THREE.BufferGeometry|undefined;
+    const retained:THREE.Texture[]=[];
+    try{
+      if(!high.length)throw new Error(`Jungle asset ${kind} has no geometry`);
+      const highMaterials=new Set(high.flatMap(m=>Array.isArray(m.material)?m.material:[m.material]));
+      if(highMaterials.size!==1)throw new Error(`Jungle asset ${kind} must use one shared atlas material`);
+      geometry=combineAssetMeshes(high,kind);geometry.computeBoundingBox();
+      const bounds=geometry.boundingBox!,size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
+      if(![...bounds.min.toArray(),...bounds.max.toArray()].every(Number.isFinite)||Math.min(size.x,size.y,size.z)<1e-6)
+        throw new Error(`Jungle asset ${kind} has empty, non-finite or flat mesh bounds`);
+      const normalize=kind.startsWith("night") ? new THREE.Matrix4() : new THREE.Matrix4().makeScale(1/size.x,1/size.y,1/size.z).multiply(new THREE.Matrix4().makeTranslation(-center.x,-bounds.min.y,-center.z));
+      geometry.applyMatrix4(normalize);
+      if(low.length)lodGeometry=combineAssetMeshes(low,kind).applyMatrix4(normalize);
+      const material=highMaterials.values().next().value as THREE.MeshStandardMaterial;
+      const map=material.map??null,normalMap=material.normalMap,roughnessMap=material.roughnessMap;
+      if(map)map.colorSpace=THREE.SRGBColorSpace;
+      for(const texture of [map,normalMap,roughnessMap])if(texture){texture.userData.shared=true;texture.anisotropy=8;retained.push(texture);}
+      return {geometry:finishGeometry(geometry,kind),lodGeometry:lodGeometry?finishGeometry(lodGeometry,kind):undefined,map,normalMap,roughnessMap};
+    }catch(error){geometry?.dispose();lodGeometry?.dispose();throw error;}
+    finally{
+      for(const g of new Set(meshes.map(m=>m.geometry)))g.dispose();
+      for(const material of sourceMaterials)material.dispose();
+      const kept=[...retained,...borrowedTextures];
+      disposeTextures([...sourceTextures].filter(texture=>!kept.includes(texture)),kept);
+    }
   });
   return pending;
 }
@@ -213,11 +271,11 @@ vec4 jungleOrigin = vec4(0.0, 0.0, 0.0, 1.0);
   jungleOrigin = instanceMatrix * jungleOrigin;
 #endif
 jungleOrigin = modelMatrix * jungleOrigin;
-float junglePhase = uJungleTime * 1.15 + jungleOrigin.x * 0.37 + jungleOrigin.z * 0.19;
+float junglePhase = uJungleTime * uJungleWindFrequency + jungleOrigin.x * 0.37 + jungleOrigin.z * 0.19;
 float jungleGust = sin(junglePhase) * 0.026 + sin(junglePhase * 0.43 + 1.8) * 0.012;
-transformed.x += jungleGust * aJungleFlex;
-transformed.z += cos(junglePhase * 0.73 + position.x * 3.0) * 0.02 * aJungleFlex;
-transformed.y += sin(junglePhase * 1.42 + position.z * 5.0) * 0.012 * aJungleFlex;
+transformed.x += jungleGust * aJungleFlex * uJungleWindScale;
+transformed.z += cos(junglePhase * 0.73 + position.x * 3.0) * 0.02 * aJungleFlex * uJungleWindScale;
+transformed.y += sin(junglePhase * 1.42 + position.z * 5.0) * 0.012 * aJungleFlex * uJungleWindScale;
 `;
 const WORLD = /* glsl */ `
 vec4 jungleWorld = vec4(transformed, 1.0);
@@ -230,13 +288,15 @@ vJungleWorld = (modelMatrix * jungleWorld).xyz;
 /** Moving canopy shade costs a few ALU operations, with no extra render pass. */
 export function addJungleDapple(material: THREE.Material, time: { value: number }, wind = false): void {
   const dirt = material.userData.jungleDirt === true;
+  const painterly = material.userData.junglePainterly === true;
   const previous = material.onBeforeCompile;
   material.onBeforeCompile = (shader, renderer) => {
     previous.call(material, shader, renderer);
     const trail=material.userData.jungleTrail===true;
     if(trail)shader.uniforms.uJungleGrass={value:material.userData.jungleGrassTexture};
     shader.uniforms.uJungleTime = time;
-    shader.vertexShader = `uniform float uJungleTime;\n${wind ? 'attribute float aJungleFlex;' : ''}\n${trail?'attribute vec2 aJungleTrail; varying vec2 vJungleTrail;':''}\nvarying vec3 vJungleWorld;\n` + shader.vertexShader;
+    if(wind){shader.uniforms.uJungleWindScale={value:painterly?1.65:1};shader.uniforms.uJungleWindFrequency={value:painterly?.72:1.15};}
+    shader.vertexShader = `uniform float uJungleTime;\n${wind ? 'attribute float aJungleFlex; uniform float uJungleWindScale; uniform float uJungleWindFrequency;' : ''}\n${trail?'attribute vec2 aJungleTrail; varying vec2 vJungleTrail;':''}\nvarying vec3 vJungleWorld;\n` + shader.vertexShader;
     shader.vertexShader = shader.vertexShader.replace("#include <begin_vertex>", `#include <begin_vertex>\n${trail?'vJungleTrail = aJungleTrail;':''}\n${wind ? WIND : ''}\n${WORLD}`);
     shader.fragmentShader = 'uniform float uJungleTime;\nvarying vec3 vJungleWorld;\n'+(trail?'uniform sampler2D uJungleGrass; varying vec2 vJungleTrail;\n':'') + shader.fragmentShader;
     if (dirt) shader.fragmentShader = shader.fragmentShader.replace("#include <map_fragment>", /* glsl */ `
@@ -248,7 +308,7 @@ export function addJungleDapple(material: THREE.Material, time: { value: number 
         vec3 soilB = texture2D(map, vec2(-soilUV.y, soilUV.x) * 1.31 + vec2(0.21, 0.37)).rgb;
         float soilPatch = smoothstep(-0.6, 0.6, sin(vJungleWorld.x * 0.09 + sin(vJungleWorld.z * 0.06)) * cos(vJungleWorld.z * 0.075));
         vec3 soil = mix(soilA, soilB, soilPatch * 0.55);
-        soil = mix(vec3(0.98, 0.72, 0.36), soil * 3.0, 0.30);
+        soil = ${painterly?'soil * 2.0':'mix(vec3(0.98, 0.72, 0.36), soil * 3.0, 0.30)'};
         ${trail ? `
           vec2 grassUV = vJungleWorld.xz * 0.24;
           vec3 grass = texture2D(uJungleGrass, grassUV).rgb;
@@ -267,7 +327,7 @@ export function addJungleDapple(material: THREE.Material, time: { value: number 
       float shadeWave = sin(vJungleWorld.x * 0.48 + vJungleWorld.z * 0.33 + sin(uJungleTime * 0.21) * 0.15)
         * sin(vJungleWorld.z * 0.68 - vJungleWorld.x * 0.23);
       float lightPool = smoothstep(-0.34, 0.6, shadeWave);
-      diffuseColor.rgb *= mix(${dirt?'vec3(0.87, 0.84, 0.76)':'vec3(0.60, 0.75, 0.70)'}, vec3(1.06, 1.02, 0.90), lightPool);
+      diffuseColor.rgb *= mix(${painterly?'vec3(0.91, 0.95, 0.95)':dirt?'vec3(0.87, 0.84, 0.76)':'vec3(0.60, 0.75, 0.70)'}, ${painterly?'vec3(1.02, 1.01, 0.98)':'vec3(1.06, 1.02, 0.90)'}, lightPool);
     `);
     if (wind) shader.fragmentShader = shader.fragmentShader.replace("#include <lights_fragment_end>", `#include <lights_fragment_end>
       #if NUM_DIR_LIGHTS > 0
@@ -276,10 +336,11 @@ export function addJungleDapple(material: THREE.Material, time: { value: number 
       #endif
     `);
   };
-  material.customProgramCacheKey = () => `jungle-dapple-v4-${wind}-${dirt}-${material.userData.jungleTrail===true}`;
+  material.customProgramCacheKey = () => `jungle-dapple-v6-${wind}-${dirt}-${material.userData.jungleTrail===true}-${painterly}`;
+  if(painterly)addTreehouseTrialsMaterialLook(material);
 }
 
-interface Bucket {kind:RenderKind;transforms:THREE.Matrix4[];colors:THREE.Color[];bounds:THREE.Box3;mesh?:THREE.InstancedMesh;assets?:ReturnType<typeof createJungleAssetScope>;}
+interface Bucket {cameraCutaway?:boolean;far?:boolean;farMesh?:THREE.InstancedMesh;kind:RenderKind;transforms:THREE.Matrix4[];colors:THREE.Color[];bounds:THREE.Box3;mesh?:THREE.InstancedMesh;assets?:ReturnType<typeof createJungleAssetScope>;}
 export class JungleAssetKit {
   private assets=createJungleAssetScope();
   readonly root=new THREE.Group();readonly time={value:0};readonly errors:string[]=[];
@@ -294,7 +355,8 @@ export class JungleAssetKit {
   private viewSet=false;
   private lastViews:THREE.Vector3[]=[];
   private lastRadius=0;
-  constructor(private batched:boolean,private lite:boolean,private depthFade=false,private streamed=false){this.root.name="Jungle Ruins modular kit";}
+  private cutaway=false;
+  constructor(private batched:boolean,private lite:boolean,private depthFade=false,private streamed=false,private style?:'painterly'){this.root.name="Jungle Ruins modular kit";}
   private material(kind:RenderKind,template:Template):THREE.MeshStandardMaterial|THREE.MeshLambertMaterial|THREE.MeshBasicMaterial {
     const cached=this.materials.get(kind);if(cached)return cached;
     const spec=renderSpec(kind),isVine=kind==="vine"||kind==="junglevine";
@@ -319,10 +381,14 @@ export class JungleAssetKit {
     const m=spec.backdrop?new THREE.MeshLambertMaterial({map:template.map,vertexColors:kind==="junglecliff",
       emissive:kind==="junglecliff"?0x64765f:0x25462e,emissiveIntensity:kind==="junglecliff"?.35:.18,
       side:kind==="junglebackdrop"?THREE.DoubleSide:THREE.FrontSide}):new THREE.MeshStandardMaterial({map:template.map,normalMap:template.normalMap??null,
-      roughnessMap:template.roughnessMap??null,normalScale:new THREE.Vector2().setScalar(spec.normalStrength??.28),
-      roughness:spec.clay ? .65 : spec.lod ? .94 : .96,metalness:0,vertexColors:isVine||spec.clay===true,
+      roughnessMap:template.roughnessMap??null,normalScale:new THREE.Vector2().setScalar((spec.normalStrength??.28)*(this.style==='painterly'?.75:1)),
+      roughness:spec.clay ? .65 : spec.lod ? .94 : .96,metalness:0,vertexColors:isVine||spec.clay===true||template.geometry.hasAttribute('color'),
       side:spec.clay?THREE.FrontSide:spec.wind||spec.doubleSided?THREE.DoubleSide:THREE.FrontSide});
+    // These GLTF atlases have derivative tangents; retain the glTF normal Y sign
+    // when replacing its material with the shared coast material.
+    if(kind.startsWith("coast")&&template.normalMap&&m instanceof THREE.MeshStandardMaterial)m.normalScale.y*=-1;
     m.name=spec.label;m.userData.jungleAsset=true;
+    m.userData.junglePainterly=this.style==='painterly';m.userData.jungleAO=true;
     if(kind==="earth")m.userData.jungleDirt=true;
     addJungleDapple(m,this.time,spec.wind);
     if(spec.windowGlow){
@@ -333,22 +399,25 @@ export class JungleAssetKit {
       };
       m.customProgramCacheKey=()=>key()+'|amber-window-v1';
     }
+    if(kind.startsWith("coast"))addCarlisleMaterialLook(m);
     if(this.depthFade)addJungleDepthFade(m);
     this.materials.set(kind,m);return m;
   }
   private configure(mesh:THREE.Mesh,kind:RenderKind):void {
     const spec=renderSpec(kind);mesh.name=spec.label;mesh.userData.jungleAsset=kind;
     if(spec.matte){mesh.castShadow=false;mesh.receiveShadow=false;return;}
-    mesh.castShadow=!this.lite&&!spec.backdrop&&kind!=="joint"&&kind!=="earth";
+    mesh.castShadow=!this.lite&&!spec.backdrop&&kind!=="joint"&&kind!=="earth"&&kind!=="coastcarpet"&&kind!=="coastfern"&&kind!=="coastfoliage";
+    if(kind.startsWith("coast"))mesh.userData.castShadow=mesh.castShadow;
     mesh.receiveShadow=!this.lite&&!spec.backdrop;
     if(!spec.wind)return;
     let depth=this.depths.get(kind);
     if(!depth){
       depth=new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking});
       depth.onBeforeCompile=shader=>{shader.uniforms.uJungleTime=this.time;
-        shader.vertexShader='uniform float uJungleTime;\nattribute float aJungleFlex;\n'+shader.vertexShader;
+        shader.uniforms.uJungleWindScale={value:this.style==='painterly'?1.65:1};shader.uniforms.uJungleWindFrequency={value:this.style==='painterly'?.72:1.15};
+        shader.vertexShader='uniform float uJungleTime;\nuniform float uJungleWindScale;\nuniform float uJungleWindFrequency;\nattribute float aJungleFlex;\n'+shader.vertexShader;
         shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\n'+WIND);};
-      depth.customProgramCacheKey=()=>"jungle-wind-depth-v2";this.depths.set(kind,depth);
+      depth.customProgramCacheKey=()=>`jungle-wind-depth-v4-${this.style??'native'}`;this.depths.set(kind,depth);
     }
     mesh.customDepthMaterial=depth;
   }
@@ -365,9 +434,9 @@ export class JungleAssetKit {
         const point=new THREE.Vector3().setFromMatrixPosition(part.matrix);
         // Fine cells keep a detailed temple bay from dragging the whole temple into view.
         const cell=renderSpec(part.kind).lod?20:32;
-        const key=`${part.kind}:${Math.floor(point.x/cell)}:${Math.floor(point.z/cell)}`;
+        const key=`${part.kind}:${Math.floor(point.x/cell)}:${Math.floor(point.z/cell)}:${c.cameraCutaway===true}`;
         let bucket=this.buckets.get(key);
-        if(!bucket){bucket={kind:part.kind,transforms:[],colors:[],bounds:new THREE.Box3()};this.buckets.set(key,bucket);}
+        if(!bucket){bucket={kind:part.kind,cameraCutaway:c.cameraCutaway,transforms:[],colors:[],bounds:new THREE.Box3()};this.buckets.set(key,bucket);}
         bucket.transforms.push(part.matrix);bucket.colors.push(new THREE.Color(part.color));
         // Templates are normalized around X/Z and anchored at Y=0. Include
         // wind and overhang before the actual mesh bounds become available.
@@ -413,6 +482,13 @@ export class JungleAssetKit {
         // roots and level transitions, without recomposing every cell/pass.
         mesh.updateMatrix();mesh.matrixAutoUpdate=false;
         this.root.add(mesh);bucket.mesh=mesh;
+        mesh.userData.cameraCutaway=bucket.cameraCutaway===true;
+        if(renderSpec(bucket.kind).distanceLod&&template.lodGeometry){
+          const far=make(template.lodGeometry);far.position.copy(center);far.updateMatrix();far.matrixAutoUpdate=false;
+          far.castShadow=false;far.userData.castShadow=false;far.userData.cameraCutaway=bucket.cameraCutaway===true;
+          this.root.add(far);bucket.farMesh=far;
+        }
+        this.showBucket(bucket);
         this.readyCount+=bucket.transforms.length;
       }).catch(error=>{if(bucket.assets===assets)this.failed(bucket.kind,error);}).finally(()=>this.pending.delete(job));
     this.pending.add(job);
@@ -420,6 +496,7 @@ export class JungleAssetKit {
   private retire(bucket:Bucket):void {
     if(!bucket.assets)return;
     if(bucket.mesh){bucket.mesh.removeFromParent();bucket.mesh.dispose();bucket.mesh=undefined;this.readyCount-=bucket.transforms.length;}
+    if(bucket.farMesh){bucket.farMesh.removeFromParent();bucket.farMesh.dispose();bucket.farMesh=undefined;}
     const users=(this.kindUsers.get(bucket.kind)??1)-1;
     if(users)this.kindUsers.set(bucket.kind,users);
     else{
@@ -428,6 +505,15 @@ export class JungleAssetKit {
       this.depths.get(bucket.kind)?.dispose();this.depths.delete(bucket.kind);
     }
     bucket.assets.dispose();bucket.assets=undefined;
+  }
+  private showBucket(bucket:Bucket):void{
+    const show=!(this.cutaway&&bucket.cameraCutaway);
+    if(bucket.mesh)bucket.mesh.visible=show&&(!bucket.far||!bucket.farMesh);
+    if(bucket.farMesh)bucket.farMesh.visible=show&&bucket.far===true;
+  }
+  setCutaway(value:boolean):void{
+    if(this.cutaway===value)return;this.cutaway=value;
+    for(const cell of this.cells)this.showBucket(cell);
   }
   /** Retain exact authored meshes in nearby cells, with ample travel/shadow
    * prefetch. Background silhouettes and painted mattes are always resident. */
@@ -441,6 +527,11 @@ export class JungleAssetKit {
     const distanceTo=(cell:Bucket)=>Math.min(...views.map(p=>cell.bounds.distanceToPoint(p)));
     for(const cell of this.cells){
       const spec=renderSpec(cell.kind),distance=distanceTo(cell);
+      if(spec.distanceLod){
+        // Hysteresis keeps a boundary from flickering while the rider idles.
+        if(distance>(cell.far?55:72))cell.far=true;else if(distance<55)cell.far=false;
+        this.showBucket(cell);
+      }
       if(spec.backdrop||spec.matte||distance<=radius)this.activate(cell);
     }
     // Acquire incoming leases before releasing outgoing cells, so a camera

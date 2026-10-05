@@ -12,7 +12,8 @@ const server=await createServer({logLevel:'silent',server:{middlewareMode:true},
 try{
  const {normalizeUserLevelEntries}=await server.ssrLoadModule('/src/level.ts');
  const revision=process.argv[2]??'3b0c637';
- const pack=JSON.parse(execFileSync('git',['show',`${revision}:public/levels.json`],{encoding:'utf8',maxBuffer:10000000}));
+ const pack=revision==='working'?JSON.parse(await readFile(new URL('../../public/levels.json',import.meta.url),'utf8'))
+  :JSON.parse(execFileSync('git',['show',`${revision}:public/levels.json`],{encoding:'utf8',maxBuffer:10000000}));
  const entry=normalizeUserLevelEntries(pack.levels).find(e=>e.id==='test'),json=JSON.stringify(entry.data);
  let a=2166136261,b=2246822519;
  for(let i=0;i<json.length;i++){a=Math.imul(a^json.charCodeAt(i),16777619);b=Math.imul(b^json.charCodeAt(i),3266489917);}

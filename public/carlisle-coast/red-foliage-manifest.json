@@ -1,0 +1,260 @@
+{
+  "name": "red-foliage",
+  "triangles": 2186,
+  "lodTriangles": 600,
+  "sourceSpanGltf": [
+    1.0,
+    0.4125030040740967,
+    1.0
+  ],
+  "sourceBoundsBlender": [
+    [
+      -0.5,
+      -0.5,
+      -0.2087170034646988
+    ],
+    [
+      0.5,
+      0.5,
+      0.2037860006093979
+    ]
+  ],
+  "normalizedBoundsGltf": [
+    [
+      -0.5,
+      0,
+      -0.5
+    ],
+    [
+      0.5,
+      1,
+      0.5
+    ]
+  ],
+  "sourceMeshCount": 1,
+  "materials": 1,
+  "uniformScaleSizeAtDefaultWidth": [
+    3,
+    1.238,
+    3.0
+  ],
+  "contactCenterline": [
+    {
+      "alongFromPositiveZ": 0.0,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.025,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.05,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.075,
+      "y": 0.52858
+    },
+    {
+      "alongFromPositiveZ": 0.1,
+      "y": 0.54528
+    },
+    {
+      "alongFromPositiveZ": 0.125,
+      "y": 0.54031
+    },
+    {
+      "alongFromPositiveZ": 0.15,
+      "y": 0.55786
+    },
+    {
+      "alongFromPositiveZ": 0.175,
+      "y": 0.55614
+    },
+    {
+      "alongFromPositiveZ": 0.2,
+      "y": 0.54079
+    },
+    {
+      "alongFromPositiveZ": 0.225,
+      "y": 0.51888
+    },
+    {
+      "alongFromPositiveZ": 0.25,
+      "y": 0.7831
+    },
+    {
+      "alongFromPositiveZ": 0.275,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.3,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.325,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.35,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.375,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.4,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.425,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.45,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.475,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.5,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.525,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.55,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.575,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.6,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.625,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.65,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.675,
+      "y": 0.98026
+    },
+    {
+      "alongFromPositiveZ": 0.7,
+      "y": 0.98702
+    },
+    {
+      "alongFromPositiveZ": 0.725,
+      "y": 0.63892
+    },
+    {
+      "alongFromPositiveZ": 0.75,
+      "y": 0.66735
+    },
+    {
+      "alongFromPositiveZ": 0.775,
+      "y": 0.67707
+    },
+    {
+      "alongFromPositiveZ": 0.8,
+      "y": 0.53111
+    },
+    {
+      "alongFromPositiveZ": 0.825,
+      "y": 0.66136
+    },
+    {
+      "alongFromPositiveZ": 0.85,
+      "y": 0.51701
+    },
+    {
+      "alongFromPositiveZ": 0.875,
+      "y": 0.50227
+    },
+    {
+      "alongFromPositiveZ": 0.9,
+      "y": 0.49142
+    },
+    {
+      "alongFromPositiveZ": 0.925,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.95,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 0.975,
+      "y": null
+    },
+    {
+      "alongFromPositiveZ": 1.0,
+      "y": null
+    }
+  ],
+  "broadTopPlaneNormalizedY": null,
+  "suggestedBoxNormalized": null,
+  "placement": "Physically normalized X/Z[-.5,.5],Y[0,1]; front+Z; no collision.",
+  "openingMeasured": null,
+  "indirectAO": [
+    {
+      "mesh": "red-foliage_LOD0",
+      "min": 0.8,
+      "max": 1.0,
+      "mean": 0.8976625172890733,
+      "raysPerVertex": 5,
+      "radiusRelativeToLargestSpan": 0.14,
+      "offsetRelativeToLargestSpan": 0.0018
+    },
+    {
+      "mesh": "red-foliage_LOD1",
+      "min": 0.8,
+      "max": 1.0,
+      "mean": 0.8965572672471533,
+      "raysPerVertex": 5,
+      "radiusRelativeToLargestSpan": 0.14,
+      "offsetRelativeToLargestSpan": 0.0018
+    }
+  ],
+  "contactFit": "Original source surface retained.",
+  "bytes": 2322228,
+  "sha256": "96470926303dbe0fc9974c0f2500157e6fb5cb281a9c2c9ea5d73724ec04c4e1",
+  "sourceSha256": "3bdd1ed53865689b01b9b552da86721e073ea338bfaf122fc5dd32c07579f361",
+  "albedoResolution": 1024,
+  "normalResolution": 512,
+  "gpuTextures": {
+    "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+    "textures": [
+      {
+        "fallbackSha256": "71996f1ac7fc2db1aac7d11ece536dfcbd0eae6ca79c9420bfba5b087d0dbec1",
+        "ktxSha256": "3fd691c02af2065c835d4a016b159820bc07decfb1b0d24abbd7c946283cdae2",
+        "width": 1024,
+        "height": 1024,
+        "mipLevels": 11,
+        "astc4x4Bytes": 1398128,
+        "encodedBytes": 1276111
+      },
+      {
+        "fallbackSha256": "001ed35379ca5b74074cd2771edd06a80a4d3be14ded758f05372eb6a8ecdf6b",
+        "ktxSha256": "7aa6ea4cb124e78254edba636af58b54badd122d499e68266d358e00b875fe03",
+        "width": 512,
+        "height": 512,
+        "mipLevels": 10,
+        "astc4x4Bytes": 349552,
+        "encodedBytes": 254517
+      }
+    ]
+  }
+}

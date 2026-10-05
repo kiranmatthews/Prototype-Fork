@@ -1,0 +1,80 @@
+{
+  "cliff-bay": {
+    "kind": "coastcliff",
+    "size": [
+      16,
+      12,
+      7
+    ],
+    "triangles": 6500,
+    "farTriangles": 1300,
+    "wind": false,
+    "hero": false,
+    "role": "Continuous concave canyon bay; preserve deep layered seams and upper moss."
+  },
+  "canyon-spire": {
+    "kind": "coastspire",
+    "size": [
+      9,
+      21,
+      8
+    ],
+    "triangles": 6500,
+    "farTriangles": 1300,
+    "wind": false,
+    "hero": false,
+    "role": "Tall broken sandstone fault spire, massive rounded strata and open splits."
+  },
+  "moss-shelf": {
+    "kind": "coastshelf",
+    "size": [
+      10,
+      2.7,
+      4
+    ],
+    "triangles": 4000,
+    "farTriangles": 800,
+    "wind": false,
+    "hero": false,
+    "role": "Low side skirt/bank only; collision and traversable tops authored separately."
+  },
+  "tiki-pillar": {
+    "kind": "coastpillar",
+    "size": [
+      3,
+      9,
+      3
+    ],
+    "triangles": 5000,
+    "farTriangles": 1000,
+    "wind": false,
+    "hero": false,
+    "role": "Broken mossy carved rectangular tiki relief pillar."
+  },
+  "temple-lintel": {
+    "kind": "coastarch",
+    "size": [
+      18,
+      13,
+      5
+    ],
+    "triangles": 7000,
+    "farTriangles": 1400,
+    "wind": false,
+    "hero": false,
+    "role": "Temple lintel on outer columns with clear rectangular opening >=12m wide and >=8m tall; no collision."
+  },
+  "red-foliage": {
+    "kind": "coastfoliage",
+    "size": [
+      3,
+      1.4,
+      3
+    ],
+    "triangles": 3000,
+    "farTriangles": 600,
+    "wind": true,
+    "hero": false,
+    "role": "Low restrained emerald broadleaf tuft with coral-red foliage accents."
+  }
+}

@@ -1,0 +1,18 @@
+Treehouse Trials V2 scenery subset reused for Carlisle Coast
+
+Created with Meshy (https://www.meshy.ai/) and OpenAI image generation for the
+project owner. The owner explicitly authorized reuse for Carlisle Coast.
+
+This directory publishes only fern-a, groundcover-a, crown-b and tree-b from the
+in-progress Treehouse Trials V2 kit. Their packed GLB bytes are unchanged. The
+Carlisle level authors independent placement, scale, rotation and runtime tint.
+The original model/task hashes and packing evidence are retained in each model
+manifest and this directory's subset provenance.json. Reuse consumed no further
+generation credits. This does not publish the remaining Treehouse asset kit.
+
+The account plan tier is not recorded by the authoring outputs; publication
+retains the conservative Meshy attribution basis, CC BY 4.0:
+https://creativecommons.org/licenses/by/4.0/
+
+No model geometry or textures were copied from the Carlisle inspiration video.
+No credentials or signed download links are included.

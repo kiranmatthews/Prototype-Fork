@@ -1,0 +1,16 @@
+{
+  "generator": "built-in image_gen",
+  "assets": [
+    {
+      "file": "public/carlisle-coast/moss-albedo.webp",
+      "source": "exec-abe6042d-8c16-4955-b13e-8d293e20881a.png",
+      "prompt": "Seamless top-down game albedo: dense velvety forest moss, compact small grass and broad smooth painterly clusters, compact ochre loam showing through thin stone fissures. Deep emerald/olive, restrained yellow-green tips, uniform ambient illumination, periodic edges, no scene/objects/text."
+    },
+    {
+      "file": "public/carlisle-coast/stone-albedo.webp",
+      "source": "exec-e9d93c21-24dc-452c-b381-5a41b8d9b8fb.png",
+      "prompt": "Seamless front-view game albedo: broad irregular staggered weathered sandstone courses, rounded corners, warm ochre block faces, deep narrow charcoal olive joints, restrained moss, smooth painterly marks, uniform illumination, periodic edges, no scene/text/frame."
+    }
+  ],
+  "processing": "Resize original square to1024 using Pillow; encode RGB WebP quality92. Visual inspection in tool output. Generated independently for Carlisle; video provides style reference only."
+}

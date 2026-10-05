@@ -1,0 +1,1096 @@
+{
+  "base": "http://127.0.0.1:5240",
+  "variant": "baseline",
+  "lite": false,
+  "portrait": false,
+  "baseline": true,
+  "started": "2026-10-05T09:00:22.992Z",
+  "errors": [],
+  "scenes": [
+    {
+      "name": "00-spawn",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": null,
+      "render": {
+        "frame": 1269,
+        "calls": 195,
+        "triangles": 556568,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 68,
+        "textures": 97,
+        "programs": 41
+      },
+      "camera": [
+        0,
+        5.1,
+        5.05
+      ],
+      "stamp": "Codex/sol fork · build 10-05 08:53 UTC",
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 16.799999997019768,
+        "calls": {
+          "min": 195,
+          "max": 195
+        },
+        "triangles": {
+          "min": 556568,
+          "max": 556568
+        }
+      }
+    },
+    {
+      "name": "01-checkpoint",
+      "position": [
+        -1,
+        -5.085,
+        -185
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": null,
+      "render": {
+        "frame": 2060,
+        "calls": 203,
+        "triangles": 586158,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 89,
+        "textures": 98,
+        "programs": 42
+      },
+      "camera": [
+        -0.9462659970279799,
+        0.01499999999999968,
+        -179.95
+      ],
+      "stamp": "Codex/sol fork · build 10-05 08:53 UTC",
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 16.799999997019768,
+        "calls": {
+          "min": 203,
+          "max": 203
+        },
+        "triangles": {
+          "min": 586158,
+          "max": 586158
+        }
+      }
+    },
+    {
+      "name": "02-checkpoint",
+      "position": [
+        -1,
+        -12.599999961853028,
+        -425
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": null,
+      "render": {
+        "frame": 2858,
+        "calls": 176,
+        "triangles": 574009,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 107,
+        "textures": 99,
+        "programs": 43
+      },
+      "camera": [
+        -0.9419481124961885,
+        -7.499999961853028,
+        -419.95
+      ],
+      "stamp": "Codex/sol fork · build 10-05 08:53 UTC",
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 17.200000002980232,
+        "calls": {
+          "min": 176,
+          "max": 177
+        },
+        "triangles": {
+          "min": 574009,
+          "max": 576109
+        }
+      }
+    },
+    {
+      "name": "03-checkpoint",
+      "position": [
+        -1,
+        -13.115000009536743,
+        -670
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": null,
+      "render": {
+        "frame": 3656,
+        "calls": 186,
+        "triangles": 556519,
+        "points": 0,
+        "lines": 72
+      },
+      "memory": {
+        "geometries": 136,
+        "textures": 102,
+        "programs": 46
+      },
+      "camera": [
+        -0.9424929279137707,
+        -8.015000009536744,
+        -664.95
+      ],
+      "stamp": "Codex/sol fork · build 10-05 08:53 UTC",
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 17.5,
+        "calls": {
+          "min": 186,
+          "max": 186
+        },
+        "triangles": {
+          "min": 556519,
+          "max": 556519
+        }
+      }
+    },
+    {
+      "name": "04-checkpoint",
+      "position": [
+        -1,
+        -13.5,
+        -922
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": null,
+      "render": {
+        "frame": 4545,
+        "calls": 202,
+        "triangles": 558016,
+        "points": 0,
+        "lines": 72
+      },
+      "memory": {
+        "geometries": 156,
+        "textures": 103,
+        "programs": 47
+      },
+      "camera": [
+        -0.9451300822173733,
+        -8.4,
+        -916.95
+      ],
+      "stamp": "Codex/sol fork · build 10-05 08:53 UTC",
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 17.400000005960464,
+        "calls": {
+          "min": 202,
+          "max": 202
+        },
+        "triangles": {
+          "min": 558016,
+          "max": 558016
+        }
+      }
+    },
+    {
+      "name": "05-checkpoint",
+      "position": [
+        -1,
+        -21.60499997615814,
+        -1238
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": null,
+      "render": {
+        "frame": 5350,
+        "calls": 148,
+        "triangles": 541848,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 164,
+        "textures": 103,
+        "programs": 47
+      },
+      "camera": [
+        -0.9450232445477044,
+        -16.50499997615814,
+        -1232.95
+      ],
+      "stamp": "Codex/sol fork · build 10-05 08:53 UTC",
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 17.700000002980232,
+        "calls": {
+          "min": 148,
+          "max": 148
+        },
+        "triangles": {
+          "min": 541848,
+          "max": 541848
+        }
+      }
+    },
+    {
+      "name": "06-checkpoint",
+      "position": [
+        -1,
+        -15.640000057220458,
+        -1371
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": null,
+      "render": {
+        "frame": 6218,
+        "calls": 238,
+        "triangles": 591251,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 207,
+        "textures": 107,
+        "programs": 48
+      },
+      "camera": [
+        -0.9488251552194568,
+        -10.540000057220459,
+        -1365.95
+      ],
+      "stamp": "Codex/sol fork · build 10-05 08:53 UTC",
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 17.599999994039536,
+        "calls": {
+          "min": 237,
+          "max": 240
+        },
+        "triangles": {
+          "min": 591249,
+          "max": 591255
+        }
+      }
+    },
+    {
+      "name": "07-checkpoint",
+      "position": [
+        -1,
+        -12.580000013113022,
+        -1403
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": null,
+      "render": {
+        "frame": 7016,
+        "calls": 258,
+        "triangles": 601382,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 214,
+        "textures": 107,
+        "programs": 48
+      },
+      "camera": [
+        -0.9419323962928375,
+        -7.480000013113022,
+        -1397.95
+      ],
+      "stamp": "Codex/sol fork · build 10-05 08:53 UTC",
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 17.400000005960464,
+        "calls": {
+          "min": 256,
+          "max": 258
+        },
+        "triangles": {
+          "min": 601378,
+          "max": 601382
+        }
+      }
+    },
+    {
+      "name": "08-checkpoint",
+      "position": [
+        -4.33,
+        -12.560000013113022,
+        -1540
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": null,
+      "render": {
+        "frame": 7968,
+        "calls": 269,
+        "triangles": 624688,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 232,
+        "textures": 107,
+        "programs": 48
+      },
+      "camera": [
+        -4.374451766555487,
+        -7.460000013113023,
+        -1534.95
+      ],
+      "stamp": "Codex/sol fork · build 10-05 08:53 UTC",
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 17.5,
+        "calls": {
+          "min": 267,
+          "max": 269
+        },
+        "triangles": {
+          "min": 624684,
+          "max": 624688
+        }
+      }
+    },
+    {
+      "name": "09-checkpoint",
+      "position": [
+        -5,
+        -18.624999980926514,
+        -1629
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": null,
+      "render": {
+        "frame": 8773,
+        "calls": 248,
+        "triangles": 580733,
+        "points": 0,
+        "lines": 72
+      },
+      "memory": {
+        "geometries": 255,
+        "textures": 107,
+        "programs": 48
+      },
+      "camera": [
+        -4.9449463173016825,
+        -13.524999980926514,
+        -1623.95
+      ],
+      "stamp": "Codex/sol fork · build 10-05 08:53 UTC",
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 17.5,
+        "calls": {
+          "min": 247,
+          "max": 250
+        },
+        "triangles": {
+          "min": 580731,
+          "max": 580747
+        }
+      }
+    },
+    {
+      "name": "10-checkpoint",
+      "position": [
+        68,
+        -16,
+        -1720
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": null,
+      "render": {
+        "frame": 9550,
+        "calls": 265,
+        "triangles": 601308,
+        "points": 0,
+        "lines": 72
+      },
+      "memory": {
+        "geometries": 269,
+        "textures": 107,
+        "programs": 48
+      },
+      "camera": [
+        68.00100743555095,
+        -11.41,
+        -1712.024
+      ],
+      "stamp": "Codex/sol fork · build 10-05 08:53 UTC",
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.600000008940697,
+        "p95Ms": 17.599999994039536,
+        "calls": {
+          "min": 264,
+          "max": 265
+        },
+        "triangles": {
+          "min": 601296,
+          "max": 601308
+        }
+      }
+    },
+    {
+      "name": "11-checkpoint",
+      "position": [
+        151,
+        -25.589999947547913,
+        -1852
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": null,
+      "render": {
+        "frame": 10341,
+        "calls": 241,
+        "triangles": 592993,
+        "points": 0,
+        "lines": 72
+      },
+      "memory": {
+        "geometries": 285,
+        "textures": 107,
+        "programs": 48
+      },
+      "camera": [
+        151.0582174323255,
+        -20.489999947547915,
+        -1846.95
+      ],
+      "stamp": "Codex/sol fork · build 10-05 08:53 UTC",
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 17.600000008940697,
+        "calls": {
+          "min": 241,
+          "max": 241
+        },
+        "triangles": {
+          "min": 592993,
+          "max": 592993
+        }
+      }
+    },
+    {
+      "name": "12-checkpoint",
+      "position": [
+        151,
+        -26,
+        -1985
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": null,
+      "render": {
+        "frame": 11118,
+        "calls": 279,
+        "triangles": 602056,
+        "points": 0,
+        "lines": 72
+      },
+      "memory": {
+        "geometries": 305,
+        "textures": 110,
+        "programs": 54
+      },
+      "camera": [
+        151.05631315114985,
+        -20.9,
+        -1979.95
+      ],
+      "stamp": "Codex/sol fork · build 10-05 08:53 UTC",
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 17.700000002980232,
+        "calls": {
+          "min": 278,
+          "max": 281
+        },
+        "triangles": {
+          "min": 602044,
+          "max": 602376
+        }
+      }
+    },
+    {
+      "name": "13-checkpoint",
+      "position": [
+        151,
+        -26,
+        -2050
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": null,
+      "render": {
+        "frame": 11902,
+        "calls": 255,
+        "triangles": 603670,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 305,
+        "textures": 110,
+        "programs": 54
+      },
+      "camera": [
+        151.0550273987778,
+        -20.9,
+        -2044.95
+      ],
+      "stamp": "Codex/sol fork · build 10-05 08:53 UTC",
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 17.599999994039536,
+        "calls": {
+          "min": 254,
+          "max": 256
+        },
+        "triangles": {
+          "min": 601710,
+          "max": 603810
+        }
+      }
+    },
+    {
+      "name": "14-checkpoint",
+      "position": [
+        151,
+        -26,
+        -2165
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": null,
+      "render": {
+        "frame": 12707,
+        "calls": 199,
+        "triangles": 577165,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 305,
+        "textures": 110,
+        "programs": 54
+      },
+      "camera": [
+        151.058215339498,
+        -20.9,
+        -2159.95
+      ],
+      "stamp": "Codex/sol fork · build 10-05 08:53 UTC",
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 17.5,
+        "calls": {
+          "min": 199,
+          "max": 199
+        },
+        "triangles": {
+          "min": 577165,
+          "max": 577165
+        }
+      }
+    },
+    {
+      "name": "15-halfpipe",
+      "position": [
+        0,
+        -13.5,
+        -770
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": null,
+      "render": {
+        "frame": 13484,
+        "calls": 193,
+        "triangles": 557372,
+        "points": 0,
+        "lines": 72
+      },
+      "memory": {
+        "geometries": 305,
+        "textures": 110,
+        "programs": 54
+      },
+      "camera": [
+        0,
+        -8.4,
+        -764.95
+      ],
+      "stamp": "Codex/sol fork · build 10-05 08:53 UTC",
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.700000002980232,
+        "p95Ms": 17.5,
+        "calls": {
+          "min": 193,
+          "max": 193
+        },
+        "triangles": {
+          "min": 557372,
+          "max": 557372
+        }
+      }
+    },
+    {
+      "name": "16-market",
+      "position": [
+        0,
+        -22,
+        -1103
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": null,
+      "render": {
+        "frame": 14280,
+        "calls": 181,
+        "triangles": 560277,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 305,
+        "textures": 110,
+        "programs": 57
+      },
+      "camera": [
+        0,
+        -16.9,
+        -1097.95
+      ],
+      "stamp": "Codex/sol fork · build 10-05 08:53 UTC",
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 17.5,
+        "calls": {
+          "min": 181,
+          "max": 181
+        },
+        "triangles": {
+          "min": 560277,
+          "max": 560277
+        }
+      }
+    },
+    {
+      "name": "17-split-dock",
+      "position": [
+        146.5,
+        -26,
+        -2078
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": null,
+      "render": {
+        "frame": 15142,
+        "calls": 242,
+        "triangles": 593028,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 305,
+        "textures": 110,
+        "programs": 57
+      },
+      "camera": [
+        146.5,
+        -20.9,
+        -2072.95
+      ],
+      "stamp": "Codex/sol fork · build 10-05 08:53 UTC",
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 17.400000005960464,
+        "calls": {
+          "min": 242,
+          "max": 243
+        },
+        "triangles": {
+          "min": 593028,
+          "max": 593168
+        }
+      }
+    },
+    {
+      "name": "18-finish-approach",
+      "position": [
+        152,
+        -26,
+        -2282
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": null,
+      "render": {
+        "frame": 16115,
+        "calls": 137,
+        "triangles": 546426,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 305,
+        "textures": 110,
+        "programs": 57
+      },
+      "camera": [
+        152,
+        -20.9,
+        -2276.95
+      ],
+      "stamp": "Codex/sol fork · build 10-05 08:53 UTC",
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.600000008940697,
+        "p95Ms": 17.400000005960464,
+        "calls": {
+          "min": 137,
+          "max": 137
+        },
+        "triangles": {
+          "min": 546426,
+          "max": 546426
+        }
+      }
+    }
+  ],
+  "scenesUseSilentHazardGrace": true,
+  "spawn": {
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "grounded": true,
+    "state": "ride",
+    "deaths": 0,
+    "lives": 4,
+    "currentSpawn": [
+      0,
+      0.1,
+      0
+    ],
+    "checkpoint": false,
+    "assets": null,
+    "render": {
+      "frame": 961,
+      "calls": 195,
+      "triangles": 556568,
+      "points": 0,
+      "lines": 0
+    },
+    "memory": {
+      "geometries": 68,
+      "textures": 97,
+      "programs": 41
+    },
+    "camera": [
+      0,
+      5.1,
+      5.05
+    ],
+    "stamp": "Codex/sol fork · build 10-05 08:53 UTC"
+  },
+  "environment": {
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+    "viewport": [
+      1280,
+      720
+    ],
+    "quality": {
+      "enabled": true,
+      "baseHeight": 720,
+      "outputMultiplier": 1,
+      "fixed60": true
+    },
+    "resolution": {
+      "viewportWidth": 1280,
+      "viewportHeight": 720,
+      "inputWidth": 1280,
+      "inputHeight": 720,
+      "outputWidth": 1280,
+      "outputHeight": 720
+    }
+  },
+  "idle": {
+    "returned": {
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": null,
+      "render": {
+        "frame": 16899,
+        "calls": 195,
+        "triangles": 556568,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 305,
+        "textures": 110,
+        "programs": 57
+      },
+      "camera": [
+        0,
+        5.1,
+        5.05
+      ],
+      "stamp": "Codex/sol fork · build 10-05 08:53 UTC"
+    },
+    "idle": {
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "grounded": true,
+      "state": "ride",
+      "deaths": 0,
+      "lives": 30,
+      "currentSpawn": [
+        0,
+        0.1,
+        0
+      ],
+      "checkpoint": false,
+      "assets": null,
+      "render": {
+        "frame": 17529,
+        "calls": 195,
+        "triangles": 556568,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 305,
+        "textures": 110,
+        "programs": 57
+      },
+      "camera": [
+        0,
+        5.1,
+        5.05
+      ],
+      "stamp": "Codex/sol fork · build 10-05 08:53 UTC"
+    }
+  },
+  "pass": true,
+  "finished": "2026-10-05T09:01:09.643Z"
+}

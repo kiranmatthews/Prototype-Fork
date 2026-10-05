@@ -1,24 +1,70 @@
 # Carlisle Coast authoring
 
-`src/levels/carlisle-coast.ts` fits the city to the original Test Course snapshot in `original-course.json`. The original route, elevations, ramps, jumps, halfpipe, enemy/obstacle sequence, checkpoints, lift, moving crossing and middle E side-scroll remain authoritative. The previously requested spawn-right playground (50 identified components) remains removed. The latest box brief replaces the old 170 crates with 162 authored placements, leaving 288 original non-box components in their original order.
+The active Carlisle Coast is the sandstone temple ravine described in
+[docs/CARLISLE_COAST.md](../../docs/CARLISLE_COAST.md). Its source-owned level
+contains 287 retained non-box originals, 162 authored boxes and 1,848
+non-colliding art components: 2,297 components total. Original support, walls,
+pits, rails, checkpoints, timed obstacles, side-scroll travel and the finish
+remain authoritative, including the existing hill-rail clearance correction.
+Movement tuning is unchanged.
 
-`src/levels/carlisle-boxes.ts` groups the new boxes into 20 encounters: spaced skating strings, clear run-ups and landings, optional stacked rewards, two independent switch staircases, bounce assists and TNT/Nitro choices. All 12 crate kinds are used. The Nitro-clear switch is off the straight finish line. Every box is supported by original ground or an exact 0.96 m stack.
+`src/levels/carlisle-coast.ts` owns the retained course and boxes;
+`src/levels/carlisle-coast-art.ts` supplies editor-compatible presentation.
+The new `tools/carlisle-coast-assets/` pipeline owns six original Meshy models,
+references, prompt records, surface maps and provenance. It used 90 existing
+credits, verified 486 → 396. The six GLBs total 14.15 MiB transfer, 30,797 near
+triangles, 6,400 actual far triangles and 10.00 MiB of ASTC 4×4 atlas mip chains.
+Beachside Stonecliff and four Treehouse Trials V2 aliases retain measured
+natural proportions and receive Carlisle's scoped moss/ochre material tint.
 
-Visible steel beams use an upright tangent frame in both directions, a narrow 0.18 m flange and rounded 0.09 m running crest aligned with the existing truck/deck contact surface. This prevents the previous inverted sloped beams and deck/wheel overlap. Original rail 132 keeps its horizontal route and four original anchors, with two additional knots that lift it above the road crests; its supports follow that corrected path. Controller tuning is unchanged.
+Gateways fit the full supporting pad: measured clear width is 11.588 m at an
+18 m authoring width; placements use at least 22 m overall width and enough
+additional width for `supportWidth + 1` m clearance. Guardians sit outside the
+support. Moss overlays use negative depth bias; normal maps retain the correct
+signed Y response. E foreground cutaways hide both LOD meshes without changing
+collision. Streaming forms 1,184 cells, with peak 261 resident cells at the
+fifteen source spawn/checkpoint camera locations. Desktop/portrait rendered
+performance evidence is pending and belongs in
+`docs/performance/carlisle-coast-*`.
 
-Foreground frontage and scaffold braces use `cameraCutaway` to hide during the side-scroll shot, including its transition. The rear scenery and playable decks/rails remain visible, all collision remains active, and ordinary/chase/editor views restore the scenery. The editor exposes this as **hide in side view** on decor, walls and meshes. Cutaway and permanent scenery use separate instancing buckets even when they share a city block.
+## Sync and check
 
-Run `node tools/carlisle-coast/sync.mjs --write` to update only the `test` entry in `public/levels.json`. The campaign keeps the `test-course` progress key. Untouched published Test Course and Carlisle snapshots follow the latest builtin; edited or renamed local copies stay intact. `node tools/carlisle-coast/cache-signature.mjs 3b0c637 --check` verifies the previous published cache and a one-centimetre edit, renamed copy and in-place edit. This authoring utility requires the named revision in local git history.
+```sh
+node tools/carlisle-coast/sync.mjs --write
+node tools/test-carlisle-layout.mjs
+node tools/test-carlisle-boxes.mjs
+node tools/test-carlisle-beam-contact.mjs
+node tools/test-carlisle-presentation.mjs
+python3 tools/carlisle-coast-assets/validate.py
+npm run check:levels
+npm run build
+```
 
-The city uses the owner's CC0 Quaternius Downtown City MegaKit Standard download. `bake_city.py`, `compress_city.mjs` and `pack_city.py` produce the shared Meshopt/KTX2 library with JPEG/PNG fallbacks. Buildings, machinery and materials remain available in the editor. Road `amp` is height change across local +X in metres, preserving horizontal dimensions. Moving and breakaway work decks attach to original collision objects. Retaining-panel darkness is relative to each panel.
+`sync.mjs` updates only the `test` snapshot in `public/levels.json`. The campaign
+keeps `test-course` progress. Untouched published Test Course/Carlisle snapshots
+follow the builtin; edited or renamed local copies stay intact. The
+`cache-signature.mjs REV --check` utility verifies migration and edited-copy
+preservation for a published revision available in local Git history.
 
-The original Meshy prompts, references and ledger remain here. No additional Meshy generations were used for the box/beam correction; total spending remains 75 of the authorized 600 credits. Signed responses and raw authoring models stay under ignored `.img2threejs/` directories.
+Smoke-test lite first, then perform full and portrait browser review:
 
-Focused validation:
+```sh
+node tools/carlisle-coast-browser.mjs http://127.0.0.1:5240 --lite --smoke-only
+node tools/carlisle-coast-browser.mjs http://127.0.0.1:5240 --visual
+node tools/carlisle-coast-browser.mjs http://127.0.0.1:5240 --portrait --visual
+```
 
-- `node tools/test-carlisle-layout.mjs` (also `node tools/test-carlisle-coast.mjs`) independently compares retained terrain/encounters with the original world, allowing only the documented rail-clearance edit. It covers 3,192 support samples, 3,950 join-clearance samples, 1,499 physical/rendered gap samples, 576 real Player ledge attempts and 208 dynamic-skin checks.
-- `node tools/test-carlisle-boxes.mjs` checks crate support, walls, rail and landing clearance, both switch puzzles, editor normalization, side-view visibility and collider retention. It raycasts 1,026 actual beam surfaces; minimum beam-to-road clearance is 0.109 m.
-- `node tools/test-carlisle-beam-contact.mjs` checks 96 actual board poses across rising/falling and N/E rails, both travel directions/stances and all eight grinds. It probes actual deck and wheel vertices, including Smith/Feeble overhangs, as well as contact and planted feet.
-- `npm run check:levels` and `npm run build` are required before publishing. The full suite requires an explicit request.
+The harness restores source, records actual frames and console errors, and
+checks the fork build stamp. The input pass verifies supported spawn, charged
+skating jump, checkpoint, pit respawn and finish. See the main document for
+output controls, provenance and the release workflow. Do not run
+`npm run check:all` without an explicit request.
 
-The local `review.html` provides section/box positions, input-driven actions and actual-board grind fixtures. **Resume controller** restores live traversal after a static pose. **Use source** drops only the preview origin's test override. Preview capture uses a temporary localhost receiver. Current evidence is in `review.json`; prior city releases remain in git history.
+## Historical city tools
+
+`original-course.json` remains the independent course oracle. The city
+prompts/references/ledger, CC0 Downtown City licence, `bake_city.py`,
+`compress_city.mjs`, `pack_city.py`, extras tooling and former `review.html`
+remain historical authoring material. They do not define the active ravine
+presentation or require city model loads during this level. Earlier city
+releases and their review evidence remain in Git history.

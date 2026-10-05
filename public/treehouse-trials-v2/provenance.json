@@ -1,0 +1,1154 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "officialCliVersion": "0.3.1",
+  "model": "meshy-t2",
+  "modelType": "smart-topology",
+  "textureGeneratedResolution": "2k",
+  "referenceGenerator": "Built-in image_gen with actual pack image inputs",
+  "styleMasterSha256": "e97f8b751f8b3b282a143a2636dde1b690e6ee14acd5af0d6871f5eb5924a774",
+  "textureEncoding": "UASTC quality 2 / lossless Zstd 18 with full mip chains and retained JPEG fallback. Geometry and UV bytes unchanged.",
+  "placementContract": "One merged LOD0 and one LOD1, one atlas material, _JUNGLE_AO indirect-only scalar and _WIND_FLEX rooted mask. Contact grids and profiles are measured from actual generated surfaces. Bottom anchored; fronts +Z.",
+  "customAttributes": {
+    "_JUNGLE_AO": "Scalar0.8\u20131.0 from5hemisphere rays, indirect light only; radius0.14largest span/offset0.0018span.",
+    "_WIND_FLEX": "UVcolor/height rooted leaves; red leaf accents included; cloth rear edge/corners anchored with free front hem."
+  },
+  "request": "Four existing Treehouse Trials V2 assets reused unchanged for Carlisle Coast. This release contains only fern-a, groundcover-a, crown-b and tree-b from that in-progress kit.",
+  "sourceProvenance": "public/treehouse-trials-v2/provenance.json in the owner's Treehouse Trials authoring checkout; filtered to this release subset.",
+  "sourceProvenanceSha256": "84c679e7e9c486e859d791ead47fdb5afbf86c983c6d97077c2544dda0c19a49",
+  "tasks": {
+    "fern-a": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "d6fc3d8d-3f98-44c0-8c79-8cf0eee45211",
+      "createdAt": "2026-10-05T06:49:57.427534+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 771,
+      "reference": "tools/treehouse-trials-assets-v2/references/fern-a.png",
+      "referenceSha256": "6825625491eb3448c1e15d89754c0777eef72efd6468e932cdfd7ee0e98bf9b8",
+      "targetTriangles": 2200,
+      "size": [
+        3,
+        2,
+        3
+      ],
+      "kind": "trialsv2ferna",
+      "id": "01a10ad3-8ae8-7631-bfa6-5eec613dddf1",
+      "checkedAt": "2026-10-05T06:55:43.883159+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183054964,
+      "sourceSha256": "a822db5f985fe67134c2a7bd6a2b4e48072efe8012a146f51e7f97ba1b81c7b5",
+      "sourceBytes": 4637256
+    },
+    "groundcover-a": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "fe84f35b-669f-42bd-b0bf-4414e8e2ebac",
+      "createdAt": "2026-10-05T06:49:50.512296+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 801,
+      "reference": "tools/treehouse-trials-assets-v2/references/groundcover-a.png",
+      "referenceSha256": "285bbea1a6224bcff36eeb4c681e3d619ace7b206689e093aa346904e41a4208",
+      "targetTriangles": 2500,
+      "size": [
+        5,
+        1.2,
+        3
+      ],
+      "kind": "trialsv2groundcovera",
+      "id": "01a10ad3-6ff2-7762-91b2-1326371e246f",
+      "checkedAt": "2026-10-05T06:55:39.126399+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183028797,
+      "sourceSha256": "21b65c72de5177e8db64bc5b1d0db6e8c3822a29432d589028e8f0122df07a11",
+      "sourceBytes": 6250500
+    },
+    "crown-b": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "3277cc1c-5818-4ef1-b991-e2527d55d22b",
+      "createdAt": "2026-10-05T06:49:46.905881+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 816,
+      "reference": "tools/treehouse-trials-assets-v2/references/crown-b.png",
+      "referenceSha256": "88b9f0da6a7f1ef8016d17be789d906b294635c056c24d90a88e95cd6a3a7b33",
+      "targetTriangles": 4000,
+      "size": [
+        26,
+        11,
+        22
+      ],
+      "kind": "trialsv2crownb",
+      "id": "01a10ad3-61ef-7622-adef-4961800c6516",
+      "checkedAt": "2026-10-05T06:55:37.180358+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183023854,
+      "sourceSha256": "0e346a93540534fef0d11e47495af328bea5dc4bbaade370804ce7705d8c3d63",
+      "sourceBytes": 6236836
+    },
+    "tree-b": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "918bda82-a1a9-41e6-8312-090f16885926",
+      "createdAt": "2026-10-05T06:49:39.150905+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 846,
+      "reference": "tools/treehouse-trials-assets-v2/references/tree-b.png",
+      "referenceSha256": "971883e9cf6e55ca0e10ea2b826cb35fe3f2e66522dbeb19c4500e580f81ea60",
+      "targetTriangles": 6500,
+      "size": [
+        26,
+        24,
+        20
+      ],
+      "kind": "trialsv2treeb",
+      "id": "01a10ad3-4437-77c1-8a08-1afc9aad7d15",
+      "checkedAt": "2026-10-05T06:55:33.205663+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791183015656,
+      "sourceSha256": "65b89fb1523baa0e7ff10c4b23ebbe6d2e9dd35eebf680e36d17e0f44a6e9db8",
+      "sourceBytes": 6546592
+    }
+  },
+  "models": [
+    {
+      "name": "tree-b",
+      "triangles": 5747,
+      "lodTriangles": 1839,
+      "sourceSpanGltf": [
+        1.0,
+        0.6439000368118286,
+        0.6810970306396484
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.5,
+          -0.34306401014328003,
+          -0.3218750059604645
+        ],
+        [
+          0.5,
+          0.338032990694046,
+          0.32202500104904175
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "uniformScaleSizeAtDefaultWidth": [
+        26,
+        16.741,
+        17.709
+      ],
+      "contactCenterline": [
+        {
+          "alongFromPositiveZ": 0.0,
+          "y": null
+        },
+        {
+          "alongFromPositiveZ": 0.025,
+          "y": null
+        },
+        {
+          "alongFromPositiveZ": 0.05,
+          "y": 0.02472
+        },
+        {
+          "alongFromPositiveZ": 0.075,
+          "y": 0.02535
+        },
+        {
+          "alongFromPositiveZ": 0.1,
+          "y": 0.02106
+        },
+        {
+          "alongFromPositiveZ": 0.125,
+          "y": null
+        },
+        {
+          "alongFromPositiveZ": 0.15,
+          "y": 0.8609
+        },
+        {
+          "alongFromPositiveZ": 0.175,
+          "y": 0.88955
+        },
+        {
+          "alongFromPositiveZ": 0.2,
+          "y": 0.89884
+        },
+        {
+          "alongFromPositiveZ": 0.225,
+          "y": 0.93133
+        },
+        {
+          "alongFromPositiveZ": 0.25,
+          "y": 0.95385
+        },
+        {
+          "alongFromPositiveZ": 0.275,
+          "y": 0.95698
+        },
+        {
+          "alongFromPositiveZ": 0.3,
+          "y": 0.96834
+        },
+        {
+          "alongFromPositiveZ": 0.325,
+          "y": 0.97937
+        },
+        {
+          "alongFromPositiveZ": 0.35,
+          "y": 0.9856
+        },
+        {
+          "alongFromPositiveZ": 0.375,
+          "y": 0.98548
+        },
+        {
+          "alongFromPositiveZ": 0.4,
+          "y": 0.98278
+        },
+        {
+          "alongFromPositiveZ": 0.425,
+          "y": 0.98008
+        },
+        {
+          "alongFromPositiveZ": 0.45,
+          "y": 0.96586
+        },
+        {
+          "alongFromPositiveZ": 0.475,
+          "y": 0.95239
+        },
+        {
+          "alongFromPositiveZ": 0.5,
+          "y": 0.95051
+        },
+        {
+          "alongFromPositiveZ": 0.525,
+          "y": 0.94782
+        },
+        {
+          "alongFromPositiveZ": 0.55,
+          "y": 0.95674
+        },
+        {
+          "alongFromPositiveZ": 0.575,
+          "y": 0.94631
+        },
+        {
+          "alongFromPositiveZ": 0.6,
+          "y": 0.93587
+        },
+        {
+          "alongFromPositiveZ": 0.625,
+          "y": 0.92558
+        },
+        {
+          "alongFromPositiveZ": 0.65,
+          "y": 0.92414
+        },
+        {
+          "alongFromPositiveZ": 0.675,
+          "y": 0.92196
+        },
+        {
+          "alongFromPositiveZ": 0.7,
+          "y": 0.91695
+        },
+        {
+          "alongFromPositiveZ": 0.725,
+          "y": 0.91195
+        },
+        {
+          "alongFromPositiveZ": 0.75,
+          "y": 0.90605
+        },
+        {
+          "alongFromPositiveZ": 0.775,
+          "y": 0.89291
+        },
+        {
+          "alongFromPositiveZ": 0.8,
+          "y": 0.8606
+        },
+        {
+          "alongFromPositiveZ": 0.825,
+          "y": 0.82836
+        },
+        {
+          "alongFromPositiveZ": 0.85,
+          "y": 0.81616
+        },
+        {
+          "alongFromPositiveZ": 0.875,
+          "y": 0.79217
+        },
+        {
+          "alongFromPositiveZ": 0.9,
+          "y": null
+        },
+        {
+          "alongFromPositiveZ": 0.925,
+          "y": null
+        },
+        {
+          "alongFromPositiveZ": 0.95,
+          "y": null
+        },
+        {
+          "alongFromPositiveZ": 0.975,
+          "y": null
+        },
+        {
+          "alongFromPositiveZ": 1.0,
+          "y": null
+        }
+      ],
+      "broadTopPlaneNormalizedY": null,
+      "suggestedBoxNormalized": null,
+      "placement": "Bottom anchored; front +Z in glTF. Collision is authored separately.",
+      "indirectAO": [
+        {
+          "mesh": "tree-b_LOD0",
+          "min": 0.8,
+          "max": 1.0,
+          "mean": 0.8924369296833065,
+          "raysPerVertex": 5,
+          "radiusRelativeToLargestSpan": 0.14,
+          "offsetRelativeToLargestSpan": 0.0018
+        },
+        {
+          "mesh": "tree-b_LOD1",
+          "min": 0.8,
+          "max": 1.0,
+          "mean": 0.8838528557599226,
+          "raysPerVertex": 5,
+          "radiusRelativeToLargestSpan": 0.14,
+          "offsetRelativeToLargestSpan": 0.0018
+        }
+      ],
+      "contactFit": "Original source surface retained.",
+      "bytes": 7575956,
+      "sha256": "d71c77acf07c104213bb186cb8acd738b5dc2bf56dde219202fbe0c552ed6339",
+      "sourceSha256": "65b89fb1523baa0e7ff10c4b23ebbe6d2e9dd35eebf680e36d17e0f44a6e9db8",
+      "albedoResolution": 2048,
+      "normalResolution": 1024,
+      "gpuTextures": {
+        "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+        "textures": [
+          {
+            "fallbackSha256": "812056c8fa8630a2f35fca25d653f692d3f1bd7d72b8e218687e828bd7193643",
+            "ktxSha256": "6a0eb761a6e78f4c97ce554c172b28420a8fe8b5d2ce80f21f1c5ff18d9763b7",
+            "width": 2048,
+            "height": 2048,
+            "mipLevels": 12,
+            "astc4x4Bytes": 5592432,
+            "encodedBytes": 4500637
+          },
+          {
+            "fallbackSha256": "9c5930082e2ab9f1e4429f4f98fda61242f5d4c88ace9b0e1c735c0c052622f1",
+            "ktxSha256": "70c9b0c44e0d05587c7c985e72aa3f5d209feff7f49280ff387af4c63cb1997a",
+            "width": 1024,
+            "height": 1024,
+            "mipLevels": 11,
+            "astc4x4Bytes": 1398128,
+            "encodedBytes": 857008
+          }
+        ]
+      },
+      "path": "tree-b.glb",
+      "kind": "trialsv2treeb",
+      "size": [
+        26,
+        24,
+        20
+      ],
+      "taskId": "01a10ad3-4437-77c1-8a08-1afc9aad7d15",
+      "referenceSha256": "971883e9cf6e55ca0e10ea2b826cb35fe3f2e66522dbeb19c4500e580f81ea60"
+    },
+    {
+      "name": "crown-b",
+      "triangles": 3107,
+      "lodTriangles": 994,
+      "sourceSpanGltf": [
+        1.0,
+        0.3617119789123535,
+        1.0
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.5,
+          -0.5,
+          -0.1814199984073639
+        ],
+        [
+          0.5,
+          0.5,
+          0.18029199540615082
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "uniformScaleSizeAtDefaultWidth": [
+        26,
+        9.405,
+        26.0
+      ],
+      "contactCenterline": [
+        {
+          "alongFromPositiveZ": 0.0,
+          "y": null
+        },
+        {
+          "alongFromPositiveZ": 0.025,
+          "y": null
+        },
+        {
+          "alongFromPositiveZ": 0.05,
+          "y": null
+        },
+        {
+          "alongFromPositiveZ": 0.075,
+          "y": 0.53739
+        },
+        {
+          "alongFromPositiveZ": 0.1,
+          "y": 0.55302
+        },
+        {
+          "alongFromPositiveZ": 0.125,
+          "y": 0.55697
+        },
+        {
+          "alongFromPositiveZ": 0.15,
+          "y": 0.55675
+        },
+        {
+          "alongFromPositiveZ": 0.175,
+          "y": 0.43807
+        },
+        {
+          "alongFromPositiveZ": 0.2,
+          "y": 0.43428
+        },
+        {
+          "alongFromPositiveZ": 0.225,
+          "y": 0.60104
+        },
+        {
+          "alongFromPositiveZ": 0.25,
+          "y": 0.67185
+        },
+        {
+          "alongFromPositiveZ": 0.275,
+          "y": 0.7228
+        },
+        {
+          "alongFromPositiveZ": 0.3,
+          "y": 0.74234
+        },
+        {
+          "alongFromPositiveZ": 0.325,
+          "y": 0.75048
+        },
+        {
+          "alongFromPositiveZ": 0.35,
+          "y": 0.77079
+        },
+        {
+          "alongFromPositiveZ": 0.375,
+          "y": 0.75813
+        },
+        {
+          "alongFromPositiveZ": 0.4,
+          "y": 0.74585
+        },
+        {
+          "alongFromPositiveZ": 0.425,
+          "y": 0.7762
+        },
+        {
+          "alongFromPositiveZ": 0.45,
+          "y": 0.79264
+        },
+        {
+          "alongFromPositiveZ": 0.475,
+          "y": 0.87009
+        },
+        {
+          "alongFromPositiveZ": 0.5,
+          "y": 0.85611
+        },
+        {
+          "alongFromPositiveZ": 0.525,
+          "y": 0.86869
+        },
+        {
+          "alongFromPositiveZ": 0.55,
+          "y": 0.87973
+        },
+        {
+          "alongFromPositiveZ": 0.575,
+          "y": 0.91637
+        },
+        {
+          "alongFromPositiveZ": 0.6,
+          "y": 0.9342
+        },
+        {
+          "alongFromPositiveZ": 0.625,
+          "y": 0.94277
+        },
+        {
+          "alongFromPositiveZ": 0.65,
+          "y": 0.93264
+        },
+        {
+          "alongFromPositiveZ": 0.675,
+          "y": 0.95501
+        },
+        {
+          "alongFromPositiveZ": 0.7,
+          "y": 0.93237
+        },
+        {
+          "alongFromPositiveZ": 0.725,
+          "y": 0.89875
+        },
+        {
+          "alongFromPositiveZ": 0.75,
+          "y": 0.90267
+        },
+        {
+          "alongFromPositiveZ": 0.775,
+          "y": 0.9005
+        },
+        {
+          "alongFromPositiveZ": 0.8,
+          "y": 0.87857
+        },
+        {
+          "alongFromPositiveZ": 0.825,
+          "y": 0.82696
+        },
+        {
+          "alongFromPositiveZ": 0.85,
+          "y": 0.74896
+        },
+        {
+          "alongFromPositiveZ": 0.875,
+          "y": 0.7392
+        },
+        {
+          "alongFromPositiveZ": 0.9,
+          "y": 0.70598
+        },
+        {
+          "alongFromPositiveZ": 0.925,
+          "y": 0.72893
+        },
+        {
+          "alongFromPositiveZ": 0.95,
+          "y": 0.60076
+        },
+        {
+          "alongFromPositiveZ": 0.975,
+          "y": 0.53106
+        },
+        {
+          "alongFromPositiveZ": 1.0,
+          "y": null
+        }
+      ],
+      "broadTopPlaneNormalizedY": null,
+      "suggestedBoxNormalized": null,
+      "placement": "Bottom anchored; front +Z in glTF. Collision is authored separately.",
+      "indirectAO": [
+        {
+          "mesh": "crown-b_LOD0",
+          "min": 0.8,
+          "max": 1.0,
+          "mean": 0.8702174963750604,
+          "raysPerVertex": 5,
+          "radiusRelativeToLargestSpan": 0.14,
+          "offsetRelativeToLargestSpan": 0.0018
+        },
+        {
+          "mesh": "crown-b_LOD1",
+          "min": 0.8,
+          "max": 1.0,
+          "mean": 0.8819111483654654,
+          "raysPerVertex": 5,
+          "radiusRelativeToLargestSpan": 0.14,
+          "offsetRelativeToLargestSpan": 0.0018
+        }
+      ],
+      "contactFit": "Original source surface retained.",
+      "bytes": 2266240,
+      "sha256": "8834cb921d771575f9a38e9e1ae3c4861a1b8d0709ee16dc3edfc9739a142ac4",
+      "sourceSha256": "0e346a93540534fef0d11e47495af328bea5dc4bbaade370804ce7705d8c3d63",
+      "albedoResolution": 1024,
+      "normalResolution": 512,
+      "gpuTextures": {
+        "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+        "textures": [
+          {
+            "fallbackSha256": "874451937e6d0e3323ce1f7b6fc6cde19a06656e9b44aff4bbe11c0074b15b75",
+            "ktxSha256": "6bf03c86ef94238b0f0208a140db40fe16ff7a760ed9aafc03199d9bb88fb11f",
+            "width": 1024,
+            "height": 1024,
+            "mipLevels": 11,
+            "astc4x4Bytes": 1398128,
+            "encodedBytes": 1222954
+          },
+          {
+            "fallbackSha256": "7c95f2fc514fc534a7a17037c402df8d382b23d6031b7fb1f830e55876c2fa31",
+            "ktxSha256": "4f975e986ce6a7c6a30c7b490686d8686a09b7b0ff9ec298733246b4e533d4a3",
+            "width": 512,
+            "height": 512,
+            "mipLevels": 10,
+            "astc4x4Bytes": 349552,
+            "encodedBytes": 229285
+          }
+        ]
+      },
+      "path": "crown-b.glb",
+      "kind": "trialsv2crownb",
+      "size": [
+        26,
+        11,
+        22
+      ],
+      "taskId": "01a10ad3-61ef-7622-adef-4961800c6516",
+      "referenceSha256": "88b9f0da6a7f1ef8016d17be789d906b294635c056c24d90a88e95cd6a3a7b33"
+    },
+    {
+      "name": "groundcover-a",
+      "triangles": 2010,
+      "lodTriangles": 643,
+      "sourceSpanGltf": [
+        1.0,
+        0.2086789906024933,
+        0.5162259936332703
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.5,
+          -0.25669199228286743,
+          -0.10281100124120712
+        ],
+        [
+          0.5,
+          0.25953400135040283,
+          0.10586799681186676
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "uniformScaleSizeAtDefaultWidth": [
+        5,
+        1.043,
+        2.581
+      ],
+      "contactCenterline": [
+        {
+          "alongFromPositiveZ": 0.0,
+          "y": null
+        },
+        {
+          "alongFromPositiveZ": 0.025,
+          "y": null
+        },
+        {
+          "alongFromPositiveZ": 0.05,
+          "y": null
+        },
+        {
+          "alongFromPositiveZ": 0.075,
+          "y": 0.31471
+        },
+        {
+          "alongFromPositiveZ": 0.1,
+          "y": 0.35079
+        },
+        {
+          "alongFromPositiveZ": 0.125,
+          "y": 0.33653
+        },
+        {
+          "alongFromPositiveZ": 0.15,
+          "y": 0.34076
+        },
+        {
+          "alongFromPositiveZ": 0.175,
+          "y": 0.20125
+        },
+        {
+          "alongFromPositiveZ": 0.2,
+          "y": 0.52471
+        },
+        {
+          "alongFromPositiveZ": 0.225,
+          "y": 0.56969
+        },
+        {
+          "alongFromPositiveZ": 0.25,
+          "y": 0.65169
+        },
+        {
+          "alongFromPositiveZ": 0.275,
+          "y": 0.6458
+        },
+        {
+          "alongFromPositiveZ": 0.3,
+          "y": 0.63991
+        },
+        {
+          "alongFromPositiveZ": 0.325,
+          "y": 0.63657
+        },
+        {
+          "alongFromPositiveZ": 0.35,
+          "y": 0.60898
+        },
+        {
+          "alongFromPositiveZ": 0.375,
+          "y": 0.64567
+        },
+        {
+          "alongFromPositiveZ": 0.4,
+          "y": 0.55975
+        },
+        {
+          "alongFromPositiveZ": 0.425,
+          "y": 0.51721
+        },
+        {
+          "alongFromPositiveZ": 0.45,
+          "y": 0.46904
+        },
+        {
+          "alongFromPositiveZ": 0.475,
+          "y": 0.47514
+        },
+        {
+          "alongFromPositiveZ": 0.5,
+          "y": 0.46605
+        },
+        {
+          "alongFromPositiveZ": 0.525,
+          "y": 0.45779
+        },
+        {
+          "alongFromPositiveZ": 0.55,
+          "y": 0.56454
+        },
+        {
+          "alongFromPositiveZ": 0.575,
+          "y": 0.68236
+        },
+        {
+          "alongFromPositiveZ": 0.6,
+          "y": 0.69344
+        },
+        {
+          "alongFromPositiveZ": 0.625,
+          "y": 0.70359
+        },
+        {
+          "alongFromPositiveZ": 0.65,
+          "y": 0.64169
+        },
+        {
+          "alongFromPositiveZ": 0.675,
+          "y": 0.63417
+        },
+        {
+          "alongFromPositiveZ": 0.7,
+          "y": 0.66443
+        },
+        {
+          "alongFromPositiveZ": 0.725,
+          "y": 0.62842
+        },
+        {
+          "alongFromPositiveZ": 0.75,
+          "y": 0.51641
+        },
+        {
+          "alongFromPositiveZ": 0.775,
+          "y": 0.50706
+        },
+        {
+          "alongFromPositiveZ": 0.8,
+          "y": 0.48772
+        },
+        {
+          "alongFromPositiveZ": 0.825,
+          "y": 0.44618
+        },
+        {
+          "alongFromPositiveZ": 0.85,
+          "y": 0.3128
+        },
+        {
+          "alongFromPositiveZ": 0.875,
+          "y": 0.41306
+        },
+        {
+          "alongFromPositiveZ": 0.9,
+          "y": 0.46535
+        },
+        {
+          "alongFromPositiveZ": 0.925,
+          "y": 0.5008
+        },
+        {
+          "alongFromPositiveZ": 0.95,
+          "y": 0.44412
+        },
+        {
+          "alongFromPositiveZ": 0.975,
+          "y": null
+        },
+        {
+          "alongFromPositiveZ": 1.0,
+          "y": null
+        }
+      ],
+      "broadTopPlaneNormalizedY": null,
+      "suggestedBoxNormalized": null,
+      "placement": "Bottom anchored; front +Z in glTF. Collision is authored separately.",
+      "indirectAO": [
+        {
+          "mesh": "groundcover-a_LOD0",
+          "min": 0.8,
+          "max": 1.0,
+          "mean": 0.9061593965234503,
+          "raysPerVertex": 5,
+          "radiusRelativeToLargestSpan": 0.14,
+          "offsetRelativeToLargestSpan": 0.0018
+        },
+        {
+          "mesh": "groundcover-a_LOD1",
+          "min": 0.8,
+          "max": 1.0,
+          "mean": 0.921684434968017,
+          "raysPerVertex": 5,
+          "radiusRelativeToLargestSpan": 0.14,
+          "offsetRelativeToLargestSpan": 0.0018
+        }
+      ],
+      "contactFit": "Original source surface retained.",
+      "bytes": 2173848,
+      "sha256": "317cadc08e607e26881c72dcfceca91d0fe9b52afb1cecd6ff4a6af7c8500bf7",
+      "sourceSha256": "21b65c72de5177e8db64bc5b1d0db6e8c3822a29432d589028e8f0122df07a11",
+      "albedoResolution": 1024,
+      "normalResolution": 512,
+      "gpuTextures": {
+        "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+        "textures": [
+          {
+            "fallbackSha256": "befddeb30f1d2f282a2d0be811337a4bd56c36e57289fbbae6d6b73354ab39b4",
+            "ktxSha256": "b0a978a9a79aba2d28cb22f6ca5f94d60a952a9752928d3e400335b6e920aec3",
+            "width": 1024,
+            "height": 1024,
+            "mipLevels": 11,
+            "astc4x4Bytes": 1398128,
+            "encodedBytes": 1231232
+          },
+          {
+            "fallbackSha256": "ee32d4e08eda8e78f17fe1770fe54144b684c69ef8c7afe969a93a58e8eff1fd",
+            "ktxSha256": "9569d312df424a53ff6da69df44b6f3468a525576b69bd94fd4118433cd47a0a",
+            "width": 512,
+            "height": 512,
+            "mipLevels": 10,
+            "astc4x4Bytes": 349552,
+            "encodedBytes": 221631
+          }
+        ]
+      },
+      "path": "groundcover-a.glb",
+      "kind": "trialsv2groundcovera",
+      "size": [
+        5,
+        1.2,
+        3
+      ],
+      "taskId": "01a10ad3-6ff2-7762-91b2-1326371e246f",
+      "referenceSha256": "285bbea1a6224bcff36eeb4c681e3d619ace7b206689e093aa346904e41a4208"
+    },
+    {
+      "name": "fern-a",
+      "triangles": 1851,
+      "lodTriangles": 592,
+      "sourceSpanGltf": [
+        1.0,
+        0.533614993095398,
+        0.9326119422912598
+      ],
+      "sourceBoundsBlender": [
+        [
+          -0.5,
+          -0.46597498655319214,
+          -0.26730701327323914
+        ],
+        [
+          0.5,
+          0.46663698554039,
+          0.2663080096244812
+        ]
+      ],
+      "sourceMeshCount": 1,
+      "materials": 1,
+      "uniformScaleSizeAtDefaultWidth": [
+        3,
+        1.601,
+        2.798
+      ],
+      "contactCenterline": [
+        {
+          "alongFromPositiveZ": 0.0,
+          "y": null
+        },
+        {
+          "alongFromPositiveZ": 0.025,
+          "y": null
+        },
+        {
+          "alongFromPositiveZ": 0.05,
+          "y": 0.39278
+        },
+        {
+          "alongFromPositiveZ": 0.075,
+          "y": 0.42422
+        },
+        {
+          "alongFromPositiveZ": 0.1,
+          "y": 0.44549
+        },
+        {
+          "alongFromPositiveZ": 0.125,
+          "y": 0.45527
+        },
+        {
+          "alongFromPositiveZ": 0.15,
+          "y": 0.77567
+        },
+        {
+          "alongFromPositiveZ": 0.175,
+          "y": 0.77099
+        },
+        {
+          "alongFromPositiveZ": 0.2,
+          "y": 0.76598
+        },
+        {
+          "alongFromPositiveZ": 0.225,
+          "y": 0.76881
+        },
+        {
+          "alongFromPositiveZ": 0.25,
+          "y": 0.74627
+        },
+        {
+          "alongFromPositiveZ": 0.275,
+          "y": 0.71609
+        },
+        {
+          "alongFromPositiveZ": 0.3,
+          "y": 0.67644
+        },
+        {
+          "alongFromPositiveZ": 0.325,
+          "y": 0.56531
+        },
+        {
+          "alongFromPositiveZ": 0.35,
+          "y": 0.54743
+        },
+        {
+          "alongFromPositiveZ": 0.375,
+          "y": 0.52507
+        },
+        {
+          "alongFromPositiveZ": 0.4,
+          "y": 0.49643
+        },
+        {
+          "alongFromPositiveZ": 0.425,
+          "y": 0.60672
+        },
+        {
+          "alongFromPositiveZ": 0.45,
+          "y": 0.61554
+        },
+        {
+          "alongFromPositiveZ": 0.475,
+          "y": 0.62127
+        },
+        {
+          "alongFromPositiveZ": 0.5,
+          "y": null
+        },
+        {
+          "alongFromPositiveZ": 0.525,
+          "y": 0.46749
+        },
+        {
+          "alongFromPositiveZ": 0.55,
+          "y": 0.49209
+        },
+        {
+          "alongFromPositiveZ": 0.575,
+          "y": 0.75403
+        },
+        {
+          "alongFromPositiveZ": 0.6,
+          "y": 0.80535
+        },
+        {
+          "alongFromPositiveZ": 0.625,
+          "y": 0.83556
+        },
+        {
+          "alongFromPositiveZ": 0.65,
+          "y": 0.85038
+        },
+        {
+          "alongFromPositiveZ": 0.675,
+          "y": 0.87977
+        },
+        {
+          "alongFromPositiveZ": 0.7,
+          "y": 0.89331
+        },
+        {
+          "alongFromPositiveZ": 0.725,
+          "y": 0.91559
+        },
+        {
+          "alongFromPositiveZ": 0.75,
+          "y": 0.9378
+        },
+        {
+          "alongFromPositiveZ": 0.775,
+          "y": 0.95429
+        },
+        {
+          "alongFromPositiveZ": 0.8,
+          "y": 0.9787
+        },
+        {
+          "alongFromPositiveZ": 0.825,
+          "y": 0.97977
+        },
+        {
+          "alongFromPositiveZ": 0.85,
+          "y": 0.98638
+        },
+        {
+          "alongFromPositiveZ": 0.875,
+          "y": 0.98331
+        },
+        {
+          "alongFromPositiveZ": 0.9,
+          "y": 0.96967
+        },
+        {
+          "alongFromPositiveZ": 0.925,
+          "y": 0.95561
+        },
+        {
+          "alongFromPositiveZ": 0.95,
+          "y": 0.92492
+        },
+        {
+          "alongFromPositiveZ": 0.975,
+          "y": null
+        },
+        {
+          "alongFromPositiveZ": 1.0,
+          "y": null
+        }
+      ],
+      "broadTopPlaneNormalizedY": null,
+      "suggestedBoxNormalized": null,
+      "placement": "Bottom anchored; front +Z in glTF. Collision is authored separately.",
+      "indirectAO": [
+        {
+          "mesh": "fern-a_LOD0",
+          "min": 0.8,
+          "max": 1.0,
+          "mean": 0.9032080659945004,
+          "raysPerVertex": 5,
+          "radiusRelativeToLargestSpan": 0.14,
+          "offsetRelativeToLargestSpan": 0.0018
+        },
+        {
+          "mesh": "fern-a_LOD1",
+          "min": 0.8,
+          "max": 1.0,
+          "mean": 0.9282252559726961,
+          "raysPerVertex": 5,
+          "radiusRelativeToLargestSpan": 0.14,
+          "offsetRelativeToLargestSpan": 0.0018
+        }
+      ],
+      "contactFit": "Original source surface retained.",
+      "bytes": 1890876,
+      "sha256": "51004d298e6212f7b59ece3635978697b07537af6540cec16b9807363eb191f6",
+      "sourceSha256": "a822db5f985fe67134c2a7bd6a2b4e48072efe8012a146f51e7f97ba1b81c7b5",
+      "albedoResolution": 1024,
+      "normalResolution": 512,
+      "gpuTextures": {
+        "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
+        "textures": [
+          {
+            "fallbackSha256": "8d08997ac63c42e5ea1c97061b73d60c88fd2ecebae24504b8679eae2d94f0b7",
+            "ktxSha256": "459494287b6f4158e4018e5d57c07c466d45d9b8b901c2f0910c1512e1260d7e",
+            "width": 1024,
+            "height": 1024,
+            "mipLevels": 11,
+            "astc4x4Bytes": 1398128,
+            "encodedBytes": 1167049
+          },
+          {
+            "fallbackSha256": "110e6cb19e6ea5948b5e5b65ad61cbe8895fb0308cf2b9b844036e84c7858b79",
+            "ktxSha256": "a5b3131b2cd61e74900800f7810fd359c043c054b923c897bdd0112d1690ee3c",
+            "width": 512,
+            "height": 512,
+            "mipLevels": 10,
+            "astc4x4Bytes": 349552,
+            "encodedBytes": 168929
+          }
+        ]
+      },
+      "path": "fern-a.glb",
+      "kind": "trialsv2ferna",
+      "size": [
+        3,
+        2,
+        3
+      ],
+      "taskId": "01a10ad3-8ae8-7631-bfa6-5eec613dddf1",
+      "referenceSha256": "6825625491eb3448c1e15d89754c0777eef72efd6468e932cdfd7ee0e98bf9b8"
+    }
+  ],
+  "reuse": {
+    "additionalGenerationCredits": 0,
+    "geometryOrTextureChanges": "None; existing packed GLBs copied byte for byte. Placement, rotation, scale and scoped runtime tint are authored for Carlisle Coast.",
+    "runtimeKinds": {
+      "fern-a": "coastfern",
+      "groundcover-a": "coastcarpet",
+      "crown-b": "coastcrown",
+      "tree-b": "coasttree"
+    }
+  },
+  "attribution": "Created with Meshy (https://www.meshy.ai/) and OpenAI image generation for the project owner. Account plan tier was not recorded in the authoring outputs; conservative publication attribution retained under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)."
+}

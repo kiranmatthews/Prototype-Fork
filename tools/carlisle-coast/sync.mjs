@@ -11,5 +11,5 @@ if(process.argv.includes('--write')){
  const row=pack.levels.find(l=>l.id==='test');if(!row)throw new Error('Missing test level');
  row.name=CARLISLE_COAST_LEVEL.name;row.data=CARLISLE_COAST_LEVEL;
  await writeFile(file,JSON.stringify(pack)+'\n');
- console.log(`Synced Carlisle Coast: ${row.data.components.length} components, original course styling.`);
+ console.log(`Synced Carlisle Coast: ${row.data.components.length} components, temple ravine presentation.`);
 }

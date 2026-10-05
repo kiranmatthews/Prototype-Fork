@@ -228,6 +228,7 @@ const SUN_OFFSET = new THREE.Vector3(38, 74, 26);
 const COAST_SUN_OFFSET = new THREE.Vector3(-68, 58, -11);
 const MAP_SUN_OFFSET = new THREE.Vector3(-32, 72, 42);
 const JUNGLE_SUN_OFFSET = new THREE.Vector3(-36, 62, 28);
+const PAINTERLY_JUNGLE_SUN_OFFSET = new THREE.Vector3(-36, 62, -16);
 function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
   const shadowHalf = document.body.classList.contains("game-world-map")
     ? MAP_SHADOW_HALF
@@ -241,7 +242,8 @@ function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
   }
   const offset = document.body.classList.contains("game-world-map")
     ? MAP_SUN_OFFSET
-    : level.jungleAtmosphere ? JUNGLE_SUN_OFFSET : activeSky === "coast" ? COAST_SUN_OFFSET : SUN_OFFSET;
+    : level.jungleStyle === 'painterly' ? PAINTERLY_JUNGLE_SUN_OFFSET
+      : level.jungleAtmosphere ? JUNGLE_SUN_OFFSET : activeSky === "coast" ? COAST_SUN_OFFSET : SUN_OFFSET;
   const heatSun = competition && isCompetitionLevel(current.id) && !editorViewActive ? competition.heatLook.sunOffset : null;
   sun.target.position.set(focusX, focusY, focusZ);
   sun.target.updateMatrixWorld();
@@ -734,6 +736,7 @@ function syncSkyBackdropVisibility(): void {
     skyCache.has(activeSky) &&
     !LITE &&
     !preset.seaHorizon &&
+    level.jungleStyle !== 'painterly' &&
     !fogBackdrop;
 }
 function setEditorView(editing: boolean, changed = false): void {
@@ -810,14 +813,19 @@ function applyTheme(): void {
   sun.color.copy(atmosphereColor(atmosphere.sunColor));
   sun.intensity = atmosphere.sunIntensity;
   sun.shadow.intensity = atmosphere.shadowStrength;
+  // The opted-in shader's fixed disk scales with map density.
+  sun.shadow.radius = level.jungleStyle === 'painterly' ? 6 * SUN_SHADOW_MAP_SIZE / 4096 : 1;
   fill.color.copy(atmosphereColor(atmosphere.fillColor));
   fill.intensity = atmosphere.fillIntensity;
+  fill.position.set(level.jungleStyle === 'painterly' ? 34 : -30,
+    level.jungleStyle === 'painterly' ? 30 : 25,
+    level.jungleStyle === 'painterly' ? 22 : -20);
 
   // THE DOME. A loaded painting wins; otherwise the procedural gradient, painted
   // in the preset's colours so day and night still read right without the art.
   const mat = sky.material as THREE.MeshBasicMaterial;
   const mistMat = skyMist.material as THREE.MeshBasicMaterial;
-  const layers = skyCache.get(activeSky);
+  const layers = level.jungleStyle === 'painterly' ? undefined : skyCache.get(activeSky);
   if (layers) {
     mat.transparent = true;
     if (mat.map !== layers.bg) {
@@ -2166,8 +2174,8 @@ function applyShadowFlags(root: THREE.Object3D = scene): void {
     // Unlit basic materials are effects (glows, markers, sky), not surfaces.
     if (one && (one as THREE.MeshBasicMaterial).isMeshBasicMaterial)
       skip = true;
-    m.castShadow = !skip;
-    m.receiveShadow = !skip;
+    m.castShadow = !skip && m.userData.castShadow !== false;
+    m.receiveShadow = !skip && m.userData.receiveShadow !== false;
   });
 }
 

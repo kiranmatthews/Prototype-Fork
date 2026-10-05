@@ -1,0 +1,236 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "cliVersion": "0.3.1",
+  "model": "meshy-t2",
+  "modelType": "smart-topology",
+  "startingBalance": 486,
+  "request": "Carlisle Coast polished ancient temple ravine kit, inspired by the supplied Tiki Pits video. Six coherent original sandstone/moss scenery pieces.",
+  "estimatedBatchCredits": 90,
+  "tasks": {
+    "cliff-bay": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "5e89afcd-bfad-4ff6-a09c-3a3f33b57300",
+      "createdAt": "2026-10-05T08:56:31.461027+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 486,
+      "reference": "tools/carlisle-coast-assets/references/cliff-bay.png",
+      "referenceSha256": "6043ee5ee59d425572e91e48b77eb93f8e502d3dd4396bfc0b89ea14603fe16f",
+      "targetTriangles": 6500,
+      "size": [
+        16,
+        12,
+        7
+      ],
+      "kind": "coastcliff",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/carlisle-coast-assets/references/cliff-bay.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 6500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the reference exact broad form and painted colors: warm ochre-gold rounded sandstone slabs, dark cool-brown deep seam crevices, forest emerald moss and controlled coral-red foliage. Smooth broad brush planes, restrained self-occlusion, no baked directional sun, photorealism or gritty tiny noise. Preserve broad paint patches, large worn carvings and open silhouette.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10b47-6b3c-7012-9e4a-cc5cf994f972",
+      "checkedAt": "2026-10-05T09:00:06.316025+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791190638825,
+      "sourceSha256": "d3019421cba6e00e0b28c069a24e7d6f82418a0b51afd5dc906fa68cf54270cb",
+      "sourceBytes": 7443504
+    },
+    "canyon-spire": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "85915092-b6b2-458a-bb9e-c5f924450272",
+      "createdAt": "2026-10-05T08:57:01.698286+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 471,
+      "reference": "tools/carlisle-coast-assets/references/canyon-spire.png",
+      "referenceSha256": "681eab73384ee8123cd1afb74d7593507ff8d898b0daf79446f683c39e076737",
+      "targetTriangles": 6500,
+      "size": [
+        9,
+        21,
+        8
+      ],
+      "kind": "coastspire",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/carlisle-coast-assets/references/canyon-spire.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 6500,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the reference exact broad form and painted colors: warm ochre-gold rounded sandstone slabs, dark cool-brown deep seam crevices, forest emerald moss and controlled coral-red foliage. Smooth broad brush planes, restrained self-occlusion, no baked directional sun, photorealism or gritty tiny noise. Preserve broad paint patches, large worn carvings and open silhouette.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10b47-e130-73c9-bbdd-c52285b5fe27",
+      "checkedAt": "2026-10-05T09:00:08.609764+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791190665468,
+      "sourceSha256": "6c80f2041bd02bd66426df4bd64d9191e3130527ef2fb71eef8cc76ed9415e73",
+      "sourceBytes": 7191716
+    },
+    "moss-shelf": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "19b9310b-df4c-491f-9ca8-e14cad2decb5",
+      "createdAt": "2026-10-05T08:58:21.989983+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 456,
+      "reference": "tools/carlisle-coast-assets/references/moss-shelf.png",
+      "referenceSha256": "fc0971eab4a2e668d7c4204fe2383a99107c290ec372033123b25cf0042a1965",
+      "targetTriangles": 4000,
+      "size": [
+        10,
+        2.7,
+        4
+      ],
+      "kind": "coastshelf",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/carlisle-coast-assets/references/moss-shelf.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 4000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the reference exact broad form and painted colors: warm ochre-gold rounded sandstone slabs, dark cool-brown deep seam crevices, forest emerald moss and controlled coral-red foliage. Smooth broad brush planes, restrained self-occlusion, no baked directional sun, photorealism or gritty tiny noise. Preserve broad paint patches, large worn carvings and open silhouette.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10b49-1b4d-727a-bc82-4069b48b7145",
+      "checkedAt": "2026-10-05T09:00:10.556696+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791190756068,
+      "sourceSha256": "502d409e2dd79bac1b4a5d2d6740b5eb9630cbc8be725e0d35ea5f86ee5213ed",
+      "sourceBytes": 7285040
+    },
+    "tiki-pillar": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "56135373-17a4-47ef-b31f-2336e9411234",
+      "createdAt": "2026-10-05T08:58:25.559793+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 441,
+      "reference": "tools/carlisle-coast-assets/references/tiki-pillar.png",
+      "referenceSha256": "d0fa91c6fbc078a06b1352e278aa800bd502012830a87c52054e6cdc0c13677e",
+      "targetTriangles": 5000,
+      "size": [
+        3,
+        9,
+        3
+      ],
+      "kind": "coastpillar",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/carlisle-coast-assets/references/tiki-pillar.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 5000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the reference exact broad form and painted colors: warm ochre-gold rounded sandstone slabs, dark cool-brown deep seam crevices, forest emerald moss and controlled coral-red foliage. Smooth broad brush planes, restrained self-occlusion, no baked directional sun, photorealism or gritty tiny noise. Preserve broad paint patches, large worn carvings and open silhouette.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10b49-28d4-74e4-9b79-5d9ec7022889",
+      "checkedAt": "2026-10-05T09:00:12.698936+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791190757998,
+      "sourceSha256": "c7b6b896ac10cb36548a443fa2dc74ecc77fa0c1c7fac052d7c368357e4195e6",
+      "sourceBytes": 7575364
+    },
+    "temple-lintel": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "45700b13-bdfe-46c3-8635-fc31e1e70232",
+      "createdAt": "2026-10-05T08:58:29.061179+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 426,
+      "reference": "tools/carlisle-coast-assets/references/temple-lintel.png",
+      "referenceSha256": "ab8725c4600c736fc728665066bb1ee6f28254ff776eda26392099523b447c65",
+      "targetTriangles": 7000,
+      "size": [
+        18,
+        13,
+        5
+      ],
+      "kind": "coastarch",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/carlisle-coast-assets/references/temple-lintel.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 7000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the reference exact broad form and painted colors: warm ochre-gold rounded sandstone slabs, dark cool-brown deep seam crevices, forest emerald moss and controlled coral-red foliage. Smooth broad brush planes, restrained self-occlusion, no baked directional sun, photorealism or gritty tiny noise. Preserve broad paint patches, large worn carvings and open silhouette.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10b49-3686-779b-97f4-adf4dd644dba",
+      "checkedAt": "2026-10-05T09:00:14.719765+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791190766041,
+      "sourceSha256": "51e751d422859c1d2f4a2d3650c406a954c00fb5030aa4cab0d3b25518d988de",
+      "sourceBytes": 7335336
+    },
+    "red-foliage": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "a6cd8f49-421e-4321-9dd0-3676ee532887",
+      "createdAt": "2026-10-05T08:58:32.569413+00:00",
+      "estimatedCredits": 15,
+      "balanceBefore": 411,
+      "reference": "tools/carlisle-coast-assets/references/red-foliage.png",
+      "referenceSha256": "faabbfcfefa03695fb689c4c0419acc09f6ddf04651c7d3fb8f3f1385ad65ffd",
+      "targetTriangles": 3000,
+      "size": [
+        3,
+        1.4,
+        3
+      ],
+      "kind": "coastfoliage",
+      "payload": {
+        "image_url": "/Users/kiki/Documents/ChatGPT/Prototype Fork/tools/carlisle-coast-assets/references/red-foliage.png",
+        "model_type": "smart-topology",
+        "ai_model": "meshy-t2",
+        "target_polycount": 3000,
+        "should_texture": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "texture_prompt": "Match the reference exact broad form and painted colors: warm ochre-gold rounded sandstone slabs, dark cool-brown deep seam crevices, forest emerald moss and controlled coral-red foliage. Smooth broad brush planes, restrained self-occlusion, no baked directional sun, photorealism or gritty tiny noise. Preserve broad paint patches, large worn carvings and open silhouette.",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "id": "01a10b49-4445-7647-8c16-56a278ae64bb",
+      "checkedAt": "2026-10-05T09:00:16.926123+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791190777053,
+      "sourceSha256": "3bdd1ed53865689b01b9b552da86721e073ea338bfaf122fc5dd32c07579f361",
+      "sourceBytes": 6559620
+    }
+  },
+  "latestBalance": 396,
+  "balanceCheckedAt": "2026-10-05T09:00:53.402567+00:00"
+}

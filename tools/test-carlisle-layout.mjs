@@ -31,6 +31,7 @@ assert.deepEqual(countBy(expected.filter(c => c.t === 'enemy'), c => c.foe ?? 'g
 
 const harness = await readFile(new URL('validate-editor-roundtrip.mjs', import.meta.url), 'utf8');
 runInThisContext(harness.slice(harness.indexOf('function installHeadlessDom()'), harness.indexOf('\nfunction round(')) + '\ninstallHeadlessDom();');
+window.location.search=''; // rendered-gap proof must include full foliage
 const nativeFetch = globalThis.fetch;
 globalThis.self = globalThis;
 globalThis.createImageBitmap = async () => ({width: 1024, height: 1024, close() {}});
@@ -99,8 +100,9 @@ try {
   city = new Level(new THREE.Scene(), {id: 'carlisle-restored-oracle', name: data.name, data});
   await city.prepareJungleAssets();
   oracle.root.updateMatrixWorld(true); city.root.updateMatrixWorld(true);
-  assert.deepEqual(city.cityAssetDiagnostics.errors, [], 'city art loads without asset failures');
-  assert.equal(city.cityAssetDiagnostics.ready, city.cityAssetDiagnostics.placements, 'all placed city assets are ready');
+  assert.ok(city.jungleAssetDiagnostics, 'the coast presentation uses the shared streamed scenery kit');
+  assert.deepEqual(city.jungleAssetDiagnostics.errors, [], 'coast art loads without asset failures');
+  assert.equal(city.jungleAssetDiagnostics.ready, city.jungleAssetDiagnostics.placements, 'all authored coast assets are ready in the camera-free oracle');
   const round = n => Math.round(n * 1e6) / 1e6;
   const vector = v => v ? v.toArray().map(round) : null;
   const box = b => b ? [vector(b.min), vector(b.max)] : null;
@@ -234,14 +236,13 @@ try {
   // band with solid:false can visually erase a jump while all collision tests
   // remain green. Only the near LOD's visible ground parts participate;
   // collider proxies, editor ghosts, shadows and deep void floors do not.
-  const {CITY_ASSETS} = await server.ssrLoadModule('/src/cityAssets.ts');
   const visualGround = [];
   city.root.traverse(mesh => {
     if (!mesh.isMesh) return;
-    const kind = mesh.userData.cityAsset;
+    const kind = mesh.userData.jungleAsset;
     const component = data.components[mesh.userData.editorIdx];
-    const authoredSurface = mesh.userData.editorIdx >= indices.length && component?.t === 'mesh';
-    if (!CITY_ASSETS[kind]?.ground && !authoredSurface) return;
+    const authoredSurface = mesh.userData.editorIdx >= indices.length && component && ['mesh','decor'].includes(component.t);
+    if (!kind && !authoredSurface) return;
     const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
     if (!materials.some(m => m.visible && !m.isShadowMaterial && (!m.transparent || m.opacity > .05))) return;
     for (let parent = mesh; parent; parent = parent.parent) {
@@ -252,7 +253,7 @@ try {
     if (bounds.max.y <= city.killY) return;
     visualGround.push({mesh, bounds, kind: kind ?? 'authored mesh'});
   });
-  assert.ok(visualGround.length > 100, 'gap visibility probes inspect the loaded city ground art');
+  assert.ok(visualGround.length > 100, 'gap visibility probes inspect the actual loaded coast dressing');
 
   // Independent original take-off/landing intervals. Samples skip the exact
   // original stepping pads but still require air beneath and around them.
@@ -280,8 +281,20 @@ try {
       const cityHit = floor(city, x, 100, z, city.groundMeshes, 100 - city.killY);
       assert.ok(!cityHit, `original jump gap stays empty at ${x},${z}; new floor at ${cityHit?.point.y}`);
       const candidates = visualGround.filter(v => x >= v.bounds.min.x && x <= v.bounds.max.x && z >= v.bounds.min.z && z <= v.bounds.max.z);
-      const visibleHit = floor(city, x, 100, z, candidates.map(v => v.mesh), 100 - city.killY);
-      if (visibleHit) visualFills.push({x: round(x), z: round(z), y: round(visibleHit.point.y), kind: visibleHit.object.userData.cityAsset, instance: visibleHit.instanceId});
+      // The enclosed ravine may have deep mist/sea and a real overhead
+      // canopy. Neither reads as a walkable landing. Inspect every hit near
+      // the original playable altitude, so an overhead leaf cannot mask an
+      // accidentally filled jump beneath it.
+      ray.set(new THREE.Vector3(x,100,z),down);ray.near=0;ray.far=100-city.killY;
+      for(const visibleHit of ray.intersectObjects(candidates.map(v=>v.mesh),false)) {
+        if(visibleHit.point.y<=city.killY+3||visibleHit.point.y<height-3||visibleHit.point.y>height+2)continue;
+        const mesh=visibleHit.object,matrix=mesh.matrixWorld.clone();
+        if(mesh.isInstancedMesh&&visibleHit.instanceId!==undefined){const instance=new THREE.Matrix4();mesh.getMatrixAt(visibleHit.instanceId,instance);matrix.multiply(instance);}
+        const normal=visibleHit.face?.normal.clone().applyNormalMatrix(new THREE.Matrix3().getNormalMatrix(matrix));
+        if(!normal||normal.y<.55)continue;
+        visualFills.push({x:round(x),z:round(z),y:round(visibleHit.point.y),kind:mesh.userData.jungleAsset??'authored mesh',instance:visibleHit.instanceId});
+        break;
+      }
       visualGapProbes++;
       gapProbes++;
     }
@@ -348,18 +361,17 @@ try {
   for (const index of [16, 17, 18, 19, 45, 53, 63])
     assert.ok(catchesByOriginal.get(index) > 0, `raised/foot platform #${index} has verified real Player catches`);
 
-  // The old mover/crumble mesh remains the collision authority. Its detailed
-  // deck is a visible child: compare its real local bounds and relative world
-  // transform, then exercise the original move, shake, fall and hide cycles.
+  // The original mover/crumble remains the collision authority. A native
+  // painted deck or attached detailed skin must agree with its footprint and
+  // contact height throughout move, shake, fall and disappearance cycles.
   const movingSkins = [...city.movers, ...city.crumbles].map(item => {
     const parent = item.mesh, children = [];
     parent.traverse(mesh => {
-      if (mesh === parent || !mesh.isMesh) return;
+      if (!mesh.isMesh) return;
       const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
       if (materials.some(m => m.visible && !m.isShadowMaterial)) children.push(mesh);
     });
-    assert.ok(children.length >= 2, 'each moving/breakaway collider has a detailed visible deck skin');
-    assert.ok((Array.isArray(parent.material) ? parent.material : [parent.material]).every(m => !m.visible), 'draft moving collider skin stays hidden');
+    assert.ok(children.length >= 1, 'each moving/breakaway collider retains a visible authored deck');
     parent.geometry.computeBoundingBox();
     const inverse = parent.matrixWorld.clone().invert();
     return {parent, children, local: children.map(mesh => inverse.clone().multiply(mesh.matrixWorld).toArray().map(round))};
