@@ -20,7 +20,7 @@ import { createLoopMeshData } from "./loopRide";
 import { withPortableAtmosphere } from "./levelAtmosphere";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { TUNING } from "./tuning";
-import { CAMPAIGN_LEVELS, resolveMedalTimes, editMedalTime, TIME_MEDALS, type TimeMedal, MAX_RELIC_TIME_SECONDS } from "./campaign";
+import { CAMPAIGN_MAP_HUBS, resolveMedalTimes, editMedalTime, TIME_MEDALS, type TimeMedal, MAX_RELIC_TIME_SECONDS } from "./campaign";
 import {
   Level,
   CustomComponent,
@@ -8007,7 +8007,7 @@ export class Editor {
         const tag =
           picked.length > 1
             ? `${picked.length} nodes`
-            : c.t === "worldmap" ? CAMPAIGN_LEVELS[picked[0]]?.name ?? `hub ${picked[0] + 1}`
+            : c.t === "worldmap" ? CAMPAIGN_MAP_HUBS[picked[0]]?.name ?? `hub ${picked[0] + 1}`
               : `node ${picked[0] + 1}`;
         const mutate = (
           vi: number,

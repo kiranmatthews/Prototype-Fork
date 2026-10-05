@@ -95,6 +95,7 @@ import { isJungleAssembly, jungleAssemblyWork } from "./jungleAssemblies";
 import { createJungleShoulder, addJungleDepthFade } from "./jungleGround";
 import {
   CAMPAIGN_LEVELS,
+  CAMPAIGN_MAP_HUBS,
   CAMPAIGN_START_LEVEL_KEY,
   CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
   resolveRelicTime,
@@ -1033,7 +1034,7 @@ export interface CustomUnitySandData {
 
 /** Stable hub order and local feet positions for the editor's world-map knots. */
 export function worldMapComponentPoints(): NonNullable<CustomComponent["pts"]> {
-  return CAMPAIGN_LEVELS.map(({ mapPosition: [x, y, z] }) => [x, z, 0, y]);
+  return CAMPAIGN_MAP_HUBS.map(({ mapPosition: [x, y, z] }) => [x, z, 0, y]);
 }
 
 // the full ancestor chain of group ids for a component (innermost first)
@@ -1125,7 +1126,7 @@ export function migrateCustomLevel(d: CustomLevelData): CustomLevelData {
   d.components = d.components.map((c) => {
     delete c.trafficRoad;
     if(isStandingWater(c))c.materialStyle='water';
-    if(c.t==='worldmap'&&c.pts&&c.pts.length>=14&&c.pts.length<CAMPAIGN_LEVELS.length){
+    if(c.t==='worldmap'&&c.pts&&c.pts.length>=14&&c.pts.length<CAMPAIGN_MAP_HUBS.length){
       const defaults=worldMapComponentPoints();
       if(c.pts.every((p,i)=>p.length===4&&p.every((v,j)=>v===defaults[i][j])))return {...c,pts:defaults};
     }
@@ -3014,7 +3015,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       singletonKinds.add(component.t);
       if (component.t === "worldmap") {
         if (source.ocean || (component.pts &&
-            (!(component.pts.length===9||(component.pts.length>=11&&component.pts.length<=CAMPAIGN_LEVELS.length)) || component.pts.some(point =>
+            (!(component.pts.length===9||(component.pts.length>=11&&component.pts.length<=CAMPAIGN_MAP_HUBS.length)) || component.pts.some(point =>
               // Hidden Shores extends the authored map to x=350. Keep the
               // editable diorama bounded while admitting every built-in hub.
               Math.abs(point[0]) > 512 || Math.abs(point[1]) > 512 || Math.abs(point[3] ?? 0) > 128))))

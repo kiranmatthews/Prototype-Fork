@@ -116,7 +116,7 @@ export const CAMPAIGN_ISLANDS: readonly CampaignIslandDefinition[] = [
     levelKeys: ["beachside-run", "coastal", "chimeworks", "island-hopper", "waterpark", "waterpark-cup", "codex-switchback", "jungle-gate", "crate-primer", "switchyard", "clockwork-gauntlet"],
   },
   { id: "hidden-shores", name: "Hidden Shores", subtitle: "WRECKS · RELICS · REEFS",
-    centre: [322, 0, 14], levelKeys: ["drowned-crown", "bone-yard", "ghost-train", "crab-chief"] },
+    centre: [322, 0, 14], levelKeys: ["drowned-crown", "ghost-train", "crab-chief"] },
 ] as const;
 
 export type CampaignMapTravelStyle = "trail" | "boardslide";
@@ -148,10 +148,8 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
     waypoints: [[-141, 10, 7]] },
   { from: "clockwork-gauntlet", to: "drowned-crown", travel: "boardslide", fromDirection: "right", toDirection: "left",
     waypoints: [[236, 8, 21], [275, 8, 14]] },
-  { from: "drowned-crown", to: "bone-yard", travel: "trail", fromDirection: "right", toDirection: "left" },
-  { from: "bone-yard", to: "crab-chief", travel: "trail", fromDirection: "right", toDirection: "left" },
-  { from: "bone-yard", to: "ghost-train", travel: "trail", fromDirection: "down", toDirection: "up",
-    waypoints: [[326, 4.5, 24]] },
+  { from: "drowned-crown", to: "ghost-train", travel: "trail", fromDirection: "right", toDirection: "left" },
+  { from: "ghost-train", to: "crab-chief", travel: "trail", fromDirection: "right", toDirection: "left" },
   {
     from: "treehouse-trail",
     to: "jungle",
@@ -298,7 +296,8 @@ export const CAMPAIGN_MAP_EDGES: readonly CampaignMapEdgeDefinition[] = [
   },
 ] as const;
 
-export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
+/** Append-only editor point identities, including retired hubs. Never compact saved indices. */
+export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
   {
     progressKey: "jungle",
     levelId: "jungle",
@@ -478,13 +477,20 @@ export const CAMPAIGN_LEVELS: readonly CampaignLevelDefinition[] = [
   { progressKey: "crab-chief", levelId: "crab-chief", name: "Tidebreak · Crab Chief", relicTime: 120,
     islandId: "hidden-shores", mapPath: "main", mapPosition: [350, 2, 14], unlockAfter: [], boss: true },
   { progressKey: "ghost-train", levelId: "ghost-train", name: "Ghost Train", relicTime: 340,
-    islandId: "hidden-shores", mapPath: "lower-branch", mapPosition: [322, 6, 34], unlockAfter: [] },
+    islandId: "hidden-shores", mapPath: "main", mapPosition: [322, 6, 34], unlockAfter: [] },
   // Append the identity to preserve every published editor/map point index.
   { progressKey: "custard-creek", levelId: "custard-creek", name: "Custard Creek", relicTime: 180,
     islandId: "island-1", mapPath: "lower-branch", mapPosition: [-111, 2.4, 46], unlockAfter: ["test-course"] },
   { progressKey: "slipstream-2", levelId: "slipstream-2", name: "Slipstream 2", relicTime: 155,
     islandId: "island-1", mapPath: "upper-branch", mapPosition: [-47, 11, -1], unlockAfter: ["slipstream"] },
 ] as const;
+
+/** Bone Yard remains in the debug registry, outside campaign menus, map and totals. */
+export const CAMPAIGN_LEVELS = CAMPAIGN_MAP_HUBS.filter(level => level.progressKey !== "bone-yard");
+
+export function campaignMapPointIndex(key: string): number {
+  return CAMPAIGN_MAP_HUBS.findIndex(level => level.progressKey === key);
+}
 
 const LEVEL_BY_ID = new Map<string, CampaignLevelDefinition>();
 for (const level of CAMPAIGN_LEVELS) {

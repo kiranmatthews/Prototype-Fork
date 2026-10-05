@@ -2,6 +2,7 @@ import * as THREE from "three";
 import {
   CAMPAIGN_ISLANDS,
   CAMPAIGN_LEVELS,
+  campaignMapPointIndex,
   CAMPAIGN_START_LEVEL_KEY,
   CAMPAIGN_MAP_EDGES,
   campaignLevelByKey,
@@ -681,8 +682,8 @@ export function createCampaignWorldMap(
     frame.updateMatrix();
     parentRoot.add(frame);
   }
-  const levels = CAMPAIGN_LEVELS.map((level, index) => ({
-    ...level, mapPosition: authoring?.hubs?.[index] ?? level.mapPosition,
+  const levels = CAMPAIGN_LEVELS.map((level) => ({
+    ...level, mapPosition: authoring?.hubs?.[campaignMapPointIndex(level.progressKey)] ?? level.mapPosition,
   }));
   const byKey = (key: string) => levels.find((level) => level.progressKey === key) ?? null;
   const worldPoint = (x: number, y: number, z: number): THREE.Vector3 => {

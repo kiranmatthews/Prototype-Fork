@@ -9,7 +9,7 @@ Bone Man now loses existing modular body parts during recoverable bails and fata
 
 Each incident varies launch, spin and rebound using a separate cosmetic random stream. The existing editable Bail/Death elasticity and flailing continue beneath the detached joints. Parts bounce, slow down and sleep. Recoverable pieces arc back to the current animated pose in a staggered 0.24–0.58 second sequence; the head docks last. Deaths keep their pieces until respawn. Existing lives, checkpoints, collision envelopes, movement, mash recovery, rescue behavior and gameplay RNG remain authoritative.
 
-Open **Bone Yard · Wipeout Playground** from the level list, or use `?playtest&level=bone-yard`. Hold the ordinary skate charge to get rolling. The left run-up feeds a high wall; the right feeds a shin-height trip. Crossbars follow. The centre lane bypasses those obstacles, and the yellow bridge on the left bypasses the fatal pit. There are two checkpoints and a finish gate. This is an optional source-owned level, not a new campaign requirement.
+Show Debug Menus (Pause or M), then open **Bone Yard · Wipeout Playground** from the debug level list, or use `?playtest&level=bone-yard`. Hold the ordinary skate charge to get rolling. The left run-up feeds a high wall; the right feeds a shin-height trip. Crossbars follow. The centre lane bypasses those obstacles, and the yellow bridge on the left bypasses the fatal pit. There are two checkpoints and a finish gate. This is a source-owned debug testing level. It is excluded from the island map, player-facing Level Select, campaign saves and progress totals. Hidden Shores connects The Drowned Crown → Ghost Train → Tidebreak · Crab Chief.
 
 ## Cost and ownership
 

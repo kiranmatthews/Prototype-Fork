@@ -26,7 +26,7 @@ try{
  const rows=ui.navButtons.filter(b=>b.dataset.levelKey);
  assert.equal(rows.length,CAMPAIGN_ISLANDS[0].levelKeys.length);assert.equal(rows.filter(b=>!b.disabled).length,1);
  assert.equal(rows[0].dataset.levelKey,'treehouse-trail');
- assert.match(rows[0].textContent,/01  TREEHOUSE TRAIL/);
+ assert.equal(rows[0].textContent,`01  ${campaignLevelById('treehouse-trail').name.toUpperCase()}`);
  assert.equal(ui.levelSelectKey,'treehouse-trail');
  assert.match(ui.levelSelectPreview.src,/treehouse-trail\.jpg$/);
  ui.changeLevelSelectIsland(1);assert.equal(ui.levelSelectIsland,'island-2');
@@ -35,7 +35,7 @@ try{
  assert.ok(puzzleRows.every(row=>!row.disabled),'research levels must be immediately selectable');
  ui.updateLevelSelectChoice('clockwork-gauntlet',true);assert.match(ui.levelSelectPreview.src,/clockwork-gauntlet\.jpg$/);
  ui.changeLevelSelectIsland(1);assert.equal(ui.levelSelectIsland,'hidden-shores');
- assert.deepEqual(ui.navButtons.filter(b=>b.dataset.levelKey).map(b=>b.dataset.levelKey),['drowned-crown','bone-yard','ghost-train','crab-chief']);
+ assert.deepEqual(ui.navButtons.filter(b=>b.dataset.levelKey).map(b=>b.dataset.levelKey),['drowned-crown','ghost-train','crab-chief']);
  assert.ok(ui.navButtons.filter(b=>b.dataset.levelKey).every(b=>!b.disabled));
  ui.updateLevelSelectChoice('drowned-crown',true);assert.match(ui.levelSelectPreview.src,/drowned-crown\.jpg$/);
  ui.updateLevelSelectChoice('ghost-train',true);assert.match(ui.levelSelectPreview.src,/ghost-train\.jpg$/);

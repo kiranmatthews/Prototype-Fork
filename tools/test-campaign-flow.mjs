@@ -77,7 +77,7 @@ assert.ok(
 );
 assert.deepEqual(
   campaign.CAMPAIGN_ISLANDS.map(({ levelKeys }) => levelKeys.length),
-  [12, 11, 4],
+  [12, 11, 3],
   "Slipstream 2 joins Island 1 above Slipstream",
 );
 assert.deepEqual(
@@ -107,7 +107,6 @@ assert.deepEqual(campaign.CAMPAIGN_MAP_EDGES.filter(e=>campaign.campaignLevelByK
   .map(e=>[e.from,e.to,e.fromDirection,e.toDirection]),[
   ['test-course','custard-creek','down','up'],
   ['jungle','jungle-terraces','up','down'],
-  ['bone-yard','ghost-train','down','up'],
   ['test-course','nightworks','up','down'],['slipstream','slipstream-2','up','down'],['coastal','chimeworks','down','up'],['island-hopper','waterpark','up','down'],
 ]);
 assert.deepEqual(campaign.CAMPAIGN_ISLANDS[1].levelKeys.slice(3,8), ['island-hopper','waterpark','waterpark-cup','codex-switchback','jungle-gate']);
@@ -120,14 +119,20 @@ assert.equal(campaign.CAMPAIGN_LEVELS[18].progressKey,"nightworks-after-hours");
 assert.deepEqual(campaign.campaignLevelByKey("nightworks-after-hours").unlockAfter,["nightworks"]);
 assert.equal(campaign.campaignLevelById('codex-lab').islandId, 'island-2');
 
-assert.deepEqual(campaign.CAMPAIGN_ISLANDS.find(island=>island.id==='hidden-shores').levelKeys,['drowned-crown','bone-yard','ghost-train','crab-chief']);
-for(const id of ['drowned-crown','bone-yard','ghost-train','crab-chief'])assert.equal(campaign.campaignLevelById(id).islandId,'hidden-shores');
-assert.equal(campaign.CAMPAIGN_LEVELS[24].progressKey,'ghost-train','existing Ghost Train hub index stays fixed');
-assert.equal(campaign.CAMPAIGN_LEVELS[25].progressKey,'custard-creek','existing Custard Creek hub index stays fixed');
+assert.deepEqual(campaign.CAMPAIGN_ISLANDS.find(island=>island.id==='hidden-shores').levelKeys,['drowned-crown','ghost-train','crab-chief']);
+for(const id of ['drowned-crown','ghost-train','crab-chief'])assert.equal(campaign.campaignLevelById(id).islandId,'hidden-shores');
+assert.equal(campaign.CAMPAIGN_MAP_HUBS[24].progressKey,'ghost-train','existing Ghost Train hub index stays fixed');
+assert.equal(campaign.CAMPAIGN_MAP_HUBS[25].progressKey,'custard-creek','existing Custard Creek hub index stays fixed');
 assert.equal(campaign.CAMPAIGN_LEVELS.at(-1).progressKey,'slipstream-2','new map identity appends after existing saved hub indices');
 assert.deepEqual(campaign.campaignLevelById('slipstream-2').mapPosition,[-47,11,-1]);
 assert.deepEqual(campaign.campaignLevelById('slipstream-2').unlockAfter,['slipstream']);
 assert.equal(campaign.resolveRelicTime('ghost-train'),340);
+assert.equal(campaign.campaignLevelById('bone-yard'), null);
+assert.equal(campaign.campaignLevelByKey('bone-yard'), null);
+assert.ok(campaign.CAMPAIGN_MAP_EDGES.every(edge => edge.from !== 'bone-yard' && edge.to !== 'bone-yard'));
+assert.equal(campaign.campaignMapPointIndex('ghost-train'), 24);
+assert.equal(campaign.campaignMapPointIndex('crab-chief'), 23);
+assert.equal(campaign.campaignMapPointIndex('custard-creek'), 25);
 const graph = new campaign.CampaignStore();
 graph.startEphemeral();
 assert.equal(graph.levelUnlocked('ghost-train'),true,'Ghost Train must be available on fresh saves');
