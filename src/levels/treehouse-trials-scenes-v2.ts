@@ -395,7 +395,7 @@ for(const [name,p,s,eye,target,fov,distance] of [
 // with the original deeper floor/reset retained as a backup below it.
 for(const [index,pit] of shallowPitBeds.entries()){
   const origin:P=[X,0,pit.near],v:number[]=[],ix:number[]=[],uv:number[]=[];
-  for(const t of [0,.3,.6,1])for(const x of [-18,18]){
+  for(const t of [0,.3,.6,1])for(const x of [-42,42]){
     const z=pit.near+(pit.far-pit.near)*t;
     v.push(x,visibleBedY(z)!,z-pit.near);uv.push((X+x)/6,z/6);
   }
@@ -428,10 +428,9 @@ function closedShore(z:number,top:number,bottom:number,width:number,depth:number
     if(end===0)ix.push(end,end+q,end+q+1);else ix.push(end,end+q+1,end+q);
   surface([X,0,z],v,ix,name,tex,paint,uv,false,G.landscape);
 }
-closedShore(-50,-5.1,-6.2,36,4,'First lower landing · closed earthen cut face','treehouse-loam');
-closedShore(-75,-9,-10.1,36,4,'Second lower landing · closed earthen cut face','treehouse-loam');
-closedShore(-102,-13,-14.1,36,4,'Third lower landing · closed earthen cut face','treehouse-loam');
-closedShore(-151,-14,-17.25,36,3,'Gap rail landing · closed visible earth face','treehouse-loam');
+closedShore(-50,-5.1,-6.2,84,4,'First lower landing · closed earthen cut face','treehouse-loam');
+closedShore(-75,-9,-10.1,84,4,'Second lower landing · closed earthen cut face','treehouse-loam');
+closedShore(-102,-13,-14.1,84,4,'Third lower landing · closed earthen cut face','treehouse-loam');
 closedShore(-240,-14,-14.8,54,2,'Shallow stream farbank · closed shelving earth face','treehouse-loam');
 closedShore(-368,-7.2,-12.6,48,6,'Broken bridge farshore · continuous rock mass beneath the landing','treehouse-stone');
 

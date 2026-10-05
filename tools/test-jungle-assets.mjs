@@ -70,7 +70,7 @@ document.createElementNS=(namespace,tag)=>{
  const listeners=new Map();element.addEventListener=(type,fn)=>listeners.set(type,fn);
  element.removeEventListener=type=>listeners.delete(type);
  Object.defineProperty(element,'src',{set(url){
-  const path=new URL(url,'http://headless.invalid').pathname.match(/\/((?:treehouse-trail\/matte-(?:far|mid)\.png|treehouse-trials\/(?:forest|coast|cavern)-depth\.webp|treehouse-trials-v2\/forest-water-probe\.webp))$/)?.[1];
+  const path=new URL(url,'http://headless.invalid').pathname.match(/\/((?:treehouse-trail\/matte-(?:far|mid)\.png|treehouse-trials\/(?:(?:forest|coast)-depth-alpha|(?:forest|coast|cavern)-depth)\.webp|treehouse-trials-v2\/forest-water-probe\.webp))$/)?.[1];
   if(path)readFile(new URL('public/'+path,root)).then(bytes=>{
    [element.width,element.height]=imageSize(bytes);listeners.get('load')?.call(element);
   }).catch(error=>listeners.get('error')?.(error));
@@ -338,7 +338,7 @@ try{
   assert.equal(template.map.colorSpace,THREE.SRGBColorSpace);assert.equal(template.map.userData.shared,true);
   let released=0;template.map.addEventListener('dispose',()=>released++);compressedOwner.dispose();assert.equal(released,1);
  }finally{compressedOwner.dispose();}
- assert.ok(gpuCalls[0].endsWith('treehouse-trials/forest-depth.ktx2'));
+ assert.ok(gpuCalls[0].endsWith('treehouse-trials/forest-depth-alpha.ktx2'));
  gpuFailure=true;const originalWarn=console.warn,warnings=[];console.warn=message=>warnings.push(message);
  try{
   for(let i=0;i<2;i++){

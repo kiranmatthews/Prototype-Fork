@@ -573,7 +573,7 @@ function ridge(u: number, seed: number): number {
   );
 }
 
-function makeSkyTexture(t: Level["theme"]): THREE.CanvasTexture {
+function makeSkyTexture(t: Level["theme"], ridgedHorizon=true): THREE.CanvasTexture {
   const W = 512;
   const H = 512; // taller than the old 256: the horizon band needs the rows
   const canvas = document.createElement("canvas");
@@ -681,7 +681,7 @@ function makeSkyTexture(t: Level["theme"]): THREE.CanvasTexture {
     { base: 0.525, amp: 24, col: mixRGB(fog, [0, 0, 0], 0.22), seed: 8.1 },
     { base: 0.55, amp: 34, col: mixRGB(fog, [0, 0, 0], 0.42), seed: 5.6 },
   ];
-  for (const r of ridges) {
+  for (const r of ridgedHorizon ? ridges : []) {
     ctx.fillStyle = css(r.col);
     ctx.beginPath();
     ctx.moveTo(0, H);
@@ -873,7 +873,7 @@ function applyTheme(): void {
     // "" reads falsy in makeSkyTexture, which is its "no disc" test
     sunColorHex: atmosphere.fallbackSunColor === null ? "" : atmosphereColorHex(atmosphere.fallbackSunColor),
   };
-  const gradientKey = JSON.stringify(gradientTheme);
+  const gradientKey = JSON.stringify([gradientTheme,atmosphere.fallbackRidges]);
   if (proceduralSky && proceduralSkyKey === gradientKey) {
     if (mat.map !== proceduralSky) {
       mat.map = proceduralSky;
@@ -881,7 +881,7 @@ function applyTheme(): void {
     }
     return;
   }
-  const grad = makeSkyTexture(gradientTheme);
+  const grad = makeSkyTexture(gradientTheme,atmosphere.fallbackRidges);
   mat.map = grad;
   mat.needsUpdate = true;
   if (proceduralSky) proceduralSky.dispose();
@@ -911,6 +911,7 @@ async function prepareActivePresentationAssets(): Promise<void> {
     loadSky(activeSky),
     player.preparePresentationAssets(),
     level.prepareJungleAssets(),
+    level.prepareSurfaceImages(),
     p2?.preparePresentationAssets(),
     document.fonts?.ready,
     sfx.prepare(),
@@ -1972,7 +1973,7 @@ function updateCamera2(dt: number): void {
   updateBaseCamera2(dt);
   const subject = p2.renderPosition;
   cameraViewFraming2.apply(camera2, cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z), subject, framingSnap);
-  loopCameraFraming2.apply(camera2, p2.authoredSkateCamera ? null : p2.loopPresentationFrame, subject, cameraRigFraming(TUNING, 0, 0, 0, true), dt, framingSnap||p2.authoredSkateCamera,p2.loopFallPresentation);
+  loopCameraFraming2.apply(camera2, p2.authoredSkateCamera ? null : p2.loopPresentationFrame, subject, cameraRigFraming(level.cameraRig ?? TUNING, 0, 0, 0, true), dt, framingSnap||p2.authoredSkateCamera,p2.loopFallPresentation);
   if(!p2.authoredSkateCamera&&level.cameraAirLift===1&&p2.vertAir&&loopCameraFraming2.active)cameraOverlayHeroFraming2.apply(camera2,p2.cameraPoseBounds,dt,framingSnap);
   else cameraOverlayHeroFraming2.reset();
   authoredSkateCamera2.apply(camera2, p2.authoredSkateCamera ? {
@@ -1990,6 +1991,7 @@ function updateCamera2(dt: number): void {
 function updateBaseCamera2(dt: number): void {
   if (!p2) return;
   const subject = p2.renderPosition;
+  const cameraValues = level.cameraRig ?? TUNING;
   const snapped = cam2RenderSnapVersion !== p2.renderSnapVersion;
   if (snapped) {
     cam2RenderSnapVersion = p2.renderSnapVersion;
@@ -2012,7 +2014,7 @@ function updateBaseCamera2(dt: number): void {
     dt,
     snapped,
   );
-  const p2AuthoredFov = TUNING.camFov;
+  const p2AuthoredFov = cameraValues.camFov;
   const p2TargetFov = THREE.MathUtils.lerp(
     p2AuthoredFov + cam2SpeedFovBoost,
     BOULDER_FOV + TUNING.camFov - 49,
@@ -2038,7 +2040,7 @@ function updateBaseCamera2(dt: number): void {
   cam2F.y = 0;
   if (cam2F.lengthSq() < 1e-4) cam2F.set(0, 0, -1);
   cam2F.normalize();
-  const framing = cameraRigFraming(TUNING, 0, 0, 0, true);
+  const framing = cameraRigFraming(cameraValues, 0, 0, 0, true);
   const laneTarget = level.cameraLookAhead && !level.zoneAt(subject.x, subject.z)
     ? level.cameraLanePointAhead(cam2LaneCursor, level.cameraLookAhead, cam2LaneTarget)
     : null;
@@ -4271,6 +4273,7 @@ function updateCamera(dt: number): void {
 
 function updateBaseCamera(dt: number): void {
   const subject = player.renderPosition;
+  const cameraValues = level.cameraRig ?? TUNING;
   if ((current.id === "warproom" || level.isCampaignMap) && worldMapController?.active) {
     worldMapController.frameCamera(camera, dt);
     camControlDir
@@ -4397,7 +4400,7 @@ function updateBaseCamera(dt: number): void {
     dt,
     snapped,
   );
-  const authoredFov = TUNING.camFov;
+  const authoredFov = cameraValues.camFov;
   const targetFov = THREE.MathUtils.lerp(
     authoredFov + camSpeedFovBoost,
     BOULDER_FOV + TUNING.camFov - 49,
@@ -4431,7 +4434,7 @@ function updateBaseCamera(dt: number): void {
     (snapped ? 1 : Math.min(1, 3 * dt));
   const back = camBack * (1 - sideF) * (1 - boulderF); // corridor thing only
 
-  const framing = cameraRigFraming(TUNING, sideF, back, boulderF);
+  const framing = cameraRigFraming(cameraValues, sideF, back, boulderF);
   // CRASH RIG VERTICAL: the camera's height anchors to the GROUND under the
   // skater, not the skater — a jump rises THROUGH the frame
   // instead of yanking the whole rig skyward and pulling the
@@ -4441,7 +4444,7 @@ function updateBaseCamera(dt: number): void {
   // the whole screen. The anchor eases along slopes/steps, follows the
   // player when there's no floor below (pits), and big verts stay framed.
   // The boulder shot keeps its authored full-follow.
-  const frameHalf = Math.tan((camera.fov * Math.PI) / 360) * Math.max(0.5, Math.abs(TUNING.camDist));
+  const frameHalf = Math.tan((camera.fov * Math.PI) / 360) * Math.max(0.5, Math.abs(cameraValues.camDist));
   const maxRise = THREE.MathUtils.clamp(frameHalf * 1.5, 1.5, 7);
   // No floor below = this fall ends in the void: the rig HOLDS its height
   // instead of chasing the body down (and clipping through the level floor).
@@ -5343,7 +5346,7 @@ level.updateSceneryView(camera);
 // A direct Cup playtest/reload needs the same covered preparation as entry
 // from the map. Never freeze a partially loaded park into the intro snapshot.
 async function prepareStartupPresentation(): Promise<void> {
-  await Promise.all([firstRunLevelSync, menuAssetsReady, level.prepareJungleAssets(),
+  await Promise.all([firstRunLevelSync, menuAssetsReady, level.prepareJungleAssets(), level.prepareSurfaceImages(),
     player.preparePresentationAssets(), animationPreparation]);
   await gameFlow.prepareMenuPresentation();
   await presentationAssets.waitUntilSettled();

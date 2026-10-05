@@ -1,39 +1,41 @@
 {
   "schemaVersion": 1,
   "encoder": "Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18",
-  "source": "Exact current opaque WebP fallback images. No asset generation or credits.",
+  "source": "Exact current RGB/RGBA WebP fallback images. Compression itself uses no generation or credits.",
   "images": [
     {
-      "name": "forest-depth",
-      "path": "treehouse-trials/forest-depth.ktx2",
-      "fallback": "treehouse-trials/forest-depth.webp",
+      "name": "forest-depth-alpha",
+      "path": "treehouse-trials/forest-depth-alpha.ktx2",
+      "fallback": "treehouse-trials/forest-depth-alpha.webp",
       "width": 1942,
       "height": 809,
       "mipLevels": 11,
-      "bytes": 1617043,
-      "sha256": "a5d613851567af5cfaf6754a7628143549536a4af071e9e349011f74c24fc235",
-      "fallbackBytes": 201692,
-      "fallbackSha256": "169e344c0d89c120363444a0ffae5c2ef5047e1d10358be58c59c76de7736e10",
+      "bytes": 1546566,
+      "sha256": "7389bbdcf85830a3e7f741289c4893c1f81c69f9fe925e075d294ae324bb6159",
+      "fallbackBytes": 586502,
+      "fallbackSha256": "a178566ac010eca6daf0a13034c694e6b32ae893e6b6c86d7761b2c92ba8fac6",
       "astc4x4Bytes": 2104848,
       "rgba8Bytes": 8375196,
       "orientation": "ru: lower-left origin physically flipped to match WebP flipY=true",
-      "colorSpace": "sRGB"
+      "colorSpace": "sRGB",
+      "channels": "RGBA"
     },
     {
-      "name": "coast-depth",
-      "path": "treehouse-trials/coast-depth.ktx2",
-      "fallback": "treehouse-trials/coast-depth.webp",
+      "name": "coast-depth-alpha",
+      "path": "treehouse-trials/coast-depth-alpha.ktx2",
+      "fallback": "treehouse-trials/coast-depth-alpha.webp",
       "width": 1942,
       "height": 809,
       "mipLevels": 11,
-      "bytes": 1438617,
-      "sha256": "3e0172cd806f8ccd748134dfe70be690010efef8d75beff6965b6578d6e3e887",
-      "fallbackBytes": 171980,
-      "fallbackSha256": "7f560374f194de741141ae7d001e9ef6ef05a29bab7450e9750bea3fb22e9b32",
+      "bytes": 1189618,
+      "sha256": "a7064246b3e7a8ff83ad85f5fba4f4dc90a6b5e2d5181a1349d0e3c58b03a8e0",
+      "fallbackBytes": 255300,
+      "fallbackSha256": "0db9eaf25aa344fd942883d68c79df86bb87ed500a70320b84dd55b9b72a3ae8",
       "astc4x4Bytes": 2104848,
       "rgba8Bytes": 8375196,
       "orientation": "ru: lower-left origin physically flipped to match WebP flipY=true",
-      "colorSpace": "sRGB"
+      "colorSpace": "sRGB",
+      "channels": "RGBA"
     },
     {
       "name": "cavern-depth",
@@ -69,7 +71,7 @@
     }
   ],
   "total": {
-    "encodedBytes": 5733161,
+    "encodedBytes": 5413685,
     "astc4x4Bytes": 7712672,
     "rgba8Bytes": 30717992
   }

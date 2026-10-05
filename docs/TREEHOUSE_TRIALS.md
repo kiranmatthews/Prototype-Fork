@@ -1,87 +1,74 @@
 # Treehouse Trials
 
-The existing `treehouse-trail` identity now contains the full visual journey.
-The user's nine-scene strip takes priority over older pack iterations: treehouse
-clearing, steep downhill, coastal settlement, enclosed hut corridor, shallow
-river, natural cave climb, cavern halfpipe, broken rope bridge, bright jungle.
-Crate and enemy placement remain deferred.
+The authoritative reference is the user's nine-image strip, clarified as
+“Ocean at the start, more length joining sections.” No Figma link is required.
+The older pack's separate rail lesson is omitted. The order is ocean/treehouse,
+downhill, coast, enclosed huts, shallow river, cave climb, cavern pipe, broken
+rope bridge and jungle exit. Crate/enemy placement remains deferred.
 
-## Reference fidelity
+## Continuous composition
 
-The opening's separate cabin, trunk, balcony, rickety stairs and backyard pipe
-remain the benchmark. Its framing now includes the complete roof and supports.
-The later scenes use their own compositions and actual generated surface
-measurements, with close gameplay views throughout.
+The opening keeps its original framing with one spatially feathered hand-off.
+The rest of the course uses one native follow rig and the ordered, smooth
+camera spine. Eight overlapping per-scene shot volumes were removed. Camera
+profile and open-horizon settings survive native copy/export/import.
 
-| Scene | Authored visual work |
-| --- | --- |
-| Downhill | Real 14m descent, full-width dirt launches, closed earthen cut faces, planted banks, exposed roots, timber lips and shallow visible beds. |
-| Coast | Warm porch hut, cane plot, yellow thatch and red cloth, crab-roof shack, blue inlet and distant island layers. |
-| Huts | Clear left-hand doors and rope porches, warm windows, varied mature trunks, dense low verges and a shaded centre lane. |
-| River | Rounded generated stone tops with matching measured collision, shelving shores, visible submerged pebbles, green forest reflections, contact ripples and foam. |
-| Cave climb | Four overlapping generated rock tread masses with fitted metre-space support, buried foundations, a true enclosing portal and daylight openings. |
-| Cavern | Continuous rock walls and a higher roof with western solar openings, a 46m U-shaped pipe, 96 curved timber slats, hand-hewn beams, braces and rope deck fences. |
-| Broken bridge | Two partial timber abutments, a single taut grindable rope, closed mossy far-shore mass, warm near soil and a clear river beneath. |
-| Exit | Warm dirt, broad pointed leaf skirts, grouped ferns and quiet forest depth after the cave. |
+The route gains 222m of actual connecting ground, reaching roughly 666m.
+Small bends, planted verges, a longer cave gallery and a forest buffer separate
+the set pieces. Native ramp gaps, stone contacts, rock treads, the 46m pipe and
+single bridge rope retain their shapes. Movement tuning is unchanged.
 
-`src/levels/treehouse-trail.ts` owns native traversal, support, gaps and the
-ordered camera lane. `treehouse-opening.ts` owns the opening assembly;
-`treehouse-trials-scenes-v2.ts` owns the detailed landscape and craft;
-`treehouse-trials-art.ts` owns separate painted depth and soft shafts.
-A 30m forest transition lets the river composition breathe before the cave.
-Movement tuning is unchanged by this task.
+An actual animated ocean borders the opening's curved sand shelves. Its extent
+stops at the authored shore, and both distant matte horizons align with their
+water heights. The coastal view has a clear porch frontage, cane and crab shack;
+the next view closes into forest. Trees overlapping the hut roofs and floating
+porch boards were removed or repositioned. Cloth and its posts move with each
+complete assembly. Straw receives sunlight; warm window emission is limited
+to vertical faces. Ground shoulders and distant earth close the forest edges.
 
-## Assets and living surfaces
+The forest and coastal matte layers now have genuine transparent sky. New
+versioned filenames avoid stale HTTP image copies. Their original dimensions,
+alpha and complete mip chains are preserved in KTX2 and WebP. The live sky
+supplies air behind the organic silhouettes, with no stock hill silhouettes
+for this level. Source prompts and generated references are recorded under
+`tools/treehouse-trials-assets/`.
 
-**33 new Meshy models consumed 495 existing credits (981 → 486).** The first
-8 modules cost 120; the subsequent 25 references and models cost 375. The latter
-kit contains two ancient trees, detached crowns, groundcover/fern variants,
-earthy banks, three flat river stones, cave wall/roof variants, rock stair rows,
-timber and scaffold parts, refined huts and separate pinned cloth. Near models
-total 80,367 triangles; far models total 25,706. Four hero atlases are 2K, others
-1K/512; the complete 25-family texture budget is 61.67 MiB compressed. Distant
-V2 foliage uses the reduced silhouettes with hysteresis; nearby forms retain
-the accepted source geometry. Actual bytes, ratios, contact grids, hashes,
-credit evidence and rejected fitting attempts are recorded in each manifest.
+## Asset recovery and budgets
 
-Leaf and cloth masks keep wood, roots, anchors and corners fixed. Animation
-uses shared shader clocks and the same deformation in visible/shadow passes.
-Measured five-ray self-occlusion affects indirect light. The scoped painterly
-look uses cool bounce, warm key light and a fixed 12-sample soft shadow kernel.
-The measured shadow-edge width is about 0.39m at both map densities. The stock
-floating cloud-sea backdrop is omitted for this style, and the sky remains
-inside the authored 185m draw distance.
+The existing 33 Meshy models consumed 495 credits in the preceding art pass.
+This revision spends no additional Meshy credits. Near/far meshes, shared
+atlases, rooted leaf wind, pinned cloth, packed AO and streamed ownership remain.
+The 25-family V2 kit has 80,367 near / 25,706 far triangles and a 61.67MiB
+compressed texture budget. The active standalone matte/wood maps use 7.35MiB
+of ASTC4x4 storage; the shared stream reflection uses 2.01MiB.
 
-The clear-stream shader uses one surface draw, analytic ripple normals and
-attached thin foam, with one shared 2.01 MiB reflection texture. No live
-reflection camera or additional screen passes are used. Face-on views retain
-the bed; grazing views receive the painted canopy. Transparent water receives
-canopy shade without casting an opaque shadow onto its bed.
+Rejected asset leases can be acquired again. Scenery cells retry with bounded
+back-off, even while the player is still. Decoder initialization retries a
+dropped WASM download without poisoning later images. A textured GLB cannot
+silently pass without its authored albedo/normal maps; portable original
+atlases remain available. Stream materials receive a recovered reflection,
+and recovered ground images update their existing tiled copies. Placeholder
+GPU storage is retired before full-size pixels upload. Disposal cancels
+future retries and prevents late image loads reviving an old level.
 
-Three background mattes remain at their full dimensions using KTX2 plus WebP
-fallbacks. Their combined GPU storage is about 6.02 MiB instead of 23.96 MiB.
-Built-in imagegen created the isolated model references, three scenery layers,
-timber/stone/loam albedo and reflection environment. Prompts and reproductions
-are in `tools/treehouse-trials-assets/` and `tools/treehouse-trials-assets-v2/`;
-provider credentials and signed responses remain outside published files.
+## Actual review
 
-## Review and delivery
+`docs/treehouse-trials-scene-review.jpg` shows the nine current scene approaches.
+`docs/treehouse-trials-continuous.webm` records one continuous native-input visit,
+with no travel warps. That run finishes in 82.3s, clears all three dirt jumps,
+walks the river stones, climb and pipe, and catches the bridge rope with zero
+deaths or console errors. Maximum sampled camera rotation is 1.39 degrees per
+simulation step. Scenery texture residency peaks at 117.69MiB in that run.
 
-The work was judged against actual rendered views, including door visibility,
-foliage clearance, supported roots/roof masses, true solar openings, cliff
-undersides, stone contact, board grain direction and rope readability. Closed
-terrain prevents bright sky from showing through thin bank edges. The hidden
-native pipe retains its collision/guide; visible boards sit within millimetres
-of it. The legacy low-Y Jungle fade is explicitly disabled for this descent.
-
-Focused checks were limited after the user's request: build, console errors
-and practical jumps, stair walking, grinds, respawn and finish. Earlier
-support/material checks remain useful evidence, but are not the visual signoff.
-No full suite was run. Actual scene images and browser resource reports are
-in `docs/treehouse-trials-scene-review.jpg` and `docs/performance/`.
-Physical-phone thermal/battery performance remains unmeasured.
+A separate real-browser observation deliberately interrupts the model, decoder,
+reflection and ground-image downloads. All recover in the same visit without
+horizontal movement, warp or reload, and without a GPU upload error. Ordinary
+15cm balcony settling is allowed. Full-render desktop and phone-sized reviews
+have supported positions and clean consoles. Physical-phone timing and thermal
+performance remain unmeasured. The focused level/ownership/stream checks and
+production build are the checks used; no full test suite is run.
 
 Campaign progress retains `treehouse-trail`; menus show “Treehouse Trials.”
-Existing local edits are preserved. Use PROJECT → restore original when an
-old local snapshot masks the source. The existing GitHub Pages workflow
-publishes the validated task-owned changes through main.
+Existing edited local copies remain intact. Restore original in PROJECT when
+an old local snapshot masks the source. Delivery uses the existing main/Pages
+workflow and preserves other chats' changes.

@@ -1,0 +1,14 @@
+{
+  "generator": "OpenAI built-in imagegen",
+  "source": "Existing authored forest-depth.webp",
+  "outputReference": "references/forest-depth-alpha.png",
+  "sourceSha256": "1ff2eebf7c6d54344eafbdb6aa57ed0d26d971a71816437f5726157d2767d6a7",
+  "fallbackSha256": "a178566ac010eca6daf0a13034c694e6b32ae893e6b6c86d7761b2c92ba8fac6",
+  "transparentBackground": true,
+  "dimensions": [
+    1942,
+    809
+  ],
+  "prompt": "Edit the existing painterly forest depth image into a genuinely transparent panoramic matte with complete organic canopy silhouettes, cool teal forest depth and warm sunlit crowns. Remove all sky and opaque backdrop. Keep the 2.4:1 composition and source style. No buildings, paths, water, characters, labels or frames.",
+  "meshyCredits": 0
+}

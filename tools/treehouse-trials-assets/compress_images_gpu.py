@@ -12,6 +12,7 @@ from pathlib import Path
 import struct
 import subprocess
 import tempfile
+import sys
 from PIL import Image
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -19,12 +20,14 @@ OUT=ROOT/'public/treehouse-trials'
 WORK=Path(tempfile.gettempdir())/'treehouse-trials-image-gpu'
 WORK.mkdir(exist_ok=True)
 ENCODER=os.environ['TREEHOUSE_TOKTX']
-NAMES=['forest-depth','coast-depth','cavern-depth','timber-albedo']
+ACTIVE=['forest-depth-alpha','coast-depth-alpha','cavern-depth','timber-albedo']
+NAMES=sys.argv[1:] or ACTIVE
+assert all(name in ACTIVE for name in NAMES)
 records=[]
 for name in NAMES:
     fallback=OUT/(name+'.webp')
     raw=fallback.read_bytes(); original=Image.open(fallback)
-    assert original.mode=='RGB', 'These scenery maps must stay opaque'
+    assert original.mode in {'RGB','RGBA'}, 'Retain authored RGB or genuine alpha channels'
     width,height=original.size
     png=WORK/(name+'.png'); original.save(png)
     path=OUT/(name+'.ktx2')
@@ -48,10 +51,14 @@ for name in NAMES:
         'fallbackBytes':len(raw),'fallbackSha256':hashlib.sha256(raw).hexdigest(),
         'astc4x4Bytes':gpu,'rgba8Bytes':rgba,
         'orientation':'ru: lower-left origin physically flipped to match WebP flipY=true',
-        'colorSpace':'sRGB'})
+        'colorSpace':'sRGB','channels':original.mode})
     print(name,round(len(data)/1048576,2),'MiB download',round(gpu/1048576,2),'MiB GPU',flush=True)
+if (OUT/'image-gpu.json').exists():
+    old=json.loads((OUT/'image-gpu.json').read_text())['images']
+    records.extend(r for r in old if r['name'] in ACTIVE and r['name'] not in NAMES)
+records.sort(key=lambda r:ACTIVE.index(r['name']))
 report={'schemaVersion':1,'encoder':'Khronos toktx 4.4.2 / UASTC quality 2 / lossless Zstd 18',
-    'source':'Exact current opaque WebP fallback images. No asset generation or credits.',
+    'source':'Exact current RGB/RGBA WebP fallback images. Compression itself uses no generation or credits.',
     'images':records,'total':{'encodedBytes':sum(r['bytes'] for r in records),
         'astc4x4Bytes':sum(r['astc4x4Bytes'] for r in records),
         'rgba8Bytes':sum(r['rgba8Bytes'] for r in records)}}

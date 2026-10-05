@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { treehouseTrialPoint, densifyTreehouseRoute, treehouseTrialContinuity, TREEHOUSE_TRIALS_OPENING_OCEAN } from "./treehouse-trials-continuity";
 import type { CustomComponent, CustomLevelData } from "../level";
 import { TREEHOUSE_OPENING_COMPONENTS, TREEHOUSE_STAIR_LANDINGS, TREEHOUSE_CLEARING_ROUTE, openingHousePoint } from "./treehouse-opening";
 import { TREEHOUSE_TRIALS_ART_COMPONENTS } from "./treehouse-trials-art";
@@ -14,7 +15,7 @@ const X = 35;
 const round = (number: number): number => Math.round(number * 100000) / 100000;
 
 /** World-space scene stations are shared with the visual review and art layer. */
-export const TREEHOUSE_TRIALS_STATIONS = {
+const AUTHORING_STATIONS = {
   opening: [X, 0, -16], downhill: [X, -6.6, -71], groundRail: [X, -14, -124],
   gapRail: [X, -14, -148], coastalSettlement: [X, -14, -176],
   hutCorridor: [X, -14, -207], shallowRiver: [X, -14, -234],
@@ -22,11 +23,12 @@ export const TREEHOUSE_TRIALS_STATIONS = {
   cavernHalfpipe: [X, -7.2, -319 - TREEHOUSE_TRIALS_CAVE_EXTENSION_V2], brokenBridge: [X + 1.35, -7.2, -362 - TREEHOUSE_TRIALS_CAVE_EXTENSION_V2],
   caveExit: [X, -7.2, -382 - TREEHOUSE_TRIALS_CAVE_EXTENSION_V2], finish: [X, -7.2, -402 - TREEHOUSE_TRIALS_CAVE_EXTENSION_V2],
 } as const;
+export const TREEHOUSE_TRIALS_STATIONS = Object.fromEntries(Object.entries(AUTHORING_STATIONS).map(([name,p]) => [name,treehouseTrialPoint(p)])) as unknown as { [K in keyof typeof AUTHORING_STATIONS]: readonly [number,number,number] };
 
 // A single vertex-painted surface owns each piece of ground. The warm dirt
 // softens into broad moss shoulders instead of rectangular overlaid decals.
 // Exact centreline heights make every landing, checkpoint and seam measurable.
-function ground(nodes: Point[], name: string, group = GROUP.trail, width = 36,
+function ground(nodes: Point[], name: string, group = GROUP.trail, width = 84,
   surface: "dirt" | "stone" | "sand" = "dirt", omitCenter: boolean | number = false, columnCount = 18): void {
   const origin = nodes[0], samples: Point[] = [];
   for (let leg = 1; leg < nodes.length; leg++) {
@@ -36,7 +38,7 @@ function ground(nodes: Point[], name: string, group = GROUP.trail, width = 36,
       samples.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]);
     }
   }
-  const columns = columnCount, vertices: number[] = [], colors: number[] = [], uvs: number[] = [], indices: number[] = [];
+  const columns = columnCount === 18 ? Math.round(width / 2) : columnCount, vertices: number[] = [], colors: number[] = [], uvs: number[] = [], indices: number[] = [];
   for (const [x, y, z] of samples) for (let col = 0; col <= columns; col++) {
     const cross = (col / columns - 0.5) * width;
     const shoulder = THREE.MathUtils.smoothstep(Math.abs(cross), 5.4, 10.8);
@@ -96,11 +98,11 @@ for (const [index, jump] of jumps.entries()) {
     len: 4, rise: 0.8, w: 12, tex: "treehouse-loam", color: "#eee8d7", edgeGrinding: false,
     nm: `Full-width downhill launch ${index + 1}`, grp: GROUP.practice });
   ground([[X, jump.base, jump.from], [X, jump.launch, jump.lip]],
-    `Planted shoulders of launch ${index + 1}`, GROUP.trail, 36, "dirt", true);
+    `Planted shoulders of launch ${index + 1}`, GROUP.trail, 84, "dirt", true);
   const middle = (jump.lip + jump.land) / 2;
-  surfaceBox([X, jump.bottom - 0.5, middle], [36, 1, 4],
+  surfaceBox([X, jump.bottom - 0.5, middle], [84, 1, 4],
     `Visible shallow dirt pit bottom ${index + 1}`, "#7f7750", GROUP.trail, "dirt");
-  add({ t: "pit", p: [X, jump.bottom + 0.1, middle], s: [35, 0.1, 3.8], invisible: true,
+  add({ t: "pit", p: [X, jump.bottom + 0.1, middle], s: [83, 0.1, 3.8], invisible: true,
     nm: `Shallow pit reset ${index + 1}`, grp: GROUP.practice });
   // Lower dirt landings continue the descent; no quarterpipes at the edges.
   const end = index < jumps.length - 1 ? jumps[index + 1].from : -112;
@@ -111,34 +113,22 @@ for (const [index, jump] of jumps.entries()) {
     [4.4, 2.8, 4.8], "Broad mossy bank at shallow pit", GROUP.bush, side * 35);
 }
 
-// The first lesson sits over ordinary ground. The next line bridges a real
-// six-metre missing section with its ends extending onto both dirt ledges.
-ground([[X, -14, -112], [X, -14, -145]], "Ground rail approach and landing");
-add({ t: "rail", p: [X, -13.23, -124], len: 14, w: 0.1, color: "#657d79",
-  nm: "First rail · ordinary dirt below", grp: GROUP.practice });
-for (const z of [-119, -124, -129]) scenery("block", [X, -14, z], [0.22, 0.75, 0.22],
-  "Low ground-rail support", GROUP.practice);
-checkpoint(-136, -14, "Before the visible gap rail");
-add({ t: "rail", p: [X, -13.23, -148], len: 12, w: 0.11, color: "#657d79",
-  nm: "Second rail · continuous grind across the actual gap", grp: GROUP.practice });
-for (const z of [-143.2, -152.8]) scenery("block", [X, -14, z], [0.28, 0.76, 0.28],
-  "Gap rail ledge support", GROUP.practice);
-surfaceBox([X, -17.6, -148], [36, 1, 6], "Visible dirt bed below the rail gap", "#7e765b", GROUP.trail, "dirt");
-add({ t: "pit", p: [X, -17.1, -148], s: [35, 0.1, 5.8], invisible: true,
-  nm: "Rail gap reset beneath its visible bed", grp: GROUP.practice });
-ground([[X, -14, -151], [X, -14, -162]], "Gap rail landing into coastal glimpse");
+// The user's nine-image strip replaces the old pack's separate rail lesson.
+// A continuous fern-lined grove connects the descent to the coastal village.
+ground([[X, -14, -112], [X, -14, -162]], "Quiet forest connecting the downhill to the coastal settlement");
+checkpoint(-136, -14, "Coastal trail checkpoint");
 
 // The screenshot's coastal beat precedes the enclosed hut corridor. Sand is
 // limited to this opening on the right, never stretched through the village.
-ground([[X, -14, -162], [X, -14, -189]], "Warm coastal settlement path", GROUP.coast);
-// The beach joins the course at x=53 with shared boundary heights. No two
+ground([[X, -14, -162], [X, -14, -189]], "Warm coastal settlement path", GROUP.coast, 26);
+// The beach joins the course at x=48 with shared boundary heights. No two
 // ground surfaces overlap, and the sand gently sinks beneath the waterline.
 const beachVertices: number[] = [], beachColors: number[] = [], beachIndices: number[] = [];
 for (let row = 0; row <= 17; row++) {
   const z = -162 - 27 * row / 17;
-  const bankY = -14 + 0.28 + Math.sin(z * 0.47 + 18 * 0.27) * 0.18 + Math.sin(z * 0.19 - 18 * 0.68) * 0.13;
+  const bankY = -14 + 0.28 + Math.sin(z * 0.47 + 13 * 0.27) * 0.18 + Math.sin(z * 0.19 - 13 * 0.68) * 0.13;
   for (let col = 0; col <= 10; col++) {
-    const cross = 17 * col / 10, fraction = col / 10;
+    const cross = 11 * col / 10, fraction = col / 10;
     beachVertices.push(round(cross), round(bankY + (-15.12 - bankY) * fraction + 14), round(z + 162));
     const paint = new THREE.Color("#79936b").lerp(new THREE.Color("#fff3d6"), THREE.MathUtils.smoothstep(cross, 0, 4.5));
     paint.multiplyScalar(Math.min(1, 0.98 + Math.sin(z * 0.28 + 18 * 0.34) * 0.025));
@@ -149,12 +139,15 @@ for (let row = 0; row < 17; row++) for (let col = 0; col < 10; col++) {
   const a = row * 11 + col, b = a + 1, c = a + 11, d = c + 1;
   beachIndices.push(a, b, c, b, d, c);
 }
-add({ t: "mesh", p: [53, -14, -162], vertices: beachVertices, colors: beachColors, indices: beachIndices,
+add({ t: "mesh", p: [48, -14, -162], vertices: beachVertices, colors: beachColors, indices: beachIndices,
   tex: "treehouse-loam", color: "#ffffff", edgeGrinding: false, nm: "Seamless small beach to the right of the route", grp: GROUP.coast });
-surfaceBox([82, -15.65, -175.5], [36, 0.5, 27], "Sandy visible bed beneath the coastal inlet", "#cbb582", GROUP.coast, "dirt");
-water([82, -14.6, -175.5], 36, 27, "Small clear coastal inlet beside the crab shack", GROUP.coast);
+surfaceBox([68, -15.65, -175.5], [36, 0.5, 27], "Sandy visible bed beneath the coastal inlet", "#cbb582", GROUP.coast, "dirt");
+water([68, -14.6, -175.5], 36, 27, "Small clear coastal inlet beside the crab shack", GROUP.coast);
+const coastalWater=components[components.length-1];
+coastalWater.materialStyle='jungle-stream';coastalWater.color='#53a4c0';coastalWater.opacity=.68;
+coastalWater.emissive='#072333';coastalWater.castShadow=false;
 scenery("trialsv2porchhut", [25, -14.0, -173], [8.8, 6.2, 7.6], "Handmade hut overlooking the beach bend", GROUP.coast, 20);
-scenery("trialsv2crabshack", [54, -15.5, -179], [11.8, 8.1, 10], "Humble crab shack beside the sandy glimpse", GROUP.coast, -58);
+scenery("trialsv2crabshack", [48, -15.5, -179], [11.8, 8.1, 10], "Humble crab shack beside the sandy glimpse", GROUP.coast, -58);
 for (const [x, z] of [[24, -184], [27, -187], [21, -187]] as const)
   scenery("treehousesugarcane", [x, -13.9, z], [3.8, 3.5, 3], "Small lived-in sugarcane patch", GROUP.coast, x * 17);
 
@@ -317,27 +310,25 @@ const authoredTrailRoute: Point[] = [
   [X, -7.2, -319], [X, -7.2, -342], [X, -7.2, -350], [X + 1.35, -5.88, -362], [X, -7.2, -374],
   [X, -7.2, -385], [X, -7.2, -410],
 ];
-export const TREEHOUSE_TRAIL_ROUTE: readonly Point[] = authoredTrailRoute.map(([x,y,z]) =>
+const sourceTrailRoute: readonly Point[] = authoredTrailRoute.map(([x,y,z]) =>
   [x,y,z <= -248 ? z - TREEHOUSE_TRIALS_CAVE_EXTENSION_V2 : z] as Point);
+export const TREEHOUSE_TRAIL_ROUTE: readonly Point[] = densifyTreehouseRoute(sourceTrailRoute).map(treehouseTrialPoint);
 for (const p of [balconySpawn, ...[...TREEHOUSE_STAIR_LANDINGS].reverse()])
   add({ t: "camnode", p: [...p], radius: 0, grp: GROUP.camera });
 for (const p of TREEHOUSE_CLEARING_ROUTE.slice(1))
   add({ t: "camnode", p: [...p], radius: 2, grp: GROUP.camera });
-for (const p of TREEHOUSE_TRAIL_ROUTE.slice(1))
+for (const p of densifyTreehouseRoute(sourceTrailRoute).slice(1))
   add({ t: "camnode", p: [...p], radius: 0, grp: GROUP.camera });
-add({ t: "camnode", cameraView: true, p: [-3, 5, 12], s: [78, 60, 72], yaw: 0, radius: 12,
-  cameraPosition: [-1, 8.5, 36], cameraTarget: [-1, 5.5, -5], cameraFov: 49, cameraAspect: 16 / 9,
-  cameraFollowDistance: 14.5, cameraFollowTargetHeight: 4.3, cameraIntroDistance: 4,
-  nm: "Opening reveal · close stair follow · square halfpipe view", grp: GROUP.camera });
+
 
 export const TREEHOUSE_TRAIL_LEVEL: CustomLevelData = {
   v: 1, name: "Treehouse Trials", spawn: balconySpawn, killY: -30,
-  sky: "day", jungleAtmosphere: true, jungleDepthFade: false, jungleStyle: "painterly", keepPlayFog: true,
+  sky: "day", ocean: TREEHOUSE_TRIALS_OPENING_OCEAN, cameraLookAhead: 12, cameraRig: {camDist:10.6,camHeight:5.5,camPitch:18,camFov:49}, jungleAtmosphere: true, jungleDepthFade: false, jungleStyle: "painterly", keepPlayFog: true,
   medalTimes: { gold: 88, silver: 125, bronze: 180 },
-  atmosphere: { fogEnabled: true, fogNear: 48, fogFar: 165, fogColor: "#618e7d",
+  atmosphere: { fallbackRidges:false, fallbackTop:"#348dcc", fallbackBottom:"#b6dce6", fallbackFog:"#b6dce6", fogEnabled: true, fogNear: 48, fogFar: 165, fogColor: "#618e7d",
     ambientSky: "#9fc5c4", ambientGround: "#6c6044", ambientIntensity: 0.98,
     sunColor: "#ffe0a6", sunIntensity: 1.72, fillColor: "#bdd2ca", fillIntensity: 0.42,
     shadowStrength: 0.85, drawDistance: 185 },
-  components,
+  components: treehouseTrialContinuity(components),
   groups: [...Object.entries(GROUP).map(([nm, id]) => ({ id, nm })), ...TREEHOUSE_TRIALS_SCENE_GROUPS_V2],
 };

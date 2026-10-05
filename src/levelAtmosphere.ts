@@ -24,6 +24,8 @@ export interface CustomAtmosphereData {
   fallbackBottom?: AtmosphereColor;
   fallbackFog?: AtmosphereColor;
   fallbackStars?: boolean;
+  /** Distant land silhouettes in the generated sky; an ocean horizon can omit them. */
+  fallbackRidges?: boolean;
   fallbackSunColor?: AtmosphereColor | null;
   fallbackSunU?: number;
   fallbackSunV?: number;
@@ -47,7 +49,7 @@ export const ATMOSPHERE_COLORS = {
   fallbackBottom: "fallback sky bottom", fallbackFog: "fallback horizon color", fallbackSunColor: "fallback sun color",
 } as const;
 const ATMOSPHERE_KEYS = new Set([...Object.keys(ATMOSPHERE_NUMBERS), ...Object.keys(ATMOSPHERE_COLORS),
-  "fogEnabled", "fallbackStars", "backdrop"]);
+  "fogEnabled", "fallbackStars", "fallbackRidges", "backdrop"]);
 const validColor = (value: unknown): boolean =>
   typeof value === "string" ? /^#[0-9a-fA-F]{6}$/.test(value) : Array.isArray(value) && value.length === 3 &&
     value.every(component => typeof component === "number" && Number.isFinite(component) && component >= 0 && component <= 1);
@@ -61,7 +63,7 @@ export function validAtmosphere(value: unknown): value is CustomAtmosphereData {
   }
   for (const key of Object.keys(ATMOSPHERE_COLORS))
     if (data[key] !== undefined && !(key === "fallbackSunColor" && data[key] === null) && !validColor(data[key])) return false;
-  for (const key of ["fogEnabled", "fallbackStars"])
+  for (const key of ["fogEnabled", "fallbackStars", "fallbackRidges"])
     if (data[key] !== undefined && typeof data[key] !== "boolean") return false;
   if (data.backdrop !== undefined && data.backdrop !== "sky" && data.backdrop !== "fog") return false;
   return data.fogNear === undefined || data.fogFar === undefined || (data.fogNear as number) < (data.fogFar as number);
@@ -269,7 +271,7 @@ export function resolveLevelAtmosphere(source: AtmosphereSource): ResolvedAtmosp
     shadowStrength: source.skyPreset === "coast" ? 0.62 : 1,
     drawDistance: source.jungleAtmosphere ? 175 : preset.farPlane ?? 400,
     backdrop: source.skyBackdrop ?? "sky", fallbackTop: preset.top, fallbackBottom: preset.bottom, fallbackFog: linear(preset.fog),
-    fallbackStars: preset.stars, fallbackSunColor: preset.sunHex === null ? null : (preset.sunHex ?? t.sunColorHex) || null,
+    fallbackRidges: true, fallbackStars: preset.stars, fallbackSunColor: preset.sunHex === null ? null : (preset.sunHex ?? t.sunColorHex) || null,
     fallbackSunU: t.sunU, fallbackSunV: t.sunV,
   };
   if (source.isCampaignMap) Object.assign(defaults, {

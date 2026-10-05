@@ -1,0 +1,6454 @@
+{
+  "mode": "finished",
+  "ticks": 4938,
+  "waypoint": 81,
+  "waypoints": 83,
+  "deaths": 0,
+  "samples": [
+    {
+      "tick": 30,
+      "position": [
+        -17.145215964092532,
+        8.400000000372529,
+        0.5822828545536485
+      ],
+      "state": "ride",
+      "camera": [
+        -17.122511790366023,
+        13.758146755890412,
+        14.914862914199446
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 235,
+        "skipped": 0,
+        "draws": 146,
+        "triangles": 256641,
+        "allLodTriangles": 619322,
+        "cells": 411,
+        "residentCells": 146,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 1.1002999999970207
+      },
+      "render": {
+        "frame": 1039,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 60,
+      "position": [
+        -16.683448011358053,
+        8.400000000372529,
+        2.5617900036336207
+      ],
+      "state": "ride",
+      "camera": [
+        -16.871373162226654,
+        13.758146755890412,
+        17.0016380634139
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 235,
+        "skipped": 0,
+        "draws": 146,
+        "triangles": 256641,
+        "allLodTriangles": 619322,
+        "cells": 411,
+        "residentCells": 146,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 1.6002999999970189
+      },
+      "render": {
+        "frame": 1249,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 90,
+      "position": [
+        -13.777388245031716,
+        6.8473302615825,
+        2.894117604840749
+      ],
+      "state": "ride",
+      "camera": [
+        -13.967638342617446,
+        12.339273371082427,
+        17.333700667873973
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 235,
+        "skipped": 0,
+        "draws": 146,
+        "triangles": 256641,
+        "allLodTriangles": 619322,
+        "cells": 411,
+        "residentCells": 146,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 2.1002999999970173
+      },
+      "render": {
+        "frame": 1459,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 120,
+      "position": [
+        -10.871325847874276,
+        5.600000000372528,
+        3.22642219957184
+      ],
+      "state": "ride",
+      "camera": [
+        -11.060995052151993,
+        10.95814675589041,
+        17.66607451447257
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 235,
+        "skipped": 0,
+        "draws": 146,
+        "triangles": 256641,
+        "allLodTriangles": 619322,
+        "cells": 411,
+        "residentCells": 146,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 2.6002999999970156
+      },
+      "render": {
+        "frame": 1669,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 150,
+      "position": [
+        -10.580562398791622,
+        5.16746633310302,
+        5.405905348708927
+      ],
+      "state": "ride",
+      "camera": [
+        -10.535846470725193,
+        10.658990696936836,
+        19.681650146924053
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 235,
+        "skipped": 0,
+        "draws": 146,
+        "triangles": 256641,
+        "allLodTriangles": 619322,
+        "cells": 411,
+        "residentCells": 146,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 3.1002999999970138
+      },
+      "render": {
+        "frame": 1879,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 180,
+      "position": [
+        -11.26568048016829,
+        3.1238866646289907,
+        8.249536515815542
+      ],
+      "state": "ride",
+      "camera": [
+        -11.242204123812005,
+        8.55206009932039,
+        22.613433660677906
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 235,
+        "skipped": 0,
+        "draws": 146,
+        "triangles": 253907,
+        "allLodTriangles": 619322,
+        "cells": 411,
+        "residentCells": 146,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 3.600299999997012
+      },
+      "render": {
+        "frame": 2096,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 210,
+      "position": [
+        -11.231036910237293,
+        2.800000000372529,
+        10.610696573701292
+      ],
+      "state": "ride",
+      "camera": [
+        -11.39968643384625,
+        8.15814675589041,
+        25.025361120949405
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 235,
+        "skipped": 0,
+        "draws": 146,
+        "triangles": 253907,
+        "allLodTriangles": 619322,
+        "cells": 411,
+        "residentCells": 146,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 4.10029999999701
+      },
+      "render": {
+        "frame": 2299,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 240,
+      "position": [
+        -8.327797370815574,
+        1.41027271112588,
+        10.958863297035403
+      ],
+      "state": "ride",
+      "camera": [
+        -8.42847990959963,
+        6.839290159938472,
+        25.408161259921343
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 235,
+        "skipped": 0,
+        "draws": 146,
+        "triangles": 249999,
+        "allLodTriangles": 619322,
+        "cells": 411,
+        "residentCells": 146,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 4.6002999999970084
+      },
+      "render": {
+        "frame": 2516,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 270,
+      "position": [
+        -4.779083785637093,
+        3.725290284584126e-10,
+        11.086538494401841
+      ],
+      "state": "ride",
+      "camera": [
+        -4.926675091023238,
+        5.3581467558904095,
+        25.601043145804947
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 235,
+        "skipped": 0,
+        "draws": 146,
+        "triangles": 249999,
+        "allLodTriangles": 619322,
+        "cells": 411,
+        "residentCells": 146,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 5.100299999997007
+      },
+      "render": {
+        "frame": 2726,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 300,
+      "position": [
+        -0.5465031357131072,
+        0,
+        9.558382402327487
+      ],
+      "state": "ride",
+      "camera": [
+        -0.6966183640049852,
+        5.358146755517881,
+        24.073920824376287
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 235,
+        "skipped": 0,
+        "draws": 146,
+        "triangles": 249999,
+        "allLodTriangles": 619322,
+        "cells": 411,
+        "residentCells": 146,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 5.600299999997005
+      },
+      "render": {
+        "frame": 2936,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 330,
+      "position": [
+        3.7584904940819,
+        0,
+        8.251206792391717
+      ],
+      "state": "ride",
+      "camera": [
+        3.4716115291052496,
+        5.358146755517881,
+        22.797170068252434
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 235,
+        "skipped": 0,
+        "draws": 146,
+        "triangles": 249999,
+        "allLodTriangles": 619322,
+        "cells": 411,
+        "residentCells": 146,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 6.100299999997003
+      },
+      "render": {
+        "frame": 3139,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 360,
+      "position": [
+        8.117266207819757,
+        0,
+        7.275084476574605
+      ],
+      "state": "ride",
+      "camera": [
+        7.82274219027318,
+        5.358146755517881,
+        21.736423468652312
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 235,
+        "skipped": 0,
+        "draws": 146,
+        "triangles": 249999,
+        "allLodTriangles": 619322,
+        "cells": 411,
+        "residentCells": 146,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 6.600299999997001
+      },
+      "render": {
+        "frame": 3349,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 390,
+      "position": [
+        12.615370897073012,
+        0,
+        7.25929677648305
+      ],
+      "state": "ride",
+      "camera": [
+        12.320052815089582,
+        5.358146755517881,
+        21.73100304658472
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 235,
+        "skipped": 0,
+        "draws": 146,
+        "triangles": 249999,
+        "allLodTriangles": 619322,
+        "cells": 411,
+        "residentCells": 146,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 7.100299999997
+      },
+      "render": {
+        "frame": 3559,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 420,
+      "position": [
+        17.11260008836038,
+        0,
+        7.101405671743031
+      ],
+      "state": "ride",
+      "camera": [
+        16.803790389550894,
+        5.358146755517881,
+        21.57358763025944
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 235,
+        "skipped": 0,
+        "draws": 146,
+        "triangles": 249999,
+        "allLodTriangles": 619322,
+        "cells": 411,
+        "residentCells": 146,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 7.600299999996998
+      },
+      "render": {
+        "frame": 3769,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 450,
+      "position": [
+        21.585293537103112,
+        0,
+        6.669394262039575
+      ],
+      "state": "ride",
+      "camera": [
+        21.103206934888444,
+        5.360235333980671,
+        21.01339775074453
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 236,
+        "skipped": 0,
+        "draws": 147,
+        "triangles": 250745,
+        "allLodTriangles": 622402,
+        "cells": 411,
+        "residentCells": 147,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 8.100299999997002
+      },
+      "render": {
+        "frame": 3979,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 480,
+      "position": [
+        25.9620717431359,
+        0,
+        5.876901197344807
+      ],
+      "state": "ride",
+      "camera": [
+        22.996696834499062,
+        5.393157355074684,
+        18.49458288984524
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 236,
+        "skipped": 0,
+        "draws": 147,
+        "triangles": 250745,
+        "allLodTriangles": 622402,
+        "cells": 411,
+        "residentCells": 147,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 8.600299999997027
+      },
+      "render": {
+        "frame": 4196,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 510,
+      "position": [
+        29.677364544037715,
+        0,
+        3.343186262018498
+      ],
+      "state": "ride",
+      "camera": [
+        24.723975144113567,
+        5.435650588231266,
+        14.689993293887706
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 238,
+        "skipped": 0,
+        "draws": 149,
+        "triangles": 252517,
+        "allLodTriangles": 629712,
+        "cells": 411,
+        "residentCells": 149,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 9.100299999997052
+      },
+      "render": {
+        "frame": 4406,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 540,
+      "position": [
+        32.0319408568645,
+        0,
+        -0.4301249493050321
+      ],
+      "state": "ride",
+      "camera": [
+        27.845382613341744,
+        5.462187130594092,
+        11.121009163227754
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 246,
+        "skipped": 0,
+        "draws": 153,
+        "triangles": 264273,
+        "allLodTriangles": 650816,
+        "cells": 411,
+        "residentCells": 153,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 9.600299999997077
+      },
+      "render": {
+        "frame": 4609,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 570,
+      "position": [
+        33.80653004153179,
+        0,
+        -4.509756049863682
+      ],
+      "state": "ride",
+      "camera": [
+        31.13594529667906,
+        5.480172280474245,
+        7.214082077320361
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 246,
+        "skipped": 0,
+        "draws": 153,
+        "triangles": 269525,
+        "allLodTriangles": 650816,
+        "cells": 411,
+        "residentCells": 153,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 10.100299999997102
+      },
+      "render": {
+        "frame": 4819,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 600,
+      "position": [
+        34.62056420396053,
+        0,
+        -8.928843283878999
+      ],
+      "state": "ride",
+      "camera": [
+        33.36747134281997,
+        5.486311660875242,
+        3.027976694663587
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 248,
+        "skipped": 0,
+        "draws": 155,
+        "triangles": 274719,
+        "allLodTriangles": 656122,
+        "cells": 411,
+        "residentCells": 155,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 10.600299999997127
+      },
+      "render": {
+        "frame": 5029,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 630,
+      "position": [
+        34.68841143116669,
+        0,
+        -13.421368362868938
+      ],
+      "state": "ride",
+      "camera": [
+        34.42557392532538,
+        5.487230199956591,
+        -1.3450969047473853
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 248,
+        "skipped": 0,
+        "draws": 155,
+        "triangles": 276307,
+        "allLodTriangles": 656122,
+        "cells": 411,
+        "residentCells": 155,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 11.100299999997151
+      },
+      "render": {
+        "frame": 5239,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 660,
+      "position": [
+        34.851825049092874,
+        0,
+        -17.91293162420677
+      ],
+      "state": "ride",
+      "camera": [
+        34.77700139332339,
+        5.488500179002057,
+        -5.996339653438453
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 252,
+        "skipped": 0,
+        "draws": 159,
+        "triangles": 292175,
+        "allLodTriangles": 669064,
+        "cells": 411,
+        "residentCells": 159,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 11.600299999997176
+      },
+      "render": {
+        "frame": 5456,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 690,
+      "position": [
+        34.93561137390888,
+        0,
+        -22.41066077738856
+      ],
+      "state": "ride",
+      "camera": [
+        34.86454716293642,
+        5.4889852671294515,
+        -10.345791113126257
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 255,
+        "skipped": 0,
+        "draws": 161,
+        "triangles": 300774,
+        "allLodTriangles": 677023,
+        "cells": 411,
+        "residentCells": 161,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 12.100299999997201
+      },
+      "render": {
+        "frame": 5659,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 720,
+      "position": [
+        34.959294713496845,
+        0,
+        -26.910179611147235
+      ],
+      "state": "ride",
+      "camera": [
+        34.94043403399399,
+        5.489223581681682,
+        -14.858829516968541
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 255,
+        "skipped": 0,
+        "draws": 161,
+        "triangles": 313823,
+        "allLodTriangles": 677023,
+        "cells": 411,
+        "residentCells": 161,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 12.600299999997226
+      },
+      "render": {
+        "frame": 5869,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 750,
+      "position": [
+        34.959294713496845,
+        0,
+        -31.410131623875888
+      ],
+      "state": "ride",
+      "camera": [
+        34.95574095914143,
+        5.4911094742418936,
+        -19.54431352350466
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 255,
+        "skipped": 0,
+        "draws": 161,
+        "triangles": 320249,
+        "allLodTriangles": 677023,
+        "cells": 411,
+        "residentCells": 161,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 13.100299999997251
+      },
+      "render": {
+        "frame": 6086,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 780,
+      "position": [
+        34.959294713496845,
+        0,
+        -35.90987310916179
+      ],
+      "state": "ride",
+      "camera": [
+        34.9585474625285,
+        5.500000000000415,
+        -24.223967656277058
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 255,
+        "skipped": 0,
+        "draws": 161,
+        "triangles": 331393,
+        "allLodTriangles": 677023,
+        "cells": 411,
+        "residentCells": 161,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 13.600299999997276
+      },
+      "render": {
+        "frame": 6296,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 810,
+      "position": [
+        34.959294713496845,
+        0,
+        -40.40949758672104
+      ],
+      "state": "ride",
+      "camera": [
+        34.959147350174874,
+        5.500000000000089,
+        -28.730403777433505
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 255,
+        "skipped": 0,
+        "draws": 161,
+        "triangles": 345505,
+        "allLodTriangles": 677023,
+        "cells": 411,
+        "residentCells": 161,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 14.1002999999973
+      },
+      "render": {
+        "frame": 6506,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 840,
+      "position": [
+        34.959294713496845,
+        0,
+        -44.90945284514271
+      ],
+      "state": "ride",
+      "camera": [
+        34.9592639409439,
+        5.50000000000002,
+        -33.08772952882582
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 259,
+        "skipped": 0,
+        "draws": 162,
+        "triangles": 348125,
+        "allLodTriangles": 687835,
+        "cells": 411,
+        "residentCells": 162,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 14.600299999997326
+      },
+      "render": {
+        "frame": 6709,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 870,
+      "position": [
+        34.959294713496845,
+        0,
+        -49.40925746913511
+      ],
+      "state": "ride",
+      "camera": [
+        34.95928888265228,
+        5.500000000000005,
+        -37.72410935104752
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 261,
+        "skipped": 0,
+        "draws": 164,
+        "triangles": 352121,
+        "allLodTriangles": 693933,
+        "cells": 411,
+        "residentCells": 164,
+        "pendingCells": 1,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
+        "errors": [],
+        "windTime": 15.10029999999735
+      },
+      "render": {
+        "frame": 6926,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 900,
+      "position": [
+        34.96488770982734,
+        0,
+        -53.908722515001124
+      ],
+      "state": "ride",
+      "camera": [
+        34.96274075392269,
+        5.500000000000005,
+        -42.077069807050655
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 269,
+        "skipped": 0,
+        "draws": 170,
+        "triangles": 380459,
+        "allLodTriangles": 722626,
+        "cells": 411,
+        "residentCells": 170,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 97.69,
+        "errors": [],
+        "windTime": 15.600299999997375
+      },
+      "render": {
+        "frame": 7129,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 930,
+      "position": [
+        34.96488770982734,
+        0,
+        -58.40845251364138
+      ],
+      "state": "ride",
+      "camera": [
+        34.96445549595489,
+        5.5000000000000036,
+        -46.58493757835404
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 275,
+        "skipped": 0,
+        "draws": 172,
+        "triangles": 397677,
+        "allLodTriangles": 738971,
+        "cells": 411,
+        "residentCells": 172,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 97.69,
+        "errors": [],
+        "windTime": 16.10029999999739
+      },
+      "render": {
+        "frame": 7339,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 960,
+      "position": [
+        34.96488770982734,
+        -0.7062846385441106,
+        -62.908230784747445
+      ],
+      "state": "ride",
+      "camera": [
+        34.964800475676206,
+        5.351226013431387,
+        -51.08612375638627
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 275,
+        "skipped": 0,
+        "draws": 172,
+        "triangles": 411789,
+        "allLodTriangles": 738971,
+        "cells": 411,
+        "residentCells": 172,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 97.69,
+        "errors": [],
+        "windTime": 16.60029999999736
+      },
+      "render": {
+        "frame": 7549,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 990,
+      "position": [
+        34.96488770982734,
+        -1.25,
+        -67.40819339403953
+      ],
+      "state": "ride",
+      "camera": [
+        34.964870928412715,
+        4.576773326844261,
+        -55.72064282282137
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 284,
+        "skipped": 0,
+        "draws": 178,
+        "triangles": 428532,
+        "allLodTriangles": 775724,
+        "cells": 411,
+        "residentCells": 178,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 99.36,
+        "errors": [],
+        "windTime": 17.100299999997333
+      },
+      "render": {
+        "frame": 7766,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1020,
+      "position": [
+        34.96488770982734,
+        -1.25,
+        -71.90800121689576
+      ],
+      "state": "ride",
+      "camera": [
+        34.96488432606256,
+        4.29390934569369,
+        -60.22446762366787
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 286,
+        "skipped": 0,
+        "draws": 179,
+        "triangles": 436102,
+        "allLodTriangles": 781030,
+        "cells": 411,
+        "residentCells": 179,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 99.36,
+        "errors": [],
+        "windTime": 17.600299999997304
+      },
+      "render": {
+        "frame": 7976,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1050,
+      "position": [
+        34.96488770982734,
+        -2.424111537927912,
+        -76.87944231036045
+      ],
+      "state": "ride",
+      "camera": [
+        34.96488699168952,
+        3.1279792639764654,
+        -65.0490193502542
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 291,
+        "skipped": 0,
+        "draws": 184,
+        "triangles": 453239,
+        "allLodTriangles": 808691,
+        "cells": 411,
+        "residentCells": 184,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 99.36,
+        "errors": [],
+        "windTime": 18.100299999997276
+      },
+      "render": {
+        "frame": 8179,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1080,
+      "position": [
+        34.96488770982734,
+        0.37587298807467256,
+        -81.37887222528074
+      ],
+      "state": "air",
+      "camera": [
+        34.96488757154473,
+        2.6654373870339674,
+        -69.68776985219694
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 291,
+        "skipped": 0,
+        "draws": 184,
+        "triangles": 470845,
+        "allLodTriangles": 808691,
+        "cells": 411,
+        "residentCells": 184,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 99.36,
+        "errors": [],
+        "windTime": 18.600299999997247
+      },
+      "render": {
+        "frame": 8396,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1110,
+      "position": [
+        34.96488770982734,
+        -5.410308832980757,
+        -85.87886027092853
+      ],
+      "state": "ride",
+      "camera": [
+        34.96488768038545,
+        0.809807238928872,
+        -74.0380680324751
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 293,
+        "skipped": 0,
+        "draws": 186,
+        "triangles": 479845,
+        "allLodTriangles": 813577,
+        "cells": 411,
+        "residentCells": 186,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 99.36,
+        "errors": [],
+        "windTime": 19.10029999999722
+      },
+      "render": {
+        "frame": 8599,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1140,
+      "position": [
+        34.96488770982734,
+        -5.837883596303829,
+        -90.37883599192605
+      ],
+      "state": "ride",
+      "camera": [
+        34.96488770391726,
+        0.04793308345347862,
+        -78.55544873713492
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 293,
+        "skipped": 0,
+        "draws": 186,
+        "triangles": 482363,
+        "allLodTriangles": 813577,
+        "cells": 411,
+        "residentCells": 186,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 99.36,
+        "errors": [],
+        "windTime": 19.60029999999719
+      },
+      "render": {
+        "frame": 8809,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1170,
+      "position": [
+        34.96488770982734,
+        -6.287875950374858,
+        -94.8787598023694
+      ],
+      "state": "ride",
+      "camera": [
+        34.96488770869075,
+        -0.4467573737561778,
+        -83.19118001435108
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 297,
+        "skipped": 0,
+        "draws": 190,
+        "triangles": 493160,
+        "allLodTriangles": 826467,
+        "cells": 411,
+        "residentCells": 190,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 99.36,
+        "errors": [],
+        "windTime": 20.100299999997162
+      },
+      "render": {
+        "frame": 9026,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1200,
+      "position": [
+        34.96488770982734,
+        -6.624345248289456,
+        -99.37827375855274
+      ],
+      "state": "ride",
+      "camera": [
+        34.96488770959844,
+        -0.901432095888405,
+        -87.7041381583539
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 303,
+        "skipped": 0,
+        "draws": 193,
+        "triangles": 503846,
+        "allLodTriangles": 847568,
+        "cells": 411,
+        "residentCells": 193,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 99.36,
+        "errors": [],
+        "windTime": 20.600299999997134
+      },
+      "render": {
+        "frame": 9229,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1230,
+      "position": [
+        34.96488770982734,
+        -3.999435365670135,
+        -103.8777536384453
+      ],
+      "state": "air",
+      "camera": [
+        34.964887709780996,
+        -0.8286972608165905,
+        -92.19045023298646
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 323,
+        "skipped": 0,
+        "draws": 205,
+        "triangles": 538519,
+        "allLodTriangles": 907685,
+        "cells": 411,
+        "residentCells": 205,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 99.36,
+        "errors": [],
+        "windTime": 21.100299999997105
+      },
+      "render": {
+        "frame": 9439,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1260,
+      "position": [
+        34.96488770982734,
+        -7.810824254559028,
+        -108.37738122660168
+      ],
+      "state": "air",
+      "camera": [
+        34.964887709817965,
+        -2.0653210794134895,
+        -96.68799883930868
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 325,
+        "skipped": 0,
+        "draws": 207,
+        "triangles": 545933,
+        "allLodTriangles": 912571,
+        "cells": 411,
+        "residentCells": 207,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 99.36,
+        "errors": [],
+        "windTime": 21.600299999997077
+      },
+      "render": {
+        "frame": 9649,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1290,
+      "position": [
+        34.96488770982734,
+        -9.475200996062515,
+        -112.87736927459937
+      ],
+      "state": "ride",
+      "camera": [
+        34.96488770982543,
+        -3.5049209262179786,
+        -101.18788122715212
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 326,
+        "skipped": 0,
+        "draws": 208,
+        "triangles": 554695,
+        "allLodTriangles": 920074,
+        "cells": 411,
+        "residentCells": 208,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 99.36,
+        "errors": [],
+        "windTime": 22.10029999999705
+      },
+      "render": {
+        "frame": 9859,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1320,
+      "position": [
+        34.96488770982734,
+        -9.860913691818112,
+        -117.37734500248536
+      ],
+      "state": "ride",
+      "camera": [
+        34.96488770982692,
+        -4.037465978506977,
+        -105.5487042295907
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 334,
+        "skipped": 0,
+        "draws": 212,
+        "triangles": 561528,
+        "allLodTriangles": 943074,
+        "cells": 411,
+        "residentCells": 212,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 99.36,
+        "errors": [],
+        "windTime": 22.60029999999702
+      },
+      "render": {
+        "frame": 10062,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1350,
+      "position": [
+        34.96488770982734,
+        -10.246622058196326,
+        -121.87726885298464
+      ],
+      "state": "ride",
+      "camera": [
+        34.964887709827245,
+        -4.441186011914117,
+        -110.03659488008692
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 343,
+        "skipped": 0,
+        "draws": 217,
+        "triangles": 573069,
+        "allLodTriangles": 978525,
+        "cells": 411,
+        "residentCells": 217,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 99.36,
+        "errors": [],
+        "windTime": 23.10029999999699
+      },
+      "render": {
+        "frame": 10272,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1380,
+      "position": [
+        34.96488770982734,
+        -10.524643275737537,
+        -126.37678362131233
+      ],
+      "state": "ride",
+      "camera": [
+        34.964887709827266,
+        -4.840944062119687,
+        -114.68342641264155
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 346,
+        "skipped": 0,
+        "draws": 219,
+        "triangles": 585034,
+        "allLodTriangles": 991334,
+        "cells": 411,
+        "residentCells": 219,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 99.36,
+        "errors": [],
+        "windTime": 23.600299999996963
+      },
+      "render": {
+        "frame": 10489,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1410,
+      "position": [
+        34.96488770982734,
+        -7.8997332231844375,
+        -130.87626440388428
+      ],
+      "state": "air",
+      "camera": [
+        34.964887709827266,
+        -4.731796758161824,
+        -119.04613736099581
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 346,
+        "skipped": 0,
+        "draws": 219,
+        "triangles": 570866,
+        "allLodTriangles": 991334,
+        "cells": 411,
+        "residentCells": 219,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 99.36,
+        "errors": [],
+        "windTime": 24.100299999996935
+      },
+      "render": {
+        "frame": 10692,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1440,
+      "position": [
+        34.96488770982734,
+        -11.71112211207333,
+        -135.3758814672234
+      ],
+      "state": "air",
+      "camera": [
+        34.96060700387102,
+        -5.925448509004466,
+        -123.54384438403599
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 347,
+        "skipped": 0,
+        "draws": 220,
+        "triangles": 575493,
+        "allLodTriangles": 1000034,
+        "cells": 411,
+        "residentCells": 220,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 99.36,
+        "errors": [],
+        "windTime": 24.600299999996906
+      },
+      "render": {
+        "frame": 10902,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1470,
+      "position": [
+        34.969715811498304,
+        -13.505094878173352,
+        -139.87579056697328
+      ],
+      "state": "ride",
+      "camera": [
+        34.49882589573666,
+        -7.471075393152977,
+        -128.06362998127585
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 352,
+        "skipped": 0,
+        "draws": 223,
+        "triangles": 600076,
+        "allLodTriangles": 1018506,
+        "cells": 411,
+        "residentCells": 223,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 99.36,
+        "errors": [],
+        "windTime": 25.100299999996878
+      },
+      "render": {
+        "frame": 11112,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1500,
+      "position": [
+        35.250558411524416,
+        -14,
+        -144.35763502601563
+      ],
+      "state": "ride",
+      "camera": [
+        33.96215468552237,
+        -8.12926233223033,
+        -132.76501993017249
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 353,
+        "skipped": 0,
+        "draws": 224,
+        "triangles": 604207,
+        "allLodTriangles": 1026092,
+        "cells": 411,
+        "residentCells": 224,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 99.36,
+        "errors": [],
+        "windTime": 25.60029999999685
+      },
+      "render": {
+        "frame": 11329,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1530,
+      "position": [
+        35.87464280659379,
+        -14,
+        -148.81243427351032
+      ],
+      "state": "ride",
+      "camera": [
+        34.10085971392046,
+        -8.441817014261611,
+        -137.27365612071313
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 354,
+        "skipped": 0,
+        "draws": 225,
+        "triangles": 599485,
+        "allLodTriangles": 1029172,
+        "cells": 411,
+        "residentCells": 225,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 99.36,
+        "errors": [],
+        "windTime": 26.10029999999682
+      },
+      "render": {
+        "frame": 11539,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1560,
+      "position": [
+        36.59594931713506,
+        -14,
+        -153.2532701105535
+      ],
+      "state": "ride",
+      "camera": [
+        34.655514112950435,
+        -8.493260979878588,
+        -141.73324118140562
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 355,
+        "skipped": 0,
+        "draws": 226,
+        "triangles": 595033,
+        "allLodTriangles": 1032252,
+        "cells": 411,
+        "residentCells": 226,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 99.36,
+        "errors": [],
+        "windTime": 26.600299999996793
+      },
+      "render": {
+        "frame": 11749,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1590,
+      "position": [
+        37.353185674295034,
+        -14,
+        -157.688867134025
+      ],
+      "state": "ride",
+      "camera": [
+        35.37779656972339,
+        -8.499296914783836,
+        -146.1794345129474
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 379,
+        "skipped": 0,
+        "draws": 233,
+        "triangles": 652151,
+        "allLodTriangles": 1102104,
+        "cells": 411,
+        "residentCells": 233,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 99.36,
+        "errors": [],
+        "windTime": 27.100299999996764
+      },
+      "render": {
+        "frame": 11959,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1620,
+      "position": [
+        38.05702533461468,
+        -14,
+        -162.1322097406275
+      ],
+      "state": "ride",
+      "camera": [
+        36.108800019809124,
+        -8.49992937429219,
+        -150.61414796866677
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 386,
+        "skipped": 0,
+        "draws": 236,
+        "triangles": 662594,
+        "allLodTriangles": 1124660,
+        "cells": 411,
+        "residentCells": 236,
+        "pendingCells": 1,
+        "retryingCells": 0,
+        "compressedTextures": 51,
+        "textureMiB": 101.02,
+        "errors": [],
+        "windTime": 27.600299999996736
+      },
+      "render": {
+        "frame": 12169,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1650,
+      "position": [
+        38.819281536950754,
+        -14,
+        -166.56715491785548
+      ],
+      "state": "ride",
+      "camera": [
+        36.86276326809206,
+        -8.499993044913413,
+        -155.04567152255854
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 394,
+        "skipped": 0,
+        "draws": 243,
+        "triangles": 658551,
+        "allLodTriangles": 1149681,
+        "cells": 411,
+        "residentCells": 243,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 104.36,
+        "errors": [],
+        "windTime": 28.100299999996707
+      },
+      "render": {
+        "frame": 12379,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1680,
+      "position": [
+        39.57607033941154,
+        -14,
+        -171.00297394391038
+      ],
+      "state": "ride",
+      "camera": [
+        37.729727313654074,
+        -8.499999321537631,
+        -159.46109831422143
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 395,
+        "skipped": 0,
+        "draws": 244,
+        "triangles": 644155,
+        "allLodTriangles": 1151303,
+        "cells": 411,
+        "residentCells": 244,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 104.36,
+        "errors": [],
+        "windTime": 28.60029999999668
+      },
+      "render": {
+        "frame": 12589,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1710,
+      "position": [
+        40.30810821851217,
+        -14,
+        -175.44273815671406
+      ],
+      "state": "ride",
+      "camera": [
+        38.89599600007895,
+        -8.49999992939373,
+        -163.71537323661747
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 402,
+        "skipped": 0,
+        "draws": 249,
+        "triangles": 658153,
+        "allLodTriangles": 1177729,
+        "cells": 411,
+        "residentCells": 249,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 104.36,
+        "errors": [],
+        "windTime": 29.10029999999665
+      },
+      "render": {
+        "frame": 12792,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1740,
+      "position": [
+        40.791195028263466,
+        -14,
+        -179.9050292721362
+      ],
+      "state": "ride",
+      "camera": [
+        40.185749493797715,
+        -8.49999999365149,
+        -168.25757247205468
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 405,
+        "skipped": 0,
+        "draws": 252,
+        "triangles": 661548,
+        "allLodTriangles": 1191735,
+        "cells": 411,
+        "residentCells": 252,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 104.36,
+        "errors": [],
+        "windTime": 29.600299999996622
+      },
+      "render": {
+        "frame": 13009,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1770,
+      "position": [
+        40.71274092614561,
+        -14,
+        -184.40416994204398
+      ],
+      "state": "ride",
+      "camera": [
+        40.70777836942861,
+        -8.499999999388267,
+        -172.71921307331922
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 409,
+        "skipped": 0,
+        "draws": 254,
+        "triangles": 648507,
+        "allLodTriangles": 1201507,
+        "cells": 411,
+        "residentCells": 254,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 104.36,
+        "errors": [],
+        "windTime": 30.100299999996594
+      },
+      "render": {
+        "frame": 13219,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1800,
+      "position": [
+        40.775323544974555,
+        -14,
+        -188.90254189685487
+      ],
+      "state": "ride",
+      "camera": [
+        40.79792209399032,
+        -8.499999999941148,
+        -177.22240163613975
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 412,
+        "skipped": 0,
+        "draws": 256,
+        "triangles": 636249,
+        "allLodTriangles": 1219382,
+        "cells": 411,
+        "residentCells": 256,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 104.36,
+        "errors": [],
+        "windTime": 30.600299999996565
+      },
+      "render": {
+        "frame": 13429,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1830,
+      "position": [
+        40.78062846924451,
+        -14,
+        -193.40200356519165
+      ],
+      "state": "ride",
+      "camera": [
+        40.80002793166687,
+        -8.499999999994307,
+        -181.71737924526485
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 415,
+        "skipped": 0,
+        "draws": 259,
+        "triangles": 641977,
+        "allLodTriangles": 1232668,
+        "cells": 411,
+        "residentCells": 259,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 104.36,
+        "errors": [],
+        "windTime": 31.100299999996537
+      },
+      "render": {
+        "frame": 13639,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1860,
+      "position": [
+        40.913535291457016,
+        -14,
+        -197.89891425124597
+      ],
+      "state": "ride",
+      "camera": [
+        40.84040459036495,
+        -8.499999999999451,
+        -186.21158359617004
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 416,
+        "skipped": 0,
+        "draws": 260,
+        "triangles": 642723,
+        "allLodTriangles": 1235748,
+        "cells": 411,
+        "residentCells": 260,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 104.36,
+        "errors": [],
+        "windTime": 31.60029999999651
+      },
+      "render": {
+        "frame": 13849,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1890,
+      "position": [
+        40.96236695664876,
+        -14,
+        -202.397904609422
+      ],
+      "state": "ride",
+      "camera": [
+        40.93532444279145,
+        -8.499999999999948,
+        -190.70597309439356
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 422,
+        "skipped": 0,
+        "draws": 264,
+        "triangles": 646160,
+        "allLodTriangles": 1256389,
+        "cells": 411,
+        "residentCells": 264,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 104.36,
+        "errors": [],
+        "windTime": 32.10029999999648
+      },
+      "render": {
+        "frame": 14059,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1920,
+      "position": [
+        40.96236695664876,
+        -14,
+        -206.89784222543176
+      ],
+      "state": "ride",
+      "camera": [
+        40.95700121834907,
+        -8.499999999999982,
+        -195.2172441857538
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 423,
+        "skipped": 0,
+        "draws": 265,
+        "triangles": 635608,
+        "allLodTriangles": 1258832,
+        "cells": 411,
+        "residentCells": 265,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 104.36,
+        "errors": [],
+        "windTime": 32.60029999999645
+      },
+      "render": {
+        "frame": 14269,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1950,
+      "position": [
+        40.96772725699765,
+        -14,
+        -211.39725442794372
+      ],
+      "state": "ride",
+      "camera": [
+        40.96181068246602,
+        -8.499999999999984,
+        -199.70710437927605
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 423,
+        "skipped": 0,
+        "draws": 265,
+        "triangles": 627922,
+        "allLodTriangles": 1258832,
+        "cells": 411,
+        "residentCells": 265,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 104.36,
+        "errors": [],
+        "windTime": 33.10029999999642
+      },
+      "render": {
+        "frame": 14479,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 1980,
+      "position": [
+        40.96772725699765,
+        -14,
+        -215.89721877619536
+      ],
+      "state": "ride",
+      "camera": [
+        40.96646958436515,
+        -8.499999999999984,
+        -204.0577442847956
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 434,
+        "skipped": 0,
+        "draws": 273,
+        "triangles": 645696,
+        "allLodTriangles": 1308818,
+        "cells": 411,
+        "residentCells": 273,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 104.36,
+        "errors": [],
+        "windTime": 33.600299999996395
+      },
+      "render": {
+        "frame": 14682,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2010,
+      "position": [
+        40.96772725699765,
+        -14,
+        -220.39699262627863
+      ],
+      "state": "ride",
+      "camera": [
+        40.967487734957366,
+        -8.499999999999986,
+        -208.71849610902862
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 442,
+        "skipped": 0,
+        "draws": 277,
+        "triangles": 647713,
+        "allLodTriangles": 1329202,
+        "cells": 411,
+        "residentCells": 277,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 104.36,
+        "errors": [],
+        "windTime": 34.100299999996366
+      },
+      "render": {
+        "frame": 14899,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2040,
+      "position": [
+        40.96772725699765,
+        -14,
+        -224.89652113889633
+      ],
+      "state": "ride",
+      "camera": [
+        40.96767898293814,
+        -8.499999999999986,
+        -213.22011846173558
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 442,
+        "skipped": 0,
+        "draws": 277,
+        "triangles": 649460,
+        "allLodTriangles": 1329202,
+        "cells": 411,
+        "residentCells": 277,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 104.36,
+        "errors": [],
+        "windTime": 34.60029999999634
+      },
+      "render": {
+        "frame": 15109,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2070,
+      "position": [
+        40.96772725699765,
+        -14,
+        -229.3963494388195
+      ],
+      "state": "ride",
+      "camera": [
+        40.967717510112465,
+        -8.499999999999986,
+        -217.7167420552691
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 442,
+        "skipped": 0,
+        "draws": 277,
+        "triangles": 641258,
+        "allLodTriangles": 1329202,
+        "cells": 411,
+        "residentCells": 277,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 104.36,
+        "errors": [],
+        "windTime": 35.10029999999631
+      },
+      "render": {
+        "frame": 15319,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2100,
+      "position": [
+        40.96772725699765,
+        -14,
+        -233.89597203691548
+      ],
+      "state": "ride",
+      "camera": [
+        40.96772528555054,
+        -8.499999999999986,
+        -222.20882399034343
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 444,
+        "skipped": 0,
+        "draws": 279,
+        "triangles": 634818,
+        "allLodTriangles": 1334608,
+        "cells": 411,
+        "residentCells": 279,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 104.36,
+        "errors": [],
+        "windTime": 35.60029999999628
+      },
+      "render": {
+        "frame": 15529,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2130,
+      "position": [
+        40.96772725699765,
+        -14,
+        -238.395889997802
+      ],
+      "state": "ride",
+      "camera": [
+        40.96772685984623,
+        -8.499999999999986,
+        -226.713914437508
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 446,
+        "skipped": 0,
+        "draws": 281,
+        "triangles": 643480,
+        "allLodTriangles": 1339914,
+        "cells": 411,
+        "residentCells": 281,
+        "pendingCells": 1,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 104.36,
+        "errors": [],
+        "windTime": 36.10029999999625
+      },
+      "render": {
+        "frame": 15739,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2160,
+      "position": [
+        40.96772725699765,
+        -14,
+        -242.89545639686588
+      ],
+      "state": "ride",
+      "camera": [
+        40.96772717693064,
+        -8.499999999999988,
+        -231.2159277504611
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 451,
+        "skipped": 0,
+        "draws": 284,
+        "triangles": 662003,
+        "allLodTriangles": 1360354,
+        "cells": 411,
+        "residentCells": 284,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 61,
+        "textureMiB": 114.36,
+        "errors": [],
+        "windTime": 36.600299999996224
+      },
+      "render": {
+        "frame": 15949,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2190,
+      "position": [
+        40.96772725699765,
+        -14,
+        -247.39513186437574
+      ],
+      "state": "ride",
+      "camera": [
+        40.96772724079227,
+        -8.49999999999999,
+        -235.7159985408189
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 454,
+        "skipped": 0,
+        "draws": 287,
+        "triangles": 664588,
+        "allLodTriangles": 1370258,
+        "cells": 411,
+        "residentCells": 287,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 65,
+        "textureMiB": 117.69,
+        "errors": [],
+        "windTime": 37.100299999996196
+      },
+      "render": {
+        "frame": 16152,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2220,
+      "position": [
+        40.96772725699765,
+        -14,
+        -251.8951091678651
+      ],
+      "state": "ride",
+      "camera": [
+        40.96772725373003,
+        -8.49999999999999,
+        -240.21002948263703
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 459,
+        "skipped": 0,
+        "draws": 292,
+        "triangles": 674273,
+        "allLodTriangles": 1385298,
+        "cells": 411,
+        "residentCells": 292,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 65,
+        "textureMiB": 117.69,
+        "errors": [],
+        "windTime": 37.60029999999617
+      },
+      "render": {
+        "frame": 16362,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2250,
+      "position": [
+        40.96772725699765,
+        -14,
+        -256.39503114757133
+      ],
+      "state": "ride",
+      "camera": [
+        40.967727256339145,
+        -8.49999999999999,
+        -244.71487332193647
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 465,
+        "skipped": 0,
+        "draws": 296,
+        "triangles": 694457,
+        "allLodTriangles": 1401778,
+        "cells": 411,
+        "residentCells": 296,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 65,
+        "textureMiB": 117.69,
+        "errors": [],
+        "windTime": 38.10029999999614
+      },
+      "render": {
+        "frame": 16572,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2280,
+      "position": [
+        40.96772725699765,
+        -14,
+        -260.89463665482924
+      ],
+      "state": "ride",
+      "camera": [
+        40.967727256863995,
+        -8.49999999999999,
+        -249.19830607178062
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 465,
+        "skipped": 0,
+        "draws": 296,
+        "triangles": 698779,
+        "allLodTriangles": 1401778,
+        "cells": 411,
+        "residentCells": 296,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 65,
+        "textureMiB": 117.69,
+        "errors": [],
+        "windTime": 38.60029999999611
+      },
+      "render": {
+        "frame": 16782,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2310,
+      "position": [
+        40.96772725699765,
+        -14,
+        -265.39461149702214
+      ],
+      "state": "ride",
+      "camera": [
+        41.1812960169894,
+        -8.49999999999999,
+        -253.71137804630234
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 472,
+        "skipped": 0,
+        "draws": 303,
+        "triangles": 724366,
+        "allLodTriangles": 1423921,
+        "cells": 411,
+        "residentCells": 303,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 65,
+        "textureMiB": 117.69,
+        "errors": [],
+        "windTime": 39.10029999999608
+      },
+      "render": {
+        "frame": 16992,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2340,
+      "position": [
+        40.916999822736365,
+        -14,
+        -269.89357260720044
+      ],
+      "state": "ride",
+      "camera": [
+        41.78355217102762,
+        -8.49999999999999,
+        -258.25672867587093
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 474,
+        "skipped": 0,
+        "draws": 305,
+        "triangles": 731226,
+        "allLodTriangles": 1430597,
+        "cells": 411,
+        "residentCells": 305,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 65,
+        "textureMiB": 117.69,
+        "errors": [],
+        "windTime": 39.600299999996054
+      },
+      "render": {
+        "frame": 17202,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2370,
+      "position": [
+        40.497298805580236,
+        -14,
+        -274.35277586882705
+      ],
+      "state": "ride",
+      "camera": [
+        42.35801761264683,
+        -8.49999999999999,
+        -262.84239818951005
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 476,
+        "skipped": 0,
+        "draws": 305,
+        "triangles": 738104,
+        "allLodTriangles": 1439993,
+        "cells": 411,
+        "residentCells": 305,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 65,
+        "textureMiB": 117.69,
+        "errors": [],
+        "windTime": 40.100299999996025
+      },
+      "render": {
+        "frame": 17412,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2400,
+      "position": [
+        39.65631655527525,
+        -14,
+        -278.76940599078955
+      ],
+      "state": "ride",
+      "camera": [
+        42.04447322819289,
+        -8.49999999999999,
+        -267.3400194328473
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 476,
+        "skipped": 0,
+        "draws": 306,
+        "triangles": 740820,
+        "allLodTriangles": 1440325,
+        "cells": 411,
+        "residentCells": 306,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 65,
+        "textureMiB": 117.69,
+        "errors": [],
+        "windTime": 40.600299999996
+      },
+      "render": {
+        "frame": 17622,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2430,
+      "position": [
+        38.69467850467001,
+        -14,
+        -283.1649145793726
+      ],
+      "state": "ride",
+      "camera": [
+        41.218899619789525,
+        -8.49999999999999,
+        -271.7590412067146
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 474,
+        "skipped": 0,
+        "draws": 304,
+        "triangles": 752243,
+        "allLodTriangles": 1438403,
+        "cells": 411,
+        "residentCells": 304,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 65,
+        "textureMiB": 117.69,
+        "errors": [],
+        "windTime": 41.10029999999597
+      },
+      "render": {
+        "frame": 17832,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2460,
+      "position": [
+        37.819051506249494,
+        -14,
+        -287.5777404729112
+      ],
+      "state": "ride",
+      "camera": [
+        40.313334515598456,
+        -8.49999999999999,
+        -276.1482923979172
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 472,
+        "skipped": 0,
+        "draws": 303,
+        "triangles": 736001,
+        "allLodTriangles": 1436481,
+        "cells": 411,
+        "residentCells": 303,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 65,
+        "textureMiB": 117.69,
+        "errors": [],
+        "windTime": 41.60029999999594
+      },
+      "render": {
+        "frame": 18042,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2490,
+      "position": [
+        36.839856005145926,
+        -14,
+        -291.96978168870623
+      ],
+      "state": "ride",
+      "camera": [
+        39.22228595422098,
+        -8.49999999999999,
+        -280.535594432135
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 465,
+        "skipped": 0,
+        "draws": 301,
+        "triangles": 713594,
+        "allLodTriangles": 1430563,
+        "cells": 411,
+        "residentCells": 301,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 61,
+        "textureMiB": 104.36,
+        "errors": [],
+        "windTime": 42.10029999999591
+      },
+      "render": {
+        "frame": 18252,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2520,
+      "position": [
+        35.88956339839378,
+        -14,
+        -296.367516138839
+      ],
+      "state": "ride",
+      "camera": [
+        37.67114996442003,
+        -8.49999999999999,
+        -284.8441336191046
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 469,
+        "skipped": 0,
+        "draws": 304,
+        "triangles": 731277,
+        "allLodTriangles": 1449294,
+        "cells": 411,
+        "residentCells": 304,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 97.69,
+        "errors": [],
+        "windTime": 42.60029999999588
+      },
+      "render": {
+        "frame": 18462,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2550,
+      "position": [
+        35.217232253814295,
+        -14,
+        -300.79888734579896
+      ],
+      "state": "ride",
+      "camera": [
+        36.031037400858274,
+        -8.49999999999999,
+        -289.18593615814433
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 470,
+        "skipped": 0,
+        "draws": 305,
+        "triangles": 733458,
+        "allLodTriangles": 1447567,
+        "cells": 411,
+        "residentCells": 305,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 57,
+        "textureMiB": 91.02,
+        "errors": [],
+        "windTime": 43.100299999995855
+      },
+      "render": {
+        "frame": 18672,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2580,
+      "position": [
+        35.33093662231378,
+        -14,
+        -305.2970768981716
+      ],
+      "state": "ride",
+      "camera": [
+        35.34630077904394,
+        -8.49999999999999,
+        -293.61181351776816
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 469,
+        "skipped": 0,
+        "draws": 304,
+        "triangles": 724062,
+        "allLodTriangles": 1440905,
+        "cells": 411,
+        "residentCells": 304,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 84.36,
+        "errors": [],
+        "windTime": 43.600299999995826
+      },
+      "render": {
+        "frame": 18882,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2610,
+      "position": [
+        35.2902176231929,
+        -14,
+        -309.79572842832
+      ],
+      "state": "ride",
+      "camera": [
+        35.26014836074123,
+        -8.499999999999991,
+        -298.09586790952744
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 482,
+        "skipped": 0,
+        "draws": 307,
+        "triangles": 727826,
+        "allLodTriangles": 1453027,
+        "cells": 411,
+        "residentCells": 307,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 84.36,
+        "errors": [],
+        "windTime": 44.1002999999958
+      },
+      "render": {
+        "frame": 19085,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2640,
+      "position": [
+        35.06825951367318,
+        -14,
+        -314.2897458614933
+      ],
+      "state": "ride",
+      "camera": [
+        35.16557048891531,
+        -8.499999999999991,
+        -302.6053129925518
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 478,
+        "skipped": 0,
+        "draws": 305,
+        "triangles": 721855,
+        "allLodTriangles": 1449183,
+        "cells": 411,
+        "residentCells": 305,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 84.36,
+        "errors": [],
+        "windTime": 44.60029999999577
+      },
+      "render": {
+        "frame": 19295,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2670,
+      "position": [
+        35.06825951367318,
+        -14,
+        -318.7897115362098
+      ],
+      "state": "ride",
+      "camera": [
+        35.08633331934885,
+        -8.499999999999991,
+        -307.1077545337018
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 472,
+        "skipped": 0,
+        "draws": 301,
+        "triangles": 729299,
+        "allLodTriangles": 1440639,
+        "cells": 411,
+        "residentCells": 301,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 84.36,
+        "errors": [],
+        "windTime": 45.10029999999574
+      },
+      "render": {
+        "frame": 19505,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2700,
+      "position": [
+        35.06825951367318,
+        -14,
+        -323.2895816588007
+      ],
+      "state": "ride",
+      "camera": [
+        35.071660905723,
+        -8.499999999999991,
+        -311.6005968180078
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 492,
+        "skipped": 0,
+        "draws": 305,
+        "triangles": 748600,
+        "allLodTriangles": 1461405,
+        "cells": 411,
+        "residentCells": 305,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 77.69,
+        "errors": [],
+        "windTime": 45.60029999999571
+      },
+      "render": {
+        "frame": 19715,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2730,
+      "position": [
+        35.06825951367318,
+        -14,
+        -327.78890749776957
+      ],
+      "state": "ride",
+      "camera": [
+        35.0689046282972,
+        -8.499999999999991,
+        -316.09749216401207
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 490,
+        "skipped": 0,
+        "draws": 303,
+        "triangles": 756226,
+        "allLodTriangles": 1457513,
+        "cells": 411,
+        "residentCells": 303,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 51,
+        "textureMiB": 71.02,
+        "errors": [],
+        "windTime": 46.100299999995684
+      },
+      "render": {
+        "frame": 19925,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2760,
+      "position": [
+        35.03613180075511,
+        -14,
+        -332.28803457886426
+      ],
+      "state": "ride",
+      "camera": [
+        35.045038214579904,
+        -8.499999999999991,
+        -320.59661948280973
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 487,
+        "skipped": 0,
+        "draws": 302,
+        "triangles": 766245,
+        "allLodTriangles": 1449058,
+        "cells": 411,
+        "residentCells": 302,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 51,
+        "textureMiB": 71.02,
+        "errors": [],
+        "windTime": 46.600299999995656
+      },
+      "render": {
+        "frame": 20135,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2790,
+      "position": [
+        35.03613180075511,
+        -14,
+        -336.7876372270916
+      ],
+      "state": "ride",
+      "camera": [
+        35.04714859936356,
+        -8.499999999999991,
+        -325.10364529452795
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 489,
+        "skipped": 0,
+        "draws": 302,
+        "triangles": 782110,
+        "allLodTriangles": 1447658,
+        "cells": 411,
+        "residentCells": 302,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 51,
+        "textureMiB": 71.02,
+        "errors": [],
+        "windTime": 47.10029999999563
+      },
+      "render": {
+        "frame": 20345,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2820,
+      "position": [
+        35.03485933767147,
+        -14,
+        -341.2874975098017
+      ],
+      "state": "ride",
+      "camera": [
+        35.068073776480965,
+        -8.499999999999991,
+        -329.6035925077583
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 497,
+        "skipped": 0,
+        "draws": 305,
+        "triangles": 788983,
+        "allLodTriangles": 1458143,
+        "cells": 411,
+        "residentCells": 305,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 51,
+        "textureMiB": 71.02,
+        "errors": [],
+        "windTime": 47.6002999999956
+      },
+      "render": {
+        "frame": 20555,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2850,
+      "position": [
+        35.02099168515455,
+        -14,
+        -345.7870651599575
+      ],
+      "state": "ride",
+      "camera": [
+        35.09191096342306,
+        -8.499999999999991,
+        -334.0887416583893
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 504,
+        "skipped": 0,
+        "draws": 307,
+        "triangles": 810160,
+        "allLodTriangles": 1463224,
+        "cells": 411,
+        "residentCells": 307,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 51,
+        "textureMiB": 71.02,
+        "errors": [],
+        "windTime": 48.10029999999557
+      },
+      "render": {
+        "frame": 20765,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2880,
+      "position": [
+        34.991906756616835,
+        -14,
+        -350.28676173460906
+      ],
+      "state": "ride",
+      "camera": [
+        35.15327339416912,
+        -8.499999999999991,
+        -338.5881288029156
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 505,
+        "skipped": 0,
+        "draws": 308,
+        "triangles": 806316,
+        "allLodTriangles": 1467030,
+        "cells": 411,
+        "residentCells": 308,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 51,
+        "textureMiB": 71.02,
+        "errors": [],
+        "windTime": 48.60029999999554
+      },
+      "render": {
+        "frame": 20975,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2910,
+      "position": [
+        34.94747711155533,
+        -14,
+        -354.78603748970136
+      ],
+      "state": "ride",
+      "camera": [
+        34.89710504585706,
+        -8.499999999999991,
+        -343.1045346679783
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 500,
+        "skipped": 0,
+        "draws": 305,
+        "triangles": 806174,
+        "allLodTriangles": 1453338,
+        "cells": 411,
+        "residentCells": 305,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 51,
+        "textureMiB": 71.02,
+        "errors": [],
+        "windTime": 49.100299999995514
+      },
+      "render": {
+        "frame": 21185,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2940,
+      "position": [
+        34.775633573107356,
+        -14,
+        -359.28060451339036
+      ],
+      "state": "ride",
+      "camera": [
+        34.623394126570005,
+        -8.499999999999991,
+        -347.5857417178769
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 496,
+        "skipped": 0,
+        "draws": 301,
+        "triangles": 803061,
+        "allLodTriangles": 1429778,
+        "cells": 411,
+        "residentCells": 301,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 51,
+        "textureMiB": 71.02,
+        "errors": [],
+        "windTime": 49.600299999995485
+      },
+      "render": {
+        "frame": 21395,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 2970,
+      "position": [
+        35.40504868336157,
+        -14.650000011920929,
+        -363.6740067612727
+      ],
+      "state": "ride",
+      "camera": [
+        34.83966457158226,
+        -8.511881673779495,
+        -352.02225602146893
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 498,
+        "skipped": 0,
+        "draws": 303,
+        "triangles": 814178,
+        "allLodTriangles": 1437390,
+        "cells": 411,
+        "residentCells": 303,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 51,
+        "textureMiB": 71.02,
+        "errors": [],
+        "windTime": 50.10029999999546
+      },
+      "render": {
+        "frame": 21605,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3000,
+      "position": [
+        35.03839081360187,
+        -14.650000011920929,
+        -367.5394371791893
+      ],
+      "state": "ride",
+      "camera": [
+        35.552709667415044,
+        -8.469110594103336,
+        -356.0431764815606
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 498,
+        "skipped": 0,
+        "draws": 303,
+        "triangles": 802561,
+        "allLodTriangles": 1435494,
+        "cells": 411,
+        "residentCells": 303,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 51,
+        "textureMiB": 71.02,
+        "errors": [],
+        "windTime": 50.60029999999543
+      },
+      "render": {
+        "frame": 21815,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3030,
+      "position": [
+        34.81916057682689,
+        -14,
+        -372.0044168292825
+      ],
+      "state": "ride",
+      "camera": [
+        34.53140575263771,
+        -8.506130738647668,
+        -360.3451931274441
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 484,
+        "skipped": 0,
+        "draws": 296,
+        "triangles": 799836,
+        "allLodTriangles": 1399094,
+        "cells": 411,
+        "residentCells": 296,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 51,
+        "textureMiB": 71.02,
+        "errors": [],
+        "windTime": 51.1002999999954
+      },
+      "render": {
+        "frame": 22025,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3060,
+      "position": [
+        35.31497835997227,
+        -14,
+        -376.4732945485292
+      ],
+      "state": "ride",
+      "camera": [
+        34.26507977874718,
+        -8.510594348199037,
+        -364.8324668144363
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 483,
+        "skipped": 0,
+        "draws": 295,
+        "triangles": 804834,
+        "allLodTriangles": 1387787,
+        "cells": 411,
+        "residentCells": 295,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 51,
+        "textureMiB": 71.02,
+        "errors": [],
+        "windTime": 51.60029999999537
+      },
+      "render": {
+        "frame": 22235,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3090,
+      "position": [
+        35.6919698977083,
+        -14,
+        -380.95662606990953
+      ],
+      "state": "ride",
+      "camera": [
+        34.48920795455487,
+        -8.501521967240206,
+        -369.32113727579997
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 485,
+        "skipped": 0,
+        "draws": 296,
+        "triangles": 848759,
+        "allLodTriangles": 1401797,
+        "cells": 411,
+        "residentCells": 296,
+        "pendingCells": 1,
+        "retryingCells": 0,
+        "compressedTextures": 51,
+        "textureMiB": 71.02,
+        "errors": [],
+        "windTime": 52.10029999999534
+      },
+      "render": {
+        "frame": 22445,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3120,
+      "position": [
+        36.02399097676441,
+        -14,
+        -385.44303849837854
+      ],
+      "state": "ride",
+      "camera": [
+        34.734995464715944,
+        -8.500170456847115,
+        -373.8331507390716
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 487,
+        "skipped": 0,
+        "draws": 298,
+        "triangles": 845124,
+        "allLodTriangles": 1410547,
+        "cells": 411,
+        "residentCells": 298,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 52.600299999995315
+      },
+      "render": {
+        "frame": 22655,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3150,
+      "position": [
+        36.488902131637154,
+        -14,
+        -389.9156435612993
+      ],
+      "state": "ride",
+      "camera": [
+        34.9678787183965,
+        -8.500017711255133,
+        -378.32604257556477
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 477,
+        "skipped": 0,
+        "draws": 294,
+        "triangles": 840093,
+        "allLodTriangles": 1384037,
+        "cells": 411,
+        "residentCells": 294,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 53.100299999995286
+      },
+      "render": {
+        "frame": 22865,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3180,
+      "position": [
+        37.07109654864697,
+        -14,
+        -394.37698558674776
+      ],
+      "state": "ride",
+      "camera": [
+        35.4429203042974,
+        -8.500001778468391,
+        -382.78809105363445
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 470,
+        "skipped": 0,
+        "draws": 293,
+        "triangles": 838877,
+        "allLodTriangles": 1359032,
+        "cells": 411,
+        "residentCells": 293,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 53.60029999999526
+      },
+      "render": {
+        "frame": 23075,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3210,
+      "position": [
+        37.69831276136877,
+        -14,
+        -398.832768691721
+      ],
+      "state": "ride",
+      "camera": [
+        36.042051585791626,
+        -8.500000173284176,
+        -387.26215341403247
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 476,
+        "skipped": 0,
+        "draws": 296,
+        "triangles": 854238,
+        "allLodTriangles": 1394806,
+        "cells": 411,
+        "residentCells": 296,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 54.10029999999523
+      },
+      "render": {
+        "frame": 23285,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3240,
+      "position": [
+        38.33600032775686,
+        -14,
+        -403.28723107899225
+      ],
+      "state": "ride",
+      "camera": [
+        36.6783744642591,
+        -8.500000016828853,
+        -391.7197863782004
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 477,
+        "skipped": 0,
+        "draws": 297,
+        "triangles": 851375,
+        "allLodTriangles": 1397298,
+        "cells": 411,
+        "residentCells": 297,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 54.6002999999952
+      },
+      "render": {
+        "frame": 23495,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3270,
+      "position": [
+        38.97364057584158,
+        -14,
+        -407.7413592872963
+      ],
+      "state": "ride",
+      "camera": [
+        37.31687172424606,
+        -8.500000001630543,
+        -396.1725928982037
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 479,
+        "skipped": 0,
+        "draws": 297,
+        "triangles": 851387,
+        "allLodTriangles": 1399413,
+        "cells": 411,
+        "residentCells": 297,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 55.10029999999517
+      },
+      "render": {
+        "frame": 23705,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3300,
+      "position": [
+        39.61134539197686,
+        -14,
+        -412.1959348797242
+      ],
+      "state": "ride",
+      "camera": [
+        37.9535608439587,
+        -8.500000000158376,
+        -400.6169757661887
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 473,
+        "skipped": 0,
+        "draws": 297,
+        "triangles": 835424,
+        "allLodTriangles": 1400303,
+        "cells": 411,
+        "residentCells": 297,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 55.600299999995144
+      },
+      "render": {
+        "frame": 23915,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3330,
+      "position": [
+        40.249049540825006,
+        -14,
+        -416.6505021656755
+      ],
+      "state": "ride",
+      "camera": [
+        38.59932007328884,
+        -8.500000000015302,
+        -405.06845129519706
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 465,
+        "skipped": 0,
+        "draws": 295,
+        "triangles": 826261,
+        "allLodTriangles": 1379079,
+        "cells": 411,
+        "residentCells": 295,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 56.100299999995116
+      },
+      "render": {
+        "frame": 24125,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3360,
+      "position": [
+        40.86478520658951,
+        -14,
+        -421.1079964105008
+      ],
+      "state": "ride",
+      "camera": [
+        39.33034353410909,
+        -8.50000000000148,
+        -409.5047645455477
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 466,
+        "skipped": 0,
+        "draws": 295,
+        "triangles": 808628,
+        "allLodTriangles": 1391218,
+        "cells": 411,
+        "residentCells": 295,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 56.60029999999509
+      },
+      "render": {
+        "frame": 24335,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3390,
+      "position": [
+        41.52627820953845,
+        -14,
+        -425.5576403990357
+      ],
+      "state": "ride",
+      "camera": [
+        40.10691493054707,
+        -8.500000000000142,
+        -413.95642425575573
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 464,
+        "skipped": 0,
+        "draws": 295,
+        "triangles": 801525,
+        "allLodTriangles": 1387320,
+        "cells": 411,
+        "residentCells": 295,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 57.10029999999506
+      },
+      "render": {
+        "frame": 24545,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3420,
+      "position": [
+        42.040030450561,
+        -14,
+        -430.0269186960674
+      ],
+      "state": "ride",
+      "camera": [
+        40.85487030382724,
+        -8.500000000000016,
+        -418.39870327774474
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 463,
+        "skipped": 0,
+        "draws": 294,
+        "triangles": 795058,
+        "allLodTriangles": 1387415,
+        "cells": 411,
+        "residentCells": 294,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 57.60029999999503
+      },
+      "render": {
+        "frame": 24755,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3450,
+      "position": [
+        42.482699963560385,
+        -14,
+        -434.50451544450874
+      ],
+      "state": "ride",
+      "camera": [
+        41.582202867299785,
+        -8.500000000000016,
+        -422.84049068634187
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 459,
+        "skipped": 0,
+        "draws": 294,
+        "triangles": 787450,
+        "allLodTriangles": 1376803,
+        "cells": 411,
+        "residentCells": 294,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 58.100299999995
+      },
+      "render": {
+        "frame": 24965,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3480,
+      "position": [
+        42.85505745496952,
+        -14,
+        -438.9882982347696
+      ],
+      "state": "ride",
+      "camera": [
+        42.2993876653659,
+        -8.500000000000016,
+        -427.30846536791296
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 461,
+        "skipped": 0,
+        "draws": 292,
+        "triangles": 789361,
+        "allLodTriangles": 1380305,
+        "cells": 411,
+        "residentCells": 292,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 58.600299999994974
+      },
+      "render": {
+        "frame": 25175,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3510,
+      "position": [
+        42.9557895137826,
+        -14,
+        -443.4848165867189
+      ],
+      "state": "ride",
+      "camera": [
+        42.82248946329284,
+        -8.500000000000016,
+        -431.79718248012
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 463,
+        "skipped": 0,
+        "draws": 294,
+        "triangles": 787369,
+        "allLodTriangles": 1385191,
+        "cells": 411,
+        "residentCells": 294,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 59.100299999994945
+      },
+      "render": {
+        "frame": 25385,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3540,
+      "position": [
+        42.95675681310314,
+        -13.368254198207486,
+        -447.9846669126469
+      ],
+      "state": "ride",
+      "camera": [
+        42.939199666595016,
+        -8.37753053554337,
+        -436.28570689223835
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 469,
+        "skipped": 0,
+        "draws": 296,
+        "triangles": 787262,
+        "allLodTriangles": 1401405,
+        "cells": 411,
+        "residentCells": 296,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 59.60029999999492
+      },
+      "render": {
+        "frame": 25595,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3570,
+      "position": [
+        42.95675681310314,
+        -12.492486415814488,
+        -452.48465774444304
+      ],
+      "state": "ride",
+      "camera": [
+        42.95515169490121,
+        -7.774971477658158,
+        -440.79235813675274
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 466,
+        "skipped": 0,
+        "draws": 295,
+        "triangles": 783795,
+        "allLodTriangles": 1398379,
+        "cells": 411,
+        "residentCells": 295,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 60.10029999999489
+      },
+      "render": {
+        "frame": 25805,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3600,
+      "position": [
+        42.95675681310314,
+        -11.567927938255437,
+        -456.9845987901813
+      ],
+      "state": "ride",
+      "camera": [
+        42.95676646157813,
+        -6.755987743083544,
+        -445.28187884648247
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 466,
+        "skipped": 0,
+        "draws": 295,
+        "triangles": 783123,
+        "allLodTriangles": 1399653,
+        "cells": 411,
+        "residentCells": 295,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 60.60029999999486
+      },
+      "render": {
+        "frame": 26015,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3630,
+      "position": [
+        42.95675681310314,
+        -10.555242346696176,
+        -461.4841665886743
+      ],
+      "state": "ride",
+      "camera": [
+        42.956814838991306,
+        -5.885129298010749,
+        -449.7880085878831
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 469,
+        "skipped": 0,
+        "draws": 298,
+        "triangles": 784061,
+        "allLodTriangles": 1406540,
+        "cells": 411,
+        "residentCells": 298,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 61.10029999999483
+      },
+      "render": {
+        "frame": 26225,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3660,
+      "position": [
+        42.96742093687845,
+        -9.872264523266212,
+        -465.9838300356883
+      ],
+      "state": "ride",
+      "camera": [
+        42.964831551807684,
+        -4.8471091714572285,
+        -454.29530969441754
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 462,
+        "skipped": 0,
+        "draws": 294,
+        "triangles": 750110,
+        "allLodTriangles": 1373170,
+        "cells": 411,
+        "residentCells": 294,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 61.6002999999948
+      },
+      "render": {
+        "frame": 26435,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3690,
+      "position": [
+        42.96742093687845,
+        -8.633708240367735,
+        -470.48380390766533
+      ],
+      "state": "ride",
+      "camera": [
+        42.966868537205656,
+        -4.09073224570005,
+        -458.6315644701066
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 460,
+        "skipped": 0,
+        "draws": 292,
+        "triangles": 745750,
+        "allLodTriangles": 1368284,
+        "cells": 411,
+        "residentCells": 292,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 62.100299999994775
+      },
+      "render": {
+        "frame": 26638,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3720,
+      "position": [
+        42.96742093687845,
+        -7.898429125307324,
+        -474.98370196020454
+      ],
+      "state": "ride",
+      "camera": [
+        42.967315946219564,
+        -3.002829685983994,
+        -463.29526894424237
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 460,
+        "skipped": 0,
+        "draws": 292,
+        "triangles": 743016,
+        "allLodTriangles": 1368284,
+        "cells": 411,
+        "residentCells": 292,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 62.600299999994746
+      },
+      "render": {
+        "frame": 26855,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3750,
+      "position": [
+        42.96742093687845,
+        -7.2,
+        -479.48329661857406
+      ],
+      "state": "ride",
+      "camera": [
+        42.967399780963646,
+        -2.2499540285439816,
+        -467.7948369613561
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 460,
+        "skipped": 0,
+        "draws": 292,
+        "triangles": 747061,
+        "allLodTriangles": 1368284,
+        "cells": 411,
+        "residentCells": 292,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 63.10029999999472
+      },
+      "render": {
+        "frame": 27065,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3780,
+      "position": [
+        42.96742093687845,
+        -7.2,
+        -483.982930240007
+      ],
+      "state": "ride",
+      "camera": [
+        42.96741664497818,
+        -1.7874251633839304,
+        -472.27564881832797
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 458,
+        "skipped": 0,
+        "draws": 290,
+        "triangles": 743091,
+        "allLodTriangles": 1363398,
+        "cells": 411,
+        "residentCells": 290,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 63.60029999999469
+      },
+      "render": {
+        "frame": 27275,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3810,
+      "position": [
+        42.96742093687845,
+        -7.2,
+        -488.4828728881956
+      ],
+      "state": "ride",
+      "camera": [
+        42.96742007673853,
+        -1.7100389233303206,
+        -476.79354874782166
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 454,
+        "skipped": 0,
+        "draws": 286,
+        "triangles": 729017,
+        "allLodTriangles": 1339216,
+        "cells": 411,
+        "residentCells": 286,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 64.10029999999466
+      },
+      "render": {
+        "frame": 27485,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3840,
+      "position": [
+        42.96742093687845,
+        -7.2,
+        -492.98244936246425
+      ],
+      "state": "ride",
+      "camera": [
+        42.967420762680504,
+        -1.701057661579135,
+        -481.28058295879356
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 444,
+        "skipped": 0,
+        "draws": 282,
+        "triangles": 709987,
+        "allLodTriangles": 1311432,
+        "cells": 411,
+        "residentCells": 282,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 64.60029999999463
+      },
+      "render": {
+        "frame": 27695,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3870,
+      "position": [
+        42.96742093687845,
+        -7.2,
+        -497.4823953765324
+      ],
+      "state": "ride",
+      "camera": [
+        42.96742090171658,
+        -1.7001062631677097,
+        -485.77862206641777
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 432,
+        "skipped": 0,
+        "draws": 276,
+        "triangles": 697077,
+        "allLodTriangles": 1278012,
+        "cells": 411,
+        "residentCells": 276,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 65.1002999999946
+      },
+      "render": {
+        "frame": 27905,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3900,
+      "position": [
+        42.96742093687845,
+        -7.2,
+        -501.9819823983926
+      ],
+      "state": "ride",
+      "camera": [
+        42.96742092982744,
+        -1.7000103604972918,
+        -490.2965692948234
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 432,
+        "skipped": 0,
+        "draws": 276,
+        "triangles": 696687,
+        "allLodTriangles": 1278012,
+        "cells": 411,
+        "residentCells": 276,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 65.60029999999458
+      },
+      "render": {
+        "frame": 28115,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3930,
+      "position": [
+        42.96742093687845,
+        -7.2,
+        -506.4817363387239
+      ],
+      "state": "ride",
+      "camera": [
+        42.967420935447926,
+        -1.7000010171909197,
+        -494.7802460084255
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 432,
+        "skipped": 0,
+        "draws": 276,
+        "triangles": 693901,
+        "allLodTriangles": 1278012,
+        "cells": 411,
+        "residentCells": 276,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 66.10029999999455
+      },
+      "render": {
+        "frame": 28325,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3960,
+      "position": [
+        42.96742093687845,
+        -7.199999809265137,
+        -510.9815315773376
+      ],
+      "state": "ride",
+      "camera": [
+        42.96742093658911,
+        -1.7000000015291639,
+        -499.2728651367318
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 430,
+        "skipped": 0,
+        "draws": 274,
+        "triangles": 683651,
+        "allLodTriangles": 1272706,
+        "cells": 411,
+        "residentCells": 274,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 66.60029999999452
+      },
+      "render": {
+        "frame": 28535,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 3990,
+      "position": [
+        42.96742093687845,
+        -7.199999809265137,
+        -515.4815238948177
+      ],
+      "state": "ride",
+      "camera": [
+        42.96742093682018,
+        -1.699999832224617,
+        -503.7806479088546
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 422,
+        "skipped": 0,
+        "draws": 270,
+        "triangles": 679817,
+        "allLodTriangles": 1250328,
+        "cells": 411,
+        "residentCells": 270,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 67.10029999999449
+      },
+      "render": {
+        "frame": 28745,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4020,
+      "position": [
+        42.96742093687845,
+        -7.199999809265137,
+        -519.9815100083472
+      ],
+      "state": "ride",
+      "camera": [
+        42.967420936866674,
+        -1.6999998116997088,
+        -508.28250603578044
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 419,
+        "skipped": 0,
+        "draws": 267,
+        "triangles": 672062,
+        "allLodTriangles": 1240893,
+        "cells": 411,
+        "residentCells": 267,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 67.60029999999446
+      },
+      "render": {
+        "frame": 28955,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4050,
+      "position": [
+        42.96742093687845,
+        -7.199999809265137,
+        -524.4814772375017
+      ],
+      "state": "ride",
+      "camera": [
+        42.96742093687605,
+        -1.6999998095112878,
+        -512.7800183533157
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 417,
+        "skipped": 0,
+        "draws": 266,
+        "triangles": 659126,
+        "allLodTriangles": 1235587,
+        "cells": 411,
+        "residentCells": 266,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 68.10029999999443
+      },
+      "render": {
+        "frame": 29165,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4080,
+      "position": [
+        42.96742093687845,
+        -7.199999809265137,
+        -528.9813040856222
+      ],
+      "state": "ride",
+      "camera": [
+        42.96742093687794,
+        -1.69999980928948,
+        -517.2749969654208
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 417,
+        "skipped": 0,
+        "draws": 266,
+        "triangles": 647396,
+        "allLodTriangles": 1235587,
+        "cells": 411,
+        "residentCells": 266,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 68.6002999999944
+      },
+      "render": {
+        "frame": 29375,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4110,
+      "position": [
+        42.96742093687845,
+        -7.199999809265137,
+        -533.4810460903512
+      ],
+      "state": "ride",
+      "camera": [
+        42.96742093687833,
+        -1.6999998092675084,
+        -521.7774847528912
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 417,
+        "skipped": 0,
+        "draws": 266,
+        "triangles": 644662,
+        "allLodTriangles": 1235587,
+        "cells": 411,
+        "residentCells": 266,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 69.10029999999438
+      },
+      "render": {
+        "frame": 29585,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4140,
+      "position": [
+        42.96742093687845,
+        -7.199999809265137,
+        -537.9810388259806
+      ],
+      "state": "ride",
+      "camera": [
+        42.96742093687837,
+        -1.6999998092653674,
+        -526.2785517439858
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 417,
+        "skipped": 0,
+        "draws": 266,
+        "triangles": 646384,
+        "allLodTriangles": 1235587,
+        "cells": 411,
+        "residentCells": 266,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 69.60029999999435
+      },
+      "render": {
+        "frame": 29795,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4170,
+      "position": [
+        42.96742093687845,
+        -7.199999809265137,
+        -542.4810259491635
+      ],
+      "state": "ride",
+      "camera": [
+        42.96809980660688,
+        -1.6999998092651591,
+        -530.7765617367148
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 416,
+        "skipped": 0,
+        "draws": 265,
+        "triangles": 639917,
+        "allLodTriangles": 1233144,
+        "cells": 411,
+        "residentCells": 265,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 70.10029999999432
+      },
+      "render": {
+        "frame": 30005,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4200,
+      "position": [
+        42.880997132268476,
+        -7.199999809265137,
+        -546.9792314858333
+      ],
+      "state": "ride",
+      "camera": [
+        43.2864655116241,
+        -1.6999998092651425,
+        -535.3032906683084
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 411,
+        "skipped": 0,
+        "draws": 262,
+        "triangles": 625292,
+        "allLodTriangles": 1227061,
+        "cells": 411,
+        "residentCells": 262,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 70.60029999999429
+      },
+      "render": {
+        "frame": 30215,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4230,
+      "position": [
+        42.88852037750552,
+        -7.199999809265137,
+        -551.4791327526945
+      ],
+      "state": "ride",
+      "camera": [
+        44.10840270107983,
+        -1.699999809265142,
+        -539.8824188218084
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 411,
+        "skipped": 0,
+        "draws": 262,
+        "triangles": 625292,
+        "allLodTriangles": 1227061,
+        "cells": 411,
+        "residentCells": 262,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 71.10029999999426
+      },
+      "render": {
+        "frame": 30425,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4260,
+      "position": [
+        42.213191789507924,
+        -7.2,
+        -555.8918869834155
+      ],
+      "state": "ride",
+      "camera": [
+        44.90542710663387,
+        -1.6999998732990254,
+        -544.574496324814
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 405,
+        "skipped": 0,
+        "draws": 259,
+        "triangles": 630115,
+        "allLodTriangles": 1209514,
+        "cells": 411,
+        "residentCells": 259,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 71.60029999999423
+      },
+      "render": {
+        "frame": 30635,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4290,
+      "position": [
+        40.962331177275516,
+        -7.2,
+        -560.2052409294071
+      ],
+      "state": "ride",
+      "camera": [
+        44.41203068112417,
+        -1.6999999796625365,
+        -549.0398321287138
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 404,
+        "skipped": 0,
+        "draws": 258,
+        "triangles": 627108,
+        "allLodTriangles": 1202011,
+        "cells": 411,
+        "residentCells": 258,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 72.1002999999942
+      },
+      "render": {
+        "frame": 30845,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4320,
+      "position": [
+        39.64900893177847,
+        -7.2,
+        -564.5081858408967
+      ],
+      "state": "ride",
+      "camera": [
+        43.22135813120239,
+        -1.6999999976402258,
+        -553.3768725877686
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 401,
+        "skipped": 0,
+        "draws": 256,
+        "triangles": 626404,
+        "allLodTriangles": 1194162,
+        "cells": 411,
+        "residentCells": 256,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
+        "errors": [],
+        "windTime": 72.60029999999418
+      },
+      "render": {
+        "frame": 31055,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4350,
+      "position": [
+        38.33703020830681,
+        -7.2,
+        -568.8107943981443
+      ],
+      "state": "ride",
+      "camera": [
+        41.873343482866545,
+        -1.6999999997518103,
+        -557.6610526076681
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 396,
+        "skipped": 0,
+        "draws": 253,
+        "triangles": 613188,
+        "allLodTriangles": 1172909,
+        "cells": 411,
+        "residentCells": 253,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 64.36,
+        "errors": [],
+        "windTime": 73.10029999999415
+      },
+      "render": {
+        "frame": 31265,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4380,
+      "position": [
+        36.944162009285435,
+        -7.2,
+        -573.0893388348416
+      ],
+      "state": "ride",
+      "camera": [
+        39.952837543493615,
+        -1.6999999999749384,
+        -561.8045655365047
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 386,
+        "skipped": 0,
+        "draws": 248,
+        "triangles": 614845,
+        "allLodTriangles": 1140592,
+        "cells": 411,
+        "residentCells": 248,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 64.36,
+        "errors": [],
+        "windTime": 73.60029999999412
+      },
+      "render": {
+        "frame": 31475,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4410,
+      "position": [
+        35.68695541233042,
+        -7.2,
+        -577.4079576742206
+      ],
+      "state": "ride",
+      "camera": [
+        37.30177143635143,
+        -1.699999999997538,
+        -565.9415941634251
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 386,
+        "skipped": 0,
+        "draws": 248,
+        "triangles": 621271,
+        "allLodTriangles": 1140592,
+        "cells": 411,
+        "residentCells": 248,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 64.36,
+        "errors": [],
+        "windTime": 74.10029999999409
+      },
+      "render": {
+        "frame": 31685,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4440,
+      "position": [
+        35.41090089937896,
+        -7.2,
+        -581.8366103564992
+      ],
+      "state": "ride",
+      "camera": [
+        35.022777953640535,
+        -1.699999999999761,
+        -570.2585414292777
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 384,
+        "skipped": 0,
+        "draws": 246,
+        "triangles": 624400,
+        "allLodTriangles": 1135706,
+        "cells": 411,
+        "residentCells": 246,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 64.36,
+        "errors": [],
+        "windTime": 74.60029999999406
+      },
+      "render": {
+        "frame": 31895,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4470,
+      "position": [
+        36.10693290659834,
+        -6.8200231508000035,
+        -586.5275847297681
+      ],
+      "state": "grind",
+      "camera": [
+        35.01529547635492,
+        -1.7000000025512096,
+        -574.6093394984737
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 384,
+        "skipped": 0,
+        "draws": 246,
+        "triangles": 628234,
+        "allLodTriangles": 1135706,
+        "cells": 411,
+        "residentCells": 246,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 64.36,
+        "errors": [],
+        "windTime": 75.10029999999404
+      },
+      "render": {
+        "frame": 32105,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4500,
+      "position": [
+        36.35,
+        -5.783842590487923,
+        -591.2337016213814
+      ],
+      "state": "grind",
+      "camera": [
+        36.20002972246834,
+        -4.619173056152082,
+        -579.5842315230047
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 379,
+        "skipped": 0,
+        "draws": 241,
+        "triangles": 628658,
+        "allLodTriangles": 1111671,
+        "cells": 411,
+        "residentCells": 241,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 64.36,
+        "errors": [],
+        "windTime": 75.60029999999401
+      },
+      "render": {
+        "frame": 32266,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4530,
+      "position": [
+        36.35,
+        -5.847635501902272,
+        -595.849759037906
+      ],
+      "state": "grind",
+      "camera": [
+        37.065004434907955,
+        -6.14737633692417,
+        -584.2229398754203
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 374,
+        "skipped": 0,
+        "draws": 238,
+        "triangles": 627307,
+        "allLodTriangles": 1105538,
+        "cells": 411,
+        "residentCells": 238,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 62.69,
+        "errors": [],
+        "windTime": 76.10029999999398
+      },
+      "render": {
+        "frame": 32476,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4560,
+      "position": [
+        36.21099424618359,
+        -5.4819481153621314,
+        -599.8683453278945
+      ],
+      "state": "air",
+      "camera": [
+        36.88332052663091,
+        -6.371367038362298,
+        -588.4076295261965
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 372,
+        "skipped": 0,
+        "draws": 236,
+        "triangles": 639072,
+        "allLodTriangles": 1099378,
+        "cells": 411,
+        "residentCells": 236,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 62.69,
+        "errors": [],
+        "windTime": 76.60029999999395
+      },
+      "render": {
+        "frame": 32686,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4590,
+      "position": [
+        35.68816969253608,
+        -6.630074935995605,
+        -604.0543379014794
+      ],
+      "state": "air",
+      "camera": [
+        35.7027392970111,
+        -2.95782885060798,
+        -592.4736793769226
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 370,
+        "skipped": 0,
+        "draws": 234,
+        "triangles": 654520,
+        "allLodTriangles": 1092068,
+        "cells": 411,
+        "residentCells": 234,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 62.69,
+        "errors": [],
+        "windTime": 77.10029999999392
+      },
+      "render": {
+        "frame": 32896,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4620,
+      "position": [
+        35.55295347692541,
+        -7.2,
+        -607.9476337094401
+      ],
+      "state": "ride",
+      "camera": [
+        34.340152657423175,
+        -1.857211886137565,
+        -596.6284206062511
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 367,
+        "skipped": 0,
+        "draws": 231,
+        "triangles": 645833,
+        "allLodTriangles": 1079679,
+        "cells": 411,
+        "residentCells": 231,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 62.69,
+        "errors": [],
+        "windTime": 77.6002999999939
+      },
+      "render": {
+        "frame": 33078,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4650,
+      "position": [
+        35.80774674882647,
+        -7.2,
+        -610.2588555603248
+      ],
+      "state": "ride",
+      "camera": [
+        33.959658852013185,
+        -1.7165588700714922,
+        -599.2410597283222
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 364,
+        "skipped": 0,
+        "draws": 230,
+        "triangles": 649400,
+        "allLodTriangles": 1071720,
+        "cells": 411,
+        "residentCells": 230,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 62.69,
+        "errors": [],
+        "windTime": 78.10029999999387
+      },
+      "render": {
+        "frame": 33288,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4680,
+      "position": [
+        36.32930894538341,
+        -7.2,
+        -614.2753105147901
+      ],
+      "state": "ride",
+      "camera": [
+        34.15061274615129,
+        -1.7016724543353507,
+        -602.8140682469639
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 359,
+        "skipped": 0,
+        "draws": 227,
+        "triangles": 642189,
+        "allLodTriangles": 1046361,
+        "cells": 411,
+        "residentCells": 227,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 62.69,
+        "errors": [],
+        "windTime": 78.60029999999384
+      },
+      "render": {
+        "frame": 33498,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4710,
+      "position": [
+        37.20907773712224,
+        -7.2,
+        -618.6880143579757
+      ],
+      "state": "ride",
+      "camera": [
+        34.846289822235555,
+        -1.700166268630632,
+        -607.2215880506019
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 351,
+        "skipped": 0,
+        "draws": 224,
+        "triangles": 631494,
+        "allLodTriangles": 1019937,
+        "cells": 411,
+        "residentCells": 224,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 62.69,
+        "errors": [],
+        "windTime": 79.10029999999381
+      },
+      "render": {
+        "frame": 33708,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4740,
+      "position": [
+        38.06543455319341,
+        -7.2,
+        -623.1044515031984
+      ],
+      "state": "ride",
+      "camera": [
+        35.71251573299232,
+        -1.700016136136012,
+        -611.6464250562361
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 347,
+        "skipped": 0,
+        "draws": 220,
+        "triangles": 633029,
+        "allLodTriangles": 1001468,
+        "cells": 411,
+        "residentCells": 220,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 62.69,
+        "errors": [],
+        "windTime": 79.60029999999378
+      },
+      "render": {
+        "frame": 33918,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4770,
+      "position": [
+        38.985443907378205,
+        -7.2,
+        -627.5093447747496
+      ],
+      "state": "ride",
+      "camera": [
+        36.69856330765112,
+        -1.7000015612205195,
+        -616.0430011055212
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 345,
+        "skipped": 0,
+        "draws": 218,
+        "triangles": 623687,
+        "allLodTriangles": 986379,
+        "cells": 411,
+        "residentCells": 218,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 62.69,
+        "errors": [],
+        "windTime": 80.10029999999375
+      },
+      "render": {
+        "frame": 34128,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4800,
+      "position": [
+        39.88873215733049,
+        -7.2,
+        -631.9174093999243
+      ],
+      "state": "ride",
+      "camera": [
+        38.01662950470349,
+        -1.7000001516886312,
+        -620.3802591694977
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 330,
+        "skipped": 0,
+        "draws": 212,
+        "triangles": 613558,
+        "allLodTriangles": 944576,
+        "cells": 411,
+        "residentCells": 212,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 62.69,
+        "errors": [],
+        "windTime": 80.60029999999372
+      },
+      "render": {
+        "frame": 34338,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4830,
+      "position": [
+        40.61551790710515,
+        -7.2,
+        -636.354365207318
+      ],
+      "state": "ride",
+      "camera": [
+        39.49396218804414,
+        -1.7000000158286166,
+        -624.586912145703
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 330,
+        "skipped": 0,
+        "draws": 212,
+        "triangles": 613558,
+        "allLodTriangles": 944576,
+        "cells": 411,
+        "residentCells": 212,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 62.69,
+        "errors": [],
+        "windTime": 81.1002999999937
+      },
+      "render": {
+        "frame": 34541,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4860,
+      "position": [
+        40.725354369083064,
+        -7.2,
+        -640.838810605583
+      ],
+      "state": "ride",
+      "camera": [
+        40.54059751037641,
+        -1.7000000014123646,
+        -629.1500488747585
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 325,
+        "skipped": 0,
+        "draws": 209,
+        "triangles": 607428,
+        "allLodTriangles": 930777,
+        "cells": 411,
+        "residentCells": 209,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 62.69,
+        "errors": [],
+        "windTime": 81.60029999999367
+      },
+      "render": {
+        "frame": 34758,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4890,
+      "position": [
+        40.78045950570627,
+        -7.2,
+        -645.336822249057
+      ],
+      "state": "ride",
+      "camera": [
+        40.7749517109451,
+        -1.7000000001356947,
+        -633.6422803393662
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 324,
+        "skipped": 0,
+        "draws": 208,
+        "triangles": 606434,
+        "allLodTriangles": 926676,
+        "cells": 411,
+        "residentCells": 208,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 62.69,
+        "errors": [],
+        "windTime": 82.10029999999364
+      },
+      "render": {
+        "frame": 34968,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    },
+    {
+      "tick": 4920,
+      "position": [
+        40.85458094870873,
+        -7.2,
+        -649.8358094267707
+      ],
+      "state": "ride",
+      "camera": [
+        40.8628995787563,
+        -1.70000000001309,
+        -638.1409494127415
+      ],
+      "fov": 49,
+      "assets": {
+        "components": 653,
+        "placements": 653,
+        "ready": 320,
+        "skipped": 0,
+        "draws": 204,
+        "triangles": 596500,
+        "allLodTriangles": 905344,
+        "cells": 411,
+        "residentCells": 204,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 62.69,
+        "errors": [],
+        "windTime": 82.60029999999361
+      },
+      "render": {
+        "frame": 35178,
+        "calls": 0,
+        "triangles": 0,
+        "points": 0,
+        "lines": 0
+      }
+    }
+  ],
+  "jumps": [
+    {
+      "label": "Full-width downhill launch 1",
+      "position": [
+        34.96488770982734,
+        -2.394126261904921,
+        -77.02936869047541
+      ],
+      "tick": 1052
+    },
+    {
+      "label": "Full-width downhill launch 2",
+      "position": [
+        34.96488770982734,
+        -6.114419281911503,
+        -101.9279035904425
+      ],
+      "tick": 1218
+    },
+    {
+      "label": "Full-width downhill launch 3",
+      "position": [
+        34.96488770982734,
+        -10.014717183978838,
+        -128.92641408010581
+      ],
+      "tick": 1398
+    },
+    {
+      "label": "Broken bridge rope",
+      "position": [
+        36.10693290659834,
+        -6.8200231508000035,
+        -586.5275847297681
+      ],
+      "tick": 4471
+    }
+  ],
+  "position": [
+    40.9198071861864,
+    -6.473333330849806,
+    -652.5340491981995
+  ],
+  "cameraViews": 1,
+  "state": "finished",
+  "grounded": true,
+  "seconds": 82.3,
+  "largestFrameTurnDegrees": 1.3883901560405283,
+  "errors": []
+}

@@ -981,6 +981,8 @@ export interface CustomLevelData {
   cameraAirLift?: number;
   /** Presentation-only distance along the camera lane to keep the next bend visible. */
   cameraLookAhead?: number;
+  /** One persistent native follow rig; avoids composing a course from fixed shots. */
+  cameraRig?: { camDist:number; camHeight:number; camPitch:number; camFov:number };
   /** 0..1 level-authored widening of ledge reach/timing; absent keeps global feel. */
   ledgeAssist?: number;
   /** Legacy gold-medal benchmark; retained for existing level JSON. */
@@ -2481,7 +2483,7 @@ const LEVEL_DATA_KEYS = new Set([
   'encounter',
   "v", "name", "spawn", "killY", "hudMode", "ledgeAssist", "relicTime",
   "medalTimes", "ocean", "unitySand", "shoreFoam", "sky", "jungleAtmosphere", "jungleDepthFade", "jungleStyle", "atmosphere",
-  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "cameraAirLift", "secretComboGem", "cameraLookAhead",
+  "components", "layers", "groups", "allBalanceCrates", "perfectGrindBoost", "keepPlayFog", "skatepark", "cameraAirLift", "secretComboGem", "cameraLookAhead", "cameraRig",
 ]);
 const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "iceGrip", "containment",
@@ -2721,6 +2723,13 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
     if (source[key] !== undefined && typeof source[key] !== "boolean") return null;
   if (source.cameraLookAhead !== undefined && (typeof source.cameraLookAhead !== "number" ||
       !Number.isFinite(source.cameraLookAhead) || source.cameraLookAhead < 0 || source.cameraLookAhead > 30)) return null;
+  if(source.cameraRig!==undefined){
+    const rig=source.cameraRig;
+    if(!rig||!hasOnlyKeys(rig,new Set(['camDist','camHeight','camPitch','camFov']))||
+      ![rig.camDist,rig.camHeight,rig.camPitch,rig.camFov].every(n=>typeof n==='number'&&Number.isFinite(n))||
+      rig.camDist<2||rig.camDist>18||rig.camHeight<.5||rig.camHeight>12||
+      rig.camPitch<-10||rig.camPitch>45||rig.camFov<35||rig.camFov>75)return null;
+  }
   if (source.cameraAirLift !== undefined && (typeof source.cameraAirLift !== "number" ||
       !Number.isFinite(source.cameraAirLift) || source.cameraAirLift < 0 || source.cameraAirLift > 1)) return null;
   if (source.relicTime !== undefined && !validRelicTime(source.relicTime)) return null;
@@ -3884,6 +3893,7 @@ export class Level {
   // other level retains the exact global grab feel.
   ledgeAssist = 0;
   cameraLookAhead: number | undefined; // presentation only; lane/input direction stays local
+  cameraRig: CustomLevelData["cameraRig"];
   cameraAirLift: number | undefined; // presentation only; does not change lane/input frames
   skatepark = false;
   // Presentation semantics are authored with data so edited/copied bonus
@@ -4183,6 +4193,52 @@ export class Level {
   // scale on the surface while the edges resolve instead of staircasing.
   private static readonly TEX_SS = 4;
   private surfTexCache = new Map<string, THREE.Texture>();
+  private surfaceImageJobs=new Set<Promise<void>>();
+  /** Preserve the texture object used by existing materials while a dropped
+   * image request recovers. Late loads never resurrect a disposed level. */
+  private surfaceImage(file:string):THREE.Texture {
+    const canvas=document.createElement('canvas');canvas.width=canvas.height=1;
+    const ctx=canvas.getContext('2d')!;
+    ctx.fillStyle=/timber/.test(file)?'#a47a4d':/stone/.test(file)?'#88907d':'#ac793f';ctx.fillRect(0,0,1,1);
+    const texture=new THREE.Texture(canvas);texture.needsUpdate=true;
+    let stopped=false,resettingUpload=false,failures=0,timer:ReturnType<typeof setTimeout>|undefined;
+    const load=()=>new Promise<void>((resolve,reject)=>{
+      new THREE.ImageLoader().load(import.meta.env.BASE_URL+file,image=>{
+        if(!stopped){
+          const copies=new Set<THREE.Texture>([texture]);
+          this.root.traverse(object=>{
+            const mesh=object as THREE.Mesh;if(!mesh.isMesh)return;
+            for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material]){
+              const map=(material as THREE.MeshStandardMaterial).map;
+              if(map?.source===texture.source)copies.add(map);
+            }
+          });
+          // Immutable GPU storage cannot grow from the one-pixel fallback.
+          // Retire its allocations, preserving each live texture object and
+          // UV transform, before uploading the real full-resolution image.
+          resettingUpload=true;for(const copy of copies)copy.dispose();resettingUpload=false;
+          texture.image=image;
+          for(const copy of copies){copy.needsUpdate=true;copy.userData.surfaceImageReady=true;}
+        }
+        resolve();
+      },undefined,reject);
+    });
+    const begin=()=>{
+      const job=(async()=>{
+        for(let attempt=0;attempt<3&&!stopped;attempt++){
+          try{await load();failures=0;return;}catch{
+            if(stopped)return;
+            if(attempt<2)await new Promise(resolve=>setTimeout(resolve,attempt===0?300:900));
+          }
+        }
+        if(!stopped)timer=setTimeout(begin,Math.min(30000,2000*2**failures++));
+      })();
+      this.surfaceImageJobs.add(job);job.finally(()=>this.surfaceImageJobs.delete(job));
+    };
+    texture.addEventListener('dispose',()=>{if(resettingUpload)return;stopped=true;clearTimeout(timer);});begin();return texture;
+  }
+  async prepareSurfaceImages():Promise<void>{await Promise.all([...this.surfaceImageJobs]);}
+
   private trickGateTexCache = new Map<DeckTrickKind, THREE.CanvasTexture>();
   private surfaceTexture(kind: string): THREE.Texture {
     if (kind === "checker") return this.checkerTexture();
@@ -4201,17 +4257,17 @@ export class Level {
       this.surfTexCache.set(kind,texture);return texture;
     }
     if(kind==='treehouse-loam'){
-      const texture=Level.finishTex(new THREE.TextureLoader().load(import.meta.env.BASE_URL+'treehouse-trials-v2/loam-albedo.webp'));
+      const texture=Level.finishTex(this.surfaceImage('treehouse-trials-v2/loam-albedo.webp'));
       this.surfTexCache.set(kind,texture);return texture;
     }
     if (kind === "treehouse-timber" || kind === "treehouse-stone") {
       const name = kind === "treehouse-timber" ? "timber" : "stone";
-      const texture = Level.finishTex(new THREE.TextureLoader().load(import.meta.env.BASE_URL + `treehouse-trials/${name}-albedo.webp`));
+      const texture = Level.finishTex(this.surfaceImage(`treehouse-trials/${name}-albedo.webp`));
       this.surfTexCache.set(kind, texture);
       return texture;
     }
     if (kind === "sunsoil" || (this.jungleAtmosphere && kind === "dirt")) {
-      const texture = Level.finishTex(new THREE.TextureLoader().load(import.meta.env.BASE_URL + `jungle-kit/${this.jungleAtmosphere ? "dirt" : "sunsoil"}.jpg`));
+      const texture = Level.finishTex(this.surfaceImage(`jungle-kit/${this.jungleAtmosphere ? "dirt" : "sunsoil"}.jpg`));
       this.surfTexCache.set(kind, texture);
       return texture;
     }
@@ -6388,6 +6444,7 @@ export class Level {
       keepPlayFog: this.keepPlayFog || undefined,
       cameraAirLift: this.cameraAirLift,
       cameraLookAhead: this.cameraLookAhead,
+      ...(this.cameraRig ? {cameraRig:{...this.cameraRig}} : {}),
       ...(this.capturedOceanSpec ? { ocean: JSON.parse(JSON.stringify(this.capturedOceanSpec)) as CustomOceanData } : {}),
       ledgeAssist: this.ledgeAssist > 0 ? r2(this.ledgeAssist) : undefined,
       relicTime: this.relicTime !== CAMPAIGN_TIME_RELIC_TARGET_SECONDS ? this.relicTime : undefined,
@@ -6518,6 +6575,7 @@ export class Level {
     this.keepPlayFog = data.keepPlayFog === true;
     this.cameraAirLift = data.cameraAirLift;
     this.cameraLookAhead = data.cameraLookAhead;
+    this.cameraRig = data.cameraRig ? {...data.cameraRig} : undefined;
     this.killY = data.killY;
     this.ledgeAssist = data.ledgeAssist ?? 0;
     this.finishZ = -1e9; // endless playground: no finish gate

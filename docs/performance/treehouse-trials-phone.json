@@ -9,103 +9,94 @@
       ],
       "grounded": true,
       "assets": {
-        "components": 539,
-        "placements": 539,
-        "ready": 266,
+        "components": 653,
+        "placements": 653,
+        "ready": 235,
         "skipped": 0,
-        "draws": 154,
-        "triangles": 296502,
-        "allLodTriangles": 660601,
-        "cells": 311,
-        "residentCells": 154,
+        "draws": 146,
+        "triangles": 256641,
+        "allLodTriangles": 619322,
+        "cells": 410,
+        "residentCells": 146,
         "pendingCells": 0,
-        "compressedTextures": 49,
-        "textureMiB": 102.35,
+        "retryingCells": 0,
+        "compressedTextures": 41,
+        "textureMiB": 82.69,
         "errors": [],
-        "windTime": 2.5664666666636826
+        "windTime": 2.23293333332737
       },
       "render": {
-        "frame": 1753,
-        "calls": 183,
-        "triangles": 401140,
+        "frame": 1603,
+        "calls": 196,
+        "triangles": 398701,
         "points": 0,
         "lines": 0
       }
     },
     {
       "position": [
-        35,
+        35.9375,
         -14,
-        -195
+        -296.25
       ],
       "grounded": true,
       "assets": {
-        "components": 539,
-        "placements": 539,
-        "ready": 495,
+        "components": 653,
+        "placements": 653,
+        "ready": 469,
         "skipped": 0,
-        "draws": 283,
-        "triangles": 808174,
-        "allLodTriangles": 1266568,
-        "cells": 311,
-        "residentCells": 283,
+        "draws": 303,
+        "triangles": 706484,
+        "allLodTriangles": 1449377,
+        "cells": 410,
+        "residentCells": 303,
         "pendingCells": 0,
-        "compressedTextures": 69,
-        "textureMiB": 129.01,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 97.69,
         "errors": [],
-        "windTime": 4.233133333330343
+        "windTime": 3.8829333333273643
       },
       "render": {
-        "frame": 2537,
-        "calls": 296,
-        "triangles": 916746,
+        "frame": 2395,
+        "calls": 284,
+        "triangles": 912002,
         "points": 0,
         "lines": 0
       }
     },
     {
       "position": [
-        35,
+        43,
         -7.199999809265137,
-        -333
+        -515
       ],
       "grounded": true,
       "assets": {
-        "components": 539,
-        "placements": 539,
-        "ready": 486,
+        "components": 653,
+        "placements": 653,
+        "ready": 421,
         "skipped": 0,
-        "draws": 282,
-        "triangles": 663246,
-        "allLodTriangles": 1301801,
-        "cells": 311,
-        "residentCells": 282,
+        "draws": 268,
+        "triangles": 639410,
+        "allLodTriangles": 1247758,
+        "cells": 410,
+        "residentCells": 268,
         "pendingCells": 0,
-        "compressedTextures": 55,
-        "textureMiB": 82.35,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 72.69,
         "errors": [],
-        "windTime": 5.899799999997004
+        "windTime": 5.516266666660692
       },
       "render": {
-        "frame": 3321,
-        "calls": 317,
-        "triangles": 755518,
+        "frame": 3163,
+        "calls": 327,
+        "triangles": 753310,
         "points": 0,
         "lines": 0
       }
     }
   ],
-  "mode": "Phone-sized full renderer visual check; physical device performance unmeasured",
-  "releaseBaseCommit": "73aedc4",
-  "referenceOrder": [
-    "Treehouse clearing",
-    "Steep downhill",
-    "Coastal settlement",
-    "Enclosed huts",
-    "Shallow river",
-    "Natural cave climb",
-    "Cavern halfpipe",
-    "Broken rope bridge",
-    "Jungle exit"
-  ]
+  "mode": "Phone-sized full renderer visual check; physical device performance unmeasured"
 }

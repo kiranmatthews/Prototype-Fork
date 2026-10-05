@@ -6,26 +6,57 @@ const MAX_CONTACTS=6;
 const STONE=/riverstone|mossrock|boulder/;
 
 export interface JungleStreamReflectionSource {
-  acquire():{promise:Promise<Template>;release:()=>void};
+  acquire():{promise:Promise<Template>;release:()=>void;subscribe?:(listener:(template:Template)=>void)=>()=>void};
 }
-/** One template lease per level, shared by its separate water materials. The
- * last material or an interrupted level transition releases the same scope. */
+/** One scope and retry schedule shared by all stream materials in a level. */
 export class JungleStreamReflectionOwner implements JungleStreamReflectionSource {
   private scope:ReturnType<typeof createJungleAssetScope>|null=null;
-  private users=0;private disposed=false;
-  acquire():{promise:Promise<Template>;release:()=>void}{
-    if(this.disposed)return {promise:Promise.reject(new Error('Stream reflection owner is disposed')),release:()=>{}};
+  private pending:Promise<Template>|null=null;
+  private template:Template|null=null;
+  private listeners=new Set<(template:Template)=>void>();
+  private timer:ReturnType<typeof setTimeout>|undefined;
+  private failures=0;private users=0;private disposed=false;
+  private load(scope:ReturnType<typeof createJungleAssetScope>):Promise<Template>{
+    const pending=scope.load('trialsv2waterreflection').then(template=>{
+      if(this.disposed||this.scope!==scope)return template;
+      this.template=template;this.failures=0;
+      for(const listener of this.listeners)listener(template);
+      return template;
+    });
+    this.pending=pending;
+    pending.catch(()=>{
+      if(this.disposed||this.scope!==scope||this.users===0)return;
+      this.timer=setTimeout(()=>{
+        if(!this.disposed&&this.scope===scope&&this.users>0)this.load(scope);
+      },Math.min(30000,2000*2**this.failures++));
+    });
+    return pending;
+  }
+  acquire():{promise:Promise<Template>;release:()=>void;subscribe:(listener:(template:Template)=>void)=>()=>void}{
+    if(this.disposed)return {promise:Promise.reject(new Error('Stream reflection owner is disposed')),release:()=>{},subscribe:()=>()=>{}};
     const scope=this.scope??=createJungleAssetScope();this.users++;
-    let released=false;
-    return {promise:scope.load('trialsv2waterreflection'),release:()=>{
+    const promise=this.pending??this.load(scope),owned=new Set<(template:Template)=>void>();let released=false;
+    return {promise,subscribe:listener=>{
+      if(released||this.disposed)return ()=>{};
+      owned.add(listener);this.listeners.add(listener);if(this.template)listener(this.template);
+      return ()=>{owned.delete(listener);this.listeners.delete(listener);};
+    },release:()=>{
       if(released)return;released=true;
+      for(const listener of owned)this.listeners.delete(listener);owned.clear();
       if(this.disposed)return;
-      if(--this.users===0){scope.dispose();if(this.scope===scope)this.scope=null;}
+      if(--this.users===0){
+        clearTimeout(this.timer);scope.dispose();
+        if(this.scope===scope){this.scope=null;this.pending=null;this.template=null;this.failures=0;}
+      }
     }};
   }
-  async ready():Promise<void>{if(this.scope&&!this.disposed)await this.scope.load('trialsv2waterreflection').then(()=>{},()=>{});}
-  dispose():void{if(this.disposed)return;this.disposed=true;this.scope?.dispose();this.scope=null;this.users=0;}
+  async ready():Promise<void>{if(this.pending&&!this.disposed)await this.pending.then(()=>{},()=>{});}
+  dispose():void{
+    if(this.disposed)return;this.disposed=true;clearTimeout(this.timer);
+    this.scope?.dispose();this.scope=null;this.pending=null;this.template=null;this.listeners.clear();this.users=0;
+  }
 }
+
 
 /** Contact ellipses come from the same authored props as the picture. The
  * renderer never queries loaded meshes or changes a collision surface. */
@@ -67,11 +98,15 @@ export function createJungleStreamMaterial(clock:{value:number},c:CustomComponen
   material.userData.streamContacts=contacts.map(stone=>stone.toArray());
   const reflectionMap={value:null as THREE.Texture|null},reflectionReady={value:0};
   const lease=reflection?.acquire();let disposed=false;
-  if(lease)lease.promise.then(template=>{
-    if(disposed)return;reflectionMap.value=template.map;reflectionReady.value=template.map?1:0;material.userData.streamReflectionReady=reflectionReady.value>0;
-  }).catch(()=>{if(!disposed)material.userData.streamReflectionUnavailable=true;});
+  const applyReflection=(template:Template)=>{
+    if(disposed)return;reflectionMap.value=template.map;reflectionReady.value=template.map?1:0;
+    material.userData.streamReflectionReady=reflectionReady.value>0;material.userData.streamReflectionUnavailable=false;
+  };
+  const unsubscribe=lease?.subscribe?.(applyReflection);
+  if(lease)lease.promise.then(applyReflection).catch(()=>{if(!disposed)material.userData.streamReflectionUnavailable=true;});
   material.addEventListener('dispose',()=>{
-    if(disposed)return;disposed=true;reflectionReady.value=0;reflectionMap.value=null;material.userData.streamReflectionReady=false;lease?.release();
+    if(disposed)return;disposed=true;reflectionReady.value=0;reflectionMap.value=null;
+    material.userData.streamReflectionReady=false;unsubscribe?.();lease?.release();
   });
   material.onBeforeCompile=shader=>{
     shader.uniforms.uJungleStreamTime=clock;

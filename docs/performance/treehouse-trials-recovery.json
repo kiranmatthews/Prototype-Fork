@@ -1,0 +1,86 @@
+{
+  "modelRequests": 4,
+  "decoderRequests": 2,
+  "before": {
+    "position": [
+      -16.97026,
+      8.55,
+      -0.40991
+    ],
+    "assets": {
+      "components": 653,
+      "placements": 653,
+      "ready": 225,
+      "skipped": 0,
+      "draws": 137,
+      "triangles": 222619,
+      "allLodTriangles": 543462,
+      "cells": 410,
+      "residentCells": 137,
+      "pendingCells": 0,
+      "retryingCells": 9,
+      "compressedTextures": 39,
+      "textureMiB": 76.02,
+      "errors": [
+        "trialsv2treeb"
+      ],
+      "windTime": 0.5513000000119209
+    }
+  },
+  "after": {
+    "position": [
+      -16.97026,
+      8.400000000372529,
+      -0.40991
+    ],
+    "assets": {
+      "components": 653,
+      "placements": 653,
+      "ready": 235,
+      "skipped": 0,
+      "draws": 146,
+      "triangles": 256641,
+      "allLodTriangles": 619322,
+      "cells": 410,
+      "residentCells": 146,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 41,
+      "textureMiB": 82.69,
+      "errors": [],
+      "windTime": 6.801300000011902
+    },
+    "trees": 18
+  },
+  "errors": [
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED",
+    "Jungle asset failed: trialsv2treeb TypeError: Failed to fetch\n    at FileLoader.load (http://127.0.0.1:5239/node_modules/.vite/deps/chunk-X67MDA5R.js?v=22d1e14e:25422:5)\n    at GLTFLoader.load (http://127.0.0.1:5239/node_modules/.vite/deps/three_examples_jsm_loaders_GLTFLoader__js.js?v=480158ba:159:12)\n    at http://127.0.0.1:5239/node_modules/.vite/deps/chunk-X67MDA5R.js?v=22d1e14e:25350:13\n    at new Promise (<anonymous>)\n    at GLTFLoader.loadAsync (http://127.0.0.1:5239/node_modules/.vite/deps/chunk-X67MDA5R.js?v=22d1e14e:25349:12)\n    at http://127.0.0.1:5239/src/jungleAssets.ts?t=1791210258939:268:42",
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED"
+  ],
+  "warnings": [
+    "The AudioContext was not allowed to start. It must be resumed (or created) after a user gesture on the page. https://developer.chrome.com/blog/autoplay/#web_audio",
+    "THREE.BufferGeometry.toNonIndexed(): BufferGeometry is already non-indexed.",
+    "THREE.BufferGeometry.toNonIndexed(): BufferGeometry is already non-indexed.",
+    "THREE.BufferGeometry.toNonIndexed(): BufferGeometry is already non-indexed.",
+    "Jungle matte trialsv2waterreflection compressed texture unavailable; loading its portable image.",
+    "THREE.KTX2Loader: ETC1S and UASTC textures should use multiple-of-four dimensions.",
+    "THREE.KTX2Loader: ETC1S and UASTC textures should use multiple-of-four dimensions.",
+    "THREE.KTX2Loader: ETC1S and UASTC textures should use multiple-of-four dimensions.",
+    "THREE.KTX2Loader: ETC1S and UASTC textures should use multiple-of-four dimensions."
+  ],
+  "note": "Network failures are deliberately injected. The same stationary visit recovers real meshes and compressed textures."
+}

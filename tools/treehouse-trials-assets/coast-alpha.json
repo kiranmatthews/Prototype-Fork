@@ -1,0 +1,14 @@
+{
+  "generator": "OpenAI built-in imagegen",
+  "source": "Existing authored coast-depth.webp",
+  "outputReference": "references/coast-depth-alpha.png",
+  "sourceSha256": "6d3b897810457392ac20997a1a651170db2f4457d1900896a3edeb21326af333",
+  "fallbackSha256": "0db9eaf25aa344fd942883d68c79df86bb87ed500a70320b84dd55b9b72a3ae8",
+  "transparentBackground": true,
+  "dimensions": [
+    1942,
+    809
+  ],
+  "prompt": "Edit this wide painterly tropical island-and-ocean panorama into a production scenery matte. Preserve the original layered jungle limestone islands, saturated turquoise sea, warm sandy coves and clear painterly detail. Make ALL sky, clouds, sun glow and empty air above the island silhouettes genuinely transparent alpha so the game supplies the sky. Keep the sea opaque in the lower image, and keep every island and tree silhouette beautifully detailed with clean organic alpha edges. No blue or white sky backdrop. Preserve the wide 2.4:1 canvas and the original geography, sea colour and horizon elevation. No new buildings, boats, characters, labels or frames. This is a distant matte behind animated 3D water and foreground huts; remove only the sky, with no rectangular fade or vignette.",
+  "meshyCredits": 0
+}

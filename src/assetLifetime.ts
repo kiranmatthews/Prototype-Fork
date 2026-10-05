@@ -52,7 +52,17 @@ export class AssetScope<K, V> {
   load = (key: K): Promise<V> => {
     if (this.disposed) return Promise.reject(new Error('Asset owner has been disposed'));
     let lease = this.leases.get(key);
-    if (!lease) { lease = this.cache.acquire(key); this.leases.set(key, lease); }
+    if (!lease) {
+      const acquired = this.cache.acquire(key);
+      this.leases.set(key, acquired);
+      // A rejected lease must not pin a transient network/decode failure to
+      // this owner. The next load can acquire a fresh cache entry.
+      acquired.promise.catch(() => {
+        if (this.leases.get(key) !== acquired) return;
+        this.leases.delete(key); acquired.release();
+      });
+      lease = acquired;
+    }
     return lease.promise;
   };
   dispose(): void {

@@ -1,23 +1,23 @@
 [
   {
-    "file": "public/treehouse-trials/forest-depth.webp",
+    "file": "public/treehouse-trials/forest-depth-alpha.webp",
     "generator": "OpenAI built-in imagegen",
-    "sourceSha256": "d7f8a1b4004e19e06ec9f9ee249eeaf03765b10702ad4cda1448c890e9a72a7e",
-    "sha256": "169e344c0d89c120363444a0ffae5c2ef5047e1d10358be58c59c76de7736e10",
+    "sourceSha256": "1ff2eebf7c6d54344eafbdb6aa57ed0d26d971a71816437f5726157d2767d6a7",
+    "sha256": "a178566ac010eca6daf0a13034c694e6b32ae893e6b6c86d7761b2c92ba8fac6",
     "width": 1942,
     "height": 809,
-    "bytes": 201692,
-    "role": "Opaque distant scenery matte; 3D gameplay and foreground remain source-owned."
+    "bytes": 586502,
+    "role": "Transparent forest depth matte. Organic canopy silhouettes reveal the live blue sky; no baked sky rectangle."
   },
   {
-    "file": "public/treehouse-trials/coast-depth.webp",
+    "file": "public/treehouse-trials/coast-depth-alpha.webp",
     "generator": "OpenAI built-in imagegen",
-    "sourceSha256": "0ad7b23a45fefe940ca3929e7232d01489616d5c9ba60ecbb1fb0cdd3f46e6f8",
-    "sha256": "7f560374f194de741141ae7d001e9ef6ef05a29bab7450e9750bea3fb22e9b32",
+    "sourceSha256": "6d3b897810457392ac20997a1a651170db2f4457d1900896a3edeb21326af333",
+    "sha256": "0db9eaf25aa344fd942883d68c79df86bb87ed500a70320b84dd55b9b72a3ae8",
     "width": 1942,
     "height": 809,
-    "bytes": 171980,
-    "role": "Opaque distant scenery matte; 3D gameplay and foreground remain source-owned."
+    "bytes": 255300,
+    "role": "Distant island-and-sea matte with genuine transparent sky. Its horizon meets the actual water height."
   },
   {
     "file": "public/treehouse-trials/cavern-depth.webp",

@@ -91,8 +91,8 @@ const ASSETS = {
   treehousesugarcane: {file:"../treehouse-trials/sugarcane",label:"Treehouse Trials sugar cane clump",size:[4,5,3],wind:true,normalStrength:0.1,lod:true,doubleSided:true},
   treehousebridgeend: {file:"../treehouse-trials/bridgeend",label:"Treehouse Trials broken bridge abutment",size:[7,2.5,4],wind:false,normalStrength:0.16,lod:true,doubleSided:false},
   treehousemossrock: {file:"../treehouse-trials/boulder",label:"Treehouse Trials broad mossy rock",size:[5,3,4],wind:false,normalStrength:0.18,lod:true,doubleSided:false},
-  treehousetrialsforestmatte: {file:"",image:"treehouse-trials/forest-depth.ktx2",imageFallback:"treehouse-trials/forest-depth.webp",label:"Treehouse Trials layered forest depth",size:[150,65,.02],wind:false,matte:true,edgeFade:0.12},
-  treehousetrialscoastmatte: {file:"",image:"treehouse-trials/coast-depth.ktx2",imageFallback:"treehouse-trials/coast-depth.webp",label:"Treehouse Trials distant coast",size:[150,65,.02],wind:false,matte:true,edgeFade:0.08},
+  treehousetrialsforestmatte: {file:"",image:"treehouse-trials/forest-depth-alpha.ktx2",imageFallback:"treehouse-trials/forest-depth-alpha.webp",label:"Treehouse Trials transparent layered forest depth",size:[150,65,.02],wind:false,matte:true,edgeFade:0.14},
+  treehousetrialscoastmatte: {file:"",image:"treehouse-trials/coast-depth-alpha.ktx2",imageFallback:"treehouse-trials/coast-depth-alpha.webp",label:"Treehouse Trials distant coast",size:[150,65,.02],wind:false,matte:true,edgeFade:0.12},
   treehousetrialscavematte: {file:"",image:"treehouse-trials/cavern-depth.ktx2",imageFallback:"treehouse-trials/cavern-depth.webp",label:"Treehouse Trials cavern depth",size:[65,36,.02],wind:false,matte:true,edgeFade:0.08},
   treehousetrialssunshaft: {file:"",label:"Treehouse Trials soft cavern light shaft",size:[3,14,.02],wind:false,shaft:true},
   junglecliff: {file:"",label:"jungle cliff face",size:[28,32,30],wind:false,backdrop:true},
@@ -138,6 +138,7 @@ const templates=new AssetCache<RenderKind,Template>(createTemplate,disposeTempla
 export const createJungleAssetScope=()=>templates.scope();
 let compressedLoader:KTX2Loader|null=null;
 const matteFallbackWarnings=new Set<RenderKind>();
+const atlasFallbackWarnings=new Set<RenderKind>();
 export function configureJungleAssetRenderer(renderer:THREE.WebGLRenderer,loader?:KTX2Loader):void {
   if(!compressedLoader)compressedLoader=loader??sceneryTextureLoader(renderer);
 }
@@ -264,14 +265,14 @@ function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Te
     if(map){map.wrapS=map.wrapT=THREE.RepeatWrapping;map.colorSpace=THREE.SRGBColorSpace;map.userData.shared=true;map.anisotropy=8;}
     return Promise.resolve({geometry:finishGeometry(geometry,kind),map});
   }
-  const loader=new GLTFLoader();if(compressedLoader)loader.setKTX2Loader(compressedLoader);
   // The separated crown contains byte-identical tree atlases. Borrow them
   // before decoding/uploading, retaining the tree until this crown is gone.
   // Resolve the shared donor BEFORE reserving a decode slot, so dependencies
   // cannot fill the queue with parents waiting for children behind them.
   const donor=kind==='treehousecanopy'?dependency('treehousetree'):Promise.resolve(null);
   const borrowedTextures:THREE.Texture[]=[];
-  const pending=donor.then(tree=>{
+  const load=(compressed:boolean)=>donor.then(tree=>{
+    const loader=new GLTFLoader();if(compressed&&compressedLoader)loader.setKTX2Loader(compressedLoader);
     if(tree){
       for(const texture of [tree.map,tree.normalMap])if(texture)borrowedTextures.push(texture);
       const loadTexture=(index:number)=>index<2?Promise.resolve(index===0?tree.map!:tree.normalMap!):null;
@@ -303,6 +304,11 @@ function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Te
       if(low.length)lodGeometry=combineAssetMeshes(low,kind).applyMatrix4(normalize);
       const material=highMaterials.values().next().value as THREE.MeshStandardMaterial;
       const map=material.map??null,normalMap=material.normalMap,roughnessMap=material.roughnessMap;
+      const sourceMaterialsJson=gltf.parser.json.materials as {pbrMetallicRoughness?:{baseColorTexture?:unknown};normalTexture?:unknown}[];
+      if ((kind.startsWith('treehouse') || kind.startsWith('trialsv2')) &&
+        ((sourceMaterialsJson?.some(m=>m.pbrMetallicRoughness?.baseColorTexture)&&!map)||
+         (sourceMaterialsJson?.some(m=>m.normalTexture)&&!normalMap)))
+        throw new Error(`Textured scenery ${kind} decoded without its original atlases`);
       if(map)map.colorSpace=THREE.SRGBColorSpace;
       for(const texture of [map,normalMap,roughnessMap])if(texture){texture.userData.shared=true;texture.anisotropy=8;retained.push(texture);}
       return {geometry:finishGeometry(geometry,kind),lodGeometry:lodGeometry?finishGeometry(lodGeometry,kind):undefined,map,normalMap,roughnessMap};
@@ -314,7 +320,17 @@ function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Te
       disposeTextures([...sourceTextures].filter(texture=>!kept.includes(texture)),kept);
     }
   });
-  return pending;
+  return load(true).catch(error=>{
+    if(!wanted()||!compressedLoader||!(kind.startsWith('treehouse')||kind.startsWith('trialsv2'))||
+      !/decoded without|KTX|Basis|transcod|texture/i.test(String((error as Error)?.message??error)))throw error;
+    if(!atlasFallbackWarnings.has(kind)){
+      atlasFallbackWarnings.add(kind);
+      console.warn(`Jungle asset ${kind} compressed atlas unavailable; using its original portable atlases.`);
+    }
+    // These authored GLBs include original JPEG sources as well as BasisU.
+    // A decoder failure must not leave a ready-looking, untextured model.
+    return load(false);
+  });
 }
 
 const WIND = /* glsl */ `
@@ -401,7 +417,7 @@ export function addJungleDapple(material: THREE.Material, time: { value: number 
   if(painterly)addTreehouseTrialsMaterialLook(material);
 }
 
-interface Bucket {castShadow?:boolean;cameraCutaway?:boolean;far?:boolean;farMesh?:THREE.InstancedMesh;kind:RenderKind;transforms:THREE.Matrix4[];colors:THREE.Color[];bounds:THREE.Box3;mesh?:THREE.InstancedMesh;assets?:ReturnType<typeof createJungleAssetScope>;}
+interface Bucket {retryCount?:number;castShadow?:boolean;cameraCutaway?:boolean;far?:boolean;farMesh?:THREE.InstancedMesh;kind:RenderKind;transforms:THREE.Matrix4[];colors:THREE.Color[];bounds:THREE.Box3;mesh?:THREE.InstancedMesh;assets?:ReturnType<typeof createJungleAssetScope>;}
 export class JungleAssetKit {
   private assets=createJungleAssetScope();
   readonly root=new THREE.Group();readonly time={value:0};readonly errors:string[]=[];
@@ -412,6 +428,7 @@ export class JungleAssetKit {
   private sourceCount=0;private count=0;private readyCount=0;private skipped=0;
   private cells:Bucket[]=[];
   private pending=new Set<Promise<void>>();
+  private failedBuckets=new Map<Bucket,number>();
   private kindUsers=new Map<RenderKind,number>();
   private viewSet=false;
   private lastViews:THREE.Vector3[]=[];
@@ -443,9 +460,9 @@ export class JungleAssetKit {
         material.onBeforeCompile=shader=>{
           shader.uniforms.uMatteEdgeFade={value:spec.edgeFade};
           shader.fragmentShader='uniform float uMatteEdgeFade;\n'+shader.fragmentShader;
-          shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>', '#include <map_fragment>\nfloat matteBorder = min(min(vMapUv.x, 1.0-vMapUv.x), min(vMapUv.y, 1.0-vMapUv.y));\ndiffuseColor.a *= smoothstep(0.0, uMatteEdgeFade, matteBorder);');
+          shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>', `#include <map_fragment>\nfloat matteBorder = min(min(vMapUv.x, 1.0-vMapUv.x), ${spec.image?.includes('-alpha.')?'vMapUv.y':'min(vMapUv.y, 1.0-vMapUv.y)'});\ndiffuseColor.a *= smoothstep(0.0, uMatteEdgeFade, matteBorder);`);
         };
-        material.customProgramCacheKey=()=>"painted-matte-soft-border-v1";
+        material.customProgramCacheKey=()=>`painted-matte-soft-border-v2-${spec.image?.includes('-alpha.')}`;
       }
       material.name=spec.label;material.userData.jungleAsset=true;material.userData.treehouseMatte=true;
       this.materials.set(kind,material);return material;
@@ -471,9 +488,9 @@ export class JungleAssetKit {
       const compile=m.onBeforeCompile,key=m.customProgramCacheKey.bind(m);
       m.onBeforeCompile=(shader,renderer)=>{
         compile.call(m,shader,renderer);
-        shader.fragmentShader=shader.fragmentShader.replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\nfloat goldRatio=diffuseColor.r/max(diffuseColor.g,0.008);\nfloat amberGlass=smoothstep(2.3,3.2,diffuseColor.g/max(diffuseColor.b,0.008))*smoothstep(0.1,0.26,diffuseColor.g)*smoothstep(1.1,1.3,goldRatio)*(1.0-smoothstep(2.4,3.1,goldRatio));\ntotalEmissiveRadiance+=vec3(1.0,0.46,0.035)*amberGlass*0.65;');
+        shader.fragmentShader=shader.fragmentShader.replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\nfloat goldRatio=diffuseColor.r/max(diffuseColor.g,0.008);\nfloat amberGlass=smoothstep(2.3,3.2,diffuseColor.g/max(diffuseColor.b,0.008))*smoothstep(0.1,0.26,diffuseColor.g)*smoothstep(1.1,1.3,goldRatio)*(1.0-smoothstep(2.4,3.1,goldRatio));\nfloat verticalGlass=1.0-smoothstep(0.35,0.65,abs(inverseTransformDirection(normal,viewMatrix).y));\ntotalEmissiveRadiance+=vec3(1.0,0.46,0.035)*amberGlass*verticalGlass*0.65;');
       };
-      m.customProgramCacheKey=()=>key()+'|amber-window-v1';
+      m.customProgramCacheKey=()=>key()+'|amber-window-v2';
     }
     if(kind.startsWith("coastv2grass"))addCarlisleGrassLook(m);
     else if(kind.startsWith("coast"))addCarlisleMaterialLook(m);
@@ -525,7 +542,7 @@ export class JungleAssetKit {
     this.root.add(holder);this.loose.add(holder);
     const inverseAnchor=new THREE.Matrix4().makeTranslation(-c.p[0],-c.p[1],-c.p[2]);
     this.jobs.push(Promise.all(drawParts.map(async part=>{
-      const template=await this.assets.load(part.kind);if(this.disposed)return;
+      const template=await this.loadTemplate(this.assets,part.kind,()=>!this.disposed);if(this.disposed)return;
       const mesh=new THREE.Mesh(template.geometry,this.material(part.kind,template));
       this.configure(mesh,part.kind);mesh.matrix.copy(inverseAnchor).multiply(part.matrix);mesh.matrixAutoUpdate=false;
       mesh.userData.editorIdx=holder.userData.editorIdx;holder.add(mesh);this.readyCount++;
@@ -536,11 +553,22 @@ export class JungleAssetKit {
     this.cells.push(...this.buckets.values());this.buckets.clear();
     if(!this.streamed)for(const bucket of this.cells)this.activate(bucket);
   }
+  private async loadTemplate(assets:ReturnType<typeof createJungleAssetScope>,kind:RenderKind,wanted:()=>boolean):Promise<Template>{
+    let failure:unknown;
+    for(let attempt=0;attempt<3;attempt++){
+      if(!wanted())throw new Error('Scenery owner was released');
+      if(attempt)await new Promise(resolve=>setTimeout(resolve,attempt===1?300:900));
+      if(!wanted())throw new Error('Scenery owner was released');
+      try{return await assets.load(kind);}catch(error){failure=error;}
+    }
+    throw failure;
+  }
   private activate(bucket:Bucket):void {
     if(bucket.assets||this.disposed)return;
+    this.failedBuckets.delete(bucket);
     const assets=bucket.assets=createJungleAssetScope();
     this.kindUsers.set(bucket.kind,(this.kindUsers.get(bucket.kind)??0)+1);
-    const job=assets.load(bucket.kind).then(template=>{
+    const job=this.loadTemplate(assets,bucket.kind,()=>!this.disposed&&bucket.assets===assets).then(template=>{
         if(this.disposed||bucket.assets!==assets)return;
         const center=new THREE.Vector3();for(const m of bucket.transforms)center.add(new THREE.Vector3().setFromMatrixPosition(m));center.multiplyScalar(1/bucket.transforms.length);
         const inverse=new THREE.Matrix4().makeTranslation(-center.x,-center.y,-center.z);
@@ -568,7 +596,17 @@ export class JungleAssetKit {
         }
         this.showBucket(bucket);
         this.readyCount+=bucket.transforms.length;
-      }).catch(error=>{if(bucket.assets===assets)this.failed(bucket.kind,error);}).finally(()=>this.pending.delete(job));
+        bucket.retryCount=0;
+        if(![...this.failedBuckets.keys()].some(cell=>cell.kind===bucket.kind)){
+          const index=this.errors.indexOf(bucket.kind);if(index>=0)this.errors.splice(index,1);
+        }
+      }).catch(error=>{
+        if(this.disposed||bucket.assets!==assets)return;
+        this.failed(bucket.kind,error);
+        bucket.retryCount=(bucket.retryCount??0)+1;
+        this.retire(bucket);
+        this.failedBuckets.set(bucket,this.time.value+Math.min(30,2**bucket.retryCount));
+      }).finally(()=>this.pending.delete(job));
     this.pending.add(job);
   }
   private retire(bucket:Bucket):void {
@@ -628,7 +666,16 @@ export class JungleAssetKit {
     if(!this.viewSet)for(const cell of this.cells)this.activate(cell);
     await Promise.all([...this.jobs,...this.pending]);
   }
-  update(dt:number):void{if(!this.disposed)this.time.value+=Math.max(0,Math.min(dt,.1));}
+  update(dt:number):void{
+    if(this.disposed)return;this.time.value+=Math.max(0,Math.min(dt,.1));
+    // Only failed cells participate. Recovery works while standing still,
+    // without rebuilding the kit or checking every healthy cell each frame.
+    for(const [bucket,at] of this.failedBuckets){
+      if(at>this.time.value)continue;
+      const nearby=this.lastViews.some(view=>bucket.bounds.distanceToPoint(view)<=this.lastRadius);
+      if(!this.viewSet||nearby)this.activate(bucket);
+    }
+  }
   get diagnostics(){
     let draws=0,triangles=0,highTriangles=0;const usedTextures=new Set<THREE.Texture>();
     this.root.traverse(o=>{const mesh=o as THREE.InstancedMesh;if(!mesh.isMesh)return;
@@ -642,11 +689,11 @@ export class JungleAssetKit {
       else if(texture.image?.width&&texture.image?.height)textureBytes+=texture.image.width*texture.image.height*4*4/3;
     }
     return {components:this.sourceCount,placements:this.count,ready:this.readyCount,skipped:this.skipped,draws,triangles,allLodTriangles:highTriangles,
-      cells:this.cells.length,residentCells:this.cells.filter(c=>!!c.mesh).length,pendingCells:this.pending.size,
+      cells:this.cells.length,residentCells:this.cells.filter(c=>!!c.mesh).length,pendingCells:this.pending.size,retryingCells:this.failedBuckets.size,
       compressedTextures,textureMiB:Math.round(textureBytes/1048576*100)/100,errors:[...this.errors],windTime:this.time.value};
   }
   dispose():void {
-    for(const cell of this.cells)this.retire(cell);this.cells.length=0;
+    for(const cell of this.cells)this.retire(cell);this.cells.length=0;this.failedBuckets.clear();
     this.assets.dispose();this.jobs.length=0;
     if(this.disposed)return;this.disposed=true;
     this.root.traverse(o=>{if((o as THREE.InstancedMesh).isInstancedMesh)(o as THREE.InstancedMesh).dispose();});
