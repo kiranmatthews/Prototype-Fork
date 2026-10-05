@@ -70,6 +70,15 @@ export function terrainSupportProbeCount(c: CustomComponent, length: number): nu
     c.baySpacing ?? woodPathProfileForComponent(c).bentSpacing) + 1);
 }
 
+/** Cross-section allocation shared by swept geometry and import work bounds. */
+export function vertRampProfileVertexCount(c: CustomComponent, skatepark = false): number {
+  const halfProfile = (c.arcSteps ?? (skatepark ? 24 : 8)) + 1 +
+    ((c.lipRise ?? 0) > 0 ? 1 : 0) +
+    ((c.outerBank ?? 0) > 0 ? 1 + ((c.deck ?? 0) > 0 ? 1 : 0)
+      : (c.deck ?? 0) > 0 ? 3 : 0);
+  return c.t === "pipe" || c.vkind === "half" ? 2 * halfProfile : halfProfile + 1;
+}
+
 /**
  * Triangle upper bounds for the ordinary geometry pass before timber is built.
  * These are triangle counts, not the validator's mixed geometry/layout units.
@@ -77,7 +86,7 @@ export function terrainSupportProbeCount(c: CustomComponent, length: number): nu
  * the runtime independently counts the actual completed buffers before probing.
  */
 export function terrainSupportGroundTriangles(
-  c: CustomComponent, pathLength: number, denseNodes: number,
+  c: CustomComponent, pathLength: number, denseNodes: number, skatepark = false,
 ): number {
   switch (c.t) {
     case "mesh": return c.solid === false ? 0 : (c.indices?.length ?? (c.vertices?.length ?? 0) / 3) / 3;
@@ -98,16 +107,19 @@ export function terrainSupportGroundTriangles(
     case "vertramp": {
       const half = c.t === "pipe" || c.vkind === "half";
       if (!c.pts && half && (c.arc ?? 90) === 90 && (c.deck ?? 0) === 0 &&
-          (c.yaw ?? 0) % 90 === 0) return 88; // Halfpipe: two 22-quad ribbons.
-      const halfProfile = 9 + ((c.deck ?? 0) > 0 ? 3 : 0);
-      const profileVertices = half ? 2 * halfProfile : halfProfile + 1;
+          (c.lipRise ?? 0) === 0 && (c.outerBank ?? 0) === 0 &&
+          (c.yaw ?? 0) % 90 === 0)
+        return 88 + ((c.w ?? 3) > 0 ? 2 : 0); // Two 22-quad ribbons and the flat floor.
+      // Mirror buildVertRampGeometry's authored profile: arc resolution,
+      // raised lip, and either the outside bank or a three-point deck skirt.
+      const profileVertices = vertRampProfileVertexCount(c, skatepark);
       const segments = c.curve === "spline"
         ? Math.max(8, Math.ceil(pathLength * 2 / 1.6))
         : Math.max(1, denseNodes - (c.closed && (c.pts?.length ?? 0) > 2 ? 0 : 1));
       return 2 * segments * (profileVertices - 1);
     }
     case "rock": return 36; // DodecahedronGeometry(detail=0).
-    case "bonusplatform": return 48; // Closed 12-segment cylinder.
+    case "bonusplatform": return 128; // Closed 32-segment collision deck; art stays visual-only.
     case "gate": return 168; // Warp plinth body, rim and pad: three closed 14-segment cylinders.
     case "worldmap": return (c.pts?.length ?? CAMPAIGN_LEVELS.length) * 128;
     case "ramp":

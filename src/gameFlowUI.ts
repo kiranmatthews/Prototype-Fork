@@ -2238,9 +2238,9 @@ export class GameFlowUI {
       body.game-debug-hidden [data-skateboard-panel-host],
       body.game-debug-hidden [data-spin-panel-host],
       body.game-debug-hidden visual-treatment-panel,
-      body.game-debug-hidden .ed-panel,
-      body.game-debug-hidden .ed-popwrap,
-      body.game-debug-hidden .ed-marquee,
+      body.game-debug-hidden:not(.ed-active) .ed-panel,
+      body.game-debug-hidden:not(.ed-active) .ed-popwrap,
+      body.game-debug-hidden:not(.ed-active) .ed-marquee,
       body.game-debug-hidden .ast-root,
       body.game-debug-hidden .clab,
       body.game-debug-hidden .pst { display: none !important; }

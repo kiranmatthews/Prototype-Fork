@@ -345,6 +345,9 @@ function contractValue(value, seen = new WeakSet()) {
 const GAMEPLAY_COLLECTIONS = [
   "groundMeshes",
   "walls",
+  "containmentWalls",
+  "vertBacks",
+  "loopMeshes",
   "killBoxes",
   "pitBoxes",
   "tumbleBoxes",
@@ -358,6 +361,7 @@ const GAMEPLAY_COLLECTIONS = [
   "checkpoints",
   "pickups",
   "movers",
+  "spinBridges",
   "crumbles",
   "ropes",
   "crushers",
@@ -371,10 +375,15 @@ const GAMEPLAY_COLLECTIONS = [
   "returnPortals",
   "grindosauri",
   "angryBalls",
+  "thornClusters",
+  "cameraViews",
 ];
 
 function waterContract(water) {
   if (!water) return null;
+  // Build duration is instrumentation, not authored water state. Comparing
+  // it makes an otherwise identical editor rebuild fail nondeterministically.
+  const { shoreFieldBuildMs: _buildDuration, ...stats } = water.stats ?? {};
   return {
     debug: contractValue(water.debug),
     group: sceneGraphContract(water.group),
@@ -382,7 +391,7 @@ function waterContract(water) {
     quality: water.quality,
     seaLevel: round(water.seaLevel),
     shore: contractValue(water.shore),
-    stats: contractValue(water.stats),
+    stats: contractValue(stats),
     type: water.constructor?.name,
   };
 }
@@ -391,9 +400,13 @@ function levelContract(level) {
   const contract = {
     activeCheckpoint: contractValue(level.activeCheckpoint),
     allBalanceCrates: level.allBalanceCrates,
+    allowsBonus: level.allowsBonus,
+    atmosphere: contractValue(level.atmosphere),
     batchDecor: level.batchDecor,
     boulder: contractValue(level.boulder),
     chaseCam: level.chaseCam,
+    cameraAirLift: contractValue(level.cameraAirLift),
+    cameraLookAhead: contractValue(level.cameraLookAhead),
     clockPickup: contractValue(level.clockPickup),
     clockSpot: contractValue(level.clockSpot),
     coastBoundary: contractValue(level.coastBoundary),
@@ -408,9 +421,17 @@ function levelContract(level) {
     gateYaw: round(level.gateYaw),
     gemPickup: contractValue(level.gemPickup),
     keepPlayFog: level.keepPlayFog,
+    hasOutOfBoundsSurfaces: level.hasOutOfBoundsSurfaces,
+    hudMode: level.hudMode,
+    isBossLevel: level.isBossLevel,
+    jungleAtmosphere: level.jungleAtmosphere,
+    jungleDepthFade: level.jungleDepthFade,
+    jungleStyle: contractValue(level.jungleStyle),
     killY: round(level.killY),
     laneArc: contractValue(level.laneArc),
     lanePts: contractValue(level.lanePts),
+    ledgeAssist: level.ledgeAssist,
+    medalTimes: contractValue(level.medalTimes),
     liteDecor: level.liteDecor,
     name: level.name,
     noFogLevel: level.noFogLevel,
@@ -418,6 +439,8 @@ function levelContract(level) {
     perfectGrindBoost: level.perfectGrindBoost,
     pitPolyByBox: contractValue(level.pitPolyByBox),
     root: sceneGraphContract(level.pickRoot),
+    relicTime: level.relicTime,
+    skatepark: level.skatepark,
     skyPreset: level.skyPreset,
     spawnPos: contractValue(level.spawnPos),
     theme: contractValue(level.theme),
@@ -1282,8 +1305,8 @@ function assertCoastalStreet(data, level) {
   assert.equal(level.water.stats.shoreSamples, 161);
   if (window.location.search.includes("lite")) {
     assert.equal(level.water.stats.quality, "lite");
-    assert.equal(level.water.stats.verts, 1_620);
-    assert.equal(level.water.stats.tris, 2_880);
+    assert.equal(level.water.stats.verts, 5_508);
+    assert.equal(level.water.stats.tris, 10_560);
   } else {
     assert.equal(level.water.stats.quality, "full");
     assert.equal(level.water.stats.verts, 21_252);
@@ -1304,7 +1327,7 @@ function assertCoastalStreet(data, level) {
   assert.equal(sandMeshes.length, 1);
   assert.equal(
     sandMeshes[0].material.customProgramCacheKey(),
-    "unity-sand-ao-green-v1",
+    "unity-sand-ao-green-v1-coastal-wet-sand-v1",
   );
   for (const role of [
     "coastal:route-arrow",

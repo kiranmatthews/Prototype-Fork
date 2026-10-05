@@ -47,6 +47,25 @@ try {
   const { setComponentPosition, Editor } = await server.ssrLoadModule("/src/editor.ts");
   const { UNITY_SAND_AO_PROGRAM_KEY } = await server.ssrLoadModule("/src/unitySandMaterial.ts");
   const build = data => new api.Level(new THREE.Scene(), { id: "material-user-copy", name: data.name, data: clone(data) });
+  // Water defaults to two visible faces, while an explicit editor choice must
+  // survive the same factory in both play and loose/pickable editor builds.
+  for (const editing of [false, true]) for (const doubleSided of [undefined, false, true]) {
+    api.setEditorBuild(editing);
+    const water = { t: "mesh", p: [0, 0, 0], vertices: [-2, 0, 2, 2, 0, 2, 0, 0, -2],
+      materialStyle: "water", solid: false, tex: "solid", opacity: .62, fog: false,
+      nm: "Water material authoring sentinel", ...(doubleSided === undefined ? {} : { doubleSided }) };
+    const canonical = api.normalizeCustomLevelData(dataFor([water]));
+    assert.ok(canonical);
+    const level = build(canonical);
+    const mesh = allMeshes(level).find(mesh => mesh.name === water.nm);
+    assert.ok(mesh);
+    assert.equal(mesh.material.side, doubleSided === false ? THREE.FrontSide : THREE.DoubleSide,
+      `water side choice changed in ${editing ? "editor" : "play"}`);
+    assert.equal(mesh.material.opacity, .62); assert.equal(mesh.material.fog, false);
+    assert.deepEqual(level.captureData(), canonical);
+    level.dispose();
+  }
+  api.setEditorBuild(false);
   const sandSource = new api.Level(new THREE.Scene(), { id: "beachfront", name: "Beachside Run" });
   const sandCapture = sandSource.captureData();
   assert.ok(api.normalizeCustomLevelData(sandCapture), "native shoreline export exceeded interchange limits");
@@ -177,8 +196,8 @@ try {
   assert.deepEqual(authoredRocks.nightworksRocks.errors, []);
   const lods = proxies.map(proxy => {
     const meshes = []; proxy.traverse(object => { if (object.isMesh && object !== proxy) meshes.push(object); });
-    assert.equal(meshes.length, 2); assert.equal(meshes[0].geometry, templateGeometry); assert.equal(meshes[1].geometry, templateFar);
-    assert.equal(meshes[0].material, meshes[1].material, "near/far LOD appearance diverged");
+    assert.equal(meshes.length, 1, "the current fitted-rock owner emits one registered mesh");
+    assert.equal(meshes[0].geometry, templateGeometry);
     return meshes;
   });
   assert.equal(lods[0][0].material.fog, true); assert.equal(lods[1][0].material.fog, false);

@@ -35,14 +35,14 @@ const triangles = meshes => {
   }
   return result;
 };
-const assertTriangles = (actual, expected, label, transform = null) => {
+const assertTriangles = (actual, expected, label, transform = null, positionTolerance = 0.0003) => {
   assert.equal(actual.length, expected.length, `${label}: triangle corners were lost or duplicated`);
   const normalMatrix = transform && new THREE.Matrix3().getNormalMatrix(transform);
   for (let i = 0; i < actual.length; i++) {
     const point = transform ? expected[i].p.clone().applyMatrix4(transform) : expected[i].p;
     // Source batches store absolute Float32 coordinates across a 2.5km road;
     // editor meshes retain double-precision anchors and Float32 local offsets.
-    assert.ok(actual[i].p.distanceTo(point) < 0.0003, `${label}: corner ${i} moved ${actual[i].p.distanceTo(point)}m`);
+    assert.ok(actual[i].p.distanceTo(point) < positionTolerance, `${label}: corner ${i} moved ${actual[i].p.distanceTo(point)}m`);
     assert.ok(actual[i].n && expected[i].n, `${label}: missing surface normal`);
     const normal = normalMatrix ? expected[i].n.clone().applyNormalMatrix(normalMatrix) : expected[i].n;
     assert.ok(actual[i].n.distanceTo(normal) < 0.000003, `${label}: corner ${i} changed its shading normal`);
@@ -59,8 +59,11 @@ const assertMaterial = (actual, expected, label) => {
   else assert.ok(!actual.map || actual.userData.texKind === "solid", `${label}: untextured scenery gained a patterned texture`);
 };
 const allMeshes = level => { const out = []; level.pickRoot.traverse(object => { if (object.isMesh) out.push(object); }); return out; };
-const pineMeshes = (level, role) => allMeshes(level).filter(mesh => mesh.name === `pine ${role}` ||
-  (mesh.userData.editorIdx === 0 && mesh.material?.color?.getHex() === (role === "trunk" ? 0x6b4a2e : 0x2e6b34)));
+const pineMeshes = (level, role) => {
+  const owners = new Set((level.builtFromData?.components ?? []).flatMap((c,index)=>c.dkind==="pine"?[index]:[]));
+  return allMeshes(level).filter(mesh => mesh.name === `pine ${role}` ||
+    (owners.has(mesh.userData.editorIdx) && mesh.material?.color?.getHex() === (role === "trunk" ? 0x6b4a2e : 0x2e6b34)));
+};
 try {
   const api = await server.ssrLoadModule("/src/level.ts");
   const build = data => new api.Level(new THREE.Scene(), { id: "scenery-regression", name: data.name, data: clone(data) });
@@ -90,6 +93,9 @@ try {
         assert.deepEqual(api.normalizeCustomLevelData(normalized), normalized, "source export changes on reopening");
         assert.equal(summary.pineCount, 214, "native roadside pine placements were lost");
       });
+      // Per-component identities and picking belong to the loose editor build;
+      // play deliberately merges static scenery into material/cell batches.
+      api.setEditorBuild(true);
       rebuilt = build(normalized ?? captured);
       const data = normalized ?? captured;
       const capturedEntries = data.components.map((c,index)=>({c,index})).filter(({c})=>c.t==='mesh'&&c.solid===false);
@@ -188,12 +194,15 @@ try {
           });
         } finally { after.dispose(); before.dispose(); }
       }
-      api.setEditorBuild(false);
+      api.setEditorBuild(true);
       for (const name of requiredRoles) {
         const component = clone(captured.components.find(c=>c.t==='mesh'&&c.solid===false&&c.nm===name));
         component.p=[5000,100,5000]; delete component.grp;
         const isolated = build(sampleData([component]));
         const baseline = build(sampleData([]));
+        api.setEditorBuild(false);
+        const play = build(sampleData([component]));
+        api.setEditorBuild(true);
         try {
           check(`${quality}: ${name} remains pickable without phantom ground or grind collision`, () => {
             const object = allMeshes(isolated).find(mesh=>mesh.userData.editorIdx===0 && mesh.name===name);
@@ -213,8 +222,43 @@ try {
             assert.equal(isolated.walls.length,baseline.walls.length);
             assert.equal(isolated.rails.length,baseline.rails.length);
           });
-        } finally { isolated.dispose(); baseline.dispose(); }
+          check(`${quality}: ${name} keeps its triangles/material and collision policy in batched play`, () => {
+            const editable = allMeshes(isolated).find(mesh=>mesh.userData.editorIdx===0 && mesh.name===name);
+            const playing = allMeshes(play).filter(mesh=>mesh.name.startsWith("static surface ") ||
+              (mesh.userData.editorIdx===0 && mesh.name===name));
+            assert.ok(editable && playing.length, "play scenery is missing");
+            // Batches store absolute Float32 coordinates. At this deliberately
+            // relocated 5 km anchor they retain geometry to one millimetre.
+            assertTriangles(triangles(playing), triangles([editable]), `${name} play batch`, null, .001);
+            for (const mesh of playing) {
+              assertMaterial(mesh.material, editable.material, name);
+              assert.ok(!play.groundMeshes.includes(mesh), "play scenery became standable");
+            }
+            assert.equal(play.groundMeshes.length,baseline.groundMeshes.length);
+            assert.equal(play.walls.length,baseline.walls.length);
+            assert.equal(play.rails.length,baseline.rails.length);
+            assert.deepEqual(play.captureData(), isolated.captureData(), "play batching changed authored data");
+          });
+        } finally { play.dispose(); isolated.dispose(); baseline.dispose(); }
       }
+      const line = clone(captured.components.find(c=>c.t==='mesh' && c.nm==='centre line'));
+      delete line.grp;
+      const pair = [{...clone(line),p:[1000,0,1000]}, {...clone(line),p:[1001,2,1001]}];
+      api.setEditorBuild(true);
+      const loose = build(sampleData(pair));
+      api.setEditorBuild(false);
+      const batched = build(sampleData(pair));
+      try { check(`${quality}: neighboring scenery components merge in play without losing authored triangles`, () => {
+        const editable = allMeshes(loose).filter(mesh=>mesh.userData.editorIdx<2 && mesh.userData.visualOnly);
+        const playing = allMeshes(batched).filter(mesh=>mesh.name.startsWith("static surface "));
+        assert.equal(editable.length,2); assert.equal(playing.length,1,"play scenery stopped sharing its material/cell batch");
+        assertTriangles(triangles(playing),triangles(editable),"merged neighboring scenery");
+        assertMaterial(playing[0].material,editable[0].material,"merged neighboring scenery");
+        assert.equal(batched.groundMeshes.length,loose.groundMeshes.length);
+        assert.equal(batched.walls.length,loose.walls.length);
+        assert.equal(batched.rails.length,loose.rails.length);
+        assert.deepEqual(batched.captureData(),loose.captureData());
+      }); } finally { batched.dispose();loose.dispose(); }
     } finally { rebuilt?.dispose(); source.dispose(); api.setEditorBuild(false); }
   }
 } finally { await server.close(); }

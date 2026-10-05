@@ -62,7 +62,7 @@ const clear = new Function(
   `${compile(functionSource("showCampaignResults"))}\nshowCampaignResults();`,
 );
 function finish({ canonical = false, before = null, runMode = false, totalBoxes = 12,
-  crates = 9, bonus = 3, collected = true, starting = {}, relicTime = 60 } = {}) {
+  crates = 9, bonus = 3, collected = true, starting = {}, relicTime = 60, clock = true } = {}) {
   const calls = { bank: 0, progress: [], commits: [], inventory: [], results: [] };
   const current = registry.get(canonical ? "jungle" : "astra-chimeworks");
   const player = {
@@ -71,7 +71,7 @@ function finish({ canonical = false, before = null, runMode = false, totalBoxes 
     bankFlyingFruit() { calls.bank++; this.fruit += 2; },
   };
   clear(
-    player, { runMode, totalCrates: totalBoxes, relicTime }, current,
+    player, { runMode, totalCrates: totalBoxes, relicTime, clockPickup: clock ? {} : null }, current,
     (id) => canonical && id === "jungle"
       ? { name: "Canonical Jungle Name", relicTime: 60 }
       : null,
@@ -113,6 +113,8 @@ const canonical = finish({ canonical: true });
 assert.equal(canonical.result.levelName, "Canonical Jungle Name");
 assert.equal(canonical.result.firstClear, true);
 assert.equal(canonical.result.timeTrialUnlocked, true);
+assert.equal(finish({ canonical: true, clock: false }).result.timeTrialUnlocked, false,
+  "a canonical editor override without an authored clock must not announce time-trial unlocking");
 assert.equal(canonical.result.relicTarget, 60);
 assert.equal(finish({ canonical:true, relicTime:83.75 }).result.relicTarget,83.75,'normal-clear UI ignored the authored target');
 assert.deepEqual(canonical.calls.progress, ["jungle"]);

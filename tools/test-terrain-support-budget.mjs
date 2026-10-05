@@ -142,6 +142,12 @@ try {
   assert.equal(api.normalizeCustomLevelData(hostile), null, "27 million overlapping triangle tests passed import validation");
   assert.equal(api.normalizeCustomLevelData({ ...hostile, components: [...hostile.components].reverse() }), null);
   assert.equal(budget.terrainSupportMeshOverlap(meshComponent(true, 4096)), 4096);
+  const longTransition = { t: "vertramp", p: [0, 0, 0], vkind: "half",
+    curve: "spline", pts: [[0, 0], [0, -9000]] };
+  assert.ok(api.normalizeCustomLevelData(dataFor([longTransition])),
+    "ordinary-resolution source allowance changed");
+  assert.equal(api.normalizeCustomLevelData(dataFor([{ ...longTransition, arcSteps: 48 }])), null,
+    "authored high-resolution transition bypassed the generated-work budget");
   const unindexedOverlap = { t: "mesh", p: [0, 0, 0], edgeGrinding: false,
     vertices: Array.from({ length: 1365 }, () => [-100, 0, 50, 100, 0, 50, 0, 0, -200]).flat() };
   assert.equal(budget.terrainSupportMeshOverlap(unindexedOverlap), 1365);
@@ -226,9 +232,19 @@ try {
     ]),
     ...["rock", "bonusplatform", "worldmap", "ramp", "metal", "mover", "crumble", "trampoline", "speedpad"]
       .map(t => ({ t, p: [0, 0, 0] })),
-  ];
-  for (const component of fixtures) {
-    const fixture = api.normalizeCustomLevelData(dataFor([timber(4.5), component]));
+  ].map(component => ({ component }));
+  fixtures.push(...["quarter", "half"].flatMap(vkind => [
+    { component: { t: "vertramp", p: [0, 0, 0], len: 80, vkind, deck: 2, yaw: 33 }, skatepark: true },
+    { component: { t: "vertramp", p: [0, 0, 0], len: 80, vkind, arcSteps: 48,
+      lipRise: 2, outerBank: 3, deck: 2, yaw: 33 } },
+    { component: { t: "vertramp", p: [0, 0, 0], len: 80, vkind, arcSteps: 48,
+      lipRise: 2, outerBank: 3 } },
+    { component: { t: "vertramp", p: [0, 0, 0], vkind, arcSteps: 48,
+      lipRise: 2, outerBank: 3, curve: "spline", closed: true,
+      pts: [[-8, 8], [8, 8], [8, -20], [-8, -20]] } },
+  ]));
+  for (const { component, skatepark = false } of fixtures) {
+    const fixture = api.normalizeCustomLevelData({ ...dataFor([timber(4.5), component]), skatepark });
     assert.ok(fixture, `ordinary ${component.t} fixture must normalize`);
     let estimate = 0;
     for (const c of fixture.components) {
@@ -240,7 +256,7 @@ try {
           (point[3] ?? 0) - (points[index][3] ?? 0)), 0);
       }
       const dense = c.pts?.reduce((sum, point) => sum + ((point[2] ?? 0) > 0.01 ? 7 : 1), 0) ?? 2;
-      estimate += budget.terrainSupportGroundTriangles(c, length, dense);
+      estimate += budget.terrainSupportGroundTriangles(c, length, dense, skatepark);
     }
     const level = build(fixture);
     assert.ok(estimate >= level.supportMeasurements[0].candidateTriangles,

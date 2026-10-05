@@ -19,6 +19,7 @@ export function atmosphereRenderer(mainSource, atmosphereModule) {
   return new Function('level', 'current', 'settings', 'THREE', 'atmosphereModule', `
     const DEFAULT_SKY='sunset', LITE=settings.lite??false, NO_COAST_POST=true, shellBypass=true;
     const editorViewActive=settings.editor??false;
+    const competition=settings.competition??null,isCompetitionLevel=settings.isCompetitionLevel??(()=>false);
     const scene=new THREE.Scene(), camera=new THREE.PerspectiveCamera(), camera2=new THREE.PerspectiveCamera();
     camera.far=camera2.far=settings.editor?1234:400;
     const hemi=new THREE.HemisphereLight(),sun=new THREE.DirectionalLight(),fill=new THREE.DirectionalLight();

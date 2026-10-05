@@ -127,6 +127,7 @@ import {
   terrainSupportGroundTriangles,
   terrainSupportMeshOverlap,
   terrainSupportProbeCount,
+  vertRampProfileVertexCount,
   woodPathProfileForComponent,
 } from "./terrainSupportBudget";
 import { selectCrateRestSurface } from "./crateRestSurface";
@@ -3077,9 +3078,11 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
         aggregateSamples += Math.max(8, Math.ceil(length / 1.5)) * 5;
         if (component.berms) aggregateSamples += Math.ceil(length / 0.25) * 8;
       } else if (component.t === "vertramp" || component.t === "pipe") {
-        // Park transitions use three times the arc resolution; account for
-        // that in the import/build workload budget as well as the renderer.
-        aggregateSamples += Math.max(nodes * 7, Math.ceil(curvedLength / 1.6)) * 24 * (source.skatepark ? 3 : 1);
+        // Charge the authored resolution and lip/deck/outside-bank profile,
+        // including the park's denser default, before geometry allocation.
+        const profileVertices = vertRampProfileVertexCount(component, source.skatepark === true);
+        aggregateSamples += Math.max(nodes * 7, Math.ceil(curvedLength / 1.6)) *
+          Math.max(24 * (source.skatepark ? 3 : 1), profileVertices);
       } else if (component.t === "wallpath" || component.t === "coastwall") {
         aggregateSamples += Math.max(nodes * 7, Math.ceil(curvedLength / 0.6)) * 8;
       } else {
@@ -3087,7 +3090,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       }
     }
     if (hasTerrainSupports) {
-      const triangles = terrainSupportGroundTriangles(component, length, denseNodes);
+      const triangles = terrainSupportGroundTriangles(component, length, denseNodes, source.skatepark === true);
       supportGroundTriangles += triangles;
       supportOverlapTriangles += component.t === "mesh" ? terrainSupportMeshOverlap(component) : triangles;
       if (supportProbeCount * supportOverlapTriangles > MAX_TERRAIN_SUPPORT_TRIANGLE_TESTS ||
@@ -5426,6 +5429,7 @@ export class Level {
       if(flowingWater)geometry=refineStandingWater(geometry);
       material=createStandingWaterMaterial(this.standingWaterClock,c.color??'#476c63',c.emissive,geometry,flowingWater);
       material.vertexColors=!!c.colors;material.fog=c.fog!==false;material.opacity=c.opacity??1;material.transparent=material.opacity<1;
+      material.side=c.doubleSided===false?THREE.FrontSide:THREE.DoubleSide;
     } else if (c.materialStyle === "unity-sand") {
       const uv = geometry.getAttribute("uv");
       geometry.setAttribute("uv1", uv.clone());
@@ -15490,9 +15494,9 @@ export class Level {
 
   get jungleAssetDiagnostics() { return this.jungleAssets?.diagnostics ?? null; }
   updateSceneryPresentation(dt:number):void {this.jungleAssets?.update(dt);}
-  updateSceneryView(camera:THREE.Camera,secondary?:THREE.Camera):void {
+  updateSceneryView(camera:THREE.Camera,secondary?:THREE.Camera,clearInspectionView=false):void {
     const far=(camera as THREE.PerspectiveCamera).far??400;
-    this.jungleAssets?.setView(camera.position,this.keepPlayFog?Math.min(far,this.theme.fogFar):far,secondary?.position);
+    this.jungleAssets?.setView(camera.position,this.keepPlayFog&&!clearInspectionView?Math.min(far,this.theme.fogFar):far,secondary?.position);
   }
   async prepareJungleAssets(): Promise<void> { await Promise.all([this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}

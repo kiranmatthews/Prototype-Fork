@@ -46,10 +46,41 @@ const check=(label,fn)=>{checks++;try{fn();}catch(error){failures++;console.erro
 try{
   const api=await server.ssrLoadModule('/src/level.ts');
   const atmosphere=await server.ssrLoadModule('/src/levelAtmosphere.ts');
+  const {JungleCupEvent}=await server.ssrLoadModule('/src/competition/event.ts');
+  const {isCompetitionLevel,competitionCourse}=await server.ssrLoadModule('/src/competition/courses.ts');
   const {NIGHTWORKS_LEVEL}=await server.ssrLoadModule('/src/levels/nightworks.ts');
   const render=atmosphereRenderer(await readFile(new URL('../src/main.ts',import.meta.url),'utf8'),atmosphere);
   const renderLevel=(level,entry,painted=true,editor=false)=>render(level,entry,{painted,editor},THREE,atmosphere);
   const build=(data,id='atmosphere_copy')=>new api.Level(new THREE.Scene(),{id,name:data.name,data:clone(data)});
+  for(const id of ['jungle-cup','waterpark-cup']){
+    const data={...dataFor(),atmosphere:{fogColor:'#114477',sunColor:'#113355',sunIntensity:2.4}};
+    const entry={id,name:data.name,data},level=build(data,id),copyId=`editor_copy_${id}`,copy=build(data,copyId);
+    const competition=new JungleCupEvent(()=>.5,()=>{},competitionCourse(id));
+    try{
+      const authored=renderLevel(level,entry,false);
+      for(let heat=0;heat<3;heat++){
+        assert.equal(competition.startRun(),true);competition.stepPresentation(3);
+        check(`${id} heat ${heat+1}: play lighting stays out of editor and copied courses`,()=>{
+          assert.equal(competition.heatLook.sky,['day','sunset','night'][heat]);
+          const settings={painted:false,competition,isCompetitionLevel};
+          const played=render(level,entry,settings,THREE,atmosphere);
+          assert.deepEqual(played.background,new THREE.Color(competition.heatLook.fogColor).toArray());
+          assert.equal(played.sunIntensity,competition.heatLook.lighting.sunIntensity??data.atmosphere.sunIntensity);
+          assert.deepEqual(played.sunColor,new THREE.Color(competition.heatLook.lighting.sunColor??data.atmosphere.sunColor).toArray());
+          assert.notDeepEqual(played,authored,'actual Cup heat did not reach the renderer');
+          const inspection=render(level,entry,{...settings,editor:true},THREE,atmosphere);
+          assert.deepEqual(inspection,renderLevel(level,entry,false,true),'Cup heat overrode authored editor lighting');
+          assert.equal(inspection.fog,null);assert.equal(inspection.sunIntensity,data.atmosphere.sunIntensity);
+          assert.deepEqual(render(copy,{id:copyId},settings,THREE,atmosphere),authored,
+            'a copied course inherited heat lighting from the stale Cup event');
+        });
+        if(heat<2){
+          assert.equal(competition.stepRun(60,12000),true);assert.equal(competition.stepFinish(1,true,true),true);
+          competition.stepPresentation(3);assert.equal(competition.showStandings(),true);
+        }
+      }
+    }finally{copy.dispose();level.dispose();}
+  }
   for(const query of ['?lite','']){
     window.location.search=query;api.setEditorBuild(false);
     for(const entry of api.BUILTIN_LEVELS.filter(e=>!e.data)){

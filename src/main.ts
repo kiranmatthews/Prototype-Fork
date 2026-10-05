@@ -754,6 +754,9 @@ function setEditorView(editing: boolean, changed = false): void {
     syncSkyBackdropVisibility();
   }
   editorPlayFog = null;
+  // The editor may have streamed distant scenery for its clear inspection
+  // lens. Restore the retained play view alongside its camera and fog.
+  level.updateSceneryView(camera, split2p ? camera2 : undefined);
 }
 
 let proceduralSky: THREE.CanvasTexture | null = null; // the gradient fallback, ours to dispose
@@ -991,13 +994,19 @@ function renderOceanPrimaryScene(
   return false;
 }
 
+function updateSceneryForCurrentView(): void {
+  const inspecting = editor?.active ?? false;
+  level.updateSceneryView(camera, inspecting ? undefined : split2p ? camera2 : undefined, inspecting);
+  if (inspecting) editorPreviewLevel?.updateSceneryView(camera, undefined, true);
+}
+
 function renderPrimaryScene(
   dt = 0,
   prepareOcean = true,
   preCrtOverlay?: CoastPostPreCrtOverlay,
 ): void {
   if(renderer.getContext().isContextLost())return;
-  if(!editor?.active)level.updateSceneryView(camera,split2p?camera2:undefined);
+  updateSceneryForCurrentView();
   if (!preCrtOverlay) gameInterface.setComposited(false);
   configureCoastPost(
     levelPostEnabled ||
@@ -3249,9 +3258,11 @@ function rebuildLevel(): void {
   puffs.attach(scene);
   const changedLevelId = loadedLevelId !== current.id;
   loadedLevelId = current.id;
-  localStorage.setItem("solProtoLevelId", current.id);
+  try { localStorage.setItem("solProtoLevelId", current.id); }
+  catch { /* accepted session-only edits remain playable when storage is full */ }
   if (changedLevelId) player.enterLevel(current.id);
   player.hubMode = level.isCampaignMap;
+  player.competitionMode = isCompetitionLevel(current.id) && !editor.active;
   worldMapController?.deactivate();
   worldMapUI?.hide();
   player.respawn(level, true);
@@ -3286,6 +3297,10 @@ function rebuildLevel(): void {
       >
     ).level = level);
   editor.onLevelRebuilt();
+  // A duplicate/import may retarget the editor from a Cup to an ordinary
+  // course. Committed rebuilds reset the rider too, so TEST needs a fresh Cup
+  // event; the untouched/no-op path above preserves the exact original run.
+  syncCompetitionLevel(editor.active);
 }
 function closeEditorToPlay(): boolean {
   if (!editor.active) return false;
@@ -3314,7 +3329,8 @@ const editor = new Editor(
       if (goTo && goTo !== current.id) {
         if (editor.targetId === goTo) {
           current = findLevel(goTo) ?? current;
-          localStorage.setItem("solProtoLevelId", current.id);
+          try { localStorage.setItem("solProtoLevelId", current.id); }
+          catch { /* retargeting an exportable session copy cannot depend on storage */ }
           ui.setLevel(
             current.id,
             level.hudMode,

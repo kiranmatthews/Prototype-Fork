@@ -1,9 +1,8 @@
 # Editor reliability audit
 
-This records the completed hardening passes against the requirement that
-authored level content can be moved and edited without losing behavior. The
-user requested closeout after the current integration and release. The findings
-below remain documented follow-up candidates; no further audit is scheduled.
+This records completed hardening passes against the requirement that authored
+level content can be moved and edited without losing behavior. The latest pass
+was requested on 2026-10-05 to cover features added since the earlier audit.
 Passing the normal build is a release gate, not proof that every possible
 fidelity or resource issue is solved.
 
@@ -106,14 +105,55 @@ fidelity or resource issue is solved.
   cameras. Original and copied courses now use the same global lens setting;
   unrelated Jungle and boulder framing and speed-FOV behavior remain intact.
 
-## Deferred by user direction
+## Current component and runtime compatibility, 2026-10-05
+
+- Deployable timber bridges now have palette, dimensions, opening-time and yaw
+  controls. Rotation follows the hinge; sparse dimensions scale using the
+  runtime defaults. Closed wall paths retain at least three knots.
+- Ice grip, gravity tracks, skate cameras, lethal surfaces and safe-ground
+  surfaces have relevant controls. Switching collision or water material clears
+  dependent flags before validation; disabling ice clears its custom grip.
+  Water honors explicit single-sided rendering.
+- Analytic loops edit their radius, width and exit offset together with their
+  mesh. Compatible scaling regenerates the same ride profile; a transform that
+  would distort the circle is rejected before any selected component changes.
+- Castle spotlight targets follow moves, duplicates, turns and group scaling.
+  Castle props expose their effective runtime dimensions. Imported city/jungle
+  props scale once rather than twice, and editing thin slabs no longer inflates
+  their authored thickness.
+- Committed Cup playtests restart their event; imported/duplicated ordinary
+  courses release the previous Cup state. A no-op editor session retains the
+  original event. Storage refusal still permits an accepted session copy to
+  finish its rebuild and remain exportable.
+- The editor camera updates both retained and preview scenery using the clear
+  inspection distance. Exit restores the gameplay streaming view.
+- Hiding Debug menus no longer hides an active editor's inspector, palette or
+  TEST button. Opening the editor leaves the saved Debug preference unchanged.
+- Geometry guards account for halfpipe floors, raised bonus decks, authored
+  transition resolution, lip and bank profiles, and skatepark defaults. Runtime
+  measurements are excluded from deterministic round-trip comparisons while
+  structural counts remain checked. Legacy scenery checks distinguish editable
+  owners from actual play batches and verify both geometry and collision.
+
+The regression coverage includes current mesh flags, loops, spin bridges,
+containment walls, camera views, thorns, park/HUD settings and environment values.
+Native hand-built capture warnings remain diagnostic: their first edit still
+forks an explicit user copy and preserves the shipped course. This pass does
+not change that established conversion policy.
+
+Run the editor security command for the component and host-transition tests,
+plus the round-trip command. The browser harness is
+`tools/test-editor-compatibility-browser.mjs`; set `PLAYWRIGHT_MODULE` when
+Playwright is provided outside this repository and pass the local base URL.
+Use `--production` against a build or public site to omit the dev-only pointer
+review page.
+
+## Remaining scope from the earlier closeout
 
 - **Large-level responsiveness:** previous validated wins are already applied.
   The remaining construction cost has no additional established optimization
   ready to use, so this follow-up adds no speculative performance work.
 - **Physical touch/pen QA:** ultra-low priority; no additional device work.
-- **Broader editor audit:** not resumed. Existing reports describe measured
-  coverage rather than a guarantee about every possible combination.
 
 Use `npm run check:editor-security`, `npm run check:editor-roundtrip`, and
 `npm run build`, followed by real-browser lite/full checks. The dev-only

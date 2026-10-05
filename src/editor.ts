@@ -16,6 +16,7 @@ import {ENEMY_KINDS} from './enemies/types';
 import {ENEMY_NAMES,enemyThumbnail} from './enemies/catalog';
 import { EditorEnvironment } from "./editorEnvironment";
 import { THORN_DEFAULT_SIZE, THORN_DEFAULT_COLOR } from "./proceduralThorns";
+import { createLoopMeshData } from "./loopRide";
 import { withPortableAtmosphere } from "./levelAtmosphere";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { TUNING } from "./tuning";
@@ -563,6 +564,17 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
           p: [at.x, at.y, at.z],
           s: [10, 1, 10],
         }),
+      },
+      {
+        label: "spin bridge",
+        icon: (x) => {
+          x.fillStyle = "#a77c4b";
+          x.fillRect(2, 4, 4, 12);
+          x.strokeStyle = "#94d171";
+          x.lineWidth = 2;
+          x.beginPath(); x.arc(9, 9, 6, -1.4, 0.7); x.stroke();
+        },
+        make: (at) => ({ t: "spinbridge", p: [at.x, at.y, at.z], s: [5, 0.36, 1.2], yaw: 0, cycle: 0.55 }),
       },
       {
         // The one component that is not a flat box. Six default nodes so a
@@ -2058,7 +2070,7 @@ const deepClone = <T>(v: T): T => JSON.parse(JSON.stringify(v)) as T;
 // Keep them attached through every move path, including copies and cancellation.
 export function setComponentPosition(c: CustomComponent, p: CustomComponent["p"]): void {
   const delta = p.map((v, i) => v - c.p[i]);
-  if ((c.t === "returnportal" || c.t === "bonusplatform") && c.to)
+  if ((c.t === "returnportal" || c.t === "bonusplatform" || (c.t === "decor" && c.dkind === "ghostshowlight")) && c.to)
     c.to = c.to.map((v, i) => v + delta[i]) as CustomComponent["p"];
   if (c.t === "camnode" && c.cameraView)
     for (const key of ["cameraPosition", "cameraTarget"] as const)
@@ -3876,6 +3888,15 @@ export class Editor {
     const sLocX = Math.hypot(cs * sx, sn * sz);
     const sLocZ = Math.hypot(sn * sx, cs * sz);
     const horizontal = (sLocX + sLocZ) / 2;
+    if (c.t === "mesh" && c.loopRadius !== undefined) {
+      c.loopRadius *= sy;
+      c.w = (c.w ?? 12) * sLocX;
+      c.loopOffset = (c.loopOffset ?? 0) * sLocX;
+      Object.assign(c, createLoopMeshData(c.loopRadius, c.w, c.loopOffset,
+        (c.vertices?.length ?? 966) / 6 - 1));
+      c.s = [1, 1, 1];
+      return;
+    }
     if (c.t === "mesh" && c.vertices) {
       const originalScale = c.s ?? [1, 1, 1];
       const nextScale: [number, number, number] = [
@@ -3944,9 +3965,9 @@ export class Editor {
     }
     if (c.s)
       c.s = [
-        Math.max(0.2, c.s[0] * sLocX),
-        Math.max(0.2, c.s[1] * sy),
-        Math.max(0.2, c.s[2] * sLocZ),
+        Math.max(0.001, c.s[0] * sLocX),
+        Math.max(0.001, c.s[1] * sy),
+        Math.max(0.001, c.s[2] * sLocZ),
       ];
     switch (c.t) {
       case "wall":
@@ -4080,9 +4101,17 @@ export class Editor {
         if (c.radius != null)
           c.radius = Math.max(0.25, c.radius * ((sx + sy + sz) / 3));
         break;
+      case "torch":
+        if (c.w != null) c.w = Math.max(0.05, c.w * horizontal);
+        if (c.rise != null) c.rise = Math.max(0.05, c.rise * sy);
+        break;
       case "decor": {
         const uniform = (sx + sy + sz) / 3;
-        if (c.w != null) c.w = Math.max(0.05, c.w * uniform);
+        // Imported asset matrices multiply fitted dimensions by w. The s
+        // update above already applies the requested resize; scaling both
+        // would square it (a 2× group resize makes the prop 4× as large).
+        if (c.w != null && !isCityAsset(c.dkind) && !isJungleAsset(c.dkind) && c.dkind !== "ghostshowlight")
+          c.w = Math.max(0.05, c.w * uniform);
         if (c.rise != null) c.rise = Math.max(0.05, c.rise * sy);
         if (c.len != null) c.len = Math.max(0.1, c.len * sLocX);
         break;
@@ -4103,9 +4132,21 @@ export class Editor {
     sz = cl(sz);
     for (const idx of this.sel) {
       const c = this.data.components[idx];
+      if (!c || c.t !== "mesh" || c.loopRadius === undefined) continue;
+      const a = THREE.MathUtils.degToRad(c.yaw ?? 0), cs = Math.cos(a), sn = Math.sin(a);
+      const localX = Math.hypot(cs * sx, sn * sz), localZ = Math.hypot(sn * sx, cs * sz);
+      const radius = c.loopRadius * sy, width = (c.w ?? 12) * localX, offset = (c.loopOffset ?? 0) * localX;
+      if (Math.abs(cs * sn * (sx - sz)) > 1e-7 || Math.abs(localZ - sy) > 1e-7 ||
+          radius < 4 || radius > 80 || width < 2 || width > 40 || Math.abs(offset) > 80) {
+        this.showMessage("KEEP THE LOOP CIRCULAR", "use proportional scaling or edit its radius, width, and exit offset in the inspector");
+        return;
+      }
+    }
+    for (const idx of this.sel) {
+      const c = this.data.components[idx];
       if (!c) continue;
       this.materializeDims(c);
-      if ((c.t === "returnportal" || c.t === "bonusplatform") && c.to)
+      if ((c.t === "returnportal" || c.t === "bonusplatform" || (c.t === "decor" && c.dkind === "ghostshowlight")) && c.to)
         c.to = [
           anchor.x + (c.to[0] - anchor.x) * sx,
           anchor.y + (c.to[1] - anchor.y) * sy,
@@ -4635,14 +4676,17 @@ export class Editor {
     if (isNightworksSurface(c.dkind) && ["platform", "mover", "phasepad"].includes(c.t))
       return [5, 4, 5];
     if (c.t === "platform") return [8, 1, 8];
+    if (c.t === "spinbridge") return [5, 0.36, 1.2];
     if (c.t === "tumblezone") return [6, 4, 6];
     if (c.t === "mesh") return [1, 1, 1];
     if (c.t === "decor") {
       if (isCityAsset(c.dkind)) return [...CITY_ASSETS[c.dkind].size] as [number,number,number];
-      if (isJungleAsset(c.dkind)) return [...JUNGLE_ASSETS[c.dkind].size];
+      if (isJungleAsset(c.dkind)) return c.dkind === "carvedlog" && c.len
+        ? [c.len, 1.1, 1.3] : [...JUNGLE_ASSETS[c.dkind].size];
       if (c.dkind === "block") return [6, 6, 6];
       if (c.dkind === "ruinblock") return [2.4, 1.6, 2.4];
       if (c.dkind === "coastalhouse") return [11.5, 8, 39];
+      if (c.dkind && DECOR_DEFAULTS[c.dkind]?.s) return [...DECOR_DEFAULTS[c.dkind].s!] as [number, number, number];
       return null;
     }
     if (c.t === "rock") return [3, 2, 3];
@@ -4710,10 +4754,11 @@ export class Editor {
       c.w = c.w ?? 1;
     } else if (c.t === "decor") {
       const kind = c.dkind ?? "fern";
+      if (kind === "ghostshowlight") c.to ??= [c.p[0], c.p[1] - 5, c.p[2] - 4];
       if (
         [
           ...TROPICAL_PLANT_KINDS,
-          "fern", "broadleaf", "flowers", "planter", "toadstool", "toadstools", "idol", "tree",
+          "pine", "fern", "broadleaf", "flowers", "planter", "toadstool", "toadstools", "idol", "tree",
           "plants", "boulder", "rocks", "trunk", "slab",
         ].includes(kind)
       )
@@ -7263,6 +7308,8 @@ export class Editor {
     let cx = 0;
     let cz = 0;
     for (const c of comps) {
+      if (c.t === "decor" && c.dkind === "ghostshowlight")
+        c.to ??= [c.p[0], c.p[1] - 5, c.p[2] - 4];
       cx += c.p[0];
       cz += c.p[2];
     }
@@ -7281,6 +7328,7 @@ export class Editor {
       "wall",
       "wallpath",
       "crumble",
+      "spinbridge",
       "rock",
       "rail",
       "trickrail",
@@ -7366,7 +7414,7 @@ export class Editor {
             const [x, z] = rot(c[key]![0] - cx, c[key]![2] - cz);
             c[key] = [Math.round((cx + x) * 100) / 100, c[key]![1], Math.round((cz + z) * 100) / 100];
           }
-      if (c.t === "returnportal" || c.t === "bonusplatform") {
+      if (c.t === "returnportal" || c.t === "bonusplatform" || (c.t === "decor" && c.dkind === "ghostshowlight")) {
         if (c.to) {
           const [tx, tz] = rot(c.to[0] - cx, c.to[2] - cz);
           c.to = [
@@ -7378,7 +7426,7 @@ export class Editor {
         // exitYaw uses -Z as zero. Rotate the actual heading vector, then
         // convert it back, rather than assuming its sign convention matches
         // component yaw.
-        if (c.t === "bonusplatform") continue;
+        if (c.t !== "returnportal") continue;
         const exit = THREE.MathUtils.degToRad(c.exitYaw ?? 0);
         const [hx, hz] = rot(Math.sin(exit), -Math.cos(exit));
         c.exitYaw =
@@ -7706,6 +7754,7 @@ export class Editor {
         "wallpath",
         "pit",
         "crumble",
+        "spinbridge",
         "rock",
         "pendulum",
         "ropeswing",
@@ -7781,6 +7830,7 @@ export class Editor {
         "wall",
         "wallpath",
         "crumble",
+        "spinbridge",
         "rock",
       ]);
       if (all.every((cc) => colorable.has(cc.t))) {
@@ -7850,7 +7900,7 @@ export class Editor {
         () => c.s?.[idx] ?? defaults[idx],
         (v) => {
           const size = c.s ? [...c.s] : [...defaults];
-          size[idx] = Math.max(0.2, v);
+          size[idx] = Math.max(0.001, v);
           c.s = size as [number, number, number];
         },
       );
@@ -7899,6 +7949,47 @@ export class Editor {
         ),
       );
     };
+    if (c.t === "platform" || c.t === "mesh") {
+      boolRow("slippery surface", () => c.slip === true, value => {
+        if (value) c.slip = true;
+        else { delete c.slip; delete c.iceGrip; }
+        this.renderProps();
+      });
+      if (c.slip) {
+        boolRow("custom ice grip", () => c.iceGrip !== undefined, value => {
+          if (value) c.iceGrip = 1;
+          else delete c.iceGrip;
+          this.renderProps();
+        });
+        if (c.iceGrip !== undefined)
+          num("ice grip", () => c.iceGrip!, value => { c.iceGrip = Math.min(1, Math.max(0.02, value)); }, 0.02);
+      }
+    }
+    if ((c.t === "mesh" || c.t === "vertramp") && c.solid !== false) {
+      if (c.loopRadius === undefined)
+        boolRow("retain gravity speed", () => c.gravityTrack === true, value => {
+          if (value) c.gravityTrack = true; else delete c.gravityTrack;
+        });
+      boolRow("skate surface camera", () => c.skateCamera === true, value => {
+        if (value) c.skateCamera = true; else delete c.skateCamera;
+      });
+      if (c.t === "mesh") {
+        boolRow("lethal surface", () => c.lethal === true, value => {
+          if (value) { c.lethal = true; delete c.outOfBounds; }
+          else delete c.lethal;
+          this.renderProps();
+        });
+        boolRow("return to safe ground", () => c.outOfBounds === true, value => {
+          if (value) { c.outOfBounds = true; delete c.lethal; }
+          else delete c.outOfBounds;
+          this.renderProps();
+        });
+        if (c.loopRadius !== undefined)
+          boolRow("require complete loop", () => c.loopRequired === true, value => {
+            if (value) c.loopRequired = true; else delete c.loopRequired;
+          });
+      }
+    }
     // Figma-style node editing: with a shape in resize mode, grabbing a node
     // selects it and its CORNER RADIUS is editable here. Rounds the visual,
     // the collision, the kill footprint, and the grind line alike.
@@ -8123,33 +8214,56 @@ export class Editor {
       note.textContent = "Visual warning only. Select its pit too when moving or rotating the complete hazard.";
       this.propsEl.appendChild(note);
     } else if (c.t === "mesh") {
+      const clearLoop = (): void => { delete c.loopRadius; delete c.loopOffset; delete c.loopRequired; };
+      const makeScenery = (): void => {
+        c.solid = false; delete c.outline;
+        delete c.gravityTrack; delete c.skateCamera; delete c.outOfBounds; delete c.lethal;
+        clearLoop();
+      };
       this.propsEl.appendChild(this.pickRow("material style", [["unity-sand", "Unity shoreline sand"], ["water", "Still water"]],
         () => c.materialStyle ?? "", value => {
           if (value === "unity-sand") { c.materialStyle = value; c.tex = "sand"; }
-          else if (value === "water") {c.materialStyle = value; c.tex = "solid"; c.solid = false; delete c.outline;}
+          else if (value === "water") {c.materialStyle = value; c.tex = "solid"; makeScenery();}
           else delete c.materialStyle;
         }, "Surface texture"));
-      boolRow("walkable collision", () => c.solid !== false, value => { c.solid = value; if(value&&c.materialStyle==='water')delete c.materialStyle; });
-      boolRow("starts as !-switch outline", () => c.outline === true, value => { c.outline = value; if(value){c.solid = true;if(c.materialStyle==='water')delete c.materialStyle;} });
-      boolRow("material fog", () => c.fog ?? c.solid === false, value => { c.fog = value; });
-      num("opacity", () => c.opacity ?? 1, value => { c.opacity = Math.max(0, Math.min(1, value)); }, .05);
+      boolRow("walkable collision", () => c.solid !== false, value => {
+        if (value) { c.solid = true; if (c.materialStyle === 'water' || String(c.materialStyle) === 'jungle-stream') delete c.materialStyle; }
+        else makeScenery();
+        this.renderProps();
+      });
+      boolRow("starts as !-switch outline", () => c.outline === true, value => {
+        c.outline = value;
+        if (value) { c.solid = true; clearLoop(); if (c.materialStyle === 'water' || String(c.materialStyle) === 'jungle-stream') delete c.materialStyle; }
+        this.renderProps();
+      });
+      boolRow("material fog", () => c.fog ?? true, value => { c.fog = value; });
+      num("opacity", () => c.opacity ?? (String(c.materialStyle) === "jungle-stream" ? 0.48 : 1), value => { c.opacity = Math.max(0, Math.min(1, value)); }, .05);
       const count = Math.floor((c.vertices?.length ?? 0) / 3);
       const note = document.createElement("div");
       note.className = "ed-dim";
-      note.textContent = `${count} vertices · ${Math.floor((c.indices?.length ?? count) / 3)} triangles · scale factors keep the exact authored surface`;
+      note.textContent = c.loopRadius !== undefined
+        ? "The circular loop profile owns its mesh and ride contact. Edit its dimensions together here."
+        : `${count} vertices · ${Math.floor((c.indices?.length ?? count) / 3)} triangles · scale factors keep the exact authored surface`;
       this.propsEl.appendChild(note);
-      for (const [axis, label] of [[0, "scale x"], [1, "scale y"], [2, "scale z"]] as const)
-        num(label, () => c.s?.[axis] ?? 1, value => {
-          const scale: [number, number, number] = [...(c.s ?? [1, 1, 1])];
-          scale[axis] = Math.max(0.001, value); c.s = scale;
-        }, 0.1);
+      if (c.loopRadius !== undefined) {
+        const rebuildLoop = (): void => {
+          Object.assign(c, createLoopMeshData(c.loopRadius!, c.w!, c.loopOffset!, count / 2 - 1));
+          c.s = [1, 1, 1];
+        };
+        num("loop radius", () => c.loopRadius!, value => { c.loopRadius = Math.max(4, Math.min(80, value)); rebuildLoop(); });
+        num("loop width", () => c.w!, value => { c.w = Math.max(2, Math.min(40, value)); rebuildLoop(); });
+        num("loop exit offset", () => c.loopOffset!, value => { c.loopOffset = Math.max(-80, Math.min(80, value)); rebuildLoop(); });
+      } else for (const [axis, label] of [[0, "scale x"], [1, "scale y"], [2, "scale z"]] as const)
+          num(label, () => c.s?.[axis] ?? 1, value => {
+            const scale: [number, number, number] = [...(c.s ?? [1, 1, 1])];
+            scale[axis] = Math.max(0.001, value); c.s = scale;
+          }, 0.1);
       num("yaw °", () => c.yaw ?? 0, value => { c.yaw = value; }, 15);
-      boolRow("slippery surface", () => c.slip === true, value => { c.slip = value; });
       boolRow("beach sand friction", () => c.beachSand === true, value => { c.beachSand = value; });
-      boolRow("double-sided surface", () => c.doubleSided === true, value => { c.doubleSided = value; });
+      boolRow("double-sided surface", () => c.doubleSided ?? (String(c.materialStyle) === "jungle-stream" || c.materialStyle === "water"), value => { c.doubleSided = value; });
       boolRow("invisible in play", () => c.invisible === true, value => { c.invisible = value; });
       colorRow();
-      if (count > 0) {
+      if (count > 0 && c.loopRadius === undefined) {
         this.meshVertexIndex = Math.min(count - 1, Math.max(0, this.meshVertexIndex || 0));
         const row = document.createElement("div"); row.className = "ed-row";
         const label = document.createElement("label"); label.textContent = `vertex (1–${count})`;
@@ -8280,7 +8394,7 @@ export class Editor {
       });
       pathAction("− remove end knot", () => {
         const path = points();
-        if (path.length > 2) path.pop();
+        if (path.length > (c.closed ? 3 : 2)) path.pop();
       });
       pathAction("reverse route", () => points().reverse());
       pathAction("preset: straight", () => {
@@ -8476,11 +8590,6 @@ export class Editor {
             c.s = size as [number, number, number];
           },
         );
-        if (c.t === "platform")
-          boolRow("slippery surface", () => c.slip === true, (value) => {
-            if (value) c.slip = true;
-            else delete c.slip;
-          });
         if (c.t === "wall") {
           num(
             "collision height",
@@ -8511,11 +8620,6 @@ export class Editor {
         (v) => (c.yaw = v),
         15,
       ); // platforms AND walls spin freely now
-      if (c.t === "platform")
-        boolRow("slippery surface", () => c.slip === true, (value) => {
-          if (value) c.slip = true;
-          else delete c.slip;
-        });
       if (c.t === "wall")
         boolRow("invisible in play", () => c.invisible === true, (value) => {
           if (value) c.invisible = true;
@@ -8538,6 +8642,16 @@ export class Editor {
         (v) => (c.yaw = v),
         15,
       );
+    } else if (c.t === "spinbridge") {
+      sizeRow(0, "span");
+      sizeRow(1, "deck thickness");
+      sizeRow(2, "width");
+      num("yaw °", () => c.yaw ?? 0, value => { c.yaw = value; }, 15);
+      num("opening time (s)", () => c.cycle ?? 0.55, value => { c.cycle = Math.max(0.15, Math.min(2, value)); }, 0.05);
+      colorRow();
+      const note = document.createElement("div"); note.className = "ed-dim";
+      note.textContent = "Spin the raised timber to lower it. Its position is the hinge at the deployed deck height.";
+      this.propsEl.appendChild(note);
     } else if (c.t === "crumble") {
       sizeRow(0, "width");
       sizeRow(2, "depth");
@@ -9045,6 +9159,46 @@ export class Editor {
       });
       this.propsEl.appendChild(kindSel);
       const dk = (c.dkind ?? "fern") as DecorKind;
+      if (dk.startsWith("ghost")) {
+        const defaults = DECOR_DEFAULTS[dk];
+        // Delivered castle models fit uniformly against one semantic size;
+        // expose only dimensions their builder actually reads.
+        if (defaults.s || c.s) {
+          const axes = dk === "ghostarch" ? [0, 1, 2] : dk === "ghostflagstone" || dk === "ghostslime" ? [0, 2]
+            : dk === "ghostchandelier" ? [0] : dk === "ghosttrestle" || dk === "ghostcart" ? [2] : [1];
+          for (const axis of axes) sizeRow(axis, ["width", "height", "depth"][axis]);
+        }
+        if (defaults.yaw !== undefined)
+          num("yaw °", () => c.yaw ?? defaults.yaw!, value => { c.yaw = value; }, 15);
+        for (const [key, label] of [["w", dk === "ghostshowlight" ? "light cone" : "effect width"],
+          ["rise", dk === "ghostshowlight" ? "light range" : "effect height"], ["len", "length"]] as const)
+          if (defaults[key] !== undefined)
+            num(label, () => c[key] ?? defaults[key]!, value => {
+              c[key] = dk === "ghostshowlight" && key === "w"
+                ? Math.max(0.15, Math.min(1.1, value)) : Math.max(0.05, value);
+            }, 0.1);
+        if (defaults.amp !== undefined)
+          num(dk === "ghostshowlight" ? "light power" : "effect density", () => c.amp ?? defaults.amp!, value => { c.amp = value; }, 0.1);
+        if (defaults.phase !== undefined)
+          num("phase", () => c.phase ?? defaults.phase!, value => { c.phase = value; }, 0.1);
+        if (defaults.vr !== undefined)
+          num("variation", () => c.vr ?? defaults.vr!, value => { c.vr = Math.max(0, Math.round(value)); }, 1);
+        if (defaults.color !== undefined) {
+          const row = document.createElement("label"); row.className = "ed-row";
+          const label = document.createElement("span"); label.textContent = "effect color";
+          const input = document.createElement("input"); input.type = "color"; input.value = c.color ?? defaults.color;
+          input.setAttribute("aria-label", "effect color");
+          input.addEventListener("change", () => { c.color = input.value; this.commit(); });
+          row.append(label, input); this.propsEl.appendChild(row);
+        }
+        if (dk === "ghostshowlight") {
+          for (const [axis, i] of ["x", "y", "z"].entries())
+            num(`light target ${i}`, () => c.to?.[axis] ?? [c.p[0], c.p[1] - 5, c.p[2] - 4][axis], value => {
+              c.to ??= [c.p[0], c.p[1] - 5, c.p[2] - 4]; c.to[axis] = value;
+            });
+          boolRow("fixed light aim", () => c.n === 1, value => { if (value) c.n = 1; else delete c.n; });
+        }
+      }
       // LIBRARY FAMILIES. One kind, many models: the panel gets a model picker
       // and a colour picker, plus the size/spin/lean every one of them takes.
       // 'any' on both means the prop keeps rolling its own from where it
@@ -9511,7 +9665,7 @@ export class Editor {
     // yaw, travel axes, portal destinations, zones and sparse size defaults
     // must all obey the same transform contract.
     const rotatable = new Set<CustomComponent["t"]>([
-      "platform", "thorn", "ramp", "rail", "trickrail", "wall", "pit", "crumble",
+      "platform", "thorn", "ramp", "rail", "trickrail", "wall", "pit", "crumble", "spinbridge",
       "rock", "pendulum", "ropeswing", "enemy", "gate", "vertramp", "rope",
       "trampoline", "speedpad", "trickgate", "returnportal", "grindosaurus",
       "angryball", "decor", "crusher", "mover", "phasepad", "zone", "stone",

@@ -29,6 +29,7 @@ const server = await createServer({ appType: "custom", logLevel: "silent",
 let checks = 0;
 try {
   const api = await server.ssrLoadModule("/src/level.ts");
+  const { isCompetitionLevel } = await server.ssrLoadModule("/src/competition/courses.ts");
   const { puffs } = await server.ssrLoadModule("/src/puffs.ts");
   const { swirls } = await server.ssrLoadModule("/src/swirls.ts");
   const { fieldSwirls } = await server.ssrLoadModule("/src/swirlfield.ts");
@@ -90,7 +91,7 @@ try {
         transition(action) { context.transition = Promise.resolve().then(action); return context.transition; },
         hide() { this.hidden = true; mark("flow.hide")(); } },
       recorder: { start: mark("record.start") }, window: { __game: { level } },
-      JUNGLE_CUP_ID: "jungle-cup", syncCompetitionLevel: mark("competition.sync"),
+      isCompetitionLevel, syncCompetitionLevel: mark("competition.sync"),
       endlessDeathsOn: false, syncCampaignPortalProgress: mark("campaign.portals"),
       adoptCommittedCampaignProgress: mark("campaign.adopt"), applyRunModes: mark("modes"),
       applyTheme: mark("theme"), applyShadowFlags: mark("shadows"), currentHudState: () => ({}),

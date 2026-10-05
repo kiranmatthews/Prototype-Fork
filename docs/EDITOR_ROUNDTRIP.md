@@ -89,7 +89,7 @@ npm run check:editor-roundtrip
 npm run check:editor-capture
 ```
 
-`check:editor-roundtrip` is part of `npm run build`. It runs source-owned,
+`check:editor-roundtrip` is a focused check separate from `npm run build`. It runs source-owned,
 published, starter, sparse-new-primitive, and malformed-group fixtures through
 both lite and full modes, loose editor builds, baked play builds, migration,
 storage, capture, world transforms, materials/shadows, and gameplay contracts.
@@ -98,3 +98,10 @@ storage, capture, world transforms, materials/shadows, and gameplay contracts.
 conversion fidelity. Those courses are protected by the automatic-copy rule,
 so its remaining diagnostics describe representational limits rather than a
 way to damage the shipped levels.
+
+The current-component checks exercise real inspector callbacks, loop and bridge
+geometry, fitted asset transforms and thin dimensions. Runtime integration
+checks cover Cup events, no-op sessions, unavailable storage and scenery views.
+Both run as part of `check:editor-security`. The browser compatibility harness
+also checks import, transform/history, supported play, checkpoint, pit respawn
+and finish behavior, with a full-render editor pass.
