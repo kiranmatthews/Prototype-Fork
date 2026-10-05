@@ -28,8 +28,8 @@ for(const version of ['original','fork']) {
   const gl=g.renderer.getContext();for(const key of ['drawElements','drawArrays','drawElementsInstanced','drawArraysInstanced']){const f=gl[key];gl[key]=function(...a){if(p.record){p.draws++;p.triangles+=(key.startsWith('drawElements')?a[1]:a[2])/3*(key.endsWith('Instanced')?a.at(-1):1);}return f.apply(this,a);};}
   function tick(t){if(p.record&&p.last)p.raf.push(t-p.last);p.last=t;requestAnimationFrame(tick);}requestAnimationFrame(tick);
  });
- for(const mode of version==='original'?['default']:['default','720p-1x','540p-crt-off','native-crt-off','crt-on']) {
-  await page.evaluate(mode=>{const g=window.__game;if(mode==='720p-1x')g.renderQualitySettings.setRegularResolution(720);if(mode==='540p-crt-off')g.renderQualitySettings.setRegularResolution(540);if(mode==='native-crt-off'){g.renderQualitySettings.setEnabled(false);g.crtGuestSettings.setEnabled(false);}if(mode==='crt-on'){g.renderQualitySettings.setRegularResolution(720);g.crtGuestSettings.setEnabled(true);} },mode);
+ for(const mode of version==='original'?['default']:['default','720p-1x','480p-crt-off','native-crt-off','crt-on']) {
+  await page.evaluate(mode=>{const g=window.__game;if(mode==='720p-1x')g.renderQualitySettings.setRegularResolution(720);if(mode==='480p-crt-off')g.renderQualitySettings.setRegularResolution(480);if(mode==='native-crt-off'){g.renderQualitySettings.setEnabled(false);g.crtGuestSettings.setEnabled(false);}if(mode==='crt-on'){g.renderQualitySettings.setRegularResolution(720);g.crtGuestSettings.setEnabled(true);} },mode);
   await page.waitForTimeout(3000);
   await page.evaluate(()=>{const p=window.__profile;p.stats={};p.draws=0;p.triangles=0;p.raf=[];p.last=0;p.record=true;});
   await page.waitForTimeout(4000);

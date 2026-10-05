@@ -53,6 +53,8 @@ async function capture(page, preset, {crt=false, split=false}={}) {
       water:g.getLevel().water?.stats ?? null,contextLost:r.getContext().isContextLost()};
   });
   assert.equal(state.rendererDpr,1);
+  assert.deepEqual(state.canvas,[state.size.inputWidth,state.size.inputHeight],
+    'regular presets must retain 1x input/output density');
   assert.equal(state.regular,preset);
   assert.equal(Math.min(...state.canvas),preset);
   assert.deepEqual(state.canvas,[state.size.outputWidth,state.size.outputHeight]);
@@ -108,11 +110,17 @@ try {
       await cdp.send('Browser.setWindowBounds',{windowId,bounds:{width:1200,height:1400}});
       await cdp.detach();
     }
+    await page.addInitScript(() => {
+      if (!localStorage.getItem('solProtoRenderQuality.v1')) localStorage.setItem('solProtoRenderQuality.v1',
+        JSON.stringify({version:2,enabled:true,baseHeight:540,outputMultiplier:2,fixed60:true}));
+    });
     await page.goto(new URL('?playtest&level=codex-lab&renderdiag',base).href);await ready(page);await instrument(page);
     await page.keyboard.press('KeyP');
     await page.getByRole('button',{name:'OPTIONS',exact:true}).click();
-    assert.equal(await page.locator('.game-resolution strong').textContent(),'720P');
-    for (const preset of [1080,540,720]) {
+    assert.equal(await page.locator('.game-resolution strong').textContent(),'480P');
+    await capture(page,480);
+    report.checks.push({test:'saved 540p 2x migrates to 480p 1x',dpr,passed:true});
+    for (const preset of [1080,480,720]) {
       const button=page.locator('.game-resolution');
       for (let i=0;await page.locator('.game-resolution strong').textContent()!==`${preset}P`;i++) {
         assert.ok(i<4);
@@ -131,18 +139,28 @@ try {
     await page.evaluate(()=>window.__game.renderQualitySettings.setOutputMultiplier(2));
     assert.equal(await page.locator('.game-resolution strong').textContent(),'CUSTOM');
     await page.locator('.game-resolution').click();
-    assert.equal(await page.locator('.game-resolution strong').textContent(),'540P');
-    await capture(page,540);
+    assert.equal(await page.locator('.game-resolution strong').textContent(),'480P');
+    await capture(page,480);
+    const densityLock=await page.evaluate(() => {
+      const settings=window.__game.renderQualitySettings;
+      settings.setOutputMultiplier(2);settings.setOutputMultiplier(3);
+      const buttons=[...window.__game.renderQualityPanel.element.shadowRoot.querySelectorAll('button')];
+      return {multiplier:settings.outputMultiplier,
+        blocked:buttons.filter(b=>['2×','3×'].includes(b.textContent)).map(b=>b.disabled)};
+    });
+    assert.equal(densityLock.multiplier,1);assert.deepEqual(densityLock.blocked,[true,true]);
+    assert.equal(await page.locator('.game-resolution strong').textContent(),'480P');
+    report.checks.push({test:'480p rejects 2x/3x density overrides',dpr,densityLock});
     await page.keyboard.press('KeyP');
     await page.waitForFunction(()=>window.__game.gameFlow.currentScreen==='pause');
     await page.keyboard.press('KeyP');await ready(page);
-    report.checks.push({test:'phone portrait gameplay with CRT',dpr,state:await capture(page,540,{crt:true})});
-    await page.screenshot({path:`${output}/dpr${dpr}-540-portrait-play.png`});
+    report.checks.push({test:'phone portrait gameplay with CRT',dpr,state:await capture(page,480,{crt:true})});
+    await page.screenshot({path:`${output}/dpr${dpr}-480-portrait-play.png`});
     await page.setViewportSize({width:852,height:393});
-    report.checks.push({test:'phone landscape gameplay with CRT',dpr,state:await capture(page,540,{crt:true})});
-    await page.screenshot({path:`${output}/dpr${dpr}-540-landscape-play.png`});
+    report.checks.push({test:'phone landscape gameplay with CRT',dpr,state:await capture(page,480,{crt:true})});
+    await page.screenshot({path:`${output}/dpr${dpr}-480-landscape-play.png`});
     await page.reload();await ready(page);await instrument(page);
-    await capture(page,540);
+    await capture(page,480);
     report.checks.push({test:'preset persists across reload',dpr,passed:true});
     await page.evaluate(()=>window.__game.renderQualitySettings.setRegularResolution(null));
     await page.waitForFunction(() => {
@@ -163,7 +181,7 @@ try {
   await page.goto(new URL('?playtest&level=beachfront&renderdiag',base).href);await ready(page);await instrument(page);
   const resources=[];
   console.log('Full-render coast resources');
-  for (const preset of [1080,720,540]) {
+  for (const preset of [1080,720,480]) {
     await page.evaluate(p=>window.__game.renderQualitySettings.setRegularResolution(p),preset);
     const state=await capture(page,preset,{crt:true});
     await page.waitForFunction(s=>window.__game.getLevel().water?.stats.sceneWidth===s.inputWidth,state.size);
@@ -182,7 +200,7 @@ try {
   assert.ok(low.water.reflectionWidth*low.water.reflectionHeight<high.water.reflectionWidth*high.water.reflectionHeight*.26);
   await page.evaluate(()=>window.__game.set2P(true,true));
   await page.waitForFunction(()=>!!window.__game.getP2());
-  const split=await capture(page,540,{split:true});
+  const split=await capture(page,480,{split:true});
   report.checks.push({test:'split-screen canvas retains preset',split});
   await context.close();
   assert.deepEqual(report.errors,[]);

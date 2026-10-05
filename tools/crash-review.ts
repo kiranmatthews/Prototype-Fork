@@ -7,7 +7,7 @@ const show=(phase:string)=>report.textContent=JSON.stringify({phase,rows},null,2
 function snapshot(label:string){const crt=g.getCrtDiagnostics();rows.push({label,level:g.getCurrentLevel().id,memory:{...g.renderer.info.memory},canvas:[g.renderer.domElement.width,g.renderer.domElement.height],scenery:g.getLevel().jungleAssetDiagnostics,crt:{active:crt?.active,bytes:crt?.estimatedTargetBytes,draws:crt?.lastDrawCount},recovery:g.getGraphicsRecoveryDiagnostics(),resizes});show(label);}
 function button(label:string,action:()=>Promise<void>){const b=document.createElement('button');b.textContent=label;b.style.cssText='padding:8px;margin:3px';b.onclick=async()=>{if(running)return;running=true;show('Running '+label);try{await action();show('Passed '+label);}catch(error){show('FAILED '+String(error));}finally{running=false;}};panel.append(b);}
 button('Real level transitions',async()=>{
- g.renderQualitySettings.setRegularResolution(540);g.crtGuestSettings.setEnabled(false);g.gameFlow.hide();
+ g.renderQualitySettings.setRegularResolution(480);g.crtGuestSettings.setEnabled(false);g.gameFlow.hide();
  for(const id of ['sky','treehouse-trail','jungle','dark','warproom','test','sky','treehouse-trail','sky']){
   await g.gameFlow.transition(()=>{if(!g.switchLevel(id))throw Error('level rejected');g.gameFlow.hide();});
   await wait(350);snapshot(id);
@@ -15,7 +15,7 @@ button('Real level transitions',async()=>{
  }
 });
 button('CRT allocation cycle',async()=>{
- g.renderQualitySettings.setRegularResolution(540);g.crtGuestSettings.setEnabled(true);await wait(1500);snapshot('CRT on');
+ g.renderQualitySettings.setRegularResolution(480);g.crtGuestSettings.setEnabled(true);await wait(1500);snapshot('CRT on');
  if(!g.getCrtDiagnostics()?.active)throw Error('CRT did not activate');
  g.crtGuestSettings.setEnabled(false);await wait(300);snapshot('CRT off');
  if(g.getCrtDiagnostics()?.estimatedTargetBytes!==0)throw Error('disabled CRT still owns targets');

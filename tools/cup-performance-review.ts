@@ -4,7 +4,7 @@ import {crtGuestSettings} from '../src/crt-guest/settings';
 import {GameInterfaceSurface} from '../src/gameInterfaceSurface';
 import {SkateChaseCamera} from '../src/skateChaseCamera';
 import {FrozenScenePass} from '../src/frozenScenePass';
-renderQualitySettings.setRegularResolution(540);crtGuestSettings.setEnabled(new URLSearchParams(location.search).has('crt'));
+renderQualitySettings.setRegularResolution(480);crtGuestSettings.setEnabled(new URLSearchParams(location.search).has('crt'));
 await import('../src/main');
 const g=(window as any).__game,gl=g.renderer.getContext(),ext=gl.getExtension('EXT_disjoint_timer_query_webgl2');
 let recording=false,worldFrames=0,presentedFrames=0,stats:any={},draws:any={},uploads=0,gpu:any={},queries:any[]=[],skipUI=false;

@@ -45,7 +45,7 @@ try{
  await page.goto(base+'?lite&playtest&level=jungle');await ready();
  await page.evaluate(async()=>{await navigator.serviceWorker.register('./legacy-worker.js');await navigator.serviceWorker.ready;});
  await page.waitForFunction(()=>!!navigator.serviceWorker.controller);
- const saved=await page.evaluate(()=>{const g=window.__game;g.campaign.newGame(1);g.renderQualitySettings.setRegularResolution(540);g.crtGuestSettings.setEnabled(false);
+ const saved=await page.evaluate(()=>{const g=window.__game;g.campaign.newGame(1);g.renderQualitySettings.setRegularResolution(480);g.crtGuestSettings.setEnabled(false);
   g.saveUserLevel({id:'preserved-enemy-level',name:'My enemy level',data:{v:1,name:'My enemy level',spawn:[0,.1,2],killY:-20,components:[{t:'platform',p:[0,-.5,0],s:[20,1,40]},{t:'enemy',foe:'grunt',p:[0,0,-6]},{t:'gate',p:[0,0,-16]}]}});
   // Preserve an actual pre-roster editor capture as the Jungle override too.
   g.saveUserLevel({id:'jungle',name:'Jungle Ruins',data:g.getLevel().captureData()});

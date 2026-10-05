@@ -1,13 +1,13 @@
 export const RENDER_QUALITY_STORAGE_KEY = "solProtoRenderQuality.v1";
 // Keep the fork-owned storage key so existing preferences and local reset work.
-export const RENDER_QUALITY_VERSION = 2;
-export const RENDER_BASE_HEIGHTS = [540, 720, 900, 1080] as const;
+export const RENDER_QUALITY_VERSION = 3;
+export const RENDER_BASE_HEIGHTS = [480, 720, 900, 1080] as const;
 export const RENDER_OUTPUT_MULTIPLIERS = [1, 2, 3] as const;
 
 export type RenderBaseHeight = (typeof RENDER_BASE_HEIGHTS)[number];
 export type RenderOutputMultiplier =
   (typeof RENDER_OUTPUT_MULTIPLIERS)[number];
-export type RegularRenderResolution = 540 | 720 | 1080 | "max";
+export type RegularRenderResolution = 480 | 720 | 1080 | "max";
 
 export interface RenderQualityState {
   enabled: boolean;
@@ -75,20 +75,22 @@ function isOutputMultiplier(value: unknown): value is RenderOutputMultiplier {
 function parseState(value: unknown): RenderQualityState | null {
   if (!value || typeof value !== "object") return null;
   const row = value as Record<string, unknown>;
-  if (row.version !== 1 && row.version !== RENDER_QUALITY_VERSION) return null;
+  if (row.version !== 1 && row.version !== 2 && row.version !== RENDER_QUALITY_VERSION) return null;
+  const baseHeight = row.version !== RENDER_QUALITY_VERSION && row.baseHeight === 540
+    ? 480 : row.baseHeight;
   if (
     typeof row.enabled !== "boolean" ||
-    !isBaseHeight(row.baseHeight) ||
+    !isBaseHeight(baseHeight) ||
     !isOutputMultiplier(row.outputMultiplier) ||
     typeof row.fixed60 !== "boolean"
   )
     return null;
   return {
     enabled: row.enabled,
-    baseHeight: row.baseHeight,
-    // V1 advertised a preset while silently scaling desktop output and
-    // overriding touch output. Start both on the advertised 1x resolution.
-    outputMultiplier: row.version === 1 ? 1 : row.outputMultiplier,
+    baseHeight,
+    // Retain V1's hidden-scale migration. The lowest preset always uses 1x,
+    // including old 540p settings and saved V3 authoring overrides.
+    outputMultiplier: row.version === 1 || baseHeight === 480 ? 1 : row.outputMultiplier,
     fixed60: row.fixed60,
   };
 }
@@ -194,13 +196,15 @@ export class RenderQualitySettings {
     const shortEdge = this.state.baseHeight;
     const inputWidth = vw <= vh ? shortEdge : validDimension(shortEdge * vw / vh);
     const inputHeight = vh <= vw ? shortEdge : validDimension(shortEdge * vh / vw);
+    // The lowest preset is a hard 1x path, including explicit caller overrides.
+    const multiplier = shortEdge === 480 ? 1 : outputMultiplier;
     return {
       viewportWidth: vw,
       viewportHeight: vh,
       inputWidth,
       inputHeight,
-      outputWidth: inputWidth * outputMultiplier,
-      outputHeight: inputHeight * outputMultiplier,
+      outputWidth: inputWidth * multiplier,
+      outputHeight: inputHeight * multiplier,
     };
   }
 
@@ -211,6 +215,8 @@ export class RenderQualitySettings {
   }
 
   private replace(next: RenderQualityState, force = false): boolean {
+    if (next.baseHeight === 480 && next.outputMultiplier !== 1)
+      next = { ...next, outputMultiplier: 1 };
     if (
       !force &&
       next.enabled === this.state.enabled &&

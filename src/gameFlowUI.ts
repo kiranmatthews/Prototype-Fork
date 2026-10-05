@@ -111,8 +111,8 @@ export interface GameFlowUICallbacks {
   onAudioOptions: (options: GameAudioOptions) => void;
   getCrtEnabled: () => boolean;
   onCrtEnabled: (enabled: boolean) => void;
-  getRenderResolution: () => 540 | 720 | 1080 | "max" | "custom";
-  onRenderResolution: (resolution: 540 | 720 | 1080 | "max") => void;
+  getRenderResolution: () => 480 | 720 | 1080 | "max" | "custom";
+  onRenderResolution: (resolution: 480 | 720 | 1080 | "max") => void;
   getPlayMode: () => GamePlayMode;
   onPlayMode: (mode: GamePlayMode) => void;
   getRelicTarget?: (levelId: string) => number;
@@ -1494,7 +1494,7 @@ export class GameFlowUI {
         return enabled;
       }),
       (() => {
-        const modes = [540, 720, 1080, "max"] as const;
+        const modes = [480, 720, 1080, "max"] as const;
         const button = this.button("", () => {
           const current = this.callbacks.getRenderResolution();
           const next = current === "custom" ? modes[0]

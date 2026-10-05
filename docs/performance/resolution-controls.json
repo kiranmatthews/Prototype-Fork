@@ -1,21 +1,27 @@
 {
-  "verifiedAt": "2026-10-04T21:39:35Z",
-  "baseCommit": "910611cbc3c4c93d145ac69820828eec5e205ee8",
+  "baseCommit": "0957ed4a4810f618ead333db369b0dad1d80057b",
   "physicalDeviceTest": false,
-  "profile": "iPhone 14 Pro-sized CSS viewport, real Chrome and WebKit",
+  "profile": "393x852 / 852x393; real Chrome and native WebKit",
   "shortEdgePixels": [
-    540,
+    480,
     720,
     1080
   ],
+  "lowestOutputMultiplier": 1,
   "engines": [
     {
       "engine": "chromium",
-      "passedChecks": 24,
+      "passedChecks": 30,
       "consoleErrors": [],
       "checks": [
         {
-          "test": "lite movement, checkpoint, pit respawn and finish"
+          "test": "lite movement, checkpoint, pit respawn and finish",
+          "passed": true
+        },
+        {
+          "test": "saved 540p 2x migrates to 480p 1x",
+          "dpr": 1,
+          "passed": true
         },
         {
           "test": "real Options preset and rotation",
@@ -28,20 +34,22 @@
           "landscape": [
             2341,
             1080
-          ]
+          ],
+          "rendererDpr": 1
         },
         {
           "test": "real Options preset and rotation",
           "dpr": 1,
-          "preset": 540,
+          "preset": 480,
           "portrait": [
-            540,
-            1171
+            480,
+            1041
           ],
           "landscape": [
-            1171,
-            540
-          ]
+            1041,
+            480
+          ],
+          "rendererDpr": 1
         },
         {
           "test": "real Options preset and rotation",
@@ -54,31 +62,58 @@
           "landscape": [
             1561,
             720
-          ]
+          ],
+          "rendererDpr": 1
+        },
+        {
+          "test": "480p rejects 2x/3x density overrides",
+          "dpr": 1,
+          "densityLock": {
+            "multiplier": 1,
+            "blocked": [
+              true,
+              true
+            ]
+          }
         },
         {
           "test": "phone portrait gameplay with CRT",
           "dpr": 1,
           "canvas": [
-            540,
-            1171
+            480,
+            1041
           ],
           "rendererDpr": 1,
-          "crtActive": true
+          "crtInput": [
+            480,
+            1041
+          ],
+          "crtOutput": [
+            480,
+            1041
+          ]
         },
         {
           "test": "phone landscape gameplay with CRT",
           "dpr": 1,
           "canvas": [
-            1171,
-            540
+            1041,
+            480
           ],
           "rendererDpr": 1,
-          "crtActive": true
+          "crtInput": [
+            1041,
+            480
+          ],
+          "crtOutput": [
+            1041,
+            480
+          ]
         },
         {
           "test": "preset persists across reload",
-          "dpr": 1
+          "dpr": 1,
+          "passed": true
         },
         {
           "test": "MAX retains native sizing",
@@ -93,6 +128,11 @@
           }
         },
         {
+          "test": "saved 540p 2x migrates to 480p 1x",
+          "dpr": 2,
+          "passed": true
+        },
+        {
           "test": "real Options preset and rotation",
           "dpr": 2,
           "preset": 1080,
@@ -103,20 +143,22 @@
           "landscape": [
             2341,
             1080
-          ]
+          ],
+          "rendererDpr": 1
         },
         {
           "test": "real Options preset and rotation",
           "dpr": 2,
-          "preset": 540,
+          "preset": 480,
           "portrait": [
-            540,
-            1171
+            480,
+            1041
           ],
           "landscape": [
-            1171,
-            540
-          ]
+            1041,
+            480
+          ],
+          "rendererDpr": 1
         },
         {
           "test": "real Options preset and rotation",
@@ -129,31 +171,58 @@
           "landscape": [
             1561,
             720
-          ]
+          ],
+          "rendererDpr": 1
+        },
+        {
+          "test": "480p rejects 2x/3x density overrides",
+          "dpr": 2,
+          "densityLock": {
+            "multiplier": 1,
+            "blocked": [
+              true,
+              true
+            ]
+          }
         },
         {
           "test": "phone portrait gameplay with CRT",
           "dpr": 2,
           "canvas": [
-            540,
-            1171
+            480,
+            1041
           ],
           "rendererDpr": 1,
-          "crtActive": true
+          "crtInput": [
+            480,
+            1041
+          ],
+          "crtOutput": [
+            480,
+            1041
+          ]
         },
         {
           "test": "phone landscape gameplay with CRT",
           "dpr": 2,
           "canvas": [
-            1171,
-            540
+            1041,
+            480
           ],
           "rendererDpr": 1,
-          "crtActive": true
+          "crtInput": [
+            1041,
+            480
+          ],
+          "crtOutput": [
+            1041,
+            480
+          ]
         },
         {
           "test": "preset persists across reload",
-          "dpr": 2
+          "dpr": 2,
+          "passed": true
         },
         {
           "test": "MAX retains native sizing",
@@ -168,6 +237,11 @@
           }
         },
         {
+          "test": "saved 540p 2x migrates to 480p 1x",
+          "dpr": 3,
+          "passed": true
+        },
+        {
           "test": "real Options preset and rotation",
           "dpr": 3,
           "preset": 1080,
@@ -178,20 +252,22 @@
           "landscape": [
             2341,
             1080
-          ]
+          ],
+          "rendererDpr": 1
         },
         {
           "test": "real Options preset and rotation",
           "dpr": 3,
-          "preset": 540,
+          "preset": 480,
           "portrait": [
-            540,
-            1171
+            480,
+            1041
           ],
           "landscape": [
-            1171,
-            540
-          ]
+            1041,
+            480
+          ],
+          "rendererDpr": 1
         },
         {
           "test": "real Options preset and rotation",
@@ -204,31 +280,58 @@
           "landscape": [
             1561,
             720
-          ]
+          ],
+          "rendererDpr": 1
+        },
+        {
+          "test": "480p rejects 2x/3x density overrides",
+          "dpr": 3,
+          "densityLock": {
+            "multiplier": 1,
+            "blocked": [
+              true,
+              true
+            ]
+          }
         },
         {
           "test": "phone portrait gameplay with CRT",
           "dpr": 3,
           "canvas": [
-            540,
-            1171
+            480,
+            1041
           ],
           "rendererDpr": 1,
-          "crtActive": true
+          "crtInput": [
+            480,
+            1041
+          ],
+          "crtOutput": [
+            480,
+            1041
+          ]
         },
         {
           "test": "phone landscape gameplay with CRT",
           "dpr": 3,
           "canvas": [
-            1171,
-            540
+            1041,
+            480
           ],
           "rendererDpr": 1,
-          "crtActive": true
+          "crtInput": [
+            1041,
+            480
+          ],
+          "crtOutput": [
+            1041,
+            480
+          ]
         },
         {
           "test": "preset persists across reload",
-          "dpr": 3
+          "dpr": 3,
+          "passed": true
         },
         {
           "test": "MAX retains native sizing",
@@ -252,74 +355,6 @@
                 1080
               ],
               "crtEstimatedBytes": 130032000,
-              "crtTargets": {
-                "stock": {
-                  "width": 2341,
-                  "height": 1080,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 10113120
-                },
-                "afterglow-read": {
-                  "width": 2341,
-                  "height": 1080,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 10113120
-                },
-                "afterglow-write": {
-                  "width": 2341,
-                  "height": 1080,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 10113120
-                },
-                "pre": {
-                  "width": 2341,
-                  "height": 1080,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 10113120
-                },
-                "linear": {
-                  "width": 2341,
-                  "height": 1080,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 20226240
-                },
-                "glow-horizontal": {
-                  "width": 800,
-                  "height": 1080,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 6912000
-                },
-                "glow": {
-                  "width": 800,
-                  "height": 600,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 3840000
-                },
-                "bloom-horizontal": {
-                  "width": 800,
-                  "height": 1080,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 6912000
-                },
-                "bloom": {
-                  "width": 2341,
-                  "height": 600,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 11236800
-                },
-                "main": {
-                  "width": 2341,
-                  "height": 1080,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 20226240
-                },
-                "reconstruction": {
-                  "width": 2341,
-                  "height": 1080,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 20226240
-                }
-              },
               "oceanPrepass": [
                 2341,
                 1080
@@ -336,74 +371,6 @@
                 720
               ],
               "crtEstimatedBytes": 65505600,
-              "crtTargets": {
-                "stock": {
-                  "width": 1561,
-                  "height": 720,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 4495680
-                },
-                "afterglow-read": {
-                  "width": 1561,
-                  "height": 720,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 4495680
-                },
-                "afterglow-write": {
-                  "width": 1561,
-                  "height": 720,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 4495680
-                },
-                "pre": {
-                  "width": 1561,
-                  "height": 720,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 4495680
-                },
-                "linear": {
-                  "width": 1561,
-                  "height": 720,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 8991360
-                },
-                "glow-horizontal": {
-                  "width": 800,
-                  "height": 720,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 4608000
-                },
-                "glow": {
-                  "width": 800,
-                  "height": 600,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 3840000
-                },
-                "bloom-horizontal": {
-                  "width": 800,
-                  "height": 720,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 4608000
-                },
-                "bloom": {
-                  "width": 1561,
-                  "height": 600,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 7492800
-                },
-                "main": {
-                  "width": 1561,
-                  "height": 720,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 8991360
-                },
-                "reconstruction": {
-                  "width": 1561,
-                  "height": 720,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 8991360
-                }
-              },
               "oceanPrepass": [
                 1561,
                 720
@@ -414,87 +381,19 @@
               ]
             },
             {
-              "preset": 540,
+              "preset": 480,
               "canvas": [
-                1171,
-                540
+                1041,
+                480
               ],
-              "crtEstimatedBytes": 41666400,
-              "crtTargets": {
-                "stock": {
-                  "width": 1171,
-                  "height": 540,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 2529360
-                },
-                "afterglow-read": {
-                  "width": 1171,
-                  "height": 540,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 2529360
-                },
-                "afterglow-write": {
-                  "width": 1171,
-                  "height": 540,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 2529360
-                },
-                "pre": {
-                  "width": 1171,
-                  "height": 540,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 2529360
-                },
-                "linear": {
-                  "width": 1171,
-                  "height": 540,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 5058720
-                },
-                "glow-horizontal": {
-                  "width": 800,
-                  "height": 540,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 3456000
-                },
-                "glow": {
-                  "width": 800,
-                  "height": 600,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 3840000
-                },
-                "bloom-horizontal": {
-                  "width": 800,
-                  "height": 540,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 3456000
-                },
-                "bloom": {
-                  "width": 1171,
-                  "height": 600,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 5620800
-                },
-                "main": {
-                  "width": 1171,
-                  "height": 540,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 5058720
-                },
-                "reconstruction": {
-                  "width": 1171,
-                  "height": 540,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 5058720
-                }
-              },
+              "crtEstimatedBytes": 34968000,
               "oceanPrepass": [
-                1171,
-                540
+                1041,
+                480
               ],
               "oceanReflection": [
-                351,
-                162
+                312,
+                144
               ]
             }
           ]
@@ -502,19 +401,25 @@
         {
           "test": "split-screen canvas retains preset",
           "canvas": [
-            1171,
-            540
+            1041,
+            480
           ]
         }
       ]
     },
     {
       "engine": "webkit",
-      "passedChecks": 24,
+      "passedChecks": 30,
       "consoleErrors": [],
       "checks": [
         {
-          "test": "lite movement, checkpoint, pit respawn and finish"
+          "test": "lite movement, checkpoint, pit respawn and finish",
+          "passed": true
+        },
+        {
+          "test": "saved 540p 2x migrates to 480p 1x",
+          "dpr": 1,
+          "passed": true
         },
         {
           "test": "real Options preset and rotation",
@@ -527,20 +432,22 @@
           "landscape": [
             2341,
             1080
-          ]
+          ],
+          "rendererDpr": 1
         },
         {
           "test": "real Options preset and rotation",
           "dpr": 1,
-          "preset": 540,
+          "preset": 480,
           "portrait": [
-            540,
-            1171
+            480,
+            1041
           ],
           "landscape": [
-            1171,
-            540
-          ]
+            1041,
+            480
+          ],
+          "rendererDpr": 1
         },
         {
           "test": "real Options preset and rotation",
@@ -553,31 +460,58 @@
           "landscape": [
             1561,
             720
-          ]
+          ],
+          "rendererDpr": 1
+        },
+        {
+          "test": "480p rejects 2x/3x density overrides",
+          "dpr": 1,
+          "densityLock": {
+            "multiplier": 1,
+            "blocked": [
+              true,
+              true
+            ]
+          }
         },
         {
           "test": "phone portrait gameplay with CRT",
           "dpr": 1,
           "canvas": [
-            540,
-            1171
+            480,
+            1041
           ],
           "rendererDpr": 1,
-          "crtActive": true
+          "crtInput": [
+            480,
+            1041
+          ],
+          "crtOutput": [
+            480,
+            1041
+          ]
         },
         {
           "test": "phone landscape gameplay with CRT",
           "dpr": 1,
           "canvas": [
-            1171,
-            540
+            1041,
+            480
           ],
           "rendererDpr": 1,
-          "crtActive": true
+          "crtInput": [
+            1041,
+            480
+          ],
+          "crtOutput": [
+            1041,
+            480
+          ]
         },
         {
           "test": "preset persists across reload",
-          "dpr": 1
+          "dpr": 1,
+          "passed": true
         },
         {
           "test": "MAX retains native sizing",
@@ -592,6 +526,11 @@
           }
         },
         {
+          "test": "saved 540p 2x migrates to 480p 1x",
+          "dpr": 2,
+          "passed": true
+        },
+        {
           "test": "real Options preset and rotation",
           "dpr": 2,
           "preset": 1080,
@@ -602,20 +541,22 @@
           "landscape": [
             2341,
             1080
-          ]
+          ],
+          "rendererDpr": 1
         },
         {
           "test": "real Options preset and rotation",
           "dpr": 2,
-          "preset": 540,
+          "preset": 480,
           "portrait": [
-            540,
-            1171
+            480,
+            1041
           ],
           "landscape": [
-            1171,
-            540
-          ]
+            1041,
+            480
+          ],
+          "rendererDpr": 1
         },
         {
           "test": "real Options preset and rotation",
@@ -628,31 +569,58 @@
           "landscape": [
             1561,
             720
-          ]
+          ],
+          "rendererDpr": 1
+        },
+        {
+          "test": "480p rejects 2x/3x density overrides",
+          "dpr": 2,
+          "densityLock": {
+            "multiplier": 1,
+            "blocked": [
+              true,
+              true
+            ]
+          }
         },
         {
           "test": "phone portrait gameplay with CRT",
           "dpr": 2,
           "canvas": [
-            540,
-            1171
+            480,
+            1041
           ],
           "rendererDpr": 1,
-          "crtActive": true
+          "crtInput": [
+            480,
+            1041
+          ],
+          "crtOutput": [
+            480,
+            1041
+          ]
         },
         {
           "test": "phone landscape gameplay with CRT",
           "dpr": 2,
           "canvas": [
-            1171,
-            540
+            1041,
+            480
           ],
           "rendererDpr": 1,
-          "crtActive": true
+          "crtInput": [
+            1041,
+            480
+          ],
+          "crtOutput": [
+            1041,
+            480
+          ]
         },
         {
           "test": "preset persists across reload",
-          "dpr": 2
+          "dpr": 2,
+          "passed": true
         },
         {
           "test": "MAX retains native sizing",
@@ -667,6 +635,11 @@
           }
         },
         {
+          "test": "saved 540p 2x migrates to 480p 1x",
+          "dpr": 3,
+          "passed": true
+        },
+        {
           "test": "real Options preset and rotation",
           "dpr": 3,
           "preset": 1080,
@@ -677,20 +650,22 @@
           "landscape": [
             2341,
             1080
-          ]
+          ],
+          "rendererDpr": 1
         },
         {
           "test": "real Options preset and rotation",
           "dpr": 3,
-          "preset": 540,
+          "preset": 480,
           "portrait": [
-            540,
-            1171
+            480,
+            1041
           ],
           "landscape": [
-            1171,
-            540
-          ]
+            1041,
+            480
+          ],
+          "rendererDpr": 1
         },
         {
           "test": "real Options preset and rotation",
@@ -703,31 +678,58 @@
           "landscape": [
             1561,
             720
-          ]
+          ],
+          "rendererDpr": 1
+        },
+        {
+          "test": "480p rejects 2x/3x density overrides",
+          "dpr": 3,
+          "densityLock": {
+            "multiplier": 1,
+            "blocked": [
+              true,
+              true
+            ]
+          }
         },
         {
           "test": "phone portrait gameplay with CRT",
           "dpr": 3,
           "canvas": [
-            540,
-            1171
+            480,
+            1041
           ],
           "rendererDpr": 1,
-          "crtActive": true
+          "crtInput": [
+            480,
+            1041
+          ],
+          "crtOutput": [
+            480,
+            1041
+          ]
         },
         {
           "test": "phone landscape gameplay with CRT",
           "dpr": 3,
           "canvas": [
-            1171,
-            540
+            1041,
+            480
           ],
           "rendererDpr": 1,
-          "crtActive": true
+          "crtInput": [
+            1041,
+            480
+          ],
+          "crtOutput": [
+            1041,
+            480
+          ]
         },
         {
           "test": "preset persists across reload",
-          "dpr": 3
+          "dpr": 3,
+          "passed": true
         },
         {
           "test": "MAX retains native sizing",
@@ -751,74 +753,6 @@
                 1080
               ],
               "crtEstimatedBytes": 130032000,
-              "crtTargets": {
-                "stock": {
-                  "width": 2341,
-                  "height": 1080,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 10113120
-                },
-                "afterglow-read": {
-                  "width": 2341,
-                  "height": 1080,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 10113120
-                },
-                "afterglow-write": {
-                  "width": 2341,
-                  "height": 1080,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 10113120
-                },
-                "pre": {
-                  "width": 2341,
-                  "height": 1080,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 10113120
-                },
-                "linear": {
-                  "width": 2341,
-                  "height": 1080,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 20226240
-                },
-                "glow-horizontal": {
-                  "width": 800,
-                  "height": 1080,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 6912000
-                },
-                "glow": {
-                  "width": 800,
-                  "height": 600,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 3840000
-                },
-                "bloom-horizontal": {
-                  "width": 800,
-                  "height": 1080,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 6912000
-                },
-                "bloom": {
-                  "width": 2341,
-                  "height": 600,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 11236800
-                },
-                "main": {
-                  "width": 2341,
-                  "height": 1080,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 20226240
-                },
-                "reconstruction": {
-                  "width": 2341,
-                  "height": 1080,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 20226240
-                }
-              },
               "oceanPrepass": [
                 2341,
                 1080
@@ -835,74 +769,6 @@
                 720
               ],
               "crtEstimatedBytes": 65505600,
-              "crtTargets": {
-                "stock": {
-                  "width": 1561,
-                  "height": 720,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 4495680
-                },
-                "afterglow-read": {
-                  "width": 1561,
-                  "height": 720,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 4495680
-                },
-                "afterglow-write": {
-                  "width": 1561,
-                  "height": 720,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 4495680
-                },
-                "pre": {
-                  "width": 1561,
-                  "height": 720,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 4495680
-                },
-                "linear": {
-                  "width": 1561,
-                  "height": 720,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 8991360
-                },
-                "glow-horizontal": {
-                  "width": 800,
-                  "height": 720,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 4608000
-                },
-                "glow": {
-                  "width": 800,
-                  "height": 600,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 3840000
-                },
-                "bloom-horizontal": {
-                  "width": 800,
-                  "height": 720,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 4608000
-                },
-                "bloom": {
-                  "width": 1561,
-                  "height": 600,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 7492800
-                },
-                "main": {
-                  "width": 1561,
-                  "height": 720,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 8991360
-                },
-                "reconstruction": {
-                  "width": 1561,
-                  "height": 720,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 8991360
-                }
-              },
               "oceanPrepass": [
                 1561,
                 720
@@ -913,87 +779,19 @@
               ]
             },
             {
-              "preset": 540,
+              "preset": 480,
               "canvas": [
-                1171,
-                540
+                1041,
+                480
               ],
-              "crtEstimatedBytes": 41666400,
-              "crtTargets": {
-                "stock": {
-                  "width": 1171,
-                  "height": 540,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 2529360
-                },
-                "afterglow-read": {
-                  "width": 1171,
-                  "height": 540,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 2529360
-                },
-                "afterglow-write": {
-                  "width": 1171,
-                  "height": 540,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 2529360
-                },
-                "pre": {
-                  "width": 1171,
-                  "height": 540,
-                  "bytesPerPixel": 4,
-                  "estimatedBytes": 2529360
-                },
-                "linear": {
-                  "width": 1171,
-                  "height": 540,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 5058720
-                },
-                "glow-horizontal": {
-                  "width": 800,
-                  "height": 540,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 3456000
-                },
-                "glow": {
-                  "width": 800,
-                  "height": 600,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 3840000
-                },
-                "bloom-horizontal": {
-                  "width": 800,
-                  "height": 540,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 3456000
-                },
-                "bloom": {
-                  "width": 1171,
-                  "height": 600,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 5620800
-                },
-                "main": {
-                  "width": 1171,
-                  "height": 540,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 5058720
-                },
-                "reconstruction": {
-                  "width": 1171,
-                  "height": 540,
-                  "bytesPerPixel": 8,
-                  "estimatedBytes": 5058720
-                }
-              },
+              "crtEstimatedBytes": 34968000,
               "oceanPrepass": [
-                1171,
-                540
+                1041,
+                480
               ],
               "oceanReflection": [
-                351,
-                162
+                312,
+                144
               ]
             }
           ]
@@ -1001,8 +799,8 @@
         {
           "test": "split-screen canvas retains preset",
           "canvas": [
-            1171,
-            540
+            1041,
+            480
           ]
         }
       ]

@@ -43,15 +43,23 @@ assert.deepEqual(settings.computeSizes(1920, 1080), {
   outputWidth: 3840,
   outputHeight: 2160,
 });
-settings.setBaseHeight(540);
+settings.setBaseHeight(480);
 assert.deepEqual(settings.computeSizes(390, 844), {
   viewportWidth: 390,
   viewportHeight: 844,
-  inputWidth: 540,
-  inputHeight: 1169,
-  outputWidth: 1620,
-  outputHeight: 3507,
+  inputWidth: 480,
+  inputHeight: 1039,
+  outputWidth: 480,
+  outputHeight: 1039,
 });
+assert.equal(settings.outputMultiplier,1);
+for (const scale of [2,3]) {
+  assert.equal(settings.setOutputMultiplier(scale),false);
+  assert.equal(settings.outputMultiplier,1);
+  const explicit=settings.computeSizes(390,844,scale);
+  assert.equal(explicit.inputWidth,explicit.outputWidth);
+  assert.equal(explicit.inputHeight,explicit.outputHeight);
+}
 
 // Rotation must transpose exactly, preserving physical density and fill cost.
 // Viewport size only changes aspect; no display-DPR argument is involved.
@@ -60,6 +68,7 @@ for (const baseHeight of api.RENDER_BASE_HEIGHTS) {
   for (const [width, height] of [[393,852],[390,844],[320,568],[768,1024],[720,1280],[1080,1920]]) {
     for (const multiplier of api.RENDER_OUTPUT_MULTIPLIERS) {
       settings.setOutputMultiplier(multiplier);
+      assert.equal(settings.outputMultiplier,baseHeight===480?1:multiplier);
       const portrait = settings.computeSizes(width, height);
       const landscape = settings.computeSizes(height, width);
       assert.equal(portrait.inputWidth, baseHeight);
@@ -74,7 +83,7 @@ for (const baseHeight of api.RENDER_BASE_HEIGHTS) {
   }
 }
 assert.equal(settings.regularResolution, "custom");
-for (const value of [540, 720, 1080]) {
+for (const value of [480, 720, 1080]) {
   settings.setRegularResolution(value);
   assert.equal(settings.enabled, true);
   assert.equal(settings.outputMultiplier, 1);
@@ -99,33 +108,37 @@ for (const [width, height] of [[0,0],[NaN,Infinity],[-1,-2]]) {
   assert.equal(size.inputHeight,720);
 }
 
-// V1 silently overrode touch output; V2 makes authoring scales explicit on
-// every device while preserving base resolution, MAX and the frame limiter.
+// Keep V1's hidden-scale migration and V2's higher authoring scales. V3
+// replaces old 540p with a hard 480p/1x while retaining MAX and the limiter.
 for (const enabled of [true, false]) {
-  for (const version of [1, api.RENDER_QUALITY_VERSION]) {
-    const stored = {version, enabled, baseHeight:540, outputMultiplier:3, fixed60:false};
-    let written;
-    const loaded = new api.RenderQualitySettings({storage:{
-      getItem: key => { assert.equal(key, api.RENDER_QUALITY_STORAGE_KEY); return JSON.stringify(stored); },
-      setItem: (key, value) => { written=JSON.parse(value); },
-    }});
-    assert.deepEqual(loaded.snapshot(), {
-      enabled, baseHeight:540, outputMultiplier:version===1?1:3, fixed60:false,
-    });
-    loaded.setRegularResolution(720);
-    assert.deepEqual(written, {version:api.RENDER_QUALITY_VERSION, enabled:true, baseHeight:720, outputMultiplier:1, fixed60:false});
+  for (const version of [1, 2, api.RENDER_QUALITY_VERSION]) {
+    for (const baseHeight of version===api.RENDER_QUALITY_VERSION ? [480,720] : [540,720]) {
+      const stored = {version, enabled, baseHeight, outputMultiplier:3, fixed60:false};
+      let written;
+      const loaded = new api.RenderQualitySettings({storage:{
+        getItem: key => { assert.equal(key, api.RENDER_QUALITY_STORAGE_KEY); return JSON.stringify(stored); },
+        setItem: (key, value) => { written=JSON.parse(value); },
+      }});
+      assert.deepEqual(loaded.snapshot(), {
+        enabled, baseHeight:baseHeight===540?480:baseHeight,
+        outputMultiplier:version===1||baseHeight===540||baseHeight===480?1:3, fixed60:false,
+      });
+      loaded.setRegularResolution(1080);
+      loaded.setRegularResolution(720);
+      assert.deepEqual(written, {version:api.RENDER_QUALITY_VERSION, enabled:true, baseHeight:720, outputMultiplier:1, fixed60:false});
+    }
   }
 }
 const unreadable = new api.RenderQualitySettings({storage:{getItem:()=>'{broken',setItem:()=>{throw Error('full');}}});
 assert.equal(unreadable.regularResolution,720);
-assert.doesNotThrow(()=>unreadable.setRegularResolution(540));
+assert.doesNotThrow(()=>unreadable.setRegularResolution(480));
 
 settings.setRegularResolution(1080);
 const high = settings.computeSizes(393,852);
-settings.setRegularResolution(540);
+settings.setRegularResolution(480);
 const low = settings.computeSizes(393,852);
-assert.ok(Math.abs(low.inputWidth*low.inputHeight/(high.inputWidth*high.inputHeight)-0.25)<0.001,
-  "540p must rasterize one quarter as many pixels as 1080p");
+assert.ok(Math.abs(low.inputWidth*low.inputHeight/(high.inputWidth*high.inputHeight)-(480/1080)**2)<0.001,
+  "480p must rasterize about one fifth as many pixels as 1080p");
 
 let updates = 0;
 const unsubscribe = settings.subscribe(() => updates++);

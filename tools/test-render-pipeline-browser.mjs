@@ -92,7 +92,7 @@ try{
  touch.on('pageerror',e=>errors.push(e.stack||String(e)));touch.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
  await touch.goto(new URL('?touch&playtest&level=sky',base).href);
  await touch.waitForFunction(()=>window.__game&&!window.__game.gameFlow.blocksGameplay,null,{timeout:120000});
- await touch.evaluate(()=>{const g=window.__game;g.renderQualitySettings.setRegularResolution(540);g.crtGuestSettings.setEnabled(true);});
+ await touch.evaluate(()=>{const g=window.__game;g.renderQualitySettings.setRegularResolution(480);g.crtGuestSettings.setEnabled(true);});
  await touch.waitForFunction(()=>window.__game.getCrtDiagnostics()?.lastDrawCount===10);
  const pause=await touch.locator('.tc-pause').boundingBox();assert.ok(pause);
  await touch.touchscreen.tap(pause.x+pause.width/2,pause.y+pause.height/2);
@@ -101,8 +101,8 @@ try{
  await touch.keyboard.press('KeyP');
  await touch.waitForFunction(()=>!window.__game.gameFlow.blocksGameplay);
  await touch.waitForTimeout(500);
- rows.push(await touch.evaluate(()=>{const g=window.__game;return {test:'touch 540p CRT pause/resume',canvas:[g.renderer.domElement.width,g.renderer.domElement.height],crtDraws:g.getCrtDiagnostics().lastDrawCount,kernel:g.getSkinBoundsKernelDiagnostics(),batches:g.player.characterRenderBatchDiagnostics};}));
- assert.equal(rows.at(-1).canvas[1],540);assert.equal(rows.at(-1).crtDraws,10);
+ rows.push(await touch.evaluate(()=>{const g=window.__game;return {test:'touch 480p CRT pause/resume',canvas:[g.renderer.domElement.width,g.renderer.domElement.height],crtDraws:g.getCrtDiagnostics().lastDrawCount,kernel:g.getSkinBoundsKernelDiagnostics(),batches:g.player.characterRenderBatchDiagnostics};}));
+ assert.equal(rows.at(-1).canvas[1],480);assert.equal(rows.at(-1).crtDraws,10);
  await touch.screenshot({path:`${output}/touch-play.png`});
  assert.deepEqual(errors,[]);
  console.log('PASS full/lite world rendering, traversal, checkpoint, respawn, finish, pause, split, sizing, suspension and graphics recovery');

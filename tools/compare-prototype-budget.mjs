@@ -2,7 +2,7 @@ import {writeFile} from 'node:fs/promises';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const options={original:process.env.BOARD_URL||'http://127.0.0.1:5191/',fork:process.env.FORK_URL||'http://127.0.0.1:5192/',output:process.env.BUDGET_OUTPUT||'budget.json',warmupMs:Number(process.env.BUDGET_WARMUP_MS||15000),versions:'original,fork',levels:'',baseHeight:0,outputMultiplier:1};
 for(let i=2;i<process.argv.length;i+=2){const key=process.argv[i].replace(/^--/,'');if(!(key in options)||!process.argv[i+1])throw new Error('Usage: --original URL --fork URL --output PATH --warmupMs 15000 [--versions fork --levels sky --baseHeight 540 --outputMultiplier 1]');options[key]=['warmupMs','baseHeight','outputMultiplier'].includes(key)?Number(process.argv[i+1]):process.argv[i+1];}
-if(options.baseHeight&&![540,720,900,1080].includes(options.baseHeight))throw new Error('Unsupported baseHeight');
+if(options.baseHeight&&![480,720,900,1080].includes(options.baseHeight))throw new Error('Unsupported baseHeight');
 if(![1,2,3].includes(options.outputMultiplier))throw new Error('Unsupported outputMultiplier');
 
 // Read-only app diagnostic. Measures live requested WebGL storage from

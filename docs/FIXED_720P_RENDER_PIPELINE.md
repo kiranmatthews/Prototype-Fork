@@ -2,7 +2,7 @@
 
 The **RENDER** panel controls a two-resolution presentation path. Its shipped
 default is **720p input → 1× output → fixed 60 FPS**. The game's Options
-presets (540P, 720P, 1080P) always set both input and output to the named
+presets (480P, 720P, 1080P) always set both input and output to the named
 physical short edge, with pixel ratio 1 on desktop and touch devices.
 
 ## Resolution graph
@@ -25,7 +25,10 @@ The short edge is fixed while the other dimension follows the live viewport
 aspect. Rotating the same viewport transposes the input/output buffers and
 preserves their pixel counts. Portrait 720×1280 and landscape 1280×720 have
 the same density and raster cost; device pixel ratio never multiplies a preset.
-The authoring panel offers 540p, 720p, 900p and 1080p inputs plus 1×, 2× and 3× output.
+The authoring panel offers 480p, 720p, 900p and 1080p inputs. 480p is locked
+to 1× input/output: 2×/3× buttons are disabled, programmatic scale changes
+are clamped, and explicit sizing overrides cannot raise its density. Higher
+authoring inputs retain 1×, 2× and 3× output.
 At 16:9 the 720p outputs are therefore:
 
 | Scale | Input | CRT output |
@@ -43,7 +46,7 @@ viewport (393×852 or 852×393), at DPR 1, 2 or 3, selects these physical buffer
 
 | Preset | Portrait | Landscape |
 | --- | --- | --- |
-| 540P | 540×1171 | 1171×540 |
+| 480P | 480×1041 | 1041×480 |
 | 720P | 720×1561 | 1561×720 |
 | 1080P | 1080×2341 | 2341×1080 |
 
@@ -52,7 +55,7 @@ rendered image to the screen. MAX retains the existing native viewport×DPR
 path (DPR capped at 2). Deliberate authoring output scales and a 900p input
 appear as CUSTOM in Options instead of claiming a regular preset. Changing
 the authoring panel refreshes an already-open Options label immediately.
-Activating CUSTOM selects the regular 540P preset.
+Activating CUSTOM selects the regular 480P preset.
 
 ## What runs at the base resolution
 
@@ -114,15 +117,16 @@ panels, leaving the face-button region clear. Settings persist under
 `solProtoRenderQuality.v1`:
 
 - fixed pre-CRT resolution on/off;
-- 540p / 720p / 900p / 1080p physical short edge;
+- 480p / 720p / 900p / 1080p physical short edge;
 - 1× / 2× / 3× CRT output;
 - fixed 60 FPS on/off;
 - restore shipped defaults.
 
-State version 2 uses that same storage key. Loading a V1 preference preserves
-its input preset, enabled/MAX choice and 60 FPS choice, and normalizes the
-formerly hidden/device-specific output multiplier to 1×. V2 preserves
-explicit authoring scales. Corrupt or unavailable storage still uses defaults.
+State version 3 uses that same storage key. V1/V2 540p preferences migrate
+to 480p and 1×, including formerly saved 2×/3× scales. V3 480p preferences
+also normalize any stored output scale to 1×. Enabled/MAX and 60 FPS choices
+are preserved. V1's hidden scaling migration remains; V2/V3 retain explicit
+authoring scales above 480p. Corrupt or unavailable storage uses defaults.
 
 Add `?renderdiag` to expose the hidden `#render-diagnostics` JSON probe. It
 reports settings, computed sizes, actual drawing buffer, composer resolution,
@@ -145,11 +149,11 @@ At a 852×393 viewport, full-render Beachfront with CRT Guest HD / Exact:
 | --- | ---: | ---: | --- |
 | 1080P | 2,528,280 | 130,032,000 bytes | 702×324 |
 | 720P | 1,123,920 | 65,505,600 bytes | 468×216 |
-| 540P | 632,340 | 41,666,400 bytes | 351×162 |
+| 480P | 499,680 | 34,968,000 bytes | 312×144 |
 
-540P reduces main/world/SMAA/output and ocean prepass pixels by approximately
-75% versus 1080P. Reflection pixels fall by 75%; CRT target storage falls by
-68%. CRT's upstream blur kernels retain their separate quality setting, so
+480P reduces main/world/SMAA/output and ocean prepass pixels by approximately
+80% versus 1080P. Reflection pixels fall by 80%; CRT target storage falls by
+73%. CRT's upstream blur kernels retain their separate quality setting, so
 its total memory scales less than the main buffer area. Scene geometry, draw
 counts and simulation remain unchanged; these figures describe raster work
 and target memory, not a promised percentage increase in frame rate.

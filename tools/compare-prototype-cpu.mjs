@@ -13,8 +13,8 @@ const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(
 await page.goto(new URL('?playtest&level=sky',urls[version]).href);await page.waitForFunction(()=>window.__game?.player,null,{timeout:120000});await page.waitForTimeout(12000);
 await page.evaluate(()=>{const g=window.__game,p=window.__cpu={record:false,steps:0,intervals:[],last:null};const step=g.player.step;g.player.step=function(...args){if(p.record)p.steps++;return step.apply(this,args);};function tick(t){if(p.record&&p.last!==null)p.intervals.push(t-p.last);p.last=t;requestAnimationFrame(tick);}requestAnimationFrame(tick);});
 const cdp=await context.newCDPSession(page);await cdp.send('Emulation.setCPUThrottlingRate',{rate:4});
-for(const mode of version==='original'?['default']:['default','540p-crt-off']){
-if(mode==='540p-crt-off')await page.evaluate(()=>{const g=window.__game;g.crtGuestSettings.setEnabled(false);g.renderQualitySettings.setRegularResolution(540);});
+for(const mode of version==='original'?['default']:['default','480p-crt-off']){
+if(mode==='480p-crt-off')await page.evaluate(()=>{const g=window.__game;g.crtGuestSettings.setEnabled(false);g.renderQualitySettings.setRegularResolution(480);});
 await page.waitForTimeout(4000);
 for(let trial=0;trial<2;trial++){
 await page.evaluate(()=>{const p=window.__cpu;p.steps=0;p.intervals=[];p.last=null;p.record=true;p.start=performance.now();});await page.waitForTimeout(6500);

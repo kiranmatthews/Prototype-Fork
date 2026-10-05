@@ -5,7 +5,7 @@ const create=document.createElement.bind(document);
 (document as any).createElement=(tag:string,...args:any[])=>{const el=(create as any)(tag,...args);if(tag.toLowerCase()==='canvas')canvases.push({ref:new WeakRef(el),stack:new Error().stack??''});return el;};
 const {renderQualitySettings}=await import('../src/render-quality/settings');
 const {crtGuestSettings}=await import('../src/crt-guest/settings');
-renderQualitySettings.setRegularResolution(540);crtGuestSettings.setEnabled(false);
+renderQualitySettings.setRegularResolution(480);crtGuestSettings.setEnabled(false);
 await import('../src/main');
 const g=(window as any).__game,gl=g.renderer.getContext();let recording=false,label='',rows:any[]=[],cpu=0,frames=0,draws:any={},uploads:any={},allocations:any[]=[],gpu:number[]=[];
 const longTasks:any[]=[];if(PerformanceObserver.supportedEntryTypes.includes('longtask'))new PerformanceObserver(list=>{if(recording)for(const entry of list.getEntries())longTasks.push({phase:g.gameFlow.loadingPhase??g.gameFlow.currentScreen??'play',ms:entry.duration});}).observe({type:'longtask'});

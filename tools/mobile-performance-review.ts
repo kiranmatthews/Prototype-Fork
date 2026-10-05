@@ -2,7 +2,7 @@ import {renderQualitySettings} from '../src/render-quality/settings';
 import {crtGuestSettings} from '../src/crt-guest/settings';
 import {GameHudSurface} from '../src/gameHudSurface';
 import {GameInterfaceSurface} from '../src/gameInterfaceSurface';
-renderQualitySettings.setRegularResolution(540);crtGuestSettings.setEnabled(false);
+renderQualitySettings.setRegularResolution(480);crtGuestSettings.setEnabled(false);
 await import('../src/main');
 const g=(window as any).__game;
 let recording=false,skipInterface=false,skipHud=false,stats:Record<string,{ms:number;calls:number}>={},draws:Record<string,{calls:number;triangles:number}>={};

@@ -119,6 +119,10 @@ export class RenderQualityPanel {
       outputButtons.appendChild(button);
     }
     output.appendChild(outputButtons);
+    const densityHint = document.createElement("div");
+    densityHint.className = "hint";
+    densityHint.textContent = "480p is locked to 1× input and output.";
+    output.appendChild(densityHint);
 
     this.fixed60 = this.checkboxRow(
       body,
@@ -179,11 +183,13 @@ export class RenderQualityPanel {
     this.fixed60.checked = this.settings.fixed60;
     for (const [value, button] of this.baseButtons)
       button.setAttribute("aria-pressed", String(value === this.settings.baseHeight));
-    for (const [value, button] of this.outputButtons)
+    for (const [value, button] of this.outputButtons) {
+      button.disabled = this.settings.baseHeight === 480 && value !== 1;
       button.setAttribute(
         "aria-pressed",
         String(value === this.settings.outputMultiplier),
       );
+    }
   }
 
   private checkboxRow(
