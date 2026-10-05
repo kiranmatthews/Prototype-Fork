@@ -11707,9 +11707,6 @@ export class Level {
     base.userData.edgeGrinding = false;
     group.add(base);
     this.groundMeshes.push(base);
-    const label = this.worldRooLabel("Bonus", 4.4);
-    label.position.set(0, 2.9, 0);
-    group.add(label);
     this.root.add(group);
     attachBonusStone(group);
     this.bonusPlatform = {

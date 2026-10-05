@@ -23,10 +23,12 @@ export class BonusJumpGate {
 type Template={geometry:THREE.BufferGeometry;material:THREE.MeshLambertMaterial};
 let pending:Promise<Template>|undefined;
 function template(){
-  return pending??=new GLTFLoader().loadAsync(`${import.meta.env.BASE_URL}props/bonus-platform/stone-circle.glb`).then(gltf=>{
+  return pending??=new GLTFLoader().loadAsync(`${import.meta.env.BASE_URL}props/bonus-platform/question-masonry.glb`).then(gltf=>{
     let source:THREE.Mesh|undefined;gltf.scene.updateMatrixWorld(true);gltf.scene.traverse(o=>{if((o as THREE.Mesh).isMesh)source=o as THREE.Mesh;});
     if(!source)throw new Error('Bonus platform GLB contains no mesh');
-    const geometry=source.geometry.clone().applyMatrix4(source.matrixWorld);geometry.computeBoundingBox();
+    // Meshy's source faces diagonally; put the question-mark dot toward +Z,
+    // where the normal negative-Z course approach sees it upright.
+    const geometry=source.geometry.clone().applyMatrix4(source.matrixWorld).rotateY(Math.PI/3);geometry.computeBoundingBox();
     const box=geometry.boundingBox!,size=box.getSize(new THREE.Vector3()),center=box.getCenter(new THREE.Vector3());
     geometry.translate(-center.x,-box.min.y,-center.z);geometry.scale(2*BONUS_PLATFORM_RADIUS/size.x,BONUS_PLATFORM_HEIGHT/size.y,2*BONUS_PLATFORM_RADIUS/size.z);
     geometry.computeBoundingBox();geometry.computeBoundingSphere();geometry.userData.shared=true;
@@ -46,7 +48,7 @@ export function attachBonusStone(group:THREE.Group):void {
     if(group.userData.bonusStoneDisposed)return;
     group.remove(fallback);fallback.geometry.dispose();fallback.material.dispose();
     const ownMaterial=material.clone();ownMaterial.userData.shared=false;
-    const stone=new THREE.Mesh(geometry,ownMaterial);stone.name='Meshy stone circle bonus platform';stone.castShadow=stone.receiveShadow=true;
+    const stone=new THREE.Mesh(geometry,ownMaterial);stone.name='Meshy masonry question mark bonus platform';stone.castShadow=stone.receiveShadow=true;
     stone.userData.bonusOpenColor=0xffffff;stone.userData.bonusOpenEmissive=0;
     if(group.userData.bonusLocked)ownMaterial.color.setScalar(.46);
     group.add(stone);group.userData.bonusStoneReady=true;

@@ -1,0 +1,43 @@
+{
+  "name": "question-masonry",
+  "triangles": 3695,
+  "bytes": 500144,
+  "textureSize": 1024,
+  "sourceSha256": "67306302090e2fb2dcc9fc9e30156bf36882c762fd7d3e49ca5c8bebe3c31168",
+  "sha256": "64be7f5ec9faabb5438f1f874ff37aaa0575eaf1eb3a9a07081061a3577d48ad",
+  "provider": "Meshy",
+  "task": {
+    "resource": "image-to-3d",
+    "state": "SUCCEEDED",
+    "operationId": "351e9832-f518-4adb-aff0-9a6fffdf2c84",
+    "createdAt": "2026-10-05T22:14:10.189918+00:00",
+    "estimatedCredits": 15,
+    "balanceBefore": 366,
+    "reference": "art/bonus-platform/question-masonry.png",
+    "referenceSha256": "90730dfed49c0f56b09132a14fb0972c9b52cdaae2cbd4cef5122b9cd09ba68d",
+    "id": "01a10e21-af98-72e2-8801-6c90643464a3",
+    "checkedAt": "2026-10-05T22:15:21.350890+00:00",
+    "progress": 100,
+    "consumedCredits": 15,
+    "finishedAt": 1791238492320,
+    "expiresAt": 1791497692320,
+    "downloads": [
+      {
+        "path": ".img2threejs/bonus-question/question-masonry/downloads/model.glb",
+        "bytes": 6791056,
+        "sha256": "67306302090e2fb2dcc9fc9e30156bf36882c762fd7d3e49ca5c8bebe3c31168"
+      }
+    ],
+    "balanceAfter": 351
+  },
+  "concept": "art/bonus-platform/question-masonry.png",
+  "conceptSha256": "90730dfed49c0f56b09132a14fb0972c9b52cdaae2cbd4cef5122b9cd09ba68d",
+  "prompt": "art/bonus-platform/question-masonry-prompt.txt",
+  "runtimeSize": [
+    3.2,
+    1.05,
+    3.2
+  ],
+  "material": "Warm golden sandstone question-mark blocks in cool dark blue-grey masonry; one 1024px base-colour texture.",
+  "runtimeYawDegrees": 60
+}

@@ -1,0 +1,66 @@
+[
+  {
+    "lite": true,
+    "initial": {
+      "sprites": [],
+      "ready": true,
+      "triangles": 3695,
+      "children": [
+        "bonus platform deck",
+        "Meshy masonry question mark bonus platform"
+      ],
+      "dimensions": [
+        3.200000047683716,
+        1.0500000715255737,
+        3.200000286102295
+      ]
+    },
+    "lock": {
+      "locked": 11908533,
+      "open": 16777215,
+      "hidden": true,
+      "visible": true
+    },
+    "returned": {
+      "ready": true,
+      "locked": true,
+      "meshes": [
+        "bonus platform deck",
+        "Meshy masonry question mark bonus platform"
+      ]
+    },
+    "errors": []
+  },
+  {
+    "lite": false,
+    "initial": {
+      "sprites": [],
+      "ready": true,
+      "triangles": 3695,
+      "children": [
+        "bonus platform deck",
+        "Meshy masonry question mark bonus platform"
+      ],
+      "dimensions": [
+        3.200000047683716,
+        1.0500000715255737,
+        3.200000286102295
+      ]
+    },
+    "lock": {
+      "locked": 11908533,
+      "open": 16777215,
+      "hidden": true,
+      "visible": true
+    },
+    "returned": {
+      "ready": true,
+      "locked": true,
+      "meshes": [
+        "bonus platform deck",
+        "Meshy masonry question mark bonus platform"
+      ]
+    },
+    "errors": []
+  }
+]
