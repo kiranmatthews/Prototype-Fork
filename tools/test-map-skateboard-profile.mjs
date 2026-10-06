@@ -31,6 +31,26 @@ try {
  const map=new SkateboardSettings({storageKey:'solProtoBoardTestMap',defaults:mapDefaults});
  const host={getBoundingClientRect:()=>({x:0,y:0,width:500,height:180})};
  const card=new MapLevelPresentation(host,host,map);
+ // Compare the actual painted sockets with the models in the print plane's
+ // coordinates. Matching scales alone misses a stale slot offset or count.
+ const assertRewardAlignment=()=>{
+  const canvas=card.faceTexture.image,ctx=canvas.getContext('2d'),sockets=[];
+  const ellipse=ctx.ellipse;
+  ctx.ellipse=(x,y)=>sockets.push({x,y});
+  try { card.paint({name:'ALIGNMENT',earned:[true,true,true],medal:'gold'},false); }
+  finally { ctx.ellipse=ellipse; }
+  assert.equal(sockets.length,card.rewards.length);
+  card.scene.updateMatrixWorld(true);
+  const {width,height}=card.face.geometry.parameters;
+  card.rewards.forEach((reward,i)=>{
+   const centre=card.face.worldToLocal(reward.getWorldPosition(reward.position.clone()));
+   const x=(centre.x/width+.5)*canvas.width,y=(.5-centre.y/height)*canvas.height;
+   assert.ok(Math.abs(x-sockets[i].x)<1e-7,`reward ${i} misses its printed socket horizontally by ${x-sockets[i].x} texture pixels`);
+   assert.ok(Math.abs(y-sockets[i].y)<1e-7,`reward ${i} misses its printed socket vertically by ${y-sockets[i].y} texture pixels`);
+   assert.ok(centre.z>0,'earned model must remain raised above the deck');
+  });
+ };
+ assertRewardAlignment();
  assert.equal(card.board.userData.settings.deckHalfWidth,.283);
  const grip=card.board.getObjectByName('Deck_ContinuousRoundedKick').material[0].map;
  assert.equal(grip.name,'SkateboardDeck_Grip_Map_Plain');
@@ -56,6 +76,11 @@ try {
  assert.ok(Math.abs(card.board.userData.geometryStats.width-.48)<1e-5);
  assert.equal(card.face.scale.x,card.face.scale.y,'map print was stretched');
  assert.ok(card.rewards.every(p=>p.scale.x===card.face.scale.x),'icons drifted from their printed sockets');
+ assertRewardAlignment();
+ map.patch({deckTailLength:.75,deckNoseLength:1.1});card.updateBoard();
+ card.anchor.rotation.z=.085;card.deckPivot.rotation.set(1.7,.05,0);
+ assertRewardAlignment();
+ card.deckPivot.rotation.set(0,0,0);
  const reloaded=new SkateboardSettings({storageKey:'solProtoBoardTestMap',defaults:mapDefaults});
  assert.equal(reloaded.value.deckHalfWidth,.24);assert.equal(reloaded.value.topWear,.9);
  map.reset();assert.equal(map.value.deckHalfWidth,.283);assert.equal(game.value.deckHalfWidth,.42);

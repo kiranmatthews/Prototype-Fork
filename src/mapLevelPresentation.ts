@@ -29,6 +29,10 @@ export function mapTrialTime(seconds: number | undefined): string {
 
 export const MAP_DECK_FLIP_SECONDS = 0.64;
 
+const DECK_FACE = { width: 1.6, height: 0.534, textureWidth: 1536, textureHeight: 512 };
+// Printing and raised models share these texture-space slot centres.
+const REWARD_SOCKETS = [0, 1, 2].map(index => ({ x: 441.2 + index * 326.4, y: 366 }));
+
 /** Shared flip clock: change the printing only while the grip faces away. */
 export class MapDeckFlip {
   shown: MapLevelCardData | null = null;
@@ -88,7 +92,7 @@ export class MapLevelPresentation {
   private readonly anchor = new THREE.Group();
   private readonly deckPivot = new THREE.Group();
   private readonly rewards: THREE.Group[] = [];
-  private readonly faceTexture = canvasTexture(1536, 512);
+  private readonly faceTexture = canvasTexture(DECK_FACE.textureWidth, DECK_FACE.textureHeight);
   private readonly trialTexture = canvasTexture(768, 800);
   private readonly trial = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: this.trialTexture, transparent: true, toneMapped: false }));
   private inkKey = "";
@@ -110,10 +114,10 @@ export class MapLevelPresentation {
     mount.quaternion.setFromEuler(new THREE.Euler(Math.PI / 2, 0, Math.PI / 2, "ZXY"));
     const board = this.board = createSkateboardPresentation(this.boardSettings.value);
     mount.add(board); this.deckPivot.add(mount);
-    const face = this.face = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 0.534), new THREE.MeshStandardMaterial({ map: this.faceTexture, roughness: 0.95, transparent: true, depthWrite: false }));
+    const face = this.face = new THREE.Mesh(new THREE.PlaneGeometry(DECK_FACE.width, DECK_FACE.height), new THREE.MeshStandardMaterial({ map: this.faceTexture, roughness: 0.95, transparent: true, depthWrite: false }));
     face.position.z = 0.075; this.deckPivot.add(face);
     const factories = [() => Level.crystalMesh(), () => Level.gemMesh(), () => Level.timeRelicMesh()];
-    for (const [i, make] of factories.entries()) {
+    for (const make of factories) {
       const model = make();
       for (const object of [...model.children]) if ((object as THREE.Sprite).isSprite) model.remove(object);
       const bounds = new THREE.Box3().setFromObject(model);
@@ -122,7 +126,6 @@ export class MapLevelPresentation {
       const spin = new THREE.Group(); spin.add(model);
       spin.scale.setScalar(0.205 / Math.max(size.y, Math.hypot(size.x, size.z)));
       const pivot = new THREE.Group(); pivot.add(spin);
-      pivot.position.set(-0.34 + i * 0.34, -0.115, 0.22);
       pivot.rotation.x = 0.12;
       this.deckPivot.add(pivot); this.rewards.push(pivot);
     }
@@ -167,7 +170,10 @@ export class MapLevelPresentation {
     this.face.scale.setScalar(printScale);
     this.face.position.set(centre, 0, printZ);
     this.rewards.forEach((pivot, i) => {
-      pivot.position.set(centre + (-0.51 + i * 0.34) * printScale, -0.115 * printScale, printZ + 0.145 * scale);
+      const socket = REWARD_SOCKETS[i];
+      const x = (socket.x / DECK_FACE.textureWidth - 0.5) * DECK_FACE.width;
+      const y = (0.5 - socket.y / DECK_FACE.textureHeight) * DECK_FACE.height;
+      pivot.position.set(centre + x * printScale, y * printScale, printZ + 0.145 * scale);
       pivot.scale.setScalar(printScale);
     });
     this.boardDirty = false;
@@ -225,12 +231,12 @@ export class MapLevelPresentation {
   private paint(data: MapLevelCardData,updateTrial=true): void {
     setTimeMedalTier(this.rewards[2], data.medal ?? 'gold');
     const ctx = this.faceTexture.image.getContext("2d")!;
-    ctx.clearRect(0, 0, 1536, 512);
+    ctx.clearRect(0, 0, DECK_FACE.textureWidth, DECK_FACE.textureHeight);
     // Warm screen-printed reward sockets; missing shapes stay flat and dark.
-    for (let i = 0; i < (data.competition ? 0 : 3); i++) {
-      const x = 441.2 + i * 326.4;
-      ctx.fillStyle = "#9e9b8b"; ctx.beginPath(); ctx.ellipse(x, 366, 109, 105, -0.08, 0, Math.PI * 2); ctx.fill();
-      if (!data.earned[i]) silhouette(ctx, i, x, 366);
+    for (let i = 0; i < (data.competition ? 0 : REWARD_SOCKETS.length); i++) {
+      const { x, y } = REWARD_SOCKETS[i];
+      ctx.fillStyle = "#9e9b8b"; ctx.beginPath(); ctx.ellipse(x, y, 109, 105, -0.08, 0, Math.PI * 2); ctx.fill();
+      if (!data.earned[i]) silhouette(ctx, i, x, y);
     }
     if (data.competition) {
       ctx.textAlign = "center"; ctx.textBaseline = "middle";
