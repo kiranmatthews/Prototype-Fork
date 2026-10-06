@@ -142,6 +142,31 @@ export function encloseTreehouseWorld(input:readonly CustomComponent[]):CustomCo
     plant('trialsv2treea',x,-.4,z,width,width*.6833,width*.9966,yaw,'rooted inland edge around the opening');
     plant('trialsv3thicket',x,-.25,z+4,width*.44,width*.26,width*.26,yaw,'dense roots beneath the opening canopy');
   }
+  // Close the inland eastern edge of the clearing. The original ground
+  // stopped at x=65, exposing sky beneath the first tree on the right.
+  const eastV:number[]=[],eastUv:number[]=[],eastIx:number[]=[];
+  const eastXs=[46,54,65,82,108],eastYs=[-.35,-.18,1.6,4.8,5.4];
+  for(const z of [-46,-30,-12,5,13])for(let i=0;i<eastXs.length;i++){
+    eastV.push(eastXs[i],eastYs[i]+(i>1?.15*Math.sin(z*.16+i):0),z);
+    eastUv.push(eastXs[i]/6.5,z/6.5);
+  }
+  for(let row=0;row<4;row++)for(let col=0;col<4;col++){
+    const a=row*5+col,b=a+1,c=a+5,d=c+1;eastIx.push(a,c,b,b,c,d);
+  }
+  C.push({t:'mesh',p:[0,0,0],vertices:eastV,indices:eastIx,uvs:eastUv,tex:'treehouse-loam',
+    color:'#3f592e',solid:false,edgeGrinding:false,nm:'Bush enclosure · eastern clearing forest bank',grp:16});
+  for(const [x,z,y,width,yaw] of [[70,-32,2,30,38],[72,-8,2.5,29,-12],[78,9,3,31,61]] as const){
+    plant('trialsv2treea',x,y,z,width,width*.6833,width*.9966,yaw,'complete inland forest behind the clearing',false);
+    plant('trialsv3thicket',x-9,y-1.5,z+2,13,7.23,11,yaw+17,'dense lower edge beyond the clearing',false);
+  }
+  C.push({t:'decor',dkind:'trialsv3understorymatte',p:[90,1,-5],s:[64,64/3,.02],yaw:-65,
+    color:'#9bb48a',castShadow:false,nm:'Bush enclosure · eastern clearing forest depth',grp:6});
+  // These crowns stand outside the future path at its bends. They fill the
+  // horizon viewed from higher ground without placing a matte across travel.
+  for(const [dx,z,width,yaw] of [[-26,-124,42,38],[23,-208,39,-22],[-26,-280,39,53]] as const){
+    const p=treehouseTrialPoint([35+dx,bankHeight(z,Math.abs(dx),Math.sign(dx))-.45,z]);
+    plant('trialsv2treea',p[0],p[1],p[2],width,width*.6833,width*.9966,yaw,'tall distant crown behind the next bend',false);
+  }
   // Mossy ledges and varied ferns carry the bush into the sunlit cavern.
   for(let z=-317,i=0;z>=-380;z-=7,i++)for(const side of [-1,1]){
     const pocket=side<0&&z<-362?9:0;

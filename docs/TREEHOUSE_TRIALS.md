@@ -89,7 +89,7 @@ run in `docs/performance/treehouse-repair-continuous.json` starts at the balcony
 and reaches the gate in 86.37s with no travel warps, deaths or console errors.
 The review controller counter-steers the normal grind balance meter on the
 longer rope; it does not change physics, position or speed. Maximum sampled
-camera rotation is 1.34 degrees per simulation step in the latest enclosure run.
+camera rotation is 0.94 degrees per simulation step in the latest integrated enclosure run.
 
 Focused browser evidence covers 28 outward stair/landing/balcony pushes, 22
 course-edge pushes, walking through all three nonlethal pits, and 81 rays
@@ -117,7 +117,7 @@ workflow and preserves other chats' changes.
 
 ## Dense bush enclosure, 7 October
 
-`src/levels/treehouse-enclosure.ts` adds 375 scenery components: continuous
+`src/levels/treehouse-enclosure.ts` adds 386 scenery components: continuous
 rising forest floors, densely filled understory, staggered middle/far trees,
 overhanging boughs, layered matte thickets and cavern planting. Sampling uses
 world metres so the extended joins receive the same density as the set pieces.
@@ -143,12 +143,16 @@ over the **764.3m ordered route**, plus **60 native left/right camera-peek views
 The eight forward and three peek sheets are in `docs/treehouse-enclosure/`.
 These are held composition surveys; the independent continuous native-input
 run proves traversal. That final run finishes in **84.33s**, zero deaths and
-console errors, with a maximum sampled camera turn of **1.34°** per step.
+console errors, with a maximum sampled camera turn of **0.94°** per step.
 
 The final six full-render 1280×720 samples have **16.7ms medians** and
-**17.4–18.4ms p95**, after removing redundant background shadow casting. Scene
+**p95 at or below 18.5ms**, after removing redundant background shadow casting. Scene
 texture residency peaks at **125.05MiB** in the moving run. The production
 bundle also passes desktop and 390×844 portrait checks, with working keyboard
 movement and all three new asset kinds loaded. Physical-phone performance is
 unmeasured. Focused level checks and the production build pass; no full suite.
 See `docs/performance/treehouse-enclosure-*.json` for the recorded evidence.
+
+The final clearing review also closes the eastern ground edge with planted
+earth, three trees, lower thickets and a matte. Three taller crowns behind
+subsequent bends fill distant sightlines without crossing the playable path.
