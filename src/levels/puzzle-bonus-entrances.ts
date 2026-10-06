@@ -34,8 +34,10 @@ export function puzzleBonusEntrance(components: readonly CustomComponent[], inde
   result.push({ t: 'platform', p: [x, y - .5, 5.35], s: [8, 1, 5.3],
     tex: court?.tex ?? 'stone', color: court?.color ?? '#bba37a', edgeGrinding: false,
     grp: 1, nm: 'Permanent bonus alcove, joined to the final court' });
-  for (const side of [-1, 1]) result.push({ t: 'wall', p: [x + side * 4.3, -14, 4.5],
-    s: [.6, 60, 8], invisible: true, grp: 3, nm: 'Bonus alcove side boundary' });
+  // Start beyond the player's half-depth and collision skin on the main lane.
+  // The near ends still overlap the existing depth boundary by 3 cm.
+  for (const side of [-1, 1]) result.push({ t: 'wall', p: [x + side * 4.3, -14, 4.8],
+    s: [.6, 60, 7.4], invisible: true, grp: 3, nm: 'Bonus alcove side boundary' });
   result.push(
     { t: 'wall', p: [x, -14, 8.3], s: [9.2, 60, .6], invisible: true, grp: 3, nm: 'Bonus alcove outer boundary' },
     { t: 'bonusplatform', p: [x, y, 5.4], to: [x, y + .1, 0], grp: 1, nm: 'Final court bonus detour' },

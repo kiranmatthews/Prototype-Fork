@@ -233,6 +233,15 @@ for (const [segmentIndex, segment] of roadSegments.entries()) {
 
 // Ten long path rails replace Unity's 46 per-slab boundary rail objects while
 // retaining the five discontinuous road/gap blocks and every elevation break.
+// Include every grade break so a rail cannot cut through a crest between
+// coarse samples. The same stations serve the boundary and street grind lines.
+const railStations = (start: number, end: number, spacing: number): number[] => {
+  const values = new Set<number>([start, end]);
+  for (let z = start; z < end; z += spacing) values.add(z);
+  for (const segment of roadSegments)
+    for (const z of [segment.start, segment.end]) if (z > start && z < end) values.add(z);
+  return [...values].sort((a, b) => a - b);
+};
 const continuousRoadBlocks = [
   [-30, 430],
   [441, 900],
@@ -243,18 +252,13 @@ const continuousRoadBlocks = [
 continuousRoadBlocks.forEach(([start, end], blockIndex) => {
   for (const side of [-1, 1] as const) {
     const points: RailPoint[] = [];
-    for (let unityZ = start; unityZ < end; unityZ += 55) {
+    for (const unityZ of railStations(start, end, 55)) {
       points.push([
         side * 7.2,
         heightAt(unityZ) + (side < 0 ? 1.22 : 0.95),
         unityZ,
       ]);
     }
-    points.push([
-      side * 7.2,
-      heightAt(end) + (side < 0 ? 1.22 : 0.95),
-      end,
-    ]);
     railPath(
       `${side < 0 ? "town" : "beach"} boundary ${blockIndex + 1}`,
       points,
@@ -466,16 +470,15 @@ const reservedSideAt = (unityZ: number): number => {
 const freestandingRails = [
   [2.5, 115, 260, 0.7], [-2.5, 360, 400, 0.68], [2.4, 670, 790, 0.7],
   [-2.4, 820, 890, 0.72], [-2.4, 930, 1030, 0.68], [0, 1120, 1230, 0.72],
-  [-2.3, 1250, 1360, 0.72], [2.3, 1390, 1510, 0.68], [-2.3, 1540, 1650, 0.72],
+  [-2.3, 1250, 1360, 0.72], [-2.3, 1390, 1510, 0.68], [-2.3, 1540, 1650, 0.72],
   [2.3, 1670, 1790, 0.68], [-2.3, 1980, 2060, 0.72], [2.3, 2180, 2270, 0.72],
-  [-2.3, 2410, 2570, 0.72], [2.3, 2830, 2990, 0.68],
+  [-2.3, 2410, 2570, 0.72], [2.3, 2848, 2990, 0.68],
 ] as const;
 freestandingRails.forEach(([x, start, end, railHeight], index) => {
   const points: RailPoint[] = [];
-  for (let unityZ = start; unityZ < end; unityZ += 18) {
+  for (const unityZ of railStations(start, end, 18)) {
     points.push([x, heightAt(unityZ) + railHeight, unityZ]);
   }
-  points.push([x, heightAt(end) + railHeight, end]);
   railPath(`street rail ${index + 1}`, points);
 });
 
@@ -492,7 +495,7 @@ boostDistances.forEach((unityZ, index) =>
   }),
 );
 
-const gruntDistances = [270, 315, 550, 620, 1040, 1105, 1380, 1518, 1950, 2148, 2295];
+const gruntDistances = [270, 315, 550, 620, 1040, 1105, 1380, 1518, 1950, 2164, 2295];
 gruntDistances.forEach((unityZ, index) =>
   add({
     t: "enemy",
@@ -509,8 +512,8 @@ crossingThreats.forEach((unityZ, index) =>
     t: "enemy",
     p: [[-4, 3.25, -2, 4, 0][index], r2(heightAt(unityZ)), -unityZ],
     foe: "spinner",
-    range: 4,
-    speed: 4.4 + index * 0.45,
+    range: 0,
+    speed: 0,
     nm: `street crossing threat ${index + 1}`,
     grp: GROUP.actors,
   }),

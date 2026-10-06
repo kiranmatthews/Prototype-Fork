@@ -126,7 +126,7 @@ add({t:'pit',p:[0,BLOCKWORKS_GROUND+.35,20-ROUTE_END/2],s:[250,1,ROUTE_END+80],i
  road(-12,120,0,s=>mix(10,8,s/90),g);road(120,166,lerpY(120,166,0,-2.4),8,g);
  gap(166,176.8,-2.4,18,g);road(176.8,208,-2.4,s=>mix(10,8,(s-176.8)/31.2),g);road(208,235,-2.4,8,g);
  pad(78,1.4,4.8,12,g,-3.4);pad(93,2.8,4.8,12,g,-3.4);pad(109,1.4,4.8,14,g,-3.4);
- railLine(112,198,s=>mix(1,-1.6,(s-112)/86),-4.4,g,'Outside arc over the first gap');
+ railLine(112,198,s=>mix(2.2,-1.6,(s-112)/86),-4.4,g,'Outside arc over the first gap');
  enemy(130,-.52,'turtle',g,-1.5,1.2,.85);fruit(130,2.4,g,-1.5);fruitLine(20,60,0,g);fruitLine(145,163,lerpY(120,166,0,-2.4),g,0,9);
  mark(153,-1.72,g);mark(164,-2.3,g);fruit(171,.3,g);crate(28,0,'mask',g,-4);
  add({t:'clock',p:routePoint(8,0,4),grp:g});
@@ -244,7 +244,8 @@ export const BLOCKWORKS_MACHINE={ferry:routePoint(1355,8.4),lift:routePoint(1410
  mover({t:'mover',p:BLOCKWORKS_MACHINE.lift,s:[8,.8,8],axis:'y',amp:2.4,speed:1.1,phase:-Math.PI/2,grp:g,nm:'Fast loading lift'});
  for(const sign of [-1,1]){const p=BLOCKWORKS_MACHINE.lift;box([p[0]+sign*5.2,0,p[2]],14.4,.6,9,g,0,GREY[3],'Grounded lift guide');}
  road(1414,1520,13.2,8,g);road(1520,1560,13.2,s=>8+1.2*groundFlare(s,1525,1543,1553,1560),g);
- railLine(1320,1444,s=>mix(9.3,14.1,(s-1320)/124),s=>5.8*Math.sin(Math.PI*(s-1320)/124),g,'Machinery high line · rising S grind');
+ // Crest above the lift guides before descending onto the receiving roof.
+ railLine(1320,1444,s=>s<=1410?mix(9.3,15.3,(s-1320)/90):mix(15.3,14.1,(s-1410)/34),s=>5.8*Math.sin(Math.PI*(s-1320)/124),g,'Machinery high line · rising S grind');
  fruitLine(1303,1330,8.4,g);fruitLine(1425,1545,13.2,g);
  checkpoint(1550,13.2,g,'Machinery and high roof complete',3.5);
 }

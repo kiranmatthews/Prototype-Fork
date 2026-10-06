@@ -34,6 +34,9 @@ function course(index:number,name:string,end:number) {
   ];
   const sections:PuzzleSection[]=[], actions:PuzzleAction[]=[];
   const add=(c:CustomComponent)=>components.push(c);
+  // One-line depth containment makes a clock on the route unavoidable. Put
+  // the optional trial behind spawn so normal jumps retain their crate rules.
+  add({t:'clock',p:[-7,0,0],grp:2,nm:'Optional trial / behind the start'});
   const visual=(x:number,y:number,z:number,w:number,h:number,d:number,color:string,nm:string)=>
     add({t:'mesh',p:[x,y,z],s:[w,h,d],...CUBE,solid:false,tex:'solid',color,grp:5,nm});
   const deck=(a:number,b:number,y:number,nm:string)=>{
@@ -101,7 +104,9 @@ function course(index:number,name:string,end:number) {
       if(index===2)add({t:'torch',p:[x,-.6,-3.6],rise:3,w:.5,grp:5,nm:'Foundry lantern'});
     }
   };
-  const data=():CustomLevelData=>({v:1,name,spawn:[-5,.12,0],killY:-12,
+  // Bounce galleries need the existing full-height camera follow on every jump.
+  const data=():CustomLevelData=>({v:1,name,spawn:[-5,.12,0],killY:-12,cameraAirLift:1,
+    cameraRig:{camDist:16.5,camHeight:7.4,camPitch:21,camFov:56},
     sky:colors.sky,components:puzzleBonusEntrance(components,index),groups});
   return {add,deck,shelf,crate,fruit,arc,enemy,checkpoint,section,jump,bridge,anchors,clear,flip,finish,data,actions,sections};
 }
@@ -161,7 +166,7 @@ b.crate(35,9,'wood','Upper key-gallery reward');
 b.bridge(42,57,1.4,38,9,10,'Gallery bridge circuit');
 b.actions.push({kind:'bounce',x:32,y:1.4,to:36,top:9,note:'Reach the high switch before clearing the wooden launcher; then descend to remove it and cross the new bridge.'});
 b.section('2 · Opposite attack rules',57,80,1.4,'Turtle followed by spiker; reset at a safe bank before the gap.');
-b.deck(57,80,1.4,'Paired enemy lesson');b.enemy(64,1.4,'turtle',1.8,1.3);b.enemy(73,1.4,'spiker',1.5,1.5);b.checkpoint(78,1.4);
+b.deck(57,80,1.4,'Paired enemy lesson');b.enemy(64,1.4,'turtle',1.8,1.3);b.enemy(71,1.4,'spiker',1.2,1.5);b.checkpoint(78,1.4);
 b.section('3 · Crate staircase',80,120,1.4,'Preserve low metal anchors, use the arrow for the upper workshop.');
 b.anchors(81,88,1.4,3,'metal');b.crate(89,1.4,'metalbounce','Workshop elevation anchor',1);
 b.jump(78,1.4,82,2.36);b.jump(82,2.36,85);b.jump(85,2.36,89);b.jump(89,2.36,94,2.8);
@@ -188,7 +193,7 @@ for(const x of [189,190,191,192])b.crate(x,2.8,'nitro','Later Nitro field; same 
 b.section('6 · Finite footing finale',196,228,2.8,'Crumble landing, step up, then an attack-rule reprise.');
 b.add({t:'crumble',p:[199,2.8,0],s:[3.6,.6,5.4],shake:1.1,tex:'wood',color:'#c3a56c',grp:4,nm:'Warning-before-collapse crossing'});
 b.actions.push({kind:'crumble',x:194,y:2.8,to:204,top:4,note:'Cross the warning deck without lingering; the next permanent landing is higher.'});
-b.arc(195,203,3.4);b.deck(202,228,4,'Final rule reprise');b.enemy(208,4,'turtle',1,1.3);b.enemy(218,4,'spiker',1,1.5);b.crate(224,4,'mystery','Mastery reward');b.finish(225,4);
+b.arc(195,203,3.4);b.deck(202,228,4,'Final rule reprise');b.enemy(208,4,'turtle',1,1.3);b.enemy(216,4,'spiker',1,1.5);b.crate(221,4,'mystery','Mastery reward');b.finish(225,4);
 
 const c=course(2,'Clockwork Gauntlet',286);
 c.section('1 · Anchor relay',-8,38,0,'Immediately remix high rewards, spiked contact and destructible bridge footing.');

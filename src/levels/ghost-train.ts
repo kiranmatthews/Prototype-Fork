@@ -279,7 +279,7 @@ for(const [i,s]of [137,176,246,287,404,495,507,1720,1781,1918].entries())axe(s,i
 for(const s of [694,712])for(const side of [-1,1])banquet(s,side*2.9,Math.floor(s)%3);
 for(const [i,s]of [550,587,672,725].entries())enemy(s,i%2?'ghostcake':'ghostfood',i%2?2.35:-2.35,i,.65);
 // A real rising gallery hands the feast theatre into the service passage.
-for(const [i,s]of [855,888,954,979,1073,1617,1672,1988,2099,2144].entries())enemy(s,'ghostknight',i%2?2.15:-2.15,0,.65);
+for(const [i,s]of [855,888,954,973,1073,1617,1672,1988,2099,2144].entries())enemy(s,'ghostknight',i%2?2.15:-2.15,0,.65);
 for(const s of [847,898,927,966,1081,1977,2026])for(const side of [-1,1]){
   const u=side*(roomAt(s).width/2-1.05),y=ghostRouteHeight(s);art.box(ghostRoutePoint(s,y+.18,u),[1.25,.36,1.35],P.dark,district(s).grp,'Armour alcove carved plinth',ghostRouteYaw(s),undefined,'castle-stone');display(s,'ghostknight',u,y+.36,2.5);showlight(s-2,u,3.8,'#82f8ad',s,u,45,1);
 }

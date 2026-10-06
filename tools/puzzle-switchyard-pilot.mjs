@@ -79,7 +79,7 @@ export function* runSwitchyardJourney(r) {
   yield* c.hit(keyLaunch, 'high gallery launcher last');
   yield* c.walk([59, 1.4, 0], 'newly materialized first bridge');
   yield* c.enemy(foeAt(64), 'armor stomp lesson');
-  yield* c.enemy(foeAt(73), 'spike spin lesson');
+  yield* c.enemy(foeAt(71), 'spike spin lesson');
   yield* c.checkpoint(78, 'pre-staircase checkpoint');
 
   yield* c.walk([78.5, 1.4, 0], 'crate stair takeoff');
@@ -149,8 +149,8 @@ export function* runSwitchyardJourney(r) {
   yield* c.hop([199, 2.8, 0], 'finite footing first landing');
   yield* c.hop([203.8, 4, 0], 'finite footing finale', { tolerance: 1, limit: 180 });
   yield* c.enemy(foeAt(208), 'final armored stomp');
-  yield* c.enemy(foeAt(218), 'final spike spin');
-  if (at(224, 4).alive) yield* c.hit(at(224, 4), 'final mastery reward');
+  yield* c.enemy(foeAt(216), 'final spike spin');
+  if (at(221, 4).alive) yield* c.hit(at(221, 4), 'final mastery reward');
   yield* c.clearAll('Switchyard active-stage crate dependency route');
   const completion=yield* c.finish('finish plane crossing',{limit:200});
   return { ...completion, id: r.id, done: true, state: p.state, cratesBroken: p.cratesBroken,

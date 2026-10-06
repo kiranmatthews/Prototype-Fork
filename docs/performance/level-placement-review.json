@@ -1,0 +1,665 @@
+{
+  "date": "2026-10-07",
+  "scope": {
+    "reviewed": 39,
+    "ordinaryAndDebugCourses": 23,
+    "bonusRooms": 16,
+    "changed": [
+      "jungle",
+      "flats",
+      "sky",
+      "slip",
+      "dark",
+      "coastal-street-run",
+      "codex-lab",
+      "crate-primer",
+      "switchyard",
+      "clockwork-gauntlet",
+      "ghost-train"
+    ],
+    "excludedActiveOrSeparateWork": [
+      "treehouse-trail",
+      "test (Carlisle Coast)",
+      "custard-creek",
+      "jungle-terraces",
+      "jungle-skyline",
+      "nightworks-after-hours"
+    ],
+    "excludedUtility": [
+      "warproom",
+      "bone-yard",
+      "backport-lab"
+    ]
+  },
+  "method": "Source/published inventory; actual Level collision and patrol probes; authored rail sweeps; lite browser route and checkpoint survey; full-render changed-level review. Suspended puzzle crates are intentional and were retained. Review is not a claim of continuous full-course completion for every surveyed level.",
+  "levels": [
+    {
+      "id": "jungle",
+      "name": "Jungle Ruins",
+      "source": "builtin",
+      "components": 3110,
+      "spawnSupport": {
+        "y": 1.779,
+        "name": "clearing",
+        "delta": 0.236
+      },
+      "checkpoints": 4,
+      "enemies": 8,
+      "authoredRails": 8,
+      "changed": true
+    },
+    {
+      "id": "flats",
+      "name": "Flats & Pipes",
+      "source": "pack",
+      "components": 332,
+      "spawnSupport": {
+        "y": 90,
+        "name": "platform",
+        "idx": 0,
+        "delta": 0.1
+      },
+      "checkpoints": 2,
+      "enemies": 3,
+      "authoredRails": 5,
+      "changed": true
+    },
+    {
+      "id": "sky",
+      "name": "Sky Bridge",
+      "source": "pack",
+      "components": 48,
+      "spawnSupport": {
+        "y": 0,
+        "name": "platform",
+        "idx": 0,
+        "delta": 0.1
+      },
+      "checkpoints": 2,
+      "enemies": 2,
+      "authoredRails": 10,
+      "changed": true
+    },
+    {
+      "id": "slip",
+      "name": "The Slipstream",
+      "source": "pack",
+      "components": 285,
+      "spawnSupport": {
+        "y": 150,
+        "name": "platform",
+        "idx": 0,
+        "delta": 0.1
+      },
+      "checkpoints": 2,
+      "enemies": 0,
+      "authoredRails": 18,
+      "changed": true
+    },
+    {
+      "id": "slipstream-2",
+      "name": "Slipstream 2",
+      "source": "pack",
+      "components": 1111,
+      "spawnSupport": {
+        "y": 150,
+        "name": "platform",
+        "idx": 0,
+        "delta": 0.08
+      },
+      "checkpoints": 16,
+      "enemies": 0,
+      "authoredRails": 26,
+      "changed": false
+    },
+    {
+      "id": "dark",
+      "name": "The Nightworks",
+      "source": "builtin",
+      "components": 167,
+      "spawnSupport": {
+        "y": 0,
+        "name": "floating rock island",
+        "idx": 0,
+        "delta": 0.1
+      },
+      "checkpoints": 11,
+      "enemies": 6,
+      "authoredRails": 5,
+      "changed": true
+    },
+    {
+      "id": "descent",
+      "name": "The Descent",
+      "source": "builtin",
+      "components": 1928,
+      "spawnSupport": {
+        "y": 428.608,
+        "name": "road deck chunk",
+        "delta": 0.158
+      },
+      "checkpoints": 4,
+      "enemies": 0,
+      "authoredRails": 2,
+      "changed": false
+    },
+    {
+      "id": "beachfront",
+      "name": "Beachside Run",
+      "source": "builtin",
+      "components": 294,
+      "spawnSupport": {
+        "y": 0.408,
+        "name": "Showcase1ContinuousSandSeabed",
+        "delta": 0.118
+      },
+      "checkpoints": 4,
+      "enemies": 0,
+      "authoredRails": 14,
+      "changed": false
+    },
+    {
+      "id": "bonus-level",
+      "name": "Bonus Level",
+      "source": "builtin",
+      "components": 49,
+      "spawnSupport": {
+        "y": 0,
+        "name": "platform",
+        "idx": 0,
+        "delta": 0.12
+      },
+      "checkpoints": 0,
+      "enemies": 0,
+      "authoredRails": 1,
+      "changed": false
+    },
+    {
+      "id": "coastal-street-run",
+      "name": "Coastal Street Run",
+      "source": "builtin",
+      "components": 766,
+      "spawnSupport": {
+        "y": 12,
+        "name": "platform",
+        "idx": 0,
+        "delta": 0.12
+      },
+      "checkpoints": 6,
+      "enemies": 16,
+      "authoredRails": 38,
+      "changed": true
+    },
+    {
+      "id": "island-hopper",
+      "name": "Island Hopper",
+      "source": "builtin",
+      "components": 130,
+      "spawnSupport": {
+        "y": 1.05,
+        "name": "Platform 01",
+        "idx": 25,
+        "delta": 0.12
+      },
+      "checkpoints": 3,
+      "enemies": 0,
+      "authoredRails": 2,
+      "changed": false
+    },
+    {
+      "id": "jungle-gate-run",
+      "name": "Jungle Gate Run",
+      "source": "builtin",
+      "components": 75,
+      "spawnSupport": {
+        "y": 0,
+        "name": "platform",
+        "idx": 0,
+        "delta": 0.12
+      },
+      "checkpoints": 3,
+      "enemies": 0,
+      "authoredRails": 2,
+      "changed": false
+    },
+    {
+      "id": "meshylook-thorns",
+      "name": "MeshyLook Thorn Courtyards",
+      "source": "builtin",
+      "components": 47,
+      "spawnSupport": {
+        "y": 1.14,
+        "name": "ramp",
+        "idx": 6,
+        "delta": 0
+      },
+      "checkpoints": 0,
+      "enemies": 0,
+      "authoredRails": 8,
+      "changed": false
+    },
+    {
+      "id": "drowned-crown",
+      "name": "The Drowned Crown",
+      "source": "pack",
+      "components": 1640,
+      "spawnSupport": {
+        "y": 0,
+        "name": "Excavated smugglers trail",
+        "idx": 0,
+        "delta": 0.12
+      },
+      "checkpoints": 4,
+      "enemies": 1,
+      "authoredRails": 2,
+      "changed": false
+    },
+    {
+      "id": "bonus-easy",
+      "name": "Bonus: Easy Street",
+      "source": "builtin",
+      "components": 42,
+      "spawnSupport": {
+        "y": 0,
+        "name": "platform",
+        "idx": 0,
+        "delta": 0.12
+      },
+      "checkpoints": 0,
+      "enemies": 0,
+      "authoredRails": 0,
+      "changed": false
+    },
+    {
+      "id": "bonus-jungle",
+      "name": "Bonus: Fern Reliquary",
+      "source": "builtin",
+      "components": 116,
+      "spawnSupport": {
+        "y": 0,
+        "name": "Bonus arrival and observation",
+        "idx": 0,
+        "delta": 0.12
+      },
+      "checkpoints": 0,
+      "enemies": 0,
+      "authoredRails": 0,
+      "changed": false
+    },
+    {
+      "id": "bonus-sky-bridge",
+      "name": "Bonus: Cloudtop Lockers",
+      "source": "builtin",
+      "components": 94,
+      "spawnSupport": {
+        "y": 0,
+        "name": "Bonus arrival and observation",
+        "idx": 0,
+        "delta": 0.12
+      },
+      "checkpoints": 0,
+      "enemies": 0,
+      "authoredRails": 0,
+      "changed": false
+    },
+    {
+      "id": "bonus-slipstream",
+      "name": "Bonus: Slipstream Airlocks",
+      "source": "builtin",
+      "components": 121,
+      "spawnSupport": {
+        "y": 0,
+        "name": "Bonus arrival and observation",
+        "idx": 0,
+        "delta": 0.12
+      },
+      "checkpoints": 0,
+      "enemies": 0,
+      "authoredRails": 0,
+      "changed": false
+    },
+    {
+      "id": "bonus-nightworks",
+      "name": "Bonus: Nightworks Fuse Store",
+      "source": "builtin",
+      "components": 89,
+      "spawnSupport": {
+        "y": 0,
+        "name": "Bonus arrival and observation",
+        "idx": 0,
+        "delta": 0.12
+      },
+      "checkpoints": 0,
+      "enemies": 0,
+      "authoredRails": 0,
+      "changed": false
+    },
+    {
+      "id": "bonus-beachside-run",
+      "name": "Bonus: Lifeguard Lockup",
+      "source": "builtin",
+      "components": 92,
+      "spawnSupport": {
+        "y": 0,
+        "name": "Bonus arrival and observation",
+        "idx": 0,
+        "delta": 0.12
+      },
+      "checkpoints": 0,
+      "enemies": 0,
+      "authoredRails": 0,
+      "changed": false
+    },
+    {
+      "id": "bonus-coastal",
+      "name": "Bonus: Rooftop Deliveries",
+      "source": "builtin",
+      "components": 79,
+      "spawnSupport": {
+        "y": 0,
+        "name": "Bonus arrival and observation",
+        "idx": 0,
+        "delta": 0.12
+      },
+      "checkpoints": 0,
+      "enemies": 0,
+      "authoredRails": 0,
+      "changed": false
+    },
+    {
+      "id": "bonus-island-hopper",
+      "name": "Bonus: Lagoon Relay",
+      "source": "builtin",
+      "components": 106,
+      "spawnSupport": {
+        "y": 0,
+        "name": "Bonus arrival and observation",
+        "idx": 0,
+        "delta": 0.12
+      },
+      "checkpoints": 0,
+      "enemies": 0,
+      "authoredRails": 0,
+      "changed": false
+    },
+    {
+      "id": "bonus-codex-switchback",
+      "name": "Bonus: Blockworks Reassembly",
+      "source": "builtin",
+      "components": 97,
+      "spawnSupport": {
+        "y": 0,
+        "name": "Bonus arrival and observation",
+        "idx": 0,
+        "delta": 0.12
+      },
+      "checkpoints": 0,
+      "enemies": 0,
+      "authoredRails": 0,
+      "changed": false
+    },
+    {
+      "id": "bonus-chimeworks",
+      "name": "Bonus: Belfry Counterweights",
+      "source": "builtin",
+      "components": 95,
+      "spawnSupport": {
+        "y": 0,
+        "name": "Bonus arrival and observation",
+        "idx": 0,
+        "delta": 0.12
+      },
+      "checkpoints": 0,
+      "enemies": 0,
+      "authoredRails": 0,
+      "changed": false
+    },
+    {
+      "id": "bonus-waterpark",
+      "name": "Bonus: Deadwater Valve House",
+      "source": "builtin",
+      "components": 112,
+      "spawnSupport": {
+        "y": 0,
+        "name": "Bonus arrival and observation",
+        "idx": 0,
+        "delta": 0.12
+      },
+      "checkpoints": 0,
+      "enemies": 0,
+      "authoredRails": 0,
+      "changed": false
+    },
+    {
+      "id": "bonus-crate-primer",
+      "name": "Bonus: Apprentice Storehouse",
+      "source": "builtin",
+      "components": 89,
+      "spawnSupport": {
+        "y": 0,
+        "name": "Bonus arrival and observation",
+        "idx": 0,
+        "delta": 0.12
+      },
+      "checkpoints": 0,
+      "enemies": 0,
+      "authoredRails": 0,
+      "changed": false
+    },
+    {
+      "id": "bonus-switchyard",
+      "name": "Bonus: Signal Cabin",
+      "source": "builtin",
+      "components": 123,
+      "spawnSupport": {
+        "y": 0,
+        "name": "Bonus arrival and observation",
+        "idx": 0,
+        "delta": 0.12
+      },
+      "checkpoints": 0,
+      "enemies": 0,
+      "authoredRails": 0,
+      "changed": false
+    },
+    {
+      "id": "bonus-clockwork-gauntlet",
+      "name": "Bonus: Furnace Reserve",
+      "source": "builtin",
+      "components": 100,
+      "spawnSupport": {
+        "y": 0,
+        "name": "Bonus arrival and observation",
+        "idx": 0,
+        "delta": 0.12
+      },
+      "checkpoints": 0,
+      "enemies": 0,
+      "authoredRails": 0,
+      "changed": false
+    },
+    {
+      "id": "bonus-drowned-crown",
+      "name": "Bonus: The Captain\u2019s Last Ledger",
+      "source": "builtin",
+      "components": 127,
+      "spawnSupport": {
+        "y": 0,
+        "name": "Bonus arrival and observation",
+        "idx": 0,
+        "delta": 0.12
+      },
+      "checkpoints": 0,
+      "enemies": 0,
+      "authoredRails": 0,
+      "changed": false
+    },
+    {
+      "id": "crate-primer",
+      "name": "Crate Primer",
+      "source": "pack",
+      "components": 162,
+      "spawnSupport": {
+        "y": 0,
+        "name": "platform",
+        "idx": 0,
+        "delta": 0.12
+      },
+      "checkpoints": 2,
+      "enemies": 3,
+      "authoredRails": 0,
+      "changed": true
+    },
+    {
+      "id": "switchyard",
+      "name": "Switchyard",
+      "source": "pack",
+      "components": 239,
+      "spawnSupport": {
+        "y": 0,
+        "name": "platform",
+        "idx": 0,
+        "delta": 0.12
+      },
+      "checkpoints": 2,
+      "enemies": 7,
+      "authoredRails": 0,
+      "changed": true
+    },
+    {
+      "id": "clockwork-gauntlet",
+      "name": "Clockwork Gauntlet",
+      "source": "pack",
+      "components": 305,
+      "spawnSupport": {
+        "y": 0,
+        "name": "platform",
+        "idx": 0,
+        "delta": 0.12
+      },
+      "checkpoints": 4,
+      "enemies": 7,
+      "authoredRails": 0,
+      "changed": true
+    },
+    {
+      "id": "crab-chief",
+      "name": "Tidebreak \u00b7 Crab Chief",
+      "source": "builtin",
+      "components": 171,
+      "spawnSupport": {
+        "y": 0,
+        "name": "Arrival canoe pier",
+        "idx": 2,
+        "delta": 0.12
+      },
+      "checkpoints": 0,
+      "enemies": 0,
+      "authoredRails": 2,
+      "changed": false
+    },
+    {
+      "id": "ghost-train",
+      "name": "Haunted Castle \u00b7 Ghost Train",
+      "source": "builtin",
+      "components": 3646,
+      "spawnSupport": {
+        "y": 0,
+        "name": "Supported castle paving and ramp",
+        "idx": 0,
+        "delta": 0.15
+      },
+      "checkpoints": 23,
+      "enemies": 15,
+      "authoredRails": 9,
+      "changed": true
+    },
+    {
+      "id": "codex-lab",
+      "name": "Blockworks \u00b7 Greybox",
+      "source": "builtin",
+      "components": 2104,
+      "spawnSupport": {
+        "y": 0,
+        "name": "Curved roof road",
+        "idx": 2,
+        "delta": 0.15
+      },
+      "checkpoints": 6,
+      "enemies": 4,
+      "authoredRails": 7,
+      "changed": true
+    },
+    {
+      "id": "jungle-cup",
+      "name": "Jungle Cup",
+      "source": "builtin",
+      "components": 116,
+      "spawnSupport": {
+        "y": 0,
+        "name": "platform",
+        "idx": 0,
+        "delta": 0.1
+      },
+      "checkpoints": 0,
+      "enemies": 0,
+      "authoredRails": 11,
+      "changed": false
+    },
+    {
+      "id": "waterpark",
+      "name": "Deadwater Park",
+      "source": "builtin",
+      "components": 1738,
+      "spawnSupport": {
+        "y": 130,
+        "name": "platform",
+        "idx": 0,
+        "delta": 0.15
+      },
+      "checkpoints": 2,
+      "enemies": 0,
+      "authoredRails": 0,
+      "changed": false
+    },
+    {
+      "id": "waterpark-cup",
+      "name": "Deadwater Cup",
+      "source": "builtin",
+      "components": 1076,
+      "spawnSupport": {
+        "y": 12,
+        "name": "platform",
+        "idx": 570,
+        "delta": 0.15
+      },
+      "checkpoints": 0,
+      "enemies": 0,
+      "authoredRails": 14,
+      "changed": false
+    },
+    {
+      "id": "astra-chimeworks",
+      "name": "The Chimeworks \u2014 Astra",
+      "source": "builtin",
+      "components": 519,
+      "spawnSupport": {
+        "y": 48,
+        "name": "platform",
+        "idx": 0,
+        "delta": 0.2
+      },
+      "checkpoints": 4,
+      "enemies": 0,
+      "authoredRails": 2,
+      "changed": false
+    }
+  ],
+  "browserSurvey": {
+    "liteViews": 132,
+    "fullViews": 67,
+    "puzzleTakeoffCompositions": 8,
+    "errors": [],
+    "note": "Individual positions are inspection fixtures, separate from the recorded input-only journeys."
+  }
+}

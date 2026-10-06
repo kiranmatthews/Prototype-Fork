@@ -1,0 +1,200 @@
+{
+  "pass": true,
+  "reports": [
+    {
+      "id": "jungle",
+      "source": "builtin",
+      "checkpoints": 4,
+      "enemies": 8,
+      "minCheckpointPatrolDistance": 8,
+      "patrolSamples": 33,
+      "railSamples": 0
+    },
+    {
+      "id": "flats",
+      "source": "builtin",
+      "checkpoints": 2,
+      "enemies": 3,
+      "minCheckpointPatrolDistance": 50.16,
+      "patrolSamples": 0,
+      "railSamples": 0
+    },
+    {
+      "id": "flats",
+      "source": "published",
+      "checkpoints": 2,
+      "enemies": 3,
+      "minCheckpointPatrolDistance": 25.66,
+      "patrolSamples": 0,
+      "railSamples": 770
+    },
+    {
+      "id": "sky",
+      "source": "builtin",
+      "checkpoints": 2,
+      "enemies": 2,
+      "minCheckpointPatrolDistance": 6.5,
+      "patrolSamples": 0,
+      "railSamples": 250
+    },
+    {
+      "id": "sky",
+      "source": "published",
+      "checkpoints": 2,
+      "enemies": 2,
+      "minCheckpointPatrolDistance": 6.5,
+      "patrolSamples": 0,
+      "railSamples": 250
+    },
+    {
+      "id": "slip",
+      "source": "builtin",
+      "checkpoints": 2,
+      "enemies": 0,
+      "minCheckpointPatrolDistance": null,
+      "patrolSamples": 0,
+      "railSamples": 0
+    },
+    {
+      "id": "slip",
+      "source": "published",
+      "checkpoints": 2,
+      "enemies": 0,
+      "minCheckpointPatrolDistance": null,
+      "patrolSamples": 0,
+      "railSamples": 1545
+    },
+    {
+      "id": "dark",
+      "source": "builtin",
+      "checkpoints": 11,
+      "enemies": 6,
+      "minCheckpointPatrolDistance": 5.64,
+      "patrolSamples": 198,
+      "railSamples": 0
+    },
+    {
+      "id": "coastal-street-run",
+      "source": "builtin",
+      "checkpoints": 6,
+      "enemies": 16,
+      "minCheckpointPatrolDistance": 28,
+      "patrolSamples": 528,
+      "railSamples": 15405
+    },
+    {
+      "id": "codex-lab",
+      "source": "builtin",
+      "checkpoints": 6,
+      "enemies": 4,
+      "minCheckpointPatrolDistance": 38.04,
+      "patrolSamples": 0,
+      "railSamples": 976
+    },
+    {
+      "id": "crate-primer",
+      "source": "builtin",
+      "checkpoints": 2,
+      "enemies": 3,
+      "minCheckpointPatrolDistance": 25.8,
+      "patrolSamples": 0,
+      "railSamples": 0,
+      "cameraRig": {
+        "camDist": 16.5,
+        "camHeight": 7.4,
+        "camPitch": 21,
+        "camFov": 56
+      },
+      "cameraAirLift": 1
+    },
+    {
+      "id": "crate-primer",
+      "source": "published",
+      "checkpoints": 2,
+      "enemies": 3,
+      "minCheckpointPatrolDistance": 25.8,
+      "patrolSamples": 0,
+      "railSamples": 0,
+      "cameraRig": {
+        "camDist": 16.5,
+        "camHeight": 7.4,
+        "camPitch": 21,
+        "camFov": 56
+      },
+      "cameraAirLift": 1
+    },
+    {
+      "id": "switchyard",
+      "source": "builtin",
+      "checkpoints": 2,
+      "enemies": 7,
+      "minCheckpointPatrolDistance": 5.8,
+      "patrolSamples": 0,
+      "railSamples": 0,
+      "cameraRig": {
+        "camDist": 16.5,
+        "camHeight": 7.4,
+        "camPitch": 21,
+        "camFov": 56
+      },
+      "cameraAirLift": 1
+    },
+    {
+      "id": "switchyard",
+      "source": "published",
+      "checkpoints": 2,
+      "enemies": 7,
+      "minCheckpointPatrolDistance": 5.8,
+      "patrolSamples": 0,
+      "railSamples": 0,
+      "cameraRig": {
+        "camDist": 16.5,
+        "camHeight": 7.4,
+        "camPitch": 21,
+        "camFov": 56
+      },
+      "cameraAirLift": 1
+    },
+    {
+      "id": "clockwork-gauntlet",
+      "source": "builtin",
+      "checkpoints": 4,
+      "enemies": 7,
+      "minCheckpointPatrolDistance": 5,
+      "patrolSamples": 0,
+      "railSamples": 0,
+      "cameraRig": {
+        "camDist": 16.5,
+        "camHeight": 7.4,
+        "camPitch": 21,
+        "camFov": 56
+      },
+      "cameraAirLift": 1
+    },
+    {
+      "id": "clockwork-gauntlet",
+      "source": "published",
+      "checkpoints": 4,
+      "enemies": 7,
+      "minCheckpointPatrolDistance": 5,
+      "patrolSamples": 0,
+      "railSamples": 0,
+      "cameraRig": {
+        "camDist": 16.5,
+        "camHeight": 7.4,
+        "camPitch": 21,
+        "camFov": 56
+      },
+      "cameraAirLift": 1
+    },
+    {
+      "id": "ghost-train",
+      "source": "builtin",
+      "checkpoints": 23,
+      "enemies": 15,
+      "minCheckpointPatrolDistance": 10.51,
+      "patrolSamples": 0,
+      "railSamples": 735
+    }
+  ]
+}

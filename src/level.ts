@@ -12569,7 +12569,8 @@ export class Level {
     crateAt(-604, 2.2);
     crateAt(-604, -2.2, undefined, 1);
     crateAt(-604, 2.2, undefined, 1);
-    this.enemy(gx(-616) - 3.6, gx(-616) + 3.6, gy(-616), -616, 3, "x", "spiker");
+    // Keep the fixed-height patrol on the shallow centre of the undulating trail.
+    this.enemy(gx(-616) - 1.6, gx(-616) + 2.8, gy(-616), -616, 3, "x", "spiker");
     for (let i = 0; i < 4; i++) fruitAt(-622 - i * 2.4, 0, 1.5);
     crateAt(-636, 0, "nitro");
     crateAt(-644, -1.6);
@@ -18998,16 +18999,10 @@ export class Level {
     for (let i = 0; i < 5; i++) {
       this.palm(-32 + i * 16, E, 70, 4.8 + (i % 2) * 0.7, 0.1 - (i % 3) * 0.08);
     }
-    // --- foe sampler: one of each takedown, lined up down the centre lane past
-    // the trick lanes (rail garden/ramps sit at x -20..115, z 0..-160) --------
-    this.enemy(-6, 6, E, -166, 4, "x", "grunt");
-    this.enemy(-6, 6, E, -172, 4, "x", "spiker"); // spin
-    this.enemy(-6, 6, E, -178, 3, "x", "turtle"); // stomp
-    this.enemy(-12, 12, E, -184, 5, "x", "charger"); // bull runway
-    this.enemy(-6, 6, E, -190, 4, "x", "hopper");
-    this.enemy(-8, 8, E, -196, 3.5, "x", "floater");
-    this.enemy(0, 0, E, -175, 0, "x", "sentry"); // turret watching the lane
-    this.enemy(0, 0, E, -187, 0, "x", "spinner");
+    // Bank the rail garden and then the runway before entering the pipe yard.
+    // The three side-yard enemies below provide readable separate encounters.
+    this.checkpoint(E, -136);
+    this.checkpoint(E, -270, 22);
     // planter islands, tucked at the deck corners (elevated with the lot)
     for (const [ix, iz] of [
       [-36, -30],
@@ -19214,12 +19209,12 @@ export class Level {
     plank(-27); // safe breather
     breakOnLand(-31); // land + it's already gone — keep moving
     breakOnLand(-34.5);
-    plank(-39); // safe landing
+    plank(-39, 4.6, false, 4.6); // a recovery deck with room to bank and line up
     this.checkpoint(0, -39); // first checkpoint
 
     // --- section C: enemy on a wide deck ------------------------------------
     plank(-45, 5, false, 5); // wide enough to dodge on
-    this.enemy(-2, 2, 0, -45, 3.2, "x", "floater");
+    this.enemy(-1.4, 1.4, 0, -45.5, 2.6, "x", "floater");
     plank(-51);
     breakSoon(-55); // stand a beat, then it drops
     breakSoon(-58.5);
@@ -19229,7 +19224,7 @@ export class Level {
     plank(-68, 1.6);
     plank(-73, 1.6);
     plank(-78, 1.6);
-    plank(-82, 3, false, 4); // landing deck
+    plank(-82, 4.6, false, 4.6); // recovery deck before the final mixed section
     this.pickup(0, 1.2, -73);
     this.checkpoint(0, -82);
 
@@ -19237,7 +19232,7 @@ export class Level {
     plank(-88, 2, true); // slippy launch
     breakOnLand(-92);
     plank(-96, 5, false, 5);
-    this.enemy(-2, 2, 0, -96, 4, "x", "spiker");
+    this.enemy(-1.6, 1.6, 0, -96, 3, "x", "spiker");
     breakSoon(-101);
     plank(-105, 2, true);
     plank(-110, 1.6);
@@ -19253,14 +19248,14 @@ export class Level {
     // --- SIDE ROPES: grindable handrails running the whole span, both sides.
     // Segmented so each snaps on its own; they sag + wobble under a grinder and
     // break after a few seconds — the safe-looking rail is a gamble.
-    const ropeY = 1.0;
+    const ropeY = 1.35; // the sag stays above the checkpoint and encounter decks
     const ropeX = W / 2 + 0.5; // just outside the deck edge
     // Longer segments (~24u) so a grinder is on ONE rope long enough for the
     // ~3s snap to bite — linger and it drops you; zip across fast and you make it.
     const zEdges = [-2, -26, -50, -74, -98, -122];
     for (let s = 0; s < zEdges.length - 1; s++) {
       for (const rx of [-ropeX, ropeX]) {
-        this.skyRope(rx, zEdges[s], rx, zEdges[s + 1], ropeY, 3.0, 1.15, 4);
+        this.skyRope(rx, zEdges[s], rx, zEdges[s + 1], ropeY, 3.0, 0.65, 4);
       }
     }
   }
@@ -19673,7 +19668,7 @@ export class Level {
       0.2,
       22,
       new THREE.MeshLambertMaterial({ color: 0x7fb6c4 }),
-      true,
+      false, // the ribbon overlaps this apron: low edge rails would be buried
       0,
       "stone",
     );

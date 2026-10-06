@@ -1,0 +1,713 @@
+[
+  {
+    "pass": true,
+    "name": "blockworks-entry-rail",
+    "id": "codex-lab",
+    "start": [
+      38.58411739598439,
+      1.55,
+      -93.92418026179635
+    ],
+    "frames": 508,
+    "result": {
+      "length": 90.34429995569168,
+      "end": {
+        "frame": 508,
+        "time": 8.466666666666667,
+        "position": [
+          68.75866458549544,
+          -1.3599952800949844,
+          -176.40958765171158
+        ],
+        "heading": [
+          0.4368187431003817,
+          0,
+          -0.899549545981878
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 18.587709631406423,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": null,
+        "rail": 0,
+        "railDistance": 88.37656689771738,
+        "balance": -0.04503128202351744,
+        "input": {
+          "moveX": 0.34,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    "end": {
+      "frame": 508,
+      "time": 8.466666666666667,
+      "position": [
+        68.75866458549544,
+        -1.3599952800949844,
+        -176.40958765171158
+      ],
+      "heading": [
+        0.4368187431003817,
+        0,
+        -0.899549545981878
+      ],
+      "state": "grind",
+      "grounded": false,
+      "speed": 18.587709631406423,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": null,
+      "rail": 0,
+      "railDistance": 88.37656689771738,
+      "balance": -0.04503128202351744,
+      "input": {
+        "moveX": 0.34,
+        "moveY": 0,
+        "jumpHeld": false,
+        "grindHeld": true,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    }
+  },
+  {
+    "pass": true,
+    "name": "blockworks-lift-bypass",
+    "id": "codex-lab",
+    "start": [
+      -1.4695761589768237e-14,
+      8.55,
+      -1300
+    ],
+    "frames": 1972,
+    "result": {
+      "length": 133.37815003943692,
+      "end": {
+        "frame": 1972,
+        "time": 32.86666666666667,
+        "position": [
+          47.74166671945989,
+          14.312770270962838,
+          -1422.1075954630471
+        ],
+        "heading": [
+          0.27561271625271994,
+          0,
+          -0.9612687608779334
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 10.491947204396283,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "Curved roof road",
+          "y": 13.199951171875,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 4,
+        "railDistance": 131.38355115457344,
+        "balance": -0.04545989184545124,
+        "input": {
+          "moveX": 0.34,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    "end": {
+      "frame": 1972,
+      "time": 32.86666666666667,
+      "position": [
+        47.74166671945989,
+        14.312770270962838,
+        -1422.1075954630471
+      ],
+      "heading": [
+        0.27561271625271994,
+        0,
+        -0.9612687608779334
+      ],
+      "state": "grind",
+      "grounded": false,
+      "speed": 10.491947204396283,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "Curved roof road",
+        "y": 13.199951171875,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": 4,
+      "railDistance": 131.38355115457344,
+      "balance": -0.04545989184545124,
+      "input": {
+        "moveX": 0.34,
+        "moveY": 0,
+        "jumpHeld": false,
+        "grindHeld": true,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    }
+  },
+  {
+    "pass": true,
+    "name": "coastal-stair-bypass",
+    "id": "coastal-street-run",
+    "start": [
+      -2.3,
+      7.12,
+      -1391
+    ],
+    "frames": 2027,
+    "result": {
+      "length": 120,
+      "end": {
+        "frame": 2027,
+        "time": 33.78333333333333,
+        "position": [
+          -2.3,
+          7.83,
+          -1508.0166666666685
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 3.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 7.000000011920929,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 31,
+        "railDistance": 118.01666666666846,
+        "balance": -0.0919021097450785,
+        "input": {
+          "moveX": 0.71,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    "end": {
+      "frame": 2027,
+      "time": 33.78333333333333,
+      "position": [
+        -2.3,
+        7.83,
+        -1508.0166666666685
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "state": "grind",
+      "grounded": false,
+      "speed": 3.5,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 7.000000011920929,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": 31,
+      "railDistance": 118.01666666666846,
+      "balance": -0.0919021097450785,
+      "input": {
+        "moveX": 0.71,
+        "moveY": 0,
+        "jumpHeld": false,
+        "grindHeld": true,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    }
+  },
+  {
+    "pass": true,
+    "name": "coastal-final-rail",
+    "id": "coastal-street-run",
+    "start": [
+      2.3,
+      7.12,
+      -2849
+    ],
+    "frames": 2404,
+    "result": {
+      "length": 142,
+      "end": {
+        "frame": 2404,
+        "time": 40.06666666666666,
+        "position": [
+          2.3,
+          7.83,
+          -2988.0083333333364
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "state": "grind",
+        "grounded": false,
+        "speed": 3.5,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": 7.000000011920929,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": 37,
+        "railDistance": 140.00833333333654,
+        "balance": -0.0902958717860406,
+        "input": {
+          "moveX": 0.72,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": true,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    "end": {
+      "frame": 2404,
+      "time": 40.06666666666666,
+      "position": [
+        2.3,
+        7.83,
+        -2988.0083333333364
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "state": "grind",
+      "grounded": false,
+      "speed": 3.5,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 7.000000011920929,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": 37,
+      "railDistance": 140.00833333333654,
+      "balance": -0.0902958717860406,
+      "input": {
+        "moveX": 0.72,
+        "moveY": 0,
+        "jumpHeld": false,
+        "grindHeld": true,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    }
+  },
+  {
+    "pass": true,
+    "name": "sky-recovery-hop",
+    "id": "sky",
+    "start": [
+      0,
+      0.12,
+      -37.4
+    ],
+    "frames": 229,
+    "result": {
+      "checkpoint": true,
+      "landing": [
+        0,
+        0,
+        -44.534766666666705
+      ]
+    },
+    "end": {
+      "frame": 229,
+      "time": 3.8166666666666664,
+      "position": [
+        0,
+        0,
+        -44.534766666666705
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 0,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 0,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": true,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    }
+  },
+  {
+    "pass": true,
+    "name": "sky-loaded-rope",
+    "id": "sky",
+    "start": [
+      1.8,
+      0.12,
+      -83
+    ],
+    "frames": 213,
+    "result": {
+      "position": [
+        1.800000000000001,
+        1.2185379991341436,
+        -94.0573927192234
+      ],
+      "state": "grind"
+    },
+    "end": {
+      "frame": 213,
+      "time": 3.55,
+      "position": [
+        1.800000000000001,
+        1.2185379991341436,
+        -94.0573927192234
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "state": "grind",
+      "grounded": false,
+      "speed": 3.5,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "platform",
+        "y": 0,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": 7,
+      "railDistance": 20.12543075432556,
+      "balance": -0.04229217665916665,
+      "input": {
+        "moveX": 0.34,
+        "moveY": 0,
+        "jumpHeld": false,
+        "grindHeld": true,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    }
+  },
+  {
+    "pass": true,
+    "name": "switchyard-reward-finish",
+    "id": "switchyard",
+    "start": [
+      212,
+      4.12,
+      0
+    ],
+    "frames": 194,
+    "result": {
+      "reward": true,
+      "state": "finished"
+    },
+    "end": {
+      "frame": 194,
+      "time": 3.2333333333333334,
+      "position": [
+        223.39999999999847,
+        4.726666669150194,
+        0
+      ],
+      "heading": [
+        1,
+        0,
+        0
+      ],
+      "state": "finished",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 0,
+      "mover": null,
+      "ground": {
+        "name": "warp plinth rim",
+        "y": 4.726666669150194,
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "slippy": false,
+        "iceGrip": null
+      },
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0.5,
+        "moveY": 0,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    }
+  },
+  {
+    "pass": true,
+    "name": "flats-bank-fall-respawn",
+    "id": "flats",
+    "start": [
+      22,
+      90.12,
+      -265
+    ],
+    "frames": 494,
+    "result": {
+      "checkpoint": true,
+      "deaths": 1,
+      "respawn": [
+        22,
+        90.1,
+        -270
+      ]
+    },
+    "end": {
+      "frame": 494,
+      "time": 8.233333333333333,
+      "position": [
+        22,
+        90.1,
+        -270
+      ],
+      "heading": [
+        0,
+        0,
+        -1
+      ],
+      "state": "ride",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "bailing": false,
+      "deaths": 1,
+      "mover": null,
+      "ground": null,
+      "rail": null,
+      "railDistance": null,
+      "balance": 0,
+      "input": {
+        "moveX": 0,
+        "moveY": 0,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      }
+    }
+  }
+]

@@ -222,12 +222,12 @@ export function createNightworksLevel(): CustomLevelData {
   // Far silhouettes frame each height band without occupying traversal space.
   const backdrops: [number,number,number,number][] = [[-28,-20,-25,15],[32,-6,-68,-20],[-85,2,-119,25],[38,17,-190,-18],[-85,21,-230,10],[35,28,-275,-12],[-75,50,-355,18]];
   for (const [x,y,z,yaw] of backdrops) add({t:"decor",dkind:"nightdistantarch",p:[x,y,z],s:[25,34,11],yaw,color:"#7588ac"});
-  // Night-shift quarry crews guard only stable islands: the original platform,
-  // phase-pad and ferry timings remain authored exactly as before.
+  // Encounters sit to the side of roomy islands, beyond the checkpoint's
+  // recovery space. The tiny lift transfer and final rope landing are breathers.
   for (const [x,y,z,range,foe] of [
-    [3,0,0,1.6,"grunt"],[3,0,-41,2.5,"grunt"],[-47,12,-53,3,"hopper"],
-    [-41,12,-110,2.5,"grunt"],[13,12,-171,1.8,"hopper"],
-    [-48,26,-205,2,"grunt"],[9,56,-281,2.5,"hopper"],[-46,70,-353,2,"grunt"],
+    [3,0,-1.5,1.2,"grunt"],[4,0,-36,1.5,"grunt"],[-43.5,12,-54,1.2,"hopper"],
+    [-42,12,-107,1.2,"grunt"],[-44.5,26,-207,.9,"grunt"],
+    [12,56,-284,1.2,"hopper"],
   ] as const) add({t:"enemy",nm:"Nightworks Snot Goblin",p:[x,y,z],range,speed:1.7,foe});
   return {v:1,name:"The Nightworks",spawn:[0,.1,4],killY:-26,sky:"night",keepPlayFog:true,components};
 }

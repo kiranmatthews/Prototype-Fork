@@ -1,0 +1,56 @@
+[
+  {
+    "id": "crate-primer",
+    "test": "supported source spawn and complete enemy cycles",
+    "probes": 120
+  },
+  {
+    "id": "crate-primer",
+    "frames": 4991,
+    "seconds": 83.18333333333334,
+    "cratesBroken": 22,
+    "totalCrates": 28,
+    "activeStageCrates": 22,
+    "bonusCrateTotal": 6,
+    "completionScope": "main-route-only",
+    "gemEarned": false,
+    "deaths": 0,
+    "state": "finished"
+  },
+  {
+    "id": "switchyard",
+    "test": "supported source spawn and complete enemy cycles",
+    "probes": 280
+  },
+  {
+    "id": "switchyard",
+    "frames": 7390,
+    "seconds": 123.16666666666667,
+    "cratesBroken": 26,
+    "totalCrates": 35,
+    "activeStageCrates": 26,
+    "bonusCrateTotal": 9,
+    "completionScope": "main-route-only",
+    "gemEarned": false,
+    "deaths": 0,
+    "state": "finished"
+  },
+  {
+    "id": "clockwork-gauntlet",
+    "test": "supported source spawn and complete enemy cycles",
+    "probes": 240
+  },
+  {
+    "id": "clockwork-gauntlet",
+    "frames": 8876,
+    "seconds": 147.93333333333334,
+    "cratesBroken": 36,
+    "totalCrates": 46,
+    "activeStageCrates": 36,
+    "bonusCrateTotal": 10,
+    "completionScope": "main-route-only",
+    "gemEarned": false,
+    "deaths": 0,
+    "state": "finished"
+  }
+]

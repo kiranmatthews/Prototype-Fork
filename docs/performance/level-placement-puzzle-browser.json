@@ -1,0 +1,191 @@
+{
+  "pass": true,
+  "mode": "full",
+  "reports": [
+    {
+      "id": "crate-primer",
+      "frames": 4989,
+      "end": {
+        "frame": 4989,
+        "position": [
+          153.52150000000046,
+          1.9266666691501935,
+          0
+        ],
+        "state": "finished",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "gemEarned": false,
+        "ground": "warp plinth rim",
+        "mover": null,
+        "input": {
+          "moveX": 1,
+          "moveY": 0,
+          "jumpHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindHeld": false,
+          "grindPressed": false,
+          "spinHeld": false,
+          "spinPressed": false,
+          "grabHeld": false,
+          "grabPressed": false,
+          "transferHeld": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      "result": {
+        "completionScope": "main-route-only",
+        "activeStageCrates": 22,
+        "bonusCrateTotal": 6,
+        "bonusCrates": 0,
+        "gemEarned": false,
+        "id": "crate-primer",
+        "cratesBroken": 22,
+        "totalCrates": 28,
+        "deaths": 0,
+        "state": "finished"
+      },
+      "framingSamples": 333,
+      "previewSamples": 79,
+      "errors": []
+    },
+    {
+      "id": "switchyard",
+      "frames": 7388,
+      "end": {
+        "frame": 7388,
+        "position": [
+          223.42944444444544,
+          4.726666669150194,
+          0
+        ],
+        "state": "finished",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "gemEarned": false,
+        "ground": "warp plinth rim",
+        "mover": null,
+        "input": {
+          "moveX": 1,
+          "moveY": 0,
+          "jumpHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindHeld": false,
+          "grindPressed": false,
+          "spinHeld": false,
+          "spinPressed": false,
+          "grabHeld": false,
+          "grabPressed": false,
+          "transferHeld": false,
+          "transferPressed": false,
+          "restartPressed": false
+        },
+        "masks": 1,
+        "playerBounds": {
+          "min": [
+            222.92944444444544,
+            4.726666669150194,
+            -0.5
+          ],
+          "max": [
+            223.92944444444544,
+            5.662530958864585,
+            0.5
+          ]
+        },
+        "projectiles": []
+      },
+      "result": {
+        "completionScope": "main-route-only",
+        "activeStageCrates": 26,
+        "bonusCrateTotal": 9,
+        "bonusCrates": 0,
+        "gemEarned": false,
+        "id": "switchyard",
+        "done": true,
+        "state": "finished",
+        "cratesBroken": 26,
+        "totalCrates": 35,
+        "deaths": 0
+      },
+      "framingSamples": 492,
+      "previewSamples": 143,
+      "errors": []
+    },
+    {
+      "id": "clockwork-gauntlet",
+      "frames": 8874,
+      "end": {
+        "frame": 8874,
+        "position": [
+          279.40037777777485,
+          5.926666669150194,
+          7.472878303452552e-19
+        ],
+        "state": "finished",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "gemEarned": false,
+        "ground": "warp plinth rim",
+        "mover": null,
+        "input": {
+          "moveX": 1,
+          "moveY": 0,
+          "jumpHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindHeld": false,
+          "grindPressed": false,
+          "spinHeld": false,
+          "spinPressed": false,
+          "grabHeld": false,
+          "grabPressed": false,
+          "transferHeld": false,
+          "transferPressed": false,
+          "restartPressed": false
+        },
+        "masks": 1,
+        "playerBounds": {
+          "min": [
+            278.90037777777485,
+            5.926666669150194,
+            -0.5
+          ],
+          "max": [
+            279.90037777777485,
+            6.8625309588645855,
+            0.5
+          ]
+        },
+        "projectiles": []
+      },
+      "result": {
+        "completionScope": "main-route-only",
+        "activeStageCrates": 36,
+        "bonusCrateTotal": 10,
+        "bonusCrates": 0,
+        "gemEarned": false,
+        "id": "clockwork-gauntlet",
+        "cratesBroken": 36,
+        "totalCrates": 46,
+        "deaths": 0,
+        "state": "finished"
+      },
+      "framingSamples": 591,
+      "previewSamples": 257,
+      "errors": []
+    }
+  ]
+}
