@@ -12283,8 +12283,9 @@ export class Player {
         // else: spinning does NOT protect (active blades, a charging bull) —
         // fall through and take the hit below.
       }
-      if (this.playerBox.intersectsBox(e.box)) {
-        const validStomp = this.isStomping(e.box) && e.stompKill;
+      const bodyContact = this.playerBox.intersectsBox(e.box);
+      if (bodyContact || e.attackBox?.intersectsBox(this.playerBox)) {
+        const validStomp = bodyContact && this.isStomping(e.box) && e.stompKill;
         const rescueStomp =
           validStomp &&
           (this.isBailing || this.emergencyEjectLandingPending);
@@ -12332,7 +12333,7 @@ export class Player {
           // dizzy bull) you just bump it. invuln grace + mask absorb apply.
           if (!e.touchHurt) continue;
           if (this.uberTimer > 0 || this.invulnTimer > 0) continue;
-          this.enemyTouch.copy(e.box).expandByScalar(-0.15);
+          this.enemyTouch.copy(bodyContact ? e.box : e.attackBox!).expandByScalar(-0.15);
           if (!this.playerBox.intersectsBox(this.enemyTouch)) continue;
           if (this.spendMask()) {
             const away = this.pos.clone().sub(e.group.position).setY(0);
@@ -14908,7 +14909,7 @@ export class Player {
     if (!hit) for (const cr of level.crushers) if (cr.crushing && cr.box.intersectsBox(HANG_BOX)) {
       hit = true; cause = 'crush'; origin = cr.box.getCenter(BLAST_AT); break;
     }
-    if (!hit) for (const e of level.enemies) if (e.alive && e.touchHurt && e.box.intersectsBox(HANG_BOX)) {
+    if (!hit) for (const e of level.enemies) if (e.alive && e.touchHurt && (e.box.intersectsBox(HANG_BOX) || e.attackBox?.intersectsBox(HANG_BOX))) {
       hit = true; origin = e.group.position;
       if (e.kind === 'hopper' && e.vy < -1 && e.box.min.y > cy) cause = 'crush';
       break;

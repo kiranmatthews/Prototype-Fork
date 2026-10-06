@@ -12,6 +12,7 @@ export interface EnemyElasticityProfile {
 /** Editable per-species strengths applied to the shared character profiles.
  * Mechanical foes flex mounts and joints; their metal shells stay rigid. */
 export const ENEMY_ELASTICITY_PROFILES: Record<EnemyKind,EnemyElasticityProfile> = {
+  moa:     {idle:1.2,walk:1.65,anticipation:1.3,rebound:1.4,landing:1,defeat:1.2},
   grunt:   {idle:1,walk:1,anticipation:1,rebound:1,landing:1,defeat:1},
   spiker:  {idle:.7,walk:.8,anticipation:.8,rebound:.8,landing:.8,defeat:.8},
   turtle:  {idle:.45,walk:.6,anticipation:.7,rebound:.7,landing:.6,defeat:.7},
@@ -58,6 +59,12 @@ export function sampleEnemyElasticity(kind:EnemyKind,frame:EnemyAnimationFrame,
     // Complete the settle even while gameplay flies the defeated actor away.
     transient=enemyElasticPulse(defeatTime,frame.flung?.45:.12)*profile.defeat;
     torso=1+SHARED.death[0]*transient*3;
+  }else if(kind==='moa'&&frame.state==='windup'){
+    transient=-smooth(frame.stateTime/.62)*profile.anticipation;
+  }else if(kind==='moa'&&frame.state==='recover'){
+    transient=enemyElasticPulse(frame.stateTime,.9)*profile.rebound;
+  }else if(kind==='moa'&&frame.state==='squawk'){
+    transient=enemyElasticPulse(frame.stateTime,1.65)*profile.rebound;
   }else if(kind==='charger'&&frame.state==='telegraph'){
     transient=-smooth(frame.stateTime/.55)*profile.anticipation;
   }else if(kind==='charger'&&frame.state==='recover'){

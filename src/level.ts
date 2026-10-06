@@ -18,6 +18,7 @@ import { SpinBridge } from './spinBridge';
 
 import * as THREE from "three";
 import { createEnemyVisual } from "./enemies/runtime";
+import { stepMoa, updateMoaAttack } from "./enemies/moaBehavior";
 import { GhostTrainAssetKit, GHOST_DECOR_KINDS, GHOST_DECOR_LABELS, createGhostEnemyVisual } from './ghostTrain';
 import { CASTLE_TEXTURE_KINDS, isCastleTexture, createCastleMaterial, prepareCastleTextures, castleTextureDiagnostics } from './ghostCastleMaterials';
 import { GHOST_TRAIN_LEVEL } from './levels/ghost-train';
@@ -210,6 +211,7 @@ const NO_BROKEN_CRATES: Crate[] = [];
 export interface Enemy {
   group: THREE.Group;
   box: THREE.Box3;
+  attackBox?: THREE.Box3; // articulated moa bill; empty outside the strike
   alive: boolean;
   x0: number; // patrol bounds — x for corridor levels, z for side-scroll levels
   x1: number;
@@ -747,7 +749,7 @@ export interface CustomComponent {
   outline?: boolean; // crate/solid mesh starts as a pass-through ghost; a grouped '!' makes it real
   range?: number;
   speed?: number;
-  foe?: EnemyKind; // enemy variant (grunt/spiker/turtle/charger/hopper/floater/sentry/spinner)
+  foe?: EnemyKind; // enemy variant (including the wingless moa)
   invisible?: boolean; // wall/pit/ramp: collider or ride surface only; editor reveals a ghost
   containment?: boolean; // wallpath: course boundary resolved after ordinary contacts; cannot be ridden or grabbed
   solid?: boolean; // wallpath: false makes a visual-only scenery sweep (earth banks/backdrops)
@@ -2853,7 +2855,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   const decorKinds = new Set(DECOR_KINDS);
   const foes = new Set<string>([
     "grunt", "spiker", "turtle", "charger", "hopper", "floater", "sentry",
-    "spinner", ...(migrate ? ["car"] : []), // accepted only for legacy removal
+    "spinner", "moa", ...(migrate ? ["car"] : []), // accepted only for legacy removal
   ]);
   const tricks = new Set<DeckTrickKind>(DECK_TRICKS.map((entry) => entry.kind));
   const directions = new Set(["E", "W", "N", "S"]);
@@ -9621,6 +9623,7 @@ export class Level {
 
   killEnemy(enemy: Enemy, fling?: THREE.Vector3): void {
     enemy.alive = false;
+    enemy.attackBox?.makeEmpty();
     // A defeated turret is no longer a visible/legible source. Its already-
     // fired orange orbs must not keep attacking from nowhere for 3.4 seconds.
     this.clearProjectilesFrom(enemy);
@@ -18343,6 +18346,7 @@ export class Level {
     e.group.rotation.set(0, 0, 0);
     e.group.scale.setScalar(1);
     e.defeatedT = undefined;
+    e.attackBox?.makeEmpty();
     e.visual.reset();
     e.spinKill = e.stompKill = e.meleeKill = e.touchHurt = true;
     e.spinRecoil = false;
@@ -18415,6 +18419,10 @@ export class Level {
         boxH = 1.1,
         cy = 0.55;
       switch (e.kind) {
+        case "moa":
+          stepMoa(e, dt, this.playerPos);
+          boxW = 1.65; boxH = 2.95; cy = 1.475;
+          break;
         case "grunt":
           this.patrolStep(e, dt);
           break;
@@ -18454,6 +18462,7 @@ export class Level {
           break;
       }
       this.updateEnemyVisual(e, dt, dt > 0 ? Math.abs(this.enemyAlong(e) - beforeAlong) / dt : 0);
+      if(e.kind==='moa')updateMoaAttack(e);
       if(e.group.userData.ghostSkin==='ghostknight'){boxH=e.group.userData.ghostHeight??3.05;boxW=1.35*boxH/2.62;cy=boxH/2;}
       else if(e.group.userData.ghostSkin==='ghostfood'||e.group.userData.ghostSkin==='ghostcake'){boxH=e.group.userData.ghostHeight??1.8;boxW=1.05*boxH;cy=boxH/2;}
       e.box.setFromCenterAndSize(

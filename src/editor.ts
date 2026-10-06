@@ -1626,8 +1626,8 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
         label: `${ENEMY_NAMES[kind]} (${kind})`,
         thumbnail: enemyThumbnail(kind),
         make: at=>({t:'enemy',p:[at.x,at.y+.5,at.z],foe:kind,
-          range: {grunt:5,spiker:5,turtle:4,charger:9,hopper:5,floater:5,sentry:0,spinner:0}[kind],
-          speed: {grunt:3,spiker:3,turtle:2.4,charger:4.5,hopper:3.4,floater:3,sentry:0,spinner:0}[kind],
+          range: {grunt:5,spiker:5,turtle:4,charger:9,hopper:5,floater:5,sentry:0,spinner:0,moa:3}[kind],
+          speed: {grunt:3,spiker:3,turtle:2.4,charger:4.5,hopper:3.4,floater:3,sentry:0,spinner:0,moa:1.45}[kind],
         }),
       })),
       {
@@ -1968,6 +1968,7 @@ const FOE_KINDS: { k: EnemyKind; label: string }[] = [
   { k: "floater", label: "floater — flies; SPIN it down" },
   { k: "sentry", label: "sentry — turret, fires orbs" },
   { k: "spinner", label: "spinner — hit it when blades retract" },
+  { k: "moa", label: "moa — dodge the peck, spin or stomp" },
 ];
 
 // components that grow draggable resize handles on double-click
