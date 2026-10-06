@@ -14,7 +14,7 @@ export interface BossPlayerSample {
   skating: boolean; grinding: boolean; attacking: boolean; spinning?: boolean; immune: boolean; shielded: boolean;
   rail?: Rail | null; support?: THREE.Object3D | null;
 }
-export interface BossStepResult { hurt: boolean; fatal: boolean; strike: boolean; }
+export interface BossStepResult { hurt: boolean; fatal: boolean; strike: boolean; impact?: 'crush'; }
 type Wave = { mesh: THREE.Mesh; centre: THREE.Vector3; radius: number; previous: number; life: number; speed: number; };
 type Bubble = { mesh: THREE.Mesh; velocity: THREE.Vector3; previous: THREE.Vector3; life: number; };
 type Spark = { mesh: THREE.Mesh; velocity: THREE.Vector3; life: number; total: number; };
@@ -190,7 +190,9 @@ export class CrabChiefEncounter {
       case 'idle': if (t > .85) this.nextAttack(p); break;
       case 'slam-tell': if (t > (this.phase === 3 ? .95 : 1.3)) this.enter('slam'); break;
       case 'slam':
-        if (t > .17 && t < .4 && p.position.y < 2.3 && Math.hypot(p.position.x - this.target.x, p.position.z - this.target.z) < 3.05) danger = true;
+        if (t > .17 && t < .4 && p.position.y < 2.3 && Math.hypot(p.position.x - this.target.x, p.position.z - this.target.z) < 3.05) {
+          danger = true; result.impact = 'crush';
+        }
         if (t > (this.phase===2?3.15:.6)) this.beginOpening(); break;
       case 'volley-tell': if (t > 1.15) this.enter('volley'); break;
       case 'volley':

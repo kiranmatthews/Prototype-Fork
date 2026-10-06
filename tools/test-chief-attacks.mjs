@@ -94,6 +94,17 @@ await withChiefRuntime(async ({l,p,tick})=>{
   actor.rail=l.rails.find(rail=>rail!==tongue);boss.step(1/60,actor);boss.present(1/60);
   assert.equal(boss.state,'idle','unrelated rail extended the expired tongue opportunity');
   assert.equal(boss.phaseGeometry.tongueActive,false);
+  // The downward claw and its later ripple carry different presentation
+  // causes. Both still use the encounter's ordinary damage/life rules.
+  boss.reset(true); boss.state = 'slam'; boss.stateTime = .2; boss.target.set(0, 0, -6);
+  const victim = { position: new THREE.Vector3(0, 0, -6), state: 'ride', speed: 0,
+    grounded: true, skating: false, grinding: false, attacking: false, immune: false, shielded: false };
+  const claw = boss.step(1 / 60, victim);
+  assert.equal(claw.hurt, true); assert.equal(claw.fatal, true); assert.equal(claw.impact, 'crush');
+  boss.reset(true); boss.state = 'recover'; boss.stateTime = 0;
+  boss.emitWave(new THREE.Vector3(), 11); victim.position.set(0, 0, 0);
+  const ripple = boss.step(1 / 60, victim);
+  assert.equal(ripple.hurt, true); assert.equal(ripple.fatal, true); assert.equal(ripple.impact, undefined);
   console.log('PASS phase 2 production Player hit/dodge attacks, actual front-court aim, completed projectile/ripple travel, clear tongue formation, two masks and unchanged phase one timing.');
   console.log(JSON.stringify(results,null,2));
 });

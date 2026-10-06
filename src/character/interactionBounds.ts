@@ -7,6 +7,13 @@ interface CachedMeshBounds {
   morphs: number[];
   box: THREE.Box3;
 }
+interface CachedSupportPoints {
+  geometry: THREE.BufferGeometry;
+  positions: THREE.BufferAttribute | THREE.InterleavedBufferAttribute;
+  version: number;
+  points: Float64Array;
+  bounds: THREE.Box3;
+}
 interface CachedSkinVertices extends SkinBoundsVertices {
   attributes: (THREE.BufferAttribute|THREE.InterleavedBufferAttribute)[];
   versions: number[];
@@ -14,7 +21,13 @@ interface CachedSkinVertices extends SkinBoundsVertices {
   relative: boolean;
   bind: number[];
 }
+const NO_MORPHS: readonly number[] = [];
 const attributeVersion=(a:THREE.BufferAttribute|THREE.InterleavedBufferAttribute)=>'version' in a?a.version:a.data.version;
+function hasVisibleMaterial(material: THREE.Material | THREE.Material[]): boolean {
+  if (!Array.isArray(material)) return material.visible && material.opacity > 0;
+  for (const entry of material) if (entry.visible && entry.opacity > 0) return true;
+  return false;
+}
 
 /** Pickup/attack silhouette, independent of the level-authoring body collider.
  * Only the rider hierarchy participates: boards, shadows and attack VFX are
@@ -32,6 +45,7 @@ export class CharacterInteractionBounds {
   meshCount = 0;
   supportSamples = 0;
   private readonly supportCache = new WeakMap<THREE.BufferGeometry, Uint32Array>();
+  private readonly rigidSupportCache = new WeakMap<THREE.Mesh, CachedSupportPoints>();
   private readonly directions = Array.from({length:128},(_,i)=>{
     const y=1-2*(i+.5)/128,r=Math.sqrt(1-y*y),a=i*2.399963229728653;
     return [Math.cos(a)*r,y,Math.sin(a)*r];
@@ -69,20 +83,87 @@ export class CharacterInteractionBounds {
     this.supportCache.set(geometry,cached);return cached;
   }
 
-  /** Sparse kinematic pose support, only for a non-interactive dead rider.
+  /** Rigid surface hulls change with geometry, not the current root
+   * orientation. Cache local points and pull the query plane into that frame;
+   * contact then needs dot products, not thousands of vertex reads/transforms. */
+  private rigidSupportPoints(mesh: THREE.Mesh, indices: Uint32Array): CachedSupportPoints {
+    const geometry = mesh.geometry, positions = geometry.getAttribute('position');
+    const version = attributeVersion(positions);
+    let cached = this.rigidSupportCache.get(mesh);
+    if (!cached || cached.geometry !== geometry || cached.positions !== positions || cached.version !== version) {
+      const points = cached?.points.length === indices.length * 3
+        ? cached.points : new Float64Array(indices.length * 3);
+      const bounds = cached?.bounds ?? new THREE.Box3();
+      bounds.makeEmpty();
+      for (let i = 0; i < indices.length; i++) {
+        mesh.getVertexPosition(indices[i], this.point);
+        points[i * 3] = this.point.x;points[i * 3 + 1] = this.point.y;points[i * 3 + 2] = this.point.z;
+        bounds.expandByPoint(this.point);
+      }
+      cached = { geometry, positions, version, points, bounds };
+      this.rigidSupportCache.set(mesh, cached);
+    }
+    return cached!;
+  }
+
+  /** Sparse kinematic pose support for a death or intact supported bail.
    * Caller updates world/bind matrices once; live pickup/attack bounds retain
    * their complete mesh measurement. No world collision or CPU full-skin scan. */
-  sampledPlaneDistance(root: THREE.Object3D, normal: Readonly<THREE.Vector3>, point: Readonly<THREE.Vector3>, contact?: THREE.Vector3, bounds?: THREE.Box3): number {
+  sampledPlaneDistance(root: THREE.Object3D, normal: Readonly<THREE.Vector3>, point: Readonly<THREE.Vector3>, contact?: THREE.Vector3, bounds?: THREE.Box3, measured = false): number {
     let minimum=Infinity;this.supportSamples=0;bounds?.makeEmpty();
     const visit=(node:THREE.Object3D):void=>{
       if(node!==root&&!node.visible)return;
       if(node instanceof THREE.Mesh){
-        const materials=Array.isArray(node.material)?node.material:[node.material];
-        if(materials.some(m=>m.visible&&m.opacity>0)){
+        if(hasVisibleMaterial(node.material)){
           const indices=this.supportIndices(node.geometry),count=node instanceof THREE.InstancedMesh?node.count:1;
           for(let instance=0;instance<count;instance++){
             this.world.copy(node.matrixWorld);
             if(node instanceof THREE.InstancedMesh){node.getMatrixAt(instance,this.instance);this.world.multiply(this.instance);}
+            if (!bounds && measured && node instanceof THREE.SkinnedMesh && node.boundingBox) {
+              // The immediately preceding exact bounds pass already skinned
+              // this pose. Its local box is conservative for every support
+              // sample, so reject higher body sections before skinning again.
+              const m = this.world.elements, box = node.boundingBox;
+              if (m[3] === 0 && m[7] === 0 && m[11] === 0 && m[15] === 1) {
+                const nx = normal.x*m[0]+normal.y*m[1]+normal.z*m[2];
+                const ny = normal.x*m[4]+normal.y*m[5]+normal.z*m[6];
+                const nz = normal.x*m[8]+normal.y*m[9]+normal.z*m[10];
+                const bound = nx*(nx>=0?box.min.x:box.max.x)+ny*(ny>=0?box.min.y:box.max.y)+
+                  nz*(nz>=0?box.min.z:box.max.z)+normal.x*(m[12]-point.x)+normal.y*(m[13]-point.y)+normal.z*(m[14]-point.z);
+                if (bound >= minimum) continue;
+              }
+            }
+            if (!bounds && !(node instanceof THREE.SkinnedMesh) &&
+              !(node.geometry.morphAttributes.position?.length) &&
+              this.world.elements[3] === 0 && this.world.elements[7] === 0 &&
+              this.world.elements[11] === 0 && this.world.elements[15] === 1 &&
+              node.getVertexPosition === THREE.Mesh.prototype.getVertexPosition) {
+              const hull = this.rigidSupportPoints(node, indices), m = this.world.elements;
+              const nx = normal.x * m[0] + normal.y * m[1] + normal.z * m[2];
+              const ny = normal.x * m[4] + normal.y * m[5] + normal.z * m[6];
+              const nz = normal.x * m[8] + normal.y * m[9] + normal.z * m[10];
+              const offset = normal.x * (m[12] - point.x) + normal.y * (m[13] - point.y) + normal.z * (m[14] - point.z);
+              // An AABB encloses every cached hull sample. If even its
+              // nearest possible plane distance cannot beat the current
+              // contact, all of this mesh's point dots are provably needless.
+              const lo = hull.bounds.min, hi = hull.bounds.max;
+              const bound = nx * (nx >= 0 ? lo.x : hi.x) + ny * (ny >= 0 ? lo.y : hi.y) +
+                nz * (nz >= 0 ? lo.z : hi.z) + offset;
+              if (bound >= minimum) continue;
+              const points = hull.points;
+              let localMinimum = Infinity, best = 0;
+              for (let i = 0; i < points.length; i += 3) {
+                const distance = nx * points[i] + ny * points[i + 1] + nz * points[i + 2];
+                if (distance < localMinimum) { localMinimum = distance; best = i; }
+              }
+              this.supportSamples += indices.length;
+              const distance = localMinimum + offset;
+              if (distance < minimum) {
+                minimum = distance;
+                if (contact) contact.set(points[best], points[best + 1], points[best + 2]).applyMatrix4(this.world);
+              }
+              continue;
+            }
             for(const i of indices){
               node.getVertexPosition(i,this.point).applyMatrix4(this.world);this.supportSamples++;bounds?.expandByPoint(this.point);
               const distance=normal.x*(this.point.x-point.x)+normal.y*(this.point.y-point.y)+normal.z*(this.point.z-point.z);
@@ -96,25 +177,45 @@ export class CharacterInteractionBounds {
     visit(root);return minimum;
   }
 
-  measure(root: THREE.Object3D, out: THREE.Box3): boolean {
-    root.updateWorldMatrix(true,true);
+  private transformBounds(box: THREE.Box3, matrix: THREE.Matrix4): THREE.Box3 {
+    const m = matrix.elements;
+    if (m[3] !== 0 || m[7] !== 0 || m[11] !== 0 || m[15] !== 1)
+      return this.transformed.copy(box).applyMatrix4(matrix);
+    const a = box.min, b = box.max;
+    // The extrema of each affine axis choose each local interval endpoint
+    // independently. This is the exact transformed box, with no hull/proxy
+    // approximation, using 18 products instead of eight transformed corners.
+    this.transformed.min.set(
+      m[12] + m[0] * (m[0] >= 0 ? a.x : b.x) + m[4] * (m[4] >= 0 ? a.y : b.y) + m[8] * (m[8] >= 0 ? a.z : b.z),
+      m[13] + m[1] * (m[1] >= 0 ? a.x : b.x) + m[5] * (m[5] >= 0 ? a.y : b.y) + m[9] * (m[9] >= 0 ? a.z : b.z),
+      m[14] + m[2] * (m[2] >= 0 ? a.x : b.x) + m[6] * (m[6] >= 0 ? a.y : b.y) + m[10] * (m[10] >= 0 ? a.z : b.z),
+    );
+    this.transformed.max.set(
+      m[12] + m[0] * (m[0] >= 0 ? b.x : a.x) + m[4] * (m[4] >= 0 ? b.y : a.y) + m[8] * (m[8] >= 0 ? b.z : a.z),
+      m[13] + m[1] * (m[1] >= 0 ? b.x : a.x) + m[5] * (m[5] >= 0 ? b.y : a.y) + m[9] * (m[9] >= 0 ? b.z : a.z),
+      m[14] + m[2] * (m[2] >= 0 ? b.x : a.x) + m[6] * (m[6] >= 0 ? b.y : a.y) + m[10] * (m[10] >= 0 ? b.z : a.z),
+    );
+    return this.transformed;
+  }
+
+  measure(root: THREE.Object3D, out: THREE.Box3, worldMatricesReady = false): boolean {
+    if (!worldMatricesReady) root.updateWorldMatrix(true,true);
     out.makeEmpty();this.meshCount=0;
     const visit=(node:THREE.Object3D):void=>{
       // The root may be hidden by a temporary presentation effect. Visibility
       // below it still selects the actual current head, outfit and limbs.
       if(node!==root&&!node.visible)return;
       if(node instanceof THREE.Mesh){
-        const materials=Array.isArray(node.material)?node.material:[node.material];
-        if(materials.some(material=>material.visible&&material.opacity>0)){
+        if(hasVisibleMaterial(node.material)){
           this.supportIndices(node.geometry);
           const box=this.localBounds(node);
           if(box&&!box.isEmpty()){
             if(node instanceof THREE.InstancedMesh){
               for(let i=0;i<node.count;i++){
                 node.getMatrixAt(i,this.instance);this.world.multiplyMatrices(node.matrixWorld,this.instance);
-                out.union(this.transformed.copy(box).applyMatrix4(this.world));
+                out.union(this.transformBounds(box,this.world));
               }
-            }else out.union(this.transformed.copy(box).applyMatrix4(node.matrixWorld));
+            }else out.union(this.transformBounds(box,node.matrixWorld));
             this.meshCount++;
           }
         }
@@ -122,7 +223,8 @@ export class CharacterInteractionBounds {
       for(const child of node.children)visit(child);
     };
     visit(root);
-    return !out.isEmpty()&&[...out.min.toArray(),...out.max.toArray()].every(Number.isFinite);
+    return !out.isEmpty() && Number.isFinite(out.min.x) && Number.isFinite(out.min.y) &&
+      Number.isFinite(out.min.z) && Number.isFinite(out.max.x) && Number.isFinite(out.max.y) && Number.isFinite(out.max.z);
   }
 
   /** Exact rendered-vertex support for a rare settled pose. A transformed
@@ -164,7 +266,7 @@ export class CharacterInteractionBounds {
     if(mesh instanceof THREE.SkinnedMesh){
       return this.skinnedBounds(mesh);
     }
-    const morphs=mesh.morphTargetInfluences??[];
+    const morphs=mesh.morphTargetInfluences??NO_MORPHS;
     const version='version' in positions?positions.version:positions.data.version;
     let cached=this.cache.get(mesh);
     if(!cached||cached.geometry!==geometry||cached.version!==version||
@@ -198,7 +300,7 @@ export class CharacterInteractionBounds {
     const geometry=mesh.geometry,positions=geometry.getAttribute('position');
     const indices=geometry.getAttribute('skinIndex'),weights=geometry.getAttribute('skinWeight');
     const attributes=[positions,indices,weights,...(geometry.morphAttributes.position??[])];
-    const morphs=mesh.morphTargetInfluences??[];
+    const morphs=mesh.morphTargetInfluences??NO_MORPHS;
     const bind=mesh.bindMatrix.elements,linearBind=bind[3]===0&&bind[7]===0&&bind[11]===0&&bind[15]===1;
     let cached=this.skinVertices.get(mesh);
     if(!cached||attributes.length!==cached.attributes.length||attributes.some((a,i)=>a!==cached!.attributes[i]||attributeVersion(a)!==cached!.versions[i])||

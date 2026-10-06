@@ -1,0 +1,3228 @@
+{
+  "recordedAt": "2026-10-06T22:24:22.759Z",
+  "protocol": "Three sequential interleaved original/final process rounds; each process runs three seeded 180-frame repetitions per mode after 60 idle warmup frames. Summary reports median of the three process medians and p95s. Active statistics exclude subsequent upright frames.",
+  "limitations": [
+    "SSR CPU only; no GPU, browser, asset-loading, frame-pacing or render cost.",
+    "Original balance/PvP/contact automatically scattered pieces; final follows cause policy. These are whole Player path comparisons, not equivalent visual workloads.",
+    "Elapsed time depends on CPU scheduling and JIT. Use workload counts and correctness tests together with timing; do not claim meaningful gains from differences near a few percent.",
+    "Original source is the pre-task Player snapshot plus pre-task breakApart/bailRecovery. The policy module present in the original directory is not referenced by its Player.",
+    "The isolated release retains the upstream concave wall-path nearest-slice guard absent in the measured workspace player. This is the only Player source difference; the benchmark contains no wall-path components. The other measured runtime source hashes match the release."
+  ],
+  "sources": {
+    "original": {
+      "src/player.ts": "6f9ce66206eac0126f9cece0a5e64a52fb125df64bfbd4d4067e1f81af4324ba",
+      "src/bailRecovery.ts": "be7124c0d5d072334dcbdee29785ec88ddd417291964aba54f2493c1c2d5bbac",
+      "src/character/breakApart.ts": "a7e93f6e87924eeed63acf533a7c5fb30398043cbbd053f5696ecb04703d4607",
+      "src/character/interactionBounds.ts": "7a39f5f203015b4f1f41f5b7b5846b1c57208b86082952ac13ea2b9e9e385ad1",
+      "src/character/wipeoutPolicy.ts": "639cdc079b2523fb99b35fc90a14475d1bedd5f1e8d8ab2b897e3d5d541b2235"
+    },
+    "final": {
+      "src/player.ts": "c7d460f33d3ceebe2e9873d7921b2f8f11ee9dd085ed389ad6ca339122e73b0a",
+      "src/bailRecovery.ts": "3d635fefe06d9a372607bacbfb49d9184a8cbe405712e7b717f647a18c41d6c9",
+      "src/character/breakApart.ts": "55ef7c3e1b209bb21055b50f7c3c98faa27234985e3aa8a316884395f68ce400",
+      "src/character/interactionBounds.ts": "70db2fac7b44de80bf5b4845102476b8b73d6031689225911ce7fad7ff4d71b5",
+      "src/character/wipeoutPolicy.ts": "639cdc079b2523fb99b35fc90a14475d1bedd5f1e8d8ab2b897e3d5d541b2235"
+    }
+  },
+  "summary": [
+    {
+      "mode": "idle",
+      "original": {
+        "medianMs": 1.146458000000166,
+        "p95Ms": 1.41733400000021,
+        "activeMedianMs": 0,
+        "activeP95Ms": 0,
+        "peakParts": 0,
+        "maxProbes": 0
+      },
+      "final": {
+        "medianMs": 1.1182079999998678,
+        "p95Ms": 1.3969579999998132,
+        "activeMedianMs": 0,
+        "activeP95Ms": 0,
+        "peakParts": 0,
+        "maxProbes": 0
+      },
+      "wholeStepMedianChangePercent": -2.4641112016571265,
+      "activeMedianChangePercent": null
+    },
+    {
+      "mode": "balance",
+      "original": {
+        "medianMs": 1.1241670000008526,
+        "p95Ms": 1.4887920000001031,
+        "activeMedianMs": 1.1472080000003189,
+        "activeP95Ms": 2.5238750000003165,
+        "peakParts": 9,
+        "maxProbes": 2
+      },
+      "final": {
+        "medianMs": 1.0990419999998267,
+        "p95Ms": 1.486667000000125,
+        "activeMedianMs": 1.1316249999999854,
+        "activeP95Ms": 2.6623749999998836,
+        "peakParts": 0,
+        "maxProbes": 0
+      },
+      "wholeStepMedianChangePercent": -2.2349882180322744,
+      "activeMedianChangePercent": -1.3583412947198004
+    },
+    {
+      "mode": "pvp",
+      "original": {
+        "medianMs": 1.09112499999992,
+        "p95Ms": 1.276083999999173,
+        "activeMedianMs": 1.0947919999998703,
+        "activeP95Ms": 1.267041999999492,
+        "peakParts": 5,
+        "maxProbes": 2
+      },
+      "final": {
+        "medianMs": 1.0611250000001746,
+        "p95Ms": 1.2554580000005444,
+        "activeMedianMs": 1.049250000000029,
+        "activeP95Ms": 1.2311659999995754,
+        "peakParts": 0,
+        "maxProbes": 0
+      },
+      "wholeStepMedianChangePercent": -2.749455836842485,
+      "activeMedianChangePercent": -4.159876944647623
+    },
+    {
+      "mode": "wall",
+      "original": {
+        "medianMs": 1.0364580000004935,
+        "p95Ms": 1.1983329999993657,
+        "activeMedianMs": 1.030999999999949,
+        "activeP95Ms": 1.1805420000000595,
+        "peakParts": 1,
+        "maxProbes": 1
+      },
+      "final": {
+        "medianMs": 1.03845900000033,
+        "p95Ms": 1.206000000000131,
+        "activeMedianMs": 1.0518339999998716,
+        "activeP95Ms": 1.242833000000246,
+        "peakParts": 1,
+        "maxProbes": 1
+      },
+      "wholeStepMedianChangePercent": 0.19306136860688383,
+      "activeMedianChangePercent": 2.020756547034286
+    },
+    {
+      "mode": "trip",
+      "original": {
+        "medianMs": 1.042207999999846,
+        "p95Ms": 1.2032500000004802,
+        "activeMedianMs": 1.050916000000143,
+        "activeP95Ms": 1.1936249999998836,
+        "peakParts": 2,
+        "maxProbes": 2
+      },
+      "final": {
+        "medianMs": 1.024083000000246,
+        "p95Ms": 1.2061249999997017,
+        "activeMedianMs": 1.0383750000000873,
+        "activeP95Ms": 1.2087080000001151,
+        "peakParts": 2,
+        "maxProbes": 2
+      },
+      "wholeStepMedianChangePercent": -1.7390962264348886,
+      "activeMedianChangePercent": -1.1933399053829175
+    },
+    {
+      "mode": "death",
+      "original": {
+        "medianMs": 0.16441699999995762,
+        "p95Ms": 1.1842909999995754,
+        "activeMedianMs": 0.16441699999995762,
+        "activeP95Ms": 1.1842909999995754,
+        "peakParts": 9,
+        "maxProbes": 2
+      },
+      "final": {
+        "medianMs": 0.047582999999576714,
+        "p95Ms": 1.3118329999997513,
+        "activeMedianMs": 0.047582999999576714,
+        "activeP95Ms": 1.3118329999997513,
+        "peakParts": 0,
+        "maxProbes": 0
+      },
+      "wholeStepMedianChangePercent": -71.05956196768645,
+      "activeMedianChangePercent": -71.05956196768645
+    },
+    {
+      "mode": "blast",
+      "original": {
+        "medianMs": 0.15895799999998417,
+        "p95Ms": 1.1208340000002863,
+        "activeMedianMs": 0.15895799999998417,
+        "activeP95Ms": 1.1208340000002863,
+        "peakParts": 9,
+        "maxProbes": 2
+      },
+      "final": {
+        "medianMs": 0.12908299999980954,
+        "p95Ms": 1.1159580000003189,
+        "activeMedianMs": 0.12908299999980954,
+        "activeP95Ms": 1.1159580000003189,
+        "peakParts": 9,
+        "maxProbes": 2
+      },
+      "wholeStepMedianChangePercent": -18.794272701076764,
+      "activeMedianChangePercent": -18.794272701076764
+    },
+    {
+      "mode": "crush",
+      "original": {
+        "medianMs": 0.1600829999997586,
+        "p95Ms": 1.09112499999992,
+        "activeMedianMs": 0.1600829999997586,
+        "activeP95Ms": 1.09112499999992,
+        "peakParts": 9,
+        "maxProbes": 2
+      },
+      "final": {
+        "medianMs": 0.12616700000035053,
+        "p95Ms": 1.0670000000000073,
+        "activeMedianMs": 0.12616700000035053,
+        "activeP95Ms": 1.0670000000000073,
+        "peakParts": 9,
+        "maxProbes": 2
+      },
+      "wholeStepMedianChangePercent": -21.18650949786001,
+      "activeMedianChangePercent": -21.18650949786001
+    }
+  ],
+  "runs": {
+    "original": [
+      {
+        "note": "Three seeded repetitions per case; SSR CPU timings. Compare on the same machine. No GPU/browser costs included.",
+        "results": [
+          {
+            "mode": "idle",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.0007780000000821019,
+              "medianMs": 0.0007500000001527951,
+              "p95Ms": 0.0009589999999661813,
+              "maxMs": 0.0009589999999661813
+            },
+            "samples": 540,
+            "averageMs": 1.2040793925925881,
+            "medianMs": 1.1471660000001975,
+            "p95Ms": 1.4258749999999054,
+            "maxMs": 4.264374999999745,
+            "active": {
+              "samples": 0,
+              "averageMs": 0,
+              "medianMs": 0,
+              "p95Ms": 0,
+              "maxMs": 0
+            },
+            "peakParts": 0,
+            "maxProbes": 0,
+            "phases": {
+              "upright": {
+                "samples": 540,
+                "averageMs": 1.2040793925925881,
+                "medianMs": 1.1471660000001975,
+                "p95Ms": 1.4258749999999054,
+                "maxMs": 4.264374999999745
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 4887,
+                "ms": 14.742450999995981
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 305.01758800000016
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 305.7299620000008
+              }
+            }
+          },
+          {
+            "mode": "balance",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.8536666666664132,
+              "medianMs": 0.5164999999997235,
+              "p95Ms": 1.6266669999999976,
+              "maxMs": 1.6266669999999976
+            },
+            "samples": 540,
+            "averageMs": 1.3149814777777675,
+            "medianMs": 1.1292079999993803,
+            "p95Ms": 1.4887920000001031,
+            "maxMs": 64.43641599999955,
+            "active": {
+              "samples": 159,
+              "averageMs": 1.677751578616333,
+              "medianMs": 1.1472080000003189,
+              "p95Ms": 2.506250000000364,
+              "maxMs": 64.43641599999955
+            },
+            "peakParts": 9,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 30,
+                "averageMs": 1.7617917000000034,
+                "medianMs": 1.2938750000002983,
+                "p95Ms": 3.463416999999936,
+                "maxMs": 6.230957999999646
+              },
+              "reassembling": {
+                "samples": 102,
+                "averageMs": 1.8166727745097602,
+                "medianMs": 1.1493749999999636,
+                "p95Ms": 1.4869589999998425,
+                "maxMs": 64.43641599999955
+              },
+              "intact-bail": {
+                "samples": 27,
+                "averageMs": 1.0595602592593085,
+                "medianMs": 1.0496250000005602,
+                "p95Ms": 1.1508750000002692,
+                "maxMs": 1.210041000000274
+              },
+              "upright": {
+                "samples": 381,
+                "averageMs": 1.163589230971122,
+                "medianMs": 1.1167089999999007,
+                "p95Ms": 1.3696249999993597,
+                "maxMs": 3.4651249999997162
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3774,
+                "ms": 11.00206300001446
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 294.3111760000015
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 294.8149350000076
+              }
+            }
+          },
+          {
+            "mode": "pvp",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.1485693333333984,
+              "medianMs": 0.11541699999997945,
+              "p95Ms": 0.23458300000038435,
+              "maxMs": 0.23458300000038435
+            },
+            "samples": 540,
+            "averageMs": 1.1143057796296,
+            "medianMs": 1.09112499999992,
+            "p95Ms": 1.276083999999173,
+            "maxMs": 2.382416999999805,
+            "active": {
+              "samples": 249,
+              "averageMs": 1.1108835060240527,
+              "medianMs": 1.0967499999997017,
+              "p95Ms": 1.2722920000005615,
+              "maxMs": 2.368040999999721
+            },
+            "peakParts": 5,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 120,
+                "averageMs": 1.1483471749999277,
+                "medianMs": 1.1096669999997175,
+                "p95Ms": 1.3005000000002838,
+                "maxMs": 2.3090830000001006
+              },
+              "reassembling": {
+                "samples": 102,
+                "averageMs": 1.1079538333333403,
+                "medianMs": 1.0922499999996944,
+                "p95Ms": 1.2238330000000133,
+                "maxMs": 2.368040999999721
+              },
+              "intact-bail": {
+                "samples": 27,
+                "averageMs": 0.9554459629628548,
+                "medianMs": 0.9287500000000364,
+                "p95Ms": 1.1415839999999662,
+                "maxMs": 1.1912499999998545
+              },
+              "upright": {
+                "samples": 291,
+                "averageMs": 1.1172341168384705,
+                "medianMs": 1.087333000000399,
+                "p95Ms": 1.2859159999998155,
+                "maxMs": 2.382416999999805
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3027,
+                "ms": 8.003041000014491
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 278.47992499999873
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 278.866269999985
+              }
+            }
+          },
+          {
+            "mode": "wall",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.4367639999997361,
+              "medianMs": 0.439832999999453,
+              "p95Ms": 0.4539169999998194,
+              "maxMs": 0.4539169999998194
+            },
+            "samples": 540,
+            "averageMs": 1.0637697722222212,
+            "medianMs": 1.0364580000004935,
+            "p95Ms": 1.1983329999993657,
+            "maxMs": 2.0938340000002427,
+            "active": {
+              "samples": 210,
+              "averageMs": 1.0563669095237986,
+              "medianMs": 1.030999999999949,
+              "p95Ms": 1.1805420000000595,
+              "maxMs": 2.0661669999999503
+            },
+            "peakParts": 1,
+            "maxProbes": 1,
+            "phases": {
+              "scattered": {
+                "samples": 81,
+                "averageMs": 1.104065876543223,
+                "medianMs": 1.074999999999818,
+                "p95Ms": 1.2264169999998558,
+                "maxMs": 2.0661669999999503
+              },
+              "reassembling": {
+                "samples": 102,
+                "averageMs": 1.046048225490178,
+                "medianMs": 1.0172499999998763,
+                "p95Ms": 1.1612920000006852,
+                "maxMs": 2.0113329999994676
+              },
+              "intact-bail": {
+                "samples": 27,
+                "averageMs": 0.9522517037036474,
+                "medianMs": 0.9515419999997903,
+                "p95Ms": 1.0579580000003261,
+                "maxMs": 1.1213330000000497
+              },
+              "upright": {
+                "samples": 330,
+                "averageMs": 1.0684806848484902,
+                "medianMs": 1.0388750000001892,
+                "p95Ms": 1.201125000000502,
+                "maxMs": 2.0938340000002427
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3369,
+                "ms": 8.161211000000549
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 280.8342560000028
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 281.15610600001037
+              }
+            }
+          },
+          {
+            "mode": "trip",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.4465140000002066,
+              "medianMs": 0.4594170000000304,
+              "p95Ms": 0.46266600000035396,
+              "maxMs": 0.46266600000035396
+            },
+            "samples": 540,
+            "averageMs": 1.0651004055555826,
+            "medianMs": 1.042207999999846,
+            "p95Ms": 1.2032500000004802,
+            "maxMs": 2.2524160000002666,
+            "active": {
+              "samples": 210,
+              "averageMs": 1.0646926666666894,
+              "medianMs": 1.050916000000143,
+              "p95Ms": 1.1936249999998836,
+              "maxMs": 2.2524160000002666
+            },
+            "peakParts": 2,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 81,
+                "averageMs": 1.0999336666666266,
+                "medianMs": 1.0664999999999054,
+                "p95Ms": 1.2032500000004802,
+                "maxMs": 2.2524160000002666
+              },
+              "reassembling": {
+                "samples": 102,
+                "averageMs": 1.0573447647059089,
+                "medianMs": 1.0425829999994676,
+                "p95Ms": 1.1513330000007045,
+                "maxMs": 1.2391660000002958
+              },
+              "intact-bail": {
+                "samples": 27,
+                "averageMs": 0.9867284074076047,
+                "medianMs": 0.9504580000002534,
+                "p95Ms": 1.068833000000268,
+                "maxMs": 2.0553340000005846
+              },
+              "upright": {
+                "samples": 330,
+                "averageMs": 1.0653598757576055,
+                "medianMs": 1.0350420000004306,
+                "p95Ms": 1.2116670000004888,
+                "maxMs": 2.248083000000406
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3369,
+                "ms": 8.147485000020424
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 280.63544700000966
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 280.95966700001463
+              }
+            }
+          },
+          {
+            "mode": "death",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.1393473333334138,
+              "medianMs": 0.08820800000012241,
+              "p95Ms": 0.24458400000003166,
+              "maxMs": 0.24458400000003166
+            },
+            "samples": 540,
+            "averageMs": 0.6024552833333221,
+            "medianMs": 0.171875,
+            "p95Ms": 1.2443750000002183,
+            "maxMs": 3.1627920000000813,
+            "active": {
+              "samples": 540,
+              "averageMs": 0.6024552833333221,
+              "medianMs": 0.171875,
+              "p95Ms": 1.2443750000002183,
+              "maxMs": 3.1627920000000813
+            },
+            "peakParts": 9,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 540,
+                "averageMs": 0.6024552833333221,
+                "medianMs": 0.171875,
+                "p95Ms": 1.2443750000002183,
+                "maxMs": 3.1627920000000813
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 27,
+                "ms": 0.07933000000139145
+              },
+              "measure": {
+                "calls": 3,
+                "ms": 1.552373999998963
+              },
+              "refreshCharacterBounds": {
+                "calls": 549,
+                "ms": 1.6794959999842831
+              },
+              "stepDeathFall": {
+                "calls": 540,
+                "ms": 0.34874899999431364
+              },
+              "sampledPlaneDistance": {
+                "calls": 621,
+                "ms": 97.00620799999706
+              },
+              "seatDeathOnGround": {
+                "calls": 243,
+                "ms": 115.46571099999983
+              }
+            }
+          },
+          {
+            "mode": "blast",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.09495833333342792,
+              "medianMs": 0.09295800000018062,
+              "p95Ms": 0.10249999999996362,
+              "maxMs": 0.10249999999996362
+            },
+            "samples": 540,
+            "averageMs": 0.5679539518518292,
+            "medianMs": 0.15870799999993324,
+            "p95Ms": 1.1208340000002863,
+            "maxMs": 2.175290999999561,
+            "active": {
+              "samples": 540,
+              "averageMs": 0.5679539518518292,
+              "medianMs": 0.15870799999993324,
+              "p95Ms": 1.1208340000002863,
+              "maxMs": 2.175290999999561
+            },
+            "peakParts": 9,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 540,
+                "averageMs": 0.5679539518518292,
+                "medianMs": 0.15870799999993324,
+                "p95Ms": 1.1208340000002863,
+                "maxMs": 2.175290999999561
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 27,
+                "ms": 0.08503900000232534
+              },
+              "measure": {
+                "calls": 3,
+                "ms": 1.4160830000000715
+              },
+              "refreshCharacterBounds": {
+                "calls": 549,
+                "ms": 1.5308360000135508
+              },
+              "stepDeathFall": {
+                "calls": 540,
+                "ms": 0.12726200000179233
+              },
+              "sampledPlaneDistance": {
+                "calls": 621,
+                "ms": 84.68100699999923
+              },
+              "seatDeathOnGround": {
+                "calls": 243,
+                "ms": 102.79037900000276
+              }
+            }
+          },
+          {
+            "mode": "crush",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.09455533333372539,
+              "medianMs": 0.08941700000013952,
+              "p95Ms": 0.10491600000023027,
+              "maxMs": 0.10491600000023027
+            },
+            "samples": 540,
+            "averageMs": 0.5607021111110919,
+            "medianMs": 0.16229199999997945,
+            "p95Ms": 1.09112499999992,
+            "maxMs": 1.999667000000045,
+            "active": {
+              "samples": 540,
+              "averageMs": 0.5607021111110919,
+              "medianMs": 0.16229199999997945,
+              "p95Ms": 1.09112499999992,
+              "maxMs": 1.999667000000045
+            },
+            "peakParts": 9,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 540,
+                "averageMs": 0.5607021111110919,
+                "medianMs": 0.16229199999997945,
+                "p95Ms": 1.09112499999992,
+                "maxMs": 1.999667000000045
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 27,
+                "ms": 0.07895499999813183
+              },
+              "measure": {
+                "calls": 3,
+                "ms": 1.433165999999801
+              },
+              "refreshCharacterBounds": {
+                "calls": 549,
+                "ms": 1.532758999995167
+              },
+              "stepDeathFall": {
+                "calls": 540,
+                "ms": 0.11759100000199396
+              },
+              "sampledPlaneDistance": {
+                "calls": 621,
+                "ms": 83.8430460000036
+              },
+              "seatDeathOnGround": {
+                "calls": 243,
+                "ms": 101.6007789999976
+              }
+            }
+          }
+        ]
+      },
+      {
+        "note": "Three seeded repetitions per case; SSR CPU timings. Compare on the same machine. No GPU/browser costs included.",
+        "results": [
+          {
+            "mode": "idle",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.0007359999998091856,
+              "medianMs": 0.0005830000000059954,
+              "p95Ms": 0.0012499999997999112,
+              "maxMs": 0.0012499999997999112
+            },
+            "samples": 540,
+            "averageMs": 1.1748426666666563,
+            "medianMs": 1.1275000000000546,
+            "p95Ms": 1.4164999999998145,
+            "maxMs": 3.5005419999997684,
+            "active": {
+              "samples": 0,
+              "averageMs": 0,
+              "medianMs": 0,
+              "p95Ms": 0,
+              "maxMs": 0
+            },
+            "peakParts": 0,
+            "maxProbes": 0,
+            "phases": {
+              "upright": {
+                "samples": 540,
+                "averageMs": 1.1748426666666563,
+                "medianMs": 1.1275000000000546,
+                "p95Ms": 1.4164999999998145,
+                "maxMs": 3.5005419999997684
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 4887,
+                "ms": 14.936523000009856
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 300.44870600000377
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 301.20566100000315
+              }
+            }
+          },
+          {
+            "mode": "balance",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.8733753333334183,
+              "medianMs": 0.5259590000005119,
+              "p95Ms": 1.6515420000000631,
+              "maxMs": 1.6515420000000631
+            },
+            "samples": 540,
+            "averageMs": 1.2908299370370235,
+            "medianMs": 1.1037919999998849,
+            "p95Ms": 1.497791000000234,
+            "maxMs": 64.26350000000002,
+            "active": {
+              "samples": 159,
+              "averageMs": 1.664722729559747,
+              "medianMs": 1.140292000000045,
+              "p95Ms": 2.5555829999998423,
+              "maxMs": 64.26350000000002
+            },
+            "peakParts": 9,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 30,
+                "averageMs": 1.755541599999924,
+                "medianMs": 1.2880000000004657,
+                "p95Ms": 2.7754580000000715,
+                "maxMs": 6.831916000000092
+              },
+              "reassembling": {
+                "samples": 102,
+                "averageMs": 1.8058141274509938,
+                "medianMs": 1.1480420000007143,
+                "p95Ms": 1.5152499999999236,
+                "maxMs": 64.26350000000002
+              },
+              "intact-bail": {
+                "samples": 27,
+                "averageMs": 1.0308009259259523,
+                "medianMs": 1.0127080000002024,
+                "p95Ms": 1.1119589999998425,
+                "maxMs": 1.1972089999999298
+              },
+              "upright": {
+                "samples": 381,
+                "averageMs": 1.1347959370078555,
+                "medianMs": 1.0875420000002123,
+                "p95Ms": 1.3804580000005444,
+                "maxMs": 3.06775000000016
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3774,
+                "ms": 11.142373999976826
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 294.84893400000556
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 295.31683400001566
+              }
+            }
+          },
+          {
+            "mode": "pvp",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.1226946666662722,
+              "medianMs": 0.1156249999994543,
+              "p95Ms": 0.16241699999955017,
+              "maxMs": 0.16241699999955017
+            },
+            "samples": 540,
+            "averageMs": 1.091681485185166,
+            "medianMs": 1.0669590000006792,
+            "p95Ms": 1.2547909999993863,
+            "maxMs": 2.302625000000262,
+            "active": {
+              "samples": 249,
+              "averageMs": 1.0871680120481582,
+              "medianMs": 1.0738750000000437,
+              "p95Ms": 1.2490410000000338,
+              "maxMs": 2.2359580000002097
+            },
+            "peakParts": 5,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 120,
+                "averageMs": 1.1168600749999844,
+                "medianMs": 1.0845840000001772,
+                "p95Ms": 1.3172080000003916,
+                "maxMs": 2.2359580000002097
+              },
+              "reassembling": {
+                "samples": 102,
+                "averageMs": 1.093163813725431,
+                "medianMs": 1.0718749999996362,
+                "p95Ms": 1.223667000000205,
+                "maxMs": 1.561666000000514
+              },
+              "intact-bail": {
+                "samples": 27,
+                "averageMs": 0.9325524814814545,
+                "medianMs": 0.9220830000003843,
+                "p95Ms": 1.0276249999997162,
+                "maxMs": 1.158625000000029
+              },
+              "upright": {
+                "samples": 291,
+                "averageMs": 1.0955435292096158,
+                "medianMs": 1.0574999999998909,
+                "p95Ms": 1.2550830000000133,
+                "maxMs": 2.302625000000262
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3027,
+                "ms": 8.068428999958087
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 278.3204680000017
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 278.7018759999846
+              }
+            }
+          },
+          {
+            "mode": "wall",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.48862499999995634,
+              "medianMs": 0.446458999999777,
+              "p95Ms": 0.6052909999998519,
+              "maxMs": 0.6052909999998519
+            },
+            "samples": 540,
+            "averageMs": 1.029683638888877,
+            "medianMs": 1.0021249999999782,
+            "p95Ms": 1.1515410000001793,
+            "maxMs": 2.1537919999991573,
+            "active": {
+              "samples": 210,
+              "averageMs": 1.0261642619047615,
+              "medianMs": 1.0073749999992287,
+              "p95Ms": 1.1627079999998386,
+              "maxMs": 1.8443749999996726
+            },
+            "peakParts": 1,
+            "maxProbes": 1,
+            "phases": {
+              "scattered": {
+                "samples": 81,
+                "averageMs": 1.0658661975308792,
+                "medianMs": 1.0385420000002341,
+                "p95Ms": 1.1760830000002898,
+                "maxMs": 1.8443749999996726
+              },
+              "reassembling": {
+                "samples": 102,
+                "averageMs": 1.012166274509787,
+                "medianMs": 0.9888750000000073,
+                "p95Ms": 1.107915999999932,
+                "maxMs": 1.5697079999999914
+              },
+              "intact-bail": {
+                "samples": 27,
+                "averageMs": 0.9599397407407566,
+                "medianMs": 0.9376250000004802,
+                "p95Ms": 1.0868329999993875,
+                "maxMs": 1.4510840000002645
+              },
+              "upright": {
+                "samples": 330,
+                "averageMs": 1.031923242424223,
+                "medianMs": 0.9987920000003214,
+                "p95Ms": 1.1477080000004207,
+                "maxMs": 2.1537919999991573
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3369,
+                "ms": 8.1973629999693
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 278.6635170000018
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 279.0049070000123
+              }
+            }
+          },
+          {
+            "mode": "trip",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.4371943333332335,
+              "medianMs": 0.4225409999999101,
+              "p95Ms": 0.4890419999992446,
+              "maxMs": 0.4890419999992446
+            },
+            "samples": 540,
+            "averageMs": 1.0362013222222315,
+            "medianMs": 1.0198749999999563,
+            "p95Ms": 1.169499999999971,
+            "maxMs": 2.1042499999994106,
+            "active": {
+              "samples": 210,
+              "averageMs": 1.0322797333333429,
+              "medianMs": 1.028124999999818,
+              "p95Ms": 1.144666999999572,
+              "maxMs": 1.6436670000002778
+            },
+            "peakParts": 2,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 81,
+                "averageMs": 1.0750410987654089,
+                "medianMs": 1.0522920000003069,
+                "p95Ms": 1.1772499999997308,
+                "maxMs": 1.6436670000002778
+              },
+              "reassembling": {
+                "samples": 102,
+                "averageMs": 1.0305984803921735,
+                "medianMs": 1.016458000000057,
+                "p95Ms": 1.1353340000005119,
+                "maxMs": 1.1756249999998545
+              },
+              "intact-bail": {
+                "samples": 27,
+                "averageMs": 0.9103470370371185,
+                "medianMs": 0.925333000000137,
+                "p95Ms": 0.9772499999999127,
+                "maxMs": 0.9827079999995476
+              },
+              "upright": {
+                "samples": 330,
+                "averageMs": 1.0386968787878879,
+                "medianMs": 1.007499999999709,
+                "p95Ms": 1.1929159999999683,
+                "maxMs": 2.1042499999994106
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3369,
+                "ms": 8.178273999976227
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 278.6250800000071
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 278.97117600001457
+              }
+            }
+          },
+          {
+            "mode": "death",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.1352499999996629,
+              "medianMs": 0.08395899999959511,
+              "p95Ms": 0.2412079999994603,
+              "maxMs": 0.2412079999994603
+            },
+            "samples": 540,
+            "averageMs": 0.5805635203703602,
+            "medianMs": 0.1642919999994774,
+            "p95Ms": 1.1777090000005046,
+            "maxMs": 2.928041000000121,
+            "active": {
+              "samples": 540,
+              "averageMs": 0.5805635203703602,
+              "medianMs": 0.1642919999994774,
+              "p95Ms": 1.1777090000005046,
+              "maxMs": 2.928041000000121
+            },
+            "peakParts": 9,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 540,
+                "averageMs": 0.5805635203703602,
+                "medianMs": 0.1642919999994774,
+                "p95Ms": 1.1777090000005046,
+                "maxMs": 2.928041000000121
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 27,
+                "ms": 0.08095899999625544
+              },
+              "measure": {
+                "calls": 3,
+                "ms": 1.4935409999998228
+              },
+              "refreshCharacterBounds": {
+                "calls": 549,
+                "ms": 1.6115270000100281
+              },
+              "stepDeathFall": {
+                "calls": 540,
+                "ms": 0.3495020000154909
+              },
+              "sampledPlaneDistance": {
+                "calls": 621,
+                "ms": 95.4657089999946
+              },
+              "seatDeathOnGround": {
+                "calls": 243,
+                "ms": 113.77891600000385
+              }
+            }
+          },
+          {
+            "mode": "blast",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.0866526666665474,
+              "medianMs": 0.08654200000000856,
+              "p95Ms": 0.09220800000002782,
+              "maxMs": 0.09220800000002782
+            },
+            "samples": 540,
+            "averageMs": 0.5553381740740658,
+            "medianMs": 0.15895799999998417,
+            "p95Ms": 1.1212500000001455,
+            "maxMs": 1.4405420000002778,
+            "active": {
+              "samples": 540,
+              "averageMs": 0.5553381740740658,
+              "medianMs": 0.15895799999998417,
+              "p95Ms": 1.1212500000001455,
+              "maxMs": 1.4405420000002778
+            },
+            "peakParts": 9,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 540,
+                "averageMs": 0.5553381740740658,
+                "medianMs": 0.15895799999998417,
+                "p95Ms": 1.1212500000001455,
+                "maxMs": 1.4405420000002778
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 27,
+                "ms": 0.08337499999834108
+              },
+              "measure": {
+                "calls": 3,
+                "ms": 1.4088349999992715
+              },
+              "refreshCharacterBounds": {
+                "calls": 549,
+                "ms": 1.5491599999941172
+              },
+              "stepDeathFall": {
+                "calls": 540,
+                "ms": 0.12379000000692031
+              },
+              "sampledPlaneDistance": {
+                "calls": 621,
+                "ms": 84.70369699999173
+              },
+              "seatDeathOnGround": {
+                "calls": 243,
+                "ms": 102.88416899999356
+              }
+            }
+          },
+          {
+            "mode": "crush",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.08916666666664241,
+              "medianMs": 0.0912079999998241,
+              "p95Ms": 0.09537499999987631,
+              "maxMs": 0.09537499999987631
+            },
+            "samples": 540,
+            "averageMs": 0.5517182018518354,
+            "medianMs": 0.1600829999997586,
+            "p95Ms": 1.0764170000002196,
+            "maxMs": 1.5690830000003189,
+            "active": {
+              "samples": 540,
+              "averageMs": 0.5517182018518354,
+              "medianMs": 0.1600829999997586,
+              "p95Ms": 1.0764170000002196,
+              "maxMs": 1.5690830000003189
+            },
+            "peakParts": 9,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 540,
+                "averageMs": 0.5517182018518354,
+                "medianMs": 0.1600829999997586,
+                "p95Ms": 1.0764170000002196,
+                "maxMs": 1.5690830000003189
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 27,
+                "ms": 0.08266399999956775
+              },
+              "measure": {
+                "calls": 3,
+                "ms": 1.4112499999991996
+              },
+              "refreshCharacterBounds": {
+                "calls": 549,
+                "ms": 1.5168920000032813
+              },
+              "stepDeathFall": {
+                "calls": 540,
+                "ms": 0.11638500000753993
+              },
+              "sampledPlaneDistance": {
+                "calls": 621,
+                "ms": 84.24230099998931
+              },
+              "seatDeathOnGround": {
+                "calls": 243,
+                "ms": 102.17854900000384
+              }
+            }
+          }
+        ]
+      },
+      {
+        "note": "Three seeded repetitions per case; SSR CPU timings. Compare on the same machine. No GPU/browser costs included.",
+        "results": [
+          {
+            "mode": "idle",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.002180666666693772,
+              "medianMs": 0.001209000000017113,
+              "p95Ms": 0.004457999999885942,
+              "maxMs": 0.004457999999885942
+            },
+            "samples": 540,
+            "averageMs": 1.1989677314814848,
+            "medianMs": 1.146458000000166,
+            "p95Ms": 1.41733400000021,
+            "maxMs": 4.010125000000244,
+            "active": {
+              "samples": 0,
+              "averageMs": 0,
+              "medianMs": 0,
+              "p95Ms": 0,
+              "maxMs": 0
+            },
+            "peakParts": 0,
+            "maxProbes": 0,
+            "phases": {
+              "upright": {
+                "samples": 540,
+                "averageMs": 1.1989677314814848,
+                "medianMs": 1.146458000000166,
+                "p95Ms": 1.41733400000021,
+                "maxMs": 4.010125000000244
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 4887,
+                "ms": 14.638911000004555
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 301.2036720000019
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 301.8762449999872
+              }
+            }
+          },
+          {
+            "mode": "balance",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.8492219999999785,
+              "medianMs": 0.5431250000001455,
+              "p95Ms": 1.5752079999997477,
+              "maxMs": 1.5752079999997477
+            },
+            "samples": 540,
+            "averageMs": 1.3128189185184949,
+            "medianMs": 1.1241670000008526,
+            "p95Ms": 1.4725419999999758,
+            "maxMs": 65.34587499999998,
+            "active": {
+              "samples": 159,
+              "averageMs": 1.674944459119458,
+              "medianMs": 1.153874999999971,
+              "p95Ms": 2.5238750000003165,
+              "maxMs": 65.34587499999998
+            },
+            "peakParts": 9,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 30,
+                "averageMs": 1.7795583666666517,
+                "medianMs": 1.3090000000001965,
+                "p95Ms": 2.8723329999997986,
+                "maxMs": 7.214332999999897
+              },
+              "reassembling": {
+                "samples": 102,
+                "averageMs": 1.8106695196078069,
+                "medianMs": 1.151082999999744,
+                "p95Ms": 1.3684999999995853,
+                "maxMs": 65.34587499999998
+              },
+              "intact-bail": {
+                "samples": 27,
+                "averageMs": 1.0459676666665911,
+                "medianMs": 1.0393749999998363,
+                "p95Ms": 1.170209000000341,
+                "maxMs": 1.2161670000000413
+              },
+              "upright": {
+                "samples": 381,
+                "averageMs": 1.1616956614173055,
+                "medianMs": 1.1094579999999041,
+                "p95Ms": 1.3999170000006416,
+                "maxMs": 3.125207999999475
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3774,
+                "ms": 10.883915999955661
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 293.0543749999897
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 293.5026739999971
+              }
+            }
+          },
+          {
+            "mode": "pvp",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.12869433333374522,
+              "medianMs": 0.11033300000053714,
+              "p95Ms": 0.1790000000000873,
+              "maxMs": 0.1790000000000873
+            },
+            "samples": 540,
+            "averageMs": 1.1196567703703446,
+            "medianMs": 1.092333999999937,
+            "p95Ms": 1.302042000000256,
+            "maxMs": 2.3451670000004015,
+            "active": {
+              "samples": 249,
+              "averageMs": 1.1075739357429448,
+              "medianMs": 1.0947919999998703,
+              "p95Ms": 1.267041999999492,
+              "maxMs": 2.2212500000005093
+            },
+            "peakParts": 5,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 120,
+                "averageMs": 1.1453555499999841,
+                "medianMs": 1.1103329999996276,
+                "p95Ms": 1.3114590000004682,
+                "maxMs": 2.2212500000005093
+              },
+              "reassembling": {
+                "samples": 102,
+                "averageMs": 1.1043124607842811,
+                "medianMs": 1.0810840000003736,
+                "p95Ms": 1.2275419999996302,
+                "maxMs": 2.0542080000004717
+              },
+              "intact-bail": {
+                "samples": 27,
+                "averageMs": 0.9519767777777209,
+                "medianMs": 0.9235410000001139,
+                "p95Ms": 1.211250000000291,
+                "maxMs": 1.2443339999999807
+              },
+              "upright": {
+                "samples": 291,
+                "averageMs": 1.1299956907216249,
+                "medianMs": 1.0883750000002692,
+                "p95Ms": 1.3112090000004173,
+                "maxMs": 2.3451670000004015
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3027,
+                "ms": 7.87613900001088
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 279.57382000002053
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 279.95486600001277
+              }
+            }
+          },
+          {
+            "mode": "wall",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.44636099999994866,
+              "medianMs": 0.4526669999995647,
+              "p95Ms": 0.47104099999978644,
+              "maxMs": 0.47104099999978644
+            },
+            "samples": 540,
+            "averageMs": 1.1090479777777664,
+            "medianMs": 1.0823749999999563,
+            "p95Ms": 1.2905829999999696,
+            "maxMs": 2.2596659999999247,
+            "active": {
+              "samples": 210,
+              "averageMs": 1.0795490000000254,
+              "medianMs": 1.0632500000001528,
+              "p95Ms": 1.2392909999998665,
+              "maxMs": 1.9654590000000098
+            },
+            "peakParts": 1,
+            "maxProbes": 1,
+            "phases": {
+              "scattered": {
+                "samples": 81,
+                "averageMs": 1.1114279629629757,
+                "medianMs": 1.0908750000007785,
+                "p95Ms": 1.2551659999999174,
+                "maxMs": 1.828457999999955
+              },
+              "reassembling": {
+                "samples": 102,
+                "averageMs": 1.087745519607886,
+                "medianMs": 1.0752080000002024,
+                "p95Ms": 1.2193749999996726,
+                "maxMs": 1.9654590000000098
+              },
+              "intact-bail": {
+                "samples": 27,
+                "averageMs": 0.9529474814814791,
+                "medianMs": 0.9472500000001673,
+                "p95Ms": 1.0284169999995356,
+                "maxMs": 1.2052089999997406
+              },
+              "upright": {
+                "samples": 330,
+                "averageMs": 1.1278200545454198,
+                "medianMs": 1.0950830000001588,
+                "p95Ms": 1.313916999999492,
+                "maxMs": 2.2596659999999247
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3369,
+                "ms": 8.458484000006138
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 287.1964649999936
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 287.55584999998155
+              }
+            }
+          },
+          {
+            "mode": "trip",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.42990266666644555,
+              "medianMs": 0.43766599999980826,
+              "p95Ms": 0.44858299999941664,
+              "maxMs": 0.44858299999941664
+            },
+            "samples": 540,
+            "averageMs": 1.1424896018518262,
+            "medianMs": 1.0965000000005602,
+            "p95Ms": 1.3565000000007785,
+            "maxMs": 6.017875000000458,
+            "active": {
+              "samples": 210,
+              "averageMs": 1.1745746380951936,
+              "medianMs": 1.112040999999408,
+              "p95Ms": 1.4285829999998896,
+              "maxMs": 6.017875000000458
+            },
+            "peakParts": 2,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 81,
+                "averageMs": 1.2077624197530625,
+                "medianMs": 1.1606659999997646,
+                "p95Ms": 1.432875000000422,
+                "maxMs": 2.622624999999971
+              },
+              "reassembling": {
+                "samples": 102,
+                "averageMs": 1.1764955392155998,
+                "medianMs": 1.1021670000000086,
+                "p95Ms": 1.3523749999994834,
+                "maxMs": 6.017875000000458
+              },
+              "intact-bail": {
+                "samples": 27,
+                "averageMs": 1.0677545555556074,
+                "medianMs": 0.9943750000002183,
+                "p95Ms": 1.3212499999999636,
+                "maxMs": 2.2140419999996084
+              },
+              "upright": {
+                "samples": 330,
+                "averageMs": 1.1220718515151378,
+                "medianMs": 1.0846659999997428,
+                "p95Ms": 1.3284999999996217,
+                "maxMs": 2.2485829999995985
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3369,
+                "ms": 8.559206000012637
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 289.79436300000543
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 290.1672430000017
+              }
+            }
+          },
+          {
+            "mode": "death",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.15062500000021828,
+              "medianMs": 0.09337500000037835,
+              "p95Ms": 0.2673750000003565,
+              "maxMs": 0.2673750000003565
+            },
+            "samples": 540,
+            "averageMs": 0.5890067203703809,
+            "medianMs": 0.16441699999995762,
+            "p95Ms": 1.1842909999995754,
+            "maxMs": 2.922458000000006,
+            "active": {
+              "samples": 540,
+              "averageMs": 0.5890067203703809,
+              "medianMs": 0.16441699999995762,
+              "p95Ms": 1.1842909999995754,
+              "maxMs": 2.922458000000006
+            },
+            "peakParts": 9,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 540,
+                "averageMs": 0.5890067203703809,
+                "medianMs": 0.16441699999995762,
+                "p95Ms": 1.1842909999995754,
+                "maxMs": 2.922458000000006
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 27,
+                "ms": 0.08741599999575556
+              },
+              "measure": {
+                "calls": 3,
+                "ms": 1.5164579999991474
+              },
+              "refreshCharacterBounds": {
+                "calls": 549,
+                "ms": 1.6236310000076628
+              },
+              "stepDeathFall": {
+                "calls": 540,
+                "ms": 0.34257699999761826
+              },
+              "sampledPlaneDistance": {
+                "calls": 621,
+                "ms": 94.33861999999499
+              },
+              "seatDeathOnGround": {
+                "calls": 243,
+                "ms": 113.45820300000105
+              }
+            }
+          },
+          {
+            "mode": "blast",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.09526399999989128,
+              "medianMs": 0.09404199999971752,
+              "p95Ms": 0.10174999999981083,
+              "maxMs": 0.10174999999981083
+            },
+            "samples": 540,
+            "averageMs": 0.5627778740740824,
+            "medianMs": 0.16245900000012625,
+            "p95Ms": 1.1024999999999636,
+            "maxMs": 1.9733750000004875,
+            "active": {
+              "samples": 540,
+              "averageMs": 0.5627778740740824,
+              "medianMs": 0.16245900000012625,
+              "p95Ms": 1.1024999999999636,
+              "maxMs": 1.9733750000004875
+            },
+            "peakParts": 9,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 540,
+                "averageMs": 0.5627778740740824,
+                "medianMs": 0.16245900000012625,
+                "p95Ms": 1.1024999999999636,
+                "maxMs": 1.9733750000004875
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 27,
+                "ms": 0.07737599999836675
+              },
+              "measure": {
+                "calls": 3,
+                "ms": 1.4148329999998168
+              },
+              "refreshCharacterBounds": {
+                "calls": 549,
+                "ms": 1.5286660000092525
+              },
+              "stepDeathFall": {
+                "calls": 540,
+                "ms": 0.1375639999869236
+              },
+              "sampledPlaneDistance": {
+                "calls": 621,
+                "ms": 83.85575100000824
+              },
+              "seatDeathOnGround": {
+                "calls": 243,
+                "ms": 101.87472199999684
+              }
+            }
+          },
+          {
+            "mode": "crush",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.09930599999976646,
+              "medianMs": 0.10220900000058464,
+              "p95Ms": 0.10683399999925314,
+              "maxMs": 0.10683399999925314
+            },
+            "samples": 540,
+            "averageMs": 0.5577149018518749,
+            "medianMs": 0.15975000000071304,
+            "p95Ms": 1.0942499999991924,
+            "maxMs": 1.9106670000001031,
+            "active": {
+              "samples": 540,
+              "averageMs": 0.5577149018518749,
+              "medianMs": 0.15975000000071304,
+              "p95Ms": 1.0942499999991924,
+              "maxMs": 1.9106670000001031
+            },
+            "peakParts": 9,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 540,
+                "averageMs": 0.5577149018518749,
+                "medianMs": 0.15975000000071304,
+                "p95Ms": 1.0942499999991924,
+                "maxMs": 1.9106670000001031
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 27,
+                "ms": 0.08312699999805773
+              },
+              "measure": {
+                "calls": 3,
+                "ms": 1.4436240000004545
+              },
+              "refreshCharacterBounds": {
+                "calls": 549,
+                "ms": 1.5447510000039983
+              },
+              "stepDeathFall": {
+                "calls": 540,
+                "ms": 0.11369800001284602
+              },
+              "sampledPlaneDistance": {
+                "calls": 621,
+                "ms": 83.91708200001267
+              },
+              "seatDeathOnGround": {
+                "calls": 243,
+                "ms": 101.88258899999892
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "final": [
+      {
+        "note": "Three seeded repetitions per case; SSR CPU timings. Compare on the same machine. No GPU/browser costs included.",
+        "results": [
+          {
+            "mode": "idle",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.0017779999999826639,
+              "medianMs": 0.0016669999999976426,
+              "p95Ms": 0.002917000000252301,
+              "maxMs": 0.002917000000252301
+            },
+            "samples": 540,
+            "averageMs": 1.1978418981481447,
+            "medianMs": 1.1426250000004075,
+            "p95Ms": 1.4311249999996107,
+            "maxMs": 3.0274169999997866,
+            "active": {
+              "samples": 0,
+              "averageMs": 0,
+              "medianMs": 0,
+              "p95Ms": 0,
+              "maxMs": 0
+            },
+            "peakParts": 0,
+            "maxProbes": 0,
+            "phases": {
+              "upright": {
+                "samples": 540,
+                "averageMs": 1.1978418981481447,
+                "medianMs": 1.1426250000004075,
+                "p95Ms": 1.4311249999996107,
+                "maxMs": 3.0274169999997866
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 4887,
+                "ms": 14.88004600002023
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 298.0168480000125
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 298.7644120000127
+              }
+            }
+          },
+          {
+            "mode": "balance",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.6273746666670377,
+              "medianMs": 0.40404100000068865,
+              "p95Ms": 1.1391250000001492,
+              "maxMs": 1.1391250000001492
+            },
+            "samples": 540,
+            "averageMs": 1.318643296296281,
+            "medianMs": 1.1188339999998789,
+            "p95Ms": 1.5407500000001164,
+            "maxMs": 64.40545800000018,
+            "active": {
+              "samples": 159,
+              "averageMs": 1.6991254905660038,
+              "medianMs": 1.147541999999703,
+              "p95Ms": 2.6623749999998836,
+              "maxMs": 64.40545800000018
+            },
+            "peakParts": 0,
+            "maxProbes": 0,
+            "phases": {
+              "intact-bail": {
+                "samples": 159,
+                "averageMs": 1.6991254905660038,
+                "medianMs": 1.147541999999703,
+                "p95Ms": 2.6623749999998836,
+                "maxMs": 64.40545800000018
+              },
+              "upright": {
+                "samples": 381,
+                "averageMs": 1.159859388451436,
+                "medianMs": 1.106416999999965,
+                "p95Ms": 1.4113330000000133,
+                "maxMs": 3.2503340000002936
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3774,
+                "ms": 10.765458999967905
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 287.60703900001045
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 288.139147999967
+              },
+              "sampledPlaneDistance": {
+                "calls": 159,
+                "ms": 12.85137800000075
+              }
+            }
+          },
+          {
+            "mode": "pvp",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.05416700000053728,
+              "medianMs": 0.03858400000081019,
+              "p95Ms": 0.0968750000001819,
+              "maxMs": 0.0968750000001819
+            },
+            "samples": 540,
+            "averageMs": 1.096573609259268,
+            "medianMs": 1.0675839999994423,
+            "p95Ms": 1.2503749999996217,
+            "maxMs": 2.9197910000002594,
+            "active": {
+              "samples": 249,
+              "averageMs": 1.0727379558233165,
+              "medianMs": 1.049250000000029,
+              "p95Ms": 1.2215000000005602,
+              "maxMs": 2.112583000000086
+            },
+            "peakParts": 0,
+            "maxProbes": 0,
+            "phases": {
+              "intact-bail": {
+                "samples": 249,
+                "averageMs": 1.0727379558233165,
+                "medianMs": 1.049250000000029,
+                "p95Ms": 1.2215000000005602,
+                "maxMs": 2.112583000000086
+              },
+              "upright": {
+                "samples": 291,
+                "averageMs": 1.1169690652920923,
+                "medianMs": 1.0810419999997976,
+                "p95Ms": 1.2553330000000642,
+                "maxMs": 2.9197910000002594
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3027,
+                "ms": 7.976458999993156
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 271.82399300000725
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 272.2486660000068
+              },
+              "sampledPlaneDistance": {
+                "calls": 153,
+                "ms": 6.7515780000012455
+              }
+            }
+          },
+          {
+            "mode": "wall",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.6520833333336972,
+              "medianMs": 0.4665000000004511,
+              "p95Ms": 1.0793750000002547,
+              "maxMs": 1.0793750000002547
+            },
+            "samples": 540,
+            "averageMs": 1.0675924518518631,
+            "medianMs": 1.039375000000291,
+            "p95Ms": 1.206000000000131,
+            "maxMs": 2.169958000000406,
+            "active": {
+              "samples": 210,
+              "averageMs": 1.0792428714285789,
+              "medianMs": 1.0548749999998108,
+              "p95Ms": 1.242833000000246,
+              "maxMs": 2.05791599999975
+            },
+            "peakParts": 1,
+            "maxProbes": 1,
+            "phases": {
+              "scattered": {
+                "samples": 81,
+                "averageMs": 1.1144727160493475,
+                "medianMs": 1.0810419999997976,
+                "p95Ms": 1.2601660000000265,
+                "maxMs": 1.945625000000291
+              },
+              "reassembling": {
+                "samples": 102,
+                "averageMs": 1.0655155588235674,
+                "medianMs": 1.0432500000006257,
+                "p95Ms": 1.1499590000003082,
+                "maxMs": 2.05791599999975
+              },
+              "intact-bail": {
+                "samples": 27,
+                "averageMs": 1.025412074074093,
+                "medianMs": 1.0250419999993028,
+                "p95Ms": 1.1697500000000218,
+                "maxMs": 1.2724169999992228
+              },
+              "upright": {
+                "samples": 330,
+                "averageMs": 1.0601785484848623,
+                "medianMs": 1.024290999999721,
+                "p95Ms": 1.1989170000006197,
+                "maxMs": 2.169958000000406
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3369,
+                "ms": 8.41380000000845
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 274.22625099999095
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 274.5900430000129
+              },
+              "sampledPlaneDistance": {
+                "calls": 24,
+                "ms": 0.9867889999995896
+              }
+            }
+          },
+          {
+            "mode": "trip",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.5629863333330528,
+              "medianMs": 0.5294169999997393,
+              "p95Ms": 0.6646670000000086,
+              "maxMs": 0.6646670000000086
+            },
+            "samples": 540,
+            "averageMs": 1.0633601777777602,
+            "medianMs": 1.0360829999999623,
+            "p95Ms": 1.21033400000033,
+            "maxMs": 2.072957999999744,
+            "active": {
+              "samples": 210,
+              "averageMs": 1.0733246095237823,
+              "medianMs": 1.0499580000005153,
+              "p95Ms": 1.2087080000001151,
+              "maxMs": 2.072957999999744
+            },
+            "peakParts": 2,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 81,
+                "averageMs": 1.1166023703703507,
+                "medianMs": 1.0859169999994265,
+                "p95Ms": 1.2387079999998605,
+                "maxMs": 2.072957999999744
+              },
+              "reassembling": {
+                "samples": 102,
+                "averageMs": 1.0503382450980259,
+                "medianMs": 1.0388330000005226,
+                "p95Ms": 1.1528330000001006,
+                "maxMs": 1.2297090000001845
+              },
+              "intact-bail": {
+                "samples": 27,
+                "averageMs": 1.0303287037036002,
+                "medianMs": 1.0100000000002183,
+                "p95Ms": 1.0920839999998861,
+                "maxMs": 1.8739580000001297
+              },
+              "upright": {
+                "samples": 330,
+                "averageMs": 1.0570191757575644,
+                "medianMs": 1.0223329999998896,
+                "p95Ms": 1.212416999999732,
+                "maxMs": 1.973041000000194
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3369,
+                "ms": 8.061035999985506
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 276.04012799999964
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 276.4201320000002
+              },
+              "sampledPlaneDistance": {
+                "calls": 24,
+                "ms": 0.9839600000022983
+              }
+            }
+          },
+          {
+            "mode": "death",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.09104166666687281,
+              "medianMs": 0.028750000000400178,
+              "p95Ms": 0.21679200000016863,
+              "maxMs": 0.21679200000016863
+            },
+            "samples": 540,
+            "averageMs": 0.5028762259259026,
+            "medianMs": 0.05158300000039162,
+            "p95Ms": 1.4084169999996448,
+            "maxMs": 2.9870410000003176,
+            "active": {
+              "samples": 540,
+              "averageMs": 0.5028762259259026,
+              "medianMs": 0.05158300000039162,
+              "p95Ms": 1.4084169999996448,
+              "maxMs": 2.9870410000003176
+            },
+            "peakParts": 0,
+            "maxProbes": 0,
+            "phases": {
+              "canned": {
+                "samples": 540,
+                "averageMs": 0.5028762259259026,
+                "medianMs": 0.05158300000039162,
+                "p95Ms": 1.4084169999996448,
+                "maxMs": 2.9870410000003176
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 27,
+                "ms": 0.1221670000022641
+              },
+              "measure": {
+                "calls": 3,
+                "ms": 1.5436240000008183
+              },
+              "refreshCharacterBounds": {
+                "calls": 549,
+                "ms": 1.6690740000094593
+              },
+              "stepDeathFall": {
+                "calls": 540,
+                "ms": 0.33455400000002555
+              },
+              "sampledPlaneDistance": {
+                "calls": 621,
+                "ms": 101.61038900000767
+              },
+              "seatDeathOnGround": {
+                "calls": 243,
+                "ms": 121.06216500000028
+              }
+            }
+          },
+          {
+            "mode": "blast",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.19725033333331035,
+              "medianMs": 0.19579200000043784,
+              "p95Ms": 0.2071249999999054,
+              "maxMs": 0.2071249999999054
+            },
+            "samples": 540,
+            "averageMs": 0.5574482574074173,
+            "medianMs": 0.13595799999984592,
+            "p95Ms": 1.1739999999999782,
+            "maxMs": 2.079791999999543,
+            "active": {
+              "samples": 540,
+              "averageMs": 0.5574482574074173,
+              "medianMs": 0.13595799999984592,
+              "p95Ms": 1.1739999999999782,
+              "maxMs": 2.079791999999543
+            },
+            "peakParts": 9,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 540,
+                "averageMs": 0.5574482574074173,
+                "medianMs": 0.13595799999984592,
+                "p95Ms": 1.1739999999999782,
+                "maxMs": 2.079791999999543
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 27,
+                "ms": 0.09349700000075245
+              },
+              "measure": {
+                "calls": 3,
+                "ms": 1.3940409999995609
+              },
+              "refreshCharacterBounds": {
+                "calls": 549,
+                "ms": 1.5454230000077587
+              },
+              "stepDeathFall": {
+                "calls": 540,
+                "ms": 0.14750300000559946
+              },
+              "sampledPlaneDistance": {
+                "calls": 621,
+                "ms": 84.37212900000031
+              },
+              "seatDeathOnGround": {
+                "calls": 243,
+                "ms": 103.10695999999825
+              }
+            }
+          },
+          {
+            "mode": "crush",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.159722333333472,
+              "medianMs": 0.1446670000004815,
+              "p95Ms": 0.19987500000024738,
+              "maxMs": 0.19987500000024738
+            },
+            "samples": 540,
+            "averageMs": 0.5267593185185097,
+            "medianMs": 0.12891700000000128,
+            "p95Ms": 1.07287499999984,
+            "maxMs": 1.9611669999994774,
+            "active": {
+              "samples": 540,
+              "averageMs": 0.5267593185185097,
+              "medianMs": 0.12891700000000128,
+              "p95Ms": 1.07287499999984,
+              "maxMs": 1.9611669999994774
+            },
+            "peakParts": 9,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 540,
+                "averageMs": 0.5267593185185097,
+                "medianMs": 0.12891700000000128,
+                "p95Ms": 1.07287499999984,
+                "maxMs": 1.9611669999994774
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 27,
+                "ms": 0.10012499999902502
+              },
+              "measure": {
+                "calls": 3,
+                "ms": 1.4076250000007349
+              },
+              "refreshCharacterBounds": {
+                "calls": 549,
+                "ms": 1.5186640000019906
+              },
+              "stepDeathFall": {
+                "calls": 540,
+                "ms": 0.12654300001031515
+              },
+              "sampledPlaneDistance": {
+                "calls": 621,
+                "ms": 81.45445600000221
+              },
+              "seatDeathOnGround": {
+                "calls": 243,
+                "ms": 99.30278599999929
+              }
+            }
+          }
+        ]
+      },
+      {
+        "note": "Three seeded repetitions per case; SSR CPU timings. Compare on the same machine. No GPU/browser costs included.",
+        "results": [
+          {
+            "mode": "idle",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.0007500000000012127,
+              "medianMs": 0.0007080000000314612,
+              "p95Ms": 0.0012499999997999112,
+              "maxMs": 0.0012499999997999112
+            },
+            "samples": 540,
+            "averageMs": 1.166831409259254,
+            "medianMs": 1.1182079999998678,
+            "p95Ms": 1.3969579999998132,
+            "maxMs": 3.2547920000001795,
+            "active": {
+              "samples": 0,
+              "averageMs": 0,
+              "medianMs": 0,
+              "p95Ms": 0,
+              "maxMs": 0
+            },
+            "peakParts": 0,
+            "maxProbes": 0,
+            "phases": {
+              "upright": {
+                "samples": 540,
+                "averageMs": 1.166831409259254,
+                "medianMs": 1.1182079999998678,
+                "p95Ms": 1.3969579999998132,
+                "maxMs": 3.2547920000001795
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 4887,
+                "ms": 14.80109899998888
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 294.72045899999284
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 295.4878289999974
+              }
+            }
+          },
+          {
+            "mode": "balance",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.6144443333329642,
+              "medianMs": 0.41616699999940465,
+              "p95Ms": 1.0885410000000775,
+              "maxMs": 1.0885410000000775
+            },
+            "samples": 540,
+            "averageMs": 1.3089643888888776,
+            "medianMs": 1.0990419999998267,
+            "p95Ms": 1.472458999999617,
+            "maxMs": 66.05712499999981,
+            "active": {
+              "samples": 159,
+              "averageMs": 1.6968637484276385,
+              "medianMs": 1.1271249999999782,
+              "p95Ms": 2.7887919999998303,
+              "maxMs": 66.05712499999981
+            },
+            "peakParts": 0,
+            "maxProbes": 0,
+            "phases": {
+              "intact-bail": {
+                "samples": 159,
+                "averageMs": 1.6968637484276385,
+                "medianMs": 1.1271249999999782,
+                "p95Ms": 2.7887919999998303,
+                "maxMs": 66.05712499999981
+              },
+              "upright": {
+                "samples": 381,
+                "averageMs": 1.147085128608922,
+                "medianMs": 1.0885410000000775,
+                "p95Ms": 1.3470839999999953,
+                "maxMs": 3.2436250000000655
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3774,
+                "ms": 10.707707000025493
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 287.97875200000453
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 288.533075000003
+              },
+              "sampledPlaneDistance": {
+                "calls": 159,
+                "ms": 12.387080999998034
+              }
+            }
+          },
+          {
+            "mode": "pvp",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.05538899999980155,
+              "medianMs": 0.034958000000187894,
+              "p95Ms": 0.10499999999956344,
+              "maxMs": 0.10499999999956344
+            },
+            "samples": 540,
+            "averageMs": 1.0936782907407396,
+            "medianMs": 1.0475409999999101,
+            "p95Ms": 1.2554580000005444,
+            "maxMs": 4.568374999999833,
+            "active": {
+              "samples": 249,
+              "averageMs": 1.0807580000000014,
+              "medianMs": 1.0467920000000959,
+              "p95Ms": 1.2507919999998194,
+              "maxMs": 3.410291000000143
+            },
+            "peakParts": 0,
+            "maxProbes": 0,
+            "phases": {
+              "intact-bail": {
+                "samples": 249,
+                "averageMs": 1.0807580000000014,
+                "medianMs": 1.0467920000000959,
+                "p95Ms": 1.2507919999998194,
+                "maxMs": 3.410291000000143
+              },
+              "upright": {
+                "samples": 291,
+                "averageMs": 1.104733797250856,
+                "medianMs": 1.049750000000131,
+                "p95Ms": 1.2554580000005444,
+                "maxMs": 4.568374999999833
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3027,
+                "ms": 8.074195000001055
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 271.88503199999104
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 272.3154220000124
+              },
+              "sampledPlaneDistance": {
+                "calls": 153,
+                "ms": 6.664127999999437
+              }
+            }
+          },
+          {
+            "mode": "wall",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.6396250000000995,
+              "medianMs": 0.46495800000047893,
+              "p95Ms": 1.043916999999965,
+              "maxMs": 1.043916999999965
+            },
+            "samples": 540,
+            "averageMs": 1.066734122222225,
+            "medianMs": 1.030999999999949,
+            "p95Ms": 1.2106659999999465,
+            "maxMs": 3.0681669999994483,
+            "active": {
+              "samples": 210,
+              "averageMs": 1.0787958095238017,
+              "medianMs": 1.0420420000000377,
+              "p95Ms": 1.259874999999738,
+              "maxMs": 3.0037499999998545
+            },
+            "peakParts": 1,
+            "maxProbes": 1,
+            "phases": {
+              "scattered": {
+                "samples": 81,
+                "averageMs": 1.11312237037039,
+                "medianMs": 1.0818749999998545,
+                "p95Ms": 1.310124999999971,
+                "maxMs": 1.837916999999834
+              },
+              "reassembling": {
+                "samples": 102,
+                "averageMs": 1.070874205882319,
+                "medianMs": 1.0304999999998472,
+                "p95Ms": 1.1917499999999563,
+                "maxMs": 3.0037499999998545
+              },
+              "intact-bail": {
+                "samples": 27,
+                "averageMs": 1.005742185185193,
+                "medianMs": 1.0022909999997864,
+                "p95Ms": 1.0933750000003783,
+                "maxMs": 1.1222090000001117
+              },
+              "upright": {
+                "samples": 330,
+                "averageMs": 1.0590585030303126,
+                "medianMs": 1.015625,
+                "p95Ms": 1.1963749999995343,
+                "maxMs": 3.0681669999994483
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3369,
+                "ms": 8.423822999982804
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 278.2920699999977
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 278.6690360000148
+              },
+              "sampledPlaneDistance": {
+                "calls": 24,
+                "ms": 0.9897100000025603
+              }
+            }
+          },
+          {
+            "mode": "trip",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.5591249999997672,
+              "medianMs": 0.541957999999795,
+              "p95Ms": 0.6667079999997441,
+              "maxMs": 0.6667079999997441
+            },
+            "samples": 540,
+            "averageMs": 1.0607012277777796,
+            "medianMs": 1.0202500000004875,
+            "p95Ms": 1.2061249999997017,
+            "maxMs": 3.2709160000003976,
+            "active": {
+              "samples": 210,
+              "averageMs": 1.0677392952380962,
+              "medianMs": 1.0299999999997453,
+              "p95Ms": 1.2117079999998168,
+              "maxMs": 3.2607920000000377
+            },
+            "peakParts": 2,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 81,
+                "averageMs": 1.1228313209876546,
+                "medianMs": 1.070542000000387,
+                "p95Ms": 1.242500000000291,
+                "maxMs": 3.2607920000000377
+              },
+              "reassembling": {
+                "samples": 102,
+                "averageMs": 1.048333333333345,
+                "medianMs": 1.0156669999996666,
+                "p95Ms": 1.1399590000000899,
+                "maxMs": 3.1936249999998836
+              },
+              "intact-bail": {
+                "samples": 27,
+                "averageMs": 0.9757746296295914,
+                "medianMs": 0.9897090000004027,
+                "p95Ms": 1.0299999999997453,
+                "maxMs": 1.0600830000003043
+              },
+              "upright": {
+                "samples": 330,
+                "averageMs": 1.05622245757576,
+                "medianMs": 1.0143749999997453,
+                "p95Ms": 1.1903749999992215,
+                "maxMs": 3.2709160000003976
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3369,
+                "ms": 8.073488000028192
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 275.152002000008
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 275.5314819999967
+              },
+              "sampledPlaneDistance": {
+                "calls": 24,
+                "ms": 0.9696630000007644
+              }
+            }
+          },
+          {
+            "mode": "death",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.12133333333319267,
+              "medianMs": 0.03137499999957072,
+              "p95Ms": 0.3037500000000364,
+              "maxMs": 0.3037500000000364
+            },
+            "samples": 540,
+            "averageMs": 0.4834568666666874,
+            "medianMs": 0.047582999999576714,
+            "p95Ms": 1.3118329999997513,
+            "maxMs": 3.6092500000004293,
+            "active": {
+              "samples": 540,
+              "averageMs": 0.4834568666666874,
+              "medianMs": 0.047582999999576714,
+              "p95Ms": 1.3118329999997513,
+              "maxMs": 3.6092500000004293
+            },
+            "peakParts": 0,
+            "maxProbes": 0,
+            "phases": {
+              "canned": {
+                "samples": 540,
+                "averageMs": 0.4834568666666874,
+                "medianMs": 0.047582999999576714,
+                "p95Ms": 1.3118329999997513,
+                "maxMs": 3.6092500000004293
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 27,
+                "ms": 0.0878290000009656
+              },
+              "measure": {
+                "calls": 3,
+                "ms": 1.5315829999990456
+              },
+              "refreshCharacterBounds": {
+                "calls": 549,
+                "ms": 1.6735390000176267
+              },
+              "stepDeathFall": {
+                "calls": 540,
+                "ms": 0.3073789999825749
+              },
+              "sampledPlaneDistance": {
+                "calls": 621,
+                "ms": 99.9806869999984
+              },
+              "seatDeathOnGround": {
+                "calls": 243,
+                "ms": 118.3685000000005
+              }
+            }
+          },
+          {
+            "mode": "blast",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.17675000000023525,
+              "medianMs": 0.17770800000016607,
+              "p95Ms": 0.19454200000018318,
+              "maxMs": 0.19454200000018318
+            },
+            "samples": 540,
+            "averageMs": 0.5385349592592656,
+            "medianMs": 0.1275839999998425,
+            "p95Ms": 1.1159580000003189,
+            "maxMs": 3.425708000000668,
+            "active": {
+              "samples": 540,
+              "averageMs": 0.5385349592592656,
+              "medianMs": 0.1275839999998425,
+              "p95Ms": 1.1159580000003189,
+              "maxMs": 3.425708000000668
+            },
+            "peakParts": 9,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 540,
+                "averageMs": 0.5385349592592656,
+                "medianMs": 0.1275839999998425,
+                "p95Ms": 1.1159580000003189,
+                "maxMs": 3.425708000000668
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 27,
+                "ms": 0.09046300000227347
+              },
+              "measure": {
+                "calls": 3,
+                "ms": 1.3823739999997997
+              },
+              "refreshCharacterBounds": {
+                "calls": 549,
+                "ms": 1.550716999990982
+              },
+              "stepDeathFall": {
+                "calls": 540,
+                "ms": 0.14662800000769494
+              },
+              "sampledPlaneDistance": {
+                "calls": 621,
+                "ms": 82.4791260000029
+              },
+              "seatDeathOnGround": {
+                "calls": 243,
+                "ms": 100.73500499999591
+              }
+            }
+          },
+          {
+            "mode": "crush",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.15219399999962965,
+              "medianMs": 0.1316659999993135,
+              "p95Ms": 0.19466599999941536,
+              "maxMs": 0.19466599999941536
+            },
+            "samples": 540,
+            "averageMs": 0.5212166555555271,
+            "medianMs": 0.12329199999931006,
+            "p95Ms": 1.0348750000002838,
+            "maxMs": 3.329083000000537,
+            "active": {
+              "samples": 540,
+              "averageMs": 0.5212166555555271,
+              "medianMs": 0.12329199999931006,
+              "p95Ms": 1.0348750000002838,
+              "maxMs": 3.329083000000537
+            },
+            "peakParts": 9,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 540,
+                "averageMs": 0.5212166555555271,
+                "medianMs": 0.12329199999931006,
+                "p95Ms": 1.0348750000002838,
+                "maxMs": 3.329083000000537
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 27,
+                "ms": 0.09183399999801622
+              },
+              "measure": {
+                "calls": 3,
+                "ms": 1.361084000000119
+              },
+              "refreshCharacterBounds": {
+                "calls": 549,
+                "ms": 1.4698999999982334
+              },
+              "stepDeathFall": {
+                "calls": 540,
+                "ms": 0.11417299999993702
+              },
+              "sampledPlaneDistance": {
+                "calls": 621,
+                "ms": 81.32101999999486
+              },
+              "seatDeathOnGround": {
+                "calls": 243,
+                "ms": 99.0092910000094
+              }
+            }
+          }
+        ]
+      },
+      {
+        "note": "Three seeded repetitions per case; SSR CPU timings. Compare on the same machine. No GPU/browser costs included.",
+        "results": [
+          {
+            "mode": "idle",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.0009163333334072377,
+              "medianMs": 0.0006659999999101274,
+              "p95Ms": 0.0016669999999976426,
+              "maxMs": 0.0016669999999976426
+            },
+            "samples": 540,
+            "averageMs": 1.1722883685185201,
+            "medianMs": 1.117666999999983,
+            "p95Ms": 1.3862500000000182,
+            "maxMs": 3.9622499999995853,
+            "active": {
+              "samples": 0,
+              "averageMs": 0,
+              "medianMs": 0,
+              "p95Ms": 0,
+              "maxMs": 0
+            },
+            "peakParts": 0,
+            "maxProbes": 0,
+            "phases": {
+              "upright": {
+                "samples": 540,
+                "averageMs": 1.1722883685185201,
+                "medianMs": 1.117666999999983,
+                "p95Ms": 1.3862500000000182,
+                "maxMs": 3.9622499999995853
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 4887,
+                "ms": 14.591218999993998
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 298.17354099999966
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 298.86125999998603
+              }
+            }
+          },
+          {
+            "mode": "balance",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.6165553333332051,
+              "medianMs": 0.41924999999991996,
+              "p95Ms": 1.0727080000001479,
+              "maxMs": 1.0727080000001479
+            },
+            "samples": 540,
+            "averageMs": 1.2950423481481452,
+            "medianMs": 1.096332999999504,
+            "p95Ms": 1.486667000000125,
+            "maxMs": 64.28924999999981,
+            "active": {
+              "samples": 159,
+              "averageMs": 1.679378383647761,
+              "medianMs": 1.1316249999999854,
+              "p95Ms": 2.5155829999998787,
+              "maxMs": 64.28924999999981
+            },
+            "peakParts": 0,
+            "maxProbes": 0,
+            "phases": {
+              "intact-bail": {
+                "samples": 159,
+                "averageMs": 1.679378383647761,
+                "medianMs": 1.1316249999999854,
+                "p95Ms": 2.5155829999998787,
+                "maxMs": 64.28924999999981
+              },
+              "upright": {
+                "samples": 381,
+                "averageMs": 1.134650144356967,
+                "medianMs": 1.078708999999435,
+                "p95Ms": 1.3748750000004293,
+                "maxMs": 3.287540999999692
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3774,
+                "ms": 10.783952000000227
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 285.34321599999157
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 285.81966899998497
+              },
+              "sampledPlaneDistance": {
+                "calls": 159,
+                "ms": 11.884168999992198
+              }
+            }
+          },
+          {
+            "mode": "pvp",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.0552639999996245,
+              "medianMs": 0.04549999999926513,
+              "p95Ms": 0.0948339999995369,
+              "maxMs": 0.0948339999995369
+            },
+            "samples": 540,
+            "averageMs": 1.0917267629629535,
+            "medianMs": 1.0611250000001746,
+            "p95Ms": 1.2729580000004717,
+            "maxMs": 2.9977499999995416,
+            "active": {
+              "samples": 249,
+              "averageMs": 1.0701387108433864,
+              "medianMs": 1.0507909999996627,
+              "p95Ms": 1.2311659999995754,
+              "maxMs": 2.1922910000002958
+            },
+            "peakParts": 0,
+            "maxProbes": 0,
+            "phases": {
+              "intact-bail": {
+                "samples": 249,
+                "averageMs": 1.0701387108433864,
+                "medianMs": 1.0507909999996627,
+                "p95Ms": 1.2311659999995754,
+                "maxMs": 2.1922910000002958
+              },
+              "upright": {
+                "samples": 291,
+                "averageMs": 1.1101990137456759,
+                "medianMs": 1.0704169999999067,
+                "p95Ms": 1.3087079999995694,
+                "maxMs": 2.9977499999995416
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3027,
+                "ms": 8.09236299999975
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 271.2966589999969
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 271.68723600000976
+              },
+              "sampledPlaneDistance": {
+                "calls": 153,
+                "ms": 6.6733340000009775
+              }
+            }
+          },
+          {
+            "mode": "wall",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.6241113333332274,
+              "medianMs": 0.4403339999998934,
+              "p95Ms": 1.028124999999818,
+              "maxMs": 1.028124999999818
+            },
+            "samples": 540,
+            "averageMs": 1.0631512462962949,
+            "medianMs": 1.03845900000033,
+            "p95Ms": 1.1822089999996024,
+            "maxMs": 2.0556249999999636,
+            "active": {
+              "samples": 210,
+              "averageMs": 1.0771201000000343,
+              "medianMs": 1.0518339999998716,
+              "p95Ms": 1.226209000000381,
+              "maxMs": 2.0402500000000146
+            },
+            "peakParts": 1,
+            "maxProbes": 1,
+            "phases": {
+              "scattered": {
+                "samples": 81,
+                "averageMs": 1.105720728395075,
+                "medianMs": 1.0713749999995343,
+                "p95Ms": 1.226209000000381,
+                "maxMs": 1.8317500000002838
+              },
+              "reassembling": {
+                "samples": 102,
+                "averageMs": 1.0600866372549396,
+                "medianMs": 1.035041999999521,
+                "p95Ms": 1.2048750000003565,
+                "maxMs": 2.0402500000000146
+              },
+              "intact-bail": {
+                "samples": 27,
+                "averageMs": 1.0556668518519372,
+                "medianMs": 1.0472910000007687,
+                "p95Ms": 1.186666999999943,
+                "maxMs": 1.3019170000006852
+              },
+              "upright": {
+                "samples": 330,
+                "averageMs": 1.0542619757575515,
+                "medianMs": 1.0232919999998558,
+                "p95Ms": 1.1579170000004524,
+                "maxMs": 2.0556249999999636
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3369,
+                "ms": 8.524651999996422
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 273.5625480000026
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 273.9245360000432
+              },
+              "sampledPlaneDistance": {
+                "calls": 24,
+                "ms": 1.0717059999988123
+              }
+            }
+          },
+          {
+            "mode": "trip",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.5594580000000254,
+              "medianMs": 0.5307080000002316,
+              "p95Ms": 0.6710829999992711,
+              "maxMs": 0.6710829999992711
+            },
+            "samples": 540,
+            "averageMs": 1.0525233925926083,
+            "medianMs": 1.024083000000246,
+            "p95Ms": 1.1906669999998485,
+            "maxMs": 2.0352090000005774,
+            "active": {
+              "samples": 210,
+              "averageMs": 1.0608795904762094,
+              "medianMs": 1.0383750000000873,
+              "p95Ms": 1.184917000000496,
+              "maxMs": 2.0352090000005774
+            },
+            "peakParts": 2,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 81,
+                "averageMs": 1.0952561975309099,
+                "medianMs": 1.071708000000399,
+                "p95Ms": 1.203417000000627,
+                "maxMs": 2.0352090000005774
+              },
+              "reassembling": {
+                "samples": 102,
+                "averageMs": 1.0373031568627566,
+                "medianMs": 1.0230420000007143,
+                "p95Ms": 1.1326670000007653,
+                "maxMs": 1.265374999999949
+              },
+              "intact-bail": {
+                "samples": 27,
+                "averageMs": 1.0468162962962635,
+                "medianMs": 1.0095000000001164,
+                "p95Ms": 1.168166999999812,
+                "maxMs": 1.876499999999396
+              },
+              "upright": {
+                "samples": 330,
+                "averageMs": 1.0472058121212258,
+                "medianMs": 1.0099159999999756,
+                "p95Ms": 1.2059170000002268,
+                "maxMs": 2.019999999999527
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 3369,
+                "ms": 8.231723000018064
+              },
+              "measure": {
+                "calls": 543,
+                "ms": 274.01637899999787
+              },
+              "refreshCharacterBounds": {
+                "calls": 1629,
+                "ms": 274.3578599999937
+              },
+              "sampledPlaneDistance": {
+                "calls": 24,
+                "ms": 1.0550400000029185
+              }
+            }
+          },
+          {
+            "mode": "death",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.08202766666636307,
+              "medianMs": 0.028874999999970896,
+              "p95Ms": 0.19054199999936827,
+              "maxMs": 0.19054199999936827
+            },
+            "samples": 540,
+            "averageMs": 0.4793610388888805,
+            "medianMs": 0.047083000000384345,
+            "p95Ms": 1.2791250000000218,
+            "maxMs": 2.7679580000003625,
+            "active": {
+              "samples": 540,
+              "averageMs": 0.4793610388888805,
+              "medianMs": 0.047083000000384345,
+              "p95Ms": 1.2791250000000218,
+              "maxMs": 2.7679580000003625
+            },
+            "peakParts": 0,
+            "maxProbes": 0,
+            "phases": {
+              "canned": {
+                "samples": 540,
+                "averageMs": 0.4793610388888805,
+                "medianMs": 0.047083000000384345,
+                "p95Ms": 1.2791250000000218,
+                "maxMs": 2.7679580000003625
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 27,
+                "ms": 0.0946669999993901
+              },
+              "measure": {
+                "calls": 3,
+                "ms": 1.4812499999989086
+              },
+              "refreshCharacterBounds": {
+                "calls": 549,
+                "ms": 1.5929599999990387
+              },
+              "stepDeathFall": {
+                "calls": 540,
+                "ms": 0.31405300000460556
+              },
+              "sampledPlaneDistance": {
+                "calls": 621,
+                "ms": 98.20123900001454
+              },
+              "seatDeathOnGround": {
+                "calls": 243,
+                "ms": 117.2389549999989
+              }
+            }
+          },
+          {
+            "mode": "blast",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.19666666666671517,
+              "medianMs": 0.20958299999983865,
+              "p95Ms": 0.21108400000048277,
+              "maxMs": 0.21108400000048277
+            },
+            "samples": 540,
+            "averageMs": 0.5352577129629548,
+            "medianMs": 0.12908299999980954,
+            "p95Ms": 1.0895000000000437,
+            "maxMs": 2.0116250000000946,
+            "active": {
+              "samples": 540,
+              "averageMs": 0.5352577129629548,
+              "medianMs": 0.12908299999980954,
+              "p95Ms": 1.0895000000000437,
+              "maxMs": 2.0116250000000946
+            },
+            "peakParts": 9,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 540,
+                "averageMs": 0.5352577129629548,
+                "medianMs": 0.12908299999980954,
+                "p95Ms": 1.0895000000000437,
+                "maxMs": 2.0116250000000946
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 27,
+                "ms": 0.10545599999568367
+              },
+              "measure": {
+                "calls": 3,
+                "ms": 1.4005839999999807
+              },
+              "refreshCharacterBounds": {
+                "calls": 549,
+                "ms": 1.5245099999956437
+              },
+              "stepDeathFall": {
+                "calls": 540,
+                "ms": 0.1347449999930177
+              },
+              "sampledPlaneDistance": {
+                "calls": 621,
+                "ms": 82.52307700000256
+              },
+              "seatDeathOnGround": {
+                "calls": 243,
+                "ms": 100.62863100000231
+              }
+            }
+          },
+          {
+            "mode": "crush",
+            "repetitions": 3,
+            "trigger": {
+              "samples": 3,
+              "averageMs": 0.15515300000030643,
+              "medianMs": 0.13462500000059663,
+              "p95Ms": 0.1979590000000826,
+              "maxMs": 0.1979590000000826
+            },
+            "samples": 540,
+            "averageMs": 0.5248457092592516,
+            "medianMs": 0.12616700000035053,
+            "p95Ms": 1.0670000000000073,
+            "maxMs": 1.9862919999995938,
+            "active": {
+              "samples": 540,
+              "averageMs": 0.5248457092592516,
+              "medianMs": 0.12616700000035053,
+              "p95Ms": 1.0670000000000073,
+              "maxMs": 1.9862919999995938
+            },
+            "peakParts": 9,
+            "maxProbes": 2,
+            "phases": {
+              "scattered": {
+                "samples": 540,
+                "averageMs": 0.5248457092592516,
+                "medianMs": 0.12616700000035053,
+                "p95Ms": 1.0670000000000073,
+                "maxMs": 1.9862919999995938
+              }
+            },
+            "metrics": {
+              "queryGround": {
+                "calls": 27,
+                "ms": 0.09145500000067841
+              },
+              "measure": {
+                "calls": 3,
+                "ms": 1.3937079999996058
+              },
+              "refreshCharacterBounds": {
+                "calls": 549,
+                "ms": 1.505460000016683
+              },
+              "stepDeathFall": {
+                "calls": 540,
+                "ms": 0.14668899999287532
+              },
+              "sampledPlaneDistance": {
+                "calls": 621,
+                "ms": 82.11737100000119
+              },
+              "seatDeathOnGround": {
+                "calls": 243,
+                "ms": 99.95295100000294
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "releaseSources": {
+    "src/player.ts": "469e058620e24ae80dba64b4e43924f42cd1d843a73711d0c0d73d4c1a318da7",
+    "src/bailRecovery.ts": "3d635fefe06d9a372607bacbfb49d9184a8cbe405712e7b717f647a18c41d6c9",
+    "src/character/breakApart.ts": "55ef7c3e1b209bb21055b50f7c3c98faa27234985e3aa8a316884395f68ce400",
+    "src/character/interactionBounds.ts": "70db2fac7b44de80bf5b4845102476b8b73d6031689225911ce7fad7ff4d71b5",
+    "src/character/wipeoutPolicy.ts": "639cdc079b2523fb99b35fc90a14475d1bedd5f1e8d8ab2b897e3d5d541b2235"
+  }
+}

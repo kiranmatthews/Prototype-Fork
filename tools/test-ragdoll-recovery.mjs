@@ -244,6 +244,60 @@ try {
   }
   assert.equal(sawForwardMotion, true, "forward recovery rotation never advanced");
 
+  const reusableRecovery = sampleBailRecovery(0);
+  assert.equal(sampleBailRecovery(.37, reusableRecovery), reusableRecovery,
+    "recovery sampler replaced its caller-owned output");
+  assert.deepEqual(reusableRecovery, sampleBailRecovery(.37));
+
+  const { CharacterInteractionBounds } = await server.ssrLoadModule('/src/character/interactionBounds.ts');
+  const contactMeasure = new CharacterInteractionBounds(null);
+  const contactRoot = new THREE.Group();
+  const contactMesh = new THREE.Mesh(new THREE.SphereGeometry(1, 40, 24), new THREE.MeshBasicMaterial());
+  contactRoot.add(contactMesh);
+  const contactNormal = new THREE.Vector3(.4, .8, -.3).normalize(), contactPoint = new THREE.Vector3(.2, -.3, .7);
+  const contactFast = new THREE.Vector3(), contactReference = new THREE.Vector3(), contactBounds = new THREE.Box3();
+  for (let pose = 0; pose < 30; pose++) {
+    contactMesh.rotation.set(pose * .09, pose * -.13, pose * .017);
+    contactMesh.scale.set(pose % 2 ? -1.4 : 1.4, .6, 1.8);
+    contactMesh.position.set(Math.sin(pose), .3 * pose, -.2);
+    contactRoot.updateMatrixWorld(true);
+    const fast = contactMeasure.sampledPlaneDistance(contactRoot, contactNormal, contactPoint, contactFast);
+    const reference = contactMeasure.sampledPlaneDistance(contactRoot, contactNormal, contactPoint, contactReference, contactBounds);
+    closeTo(fast, reference, "cached local-plane support matches world hull", 1e-10);
+    closeTo(contactFast.distanceTo(contactReference), 0, "cached support point matches world hull", 1e-10);
+  }
+  let contactVertexReads = 0;
+  const originalVertexGetter = THREE.Mesh.prototype.getVertexPosition;
+  try {
+    THREE.Mesh.prototype.getVertexPosition = function(index, out) {
+      contactVertexReads++;return originalVertexGetter.call(this, index, out);
+    };
+    for (let pose = 0; pose < 60; pose++) {
+      contactRoot.rotation.x += .01;contactRoot.updateMatrixWorld(true);
+      contactMeasure.sampledPlaneDistance(contactRoot, contactNormal, contactPoint);
+    }
+    assert.equal(contactVertexReads, 0, "warm rigid contact re-read mesh vertices");
+    contactMesh.geometry.attributes.position.setXYZ(0, 1, -4, 2);
+    contactMesh.geometry.attributes.position.needsUpdate = true;
+    const updated = contactMeasure.sampledPlaneDistance(contactRoot, contactNormal, contactPoint);
+    assert.ok(contactVertexReads > 0, "edited rigid contact kept stale geometry");
+    closeTo(updated, contactMeasure.sampledPlaneDistance(contactRoot, contactNormal, contactPoint, undefined, contactBounds),
+      "edited cached local-plane support matches world hull", 1e-10);
+  } finally { THREE.Mesh.prototype.getVertexPosition = originalVertexGetter; }
+  const localBox = new THREE.Box3(new THREE.Vector3(-.7, -1.3, .2), new THREE.Vector3(1.2, .4, 2.1));
+  for (let pose = 0; pose < 60; pose++) {
+    const transform = new THREE.Matrix4().compose(new THREE.Vector3(pose*.2, -pose*.1, .3),
+      new THREE.Quaternion().setFromEuler(new THREE.Euler(pose*.3, -pose*.21, pose*.11)),
+      new THREE.Vector3(pose%2 ? -1.3 : 1.3, .4+pose*.04, 2.1));
+    if (pose % 3 === 0) transform.elements[4] += .31; // affine shear
+    if (pose % 7 === 0) transform.elements[3] = .001; // original projective fallback
+    const reference = localBox.clone().applyMatrix4(transform);
+    const actual = contactMeasure.transformBounds(localBox, transform);
+    closeTo(actual.min.distanceTo(reference.min), 0, "affine lower box extrema", 1e-10);
+    closeTo(actual.max.distanceTo(reference.max), 0, "affine upper box extrema", 1e-10);
+  }
+  contactMesh.geometry.dispose();contactMesh.material.dispose();
+
   const tuningSnapshot = {
     bailRollOutSpeed: TUNING.bailRollOutSpeed,
     ragFlailJumpChance: TUNING.ragFlailJumpChance,
@@ -297,6 +351,101 @@ try {
     fixtures.push(fixture);
     return fixture;
   };
+
+  // The rebound belongs to the actual support plane. Measure both retained
+  // tangential velocity and normal restitution on flat/uphill/downhill banks;
+  // no contact may add linear energy or consume gameplay RNG.
+  const contactResponse = createFixture();
+  const contactPlayer = contactResponse.player;
+  assert.equal(contactPlayer.beginPvpKnockdown(0, 1), true);
+  const contactRng = installRandomSequence(contactPlayer, []);
+  for (const normal of [new THREE.Vector3(0, 1, 0),
+    new THREE.Vector3(.5, .866025403784, 0).normalize(),
+    new THREE.Vector3(-.5, .866025403784, 0).normalize()]) {
+    const incident = new THREE.Vector3(8, -12, -6);
+    contactPlayer.axisF.set(incident.x, 0, incident.z).normalize();
+    contactPlayer.speed = Math.hypot(incident.x, incident.z);
+    contactPlayer.vVel = incident.y;
+    contactPlayer.ragBounces = 0;
+    assert.equal(contactPlayer.resolveRagdollGroundBounce({...contactPlayer.groundHit, normal}), true);
+    const outgoing = contactPlayer.axisF.clone().multiplyScalar(contactPlayer.speed).setY(contactPlayer.vVel);
+    closeTo(outgoing.dot(normal), -incident.dot(normal) * TUNING.ragBounce,
+      "contact-normal restitution", 1e-6);
+    const beforeTangent = incident.clone().addScaledVector(normal, -incident.dot(normal));
+    const afterTangent = outgoing.clone().addScaledVector(normal, -outgoing.dot(normal));
+    closeTo(afterTangent.distanceTo(beforeTangent.multiplyScalar(.72)), 0,
+      "contact tangent drag", 1e-6);
+    assert.ok(outgoing.lengthSq() <= incident.lengthSq(), "ground bounce added energy");
+  }
+  assert.equal(contactRng(), 0, "ground bounce consumed gameplay RNG");
+  contactPlayer.axisF.set(1, 0, 0);contactPlayer.speed = 20;contactPlayer.vVel = -2;contactPlayer.ragBounces = 0;
+  assert.equal(contactPlayer.resolveRagdollGroundBounce({...contactPlayer.groundHit,
+    normal: new THREE.Vector3(.6, .8, 0)}), false, "separating bank contact bounced again");
+  contactPlayer.axisF.set(0, 0, -1);contactPlayer.speed = 8;contactPlayer.vVel = -20;contactPlayer.ragBounces = 3;
+  assert.equal(contactPlayer.resolveRagdollGroundBounce(contactPlayer.groundHit), false,
+    "three-impact bounce budget was exceeded");
+
+  // Rotating about the combined angular velocity has no sequential-axis
+  // bias. One long advance and 12 subdivisions must describe the same arc.
+  contactPlayer.axisF.set(.6, 0, -.8);contactPlayer.axisL.set(.8, 0, .6);
+  contactPlayer.speed = 8;contactPlayer.ragAngVel.set(12, 7, -9);contactPlayer.ragQ.identity();
+  contactPlayer.integrateRagdollRotation(.2);
+  const oneStepRotation = contactPlayer.ragQ.clone();
+  contactPlayer.ragQ.identity();
+  for (let i = 0; i < 12; i++) contactPlayer.integrateRagdollRotation(.2 / 12);
+  closeTo(Math.abs(contactPlayer.ragQ.dot(oneStepRotation)), 1, "subdivided angular integration", 1e-10);
+  for (let i = 0; i < 6000; i++) contactPlayer.integrateRagdollRotation(CONST.fixedStep);
+  closeTo(contactPlayer.ragQ.length(), 1, "long tumble quaternion drift", 1e-12);
+
+  // The visible grounded body contacts geometry after all animated limbs and
+  // elasticity are posed. Sparse support is bounded, uses no exact vertex
+  // scan and cannot move the gameplay capsule or discarded board.
+  const seated = createFixture();
+  const seatedPlayer = seated.player;
+  assert.equal(seatedPlayer.beginPvpKnockdown(0, 1), true);
+  seatedPlayer.state = "ride";seatedPlayer.grounded = true;
+  seatedPlayer.ragBlend = 1;seatedPlayer.ragAngVel.set(5, 3, 4);
+  const exactClearance = seatedPlayer.interactionMeasure.minimumPlaneDistance.bind(seatedPlayer.interactionMeasure);
+  seatedPlayer.interactionMeasure.minimumPlaneDistance = () => {throw new Error("bail scanned all vertices");};
+  let maxContactSamples = 0;
+  for (const normal of [new THREE.Vector3(0, 1, 0), new THREE.Vector3(.35, .93675, 0).normalize()]) {
+    seatedPlayer.groundHit = {...seatedPlayer.groundHit, normal};
+    seatedPlayer.rideNormal.copy(normal);
+    for (let frame = 0; frame < 24; frame++) {
+      seatedPlayer.ragQ.setFromEuler(new THREE.Euler(frame * .21, frame * -.07, frame * .13));
+      seatedPlayer.syncVisual(makeInput(), CONST.fixedStep);
+      const positionBefore = seatedPlayer.pos.clone();
+      seatedPlayer.seatBailOnGround(CONST.fixedStep);
+      maxContactSamples = Math.max(maxContactSamples, seatedPlayer.interactionMeasure.supportSamples);
+      const clearance = exactClearance(seatedPlayer.riderG, normal,
+        new THREE.Vector3(seatedPlayer.pos.x, seatedPlayer.groundHit.y, seatedPlayer.pos.z));
+      assert.ok(clearance >= -.012, `supported tumble clips ground by ${-clearance}m`);
+      assert.equal(seatedPlayer.pos.distanceTo(positionBefore), 0, "presentation contact moved collision");
+    }
+  }
+  assert.ok(maxContactSamples > 0 && maxContactSamples < 12000,
+    `bail support escaped its cached sparse probe budget (${maxContactSamples})`);
+  const seatedBounds = new THREE.Box3(), seatedReference = new THREE.Box3();
+  for (const progress of [0, .15, .3, .5, .8, .95]) {
+    seatedPlayer.bailRecoveryPose = progress;
+    seatedPlayer.bailRecoverT = progress > 0 ? progress * .72 : -1;
+    seatedPlayer.finishVisualStep(makeInput(), CONST.fixedStep);
+    seatedBounds.copy(seatedPlayer.characterBounds);
+    seated.scene.updateMatrixWorld(true);
+    seatedPlayer.interactionMeasure.measure(seatedPlayer.riderG, seatedReference);
+    closeTo(seatedBounds.min.distanceTo(seatedReference.min), 0, "translated seated lower bounds", 1e-8);
+    closeTo(seatedBounds.max.distanceTo(seatedReference.max), 0, "translated seated upper bounds", 1e-8);
+    const planePoint = new THREE.Vector3(seatedPlayer.pos.x, seatedPlayer.groundHit.y, seatedPlayer.pos.z);
+    const planeNormal = seatedPlayer.groundHit.normal, fastContact = new THREE.Vector3(), referenceContact = new THREE.Vector3();
+    const fastPlane = seatedPlayer.interactionMeasure.sampledPlaneDistance(seatedPlayer.riderG, planeNormal,
+      planePoint, fastContact, undefined, true);
+    const referencePlane = seatedPlayer.interactionMeasure.sampledPlaneDistance(seatedPlayer.riderG, planeNormal,
+      planePoint, referenceContact, new THREE.Box3());
+    closeTo(fastPlane, referencePlane, "pruned posed-skin support distance", 1e-9);
+    closeTo(fastContact.distanceTo(referenceContact), 0, "pruned posed-skin support point", 1e-9);
+  }
+  seatedPlayer.grounded = false;seatedPlayer.seatBailOnGround(CONST.fixedStep);
+  assert.equal(seatedPlayer.bailSupportOffset, 0, "lost support retained floor correction");
 
   const createFirstImpact = ({ input = makeInput() } = {}) => {
     const fixture = createFixture();
@@ -631,7 +780,7 @@ try {
   }
 
   console.log(
-    "Validated ragdoll recovery, soft skating rebounds, mounted run-out, braking, and unchanged high-speed bails.",
+    `Validated slope-normal bounces, finite tumble/contact (${maxContactSamples} sparse probes), ragdoll recovery, soft skating rebounds, mounted run-out, braking, and high-speed bails.`,
   );
 } finally {
   restoreTuning?.();

@@ -37,18 +37,19 @@ function bell(value: number, from: number, to: number): number {
  * running stride. Every temporary offset returns to zero at both ends, while
  * the 2π roll itself is exactly upright at completion.
  */
-export function sampleBailRecovery(progress: number): BailRecoverySample {
+export function sampleBailRecovery(
+  progress: number,
+  out: BailRecoverySample = { roll: 0, forwardRoll: 0, tuck: 0, plant: 0, stride: 0, shoulder: 0, drive: 0 },
+): BailRecoverySample {
   const p = clamp01(progress);
   const roll = smoothRange(p, 0.02, 0.7);
-  return {
-    roll,
-    forwardRoll:
-      BAIL_RECOVERY_SPRAWL_PITCH +
-      (Math.PI * 2 - BAIL_RECOVERY_SPRAWL_PITCH) * roll,
-    tuck: bell(p, 0, 0.56),
-    plant: bell(p, 0.24, 0.92),
-    stride: bell(p, 0.56, 1),
-    shoulder: bell(p, 0.04, 0.68),
-    drive: smoothRange(p, 0.1, 0.84),
-  };
+  out.roll = roll;
+  out.forwardRoll = BAIL_RECOVERY_SPRAWL_PITCH +
+    (Math.PI * 2 - BAIL_RECOVERY_SPRAWL_PITCH) * roll;
+  out.tuck = bell(p, 0, 0.56);
+  out.plant = bell(p, 0.24, 0.92);
+  out.stride = bell(p, 0.56, 1);
+  out.shoulder = bell(p, 0.04, 0.68);
+  out.drive = smoothRange(p, 0.1, 0.84);
+  return out;
 }
