@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
+import {gunzipSync} from 'node:zlib';
 import {runInThisContext} from 'node:vm';
 import {createServer} from 'vite';
 
@@ -12,8 +13,9 @@ try {
     ['04557f6 v1','custard-creek-carving-v1.ts',907],
     ['73aedc4 v2','custard-creek-coast-v2.ts',859],
     ['ba562b6 v3','custard-creek-independent-v3.ts',1132],
+    ['5ac0b01 v4','custard-creek-sunset-v4.json.gz',4409],
   ]) {
-    const {CUSTARD_CREEK_LEVEL:oldData}=await server.ssrLoadModule('/tools/fixtures/'+fixture);
+    const oldData=fixture.endsWith('.gz')?JSON.parse(gunzipSync(await readFile(new URL('fixtures/'+fixture,import.meta.url)))):(await server.ssrLoadModule('/tools/fixtures/'+fixture)).CUSTARD_CREEK_LEVEL;
     const raw={id:'custard-creek',name:'Custard Creek',data:oldData};
     assert.ok(isOriginalCustardCreek(raw),version+': the exact published source is pristine');
     const pristine=normalizeUserLevelEntries([raw])?.[0];
@@ -53,5 +55,5 @@ try {
   assert.ok(isOriginalCustardCreek(current),'current detailed source snapshot follows the builtin');
   const edited=structuredClone(current);edited.data.components[0].p[0]+=.01;
   assert.equal(isOriginalCustardCreek(edited),false,'current sculpted edits remain authored');
-  console.log('PASS Custard cache: exact raw/normalized v1, v2, v3 and current published snapshots follow source; geometry, spawn, metadata, names and mutable edits remain local.');
+  console.log('PASS Custard cache: exact raw/normalized v1, v2, v3, v4 and current published snapshots follow source; geometry, spawn, metadata, names and mutable edits remain local.');
 } finally {await server.close();}

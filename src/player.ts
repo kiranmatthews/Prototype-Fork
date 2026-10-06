@@ -13896,6 +13896,13 @@ export class Player {
       Math.abs(contact.nz) * CONST.playerHalf.z +
       0.02;
     if (contact.distance >= radius) return null;
+    // Adjacent broadphase slices can overlap at a concave bend. A farther
+    // segment's extended face must not push through the nearer visible face.
+    // Let the nearest slice resolve this logical path once.
+    const nearest = level.closestWallPath(path, this.pos.x, this.pos.z);
+    if (Math.abs(nearest.s - contact.s) < radius * 2 &&
+        Math.abs(nearest.y - contact.y) < 0.25 &&
+        nearest.distance + 1e-5 < contact.distance) return null;
     const before = level.closestWallPath(
       path,
       this.prevPos.x,

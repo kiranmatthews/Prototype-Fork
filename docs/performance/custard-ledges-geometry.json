@@ -1,0 +1,342 @@
+{
+  "inventory": {
+    "enemy": 11,
+    "stone": 3,
+    "crusher": 2,
+    "pendulum": 2,
+    "mover": 2,
+    "crumble": 15,
+    "rail": 6,
+    "vertramp": 1,
+    "checkpoint": 11,
+    "crate": 147,
+    "gate": 1
+  },
+  "route": {
+    "length": 2430,
+    "heightRange": [
+      -10,
+      18
+    ],
+    "headingReversals": 3,
+    "maxYawRateAt23": 31.103957731710413,
+    "minRadius": 42.36769288872189
+  },
+  "roads": {
+    "expected": 6364,
+    "probes": 6364,
+    "failures": []
+  },
+  "pipe": {
+    "expected": 930,
+    "probes": 930,
+    "failures": []
+  },
+  "gaps": {
+    "expected": 1746,
+    "probes": 1746,
+    "failures": []
+  },
+  "enemies": [
+    {
+      "i": 0,
+      "kind": "turtle",
+      "range": 2,
+      "speed": 0.8,
+      "expected": 81,
+      "probes": 81,
+      "maxHeightError": 0.0007385969071798115,
+      "failures": []
+    },
+    {
+      "i": 1,
+      "kind": "spiker",
+      "range": 0,
+      "speed": 0,
+      "expected": 81,
+      "probes": 81,
+      "maxHeightError": 4.440892098500626e-14,
+      "failures": []
+    },
+    {
+      "i": 2,
+      "kind": "hopper",
+      "range": 0,
+      "speed": 0,
+      "expected": 81,
+      "probes": 81,
+      "maxHeightError": 7.993605777301127e-15,
+      "failures": []
+    },
+    {
+      "i": 3,
+      "kind": "charger",
+      "range": 4,
+      "speed": 1.2,
+      "expected": 81,
+      "probes": 81,
+      "maxHeightError": 0.07941855053395486,
+      "failures": []
+    },
+    {
+      "i": 4,
+      "kind": "turtle",
+      "range": 2,
+      "speed": 0.8,
+      "expected": 81,
+      "probes": 81,
+      "maxHeightError": 0,
+      "failures": []
+    },
+    {
+      "i": 5,
+      "kind": "hopper",
+      "range": 0,
+      "speed": 0,
+      "expected": 81,
+      "probes": 81,
+      "maxHeightError": 9.769962616701378e-15,
+      "failures": []
+    },
+    {
+      "i": 6,
+      "kind": "sentry",
+      "range": 0,
+      "speed": 0,
+      "expected": 81,
+      "probes": 81,
+      "maxHeightError": 7.105427357601002e-14,
+      "failures": []
+    },
+    {
+      "i": 7,
+      "kind": "spinner",
+      "range": 0,
+      "speed": 0,
+      "expected": 81,
+      "probes": 81,
+      "maxHeightError": 0,
+      "failures": []
+    },
+    {
+      "i": 8,
+      "kind": "charger",
+      "range": 4,
+      "speed": 1.2,
+      "expected": 81,
+      "probes": 81,
+      "maxHeightError": 0.03651522809018193,
+      "failures": []
+    },
+    {
+      "i": 9,
+      "kind": "spiker",
+      "range": 0,
+      "speed": 0,
+      "expected": 81,
+      "probes": 81,
+      "maxHeightError": 1.0658141036401503e-14,
+      "failures": []
+    },
+    {
+      "i": 10,
+      "kind": "grunt",
+      "range": 2.599999999999909,
+      "speed": 1,
+      "expected": 81,
+      "probes": 81,
+      "maxHeightError": 0.020022261257922835,
+      "failures": []
+    }
+  ],
+  "stones": [
+    {
+      "i": 0,
+      "axis": "x",
+      "expected": 729,
+      "probes": 729,
+      "maxHeightError": 0,
+      "failures": []
+    },
+    {
+      "i": 1,
+      "axis": "x",
+      "expected": 729,
+      "probes": 729,
+      "maxHeightError": 0,
+      "failures": []
+    },
+    {
+      "i": 2,
+      "axis": "z",
+      "expected": 729,
+      "probes": 729,
+      "maxHeightError": 0,
+      "failures": []
+    }
+  ],
+  "rails": [
+    {
+      "name": "Outside bank coping",
+      "expected": 100,
+      "probes": 100,
+      "minClearance": 0.7998530666194057,
+      "failures": []
+    },
+    {
+      "name": "Crown aqueduct crossing",
+      "expected": 192,
+      "probes": 192,
+      "minClearance": 0.7180937785815544,
+      "failures": []
+    },
+    {
+      "name": "High spillway coping",
+      "expected": 164,
+      "probes": 164,
+      "minClearance": 1.9703375052099545,
+      "failures": []
+    },
+    {
+      "name": "Reedbank fast rail",
+      "expected": 178,
+      "probes": 178,
+      "minClearance": 0.7983960518942155,
+      "failures": []
+    },
+    {
+      "name": "Quarry outside carve rail",
+      "expected": 176,
+      "probes": 176,
+      "minClearance": 0.7810422618362214,
+      "failures": []
+    },
+    {
+      "name": "Final crown rail",
+      "expected": 237,
+      "probes": 237,
+      "minClearance": 0.7467701970824878,
+      "failures": []
+    }
+  ],
+  "camera": {
+    "expected": 3648,
+    "probes": 3648,
+    "maxError": 1.2136028448573,
+    "failures": []
+  },
+  "contacts": {
+    "expectedTops": 132,
+    "tops": 132,
+    "expectedSides": 132,
+    "sides": 132,
+    "minSideMove": 0.4065085164428643,
+    "minOutwardMove": 0.4064926280602687,
+    "failures": []
+  },
+  "ferry": [
+    {
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "ends": [
+        {
+          "s": 1622,
+          "minGap": 5.6064453125
+        },
+        {
+          "s": 1662,
+          "minGap": 3.81689453125
+        }
+      ]
+    }
+  ],
+  "visibleGapCaps": [
+    {
+      "name": "Broken crown aqueduct",
+      "s": 660.2,
+      "u": -2.4,
+      "p": [
+        257.066162109375,
+        12,
+        -385.37158203125
+      ],
+      "y": 11.626557317659964,
+      "mesh": "Measured Custard broken bank root Broken crown aqueduct -1"
+    },
+    {
+      "name": "Broken crown aqueduct",
+      "s": 660.2,
+      "u": 0,
+      "p": [
+        255.311767578125,
+        12,
+        -383.733642578125
+      ],
+      "y": 11.63057675881113,
+      "mesh": "Measured Custard broken bank root Broken crown aqueduct -1"
+    },
+    {
+      "name": "Broken crown aqueduct",
+      "s": 719.7,
+      "u": 0,
+      "p": [
+        284.92626953125,
+        12,
+        -332.771240234375
+      ],
+      "y": 11.627168529775874,
+      "mesh": "Measured Custard broken bank root Broken crown aqueduct 1"
+    },
+    {
+      "name": "Broken crown aqueduct",
+      "s": 719.7,
+      "u": 2.4,
+      "p": [
+        282.6357421875,
+        12,
+        -332.054931640625
+      ],
+      "y": 11.625091754188588,
+      "mesh": "Measured Custard broken bank root Broken crown aqueduct 1"
+    },
+    {
+      "name": "First sluice jump",
+      "s": 1240.2,
+      "u": -2.4,
+      "p": [
+        125.62353515625,
+        3.68408203125,
+        96.57373046875
+      ],
+      "y": 3.3333186933450634,
+      "mesh": "Measured Custard broken bank root First sluice jump -1"
+    },
+    {
+      "name": "Moving ferry channel",
+      "s": 1622.2,
+      "u": -2.4,
+      "p": [
+        445.783447265625,
+        -2,
+        68.247802734375
+      ],
+      "y": -2.3543755791307177,
+      "mesh": "Measured Custard broken bank root Moving ferry channel -1"
+    },
+    {
+      "name": "Final backwater rail crescent",
+      "s": 2288.2,
+      "u": -2.4,
+      "p": [
+        749.17138671875,
+        -6,
+        -181.191650390625
+      ],
+      "y": -6.354623187213679,
+      "mesh": "Measured Custard broken bank root Final backwater rail crescent -1"
+    }
+  ]
+}

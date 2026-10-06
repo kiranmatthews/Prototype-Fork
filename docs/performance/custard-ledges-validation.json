@@ -1,0 +1,30 @@
+{
+  "sourceBase": "8977ba1",
+  "views": 69,
+  "review": "23 full, 23 portrait, 23 lite actual gameplay-camera captures inspected; static capture hazard grace only.",
+  "firstPlayable": "2026-10-06T11:54:42.924Z",
+  "goalStart": "2026-10-06T11:14:07Z",
+  "heroSource": "/private/tmp/custard-ledges-final-full/preview-03-first-gap.png",
+  "heroSha256": "2438902dff87469414906c9e01f207d7f84b839bbc05d4ab4c69003a54cbadb7",
+  "passed": [
+    "native support/actor/void/camera geometry",
+    "132 top and 132 outward-side Player contacts",
+    "588 actual GLB cap rays",
+    "1324 verge roots and 360 meadow roots",
+    "81 integrated quarry-floor samples",
+    "11 production-Player input pilots",
+    "exact v1-v4/current cache migration and edit preservation",
+    "360 wallride facing cases and 2880 native frames",
+    "latest-main placement regression",
+    "check:levels",
+    "production type-check/build"
+  ],
+  "existingFailure": {
+    "test": "tools/test-jungle-cup-skating.mjs:46",
+    "assertion": "charged target differs from platforming",
+    "sameFailureWithUnchangedPlayer": true,
+    "action": "Retained existing tuning and left unrelated park assertion untouched"
+  },
+  "fullSuiteRun": false,
+  "newMeshyCredits": 0
+}

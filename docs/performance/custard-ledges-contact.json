@@ -1,0 +1,130 @@
+{
+  "capModels": 14,
+  "capRays": 588,
+  "minClearance": 0.019984693977743717,
+  "maxClearance": 0.02000743525716331,
+  "vergeRoots": 1324,
+  "outlines": [
+    {
+      "name": "Lockyard towpath",
+      "samples": 66,
+      "min": 7.2647857666015625,
+      "max": 13.596038818359375,
+      "spread": 6.3312530517578125
+    },
+    {
+      "name": "Inner millrace bank",
+      "samples": 16,
+      "min": 4.510223388671873,
+      "max": 5.395947265624999,
+      "spread": 0.8857238769531257
+    },
+    {
+      "name": "Inner millrace bank",
+      "samples": 17,
+      "min": 4.43575439453125,
+      "max": 4.500311279296874,
+      "spread": 0.06455688476562393
+    },
+    {
+      "name": "Inner millrace bank",
+      "samples": 19,
+      "min": 4.505737304687498,
+      "max": 6.197888183593749,
+      "spread": 1.6921508789062507
+    },
+    {
+      "name": "Outer millrace bank",
+      "samples": 29,
+      "min": 4.446179199218749,
+      "max": 6.189215087890624,
+      "spread": 1.7430358886718746
+    },
+    {
+      "name": "Outer millrace bank",
+      "samples": 25,
+      "min": 4.453784179687498,
+      "max": 5.05927734375,
+      "spread": 0.6054931640625014
+    },
+    {
+      "name": "Ascending mill crown",
+      "samples": 24,
+      "min": 7.367340087890625,
+      "max": 10.7940673828125,
+      "spread": 3.426727294921875
+    },
+    {
+      "name": "Upper mill terrace",
+      "samples": 32,
+      "min": 7.467918395996094,
+      "max": 11.563545227050781,
+      "spread": 4.0956268310546875
+    },
+    {
+      "name": "Offset sluice island",
+      "samples": 20,
+      "min": 5.0598907470703125,
+      "max": 7.519660949707031,
+      "spread": 2.4597702026367188
+    },
+    {
+      "name": "Returning sluice island",
+      "samples": 22,
+      "min": 5.578155517578125,
+      "max": 8.587722778320312,
+      "spread": 3.0095672607421875
+    },
+    {
+      "name": "Reedbed ferry approach",
+      "samples": 27,
+      "min": 8.84228515625,
+      "max": 12.41961669921875,
+      "spread": 3.57733154296875
+    },
+    {
+      "name": "Ferry receiver island",
+      "samples": 18,
+      "min": 9.0682373046875,
+      "max": 13.1697998046875,
+      "spread": 4.1015625
+    },
+    {
+      "name": "Left reedbank",
+      "samples": 18,
+      "min": 4.43206787109375,
+      "max": 4.8621826171875,
+      "spread": 0.43011474609375
+    },
+    {
+      "name": "Right reedbank",
+      "samples": 18,
+      "min": 4.4307403564453125,
+      "max": 4.5026092529296875,
+      "spread": 0.071868896484375
+    },
+    {
+      "name": "Boulder-run carving bank",
+      "samples": 72,
+      "min": 12.698684692382812,
+      "max": 17.165008544921875,
+      "spread": 4.4663238525390625
+    },
+    {
+      "name": "Backwater crown approach",
+      "samples": 48,
+      "min": 9.578964233398438,
+      "max": 11.570037841796875,
+      "spread": 1.9910736083984375
+    },
+    {
+      "name": "Custard finish island",
+      "samples": 18,
+      "min": 9.929031372070312,
+      "max": 12.415512084960938,
+      "spread": 2.486480712890625
+    }
+  ],
+  "quarrySamples": 81,
+  "assetSha256": "e150f21e4ccb2bf2962e0ceb2e6dfa7ba447fdce032bcbede32b2d6c6e5baf36"
+}

@@ -1,0 +1,289 @@
+{
+  "base": "http://127.0.0.1:5249",
+  "results": [
+    {
+      "maxFrames": 830,
+      "tailFrames": 0,
+      "deaths": 0,
+      "bails": 0,
+      "states": [
+        "ride",
+        "air"
+      ],
+      "grounds": [
+        "Spillway runout",
+        "Creek bank",
+        "Offset sluice island",
+        "Measured Custard broken bank root Second sluice jump -1",
+        "Measured Custard broken bank root Second sluice jump 1",
+        "Returning sluice island",
+        "crumble pad"
+      ],
+      "rails": [],
+      "movers": [],
+      "nativeTakeEnd": {
+        "position": [
+          340.5494079939952,
+          -1.7619192428115542,
+          153.9054994988842
+        ],
+        "state": "ride",
+        "grounded": true,
+        "cratesBroken": 13,
+        "progress": 1484.0736075891728
+      },
+      "final": {
+        "position": [
+          340.5494079939952,
+          -1.7619192428115542,
+          153.9054994988842
+        ],
+        "state": "ride",
+        "grounded": true,
+        "cratesBroken": 13,
+        "progress": 1484.0736075891728
+      },
+      "position": [
+        340.5494079939952,
+        -1.7619192428115542,
+        153.9054994988842
+      ],
+      "state": "ride",
+      "grounded": true,
+      "cratesBroken": 13,
+      "progress": 1484.0736075891728,
+      "stamp": "Codex/sol fork · build 10-06 12:41 UTC",
+      "name": "sluice",
+      "render": "lite",
+      "nativeFinalDistance": 0.008048449886872547
+    },
+    {
+      "maxFrames": 1769,
+      "tailFrames": 0,
+      "deaths": 0,
+      "bails": 0,
+      "states": [
+        "ride",
+        "air"
+      ],
+      "grounds": [
+        "Reedbed ferry approach",
+        "moving platform",
+        "Ferry receiver island"
+      ],
+      "rails": [],
+      "movers": [
+        1
+      ],
+      "nativeTakeEnd": {
+        "position": [
+          462.90765978672357,
+          -2,
+          30.632228116821093
+        ],
+        "state": "ride",
+        "grounded": true,
+        "cratesBroken": 0,
+        "progress": 1664.322813180428
+      },
+      "final": {
+        "position": [
+          462.90765978672357,
+          -2,
+          30.632228116821093
+        ],
+        "state": "ride",
+        "grounded": true,
+        "cratesBroken": 0,
+        "progress": 1664.322813180428
+      },
+      "position": [
+        462.90765978672357,
+        -2,
+        30.632228116821093
+      ],
+      "state": "ride",
+      "grounded": true,
+      "cratesBroken": 0,
+      "progress": 1664.322813180428,
+      "stamp": "Codex/sol fork · build 10-06 12:41 UTC",
+      "name": "ferry",
+      "render": "lite",
+      "nativeFinalDistance": 0.39404610403568807
+    },
+    {
+      "maxFrames": 2366,
+      "tailFrames": 1,
+      "deaths": 0,
+      "bails": 0,
+      "states": [
+        "ride",
+        "air",
+        "grind"
+      ],
+      "grounds": [
+        "Creek bank",
+        "Inner millrace bank",
+        "Millrace reunion shelf",
+        "Ascending mill crown",
+        "Measured Custard broken bank root Broken crown aqueduct -1",
+        "Measured Custard broken bank root Broken crown aqueduct 1",
+        "Upper mill terrace",
+        "vertramp",
+        "Spillway runout"
+      ],
+      "rails": [
+        1
+      ],
+      "movers": [],
+      "nativeTakeEnd": {
+        "position": [
+          104.04501601377724,
+          4,
+          51.39379710653224
+        ],
+        "state": "ride",
+        "grounded": true,
+        "cratesBroken": 42,
+        "progress": 1189.7160640467314
+      },
+      "tailActive": true,
+      "final": {
+        "position": [
+          104.0665438625365,
+          4,
+          51.83586513089253
+        ],
+        "state": "ride",
+        "grounded": true,
+        "cratesBroken": 42,
+        "progress": 1190.1312082913828
+      },
+      "position": [
+        104.0665438625365,
+        4,
+        51.83586513089253
+      ],
+      "state": "ride",
+      "grounded": true,
+      "cratesBroken": 42,
+      "progress": 1190.1312082913828,
+      "stamp": "Codex/sol fork · build 10-06 12:41 UTC",
+      "name": "continuous-chapter",
+      "render": "lite",
+      "nativeFinalDistance": 0.05189085406760955
+    },
+    {
+      "maxFrames": 963,
+      "tailFrames": 0,
+      "deaths": 0,
+      "bails": 0,
+      "states": [
+        "ride",
+        "air"
+      ],
+      "grounds": [
+        "Upper mill terrace",
+        "moving platform",
+        "Mill reward roof"
+      ],
+      "rails": [],
+      "movers": [
+        0
+      ],
+      "nativeTakeEnd": {
+        "position": [
+          310.02637119262903,
+          19.67329978942871,
+          -263.0287514661775
+        ],
+        "state": "ride",
+        "grounded": true,
+        "cratesBroken": 0,
+        "progress": 791
+      },
+      "final": {
+        "position": [
+          310.02637119262903,
+          19.67329978942871,
+          -263.0287514661775
+        ],
+        "state": "ride",
+        "grounded": true,
+        "cratesBroken": 0,
+        "progress": 791
+      },
+      "position": [
+        310.02637119262903,
+        19.67329978942871,
+        -263.0287514661775
+      ],
+      "state": "ride",
+      "grounded": true,
+      "cratesBroken": 0,
+      "progress": 791,
+      "stamp": "Codex/sol fork · build 10-06 12:41 UTC",
+      "name": "mill-roof-lift",
+      "render": "lite",
+      "nativeFinalDistance": 0.00002310164001777558
+    },
+    {
+      "maxFrames": 953,
+      "tailFrames": 11,
+      "deaths": 0,
+      "bails": 0,
+      "states": [
+        "ride",
+        "grind",
+        "air",
+        "finished"
+      ],
+      "grounds": [
+        "Backwater crown approach",
+        "Custard finish island",
+        "warp pad"
+      ],
+      "rails": [
+        5
+      ],
+      "movers": [],
+      "nativeTakeEnd": {
+        "position": [
+          720.6787630942615,
+          -6,
+          -48.629673401737264
+        ],
+        "state": "ride",
+        "grounded": true,
+        "cratesBroken": 16,
+        "progress": 2424.418446119204
+      },
+      "tailActive": true,
+      "final": {
+        "position": [
+          719.5866616296817,
+          -5.263333333556851,
+          -44.565802035594444
+        ],
+        "state": "finished",
+        "grounded": true,
+        "cratesBroken": 16,
+        "progress": 2428.618199496902
+      },
+      "position": [
+        719.5866616296817,
+        -5.263333333556851,
+        -44.565802035594444
+      ],
+      "state": "finished",
+      "grounded": true,
+      "cratesBroken": 16,
+      "progress": 2428.618199496902,
+      "stamp": "Codex/sol fork · build 10-06 12:41 UTC",
+      "name": "backwater-finish",
+      "render": "full",
+      "nativeFinalDistance": 0.45313298157178017
+    }
+  ],
+  "errors": []
+}

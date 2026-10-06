@@ -3503,7 +3503,7 @@ export function userLevelStorageHealthy(): boolean {
   return LAST_USER_WRITE_OK;
 }
 
-// Only unchanged snapshots published by 04557f6 and 73aedc4 follow the
+// Only exact published Custard snapshots follow the
 // current source. The second v1 signature includes parser water tags.
 // Names, component metadata and every coordinate are part of both hashes;
 // an edited or renamed local copy remains the player's authored level.
@@ -3513,6 +3513,7 @@ const CUSTARD_CARVING_SNAPSHOTS = [
   { length: 1208879, a: 0x1f403b53, b: 0x72a1667b },
   { length: 1508766, a: 0x83f4c9bc, b: 0x440d0304 },
   { length: 6077529, a: 0x474a5f5c, b: 0x690291e6 },
+  { length: 6216783, a: 0x7b132118, b: 0x929a7a02 },
 ] as const;
 const CUSTARD_SNAPSHOT_CACHE = new WeakMap<object, boolean>();
 export function isOriginalCustardCreek(entry: LevelEntry): boolean {

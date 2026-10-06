@@ -1,128 +1,131 @@
-# Custard Creek · sunset river valley
+# Custard Creek · uneven sunset ledges
 
-The visual rebuild keeps the independently authored 2,430 m folded river and
-its eight gameplay chapters. The course climbs through the lockyard, split
-millrace and high mill, descends around the return spillway, crosses the sluices
-and ferry basin, and finishes through the quarry and backwater crown.
+Custard keeps its independently authored 2,430 m folded river and eight
+gameplay chapters. The course climbs through the lockyard, split millrace and
+high mill, descends around the return spillway, crosses the sluices and ferry
+basin, and finishes through the quarry and backwater crown.
 
-`src/levels/custard-terrain.ts` replaces the former flat-sided ribbons with
-closed curved stone volumes. Native caps retain the supported route heights;
-irregular rims, broad recessed courses and tapered roots form the exposed
-silhouette. Landing faces have real cross-section subdivisions and relief,
-with separate metre-scaled UVs. Collinear rim subdivisions are retained in
-the end caps, so UV seams weld into closed, consistently wound geometry.
-Coarser closed shoulders provide the distant valley mass at lower cost.
+## Sculpted banks and measured contact
 
-`src/levels/custard-creek-art.ts` reuses the Carlisle sandstone masses, deep
-ledge roots, carved piers and fine grass, Beachside Stonecliff forms, and
-Treehouse cave rock, earth banks, trees, ferns, crowns and porch houses.
-Different compositions, proportions, rotations and warm tints suit the
-winding river. Meadow roots are placed on the actual triangulated shoulders.
-Imported scenery stays outside collision queries and the established gaps.
+`src/levels/custard-ledge-profile.ts` applies Carlisle's broad eroded bays,
+smaller chips, asymmetric widths and rounded exposed ends to Custard's curved
+route. The outlines vary around a practical core, with generous pockets for
+patrols, reward lines, checkpoints, hazard bypasses and ferry/lift transfers.
+Joined chunks retain a continuous border. The outer collar rolls downward;
+the level does not hide the new shape with rectangular support floors.
+
+`custard-terrain.ts` builds closed stone volumes with three recessed strata,
+tapered roots, metre-scaled UVs and subdivided free faces. Interior caps no
+longer contaminate top normals with arbitrary transverse dark bands. Low
+scenic shoulders have varying widths and offsets. Invisible side curtains
+follow the actual collar and stop below its walking surface.
+
+Fourteen exposed Carlisle ledge-root models now have collision baked from
+their actual upward LOD0 triangles. `tools/custard-ledges/bake-contact.py`
+retains the source hash and attribution. The 913-vertex / 874-triangle cap is
+transformed to each instance, with 2 cm sole clearance. Independent rays
+against the shipped GLB measure 1.99847–2.00074 cm clearance. The challenge
+gaps remain open; only a few visible rail-bank caps extend less than 0.9 m
+into their original endpoints.
+
+The native-Player side audit exposed overlapping broadphase wall slices at a
+concave bend. `Player.pushOutOfWallPath` now leaves a farther adjacent slice
+to the nearer contact at the same height. This narrowly scoped collision
+selection fix preserves movement tuning, jumping, rail controls and camera
+behavior. All 132 actual bank-side probes resolve outward.
+
+## Repairs made during the pass
+
+- Replace coincident inner/outer millrace endings with one reunion shelf.
+- Integrate all three quarry courts into the descending bank, with smoothly
+  approached level patrol areas and bare stone pigment instead of stacked pads.
+- Remove the repeated clipped rock blobs along the old rectangular edges.
+- Root 1,324 verge tufts and 360 meadow placements on actual triangles; attach
+  isolated leaf crowns more closely to trees and plant the lower fern gardens.
+- Add a grounded timber hoist around the optional mill lift, with four river
+  piles, knee braces and overhead members outside its moving deck envelope.
+- Preserve the sunset pass's planted mill houses, Beachside cliff variants,
+  stone footings, curved spillway foundation and waterline-matched ferry floats.
+
+The reused library includes Carlisle sandstone, ledges, piers and fine grass,
+Beachside Stonecliff forms, and Treehouse rock, foliage, houses and timber.
+Different proportions, rotations and warm tints suit the winding river.
 No new Meshy generation or credits were required.
 
-Sunset is actual lighting as well as sky colour. The level authors a bounded
-world-space sun direction at **17.41° elevation**, with a warm key, cool fill,
-soft rose haze and restrained soil bounce. The optional atmosphere direction
-is validated and preserved by native capture; other levels retain their
-existing sun policy. The runtime browser checks the rendered light vector.
-
-The curved 310 m spillway uses metric arc/along UVs at 3.1 m per tile. Its ride
-geometry is unchanged; closed stone backing sits below the actual outer
-decks. Outside the original deck the backing falls away steeply, so it does
-not advertise an unsupported flat walking shelf. The support audit checks real intersections throughout the bend.
-
-The fifteen collapsing sections and both movers use the existing worn timber
-kit. The ferry's three hewn floats and transverse ties follow its native
-moving parent, and its sheltered basin meets the floats at the waterline.
-The original deck collider and motion remain authoritative. Gallows use
-fitted hewn members. Mill houses and carved piers have planted stone footings,
-and the optional mill roof has a deep buttress foundation.
-
-Corrections made during the pass include landing-face texture stretching,
-black visual pit plates covering the water, spillway backing intruding into
-the ride, floating scenery footings and the ferry's former separation from
-its visible water. Collision authoring along the banks was simplified while
-retaining the measured top and outward-side contacts. River reset volumes now follow the visible water, so ordinary falls do not
-continue far underneath it. Every playable lane is tested against those
-volumes. Encounter ordering and native movement tuning remain intact. The release
-incorporates the independently published grind-input fix.
+Sunset uses an actual **17.41°** sun, warm key, cool fill and rose haze. The
+310 m spillway retains its native ride and 3.1 m metric texture scale; its
+closed backing stays below the actual curved surface. The ferry's three
+timber floats follow its existing moving parent and meet the raised basin.
+River resets follow visible water. None intersects the 3,294 dry-body probes.
 
 ## Verification
 
-- The current source and complete published pack pass the existing bounded
-  editor/import contracts. Exact v1, v2, v3 and current snapshot recognition
-  preserves authored local edits.
-- The geometry proof covers 61 native stone solids and 125 scenic stone
-  volumes, welded edge closure and orientation, finite unit normals, 684
-  actual spillway-clearance samples, 360 planted meadow roots and the three
-  actual ferry pontoons.
-- The independent audit covers every road, pipe, gap, enemy patrol, boulder
-  footprint, rail clearance and camera segment, plus 126 top and 126 outward
-  side-contact probes.
-- All eleven production-Player input pilots pass, including both split-bank
-  routes, aqueduct, spillway, sluices, ferry, quarry, final rail/finish and mill
-  lift. The continuous 940 m chapter clears both jumping spans, the crown
-  rail and the descending spillway, breaking 42 crates without a bail/death.
-- The browser harness captures 18 actual gameplay-camera locations. Static
-  captures use silent hazard grace; real input/replay checks do not. The
-  keyboard smoke activates a checkpoint, walks off into the river, loses a
-  life, respawns grounded at the earned checkpoint and reaches the finish.
-- Atmosphere runtime/security/history checks, renderer frame checks, required
-  `check:levels` and the production type-check/build pass. The full suite was
-  not requested or run.
+- 58 native and 125 scenic closed stone volumes pass welded edge closure,
+  outward orientation and unit-normal checks; 684 spillway clearance samples
+  and the actual ferry floats pass.
+- Independent geometry checks cover 6,364 road, 930 pipe, 1,746 gap and 3,648
+  camera samples, every patrol/boulder/rail, and 132 top plus 132 side contacts.
+- The ledge proof measures actual native width variation, 588 independent
+  GLB/contact rays, planted verges, nonoverlapping millrace surfaces and 81
+  quarry-floor samples.
+- All eleven production-Player pilots pass. The continuous 940 m chapter
+  crosses both inner-bank gaps, the aqueduct and spillway, breaking 42 crates
+  with no bail or death. The ferry, optional lift and final grind/finish pass.
+- Exact published v1–v4 and current cache recognition preserves edited copies.
+  The complete pack remains inside its existing import/work limits, with all
+  other latest-main rows preserved.
+- The collision regression also passes 360 wallride direction/facing cases,
+  144 permitted entries and 2,880 native wallride frames. The unrelated
+  `test-jungle-cup-skating.mjs:46` charge-speed assertion fails identically
+  with the unchanged pre-task Player; no tuning change was made to mask it.
+- Required `check:levels`, latest-main placement checks and the production
+  type-check/build pass. The full suite was not requested or run.
 
-Final hardware, framebuffer, draw/triangle counts and resource measurements
-are recorded in `docs/performance/custard-sunset-{full,portrait,lite}.json`.
-Portrait testing is a viewport test on the recorded desktop GPU, not a
-physical-phone benchmark. The review and thumbnail use actual game renders.
+Current source: **3,574 components**, **63,586 mesh vertices / 91,470 triangles**,
+**6,217,097 UTF-8 bytes**. The exact cap contacts account for 12,236 triangles
+and are invisible to the renderer. Author-time planting uses a spatial grid;
+there is no additional per-frame planting work.
 
-Final source: **4,409 components**, **52,194 mesh vertices / 81,550 triangles**,
-**6,077,859 UTF-8 bytes**. The complete shared pack remains below 16 MiB;
-all other published level rows are unchanged. Geometry workload limits were
-retained. The final invisible river volumes pass **3,354 dry-body probes**.
+Final browser measurements, input outcomes and actual review images are
+recorded in `docs/performance/custard-ledges-*.json` and
+`docs/custard-ledges-review.jpg`. Portrait is a viewport test on the recorded
+desktop GPU, not a physical-phone benchmark.
 
-| Profile | Actual framebuffer | Scene median | Worst scene p95 | Peak full-frame calls / triangles |
+
+| Profile | Actual framebuffer | Scene median | Worst scene p95 | Peak calls / triangles |
 | --- | --- | --- | --- | --- |
-| Desktop full | 1280 × 720 | 16.6–16.8 ms | 18.4 ms | 424 / 973,406 |
-| Portrait viewport | 720 × 1558 | 16.6–16.7 ms | 17.6 ms | 305 / 751,152 |
-| Lite | 1280 × 720 | 16.6–16.7 ms | 17.6 ms | 178 / 519,886 |
+| Desktop full | 1280 × 720 | 16.7–16.8 ms | 18.4 ms | 423 / 944,673 |
+| Portrait viewport | 720 × 1558 | 16.7 ms | 17.6 ms | 297 / 746,031 |
+| Lite | 1280 × 720 | 16.6–16.7 ms | 18.0 ms | 182 / 444,120 |
 
-Chrome 154 on Apple M1 Pro, 30 warmup and 60 measured frames per view.
-The portrait viewport is 390 × 844. Compressed streamed-texture estimates peak
-at 39.67 MiB full / 28 MiB lite; resident scenery peaks at 462 / 1,337 cells
-in full rendering. Idle geometry, texture, program and cell counts are stable.
-The full and portrait composites retain raw report hashes and the four fresh
-crown/spillway samples after the last non-colliding cliff-edge adjustment.
+Chrome 154 on Apple M1 Pro; 30 warmup and 60 measured frames per view.
+All 69 camera fixtures are supported, stream without errors and retain stable
+idle geometry, texture, program and scenery-cell counts. Texture estimates
+peak at 41.33 MiB full / 29.67 MiB lite; resident cells at 432 / 147.
+The 390 × 844 portrait viewport uses the same desktop GPU.
 
-All 54 route captures have clean consoles and supported fixtures. Production
-browser input replays pass ferry, sluices, the continuous chapter and the full
-finish. The exact-build keyboard smoke records the missed-bank death at
-Y = 2.50 m with the local visible water at Y = 2.96 m, then a grounded earned
-checkpoint respawn and successful finish. See `custard-sunset-smoke.json` and
-`custard-sunset-browser-traversal.json` for those actual outcomes.
-
-The preview is `docs/custard-sunset-review.png`; raw measurements and native
-support/traversal summaries are retained under `docs/performance/`. No
-movement tuning was changed by this visual rebuild.
+The keyboard smoke earns a checkpoint, naturally falls into water at
+Y = 2.683 m (visible water Y = 2.956 m), loses one life, respawns grounded at
+the earned checkpoint and reaches the finish. The complete latest-main pack
+is **16,081,074 bytes**, below the existing 16 MiB limit.
 
 Reproduction:
 
 ```sh
+python3 tools/custard-ledges/bake-contact.py
 node tools/sync-custard-creek.mjs --write
 node tools/test-custard-creek.mjs
 node tools/custard-audit-geometry.mjs
+node tools/test-custard-ledges.mjs
 node tools/test-custard-sunset.mjs
 node tools/test-custard-creek-cache.mjs
 node tools/test-custard-traversal.mjs
 npm run check:levels
 npm run build
-node tools/custard-sunset-browser.mjs http://127.0.0.1:5247 --lite --smoke
-node tools/custard-sunset-browser.mjs http://127.0.0.1:5247
-node tools/custard-sunset-browser.mjs http://127.0.0.1:5247 --portrait
+node tools/custard-sunset-browser.mjs http://127.0.0.1:5249 --lite --smoke
+node tools/custard-sunset-browser.mjs http://127.0.0.1:5249
+node tools/custard-sunset-browser.mjs http://127.0.0.1:5249 --portrait
 ```
 
-`CUSTARD_REVIEW_OUTPUT`, `CUSTARD_REVIEW_SCENES` and
-`CUSTARD_REVIEW_FRAMES` select captured evidence. Native input traces use
-`CUSTARD_TRAVERSAL_OUTPUT`; `tools/custard-traversal-browser.mjs` replays them
-through the production game loop on either a local build or GitHub Pages.
+The prior release's `custard-sunset-*` evidence is retained as historical data;
+the `custard-ledges-*` reports describe the current version.

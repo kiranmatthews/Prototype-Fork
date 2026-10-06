@@ -21,7 +21,7 @@ let m;try{m=await author.ssrLoadModule('/src/levels/custard-creek.ts');}finally{
 const fixtures=[['00-spawn',0,0],['01-lockyard',60,0],['02-inner-bank',300,-6],['03-first-gap',333,-6],['04-outer-bank',376,8],
  ['05-aqueduct',631,0],['06-crown-terrace',753,-3.5],['07-mill-roof',791,-18,5],['08-spillway-entry',870,0],['09-spillway-bend',1020,0],
  ['10-sluice-first',1224,0],['11-sluice-crescent',1418,-2],['12-ferry-near',1595,3],['13-ferry-far',1676,4],['14-reedbanks',1770,-5],
- ['15-boulder-run',1908,6],['16-final-rail',2270,-3.5],['17-finish-island',2390,4]];
+ ['15-boulder-run',1908,6],['16-final-rail',2270,-3.5],['17-finish-island',2390,4],['18-millrace-reunion',523,0],['19-mill-hoist',788,-5],['20-quarry-court',1862,0],['21-second-court',1950,0],['22-last-court',2030,0]];
 const scenes=fixtures.map(([name,s,u,lift=0])=>({name,s,u,position:m.custardPoint(s,m.custardHeight(s)+lift+.12,u),heading:m.custardTangent(s)}));
 const report={base,variant,started:new Date().toISOString(),sceneCount:scenes.length,scenes:[],errors:[],staticCaptureHazardGrace:true};
 const browser=await chromium.launch({channel:'chrome',headless:true});
