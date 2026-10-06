@@ -1,6 +1,6 @@
 import type * as THREE from 'three';
 
-export const ENEMY_KINDS = ['grunt','spiker','turtle','charger','hopper','floater','sentry','spinner'] as const;
+export const ENEMY_KINDS = ['grunt','spiker','turtle','charger','hopper','floater','sentry','spinner','moa'] as const;
 export type EnemyKind = typeof ENEMY_KINDS[number];
 export const ENEMY_LEGS = ['frontLeft','frontRight','hindLeft','hindRight'] as const;
 export type EnemyLeg = typeof ENEMY_LEGS[number];
@@ -74,6 +74,8 @@ export interface EnemyVisual {
   readonly diagnostics: EnemyVisualDiagnostics;
   /** Actual +Z barrel tip including aim/recoil; false until a barrel is loaded. */
   getMuzzlePosition(target:THREE.Vector3):boolean;
+  /** Articulated melee tip, sampled after animation. */
+  getAttackPosition?(target:THREE.Vector3):boolean;
   update(dt: number, frame: EnemyAnimationFrame): void;
   reset(): void;
   /** Detaches all borrowed render resources before releasing the asset lease. */

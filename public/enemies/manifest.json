@@ -143,6 +143,21 @@
       "rig": "Articulated rigid parts",
       "triangles": 8154,
       "clips": []
+    },
+    {
+      "kind": "moa",
+      "name": "Moa",
+      "provider": "Original procedural",
+      "source": "src/enemies/moa.ts",
+      "sha256": "7e4822a74fd1dc3f1cb666195ebec0d9ec70913bc11248b159eac73aa3c8fae5",
+      "rig": "Articulated biped, continuous swept neck, independent elastic surfaces",
+      "clips": [
+        "High step",
+        "Peck",
+        "Idle squawk"
+      ],
+      "heightMetres": 4.4,
+      "audio": "Original locally synthesized honk and peck; tools/make-moa-sounds.py"
     }
   ]
 }

@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { createMoaVisual } from './moa';
 import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { clone as cloneSkeleton } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
@@ -161,9 +162,10 @@ function inPlaceClip(clip:THREE.AnimationClip,model:THREE.Object3D,nodes:BoundNo
   return new THREE.AnimationClip(clip.name,clip.duration,tracks,clip.blendMode);
 }
 
-/** A generated-asset-only adapter. Missing assets remain observable as errors;
- * gameplay and tests can inspect readiness without a substitute primitive foe. */
+/** Imported models retain observable loading failures. The original moa has
+ * its own explicit code-authored model and animation adapter. */
 export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):EnemyVisual {
+  if(kind==='moa')return createMoaVisual();
   const startState=kind==='hopper'?'crouch':kind==='floater'?'hover':kind==='sentry'?'track':kind==='spinner'?'out':'patrol';
   const group=new THREE.Group();group.name=`Enemy_${kind}`;
   // Static artwork sizing stays outside animation bindings and gameplay resets.

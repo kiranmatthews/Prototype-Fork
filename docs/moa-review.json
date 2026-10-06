@@ -1,0 +1,205 @@
+{
+  "production": {
+    "base": "http://127.0.0.1:5292/",
+    "evidence": [
+      {
+        "lite": true,
+        "spawn": {
+          "grounded": true,
+          "y": 0
+        },
+        "status": "ready",
+        "moa": [
+          2.1335549354553223,
+          4.392138824462891,
+          3.5318004430360013
+        ],
+        "skater": [
+          17.380745821290216,
+          2.6438507912503453,
+          40.36747604740188
+        ],
+        "position": [
+          14.866352255451652,
+          0,
+          -28
+        ],
+        "idle": {
+          "states": [
+            "patrol",
+            "idle",
+            "squawk"
+          ],
+          "audio": [
+            {
+              "duration": 1.14,
+              "state": "running",
+              "rate": 0.9745110273361206
+            }
+          ],
+          "frames": 369
+        },
+        "peck": {
+          "state": "peck",
+          "alive": true,
+          "masks": 0,
+          "audio": [
+            {
+              "duration": 0.22,
+              "state": "running",
+              "rate": 0.9965081214904785
+            }
+          ]
+        },
+        "defeated": {
+          "alive": false,
+          "flung": true
+        },
+        "respawn": {
+          "alive": true,
+          "attackEmpty": true,
+          "checkpoint": true,
+          "player": "ride"
+        },
+        "finish": {
+          "screen": null,
+          "events": {
+            "finish": 1
+          },
+          "stamp": "Codex/sol fork \u00b7 build 10-06 23:48 UTC"
+        }
+      },
+      {
+        "lite": false,
+        "spawn": {
+          "grounded": true,
+          "y": 0
+        },
+        "status": "ready",
+        "moa": [
+          2.1335549354553223,
+          4.392138824462891,
+          3.5318004430360013
+        ],
+        "skater": [
+          17.38321565323548,
+          2.6438380119333087,
+          40.37441609712069
+        ],
+        "position": [
+          14.866352255451652,
+          0,
+          -28
+        ],
+        "idle": {
+          "states": [
+            "patrol",
+            "idle",
+            "squawk"
+          ],
+          "audio": [
+            {
+              "duration": 1.14,
+              "state": "running",
+              "rate": 1.0333905220031738
+            }
+          ],
+          "frames": 369
+        },
+        "peck": {
+          "state": "peck",
+          "alive": true,
+          "masks": 0,
+          "audio": [
+            {
+              "duration": 0.22,
+              "state": "running",
+              "rate": 0.9930511116981506
+            }
+          ]
+        },
+        "defeated": {
+          "alive": false,
+          "flung": true
+        },
+        "respawn": {
+          "alive": true,
+          "attackEmpty": true,
+          "checkpoint": true,
+          "player": "ride"
+        },
+        "finish": {
+          "screen": null,
+          "events": {
+            "finish": 1
+          },
+          "stamp": "Codex/sol fork \u00b7 build 10-06 23:48 UTC"
+        }
+      }
+    ],
+    "errors": []
+  },
+  "motion": {
+    "rows": [
+      {
+        "view": "front",
+        "states": [
+          "patrol",
+          "idle",
+          "squawk",
+          "windup",
+          "peck",
+          "recover"
+        ],
+        "frames": 430,
+        "maxHeadStep": 0.7100158122417589
+      },
+      {
+        "view": "quarter",
+        "states": [
+          "patrol",
+          "idle",
+          "squawk",
+          "windup",
+          "peck",
+          "recover"
+        ],
+        "frames": 430,
+        "maxHeadStep": 0.7100158122417589
+      },
+      {
+        "view": "side",
+        "states": [
+          "patrol",
+          "idle",
+          "squawk",
+          "windup",
+          "peck",
+          "recover"
+        ],
+        "frames": 430,
+        "maxHeadStep": 0.7100158122417589
+      }
+    ],
+    "errors": []
+  },
+  "editor": {
+    "data": {
+      "editor": "ready",
+      "play": "ready",
+      "imported": "ready",
+      "component": {
+        "t": "enemy",
+        "p": [
+          0,
+          0.5,
+          -8
+        ],
+        "foe": "moa",
+        "range": 3,
+        "speed": 1.45
+      }
+    },
+    "errors": []
+  }
+}

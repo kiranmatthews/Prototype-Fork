@@ -27,6 +27,7 @@ const CYCLES:Record<EnemyKind,readonly Segment[]>={
   floater:[{state:'hover',frames:156,speed:3.2},{state:'swoop',frames:48,speed:3.2}],
   sentry:[{state:'track',frames:78,speed:0},{state:'charge',frames:33,speed:0},{state:'fire',frames:9,speed:0},{state:'cooldown',frames:42,speed:0}],
   spinner:[{state:'out',frames:132,speed:0},{state:'in',frames:81,speed:0}],
+  moa:[{state:'patrol',frames:180,speed:1.45},{state:'idle',frames:36,speed:0},{state:'squawk',frames:99,speed:0},{state:'windup',frames:38,speed:0},{state:'peck',frames:22,speed:0},{state:'recover',frames:54,speed:0}],
 };
 type View='front'|'quarter'|'side'|'back'|'orbit';
 const initialKind=query.get('kind');
@@ -54,6 +55,7 @@ const grid=new THREE.GridHelper(40,40,0x48636b,0x2b4049);grid.position.y=-.035;s
 interface Actor {kind:EnemyKind;visual:EnemyVisual;home:THREE.Vector3;label:HTMLButtonElement;status:HTMLTableCellElement;
   bounds:THREE.Box3;boundsHelper:THREE.Box3Helper;skeleton:THREE.SkeletonHelper|null;frame:EnemyAnimationFrame;}
 const actors:Actor[]=[];
+kindInput.options[0].textContent=`Full roster · ${ROSTER.length} enemies`;
 const siteRoot=new URL('../../',location.href);
 for(const [index,kind] of ROSTER.entries()){
   const option=document.createElement('option');option.value=kind;option.textContent=`${NAMES[kind]} · ${kind}`;kindInput.append(option);
@@ -64,7 +66,7 @@ for(const [index,kind] of ROSTER.entries()){
   const row=document.createElement('tr'),name=document.createElement('td'),status=document.createElement('td');
   name.textContent=kind;status.textContent='Loading…';row.append(name,status);required('roster-status').append(row);
   const bounds=new THREE.Box3(),boundsHelper=new THREE.Box3Helper(bounds,0xefba74);boundsHelper.visible=false;scene.add(boundsHelper);
-  actors.push({kind,visual,home:new THREE.Vector3((index%4-1.5)*3.2,0,index<4?-2:2),label,status,bounds,boundsHelper,skeleton:null,
+  actors.push({kind,visual,home:new THREE.Vector3((index%4-1.5)*3.2,0,(Math.floor(index/4)-(Math.ceil(ROSTER.length/4)-1)/2)*4.7),label,status,bounds,boundsHelper,skeleton:null,
     frame:{state:CYCLES[kind][0].state,stateTime:0,time:0,speed:0,verticalVelocity:0,grounded:kind!=='floater',alive:true,flung:false}});
 }
 
@@ -105,6 +107,7 @@ function layoutActor(actor:Actor):void {
   if(kind==='turtle'){height=.9;cy=.42;}else if(kind==='charger')width=1.45;
   else if(kind==='floater')cy=.05;else if(kind==='sentry'){width=1.05;height=1.15;cy=.6;}
   else if(kind==='spinner')width=frame.state==='out'?2.1:.8;
+  else if(kind==='moa'){width=1.65;height=2.95;cy=1.475;}
   actor.bounds.setFromCenterAndSize(new THREE.Vector3(visual.group.position.x,visual.group.position.y+cy,visual.group.position.z),new THREE.Vector3(width,height,width));
   actor.boundsHelper.visible=review.showBounds&&shown;
   if(actor.skeleton)actor.skeleton.visible=review.showSkeleton&&shown;
@@ -155,11 +158,11 @@ function setCamera(view:Exclude<View,'orbit'>):void {
   review.camera=view;
   const solo=review.kind!=='all',jumpingHopper=review.kind==='hopper'&&(review.motion==='cycle'||review.motion==='leap');
   const swoopingFloater=review.kind==='floater'&&(review.motion==='cycle'||review.motion==='swoop');
-  const targetY=swoopingFloater?1.15:review.kind==='floater'?1.7:jumpingHopper?1.35:.65;
+  const targetY=review.kind==='moa'?2.05:swoopingFloater?1.15:review.kind==='floater'?1.7:jumpingHopper?1.35:.65;
   const target=new THREE.Vector3(0,solo?targetY:.85,0);
   const direction=view==='front'?new THREE.Vector3(0,solo?.045:.9,1):view==='side'?new THREE.Vector3(1,solo?.045:.9,0)
     :view==='back'?new THREE.Vector3(0,solo?.045:.9,-1):new THREE.Vector3(.643,solo?.18:.8,.766);
-  const halfWidth=solo?1.3:7.5,halfHeight=solo?(jumpingHopper?1.55:swoopingFloater?1.4:1.1):4.5;
+  const halfWidth=solo?(review.kind==='moa'?3:1.3):7.5,halfHeight=solo?(review.kind==='moa'?3.1:(jumpingHopper?1.55:swoopingFloater?1.4:1.1)):4.5;
   const distance=Math.max(halfHeight,halfWidth/Math.max(.4,camera.aspect))/Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
   controls.target.copy(target);camera.position.copy(target).addScaledVector(direction.normalize(),distance);controls.update();
   document.querySelectorAll<HTMLButtonElement>('[data-camera]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.camera===view)));
@@ -188,7 +191,7 @@ const projected=new THREE.Vector3();
 function positionLabels():void {
   for(const actor of actors){
     if(actor.label.hidden)continue;
-    projected.copy(actor.visual.group.position);projected.y+=actor.kind==='floater'?.75:1.3;projected.project(camera);
+    projected.copy(actor.visual.group.position);projected.y+=actor.kind==='moa'?4.7:actor.kind==='floater'?.75:1.3;projected.project(camera);
     actor.label.style.left=`${(projected.x*.5+.5)*stage.clientWidth}px`;
     actor.label.style.top=`${(-projected.y*.5+.5)*stage.clientHeight}px`;
     actor.label.style.visibility=projected.z<1&&projected.z>-1?'visible':'hidden';

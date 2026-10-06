@@ -41,13 +41,13 @@ const near = (actual, expected, label, epsilon = 1e-7) =>
   assert.ok(Math.abs(actual - expected) < epsilon, `${label}: ${actual} != ${expected}`);
 const flags = enemy => [enemy.spinKill, enemy.stompKill, enemy.meleeKill, enemy.touchHurt, enemy.spinRecoil];
 const starts = { grunt: 'patrol', spiker: 'patrol', turtle: 'patrol', charger: 'patrol',
-  hopper: 'crouch', floater: 'hover', sentry: 'track', spinner: 'out' };
+  hopper: 'crouch', floater: 'hover', sentry: 'track', spinner: 'out', moa: 'patrol' };
 
 try {
   const { Level } = await server.ssrLoadModule('/src/level.ts');
   const { Player } = await server.ssrLoadModule('/src/player.ts');
   const { ENEMY_KINDS } = await server.ssrLoadModule('/src/enemies/types.ts');
-  assert.deepEqual([...ENEMY_KINDS].sort(), Object.keys(starts).sort(), 'full eight-kind fixture');
+  assert.deepEqual([...ENEMY_KINDS].sort(), Object.keys(starts).sort(), 'complete enemy fixture');
   const scene = new THREE.Scene();
   const level = new Level(scene, { id: 'enemy-gameplay', name: 'Enemy gameplay', data: {
     v: 1, name: 'Enemy gameplay', spawn: [0, 1, 8], killY: -30,
@@ -61,11 +61,11 @@ try {
   levels.push(level);
   await level.prepareJungleAssets();
   for (const enemy of level.enemies) {
-    assert.equal(enemy.visual.diagnostics.status, availableKinds.has(enemy.kind) ? 'ready' : 'error',
+    assert.equal(enemy.visual.diagnostics.status, (enemy.kind === 'moa' || availableKinds.has(enemy.kind)) ? 'ready' : 'error',
       `${enemy.kind}: level readiness must include its real or deliberately missing model`);
     if (availableKinds.has(enemy.kind)) assert.ok(enemy.visual.diagnostics.meshes > 0, `${enemy.kind} model did not attach`);
   }
-  const byKind = Object.fromEntries(level.enemies.slice(0, 8).map(e => [e.kind, e]));
+  const byKind = Object.fromEntries(level.enemies.slice(0, ENEMY_KINDS.length).map(e => [e.kind, e]));
   const tick = (dt = 1 / 60) => { level.time += dt; level.updateEnemies(dt); };
   const reset = () => { level.reset(true); level.playerPos.set(1000, 0, 1000); tick(0); };
   reset();
@@ -86,7 +86,7 @@ try {
   near(byKind.floater.group.position.x, .4, 'floater patrol');
   near(byKind.sentry.group.position.x, 0, 'sentry stationary');
   near(byKind.spinner.group.position.x, 0, 'spinner stationary');
-  const zPatrol = level.enemies[8];
+  const zPatrol = level.enemies[ENEMY_KINDS.length];
   near(zPatrol.group.position.z, -29.6, 'rotated patrol uses Z');
   near(zPatrol.group.position.x, 30, 'rotated patrol preserves cross coordinate');
   for (const enemy of [byKind.grunt, zPatrol]) {
@@ -206,7 +206,7 @@ try {
     assert.equal(enemy.visual.diagnostics.status, 'disposed', 'Level did not release visual ownership');
     assert.equal(enemy.group.parent, null, 'disposed enemy remained in Level traversal');
   }
-  console.log(`PASS enemy gameplay: all eight combat identities, patrol/FSM/projectile transitions, real Player spin/recoil, collision extents, death/fling, reset and disposal. ${realAssets ? `Real models loaded: ${[...availableKinds].sort().join(', ')}; source muzzle aligned.` : 'Assets deliberately unavailable; rendering not tested.'}`);
+  console.log(`PASS enemy gameplay: all nine combat identities, patrol/FSM/projectile transitions, real Player spin/recoil, collision extents, death/fling, reset and disposal. ${realAssets ? `Real models loaded: ${[...availableKinds].sort().join(', ')}; source muzzle aligned.` : 'Assets deliberately unavailable; rendering not tested.'}`);
 } finally {
   for (const level of levels) level.dispose();
   await server.close();

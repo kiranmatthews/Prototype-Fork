@@ -1,4 +1,4 @@
-// Render the shipped models, not stand-in drawings. Run against a Vite source server.
+// Render the shipped models, including the original procedural moa. Run against a Vite source server.
 import assert from 'node:assert/strict';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
@@ -11,7 +11,8 @@ try{
   const page=await browser.newPage();page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
   await page.route('**/__enemy-icons',route=>route.fulfill({contentType:'text/html',body:'<!doctype html><title>Enemy model thumbnails</title>'}));
   await page.goto(new URL('__enemy-icons',base).href);
-  const images=await page.evaluate(async()=>{
+  const only=process.argv.find(a=>a.startsWith('--kind='))?.slice(7);
+  const images=await page.evaluate(async only=>{
     const THREE=await import('/node_modules/three/build/three.module.js');
     const {createEnemyVisual}=await import('/src/enemies/runtime.ts');
     const {ENEMY_KINDS}=await import('/src/enemies/types.ts');
@@ -22,7 +23,7 @@ try{
     const sun=new THREE.DirectionalLight(0xffe4ae,1.55);sun.position.set(-3,5,4);scene.add(sun);
     const fill=new THREE.DirectionalLight(0xbfd4ff,.6);fill.position.set(3,2,-2);scene.add(fill);
     const images=[];
-    for(const kind of ENEMY_KINDS){
+    for(const kind of ENEMY_KINDS.filter(kind=>!only||kind===only)){
       const visual=createEnemyVisual(kind);await visual.ready;
       if(visual.diagnostics.status!=='ready')throw Error(JSON.stringify(visual.diagnostics));
       scene.add(visual.group);scene.updateMatrixWorld(true);
@@ -35,9 +36,10 @@ try{
       visual.group.removeFromParent();visual.dispose();
     }
     renderer.dispose();return images;
-  });
+  },only);
   assert.deepEqual(errors,[]);
-  const rows=[];
+  const old=JSON.parse(await readFile(new URL('manifest.json',output),'utf8'));
+  const rows=only?old.icons.filter(row=>row.kind!==only):[];
   for(const image of images){
     const bytes=Buffer.from(image.png.split(',')[1],'base64');
     assert.ok(bytes.length>3000,'model thumbnail must contain rendered artwork');
@@ -45,6 +47,7 @@ try{
     rows.push({kind:image.kind,modelSha256:manifest.enemies.find(e=>e.kind===image.kind).sha256,
       pngSha256:createHash('sha256').update(bytes).digest('hex'),width:256,height:256});
   }
-  await writeFile(new URL('manifest.json',output),JSON.stringify({source:'Shipped enemy GLBs rendered with Three.js',icons:rows},null,2)+'\n');
-  console.log('Rendered all eight shipped enemy models as editor thumbnails.');
+  rows.sort((a,b)=>manifest.enemies.findIndex(e=>e.kind===a.kind)-manifest.enemies.findIndex(e=>e.kind===b.kind));
+  await writeFile(new URL('manifest.json',output),JSON.stringify({source:'Shipped enemy models rendered with Three.js',icons:rows},null,2)+'\n');
+  console.log('Rendered shipped enemy model thumbnails.');
 }finally{await browser.close();}
