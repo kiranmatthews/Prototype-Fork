@@ -324,7 +324,7 @@ for (const p of densifyTreehouseRoute(sourceTrailRoute).slice(1))
 
 export const TREEHOUSE_TRAIL_LEVEL: CustomLevelData = {
   v: 1, name: "Treehouse Trials", spawn: balconySpawn, killY: -30,
-  sky: "day", ocean: TREEHOUSE_TRIALS_OPENING_OCEAN, cameraLookAhead: 12, cameraRig: {camDist:11.5,camHeight:3.8,camPitch:10.5,camFov:49}, jungleAtmosphere: true, jungleDepthFade: false, jungleStyle: "painterly", keepPlayFog: true,
+  sky: "day", ocean: TREEHOUSE_TRIALS_OPENING_OCEAN, cameraAirLift: .7, cameraLookAhead: 12, cameraRig: {camDist:11.5,camHeight:3.8,camPitch:10.5,camFov:49}, jungleAtmosphere: true, jungleDepthFade: false, jungleStyle: "painterly", keepPlayFog: true,
   medalTimes: { gold: 88, silver: 125, bronze: 180 },
   atmosphere: { fallbackRidges:false, fallbackTop:"#348dcc", fallbackBottom:"#b6dce6", fallbackFog:"#b6dce6", fogEnabled: true, fogNear: 62, fogFar: 185, fogColor: "#618e7d",
     ambientSky: "#9fc5c4", ambientGround: "#6c6044", ambientIntensity: 0.98,

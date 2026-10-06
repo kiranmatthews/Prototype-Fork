@@ -53,7 +53,8 @@ to 1944×812 for GPU block alignment.
   passes and 128 lateral wave segments; occlusion skips its passes inland.
 - Foliage LODs dissolve across a 24m distance band instead of switching whole
   cells. A 320m camera range, fog, curved joins and foreground planting hide the
-  distant course. The single follow camera remains continuous after the opening.
+  distant course. The single follow camera remains continuous after the opening. Its 70%
+  airborne vertical follow keeps the rope jump and descent jumps in frame.
 - The 46m halfpipe has separate timber decks, warm coping, trestles, fern
   shoulders and an asymmetric rock arch with measured riding clearance. Roof
   edges are irregular. The broken bridge's single rope spans 25m; its anchors,
@@ -89,7 +90,10 @@ camera rotation is 0.84 degrees per simulation step.
 Focused browser evidence covers 28 outward stair/landing/balcony pushes, 22
 course-edge pushes, walking through all three nonlethal pits, and 81 rays
 against actual rendered stone triangles. Measured sole clearance is 1.99996–
-2.00005cm. The summit gap was found during the close visual review and closed.
+2.00005cm. The summit gap was found during the close visual review and closed. A final
+264-frame native approach/jump/grind/landing review confirms the airborne
+camera correction: projected head stays below NDC Y=0.413 and feet above
+−0.300, with no death or console error.
 The five full-render 1280×720 scene samples (120 rendered frames each) have
 16.7ms medians and 18.0–18.4ms p95 on this desktop. Physical-phone timing and
 thermal performance remain unmeasured. Performance, contacts and boundary
