@@ -1,0 +1,13 @@
+{
+  "generator": "OpenAI built-in imagegen",
+  "source": "tools/treehouse-trials-v3/references/understory-matte.png",
+  "size": [
+    2172,
+    724
+  ],
+  "sourceSha256": "2a87ca8c59129b2cc526727133dda0e181380eb91682bb883cbed36335d13456",
+  "ktxSha256": "cc72fa18e0b1cd8bfbef8f89ec6664fd5a7a5163e69d702a2fd22efdb7251191",
+  "webpSha256": "628fa09ce1c1975f6319c0839e899bbffa11762a42176691288b24f222ca4e64",
+  "mipLevels": 12,
+  "encodedBytes": 1407995
+}

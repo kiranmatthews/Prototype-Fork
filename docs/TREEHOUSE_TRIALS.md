@@ -9,8 +9,10 @@ rope bridge and jungle exit. Crate/enemy placement remains deferred.
 ## Continuous composition
 
 The opening keeps its original framing with one spatially feathered hand-off.
-The rest of the course uses one native follow rig and the ordered, smooth
-camera spine. Eight overlapping per-scene shot volumes were removed. Camera
+The rest of the course uses the native follow rig and the ordered, smooth
+camera spine. The straight downhill has one gently feathered elevated follow
+composition, ending before the first bend, so the preceding dirt lip stays low
+in the view. Eight overlapping per-scene shot volumes were removed. Camera
 profile and open-horizon settings survive native copy/export/import.
 
 The route gains 234m of connecting length, reaching roughly 678m.
@@ -63,7 +65,9 @@ to 1944×812 for GPU block alignment.
 ## Asset recovery and budgets
 
 The existing 33 Meshy models consumed 495 credits in the preceding art pass.
-This revision spends no additional Meshy credits. Near/far meshes, shared
+The dense-enclosure revision adds two original models for 30 more existing
+credits: 35 models and 525 credits across the Treehouse art passes. No credits
+were purchased. Near/far meshes, shared
 atlases, rooted leaf wind, pinned cloth, packed AO and streamed ownership remain.
 The 25-family V2 kit has 80,367 near / 25,706 far triangles and a 61.67MiB
 compressed texture budget. The active standalone matte/wood maps use 13.38MiB
@@ -85,7 +89,7 @@ run in `docs/performance/treehouse-repair-continuous.json` starts at the balcony
 and reaches the gate in 86.37s with no travel warps, deaths or console errors.
 The review controller counter-steers the normal grind balance meter on the
 longer rope; it does not change physics, position or speed. Maximum sampled
-camera rotation is 0.84 degrees per simulation step.
+camera rotation is 1.34 degrees per simulation step in the latest enclosure run.
 
 Focused browser evidence covers 28 outward stair/landing/balcony pushes, 22
 course-edge pushes, walking through all three nonlethal pits, and 81 rays
@@ -110,3 +114,41 @@ Campaign progress retains `treehouse-trail`; menus show “Treehouse Trials.”
 Existing edited local copies remain intact. Restore original in PROJECT when
 an old local snapshot masks the source. Delivery uses the existing main/Pages
 workflow and preserves other chats' changes.
+
+## Dense bush enclosure, 7 October
+
+`src/levels/treehouse-enclosure.ts` adds 375 scenery components: continuous
+rising forest floors, densely filled understory, staggered middle/far trees,
+overhanging boughs, layered matte thickets and cavern planting. Sampling uses
+world metres so the extended joins receive the same density as the set pieces.
+Porch clearances and the intentional coastal water opening remain open. The
+forest recedes through overlapping layers rather than ending at an empty bank.
+
+The bridge approach's inside rock wall and roof now leave room for the actual
+camera path. Old low crowns after the river are reseated on the forest bank;
+the halfpipe's close fern is moved beyond the lens. All playable supports,
+river/climb contacts, barriers, rope, reward positions and movement tuning are
+retained. Camera framing is level data; no new camera runtime is added.
+
+The new thicket and bough have 4,993 / 5,861 near triangles and 1,597 / 1,944 far
+triangles, one atlas apiece, full GPU mipmaps and JPEG fallbacks. Their combined
+compressed texture estimate is 3.34MiB. Four measured stems connect the bough's
+hanging leaves and move with their tip-weighted wind. The built-in ImageGen
+understory matte adds approximately 2MiB. Public hashes and billing live in
+`public/treehouse-trials-v3/provenance.json`; original images and exact prompts
+are in `tools/treehouse-trials-v3/`.
+
+The route was inspected at **154 forward camera stations, five metres apart**
+over the **764.3m ordered route**, plus **60 native left/right camera-peek views**.
+The eight forward and three peek sheets are in `docs/treehouse-enclosure/`.
+These are held composition surveys; the independent continuous native-input
+run proves traversal. That final run finishes in **84.33s**, zero deaths and
+console errors, with a maximum sampled camera turn of **1.34°** per step.
+
+The final six full-render 1280×720 samples have **16.7ms medians** and
+**17.4–18.4ms p95**, after removing redundant background shadow casting. Scene
+texture residency peaks at **125.05MiB** in the moving run. The production
+bundle also passes desktop and 390×844 portrait checks, with working keyboard
+movement and all three new asset kinds loaded. Physical-phone performance is
+unmeasured. Focused level checks and the production build pass; no full suite.
+See `docs/performance/treehouse-enclosure-*.json` for the recorded evidence.

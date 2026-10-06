@@ -18,8 +18,9 @@ import sys
 import uuid
 
 ROOT = Path(__file__).resolve().parents[2]
-HERE = Path(__file__).resolve().parent
-WORK = ROOT / '.img2threejs/treehouse-trials-v2'
+KIT = os.environ.get('TREEHOUSE_ASSET_KIT', 'treehouse-trials-v2')
+HERE = ROOT / 'tools' / KIT
+WORK = ROOT / '.img2threejs' / KIT
 LEDGER = HERE / 'tasks.json'
 SPECS = json.loads((HERE / 'specs.json').read_text())
 

@@ -1,0 +1,4934 @@
+{
+  "spacing": 5,
+  "frames": [
+    {
+      "distance": 0,
+      "p": [
+        -16.97026,
+        8.55,
+        -0.40991
+      ],
+      "camera": [
+        -16.97026,
+        13.778146755890408,
+        14.051428992077705
+      ],
+      "feetY": 8.420000000372525,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 408,
+        "skipped": 0,
+        "draws": 324,
+        "triangles": 837063,
+        "allLodTriangles": 1449648,
+        "cells": 668,
+        "residentCells": 266,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 90.05,
+        "errors": [],
+        "windTime": 0.683833333333334
+      },
+      "filename": "000.png"
+    },
+    {
+      "distance": 5,
+      "p": [
+        -15.122563672232143,
+        7.473193961154163,
+        2.4544563615923822
+      ],
+      "camera": [
+        -15.122563672232143,
+        13.20623691158492,
+        16.915795353670088
+      ],
+      "feetY": 7.8480901560670375,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 408,
+        "skipped": 0,
+        "draws": 324,
+        "triangles": 837063,
+        "allLodTriangles": 1449648,
+        "cells": 668,
+        "residentCells": 266,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 90.05,
+        "errors": [],
+        "windTime": 1.0505000000000013
+      },
+      "filename": "001.png"
+    },
+    {
+      "distance": 10,
+      "p": [
+        -10.55070810052598,
+        5.616241979075374,
+        3.2605990088409715
+      ],
+      "camera": [
+        -10.55070810052598,
+        10.97814675589041,
+        17.721938000918676
+      ],
+      "feetY": 5.620000000372528,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 408,
+        "skipped": 0,
+        "draws": 321,
+        "triangles": 814739,
+        "allLodTriangles": 1449648,
+        "cells": 668,
+        "residentCells": 266,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 90.05,
+        "errors": [],
+        "windTime": 1.4338333333333333
+      },
+      "filename": "002.png"
+    },
+    {
+      "distance": 15,
+      "p": [
+        -11.309812625242254,
+        3.7592877645504794,
+        7.7995163935380685
+      ],
+      "camera": [
+        -11.309812625242254,
+        8.80689730735008,
+        22.260855385615773
+      ],
+      "feetY": 3.4487505518322,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 408,
+        "skipped": 0,
+        "draws": 318,
+        "triangles": 791612,
+        "allLodTriangles": 1449648,
+        "cells": 668,
+        "residentCells": 266,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 90.05,
+        "errors": [],
+        "windTime": 1.8004999999999987
+      },
+      "filename": "003.png"
+    },
+    {
+      "distance": 20,
+      "p": [
+        -9.503292592809125,
+        1.9357912497339511,
+        10.553270262797907
+      ],
+      "camera": [
+        -9.503292592809125,
+        7.670784298272431,
+        25.014609254875612
+      ],
+      "feetY": 2.3126375427545507,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 408,
+        "skipped": 0,
+        "draws": 318,
+        "triangles": 791612,
+        "allLodTriangles": 1449648,
+        "cells": 668,
+        "residentCells": 266,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 90.05,
+        "errors": [],
+        "windTime": 2.1504999999999974
+      },
+      "filename": "004.png"
+    },
+    {
+      "distance": 25,
+      "p": [
+        -4.904759753738441,
+        0.1480491960019763,
+        11.364118015034238
+      ],
+      "camera": [
+        -4.904759753738441,
+        5.4981467558904065,
+        25.825457007111943
+      ],
+      "feetY": 0.14000000037252547,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 408,
+        "skipped": 0,
+        "draws": 317,
+        "triangles": 782338,
+        "allLodTriangles": 1449648,
+        "cells": 668,
+        "residentCells": 266,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 90.05,
+        "errors": [],
+        "windTime": 2.4838333333333296
+      },
+      "filename": "005.png"
+    },
+    {
+      "distance": 30,
+      "p": [
+        -0.2757874262256994,
+        0.026248024665987246,
+        9.51989462455921
+      ],
+      "camera": [
+        -0.2757874262256994,
+        5.37814675551788,
+        23.981233616636914
+      ],
+      "feetY": 0.02,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 408,
+        "skipped": 0,
+        "draws": 318,
+        "triangles": 810648,
+        "allLodTriangles": 1449648,
+        "cells": 668,
+        "residentCells": 266,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 90.05,
+        "errors": [],
+        "windTime": 2.8338333333333283
+      },
+      "filename": "006.png"
+    },
+    {
+      "distance": 35,
+      "p": [
+        4.482734311462155,
+        0,
+        8.004933053867955
+      ],
+      "camera": [
+        4.482734311462155,
+        5.37814675551788,
+        22.466272045945658
+      ],
+      "feetY": 0.02,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 408,
+        "skipped": 0,
+        "draws": 318,
+        "triangles": 811907,
+        "allLodTriangles": 1449648,
+        "cells": 668,
+        "residentCells": 266,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 90.05,
+        "errors": [],
+        "windTime": 3.183833333333327
+      },
+      "filename": "007.png"
+    },
+    {
+      "distance": 40,
+      "p": [
+        9.341988468235513,
+        0,
+        7
+      ],
+      "camera": [
+        9.341988468235513,
+        5.37814675551788,
+        21.461338992077707
+      ],
+      "feetY": 0.02,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 408,
+        "skipped": 0,
+        "draws": 317,
+        "triangles": 816605,
+        "allLodTriangles": 1449648,
+        "cells": 668,
+        "residentCells": 266,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 90.05,
+        "errors": [],
+        "windTime": 3.533833333333326
+      },
+      "filename": "008.png"
+    },
+    {
+      "distance": 45,
+      "p": [
+        14.341988468235513,
+        0,
+        7
+      ],
+      "camera": [
+        14.341988468235513,
+        5.37814675551788,
+        21.461338992077707
+      ],
+      "feetY": 0.02,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 408,
+        "skipped": 0,
+        "draws": 318,
+        "triangles": 828390,
+        "allLodTriangles": 1449648,
+        "cells": 668,
+        "residentCells": 266,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 90.05,
+        "errors": [],
+        "windTime": 3.900499999999991
+      },
+      "filename": "009.png"
+    },
+    {
+      "distance": 50,
+      "p": [
+        19.341988468235513,
+        0,
+        7
+      ],
+      "camera": [
+        19.341988468235513,
+        5.37814675551788,
+        21.461338992077707
+      ],
+      "feetY": 0.02,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 410,
+        "skipped": 0,
+        "draws": 318,
+        "triangles": 828390,
+        "allLodTriangles": 1455808,
+        "cells": 668,
+        "residentCells": 267,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 90.05,
+        "errors": [],
+        "windTime": 4.400499999999989
+      },
+      "filename": "010.png"
+    },
+    {
+      "distance": 55,
+      "p": [
+        24.28291104241675,
+        0,
+        6.286181492930542
+      ],
+      "camera": [
+        23.106225862806898,
+        5.311818498331546,
+        19.541209695707096
+      ],
+      "feetY": 0.02,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 410,
+        "skipped": 0,
+        "draws": 321,
+        "triangles": 854760,
+        "allLodTriangles": 1455808,
+        "cells": 668,
+        "residentCells": 267,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 90.05,
+        "errors": [],
+        "windTime": 4.867166666666654
+      },
+      "filename": "011.png"
+    },
+    {
+      "distance": 60,
+      "p": [
+        28.54502787786294,
+        0,
+        3.9639776977096486
+      ],
+      "camera": [
+        25.858736647247483,
+        5.163656206578859,
+        15.61570014280674
+      ],
+      "feetY": 0.02,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 421,
+        "skipped": 0,
+        "draws": 327,
+        "triangles": 882870,
+        "allLodTriangles": 1501317,
+        "cells": 668,
+        "residentCells": 273,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 90.05,
+        "errors": [],
+        "windTime": 5.250499999999986
+      },
+      "filename": "012.png"
+    },
+    {
+      "distance": 65,
+      "p": [
+        31.83007391509618,
+        0,
+        0.3398521698076413
+      ],
+      "camera": [
+        29.451505250655522,
+        5.040217197482089,
+        11.307432394885124
+      ],
+      "feetY": 0.02,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 424,
+        "skipped": 0,
+        "draws": 331,
+        "triangles": 903297,
+        "allLodTriangles": 1516940,
+        "cells": 668,
+        "residentCells": 275,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 90.05,
+        "errors": [],
+        "windTime": 5.617166666666652
+      },
+      "filename": "013.png"
+    },
+    {
+      "distance": 70,
+      "p": [
+        34.024314243284756,
+        0,
+        -4.1458854597085475
+      ],
+      "camera": [
+        32.92889422826645,
+        4.971926675334345,
+        6.51847673963008
+      ],
+      "feetY": 0.02,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 428,
+        "skipped": 0,
+        "draws": 336,
+        "triangles": 918453,
+        "allLodTriangles": 1540149,
+        "cells": 668,
+        "residentCells": 278,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 90.05,
+        "errors": [],
+        "windTime": 6.033833333333317
+      },
+      "filename": "014.png"
+    },
+    {
+      "distance": 75,
+      "p": [
+        34.84630917981154,
+        0,
+        -9.077855078869266
+      ],
+      "camera": [
+        34.659754461272975,
+        4.951750890254282,
+        1.4668792265781205
+      ],
+      "feetY": 0.02,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 434,
+        "skipped": 0,
+        "draws": 338,
+        "triangles": 939244,
+        "allLodTriangles": 1567366,
+        "cells": 668,
+        "residentCells": 283,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 90.05,
+        "errors": [],
+        "windTime": 6.567166666666648
+      },
+      "filename": "015.png"
+    },
+    {
+      "distance": 80,
+      "p": [
+        35,
+        0,
+        -14.065135237706855
+      ],
+      "camera": [
+        35,
+        4.948381241149473,
+        -3.5494804975529513
+      ],
+      "feetY": 0.02,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 438,
+        "skipped": 0,
+        "draws": 342,
+        "triangles": 970950,
+        "allLodTriangles": 1585928,
+        "cells": 668,
+        "residentCells": 287,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 90.05,
+        "errors": [],
+        "windTime": 6.95049999999998
+      },
+      "filename": "016.png"
+    },
+    {
+      "distance": 85,
+      "p": [
+        35,
+        0,
+        -19.065135237706855
+      ],
+      "camera": [
+        35,
+        4.948381241149473,
+        -8.54948049755295
+      ],
+      "feetY": 0.02,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 444,
+        "skipped": 0,
+        "draws": 352,
+        "triangles": 1009103,
+        "allLodTriangles": 1606260,
+        "cells": 668,
+        "residentCells": 291,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 90.05,
+        "errors": [],
+        "windTime": 7.350499999999979
+      },
+      "filename": "017.png"
+    },
+    {
+      "distance": 90,
+      "p": [
+        35,
+        0,
+        -24.065135237706855
+      ],
+      "camera": [
+        35,
+        4.948381241149473,
+        -13.54948049755295
+      ],
+      "feetY": 0.02,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 444,
+        "skipped": 0,
+        "draws": 352,
+        "triangles": 1019741,
+        "allLodTriangles": 1606260,
+        "cells": 668,
+        "residentCells": 291,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 90.05,
+        "errors": [],
+        "windTime": 7.733833333333311
+      },
+      "filename": "018.png"
+    },
+    {
+      "distance": 95,
+      "p": [
+        35,
+        0,
+        -29.065135237706855
+      ],
+      "camera": [
+        35,
+        4.948381241149473,
+        -18.549480497552953
+      ],
+      "feetY": 0.02,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 445,
+        "skipped": 0,
+        "draws": 348,
+        "triangles": 1016212,
+        "allLodTriangles": 1612850,
+        "cells": 668,
+        "residentCells": 292,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 90.05,
+        "errors": [],
+        "windTime": 8.11716666666665
+      },
+      "filename": "019.png"
+    },
+    {
+      "distance": 100,
+      "p": [
+        35,
+        0,
+        -34.065135237706855
+      ],
+      "camera": [
+        35,
+        4.914000000000001,
+        -23.865135237706856
+      ],
+      "feetY": 0.02,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 447,
+        "skipped": 0,
+        "draws": 359,
+        "triangles": 1088442,
+        "allLodTriangles": 1627026,
+        "cells": 668,
+        "residentCells": 294,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 90.05,
+        "errors": [],
+        "windTime": 8.500500000000002
+      },
+      "filename": "020.png"
+    },
+    {
+      "distance": 105,
+      "p": [
+        35,
+        0,
+        -39.065135237706855
+      ],
+      "camera": [
+        35,
+        4.914000000000001,
+        -28.865135237706856
+      ],
+      "feetY": 0.02,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 454,
+        "skipped": 0,
+        "draws": 362,
+        "triangles": 1104456,
+        "allLodTriangles": 1650730,
+        "cells": 668,
+        "residentCells": 297,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 90.05,
+        "errors": [],
+        "windTime": 8.98383333333336
+      },
+      "filename": "021.png"
+    },
+    {
+      "distance": 110,
+      "p": [
+        35,
+        0,
+        -44.065135237706855
+      ],
+      "camera": [
+        35,
+        4.914000000000001,
+        -33.86513523770685
+      ],
+      "feetY": 0.02,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 455,
+        "skipped": 0,
+        "draws": 360,
+        "triangles": 1100382,
+        "allLodTriangles": 1653173,
+        "cells": 668,
+        "residentCells": 298,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 47,
+        "textureMiB": 90.05,
+        "errors": [],
+        "windTime": 9.400500000000047
+      },
+      "filename": "022.png"
+    },
+    {
+      "distance": 115,
+      "p": [
+        35,
+        0,
+        -49.065135237706855
+      ],
+      "camera": [
+        35,
+        4.9145202717754595,
+        -38.86528740467582
+      ],
+      "feetY": 0.02,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 464,
+        "skipped": 0,
+        "draws": 365,
+        "triangles": 1125040,
+        "allLodTriangles": 1691568,
+        "cells": 668,
+        "residentCells": 305,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 105.05,
+        "errors": [],
+        "windTime": 10.18383333333342
+      },
+      "filename": "023.png"
+    },
+    {
+      "distance": 120,
+      "p": [
+        35,
+        0,
+        -54.065135237706855
+      ],
+      "camera": [
+        35,
+        7.006864047716782,
+        -44.47724758671039
+      ],
+      "feetY": 0.02,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 470,
+        "skipped": 0,
+        "draws": 373,
+        "triangles": 1185827,
+        "allLodTriangles": 1707913,
+        "cells": 668,
+        "residentCells": 307,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 105.05,
+        "errors": [],
+        "windTime": 10.58383333333344
+      },
+      "filename": "024.png"
+    },
+    {
+      "distance": 125,
+      "p": [
+        35,
+        0,
+        -59.065135237706855
+      ],
+      "camera": [
+        35,
+        9.019508649014718,
+        -50.06589767889091
+      ],
+      "feetY": 0.02,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 478,
+        "skipped": 0,
+        "draws": 381,
+        "triangles": 1223224,
+        "allLodTriangles": 1751960,
+        "cells": 668,
+        "residentCells": 311,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 105.05,
+        "errors": [],
+        "windTime": 10.950500000000124
+      },
+      "filename": "025.png"
+    },
+    {
+      "distance": 130,
+      "p": [
+        35,
+        -0.8517640819244799,
+        -63.97489904898091
+      ],
+      "camera": [
+        35,
+        8.05417599695489,
+        -54.97566149016497
+      ],
+      "feetY": -0.9453326520598284,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 485,
+        "skipped": 0,
+        "draws": 380,
+        "triangles": 1238603,
+        "allLodTriangles": 1778694,
+        "cells": 668,
+        "residentCells": 316,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 106.71,
+        "errors": [],
+        "windTime": 11.367166666666812
+      },
+      "filename": "026.png"
+    },
+    {
+      "distance": 135,
+      "p": [
+        35,
+        -1.8994095255788475,
+        -68.86391111936796
+      ],
+      "camera": [
+        35,
+        7.769508649014718,
+        -59.86467356055201
+      ],
+      "feetY": -1.23,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 486,
+        "skipped": 0,
+        "draws": 382,
+        "triangles": 1260938,
+        "allLodTriangles": 1782141,
+        "cells": 668,
+        "residentCells": 317,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 106.71,
+        "errors": [],
+        "windTime": 11.783833333333499
+      },
+      "filename": "027.png"
+    },
+    {
+      "distance": 140,
+      "p": [
+        35,
+        -2.947054969233214,
+        -73.752923189755
+      ],
+      "camera": [
+        35,
+        6.065394353165715,
+        -64.75368563093906
+      ],
+      "feetY": -2.9341142958490027,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 491,
+        "skipped": 0,
+        "draws": 388,
+        "triangles": 1279319,
+        "allLodTriangles": 1809802,
+        "cells": 668,
+        "residentCells": 321,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 106.71,
+        "errors": [],
+        "windTime": 12.167166666666851
+      },
+      "filename": "028.png"
+    },
+    {
+      "distance": 145,
+      "p": [
+        35,
+        -2.592152191347161,
+        -78.54089957427195
+      ],
+      "camera": [
+        35,
+        6.096971093774929,
+        -69.54166201545601
+      ],
+      "feetY": -2.9025375552397885,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 493,
+        "skipped": 0,
+        "draws": 390,
+        "triangles": 1295882,
+        "allLodTriangles": 1825092,
+        "cells": 668,
+        "residentCells": 323,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 106.71,
+        "errors": [],
+        "windTime": 12.550500000000204
+      },
+      "filename": "029.png"
+    },
+    {
+      "distance": 150,
+      "p": [
+        35,
+        -5.168164720336799,
+        -82.7242501535785
+      ],
+      "camera": [
+        35,
+        3.861568635865063,
+        -73.72501259476256
+      ],
+      "feetY": -5.137940013149654,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 496,
+        "skipped": 0,
+        "draws": 395,
+        "triangles": 1313586,
+        "allLodTriangles": 1837564,
+        "cells": 668,
+        "residentCells": 326,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 106.71,
+        "errors": [],
+        "windTime": 12.950500000000224
+      },
+      "filename": "030.png"
+    },
+    {
+      "distance": 155,
+      "p": [
+        35,
+        -5.636682434997059,
+        -87.70225087184376
+      ],
+      "camera": [
+        35,
+        3.4492835530793835,
+        -78.70301331302782
+      ],
+      "feetY": -5.550225095935334,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 499,
+        "skipped": 0,
+        "draws": 401,
+        "triangles": 1327425,
+        "allLodTriangles": 1853371,
+        "cells": 668,
+        "residentCells": 329,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 106.71,
+        "errors": [],
+        "windTime": 13.317166666666909
+      },
+      "filename": "031.png"
+    },
+    {
+      "distance": 160,
+      "p": [
+        35,
+        -6.10520014965732,
+        -92.68025159010902
+      ],
+      "camera": [
+        35,
+        2.951483484921547,
+        -83.68101403129309
+      ],
+      "feetY": -6.04802516409317,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 507,
+        "skipped": 0,
+        "draws": 405,
+        "triangles": 1369470,
+        "allLodTriangles": 1880255,
+        "cells": 668,
+        "residentCells": 334,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 106.71,
+        "errors": [],
+        "windTime": 13.700500000000261
+      },
+      "filename": "032.png"
+    },
+    {
+      "distance": 165,
+      "p": [
+        35,
+        -6.573717864317581,
+        -97.6582523083743
+      ],
+      "camera": [
+        35,
+        2.453683373008926,
+        -88.65901474955837
+      ],
+      "feetY": -6.545825276005791,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 521,
+        "skipped": 0,
+        "draws": 424,
+        "triangles": 1433429,
+        "allLodTriangles": 1934874,
+        "cells": 668,
+        "residentCells": 344,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 106.71,
+        "errors": [],
+        "windTime": 14.133833333333616
+      },
+      "filename": "033.png"
+    },
+    {
+      "distance": 170,
+      "p": [
+        35,
+        -5.9837205834940255,
+        -102.58139708252988
+      ],
+      "camera": [
+        35,
+        3.035788065520693,
+        -93.58215952371394
+      ],
+      "feetY": -5.963720583494024,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 530,
+        "skipped": 0,
+        "draws": 430,
+        "triangles": 1450068,
+        "allLodTriangles": 1962353,
+        "cells": 668,
+        "residentCells": 349,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 106.71,
+        "errors": [],
+        "windTime": 14.517166666666968
+      },
+      "filename": "034.png"
+    },
+    {
+      "distance": 175,
+      "p": [
+        35,
+        -8.701355839247327,
+        -106.614652695803
+      ],
+      "camera": [
+        35,
+        0.04203507818486951,
+        -97.61541513698707
+      ],
+      "feetY": -8.957473570829848,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 535,
+        "skipped": 0,
+        "draws": 436,
+        "triangles": 1468093,
+        "allLodTriangles": 1991111,
+        "cells": 668,
+        "residentCells": 353,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 106.71,
+        "errors": [],
+        "windTime": 14.917166666666988
+      },
+      "filename": "035.png"
+    },
+    {
+      "distance": 180,
+      "p": [
+        35,
+        -9.378657635855781,
+        -111.49655942578741
+      ],
+      "camera": [
+        35,
+        -0.3402161134093342,
+        -102.49732186697148
+      ],
+      "feetY": -9.339724762424051,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 550,
+        "skipped": 0,
+        "draws": 445,
+        "triangles": 1509537,
+        "allLodTriangles": 2073202,
+        "cells": 668,
+        "residentCells": 361,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 106.71,
+        "errors": [],
+        "windTime": 15.317166666667008
+      },
+      "filename": "036.png"
+    },
+    {
+      "distance": 185,
+      "p": [
+        35,
+        -9.79822523203455,
+        -116.47892463041029
+      ],
+      "camera": [
+        35,
+        -0.7643993668440361,
+        -107.47968707159436
+      ],
+      "feetY": -9.763908015858753,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 561,
+        "skipped": 0,
+        "draws": 458,
+        "triangles": 1555850,
+        "allLodTriangles": 2117663,
+        "cells": 668,
+        "residentCells": 367,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 106.71,
+        "errors": [],
+        "windTime": 15.717166666667028
+      },
+      "filename": "037.png"
+    },
+    {
+      "distance": 190,
+      "p": [
+        35,
+        -10.21779282821332,
+        -121.46128983503316
+      ],
+      "camera": [
+        35,
+        -1.1914590639417861,
+        -112.46205227621722
+      ],
+      "feetY": -10.190967712956503,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 565,
+        "skipped": 0,
+        "draws": 467,
+        "triangles": 1588279,
+        "allLodTriangles": 2137062,
+        "cells": 668,
+        "residentCells": 370,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 106.71,
+        "errors": [],
+        "windTime": 16.200500000000364
+      },
+      "filename": "038.png"
+    },
+    {
+      "distance": 195,
+      "p": [
+        35,
+        -10.512684128783665,
+        -126.43657935608168
+      ],
+      "camera": [
+        35,
+        -1.4931754797689498,
+        -117.43734179726574
+      ],
+      "feetY": -10.492684128783667,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 565,
+        "skipped": 0,
+        "draws": 467,
+        "triangles": 1587573,
+        "allLodTriangles": 2137062,
+        "cells": 668,
+        "residentCells": 370,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 106.71,
+        "errors": [],
+        "windTime": 16.60050000000034
+      },
+      "filename": "039.png"
+    },
+    {
+      "distance": 200,
+      "p": [
+        35,
+        -10.653339507185251,
+        -131.06667438398156
+      ],
+      "camera": [
+        35,
+        -1.5249362847617585,
+        -122.06743682516563
+      ],
+      "feetY": -10.524444933776476,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 569,
+        "skipped": 0,
+        "draws": 468,
+        "triangles": 1595722,
+        "allLodTriangles": 2164637,
+        "cells": 668,
+        "residentCells": 372,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 106.71,
+        "errors": [],
+        "windTime": 17.00050000000032
+      },
+      "filename": "040.png"
+    },
+    {
+      "distance": 205,
+      "p": [
+        35,
+        -13.123733902511646,
+        -135.23733902511646
+      ],
+      "camera": [
+        34.988292917859404,
+        -4.604046476682338,
+        -126.08473053692464
+      ],
+      "feetY": -13.078987123484342,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 577,
+        "skipped": 0,
+        "draws": 473,
+        "triangles": 1609633,
+        "allLodTriangles": 2204753,
+        "cells": 668,
+        "residentCells": 377,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 106.71,
+        "errors": [],
+        "windTime": 17.400500000000296
+      },
+      "filename": "041.png"
+    },
+    {
+      "distance": 210,
+      "p": [
+        35,
+        -13.62125249761664,
+        -140.2125249761664
+      ],
+      "camera": [
+        32.92691967250316,
+        -7.852347041042911,
+        -130.5046501896706
+      ],
+      "feetY": -13.5255030088822,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 579,
+        "skipped": 0,
+        "draws": 478,
+        "triangles": 1613384,
+        "allLodTriangles": 2210059,
+        "cells": 668,
+        "residentCells": 378,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 106.71,
+        "errors": [],
+        "windTime": 17.800500000000273
+      },
+      "filename": "042.png"
+    },
+    {
+      "distance": 215,
+      "p": [
+        35.50661900644501,
+        -14,
+        -145.08078721374935
+      ],
+      "camera": [
+        31.03976325630254,
+        -9.086,
+        -135.91087992373713
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 581,
+        "skipped": 0,
+        "draws": 476,
+        "triangles": 1602704,
+        "allLodTriangles": 2220725,
+        "cells": 668,
+        "residentCells": 380,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 106.71,
+        "errors": [],
+        "windTime": 18.233833333333582
+      },
+      "filename": "043.png"
+    },
+    {
+      "distance": 220,
+      "p": [
+        37.628788387598604,
+        -14,
+        -149.6080818935437
+      ],
+      "camera": [
+        32.97069516944701,
+        -9.086,
+        -140.53382337997851
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 586,
+        "skipped": 0,
+        "draws": 479,
+        "triangles": 1597482,
+        "allLodTriangles": 2245666,
+        "cells": 668,
+        "residentCells": 385,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 106.71,
+        "errors": [],
+        "windTime": 18.63383333333356
+      },
+      "filename": "044.png"
+    },
+    {
+      "distance": 225,
+      "p": [
+        39.905580171794895,
+        -14,
+        -154.05930699984464
+      ],
+      "camera": [
+        35.23103101320585,
+        -9.086,
+        -144.993514692278
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 620,
+        "skipped": 0,
+        "draws": 485,
+        "triangles": 1626933,
+        "allLodTriangles": 2367880,
+        "cells": 668,
+        "residentCells": 395,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 106.71,
+        "errors": [],
+        "windTime": 19.01716666666687
+      },
+      "filename": "045.png"
+    },
+    {
+      "distance": 230,
+      "p": [
+        42.19702583776992,
+        -14,
+        -158.50332283688712
+      ],
+      "camera": [
+        37.522476679180876,
+        -9.086,
+        -149.4375305293205
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 627,
+        "skipped": 0,
+        "draws": 493,
+        "triangles": 1639871,
+        "allLodTriangles": 2386421,
+        "cells": 668,
+        "residentCells": 400,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 61,
+        "textureMiB": 111.71,
+        "errors": [],
+        "windTime": 19.550500000000174
+      },
+      "filename": "046.png"
+    },
+    {
+      "distance": 235,
+      "p": [
+        44.48847150374495,
+        -14,
+        -162.9473386739296
+      ],
+      "camera": [
+        39.813922345155895,
+        -9.086,
+        -153.88154636636298
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 636,
+        "skipped": 0,
+        "draws": 502,
+        "triangles": 1662495,
+        "allLodTriangles": 2439258,
+        "cells": 668,
+        "residentCells": 408,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 61,
+        "textureMiB": 111.71,
+        "errors": [],
+        "windTime": 19.95050000000015
+      },
+      "filename": "047.png"
+    },
+    {
+      "distance": 240,
+      "p": [
+        46.77991716971997,
+        -14,
+        -167.39135451097206
+      ],
+      "camera": [
+        42.16492714127398,
+        -9.086,
+        -158.29509885068282
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 639,
+        "skipped": 0,
+        "draws": 502,
+        "triangles": 1662789,
+        "allLodTriangles": 2452250,
+        "cells": 668,
+        "residentCells": 410,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 61,
+        "textureMiB": 111.71,
+        "errors": [],
+        "windTime": 20.350500000000128
+      },
+      "filename": "048.png"
+    },
+    {
+      "distance": 245,
+      "p": [
+        49.071362835695,
+        -14,
+        -171.83537034801455
+      ],
+      "camera": [
+        44.64806958300212,
+        -9.086,
+        -162.64437057646185
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 648,
+        "skipped": 0,
+        "draws": 498,
+        "triangles": 1617930,
+        "allLodTriangles": 2489746,
+        "cells": 668,
+        "residentCells": 414,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 61,
+        "textureMiB": 111.71,
+        "errors": [],
+        "windTime": 20.73383333333344
+      },
+      "filename": "049.png"
+    },
+    {
+      "distance": 250,
+      "p": [
+        51.275984773036214,
+        -14,
+        -176.32210084914394
+      ],
+      "camera": [
+        49.27468624548012,
+        -9.086,
+        -166.32036079035407
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 657,
+        "skipped": 0,
+        "draws": 503,
+        "triangles": 1634664,
+        "allLodTriangles": 2539638,
+        "cells": 668,
+        "residentCells": 419,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 61,
+        "textureMiB": 111.71,
+        "errors": [],
+        "windTime": 21.133833333333417
+      },
+      "filename": "050.png"
+    },
+    {
+      "distance": 255,
+      "p": [
+        53,
+        -14,
+        -180.9380828828408
+      ],
+      "camera": [
+        53,
+        -9.086,
+        -170.7380828828408
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 659,
+        "skipped": 0,
+        "draws": 508,
+        "triangles": 1645349,
+        "allLodTriangles": 2544524,
+        "cells": 668,
+        "residentCells": 420,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 61,
+        "textureMiB": 111.71,
+        "errors": [],
+        "windTime": 21.55050000000006
+      },
+      "filename": "051.png"
+    },
+    {
+      "distance": 260,
+      "p": [
+        53,
+        -14,
+        -185.9380828828408
+      ],
+      "camera": [
+        53,
+        -9.086,
+        -175.7380828828408
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 668,
+        "skipped": 0,
+        "draws": 512,
+        "triangles": 1641961,
+        "allLodTriangles": 2603845,
+        "cells": 668,
+        "residentCells": 426,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 61,
+        "textureMiB": 111.71,
+        "errors": [],
+        "windTime": 21.967166666666703
+      },
+      "filename": "052.png"
+    },
+    {
+      "distance": 265,
+      "p": [
+        53,
+        -14,
+        -190.9380828828408
+      ],
+      "camera": [
+        53,
+        -9.086,
+        -180.7380828828408
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 671,
+        "skipped": 0,
+        "draws": 517,
+        "triangles": 1616627,
+        "allLodTriangles": 2617214,
+        "cells": 668,
+        "residentCells": 429,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 61,
+        "textureMiB": 111.71,
+        "errors": [],
+        "windTime": 22.433833333333343
+      },
+      "filename": "053.png"
+    },
+    {
+      "distance": 270,
+      "p": [
+        53,
+        -14,
+        -195.9380828828408
+      ],
+      "camera": [
+        53,
+        -9.086,
+        -185.7380828828408
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 678,
+        "skipped": 0,
+        "draws": 525,
+        "triangles": 1626050,
+        "allLodTriangles": 2644086,
+        "cells": 668,
+        "residentCells": 433,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 61,
+        "textureMiB": 111.71,
+        "errors": [],
+        "windTime": 22.83383333333332
+      },
+      "filename": "054.png"
+    },
+    {
+      "distance": 275,
+      "p": [
+        53,
+        -13.939929886493532,
+        -200.93615761308783
+      ],
+      "camera": [
+        53,
+        -9.086000000000002,
+        -190.73615761308784
+      ],
+      "feetY": -13.980000000000004,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 683,
+        "skipped": 0,
+        "draws": 530,
+        "triangles": 1632607,
+        "allLodTriangles": 2666070,
+        "cells": 668,
+        "residentCells": 438,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 61,
+        "textureMiB": 111.71,
+        "errors": [],
+        "windTime": 23.233833333333298
+      },
+      "filename": "055.png"
+    },
+    {
+      "distance": 280,
+      "p": [
+        53,
+        -13.619755013860978,
+        -205.92589588788087
+      ],
+      "camera": [
+        53,
+        -9.086,
+        -195.72589588788088
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 686,
+        "skipped": 0,
+        "draws": 531,
+        "triangles": 1615756,
+        "allLodTriangles": 2688946,
+        "cells": 668,
+        "residentCells": 441,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 61,
+        "textureMiB": 111.71,
+        "errors": [],
+        "windTime": 23.61716666666661
+      },
+      "filename": "056.png"
+    },
+    {
+      "distance": 285,
+      "p": [
+        53,
+        -13.299580141228423,
+        -210.9156341626739
+      ],
+      "camera": [
+        53,
+        -9.086,
+        -200.71563416267392
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 696,
+        "skipped": 0,
+        "draws": 546,
+        "triangles": 1646464,
+        "allLodTriangles": 2743491,
+        "cells": 668,
+        "residentCells": 448,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 61,
+        "textureMiB": 111.71,
+        "errors": [],
+        "windTime": 24.017166666666586
+      },
+      "filename": "057.png"
+    },
+    {
+      "distance": 290,
+      "p": [
+        53,
+        -13.480596027856937,
+        -215.9053723542777
+      ],
+      "camera": [
+        53,
+        -9.086,
+        -205.7053723542777
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 703,
+        "skipped": 0,
+        "draws": 549,
+        "triangles": 1630178,
+        "allLodTriangles": 2768760,
+        "cells": 668,
+        "residentCells": 451,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 61,
+        "textureMiB": 111.71,
+        "errors": [],
+        "windTime": 24.400499999999898
+      },
+      "filename": "058.png"
+    },
+    {
+      "distance": 295,
+      "p": [
+        53,
+        -13.800772556915424,
+        -220.8951105227831
+      ],
+      "camera": [
+        53,
+        -9.086,
+        -210.69511052278312
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 715,
+        "skipped": 0,
+        "draws": 562,
+        "triangles": 1679375,
+        "allLodTriangles": 2833690,
+        "cells": 668,
+        "residentCells": 458,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 61,
+        "textureMiB": 111.71,
+        "errors": [],
+        "windTime": 24.800499999999875
+      },
+      "filename": "059.png"
+    },
+    {
+      "distance": 300,
+      "p": [
+        53,
+        -13.932211646936874,
+        -225.89236741918035
+      ],
+      "camera": [
+        53,
+        -9.086,
+        -215.69236741918036
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 719,
+        "skipped": 0,
+        "draws": 560,
+        "triangles": 1664103,
+        "allLodTriangles": 2844829,
+        "cells": 668,
+        "residentCells": 461,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 61,
+        "textureMiB": 111.71,
+        "errors": [],
+        "windTime": 25.217166666666518
+      },
+      "filename": "060.png"
+    },
+    {
+      "distance": 305,
+      "p": [
+        53,
+        -13.974675715014842,
+        -230.89218101514535
+      ],
+      "camera": [
+        53,
+        -9.085999999999999,
+        -220.69218101514537
+      ],
+      "feetY": -13.979999999999997,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 719,
+        "skipped": 0,
+        "draws": 564,
+        "triangles": 1675823,
+        "allLodTriangles": 2844829,
+        "cells": 668,
+        "residentCells": 461,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 61,
+        "textureMiB": 111.71,
+        "errors": [],
+        "windTime": 25.617166666666495
+      },
+      "filename": "061.png"
+    },
+    {
+      "distance": 310,
+      "p": [
+        53,
+        -14,
+        -235.89207783848548
+      ],
+      "camera": [
+        53,
+        -9.086,
+        -225.6920778384855
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 725,
+        "skipped": 0,
+        "draws": 572,
+        "triangles": 1697233,
+        "allLodTriangles": 2869894,
+        "cells": 668,
+        "residentCells": 467,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 65,
+        "textureMiB": 120.05,
+        "errors": [],
+        "windTime": 26.233833333333127
+      },
+      "filename": "062.png"
+    },
+    {
+      "distance": 315,
+      "p": [
+        53,
+        -14,
+        -240.89207783848548
+      ],
+      "camera": [
+        53,
+        -9.086,
+        -230.6920778384855
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 729,
+        "skipped": 0,
+        "draws": 574,
+        "triangles": 1699979,
+        "allLodTriangles": 2882409,
+        "cells": 668,
+        "residentCells": 470,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 69,
+        "textureMiB": 123.38,
+        "errors": [],
+        "windTime": 26.65049999999977
+      },
+      "filename": "063.png"
+    },
+    {
+      "distance": 320,
+      "p": [
+        53,
+        -14,
+        -245.89207783848548
+      ],
+      "camera": [
+        53,
+        -9.086,
+        -235.6920778384855
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 734,
+        "skipped": 0,
+        "draws": 570,
+        "triangles": 1682015,
+        "allLodTriangles": 2897508,
+        "cells": 668,
+        "residentCells": 475,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 71,
+        "textureMiB": 125.05,
+        "errors": [],
+        "windTime": 27.100499999999744
+      },
+      "filename": "064.png"
+    },
+    {
+      "distance": 325,
+      "p": [
+        53,
+        -14,
+        -250.89207783848548
+      ],
+      "camera": [
+        53,
+        -9.086,
+        -240.6920778384855
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 739,
+        "skipped": 0,
+        "draws": 575,
+        "triangles": 1683990,
+        "allLodTriangles": 2907636,
+        "cells": 668,
+        "residentCells": 479,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 71,
+        "textureMiB": 125.05,
+        "errors": [],
+        "windTime": 27.50049999999972
+      },
+      "filename": "065.png"
+    },
+    {
+      "distance": 330,
+      "p": [
+        53,
+        -14,
+        -255.89207783848548
+      ],
+      "camera": [
+        53,
+        -9.086,
+        -245.6920778384855
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 743,
+        "skipped": 0,
+        "draws": 576,
+        "triangles": 1694527,
+        "allLodTriangles": 2924270,
+        "cells": 668,
+        "residentCells": 481,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 71,
+        "textureMiB": 125.05,
+        "errors": [],
+        "windTime": 27.93383333333303
+      },
+      "filename": "066.png"
+    },
+    {
+      "distance": 335,
+      "p": [
+        53,
+        -14,
+        -260.8920778384855
+      ],
+      "camera": [
+        53,
+        -9.086,
+        -250.6920778384855
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 748,
+        "skipped": 0,
+        "draws": 583,
+        "triangles": 1708484,
+        "allLodTriangles": 2940261,
+        "cells": 668,
+        "residentCells": 486,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 71,
+        "textureMiB": 125.05,
+        "errors": [],
+        "windTime": 28.333833333333008
+      },
+      "filename": "067.png"
+    },
+    {
+      "distance": 340,
+      "p": [
+        53,
+        -14,
+        -265.8920778384855
+      ],
+      "camera": [
+        54.11875591315214,
+        -9.086,
+        -255.75361714631
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 751,
+        "skipped": 0,
+        "draws": 587,
+        "triangles": 1708020,
+        "allLodTriangles": 2949851,
+        "cells": 668,
+        "residentCells": 489,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 71,
+        "textureMiB": 125.05,
+        "errors": [],
+        "windTime": 28.75049999999965
+      },
+      "filename": "068.png"
+    },
+    {
+      "distance": 345,
+      "p": [
+        53,
+        -14,
+        -270.8920778384855
+      ],
+      "camera": [
+        57.16253197592166,
+        -9.086,
+        -261.580078721785
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 752,
+        "skipped": 0,
+        "draws": 591,
+        "triangles": 1723262,
+        "allLodTriangles": 2956333,
+        "cells": 668,
+        "residentCells": 489,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 71,
+        "textureMiB": 125.05,
+        "errors": [],
+        "windTime": 29.233833333332957
+      },
+      "filename": "069.png"
+    },
+    {
+      "distance": 350,
+      "p": [
+        51.52650945863065,
+        -14,
+        -275.48856180320155
+      ],
+      "camera": [
+        57.06087951968888,
+        -9.086,
+        -266.9205545653858
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 758,
+        "skipped": 0,
+        "draws": 597,
+        "triangles": 1759863,
+        "allLodTriangles": 2981744,
+        "cells": 668,
+        "residentCells": 495,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 71,
+        "textureMiB": 125.05,
+        "errors": [],
+        "windTime": 29.6504999999996
+      },
+      "filename": "070.png"
+    },
+    {
+      "distance": 355,
+      "p": [
+        48.86874890395276,
+        -14,
+        -279.7214662849999
+      ],
+      "camera": [
+        54.53990351638132,
+        -9.086,
+        -271.24337656136936
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 753,
+        "skipped": 0,
+        "draws": 589,
+        "triangles": 1724130,
+        "allLodTriangles": 2974878,
+        "cells": 668,
+        "residentCells": 493,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 69,
+        "textureMiB": 118.38,
+        "errors": [],
+        "windTime": 30.050499999999577
+      },
+      "filename": "071.png"
+    },
+    {
+      "distance": 360,
+      "p": [
+        46.08877115276229,
+        -14,
+        -283.8773926201129
+      ],
+      "camera": [
+        51.75992576519085,
+        -9.086,
+        -275.39930289648237
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 746,
+        "skipped": 0,
+        "draws": 584,
+        "triangles": 1709941,
+        "allLodTriangles": 2967811,
+        "cells": 668,
+        "residentCells": 490,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 67,
+        "textureMiB": 111.71,
+        "errors": [],
+        "windTime": 30.450499999999554
+      },
+      "filename": "072.png"
+    },
+    {
+      "distance": 365,
+      "p": [
+        43.30879340157184,
+        -14,
+        -288.0333189552259
+      ],
+      "camera": [
+        48.9799480140004,
+        -9.086,
+        -279.5552292315954
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 746,
+        "skipped": 0,
+        "draws": 583,
+        "triangles": 1729643,
+        "allLodTriangles": 2972969,
+        "cells": 668,
+        "residentCells": 490,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 65,
+        "textureMiB": 105.05,
+        "errors": [],
+        "windTime": 30.85049999999953
+      },
+      "filename": "073.png"
+    },
+    {
+      "distance": 370,
+      "p": [
+        40.52881565038137,
+        -14,
+        -292.189245290339
+      ],
+      "camera": [
+        45.98516490231922,
+        -9.086,
+        -283.57134224836426
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 784,
+        "skipped": 0,
+        "draws": 588,
+        "triangles": 1759914,
+        "allLodTriangles": 3006769,
+        "cells": 668,
+        "residentCells": 492,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 65,
+        "textureMiB": 105.05,
+        "errors": [],
+        "windTime": 31.28383333333284
+      },
+      "filename": "074.png"
+    },
+    {
+      "distance": 375,
+      "p": [
+        37.75416260597586,
+        -14,
+        -296.3485253765741
+      ],
+      "camera": [
+        40.98556915556165,
+        -9.086,
+        -286.67391883618734
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 788,
+        "skipped": 0,
+        "draws": 587,
+        "triangles": 1760299,
+        "allLodTriangles": 3019089,
+        "cells": 668,
+        "residentCells": 493,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 65,
+        "textureMiB": 105.05,
+        "errors": [],
+        "windTime": 31.66716666666615
+      },
+      "filename": "075.png"
+    },
+    {
+      "distance": 380,
+      "p": [
+        35.206702572637006,
+        -14,
+        -300.6509023217686
+      ],
+      "camera": [
+        35.442385272877026,
+        -9.086,
+        -290.45362554486354
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 799,
+        "skipped": 0,
+        "draws": 591,
+        "triangles": 1809686,
+        "allLodTriangles": 3045458,
+        "cells": 668,
+        "residentCells": 496,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 63,
+        "textureMiB": 98.38,
+        "errors": [],
+        "windTime": 32.06716666666613
+      },
+      "filename": "076.png"
+    },
+    {
+      "distance": 385,
+      "p": [
+        35,
+        -14,
+        -305.59429673099504
+      ],
+      "camera": [
+        35,
+        -9.086,
+        -295.39429673099505
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 826,
+        "skipped": 0,
+        "draws": 588,
+        "triangles": 1801784,
+        "allLodTriangles": 3059341,
+        "cells": 668,
+        "residentCells": 497,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 61,
+        "textureMiB": 91.71,
+        "errors": [],
+        "windTime": 32.50049999999944
+      },
+      "filename": "077.png"
+    },
+    {
+      "distance": 390,
+      "p": [
+        35,
+        -14,
+        -310.59429673099504
+      ],
+      "camera": [
+        35,
+        -9.086,
+        -300.39429673099505
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 824,
+        "skipped": 0,
+        "draws": 585,
+        "triangles": 1769949,
+        "allLodTriangles": 3059695,
+        "cells": 668,
+        "residentCells": 497,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 61,
+        "textureMiB": 91.71,
+        "errors": [],
+        "windTime": 32.88383333333275
+      },
+      "filename": "078.png"
+    },
+    {
+      "distance": 395,
+      "p": [
+        35,
+        -14,
+        -315.59429673099504
+      ],
+      "camera": [
+        35,
+        -9.086,
+        -305.39429673099505
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 818,
+        "skipped": 0,
+        "draws": 576,
+        "triangles": 1734640,
+        "allLodTriangles": 3042857,
+        "cells": 668,
+        "residentCells": 492,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 61,
+        "textureMiB": 91.71,
+        "errors": [],
+        "windTime": 33.28383333333273
+      },
+      "filename": "079.png"
+    },
+    {
+      "distance": 400,
+      "p": [
+        35,
+        -14,
+        -320.59429673099504
+      ],
+      "camera": [
+        35,
+        -9.086,
+        -310.39429673099505
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 830,
+        "skipped": 0,
+        "draws": 578,
+        "triangles": 1744117,
+        "allLodTriangles": 3081494,
+        "cells": 668,
+        "residentCells": 493,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 57,
+        "textureMiB": 78.38,
+        "errors": [],
+        "windTime": 33.70049999999937
+      },
+      "filename": "080.png"
+    },
+    {
+      "distance": 405,
+      "p": [
+        35,
+        -14,
+        -325.59429673099504
+      ],
+      "camera": [
+        35,
+        -9.086,
+        -315.39429673099505
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 829,
+        "skipped": 0,
+        "draws": 578,
+        "triangles": 1773289,
+        "allLodTriangles": 3082053,
+        "cells": 668,
+        "residentCells": 492,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 57,
+        "textureMiB": 78.38,
+        "errors": [],
+        "windTime": 34.10049999999935
+      },
+      "filename": "081.png"
+    },
+    {
+      "distance": 410,
+      "p": [
+        35,
+        -14,
+        -330.59429673099504
+      ],
+      "camera": [
+        35,
+        -9.086,
+        -320.39429673099505
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 827,
+        "skipped": 0,
+        "draws": 576,
+        "triangles": 1775912,
+        "allLodTriangles": 3070204,
+        "cells": 668,
+        "residentCells": 492,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 57,
+        "textureMiB": 78.38,
+        "errors": [],
+        "windTime": 34.51716666666599
+      },
+      "filename": "082.png"
+    },
+    {
+      "distance": 415,
+      "p": [
+        35,
+        -14,
+        -335.59429673099504
+      ],
+      "camera": [
+        35.00469788984424,
+        -9.086,
+        -325.3942978128661
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 855,
+        "skipped": 0,
+        "draws": 580,
+        "triangles": 1799769,
+        "allLodTriangles": 3078809,
+        "cells": 668,
+        "residentCells": 496,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 57,
+        "textureMiB": 78.38,
+        "errors": [],
+        "windTime": 34.91716666666597
+      },
+      "filename": "083.png"
+    },
+    {
+      "distance": 420,
+      "p": [
+        35,
+        -14,
+        -340.59429673099504
+      ],
+      "camera": [
+        35.04422291310217,
+        -9.086,
+        -330.39439259742807
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 872,
+        "skipped": 0,
+        "draws": 584,
+        "triangles": 1835017,
+        "allLodTriangles": 3101278,
+        "cells": 668,
+        "residentCells": 498,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 57,
+        "textureMiB": 78.38,
+        "errors": [],
+        "windTime": 35.31716666666595
+      },
+      "filename": "084.png"
+    },
+    {
+      "distance": 425,
+      "p": [
+        34.9888798596942,
+        -13.99666499201926,
+        -345.5942544610767
+      ],
+      "camera": [
+        35.070085810849335,
+        -9.086,
+        -335.3945777214198
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 873,
+        "skipped": 0,
+        "draws": 584,
+        "triangles": 1820522,
+        "allLodTriangles": 3098569,
+        "cells": 668,
+        "residentCells": 499,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 57,
+        "textureMiB": 78.38,
+        "errors": [],
+        "windTime": 35.717166666665925
+      },
+      "filename": "085.png"
+    },
+    {
+      "distance": 430,
+      "p": [
+        34.95400510868451,
+        -13.98620580987361,
+        -350.5941218950444
+      ],
+      "camera": [
+        35.16442161440717,
+        -9.086,
+        -340.39629247432356
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 864,
+        "skipped": 0,
+        "draws": 580,
+        "triangles": 1809880,
+        "allLodTriangles": 3054790,
+        "cells": 668,
+        "residentCells": 495,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 57,
+        "textureMiB": 78.38,
+        "errors": [],
+        "windTime": 36.1171666666659
+      },
+      "filename": "086.png"
+    },
+    {
+      "distance": 435,
+      "p": [
+        34.90364851332679,
+        -13.9710970999536,
+        -355.59381586882233
+      ],
+      "camera": [
+        34.51034884165275,
+        -9.086,
+        -345.4014012693145
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 852,
+        "skipped": 0,
+        "draws": 568,
+        "triangles": 1780274,
+        "allLodTriangles": 2978177,
+        "cells": 668,
+        "residentCells": 487,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 57,
+        "textureMiB": 78.38,
+        "errors": [],
+        "windTime": 36.51716666666588
+      },
+      "filename": "087.png"
+    },
+    {
+      "distance": 440,
+      "p": [
+        34.70401955044333,
+        -13.911205481254523,
+        -360.58771040387506
+      ],
+      "camera": [
+        34.396168377388236,
+        -8.930589117750023,
+        -350.39235716549985
+      ],
+      "feetY": -13.824589117750023,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 853,
+        "skipped": 0,
+        "draws": 568,
+        "triangles": 1781975,
+        "allLodTriangles": 2981450,
+        "cells": 668,
+        "residentCells": 488,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 57,
+        "textureMiB": 78.38,
+        "errors": [],
+        "windTime": 36.91716666666586
+      },
+      "filename": "088.png"
+    },
+    {
+      "distance": 445,
+      "p": [
+        35.51853600088644,
+        -13.829898036315285,
+        -365.4566276395065
+      ],
+      "camera": [
+        36.22682735525739,
+        -8.886000019073487,
+        -355.2812493488815
+      ],
+      "feetY": -13.780000019073487,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 851,
+        "skipped": 0,
+        "draws": 564,
+        "triangles": 1770889,
+        "allLodTriangles": 2971202,
+        "cells": 668,
+        "residentCells": 486,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 57,
+        "textureMiB": 78.38,
+        "errors": [],
+        "windTime": 37.317166666665834
+      },
+      "filename": "089.png"
+    },
+    {
+      "distance": 450,
+      "p": [
+        34.801127912733705,
+        -13.900564252096462,
+        -370.33066909603804
+      ],
+      "camera": [
+        33.26181316887759,
+        -8.966000019073487,
+        -360.2474895320638
+      ],
+      "feetY": -13.860000019073487,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 833,
+        "skipped": 0,
+        "draws": 555,
+        "triangles": 1739536,
+        "allLodTriangles": 2883507,
+        "cells": 668,
+        "residentCells": 477,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 57,
+        "textureMiB": 78.38,
+        "errors": [],
+        "windTime": 37.71716666666581
+      },
+      "filename": "090.png"
+    },
+    {
+      "distance": 455,
+      "p": [
+        35.15113124674897,
+        -13.911523355525311,
+        -375.28851297361393
+      ],
+      "camera": [
+        32.605668898417186,
+        -9.086,
+        -365.4112349359547
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 821,
+        "skipped": 0,
+        "draws": 555,
+        "triangles": 1725082,
+        "allLodTriangles": 2853214,
+        "cells": 668,
+        "residentCells": 476,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 57,
+        "textureMiB": 78.38,
+        "errors": [],
+        "windTime": 38.133833333332454
+      },
+      "filename": "091.png"
+    },
+    {
+      "distance": 460,
+      "p": [
+        36.39890552156722,
+        -13.918976137283288,
+        -380.13031055459004
+      ],
+      "camera": [
+        33.6717539602498,
+        -9.086,
+        -370.3016461304883
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 826,
+        "skipped": 0,
+        "draws": 564,
+        "triangles": 1755326,
+        "allLodTriangles": 2859604,
+        "cells": 668,
+        "residentCells": 478,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 38.633833333332426
+      },
+      "filename": "092.png"
+    },
+    {
+      "distance": 465,
+      "p": [
+        37.64667979638548,
+        -13.926428919041264,
+        -384.9721081355661
+      ],
+      "camera": [
+        34.27251764919557,
+        -9.086,
+        -375.34635986312145
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 824,
+        "skipped": 0,
+        "draws": 555,
+        "triangles": 1741137,
+        "allLodTriangles": 2848103,
+        "cells": 668,
+        "residentCells": 476,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 39.05049999999907
+      },
+      "filename": "093.png"
+    },
+    {
+      "distance": 470,
+      "p": [
+        39.16626395847785,
+        -13.932692366322355,
+        -389.726234036859
+      ],
+      "camera": [
+        35.46053975877402,
+        -9.086,
+        -380.22320251235436
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 812,
+        "skipped": 0,
+        "draws": 544,
+        "triangles": 1698372,
+        "allLodTriangles": 2806517,
+        "cells": 668,
+        "residentCells": 471,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 39.450499999999046
+      },
+      "filename": "094.png"
+    },
+    {
+      "distance": 475,
+      "p": [
+        40.98279453364176,
+        -13.937656491454444,
+        -394.38458052750957
+      ],
+      "camera": [
+        37.27707033393793,
+        -9.086000000000002,
+        -384.8815490030049
+      ],
+      "feetY": -13.980000000000004,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 795,
+        "skipped": 0,
+        "draws": 541,
+        "triangles": 1678402,
+        "allLodTriangles": 2747249,
+        "cells": 668,
+        "residentCells": 465,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 39.86716666666569
+      },
+      "filename": "095.png"
+    },
+    {
+      "distance": 480,
+      "p": [
+        42.799325108805675,
+        -13.942620616586531,
+        -399.0429270181601
+      ],
+      "camera": [
+        39.093600693190226,
+        -9.086,
+        -389.5398955778506
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 791,
+        "skipped": 0,
+        "draws": 538,
+        "triangles": 1679336,
+        "allLodTriangles": 2724750,
+        "cells": 668,
+        "residentCells": 461,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 40.28383333333233
+      },
+      "filename": "096.png"
+    },
+    {
+      "distance": 485,
+      "p": [
+        44.615855683969585,
+        -13.94758474171862,
+        -403.7012735088107
+      ],
+      "camera": [
+        40.910128918296444,
+        -9.086000000000002,
+        -394.19824298491073
+      ],
+      "feetY": -13.980000000000004,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 790,
+        "skipped": 0,
+        "draws": 533,
+        "triangles": 1680208,
+        "allLodTriangles": 2708135,
+        "cells": 668,
+        "residentCells": 458,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 40.68383333333231
+      },
+      "filename": "097.png"
+    },
+    {
+      "distance": 490,
+      "p": [
+        46.432386864344586,
+        -13.952548866599214,
+        -408.35961976345817
+      ],
+      "camera": [
+        42.72665843453287,
+        -9.086,
+        -398.85658988849275
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 789,
+        "skipped": 0,
+        "draws": 534,
+        "triangles": 1685505,
+        "allLodTriangles": 2719820,
+        "cells": 668,
+        "residentCells": 462,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 41.10049999999895
+      },
+      "filename": "098.png"
+    },
+    {
+      "distance": 495,
+      "p": [
+        48.24891951309007,
+        -13.957512990869628,
+        -413.01796544551223
+      ],
+      "camera": [
+        44.54319108327838,
+        -9.086,
+        -403.5149355705468
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 780,
+        "skipped": 0,
+        "draws": 535,
+        "triangles": 1698248,
+        "allLodTriangles": 2676880,
+        "cells": 668,
+        "residentCells": 462,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 41.53383333333226
+      },
+      "filename": "099.png"
+    },
+    {
+      "distance": 500,
+      "p": [
+        50.06545216183556,
+        -13.962477115140043,
+        -417.67631112756635
+      ],
+      "camera": [
+        46.359723732023845,
+        -9.086,
+        -408.17328125260093
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 784,
+        "skipped": 0,
+        "draws": 536,
+        "triangles": 1706460,
+        "allLodTriangles": 2689688,
+        "cells": 668,
+        "residentCells": 463,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 41.93383333333224
+      },
+      "filename": "100.png"
+    },
+    {
+      "distance": 505,
+      "p": [
+        51.881984810581045,
+        -13.967441239410457,
+        -422.3346568096204
+      ],
+      "camera": [
+        48.754564146830305,
+        -9.086,
+        -412.62593701801325
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 783,
+        "skipped": 0,
+        "draws": 535,
+        "triangles": 1704803,
+        "allLodTriangles": 2708979,
+        "cells": 668,
+        "residentCells": 462,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 42.35049999999888
+      },
+      "filename": "101.png"
+    },
+    {
+      "distance": 510,
+      "p": [
+        53.63832421190606,
+        -13.972669123230277,
+        -427.012417681998
+      ],
+      "camera": [
+        51.092868724422964,
+        -9.086,
+        -417.13513787623964
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 773,
+        "skipped": 0,
+        "draws": 530,
+        "triangles": 1680657,
+        "allLodTriangles": 2679274,
+        "cells": 668,
+        "residentCells": 458,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 42.78383333333219
+      },
+      "filename": "102.png"
+    },
+    {
+      "distance": 515,
+      "p": [
+        54.88609512223202,
+        -13.980125492831743,
+        -431.8542161245084
+      ],
+      "camera": [
+        52.499260449441394,
+        -9.086,
+        -421.9374111831594
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 766,
+        "skipped": 0,
+        "draws": 527,
+        "triangles": 1663579,
+        "allLodTriangles": 2654655,
+        "cells": 668,
+        "residentCells": 455,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 43.18383333333217
+      },
+      "filename": "103.png"
+    },
+    {
+      "distance": 520,
+      "p": [
+        56.133866032557975,
+        -13.98758186243321,
+        -436.6960145670189
+      ],
+      "camera": [
+        55.14500189374814,
+        -9.086,
+        -426.5440616654843
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 774,
+        "skipped": 0,
+        "draws": 532,
+        "triangles": 1678389,
+        "allLodTriangles": 2674535,
+        "cells": 668,
+        "residentCells": 458,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 43.583833333332144
+      },
+      "filename": "104.png"
+    },
+    {
+      "distance": 525,
+      "p": [
+        56.9930954959759,
+        -13.996550101261308,
+        -441.5880359868923
+      ],
+      "camera": [
+        56.98520069125071,
+        -9.086,
+        -431.388039042184
+      ],
+      "feetY": -13.98,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 774,
+        "skipped": 0,
+        "draws": 528,
+        "triangles": 1656288,
+        "allLodTriangles": 2688768,
+        "cells": 668,
+        "residentCells": 459,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 43.98383333333212
+      },
+      "filename": "105.png"
+    },
+    {
+      "distance": 530,
+      "p": [
+        57,
+        -13.891225153377665,
+        -446.57786637268117
+      ],
+      "camera": [
+        57,
+        -8.725850773861682,
+        -436.3778663726812
+      ],
+      "feetY": -13.619850773861682,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 775,
+        "skipped": 0,
+        "draws": 525,
+        "triangles": 1622623,
+        "allLodTriangles": 2702283,
+        "cells": 668,
+        "residentCells": 460,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 44.400499999998765
+      },
+      "filename": "106.png"
+    },
+    {
+      "distance": 535,
+      "p": [
+        57,
+        -12.966292398241455,
+        -451.4915716343423
+      ],
+      "camera": [
+        57,
+        -7.881674933341104,
+        -441.2915716343423
+      ],
+      "feetY": -12.775674933341104,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 772,
+        "skipped": 0,
+        "draws": 533,
+        "triangles": 1666910,
+        "allLodTriangles": 2689575,
+        "cells": 668,
+        "residentCells": 459,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 44.81716666666541
+      },
+      "filename": "107.png"
+    },
+    {
+      "distance": 540,
+      "p": [
+        57,
+        -12.041359643105245,
+        -456.4052768960034
+      ],
+      "camera": [
+        57,
+        -6.621317056750714,
+        -446.2052768960034
+      ],
+      "feetY": -11.515317056750714,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 785,
+        "skipped": 0,
+        "draws": 541,
+        "triangles": 1683759,
+        "allLodTriangles": 2734277,
+        "cells": 668,
+        "residentCells": 463,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 45.23383333333205
+      },
+      "filename": "108.png"
+    },
+    {
+      "distance": 545,
+      "p": [
+        57,
+        -11.116426887969034,
+        -461.3189821576645
+      ],
+      "camera": [
+        57,
+        -5.65655343627742,
+        -451.1189821576645
+      ],
+      "feetY": -10.550553436277418,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 788,
+        "skipped": 0,
+        "draws": 539,
+        "triangles": 1673587,
+        "allLodTriangles": 2718657,
+        "cells": 668,
+        "residentCells": 461,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 45.63383333333203
+      },
+      "filename": "109.png"
+    },
+    {
+      "distance": 550,
+      "p": [
+        57,
+        -10.03232899888789,
+        -466.19862917130047
+      ],
+      "camera": [
+        57,
+        -4.935572970017015,
+        -455.9986291713005
+      ],
+      "feetY": -9.829572970017017,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 785,
+        "skipped": 0,
+        "draws": 531,
+        "triangles": 1639544,
+        "allLodTriangles": 2711812,
+        "cells": 668,
+        "residentCells": 460,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 46.05049999999867
+      },
+      "filename": "110.png"
+    },
+    {
+      "distance": 555,
+      "p": [
+        57,
+        -8.865464236511269,
+        -471.06056568120306
+      ],
+      "camera": [
+        57,
+        -3.632480535206838,
+        -460.86056568120307
+      ],
+      "feetY": -8.526480535206838,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 786,
+        "skipped": 0,
+        "draws": 532,
+        "triangles": 1633315,
+        "allLodTriangles": 2712004,
+        "cells": 668,
+        "residentCells": 462,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 46.467166666665314
+      },
+      "filename": "111.png"
+    },
+    {
+      "distance": 560,
+      "p": [
+        57,
+        -7.698599474134648,
+        -475.92250219110565
+      ],
+      "camera": [
+        57,
+        -2.7924671233426572,
+        -465.72250219110566
+      ],
+      "feetY": -7.686467123342657,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 785,
+        "skipped": 0,
+        "draws": 531,
+        "triangles": 1612862,
+        "allLodTriangles": 2711411,
+        "cells": 668,
+        "residentCells": 462,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 46.86716666666529
+      },
+      "filename": "112.png"
+    },
+    {
+      "distance": 565,
+      "p": [
+        57,
+        -7.2,
+        -480.86350787935737
+      ],
+      "camera": [
+        57,
+        -2.225999997615814,
+        -470.6635078793574
+      ],
+      "feetY": -7.119999997615815,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 783,
+        "skipped": 0,
+        "draws": 529,
+        "triangles": 1609288,
+        "allLodTriangles": 2714037,
+        "cells": 668,
+        "residentCells": 459,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 47.26716666666527
+      },
+      "filename": "113.png"
+    },
+    {
+      "distance": 570,
+      "p": [
+        57,
+        -7.2,
+        -485.86350787935737
+      ],
+      "camera": [
+        57,
+        -2.225999997615814,
+        -475.6635078793574
+      ],
+      "feetY": -7.119999997615815,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 782,
+        "skipped": 0,
+        "draws": 530,
+        "triangles": 1591424,
+        "allLodTriangles": 2709247,
+        "cells": 668,
+        "residentCells": 459,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 47.70049999999858
+      },
+      "filename": "114.png"
+    },
+    {
+      "distance": 575,
+      "p": [
+        57,
+        -7.2,
+        -490.86350787935737
+      ],
+      "camera": [
+        57,
+        -2.3130162389829927,
+        -480.6635078793574
+      ],
+      "feetY": -7.207016238982992,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 774,
+        "skipped": 0,
+        "draws": 524,
+        "triangles": 1510043,
+        "allLodTriangles": 2682104,
+        "cells": 668,
+        "residentCells": 459,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 48.08383333333189
+      },
+      "filename": "115.png"
+    },
+    {
+      "distance": 580,
+      "p": [
+        57,
+        -7.2,
+        -495.86350787935737
+      ],
+      "camera": [
+        57,
+        -2.2859999999999996,
+        -485.6635078793574
+      ],
+      "feetY": -7.180000000000001,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 759,
+        "skipped": 0,
+        "draws": 519,
+        "triangles": 1503517,
+        "allLodTriangles": 2638898,
+        "cells": 668,
+        "residentCells": 454,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 48.483833333331866
+      },
+      "filename": "116.png"
+    },
+    {
+      "distance": 585,
+      "p": [
+        57,
+        -7.2,
+        -500.86350787935737
+      ],
+      "camera": [
+        57,
+        -2.2859999999999996,
+        -490.6635078793574
+      ],
+      "feetY": -7.180000000000001,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 757,
+        "skipped": 0,
+        "draws": 519,
+        "triangles": 1504309,
+        "allLodTriangles": 2620502,
+        "cells": 668,
+        "residentCells": 451,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 48.96716666666517
+      },
+      "filename": "117.png"
+    },
+    {
+      "distance": 590,
+      "p": [
+        57,
+        -7.2,
+        -505.86350787935737
+      ],
+      "camera": [
+        57,
+        -2.2859999999999996,
+        -495.6635078793574
+      ],
+      "feetY": -7.180000000000001,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 761,
+        "skipped": 0,
+        "draws": 518,
+        "triangles": 1481668,
+        "allLodTriangles": 2641525,
+        "cells": 668,
+        "residentCells": 455,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 49.383833333331815
+      },
+      "filename": "118.png"
+    },
+    {
+      "distance": 595,
+      "p": [
+        57,
+        -7.2,
+        -510.86350787935737
+      ],
+      "camera": [
+        57,
+        -2.2859998092651397,
+        -500.6635078793574
+      ],
+      "feetY": -7.179999809265141,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 757,
+        "skipped": 0,
+        "draws": 504,
+        "triangles": 1431206,
+        "allLodTriangles": 2634892,
+        "cells": 668,
+        "residentCells": 452,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 49.78383333333179
+      },
+      "filename": "119.png"
+    },
+    {
+      "distance": 600,
+      "p": [
+        57,
+        -7.2,
+        -515.8635078793574
+      ],
+      "camera": [
+        57,
+        -2.2859998092651397,
+        -505.6635078793574
+      ],
+      "feetY": -7.179999809265141,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 746,
+        "skipped": 0,
+        "draws": 495,
+        "triangles": 1387721,
+        "allLodTriangles": 2590012,
+        "cells": 668,
+        "residentCells": 447,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 50.200499999998435
+      },
+      "filename": "120.png"
+    },
+    {
+      "distance": 605,
+      "p": [
+        57,
+        -7.2,
+        -520.8635078793574
+      ],
+      "camera": [
+        57,
+        -2.2859998092651397,
+        -510.6635078793574
+      ],
+      "feetY": -7.179999809265141,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 744,
+        "skipped": 0,
+        "draws": 492,
+        "triangles": 1376016,
+        "allLodTriangles": 2587428,
+        "cells": 668,
+        "residentCells": 446,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 50.60049999999841
+      },
+      "filename": "121.png"
+    },
+    {
+      "distance": 610,
+      "p": [
+        57,
+        -7.2,
+        -525.8635078793574
+      ],
+      "camera": [
+        57,
+        -2.2859998092651397,
+        -515.6635078793573
+      ],
+      "feetY": -7.179999809265141,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 742,
+        "skipped": 0,
+        "draws": 492,
+        "triangles": 1364357,
+        "allLodTriangles": 2567255,
+        "cells": 668,
+        "residentCells": 444,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 51.017166666665055
+      },
+      "filename": "122.png"
+    },
+    {
+      "distance": 615,
+      "p": [
+        57,
+        -7.2,
+        -530.8635078793574
+      ],
+      "camera": [
+        57,
+        -2.2859998092651397,
+        -520.6635078793573
+      ],
+      "feetY": -7.179999809265141,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 740,
+        "skipped": 0,
+        "draws": 489,
+        "triangles": 1345431,
+        "allLodTriangles": 2552083,
+        "cells": 668,
+        "residentCells": 442,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 51.41716666666503
+      },
+      "filename": "123.png"
+    },
+    {
+      "distance": 620,
+      "p": [
+        57,
+        -7.2,
+        -535.8635078793574
+      ],
+      "camera": [
+        57,
+        -2.2859998092651397,
+        -525.6635078793573
+      ],
+      "feetY": -7.179999809265141,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 739,
+        "skipped": 0,
+        "draws": 489,
+        "triangles": 1352517,
+        "allLodTriangles": 2545493,
+        "cells": 668,
+        "residentCells": 441,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 51.85049999999834
+      },
+      "filename": "124.png"
+    },
+    {
+      "distance": 625,
+      "p": [
+        57,
+        -7.2,
+        -540.8635078793574
+      ],
+      "camera": [
+        57,
+        -2.2859998092651397,
+        -530.6635078793573
+      ],
+      "feetY": -7.179999809265141,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 737,
+        "skipped": 0,
+        "draws": 488,
+        "triangles": 1360115,
+        "allLodTriangles": 2536460,
+        "cells": 668,
+        "residentCells": 439,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 52.267166666664984
+      },
+      "filename": "125.png"
+    },
+    {
+      "distance": 630,
+      "p": [
+        57,
+        -7.2,
+        -545.8635078793574
+      ],
+      "camera": [
+        57.594043591157,
+        -2.2859998092651397,
+        -535.6808209936771
+      ],
+      "feetY": -7.179999809265141,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 731,
+        "skipped": 0,
+        "draws": 485,
+        "triangles": 1337481,
+        "allLodTriangles": 2527724,
+        "cells": 668,
+        "residentCells": 436,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 52.68383333333163
+      },
+      "filename": "126.png"
+    },
+    {
+      "distance": 635,
+      "p": [
+        57,
+        -7.2,
+        -550.8635078793574
+      ],
+      "camera": [
+        61.164731358602914,
+        -2.2859998092651397,
+        -541.5524922145295
+      ],
+      "feetY": -7.179999809265141,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 723,
+        "skipped": 0,
+        "draws": 478,
+        "triangles": 1325236,
+        "allLodTriangles": 2492777,
+        "cells": 668,
+        "residentCells": 431,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 53.083833333331604
+      },
+      "filename": "127.png"
+    },
+    {
+      "distance": 640,
+      "p": [
+        55.88837343997594,
+        -7.2,
+        -555.4956430080324
+      ],
+      "camera": [
+        62.40603919876035,
+        -2.2859999999999996,
+        -547.6496228030642
+      ],
+      "feetY": -7.180000000000001,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 722,
+        "skipped": 0,
+        "draws": 484,
+        "triangles": 1330250,
+        "allLodTriangles": 2485274,
+        "cells": 668,
+        "residentCells": 430,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 59,
+        "textureMiB": 80.05,
+        "errors": [],
+        "windTime": 53.50049999999825
+      },
+      "filename": "128.png"
+    },
+    {
+      "distance": 645,
+      "p": [
+        52.82465423388317,
+        -7.2,
+        -559.4421184517327
+      ],
+      "camera": [
+        59.66057036586124,
+        -2.2859999999999996,
+        -551.8717650493767
+      ],
+      "feetY": -7.180000000000001,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 718,
+        "skipped": 0,
+        "draws": 484,
+        "triangles": 1349750,
+        "allLodTriangles": 2472490,
+        "cells": 668,
+        "residentCells": 427,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 57,
+        "textureMiB": 78.38,
+        "errors": [],
+        "windTime": 53.91716666666489
+      },
+      "filename": "129.png"
+    },
+    {
+      "distance": 650,
+      "p": [
+        49.473714953501755,
+        -7.2,
+        -563.1530760019072
+      ],
+      "camera": [
+        56.30963108547988,
+        -2.2859999999999996,
+        -555.5827225995513
+      ],
+      "feetY": -7.180000000000001,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 715,
+        "skipped": 0,
+        "draws": 479,
+        "triangles": 1331680,
+        "allLodTriangles": 2453992,
+        "cells": 668,
+        "residentCells": 424,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 71.71,
+        "errors": [],
+        "windTime": 54.31716666666487
+      },
+      "filename": "130.png"
+    },
+    {
+      "distance": 655,
+      "p": [
+        46.12277567312034,
+        -7.2,
+        -566.8640335520817
+      ],
+      "camera": [
+        52.95869180509847,
+        -2.2859999999999996,
+        -559.2936801497258
+      ],
+      "feetY": -7.180000000000001,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 705,
+        "skipped": 0,
+        "draws": 479,
+        "triangles": 1351363,
+        "allLodTriangles": 2427312,
+        "cells": 668,
+        "residentCells": 421,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 71.71,
+        "errors": [],
+        "windTime": 54.73383333333151
+      },
+      "filename": "131.png"
+    },
+    {
+      "distance": 660,
+      "p": [
+        42.77183639273891,
+        -7.2,
+        -570.574991102256
+      ],
+      "camera": [
+        49.4023978881712,
+        -2.2859999999999996,
+        -562.8241424870855
+      ],
+      "feetY": -7.180000000000001,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 702,
+        "skipped": 0,
+        "draws": 476,
+        "triangles": 1360159,
+        "allLodTriangles": 2413566,
+        "cells": 668,
+        "residentCells": 419,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 71.71,
+        "errors": [],
+        "windTime": 55.150499999998154
+      },
+      "filename": "132.png"
+    },
+    {
+      "distance": 665,
+      "p": [
+        39.420897112357494,
+        -7.2,
+        -574.2859486524305
+      ],
+      "camera": [
+        44.6085825819661,
+        -2.2859999999999996,
+        -565.5036984015887
+      ],
+      "feetY": -7.180000000000001,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 699,
+        "skipped": 0,
+        "draws": 478,
+        "triangles": 1376294,
+        "allLodTriangles": 2392800,
+        "cells": 668,
+        "residentCells": 417,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 71.71,
+        "errors": [],
+        "windTime": 55.55049999999813
+      },
+      "filename": "133.png"
+    },
+    {
+      "distance": 670,
+      "p": [
+        36.33018795143766,
+        -7.2,
+        -578.2102925744293
+      ],
+      "camera": [
+        37.28584626232568,
+        -2.2859999999999996,
+        -568.055160020256
+      ],
+      "feetY": -7.180000000000001,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 698,
+        "skipped": 0,
+        "draws": 475,
+        "triangles": 1368709,
+        "allLodTriangles": 2390357,
+        "cells": 668,
+        "residentCells": 416,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 71.71,
+        "errors": [],
+        "windTime": 55.95049999999811
+      },
+      "filename": "134.png"
+    },
+    {
+      "distance": 675,
+      "p": [
+        35.08558339870128,
+        -7.116318454603192,
+        -582.7607413217892
+      ],
+      "camera": [
+        34.124112177233094,
+        -2.2860000035762793,
+        -572.6061574755506
+      ],
+      "feetY": -7.180000003576279,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 696,
+        "skipped": 0,
+        "draws": 474,
+        "triangles": 1375688,
+        "allLodTriangles": 2381324,
+        "cells": 668,
+        "residentCells": 414,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 71.71,
+        "errors": [],
+        "windTime": 56.350499999998085
+      },
+      "filename": "135.png"
+    },
+    {
+      "distance": 680,
+      "p": [
+        35.6412473705466,
+        -6.5730025710210995,
+        -587.6999766270809
+      ],
+      "camera": [
+        35.02127108359862,
+        -1.3760000010728834,
+        -577.5188357576291
+      ],
+      "feetY": -5.88,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 693,
+        "skipped": 0,
+        "draws": 476,
+        "triangles": 1389712,
+        "allLodTriangles": 2366464,
+        "cells": 668,
+        "residentCells": 411,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 71.71,
+        "errors": [],
+        "windTime": 56.7338333333314
+      },
+      "filename": "136.png"
+    },
+    {
+      "distance": 685,
+      "p": [
+        35.99861403906109,
+        -6.2235773840291575,
+        -592.6744250086601
+      ],
+      "camera": [
+        35.69168361596513,
+        -2.7859999999999996,
+        -582.4790440096303
+      ],
+      "feetY": -5.88,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 687,
+        "skipped": 0,
+        "draws": 478,
+        "triangles": 1423436,
+        "allLodTriangles": 2351168,
+        "cells": 668,
+        "residentCells": 407,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 55,
+        "textureMiB": 71.71,
+        "errors": [],
+        "windTime": 57.133833333331374
+      },
+      "filename": "137.png"
+    },
+    {
+      "distance": 690,
+      "p": [
+        36.23929959454809,
+        -5.988240396441864,
+        -597.6629914404598
+      ],
+      "camera": [
+        36.47146346150121,
+        -2.7859999999999996,
+        -587.4656339426135
+      ],
+      "feetY": -5.88,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 683,
+        "skipped": 0,
+        "draws": 470,
+        "triangles": 1406711,
+        "allLodTriangles": 2335182,
+        "cells": 668,
+        "residentCells": 403,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 70.05,
+        "errors": [],
+        "windTime": 57.55049999999802
+      },
+      "filename": "138.png"
+    },
+    {
+      "distance": 695,
+      "p": [
+        36.22437633608456,
+        -6.0028320269395445,
+        -602.6520551271038
+      ],
+      "camera": [
+        36.81817217268709,
+        -2.7859999999999996,
+        -592.4693537907966
+      ],
+      "feetY": -5.88,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 678,
+        "skipped": 0,
+        "draws": 467,
+        "triangles": 1391872,
+        "allLodTriangles": 2305197,
+        "cells": 668,
+        "residentCells": 399,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 70.05,
+        "errors": [],
+        "windTime": 57.93383333333133
+      },
+      "filename": "139.png"
+    },
+    {
+      "distance": 700,
+      "p": [
+        35.97685706158586,
+        -6.2448508731160475,
+        -607.6398424437598
+      ],
+      "camera": [
+        36.903652547085116,
+        -2.7859999999999996,
+        -597.482035095318
+      ],
+      "feetY": -5.88,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 671,
+        "skipped": 0,
+        "draws": 461,
+        "triangles": 1395449,
+        "allLodTriangles": 2277957,
+        "cells": 668,
+        "residentCells": 394,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 70.05,
+        "errors": [],
+        "windTime": 58.31716666666464
+      },
+      "filename": "140.png"
+    },
+    {
+      "distance": 705,
+      "p": [
+        35.60615861681566,
+        -6.607311574669129,
+        -612.611923406083
+      ],
+      "camera": [
+        34.91675287348896,
+        -2.2860000035762766,
+        -602.4352481277286
+      ],
+      "feetY": -7.180000003576276,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 659,
+        "skipped": 0,
+        "draws": 460,
+        "triangles": 1415971,
+        "allLodTriangles": 2233677,
+        "cells": 668,
+        "residentCells": 389,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 70.05,
+        "errors": [],
+        "windTime": 58.71716666666462
+      },
+      "filename": "141.png"
+    },
+    {
+      "distance": 710,
+      "p": [
+        35.05049464497034,
+        -7.150627458251222,
+        -617.5511587113748
+      ],
+      "camera": [
+        31.053970661388536,
+        -2.2860000035762793,
+        -608.1667143459019
+      ],
+      "feetY": -7.180000003576279,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 654,
+        "skipped": 0,
+        "draws": 456,
+        "triangles": 1410136,
+        "allLodTriangles": 2208701,
+        "cells": 668,
+        "residentCells": 384,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 70.05,
+        "errors": [],
+        "windTime": 59.117166666664595
+      },
+      "filename": "142.png"
+    },
+    {
+      "distance": 715,
+      "p": [
+        36.61138679704895,
+        -7.2,
+        -622.158318122216
+      ],
+      "camera": [
+        31.212965379014474,
+        -2.2859999999999996,
+        -613.5040101664458
+      ],
+      "feetY": -7.180000000000001,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 649,
+        "skipped": 0,
+        "draws": 449,
+        "triangles": 1387623,
+        "allLodTriangles": 2168543,
+        "cells": 668,
+        "residentCells": 379,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 53,
+        "textureMiB": 70.05,
+        "errors": [],
+        "windTime": 59.51716666666457
+      },
+      "filename": "143.png"
+    },
+    {
+      "distance": 720,
+      "p": [
+        39.07890059464604,
+        -7.2,
+        -626.4951481268553
+      ],
+      "camera": [
+        33.25093856859634,
+        -2.2859999999999996,
+        -618.1240753985293
+      ],
+      "feetY": -7.180000000000001,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 629,
+        "skipped": 0,
+        "draws": 435,
+        "triangles": 1362582,
+        "allLodTriangles": 2094553,
+        "cells": 668,
+        "residentCells": 369,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 51,
+        "textureMiB": 63.38,
+        "errors": [],
+        "windTime": 59.91716666666455
+      },
+      "filename": "144.png"
+    },
+    {
+      "distance": 725,
+      "p": [
+        41.93574472506258,
+        -7.2,
+        -630.5986151505444
+      ],
+      "camera": [
+        36.10778269901287,
+        -2.2859999999999996,
+        -622.2275424222184
+      ],
+      "feetY": -7.180000000000001,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 628,
+        "skipped": 0,
+        "draws": 428,
+        "triangles": 1345645,
+        "allLodTriangles": 2090526,
+        "cells": 668,
+        "residentCells": 368,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 51,
+        "textureMiB": 63.38,
+        "errors": [],
+        "windTime": 60.31716666666453
+      },
+      "filename": "145.png"
+    },
+    {
+      "distance": 730,
+      "p": [
+        44.7925888554791,
+        -7.2,
+        -634.7020821742336
+      ],
+      "camera": [
+        38.9646268294294,
+        -2.2859999999999996,
+        -626.3310094459076
+      ],
+      "feetY": -7.180000000000001,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 624,
+        "skipped": 0,
+        "draws": 424,
+        "triangles": 1340961,
+        "allLodTriangles": 2080754,
+        "cells": 668,
+        "residentCells": 366,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 51,
+        "textureMiB": 63.38,
+        "errors": [],
+        "windTime": 60.717166666664504
+      },
+      "filename": "146.png"
+    },
+    {
+      "distance": 735,
+      "p": [
+        47.64943298589565,
+        -7.2,
+        -638.8055491979228
+      ],
+      "camera": [
+        41.89921159877382,
+        -2.2859999999999996,
+        -630.3808857625631
+      ],
+      "feetY": -7.180000000000001,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 622,
+        "skipped": 0,
+        "draws": 421,
+        "triangles": 1338859,
+        "allLodTriangles": 2068848,
+        "cells": 668,
+        "residentCells": 364,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 51,
+        "textureMiB": 63.38,
+        "errors": [],
+        "windTime": 61.11716666666448
+      },
+      "filename": "147.png"
+    },
+    {
+      "distance": 740,
+      "p": [
+        50.50627711631218,
+        -7.2,
+        -642.9090162216121
+      ],
+      "camera": [
+        45.52348811332455,
+        -2.2859999999999996,
+        -634.0089143260321
+      ],
+      "feetY": -7.180000000000001,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 620,
+        "skipped": 0,
+        "draws": 418,
+        "triangles": 1330109,
+        "allLodTriangles": 2062688,
+        "cells": 668,
+        "residentCells": 362,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 51,
+        "textureMiB": 63.38,
+        "errors": [],
+        "windTime": 61.50049999999779
+      },
+      "filename": "148.png"
+    },
+    {
+      "distance": 745,
+      "p": [
+        53.25014759385173,
+        -7.2,
+        -647.0868563615282
+      ],
+      "camera": [
+        51.2212328360884,
+        -2.2859999999999996,
+        -637.0906818479591
+      ],
+      "feetY": -7.180000000000001,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 616,
+        "skipped": 0,
+        "draws": 408,
+        "triangles": 1293563,
+        "allLodTriangles": 2032344,
+        "cells": 668,
+        "residentCells": 360,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 51,
+        "textureMiB": 63.38,
+        "errors": [],
+        "windTime": 61.883833333331104
+      },
+      "filename": "149.png"
+    },
+    {
+      "distance": 750,
+      "p": [
+        55,
+        -7.2,
+        -651.7081303494656
+      ],
+      "camera": [
+        55,
+        -2.2859999999999996,
+        -641.5081303494655
+      ],
+      "feetY": -7.180000000000001,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 612,
+        "skipped": 0,
+        "draws": 405,
+        "triangles": 1284099,
+        "allLodTriangles": 2015685,
+        "cells": 668,
+        "residentCells": 357,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 51,
+        "textureMiB": 63.38,
+        "errors": [],
+        "windTime": 62.28383333333108
+      },
+      "filename": "150.png"
+    },
+    {
+      "distance": 755,
+      "p": [
+        55,
+        -7.2,
+        -656.7081303494656
+      ],
+      "camera": [
+        55,
+        -2.2859999999999996,
+        -646.5081303494655
+      ],
+      "feetY": -7.180000000000001,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 602,
+        "skipped": 0,
+        "draws": 399,
+        "triangles": 1266620,
+        "allLodTriangles": 1974330,
+        "cells": 668,
+        "residentCells": 350,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 51,
+        "textureMiB": 63.38,
+        "errors": [],
+        "windTime": 62.66716666666439
+      },
+      "filename": "151.png"
+    },
+    {
+      "distance": 760,
+      "p": [
+        55,
+        -7.2,
+        -661.7081303494656
+      ],
+      "camera": [
+        55,
+        -2.2859999999999996,
+        -651.5081303494655
+      ],
+      "feetY": -7.180000000000001,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 595,
+        "skipped": 0,
+        "draws": 384,
+        "triangles": 1234992,
+        "allLodTriangles": 1954682,
+        "cells": 668,
+        "residentCells": 344,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 61.71,
+        "errors": [],
+        "windTime": 63.050499999997704
+      },
+      "filename": "152.png"
+    },
+    {
+      "distance": 764.2918696505344,
+      "p": [
+        55,
+        -7.2,
+        -666
+      ],
+      "camera": [
+        55,
+        -1.5493333335568513,
+        -655.8
+      ],
+      "feetY": -6.4433333335568514,
+      "assets": {
+        "components": 1118,
+        "placements": 1118,
+        "ready": 576,
+        "skipped": 0,
+        "draws": 377,
+        "triangles": 1179514,
+        "allLodTriangles": 1885300,
+        "cells": 668,
+        "residentCells": 340,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 49,
+        "textureMiB": 61.71,
+        "errors": [],
+        "windTime": 63.48383333333101
+      },
+      "filename": "153.png"
+    }
+  ],
+  "errors": []
+}

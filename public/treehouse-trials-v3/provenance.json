@@ -1,0 +1,36 @@
+{
+  "provider": "Meshy through official CLI 0.3.1",
+  "generator": "meshy-t2 smart-topology",
+  "startingCredits": 351,
+  "spentCredits": 30,
+  "remainingCredits": 321,
+  "newRenderPasses": 0,
+  "models": [
+    {
+      "name": "understory-thicket",
+      "taskId": "01a11105-9515-77b1-b29b-e6f376cb2a25",
+      "operationId": "9897eb59-6802-4609-bbb1-732c176cd815",
+      "credits": 15,
+      "sourceSha256": "57bc98d058877cc4d24c8642d503ae988376dac04a2b75587dc19fe14fc3ee5f",
+      "referenceSha256": "6621299a522bc9af0b4d1e2670cb7f546806311a0985bd1635771be969d71ba5",
+      "runtimeSha256": "85de1612ee5b6e692b684984a0b6b6f736d5d7da60f21db45f1375d7eb1aa5b9",
+      "triangles": 4993,
+      "lodTriangles": 1597,
+      "gpuBytes": 1747680
+    },
+    {
+      "name": "canopy-bough",
+      "taskId": "01a11109-4bb8-70b1-85b2-7a0ee781cd6e",
+      "operationId": "e5af5ce4-104f-41bd-ae38-e55f7d83b2cc",
+      "credits": 15,
+      "sourceSha256": "764eb8851f8dec3b2238dc8198d4b715d9a7466018ee23fc9e310828842a0b9f",
+      "referenceSha256": "f1839fd35499d0ea1a76add0c686da428396cdec42cc3adc6aaa36608ec1f0ec",
+      "runtimeSha256": "78f5e826f489649281e30d891761a06389273ce95965447a5ab24b7a8b758edb",
+      "triangles": 5861,
+      "lodTriangles": 1944,
+      "gpuBytes": 1747680
+    }
+  ],
+  "matte": "understory-matte-manifest.json",
+  "imagePrompts": "tools/treehouse-trials-v3/prompts.json"
+}

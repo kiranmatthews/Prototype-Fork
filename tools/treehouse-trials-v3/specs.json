@@ -1,0 +1,25 @@
+{
+  "understory-thicket": {
+    "triangles": 5500,
+    "size": [
+      8,
+      4.7,
+      5.2
+    ],
+    "kind": "trialsv3thicket",
+    "hero": false,
+    "wind": true
+  },
+  "canopy-bough": {
+    "triangles": 5500,
+    "size": [
+      15,
+      5.8,
+      7
+    ],
+    "kind": "trialsv3bough",
+    "hero": false,
+    "wind": true,
+    "hangingVines": true
+  }
+}

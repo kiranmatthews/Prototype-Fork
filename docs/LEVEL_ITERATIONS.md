@@ -599,6 +599,7 @@
 - Current scenery views: `docs/treehouse-repairs/`; measurements: `docs/performance/treehouse-repair-*.json`; source contracts and limitations: `docs/TREEHOUSE_TRIALS.md`.
 
 
+
 ### 2026-10-07 — Remaining-level gameplay and placement cleanup
 
 - Brief: ruthlessly review levels outside the active work and clean up obstacle, rail, object and enemy placement. Review **39 layouts** (23 ordinary/debug courses and 16 bonus rooms); change **11 levels**. Exclude the separately owned Treehouse, Carlisle, Custard, jungle-sequel and After Hours work, plus the map and hidden utility labs. Preserve the shared checkout and all four unrelated published-pack rows.
@@ -620,3 +621,12 @@
 - Review all 23 actual gameplay-camera locations in full, portrait and lite. Clean consoles, ready assets and stable idle ownership. M1 Pro / Chrome154 full 1280×720 medians16.7–16.8ms, worst scene p9518.4ms, peak423 complete-frame calls/944,673 triangles, texture estimate41.33MiB. Portrait390×844 renders720×1558 on the same GPU; physical-phone performance remains unmeasured. Real keyboard checkpoint, water-contact death, grounded respawn and finish pass; production-browser input replays cover sluices, ferry, continuous chapter, mill lift and final rail/finish.
 - Required level checks, latest-main placement checks and production build pass. The unrelated park charge-speed assertion in `test-jungle-cup-skating.mjs:46` fails identically on the unchanged Player baseline; preserve tuning and document the existing failure. No full-suite run.
 - Implementation, exact screenshot/thumbnail and scoped evidence: `docs/CUSTARD_CREEK.md`, `docs/custard-ledges-review.jpg`, both route contact sheets, `docs/performance/custard-ledges-*.json` and `tools/custard-ledges/bake-contact.py`. Publish task-owned changes through the existing main/GitHub Pages workflow and verify the live build.
+
+## 2026-10-07 · Treehouse Trials dense bush enclosure
+
+- Brief: polish remaining visible flaws, fill empty distance with dense bush enclosure like the supplied references, and inspect every part of the route.
+- Elapsed: approximately **30 minutes** to the first full-route dense scenery survey; approximately **one hour** to the first complete native-input clear. Final asset, composition, performance and production review took approximately **two hours**, followed by publication verification.
+- Add 375 source-owned scenery components, continuous forest earth, overlapping understory/tree/bough/matte layers and porch/coast exclusions. Generate a thicket and canopy bough through the existing Meshy pipeline using **30 existing credits** (351 → 321), plus a complete dense ImageGen matte. Connect hanging leaves with measured stems and restrained wind. Widen the rock bend around the camera, reseat intrusive crowns, move the close pipe fern and feather the downhill follow framing. No movement tuning, support or crate/enemy edits.
+- Inspect 154 forward stations at 5m intervals over the 764.3m ordered route and 60 native camera-peek views. Final native run: **84.33s**, zero deaths/errors and **1.34°** maximum sampled camera turn. Six full-render desktop scene samples: median16.7ms, p9517.4–18.4ms; peak compressed scene texture estimate125.05MiB. Desktop and portrait production checks pass. Physical-phone performance remains unmeasured. Required level checks/build pass; no full suite.
+- Evidence: `docs/treehouse-enclosure/`, `docs/performance/treehouse-enclosure-*.json`, and `public/treehouse-trials-v3/provenance.json`. Preserve unrelated shared work when publishing.
+

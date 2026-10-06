@@ -68,6 +68,9 @@ const TREEHOUSE_TRIALS_V2_ASSETS = {
   trialsv2waterreflection:{file:"",image:"treehouse-trials-v2/forest-water-probe.ktx2",imageFallback:"treehouse-trials-v2/forest-water-probe.webp",label:"Treehouse Trials forest water reflection",size:[120,60,.02],wind:false,matte:true},
 } as const;
 const ASSETS = {
+  trialsv3thicket:{file:'../treehouse-trials-v3/understory-thicket',label:'Dense rooted jungle thicket',size:[8,4.7,5.2],wind:true,normalStrength:.07,lod:true,distanceLod:true,doubleSided:false},
+  trialsv3bough:{file:'../treehouse-trials-v3/canopy-bough',label:'Layered hanging jungle bough',size:[15,5.8,7],wind:true,normalStrength:.08,lod:true,distanceLod:true,doubleSided:false},
+  trialsv3understorymatte:{file:'',image:'treehouse-trials-v3/understory-matte.ktx2',imageFallback:'treehouse-trials-v3/understory-matte.webp',label:'Dense overlapping jungle understory matte',size:[64,21.333,.02],wind:false,matte:true,edgeFade:.04,fog:true},
   treehouserepairgrove:{file:'',image:'treehouse-repair/grove.ktx2',imageFallback:'treehouse-repair/grove.webp',label:'Complete Treehouse midground grove',size:[72,30.074,.02],wind:false,matte:true,edgeFade:.025,fog:true},
   treehouserepairridge:{file:'',image:'treehouse-repair/ridge.ktx2',imageFallback:'treehouse-repair/ridge.webp',label:'Layered Treehouse canopy ridge',size:[126,52.63,.02],wind:false,matte:true,edgeFade:.025,fog:true},
   treehouserepairvines:{file:'',image:'treehouse-repair/cave.ktx2',imageFallback:'treehouse-repair/cave.webp',label:'Layered cavern vine curtain',size:[30,12.53,.02],wind:false,matte:true,edgeFade:.025,fog:true},
@@ -310,7 +313,7 @@ function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Te
       const material=highMaterials.values().next().value as THREE.MeshStandardMaterial;
       const map=material.map??null,normalMap=material.normalMap,roughnessMap=material.roughnessMap;
       const sourceMaterialsJson=gltf.parser.json.materials as {pbrMetallicRoughness?:{baseColorTexture?:unknown};normalTexture?:unknown}[];
-      if ((kind.startsWith('treehouse') || kind.startsWith('trialsv2')) &&
+      if ((kind.startsWith('treehouse') || /^trialsv[23]/.test(kind)) &&
         ((sourceMaterialsJson?.some(m=>m.pbrMetallicRoughness?.baseColorTexture)&&!map)||
          (sourceMaterialsJson?.some(m=>m.normalTexture)&&!normalMap)))
         throw new Error(`Textured scenery ${kind} decoded without its original atlases`);
@@ -326,7 +329,7 @@ function createTemplate(kind:RenderKind,dependency:(kind:RenderKind)=>Promise<Te
     }
   });
   return load(true).catch(error=>{
-    if(!wanted()||!compressedLoader||!(kind.startsWith('treehouse')||kind.startsWith('trialsv2'))||
+    if(!wanted()||!compressedLoader||!(kind.startsWith('treehouse')||/^trialsv[23]/.test(kind))||
       !/decoded without|KTX|Basis|transcod|texture/i.test(String((error as Error)?.message??error)))throw error;
     if(!atlasFallbackWarnings.has(kind)){
       atlasFallbackWarnings.add(kind);

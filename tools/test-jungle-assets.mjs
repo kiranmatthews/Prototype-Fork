@@ -70,7 +70,7 @@ document.createElementNS=(namespace,tag)=>{
  const listeners=new Map();element.addEventListener=(type,fn)=>listeners.set(type,fn);
  element.removeEventListener=type=>listeners.delete(type);
  Object.defineProperty(element,'src',{set(url){
-  const path=new URL(url,'http://headless.invalid').pathname.match(/\/((?:treehouse-trail\/matte-(?:far|mid)\.png|treehouse-trials\/(?:(?:forest|coast)-depth-alpha|(?:forest|coast|cavern)-depth)\.webp|treehouse-trials-v2\/forest-water-probe\.webp|treehouse-repair\/(?:grove|ridge|cave)\.webp))$/)?.[1];
+  const path=new URL(url,'http://headless.invalid').pathname.match(/\/((?:treehouse-trail\/matte-(?:far|mid)\.png|treehouse-trials\/(?:(?:forest|coast)-depth-alpha|(?:forest|coast|cavern)-depth)\.webp|treehouse-trials-v2\/forest-water-probe\.webp|treehouse-trials-v3\/understory-matte\.webp|treehouse-repair\/(?:grove|ridge|cave)\.webp))$/)?.[1];
   if(path)readFile(new URL('public/'+path,root)).then(bytes=>{
    [element.width,element.height]=imageSize(bytes);listeners.get('load')?.call(element);
   }).catch(error=>listeners.get('error')?.(error));
@@ -78,7 +78,7 @@ document.createElementNS=(namespace,tag)=>{
 };
 globalThis.createImageBitmap=async()=>({width:1024,height:1024,close(){}});
 globalThis.ProgressEvent??=class{constructor(type,data){this.type=type;Object.assign(this,data);}};
-globalThis.fetch=async input=>{const url=typeof input==='string'?input:input.url;if(url.startsWith('blob:'))return nativeFetch(input);const match=new URL(url,'http://headless.invalid').pathname.match(/\/((?:jungle-kit\/(?:(?:modular|editor)\/)?|map-kit\/|nightworks-kit\/|treehouse-trail\/|treehouse-trials\/|treehouse-trials-v2\/|carlisle-coast\/|carlisle-coast-fidelity\/|beachfront\/)[\w-]+\.glb)$/);return match?new Response(await readFile(new URL('public/'+match[1],root))):new Response('',{status:404});};
+globalThis.fetch=async input=>{const url=typeof input==='string'?input:input.url;if(url.startsWith('blob:'))return nativeFetch(input);const match=new URL(url,'http://headless.invalid').pathname.match(/\/((?:jungle-kit\/(?:(?:modular|editor)\/)?|map-kit\/|nightworks-kit\/|treehouse-trail\/|treehouse-trials\/|treehouse-trials-v[23]\/|carlisle-coast\/|carlisle-coast-fidelity\/|beachfront\/)[\w-]+\.glb)$/);return match?new Response(await readFile(new URL('public/'+match[1],root))):new Response('',{status:404});};
 const server=await createServer({logLevel:'silent',server:{middlewareMode:true},appType:'custom'});
 try{
  const {JungleAssetKit,JUNGLE_ASSETS,JUNGLE_ASSET_KINDS,jungleAssetMatrix,createJungleAssetScope,configureJungleAssetRenderer}=await server.ssrLoadModule('/src/jungleAssets.ts');
