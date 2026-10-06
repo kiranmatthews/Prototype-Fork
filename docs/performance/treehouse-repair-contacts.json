@@ -1,0 +1,744 @@
+{
+  "normalized": true,
+  "sourceBytes": 3729258,
+  "samples": [
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstonea",
+      "x": 33.081,
+      "z": -363.036,
+      "visual": -13.86372597976227,
+      "support": -13.843726191105672,
+      "clearance": 0.019999788656598128
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstonea",
+      "x": 33.081,
+      "z": -362.2,
+      "visual": -13.869127449620008,
+      "support": -13.849127646087263,
+      "clearance": 0.019999803532744664
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstonea",
+      "x": 33.081,
+      "z": -361.364,
+      "visual": -13.870944950654714,
+      "support": -13.850944932571654,
+      "clearance": 0.020000018083059956
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstonea",
+      "x": 34.6,
+      "z": -363.036,
+      "visual": -13.884412526852094,
+      "support": -13.864412402089847,
+      "clearance": 0.02000012476224633
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstonea",
+      "x": 34.6,
+      "z": -362.2,
+      "visual": -13.88681155138906,
+      "support": -13.86681148214224,
+      "clearance": 0.020000069246821184
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstonea",
+      "x": 34.6,
+      "z": -361.364,
+      "visual": -13.876182018884823,
+      "support": -13.856182061595296,
+      "clearance": 0.019999957289526193
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstonea",
+      "x": 36.119,
+      "z": -363.036,
+      "visual": -13.870048528040284,
+      "support": -13.850048731789949,
+      "clearance": 0.019999796250335322
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstonea",
+      "x": 36.119,
+      "z": -362.2,
+      "visual": -13.876979780169899,
+      "support": -13.856979977883125,
+      "clearance": 0.019999802286774226
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstonea",
+      "x": 36.119,
+      "z": -361.364,
+      "visual": -13.87025324823058,
+      "support": -13.85025279375683,
+      "clearance": 0.020000454473748874
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstoneb",
+      "x": 34.230000000000004,
+      "z": -367.002,
+      "visual": -13.82,
+      "support": -13.800000019073487,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstoneb",
+      "x": 34.230000000000004,
+      "z": -366.1,
+      "visual": -13.82,
+      "support": -13.800000019073487,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstoneb",
+      "x": 34.230000000000004,
+      "z": -365.19800000000004,
+      "visual": -13.82,
+      "support": -13.800000019073487,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstoneb",
+      "x": 35.7,
+      "z": -367.002,
+      "visual": -13.82,
+      "support": -13.800000019073487,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstoneb",
+      "x": 35.7,
+      "z": -366.1,
+      "visual": -13.82,
+      "support": -13.800000019073487,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstoneb",
+      "x": 35.7,
+      "z": -365.19800000000004,
+      "visual": -13.82,
+      "support": -13.800000019073487,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstoneb",
+      "x": 37.17,
+      "z": -367.002,
+      "visual": -13.82,
+      "support": -13.800000019073487,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstoneb",
+      "x": 37.17,
+      "z": -366.1,
+      "visual": -13.82,
+      "support": -13.800000019073487,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstoneb",
+      "x": 37.17,
+      "z": -365.19800000000004,
+      "visual": -13.82,
+      "support": -13.800000019073487,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstonec",
+      "x": 33.207499999999996,
+      "z": -370.98,
+      "visual": -13.900000001341105,
+      "support": -13.880000019073487,
+      "clearance": 0.019999982267618677
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstonec",
+      "x": 33.207499999999996,
+      "z": -370.1,
+      "visual": -13.900000001341105,
+      "support": -13.880000019073487,
+      "clearance": 0.019999982267618677
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstonec",
+      "x": 33.207499999999996,
+      "z": -369.22,
+      "visual": -13.900000001341105,
+      "support": -13.880000019073487,
+      "clearance": 0.019999982267618677
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstonec",
+      "x": 34.8,
+      "z": -370.98,
+      "visual": -13.900000001341105,
+      "support": -13.880000019073487,
+      "clearance": 0.019999982267618677
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstonec",
+      "x": 34.8,
+      "z": -370.1,
+      "visual": -13.900000001341105,
+      "support": -13.880000019073487,
+      "clearance": 0.019999982267618677
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstonec",
+      "x": 34.8,
+      "z": -369.22,
+      "visual": -13.900000001341105,
+      "support": -13.880000019073487,
+      "clearance": 0.019999982267618677
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstonec",
+      "x": 36.3925,
+      "z": -370.98,
+      "visual": -13.900000001341105,
+      "support": -13.880000019073487,
+      "clearance": 0.019999982267618677
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstonec",
+      "x": 36.3925,
+      "z": -370.1,
+      "visual": -13.900000001341105,
+      "support": -13.880000019073487,
+      "clearance": 0.019999982267618677
+    },
+    {
+      "name": "Hero flat naturally rounded river stone fitted to its native support",
+      "kind": "trialsv2riverstonec",
+      "x": 36.3925,
+      "z": -369.22,
+      "visual": -13.900000001341105,
+      "support": -13.880000019073487,
+      "clearance": 0.019999982267618677
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 54.773,
+      "z": -452.816,
+      "visual": -12.304740730924497,
+      "support": -12.284740720223654,
+      "clearance": 0.020000010700842452
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 54.773,
+      "z": -450,
+      "visual": -13.213367033532897,
+      "support": -13.193366951206247,
+      "clearance": 0.02000008232664996
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 54.773,
+      "z": -447.184,
+      "visual": -13.62759231957438,
+      "support": -13.607592231396353,
+      "clearance": 0.020000088178026232
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 56.88,
+      "z": -452.816,
+      "visual": -12.301924889414925,
+      "support": -12.28192449408256,
+      "clearance": 0.020000395332365528
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 56.88,
+      "z": -450,
+      "visual": -13.272360832714877,
+      "support": -13.252360552666701,
+      "clearance": 0.020000280048176222
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 56.88,
+      "z": -447.184,
+      "visual": -13.668327098137057,
+      "support": -13.648326918306282,
+      "clearance": 0.020000179830775622
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 58.987,
+      "z": -452.816,
+      "visual": -12.267608186130138,
+      "support": -12.247608186043692,
+      "clearance": 0.02000000008644598
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 58.987,
+      "z": -450,
+      "visual": -13.312098378379194,
+      "support": -13.292098458641243,
+      "clearance": 0.019999919737950123
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 58.987,
+      "z": -447.184,
+      "visual": -13.663059878549417,
+      "support": -13.643060096807702,
+      "clearance": 0.01999978174171524
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 55.073,
+      "z": -460.816,
+      "visual": -10.612608462679953,
+      "support": -10.592608656941309,
+      "clearance": 0.019999805738644127
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 55.073,
+      "z": -458,
+      "visual": -11.513190278736976,
+      "support": -11.493190070404466,
+      "clearance": 0.020000208332509928
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 55.073,
+      "z": -455.184,
+      "visual": -11.928213644817903,
+      "support": -11.908213638584126,
+      "clearance": 0.020000006233777512
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 57.18,
+      "z": -460.816,
+      "visual": -10.596656325815378,
+      "support": -10.576656317876521,
+      "clearance": 0.020000007938856257
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 57.18,
+      "z": -458,
+      "visual": -11.572360784583458,
+      "support": -11.552360555131871,
+      "clearance": 0.020000229451586193
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 57.18,
+      "z": -455.184,
+      "visual": -11.968819754285807,
+      "support": -11.948819564079503,
+      "clearance": 0.020000190206303614
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 59.287,
+      "z": -460.816,
+      "visual": -10.645373646519461,
+      "support": -10.625373755919643,
+      "clearance": 0.019999890599818215
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 59.287,
+      "z": -458,
+      "visual": -11.61025441529533,
+      "support": -11.590254626002345,
+      "clearance": 0.01999978929298507
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 59.287,
+      "z": -455.184,
+      "visual": -11.962126748538962,
+      "support": -11.942127167200589,
+      "clearance": 0.019999581338373318
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 55.013,
+      "z": -468.816,
+      "visual": -8.913488822298936,
+      "support": -8.893489015659835,
+      "clearance": 0.019999806639100726
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 55.013,
+      "z": -466,
+      "visual": -9.813352489021314,
+      "support": -9.793352496691462,
+      "clearance": 0.01999999232985239
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 55.013,
+      "z": -463.184,
+      "visual": -10.2274810300563,
+      "support": -10.207480996299795,
+      "clearance": 0.02000003375650472
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 57.12,
+      "z": -468.816,
+      "visual": -8.896518864634501,
+      "support": -8.876518790728632,
+      "clearance": 0.020000073905869442
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 57.12,
+      "z": -466,
+      "visual": -9.872360782836132,
+      "support": -9.852360546783753,
+      "clearance": 0.020000236052378995
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 57.12,
+      "z": -463.184,
+      "visual": -10.268226438459093,
+      "support": -10.248226316591936,
+      "clearance": 0.020000121867157716
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 59.227,
+      "z": -468.816,
+      "visual": -8.9357651401985,
+      "support": -8.915765052452578,
+      "clearance": 0.0200000877459221
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 59.227,
+      "z": -466,
+      "visual": -9.91246532613736,
+      "support": -9.89246543059783,
+      "clearance": 0.019999895539529078
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 59.227,
+      "z": -463.184,
+      "visual": -10.263419227356362,
+      "support": -10.243419487151693,
+      "clearance": 0.019999740204669436
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 54.743,
+      "z": -476.816,
+      "visual": -7.686663969462373,
+      "support": -7.666663816883201,
+      "clearance": 0.02000015257917198
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 54.743,
+      "z": -474,
+      "visual": -8.11333613645237,
+      "support": -8.093335947248757,
+      "clearance": 0.02000018920361235
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 54.743,
+      "z": -471.184,
+      "visual": -8.528080718484864,
+      "support": -8.508080698804132,
+      "clearance": 0.020000019680731285
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 56.85,
+      "z": -476.816,
+      "visual": -7.745506332430351,
+      "support": -7.725506155352262,
+      "clearance": 0.020000177078088655
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 56.85,
+      "z": -474,
+      "visual": -8.172360794029867,
+      "support": -8.152360541619403,
+      "clearance": 0.02000025241046366
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 56.85,
+      "z": -471.184,
+      "visual": -8.5687211896678,
+      "support": -8.548720992939417,
+      "clearance": 0.02000019672838249
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 58.957,
+      "z": -476.816,
+      "visual": -7.70159977429472,
+      "support": -7.681599892274337,
+      "clearance": 0.019999882020382387
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 58.957,
+      "z": -474,
+      "visual": -8.210624302297024,
+      "support": -8.190624499885885,
+      "clearance": 0.019999802411138745
+    },
+    {
+      "name": "Main natural rock climb \u00b7 overlapping sculpted stair mass",
+      "kind": "trialsv2rockstepsb",
+      "x": 58.957,
+      "z": -471.184,
+      "visual": -8.563630093248786,
+      "support": -8.543630498762392,
+      "clearance": 0.019999594486394656
+    },
+    {
+      "name": "Climb summit \u00b7 fitted natural rock transition slab",
+      "kind": "trialsv2riverstoneb",
+      "x": 54.697,
+      "z": -483.14000000000004,
+      "visual": -7.159999978542328,
+      "support": -7.139999997615814,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Climb summit \u00b7 fitted natural rock transition slab",
+      "kind": "trialsv2riverstoneb",
+      "x": 54.697,
+      "z": -481.6,
+      "visual": -7.159999978542328,
+      "support": -7.139999997615814,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Climb summit \u00b7 fitted natural rock transition slab",
+      "kind": "trialsv2riverstoneb",
+      "x": 54.697,
+      "z": -480.06,
+      "visual": -7.159999978542328,
+      "support": -7.139999997615814,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Climb summit \u00b7 fitted natural rock transition slab",
+      "kind": "trialsv2riverstoneb",
+      "x": 57,
+      "z": -483.14000000000004,
+      "visual": -7.159999978542328,
+      "support": -7.139999997615814,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Climb summit \u00b7 fitted natural rock transition slab",
+      "kind": "trialsv2riverstoneb",
+      "x": 57,
+      "z": -481.6,
+      "visual": -7.159999978542328,
+      "support": -7.139999997615814,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Climb summit \u00b7 fitted natural rock transition slab",
+      "kind": "trialsv2riverstoneb",
+      "x": 57,
+      "z": -480.06,
+      "visual": -7.159999978542328,
+      "support": -7.139999997615814,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Climb summit \u00b7 fitted natural rock transition slab",
+      "kind": "trialsv2riverstoneb",
+      "x": 59.303,
+      "z": -483.14000000000004,
+      "visual": -7.159999978542328,
+      "support": -7.139999997615814,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Climb summit \u00b7 fitted natural rock transition slab",
+      "kind": "trialsv2riverstoneb",
+      "x": 59.303,
+      "z": -481.6,
+      "visual": -7.159999978542328,
+      "support": -7.139999997615814,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Climb summit \u00b7 fitted natural rock transition slab",
+      "kind": "trialsv2riverstoneb",
+      "x": 59.303,
+      "z": -480.06,
+      "visual": -7.159999978542328,
+      "support": -7.139999997615814,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Climb summit \u00b7 fitted natural rock transition slab",
+      "kind": "trialsv2riverstonec",
+      "x": 54.599000000000004,
+      "z": -488.476,
+      "visual": -7.159999978542328,
+      "support": -7.139999997615814,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Climb summit \u00b7 fitted natural rock transition slab",
+      "kind": "trialsv2riverstonec",
+      "x": 54.599000000000004,
+      "z": -487.2,
+      "visual": -7.159999978542328,
+      "support": -7.139999997615814,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Climb summit \u00b7 fitted natural rock transition slab",
+      "kind": "trialsv2riverstonec",
+      "x": 54.599000000000004,
+      "z": -485.924,
+      "visual": -7.159999978542328,
+      "support": -7.139999997615814,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Climb summit \u00b7 fitted natural rock transition slab",
+      "kind": "trialsv2riverstonec",
+      "x": 57,
+      "z": -488.476,
+      "visual": -7.159999978542328,
+      "support": -7.139999997615814,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Climb summit \u00b7 fitted natural rock transition slab",
+      "kind": "trialsv2riverstonec",
+      "x": 57,
+      "z": -487.2,
+      "visual": -7.159999978542328,
+      "support": -7.139999997615814,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Climb summit \u00b7 fitted natural rock transition slab",
+      "kind": "trialsv2riverstonec",
+      "x": 57,
+      "z": -485.924,
+      "visual": -7.159999978542328,
+      "support": -7.139999997615814,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Climb summit \u00b7 fitted natural rock transition slab",
+      "kind": "trialsv2riverstonec",
+      "x": 59.400999999999996,
+      "z": -488.476,
+      "visual": -7.159999978542328,
+      "support": -7.139999997615814,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Climb summit \u00b7 fitted natural rock transition slab",
+      "kind": "trialsv2riverstonec",
+      "x": 59.400999999999996,
+      "z": -487.2,
+      "visual": -7.159999978542328,
+      "support": -7.139999997615814,
+      "clearance": 0.019999980926513672
+    },
+    {
+      "name": "Climb summit \u00b7 fitted natural rock transition slab",
+      "kind": "trialsv2riverstonec",
+      "x": 59.400999999999996,
+      "z": -485.924,
+      "visual": -7.159999978542328,
+      "support": -7.139999997615814,
+      "clearance": 0.019999980926513672
+    }
+  ],
+  "minimumClearance": 0.019999581338373318,
+  "maximumClearance": 0.020000454473748874,
+  "cameraViews": 1,
+  "containmentFaces": 990,
+  "oceanQuality": "full",
+  "deaths": [
+    "Cavern river reset below the single rope"
+  ],
+  "errors": []
+}

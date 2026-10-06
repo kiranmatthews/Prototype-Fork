@@ -1,0 +1,14 @@
+[
+  {
+    "key": "grove",
+    "prompt": "Use case: background-extraction. Turn the forest in this reference into an isolated painterly jungle GROVE for a layered game matte. Preserve the reference's drooping leaf tiers, warm textured twisting trunks, hanging vines and deep teal undergrowth. Three connected trees and their low fern skirt, with all crowns, roots and leaf tips completely inside the image. TRUE transparent background, including generous transparent gutters of at least 12% on the left and right and 10% above the crowns. No branch, leaf, root, painted haze, ground or shadow may touch any canvas edge. No sky, no path, no rocks, no buildings, no rectangular backdrop, no blur vignette. Wide 2.4:1 composition, subtle warm light from upper left. This is a freestanding midground cutout, not an image with a rectangular forest background. Preserve intricate leaf silhouettes and the supplied game-art style."
+  },
+  {
+    "key": "ridge",
+    "prompt": "Use case: background-extraction. Extract the distant visual language of this scene into a layered jungle RIDGE matte for a stylized 3D adventure level. A broad undulating mass of misty blue-green rainforest crowns, with two uneven low hills and occasional tall umbrella crowns; the canopy must have a fully organic silhouette. True transparent sky and background. All foliage must be fully contained within a transparent gutter of at least 10% on every edge, including both sides and the bottom: absolutely no image-edge cuts or rectangle. No foreground trunks, paths, structures, characters, water, text, or solid haze behind the trees. Low-contrast cool atmospheric colours, keeping the supplied painterly leaf shapes. Wide 2.4:1 canvas. This is one isolated distant island of foliage to overlap with other layers in a real scene."
+  },
+  {
+    "key": "cave",
+    "prompt": "Use case: background-extraction. Extract an isolated hanging canopy and vine curtain for the upper edge of a jungle cavern, in exactly this painterly adventure-game style. Weathered mossy roots with trailing vines and fern fronds, three varied organic clumps connected by thin twisting roots. Warm sunlight picks out a few leaf edges; shaded areas are deep olive and teal. Everything is fully contained within a TRUE transparent background, with at least 10% transparent margin on all four sides. No hard cropped top, no rectangular rock or forest backdrop, no sky, no ground, no halfpipe, no buildings, no characters, no text. Wide 2.4:1 composition. The vines dangle to different lengths with empty transparent air between them; it will hang behind real 3D cavern beams and arches."
+  }
+]

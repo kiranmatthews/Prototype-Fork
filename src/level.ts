@@ -5644,7 +5644,7 @@ export class Level {
       map: c.tex === "solid" ? null : this.surfaceTexture(c.tex ?? "checker"),
     });
     material.userData.texKind = c.materialStyle === "unity-sand" ? "sand" : c.tex ?? "checker";
-    if(this.jungleStyle==='painterly'&&!standingWater&&!jungleStream){
+    if(this.jungleStyle==='painterly'&&!standingWater&&!jungleStream&&!material.userData.jungleDapple){
       material.userData.junglePainterly=true;material.userData.jungleDapple=true;
       addJungleDapple(material,this.jungleTime);
     }
@@ -8453,6 +8453,7 @@ export class Level {
   // direction the camera and the controls steer along.
   readonly cameraViews: CameraView[] = [];
   private lanePts: { x: number; y: number; z: number }[] = [];
+  get hasAuthoredOcean(): boolean { return this.capturedOceanSpec !== null; }
   get hasSwimmableWater(): boolean { return !!this.capturedOceanSpec?.swimBounds; }
 
   /** Only explicitly authored water supports swimming; other oceans retain their rules. */

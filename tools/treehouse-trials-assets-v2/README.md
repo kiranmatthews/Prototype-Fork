@@ -75,3 +75,15 @@ Source GLBs, signed responses, AO evidence and all two-angle model reviews stay
 in ignored `.img2threejs/treehouse-trials-v2/`. No generative credentials or signed
 download URLs are published. Source/reference atlas quality is reviewed before
 integration; the final level still requires all-scene browser composition QA.
+
+## October contact and matte repair
+
+`node tools/bake-treehouse-contacts.mjs` now bakes exact upward/vertical LOD0
+triangles for the three river stones and the accepted rock stair B. The
+normalized frame is identical to JungleAssetKit. Runtime level data applies
+placement scale/yaw and 2cm sole clearance, replacing the earlier coarse grids.
+`contact-bake.json` records the accepted GLB hashes and triangle counts.
+
+`repair-mattes/` retains three original-alpha built-in ImageGen sources and
+exact prompts. Runtime KTX2/WebP outputs and hashes are in
+`public/treehouse-repair/`. No additional Meshy credits were used in this repair.

@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import {repairTreehouseWorld} from "./treehouse-scenic-repairs";
 import { treehouseTrialPoint, densifyTreehouseRoute, treehouseTrialContinuity, TREEHOUSE_TRIALS_OPENING_OCEAN } from "./treehouse-trials-continuity";
 import type { CustomComponent, CustomLevelData } from "../level";
 import { TREEHOUSE_OPENING_COMPONENTS, TREEHOUSE_STAIR_LANDINGS, TREEHOUSE_CLEARING_ROUTE, openingHousePoint } from "./treehouse-opening";
@@ -48,7 +49,9 @@ function ground(nodes: Point[], name: string, group = GROUP.trail, width = 84,
     uvs.push(round((x + cross) / 9), round(z / 9));
     const edge = surface === "stone" ? "#83917e" : surface === "sand" ? "#93a482" : "#79936b";
     const center = surface === "stone" ? "#ded7c5" : surface === "sand" ? "#fff3d6" : "#eee8d7";
-    const paintEdge = THREE.MathUtils.smoothstep(Math.abs(cross), 3.6, 6.5);
+    const pathCenter=.55*Math.sin(z*.095)+.24*Math.sin(z*.31+.8);
+    const pathHalf=3.5+.55*Math.sin(z*.17+1.2)+.22*Math.sin(z*.57);
+    const paintEdge=THREE.MathUtils.smoothstep(Math.abs(cross-pathCenter),pathHalf,pathHalf+2.35);
     const paint = new THREE.Color(center).lerp(new THREE.Color(edge), paintEdge);
     paint.multiplyScalar(0.98 + Math.sin(z * 0.28 + cross * 0.34) * 0.025);
     colors.push(round(paint.r), round(paint.g), round(paint.b));
@@ -102,8 +105,6 @@ for (const [index, jump] of jumps.entries()) {
   const middle = (jump.lip + jump.land) / 2;
   surfaceBox([X, jump.bottom - 0.5, middle], [84, 1, 4],
     `Visible shallow dirt pit bottom ${index + 1}`, "#7f7750", GROUP.trail, "dirt");
-  add({ t: "pit", p: [X, jump.bottom + 0.1, middle], s: [83, 0.1, 3.8], invisible: true,
-    nm: `Shallow pit reset ${index + 1}`, grp: GROUP.practice });
   // Lower dirt landings continue the descent; no quarterpipes at the edges.
   const end = index < jumps.length - 1 ? jumps[index + 1].from : -112;
   const endY = index < jumps.length - 1 ? jumps[index + 1].base : -14;
@@ -201,7 +202,7 @@ add({ t: "vertramp", p: [X, -7.2, -319], len: TREEHOUSE_TRIALS_PIPE_V2.length, w
   arcSteps: 32, deck: TREEHOUSE_TRIALS_PIPE_V2.deck, vkind: "half", rails: false, yaw: 0, invisible: true,
   tex: "treehouse-timber", color: "#e0d0b3", nm: "Long sunlit cavern timber halfpipe", grp: GROUP.halfpipe });
 for (const side of [-1, 1]) add({ t: "rail", p: [X + side * (TREEHOUSE_TRIALS_PIPE_V2.flat + TREEHOUSE_TRIALS_PIPE_V2.radius), -7.2 + TREEHOUSE_TRIALS_PIPE_V2.radius, -319],
-  len: TREEHOUSE_TRIALS_PIPE_V2.length, w: 0.1, color: "#b59872", nm: "Rounded timber halfpipe coping", grp: GROUP.halfpipe });
+  len: TREEHOUSE_TRIALS_PIPE_V2.length, w: 0.1, invisible: true, color: "#b59872", nm: "Rounded timber halfpipe coping", grp: GROUP.halfpipe });
 
 // The two surviving wooden abutments stop at the water. A single lightly
 // sagging grindable rope is the sole crossing; nothing fills the broken span.
@@ -323,12 +324,12 @@ for (const p of densifyTreehouseRoute(sourceTrailRoute).slice(1))
 
 export const TREEHOUSE_TRAIL_LEVEL: CustomLevelData = {
   v: 1, name: "Treehouse Trials", spawn: balconySpawn, killY: -30,
-  sky: "day", ocean: TREEHOUSE_TRIALS_OPENING_OCEAN, cameraLookAhead: 12, cameraRig: {camDist:10.6,camHeight:5.5,camPitch:18,camFov:49}, jungleAtmosphere: true, jungleDepthFade: false, jungleStyle: "painterly", keepPlayFog: true,
+  sky: "day", ocean: TREEHOUSE_TRIALS_OPENING_OCEAN, cameraLookAhead: 12, cameraRig: {camDist:11.5,camHeight:3.8,camPitch:10.5,camFov:49}, jungleAtmosphere: true, jungleDepthFade: false, jungleStyle: "painterly", keepPlayFog: true,
   medalTimes: { gold: 88, silver: 125, bronze: 180 },
-  atmosphere: { fallbackRidges:false, fallbackTop:"#348dcc", fallbackBottom:"#b6dce6", fallbackFog:"#b6dce6", fogEnabled: true, fogNear: 48, fogFar: 165, fogColor: "#618e7d",
+  atmosphere: { fallbackRidges:false, fallbackTop:"#348dcc", fallbackBottom:"#b6dce6", fallbackFog:"#b6dce6", fogEnabled: true, fogNear: 62, fogFar: 185, fogColor: "#618e7d",
     ambientSky: "#9fc5c4", ambientGround: "#6c6044", ambientIntensity: 0.98,
     sunColor: "#ffe0a6", sunIntensity: 1.72, fillColor: "#bdd2ca", fillIntensity: 0.42,
-    shadowStrength: 0.85, drawDistance: 185 },
-  components: treehouseTrialContinuity(components),
+    shadowStrength: 0.85, drawDistance: 320 },
+  components: repairTreehouseWorld(treehouseTrialContinuity(components)),
   groups: [...Object.entries(GROUP).map(([nm, id]) => ({ id, nm })), ...TREEHOUSE_TRIALS_SCENE_GROUPS_V2],
 };

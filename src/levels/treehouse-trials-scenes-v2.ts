@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {exactTreehouseSupport} from './treehouse-exact-support';
 import type { CustomComponent } from '../level';
 
 type P = [number, number, number];
@@ -104,7 +105,7 @@ function bank(near:number,far:number,side:number,heightAt:(z:number)=>number=flo
       const cross=[edge-.3,edge+.35,edge+1.5,edge+3.3,edge+6.1,edge+10.3][col];
       const height=[-.08,.13,.68,1.7,2.65,1.9][col]*garden;
       const noise=(Math.sin(z*.28+col*.84)*.22+Math.sin(z*.061-side*col)*.17)*(col/5);
-      v.push(side*cross,y+height+noise,z-near);uv.push((X+side*cross)/7,z/7);
+      v.push(side*cross,y+height+noise,z-near);uv.push((X+side*cross)/6.5,z/6.5);
       const paint=new THREE.Color('#eee8d7').lerp(new THREE.Color('#70916d'),THREE.MathUtils.smoothstep(col,0,2.2));
       paint.lerp(new THREE.Color('#394f3d'),THREE.MathUtils.smoothstep(col,3,5)*.25);
       paint.multiplyScalar(.94+Math.sin(z*.19+col*.45)*.055);colors.push(paint.r,paint.g,paint.b);
@@ -170,7 +171,6 @@ function riverMargin(z:number,near:boolean):void {
 riverMargin(-228,true);riverMargin(-240,false);
 // Nine-by-nine contact grids are a bounded downsample of the measured
 // 41x41 GLB height fields. They fit the actual flat top and sloped stone edges.
-const riverContacts: (number | null)[][][] = [[[null,null,null,null,null,null,null,null,null],[null,null,0.97797,0.98662,0.98584,0.98724,0.98477,null,null],[null,0.9858,0.98518,0.9735,0.98017,0.97561,0.98602,0.66261,null],[null,0.99012,0.98389,0.97426,0.97484,0.97205,0.96811,0.95011,null],[null,0.9914,0.98636,0.97604,0.96826,0.97274,0.9783,0.98356,null],[null,0.98775,0.97559,0.97903,0.96967,0.97521,0.97995,0.98444,null],[null,0.83435,0.99327,0.98211,0.97097,0.97339,0.98551,0.94982,null],[null,null,0.98637,0.98878,0.97939,0.98288,0.76242,null,null],[null,null,null,null,null,null,null,null,null]],[[null,null,null,null,null,0.00946,null,null,null],[null,null,1.0,1.0,1.0,1.0,1.0,null,null],[null,1.0,1.0,1.0,1.0,1.0,1.0,0.83988,null],[null,1.0,1.0,1.0,1.0,1.0,1.0,1.0,null],[null,1.0,1.0,1.0,1.0,1.0,1.0,1.0,null],[null,1.0,1.0,1.0,1.0,1.0,1.0,1.0,null],[null,1.0,1.0,1.0,1.0,1.0,1.0,1.0,null],[null,0.34104,1.0,1.0,1.0,1.0,1.0,null,null],[null,null,null,null,null,null,null,null,null]],[[null,null,null,null,0.05964,null,null,null,null],[null,0.16178,1.0,1.0,1.0,1.0,1.0,0.33906,null],[null,1.0,1.0,1.0,1.0,1.0,1.0,1.0,null],[null,1.0,1.0,1.0,1.0,1.0,1.0,1.0,null],[0.06924,1.0,1.0,1.0,1.0,1.0,1.0,1.0,null],[null,1.0,1.0,1.0,1.0,1.0,1.0,1.0,null],[null,0.91576,1.0,1.0,1.0,1.0,1.0,1.0,null],[null,0.35566,1.0,1.0,1.0,1.0,1.0,0.25427,null],[null,null,null,null,null,null,null,null,null]]];
 for(const [index,kind,x,z,top,w,d] of [
   [0,'trialsv2riverstonea',34.6,-230.2,-13.88,6.2,3.8],
   [1,'trialsv2riverstoneb',35.7,-234.1,-13.82,6,4.1],
@@ -178,15 +178,7 @@ for(const [index,kind,x,z,top,w,d] of [
 ] as const){
   const contactTop=index===0?.97507:1;
   prop(kind,[x,top-contactTop,z],[w,1,d],'Hero flat naturally rounded river stone fitted to its native support',0,G.landscape);
-  const grid=riverContacts[index],v:number[]=[],ix:number[]=[];
-  for(let row=0;row<9;row++)for(let col=0;col<9;col++)v.push((col/8-.5)*w,(grid[row][col]??0)-.5,(.5-row/8)*d);
-  for(let row=0;row<8;row++)for(let col=0;col<8;col++){
-    const a=row*9+col,b=a+1,c=a+9,d=c+1;
-    if(grid[row][col]!==null&&grid[row][col+1]!==null&&grid[row+1][col]!==null)ix.push(a,b,c);
-    if(grid[row][col+1]!==null&&grid[row+1][col+1]!==null&&grid[row+1][col]!==null)ix.push(b,d,c);
-  }
-  add({t:'mesh',p:[x,top-contactTop+.5,z],s:[1,1,1],vertices:v,indices:ix,invisible:true,
-    tex:'solid',edgeGrinding:false,vert:false,nm:`Oversized flat river stepping stone ${index+1}`,grp:13});
+  add(exactTreehouseSupport(C[C.length-1],`Exact visible river stone support ${index+1}`));
 }
 for(const [dx,z,size,yaw] of [[-7.5,-228.9,4.8,23],[8.8,-239,4.5,48],[-11,-236.5,5.4,-15],[13,-232,5.2,69],[-6,-238.8,3.7,28],[7.8,-228.2,3.9,-39]] as const){
   prop('treehousemossrock',[X+dx,-14.95,z],[size,2.2,size*.8],'Mossy rounded river margin boulder',yaw,G.landscape);
@@ -230,7 +222,7 @@ function roof(near:number,far:number):void {
   const nx=12,nz=8,v:number[]=[],ix:number[]=[],colors:number[]=[],uv:number[]=[];
   // Lower and upper shells share boundary rows, with closed rough side faces.
   for(let layer=0;layer<2;layer++)for(let row=0;row<=nz;row++)for(let col=0;col<=nx;col++){
-    const x=-20+40*col/nx,z=near+(far-near)*row/nz;
+    const x=-20+40*col/nx,z=near+(far-near)*row/nz+Math.sin(x*.42+near*.3)*1.4+Math.sin(x*.91)*.4;
     const lower=floorAt(z)+17.0+Math.cos(x*.17)*1.6+Math.sin(z*.22+x*.31)*.55;
     const y=lower+layer*(4.1+Math.sin(x*.23-z*.12)*.6);
     v.push(x,y,z-near);uv.push((x+X)/8,z/8);
@@ -240,7 +232,7 @@ function roof(near:number,far:number):void {
   const count=(nx+1)*(nz+1);
   for(let row=0;row<nz;row++)for(let col=0;col<nx;col++){
     const x=-20+40*(col+.5)/nx,z=near+(far-near)*(row+.5)/nz;
-    if(x>-17&&x<-3&&skylightAt(z))continue;
+    if(x>-17+Math.sin(z*.47)*2.2&&x<-3+Math.sin(z*.61)*2.4&&skylightAt(z))continue;
     const a=row*(nx+1)+col,b=a+1,c=a+nx+1,d=c+1;
     ix.push(a,c,b,b,c,d,a+count,b+count,c+count,b+count,d+count,c+count);
   }
@@ -276,15 +268,7 @@ for(const [row,z,entryY,variant,dx,yaw] of [[0,-256,-14,1,-.12,-1],[1,-264,-12.3
   const x=X+dx,w=8.6,depth=12.8;
   prop(variant?'trialsv2rockstepsb':'trialsv2rockstepsa',[x,base,z],[w,height,depth],
     'Main natural rock climb · overlapping sculpted stair mass',yaw,G.cavern);
-  const v:number[]=[],ix:number[]=[];
-  for(let rr=0;rr<9;rr++)for(let col=0;col<9;col++)v.push((col/8-.5)*w,((col>=2&&col<=6?grid[Math.round(rr*2.5)][4]:grid[Math.round(rr*2.5)][col])??0)*height,(.5-rr/8)*depth);
-  for(let rr=0;rr<8;rr++)for(let col=0;col<8;col++){
-    const aa=grid[Math.round(rr*2.5)],bb=grid[Math.round((rr+1)*2.5)],a=rr*9+col,b=a+1,c=a+9,d=c+1;
-    if(aa[col]!==null&&aa[col+1]!==null&&bb[col]!==null)ix.push(a,b,c);
-    if(aa[col+1]!==null&&bb[col+1]!==null&&bb[col]!==null)ix.push(b,d,c);
-  }
-  add({t:'mesh',p:[x,base,z],s:[1,1,1],yaw,vertices:v,indices:ix,invisible:true,
-    vert:false,edgeGrinding:false,tex:'solid',nm:`Measured native support for natural climb row ${row+1}`,grp:G.cavern});
+  add(exactTreehouseSupport(C[C.length-1],`Exact visible rock climb support ${row+1}`));
 }
 
 // The native halfpipe owns collision. Physical narrow boards sit only 3mm
@@ -391,7 +375,7 @@ for(const [name,p,s,eye,target,fov,distance] of [
   cameraFollowTargetHeight:1.35,nm:name,grp:G.camera});
 
 // Shallow near shelves reveal actual soil behind the launch lips, then
-// descend to the lower landings. Contact uses the existing lethal-mesh path,
+// descend to the lower landings. Contact uses the existing ordinary ground contact,
 // with the original deeper floor/reset retained as a backup below it.
 for(const [index,pit] of shallowPitBeds.entries()){
   const origin:P=[X,0,pit.near],v:number[]=[],ix:number[]=[],uv:number[]=[];
@@ -400,7 +384,7 @@ for(const [index,pit] of shallowPitBeds.entries()){
     v.push(x,visibleBedY(z)!,z-pit.near);uv.push((X+x)/6,z/6);
   }
   for(let row=0;row<3;row++){const a=row*2,b=a+1,c=a+2,d=c+1;ix.push(a,b,c,b,d,c);}
-  add({t:'mesh',p:origin,vertices:v,indices:ix,uvs:uv,lethal:true,vert:false,
+  add({t:'mesh',p:origin,vertices:v,indices:ix,uvs:uv,vert:false,
     edgeGrinding:false,tex:'treehouse-loam',color:'#e9e1cf',nm:`Visible shallow solid dirt bed ${index+1}`,grp:G.landscape});
 }
 

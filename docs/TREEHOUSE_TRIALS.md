@@ -13,10 +13,10 @@ The rest of the course uses one native follow rig and the ordered, smooth
 camera spine. Eight overlapping per-scene shot volumes were removed. Camera
 profile and open-horizon settings survive native copy/export/import.
 
-The route gains 222m of actual connecting ground, reaching roughly 666m.
-Small bends, planted verges, a longer cave gallery and a forest buffer separate
+The route gains 234m of connecting length, reaching roughly 678m.
+Stronger bends, planted verges, a longer cave gallery and a forest buffer separate
 the set pieces. Native ramp gaps, stone contacts, rock treads, the 46m pipe and
-single bridge rope retain their shapes. Movement tuning is unchanged.
+25m bridge rope retain native movement and collision behavior. Movement tuning is unchanged.
 
 An actual animated ocean borders the opening's curved sand shelves. Its extent
 stops at the authored shore, and both distant matte horizons align with their
@@ -26,12 +26,38 @@ porch boards were removed or repositioned. Cloth and its posts move with each
 complete assembly. Straw receives sunlight; warm window emission is limited
 to vertical faces. Ground shoulders and distant earth close the forest edges.
 
-The forest and coastal matte layers now have genuine transparent sky. New
-versioned filenames avoid stale HTTP image copies. Their original dimensions,
-alpha and complete mip chains are preserved in KTX2 and WebP. The live sky
-supplies air behind the organic silhouettes, with no stock hill silhouettes
-for this level. Source prompts and generated references are recorded under
-`tools/treehouse-trials-assets/`.
+Three new built-in ImageGen layers provide complete transparent grove,
+canopy-ridge and hanging-vine silhouettes. They replace incomplete old forest
+and cave cards. Staggered placement, foreground planting and the turning exit
+provide depth. The layers use fog, mipmapped KTX2 and original-alpha WebP
+fallbacks. Sources and exact prompts are in
+`tools/treehouse-trials-assets-v2/repair-mattes/`; the runtime manifest is
+`public/treehouse-repair/manifest.json`. Encoding adds only transparent padding
+to 1944×812 for GPU block alignment.
+
+## Contact and scenery repair, 6 October
+
+- All stair flights, exposed landing edges and balcony returns have visible
+  balustrades paired with continuous containment faces. Grounded posts, cross
+  bearers, diagonal braces and stringers support the cabin and landings. The
+  bottom landing is raised 12cm clear of the soil.
+- The three downhill depressions have supported, nonlethal beds. Their old
+  invisible reset boxes are removed. A fitted perimeter prevents escape
+  through the outer scenery while preserving openings and supported travel.
+- River stones and the main rock stair masses use exact accepted GLB triangles
+  as collision data, with a 2cm sole clearance. `tools/bake-treehouse-contacts.mjs`
+  records source hashes and reproduces the baked contact module. Natural summit
+  slabs and a buried rocky berm close the exposed gallery join.
+- Continuous world-space loam UVs and wavy painted verges remove rectangular
+  material boundaries. The native ocean gets full reflection/refraction/depth
+  passes and 128 lateral wave segments; occlusion skips its passes inland.
+- Foliage LODs dissolve across a 24m distance band instead of switching whole
+  cells. A 320m camera range, fog, curved joins and foreground planting hide the
+  distant course. The single follow camera remains continuous after the opening.
+- The 46m halfpipe has separate timber decks, warm coping, trestles, fern
+  shoulders and an asymmetric rock arch with measured riding clearance. Roof
+  edges are irregular. The broken bridge's single rope spans 25m; its anchors,
+  far abutment, river and downstream course move together.
 
 ## Asset recovery and budgets
 
@@ -39,7 +65,7 @@ The existing 33 Meshy models consumed 495 credits in the preceding art pass.
 This revision spends no additional Meshy credits. Near/far meshes, shared
 atlases, rooted leaf wind, pinned cloth, packed AO and streamed ownership remain.
 The 25-family V2 kit has 80,367 near / 25,706 far triangles and a 61.67MiB
-compressed texture budget. The active standalone matte/wood maps use 7.35MiB
+compressed texture budget. The active standalone matte/wood maps use 13.38MiB
 of ASTC4x4 storage; the shared stream reflection uses 2.01MiB.
 
 Rejected asset leases can be acquired again. Scenery cells retry with bounded
@@ -53,20 +79,28 @@ future retries and prevents late image loads reviving an old level.
 
 ## Actual review
 
-`docs/treehouse-trials-scene-review.jpg` shows the nine current scene approaches.
-`docs/treehouse-trials-continuous.webm` records one continuous native-input visit,
-with no travel warps. That run finishes in 82.3s, clears all three dirt jumps,
-walks the river stones, climb and pipe, and catches the bridge rope with zero
-deaths or console errors. Maximum sampled camera rotation is 1.39 degrees per
-simulation step. Scenery texture residency peaks at 117.69MiB in that run.
+Current screenshots are in `docs/treehouse-repairs/`. The continuous native-input
+run in `docs/performance/treehouse-repair-continuous.json` starts at the balcony
+and reaches the gate in 86.37s with no travel warps, deaths or console errors.
+The review controller counter-steers the normal grind balance meter on the
+longer rope; it does not change physics, position or speed. Maximum sampled
+camera rotation is 0.84 degrees per simulation step.
 
-A separate real-browser observation deliberately interrupts the model, decoder,
-reflection and ground-image downloads. All recover in the same visit without
-horizontal movement, warp or reload, and without a GPU upload error. Ordinary
-15cm balcony settling is allowed. Full-render desktop and phone-sized reviews
-have supported positions and clean consoles. Physical-phone timing and thermal
-performance remain unmeasured. The focused level/ownership/stream checks and
-production build are the checks used; no full test suite is run.
+Focused browser evidence covers 28 outward stair/landing/balcony pushes, 22
+course-edge pushes, walking through all three nonlethal pits, and 81 rays
+against actual rendered stone triangles. Measured sole clearance is 1.99996–
+2.00005cm. The summit gap was found during the close visual review and closed.
+The five full-render 1280×720 scene samples (120 rendered frames each) have
+16.7ms medians and 18.0–18.4ms p95 on this desktop. Physical-phone timing and
+thermal performance remain unmeasured. Performance, contacts and boundary
+records are the `docs/performance/treehouse-repair-*.json` files.
+
+The merged production bundle also passes desktop and 390×844 portrait smoke
+checks, including real keyboard movement, all repaired asset markers and clean
+consoles. The required `check:levels` scripts and production type-check/bundle pass. The
+image fixture recognizes all three new matte files. No full test suite was run.
+Earlier asset interruption/recovery evidence remains valid for the unchanged
+bounded-retry code and is retained separately.
 
 Campaign progress retains `treehouse-trail`; menus show “Treehouse Trials.”
 Existing edited local copies remain intact. Restore original in PROJECT when

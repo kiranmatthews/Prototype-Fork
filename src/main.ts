@@ -932,7 +932,7 @@ function updateWaterPresentation(dt: number): void {
   } else {
     level.water.clearPreCrtRenderSize();
   }
-  level.water.setQuality((level.skyPreset === "coast" || (level.hasSwimmableWater && player.pos.z > -12)) && !split2p && !LITE_RENDER && !NO_OCEAN_PASSES ? "full" : "lite");
+  level.water.setQuality((level.skyPreset === "coast" || level.hasAuthoredOcean || (level.hasSwimmableWater && player.pos.z > -12)) && !split2p && !LITE_RENDER && !NO_OCEAN_PASSES ? "full" : "lite");
   oceanTuning.apply(level.water, (current.id === "warproom" || level.isCampaignMap) ? "map" : "level");
   level.water.setSkyUrl(import.meta.env.BASE_URL + SKY_PRESETS[activeSky].file,
     SKY_PRESETS[activeSky].fog, presetHorizonV(activeSky));

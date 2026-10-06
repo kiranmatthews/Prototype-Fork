@@ -1,0 +1,562 @@
+{
+  "mode": "complete",
+  "jobs": 31,
+  "results": [
+    {
+      "name": "Stair rope handrail \u00b7 invisible safety barrier segment 1",
+      "start": [
+        -7.367557873329587,
+        0.8700026819801506,
+        11.35633361723991
+      ],
+      "end": [
+        -7.397264353788716,
+        0.7900384229048968,
+        11.5245014533107
+      ],
+      "crossed": -0.6792285349591178,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Stair rope handrail \u00b7 invisible safety barrier segment 2",
+      "start": [
+        -9.337176268388243,
+        2.2100045001889694,
+        11.009038018601652
+      ],
+      "end": [
+        -9.366882352430357,
+        2.1300393694502753,
+        11.177207595118082
+      ],
+      "crossed": -0.6792268900059456,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Stair rope handrail \u00b7 invisible safety barrier segment 1",
+      "start": [
+        -7.221692126670413,
+        0.8700016904181957,
+        10.52909638276009
+      ],
+      "end": [
+        -7.191985646211284,
+        0.7899659494934506,
+        10.3609285466893
+      ],
+      "crossed": -0.679228534959118,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Stair rope handrail \u00b7 invisible safety barrier segment 2",
+      "start": [
+        -9.191303731611756,
+        2.209998889067424,
+        10.18180198139835
+      ],
+      "end": [
+        -9.16159764756964,
+        2.129964019806118,
+        10.01363240488192
+      ],
+      "crossed": -0.6792268900059454,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Stair rope handrail \u00b7 invisible safety barrier segment 1",
+      "start": [
+        -11.70575361723991,
+        3.5799959084145416,
+        7.626352126670413
+      ],
+      "end": [
+        -11.873921453310697,
+        3.500033249679206,
+        7.596645646211278
+      ],
+      "crossed": -0.6792285349591203,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Stair rope handrail \u00b7 invisible safety barrier segment 2",
+      "start": [
+        -11.358458018601652,
+        4.979997808035696,
+        5.656733731611757
+      ],
+      "end": [
+        -11.526627595118082,
+        4.900034238607207,
+        5.627027647569644
+      ],
+      "crossed": -0.679226890005946,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Stair rope handrail \u00b7 invisible safety barrier segment 1",
+      "start": [
+        -10.87851638276009,
+        3.58000176610856,
+        7.772207873329587
+      ],
+      "end": [
+        -10.710348546689303,
+        3.4999644248438995,
+        7.8019143537887174
+      ],
+      "crossed": -0.679228534959121,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Stair rope handrail \u00b7 invisible safety barrier segment 2",
+      "start": [
+        -10.53122198139835,
+        4.979998839324175,
+        5.802596268388243
+      ],
+      "end": [
+        -10.363052404881918,
+        4.899962408752662,
+        5.832302352430355
+      ],
+      "crossed": -0.6792268900059443,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Stair rope handrail \u00b7 invisible safety barrier segment 1",
+      "start": [
+        -13.045677873329586,
+        6.3800028020688115,
+        3.24714361723991
+      ],
+      "end": [
+        -13.075384353788742,
+        6.300040143333491,
+        3.415311453310694
+      ],
+      "crossed": -0.6792285349591194,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Stair rope handrail \u00b7 invisible safety barrier segment 2",
+      "start": [
+        -15.015296268388242,
+        7.780004701689966,
+        2.8998480186016504
+      ],
+      "end": [
+        -15.045002352430354,
+        7.700041132261475,
+        3.068017595118083
+      ],
+      "crossed": -0.6792268900059445,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Stair rope handrail \u00b7 invisible safety barrier segment 1",
+      "start": [
+        -12.899812126670414,
+        6.380001766108561,
+        2.4199063827600895
+      ],
+      "end": [
+        -12.870105646211266,
+        6.299964424843887,
+        2.2517385466893045
+      ],
+      "crossed": -0.6792285349591196,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Stair rope handrail \u00b7 invisible safety barrier segment 2",
+      "start": [
+        -14.869423731611755,
+        7.779998839324172,
+        2.0726119813983495
+      ],
+      "end": [
+        -14.869269698887932,
+        7.699984083824614,
+        2.0718582498268976
+      ],
+      "crossed": -0.8492309718581244,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Bottom landing north rail \u00b7 invisible safety barrier segment 1",
+      "start": [
+        -4.782871156459984,
+        0.20000000037252902,
+        10.80681655383519
+      ],
+      "end": [
+        -4.7531647892842726,
+        0.12000000037252903,
+        10.638648220395721
+      ],
+      "crossed": -0.6792280648795144,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Bottom landing south rail \u00b7 invisible safety barrier segment 1",
+      "start": [
+        -4.980828843540016,
+        0.20000000037252902,
+        11.929493446164809
+      ],
+      "end": [
+        -5.0105352107157275,
+        0.12000000037252903,
+        12.097661779604278
+      ],
+      "crossed": -0.6792280648795144,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "First landing outer balustrade \u00b7 invisible safety barrier segment 1",
+      "start": [
+        -12.280658264641023,
+        2.880000000372529,
+        10.022930126985216
+      ],
+      "end": [
+        -12.448827125831137,
+        2.800000000372529,
+        9.993223880013796
+      ],
+      "crossed": -0.6792275660848178,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "First landing outer balustrade \u00b7 invisible safety barrier segment 2",
+      "start": [
+        -11.785849873014783,
+        2.880000000372529,
+        10.729588264641023
+      ],
+      "end": [
+        -11.815556119986203,
+        2.800000000372529,
+        10.897757125831138
+      ],
+      "crossed": -0.6792275660848178,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Second landing outer balustrade \u00b7 invisible safety barrier segment 1",
+      "start": [
+        -10.451130126985216,
+        5.680000000372528,
+        2.6993617353589756
+      ],
+      "end": [
+        -10.421423880013803,
+        5.600000000372528,
+        2.5311928741688625
+      ],
+      "crossed": -0.6792275660848195,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Second landing outer balustrade \u00b7 invisible safety barrier segment 2",
+      "start": [
+        -9.956321735358976,
+        5.680000000372528,
+        3.4060198730147833
+      ],
+      "end": [
+        -9.788152874168862,
+        5.600000000372528,
+        3.4357261199862057
+      ],
+      "crossed": -0.6792275660848176,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Top landing outer balustrade \u00b7 invisible safety barrier segment 1",
+      "start": [
+        -17.958773080997037,
+        8.480000000372529,
+        1.9137340854786453
+      ],
+      "end": [
+        -18.126942476106503,
+        8.400000000372529,
+        1.8840279601174537
+      ],
+      "crossed": -0.6792270614597652,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Top landing outer balustrade \u00b7 invisible safety barrier segment 2",
+      "start": [
+        -17.37714437521268,
+        8.480000000372529,
+        2.1279883524166134
+      ],
+      "end": [
+        -17.406850680308956,
+        8.400000000372529,
+        2.296156958413033
+      ],
+      "crossed": -0.6792278072768856,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Balcony outer edge \u00b7 invisible safety barrier segment 1",
+      "start": [
+        -23.41777990438766,
+        8.480000000372529,
+        -0.9883017408908285
+      ],
+      "end": [
+        -23.44748614769599,
+        8.400000000372529,
+        -0.8201328636177094
+      ],
+      "crossed": -0.6792275508842145,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Balcony outer edge \u00b7 invisible safety barrier segment 2",
+      "start": [
+        -20.241773395643587,
+        8.480000000372529,
+        -0.4282864748587282
+      ],
+      "end": [
+        -20.271479815116564,
+        8.400000000372529,
+        -0.2601183710289666
+      ],
+      "crossed": -0.6792282818912612,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Balcony outer edge \u00b7 invisible safety barrier segment 1",
+      "start": [
+        -14.209817537884263,
+        8.480000000372529,
+        0.6353186763885268
+      ],
+      "end": [
+        -14.210034770716268,
+        8.400000000372529,
+        0.6360612895822078
+      ],
+      "crossed": -0.8492309465305644,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Balcony outer edge \u00b7 invisible safety barrier segment 2",
+      "start": [
+        -12.01862777553935,
+        8.480000000372529,
+        1.021682752855766
+      ],
+      "end": [
+        -12.24943326405409,
+        8.400000000372529,
+        0.9817669311515187
+      ],
+      "crossed": -0.8492315009562921,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Balcony left return \u00b7 invisible safety barrier segment 1",
+      "start": [
+        -24.06086817133316,
+        8.480000000372529,
+        -1.6601804021940103
+      ],
+      "end": [
+        -24.22903730380234,
+        8.400000000372529,
+        -1.6898865873766182
+      ],
+      "crossed": -0.6792273096899007,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Balcony right return \u00b7 invisible safety barrier segment 1",
+      "start": [
+        -11.84925182866684,
+        8.480000000372529,
+        0.4930604021940101
+      ],
+      "end": [
+        -11.681082696197658,
+        8.400000000372529,
+        0.522766587376611
+      ],
+      "crossed": -0.6792273096899002,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Balcony rear left guard \u00b7 invisible safety barrier segment 1",
+      "start": [
+        -23.69454137221654,
+        8.480000000372529,
+        -2.1540684842085955
+      ],
+      "end": [
+        -23.664834979848663,
+        8.400000000372529,
+        -2.3222367070425705
+      ],
+      "crossed": -0.6792281694164392,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Balcony rear right guard \u00b7 invisible safety barrier segment 1",
+      "start": [
+        -12.024571372216542,
+        8.480000000372529,
+        -0.09633848420859525
+      ],
+      "end": [
+        -11.994864979848646,
+        8.400000000372529,
+        -0.26450670704256646
+      ],
+      "crossed": -0.67922816941644,
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Full-width downhill launch 1 walk into safe pit",
+      "start": [
+        35,
+        -2.1,
+        -77
+      ],
+      "end": [
+        35,
+        -5.8950000106912155,
+        -90.9499999996238
+      ],
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Full-width downhill launch 2 walk into safe pit",
+      "start": [
+        35,
+        -5.800000000000001,
+        -102
+      ],
+      "end": [
+        35,
+        -9.738572889378634,
+        -115.9499999996238
+      ],
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    },
+    {
+      "name": "Full-width downhill launch 3 walk into safe pit",
+      "start": [
+        35,
+        -9.7,
+        -129
+      ],
+      "end": [
+        35.228038562912886,
+        -13.873012438184421,
+        -142.9417701500024
+      ],
+      "state": "ride",
+      "deaths": 0,
+      "grounded": true,
+      "passed": true
+    }
+  ],
+  "errors": []
+}
