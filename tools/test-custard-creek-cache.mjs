@@ -11,6 +11,7 @@ try {
   for(const [version,fixture,componentCount] of [
     ['04557f6 v1','custard-creek-carving-v1.ts',907],
     ['73aedc4 v2','custard-creek-coast-v2.ts',859],
+    ['ba562b6 v3','custard-creek-independent-v3.ts',1132],
   ]) {
     const {CUSTARD_CREEK_LEVEL:oldData}=await server.ssrLoadModule('/tools/fixtures/'+fixture);
     const raw={id:'custard-creek',name:'Custard Creek',data:oldData};
@@ -48,5 +49,9 @@ try {
     assert.equal(isOriginalCustardCreek({...pristine,id:'my-creek'}),false,'custom identities never migrate');
     assert.equal(isOriginalCustardCreek({...pristine,name:'Custard Creek copy'}),false,'entry-only renames remain local');
   }
-  console.log('PASS Custard cache: exact raw/normalized v1 and v2 published snapshots follow source; geometry, spawn, metadata, names and mutable edits remain local.');
+  const current=BUILTIN_LEVELS.find(entry=>entry.id==='custard-creek');
+  assert.ok(isOriginalCustardCreek(current),'current detailed source snapshot follows the builtin');
+  const edited=structuredClone(current);edited.data.components[0].p[0]+=.01;
+  assert.equal(isOriginalCustardCreek(edited),false,'current sculpted edits remain authored');
+  console.log('PASS Custard cache: exact raw/normalized v1, v2, v3 and current published snapshots follow source; geometry, spawn, metadata, names and mutable edits remain local.');
 } finally {await server.close();}

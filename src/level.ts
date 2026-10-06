@@ -920,6 +920,7 @@ export const TEX_KINDS = [
   "coast-turf",
   "coast-bedrock",
   "coast-timber",
+  "creek-raft",
   "coast-moss",
   "coast-stone",
   "treehouse-timber",
@@ -1460,6 +1461,8 @@ export interface VertRampNode {
   roll?: number; // radians, banked about the spine tangent
 }
 export interface VertRampOpts {
+  /** Optional metric stone projection, including arc distance up each bank. */
+  uvTileMetres?: number;
   radius: number; // transition radius
   flatHalf: number; // half-width of the flat (a quarter's run-up, a half's trough)
   kind: "quarter" | "half";
@@ -1658,6 +1661,7 @@ export function buildVertRampGeometry(
 
   const pos: number[] = [];
   const uv: number[] = [];
+  const profileArc=[0];for(let k=1;k<prof.length;k++)profileArc.push(profileArc[k-1]+Math.hypot(prof[k].lat-prof[k-1].lat,prof[k].y-prof[k-1].y));
   // arc length along the spine, so a repeating texture doesn't stretch on bends
   let s = 0;
   const sAt: number[] = [0];
@@ -1686,8 +1690,13 @@ export function buildVertRampGeometry(
       const u1 = prof[k + 1].lat / 6;
       const v0 = s0 / 6;
       const v1 = s1 / 6;
-      uv.push(u0, v0, u1, v1, u1, v0);
-      uv.push(u0, v0, u0, v1, u1, v1);
+      if(o.uvTileMetres){
+        const tile=o.uvTileMetres,a=profileArc[k]/tile,b=profileArc[k+1]/tile;
+        uv.push(s0/tile,a,s1/tile,b,s0/tile,b,s0/tile,a,s1/tile,a,s1/tile,b);
+      }else{
+        uv.push(u0, v0, u1, v1, u1, v0);
+        uv.push(u0, v0, u0, v1, u1, v1);
+      }
     }
   }
   const copings = copK.map((k) => {
@@ -3131,7 +3140,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       if (supportProbeCount * supportOverlapTriangles > MAX_TERRAIN_SUPPORT_TRIANGLE_TESTS ||
           supportProbeCount * supportGroundTriangles > MAX_TERRAIN_SUPPORT_RAW_TRIANGLES) return null;
     }
-    if(component.tex==='coast-timber'&&['platform','crumble','mover'].includes(component.t)&&!component.pts){
+    if((component.tex==='coast-timber'||component.tex==='creek-raft')&&['platform','crumble','mover'].includes(component.t)&&!component.pts){
       const depth=component.s?.[2]??(component.t==='platform'?8:component.t==='mover'?6:3);
       if(depth>MAX_PATH_LENGTH)return null;
       aggregateSamples+=estimateCarlisleTimberWork(depth,component.t!=='platform');
@@ -3502,6 +3511,8 @@ const CUSTARD_CARVING_SNAPSHOTS = [
   { length: 3111245, a: 0x56d3de51, b: 0x9e9d8f25 },
   { length: 3111533, a: 0xe38da879, b: 0x9bcdbc1d },
   { length: 1208879, a: 0x1f403b53, b: 0x72a1667b },
+  { length: 1508766, a: 0x83f4c9bc, b: 0x440d0304 },
+  { length: 6077529, a: 0x474a5f5c, b: 0x690291e6 },
 ] as const;
 const CUSTARD_SNAPSHOT_CACHE = new WeakMap<object, boolean>();
 export function isOriginalCustardCreek(entry: LevelEntry): boolean {
@@ -4246,7 +4257,7 @@ export class Level {
     if (kind === "checker") return this.checkerTexture();
     const cached = this.surfTexCache.get(kind);
     if (cached) return cached;
-    if(kind==='coast-timber')return this.surfaceTexture('wood');
+    if(kind==='coast-timber'||kind==='creek-raft')return this.surfaceTexture('wood');
     if(kind==='coast-terrain')return this.surfaceTexture('coast-bedrock');
     if(kind==='coast-turf'||kind==='coast-bedrock'){
       const file=kind==='coast-turf'?'turf':'sandstone';
@@ -7434,7 +7445,7 @@ export class Level {
               c.travelSign ?? 1,
             );
             if(c.dkind==="citydeck")this.dressCityMovingDeck(this.movers[this.movers.length-1].mesh,c,s[1]);
-            if(c.tex==='coast-timber')dressCarlisleTimberDeck(this.movers[this.movers.length-1].mesh,c,true);
+            if(c.tex==='coast-timber'||c.tex==='creek-raft')dressCarlisleTimberDeck(this.movers[this.movers.length-1].mesh,c,true);
             if(c.dkind==='ghostcart'){const cabin=this.ghostKit().cart(this.movers[this.movers.length-1].mesh,c,s[1]);this.groundMeshes.push(...cabin.support);this.walls.push(...cabin.walls);}
           } else if (c.t === "torch") {
             this.torch(c.p[0], c.p[1], c.p[2], c.rise ?? 2.2, c.w ?? 1);
@@ -15033,7 +15044,9 @@ export class Level {
     // ---- swept mesh: any path, any bank, any arc ----
     const spine = vertRampSpine(c);
     if (spine.length < 2) return null;
+    if(c.tex==='coast-bedrock'&&mat.map)mat.map.repeat.set(1,1);
     const vr = buildVertRampGeometry(spine, {
+      uvTileMetres:c.tex==='coast-bedrock'?3.1:undefined,
       radius: R,
       flatHalf: F,
       kind: vkind,

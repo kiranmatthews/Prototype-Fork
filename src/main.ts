@@ -229,6 +229,7 @@ const COAST_SUN_OFFSET = new THREE.Vector3(-68, 58, -11);
 const MAP_SUN_OFFSET = new THREE.Vector3(-32, 72, 42);
 const JUNGLE_SUN_OFFSET = new THREE.Vector3(-36, 62, 28);
 const PAINTERLY_JUNGLE_SUN_OFFSET = new THREE.Vector3(-36, 62, -16);
+const authoredSunOffset = new THREE.Vector3();
 function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
   const shadowHalf = document.body.classList.contains("game-world-map")
     ? MAP_SHADOW_HALF
@@ -240,10 +241,12 @@ function updateSunShadow(focusX: number, focusY: number, focusZ: number): void {
     sun.shadow.camera.bottom = -shadowHalf;
     sun.shadow.camera.updateProjectionMatrix();
   }
-  const offset = document.body.classList.contains("game-world-map")
+  let offset = document.body.classList.contains("game-world-map")
     ? MAP_SUN_OFFSET
     : level.jungleStyle === 'painterly' ? PAINTERLY_JUNGLE_SUN_OFFSET
       : level.jungleAtmosphere ? JUNGLE_SUN_OFFSET : activeSky === "coast" ? COAST_SUN_OFFSET : SUN_OFFSET;
+  if(!level.isCampaignMap&&level.atmosphere?.sunDirection)
+    offset=authoredSunOffset.fromArray(level.atmosphere.sunDirection).normalize().multiplyScalar(90);
   const heatSun = competition && isCompetitionLevel(current.id) && !editorViewActive ? competition.heatLook.sunOffset : null;
   sun.target.position.set(focusX, focusY, focusZ);
   sun.target.updateMatrixWorld();

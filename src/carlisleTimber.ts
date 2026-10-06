@@ -72,10 +72,25 @@ export function dressCarlisleTimberDeck(mesh: THREE.Mesh, component: CustomCompo
     plankVariantWeights: WOOD_PATH_PLANK_WEIGHTS, poleVariantWeights: WOOD_PATH_POLE_WEIGHTS,
     fallbackBaseY: top - pierDepth, includeSupports: true, includeHandrails: false,
   });
+  if(moving&&component.tex==='creek-raft'){
+    // Three hewn floats and transverse ties make a ferry hull from the same
+    // shared kit. Every member stays below the original walkable deck.
+    layout.poles.length=0;
+    const member=(start:[number,number,number],end:[number,number,number],radius:number,role:'top-ledger'|'crossbeam',variant:number)=>{
+      const a=new THREE.Vector3(...start),b=new THREE.Vector3(...end),delta=b.clone().sub(a),length=delta.length();
+      layout.poles.push({kind:'pole',index:layout.poles.length,role,start,end,
+        center:a.add(b).multiplyScalar(.5).toArray(),direction:delta.normalize().toArray(),length,radius,variantIndex:variant,tonalBucket:2});
+    };
+    for(const side of [-1,0,1])member([centerX+side*width*.31,top-.79,box.min.z+.15],
+      [centerX+side*width*.31,top-.79,box.max.z-.15],.39,'top-ledger',side===0?1:0);
+    for(const t of [-.36,0,.36])member([box.min.x+.03,top-.24,(box.min.z+box.max.z)/2+length*t],
+      [box.max.x-.03,top-.24,(box.min.z+box.max.z)/2+length*t],.17,'crossbeam',1);
+  }
   const [planks, beams] = buildWoodPathMeshes(layout, seed + 7319);
   const root = new THREE.Group();
   root.name = moving ? 'Carlisle worn moving timber deck' : 'Carlisle worn timber pier bridge';
   root.userData.carlisleTimberDressing = true;
+  if(component.tex==='creek-raft')root.userData.timberRaft=true;
   root.userData.visualOnly = true;
   root.add(planks, beams);
   root.traverse(object => {

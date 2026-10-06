@@ -1,6 +1,4 @@
-import type {CustomComponent, CustomGroup, CustomLevelData} from '../level';
-import {buildCreekBank,type CreekBank} from './custard-terrain';
-import {buildCreekArt,CUSTARD_ART_GROUPS} from './custard-creek-art';
+import type {CustomComponent, CustomGroup, CustomLevelData} from '../../src/level';
 
 type Point=[number,number,number];
 type Scalar=number|((s:number)=>number);
@@ -37,7 +35,6 @@ export const custardYaw=(s:number)=>Math.atan2(-custardTangent(s)[0],-custardTan
 const heights:[number,number][]=[[-20,0],[80,0],[240,3],[300,3],[560,9],[650,12],[740,12],[850,18],
  [1160,4],[1210,4],[1360,1],[1510,-2],[1740,-2],[1820,0],[1960,-8],[2100,-10],[2200,-10],[2280,-6],[2460,-6]];
 export function custardHeight(s:number):number {for(let i=1;i<heights.length;i++)if(s<=heights[i][0]){const a=heights[i-1],b=heights[i];return a[1]+(b[1]-a[1])*smooth((s-a[0])/(b[0]-a[0]));}return heights[heights.length-1][1];}
-export function custardWaterHeight(s:number):number{return custardHeight(s)-6+4.9*smooth((s-1548)/48)*(1-smooth((s-1704)/50));}
 export function custardPoint(s:number,y=custardHeight(s),u=0):Point {const p=centre(s),d=custardTangent(s);return[p[0]-d[2]*u,y,p[2]+d[0]*u].map(round) as Point;}
 export function custardProgress(q:Point|{x:number;z:number}):number {
  const x=Array.isArray(q)?q[0]:q.x,z=Array.isArray(q)?q[2]:q.z;let best=Infinity,station=0;
@@ -57,35 +54,30 @@ export const CUSTARD_CREEK_SECTIONS=[
 for(const r of CUSTARD_CREEK_SECTIONS)groups.push({id:r.grp,nm:r.name,editorOnly:true});
 const section=(s:number)=>CUSTARD_CREEK_SECTIONS.find(r=>s>=r.a&&s<r.b)??CUSTARD_CREEK_SECTIONS[CUSTARD_CREEK_SECTIONS.length-1];
 const add=(c:CustomComponent)=>C.push(c);
-export const CUSTARD_CREEK_ROADS:CreekBank[]=[];
+export const CUSTARD_CREEK_ROADS:{a:number;b:number;width:Scalar;offset:Scalar;name:string}[]=[];
 export const CUSTARD_CREEK_GAPS:{a:number;b:number;u:number;name:string}[]=[];
 // Closed swept solids and below-deck side shells use the existing mesh and
 // wallpath toolkit. Gap footprints never receive a hidden supporting floor.
 function ribbon(a:number,b:number,width:Scalar=12,offset:Scalar=0,name='Creek bank',color='#d7ba76',top:Scalar=custardHeight,solid=true){
- if(solid){
-  const bank={a,b,width,offset,name,group:section(a).grp,top};CUSTARD_CREEK_ROADS.push(bank);
-  C.push(...buildCreekBank({point:custardPoint,height:custardHeight},bank));
- }
- for(let start=a;start<b;start+=solid?48:120){
-  const end=Math.min(b,start+(solid?48:120)),rows=Math.ceil((end-start)/(solid?6:5)),p=custardPoint(start,0);
-  const vertices:number[]=[],indices:number[]=[],left:Point[]=[],right:Point[]=[];
-  for(let i=0;i<=rows;i++){
-   const s=start+(end-start)*i/rows,w=value(width,s),u=value(offset,s),y=value(top,s);
-   for(const side of [-1,0,1]){const point=custardPoint(s,y,u+side*w/2);vertices.push(round(point[0]-p[0]),point[1],round(point[2]-p[2]));if(side!==0)(side<0?left:right).push(custardPoint(s,y,u+side*(w/2-.06)));}
+ if(solid)CUSTARD_CREEK_ROADS.push({a,b,width,offset,name});
+ for(let start=a;start<b;start+=48){
+  const end=Math.min(b,start+48),rows=Math.ceil((end-start)/2),p=custardPoint(start,0),vertices:number[]=[],indices:number[]=[],uvs:number[]=[];
+  const left:Point[]=[],right:Point[]=[];
+  for(let lower=0;lower<2;lower++)for(let i=0;i<=rows;i++){
+   const s=start+(end-start)*i/rows,w=value(width,s),u=value(offset,s),y=value(top,s)-(lower?6:0);
+   for(const side of [-1,0,1]){const q=custardPoint(s,y,u+side*w/2);vertices.push(round(q[0]-p[0]),q[1],round(q[2]-p[2]));uvs.push((u+side*w/2)/4,s/4);if(!lower&&side!==0)(side<0?left:right).push(custardPoint(s,y,u+side*(w/2-.06)));}
   }
-  if(!solid){
-   for(let i=0;i<rows;i++)for(let j=0;j<2;j++){const v=i*3+j;indices.push(v,v+1,v+3,v+3,v+1,v+4);}
-   add({t:'mesh',p,vertices,indices,color,tex:'solid',materialStyle:'jungle-stream',opacity:.63,solid:false,castShadow:false,edgeGrinding:false,doubleSided:true,grp:section(start).grp,nm:name});
-  }else{
-   const shell=(qs:Point[],suffix:string)=>{const anchor=qs[0];add({t:'wallpath',p:[anchor[0],anchor[1]-6,anchor[2]],pts:qs.map(q=>[q[0]-anchor[0],q[2]-anchor[2],0,q[1]-anchor[1]]),w:.12,rise:5.95,collisionHeight:5.95,invisible:true,edgeGrinding:false,grp:section(start).grp,nm:`${name} · ${suffix}`});};
-   shell(left,'left mass');shell(right,'right mass');if(start===a)shell([left[0],right[0]],'entry mass');if(end===b)shell([left[left.length-1],right[right.length-1]],'exit mass');
-  }
+  const n=(rows+1)*3,quad=(a:number,b:number,c:number,d:number)=>indices.push(a,b,c,c,b,d);
+  for(let i=0;i<rows;i++)for(let j=0;j<2;j++){const v=i*3+j;quad(v,v+1,v+3,v+4);if(solid)quad(v+n,v+n+3,v+n+1,v+n+4);}
+  if(solid){for(let i=0;i<rows;i++){const v=i*3;quad(v+3,v,v+3+n,v+n);quad(v+2,v+5,v+2+n,v+5+n);}for(const i of [0,rows])for(let j=0;j<2;j++){const v=i*3+j;quad(v,v+n,v+1,v+1+n);}}
+  add({t:'mesh',p,vertices,indices,uvs,color,tex:solid?'sand':'solid',solid,edgeGrinding:false,doubleSided:!solid,grp:section(start).grp,nm:name});
+  if(solid){const shell=(qs:Point[],suffix:string)=>{const anchor=qs[0];add({t:'wallpath',p:[anchor[0],anchor[1]-6,anchor[2]],pts:qs.map(q=>[q[0]-anchor[0],q[2]-anchor[2],0,q[1]-anchor[1]]),w:.12,rise:5.95,collisionHeight:5.95,invisible:true,edgeGrinding:false,grp:section(start).grp,nm:`${name} · ${suffix}`});};shell(left,'left mass');shell(right,'right mass');if(start===a)shell([left[0],right[0]],'entry mass');if(end===b)shell([left[left.length-1],right[right.length-1]],'exit mass');}
  }
 }
 function gap(a:number,b:number,u=0,width=24,name='Open creek crossing'){
- CUSTARD_CREEK_GAPS.push({a,b,u,name});const water=Math.min(custardWaterHeight(a),custardWaterHeight(b),custardWaterHeight((a+b)/2));const p=custardPoint(a,water-.35,u),pts:NonNullable<CustomComponent['pts']>=[];
+ CUSTARD_CREEK_GAPS.push({a,b,u,name});const p=custardPoint(a,custardHeight(a)-3,u),pts:NonNullable<CustomComponent['pts']>=[];
  for(const side of [-1,1]){const qs=[];for(let s=a;s<b;s+=2)qs.push(custardPoint(s,p[1],u+side*width/2));qs.push(custardPoint(b,p[1],u+side*width/2));if(side>0)qs.reverse();pts.push(...qs.map(q=>[q[0]-p[0],q[2]-p[2]] as [number,number]));}
- add({t:'pit',p,pts,invisible:true,color:'#547f79',grp:section(a).grp,nm:name});
+ add({t:'pit',p,pts,color:'#547f79',grp:section(a).grp,nm:name});
 }
 function rail(a:number,b:number,u:Scalar=0,lift=.72,name='Creek grind line'){
  const p=custardPoint(a,custardHeight(a)+lift,value(u,a)),pts:NonNullable<CustomComponent['pts']>=[],steps=Math.ceil((b-a)/3);
@@ -97,9 +89,7 @@ const enemy=(s:number,u:number,foe:NonNullable<CustomComponent['foe']>,range=0,s
 function rewardLine(a:number,b:number,u:Scalar=0,spacing=10){for(let s=a,i=0;s<=b;s+=spacing,i++)crate(s,value(u,s),i%7===6?'mystery':'wood');}
 function cp(s:number,u=0){add({t:'checkpoint',p:custardPoint(s,custardHeight(s),u),grp:section(s).grp,nm:`${section(s).name} · safe restart`});}
 function pad(s:number,w:number,d:number,u=0,top=custardHeight(s),name='Mill stone island'){
- C.push(...buildCreekBank({point:custardPoint,height:custardHeight},{a:s-d/2,b:s+d/2,width:w,offset:u,top,name,group:section(s).grp}));
- const corners=[custardPoint(s-d/2,top,u-w/2+.08),custardPoint(s-d/2,top,u+w/2-.08),custardPoint(s+d/2,top,u+w/2-.08),custardPoint(s+d/2,top,u-w/2+.08)];
- const anchor=corners[0];add({t:'wallpath',p:[anchor[0],top-6,anchor[2]],pts:[...corners,corners[0]].map(q=>[q[0]-anchor[0],q[2]-anchor[2],0,0]),w:.12,rise:5.95,collisionHeight:5.95,invisible:true,edgeGrinding:false,grp:section(s).grp,nm:`${name} · stone sides`});
+ add({t:'platform',p:custardPoint(s,top-1,u),s:[w,2,d],yaw:custardYaw(s),color:'#bda56f',tex:'stone',edgeGrinding:false,grp:section(s).grp,nm:name});
 }
 // 1. Start at creek level. Twin locks and alternating stone noses teach
 // route reading before any long rail or drop; the outside line stays open.
@@ -129,7 +119,7 @@ pad(791,9,16,-18,custardHeight(791)+5,'Mill reward roof');const liftP=custardPoi
 {
  const a=850,b=1160,p=custardPoint(a),pts:NonNullable<CustomComponent['pts']>=[];
  for(let s=a;s<=b;s+=5){const q=custardPoint(s);pts.push([q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]);}const q=custardPoint(b);pts.push([q[0]-p[0],q[2]-p[2],0,q[1]-p[1]]);
- add({t:'vertramp',p,pts,vkind:'half',curve:'corner',w:4.5,rise:3,arc:80,arcSteps:20,deck:1.5,rails:false,bank:0,tex:'coast-bedrock',color:'#f0dfc5',grp:23,nm:'Descending return-bend spillway'});
+ add({t:'vertramp',p,pts,vkind:'half',curve:'corner',w:4.5,rise:3,arc:80,arcSteps:20,deck:1.5,rails:false,bank:0,tex:'stone',color:'#d2bd88',grp:23,nm:'Descending return-bend spillway'});
 }
 ribbon(1160,1210,14,0,'Spillway runout');rewardLine(876,1128,s=>2.7*Math.sin((s-876)/39),14);rail(943,1020,-6.7,3,'High spillway coping');enemy(1180,-3,'turtle',1,.8);cp(1198,3.5);
 // 5. Three separate sluice basins break the floor. Short flights alternate
@@ -156,18 +146,16 @@ ribbon(2100,2288,14,0,'Backwater crown approach');
 for(const [s,u,phase] of [[2174,-1,0],[2233,1,1.4]])add({t:'pendulum',p:custardPoint(s,custardHeight(s)+6,u),len:5,amp:.85,speed:1.5,phase,yaw:custardYaw(s),grp:27,nm:'Crown waterwheel pendulum'});
 rewardLine(2120,2160,3);rewardLine(2193,2250,-3);crate(2265,4,'nitro');crate(2278,4,'nitro');cp(2272,-3.5);
 gap(2288,2370,0,28,'Final backwater rail crescent');rail(2270,2388,0,.75,'Final crown rail');ribbon(2370,2450,18,0,'Custard finish island');rewardLine(2394,2420,0,6);crate(2408,-5,'nitrobang');
-// A sheltered ferry basin meets the raft's freeboard; the river drops into
-// lower race channels on either side. No water surface adds support.
-
 // Water remains visibly below all supported banks. A broad reset plane
 // catches a missed bank; individual pits make the challenge spans immediate.
-for(let a=-16;a<2450;a+=120)ribbon(a,Math.min(2450,a+120),60,0,'Low flowing custard water','#b8a57e',custardWaterHeight,false);
-// Water contact resets ordinary missed banks too. Short conservative-height
-// strips follow the folded river without reaching any playable deck.
-for(let a=-16;a<2450;a+=16){
- const b=Math.min(2450,a+16),water=Math.min(custardWaterHeight(a),custardWaterHeight((a+b)/2),custardWaterHeight(b));
- const p=custardPoint(a,water-.35),corners=[custardPoint(a,p[1],-33),custardPoint(a,p[1],33),custardPoint(b,p[1],33),custardPoint(b,p[1],-33)];
- add({t:'pit',p,pts:corners.map(q=>[q[0]-p[0],q[2]-p[2]]),invisible:true,nm:'Custard river contact reset'});
+for(let a=-16;a<2450;a+=120)ribbon(a,Math.min(2450,a+120),34,0,'Low flowing custard water','#64958d',s=>custardHeight(s)-6,false);
+// Low planted shoulders give the folded reaches a riverbank silhouette.
+// They are scenery below the challenge decks, never a bypass collision floor.
+for(let a=-16;a<2450;a+=64)for(const side of [-1,1]){
+ const b=Math.min(2450,a+64),n=Math.ceil((b-a)/4),p=custardPoint(a,0),vertices:number[]=[],indices:number[]=[];
+ const offsets=[15,18,30,35],ys=[-6,-3,-3,-6];
+ for(let i=0;i<=n;i++){const s=a+(b-a)*i/n;for(let j=0;j<4;j++){const q=custardPoint(s,custardHeight(s)+ys[j],offsets[j]*side);vertices.push(q[0]-p[0],q[1],q[2]-p[2]);}if(i)for(let j=0;j<3;j++){const v=(i-1)*4+j;indices.push(v,v+1,v+4,v+4,v+1,v+5);}}
+ add({t:'mesh',p,vertices,indices,solid:false,doubleSided:true,color:side<0?'#8f9b62':'#a3ab70',tex:'grass',edgeGrinding:false,grp:section(a).grp,nm:'Planted low creek shoulder'});
 }
 add({t:'pit',p:[420,-25,-150],s:[1400,1,1200],invisible:true,nm:'Creek fall reset'});
 for(let s=15;s<2448;s+=8)add({t:'camnode',p:custardPoint(s,custardHeight(s)+.8),radius:0,nm:'Ordered folded creek camera'});
@@ -175,17 +163,9 @@ add({t:'camnode',p:custardPoint(-16,.8),radius:0,nm:'Creek entry camera'});
 // Put the near-end camera first; camnodes are a travelled chain, not a set.
 const camera=C.filter(c=>c.t==='camnode');C.splice(0,C.length,...C.filter(c=>c.t!=='camnode'),camera[camera.length-1],...camera.slice(0,-1));
 for(let s=20;s<2420;s+=24){const road=CUSTARD_CREEK_ROADS.find(r=>s>=r.a&&s<=r.b);if(road)add({t:'wumpa',p:custardPoint(s,custardHeight(s)+1.3,value(road.offset,s)),grp:section(s).grp,nm:'Onward creek fruit'});}
+for(let s=25,i=0;s<2420;s+=33,i++)for(const side of [-1,1]){add({t:'decor',dkind:i%3?'pine':'palm',p:custardPoint(s,custardHeight(s)-3,side*(22+i%3*3)),w:1.3+(i%3)*.15,rise:6+i%4,yaw:i*47,grp:section(s).grp,nm:'Folded creek trees'});if(i%4===0)add({t:'rock',p:custardPoint(s+8,custardHeight(s+8)-1.8,side*18),s:[3,3,4],seed:i+21,color:'#b9a77e',grp:section(s).grp,nm:'Creek bank stone'});}
 add({t:'clock',p:custardPoint(8,0,-4),nm:'Creek time trial'});add({t:'crystal',p:custardPoint(833,custardHeight(833)+1.4),nm:'Mill crown crystal'});
 add({t:'gate',p:custardPoint(CUSTARD_CREEK_END),yaw:custardYaw(CUSTARD_CREEK_END),nm:'Custard Creek finish'});
 export const CUSTARD_CREEK_CAMERA=C.filter(c=>c.t==='camnode').map(c=>c.p);
 export const CUSTARD_CREEK_GAMEPLAY=Object.fromEntries(['enemy','stone','crusher','pendulum','mover','crumble','rail','vertramp','checkpoint','crate','gate'].map(t=>[t,C.filter(c=>c.t===t).length]));
-for(const c of C)if(c.t==='crumble'||c.t==='mover'||c.t==='pendulum')c.tex=c.nm==='Reedbed ferry'?'creek-raft':'coast-timber';
-C.push(...buildCreekArt({point:custardPoint,height:custardHeight,yaw:custardYaw,roads:CUSTARD_CREEK_ROADS,gaps:CUSTARD_CREEK_GAPS}));
-export const CUSTARD_CREEK_LEVEL:CustomLevelData={v:1,name:'Custard Creek',sky:'sunset',spawn:custardPoint(0,.12),killY:-34,
- jungleAtmosphere:true,jungleStyle:'painterly',jungleDepthFade:false,keepPlayFog:true,
- atmosphere:{fogEnabled:true,fogNear:55,fogFar:190,fogColor:'#c19f91',
-  ambientSky:'#c5c4d7',ambientGround:'#80684c',ambientIntensity:1.12,
-  sunColor:'#ffca85',sunIntensity:1.9,fillColor:'#b2bdcf',fillIntensity:.40,shadowStrength:.80,
-  sunDirection:[-.72,.30,-.63],drawDistance:230,backdrop:'sky',fallbackTop:'#6f798f',fallbackBottom:'#ebbb91',fallbackFog:'#b9a29a',
-  fallbackSunColor:'#ffe3a4',fallbackSunU:.64,fallbackSunV:.38,fallbackStars:false,fallbackRidges:true},
- medalTimes:{gold:180,silver:210,bronze:255},groups:[...groups,...CUSTARD_ART_GROUPS],components:C};
+export const CUSTARD_CREEK_LEVEL:CustomLevelData={v:1,name:'Custard Creek',sky:'coast',spawn:custardPoint(0,.12),killY:-34,medalTimes:{gold:180,silver:210,bronze:255},groups,components:C};

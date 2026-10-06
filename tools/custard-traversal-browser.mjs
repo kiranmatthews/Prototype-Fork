@@ -2,6 +2,7 @@
 // A normal respawn establishes each independent fixture before the take;
 // playback uses the game's fixed-step loop with no pose/state/velocity edits.
 import assert from 'node:assert/strict';
+import {createServer} from 'vite';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import {pathToFileURL} from 'node:url';
 import {createRequire} from 'node:module';
@@ -16,6 +17,8 @@ const folder=process.env.CUSTARD_TRAVERSAL_OUTPUT||'/private/tmp/custard-creek-i
 const channels=['jumpHeld','grindHeld','spinHeld','grabHeld','jumpPressed','jumpReleased','grindPressed','spinPressed','grabPressed','restartPressed','transferHeld','transferPressed','jumpCancelled'];
 const reports=JSON.parse(await readFile(folder+'/report.json','utf8')).filter(r=>r.course==='independent-folded-creek');
 const tests=names.length?names:['lockyard','inner-bank','outer-bank','mill-rail','spillway','sluice','ferry','boulder-run','backwater-finish','continuous-chapter'];
+const author=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true,hmr:false,ws:false}});
+let route;try{const m=await author.ssrLoadModule('/src/levels/custard-creek.ts');route=Array.from({length:2451},(_,s)=>{const p=m.custardPoint(s);return[s,p[0],p[2]];});}finally{await author.close();}
 const browser=await chromium.launch({channel:'chrome',headless:true});const results=[],errors=[];
 try{
  for(const name of tests){
@@ -28,8 +31,9 @@ try{
   const full=name==='backwater-finish'||name==='full-course';
   await page.goto(`${base}/?playtest&level=custard-creek${full?'':'&lite'}`,{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>window.__game&&!window.__game.gameFlow.blocksGameplay);
-  await page.evaluate(async({startWorld,heading,data,expectedFinish,goalStation})=>{
-   const g=window.__game,l=g.getLevel(),p=g.player,m=await import('./src/levels/custard-creek.ts');
+  await page.evaluate(async({startWorld,heading,data,expectedFinish,goalStation,route})=>{
+   const g=window.__game,l=g.getLevel(),p=g.player;
+   const m={custardProgress(q){let best=Infinity,station=0;for(let i=1;i<route.length;i++){const a=route[i-1],b=route[i],dx=b[1]-a[1],dz=b[2]-a[2],t=Math.max(0,Math.min(1,((q.x-a[1])*dx+(q.z-a[2])*dz)/(dx*dx+dz*dz))),d=(q.x-a[1]-dx*t)**2+(q.z-a[2]-dz*t)**2;if(d<best){best=d;station=a[0]+(b[0]-a[0])*t;}}return station;}};
    p.respawn(l,true,false,{position:p.pos.clone().fromArray(startWorld),heading:p.axisF.clone().fromArray(heading)});
    window.__creekReplayEvidence={maxFrames:0,tailFrames:0,deaths:0,bails:0,states:[],grounds:[],rails:[],movers:[]};
    const old=p.step,oldPoll=g.input.pollGamepad;window.__creekRestoreStep=()=>{p.step=old;g.input.pollGamepad=oldPoll;};
@@ -59,7 +63,7 @@ try{
     return result;
    };
    g.replayer.begin(data);
-  },{startWorld:native.startWorld,heading:native.startHeading,data,expectedFinish:native.final.state==='finished',goalStation:name==='continuous-chapter'?native.finalProgress:null});
+  },{startWorld:native.startWorld,heading:native.startHeading,data,expectedFinish:native.final.state==='finished',goalStation:name==='continuous-chapter'?native.finalProgress:null,route});
   await page.waitForFunction(()=>window.__creekReplayEvidence.final||window.__creekReplayEvidence.deaths>0||window.__creekReplayEvidence.bails>0||window.__creekReplayEvidence.tailFrames>300);
   const result=await page.evaluate(()=>{const g=window.__game,p=g.player,e=window.__creekReplayEvidence;return {...e,...(e.final??{position:p.pos.toArray(),state:p.state,grounded:p.grounded,cratesBroken:p.cratesBroken}),stamp:document.querySelector('.hud-build')?.textContent};});
   result.name=name;result.render=full?'full':'lite';results.push(result);console.log(JSON.stringify(result));

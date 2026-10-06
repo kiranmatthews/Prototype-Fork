@@ -1,0 +1,1541 @@
+{
+  "base": "http://127.0.0.1:5247",
+  "variant": "portrait",
+  "started": "2026-10-06T01:03:54.856Z",
+  "sceneCount": 18,
+  "scenes": [
+    {
+      "name": "00-spawn",
+      "s": 0,
+      "u": 0,
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "heading": [
+        -0.2459851971994276,
+        0,
+        -0.9692735850928563
+      ],
+      "grounded": true,
+      "state": "ride",
+      "lives": 30,
+      "stamp": "Codex/sol fork \u00b7 build 10-06 00:56 UTC",
+      "assets": {
+        "components": 3294,
+        "placements": 3294,
+        "ready": 844,
+        "skipped": 0,
+        "draws": 379,
+        "triangles": 785359,
+        "allLodTriangles": 2143533,
+        "cells": 1337,
+        "residentCells": 379,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 20,
+        "textureMiB": 38,
+        "errors": [],
+        "windTime": 2.6833333333333287
+      },
+      "render": {
+        "frame": 1756,
+        "calls": 282,
+        "triangles": 701861,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 93,
+        "textures": 91,
+        "programs": 42
+      },
+      "camera": [
+        1.3324405051029058,
+        5.1,
+        4.871047351480081
+      ],
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 17.5,
+        "calls": 282,
+        "triangles": 701861
+      }
+    },
+    {
+      "name": "01-lockyard",
+      "s": 60,
+      "u": 0,
+      "position": [
+        -17.593017578125,
+        0,
+        -57.357666015625
+      ],
+      "heading": [
+        -0.27957610464836435,
+        0,
+        -0.9601235346087746
+      ],
+      "grounded": true,
+      "state": "ride",
+      "lives": 30,
+      "stamp": "Codex/sol fork \u00b7 build 10-06 00:56 UTC",
+      "assets": {
+        "components": 3294,
+        "placements": 3294,
+        "ready": 771,
+        "skipped": 0,
+        "draws": 346,
+        "triangles": 802630,
+        "allLodTriangles": 1978252,
+        "cells": 1337,
+        "residentCells": 346,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 20,
+        "textureMiB": 38,
+        "errors": [],
+        "windTime": 4.983333333333321
+      },
+      "render": {
+        "frame": 2722,
+        "calls": 239,
+        "triangles": 679830,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 96,
+        "textures": 91,
+        "programs": 42
+      },
+      "camera": [
+        -16.184436544109744,
+        5.1,
+        -52.50808876903819
+      ],
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.700000017881393,
+        "p95Ms": 17.5,
+        "calls": 239,
+        "triangles": 679830
+      }
+    },
+    {
+      "name": "02-inner-bank",
+      "s": 300,
+      "u": -6,
+      "position": [
+        -26.457763671875,
+        3,
+        -296.109619140625
+      ],
+      "heading": [
+        0.2794577929400221,
+        0,
+        -0.9601579776084203
+      ],
+      "grounded": true,
+      "state": "ride",
+      "lives": 30,
+      "stamp": "Codex/sol fork \u00b7 build 10-06 00:56 UTC",
+      "assets": {
+        "components": 3294,
+        "placements": 3294,
+        "ready": 1014,
+        "skipped": 0,
+        "draws": 339,
+        "triangles": 893983,
+        "allLodTriangles": 2141786,
+        "cells": 1337,
+        "residentCells": 339,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 20,
+        "textureMiB": 38,
+        "errors": [],
+        "windTime": 7.416666666666646
+      },
+      "render": {
+        "frame": 3737,
+        "calls": 218,
+        "triangles": 694075,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 125,
+        "textures": 93,
+        "programs": 45
+      },
+      "camera": [
+        -27.867943169453874,
+        8.108213274068635,
+        -291.2379667959941
+      ],
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 17.400000005960464,
+        "calls": 218,
+        "triangles": 694075
+      }
+    },
+    {
+      "name": "03-first-gap",
+      "s": 333,
+      "u": -6,
+      "position": [
+        -14.74853515625,
+        3.2657065877221663,
+        -327.873291015625
+      ],
+      "heading": [
+        0.363190726061372,
+        0,
+        -0.9317148150067237
+      ],
+      "grounded": true,
+      "state": "ride",
+      "lives": 30,
+      "stamp": "Codex/sol fork \u00b7 build 10-06 00:56 UTC",
+      "assets": {
+        "components": 3294,
+        "placements": 3294,
+        "ready": 1023,
+        "skipped": 0,
+        "draws": 321,
+        "triangles": 944505,
+        "allLodTriangles": 2070307,
+        "cells": 1337,
+        "residentCells": 321,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 18,
+        "textureMiB": 36.33,
+        "errors": [],
+        "windTime": 9.733333333333396
+      },
+      "render": {
+        "frame": 4781,
+        "calls": 200,
+        "triangles": 700113,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 132,
+        "textures": 91,
+        "programs": 48
+      },
+      "camera": [
+        -16.58063588586776,
+        8.365706587722165,
+        -323.1673472296737
+      ],
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 17.30000001192093,
+        "calls": 200,
+        "triangles": 700113
+      }
+    },
+    {
+      "name": "04-outer-bank",
+      "s": 376,
+      "u": 8,
+      "position": [
+        16.369140625,
+        4.2382941379665855,
+        -360.2021484375
+      ],
+      "heading": [
+        0.5195859616334967,
+        0,
+        -0.8544181812633638
+      ],
+      "grounded": true,
+      "state": "ride",
+      "lives": 30,
+      "stamp": "Codex/sol fork \u00b7 build 10-06 00:56 UTC",
+      "assets": {
+        "components": 3294,
+        "placements": 3294,
+        "ready": 1051,
+        "skipped": 0,
+        "draws": 329,
+        "triangles": 972300,
+        "allLodTriangles": 2139583,
+        "cells": 1337,
+        "residentCells": 329,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 18,
+        "textureMiB": 36.33,
+        "errors": [],
+        "windTime": 12.150000000000183
+      },
+      "render": {
+        "frame": 5842,
+        "calls": 232,
+        "triangles": 687072,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 142,
+        "textures": 91,
+        "programs": 48
+      },
+      "camera": [
+        13.745959904297372,
+        9.338294137966585,
+        -355.88689376291427
+      ],
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 17.5,
+        "calls": 232,
+        "triangles": 687072
+      }
+    },
+    {
+      "name": "05-aqueduct",
+      "s": 631,
+      "u": 0,
+      "position": [
+        233.62451171875,
+        11.654652517769707,
+        -403.23193359375
+      ],
+      "heading": [
+        0.7981964664183273,
+        0,
+        0.6023972119766959
+      ],
+      "grounded": true,
+      "state": "ride",
+      "lives": 30,
+      "stamp": "Codex/sol fork \u00b7 build 10-06 00:56 UTC",
+      "assets": {
+        "components": 3294,
+        "placements": 3294,
+        "ready": 1012,
+        "skipped": 0,
+        "draws": 348,
+        "triangles": 867638,
+        "allLodTriangles": 2141653,
+        "cells": 1337,
+        "residentCells": 348,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 22,
+        "textureMiB": 39.67,
+        "errors": [],
+        "windTime": 14.466666666666965
+      },
+      "render": {
+        "frame": 6815,
+        "calls": 200,
+        "triangles": 540502,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 193,
+        "textures": 94,
+        "programs": 48
+      },
+      "camera": [
+        229.59596005264777,
+        16.754652517769706,
+        -406.2771382623306
+      ],
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 17.599999994039536,
+        "calls": 200,
+        "triangles": 540502
+      }
+    },
+    {
+      "name": "06-crown-terrace",
+      "s": 753,
+      "u": -3.5,
+      "position": [
+        295.739501953125,
+        12.232375939712433,
+        -300.86962890625
+      ],
+      "heading": [
+        0.15578965051627416,
+        0,
+        0.9877902534404849
+      ],
+      "grounded": true,
+      "state": "ride",
+      "lives": 30,
+      "stamp": "Codex/sol fork \u00b7 build 10-06 01:11 UTC",
+      "assets": {
+        "components": 3294,
+        "placements": 3294,
+        "ready": 782,
+        "skipped": 0,
+        "draws": 340,
+        "triangles": 771427,
+        "allLodTriangles": 2031528,
+        "cells": 1337,
+        "residentCells": 340,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 22,
+        "textureMiB": 39.67,
+        "errors": [],
+        "windTime": 2.6166666666666623
+      },
+      "render": {
+        "frame": 1730,
+        "calls": 277,
+        "triangles": 631788,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 180,
+        "textures": 94,
+        "programs": 44
+      },
+      "camera": [
+        294.95685134998797,
+        17.332375939712435,
+        -305.85861257363416
+      ],
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 17.5,
+        "calls": 277,
+        "triangles": 631788
+      }
+    },
+    {
+      "name": "07-mill-roof",
+      "s": 791,
+      "u": -18,
+      "position": [
+        312.830322265625,
+        19.67329978942871,
+        -263.167724609375
+      ],
+      "heading": [
+        0.03634220873236541,
+        0,
+        0.9993394037385164
+      ],
+      "grounded": true,
+      "state": "ride",
+      "lives": 30,
+      "stamp": "Codex/sol fork \u00b7 build 10-06 01:11 UTC",
+      "assets": {
+        "components": 3294,
+        "placements": 3294,
+        "ready": 901,
+        "skipped": 0,
+        "draws": 393,
+        "triangles": 901154,
+        "allLodTriangles": 2296844,
+        "cells": 1337,
+        "residentCells": 393,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 22,
+        "textureMiB": 39.67,
+        "errors": [],
+        "windTime": 4.933333333333321
+      },
+      "render": {
+        "frame": 2696,
+        "calls": 241,
+        "triangles": 621612,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 182,
+        "textures": 95,
+        "programs": 44
+      },
+      "camera": [
+        312.66579178746167,
+        24.773299789428712,
+        -268.2150839941489
+      ],
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 17.599999994039536,
+        "calls": 241,
+        "triangles": 621612
+      }
+    },
+    {
+      "name": "08-spillway-entry",
+      "s": 870,
+      "u": 0,
+      "position": [
+        288.59228515625,
+        17.832763671875,
+        -184.107666015625
+      ],
+      "heading": [
+        -0.23685663164496928,
+        0,
+        0.9715446135128326
+      ],
+      "grounded": true,
+      "state": "ride",
+      "lives": 30,
+      "stamp": "Codex/sol fork \u00b7 build 10-06 01:11 UTC",
+      "assets": {
+        "components": 3294,
+        "placements": 3294,
+        "ready": 937,
+        "skipped": 0,
+        "draws": 413,
+        "triangles": 877678,
+        "allLodTriangles": 2429162,
+        "cells": 1337,
+        "residentCells": 413,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 22,
+        "textureMiB": 39.67,
+        "errors": [],
+        "windTime": 7.233333333333313
+      },
+      "render": {
+        "frame": 3662,
+        "calls": 195,
+        "triangles": 475951,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 200,
+        "textures": 95,
+        "programs": 46
+      },
+      "camera": [
+        289.7968575033083,
+        22.932763671875,
+        -189.0118994379557
+      ],
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 17.5,
+        "calls": 195,
+        "triangles": 475951
+      }
+    },
+    {
+      "name": "09-spillway-bend",
+      "s": 1020,
+      "u": 0,
+      "position": [
+        195.16943359375,
+        9.987060546875,
+        -78.369384765625
+      ],
+      "heading": [
+        -0.9450520998569643,
+        0,
+        0.3269197585890802
+      ],
+      "grounded": true,
+      "state": "ride",
+      "lives": 30,
+      "stamp": "Codex/sol fork \u00b7 build 10-06 01:11 UTC",
+      "assets": {
+        "components": 3294,
+        "placements": 3294,
+        "ready": 753,
+        "skipped": 0,
+        "draws": 394,
+        "triangles": 794048,
+        "allLodTriangles": 2336908,
+        "cells": 1337,
+        "residentCells": 394,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 22,
+        "textureMiB": 39.67,
+        "errors": [],
+        "windTime": 9.533333333333387
+      },
+      "render": {
+        "frame": 4628,
+        "calls": 214,
+        "triangles": 542943,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 238,
+        "textures": 96,
+        "programs": 46
+      },
+      "camera": [
+        199.9394642108897,
+        15.087060546875,
+        -80.02748847515431
+      ],
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 17.19999998807907,
+        "calls": 214,
+        "triangles": 542943
+      }
+    },
+    {
+      "name": "10-sluice-first",
+      "s": 1224,
+      "u": 0,
+      "position": [
+        115.33349609375,
+        3.926500430189644,
+        84.02294921875
+      ],
+      "heading": [
+        0.4551101273957714,
+        0,
+        0.8904351587520591
+      ],
+      "grounded": true,
+      "state": "ride",
+      "lives": 30,
+      "stamp": "Codex/sol fork \u00b7 build 10-06 00:56 UTC",
+      "assets": {
+        "components": 3294,
+        "placements": 3294,
+        "ready": 681,
+        "skipped": 0,
+        "draws": 341,
+        "triangles": 756568,
+        "allLodTriangles": 1967371,
+        "cells": 1337,
+        "residentCells": 341,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 20,
+        "textureMiB": 38,
+        "errors": [],
+        "windTime": 26.01666666666647
+      },
+      "render": {
+        "frame": 11666,
+        "calls": 195,
+        "triangles": 615020,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 285,
+        "textures": 99,
+        "programs": 49
+      },
+      "camera": [
+        113.03295809323377,
+        9.026500430189643,
+        79.52739308983993
+      ],
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 17.400000005960464,
+        "calls": 195,
+        "triangles": 615020
+      }
+    },
+    {
+      "name": "11-sluice-crescent",
+      "s": 1418,
+      "u": -2,
+      "position": [
+        275.46875,
+        0.02968463183784964,
+        166.912841796875
+      ],
+      "heading": [
+        0.9975578199639787,
+        0,
+        -0.0698455140199718
+      ],
+      "grounded": true,
+      "state": "ride",
+      "lives": 30,
+      "stamp": "Codex/sol fork \u00b7 build 10-06 00:56 UTC",
+      "assets": {
+        "components": 3294,
+        "placements": 3294,
+        "ready": 688,
+        "skipped": 0,
+        "draws": 334,
+        "triangles": 679680,
+        "allLodTriangles": 1868828,
+        "cells": 1337,
+        "residentCells": 334,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 18,
+        "textureMiB": 31.33,
+        "errors": [],
+        "windTime": 28.31666666666634
+      },
+      "render": {
+        "frame": 12632,
+        "calls": 215,
+        "triangles": 584815,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 290,
+        "textures": 97,
+        "programs": 48
+      },
+      "camera": [
+        270.41457546126776,
+        5.135521609438315,
+        167.2579763277844
+      ],
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 17.599999994039536,
+        "calls": 215,
+        "triangles": 584815
+      }
+    },
+    {
+      "name": "12-ferry-near",
+      "s": 1595,
+      "u": 3,
+      "position": [
+        431.736572265625,
+        -2,
+        92.7060546875
+      ],
+      "heading": [
+        0.6799371050325963,
+        0,
+        -0.7332704366056852
+      ],
+      "grounded": true,
+      "state": "ride",
+      "lives": 30,
+      "stamp": "Codex/sol fork \u00b7 build 10-06 00:56 UTC",
+      "assets": {
+        "components": 3294,
+        "placements": 3294,
+        "ready": 808,
+        "skipped": 0,
+        "draws": 333,
+        "triangles": 756381,
+        "allLodTriangles": 1974079,
+        "cells": 1337,
+        "residentCells": 333,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 18,
+        "textureMiB": 36.33,
+        "errors": [],
+        "windTime": 30.61666666666621
+      },
+      "render": {
+        "frame": 13598,
+        "calls": 178,
+        "triangles": 552577,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 293,
+        "textures": 97,
+        "programs": 49
+      },
+      "camera": [
+        428.29590745757673,
+        3.1029906599159505,
+        96.41335610644269
+      ],
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.600000023841858,
+        "p95Ms": 17.5,
+        "calls": 178,
+        "triangles": 552577
+      }
+    },
+    {
+      "name": "13-ferry-far",
+      "s": 1676,
+      "u": 4,
+      "position": [
+        476.01611328125,
+        -2,
+        23.2861328125
+      ],
+      "heading": [
+        0.34394472881725463,
+        0,
+        -0.9389898953230674
+      ],
+      "grounded": true,
+      "state": "ride",
+      "lives": 30,
+      "stamp": "Codex/sol fork \u00b7 build 10-06 00:56 UTC",
+      "assets": {
+        "components": 3294,
+        "placements": 3294,
+        "ready": 802,
+        "skipped": 0,
+        "draws": 321,
+        "triangles": 791510,
+        "allLodTriangles": 1919579,
+        "cells": 1337,
+        "residentCells": 321,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 18,
+        "textureMiB": 36.33,
+        "errors": [],
+        "windTime": 32.91666666666608
+      },
+      "render": {
+        "frame": 14564,
+        "calls": 215,
+        "triangles": 658023,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 297,
+        "textures": 97,
+        "programs": 49
+      },
+      "camera": [
+        474.27317417719576,
+        3.0999999999999996,
+        28.025823021739274
+      ],
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.600000023841858,
+        "p95Ms": 17.400000005960464,
+        "calls": 215,
+        "triangles": 658023
+      }
+    },
+    {
+      "name": "14-reedbanks",
+      "s": 1770,
+      "u": -5,
+      "position": [
+        483.363525390625,
+        -1.3649659422488787,
+        -69.7412109375
+      ],
+      "heading": [
+        -0.05973612882398943,
+        0,
+        -0.9982142029209581
+      ],
+      "grounded": true,
+      "state": "ride",
+      "lives": 30,
+      "stamp": "Codex/sol fork \u00b7 build 10-06 00:56 UTC",
+      "assets": {
+        "components": 3294,
+        "placements": 3294,
+        "ready": 876,
+        "skipped": 0,
+        "draws": 371,
+        "triangles": 895264,
+        "allLodTriangles": 2186843,
+        "cells": 1337,
+        "residentCells": 371,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 18,
+        "textureMiB": 36.33,
+        "errors": [],
+        "windTime": 35.23333333333262
+      },
+      "render": {
+        "frame": 15593,
+        "calls": 305,
+        "triangles": 751152,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 304,
+        "textures": 97,
+        "programs": 50
+      },
+      "camera": [
+        483.65395912519034,
+        3.735017850820379,
+        -64.69955450856806
+      ],
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 17.5,
+        "calls": 305,
+        "triangles": 751152
+      }
+    },
+    {
+      "name": "15-boulder-run",
+      "s": 1908,
+      "u": 6,
+      "position": [
+        476.19287109375,
+        -5.508798209336989,
+        -203.1240234375
+      ],
+      "heading": [
+        0.29577652441060676,
+        0,
+        -0.9552571630757769
+      ],
+      "grounded": true,
+      "state": "ride",
+      "lives": 30,
+      "stamp": "Codex/sol fork \u00b7 build 10-06 00:56 UTC",
+      "assets": {
+        "components": 3294,
+        "placements": 3294,
+        "ready": 1078,
+        "skipped": 0,
+        "draws": 461,
+        "triangles": 999050,
+        "allLodTriangles": 2669870,
+        "cells": 1337,
+        "residentCells": 461,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 20,
+        "textureMiB": 38,
+        "errors": [],
+        "windTime": 37.533333333332486
+      },
+      "render": {
+        "frame": 16622,
+        "calls": 248,
+        "triangles": 604847,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 318,
+        "textures": 97,
+        "programs": 50
+      },
+      "camera": [
+        474.7122264494252,
+        -0.4087982093369895,
+        -198.29596053016002
+      ],
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 17.600000023841858,
+        "calls": 248,
+        "triangles": 604847
+      }
+    },
+    {
+      "name": "16-final-rail",
+      "s": 2270,
+      "u": -3.5,
+      "position": [
+        745.56982421875,
+        -6.1718999894944755,
+        -199.35791015625
+      ],
+      "heading": [
+        0.2981196930508446,
+        0,
+        0.9545284954443582
+      ],
+      "grounded": true,
+      "state": "ride",
+      "lives": 30,
+      "stamp": "Codex/sol fork \u00b7 build 10-06 00:56 UTC",
+      "assets": {
+        "components": 3294,
+        "placements": 3294,
+        "ready": 896,
+        "skipped": 0,
+        "draws": 362,
+        "triangles": 772652,
+        "allLodTriangles": 1982268,
+        "cells": 1337,
+        "residentCells": 362,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 22,
+        "textureMiB": 39.67,
+        "errors": [],
+        "windTime": 39.833333333332355
+      },
+      "render": {
+        "frame": 17588,
+        "calls": 170,
+        "triangles": 511614,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 356,
+        "textures": 99,
+        "programs": 50
+      },
+      "camera": [
+        744.0545534627597,
+        -1.0718999894944758,
+        -204.1752179662245
+      ],
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.599999994039536,
+        "p95Ms": 17.5,
+        "calls": 170,
+        "triangles": 511614
+      }
+    },
+    {
+      "name": "17-finish-island",
+      "s": 2390,
+      "u": 4,
+      "position": [
+        727.839599609375,
+        -6,
+        -82.515380859375
+      ],
+      "heading": [
+        -0.3129102068990278,
+        0,
+        0.9497827132657277
+      ],
+      "grounded": true,
+      "state": "ride",
+      "lives": 30,
+      "stamp": "Codex/sol fork \u00b7 build 10-06 00:56 UTC",
+      "assets": {
+        "components": 3294,
+        "placements": 3294,
+        "ready": 851,
+        "skipped": 0,
+        "draws": 337,
+        "triangles": 788256,
+        "allLodTriangles": 1872958,
+        "cells": 1337,
+        "residentCells": 337,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 22,
+        "textureMiB": 39.67,
+        "errors": [],
+        "windTime": 42.14999999999889
+      },
+      "render": {
+        "frame": 18547,
+        "calls": 186,
+        "triangles": 566776,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 367,
+        "textures": 103,
+        "programs": 56
+      },
+      "camera": [
+        729.4186297301843,
+        -0.9000000000000004,
+        -87.31216768782348
+      ],
+      "timing": {
+        "frames": 60,
+        "medianMs": 16.69999998807907,
+        "p95Ms": 17.400000005960464,
+        "calls": 186,
+        "triangles": 566776
+      }
+    }
+  ],
+  "errors": [],
+  "staticCaptureHazardGrace": true,
+  "environment": {
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+    "viewport": [
+      390,
+      844
+    ],
+    "resolution": {
+      "viewportWidth": 390,
+      "viewportHeight": 844,
+      "inputWidth": 720,
+      "inputHeight": 1558,
+      "outputWidth": 720,
+      "outputHeight": 1558
+    },
+    "atmosphere": {
+      "fogEnabled": true,
+      "fogNear": 55,
+      "fogFar": 190,
+      "fogColor": "#c19f91",
+      "ambientSky": "#c5c4d7",
+      "ambientGround": "#80684c",
+      "ambientIntensity": 1.12,
+      "sunColor": "#ffca85",
+      "sunIntensity": 1.9,
+      "fillColor": "#b2bdcf",
+      "fillIntensity": 0.4,
+      "shadowStrength": 0.8,
+      "sunDirection": [
+        -0.72,
+        0.3,
+        -0.63
+      ],
+      "drawDistance": 230,
+      "backdrop": "sky",
+      "fallbackTop": "#6f798f",
+      "fallbackBottom": "#ebbb91",
+      "fallbackFog": "#b9a29a",
+      "fallbackSunColor": "#ffe3a4",
+      "fallbackSunU": 0.64,
+      "fallbackSunV": 0.38,
+      "fallbackStars": false,
+      "fallbackRidges": true
+    },
+    "sunDirection": [
+      -0.7180995509572814,
+      0.29920814623220054,
+      -0.6283371070876211
+    ]
+  },
+  "spawn": {
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "grounded": true,
+    "state": "ride",
+    "lives": 4,
+    "stamp": "Codex/sol fork \u00b7 build 10-06 00:56 UTC",
+    "assets": {
+      "components": 3294,
+      "placements": 3294,
+      "ready": 844,
+      "skipped": 0,
+      "draws": 379,
+      "triangles": 785359,
+      "allLodTriangles": 2143533,
+      "cells": 1337,
+      "residentCells": 379,
+      "pendingCells": 0,
+      "retryingCells": 0,
+      "compressedTextures": 20,
+      "textureMiB": 38,
+      "errors": [],
+      "windTime": 1.4666666666666663
+    },
+    "render": {
+      "frame": 1245,
+      "calls": 282,
+      "triangles": 701861,
+      "points": 0,
+      "lines": 0
+    },
+    "memory": {
+      "geometries": 93,
+      "textures": 91,
+      "programs": 42
+    },
+    "camera": [
+      1.3324405051029058,
+      5.1,
+      4.871047351480081
+    ]
+  },
+  "idle": {
+    "before": {
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "grounded": true,
+      "state": "ride",
+      "lives": 4,
+      "stamp": "Codex/sol fork \u00b7 build 10-06 01:11 UTC",
+      "assets": {
+        "components": 3294,
+        "placements": 3294,
+        "ready": 668,
+        "skipped": 0,
+        "draws": 314,
+        "triangles": 634858,
+        "allLodTriangles": 1801882,
+        "cells": 1337,
+        "residentCells": 314,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 20,
+        "textureMiB": 38,
+        "errors": [],
+        "windTime": 11.533333333333486
+      },
+      "render": {
+        "frame": 5468,
+        "calls": 266,
+        "triangles": 661753,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 237,
+        "textures": 96,
+        "programs": 46
+      },
+      "camera": [
+        1.3324405051029065,
+        5.1,
+        4.871047351480081
+      ]
+    },
+    "after": {
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "grounded": true,
+      "state": "ride",
+      "lives": 4,
+      "stamp": "Codex/sol fork \u00b7 build 10-06 01:11 UTC",
+      "assets": {
+        "components": 3294,
+        "placements": 3294,
+        "ready": 668,
+        "skipped": 0,
+        "draws": 314,
+        "triangles": 634858,
+        "allLodTriangles": 1801882,
+        "cells": 1337,
+        "residentCells": 314,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 20,
+        "textureMiB": 38,
+        "errors": [],
+        "windTime": 13.533333333333585
+      },
+      "render": {
+        "frame": 6308,
+        "calls": 265,
+        "triangles": 661741,
+        "points": 0,
+        "lines": 0
+      },
+      "memory": {
+        "geometries": 237,
+        "textures": 96,
+        "programs": 46
+      },
+      "camera": [
+        1.3324405051029065,
+        5.1,
+        4.871047351480081
+      ]
+    }
+  },
+  "pass": true,
+  "finished": "2026-10-06T01:15:16.866Z",
+  "measurementProvenance": {
+    "scope": "Four crown/spillway views refreshed after the final non-colliding outer-cliff slope adjustment; all other authored scene geometry and gameplay are identical. Raw reports retain original stamps, samples and capture paths.",
+    "sources": [
+      {
+        "file": "custard-sunset-portrait-initial.json",
+        "sha256": "4fb44a99e455665b89a3665a2e6cdb9813f9798875325b2e50ad25ad608a1b61"
+      },
+      {
+        "file": "custard-sunset-spillway-portrait.json",
+        "sha256": "4fa086bafd5c3213f036a8cc4c376d69d42f1a5f1534971970d2752c9ab7a7b2"
+      }
+    ],
+    "refreshedScenes": [
+      "06-crown-terrace",
+      "07-mill-roof",
+      "08-spillway-entry",
+      "09-spillway-bend"
+    ],
+    "priorSceneMeasurements": [
+      {
+        "name": "06-crown-terrace",
+        "s": 753,
+        "u": -3.5,
+        "position": [
+          295.739501953125,
+          12.232375939712433,
+          -300.86962890625
+        ],
+        "heading": [
+          0.15578965051627416,
+          0,
+          0.9877902534404849
+        ],
+        "grounded": true,
+        "state": "ride",
+        "lives": 30,
+        "stamp": "Codex/sol fork \u00b7 build 10-06 00:56 UTC",
+        "assets": {
+          "components": 3294,
+          "placements": 3294,
+          "ready": 955,
+          "skipped": 0,
+          "draws": 380,
+          "triangles": 884065,
+          "allLodTriangles": 2265741,
+          "cells": 1337,
+          "residentCells": 380,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 22,
+          "textureMiB": 39.67,
+          "errors": [],
+          "windTime": 16.783333333333662
+        },
+        "render": {
+          "frame": 7788,
+          "calls": 279,
+          "triangles": 643838,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 224,
+          "textures": 99,
+          "programs": 49
+        },
+        "camera": [
+          294.95684553197543,
+          17.332375939712435,
+          -305.85861166092394
+        ],
+        "timing": {
+          "frames": 60,
+          "medianMs": 16.69999998807907,
+          "p95Ms": 17.599999994039536,
+          "calls": 279,
+          "triangles": 643838
+        }
+      },
+      {
+        "name": "07-mill-roof",
+        "s": 791,
+        "u": -18,
+        "position": [
+          312.830322265625,
+          19.67329978942871,
+          -263.167724609375
+        ],
+        "heading": [
+          0.03634220873236541,
+          0,
+          0.9993394037385164
+        ],
+        "grounded": true,
+        "state": "ride",
+        "lives": 30,
+        "stamp": "Codex/sol fork \u00b7 build 10-06 00:56 UTC",
+        "assets": {
+          "components": 3294,
+          "placements": 3294,
+          "ready": 981,
+          "skipped": 0,
+          "draws": 407,
+          "triangles": 946599,
+          "allLodTriangles": 2411510,
+          "cells": 1337,
+          "residentCells": 407,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 22,
+          "textureMiB": 39.67,
+          "errors": [],
+          "windTime": 19.08333333333353
+        },
+        "render": {
+          "frame": 8754,
+          "calls": 241,
+          "triangles": 621612,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 226,
+          "textures": 100,
+          "programs": 49
+        },
+        "camera": [
+          312.6566166400027,
+          24.773299789428712,
+          -268.2147482427708
+        ],
+        "timing": {
+          "frames": 60,
+          "medianMs": 16.700000017881393,
+          "p95Ms": 17.30000001192093,
+          "calls": 241,
+          "triangles": 621612
+        }
+      },
+      {
+        "name": "08-spillway-entry",
+        "s": 870,
+        "u": 0,
+        "position": [
+          288.59228515625,
+          17.832763671875,
+          -184.107666015625
+        ],
+        "heading": [
+          -0.23685663164496928,
+          0,
+          0.9715446135128326
+        ],
+        "grounded": true,
+        "state": "ride",
+        "lives": 30,
+        "stamp": "Codex/sol fork \u00b7 build 10-06 00:56 UTC",
+        "assets": {
+          "components": 3294,
+          "placements": 3294,
+          "ready": 942,
+          "skipped": 0,
+          "draws": 418,
+          "triangles": 887334,
+          "allLodTriangles": 2480531,
+          "cells": 1337,
+          "residentCells": 418,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 22,
+          "textureMiB": 39.67,
+          "errors": [],
+          "windTime": 21.3833333333334
+        },
+        "render": {
+          "frame": 9720,
+          "calls": 195,
+          "triangles": 475951,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 244,
+          "textures": 100,
+          "programs": 49
+        },
+        "camera": [
+          289.7968596880868,
+          22.932763671875,
+          -189.011898901332
+        ],
+        "timing": {
+          "frames": 60,
+          "medianMs": 16.700000017881393,
+          "p95Ms": 17.5,
+          "calls": 195,
+          "triangles": 475951
+        }
+      },
+      {
+        "name": "09-spillway-bend",
+        "s": 1020,
+        "u": 0,
+        "position": [
+          195.16943359375,
+          9.987060546875,
+          -78.369384765625
+        ],
+        "heading": [
+          -0.9450520998569643,
+          0,
+          0.3269197585890802
+        ],
+        "grounded": true,
+        "state": "ride",
+        "lives": 30,
+        "stamp": "Codex/sol fork \u00b7 build 10-06 00:56 UTC",
+        "assets": {
+          "components": 3294,
+          "placements": 3294,
+          "ready": 754,
+          "skipped": 0,
+          "draws": 395,
+          "triangles": 796248,
+          "allLodTriangles": 2349828,
+          "cells": 1337,
+          "residentCells": 395,
+          "pendingCells": 0,
+          "retryingCells": 0,
+          "compressedTextures": 22,
+          "textureMiB": 39.67,
+          "errors": [],
+          "windTime": 23.699999999999935
+        },
+        "render": {
+          "frame": 10693,
+          "calls": 214,
+          "triangles": 542943,
+          "points": 0,
+          "lines": 0
+        },
+        "memory": {
+          "geometries": 277,
+          "textures": 101,
+          "programs": 49
+        },
+        "camera": [
+          199.9394631396963,
+          15.087060546875,
+          -80.0274915567575
+        ],
+        "timing": {
+          "frames": 60,
+          "medianMs": 16.69999998807907,
+          "p95Ms": 17.5,
+          "calls": 214,
+          "triangles": 542943
+        }
+      }
+    ]
+  },
+  "finalBuildStamp": "Codex/sol fork \u00b7 build 10-06 01:11 UTC"
+}

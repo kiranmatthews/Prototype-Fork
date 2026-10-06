@@ -1,0 +1,256 @@
+{
+  "inventory": {
+    "enemy": 11,
+    "stone": 3,
+    "crusher": 2,
+    "pendulum": 2,
+    "mover": 2,
+    "crumble": 15,
+    "rail": 6,
+    "vertramp": 1,
+    "checkpoint": 11,
+    "crate": 147,
+    "gate": 1
+  },
+  "route": {
+    "length": 2430,
+    "heightRange": [
+      -10,
+      18
+    ],
+    "headingReversals": 3,
+    "maxYawRateAt23": 31.103957731710413,
+    "minRadius": 42.36769288872189
+  },
+  "roads": {
+    "expected": 6708,
+    "probes": 6708,
+    "failures": []
+  },
+  "pipe": {
+    "expected": 930,
+    "probes": 930,
+    "failures": []
+  },
+  "gaps": {
+    "expected": 1746,
+    "probes": 1746,
+    "failures": []
+  },
+  "enemies": [
+    {
+      "i": 0,
+      "kind": "turtle",
+      "range": 2,
+      "speed": 0.8,
+      "expected": 81,
+      "probes": 81,
+      "maxHeightError": 0.0007380865704496031,
+      "failures": []
+    },
+    {
+      "i": 1,
+      "kind": "spiker",
+      "range": 0,
+      "speed": 0,
+      "expected": 81,
+      "probes": 81,
+      "maxHeightError": 4.263256414560601e-14,
+      "failures": []
+    },
+    {
+      "i": 2,
+      "kind": "hopper",
+      "range": 0,
+      "speed": 0,
+      "expected": 81,
+      "probes": 81,
+      "maxHeightError": 5.329070518200751e-15,
+      "failures": []
+    },
+    {
+      "i": 3,
+      "kind": "charger",
+      "range": 4,
+      "speed": 1.2,
+      "expected": 81,
+      "probes": 81,
+      "maxHeightError": 0.07930806099959575,
+      "failures": []
+    },
+    {
+      "i": 4,
+      "kind": "turtle",
+      "range": 2,
+      "speed": 0.8,
+      "expected": 81,
+      "probes": 81,
+      "maxHeightError": 0,
+      "failures": []
+    },
+    {
+      "i": 5,
+      "kind": "hopper",
+      "range": 0,
+      "speed": 0,
+      "expected": 81,
+      "probes": 81,
+      "maxHeightError": 4.440892098500626e-15,
+      "failures": []
+    },
+    {
+      "i": 6,
+      "kind": "sentry",
+      "range": 0,
+      "speed": 0,
+      "expected": 81,
+      "probes": 81,
+      "maxHeightError": 3.019806626980426e-14,
+      "failures": []
+    },
+    {
+      "i": 7,
+      "kind": "spinner",
+      "range": 0,
+      "speed": 0,
+      "expected": 81,
+      "probes": 81,
+      "maxHeightError": 0,
+      "failures": []
+    },
+    {
+      "i": 8,
+      "kind": "charger",
+      "range": 4,
+      "speed": 1.2,
+      "expected": 81,
+      "probes": 81,
+      "maxHeightError": 0.035790665697772894,
+      "failures": []
+    },
+    {
+      "i": 9,
+      "kind": "spiker",
+      "range": 0,
+      "speed": 0,
+      "expected": 81,
+      "probes": 81,
+      "maxHeightError": 7.460698725481052e-14,
+      "failures": []
+    },
+    {
+      "i": 10,
+      "kind": "grunt",
+      "range": 2.599999999999909,
+      "speed": 1,
+      "expected": 81,
+      "probes": 81,
+      "maxHeightError": 0.02003635444331664,
+      "failures": []
+    }
+  ],
+  "stones": [
+    {
+      "i": 0,
+      "axis": "x",
+      "expected": 729,
+      "probes": 729,
+      "maxHeightError": 0.16788770845236378,
+      "failures": []
+    },
+    {
+      "i": 1,
+      "axis": "x",
+      "expected": 729,
+      "probes": 729,
+      "maxHeightError": 0.13162187875125841,
+      "failures": []
+    },
+    {
+      "i": 2,
+      "axis": "z",
+      "expected": 729,
+      "probes": 729,
+      "maxHeightError": 0.06519282814871374,
+      "failures": []
+    }
+  ],
+  "rails": [
+    {
+      "name": "Outside bank coping",
+      "expected": 100,
+      "probes": 100,
+      "minClearance": 0.7998495604503013,
+      "failures": []
+    },
+    {
+      "name": "Crown aqueduct crossing",
+      "expected": 192,
+      "probes": 192,
+      "minClearance": 0.7180943098350419,
+      "failures": []
+    },
+    {
+      "name": "High spillway coping",
+      "expected": 164,
+      "probes": 164,
+      "minClearance": 1.9703375052099545,
+      "failures": []
+    },
+    {
+      "name": "Reedbank fast rail",
+      "expected": 178,
+      "probes": 178,
+      "minClearance": 0.7983960531099301,
+      "failures": []
+    },
+    {
+      "name": "Quarry outside carve rail",
+      "expected": 176,
+      "probes": 176,
+      "minClearance": 0.6835942561489947,
+      "failures": []
+    },
+    {
+      "name": "Final crown rail",
+      "expected": 237,
+      "probes": 237,
+      "minClearance": 0.746770220550542,
+      "failures": []
+    }
+  ],
+  "camera": {
+    "expected": 3648,
+    "probes": 3648,
+    "maxError": 1.2136028448573,
+    "failures": []
+  },
+  "contacts": {
+    "expectedTops": 126,
+    "tops": 126,
+    "expectedSides": 126,
+    "sides": 126,
+    "minSideMove": 0.2111539296349668,
+    "minOutwardMove": 0.21112700185945274,
+    "failures": []
+  },
+  "ferry": [
+    {
+      "axis": [
+        0,
+        0,
+        1
+      ],
+      "ends": [
+        {
+          "s": 1622,
+          "minGap": 5.6064453125
+        },
+        {
+          "s": 1662,
+          "minGap": 3.81689453125
+        }
+      ]
+    }
+  ]
+}

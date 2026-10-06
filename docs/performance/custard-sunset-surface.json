@@ -1,0 +1,14 @@
+{
+  "solids": 61,
+  "scenerySolids": 125,
+  "triangles": 79574,
+  "vertices": 50649,
+  "closedEdges": 119361,
+  "bankClearance": 684,
+  "shoreGrass": 360,
+  "ferryPontoons": 3,
+  "dryFootProbes": 3354,
+  "elevation": 17.41004876842084,
+  "bytes": 6077859,
+  "components": 4409
+}
