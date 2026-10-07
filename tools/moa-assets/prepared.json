@@ -1,0 +1,43 @@
+{
+  "sourceReview": "Actual Meshy front/quarter/side/back/top inspected; original animation bind frames retained",
+  "moa": {
+    "file": "moa.glb",
+    "triangles": 7675,
+    "parts": {
+      "MoaMeshyBody": 7455,
+      "MoaMeshyJaw": 220
+    },
+    "bytes": 596276,
+    "sha256": "21845ce25abf8223730c86fe28a836d3d16620392ac6d5cba313feb7227b4ffe",
+    "joints": [
+      "torso",
+      "rump",
+      "head",
+      "jaw",
+      "footLeft",
+      "footRight",
+      "upperLeft",
+      "upperRight",
+      "lowerLeft",
+      "lowerRight",
+      "hockLeft",
+      "hockRight",
+      "browLeft",
+      "browRight",
+      "neck0",
+      "neck1",
+      "neck2",
+      "neck3",
+      "neck4",
+      "neck5",
+      "neck6",
+      "neck7"
+    ]
+  },
+  "chicken": {
+    "file": "moa-roast-chicken.glb",
+    "triangles": 2202,
+    "bytes": 123548,
+    "sha256": "fba2151c740e179152af76345fe8d06ca77ab05195d61950011173b38261fcad"
+  }
+}

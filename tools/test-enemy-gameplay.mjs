@@ -21,7 +21,7 @@ const availableKinds = new Set(realAssets ? (await readdir(new URL('../public/en
 if (realAssets) {
   for (const kind of ['hopper', 'floater', 'sentry', 'spinner']) assert.ok(availableKinds.has(kind), `missing actual ${kind} fixture`);
   GLTFLoader.prototype.loadAsync = async function (url, ...args) {
-    const kind = String(url).match(/(?:^|\/)enemies\/([a-z]+)\.glb(?:\?.*)?$/)?.[1];
+    const kind = String(url).match(/(?:^|\/)enemies\/([a-z-]+)\.glb(?:\?.*)?$/)?.[1];
     if (!kind || !availableKinds.has(kind)) return originalLoadAsync.call(this, url, ...args);
     const path = fileURLToPath(new URL(`../public/enemies/${kind}.glb`, import.meta.url));
     const bytes = await readFile(path);
@@ -61,7 +61,7 @@ try {
   levels.push(level);
   await level.prepareJungleAssets();
   for (const enemy of level.enemies) {
-    assert.equal(enemy.visual.diagnostics.status, (enemy.kind === 'moa' || availableKinds.has(enemy.kind)) ? 'ready' : 'error',
+    assert.equal(enemy.visual.diagnostics.status, availableKinds.has(enemy.kind) ? 'ready' : 'error',
       `${enemy.kind}: level readiness must include its real or deliberately missing model`);
     if (availableKinds.has(enemy.kind)) assert.ok(enemy.visual.diagnostics.meshes > 0, `${enemy.kind} model did not attach`);
   }
@@ -174,8 +174,8 @@ try {
       near(enemy.group.position.x - before, .8, 'turtle shell recoil distance');
     } else {
       assert.equal(enemy.alive, false, `${kind} actual Player spin takedown`);
-      assert.equal(enemy.flungT, 0, `${kind} starts ballistic fling`);
-      near(enemy.flungVel.y, 10, `${kind} fling vertical velocity`);
+      if(kind==='moa'){assert.equal(enemy.state,'roast');assert.ok(enemy.roast);assert.equal(enemy.flungT,undefined);}
+      else{assert.equal(enemy.flungT, 0, `${kind} starts ballistic fling`);near(enemy.flungVel.y, 10, `${kind} fling vertical velocity`);}
     }
   }
 
@@ -183,6 +183,13 @@ try {
   // both soft/hard resets restore the complete home and clear all transient state.
   for (const kind of ENEMY_KINDS) {
     reset(); const enemy = byKind[kind], home = enemy.homePosition.clone();
+    if(kind==='moa'){
+      level.killEnemy(enemy);tick(3);assert.ok(enemy.roast&&enemy.group.visible);
+      level.clearMoaRoast(enemy);assert.equal(enemy.group.visible,false);
+      level.reset(false);assert.equal(enemy.alive,true);assert.equal(enemy.roast,undefined);assert.ok(enemy.group.position.distanceTo(home)<1e-9);
+      level.killEnemy(enemy,new THREE.Vector3(6,10,3));tick(.3);assert.equal(enemy.flungT,undefined);assert.equal(enemy.state,'roast');
+      level.reset(true);assert.equal(enemy.alive,true);assert.equal(enemy.state,'patrol');assert.equal(enemy.roast,undefined);continue;
+    }
     level.killEnemy(enemy); assert.equal(enemy.alive, false); assert.equal(enemy.group.visible, true);
     tick(.06); assert.equal(enemy.group.visible, true); tick(.061); assert.equal(enemy.group.visible, false);
     level.reset(false); assert.equal(enemy.alive, true); assert.equal(enemy.group.visible, true);

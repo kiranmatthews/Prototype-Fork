@@ -8450,7 +8450,7 @@ export class Player {
     }
     for (const e of level.enemies) {
       if (e.alive && e.meleeKill && e.group.position.distanceTo(this.pos) < TUNING.slamRadius + 0.6) {
-        level.killEnemy(e);
+        level.killEnemy(e, undefined, this.debrisSpinToken);
         this.score(CONST.ptsEnemy, 'Flattened');
       }
     }
@@ -8937,8 +8937,14 @@ export class Player {
       else this.smashCrate(level, c);
     }
     for (const e of level.enemies) {
+      if (e.roast) {
+        e.roast.lastSpin ??= this.debrisSpinToken;
+        if (e.stateT > .12 && e.roast.lastSpin !== this.debrisSpinToken &&
+            e.roast.box.distanceToPoint(this.pos) < reach + .4) level.clearMoaRoast(e);
+        continue;
+      }
       if (e.alive && e.meleeKill && e.group.position.distanceTo(this.pos) < reach + 0.4) {
-        level.killEnemy(e);
+        level.killEnemy(e, undefined, this.debrisSpinToken);
         this.score(CONST.ptsEnemy, 'Takedown');
       }
     }
@@ -12143,7 +12149,15 @@ export class Player {
     // stompKill / meleeKill / touchHurt / spinRecoil. The rules below read them
     // so each kind's "which attack works" is data, not a special case here.
     for (const e of level.enemies) {
-      if (!e.alive) continue;
+      if (!e.alive) {
+        if (e.roast) {
+          // The killing stroke cannot immediately erase the new chicken.
+          e.roast.lastSpin ??= this.debrisSpinToken;
+          if (this.spinning && e.stateT > .12 && e.roast.lastSpin !== this.debrisSpinToken &&
+              this.spinBox.intersectsBox(e.roast.box)) level.clearMoaRoast(e);
+        }
+        continue;
+      }
       if (this.spinning && this.spinBox.intersectsBox(e.box)) {
         if (e.spinKill) {
           // Spin PINGS the enemy away — it can smash crates it happens to hit.
@@ -12151,7 +12165,7 @@ export class Player {
           if (fling.lengthSq() < 0.01) fling.copy(this.axisF).multiplyScalar(Math.sign(this.speed || 1));
           fling.normalize().multiplyScalar(42); // pinball ricochet
           fling.y = 10;
-          level.killEnemy(e, fling);
+          level.killEnemy(e, fling, this.debrisSpinToken);
           this.score(CONST.ptsEnemy, 'Takedown');
           continue;
         }
@@ -12178,7 +12192,7 @@ export class Player {
           // Spikes, airborne hoppers/floaters and other non-stompable states
           // keep their published combat identity through validStomp above.
           const top = e.box.max.y;
-          level.killEnemy(e);
+          level.killEnemy(e, undefined, this.debrisSpinToken);
           this.score(CONST.ptsEnemy, 'Bonk');
           this.pos.y = top + 0.02;
           this.vVel = TUNING.crateBounce;
@@ -12190,12 +12204,12 @@ export class Player {
         }
         if ((this.uberTimer > 0 || this.sliding) && e.meleeKill) {
           // Uber plows through; Crash 3 rules: the slide takes out enemies too.
-          level.killEnemy(e);
+          level.killEnemy(e, undefined, this.debrisSpinToken);
           this.score(CONST.ptsEnemy, 'Takedown');
         } else if (validStomp) {
           // Crash rules: jumping on an enemy squashes it and bounces you
           // (slams punch straight through instead).
-          level.killEnemy(e);
+          level.killEnemy(e, undefined, this.debrisSpinToken);
           this.score(CONST.ptsEnemy, 'Bonk');
           if (!this.slamActive) {
             this.vVel = TUNING.crateBounce;

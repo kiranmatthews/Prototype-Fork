@@ -165,7 +165,7 @@ function inPlaceClip(clip:THREE.AnimationClip,model:THREE.Object3D,nodes:BoundNo
 /** Imported models retain observable loading failures. The original moa has
  * its own explicit code-authored model and animation adapter. */
 export function createEnemyVisual(kind:EnemyKind,options:EnemyVisualOptions={}):EnemyVisual {
-  if(kind==='moa')return createMoaVisual();
+  if(kind==='moa')return createMoaVisual(options.url);
   const startState=kind==='hopper'?'crouch':kind==='floater'?'hover':kind==='sentry'?'track':kind==='spinner'?'out':'patrol';
   const group=new THREE.Group();group.name=`Enemy_${kind}`;
   // Static artwork sizing stays outside animation bindings and gameplay resets.

@@ -1,0 +1,15 @@
+{
+  "title": "Caw.ogg",
+  "author": "egomassive",
+  "originalAuthor": "Nigel Coop (nigelcoop)",
+  "source": "https://freesound.org/people/egomassive/sounds/536732/",
+  "originalSource": "https://freesound.org/people/nigelcoop/sounds/75162/",
+  "license": "CC0 1.0",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "publicPreview": "https://cdn.freesound.org/previews/536/536732_1415754-hq.mp3",
+  "changes": "Trimmed the two calls, resampled to the unchanged animation mouth beats, 15 ms edge fades, mono 32 kHz PCM, peak normalized to 0.78.",
+  "sha256": "56a81986ec96f8a9855b6915360049d956dd4873f3ab656b90f4eadcaed5186e",
+  "peckFile": "moa-caw-peck.wav",
+  "peckChanges": "0.30\u20130.52 s excerpt of the first caw with 15 ms edge fades, mono 32 kHz PCM, peak normalized to 0.68",
+  "peckSha256": "8193734499686504e72461879ebd81b42a2d546231129dd8ca578a1b62509d00"
+}
