@@ -119,7 +119,7 @@ export function makeBonusCourse({ name, patterns, style }: {
     {t:'camnode',p:[a+21,0,0],radius:0,grp:3},
     {t:'camnode',p:[a/2,8,0],s:[a+54,48,18],cameraView:true,radius:1,
       cameraPosition:[2,8.2,22],cameraTarget:[2,5.6,0],cameraFollowDistance:18,cameraFollowTargetHeight:5.3,cameraIntroDistance:0,
-      cameraFov:56,cameraAspect:1.3,grp:3,nm:'Close side follow keeps the hero and current crate goal readable'},
+      cameraFov:56,cameraAspect:1.3,grp:3,nm:'Close side view holds the landing floor and high crate goals'},
   );
   return { data:{v:1,name,spawn:[-6,.12,0],killY:-12,hudMode:'bonus',sky:style.sky,
     cameraAirLift:.85,...(style.jungleAtmosphere?{jungleAtmosphere:true}:{}),components,groups},rooms,actions };

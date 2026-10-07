@@ -9,6 +9,7 @@
 import * as THREE from "three";
 import { trackPresentationImage } from "./presentationLoading";
 import { RooAtlasPainter } from "./roo-type/atlas";
+import { paintBonusTitle } from './bonusTitle';
 import {drawBalanceMeter} from './balanceMeter';
 import { getRooAppearance } from './roo-type/settings';
 import { ROO_COUNTER_TRACKING, rooNumberCap, rooTitleCap } from "./roo-type/typography";
@@ -433,7 +434,7 @@ export class GameHudSurface {
     // Same ascending z-order as ui.ts: halo behind persistent HUD; flash and
     // result cards above it; death fade and GAME OVER on top.
     this.paintHalo(ctx, width, height, frame);
-    this.paintBonus(ctx, layout, width, height);
+    this.paintBonus(ctx, layout, width, height, time);
     this.paintCounters(ctx, layout, width, height, frame, time);
     this.paintScoreAndClock(ctx, layout, width, height, frame);
     this.paintSpecial(ctx, layout, width, height, frame, time);
@@ -503,6 +504,7 @@ export class GameHudSurface {
     layout: LayoutMap,
     width: number,
     height: number,
+    time: number,
   ): void {
     const title = this.elements.bonusTitle;
     if (!isLaidOut(title)) return;
@@ -517,6 +519,11 @@ export class GameHudSurface {
       height: 100 * sy,
     };
     const titleSize = rooTitleCap(height) * revealScale;
+    const elapsed = time - Number(title?.dataset.bonusStartedAt ?? time);
+    if (this.fontFamily === "Roo" && paintBonusTitle(ctx, this.rooAtlas, rect, titleSize, alpha, elapsed)) {
+      this.mark();
+      return;
+    }
     this.drawRooInRect(ctx, readRooHudText(title) || "BONUS", rect, {
       size: titleSize,
       align: "center",

@@ -86,7 +86,7 @@ try {
     };
     const context = {
       THREE, Level, scene, player, level: parentLevel, current: parentEntry, loadedLevelId: parentId,
-      bonusSession: null, competition: parentCompetition, competitionUI: { render: noop }, currentRunBonusBoxes: 0, endlessDeathsOn: false,
+      bonusSession: null, bonusDeparture: null, competition: parentCompetition, competitionUI: { render: noop }, currentRunBonusBoxes: 0, endlessDeathsOn: false,
       campaignLevelById, isCampaignLevel, isCompetitionLevel, recordPresentationStage: noop,
       JungleCupEvent, competitionCourse, sfx: { countdownBeep: noop },
       guardGameplayFromMenu: noop, restoreCommittedRunRewards: noop, runStartRewards: {},

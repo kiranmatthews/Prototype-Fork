@@ -20,6 +20,22 @@ export interface CameraView {
 
 export interface CameraViewMatch { view: CameraView; weight: number; }
 
+/** Render-only bonus fallback. Keep it out of Level.cameraViews: legacy
+ * bonus rooms already own their movement axes through cardinal travel zones. */
+export const BONUS_PRESENTATION_VIEW:CameraViewMatch={weight:1,view:{
+  p:[0,0,0],s:[1,1,1],yaw:0,feather:1,
+  cameraPosition:[2,8.2,22],cameraTarget:[2,5.6,0],cameraFollowDistance:18,
+  cameraFollowTargetHeight:5.3,cameraIntroDistance:0,cameraFov:56,cameraAspect:1.3,
+}};
+
+/** Opt-in presentation context for a side-view shot that holds the landing
+ * surface while the character jumps through the frame. */
+export interface CameraViewGroundFollow {
+  groundY: number | null;
+  grounded: boolean;
+  dt: number;
+}
+
 /** The same spatial feather owns both the heading and optional framing. */
 export function cameraViewAt(views: readonly CameraView[], x:number,y:number,z:number):CameraViewMatch|null {
   let match:CameraViewMatch|null=null;
@@ -49,6 +65,9 @@ export class CameraViewFraming {
   private readonly worldUp=new THREE.Vector3(0,1,0);
   private readonly followEye=new THREE.Vector3();
   private readonly followTarget=new THREE.Vector3();
+  private groundView:CameraView|null=null;
+  private supportY=0;
+  private anchorY=0;
 
   restore(camera:THREE.PerspectiveCamera):void {
     if(!this.applied)return;
@@ -57,8 +76,8 @@ export class CameraViewFraming {
     this.applied=false;
   }
 
-  apply(camera:THREE.PerspectiveCamera,match:CameraViewMatch|null,subject?:THREE.Vector3,_snap=false):void {
-    if(!match)return;
+  apply(camera:THREE.PerspectiveCamera,match:CameraViewMatch|null,subject?:THREE.Vector3,snap=false,groundFollow?:CameraViewGroundFollow):void {
+    if(!match){this.groundView=null;return;}
     const {view,weight}=match;
     if(!view.cameraPosition&&!view.cameraTarget&&view.cameraFov===undefined)return;
     this.position.copy(camera.position);this.orientation.copy(camera.quaternion);this.up.copy(camera.up);this.fov=camera.fov;
@@ -67,7 +86,38 @@ export class CameraViewFraming {
       this.shotEye.fromArray(view.cameraPosition);this.shotTarget.fromArray(view.cameraTarget);
       const distance=Math.min(18,view.cameraFollowDistance??this.shotEye.distanceTo(this.shotTarget));
       if(subject){
-        this.followTarget.copy(subject);this.followTarget.y+=view.cameraFollowTargetHeight??1.3;
+        const targetHeight=view.cameraFollowTargetHeight??1.3;
+        this.followTarget.copy(subject);
+        if(groundFollow){
+          const floor=groundFollow.groundY;
+          const supported=floor!==null&&Number.isFinite(floor);
+          const fresh=snap||this.groundView!==view;
+          if(fresh){
+            this.supportY=supported?Math.min(subject.y,floor):subject.y;
+            this.anchorY=this.supportY;
+          }else if(groundFollow.grounded)this.supportY=supported?floor:subject.y;
+          this.groundView=view;
+
+          // A higher floor under an airborne player is a future landing, not
+          // an instruction to bob the shot. Hold the last supported height;
+          // the head/feet bounds below still allow tall climbs and drops.
+          const fov=view.cameraFov===undefined?camera.fov:Math.min(camera.fov,view.cameraFov);
+          const tangent=Math.tan(THREE.MathUtils.degToRad(fov)/2);
+          this.followEye.copy(this.shotEye).sub(this.shotTarget).normalize();
+          const sine=this.followEye.y,cosine=Math.hypot(this.followEye.x,this.followEye.z);
+          const frameHeight=(screenY:number)=>screenY*tangent*distance/Math.max(.1,cosine+screenY*tangent*sine);
+          const maxRise=targetHeight+frameHeight(.65)-2.5;
+          const minDrop=targetHeight+frameHeight(-.8);
+          const low=subject.y-maxRise;
+          // A void fall keeps its last composition. Only follow downward
+          // when the player's existing support probe sees a real receiver.
+          const high=supported?subject.y-minDrop:Infinity;
+          const goal=THREE.MathUtils.clamp(this.supportY,low,high);
+          const blend=fresh?1:1-Math.exp(-5*Math.max(0,groundFollow.dt));
+          this.anchorY=THREE.MathUtils.clamp(THREE.MathUtils.lerp(this.anchorY,goal,blend),low,high);
+          this.followTarget.y=this.anchorY;
+        }else this.groundView=null;
+        this.followTarget.y+=targetHeight;
         this.followEye.copy(this.shotEye).sub(this.shotTarget).setLength(distance).add(this.followTarget);
         this.shotEye.copy(this.followEye);this.shotTarget.copy(this.followTarget);
       }else this.shotEye.sub(this.shotTarget).setLength(distance).add(this.shotTarget);

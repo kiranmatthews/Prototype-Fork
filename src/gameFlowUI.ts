@@ -704,7 +704,7 @@ export class GameFlowUI {
     Object.assign(this.previousPad, { up, down, left, right, accept, back });
   }
 
-  async transition(action: () => void | Promise<void>, options: { vortex?: boolean } = {}): Promise<void> {
+  async transition(action: () => void | Promise<void>, options: { vortex?: boolean; beforeCover?: () => Promise<void> } = {}): Promise<void> {
     if (this.transitionActive) return;
     this.transitionActive = true;
     this.cursor.classList.remove("visible");
@@ -715,6 +715,9 @@ export class GameFlowUI {
     // style update and appearing fully black on its first painted frame.
     void this.transitionCurtain.offsetWidth;
     try {
+      // Own the input lock before a visible departure, then cover its last
+      // frame. The same transition remains responsible for destination load.
+      await options.beforeCover?.();
       await runLoadingTransition({
         phase: (phase) => {
           this.transitionPhase = phase;

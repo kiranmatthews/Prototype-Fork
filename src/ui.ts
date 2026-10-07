@@ -3,6 +3,7 @@
 
 import * as THREE from "three";
 import { BonusPayout } from "./bonusPayout";
+import { BonusTitleAnimation } from "./bonusTitle";
 import {loadBalanceMeterAssets,paintBalanceElement} from './balanceMeter';
 import { sfx } from "./audio";
 import { setPromptText } from "./inputPromptUI";
@@ -179,6 +180,7 @@ export class UI {
   private rooTTResTitle!: RooLabel;
   private rooMsgTitle!: RooLabel;
   private rooBonusTitle!: RooLabel;
+  private bonusTitleAnimation!: BonusTitleAnimation;
   private scoreLabelEl!: HTMLElement;
   private scorePlateEl!: HTMLElement;
   private boostLabelEl!: HTMLElement;
@@ -700,6 +702,7 @@ export class UI {
     tl.appendChild(relicRow);
 
     this.bonusTitleEl = div("hud-reveal hud-bonus-title");
+    this.bonusTitleAnimation = new BonusTitleAnimation(this.bonusTitleEl);
 
     // Bottom-right life portrait; the Special ring shares its exact anchor.
     // The top-right column is reserved for explicit run-mode clock/score UI.
@@ -1401,6 +1404,7 @@ export class UI {
 
   setHUD(s: HudState, deltaSeconds = 1 / 60): void {
     const hudNow = performance.now();
+    if (s.bonusMode) this.bonusTitleAnimation.update(hudNow);
     const payout = this.bonusPayout;
     if (payout) {
       const launchedBefore = payout.fruitLaunched;
@@ -1692,6 +1696,14 @@ export class UI {
     this.currentLevelId = id;
     this.hudMode = hudMode;
     this.bonusMode = hudMode === "bonus";
+    // Level switches happen under the black curtain. Resolve the destination
+    // layout here so the banked payout cannot briefly use the bonus positions.
+    if (this.hudBonusExitTimer !== null) {
+      window.clearTimeout(this.hudBonusExitTimer);
+      this.hudBonusExitTimer = null;
+    }
+    this.gameHudLayer.classList.toggle("hud-bonus", this.bonusMode);
+    if (this.bonusMode) this.bonusTitleAnimation.restart(performance.now());
     this.resetHudTransients(fruitCollectionRevision, inventoryHeld);
     this.levelRows.forEach((b, key) =>
       b.classList.toggle("active", key === id),

@@ -90,13 +90,14 @@ import {
   type GamePlayMode,
 } from "./campaign";
 import { resolveBonusLevel } from "./levels/themed-bonuses";
+import { bonusDeparturePose } from "./bonusDeparture";
 import { TUNING, CONST } from "./tuning";
 import {
   speedSkateFovTarget,
   stepSpeedSkateFov,
 } from "./cameraSpeedEffect";
 import { CameraLookOffset } from "./cameraLook";
-import { cameraViewAt, cameraViewDirection, CameraViewFraming } from "./cameraViews";
+import { cameraViewAt, cameraViewDirection, CameraViewFraming, BONUS_PRESENTATION_VIEW } from "./cameraViews";
 import { cameraRigFraming, setCameraRigAim, CourseCameraHeading, fitCameraRigHorizontal, CameraFallHold } from "./cameraRig";
 import { LoopCameraFraming } from "./loopCamera";
 import { CameraHeroFraming } from "./cameraHeroFraming";
@@ -1997,7 +1998,8 @@ function updateCamera2(dt: number): void {
   cameraViewFraming2.restore(camera2);
   updateBaseCamera2(dt);
   const subject = p2.renderPosition;
-  cameraViewFraming2.apply(camera2, cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z), subject, framingSnap);
+  cameraViewFraming2.apply(camera2, cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z) ?? (level.hudMode === 'bonus' ? BONUS_PRESENTATION_VIEW : null), subject, framingSnap,
+    level.hudMode === 'bonus' ? { groundY: p2.groundBelowY !== null && p2.groundBelowY > level.killY ? p2.groundBelowY : null, grounded: p2.grounded, dt } : undefined);
   loopCameraFraming2.apply(camera2, p2.authoredSkateCamera ? null : p2.loopPresentationFrame, subject, cameraRigFraming(level.cameraRig ?? TUNING, 0, 0, 0, true), dt, framingSnap||p2.authoredSkateCamera,p2.loopFallPresentation);
   if(!p2.authoredSkateCamera&&level.cameraAirLift===1&&p2.vertAir&&loopCameraFraming2.active)cameraOverlayHeroFraming2.apply(camera2,p2.cameraPoseBounds,dt,framingSnap);
   else cameraOverlayHeroFraming2.reset();
@@ -2886,8 +2888,10 @@ function enterCampaignLevel(targetId: string, forfeitCurrentRun = false): void {
   });
 }
 
-function enterBonusRound(): void {
-  if (!level.allowsBonus || bonusSession || level.bonusRoundCompleted || player.ttActive || level.timeTrial ||
+let bonusDeparture: { elapsed: number; reducedMotion: boolean; finish: () => void } | null = null;
+
+function enterBonusRound(fromLanding = false): void {
+  if (bonusDeparture || gameFlow.loadingPhase || !level.allowsBonus || bonusSession || level.bonusRoundCompleted || player.ttActive || level.timeTrial ||
       (competition && (competition.simulating || competition.phase === "countdown")) ||
       (!isCampaignLevel(current.id) && !level.bonusPlatformDiagnostics)) return;
   ui.hideMessage();
@@ -2902,6 +2906,7 @@ function enterBonusRound(): void {
   const parentHubMode = player.hubMode;
   const parentCompetitionMode = player.competitionMode;
   void gameFlow.transition(async () => {
+    bonusDeparture = null;
     bonusSession = {
       parentLevel,
       parentEntry,
@@ -2956,7 +2961,10 @@ function enterBonusRound(): void {
     recorder.start(current.id, endlessDeathsOn);
     gameFlow.setWarpRoom(false);
     gameFlow.hide();
-  }, { vortex: false });
+  }, { vortex: false, ...(fromLanding ? { beforeCover: () => new Promise<void>((finish) => {
+    player.collapseRenderInterpolation();
+    bonusDeparture = { elapsed: 0, reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches, finish };
+  }) } : {}) }).finally(() => { bonusDeparture = null; });
 }
 
 function returnFromBonus(completed: boolean): void {
@@ -3044,7 +3052,7 @@ function checkCampaignEntrances(): void {
     enabled:!bonusSession&&(isCampaignLevel(current.id)||!!level.bonusPlatformDiagnostics)&&!player.ttActive&&!level.timeTrial&&!player.comboRun,
     grounded:player.grounded,jump:input.jumpPressed||input.jumpReleased,rising:player.vVel>.2,
   }))
-    enterBonusRound();
+    enterBonusRound(true);
 }
 
 function flushPendingCompletion(): void {
@@ -4276,7 +4284,8 @@ function updateCamera(dt: number): void {
   cameraViewFraming.restore(camera);
   updateBaseCamera(dt);
   const subject = player.renderPosition;
-  cameraViewFraming.apply(camera, cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z), subject, framingSnap);
+  cameraViewFraming.apply(camera, cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z) ?? (level.hudMode === 'bonus' ? BONUS_PRESENTATION_VIEW : null), subject, framingSnap,
+    level.hudMode === 'bonus' ? { groundY: player.groundBelowY !== null && player.groundBelowY > level.killY ? player.groundBelowY : null, grounded: player.grounded, dt } : undefined);
   // The chase rig has its own heading; authored view volumes still own the
   // canonical input direction, independently from this presentation layer.
   if ((level.skatepark || TUNING.chaseCam > 0.5) && !level.boulder && level.cameraViews.length) {
@@ -4907,6 +4916,23 @@ function advanceFrame(nowMs: number): void {
     if (split2p) input2.consumeEdges(true);
     acc = 0;
     sfx.stopLoops();
+    if (bonusDeparture && !gameFlow.loadingPhase) {
+      bonusDeparture.elapsed += dt;
+      const pose = bonusDeparturePose(bonusDeparture.elapsed, bonusDeparture.reducedMotion);
+      player.prepareStartPresentation(level, dt);
+      // Keep the landing camera and physical deck fixed. Lift only the rendered
+      // character; the suspended run, collision and checkpoint stay untouched.
+      const baseY = player.group.position.y;
+      player.group.position.y += pose.offsetY;
+      try {
+        ui.setHUD(currentHudState(), 0);
+        renderGameplayScene(dt, true, true);
+      } finally {
+        player.group.position.y = baseY;
+      }
+      if (pose.complete) bonusDeparture.finish();
+      return;
+    }
     const vortexContext = gameFlow.vortexContext;
     if (vortexContext) {
       ui.setGameHudComposited(false);
@@ -5350,6 +5376,7 @@ requestAnimationFrame(frame);
   campaign,
   gameFlow,
   enterBonusRound,
+  getBonusDeparture: () => bonusDeparture ? { elapsed: bonusDeparture.elapsed, ...bonusDeparturePose(bonusDeparture.elapsed, bonusDeparture.reducedMotion) } : null,
   returnFromBonus,
   showCampaignResults,
   showTimeTrialResults,
