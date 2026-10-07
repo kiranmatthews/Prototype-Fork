@@ -100,6 +100,7 @@ import { cameraViewAt, cameraViewDirection, CameraViewFraming } from "./cameraVi
 import { cameraRigFraming, setCameraRigAim, CourseCameraHeading, fitCameraRigHorizontal } from "./cameraRig";
 import { LoopCameraFraming } from "./loopCamera";
 import { CameraHeroFraming } from "./cameraHeroFraming";
+import { CameraPortraitFraming } from "./cameraPortraitFraming";
 import { SkateChaseCamera, SkateChaseCameraOverlay } from "./skateChaseCamera";
 import { sfx } from "./audio";
 import { Recorder, Replayer, ReplayFile, camYawOf, isReplayFile } from "./replay";
@@ -899,6 +900,7 @@ function applyTheme(): void {
 // crushing to a foreshortened sliver at the horizon.
 const BOULDER_FOV = 27;
 const camera = new THREE.PerspectiveCamera(TUNING.camFov, 1, 0.1, 400);
+const cameraPortraitFraming = new CameraPortraitFraming();
 async function prepareActivePresentationAssets(): Promise<void> {
   if(resultsPresentation)resultsPresentation.frameCamera(camera,window.innerWidth,window.innerHeight,
     gameFlow.resultsSceneViewport(window.innerWidth,window.innerHeight));
@@ -1022,6 +1024,23 @@ function updateSceneryForCurrentView(): void {
 }
 
 function renderPrimaryScene(
+  dt = 0,
+  prepareOcean = true,
+  preCrtOverlay?: CoastPostPreCrtOverlay,
+): void {
+  // Fit only the rendered gameplay view, after every shared/level camera
+  // layer. Restore before simulation, editor snapshots, and the next frame.
+  cameraPortraitFraming.apply(camera, TOUCH_PRESENTATION && !split2p &&
+    !level.isCampaignMap && current.id !== "warproom" && !editorViewActive && !characterLab && !animationStudio &&
+    !(resultsPresentation && gameFlow.currentScreen === "results"));
+  try {
+    drawPrimaryScene(dt, prepareOcean, preCrtOverlay);
+  } finally {
+    cameraPortraitFraming.restore(camera);
+  }
+}
+
+function drawPrimaryScene(
   dt = 0,
   prepareOcean = true,
   preCrtOverlay?: CoastPostPreCrtOverlay,

@@ -1,0 +1,441 @@
+{
+  "date": "2026-10-07",
+  "phoneFraming": "Same short-edge pixel scale as landscape; 85% of extra vertical view below the authored composition",
+  "review": [
+    {
+      "level": "codex-lab",
+      "lite": true,
+      "samples": [
+        {
+          "viewport": [
+            390,
+            844
+          ],
+          "fov": 89.20606569817818,
+          "authoredFov": 49,
+          "heroPixels": {
+            "left": 143.8293,
+            "right": 241.44,
+            "top": 255.5135,
+            "bottom": 432.11,
+            "height": 176.5965
+          },
+          "controlsTop": 597,
+          "restoredView": null
+        },
+        {
+          "viewport": [
+            844,
+            390
+          ],
+          "fov": 49,
+          "authoredFov": 49,
+          "heroPixels": {
+            "left": 370.8292,
+            "right": 468.44,
+            "top": 187.413,
+            "bottom": 364.0096,
+            "height": 176.5966
+          },
+          "controlsTop": 158,
+          "restoredView": null
+        },
+        {
+          "viewport": [
+            390,
+            844
+          ],
+          "fov": 89.20606569817818,
+          "authoredFov": 49,
+          "heroPixels": {
+            "left": 143.8292,
+            "right": 241.44,
+            "top": 255.513,
+            "bottom": 432.1096,
+            "height": 176.5966
+          },
+          "controlsTop": 597,
+          "restoredView": null
+        },
+        {
+          "viewport": [
+            320,
+            568
+          ],
+          "fov": 77.93976807937705,
+          "authoredFov": 49,
+          "heroPixels": {
+            "left": 118.0137,
+            "right": 198.1047,
+            "top": 190.9747,
+            "bottom": 335.8745,
+            "height": 144.8998
+          },
+          "controlsTop": 356,
+          "restoredView": null
+        },
+        {
+          "viewport": [
+            568,
+            320
+          ],
+          "fov": 49,
+          "authoredFov": 49,
+          "heroPixels": {
+            "left": 242.0137,
+            "right": 322.1047,
+            "top": 153.7747,
+            "bottom": 298.6745,
+            "height": 144.8998
+          },
+          "controlsTop": 100,
+          "restoredView": null
+        }
+      ]
+    },
+    {
+      "level": "bonus-easy",
+      "lite": true,
+      "samples": [
+        {
+          "viewport": [
+            390,
+            844
+          ],
+          "fov": 89.20606569817818,
+          "authoredFov": 49,
+          "heroPixels": {
+            "left": 175.8501,
+            "right": 220.7203,
+            "top": 268.4849,
+            "bottom": 409.253,
+            "height": 140.7681
+          },
+          "controlsTop": 597,
+          "restoredView": null
+        },
+        {
+          "viewport": [
+            844,
+            390
+          ],
+          "fov": 49,
+          "authoredFov": 49,
+          "heroPixels": {
+            "left": 402.8501,
+            "right": 447.7203,
+            "top": 200.3849,
+            "bottom": 341.153,
+            "height": 140.7681
+          },
+          "controlsTop": 158,
+          "restoredView": null
+        },
+        {
+          "viewport": [
+            390,
+            844
+          ],
+          "fov": 89.20606569817818,
+          "authoredFov": 49,
+          "heroPixels": {
+            "left": 175.8501,
+            "right": 220.7203,
+            "top": 268.4849,
+            "bottom": 409.253,
+            "height": 140.7681
+          },
+          "controlsTop": 597,
+          "restoredView": null
+        }
+      ]
+    },
+    {
+      "level": "crab-chief",
+      "lite": true,
+      "samples": [
+        {
+          "viewport": [
+            390,
+            844
+          ],
+          "fov": 89.20606569817818,
+          "authoredFov": 49,
+          "heroPixels": {
+            "left": 158.486,
+            "right": 234.0941,
+            "top": 300.1973,
+            "bottom": 446.7542,
+            "height": 146.5569
+          },
+          "controlsTop": 597,
+          "restoredView": null
+        },
+        {
+          "viewport": [
+            844,
+            390
+          ],
+          "fov": 49,
+          "authoredFov": 49,
+          "heroPixels": {
+            "left": 385.486,
+            "right": 461.0941,
+            "top": 232.0973,
+            "bottom": 378.6542,
+            "height": 146.5569
+          },
+          "controlsTop": 158,
+          "restoredView": null
+        },
+        {
+          "viewport": [
+            390,
+            844
+          ],
+          "fov": 89.20606569817818,
+          "authoredFov": 49,
+          "heroPixels": {
+            "left": 158.486,
+            "right": 234.0941,
+            "top": 300.1973,
+            "bottom": 446.7542,
+            "height": 146.5569
+          },
+          "controlsTop": 597,
+          "restoredView": null
+        }
+      ]
+    },
+    {
+      "level": "codex-lab",
+      "lite": false,
+      "samples": [
+        {
+          "viewport": [
+            390,
+            844
+          ],
+          "fov": 89.20606569817818,
+          "authoredFov": 49,
+          "heroPixels": {
+            "left": 143.8593,
+            "right": 241.5168,
+            "top": 255.536,
+            "bottom": 432.1065,
+            "height": 176.5705
+          },
+          "controlsTop": 597,
+          "restoredView": null
+        },
+        {
+          "viewport": [
+            844,
+            390
+          ],
+          "fov": 49,
+          "authoredFov": 49,
+          "heroPixels": {
+            "left": 370.8593,
+            "right": 468.5169,
+            "top": 187.4356,
+            "bottom": 364.0062,
+            "height": 176.5706
+          },
+          "controlsTop": 158,
+          "restoredView": null
+        },
+        {
+          "viewport": [
+            390,
+            844
+          ],
+          "fov": 89.20606569817818,
+          "authoredFov": 49,
+          "heroPixels": {
+            "left": 143.8593,
+            "right": 241.5169,
+            "top": 255.5356,
+            "bottom": 432.1062,
+            "height": 176.5706
+          },
+          "controlsTop": 597,
+          "restoredView": null
+        }
+      ]
+    },
+    {
+      "level": "treehouse-trail",
+      "lite": true,
+      "samples": [
+        {
+          "viewport": [
+            390,
+            844
+          ],
+          "fov": 89.20606569817818,
+          "authoredFov": 49,
+          "heroPixels": {
+            "left": 174.8977,
+            "right": 216.1802,
+            "top": 308.6029,
+            "bottom": 390.1957,
+            "height": 81.5928
+          },
+          "controlsTop": 597,
+          "restoredView": null
+        },
+        {
+          "viewport": [
+            844,
+            390
+          ],
+          "fov": 49,
+          "authoredFov": 49,
+          "heroPixels": {
+            "left": 401.8977,
+            "right": 443.1802,
+            "top": 240.5029,
+            "bottom": 322.0957,
+            "height": 81.5928
+          },
+          "controlsTop": 158,
+          "restoredView": null
+        },
+        {
+          "viewport": [
+            390,
+            844
+          ],
+          "fov": 89.20606569817818,
+          "authoredFov": 49,
+          "heroPixels": {
+            "left": 174.8977,
+            "right": 216.1802,
+            "top": 308.6029,
+            "bottom": 390.1957,
+            "height": 81.5928
+          },
+          "controlsTop": 597,
+          "restoredView": null
+        }
+      ]
+    },
+    {
+      "level": "treehouse-trail",
+      "lite": false,
+      "samples": [
+        {
+          "viewport": [
+            390,
+            844
+          ],
+          "fov": 89.20606569817818,
+          "authoredFov": 49,
+          "heroPixels": {
+            "left": 174.8955,
+            "right": 216.1808,
+            "top": 308.6111,
+            "bottom": 390.1955,
+            "height": 81.5844
+          },
+          "controlsTop": 597,
+          "restoredView": null
+        },
+        {
+          "viewport": [
+            844,
+            390
+          ],
+          "fov": 49,
+          "authoredFov": 49,
+          "heroPixels": {
+            "left": 401.8955,
+            "right": 443.1808,
+            "top": 240.5111,
+            "bottom": 322.0955,
+            "height": 81.5844
+          },
+          "controlsTop": 158,
+          "restoredView": null
+        },
+        {
+          "viewport": [
+            390,
+            844
+          ],
+          "fov": 89.20606569817818,
+          "authoredFov": 49,
+          "heroPixels": {
+            "left": 174.8955,
+            "right": 216.1808,
+            "top": 308.6111,
+            "bottom": 390.1955,
+            "height": 81.5844
+          },
+          "controlsTop": 597,
+          "restoredView": null
+        }
+      ]
+    }
+  ],
+  "gameplay": [
+    {
+      "spawn": {
+        "grounded": true,
+        "position": [
+          0.5712883843718615,
+          0,
+          18
+        ],
+        "deaths": 0
+      },
+      "moved": {
+        "position": [
+          1.5221542761293216,
+          0,
+          14.683623354349187
+        ],
+        "grounded": true,
+        "deaths": 0
+      },
+      "checkpoint": {
+        "position": [
+          -67.12787406345001,
+          7.199951171875,
+          -402.77397664781984
+        ],
+        "active": true
+      },
+      "respawn": {
+        "state": "ride",
+        "grounded": true,
+        "checkpoint": true,
+        "position": [
+          -66.12787406345001,
+          7.199951171875,
+          -402.77397664781984
+        ]
+      },
+      "finish": {
+        "events": {
+          "finish": 1
+        },
+        "screen": null,
+        "stamp": "Codex/sol fork \u00b7 build 10-07 10:12 UTC"
+      }
+    }
+  ],
+  "consoleErrors": [],
+  "focusedChecks": [
+    "48 portrait shots and production render-boundary regression",
+    "authored camera rig",
+    "renderer suite",
+    "mobile UI layout",
+    "production type-check and build"
+  ],
+  "existingTestLimitations": [
+    "test-camera-speed-effect.mjs evaluates the existing cameraValues.camFov expression without defining cameraValues",
+    "test-camera-look.mjs expects an older blur listener spelling in unchanged src/touch.ts"
+  ]
+}
