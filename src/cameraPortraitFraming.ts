@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 /** Viewport-only framing over the final authored shot. Keep the short-edge
- * pixel scale when a phone rotates, and put 85% of the extra vertical view
+ * pixel scale when a phone rotates, and put 80% of the extra vertical view
  * below the landscape composition for the thumb controls. Never move or
  * rotate the camera, or feed this wider lens back into camera damping. */
 export class CameraPortraitFraming {
@@ -29,7 +29,7 @@ export class CameraPortraitFraming {
       enabled: true, fullWidth: aspect, fullHeight: 1,
       offsetX: 0, offsetY: 0, width: aspect, height: 1,
     });
-    view.offsetY += (1 - aspect) * .35 * view.height;
+    view.offsetY += (1 - aspect) * .30 * view.height;
     camera.view = view;
     camera.updateProjectionMatrix();
   }
