@@ -12,7 +12,7 @@ import { RooAtlasPainter } from "./roo-type/atlas";
 import { paintBonusTitle } from './bonusTitle';
 import {drawBalanceMeter} from './balanceMeter';
 import { getRooAppearance } from './roo-type/settings';
-import { ROO_COUNTER_TRACKING, rooNumberCap, rooTitleCap } from "./roo-type/typography";
+import { ROO_COUNTER_TRACKING, rooNumberCap } from "./roo-type/typography";
 import {
   SOURCE_HUD_TRACKING,
   sourceTrackingPixels,
@@ -518,7 +518,7 @@ export class GameHudSurface {
       width: width * 0.5,
       height: 100 * sy,
     };
-    const titleSize = rooTitleCap(height) * revealScale;
+    const titleSize = Math.min(height * .088, width * .11) * revealScale;
     const elapsed = time - Number(title?.dataset.bonusStartedAt ?? time);
     if (this.fontFamily === "Roo" && paintBonusTitle(ctx, this.rooAtlas, rect, titleSize, alpha, elapsed)) {
       this.mark();
@@ -724,7 +724,8 @@ export class GameHudSurface {
     time: number,
   ): void {
     const sy = height / 720;
-    const counterSize = rooNumberCap(height);
+    const bonus = !!this.elements.bonusTitle?.closest('.hud-bonus');
+    const counterSize = bonus ? Math.min(height * .092, width * .08) : rooNumberCap(height);
     const iconSize = 77 * sy;
     const left = 40 * (width / 1280);
     const top = 16 * sy;

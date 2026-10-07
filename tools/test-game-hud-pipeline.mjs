@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
+import ts from 'typescript';
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const text = (path) => readFile(`${root}${path}`, "utf8");
@@ -54,7 +55,7 @@ const counterPainter = surface.match(
   /private paintCounters\(([\s\S]*?)\n  private paintScoreAndClock/,
 )?.[1] ?? "";
 assert.match(counterPainter, /resolveCrateCounter\(/);
-assert.match(counterPainter, /const counterSize = rooNumberCap\(height\)/);
+assert.match(counterPainter, /const counterSize = bonus \? Math\.min\(height \* \.092, width \* \.08\) : rooNumberCap\(height\)/);
 assert.match(counterPainter, /const totalSize = counterSize \* crateScale/);
 assert.match(counterPainter, /formatCrateTotal\(crates\.total\)/);
 assert.match(
@@ -289,9 +290,13 @@ assert.match(
   /player\.drawFlyingFruit\(context\.renderer,[\s\S]{0,220}ui\.drawIcons\(context\.renderer,[\s\S]{0,220}ui\.drawGameHud\(context\.renderer/,
   "pre-CRT overlay order must be fruit -> 3D icons -> 2D gameplay HUD",
 );
+const mainTree=ts.createSourceFile('main.ts',main,ts.ScriptTarget.Latest,true);
+const frameFunction=mainTree.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='advanceFrame');
+const blockedBranch=frameFunction.body.statements.find(n=>ts.isIfStatement(n)&&n.expression.getText(mainTree)==='gameFlow.blocksGameplay');
+assert.ok(blockedBranch,'missing gameplay presentation lock');
 assert.match(
-  main,
-  /if \(gameFlow\.blocksGameplay\)[\s\S]{0,2400}if \(gameFlow\.consumeGameplayFrameRequest\(\)\)[\s\S]{0,240}renderGameplayWithGameFlow\(dt\)[\s\S]{0,120}gameFlow\.captureGameplay/,
+  blockedBranch.thenStatement.getText(mainTree),
+  /if \(gameFlow\.consumeGameplayFrameRequest\(\)\)[\s\S]*?renderGameplayWithGameFlow\(dt\)[\s\S]*?gameFlow\.captureGameplay/,
   "ordinary gameplay pause menus must still capture and reuse one frozen frame after the live-map exception",
 );
 assert.ok(
@@ -300,13 +305,14 @@ assert.ok(
 );
 
 const interfaceSurface = await text("src/gameInterfaceSurface.ts");
-for (const token of [".world-map-ui", ".tc-zone", ".tc-pause", ".game-cartoon-cursor", ".game-transition-curtain", "paintSilverSecondaryText", "filter:opacity(0)"])
+for (const token of [".world-map-ui", ".tc-zone", ".tc-pause", ".game-cartoon-cursor", "paintSilverSecondaryText", "filter:opacity(0)"])
   assert.ok(interfaceSurface.includes(token), `missing game-owned pre-CRT surface ${token}`);
+assert.match(await text("src/gameFlowUI.ts"), /private transitionCurtain = element\("div", "game-transition-curtain"\)/, "loading curtain must remain owned by the transition controller");
 assert.doesNotMatch(interfaceSurface, /html2canvas|foreignObject|XMLSerializer|secondary-text-tuner|side-wrap/);
 assert.match(main, /gameInterface\.draw\(context\.renderer, size, context\.target\)/);
 assert.match(main, /function drawGameFlowPreCrt[\s\S]{0,500}gameInterface\.draw/);
 const textPanel = await text("src/secondaryTextPanel.ts");
-assert.match(textPanel, /world-map-active:not\(\.game-shell-modal\):not\(\.game-shell-transitioning\):not\(\.game-debug-hidden\)/);
+assert.match(textPanel, /body:not\(\.game-shell-transitioning\):not\(\.game-debug-hidden\) \.secondary-text-tuner/);
 assert.match(textPanel, /event\.code === "KeyM"/);
 
 console.log(

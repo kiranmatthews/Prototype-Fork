@@ -43,7 +43,7 @@ await withSkateRuntime(async ({ THREE, Level, Player, scene, server }) => {
     const total = parent.totalCrates;
     const context = {
       player, level: parent, current: entry, campaign, mergeCompletedBonusInventory,
-      endlessDeathsOn: false, currentRunBonusBoxes: 0, bonusSession: null,
+      endlessDeathsOn: false, currentRunBonusBoxes: 0, bonusSession: null,bonusDeparture:null,clearBonusDeparture:noop,clearBonusArrival:noop,beginBonusArrival:noop,startBonusDeparture:async()=>{},
       puffs: { clear: noop, attach: noop }, scene, input: { inventoryHeld: false },
       applyEndlessDeaths: noop, applyRunModes: noop, applyTheme: noop, applyShadowFlags: noop,
       currentHudState: () => ({}), prepareActivePresentationAssets: async () => {},

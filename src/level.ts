@@ -15732,7 +15732,12 @@ export class Level {
   }
 
   get jungleAssetDiagnostics() { return this.jungleAssets?.diagnostics ?? null; }
-  updateSceneryPresentation(dt:number):void {this.jungleAssets?.update(dt);}
+  updateSceneryPresentation(dt:number):void {
+    this.jungleAssets?.update(dt);
+    // Keep exit light alive during a reward receipt without advancing crates,
+    // hazards, collision, checkpoints or any gameplay clock.
+    for(const pad of this.warpPads)pad.update(dt);
+  }
   updateSceneryView(camera:THREE.Camera,secondary?:THREE.Camera,clearInspectionView=false):void {
     const far=(camera as THREE.PerspectiveCamera).far??400;
     this.jungleAssets?.setView(camera.position,this.keepPlayFog&&!clearInspectionView?Math.min(far,this.theme.fogFar):far,secondary?.position);

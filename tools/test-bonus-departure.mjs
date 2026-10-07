@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {runInNewContext} from 'node:vm';
 import ts from 'typescript';
+import * as THREE from 'three';
+import {createServer} from 'vite';
 
 const parse=async path=>ts.createSourceFile(path,await readFile(new URL(`../${path}`,import.meta.url),'utf8'),ts.ScriptTarget.Latest,true);
 const main=await parse('src/main.ts'),flow=await parse('src/gameFlowUI.ts'),departure=await parse('src/bonusDeparture.ts'),loading=await parse('src/presentationLoading.ts');
@@ -19,16 +21,19 @@ const code=ts.transpileModule([
  'const MINIMUM_VORTEX_MS=2000;',
  fn(departure,'bonusDeparturePose'),fn(loading,'runLoadingTransition'),
  `class FlowForTest { ${['blocksGameplay','loadingPhase','transition'].map(method).join('\n')} }`,
- fn(main,'enterBonusRound'),fn(main,'advanceFrame'),
+ ...['clearBonusDeparture','clearBonusArrival','beginBonusArrival','startBonusDeparture','renderBonusDeparture','enterBonusRound','advanceFrame'].map(name=>fn(main,name)),
  'globalThis.FlowForTest=FlowForTest; globalThis.loadingSequence=runLoadingTransition;',
 ].join('\n'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.None}}).outputText;
+const server=await createServer({configFile:false,logLevel:'silent',server:{middlewareMode:true,hmr:false}});
+const {bonusTransferFrame,BONUS_TRANSFER_SECONDS}=await server.ssrLoadModule('/src/bonusTransfer.ts');
+await server.close();
 const noop=()=>{};
 const classes=()=>({add:noop,remove:noop,toggle:noop});
 function fixture(reducedMotion=false){
  const events=[],frames=[];
  const pos={x:3,y:1.05,z:-20};
  const player={
-  pos:{...pos},group:{position:{...pos}},vVel:0,grounded:true,state:'ride',runTime:18.25,
+  pos:new THREE.Vector3(pos.x,pos.y,pos.z),group:new THREE.Group(),vVel:0,grounded:true,state:'ride',runTime:18.25,
   lives:4,fruit:90,masks:2,uberTimer:9,bonusMode:false,hubMode:false,competitionMode:false,ttActive:false,
   captureRunState(){return {pos:{...this.pos},runTime:this.runTime,lives:this.lives,fruit:this.fruit,masks:this.masks,uberTimer:this.uberTimer};},
   captureIdleFruit:()=>[],bankFlyingFruit:noop,
@@ -37,24 +42,26 @@ function fixture(reducedMotion=false){
   step(){throw new Error('departure advanced gameplay physics');},
   respawn(){events.push('respawn');},
  };
- const parent={allowsBonus:true,bonusRoundCompleted:false,timeTrial:false,bonusPlatformDiagnostics:{},
-  bonusReturnPoint:()=>({x:0,y:.1,z:-24}),setActive(on){events.push(['parentActive',on]);},
-  update(){throw new Error('departure advanced the parent simulation');}};
+ const parent={allowsBonus:true,bonusRoundCompleted:false,timeTrial:false,bonusPlatformDiagnostics:{x:3,topY:1.05,z:-20},
+  finishBox:new THREE.Box3(new THREE.Vector3(-4,0,-20),new THREE.Vector3(10,30,-18)),bonusReturnPoint:()=>({x:0,y:.1,z:-24}),setActive(on){events.push(['parentActive',on]);},
+  updateSceneryPresentation:noop,update(){throw new Error('departure advanced the parent simulation');}};
  const input={pausePressed:false,restartPressed:true,jumpPressed:true,update:noop,
   consumeEdges(flush){assert.equal(flush,true);this.jumpPressed=false;this.restartPressed=false;events.push('edges');}};
  const context={
+  bonusTransferFrame,THREE,camera:new THREE.PerspectiveCamera(),WARP_PAD_TOP:.733,bonusArrival:null,bonusTravelReviewRate:1,BONUS_TRANSFER_SECONDS:2.8,
+  BonusWarpEffect:class {group=new THREE.Group();update(){}dispose(){}},updateWaterPresentation:noop,
   performance:{now:()=>0},Promise,console,document:{body:{classList:classes()}},window:{matchMedia:()=>({matches:reducedMotion})},
   player,level:parent,current:{id:'jungle',name:'Jungle'},bonusSession:null,bonusDeparture:null,competition:null,
   isCampaignLevel:()=>true,campaignLevelById:()=>({name:'Jungle'}),resolveBonusLevel:()=>({}),
   Level:class {constructor(){this.hudMode='bonus';}},scene:{},loadedLevelId:'jungle',
-  ui:{hideMessage:noop,setEndlessDeaths:noop,setLevel:noop,setHUD(_state,dt){assert.equal(dt,0);}},
+  ui:{setBonusTransfer(frame){if(frame)events.push(['receipt',frame]);},hideMessage:noop,setEndlessDeaths:noop,setLevel:noop,setHUD(_state,dt){assert.equal(dt,0);}},
   competitionUI:{render:noop,setInputBlocked:noop,updateInput:noop},competitionPresentationSuppressed:()=>false,
   puffs:{clear:noop,attach:noop},swirls:{clear:noop},fieldSwirls:{clear:noop},
   input,recorder:{start:noop},endlessDeathsOn:false,
   applyRunModes:noop,applyTheme:noop,applyShadowFlags:noop,prepareActivePresentationAssets:async()=>{},currentHudState:()=>({}),
   reportedPresentationStage:'',recordPresentationStage:noop,graphicsRecovery:{lost:false},allowRenderFrame:()=>true,
   renderer:{info:{reset:noop}},clock:{getDelta:()=>1/60},animationStudio:null,characterLab:null,
-  split2p:false,bossUI:{render:noop},editor:{active:false},paused:false,acc:7,sfx:{stopLoops:noop},
+  split2p:false,bossUI:{render:noop},editor:{active:false},paused:false,acc:7,sfx:{stopLoops:noop,play:noop},
   renderGameplayScene(){frames.push({renderY:player.group.position.y,physicalY:player.pos.y,time:player.runTime,uber:player.uberTimer,
     active:context.gameFlow.transitionActive,phase:context.gameFlow.loadingPhase});},
  };
@@ -128,5 +135,25 @@ for(const invalid of ['disallowed','completed','trial','levelTrial','competition
  const {context:c,frames}=fixture();c.enterBonusRound();await c.pending;
  assert.equal(frames.length,0,'direct/test entry played a false landing');
  assert.equal(c.current.id,'bonus:jungle');
+}
+{
+ const {context:c,player,frames,events}=fixture();
+ const receipt={parent:{fruit:90,lives:4,boxes:12,totalBoxes:80,deaths:2,modern:false},bonus:{fruit:26,lives:3,boxes:9,totalBoxes:9}};
+ c.gameFlow.transitionActive=true;
+ let complete=false;const pending=c.startBonusDeparture('exit',receipt).then(()=>complete=true);
+ for(let frame=0;frame<245;frame++){
+  c.advanceFrame(frame*1000/60);await Promise.resolve();
+  assert.equal(complete,false,'return covered the scene before the complete receipt');
+  assert.equal(player.fruit,90,'visual tally mutated gameplay inventory');
+  assert.equal(player.lives,4,'visual tally credited a life early');
+  assert.equal(player.runTime,18.25);assert.equal(player.uberTimer,9);
+ }
+ for(let frame=245;frame<250&&!complete;frame++){c.advanceFrame(frame*1000/60);await Promise.resolve();}
+ await pending;assert.equal(complete,true);
+ const receiptFrames=events.filter(e=>Array.isArray(e)&&e[0]==='receipt').map(e=>e[1]);
+ assert.equal(receiptFrames.at(-1).parent.fruit,16);assert.equal(receiptFrames.at(-1).parent.lives,8);
+ assert.equal(receiptFrames.at(-1).parent.boxes,21);assert.equal(receiptFrames.at(-1).complete,true);
+ assert.ok(frames.length>=246,'exit missed the readable before-fade receipt');
+ c.clearBonusDeparture();assert.equal(c.bonusDeparture,null);
 }
 console.log('PASS bonus departure: real entry/frame/transition functions hold landing, freeze physics/timers/input, lift render only, reject duplicates and ineligible entries, respect reduced motion and clean up on arrival');

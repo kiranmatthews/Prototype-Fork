@@ -73,15 +73,17 @@ try {
         assert.ok(Math.abs(actual[i][0]-(left+expected[0]*cap))<1e-7, `letter ${i} X differs across render paths at ${elapsed}`);
         assert.ok(Math.abs(actual[i][1]-(top+expected[1]*cap))<1e-7, `letter ${i} Y differs across render paths at ${elapsed}`);
         assert.equal(layers[0][i].transform,layers[2][i].transform,'shimmer layers separate during motion');
-        if (reduced) assert.deepEqual(bonusTitlePose(elapsed,i,true),{y:0,angle:0,scaleX:1,scaleY:1});
+        if (reduced) assert.deepEqual(bonusTitlePose(elapsed,i,true),{y:0,angle:0,scaleX:1,scaleY:1,alpha:1});
       }
       assert.deepEqual(ctx.matrix(),identity(),'title paint leaks a Canvas transform');
     }
   }
-  assert.equal(bonusTitleWordScale(1400),.78,'reference contraction lost');
+  assert.equal(bonusTitleWordScale(1400),1,'title should keep its authored optical positions');
+  assert.equal(bonusTitlePose(200,4).alpha,0,'last letter appears before its turn');
+  assert.equal(bonusTitlePose(1800,4).alpha,1,'settled title never becomes complete');
   for (let time=0;time<BONUS_TITLE_LOOP_MS;time+=17) for(let i=0;i<5;i++) {
     assert.deepEqual(bonusTitlePose(time,i),bonusTitlePose(time+BONUS_TITLE_LOOP_MS,i),'loop discontinuity');
-    assert.ok(bonusTitlePose(time,i).scaleX>.7,'title becomes unreadable');
+    assert.ok(bonusTitlePose(time,i).scaleX>0,'letter turn inverts the artwork');
     assert.equal(bonusTitleWordScale(time,true),1);
   }
 
@@ -106,7 +108,7 @@ try {
   for(const destination of ['standard','hub','competition']) {
     const ui = new scope.Harness();
     for(const name of ['gameHudLayer','livesRowEl','livesEl','bonusTitleEl','wumpaRowEl','crateRowEl','relicRowEl','scorePlateEl'])ui[name]=element();
-    Object.assign(ui,{endCombo(){},refreshEditControls(){},bonusTitleAnimation:animation,levelRows:new Map(),prevHud:{points:0},
+    Object.assign(ui,{setBonusTransfer(){},endCombo(){},refreshEditControls(){},bonusTitleAnimation:animation,levelRows:new Map(),prevHud:{points:0},
       hudVisibility:new HudVisibilityState(),hudBonusExitTimer:7,bonusMode:true,runRowsHidden:false,endlessDeaths:false});
     ui.gameHudLayer.classList.add('hud-bonus');
     ui.setLevel('parent',destination,8,false);

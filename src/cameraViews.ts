@@ -24,8 +24,8 @@ export interface CameraViewMatch { view: CameraView; weight: number; }
  * bonus rooms already own their movement axes through cardinal travel zones. */
 export const BONUS_PRESENTATION_VIEW:CameraViewMatch={weight:1,view:{
   p:[0,0,0],s:[1,1,1],yaw:0,feather:1,
-  cameraPosition:[2,8.2,22],cameraTarget:[2,5.6,0],cameraFollowDistance:18,
-  cameraFollowTargetHeight:5.3,cameraIntroDistance:0,cameraFov:56,cameraAspect:1.3,
+  cameraPosition:[2,6,20],cameraTarget:[2,3.3,0],cameraFollowDistance:13.4,
+  cameraFollowTargetHeight:2.7,cameraIntroDistance:0,cameraFov:46,cameraAspect:1.3,
 }};
 
 /** Opt-in presentation context for a side-view shot that holds the landing
@@ -68,6 +68,9 @@ export class CameraViewFraming {
   private groundView:CameraView|null=null;
   private supportY=0;
   private anchorY=0;
+  private leadX=0;
+  private lastX=0;
+  private direction=1;
 
   restore(camera:THREE.PerspectiveCamera):void {
     if(!this.applied)return;
@@ -84,9 +87,11 @@ export class CameraViewFraming {
     this.applied=true;
     if(view.cameraPosition&&view.cameraTarget){
       this.shotEye.fromArray(view.cameraPosition);this.shotTarget.fromArray(view.cameraTarget);
-      const distance=Math.min(18,view.cameraFollowDistance??this.shotEye.distanceTo(this.shotTarget));
+      const distance=groundFollow ? 13.4 : Math.min(18,view.cameraFollowDistance??this.shotEye.distanceTo(this.shotTarget));
+      // Bonus owns its lens without changing the parent's camera or controls.
+      if(groundFollow){camera.fov=46;camera.updateProjectionMatrix();}
       if(subject){
-        const targetHeight=view.cameraFollowTargetHeight??1.3;
+        const targetHeight=groundFollow ? 2.7 : view.cameraFollowTargetHeight??1.3;
         this.followTarget.copy(subject);
         if(groundFollow){
           const floor=groundFollow.groundY;
@@ -95,19 +100,26 @@ export class CameraViewFraming {
           if(fresh){
             this.supportY=supported?Math.min(subject.y,floor):subject.y;
             this.anchorY=this.supportY;
+            this.direction=1;this.leadX=.9;this.lastX=subject.x;
           }else if(groundFollow.grounded)this.supportY=supported?floor:subject.y;
           this.groundView=view;
+          const travel=subject.x-this.lastX;
+          if(Math.abs(travel)>.012)this.direction=Math.sign(travel);
+          this.lastX=subject.x;
+          const desiredLead=this.direction*Math.min(1.45,Math.max(.45,camera.aspect*1.05));
+          this.leadX=THREE.MathUtils.lerp(this.leadX,desiredLead,1-Math.exp(-3*Math.max(0,groundFollow.dt)));
+          this.followTarget.x+=this.leadX;
 
           // A higher floor under an airborne player is a future landing, not
           // an instruction to bob the shot. Hold the last supported height;
           // the head/feet bounds below still allow tall climbs and drops.
-          const fov=view.cameraFov===undefined?camera.fov:Math.min(camera.fov,view.cameraFov);
+          const fov=camera.fov;
           const tangent=Math.tan(THREE.MathUtils.degToRad(fov)/2);
           this.followEye.copy(this.shotEye).sub(this.shotTarget).normalize();
           const sine=this.followEye.y,cosine=Math.hypot(this.followEye.x,this.followEye.z);
           const frameHeight=(screenY:number)=>screenY*tangent*distance/Math.max(.1,cosine+screenY*tangent*sine);
-          const maxRise=targetHeight+frameHeight(.65)-2.5;
-          const minDrop=targetHeight+frameHeight(-.8);
+          const maxRise=targetHeight+frameHeight(.63)-2.5;
+          const minDrop=targetHeight+frameHeight(-.72);
           const low=subject.y-maxRise;
           // A void fall keeps its last composition. Only follow downward
           // when the player's existing support probe sees a real receiver.
@@ -127,7 +139,7 @@ export class CameraViewFraming {
       camera.quaternion.slerp(this.shotOrientation,weight);
       camera.up.lerp(this.worldUp,weight).normalize();
     }
-    if(view.cameraFov!==undefined){
+    if(view.cameraFov!==undefined&&!groundFollow){
       // Portrait fitting must not widen the gameplay lens into an overview.
       camera.fov=THREE.MathUtils.lerp(camera.fov,Math.min(this.fov,view.cameraFov),weight);camera.updateProjectionMatrix();
     }

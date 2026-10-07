@@ -34,8 +34,8 @@ try {
   for (const entry of BONUS_LEVEL_ENTRIES)
     assert.equal(findLevel(entry.id)?.data, entry.data, `room ${entry.id} has no direct editor entry`);
   for (const parent of CAMPAIGN_LEVELS.filter(entry => levelAllowsBonus(entry.levelId))) {
-    // Ghost Train was published after the themed pack and uses its safe fallback.
-    if (parent.levelId === 'ghost-train') {
+    // These three courses were published after the themed pack and retain Easy Street.
+    if (['ghost-train','custard-creek','slipstream-2'].includes(parent.levelId)) {
       assert.equal(resolveBonusLevel(parent.levelId), EASY_BONUS_LEVEL);
       continue;
     }
@@ -86,7 +86,8 @@ try {
     };
     const context = {
       THREE, Level, scene, player, level: parentLevel, current: parentEntry, loadedLevelId: parentId,
-      bonusSession: null, bonusDeparture: null, competition: parentCompetition, competitionUI: { render: noop }, currentRunBonusBoxes: 0, endlessDeathsOn: false,
+      bonusSession: null, bonusDeparture: null, clearBonusDeparture:noop, clearBonusArrival:noop, beginBonusArrival:noop,
+      startBonusDeparture(kind,receipt){events.push(['transfer',kind,receipt]);return Promise.resolve();}, competition: parentCompetition, competitionUI: { render: noop }, currentRunBonusBoxes: 0, endlessDeathsOn: false,
       campaignLevelById, isCampaignLevel, isCompetitionLevel, recordPresentationStage: noop,
       JungleCupEvent, competitionCourse, sfx: { countdownBeep: noop },
       guardGameplayFromMenu: noop, restoreCommittedRunRewards: noop, runStartRewards: {},
@@ -97,7 +98,7 @@ try {
         startBonusPayout(...args) { events.push(['payout', ...args]); } },
       campaign: { levelProgress: () => null, updateInventory(...args) { events.push(['inventory', ...args]); } },
       gameFlow: { setWarpRoom: noop, hide: noop,
-        transition(action, options) { if (options) assert.equal(options.vortex, false); context.transition = Promise.resolve().then(action); return context.transition; } },
+        transition(action, options) { if (options) assert.equal(options.vortex, false); context.transition = Promise.resolve().then(()=>options?.beforeCover?.()).then(action); return context.transition; } },
       applyRunModes: noop, applyTheme: noop, applyShadowFlags: noop, applyEndlessDeaths: noop,
       currentHudState: () => ({}), prepareActivePresentationAssets: async () => {},
       LITE: false, editorViewActive: false, activeSky: 'night', DEFAULT_SKY: 'night',
@@ -176,7 +177,7 @@ try {
           assert.equal(parentLevel.activeCheckpoint.savedCratesBroken, 1);
           assert.equal(parentLevel.activeCheckpoint.savedMasks, 1);
         } else assert.equal(parentLevel.activeCheckpoint, null, 'failed bonus created a checkpoint');
-        assert.equal(events.filter(event => event[0] === 'payout').length, completed ? 1 : 0);
+        assert.equal(events.filter(event => event[0] === 'transfer').length, completed ? 1 : 0);
       }
       const paidEvents = events.length;
       context.enterBonusRound(); await context.transition;

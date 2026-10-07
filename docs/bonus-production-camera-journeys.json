@@ -1,0 +1,182 @@
+[
+  {
+    "id": "bonus-treehouse-trail",
+    "frames": 1935,
+    "samples": 5805,
+    "crates": 7,
+    "deaths": 0,
+    "minHead": -0.3057310160569174,
+    "maxFeet": 0.4039595092627262
+  },
+  {
+    "id": "bonus-jungle",
+    "frames": 1966,
+    "samples": 5898,
+    "crates": 5,
+    "deaths": 0,
+    "minHead": -0.3057310160569174,
+    "maxFeet": 0.4039595092627262
+  },
+  {
+    "id": "bonus-test-course",
+    "frames": 2035,
+    "samples": 6105,
+    "crates": 6,
+    "deaths": 0,
+    "minHead": -0.18852814544863356,
+    "maxFeet": 0.40395950926272617
+  },
+  {
+    "id": "bonus-sky-bridge",
+    "frames": 1603,
+    "samples": 4809,
+    "crates": 7,
+    "deaths": 0,
+    "minHead": -0.18852814544863356,
+    "maxFeet": 0.40395950926272617
+  },
+  {
+    "id": "bonus-slipstream",
+    "frames": 2776,
+    "samples": 8328,
+    "crates": 9,
+    "deaths": 0,
+    "minHead": -0.3057310160569174,
+    "maxFeet": 0.4039595092627262
+  },
+  {
+    "id": "bonus-nightworks",
+    "frames": 2807,
+    "samples": 8421,
+    "crates": 7,
+    "deaths": 0,
+    "minHead": -0.3057310160569175,
+    "maxFeet": 0.4039595092627262
+  },
+  {
+    "id": "bonus-beachside-run",
+    "frames": 1966,
+    "samples": 5898,
+    "crates": 5,
+    "deaths": 0,
+    "minHead": -0.3057310160569174,
+    "maxFeet": 0.4039595092627262
+  },
+  {
+    "id": "bonus-coastal",
+    "frames": 1839,
+    "samples": 5517,
+    "crates": 7,
+    "deaths": 0,
+    "minHead": -0.18852814544863356,
+    "maxFeet": 0.40395950926272617
+  },
+  {
+    "id": "bonus-island-hopper",
+    "frames": 3548,
+    "samples": 10644,
+    "crates": 10,
+    "deaths": 0,
+    "minHead": -0.3057310160569175,
+    "maxFeet": 0.4039595092627262
+  },
+  {
+    "id": "bonus-codex-switchback",
+    "frames": 3247,
+    "samples": 9741,
+    "crates": 8,
+    "deaths": 0,
+    "minHead": -0.3057310160569175,
+    "maxFeet": 0.4039595092627262
+  },
+  {
+    "id": "bonus-chimeworks",
+    "frames": 2406,
+    "samples": 7218,
+    "crates": 6,
+    "deaths": 0,
+    "minHead": -0.3057310160569175,
+    "maxFeet": 0.4039595092627262
+  },
+  {
+    "id": "bonus-waterpark",
+    "frames": 3648,
+    "samples": 10944,
+    "crates": 9,
+    "deaths": 0,
+    "minHead": -0.3057310160569175,
+    "maxFeet": 0.4039595092627262
+  },
+  {
+    "id": "bonus-nightworks-after-hours",
+    "frames": 3617,
+    "samples": 10851,
+    "crates": 11,
+    "deaths": 0,
+    "minHead": -0.3057310160569175,
+    "maxFeet": 0.4039595092627262
+  },
+  {
+    "id": "bonus-crate-primer",
+    "frames": 1770,
+    "samples": 5310,
+    "crates": 6,
+    "deaths": 0,
+    "minHead": -0.3057310160569174,
+    "maxFeet": 0.4039595092627262
+  },
+  {
+    "id": "bonus-switchyard",
+    "frames": 3412,
+    "samples": 10236,
+    "crates": 9,
+    "deaths": 0,
+    "minHead": -0.3057310160569175,
+    "maxFeet": 0.4039595092627262
+  },
+  {
+    "id": "bonus-clockwork-gauntlet",
+    "frames": 3452,
+    "samples": 10356,
+    "crates": 10,
+    "deaths": 0,
+    "minHead": -0.3057310160569175,
+    "maxFeet": 0.4039595092627262
+  },
+  {
+    "id": "bonus-jungle-terraces",
+    "frames": 2680,
+    "samples": 8040,
+    "crates": 9,
+    "deaths": 0,
+    "minHead": -0.18852814544863356,
+    "maxFeet": 0.40395950926272617
+  },
+  {
+    "id": "bonus-jungle-skyline",
+    "frames": 3548,
+    "samples": 10644,
+    "crates": 10,
+    "deaths": 0,
+    "minHead": -0.3057310160569175,
+    "maxFeet": 0.4039595092627262
+  },
+  {
+    "id": "bonus-drowned-crown",
+    "frames": 3648,
+    "samples": 10944,
+    "crates": 9,
+    "deaths": 0,
+    "minHead": -0.3057310160569175,
+    "maxFeet": 0.4039595092627262
+  },
+  {
+    "id": "bonus-bone-yard",
+    "frames": 3216,
+    "samples": 9648,
+    "crates": 10,
+    "deaths": 0,
+    "minHead": -0.3057310160569175,
+    "maxFeet": 0.4039595092627262
+  }
+]

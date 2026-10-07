@@ -1,0 +1,72 @@
+{
+  "reference": "https://www.youtube.com/watch?v=kMNgcuR1gzw&t=107",
+  "date": "2026-10-08",
+  "cameraJourneys": {
+    "courses": 20,
+    "playerSteps": 55119,
+    "projectedPoses": 165357,
+    "deaths": 0
+  },
+  "receiptCases": 90,
+  "resourceLifetimes": 30,
+  "chrome": {
+    "fullJourneys": [
+      {
+        "parent": "crate-primer",
+        "boxes": 6,
+        "fruit": 18,
+        "bonusLives": 2,
+        "deaths": 0
+      },
+      {
+        "parent": "jungle-terraces",
+        "boxes": 9,
+        "fruit": 31,
+        "bonusLives": 2,
+        "deaths": 0
+      }
+    ],
+    "liteFailure": {
+      "returnParent": "crate-primer",
+      "fruit": 0,
+      "lives": 4,
+      "completed": false,
+      "retryEntered": true
+    },
+    "viewports": [
+      [
+        1280,
+        720
+      ],
+      [
+        1920,
+        1080
+      ],
+      [
+        960,
+        720
+      ],
+      [
+        390,
+        844
+      ],
+      [
+        320,
+        568
+      ],
+      [
+        844,
+        390
+      ]
+    ],
+    "mobileCrateCounter": "Between lower controls; numerator and denominator aligned; 18/18 clears buttons at 320 and 390 CSS px",
+    "consoleErrors": []
+  },
+  "evidence": [
+    "art-reviews/bonus-production-entry.png",
+    "art-reviews/bonus-production-transfer.png",
+    "art-reviews/bonus-production-mobile.png",
+    "bonus-production-camera-journeys.json"
+  ],
+  "scope": "Complete input-only journeys plus staged presentation/failure/layout checks; no full test suite."
+}

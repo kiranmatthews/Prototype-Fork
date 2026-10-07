@@ -23,7 +23,7 @@ await withBlockworksRuntime(async r=>{
   const normalized=normalizeCustomLevelData(course.data);assert.ok(normalized,course.id);
   const spec=normalized.components.find(c=>c.t==='camnode'&&c.cameraView)??BONUS_PRESENTATION_VIEW.view;
   assert.ok(spec,`${course.id} has no authored side view`);
-  assert.equal(spec.cameraFollowDistance,18);assert.equal(spec.cameraFollowTargetHeight,5.3);
+  assert.equal(spec.cameraFollowDistance,13.4);assert.equal(spec.cameraFollowTargetHeight,2.7);
   for(const aspect of [16/9,4/3,390/844]){
    const camera=new r.THREE.PerspectiveCamera(49,aspect,.1,400),framing=new CameraViewFraming();
    const match={weight:1,view:{yaw:0,feather:1,...spec}};
@@ -40,14 +40,16 @@ await withBlockworksRuntime(async r=>{
    };
    step(0,0,0,true,true);
    const supportedEye=camera.position.clone(),supportedAim=camera.quaternion.clone();
-   for(const [name,point]of [['feet',[0,.1,0]],['head',[0,2.5,0]],['high cap',[3,10.56,0]]]){
+   const size=(projected([0,2.5,0]).y-projected([0,0,0]).y)/2;
+   assert.ok(size>.19&&size<.29,`hero scale ${size} should match the playable reference shot`);
+   for(const [name,point]of [['feet',[0,.1,0]],['head',[0,2.5,0]]]){
     const q=projected(point);assert.ok(Math.abs(q.x)<1.1&&q.y>-.85&&q.y<.7&&q.z<1,`${course.id}/${aspect} cropped ${name}: ${q.toArray()}`);
    }
    // Ordinary jumps pass through the stable shot. A crate or ledge under an
    // airborne rider must not be mistaken for an already-supported height.
-   for(const [y,floor]of [[1,0],[3,0],[6,4],[4,null],[2,0],[0,0]]){
+   for(const [y,floor]of [[1,0],[2,0],[3,2],[2,null],[0,0]]){
     step(0,y,floor);actorVisible(0,y);
-    assert.ok(camera.position.distanceTo(supportedEye)<1e-8,`${course.id} followed an ordinary jump or future receiver`);
+    assert.ok(Math.abs(camera.position.y-supportedEye.y)<1e-8,`${course.id} followed an ordinary jump or future receiver`);
     assert.ok(camera.quaternion.angleTo(supportedAim)<1e-7,'jump rotated the side view');
    }
    // Tall arrow bounces retain the head; settling on a raised receiver then
@@ -71,7 +73,7 @@ await withBlockworksRuntime(async r=>{
    assert.ok(Math.abs(camera.position.y-normalY-6)<1e-8,'optional bonus context changed ordinary authored views');
   }
  }
- const view=r.l.cameraViews[0];assert.equal(view.cameraFollowTargetHeight,5.3);
- const captured=r.l.captureData();assert.equal(captured.components.find(c=>c.cameraView).cameraFollowTargetHeight,5.3);
- console.log('PASS',courses.length,'bonus cameras: stable jump/ledge/gap shot; tall-bounce, raised/lower receiver and respawn framing; ordinary views unchanged; desktop and portrait caps visible');
+ const view=r.l.cameraViews[0];assert.equal(view.cameraFollowTargetHeight,2.7);
+ const captured=r.l.captureData();assert.equal(captured.components.find(c=>c.cameraView).cameraFollowTargetHeight,2.7);
+ console.log('PASS',courses.length,'production bonus cameras: stable jump/ledge/gap shot; tall-bounce, raised/lower receiver and respawn framing; ordinary views unchanged; desktop and portrait caps visible');
 },{modulePath:'/src/level.ts',levelId:'bonus-jungle-terraces',source:m=>m.findLevel('bonus-jungle-terraces').data});

@@ -2,32 +2,24 @@ import { layoutRooAtlas, RooAtlasPainter } from './roo-type/atlas';
 import { ROO_ATLAS_METRICS } from './roo-type/atlas-metrics';
 import { getRooAppearance } from './roo-type/settings';
 
-/** A readable hold, then one squash/turn/rebound travelling across the word. */
-export const BONUS_TITLE_LOOP_MS = 3400;
+/** Sequential letter arrivals, a long readable hold, then a short turn away. */
+export const BONUS_TITLE_LOOP_MS = 6000;
 const motionMedia = typeof matchMedia === 'function'
   ? matchMedia('(prefers-reduced-motion: reduce)') : null;
-const still = { y: 0, angle: 0, scaleX: 1, scaleY: 1 };
-
-export function bonusTitleWordScale(elapsedMs: number, reducedMotion = false): number {
-  if (reducedMotion || !Number.isFinite(elapsedMs)) return 1;
-  const phase = ((Math.max(0, elapsedMs) % BONUS_TITLE_LOOP_MS) - 650) / 1500;
-  return phase <= 0 || phase >= 1 ? 1 : 1 - 0.22 * Math.sin(Math.PI * phase) ** 2;
-}
-
+const still = { y: 0, angle: 0, scaleX: 1, scaleY: 1, alpha: 1 };
+const clamp=(x:number)=>Math.max(0,Math.min(1,x));
+export function bonusTitleWordScale(_elapsedMs: number, _reducedMotion = false): number { return 1; }
 export function bonusTitlePose(elapsedMs: number, index: number, reducedMotion = false) {
   if (reducedMotion || !Number.isFinite(elapsedMs)) return still;
-  const phase = ((Math.max(0, elapsedMs) % BONUS_TITLE_LOOP_MS) - 650 - index * 120) / 980;
-  if (phase <= 0 || phase >= 1) return still;
-  // Squash into the take-off and landing, stretching only while airborne.
-  // A positive X scale keeps each letter readable throughout its little turn.
-  const lift = Math.sin(Math.PI * phase) ** 2;
-  const settle = Math.sin(2 * Math.PI * phase) ** 2;
-  return {
-    y: -0.105 * lift,
-    angle: Math.sin(2 * Math.PI * phase) * 0.13,
-    scaleX: 1 - 0.27 * lift + 0.065 * settle,
-    scaleY: 1 + 0.12 * lift - 0.085 * settle,
-  };
+  const time=Math.max(0,elapsedMs)%BONUS_TITLE_LOOP_MS;
+  const enter=clamp((time-index*170)/420);
+  const leave=clamp((time-5200-index*55)/240);
+  const spring=1-Math.pow(1-enter,3)+Math.sin(enter*Math.PI)*.18;
+  return { y:-Math.sin(enter*Math.PI)*.14-leave*.08,
+    angle:(1-enter)*-.12+leave*.1,
+    scaleX:Math.max(.001,spring*(1-leave)),
+    scaleY:(.7+.3*spring)*(1-leave*.25),
+    alpha:clamp(enter*5)*(1-leave) };
 }
 
 function titleLayout() {
@@ -69,7 +61,7 @@ export class BonusTitleAnimation {
       const centre = glyphCentre(entry);
       const pose = bonusTitlePose(elapsed, index, reduced);
       const transform = `translate(${wordCentre} 0) scale(${wordScale} 1) translate(${-wordCentre} 0) translate(${centre.x} ${centre.y + pose.y}) rotate(${pose.angle * 180 / Math.PI}) scale(${pose.scaleX} ${pose.scaleY}) translate(${-centre.x} ${-centre.y})`;
-      for (const layer of this.layers) layer[index]?.setAttribute('transform', transform);
+      for (const layer of this.layers) { layer[index]?.setAttribute('transform', transform); layer[index]?.setAttribute('opacity',String(pose.alpha)); }
     }
   }
 }
@@ -99,12 +91,13 @@ export function paintBonusTitle(
     const pose = bonusTitlePose(elapsedMs, index, reduced);
     ctx.save();
     ctx.translate(left + centre.x * cap, top + (centre.y + pose.y) * cap);
+    ctx.globalAlpha *= pose.alpha;
     ctx.rotate(pose.angle);
     ctx.scale(pose.scaleX, pose.scaleY);
     ctx.translate((entry.x - centre.x) * cap, (entry.y - centre.y) * cap);
     // Rasterize at a stable size above the largest pose. Animated upscales
     // would otherwise create a fresh entry in the shared atlas cache per frame.
-    const rasterScale = Math.max(entry.sx, entry.sy) * 1.12;
+    const rasterScale = Math.max(entry.sx, entry.sy) * 1.25;
     ctx.scale(entry.sx / rasterScale, entry.sy / rasterScale);
     // A single-glyph atlas draw anchors its inkLeft at x. Undo that anchor
     // so this letter keeps the authored BONUS optical layout and cap band.

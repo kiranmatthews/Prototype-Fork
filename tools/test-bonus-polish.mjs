@@ -176,7 +176,8 @@ try {
   }
   assert.match(main, /masks: player.masks/);
   assert.match(main, /player.masks = parentState.masks/);
-  assert.match(main, /startBonusPayout\(bonusLives, bonusFruit,/);
+  assert.match(main, /startBonusDeparture\('exit'/);
+  assert.doesNotMatch(main, /startBonusPayout\(bonusLives/, 'parent gameplay must not pay a second time');
   const ui = await readFile(new URL('../src/ui.ts', import.meta.url), 'utf8');
   assert.doesNotMatch(ui, /BONUS BANKED|bonusPayoutAnnounced/);
   console.log('PASS easier default bonus: permanent reward support, 2 real-Player short jumps, preserved original course, mask/uber carry, visible rollover-safe payout and black-only routing');

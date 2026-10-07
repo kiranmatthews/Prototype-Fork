@@ -4,6 +4,8 @@
 import * as THREE from "three";
 import { BonusPayout } from "./bonusPayout";
 import { BonusTitleAnimation } from "./bonusTitle";
+import {BonusTransferHud} from './bonusTransferHud';
+import type {BonusTransferFrame} from './bonusTransfer';
 import {loadBalanceMeterAssets,paintBalanceElement} from './balanceMeter';
 import { sfx } from "./audio";
 import { setPromptText } from "./inputPromptUI";
@@ -17,7 +19,7 @@ import {
 } from "./gameHudSurface";
 import { COMBO_GEM_TINT, Level, levelList, MAX_LEVEL_FILE_BYTES } from "./level";
 import { RooLabel, ROO_HUD, ROO_TT } from "./rootext";
-import { ROO_COUNTER_TRACKING, ROO_NUMBER_VH, ROO_TITLE_VH } from "./roo-type/typography";
+import { ROO_COUNTER_TRACKING, ROO_NUMBER_VH } from "./roo-type/typography";
 import { milkBlob } from "./milk";
 import {
   COMBO_CASH_IN_EXTRA_HOLD_MS,
@@ -181,6 +183,9 @@ export class UI {
   private rooMsgTitle!: RooLabel;
   private rooBonusTitle!: RooLabel;
   private bonusTitleAnimation!: BonusTitleAnimation;
+  private bonusTransferHud!: BonusTransferHud;
+  private bonusTransferFrame: BonusTransferFrame|null=null;
+  private bonusRevealStartedAt=-Infinity;
   private scoreLabelEl!: HTMLElement;
   private scorePlateEl!: HTMLElement;
   private boostLabelEl!: HTMLElement;
@@ -640,6 +645,7 @@ export class UI {
     // state for the native HUD renderer to read.
     this.gameHudLayer = div("game-hud-layer");
     document.body.appendChild(this.gameHudLayer);
+    this.bonusTransferHud=new BonusTransferHud(this.gameHudLayer);
 
     // ---- center messages / flash ----
     this.msgWrap = div("hud-msg");
@@ -963,13 +969,38 @@ export class UI {
     return this.gameHudSurface.render(
       renderer,
       targetSize,
-      { boost: this.boostFrame, special: this.specialFrame },
+      { boost: this.boostFrame, special: this.specialFrame,
+        ...(this.bonusTransferHud.active ? {drawExtra:(ctx:CanvasRenderingContext2D,size:{width:number;height:number})=>this.bonusTransferHud.paint(ctx,size.width,size.height)} : {}) },
       target,
     );
   }
 
   get gameHudDiagnostics(): GameHudSurfaceDiagnostics {
     return this.gameHudSurface.diagnostics;
+  }
+
+  setBonusTransfer(frame:BonusTransferFrame|null):void {
+    const old=this.bonusTransferFrame;
+    this.bonusTransferFrame=frame;
+    this.gameHudLayer.classList.toggle('hud-bonus-leaving',frame!==null);
+    if(!frame){this.bonusTransferHud.update(null);for(const row of [this.wumpaRowEl,this.crateRowEl,this.livesRowEl])row.style.opacity='';}
+    else {
+      for(const [kind,row] of [['fruit',this.wumpaRowEl],['boxes',this.crateRowEl],['lives',this.livesRowEl]] as const){
+        const end=frame.receipt.bonus[kind]===0?.5:2.28;
+        row.style.opacity=String(Math.max(0,Math.min(1,(end-frame.elapsed)/.22)));
+      }
+    }
+    if(frame&&old){
+      if(frame.paid.fruit>old.paid.fruit)sfx.play(['wumpa1','wumpa2','wumpa3'][frame.paid.fruit%3],.45);
+      if(frame.paid.lives>old.paid.lives)sfx.play('lifeGet',.7);
+    }
+  }
+
+  beginBonusReveal():void {
+    if(!this.bonusMode)return;
+    this.bonusTitleAnimation.restart(performance.now());
+    this.bonusRevealStartedAt=performance.now();
+    this.gameHudLayer.classList.add('hud-bonus-entering');
   }
 
   setReplayBadge(on: boolean): void {
@@ -1315,13 +1346,18 @@ export class UI {
     const ky = size.y / ch;
 
     let drew = false;
-    for (const slot of this.iconSlots) {
+    const extras=this.bonusTransferHud.icons;
+    for(const slot of this.iconSlots)slot.spin.rotation.y+=dt*slot.rate;
+    for(let index=0;index<this.iconSlots.length+extras.length;index++){
+      const extra=index>=this.iconSlots.length?extras[index-this.iconSlots.length]:null;
+      const slot=extra?this.iconSlots[extra.slot]:this.iconSlots[index];
+      const raw=extra?.rect;
+      const r=raw?{width:raw.width,height:raw.height,left:raw.x,top:raw.y,right:raw.x+raw.width,bottom:raw.y+raw.height}:slot.host.getBoundingClientRect();
+      const revealAlpha=extra?extra.alpha:hudRevealOpacity(slot.revealHost);
       if (!slot.on) continue;
-      const revealAlpha = hudRevealOpacity(slot.revealHost);
       if (revealAlpha <= 0.001) continue;
       this.setIconRevealAlpha(slot, revealAlpha);
-      slot.spin.rotation.y += dt * slot.rate;
-      const r = slot.host.getBoundingClientRect();
+
       // A hidden HUD (menus, the editor, a closed panel) measures zero, and a
       // scrolled-off icon would scissor to nothing: skip rather than draw.
       if (r.width < 4 || r.height < 4) continue;
@@ -1403,6 +1439,12 @@ export class UI {
   }
 
   setHUD(s: HudState, deltaSeconds = 1 / 60): void {
+    if(performance.now()-this.bonusRevealStartedAt>500)this.gameHudLayer.classList.remove('hud-bonus-entering');
+    if(s.bonusMode)s={...s,endlessDeaths:false};
+    if(this.bonusTransferFrame)s={...s,
+      fruit:this.bonusTransferFrame.remaining.fruit,
+      lives:this.bonusTransferFrame.remaining.lives,
+      cratesBroken:this.bonusTransferFrame.remaining.boxes};
     const hudNow = performance.now();
     if (s.bonusMode) this.bonusTitleAnimation.update(hudNow);
     const payout = this.bonusPayout;
@@ -1508,6 +1550,7 @@ export class UI {
       this.prevHud.lives = lifeReadout;
     }
     this.syncHudVisibility();
+    this.bonusTransferHud.update(this.bonusTransferFrame,{fruit:this.wumpaIcon.getBoundingClientRect(),boxes:this.crateIcon.getBoundingClientRect(),lives:this.lifeFaceEl.getBoundingClientRect()});
     const specialValue = Math.max(0, Math.min(100, s.specialMeter));
     const specialFraction = specialValue / 100;
     this.specialWrap.dataset.value = specialValue.toFixed(4);
@@ -1515,7 +1558,7 @@ export class UI {
     this.specialWrap.style.setProperty("--special-turn", `${specialFraction}turn`);
     this.specialWrap.classList.toggle("hud-special-ready", s.specialReady);
     this.specialFrame = {
-      visible: this.livesRowEl.classList.contains("hud-reveal-visible"),
+      visible: !s.bonusMode && this.livesRowEl.classList.contains("hud-reveal-visible"),
       value: specialValue,
       ready: s.specialReady,
     };
@@ -1696,6 +1739,7 @@ export class UI {
     this.currentLevelId = id;
     this.hudMode = hudMode;
     this.bonusMode = hudMode === "bonus";
+    this.setBonusTransfer(null);
     // Level switches happen under the black curtain. Resolve the destination
     // layout here so the banked payout cannot briefly use the bonus positions.
     if (this.hudBonusExitTimer !== null) {
@@ -2359,11 +2403,11 @@ export class UI {
       }
       .hud-life-face-wrap .hud-icon-face { width: 100%; height: 100%; }
       .hud-bonus-title {
-        position: fixed; top: 18px; left: 50%; z-index: 10;
+        position: fixed; top: 5.5vh; left: 50%; z-index: 10;
         transform: translateX(-50%);
         --hud-reveal-x: 0px; --hud-reveal-y: -12px;
         transform-origin: center top;
-        font: 900 clamp(52px, min(${ROO_TITLE_VH}vh, 23vw), 190px) Impact, 'Arial Black', sans-serif;
+        font: 900 clamp(28px, min(8.8vh, 11vw), 96px) Impact, 'Arial Black', sans-serif;
         line-height: 0; pointer-events: none;
         filter: none;
       }
@@ -2371,19 +2415,34 @@ export class UI {
         position: static;
       }
       .game-hud-layer.hud-bonus .hud-fruit-row {
-        position: fixed; left: 30px; bottom: 20px;
+        position: fixed; left: 6%; bottom: 6%;
         --hud-reveal-x: 0px; --hud-reveal-y: 12px;
         transform-origin: left bottom;
       }
       .game-hud-layer.hud-bonus .hud-crate-row {
-        position: fixed; left: 38%; bottom: 20px;
+        position: fixed; left: 50%; bottom: 6%; margin-left: 0; translate: -50% 0;
         --hud-reveal-x: 0px; --hud-reveal-y: 12px;
         transform-origin: left bottom;
       }
       .game-hud-layer.hud-bonus .hud-life-row {
-        top: auto; bottom: 20px;
+        top: auto; bottom: 6%; right: 6%; gap: 8px;
       }
+      .game-hud-layer.hud-bonus .hud-life-face-wrap { order: -1; transform: none; width: 9.8vh; height: 9.8vh; }
+      .game-hud-layer.hud-bonus .hud-life-row .hud-special { display: none; }
+      .game-hud-layer.hud-bonus .hud-num,
+      .game-hud-layer.hud-bonus .hud-lives { font-size: clamp(28px, min(9.2vh, 8vw), 110px); }
+      .game-hud-layer.hud-bonus .hud-icon { width: 10vh; height: 10vh; }
       .game-hud-layer.hud-bonus .hud-counter { margin-bottom: 0; }
+      .game-hud-layer.hud-bonus .hud-crate-row.hud-reveal-visible { translate: -50% 0; }
+      .game-hud-layer.hud-bonus .hud-crate-row:not(.hud-reveal-visible) { translate: -50% 12px; }
+      .game-hud-layer.hud-bonus-leaving .hud-bonus-title { display:none; }
+      .game-hud-layer.hud-bonus-leaving .hud-num { animation:none !important; }
+      @keyframes bonusHudArrive { from { opacity:0; filter:brightness(1.3); } to { opacity:1; filter:none; } }
+      .hud-bonus-entering .hud-counter,
+      .hud-bonus-entering .hud-bonus-title { animation:bonusHudArrive 420ms ease-out; }
+      @media (prefers-reduced-motion: reduce) {
+        .hud-bonus-entering .hud-counter,.hud-bonus-entering .hud-bonus-title { animation:none; }
+      }
       .hud-deathcount .hud-icon-face { filter: grayscale(0.35) saturate(1.3) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.6)); }
       /* Sized as CAP HEIGHT — see the .roo-line note below. The icon leads the
          digits slightly, the way the crate and the fruit do in Crash. */
@@ -2426,12 +2485,14 @@ export class UI {
         .game-hud-layer:not(.hud-bonus) .hud-life-face-wrap { width: 64px; height: 64px; }
         .game-hud-layer:not(.hud-bonus) .hud-lives { font-size: 60px; }
         .hud-relics .hud-icon-gem { width: 108px; height: 108px; }
-        .game-hud-layer.hud-bonus .hud-num { font-size: 56px; }
-        .game-hud-layer.hud-bonus .hud-icon { width: 52px; height: 52px; }
-        .game-hud-layer.hud-bonus .hud-life-face-wrap { width: 60px; height: 60px; }
-        .game-hud-layer.hud-bonus .hud-fruit-row { left: 16px; bottom: 16px; }
-        .game-hud-layer.hud-bonus .hud-life-row { right: 16px; bottom: 16px; }
-        .game-hud-layer.hud-bonus .hud-crate-row { left: 16px; bottom: 96px; }
+        .game-hud-layer.hud-bonus .hud-counter { gap: 3px; }
+        .game-hud-layer.hud-bonus .hud-num,
+        .game-hud-layer.hud-bonus .hud-lives { font-size: min(8vw, 9vh); }
+        .game-hud-layer.hud-bonus .hud-icon,
+        .game-hud-layer.hud-bonus .hud-life-face-wrap { width: min(10vw, 10vh); height: min(10vw, 10vh); }
+        .game-hud-layer.hud-bonus .hud-fruit-row { left: 4%; bottom: max(16px, 5%); }
+        .game-hud-layer.hud-bonus .hud-life-row { right: 4%; bottom: max(16px, 5%); }
+        .game-hud-layer.hud-bonus .hud-crate-row { left: 50%; bottom: max(16px, 5%); }
         .hud-box-count { max-width: calc(100vw - 98px); }
         .hud-box-current, .hud-box-total { min-width: 0; }
       }

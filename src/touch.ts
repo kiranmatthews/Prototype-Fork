@@ -395,7 +395,7 @@ export class TouchControls {
     const body = document.body.classList;
     return this.mapMode || this.graphicsBlocked || body.contains('world-map-active') ||
       !this.enabled || document.hidden || body.contains('game-shell-modal') ||
-      body.contains('game-shell-transitioning') || body.contains('game-startup-loading') ||
+      body.contains('game-shell-transitioning') || body.contains('bonus-travel-active') || body.contains('game-startup-loading') ||
       body.contains('ed-active') || body.contains('tool-panel-open') ||
       body.contains('character-lab-open') || body.contains('animation-studio-open') ||
       body.contains('game-field-studio-open');
@@ -821,7 +821,7 @@ export class TouchControls {
         overscroll-behavior: none;
       }
       body:is(.world-map-active,.game-shell-modal,.game-shell-transitioning,.game-startup-loading,
-        .ed-active,.tool-panel-open,.character-lab-open,.animation-studio-open,.game-field-studio-open,.tc-graphics-lost)
+        .ed-active,.tool-panel-open,.character-lab-open,.animation-studio-open,.game-field-studio-open,.tc-graphics-lost,.bonus-travel-active)
         :is(.tc-zone,.tc-look,.tc-pause) { display:none !important; }
       .tc-look {
         position: fixed; top: 0; left: 0; width: 100vw; height: 38%; z-index: 9;
@@ -994,23 +994,32 @@ export class TouchControls {
       }
       body.tc-on .game-hud-layer.hud-bonus .hud-fruit-row {
         left: max(12px, env(safe-area-inset-left));
-        bottom: calc(var(--tc-bottom-edge) + var(--tc-size) + 10px);
+        bottom: calc(var(--tc-bottom-edge) + var(--tc-size) + 70px);
       }
       body.tc-on .game-hud-layer.hud-bonus .hud-crate-row {
-        left: 42%;
-        bottom: calc(var(--tc-bottom-edge) + var(--tc-size) + 10px);
+        left: 50%;
+        bottom: var(--tc-bottom-edge);
+      }
+      body.tc-on .game-hud-layer.hud-bonus .hud-crate-row .hud-num {
+        font-size: min(6.6vw, 8.4vh);
+      }
+      body.tc-on .game-hud-layer.hud-bonus .hud-crate-row .hud-box-total {
+        font-size: inherit; margin-bottom: 0;
+      }
+      body.tc-on .game-hud-layer.hud-bonus .hud-crate-row .hud-icon {
+        width: min(8.8vw, 9.5vh); height: min(8.8vw, 9.5vh);
       }
       body.tc-on .game-hud-layer.hud-bonus .hud-life-row {
         top: auto;
-        bottom: calc(var(--tc-bottom-edge) + var(--tc-size) + 68px);
+        bottom: calc(var(--tc-bottom-edge) + var(--tc-size) + 70px);
       }
       @media (orientation: portrait) {
         body.tc-on .game-hud-layer.hud-bonus .hud-bonus-title {
           top: calc(var(--tc-top-edge) + 60px);
         }
         body.tc-on .game-hud-layer.hud-bonus .hud-crate-row {
-          left: var(--tc-left-edge);
-          bottom: calc(var(--tc-bottom-edge) + var(--tc-size) + 96px);
+          left: 50%;
+          bottom: var(--tc-bottom-edge);
         }
       }
       body.tc-on .hud-bonus-title { top: max(8px, env(safe-area-inset-top)); }
