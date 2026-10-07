@@ -27,7 +27,7 @@ try {
   assert.ok(begin>=0&&end>begin,'production camera extraction points changed');
   const code = ts.transpileModule(main.slice(begin,end),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText;
   const makeRig=new Function('deps',`
-    const {THREE,TUNING,newLaneCursor,cameraRigFraming,setCameraRigAim,CourseCameraHeading,fitCameraRigHorizontal,LoopCameraFraming,CameraHeroFraming,cameraViewAt,cameraViewDirection,CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,level,player,camera}=deps;
+    const {THREE,TUNING,newLaneCursor,cameraRigFraming,setCameraRigAim,CameraFallHold,CourseCameraHeading,fitCameraRigHorizontal,LoopCameraFraming,CameraHeroFraming,cameraViewAt,cameraViewDirection,CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,level,player,camera}=deps;
     const current={id:'slip'},worldMapController=null,oceanOverview=false,oceanReview=false,BOULDER_FOV=27,input={lookX:0,lookY:0};
     ${code}
     return {step:updateCamera,heading:camControlDir,cursor:cameraLaneCursor};`);

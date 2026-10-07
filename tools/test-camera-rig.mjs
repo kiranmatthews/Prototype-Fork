@@ -9,12 +9,51 @@ const server = await createServer({
 });
 
 try {
-  const { cameraRigFraming, setCameraRigAim, legacyCameraRigTuning, migrateLegacySavedCameraRig } =
+  const { CameraFallHold, cameraRigFraming, setCameraRigAim, legacyCameraRigTuning, migrateLegacySavedCameraRig } =
     await server.ssrLoadModule('/src/cameraRig.ts');
   const { TUNING, TUNING_VERSION } = await server.ssrLoadModule('/src/tuning.ts');
   const { Replayer } = await server.ssrLoadModule('/src/replay.ts');
   assert.ok(TUNING_VERSION >= 18);
   const saved = { ...TUNING };
+  // A missing landing only holds the shot below the last course surface.
+  // Ordinary descents, rescue jumps and traversal attachments stay live.
+  const fall = new CameraFallHold();
+  const rider = { renderPosition: { y: 12 }, renderSnapVersion: 0,
+    groundBelowY: 12, grounded: true, state: 'ride', vVel: 0 };
+  assert.equal(fall.shouldHold(rider, -30), false);
+  Object.assign(rider, { grounded: false, state: 'air', groundBelowY: null, vVel: 8 });
+  rider.renderPosition.y = 16;
+  assert.equal(fall.shouldHold(rider, -30), false, 'jump over a gap was held');
+  rider.vVel = -8;
+  assert.equal(fall.shouldHold(rider, -30), false, 'returning jump above its takeoff was held');
+  rider.renderPosition.y = 11.9;
+  assert.equal(fall.shouldHold(rider, -30), false, 'sole-height noise held the shot');
+  for (const y of [11.5, 5, -20]) {
+    rider.renderPosition.y = y;
+    assert.equal(fall.shouldHold(rider, -30), true, 'void fall followed beneath the ledge');
+  }
+  rider.vVel = 8;
+  assert.equal(fall.shouldHold(rider, -30), false, 'upward rescue did not release the hold');
+  rider.vVel = -8;
+  rider.groundBelowY = -25;
+  assert.equal(fall.shouldHold(rider, -30), false, 'reachable lower landing was held');
+  rider.groundBelowY = -30;
+  assert.equal(fall.shouldHold(rider, -30), false, 'shot should follow until the last real landing height');
+  rider.renderPosition.y = -26;
+  assert.equal(fall.shouldHold(rider, -30), true, 'floor at the death plane counted as a landing');
+  rider.groundBelowY = -40;
+  assert.equal(fall.shouldHold(rider, -30), true, 'floor below the death plane counted as a landing');
+  for (const state of ['rope', 'hang', 'grind', 'swim', 'finished']) {
+    rider.state = state; rider.renderPosition.y -= 2;
+    assert.equal(fall.shouldHold(rider, -30), false, `${state} traversal was held`);
+  }
+  rider.state = 'dead'; rider.renderSnapVersion++;
+  assert.equal(fall.shouldHold(rider, -30), true, 'death blackout must hold even after a render reset');
+  rider.state = 'ride'; rider.grounded = true; rider.renderPosition.y = 40; rider.groundBelowY = 40;
+  assert.equal(fall.shouldHold(rider, -30), false, 'respawn did not release the hold');
+  Object.assign(rider, { grounded: false, state: 'air', groundBelowY: null, vVel: -8 });
+  rider.renderPosition.y = 39;
+  assert.equal(fall.shouldHold(rider, -30), true, 'respawn retained the previous level height');
   const camera = new THREE.PerspectiveCamera(49, 16 / 9, 0.1, 400);
   const aim = new THREE.Vector3();
   const forward = new THREE.Vector3(0.6, 0, -0.8);

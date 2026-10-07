@@ -1,0 +1,510 @@
+{
+  "base": "http://127.0.0.1:5297/",
+  "reports": [
+    {
+      "lite": true,
+      "mode": "corridor",
+      "stamp": "Codex/sol fork · build 10-07 10:39 UTC",
+      "heldFrames": 52,
+      "deepestY": -34.68333333333336,
+      "shot": {
+        "y": 7.308333333333327,
+        "x": -11.850000000000017,
+        "grounded": false,
+        "state": "air",
+        "floor": null,
+        "snap": 3,
+        "eye": [
+          -9.065338610975411,
+          13.1,
+          5.05
+        ],
+        "rotation": [
+          -0.2194205261945671,
+          0,
+          0,
+          0.9756303770816586
+        ],
+        "fov": 49
+      },
+      "respawn": {
+        "grounded": true,
+        "y": 8.1,
+        "eye": [
+          0,
+          13.1,
+          5.05
+        ]
+      },
+      "lower": {
+        "y": 0,
+        "eyeY": 6.4926961220438395,
+        "deaths": 0,
+        "floor": 0
+      }
+    },
+    {
+      "lite": true,
+      "mode": "partial-follow",
+      "stamp": "Codex/sol fork · build 10-07 10:39 UTC",
+      "heldFrames": 52,
+      "deepestY": -34.68333333333336,
+      "shot": {
+        "y": 7.308333333333327,
+        "x": -11.850000000000017,
+        "grounded": false,
+        "state": "air",
+        "floor": null,
+        "snap": 7,
+        "eye": [
+          -9.068514564426556,
+          14.323790826905004,
+          5.05
+        ],
+        "rotation": [
+          -0.2194205261945671,
+          0,
+          0,
+          0.9756303770816586
+        ],
+        "fov": 49
+      },
+      "respawn": {
+        "grounded": true,
+        "y": 8.1,
+        "eye": [
+          0,
+          13.18,
+          5.05
+        ]
+      },
+      "lower": {
+        "y": 0,
+        "eyeY": 5.4281094911322825,
+        "deaths": 0,
+        "floor": 0
+      }
+    },
+    {
+      "lite": true,
+      "mode": "full-follow",
+      "stamp": "Codex/sol fork · build 10-07 10:39 UTC",
+      "heldFrames": 52,
+      "deepestY": -34.68333333333336,
+      "shot": {
+        "y": 7.308333333333327,
+        "x": -11.850000000000017,
+        "grounded": false,
+        "state": "air",
+        "floor": null,
+        "snap": 11,
+        "eye": [
+          -9.060578690834703,
+          13.415508756732505,
+          5.05
+        ],
+        "rotation": [
+          -0.23287240139285145,
+          0,
+          0,
+          0.9725072980032214
+        ],
+        "fov": 49
+      },
+      "respawn": {
+        "grounded": true,
+        "y": 8.1,
+        "eye": [
+          0,
+          13.2,
+          5.05
+        ]
+      },
+      "lower": {
+        "y": 0,
+        "eyeY": 5.1,
+        "deaths": 0,
+        "floor": 0
+      }
+    },
+    {
+      "lite": true,
+      "mode": "chase",
+      "stamp": "Codex/sol fork · build 10-07 10:39 UTC",
+      "heldFrames": 52,
+      "deepestY": -34.68333333333336,
+      "shot": {
+        "y": 7.308333333333327,
+        "x": -11.9999999999981,
+        "grounded": false,
+        "state": "air",
+        "floor": null,
+        "snap": 15,
+        "eye": [
+          -11.316351758272804,
+          10.6087088507652,
+          4.498133436580568
+        ],
+        "rotation": [
+          -0.10350841293520469,
+          0.04851300742949465,
+          -0.0037030081653114315,
+          0.9934378613140876
+        ],
+        "fov": 56
+      },
+      "respawn": {
+        "grounded": true,
+        "y": 8.1,
+        "eye": [
+          0,
+          10.556823209702866,
+          4.498133363427292
+        ]
+      },
+      "lower": {
+        "y": 0,
+        "eyeY": 2.4568232097028715,
+        "deaths": 0,
+        "floor": 0
+      }
+    },
+    {
+      "lite": true,
+      "mode": "authored",
+      "stamp": "Codex/sol fork · build 10-07 10:39 UTC",
+      "heldFrames": 52,
+      "deepestY": -34.68333333333336,
+      "shot": {
+        "y": 7.308333333333327,
+        "x": -11.999999999676168,
+        "grounded": false,
+        "state": "air",
+        "floor": null,
+        "snap": 19,
+        "eye": [
+          -11.761799999575313,
+          13.803863733088278,
+          8.944358317006728
+        ],
+        "rotation": [
+          -0.2297529205473612,
+          0,
+          0,
+          0.9732489894677301
+        ],
+        "fov": 49
+      },
+      "respawn": {
+        "grounded": true,
+        "y": 8.1,
+        "eye": [
+          0,
+          13.87213595499958,
+          8.94427190999916
+        ]
+      },
+      "lower": {
+        "y": 0,
+        "eyeY": 5.772135954999579,
+        "deaths": 0,
+        "floor": 0
+      }
+    },
+    {
+      "lite": true,
+      "mode": "split",
+      "stamp": "Codex/sol fork · build 10-07 10:39 UTC",
+      "heldFrames": 52,
+      "deepestY": -34.68333333333336,
+      "shot": {
+        "y": 7.308333333333327,
+        "x": -11.99833333333335,
+        "grounded": false,
+        "state": "air",
+        "floor": null,
+        "snap": 3,
+        "eye": [
+          -10.862377499164046,
+          13.851617861624401,
+          3.8
+        ],
+        "rotation": [
+          -0.21435105180959552,
+          0,
+          0,
+          0.9767566875062182
+        ],
+        "fov": 49
+      },
+      "respawn": {
+        "grounded": true,
+        "y": 8.1,
+        "eye": [
+          -0.225833333333334,
+          12.434999999999999,
+          3.8
+        ]
+      },
+      "lower": {
+        "y": 0,
+        "eyeY": 4.411916164502735,
+        "deaths": 0,
+        "floor": 0
+      }
+    },
+    {
+      "lite": false,
+      "mode": "corridor",
+      "stamp": "Codex/sol fork · build 10-07 10:39 UTC",
+      "heldFrames": 53,
+      "deepestY": -34.68333333333336,
+      "shot": {
+        "y": 7.308333333333327,
+        "x": -11.850000000000017,
+        "grounded": false,
+        "state": "air",
+        "floor": null,
+        "snap": 3,
+        "eye": [
+          -9.015684165013171,
+          13.1,
+          5.05
+        ],
+        "rotation": [
+          -0.2194205261945671,
+          0,
+          0,
+          0.9756303770816586
+        ],
+        "fov": 49
+      },
+      "respawn": {
+        "grounded": true,
+        "y": 8,
+        "eye": [
+          0,
+          13.1,
+          5.05
+        ]
+      },
+      "lower": {
+        "y": 0,
+        "eyeY": 6.4425584150517246,
+        "deaths": 0,
+        "floor": 0
+      }
+    },
+    {
+      "lite": false,
+      "mode": "partial-follow",
+      "stamp": "Codex/sol fork · build 10-07 10:39 UTC",
+      "heldFrames": 52,
+      "deepestY": -33.81666666666669,
+      "shot": {
+        "y": 7.308333333333327,
+        "x": -11.850000000000017,
+        "grounded": false,
+        "state": "air",
+        "floor": null,
+        "snap": 7,
+        "eye": [
+          -9.017672747670346,
+          14.393428875679971,
+          5.05
+        ],
+        "rotation": [
+          -0.2194205261945671,
+          0,
+          0,
+          0.9756303770816586
+        ],
+        "fov": 49
+      },
+      "respawn": {
+        "grounded": true,
+        "y": 8,
+        "eye": [
+          0,
+          13.177919999885557,
+          5.05
+        ]
+      },
+      "lower": {
+        "y": 0,
+        "eyeY": 5.407393440550035,
+        "deaths": 0,
+        "floor": 0
+      }
+    },
+    {
+      "lite": false,
+      "mode": "full-follow",
+      "stamp": "Codex/sol fork · build 10-07 10:39 UTC",
+      "heldFrames": 52,
+      "deepestY": -33.81666666666669,
+      "shot": {
+        "y": 7.308333333333327,
+        "x": -11.850000000000017,
+        "grounded": false,
+        "state": "air",
+        "floor": null,
+        "snap": 11,
+        "eye": [
+          -9.004820189577154,
+          13.598384207037403,
+          5.05
+        ],
+        "rotation": [
+          -0.23336647056986384,
+          0,
+          0,
+          0.9723888576149795
+        ],
+        "fov": 49
+      },
+      "respawn": {
+        "grounded": true,
+        "y": 8.1,
+        "eye": [
+          0,
+          13.2,
+          5.05
+        ]
+      },
+      "lower": {
+        "y": 0,
+        "eyeY": 5.1,
+        "deaths": 0,
+        "floor": 0
+      }
+    },
+    {
+      "lite": false,
+      "mode": "chase",
+      "stamp": "Codex/sol fork · build 10-07 10:39 UTC",
+      "heldFrames": 52,
+      "deepestY": -34.68333333333336,
+      "shot": {
+        "y": 7.308333333333327,
+        "x": -11.999999999991354,
+        "grounded": false,
+        "state": "air",
+        "floor": null,
+        "snap": 15,
+        "eye": [
+          -11.243237927607534,
+          10.817416865138828,
+          4.498133809853925
+        ],
+        "rotation": [
+          -0.10375612975060189,
+          0.0486612443080966,
+          -0.0037020699207180106,
+          0.9934047732520044
+        ],
+        "fov": 56
+      },
+      "respawn": {
+        "grounded": true,
+        "y": 8,
+        "eye": [
+          -0.0000033045132852006563,
+          10.554423209488288,
+          4.498133363426078
+        ]
+      },
+      "lower": {
+        "y": 0,
+        "eyeY": 2.4568232097028693,
+        "deaths": 0,
+        "floor": 0
+      }
+    },
+    {
+      "lite": false,
+      "mode": "authored",
+      "stamp": "Codex/sol fork · build 10-07 10:39 UTC",
+      "heldFrames": 52,
+      "deepestY": -34.68333333333336,
+      "shot": {
+        "y": 7.308333333333327,
+        "x": -11.999999999676168,
+        "grounded": false,
+        "state": "air",
+        "floor": null,
+        "snap": 19,
+        "eye": [
+          -11.834699999787922,
+          13.592588732466401,
+          8.944358852560033
+        ],
+        "rotation": [
+          -0.2297529205473612,
+          0,
+          0,
+          0.9732489894677301
+        ],
+        "fov": 49
+      },
+      "respawn": {
+        "grounded": true,
+        "y": 8.1,
+        "eye": [
+          0,
+          13.87213595499958,
+          8.94427190999916
+        ]
+      },
+      "lower": {
+        "y": 0,
+        "eyeY": 5.772135954999579,
+        "deaths": 0,
+        "floor": 0
+      }
+    },
+    {
+      "lite": false,
+      "mode": "split",
+      "stamp": "Codex/sol fork · build 10-07 10:39 UTC",
+      "heldFrames": 52,
+      "deepestY": -34.68333333333336,
+      "shot": {
+        "y": 7.308333333333327,
+        "x": -11.99833333333335,
+        "grounded": false,
+        "state": "air",
+        "floor": null,
+        "snap": 3,
+        "eye": [
+          -10.989333817449838,
+          13.625594484678436,
+          3.8
+        ],
+        "rotation": [
+          -0.21435105180959552,
+          0,
+          0,
+          0.9767566875062182
+        ],
+        "fov": 49
+      },
+      "respawn": {
+        "grounded": true,
+        "y": 8.1,
+        "eye": [
+          -0.225833333333334,
+          12.434999999999999,
+          3.8
+        ]
+      },
+      "lower": {
+        "y": 0,
+        "eyeY": 4.4098793839106545,
+        "deaths": 0,
+        "floor": 0
+      }
+    }
+  ],
+  "errors": []
+}

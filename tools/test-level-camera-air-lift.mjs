@@ -13,7 +13,7 @@ const code = ts.transpileModule(main.slice(begin, end), {
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
 }).outputText;
 const makeRig = new Function('deps', `
-  const {THREE,TUNING,LoopCameraFraming,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,
+  const {THREE,TUNING,LoopCameraFraming,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CameraFallHold,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,
     CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,
     newLaneCursor,level,player,camera}=deps;
   const current={id:'codex-lab'},worldMapController=null,oceanOverview=false,oceanReview=false;
@@ -33,7 +33,7 @@ await withBlockworksRuntime(async r => {
   const { p, l, THREE, TUNING, source, server } = r;
   const tuningBefore = JSON.stringify(TUNING);
   const { Level, newLaneCursor, normalizeCustomLevelData } = await server.ssrLoadModule('/src/level.ts');
-  const { cameraRigFraming, setCameraRigAim, CourseCameraHeading, fitCameraRigHorizontal } = await server.ssrLoadModule('/src/cameraRig.ts');
+  const { cameraRigFraming, setCameraRigAim, CameraFallHold,CourseCameraHeading, fitCameraRigHorizontal } = await server.ssrLoadModule('/src/cameraRig.ts');
   const { ChiefCamera } = await server.ssrLoadModule('/src/boss/camera.ts');
   const { SkateChaseCamera, SkateChaseCameraOverlay } = await server.ssrLoadModule('/src/skateChaseCamera.ts');
   const { LoopCameraFraming } = await server.ssrLoadModule('/src/loopCamera.ts');
@@ -58,7 +58,7 @@ await withBlockworksRuntime(async r => {
   const camera = new THREE.PerspectiveCamera(TUNING.camFov, 16/9, .1, 500);
   const previousCamera = camera.clone();
   const defaults = new Proxy(l, { get: (target, key) => key === 'cameraAirLift' ? undefined : Reflect.get(target, key, target) });
-  const deps = { THREE,TUNING,LoopCameraFraming,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,
+  const deps = { THREE,TUNING,LoopCameraFraming,CameraHeroFraming,ChiefCamera,SkateChaseCamera,SkateChaseCameraOverlay,cameraRigFraming,setCameraRigAim,CameraFallHold,CourseCameraHeading,fitCameraRigHorizontal,cameraViewAt,cameraViewDirection,
     CameraViewFraming,CameraLookOffset,speedSkateFovTarget,stepSpeedSkateFov,newLaneCursor,player:p };
   const rig = makeRig({ ...deps, level:l, camera });
   const legacy = makeRig({ ...deps, level:defaults, camera:previousCamera });

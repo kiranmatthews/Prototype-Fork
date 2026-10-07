@@ -97,7 +97,7 @@ import {
 } from "./cameraSpeedEffect";
 import { CameraLookOffset } from "./cameraLook";
 import { cameraViewAt, cameraViewDirection, CameraViewFraming } from "./cameraViews";
-import { cameraRigFraming, setCameraRigAim, CourseCameraHeading, fitCameraRigHorizontal } from "./cameraRig";
+import { cameraRigFraming, setCameraRigAim, CourseCameraHeading, fitCameraRigHorizontal, CameraFallHold } from "./cameraRig";
 import { LoopCameraFraming } from "./loopCamera";
 import { CameraHeroFraming } from "./cameraHeroFraming";
 import { CameraPortraitFraming } from "./cameraPortraitFraming";
@@ -1981,12 +1981,14 @@ const cam2ViewForward = new THREE.Vector3();
 const cam2LaneOrigin = new THREE.Vector3();
 const cam2LaneHeading = new CourseCameraHeading();
 const cameraViewFraming2 = new CameraViewFraming();
+const cameraFallHold2 = new CameraFallHold();
 const chiefCamera2 = new ChiefCamera();
 const authoredSkateCamera2 = new SkateChaseCameraOverlay();
 const loopCameraFraming2 = new LoopCameraFraming();
 const cameraOverlayHeroFraming2 = new CameraHeroFraming();
 function updateCamera2(dt: number): void {
   if (!p2) return;
+  if (cameraFallHold2.shouldHold(p2, level.killY)) return;
   const framingSnap = cam2RenderSnapVersion !== p2.renderSnapVersion;
   chiefCamera2.restore(camera2);
   authoredSkateCamera2.restore(camera2);
@@ -4258,12 +4260,14 @@ const camF = new THREE.Vector3(0, 0, -1);
 const skateChaseCamera = new SkateChaseCamera();
 
 const cameraViewFraming = new CameraViewFraming();
+const cameraFallHold = new CameraFallHold();
 const chiefCamera = new ChiefCamera();
 const authoredSkateCamera = new SkateChaseCameraOverlay();
 const cameraHeroFraming = new CameraHeroFraming();
 const loopCameraFraming = new LoopCameraFraming();
 const cameraOverlayHeroFraming = new CameraHeroFraming();
 function updateCamera(dt: number): void {
+  if (cameraFallHold.shouldHold(player, level.killY)) return;
   const framingSnap = cameraRenderSnapVersion !== player.renderSnapVersion;
   chiefCamera.restore(camera);
   authoredSkateCamera.restore(camera);
@@ -4464,7 +4468,8 @@ function updateBaseCamera(dt: number): void {
   // the rig starts lifting scales with the lens — a telephoto zoom-in has a
   // tiny frame, so the rig gives sooner and an ollie never rockets across
   // the whole screen. The anchor eases along slopes/steps, follows the
-  // player when there's no floor below (pits), and big verts stay framed.
+  // player above the course, and big verts stay framed. Void falls hold the
+  // complete shot in updateCamera before any of these layers can move it.
   // The boulder shot keeps its authored full-follow.
   const frameHalf = Math.tan((camera.fov * Math.PI) / 360) * Math.max(0.5, Math.abs(cameraValues.camDist));
   const maxRise = THREE.MathUtils.clamp(frameHalf * 1.5, 1.5, 7);

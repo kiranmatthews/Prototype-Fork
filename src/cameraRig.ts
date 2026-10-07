@@ -1,5 +1,47 @@
 import * as THREE from 'three';
 
+interface FallCameraSubject {
+  renderPosition: { y: number };
+  renderSnapVersion: number;
+  groundBelowY: number | null;
+  grounded: boolean;
+  state: string;
+  vVel: number;
+}
+
+/** Keep the complete last shot once a missed landing falls below the course.
+ * Runs before any camera layer restores or reframes, so chase/loop/authored
+ * shots cannot pull the eye or aim underground. Reuse the player's existing
+ * support probe; this is presentation only and adds no collision queries. */
+export class CameraFallHold {
+  private snapVersion = -1;
+  private edgeY = 0;
+
+  shouldHold(subject: FallCameraSubject, killY: number): boolean {
+    if (subject.state === 'dead' || subject.state === 'gameover') return true;
+    const y = subject.renderPosition.y;
+    const floor = subject.groundBelowY;
+    // A floor below the death plane cannot catch this fall.
+    const landing = floor !== null && Number.isFinite(floor) && floor > killY;
+    if (subject.renderSnapVersion !== this.snapVersion) {
+      this.snapVersion = subject.renderSnapVersion;
+      this.edgeY = landing ? Math.min(y, floor) : y;
+      return false;
+    }
+    if (subject.grounded || ['grind', 'rope', 'hang', 'swim', 'finished'].includes(subject.state)) {
+      this.edgeY = y;
+      return false;
+    }
+    if (landing) {
+      this.edgeY = Math.min(y, floor);
+      return false;
+    }
+    // Leave jumps and upward rescue attempts responsive. A small sole-height
+    // tolerance prevents interpolation/contact noise from freezing at a lip.
+    return subject.vVel <= 0 && y < this.edgeY - .2;
+  }
+}
+
 export interface CameraRigTuning {
   camDist: number;
   camHeight: number;
