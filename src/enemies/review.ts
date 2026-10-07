@@ -59,7 +59,7 @@ kindInput.options[0].textContent=`Full roster · ${ROSTER.length} enemies`;
 const siteRoot=new URL('../../',location.href);
 for(const [index,kind] of ROSTER.entries()){
   const option=document.createElement('option');option.value=kind;option.textContent=`${NAMES[kind]} · ${kind}`;kindInput.append(option);
-  const visual=createEnemyVisual(kind,{appearance,url:new URL(`enemies/${appearance?'nightworks-snot-goblin':kind}.glb`,siteRoot).href});
+  const visual=createEnemyVisual(kind,{appearance,url:new URL(`enemies/${appearance?'nightworks-snot-goblin':kind==='moa'?'moa-clean':kind}.glb`,siteRoot).href});
   scene.add(visual.group);
   const label=document.createElement('button');label.className='actor-label';label.textContent=NAMES[kind];
   label.addEventListener('click',()=>setKind(kind));stage.append(label);

@@ -2,14 +2,16 @@
 Blender --background --python tools/moa-assets/prepare.py
 """
 from pathlib import Path
-import sys,json,hashlib,math
+import sys,json,hashlib,math,argparse
 import bpy,bmesh
 import numpy as np
 from mathutils import Matrix,Vector
 ROOT=Path(__file__).resolve().parents[2];HERE=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT/'tools/enemies'))
+sys.path.insert(0,str(HERE))
 from bake_assets import load_surface,normalized_surface,compact_textures,render_views
 from glb_rig import Glb
+from clean_materials import clean_moa_materials
 WORK=ROOT/'.img2threejs/moa';OUT=ROOT/'public/enemies'
 FRAMES={k:np.array(v).reshape(4,4,order='F') for k,v in json.loads((HERE/'bind-frames.json').read_text()).items()}
 NAMES=list(FRAMES);INDEX={n:i for i,n in enumerate(NAMES)}
@@ -75,14 +77,15 @@ def shade(obj):
         s=m.node_tree.nodes.get('Principled BSDF')
         if s:s.inputs['Metallic'].default_value=0;s.inputs['Roughness'].default_value=.92
 
-def export(objects,path):
+def export(objects,path,clean=False):
     for o in bpy.context.scene.objects:o.select_set(o in objects)
     bpy.context.view_layer.objects.active=objects[0]
     bpy.ops.export_scene.gltf(filepath=str(path),export_format='GLB',use_selection=True,export_yup=True,
         export_apply=True,export_materials='EXPORT',export_animations=False,export_cameras=False,
-        export_lights=False,export_image_format='JPEG',export_jpeg_quality=90,export_extras=True)
+        export_lights=False,export_image_format='AUTO' if clean else 'JPEG',export_jpeg_quality=90,export_extras=True,
+        **({'export_vertex_color':'NONE'} if clean else {}))
 
-def skin(path,weights_by_piece):
+def skin(path,weights_by_piece,colours_by_piece=None):
     g=Glb(path);doc=g.document;nodes=doc['nodes'];mesh_nodes=[i for i,n in enumerate(nodes) if 'mesh' in n]
     joints=[]
     for name in NAMES:
@@ -95,6 +98,17 @@ def skin(path,weights_by_piece):
         lookup=weights_by_piece[node['name']]
         for prim in doc['meshes'][node['mesh']]['primitives']:
             points=g.read_accessor(prim['attributes']['POSITION'])
+            material=doc['materials'][prim['material']]
+            if colours_by_piece and material['name']=='Moa clean vertex colours':
+                uv=g.read_accessor(prim['attributes']['TEXCOORD_0']);lookup_colours=colours_by_piece[node['name']];colours=[]
+                for point,tex in zip(points,uv):
+                    key=tuple(round(float(c),5) for c in [*point,*tex])
+                    if key not in lookup_colours:
+                        nearest=min(lookup_colours,key=lambda k:sum((k[j]-float([*point,*tex][j]))**2 for j in range(5)))
+                        assert sum((nearest[j]-float([*point,*tex][j]))**2 for j in range(5))<1e-8
+                        key=nearest
+                    colours.append(lookup_colours[key])
+                prim['attributes']['COLOR_0']=g.add_accessor(np.array(colours,dtype='<f4'),5126,'VEC4',34962)
             weights=[]
             for point in points:
                 key=tuple(round(float(c),5) for c in point)
@@ -118,7 +132,7 @@ def moa():
     for co,no in [((0,0,4.24),(0,-.24,1)),((0,-1.25,0),(0,-1,0)),((0,-1.90,0),(0,-1,0))]:
         bmesh.ops.bisect_plane(bm,geom=list(bm.verts)+list(bm.edges)+list(bm.faces),dist=1e-7,plane_co=Vector(co),plane_no=Vector(no))
     bmesh.ops.triangulate(bm,faces=list(bm.faces));bm.to_mesh(obj.data);bm.free();obj.data.update()
-    objects=[];weights_by_piece={};counts={}
+    objects=[];weights_by_piece={};source_positions={};counts={}
     for is_jaw,name in [(False,'MoaMeshyBody'),(True,'MoaMeshyJaw')]:
         mesh=obj.data.copy();bm=bmesh.new();bm.from_mesh(mesh)
         discard=[]
@@ -134,7 +148,7 @@ def moa():
             for f in filled['faces']:f.material_index=len(mesh.materials)-1
         bmesh.ops.triangulate(bm,faces=list(bm.faces));bmesh.ops.recalc_face_normals(bm,faces=list(bm.faces));bm.to_mesh(mesh);bm.free();mesh.update()
         part=bpy.data.objects.new(name,mesh);bpy.context.scene.collection.objects.link(part)
-        points=game_points(part);fitted,w=fit(points,is_jaw)
+        points=game_points(part);source_positions[name]=points.copy();fitted,w=fit(points,is_jaw)
         for vertex,p in zip(mesh.vertices,fitted):vertex.co=Vector((p[0],-p[2],p[1]))
         # Restoring geometric normals avoids old normals on the fitted anatomy.
         if mesh.has_custom_normals:
@@ -143,16 +157,29 @@ def moa():
         mesh.update();shade(part)
         weights_by_piece[name]={tuple(round(float(c),5) for c in p):weight for p,weight in zip(fitted,w)}
         mesh.calc_loop_triangles();counts[name]=len(mesh.loop_triangles);objects.append(part)
-    bpy.data.objects.remove(obj,do_unlink=True);compact_textures(768)
-    path=OUT/'moa.glb';export(objects,path);skin(path,weights_by_piece)
+    bpy.data.objects.remove(obj,do_unlink=True)
+    surface=clean_moa_materials(objects,source_positions,WORK/'refine')
+    colours_by_piece={}
+    for part in objects:
+        part.data.validate(verbose=True)
+        mesh=part.data;uv=mesh.uv_layers['MoaSourceUV'];colour=mesh.color_attributes['MoaPalette'];lookup={}
+        for face in mesh.polygons:
+            if mesh.materials[face.material_index].name!='Moa clean vertex colours':continue
+            for li in face.loop_indices:
+                v=mesh.vertices[mesh.loops[li].vertex_index].co;tex=uv.data[li].uv
+                lookup[tuple(round(float(c),5) for c in (v.x,v.z,-v.y,tex.x,1-tex.y))]=tuple(colour.data[li].color)
+        colours_by_piece[part.name]=lookup;mesh.calc_loop_triangles();counts[part.name]=len(mesh.loop_triangles)
+    path=OUT/'moa-clean.glb';export(objects,path,clean=True);skin(path,weights_by_piece,colours_by_piece)
     print('MOA_PACKED',counts,'bytes',path.stat().st_size,flush=True)
-    return {'file':'moa.glb','triangles':sum(counts.values()),'parts':counts,'bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'joints':NAMES}
+    return {'file':'moa-clean.glb','surface':surface,'triangles':sum(counts.values()),'parts':counts,'bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'joints':NAMES}
 
 def chicken():
     obj=normalized_surface(load_surface(WORK/'roast-chicken.glb'),{'maxSize':[1.5,.92,1.6]});obj.name='MoaRoastChicken';shade(obj);compact_textures(512)
     path=OUT/'moa-roast-chicken.glb';export([obj],path);obj.data.calc_loop_triangles()
     return {'file':path.name,'triangles':len(obj.data.loop_triangles),'bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
 
+parser=argparse.ArgumentParser();parser.add_argument('--moa-only',action='store_true');args=parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
 OUT.mkdir(exist_ok=True,parents=True)
-report={'sourceReview':'Actual Meshy front/quarter/side/back/top inspected; original animation bind frames retained','moa':moa(),'chicken':chicken()}
+previous=json.loads((HERE/'prepared.json').read_text()) if (HERE/'prepared.json').exists() else {}
+report={'sourceReview':'Actual Meshy front/quarter/side/back/top inspected; original animation bind frames retained','moa':moa(),'chicken':previous['chicken'] if args.moa_only else chicken()}
 (HERE/'prepared.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report),flush=True)
