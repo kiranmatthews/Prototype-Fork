@@ -1,0 +1,417 @@
+{
+  "scope": "Two moa in Treehouse Trials and two in Jungle Ruins; existing art, AI, chicken, movement and geometry unchanged.",
+  "placement": [
+    {
+      "id": "treehouse-trail",
+      "spawn": [
+        -16.97026,
+        8.55,
+        -0.40991
+      ],
+      "enemies": 2,
+      "moa": [
+        {
+          "position": [
+            53,
+            -14,
+            -214
+          ],
+          "range": [
+            50.8,
+            55.2
+          ],
+          "maxFootSupportError": 0,
+          "minCheckpoint": 14,
+          "minEnemy": 204.86804550036226
+        },
+        {
+          "position": [
+            50.71301,
+            -14,
+            -418.85528
+          ],
+          "range": [
+            48.513009999999994,
+            52.91301
+          ],
+          "maxFootSupportError": 0,
+          "minCheckpoint": 70.94338137601422,
+          "minEnemy": 204.86804550036226
+        }
+      ]
+    },
+    {
+      "id": "jungle",
+      "spawn": [
+        3.7290679770243798,
+        2.0151214767927224,
+        6
+      ],
+      "enemies": 10,
+      "moa": [
+        {
+          "position": [
+            0,
+            11.5,
+            -439
+          ],
+          "range": [
+            -2.2,
+            2.2
+          ],
+          "maxFootSupportError": 0,
+          "minCheckpoint": 43,
+          "minEnemy": 31.75242558627995
+        },
+        {
+          "position": [
+            3.5107549820473496,
+            -2.3177126424355947,
+            -512
+          ],
+          "range": [
+            2.0107549820473496,
+            5.01075498204735
+          ],
+          "maxFootSupportError": 0.11880582862290101,
+          "minCheckpoint": 68.00002772425584,
+          "minEnemy": 16.09576097421018
+        }
+      ]
+    }
+  ],
+  "production": {
+    "reports": [
+      {
+        "id": "treehouse-trail",
+        "lite": true,
+        "spawn": {
+          "grounded": true,
+          "position": [
+            -16.97026,
+            8.400000000372529,
+            -0.40991
+          ]
+        },
+        "moa": [
+          {
+            "position": [
+              54.03916666666664,
+              -14,
+              -214
+            ],
+            "status": "ready",
+            "url": "./enemies/moa-clean.glb"
+          },
+          {
+            "position": [
+              51.752176666666635,
+              -14,
+              -418.85528
+            ],
+            "status": "ready",
+            "url": "./enemies/moa-clean.glb"
+          }
+        ],
+        "encounters": [
+          {
+            "peck": {
+              "state": "peck",
+              "alive": true,
+              "masks": 0
+            },
+            "roast": {
+              "state": "roast",
+              "roast": true,
+              "visible": true,
+              "steam": 9
+            },
+            "clear": {
+              "state": "removed",
+              "visible": false
+            }
+          },
+          {
+            "peck": {
+              "state": "peck",
+              "alive": true,
+              "masks": 0
+            },
+            "roast": {
+              "state": "roast",
+              "roast": true,
+              "visible": true,
+              "steam": 16
+            },
+            "clear": {
+              "state": "removed",
+              "visible": false
+            }
+          }
+        ],
+        "respawn": {
+          "moa": [
+            true,
+            true
+          ],
+          "checkpoint": true
+        },
+        "finish": {
+          "events": {
+            "finish": 1,
+            "steam": 18
+          },
+          "stamp": "Codex/sol fork \u00b7 build 10-07 08:13 UTC"
+        }
+      },
+      {
+        "id": "treehouse-trail",
+        "lite": false,
+        "spawn": {
+          "grounded": true,
+          "position": [
+            -16.97026,
+            8.400000000372529,
+            -0.40991
+          ]
+        },
+        "moa": [
+          {
+            "position": [
+              54.08749999999997,
+              -14,
+              -214
+            ],
+            "status": "ready",
+            "url": "./enemies/moa-clean.glb"
+          },
+          {
+            "position": [
+              51.80050999999997,
+              -14,
+              -418.85528
+            ],
+            "status": "ready",
+            "url": "./enemies/moa-clean.glb"
+          }
+        ],
+        "encounters": [
+          {
+            "peck": {
+              "state": "peck",
+              "alive": true,
+              "masks": 0
+            },
+            "roast": {
+              "state": "roast",
+              "roast": true,
+              "visible": true,
+              "steam": 9
+            },
+            "clear": {
+              "state": "removed",
+              "visible": false
+            }
+          },
+          {
+            "peck": {
+              "state": "peck",
+              "alive": true,
+              "masks": 0
+            },
+            "roast": {
+              "state": "roast",
+              "roast": true,
+              "visible": true,
+              "steam": 17
+            },
+            "clear": {
+              "state": "removed",
+              "visible": false
+            }
+          }
+        ],
+        "respawn": {
+          "moa": [
+            true,
+            true
+          ],
+          "checkpoint": true
+        },
+        "finish": {
+          "events": {
+            "finish": 1,
+            "steam": 19
+          },
+          "stamp": "Codex/sol fork \u00b7 build 10-07 08:13 UTC"
+        }
+      },
+      {
+        "id": "jungle",
+        "lite": true,
+        "spawn": {
+          "grounded": true,
+          "position": [
+            3.7290679770243798,
+            1.778567367051819,
+            6
+          ]
+        },
+        "moa": [
+          {
+            "position": [
+              1.0633333333333332,
+              11.5,
+              -439
+            ],
+            "status": "ready",
+            "url": "./enemies/moa-clean.glb"
+          },
+          {
+            "position": [
+              4.574088315380684,
+              -2.3177126424355947,
+              -512
+            ],
+            "status": "ready",
+            "url": "./enemies/moa-clean.glb"
+          }
+        ],
+        "encounters": [
+          {
+            "peck": {
+              "state": "peck",
+              "alive": true,
+              "masks": 0
+            },
+            "roast": {
+              "state": "roast",
+              "roast": true,
+              "visible": true,
+              "steam": 6
+            },
+            "clear": {
+              "state": "removed",
+              "visible": false
+            }
+          },
+          {
+            "peck": {
+              "state": "peck",
+              "alive": true,
+              "masks": 0
+            },
+            "roast": {
+              "state": "roast",
+              "roast": true,
+              "visible": true,
+              "steam": 11
+            },
+            "clear": {
+              "state": "removed",
+              "visible": false
+            }
+          }
+        ],
+        "respawn": {
+          "moa": [
+            true,
+            true
+          ],
+          "checkpoint": true
+        },
+        "finish": {
+          "events": {
+            "finish": 1,
+            "steam": 13
+          },
+          "stamp": "Codex/sol fork \u00b7 build 10-07 08:15 UTC"
+        }
+      },
+      {
+        "id": "jungle",
+        "lite": false,
+        "spawn": {
+          "grounded": true,
+          "position": [
+            3.7290679770243798,
+            1.778567367051819,
+            6
+          ]
+        },
+        "moa": [
+          {
+            "position": [
+              1.0875,
+              11.5,
+              -439
+            ],
+            "status": "ready",
+            "url": "./enemies/moa-clean.glb"
+          },
+          {
+            "position": [
+              4.598254982047351,
+              -2.3177126424355947,
+              -512
+            ],
+            "status": "ready",
+            "url": "./enemies/moa-clean.glb"
+          }
+        ],
+        "encounters": [
+          {
+            "peck": {
+              "state": "peck",
+              "alive": true,
+              "masks": 0
+            },
+            "roast": {
+              "state": "roast",
+              "roast": true,
+              "visible": true,
+              "steam": 6
+            },
+            "clear": {
+              "state": "removed",
+              "visible": false
+            }
+          },
+          {
+            "peck": {
+              "state": "peck",
+              "alive": true,
+              "masks": 0
+            },
+            "roast": {
+              "state": "roast",
+              "roast": true,
+              "visible": true,
+              "steam": 11
+            },
+            "clear": {
+              "state": "removed",
+              "visible": false
+            }
+          }
+        ],
+        "respawn": {
+          "moa": [
+            true,
+            true
+          ],
+          "checkpoint": true
+        },
+        "finish": {
+          "events": {
+            "finish": 1,
+            "steam": 13
+          },
+          "stamp": "Codex/sol fork \u00b7 build 10-07 08:15 UTC"
+        }
+      }
+    ],
+    "errors": []
+  },
+  "method": "Real level collision samples and capture normalization; Chrome lite/full staged encounter smoke checks, native peck damage and spin input, checkpoint, pit respawn and finish. Not complete end-to-end course runs."
+}
