@@ -1315,6 +1315,11 @@ export class Player {
   private maskMesh: THREE.Mesh | null = null;
   private maskBones: THREE.Object3D | null = null; // 3D crossbones under the skull on the 2nd mask
   private maskAnchor = new THREE.Vector3(); // scratch: head world position for the floating mask
+  private readonly maskViewForward = new THREE.Vector3();
+  private readonly maskViewRight = new THREE.Vector3();
+  private readonly maskBoundCenter = new THREE.Vector3();
+  private readonly maskBoundSize = new THREE.Vector3();
+  private readonly maskBasis = new THREE.Matrix4();
   private maskSparks: { sprite: THREE.Sprite; vel: THREE.Vector3; life: number; maxLife: number }[] = [];
   private maskSparkT = 0; // pink-spark emission accumulator (2nd + 3rd mask)
   private spinEffects: SpinEffectsPresentation | null = null;
@@ -2908,7 +2913,6 @@ export class Player {
     const dz = this.pos.z - this.group.position.z;
     this.group.position.copy(this.pos);
     if (dx * dx + dy * dy + dz * dz > 1e-12) {
-      if (this.maskMesh?.visible) this.maskMesh.position.add(_renderDelta.set(dx, dy, dz));
       if (this.boostGlow.visible) this.boostGlow.position.add(_renderDelta.set(dx, dy, dz));
     }
     // Player.step authored the pose before Level.update advanced movers. Probe
@@ -2920,7 +2924,6 @@ export class Player {
     objects.length = 0;
     this.collectRenderHierarchy(this.group);
     objects.push(this.floorX, this.boostGlow);
-    if (this.maskMesh) objects.push(this.maskMesh);
     for (const fruit of this.fruits)
       if (fruit.phase !== 'off' && fruit.phase !== 'fly') objects.push(fruit.mesh);
     for (const spark of this.sparks)
@@ -17954,82 +17957,11 @@ export class Player {
     // the mask from the final head socket only after every post-pose correction.
     // Mask sockets live under the presentation mount, so sample them only after
     // both the authored head pose and the active Skull/BoolieRoo profile land.
+    this.prepareMaskPresentation();
     if (this.maskMesh) {
-      const uber = this.uberTimer > 0; // third mask
-      const two = !uber && this.masks >= 2; // second mask held
-      const vis = (this.masks > 0 || uber) && this.state !== 'dead';
-      this.maskMesh.visible = vis;
-      // Front (local -Z) points at the camera at yaw = atan2(camDir.x, camDir.z);
-      // it rocks around that instead of spinning through — never the back.
-      const faceYaw = Math.atan2(this.camDir.x, this.camDir.z);
-      // Anchor to the ACTUAL head (so it tracks every pose — crouch, air, lean),
-      // and lay the mask out in CAMERA space: pulled toward the lens and offset
-      // by the viewer's screen axes. A fixed WORLD offset used to bury the mask
-      // in the face whenever the skater travelled toward +X (the Sideways stretch
-      // faces that way the whole time) or turned to face the camera. Camera-space
-      // keeps it floating clear IN FRONT of the face no matter the heading.
-      if (this.headVisualCenter) this.headVisualCenter.getWorldPosition(this.maskAnchor);
-      else if (this.headM) this.headM.getWorldPosition(this.maskAnchor);
-      else this.maskAnchor.set(this.pos.x, this.pos.y + 1.42, this.pos.z);
-      const hx = this.maskAnchor.x;
-      const hy = this.maskAnchor.y;
-      const hz = this.maskAnchor.z;
-      // horizontal camera-forward (lens -> scene) and the viewer's screen-right
-      let cfx = this.camDir.x;
-      let cfz = this.camDir.z;
-      const clen = Math.hypot(cfx, cfz) || 1;
-      cfx /= clen;
-      cfz /= clen;
-      const rx = -cfz; // screen-right = camera-forward rotated -90 about Y
-      const rz = cfx;
-      if (uber) {
-        // third mask: WORN on the face. It sits in front of the skull and turns
-        // WITH the skater's own facing — so it tracks the head in every direction
-        // (running away, left or right included), showing its side/back just like
-        // a real worn mask when the skater turns from the camera. (The old
-        // camera-relative placement only lined up with the face when you ran
-        // toward the lens.) Head-anchored and pushed out enough to clear the face.
-        let ffx = -Math.sin(this.visualYaw);
-        let ffy = 0;
-        let ffz = -Math.cos(this.visualYaw);
-        if (this.headLookSocket) {
-          this.headLookSocket.getWorldDirection(this.headForward).normalize();
-          ffx = this.headForward.x;
-          ffy = this.headForward.y;
-          ffz = this.headForward.z;
-        }
-        this.maskMesh.position.set(
-          hx + ffx * 0.42,
-          hy + ffy * 0.42 + 0.03 + Math.sin(this.runTime * 9) * 0.03,
-          hz + ffz * 0.42,
-        );
-        if (this.headLookSocket) {
-          this.headLookSocket.getWorldQuaternion(this.headWorldQuaternion);
-          this.maskMesh.quaternion.copy(this.headWorldQuaternion);
-          this.maskMesh.rotateY(Math.PI + Math.sin(this.runTime * 5) * 0.05);
-        } else {
-          this.maskMesh.rotation.set(
-            0,
-            this.visualYaw + Math.PI + Math.sin(this.runTime * 5) * 0.05,
-            0,
-          );
-        }
-        this.maskMesh.scale.setScalar(0.82);
-      } else {
-        // held mask (states 1 & 2): floats up and to the screen-side of the head,
-        // pushed out ~1/3 of a skater-width further right so it isn't fighting the
-        // skater for space, tipped a touch toward the lens so it reads clear of the
-        // face. FIXED size — the 2nd mask doesn't grow, it just glows harder.
-        this.maskMesh.position.set(
-          hx + rx * 0.95 - cfx * 0.18,
-          hy + 0.34 + Math.sin(this.runTime * 3) * 0.09,
-          hz + rz * 0.95 - cfz * 0.18,
-        );
-        this.maskMesh.rotation.y = faceYaw + Math.PI + Math.sin(this.runTime * 2.4) * 0.32;
-        this.maskMesh.scale.setScalar(0.85); // states 1 & 2: 15% smaller than before
-      }
-      // Crossbones ride under the skull only on the 2nd mask (state 2).
-      if (this.maskBones) this.maskBones.visible = two;
+      const uber = this.uberTimer > 0;
+      const two = !uber && this.masks >= 2;
+      const vis = this.maskMesh.visible;
       // Pink spark comet-tail on the 2nd + 3rd mask: streams off the mask (2nd)
       // or the skater (3rd), trailing opposite to how the skater is moving.
       if ((two || uber) && vis) {
@@ -18077,6 +18009,85 @@ export class Player {
       s.sprite.scale.setScalar(0.28 * (0.35 + 0.65 * f));
     }
 
+  }
+
+  /** Resolve attachments from the final head pose and the visible camera.
+   * Also runs after render interpolation/camera updates: independently lerping
+   * a world-space mask cuts through a rotating head and lags a turning camera.
+   * This changes presentation only; camDir remains the recorded control input. */
+  prepareMaskPresentation(): void {
+    const mask = this.maskMesh;
+    if (!mask) return;
+    const worn = this.uberTimer > 0;
+    mask.visible = (this.masks > 0 || worn) && this.state !== 'dead' && this.state !== 'gameover';
+    if (this.maskBones) this.maskBones.visible = mask.visible && !worn && this.masks >= 2;
+    if (!mask.visible) return;
+    if (this.headVisualCenter) this.headVisualCenter.getWorldPosition(this.maskAnchor);
+    else if (this.headM) this.headM.getWorldPosition(this.maskAnchor);
+    else this.maskAnchor.set(this.group.position.x, this.group.position.y + 1.42, this.group.position.z);
+    const head = this.characterHeadStyleValue === 'alternate' && this.meshyBoolieRooHead
+      ? this.meshyBoolieRooHead.mesh : this.meshyHead?.mesh;
+    mask.position.set(0, 0, 0);
+    if (worn) {
+      if (this.headLookSocket) {
+        // Nonuniform head/body scales can shear the socket matrix. Build an
+        // orthonormal frame around its actual gaze instead of decomposing a
+        // sheared matrix into a drifting/non-unit quaternion.
+        this.headLookSocket.getWorldDirection(this.headForward);
+        this.maskViewRight.setFromMatrixColumn(this.headLookSocket.matrixWorld, 1).cross(this.headForward).normalize();
+        this.maskViewForward.crossVectors(this.headForward, this.maskViewRight).normalize();
+        this.maskBasis.makeBasis(this.maskViewRight, this.maskViewForward, this.headForward);
+        this.headWorldQuaternion.setFromRotationMatrix(this.maskBasis);
+      } else {
+        this.headWorldQuaternion.setFromAxisAngle(THREE.Object3D.DEFAULT_UP, this.visualYaw + Math.PI);
+      }
+      // Both the skull asset and the look socket face local +Z.
+      mask.quaternion.copy(this.headWorldQuaternion);
+      mask.rotateY(Math.sin(this.runTime * 5) * 0.05);
+      this.headForward.set(0, 0, 1).applyQuaternion(mask.quaternion);
+      mask.scale.setScalar(0.82);
+      this.maskAnchor.y += 0.03 + Math.sin(this.runTime * 9) * 0.03;
+      const back = -this.maskProjectionEdge(mask, this.headForward, false) * 1.05;
+      const clearance = head
+        ? this.maskProjectionEdge(head, this.headForward, true) - this.maskAnchor.dot(this.headForward) + back + 0.035
+        : 0.42;
+      mask.position.copy(this.maskAnchor).addScaledVector(this.headForward, Math.max(0.42, clearance));
+    } else {
+      if (this.cam) this.cam.getWorldDirection(this.maskViewForward);
+      else this.maskViewForward.copy(this.camDir);
+      this.maskViewForward.y = 0;
+      if (this.maskViewForward.lengthSq() < 1e-8) this.maskViewForward.copy(this.camDir);
+      this.maskViewForward.normalize();
+      this.maskViewRight.set(-this.maskViewForward.z, 0, this.maskViewForward.x);
+      const yaw = Math.atan2(this.maskViewForward.x, this.maskViewForward.z);
+      // Reset ALL axes. A worn pose or quaternion interpolation may have left
+      // an equivalent Euler representation with nonzero pitch and roll.
+      mask.rotation.set(0, yaw + Math.PI + Math.sin(this.runTime * 2.4) * 0.32, 0);
+      mask.scale.setScalar(0.85);
+      this.maskAnchor.y += 0.34 + Math.sin(this.runTime * 3) * 0.09;
+      this.maskAnchor.addScaledVector(this.maskViewForward, -0.18);
+      const left = -this.maskProjectionEdge(mask, this.maskViewRight, false) * 1.05;
+      const clearance = head
+        ? this.maskProjectionEdge(head, this.maskViewRight, true) - this.maskAnchor.dot(this.maskViewRight) + left + 0.16
+        : 0.95;
+      mask.position.copy(this.maskAnchor).addScaledVector(this.maskViewRight, Math.max(0.95, clearance));
+    }
+  }
+
+  /** Project a rigid surface's cached local box without scanning its vertices.
+   * Keeps both head profiles and their editable proportions clear of the mask. */
+  private maskProjectionEdge(mesh: THREE.Mesh, axis: THREE.Vector3, maximum: boolean): number {
+    const geometry = mesh.geometry;
+    if (!geometry.boundingBox) geometry.computeBoundingBox();
+    const box = geometry.boundingBox!;
+    mesh.updateWorldMatrix(true, false);
+    box.getCenter(this.maskBoundCenter).applyMatrix4(mesh.matrixWorld);
+    box.getSize(this.maskBoundSize).multiplyScalar(0.5);
+    const e = mesh.matrixWorld.elements, { x, y, z } = axis;
+    const radius = this.maskBoundSize.x * Math.abs(x * e[0] + y * e[1] + z * e[2]) +
+      this.maskBoundSize.y * Math.abs(x * e[4] + y * e[5] + z * e[6]) +
+      this.maskBoundSize.z * Math.abs(x * e[8] + y * e[9] + z * e[10]);
+    return this.maskBoundCenter.dot(axis) + (maximum ? radius : -radius);
   }
 
   private tailBodies_(): TailCollider[] {

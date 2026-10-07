@@ -240,7 +240,7 @@ try {
     'alternate head must remain a first-selection dynamic import');
   assert.match(playerSource, /setCharacterHeadStyle/);
   assert.match(playerSource, /socket-head-visual-center/);
-  assert.match(playerSource, /headLookSocket\.getWorldQuaternion/);
+  assert.match(playerSource, /headLookSocket\.getWorldDirection/);
   const finalOverlayIndex = playerSource.indexOf('this.playerAnimationBridge.applyOverlay(dt);');
   const finalAppearanceIndex = playerSource.indexOf(
     'this.syncCharacterAppearance(',

@@ -1046,6 +1046,7 @@ function drawPrimaryScene(
   preCrtOverlay?: CoastPostPreCrtOverlay,
 ): void {
   if(renderer.getContext().isContextLost())return;
+  player.prepareMaskPresentation();
   updateSceneryForCurrentView();
   if (!preCrtOverlay) gameInterface.setComposited(false);
   configureCoastPost(
@@ -5190,6 +5191,8 @@ function advanceFrame(nowMs: number): void {
   // main water draw and coast-only post chain below. In lite/split mode the
   // ocean's quality switch makes these hooks a cheap feature-disable path.
   if ((current.id !== "warproom" && !level.isCampaignMap) && split2p && p2) {
+    player.prepareMaskPresentation();
+    p2.prepareMaskPresentation();
     level.updateSceneryView(camera, camera2);
     const automaticWorldMatrices = prepareWorldFrame(scene);
     const shadowAutoUpdate = renderer.shadowMap.autoUpdate;
