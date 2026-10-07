@@ -262,6 +262,14 @@ for (const z of [-260, -277, -295, -316, -337, -355, -377]) for (const side of [
 for (const component of components) if (component.p[2] <= -248)
   component.p[2] -= TREEHOUSE_TRIALS_CAVE_EXTENSION_V2;
 
+// Two slow, readable encounters on the broad forest floor. These stations
+// already include the cave extension; the shared continuity pass moves them
+// with the trail. Keep river landings, checkpoints and the rope crossing free.
+add({ t: "enemy", foe: "moa", p: [X, -14, -150], range: 2.2, speed: 1.45,
+  nm: "Moa in the coastal forest", grp: GROUP.practice });
+add({ t: "enemy", foe: "moa", p: [X, -14, -264], range: 2.2, speed: 1.45,
+  nm: "Moa in the forest beyond the river", grp: GROUP.practice });
+
 // Reuse the complete source-owned opening, omitting the old rear matte that
 // would otherwise cut through the extended route at -185m.
 components.push(...TREEHOUSE_OPENING_COMPONENTS.filter(c => c.dkind !== "treehousemattefar").map(c => {

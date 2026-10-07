@@ -21,7 +21,7 @@ try {
   const { CONST } = await server.ssrLoadModule('/src/tuning.ts');
   assert.ok(normalizeCustomLevelData(structuredClone(data)), 'all source-owned components normalize');
   assert.equal(data.components.filter(c => c.t === 'gate').length, 1);
-  assert.ok(!data.components.some(c => c.t === 'enemy' || c.t === 'crate'), 'placement is deferred');
+  assert.ok(!data.components.some(c => c.t === 'crate'), 'ordinary crate placement is deferred');
   assert.ok(data.killY < -24, 'kill plane stays beneath descent and all visible beds');
   const scene = new THREE.Scene();
   level = new Level(scene, { id: 'treehouse-trail', name: data.name, data });

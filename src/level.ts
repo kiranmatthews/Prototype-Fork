@@ -12580,12 +12580,16 @@ export class Level {
     this.crate(0, 11.5, -428, "tnt");
     this.crystal(5.6, 11.5, -430);
     this.checkpoint(11.5, -396, 0);
+    // The broad level terrace leaves room to read and dodge the long peck.
+    this.enemy(-2.2, 2.2, 11.5, -439, 1.45, "x", "moa");
 
     // E. the run home: a spinner on the last straight, then the landing
     this.enemy(0, 0, 0.4, -470, 0, "x", "spinner");
     crateAt(-500, -1.8);
     crateAt(-500, 1.8);
     for (let i = 0; i < 5; i++) fruitAt(-508 - i * 2.6, 0, 1.5);
+    // This shallow stretch gives the long peck a level approach and clear sides.
+    this.enemy(gx(-512) - 1.5, gx(-512) + 1.5, gy(-512), -512, 1.45, "x", "moa");
     this.enemy(gx(-528) - 4, gx(-528) + 4, gy(-528), -528, 3.2, "x", "floater");
     crateAt(-542, 0, "bouncy");
     crateAt(-556, -1.5);
