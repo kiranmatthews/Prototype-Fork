@@ -1,0 +1,268 @@
+{
+  "production": {
+    "base": "http://127.0.0.1:5292/",
+    "evidence": [
+      {
+        "lite": true,
+        "spawn": {
+          "grounded": true,
+          "y": 0
+        },
+        "status": "ready",
+        "moa": [
+          2.066086125392708,
+          4.317285976409912,
+          3.229200644651531
+        ],
+        "skater": [
+          17.382851072794928,
+          2.6438789097440454,
+          40.3747631206638
+        ],
+        "position": [
+          14.866352255451652,
+          0,
+          -28
+        ],
+        "idle": {
+          "states": [
+            "patrol",
+            "idle",
+            "squawk"
+          ],
+          "audio": [
+            {
+              "duration": 1.14,
+              "state": "running",
+              "rate": 1.0256202220916748
+            }
+          ],
+          "frames": 369
+        },
+        "peck": {
+          "state": "peck",
+          "alive": true,
+          "masks": 0,
+          "audio": [
+            {
+              "duration": 0.22,
+              "state": "running",
+              "rate": 1.0139591693878174
+            }
+          ]
+        },
+        "defeated": {
+          "alive": false,
+          "state": "roast",
+          "roast": true,
+          "visible": true,
+          "flung": false,
+          "roastVisible": true,
+          "steam": 7
+        },
+        "cleared": {
+          "visible": false,
+          "roast": false
+        },
+        "respawn": {
+          "alive": true,
+          "attackEmpty": true,
+          "checkpoint": true,
+          "player": "ride"
+        },
+        "finish": {
+          "screen": null,
+          "events": {
+            "finish": 1,
+            "steam": 7
+          },
+          "stamp": "Codex/sol fork \u00b7 build 10-07 04:30 UTC"
+        }
+      },
+      {
+        "lite": false,
+        "spawn": {
+          "grounded": true,
+          "y": 0
+        },
+        "status": "ready",
+        "moa": [
+          2.066086125392708,
+          4.317285976409912,
+          3.229200644651531
+        ],
+        "skater": [
+          17.38373145396037,
+          2.6437963122192336,
+          40.37444188725958
+        ],
+        "position": [
+          14.866352255451652,
+          0,
+          -28
+        ],
+        "idle": {
+          "states": [
+            "patrol",
+            "idle",
+            "squawk"
+          ],
+          "audio": [
+            {
+              "duration": 1.14,
+              "state": "running",
+              "rate": 1.0094503164291382
+            }
+          ],
+          "frames": 369
+        },
+        "peck": {
+          "state": "peck",
+          "alive": true,
+          "masks": 0,
+          "audio": [
+            {
+              "duration": 0.22,
+              "state": "running",
+              "rate": 0.9832931160926819
+            }
+          ]
+        },
+        "defeated": {
+          "alive": false,
+          "state": "roast",
+          "roast": true,
+          "visible": true,
+          "flung": false,
+          "roastVisible": true,
+          "steam": 7
+        },
+        "cleared": {
+          "visible": false,
+          "roast": false
+        },
+        "respawn": {
+          "alive": true,
+          "attackEmpty": true,
+          "checkpoint": true,
+          "player": "ride"
+        },
+        "finish": {
+          "screen": null,
+          "events": {
+            "finish": 1,
+            "steam": 7
+          },
+          "stamp": "Codex/sol fork \u00b7 build 10-07 04:30 UTC"
+        }
+      }
+    ],
+    "errors": []
+  },
+  "motion": {
+    "rows": [
+      {
+        "view": "front",
+        "states": [
+          "patrol",
+          "idle",
+          "squawk",
+          "windup",
+          "peck",
+          "recover"
+        ],
+        "frames": 430,
+        "maxHeadStep": 0.7100158122417589
+      },
+      {
+        "view": "quarter",
+        "states": [
+          "patrol",
+          "idle",
+          "squawk",
+          "windup",
+          "peck",
+          "recover"
+        ],
+        "frames": 430,
+        "maxHeadStep": 0.7100158122417589
+      },
+      {
+        "view": "side",
+        "states": [
+          "patrol",
+          "idle",
+          "squawk",
+          "windup",
+          "peck",
+          "recover"
+        ],
+        "frames": 430,
+        "maxHeadStep": 0.7100158122417589
+      }
+    ],
+    "errors": []
+  },
+  "editor": {
+    "data": {
+      "editor": "ready",
+      "play": "ready",
+      "imported": "ready",
+      "component": {
+        "t": "enemy",
+        "p": [
+          0,
+          0.5,
+          -8
+        ],
+        "foe": "moa",
+        "range": 3,
+        "speed": 1.45
+      }
+    },
+    "errors": []
+  },
+  "prepared": {
+    "sourceReview": "Actual Meshy front/quarter/side/back/top inspected; original animation bind frames retained",
+    "moa": {
+      "file": "moa.glb",
+      "triangles": 7675,
+      "parts": {
+        "MoaMeshyBody": 7455,
+        "MoaMeshyJaw": 220
+      },
+      "bytes": 596276,
+      "sha256": "21845ce25abf8223730c86fe28a836d3d16620392ac6d5cba313feb7227b4ffe",
+      "joints": [
+        "torso",
+        "rump",
+        "head",
+        "jaw",
+        "footLeft",
+        "footRight",
+        "upperLeft",
+        "upperRight",
+        "lowerLeft",
+        "lowerRight",
+        "hockLeft",
+        "hockRight",
+        "browLeft",
+        "browRight",
+        "neck0",
+        "neck1",
+        "neck2",
+        "neck3",
+        "neck4",
+        "neck5",
+        "neck6",
+        "neck7"
+      ]
+    },
+    "chicken": {
+      "file": "moa-roast-chicken.glb",
+      "triangles": 2202,
+      "bytes": 123548,
+      "sha256": "fba2151c740e179152af76345fe8d06ca77ab05195d61950011173b38261fcad"
+    }
+  }
+}

@@ -6,5 +6,5 @@ export const ENEMY_NAMES:Readonly<Record<EnemyKind,string>>={
   hopper:'Spring Frog',floater:'Violet Watcher',sentry:'Ember Sentry',spinner:'Brass Whirler',moa:'Moa',
 };
 export function enemyThumbnail(kind:EnemyKind):string {
-  return `${import.meta.env.BASE_URL}enemies/icons/${kind}.png`;
+  return `${import.meta.env.BASE_URL}enemies/icons/${kind==='moa'?'moa-meshy':kind}.png`;
 }

@@ -38,8 +38,8 @@ const FILES: Record<string, string> = {
   tntCount: 'tnt-count.wav',
   tntCount2: 'tnt-count-2.wav',
   tntBoom: 'explosion.mp3', // the real nitro/TNT detonation
-  moaSquawk: 'moa-squawk.wav', // original two-part honking squawk
-  moaPeck: 'moa-peck.wav',
+  moaSquawk: 'moa-caw.wav', // CC0 crow recording fitted to the original two mouth beats
+  moaPeck: 'moa-caw-peck.wav',
   enemyDown: 'unsure.wav',
   fruitSpun: 'spin-away.wav', // spun a wumpa away instead of collecting it
   uberMusic: 'uber-music.mp3', // triple-mask invincibility theme

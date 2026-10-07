@@ -14,9 +14,9 @@ try{
  assert.deepEqual(thumbs.icons.map(row=>row.kind),[...ENEMY_KINDS]);
  for(const kind of ENEMY_KINDS){
   const model=models.enemies.find(row=>row.kind===kind),thumb=thumbs.icons.find(row=>row.kind===kind);
-  const png=await readFile(new URL(`../public/enemies/icons/${kind}.png`,import.meta.url));
+  const png=await readFile(new URL(`../public/enemies/icons/${thumb.file??kind+'.png'}`,import.meta.url));
   assert.equal(ENEMY_NAMES[kind],model.name);
-  if(model.provider==='Original procedural'){const source=await readFile(new URL('../'+model.source,import.meta.url));assert.equal(createHash('sha256').update(source).digest('hex'),model.sha256,'procedural model changed; regenerate thumbnail');}assert.ok(enemyThumbnail(kind).endsWith(`/enemies/icons/${kind}.png`));
+  if(model.provider==='Original procedural'){const source=await readFile(new URL('../'+model.source,import.meta.url));assert.equal(createHash('sha256').update(source).digest('hex'),model.sha256,'procedural model changed; regenerate thumbnail');}assert.ok(enemyThumbnail(kind).endsWith(`/enemies/icons/${thumb.file??kind+'.png'}`));
   assert.equal(png.readUInt32BE(16),256);assert.equal(png.readUInt32BE(20),256);
   assert.equal(thumb.modelSha256,model.sha256,'thumbnail source model changed; regenerate icons');
   assert.equal(thumb.pngSha256,createHash('sha256').update(png).digest('hex'));

@@ -1,9 +1,11 @@
 import * as THREE from 'three';
+import { moaPoseBindings } from './moaPoseBindings';
+import { mountMoaSkin } from './moaSkin';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { enemyElasticPulse, sampleEnemyElasticity } from './elasticity';
 import type { EnemyAnimationFrame, EnemyVisual, EnemyVisualDiagnostics } from './types';
 
-/** Original, code-authored wingless moa. All dimensions are metres; +Z is forward.
+/** Original motion controls with a fitted Meshy wingless moa surface. All dimensions are metres; +Z is forward.
  * Only individual surfaces deform: the actor, foot anchors and skeleton never scale. */
 export const MOA = { height: 4.25, stride: 1.8, stance: .62, windup: .62, peck: .36, recover: .9, squawk: 1.65 } as const;
 const TAU = Math.PI * 2;
@@ -12,7 +14,7 @@ const hump = (t:number,a:number,b:number) => t<=a||t>=b?0:Math.sin(Math.PI*(t-a)
 const v = (x:number,y:number,z:number) => new THREE.Vector3(x,y,z);
 const UP = v(0,1,0);
 
-export function createMoaVisual():EnemyVisual {
+export function createMoaVisual(sourceUrl?:string):EnemyVisual {
   const group=new THREE.Group();group.name='Enemy_moa';
   const body=new THREE.Group();body.name='Moa_Pose';group.add(body);
   const materials:THREE.Material[]=[],geometries:THREE.BufferGeometry[]=[];
@@ -94,6 +96,7 @@ export function createMoaVisual():EnemyVisual {
   });
   const attackTip=new THREE.Object3D();attackTip.name='Moa_BeakTip';attackTip.position.set(0,-.08,.83);head.add(attackTip);
   let phase=0,moveWeight=0,stepWeight=0,deathTime=0,disposed=false;
+  let surface:ReturnType<typeof mountMoaSkin>|undefined;
   const diagnostic:EnemyVisualDiagnostics={kind:'moa',status:'ready',url:'code:moa',clips:['High step','Peck','Idle squawk'],activeClip:'High step',mappedNodes:{torso:torso.name,head:head.name,jaw:jaw.name,frontFootLeft:legs[0].foot.name,frontFootRight:legs[1].foot.name},skinnedMeshes:0,meshes:0,animationTime:0,gaitPhase:0,state:'patrol'};
   group.userData.enemyVisual=diagnostic;
   group.traverse(o=>{if((o as THREE.Mesh).isMesh)diagnostic.meshes++;});
@@ -167,12 +170,18 @@ export function createMoaVisual():EnemyVisual {
     diagnostic.animationTime+=dt;diagnostic.gaitPhase=phase;diagnostic.state=f.state;
     diagnostic.activeClip=f.state==='squawk'?'Idle squawk':['windup','peck','recover'].includes(f.state)?'Peck':moving?'High step':'Idle';
     group.updateMatrixWorld(true);
+    surface?.update(dt,f);
   }
   function reset(){phase=moveWeight=stepWeight=deathTime=0;diagnostic.animationTime=0;update(0,idle);}
   reset();
-  return {group,body,ready:Promise.resolve(),diagnostics:diagnostic,update,reset,
+  // Retain the exact control transforms as the animation driver, hiding their
+  // former helper surfaces. Every visible living/cooked surface is Meshy art.
+  body.traverse(o=>{if((o as THREE.Mesh).isMesh)o.visible=false;});
+  surface=mountMoaSkin(body,moaPoseBindings(body),diagnostic,sourceUrl);
+  update(0,idle);
+  return {group,body,ready:surface.ready,diagnostics:diagnostic,update,reset,
     getMuzzlePosition:()=>false,
     getAttackPosition(target){if(disposed)return false;attackTip.getWorldPosition(target);return true;},
-    dispose(){if(disposed)return;disposed=true;group.removeFromParent();group.clear();for(const g of geometries)g.dispose();for(const m of materials)m.dispose();diagnostic.status='disposed';},
+    dispose(){if(disposed)return;disposed=true;surface?.dispose();group.removeFromParent();group.clear();for(const g of geometries)g.dispose();for(const m of materials)m.dispose();diagnostic.status='disposed';},
   };
 }

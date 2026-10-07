@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "provider": "Meshy",
+  "model": "meshy-t2",
+  "modelType": "smart-topology",
+  "budgetCredits": 60,
+  "tasks": {
+    "moa": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "a505c48c-f4a2-44f5-9f6d-5cd6ae71bc9d",
+      "createdAt": "2026-10-07T03:44:59.421869+00:00",
+      "estimatedCredits": 15,
+      "reference": "tools/moa-assets/references/moa.png",
+      "referenceSha256": "cb318c1a45735c861e86373e74b0333e076a7041cd47503bbd4124e7cf4d63c0",
+      "id": "01a11476-eb29-7375-b117-815016e9951f",
+      "checkedAt": "2026-10-07T03:47:17.041071+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791344723379,
+      "expiresAt": 1791603923379,
+      "downloads": [
+        {
+          "path": ".img2threejs/moa/moa/downloads/model.glb",
+          "bytes": 2802480,
+          "sha256": "e45899af891851b4a776381abbc7b86196d6f070c7df87237c5fa9c0302591a7"
+        }
+      ]
+    },
+    "roast-chicken": {
+      "resource": "image-to-3d",
+      "state": "SUCCEEDED",
+      "operationId": "a5763c3b-4461-4a53-a5a2-f9b7d8d166f2",
+      "createdAt": "2026-10-07T03:45:05.475921+00:00",
+      "estimatedCredits": 15,
+      "reference": "tools/moa-assets/references/roast-chicken.png",
+      "referenceSha256": "966b980fe3e1cef286c77bb4e4c5f7e709a098c98f73591053a90ffb7988566b",
+      "id": "01a11477-0321-7152-9942-9657e3a31e6f",
+      "checkedAt": "2026-10-07T03:47:18.935719+00:00",
+      "progress": 100,
+      "consumedCredits": 15,
+      "finishedAt": 1791344732365,
+      "expiresAt": 1791603932365,
+      "downloads": [
+        {
+          "path": ".img2threejs/moa/roast-chicken/downloads/model.glb",
+          "bytes": 2609396,
+          "sha256": "39df9b83e1288e67cbda835beb3d168ab8017c48478ad548edbbf5d4fd8e57f5"
+        }
+      ]
+    }
+  }
+}

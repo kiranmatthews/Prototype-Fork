@@ -59,8 +59,9 @@
     },
     {
       "kind": "moa",
-      "modelSha256": "7e4822a74fd1dc3f1cb666195ebec0d9ec70913bc11248b159eac73aa3c8fae5",
-      "pngSha256": "b6950fc636a6e73692bf2917e0e3e8f8a0f90dd97b77e86e5ace99dcdc2407ce",
+      "file": "moa-meshy.png",
+      "modelSha256": "21845ce25abf8223730c86fe28a836d3d16620392ac6d5cba313feb7227b4ffe",
+      "pngSha256": "561fb87369e38d799ad5e2d04964854de7270b4f4f9af6f25aad9686be003949",
       "width": 256,
       "height": 256
     }

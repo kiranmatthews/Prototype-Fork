@@ -212,6 +212,7 @@ export interface Enemy {
   group: THREE.Group;
   box: THREE.Box3;
   attackBox?: THREE.Box3; // articulated moa bill; empty outside the strike
+  roast?: { box: THREE.Box3; lastSpin?: object }; // harmless cooked moa; a new spin clears it
   alive: boolean;
   x0: number; // patrol bounds — x for corridor levels, z for side-scroll levels
   x1: number;
@@ -9621,12 +9622,26 @@ export class Level {
     return b;
   }
 
-  killEnemy(enemy: Enemy, fling?: THREE.Vector3): void {
+  killEnemy(enemy: Enemy, fling?: THREE.Vector3, spinToken?: object): void {
+    if(enemy.kind === "moa" && !enemy.alive)return;
     enemy.alive = false;
     enemy.attackBox?.makeEmpty();
     // A defeated turret is no longer a visible/legible source. Its already-
     // fired orange orbs must not keep attacking from nowhere for 3.4 seconds.
     this.clearProjectilesFrom(enemy);
+    if (enemy.kind === "moa") {
+      enemy.state = "roast"; enemy.stateT = 0;
+      enemy.defeatedT = enemy.flungT = undefined; enemy.flungVel = undefined;
+      enemy.touchHurt = false; enemy.box.makeEmpty();
+      enemy.group.rotation.x = enemy.group.rotation.z = 0;
+      const ep = enemy.group.position;
+      enemy.roast = { box: new THREE.Box3().setFromCenterAndSize(
+        new THREE.Vector3(ep.x, ep.y + .46, ep.z), new THREE.Vector3(1.55, .94, 1.6)), lastSpin: spinToken };
+      this.updateEnemyVisual(enemy, 0, 0);
+      puffs.burst("enemyPoof", ep.x, ep.y + .5, ep.z, {});
+      sfx.play("enemyDown", .7, .9);
+      return;
+    }
     if (fling) {
       // ping away instead of popping; update() flies it into whatever lines up
       enemy.flungVel = fling.clone();
@@ -9641,6 +9656,15 @@ export class Level {
       enemy.defeatedT = 0;
       sfx.play("enemyDown", 0.7);
     }
+  }
+
+  /** The roast is presentation-only loot: no damage, auto-collection or second score. */
+  clearMoaRoast(enemy: Enemy): void {
+    if (enemy.alive || !enemy.roast) return;
+    enemy.roast = undefined; enemy.state = "removed"; enemy.group.visible = false;
+    const ep = enemy.group.position;
+    puffs.burst("enemyPoof", ep.x, ep.y + .4, ep.z, {});
+    sfx.play("fruitSpun", .6, 1.15);
   }
 
   // Broken (spun/stomped) like a normal box; banks the respawn point and a
@@ -18346,6 +18370,7 @@ export class Level {
     e.group.rotation.set(0, 0, 0);
     e.group.scale.setScalar(1);
     e.defeatedT = undefined;
+    e.roast = undefined;
     e.attackBox?.makeEmpty();
     e.visual.reset();
     e.spinKill = e.stompKill = e.meleeKill = e.touchHurt = true;
@@ -18401,6 +18426,7 @@ export class Level {
     for (const e of this.enemies) {
       if (!e.alive) {
         if (!e.group.visible) continue; // finite defeat has finished; no hidden rig work
+        if (e.roast) e.stateT += dt;
         this.updateEnemyVisual(e, dt, 0);
         if (e.defeatedT !== undefined) {
           e.defeatedT += dt;
