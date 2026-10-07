@@ -177,6 +177,15 @@ assert.equal(tc.moveY, 1); assert.equal(tc.grabHeld, false); document.body.class
 button('x', 2); up(2); document.body.classList.add('side-panel-right-open'); tc.syncAvailability();
 assert.equal(tc.consumeButtonPress('x'), false); assert.equal(tc.consumeJumpRelease(), false);
 document.body.classList.remove('side-panel-right-open'); reset();
+// A saved open side panel is not an obstruction while M hides developer chrome.
+for(const name of ['side-panel-left-open','side-panel-right-open','game-debug-hidden'])document.body.classList.add(name);
+observers.forEach(f=>f());down(left,1,50,0);button('o',2);
+assert.equal(tc.moveY,1,'hidden saved panel disabled the movement pad');
+assert.equal(tc.grabHeld,true,'hidden saved panel disabled action buttons');
+assert.equal(tc.lookBlocked(),false);assert.equal(tc.pauseBlocked(),false);
+document.body.classList.remove('game-debug-hidden');observers.forEach(f=>f());neutral();
+for(const name of ['side-panel-left-open','side-panel-right-open'])document.body.classList.remove(name);
+reset();
 down(left, 1, 50, 0); window.emit('resize'); assert.equal(tc.moveY, 1, 'identical resize cancels a held finger');
 window.innerWidth = 844; window.innerHeight = 390; window.emit('resize'); neutral();
 down(left, 1, 50, 0); button('o', 2); tc.setMapMode(true); neutral(); tc.setMapMode(false);

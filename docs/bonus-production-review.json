@@ -70,6 +70,12 @@
       "countRight": 205.193,
       "jumpLeft": 210.16,
       "clearancePx": 4.967
+    },
+    "savedPanelRegression": {
+      "state": "side-panel-left-open game-debug-hidden",
+      "leftPadDisplay": "block",
+      "pauseDisplay": "flex",
+      "verifiedBy": "Open MENU through M, then hide chrome through M without clearing the saved panel state"
     }
   },
   "evidence": [

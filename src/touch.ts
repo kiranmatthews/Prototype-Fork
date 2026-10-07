@@ -401,8 +401,12 @@ export class TouchControls {
       body.contains('game-field-studio-open');
   }
 
-  private padBlocked(): boolean { return this.controlsBlocked() || document.body.classList.contains('side-panel-left-open'); }
-  private buttonsBlocked(): boolean { return this.controlsBlocked() || document.body.classList.contains('side-panel-right-open'); }
+  private sidePanelVisible(side: 'left' | 'right'): boolean {
+    const body=document.body.classList;
+    return !body.contains('game-debug-hidden') && body.contains(`side-panel-${side}-open`);
+  }
+  private padBlocked(): boolean { return this.controlsBlocked() || this.sidePanelVisible('left'); }
+  private buttonsBlocked(): boolean { return this.controlsBlocked() || this.sidePanelVisible('right'); }
   private pauseBlocked(): boolean { return this.controlsBlocked() || this.lookBlocked(); }
   private ownsPointer(id: number): boolean {
     return id === this.padPointer || id === this.lookPointer || id === this.pausePointer ||
@@ -496,8 +500,8 @@ export class TouchControls {
       body.contains('character-lab-open') ||
       body.contains('animation-studio-open') ||
       body.contains('game-field-studio-open') ||
-      body.contains('side-panel-left-open') ||
-      body.contains('side-panel-right-open')
+      this.sidePanelVisible('left') ||
+      this.sidePanelVisible('right')
     );
   }
 
@@ -868,10 +872,10 @@ export class TouchControls {
       body.character-lab-open .tc-look,
       body.animation-studio-open .tc-look,
       body.game-field-studio-open .tc-look,
-      body.side-panel-left-open .tc-look,
-      body.side-panel-right-open .tc-look,
-      body.side-panel-left-open .tc-pause,
-      body.side-panel-right-open .tc-pause { display: none !important; }
+      body.side-panel-left-open:not(.game-debug-hidden) .tc-look,
+      body.side-panel-right-open:not(.game-debug-hidden) .tc-look,
+      body.side-panel-left-open:not(.game-debug-hidden) .tc-pause,
+      body.side-panel-right-open:not(.game-debug-hidden) .tc-pause { display: none !important; }
       .tc-left { left: 0; width: 50vw; height: 52%; }
       .tc-right { right: 0; width: 50vw; height: max(62%, calc(var(--tc-size) + var(--tc-bottom-edge) + 62px)); }
       /* the two groups: identical footprint, identical height, identical
@@ -1037,8 +1041,8 @@ export class TouchControls {
       body.tc-on.tool-panel-open .tc-zone {
         display: none !important;
       }
-      body.tc-on.side-panel-left-open .tc-left,
-      body.tc-on.side-panel-right-open .tc-right {
+      body.tc-on.side-panel-left-open:not(.game-debug-hidden) .tc-left,
+      body.tc-on.side-panel-right-open:not(.game-debug-hidden) .tc-right {
         display: none !important;
       }
 
