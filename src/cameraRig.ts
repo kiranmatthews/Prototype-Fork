@@ -4,9 +4,9 @@ interface FallCameraSubject {
   renderPosition: { y: number };
   renderSnapVersion: number;
   groundBelowY: number | null;
+  groundBelowIsFatal?: boolean;
   grounded: boolean;
   state: string;
-  vVel: number;
 }
 
 /** Keep the complete last shot once a missed landing falls below the course.
@@ -22,13 +22,13 @@ export class CameraFallHold {
     const y = subject.renderPosition.y;
     const floor = subject.groundBelowY;
     // A floor below the death plane cannot catch this fall.
-    const landing = floor !== null && Number.isFinite(floor) && floor > killY;
+    const landing = floor !== null && Number.isFinite(floor) && floor > killY && !subject.groundBelowIsFatal;
     if (subject.renderSnapVersion !== this.snapVersion) {
       this.snapVersion = subject.renderSnapVersion;
       this.edgeY = landing ? Math.min(y, floor) : y;
       return false;
     }
-    if (subject.grounded || ['grind', 'rope', 'hang', 'swim', 'finished'].includes(subject.state)) {
+    if ((subject.grounded && !subject.groundBelowIsFatal) || ['grind', 'rope', 'hang', 'swim', 'finished'].includes(subject.state)) {
       this.edgeY = y;
       return false;
     }
@@ -36,9 +36,10 @@ export class CameraFallHold {
       this.edgeY = Math.min(y, floor);
       return false;
     }
-    // Leave jumps and upward rescue attempts responsive. A small sole-height
-    // tolerance prevents interpolation/contact noise from freezing at a lip.
-    return subject.vVel <= 0 && y < this.edgeY - .2;
+    // A rescue jump below the lip must not pull the camera underground either;
+    // resume once the rider regains the course height or a real landing.
+    // The sole-height tolerance ignores interpolation/contact noise at a lip.
+    return y < this.edgeY - .2;
   }
 }
 

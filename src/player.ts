@@ -1438,6 +1438,7 @@ export class Player {
   // read as one continuous curve instead of a stack of facets.
   private rideNormal = new THREE.Vector3(0, 1, 0);
   private shadowGroundY: number | null = null; // long-range floor probe for the blob shadow
+  private shadowGroundIsFatal = false;
   private lastGroundY = 0; // most recent real floor level — the landing X hovers here over a pit
   private groundHit: GroundHit | null = null;
   private loopRide: { mesh: THREE.Object3D; shape: LoopShape; angle: number; lateral: number; recovering: boolean } | null = null;
@@ -1793,6 +1794,9 @@ export class Player {
   get groundBelowY(): number | null {
     return this.shadowGroundY;
   }
+
+  /** A visible floor can still sit inside a pit or be a reset-only surface. */
+  get groundBelowIsFatal(): boolean { return this.shadowGroundIsFatal; }
 
   // CHASE CAM: is the current travel a real heading — flat-ish ground or a
   // grind — rather than cross-pipe oscillation or an air the camera should
@@ -15787,6 +15791,7 @@ export class Player {
     this.raycaster.far = 120;
     const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
     let groundY: number | null = null;
+    let fatal = false;
     for (const hit of hits) {
       const pipe = hit.object.userData.halfpipe as Halfpipe | undefined;
       if (
@@ -15798,6 +15803,7 @@ export class Player {
       )
         continue;
       groundY = hit.point.y;
+      fatal = hit.object.userData.lethal === true || hit.object.userData.outOfBounds === true;
       break;
     }
     if (!includeCrates) return groundY;
@@ -15810,6 +15816,16 @@ export class Player {
         || (groundY !== null && top <= groundY)
         || !this.crateLidOverlapsSole(crate.box, this.pos.x, this.pos.z)) continue;
       groundY = top;
+      fatal = false; // a live crate lid above the hazardous floor can catch us
+    }
+    this.shadowGroundIsFatal = fatal;
+    if (groundY !== null && !fatal) for (const pit of level.pitBoxes) {
+      if (pit.max.y < groundY || pit.min.y > this.pos.y ||
+          this.pos.x < pit.min.x || this.pos.x > pit.max.x ||
+          this.pos.z < pit.min.z || this.pos.z > pit.max.z ||
+          level.pitMissesPoly(pit, this.pos.x, this.pos.z)) continue;
+      this.shadowGroundIsFatal = true;
+      break;
     }
     return groundY;
   }

@@ -8,6 +8,7 @@ const output = process.env.CAMERA_FALL_OUTPUT || '/private/tmp/camera-fall-revie
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ headless: true, channel: 'chrome' });
 const errors = [], reports = [];
+const modes = process.env.CAMERA_FALL_MODES?.split(',') || ['corridor', 'partial-follow', 'full-follow', 'chase', 'authored', 'split', 'lethal-floor'];
 try {
   for (const lite of [true, false]) {
     const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
@@ -18,7 +19,7 @@ try {
     await page.waitForFunction(() => window.__game && !window.__game.gameFlow.blocksGameplay, null, { timeout: 120000 });
     const stamp = await page.locator('.hud-build').textContent();
     assert.match(stamp, /Codex\/sol fork/);
-    for (const mode of ['corridor', 'partial-follow', 'full-follow', 'chase', 'authored', 'split']) {
+    for (const mode of modes) {
       await page.evaluate(mode => {
         const g = window.__game;
         g.set2P(false); g.gameFlow.hide();
@@ -32,6 +33,9 @@ try {
         if (mode === 'authored') data.components.push({ t: 'camnode', cameraView: true,
           p: [0, 0, 0], s: [120, 160, 120], yaw: 0, radius: 2,
           cameraPosition: [0, 16, 14], cameraTarget: [0, 9, 0], cameraFollowDistance: 10 });
+        if (mode === 'lethal-floor') data.components.push(
+          { t: 'platform', p: [0, -20.5, 0], s: [200, 1, 80] },
+          { t: 'pit', p: [0, -19.6, 0], s: [200, 1, 80], invisible: true });
         const id = g.saveUserLevel({ id: '', name: data.name, data });
         if (!id || !g.switchLevel(id)) throw Error('Could not load isolated fall fixture');
         g.gameFlow.hide(); g.TUNING.chaseCam = mode === 'chase' ? 1 : 0;
@@ -45,7 +49,7 @@ try {
           initialSnap: p.renderSnapVersion, lower: false };
         p.step = (dt, input, level) => {
           // Use the normal charged jump to clear the protective teeter catch.
-          if (state.jumpAge < 0 && state.direction && Math.abs(p.pos.x) > 3) state.jumpAge = 0;
+          if (state.jumpAge < 0 && state.direction && Math.abs(p.pos.x) > 1) state.jumpAge = 0;
           const charging = state.jumpAge >= 0 && state.jumpAge < .5;
           if (charging) state.jumpAge += dt;
           native(dt, { ...neutral, moveX: state.direction,
@@ -54,6 +58,7 @@ try {
         const place = () => {
           p.respawn(level, true, true, { position: p.pos.clone().set(0, 8.05, 0), heading: p.pos.clone().set(0, 0, -1) });
           p.lives = 5; p.freeSkate = true; p.speed = 0;
+          if (mode === 'lethal-floor') { p.masks = 0; p.invulnTimer = 4; }
           state.jumpAge = -1;
           state.initialSnap = p.renderSnapVersion;
         };
@@ -63,8 +68,8 @@ try {
         const sample = () => {
           if (!state.active) return;
           const c = p.cam;
-          state.samples.push({ y: p.pos.y, x: p.pos.x, grounded: p.grounded, state: p.state,
-            floor: p.groundBelowY, snap: p.renderSnapVersion, eye: c.position.toArray(),
+          state.samples.push({ y: p.pos.y, x: p.pos.x, vVel: p.vVel, grounded: p.grounded, state: p.state,
+            floor: p.groundBelowY, fatalFloor: p.groundBelowIsFatal, snap: p.renderSnapVersion, eye: c.position.toArray(),
             rotation: c.quaternion.toArray(), fov: c.fov });
           if (p.state === 'dead') { state.deaths++; state.direction = 0; }
           if (state.deaths && p.state !== 'dead' && p.renderSnapVersion !== state.initialSnap) state.respawned = true;
@@ -86,9 +91,11 @@ try {
         return result;
       });
       const falling = result.samples.filter(s => s.state === 'air' && s.y < 7.5);
-      assert.ok(falling.length > 15 && falling.at(-1).y < -25, `${mode}: did not exercise a deep fall`);
+      await writeFile(`${output}/last-case.json`, JSON.stringify({ mode, ...result }, null, 2));
+      assert.ok(falling.length > 15 && falling.at(-1).y < (mode === 'lethal-floor' ? -15 : -25), `${mode}: did not exercise a deep fall`);
       const shot = falling[0];
-      for (const sample of falling) {
+      if (mode === 'lethal-floor') assert.ok(shot.floor > -35 && shot.fatalFloor, 'fixture must see solid scenery above killY inside the pit');
+      for (const sample of result.samples.filter(s => s.snap === shot.snap && s.y < 7.5)) {
         assert.deepEqual(sample.eye, shot.eye, `${mode}: camera moved down the void`);
         assert.deepEqual(sample.rotation, shot.rotation, `${mode}: camera aimed after the falling body`);
         assert.equal(sample.fov, shot.fov, `${mode}: held lens drifted`);
@@ -96,6 +103,8 @@ try {
       assert.ok(shot.eye[1] > 8, `${mode}: held shot is below the floor`);
       assert.ok(result.respawn.grounded && Math.abs(result.respawn.y - 8) < .1);
       assert.ok(result.respawn.eye[1] > 8, `${mode}: respawn camera stayed underground`);
+      if (mode === 'lethal-floor') assert.ok(result.samples.some(s => s.y < 0 && s.grounded && s.state === 'ride'),
+        'hazard case must hold through temporary protection on the pit floor');
       // Walk off the other side onto the lower shelf. It is a real landing,
       // so the camera must descend and regain support without a death.
       await page.waitForFunction(() => window.__fallProbe.p.grounded);

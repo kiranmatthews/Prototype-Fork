@@ -33,9 +33,18 @@ try {
     assert.equal(fall.shouldHold(rider, -30), true, 'void fall followed beneath the ledge');
   }
   rider.vVel = 8;
-  assert.equal(fall.shouldHold(rider, -30), false, 'upward rescue did not release the hold');
+  assert.equal(fall.shouldHold(rider, -30), true, 'rescue below the course pulled the camera underground');
+  rider.renderPosition.y = 12;
+  assert.equal(fall.shouldHold(rider, -30), false, 'rescue back to course height did not release the hold');
+  rider.renderPosition.y = -20;
   rider.vVel = -8;
   rider.groundBelowY = -25;
+  rider.groundBelowIsFatal = true;
+  assert.equal(fall.shouldHold(rider, -30), true, 'pit scenery was mistaken for a safe landing');
+  rider.grounded = true;
+  assert.equal(fall.shouldHold(rider, -30), true, 'temporary protection on a pit floor released the hold');
+  rider.grounded = false;
+  rider.groundBelowIsFatal = false;
   assert.equal(fall.shouldHold(rider, -30), false, 'reachable lower landing was held');
   rider.groundBelowY = -30;
   assert.equal(fall.shouldHold(rider, -30), false, 'shot should follow until the last real landing height');

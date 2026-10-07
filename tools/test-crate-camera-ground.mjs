@@ -112,6 +112,35 @@ try{
  level.crates.push(overhead);
  assert.equal(p.queryShadowGround(level,true),8.4,'overhead box displaced the standing support');
  level.crates.pop();
+ // Camera safety uses the same floor measurement, including exact polygon
+ // pits, while a real crate lid above a lethal surface remains a landing.
+ const pit=new THREE.Box3(new THREE.Vector3(p.pos.x-1,8.3,p.pos.z-1),new THREE.Vector3(p.pos.x+1,8.9,p.pos.z+1));
+ level.pitBoxes.push(pit);
+ assert.equal(p.queryShadowGround(level,true),8.4);
+ assert.equal(p.groundBelowIsFatal,true,'solid floor inside a pit was treated as a safe landing');
+ p.queryShadowGround(level,false);
+ assert.equal(p.groundBelowIsFatal,true,'physics-only probe changed camera safety');
+ level.pitPolyByBox.set(pit,{cx:p.pos.x,cz:p.pos.z,pts:[[.3,.3],[.9,.3],[.3,.9]]});
+ p.queryShadowGround(level,true);
+ assert.equal(p.groundBelowIsFatal,false,'empty corner of a polygon pit was treated as lethal');
+ level.pitPolyByBox.set(pit,{cx:p.pos.x,cz:p.pos.z,pts:[[-1,-1],[1,-1],[0,1]]});
+ p.queryShadowGround(level,true);
+ assert.equal(p.groundBelowIsFatal,true,'actual polygon pit was missed');
+ pit.min.y=7;pit.max.y=8;
+ p.queryShadowGround(level,true);
+ assert.equal(p.groundBelowIsFatal,false,'crate above a pit lost its safe landing');
+ level.pitPolyByBox.delete(pit);level.pitBoxes.pop();
+ const flags=level.groundMeshes.map(mesh=>({mesh,lethal:mesh.userData.lethal,outOfBounds:mesh.userData.outOfBounds}));
+ for(const flag of ['lethal','outOfBounds']){
+  for(const row of flags)row.mesh.userData[flag]=true;
+  p.queryShadowGround(level,true);assert.equal(p.groundBelowIsFatal,false,'crate lid inherited lower terrain hazard');
+  for(const row of saved)row.crate.alive=false;
+  p.queryShadowGround(level,true);assert.equal(p.groundBelowIsFatal,true,`${flag} surface counted as a landing`);
+  restore();
+  for(const row of flags){if(row[flag]===undefined)delete row.mesh.userData[flag];else row.mesh.userData[flag]=row[flag];}
+ }
+ p.queryShadowGround(level,true);
+ assert.equal(p.groundBelowIsFatal,false,'safe landing retained old hazard classification');
  const playerSource=await readFile(new URL('../src/player.ts',import.meta.url),'utf8');
  assert.match(playerSource,/const belowY = this\.queryShadowGround\(level, false\);/,'teeter no longer explicitly requests its original terrain-only probe');
  assert.equal((playerSource.match(/this\.shadowGroundY = this\.queryShadowGround\(level, true\);/g)??[]).length,2);
