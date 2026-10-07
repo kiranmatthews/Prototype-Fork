@@ -1,14 +1,25 @@
 {
   "sourceReview": "Actual Meshy front/quarter/side/back/top inspected; original animation bind frames retained",
   "moa": {
-    "file": "moa.glb",
-    "triangles": 7675,
+    "file": "moa-clean.glb",
+    "surface": {
+      "vertexColourFaces": 5438,
+      "paintedFaces": 2083,
+      "faceAtlasSize": 1024,
+      "atlasPaddingPixels": 12,
+      "sourceTextureSize": [
+        2048,
+        2048
+      ],
+      "chickenChanged": false
+    },
+    "triangles": 7672,
     "parts": {
       "MoaMeshyBody": 7455,
-      "MoaMeshyJaw": 220
+      "MoaMeshyJaw": 217
     },
-    "bytes": 596276,
-    "sha256": "21845ce25abf8223730c86fe28a836d3d16620392ac6d5cba313feb7227b4ffe",
+    "bytes": 1794572,
+    "sha256": "816b2af4c6be51a2052c44c7d833a36f66ba3521b4f2093584c04d38dcc64df8",
     "joints": [
       "torso",
       "rump",

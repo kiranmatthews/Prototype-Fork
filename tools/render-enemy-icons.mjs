@@ -43,8 +43,8 @@ try{
   for(const image of images){
     const bytes=Buffer.from(image.png.split(',')[1],'base64');
     assert.ok(bytes.length>3000,'model thumbnail must contain rendered artwork');
-    await writeFile(new URL(`${image.kind==='moa'?'moa-meshy':image.kind}.png`,output),bytes);
-    rows.push({kind:image.kind,...(image.kind==='moa'?{file:'moa-meshy.png'}:{}),modelSha256:manifest.enemies.find(e=>e.kind===image.kind).sha256,
+    await writeFile(new URL(`${image.kind==='moa'?'moa-clean':image.kind}.png`,output),bytes);
+    rows.push({kind:image.kind,...(image.kind==='moa'?{file:'moa-clean.png'}:{}),modelSha256:manifest.enemies.find(e=>e.kind===image.kind).sha256,
       pngSha256:createHash('sha256').update(bytes).digest('hex'),width:256,height:256});
   }
   rows.sort((a,b)=>manifest.enemies.findIndex(e=>e.kind===a.kind)-manifest.enemies.findIndex(e=>e.kind===b.kind));

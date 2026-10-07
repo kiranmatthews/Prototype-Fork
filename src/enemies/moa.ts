@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { moaPoseBindings } from './moaPoseBindings';
 import { mountMoaSkin } from './moaSkin';
+import { sampleMoaBounce } from './moaBounce';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { enemyElasticPulse, sampleEnemyElasticity } from './elasticity';
 import type { EnemyAnimationFrame, EnemyVisual, EnemyVisualDiagnostics } from './types';
@@ -121,22 +122,25 @@ export function createMoaVisual(sourceUrl?:string):EnemyVisual {
     const inhale=f.state==='squawk'?hump(p,0,.42):0;
     const planted={frontLeft:!moving||phase<MOA.stance,frontRight:!moving||(phase+.5)%1<MOA.stance};
     const elastic=sampleEnemyElasticity('moa',f,phase,planted,deathTime);
+    const bounce=sampleMoaBounce(f,phase,moveWeight,elastic.torso,MOA);
     const sway=Math.sin(phase*TAU)*moveWeight;
     const bob=(1-Math.cos(phase*TAU*2))*.065*moveWeight;
-    torso.position.set(sway*.11,2.23+bob-wind*.18-strike*.23,0);
-    torso.rotation.set(-.08+wind*.14+strike*.22,0,-sway*.09);
-    torsoSurface.scale.set(1/Math.sqrt(elastic.torso),elastic.torso,1/Math.sqrt(elastic.torso));
-    rump.rotation.x=-sway*.13+recoil*.1;
-    const neckBase=v(sway*.06,2.8+bob-wind*.15,.53);
+    torso.position.set(sway*.11,2.23+bob-wind*.18-strike*.23+bounce.bodyY,bounce.bodyZ);
+    torso.rotation.set(-.08+wind*.14+strike*.22+bounce.bodyPitch,0,-sway*.09);
+    torsoSurface.scale.set(1/Math.sqrt(bounce.torso*bounce.forward),bounce.torso,Math.sqrt(bounce.forward/bounce.torso));
+    rump.rotation.x=-sway*.13+recoil*.1+bounce.tail;
+    const neckBase=v(sway*.06,2.8+bob-wind*.15+bounce.bodyY*.8,.53+bounce.bodyZ);
     const headAt=v(-sway*.1,3.96+bob+wind*.11-strike*2.68+call*.2-inhale*.16, .96-wind*.48+strike*1.52);
-    head.position.copy(headAt);head.rotation.set(-wind*.26+strike*.53-call*.63,f.alive?Math.sin(f.time*1.1)*.07*(1-strike):0,sway*.08+call*.1*Math.sin(p*43));
-    const neckPoints=[neckBase,v(sway*.08,3.19+bob-wind*.28-strike*.61,.28+strike*.76),
-      v(-sway*.06,3.63+bob-wind*.08-strike*1.87,.51+strike*1.3),headAt];
+    headAt.y+=bounce.headY;headAt.z+=bounce.headZ;
+    head.scale.set(1/Math.sqrt(bounce.headScale),bounce.headScale,1/Math.sqrt(bounce.headScale));
+    head.position.copy(headAt);head.rotation.set(-wind*.26+strike*.53-call*.63+bounce.headPitch,f.alive?Math.sin(f.time*1.1)*.07*(1-strike):0,sway*.08+call*.1*Math.sin(p*43));
+    const neckPoints=[neckBase,v(sway*.08,3.19+bob-wind*.28-strike*.61+bounce.bodyY*.55,.28+strike*.76+bounce.bodyZ*.65),
+      v(-sway*.06,3.63+bob-wind*.08-strike*1.87+bounce.headY*.6,.51+strike*1.3+bounce.headZ*.6),headAt];
     const curve=new THREE.CatmullRomCurve3(neckPoints),centre=new THREE.Vector3(),tangent=new THREE.Vector3(),side=new THREE.Vector3(),normal=new THREE.Vector3();
     for(let j=0;j<=rings;j++){
       const u=j/rings;curve.getPoint(u,centre);curve.getTangent(u,tangent);
       side.crossVectors(v(1,0,0),tangent).normalize();normal.crossVectors(tangent,side).normalize();
-      const radius=(.27-.115*u)*(1+inhale*.12-call*.055)/Math.sqrt(elastic.torso);
+      const radius=(.27-.115*u)*(1+inhale*.12-call*.055)*bounce.neckWidth/Math.sqrt(bounce.torso);
       for(let k=0;k<=sides;k++){
         const a=k/sides*TAU,index=(j*(sides+1)+k)*3;
         neckPositions[index]=centre.x+radius*(Math.cos(a)*side.x+Math.sin(a)*normal.x);
@@ -157,7 +161,7 @@ export function createMoaVisual(sourceUrl?:string):EnemyVisual {
       leg.foot.position.set(leg.side*(.49+(stance?0:Math.sin(Math.PI*t)*.14*stepWeight)),lift,footZ);
       leg.foot.rotation.set(stance?0:-.42*Math.sin(Math.PI*t)*moveWeight,leg.side*.17,0);
       const ankle=leg.foot.position.clone().add(v(0,.18,0));
-      const hip=v(leg.side*.46+sway*.11,1.94+bob-wind*.18-strike*.16,-.12);
+      const hip=v(leg.side*.46+sway*.11,1.94+bob-wind*.18-strike*.16+bounce.bodyY,-.12+bounce.bodyZ*.45);
       // Knee swings forward; the slender hock folds back, leaving the long toes planted.
       const knee=hip.clone().lerp(ankle,.46).add(v(0,.05,.35+.24*Math.sin(Math.PI*t)*(stance?0:moveWeight)));
       const ratio=elastic.legs[leg.side<0?'frontLeft':'frontRight'];

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "referenceGenerator": "OpenAI built-in image_gen",
   "modelGenerationCredits": 150,
-  "runtimeBytes": 6027736,
+  "runtimeBytes": 7226032,
   "enemies": [
     {
       "kind": "grunt",
@@ -147,14 +147,14 @@
     {
       "kind": "moa",
       "name": "Moa",
-      "file": "moa.glb",
-      "sha256": "21845ce25abf8223730c86fe28a836d3d16620392ac6d5cba313feb7227b4ffe",
-      "bytes": 596276,
+      "file": "moa-clean.glb",
+      "sha256": "816b2af4c6be51a2052c44c7d833a36f66ba3521b4f2093584c04d38dcc64df8",
+      "bytes": 1794572,
       "provider": "Meshy",
       "generationTaskId": "01a11476-eb29-7375-b117-815016e9951f",
       "generatedSurfaceSha256": "e45899af891851b4a776381abbc7b86196d6f070c7df87237c5fa9c0302591a7",
-      "rig": "22 custom joints driven by the unchanged original moa animation controls",
-      "triangles": 7675,
+      "rig": "22 custom joints with independent bouncy squash/stretch, unchanged planted-foot paths and active peck targets",
+      "triangles": 7672,
       "clips": [
         "High step",
         "Peck",
@@ -170,7 +170,18 @@
         "provider": "Meshy",
         "generationTaskId": "01a11477-0321-7152-9942-9657e3a31e6f"
       },
-      "audio": "CC0 crow recording, egomassive / Nigel Coop; public/sfx/moa-caw-license.json"
+      "audio": "CC0 crow recording, egomassive / Nigel Coop; public/sfx/moa-caw-license.json",
+      "surface": {
+        "vertexColourFaces": 5438,
+        "paintedFaces": 2083,
+        "faceAtlasSize": 1024,
+        "atlasPaddingPixels": 12,
+        "sourceTextureSize": [
+          2048,
+          2048
+        ],
+        "chickenChanged": false
+      }
     }
   ]
 }

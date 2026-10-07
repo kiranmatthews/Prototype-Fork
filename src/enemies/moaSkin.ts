@@ -13,7 +13,10 @@ const assets=new AssetCache<string,THREE.Group>(async(url,_dependency,wanted)=>{
   gltf.scene.traverse(o=>{const m=o as THREE.Mesh;if(!m.isMesh)return;m.geometry.userData.shared=true;
     for(const material of Array.isArray(m.material)?m.material:[m.material]){
       material.userData.shared=true;(material as THREE.MeshStandardMaterial).fog=false;
-      for(const value of Object.values(material))if(value?.isTexture)value.userData.shared=true;
+      for(const value of Object.values(material))if(value?.isTexture){
+        value.userData.shared=true;
+        if(!/moa-roast-chicken\.glb(?:[?#]|$)/.test(url)){value.anisotropy=8;value.magFilter=THREE.LinearFilter;value.minFilter=THREE.LinearMipmapLinearFilter;}
+      }
     }});
   return gltf.scene;
 },root=>{
@@ -27,7 +30,7 @@ const assets=new AssetCache<string,THREE.Group>(async(url,_dependency,wanted)=>{
 /** Meshy supplies the surfaces; the original control rig owns every live pose. */
 export function mountMoaSkin(body:THREE.Group,poses:()=>Record<string,THREE.Matrix4>,diagnostic:EnemyVisualDiagnostics,sourceUrl?:string){
   const live=new THREE.Group(),roast=new THREE.Group();live.name='Moa_MeshySkin';roast.name='Moa_RoastChicken';body.add(live,roast);roast.visible=false;
-  const url=sourceUrl??`${import.meta.env.BASE_URL}enemies/moa.glb`,chickenUrl=url.slice(0,url.lastIndexOf('/')+1)+'moa-roast-chicken.glb';
+  const url=sourceUrl??`${import.meta.env.BASE_URL}enemies/moa-clean.glb`,chickenUrl=url.slice(0,url.lastIndexOf('/')+1)+'moa-roast-chicken.glb';
   const birdLease=assets.acquire(url),chickenLease=assets.acquire(chickenUrl),bones=new Map<string,THREE.Bone>(),skeletons=new Set<THREE.Skeleton>();
   const steam=new Emitter(puffs,'steam',{shape:'disc',size:new THREE.Vector3(.3,.02,.3),rate:[6,8],seed:body.id});
   let disposed=false,last:EnemyAnimationFrame|null=null;
