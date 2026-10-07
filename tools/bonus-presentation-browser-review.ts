@@ -98,6 +98,6 @@ document.querySelector('#advance')!.addEventListener('click',()=>game()?.advance
 document.querySelector('#resume')!.addEventListener('click',()=>game()?.setBonusTravelReviewRate(1));
 
 // Typography-only stress fixture; game inventory remains untouched.
-act('#counterfit',g=>{g.ui.rooCratesCurrent.set('18');g.ui.rooCratesTotal.set('/18');});
+act('#counterfit',g=>{g.ui.rooCratesCurrent.set('18');g.ui.rooCratesTotal.set('/18');g.ui.cratesEl.classList.add('hud-pop');g.ui.cratesEl.style.animationPlayState='paused';});
 
 act('#hold',g=>g.setBonusTravelReviewRate(0));

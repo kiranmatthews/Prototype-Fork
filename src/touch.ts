@@ -1006,6 +1006,13 @@ export class TouchControls {
       body.tc-on .game-hud-layer.hud-bonus .hud-crate-row .hud-box-total {
         font-size: inherit; margin-bottom: 0;
       }
+      @keyframes tcBonusCountPop { from { transform:scale(1.12); } to { transform:scale(1); } }
+      body.tc-on .game-hud-layer.hud-bonus .hud-crate-row .hud-pop {
+        animation:tcBonusCountPop .22s ease-out;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        body.tc-on .game-hud-layer.hud-bonus .hud-crate-row .hud-pop { animation:none; }
+      }
       body.tc-on .game-hud-layer.hud-bonus .hud-crate-row .hud-icon {
         width: min(8.8vw, 9.5vh); height: min(8.8vw, 9.5vh);
       }

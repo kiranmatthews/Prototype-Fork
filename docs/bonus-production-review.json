@@ -60,7 +60,17 @@
       ]
     ],
     "mobileCrateCounter": "Between lower controls; numerator and denominator aligned; 18/18 clears buttons at 320 and 390 CSS px",
-    "consoleErrors": []
+    "consoleErrors": [],
+    "mobilePickupPulse": {
+      "scale": 1.12,
+      "viewport": [
+        320,
+        568
+      ],
+      "countRight": 205.193,
+      "jumpLeft": 210.16,
+      "clearancePx": 4.967
+    }
   },
   "evidence": [
     "art-reviews/bonus-production-entry.png",
