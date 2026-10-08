@@ -6,7 +6,7 @@ import { getCrtGuestParameter, getCrtGuestRange, type CrtGuestVariant } from './
 /** Dependencies, not quality approximations: an unconsumed surface is absent. */
 export function planCrt(s: CrtGuestSettingsLike, height: number, width = 0, outputWidth = -1) {
   const v = (id: string) => s.getValue(id, s.variant);
-  const afterglow = v('AS') !== 0 || v('BP') > 0;
+  const afterglow = v('AS') !== 0;
   const average = s.variant === 'advanced' && v('BLOOM') !== 0;
   const edges = s.variant === 'advanced' && v('smart_ei') > .01 && v('TATE') < .5;
   const glow = v('glow') !== 0;
@@ -31,6 +31,68 @@ export function planCrt(s: CrtGuestSettingsLike, height: number, width = 0, outp
   };
 }
 export type CrtPlan = ReturnType<typeof planCrt>;
+
+export type CrtHalfFloatRounding = 'truncate' | 'nearest';
+
+/** The relevant values are positive, normal half floats (1 / gamma, 0.2..1).
+ * Keep float32 reciprocal and the device's render-target rounding convention. */
+export function crtHalfFloat(value: number, rounding: CrtHalfFloatRounding): number {
+  const step = 2 ** (Math.floor(Math.log2(value)) - 10);
+  const scaled = Math.fround(value) / step, lower = Math.floor(scaled);
+  const up = scaled - lower > .5 || (scaled - lower === .5 && lower % 2 === 1);
+  return (rounding === 'nearest' && up ? lower + 1 : lower) * step;
+}
+
+export function crtFrameMetadata(s: CrtGuestSettingsLike, height: number, rounding: CrtHalfFloatRounding | null) {
+  const v = (id: string) => s.getValue(id);
+  const interlaced = v('inter') <= height / (v('intres') > 1.25 ? v('intres') : 1) &&
+    v('interm') > .5 && v('intres') !== 1 && v('intres') !== .5 && v('vga_mode') < .5;
+  let interlace = interlaced || v('hiscan') > .5 ? .25 : 1;
+  if (v('vga_mode') > .5) interlace = v('inter') <= height ? .75 : .5;
+  const gamma = v('GAMMA_INPUT');
+  const inverseGamma = gamma === 1 ? 1 : rounding && Number.isFinite(gamma) && gamma >= 1 && gamma <= 5
+    ? crtHalfFloat(Math.fround(1 / Math.fround(gamma)), rounding) : null;
+  return { interlace, inverseGamma };
+}
+
+/** Frame-wide alpha metadata was being fetched twice for every output pixel.
+ * Its exact value is known from settings; baking the interlace state also
+ * removes entire unselected reconstruction/scanline branches on the GPU. */
+export function specializeFrameMetadata(source: string, s: CrtGuestSettingsLike, width: number,
+  height: number, rounding: CrtHalfFloatRounding | null): string {
+  // Tiny textures can interpolate across the two metadata bands.
+  if (width < 4) return source;
+  const metadata = crtFrameMetadata(s,height,rounding);
+  source = source.replace('crtGuestSampleLinearBorder(LinearizePass, vec2(0.75, 0.25), 0.0).w', literal(metadata.interlace));
+  if (metadata.inverseGamma !== null) {
+    source = source.replace('uniform highp sampler2D LinearizePass;',
+      'uniform highp sampler2D LinearizePass;\nuniform highp float uCrtInverseGamma;');
+    source = source.replace('crtGuestSampleLinearBorder(LinearizePass, vec2(0.25), 0.0).w',
+      metadata.inverseGamma === 1 ? '1.0' : 'uCrtInverseGamma');
+  }
+  return source;
+}
+
+/** At a native, unwarped raster a narrow positive vertical kernel has only
+ * its centre above half-float precision. Preserve the original centre-coordinate
+ * calculation, gamma/peak math and all non-native/curved/filtering paths. */
+export function optimizeNativeVertical(source: string, s: CrtGuestSettingsLike, height: number, outputHeight: number): string {
+  const v = (id: string) => s.getValue(id);
+  const interlace = crtFrameMetadata(s,height,null).interlace;
+  if (s.variant !== 'hd' || height !== outputHeight || interlace !== .25 ||
+      v('interm') === 5 || v('hiscan') !== 0 || v('no_scanlines') !== 0 || v('intres') !== 0 ||
+      v('S_SHARP') !== 0 || v('SIGMA_VER') * v('internal_res') > .100001 ||
+      // Very small exponents amplify otherwise negligible tails in peak alpha.
+      v('scangamma') / v('GAMMA_INPUT') < .41 ||
+      ['warpX','warpY','overscanX','overscanY','VShift'].some(id=>v(id)!==0)) return source;
+  const start = source.indexOf('highp vec3 v_resample('), end = source.indexOf('\nhighp float st(',start);
+  if (start < 0 || end < 0) throw new Error('HD vertical reconstruction function changed');
+  return source.slice(0,start) + `highp vec3 v_resample(highp vec2 tex0, highp vec4 Size) {
+    vec2 tex = tex0;
+    tex.y = (floor(Size.y * tex.y) * Size.w) + (0.5 * Size.w);
+    return crtGuestSampleLinearBorder(Pass1, tex, 0.0).rgb;
+}\n` + source.slice(end);
+}
 
 // Integer neighbours replace six UV->texel conversions and repeated size
 // queries. The two legacy esrc inputs both name this same stock surface.
@@ -66,6 +128,20 @@ void main() {
 /** Remove identity colour-space round trips before the preserved RGBA8 write.
  * EBU/sRGB -> sRGB is the same gamut; WP=0 has no temperature transform. */
 export function optimizePreColour(source: string, settings: CrtGuestSettingsLike): string {
+  if (settings.getValue('AS') === 0 && settings.getValue('BP') > 0) {
+    // Only threshold alpha is consumed. Reproduce its RGBA8 quantization from
+    // the already-fetched stock pixel; no spatial/temporal history is needed.
+    source = source.replace('uniform highp sampler2D AfterglowPass;',
+      `uniform highp sampler2D AfterglowPass;
+uniform highp float uParams_bth;
+float crtBlackThreshold(vec3 c) {
+  float b=uParams_bth/255.0;
+  float w=smoothstep(b,2.0*b,max(max(c.r,c.g),c.b));
+  return floor(w*255.0+0.5)/255.0;
+}`);
+    source = source.replace('crtGuestSamplePointBorder(AfterglowPass, vTexCoord, 0.0)',
+      'vec4(0.0,0.0,0.0,crtBlackThreshold(imgColor.rgb))');
+  }
   if (settings.getValue('CP') === 0 && settings.getValue('CS') === 0)
     source = source.replace('uniform highp float uParams_CP;', 'const highp float uParams_CP = -1.0;');
   if (settings.getValue('WP') === 0) {
@@ -76,6 +152,14 @@ export function optimizePreColour(source: string, settings: CrtGuestSettingsLike
     source = source.slice(0,start) + '    color = clamp(color, vec3(0.0), vec3(1.0));' + source.slice(end+tail.length);
   }
   return source;
+}
+
+/** Compose the two reciprocal mask transfers analytically. The original
+ * min(...,1) is retained after the equivalent multiplication in colour space. */
+export function optimizeMaskTransfer(source: string): string {
+  const pattern = /color = pow\(color, vec3\(uGlobal_mask_gamma \/ gamma_in\)\);\s*color \*= cmask;\s*color = min\(color, vec3\(1\.0\)\);\s*color = pow\(color, vec3\(gamma_in \/ uGlobal_mask_gamma\)\);/;
+  if (!pattern.test(source)) throw new Error('CRT mask transfer sequence changed');
+  return source.replace(pattern,'color = min(color * pow(cmask, vec3(gamma_in / uGlobal_mask_gamma)), vec3(1.0));');
 }
 
 const literal = (value: number) => Number.isInteger(value) ? `${value}.0` : String(value);

@@ -123,10 +123,12 @@ try{
           assert(reference.active&&deferred.active,JSON.stringify({reference:reference.diagnostics,deferred:deferred.diagnostics}));
           assert(deferred.deferredDeconvergence?.material===deferred.materialSets[spec.variant].deconvergence,'Deferred output must borrow this configured stage');
           assert(deferred.targets.deconvergence===null,'Deferred final stage must not allocate a deconvergence texture');
-          assert(deferredDraws===referenceDraws-2,'Fusion must defer both deconvergence and decode');
+          const calibrationDraws=referenceDraws-reference.diagnostics.lastDrawCount;
+          assert(calibrationDraws>=0&&calibrationDraws<=1,'Only a one-pixel device calibration may precede the graph');
+          assert(deferredDraws===reference.diagnostics.lastDrawCount-2,'Fusion must defer both deconvergence and decode');
           assert(reference.diagnostics.estimatedTargetBytes-deferred.diagnostics.estimatedTargetBytes===decoded.width*decoded.height*8,'Fusion must release exactly the full-output RGBA16F target');
           const guest=await compare(read(reference.targets.main),read(deferred.targets.main),`${scenario}/${frame}/guest-graph`);
-          graphs.push({...spec,scenario,frame,referenceDraws,deferredDraws,guest});
+          graphs.push({...spec,scenario,frame,referenceDraws,deferredDraws,calibrationDraws,guest});
           await outputPair(`${scenario}/${frame}`,decoded,spec.allMappings&&frame===0);
         }
         if(scenario===0||scenario===3){

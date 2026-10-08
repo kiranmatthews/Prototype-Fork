@@ -37,7 +37,7 @@ try {
       const g=window.__game,s=g.crtGuestSettings;g.crtGuestPanel.open();
       const host=g.crtGuestPanel.element,root=host.shadowRoot;
       const visible=id=>{const row=root.querySelector(`[data-parameter="${id}"]`);return !!row&&!row.hidden;};
-      const before={glow:visible('glow'),sigma:visible('SIGMA_H'),esrc:visible('esrc'),lutSize:visible('LS')};
+      const before={glow:visible('glow'),sigma:visible('SIGMA_H'),esrc:visible('esrc'),lutSize:visible('LS'),scanGamma:visible('scangamma')};
       s.setValue('glow',.3);const after={sigma:visible('SIGMA_H'),magic:visible('m_glow_cutoff')};
       s.setValue('m_glow',2);after.magicEnabled=visible('m_glow_cutoff');
       s.setValue('AS',0);after.persistenceHidden=!visible('PR');
@@ -48,7 +48,7 @@ try {
       const count=[...root.querySelectorAll('.parameter')].filter(row=>!row.hidden).length;
       return {before,after,count,radius};
     });
-    assert.deepEqual(controls.before,{glow:true,sigma:false,esrc:false,lutSize:false});
+    assert.deepEqual(controls.before,{glow:true,sigma:false,esrc:false,lutSize:false,scanGamma:true});
     assert.deepEqual(controls.after,{sigma:true,magic:false,magicEnabled:true,persistenceHidden:true});
     assert.deepEqual({maximum:controls.radius.maximum,shown:controls.radius.shown,stored:controls.radius.stored},{maximum:8,shown:8,stored:50});
     assert.ok(controls.radius.widerMaximum>=17&&controls.radius.widerMaximum<=18,'Radius range follows the wider kernel, including legacy float step rounding');
@@ -79,6 +79,11 @@ try {
       menu.native=await page.evaluate(()=>window.__game.getCrtDiagnostics());
       assert.equal(menu.native.graph.reconstruction,false);assert.equal(menu.native.lastDrawCount,4);
       await page.screenshot({path:`${output}/full-pause-native-1080.png`});
+      await page.evaluate(()=>{const s=window.__game.crtGuestSettings;s.setValue('AS',0);s.setValue('BP',25);});
+      await page.waitForFunction(()=>{const d=window.__game.getCrtDiagnostics();return d?.active&&!d.graph.afterglow&&d.lastDrawCount===2;});
+      menu.threshold=await page.evaluate(()=>window.__game.getCrtDiagnostics());
+      assert.equal(menu.threshold.targets['afterglow-read'],undefined);assert.equal(menu.threshold.targets.stock,undefined);
+      await page.evaluate(()=>{const s=window.__game.crtGuestSettings;s.applyStartupPreset();s.setEnabled(true);});
     }
     await page.keyboard.press('Escape');
     await page.evaluate(()=>{

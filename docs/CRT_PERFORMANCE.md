@@ -1,5 +1,8 @@
 # CRT performance rewrite — 8 October 2026
 
+This is the first rewrite's baseline. A [follow-up optimization](CRT_PERFORMANCE_FOLLOWUP.md)
+further reduces the contributing shader work while retaining its picture and presets.
+
 The runtime preserves the pinned Guest look and existing presets while executing
 only the current image dependencies. This includes substantial changes to the
 stages that remain active. The generated shader sources and GPL provenance stay

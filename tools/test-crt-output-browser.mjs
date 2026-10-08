@@ -114,7 +114,9 @@ try{
           renderer.info.reset();deferred.render(renderer,unused,source,1/60,false);const deferredDraws=renderer.info.render.calls;
           assert(reference.active&&deferred.active,JSON.stringify({reference:reference.diagnostics,deferred:deferred.diagnostics}));
           assert(deferred.deferredOutput===deferred.targets.deconvergence.texture,'Deferred output must borrow this completed graph texture');
-          assert(deferredDraws===referenceDraws-1,'Fusion must eliminate exactly one CRT graph draw');
+          const calibrationDraws=referenceDraws-reference.diagnostics.lastDrawCount;
+          assert(calibrationDraws>=0&&calibrationDraws<=1,'Only a one-pixel device calibration may precede the graph');
+          assert(deferredDraws===reference.diagnostics.lastDrawCount-1,'Fusion must eliminate exactly one CRT graph draw');
           const guest=await compare(read(reference.targets.deconvergence),read(deferred.targets.deconvergence),`${scenario}/${frame}/guest-graph`);
           graphs.push({...spec,scenario,frame,referenceDraws,deferredDraws,guest});
           await outputPair(`${scenario}/${frame}`,decoded,spec.allMappings&&frame===0);

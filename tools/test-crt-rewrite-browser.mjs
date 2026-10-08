@@ -77,6 +77,11 @@ try {
         { name: 'advanced-colour', variant: 'advanced', width:127, height:73, ow:387, oh:213, patch:{CP:3,CS:2,TNTC:4,WP:35,wp_saturation:1.3,contr:.2,pre_gc:.8} },
         { name: 'hd-apple-tv', variant: 'hd', quality:'apple-tv', patch:{glow:.5,bloom:.5,m_glow:1,FINE_GLOW:2} },
         { name: 'advanced-balanced', variant: 'advanced', quality:'balanced', patch:{BLOOM:10,smart_ei:.2,glow:.1,bloom:.3} },
+        { name: 'native-threshold-only', variant:'hd', startup:true, width:1280,height:720,ow:1280,oh:720,patch:{AS:0,BP:25,bth:125} },
+        { name: 'advanced-threshold-only', variant:'advanced',patch:{AS:0,BP:25,bth:16,glow:0} },
+        { name: 'native-gamma', variant:'hd',startup:true,width:1280,height:720,ow:1280,oh:720,patch:{GAMMA_INPUT:3.2,gamma_c:.7,gamma_out:5,post_br:2} },
+        { name: 'native-curved', variant:'hd',startup:true,width:1280,height:720,ow:1280,oh:720,patch:{warpX:.05,warpY:.05} },
+        { name: 'native-low-scan-gamma', variant:'hd',startup:true,width:1280,height:720,ow:1280,oh:720,patch:{GAMMA_INPUT:5,scangamma:.5,bmask:.25,post_br:2} },
       ];
       const render = () => { crt.render(renderer, spare, source, 1/60, false); final.render(renderer, spare, source, 1/60, false); };
       for (const spec of specs.filter(s=>!cases||cases.split(',').includes(s.name))) {

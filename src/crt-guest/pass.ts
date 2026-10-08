@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { planCrt, specializeCrt, fusePreLinear, optimizePreColour, optimizeHdFilter, gaussianShader, CRT_AFTERGLOW_SHADER, type CrtPlan } from "./optimize";
+import { crtHalfFloat, crtFrameMetadata, specializeFrameMetadata, optimizeNativeVertical, optimizeMaskTransfer, type CrtHalfFloatRounding } from './optimize';
 import { setCrtControlSourceHeight } from './controls';
 import {
   FullScreenQuad,
@@ -251,6 +252,14 @@ export class CrtGuestPass extends Pass {
   private commandsDirty = true;
   private drawCommands: { material: THREE.RawShaderMaterial; target: THREE.WebGLRenderTarget | readonly [THREE.WebGLRenderTarget, THREE.WebGLRenderTarget] }[] = [];
   private frameUniforms: THREE.IUniform[] = [];
+  private halfFloatRounding: CrtHalfFloatRounding | null = null;
+  private readonly onContextRestored = () => {
+    this.renderer.extensions.has('EXT_color_buffer_float');
+    HALF_FLOAT_ROUNDING.delete(this.renderer);
+    this.halfFloatRounding = null;
+    this.shaderRevision = null;
+    this.resetHistory('WebGL context restored');
+  };
 
   private readonly capabilitySupported: boolean;
   private readonly capabilityFailure: string | null;
@@ -333,6 +342,7 @@ export class CrtGuestPass extends Pass {
     };
     this.fsQuad = new FullScreenQuad(this.inputMaterial);
     this.bindLuts();
+    renderer.domElement.addEventListener('webglcontextrestored',this.onContextRestored);
   }
 
   /** Completed current output, never a stale texture after bypass or failure. */
@@ -676,6 +686,7 @@ export class CrtGuestPass extends Pass {
   override dispose(): void {
     if (this.disposed) return;
     this.disposed = true;
+    this.renderer.domElement.removeEventListener('webglcontextrestored',this.onContextRestored);
     this.enabled = false;
     this.disposeTargets();
     this.inputMaterial.dispose();
@@ -793,6 +804,7 @@ export class CrtGuestPass extends Pass {
         this.resetHistory("temporal dependencies changed");
     }
     const v = (id: string) => this.settings.getValue(id, this.variant);
+    if (v('GAMMA_INPUT') !== 1) this.halfFloatRounding = probeHalfFloatRounding(this.renderer);
     const shaders = { ...SHADER_LIBRARY[this.variant], edges: SHADER_LIBRARY.advanced.variant4 };
     shaders.pre = optimizePreColour(shaders.pre, this.settings);
     const materials = this.materialSets[this.variant];
@@ -806,7 +818,7 @@ export class CrtGuestPass extends Pass {
       if (name === 'pre' || (isLinear && this.plan.fusePre))
         fragment = fragment.replace(/(?:pre_)?crtGuestSamplePointBorder\((StockPass|AfterglowPass), vTexCoord, 0\.0\)/g,
           'texelFetch($1, ivec2(gl_FragCoord.xy), 0)');
-      if (name === "deconvergence" && this.plan.fusePre) {
+      if (name === "deconvergence" && v('vigstr') === 0) {
         // With vigstr=0 every pre alpha is exactly 1, including clamped borders.
         fragment = fragment.replace(/crtGuestSampleLinearBorder\(PrePass,.*?\)\.w/g, '1.0');
       }
@@ -835,6 +847,10 @@ export class CrtGuestPass extends Pass {
       }
       if (this.variant === 'hd' && (name === 'variant5' || name === 'main'))
         fragment = optimizeHdFilter(fragment, name === 'variant5', this.settings, this.width, this.height);
+      if (name === 'main') fragment = optimizeNativeVertical(fragment,this.settings,this.height,this.outputHeight);
+      if (name === 'main' || name === 'deconvergence')
+        fragment = specializeFrameMetadata(fragment,this.settings,this.width,this.height,this.halfFloatRounding);
+      if (name === 'deconvergence') fragment = optimizeMaskTransfer(fragment);
       fragment = withoutVersionDirective(specializeCrt(fragment, this.settings, this.variant));
       const material = materials[name];
       if (material.fragmentShader !== fragment) {
@@ -846,6 +862,8 @@ export class CrtGuestPass extends Pass {
         material.needsUpdate = true;
         this.appliedSettingsRevision[this.variant] = null;
       }
+      if (material.uniforms.uCrtInverseGamma)
+        material.uniforms.uCrtInverseGamma.value = crtFrameMetadata(this.settings,this.height,this.halfFloatRounding).inverseGamma ?? 1;
     }
     this.bindLuts();
     this.commandsDirty = true;
@@ -1274,6 +1292,40 @@ function configurePreMipmaps(
   texture.minFilter = minFilter;
   texture.magFilter = THREE.LinearFilter;
   texture.needsUpdate = true;
+}
+
+const HALF_FLOAT_ROUNDING = new WeakMap<THREE.WebGLRenderer, CrtHalfFloatRounding | null>();
+
+/** Devices differ when writing float32 fragments to RGBA16F. Calibrate once,
+ * lazily on the first non-identity gamma. Unknown behavior keeps texture reads. */
+function probeHalfFloatRounding(renderer: THREE.WebGLRenderer): CrtHalfFloatRounding | null {
+  if (HALF_FLOAT_ROUNDING.has(renderer)) return HALF_FLOAT_ROUNDING.get(renderer)!;
+  const target = makeTarget(1,1,THREE.HalfFloatType,'CRTGuest.MetadataProbe');
+  const material = makeMaterial('CRTGuest.MetadataProbe', `precision highp float;
+    uniform vec4 uProbeGamma;
+    out vec4 FragColor;
+    void main() { FragColor = vec4(1.0) / uProbeGamma; }`);
+  const gamma = [1.1,1.2,2.4,3.7];
+  material.uniforms.uProbeGamma.value.set(...gamma);
+  // Own the probe geometry. FullScreenQuad.dispose() disposes a shared global
+  // geometry, including stale GPU listeners from before a context restoration.
+  const geometry = new THREE.PlaneGeometry(2,2);
+  const mesh = new THREE.Mesh(geometry,material), camera = new THREE.Camera();
+  const previous = renderer.getRenderTarget(), face = renderer.getActiveCubeFace(), mip = renderer.getActiveMipmapLevel();
+  const autoClear = renderer.autoClear;
+  let result: CrtHalfFloatRounding | null = null;
+  try {
+    renderer.autoClear = false; renderer.setRenderTarget(target); renderer.render(mesh,camera);
+    const pixels = new Uint16Array(4); renderer.readRenderTargetPixels(target,0,0,1,1,pixels);
+    for (const mode of ['truncate','nearest'] as const)
+      if (gamma.every((value,i)=>THREE.DataUtils.fromHalfFloat(pixels[i]) === crtHalfFloat(Math.fround(1/Math.fround(value)),mode))) result = mode;
+  } catch { /* The original texture-based metadata remains a valid fallback. */ }
+  finally {
+    renderer.setRenderTarget(previous,face,mip);renderer.autoClear=autoClear;
+    geometry.dispose();material.dispose();target.dispose();
+  }
+  HALF_FLOAT_ROUNDING.set(renderer,result);
+  return result;
 }
 
 function probeCapabilities(renderer: THREE.WebGLRenderer): {

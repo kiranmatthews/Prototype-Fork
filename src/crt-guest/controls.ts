@@ -40,7 +40,8 @@ export function isCrtControlRelevant(id: string, settings: CrtGuestSettings): bo
   const scanlines = v('hiscan') > .5 || (v('no_scanlines') <= .025 && (!interlaced || alternateLines));
   if (id === 'pr_scan') return scanlines;
   if (id === 'smart_ei') return v('TATE') < .5;
-  if (['gsl','scanline1','scanline2','beam_min','beam_max','tds','beam_size','scans','scan_falloff','scangamma','rolling_scan','clips'].includes(id)) return scanlines;
+  // scangamma also shapes the peak-alpha signal used by masks in interlaced output.
+  if (['gsl','scanline1','scanline2','beam_min','beam_max','tds','beam_size','scans','scan_falloff','rolling_scan','clips'].includes(id)) return scanlines;
   if (id === 'spike' && settings.variant === 'hd') return scanlines;
   if (id === 'HSHARPNESS') return v('S_SHARP') !== 0 || v('SIGMA_HOR') > .25;
   if (id === 'VSHARPNESS' && v('S_SHARP') === 0 && v('SIGMA_VER') <= .25) return false;
