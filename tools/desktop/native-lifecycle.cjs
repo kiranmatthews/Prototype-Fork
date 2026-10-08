@@ -19,16 +19,24 @@ app.once('browser-window-created', async (_event, window) => {
     await new Promise(resolve => window.webContents.once('did-finish-load', resolve));
     await window.loadURL('boneman://game/?playtest&lite&level=codex-lab');
     await waitFor(window, '!!window.__game && window.__game.player.grounded && !window.__game.gameFlow.blocksGameplay');
-    window.hide();
-    await waitFor(window, 'document.hidden');
-    const before = await window.webContents.executeJavaScript('window.__game.player.pos.toArray()');
-    await sleep(500);
-    assert.deepEqual(await window.webContents.executeJavaScript('window.__game.player.pos.toArray()'), before);
-    window.show(); window.focus();
-    await waitFor(window, '!document.hidden');
-    const frame = await window.webContents.executeJavaScript('window.__game.frameStats.frame');
-    await sleep(300);
-    assert((await window.webContents.executeJavaScript('window.__game.frameStats.frame')) > frame);
+    async function checkHidden(action, restore) {
+      action();
+      await waitFor(window, 'document.hidden');
+      const snapshot = '({frame:window.__game.frameStats.frame,pos:window.__game.player.pos.toArray()})';
+      const before = await window.webContents.executeJavaScript(snapshot);
+      await sleep(500);
+      const after = await window.webContents.executeJavaScript(snapshot);
+      assert.deepEqual(after, before, 'Hidden play must stop frame advancement as well as movement');
+      restore(); window.focus();
+      await waitFor(window, '!document.hidden');
+      await waitFor(window, 'window.__game.frameStats.frame > ' + before.frame);
+      return {before:before.frame,after:after.frame,resumed:true};
+    }
+    const hiddenFrames = await checkHidden(() => window.hide(), () => window.show());
+    // Xvfb has no window manager. Exercise its hide/show path; native macOS and
+    // Windows additionally exercise the actual minimize/restore window actions.
+    const minimizedFrames = process.platform === 'linux' ? null : await checkHidden(
+      () => window.minimize(), () => { assert(window.isMinimized()); window.restore(); window.show(); });
     assert.equal(window.webContents.getLastWebPreferences().sandbox, true);
     let networkHits = 0;
     const server = createServer((_request,response) => {networkHits++;response.end('must not load');});
@@ -38,7 +46,7 @@ app.once('browser-window-created', async (_event, window) => {
       await assert.rejects(window.webContents.session.fetch(url));
       assert.equal(networkHits, 0);
     } finally {await new Promise(resolve => server.close(resolve));}
-    console.log(JSON.stringify({status:'passed', hiddenSimulation:'stopped', restoredSimulation:'advancing', sandbox:true, nativeNetworkDenied:true, networkHits}));
+    console.log(JSON.stringify({status:'passed', hiddenSimulation:'stopped', restoredSimulation:'advancing', sandbox:true, nativeNetworkDenied:true, networkHits, hiddenFrames, minimizedFrames}));
     app.exit(0);
   } catch (error) { console.error(error); app.exit(1); }
 });

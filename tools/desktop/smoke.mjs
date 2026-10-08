@@ -174,6 +174,9 @@ try {
   report.nativeLog = app?.diagnostics();
   if (app) report.page = await Promise.race([app.page.evaluate(() => ({
     url:location.href, hidden:document.hidden, ready:document.readyState,
+    screen:window.__game?.gameFlow.currentScreen, loadingPhase:window.__game?.gameFlow.loadingPhase,
+    blocked:window.__game?.gameFlow.blocksGameplay, playerState:window.__game?.player.state,
+    frame:window.__game?.frameStats.frame,
     loading:window.__game?.getLoadingDiagnostics(), level:window.__game?.getCurrentLevel().id,
   })).catch(() => null), new Promise(resolve => setTimeout(() => resolve('unresponsive'), 2000))]);
   console.error(JSON.stringify(report));

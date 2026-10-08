@@ -67,7 +67,7 @@ Do not remove assets based only on a short playthrough. Do not preload all level
 
 ## Automated distribution
 
-`.github/workflows/desktop.yml` builds Apple Silicon, Mac x64, Windows x64 and Linux x64 artifacts. Both Mac jobs run on Apple Silicon: the x64 job explicitly pins both Node and Electron installation architecture to x64 and runs under Rosetta because the hosted Intel VM cannot initialize WebGL. The native capability probe asserts the Electron architecture. This verifies the x64 binary's functional behaviour, not physical Intel GPU performance; that remains a required release acceptance check. It runs focused checks, the real offline renderer smoke, packaging, ASAR/fuse verification, packaged-app smoke, native window hide/restore, and checksums. It never runs `check:all`.
+`.github/workflows/desktop.yml` builds Apple Silicon, Mac x64, Windows x64 and Linux x64 artifacts. Both Mac jobs run on Apple Silicon: the x64 job explicitly pins both Node and Electron installation architecture to x64 and runs under Rosetta because the hosted Intel VM cannot initialize WebGL. The native capability probe asserts the Electron architecture. This verifies the x64 binary's functional behaviour, not physical Intel GPU performance; that remains a required release acceptance check. It runs focused checks, the real offline renderer smoke, packaging, ASAR/fuse verification, packaged-app smoke, native window hide/show and macOS/Windows minimize/restore, and checksums. It never runs `check:all`.
 
 For unsigned/ad-hoc candidates from main:
 
@@ -119,7 +119,7 @@ The smoke scripts are short automated regression checks. They are not a full-cou
 
 The initial macOS arm64 candidate contains **861 manifest-tracked game files / 408.3 MiB**, omitting **438.5 MiB** of web/authoring material from the public asset inventory. The app with its browser runtime occupies approximately **696 MiB** on this host; compressed candidate installers are approximately **487 MiB**. This is a size reduction, not an FPS claim.
 
-Fresh-profile disconnected startup, lite/full gameplay with CRT enabled, checkpoint/pit/finish, persistent saves, actual WebGL loss/restoration, and cold Treehouse/Jungle/Nightworks/boss asset loading pass. Deliberate fetch/image/WebSocket/worker requests and a native-session request produce **zero hits** on the probe server. The packaged app passes full rendering without focus emulation. A separate native test verifies stopped simulation while hidden, resumed simulation on show, and enabled sandboxing. Details and bundle identity are in [the local evidence](performance/offline-desktop.json).
+Fresh-profile disconnected startup, lite/full gameplay with CRT enabled, checkpoint/pit/finish, persistent saves, actual WebGL loss/restoration, and cold Treehouse/Jungle/Nightworks/boss asset loading pass. Deliberate fetch/image/WebSocket/worker requests and a native-session request produce **zero hits** on the probe server. The packaged app passes full rendering without focus emulation. A separate native test verifies stopped frame advancement and movement while hidden, resumed simulation on show, and enabled sandboxing. macOS/Windows also exercise native minimize/restore; Linux CI uses hide/show because Xvfb has no window manager. Details and bundle identity are in [the local evidence](performance/offline-desktop.json).
 
 This is an ad-hoc Mac candidate. Developer ID signing/notarization, signed Windows distribution and minimum-hardware acceptance are exercised when releasing with the documented credentials and hardware matrix.
 

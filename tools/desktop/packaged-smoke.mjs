@@ -74,6 +74,9 @@ try {
   report.requestCount = requests.length;
   if (page) report.page = await Promise.race([page.evaluate(() => ({
     url:location.href, hidden:document.hidden, ready:document.readyState,
+    screen:window.__game?.gameFlow.currentScreen, loadingPhase:window.__game?.gameFlow.loadingPhase,
+    blocked:window.__game?.gameFlow.blocksGameplay, playerState:window.__game?.player.state,
+    frame:window.__game?.frameStats.frame,
     game:!!window.__game, loading:window.__game?.getLoadingDiagnostics(),
   })).catch(() => null), new Promise(resolve => setTimeout(() => resolve('unresponsive'), 2000))]);
   console.error(JSON.stringify(report));
