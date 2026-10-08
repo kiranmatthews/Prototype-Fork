@@ -42,8 +42,8 @@ jobs:
         run: node tools/test-wood-path-kit.mjs && node tools/test-wood-path-meshes.mjs && node tools/test-wood-path-level.mjs
       - name: Renderer frame graph regression
         run: npm run check:renderer
-      - name: Loading and collision reuse regression
-        run: node tools/test-presentation-loading.mjs && node tools/test-nightworks-collision-cache.mjs
+      - name: Loading and traversal collision regression
+        run: node tools/test-presentation-loading.mjs && node tools/test-nightworks-collision-cache.mjs && node tools/test-grind-solid-support.mjs && node tools/test-spinbridge.mjs
       - name: Crate attack targeting regression
         run: node tools/test-crate-hit-forgiveness.mjs && npm run check:crate-jump && npm run check:crate-types
       - name: Touch ownership and responsive layout regression

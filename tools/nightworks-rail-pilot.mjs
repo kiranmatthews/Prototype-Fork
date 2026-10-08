@@ -43,10 +43,21 @@ function recorder(kind, source) {
   };
 }
 
-export function createCounterweightPilot(source) {
+export function createCounterweightPilot(source,options={}) {
   const stage = source.AFTER_HOURS_STAGES.find(s => s.kind === 'rail-transfer'), record = recorder('counterweight', source);
-  let mode = 'reframe', released = false, readCursor = 0, readBrake = false;
+  let mode = 'reframe', released = false, readCursor = 0, readBrake = false, transferAim = 0, transferReleased = false;
   record.evidence.readFrames = 0; record.evidence.brakeFrames = 0;
+  const transferSpeed=options.tuning?.grindTransferSpeed??4.8;
+  const futureZ=(rail,time)=>{
+    const c=source.NIGHTWORKS_AFTER_HOURS_LEVEL.components[componentOf(rail.object)];
+    return c?.axis==='z'?c.p[2]+Math.sin(time*(c.speed??.6)+(c.phase??0))*(c.amp??0):lineZ(rail);
+  };
+  const transferWindow=(p,l,first,second)=>{
+    const distance=Math.max(0,Math.min(...first.points.map(q=>q.x))-2-p.pos.x),speed=Math.abs(p.speed);
+    const run=(Math.sqrt(speed*speed+18*distance)-speed)/9;
+    const takeoff=l.time+run+.1+(first.totalLength-6)/Math.max(12,speed+9*run);
+    return Math.abs(futureZ(second,takeoff+.6)-futureZ(first,takeoff))<3.4;
+  };
   const pilot = { evidence: record.evidence, get done() { return record.evidence.done; },
     sample(p, l) {
       const [first, second] = railInGroup(source, l, stage.grp);
@@ -67,7 +78,8 @@ export function createCounterweightPilot(source) {
         const target = path[Math.min(readCursor, path.length - 1)];
         if (Math.hypot(p.pos.x - target[0], p.pos.z - target[1]) < (readCursor === 0 ? 4 : 2.5)) {
           if (readCursor === 0) readCursor++;
-          else { mode = 'approach'; return { jumpHeld: true, grindHeld: true, spinHeld: checkpointSpin(p, l) }; }
+          else if(transferWindow(p,l,first,second)) { mode = 'approach'; return { jumpHeld: true, grindHeld: true, spinHeld: checkpointSpin(p, l) }; }
+          else readCursor=0; // another supported reading circuit; never advance the phase clock directly
         }
         const next = path[Math.min(readCursor, path.length - 1)];
         return { ...directionInput(p, l, next[0] - p.pos.x, next[1] - p.pos.z, .55), jumpHeld: false, spinHeld: checkpointSpin(p, l) };
@@ -81,14 +93,24 @@ export function createCounterweightPilot(source) {
         return sample;
       }
       if (mode === 'first') {
-        if (p.pos.x >= Math.max(...first.points.map(point => point.x)) - 5) { mode = 'transfer'; record.pop('Counterweight handoff', p); return { moveX: clamp((lineZ(second) - p.pos.z) * 1.5), moveY: 0, jumpHeld: false, grindHeld: true }; }
+        if (p.pos.x >= Math.max(...first.points.map(point => point.x)) - 6) {
+          const aim={moveX:clamp((futureZ(second,l.time+.6)-p.pos.z)/Math.max(.01,transferSpeed*.6)),moveY:0,grindHeld:true};
+          // Current controls commit lateral launch before releasing Jump;
+          // an airborne stick change is a trick, not flight steering.
+          if(transferAim++<3)return {...aim,jumpHeld:true};
+          mode='transfer';record.pop('Counterweight handoff',p);return {...aim,jumpHeld:false};
+        }
         return { moveX: balanceInput(p), moveY: 1, jumpHeld: true, grindHeld: true };
       }
-      if (mode === 'transfer') return { moveX: clamp((lineZ(second) - p.pos.z) * 1.5), moveY: 0, jumpHeld: false, grindHeld: true };
+      if (mode === 'transfer') {
+        const grindHeld=transferReleased;transferReleased=true;
+        return {moveX:0,moveY:0,jumpHeld:false,grindHeld};
+      }
       if (mode === 'second') {
         if (p.pos.x >= Math.max(...second.points.map(point => point.x)) - 4) { mode = 'exit'; record.pop('Counterweight receiving dock', p); return { moveX: 0, moveY: 1, jumpHeld: false, grindHeld: true }; }
         return { moveX: balanceInput(p), moveY: 1, jumpHeld: true, grindHeld: true };
       }
+      if(!p.grounded)return {grindHeld:false};
       return { ...directionInput(p, l, 10, stage.end[2] - p.pos.z), jumpHeld: false, grindHeld: false };
     },
     observe(p, l) {
@@ -105,7 +127,7 @@ export const createAfterHoursCounterweightPilot = createCounterweightPilot;
 export function createFinaleRailPilot(source) {
   const stage = source.AFTER_HOURS_STAGES.find(s => s.kind === 'finale'), record = recorder('finale', source);
   const phaseSource = source.NIGHTWORKS_AFTER_HOURS_LEVEL.components.find(c => c.grp === stage.grp && c.t === 'phasepad');
-  let mode = 'read', phaseReleased = false, railReleased = false, groundCharge = 0, readBrake = false;
+  let mode = 'read', phaseReleased = false, railReleased = false, groundCharge = 0, readBrake = false, summitAim = 0;
   const pilot = { evidence: record.evidence, get done() { return record.evidence.done; },
     sample(p, l) {
       const rail = railInGroup(source, l, stage.grp).find(r => source.NIGHTWORKS_AFTER_HOURS_LEVEL.components[componentOf(r.object)]?.t === 'rail');
@@ -114,17 +136,23 @@ export function createFinaleRailPilot(source) {
       if (mode === 'read') {
         const travel = (Math.sqrt(p.speed * p.speed + 18 * Math.max(0, p.pos.z + 600)) - p.speed) / 9;
         const k = (((l.time + travel + .6) / pad.cycle + pad.phase) % 1 + 1) % 1, remaining = k < pad.duty ? (pad.duty - k) * pad.cycle : -1;
-        if (remaining > .65 && (!p.boardRolling || p.pos.z > -595 && p.axisF.z < -.75)) mode = 'phase-approach';
+        const ridgeSource=source.NIGHTWORKS_AFTER_HOURS_LEVEL.components[componentOf(rail.object)];
+        const exitX=ridgeSource.p[0]+Math.sin((l.time+travel+3)*ridgeSource.speed+ridgeSource.phase)*ridgeSource.amp;
+        // Take the phase-and-ridge chain when the moving crest will deliver
+        // its committed final jump toward the gate, not the far dock edge.
+        if (remaining > .65 && exitX>=128 && (!p.boardRolling || p.pos.z > -595 && p.axisF.z < -.75)) mode = 'phase-approach';
         else if (!p.boardRolling) return { jumpHeld: true };
         else {
           // Keep a slow mounted reading arc inside the dock if this helper is
           // entered from a continuous run rather than a fresh checkpoint.
           const dx = p.pos.x - stage.start[0], dz = p.pos.z - stage.start[2], distance = Math.hypot(dx, dz);
           const x = distance < 4 ? dx || 1 : dz - dx * .8, z = distance < 4 ? dz : -dx - dz * .8;
-          if (p.speed > 11.5) readBrake = true; if (p.speed < 9.5) readBrake = false;
-          // Circle regulates speed throughout the arc, including sideways
-          // headings. Light stick samples avoid an accidental manual flick.
-          return { ...directionInput(p, l, x, z, .55), jumpHeld: true, grabHeld: readBrake, spinHeld: checkpointSpin(p, l) };
+          if (p.speed > 15) readBrake = true; if (p.speed < 13) readBrake = false;
+          // Brake excess entry speed once, then coast through the reading
+          // arc. Circle holds its slide heading, so pumping/braking every
+          // turn cannot steer a safe waiting circle on the small dock.
+          if(readBrake)return {jumpHeld:false,grabHeld:true,spinHeld:checkpointSpin(p,l)};
+          return { ...directionInput(p, l, x, z, .55), jumpHeld: false, spinHeld: checkpointSpin(p, l) };
         }
       }
       if (mode === 'phase-approach') {
@@ -148,11 +176,15 @@ export function createFinaleRailPilot(source) {
       }
       if (mode === 'rail-air') return { grindHeld: true };
       if (mode === 'grind') {
-        if (p.pos.z <= -664) { mode = 'summit-air'; record.pop('Higher summit landing', p); return { moveX: clamp((stage.end[0] - p.pos.x) * .25), moveY: 0, jumpHeld: false, grindHeld: true }; }
+        if (p.pos.z <= -663) {
+          const aim={moveX:clamp((stage.end[0]-p.pos.x)*.25),moveY:0,grindHeld:true};
+          if(summitAim++<3)return {...aim,jumpHeld:true};
+          mode='summit-air';record.pop('Higher summit landing',p);return {...aim,jumpHeld:false};
+        }
         return { moveX: balanceInput(p), moveY: 1, jumpHeld: true, grindHeld: true };
       }
-      if (mode === 'summit-air') return { moveX: clamp((stage.end[0] - p.pos.x) * .5), moveY: 0, grindHeld: false };
-      return { ...directionInput(p, l, stage.end[0] - p.pos.x, stage.end[2] - p.pos.z), jumpHeld: true };
+      if (mode === 'summit-air') return { grindHeld: false };
+      return { ...directionInput(p, l, stage.end[0] - p.pos.x, stage.end[2] - p.pos.z), jumpHeld: false };
     },
     observe(p, l) {
       record.observe(p, l);

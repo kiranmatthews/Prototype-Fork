@@ -62,8 +62,9 @@ export function* runSwitchyardJourney(r) {
     { label: 'stomp ordinary admission stepping box', limit: 140 });
   yield* grounded([16.6, 2.8, 0], 'ordinary crate rebound to admission perch');
   if (at(18, 2.8).alive) yield* c.hit(at(18, 2.8), 'admission upper life');
-  yield* c.hop([11.5, 0, 0], 'return from admission reward perch');
-  yield* c.walk([20.5, 0, 0], 'admission exit takeoff');
+  // Continue over the solid perch after collecting it. The old return to
+  // ground then walked the full-height rider through its low underside.
+  yield* c.walk([19.2, 2.8, 0], 'admission exit takeoff');
   yield* c.hop([24, 1.4, 0], 'raised balcony admission');
   yield* c.enemy(foeAt(26), 'first patrol');
 

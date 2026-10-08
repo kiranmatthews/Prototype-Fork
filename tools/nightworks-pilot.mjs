@@ -8,7 +8,7 @@ import {createCounterweightPilot,createFinaleRailPilot} from './nightworks-rail-
 // inherits the production rider and clock left by the preceding challenge.
 export function createAfterHoursPilot(source,options={}) {
  const factories=[()=>createAfterHoursFreightPilot(),()=>createNightworksFerryPilot(source,{tuning:options.tuning,fixedStep:options.fixedStep}),
-  ()=>createAfterHoursCutbackPilot(source),()=>createAfterHoursPhasePilot(source,{tuning:options.tuning,fixedStep:options.fixedStep}),()=>createCounterweightPilot(source),
+  ()=>createAfterHoursCutbackPilot(source),()=>createAfterHoursPhasePilot(source,{tuning:options.tuning,fixedStep:options.fixedStep}),()=>createCounterweightPilot(source,options),
   ()=>createAfterHoursWorkbayPilot(),()=>createAfterHoursCrownPilot(),()=>createFinaleRailPilot(source)];
  let stage=0,helper=factories[0](),frame=0,mounted=false;
  const evidence={chapters:[{id:source.AFTER_HOURS_STAGES[0].id,firstFrame:1,lastFrame:null}],checkpoints:[],footFrames:0,mountedFrames:0,finished:false,chapterEvidence:{}};

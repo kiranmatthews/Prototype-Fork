@@ -1,0 +1,3717 @@
+{
+  "baseline": "04da381",
+  "status": "ongoing goal; continuous coverage is partial",
+  "bonuses": [
+    {
+      "id": "bonus-treehouse-trail",
+      "frames": 1928,
+      "end": {
+        "frame": 1928,
+        "position": [
+          63.92605555366881,
+          0.7306666691501937,
+          -0.0005137054882436596
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 5,
+        "crates": 7,
+        "gem": true
+      },
+      "result": {
+        "id": "bonus-treehouse-trail",
+        "state": "finished",
+        "gemEarned": true,
+        "totalCrates": 7,
+        "cratesBroken": 7,
+        "deaths": 0
+      },
+      "roomEvidence": [
+        {
+          "action": "room complete",
+          "pattern": "upper",
+          "index": 0,
+          "position": [
+            26.920244443555998,
+            0,
+            -0.00024184561979186957
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "relay",
+          "index": 1,
+          "position": [
+            54.926055553911546,
+            0,
+            -0.0004475877963838679
+          ]
+        }
+      ],
+      "consoleErrors": [],
+      "stamp": "Codex/sol fork · build 10-08 14:03 UTC"
+    },
+    {
+      "id": "bonus-jungle",
+      "frames": 1959,
+      "end": {
+        "frame": 1959,
+        "position": [
+          69.92887777675385,
+          0.7306666691501937,
+          -0.0005610559589627786
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 5,
+        "crates": 5,
+        "gem": true
+      },
+      "result": {
+        "id": "bonus-jungle",
+        "state": "finished",
+        "gemEarned": true,
+        "totalCrates": 5,
+        "cratesBroken": 5,
+        "deaths": 0
+      },
+      "roomEvidence": [
+        {
+          "action": "room complete",
+          "pattern": "upper",
+          "index": 0,
+          "position": [
+            26.920244443555998,
+            0,
+            -0.00024184561979186957
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "bridge",
+          "index": 1,
+          "position": [
+            60.92887777699658,
+            0,
+            -0.000494938267102987
+          ]
+        }
+      ],
+      "consoleErrors": [],
+      "stamp": "Codex/sol fork · build 10-08 14:03 UTC"
+    },
+    {
+      "id": "bonus-test-course",
+      "frames": 2067,
+      "end": {
+        "frame": 2067,
+        "position": [
+          67.9288777767538,
+          0.7306666691501937,
+          -0.0005488365116125093
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 5,
+        "crates": 6,
+        "gem": true
+      },
+      "result": {
+        "id": "bonus-test-course",
+        "state": "finished",
+        "gemEarned": true,
+        "totalCrates": 6,
+        "cratesBroken": 6,
+        "deaths": 0
+      },
+      "roomEvidence": [
+        {
+          "action": "room complete",
+          "pattern": "fuse",
+          "index": 0,
+          "position": [
+            24.930266666182504,
+            0,
+            -0.00022968690276597357
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "bridge",
+          "index": 1,
+          "position": [
+            58.928877776996536,
+            0,
+            -0.0004827188197527176
+          ]
+        }
+      ],
+      "consoleErrors": [],
+      "stamp": "Codex/sol fork · build 10-08 14:03 UTC"
+    },
+    {
+      "id": "bonus-sky-bridge",
+      "frames": 1601,
+      "end": {
+        "frame": 1601,
+        "position": [
+          59.9279222215492,
+          0.7306666691501937,
+          -0.0004896898283978008
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 5,
+        "crates": 7,
+        "gem": true
+      },
+      "result": {
+        "id": "bonus-sky-bridge",
+        "state": "finished",
+        "gemEarned": true,
+        "totalCrates": 7,
+        "cratesBroken": 7,
+        "deaths": 0
+      },
+      "roomEvidence": [
+        {
+          "action": "room complete",
+          "pattern": "relay",
+          "index": 0,
+          "position": [
+            26.9274777768892,
+            0,
+            -0.0002418987588256975
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "finite",
+          "index": 1,
+          "position": [
+            50.92792222179194,
+            0,
+            -0.00042357213653800913
+          ]
+        }
+      ],
+      "consoleErrors": [],
+      "stamp": "Codex/sol fork · build 10-08 14:03 UTC"
+    },
+    {
+      "id": "bonus-slipstream",
+      "frames": 2769,
+      "end": {
+        "frame": 2769,
+        "position": [
+          97.92887777675443,
+          0.7306666691501937,
+          -0.0007667628727857851
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 5,
+        "crates": 9,
+        "gem": true
+      },
+      "result": {
+        "id": "bonus-slipstream",
+        "state": "finished",
+        "gemEarned": true,
+        "totalCrates": 9,
+        "cratesBroken": 9,
+        "deaths": 0
+      },
+      "roomEvidence": [
+        {
+          "action": "room complete",
+          "pattern": "upper",
+          "index": 0,
+          "position": [
+            26.920244443555998,
+            0,
+            -0.00024184561979186957
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "relay",
+          "index": 1,
+          "position": [
+            54.926055553911546,
+            0,
+            -0.0004475877963838679
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "bridge",
+          "index": 2,
+          "position": [
+            88.92887777699717,
+            0,
+            -0.0007006451809259934
+          ]
+        }
+      ],
+      "consoleErrors": [],
+      "stamp": "Codex/sol fork · build 10-08 14:03 UTC"
+    },
+    {
+      "id": "bonus-nightworks",
+      "frames": 2834,
+      "end": {
+        "frame": 2834,
+        "position": [
+          67.92874444279995,
+          0.7306666691501937,
+          -0.0005455713587827762
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 6,
+        "crates": 7,
+        "gem": true
+      },
+      "result": {
+        "id": "bonus-nightworks",
+        "state": "finished",
+        "gemEarned": true,
+        "totalCrates": 7,
+        "cratesBroken": 7,
+        "deaths": 0
+      },
+      "roomEvidence": [
+        {
+          "action": "room complete",
+          "pattern": "fuse",
+          "index": 0,
+          "position": [
+            24.930266666182504,
+            0,
+            -0.00022968690276597357
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "return",
+          "index": 1,
+          "position": [
+            58.928744443042696,
+            0,
+            -0.00047945366692298436
+          ]
+        }
+      ],
+      "consoleErrors": [],
+      "stamp": "Codex/sol fork · build 10-08 14:03 UTC"
+    },
+    {
+      "id": "bonus-beachside-run",
+      "frames": 1959,
+      "end": {
+        "frame": 1959,
+        "position": [
+          69.92015555377613,
+          0.7306666691501937,
+          -0.000561016043467322
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 5,
+        "crates": 5,
+        "gem": true
+      },
+      "result": {
+        "id": "bonus-beachside-run",
+        "state": "finished",
+        "gemEarned": true,
+        "totalCrates": 5,
+        "cratesBroken": 5,
+        "deaths": 0
+      },
+      "roomEvidence": [
+        {
+          "action": "room complete",
+          "pattern": "bridge",
+          "index": 0,
+          "position": [
+            32.92887777699673,
+            0,
+            -0.0002892629428438708
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "upper",
+          "index": 1,
+          "position": [
+            60.920155554018855,
+            0,
+            -0.0004948983516075303
+          ]
+        }
+      ],
+      "consoleErrors": [],
+      "stamp": "Codex/sol fork · build 10-08 14:03 UTC"
+    },
+    {
+      "id": "bonus-coastal",
+      "frames": 1873,
+      "end": {
+        "frame": 1873,
+        "position": [
+          57.930266665939605,
+          0.7306666691501937,
+          -0.00047748727779100663
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 6,
+        "crates": 7,
+        "gem": true
+      },
+      "result": {
+        "id": "bonus-coastal",
+        "state": "finished",
+        "gemEarned": true,
+        "totalCrates": 7,
+        "cratesBroken": 7,
+        "deaths": 0
+      },
+      "roomEvidence": [
+        {
+          "action": "room complete",
+          "pattern": "finite",
+          "index": 0,
+          "position": [
+            22.927922221792073,
+            0,
+            -0.000217888241466984
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "fuse",
+          "index": 1,
+          "position": [
+            48.93026666618234,
+            0,
+            -0.000411369585931215
+          ]
+        }
+      ],
+      "consoleErrors": [],
+      "stamp": "Codex/sol fork · build 10-08 14:03 UTC"
+    },
+    {
+      "id": "bonus-island-hopper",
+      "frames": 3536,
+      "end": {
+        "frame": 3536,
+        "position": [
+          97.92896666386211,
+          0.7306666691501937,
+          -0.0007635048214859188
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 6,
+        "crates": 10,
+        "gem": true
+      },
+      "result": {
+        "id": "bonus-island-hopper",
+        "state": "finished",
+        "gemEarned": true,
+        "totalCrates": 10,
+        "cratesBroken": 10,
+        "deaths": 0
+      },
+      "roomEvidence": [
+        {
+          "action": "room complete",
+          "pattern": "relay",
+          "index": 0,
+          "position": [
+            26.9274777768892,
+            0,
+            -0.0002418987588256975
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "upper",
+          "index": 1,
+          "position": [
+            54.920255553911346,
+            0,
+            -0.00044754518720466836
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "return",
+          "index": 2,
+          "position": [
+            88.92896666410485,
+            0,
+            -0.0006973871296261272
+          ]
+        }
+      ],
+      "consoleErrors": [],
+      "stamp": "Codex/sol fork · build 10-08 14:03 UTC"
+    },
+    {
+      "id": "bonus-codex-switchback",
+      "frames": 3240,
+      "end": {
+        "frame": 3240,
+        "position": [
+          99.9279222215494,
+          0.7306666691501937,
+          -0.0007868011861457646
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 6,
+        "crates": 8,
+        "gem": true
+      },
+      "result": {
+        "id": "bonus-codex-switchback",
+        "state": "finished",
+        "gemEarned": true,
+        "totalCrates": 8,
+        "cratesBroken": 8,
+        "deaths": 0
+      },
+      "roomEvidence": [
+        {
+          "action": "room complete",
+          "pattern": "return",
+          "index": 0,
+          "position": [
+            32.928544443393804,
+            0,
+            -0.0002859850562364461
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "bridge",
+          "index": 1,
+          "position": [
+            66.92887777699671,
+            0,
+            -0.0005390208913086305
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "finite",
+          "index": 2,
+          "position": [
+            90.92792222179213,
+            0,
+            -0.0007206834942859729
+          ]
+        }
+      ],
+      "consoleErrors": [],
+      "stamp": "Codex/sol fork · build 10-08 14:03 UTC"
+    },
+    {
+      "id": "bonus-chimeworks",
+      "frames": 2399,
+      "end": {
+        "frame": 2399,
+        "position": [
+          65.9284333317428,
+          0.7306666691501937,
+          -0.0005337876351845399
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 6,
+        "crates": 6,
+        "gem": true
+      },
+      "result": {
+        "id": "bonus-chimeworks",
+        "state": "finished",
+        "gemEarned": true,
+        "totalCrates": 6,
+        "cratesBroken": 6,
+        "deaths": 0
+      },
+      "roomEvidence": [
+        {
+          "action": "room complete",
+          "pattern": "finite",
+          "index": 0,
+          "position": [
+            22.927922221792073,
+            0,
+            -0.000217888241466984
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "return",
+          "index": 1,
+          "position": [
+            56.92843333198554,
+            0,
+            -0.00046766994332474827
+          ]
+        }
+      ],
+      "consoleErrors": [],
+      "stamp": "Codex/sol fork · build 10-08 14:03 UTC"
+    },
+    {
+      "id": "bonus-waterpark",
+      "frames": 3675,
+      "end": {
+        "frame": 3675,
+        "position": [
+          101.92872222028107,
+          0.7306666691501937,
+          -0.0007986133158634674
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 6,
+        "crates": 9,
+        "gem": true
+      },
+      "result": {
+        "id": "bonus-waterpark",
+        "state": "finished",
+        "gemEarned": true,
+        "totalCrates": 9,
+        "cratesBroken": 9,
+        "deaths": 0
+      },
+      "roomEvidence": [
+        {
+          "action": "room complete",
+          "pattern": "fuse",
+          "index": 0,
+          "position": [
+            24.930266666182504,
+            0,
+            -0.00022968690276597357
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "bridge",
+          "index": 1,
+          "position": [
+            58.928877776996536,
+            0,
+            -0.0004827188197527176
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "return",
+          "index": 2,
+          "position": [
+            92.92872222052381,
+            0,
+            -0.0007324956240036758
+          ]
+        }
+      ],
+      "consoleErrors": [],
+      "stamp": "Codex/sol fork · build 10-08 14:03 UTC"
+    },
+    {
+      "id": "bonus-nightworks-after-hours",
+      "frames": 3644,
+      "end": {
+        "frame": 3644,
+        "position": [
+          95.92874444279998,
+          0.7306666691501937,
+          -0.0007512630900246908
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 6,
+        "crates": 11,
+        "gem": true
+      },
+      "result": {
+        "id": "bonus-nightworks-after-hours",
+        "state": "finished",
+        "gemEarned": true,
+        "totalCrates": 11,
+        "cratesBroken": 11,
+        "deaths": 0
+      },
+      "roomEvidence": [
+        {
+          "action": "room complete",
+          "pattern": "relay",
+          "index": 0,
+          "position": [
+            26.9274777768892,
+            0,
+            -0.0002418987588256975
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "fuse",
+          "index": 1,
+          "position": [
+            52.93026666618211,
+            0,
+            -0.0004353786340078869
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "return",
+          "index": 2,
+          "position": [
+            86.92874444304272,
+            0,
+            -0.0006851453981648991
+          ]
+        }
+      ],
+      "consoleErrors": [],
+      "stamp": "Codex/sol fork · build 10-08 14:03 UTC"
+    },
+    {
+      "id": "bonus-crate-primer",
+      "frames": 1765,
+      "end": {
+        "frame": 1765,
+        "position": [
+          59.9279222215492,
+          0.7306666691501937,
+          -0.0004896837063892956
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 6,
+        "crates": 6,
+        "gem": true
+      },
+      "result": {
+        "id": "bonus-crate-primer",
+        "state": "finished",
+        "gemEarned": true,
+        "totalCrates": 6,
+        "cratesBroken": 6,
+        "deaths": 0
+      },
+      "roomEvidence": [
+        {
+          "action": "room complete",
+          "pattern": "upper",
+          "index": 0,
+          "position": [
+            26.920244443555998,
+            0,
+            -0.00024184561979186957
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "finite",
+          "index": 1,
+          "position": [
+            50.92792222179194,
+            0,
+            -0.00042356601452950385
+          ]
+        }
+      ],
+      "consoleErrors": [],
+      "stamp": "Codex/sol fork · build 10-08 14:03 UTC"
+    },
+    {
+      "id": "bonus-switchyard",
+      "frames": 3403,
+      "end": {
+        "frame": 3403,
+        "position": [
+          103.92618888619248,
+          0.7306666691501937,
+          -0.0008108383138347799
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 5,
+        "crates": 9,
+        "gem": true
+      },
+      "result": {
+        "id": "bonus-switchyard",
+        "state": "finished",
+        "gemEarned": true,
+        "totalCrates": 9,
+        "cratesBroken": 9,
+        "deaths": 0
+      },
+      "roomEvidence": [
+        {
+          "action": "room complete",
+          "pattern": "bridge",
+          "index": 0,
+          "position": [
+            32.92887777699673,
+            0,
+            -0.0002892629428438708
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "return",
+          "index": 1,
+          "position": [
+            66.92872222052354,
+            0,
+            -0.0005390397470948297
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "relay",
+          "index": 2,
+          "position": [
+            94.92618888643521,
+            0,
+            -0.0007447206219749883
+          ]
+        }
+      ],
+      "consoleErrors": [],
+      "stamp": "Codex/sol fork · build 10-08 14:03 UTC"
+    },
+    {
+      "id": "bonus-clockwork-gauntlet",
+      "frames": 3518,
+      "end": {
+        "frame": 3518,
+        "position": [
+          91.93036666593979,
+          0.7306666691501937,
+          -0.0007470943287395369
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 7,
+        "crates": 10,
+        "gem": true
+      },
+      "result": {
+        "id": "bonus-clockwork-gauntlet",
+        "state": "finished",
+        "gemEarned": true,
+        "totalCrates": 10,
+        "cratesBroken": 10,
+        "deaths": 0
+      },
+      "roomEvidence": [
+        {
+          "action": "room complete",
+          "pattern": "finite",
+          "index": 0,
+          "position": [
+            22.927922221792073,
+            0,
+            -0.00022780589524595287
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "return",
+          "index": 1,
+          "position": [
+            56.92847777643012,
+            0,
+            -0.0004775879236108372
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "fuse",
+          "index": 2,
+          "position": [
+            82.93036666618252,
+            0,
+            -0.0006809766368797453
+          ]
+        }
+      ],
+      "consoleErrors": [],
+      "stamp": "Codex/sol fork · build 10-08 14:03 UTC"
+    },
+    {
+      "id": "bonus-jungle-terraces",
+      "frames": 2714,
+      "end": {
+        "frame": 2714,
+        "position": [
+          91.93026666593975,
+          0.7306666691501937,
+          -0.0007305231128631931
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 6,
+        "crates": 9,
+        "gem": true
+      },
+      "result": {
+        "id": "bonus-jungle-terraces",
+        "state": "finished",
+        "gemEarned": true,
+        "totalCrates": 9,
+        "cratesBroken": 9,
+        "deaths": 0
+      },
+      "roomEvidence": [
+        {
+          "action": "room complete",
+          "pattern": "finite",
+          "index": 0,
+          "position": [
+            22.927922221792073,
+            0,
+            -0.000217888241466984
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "bridge",
+          "index": 1,
+          "position": [
+            56.92887777699653,
+            0,
+            -0.00047093509615448137
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "fuse",
+          "index": 2,
+          "position": [
+            82.93026666618249,
+            0,
+            -0.0006644054210034015
+          ]
+        }
+      ],
+      "consoleErrors": [],
+      "stamp": "Codex/sol fork · build 10-08 14:03 UTC"
+    },
+    {
+      "id": "bonus-jungle-skyline",
+      "frames": 3536,
+      "end": {
+        "frame": 3536,
+        "position": [
+          97.92028888608459,
+          0.7306666691501937,
+          -0.0007634410709706823
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 6,
+        "crates": 10,
+        "gem": true
+      },
+      "result": {
+        "id": "bonus-jungle-skyline",
+        "state": "finished",
+        "gemEarned": true,
+        "totalCrates": 10,
+        "cratesBroken": 10,
+        "deaths": 0
+      },
+      "roomEvidence": [
+        {
+          "action": "room complete",
+          "pattern": "return",
+          "index": 0,
+          "position": [
+            32.928544443393804,
+            0,
+            -0.0002859850562364461
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "relay",
+          "index": 1,
+          "position": [
+            60.92751110930502,
+            0,
+            -0.0004916769507319177
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "upper",
+          "index": 2,
+          "position": [
+            88.92028888632733,
+            0,
+            -0.0006973233791108906
+          ]
+        }
+      ],
+      "consoleErrors": [],
+      "stamp": "Codex/sol fork · build 10-08 14:03 UTC"
+    },
+    {
+      "id": "bonus-drowned-crown",
+      "frames": 3675,
+      "end": {
+        "frame": 3675,
+        "position": [
+          101.92887777675443,
+          0.7306666691501937,
+          -0.000798604989931898
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 6,
+        "crates": 9,
+        "gem": true
+      },
+      "result": {
+        "id": "bonus-drowned-crown",
+        "state": "finished",
+        "gemEarned": true,
+        "totalCrates": 9,
+        "cratesBroken": 9,
+        "deaths": 0
+      },
+      "roomEvidence": [
+        {
+          "action": "room complete",
+          "pattern": "return",
+          "index": 0,
+          "position": [
+            32.928544443393804,
+            0,
+            -0.0002859850562364461
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "fuse",
+          "index": 1,
+          "position": [
+            58.93026666618212,
+            0,
+            -0.00047945538108536687
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "bridge",
+          "index": 2,
+          "position": [
+            92.92887777699717,
+            0,
+            -0.0007324872980721064
+          ]
+        }
+      ],
+      "consoleErrors": [],
+      "stamp": "Codex/sol fork · build 10-08 14:03 UTC"
+    },
+    {
+      "id": "bonus-bone-yard",
+      "frames": 3209,
+      "end": {
+        "frame": 3209,
+        "position": [
+          93.92843333174314,
+          0.7306666691501937,
+          -0.0007394715302555665
+        ],
+        "state": "finished",
+        "grounded": true,
+        "deaths": 0,
+        "lives": 6,
+        "crates": 10,
+        "gem": true
+      },
+      "result": {
+        "id": "bonus-bone-yard",
+        "state": "finished",
+        "gemEarned": true,
+        "totalCrates": 10,
+        "cratesBroken": 10,
+        "deaths": 0
+      },
+      "roomEvidence": [
+        {
+          "action": "room complete",
+          "pattern": "relay",
+          "index": 0,
+          "position": [
+            26.9274777768892,
+            0,
+            -0.0002418987588256975
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "finite",
+          "index": 1,
+          "position": [
+            50.92792222179194,
+            0,
+            -0.00042357213653800913
+          ]
+        },
+        {
+          "action": "room complete",
+          "pattern": "return",
+          "index": 2,
+          "position": [
+            84.92843333198587,
+            0,
+            -0.0006733538383957748
+          ]
+        }
+      ],
+      "consoleErrors": [],
+      "stamp": "Codex/sol fork · build 10-08 14:03 UTC"
+    }
+  ],
+  "puzzles": [
+    {
+      "id": "crate-primer",
+      "frames": 4963,
+      "end": {
+        "frame": 4963,
+        "position": [
+          152.92150000000044,
+          1.9306666691501932,
+          1.547992724109158e-16
+        ],
+        "state": "finished",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "gemEarned": false,
+        "ground": "warp plinth rim",
+        "mover": null,
+        "input": {
+          "moveX": 1,
+          "moveY": 0,
+          "jumpHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindHeld": false,
+          "grindPressed": false,
+          "spinHeld": false,
+          "spinPressed": false,
+          "grabHeld": false,
+          "grabPressed": false,
+          "transferHeld": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      },
+      "result": {
+        "completionScope": "main-route-only",
+        "activeStageCrates": 22,
+        "bonusCrateTotal": 6,
+        "bonusCrates": 0,
+        "gemEarned": false,
+        "id": "crate-primer",
+        "cratesBroken": 22,
+        "totalCrates": 28,
+        "deaths": 0,
+        "state": "finished"
+      },
+      "consoleErrors": [],
+      "previewOutside": 78
+    },
+    {
+      "id": "switchyard",
+      "frames": 7210,
+      "end": {
+        "frame": 7210,
+        "position": [
+          222.9900777777786,
+          4.730666669150193,
+          0
+        ],
+        "state": "finished",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "gemEarned": false,
+        "ground": "warp plinth rim",
+        "mover": null,
+        "input": {
+          "moveX": 1,
+          "moveY": 0,
+          "jumpHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindHeld": false,
+          "grindPressed": false,
+          "spinHeld": false,
+          "spinPressed": false,
+          "grabHeld": false,
+          "grabPressed": false,
+          "transferHeld": false,
+          "transferPressed": false,
+          "restartPressed": false
+        },
+        "masks": 1,
+        "playerBounds": {
+          "min": [
+            222.4900777777786,
+            4.730666669150193,
+            -0.5
+          ],
+          "max": [
+            223.4900777777786,
+            5.666530958864585,
+            0.5
+          ]
+        },
+        "projectiles": []
+      },
+      "result": {
+        "completionScope": "main-route-only",
+        "activeStageCrates": 26,
+        "bonusCrateTotal": 9,
+        "bonusCrates": 0,
+        "gemEarned": false,
+        "id": "switchyard",
+        "done": true,
+        "state": "finished",
+        "cratesBroken": 26,
+        "totalCrates": 35,
+        "deaths": 0
+      },
+      "consoleErrors": [],
+      "previewOutside": 141
+    },
+    {
+      "id": "clockwork-gauntlet",
+      "frames": 8827,
+      "end": {
+        "frame": 8827,
+        "position": [
+          278.9509222222195,
+          5.9306666691501935,
+          0
+        ],
+        "state": "finished",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "gemEarned": false,
+        "ground": "warp plinth rim",
+        "mover": null,
+        "input": {
+          "moveX": 1,
+          "moveY": 0,
+          "jumpHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindHeld": false,
+          "grindPressed": false,
+          "spinHeld": false,
+          "spinPressed": false,
+          "grabHeld": false,
+          "grabPressed": false,
+          "transferHeld": false,
+          "transferPressed": false,
+          "restartPressed": false
+        },
+        "masks": 1,
+        "playerBounds": {
+          "min": [
+            278.4509222222195,
+            5.9306666691501935,
+            -0.5
+          ],
+          "max": [
+            279.4509222222195,
+            6.866530958864585,
+            0.5
+          ]
+        },
+        "projectiles": []
+      },
+      "result": {
+        "completionScope": "main-route-only",
+        "activeStageCrates": 36,
+        "bonusCrateTotal": 10,
+        "bonusCrates": 0,
+        "gemEarned": false,
+        "id": "clockwork-gauntlet",
+        "cratesBroken": 36,
+        "totalCrates": 46,
+        "deaths": 0,
+        "state": "finished"
+      },
+      "consoleErrors": [],
+      "previewOutside": 246
+    }
+  ],
+  "afterHours": {
+    "frames": 4256,
+    "end": {
+      "frame": 4256,
+      "worldTime": 70.9333333333306,
+      "chapter": "last-shift",
+      "input": {
+        "moveX": 0.12,
+        "moveY": 0.99,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "jumpCancelled": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "position": [
+        131.78036287313105,
+        36.73066666915019,
+        -682.2218236421099
+      ],
+      "heading": [
+        0.1203240744864014,
+        0,
+        -0.9927346660105059
+      ],
+      "state": "finished",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "boardRolling": true,
+      "bailing": false,
+      "deaths": 0,
+      "impact": null,
+      "supportComponent": 167,
+      "railComponent": null,
+      "cameraPosition": [
+        131.7423005967975,
+        41.46517703901891,
+        -677.1714705803857
+      ],
+      "cameraDirection": [
+        -0.000007346410206643587,
+        0,
+        -0.9999999999730151
+      ]
+    },
+    "evidence": {
+      "chapters": [
+        {
+          "id": "freight",
+          "firstFrame": 1,
+          "lastFrame": 344
+        },
+        {
+          "id": "ferries",
+          "firstFrame": 345,
+          "lastFrame": 644
+        },
+        {
+          "id": "cutbacks",
+          "firstFrame": 645,
+          "lastFrame": 1409
+        },
+        {
+          "id": "shift-lights",
+          "firstFrame": 1410,
+          "lastFrame": 1675
+        },
+        {
+          "id": "rail-ferry",
+          "firstFrame": 1676,
+          "lastFrame": 2518
+        },
+        {
+          "id": "workbay",
+          "firstFrame": 2519,
+          "lastFrame": 3085
+        },
+        {
+          "id": "crown",
+          "firstFrame": 3086,
+          "lastFrame": 3489
+        },
+        {
+          "id": "last-shift",
+          "firstFrame": 3490,
+          "lastFrame": 4256
+        }
+      ],
+      "checkpoints": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        6
+      ],
+      "footFrames": 0,
+      "mountedFrames": 4223,
+      "finished": true,
+      "chapterEvidence": {
+        "freight": {
+          "launches": [
+            {
+              "index": 0,
+              "start": [
+                4.610068557097033,
+                10.747310107226612,
+                -22.275513974365918
+              ],
+              "peak": 10.747310107226612,
+              "airborne": false
+            },
+            {
+              "index": 1,
+              "start": [
+                2.931589455676724,
+                11.674201147172443,
+                -57.37742430522712
+              ],
+              "peak": 11.674201147172443,
+              "airborne": false
+            }
+          ],
+          "landings": [
+            {
+              "index": 0,
+              "start": [
+                4.610068557097033,
+                10.747310107226612,
+                -22.275513974365918
+              ],
+              "peak": 13.130658004952933,
+              "airborne": true,
+              "end": [
+                7.340926655717683,
+                10,
+                -41.58760527518141
+              ]
+            },
+            {
+              "index": 1,
+              "start": [
+                2.931589455676724,
+                11.674201147172443,
+                -57.37742430522712
+              ],
+              "peak": 14.823732072161201,
+              "airborne": true,
+              "end": [
+                -4.54036153868945,
+                12,
+                -76.15715202196178
+              ]
+            }
+          ],
+          "complete": true
+        },
+        "ferries": {
+          "moverContacts": [
+            {
+              "moverIndex": 0,
+              "component": 30,
+              "frame": 74,
+              "time": 6.966666666666647,
+              "position": [
+                -10.65378988588638,
+                12,
+                -110.12288282854642
+              ]
+            },
+            {
+              "moverIndex": 1,
+              "component": 31,
+              "frame": 153,
+              "time": 8.283333333333324,
+              "position": [
+                -4.876463359614425,
+                12.5,
+                -130.94305766392213
+              ]
+            },
+            {
+              "moverIndex": 2,
+              "component": 32,
+              "frame": 227,
+              "time": 9.516666666666719,
+              "position": [
+                -4.543901574596881,
+                13.191510766170063,
+                -150.4449556452006
+              ]
+            }
+          ],
+          "landings": [
+            {
+              "goal": 0,
+              "start": [
+                -8.891164700009853,
+                12,
+                -98.49013357978498
+              ],
+              "startFrame": 37,
+              "startTime": 6.349999999999983,
+              "charge": 0.4,
+              "peak": 13.77907584806457,
+              "airborne": true,
+              "predicted": {
+                "t": 0.6166666666666669,
+                "position": [
+                  -10.639932216414998,
+                  12,
+                  -110.03142674620756
+                ],
+                "peak": 13.77907584806457
+              },
+              "end": [
+                -10.65378988588638,
+                12,
+                -110.12288282854642
+              ],
+              "endFrame": 74,
+              "endTime": 6.966666666666647,
+              "moverIndex": 0,
+              "component": 30
+            },
+            {
+              "goal": 1,
+              "start": [
+                -10.61963288673971,
+                12,
+                -122.15851393367471
+              ],
+              "startFrame": 118,
+              "startTime": 7.699999999999978,
+              "charge": 0.4,
+              "peak": 13.77907584806457,
+              "airborne": true,
+              "predicted": {
+                "t": 0.6000000000000002,
+                "position": [
+                  -4.752718050297056,
+                  12.5,
+                  -131.11874932225254
+                ],
+                "peak": 13.77907584806457
+              },
+              "end": [
+                -4.876463359614425,
+                12.5,
+                -130.94305766392213
+              ],
+              "endFrame": 153,
+              "endTime": 8.283333333333324,
+              "moverIndex": 1,
+              "component": 31
+            },
+            {
+              "goal": 2,
+              "start": [
+                -1.6140679117237233,
+                12.5,
+                -140.8771340634321
+              ],
+              "startFrame": 193,
+              "startTime": 8.950000000000024,
+              "charge": 0.4,
+              "peak": 14.27907584806457,
+              "airborne": true,
+              "predicted": {
+                "t": 0.5833333333333335,
+                "position": [
+                  -4.205732778147551,
+                  13.19551151582424,
+                  -150.74921664664
+                ],
+                "peak": 14.27907584806457
+              },
+              "end": [
+                -4.543901574596881,
+                13.191510766170063,
+                -150.4449556452006
+              ],
+              "endFrame": 227,
+              "endTime": 9.516666666666719,
+              "moverIndex": 2,
+              "component": 32
+            },
+            {
+              "goal": 3,
+              "start": [
+                -6.610587176074845,
+                13.169039878356624,
+                -158.92243077677162
+              ],
+              "startFrame": 259,
+              "startTime": 10.050000000000079,
+              "charge": 0.4,
+              "peak": 14.945113255426968,
+              "airborne": true,
+              "predicted": {
+                "t": 0.6833333333333338,
+                "position": [
+                  -7.970570597042954,
+                  12,
+                  -170.1429840447478
+                ],
+                "peak": 14.948115726421195
+              },
+              "end": [
+                -7.982903814677805,
+                12,
+                -170.24473934801335
+              ],
+              "endFrame": 300,
+              "endTime": 10.733333333333446,
+              "moverIndex": null,
+              "component": 33
+            }
+          ],
+          "launches": [
+            {
+              "goal": 0,
+              "start": [
+                -8.891164700009853,
+                12,
+                -98.49013357978498
+              ],
+              "startFrame": 37,
+              "startTime": 6.349999999999983,
+              "charge": 0.4,
+              "peak": 12,
+              "airborne": false,
+              "predicted": {
+                "t": 0.6166666666666669,
+                "position": [
+                  -10.639932216414998,
+                  12,
+                  -110.03142674620756
+                ],
+                "peak": 13.77907584806457
+              }
+            },
+            {
+              "goal": 1,
+              "start": [
+                -10.61963288673971,
+                12,
+                -122.15851393367471
+              ],
+              "startFrame": 118,
+              "startTime": 7.699999999999978,
+              "charge": 0.4,
+              "peak": 12,
+              "airborne": false,
+              "predicted": {
+                "t": 0.6000000000000002,
+                "position": [
+                  -4.752718050297056,
+                  12.5,
+                  -131.11874932225254
+                ],
+                "peak": 13.77907584806457
+              }
+            },
+            {
+              "goal": 2,
+              "start": [
+                -1.6140679117237233,
+                12.5,
+                -140.8771340634321
+              ],
+              "startFrame": 193,
+              "startTime": 8.950000000000024,
+              "charge": 0.4,
+              "peak": 12.5,
+              "airborne": false,
+              "predicted": {
+                "t": 0.5833333333333335,
+                "position": [
+                  -4.205732778147551,
+                  13.19551151582424,
+                  -150.74921664664
+                ],
+                "peak": 14.27907584806457
+              }
+            },
+            {
+              "goal": 3,
+              "start": [
+                -6.610587176074845,
+                13.169039878356624,
+                -158.92243077677162
+              ],
+              "startFrame": 259,
+              "startTime": 10.050000000000079,
+              "charge": 0.4,
+              "peak": 13.169039878356624,
+              "airborne": false,
+              "predicted": {
+                "t": 0.6833333333333338,
+                "position": [
+                  -7.970570597042954,
+                  12,
+                  -170.1429840447478
+                ],
+                "peak": 14.948115726421195
+              }
+            }
+          ],
+          "mountedFrames": 300,
+          "footFrames": 0,
+          "complete": true,
+          "waitFrames": 0
+        },
+        "cutbacks": {
+          "complete": true,
+          "brakeFrames": 418,
+          "lateral": 90.341676258675,
+          "last": [
+            20.00480662926392,
+            14,
+            -278.01095773375795
+          ]
+        },
+        "shift-lights": {
+          "phasePadContacts": [
+            {
+              "station": 0,
+              "lane": 1,
+              "component": 75,
+              "frame": 93,
+              "time": 25.033333333333193,
+              "position": [
+                21.978007651254188,
+                14,
+                -306.3080127276937
+              ],
+              "speed": 19.199885980208627,
+              "lit": true
+            },
+            {
+              "station": 1,
+              "lane": 0,
+              "component": 76,
+              "frame": 137,
+              "time": 25.766666666666485,
+              "position": [
+                18.522530914416134,
+                14,
+                -321.13467602826796
+              ],
+              "speed": 21.133670089667284,
+              "lit": true
+            },
+            {
+              "station": 2,
+              "lane": 0,
+              "component": 78,
+              "frame": 181,
+              "time": 26.499999999999776,
+              "position": [
+                18.027754408561005,
+                14,
+                -337.7476235342541
+              ],
+              "speed": 23,
+              "lit": true
+            },
+            {
+              "station": 3,
+              "lane": 1,
+              "component": 81,
+              "frame": 227,
+              "time": 27.2666666666664,
+              "position": [
+                21.552554179405668,
+                14,
+                -354.9916308885523
+              ],
+              "speed": 23,
+              "lit": true
+            }
+          ],
+          "jumps": [
+            {
+              "station": 0,
+              "target": {
+                "station": 0,
+                "lane": 1,
+                "x": 22,
+                "z": -308,
+                "firstTakeoff": -290,
+                "turnEarly": false,
+                "predictedLandingTime": 25.015726008834744
+              },
+              "start": [
+                20.83852265488007,
+                14.735894380157264,
+                -290.0279386926247
+              ],
+              "peak": 17.158242358483545,
+              "airborne": true,
+              "predicted": null,
+              "end": [
+                21.978007651254188,
+                14,
+                -306.3080127276937
+              ],
+              "component": 75,
+              "time": 25.033333333333193
+            },
+            {
+              "station": 1,
+              "target": {
+                "station": 1,
+                "lane": 0,
+                "x": 18,
+                "z": -325,
+                "firstTakeoff": -290,
+                "turnEarly": false,
+                "predictedLandingTime": 25.837662054237015
+              },
+              "start": [
+                21.37702035804984,
+                14,
+                -310.59532955013236
+              ],
+              "peak": 15.172626791800525,
+              "airborne": true,
+              "predicted": {
+                "safe": true,
+                "position": [
+                  18.542791163333096,
+                  14,
+                  -321.059871133282
+                ],
+                "time": 25.766666666666513,
+                "heading": [
+                  -0.2614225666701345,
+                  0,
+                  -0.9652244514285794
+                ],
+                "inside": true,
+                "lit": true
+              },
+              "end": [
+                18.522530914416134,
+                14,
+                -321.13467602826796
+              ],
+              "component": 76,
+              "time": 25.766666666666485
+            },
+            {
+              "station": 2,
+              "target": {
+                "station": 2,
+                "lane": 0,
+                "x": 18,
+                "z": -342,
+                "firstTakeoff": -290,
+                "turnEarly": false,
+                "predictedLandingTime": 26.6494925483004
+              },
+              "start": [
+                18.027841708402327,
+                14,
+                -325.8642902012417
+              ],
+              "peak": 15.172626791800525,
+              "airborne": true,
+              "predicted": {
+                "safe": true,
+                "position": [
+                  18.027754729276783,
+                  14,
+                  -337.7039674171023
+                ],
+                "time": 26.499999999999805,
+                "heading": [
+                  -0.00000734641020664359,
+                  0,
+                  -0.9999999999730167
+                ],
+                "inside": true,
+                "lit": true
+              },
+              "end": [
+                18.027754408561005,
+                14,
+                -337.7476235342541
+              ],
+              "component": 78,
+              "time": 26.499999999999776
+            },
+            {
+              "station": 3,
+              "target": {
+                "station": 3,
+                "lane": 1,
+                "x": 22,
+                "z": -359,
+                "firstTakeoff": -290,
+                "turnEarly": false,
+                "predictedLandingTime": 27.3787438581383
+              },
+              "start": [
+                18.72252151675469,
+                14,
+                -343.05588515401826
+              ],
+              "peak": 15.223029717485602,
+              "airborne": true,
+              "predicted": {
+                "safe": true,
+                "position": [
+                  21.552554179405625,
+                  14,
+                  -354.991630888552
+                ],
+                "time": 27.26666666666643,
+                "heading": [
+                  0.23070918445523927,
+                  0,
+                  -0.9730227500978599
+                ],
+                "inside": true,
+                "lit": true
+              },
+              "end": [
+                21.552554179405668,
+                14,
+                -354.9916308885523
+              ],
+              "component": 81,
+              "time": 27.2666666666664
+            },
+            {
+              "station": "dock",
+              "start": [
+                22.074379769106386,
+                14,
+                -358.7840786790438
+              ],
+              "peak": 15.029792570640984,
+              "airborne": true,
+              "predicted": {
+                "safe": true,
+                "position": [
+                  22.720969109656558,
+                  14,
+                  -369.88192531712923
+                ],
+                "time": 27.91666666666639,
+                "heading": [
+                  0.05816395867018034,
+                  0,
+                  -0.9983070439057405
+                ],
+                "inside": true,
+                "lit": true
+              },
+              "end": [
+                22.527186500861607,
+                14,
+                -369.8915196013014
+              ],
+              "component": 82,
+              "time": 27.916666666666362
+            }
+          ],
+          "mountedFrames": 266,
+          "footFrames": 0,
+          "complete": true
+        },
+        "rail-ferry": {
+          "kind": "counterweight",
+          "frame": 843,
+          "railCatches": [
+            {
+              "frame": 563,
+              "component": 96,
+              "name": "Counterweight ridge 1",
+              "time": 37.299999999999166,
+              "position": [
+                28.023481828049725,
+                14.339166666666666,
+                -375.5957394936376
+              ]
+            },
+            {
+              "frame": 695,
+              "component": 97,
+              "name": "Counterweight ridge 2",
+              "time": 39.49999999999904,
+              "position": [
+                67.6213156039449,
+                18.08884786024304,
+                -377.1507719885276
+              ]
+            }
+          ],
+          "pops": [
+            {
+              "name": "Catch first counterweight",
+              "frame": 560,
+              "takeoff": [
+                27.13905608072598,
+                14,
+                -375.58689198716223
+              ],
+              "previousState": "ride",
+              "railComponent": null,
+              "time": 37.24999999999917,
+              "position": [
+                27.433864663167228,
+                14,
+                -375.58984115598736
+              ]
+            },
+            {
+              "name": "Counterweight handoff",
+              "frame": 662,
+              "takeoff": [
+                57.89228190218779,
+                16.25,
+                -377.1460365710276
+              ],
+              "previousState": "grind",
+              "railComponent": 96,
+              "time": 38.94999999999907,
+              "position": [
+                58.18710110527134,
+                16.25,
+                -377.1507719885276
+              ]
+            },
+            {
+              "name": "Counterweight receiving dock",
+              "frame": 796,
+              "takeoff": [
+                97.10323591229977,
+                16.25,
+                -378.03764909787276
+              ],
+              "previousState": "grind",
+              "railComponent": 97,
+              "time": 41.18333333333228,
+              "position": [
+                97.39805511538333,
+                16.25,
+                -378.0574804156685
+              ]
+            }
+          ],
+          "phaseContacts": [],
+          "mountedFrames": 843,
+          "footFrames": 0,
+          "bails": 0,
+          "deaths": 0,
+          "exit": {
+            "frame": 843,
+            "position": [
+              111.25455766031011,
+              14,
+              -378.0574804156685
+            ],
+            "mounted": true,
+            "state": "ride"
+          },
+          "done": true,
+          "readFrames": 521,
+          "brakeFrames": 33
+        },
+        "workbay": {
+          "complete": true,
+          "points": [
+            {
+              "index": 0,
+              "at": [
+                114.1739818703643,
+                14,
+                -388.0079983756288
+              ]
+            },
+            {
+              "index": 1,
+              "at": [
+                116.33865370994317,
+                14,
+                -414.6996488276728
+              ]
+            },
+            {
+              "index": 2,
+              "at": [
+                113.2335007485678,
+                14,
+                -419.03025178994005
+              ]
+            },
+            {
+              "index": 3,
+              "at": [
+                111.2781671948853,
+                14,
+                -424.18029856022525
+              ]
+            },
+            {
+              "index": 4,
+              "at": [
+                111.45493052716921,
+                14,
+                -437.7715547241549
+              ]
+            },
+            {
+              "index": 5,
+              "at": [
+                116.06516426603895,
+                14,
+                -446.12880970172614
+              ]
+            },
+            {
+              "index": 6,
+              "at": [
+                116.8887233863548,
+                14,
+                -450.02254810180546
+              ]
+            },
+            {
+              "index": 7,
+              "at": [
+                116.97927723512902,
+                14,
+                -457.02128560838605
+              ]
+            }
+          ],
+          "setupFrames": 105,
+          "pendulumChoices": [
+            {
+              "index": 0,
+              "time": 45.949999999998674,
+              "predictedX": 118.31438848291208,
+              "lane": 110.8,
+              "position": [
+                116.33865370994317,
+                14,
+                -414.6996488276728
+              ]
+            },
+            {
+              "index": 1,
+              "time": 48.01666666666522,
+              "predictedX": 108.84107499313072,
+              "lane": 117.2,
+              "position": [
+                111.45493052716921,
+                14,
+                -437.7715547241549
+              ]
+            }
+          ]
+        },
+        "crown": {
+          "complete": true,
+          "launches": [
+            {
+              "index": 0,
+              "start": [
+                101.84018230782256,
+                21.664022322884605,
+                -517.5074115930703
+              ],
+              "peak": 21.664022322884605,
+              "airborne": false
+            },
+            {
+              "index": 1,
+              "start": [
+                108.12686787072835,
+                31.0776887103073,
+                -570.7524872155959
+              ],
+              "peak": 31.0776887103073,
+              "airborne": false
+            }
+          ],
+          "landings": [
+            {
+              "index": 0,
+              "start": [
+                101.84018230782256,
+                21.664022322884605,
+                -517.5074115930703
+              ],
+              "peak": 24.979315995191957,
+              "airborne": true,
+              "end": [
+                98.39554270863343,
+                24,
+                -528.4198376460715
+              ]
+            },
+            {
+              "index": 1,
+              "start": [
+                108.12686787072835,
+                31.0776887103073,
+                -570.7524872155959
+              ],
+              "peak": 34.93137114763745,
+              "airborne": true,
+              "end": [
+                116.55566670477899,
+                34,
+                -584.271770273999
+              ]
+            }
+          ]
+        },
+        "last-shift": {
+          "kind": "finale",
+          "frame": 767,
+          "railCatches": [
+            {
+              "frame": 621,
+              "component": 156,
+              "name": "Last-shift moving ridge",
+              "time": 68.4999999999974,
+              "position": [
+                126.98981791609788,
+                35.6895460596231,
+                -626.2719636831224
+              ]
+            }
+          ],
+          "pops": [
+            {
+              "name": "Final phase approach",
+              "frame": 534,
+              "takeoff": [
+                123.56765535059701,
+                34,
+                -597.1294074095605
+              ],
+              "previousState": "ride",
+              "railComponent": null,
+              "time": 67.04999999999748,
+              "position": [
+                123.55192269002812,
+                34,
+                -597.444014280737
+              ]
+            },
+            {
+              "name": "Final moving-ridge catch",
+              "frame": 595,
+              "takeoff": [
+                124.55824329192595,
+                34,
+                -616.8371673478813
+              ],
+              "previousState": "ride",
+              "railComponent": null,
+              "time": 68.06666666666409,
+              "position": [
+                124.65176539285564,
+                34,
+                -617.200044130006
+              ]
+            },
+            {
+              "name": "Higher summit landing",
+              "frame": 720,
+              "takeoff": [
+                129.32788688886723,
+                35.3,
+                -664.3986049275009
+              ],
+              "previousState": "grind",
+              "railComponent": 156,
+              "time": 70.1499999999973,
+              "position": [
+                129.33768407703548,
+                35.3,
+                -664.7700192634958
+              ]
+            }
+          ],
+          "phaseContacts": [
+            {
+              "frame": 570,
+              "component": 155,
+              "name": "Last-shift phase approach",
+              "time": 67.64999999999745,
+              "lit": true,
+              "position": [
+                122.9855469095482,
+                34,
+                -608.7698616430897
+              ]
+            }
+          ],
+          "mountedFrames": 767,
+          "footFrames": 0,
+          "bails": 0,
+          "deaths": 0,
+          "exit": {
+            "frame": 767,
+            "position": [
+              131.78036287313105,
+              36.73066666915019,
+              -682.2218236421099
+            ],
+            "mounted": true,
+            "state": "finished"
+          },
+          "done": true
+        }
+      }
+    },
+    "assets": {
+      "rocks": {
+        "models": 29,
+        "ready": 29,
+        "solids": 29,
+        "collisionTrees": 20,
+        "errors": []
+      },
+      "scenery": {
+        "components": 35,
+        "placements": 35,
+        "ready": 19,
+        "skipped": 0,
+        "draws": 19,
+        "triangles": 42428,
+        "allLodTriangles": 42428,
+        "cells": 31,
+        "residentCells": 19,
+        "pendingCells": 0,
+        "retryingCells": 0,
+        "compressedTextures": 2,
+        "textureMiB": 8,
+        "errors": [],
+        "windTime": 71.71663333334247
+      },
+      "enemies": [
+        {
+          "kind": "grunt",
+          "status": "ready",
+          "url": "/enemies/nightworks-snot-goblin.glb",
+          "appearance": "nightworks",
+          "clips": [
+            "Armature|walking_man|baselayer"
+          ],
+          "activeClip": "Armature|walking_man|baselayer",
+          "mappedNodes": {
+            "torso": "Spine02",
+            "head": "Head",
+            "frontUpperLeft": "LeftArm",
+            "frontUpperRight": "RightArm",
+            "frontLowerLeft": "LeftForeArm",
+            "frontLowerRight": "RightForeArm",
+            "hindUpperLeft": "LeftUpLeg",
+            "hindUpperRight": "RightUpLeg",
+            "hindLowerLeft": "LeftLeg",
+            "hindLowerRight": "RightLeg",
+            "hindFootLeft": "LeftFoot",
+            "hindFootRight": "RightFoot",
+            "motionRoot": "Hips"
+          },
+          "skinnedMeshes": 1,
+          "meshes": 1,
+          "animationTime": 0.0768484027297889,
+          "gaitPhase": 0.07204537380171816,
+          "state": "patrol"
+        },
+        {
+          "kind": "hopper",
+          "status": "ready",
+          "url": "/enemies/nightworks-snot-goblin.glb",
+          "appearance": "nightworks",
+          "clips": [
+            "Armature|walking_man|baselayer"
+          ],
+          "activeClip": null,
+          "mappedNodes": {
+            "torso": "Spine02",
+            "head": "Head",
+            "frontUpperLeft": "LeftArm",
+            "frontUpperRight": "RightArm",
+            "frontLowerLeft": "LeftForeArm",
+            "frontLowerRight": "RightForeArm",
+            "hindUpperLeft": "LeftUpLeg",
+            "hindUpperRight": "RightUpLeg",
+            "hindLowerLeft": "LeftLeg",
+            "hindLowerRight": "RightLeg",
+            "hindFootLeft": "LeftFoot",
+            "hindFootRight": "RightFoot",
+            "motionRoot": "Hips"
+          },
+          "skinnedMeshes": 1,
+          "meshes": 1,
+          "animationTime": 0,
+          "gaitPhase": 0.6487179487186931,
+          "state": "crouch"
+        },
+        {
+          "kind": "grunt",
+          "status": "ready",
+          "url": "/enemies/nightworks-snot-goblin.glb",
+          "appearance": "nightworks",
+          "clips": [
+            "Armature|walking_man|baselayer"
+          ],
+          "activeClip": "Armature|walking_man|baselayer",
+          "mappedNodes": {
+            "torso": "Spine02",
+            "head": "Head",
+            "frontUpperLeft": "LeftArm",
+            "frontUpperRight": "RightArm",
+            "frontLowerLeft": "LeftForeArm",
+            "frontLowerRight": "RightForeArm",
+            "hindUpperLeft": "LeftUpLeg",
+            "hindUpperRight": "RightUpLeg",
+            "hindLowerLeft": "LeftLeg",
+            "hindLowerRight": "RightLeg",
+            "hindFootLeft": "LeftFoot",
+            "hindFootRight": "RightFoot",
+            "motionRoot": "Hips"
+          },
+          "skinnedMeshes": 1,
+          "meshes": 1,
+          "animationTime": 0.4768484027297413,
+          "gaitPhase": 0.44704535424390035,
+          "state": "patrol"
+        },
+        {
+          "kind": "hopper",
+          "status": "ready",
+          "url": "/enemies/nightworks-snot-goblin.glb",
+          "appearance": "nightworks",
+          "clips": [
+            "Armature|walking_man|baselayer"
+          ],
+          "activeClip": null,
+          "mappedNodes": {
+            "torso": "Spine02",
+            "head": "Head",
+            "frontUpperLeft": "LeftArm",
+            "frontUpperRight": "RightArm",
+            "frontLowerLeft": "LeftForeArm",
+            "frontLowerRight": "RightForeArm",
+            "hindUpperLeft": "LeftUpLeg",
+            "hindUpperRight": "RightUpLeg",
+            "hindLowerLeft": "LeftLeg",
+            "hindLowerRight": "RightLeg",
+            "hindFootLeft": "LeftFoot",
+            "hindFootRight": "RightFoot",
+            "motionRoot": "Hips"
+          },
+          "skinnedMeshes": 1,
+          "meshes": 1,
+          "animationTime": 0,
+          "gaitPhase": 0.06666666666716226,
+          "state": "leap"
+        }
+      ]
+    },
+    "stamp": "Codex/sol fork · build 10-08 13:10 UTC",
+    "errors": []
+  },
+  "railFailure": [
+    {
+      "key": "enterGrind",
+      "frame": 1879,
+      "before": {
+        "position": [
+          28.151746466873817,
+          14.339166666666666,
+          -375.5306795011572
+        ],
+        "state": "air",
+        "bailing": false,
+        "speed": 17.689399999999992
+      },
+      "after": {
+        "position": [
+          28.151746466873817,
+          14.339166666666666,
+          -375.5306795011572
+        ],
+        "state": "grind",
+        "bailing": false,
+        "speed": 17.687172638955985
+      },
+      "railComponent": 96,
+      "contact": {
+        "normal": [
+          0.22252095851875162,
+          0,
+          -0.9749279065756074
+        ],
+        "point": [
+          0.18116946632902964,
+          10.716666666890184,
+          8.574684054794721
+        ],
+        "depth": 0.25912824001131485,
+        "fraction": 0
+      }
+    },
+    {
+      "key": "bail",
+      "frame": 1881,
+      "before": {
+        "position": [
+          29.097616488873157,
+          15.25329989711934,
+          -375.3360017862137
+        ],
+        "state": "grind",
+        "bailing": false,
+        "speed": 17.687172638955985
+      },
+      "after": {
+        "position": [
+          29.097616488873157,
+          15.25329989711934,
+          -375.3360017862137
+        ],
+        "state": "grind",
+        "bailing": true,
+        "speed": 8.843586319477993
+      },
+      "contact": {
+        "mesh": "floating rock island",
+        "owner": {
+          "t": "rail",
+          "nm": "Counterweight ridge 1",
+          "dkind": "nightrockridge",
+          "color": "#fff0cf",
+          "p": [
+            46,
+            16.1,
+            -375
+          ],
+          "len": 34,
+          "yaw": 90,
+          "axis": "z",
+          "amp": 2.2,
+          "speed": 0.6,
+          "phase": 0,
+          "grp": 5
+        },
+        "normal": [
+          -0.9156449668934991,
+          0,
+          -0.4019879284289557
+        ],
+        "point": [
+          29.554845809936523,
+          16.100000047683718,
+          -375.1237043068701
+        ],
+        "depth": 0,
+        "fraction": 0.8959191566105184
+      }
+    },
+    {
+      "key": "resolveWorldContact",
+      "frame": 1881,
+      "before": {
+        "position": [
+          29.14711918951358,
+          15.25329989711934,
+          -375.3165540302341
+        ],
+        "state": "grind",
+        "bailing": false,
+        "speed": 17.687172638955985
+      },
+      "after": {
+        "position": [
+          29.097616488873157,
+          15.25329989711934,
+          -375.3360017862137
+        ],
+        "state": "air",
+        "bailing": true,
+        "speed": 10.32044134985807
+      },
+      "contact": {
+        "mesh": "floating rock island",
+        "owner": {
+          "t": "rail",
+          "nm": "Counterweight ridge 1",
+          "dkind": "nightrockridge",
+          "color": "#fff0cf",
+          "p": [
+            46,
+            16.1,
+            -375
+          ],
+          "len": 34,
+          "yaw": 90,
+          "axis": "z",
+          "amp": 2.2,
+          "speed": 0.6,
+          "phase": 0,
+          "grp": 5
+        },
+        "normal": [
+          -0.9156449668934991,
+          0,
+          -0.4019879284289557
+        ],
+        "point": [
+          29.554845809936523,
+          16.100000047683718,
+          -375.1237043068701
+        ],
+        "depth": 0,
+        "fraction": 0.8959191566105184
+      }
+    }
+  ],
+  "spinBridgeFailure": {
+    "failure": "Error: first phase relay spin the far timber and leave for permanent footing: {\"frame\":2747,\"position\":[108.8618907875721,3.788969004966232,-1.7871774000875048e-17],\"state\":\"air\",\"grounded\":false,\"bailing\":true,\"speed\":-13.239907747071992,\"verticalSpeed\":4.221746667424658,\"deaths\":0,\"ground\":\"phase pad\"}",
+    "impact": {
+      "count": 1,
+      "last": {
+        "name": "Phase relay return shortcut — spin open once",
+        "point": [
+          109.36619973211764,
+          6.2594420868268745,
+          2.220446049250313e-16
+        ],
+        "normal": [
+          -0.9979755722504748,
+          -0.06359840557228667,
+          -4.5002466820252e-16
+        ],
+        "incoming": [
+          9.000000000000341,
+          6.849999999999993,
+          0
+        ],
+        "outgoing": [
+          -13.239907747071992,
+          4.221746667424658,
+          -8.856055932434316e-15
+        ],
+        "impact": 16.940937410662215,
+        "bailing": true
+      }
+    },
+    "bridges": [
+      {
+        "name": "Phase relay return shortcut — spin open once",
+        "p": [
+          110,
+          1.66,
+          0
+        ],
+        "activated": true,
+        "deployed": false,
+        "progress": 0.1515151515151515,
+        "wallEmpty": true
+      },
+      {
+        "name": "Upper phase return shortcut — spin open once",
+        "p": [
+          122,
+          2.86,
+          0
+        ],
+        "activated": false,
+        "deployed": false,
+        "progress": 0,
+        "wallEmpty": false
+      }
+    ],
+    "contact": {
+      "normal": [
+        -0.9979755722504748,
+        -0.06359840557228667,
+        -4.5002466820252e-16
+      ],
+      "fraction": 0.7931901950719284,
+      "depth": 0,
+      "mesh": "Phase relay return shortcut — spin open once",
+      "owner": {
+        "t": "spinbridge",
+        "p": [
+          110,
+          1.66,
+          0
+        ],
+        "s": [
+          6,
+          0.34,
+          1.6
+        ],
+        "yaw": 180,
+        "cycle": 0.55,
+        "tex": "wood",
+        "color": "#b77c43",
+        "grp": 4,
+        "nm": "Phase relay return shortcut — spin open once"
+      }
+    }
+  },
+  "openDeadwater": {
+    "end": {
+      "frame": 520,
+      "position": [
+        36.46166716939011,
+        73.61419000338068,
+        85.23522698358052
+      ],
+      "state": "air",
+      "grounded": false,
+      "speed": 22.74225599993609,
+      "verticalSpeed": 8.5,
+      "pipe": -1,
+      "vertAir": false,
+      "pipeHang": false,
+      "releaseStage": 0,
+      "bailing": true,
+      "deaths": 0,
+      "freeSkate": false,
+      "rail": null
+    },
+    "events": [
+      {
+        "frame": 520,
+        "args": [
+          false,
+          38.27239968628927,
+          "trip",
+          30.225636865224462
+        ],
+        "position": [
+          36.46166716939011,
+          73.61419000338068,
+          85.23522698358052
+        ],
+        "phase": "giant catch",
+        "impact": {
+          "count": 17,
+          "last": {
+            "name": "Giant shared vert wall — left entry, right exit",
+            "point": [
+              28.486114196676183,
+              81.61387613058828,
+              75.33623991693732
+            ],
+            "normal": [
+              7.105427357600953e-15,
+              0.6469538282122711,
+              0.7625291759411487
+            ],
+            "incoming": [
+              109.90821868134915,
+              -38.46030126524404,
+              30.11406293864667
+            ],
+            "outgoing": [
+              109.90821868134917,
+              -37.21867553860151,
+              31.577499432685652
+            ],
+            "impact": 1.9191875408999763,
+            "bailing": false
+          }
+        }
+      }
+    ],
+    "owner": {
+      "t": "mesh",
+      "nm": "Giant vert right exit chute"
+    },
+    "last": [
+      {
+        "frame": 481,
+        "position": [
+          9.20940718294894,
+          93.38945431913886,
+          69.56694128219412
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": -21.75058221401275,
+        "verticalSpeed": -39.29921221651234,
+        "pipe": -1,
+        "vertAir": true,
+        "pipeHang": true,
+        "releaseStage": 1,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 482,
+        "position": [
+          9.640419805228776,
+          92.73219142116386,
+          69.7531883045048
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": -28.20379783751936,
+        "verticalSpeed": -39.41287219729979,
+        "pipe": -1,
+        "vertAir": true,
+        "pipeHang": true,
+        "releaseStage": 1,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 483,
+        "position": [
+          10.179185583078572,
+          92.06669910676442,
+          69.94077194690594
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": -28.20379783751936,
+        "verticalSpeed": -39.92953886396646,
+        "pipe": -1,
+        "vertAir": true,
+        "pipeHang": true,
+        "releaseStage": 1,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 484,
+        "position": [
+          10.71795136092837,
+          91.40478446717178,
+          70.16629073964889
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": -34.7799603481726,
+        "verticalSpeed": -39.9392794250925,
+        "pipe": -1,
+        "vertAir": true,
+        "pipeHang": true,
+        "releaseStage": 1,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 485,
+        "position": [
+          11.364470294348125,
+          90.73886925533787,
+          70.40350765719644
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": -41.33916939012348,
+        "verticalSpeed": -39.93489128492864,
+        "pipe": -1,
+        "vertAir": true,
+        "pipeHang": true,
+        "releaseStage": 1,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 486,
+        "position": [
+          12.11874238333784,
+          90.06467662281129,
+          70.64165717447763
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": -41.33916939012348,
+        "verticalSpeed": -40.451557951595305,
+        "pipe": -1,
+        "vertAir": true,
+        "pipeHang": true,
+        "releaseStage": 1,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 487,
+        "position": [
+          12.873014472327556,
+          89.39810445780574,
+          70.92088183385587
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": -47.97900021526734,
+        "verticalSpeed": -40.318693648558195,
+        "pipe": -1,
+        "vertAir": true,
+        "pipeHang": true,
+        "releaseStage": 1,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 488,
+        "position": [
+          13.735039716887231,
+          88.72896645889075,
+          71.21284101313492
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": -54.577182039725656,
+        "verticalSpeed": -40.18935904528233,
+        "pipe": -1,
+        "vertAir": true,
+        "pipeHang": true,
+        "releaseStage": 1,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 489,
+        "position": [
+          14.704818117016865,
+          88.05053269702493,
+          71.50322089806917
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": -54.577182039725656,
+        "verticalSpeed": -40.706025711948996,
+        "pipe": -1,
+        "vertAir": true,
+        "pipeHang": true,
+        "releaseStage": 1,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 490,
+        "position": [
+          15.674596517146469,
+          87.38516709944722,
+          71.83943747192323
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": -61.246908844939405,
+        "verticalSpeed": -40.420995884528764,
+        "pipe": -1,
+        "vertAir": true,
+        "pipeHang": true,
+        "releaseStage": 1,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 491,
+        "position": [
+          16.752128072846045,
+          86.71886186273655,
+          72.18919614996246
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": -67.86328801333714,
+        "verticalSpeed": -40.16140632517555,
+        "pipe": -1,
+        "vertAir": true,
+        "pipeHang": true,
+        "releaseStage": 1,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 492,
+        "position": [
+          17.93741278411558,
+          86.05370731007878,
+          72.55607056729998
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": -74.48358410768702,
+        "verticalSpeed": -39.83858268859971,
+        "pipe": -1,
+        "vertAir": true,
+        "pipeHang": true,
+        "releaseStage": 1,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 493,
+        "position": [
+          19.230450650955074,
+          85.38111982082434,
+          72.92506501665503
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": -74.48358410768702,
+        "verticalSpeed": -40.35524935526637,
+        "pipe": -1,
+        "vertAir": true,
+        "pipeHang": true,
+        "releaseStage": 1,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 494,
+        "position": [
+          20.523488517794597,
+          84.72650087701999,
+          73.33840472363694
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": -81.17267174317827,
+        "verticalSpeed": -39.83206737944723,
+        "pipe": -1,
+        "vertAir": true,
+        "pipeHang": true,
+        "releaseStage": 1,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 495,
+        "position": [
+          21.92427954020407,
+          84.07319904950192,
+          73.76605630406343
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": -87.79788966198502,
+        "verticalSpeed": -39.3736253110937,
+        "pipe": -1,
+        "vertAir": true,
+        "pipeHang": true,
+        "releaseStage": 1,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 496,
+        "position": [
+          23.4328237181835,
+          83.40836084987258,
+          74.1891709689237
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": -87.79788966198502,
+        "verticalSpeed": -39.89029197776036,
+        "pipe": -1,
+        "vertAir": true,
+        "pipeHang": true,
+        "releaseStage": 1,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 497,
+        "position": [
+          24.941367896162745,
+          82.77076748800876,
+          74.66409291242012
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": -94.4913009227659,
+        "verticalSpeed": -39.200169403878576,
+        "pipe": -1,
+        "vertAir": true,
+        "pipeHang": true,
+        "releaseStage": 1,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 498,
+        "position": [
+          26.55766522971169,
+          82.13646092092911,
+          75.15353737330675
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": -101.11593832448533,
+        "verticalSpeed": -38.60404110819209,
+        "pipe": -1,
+        "vertAir": true,
+        "pipeHang": true,
+        "releaseStage": 1,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 499,
+        "position": [
+          28.281715718830927,
+          81.50887842405551,
+          75.66150078926
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": -107.73725960496897,
+        "verticalSpeed": -37.943634598577376,
+        "pipe": -1,
+        "vertAir": true,
+        "pipeHang": true,
+        "releaseStage": 1,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 500,
+        "position": [
+          30.11351936352008,
+          80.8888459045862,
+          76.18812098151922
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": -114.35451457694415,
+        "verticalSpeed": -37.21867553860151,
+        "pipe": -1,
+        "vertAir": true,
+        "pipeHang": true,
+        "releaseStage": 1,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 501,
+        "position": [
+          32.053076163779195,
+          80.2599235344984,
+          76.71441263873065
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": -114.35451457694415,
+        "verticalSpeed": -37.735342205268175,
+        "pipe": -1,
+        "vertAir": true,
+        "pipeHang": true,
+        "releaseStage": 1,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 502,
+        "position": [
+          33.99263296403831,
+          79.62239005329948,
+          77.24070429594208
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": -114.35451457694415,
+        "verticalSpeed": -38.25200887193484,
+        "pipe": -1,
+        "vertAir": true,
+        "pipeHang": true,
+        "releaseStage": 1,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 503,
+        "position": [
+          35.756904666425584,
+          79.03689934105809,
+          77.71943298174112
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 29.925696877715044,
+        "verticalSpeed": 0,
+        "pipe": -1,
+        "vertAir": true,
+        "pipeHang": true,
+        "releaseStage": 0,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 504,
+        "position": [
+          35.86613304427987,
+          78.6938204668034,
+          78.07392733100009
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 30.316343877887114,
+        "verticalSpeed": 0,
+        "pipe": -1,
+        "vertAir": false,
+        "pipeHang": false,
+        "releaseStage": 0,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 505,
+        "position": [
+          35.968787813631934,
+          78.35265348602402,
+          78.44688049679736
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 30.934933158815394,
+        "verticalSpeed": 0,
+        "pipe": -1,
+        "vertAir": false,
+        "pipeHang": false,
+        "releaseStage": 0,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 506,
+        "position": [
+          36.0643823624086,
+          78.00575470532824,
+          78.82962343996311
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 31.51966485307204,
+        "verticalSpeed": 0,
+        "pipe": -1,
+        "vertAir": false,
+        "pipeHang": false,
+        "releaseStage": 0,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 507,
+        "position": [
+          36.15254871188813,
+          77.66181842036761,
+          79.23013451395566
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 32.10280415162969,
+        "verticalSpeed": 0,
+        "pipe": -1,
+        "vertAir": false,
+        "pipeHang": false,
+        "releaseStage": 0,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 508,
+        "position": [
+          36.232845300427925,
+          77.31358478662638,
+          79.6405784964968
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 32.65336869259212,
+        "verticalSpeed": 0,
+        "pipe": -1,
+        "vertAir": false,
+        "pipeHang": false,
+        "releaseStage": 0,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 509,
+        "position": [
+          36.30492684714963,
+          76.97040093803675,
+          80.06892805690113
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 33.20207328346738,
+        "verticalSpeed": 0,
+        "pipe": -1,
+        "vertAir": false,
+        "pipeHang": false,
+        "releaseStage": 0,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 510,
+        "position": [
+          36.3684157762198,
+          76.6231611137274,
+          80.50644925881205
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 33.72998829766765,
+        "verticalSpeed": 0,
+        "pipe": -1,
+        "vertAir": false,
+        "pipeHang": false,
+        "releaseStage": 0,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 511,
+        "position": [
+          36.42298416606042,
+          76.28400121069105,
+          80.96282488975577
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 34.25574749313452,
+        "verticalSpeed": 0,
+        "pipe": -1,
+        "vertAir": false,
+        "pipeHang": false,
+        "releaseStage": 0,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 512,
+        "position": [
+          36.4682827545311,
+          75.94211022146523,
+          81.42832532606926
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 34.759881567760615,
+        "verticalSpeed": 0,
+        "pipe": -1,
+        "vertAir": false,
+        "pipeHang": false,
+        "releaseStage": 0,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 513,
+        "position": [
+          36.503982861478214,
+          75.6084621060123,
+          81.91040435131445
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 35.24180325956203,
+        "verticalSpeed": 0,
+        "pipe": -1,
+        "vertAir": false,
+        "pipeHang": false,
+        "releaseStage": 0,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 514,
+        "position": [
+          36.52979198756353,
+          75.2757838747657,
+          82.40351260954766
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 35.7212521570626,
+        "verticalSpeed": 0,
+        "pipe": -1,
+        "vertAir": false,
+        "pipeHang": false,
+        "releaseStage": 0,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 515,
+        "position": [
+          36.54541372833783,
+          74.94915139517143,
+          82.91010124591743
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 36.17780401344008,
+        "verticalSpeed": 0,
+        "pipe": -1,
+        "vertAir": false,
+        "pipeHang": false,
+        "releaseStage": 0,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 516,
+        "position": [
+          36.55057744220603,
+          74.62884242215564,
+          83.42998297565707
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 36.631698451798826,
+        "verticalSpeed": 0,
+        "pipe": -1,
+        "vertAir": false,
+        "pipeHang": false,
+        "releaseStage": 0,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 517,
+        "position": [
+          36.54502103877131,
+          74.31129213993422,
+          83.95978098272201
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 37.06208225576135,
+        "verticalSpeed": 0,
+        "pipe": -1,
+        "vertAir": false,
+        "pipeHang": false,
+        "releaseStage": 0,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 518,
+        "position": [
+          36.52849708069594,
+          74.00640117141141,
+          84.50524953434184
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 37.48966536797738,
+        "verticalSpeed": 0,
+        "pipe": -1,
+        "vertAir": false,
+        "pipeHang": false,
+        "releaseStage": 0,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 519,
+        "position": [
+          36.50077952184769,
+          73.70454218073111,
+          85.05932615871156
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 37.8932163583692,
+        "verticalSpeed": 0,
+        "pipe": -1,
+        "vertAir": false,
+        "pipeHang": false,
+        "releaseStage": 0,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      {
+        "frame": 520,
+        "position": [
+          36.46166716939011,
+          73.61419000338068,
+          85.23522698358052
+        ],
+        "state": "air",
+        "grounded": false,
+        "speed": 22.74225599993609,
+        "verticalSpeed": 8.5,
+        "pipe": -1,
+        "vertAir": false,
+        "pipeHang": false,
+        "releaseStage": 0,
+        "bailing": true,
+        "deaths": 0,
+        "freeSkate": false,
+        "rail": null
+      }
+    ],
+    "nativeReference": {
+      "diagnosticOnly": true,
+      "end": {
+        "frame": 4345,
+        "position": [
+          60.016516412204126,
+          -164.26333333355686,
+          -1058.9609443331462
+        ],
+        "state": "finished",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "pipe": -1,
+        "vertAir": false,
+        "pipeHang": false,
+        "releaseStage": 0,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      "giant": {
+        "air": true,
+        "landedRight": true,
+        "exited": true,
+        "peak": 120.91123632282286,
+        "landing": [
+          8.52635311549158,
+          96.24265096942713,
+          68.52652272041901
+        ]
+      },
+      "completedLoops": [
+        0,
+        1,
+        2
+      ]
+    }
+  },
+  "productionKeyboard": {
+    "before": {
+      "base": "https://kiranmatthews.github.io/Prototype-Fork/",
+      "rows": [
+        {
+          "test": "native airborne spin through opening bridge",
+          "stamp": "Codex/sol fork · build 10-08 14:22 UTC",
+          "position": [
+            1.8621783498843993,
+            2.184556791293041,
+            6.578879198983513e-18
+          ],
+          "state": "air",
+          "bailing": true,
+          "grounded": false,
+          "lives": 4,
+          "activated": true,
+          "deployed": false,
+          "runMode": false,
+          "impact": {
+            "count": 1,
+            "last": {
+              "name": "Spin-deploying timber bridge",
+              "point": [
+                2.367105883490325,
+                4.64522291062941,
+                0
+              ],
+              "normal": [
+                -0.9979755722504747,
+                -0.06359840557229027,
+                -8.968115822892754e-18
+              ],
+              "incoming": [
+                8.999999999999995,
+                6.849999999999993,
+                0
+              ],
+              "outgoing": [
+                -13.209438172417094,
+                4.223631980918498,
+                -3.3733122516015807e-16
+              ],
+              "impact": 16.91781029389327,
+              "bailing": true
+            }
+          }
+        }
+      ],
+      "errors": []
+    },
+    "after": {
+      "base": "http://127.0.0.1:5345/",
+      "rows": [
+        {
+          "test": "native airborne spin through opening bridge",
+          "stamp": "Codex/sol fork · build 10-08 17:06 UTC",
+          "position": [
+            5.850000000000003,
+            0,
+            0
+          ],
+          "state": "ride",
+          "bailing": false,
+          "grounded": true,
+          "lives": 4,
+          "activated": true,
+          "deployed": false,
+          "runMode": false,
+          "impact": {
+            "count": 0,
+            "last": null
+          }
+        }
+      ],
+      "errors": []
+    }
+  }
+}

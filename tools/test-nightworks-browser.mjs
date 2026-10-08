@@ -13,7 +13,9 @@ page.on('pageerror',error=>errors.push({type:'pageerror',message:error.message})
 page.on('console',message=>{if(message.type()==='error')errors.push({type:'console',message:message.text()});});
 try {
  await page.goto(`${base}/?playtest&level=nightworks-after-hours${full?'':'&lite'}`);
- await page.waitForFunction(()=>window.__game&&!window.__game.gameFlow.blocksGameplay,null,{timeout:90000});
+ // Install the controller while the ordinary startup loader owns gameplay,
+ // so the run begins at the first simulation tick rather than after imports.
+ await page.waitForFunction(()=>window.__game,null,{timeout:90000});
  await page.evaluate(async()=>{
   const g=window.__game;
   await Promise.all([g.getLevel().prepareJungleAssets(),g.player.preparePresentationAssets()]);
@@ -27,6 +29,7 @@ try {
   const components=authored.NIGHTWORKS_AFTER_HOURS_LEVEL.components;
   const source={...authored,AFTER_HOURS_CUTBACK_PATH:vertRampSpine(components.find(c=>c.nm==='Four quarry cutbacks')).map(point=>[point.x,point.y,point.z])};
   const pilot=createAfterHoursPilot(source,{tuning:g.TUNING,fixedStep:CONST.fixedStep});
+  if(g.frameStats.totalFixedSteps!==0||l.time!==0)throw Error('Install the pilot before the first gameplay tick');
   // The sole placement starts the complete journey. Native movement, level
   // updates, camera, animation and rendering remain in the normal game loop.
   p.respawn(l,true);
@@ -41,6 +44,7 @@ try {
   const snap=input=>({frame:report.frame,worldTime:l.time,chapter:pending?.chapter??report.currentChapter,input,
    position:p.pos.toArray(),heading:p.axisF.toArray(),state:p.state,grounded:p.grounded,speed:p.speed,verticalSpeed:p.vVel,
    boardRolling:p.boardRolling,bailing:p.isBailing,deaths:p.totalDeaths,
+   impact:p.isBailing?p.worldImpactDiagnostics:null,
    supportComponent:p.grounded?componentOf(p.groundHit?.mesh):null,
    railComponent:p.state==='grind'?componentOf(p.grindRail?.object):null,
    cameraPosition:g.camera.position.toArray(),cameraDirection:p.camDir.toArray()});
@@ -132,11 +136,11 @@ try {
  // Original Nightworks still uses the same prepared enemy asset family.
  await page.goto(`${base}/?playtest&level=dark${full?'':'&lite'}`);
  await page.waitForFunction(()=>window.__game&&!window.__game.gameFlow.blocksGameplay,null,{timeout:90000});
- const original=await page.evaluate(async()=>{const l=window.__game.getLevel();await l.prepareJungleAssets();return {rocks:l.nightworksRocks?.diagnostics,scenery:l.jungleAssetDiagnostics,enemies:l.enemies.map(e=>({kind:e.kind,...e.visual.diagnostics}))};});
+ const original=await page.evaluate(async()=>{const l=window.__game.getLevel();await l.prepareJungleAssets();const {NIGHTWORKS_LEVEL}=await import('/src/levels/nightworks.ts');return {expectedEnemies:NIGHTWORKS_LEVEL.components.filter(c=>c.t==='enemy').length,rocks:l.nightworksRocks?.diagnostics,scenery:l.jungleAssetDiagnostics,enemies:l.enemies.map(e=>({kind:e.kind,...e.visual.diagnostics}))};});
  await page.screenshot({path:`${output}/original-${mode}.png`});
  await writeFile(`${output}/original-${mode}.json`,JSON.stringify({assets:original,errors},null,2));
- assert.equal(original.enemies.length,8);assert.ok(original.enemies.every(e=>e.status==='ready'&&e.appearance==='nightworks'));
+ assert.equal(original.enemies.length,original.expectedEnemies);assert.ok(original.enemies.every(e=>e.status==='ready'&&e.appearance==='nightworks'));
  assert.equal(original.rocks.ready,original.rocks.models);assert.deepEqual(original.rocks.errors,[]);assert.deepEqual(errors,[]);
  if(original.scenery){assert.deepEqual(original.scenery.errors,[]);assert.equal(original.scenery.pendingCells,0);}
- console.log(`PASS original Nightworks ${mode}: ${original.rocks.ready} rock assets and eight themed goblins ready, clean console.`);
+ console.log(`PASS original Nightworks ${mode}: ${original.rocks.ready} rock assets and ${original.expectedEnemies} themed goblins ready, clean console.`);
 } finally {await browser.close();}

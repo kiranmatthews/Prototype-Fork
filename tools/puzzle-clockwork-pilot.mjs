@@ -109,7 +109,9 @@ export function* runClockworkJourney(r) {
   yield* c.until(()=>lift.mesh.position.y<3.4,{}, {label:'wait for a low lift receiver',limit:900});
   yield* c.hop(()=>[150,lift.mesh.position.y+.3,0],'board the vertical lift',{heightTolerance:.2});
   yield* c.until(()=>lift.mesh.position.y>3.8,{}, {label:'ride lift to upper deck height',limit:900});
-  yield* c.hop([156,4,0],'leave lift for upper blade terrace',{heightTolerance:.2});
+  // Land on the safe lip before reading the spinner. A landing at 156 enters
+  // the active enemy's contact envelope and can knock the rider off the edge.
+  yield* c.hop([155.2,4,0],'leave lift for upper blade terrace',{heightTolerance:.2});
   yield* c.enemy(l.enemies[4],'upper blade recovery window');
   const returnArrow=at(162,4);
   const returnHigh=r.source.components.find(component=>component.nm==='Second outward-then-return high gallery').p[1]+.3;

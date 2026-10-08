@@ -32,11 +32,11 @@ The construction reductions are **63%** for Nightworks and **27%** for After Hou
 - Loading regressions cover every warmed mesh, fast/expensive batches, GPU completion/loss, exceptions, renderer/scene restoration, loading duration, nested asset readiness and input release. Update the existing callback-shape assertion to recognize the current completion wrapper, which still calls `guardGameplayFromMenu()`.
 - The exact `check:levels` commands and production type-check/build passed. npm is absent on this host, so the package script's Node entry points were invoked directly. No full-suite run.
 
-Two existing Nightworks checks fail identically on unchanged `bdc5370` and the optimized tree. `test-nightworks.mjs` expects the old zero-height spawn floor, before the raised arrival pad. The After Hours pilot misses the second counterweight at fixed tick **2,096**, ending at `[90.66642352087555, -35.55261672061277, -373.16020697348523]`. The complete before/after failure report is identical. These failures have not been hidden or weakened; the pilot/current gameplay mismatch still needs investigation.
+At the first pass, two existing Nightworks checks failed identically on unchanged `bdc5370` and the optimized tree. `test-nightworks.mjs` expects the old zero-height spawn floor, before the raised arrival pad. The After Hours pilot missed the second counterweight at fixed tick **2,096**, ending at `[90.66642352087555, -35.55261672061277, -373.16020697348523]`. The complete before/after failure report was identical. These were retained as open findings; the continuous follow-up below records the subsequent pilot and collision repairs.
 
 ## Remaining goal work
 
-The goal remains active. Entry/checkpoint/lifecycle probes do **not** prove a complete intended traversal of every course. Continue the individual course traversal audit and investigate the After Hours pilot failure. The paired browser trace also identifies pre-existing first-play shader/buffer allocations in both Nightworks courses, identical before and after this change. The follow-up owner trace locates phase-rock wireframe buffers on the first update, transparent effect materials, fruit material variants and the HUD composite texture. Remove avoidable first-use work without changing when these objects appear. Repeated level-return residency, touch/portrait and graphics-recovery checks remain part of the broader smoothness audit.
+The goal remains active. Entry/checkpoint/lifecycle probes do **not** prove a complete intended traversal of every course; see the continuous follow-up for current route coverage. The paired browser trace also identifies pre-existing first-play shader/buffer allocations in both Nightworks courses, identical before and after the loading change. The owner trace locates phase-rock wireframe buffers on the first update, transparent effect materials, fruit material variants and the HUD composite texture. Remove avoidable first-use work without changing when these objects appear. Repeated level-return residency, touch/portrait and graphics-recovery checks remain part of the broader smoothness audit.
 
 ## Individual level coverage
 
@@ -99,3 +99,7 @@ Full-render combined production build (`1ae0c10` plus the performance patch). Th
 | Deadwater Cup (waterpark-cup) | Pass | 0 | Run start and respawn |
 | The Chimeworks — Astra (astra-chimeworks) | Pass | 4 | Respawn and finish gate |
 | Backport Mechanics Lab (backport-lab) | Pass | 1 | Respawn and finish gate |
+
+## Continuous follow-up
+
+See [TRAVERSAL_PERFORMANCE_FOLLOWUP.md](TRAVERSAL_PERFORMANCE_FOLLOWUP.md) for the next pass: full bonus and puzzle journeys, After Hours completion, two collision lifecycle fixes, and explicitly unresolved Deadwater/Temple and camera-test findings. The full goal remains active.

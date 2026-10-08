@@ -3943,6 +3943,7 @@ export class Level {
   private terrainSupportRayWork = 0;
   crates: Crate[] = [];
   readonly spinBridges: SpinBridge[] = [];
+  private readonly spinBridgeMeshes=new WeakMap<THREE.Object3D,SpinBridge>();
   private readonly spinBridgeFloors = new Set<SpinBridge>();
   enemies: Enemy[] = [];
   projectiles: Projectile[] = []; // sentry orbs in flight
@@ -5043,7 +5044,13 @@ export class Level {
     this.installGroundAcceleration(this.groundMeshes);
     if(!this.isCampaignMap){
       this.worldSurfaceBinding=new WorldSurfaceBinding(this.root,this.worldSolids,{
-        ground:()=>this.groundMeshes,active:mesh=>{const c=this.crumbles[mesh.userData.crumbleId];return !c||c.state!=='fall'&&c.state!=='gone';},walls:()=>this.walls,wallPath:box=>this.wallPathForBox(box),wallSource:box=>this.worldWallSources.get(box),
+        ground:()=>this.groundMeshes,active:mesh=>{
+          // Spin activation already retires the authored upright wall. The
+          // swinging leaf becomes physical support only after it settles.
+          const bridge=this.spinBridges.length?this.spinBridgeMeshes.get(mesh):undefined;
+          if(bridge?.activated&&!bridge.deployed)return false;
+          const c=this.crumbles[mesh.userData.crumbleId];return !c||c.state!=='fall'&&c.state!=='gone';
+        },walls:()=>this.walls,wallPath:box=>this.wallPathForBox(box),wallSource:box=>this.worldWallSources.get(box),
         component:object=>{for(let at:THREE.Object3D|null=object;at&&at!==this.root;at=at.parent){if(at.userData.assetBatchRoot)return undefined;const index=at.userData.editorIdx;if(Number.isInteger(index))return this.builtFromData?.components[index];}return undefined;},
       });
       this.worldSurfaceBinding.prepare();
@@ -7482,6 +7489,7 @@ export class Level {
               color: c.color ?? '#a77c4b', emissive: c.emissive ?? '#000000',
             }), size[0], size[2], c.tex ?? 'wood');
             const bridge = new SpinBridge(this.root, c, material);
+            bridge.pivot.traverse(object=>{if((object as THREE.Mesh).isMesh)this.spinBridgeMeshes.set(object,bridge);});
             this.spinBridges.push(bridge); this.walls.push(bridge.wallBox);
           } else if (c.t === "mesh") {
             this.buildSurfaceMesh(c,gameplayGroupChainOf(c,data));

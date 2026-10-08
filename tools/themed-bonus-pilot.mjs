@@ -22,12 +22,29 @@ export function* runThemedBonusJourney(r) {
         yield* c.walk([room.launchX+1.8,0,0],`${label} backtrack to retained arrow`);
       }
       const shelf=room.shelf;
-      yield* c.bounce(arrow,[shelf.a+1.3,shelf.y,0],`${label} conserved-arrow ascent`,
-        {double:true,airSpinAbove:shelf.y-1.2});
-      for(const reward of rewards)if(reward.alive)yield* c.hit(reward,`${label} high target before support`);
-      c.check(arrow.alive,'high route consumed its arrow too early');
-      yield* c.walk([shelf.a+.5,shelf.y,0],`${label} return-gallery edge`);
-      yield* c.hop([room.launchX-2,0,0],`${label} descend before clearing arrow`,{heightTolerance:.2});
+      if(rewards.some(reward=>reward.box.min.y>=shelf.y-.2)){
+        yield* c.bounce(arrow,[shelf.a+1.3,shelf.y,0],`${label} conserved-arrow ascent`,
+          {double:true,airSpinAbove:shelf.y-1.2});
+        for(const reward of rewards)if(reward.alive)yield* c.hit(reward,`${label} high target before support`);
+        yield* c.walk([shelf.a+.5,shelf.y,0],`${label} return-gallery edge`);
+        yield* c.hop([room.launchX-2,0,0],`${label} descend before clearing arrow`,{heightTolerance:.2});
+      }else{
+        // Some authored rooms lower their rewards below the gallery. Follow
+        // the live crate positions; spinning on the now-empty upper shelf
+        // cannot prove those rooms playable.
+        if(p.pos.x<room.launchX){
+          yield* c.walk([room.launchX-2,0,0],`${label} retained-arrow approach`);
+          yield* c.hop([room.launchX+3,0,0],`${label} pass retained arrow`);
+        }
+        for(const reward of rewards)if(reward.alive){
+          yield* c.walk([reward.mesh.position.x-1.8,0,0],`${label} lowered-reward approach`);
+          yield* c.hop([reward.mesh.position.x+1.2,0,0],`${label} collect lowered reward`,{airButtons:{spinHeld:true}});
+          c.check(!reward.alive,`${label} lowered reward was not collected`);
+        }
+        yield* c.walk([room.launchX+2,0,0],`${label} retained-arrow return`);
+        yield* c.hop([room.launchX-2,0,0],`${label} cross before clearing arrow`);
+      }
+      c.check(arrow.alive,'reward route consumed its arrow too early');
       yield* c.hit(arrow,`${label} destroy arrow last`);
       if(room.pattern==='return') {
         yield* c.walk([room.switchX-2,0,0],`${label} spent-switch approach`);

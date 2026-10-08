@@ -1,4 +1,4 @@
-import {solidContact} from './worldSolids';
+import {solidContact, type SolidSurface} from './worldSolids';
 import { surfaceGrip } from './surfaceBehavior';
 import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';
 import { LOOP_TURN, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';
@@ -876,6 +876,16 @@ export class Player {
   private bailGroundT = 0; // uninterrupted stable support before roll-up may start
   private bailExitSpeed = 0; // capped run-out target when direction is held
   private worldStandingHeight=1.6;
+  private readonly isCurrentGrindSupport=(surface:SolidSurface):boolean=>{
+    if(this.state!=='grind'||this.isBailing||!this.grindRail)return false;
+    const index=this.grindRail.object.userData.editorIdx;
+    const owner=surface.owner as {t?:string}|undefined;
+    // An accepted catch eases the feet up onto the crest. Its own hanging
+    // rail body is support during that move, not a new wall impact. Keep
+    // other components solid, and restore this body's collisions on release.
+    return Number.isInteger(index)&&surface.mesh.userData.editorIdx===index&&
+      (owner?.t==='rail'||owner?.t==='trickrail');
+  };
   private readonly worldStepOrigin=new THREE.Vector3();
   private readonly worldLateOrigin=new THREE.Vector3();
   private readonly worldContact=solidContact();
@@ -14060,7 +14070,8 @@ export class Player {
     this.worldVelocity.y=this.vVel;
     const entrySpeed=this.speed;
     const query={low:down?.8:radius,high:Math.max(down?.9:radius,height-radius),radius,axis:this.worldAxis,supportNormal:this.worldAxis,ignoreGround:true,
-      soleClearance:this.state==='grind'?.32:this.grounded&&!down?.08:undefined};
+      soleClearance:this.state==='grind'?.32:this.grounded&&!down?.08:undefined,
+      ignore:this.state==='grind'&&!down?this.isCurrentGrindSupport:undefined};
     if(!level.worldSolids.resolve(this.worldStepOrigin,this.pos,query,this.worldContact))return;
     const hit=this.worldContact,n=this.worldNormal.copy(hit.normal);
     // Retain the ride solver's existing 0.8 m step window. Probe over the
