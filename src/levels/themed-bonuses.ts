@@ -67,11 +67,12 @@ export const THEMED_BONUS_COURSES = THEMED_BONUS_RECIPES.filter(recipe => levelA
   const {name,patterns,color,accent,tex,sky,jungleAtmosphere}=recipe;
   const course=makeBonusCourse({name,patterns,style:{color,accent,tex,sky,jungleAtmosphere}});
   if (recipe.parentId === 'clockwork-gauntlet') {
-    // Show the high caps and return gallery before the player spends their supports.
-    const camera = course.data.components.find(component => component.cameraView)!;
-    camera.cameraFollowDistance = 18;
-    camera.cameraFollowTargetHeight = 5.3;
-    camera.cameraFov = 56;
+    // Keep every box target visible in the existing close camera.
+    for (const room of course.rooms) for (const crate of room.crates) {
+      if (crate.y < 8) continue;
+      crate.y = 2;
+      course.data.components.find(component => component.nm === crate.name)!.p[1] = crate.y;
+    }
   }
   const gate=course.data.components.find(component=>component.t==='gate')!;
   const end=gate.p[0]+8;

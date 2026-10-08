@@ -108,10 +108,8 @@ export class CameraViewFraming {
     this.applied=true;
     if(view.cameraPosition&&view.cameraTarget){
       this.shotEye.fromArray(view.cameraPosition);this.shotTarget.fromArray(view.cameraTarget);
-      const authoredDistance=Math.min(18,view.cameraFollowDistance??(groundFollow ? 13.4 : this.shotEye.distanceTo(this.shotTarget)));
-      // A deliberately wider bonus shot must keep its overhead box targets in view.
-      const wideBonus = groundFollow && authoredDistance > BONUS_PRESENTATION_VIEW.view.cameraFollowDistance!;
-      const desiredSide = sideFollow && !wideBonus ? cameraSideWeight(view, sideFollow.travel) : 0;
+      const authoredDistance=groundFollow ? 13.4 : Math.min(18,view.cameraFollowDistance??this.shotEye.distanceTo(this.shotTarget));
+      const desiredSide = sideFollow ? cameraSideWeight(view, sideFollow.travel) : 0;
       this.sideWeight = snap || this.sideView !== view || sideFollow?.dt === undefined
         ? desiredSide : THREE.MathUtils.lerp(this.sideWeight, desiredSide, 1-Math.exp(-6*Math.max(0,sideFollow.dt)));
       this.sideView = view;
@@ -119,9 +117,9 @@ export class CameraViewFraming {
       const distance = THREE.MathUtils.lerp(authoredDistance,
         Math.min(authoredDistance, sideFollow?.distance ?? authoredDistance), side);
       // Bonus owns its lens without changing the parent's camera or controls.
-      if(groundFollow){camera.fov=view.cameraFov??46;camera.updateProjectionMatrix();}
+      if(groundFollow){camera.fov=46;camera.updateProjectionMatrix();}
       if(subject){
-        const targetHeight=THREE.MathUtils.lerp(view.cameraFollowTargetHeight??(groundFollow ? 2.7 : 1.3),1.3,side);
+        const targetHeight=THREE.MathUtils.lerp(groundFollow ? 2.7 : view.cameraFollowTargetHeight??1.3,1.3,side);
         this.followTarget.copy(subject);
         if(groundFollow){
           const floor=groundFollow.groundY;
