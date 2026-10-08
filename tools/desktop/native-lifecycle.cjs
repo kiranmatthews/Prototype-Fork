@@ -8,7 +8,7 @@ assert.equal(process.arch, process.env.BONEMAN_TARGET_ARCH || process.arch);
 app.setAppPath(path.resolve(__dirname, '../../desktop'));
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 async function waitFor(window, expression) {
-  const deadline = Date.now() + 90000;
+  const deadline = Date.now() + Number(process.env.BONEMAN_TEST_TIMEOUT_MS || 90000);
   while (!(await window.webContents.executeJavaScript(expression))) {
     if (Date.now() > deadline) throw new Error('Timed out: ' + expression);
     await sleep(100);
@@ -17,7 +17,8 @@ async function waitFor(window, expression) {
 app.once('browser-window-created', async (_event, window) => {
   try {
     await new Promise(resolve => window.webContents.once('did-finish-load', resolve));
-    await window.loadURL('boneman://game/?playtest&lite&level=codex-lab');
+    await waitFor(window, '!!window.__game && window.__game.gameFlow.startupLoading === false && !window.__game.gameFlow.transitionActive');
+    await window.webContents.executeJavaScript("window.__game.ui.onLevelSelect('codex-lab')");
     await waitFor(window, '!!window.__game && window.__game.player.grounded && !window.__game.gameFlow.blocksGameplay');
     async function checkHidden(action, restore) {
       action();

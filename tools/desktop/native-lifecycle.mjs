@@ -12,15 +12,16 @@ const profile = await mkdtemp(path.join(tmpdir(), 'boneman-lifecycle-'));
 const out = fileURLToPath(new URL('../../desktop/test-results/', import.meta.url));
 await mkdir(out, {recursive:true});
 const child = spawn(require('electron'), [...testGpuArgs, fileURLToPath(new URL(probe ? './gpu-probe.cjs' : './native-lifecycle.cjs', import.meta.url))], {
-  env:{...process.env, BONEMAN_USER_DATA:profile}, stdio:['ignore','pipe','pipe'],
+  env:{...process.env, BONEMAN_USER_DATA:profile, BONEMAN_TEST_TIMEOUT_MS:String(testTimeout)}, stdio:['ignore','pipe','pipe'],
 });
 let stdout = '', stderr = '';
 child.stdout.on('data', bytes => { stdout = (stdout + bytes).slice(-12000); });
 child.stderr.on('data', bytes => { stderr = (stderr + bytes).slice(-12000); });
-const timeout = setTimeout(() => child.kill('SIGKILL'), testTimeout);
+// Startup and level entry each keep their own functional deadline.
+const timeout = setTimeout(() => child.kill('SIGKILL'), probe ? testTimeout : 2 * testTimeout);
 try {
   const code = await new Promise((resolve, reject) => { child.once('error', reject); child.once('exit', resolve); });
-  const report = {status:code === 0 ? 'passed' : 'failed', code, platform:process.platform, arch:process.arch, softwareGpuTest, translatedTest, slowGpuTest, stdout, stderr};
+  const report = {status:code === 0 ? 'passed' : 'failed', code, platform:process.platform, arch:process.env.BONEMAN_TARGET_ARCH || process.arch, hostArch:process.arch, softwareGpuTest, translatedTest, slowGpuTest, stdout, stderr};
   await writeFile(path.join(out, probe ? 'gpu-probe.json' : 'native-lifecycle.json'), JSON.stringify(report, null, 2) + '\n');
   if (code !== 0) throw new Error('Native lifecycle failed: ' + stdout + stderr);
   console.log(probe ? 'PASS native WebGL2 capability: ' + stdout.trim() : 'PASS native app hide/restore: simulation stops, resumes, sandbox enabled.');

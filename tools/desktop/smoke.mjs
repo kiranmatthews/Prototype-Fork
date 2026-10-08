@@ -10,10 +10,10 @@ import { createServer } from 'node:http';
 import { launchSource } from './launch-source.mjs';
 
 const desktop = path.resolve(fileURLToPath(new URL('../../desktop/', import.meta.url)));
-const output = path.join(desktop, 'test-results');
+const output = process.env.BONEMAN_TEST_OUTPUT || path.join(desktop, 'test-results');
 await mkdir(output, { recursive:true });
 const profile = await mkdtemp(path.join(tmpdir(), 'boneman-smoke-'));
-const report = { timestamp:new Date().toISOString(), platform:platform(), arch:arch(), softwareGpuTest, translatedTest, slowGpuTest, modes:[] };
+const report = { timestamp:new Date().toISOString(), platform:platform(), arch:process.env.BONEMAN_TARGET_ARCH || arch(), hostArch:arch(), softwareGpuTest, translatedTest, slowGpuTest, modes:[] };
 const errors = [], requests = [], failed = [];
 let app;
 try {
@@ -101,9 +101,12 @@ try {
     console.log('PASS', lite ? 'lite' : 'full', 'gameplay and rendering');
   }
   report.assetFamilies = [];
+  await page.waitForFunction(() => !window.__game.gameFlow.transitionActive);
   for (const level of ['treehouse-trail', 'jungle', 'dark', 'crab-chief']) {
     console.log('Loading bundled asset family:', level);
-    await page.goto('boneman://game/?playtest&level=' + level);
+    // Exercise the real level selector: first-use asset loading and disposal
+    // must work in one session, without reinitializing the engine per level.
+    await page.evaluate(id => window.__game.ui.onLevelSelect(id), level);
     await page.waitForFunction(id => {
       const g = window.__game;
       return g?.getCurrentLevel().id === id && !g.gameFlow.blocksGameplay && g.getLoadingDiagnostics().pending.length === 0;

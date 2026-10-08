@@ -34,12 +34,13 @@ jobs:
             platform: linux
             arch: x64
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 45
+    # Rosetta cold starts are much slower than native release hardware.
+    timeout-minutes: ${{ matrix.platform == 'mac' && matrix.arch == 'x64' && 90 || 45 }}
     env:
       # Hosted Windows exposes Microsoft's software Basic Render Driver.
       BONEMAN_TEST_SLOW_GPU: ${{ matrix.platform == 'win' && '1' || '0' }}
       BONEMAN_TEST_SOFTWARE_GPU: ${{ matrix.platform == 'linux' && '1' || '0' }}
-      npm_config_arch: ${{ matrix.arch }}
+      ELECTRON_INSTALL_ARCH: ${{ matrix.arch }}
       BONEMAN_TARGET_ARCH: ${{ matrix.arch }}
       BONEMAN_BUILD_ID: ${{ github.sha }}
     steps:
@@ -47,7 +48,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-          architecture: ${{ matrix.arch }}
+          architecture: ${{ runner.arch == 'ARM64' && 'arm64' || 'x64' }}
           cache: npm
           cache-dependency-path: |
             package-lock.json

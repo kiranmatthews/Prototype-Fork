@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 import { chromium } from '../../desktop/node_modules/playwright/index.mjs';
 import { bundlePaths } from './bundle-paths.mjs';
 const profile = await mkdtemp(path.join(tmpdir(), 'boneman-packaged-'));
-const output = fileURLToPath(new URL('../../desktop/test-results/', import.meta.url));
+const output = process.env.BONEMAN_TEST_OUTPUT || fileURLToPath(new URL('../../desktop/test-results/', import.meta.url));
 await mkdir(output, { recursive:true });
 const { binary } = bundlePaths();
 const processHandle = spawn(binary, [...testGpuArgs, '--remote-debugging-port=0'], { env:{...process.env, BONEMAN_USER_DATA:profile}, stdio:['ignore','pipe','pipe'] });
@@ -50,7 +50,8 @@ try {
       .flatMap(session => session.events || []).filter(event => ['javascript-error','promise-error'].includes(event.stage)));
   assert.deepEqual(startupErrors, [], 'Packaged startup error ledger must be clean');
   await context.setOffline(true);
-  await page.goto('boneman://game/?playtest&level=codex-lab', {timeout:testTimeout});
+  await page.waitForFunction(() => window.__game.gameFlow.startupLoading === false && !window.__game.gameFlow.transitionActive);
+  await page.evaluate(() => window.__game.ui.onLevelSelect('codex-lab'));
   await page.waitForFunction(() => window.__game && !window.__game.gameFlow.blocksGameplay && window.__game.player.grounded, null, {timeout:testTimeout});
   await page.evaluate(() => { const s = window.__game.crtGuestSettings; s.applyStartupPreset(); s.setEnabled(true); });
   await page.waitForFunction(() => window.__game.getCrtDiagnostics()?.active, null, {timeout:30000});
