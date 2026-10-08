@@ -1285,6 +1285,7 @@ export class Player {
   private grindOllieAir = false; // deliberate top-side pop can return to the departing rail
   private grindOllieCatchArmed = false; // each ollie needs a fresh airborne Grind press
   private grindOllieCatchGrace = 0; // brief release buffer for that fresh press, never the takeoff hold
+  private grindAirTrickCompleted = false; // completed deck trick in this rail departure, paid only on a rail catch
   private grindAirLat = 0;
   private grindSpinInput = 0; // pre-held transfer direction must be released before it spins
   private readonly grindJumpInput = new THREE.Vector2();
@@ -3363,6 +3364,7 @@ export class Player {
     this.lipYawPose = this.revertPoseT = 0;
     this.balanceArmMotion.reset();
     this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
     this.deckTricksThisCombo.clear();
     this.ollieDeckTrickBufferT = 0;
     this.floatAir = false;
@@ -5066,6 +5068,7 @@ export class Player {
     this.emergencyEjectLandingPending = false;
     this.emergencyEjectLandingWillBail = false;
     this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
     const t = Math.min(1, this.chargeTimer / (this.parkControls ? SKATE_PARK.chargeSeconds : TUNING.jumpChargeTime));
     if (this.parkControls && this.freeSkate && !this.isBailing) {
       if (this.manualing) this.endManual();
@@ -7457,6 +7460,7 @@ export class Player {
     this.jumpBufferT = 0;
     this.flipT = 0;
     this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
     this.flipTimer = CONST.frontFlip ? CONST.flipDuration : 0;
     this.lastJumpType = label;
     sfx.play('ollie', 0.75, 0.9 + charge * 0.2);
@@ -7474,6 +7478,7 @@ export class Player {
     this.emergencyEjectUsed = false;
     this.boardOllieAir = false;
     this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
     return shouldBail;
   }
 
@@ -8013,6 +8018,7 @@ export class Player {
       this.emergencyEjectChargeT = 0;
       this.emergencyEjectUsed = false;
       this.deckTricksThisAir.clear();
+      this.grindAirTrickCompleted = false;
       this.surfaceName = hit.name;
       this.crateFloor = hit.crate ?? null;
       this.airMomentum = false; // touchdown: normal ground rules resume
@@ -8792,6 +8798,7 @@ export class Player {
     this.boardOllieAir = false;
     this.ollieDeckTrickBufferT = 0;
     this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
     this.flipT = 0;
     this.clearSpecialMoves();
 
@@ -9764,6 +9771,7 @@ export class Player {
     this.comboHasTrick = false;
     this.clearComboTrickHistory();
     this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
     this.deckTricksThisCombo.clear();
     this.airGrabShown = null;
     this.special.wipe();
@@ -9867,6 +9875,7 @@ export class Player {
     this.emergencyEjectLandingPending = false;
     this.emergencyEjectLandingWillBail = false;
     this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
     this.slamActive = false;
     this.slamHangT = 0;
     this.slamFlatT = 0;
@@ -10584,6 +10593,12 @@ export class Player {
   private enterGrind(rail: Rail, sample: RailSample, level?: Level): void {
     if (this.manualing !== 0) this.endManual();
     if (this.state === 'air' && this.flipT > 0) this.completeDeckTrick();
+    // Use this flight's landed trick, not the combo total (which includes
+    // earlier rails/world rewards). Catch eligibility already judges flips;
+    // a plain hop or in-place grind switch earns none.
+    const railTrickLanding = this.state === 'air' && this.grindExitAir && !this.isBailing &&
+      (this.grindAirTrickCompleted || this.airGrabShown !== null ||
+        Math.round(Math.abs(this.grabSpinAngle) / Math.PI) >= 1);
     // Locked park vert carries coping motion separately from axisF*speed.
     // Capture that real incoming velocity before ending the flight so either
     // catch direction retains its speed rather than reversing at the rail.
@@ -10606,6 +10621,7 @@ export class Player {
     this.emergencyEjectCharging = false;
     this.emergencyEjectChargeT = 0;
     this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
     this.grindRail = rail;
     const run = level ? level.crateRunFor(rail) : null;
     this.grindRun = run ? new Set(run) : null;
@@ -10722,16 +10738,19 @@ export class Player {
     // dispensing its own. A clean aligned hit keeps everything; a hard
     // sideways clip is blended down toward the along component (a boardslide
     // still slides at real pace, it doesn't rocket) — but slow entry = slow
-    // grind, and only DOWNHILL rails add speed (slope gravity in stepGrind).
+    // grind. Downhill rails add slope speed; landing a trick from a rail
+    // departure earns one separate speed reward in every game mode.
     // railSpeedBoost survives as a 0-default slider for anyone who wants the
     // old gear-change gift back.
     const alongFrac = planarIn > 0.01 ? Math.min(1, Math.abs(alongVel) / planarIn) : 1;
     this.grindVel = THREE.MathUtils.clamp(
-      planarIn * (0.72 + 0.28 * alongFrac) + TUNING.railSpeedBoost,
+      planarIn * (0.72 + 0.28 * alongFrac) + TUNING.railSpeedBoost +
+        (railTrickLanding ? TUNING.grindTrickBoost : 0),
       rail.chiefTongueAssist?.minSpeed ?? CONST.grindMinSpeed,
       TUNING.downhillMax,
     );
     this.speed = this.grindVel;
+    if (railTrickLanding && TUNING.grindTrickBoost > 0) this.emitSparks(10, 0xfff3d0, 2.2);
     // Remember how far off the rail the body was at entry; placeOnRail eases
     // it to zero so the snap reads as a quick glide, not a teleport.
     this.snapOffset.set(
@@ -10836,6 +10855,7 @@ export class Player {
     this.grindOllieAir = ollie;
     this.grindOllieCatchArmed = false;
     this.grindOllieCatchGrace = 0;
+    this.grindAirTrickCompleted = false;
     this.grindAirLat = lateral;
     this.grindSpinInput = lateral !== 0 && Math.abs(this.rawInput.moveX) > 0.3
       ? Math.sign(this.rawInput.moveX) : 0;
@@ -11132,6 +11152,7 @@ export class Player {
   private completeDeckTrick(): void {
     const completedSpecial=this.specialFlip;
     this.score(completedSpecial?.points??deckTrickInfo(this.flipKind).points,this.flipName);
+    if (this.grindExitAir) this.grindAirTrickCompleted = true;
     if(completedSpecial)this.specialGrabLanding=true;
     else
       this.deckYawOffset=wrapAngle(this.deckYawOffset+deckTrickInfo(this.flipKind).yaw*Math.PI*2*this.stance);
@@ -11653,6 +11674,7 @@ export class Player {
         this.emergencyEjectCharging = false;
         this.emergencyEjectChargeT = 0;
         this.deckTricksThisAir.clear();
+        this.grindAirTrickCompleted = false;
         // A portal is a traversal boundary. Retire the whole authored slide
         // envelope together so it cannot resume or attack at the destination.
         this.cancelSlideTraversal();
@@ -12848,6 +12870,7 @@ export class Player {
     this.emergencyEjectLandingWillBail = false;
     this.boardOllieAir = false;
     this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
     this.jumpReleaseRearmRequired = false;
 
     this.state = 'air';
@@ -14211,6 +14234,7 @@ export class Player {
     this.emergencyEjectCharging = false;
     this.emergencyEjectChargeT = 0;
     this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
     this.wallrideLatched = true; // no second wallride until you land or grind
     this.wallrideT = TUNING.wallrideMaxTime;
     this.wallTickT = 0;
@@ -14687,6 +14711,7 @@ export class Player {
     this.emergencyEjectCharging = false;
     this.emergencyEjectChargeT = 0;
     this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
     this.ledgeT = TUNING.ledgeGrabTime;
     this.speed = 0;
     this.vVel = 0;
@@ -15456,6 +15481,7 @@ export class Player {
     this.special.wipe();
     this.clearSpecialMoves();
     this.deckTricksThisAir.clear();
+    this.grindAirTrickCompleted = false;
     this.deckTricksThisCombo.clear();
     this.boardOllieAir = false;
     this.emergencyEjectCharging = false;

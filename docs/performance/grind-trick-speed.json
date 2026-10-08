@@ -1,0 +1,1454 @@
+{
+  "base": "http://127.0.0.1:5241",
+  "stamps": [
+    "Codex/sol fork \u00b7 build 10-08 00:57 UTC",
+    "Codex/sol fork \u00b7 build 10-08 00:57 UTC",
+    "Codex/sol fork \u00b7 build 10-08 00:57 UTC",
+    "Codex/sol fork \u00b7 build 10-08 00:57 UTC"
+  ],
+  "results": [
+    {
+      "lite": true,
+      "level": "jungle-cup",
+      "kind": "plain",
+      "railInfo": {
+        "index": 3,
+        "length": 18,
+        "t": 1.5,
+        "competition": true
+      },
+      "control": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            0.8,
+            -8.699999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": true,
+          "boost": 0
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            1.1489499999999997,
+            -3.0999999999999823
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50 x2"
+          ],
+          "rail": true,
+          "competition": true,
+          "boost": 0
+        }
+      },
+      "reward": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            0.8,
+            -8.699999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": true,
+          "boost": 3
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            1.1489499999999997,
+            -3.0999999999999823
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50 x2"
+          ],
+          "rail": true,
+          "competition": true,
+          "boost": 3
+        }
+      }
+    },
+    {
+      "lite": true,
+      "level": "jungle-cup",
+      "kind": "flip",
+      "railInfo": {
+        "index": 3,
+        "length": 18,
+        "t": 1.5,
+        "competition": true
+      },
+      "control": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            0.8,
+            -8.699999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": true,
+          "boost": 0
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            1.1489499999999997,
+            -3.0999999999999823
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Kickflip",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": true,
+          "boost": 0
+        }
+      },
+      "reward": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            0.8,
+            -8.699999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": true,
+          "boost": 3
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 11,
+          "pos": [
+            -22,
+            1.1489499999999997,
+            -3.0999999999999823
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Kickflip",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": true,
+          "boost": 3
+        }
+      }
+    },
+    {
+      "lite": true,
+      "level": "jungle-cup",
+      "kind": "grab",
+      "railInfo": {
+        "index": 3,
+        "length": 18,
+        "t": 1.5,
+        "competition": true
+      },
+      "control": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            0.8,
+            -8.699999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": true,
+          "boost": 0
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            1.1489499999999997,
+            -3.0999999999999823
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Indy",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": true,
+          "boost": 0
+        }
+      },
+      "reward": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            0.8,
+            -8.699999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": true,
+          "boost": 3
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 11,
+          "pos": [
+            -22,
+            1.1489499999999997,
+            -3.0999999999999823
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Indy",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": true,
+          "boost": 3
+        }
+      }
+    },
+    {
+      "lite": true,
+      "level": "jungle-cup",
+      "kind": "spin",
+      "railInfo": {
+        "index": 3,
+        "length": 18,
+        "t": 1.5,
+        "competition": true
+      },
+      "control": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            0.8,
+            -8.699999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": true,
+          "boost": 0
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            1.1489499999999997,
+            -3.0999999999999823
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Switch 180\u00b0",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": true,
+          "boost": 0
+        }
+      },
+      "reward": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            0.8,
+            -8.699999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": true,
+          "boost": 3
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 11,
+          "pos": [
+            -22,
+            1.1489499999999997,
+            -3.0999999999999823
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Switch 180\u00b0",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": true,
+          "boost": 3
+        }
+      }
+    },
+    {
+      "lite": true,
+      "level": "slip",
+      "kind": "plain",
+      "railInfo": {
+        "index": 0,
+        "length": 32,
+        "t": 2,
+        "competition": false
+      },
+      "control": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.20000000000002,
+            19.199999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": false,
+          "boost": 0
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.37748689585237,
+            13.866666666666678
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50 x2"
+          ],
+          "rail": true,
+          "competition": false,
+          "boost": 0
+        }
+      },
+      "reward": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.20000000000002,
+            19.199999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": false,
+          "boost": 3
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.37748689585237,
+            13.866666666666678
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50 x2"
+          ],
+          "rail": true,
+          "competition": false,
+          "boost": 3
+        }
+      }
+    },
+    {
+      "lite": true,
+      "level": "slip",
+      "kind": "flip",
+      "railInfo": {
+        "index": 0,
+        "length": 32,
+        "t": 2,
+        "competition": false
+      },
+      "control": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.20000000000002,
+            19.199999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": false,
+          "boost": 0
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.37748689585237,
+            13.866666666666678
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Kickflip",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": false,
+          "boost": 0
+        }
+      },
+      "reward": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.20000000000002,
+            19.199999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": false,
+          "boost": 3
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 11,
+          "pos": [
+            -10.85,
+            150.37748689585237,
+            13.866666666666678
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Kickflip",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": false,
+          "boost": 3
+        }
+      }
+    },
+    {
+      "lite": true,
+      "level": "slip",
+      "kind": "grab",
+      "railInfo": {
+        "index": 0,
+        "length": 32,
+        "t": 2,
+        "competition": false
+      },
+      "control": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.20000000000002,
+            19.199999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": false,
+          "boost": 0
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.37748689585237,
+            13.866666666666678
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Indy",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": false,
+          "boost": 0
+        }
+      },
+      "reward": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.20000000000002,
+            19.199999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": false,
+          "boost": 3
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 11,
+          "pos": [
+            -10.85,
+            150.37748689585237,
+            13.866666666666678
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Indy",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": false,
+          "boost": 3
+        }
+      }
+    },
+    {
+      "lite": true,
+      "level": "slip",
+      "kind": "spin",
+      "railInfo": {
+        "index": 0,
+        "length": 32,
+        "t": 2,
+        "competition": false
+      },
+      "control": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.20000000000002,
+            19.199999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": false,
+          "boost": 0
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.37748689585237,
+            13.866666666666678
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Switch 180\u00b0",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": false,
+          "boost": 0
+        }
+      },
+      "reward": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.20000000000002,
+            19.199999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": false,
+          "boost": 3
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 11,
+          "pos": [
+            -10.85,
+            150.37748689585237,
+            13.866666666666678
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Switch 180\u00b0",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": false,
+          "boost": 3
+        }
+      }
+    },
+    {
+      "lite": false,
+      "level": "jungle-cup",
+      "kind": "plain",
+      "railInfo": {
+        "index": 3,
+        "length": 18,
+        "t": 1.5,
+        "competition": true
+      },
+      "control": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            0.8,
+            -8.699999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": true,
+          "boost": 0
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            1.1489499999999997,
+            -3.0999999999999823
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50 x2"
+          ],
+          "rail": true,
+          "competition": true,
+          "boost": 0
+        }
+      },
+      "reward": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            0.8,
+            -8.699999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": true,
+          "boost": 3
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            1.1489499999999997,
+            -3.0999999999999823
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50 x2"
+          ],
+          "rail": true,
+          "competition": true,
+          "boost": 3
+        }
+      }
+    },
+    {
+      "lite": false,
+      "level": "jungle-cup",
+      "kind": "flip",
+      "railInfo": {
+        "index": 3,
+        "length": 18,
+        "t": 1.5,
+        "competition": true
+      },
+      "control": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            0.8,
+            -8.699999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": true,
+          "boost": 0
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            1.1489499999999997,
+            -3.0999999999999823
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Kickflip",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": true,
+          "boost": 0
+        }
+      },
+      "reward": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            0.8,
+            -8.699999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": true,
+          "boost": 3
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 11,
+          "pos": [
+            -22,
+            1.1489499999999997,
+            -3.0999999999999823
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Kickflip",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": true,
+          "boost": 3
+        }
+      }
+    },
+    {
+      "lite": false,
+      "level": "jungle-cup",
+      "kind": "grab",
+      "railInfo": {
+        "index": 3,
+        "length": 18,
+        "t": 1.5,
+        "competition": true
+      },
+      "control": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            0.8,
+            -8.699999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": true,
+          "boost": 0
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            1.1489499999999997,
+            -3.0999999999999823
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Indy",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": true,
+          "boost": 0
+        }
+      },
+      "reward": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            0.8,
+            -8.699999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": true,
+          "boost": 3
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 11,
+          "pos": [
+            -22,
+            1.1489499999999997,
+            -3.0999999999999823
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Indy",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": true,
+          "boost": 3
+        }
+      }
+    },
+    {
+      "lite": false,
+      "level": "jungle-cup",
+      "kind": "spin",
+      "railInfo": {
+        "index": 3,
+        "length": 18,
+        "t": 1.5,
+        "competition": true
+      },
+      "control": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            0.8,
+            -8.699999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": true,
+          "boost": 0
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            1.1489499999999997,
+            -3.0999999999999823
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Switch 180\u00b0",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": true,
+          "boost": 0
+        }
+      },
+      "reward": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -22,
+            0.8,
+            -8.699999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": true,
+          "boost": 3
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 11,
+          "pos": [
+            -22,
+            1.1489499999999997,
+            -3.0999999999999823
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Switch 180\u00b0",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": true,
+          "boost": 3
+        }
+      }
+    },
+    {
+      "lite": false,
+      "level": "slip",
+      "kind": "plain",
+      "railInfo": {
+        "index": 0,
+        "length": 32,
+        "t": 2,
+        "competition": false
+      },
+      "control": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.20000000000002,
+            19.199999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": false,
+          "boost": 0
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.37748689585237,
+            13.866666666666678
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50 x2"
+          ],
+          "rail": true,
+          "competition": false,
+          "boost": 0
+        }
+      },
+      "reward": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.20000000000002,
+            19.199999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": false,
+          "boost": 3
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.37748689585237,
+            13.866666666666678
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50 x2"
+          ],
+          "rail": true,
+          "competition": false,
+          "boost": 3
+        }
+      }
+    },
+    {
+      "lite": false,
+      "level": "slip",
+      "kind": "flip",
+      "railInfo": {
+        "index": 0,
+        "length": 32,
+        "t": 2,
+        "competition": false
+      },
+      "control": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.20000000000002,
+            19.199999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": false,
+          "boost": 0
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.37748689585237,
+            13.866666666666678
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Kickflip",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": false,
+          "boost": 0
+        }
+      },
+      "reward": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.20000000000002,
+            19.199999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": false,
+          "boost": 3
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 11,
+          "pos": [
+            -10.85,
+            150.37748689585237,
+            13.866666666666678
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Kickflip",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": false,
+          "boost": 3
+        }
+      }
+    },
+    {
+      "lite": false,
+      "level": "slip",
+      "kind": "grab",
+      "railInfo": {
+        "index": 0,
+        "length": 32,
+        "t": 2,
+        "competition": false
+      },
+      "control": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.20000000000002,
+            19.199999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": false,
+          "boost": 0
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.37748689585237,
+            13.866666666666678
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Indy",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": false,
+          "boost": 0
+        }
+      },
+      "reward": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.20000000000002,
+            19.199999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": false,
+          "boost": 3
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 11,
+          "pos": [
+            -10.85,
+            150.37748689585237,
+            13.866666666666678
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Indy",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": false,
+          "boost": 3
+        }
+      }
+    },
+    {
+      "lite": false,
+      "level": "slip",
+      "kind": "spin",
+      "railInfo": {
+        "index": 0,
+        "length": 32,
+        "t": 2,
+        "competition": false
+      },
+      "control": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.20000000000002,
+            19.199999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": false,
+          "boost": 0
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.37748689585237,
+            13.866666666666678
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Switch 180\u00b0",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": false,
+          "boost": 0
+        }
+      },
+      "reward": {
+        "launch": {
+          "state": "air",
+          "bail": false,
+          "speed": 8,
+          "pos": [
+            -10.85,
+            150.20000000000002,
+            19.199999999999992
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50"
+          ],
+          "rail": false,
+          "competition": false,
+          "boost": 3
+        },
+        "landed": {
+          "state": "grind",
+          "bail": false,
+          "speed": 11,
+          "pos": [
+            -10.85,
+            150.37748689585237,
+            13.866666666666678
+          ],
+          "flip": 0,
+          "spin": 0,
+          "labels": [
+            "50-50",
+            "Switch 180\u00b0",
+            "50-50"
+          ],
+          "rail": true,
+          "competition": false,
+          "boost": 3
+        }
+      }
+    }
+  ],
+  "errors": [],
+  "controllerCases": 40,
+  "controllerFrames": 7769
+}

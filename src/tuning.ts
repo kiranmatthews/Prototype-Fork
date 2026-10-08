@@ -89,6 +89,7 @@ export const TUNING = {
   grindSpeed: 5, // reference speed: you grind at ENTRY speed; slower than this drifts harder
   grindJumpForce: 12.5, // vertical pop when jumping off a rail
   grindTransferSpeed: 4.8, // sideways launch speed from a direction held BEFORE releasing a rail ollie
+  grindTrickBoost: 3, // speed earned once when a rail departure lands an air trick onto a rail
   underRailCooldown: 1.5, // seconds between under-rail hang switches (Circle on a rail)
   spinDuration: 0.3,
   spinAirCorrection: 0.5, // small vertical stall from spinning in air (not a rescue)
@@ -307,6 +308,7 @@ export const TUNING_RANGES: Record<TuningKey, { min: number; max: number; step: 
   grindSpeed: { min: 5, max: 50, step: 1 },
   grindJumpForce: { min: 4, max: 30, step: 0.5 },
   grindTransferSpeed: { min: 0, max: 10, step: 0.1 },
+  grindTrickBoost: { min: 0, max: 8, step: 0.5 },
   underRailCooldown: { min: 0.5, max: 4, step: 0.1 },
   spinDuration: { min: 0.1, max: 1.2, step: 0.05 },
   flipHoldTime: { min: 0, max: 0.6, step: 0.02 },
@@ -447,6 +449,7 @@ export const TUNING_LABELS: Partial<Record<TuningKey, string>> = {
   balanceReentryRelief: 'Linked Catch Relief',
   balanceSpeedEffect: 'Grind Speed Influence',
   grindSpeed: 'Grind Speed Reference',
+  grindTrickBoost: 'Rail Trick Speed Reward',
   balanceInertia: 'Balance Momentum',
   balanceEdgePower: 'Edge Curve Power',
   balanceNoise: 'Balance Wander',
@@ -600,7 +603,9 @@ export const TUNING_INFO: Record<TuningKey, string> = {
   grindDrag:
     'Friction a FLAT rail scrubs off per second. 0 (default) = a rail HOLDS the speed you brought it, and only a climb costs you — the slope works the grind line either way, so downhill rails still feed speed. Dial it up to make long grinds a speed decision again; a crosswise slide scrubs the full amount, a crooked grind about half, a nosegrind least.',
   railSpeedBoost:
-    'EXTRA flat speed granted on top when you land a grind. Grinds now KEEP the speed you carried in (THPS speed-keep — redirected along the rail whatever the angle you hit it at), so this ships at 0: slow entry = slow grind, fast entry = fast grind, and only DOWNHILL rails add speed. Raise it if you want every rail to be a gear change again.',
+    'EXTRA flat speed granted on every grind catch. This ships at 0 so ordinary catches keep their incoming speed. Downhill rails and the separate Rail Trick Speed Reward can earn additional speed.',
+  grindTrickBoost:
+    'Speed added once when a rail departure lands a completed flip, grab or scored rotation back onto a rail, in campaign and competition. Plain hops and grind-style switches earn none. Repeated successful links build speed up to downhillMax; 0 disables this reward.',
   perfectGrindSpeed:
     'THE SLIPSTREAM only. Ride a rail its WHOLE length — on at one end, off at the other, no bail — and you leave the rail at this speed. It sits above downhillMax on purpose: a perfect grind is meant to be the fastest the board ever moves, so the level built around one long rail line rewards committing to it.',
   perfectGrindHold:
@@ -868,7 +873,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'LEDGE GRAB', keys: ['ledgeGrabTime', 'ledgeClimbTime', 'ledgeClimbPop', 'ledgeReach'] },
   {
     title: 'GRINDS',
-    keys: ['railSnapDistance', 'grindApproachMargin', 'railTripSpeed', 'railSpeedBoost', 'grindDrag', 'perfectGrindSpeed', 'perfectGrindHold', 'grindSpeed', 'grindJumpForce', 'grindTransferSpeed', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'balanceEntryLean', 'grindCalm', 'balanceSpeedEffect'],
+    keys: ['railSnapDistance', 'grindApproachMargin', 'railTripSpeed', 'railSpeedBoost', 'grindTrickBoost', 'grindDrag', 'perfectGrindSpeed', 'perfectGrindHold', 'grindSpeed', 'grindJumpForce', 'grindTransferSpeed', 'underRailCooldown', 'balanceDrift', 'balanceControl', 'balanceEntryLean', 'grindCalm', 'balanceSpeedEffect'],
   },
   {
     title: 'BALANCE · SHARED',

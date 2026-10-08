@@ -274,7 +274,9 @@ export class Replayer {
     // Missing park values use this build's defaults; retired multipliers must
     // never become live properties or silently affect the absolute profile.
     for (const key of Object.keys(replayTuning)) if (retiredParkTuner(key)) delete replayTuning[key];
-    Object.assign(TUNING, PARK_TUNING_DEFAULTS, replayTuning);
+    // Earlier recordings predate the rail-trick speed reward. Keep their
+    // original trajectories; new takes explicitly record the chosen reward.
+    Object.assign(TUNING, PARK_TUNING_DEFAULTS, { grindTrickBoost: 0 }, replayTuning);
     this.refreshLegacyCarveGrip();
     this.refreshLegacyCamera();
     this.onTuningApplied();
