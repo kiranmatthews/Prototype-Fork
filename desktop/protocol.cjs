@@ -2,7 +2,7 @@
 const path = require('node:path');
 const { createReadStream } = require('node:fs');
 const { Readable } = require('node:stream');
-const { assetKey, byteRange, CSP } = require('./policy.cjs');
+const { assetKey, byteRange, CSP, DECODER_CSP } = require('./policy.cjs');
 const TYPES = {
   html:'text/html; charset=utf-8', js:'text/javascript; charset=utf-8', css:'text/css; charset=utf-8',
   json:'application/json', wasm:'application/wasm', glb:'model/gltf-binary', gltf:'model/gltf+json',
@@ -17,7 +17,7 @@ function assetHandler(root, manifest, onMissing = () => {}) {
     const key = assetKey(request.url);
     const row = entries.get(key);
     const headers = new Headers({
-      'Content-Security-Policy': CSP,
+      'Content-Security-Policy': key === 'desktop-basis-worker.js' ? DECODER_CSP : CSP,
       'X-Content-Type-Options': 'nosniff',
       'Cache-Control': key?.startsWith('assets/') ? 'public, max-age=31536000, immutable' : 'no-store',
     });

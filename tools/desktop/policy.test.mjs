@@ -13,6 +13,8 @@ test('only the bundle origin and local generated resources are allowed', () => {
   for (const url of ['https://example.com', 'http://127.0.0.1/', 'ws://localhost', 'wss://example.com',
     'file:///etc/passwd', 'boneman://game.evil/', 'boneman://user@game/', 'boneman://game:80/', 'blob:https://example.com/123'])
     assert.equal(policy.allowedRequest(url), false, url);
+  assert(!policy.CSP.includes("'unsafe-eval'"), 'The game window cannot compile JavaScript strings');
+  assert(policy.DECODER_CSP.includes("connect-src 'none'"), 'The decoder cannot access the network');
   assert(policy.allowedNavigation('boneman://game/?playtest&level=codex-lab'));
   assert(policy.allowedNavigation('boneman://game/reset-local-data.html'));
   assert(!policy.allowedNavigation('boneman://game/arbitrary.html'));

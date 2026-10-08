@@ -1,0 +1,68 @@
+{
+  "validatedAt": "2026-10-08T18:37:28.753Z",
+  "sourceBase": "cb9c230",
+  "platform": "darwin",
+  "arch": "arm64",
+  "runtime": {
+    "electron": "44.7.0",
+    "chromium": "152.0.7977.130",
+    "gpu": {
+      "2d_canvas": "enabled",
+      "direct_rendering_display_compositor": "disabled_off_ok",
+      "gpu_compositing": "enabled",
+      "multiple_raster_threads": "enabled_on",
+      "opengl": "enabled_on",
+      "rasterization": "enabled",
+      "raw_draw": "disabled_off_ok",
+      "skia_graphite": "enabled_on",
+      "trees_in_viz": "disabled_off",
+      "video_decode": "enabled",
+      "video_encode": "enabled",
+      "webgl": "enabled",
+      "webgpu": "enabled",
+      "webnn": "disabled_off"
+    }
+  },
+  "payload": {
+    "files": 861,
+    "bytes": 428082774,
+    "contentId": "fea31608c5b3f2d82feea8cef545ca535349e7d7791925df4b1c085c301b5a02"
+  },
+  "tests": {
+    "sourceSmoke": "passed",
+    "packagedSmoke": "passed",
+    "packagedFocusEmulated": false,
+    "nativeLifecycle": "passed",
+    "graphicsRecovery": {
+      "lost": false,
+      "losses": 1,
+      "restores": 1
+    },
+    "network": {
+      "denied": {
+        "fetch": true,
+        "image": true,
+        "socket": true,
+        "worker": true
+      },
+      "nativeDenied": true,
+      "networkHits": 0,
+      "gameRequests": 993
+    },
+    "savePersistence": true,
+    "assetFamilies": [
+      "treehouse-trail",
+      "jungle",
+      "dark",
+      "crab-chief"
+    ]
+  },
+  "measurementScope": "Short functional smoke only; RAF samples are display callback cadence, not presented-game FPS or GPU timings. No sustained minimum-hardware certification.",
+  "artifacts": {
+    "type": "local ad-hoc macOS candidate, not Developer ID signed or notarized",
+    "checksums": [
+      "ebd21c5903963d46fd3d72ea5242cc1413b23d978dd1ff77517e40ccc5efb0d5  BONEMAN-0.1.0-mac-arm64.dmg",
+      "445386d45ab372d1e90e506af87cb07aa6f578dbb8d2980149604569051429f4  BONEMAN-0.1.0-mac-arm64.zip"
+    ]
+  }
+}

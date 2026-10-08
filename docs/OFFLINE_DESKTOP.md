@@ -25,6 +25,7 @@ Create and verify a local app:
 npm run desktop:pack
 node tools/desktop/check-package.mjs
 node tools/desktop/packaged-smoke.mjs
+node tools/desktop/native-lifecycle.mjs
 ```
 
 The local Mac app is `desktop/release/mac-arm64/BONEMAN.app` on Apple Silicon or `desktop/release/mac/BONEMAN.app` on Intel. Local Mac candidates use an ad-hoc signature so modified ARM binaries can run. This is not a Developer ID signature or notarization. Candidate installers are for testing, not public distribution.
@@ -43,7 +44,7 @@ Separate native Mac artifacts avoid Rosetta and avoid shipping two Chromium arch
 ## Offline boundary and stability
 
 - `desktop/main.cjs` creates one sandboxed game window. The renderer has no Node integration, preload bridge, IPC API, webview, or permission grants.
-- Native session policy rejects HTTP, HTTPS, WebSocket and direct filesystem requests. CSP separately restricts scripts, textures, fonts, audio, workers and connections to bundled or locally generated resources. Navigation is limited to the game and local reset page; new windows and external links are denied.
+- Native session policy rejects HTTP, HTTPS, WebSocket and direct filesystem requests. CSP separately restricts scripts, textures, fonts, audio, workers and connections to bundled or locally generated resources. The pinned Basis/Embind decoder needs JavaScript call-adapter generation: it is emitted as a dedicated bundled worker with its own policy allowing that operation and denying all connections. The game window retains its prohibition on JavaScript string evaluation. The build adapter fails if the pinned Three.js loader structure changes. Navigation is limited to the game and local reset page; new windows and external links are denied.
 - A secure, standard custom origin preserves relative URLs, browser storage, WebGL, WebAudio, WASM and blob workers. Local responses support MIME types, HEAD and byte ranges. Paths must be explicit members of the build manifest; missing files fail locally.
 - The desktop build removes web update discovery and the GitHub publishing client. Cloud/token controls are hidden; “Restore bundled levels” reads the installed `levels.json`. Local file import/export stays available.
 - Service workers are not enabled for the protocol. There is no full-game CacheStorage copy, cache warm-up, stale PWA version or online fallback. Hashed code can retain Chromium's code cache; mutable asset URLs are not cached across app releases.
@@ -66,7 +67,7 @@ Do not remove assets based only on a short playthrough. Do not preload all level
 
 ## Automated distribution
 
-`.github/workflows/desktop.yml` builds on native Apple Silicon, Intel Mac, Windows and Linux runners. It runs focused checks, the real offline renderer smoke, packaging, ASAR/fuse verification, packaged-app smoke, and checksums. It never runs `check:all`.
+`.github/workflows/desktop.yml` builds on native Apple Silicon, Intel Mac, Windows and Linux runners. It runs focused checks, the real offline renderer smoke, packaging, ASAR/fuse verification, packaged-app smoke, native window hide/restore, and checksums. It never runs `check:all`.
 
 For unsigned/ad-hoc candidates from main:
 
@@ -113,6 +114,14 @@ For each supported platform, record the immutable commit/content ID, Electron/Ch
 7. Retain screenshots, traces, source and packaged smoke JSON, manifest content ID, signing/notarization results and checksums beside the release. A faster result without the same picture, inputs, resolution and content is not a valid performance comparison.
 
 The smoke scripts are short automated regression checks. They are not a full-course playthrough, a sustained hardware benchmark, a physical controller test or a substitute for the final disconnected installer review.
+
+## Verified local result
+
+The initial macOS arm64 candidate contains **861 manifest-tracked game files / 408.3 MiB**, omitting **438.5 MiB** of web/authoring material from the public asset inventory. The app with its browser runtime occupies approximately **696 MiB** on this host; compressed candidate installers are approximately **487 MiB**. This is a size reduction, not an FPS claim.
+
+Fresh-profile disconnected startup, lite/full gameplay with CRT enabled, checkpoint/pit/finish, persistent saves, actual WebGL loss/restoration, and cold Treehouse/Jungle/Nightworks/boss asset loading pass. Deliberate fetch/image/WebSocket/worker requests and a native-session request produce **zero hits** on the probe server. The packaged app passes full rendering without focus emulation. A separate native test verifies stopped simulation while hidden, resumed simulation on show, and enabled sandboxing. Details and bundle identity are in [the local evidence](performance/offline-desktop.json).
+
+This is an ad-hoc Mac candidate. Developer ID signing/notarization, signed Windows distribution and minimum-hardware acceptance are exercised when releasing with the documented credentials and hardware matrix.
 
 ## References
 

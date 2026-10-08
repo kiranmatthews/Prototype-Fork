@@ -11,10 +11,12 @@ const output = fileURLToPath(new URL('../../desktop/test-results/', import.meta.
 await mkdir(output, { recursive:true });
 const { binary } = bundlePaths();
 const processHandle = spawn(binary, ['--remote-debugging-port=0'], { env:{...process.env, BONEMAN_USER_DATA:profile}, stdio:['ignore','pipe','pipe'] });
+const watchdog = setTimeout(() => processHandle.kill('SIGKILL'), 180000);
 let browser, page;
 const errors = [], failed = [], requests = [];
 const emulatedFocus = process.argv.includes('--emulated-focus');
-const report = { binary, platform:process.platform, arch:process.arch, emulatedFocus };
+const report = { binary, platform:process.platform, arch:process.arch, emulatedFocus, stderr:'' };
+processHandle.stderr.on('data', bytes => { report.stderr = (report.stderr + bytes).slice(-12000); });
 try {
   const endpoint = await new Promise((resolve,reject) => {
     let log = '';
@@ -34,29 +36,19 @@ try {
   page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
   page.on('request', request => requests.push(request.url()));
   page.on('response', r => { if (r.status() >= 400) failed.push(r.url()); });
-  await page.waitForFunction(() => !!window.__game, null, {timeout:120000});
+  await page.waitForFunction(() => !!window.__game && document.readyState === 'complete', null, {timeout:60000});
   await context.setOffline(true);
   await page.goto('boneman://game/?playtest&level=codex-lab', {timeout:120000});
   await page.waitForFunction(() => window.__game && !window.__game.gameFlow.blocksGameplay && window.__game.player.grounded, null, {timeout:120000});
+  await page.evaluate(() => { const s = window.__game.crtGuestSettings; s.applyStartupPreset(); s.setEnabled(true); });
+  await page.waitForFunction(() => window.__game.getCrtDiagnostics()?.active, null, {timeout:30000});
   assert.match(await page.locator('.hud-build').textContent(), /Codex\/sol fork.*Offline desktop/);
   assert.equal(await page.evaluate(() => typeof window.require), 'undefined');
   const start = await page.evaluate(() => window.__game.player.pos.toArray());
   await page.keyboard.down('ArrowUp'); await page.waitForTimeout(700); await page.keyboard.up('ArrowUp');
   const finish = await page.evaluate(() => window.__game.player.pos.toArray());
   assert(Math.hypot(...finish.map((n,i) => n - start[i])) > .2);
-  if (!emulatedFocus) {
-  const client = await context.newCDPSession(page);
-  const { windowId } = await client.send('Browser.getWindowForTarget');
-  await client.send('Browser.setWindowBounds', {windowId, bounds:{windowState:'minimized'}});
-  await page.waitForFunction(() => document.hidden, null, {polling:100});
-  const beforeHidden = await page.evaluate(() => window.__game.player.pos.toArray());
-  await page.waitForTimeout(500);
-  assert.deepEqual(await page.evaluate(() => window.__game.player.pos.toArray()), beforeHidden);
-  await client.send('Browser.setWindowBounds', {windowId, bounds:{windowState:'normal'}});
-  await page.bringToFront();
-  await page.waitForFunction(() => !document.hidden, null, {polling:100});
-  report.visibility = 'simulation frozen while minimized; resumed';
-  } else report.visibility = 'not tested: focus emulation enabled';
+  report.visibility = 'covered by native-lifecycle.mjs without CDP emulation';
   await page.keyboard.press('Escape');
   await page.waitForFunction(() => window.__game.gameFlow.blocksGameplay);
   await page.screenshot({path:path.join(output, 'packaged-full.png')});
@@ -70,14 +62,14 @@ try {
   report.errors = errors;
   report.failedRequests = failed;
   report.requestCount = requests.length;
-  if (page) report.page = await page.evaluate(() => ({
+  if (page) report.page = await Promise.race([page.evaluate(() => ({
     url:location.href, hidden:document.hidden, ready:document.readyState,
     game:!!window.__game, loading:window.__game?.getLoadingDiagnostics(),
-  })).catch(() => null);
+  })).catch(() => null), new Promise(resolve => setTimeout(() => resolve('unresponsive'), 2000))]);
   console.error(JSON.stringify(report));
   throw error;
 } finally {
-  if (browser) await browser.close().catch(() => {});
+  if (browser) await Promise.race([browser.close().catch(() => {}), new Promise(resolve => setTimeout(resolve, 3000))]);
   if (processHandle.exitCode === null) {
     processHandle.kill();
     await new Promise(resolve => {
@@ -85,6 +77,7 @@ try {
       processHandle.once('exit', () => { clearTimeout(timer); resolve(); });
     });
   }
+  clearTimeout(watchdog);
   await writeFile(path.join(output, 'packaged-smoke.json'), JSON.stringify(report, null, 2) + '\n');
   await rm(profile, { recursive:true, force:true, maxRetries:5, retryDelay:200 });
 }

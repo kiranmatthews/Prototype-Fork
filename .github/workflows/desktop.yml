@@ -85,6 +85,12 @@ jobs:
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
       - run: node tools/desktop/check-package.mjs
+      - name: Native window lifecycle
+        if: runner.os != 'Linux'
+        run: node tools/desktop/native-lifecycle.mjs
+      - name: Native window lifecycle (Linux display)
+        if: runner.os == 'Linux'
+        run: xvfb-run -a node tools/desktop/native-lifecycle.mjs
       - name: Packaged application smoke
         if: runner.os != 'Linux'
         run: node tools/desktop/packaged-smoke.mjs

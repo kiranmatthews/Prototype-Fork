@@ -15,6 +15,11 @@ const profile = await mkdtemp(path.join(tmpdir(), 'boneman-smoke-'));
 const report = { timestamp:new Date().toISOString(), platform:platform(), arch:arch(), modes:[] };
 const errors = [], requests = [], failed = [];
 let app;
+async function closeApp() {
+  const child = app.process();
+  await Promise.race([app.close(), new Promise(resolve => setTimeout(resolve, 5000))]);
+  if (child.exitCode === null) child.kill('SIGKILL');
+}
 try {
   app = await _electron.launch({
     executablePath:require('electron'), args:[desktop], chromiumSandbox:true,
@@ -44,6 +49,10 @@ try {
   for (const lite of [true, false]) {
     await page.goto('boneman://game/?playtest&level=codex-lab' + (lite ? '&lite' : ''));
     await page.waitForFunction(() => window.__game && !window.__game.gameFlow.blocksGameplay && window.__game.player.grounded, null, { timeout:120000 });
+    if (!lite) {
+      await page.evaluate(() => { const s = window.__game.crtGuestSettings; s.applyStartupPreset(); s.setEnabled(true); });
+      await page.waitForFunction(() => window.__game.getCrtDiagnostics()?.active, null, {timeout:30000});
+    }
     const stamp = await page.locator('.hud-build').textContent();
     assert.match(stamp, /Codex\/sol fork.*Offline desktop/);
     const start = await page.evaluate(() => window.__game.player.pos.toArray());
@@ -94,16 +103,17 @@ try {
     console.log('PASS', lite ? 'lite' : 'full', 'gameplay and rendering');
   }
   report.assetFamilies = [];
-  for (const level of ['treehouse-trail', 'jungle', 'nightworks', 'crab-chief']) {
-    await page.goto('boneman://game/?playtest&lite&level=' + level);
+  for (const level of ['treehouse-trail', 'jungle', 'dark', 'crab-chief']) {
+    await page.goto('boneman://game/?playtest&level=' + level);
     await page.waitForFunction(id => {
       const g = window.__game;
       return g?.getCurrentLevel().id === id && !g.gameFlow.blocksGameplay && g.getLoadingDiagnostics().pending.length === 0;
     }, level, {timeout:120000});
     const loaded = await page.evaluate(() => ({
       level:window.__game.getCurrentLevel().id, assets:window.__game.getLoadingDiagnostics(),
-      decoder:window.__game.getSceneryDecoderDiagnostics(),
+      decoder:window.__game.getSceneryDecoderDiagnostics(), memory:{...window.__game.renderer.info.memory},
     }));
+    assert.equal(loaded.level, level);
     assert.deepEqual(loaded.assets.failed, []);
     report.assetFamilies.push(loaded);
     console.log('PASS bundled asset family:', level);
@@ -153,7 +163,7 @@ try {
   await page.locator('#back').click();
   await page.waitForFunction(() => !!window.__game, null, {timeout:120000});
   await page.evaluate(() => localStorage.setItem('solProtoDesktopPersistenceTest', 'kept'));
-  await app.close(); app = null;
+  await closeApp(); app = null;
   app = await _electron.launch({ chromiumSandbox:true, executablePath:require('electron'), args:[desktop], env:{...process.env, BONEMAN_USER_DATA:profile} });
   const reopened = await app.firstWindow();
   await reopened.waitForFunction(() => location.protocol === 'boneman:' && document.readyState === 'complete');
@@ -163,8 +173,19 @@ try {
   report.normalErrors = [];
   report.status = 'passed';
   console.log('PASS fresh-profile offline startup; lite/full play, checkpoint, pit, finish, pause, network denial and persistent saves.');
+} catch (error) {
+  report.status = 'failed';
+  report.error = String(error);
+  report.errors = errors;
+  report.failedRequests = failed;
+  if (app) report.page = await Promise.race([app.windows()[0]?.evaluate(() => ({
+    url:location.href, hidden:document.hidden, ready:document.readyState,
+    loading:window.__game?.getLoadingDiagnostics(), level:window.__game?.getCurrentLevel().id,
+  })).catch(() => null), new Promise(resolve => setTimeout(() => resolve('unresponsive'), 2000))]);
+  console.error(JSON.stringify(report));
+  throw error;
 } finally {
-  if (app) await app.close();
+  if (app) await closeApp();
   await writeFile(path.join(output, 'smoke.json'), JSON.stringify(report, null, 2) + '\n');
   await rm(profile, { recursive:true, force:true });
 }

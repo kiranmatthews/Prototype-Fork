@@ -16,6 +16,9 @@ const CSP = [
   "frame-ancestors 'none'",
 ].join('; ');
 
+// The pinned Basis/Embind decoder generates call adapters. Only its isolated
+// worker receives this exception; it has no DOM, native bridge or network access.
+const DECODER_CSP = "default-src 'none'; script-src 'self' 'unsafe-eval'; connect-src 'none'";
 function localURL(raw) {
   try {
     const url = new URL(raw);
@@ -50,4 +53,4 @@ function byteRange(header, size) {
       start < 0 || start >= size || end < start) return false;
   return { start, end: Math.min(end, size - 1) };
 }
-module.exports = { ORIGIN, CSP, localURL, allowedRequest, allowedNavigation, assetKey, byteRange };
+module.exports = { ORIGIN, CSP, DECODER_CSP, localURL, allowedRequest, allowedNavigation, assetKey, byteRange };
