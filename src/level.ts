@@ -78,6 +78,8 @@ import { JUNGLE_CUP_LEVEL } from "./levels/jungle-cup";
 import { JUNGLE_TERRACES_LEVEL, JUNGLE_SKYLINE_LEVEL } from "./levels/jungle-sequels";
 import { PIRATE_WRECK_LEVEL } from './levels/pirate-wreck';
 import { CODEX_LAB_LEVEL } from "./levels/codex-lab";
+import { TREEHOUSE_ROOM_LEVEL } from './levels/treehouse-room';
+import { roomArt, ROOM_TEXTURE_KINDS } from './levels/treehouse-room-art';
 import { PUZZLE_LEVELS } from './levels/puzzle-trilogy';
 import { CRAB_CHIEF_LEVEL } from './levels/crab-chief';
 import { CrabChiefEncounter } from './boss/crabChief';
@@ -911,6 +913,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
 // Every paintable surface kind the texture system offers. The editor's
 // texture dropdown is built from this list; 'checker' is the classic default.
 export const TEX_KINDS = [
+  ...ROOM_TEXTURE_KINDS,
   ...CASTLE_TEXTURE_KINDS,
   "checker",
   "grass",
@@ -2378,6 +2381,7 @@ export interface LevelEntry {
 
 export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "treehouse-trail", name: TREEHOUSE_TRAIL_LEVEL.name, data: TREEHOUSE_TRAIL_LEVEL },
+  { id: 'inside-your-room', name: TREEHOUSE_ROOM_LEVEL.name, data: TREEHOUSE_ROOM_LEVEL },
   { id: "jungle", name: "Jungle Ruins" }, // enclosed corridor: pit hops, a trunk grind, a temple climb
   { id: "jungle-terraces", name: JUNGLE_TERRACES_LEVEL.name, data: JUNGLE_TERRACES_LEVEL },
   { id: "jungle-skyline", name: JUNGLE_SKYLINE_LEVEL.name, data: JUNGLE_SKYLINE_LEVEL },
@@ -4286,6 +4290,12 @@ export class Level {
     if (kind === "checker") return this.checkerTexture();
     const cached = this.surfTexCache.get(kind);
     if (cached) return cached;
+    const room = roomArt(kind);
+    if (room) {
+      const texture = Level.finishTex(this.surfaceImage(room.file), room.repeat === true);
+      this.surfTexCache.set(kind, texture);
+      return texture;
+    }
     if(['coast-timber','creek-raft','bridge-timber'].includes(kind))return this.surfaceTexture('wood');
     if(kind==='coast-terrain')return this.surfaceTexture('coast-bedrock');
     if(kind==='coast-turf'||kind==='coast-bedrock'){
@@ -5602,7 +5612,7 @@ export class Level {
       surface.active=active;
     }
   }
-  private staticSurfaceMaterials=new Map<string,THREE.MeshLambertMaterial|THREE.MeshStandardMaterial|THREE.MeshPhongMaterial>();
+  private staticSurfaceMaterials=new Map<string,THREE.MeshLambertMaterial|THREE.MeshStandardMaterial|THREE.MeshPhongMaterial|THREE.MeshBasicMaterial>();
   private replacedSurfaceMaterials: THREE.Material[] = [];
   private readonly standingWaterClock={value:0};
   private jungleStreamReflections:JungleStreamReflectionOwner|null=null;
@@ -5624,7 +5634,7 @@ export class Level {
     if (c.colors) geometry.setAttribute("color", new THREE.Float32BufferAttribute(c.colors, 3));
     geometry.computeBoundingBox();
     geometry.computeBoundingSphere();
-    let material: THREE.MeshLambertMaterial | THREE.MeshStandardMaterial | THREE.MeshPhongMaterial;
+    let material: THREE.MeshLambertMaterial | THREE.MeshStandardMaterial | THREE.MeshPhongMaterial | THREE.MeshBasicMaterial;
     const standingWater=isStandingWater(c);
     const jungleStream=c.materialStyle==='jungle-stream';
     if(jungleStream){
@@ -5666,6 +5676,12 @@ export class Level {
         this.meshSandMaterials.set(key, sand);
         material = sand;
       }
+    } else if (roomArt(c.tex)?.unlit) {
+      material = new THREE.MeshBasicMaterial({
+        map: this.surfaceTexture(c.tex!), color: c.color ?? '#ffffff',
+        side: c.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
+        alphaTest: roomArt(c.tex)?.cutout ? .25 : 0, fog: c.fog !== false,
+      });
     } else if(isCastleTexture(c.tex))material=createCastleMaterial(c);
     else if(c.tex==='ice')material=createIceMaterial();
     else material = new THREE.MeshLambertMaterial({
