@@ -7108,7 +7108,7 @@ export class Level {
               rng ^= rng + Math.imul(rng ^ (rng >>> 7), rng | 61);
               return ((rng ^ (rng >>> 14)) >>> 0) / 4294967296;
             };
-            const geo = new THREE.DodecahedronGeometry(0.5, 0).toNonIndexed();
+            const geo = new THREE.DodecahedronGeometry(0.5, 0);
             const pos = geo.getAttribute("position") as THREE.BufferAttribute;
             // jitter shared corners identically (keyed by rounded position)
             // so the faceted shell stays watertight

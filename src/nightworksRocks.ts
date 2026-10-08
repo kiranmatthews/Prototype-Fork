@@ -35,6 +35,18 @@ export interface NightworksAppearance {
 }
 const capsule=new Capsule(),sample=new THREE.Vector3(),step=new THREE.Vector3(),local=new THREE.Vector3();
 const sweep=new THREE.Box3(),origin=new THREE.Vector3(),contact=new THREE.Vector3();
+const currentBounds=new THREE.Box3(),previousBounds=new THREE.Box3();
+
+interface LocalCollisionTree {
+  positions: Uint8Array;
+  indices: Uint8Array | null;
+  tree: Octree;
+}
+const bytesEqual=(a:Uint8Array,b:Uint8Array):boolean=>{
+  if(a.length!==b.length)return false;
+  for(let i=0;i<a.length;i++)if(a[i]!==b[i])return false;
+  return true;
+};
 
 /** Physics remains synchronous: these are the same fitted vertices as the GLB. */
 export class NightworksRocks {
@@ -46,13 +58,35 @@ export class NightworksRocks {
   private pending=0;
   private readyCount=0;
   private assets=createJungleAssetScope();
+  // Repeated islands differ in world position/motion, not local triangles.
+  // Keep exact input snapshots: editing a source buffer must never alias an
+  // older collision tree. The cache lives only as long as this level.
+  private collisionTrees=new Map<string,LocalCollisionTree[]>();
   constructor(private loadTemplate:(kind:NightworksKind)=>Promise<Template>=kind=>this.assets.load(kind)) {}
+  private collisionTree(geometry:THREE.BufferGeometry):Octree {
+    const position=geometry.getAttribute('position'),index=geometry.getIndex();
+    const build=()=>{
+      const proxy=new THREE.Mesh(geometry);
+      try{return new Octree().fromGraphNode(proxy);}
+      finally{(proxy.material as THREE.Material).dispose();}
+    };
+    // Exotic/imported attributes keep Three's original construction path.
+    if(!(position instanceof THREE.BufferAttribute)||position.itemSize!==3||position.normalized||
+      (index&&(index.itemSize!==1||index.normalized)))return build();
+    const positions=new Uint8Array(position.array.buffer,position.array.byteOffset,position.array.byteLength);
+    const indices=index?new Uint8Array(index.array.buffer,index.array.byteOffset,index.array.byteLength):null;
+    const key=`${position.array.constructor.name}:${positions.length}:${index?.array.constructor.name}:${indices?.length}`;
+    const bucket=this.collisionTrees.get(key)??[];
+    for(const cached of bucket)if(bytesEqual(positions,cached.positions)&&
+      (indices?cached.indices!==null&&bytesEqual(indices,cached.indices):cached.indices===null))return cached.tree;
+    const tree=build();
+    bucket.push({positions:positions.slice(),indices:indices?.slice()??null,tree});
+    this.collisionTrees.set(key,bucket);
+    return tree;
+  }
   addSolid(mesh:THREE.Mesh,delta:THREE.Vector3,active=()=>true):void {
     // Translation is owned by the mover. Bake dimensions/yaw into the local geometry.
-    const proxy=new THREE.Mesh(mesh.geometry);
-    proxy.updateMatrixWorld(true);
-    this.solids.push({mesh,octree:new Octree().fromGraphNode(proxy),bounds:mesh.geometry.boundingBox!.clone(),delta,active});
-    (proxy.material as THREE.Material).dispose();
+    this.solids.push({mesh,octree:this.collisionTree(mesh.geometry),bounds:mesh.geometry.boundingBox!.clone(),delta,active});
   }
   attach(parent:THREE.Object3D,kind:NightworksKind,size:readonly number[],offset:THREE.Vector3,yaw=0,proxy?:THREE.Mesh,appearance:NightworksAppearance={}):THREE.Group {
     const fallback=proxy?.material as THREE.MeshLambertMaterial|undefined;
@@ -95,9 +129,9 @@ export class NightworksRocks {
       const top=solid.bounds.max.y+origin.y;
       // Walkable top/landing are the existing ground raycast's responsibility.
       if(position.y>=top-.18)continue;
-      const bounds=solid.bounds.clone().translate(origin);
-      bounds.union(solid.bounds.clone().translate(origin.clone().sub(solid.delta)));
-      if(!sweep.intersectsBox(bounds))continue;
+      currentBounds.copy(solid.bounds).translate(origin);
+      currentBounds.union(previousBounds.copy(solid.bounds).translate(local.copy(origin).sub(solid.delta)));
+      if(!sweep.intersectsBox(currentBounds))continue;
       sample.copy(previous).sub(origin).add(solid.delta);
       local.copy(position).sub(origin);
       step.copy(local).sub(sample);
@@ -119,6 +153,6 @@ export class NightworksRocks {
     if(collided)normal.normalize();return collided;
   }
   async ready():Promise<void>{await Promise.all(this.jobs);}
-  get diagnostics(){return {models:this.pending,ready:this.readyCount,solids:this.solids.length,errors:[...this.errors]};}
-  dispose():void {this.disposed=true;for(const m of this.materials.values())m.dispose();this.materials.clear();this.solids.length=0;this.assets.dispose();this.jobs.length=0;}
+  get diagnostics(){return {models:this.pending,ready:this.readyCount,solids:this.solids.length,collisionTrees:[...this.collisionTrees.values()].reduce((count,trees)=>count+trees.length,0),errors:[...this.errors]};}
+  dispose():void {this.disposed=true;for(const m of this.materials.values())m.dispose();this.materials.clear();this.solids.length=0;this.collisionTrees.clear();this.assets.dispose();this.jobs.length=0;}
 }

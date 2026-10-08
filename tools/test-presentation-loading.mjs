@@ -35,6 +35,32 @@ try {
     delete globalThis.requestAnimationFrame;
   }
   assert.equal(MINIMUM_VORTEX_MS, 2000);
+  for(const cost of [.5,5]){
+    const descriptor=Object.getOwnPropertyDescriptor(performance,'now');
+    let clock=0,paints=0,draws=0,fences=0,target=null;
+    Object.defineProperty(performance,'now',{configurable:true,value:()=>clock});
+    const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(60,1,.1,100);camera.position.z=10;
+    const meshes=Array.from({length:130},()=>new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshBasicMaterial()));
+    scene.add(...meshes,new THREE.AmbientLight());const warmed=new Set();
+    globalThis.requestAnimationFrame=callback=>{queueMicrotask(()=>{
+      assert.equal(camera.layers.mask,1);assert.ok(meshes.every(mesh=>mesh.layers.mask===1&&mesh.frustumCulled),'paint must see the original scene');
+      paints++;callback(clock);
+    });return 1;};
+    const gl={SYNC_GPU_COMMANDS_COMPLETE:1,ALREADY_SIGNALED:2,CONDITION_SATISFIED:3,WAIT_FAILED:4,
+      isContextLost:()=>false,fenceSync:()=>{fences++;return {};},flush(){},clientWaitSync:()=>2,deleteSync(){}};
+    const renderer={autoClear:false,shadowMap:{needsUpdate:false},getContext:()=>gl,getRenderTarget:()=>target,setRenderTarget:value=>target=value,
+      getViewport:value=>value.set(0,0,100,100),getScissor:value=>value.set(0,0,100,100),getScissorTest:()=>false,setViewport(){},setScissor(){},setScissorTest(){},
+      render(){draws++;clock+=cost;const batch=meshes.filter(mesh=>mesh.layers.test(camera.layers));assert.ok(batch.length<=24);for(const mesh of batch){assert.ok(!warmed.has(mesh));warmed.add(mesh);}}};
+    try{
+      await warmPresentationScene(renderer,scene,camera);
+      assert.equal(warmed.size,130,'every visible mesh must still warm exactly once');assert.equal(draws,6);
+      assert.equal(fences,cost<4?1:6,'fast batches share a fence; expensive batches yield individually');
+      assert.equal(paints,cost<4?2:12);assert.equal(target,null);assert.equal(renderer.autoClear,false);assert.equal(renderer.shadowMap.needsUpdate,true);
+    }finally{
+      if(descriptor)Object.defineProperty(performance,'now',descriptor);else delete performance.now;
+      delete globalThis.requestAnimationFrame;meshes.forEach(mesh=>{mesh.geometry.dispose();mesh.material.dispose();});
+    }
+  }
   for (const reduced of [false, true]) for (const loadMs of [0, 800, 6200]) {
     let clock = 0, loadAt = 0, assetsReadyAt = 0;
     const phases = [];
@@ -115,7 +141,7 @@ try {
   assert.match(main, /prepareLoadingVortex: prepareLoadingVortexPresentation/);
   assert.match(main, /waitForDestinationAssets: prepareActivePresentationAssets/);
   assert.match(main, /prepareDestinationFrame: prepareDestinationPresentation/);
-  assert.match(main, /onTransitionComplete: guardGameplayFromMenu/);
+  assert.match(main, /onTransitionComplete:\s*\(\)\s*=>\s*\{\s*guardGameplayFromMenu\(\);/, 'the completion callback must still release held menu input');
   assert.match(main, /await warmPresentationTextures\(renderer,scene\)/);
   assert.match(main, /await waitForPresentationGpu\(renderer\)/);
   assert.match(main, /player\.preparePresentationAssets\(\)/);

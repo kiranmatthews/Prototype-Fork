@@ -1,0 +1,468 @@
+[
+  {
+    "id": "dark",
+    "events": [
+      {
+        "key": "createBuffer",
+        "level": "dark",
+        "time": 0.016666666666666666,
+        "context": null,
+        "stack": [
+          "    at createBuffer (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:8106:23)",
+          "    at Object.update (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:8203:30)",
+          "    at Object.update (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:10618:18)",
+          "    at Object.update (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:10883:18)"
+        ]
+      },
+      {
+        "key": "createBuffer",
+        "level": "dark",
+        "time": 0.016666666666666666,
+        "context": null,
+        "stack": [
+          "    at createBuffer (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:8106:23)",
+          "    at Object.update (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:8203:30)",
+          "    at Object.update (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:10618:18)",
+          "    at Object.update (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:10883:18)"
+        ]
+      },
+      {
+        "key": "createBuffer",
+        "level": "dark",
+        "time": 0.016666666666666666,
+        "context": {
+          "name": "floating rock island",
+          "type": "Mesh",
+          "geometry": "BufferGeometry",
+          "editorIdx": 23,
+          "rock": "nightphaserock",
+          "material": "",
+          "materialType": "MeshDepthMaterial",
+          "transparent": false,
+          "opacity": 1,
+          "side": 1,
+          "visible": true
+        },
+        "stack": [
+          "    at createBuffer (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:8106:23)",
+          "    at Object.update (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:8203:30)",
+          "    at Object.setup (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:9169:18)",
+          "    at WebGLRenderer.renderBufferDirect (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:17266:21)"
+        ]
+      },
+      {
+        "key": "createBuffer",
+        "level": "dark",
+        "time": 0.016666666666666666,
+        "context": {
+          "name": "floating rock island",
+          "type": "Mesh",
+          "geometry": "BufferGeometry",
+          "editorIdx": 29,
+          "rock": "nightphaserock",
+          "material": "",
+          "materialType": "MeshDepthMaterial",
+          "transparent": false,
+          "opacity": 1,
+          "side": 1,
+          "visible": true
+        },
+        "stack": [
+          "    at createBuffer (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:8106:23)",
+          "    at Object.update (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:8203:30)",
+          "    at Object.setup (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:9169:18)",
+          "    at WebGLRenderer.renderBufferDirect (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:17266:21)"
+        ]
+      },
+      {
+        "key": "createBuffer",
+        "level": "dark",
+        "time": 0.016666666666666666,
+        "context": {
+          "name": "floating rock island",
+          "type": "Mesh",
+          "geometry": "BufferGeometry",
+          "editorIdx": 30,
+          "rock": "nightphaserock",
+          "material": "",
+          "materialType": "MeshDepthMaterial",
+          "transparent": false,
+          "opacity": 1,
+          "side": 1,
+          "visible": true
+        },
+        "stack": [
+          "    at createBuffer (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:8106:23)",
+          "    at Object.update (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:8203:30)",
+          "    at Object.setup (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:9169:18)",
+          "    at WebGLRenderer.renderBufferDirect (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:17266:21)"
+        ]
+      },
+      {
+        "key": "compileShader",
+        "level": "dark",
+        "time": 0.016666666666666666,
+        "context": {
+          "name": "",
+          "type": "Mesh",
+          "geometry": "BufferGeometry",
+          "material": "",
+          "materialType": "MeshBasicMaterial",
+          "transparent": true,
+          "opacity": 1,
+          "side": 1,
+          "visible": true
+        },
+        "stack": [
+          "    at WebGLShader (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:11557:6)",
+          "    at WebGLProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:12084:26)",
+          "    at Object.acquireProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:12666:17)",
+          "    at getProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:17710:32)"
+        ]
+      },
+      {
+        "key": "compileShader",
+        "level": "dark",
+        "time": 0.016666666666666666,
+        "context": {
+          "name": "",
+          "type": "Mesh",
+          "geometry": "BufferGeometry",
+          "material": "",
+          "materialType": "MeshBasicMaterial",
+          "transparent": true,
+          "opacity": 1,
+          "side": 1,
+          "visible": true
+        },
+        "stack": [
+          "    at WebGLShader (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:11557:6)",
+          "    at WebGLProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:12085:28)",
+          "    at Object.acquireProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:12666:17)",
+          "    at getProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:17710:32)"
+        ]
+      },
+      {
+        "key": "createBuffer",
+        "level": "dark",
+        "time": 0.016666666666666666,
+        "context": {
+          "name": "",
+          "type": "Mesh",
+          "geometry": "BufferGeometry",
+          "material": "",
+          "materialType": "MeshBasicMaterial",
+          "transparent": true,
+          "opacity": 1,
+          "side": 1,
+          "visible": true
+        },
+        "stack": [
+          "    at createBuffer (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:8106:23)",
+          "    at Object.update (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:8203:30)",
+          "    at Object.setup (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:9169:18)",
+          "    at WebGLRenderer.renderBufferDirect (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:17266:21)"
+        ]
+      },
+      {
+        "key": "compileShader",
+        "level": "dark",
+        "time": 0.016666666666666666,
+        "context": {
+          "name": "",
+          "type": "Mesh",
+          "geometry": "BufferGeometry",
+          "material": "",
+          "materialType": "MeshBasicMaterial",
+          "transparent": true,
+          "opacity": 1,
+          "side": 0,
+          "visible": true
+        },
+        "stack": [
+          "    at WebGLShader (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:11557:6)",
+          "    at WebGLProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:12084:26)",
+          "    at Object.acquireProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:12666:17)",
+          "    at getProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:17710:32)"
+        ]
+      },
+      {
+        "key": "compileShader",
+        "level": "dark",
+        "time": 0.016666666666666666,
+        "context": {
+          "name": "",
+          "type": "Mesh",
+          "geometry": "BufferGeometry",
+          "material": "",
+          "materialType": "MeshBasicMaterial",
+          "transparent": true,
+          "opacity": 1,
+          "side": 0,
+          "visible": true
+        },
+        "stack": [
+          "    at WebGLShader (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:11557:6)",
+          "    at WebGLProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:12085:28)",
+          "    at Object.acquireProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:12666:17)",
+          "    at getProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:17710:32)"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "nightworks-after-hours",
+    "events": [
+      {
+        "key": "compileShader",
+        "level": "nightworks-after-hours",
+        "time": 0.13333333333333333,
+        "context": {
+          "name": "",
+          "type": "Mesh",
+          "geometry": "SphereGeometry",
+          "material": "juicy orange fruit",
+          "materialType": "MeshBasicMaterial",
+          "transparent": false,
+          "opacity": 1,
+          "side": 0,
+          "visible": true
+        },
+        "stack": [
+          "    at WebGLShader (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:11557:6)",
+          "    at WebGLProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:12084:26)",
+          "    at Object.acquireProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:12666:17)",
+          "    at getProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:17710:32)"
+        ]
+      },
+      {
+        "key": "compileShader",
+        "level": "nightworks-after-hours",
+        "time": 0.13333333333333333,
+        "context": {
+          "name": "",
+          "type": "Mesh",
+          "geometry": "SphereGeometry",
+          "material": "juicy orange fruit",
+          "materialType": "MeshBasicMaterial",
+          "transparent": false,
+          "opacity": 1,
+          "side": 0,
+          "visible": true
+        },
+        "stack": [
+          "    at WebGLShader (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:11557:6)",
+          "    at WebGLProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:12085:28)",
+          "    at Object.acquireProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:12666:17)",
+          "    at getProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:17710:32)"
+        ]
+      },
+      {
+        "key": "createBuffer",
+        "level": "nightworks-after-hours",
+        "time": 0.4333333333333333,
+        "context": {
+          "name": "floating rock island",
+          "type": "Mesh",
+          "geometry": "BufferGeometry",
+          "editorIdx": 80,
+          "rock": "nightphaserock",
+          "material": "",
+          "materialType": "MeshBasicMaterial",
+          "transparent": true,
+          "opacity": 0.16,
+          "side": 0,
+          "visible": true
+        },
+        "stack": [
+          "    at createBuffer (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:8106:23)",
+          "    at Object.update (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:8203:30)",
+          "    at Object.setup (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:9169:18)",
+          "    at WebGLRenderer.renderBufferDirect (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:17266:21)"
+        ]
+      },
+      {
+        "key": "createBuffer",
+        "level": "nightworks-after-hours",
+        "time": 0.4333333333333333,
+        "context": {
+          "name": "floating rock island",
+          "type": "Mesh",
+          "geometry": "BufferGeometry",
+          "editorIdx": 79,
+          "rock": "nightphaserock",
+          "material": "",
+          "materialType": "MeshBasicMaterial",
+          "transparent": true,
+          "opacity": 0.16,
+          "side": 0,
+          "visible": true
+        },
+        "stack": [
+          "    at createBuffer (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:8106:23)",
+          "    at Object.update (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:8203:30)",
+          "    at Object.setup (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:9169:18)",
+          "    at WebGLRenderer.renderBufferDirect (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:17266:21)"
+        ]
+      },
+      {
+        "key": "createBuffer",
+        "level": "nightworks-after-hours",
+        "time": 0.4333333333333333,
+        "context": {
+          "name": "floating rock island",
+          "type": "Mesh",
+          "geometry": "BufferGeometry",
+          "editorIdx": 76,
+          "rock": "nightphaserock",
+          "material": "",
+          "materialType": "MeshBasicMaterial",
+          "transparent": true,
+          "opacity": 0.16,
+          "side": 0,
+          "visible": true
+        },
+        "stack": [
+          "    at createBuffer (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:8106:23)",
+          "    at Object.update (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:8203:30)",
+          "    at Object.setup (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:9169:18)",
+          "    at WebGLRenderer.renderBufferDirect (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:17266:21)"
+        ]
+      },
+      {
+        "key": "createBuffer",
+        "level": "nightworks-after-hours",
+        "time": 0.4333333333333333,
+        "context": {
+          "name": "floating rock island",
+          "type": "Mesh",
+          "geometry": "BufferGeometry",
+          "editorIdx": 75,
+          "rock": "nightphaserock",
+          "material": "",
+          "materialType": "MeshBasicMaterial",
+          "transparent": true,
+          "opacity": 0.16,
+          "side": 0,
+          "visible": true
+        },
+        "stack": [
+          "    at createBuffer (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:8106:23)",
+          "    at Object.update (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:8203:30)",
+          "    at Object.setup (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:9169:18)",
+          "    at WebGLRenderer.renderBufferDirect (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:17266:21)"
+        ]
+      },
+      {
+        "key": "compileShader",
+        "level": "nightworks-after-hours",
+        "time": 0.6500000000000004,
+        "context": {
+          "name": "",
+          "type": "Mesh",
+          "geometry": "SphereGeometry",
+          "material": "juicy orange fruit",
+          "materialType": "MeshBasicMaterial",
+          "transparent": true,
+          "opacity": 0.286537,
+          "side": 0,
+          "visible": true
+        },
+        "stack": [
+          "    at WebGLShader (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:11557:6)",
+          "    at WebGLProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:12084:26)",
+          "    at Object.acquireProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:12666:17)",
+          "    at getProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:17710:32)"
+        ]
+      },
+      {
+        "key": "compileShader",
+        "level": "nightworks-after-hours",
+        "time": 0.6500000000000004,
+        "context": {
+          "name": "",
+          "type": "Mesh",
+          "geometry": "SphereGeometry",
+          "material": "juicy orange fruit",
+          "materialType": "MeshBasicMaterial",
+          "transparent": true,
+          "opacity": 0.286537,
+          "side": 0,
+          "visible": true
+        },
+        "stack": [
+          "    at WebGLShader (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:11557:6)",
+          "    at WebGLProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:12085:28)",
+          "    at Object.acquireProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:12666:17)",
+          "    at getProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:17710:32)"
+        ]
+      },
+      {
+        "key": "createTexture",
+        "level": "nightworks-after-hours",
+        "time": 0.6500000000000004,
+        "context": {
+          "name": "",
+          "type": "Mesh",
+          "geometry": "PlaneGeometry",
+          "material": "GameplayHUD.PreCRT.Composite",
+          "materialType": "MeshBasicMaterial",
+          "transparent": true,
+          "opacity": 1,
+          "side": 0,
+          "visible": true
+        },
+        "stack": [
+          "    at initTexture (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:14776:24)",
+          "    at uploadTexture (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:14799:25)",
+          "    at WebGLTextures.setTexture2D (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:14681:9)",
+          "    at SingleUniform.setValueT1 [as setValue] (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:11215:12)"
+        ]
+      },
+      {
+        "key": "compileShader",
+        "level": "nightworks-after-hours",
+        "time": 0.733333333333334,
+        "context": {
+          "name": "",
+          "type": "Mesh",
+          "geometry": "SphereGeometry",
+          "material": "juicy orange fruit",
+          "materialType": "MeshBasicMaterial",
+          "transparent": false,
+          "opacity": 1,
+          "side": 0,
+          "visible": true
+        },
+        "stack": [
+          "    at WebGLShader (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:11557:6)",
+          "    at WebGLProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:12084:26)",
+          "    at Object.acquireProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:12666:17)",
+          "    at getProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:17710:32)"
+        ]
+      },
+      {
+        "key": "compileShader",
+        "level": "nightworks-after-hours",
+        "time": 0.733333333333334,
+        "context": {
+          "name": "",
+          "type": "Mesh",
+          "geometry": "SphereGeometry",
+          "material": "juicy orange fruit",
+          "materialType": "MeshBasicMaterial",
+          "transparent": false,
+          "opacity": 1,
+          "side": 0,
+          "visible": true
+        },
+        "stack": [
+          "    at WebGLShader (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:11557:6)",
+          "    at WebGLProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:12085:28)",
+          "    at Object.acquireProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:12666:17)",
+          "    at getProgram (http://127.0.0.1:5340/node_modules/.vite/deps/chunk-X67MDA5R.js?v=2c835a4f:17710:32)"
+        ]
+      }
+    ]
+  }
+]

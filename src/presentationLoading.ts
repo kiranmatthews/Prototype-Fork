@@ -69,6 +69,7 @@ export async function warmPresentationScene(renderer:THREE.WebGLRenderer,scene:T
   const layer=1<<31,cameraMask=camera.layers.mask;
   const masks=meshes.map(o=>o.layers.mask),culled=meshes.map(o=>o.frustumCulled),lightMasks=lights.map(o=>o.layers.mask);
   const viewport=new THREE.Vector4(),scissor=new THREE.Vector4();
+  let started=performance.now();
   try{
     for(let start=0;start<meshes.length;start+=24){
       if(renderer.getContext().isContextLost())return;
@@ -87,8 +88,15 @@ export async function warmPresentationScene(renderer:THREE.WebGLRenderer,scene:T
         meshes.forEach((object,i)=>{object.layers.mask=masks[i];object.frustumCulled=culled[i];});
         renderer.setRenderTarget(previous);renderer.setViewport(viewport);renderer.setScissor(scissor);renderer.setScissorTest(scissorTest);renderer.autoClear=autoClear;
       }
-      await waitForPresentationGpu(renderer);
-      await afterPresentationPaint();
+      // Keep the same small draws, but don't spend two refresh intervals on
+      // every already-cheap batch. A slow upload/compile still yields after
+      // its first batch; fast batches share the texture warm-up's 4 ms budget.
+      // Always finish the GPU work before the destination can be revealed.
+      if(performance.now()-started>=4||start+24>=meshes.length){
+        await waitForPresentationGpu(renderer);
+        await afterPresentationPaint();
+        started=performance.now();
+      }
     }
   }finally{target.dispose();renderer.shadowMap.needsUpdate=true;}
 }
