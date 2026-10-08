@@ -15,8 +15,7 @@ import { installRooMenuText, waitForRooMenuText } from './roo-type/menu';
 import { subscribeRooLight } from './roo-type/settings';
 import { inputPrompts, CONTROLLER_FAMILIES, PROMPT_FAMILY_NAMES } from "./inputPrompts";
 import { actionButtonDown } from "./inputBindings";
-import { setPromptText } from './inputPromptUI';
-import { TRICK_GUIDE_INTRO, TRICK_GUIDE_PAGE_COUNT, trickGuidePages } from './skateTrickGuide';
+import { TrickGuidePagination } from './trickGuidePagination';
 import {
   CAMPAIGN_ISLANDS,
   CAMPAIGN_LEVELS,
@@ -176,6 +175,7 @@ export class GameFlowUI {
   private screen: GameScreen | null = null;
   private previousScreen: GameScreen | null = null;
   private trickGuidePage = 0;
+  private trickGuide: TrickGuidePagination | null = null;
   private navButtons: HTMLButtonElement[] = [];
   private selected = 0;
   private levelSelectKey = CAMPAIGN_START_LEVEL_KEY;
@@ -492,6 +492,7 @@ export class GameFlowUI {
   }
 
   hide(): void {
+    this.trickGuide?.destroy(); this.trickGuide = null;
     this.cancelScheduledFocus();
     this.setPreCrtComposited(false);
     this.gameFlowSurface.deactivate();
@@ -775,6 +776,7 @@ export class GameFlowUI {
   }
 
   private render(): void {
+    this.trickGuide?.destroy(); this.trickGuide = null;
     this.claimModalFocus();
     this.cancelScheduledFocus();
     this.root.hidden = false;
@@ -825,6 +827,7 @@ export class GameFlowUI {
     else if (this.screen === "gameover") this.renderGameOver();
     if (this.screen !== 'level-select') {
       const hints = element('footer', 'game-menu-hints');
+      if (this.screen === 'trick-guide') hints.append(menuHint('PAGE', ['left', 'right']));
       hints.append(menuHint('SELECT', ['confirm']));
       if (!['launch', 'gameover', 'results'].includes(this.screen ?? '')) hints.append(this.backHint());
       this.panel.append(hints);
@@ -1529,10 +1532,7 @@ export class GameFlowUI {
   }
 
   private changeTrickGuidePage(delta: number): void {
-    this.trickGuidePage = (this.trickGuidePage + delta + TRICK_GUIDE_PAGE_COUNT) % TRICK_GUIDE_PAGE_COUNT;
-    const selected = this.selected;
-    this.render();
-    this.selected = selected; this.syncSelection();
+    this.trickGuide?.change(delta);
   }
 
   private renderTrickGuide(): void {
@@ -1543,16 +1543,14 @@ export class GameFlowUI {
     previous.setAttribute('aria-label', 'Previous trick page');
     const next = this.button('▶', () => this.changeTrickGuidePage(1));
     next.setAttribute('aria-label', 'Next trick page');
-    const page = element('span'); page.textContent = `${this.trickGuidePage + 1} / ${TRICK_GUIDE_PAGE_COUNT}`;
+    const page = element('span');
     pager.append(previous, page, next);
-    const intro = element('p', 'game-trick-intro'); intro.textContent = TRICK_GUIDE_INTRO;
-    const content = element('div', 'game-trick-content game-scroll-segment');
-    content.innerHTML = trickGuidePages()[this.trickGuidePage];
-    for (const heading of content.querySelectorAll<HTMLElement>('[data-guide-prompt]')) {
-      if (heading.matches('h3')) heading.classList.add('secondary-silver');
-      setPromptText(heading, heading.dataset.guidePrompt!);
-    }
-    guide.append(title, pager, intro, content); this.panel.append(guide);
+    const content = element('div', 'game-trick-content');
+    guide.append(title, pager, content); this.panel.append(guide);
+    this.trickGuide = new TrickGuidePagination(content, page, index => {
+      this.trickGuidePage = index;
+      this.invalidatePreCrt();
+    }, this.trickGuidePage);
   }
 
   private renderGameOver(): void {

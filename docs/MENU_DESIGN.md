@@ -9,7 +9,7 @@ competition's avatar-only and Bonus visibility rules are unchanged.
 Player-facing menus are game screens, composed for a TV frame. They must not behave like scrolling web pages.
 
 - Divide the viewport into fixed regions. Keep the island/title area and control hints visible. Pause and Level Select fill the screen inside TV-safe margins.
-- Fit lists in their assigned region. Paginate long content first; when scrolling is necessary, only the bounded content region scrolls. Never scroll the entire menu. Keep exit/confirm actions outside that region.
+- Fit lists in their assigned region. Paginate read-only content so a controller can reach every line. Action lists may scroll within their bounded region when controller focus reveals the selected row. Never scroll the entire menu. Keep exit/confirm actions outside that region.
 - Use the existing input prompt kit with the silver comic `Staging Secondary` treatment. Reflect the current controller family and real input bindings. Give controller selection a visible highlight without moving the hit target.
 - Show ownership through objects: an empty recessed silhouette for missing collectibles, the actual rotating game model for earned collectibles. Use numerical counts and times where meaningful; do not substitute paragraphs explaining missing rewards.
 - Level Select has an unboxed island heading and navigation pips, a real level preview above its list, rewards/records on the right, and unboxed controls below. Do not add a redundant “Level Select” heading.
@@ -21,9 +21,9 @@ Player-facing menus are game screens, composed for a TV frame. They must not beh
 
 - Map Level Stats retains level selection and entry. Gameplay pause keeps the Level Select name and requires confirmation before abandoning the current run; cancel preserves it.
 - Pause and Options use actions/options on the left and the overall collectibles sheet on the right. No progress bar or separate map Progress submenu.
-- Submenu hints are Select and clickable Back only; never show Up/Down Choose. Touch has no menu hints and uses a corner close action instead. Back is never a menu-list row.
+- Submenu hints are Select and clickable Back; paginated guides also show Left/Right Page. Never show Up/Down Choose. Touch has no menu hints and uses a corner close action instead. Back is never a menu-list row.
 - Text appearance and shimmer are authoring controls in the M-dismissible Text Tuning panel, never gameplay options. Menu PNG text uses the HUD atlas painter at the render target's full resolution, including physical pixels on the direct path.
-- Home, Island Map and gameplay Options share their audio, prompt-style and Trick Guide controls, plus the collectibles sheet. Home and map also allow changing play mode; active courses keep their existing rules. The four-page Trick Guide uses `src/skateTrickGuide.ts` in both Options and competition. Left/right pages, Select activates the visible arrows, and Back returns through the originating Options menu without resuming the run. Guide text and prompt artwork stay beneath CRT, with fixed header/footer and bounded page content.
+- Home, Island Map and gameplay Options share their audio, prompt-style and Trick Guide controls, plus the collectibles sheet. Home and map also allow changing play mode; active courses keep their existing rules. The Trick Guide uses `src/skateTrickGuide.ts` in both Options and competition, with Basics, Flips, Grabs, Grinds, Special and Keep It Fresh sections. Left/right pages, Select activates the visible arrows, and Back returns through the originating Options menu without resuming the run. Guide text and prompt artwork stay beneath CRT, with fixed header/footer and page content that fits without scrolling. `src/trickGuidePagination.ts` fits whole rows and paragraphs to the available region, repeats category/table headings, and preserves the current entry when viewport, fonts or prompt family change.
 
 - PNG menu focus uses the existing orange neutral image unchanged for its normal phase. White flashes and inactive desaturation are display-time CSS/Canvas colour filters. The reference default is one white frame followed by three orange frames at 30 fps (7.5 Hz, 25% white). Keep only lettering as the focus cue; no selection arrows, row highlights or outlines. Rate, white duration/brightness/desaturation, and inactive saturation/brightness sliders belong in M → Text Tuning. Reduced motion and a zero flash rate hold the normal PNG.
 
@@ -35,7 +35,7 @@ Player-facing menus are game screens, composed for a TV frame. They must not beh
 
 The September 2026 scale pass uses [Kara Zisa's N. Sane Trilogy pause screens](https://karazisa.com/Crash-Bandicoot/Pause-Menu) and a [Crash 4 Game Progress pause screenshot](https://pbs.twimg.com/media/Emad7dMW4AA20Tl?format=jpg&name=4096x4096) as visual proportion references. N. Sane's short action list and Crash 4's full-screen action/progress split guide the hierarchy; the existing BONEMAN type and focus artwork remain the game's own style.
 
-At 1280×720, the shared CSS scale is approximately 56 px for titles, 42 px for actions, 36 px for option controls, 29 px for section headings, 22 px for body copy and 19 px for captions. It scales with viewport height on TVs and viewport width in portrait, with a separate short-landscape scale. Increase available row space before reducing type. Long guides scroll only within the current page; headings, page controls and Back stay fixed.
+At 1280×720, the shared CSS scale is approximately 56 px for titles, 42 px for actions, 36 px for option controls, 29 px for section headings, 22 px for body copy and 19 px for captions. It scales with viewport height on TVs and viewport width in portrait, with a separate short-landscape scale. Increase available row space before reducing type. Long guides add pages instead of shrinking the TV type or relying on vertical scrolling; headings, page controls and Back stay fixed.
 
 `src/menuTheme.ts` owns the deep teal panel palette, brass edges and backdrop used by both Canvas painters. Its exported CSS variables keep native DOM fallback artwork in step with the pre-CRT pass. Unboxed Level Select, Progress and Trick Guide screens use an opaque dark backdrop. `src/game-menu-layout.css` owns the common type scale; `src/competition/menu.css` consumes it. Jungle Cup uses the same Roo headings, action lettering, orange/white PNG focus, secondary body text and input hints. Final standings place the podium alongside all six skaters on landscape screens. The competition guide returns through a footer Back action or a touch close button.
 
@@ -72,7 +72,7 @@ Home actions use bounded lists, and keyboard/controller focus reveals its action
 without scrolling the whole menu. Portrait Options stack labels and choices.
 Compact guides use fixed table columns; Canvas text bounds include cell padding.
 Recipe cells retain table layout and readable text, and mirrored prompt glyphs
-and words follow the same bounded scroll clipping as the DOM.
+and words follow the same page clipping as the DOM; all guide entries fit inside that clip.
 Short Cup standings retain all six skaters in intrinsically sized content with
 bounded scrolling when necessary. Save bays remain a 2×2 grid.
 
@@ -89,7 +89,7 @@ loading frame covers final post/HUD requests and GPU completion, then fades into
 the ready destination. Its fullscreen raster is released afterward. Shared
 prompt/map/touch ink is suppressed during loading, including cached Canvas ink.
 
-`tools/test-menus-responsive-browser.mjs` covers all 26 catalogue screens, all four
+`tools/test-menus-responsive-browser.mjs` covers all 26 catalogue screens, all adaptive
 guide pages, real touch actions, bounded swipes/focus, PNG labels and table cells.
 It supports `MENU_BROWSER=webkit`, `MENU_PROFILE=320x568,568x320,390x844`,
 `MENU_TOUCH=false` and `MENU_CUP=waterpark-cup` for additional compact/Cup checks.
@@ -160,3 +160,5 @@ and remain independent of focus. Actual earned collectible models and their
 animation are unchanged. The PNG atlases, glyph measurements and focus profile
 are also unchanged; reference-frame verification remains the font acceptance
 check. See the study folder for the prompts, production captures and validation.
+
+`tools/test-trick-guide-controller.mjs` visits the actual Options and Cup guide through browser gamepad input. It checks every trick and rule without scrolling at TV, 4:3 and compact sizes, held-input edges, forward/backward wrapping, rotation, keyboard, touch/pointer and return to the originating menu in lite/full rendering. It also runs against production previews and Pages.

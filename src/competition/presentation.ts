@@ -2,11 +2,11 @@ import { updateMenuPngFocus } from '../menuPngFocus';
 import CSS from './menu.css?inline';
 import { menuHint } from "../menuPresentation";
 import { inputPrompts } from '../inputPrompts';
-import { setPromptText } from '../inputPromptUI';
 import { actionButtonDown } from '../inputBindings';
 import { JUDGES, type JungleCupEvent, type Standing } from './event';
 import { CompetitionSurface } from './surface';
-import { TRICK_GUIDE_INTRO, TRICK_GUIDE_PAGE_COUNT, trickGuidePages } from '../skateTrickGuide';
+import { trickGuidePages } from '../skateTrickGuide';
+import { TrickGuidePagination } from '../trickGuidePagination';
 import { installRooMenuText } from '../roo-type/menu';
 import type * as THREE from 'three';
 
@@ -41,6 +41,7 @@ export class CompetitionPresentation {
   private phase = '';
   private guideOpen = false;
   private guidePage = 0;
+  private guide: TrickGuidePagination | null = null;
   private pointer = { x: NaN, y: NaN };
   private inputBlocked=false;
   constructor(private action: (action: CompetitionAction) => void, readonly hooks: JudgePresentationHooks = {}) {
@@ -83,7 +84,7 @@ export class CompetitionPresentation {
       if (!this.modalActive || document.body.classList.contains('game-shell-modal') ||
           (e.target instanceof Element && e.target.closest('input,textarea,select,[contenteditable=true],.side-wrap,.secondary-text-tuner,[data-crt-guest-panel-host],[data-render-quality-panel-host],[data-skateboard-panel-host],.ed-panel'))) return;
       const buttons = this.buttons();
-      if(this.guideOpen && ['ArrowLeft','ArrowRight'].includes(e.code)){e.preventDefault();if(!e.repeat)this.changeGuidePage(e.code==='ArrowRight'?1:-1);return;}
+      if(this.guideOpen && ['ArrowLeft','ArrowRight','KeyA','KeyD'].includes(e.code)){e.preventDefault();if(!e.repeat)this.changeGuidePage(['ArrowRight','KeyD'].includes(e.code)?1:-1);return;}
       if(e.code==='Escape'&&this.guideOpen){e.preventDefault();e.stopImmediatePropagation();if(!e.repeat)this.showGuide(false);return;}
       if (['ArrowDown','ArrowRight','KeyS','KeyD'].includes(e.code)) {e.preventDefault();if(!e.repeat)this.select(1);}
       else if (['ArrowUp','ArrowLeft','KeyW','KeyA'].includes(e.code)) {e.preventDefault();if(!e.repeat)this.select(-1);}
@@ -97,7 +98,7 @@ export class CompetitionPresentation {
     this.guideOpen=open;this.key='';this.seedInput=true;this.render(this.event);
     if(!open){this.selected=Math.max(0,this.buttons().findIndex(button=>button.dataset.action==='guide'));this.syncSelection();}
   }
-  private changeGuidePage(delta:number):void {this.guidePage=(this.guidePage+delta+TRICK_GUIDE_PAGE_COUNT)%TRICK_GUIDE_PAGE_COUNT;this.key='';this.render(this.event);}
+  private changeGuidePage(delta:number):void {this.guide?.change(delta);}
   get diagnostics() { return { selected: this.buttons()[this.selected]?.dataset.action ?? null, ...this.surface.diagnostics }; }
   draw(renderer:THREE.WebGLRenderer,size:{width:number;height:number},target:THREE.WebGLRenderTarget|null):void {this.surface.draw(renderer,size,target);}
   setComposited(value: boolean): void {
@@ -153,12 +154,13 @@ export class CompetitionPresentation {
     if(wasHidden!==this.element.hidden){this.seedInput=true;this.surface.invalidate();}
     if(this.element.hidden)this.surface.deactivate();
     document.body.classList.toggle('competition-active',!!event);
-    if(!event)return;
+    if(!event){this.guide?.destroy();this.guide=null;return;}
     if(event.simulating||event.phase==='countdown')this.guideOpen=false;
     const view=this.guideOpen?'guide':event.phase;
     const bonusAvailable=this.hooks.bonusAvailable?.()===true;
     const key=[bonusAvailable,view,event.runs.length,Math.ceil(event.remaining),Math.ceil(event.countdown),event.revealedJudges,event.bails,event.cupAwarded,event.overtime,event.finalComboActive].join(':');
     if(key===this.key)return;this.key=key;
+    this.guide?.destroy();this.guide=null;
     const phaseChanged=this.phase!==view;this.phase=view;
     if(phaseChanged)this.seedInput=true;
     this.element.classList.toggle('is-running',event.simulating);
@@ -171,7 +173,7 @@ export class CompetitionPresentation {
     let html='';
     const reveals: {id:string;score:number}[]=[];
     if(this.guideOpen){
-      html=`<section class="timber-card comp-card comp-guide"><h1>TRICK GUIDE</h1><p>${TRICK_GUIDE_INTRO}</p><div class="comp-guide-grid">${trickGuidePages().join('')}</div><div class="comp-actions">${button('BACK','guide-back')}</div></section>`;
+      html=`<section class="timber-card comp-card comp-guide"><h1>TRICK GUIDE</h1><div class="comp-guide-grid">${trickGuidePages().join('')}</div><div class="comp-actions">${button('BACK','guide-back')}</div></section>`;
     } else if(event.simulating) {
       const seconds=Math.ceil(event.remaining);
       html=`<div class="comp-run-hud${seconds<=10?' urgent':''}${event.overtime?' overtime':''}"><span>RUN ${event.runNumber}/3${event.overtime&&event.finalComboActive?'<small>FINAL COMBO</small>':''}</span><strong>${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}</strong></div>`;
@@ -200,13 +202,12 @@ export class CompetitionPresentation {
       for(const child of [...card.children])if(!child.matches('.comp-eyebrow,h1,.comp-actions'))content.append(child);
       const actions=card.querySelector('.comp-actions');card.insertBefore(content,actions);
       if(this.guideOpen){
-        const articles=[...content.querySelectorAll<HTMLElement>('.comp-guide-grid article')];
-        articles.forEach((article,index)=>article.hidden=index!==this.guidePage);
         const pager=document.createElement('div');pager.className='comp-guide-pager';
-        pager.innerHTML=`<button data-action="guide-prev" aria-label="Previous trick page">◀</button><span>${this.guidePage+1} / ${TRICK_GUIDE_PAGE_COUNT}</span><button data-action="guide-next" aria-label="Next trick page">▶</button>`;
+        pager.innerHTML='<button data-action="guide-prev" aria-label="Previous trick page">◀</button><span></span><button data-action="guide-next" aria-label="Next trick page">▶</button>';
         content.prepend(pager);
       }
       const hints=document.createElement('footer');hints.className='game-menu-hints comp-hints';
+      if(this.guideOpen)hints.append(menuHint('PAGE',['left','right']));
       hints.append(menuHint('SELECT',['confirm']));
       if(this.guideOpen){
         const back=actions?.querySelector<HTMLButtonElement>('[data-action="guide-back"]');
@@ -219,7 +220,9 @@ export class CompetitionPresentation {
       this.element.append(hints);
     }
     for(const control of this.element.querySelectorAll<HTMLButtonElement>('button'))control.classList.add('game-menu-button');
-    if(this.guideOpen)for(const heading of this.element.querySelectorAll<HTMLElement>('[data-guide-prompt]'))setPromptText(heading,heading.dataset.guidePrompt!);
+    if(this.guideOpen && card)this.guide=new TrickGuidePagination(
+      card.querySelector('.comp-guide-grid')!,card.querySelector('.comp-guide-pager > span')!,
+      page=>{this.guidePage=page;this.surface.invalidate();},this.guidePage);
     for (const reveal of reveals) this.hooks.onReveal?.(reveal.id,reveal.score);
     if(!event.simulating&&event.phase!=='countdown') {
       const target=this.element.querySelector<HTMLButtonElement>(`button[data-action="${focused??''}"]:not(:disabled)`)??this.buttons()[0];
