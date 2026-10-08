@@ -86,6 +86,12 @@ The two aliased afterglow sources and fixed LUT size are not editable rows;
 ineffective narrow-kernel radius controls are hidden. Closing the panel releases
 keyboard focus so game controls and Pause work immediately.
 
+Radius slider limits follow the current blur width and sampling scale, excluding
+the range discarded by Gaussian-tail truncation. Imported larger radii remain
+in preset storage; the panel shows their effective radius and explains the saved
+value in its tooltip. Auto-resolution appears only for source sizes where it
+can operate, and mask/scanline subcontrols follow their actual consumers.
+
 Unused targets are released. Temporal surfaces initialize when their effect
 becomes active and clear on the established resize/preset/enable resets. Shader
 specializations invalidate the borrowed final output and its cached display

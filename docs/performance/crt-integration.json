@@ -1,10 +1,18 @@
 {
   "environment": "Integrated production preview at /Prototype-Fork/",
-  "commitSource": "da32e19fe723f60e744644940cd1930e5c41c704",
+  "runtimeSourceHashes": {
+    "pass.ts": "9f3c09ba4463fa641b7ee7f1c8a4b4428108e2480a1bc144ad6418388e0c5d9b",
+    "output.ts": "310fc8be7932d9f717edac7064bb66636eaaf40c0e300fc2199977a19e9af9ec",
+    "optimize.ts": "8ac2fe8f2bda1b089f4802a4759e4641853faa3e5208c12c90bb908562bf7caa",
+    "controls.ts": "cb5beeaa5c2f816d5cdede6ab8f6ed2fa96f3f12c1ffc5079d1d65a5e315630f",
+    "settings.ts": "4bb9ddf3e3c70c5fe6d4dc3a6ab5a65d20e7917d75423fb2df2d2e2b1144c1e1",
+    "panel.ts": "e33710214502f2d4a9ede61a96375aeaac713486a3906b2ecb1e599c9f3c3043",
+    "review.ts": "a62a2e8335007ebea86a15cc3e82cec49cb47f61afea0080a246b1da91aeca82"
+  },
   "scenarios": [
     {
       "lite": true,
-      "stamp": "Codex/sol fork \u00b7 build 10-08 04:40 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-08 05:01 UTC",
       "initial": {
         "pos": [
           0.5712883843718615,
@@ -95,7 +103,13 @@
           "magicEnabled": true,
           "persistenceHidden": true
         },
-        "count": 93
+        "count": 94,
+        "radius": {
+          "maximum": 8,
+          "shown": 8,
+          "stored": 50,
+          "widerMaximum": 18
+        }
       },
       "menu": {
         "blocked": true,
@@ -127,7 +141,7 @@
           "historyClearPending": true,
           "historyResetCount": 6,
           "lastHistoryResetReason": "gameplay presentation resumed",
-          "settingsRevision": 8,
+          "settingsRevision": 11,
           "historyRevision": 5,
           "estimatedTargetBytes": 0,
           "graph": {
@@ -151,15 +165,15 @@
           "width": 640,
           "height": 360,
           "screen": "pause",
-          "revision": 300,
-          "paintedRevision": 300,
-          "canvasFrames": 23,
-          "textureUploads": 23,
+          "revision": 299,
+          "paintedRevision": 299,
+          "canvasFrames": 24,
+          "textureUploads": 24,
           "textureReallocations": 1,
-          "compositeDraws": 23,
+          "compositeDraws": 24,
           "primitiveCount": 29,
           "releaseCount": 0,
-          "lastCanvasMs": 1,
+          "lastCanvasMs": 1.100000023841858,
           "disposed": false,
           "composited": true
         }
@@ -168,7 +182,7 @@
     },
     {
       "lite": false,
-      "stamp": "Codex/sol fork \u00b7 build 10-08 04:40 UTC",
+      "stamp": "Codex/sol fork \u00b7 build 10-08 05:01 UTC",
       "initial": {
         "pos": [
           0.5712883843718615,
@@ -255,9 +269,9 @@
         }
       },
       "moved": [
-        2.1430414091072896,
+        2.101587277792932,
         0,
-        12.520986333438145
+        12.66514442373131
       ],
       "checkpoint": {
         "warped": true,
@@ -290,7 +304,13 @@
           "magicEnabled": true,
           "persistenceHidden": true
         },
-        "count": 83
+        "count": 82,
+        "radius": {
+          "maximum": 8,
+          "shown": 8,
+          "stored": 50,
+          "widerMaximum": 18
+        }
       },
       "menu": {
         "blocked": true,
@@ -312,8 +332,8 @@
           "outputHeight": 720,
           "kernelWidth": 800,
           "kernelHeight": 600,
-          "frameIndex": 323,
-          "renderCount": 323,
+          "frameIndex": 324,
+          "renderCount": 324,
           "bypassCount": 0,
           "failureCount": 0,
           "lastDrawCount": 4,
@@ -322,7 +342,7 @@
           "historyClearPending": false,
           "historyResetCount": 11,
           "lastHistoryResetReason": "temporal dependencies changed",
-          "settingsRevision": 8,
+          "settingsRevision": 11,
           "historyRevision": 5,
           "estimatedTargetBytes": 25804800,
           "graph": {
@@ -379,13 +399,13 @@
           "screen": "pause",
           "revision": 84,
           "paintedRevision": 84,
-          "canvasFrames": 22,
-          "textureUploads": 22,
+          "canvasFrames": 23,
+          "textureUploads": 23,
           "textureReallocations": 1,
-          "compositeDraws": 22,
+          "compositeDraws": 23,
           "primitiveCount": 29,
           "releaseCount": 0,
-          "lastCanvasMs": 0.9000000357627869,
+          "lastCanvasMs": 0.8999999761581421,
           "disposed": false,
           "composited": true
         },
@@ -407,8 +427,8 @@
           "outputHeight": 1440,
           "kernelWidth": 800,
           "kernelHeight": 600,
-          "frameIndex": 387,
-          "renderCount": 387,
+          "frameIndex": 389,
+          "renderCount": 389,
           "bypassCount": 0,
           "failureCount": 0,
           "lastDrawCount": 5,
@@ -417,7 +437,7 @@
           "historyClearPending": false,
           "historyResetCount": 13,
           "lastHistoryResetReason": "source size changed",
-          "settingsRevision": 8,
+          "settingsRevision": 11,
           "historyRevision": 5,
           "estimatedTargetBytes": 62668800,
           "graph": {
@@ -489,8 +509,8 @@
           "outputHeight": 1080,
           "kernelWidth": 800,
           "kernelHeight": 600,
-          "frameIndex": 393,
-          "renderCount": 393,
+          "frameIndex": 396,
+          "renderCount": 396,
           "bypassCount": 0,
           "failureCount": 0,
           "lastDrawCount": 4,
@@ -499,7 +519,7 @@
           "historyClearPending": false,
           "historyResetCount": 15,
           "lastHistoryResetReason": "source size changed",
-          "settingsRevision": 8,
+          "settingsRevision": 11,
           "historyRevision": 5,
           "estimatedTargetBytes": 58060800,
           "graph": {

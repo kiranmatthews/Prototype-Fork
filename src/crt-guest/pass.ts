@@ -301,7 +301,7 @@ export class CrtGuestPass extends Pass {
     const legacyHeight = validDimension(options.height ?? 1);
     this.width = validDimension(options.sourceWidth ?? legacyWidth);
     this.height = validDimension(options.sourceHeight ?? legacyHeight);
-    setCrtControlSourceHeight(settings, this.height);
+    setCrtControlSourceHeight(settings, this.height, this.width);
     this.outputWidth = validDimension(options.outputWidth ?? legacyWidth);
     this.outputHeight = validDimension(options.outputHeight ?? legacyHeight);
     this.variant = validVariant(settings.variant);
@@ -410,7 +410,7 @@ export class CrtGuestPass extends Pass {
     if (this.settings === settings) return;
     this.settings = settings;
     this.shaderRevision = null;
-    setCrtControlSourceHeight(settings, this.height);
+    setCrtControlSourceHeight(settings, this.height, this.width);
     this.appliedSettingsRevision.advanced = null;
     this.appliedSettingsRevision.hd = null;
     this.lastHistoryRevision = finiteRevision(settings.historyRevision);
@@ -490,7 +490,7 @@ export class CrtGuestPass extends Pass {
     if (nextWidth === this.width && nextHeight === this.height) return;
     this.width = nextWidth;
     this.height = nextHeight;
-    setCrtControlSourceHeight(this.settings, this.height);
+    setCrtControlSourceHeight(this.settings, this.height, this.width);
     this.deferredOutputTexture = null;
     this.deferredDeconvergenceStage = null;
     if (this.targets) this.resizeTargets(this.targets);
@@ -531,7 +531,7 @@ export class CrtGuestPass extends Pass {
     if (!sourceChanged && !outputChanged) return;
     this.width = nextSourceWidth;
     this.height = nextSourceHeight;
-    setCrtControlSourceHeight(this.settings, this.height);
+    setCrtControlSourceHeight(this.settings, this.height, this.width);
     this.outputWidth = nextOutputWidth;
     this.outputHeight = nextOutputHeight;
     this.deferredOutputTexture = null;

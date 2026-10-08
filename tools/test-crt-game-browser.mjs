@@ -41,11 +41,17 @@ try {
       s.setValue('glow',.3);const after={sigma:visible('SIGMA_H'),magic:visible('m_glow_cutoff')};
       s.setValue('m_glow',2);after.magicEnabled=visible('m_glow_cutoff');
       s.setValue('AS',0);after.persistenceHidden=!visible('PR');
+      s.setValue('SIGMA_H',1.2);s.setValue('SIZEH',50);
+      const radiusRow=root.querySelector('[data-parameter="SIZEH"]');
+      const radius={maximum:Number(radiusRow.querySelector('.range').max),shown:Number(radiusRow.querySelector('.numeric').value),stored:s.getValue('SIZEH')};
+      s.setValue('SIGMA_H',3);radius.widerMaximum=Number(radiusRow.querySelector('.range').max);
       const count=[...root.querySelectorAll('.parameter')].filter(row=>!row.hidden).length;
-      return {before,after,count};
+      return {before,after,count,radius};
     });
     assert.deepEqual(controls.before,{glow:true,sigma:false,esrc:false,lutSize:false});
     assert.deepEqual(controls.after,{sigma:true,magic:false,magicEnabled:true,persistenceHidden:true});
+    assert.deepEqual({maximum:controls.radius.maximum,shown:controls.radius.shown,stored:controls.radius.stored},{maximum:8,shown:8,stored:50});
+    assert.ok(controls.radius.widerMaximum>=17&&controls.radius.widerMaximum<=18,'Radius range follows the wider kernel, including legacy float step rounding');
     await page.screenshot({path:`${output}/${lite?'lite':'full'}-controls.png`});
     await page.evaluate(()=>{const g=window.__game;g.crtGuestPanel.close();g.crtGuestSettings.applyStartupPreset();g.crtGuestSettings.setEnabled(true);});
     await page.keyboard.press('KeyM');

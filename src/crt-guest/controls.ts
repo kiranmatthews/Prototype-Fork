@@ -2,10 +2,12 @@ import type { CrtGuestSettings } from './settings';
 import type { CrtGuestSettingsLike } from './pass';
 
 const sourceHeights = new WeakMap<CrtGuestSettingsLike, number>();
+const sourceWidths = new WeakMap<CrtGuestSettingsLike, number>();
 const contextListeners = new WeakMap<CrtGuestSettingsLike, Set<() => void>>();
-export function setCrtControlSourceHeight(settings: CrtGuestSettingsLike, height: number): void {
-  if (sourceHeights.get(settings) === height) return;
+export function setCrtControlSourceHeight(settings: CrtGuestSettingsLike, height: number, width?: number): void {
+  if (sourceHeights.get(settings) === height && (width === undefined || sourceWidths.get(settings) === width)) return;
   sourceHeights.set(settings, height);
+  if (width !== undefined) sourceWidths.set(settings,width);
   for (const listener of contextListeners.get(settings) ?? []) listener();
 }
 export function subscribeCrtControlContext(settings: CrtGuestSettingsLike, listener: () => void): () => void {
@@ -30,11 +32,14 @@ export function isCrtControlRelevant(id: string, settings: CrtGuestSettings): bo
   const maskBloom = mask && Math.abs(v('mask_bloom')) > .025;
   const magic = glow && v('m_glow') > .5;
   const height = sourceHeights.get(settings);
+  if (id === 'auto_res') return height === undefined || (height < 375 && (sourceWidths.get(settings) ?? 450) >= 450);
   const interlaced = height === undefined ? null :
     v('inter') <= height / (v('intres') > 1.25 ? v('intres') : 1) && v('interm') > .5 &&
     v('intres') !== 1 && v('intres') !== .5 && v('vga_mode') < .5;
   const alternateLines = v('interm') === (settings.variant === 'hd' ? 5 : 6);
   const scanlines = v('hiscan') > .5 || (v('no_scanlines') <= .025 && (!interlaced || alternateLines));
+  if (id === 'pr_scan') return scanlines;
+  if (id === 'smart_ei') return v('TATE') < .5;
   if (['gsl','scanline1','scanline2','beam_min','beam_max','tds','beam_size','scans','scan_falloff','scangamma','rolling_scan','clips'].includes(id)) return scanlines;
   if (id === 'spike' && settings.variant === 'hd') return scanlines;
   if (id === 'HSHARPNESS') return v('S_SHARP') !== 0 || v('SIGMA_HOR') > .25;
@@ -53,7 +58,8 @@ export function isCrtControlRelevant(id: string, settings: CrtGuestSettings): bo
     return (glowRadius ? glow : bloom || halation || maskBloom) && v(sigma) > .25;
   }
   if (['m_glow','FINE_GLOW','SIZEH','SIZEV','SIGMA_H','SIGMA_V'].includes(id)) return glow;
-  if (['m_glow_cutoff','m_glow_low','m_glow_high','m_glow_dist','m_glow_mask'].includes(id)) return magic;
+  if (id === 'm_glow_mask') return magic && mask;
+  if (['m_glow_cutoff','m_glow_low','m_glow_high','m_glow_dist'].includes(id)) return magic;
   if (['FINE_BLOOM','SIZEHB','SIZEVB','SIGMA_HB','SIGMA_VB'].includes(id)) return bloom || halation || maskBloom;
   if (id === 'bloom_dist') return bloom || maskBloom;
   if (id === 'bmask1') return bloom && mask;
@@ -77,4 +83,15 @@ export function isCrtControlRelevant(id: string, settings: CrtGuestSettings): bo
 
 export function hasCrtKernelControls(settings: CrtGuestSettings): boolean {
   return isCrtControlRelevant('FINE_GLOW', settings) || isCrtControlRelevant('FINE_BLOOM', settings);
+}
+
+/** Imported radii stay in storage; the editor shows the kernel's effective
+ * range instead of a long plateau of values discarded by tail truncation. */
+export function crtRadiusMaximum(id: string, settings: CrtGuestSettings): number | null {
+  const sigmaId = {SIZEH:'SIGMA_H',SIZEV:'SIGMA_V',SIZEHB:'SIGMA_HB',SIZEVB:'SIGMA_VB'}[id];
+  if (!sigmaId) return null;
+  const horizontal = id === 'SIZEH' || id === 'SIZEHB';
+  const auto = settings.variant === 'hd' && horizontal && (sourceHeights.get(settings) ?? 375) < 375
+    ? 1 + Math.max(0,Math.min(1,settings.getValue('auto_res')*Math.round((sourceWidths.get(settings) ?? 300)/300)-1)) : 1;
+  return Math.max(1,Math.min(50,Math.ceil(Math.ceil(5.5*settings.getValue(sigmaId)*auto+.5)/auto)));
 }

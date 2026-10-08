@@ -12,7 +12,7 @@ import {
   type CrtGuestParameterDefinition,
   type CrtGuestQuality,
 } from "./settings";
-import { hasCrtKernelControls, isCrtControlRelevant, subscribeCrtControlContext } from './controls';
+import { crtRadiusMaximum, hasCrtKernelControls, isCrtControlRelevant, subscribeCrtControlContext } from './controls';
 
 export type CrtGuestPanelToggleBinder = (
   toggle: () => void,
@@ -506,8 +506,10 @@ export class CrtGuestTuningPanel {
   }
 
   private syncRelevance(): void {
-    for (const [id, controls] of this.parameterControls)
+    for (const [id, controls] of this.parameterControls) {
       controls.row.hidden = !isCrtControlRelevant(id, this.settings);
+      if (crtRadiusMaximum(id,this.settings) !== null) this.syncParameter(controls);
+    }
     for (const details of this.groups.querySelectorAll('details')) {
       const count = Array.from(details.querySelectorAll<HTMLElement>('.parameter')).filter(row=>!row.hidden).length;
       details.hidden = count === 0;
@@ -648,7 +650,7 @@ export class CrtGuestTuningPanel {
     }
     this.settings.setValue(
       controls.parameter.id,
-      requested,
+      Math.min(requested,crtRadiusMaximum(controls.parameter.id,this.settings) ?? Infinity),
       controls.variant,
     );
     const applied = this.settings.getValue(
@@ -679,7 +681,12 @@ export class CrtGuestTuningPanel {
       controls.parameter.id,
       controls.variant,
     );
-    const formatted = formatValue(value, range.step);
+    const maximum = crtRadiusMaximum(controls.parameter.id,this.settings) ?? range.max;
+    controls.slider.max = controls.numeric.max = String(maximum);
+    const effective = Math.min(value,maximum);
+    const hint = value > maximum ? `Saved radius ${value}; effective radius ${maximum} at this blur width.` : '';
+    controls.slider.title = controls.numeric.title = hint;
+    const formatted = formatValue(effective, range.step);
     controls.slider.value = formatted;
     if (this.shadow.activeElement !== controls.numeric) {
       controls.numeric.value = formatted;

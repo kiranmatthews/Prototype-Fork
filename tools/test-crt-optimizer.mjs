@@ -11,7 +11,7 @@ for (const name of ['settings','controls','optimize']) {
 }
 const {CrtGuestSettings}=modules.get('settings');
 const {planCrt}=modules.get('optimize');
-const {isCrtControlRelevant:visible,setCrtControlSourceHeight,subscribeCrtControlContext}=modules.get('controls');
+const {crtRadiusMaximum,isCrtControlRelevant:visible,setCrtControlSourceHeight,subscribeCrtControlContext}=modules.get('controls');
 const settings=new CrtGuestSettings({storage:null,loadStored:false,persistChanges:false});
 const v=(id,value)=>settings.setValue(id,value);
 assert.deepEqual(planCrt(settings,1080),{afterglow:true,average:false,edges:false,glow:false,bloom:false,fusePre:true,fuseInput:false,reconstruction:true,mipmaps:false,scalarAverage:false});
@@ -31,6 +31,11 @@ let notifications=0;const stop=subscribeCrtControlContext(settings,()=>notificat
 setCrtControlSourceHeight(settings,360);assert.equal(visible('beam_min',settings),true);assert.equal(visible('SIGMA_VER',settings),false);
 setCrtControlSourceHeight(settings,1080);assert.equal(visible('beam_min',settings),false);assert.equal(visible('SIGMA_VER',settings),true);
 setCrtControlSourceHeight(settings,1080);assert.equal(notifications,2);stop();
+assert.equal(visible('auto_res',settings),false);
+setCrtControlSourceHeight(settings,360,640);assert.equal(visible('auto_res',settings),true);
+v('SIZEH',50);v('SIGMA_H',1.2);assert.equal(crtRadiusMaximum('SIZEH',settings),8);
+assert.equal(settings.getValue('SIZEH'),50,'Effective UI range must not rewrite imported radii');
+v('SIGMA_H',15);assert.equal(crtRadiusMaximum('SIZEH',settings),50);
 v('interm',1);assert.equal(planCrt(settings,1080).fusePre,false,'Two-line temporal reconstruction keeps the pre image');
 v('interm',0);assert.equal(visible('beam_min',settings),true);assert.equal(planCrt(settings,1080).fusePre,true);
 v('vigstr',.5);assert.equal(planCrt(settings,1080).fusePre,false,'Vignette alpha must survive pre-image filtering');
