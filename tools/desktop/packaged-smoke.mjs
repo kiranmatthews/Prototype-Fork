@@ -1,4 +1,4 @@
-import { testTimeout, slowTest, translatedTest } from './test-timing.mjs';
+import { testTimeout, slowTest, translatedTest, slowGpuTest } from './test-timing.mjs';
 import { waitForNativeStartup } from './native-startup.mjs';
 import { moveOnSupportedGround } from './input-smoke.mjs';
 import { testGpuArgs, softwareGpuTest } from './test-gpu.mjs';
@@ -19,7 +19,7 @@ const watchdog = setTimeout(() => processHandle.kill('SIGKILL'), slowTest ? 1800
 let browser, page;
 const errors = [], failed = [], requests = [];
 const emulatedFocus = process.argv.includes('--emulated-focus');
-const report = { binary, platform:process.platform, arch:process.env.BONEMAN_TARGET_ARCH || process.arch, hostArch:process.arch, softwareGpuTest, translatedTest, emulatedFocus, stderr:'' };
+const report = { binary, platform:process.platform, arch:process.env.BONEMAN_TARGET_ARCH || process.arch, hostArch:process.arch, softwareGpuTest, translatedTest, slowGpuTest, emulatedFocus, stderr:'' };
 processHandle.stderr.on('data', bytes => { report.stderr = (report.stderr + bytes).slice(-12000); });
 try {
   const endpoint = await new Promise((resolve,reject) => {

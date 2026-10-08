@@ -36,6 +36,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     env:
+      # Hosted Windows exposes Microsoft's software Basic Render Driver.
+      BONEMAN_TEST_SLOW_GPU: ${{ matrix.platform == 'win' && '1' || '0' }}
       BONEMAN_TEST_SOFTWARE_GPU: ${{ matrix.platform == 'linux' && '1' || '0' }}
       npm_config_arch: ${{ matrix.arch }}
       BONEMAN_TARGET_ARCH: ${{ matrix.arch }}

@@ -8,7 +8,8 @@ if (process.platform === 'darwin' && process.arch === 'x64') {
   catch { /* Native Intel host. */ }
 }
 export const translatedTest = translated;
-export const slowTest = softwareGpuTest || translatedTest;
+export const slowGpuTest = process.env.BONEMAN_TEST_SLOW_GPU === '1';
+export const slowTest = softwareGpuTest || slowGpuTest || translatedTest;
 // Functional checks on emulated CPUs/software GPUs preserve scene/quality.
 // These generous deadlines are not release performance acceptance thresholds.
 export const testTimeout = slowTest ? 600000 : 120000;

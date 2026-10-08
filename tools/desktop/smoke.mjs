@@ -1,4 +1,4 @@
-import { testTimeout, slowTest, translatedTest } from './test-timing.mjs';
+import { testTimeout, slowTest, translatedTest, slowGpuTest } from './test-timing.mjs';
 import { moveOnSupportedGround } from './input-smoke.mjs';
 import { softwareGpuTest } from './test-gpu.mjs';
 import assert from 'node:assert/strict';
@@ -13,7 +13,7 @@ const desktop = path.resolve(fileURLToPath(new URL('../../desktop/', import.meta
 const output = path.join(desktop, 'test-results');
 await mkdir(output, { recursive:true });
 const profile = await mkdtemp(path.join(tmpdir(), 'boneman-smoke-'));
-const report = { timestamp:new Date().toISOString(), platform:platform(), arch:arch(), softwareGpuTest, translatedTest, modes:[] };
+const report = { timestamp:new Date().toISOString(), platform:platform(), arch:arch(), softwareGpuTest, translatedTest, slowGpuTest, modes:[] };
 const errors = [], requests = [], failed = [];
 let app;
 try {

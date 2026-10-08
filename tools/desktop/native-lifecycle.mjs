@@ -1,3 +1,4 @@
+import { testTimeout, translatedTest, slowGpuTest } from './test-timing.mjs';
 import { testGpuArgs, softwareGpuTest } from './test-gpu.mjs';
 import { spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
@@ -16,10 +17,10 @@ const child = spawn(require('electron'), [...testGpuArgs, fileURLToPath(new URL(
 let stdout = '', stderr = '';
 child.stdout.on('data', bytes => { stdout = (stdout + bytes).slice(-12000); });
 child.stderr.on('data', bytes => { stderr = (stderr + bytes).slice(-12000); });
-const timeout = setTimeout(() => child.kill('SIGKILL'), 120000);
+const timeout = setTimeout(() => child.kill('SIGKILL'), testTimeout);
 try {
   const code = await new Promise((resolve, reject) => { child.once('error', reject); child.once('exit', resolve); });
-  const report = {status:code === 0 ? 'passed' : 'failed', code, platform:process.platform, arch:process.arch, softwareGpuTest, stdout, stderr};
+  const report = {status:code === 0 ? 'passed' : 'failed', code, platform:process.platform, arch:process.arch, softwareGpuTest, translatedTest, slowGpuTest, stdout, stderr};
   await writeFile(path.join(out, probe ? 'gpu-probe.json' : 'native-lifecycle.json'), JSON.stringify(report, null, 2) + '\n');
   if (code !== 0) throw new Error('Native lifecycle failed: ' + stdout + stderr);
   console.log(probe ? 'PASS native WebGL2 capability: ' + stdout.trim() : 'PASS native app hide/restore: simulation stops, resumes, sandbox enabled.');
