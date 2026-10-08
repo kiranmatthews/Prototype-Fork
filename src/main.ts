@@ -2541,9 +2541,8 @@ function handleCompetitionAction(action: CompetitionAction): void {
 }
 
 function currentCampaignName(): string {
-  if (bonusSession)
-    return `${campaignLevelById(bonusSession.parentEntry.id)?.name ?? bonusSession.parentEntry.name} Bonus`;
-  return campaignLevelById(current.id)?.name ?? current.name;
+  const entry = bonusSession?.parentEntry ?? current;
+  return campaignLevelById(entry.id)?.name ?? entry.name;
 }
 
 function applyGameAudioOptions(options: GameAudioOptions): void {
@@ -3053,7 +3052,7 @@ function enterBonusRound(fromLanding = false): void {
     const parentName = campaignLevelById(parentEntry.id)?.name ?? parentEntry.name;
     current = {
       id: `bonus:${parentEntry.id}`,
-      name: `${parentName} Bonus`,
+      name: parentName,
       data: resolveBonusLevel(parentEntry.id),
     };
     level = new Level(scene, current);
