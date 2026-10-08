@@ -93,6 +93,9 @@ try {
     near(THREE.MathUtils.radToDeg(tilted.quaternion.angleTo(base.quaternion)), 10, 'tilt is not degrees');
   }
 
+  for (const side of [0, .2, .5, .8, 1])
+    assert.deepEqual(cameraRigFraming(saved, side), cameraRigFraming(saved), 'side-scroll changed the gameplay scale or pitch');
+
   // A moving/damped eye must not tilt toward an independently lagging target.
   // Include negative distance, horizon, upward tilt, and near-vertical limits.
   for (const pitch of [-85, 0, 25.35, 85]) {

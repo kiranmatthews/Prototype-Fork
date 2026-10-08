@@ -36,6 +36,25 @@ export interface CameraViewGroundFollow {
   dt: number;
 }
 
+export interface CameraSideFollow {
+  travel: { x: number; z: number } | null;
+  distance: number;
+  dt?: number;
+}
+
+/** A side-on authored shot uses the same close scale as the gameplay rig.
+ * Compare view and route directions, so rotated bonus courses and climbing
+ * galleries follow the same rule without level names or world-axis guesses. */
+export function cameraSideWeight(view: CameraView, travel: CameraSideFollow['travel']): number {
+  if (!travel || !view.cameraPosition || !view.cameraTarget) return 0;
+  const x = view.cameraTarget[0] - view.cameraPosition[0];
+  const z = view.cameraTarget[2] - view.cameraPosition[2];
+  const length = Math.hypot(x, z) * Math.hypot(travel.x, travel.z);
+  if (length < 1e-6) return 0;
+  const alignment = Math.abs((x * travel.x + z * travel.z) / length);
+  return 1 - THREE.MathUtils.smoothstep(alignment, .25, .75);
+}
+
 /** The same spatial feather owns both the heading and optional framing. */
 export function cameraViewAt(views: readonly CameraView[], x:number,y:number,z:number):CameraViewMatch|null {
   let match:CameraViewMatch|null=null;
@@ -66,6 +85,8 @@ export class CameraViewFraming {
   private readonly followEye=new THREE.Vector3();
   private readonly followTarget=new THREE.Vector3();
   private groundView:CameraView|null=null;
+  private sideView:CameraView|null=null;
+  private sideWeight=0;
   private supportY=0;
   private anchorY=0;
   private leadX=0;
@@ -79,19 +100,26 @@ export class CameraViewFraming {
     this.applied=false;
   }
 
-  apply(camera:THREE.PerspectiveCamera,match:CameraViewMatch|null,subject?:THREE.Vector3,snap=false,groundFollow?:CameraViewGroundFollow):void {
-    if(!match){this.groundView=null;return;}
+  apply(camera:THREE.PerspectiveCamera,match:CameraViewMatch|null,subject?:THREE.Vector3,snap=false,groundFollow?:CameraViewGroundFollow,sideFollow?:CameraSideFollow):void {
+    if(!match){this.groundView=null;this.sideView=null;this.sideWeight=0;return;}
     const {view,weight}=match;
     if(!view.cameraPosition&&!view.cameraTarget&&view.cameraFov===undefined)return;
     this.position.copy(camera.position);this.orientation.copy(camera.quaternion);this.up.copy(camera.up);this.fov=camera.fov;
     this.applied=true;
     if(view.cameraPosition&&view.cameraTarget){
       this.shotEye.fromArray(view.cameraPosition);this.shotTarget.fromArray(view.cameraTarget);
-      const distance=groundFollow ? 13.4 : Math.min(18,view.cameraFollowDistance??this.shotEye.distanceTo(this.shotTarget));
+      const authoredDistance=groundFollow ? 13.4 : Math.min(18,view.cameraFollowDistance??this.shotEye.distanceTo(this.shotTarget));
+      const desiredSide = sideFollow ? cameraSideWeight(view, sideFollow.travel) : 0;
+      this.sideWeight = snap || this.sideView !== view || sideFollow?.dt === undefined
+        ? desiredSide : THREE.MathUtils.lerp(this.sideWeight, desiredSide, 1-Math.exp(-6*Math.max(0,sideFollow.dt)));
+      this.sideView = view;
+      const side = this.sideWeight;
+      const distance = THREE.MathUtils.lerp(authoredDistance,
+        Math.min(authoredDistance, sideFollow?.distance ?? authoredDistance), side);
       // Bonus owns its lens without changing the parent's camera or controls.
       if(groundFollow){camera.fov=46;camera.updateProjectionMatrix();}
       if(subject){
-        const targetHeight=groundFollow ? 2.7 : view.cameraFollowTargetHeight??1.3;
+        const targetHeight=THREE.MathUtils.lerp(groundFollow ? 2.7 : view.cameraFollowTargetHeight??1.3,1.3,side);
         this.followTarget.copy(subject);
         if(groundFollow){
           const floor=groundFollow.groundY;
@@ -100,13 +128,13 @@ export class CameraViewFraming {
           if(fresh){
             this.supportY=supported?Math.min(subject.y,floor):subject.y;
             this.anchorY=this.supportY;
-            this.direction=1;this.leadX=.9;this.lastX=subject.x;
+            this.direction=1;this.leadX=.9*Math.min(1,distance/13.4);this.lastX=subject.x;
           }else if(groundFollow.grounded)this.supportY=supported?floor:subject.y;
           this.groundView=view;
           const travel=subject.x-this.lastX;
           if(Math.abs(travel)>.012)this.direction=Math.sign(travel);
           this.lastX=subject.x;
-          const desiredLead=this.direction*Math.min(1.45,Math.max(.45,camera.aspect*1.05));
+          const desiredLead=this.direction*Math.min(1.45,Math.max(.45,camera.aspect*1.05))*Math.min(1,distance/13.4);
           this.leadX=THREE.MathUtils.lerp(this.leadX,desiredLead,1-Math.exp(-3*Math.max(0,groundFollow.dt)));
           this.followTarget.x+=this.leadX;
 

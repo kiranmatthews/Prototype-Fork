@@ -2033,8 +2033,15 @@ function updateCamera2(dt: number): void {
   cameraViewFraming2.restore(camera2);
   updateBaseCamera2(dt);
   const subject = p2.renderPosition;
-  cameraViewFraming2.apply(camera2, cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z) ?? (level.hudMode === 'bonus' ? BONUS_PRESENTATION_VIEW : null), subject, framingSnap,
-    level.hudMode === 'bonus' ? { groundY: p2.groundBelowY !== null && p2.groundBelowY > level.killY ? p2.groundBelowY : null, grounded: p2.grounded, dt } : undefined);
+  const viewMatch = cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z) ??
+    (level.hudMode === 'bonus' ? BONUS_PRESENTATION_VIEW : null);
+  const zoneDirection = level.zoneAt(subject.x, subject.z)?.dir;
+  const viewTravel = !viewMatch ? null : zoneDirection === 'E' || zoneDirection === 'W'
+    ? {x:1,z:0} : level.laneDirAt(subject.x, subject.y, subject.z) ??
+      (level.hudMode === 'bonus' ? {x:1,z:0} : null);
+  cameraViewFraming2.apply(camera2, viewMatch, subject, framingSnap,
+    level.hudMode === 'bonus' ? { groundY: p2.groundBelowY !== null && p2.groundBelowY > level.killY ? p2.groundBelowY : null, grounded: p2.grounded, dt } : undefined,
+    {travel:viewTravel,distance:Math.hypot(TUNING.camDist,TUNING.camHeight-1.3),dt});
   loopCameraFraming2.apply(camera2, p2.authoredSkateCamera ? null : p2.loopPresentationFrame, subject, cameraRigFraming(level.cameraRig ?? TUNING, 0, 0, 0, true), dt, framingSnap||p2.authoredSkateCamera,p2.loopFallPresentation);
   if(!p2.authoredSkateCamera&&level.cameraAirLift===1&&p2.vertAir&&loopCameraFraming2.active)cameraOverlayHeroFraming2.apply(camera2,p2.cameraPoseBounds,dt,framingSnap);
   else cameraOverlayHeroFraming2.reset();
@@ -2076,7 +2083,9 @@ function updateBaseCamera2(dt: number): void {
     dt,
     snapped,
   );
-  const p2AuthoredFov = cameraValues.camFov;
+  const sideZone = level.zoneAt(subject.x, subject.z)?.dir;
+  const p2Side = sideZone === 'E' || sideZone === 'W' ? 1 : 0;
+  const p2AuthoredFov = THREE.MathUtils.lerp(cameraValues.camFov, TUNING.camFov, p2Side);
   const p2TargetFov = THREE.MathUtils.lerp(
     p2AuthoredFov + cam2SpeedFovBoost,
     BOULDER_FOV + TUNING.camFov - 49,
@@ -2102,7 +2111,7 @@ function updateBaseCamera2(dt: number): void {
   cam2F.y = 0;
   if (cam2F.lengthSq() < 1e-4) cam2F.set(0, 0, -1);
   cam2F.normalize();
-  const framing = cameraRigFraming(cameraValues, 0, 0, 0, true);
+  const framing = cameraRigFraming(cameraValues, p2Side, 0, 0, true, TUNING);
   const laneTarget = level.cameraLookAhead && !level.zoneAt(subject.x, subject.z)
     ? level.cameraLanePointAhead(cam2LaneCursor, level.cameraLookAhead, cam2LaneTarget)
     : null;
@@ -4398,7 +4407,7 @@ let camAnchorY = 0; // the rig's vertical anchor: the ground under the skater, e
 let camRoll = 0; // eased dutch roll tracking the grind balance needle (radians)
 const aimSmooth = new THREE.Vector3(); // aim built from the current eye + explicit orientation
 let camBack = 0; // 0 = facing down-course, eases to 1 while travelling at the camera
-let sideF = 0; // eases to 1 on turned (X-running) stretches: wider framing only
+let sideF = 0; // eases to 1 on side-scroll stretches for lateral tracking
 let boulderF = 0; // eases to 1 on boulder-chase levels: tipped-down framing
 let camSpeedFovBoost = 0; // additive high-speed skate lens push, eased in/out
 const prevPlayerPos = new THREE.Vector3();
@@ -4426,8 +4435,15 @@ function updateCamera(dt: number): void {
   cameraViewFraming.restore(camera);
   updateBaseCamera(dt);
   const subject = player.renderPosition;
-  cameraViewFraming.apply(camera, cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z) ?? (level.hudMode === 'bonus' ? BONUS_PRESENTATION_VIEW : null), subject, framingSnap,
-    level.hudMode === 'bonus' ? { groundY: player.groundBelowY !== null && player.groundBelowY > level.killY ? player.groundBelowY : null, grounded: player.grounded, dt } : undefined);
+  const viewMatch = cameraViewAt(level.cameraViews, subject.x, subject.y, subject.z) ??
+    (level.hudMode === 'bonus' ? BONUS_PRESENTATION_VIEW : null);
+  const zoneDirection = level.zoneAt(subject.x, subject.z)?.dir;
+  const viewTravel = !viewMatch ? null : zoneDirection === 'E' || zoneDirection === 'W'
+    ? {x:1,z:0} : level.laneDirAt(subject.x, subject.y, subject.z) ??
+      (level.hudMode === 'bonus' ? {x:1,z:0} : null);
+  cameraViewFraming.apply(camera, viewMatch, subject, framingSnap,
+    level.hudMode === 'bonus' ? { groundY: player.groundBelowY !== null && player.groundBelowY > level.killY ? player.groundBelowY : null, grounded: player.grounded, dt } : undefined,
+    {travel:viewTravel,distance:Math.hypot(TUNING.camDist,TUNING.camHeight-1.3),dt});
   // The chase rig has its own heading; authored view volumes still own the
   // canonical input direction, independently from this presentation layer.
   if ((level.skatepark || TUNING.chaseCam > 0.5) && !level.boulder && level.cameraViews.length) {
@@ -4578,7 +4594,7 @@ function updateBaseCamera(dt: number): void {
     dt,
     snapped,
   );
-  const authoredFov = cameraValues.camFov;
+  const authoredFov = THREE.MathUtils.lerp(cameraValues.camFov, TUNING.camFov, sideF);
   const targetFov = THREE.MathUtils.lerp(
     authoredFov + camSpeedFovBoost,
     BOULDER_FOV + TUNING.camFov - 49,
@@ -4612,7 +4628,7 @@ function updateBaseCamera(dt: number): void {
     (snapped ? 1 : Math.min(1, 3 * dt));
   const back = camBack * (1 - sideF) * (1 - boulderF); // corridor thing only
 
-  const framing = cameraRigFraming(cameraValues, sideF, back, boulderF);
+  const framing = cameraRigFraming(cameraValues, sideF, back, boulderF, false, TUNING);
   // CRASH RIG VERTICAL: the camera's height anchors to the GROUND under the
   // skater, not the skater — a jump rises THROUGH the frame
   // instead of yanking the whole rig skyward and pulling the
@@ -4643,11 +4659,12 @@ function updateBaseCamera(dt: number): void {
   // rising — same physics, but every air reads much bigger and floatier).
   // High-air courses may opt into full vertical framing without changing
   // global tuning, camera yaw, or the player's camera-relative input frame.
-  const airLift = player.swimming ? 1 : Math.max(level.cameraAirLift ?? TUNING.camAirLift, boulderF);
+  const airLift = player.swimming ? 1 : Math.max(level.cameraAirLift ?? TUNING.camAirLift, boulderF, sideF);
   // Full-follow centres the visible posed rider, not just the feet that own
   // collision. The readonly pose offset is zero on ordinary upright support.
   const poseYOffset = level.cameraAirLift === 1 ? (player.cameraPoseYOffset ?? 0) : 0;
-  const effY = THREE.MathUtils.lerp(camAnchorY, subject.y, airLift) + poseYOffset;
+  const followY = inTurn && floorY === null ? Math.max(camAnchorY, subject.y) : subject.y;
+  const effY = THREE.MathUtils.lerp(camAnchorY, followY, airLift) + poseYOffset;
   // Course controls keep the local tangent. The authored look-ahead affects
   // only the shot, bringing the upcoming bend into narrow screens as well.
   const laneTarget = level.cameraLookAhead && lf && !znHere
@@ -4687,8 +4704,9 @@ function updateBaseCamera(dt: number): void {
     camera.position.z += camF.z * along * kAlong + perpZ * lat * kLat;
     // An authored full-follow course tracks the already-interpolated subject
     // without a second Y delay, on ramps as well as in the air. The shared
-    // default and partial-follow courses retain their exact existing damping.
-    if (level.cameraAirLift === 1) camera.position.y = camTarget.y;
+    // side-scrolls use this too so the close shot cannot lag behind a jump.
+    // Other default and partial-follow courses retain their existing damping.
+    if (level.cameraAirLift === 1 || inTurn) camera.position.y = camTarget.y;
     else camera.position.y += (camTarget.y - camera.position.y) * kY;
   }
 

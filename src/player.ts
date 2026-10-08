@@ -7836,7 +7836,8 @@ export class Player {
       !this.slideJumpAir
     ) {
       const footAir =
-        !(this.parkControls && this.airFromSkate) &&
+        (!this.airFromSkate || this.bounceJump) && // slow ollies keep momentum; crate bounces regain foot control
+        (!this.freeSkate || this.bounceJump) &&
         !this.charging &&
         !this.airMomentum && // grind/slide exits keep flying, even when slow
         Math.abs(this.speed) <= TUNING.walkSpeed + 0.5;
@@ -7846,7 +7847,7 @@ export class Player {
       if (footAir) {
         // On-foot air control is DIRECT DRIVE like the walk: zero inertia, so
         // precision hops (bouncy crates!) never drift. After a double jump the
-        // same direct authority is intentionally capped at 55% traversal.
+        // same direct authority follows the editable traversal retention.
         this.speed = input.moveY * TUNING.walkSpeed * diag * doubleScale;
         this.walkVelocity
           .copy(this.axisF)
@@ -11182,7 +11183,7 @@ export class Player {
     // "a tumbling body is scenery" guards the collision code carefully keeps.
     const canSpin =
       !this.isBailing &&
-      (this.state === 'ride' || this.state === 'air' || this.state === 'grind' || this.state === 'rope');
+      (this.state === 'ride' || this.state === 'air' || this.state === 'grind' || this.state === 'rope' || this.state === 'hang');
     const boardAir = this.state === 'air' && this.airFromSkate && !this.isBailing;
     this.ollieDeckTrickBufferT = Math.max(0, this.ollieDeckTrickBufferT - dt);
     if(this.queuedFlip){this.queuedFlip.time-=dt;if(this.queuedFlip.time<=0)this.queuedFlip=null;}
@@ -11657,8 +11658,8 @@ export class Player {
 
   // ------------------------------------------------------------- collision --
 
-  private collide(level: Level): void {
-    if (this.returnPortalCoolT <= 0) {
+  private collide(level: Level, ledgeOnly = false): void {
+    if (!ledgeOnly && this.returnPortalCoolT <= 0) {
       const portal = level.returnPortalAt(
         this.prevPos,
         this.pos,
@@ -11737,7 +11738,7 @@ export class Player {
       }
     }
     const half = this.hitboxHalf;
-    if (this.state !== 'grind' && !this.wallriding) {
+    if (!ledgeOnly && this.state !== 'grind' && !this.wallriding) {
       const coastHit = level.resolveCoastBoundary(
         this.prevPos,
         this.pos,
@@ -11796,7 +11797,7 @@ export class Player {
       Math.max(half.x, half.z),
     );
     const trickGate =
-      level.trickGates.length > 0
+      !ledgeOnly && level.trickGates.length > 0
         ? level.resolveTrickGateCrossing(
             this.primitiveFrom.copy(this.prevPos).addScaledVector(CRATE_UP, half.y),
             this.primitiveTo.copy(this.pos).addScaledVector(CRATE_UP, half.y),
@@ -11898,6 +11899,9 @@ export class Player {
     // travel tax. A seam can overlap several adjacent stack boxes at once;
     // charging 0.92 per array member made the same sweep mutate from Smash to
     // Trip halfway through and turned crate ordering into gameplay.
+    // A pull-up is an upward body attack. Reuse the normal typed contacts:
+    // wood breaks, TNT/Nitro remain dangerous, and steel stays solid.
+    const mantleContact = ledgeOnly && this.ledgePhase === 'climb';
     const crateContactSpeed = this.speed;
     let crateBoardSmashTax = false;
     this.refreshCharacterBounds();
@@ -12023,7 +12027,7 @@ export class Player {
             // body back into the sky — the same defect the plain-crate,
             // arrow-crate and '!' branches each guard against.
             if (this.grounded) this.pushOutOfCrate(c.box);
-          } else if (this.uberTimer > 0 || this.sliding) {
+          } else if (this.uberTimer > 0 || this.sliding || mantleContact) {
             level.detonate(c);
           } else if (this.state === 'grind') {
             if (this.grindVel >= TUNING.smashSpeed || this.spendMask()) level.detonate(c);
@@ -12132,7 +12136,7 @@ export class Player {
             this.vVel = -1; // head bonk on the underside
           } else if (
             c.bouncy &&
-            (this.uberTimer > 0 ||
+            (this.uberTimer > 0 || mantleContact ||
               (this.freeSkate && Math.abs(crateContactSpeed) >= TUNING.smashSpeed))
           ) {
             // WOOD arrows are still WOOD: fast skating plows straight through
@@ -12248,8 +12252,8 @@ export class Player {
         } else if (this.uberTimer > 0 && !crateStompContacts.has(c)) {
           // Uber: boxes shatter on touch (stomps below still bounce).
           this.smashCrate(level, c);
-        } else if (this.sliding) {
-          // Slides smash boxes without breaking stride.
+        } else if (this.sliding || mantleContact) {
+          // Slides and pull-ups smash wood without breaking stride.
           this.smashCrate(level, c);
         } else if (this.state === 'grind') {
           // Crates on the rail line are obstacles: spin them, hop them, or
@@ -12318,6 +12322,9 @@ export class Player {
     }
     if (crateBoardSmashTax && !this.isBailing)
       this.speed *= 0.92;
+    // The mantle owns its path around the supporting lip. Only its crate
+    // contacts run here; ordinary wall separation would push it off the ledge.
+    if (ledgeOnly) return;
 
     // Typed foes publish per-frame flags (see Level.updateEnemies): spinKill /
     // stompKill / meleeKill / touchHurt / spinRecoil. The rules below read them
@@ -14324,6 +14331,7 @@ export class Player {
       if (
         crate.alive &&
         !crate.pending &&
+        (crate.metal || crate.metalBounce || crate.bang || crate.nitroBang) &&
         ledgeBlockerIntersects(crate.box, LEDGE_BODY, supportY)
       )
         return true;
@@ -14740,8 +14748,14 @@ export class Player {
     this.airGrav = 'foot'; // hanging by the hands: every exit off this ledge is on foot
     this.pipeEndFly = false; // catching a ledge settles a pending fly-off — no stale bail later
     this.rollOffT = 0;
-    this.spinTimer = 0;
-    this.spinAngle = 0;
+    // A grip is fresh support: no stale jump, lateral launch or landing
+    // buffer may resume after the pull-up. An active spin may continue.
+    this.clearCoyoteJumpWindow();
+    this.jumpBufferT = this.jumpBufferCharge = this.airTapT = 0;
+    this.airMomentum = this.slideJumpAir = false;
+    this.slideAirLat = 0;
+    this.airborneT = this.launchVy = 0;
+    this.airPeakY = this.pos.y;
     this.flipTimer = 0;
     this.teetering = false;
     this.airJumpUsed = false; // a grip is solid contact: the double jump re-arms
@@ -14782,6 +14796,7 @@ export class Player {
     this.slamSquash = Math.max(0, this.slamSquash - dt);
     this.slamFlatT = Math.max(0, this.slamFlatT - dt);
     this.hangClipT += dt * this.hangClipRate;
+    this.updateSpin(dt, input);
     // the time-trial clock keeps running — hanging is not a pause button
     if (this.ttActive) {
       if (this.ttFreeze > 0) this.ttFreeze = Math.max(0, this.ttFreeze - dt);
@@ -14809,11 +14824,18 @@ export class Player {
       this.pos.x = THREE.MathUtils.lerp(this.ledgeClimbFrom.x, this.ledgeClimbTo.x, hK);
       this.pos.z = THREE.MathUtils.lerp(this.ledgeClimbFrom.z, this.ledgeClimbTo.z, hK);
       this.ledgeClimbK = t;
+      this.vVel = (this.pos.y - this.prevPos.y) / Math.max(dt, 1e-6);
+      this.collide(level, true);
+      if (this.state !== 'hang') return;
       if (t >= 1) {
         // topped out: stand it up (a whisper of lift keeps the beat alive)
         this.state = 'air';
         this.grounded = false;
         this.vVel = TUNING.ledgeClimbPop;
+        this.airborneT = 0;
+        this.launchVy = this.vVel;
+        this.airPeakY = this.pos.y;
+        this.jumpReleaseRearmRequired = this.rawInput.jumpHeld;
         this.speed = 0;
         this.ledgeCoolT = 0.35;
         this.prevPos.copy(this.pos); // fresh sweep origin ON the deck — no back-clip
@@ -14886,7 +14908,7 @@ export class Player {
       // requested motion that an actual end blocks does not create an infinite
       // hang: only real displacement refreshes the hands.
       if (!didShimmy) this.ledgeT -= dt;
-      if (input.jumpPressed || gripIntent.pullingToward)
+      if (input.jumpPressed || input.spinPressed || gripIntent.pullingToward)
         this.ledgeClimbQueued = true;
       const climbRequested =
         this.ledgeEaseT >= LEDGE_EASE && this.ledgeClimbQueued;
@@ -14902,6 +14924,8 @@ export class Player {
         this.ledgeLetGo(); // the grip gave out
       }
     }
+    if (this.state === 'hang' && this.ledgePhase === 'grip')
+      this.collide(level, true);
     // bookkeeping the main step normally does (velocity measure + prevPos)
     this.measurePlanar(dt);
   }

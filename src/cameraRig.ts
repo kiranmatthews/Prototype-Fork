@@ -54,18 +54,21 @@ const degrees = (rise: number, run: number): number =>
   Math.atan2(rise, run) * 180 / Math.PI;
 
 // v17's shipped shot, before position and orientation became independent.
-// Used only to preserve the authored side/reverse/boulder/split shot offsets
+// Used only to preserve the authored reverse/boulder/split shot offsets
 // and to translate old saves. Live tuning never feeds a look-at triangle.
 const LEGACY = { distance: 3.8, height: 5.1, aimHeight: 3.3, offset: -1.25 };
 const BASE_PITCH = degrees(LEGACY.height - LEGACY.aimHeight, LEGACY.distance);
 const BASE_DISTANCE = LEGACY.distance - LEGACY.offset;
 
+/** Side-scrolls share the live gameplay framing, including when a level
+ * carries an older wide preset. The blend also covers entry/exit transitions. */
 export function cameraRigFraming(
   tuning: CameraRigTuning,
   side = 0,
   back = 0,
   boulder = 0,
   split = false,
+  gameplay: CameraRigTuning = tuning,
 ): { distance: number; height: number; pitch: number } {
   let distance: number;
   let height: number;
@@ -76,18 +79,19 @@ export function cameraRigFraming(
     pitch = degrees(height - 1.2, distance + 3);
   } else {
     const off = LEGACY.offset * (1 - boulder);
-    distance = LEGACY.distance * (1 + 0.77 * side) + back * 3.8 + boulder * 18.8 - off;
-    height = LEGACY.height * (1 - 0.1 * side) + back * 1.1 + boulder * 1.7;
+    // Turning into a side-scroll changes tracking, never the player scale.
+    distance = LEGACY.distance + back * 3.8 + boulder * 18.8 - off;
+    height = LEGACY.height + back * 1.1 + boulder * 1.7;
     const aimBack = THREE.MathUtils.lerp(
       THREE.MathUtils.lerp(-off, 3.5, back), 12, boulder,
     );
-    const aimHeight = THREE.MathUtils.lerp(LEGACY.aimHeight - 0.2 * side, 1.6, boulder);
+    const aimHeight = THREE.MathUtils.lerp(LEGACY.aimHeight, 1.6, boulder);
     pitch = degrees(height - aimHeight, distance - aimBack);
   }
   return {
-    distance: tuning.camDist + distance - BASE_DISTANCE,
-    height: tuning.camHeight + height - LEGACY.height,
-    pitch: tuning.camPitch + pitch - BASE_PITCH,
+    distance: THREE.MathUtils.lerp(tuning.camDist, gameplay.camDist, side) + distance - BASE_DISTANCE,
+    height: THREE.MathUtils.lerp(tuning.camHeight, gameplay.camHeight, side) + height - LEGACY.height,
+    pitch: THREE.MathUtils.lerp(tuning.camPitch, gameplay.camPitch, side) + pitch - BASE_PITCH,
   };
 }
 

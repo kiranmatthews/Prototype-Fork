@@ -23,6 +23,7 @@ try {
     parkCamFov: 49,
     parkCamSpeedFovBoost: 6,
     camDist: 5.05, camPitch: 25.35, milkMagnetRange: 1.75,
+    doubleJumpHorizontalScale: 1, // v26: the second jump retains directional travel
     hugeDropDistance: 24, // v25: retain the historical capture while promoting forgiving drop judgement
     grindCalm:.5,balanceSpeedEffect:.75,balanceGrace:1,balanceRamp:.18,balanceRampMax:2.5,bailGrace:0,
     balanceInertia:.7,balanceGravity:4.5,balanceEdgePower:3,balanceSafePeriod:.25,

@@ -51,7 +51,7 @@ export const TUNING = {
   doubleJump: 1, // 1 = a fresh X press mid-air pops a second, smaller jump (one per air)
   doubleJumpWindow: 0.7, // how LATE into the air the double can still fire (seconds since takeoff)
   doubleJumpVelocity: 11, // vertical speed of the second on-foot pop
-  doubleJumpHorizontalScale: 0.55, // traversal retained after the second pop
+  doubleJumpHorizontalScale: 1, // the second pop preserves directional travel
   chargeBoost: 9, // THE skate acceleration: holding X builds speed toward maxSpeed
   cruiseSpeed: 12, // baseline the board holds on its own while skating (no input)
   chargeDecay: 10, // rate the board eases UP to cruiseSpeed when you're below it. (It no longer bleeds you DOWN to cruise — that was punishing you for steering, and overspeed now goes through the normal friction model.)
@@ -226,7 +226,8 @@ export type TuningKey = keyof typeof TUNING;
 // the keys the user actually MOVED off those defaults are re-applied — every
 // untouched key follows the new build. (The spineDrift saga: a snapshot from
 // an old build silently kept a retired mechanic alive for days.)
-export const TUNING_VERSION = 25; // v25: huge-drop bails require 24 m of descent; untouched saved defaults follow this build
+export const TUNING_VERSION = 26; // v26: preserve double-jump traversal speed
+// v25: huge-drop bails require 24 m of descent; untouched saved defaults follow this build
 // v24: restore park feel; only speed/acceleration, coast-to-stop and camera tuning
 // v17: captured Chrome carve grip and balance defaults
 // v16: tunable high-speed skating FOV push
