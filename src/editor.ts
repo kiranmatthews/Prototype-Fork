@@ -1,3 +1,4 @@
+import { ICE_SURFACE, FALL_AWAY_SURFACE, SLIPPERY_COMPONENT_TYPES } from './surfaceBehavior';
 // LEVEL EDITOR: an in-game mode over source-owned level data. The editor keeps
 // a transactional working copy and rebuilds the live preview from that exact
 // copy. A hand-coded built-in is captured only into memory on open; it does not
@@ -914,7 +915,7 @@ const PALETTE_SECTIONS: { title: string; items: PalItem[] }[] = [
           t: "crumble",
           p: [at.x, at.y + 1, at.z],
           s: [3, 1, 3],
-          shake: 0.7,
+          shake: FALL_AWAY_SURFACE.delay,
         }),
       },
       {
@@ -7950,7 +7951,7 @@ export class Editor {
         ),
       );
     };
-    if (c.t === "platform" || c.t === "mesh") {
+    if (SLIPPERY_COMPONENT_TYPES.includes(c.t) && c.solid !== false && !c.materialStyle) {
       boolRow("slippery surface", () => c.slip === true, value => {
         if (value) c.slip = true;
         else { delete c.slip; delete c.iceGrip; }
@@ -7958,7 +7959,7 @@ export class Editor {
       });
       if (c.slip) {
         boolRow("custom ice grip", () => c.iceGrip !== undefined, value => {
-          if (value) c.iceGrip = 1;
+          if (value) c.iceGrip = ICE_SURFACE.grip;
           else delete c.iceGrip;
           this.renderProps();
         });
@@ -8655,17 +8656,18 @@ export class Editor {
       note.textContent = "Spin the raised timber to lower it. Its position is the hinge at the deployed deck height.";
       this.propsEl.appendChild(note);
     } else if (c.t === "crumble") {
+      sizeRow(1, "thickness");
       sizeRow(0, "width");
       sizeRow(2, "depth");
       num(
         "fall delay",
-        () => c.shake ?? 0.7,
+        () => c.shake ?? FALL_AWAY_SURFACE.delay,
         (v) => (c.shake = Math.max(0, v)),
         0.1,
       );
       num(
-        "fall speed",
-        () => c.speed ?? 30,
+        "fall acceleration",
+        () => c.speed ?? FALL_AWAY_SURFACE.acceleration,
         (v) => (c.speed = Math.max(2, v)),
         5,
       );

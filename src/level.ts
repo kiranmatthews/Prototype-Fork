@@ -1,3 +1,6 @@
+import { SKY_BRIDGE_LEVEL } from './levels/sky-bridge';
+import { ICE_SURFACE, FALL_AWAY_SURFACE, SLIPPERY_COMPONENT_TYPES } from './surfaceBehavior';
+import { createIceMaterial, dressFallAwaySurface, updateFallAwayWarning } from './surfacePresentation';
 import { CARLISLE_COAST_LEVEL } from "./levels/carlisle-coast";
 import { CUSTARD_CREEK_LEVEL } from "./levels/custard-creek";
 import { isOriginalTestCourse } from "./levels/carlisleLegacy";
@@ -641,7 +644,7 @@ export interface CustomComponent {
     | "rail" // grind rail: p = center (at rail height), len, yaw degrees (0 = along Z). Give it amp/speed/axis and the whole line TRAVELS on that cycle — a grind that ferries you across a gap
     | "pipe" // LEGACY straight halfpipe (old saves) — migration folds it into 'vertramp'
     | "vertramp" // THE VERT PART: one swept transition profile that covers quarter pipes, half pipes, bowl corners, whole pools and banked slide troughs. Straight along `len`/`yaw`, or drawn along `pts` (rail node convention, plus an optional 5th number = bank degrees). rise = transition radius, w = flat half-width, arc = degrees round the transition, deck = platform past the lip, closed = loop the spine, curve picks filleted corners or a spline, bank auto-leans into turns. Faces carry userData.vert unless `vert` is false.
-    | "crumble" // breakaway pad: p = top center, s = [w,-,d], shake = fall delay in seconds (0.02 = instant), speed = fall accel (default 30)
+    | "crumble" // breakaway pad: p = top center, s = [w,thickness,d], shake = warning seconds (default .85), speed = fall acceleration (default 30); resets at respawn
     | "pit" // death zone: touch = wipeout; p = center of the dark pool, s = [w,-,d], invisible = collider-only
     | "crate" // p = [x, deckY, z], kind picks the crate; outline = ghost until a '!' in its group is hit
     | "metal" // unbreakable steel crate: solid terrain, spin/slam-proof
@@ -685,9 +688,8 @@ export interface CustomComponent {
   p: [number, number, number];
   s?: [number, number, number];
   collisionHeight?: number; // wall/wallpath: optional collider height when visual height differs
-  slip?: boolean; // platform/mesh: an icy/slick deck (friction cut, you can't stop short)
-  // Slip only, 0.02..1: fraction of dry skate steering/braking/drive; scales
-  // legacy ice run response and rollout drag. Explicit values enable vector run inertia.
+  slip?: boolean; // supported ground primitive: shared ice visuals and vector inertia
+  // Slip only, 0.02..1: fraction of dry steering/braking/drive. Omitted = ICE_SURFACE.grip.
   iceGrip?: number;
   edgeGrinding?: boolean; // solid surface boundary grind paths (default true; false = explicit opt-out)
   trafficRoad?: boolean; // LEGACY only: removed by migration along with retired car enemies
@@ -924,6 +926,8 @@ export const TEX_KINDS = [
   "coast-bedrock",
   "coast-timber",
   "creek-raft",
+  "bridge-timber",
+  "ice",
   "coast-moss",
   "coast-stone",
   "treehouse-timber",
@@ -952,12 +956,9 @@ export interface CustomGroup {
 }
 
 // ---- TIME OF DAY ----------------------------------------------------------
-// One authored knob that swings the whole atmosphere: which painted skybox is
-// on the dome, what colour the world fades into, and how the lights are tinted
-// and scaled. The three presets share the same painting geometry (the images
-// are the same size with their horizon on the same row), so a switch is pure
-// colour — see SKY_PRESETS in main.ts, which owns the actual values.
-export const SKY_PRESETS = ["day", "sunset", "night", "coast"] as const;
+// Authored sky selection and shared lighting presets. Each painting declares
+// its own horizon geometry in levelAtmosphere.ts.
+export const SKY_PRESETS = ["day", "sunset", "night", "coast", "clouds"] as const;
 export type SkyPreset = (typeof SKY_PRESETS)[number];
 export const DEFAULT_SKY: SkyPreset = "sunset";
 export function asSkyPreset(v: unknown): SkyPreset {
@@ -2381,7 +2382,7 @@ export const BUILTIN_LEVELS: LevelEntry[] = [
   { id: "jungle-terraces", name: JUNGLE_TERRACES_LEVEL.name, data: JUNGLE_TERRACES_LEVEL },
   { id: "jungle-skyline", name: JUNGLE_SKYLINE_LEVEL.name, data: JUNGLE_SKYLINE_LEVEL },
   { id: "flats", name: "Flats & Pipes" }, // sky-deck runway opening into the transition yard
-  { id: "sky", name: "Sky Bridge" },
+  { id: "sky", name: "Sky Bridge", data: SKY_BRIDGE_LEVEL },
   { id: "slip", name: "The Slipstream" }, // banked ribbon slide high over the sea
   { id: "slipstream-2", name: SLIPSTREAM_2_LEVEL.name, data: SLIPSTREAM_2_LEVEL },
   {id:"test",name:CARLISLE_COAST_LEVEL.name,data:CARLISLE_COAST_LEVEL},
@@ -2933,9 +2934,12 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       if (typeof number === "number" && Math.abs(number) > MAX_ABS) return null;
     }
     if (
+      (component.slip === true && (!SLIPPERY_COMPONENT_TYPES.includes(component.t) ||
+        component.solid === false || component.materialStyle !== undefined)) ||
+      (component.t === "crumble" && ((component.shake ?? 0) < 0 || (component.speed ?? 30) <= 0)) ||
       (component.iceGrip !== undefined &&
         (component.iceGrip < 0.02 || component.iceGrip > 1 || component.slip !== true ||
-          !["platform", "mesh"].includes(component.t))) ||
+          !SLIPPERY_COMPONENT_TYPES.includes(component.t))) ||
       (component.axis !== undefined && !axes.has(component.axis)) ||
       (component.travelSign !== undefined &&
         ((component.travelSign !== 1 && component.travelSign !== -1) ||
@@ -3143,10 +3147,12 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       if (supportProbeCount * supportOverlapTriangles > MAX_TERRAIN_SUPPORT_TRIANGLE_TESTS ||
           supportProbeCount * supportGroundTriangles > MAX_TERRAIN_SUPPORT_RAW_TRIANGLES) return null;
     }
-    if((component.tex==='coast-timber'||component.tex==='creek-raft')&&['platform','crumble','mover'].includes(component.t)&&!component.pts){
+    if((['coast-timber','creek-raft','bridge-timber'].includes(component.tex??'')||
+      (component.t==='crumble'&&(!component.tex||component.tex==='wood'||component.tex==='plank')))&&
+      ['platform','crumble','mover'].includes(component.t)&&!component.pts){
       const depth=component.s?.[2]??(component.t==='platform'?8:component.t==='mover'?6:3);
       if(depth>MAX_PATH_LENGTH)return null;
-      aggregateSamples+=estimateCarlisleTimberWork(depth,component.t!=='platform');
+      aggregateSamples+=estimateCarlisleTimberWork(depth,component.t!=='platform'||component.tex==='bridge-timber');
     }
     if (aggregateSamples > MAX_GENERATED_SAMPLES) return null;
     // Polygon walls and spun slabs use the complete scanline collider below.
@@ -3543,6 +3549,21 @@ export function isOriginalCustardCreek(entry: LevelEntry): boolean {
   return pristine;
 }
 
+// Only exact previously published snapshots follow the new source. Any
+// authored geometry, metadata or name change keeps the player's local copy.
+export function isOriginalSkyBridge(entry: LevelEntry): boolean {
+  if (entry.id !== 'sky' || entry.name !== 'Sky Bridge' || entry.data?.components.length !== 48) return false;
+  const json = JSON.stringify(entry.data);
+  if (json.length !== 3560 && json.length !== 3602) return false;
+  let a = 2166136261, b = 2246822519;
+  for (let i=0; i<json.length; i++) {
+    a = Math.imul(a ^ json.charCodeAt(i), 16777619);
+    b = Math.imul(b ^ json.charCodeAt(i), 3266489917);
+  }
+  return (json.length === 3560 && (a >>> 0) === 2625946987 && (b >>> 0) === 4006427273) ||
+    (json.length === 3602 && (a >>> 0) === 3548812583 && (b >>> 0) === 3344214389);
+}
+
 /**
  * Built-ins first (in their fixed order), then user levels in the order they
  * were added. A built-in that has been EDITED is stored under its own id, and
@@ -3555,7 +3576,7 @@ export function levelList(): LevelEntry[] {
   const edited = new Map(user.map((l) => [l.id, l]));
   const out = BUILTIN_LEVELS.map((builtin) => {
     const override = edited.get(builtin.id);
-    if (!override || isOriginalTestCourse(override) || isOriginalCustardCreek(override)) return builtin;
+    if (!override || isOriginalTestCourse(override) || isOriginalCustardCreek(override) || isOriginalSkyBridge(override)) return builtin;
     // Early published copies mislabeled these campaign courses as bonuses.
     // Repair their presentation while retaining all locally edited geometry.
     if (override.data?.hudMode === "bonus" && PUZZLE_LEVELS.some(level => level.id === builtin.id))
@@ -4265,7 +4286,7 @@ export class Level {
     if (kind === "checker") return this.checkerTexture();
     const cached = this.surfTexCache.get(kind);
     if (cached) return cached;
-    if(kind==='coast-timber'||kind==='creek-raft')return this.surfaceTexture('wood');
+    if(['coast-timber','creek-raft','bridge-timber'].includes(kind))return this.surfaceTexture('wood');
     if(kind==='coast-terrain')return this.surfaceTexture('coast-bedrock');
     if(kind==='coast-turf'||kind==='coast-bedrock'){
       const file=kind==='coast-turf'?'turf':'sandstone';
@@ -4711,6 +4732,7 @@ export class Level {
     d: number,
     kind = "checker",
   ): THREE.MeshPhongMaterial {
+    if (kind === "ice") return createIceMaterial(mat);
     const m = this.surfaceMat(mat, kind);
     if (kind === "solid") {
       m.map = null;
@@ -5580,7 +5602,8 @@ export class Level {
       surface.active=active;
     }
   }
-  private staticSurfaceMaterials=new Map<string,THREE.MeshLambertMaterial|THREE.MeshStandardMaterial>();
+  private staticSurfaceMaterials=new Map<string,THREE.MeshLambertMaterial|THREE.MeshStandardMaterial|THREE.MeshPhongMaterial>();
+  private replacedSurfaceMaterials: THREE.Material[] = [];
   private readonly standingWaterClock={value:0};
   private jungleStreamReflections:JungleStreamReflectionOwner|null=null;
   private buildSurfaceMesh(c: CustomComponent, outlineGroups:number[]=[]): void {
@@ -5601,7 +5624,7 @@ export class Level {
     if (c.colors) geometry.setAttribute("color", new THREE.Float32BufferAttribute(c.colors, 3));
     geometry.computeBoundingBox();
     geometry.computeBoundingSphere();
-    let material: THREE.MeshLambertMaterial | THREE.MeshStandardMaterial;
+    let material: THREE.MeshLambertMaterial | THREE.MeshStandardMaterial | THREE.MeshPhongMaterial;
     const standingWater=isStandingWater(c);
     const jungleStream=c.materialStyle==='jungle-stream';
     if(jungleStream){
@@ -5644,6 +5667,7 @@ export class Level {
         material = sand;
       }
     } else if(isCastleTexture(c.tex))material=createCastleMaterial(c);
+    else if(c.tex==='ice')material=createIceMaterial();
     else material = new THREE.MeshLambertMaterial({
       color: c.color ?? "#ffffff", vertexColors: !!c.colors,
       emissive: c.emissive ?? "#000000", opacity: c.opacity ?? 1,
@@ -5695,8 +5719,6 @@ export class Level {
     }
     if (c.fog !== undefined) mesh.userData.authoredFog = c.fog;
     if (c.solid === false) { mesh.userData.visualOnly = true; mesh.userData.edgeGrinding = false; }
-    if (c.slip) mesh.userData.slippy = true;
-    if (c.iceGrip !== undefined) mesh.userData.iceGrip = c.iceGrip;
     if (c.beachSand) mesh.userData.beachSandFriction = true;
     if (c.edgeGrinding === false) mesh.userData.edgeGrinding = false;
     if (c.invisible) {
@@ -6098,8 +6120,8 @@ export class Level {
       const gp = (cr.mesh.geometry as THREE.BoxGeometry).parameters;
       C.push({
         t: "crumble",
-        p: [r2(cr.base.x), r2(cr.base.y + 0.25), r2(cr.base.z)],
-        s: [r2(gp.width), 1, r2(gp.depth)],
+        p: [r2(cr.base.x), r2(cr.base.y + gp.height / 2), r2(cr.base.z)],
+        s: [r2(gp.width), r2(gp.height), r2(gp.depth)],
         shake: r2(cr.shakeTime),
         speed: cr.fallSpeed !== 30 ? r2(cr.fallSpeed) : undefined,
         yaw: cr.yaw ? Math.round(THREE.MathUtils.radToDeg(cr.yaw)) : undefined,
@@ -6616,7 +6638,25 @@ export class Level {
     // tag every root child a component adds with that component's index
     const buildTagged = (idx: number, fn: () => void): void => {
       const before = this.root.children.length;
+      const groundBefore = this.groundMeshes.length;
       fn();
+      const surface = data.components[idx];
+      if (surface.slip || (surface.tex === 'ice' && !surface.materialStyle)) for (let g = groundBefore; g < this.groundMeshes.length; g++) {
+        const mesh = this.groundMeshes[g];
+        if (surface.slip) {
+          mesh.userData.slippy = true;
+          mesh.userData.iceGrip = surface.iceGrip ?? ICE_SURFACE.grip;
+          mesh.userData.edgeGrinding = false;
+        }
+        const old = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+        // Ice is the default appearance. An explicit alternate material can
+        // describe oil or another slick without changing the shared physics.
+        if (surface.tex === undefined || surface.tex === 'ice') {
+          mesh.geometry.computeBoundingBox();
+          mesh.material = createIceMaterial(old[0], mesh.geometry.boundingBox ?? undefined);
+          this.replacedSurfaceMaterials.push(...old);
+        }
+      }
       for (let c = before; c < this.root.children.length; c++) {
         this.root.children[c].traverse((o) => {
           o.userData.editorIdx = idx;
@@ -6770,8 +6810,6 @@ export class Level {
               c.p[2],
             );
             mesh.name = c.slip ? "slippy plank" : "platform";
-            if (c.slip) mesh.userData.slippy = true;
-            if (c.iceGrip !== undefined) mesh.userData.iceGrip = c.iceGrip;
             if (c.shoreProfile) {
               mesh.userData.shoreProfile = true;
               // Island Hopper's authored shore shelves are real beach sand.
@@ -6882,9 +6920,7 @@ export class Level {
             mesh.position.set(c.p[0], c.p[1], c.p[2]);
             mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0); // ride surface is raycast: free spin is fine
             mesh.name = c.slip ? "slippy plank" : "platform";
-            if (c.slip) mesh.userData.slippy = true; // friction cut: can't stop short
-            if (c.iceGrip !== undefined) mesh.userData.iceGrip = c.iceGrip;
-            if(c.tex==='coast-timber')dressCarlisleTimberDeck(mesh,c,false);
+            if(!c.slip&&(c.tex==='coast-timber'||c.tex==='bridge-timber'))dressCarlisleTimberDeck(mesh,c,c.tex==='bridge-timber');
             this.root.add(mesh);
             this.groundMeshes.push(mesh);
             // SIDE COLLISION: without it you clip into a thick platform's
@@ -7365,15 +7401,16 @@ export class Level {
               s[0],
               s[2],
               null,
-              c.shake ?? 0.7,
+              c.shake ?? FALL_AWAY_SURFACE.delay,
               col,
               c.yaw ?? 0,
               c.tex ?? "wood",
-              c.speed ?? 30,
+              c.speed ?? FALL_AWAY_SURFACE.acceleration,
               c.emissive,
+              s[1],
             );
-            if(c.dkind==="citydeck")this.dressCityMovingDeck(this.crumbles[this.crumbles.length-1].mesh,c,.5);
-            if(c.tex==='coast-timber')dressCarlisleTimberDeck(this.crumbles[this.crumbles.length-1].mesh,c,true);
+            if(c.dkind==="citydeck")this.dressCityMovingDeck(this.crumbles[this.crumbles.length-1].mesh,c,s[1]);
+            if(!c.slip&&c.dkind!=='citydeck'&&(!c.tex||['wood','plank','coast-timber','bridge-timber'].includes(c.tex)))dressCarlisleTimberDeck(this.crumbles[this.crumbles.length-1].mesh,c,true);
           } else if (c.t === "crate") {
             const gids = gameplayGroupChainOf(c, data);
             // sharing a group with a '!' switch ghosts the crate until the
@@ -7453,7 +7490,7 @@ export class Level {
               c.travelSign ?? 1,
             );
             if(c.dkind==="citydeck")this.dressCityMovingDeck(this.movers[this.movers.length-1].mesh,c,s[1]);
-            if(c.tex==='coast-timber'||c.tex==='creek-raft')dressCarlisleTimberDeck(this.movers[this.movers.length-1].mesh,c,true);
+            if(!c.slip&&['coast-timber','creek-raft','bridge-timber'].includes(c.tex??''))dressCarlisleTimberDeck(this.movers[this.movers.length-1].mesh,c,true);
             if(c.dkind==='ghostcart'){const cabin=this.ghostKit().cart(this.movers[this.movers.length-1].mesh,c,s[1]);this.groundMeshes.push(...cabin.support);this.walls.push(...cabin.walls);}
           } else if (c.t === "torch") {
             this.torch(c.p[0], c.p[1], c.p[2], c.rise ?? 2.2, c.w ?? 1);
@@ -7754,6 +7791,8 @@ export class Level {
       }
       x.dispose();
     };
+    this.replacedSurfaceMaterials.forEach(disposeMat);
+    this.replacedSurfaceMaterials.length = 0;
     this.root.traverse((o) => {
       if((o as THREE.Mesh).isMesh)disposeCarlisleTimberDeck(o as THREE.Mesh);
     });
@@ -8992,6 +9031,7 @@ export class Level {
       if (c.state === "idle") continue;
       c.t += dt;
       if (c.state === "shake") {
+        updateFallAwayWarning(c.mesh, Math.min(1, c.t / Math.max(.001, c.shakeTime)));
         c.mesh.position.x = c.base.x + Math.sin(c.t * 55) * 0.06;
         c.mesh.position.y = c.base.y - c.t * 0.25;
         if (c.t > c.shakeTime) {
@@ -9017,6 +9057,7 @@ export class Level {
         c.mesh.visible = true;
         c.mesh.position.copy(c.base);
         c.mesh.rotation.set(0, c.yaw, 0);
+        updateFallAwayWarning(c.mesh, 0);
       }
       c.mesh.updateWorldMatrix(true, false);
     }
@@ -9943,6 +9984,7 @@ export class Level {
       c.mesh.visible = true;
       c.mesh.position.copy(c.base);
       c.mesh.rotation.set(0, c.yaw, 0);
+      updateFallAwayWarning(c.mesh, 0);
     }
     // Phase pads come back solid and lit; their cycle is driven off level
     // time, which the reset rewinds, so they re-sync on their own from here.
@@ -14827,22 +14869,24 @@ export class Level {
     z: number,
     w: number,
     d: number,
-    regen: number | null = 3,
-    shakeTime = 0.35,
+    regen: number | null = null,
+    shakeTime: number = FALL_AWAY_SURFACE.delay,
     color = 0xa8845c,
     yawDeg = 0,
     tex = "wood",
-    fallSpeed = 30,
+    fallSpeed: number = FALL_AWAY_SURFACE.acceleration,
     emissive = "#000000",
+    thickness: number = FALL_AWAY_SURFACE.thickness,
   ): Crumble {
     const mesh = new THREE.Mesh(
-      new THREE.BoxGeometry(w, 0.5, d),
+      new THREE.BoxGeometry(w, thickness, d),
       this.patterned(new THREE.MeshLambertMaterial({ color, emissive }), w, d, tex),
     );
-    mesh.position.set(x, topY - 0.25, z);
+    mesh.position.set(x, topY - thickness / 2, z);
     mesh.rotation.y = THREE.MathUtils.degToRad(yawDeg); // stand-detection is the ground raycast: free spin is fine
     mesh.name = "crumble pad";
     mesh.userData.crumbleId = this.crumbles.length;
+    dressFallAwaySurface(mesh);
     this.root.add(mesh);
     this.groundMeshes.push(mesh);
     const c: Crumble = {
@@ -19190,128 +19234,10 @@ export class Level {
     this.finishGate(baseY, this.finishZ, 36);
   }
 
-  // SKY BRIDGE: a long, narrow plank bridge strung across an open sky with rope
-  // handrails running BOTH sides most of the way. Precision platforming — slick
-  // planks, planks that drop the instant you land (or a beat later), patrolling
-  // foes — and the twist: those side ropes are grindable, but they sag, wobble,
-  // and snap after a few seconds, so grinding the rail is a gamble. One misstep
-  // is a long way down.
+  // Sky Bridge uses the same editable component and surface pipeline as every
+  // source-authored course. Keep this fallback for native callers and tools.
   private buildSkyBridge(): void {
-    this.keepPlayFog = true; // the bridge itself must disappear into the cloud bank
-    this.killY = -22; // off the bridge = a fatal drop into the clouds
-    this.finishZ = -127; // gate on the goal deck
-    this.endWallZ = -400;
-    this.theme = {
-      skyTop: "#8fbfe6",
-      skyBottom: "#f2f6f8",
-      sunColorHex: "#fff4d8",
-      sunU: 0.6,
-      sunV: 0.2,
-      stars: false,
-      fog: 0xeef4f8, // the void below is bright cloud haze
-      // From the chase camera this leaves roughly 3–4 small planks readable.
-      fogNear: SKY_BRIDGE_FOG_NEAR,
-      fogFar: SKY_BRIDGE_FOG_FAR,
-      hemiSky: 0xdff0ff,
-      hemiGround: 0xb9c6cf,
-      hemiI: 1.25,
-      sunColor: 0xfff2d4,
-      sunI: 1.5,
-    };
-    const woodCol = 0xb98a52;
-    const iceCol = 0x9fc7de;
-    // A fixed board footprint keeps the bridge cramped: the deck is barely
-    // wider than Crash, so a slippy carry or a sloppy jump goes over the side.
-    const W = 2.6;
-    const plank = (z: number, d = 2, slippy = false, w = W): THREE.Mesh => {
-      const mesh = new THREE.Mesh(
-        new THREE.BoxGeometry(w, 0.5, d),
-        this.patterned(
-          new THREE.MeshLambertMaterial({ color: slippy ? iceCol : woodCol }),
-          w,
-          d,
-          "wood",
-        ),
-      );
-      mesh.position.set(0, -0.25, z);
-      mesh.name = slippy ? "slippy plank" : "plank";
-      if (slippy) mesh.userData.slippy = true;
-      this.root.add(mesh);
-      this.groundMeshes.push(mesh);
-      return mesh;
-    };
-    const breakOnLand = (z: number, d = 2): void =>
-      void this.crumblePad(0, 0, z, W, d, null, 0.02, 0xcf6a48);
-    const breakSoon = (z: number, d = 2): void =>
-      void this.crumblePad(0, 0, z, W, d, null, 0.7, 0xd0a24a);
-
-    // --- start deck ---------------------------------------------------------
-    plank(3, 9, false, 7); // wide safe landing to launch from
-    this.spawnPos.set(0, 0.1, 4);
-    this.currentSpawn.copy(this.spawnPos);
-
-    // --- section A: warm-up hops, then slick planks -------------------------
-    plank(-4);
-    plank(-8);
-    // gap
-    plank(-14, 2, true); // slippy trio: carry bleeds slow, so stop short or slide off
-    plank(-17.5, 2, true);
-    plank(-21, 2, true);
-    this.pickup(0, 1.2, -17.5);
-
-    // --- section B: drop planks ---------------------------------------------
-    plank(-27); // safe breather
-    breakOnLand(-31); // land + it's already gone — keep moving
-    breakOnLand(-34.5);
-    plank(-39, 4.6, false, 4.6); // a recovery deck with room to bank and line up
-    this.checkpoint(0, -39); // first checkpoint
-
-    // --- section C: enemy on a wide deck ------------------------------------
-    plank(-45, 5, false, 5); // wide enough to dodge on
-    this.enemy(-1.4, 1.4, 0, -45.5, 2.6, "x", "floater");
-    plank(-51);
-    breakSoon(-55); // stand a beat, then it drops
-    breakSoon(-58.5);
-
-    // --- section D: stepping-stone hops (grind the side ropes for a fast line)
-    plank(-63);
-    plank(-68, 1.6);
-    plank(-73, 1.6);
-    plank(-78, 1.6);
-    plank(-82, 4.6, false, 4.6); // recovery deck before the final mixed section
-    this.pickup(0, 1.2, -73);
-    this.checkpoint(0, -82);
-
-    // --- section E: everything at once --------------------------------------
-    plank(-88, 2, true); // slippy launch
-    breakOnLand(-92);
-    plank(-96, 5, false, 5);
-    this.enemy(-1.6, 1.6, 0, -96, 3, "x", "spiker");
-    breakSoon(-101);
-    plank(-105, 2, true);
-    plank(-110, 1.6);
-    breakSoon(-115);
-    plank(-120, 1.6);
-
-    // --- goal deck ----------------------------------------------------------
-    plank(-125, 8, false, 7);
-    this.pickup(0, 1.2, -125);
-    this.crystal(0, 0.6, -125);
-    this.finishGate(0, this.finishZ);
-
-    // --- SIDE ROPES: grindable handrails running the whole span, both sides.
-    // Segmented so each snaps on its own; they sag + wobble under a grinder and
-    // break after a few seconds — the safe-looking rail is a gamble.
-    const ropeY = 1.35; // the sag stays above the checkpoint and encounter decks
-    const ropeX = W / 2 + 0.5; // just outside the deck edge
-    // Longer segments (~24u) so a grinder is on ONE rope long enough for the
-    // ~3s snap to bite — linger and it drops you; zip across fast and you make it.
-    const zEdges = [-2, -26, -50, -74, -98, -122];
-    for (let s = 0; s < zEdges.length - 1; s++) {
-      for (const rx of [-ropeX, ropeX]) {
-        this.skyRope(rx, zEdges[s], rx, zEdges[s + 1], ropeY, 3.0, 0.65, 4);
-      }
-    }
+    this.buildCustom(JSON.parse(JSON.stringify(SKY_BRIDGE_LEVEL)) as CustomLevelData);
   }
 
   // ---- THE NIGHTWORKS: platforming in the dark ---------------------------

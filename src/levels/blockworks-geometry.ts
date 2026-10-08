@@ -175,7 +175,7 @@ export function emitRibbon(
       quad(ids[0], ids[1], ids[2], ids[3], outward);
     }
     components.push({ t: 'mesh', p: anchor, vertices, normals, indices,
-      vert: false, edgeGrinding: false, tex: 'solid', color: options.color ?? '#aeb4bb',
+      vert: false, edgeGrinding: false, tex: options.slip ? 'ice' : 'solid', color: options.color ?? '#aeb4bb',
       grp: options.grp, nm: options.name ?? 'Curved ground',
       ...(options.slip ? { slip: true } : {}),
       ...(options.iceGrip === undefined ? {} : { iceGrip: options.iceGrip }) });

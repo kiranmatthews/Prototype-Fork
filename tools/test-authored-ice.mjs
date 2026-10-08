@@ -40,7 +40,7 @@ try {
     }
     assert.equal(player.state, 'ride'); assert.equal(player.grounded, true);
   };
-  const ice = { slip: true, iceGrip: .08 }, legacy = { slip: true };
+  const ice = { slip: true, iceGrip: .08 }, legacy = { slip: true, iceGrip: 1 };
   // Both box and polygon capture paths must survive build/capture/build.
   for (const shape of [{}, { pts: [[-100, -100], [100, -100], [100, 100], [-100, 100]] }]) {
     const authored = normalizeCustomLevelData(data({ ...ice, ...shape }));
@@ -58,7 +58,7 @@ try {
     assert.equal(normalizeCustomLevelData(data({ slip: true, iceGrip })), null);
   for (const iceGrip of [.02, .08, 1]) assert.ok(normalizeCustomLevelData(data({ slip: true, iceGrip })));
   assert.equal(normalizeCustomLevelData(data({ iceGrip: .08 })), null, 'dry materials cannot silently become ice');
-  assert.equal(normalizeCustomLevelData(data({ t: 'ramp', slip: true, iceGrip: .08 })), null);
+  assert.ok(normalizeCustomLevelData(data({ t: 'ramp', slip: true, iceGrip: .08 })));
 
   const momentum = [];
   for (const patch of [legacy, ice]) {
@@ -68,7 +68,7 @@ try {
     tick(f, { moveX: 0, moveY: 0 });
     momentum.push(f.player.walkVelocity.clone());
   }
-  assert.ok(momentum[0].length() < .3, 'legacy release changed');
+  assert.ok(momentum[0].length() < .3, 'full-grip release changed');
   assert.ok(momentum[1].x > 2.9 && -momentum[1].z > 4.4, 'authored ice did not carry both velocity axes');
 
   const steer = [];
@@ -100,7 +100,7 @@ try {
   const turnOld = board(legacy, { moveX: 1, moveY: 0 });
   const turnNew = board(ice, { moveX: 1, moveY: 0 });
   assert.ok(turnNew.turn > 0 && turnNew.turn < turnOld.turn * .4, 'board steering did not respect authored grip');
-  console.log('PASS authored vector ice inertia, counter-steer, skate coast/brake/steer, legacy behavior and box/mesh capture');
+  console.log('PASS authored vector ice inertia, counter-steer, skate coast/brake/steer, explicit grip range and box/mesh capture');
   console.log(JSON.stringify({ runAfter1s: momentum.map(v => v.toArray()), steerAfterHalfSecond: steer.map(v => v.toArray()), coastOld, coastNew, brakeOld, brakeNew, pullbackOld, pullbackNew, turnOld, turnNew }));
 } finally {
   for (const level of levels) level.dispose();

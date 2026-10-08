@@ -1,0 +1,649 @@
+{
+  "base": "http://127.0.0.1:5199",
+  "errors": [],
+  "route": {
+    "frames": 1650,
+    "jumps": 22,
+    "ice": [
+      3,
+      14,
+      21
+    ],
+    "falling": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "states": [
+      "ride",
+      "air",
+      "finished"
+    ],
+    "finish": true,
+    "dead": false,
+    "trace": [
+      {
+        "p": [
+          0,
+          0,
+          3.1300000000000012
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          0,
+          0,
+          -1.1499999999999988
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          0,
+          2.2297222222222204,
+          -5.650000000000001
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          0,
+          1.191944444444444,
+          -10.150000000000011
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          0,
+          0,
+          -14.650000000000022
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          0,
+          2.115555555555554,
+          -19.149999999999995
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          0,
+          1.1920928910669204e-08,
+          -23.649999999999952
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          0,
+          1.1920928910669204e-08,
+          -28.14999999999991
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          0,
+          1.1920928910669204e-08,
+          -32.64999999999987
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          0,
+          2.019722234143149,
+          -37.14999999999983
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          0,
+          0,
+          -41.649999999999785
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          0,
+          2.288888888888887,
+          -46.14999999999974
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          0,
+          -0.05416666666666664,
+          -50.6499999999997
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          0,
+          2.1463888888888873,
+          -55.14999999999966
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          0,
+          -0.07500000000000001,
+          -59.649999999999615
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          0,
+          1.9280555555555536,
+          -64.14999999999958
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          0,
+          0,
+          -67.49000000000005
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          0,
+          0,
+          -71.99000000000022
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          0,
+          2.004166666666665,
+          -76.49000000000039
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          -0.6542854463806619,
+          0,
+          -80.10574293632821
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          -0.6542854463806619,
+          1.0491666666666664,
+          -84.60574293632838
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          -0.6542854463806619,
+          0,
+          -89.10574293632855
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          -0.6542854463806619,
+          0.45333333333333325,
+          -93.60574293632872
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          -0.6542854463806619,
+          0.6574999999999969,
+          -98.1057429363289
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          -0.6542854463806619,
+          -0.11249999999999999,
+          -102.60574293632907
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          -0.6542854463806619,
+          1.1644444444444422,
+          -107.10574293632924
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          -0.49,
+          0.5658333333333332,
+          -111.6057429363294
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          -0.49,
+          0.3727777777777748,
+          -116.10574293632958
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          -0.49,
+          1.1920928910669204e-08,
+          -120.60574293632975
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          -0.49,
+          1.1920928910669204e-08,
+          -125.10574293632992
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          -0.49,
+          0.5658333452542621,
+          -129.60574293633007
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          -0.49,
+          0.44777778969870413,
+          -134.10574293633024
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          -0.49,
+          0,
+          -138.60574293633042
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          -0.49,
+          0,
+          -143.10574293633059
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          -0.49,
+          1.276944444444442,
+          -147.60574293633076
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          -0.49,
+          1.5652777777777769,
+          -152.10574293633093
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          -0.49,
+          0,
+          -156.6057429363311
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          -0.49,
+          2.064444444444443,
+          -161.10574293633127
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          -0.49,
+          -0.041666666666666685,
+          -165.60574293633144
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          -0.49,
+          1.9644444444444433,
+          -170.1057429363316
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          -0.49,
+          0,
+          -174.60574293633178
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          -0.49,
+          1.0491666666666664,
+          -179.10574293633195
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          -0.49,
+          1.1920928910669204e-08,
+          -183.60574293633212
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          -0.49,
+          1.1920928910669204e-08,
+          -188.1057429363323
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          -0.49,
+          1.1920928910669204e-08,
+          -192.60574293633246
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          -0.49,
+          1.565277789698706,
+          -197.10574293633263
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          -0.49,
+          0,
+          -201.6057429363328
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          -0.49,
+          0,
+          -206.10574293633297
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          -0.49,
+          1.85611111111111,
+          -210.60574293633314
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          -0.49,
+          -0.033333333333333326,
+          -215.10574293633331
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          -0.49,
+          1.7519444444444434,
+          -219.60574293633348
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          -0.49,
+          -0.033333333333333326,
+          -224.10574293633366
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          -0.49,
+          1.4486111111111106,
+          -228.60574293633383
+        ],
+        "state": "air",
+        "grounded": false
+      },
+      {
+        "p": [
+          -0.49,
+          0,
+          -233.105742936334
+        ],
+        "state": "ride",
+        "grounded": true
+      },
+      {
+        "p": [
+          -0.49,
+          0.7266666691501935,
+          -237.60574293633417
+        ],
+        "state": "finished",
+        "grounded": true
+      }
+    ],
+    "position": [
+      -0.49,
+      0.7266666691501935,
+      -237.60574293633417
+    ],
+    "checkpoints": [
+      true,
+      true,
+      true
+    ]
+  },
+  "collapse": {
+    "state": "fall",
+    "grounded": false,
+    "warning": true,
+    "respawn": {
+      "position": [
+        0,
+        0,
+        5
+      ],
+      "allRestored": true
+    }
+  },
+  "checkpoint": {
+    "position": [
+      0,
+      0.1,
+      -67
+    ],
+    "active": true
+  },
+  "iceRelease": {
+    "before": {
+      "z": -22.249583512964453,
+      "speed": 0.9941338615860292
+    },
+    "after": {
+      "z": -22.82534161810507,
+      "speed": 0.7506107959676392,
+      "ice": true
+    },
+    "carry": 0.5757581051406184
+  },
+  "full": {
+    "sky": "clouds",
+    "stamp": "Codex/sol fork \u00b7 build 10-08 01:13 UTC",
+    "calls": 344,
+    "triangles": 471772,
+    "textures": 47,
+    "geometries": 145,
+    "fog": {
+      "near": 12,
+      "far": 64,
+      "color": "eef4f6"
+    }
+  },
+  "compatibility": {
+    "results": [
+      {
+        "id": "codex-lab",
+        "actual": "codex-lab",
+        "spawnSupported": true,
+        "slippery": 5,
+        "iceMaterials": 5,
+        "grips": [
+          0.08
+        ],
+        "falling": 0,
+        "warningOwned": true,
+        "oilMaterials": []
+      },
+      {
+        "id": "custard-creek",
+        "actual": "custard-creek",
+        "spawnSupported": true,
+        "slippery": 0,
+        "iceMaterials": 0,
+        "grips": [],
+        "falling": 15,
+        "warningOwned": true,
+        "oilMaterials": []
+      },
+      {
+        "id": "descent",
+        "actual": "descent",
+        "spawnSupported": true,
+        "slippery": 10,
+        "iceMaterials": 0,
+        "grips": [
+          0.12
+        ],
+        "falling": 0,
+        "warningOwned": true,
+        "oilMaterials": [
+          "MeshLambertMaterial",
+          "MeshLambertMaterial",
+          "MeshLambertMaterial",
+          "MeshLambertMaterial",
+          "MeshLambertMaterial",
+          "MeshLambertMaterial",
+          "MeshLambertMaterial",
+          "MeshLambertMaterial",
+          "MeshLambertMaterial",
+          "MeshLambertMaterial"
+        ]
+      }
+    ],
+    "errors": []
+  },
+  "checks": [
+    "check:surfaces",
+    "check:levels",
+    "build",
+    "editor material fidelity",
+    "185 level security checks",
+    "Blockworks ice traversal",
+    "loaded rope and checkpoint placement",
+    "Sky Bridge recovery jump and loaded rope traversal",
+    "439 editor atmosphere checks",
+    "editor surface controls",
+    "idle rope lifecycle"
+  ],
+  "fullSuiteRun": false
+}

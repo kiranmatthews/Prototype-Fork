@@ -18,19 +18,19 @@ const cases=[
  {name:'blockworks-lift-bypass',id:'codex-lab',start:m.routePoint(1320,8.55,0),run:r=>ride(r,'Machinery high line · rising S grind')},
  {name:'coastal-stair-bypass',id:'coastal-street-run',start:[-2.3,7.12,-1391],run:r=>ride(r,'street rail 8')},
  {name:'coastal-final-rail',id:'coastal-street-run',start:[2.3,7.12,-2849],run:r=>ride(r,'street rail 14')},
- {name:'sky-recovery-hop',id:'sky',start:[0,.12,-37.4],run:r=>{
+ {name:'sky-recovery-hop',id:'sky',start:[0,.12,-64.8],run:r=>{
    r.stepFor(20);const cp=r.l.checkpoints[0];
    r.until(()=>cp.active,(_r,i)=>({moveY:.25,spinHeld:i%30<2}),{maxFrames:180,label:'bank widened recovery deck'});
-   r.walkTo([0,0,-40.5],{pace:.22,arrivalTolerance:.3});
-   r.jumpTo([0,0,-44.5],{airButtons:{spinHeld:true},arrivalTolerance:2,heightTolerance:.2});
+   r.walkTo([0,0,-73.2],{pace:.22,arrivalTolerance:.3});
+   r.jumpTo([0,0,-79.5],{airButtons:{spinHeld:true},arrivalTolerance:2,heightTolerance:.2});
    assert.equal(r.p.totalDeaths,0);assert.ok(r.p.grounded);return{checkpoint:true,landing:r.p.pos.toArray()};
  }},
- {name:'sky-loaded-rope',id:'sky',start:[1.8,.12,-83],run:r=>{
+ {name:'sky-loaded-rope',id:'sky',start:[2.65,.12,-139],run:r=>{
    r.stepFor(20);r.charge();r.releaseJump({moveY:.5});
    r.until(()=>r.p.pos.y>1.65,{moveY:.5},{maxFrames:60,label:'jump clear of the deck edge'});
    r.until(()=>r.p.state==='grind',{moveY:.6,grindHeld:true},{maxFrames:90,label:'catch sky rope from recovery deck'});
    assert.ok(r.l.ropes.some(rope=>rope.rail===r.p.grindRail),'catch the actual rope');
-   r.until(()=>r.p.pos.z<-94,()=>balance(r),{maxFrames:400});assert.equal(r.p.state,'grind');assert.equal(r.p.totalDeaths,0);
+   r.until(()=>r.p.pos.z<-151,()=>balance(r),{maxFrames:400});assert.equal(r.p.state,'grind');assert.equal(r.p.totalDeaths,0);
    return{position:r.p.pos.toArray(),state:r.p.state};
  }},
  {name:'switchyard-reward-finish',id:'switchyard',start:[212,4.12,0],run:r=>{

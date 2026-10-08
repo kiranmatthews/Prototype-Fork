@@ -1,4 +1,4 @@
-import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
+import type { CustomComponent, CustomGroup, CustomLevelData, SkyPreset } from '../level';
 
 /** Original compact rooms based on PLATFORMER_PUZZLE_RESEARCH.md. The kit
  * shares measured movement dimensions; each parent authors its own sequence. */
@@ -6,7 +6,7 @@ export type BonusPattern = 'upper' | 'finite' | 'bridge' | 'return' | 'fuse' | '
 type Kind = NonNullable<CustomComponent['kind']>;
 export interface BonusStyle {
   color: string; accent: string; tex: string;
-  sky: 'day' | 'sunset' | 'night' | 'coast'; jungleAtmosphere?: boolean;
+  sky: SkyPreset; jungleAtmosphere?: boolean;
 }
 export interface BonusRoomCrate { role: string; x: number; y: number; kind: Kind; name: string }
 export interface BonusRoom {

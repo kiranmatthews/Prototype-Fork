@@ -25,6 +25,7 @@
     "check:landing-x": "node tools/validate-landing-indicator.mjs",
     "check:run-facing": "node tools/test-run-facing.mjs && node tools/test-locomotion-replays.mjs && node tools/test-locomotion-idle.mjs && node tools/test-run-inertia-presentation.mjs && node tools/test-idle-recovery-charge.mjs && node tools/test-world-map-locomotion.mjs",
     "check:carve-grip": "node tools/test-carve-grip.mjs",
+    "check:surfaces": "node tools/test-surface-behavior.mjs && node tools/test-authored-ice.mjs && node tools/test-surface-friction.mjs",
     "check:surface-friction": "node tools/test-surface-friction.mjs",
     "check:camera-speed": "node tools/test-camera-speed-effect.mjs && node tools/test-camera-look.mjs && node tools/test-camera-rig.mjs && node tools/test-camera-portrait.mjs",
     "check:bail-recovery": "node tools/test-ragdoll-recovery.mjs && node tools/test-break-apart.mjs && node tools/test-wipeout-policy.mjs",

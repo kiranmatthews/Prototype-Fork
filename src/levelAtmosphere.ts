@@ -143,6 +143,13 @@ export interface SkyPresetDef {
   farPlane?: number;
 }
 export const SKY_PRESETS: Record<SkyPreset, SkyPresetDef> = {
+  clouds: {
+    file: 'sky-bridge/cloud-sea.webp', label: 'cloud sea', fog: 0xeef4f6, fogFarCap: 160,
+    sunTint: 0xfff3dc, sunK: .5, sunMul: 1, groundTint: 0x99a7b2, groundK: .5,
+    hemiTint: 0xe3f4ff, hemiK: .5, hemiMul: 1, fillTint: 0xc5e5f4, fillK: .5, fillMul: .3,
+    top: '#d4e7f1', bottom: '#f4f6f5', stars: false, sunHex: null,
+    imgH: 887, horizonPx: 455,
+  },
   // Bright and open: neutral key, cool skylight, air you can see a long way
   // through. The haze is the pale blue-white of the cloud sea at noon.
   day: {

@@ -1,3 +1,4 @@
+import { surfaceGrip } from './surfaceBehavior';
 import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';
 import { LOOP_TURN, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';
 import { sampleTeeterMotion, probeTeeterEdge } from './teeterMotion';
@@ -469,7 +470,7 @@ interface GroundHit {
   moverId?: number; // standing on a moving platform: ride along with it
   crumbleId?: number; // standing on a crumble pad: it starts breaking
   slippy?: boolean; // an icy/slick plank: friction cut so you skate on and can't stop short
-  iceGrip?: number; // authored multiplier; absent retains the original ice controls
+  iceGrip?: number; // authored multiplier; absence uses the shared surface default
   vert?: boolean; // AUTHORED transition face: the level says "this is vert", overriding the normal.y guesswork
   finishPad?: boolean; // the warp pad's masonry: standing on it ends the run
   halfpipe?: Halfpipe; // the transition wall we're on (drives the pendulum + coping launch)
@@ -6213,22 +6214,10 @@ export class Player {
         this.walkVelocity.set(0, 0, 0);
         this.walkTurnaround = false;
         this.walkIntent.set(0, 0, 0);
-      } else if (slickWalk && this.groundHit?.iceGrip !== undefined) {
+      } else if (slickWalk) {
         // Authored ice carries the entire approach vector through release and
         // steering. Counter-steer early; sideways input cannot erase inertia.
         this.walkVelocity.lerp(this.walkTarget, Math.min(1, CONST.slipAccel * iceGrip * dt));
-        this.walkTurnaround = false;
-        this.walkIntent.set(0, 0, 0);
-      } else if (slickWalk) {
-        // Preserve the established ice rule: eased along-course velocity and
-        // direct lateral drive. Ordinary dry ground owns the new release coast.
-        const previousForward = this.walkVelocity.dot(this.axisF);
-        const response = Math.min(1, CONST.slipAccel * dt);
-        const forward = previousForward + (targetForward - previousForward) * response;
-        this.walkVelocity
-          .copy(this.axisF)
-          .multiplyScalar(forward)
-          .addScaledVector(this.axisL, targetLateral);
         this.walkTurnaround = false;
         this.walkIntent.set(0, 0, 0);
       } else if (!walkDir) {
@@ -6361,7 +6350,7 @@ export class Player {
         if (this.grounded && this.groundHit && this.groundHit.slippy)
           this.greaseT = 0.35;
         else this.greaseT = Math.max(0, this.greaseT - dt);
-        const slick = this.groundHit?.slippy && this.groundHit.iceGrip !== undefined
+        const slick = this.groundHit?.slippy
           ? iceGrip : this.greaseT > 0 ? 0.22 : 1; // authored grip is relative to dry steering
         this.iceSkateSteering = 0;
         const rx = this.rawInput.moveX;
@@ -8714,10 +8703,10 @@ export class Player {
     else resetVertBoardRelease(this.vertBoardRelease);
   }
 
-  // Extra grip is opt-in: old Sky Bridge ice and every ordinary material keep
-  // their established response. Read contact so dry exit pads restore control.
+  // One surface policy for native, source and editor-authored ice.
+  // Read the current contact so dry exit pads restore ordinary control.
   private authoredIceGrip(): number {
-    return this.groundHit?.slippy ? this.groundHit.iceGrip ?? 1 : 1;
+    return surfaceGrip(this.groundHit);
   }
 
   // BASELINE CRUISE: while free-skating the board holds cruiseSpeed on its
@@ -17885,7 +17874,7 @@ export class Player {
         (this.groundHit?.normal.y ?? 0) > .9 && this.competitionFinishT < 0 &&
         !this.resultsPose && this.worldMapBaseScale === null && !this.playerAnimationBridge.previewActive,
       onIce: this.groundHit?.slippy === true,
-      speed: this.speed, grip: this.groundHit?.iceGrip ?? .22,
+      speed: this.speed, grip: surfaceGrip(this.groundHit),
       steering: this.iceSkateSteering * this.stance / (Math.PI / 2), braking: input.grabHeld || this.brakeT > .05,
     });
     if (iceSkate) {
