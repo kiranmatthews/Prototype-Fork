@@ -6,6 +6,7 @@ const root = fileURLToPath(new URL('../../desktop/release/', import.meta.url));
 const names = (await readdir(root)).filter(name => /\.(?:dmg|zip|exe|AppImage|tar\.gz)$/.test(name)).sort();
 if (!names.length) throw new Error('No distributable artifacts found');
 const lines = [];
+const targetArch = process.env.BONEMAN_TARGET_ARCH || process.arch;
 for (const name of names) lines.push(createHash('sha256').update(await readFile(path.join(root, name))).digest('hex') + '  ' + name);
-await writeFile(path.join(root, 'SHA256SUMS-' + process.platform + '-' + process.arch + '.txt'), lines.join('\n') + '\n');
+await writeFile(path.join(root, 'SHA256SUMS-' + process.platform + '-' + targetArch + '.txt'), lines.join('\n') + '\n');
 console.log(lines.join('\n'));

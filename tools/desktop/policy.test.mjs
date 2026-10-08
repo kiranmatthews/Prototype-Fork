@@ -1,6 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, writeFile, rm } from 'node:fs/promises';
+import { mkdtemp, mkdir, copyFile, readFile, readdir, writeFile, rm } from 'node:fs/promises';
+import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import policy from '../../desktop/policy.cjs';
@@ -55,4 +57,25 @@ test('active runtime assets and licenses survive the smaller desktop bundle', ()
   for (const file of ['fonts/roo-bonus-v9.png', 'fonts/roo-image-font-v10.zip', 'sw.js', 'release.json',
     'offline-save.html', 'update-game.html', 'provenance/source.glb'])
     assert.equal(keepAsset(file, versions), false, file);
+});
+
+
+test('cross-architecture checksum manifests can coexist in a release', async () => {
+  const root = await mkdtemp(path.join(tmpdir(), 'boneman-checksums-'));
+  try {
+    const scripts = path.join(root, 'tools', 'desktop');
+    const artifacts = path.join(root, 'desktop', 'release');
+    await mkdir(scripts, {recursive:true}); await mkdir(artifacts, {recursive:true});
+    const script = path.join(scripts, 'checksums.mjs');
+    await copyFile(new URL('./checksums.mjs', import.meta.url), script);
+    const payload = Buffer.from('offline release fixture');
+    await writeFile(path.join(artifacts, 'BONEMAN-test.zip'), payload);
+    for (const target of ['arm64', 'x64']) execFileSync(process.execPath, [script], {
+      env:{...process.env, BONEMAN_TARGET_ARCH:target}, timeout:10000,
+    });
+    const names = (await readdir(artifacts)).filter(name => name.startsWith('SHA256SUMS')).sort();
+    assert.deepEqual(names, ['arm64','x64'].map(target => `SHA256SUMS-${process.platform}-${target}.txt`));
+    const expected = createHash('sha256').update(payload).digest('hex') + '  BONEMAN-test.zip\n';
+    for (const name of names) assert.equal(await readFile(path.join(artifacts, name), 'utf8'), expected);
+  } finally { await rm(root, {recursive:true, force:true}); }
 });
