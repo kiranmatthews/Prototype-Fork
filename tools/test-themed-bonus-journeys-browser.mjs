@@ -2,10 +2,12 @@
 // the headless checks. No warps or live physics/collectible-state edits.
 import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=process.argv[2]||'http://127.0.0.1:5343/';
 const source=process.env.BONUS_PILOT_SOURCE||base;
-const output=process.env.BONUS_JOURNEY_OUTPUT||'/private/tmp/bonus-journeys-full';
+const output=process.env.BONUS_JOURNEY_OUTPUT||join(tmpdir(),'bonus-journeys-full');
 const selected=process.env.BONUS_JOURNEY_LEVELS?.split(',');
 await mkdir(output,{recursive:true});
 const browser=await chromium.launch({headless:true,channel:'chrome'}),rows=[];

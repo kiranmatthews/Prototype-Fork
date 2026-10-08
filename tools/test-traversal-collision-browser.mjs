@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=process.argv[2]||'http://127.0.0.1:5345/';
-const output=process.env.TRAVERSAL_COLLISION_OUTPUT||'/private/tmp/traversal-collision-browser';
+const output=process.env.TRAVERSAL_COLLISION_OUTPUT||join(tmpdir(),'traversal-collision-browser');
 await mkdir(output,{recursive:true});
 const browser=await chromium.launch({headless:true,channel:'chrome'}),errors=[],rows=[];
 try{

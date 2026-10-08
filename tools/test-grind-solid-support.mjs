@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
-import {writeFile} from 'node:fs/promises';
+import {mkdir,writeFile} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {dirname,join} from 'node:path';
 import {withSkateRuntime,makeInput} from './jungle-cup-harness.mjs';
 
 const results=[];
@@ -46,5 +48,7 @@ await withSkateRuntime(async({THREE,Level,Player,CONST,server})=>{
   l.dispose();if(obstacle){obstacle.geometry.dispose();obstacle.material.dispose();}
  }
 });
-await writeFile(process.env.GRIND_SOLID_OUTPUT||'/private/tmp/grind-solid-support.json',JSON.stringify(results,null,2));
+const output=process.env.GRIND_SOLID_OUTPUT||join(tmpdir(),'grind-solid-support.json');
+await mkdir(dirname(output),{recursive:true});
+await writeFile(output,JSON.stringify(results,null,2));
 console.log(`PASS ${results.length} moving-rock rail approaches: accepted catch support, both directions/yaws, independent walls and restored airborne collision.`);
