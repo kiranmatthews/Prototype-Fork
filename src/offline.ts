@@ -10,6 +10,7 @@ export const OFFLINE_STATUS_EVENT = 'solProtoOfflineChanged';
 export function gameUpdateAvailable(): boolean { return gameUpdate; }
 
 export function offlineStatusText(): string {
+  if (import.meta.env.VITE_DESKTOP === 'true') return 'Offline desktop · all game content is installed.';
   if (!import.meta.env.PROD) return '';
   if (gameUpdate) return 'A new game version is available. Update from Home; saves and custom levels are kept.';
   if (state.phase === 'unsupported') return 'Offline play is unavailable in this browser.';
@@ -20,6 +21,7 @@ export function offlineStatusText(): string {
   return '';
 }
 export async function openOfflineSave(): Promise<void> {
+  if (import.meta.env.VITE_DESKTOP === 'true') return;
   // Replace, rather than retain a full game behind the downloader in history.
   // This action appears only on Home, where no run is in progress.
   const {sfx}=await import('./audio');
@@ -32,6 +34,7 @@ export async function openOfflineSave(): Promise<void> {
   window.location.replace(`${import.meta.env.BASE_URL}offline-save.html?v=${Date.now()}`);
 }
 export async function openGameUpdate(): Promise<void> {
+  if (import.meta.env.VITE_DESKTOP === 'true') return;
   const {sfx}=await import('./audio');
   await sfx.prepareToLeave();
   const {presentationAssets}=await import('./presentationLoading');
@@ -60,6 +63,7 @@ function requestStatus(): void {
 }
 /** The game checks lightweight updates; full-release saving belongs to its own page. */
 export function startOfflineCache(): void {
+  if (import.meta.env.VITE_DESKTOP === 'true') return;
   if (!import.meta.env.PROD) return;
   void checkGameUpdate();
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)void checkGameUpdate();});

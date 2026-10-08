@@ -315,7 +315,7 @@ export class UI {
     directory.textContent = "ALL LABS & TOOLS ↗";
     directory.href = new URL(`${import.meta.env.BASE_URL}labs/`, location.href).href;
     directory.style.cssText = "display:block;text-align:center;text-decoration:none;margin-bottom:10px";
-    statsWrap.appendChild(directory);
+    if (import.meta.env.VITE_DESKTOP !== 'true') statsWrap.appendChild(directory);
 
     // LEVEL LIST. Re-rendered (not built once) because the list grows at
     // runtime: NEW, IMPORT, editing a built-in copy, and RESTORE FROM CLOUD
@@ -412,7 +412,7 @@ export class UI {
     // whole level list with the published one: the setup tap for a new phone,
     // and the escape hatch for a device that has drifted. Two taps, because it
     // discards local levels and a fat-fingered scroll must not be enough.
-    const RESYNC_LABEL = "⟲ RESTORE LEVELS FROM CLOUD";
+    const RESYNC_LABEL = import.meta.env.VITE_DESKTOP === 'true' ? "⟲ RESTORE BUNDLED LEVELS" : "⟲ RESTORE LEVELS FROM CLOUD";
     const resyncBtn = document.createElement("button");
     resyncBtn.className = "hud-levelbtn hud-editbtn";
     resyncBtn.textContent = RESYNC_LABEL;
@@ -1856,10 +1856,10 @@ export class UI {
     const st = this.provideEditState ? this.provideEditState() : null;
     const unlocked = st ? st.unlocked : this.editUnlocked;
     this.editUnlocked = unlocked;
-    this.tokenRow.style.display = unlocked ? "" : "none";
-    this.pushRow.style.display = unlocked ? "" : "none";
+    this.tokenRow.style.display = unlocked && import.meta.env.VITE_DESKTOP !== 'true' ? "" : "none";
+    this.pushRow.style.display = unlocked && import.meta.env.VITE_DESKTOP !== 'true' ? "" : "none";
     this.unlockRow.style.display = unlocked ? "none" : "";
-    if (unlocked && st) {
+    if (unlocked && st && import.meta.env.VITE_DESKTOP !== 'true') {
       const n = st.userCount;
       this.pushRow.querySelector("button")!.textContent =
         `☁ SYNC MY ${n} LEVEL${n === 1 ? "" : "S"} UP`;

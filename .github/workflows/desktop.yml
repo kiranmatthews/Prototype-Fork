@@ -1,0 +1,148 @@
+name: Offline desktop distribution
+
+on:
+  workflow_dispatch:
+    inputs:
+      release:
+        description: Sign and notarize an immutable desktop-vX.Y.Z tag, then create a draft GitHub release
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: desktop-${{ github.ref }}-${{ inputs.release }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-15
+            platform: mac
+            arch: arm64
+          - os: macos-15-intel
+            platform: mac
+            arch: x64
+          - os: windows-2025
+            platform: win
+            arch: x64
+          - os: ubuntu-22.04
+            platform: linux
+            arch: x64
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    env:
+      BONEMAN_BUILD_ID: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            desktop/package-lock.json
+      - run: npm ci
+      - run: npm --prefix desktop ci
+      - name: Require matching tag and release credentials
+        if: inputs.release
+        run: node tools/desktop/release-preflight.mjs
+        env:
+          CSC_LINK: ${{ runner.os == 'Windows' && secrets.WINDOWS_CERTIFICATE || secrets.MACOS_CERTIFICATE }}
+          CSC_KEY_PASSWORD: ${{ runner.os == 'Windows' && secrets.WINDOWS_CERTIFICATE_PASSWORD || secrets.MACOS_CERTIFICATE_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      - name: Focused offline and rendering checks
+        run: |
+          npm run check:desktop
+          npm run check:offline
+          node tools/test-game-update.mjs
+          npm run check:renderer
+      - run: npm run build:desktop
+      - name: Real offline renderer smoke
+        if: runner.os != 'Linux'
+        run: npm run desktop:smoke
+      - name: Real offline renderer smoke (Linux display)
+        if: runner.os == 'Linux'
+        run: xvfb-run -a npm run desktop:smoke
+      - name: Build unsigned candidate
+        if: ${{ !inputs.release }}
+        run: npm --prefix desktop run dist -- --${{ matrix.platform }} --${{ matrix.arch }}
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+      - name: Build signed distribution
+        if: inputs.release
+        run: npm --prefix desktop run release -- --${{ matrix.platform }} --${{ matrix.arch }} -c.forceCodeSigning=${{ runner.os != 'Linux' }}
+        env:
+          CSC_LINK: ${{ runner.os == 'Windows' && secrets.WINDOWS_CERTIFICATE || secrets.MACOS_CERTIFICATE }}
+          CSC_KEY_PASSWORD: ${{ runner.os == 'Windows' && secrets.WINDOWS_CERTIFICATE_PASSWORD || secrets.MACOS_CERTIFICATE_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      - run: node tools/desktop/check-package.mjs
+      - name: Packaged application smoke
+        if: runner.os != 'Linux'
+        run: node tools/desktop/packaged-smoke.mjs
+      - name: Packaged application smoke (Linux display)
+        if: runner.os == 'Linux'
+        run: xvfb-run -a node tools/desktop/packaged-smoke.mjs
+      - name: Verify signed and stapled macOS application
+        if: inputs.release && runner.os == 'macOS'
+        shell: bash
+        run: |
+          APP=$(find desktop/release -maxdepth 2 -name BONEMAN.app -type d -print -quit)
+          codesign --verify --deep --strict --verbose=2 "$APP"
+          xcrun stapler validate "$APP"
+          spctl --assess --type execute --verbose=2 "$APP"
+      - name: Verify Windows installer signature
+        if: inputs.release && runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Get-ChildItem desktop/release/BONEMAN-*.exe | ForEach-Object {
+            if ((Get-AuthenticodeSignature $_.FullName).Status -ne 'Valid') { throw 'Installer signature is not valid' }
+          }
+      - run: node tools/desktop/checksums.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: boneman-installer-${{ matrix.platform }}-${{ matrix.arch }}
+          if-no-files-found: error
+          compression-level: 0
+          path: |
+            desktop/release/BONEMAN-*.dmg
+            desktop/release/BONEMAN-*.zip
+            desktop/release/BONEMAN-*.exe
+            desktop/release/BONEMAN-*.AppImage
+            desktop/release/BONEMAN-*.tar.gz
+            desktop/release/SHA256SUMS-*.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: boneman-evidence-${{ matrix.platform }}-${{ matrix.arch }}
+          path: desktop/test-results/
+          if-no-files-found: ignore
+
+  draft:
+    if: inputs.release
+    needs: build
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: boneman-installer-*
+          merge-multiple: true
+          path: installers
+      - name: Create reviewable distribution
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >
+          gh release create "$GITHUB_REF_NAME" installers/*
+          --verify-tag --draft --title "BONEMAN ${GITHUB_REF_NAME#desktop-v}"
+          --notes-file docs/DESKTOP_RELEASE_NOTES.md

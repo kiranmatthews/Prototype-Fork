@@ -20,9 +20,11 @@ const FILE_PATH = 'public/levels.json';
 const API = `https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`;
 
 export function getToken(): string {
+  if (import.meta.env.VITE_DESKTOP === 'true') return '';
   return localStorage.getItem('solProtoGHToken') ?? '';
 }
 export function setToken(t: string): void {
+  if (import.meta.env.VITE_DESKTOP === 'true') return;
   const v = t.trim();
   if (v) localStorage.setItem('solProtoGHToken', v);
   else localStorage.removeItem('solProtoGHToken');
@@ -95,6 +97,7 @@ async function currentSha(headers: HeadersInit): Promise<{ sha?: string; err?: s
 // Commit the payload to public/levels.json on the Pages branch. Retries once on
 // a 409 (a stale sha because another push landed in between).
 export async function pushLevels(payload: Record<string, unknown>): Promise<PushResult> {
+  if (import.meta.env.VITE_DESKTOP === 'true') return { ok: false, msg: 'Desktop levels stay on this computer. Use Export to share a file.' };
   const token = getToken();
   if (!token) return { ok: false, msg: 'paste a GitHub token first' };
   const headers = { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' };

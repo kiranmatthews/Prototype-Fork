@@ -14,3 +14,8 @@ tools/tripo-character/.env
 tools/tripo-character/*.local.json
 __pycache__/
 *.pyc
+
+# Bundled offline desktop artifacts and local profiles.
+desktop/web/
+desktop/release/
+desktop/test-results/

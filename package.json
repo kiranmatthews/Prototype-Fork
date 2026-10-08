@@ -73,7 +73,12 @@
     "check:ice-skate": "node tools/test-ice-skate-animation.mjs && node tools/test-ice-walk-animation.mjs && node tools/test-character-elasticity.mjs",
     "check:ice-walk": "node tools/test-ice-walk-animation.mjs && node tools/test-character-animation-runtime.mjs && node tools/test-character-elasticity.mjs && node tools/test-authored-ice.mjs",
     "check:blockworks-wedges": "node tools/test-blockworks-wedges.mjs && node tools/test-blockworks-skate-lines.mjs",
-    "check:world-solids": "node tools/test-world-solids.mjs && node tools/test-world-surface-binding.mjs && node tools/test-solid-player.mjs && node tools/test-solid-debris.mjs && node tools/test-jungle-enclosure.mjs --corner"
+    "check:world-solids": "node tools/test-world-solids.mjs && node tools/test-world-surface-binding.mjs && node tools/test-solid-player.mjs && node tools/test-solid-debris.mjs && node tools/test-jungle-enclosure.mjs --corner",
+    "build:desktop": "tsc --noEmit && vite build --config desktop/vite.config.ts && node tools/desktop/audit.mjs",
+    "check:desktop": "node --test tools/desktop/policy.test.mjs",
+    "desktop:pack": "npm run build:desktop && npm --prefix desktop run pack",
+    "desktop:dist": "npm run build:desktop && npm --prefix desktop run dist",
+    "desktop:smoke": "npm --prefix desktop run smoke"
   },
   "dependencies": {
     "three": "^0.166.1",

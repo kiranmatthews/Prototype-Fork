@@ -143,3 +143,7 @@ kicker ramp with a gap (carry speed!) → finish gate.
 - `src/groundAcceleration.ts` — per-geometry BVHs for universal ground queries
 - `src/tuning.ts` — every feel number in the game
 - `src/ui.ts` — debug stats + live tuning sliders
+
+## Offline desktop app
+
+See [the offline desktop publishing workflow](docs/OFFLINE_DESKTOP.md) for self-contained macOS, Windows and Linux builds, native packaging, offline verification and release performance gates.

@@ -1,0 +1,170 @@
+import assert from 'node:assert/strict';
+import { mkdtemp, mkdir, readFile, writeFile, rm } from 'node:fs/promises';
+import { tmpdir, platform, arch } from 'node:os';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
+import { createServer } from 'node:http';
+import { _electron } from '../../desktop/node_modules/playwright/index.mjs';
+
+const desktop = fileURLToPath(new URL('../../desktop/', import.meta.url));
+const require = createRequire(path.join(desktop, 'package.json'));
+const output = path.join(desktop, 'test-results');
+await mkdir(output, { recursive:true });
+const profile = await mkdtemp(path.join(tmpdir(), 'boneman-smoke-'));
+const report = { timestamp:new Date().toISOString(), platform:platform(), arch:arch(), modes:[] };
+const errors = [], requests = [], failed = [];
+let app;
+try {
+  app = await _electron.launch({
+    executablePath:require('electron'), args:[desktop], chromiumSandbox:true,
+    env:{ ...process.env, BONEMAN_USER_DATA:profile },
+    timeout:60000,
+  });
+  const page = await app.firstWindow();
+  page.on('pageerror', e => errors.push(String(e)));
+  page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
+  page.on('request', r => requests.push(r.url()));
+  page.on('response', r => { if (r.status() >= 400) failed.push({ url:r.url(), status:r.status() }); });
+  await page.waitForFunction(() => window.__game && !window.__game.gameFlow.blocksGameplay || window.__game?.gameFlow.currentScreen === 'launch', null, { timeout:120000 });
+  // The first run above has a fresh profile: no PWA/HTTP cache can make this pass.
+  const startup = await page.evaluate(async () => ({
+    node:typeof window.require, process:typeof window.process,
+    secure:window.isSecureContext, origin:location.origin,
+    serviceWorkers: 'serviceWorker' in navigator ? await navigator.serviceWorker.getRegistrations().then(r => r.length, e => e.name) : 'disabled',
+    caches:await caches.keys(),
+  }));
+  assert.equal(startup.node, 'undefined'); assert.equal(startup.process, 'undefined');
+  assert.equal(startup.secure, true); assert.equal(startup.origin, 'boneman://game');
+  assert([0, 'disabled', 'InvalidStateError'].includes(startup.serviceWorkers)); assert.deepEqual(startup.caches, []);
+  report.startup = startup;
+  report.runtime = await app.evaluate(({ app }) => ({ versions:process.versions, gpu:app.getGPUFeatureStatus() }));
+  // A disconnected browser must still load every byte from the app protocol.
+  await page.context().setOffline(true);
+  for (const lite of [true, false]) {
+    await page.goto('boneman://game/?playtest&level=codex-lab' + (lite ? '&lite' : ''));
+    await page.waitForFunction(() => window.__game && !window.__game.gameFlow.blocksGameplay && window.__game.player.grounded, null, { timeout:120000 });
+    const stamp = await page.locator('.hud-build').textContent();
+    assert.match(stamp, /Codex\/sol fork.*Offline desktop/);
+    const start = await page.evaluate(() => window.__game.player.pos.toArray());
+    await page.keyboard.down('ArrowUp'); await page.waitForTimeout(700); await page.keyboard.up('ArrowUp');
+    const moved = await page.evaluate(() => window.__game.player.pos.toArray());
+    assert(Math.hypot(...moved.map((n,i) => n - start[i])) > .2);
+    const checkpoint = await page.evaluate(() => {
+      const g = window.__game;
+      const warped = g.player.warpCheckpoint(g.getLevel(), 1);
+      return { warped, spawn:g.getLevel().currentSpawn.toArray() };
+    });
+    assert.equal(checkpoint.warped, true);
+    await page.evaluate(() => { const g = window.__game; g.player.pos.y = g.getLevel().killY - 10; });
+    await page.waitForFunction(() => window.__game.player.state === 'dead', null, { timeout:15000 });
+    await page.waitForFunction(() => window.__game.player.state !== 'dead' && window.__game.player.grounded, null, { timeout:30000 });
+    const pos = await page.evaluate(() => window.__game.player.pos.toArray());
+    assert(Math.hypot(...pos.map((n,i) => n - checkpoint.spawn[i])) < 8);
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(() => window.__game.gameFlow.blocksGameplay);
+    await page.screenshot({ path:path.join(output, lite ? 'lite-pause.png' : 'full-pause.png') });
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(() => !window.__game.gameFlow.blocksGameplay);
+    await page.screenshot({ path:path.join(output, lite ? 'lite-game.png' : 'full-game.png') });
+    const frames = await page.evaluate(async () => {
+      const intervals = []; let previous;
+      await new Promise(resolve => {
+        function frame(now) {
+          if (previous !== undefined) intervals.push(now - previous);
+          previous = now;
+          if (intervals.length < 240) requestAnimationFrame(frame); else resolve();
+        }
+        requestAnimationFrame(frame);
+      });
+      intervals.sort((a,b) => a - b);
+      return { samples:intervals.length, p50:intervals[Math.floor(intervals.length*.5)], p95:intervals[Math.floor(intervals.length*.95)],
+        p99:intervals[Math.floor(intervals.length*.99)], crt:window.__game.getCrtDiagnostics(), quality:window.__game.renderQualitySettings.snapshot() };
+    });
+    await page.evaluate(() => { const g = window.__game; g.getLevel().finishGlow.getCenter(g.player.pos); g.player.speed = 0; });
+    await page.waitForFunction(() => window.__game.player.state === 'finished' || window.__game.gameFlow.blocksGameplay, null, { timeout:15000 });
+    if (!lite) {
+      await page.evaluate(() => window.__game.renderer.forceContextLoss());
+      await page.waitForFunction(() => window.__game.getGraphicsRecoveryDiagnostics().lost);
+      await page.evaluate(() => window.__game.renderer.forceContextRestore());
+      await page.waitForFunction(() => !window.__game.getGraphicsRecoveryDiagnostics().lost && window.__game.getGraphicsRecoveryDiagnostics().restores > 0, null, {timeout:30000});
+      report.graphicsRecovery = await page.evaluate(() => window.__game.getGraphicsRecoveryDiagnostics());
+    }
+    report.modes.push({ lite, stamp, frames, checkpoint, respawn:pos });
+    console.log('PASS', lite ? 'lite' : 'full', 'gameplay and rendering');
+  }
+  report.assetFamilies = [];
+  for (const level of ['treehouse-trail', 'jungle', 'nightworks', 'crab-chief']) {
+    await page.goto('boneman://game/?playtest&lite&level=' + level);
+    await page.waitForFunction(id => {
+      const g = window.__game;
+      return g?.getCurrentLevel().id === id && !g.gameFlow.blocksGameplay && g.getLoadingDiagnostics().pending.length === 0;
+    }, level, {timeout:120000});
+    const loaded = await page.evaluate(() => ({
+      level:window.__game.getCurrentLevel().id, assets:window.__game.getLoadingDiagnostics(),
+      decoder:window.__game.getSceneryDecoderDiagnostics(),
+    }));
+    assert.deepEqual(loaded.assets.failed, []);
+    report.assetFamilies.push(loaded);
+    console.log('PASS bundled asset family:', level);
+  }
+  assert.deepEqual(errors, [], 'Unexpected renderer errors');
+  assert.deepEqual(failed, [], 'Missing bundled resources');
+  assert(requests.every(url => /^(boneman:|data:|blob:)/.test(url)), 'Game attempted a network request');
+  assert(!requests.some(url => /release\.json|sw\.js|offline-save\.html|api\.github/.test(url)));
+  // Test deliberate hostile requests separately from normal game traffic.
+  let networkHits = 0;
+  const server = createServer((_req,res) => { networkHits++; res.end('must never be read'); });
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  try {
+    await page.context().setOffline(false);
+    const probe = 'http://127.0.0.1:' + server.address().port + '/';
+    const denied = await page.evaluate(async url => {
+      const results = {};
+      results.fetch = await fetch(url).then(() => false, () => true);
+      results.image = await new Promise(resolve => { const i = new Image(); i.onload = () => resolve(false); i.onerror = () => resolve(true); i.src = url + 'image'; });
+      results.socket = await new Promise(resolve => { try { const s = new WebSocket(url.replace('http:', 'ws:')); s.onopen = () => { s.close(); resolve(false); }; s.onerror = () => resolve(true); } catch { resolve(true); } });
+      results.worker = await new Promise(resolve => {
+        const worker = new Worker(URL.createObjectURL(new Blob(['fetch(' + JSON.stringify(url) + ').then(()=>postMessage(false),()=>postMessage(true))'], {type:'text/javascript'})));
+        worker.onmessage = event => { resolve(event.data); worker.terminate(); };
+        worker.onerror = () => { resolve(false); worker.terminate(); };
+      });
+      return results;
+    }, probe);
+    assert.deepEqual(denied, { fetch:true, image:true, socket:true, worker:true });
+    // Native session policy remains effective independently of document CSP.
+    const nativeDenied = await app.evaluate(async ({ BrowserWindow }, url) => {
+      const ses = BrowserWindow.getAllWindows()[0].webContents.session;
+      return await ses.fetch(url).then(() => false, () => true);
+    }, probe);
+    assert.equal(nativeDenied, true);
+    const beforeNavigation = page.url();
+    await page.evaluate(url => { window.open(url); location.assign(url); }, probe);
+    await page.waitForTimeout(200);
+    assert.equal(page.url(), beforeNavigation, 'External navigation is blocked');
+    assert.equal(app.windows().length, 1, 'External popups are blocked');
+    assert.equal(networkHits, 0);
+    report.network = { denied, nativeDenied, networkHits, gameRequests:requests.length };
+  } finally { await new Promise(resolve => server.close(resolve)); }
+
+  await page.evaluate(() => location.assign('boneman://game/reset-local-data.html'));
+  await page.waitForURL('boneman://game/reset-local-data.html');
+  assert.equal(await page.locator('#status').textContent(), 'Nothing has been reset.');
+  await page.locator('#back').click();
+  await page.waitForFunction(() => !!window.__game, null, {timeout:120000});
+  await page.evaluate(() => localStorage.setItem('solProtoDesktopPersistenceTest', 'kept'));
+  await app.close(); app = null;
+  app = await _electron.launch({ chromiumSandbox:true, executablePath:require('electron'), args:[desktop], env:{...process.env, BONEMAN_USER_DATA:profile} });
+  const reopened = await app.firstWindow();
+  await reopened.waitForFunction(() => location.protocol === 'boneman:' && document.readyState === 'complete');
+  assert.equal(await reopened.evaluate(() => localStorage.getItem('solProtoDesktopPersistenceTest')), 'kept');
+  report.persistence = true;
+  report.contentId = JSON.parse(await readFile(path.join(desktop, 'web/asset-manifest.json'), 'utf8')).contentId;
+  report.normalErrors = [];
+  report.status = 'passed';
+  console.log('PASS fresh-profile offline startup; lite/full play, checkpoint, pit, finish, pause, network denial and persistent saves.');
+} finally {
+  if (app) await app.close();
+  await writeFile(path.join(output, 'smoke.json'), JSON.stringify(report, null, 2) + '\n');
+  await rm(profile, { recursive:true, force:true });
+}
