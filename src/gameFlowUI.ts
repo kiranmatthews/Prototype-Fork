@@ -19,6 +19,7 @@ import { TrickGuidePagination } from './trickGuidePagination';
 import {
   CAMPAIGN_ISLANDS,
   CAMPAIGN_LEVELS,
+  CAMPAIGN_MAP_EDGES,
   CAMPAIGN_START_LEVEL_KEY,
   CAMPAIGN_SAVE_SLOTS,
   CAMPAIGN_TIME_RELIC_TARGET_SECONDS,
@@ -1246,8 +1247,23 @@ export class GameFlowUI {
     this.panel.appendChild(layout);
   }
 
-  private levelSelectIslands() {
-    return CAMPAIGN_ISLANDS.filter(island => island.levelKeys.some(key => this.campaign.levelUnlocked(key)));
+  private levelSelectKeys(): Set<string> {
+    // Prototype destinations may have no local prerequisites while still
+    // sitting beyond a locked map route. Reveal only the connected unlocked
+    // route; completed hubs also seed it so older saves keep earned access.
+    const visible = new Set(CAMPAIGN_LEVELS.filter(level =>
+      this.campaign.levelUnlocked(level.progressKey) &&
+      (level.progressKey === CAMPAIGN_START_LEVEL_KEY || this.campaign.levelProgress(level.levelId)?.cleared),
+    ).map(level => level.progressKey));
+    for (const key of visible) for (const edge of CAMPAIGN_MAP_EDGES) {
+      const next = edge.from === key ? edge.to : edge.to === key ? edge.from : null;
+      if (next && this.campaign.levelUnlocked(next)) visible.add(next);
+    }
+    return visible;
+  }
+
+  private levelSelectIslands(visible = this.levelSelectKeys()) {
+    return CAMPAIGN_ISLANDS.filter(island => island.levelKeys.some(key => visible.has(key)));
   }
 
   private openLevelSelect(): void {
@@ -1273,7 +1289,8 @@ export class GameFlowUI {
   }
 
   private renderLevelSelect(): void {
-    const islands = this.levelSelectIslands();
+    const visible = this.levelSelectKeys();
+    const islands = this.levelSelectIslands(visible);
     const island = islands.find(item => item.id === this.levelSelectIsland) ?? islands[0];
     const layout = element('div', 'game-level-select-layout');
     const header = element('header', 'game-level-header');
@@ -1289,13 +1306,17 @@ export class GameFlowUI {
     heading.append(title, pages); header.append(previous, heading, next);
     layout.append(header);
     if (!island) {
+      this.levelSelectKey = '';
+      this.levelSelectDetail = this.levelSelectPreview = this.levelSelectPlay = null;
       layout.append(this.backHint());
       this.panel.append(layout); return;
     }
     this.levelSelectIsland = island.id;
-    const definitions = island.levelKeys.map(key => campaignLevelByKey(key)!).filter(Boolean);
-    if (!definitions.some(def => def.progressKey === this.levelSelectKey && this.campaign.levelUnlocked(def.progressKey)))
-      this.levelSelectKey = definitions.find(def => this.campaign.levelUnlocked(def.progressKey))!.progressKey;
+    const definitions = island.levelKeys
+      .filter(key => visible.has(key))
+      .map(key => campaignLevelByKey(key)!).filter(Boolean);
+    if (!definitions.some(def => def.progressKey === this.levelSelectKey))
+      this.levelSelectKey = definitions[0].progressKey;
     layout.dataset.island = island.id;
     const columns = element('div', 'game-level-columns');
     if (this.levelSelectSlide) columns.classList.add(this.levelSelectSlide > 0 ? 'island-from-right' : 'island-from-left');
@@ -1305,7 +1326,6 @@ export class GameFlowUI {
     const list = element('div', 'game-level-list game-scroll-segment');
     list.setAttribute('role', 'listbox'); list.setAttribute('aria-label', `${island.name} levels`);
     for (const [index, definition] of definitions.entries()) {
-      const unlocked = this.campaign.levelUnlocked(definition.progressKey);
       const progress = this.campaign.levelProgress(definition.levelId);
       let touchActivation = false;
       const row = this.button('', () => {
@@ -1315,10 +1335,10 @@ export class GameFlowUI {
         if (touchActivation || inputPrompts.family === 'touch') this.playSelectedLevel();
       });
       row.classList.add('game-level-row'); row.dataset.levelKey = definition.progressKey;
-      row.disabled = !unlocked; row.setAttribute('role', 'option');
-      row.setAttribute('aria-label', `${definition.name}${unlocked ? progress?.cleared ? ', cleared' : ', available' : ', locked'}`);
+      row.setAttribute('role', 'option');
+      row.setAttribute('aria-label', `${definition.name}${progress?.cleared ? ', cleared' : ', available'}`);
       const label = element('span', 'game-level-label'); label.textContent = `${String(index + 1).padStart(2, '0')}  ${definition.name.toUpperCase()}`;
-      const marker = element('span', 'game-level-mark'); marker.textContent = !unlocked ? '●' : progress?.cleared ? '✓' : '';
+      const marker = element('span', 'game-level-mark'); marker.textContent = progress?.cleared ? '✓' : '';
       row.append(label, marker);
       row.addEventListener('pointerdown', event => { touchActivation = event.pointerType === 'touch'; });
       row.addEventListener('pointercancel', () => { touchActivation = false; });
@@ -1345,7 +1365,7 @@ export class GameFlowUI {
     if (!force && key === this.levelSelectKey) return;
     const definition = campaignLevelByKey(key);
     const detail = this.levelSelectDetail;
-    if (!definition || !detail || !this.campaign.levelUnlocked(key)) return;
+    if (!definition || !detail || !this.levelSelectKeys().has(key)) return;
     this.levelSelectKey = key; this.levelSelectMemories.set(definition.islandId, key);
     for (const row of this.panel.querySelectorAll<HTMLButtonElement>('.game-level-row')) {
       const chosen = row.dataset.levelKey === key;
@@ -1384,7 +1404,7 @@ export class GameFlowUI {
       }
       detail.append(records);
     }
-    if (this.levelSelectPlay) this.levelSelectPlay.disabled = !this.campaign.levelUnlocked(key);
+    if (this.levelSelectPlay) this.levelSelectPlay.disabled = !this.levelSelectKeys().has(key);
     this.invalidatePreCrt();
   }
 
@@ -1399,7 +1419,7 @@ export class GameFlowUI {
   private playSelectedLevel(): void {
     if (this.transitionActive) return;
     const definition = campaignLevelByKey(this.levelSelectKey);
-    if (!definition || !this.campaign.levelUnlocked(definition.progressKey)) return;
+    if (!definition || !this.levelSelectKeys().has(definition.progressKey)) return;
     if (!this.pauseState?.inWarpRoom) {
       this.screen = 'confirm-level-select'; this.render();
     } else this.callbacks.onLevelSelect?.(definition.levelId);
@@ -1413,7 +1433,7 @@ export class GameFlowUI {
     warning.textContent = `Switch to ${destination?.name ?? 'another level'}? All progress from this unfinished run will be forfeited. Saved collectibles and completed levels are kept.`;
     const actions = element('div', 'game-menu-list');
     actions.append(this.button('CANCEL', () => this.goBack()), this.button('SWITCH LEVEL', () => {
-      if (destination && this.campaign.levelUnlocked(destination.progressKey)) this.callbacks.onLevelSelect?.(destination.levelId);
+      if (destination && this.levelSelectKeys().has(destination.progressKey)) this.callbacks.onLevelSelect?.(destination.levelId);
     }, 'danger'));
     card.append(title, warning, actions); this.panel.append(card);
   }

@@ -22,17 +22,30 @@ try{
  assert.ok(ui.navButtons.some(b=>b.textContent==='LEVEL SELECT'));
  ui.navButtons.find(b=>b.textContent==='LEVEL SELECT').click();
  assert.equal(ui.currentScreen,'level-select');
- assert.equal(ui.levelSelectIslands().length,3,'fresh saves must expose the new destinations');
+ assert.deepEqual(ui.levelSelectIslands().map(island=>island.id),['island-1'],'unreachable islands must stay hidden');
  const rows=ui.navButtons.filter(b=>b.dataset.levelKey);
- assert.equal(rows.length,CAMPAIGN_ISLANDS[0].levelKeys.length);assert.equal(rows.filter(b=>!b.disabled).length,1);
+ assert.deepEqual(rows.map(row=>row.dataset.levelKey),['treehouse-trail'],'locked levels must not appear in the list');
  assert.equal(rows[0].dataset.levelKey,'treehouse-trail');
  assert.equal(rows[0].textContent,`01  ${campaignLevelById('treehouse-trail').name.toUpperCase()}`);
  assert.equal(ui.levelSelectKey,'treehouse-trail');
  assert.match(ui.levelSelectPreview.src,/treehouse-trail\.jpg$/);
- ui.changeLevelSelectIsland(1);assert.equal(ui.levelSelectIsland,'island-2');
+ ui.changeLevelSelectIsland(1);assert.equal(ui.levelSelectIsland,'island-1','paging revealed an unreachable island');
+ ui.updateLevelSelectChoice('clockwork-gauntlet',true);
+ assert.equal(ui.levelSelectKey,'treehouse-trail','unreachable prototype changed the preview');
+ ui.levelSelectKey='clockwork-gauntlet';ui.playSelectedLevel();assert.deepEqual(calls,[],'unreachable prototype launched');
+ campaign.active.levels['treehouse-trail'].cleared=true;
+ ui.openLevelSelect();
+ assert.deepEqual(ui.navButtons.filter(b=>b.dataset.levelKey).map(b=>b.dataset.levelKey),['treehouse-trail','jungle']);
+ for(const key of ['jungle','test-course','sky-bridge','nightworks','slipstream'])campaign.active.levels[key].cleared=true;
+ ui.openLevelSelect();assert.equal(ui.levelSelectIslands().length,1,'Island 2 appeared before its connecting route unlocked');
+ campaign.active.levels['jungle-cup'].cleared=true;
+ ui.openLevelSelect();ui.changeLevelSelectIsland(1);assert.equal(ui.levelSelectIsland,'island-2');
+ assert.deepEqual(ui.navButtons.filter(b=>b.dataset.levelKey).map(b=>b.dataset.levelKey),['beachside-run']);
+ for(const key of ['beachside-run','coastal','island-hopper','waterpark','codex-switchback'])campaign.active.levels[key].cleared=true;
+ ui.render();
  const puzzleRows=ui.navButtons.filter(b=>['crate-primer','switchyard','clockwork-gauntlet'].includes(b.dataset.levelKey));
  assert.deepEqual(puzzleRows.map(row=>row.dataset.levelKey),['crate-primer','switchyard','clockwork-gauntlet']);
- assert.ok(puzzleRows.every(row=>!row.disabled),'research levels must be immediately selectable');
+ assert.ok(puzzleRows.every(row=>!row.disabled),'reachable prototype levels must remain selectable');
  ui.updateLevelSelectChoice('clockwork-gauntlet',true);assert.match(ui.levelSelectPreview.src,/clockwork-gauntlet\.jpg$/);
  ui.changeLevelSelectIsland(1);assert.equal(ui.levelSelectIsland,'hidden-shores');
  assert.deepEqual(ui.navButtons.filter(b=>b.dataset.levelKey).map(b=>b.dataset.levelKey),['drowned-crown','ghost-train','crab-chief']);
@@ -41,7 +54,7 @@ try{
  ui.updateLevelSelectChoice('ghost-train',true);assert.match(ui.levelSelectPreview.src,/ghost-train\.jpg$/);
  assert.match(ui.levelSelectDetail.textContent,/GHOST TRAIN/);
  ui.changeLevelSelectIsland(-1);ui.changeLevelSelectIsland(-1);assert.equal(ui.levelSelectIsland,'island-1');
- ui.levelSelectKey='test-course';ui.playSelectedLevel();assert.deepEqual(calls,[],'locked level launched');
+ ui.levelSelectKey='jungle-skyline';ui.playSelectedLevel();assert.deepEqual(calls,[],'locked level launched');
  ui.updateLevelSelectChoice('treehouse-trail',true);ui.playSelectedLevel();
  assert.equal(ui.currentScreen,'confirm-level-select','changing the active course bypassed confirmation');
  ui.goBack();assert.equal(ui.currentScreen,'level-select');
@@ -86,6 +99,16 @@ try{
  input.armMenuReleaseGuard();input.update();assert.equal(input.mapLevelSelectPressed,false);
  pad.buttons[17].pressed=false;input.update();pad.buttons[17].pressed=true;input.update();assert.equal(input.mapLevelSelectPressed,true);
  input.consumeEdges();pad.buttons[17].pressed=false;input.update();document.body.classList.remove('world-map-active');pad.buttons[17].pressed=true;input.update();assert.equal(input.mapLevelSelectPressed,false,'map shortcut leaks into gameplay');
+ // Loading a fresh save must retire an island/preview remembered by the old one.
+ ui.levelSelectIsland='hidden-shores';ui.levelSelectKey='ghost-train';
+ campaign.startEphemeral();ui.render();
+ assert.equal(ui.levelSelectIsland,'island-1');assert.equal(ui.levelSelectKey,'treehouse-trail');
+ assert.match(ui.levelSelectPreview.src,/treehouse-trail\.jpg$/);
+ assert.equal(ui.navButtons.filter(b=>b.dataset.levelKey).length,1);
+ // Completed destinations survive a missing older prerequisite chain.
+ campaign.active.levels.waterpark.cleared=true;ui.openLevelSelect();
+ assert.deepEqual(ui.levelSelectIslands().map(island=>island.id),['island-1','island-2']);
+ ui.changeLevelSelectIsland(1);assert.ok(ui.navButtons.some(b=>b.dataset.levelKey==='waterpark'));
  // Touch rows are the entry action when the keyboard/controller footer is hidden.
  // Exercise the real click handlers, including selection before launch and Back.
  inputPrompts.update(null,true);assert.equal(inputPrompts.family,'touch');
@@ -104,8 +127,7 @@ try{
    assert.equal(close.getAttribute('aria-label'),'Back');close.click();
  };
  touchUI.showMapSection('level-select');
- assert.equal(touchRow('jungle').disabled,true);
- touchRow('jungle').click();
+ assert.equal(touchUI.navButtons.some(button=>button.dataset.levelKey==='jungle'),false,'locked touch row must be hidden');
  assert.equal(touchUI.levelSelectKey,'treehouse-trail','locked touch row changed selection');
  assert.deepEqual(touchCalls,[],'locked touch row launched a level');
  touchCampaign.active.levels['treehouse-trail'].cleared=true;
