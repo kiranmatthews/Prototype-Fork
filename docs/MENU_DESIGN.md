@@ -21,6 +21,7 @@ Player-facing menus are game screens, composed for a TV frame. They must not beh
 
 - Map Level Stats retains level selection and entry. Gameplay pause keeps the Level Select name and requires confirmation before abandoning the current run; cancel preserves it.
 - Level Select and Level Stats show only levels reachable through unlocked map routes. Hide islands with no visible levels, including their navigation pips. Completed levels remain available to older saves; loading another save replaces stale selections and previews with a visible destination.
+- Short level lists start at the top of their assigned region with normal row heights; do not stretch a single unlocked row to fill the list. Keep the 44px desktop / 48px touch minimum and bounded scrolling for longer lists.
 - Pause and Options use actions/options on the left and the overall collectibles sheet on the right. No progress bar or separate map Progress submenu.
 - Submenu hints are Select and clickable Back; paginated guides also show Left/Right Page. Never show Up/Down Choose. Touch has no menu hints and uses a corner close action instead. Back is never a menu-list row.
 - Text appearance and shimmer are authoring controls in the M-dismissible Text Tuning panel, never gameplay options. Menu PNG text uses the HUD atlas painter at the render target's full resolution, including physical pixels on the direct path.
