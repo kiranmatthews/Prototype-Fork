@@ -36,6 +36,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     env:
+      BONEMAN_TEST_SOFTWARE_GPU: ${{ (runner.os == 'Linux' || (runner.os == 'macOS' && matrix.arch == 'x64')) && '1' || '0' }}
       BONEMAN_BUILD_ID: ${{ github.sha }}
     steps:
       - uses: actions/checkout@v4

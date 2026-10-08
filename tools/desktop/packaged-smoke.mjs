@@ -1,3 +1,4 @@
+import { testGpuArgs, softwareGpuTest } from './test-gpu.mjs';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
@@ -10,12 +11,12 @@ const profile = await mkdtemp(path.join(tmpdir(), 'boneman-packaged-'));
 const output = fileURLToPath(new URL('../../desktop/test-results/', import.meta.url));
 await mkdir(output, { recursive:true });
 const { binary } = bundlePaths();
-const processHandle = spawn(binary, ['--remote-debugging-port=0'], { env:{...process.env, BONEMAN_USER_DATA:profile}, stdio:['ignore','pipe','pipe'] });
+const processHandle = spawn(binary, [...testGpuArgs, '--remote-debugging-port=0'], { env:{...process.env, BONEMAN_USER_DATA:profile}, stdio:['ignore','pipe','pipe'] });
 const watchdog = setTimeout(() => processHandle.kill('SIGKILL'), 180000);
 let browser, page;
 const errors = [], failed = [], requests = [];
 const emulatedFocus = process.argv.includes('--emulated-focus');
-const report = { binary, platform:process.platform, arch:process.arch, emulatedFocus, stderr:'' };
+const report = { binary, platform:process.platform, arch:process.arch, softwareGpuTest, emulatedFocus, stderr:'' };
 processHandle.stderr.on('data', bytes => { report.stderr = (report.stderr + bytes).slice(-12000); });
 try {
   const endpoint = await new Promise((resolve,reject) => {

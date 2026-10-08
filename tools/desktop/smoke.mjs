@@ -1,3 +1,4 @@
+import { testGpuArgs, softwareGpuTest } from './test-gpu.mjs';
 import assert from 'node:assert/strict';
 import { mkdtemp, mkdir, readFile, writeFile, rm } from 'node:fs/promises';
 import { tmpdir, platform, arch } from 'node:os';
@@ -12,7 +13,7 @@ const require = createRequire(path.join(desktop, 'package.json'));
 const output = path.join(desktop, 'test-results');
 await mkdir(output, { recursive:true });
 const profile = await mkdtemp(path.join(tmpdir(), 'boneman-smoke-'));
-const report = { timestamp:new Date().toISOString(), platform:platform(), arch:arch(), modes:[] };
+const report = { timestamp:new Date().toISOString(), platform:platform(), arch:arch(), softwareGpuTest, modes:[] };
 const errors = [], requests = [], failed = [];
 let app;
 async function closeApp() {
@@ -22,7 +23,7 @@ async function closeApp() {
 }
 try {
   app = await _electron.launch({
-    executablePath:require('electron'), args:[desktop], chromiumSandbox:true,
+    executablePath:require('electron'), args:[...testGpuArgs, desktop], chromiumSandbox:true,
     env:{ ...process.env, BONEMAN_USER_DATA:profile },
     timeout:60000,
   });
@@ -164,7 +165,7 @@ try {
   await page.waitForFunction(() => !!window.__game, null, {timeout:120000});
   await page.evaluate(() => localStorage.setItem('solProtoDesktopPersistenceTest', 'kept'));
   await closeApp(); app = null;
-  app = await _electron.launch({ chromiumSandbox:true, executablePath:require('electron'), args:[desktop], env:{...process.env, BONEMAN_USER_DATA:profile} });
+  app = await _electron.launch({ chromiumSandbox:true, executablePath:require('electron'), args:[...testGpuArgs, desktop], env:{...process.env, BONEMAN_USER_DATA:profile} });
   const reopened = await app.firstWindow();
   await reopened.waitForFunction(() => location.protocol === 'boneman:' && document.readyState === 'complete');
   assert.equal(await reopened.evaluate(() => localStorage.getItem('solProtoDesktopPersistenceTest')), 'kept');

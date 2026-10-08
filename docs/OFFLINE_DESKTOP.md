@@ -75,7 +75,7 @@ For unsigned/ad-hoc candidates from main:
 gh workflow run desktop.yml --ref main -f release=false
 ```
 
-Download the `boneman-installer-*` and `boneman-evidence-*` artifacts from that run. CI checks correctness; virtual-runner frame times do not certify minimum-hardware performance.
+Download the `boneman-installer-*` and `boneman-evidence-*` artifacts from that run. CI checks correctness; virtual-runner frame times do not certify minimum-hardware performance. Linux and Intel Mac CI explicitly use a software GPU test backend because those hosted runners cannot create a usable hardware WebGL context. Test launchers alone honor BONEMAN_TEST_SOFTWARE_GPU=1; no software-GPU flags or relaxed graphics settings are added to the distributed app.
 
 For public distribution, configure these repository/environment secrets in GitHub, never in game source or the bundle:
 
