@@ -1,4 +1,4 @@
-import { testTimeout, slowTest, translatedTest, slowGpuTest } from './test-timing.mjs';
+import { testTimeout, slowTest, translatedTest, slowGpuTest, interactionTimeout } from './test-timing.mjs';
 import { moveOnSupportedGround } from './input-smoke.mjs';
 import { softwareGpuTest } from './test-gpu.mjs';
 import assert from 'node:assert/strict';
@@ -51,7 +51,7 @@ try {
     await page.waitForFunction(() => window.__game && !window.__game.gameFlow.blocksGameplay && window.__game.player.grounded, null, { timeout:testTimeout });
     if (!lite) {
       await page.evaluate(() => { const s = window.__game.crtGuestSettings; s.applyStartupPreset(); s.setEnabled(true); });
-      await page.waitForFunction(() => window.__game.getCrtDiagnostics()?.active, null, {timeout:30000});
+      await page.waitForFunction(() => window.__game.getCrtDiagnostics()?.active, null, {timeout:interactionTimeout(30000)});
     }
     const stamp = await page.locator('.hud-build').textContent();
     assert.match(stamp, /Codex\/sol fork.*Offline desktop/);
@@ -64,8 +64,8 @@ try {
     });
     assert.equal(checkpoint.warped, true);
     await page.evaluate(() => { const g = window.__game; g.player.pos.y = g.getLevel().killY - 10; });
-    await page.waitForFunction(() => window.__game.player.state === 'dead', null, { timeout:15000 });
-    await page.waitForFunction(() => window.__game.player.state !== 'dead' && window.__game.player.grounded, null, { timeout:30000 });
+    await page.waitForFunction(() => window.__game.player.state === 'dead', null, { timeout:interactionTimeout(15000) });
+    await page.waitForFunction(() => window.__game.player.state !== 'dead' && window.__game.player.grounded, null, { timeout:interactionTimeout(30000) });
     const pos = await page.evaluate(() => window.__game.player.pos.toArray());
     assert(Math.hypot(...pos.map((n,i) => n - checkpoint.spawn[i])) < 8);
     await page.keyboard.press('Escape');
@@ -89,12 +89,12 @@ try {
         p99:intervals[Math.floor(intervals.length*.99)], crt:window.__game.getCrtDiagnostics(), quality:window.__game.renderQualitySettings.snapshot() };
     }, slowTest ? 30 : 240);
     await page.evaluate(() => { const g = window.__game; g.getLevel().finishGlow.getCenter(g.player.pos); g.player.speed = 0; });
-    await page.waitForFunction(() => window.__game.player.state === 'finished' || window.__game.gameFlow.blocksGameplay, null, { timeout:15000 });
+    await page.waitForFunction(() => window.__game.player.state === 'finished' || window.__game.gameFlow.blocksGameplay, null, { timeout:interactionTimeout(15000) });
     if (!lite) {
       await page.evaluate(() => window.__game.renderer.forceContextLoss());
       await page.waitForFunction(() => window.__game.getGraphicsRecoveryDiagnostics().lost);
       await page.evaluate(() => window.__game.renderer.forceContextRestore());
-      await page.waitForFunction(() => !window.__game.getGraphicsRecoveryDiagnostics().lost && window.__game.getGraphicsRecoveryDiagnostics().restores > 0, null, {timeout:30000});
+      await page.waitForFunction(() => !window.__game.getGraphicsRecoveryDiagnostics().lost && window.__game.getGraphicsRecoveryDiagnostics().restores > 0, null, {timeout:interactionTimeout(30000)});
       report.graphicsRecovery = await page.evaluate(() => window.__game.getGraphicsRecoveryDiagnostics());
     }
     report.modes.push({ lite, stamp, frames, checkpoint, respawn:pos });

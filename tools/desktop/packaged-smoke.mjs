@@ -1,4 +1,4 @@
-import { testTimeout, slowTest, translatedTest, slowGpuTest } from './test-timing.mjs';
+import { testTimeout, slowTest, translatedTest, slowGpuTest, interactionTimeout } from './test-timing.mjs';
 import { waitForNativeStartup } from './native-startup.mjs';
 import { moveOnSupportedGround } from './input-smoke.mjs';
 import { testGpuArgs, softwareGpuTest } from './test-gpu.mjs';
@@ -54,7 +54,7 @@ try {
   await page.evaluate(() => window.__game.ui.onLevelSelect('codex-lab'));
   await page.waitForFunction(() => window.__game && !window.__game.gameFlow.blocksGameplay && window.__game.player.grounded, null, {timeout:testTimeout});
   await page.evaluate(() => { const s = window.__game.crtGuestSettings; s.applyStartupPreset(); s.setEnabled(true); });
-  await page.waitForFunction(() => window.__game.getCrtDiagnostics()?.active, null, {timeout:30000});
+  await page.waitForFunction(() => window.__game.getCrtDiagnostics()?.active, null, {timeout:interactionTimeout(30000)});
   assert.match(await page.locator('.hud-build').textContent(), /Codex\/sol fork.*Offline desktop/);
   assert.equal(await page.evaluate(() => typeof window.require), 'undefined');
   const { start, moved:finish } = await moveOnSupportedGround(page);

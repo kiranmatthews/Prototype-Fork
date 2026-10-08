@@ -13,3 +13,5 @@ export const slowTest = softwareGpuTest || slowGpuTest || translatedTest;
 // Functional checks on emulated CPUs/software GPUs preserve scene/quality.
 // These generous deadlines are not release performance acceptance thresholds.
 export const testTimeout = slowTest ? 600000 : 120000;
+
+export const interactionTimeout = milliseconds => slowTest ? Math.max(milliseconds, 120000) : milliseconds;
