@@ -121,8 +121,19 @@ export const JUNGLE_ASSETS: Readonly<Record<JungleAssetKind,JungleAssetSpec>> = 
 export const JUNGLE_ASSET_KINDS = Object.keys(ASSETS) as JungleAssetKind[];
 export const JUNGLE_ASSET_LABELS = Object.fromEntries(JUNGLE_ASSET_KINDS.map(k=>[k,JUNGLE_ASSETS[k].label])) as Record<JungleAssetKind,string>;
 export function isJungleAsset(kind:string|undefined):kind is JungleAssetKind {return !!kind&&Object.prototype.hasOwnProperty.call(ASSETS,kind);}
+/** Hard asset bodies are physical even when their original author only used
+ * them as scenery. Foliage, fabric, light and painted depth stay permeable. */
+export function jungleSolidRole(kind:string):'mesh'|'trunk'|'none'{
+  const spec=(JUNGLE_ASSETS as Readonly<Record<string,JungleAssetSpec>>)[kind];
+  if(spec?.matte||spec?.shaft||spec?.cloth||kind==='junglebackdrop')return'none';
+  if(/tree|palm/i.test(kind)||kind==='junglecanopy')return'trunk';
+  if(/grass|fern|foliage|leaf|crown|canopy|carpet|bush|vine|flower|cane|thorn/i.test(kind))return'none';
+  if(spec?.wind&&!/earthbank|rootbank|rock|stone|beam|wall/i.test(kind))return'none';
+  return spec||kind==='joint'||kind==='earth'?'mesh':'none';
+}
 export interface JunglePlacement {
   dkind:JungleAssetKind;p:[number,number,number];s?:[number,number,number];w?:number;
+  scenerySolid?:boolean;
   yaw?:number;amp?:number;color?:string;vr?:number;seed?:number;cameraCutaway?:boolean;castShadow?:boolean;
 }
 export function jungleAssetMatrix(c:JunglePlacement):THREE.Matrix4 {
@@ -442,7 +453,7 @@ function addSceneryLodFade(material:THREE.Material,view:THREE.Vector3,range:THRE
   };
   material.customProgramCacheKey=()=>key()+`|scenery-lod-fade-v2-${far}`;
 }
-interface Bucket {nearVisible?:boolean;farVisible?:boolean;retryCount?:number;castShadow?:boolean;cameraCutaway?:boolean;far?:boolean;farMesh?:THREE.InstancedMesh;kind:RenderKind;transforms:THREE.Matrix4[];colors:THREE.Color[];bounds:THREE.Box3;mesh?:THREE.InstancedMesh;assets?:ReturnType<typeof createJungleAssetScope>;}
+interface Bucket {scenerySolid?:boolean;nearVisible?:boolean;farVisible?:boolean;retryCount?:number;castShadow?:boolean;cameraCutaway?:boolean;far?:boolean;farMesh?:THREE.InstancedMesh;kind:RenderKind;transforms:THREE.Matrix4[];colors:THREE.Color[];bounds:THREE.Box3;mesh?:THREE.InstancedMesh;assets?:ReturnType<typeof createJungleAssetScope>;}
 export class JungleAssetKit {
   private assets=createJungleAssetScope();
   readonly root=new THREE.Group();readonly time={value:0};readonly errors:string[]=[];
@@ -462,7 +473,7 @@ export class JungleAssetKit {
   private lastViews:THREE.Vector3[]=[];
   private lastRadius=0;
   private cutaway=false;
-  constructor(private batched:boolean,private lite:boolean,private depthFade=false,private streamed=false,private style?:'painterly'){this.root.name="Jungle Ruins modular kit";}
+  constructor(private batched:boolean,private lite:boolean,private depthFade=false,private streamed=false,private style?:'painterly'){this.root.name="Jungle Ruins modular kit";this.root.userData.assetBatchRoot=true;}
   private material(kind:RenderKind,template:Template,far=false):THREE.MeshStandardMaterial|THREE.MeshLambertMaterial|THREE.MeshBasicMaterial {
     const cache=far?this.farMaterials:this.materials;
     const cached=cache.get(kind);if(cached)return cached;
@@ -528,8 +539,9 @@ export class JungleAssetKit {
     if(this.streamed&&spec.distanceLod&&template.lodGeometry)addSceneryLodFade(m,this.viewPosition,this.lodRange,far);
     cache.set(kind,m);return m;
   }
-  private configure(mesh:THREE.Mesh,kind:RenderKind,hasLod=false):void {
+  private configure(mesh:THREE.Mesh,kind:RenderKind,hasLod=false,scenerySolid?:boolean):void {
     const spec=renderSpec(kind);mesh.name=spec.label;mesh.userData.jungleAsset=kind;
+    mesh.userData.solidSurface=scenerySolid===false?'none':scenerySolid===true?'mesh':jungleSolidRole(kind);
     if(spec.matte||spec.shaft){mesh.castShadow=false;mesh.receiveShadow=false;return;}
     mesh.castShadow=!this.lite&&!spec.backdrop&&kind!=="joint"&&kind!=="earth"&&kind!=="coastcarpet"&&kind!=="coastfern"&&kind!=="coastfoliage"&&kind!=="coastv2grass"&&kind!=="coastv2grassb";
     if(kind.startsWith("coast"))mesh.userData.castShadow=mesh.castShadow;
@@ -560,16 +572,16 @@ export class JungleAssetKit {
       :[{kind:c.dkind as RenderKind,matrix:jungleAssetMatrix(c),color:c.color??'#ffffff'}];
     this.count+=parts.length;
     const drawParts=parts.filter(p=>{
-      if(this.lite&&renderSpec(p.kind).wind){this.skipped++;return false;}return true;
+      if(this.lite&&renderSpec(p.kind).wind&&c.scenerySolid!==true&&jungleSolidRole(p.kind)==='none'){this.skipped++;return false;}return true;
     });
     if(this.batched){
       for(const part of drawParts){
         const point=new THREE.Vector3().setFromMatrixPosition(part.matrix);
         // Fine cells keep a detailed temple bay from dragging the whole temple into view.
         const cell=renderSpec(part.kind).lod?20:32;
-        const key=`${part.kind}:${Math.floor(point.x/cell)}:${Math.floor(point.z/cell)}:${c.cameraCutaway===true}:${c.castShadow!==false}`;
+        const key=`${part.kind}:${Math.floor(point.x/cell)}:${Math.floor(point.z/cell)}:${c.cameraCutaway===true}:${c.castShadow!==false}:${c.scenerySolid}`;
         let bucket=this.buckets.get(key);
-        if(!bucket){bucket={kind:part.kind,castShadow:c.castShadow,cameraCutaway:c.cameraCutaway,transforms:[],colors:[],bounds:new THREE.Box3()};this.buckets.set(key,bucket);}
+        if(!bucket){bucket={kind:part.kind,scenerySolid:c.scenerySolid,castShadow:c.castShadow,cameraCutaway:c.cameraCutaway,transforms:[],colors:[],bounds:new THREE.Box3()};this.buckets.set(key,bucket);}
         bucket.transforms.push(part.matrix);bucket.colors.push(new THREE.Color(part.color));
         // Templates are normalized around X/Z and anchored at Y=0. Include
         // wind and overhang before the actual mesh bounds become available.
@@ -583,7 +595,7 @@ export class JungleAssetKit {
     this.jobs.push(Promise.all(drawParts.map(async part=>{
       const template=await this.loadTemplate(this.assets,part.kind,()=>!this.disposed);if(this.disposed)return;
       const mesh=new THREE.Mesh(template.geometry,this.material(part.kind,template));
-      this.configure(mesh,part.kind);mesh.matrix.copy(inverseAnchor).multiply(part.matrix);mesh.matrixAutoUpdate=false;
+      this.configure(mesh,part.kind,false,c.scenerySolid);mesh.matrix.copy(inverseAnchor).multiply(part.matrix);mesh.matrixAutoUpdate=false;
       mesh.userData.editorIdx=holder.userData.editorIdx;holder.add(mesh);this.readyCount++;
     })).then(()=>{holder.userData.assetReady=true;}).catch(error=>this.failed(c.dkind,error)));
     return holder;
@@ -616,12 +628,12 @@ export class JungleAssetKit {
           const mesh=new THREE.InstancedMesh(geometry,drawMaterial,bucket.transforms.length);
           bucket.transforms.forEach((matrix,i)=>{mesh.setMatrixAt(i,inverse.clone().multiply(matrix));mesh.setColorAt(i,bucket.colors[i]);});
           mesh.instanceMatrix.needsUpdate=true;if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;
-          mesh.computeBoundingBox();mesh.computeBoundingSphere();this.configure(mesh,bucket.kind,!!template.lodGeometry);
+          mesh.computeBoundingBox();mesh.computeBoundingSphere();this.configure(mesh,bucket.kind,!!template.lodGeometry,bucket.scenerySolid);
           if(bucket.castShadow===false){mesh.castShadow=false;mesh.userData.castShadow=false;}return mesh;
         };
         // Keep the authored mesh at every distance. Cell bounds still allow
         // frustum culling without changing silhouettes as the camera moves.
-        const mesh=make(template.geometry);mesh.position.copy(center);
+        const mesh=make(template.geometry);mesh.userData.sceneryLod=0;mesh.position.copy(center);
         // Placement is immutable after upload; wind moves vertices in the
         // shader. Parent/world transforms still update normally for editor
         // roots and level transitions, without recomposing every cell/pass.
@@ -630,7 +642,7 @@ export class JungleAssetKit {
         mesh.userData.cameraCutaway=bucket.cameraCutaway===true;
         if(renderSpec(bucket.kind).distanceLod&&template.lodGeometry){
           const far=make(template.lodGeometry,this.material(bucket.kind,template,true));far.position.copy(center);far.updateMatrix();far.matrixAutoUpdate=false;
-          far.castShadow=false;far.userData.castShadow=false;far.userData.cameraCutaway=bucket.cameraCutaway===true;
+          far.userData.sceneryLod=1;far.castShadow=false;far.userData.castShadow=false;far.userData.cameraCutaway=bucket.cameraCutaway===true;
           this.root.add(far);bucket.farMesh=far;
         }
         this.showBucket(bucket);

@@ -55,6 +55,8 @@ import {
   WARP_PAD_GLOW_TOP,
 } from "./warpPad";
 import { CONST, TUNING } from "./tuning";
+import {WorldSolids} from "./worldSolids";
+import {WorldSurfaceBinding} from "./worldSurfaceBinding";
 import { sfx } from "./audio";
 import { rooReady, rooLoaded } from "./roofont"; // crate stencils are set in Roo
 import { puffs, PUFF_PRESETS } from "./puffs";
@@ -759,6 +761,7 @@ export interface CustomComponent {
   foe?: EnemyKind; // enemy variant (including the wingless moa)
   invisible?: boolean; // wall/pit/ramp: collider or ride surface only; editor reveals a ghost
   containment?: boolean; // wallpath: course boundary resolved after ordinary contacts; cannot be ridden or grabbed
+  scenerySolid?: boolean; // explicit hard/soft override for rendered scenery; native gameplay support remains authored
   solid?: boolean; // wallpath: false makes a visual-only scenery sweep (earth banks/backdrops)
   cycle?: number;
   phase?: number;
@@ -2514,7 +2517,7 @@ const COMPONENT_DATA_KEYS = new Set([
   "t", "p", "s", "to", "pts", "widths", "collisionHeight", "slip", "iceGrip", "containment",
   "edgeGrinding", "cameraView", "cameraPosition", "cameraTarget", "cameraFov", "cameraAspect", "cameraFollowDistance", "cameraFollowTargetHeight", "cameraIntroDistance", "cameraCutaway", "len", "rise", "w", "yaw", "axis", "travelSign", "travelPhase", "vkind", "arc", "arcSteps", "deck",
   "closed", "bank", "curve", "vert", "lipRise", "outerBank", "depthBias", "shake", "kind", "dkind", "vr", "tn",
-  "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid",
+  "lit", "berms", "n", "outline", "range", "speed", "foe", "invisible", "solid", "scenerySolid",
   "cycle", "phase", "amp", "seed", "scaffold", "supports", "rails", "spacing",
   "baySpacing", "supportDepth", "supportBaseY", "terrainSupports", "structureStyle",
   "plankPalette", "polePalette", "shoreProfile", "shoreSeaLevel", "shorePhase",
@@ -2877,7 +2880,7 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
   const booleanKeys: (keyof CustomComponent)[] = [
     "fog",
     "slip", "closed", "vert", "lit", "berms", "outline", "invisible", "containment",
-    "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "lk",
+    "scaffold", "supports", "rails", "terrainSupports", "airOnly", "solid", "scenerySolid", "lk",
     "shoreProfile", "cameraView", "cameraCutaway", "edgeGrinding", "trafficRoad", "doubleSided", "castShadow", "beachSand", "loopRequired", "gravityTrack", "lethal", "skateCamera", "outOfBounds",
   ];
   let aggregateNodes = source.ocean?.shore?.length ?? 0;
@@ -3925,6 +3928,10 @@ export class Level {
   readonly allowsBonus: boolean;
   boss: CrabChiefEncounter | null = null;
   groundMeshes: THREE.Mesh[] = [];
+  readonly worldSolids=new WorldSolids();
+  private worldSurfaceBinding:WorldSurfaceBinding|null=null;
+  prepareWorldSolids():void{this.worldSurfaceBinding?.prepare();}
+  get worldSolidDiagnostics(){return this.worldSurfaceBinding?.diagnostics??null;}
   readonly loopMeshes: THREE.Mesh[] = []; // explicit analytic contacts; empty on ordinary courses
   private obstacleEdgeMeshes: THREE.Mesh[] = [];
   groundAccelerationStats!: GroundAccelerationStats;
@@ -5032,6 +5039,13 @@ export class Level {
     // accelerated Mesh.raycast contract with no first-query hitch.
     this.root.updateMatrixWorld(true);
     this.installGroundAcceleration(this.groundMeshes);
+    if(!this.isCampaignMap){
+      this.worldSurfaceBinding=new WorldSurfaceBinding(this.root,this.worldSolids,{
+        ground:()=>this.groundMeshes,walls:()=>this.walls,wallPath:box=>this.wallPathForBox(box),
+        component:object=>{for(let at:THREE.Object3D|null=object;at&&at!==this.root;at=at.parent){if(at.userData.assetBatchRoot)return undefined;const index=at.userData.editorIdx;if(Number.isInteger(index))return this.builtFromData?.components[index];}return undefined;},
+      });
+      this.worldSurfaceBinding.prepare();
+    }
     if (this.water && !this.campaignWorldMap) {
       const shorelineMeshes:THREE.Mesh[]=[];
       this.root.traverse(object=>{
@@ -5787,14 +5801,14 @@ export class Level {
     // These remain separate authoring components. Runtime-only visual pieces
     // can share one draw per material/cell instead of one draw per rope/post.
     if(!EDITOR_BUILD&&this.batchDecor&&!canvasCloth&&c.solid===false&&!c.invisible&&!c.materialStyle&&!standingWater&&
-      !c.colors&&!c.depthBias&&!c.cameraCutaway&&c.castShadow===undefined&&(c.s??[1,1,1]).every(scale=>scale>0)&&
+      !c.colors&&!c.depthBias&&!c.cameraCutaway&&!c.slip&&c.iceGrip===undefined&&c.castShadow===undefined&&(c.s??[1,1,1]).every(scale=>scale>0)&&
       c.fog===undefined&&c.vert===undefined&&(c.opacity??1)===1){
       const key=JSON.stringify([c.color??'#ffffff',c.emissive??'#000000',c.tex??'checker',!!c.doubleSided]);
       let shared=this.staticSurfaceMaterials.get(key);
       if(shared)material.dispose();else{shared=material;this.staticSurfaceMaterials.set(key,shared);}
       const matrix=new THREE.Matrix4().compose(new THREE.Vector3(...c.p),
         new THREE.Quaternion().setFromAxisAngle(THREE.Object3D.DEFAULT_UP,THREE.MathUtils.degToRad(c.yaw??0)),new THREE.Vector3(...(c.s??[1,1,1])));
-      this.putDecor(`static surface ${key}:${Math.floor(c.p[0]/16)}:${Math.floor(c.p[2]/16)}`,geometry,shared,matrix);
+      this.putDecor(`static surface ${key}:${Math.floor(c.p[0]/16)}:${Math.floor(c.p[2]/16)}`,geometry,shared,matrix,undefined,false,undefined,c.scenerySolid===false?'none':'mesh');
       return;
     }
     if(c.outline&&c.materialStyle==='unity-sand')material=material.clone();
@@ -6748,9 +6762,11 @@ export class Level {
     // tag every root child a component adds with that component's index
     const buildTagged = (idx: number, fn: () => void): void => {
       const before = this.root.children.length;
-      const groundBefore = this.groundMeshes.length;
-      fn();
+      const groundBefore = this.groundMeshes.length,wallBefore=this.walls.length;
+      const sceneryPolicy=this.decorScenerySolid;this.decorScenerySolid=data.components[idx].scenerySolid;
+      try{fn();}finally{this.decorScenerySolid=sceneryPolicy;}
       const surface = data.components[idx];
+      if(surface.t==='decor'&&surface.scenerySolid===false){this.groundMeshes.splice(groundBefore);this.walls.splice(wallBefore);}
       const frozenDeck = surface.tex === 'bridge-ice' && ['platform','crumble','mover'].includes(surface.t) && !surface.pts;
       if (frozenDeck) for (let g=groundBefore;g<this.groundMeshes.length;g++)
         dressCarlisleTimberDeck(this.groundMeshes[g],surface,true);
@@ -7812,6 +7828,7 @@ export class Level {
   }
 
   dispose(preserveResourcesFrom?: Level): void {
+    this.worldSurfaceBinding?.dispose();this.worldSurfaceBinding=null;
     this.boss?.dispose();
     this.boss = null; // Meshy leases are released before the ordinary root traversal.
     if(this.bonusPlatform)this.bonusPlatform.group.userData.bonusStoneDisposed=true;
@@ -8809,6 +8826,7 @@ export class Level {
   }
 
   update(dt: number): void {
+    this.worldSurfaceBinding?.beginStep();
     this.standingWaterClock.value+=Math.max(0,Math.min(dt,0.1));
     for (const bridge of this.spinBridges) bridge.update(dt);
     this.syncSpinBridgeFloors();
@@ -15616,6 +15634,7 @@ export class Level {
   // planter's fern): the members belong to the parent component and must not
   // log themselves, or a captured cluster comes back as four loose props.
   private decorQuiet = false;
+  private decorScenerySolid:boolean|undefined;
   private noteDecor(
     dkind: DecorKind,
     x: number,
@@ -15637,11 +15656,8 @@ export class Level {
     this.decorLog.push(c);
   }
 
-  // Plain scenery box: massing that must LOOK solid without being solid —
-  // the earth banks either side of a corridor, a backdrop cliff, a ravine
-  // floor. Never a groundMesh, never a collider, so it cannot change how a
-  // level plays; it only changes what you can see. Batches with everything
-  // else, so a hundred of them is still one draw call in play.
+  // Opaque earth/stone massing shares the physical scenery path. Batching
+  // changes draw ownership, never whether the visible mass is solid.
   private decorBlock(
     x: number,
     y: number,
@@ -15659,7 +15675,6 @@ export class Level {
       color: "#" + color.toString(16).padStart(6, "0"),
       tex,
     });
-    if (this.liteDecor) return;
     this.putDecor(
       `block:${color.toString(16)}:${tex}`,
       new THREE.BoxGeometry(w, h, d),
@@ -15849,7 +15864,7 @@ export class Level {
     const yaw = c.yaw ?? 0;
     const tilt = c.amp ?? 0;
     this.noteDecor(family, x, y, z, { vr, tn, w, yaw, amp: tilt, seed: c.seed });
-    if (this.liteDecor) return;
+    if (this.liteDecor&&family==='plants'&&c.scenerySolid!==true)return;
     const surfaces = propSurfaces(family, vr);
     if (!surfaces.length) return;
     const tint = propTint(family, tn);
@@ -15872,6 +15887,7 @@ export class Level {
       new THREE.Vector3(s, s, s),
     );
     for (const surf of surfaces) {
+      if(this.liteDecor&&surf.role==='leaf'&&c.scenerySolid!==true)continue;
       const hex = tint?.roles[surf.role];
       this.putDecor(
         `prop:${surf.role}`,
@@ -16174,6 +16190,7 @@ export class Level {
       mat: THREE.Material;
       captureScenery?: boolean;
       captureGroup?: number;
+      solidSurface?: 'mesh'|'none';
       parts: { geo: THREE.BufferGeometry; m: THREE.Matrix4; tint?: THREE.Color }[];
     }
   >();
@@ -16185,7 +16202,11 @@ export class Level {
     tint?: THREE.Color,
     captureScenery = false,
     captureGroup?: number,
+    solidSurface?: 'mesh'|'none',
   ): void {
+    if(this.decorScenerySolid!==undefined)solidSurface=this.decorScenerySolid?'mesh':'none';
+    solidSurface??=/block:|trunk|stone|rock|boulder|wall|beam|pillar|bark|sawn|kerb|curb|barrier|fence|scaffold|building|facade|column|pier|post|masonry|concrete|brick|roof|deck|step|plank|floor|bridge|bench|ledge|platform|pole/i.test(key)&&!/leaf|frond|crown|grass|fern|glow|shadow|foam/i.test(key)?'mesh':'none';
+    if(this.liteDecor&&solidSurface==='none')return;
     if (!this.batchDecor) {
       // Unbatched (the editor's pickable-mesh mode): the shared geometry has
       // no room for this copy's tint, so give this one its own colour attribute
@@ -16202,7 +16223,7 @@ export class Level {
         }
         g.setAttribute("color", new THREE.BufferAttribute(col, 3));
       }
-      const mesh = new THREE.Mesh(g, mat);
+      const mesh = new THREE.Mesh(g, mat);mesh.userData.solidSurface=solidSurface;
       m.decompose(mesh.position, mesh.quaternion, mesh.scale);
       this.root.add(mesh);
       if (captureGroup !== undefined) mesh.userData.captureGroup = captureGroup;
@@ -16210,9 +16231,10 @@ export class Level {
       return;
     }
     if (captureScenery) key += ` scenery${captureGroup === undefined ? "" : ` ${captureGroup}`}`;
+    key+=` physical:${solidSurface}`;
     let b = this.decorParts.get(key);
     if (!b) {
-      b = { mat, parts: [], captureScenery, captureGroup };
+      b = { mat, parts: [], captureScenery, captureGroup, solidSurface };
       this.decorParts.set(key, b);
     }
     b.parts.push({ geo, m, tint });
@@ -16221,7 +16243,7 @@ export class Level {
   private bakeDecor(): void {
     for (const [key, b] of this.decorParts) {
       if (b.parts.length === 0) continue;
-      const mesh = new THREE.Mesh(Level.mergeGeos(b.parts), b.mat);
+      const mesh = new THREE.Mesh(Level.mergeGeos(b.parts), b.mat);mesh.userData.solidSurface=b.solidSurface;
       mesh.name = b.captureGroup === undefined ? key : key.replace(/ \d+$/, "");
       if (b.captureGroup !== undefined) mesh.userData.captureGroup = b.captureGroup;
       this.root.add(mesh);
@@ -16273,7 +16295,6 @@ export class Level {
   private static coconutGeo: THREE.BufferGeometry | null = null;
   private palm(x: number, y: number, z: number, h = 4.8, lean = 0.12): void {
     this.noteDecor("palm", x, y, z, { rise: h, amp: lean });
-    if (this.liteDecor) return;
     if (!Level.palmTrunkGeo) {
       const g = new THREE.CylinderGeometry(0.13, 0.3, 4.8, 7, 6);
       g.translate(0, 2.4, 0);
@@ -16309,6 +16330,7 @@ export class Level {
         this.baseMat("palmTrunk", 0xb08556, "wood", 1, 3),
       ),
     );
+    g.children[0].userData.solidSurface='mesh';
     const two = Math.abs(Math.round(x + z)) % 2 === 0;
     const crown = new THREE.Mesh(
       Level.palmCrownGeo,
@@ -16321,13 +16343,13 @@ export class Level {
     );
     crown.position.set(0.85, 4.72, 0);
     crown.rotation.y = x * 1.7 + z * 0.4; // deterministic twist per tree
-    g.add(crown);
+    crown.userData.solidSurface='none';crown.visible=!this.liteDecor;g.add(crown);
     const nuts = new THREE.Mesh(
       Level.coconutGeo,
       this.decorMat("coconut", 0x7a5a34),
     );
     nuts.position.set(0.85, 4.45, 0);
-    g.add(nuts);
+    nuts.userData.solidSurface='none';nuts.visible=!this.liteDecor;g.add(nuts);
     g.scale.setScalar(h / 4.8);
     g.position.set(x, y, z);
     g.rotation.z = lean;
@@ -16526,7 +16548,6 @@ export class Level {
   private static jCrownGeo: THREE.BufferGeometry | null = null;
   private jungleTree(x: number, y: number, z: number, h = 9, lean = 0): void {
     this.noteDecor("jungletree", x, y, z, { rise: h, amp: lean });
-    if (this.liteDecor) return;
     if (!Level.jTrunkGeo) {
       // taper hard at the base so it reads as a buttress root flare
       const g = new THREE.CylinderGeometry(0.34, 0.95, 9, 8, 5);
@@ -16659,7 +16680,6 @@ export class Level {
       s: [w, h, d],
       yaw: THREE.MathUtils.radToDeg(yaw),
     });
-    if (this.liteDecor) return;
     const m = new THREE.Mesh(
       new THREE.BoxGeometry(w, h, d),
       this.baseMat("ruin", 0x8f9488, "stone", Math.max(1, w / 3), Math.max(1, h / 3)),

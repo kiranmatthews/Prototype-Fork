@@ -1,7 +1,9 @@
 import * as THREE from 'three';
+import {solidContact,type WorldSolids}from'../worldSolids';
 import { RenderInterpolator } from '../renderInterpolation';
 import { BoardFractures } from './fracture';
 export interface BoardDebrisWorld {
+    worldSolids?:WorldSolids;
     groundMeshes: THREE.Mesh[];
     killY: number;
     crumbles: {
@@ -47,6 +49,14 @@ export class DiscardedBoards {
     private point = new THREE.Vector3();
     private normal = new THREE.Vector3();
     private normalMatrix = new THREE.Matrix3();
+    private hardContact=solidContact();
+    private hardPrevious=new THREE.Vector3();
+    private hardCenter=new THREE.Vector3();
+    private hardResolved=new THREE.Vector3();
+    private hardHalf=new THREE.Vector3();
+    private hardLocalNormal=new THREE.Vector3();
+    private hardInverse=new THREE.Quaternion();
+    private hardSurfaceVelocity=new THREE.Vector3();
     private seed = 0x61c88647;
     private disposed = false;
     private thrown = 0;
@@ -194,6 +204,7 @@ export class DiscardedBoards {
         if (board.rest)
             return;
         const root = board.root, velocity = board.velocity;
+        board.bounds.getCenter(this.hardPrevious).multiply(root.scale).applyQuaternion(root.quaternion).add(root.position);
         const previousY = root.position.y;
         velocity.y -= 24 * dt;
         root.position.addScaledVector(velocity, dt);
@@ -204,6 +215,17 @@ export class DiscardedBoards {
             this.retire(board);
             this.lost++;
             return;
+        }
+        if(world.worldSolids?.enabled){
+            board.bounds.getCenter(this.hardCenter).multiply(root.scale).applyQuaternion(root.quaternion).add(root.position);
+            board.bounds.getSize(this.hardHalf).multiply(root.scale).multiplyScalar(.5);this.hardInverse.copy(root.quaternion).invert();this.hardResolved.copy(this.hardCenter);
+            const supportRadius=(n:THREE.Vector3)=>{this.hardLocalNormal.copy(n).applyQuaternion(this.hardInverse);return Math.abs(this.hardLocalNormal.x)*this.hardHalf.x+Math.abs(this.hardLocalNormal.y)*this.hardHalf.y+Math.abs(this.hardLocalNormal.z)*this.hardHalf.z;};
+            if(world.worldSolids.resolve(this.hardPrevious,this.hardResolved,{low:0,high:0,radius:this.hardHalf.length(),ignoreGround:true,supportRadius},this.hardContact)){
+                root.position.add(this.hardResolved.sub(this.hardCenter));
+                this.hardSurfaceVelocity.copy(this.hardContact.surfaceDelta).multiplyScalar(1/Math.max(dt,1e-6));velocity.sub(this.hardSurfaceVelocity);
+                const inward=velocity.dot(this.hardContact.normal);if(inward<0)velocity.addScaledVector(this.hardContact.normal,-inward*1.35);
+                velocity.add(this.hardSurfaceVelocity);board.angular.multiplyScalar(.72);if(inward< -1)this.onImpact?.(board.broken);
+            }
         }
         if (velocity.y >= 0)
             return;

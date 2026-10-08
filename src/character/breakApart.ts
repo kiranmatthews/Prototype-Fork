@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {solidContact,type WorldSolids}from'../worldSolids';
 import { characterElasticityAmplitudes } from '../animation/elasticity';
 
 export type BreakApartStyle = 'head-pop' | 'waist-split' | 'loose-limbs' | 'yard-sale' | 'blast' | 'crush';
@@ -11,6 +12,7 @@ export interface BreakApartOptions {
 }
 export type WipeoutDirection = 'forward' | 'back' | 'side' | 'air';
 interface DebrisWorld {
+  worldSolids?:WorldSolids;
   groundMeshes: THREE.Mesh[];
   walls: THREE.Box3[];
   crumbles: { state: string }[];
@@ -128,6 +130,8 @@ export class CharacterBreakApart {
   private normal = new THREE.Vector3();
   private normalMatrix = new THREE.Matrix3();
   private ray = new THREE.Raycaster();
+  private hardContact=solidContact();
+  private surfaceVelocity=new THREE.Vector3();
   private hits: THREE.Intersection[] = [];
 
   constructor(private readonly root: THREE.Object3D) {}
@@ -468,12 +472,21 @@ export class CharacterBreakApart {
       p.rotation.premultiply(this.angularQ).normalize();
     }
     p.angular.multiplyScalar(Math.exp(-.65 * dt));
+    if(world.worldSolids?.enabled){
+      const radius=Math.hypot(p.halfSize.x*p.scale.x,p.halfSize.y*p.scale.y,p.halfSize.z*p.scale.z);
+      if(world.worldSolids.resolve(this.previous,p.position,{low:0,high:0,radius,ignoreGround:true,supportRadius:n=>this.supportRadius(p,n)},this.hardContact)){
+        const hit=this.hardContact;this.surfaceVelocity.copy(hit.surfaceDelta).multiplyScalar(1/Math.max(dt,1e-6));
+        p.velocity.sub(this.surfaceVelocity);const inward=p.velocity.dot(hit.normal);
+        if(inward<0)p.velocity.addScaledVector(hit.normal,-inward*1.35);
+        p.velocity.add(this.surfaceVelocity);p.angular.multiplyScalar(.72);this.contacts++;
+      }
+    }
     // Swept expanded boxes catch thin walls even when a fast fragment crosses
     // the whole slab in a fixed tick. OBB projection keeps gloves/feet compact.
     const rx = this.walls.length ? this.supportRadius(p, this.normal.set(1, 0, 0)) : 0;
     const ry = this.walls.length ? this.supportRadius(p, UP) : 0;
     const rz = this.walls.length ? this.supportRadius(p, this.normal.set(0, 0, 1)) : 0;
-    for (const box of this.walls) {
+    for (const box of world.worldSolids?.enabled?[]:this.walls) {
       let near = 0, far = 1;
       this.sweepNormal.set(0, 0, 0);
       for (let axis = 0; axis < 3; axis++) {

@@ -73,7 +73,7 @@ import {
 } from "./props";
 import { TROPICAL_PLANT_KINDS } from "./tropicalPlants";
 import { CITY_ASSETS, CITY_ASSET_KINDS, isCityAsset, type CityKind } from "./cityAssets";
-import { JUNGLE_ASSETS, JUNGLE_ASSET_KINDS, isJungleAsset, type JungleAssetKind } from "./jungleAssets";
+import { JUNGLE_ASSETS, JUNGLE_ASSET_KINDS, isJungleAsset, jungleSolidRole, type JungleAssetKind } from "./jungleAssets";
 import { isNightworksSurface } from "./nightworksRocks";
 
 interface Hooks {
@@ -8248,7 +8248,8 @@ export class Editor {
           else if (value === "water" || value === "jungle-stream") {c.materialStyle = value; c.tex = "solid"; makeScenery();}
           else delete c.materialStyle;
         }, "Surface texture"));
-      boolRow("walkable collision", () => c.solid !== false, value => {
+      boolRow("solid collision", () => c.scenerySolid??(c.materialStyle!=='water'&&c.materialStyle!=='jungle-stream'), value => {
+        c.scenerySolid=value;
         if (value) { c.solid = true; if (c.materialStyle === 'water' || String(c.materialStyle) === 'jungle-stream') delete c.materialStyle; }
         else makeScenery();
         this.renderProps();
@@ -9329,13 +9330,14 @@ export class Editor {
       if (["pine", "fern", "broadleaf", "flowers", "toadstool", "toadstools", "mossrock", "jungletree", "palm", "vines", "planter", "log", "coastalhouse"].includes(dk))
         num("yaw °", () => c.yaw ?? 0, v => { c.yaw = v; }, 15);
       if (isJungleAsset(dk)) {
+        if(dk!=='thornroots'&&dk!=='carvedlog')boolRow("solid scenery",()=>c.scenerySolid??jungleSolidRole(dk)!=='none',value=>{c.scenerySolid=value;});
         boolRow("invisible in play", () => c.invisible === true, value => {
           if (value) c.invisible = true; else delete c.invisible;
         });
         if (dk === "carvedlog" || dk === "thornroots")
-          boolRow(dk === "thornroots" ? "hazard collision" : "solid collision", () => c.solid ?? dk === "carvedlog", value => { c.solid = value; });
+          boolRow(dk === "thornroots" ? "hazard collision" : "solid collision", () => c.solid ?? dk === "carvedlog", value => { c.solid = value;c.scenerySolid=value; });
       }
-      if(isCityAsset(dk)){if(CITY_ASSETS[dk].ground||dk==="cityfence")num("rise along tile (m)",()=>c.amp??0,v=>{c.amp=v;},.1);num("yaw °",()=>c.yaw??0,v=>{c.yaw=v;},15);sizeRow(0,"width");sizeRow(1,"height");sizeRow(2,"depth");boolRow("solid collision",()=>c.solid??!!(CITY_ASSETS[dk].building||CITY_ASSETS[dk].ground),v=>{c.solid=v;});}
+      if(isCityAsset(dk)){if(CITY_ASSETS[dk].ground||dk==="cityfence")num("rise along tile (m)",()=>c.amp??0,v=>{c.amp=v;},.1);num("yaw °",()=>c.yaw??0,v=>{c.yaw=v;},15);sizeRow(0,"width");sizeRow(1,"height");sizeRow(2,"depth");boolRow("solid collision",()=>c.scenerySolid??true,v=>{c.solid=v;c.scenerySolid=v;});}
       if (dk === "coastalhouse") {
         sizeRow(0, "width"); sizeRow(1, "height"); sizeRow(2, "depth");
         num("district colour", () => c.tn ?? 0, v => { c.tn = THREE.MathUtils.clamp(Math.round(v), 0, 6); }, 1);
@@ -9405,8 +9407,8 @@ export class Editor {
           : dk === "log"
             ? "scenery — solid: a hop-over obstacle across the path"
             : dk === "block"
-              ? "massing — looks solid, is not: you fall straight through it"
-              : "scenery — visual only, never a floor and never a wall";
+              ? "solid massing — its rendered sides and top have physical contact"
+              : "Hard scenery has physical contact; foliage, water and projected backdrops remain soft.";
       if (!PROP_FAMILIES.includes(dk as PropFamily))
         this.propsEl.appendChild(note);
     } else if (c.t === "grindosaurus") {

@@ -1,3 +1,4 @@
+import {solidContact} from './worldSolids';
 import { surfaceGrip } from './surfaceBehavior';
 import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';
 import { LOOP_TURN, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';
@@ -145,6 +146,7 @@ import { ROLL_LANDING_CLIP_ID, ROLL_LANDING_DURATION, ROLL_LANDING_CONTROL_SECON
 import {
   BASE_CHARACTER_HITBOX_HEIGHT,
   characterCollisionHeight,
+  characterDesignHeight,
 } from './character/collisionDimensions';
 import {
   characterProportionSettings,
@@ -873,6 +875,21 @@ export class Player {
   private bailRecoveryPose = 0; // 0..1 fixed-step roll/kneel/rise phase
   private bailGroundT = 0; // uninterrupted stable support before roll-up may start
   private bailExitSpeed = 0; // capped run-out target when direction is held
+  private worldStandingHeight=1.6;
+  private readonly worldStepOrigin=new THREE.Vector3();
+  private readonly worldContact=solidContact();
+  private readonly worldVelocity=new THREE.Vector3();
+  private readonly worldNormal=new THREE.Vector3();
+  private readonly worldAxis=new THREE.Vector3(0,1,0);
+  private readonly worldSurfaceVelocity=new THREE.Vector3();
+  private readonly worldProposed=new THREE.Vector3();
+  private worldContactCount=0;
+  private worldLastImpact:{name:string;point:number[];normal:number[];incoming:number[];outgoing:number[];impact:number;bailing:boolean}|null=null;
+  private worldTripT=0;
+  private readonly worldTripNormal=new THREE.Vector3();
+  private worldTripPlane=0;
+  private worldTripTop=0;
+  get worldImpactDiagnostics(){return{count:this.worldContactCount,last:this.worldLastImpact};}
   private readonly bailVelocity = new THREE.Vector3(); // world-space recovery carry
   private readonly bailRecoverySample = sampleBailRecovery(0);
   private bailSupportOffset = 0;
@@ -2554,6 +2571,9 @@ export class Player {
 
   private syncCharacterHitboxDimensions(): void {
     this.interactionVersion++;
+    // Hard world contact follows the actual authored stature. The smaller
+    // legacy interaction box remains responsible for forgiving crate/enemy play.
+    this.worldStandingHeight=1.36*characterDesignHeight(characterProportionSettings.value,characterProportionSettings.activeHeadProfile);
     this.hitboxHalf.y =
       characterCollisionHeight(
         characterProportionSettings.value,
@@ -3690,6 +3710,7 @@ export class Player {
     this.lastTy = 0;
     this.rideNormal.set(0, 1, 0);
     this.prevPos.copy(this.pos);
+    this.worldStepOrigin.copy(this.pos);level.prepareWorldSolids?.();level.worldSolids?.resetMotion();
     this.snapRenderInterpolation();
     for (const s of this.sparks) {
       s.life = 0;
@@ -3739,6 +3760,8 @@ export class Player {
 
   // One deterministic fixed step.
   step(dt: number, input: Input, level: Level): void {
+    level.prepareWorldSolids?.();this.worldStepOrigin.copy(this.pos);
+    this.worldTripT=Math.max(0,this.worldTripT-dt);
     // Detached sockets are a final presentation layer. Never let them enter
     // the authored-pose baseline, interaction bounds or movement simulation.
     this.breakApart?.restore();
@@ -3938,6 +3961,7 @@ export class Player {
         return;
       }
       this.stepRope(dt, input, level);
+      this.resolveWorldContact(level);
       this.stepBossEncounter(dt, level);
       this.blastCheck(level); // a bomb under the rope/ledge still gets you
       this.updateSpin(dt, input); // Square spins on the rope: mid-air smash
@@ -11910,11 +11934,13 @@ export class Player {
         this.airFromSkate = portalBoard;
         this.airMomentum = portalBoard;
         this.laneCursor.s = -1; this.viewInput.reset();this.chiefInput.reset();
+        this.worldStepOrigin.copy(this.pos);
         this.returnPortalCoolT = 0.35;
         this.emitSparks(12, 0x9f72ff, 2);
         sfx.play('woosh2', 0.85, 1.2);
       }
     }
+    this.resolveWorldContact(level);
     const half = this.hitboxHalf;
     if (!ledgeOnly && this.state !== 'grind' && !this.wallriding) {
       const coastHit = level.resolveCoastBoundary(
@@ -12775,6 +12801,7 @@ export class Player {
               this.tryLedgeGrab(w, level)
             )
               break;
+            if(level.worldSolids?.enabled)continue;
             const bx = this.pos.x;
             const bz = this.pos.z;
             const bs = this.speed;
@@ -12784,6 +12811,7 @@ export class Player {
             break; // one logical path resolves once, never once per broadphase slice
           }
           if (this.tryLedgeGrab(w, level)) break; // caught its lip — hanging
+          if(level.worldSolids?.enabled)continue;
           const bx = this.pos.x;
           const bz = this.pos.z;
           const bs = this.speed; // pushOutOf full-stops; keep the crash speed
@@ -13999,6 +14027,60 @@ export class Player {
     const hi = Math.max(TUNING.tripCarryMin, TUNING.tripCarryMax);
     return Math.sign(entrySignedSpeed || 1) * Math.abs(entrySignedSpeed) *
       THREE.MathUtils.lerp(lo, hi, this.simRand());
+  }
+
+  /** One physical boundary for native triangles, structural props and moving
+   * geometry. Only ordinary floor acceptance stays with the ride solver. */
+  private resolveWorldContact(level:Level):void{
+    if(this.hubMode||!level.worldSolids?.enabled||this.state==='hang')return;
+    const half=this.hitboxHalf,down=this.isBailing||this.state==='dead';
+    const height=Math.max(half.y*2,this.worldStandingHeight*(this.crawling?.6:this.sliding?.55:1-.14*this.chargePose));
+    const radius=Math.min(height*.49,down?Math.max(.55,half.x,half.z):Math.max(half.x,half.z));
+    this.worldAxis.copy(this.grounded&&!down?this.rideNormal:VERT_UP).normalize();
+    this.worldProposed.copy(this.pos);
+    // Displacement includes a moving support's carry. Vertical speed remains
+    // physical, so a floor snap cannot manufacture a violent ceiling impact.
+    this.worldVelocity.copy(this.pos).sub(this.worldStepOrigin).multiplyScalar(1/CONST.fixedStep);this.worldVelocity.y=this.vVel;
+    const entrySpeed=this.speed;
+    const query={low:down?.8:radius,high:Math.max(down?.9:radius,height-radius),radius,axis:this.worldAxis,supportNormal:this.worldAxis,ignoreGround:true,
+      soleClearance:this.state==='grind'?.32:undefined};
+    if(!level.worldSolids.resolve(this.worldStepOrigin,this.pos,query,this.worldContact))return;
+    const hit=this.worldContact,n=this.worldNormal.copy(hit.normal);
+    const shiftX=this.pos.x-this.worldProposed.x,shiftY=this.pos.y-this.worldProposed.y,shiftZ=this.pos.z-this.worldProposed.z;
+    this.translateCollisionBoxes(shiftX,shiftY,shiftZ);
+    if(hit.fraction===0&&hit.depth>.035)this.prevPos.addScaledVector(n,hit.depth+.004);
+    this.worldSurfaceVelocity.copy(hit.surfaceDelta).multiplyScalar(1/CONST.fixedStep);
+    this.worldVelocity.sub(this.worldSurfaceVelocity);
+    const into=-this.worldVelocity.dot(n);if(into<=.03)return;
+    const incoming=this.worldVelocity.clone().add(this.worldSurfaceVelocity).toArray();
+    const planar=Math.hypot(this.worldVelocity.x,this.worldVelocity.z),normalPlanar=Math.hypot(n.x,n.z);
+    const frontal=normalPlanar>.7?-(n.x*this.worldVelocity.x+n.z*this.worldVelocity.z)/Math.max(.001,normalPlanar*planar):into/Math.max(.001,this.worldVelocity.length());
+    const fatal=this.state==='dead'||this.state==='gameover';
+    const crash=!fatal&&!this.isBailing&&into>=TUNING.wallBailSpeed&&frontal>=TUNING.wallBailFrontal;
+    const trip=crash&&Math.abs(n.y)<.55&&hit.top<this.pos.y+TUNING.tripMaxHeight;
+    if(trip){
+      const launch=this.lowObstacleTripLaunch(entrySpeed);
+      this.bail(false,entrySpeed,'trip',into);this.startRagdoll('forward');this.vVel=Math.max(this.vVel,launch);this.speed=this.lowObstacleTripCarry(entrySpeed);
+      this.state='air';this.grounded=false;this.airFromSkate=false;this.airGrav='board';this.airMomentum=true;
+      this.worldTripT=.45;this.worldTripNormal.copy(n);this.worldTripPlane=n.dot(hit.point);this.worldTripTop=hit.top;
+    }else{
+      const sameTrip=this.worldTripT>0&&this.vVel>0&&this.worldTripNormal.dot(n)>.95&&Math.abs(this.worldTripNormal.dot(hit.point)-this.worldTripPlane)<.06&&hit.top<=this.worldTripTop+.08;
+      if(sameTrip)return; // remain physically blocked while the trip lifts the core over the lip
+      if(crash){this.bail(false,entrySpeed,'wall',into);this.startRagdoll('back');this.wallriding=false;this.state='air';this.grounded=false;this.airFromSkate=false;this.airGrav='foot';this.airMomentum=true;}
+      if(!crash&&!this.isBailing&&!fatal&&Math.abs(n.y)<.4&&this.softSkateImpact(n.x,n.z,entrySpeed))return;
+      const bouncing=crash||this.isBailing||fatal,restitution=crash?.32:bouncing?THREE.MathUtils.clamp(TUNING.ragBounce,0,.8):0;
+      this.worldVelocity.addScaledVector(n,into).multiplyScalar(bouncing?.82:1).addScaledVector(n,into*restitution).add(this.worldSurfaceVelocity);
+      if(crash&&n.y>-.3)this.worldVelocity.y=Math.max(this.worldVelocity.y,3.6);
+      this.vVel=this.worldVelocity.y;
+      const speed=Math.hypot(this.worldVelocity.x,this.worldVelocity.z);
+      if(speed>.0001){const sign=this.worldVelocity.x*this.axisF.x+this.worldVelocity.z*this.axisF.z<0?-1:1;this.speed=speed*sign;this.axisF.set(this.worldVelocity.x/this.speed,0,this.worldVelocity.z/this.speed);this.axisL.set(this.axisF.z,0,-this.axisF.x);}else this.speed=0;
+      this.walkVelocity.copy(this.worldVelocity).setY(0);if(this.swimming)this.swimVelocity.copy(this.worldVelocity);
+      if(this.isBailing){this.bailVelocity.copy(this.worldVelocity).setY(0);this.ragAngVel.multiplyScalar(.78);}
+      if(bouncing&&into>2){sfx.play('crunch',Math.min(.9,.35+into*.02),.75);this.emitSparks(6,0xffd166,1.7);this.emitDust(2);}
+    }
+    this.worldContactCount++;
+    this.worldLastImpact={name:hit.surface?.name??'Solid surface',point:hit.point.toArray(),normal:n.toArray(),incoming,
+      outgoing:[this.axisF.x*this.speed,this.vVel,this.axisF.z*this.speed],impact:into,bailing:this.isBailing};
   }
 
   private softSkateImpact(nx: number, nz: number, entrySpeed: number, threshold = TUNING.wallBailSpeed): boolean {
@@ -15596,7 +15678,8 @@ export class Player {
     this.pos.addScaledVector(this.axisF, this.speed * dt);
     this.vVel = Math.max(-CONST.maxFallSpeed, this.vVel - TUNING.fallGravity * dt);
     this.pos.y += this.vVel * dt;
-    for (const wall of level.walls) {
+    this.resolveWorldContact(level);
+    for (const wall of level.worldSolids?.enabled?[]:level.walls) {
       if (this.pos.y > wall.max.y || this.pos.y + this.hitboxHalf.y * 2 < wall.min.y) continue;
       const hx = CONST.playerHalf.x + 0.02;
       const hz = CONST.playerHalf.z + 0.02;

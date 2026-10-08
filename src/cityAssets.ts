@@ -31,6 +31,7 @@ export const CITY_ASSET_KINDS=Object.keys(ASSETS) as CityKind[];
 export const CITY_ASSET_LABELS=Object.fromEntries(CITY_ASSET_KINDS.map(k=>[k,CITY_ASSETS[k].label])) as Record<CityKind,string>;
 export const isCityAsset=(kind:string|undefined):kind is CityKind=>!!kind&&Object.prototype.hasOwnProperty.call(ASSETS,kind);
 export interface CityPlacement {
+ scenerySolid?:boolean;
  dkind:CityKind;p:[number,number,number];s?:[number,number,number];yaw?:number;w?:number;color?:string;cameraCutaway?:boolean;
  /** Height change in metres across local +X; yaw 90 points +X along world -Z. */
  amp?:number;
@@ -244,7 +245,7 @@ export function cityCollisionGeometry(kind:CityKind):THREE.BufferGeometry {
  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(data.positions,3));g.setIndex(data.indices);
  g.translate(-(spec.bounds[0][0]+spec.bounds[1][0])/2,-spec.bounds[0][1],-(spec.bounds[0][2]+spec.bounds[1][2])/2);g.computeVertexNormals();return g;
 }
-interface Bucket {kind:CityKind;cutaway:boolean;matrices:THREE.Matrix4[];colors:THREE.Color[];}
+interface Bucket {scenerySolid?:boolean;kind:CityKind;cutaway:boolean;matrices:THREE.Matrix4[];colors:THREE.Color[];}
 /** City streets are static; reject distant rays before entering each tile's BVH. */
 export function accelerateCityGround(mesh:THREE.Mesh):void {
  if(!mesh.userData.cityAsset)return;
@@ -261,10 +262,10 @@ export function accelerateCityGround(mesh:THREE.Mesh):void {
 export class CityAssetKit {
  private assets=cityTemplates.scope();
  readonly root=new THREE.Group();readonly errors:string[]=[];private buckets=new Map<string,Bucket>();private jobs:Promise<void>[]=[];private disposed=false;private count=0;private loaded=0;private loose=new Set<THREE.Group>();private ownedMaterials=new Set<THREE.Material>();
- constructor(private batched=true){this.root.name='Carlisle Coast city kit';}
+ constructor(private batched=true){this.root.name='Carlisle Coast city kit';this.root.userData.assetBatchRoot=true;}
  add(c:CityPlacement,centered=false):THREE.Group|null {
   const matrix=cityMatrix(c,centered);this.count++;
-  if(this.batched){const key=c.dkind+':'+Math.floor(c.p[0]/48)+':'+Math.floor(c.p[2]/48)+':'+(c.cameraCutaway?'cutaway':'solid');let bucket=this.buckets.get(key);if(!bucket){bucket={kind:c.dkind,cutaway:!!c.cameraCutaway,matrices:[],colors:[]};this.buckets.set(key,bucket);}bucket.matrices.push(matrix);bucket.colors.push(new THREE.Color(c.color??'#ffffff'));return null;}
+  if(this.batched){const key=c.dkind+':'+Math.floor(c.p[0]/48)+':'+Math.floor(c.p[2]/48)+':'+(c.cameraCutaway?'cutaway':'solid')+':'+c.scenerySolid;let bucket=this.buckets.get(key);if(!bucket){bucket={kind:c.dkind,scenerySolid:c.scenerySolid,cutaway:!!c.cameraCutaway,matrices:[],colors:[]};this.buckets.set(key,bucket);}bucket.matrices.push(matrix);bucket.colors.push(new THREE.Color(c.color??'#ffffff'));return null;}
   return this.addLoose(this.root,c,matrix);
  }
  /** Dress a moving gameplay object in its local coordinates without replacing its collider. */
@@ -274,7 +275,7 @@ export class CityAssetKit {
  private addLoose(parent:THREE.Object3D,c:CityPlacement,matrix:THREE.Matrix4):THREE.Group {
   const holder=new THREE.Group();holder.name=CITY_ASSETS[c.dkind].label;holder.position.fromArray(c.p);holder.userData.editorIdx=parent.userData.editorIdx;parent.add(holder);this.loose.add(holder);
   this.jobs.push(this.template(c.dkind).then(template=>{if(this.disposed)return;const inverse=new THREE.Matrix4().makeTranslation(-c.p[0],-c.p[1],-c.p[2]);
-   for(const part of template.near){const material=part.material.clone();material.onBeforeCompile=part.material.onBeforeCompile;material.customProgramCacheKey=part.material.customProgramCacheKey;material.color.multiply(new THREE.Color(c.color??'#ffffff'));this.ownedMaterials.add(material);const m=new THREE.Mesh(part.geometry,material);m.matrix.copy(inverse).multiply(matrix);m.matrixAutoUpdate=false;m.castShadow=m.receiveShadow=true;m.userData.editorIdx=holder.userData.editorIdx;holder.add(m);}this.loaded++;
+   for(const part of template.near){const material=part.material.clone();material.onBeforeCompile=part.material.onBeforeCompile;material.customProgramCacheKey=part.material.customProgramCacheKey;material.color.multiply(new THREE.Color(c.color??'#ffffff'));this.ownedMaterials.add(material);const m=new THREE.Mesh(part.geometry,material);m.matrix.copy(inverse).multiply(matrix);m.matrixAutoUpdate=false;m.castShadow=m.receiveShadow=true;m.userData.editorIdx=holder.userData.editorIdx;m.userData.solidSurface=c.scenerySolid===false?'none':'mesh';holder.add(m);}this.loaded++;
   }).catch(e=>this.failed(c.dkind,e)));return holder;
  }
  private template(kind:CityKind):Promise<Template>{return this.assets.load(CITY_ASSETS[kind].file||CITY_ASSETS[kind].procedural?kind:'library').then(l=>l.get(kind)!);}
@@ -285,7 +286,7 @@ export class CityAssetKit {
    const build=(parts:Part[])=>{const group=new THREE.Group();for(const part of parts){const m=new THREE.InstancedMesh(part.geometry,part.material,bucket.matrices.length);bucket.matrices.forEach((matrix,i)=>{m.setMatrixAt(i,inverse.clone().multiply(matrix));m.setColorAt(i,bucket.colors[i]);});m.computeBoundingBox();
     // A sphere transformed by max-axis scale can under-bound a graded instance.
     // The transformed box encloses all instances, including their full descent.
-    m.boundingSphere=m.boundingBox!.getBoundingSphere(new THREE.Sphere());bounds.union(m.boundingBox!);m.updateMatrix();m.matrixAutoUpdate=false;m.castShadow=m.receiveShadow=true;m.userData.cityAsset=bucket.kind;group.add(m);}return group;};
+    m.boundingSphere=m.boundingBox!.getBoundingSphere(new THREE.Sphere());bounds.union(m.boundingBox!);m.updateMatrix();m.matrixAutoUpdate=false;m.castShadow=m.receiveShadow=true;m.userData.cityAsset=bucket.kind;m.userData.solidSurface=bucket.scenerySolid===false?'none':'mesh';group.add(m);}return group;};
    cell.add(build(template.near));cell.userData.cityBounds=bounds.translate(center);cell.userData.cameraCutaway=bucket.cutaway;cell.updateMatrix();cell.matrixAutoUpdate=false;this.root.add(cell);this.loaded+=bucket.matrices.length;
   }).catch(e=>this.failed(bucket.kind,e)));this.buckets.clear();
  }
