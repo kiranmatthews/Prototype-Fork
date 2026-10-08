@@ -141,7 +141,7 @@ import { withSpinArmPose, SPIN_ELBOW_BEND_DEGREES } from './spin-effects/armPose
 import { SPIN_SMEAR_POSE_REVISION } from './spin-effects/storageKeys';
 import { CharacterBreakApart } from './character/breakApart';
 import { selectWipeoutStyle, type WipeoutCause } from './character/wipeoutPolicy';
-import { ROLL_LANDING_CLIP_ID, ROLL_LANDING_DURATION } from './animation/rollLanding';
+import { ROLL_LANDING_CLIP_ID, ROLL_LANDING_DURATION, ROLL_LANDING_CONTROL_SECONDS } from './animation/rollLanding';
 import {
   BASE_CHARACTER_HITBOX_HEIGHT,
   characterCollisionHeight,
@@ -1029,6 +1029,7 @@ export class Player {
   private rollLandingT = -1;
   private rollLandingDuration = ROLL_LANDING_DURATION;
   private boardRunCarry = false;
+  private boardRunCarryT = 0;
   private readonly rollPalmTarget = new THREE.Vector3();
   private readonly rollFootTarget = new THREE.Vector3();
   private rollPalmPlanted = false;
@@ -3524,6 +3525,7 @@ export class Player {
     this.walkIntent.set(0, 0, 0);
     this.rollLandingT = -1;
     this.boardRunCarry = false;
+    this.boardRunCarryT = 0;
     this.crawling = false;
     this.slamActive = false;
     this.slamHangT = 0;
@@ -4016,7 +4018,8 @@ export class Player {
         ? (this.courseInputDirection(level) ??
           (chaseMode ? (level.skatepark ? this.axisF : this.camDir) : null))
         : null;
-    if (laneDir && (!level.boss || this.grounded && this.state === 'ride' && this.slideTimer <= 0 && !this.isBailing && !this.wallriding)) {
+    if (laneDir && !(this.state === 'air' && this.emergencyEjectLandingPending) &&
+        (!level.boss || this.grounded && this.state === 'ride' && this.slideTimer <= 0 && !this.isBailing && !this.wallriding)) {
       // The chief camera may orbit through 180 degrees during a jump. Input
       // changes its screen frame, never the physical launch/board heading.
       const k = level.boss || level.cameraViews.length && !chaseMode ? 1 : Math.min(1, 6 * dt);
@@ -4436,8 +4439,10 @@ export class Player {
         if (this.rollLandingT >= this.rollLandingDuration) this.rollLandingT = -1;
       }
     }
-    if (this.freeSkate || this.isBailing || this.state !== 'ride' || this.swimming)
+    if (this.freeSkate || this.isBailing || this.state !== 'ride' || this.swimming) {
       this.boardRunCarry = false;
+      this.boardRunCarryT = 0;
+    }
 
     // A slide taken from your feet ends back on your feet — the burst never
     // launches you into skating. lastPlanar still holds the slide's burst
@@ -4637,7 +4642,10 @@ export class Player {
         const jumpActionConsumed = vertRelease.consumed || emergencyEjected;
         if (jumpActionConsumed) {
           input = { ...input, jumpPressed: false, jumpReleased: false } as Input;
-          this.rawInput = input;
+          // input is already projected onto the departing board's axes.
+          // Retire only its jump edges in the raw device sample: replacing
+          // raw axes here turns Right/Back into Forward on the eject frame.
+          this.rawInput = { ...this.rawInput, jumpPressed: false, jumpReleased: false } as Input;
         }
         // NOTE: there is deliberately NO lip-stall catch from the air. The
         // stall is committed ON the wall (climb square holding Triangle,
@@ -6321,26 +6329,15 @@ export class Player {
         .addScaledVector(this.axisL, targetLateral);
 
       if (this.boardRunCarry && !planted) {
-        const carry = this.walkVelocity.length();
-        const target = this.walkTarget.length();
-        const facing = carry > 1e-6 && target > 1e-6
-          ? this.walkVelocity.dot(this.walkTarget) / (carry * target) : 1;
-        if (input.grabHeld || facing < -.15 || (!walkDir && this.rollLandingT < 0)) {
-          // Explicit braking/reversal and released running use foot friction;
-          // touchdown and the forward roll take no momentum away.
-          const brake = TUNING.walkSpeed * dt / Math.max(.08, TUNING.walkSlowdownTime);
-          this.walkVelocity.setLength(Math.max(0, carry - brake * (facing < -.15 ? 2 : 1)));
-        } else if (target > 1e-6 && carry > 1e-6) {
-          const angle = Math.atan2(this.walkVelocity.x * this.walkTarget.z - this.walkVelocity.z * this.walkTarget.x,
-            this.walkVelocity.dot(this.walkTarget));
-          const turn = THREE.MathUtils.clamp(angle, -4 * dt, 4 * dt);
-          const x = this.walkVelocity.x, z = this.walkVelocity.z;
-          this.walkVelocity.set(x * Math.cos(turn) - z * Math.sin(turn), 0,
-            x * Math.sin(turn) + z * Math.cos(turn));
-        }
+        // Keep the exact impact velocity, then give the ordinary foot target
+        // full ownership within a short finite window. Direction changes and
+        // neutral input work immediately; neither a rolling pose nor a held
+        // stick can retain skate speed as permanent running speed.
+        this.walkVelocity.lerp(this.walkTarget, Math.min(1, dt / Math.max(dt, this.boardRunCarryT)));
+        this.boardRunCarryT = Math.max(0, this.boardRunCarryT - dt);
         this.walkTurnaround = false;
         this.walkIntent.set(0, 0, 0);
-        if (this.rollLandingT < 0 && this.walkVelocity.length() <= TUNING.walkSpeed) this.boardRunCarry = false;
+        if (this.boardRunCarryT <= 1e-6) this.boardRunCarry = false;
       } else if (planted) {
         this.walkVelocity.set(0, 0, 0);
         this.walkTurnaround = false;
@@ -8556,6 +8553,7 @@ export class Player {
     this.freeSkate = false;
     this.slideFromWalk = this.slideLandClamp = false;
     this.boardRunCarry = true;
+    this.boardRunCarryT = ROLL_LANDING_CONTROL_SECONDS;
     this.rollLandingT = 0;
     this.rollPalmPlanted = this.rollFootPlanted = false;
     this.rollLandingDuration = THREE.MathUtils.clamp(ROLL_LANDING_DURATION * 18 / Math.max(12, this.speed), .60, .90);

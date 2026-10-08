@@ -4,6 +4,8 @@ import type { AnimationClip, QuaternionTuple, Vec3Tuple } from './types';
 
 export const ROLL_LANDING_CLIP_ID = 'player.roll-land';
 export const ROLL_LANDING_DURATION = .76;
+/** Brief momentum handoff into ordinary foot intent, including release/stop. */
+export const ROLL_LANDING_CONTROL_SECONDS = .24;
 export const ROLL_RUN_BLEND_START = .72;
 
 // Catch, load the leading palm, roll across the shoulder/back, plant the

@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { makeInput } from './jungle-cup-harness.mjs';
 import { withBlockworksRuntime, normalizeGameInput } from './blockworks-runner.mjs';
 
 const source = { v: 1, name: 'Board roll landing', spawn: [0, .05, 60], killY: -80,
@@ -52,8 +54,9 @@ await withBlockworksRuntime(async r => {
       assert.equal(p.freeSkate, false);
       const contact = samples.length - 1;
       for (let i = 0; i < 60 && p.rollLandingT >= 0; i++) tick();
-      assert.ok(samples.slice(contact, -1).every(s => Math.abs(Math.hypot(...s.velocity) - before) < 1e-6), 'roll scrubbed world momentum');
-      assert.equal(p.isBailing, false); assert.equal(p.animationClipHint, 'player.run');
+      assert.ok(samples.slice(contact + 15).every(s => Math.hypot(...s.velocity) < .01), 'released roll kept auto-running');
+      assert.equal(p.isBailing, false); assert.equal(p.animationClipHint, 'player.idle');
+      assert.equal(runtime.activeClipId, 'player.idle', 'stopped roll forced a running animation');
       assert.ok(p.animationRig.joints.every(j => [...j.node.position.toArray(), ...j.node.scale.toArray()].every(Number.isFinite)));
       // Releasing the run should still stop; no permanent auto-run or phantom board recall.
       for (let i = 0; i < 180; i++) tick();
@@ -66,7 +69,8 @@ await withBlockworksRuntime(async r => {
     for (let i = 0; i < 240 && !p.grounded; i++) tick({ moveY: 1 });
     const carried = p.walkVelocity.length();
     for (let i = 0; i < 120; i++) tick({ moveY: 1 });
-    assert.ok(Math.abs(p.walkVelocity.length() - carried) < 1e-6, 'held run lost carried momentum');
+    assert.ok(carried > r.TUNING.walkSpeed, 'fixture did not carry skate speed into contact');
+    assert.ok(Math.abs(p.walkVelocity.length() - r.TUNING.walkSpeed) < 1e-6, 'run kept skate speed');
     assert.equal(p.freeSkate, false);
     tick({ jumpHeld: true }); tick();
     assert.equal(p.state, 'air', 'roll/run blocked a new jump');
@@ -83,6 +87,59 @@ await withBlockworksRuntime(async r => {
       assert.equal(p.isBailing, true, 'roll suppressed a genuine impact');
       assert.notEqual(p.animationClipHint, 'player.roll-land');
     }
-    console.log(`PASS ${cases} native double-jump/dismount landings: full carry, roll/run, finite rig, neutral stop; held run, jump/reset, real impacts. Lowest roll clearance ${lowestRollClearance.toFixed(4)}m.`);
+    // Authored camera views used to replace the airborne travel heading with
+    // the camera forward every tick. Exercise the actual second jump while
+    // holding every screen direction, and while the camera turns under a hold.
+    l.cameraViews.push({p:[0,0,0],s:[500,100,500],yaw:0,feather:0});
+    for (const [x,y] of [[1,0],[-1,0],[0,1],[0,-1],[.6,.8]]) {
+      const yaw=Math.atan2(x,y);setup(18,yaw);p.camDir.set(0,0,-1);
+      const sample={moveX:x,moveY:y};
+      for(let i=0;i<12;i++)tick({...sample,jumpHeld:true});
+      tick(sample);for(let i=0;i<4;i++)tick(sample);
+      tick({...sample,jumpHeld:true});tick({...sample,jumpHeld:true});tick(sample);
+      assert.equal(p.emergencyEjectLandingPending,true);
+      assert.equal(p.rawInput.moveX,x,'dismount remapped the raw horizontal input');
+      assert.equal(p.rawInput.moveY,y,'dismount remapped the raw forward input');
+      for(let i=0;i<24;i++) {
+        p.camDir.set(Math.sin(i*.025),0,-Math.cos(i*.025));tick(sample);
+        assert.ok(p.axisF.x*x-p.axisF.z*y>.98,'held dismount direction bent with the camera');
+      }
+      for(let i=0;i<200&&!p.grounded;i++)tick(sample);
+      for(let i=0;i<20;i++)tick(sample);
+      assert.ok(Math.abs(p.walkVelocity.length()-r.TUNING.walkSpeed)<1e-6,'directional dismount did not return to run speed');
+      assert.ok((p.walkVelocity.x*x-p.walkVelocity.z*y)/p.walkVelocity.length()>.98,'run uses the wrong direction');
+      cases++;
+    }
+    console.log(`PASS ${cases} native dismounts: impact carry, prompt neutral stop/idle, normal run speed, camera-stable screen directions, finite rig, jump/reset and real impacts. Lowest roll clearance ${lowestRollClearance.toFixed(4)}m.`);
   } finally { runtime.dispose(); }
 }, { source: () => source, levelId: 'board-roll-landing' });
+
+// The supplied Treehouse recording contains a held Right dismount followed
+// by release. Replay the unchanged input/camera stream through that encounter;
+// later course positions intentionally change once the first landing is fixed.
+const recording = JSON.parse(await readFile(new URL('./fixtures/board-dismount-direction-replay.json', import.meta.url), 'utf8'));
+await withBlockworksRuntime(async r => {
+  const { Replayer } = await r.server.ssrLoadModule('/src/replay.ts');
+  const playback = new Replayer(); playback.begin(recording);
+  const { p, l } = r, input = makeInput(); p.endlessDeaths = recording.endlessDeaths; p.respawn(l, true);
+  let flight = 0, landing = -1;
+  try {
+    for (let frame = 0; frame < 4240; frame++) {
+      playback.feed(input, p.camDir); const previous = p.pos.clone();
+      p.step(r.dt, input, l); l.update(r.dt); p.flushLevelCrateRewards(l); p.commitRenderStep(l);
+      if (p.emergencyEjectLandingPending) {
+        assert.equal(input.moveX, 1); assert.equal(input.moveY, 0);
+        assert.equal(p.rawInput.moveX, 1); assert.equal(p.rawInput.moveY, 0);
+        const delta = p.pos.clone().sub(previous).setY(0);
+        assert.ok(delta.x > .3 && Math.abs(delta.z) < .002, `frame ${frame}: Right dismount steered down-course`);
+        flight++;
+      }
+      if (landing < 0 && p.rollLandingT >= 0) landing = frame;
+      if (landing >= 0 && frame >= landing + 16 && input.moveX === 0 && input.moveY === 0)
+        assert.ok(p.walkVelocity.length() < .01, `frame ${frame}: released landing kept running`);
+      assert.equal(p.isBailing, false);
+    }
+    assert.ok(flight >= 30 && landing > 0, 'recorded dismount was not reproduced');
+    console.log(`PASS supplied Treehouse replay: ${flight} correctly directed air frames; landing ${landing}, neutral stopped within 0.25s.`);
+  } finally { playback.end(); }
+}, { modulePath: '/src/levels/treehouse-trail.ts', source: m => m.TREEHOUSE_TRAIL_LEVEL, levelId: 'treehouse-trail' });

@@ -592,7 +592,7 @@ export class CharacterAnimationRuntime {
           ? this.pendingRunHandoffOffset
           : null;
       const idleHandoffOffset = this.manualClipId === null && clip.id === 'player.idle' &&
-        (previousClipId === LAND_CLIP_ID || previousClipId === RUN_STOP_CLIP_ID)
+        (previousClipId === LAND_CLIP_ID || previousClipId === RUN_STOP_CLIP_ID || previousClipId === ROLL_LANDING_CLIP_ID)
         ? this.pendingIdleHandoffOffset : null;
       const switchBlendDuration = this.manualClipId === null
         ? idleHandoffOffset !== null ? 0 : previousClipId === RUN_STOP_CLIP_ID ? .12 : locomotionSwitch
@@ -738,25 +738,6 @@ export class CharacterAnimationRuntime {
     } else {
       this.pendingRunHandoffOffset = null;
     }
-    // The revolution is complete before this live gait blend begins. Carry
-    // the sampled run phase into the next state so the planted foot cannot
-    // jump back to frame zero when the roll clock retires.
-    if (this.manualClipId === null && clip.id === ROLL_LANDING_CLIP_ID) {
-      const run = this.findPlayableClip('player.run');
-      if (run) {
-        const phase = motion.actionProgress;
-        const runSeconds = Math.max(0, phase - ROLL_RUN_BLEND_START) * clip.duration;
-        const strike = run.markers.find(marker => marker.id.endsWith(':left-strike'))?.time ?? run.range.start;
-        const runTime = clipTimeAt(run, runSeconds, { offset: strike - run.range.start });
-        const runPose = this.samplePoseAt(run, runTime, motion, true);
-        pose = blendPoses(
-          withControlDefaults(canonicalizePose(pose, this.binding), this.controlDefaults),
-          withControlDefaults(canonicalizePose(runPose, this.binding), this.controlDefaults),
-          smoothstep01((phase - ROLL_RUN_BLEND_START) / (.96 - ROLL_RUN_BLEND_START)),
-        );
-        this.pendingRunHandoffOffset = runTime - run.range.start;
-      }
-    }
     // Return the limbs DURING the rebound/settle, not in a second fade once
     // the landing or skid has already finished. Root compression remains its
     // own channel until the last part of the bounce.
@@ -768,6 +749,27 @@ export class CharacterAnimationRuntime {
     } else {
       this.recoveryIdle = null;
       this.pendingIdleHandoffOffset = null;
+    }
+    // Complete the revolution, then recover into the locomotion actually
+    // being performed. Releasing the stick can settle into Idle; the roll
+    // must never manufacture a final running stride on a stationary player.
+    if (this.manualClipId === null && clip.id === ROLL_LANDING_CLIP_ID) {
+      const run = this.findPlayableClip('player.run');
+      const idle = this.findPlayableClip('player.idle');
+      const canonical = (sample: PoseBuffer) => withControlDefaults(canonicalizePose(sample, this.binding), this.controlDefaults);
+      const seconds = Math.max(0, motion.actionProgress - ROLL_RUN_BLEND_START) * clip.duration;
+      const runTime = run ? clipTimeAt(run, seconds, { offset:
+        (run.markers.find(marker => marker.id.endsWith(':left-strike'))?.time ?? run.range.start) - run.range.start }) : 0;
+      const idleTime = idle ? clipTimeAt(idle, seconds) : 0;
+      const runPose = run ? canonical(this.samplePoseAt(run, runTime, motion, true)) : null;
+      const idlePose = idle ? canonical(this.samplePoseAt(idle, idleTime, motion, true)) : null;
+      const moving = runPose ? idlePose ? smoothstep01(motion.normalizedSpeed / .2) : 1 : 0;
+      const locomotion = runPose && idlePose ? blendPoses(idlePose, runPose, moving) : runPose ?? idlePose;
+      const weight = smoothstep01((motion.actionProgress - ROLL_RUN_BLEND_START) / (.96 - ROLL_RUN_BLEND_START));
+      if (locomotion) pose = blendPoses(canonical(pose), locomotion, weight);
+      this.recoveryIdleWeight = (1 - moving) * weight;
+      this.pendingRunHandoffOffset = run ? runTime - run.range.start : null;
+      this.pendingIdleHandoffOffset = idle ? idleTime - idle.range.start : null;
     }
     let contactTransitionWeight: number | null = null;
     if (this.switchOutgoingPose && this.switchBlendDuration > 0) {
