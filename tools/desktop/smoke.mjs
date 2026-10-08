@@ -100,7 +100,7 @@ try {
     await page.waitForFunction(id => {
       const g = window.__game;
       return g?.getCurrentLevel().id === id && !g.gameFlow.blocksGameplay && g.getLoadingDiagnostics().pending.length === 0;
-    }, level, {timeout:120000});
+    }, level, {timeout:softwareGpuTest ? 600000 : 120000});
     const loaded = await page.evaluate(() => ({
       level:window.__game.getCurrentLevel().id, assets:window.__game.getLoadingDiagnostics(),
       decoder:window.__game.getSceneryDecoderDiagnostics(), memory:{...window.__game.renderer.info.memory},

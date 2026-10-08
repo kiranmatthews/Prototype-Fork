@@ -67,7 +67,7 @@ Do not remove assets based only on a short playthrough. Do not preload all level
 
 ## Automated distribution
 
-`.github/workflows/desktop.yml` builds Apple Silicon, Mac x64, Windows x64 and Linux x64 artifacts. Both Mac jobs run on Apple Silicon: the x64 job selects x64 Node/Electron and runs under Rosetta because the hosted Intel VM cannot initialize WebGL. The native capability probe asserts the Electron architecture. This verifies the x64 binary's functional behaviour, not physical Intel GPU performance; that remains a required release acceptance check. It runs focused checks, the real offline renderer smoke, packaging, ASAR/fuse verification, packaged-app smoke, native window hide/restore, and checksums. It never runs `check:all`.
+`.github/workflows/desktop.yml` builds Apple Silicon, Mac x64, Windows x64 and Linux x64 artifacts. Both Mac jobs run on Apple Silicon: the x64 job explicitly pins both Node and Electron installation architecture to x64 and runs under Rosetta because the hosted Intel VM cannot initialize WebGL. The native capability probe asserts the Electron architecture. This verifies the x64 binary's functional behaviour, not physical Intel GPU performance; that remains a required release acceptance check. It runs focused checks, the real offline renderer smoke, packaging, ASAR/fuse verification, packaged-app smoke, native window hide/restore, and checksums. It never runs `check:all`.
 
 For unsigned/ad-hoc candidates from main:
 
@@ -75,7 +75,7 @@ For unsigned/ad-hoc candidates from main:
 gh workflow run desktop.yml --ref main -f release=false
 ```
 
-Download the `boneman-installer-*` and `boneman-evidence-*` artifacts from that run. CI checks correctness; virtual-runner frame times do not certify minimum-hardware performance. Linux CI explicitly uses a software GPU test backend because its hosted Mesa context cannot initialize this Chromium build. Test launchers alone honor BONEMAN_TEST_SOFTWARE_GPU=1; no software-GPU flags or relaxed graphics settings are added to the distributed app.
+Download the `boneman-installer-*` and `boneman-evidence-*` artifacts from that run. CI checks correctness; virtual-runner frame times do not certify minimum-hardware performance. Linux CI explicitly uses a software GPU test backend because its hosted Mesa context cannot initialize this Chromium build. Test launchers alone honor BONEMAN_TEST_SOFTWARE_GPU=1; no software-GPU flags or relaxed graphics settings are added to the distributed app. The software test gets a longer shader warm-up timeout while retaining the same full-render scene and resolution.
 
 For public distribution, configure these repository/environment secrets in GitHub, never in game source or the bundle:
 

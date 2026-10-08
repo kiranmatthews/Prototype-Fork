@@ -37,6 +37,7 @@ jobs:
     timeout-minutes: 45
     env:
       BONEMAN_TEST_SOFTWARE_GPU: ${{ matrix.platform == 'linux' && '1' || '0' }}
+      npm_config_arch: ${{ matrix.arch }}
       BONEMAN_TARGET_ARCH: ${{ matrix.arch }}
       BONEMAN_BUILD_ID: ${{ github.sha }}
     steps:
