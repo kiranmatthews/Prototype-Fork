@@ -20,5 +20,32 @@ await withChiefRuntime(async ({l,bossCamera})=>{
       bossCamera.restore(camera);assert.ok(camera.position.distanceTo(original)<1e-9);assert.ok(camera.quaternion.angleTo(q)<1e-7);samples++;
     }
   }
-  console.log(`PASS ${samples} boss-facing close camera samples, rider/chief vertical framing, nine-metre distance ceiling and independent base-rig restoration.`);
+  // A real-height jump crosses close past the chief; the camera must turn
+  // continuously, show both actors and settle back to its close framing.
+  let maxTurn=0,maxDistance=0,dynamicSamples=0;
+  for(const aspect of [16/9,9/16])for(const fps of [30,60,144]){
+    const camera=new THREE.PerspectiveCamera(49,aspect,.1,400);
+    const subject=new THREE.Vector3(),centre=new THREE.Vector3(0,0,-24);
+    let previous=null;
+    for(let i=0;i<fps*5;i++){
+      const t=i/fps,z=t<1.4?-14-t*10:t<2.8?-28+(t-1.4)*10:-14;
+      subject.set(.7,t<2.8?6:0,z);boss.model.root.position.copy(centre);boss.model.cameraTop.set(0,8.2,-24);
+      bossCamera.restore(camera);bossCamera.apply(camera,boss,subject,1/fps,i===0||i===Math.ceil(fps*2.8));
+      const heading=bossCamera.heading.clone();
+      if(previous&&i!==Math.ceil(fps*2.8)){
+        const turn=Math.acos(THREE.MathUtils.clamp(previous.dot(heading),-1,1));
+        maxTurn=Math.max(maxTurn,turn*fps);
+        assert.ok(turn<THREE.MathUtils.degToRad(700)/fps,'camera snapped through the chief');
+      }
+      previous=heading;maxDistance=Math.max(maxDistance,bossCamera.diagnostics.distance);
+      for(const point of [subject.clone(),subject.clone().add(new THREE.Vector3(0,2.6,0)),boss.model.cameraTop.clone()]){
+        const projected=point.project(camera);
+        assert.ok(projected.z<1&&Math.abs(projected.x)<.95&&Math.abs(projected.y)<1,`moving camera lost an actor at ${t}s, aspect ${aspect}: ${projected.toArray()}`);
+      }
+      dynamicSamples++;
+    }
+    assert.ok(bossCamera.diagnostics.distance<9,'camera never returned to the close view');
+  }
+  console.log(JSON.stringify({dynamicSamples,maxTurnDegreesPerSecond:THREE.MathUtils.radToDeg(maxTurn),maxDistance}));
+  console.log(`PASS ${samples} boss-facing close camera samples, rider/chief vertical framing, nine-metre settled distance ceiling and independent base-rig restoration.`);
 });

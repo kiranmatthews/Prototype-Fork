@@ -5594,7 +5594,7 @@ export class Player {
     this.speed = velocity;
   }
 
-  /** Active held screen frame for boss movement; reading it does not re-aim a held stick. */
+  /** Last sampled camera frame for boss movement; reading it is side-effect free. */
   get bossInputBasis():ChiefInputDirection {return this.chiefInput.basis;}
 
   /** Convert world intent to genuine device samples for authoring/review pilots. */

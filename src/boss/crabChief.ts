@@ -50,8 +50,6 @@ export class CrabChiefEncounter {
   skateDistance = 0;
   readonly history: { time: number; state: ChiefState; phase: number; health: number }[] = [];
   readonly strikes: { time: number; phase: number; speed: number; skating: boolean; grinding: boolean; charged: boolean; kind: 'pearl' | 'tongue' | 'sand-spin'; tongueMetres:number; rampSpeed:number; }[] = [];
-  private checkpointPhase = 1;
-  private checkpointDefeated = false;
   private ordinal = 0;
   private left = true;
   private invulnerability = 0;
@@ -64,7 +62,7 @@ export class CrabChiefEncounter {
   private tongueRun = 0;
   private attachedTongue = false;
   private rampSupported = false;
-  private rampLipSpeed = 0;
+  private rampLaunchSpeed = 0;
   private launchTime = 0;
   private rampFormed = false;
   private readonly marker: THREE.Group;
@@ -163,12 +161,16 @@ export class CrabChiefEncounter {
     const rampContact=p.grounded&&p.support===this.phaseGeometry.sandRamp;
     if(this.phase===3&&rampContact&&p.skating){
       this.skateDistance+=movement;
-      if(this.phaseGeometry.launchZone.containsPoint(p.position)&&p.speed>=this.phaseGeometry.requiredSpeed)this.rampLipSpeed=p.speed;
+      // Any real ramp departure can earn the aerial strike. Requiring the
+      // final 1.5 m silently rejected earlier ollies that visibly hit the
+      // chief. Keep the last supported speed, so braking cannot bank credit.
+      this.rampLaunchSpeed=p.speed;
     }
-    if(this.rampSupported&&!p.grounded&&p.state==='air'&&this.rampLipSpeed>=this.phaseGeometry.requiredSpeed)this.launchTime=2.0;
+    if(this.rampSupported&&!p.grounded&&p.state==='air'&&this.rampLaunchSpeed>=this.phaseGeometry.requiredSpeed)this.launchTime=2.0;
+    if(rampContact&&!p.skating)this.rampLaunchSpeed=0;
     this.rampSupported=rampContact;
     this.launchTime=Math.max(0,this.launchTime-dt);
-    if(p.grounded&&!rampContact){this.rampLipSpeed=0;this.launchTime=0;}
+    if(p.grounded){this.launchTime=0;if(!rampContact)this.rampLaunchSpeed=0;}
     this.charge=this.phase===2?Math.min(1,this.tongueRun/6):this.phase===3&&this.launchTime>0?1:0;
     let danger = false;
     for (const wave of this.waves) if (wave.life > 0) {
@@ -213,7 +215,7 @@ export class CrabChiefEncounter {
       case 'ramp-form': if(t>1.8){this.rampFormed=true;this.enter('ramp-open');} break;
       case 'ramp-open': if(t>13)this.enter('idle'); break;
       case 'hurt': if (t > 1.05) {
-        if (this.health > 0 && this.health % 3 === 0) { this.phase++; this.checkpointPhase = this.phase; this.charge = 0;
+        if (this.health > 0 && this.health % 3 === 0) { this.phase++; this.charge = 0;
           this.clearAttacks(); this.enter('phase'); sfx.play('maskGet', .7, .8); }
         else this.enter('idle');
       } break;
@@ -230,10 +232,10 @@ export class CrabChiefEncounter {
     if((this.phase===1&&this.exposed&&inReach&&attack)||tongueHit||sandHit){
       result.strike=true;this.hits++;this.health--;
       this.strikes.push({time:this.time,phase:this.phase,speed:p.speed,skating:p.skating,grinding:p.grinding,charged:this.phase>1,
-        kind:this.phase===1?'pearl':this.phase===2?'tongue':'sand-spin',tongueMetres:this.tongueRun,rampSpeed:this.rampLipSpeed});
+        kind:this.phase===1?'pearl':this.phase===2?'tongue':'sand-spin',tongueMetres:this.tongueRun,rampSpeed:this.rampLaunchSpeed});
       this.charge=0;this.launchTime=0;this.clearAttacks();this.burst(tongueHit?this.phaseGeometry.tongueMouth:this.pearl,28);this.invulnerability=Math.max(this.invulnerability,.6);
       sfx.play('crateBreak1',.9,.65);
-      if(this.health===0){this.checkpointDefeated=true;this.enter('defeated');this.burst(this.pearl,34);sfx.play('lifeGet',.9,.9);}
+      if(this.health===0){this.enter('defeated');this.burst(this.pearl,34);sfx.play('lifeGet',.9,.9);}
       else this.enter('hurt');danger=false;
     }
     if (danger && !this.defeated && !p.immune && this.invulnerability <= 0) {
@@ -246,7 +248,7 @@ export class CrabChiefEncounter {
   private beginOpening():void {
     // Phase one keeps its original propagating slam ripple during recovery.
     if(this.phase>1)this.clearAttacks();
-    this.tongueRun=0;this.rampLipSpeed=0;this.launchTime=0;
+    this.tongueRun=0;this.rampLaunchSpeed=0;this.launchTime=0;
     this.enter(this.phase===1?'recover':this.phase===2?'tongue-form':this.rampFormed?'ramp-open':'ramp-form');
   }
   private clearAttacks(): void { for (const wave of this.waves) wave.life = 0; for (const bubble of this.bubbles) bubble.life = 0; }
@@ -318,13 +320,15 @@ export class CrabChiefEncounter {
       if (spark.life <= 0) continue; spark.velocity.y -= dt * 9; spark.mesh.position.addScaledVector(spark.velocity, dt);
       spark.mesh.rotation.x += dt * 5; spark.mesh.scale.setScalar(.14 * Math.min(1, spark.life / .25)); }
   }
-  reset(hard: boolean): void {
-    if (hard) { this.checkpointPhase = 1; this.checkpointDefeated = false; this.hits = this.playerHits = this.grindDistance = this.skateDistance = 0;
-      this.history.length = this.strikes.length = 0; this.time = 0; }
-    this.phase = this.checkpointPhase; this.health = (4 - this.phase) * 3;
-    this.charge = 0; this.invulnerability = 0; this.ordinal = 0;
-    this.lastPosition = null;this.tongueRun=0;this.attachedTongue=false;this.rampSupported=false;this.rampLipSpeed=0;this.launchTime=0;this.rampFormed=false;this.phaseGeometry.reset();this.clearAttacks(); this.enter('waiting');
-    if (this.checkpointDefeated) { this.health = 0; this.enter('defeated'); this.stateTime = 4; }
+  reset(_hard: boolean): void {
+    // The arena has no combat checkpoints: every death starts a fresh fight,
+    // including a fall during the defeat settle before victory is awarded.
+    this.hits = this.playerHits = this.grindDistance = this.skateDistance = 0;
+    this.history.length = this.strikes.length = 0; this.time = 0;
+    this.phase = 1; this.health = 9;
+    this.charge = 0; this.invulnerability = 0; this.ordinal = 0; this.left = true;
+    this.target.set(0,0,-14);this.actorSkating=false;
+    this.lastPosition = null;this.tongueRun=0;this.attachedTongue=false;this.rampSupported=false;this.rampLaunchSpeed=0;this.launchTime=0;this.rampFormed=false;this.phaseGeometry.reset();this.clearAttacks(); this.enter('waiting');
     for (const spark of this.sparks) spark.life = 0;
     this.present(0);
   }
@@ -333,7 +337,7 @@ export class CrabChiefEncounter {
   get diagnostics() { return { state: this.state, stateTime: this.stateTime, phase: this.phase, health: this.health,
     charged: this.charged, charge: this.charge, canFinish: this.canFinish,
     hits: this.hits, playerHits: this.playerHits, grindDistance: this.grindDistance, skateDistance: this.skateDistance,
-    tongueRun:this.tongueRun,tongueActive:this.phaseGeometry.tongueActive,tongueProgress:this.phaseGeometry.tongueProgress,rampActive:this.phaseGeometry.rampActive,rampProgress:this.phaseGeometry.rampProgress,launchTime:this.launchTime,rampSpeed:this.rampLipSpeed,
+    tongueRun:this.tongueRun,tongueActive:this.phaseGeometry.tongueActive,tongueProgress:this.phaseGeometry.tongueProgress,rampActive:this.phaseGeometry.rampActive,rampProgress:this.phaseGeometry.rampProgress,launchTime:this.launchTime,rampSpeed:this.rampLaunchSpeed,
     activeWaves: this.waves.filter(w => w.life > 0).map(w => ({ radius: w.radius, previous: w.previous, centre: w.centre.toArray() })),
     activeBubbles: this.bubbles.filter(b => b.life > 0).length,
     bubblePositions:this.bubbles.filter(b=>b.life>0).map(b=>b.mesh.position.toArray()), target: this.target.toArray(),

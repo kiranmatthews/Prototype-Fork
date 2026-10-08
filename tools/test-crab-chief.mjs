@@ -118,6 +118,8 @@ await withChiefRuntime(async ({ l, p, tick, source, module }) => {
     contact(geometry.requiredSpeed-.1);actor.spinning=true;assert.equal(launch().strike,false,'slow sand contact minted a launch');assert.equal(boss.diagnostics.launchTime,0);
     contact(geometry.requiredSpeed+2,l.groundMeshes.find(mesh=>mesh!==geometry.sandRamp));actor.spinning=true;
     assert.equal(launch().strike,false,'ordinary floor minted a sand launch');assert.equal(boss.diagnostics.launchTime,0);
+    contact(geometry.requiredSpeed+2);contact(geometry.requiredSpeed-.1);actor.spinning=true;
+    assert.equal(launch().strike,false,'braking on the ramp retained a stale fast-launch credit');
     contact(geometry.requiredSpeed+2);assert.ok(boss.diagnostics.rampSpeed>=geometry.requiredSpeed);launch();
     assert.ok(boss.diagnostics.launchTime>0);assert.equal(boss.health,hp);
     actor.attacking=true;actor.spinning=false;head();assert.equal(step().strike,false,'generic air attack replaced the required spin');
@@ -137,15 +139,16 @@ await withChiefRuntime(async ({ l, p, tick, source, module }) => {
     actor.attacking=true;assert.equal(step().strike,true);assert.equal(boss.health,hp-1);actor.attacking=false;
     for(let i=0;i<4;i++){assert.equal(step().strike,false);assert.equal(boss.health,hp-1,'one pearl opening accepted multiple strikes');}
   }
-  rest();until(()=>boss.phase===2);p.masks=0;p.respawn(l,false);assert.equal(boss.phase,2);assert.equal(boss.health,6);assert.equal(p.masks,2);
-  assert.ok(p.pos.equals(saved),'phase retry moved the original arrival spawn');assert.equal(l.activeCheckpoint,null);
+  rest();until(()=>boss.phase===2);assert.equal(boss.health,6);
+  assert.ok(l.currentSpawn.equals(saved),'phase transition moved the original arrival spawn');assert.equal(l.activeCheckpoint,null);
   assert.equal(geometry.tongueActive,false);assert.equal(geometry.rampActive,false);assert.equal('playerHealth' in boss,false);
   for(let hit=0;hit<3;hit++)strikeTongue();
-  rest();until(()=>boss.phase===3);boss.reset(false);assert.equal(boss.phase,3);assert.equal(boss.health,3);assert.equal(geometry.rampActive,false);
+  rest();until(()=>boss.phase===3);assert.equal(boss.phase,3);assert.equal(boss.health,3);assert.equal(geometry.rampActive,false);
   for(let hit=0;hit<3;hit++)strikeSand();
   assert.deepEqual(boss.strikes.map(strike=>strike.kind),['pearl','pearl','pearl','tongue','tongue','tongue','sand-spin','sand-spin','sand-spin']);
   assert.equal(boss.health,0);assert.equal(boss.defeated,true);assert.equal(boss.canFinish,false);
-  until(()=>boss.canFinish);boss.reset(false);assert.equal(boss.canFinish,true,'victory lost after a lagoon retry');
+  until(()=>boss.canFinish);boss.reset(false);assert.equal(boss.canFinish,false,'death retained a completed fight');
+  assert.equal(boss.phase,1);assert.equal(boss.health,9);assert.equal(boss.hits,0);
   boss.reset(true);assert.equal(boss.health,9);assert.equal(boss.phase,1);assert.equal(boss.canFinish,false);
 
   // Telegraph lock, swept-wave damage, mask survival, cooldown and lethal
@@ -164,5 +167,5 @@ await withChiefRuntime(async ({ l, p, tick, source, module }) => {
   assert.deepEqual(maskStates,[2,1,0]);assert.equal(p.state,'dead');assert.equal(p.lives,startingLives-1,'third unmasked hit did not cost a life');assert.equal(boss.playerHits,3);
   const stopped=boss.time;for(let i=0;i<10;i++)tick();assert.equal(boss.time,stopped,'fight advanced during the death fade');
   p.respawn(l,false);assert.equal(p.masks,2);
-  console.log(`PASS Crab Chief: editor schema, supported original spawn/lagoon retry, no checkpoint crate/crystal/warp pad, ${model.diagnostics.triangles} triangles and all new poses finite; nine phase-specific strikes, irrelevant terrace rails, required tongue arc/end, fast sand contact→air ticket→spin/height/range, phase/victory retries, locked telegraphs and two-mask→fatal damage with no hearts.`);
+  console.log(`PASS Crab Chief: editor schema, supported original spawn/lagoon retry, no checkpoint crate/crystal/warp pad, ${model.diagnostics.triangles} triangles and all new poses finite; nine phase-specific strikes, irrelevant terrace rails, required tongue arc/end, fast sand contact→air ticket→spin/height/range, full-fight death resets, locked telegraphs and two-mask→fatal damage with no hearts.`);
 });

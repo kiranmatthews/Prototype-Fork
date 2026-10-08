@@ -35,7 +35,6 @@ export class ChiefPhaseGeometry {
   readonly tongueEntry = new THREE.Vector3(0,.32,-4);
   readonly tongueMouth = new THREE.Vector3(0,6.4,-23);
   readonly launchPoint = new THREE.Vector3(0,4.1,-18);
-  readonly launchZone = new THREE.Box3();
   readonly rampToe = new THREE.Vector3(0,0,-5);
   readonly rampFacing = new THREE.Vector3(0,0,-1);
   readonly requiredSpeed = 9.5;
@@ -58,9 +57,6 @@ export class ChiefPhaseGeometry {
     this.rampSpec={lip:options.lip?.clone()??this.launchPoint.clone(),length:options.length??13,width:options.width??6.4,rise:options.rise??4.1};
     this.launchPoint.copy(this.rampSpec.lip);this.launchPoint.y=this.rampSpec.rise;
     this.rampToe.copy(this.launchPoint).add(new THREE.Vector3(0,-this.rampSpec.rise,this.rampSpec.length));
-    this.launchZone.set(new THREE.Vector3(-this.rampSpec.width*.5,0,this.launchPoint.z-.35),
-      new THREE.Vector3(this.rampSpec.width*.5,this.rampSpec.rise+.9,this.launchPoint.z+1.5));
-    this.launchZone.translate(new THREE.Vector3(this.launchPoint.x,0,0));
     this.tongueRail=new Rail(this.fullTongue,false);this.tongueRail.object.name='Crab chief tongue · real uphill grind';this.tongueRail.grindable=false;
     this.tongueRail.chiefTongueAssist={entryLength:4.5,catchRadius:2.3,minSpeed:6.5};
     this.root.add(this.tongueRail.object);this.tongueRail.object.visible=false;
