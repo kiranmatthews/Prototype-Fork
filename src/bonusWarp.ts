@@ -14,9 +14,12 @@ export class BonusWarpEffect {
   private columnMaterial:THREE.ShaderMaterial;
   private positions=new Float32Array(72);
   private readonly warmth:boolean;
-  constructor(scene:THREE.Scene,origin:THREE.Vector3,exit=false){
+  constructor(scene:THREE.Scene,origin:THREE.Vector3,exit=false,private readonly skyContrast=false){
     this.warmth=exit;
-    this.group.name='Bonus travel light';this.group.position.copy(origin);scene.add(this.group);
+    this.group.name='Bonus travel light';this.group.position.copy(origin);
+    // The horizon mist draws at order 6 without writing depth. Travel light
+    // must follow it, while retaining depth testing against solid scenery.
+    this.group.renderOrder=7;scene.add(this.group);
     const color=new THREE.Color(exit?0xffbd72:0x60ffe2);
     const vertex='varying vec2 uv0; void main(){uv0=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}';
     const options={transparent:true,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending,toneMapped:false};
@@ -26,8 +29,11 @@ export class BonusWarpEffect {
     for(let i=0;i<pos.count;i++)pos.setY(i,pos.getY(i)+(uv.getX(i)-.5)*.22);
     pos.needsUpdate=true;this.ringGeo.computeBoundingSphere();
     for(let i=0;i<5;i++){
-      const material=new THREE.ShaderMaterial({...options,uniforms:{tint:{value:color.clone()},strength:{value:0}},vertexShader:vertex,
-        fragmentShader:'varying vec2 uv0;uniform vec3 tint;uniform float strength;void main(){float edge=pow(max(0.,sin(uv0.y*3.14159)),1.5);float tip=pow(max(0.,sin(uv0.x*3.14159)),.45);float core=pow(edge,7.);gl_FragColor=vec4(mix(tint,vec3(.88,1.,.98),core*.65),edge*tip*strength);}' });
+      // Exposed course exits can sit against a nearly white sky. A softly
+      // tinted core remains readable there; the floor glow/sparks stay additive.
+      const material=new THREE.ShaderMaterial({...options,blending:skyContrast?THREE.NormalBlending:THREE.AdditiveBlending,
+        uniforms:{tint:{value:color.clone()},strength:{value:0}},vertexShader:vertex,
+        fragmentShader:`varying vec2 uv0;uniform vec3 tint;uniform float strength;void main(){float edge=pow(max(0.,sin(uv0.y*3.14159)),1.5);float tip=pow(max(0.,sin(uv0.x*3.14159)),.45);float core=pow(edge,7.);gl_FragColor=vec4(mix(tint,vec3(.88,1.,.98),core*${skyContrast?'.12':'.65'}),edge*tip*strength);}` });
       const ring=new THREE.Mesh(this.ringGeo,material);ring.name=`Bonus orbit ribbon ${i}`;ring.renderOrder=4;
       this.ringMaterials.push(material);this.rings.push(ring);this.group.add(ring);
     }
@@ -55,7 +61,7 @@ export class BonusWarpEffect {
       const ring=this.rings[i];ring.position.y=y;ring.scale.set(r,1,r);
       ring.rotation.y=reduced?i*1.7:elapsed*(.8+i*.13)+i*1.7;
       ring.rotation.z=reduced?0:Math.sin(i*1.9)*.075;
-      this.ringMaterials[i].uniforms.strength.value=(reduced?.24:strength*Math.pow(Math.sin(phase*Math.PI),.5))*(this.warmth?.42:.9);
+      this.ringMaterials[i].uniforms.strength.value=(reduced?.24:strength*Math.pow(Math.sin(phase*Math.PI),.5))*(this.warmth?.42:.9)*(this.skyContrast?2.2:1);
     }
     for(let i=0;i<24;i++){
       const t=(elapsed*.65+i/24)%1,a=i*2.399+elapsed*.8,r=.7+.36*Math.sin(i*1.9);

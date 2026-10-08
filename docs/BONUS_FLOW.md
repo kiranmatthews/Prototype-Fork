@@ -63,4 +63,11 @@ BONUS uses the existing green/blue PNG art at about 8.8% of screen height. Its s
 
 The dev-only `bonus-presentation-review.html?playtest&level=crate-primer` page provides actual centered/rim/near-miss jumps and rolling rim ollies, a complete input-only bonus pilot, slow/held travel, step-by-step exit review, and a full-render frame export. Append `lite` or `touch` for those presentation paths. The fixture is excluded from the production HTML entry list.
 
+Main-level starts and finishes now share this travel presentation. Their quiet
+plain-top stone pads use cyan arrival and gold exit insets; bright activation
+belongs to the temporary warp effect. Main finishes align and lift before the
+existing normal/time-trial results scene. See [the results flow](RESULTS_PRESENTATION.md).
+The review page's Restart level, Reach exit and Capture next arrival controls
+also exercise this path.
+
 Validation includes 20 complete production-Player journeys and **165,357** projected actor poses across 16:9, 4:3 and portrait, 90 reward receipts including fruit rollover/Modern rules, actual entry/exit transition and frozen-simulation tests, 30 warp resource lifetimes, SVG/native title parity, supported legacy jumps, all 23 parent/fallback lifecycle cases, checkpoint restoration, touch ownership and HUD composition. Real Chrome verifies complete six- and nine-box journeys, actual gate return, the before-fade receipt, responsive rendering and clean consoles. The required level checks and build run on the isolated release. No full suite.

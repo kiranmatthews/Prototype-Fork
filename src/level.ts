@@ -48,6 +48,7 @@ import { Halfpipe } from "./halfpipe";
 import {
   createWarpPad,
   WarpPad,
+  WARP_PAD_TOP,
   WARP_PAD_GLOW_RADIUS,
   WARP_PAD_GLOW_BASE,
   WARP_PAD_GLOW_TOP,
@@ -4032,6 +4033,8 @@ export class Level {
   private scrollTexes: { tex: THREE.CanvasTexture; su: number; sv: number }[] =
     [];
   private warpPads: WarpPad[] = []; // end-of-level warp platforms: rings rise, plume flickers
+  startWarpPosition: THREE.Vector3 | null = null;
+  private startWarpOriginalSpawn: THREE.Vector3 | null = null;
   private campaignPortals: CampaignPortalRuntime[] = [];
   private campaignPortalPoint = new THREE.Vector3();
   private campaignPortalWorld = new THREE.Vector3();
@@ -4944,6 +4947,8 @@ export class Level {
       this.placeClock(); // time-trial stopwatch near spawn (only where a finish gate exists)
       this.placeComboOrb(); // optional, explicitly authored secret challenge
     }
+    if((isCampaignLevel(entry.id)||entry.id==='codex-lab')&&this.hudMode!=='bonus'&&this.hudMode!=='hub'&&!this.isBossLevel&&!this.skatepark)
+      this.placeStartWarpPad();
     this.bakeDecor(); // any batched decor the builder didn't flush itself
     this.jungleAssets?.flush();
     this.cityAssets?.flush();
@@ -6495,7 +6500,7 @@ export class Level {
     return {
       v: 1,
       name: `${this.name} (copy)`,
-      spawn: [r2(this.spawnPos.x), r2(this.spawnPos.y), r2(this.spawnPos.z)],
+      spawn: (this.startWarpOriginalSpawn??this.spawnPos).toArray().map(r2) as [number,number,number],
       killY: r2(this.killY),
       hudMode: this.hudMode === "bonus" ? "bonus" : undefined,
       allBalanceCrates: this.allBalanceCrates || undefined,
@@ -19747,6 +19752,22 @@ export class Level {
     this.root.add(wall);
   }
 
+  private placeStartWarpPad():void {
+    if(!this.gateSpec||this.startWarpPosition)return;
+    this.root.updateMatrixWorld(true);
+    const spawn=this.spawnPos, floor=this.nearbyFloorY(spawn.x,spawn.z,spawn.y);
+    // Do not manufacture a platform across an intentionally unsupported spawn.
+    if(floor===null||!Number.isFinite(floor)||Math.abs(floor-spawn.y)>2)return;
+    const pad=createWarpPad({quiet:true,arrival:true});
+    pad.group.position.set(spawn.x,floor,spawn.z);pad.group.name='level start warp pad';
+    this.root.add(pad.group);this.warpPads.push(pad);
+    for(const mesh of pad.solids){mesh.userData.startWarpPad=true;mesh.userData.edgeGrinding=false;mesh.userData.vert=false;this.groundMeshes.push(mesh);}
+    this.startWarpOriginalSpawn=spawn.clone();
+    this.startWarpPosition=new THREE.Vector3(spawn.x,floor+WARP_PAD_TOP,spawn.z);
+    spawn.copy(this.startWarpPosition).y+=.12;
+    this.currentSpawn.copy(spawn);
+  }
+
   private finishGate(deckY: number, z: number, cx = 0, yawDeg = 0): void {
     this.gateSpec = { x: cx, y: deckY, z };
     this.gateYaw = yawDeg;
@@ -19771,12 +19792,9 @@ export class Level {
     gate.position.set(cx, deckY, z);
     gate.rotation.y = yawR;
     this.root.add(gate);
-    // THE WARP PAD replaces the old checkered finish gate: a Crash-style stone
-    // plinth with a plasma column standing on it (see src/warpPad.ts, rebuilt
-    // from a video reference through the img2threejs sculpt pipeline). The
-    // trigger box above is unchanged, so every level still finishes at exactly
-    // the same place and no call site moves.
-    // the column, as a volume you can fly through
+    // The quiet stone stays visible beneath the skater. The shared travel
+    // presentation owns activation light and departure; finish eligibility
+    // retains the authored surface/glow envelope and location.
     this.finishGlow.setFromCenterAndSize(
       new THREE.Vector3(
         cx,
@@ -19789,7 +19807,7 @@ export class Level {
         WARP_PAD_GLOW_RADIUS * 2,
       ),
     );
-    const pad = createWarpPad();
+    const pad = createWarpPad({quiet:true});
     gate.add(pad.group);
     this.warpPads.push(pad);
     for (const m of pad.solids) {

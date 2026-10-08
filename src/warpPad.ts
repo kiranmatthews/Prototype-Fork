@@ -202,7 +202,7 @@ export interface WarpPad {
  * Build one warp pad. Origin is the footprint centre ON the ground plane, so a
  * level places it at a floor coordinate and the disc lands at WARP_PAD_TOP.
  */
-export function createWarpPad(): WarpPad {
+export function createWarpPad(options:{quiet?:boolean;arrival?:boolean}={}): WarpPad {
   const group = new THREE.Group();
   group.name = 'warp pad';
   const rand = rng(0x3a17);
@@ -248,6 +248,19 @@ export function createWarpPad(): WarpPad {
   disc.position.y = WARP_PAD_TOP - 0.02 * S;
   disc.name = 'warp pad';
   group.add(disc);
+
+  // Course pads keep the readable masonry and a small inset marker. Travel
+  // owns the bright ribbons/sparks, so the resting pad never hides the rider.
+  if(options.quiet){
+    stoneMat.color.setHex(0x8195a8);
+    discMat.color.setHex(0xc0c7bd);
+    const markerMat=keep(new THREE.MeshBasicMaterial({color:options.arrival?0x65dbc9:0xe9bd76,
+      transparent:true,opacity:.65,depthWrite:false,toneMapped:false}));
+    const marker=new THREE.Mesh(keep(new THREE.RingGeometry(.87,1.02,48)),markerMat);
+    marker.name='warp pad inset';marker.rotation.x=-Math.PI/2;marker.position.y=WARP_PAD_TOP+.014;
+    group.add(marker);
+    return {group,solids:[body,rim,disc],update:()=>{},dispose:()=>{for(const d of disposables)d.dispose();}};
+  }
 
   // ---- COLUMN: additive, unlit, depthWrite off ----------------------------
   const column = new THREE.Group();

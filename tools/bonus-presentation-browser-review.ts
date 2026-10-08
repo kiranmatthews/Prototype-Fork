@@ -6,6 +6,7 @@ window.addEventListener('error', event => errors.push(event.message));
 const samples: object[] = [];
 let pilotReport:any=null;
 let previous = '', jumpTimer = 0;
+let captureArrival=false;
 const game = () => (window as any).__game;
 const act = (id: string, action: (g: any) => void) => document.querySelector(id)!.addEventListener('click', () => {
   const g = game(); if (g && !g.gameFlow.blocksGameplay) action(g);
@@ -38,13 +39,14 @@ function review() {
   const g = game(); if (!g) return;
   const p = g.player, departure = g.getBonusDeparture();
   const state = { level:g.getCurrentLevel().id, phase:departure?.phase ?? g.gameFlow.loadingPhase ?? 'play',
-    kind:departure?.kind, alignment:departure?.alignment, elapsed:departure?.elapsed, lift:departure?.offsetY, runTime:p.runTime, position:p.pos.toArray(),
+    kind:departure?.kind, alignment:departure?.alignment, arrival:g.getWarpArrival(), elapsed:departure?.elapsed, lift:departure?.offsetY, runTime:p.runTime, position:p.pos.toArray(),
     grounded:p.grounded, state:p.state, board:p.boardRolling, camera:g.camera.position.toArray(), lives:p.lives, fruit:p.fruit,
     completed:g.getLevel().bonusRoundCompleted, hudBonus:document.querySelector('.game-hud-layer')?.classList.contains('hud-bonus'),
     errors };
   const marker = state.level + ':' + state.phase;
-  if (marker !== previous || (departure && samples.length < 150)) { samples.push({...state}); previous=marker; }
+  if (marker !== previous || ((departure||state.arrival) && samples.length < 150)) { samples.push({...state}); previous=marker; }
   status.textContent = JSON.stringify({pilot:pilotReport&&{stage:pilotReport.stage,frame:pilotReport.frame,done:pilotReport.done,failed:pilotReport.failed,result:pilotReport.result}, current:state, transitions:samples.filter((_:object,i:number)=>!i||(samples[i-1] as any).phase!==(samples[i] as any).phase)},null,1);
+  if(captureArrival&&state.arrival?.elapsed>=.14&&state.arrival.elapsed<.44){captureArrival=false;saveFrame();}
   (window as any).bonusReview = { samples, errors };
 }
 review();
@@ -81,10 +83,11 @@ act('#pilot',async g=>{
   if(report.done){p.step=step;p.commitRenderStep=commit;if(!report.failed)g.setBonusTravelReviewRate(0);}
  };
 });
-document.querySelector('#capture')!.addEventListener('click',()=>{
+function saveFrame(){
  const data=game()?.captureBonusReviewFrame();if(!data)return;
  const a=document.createElement('a');a.href=data;a.download='bonus-polish-'+Date.now()+'.png';a.click();
-});
+}
+document.querySelector('#capture')!.addEventListener('click',saveFrame);
 act('#study',g=>{
  if(!g.getCurrentLevel().id.startsWith('bonus:'))return;
  g.player.bankFlyingFruit();g.player.fruit=26;g.player.lives=3;g.player.cratesBroken=g.getLevel().totalCrates;
@@ -115,3 +118,15 @@ function stageBonusJump(g:any,radius:number,board=false){
 act('#rim',g=>stageBonusJump(g,1.45));
 act('#near',g=>stageBonusJump(g,2.1));
 act('#ollie',g=>stageBonusJump(g,2.1,true));
+
+const restart=document.createElement('button');restart.textContent='Restart level';
+document.querySelector('#review')!.prepend(restart);
+restart.addEventListener('click',()=>{
+ const g=game();if(!g||g.gameFlow.transitionActive)return;
+ samples.length=0;g.setBonusTravelReviewRate(1);
+ if(g.gameFlow.currentScreen==='results')g.gameFlow.callbacks.onResultsRetry();else g.gameFlow.callbacks.onRestart();
+ restart.blur();
+});
+const arrivalCapture=document.createElement('button');arrivalCapture.textContent='Capture next arrival';
+document.querySelector('#review')!.prepend(arrivalCapture);
+arrivalCapture.addEventListener('click',()=>{captureArrival=true;arrivalCapture.blur();});

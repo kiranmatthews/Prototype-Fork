@@ -21,7 +21,7 @@ const code=ts.transpileModule([
  'const MINIMUM_VORTEX_MS=2000;',
  fn(departure,'bonusAlignmentPose'),fn(departure,'bonusDeparturePose'),fn(loading,'runLoadingTransition'),
  `class FlowForTest { ${['blocksGameplay','loadingPhase','transition'].map(method).join('\n')} }`,
- ...['clearBonusDeparture','clearBonusArrival','beginBonusArrival','startBonusDeparture','renderBonusDeparture','enterBonusRound','checkCampaignEntrances','advanceFrame'].map(name=>fn(main,name)),
+ ...['clearBonusDeparture','clearBonusArrival','beginBonusArrival','renderWarpArrival','startBonusDeparture','renderBonusDeparture','presentCampaignResults','enterBonusRound','checkCampaignEntrances','advanceFrame'].map(name=>fn(main,name)),
  'globalThis.FlowForTest=FlowForTest; globalThis.loadingSequence=runLoadingTransition;',
 ].join('\n'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.None}}).outputText;
 const server=await createServer({configFile:false,logLevel:'silent',server:{middlewareMode:true,hmr:false}});
@@ -50,12 +50,13 @@ function fixture(reducedMotion=false){
   consumeEdges(flush){assert.equal(flush,true);this.jumpPressed=false;this.restartPressed=false;events.push('edges');}};
  const context={
   bonusTransferFrame,THREE,camera:new THREE.PerspectiveCamera(),WARP_PAD_TOP:.733,bonusArrival:null,bonusTravelReviewRate:1,BONUS_TRANSFER_SECONDS:2.8,
-  BonusWarpEffect:class {group=new THREE.Group();update(){}dispose(){}},updateWaterPresentation:noop,
+  BonusWarpEffect:class {group=new THREE.Group();update(){}dispose(){}},updateWaterPresentation:noop,updateCamera:noop,
   performance:{now:()=>0},Promise,console,document:{body:{classList:classes()}},window:{matchMedia:()=>({matches:reducedMotion})},
-  player,level:parent,current:{id:'jungle',name:'Jungle'},bonusSession:null,bonusDeparture:null,competition:null,
+  player,p2:null,level:parent,current:{id:'jungle',name:'Jungle'},bonusSession:null,bonusDeparture:null,competition:null,
   isCampaignLevel:()=>true,isCompetitionLevel:()=>false,campaignLevelById:()=>({name:'Jungle'}),resolveBonusLevel:()=>({}),
   Level:class {constructor(){this.hudMode='bonus';}},scene:{},loadedLevelId:'jungle',
-  ui:{setBonusTransfer(frame){if(frame)events.push(['receipt',frame]);},hideMessage:noop,setEndlessDeaths:noop,setLevel:noop,setHUD(_state,dt){assert.equal(dt,0);}},
+  ui:{setBonusTransfer(frame){if(frame)events.push(['receipt',frame]);},beginBonusReveal:noop,hideMessage:noop,hideTTResults:noop,resetHudTransients:noop,setEndlessDeaths:noop,setLevel:noop,setHUD(_state,dt){assert.equal(dt,0);}},
+  clearResultsPresentation:noop,resultsPresentation:null,ResultsPresentation:class{constructor(){events.push('results');}},
   competitionUI:{render:noop,setInputBlocked:noop,updateInput:noop},competitionPresentationSuppressed:()=>false,
   puffs:{clear:noop,attach:noop},swirls:{clear:noop},fieldSwirls:{clear:noop},
   input,recorder:{start:noop},endlessDeathsOn:false,
@@ -74,7 +75,7 @@ function fixture(reducedMotion=false){
  Object.assign(instance,{transitionActive:false,startupLoading:false,screen:null,transitionPhase:null,reducedMotion,
   cursor:{classList:classes()},invalidatePreCrt:noop,requestGameplayFrame:noop,syncVortexBodyClass:noop,
   transitionCurtain:{hidden:true,classList:classes(),offsetWidth:0,querySelectorAll:()=>[],replaceChildren:noop},
-  callbacks:{onTransitionComplete(){events.push('complete');}},setWarpRoom:noop,hide:noop,update:noop,
+  callbacks:{onTransitionComplete(){events.push('complete');}},setWarpRoom:noop,hide:noop,update:noop,showResults:noop,
  });
  const transition=instance.transition.bind(instance);
  instance.transition=(...args)=>context.pending=transition(...args);
@@ -82,6 +83,21 @@ function fixture(reducedMotion=false){
  return {context,events,frames,player,parent,input};
 }
 
+for(const reducedMotion of [false,true]){
+ const {context:c,frames,player}=fixture(reducedMotion);
+ c.beginBonusArrival();
+ for(let i=0;i<32;i++){
+  c.renderWarpArrival(1/60);
+  assert.equal(player.group.position.y,player.pos.y,'arrival transform leaked');
+  assert.equal(player.runTime,18.25);assert.equal(player.uberTimer,9);
+ }
+ assert.equal(c.bonusArrival,null,'arrival effect did not retire');
+ if(reducedMotion)assert.ok(frames.every(f=>f.renderY===1.05));
+ else {
+  assert.ok(frames[0].renderY>2.4,'arrival skipped the supported descent');
+  assert.ok(frames.slice(1).every((f,i)=>f.renderY<=frames[i].renderY));
+ }
+}
 for(const reducedMotion of [false,true]){
  const f=fixture(reducedMotion),{context:c,events,frames,player,input}=f;
  c.enterBonusRound(true);
@@ -134,6 +150,24 @@ for(const reduced of [false,true]){
  const alignmentFrames=frames.slice(6,27);
  if(reduced)assert.ok(alignmentFrames.every(f=>f.renderY===1.05));
  else assert.ok(Math.max(...alignmentFrames.map(f=>f.renderY))>1.45,'off-center landing slid instead of hopping');
+}
+for(const reduced of [false,true])for(const kind of ['normal','time-trial']){
+ const {context:c,player,frames,events,parent}=fixture(reduced);
+ parent.isBossLevel=false;player.state='finished';player.pos.set(4.4,2.5,-19);
+ const physical=player.pos.clone();
+ c.presentCampaignResults({kind});
+ assert.equal(c.gameFlow.blocksGameplay,true);
+ assert.equal(c.bonusDeparture.kind,'level-exit');
+ for(let frame=0;frame<100&&!c.gameFlow.loadingPhase;frame++){
+  c.advanceFrame(frame*1000/60);await Promise.resolve();
+  assert.deepEqual(player.pos.toArray(),physical.toArray());
+  assert.equal(player.runTime,18.25);assert.equal(player.uberTimer,9);
+  assert.equal(events.includes('results'),false,'results appeared before warp out');
+ }
+ await c.pending;await Promise.resolve();
+ assert.ok(frames.length>=39,'main finish skipped the landing beat');
+ assert.ok(events.indexOf('results')>events.indexOf('cover'),'results appeared before black');
+ assert.equal(c.bonusDeparture,null);assert.equal(c.gameFlow.blocksGameplay,false);
 }
 {
  const {context:c,player,parent}=fixture();

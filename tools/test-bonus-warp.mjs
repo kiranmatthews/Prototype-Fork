@@ -6,7 +6,9 @@ try{
  const {BonusWarpEffect}=await server.ssrLoadModule('/src/bonusWarp.ts');
  const scene=new THREE.Scene();
  for(let cycle=0;cycle<30;cycle++){
-  const effect=new BonusWarpEffect(scene,new THREE.Vector3(4,2,-9),cycle%2===0);
+  const effect=new BonusWarpEffect(scene,new THREE.Vector3(4,2,-9),cycle%2===0,cycle%3===0);
+  assert.ok(effect.group.renderOrder>6,'horizon mist would paint over the warp');
+  effect.group.traverse(o=>{if(o.material)assert.equal(o.material.depthTest,true,'warp ignored solid-world occlusion');});
   const resources=new Set(),disposed=new Set();
   effect.group.traverse(o=>{for(const r of [o.geometry,o.material])if(r&&!resources.has(r)){resources.add(r);r.addEventListener('dispose',()=>disposed.add(r));}});
   for(let i=0;i<150;i++){

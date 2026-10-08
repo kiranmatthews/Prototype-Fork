@@ -2,11 +2,26 @@
 
 Normal and time-trial finishes share a live shot of the skater at the level end. Gameplay remains stopped: only the results pose, reward bob/spin, water and rendering use the presentation clock.
 
-The completed run now fades directly through black into this shot, without an intervening loading vortex. Asset readiness and hidden-frame preparation are retained.
+Standard main-level finishes first use the bonus travel sequence: settle on the
+stone pad for 0.65 seconds, align with a short hop when needed, then rise for
+0.5 seconds before the black fade into results. The finish clock and awards are
+already fixed at contact; the presentation never advances physics or timers.
+Warm ribbons keep a tinted core against bright skies. Boss defeat presentations
+retain their existing results handoff. Asset readiness and hidden-frame
+preparation remain in place, with no intervening loading vortex.
+
+Standard campaign starts and Codex Geometry Lab receive a matching plain stone
+pad with a cyan inset. The existing spawn's X/Z stays fixed; the runtime raises
+the supported spawn onto its deck. The derived platform is excluded from editor
+capture, and the authored spawn is retained so repeated imports do not stack
+pads. Startup, course entry and full-run restart reveal a short descending warp
+onto the pad while input and the run clock remain locked. Ordinary checkpoint
+respawns retain their existing behavior. Cups, hubs, boss encounters and
+always-skate parks retain their specialized starts.
 
 - No new rewards: a slightly folded, looping catching-breath idle.
 - Rewards earned: arms open, gaze raised, with the actual crystal, clear box gem, green combo gem or blue time relic floating overhead. Normal clears can show any combination of the three collectibles.
-- The fiery finish pad and its foreground systemic Nitro switch are hidden for the shot, without destroying props or changing crate totals. The skater is placed on supported floor near the finish approach.
+- The stone finish pad and its foreground systemic Nitro switch are hidden for the shot, without destroying props or changing crate totals. The skater is placed on supported floor near the finish approach.
 - Box totals remain UI in both modes. Trial results emphasize the run time, authored relic target and top three local times, including the active campaign's saved personal best when available.
 
 There is one relic target per course, defaulting to **1:00.00**. In the editor,
