@@ -6858,6 +6858,20 @@ export class Editor {
     this.injectStyle();
   }
 
+  /** Select an existing editor workspace from the authoring directory. */
+  openToolSection(section: string): void {
+    if (!this.active) return;
+    if (section === "add" || section === "layers") this.setPop(section, false);
+    else {
+      this.setPop("", false);
+      this.setPanelTab(section === "project" || section === "environment" ? "proj" : "sel");
+      if (section === "environment" && this.environment) {
+        this.environment.element.open = true;
+        this.environment.element.scrollIntoView({ block: "start" });
+      }
+    }
+  }
+
   // one pop-out at a time (photoshop-dock rules); '' closes both
   private setPop(which: "add" | "layers" | "", persist = true): void {
     this.activePop = which;

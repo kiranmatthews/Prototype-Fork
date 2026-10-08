@@ -1723,13 +1723,18 @@ export class GameFlowUI {
     this.syncSelection(false);
   }
 
+  /** A tool bookmark exposes its controls without changing the saved debug preference. */
+  showDeveloperTools(): void {
+    if (!this.debugVisible) this.toggleDeveloperChrome(false);
+  }
+
   /** Pause and M share one persisted switch, including debug focus ownership. */
-  private toggleDeveloperChrome(): void {
+  private toggleDeveloperChrome(persist = true): void {
     const restoreMenuFocus = this.isDeveloperChromeTarget(document.activeElement);
     this.debugVisible = !this.debugVisible;
     document.body.classList.toggle("game-debug-hidden", !this.debugVisible);
     document.body.classList.toggle("game-debug-visible", this.debugVisible);
-    localStorage.setItem("solProtoDebugChrome", this.debugVisible ? "visible" : "hidden");
+    if (persist) localStorage.setItem("solProtoDebugChrome", this.debugVisible ? "visible" : "hidden");
     this.root.setAttribute("aria-modal", String(!this.debugVisible));
     const button = this.panel.querySelector<HTMLButtonElement>(".game-debug-toggle");
     if (button) {

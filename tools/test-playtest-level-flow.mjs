@@ -16,12 +16,15 @@ const functionSource = (name) => {
 
 // Execute the actual startup branch: no copied level-selection policy in the
 // test and no WebGL/browser machinery needed to check the URL trust boundary.
-const startupStart = source.indexOf("const fieldStudioRequested =");
+const toolSource = await readFile(new URL("../src/toolRoutes.ts", import.meta.url), "utf8");
+const toolModule = ts.transpileModule(toolSource, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 } }).outputText;
+const { requestedTool } = await import(`data:text/javascript;base64,${Buffer.from(toolModule).toString('base64')}`);
+const startupStart = source.indexOf("const linkedTool =");
 const startupEnd = source.indexOf("let level: Level;", startupStart);
 assert.ok(startupStart >= 0 && startupEnd > startupStart);
 const startup = new Function(
   "window", "location", "localStorage", "LITE_RENDER", "oceanReview",
-  "oceanOverview", "coastPhysicsReview", "ui", "findLevel", "DEFAULT_LEVEL_ID",
+  "oceanOverview", "coastPhysicsReview", "ui", "findLevel", "DEFAULT_LEVEL_ID", "requestedTool",
   `${compile(source.slice(startupStart, startupEnd))}\nreturn { current, shellBypass };`,
 );
 const registry = new Map([
@@ -37,9 +40,9 @@ function select(search, { saved = "slip", lite = false, ocean = false, coast = f
     ["solProtoLevelId", saved], ["solProtoEditorOpen", editor ? "1" : "0"],
   ]);
   return startup(
-    { location: { search } }, { hash: "" }, { getItem: (key) => storage.get(key) ?? null },
+    { location: { search } }, { search, hash: "" }, { getItem: (key) => storage.get(key) ?? null },
     lite, ocean, false, coast, { setLifeCheatEnabled() {} },
-    (id) => registry.get(id) ?? null, "jungle",
+    (id) => registry.get(id) ?? null, "jungle", requestedTool,
   );
 }
 assert.equal(select("?playtest&level=astra-chimeworks").current.id, "astra-chimeworks");
@@ -53,6 +56,8 @@ assert.equal(select("?level=astra-chimeworks").shellBypass, false);
 assert.equal(select("?lite&level=astra-chimeworks", { lite: true }).current.id, "slip");
 assert.equal(select("?level=astra-chimeworks", { editor: true }).current.id, "slip");
 assert.equal(select("?playtest&level=%3Cscript%3E").current.id, "slip");
+assert.equal(select("?tool=tuning").shellBypass, true);
+assert.equal(select("?tool=unknown").shellBypass, false);
 assert.equal(select("?oceanreview", { ocean: true }).current.id, "beachfront");
 assert.equal(select("?coastphysics", { coast: true }).current.id, "descent");
 

@@ -1,3 +1,5 @@
+import { requestedTool } from "./toolRoutes";
+import { createSecondaryTextPanel } from "./secondaryTextPanel";
 import { startOfflineCache } from "./offline";
 import { stabilityReport } from './stabilityReport';
 import { rooAtlasDiagnostics } from './roo-type/atlas';
@@ -1598,7 +1600,7 @@ const oceanOverview = new URLSearchParams(window.location.search).has(
 const coastPhysicsReview = new URLSearchParams(window.location.search).has(
   "coastphysics",
 );
-const fieldStudioRequested = location.hash.toLowerCase().includes("fieldstudio");
+const linkedTool = requestedTool(location.search, location.hash);
 const playtestParams = new URLSearchParams(window.location.search);
 const playtestRequested = playtestParams.has("playtest");
 const shellBypass =
@@ -1606,7 +1608,7 @@ const shellBypass =
   oceanReview ||
   oceanOverview ||
   coastPhysicsReview ||
-  fieldStudioRequested ||
+  linkedTool !== null ||
   playtestRequested ||
   localStorage.getItem("solProtoEditorOpen") === "1";
 ui.setLifeCheatEnabled(shellBypass);
@@ -3725,18 +3727,42 @@ async function openWaterStudioTool(): Promise<void> {
   });
   (window as unknown as { __game: Record<string, unknown> }).__game.waterStudio = waterStudio;
 }
-if (location.hash.toLowerCase().includes("characterlab")) {
-  setTimeout(() => void openCharacterLabTool(), 500);
-} else if (location.hash.toLowerCase().includes("animationstudio")) {
-  setTimeout(() => void openAnimationStudioTool(), 500);
-} else if (location.hash.toLowerCase().includes("waterstudio")) {
-  setTimeout(() => void openWaterStudioTool(), 2500);
-} else if (location.hash.toLowerCase().includes("puffstudio")) {
-  setTimeout(() => void openPuffStudioTool(), 2500);
-} else if (location.hash.toLowerCase().includes("swirlstudio")) {
-  setTimeout(() => void openSwirlStudioTool(), 2500);
-} else if (fieldStudioRequested) {
-  setTimeout(() => void openFieldStudioTool(), 2500);
+// Open only after covered startup has finished, so the launch menu cannot hide the tool.
+async function openLinkedTool(): Promise<void> {
+  if (!linkedTool) return;
+  const section = new URLSearchParams(location.search).get("section") ?? "";
+  if (["options", "save-load", "level-select"].includes(linkedTool)) {
+    openWorldMapSection(linkedTool as "options" | "save-load" | "level-select");
+    return;
+  }
+  gameFlow.showDeveloperTools();
+  closePresentationPanels();
+  switch (linkedTool) {
+    case "characterlab": await openCharacterLabTool(); break;
+    case "animationstudio": await openAnimationStudioTool(); break;
+    case "waterstudio": await openWaterStudioTool(); break;
+    case "puffstudio": await openPuffStudioTool(); break;
+    case "swirlstudio": await openSwirlStudioTool(); break;
+    case "fieldstudio": await openFieldStudioTool(); break;
+    case "tuning": ui.openToolPanel("right", section); break;
+    case "menu": ui.openToolPanel("left"); break;
+    case "editor": openEditor(); editor.openToolSection(section); break;
+    case "crt": crtGuestPanel.open(); break;
+    case "render": renderQualityPanel?.setOpen(true); break;
+    case "board": skateboardPanel.setOpen(true); break;
+    case "spin": spinPanel.setOpen(true); break;
+    case "look": visualTreatmentPanel.setOpen(true); break;
+    case "text": {
+      createSecondaryTextPanel();
+      const panel = document.querySelector<HTMLDetailsElement>(".secondary-text-tuner");
+      if (panel) {
+        panel.open = true;
+        if (section === "focus") panel.querySelector(".menu-png-tuning")?.scrollIntoView({ block: "start" });
+      }
+      break;
+    }
+  }
+  document.body.dataset.activeTool = linkedTool;
 }
 
 function openEditor(
@@ -3955,7 +3981,7 @@ ui.setEditUnlocked(isEditUnlocked());
 // Refresh-proof editing: if the page reloads mid-edit, walk straight back into
 // the editor on the SAME level (camera pose restored by Editor.enter()).
 // Deferred past module init — openEditor touches state declared further down.
-if (localStorage.getItem("solProtoEditorOpen") === "1") {
+if (!linkedTool && localStorage.getItem("solProtoEditorOpen") === "1") {
   const t = localStorage.getItem("solProtoEditorTarget") ?? "";
   // a stale target (older build, deleted level) must not reopen on the wrong
   // level — the editor autosaves, so that would overwrite it
@@ -5517,6 +5543,7 @@ async function prepareStartupPresentation(): Promise<void> {
   }
   gameFlow.setStartupLoading(false);
   recordPresentationStage('startup:ready');
+  await openLinkedTool();
   startOfflineCache();
 }
 void prepareStartupPresentation().catch(error=>{

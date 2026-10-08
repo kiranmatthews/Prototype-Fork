@@ -1,3 +1,4 @@
+import { toolSectionId } from "./toolRoutes";
 // DOM overlay: Crash-style game HUD (counters that pop, THPS trick plate),
 // plus the debug/menu and tuning panels tucked into collapsible side tabs.
 
@@ -309,6 +310,12 @@ export class UI {
 
     // ---- LEFT side panel (level menu + debug), behind a collapsible tab ----
     const statsWrap = div("hud-stats");
+    const directory = document.createElement("a");
+    directory.className = "hud-levelbtn";
+    directory.textContent = "ALL LABS & TOOLS ↗";
+    directory.href = new URL(`${import.meta.env.BASE_URL}labs/`, location.href).href;
+    directory.style.cssText = "display:block;text-align:center;text-decoration:none;margin-bottom:10px";
+    statsWrap.appendChild(directory);
 
     // LEVEL LIST. Re-rendered (not built once) because the list grows at
     // runtime: NEW, IMPORT, editing a built-in copy, and RESTORE FROM CLOUD
@@ -616,6 +623,7 @@ export class UI {
       if (keys.length === 0) return;
       const head = div("hud-secttitle");
       head.textContent = title;
+      head.dataset.toolSection = toolSectionId(title);
       panel.appendChild(head);
       for (const key of keys) {
         panel.appendChild(this.sliderRow(key));
@@ -1032,6 +1040,19 @@ export class UI {
       });
       this.presentationToolsRow.appendChild(button);
     }
+  }
+
+  /** Open a bookmark without depending on the remembered collapsed state. */
+  openToolPanel(side: "left" | "right", section = ""): void {
+    this.onSideTab?.(side);
+    const wrap = document.querySelector<HTMLElement>(`.side-wrap.${side}`);
+    if (!wrap) return;
+    wrap.classList.remove("collapsed");
+    document.body.classList.add(`side-panel-${side}-open`);
+    const target = [...wrap.querySelectorAll<HTMLElement>("[data-tool-section]")]
+      .find(element => element.dataset.toolSection === section);
+    if (target) target.scrollIntoView({ block: "start" });
+    else wrap.querySelector<HTMLElement>(".hud-tuning, .hud-stats")?.scrollTo(0, 0);
   }
 
   // A fixed side wrapper with a vertical tab that slides the content off-screen.

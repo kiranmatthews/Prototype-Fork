@@ -6,6 +6,7 @@ It is set up to measure prompt-to-playable speed for Codex/sol level work
 against the equivalent Unity greybox workflow.
 
 - [Play the Codex/sol fork](https://kiranmatthews.github.io/Prototype-Fork/)
+- [All labs, tuning panels & tools](https://kiranmatthews.github.io/Prototype-Fork/labs/)
 - [Experiment protocol](docs/CODEX_LEVEL_EXPERIMENT.md)
 - [Iteration log](docs/LEVEL_ITERATIONS.md)
 - [Unity-backport level primitives](docs/UNITY_BACKPORT_PRIMITIVES.md)
@@ -44,6 +45,35 @@ Character asset experiments use the pinned `vendor/img2threejs` and
 `vendor/img2threejs-showcase` submodules plus the isolated official Tripo CLI
 under `tools/tripo-character`. Tripo credentials and generated assets remain
 outside the published browser bundle.
+
+## Labs, tuning and configuration
+
+Bookmark **[the full tools directory](https://kiranmatthews.github.io/Prototype-Fork/labs/)**
+(`labs/` on the development server). It lists every project-owned HTML review,
+embedded studio, graphics/configuration panel, movement-tuning section, editor
+workspace, playable lab and diagnostic launch. Search matches names, controls
+and source filenames; category and availability filters are bookmarkable.
+The developer MENU also links to the directory.
+
+Published tools open immediately. The **Local dev** entries retain their authoring
+fixtures and run against the development-server URL configured in the directory
+(default `http://localhost:5173/`). Run `npm run dev` in this checkout first.
+Historical font/art proofs can require their original generated working assets;
+CLI-only generation/test scripts and the separate vendor showcase are not game UIs.
+
+Embedded bookmarks use `?playtest&level=codex-lab&tool=tuning&section=grinds`,
+with the appropriate level/tool/section substituted. Studio hash bookmarks such
+as `#characterlab` and `#fieldstudio` remain supported. Opening a tool waits for
+startup, exposes its controls, and ignores a remembered editor reopening without
+changing the saved debug-menu preference.
+
+`tools/tool-directory.mjs` discovers browser pages at each build;
+`tools/site-entries.mjs` owns published HTML entries;
+`src/toolDirectoryEntries.ts` describes embedded destinations, deriving all
+movement sections from `TUNING_SECTIONS`. Add a new embedded UI there and a
+handler in `src/toolRoutes.ts` / `src/main.ts`. Validate with
+`node tools/test-tool-directory.mjs` after building, and use
+`tools/test-tool-directory-browser.mjs` for real-browser link and panel checks.
 
 ## Controls
 

@@ -105,8 +105,8 @@ await withSkateRuntime(async ({player:p,server,THREE})=>{
   p.exitAnimationPreview();
   for(const state of before){assert.ok(state.node.position.distanceTo(state.p)<1e-8);assert.ok(state.node.quaternion.angleTo(state.q)<1e-6);assert.ok(state.node.scale.distanceTo(state.s)<1e-8,`${state.node.name} scale after preview ${state.node.scale.toArray()} != ${state.s.toArray()}`);assert.equal(state.node.visible,state.visible);}
   const html=await readFile(new URL('../skate-pose-review.html',import.meta.url),'utf8');
-  const config=await readFile(new URL('../vite.config.ts',import.meta.url),'utf8');
+  const { siteEntries } = await import('./site-entries.mjs');
   assert.ok(html.includes("location.protocol === 'file:'")&&html.includes('location.replace'));
-  assert.ok(config.includes("skatePoseReview: 'skate-pose-review.html'"),'contact sheet is absent from production build');
+  assert.equal(siteEntries.skatePoseReview, 'skate-pose-review.html', 'contact sheet is absent from production build');
   console.log(`PASS ${data.clips.length} editable skate captures; ${frames} finite playback frames, native entries/exits including the full S42 cycle, independent elasticity, board tracks/visibility, safe source upgrades, saved edits/deletions, complete preview restoration and published/file-link entry.`);
 });

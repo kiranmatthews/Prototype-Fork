@@ -1,24 +1,16 @@
 import { defineConfig } from 'vite';
 import { offlineBuild } from './tools/offline-build.mjs';
+import { siteEntries } from './tools/site-entries.mjs';
+import { toolDirectory } from './tools/tool-directory.mjs';
 
 // Relative base so the build works both at a domain root and on a subpath
 // like GitHub Pages (https://<user>.github.io/<repo>/).
 export default defineConfig({
   base: './',
-  plugins: [offlineBuild()],
+  plugins: [toolDirectory(), offlineBuild()],
   build: {
     rollupOptions: {
-      input: {
-        // The offline manifest includes the game and these companion tools.
-        index: 'index.html',
-        crtReview: 'crt-review.html',
-        skateboardLab: 'skateboard-lab.html',
-        skatePoseReview: 'skate-pose-review.html',
-        spinLab: 'spin-lab.html',
-        milkReview: 'milk-review.html',
-        resetLocalData: 'reset-local-data.html',
-        rooTypeLab: 'roo-type-lab.html',
-      },
+      input: siteEntries,
     },
   },
   resolve: {

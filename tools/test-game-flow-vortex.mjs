@@ -353,7 +353,7 @@ assert.match(
   /Copy active'[\s\S]{0,100}this\.activeProfileOutput\(\)/,
   "Copy active must not trust textarea content replaced by clipboard fallback",
 );
-assert.match(main, /const shellBypass =[^;]*\|\|\s*fieldStudioRequested\s*\|\|/,
+assert.match(main, /const shellBypass =[^;]*\|\|\s*linkedTool !== null\s*\|\|/,
   "#fieldstudio must bypass the launch shell without an extra query flag");
 assert.match(
   main,
