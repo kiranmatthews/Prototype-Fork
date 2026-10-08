@@ -1,0 +1,2227 @@
+{
+  "base": "http://127.0.0.1:5241",
+  "results": [
+    {
+      "lite": true,
+      "park": false,
+      "case": "neutral-spin-fresh-catch",
+      "launch": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          0.8,
+          -8.699999999999992
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 12.5,
+        "catchGrace": 0,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "mid": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          3.098395436150975,
+          -5.63333333333332
+        ],
+        "spin": -3.299999999999999,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 0.5291138044007422,
+        "catchGrace": 0.2,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "landed": {
+        "state": "grind",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          0.9774868958523479,
+          -3.366666666666649
+        ],
+        "spin": 0,
+        "rail": 0,
+        "labels": [
+          "50-50",
+          "Switch 180\u00b0",
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 3,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": true,
+      "park": false,
+      "case": "fresh-tap-buffer",
+      "released": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          1.5094938036166878,
+          -3.6333333333333155
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": -14.210207232930196,
+        "catchGrace": 0.2,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "landed": {
+        "state": "grind",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          0.9774868958523479,
+          -3.366666666666649
+        ],
+        "spin": 0,
+        "rail": 0,
+        "labels": [
+          "50-50 x2"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 2,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": true,
+      "park": false,
+      "case": "fresh-hold-release-buffer",
+      "released": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          1.746330590832191,
+          -3.766666666666649
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": -13.04354056626353,
+        "catchGrace": 0.2,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "landed": {
+        "state": "grind",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          0.9774868958523479,
+          -3.366666666666649
+        ],
+        "spin": 0,
+        "rail": 0,
+        "labels": [
+          "50-50 x2"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 2,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": true,
+      "park": false,
+      "case": "expired-tap-still-bails",
+      "expired": {
+        "state": "air",
+        "grounded": false,
+        "bail": true,
+        "pos": [
+          -22,
+          0.67,
+          -3.0999999999999823
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [],
+        "speed": 4.6679891967028375,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 4.837382764776051,
+        "catchGrace": 0,
+        "combo": 0,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": true,
+      "park": false,
+      "case": "no-grind-bails",
+      "missed": {
+        "state": "air",
+        "grounded": false,
+        "bail": true,
+        "pos": [
+          -22,
+          0.67,
+          -3.0999999999999823
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [],
+        "speed": 4.6679891967028375,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 4.837382764776051,
+        "catchGrace": 0,
+        "combo": 0,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": true,
+      "park": false,
+      "case": "stale-grind-hold-bails",
+      "missed": {
+        "state": "air",
+        "grounded": false,
+        "bail": true,
+        "pos": [
+          -22,
+          0.67,
+          -3.0999999999999823
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [],
+        "speed": 4.6679891967028375,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 4.837382764776051,
+        "catchGrace": 0,
+        "combo": 0,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": true,
+      "park": false,
+      "case": "side-transfer",
+      "side": -1,
+      "launch": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          0.8,
+          -8.699999999999992
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": -4.8,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 12.5,
+        "catchGrace": 0,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "mid": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -23.519999999999968,
+          3.0222125852395765,
+          -6.166666666666655
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": -4.8,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 2.227294170744714,
+        "catchGrace": 0.2,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "landed": {
+        "state": "grind",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -24.639999999999944,
+          2.49923329524976,
+          -4.299999999999983
+        ],
+        "spin": 0,
+        "rail": 1,
+        "labels": [
+          "50-50",
+          "Boardslide"
+        ],
+        "speed": 8.957256582861786,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 2,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": true,
+      "park": false,
+      "case": "side-transfer",
+      "side": 1,
+      "launch": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          0.8,
+          -8.699999999999992
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 4.8,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 12.5,
+        "catchGrace": 0,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "mid": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -20.480000000000032,
+          3.0222125852395765,
+          -6.166666666666655
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 4.8,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 2.227294170744714,
+        "catchGrace": 0.2,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "landed": {
+        "state": "grind",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -19.360000000000056,
+          2.49923329524976,
+          -4.299999999999983
+        ],
+        "spin": 0,
+        "rail": 2,
+        "labels": [
+          "50-50",
+          "Boardslide"
+        ],
+        "speed": 8.957256582861786,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 2,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": true,
+      "park": false,
+      "case": "side-exit-rollout",
+      "launch": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          0.8,
+          -8.699999999999992
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": -4.8,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 12.5,
+        "catchGrace": 0,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "exited": {
+        "state": "ride",
+        "grounded": true,
+        "bail": false,
+        "pos": [
+          -25.439999999999927,
+          0,
+          -2.966666666666649
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 9.329523031752426,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": true,
+      "park": true,
+      "case": "neutral-spin-fresh-catch",
+      "launch": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          0.8,
+          -8.699999999999992
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 12.5,
+        "catchGrace": 0,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "mid": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          3.072304166666667,
+          -5.63333333333332
+        ],
+        "spin": -1.946666666666666,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": -0.6445000000000042,
+        "catchGrace": 0.2,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "landed": {
+        "state": "grind",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          1.1489499999999997,
+          -3.0999999999999823
+        ],
+        "spin": 0,
+        "rail": 0,
+        "labels": [
+          "50-50",
+          "Switch 180\u00b0",
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 3,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": true,
+      "park": true,
+      "case": "fresh-tap-buffer",
+      "released": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          1.6812375,
+          -3.4999999999999822
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": -9.788500000000006,
+        "catchGrace": 0.2,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "landed": {
+        "state": "grind",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          1.1489499999999997,
+          -3.0999999999999823
+        ],
+        "spin": 0,
+        "rail": 0,
+        "labels": [
+          "50-50 x2"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 2,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": true,
+      "park": true,
+      "case": "fresh-hold-release-buffer",
+      "released": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          1.8396166666666667,
+          -3.6333333333333155
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": -9.217000000000006,
+        "catchGrace": 0.2,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "landed": {
+        "state": "grind",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          1.1489499999999997,
+          -3.0999999999999823
+        ],
+        "spin": 0,
+        "rail": 0,
+        "labels": [
+          "50-50 x2"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 2,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": true,
+      "park": true,
+      "case": "expired-tap-still-bails",
+      "expired": {
+        "state": "air",
+        "grounded": false,
+        "bail": true,
+        "pos": [
+          -22,
+          0.67,
+          -2.6999999999999824
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [],
+        "speed": 4.6679891967028375,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 4.837382764776051,
+        "catchGrace": 0,
+        "combo": 0,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": true,
+      "park": true,
+      "case": "no-grind-bails",
+      "missed": {
+        "state": "air",
+        "grounded": false,
+        "bail": true,
+        "pos": [
+          -22,
+          0.67,
+          -2.6999999999999824
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [],
+        "speed": 4.6679891967028375,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 4.837382764776051,
+        "catchGrace": 0,
+        "combo": 0,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": true,
+      "park": true,
+      "case": "stale-grind-hold-bails",
+      "missed": {
+        "state": "air",
+        "grounded": false,
+        "bail": true,
+        "pos": [
+          -22,
+          0.67,
+          -2.6999999999999824
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [],
+        "speed": 4.6679891967028375,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 4.837382764776051,
+        "catchGrace": 0,
+        "combo": 0,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": true,
+      "park": true,
+      "case": "side-transfer",
+      "side": -1,
+      "launch": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          0.8,
+          -8.699999999999992
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 4.8,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 12.5,
+        "catchGrace": 0,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "mid": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -20.480000000000032,
+          3.0390708333333336,
+          -6.166666666666655
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 4.8,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 1.6414999999999957,
+        "catchGrace": 0.2,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "landed": {
+        "state": "grind",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -19.360000000000056,
+          2.4886375000000003,
+          -4.299999999999983
+        ],
+        "spin": 0,
+        "rail": 2,
+        "labels": [
+          "50-50",
+          "Boardslide"
+        ],
+        "speed": 8.957256582861786,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 2,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": true,
+      "park": true,
+      "case": "side-transfer",
+      "side": 1,
+      "launch": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          0.8,
+          -8.699999999999992
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": -4.8,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 12.5,
+        "catchGrace": 0,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "mid": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -23.519999999999968,
+          3.0390708333333336,
+          -6.166666666666655
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": -4.8,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 1.6414999999999957,
+        "catchGrace": 0.2,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "landed": {
+        "state": "grind",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -24.639999999999944,
+          2.4886375000000003,
+          -4.299999999999983
+        ],
+        "spin": 0,
+        "rail": 1,
+        "labels": [
+          "50-50",
+          "Boardslide"
+        ],
+        "speed": 8.957256582861786,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 2,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": true,
+      "park": true,
+      "case": "side-exit-rollout",
+      "launch": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          0.8,
+          -8.699999999999992
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 4.8,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 12.5,
+        "catchGrace": 0,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "exited": {
+        "state": "ride",
+        "grounded": true,
+        "bail": false,
+        "pos": [
+          -18.160000000000082,
+          0,
+          -2.2999999999999825
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 9.329523031752426,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": false,
+      "park": false,
+      "case": "neutral-spin-fresh-catch",
+      "launch": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          0.8,
+          -8.699999999999992
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 12.5,
+        "catchGrace": 0,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "mid": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          3.098395436150975,
+          -5.63333333333332
+        ],
+        "spin": -3.299999999999999,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 0.5291138044007422,
+        "catchGrace": 0.2,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "landed": {
+        "state": "grind",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          0.9774868958523479,
+          -3.366666666666649
+        ],
+        "spin": 0,
+        "rail": 0,
+        "labels": [
+          "50-50",
+          "Switch 180\u00b0",
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 3,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": false,
+      "park": false,
+      "case": "fresh-tap-buffer",
+      "released": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          1.5094938036166878,
+          -3.6333333333333155
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": -14.210207232930196,
+        "catchGrace": 0.2,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "landed": {
+        "state": "grind",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          0.9774868958523479,
+          -3.366666666666649
+        ],
+        "spin": 0,
+        "rail": 0,
+        "labels": [
+          "50-50 x2"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 2,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": false,
+      "park": false,
+      "case": "fresh-hold-release-buffer",
+      "released": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          1.746330590832191,
+          -3.766666666666649
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": -13.04354056626353,
+        "catchGrace": 0.2,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "landed": {
+        "state": "grind",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          0.9774868958523479,
+          -3.366666666666649
+        ],
+        "spin": 0,
+        "rail": 0,
+        "labels": [
+          "50-50 x2"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 2,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": false,
+      "park": false,
+      "case": "expired-tap-still-bails",
+      "expired": {
+        "state": "air",
+        "grounded": false,
+        "bail": true,
+        "pos": [
+          -22,
+          0.67,
+          -3.0999999999999823
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [],
+        "speed": 4.6679891967028375,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 4.837382764776051,
+        "catchGrace": 0,
+        "combo": 0,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": false,
+      "park": false,
+      "case": "no-grind-bails",
+      "missed": {
+        "state": "air",
+        "grounded": false,
+        "bail": true,
+        "pos": [
+          -22,
+          0.67,
+          -3.0999999999999823
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [],
+        "speed": 4.6679891967028375,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 4.837382764776051,
+        "catchGrace": 0,
+        "combo": 0,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": false,
+      "park": false,
+      "case": "stale-grind-hold-bails",
+      "missed": {
+        "state": "air",
+        "grounded": false,
+        "bail": true,
+        "pos": [
+          -22,
+          0.67,
+          -3.0999999999999823
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [],
+        "speed": 4.6679891967028375,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 4.837382764776051,
+        "catchGrace": 0,
+        "combo": 0,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": false,
+      "park": false,
+      "case": "side-transfer",
+      "side": -1,
+      "launch": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          0.8,
+          -8.699999999999992
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": -4.8,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 12.5,
+        "catchGrace": 0,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "mid": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -23.519999999999968,
+          3.0222125852395765,
+          -6.166666666666655
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": -4.8,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 2.227294170744714,
+        "catchGrace": 0.2,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "landed": {
+        "state": "grind",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -24.639999999999944,
+          2.49923329524976,
+          -4.299999999999983
+        ],
+        "spin": 0,
+        "rail": 1,
+        "labels": [
+          "50-50",
+          "Boardslide"
+        ],
+        "speed": 8.957256582861786,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 2,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": false,
+      "park": false,
+      "case": "side-transfer",
+      "side": 1,
+      "launch": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          0.8,
+          -8.699999999999992
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 4.8,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 12.5,
+        "catchGrace": 0,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "mid": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -20.480000000000032,
+          3.0222125852395765,
+          -6.166666666666655
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 4.8,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 2.227294170744714,
+        "catchGrace": 0.2,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "landed": {
+        "state": "grind",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -19.360000000000056,
+          2.49923329524976,
+          -4.299999999999983
+        ],
+        "spin": 0,
+        "rail": 2,
+        "labels": [
+          "50-50",
+          "Boardslide"
+        ],
+        "speed": 8.957256582861786,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 2,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": false,
+      "park": false,
+      "case": "side-exit-rollout",
+      "launch": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          0.8,
+          -8.699999999999992
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": -4.8,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 12.5,
+        "catchGrace": 0,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "exited": {
+        "state": "ride",
+        "grounded": true,
+        "bail": false,
+        "pos": [
+          -25.439999999999927,
+          0,
+          -2.966666666666649
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 9.329523031752426,
+        "lateralX": 0,
+        "camera": [
+          -7.346410206643587e-06,
+          0,
+          -0.9999999999730151
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": false,
+      "park": true,
+      "case": "neutral-spin-fresh-catch",
+      "launch": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          0.8,
+          -8.699999999999992
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 12.5,
+        "catchGrace": 0,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "mid": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          3.072304166666667,
+          -5.63333333333332
+        ],
+        "spin": -1.946666666666666,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": -0.6445000000000042,
+        "catchGrace": 0.2,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "landed": {
+        "state": "grind",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          1.1489499999999997,
+          -3.0999999999999823
+        ],
+        "spin": 0,
+        "rail": 0,
+        "labels": [
+          "50-50",
+          "Switch 180\u00b0",
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 3,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": false,
+      "park": true,
+      "case": "fresh-tap-buffer",
+      "released": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          1.6812375,
+          -3.4999999999999822
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": -9.788500000000006,
+        "catchGrace": 0.2,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "landed": {
+        "state": "grind",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          1.1489499999999997,
+          -3.0999999999999823
+        ],
+        "spin": 0,
+        "rail": 0,
+        "labels": [
+          "50-50 x2"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 2,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": false,
+      "park": true,
+      "case": "fresh-hold-release-buffer",
+      "released": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          1.8396166666666667,
+          -3.6333333333333155
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": -9.217000000000006,
+        "catchGrace": 0.2,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "landed": {
+        "state": "grind",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          1.1489499999999997,
+          -3.0999999999999823
+        ],
+        "spin": 0,
+        "rail": 0,
+        "labels": [
+          "50-50 x2"
+        ],
+        "speed": 8,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 2,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": false,
+      "park": true,
+      "case": "expired-tap-still-bails",
+      "expired": {
+        "state": "air",
+        "grounded": false,
+        "bail": true,
+        "pos": [
+          -22,
+          0.67,
+          -2.6999999999999824
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [],
+        "speed": 4.6679891967028375,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 4.837382764776051,
+        "catchGrace": 0,
+        "combo": 0,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": false,
+      "park": true,
+      "case": "no-grind-bails",
+      "missed": {
+        "state": "air",
+        "grounded": false,
+        "bail": true,
+        "pos": [
+          -22,
+          0.67,
+          -2.6999999999999824
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [],
+        "speed": 4.6679891967028375,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 4.837382764776051,
+        "catchGrace": 0,
+        "combo": 0,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": false,
+      "park": true,
+      "case": "stale-grind-hold-bails",
+      "missed": {
+        "state": "air",
+        "grounded": false,
+        "bail": true,
+        "pos": [
+          -22,
+          0.67,
+          -2.6999999999999824
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [],
+        "speed": 4.6679891967028375,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 4.837382764776051,
+        "catchGrace": 0,
+        "combo": 0,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": false,
+      "park": true,
+      "case": "side-transfer",
+      "side": -1,
+      "launch": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          0.8,
+          -8.699999999999992
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 4.8,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 12.5,
+        "catchGrace": 0,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "mid": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -20.480000000000032,
+          3.0390708333333336,
+          -6.166666666666655
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 4.8,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 1.6414999999999957,
+        "catchGrace": 0.2,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "landed": {
+        "state": "grind",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -19.360000000000056,
+          2.4886375000000003,
+          -4.299999999999983
+        ],
+        "spin": 0,
+        "rail": 2,
+        "labels": [
+          "50-50",
+          "Boardslide"
+        ],
+        "speed": 8.957256582861786,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 2,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": false,
+      "park": true,
+      "case": "side-transfer",
+      "side": 1,
+      "launch": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          0.8,
+          -8.699999999999992
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": -4.8,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 12.5,
+        "catchGrace": 0,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "mid": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -23.519999999999968,
+          3.0390708333333336,
+          -6.166666666666655
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": -4.8,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 1.6414999999999957,
+        "catchGrace": 0.2,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "landed": {
+        "state": "grind",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -24.639999999999944,
+          2.4886375000000003,
+          -4.299999999999983
+        ],
+        "spin": 0,
+        "rail": 1,
+        "labels": [
+          "50-50",
+          "Boardslide"
+        ],
+        "speed": 8.957256582861786,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 2,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    },
+    {
+      "lite": false,
+      "park": true,
+      "case": "side-exit-rollout",
+      "launch": {
+        "state": "air",
+        "grounded": false,
+        "bail": false,
+        "pos": [
+          -22,
+          0.8,
+          -8.699999999999992
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 8,
+        "lateralX": 4.8,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 12.5,
+        "catchGrace": 0,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      },
+      "exited": {
+        "state": "ride",
+        "grounded": true,
+        "bail": false,
+        "pos": [
+          -18.160000000000082,
+          0,
+          -2.2999999999999825
+        ],
+        "spin": 0,
+        "rail": -1,
+        "labels": [
+          "50-50"
+        ],
+        "speed": 9.329523031752426,
+        "lateralX": 0,
+        "camera": [
+          0,
+          0,
+          1
+        ],
+        "verticalSpeed": 0,
+        "catchGrace": 0,
+        "combo": 1,
+        "charging": false,
+        "charge": 0,
+        "releaseGuard": false
+      }
+    }
+  ],
+  "errors": [],
+  "sourceReplay": {
+    "file": "tools/fixtures/grind-catch-release-replay.json",
+    "sha256": "e6e38d248d3fb49625b334cf6a871bc75c791a75186b70cedbd28bcbf37e0574",
+    "frames": 3671
+  },
+  "independentReplayCases": [
+    {
+      "takeoff": 551,
+      "originalImpact": 595,
+      "correctedCatch": 593
+    },
+    {
+      "takeoff": 2111,
+      "originalImpact": 2147,
+      "correctedCatch": 2145
+    },
+    {
+      "takeoff": 3036,
+      "originalImpact": 3075,
+      "correctedCatch": 3072
+    }
+  ],
+  "note": "Each recorded approach retains legacy routing before takeoff, then tests the corrected air independently; the earlier fix changes the later route in a continuous replay.",
+  "controllerCases": 44,
+  "releaseBufferSeconds": 0.2
+}

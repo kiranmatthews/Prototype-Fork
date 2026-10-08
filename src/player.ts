@@ -1284,6 +1284,7 @@ export class Player {
   private grindExitAir = false; // rail airs keep their launch velocity; airborne input owns tricks
   private grindOllieAir = false; // deliberate top-side pop can return to the departing rail
   private grindOllieCatchArmed = false; // each ollie needs a fresh airborne Grind press
+  private grindOllieCatchGrace = 0; // brief release buffer for that fresh press, never the takeoff hold
   private grindAirLat = 0;
   private grindSpinInput = 0; // pre-held transfer direction must be released before it spins
   private readonly grindJumpInput = new THREE.Vector2();
@@ -3429,6 +3430,7 @@ export class Player {
     this.grindExitAir = false;
     this.grindOllieAir = false;
     this.grindOllieCatchArmed = false;
+    this.grindOllieCatchGrace = 0;
     this.grindAirLat = this.grindSpinInput = 0;
     this.grindJumpInput.set(0, 0);
     this.boardOllieAir = false;
@@ -4005,6 +4007,7 @@ export class Player {
     this.liftTyT = Math.max(0, this.liftTyT - dt);
     if (this.liftTyT === 0) this.liftTy = 0;
     this.regrindCd = Math.max(0, this.regrindCd - dt);
+    this.grindOllieCatchGrace = Math.max(0, this.grindOllieCatchGrace - dt);
     if(this.loopFailure){
       this.loopFailure.elapsed+=dt;
       if(!this.loopFailure.tumbleStarted&&this.loopFailure.elapsed>=.2){
@@ -4523,7 +4526,7 @@ export class Player {
         } else if (
           !jumpActionConsumed &&
           !this.wallriding &&
-          (input.grindPressed || input.grindHeld) &&
+          this.grindRequested(input) &&
           this.tryGrind(input.grindPressed, level)
         ) {
           // grabbed the rail
@@ -8018,6 +8021,7 @@ export class Player {
       this.grindExitAir = false;
       this.grindOllieAir = false;
       this.grindOllieCatchArmed = false;
+      this.grindOllieCatchGrace = 0;
       this.grindAirLat = this.grindSpinInput = 0;
       this.liftTy = 0; // this landing's ramp memory belongs to this landing
       this.liftTyT = 0;
@@ -10434,12 +10438,20 @@ export class Player {
     this.specialGrind = null;
   }
 
+  private grindRequested(input: Input): boolean {
+    return input.grindPressed || input.grindHeld ||
+      (this.grindExitAir && this.grindOllieAir && this.grindOllieCatchGrace > 1e-6);
+  }
+
   private tryGrind(pressed: boolean, level: Level): boolean {
     // The takeoff hold belongs to the grind we left. A fresh press can arm
-    // the next catch early (even during cooldown), then be held to contact.
+    // the next catch early (even during cooldown). Keep that request for
+    // 0.2s after release: a tap just before contact must not become a smack
+    // merely because this return waits until rail height to catch.
     if (this.grindExitAir && this.grindOllieAir) {
       if (pressed) this.grindOllieCatchArmed = true;
       if (!this.grindOllieCatchArmed) return false;
+      if (pressed || this.rawInput.grindHeld) this.grindOllieCatchGrace = 0.2;
     }
     // A flopped bail can't grab a rail — the lip bail ejects you right over
     // the coping with Triangle still held, and snapping it would turn the
@@ -10685,6 +10697,7 @@ export class Player {
     this.grindExitAir = false; // (re-set by the next exit — the hop window is per-air)
     this.grindOllieAir = false;
     this.grindOllieCatchArmed = false;
+    this.grindOllieCatchGrace = 0;
     this.grindAirLat = this.grindSpinInput = 0;
     this.grindJumpInput.set(0, 0);
     // The trick is scored the moment you lock in — the rail then RACKS UP
@@ -10822,6 +10835,7 @@ export class Player {
     this.grindExitAir = true;
     this.grindOllieAir = ollie;
     this.grindOllieCatchArmed = false;
+    this.grindOllieCatchGrace = 0;
     this.grindAirLat = lateral;
     this.grindSpinInput = lateral !== 0 && Math.abs(this.rawInput.moveX) > 0.3
       ? Math.sign(this.rawInput.moveX) : 0;
@@ -13862,7 +13876,7 @@ export class Player {
     if (!this.airRose && this.vVel > -3) return false;
     if (!this.airFromSkate && !this.freeSkate) return false;
     if (this.isBailing || this.slamActive) return false;
-    const grindRequested = (input.grindHeld || input.grindPressed) &&
+    const grindRequested = this.grindRequested(input) &&
       (!this.grindExitAir || !this.grindOllieAir || this.grindOllieCatchArmed);
     if (grindRequested) return false;
     if (this.regrindCd > 0 || this.vertLandGraceT > 0 || this.vertAir || this.pipeHang) return false;

@@ -9,6 +9,9 @@ const output = process.env.GRIND_REVIEW_OUTPUT || '/private/tmp/grind-ollie-brow
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ headless: true, channel: 'chrome' });
 const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
+// This is a keyboard fixture: a physical controller connected to the host
+// must not merge a held Cross/stick into the scripted keyboard releases.
+await page.addInitScript(() => { navigator.getGamepads = () => []; });
 const errors = [], results = [];
 page.on('pageerror', error => errors.push(error.message));
 page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
@@ -17,7 +20,9 @@ const state = () => page.evaluate(() => {
   const p = window.__game.player;
   return { state: p.state, grounded: p.grounded, bail: p.isBailing, pos: p.pos.toArray(), spin: p.grabSpinAngle,
     rail: window.__railReview.rails.indexOf(p.grindRail), labels: [...p.comboLabels], speed: p.speed,
-    lateralX: p.axisL.x * p.grindAirLat, camera: p.camDir.toArray() };
+    lateralX: p.axisL.x * p.grindAirLat, camera: p.camDir.toArray(), verticalSpeed: p.vVel,
+    catchGrace: p.grindOllieCatchGrace, combo: p.comboMult,
+    charging: p.charging, charge: p.chargeTimer, releaseGuard: p.jumpReleaseRearmRequired };
 });
 async function advance(frames, stopOnContact = false) {
   await page.evaluate(({ frames, stopOnContact }) => { Object.assign(window.__railReview, { budget: frames, stopOnContact }); }, { frames, stopOnContact });
@@ -36,6 +41,9 @@ async function setup(park) {
     p.pos.copy(position); p.prevPos.copy(position); p.axisF.copy(heading); p.axisL.set(heading.z, 0, -heading.x);
     p.state = 'air'; p.grounded = false; p.freeSkate = p.airFromSkate = true;
     p.speed = 8; p.vVel = 0; p.balanceBoostT = 10; q.samples = [];
+    // Settle the fixture's released keys in the production poll before
+    // clearing their edges; do not inherit the preceding case's held state.
+    g.input.update();
     q.consume();
   }, park);
   await page.keyboard.down('KeyE');
@@ -47,7 +55,7 @@ async function pop(side = 0) {
   if (side) await page.keyboard.down(side < 0 ? 'ArrowLeft' : 'ArrowRight');
   await advance(4);
   await page.keyboard.up('Space');
-  const launched = await advance(1); assert.equal(launched.state, 'air'); return launched;
+  const launched = await advance(1); assert.equal(launched.state, 'air', JSON.stringify(launched)); return launched;
 }
 try {
   for (const lite of [true, false]) {
@@ -89,6 +97,32 @@ try {
       assert.equal(landed.state, 'grind'); assert.equal(landed.rail, 0); assert.equal(landed.bail, false);
       assert.ok(landed.labels.some(label => label.includes('180')));
       results.push({ lite, park, case: 'neutral-spin-fresh-catch', launch, mid, landed });
+
+      for (const held of [false, true]) {
+        await setup(park); const launch = await pop();
+        await page.keyboard.up('KeyE'); await advance(1);
+        if (held) await page.keyboard.down('KeyE');
+        let near = await state();
+        for (let i = 0; i < 80 && !(near.verticalSpeed < 0 && near.pos[1] - launch.pos[1] < 1.1); i++)
+          near = await advance(1);
+        assert.equal(near.state, 'air');
+        if (!held) { await page.keyboard.down('KeyE'); await advance(1); }
+        await page.keyboard.up('KeyE');
+        const released = await state();
+        const landed = await advance(80, true);
+        assert.equal(landed.state, 'grind'); assert.equal(landed.rail, 0); assert.equal(landed.bail, false);
+        assert.ok(landed.combo >= 2); assert.equal(landed.catchGrace, 0);
+        if (!lite && park && !held) await page.screenshot({ path: `${output}/full-buffered-catch.png` });
+        results.push({ lite, park, case: held ? 'fresh-hold-release-buffer' : 'fresh-tap-buffer', released, landed });
+      }
+
+      await setup(park); await pop();
+      await page.keyboard.up('KeyE'); await advance(1);
+      await page.keyboard.down('KeyE'); await advance(1);
+      await page.keyboard.up('KeyE');
+      const expired = await advance(80, true);
+      assert.equal(expired.bail, true);
+      results.push({ lite, park, case: 'expired-tap-still-bails', expired });
 
       for (const held of [false, true]) {
         await setup(park); await pop();
