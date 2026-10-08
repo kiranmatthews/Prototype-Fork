@@ -44,8 +44,8 @@ try{
    row.respawn=await page.evaluate(()=>{const g=window.__game,p=g.player,l=g.getLevel();return {lives:p.lives,deaths:p.totalDeaths,position:p.pos.toArray(),distance:p.pos.distanceTo(l.currentSpawn),boss:g.getBossDiagnostics(),contextLost:g.renderer.getContext().isContextLost()};});
    assert.ok(row.respawn.distance<3,'respawn must return to supported checkpoint ground');assert.equal(row.respawn.contextLost,false);
    if(!kind.hub)assert.ok(row.respawn.lives<row.death.lives||row.respawn.deaths>row.death.deaths||kind.competition,'death must use normal life accounting');
-   if(kind.boss){assert.equal(row.respawn.boss.health,9);assert.equal(row.respawn.boss.phase,1);row.finish='boss victory is covered by the dedicated fight test';}
-   else if(kind.competition)row.finish='competition scorecard is covered by the dedicated event test';
+   if(kind.boss){assert.equal(row.respawn.boss.health,9);assert.equal(row.respawn.boss.phase,1);row.finish='boss victory not exercised; dedicated fight required';}
+   else if(kind.competition)row.finish='competition completion not exercised; dedicated event required';
    else if(kind.hub||!kind.gate)row.finish='no ordinary finish gate';
    else{
     await page.evaluate(()=>{const g=window.__game,l=g.getLevel(),p=g.player;const position=l.finishGlow.getCenter(p.pos.clone());p.respawn(l,false,true,{position,heading:p.camDir.clone()});p.snapRenderInterpolation();});

@@ -1,0 +1,2790 @@
+{
+  "base": "http://127.0.0.1:5342/",
+  "full": true,
+  "rows": [
+    {
+      "id": "treehouse-trail",
+      "name": "Treehouse Trials",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 5,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.9200000000000014,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          32.9,
+          -1.15,
+          -67
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          32.9,
+          -1.25,
+          -67
+        ],
+        "distance": 0.10000000000000009,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [
+          "./jungle-kit/../treehouse-trials-v2/riverstone-a.glb",
+          "./jungle-kit/../treehouse-trials-v2/riverstone-b.glb",
+          "blob:http://127.0.0.1:5342/6faae5f6-9738-4df6-a5b2-9704874bda89",
+          "blob:http://127.0.0.1:5342/8397969f-6f4e-408e-8ddf-0463f91f3e8a",
+          "blob:http://127.0.0.1:5342/8068a13b-d715-4a0e-bb58-f0a562933d53",
+          "blob:http://127.0.0.1:5342/3c7b8489-ea29-4490-8b41-397595ba0b25"
+        ],
+        "failed": [],
+        "revision": 474
+      }
+    },
+    {
+      "id": "inside-your-room",
+      "name": "Inside Your Room",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 1,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.8433333333333333,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          4.6,
+          0.10000000596046449,
+          8.2
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          4.6,
+          0.10000000596046449,
+          8.2
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 550
+      }
+    },
+    {
+      "id": "jungle",
+      "name": "Jungle Ruins",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 4,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.8433333311365856,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          -1.4179450392282735,
+          -2.6958760261293664,
+          -116
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -1.4179450392282735,
+          -2.7958760261293656,
+          -116
+        ],
+        "distance": 0.0999999999999992,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 858
+      }
+    },
+    {
+      "id": "jungle-terraces",
+      "name": "Temple Terraces",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 3,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.7699999999999818,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          1.1,
+          0.13500000014901162,
+          45
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          1.1,
+          0.13500000014901162,
+          45
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1032
+      }
+    },
+    {
+      "id": "jungle-skyline",
+      "name": "Temple Skyline",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 5,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.8344444444444292,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          1.1,
+          0.13500000014901162,
+          54
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          1.1,
+          0.13500000014901162,
+          54
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1206
+      }
+    },
+    {
+      "id": "flats",
+      "name": "Flats & Pipes",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 2,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.7700000000000031,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          0,
+          90.1,
+          -136
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          0,
+          90.1,
+          -136
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1238
+      }
+    },
+    {
+      "id": "sky",
+      "name": "Sky Bridge",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 3,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.8433333333333328,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          0,
+          0.09999995231628414,
+          -67
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          0,
+          -4.768371586472142e-8,
+          -67
+        ],
+        "distance": 0.1,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1304
+      }
+    },
+    {
+      "id": "slip",
+      "name": "The Slipstream",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 2,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.7700000000000031,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          4.63,
+          71.74884384657628,
+          -295.61
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          4.63,
+          71.74884384657628,
+          -295.61
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1304
+      }
+    },
+    {
+      "id": "slipstream-2",
+      "name": "Slipstream 2",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 7,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.7699999999999999,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          -16,
+          65.29999997615813,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -16,
+          65.29999997615813,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1308
+      }
+    },
+    {
+      "id": "test",
+      "name": "Carlisle Coast",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 14,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.8433333333333332,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          0,
+          -4.985,
+          -185
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          0,
+          -5.085,
+          -185
+        ],
+        "distance": 0.09999999999999964,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1484
+      }
+    },
+    {
+      "id": "custard-creek",
+      "name": "Custard Creek",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 11,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.8433333224010636,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          -28.7470703125,
+          3.0350993220775773,
+          -221.369384765625
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -28.7470703125,
+          2.9350993220775763,
+          -221.369384765625
+        ],
+        "distance": 0.10000000000000098,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [
+          "./jungle-kit/../carlisle-coast/canyon-spire.glb"
+        ],
+        "failed": [],
+        "revision": 1592
+      }
+    },
+    {
+      "id": "dark",
+      "name": "The Nightworks",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 11,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.8433333333333332,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          0,
+          0.09999990463256872,
+          -44
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          0,
+          0.09999990463256872,
+          -44
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1674
+      }
+    },
+    {
+      "id": "nightworks-after-hours",
+      "name": "Nightworks: After Hours",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 7,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.8433333333333305,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          -8,
+          12.1,
+          -89
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -8,
+          12.1,
+          -89
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1684
+      }
+    },
+    {
+      "id": "warproom",
+      "name": "Island World Map",
+      "kind": {
+        "hub": true,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": false,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -175,
+          1.35,
+          22
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 4,
+        "deaths": 0,
+        "position": [
+          -175,
+          1.35,
+          22
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "no ordinary finish gate",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1708
+      }
+    },
+    {
+      "id": "descent",
+      "name": "The Descent",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 4,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.852055727175926,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          29.767108019996837,
+          300.3473792232894,
+          -446.7655953133657
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          29.767108019996837,
+          300.2473792232894,
+          -446.7655953133657
+        ],
+        "distance": 0.10000000000002274,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1724
+      }
+    },
+    {
+      "id": "beachfront",
+      "name": "Beachside Run",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 4,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.8433333324588002,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          21.72,
+          0.528014243675018,
+          -143.34
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          21.72,
+          0.528014243675018,
+          -143.34
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1748
+      }
+    },
+    {
+      "id": "bonus-level",
+      "name": "Bonus Level",
+      "kind": {
+        "hub": false,
+        "bonus": true,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.8433333333333373,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -24,
+          0.12,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -24,
+          0.12,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1750
+      }
+    },
+    {
+      "id": "coastal-street-run",
+      "name": "Coastal Street Run",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 6,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.9199999999999999,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          -3.5,
+          4.10000001192093,
+          -510
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -3.5,
+          4.10000001192093,
+          -510
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1786
+      }
+    },
+    {
+      "id": "island-hopper",
+      "name": "Island Hopper",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 3,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.6999999985051099,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          29.12,
+          1.1499999523162843,
+          -78.95
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          29.12,
+          1.1499999523162843,
+          -78.95
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1796
+      }
+    },
+    {
+      "id": "jungle-gate-run",
+      "name": "Jungle Gate Run",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 3,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.7700000000000031,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          106,
+          6.100000023841858,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          106,
+          6.100000023841858,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": "cover",
+        "pending": [],
+        "failed": [],
+        "revision": 1796
+      }
+    },
+    {
+      "id": "meshylook-thorns",
+      "name": "MeshyLook Thorn Courtyards",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.8479786509458866,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -3.5385852,
+          1.1403642,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -3.5385852,
+          1.1403642,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1802
+      }
+    },
+    {
+      "id": "drowned-crown",
+      "name": "The Drowned Crown",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 4,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.7611111111111128,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          -20,
+          -5.9,
+          -68
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -20,
+          -5.9,
+          -68
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1816
+      }
+    },
+    {
+      "id": "bonus-easy",
+      "name": "Bonus: Easy Street",
+      "kind": {
+        "hub": false,
+        "bonus": true,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.7699999999999996,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -12,
+          0.12,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -12,
+          0.12,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1820
+      }
+    },
+    {
+      "id": "bonus-treehouse-trail",
+      "name": "Bonus: Canopy Cache",
+      "kind": {
+        "hub": false,
+        "bonus": true,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.7699999999999999,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -6,
+          0.12,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -6,
+          0.12,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1874
+      }
+    },
+    {
+      "id": "bonus-jungle",
+      "name": "Bonus: Fern Reliquary",
+      "kind": {
+        "hub": false,
+        "bonus": true,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.7699999999999999,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -6,
+          0.12,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -6,
+          0.12,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1944
+      }
+    },
+    {
+      "id": "bonus-test-course",
+      "name": "Bonus: Quayside Cargo",
+      "kind": {
+        "hub": false,
+        "bonus": true,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.7699999999999999,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -6,
+          0.12,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -6,
+          0.12,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1946
+      }
+    },
+    {
+      "id": "bonus-sky-bridge",
+      "name": "Bonus: Cloudtop Lockers",
+      "kind": {
+        "hub": false,
+        "bonus": true,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.6999999999999998,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -6,
+          0.12,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -6,
+          0.12,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1948
+      }
+    },
+    {
+      "id": "bonus-slipstream",
+      "name": "Bonus: Slipstream Airlocks",
+      "kind": {
+        "hub": false,
+        "bonus": true,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.8433333333333332,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -6,
+          0.12,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -6,
+          0.12,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1950
+      }
+    },
+    {
+      "id": "bonus-nightworks",
+      "name": "Bonus: Nightworks Fuse Store",
+      "kind": {
+        "hub": false,
+        "bonus": true,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.7699999999999999,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -6,
+          0.12,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -6,
+          0.12,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1982
+      }
+    },
+    {
+      "id": "bonus-beachside-run",
+      "name": "Bonus: Lifeguard Lockup",
+      "kind": {
+        "hub": false,
+        "bonus": true,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.7699999999999999,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -6,
+          0.12,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -6,
+          0.12,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1996
+      }
+    },
+    {
+      "id": "bonus-coastal",
+      "name": "Bonus: Rooftop Deliveries",
+      "kind": {
+        "hub": false,
+        "bonus": true,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.7699999999999999,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -6,
+          0.12,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -6,
+          0.12,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2004
+      }
+    },
+    {
+      "id": "bonus-island-hopper",
+      "name": "Bonus: Lagoon Relay",
+      "kind": {
+        "hub": false,
+        "bonus": true,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.7699999999999999,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -6,
+          0.12,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -6,
+          0,
+          0
+        ],
+        "distance": 0.12,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2018
+      }
+    },
+    {
+      "id": "bonus-codex-switchback",
+      "name": "Bonus: Blockworks Reassembly",
+      "kind": {
+        "hub": false,
+        "bonus": true,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.7699999999999999,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -6,
+          0.12,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -6,
+          0.12,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2020
+      }
+    },
+    {
+      "id": "bonus-chimeworks",
+      "name": "Bonus: Belfry Counterweights",
+      "kind": {
+        "hub": false,
+        "bonus": true,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.8433333333333332,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -6,
+          0.12,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -6,
+          0,
+          0
+        ],
+        "distance": 0.12,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2022
+      }
+    },
+    {
+      "id": "bonus-waterpark",
+      "name": "Bonus: Deadwater Valve House",
+      "kind": {
+        "hub": false,
+        "bonus": true,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.8433333333333332,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -6,
+          0.12,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -6,
+          0.12,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2024
+      }
+    },
+    {
+      "id": "bonus-nightworks-after-hours",
+      "name": "Bonus: After Hours Dispatch",
+      "kind": {
+        "hub": false,
+        "bonus": true,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.8433333333333332,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -6,
+          0.12,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -6,
+          0.12,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2036
+      }
+    },
+    {
+      "id": "bonus-crate-primer",
+      "name": "Bonus: Apprentice Storehouse",
+      "kind": {
+        "hub": false,
+        "bonus": true,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.7699999999999999,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -6,
+          0.12,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -6,
+          0.12,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2038
+      }
+    },
+    {
+      "id": "bonus-switchyard",
+      "name": "Bonus: Signal Cabin",
+      "kind": {
+        "hub": false,
+        "bonus": true,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.7699999999999999,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -6,
+          0.12,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -6,
+          0.12,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2040
+      }
+    },
+    {
+      "id": "bonus-clockwork-gauntlet",
+      "name": "Bonus: Furnace Reserve",
+      "kind": {
+        "hub": false,
+        "bonus": true,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.8433333333333332,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -6,
+          0.12,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -6,
+          0,
+          0
+        ],
+        "distance": 0.12,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2042
+      }
+    },
+    {
+      "id": "bonus-jungle-terraces",
+      "name": "Bonus: Jade Reservoir",
+      "kind": {
+        "hub": false,
+        "bonus": true,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.7699999999999999,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -6,
+          0.12,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -6,
+          0.12,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2090
+      }
+    },
+    {
+      "id": "bonus-jungle-skyline",
+      "name": "Bonus: Sun-Crown Treasury",
+      "kind": {
+        "hub": false,
+        "bonus": true,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.8433333333333332,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -6,
+          0.12,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -6,
+          0.12,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2144
+      }
+    },
+    {
+      "id": "bonus-drowned-crown",
+      "name": "Bonus: The Captain’s Last Ledger",
+      "kind": {
+        "hub": false,
+        "bonus": true,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.7699999999999999,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -6,
+          0.12,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -6,
+          0.12,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2156
+      }
+    },
+    {
+      "id": "bonus-bone-yard",
+      "name": "Bonus: Ivory Salvage",
+      "kind": {
+        "hub": false,
+        "bonus": true,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.7699999999999999,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -6,
+          0.12,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -6,
+          0.12,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2158
+      }
+    },
+    {
+      "id": "crate-primer",
+      "name": "Crate Primer",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 2,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.8433333333333328,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          59,
+          0.699999952316284,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          59,
+          0.699999952316284,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2192
+      }
+    },
+    {
+      "id": "switchyard",
+      "name": "Switchyard",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 2,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.8433333333333328,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          78,
+          1.500000047683716,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          78,
+          1.500000047683716,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2216
+      }
+    },
+    {
+      "id": "clockwork-gauntlet",
+      "name": "Clockwork Gauntlet",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 4,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.8433333333333328,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          41,
+          1.699999952316284,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          41,
+          1.599999952316284,
+          0
+        ],
+        "distance": 0.10000000000000009,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2240
+      }
+    },
+    {
+      "id": "crab-chief",
+      "name": "Tidebreak · Crab Chief",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": true,
+        "checkpoints": 0,
+        "gate": false,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.7000000000000025,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          0,
+          0.12,
+          17
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          0,
+          0.12,
+          17
+        ],
+        "distance": 0,
+        "boss": {
+          "state": "waiting",
+          "stateTime": 0,
+          "phase": 1,
+          "health": 9,
+          "charged": false,
+          "charge": 0,
+          "canFinish": false,
+          "hits": 0,
+          "playerHits": 0,
+          "grindDistance": 0,
+          "skateDistance": 0,
+          "tongueRun": 0,
+          "tongueActive": false,
+          "tongueProgress": 0,
+          "rampActive": false,
+          "rampProgress": 0,
+          "launchTime": 0,
+          "rampSpeed": 0,
+          "activeWaves": [],
+          "activeBubbles": 0,
+          "bubblePositions": [],
+          "target": [
+            0,
+            0,
+            -14
+          ],
+          "history": [
+            {
+              "time": 0,
+              "state": "waiting",
+              "phase": 1,
+              "health": 9
+            }
+          ],
+          "strikes": [],
+          "model": {
+            "provider": "Meshy",
+            "triangles": 7667,
+            "meshes": 1,
+            "rootScale": [
+              1,
+              1,
+              1
+            ],
+            "ready": true,
+            "joints": 21,
+            "toes": [
+              [
+                -1.23,
+                0.48,
+                0.22
+              ],
+              [
+                1.23,
+                0.48,
+                0.22
+              ]
+            ],
+            "wrists": [
+              [
+                -3,
+                2.95,
+                -28
+              ],
+              [
+                3,
+                2.95,
+                -28
+              ]
+            ],
+            "pearl": [
+              0,
+              4.95,
+              -26.75
+            ]
+          }
+        },
+        "contextLost": false
+      },
+      "finish": "boss victory is covered by the dedicated fight test",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2300
+      }
+    },
+    {
+      "id": "ghost-train",
+      "name": "Haunted Castle · Ghost Train",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 23,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.8433333333333305,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          -0.45849609375,
+          0.1,
+          -36.453125
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -0.45849609375,
+          0,
+          -36.453125
+        ],
+        "distance": 0.1,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2404
+      }
+    },
+    {
+      "id": "codex-lab",
+      "name": "Blockworks · Greybox",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 6,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.8433333333333392,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          -66.12787406345001,
+          7.2999511718750005,
+          -402.77397664781984
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -66.12787406345001,
+          7.199951171875,
+          -402.77397664781984
+        ],
+        "distance": 0.10000000000000053,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2450
+      }
+    },
+    {
+      "id": "jungle-cup",
+      "name": "Jungle Cup",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": true,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": false,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.702707079438305,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          0,
+          0.1,
+          14
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 4,
+        "deaths": 1,
+        "position": [
+          0,
+          0.1,
+          14
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "competition scorecard is covered by the dedicated event test",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2624
+      }
+    },
+    {
+      "id": "bone-yard",
+      "name": "Bone Yard · Wipeout Playground",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 2,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.7699999999999996,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          0,
+          0.1,
+          -8
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          0,
+          0.1,
+          -8
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2624
+      }
+    },
+    {
+      "id": "waterpark",
+      "name": "Deadwater Park",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 2,
+        "gate": true,
+        "loops": 3
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.7699999999999818,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          -4,
+          48.10000002384186,
+          -178
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -4,
+          48.10000002384186,
+          -178
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "required loop lock retained; complete loop traversal is a separate check",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2624
+      }
+    },
+    {
+      "id": "waterpark-cup",
+      "name": "Deadwater Cup",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": true,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.6998090024053649,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          18,
+          12.15,
+          -12
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 4,
+        "deaths": 1,
+        "position": [
+          18,
+          12.15,
+          -12
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "competition scorecard is covered by the dedicated event test",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2624
+      }
+    },
+    {
+      "id": "astra-chimeworks",
+      "name": "The Chimeworks — Astra",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 4,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.7700000000000031,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          -8,
+          28.106280669744468,
+          -195
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -8,
+          28.106280669744468,
+          -195
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2628
+      }
+    },
+    {
+      "id": "backport-lab",
+      "name": "Backport Mechanics Lab",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 1,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.8433333333333337,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          -4,
+          0.1,
+          -68
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -4,
+          0,
+          -68
+        ],
+        "distance": 0.1,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2630
+      }
+    }
+  ],
+  "errors": [],
+  "stamp": "Codex/sol fork · build 10-08 13:34 UTC",
+  "sourceBaseline": "bdc5370 + performance patch"
+}

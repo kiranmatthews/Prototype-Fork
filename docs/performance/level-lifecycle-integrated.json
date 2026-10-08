@@ -1,0 +1,582 @@
+{
+  "base": "http://127.0.0.1:5343/",
+  "full": true,
+  "rows": [
+    {
+      "id": "treehouse-trail",
+      "name": "Treehouse Trials",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 5,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.7700000000000017,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          32.9,
+          -1.15,
+          -67
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          32.9,
+          -1.25,
+          -67
+        ],
+        "distance": 0.10000000000000009,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [
+          "./jungle-kit/../treehouse-trials-v2/riverstone-a.glb",
+          "./jungle-kit/../treehouse-trials-v2/riverstone-b.glb",
+          "blob:http://127.0.0.1:5343/f215df03-cd27-4cca-973b-3b616cfb2a36",
+          "blob:http://127.0.0.1:5343/a925745a-6e0f-4b89-8709-5dd9040b7a7a",
+          "blob:http://127.0.0.1:5343/70631285-9fc1-48e6-93d2-04b587fc19ac",
+          "blob:http://127.0.0.1:5343/56d48c81-a039-4d79-8550-109e7b729f1c"
+        ],
+        "failed": [],
+        "revision": 474
+      }
+    },
+    {
+      "id": "dark",
+      "name": "The Nightworks",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 11,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.7699999999999999,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          0,
+          0.09999990463256872,
+          -44
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          0,
+          0.09999990463256872,
+          -44
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 608
+      }
+    },
+    {
+      "id": "nightworks-after-hours",
+      "name": "Nightworks: After Hours",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 7,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.8433333333333305,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          -8,
+          12.1,
+          -89
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -8,
+          12.1,
+          -89
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 618
+      }
+    },
+    {
+      "id": "warproom",
+      "name": "Island World Map",
+      "kind": {
+        "hub": true,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": false,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -175,
+          1.35,
+          22
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 4,
+        "deaths": 0,
+        "position": [
+          -175,
+          1.35,
+          22
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "no ordinary finish gate",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 642
+      }
+    },
+    {
+      "id": "bonus-jungle",
+      "name": "Bonus: Fern Reliquary",
+      "kind": {
+        "hub": false,
+        "bonus": true,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowRight",
+      "movement": {
+        "distance": 0.8433333333333332,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          -6,
+          0.12,
+          0
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -6,
+          0.12,
+          0
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 712
+      }
+    },
+    {
+      "id": "crab-chief",
+      "name": "Tidebreak · Crab Chief",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": true,
+        "checkpoints": 0,
+        "gate": false,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.7700000000000017,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          0,
+          0.12,
+          17
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          0,
+          0.12,
+          17
+        ],
+        "distance": 0,
+        "boss": {
+          "state": "waiting",
+          "stateTime": 0,
+          "phase": 1,
+          "health": 9,
+          "charged": false,
+          "charge": 0,
+          "canFinish": false,
+          "hits": 0,
+          "playerHits": 0,
+          "grindDistance": 0,
+          "skateDistance": 0,
+          "tongueRun": 0,
+          "tongueActive": false,
+          "tongueProgress": 0,
+          "rampActive": false,
+          "rampProgress": 0,
+          "launchTime": 0,
+          "rampSpeed": 0,
+          "activeWaves": [],
+          "activeBubbles": 0,
+          "bubblePositions": [],
+          "target": [
+            0,
+            0,
+            -14
+          ],
+          "history": [
+            {
+              "time": 0,
+              "state": "waiting",
+              "phase": 1,
+              "health": 9
+            }
+          ],
+          "strikes": [],
+          "model": {
+            "provider": "Meshy",
+            "triangles": 7667,
+            "meshes": 1,
+            "rootScale": [
+              1,
+              1,
+              1
+            ],
+            "ready": true,
+            "joints": 21,
+            "toes": [
+              [
+                -1.23,
+                0.48,
+                0.22
+              ],
+              [
+                1.23,
+                0.48,
+                0.22
+              ]
+            ],
+            "wrists": [
+              [
+                -3,
+                2.95,
+                -28
+              ],
+              [
+                3,
+                2.95,
+                -28
+              ]
+            ],
+            "pearl": [
+              0,
+              4.95,
+              -26.75
+            ]
+          }
+        },
+        "contextLost": false
+      },
+      "finish": "boss victory not exercised; dedicated fight required",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 772
+      }
+    },
+    {
+      "id": "codex-lab",
+      "name": "Blockworks · Greybox",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 6,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.8433333333333392,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          -66.12787406345001,
+          7.2999511718750005,
+          -402.77397664781984
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -66.12787406345001,
+          7.199951171875,
+          -402.77397664781984
+        ],
+        "distance": 0.10000000000000053,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "gate accepted",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 818
+      }
+    },
+    {
+      "id": "jungle-cup",
+      "name": "Jungle Cup",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": true,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": false,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.6416074944928329,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          0,
+          0.1,
+          14
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 4,
+        "deaths": 1,
+        "position": [
+          0,
+          0.1,
+          14
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "competition completion not exercised; dedicated event required",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 992
+      }
+    },
+    {
+      "id": "waterpark",
+      "name": "Deadwater Park",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": false,
+        "boss": false,
+        "checkpoints": 2,
+        "gate": true,
+        "loops": 3
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.8433333333333053,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": true,
+        "expected": [
+          -4,
+          48.10000002384186,
+          -178
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 3,
+        "deaths": 0,
+        "position": [
+          -4,
+          48.10000002384186,
+          -178
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "required loop lock retained; complete loop traversal is a separate check",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 992
+      }
+    },
+    {
+      "id": "waterpark-cup",
+      "name": "Deadwater Cup",
+      "kind": {
+        "hub": false,
+        "bonus": false,
+        "competition": true,
+        "boss": false,
+        "checkpoints": 0,
+        "gate": true,
+        "loops": 0
+      },
+      "key": "ArrowUp",
+      "movement": {
+        "distance": 0.6416074944928329,
+        "state": "ride"
+      },
+      "checkpoint": {
+        "warped": null,
+        "expected": [
+          18,
+          12.15,
+          -12
+        ]
+      },
+      "death": {
+        "lives": 4,
+        "deaths": 0
+      },
+      "respawn": {
+        "lives": 4,
+        "deaths": 1,
+        "position": [
+          18,
+          12.15,
+          -12
+        ],
+        "distance": 0,
+        "boss": null,
+        "contextLost": false
+      },
+      "finish": "competition completion not exercised; dedicated event required",
+      "assets": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 992
+      }
+    }
+  ],
+  "errors": [],
+  "stamp": "Codex/sol fork · build 10-08 14:03 UTC"
+}
