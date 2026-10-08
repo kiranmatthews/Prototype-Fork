@@ -1,0 +1,157 @@
+{
+  "base": "http://127.0.0.1:5317/",
+  "errors": [],
+  "cases": [
+    {
+      "lite": true,
+      "axis": "z",
+      "sign": 1,
+      "mover": 1,
+      "stamp": "Codex/sol fork \u00b7 build 10-08 09:44 UTC",
+      "gripLip": 1.390039074420929,
+      "landing": [
+        -9.000000779204472,
+        0.04003905951976777,
+        -69.33596400466804
+      ],
+      "supported": true,
+      "floor": 0.0400390625,
+      "feet": 0.04003905951976777,
+      "spinFrames": 18,
+      "climbFrames": 23
+    },
+    {
+      "lite": true,
+      "axis": "x",
+      "sign": 1,
+      "mover": 1,
+      "stamp": "Codex/sol fork \u00b7 build 10-08 09:44 UTC",
+      "gripLip": 1.4900390863418578,
+      "landing": [
+        -8.44400000178814,
+        0.04003905951976777,
+        -75.02064519261275
+      ],
+      "supported": true,
+      "floor": 0.0400390625,
+      "feet": 0.04003905951976777,
+      "spinFrames": 18,
+      "climbFrames": 23
+    },
+    {
+      "lite": true,
+      "axis": "x",
+      "sign": -1,
+      "mover": 1,
+      "stamp": "Codex/sol fork \u00b7 build 10-08 09:44 UTC",
+      "gripLip": 1.4900390863418578,
+      "landing": [
+        -9.55599999821186,
+        0.04003905951976777,
+        -79.79625344402331
+      ],
+      "supported": true,
+      "floor": 0.0400390625,
+      "feet": 0.04003905951976777,
+      "spinFrames": 18,
+      "climbFrames": 23
+    },
+    {
+      "lite": true,
+      "axis": "z",
+      "sign": -1,
+      "mover": 1,
+      "stamp": "Codex/sol fork \u00b7 build 10-08 09:44 UTC",
+      "gripLip": 0.9400390505790712,
+      "landing": [
+        -8.999999220795528,
+        0.04003905951976777,
+        -80.13790021760855
+      ],
+      "supported": true,
+      "floor": 0.0400390625,
+      "feet": 0.04003905951976777,
+      "spinFrames": 18,
+      "climbFrames": 23
+    },
+    {
+      "lite": false,
+      "axis": "z",
+      "sign": 1,
+      "mover": 1,
+      "stamp": "Codex/sol fork \u00b7 build 10-08 09:44 UTC",
+      "gripLip": 1.390039074420929,
+      "landing": [
+        -9.000000779204472,
+        0.04003905951976777,
+        -69.5099178099079
+      ],
+      "supported": true,
+      "floor": 0.0400390625,
+      "feet": 0.04003905951976777,
+      "spinFrames": 18,
+      "climbFrames": 23
+    },
+    {
+      "lite": false,
+      "axis": "x",
+      "sign": 1,
+      "mover": 1,
+      "stamp": "Codex/sol fork \u00b7 build 10-08 09:44 UTC",
+      "gripLip": 1.4900390863418578,
+      "landing": [
+        -8.44400000178814,
+        0.04003905951976777,
+        -77.23387419687874
+      ],
+      "supported": true,
+      "floor": 0.0400390625,
+      "feet": 0.04003905951976777,
+      "spinFrames": 18,
+      "climbFrames": 23
+    },
+    {
+      "lite": false,
+      "axis": "x",
+      "sign": -1,
+      "mover": 1,
+      "stamp": "Codex/sol fork \u00b7 build 10-08 09:44 UTC",
+      "gripLip": 1.4900390863418578,
+      "landing": [
+        -9.55599999821186,
+        0.04003905951976777,
+        -78.85204859027468
+      ],
+      "supported": true,
+      "floor": 0.0400390625,
+      "feet": 0.04003905951976777,
+      "spinFrames": 18,
+      "climbFrames": 23
+    },
+    {
+      "lite": false,
+      "axis": "z",
+      "sign": -1,
+      "mover": 1,
+      "stamp": "Codex/sol fork \u00b7 build 10-08 09:44 UTC",
+      "gripLip": 0.9400390505790712,
+      "landing": [
+        -8.999999220795528,
+        0.04003905951976777,
+        -76.99780549402533
+      ],
+      "supported": true,
+      "floor": 0.0400390625,
+      "feet": 0.04003905951976777,
+      "spinFrames": 18,
+      "climbFrames": 23
+    }
+  ],
+  "promptToPlayableMinutes": 25,
+  "replay": {
+    "file": "replay-HauntedCastle\u00b7GhostTrain-2026-10-08T09-41-18.json",
+    "frames": 23243,
+    "frameExactEndingReproduced": false
+  },
+  "fixtureCases": 12
+}

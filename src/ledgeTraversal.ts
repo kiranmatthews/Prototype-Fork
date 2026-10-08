@@ -199,3 +199,27 @@ export function ledgeBlockerIntersects(
 ): boolean {
   return blocker.max.y > footY + supportEpsilon && blocker.intersectsBox(body);
 }
+
+/** Follow the same path for clearance and animation. A cabin vault rises
+ * fully above its rim, moves the whole body inward, then settles onto the
+ * lower receiver. Ordinary platform mantles retain their existing arc. */
+export function ledgeClimbPoint(
+  out: THREE.Vector3,
+  from: THREE.Vector3,
+  to: THREE.Vector3,
+  lipY: number,
+  progress: number,
+): THREE.Vector3 {
+  const t = THREE.MathUtils.clamp(progress, 0, 1);
+  const smooth = (v: number): number => THREE.MathUtils.smoothstep(v, 0, 1);
+  const vault = to.y < lipY - 0.1;
+  const rise = smooth(t / (vault ? 0.4 : 0.65));
+  const inward = smooth((t - (vault ? 0.42 : 0.35)) / (vault ? 0.31 : 0.65));
+  const settle = vault ? smooth((t - 0.76) / 0.24) : 0;
+  const peak = vault ? lipY + 0.06 : to.y;
+  return out.set(
+    THREE.MathUtils.lerp(from.x, to.x, inward),
+    THREE.MathUtils.lerp(THREE.MathUtils.lerp(from.y, peak, rise), to.y, settle),
+    THREE.MathUtils.lerp(from.z, to.z, inward),
+  );
+}

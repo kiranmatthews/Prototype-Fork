@@ -298,6 +298,8 @@ export class GhostTrainAssetKit {
     for(const value of Object.values(previous)){const texture=value as THREE.Texture;if(texture?.isTexture&&!texture.userData.shared)texture.dispose();}
     previous.dispose();mesh.material=new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false});mesh.material.visible=false;
     mesh.name='Ghost carriage interior floor';mesh.userData.ghostSkin='ghostcart';
+    // The floor is a landing receiver, not an exposed lip beneath the cabin.
+    mesh.userData.ledgeGrab=false;
     const lamps=new THREE.Group(),lampMaterial=new THREE.MeshBasicMaterial({color:0x8cff3d});mesh.add(lamps);
     for(const side of [-1,1])for(const end of [-1,1]){const glow=greenLamp(lamps,[side*w*.435,height/2+bodyH-floorOffset-.18,end*d*.40],.065);(glow.material as THREE.Material).dispose();glow.material=lampMaterial;}mergeRigidParts(lamps);
     const radius=d*.09;
@@ -305,6 +307,9 @@ export class GhostTrainAssetKit {
     const walls:{mesh:THREE.Mesh;box:THREE.Box3}[]=[],support:THREE.Mesh[]=[],proxyMaterial=new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false});
     const proxy=(size:[number,number,number],p:[number,number,number])=>{
       const solid=box(mesh,size,p,proxyMaterial,'Moving cart cabin side collider');solid.visible=false;solid.userData.moverId=mesh.userData.moverId;solid.userData.edgeGrinding=false;
+      // Rim height above this moving cabin's interior floor. The traversal
+      // solver must vault this wall before settling onto that same mover.
+      solid.userData.ledgeReceiverDrop=size[1];
       const bounds=new THREE.Box3();walls.push({mesh:solid,box:bounds});support.push(solid);
     };
     for(const side of [-1,1])proxy([.16,1.45,d*.83],[side*w*.43,height/2+.725,0]);

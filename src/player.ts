@@ -77,6 +77,7 @@ import {
   ledgeBlockerIntersects,
   ledgeBodyBox,
   ledgeCatchEnvelope,
+  ledgeClimbPoint,
   ledgeEdgePoint,
   ledgeLandingPoint,
   ledgeScreenGripIntent,
@@ -487,6 +488,7 @@ interface GroundHit {
 interface LedgeTop {
   y: number;
   moverId?: number;
+  receiverDrop?: number;
 }
 
 const DOWN = new THREE.Vector3(0, -1, 0);
@@ -1152,7 +1154,7 @@ export class Player {
   private readonly ledgeLanding = new THREE.Vector3(); // validated feet point inward of the lip
   private ledgeMoverId: number | undefined; // moving support carried while hanging/climbing
   private readonly ledgeFrom = new THREE.Vector3(); // where the catch started (ease origin)
-  private ledgeLip = 0; // TRUE landing height (probed walk surface, not the collider top)
+  private ledgeLip = 0; // walkable lip / cabin rim, possibly above its interior landing
   private ledgePose = 0; // visual weight of the hanging pose
   // the CLAMBER: a committed, animated pull-up-and-over (not a snap) — the
   // body eases up the face then over the lip along a rounded corner path
@@ -14373,14 +14375,15 @@ export class Player {
     rayBottom: number,
     minY: number,
     maxY: number,
+    landingReceiver = false,
   ): LedgeTop | null {
     this.raycaster.set(LEDGE_RAY_ORIGIN.set(x, rayTop, z), LEDGE_DOWN);
     this.raycaster.near = 0;
     this.raycaster.far = Math.max(0.05, rayTop - rayBottom);
     const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
     for (const hit of hits) {
-      const data = hit.object.userData as { halfpipe?: unknown; vert?: boolean };
-      if (data.halfpipe || data.vert === true || !hit.face) continue;
+      const data = hit.object.userData as { halfpipe?: unknown; vert?: boolean; ledgeGrab?: boolean; ledgeReceiverDrop?: number };
+      if (data.halfpipe || data.vert === true || !hit.face || (!landingReceiver && data.ledgeGrab === false)) continue;
       LEDGE_FACE_NORMAL.copy(hit.face.normal)
         .applyNormalMatrix(
           LEDGE_NORMAL_MATRIX.getNormalMatrix(hit.object.matrixWorld),
@@ -14391,6 +14394,7 @@ export class Player {
       return {
         y: hit.point.y,
         moverId: hit.object.userData.moverId as number | undefined,
+        receiverDrop: data.ledgeReceiverDrop,
       };
     }
     return null;
@@ -14522,7 +14526,16 @@ export class Player {
     );
     if (outside !== null) return null;
 
+    // A narrow cabin rim has a lower landing behind it. Only a declared rim
+    // may use this route, and its receiver must belong to the same mover.
+    const rim = this.probeWalkableLedgeTop(level,
+      LEDGE_EDGE.x - basis.nx * 0.06, LEDGE_EDGE.z - basis.nz * 0.06,
+      rayTop, rayBottom, minY, maxY);
+    const drop = rim?.moverId !== undefined && Number.isFinite(rim.receiverDrop)
+      ? Math.max(0, Math.min(3, rim.receiverDrop!)) : 0;
     for (const depth of LEDGE_INWARD_DEPTHS) {
+      // Seat the complete body inside the rim before descending.
+      if (drop > 0 && depth < basis.skin + 0.25) continue;
       const x = LEDGE_EDGE.x - basis.nx * depth;
       const z = LEDGE_EDGE.z - basis.nz * depth;
       const lip = this.probeWalkableLedgeTop(
@@ -14530,30 +14543,29 @@ export class Player {
         x,
         z,
         rayTop,
-        rayBottom,
-        minY,
+        rayBottom - drop,
+        minY - drop,
         maxY,
+        drop > 0,
       );
       if (lip === null) continue;
+      if (drop > 0 && (lip.moverId !== rim!.moverId ||
+          Math.abs(lip.y - (rim!.y - drop)) > 0.15)) continue;
+      const grip = drop > 0 ? rim! : lip;
       ledgeLandingPoint(landingOut, anchor, basis, depth, lip.y);
-      LEDGE_PATH.copy(anchor).setY(lip.y - LEDGE_HANG_DEPTH);
-      if (this.ledgeBodyBlocked(LEDGE_PATH, lip.y, level)) return null;
-      return lip;
+      LEDGE_PATH.copy(anchor).setY(grip.y - LEDGE_HANG_DEPTH);
+      if (this.ledgeBodyBlocked(LEDGE_PATH, grip.y, level)) return null;
+      return grip;
     }
     return null;
   }
 
   private ledgeClimbPathClear(to: THREE.Vector3, level: Level): boolean {
-    const smooth = (value: number): number => value * value * (3 - 2 * value);
     for (const t of [0.2, 0.4, 0.6, 0.8, 1] as const) {
-      const yK = smooth(Math.min(1, t / 0.65));
-      const hK = smooth(Math.max(0, (t - 0.35) / 0.65));
-      LEDGE_PATH.set(
-        THREE.MathUtils.lerp(this.pos.x, to.x, hK),
-        THREE.MathUtils.lerp(this.pos.y, to.y, yK),
-        THREE.MathUtils.lerp(this.pos.z, to.z, hK),
-      );
-      if (this.ledgeBodyBlocked(LEDGE_PATH, this.ledgeLip, level)) return false;
+      ledgeClimbPoint(LEDGE_PATH, this.pos, to, this.ledgeLip, t);
+      const supportY = to.y < this.ledgeLip - 0.1 && t >= 0.76
+        ? LEDGE_PATH.y : this.ledgeLip;
+      if (this.ledgeBodyBlocked(LEDGE_PATH, supportY, level)) return false;
     }
     return true;
   }
@@ -14645,13 +14657,11 @@ export class Player {
       ? THREE.MathUtils.clamp(this.pos.z, w.min.z + 0.1, w.max.z - 0.1)
       : face - nz * 0.45;
     const lip = this.probeWalkableLedgeTop(
-      level,
-      px,
-      pz,
-      lipRough + 1.6,
-      lipRough - 1,
-      lipRough - 0.05,
-      lipRough + 0.75,
+      level, px, pz, lipRough + 1.6, lipRough - 1,
+      lipRough - 0.05, lipRough + 0.75,
+    ) ?? this.probeWalkableLedgeTop(
+      level, useX ? face - nx * 0.04 : px, useX ? pz : face - nz * 0.04,
+      lipRough + 1.6, lipRough - 1, lipRough - 0.05, lipRough + 0.75,
     );
     if (lip === null) return false; // no walkable top at the lip = not a ledge
     // it's a ledge — commit the catch (position settles in stepHang's ease)
@@ -14894,12 +14904,7 @@ export class Player {
       this.ledgeClimbT += dt;
       const T = Math.max(0.12, TUNING.ledgeClimbTime);
       const t = Math.min(1, this.ledgeClimbT / T);
-      const s = (v: number): number => v * v * (3 - 2 * v); // smoothstep
-      const yK = s(Math.min(1, t / 0.65));
-      const hK = s(Math.max(0, (t - 0.35) / 0.65));
-      this.pos.y = THREE.MathUtils.lerp(this.ledgeClimbFrom.y, this.ledgeClimbTo.y, yK);
-      this.pos.x = THREE.MathUtils.lerp(this.ledgeClimbFrom.x, this.ledgeClimbTo.x, hK);
-      this.pos.z = THREE.MathUtils.lerp(this.ledgeClimbFrom.z, this.ledgeClimbTo.z, hK);
+      ledgeClimbPoint(this.pos, this.ledgeClimbFrom, this.ledgeClimbTo, this.ledgeLip, t);
       this.ledgeClimbK = t;
       this.vVel = (this.pos.y - this.prevPos.y) / Math.max(dt, 1e-6);
       this.collide(level, true);
