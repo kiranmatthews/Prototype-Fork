@@ -1,3 +1,4 @@
+import { moveOnSupportedGround } from './input-smoke.mjs';
 import { testGpuArgs, softwareGpuTest } from './test-gpu.mjs';
 import assert from 'node:assert/strict';
 import { mkdtemp, mkdir, readFile, writeFile, rm } from 'node:fs/promises';
@@ -8,7 +9,7 @@ import { createRequire } from 'node:module';
 import { createServer } from 'node:http';
 import { _electron } from '../../desktop/node_modules/playwright/index.mjs';
 
-const desktop = fileURLToPath(new URL('../../desktop/', import.meta.url));
+const desktop = path.resolve(fileURLToPath(new URL('../../desktop/', import.meta.url)));
 const require = createRequire(path.join(desktop, 'package.json'));
 const output = path.join(desktop, 'test-results');
 await mkdir(output, { recursive:true });
@@ -23,7 +24,7 @@ async function closeApp() {
 }
 try {
   app = await _electron.launch({
-    executablePath:require('electron'), args:[...testGpuArgs, desktop], chromiumSandbox:true,
+    executablePath:require('electron'), args:[...testGpuArgs, path.join(desktop, 'main.cjs')], chromiumSandbox:true,
     env:{ ...process.env, BONEMAN_USER_DATA:profile },
     timeout:60000,
   });
@@ -56,9 +57,7 @@ try {
     }
     const stamp = await page.locator('.hud-build').textContent();
     assert.match(stamp, /Codex\/sol fork.*Offline desktop/);
-    const start = await page.evaluate(() => window.__game.player.pos.toArray());
-    await page.keyboard.down('ArrowUp'); await page.waitForTimeout(700); await page.keyboard.up('ArrowUp');
-    const moved = await page.evaluate(() => window.__game.player.pos.toArray());
+    const { start, moved } = await moveOnSupportedGround(page);
     assert(Math.hypot(...moved.map((n,i) => n - start[i])) > .2);
     const checkpoint = await page.evaluate(() => {
       const g = window.__game;
@@ -77,20 +76,20 @@ try {
     await page.keyboard.press('Escape');
     await page.waitForFunction(() => !window.__game.gameFlow.blocksGameplay);
     await page.screenshot({ path:path.join(output, lite ? 'lite-game.png' : 'full-game.png') });
-    const frames = await page.evaluate(async () => {
+    const frames = await page.evaluate(async sampleCount => {
       const intervals = []; let previous;
       await new Promise(resolve => {
         function frame(now) {
           if (previous !== undefined) intervals.push(now - previous);
           previous = now;
-          if (intervals.length < 240) requestAnimationFrame(frame); else resolve();
+          if (intervals.length < sampleCount) requestAnimationFrame(frame); else resolve();
         }
         requestAnimationFrame(frame);
       });
       intervals.sort((a,b) => a - b);
       return { samples:intervals.length, p50:intervals[Math.floor(intervals.length*.5)], p95:intervals[Math.floor(intervals.length*.95)],
         p99:intervals[Math.floor(intervals.length*.99)], crt:window.__game.getCrtDiagnostics(), quality:window.__game.renderQualitySettings.snapshot() };
-    });
+    }, softwareGpuTest ? 30 : 240);
     await page.evaluate(() => { const g = window.__game; g.getLevel().finishGlow.getCenter(g.player.pos); g.player.speed = 0; });
     await page.waitForFunction(() => window.__game.player.state === 'finished' || window.__game.gameFlow.blocksGameplay, null, { timeout:15000 });
     if (!lite) {
@@ -165,7 +164,7 @@ try {
   await page.waitForFunction(() => !!window.__game, null, {timeout:120000});
   await page.evaluate(() => localStorage.setItem('solProtoDesktopPersistenceTest', 'kept'));
   await closeApp(); app = null;
-  app = await _electron.launch({ chromiumSandbox:true, executablePath:require('electron'), args:[...testGpuArgs, desktop], env:{...process.env, BONEMAN_USER_DATA:profile} });
+  app = await _electron.launch({ chromiumSandbox:true, executablePath:require('electron'), args:[...testGpuArgs, path.join(desktop, 'main.cjs')], env:{...process.env, BONEMAN_USER_DATA:profile} });
   const reopened = await app.firstWindow();
   await reopened.waitForFunction(() => location.protocol === 'boneman:' && document.readyState === 'complete');
   assert.equal(await reopened.evaluate(() => localStorage.getItem('solProtoDesktopPersistenceTest')), 'kept');

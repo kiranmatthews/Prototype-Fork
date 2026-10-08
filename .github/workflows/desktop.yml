@@ -65,6 +65,12 @@ jobs:
           node tools/test-game-update.mjs
           npm run check:renderer
       - run: npm run build:desktop
+      - name: Native WebGL capability
+        if: runner.os != 'Linux'
+        run: node tools/desktop/native-lifecycle.mjs --probe
+      - name: Native WebGL capability (Linux display)
+        if: runner.os == 'Linux'
+        run: xvfb-run -a node tools/desktop/native-lifecycle.mjs --probe
       - name: Real offline renderer smoke
         if: runner.os != 'Linux'
         run: npm run desktop:smoke

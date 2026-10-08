@@ -1,3 +1,4 @@
+import { moveOnSupportedGround } from './input-smoke.mjs';
 import { testGpuArgs, softwareGpuTest } from './test-gpu.mjs';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
@@ -45,9 +46,7 @@ try {
   await page.waitForFunction(() => window.__game.getCrtDiagnostics()?.active, null, {timeout:30000});
   assert.match(await page.locator('.hud-build').textContent(), /Codex\/sol fork.*Offline desktop/);
   assert.equal(await page.evaluate(() => typeof window.require), 'undefined');
-  const start = await page.evaluate(() => window.__game.player.pos.toArray());
-  await page.keyboard.down('ArrowUp'); await page.waitForTimeout(700); await page.keyboard.up('ArrowUp');
-  const finish = await page.evaluate(() => window.__game.player.pos.toArray());
+  const { start, moved:finish } = await moveOnSupportedGround(page);
   assert(Math.hypot(...finish.map((n,i) => n - start[i])) > .2);
   report.visibility = 'covered by native-lifecycle.mjs without CDP emulation';
   await page.keyboard.press('Escape');
