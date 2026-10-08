@@ -2,7 +2,9 @@
 // Test-only entry, excluded from packaged files. No Playwright focus overrides.
 const assert = require('node:assert/strict');
 const path = require('node:path');
+const { createServer } = require('node:http');
 const { app } = require('electron');
+assert.equal(process.arch, process.env.BONEMAN_TARGET_ARCH || process.arch);
 app.setAppPath(path.resolve(__dirname, '../../desktop'));
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 async function waitFor(window, expression) {
@@ -28,7 +30,15 @@ app.once('browser-window-created', async (_event, window) => {
     await sleep(300);
     assert((await window.webContents.executeJavaScript('window.__game.frameStats.frame')) > frame);
     assert.equal(window.webContents.getLastWebPreferences().sandbox, true);
-    console.log(JSON.stringify({status:'passed', hiddenSimulation:'stopped', restoredSimulation:'advancing', sandbox:true}));
+    let networkHits = 0;
+    const server = createServer((_request,response) => {networkHits++;response.end('must not load');});
+    await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+    try {
+      const url = 'http://127.0.0.1:' + server.address().port + '/';
+      await assert.rejects(window.webContents.session.fetch(url));
+      assert.equal(networkHits, 0);
+    } finally {await new Promise(resolve => server.close(resolve));}
+    console.log(JSON.stringify({status:'passed', hiddenSimulation:'stopped', restoredSimulation:'advancing', sandbox:true, nativeNetworkDenied:true, networkHits}));
     app.exit(0);
   } catch (error) { console.error(error); app.exit(1); }
 });

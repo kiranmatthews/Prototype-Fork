@@ -79,7 +79,12 @@ async function start() {
     if (input.type === 'keyDown' && input.key.toLowerCase() === 'q' && (input.meta || input.control)) app.quit();
   });
   window.once('ready-to-show', () => window.show());
-  await contents.loadURL(ORIGIN + '/');
+  try { await contents.loadURL(ORIGIN + '/'); }
+  catch (error) {
+    // A permitted local navigation can replace startup while assets are still
+    // loading. It is not a damaged installation and must not open a fatal modal.
+    if (!quitting && !(error.code === 'ERR_ABORTED' && allowedNavigation(contents.getURL()))) throw error;
+  }
 }
 async function recover(message) {
   if (prompting || quitting) return;

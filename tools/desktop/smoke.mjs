@@ -1,39 +1,28 @@
 import { moveOnSupportedGround } from './input-smoke.mjs';
-import { testGpuArgs, softwareGpuTest } from './test-gpu.mjs';
+import { softwareGpuTest } from './test-gpu.mjs';
 import assert from 'node:assert/strict';
 import { mkdtemp, mkdir, readFile, writeFile, rm } from 'node:fs/promises';
 import { tmpdir, platform, arch } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createRequire } from 'node:module';
 import { createServer } from 'node:http';
-import { _electron } from '../../desktop/node_modules/playwright/index.mjs';
+import { launchSource } from './launch-source.mjs';
 
 const desktop = path.resolve(fileURLToPath(new URL('../../desktop/', import.meta.url)));
-const require = createRequire(path.join(desktop, 'package.json'));
 const output = path.join(desktop, 'test-results');
 await mkdir(output, { recursive:true });
 const profile = await mkdtemp(path.join(tmpdir(), 'boneman-smoke-'));
 const report = { timestamp:new Date().toISOString(), platform:platform(), arch:arch(), softwareGpuTest, modes:[] };
 const errors = [], requests = [], failed = [];
 let app;
-async function closeApp() {
-  const child = app.process();
-  await Promise.race([app.close(), new Promise(resolve => setTimeout(resolve, 5000))]);
-  if (child.exitCode === null) child.kill('SIGKILL');
-}
 try {
-  app = await _electron.launch({
-    executablePath:require('electron'), args:[...testGpuArgs, path.join(desktop, 'main.cjs')], chromiumSandbox:true,
-    env:{ ...process.env, BONEMAN_USER_DATA:profile },
-    timeout:60000,
-  });
-  const page = await app.firstWindow();
+  app = await launchSource(profile);
+  const page = app.page;
   page.on('pageerror', e => errors.push(String(e)));
   page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
   page.on('request', r => requests.push(r.url()));
   page.on('response', r => { if (r.status() >= 400) failed.push({ url:r.url(), status:r.status() }); });
-  await page.waitForFunction(() => window.__game && !window.__game.gameFlow.blocksGameplay || window.__game?.gameFlow.currentScreen === 'launch', null, { timeout:120000 });
+  await page.waitForFunction(() => document.readyState === 'complete' && window.__game && (!window.__game.gameFlow.blocksGameplay || window.__game.gameFlow.currentScreen === 'launch'), null, { timeout:120000 });
   // The first run above has a fresh profile: no PWA/HTTP cache can make this pass.
   const startup = await page.evaluate(async () => ({
     node:typeof window.require, process:typeof window.process,
@@ -45,7 +34,10 @@ try {
   assert.equal(startup.secure, true); assert.equal(startup.origin, 'boneman://game');
   assert([0, 'disabled', 'InvalidStateError'].includes(startup.serviceWorkers)); assert.deepEqual(startup.caches, []);
   report.startup = startup;
-  report.runtime = await app.evaluate(({ app }) => ({ versions:process.versions, gpu:app.getGPUFeatureStatus() }));
+  report.runtime = await page.evaluate(() => {
+    const gl = window.__game.renderer.getContext(), extension = gl.getExtension('WEBGL_debug_renderer_info');
+    return {userAgent:navigator.userAgent, gpu:extension ? gl.getParameter(extension.UNMASKED_RENDERER_WEBGL) : null};
+  });
   // A disconnected browser must still load every byte from the app protocol.
   await page.context().setOffline(true);
   for (const lite of [true, false]) {
@@ -142,19 +134,13 @@ try {
       return results;
     }, probe);
     assert.deepEqual(denied, { fetch:true, image:true, socket:true, worker:true });
-    // Native session policy remains effective independently of document CSP.
-    const nativeDenied = await app.evaluate(async ({ BrowserWindow }, url) => {
-      const ses = BrowserWindow.getAllWindows()[0].webContents.session;
-      return await ses.fetch(url).then(() => false, () => true);
-    }, probe);
-    assert.equal(nativeDenied, true);
     const beforeNavigation = page.url();
     await page.evaluate(url => { window.open(url); location.assign(url); }, probe);
     await page.waitForTimeout(200);
     assert.equal(page.url(), beforeNavigation, 'External navigation is blocked');
-    assert.equal(app.windows().length, 1, 'External popups are blocked');
+    assert.equal(app.context.pages().length, 1, 'External popups are blocked');
     assert.equal(networkHits, 0);
-    report.network = { denied, nativeDenied, networkHits, gameRequests:requests.length };
+    report.network = { denied, networkHits, gameRequests:requests.length, nativePolicy:'verified separately by native-lifecycle.mjs' };
   } finally { await new Promise(resolve => server.close(resolve)); }
 
   await page.evaluate(() => location.assign('boneman://game/reset-local-data.html'));
@@ -163,9 +149,9 @@ try {
   await page.locator('#back').click();
   await page.waitForFunction(() => !!window.__game, null, {timeout:120000});
   await page.evaluate(() => localStorage.setItem('solProtoDesktopPersistenceTest', 'kept'));
-  await closeApp(); app = null;
-  app = await _electron.launch({ chromiumSandbox:true, executablePath:require('electron'), args:[...testGpuArgs, path.join(desktop, 'main.cjs')], env:{...process.env, BONEMAN_USER_DATA:profile} });
-  const reopened = await app.firstWindow();
+  await app.close(); app = null;
+  app = await launchSource(profile);
+  const reopened = app.page;
   await reopened.waitForFunction(() => location.protocol === 'boneman:' && document.readyState === 'complete');
   assert.equal(await reopened.evaluate(() => localStorage.getItem('solProtoDesktopPersistenceTest')), 'kept');
   report.persistence = true;
@@ -178,14 +164,15 @@ try {
   report.error = String(error);
   report.errors = errors;
   report.failedRequests = failed;
-  if (app) report.page = await Promise.race([app.windows()[0]?.evaluate(() => ({
+  report.nativeLog = app?.diagnostics();
+  if (app) report.page = await Promise.race([app.page.evaluate(() => ({
     url:location.href, hidden:document.hidden, ready:document.readyState,
     loading:window.__game?.getLoadingDiagnostics(), level:window.__game?.getCurrentLevel().id,
   })).catch(() => null), new Promise(resolve => setTimeout(() => resolve('unresponsive'), 2000))]);
   console.error(JSON.stringify(report));
   throw error;
 } finally {
-  if (app) await closeApp();
+  if (app) await app.close();
   await writeFile(path.join(output, 'smoke.json'), JSON.stringify(report, null, 2) + '\n');
   await rm(profile, { recursive:true, force:true });
 }

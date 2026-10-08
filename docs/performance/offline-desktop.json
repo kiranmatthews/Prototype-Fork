@@ -61,8 +61,9 @@
   "artifacts": {
     "type": "local ad-hoc macOS candidate, not Developer ID signed or notarized",
     "checksums": [
-      "ebd21c5903963d46fd3d72ea5242cc1413b23d978dd1ff77517e40ccc5efb0d5  BONEMAN-0.1.0-mac-arm64.dmg",
-      "445386d45ab372d1e90e506af87cb07aa6f578dbb8d2980149604569051429f4  BONEMAN-0.1.0-mac-arm64.zip"
+      "702ec44d965a471147b6a27a7e01a0070ad666ad45daa5b8b9b0e66196b73445  BONEMAN-0.1.0-mac-arm64.dmg",
+      "65a69663375a2c2780eb43e82486dc54b5c98d645af16ce564700c0885e63348  BONEMAN-0.1.0-mac-arm64.zip"
     ]
-  }
+  },
+  "verificationUpdate": "Rebuilt after safe startup-navigation handling; source smoke, packaged smoke and native lifecycle/network checks pass."
 }
