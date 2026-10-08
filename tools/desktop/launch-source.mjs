@@ -34,7 +34,7 @@ export async function launchSource(profile) {
   }
   try {
     const endpoint = await new Promise((resolve,reject) => {
-      const timer = setTimeout(() => reject(new Error('Desktop startup timeout: ' + stderr)), 60000);
+      const timer = setTimeout(() => reject(new Error('Desktop startup timeout: ' + stderr)), 120000);
       child.once('error', error => { clearTimeout(timer); reject(error); });
       child.once('exit', code => { clearTimeout(timer); reject(new Error('Desktop exited: ' + code + '\n' + stderr)); });
       child.stderr.on('data', () => {

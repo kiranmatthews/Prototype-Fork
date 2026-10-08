@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import path from 'node:path';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
@@ -7,9 +8,9 @@ const require = createRequire(fileURLToPath(new URL('../../desktop/package.json'
 const { extractFile, listPackage } = require('@electron/asar');
 const { getCurrentFuseWire, FuseV1Options, FuseState } = await import('../../desktop/node_modules/@electron/fuses/dist/index.js');
 const paths = bundlePaths();
-const manifest = JSON.parse(extractFile(paths.archive, 'web/asset-manifest.json'));
+const manifest = JSON.parse(extractFile(paths.archive, path.join('web', 'asset-manifest.json')));
 for (const file of manifest.files) {
-  const bytes = extractFile(paths.archive, 'web/' + file.path);
+  const bytes = extractFile(paths.archive, path.join('web', ...file.path.split('/')));
   assert.equal(bytes.length, file.bytes, file.path);
   assert.equal(createHash('sha256').update(bytes).digest('hex'), file.sha256, file.path);
 }

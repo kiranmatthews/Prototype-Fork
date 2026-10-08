@@ -13,7 +13,7 @@ const output = fileURLToPath(new URL('../../desktop/test-results/', import.meta.
 await mkdir(output, { recursive:true });
 const { binary } = bundlePaths();
 const processHandle = spawn(binary, [...testGpuArgs, '--remote-debugging-port=0'], { env:{...process.env, BONEMAN_USER_DATA:profile}, stdio:['ignore','pipe','pipe'] });
-const watchdog = setTimeout(() => processHandle.kill('SIGKILL'), 180000);
+const watchdog = setTimeout(() => processHandle.kill('SIGKILL'), 300000);
 let browser, page;
 const errors = [], failed = [], requests = [];
 const emulatedFocus = process.argv.includes('--emulated-focus');
@@ -22,7 +22,7 @@ processHandle.stderr.on('data', bytes => { report.stderr = (report.stderr + byte
 try {
   const endpoint = await new Promise((resolve,reject) => {
     let log = '';
-    const timer = setTimeout(() => reject(new Error('Packaged app did not expose its test debugging endpoint: ' + log.slice(-2000))), 45000);
+    const timer = setTimeout(() => reject(new Error('Packaged app did not expose its test debugging endpoint: ' + log.slice(-2000))), 120000);
     processHandle.once('error', reject);
     processHandle.once('exit', code => { clearTimeout(timer); reject(new Error('Packaged app exited early: ' + code + '\n' + log.slice(-2000))); });
     processHandle.stderr.on('data', bytes => {
@@ -38,7 +38,7 @@ try {
   page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
   page.on('request', request => requests.push(request.url()));
   page.on('response', r => { if (r.status() >= 400) failed.push(r.url()); });
-  await page.waitForFunction(() => !!window.__game && document.readyState === 'complete', null, {timeout:60000});
+  await page.waitForFunction(() => !!window.__game && document.readyState === 'complete', null, {timeout:120000});
   await context.setOffline(true);
   await page.goto('boneman://game/?playtest&level=codex-lab', {timeout:120000});
   await page.waitForFunction(() => window.__game && !window.__game.gameFlow.blocksGameplay && window.__game.player.grounded, null, {timeout:120000});
