@@ -38,8 +38,8 @@ function review() {
   const g = game(); if (!g) return;
   const p = g.player, departure = g.getBonusDeparture();
   const state = { level:g.getCurrentLevel().id, phase:departure?.phase ?? g.gameFlow.loadingPhase ?? 'play',
-    kind:departure?.kind, elapsed:departure?.elapsed, lift:departure?.offsetY, runTime:p.runTime, position:p.pos.toArray(),
-    grounded:p.grounded, state:p.state, camera:g.camera.position.toArray(), lives:p.lives, fruit:p.fruit,
+    kind:departure?.kind, alignment:departure?.alignment, elapsed:departure?.elapsed, lift:departure?.offsetY, runTime:p.runTime, position:p.pos.toArray(),
+    grounded:p.grounded, state:p.state, board:p.boardRolling, camera:g.camera.position.toArray(), lives:p.lives, fruit:p.fruit,
     completed:g.getLevel().bonusRoundCompleted, hudBonus:document.querySelector('.game-hud-layer')?.classList.contains('hud-bonus'),
     errors };
   const marker = state.level + ':' + state.phase;
@@ -101,3 +101,17 @@ document.querySelector('#resume')!.addEventListener('click',()=>game()?.setBonus
 act('#counterfit',g=>{g.ui.rooCratesCurrent.set('18');g.ui.rooCratesTotal.set('/18');g.ui.cratesEl.classList.add('hud-pop');g.ui.cratesEl.style.animationPlayState='paused';});
 
 act('#hold',g=>g.setBonusTravelReviewRate(0));
+
+function stageBonusJump(g:any,radius:number,board=false){
+ const l=g.getLevel(),pad=l.bonusPlatformDiagnostics;if(!pad)return;
+ g.player.pos.set(pad.x+radius,radius>1.6?pad.y+.02:pad.topY+.02,pad.z);
+ g.player.settle(l);g.player.freeSkate=board;
+ if(board){g.player.speed=.6;g.player.axisF.set(0,0,-1);g.player.axisL.set(-1,0,0);g.player.skatePose=1;g.player.deckPose=1;}
+ g.player.prepareStartPresentation(l);l.cancelBonusEntry();samples.length=0;
+ g.setBonusTravelReviewRate(0);
+ window.dispatchEvent(new KeyboardEvent('keydown',{code:'Space',key:' ',bubbles:true}));
+ window.setTimeout(()=>window.dispatchEvent(new KeyboardEvent('keyup',{code:'Space',key:' ',bubbles:true})),300);
+}
+act('#rim',g=>stageBonusJump(g,1.45));
+act('#near',g=>stageBonusJump(g,2.1));
+act('#ollie',g=>stageBonusJump(g,2.1,true));

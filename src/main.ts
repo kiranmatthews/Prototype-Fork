@@ -90,7 +90,7 @@ import {
   type GamePlayMode,
 } from "./campaign";
 import { resolveBonusLevel } from "./levels/themed-bonuses";
-import { bonusDeparturePose } from "./bonusDeparture";
+import { bonusDeparturePose, bonusAlignmentPose } from "./bonusDeparture";
 import {BonusWarpEffect} from './bonusWarp';
 import {bonusTransferFrame,BONUS_TRANSFER_SECONDS,type BonusReceipt} from './bonusTransfer';
 import {WARP_PAD_TOP} from './warpPad';
@@ -2894,7 +2894,8 @@ function enterCampaignLevel(targetId: string, forfeitCurrentRun = false): void {
 let bonusTravelReviewRate=1;
 let bonusArrival:{elapsed:number;effect:BonusWarpEffect;reduced:boolean;revealed:boolean}|null=null;
 let bonusDeparture: { elapsed:number; reducedMotion:boolean; finish:()=>void; effect:BonusWarpEffect;
-  origin:THREE.Vector3; eye:THREE.Vector3; targetEye:THREE.Vector3; kind:'enter'|'exit'; receipt?:BonusReceipt; sounded:boolean } | null = null;
+  origin:THREE.Vector3; alignmentDistance:number; alignmentHeight:number;
+  eye:THREE.Vector3; targetEye:THREE.Vector3; kind:'enter'|'exit'; receipt?:BonusReceipt; sounded:boolean } | null = null;
 
 function clearBonusDeparture():void {
   bonusDeparture?.effect.dispose();bonusDeparture=null;ui.setBonusTransfer(null);
@@ -2917,6 +2918,7 @@ function startBonusDeparture(kind:'enter'|'exit',receipt?:BonusReceipt):Promise<
     const focus=origin.clone().add(new THREE.Vector3(0,1.6,0));
     const targetEye=focus.clone().addScaledVector(direction,Math.min(11.8,eye.distanceTo(focus)));
     bonusDeparture={elapsed:0,finish,kind,receipt,origin,eye,targetEye,sounded:false,
+      alignmentDistance:Math.hypot(origin.x-player.pos.x,origin.z-player.pos.z),alignmentHeight:origin.y-player.pos.y,
       reducedMotion:window.matchMedia('(prefers-reduced-motion: reduce)').matches,
       effect:new BonusWarpEffect(scene,origin,kind==='exit')};
     if(receipt)ui.setBonusTransfer(bonusTransferFrame(receipt,-1));
@@ -2933,11 +2935,13 @@ function renderBonusDeparture(dt:number):void {
   travel.effect.update(travel.elapsed,charge,travel.reducedMotion);
   if(travel.elapsed>=.62&&!travel.sounded){sfx.play('woosh2',.75,1.1,0);travel.sounded=true;}
   if(travel.receipt)ui.setBonusTransfer(bonusTransferFrame(travel.receipt,travel.elapsed-1.3,travel.reducedMotion));
-  player.prepareStartPresentation(level, dt);
+  const alignment=bonusAlignmentPose(travel.elapsed,travel.alignmentDistance,travel.alignmentHeight,travel.reducedMotion);
+  if(travel.kind==='enter'&&alignment.needed)player.prepareBonusAlignmentPresentation(level,dt,alignment);
+  else player.prepareStartPresentation(level, dt);
   const base=player.group.position.clone(),visible=player.group.visible;
-  const center=THREE.MathUtils.smoothstep(travel.elapsed,0,.3);
+  const center=travel.kind==='enter'?alignment.progress:THREE.MathUtils.smoothstep(travel.elapsed,0,.3);
   player.group.position.lerp(travel.origin,center);
-  player.group.position.y+=pose.offsetY;
+  player.group.position.y+=pose.offsetY+(travel.kind==='enter'?alignment.offsetY:0);
   player.group.visible=visible&&(!pose.complete||travel.reducedMotion&&travel.elapsed<1.15);
   try {
     level.updateSceneryPresentation(dt);
@@ -3111,7 +3115,7 @@ function checkCampaignEntrances(): void {
     return;
   }
   if (level.consumeBonusLanding(player.pos,{
-    enabled:!bonusSession&&(isCampaignLevel(current.id)||!!level.bonusPlatformDiagnostics)&&!player.ttActive&&!level.timeTrial&&!player.comboRun,
+    enabled:!bonusSession&&(isCampaignLevel(current.id)||!!level.bonusPlatformDiagnostics)&&!player.ttActive&&!level.timeTrial&&!player.comboRun&&!player.skateCameraBailing,
     grounded:player.grounded,jump:input.jumpPressed||input.jumpReleased,rising:player.vVel>.2,
   }))
     enterBonusRound(true);
@@ -5436,7 +5440,7 @@ requestAnimationFrame(frame);
   captureBonusReviewFrame: () => { if(!shellBypass)return null; if(bonusDeparture&&!gameFlow.loadingPhase)renderBonusDeparture(0);else renderGameplayScene(0,true,true); return renderer.domElement.toDataURL('image/png'); },
   advanceBonusTravelReview: (dt:number) => { if(shellBypass&&bonusDeparture)bonusDeparture.elapsed+=Math.max(0,Math.min(.5,dt)); },
   setBonusTravelReviewRate: (rate:number) => { if(shellBypass)bonusTravelReviewRate=Math.max(0,Math.min(1,rate)); },
-  getBonusDeparture: () => bonusDeparture ? { kind:bonusDeparture.kind, receipt:bonusDeparture.receipt, elapsed: bonusDeparture.elapsed, ...bonusDeparturePose(bonusDeparture.elapsed, bonusDeparture.reducedMotion) } : null,
+  getBonusDeparture: () => bonusDeparture ? { alignment:bonusAlignmentPose(bonusDeparture.elapsed,bonusDeparture.alignmentDistance,bonusDeparture.alignmentHeight,bonusDeparture.reducedMotion), kind:bonusDeparture.kind, receipt:bonusDeparture.receipt, elapsed: bonusDeparture.elapsed, ...bonusDeparturePose(bonusDeparture.elapsed, bonusDeparture.reducedMotion) } : null,
   returnFromBonus,
   showCampaignResults,
   showTimeTrialResults,

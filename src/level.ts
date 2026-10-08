@@ -7999,6 +7999,7 @@ export class Level {
     const platform=this.bonusPlatform;if(!platform)return false;
     return platform.entry.step({...state,enabled:state.enabled&&!this.timeTrial&&!platform.locked&&platform.group.visible,
       near:Math.hypot(position.x-platform.group.position.x,position.z-platform.group.position.z)<7,
+      landing:{x:position.x-platform.group.position.x,z:position.z-platform.group.position.z,height:position.y-platform.group.position.y-BONUS_PLATFORM_HEIGHT},
       onTop:this.bonusPlatformAt(position)});
   }
 

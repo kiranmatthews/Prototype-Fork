@@ -17,6 +17,7 @@ import { CameraInputFrame } from "./cameraViews";
 import { ChiefInputFrame, type ChiefDeviceInput, type ChiefInputDirection } from './boss/inputFrame';
 import { softSkateRebound, sampleSoftSkateImpact, SOFT_SKATE_IMPACT_SECONDS } from './skateImpact';
 import { BONUS_FRUIT_FLIGHT_SECONDS } from './bonusPayout';
+import type { BonusAlignmentPose } from './bonusDeparture';
 import { TUNING, CONST } from './tuning';
 import { GRIND_TRICKS, GRIND_CONTACTS, LIP_CONTACTS, grabTrickInfo, grabTrickFromInput, sampleDeckTrick, sampleBackflip, sampleFootFlip, sampleImpossible, type GrabTrickKind, type GrindStyle, type LipStyle } from './skateTricks';
 import { SkateAnimation } from './skateAnimation';
@@ -3255,6 +3256,31 @@ export class Player {
     this.idlePresentationOffset+=dt;
     this.finishVisualStep({ moveX: 0, moveY: 0 } as Input, dt);
     this.collapseRenderInterpolation();
+  }
+
+  /** The bonus transition owns the input lock. Sample our existing jump/ollie
+   * (including editable segment elasticity and deck contacts) without stepping
+   * movement or leaving synthetic jump state in the suspended parent run. */
+  prepareBonusAlignmentPresentation(level:Level,dt:number,hop:BonusAlignmentPose):void {
+    const skating=this.freeSkate;
+    const saved={state:this.state,grounded:this.grounded,vVel:this.vVel,
+      airborneT:this.airborneT,launchVy:this.launchVy,airFromSkate:this.airFromSkate,
+      boardOllieAir:this.boardOllieAir,doubleJumpAir:this.doubleJumpAir,
+      slideJumpAir:this.slideJumpAir,flipTimer:this.flipTimer,speed:this.speed,
+      teetering:this.teetering,coyoteTimer:this.coyoteTimer,lastPlanar:this.lastPlanar,
+      spinTimer:this.spinTimer,flipT:this.flipT};
+    const walking=this.walkVelocity.clone();
+    try{
+      this.state=hop.airborne?'air':'ride';this.grounded=!hop.airborne;
+      this.vVel=hop.verticalVelocity;this.airborneT=hop.airborneSeconds;this.launchVy=hop.launchVelocity;
+      this.airFromSkate=skating;this.boardOllieAir=skating&&hop.airborne;
+      this.doubleJumpAir=false;this.slideJumpAir=false;this.flipTimer=0;
+      this.teetering=false;this.coyoteTimer=0;this.lastPlanar=0;this.spinTimer=0;this.flipT=0;
+      this.speed=0;this.walkVelocity.set(0,0,0);
+      this.prepareStartPresentation(level,dt);
+    }finally{
+      Object.assign(this,saved);this.walkVelocity.copy(walking);
+    }
   }
 
   /** Presentation only: never step physics, timers, input, or the run clock. */
