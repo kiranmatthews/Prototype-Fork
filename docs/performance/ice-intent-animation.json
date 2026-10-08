@@ -1,0 +1,244 @@
+{
+  "base": "http://127.0.0.1:5218",
+  "cases": [
+    {
+      "lite": true,
+      "landed": {
+        "p": [
+          -0.95,
+          0.10000000059604644,
+          -24.057105945050125
+        ],
+        "v": [
+          0,
+          0,
+          -1.53
+        ],
+        "yaw": 0,
+        "input": [
+          0,
+          0.17
+        ],
+        "grounded": true,
+        "ice": true,
+        "hint": "player.ice-walk",
+        "active": "player.ice-walk",
+        "transient": null,
+        "time": 0
+      },
+      "reversed": {
+        "p": [
+          -0.95,
+          0.10000000059604644,
+          -24.988406639489035
+        ],
+        "v": [
+          0,
+          0,
+          -1.23824139812253
+        ],
+        "yaw": -3.141592653589793,
+        "input": [
+          0,
+          -1
+        ],
+        "grounded": true,
+        "ice": true,
+        "hint": "player.ice-walk",
+        "active": "player.ice-walk",
+        "transient": null,
+        "time": 0.44412948688237575
+      },
+      "caughtUp": {
+        "p": [
+          -0.95,
+          0.10000000059604644,
+          -23.394975667199873
+        ],
+        "v": [
+          0,
+          0,
+          3.1633285833865874
+        ],
+        "yaw": -3.141592653589793,
+        "input": [
+          0,
+          -1
+        ],
+        "grounded": true,
+        "ice": true,
+        "hint": "player.ice-walk",
+        "active": "player.ice-walk",
+        "transient": null,
+        "time": 0.25624019105213836
+      },
+      "sideways": {
+        "p": [
+          -0.9395732431101499,
+          0.10000000059604644,
+          -23.18775190142984
+        ],
+        "v": [
+          0.24936632639099995,
+          0,
+          3.0756810691636143
+        ],
+        "yaw": -1.5707963267948966,
+        "input": [
+          1,
+          0
+        ],
+        "grounded": true,
+        "ice": true,
+        "hint": "player.ice-walk",
+        "active": "player.ice-walk",
+        "transient": null,
+        "time": 0.3255898138923343
+      },
+      "coast": {
+        "p": [
+          -0.9073548099992865,
+          0.10000000059604644,
+          -22.790370160954506
+        ],
+        "v": [
+          0.2357391945616318,
+          0,
+          2.9076042000803906
+        ],
+        "yaw": -1.5707963267948966,
+        "input": [
+          0,
+          0
+        ],
+        "grounded": true,
+        "ice": true,
+        "hint": "player.ice-walk",
+        "active": "player.ice-walk",
+        "transient": null,
+        "time": 0.4365767952145254
+      },
+      "stamp": "Codex/sol fork · build 10-08 11:35 UTC"
+    },
+    {
+      "lite": false,
+      "landed": {
+        "p": [
+          -0.95,
+          0.10000000059604644,
+          -24.057105945050125
+        ],
+        "v": [
+          0,
+          0,
+          -1.53
+        ],
+        "yaw": 0,
+        "input": [
+          0,
+          0.17
+        ],
+        "grounded": true,
+        "ice": true,
+        "hint": "player.ice-walk",
+        "active": "player.ice-walk",
+        "transient": null,
+        "time": 0
+      },
+      "reversed": {
+        "p": [
+          -0.95,
+          0.10000000059604644,
+          -24.988406639489035
+        ],
+        "v": [
+          0,
+          0,
+          -1.23824139812253
+        ],
+        "yaw": -3.141592653589793,
+        "input": [
+          0,
+          -1
+        ],
+        "grounded": true,
+        "ice": true,
+        "hint": "player.ice-walk",
+        "active": "player.ice-walk",
+        "transient": null,
+        "time": 0.44412948688237575
+      },
+      "caughtUp": {
+        "p": [
+          -0.95,
+          0.10000000059604644,
+          -23.394975667199873
+        ],
+        "v": [
+          0,
+          0,
+          3.1633285833865874
+        ],
+        "yaw": -3.141592653589793,
+        "input": [
+          0,
+          -1
+        ],
+        "grounded": true,
+        "ice": true,
+        "hint": "player.ice-walk",
+        "active": "player.ice-walk",
+        "transient": null,
+        "time": 0.25624019105213836
+      },
+      "sideways": {
+        "p": [
+          -0.9395732431101499,
+          0.10000000059604644,
+          -23.18775190142984
+        ],
+        "v": [
+          0.24936632639099995,
+          0,
+          3.0756810691636143
+        ],
+        "yaw": -1.5707963267948966,
+        "input": [
+          1,
+          0
+        ],
+        "grounded": true,
+        "ice": true,
+        "hint": "player.ice-walk",
+        "active": "player.ice-walk",
+        "transient": null,
+        "time": 0.3255898138923343
+      },
+      "coast": {
+        "p": [
+          -0.9073548099992865,
+          0.10000000059604644,
+          -22.790370160954506
+        ],
+        "v": [
+          0.2357391945616318,
+          0,
+          2.9076042000803906
+        ],
+        "yaw": -1.5707963267948966,
+        "input": [
+          0,
+          0
+        ],
+        "grounded": true,
+        "ice": true,
+        "hint": "player.ice-walk",
+        "active": "player.ice-walk",
+        "transient": null,
+        "time": 0.4365767952145254
+      },
+      "stamp": "Codex/sol fork · build 10-08 11:35 UTC"
+    }
+  ],
+  "errors": []
+}

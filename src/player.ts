@@ -16752,11 +16752,12 @@ export class Player {
       this.group.quaternion.premultiply(VERT_Q2);
     }
 
-    // The body ALWAYS faces its actual travel direction — riding, grinding,
-    // sidestepping, and mid-air drift all turn the model, Crash-style.
-    // Movement itself never leaves the course axes; this is purely visual.
+    // Ordinary travel follows velocity; ice and committed run reversals face
+    // input first so the body can push against its existing momentum.
+    // This changes presentation only, never the controller's travel axes.
     let targetYaw = this.visualYaw; // stationary: keep facing the last direction
-    let runReversal = false;
+    let intentFacing = false;
+    const iceWalking = this.animationClipHint === ICE_WALK_CLIP_ID;
     const onFootRunReversal =
       this.walkTurnaround &&
       this.state === 'ride' &&
@@ -16786,12 +16787,21 @@ export class Player {
       // still faces the edge while the feet/deck retain their contact solver.
       targetYaw = wrapAngle(Math.atan2(this.teeterDirection.x, this.teeterDirection.z) -
         Math.PI - this.stance * (Math.PI / 2) * this.sidePose);
+    } else if (iceWalking) {
+      // Use this step's remapped input, including the first landing frame.
+      // Coasting retains the last facing instead of turning back toward drift.
+      if (Math.hypot(input.moveX, input.moveY) > .08) {
+        const x = this.axisF.x * input.moveY + this.axisL.x * input.moveX;
+        const z = this.axisF.z * input.moveY + this.axisL.z * input.moveX;
+        targetYaw = wrapAngle(Math.atan2(x, z) - Math.PI);
+        intentFacing = true;
+      }
     } else if (onFootRunReversal) {
       // Input leads a committed run turnaround while the root still slides
       // through old momentum. A four-frame pivot gets facing out of the way
       // before the much slower physical slide changes direction.
       targetYaw = wrapAngle(Math.atan2(this.walkIntent.x, this.walkIntent.z) - Math.PI);
-      runReversal = true;
+      intentFacing = true;
     } else if (
       this.state === 'ride' &&
       this.grounded &&
@@ -16825,11 +16835,11 @@ export class Player {
         targetYaw = wrapAngle(Math.atan2(vx, vz) - Math.PI);
       }
     }
-    if (runReversal) {
+    if (intentFacing) {
       // Pure lateral reversals are exactly PI apart, where "shortest" has no
       // unique sign. Turn toward screen-right clockwise and screen-left
       // counter-clockwise so side-to-side pivots undo each other naturally.
-      const lateralIntent = this.walkIntent.dot(this.axisL);
+      const lateralIntent = iceWalking ? input.moveX : this.walkIntent.dot(this.axisL);
       const turnSign = Math.abs(lateralIntent) > 0.25
         ? -Math.sign(lateralIntent)
         : -1;

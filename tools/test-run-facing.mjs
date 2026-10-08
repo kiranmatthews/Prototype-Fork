@@ -98,7 +98,7 @@ try {
     /const selfDrivenPlanar = this\.walkVelocity\.length\(\)[\s\S]{0,260}runningAnim = onFoot/,
     "legacy gait still reads world/platform displacement",
   );
-  assert.match(player, /if \(runReversal\)[\s\S]{0,1200}stepFacingYaw\(/);
+  assert.match(player, /if \(intentFacing\)[\s\S]{0,1200}stepFacingYaw\(/);
   assert.match(player, /RUN_REVERSAL_YAW_RATE \* dt/);
   for (const guard of [
     "this.state === 'ride'",

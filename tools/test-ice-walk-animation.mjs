@@ -98,9 +98,39 @@ try {
   for(const [name,setup]of exclusions){resetHint();setup(eligible);assert.notEqual(eligible.animationClipHint,ICE,`${name} was masked by ice locomotion`);}
   evidence.push({test:'ice eligibility and higher-priority ownership',excludedStates:exclusions.length});
 
+  const facingError=(p,target)=>{
+    const yaw=Math.atan2(target.x,target.z)-Math.PI;
+    return Math.abs(Math.atan2(Math.sin(yaw-p.visualYaw),Math.cos(yaw-p.visualYaw)));
+  };
+  for(const {name,initial,reverse,components=[]} of [
+    {name:'reverse',initial:{moveY:1},reverse:{moveY:-1}},
+    {name:'diagonal',initial:{moveY:1},reverse:{moveX:.71,moveY:-.71}},
+    {name:'turned-course',initial:{moveX:1},reverse:{moveX:-1},
+      components:[{t:'zone',p:[0,0,0],s:[200,10,120],dir:'E'}]},
+  ]){
+    const b=pair('ice-facing-'+name,{components});hold(b,25);hold(b,100,initial);
+    const p=b.on.p,runtime=b.on.runtime;
+    for(let frame=0;frame<4;frame++){
+      const result=tick(b,reverse);assert.equal(result.hint,ICE);assert.equal(result.active,ICE);
+    }
+    assert.ok(facingError(p,p.walkTarget)<1e-6,`${name}: body still faces drift after four frames`);
+    assert.ok(p.walkVelocity.dot(p.walkTarget)<0,`${name}: physics reversed as quickly as the body`);
+    const facing=p.visualYaw;hold(b,10);
+    assert.ok(Math.abs(p.visualYaw-facing)<1e-6,`${name}: releasing input turned the body back toward drift`);
+    let crossed=false,advancing=0,previousTime=runtime.diagnostics.timelineTime;
+    for(let frame=0;frame<180;frame++){
+      const result=tick(b,reverse);assert.equal(result.active,ICE,'zero-speed crossover interrupted the ice cycle');
+      const time=runtime.diagnostics.timelineTime;
+      if(Math.abs(time-previousTime)>1e-6)advancing++;previousTime=time;
+      if(p.walkVelocity.dot(p.walkTarget)>0)crossed=true;
+    }
+    assert.ok(crossed,`${name}: traction never caught up to intent`);assert.equal(advancing,180);
+    evidence.push({test:'input-facing ice pivot, coast-facing retention and continuous zero-speed cycle',name,frames:b.frames});
+  }
+
   const motion=pair('ice-motion');hold(motion,30);
   assert.notEqual(motion.on.runtime.activeClipId,ICE,'stationary ice idling slipped endlessly');
-  assert.equal(tick(motion,{moveY:1}).hint,ICE);
+  const firstPush=tick(motion,{moveY:1});assert.equal(firstPush.hint,ICE);assert.equal(firstPush.active,ICE,'ice push waited for another animation');
   hold(motion,269,{moveY:1});assert.equal(motion.on.runtime.activeClipId,ICE);
   const physicalBeforeRelease=motion.on.p.walkVelocity.length();
   for(let i=0;i<120;i++){const result=tick(motion);assert.equal(result.hint,ICE);assert.equal(result.active,ICE);assert.notEqual(motion.on.runtime.diagnostics.transientClipId,'player.run-stop');}
@@ -121,7 +151,13 @@ try {
     const b=pair('ice-actions-'+legacyIce,{legacyIce});hold(b,25);hold(b,180,{moveY:1});
     assert.equal(b.on.p.animationClipHint,ICE);
     hold(b,26,{jumpHeld:true});tick(b,{jumpReleased:true});assert.equal(b.on.p.state,'air');assert.notEqual(b.on.p.animationClipHint,ICE);
-    let peak=b.on.p.pos.y;for(let i=0;i<120&&!b.on.p.grounded;i++){tick(b);peak=Math.max(peak,b.on.p.pos.y);}
+    let peak=b.on.p.pos.y;for(let i=0;i<120&&!b.on.p.grounded;i++){
+      tick(b);peak=Math.max(peak,b.on.p.pos.y);
+      if(b.on.p.grounded&&b.on.p.animationClipHint===ICE){
+        assert.equal(b.on.runtime.activeClipId,ICE,'first ice contact was hidden by landing recovery');
+        assert.notEqual(b.on.runtime.diagnostics.transientClipId,'player.land');
+      }
+    }
     hold(b,45);assert.ok(b.on.p.grounded && peak>2.7&&peak<3.05);
     hold(b,160,{moveY:1});tick(b,{moveY:1,spinHeld:true});assert.equal(b.on.p.animationClipHint,'player.spin');
     hold(b,35,{moveY:1});tick(b,{moveY:1,grabHeld:true});assert.notEqual(b.on.p.animationClipHint,ICE,'slide lost its pose');

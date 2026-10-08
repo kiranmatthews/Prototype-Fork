@@ -155,7 +155,7 @@ function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId): number {
   if (!from) return 0;
   if (to === ROLL_LANDING_CLIP_ID) return .045;
   if (from === ROLL_LANDING_CLIP_ID) return to === 'player.run' ? 0 : .12;
-  if (to === ICE_WALK_CLIP_ID) return .18;
+  if (to === ICE_WALK_CLIP_ID) return .06;
   if (from === ICE_WALK_CLIP_ID) return .16;
   if (from === JUMP_CHARGE_CLIP_ID || to === JUMP_CHARGE_CLIP_ID) return .10;
   if (to === RUN_STOP_CLIP_ID) return .10;
@@ -506,16 +506,16 @@ export class CharacterAnimationRuntime {
           (this.transient?.kind === 'crouch-exit' && hint !== 'player.idle')) {
         this.cancelTransient();
       }
-      // On-foot landing has first refusal on the exact contact frame. The
-      // mounted board's procedural spring owns its own contact/rebound.
-      if (justLanded && !this.currentClipId?.startsWith('player.swim') && hint !== ROLL_LANDING_CLIP_ID && hint !== 'player.bail' && hint !== 'player.death' && hint !== 'player.slam' && hint !== 'player.skate') {
+      // Ice starts its balance cycle on contact, without waiting for a dry
+      // landing plant/recovery. Board contact retains its procedural spring.
+      if (justLanded && hint !== ICE_WALK_CLIP_ID && !this.currentClipId?.startsWith('player.swim') && hint !== ROLL_LANDING_CLIP_ID && hint !== 'player.bail' && hint !== 'player.death' && hint !== 'player.slam' && hint !== 'player.skate') {
         this.resetLandingRunBlend();
         this.transient = this.makeTransient('landing', LAND_CLIP_ID);
       } else if (this.transient?.kind === 'landing') {
         if (
           !grounded ||
           hint === 'player.bail' || hint === 'player.death' ||
-          (hint !== 'player.run' && hint !== 'player.idle' && hint !== ICE_WALK_CLIP_ID)
+          (hint !== 'player.run' && hint !== 'player.idle')
         ) {
           this.cancelTransient();
         }
