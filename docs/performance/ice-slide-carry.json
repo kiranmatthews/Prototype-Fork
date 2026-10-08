@@ -1,0 +1,148 @@
+[
+  {
+    "direction": 0,
+    "held": false,
+    "slideFrames": 12,
+    "exitSpeed": 24.39016195108184,
+    "coastDistance": 20.097248743698767,
+    "speedAfterSecond": 15.889815050423755
+  },
+  {
+    "direction": 0,
+    "held": true,
+    "slideFrames": 12,
+    "exitSpeed": 24.39016195108184,
+    "coastDistance": 20.097248743698767,
+    "speedAfterSecond": 15.889815050423755
+  },
+  {
+    "direction": 1,
+    "held": false,
+    "slideFrames": 12,
+    "exitSpeed": 24.39016195108184,
+    "coastDistance": 20.097248743698767,
+    "speedAfterSecond": 15.889815050423753
+  },
+  {
+    "direction": 1,
+    "held": true,
+    "slideFrames": 12,
+    "exitSpeed": 24.39016195108184,
+    "coastDistance": 20.097248743698767,
+    "speedAfterSecond": 15.889815050423753
+  },
+  {
+    "direction": 2,
+    "held": false,
+    "slideFrames": 12,
+    "exitSpeed": 24.39016195108184,
+    "coastDistance": 20.097248743698767,
+    "speedAfterSecond": 15.889815050423755
+  },
+  {
+    "direction": 2,
+    "held": true,
+    "slideFrames": 12,
+    "exitSpeed": 24.39016195108184,
+    "coastDistance": 20.097248743698767,
+    "speedAfterSecond": 15.889815050423755
+  },
+  {
+    "direction": 3,
+    "held": false,
+    "slideFrames": 12,
+    "exitSpeed": 24.39016195108184,
+    "coastDistance": 20.097248743698767,
+    "speedAfterSecond": 15.889815050423753
+  },
+  {
+    "direction": 3,
+    "held": true,
+    "slideFrames": 12,
+    "exitSpeed": 24.39016195108184,
+    "coastDistance": 20.097248743698767,
+    "speedAfterSecond": 15.889815050423753
+  },
+  {
+    "direction": 4,
+    "held": false,
+    "slideFrames": 12,
+    "exitSpeed": 24.39016195108184,
+    "coastDistance": 20.097248743698767,
+    "speedAfterSecond": 15.889815050423755
+  },
+  {
+    "direction": 4,
+    "held": true,
+    "slideFrames": 12,
+    "exitSpeed": 24.39016195108184,
+    "coastDistance": 20.097248743698767,
+    "speedAfterSecond": 15.889815050423755
+  },
+  {
+    "direction": 5,
+    "held": false,
+    "slideFrames": 12,
+    "exitSpeed": 24.39016195108184,
+    "coastDistance": 20.097248743698767,
+    "speedAfterSecond": 15.889815050423753
+  },
+  {
+    "direction": 5,
+    "held": true,
+    "slideFrames": 12,
+    "exitSpeed": 24.39016195108184,
+    "coastDistance": 20.097248743698767,
+    "speedAfterSecond": 15.889815050423753
+  },
+  {
+    "direction": 6,
+    "held": false,
+    "slideFrames": 12,
+    "exitSpeed": 24.39016195108184,
+    "coastDistance": 20.097248743698767,
+    "speedAfterSecond": 15.889815050423755
+  },
+  {
+    "direction": 6,
+    "held": true,
+    "slideFrames": 12,
+    "exitSpeed": 24.39016195108184,
+    "coastDistance": 20.097248743698767,
+    "speedAfterSecond": 15.889815050423755
+  },
+  {
+    "direction": 7,
+    "held": false,
+    "slideFrames": 12,
+    "exitSpeed": 24.39016195108184,
+    "coastDistance": 20.097248743698767,
+    "speedAfterSecond": 15.889815050423753
+  },
+  {
+    "direction": 7,
+    "held": true,
+    "slideFrames": 12,
+    "exitSpeed": 24.39016195108184,
+    "coastDistance": 20.097248743698767,
+    "speedAfterSecond": 15.889815050423753
+  },
+  {
+    "kind": "dry",
+    "slideFrames": 24,
+    "distance": 5.000000000000003,
+    "exitSpeed": 0
+  },
+  {
+    "kind": "ice-to-dry",
+    "slideFrames": 17,
+    "distance": 4.999999999999999,
+    "exitSpeed": 0
+  },
+  {
+    "kind": "dry-to-ice",
+    "slideFrames": 15,
+    "distance": 5.21423219245626,
+    "exitSpeed": 19.105626861680776
+  }
+]

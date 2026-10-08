@@ -1,0 +1,314 @@
+{
+  "base": "http://127.0.0.1:5218",
+  "cases": [
+    {
+      "lite": true,
+      "held": false,
+      "exit": {
+        "p": [
+          -0.95,
+          0.10000000059604644,
+          -25.737769726492544
+        ],
+        "v": [
+          0,
+          0,
+          -24.39016195108184
+        ],
+        "speed": 24.39016195108184,
+        "slide": 0,
+        "carry": true,
+        "recovery": 0,
+        "board": false,
+        "crawl": false,
+        "grounded": true,
+        "ice": true,
+        "state": "ride",
+        "ground": "slippy plank",
+        "active": "player.slide",
+        "deaths": 0
+      },
+      "coast": {
+        "p": [
+          -0.95,
+          0.10000000059604644,
+          -31.86804112528364
+        ],
+        "v": [
+          0,
+          0,
+          -21.797297915339392
+        ],
+        "speed": 21.797297915339392,
+        "slide": 0,
+        "carry": true,
+        "recovery": 0,
+        "board": false,
+        "crawl": false,
+        "grounded": true,
+        "ice": true,
+        "state": "ride",
+        "ground": "slippy plank",
+        "active": "player.ice-walk",
+        "deaths": 0
+      },
+      "landing": {
+        "p": [
+          -0.95,
+          3.5762786898541066e-9,
+          -47.37075843231173
+        ],
+        "v": [
+          0,
+          0,
+          -9
+        ],
+        "speed": 9,
+        "slide": 0,
+        "carry": false,
+        "recovery": 0,
+        "board": false,
+        "crawl": false,
+        "grounded": true,
+        "ice": false,
+        "state": "ride",
+        "ground": "crumble pad",
+        "active": "player.land",
+        "deaths": 0
+      },
+      "stamp": "Codex/sol fork · build 10-08 12:09 UTC"
+    },
+    {
+      "lite": true,
+      "held": true,
+      "exit": {
+        "p": [
+          -0.95,
+          0.10000000059604644,
+          -25.737769726492544
+        ],
+        "v": [
+          0,
+          0,
+          -24.39016195108184
+        ],
+        "speed": 24.39016195108184,
+        "slide": 0,
+        "carry": true,
+        "recovery": 0,
+        "board": false,
+        "crawl": false,
+        "grounded": true,
+        "ice": true,
+        "state": "ride",
+        "ground": "slippy plank",
+        "active": "player.slide",
+        "deaths": 0
+      },
+      "coast": {
+        "p": [
+          -0.95,
+          0.10000000059604644,
+          -31.86804112528364
+        ],
+        "v": [
+          0,
+          0,
+          -21.797297915339392
+        ],
+        "speed": 21.797297915339392,
+        "slide": 0,
+        "carry": true,
+        "recovery": 0,
+        "board": false,
+        "crawl": false,
+        "grounded": true,
+        "ice": true,
+        "state": "ride",
+        "ground": "slippy plank",
+        "active": "player.ice-walk",
+        "deaths": 0
+      },
+      "landing": {
+        "p": [
+          -0.95,
+          3.5762786898541066e-9,
+          -47.37075843231173
+        ],
+        "v": [
+          0,
+          0,
+          -9
+        ],
+        "speed": 9,
+        "slide": 0,
+        "carry": false,
+        "recovery": 0,
+        "board": false,
+        "crawl": false,
+        "grounded": true,
+        "ice": false,
+        "state": "ride",
+        "ground": "crumble pad",
+        "active": "player.land",
+        "deaths": 0
+      },
+      "stamp": "Codex/sol fork · build 10-08 12:09 UTC"
+    },
+    {
+      "lite": false,
+      "held": false,
+      "exit": {
+        "p": [
+          -0.95,
+          0.10000000059604644,
+          -25.737769726492544
+        ],
+        "v": [
+          0,
+          0,
+          -24.39016195108184
+        ],
+        "speed": 24.39016195108184,
+        "slide": 0,
+        "carry": true,
+        "recovery": 0,
+        "board": false,
+        "crawl": false,
+        "grounded": true,
+        "ice": true,
+        "state": "ride",
+        "ground": "slippy plank",
+        "active": "player.slide",
+        "deaths": 0
+      },
+      "coast": {
+        "p": [
+          -0.95,
+          0.10000000059604644,
+          -31.86804112528364
+        ],
+        "v": [
+          0,
+          0,
+          -21.797297915339392
+        ],
+        "speed": 21.797297915339392,
+        "slide": 0,
+        "carry": true,
+        "recovery": 0,
+        "board": false,
+        "crawl": false,
+        "grounded": true,
+        "ice": true,
+        "state": "ride",
+        "ground": "slippy plank",
+        "active": "player.ice-walk",
+        "deaths": 0
+      },
+      "landing": {
+        "p": [
+          -0.95,
+          3.5762786898541066e-9,
+          -47.37075843231173
+        ],
+        "v": [
+          0,
+          0,
+          -9
+        ],
+        "speed": 9,
+        "slide": 0,
+        "carry": false,
+        "recovery": 0,
+        "board": false,
+        "crawl": false,
+        "grounded": true,
+        "ice": false,
+        "state": "ride",
+        "ground": "crumble pad",
+        "active": "player.land",
+        "deaths": 0
+      },
+      "stamp": "Codex/sol fork · build 10-08 12:09 UTC"
+    },
+    {
+      "lite": false,
+      "held": true,
+      "exit": {
+        "p": [
+          -0.95,
+          0.10000000059604644,
+          -25.737769726492544
+        ],
+        "v": [
+          0,
+          0,
+          -24.39016195108184
+        ],
+        "speed": 24.39016195108184,
+        "slide": 0,
+        "carry": true,
+        "recovery": 0,
+        "board": false,
+        "crawl": false,
+        "grounded": true,
+        "ice": true,
+        "state": "ride",
+        "ground": "slippy plank",
+        "active": "player.slide",
+        "deaths": 0
+      },
+      "coast": {
+        "p": [
+          -0.95,
+          0.10000000059604644,
+          -31.86804112528364
+        ],
+        "v": [
+          0,
+          0,
+          -21.797297915339392
+        ],
+        "speed": 21.797297915339392,
+        "slide": 0,
+        "carry": true,
+        "recovery": 0,
+        "board": false,
+        "crawl": false,
+        "grounded": true,
+        "ice": true,
+        "state": "ride",
+        "ground": "slippy plank",
+        "active": "player.ice-walk",
+        "deaths": 0
+      },
+      "landing": {
+        "p": [
+          -0.95,
+          3.5762786898541066e-9,
+          -47.37075843231173
+        ],
+        "v": [
+          0,
+          0,
+          -9
+        ],
+        "speed": 9,
+        "slide": 0,
+        "carry": false,
+        "recovery": 0,
+        "board": false,
+        "crawl": false,
+        "grounded": true,
+        "ice": false,
+        "state": "ride",
+        "ground": "crumble pad",
+        "active": "player.land",
+        "deaths": 0
+      },
+      "stamp": "Codex/sol fork · build 10-08 12:09 UTC"
+    }
+  ],
+  "errors": []
+}

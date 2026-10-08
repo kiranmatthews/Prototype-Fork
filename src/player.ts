@@ -816,13 +816,15 @@ export class Player {
   private slideLandClamp = false; // walk-slide touchdown: cap the next measured planar too
   private slideVec = new THREE.Vector3(); // world-space slide direction (8-axis)
   private slideSpd = 0;
+  private slideBaseDeceleration = 0;
+  private iceSlideCarry = false; // slide exit remains on foot while its ice momentum coasts
   private slideDistanceLeft = 0; // exact authored travel remaining; slideTimer is only the derived time/readability channel
   private slideContactLatch = false; // this fixed step translated as a slide, even if the exact final partial step consumed its timer
   private slideEndPending = false; // a slide is running; its end (scrub+recharge) not yet resolved
   private slideGraceHold = false; // preserve freshly refreshed grace through the first ordinary tick after an exact partial-step finish
   private slideAirLat = 0; // slide-jump: launch velocity component ACROSS the heading (keeps sideways slide-jumps sideways)
   private slideJumpAir = false; // in a committed slide-jump arc: no input air-steer (no diagonal drift)
-  private slideRecoverT = 0; // get-up beat after a slide: movement locked while the skater gets off the ground
+  private slideRecoverT = 0; // dry-ground get-up beat after a slide: movement locked while the skater gets off the ground
   private skateBlockT = 0; // brief window after a slide-jump touchdown where the board CAN'T pop (a slide jump lands on foot, period — slope re-accel or a held direction mustn't flip it out)
   private slideCrawlChain = false; // Circle held through a slide: flow straight into the crawl on the way out (no get-up beat)
   private landingScoring = false; // landing-tick payouts still count as air tricks
@@ -3110,6 +3112,8 @@ export class Player {
     this.slideDistanceLeft = 0;
     this.slideContactLatch = false;
     this.slideSpd = 0;
+    this.slideBaseDeceleration = 0;
+    this.iceSlideCarry = false;
     this.slideVec.set(0, 0, 0);
     this.slideGraceT = 0;
     this.slideGraceHold = false;
@@ -3496,6 +3500,8 @@ export class Player {
     this.slideDistanceLeft = 0;
     this.slideContactLatch = false;
     this.slideSpd = 0;
+    this.slideBaseDeceleration = 0;
+    this.iceSlideCarry = false;
     this.slideCd = 0;
     this.slideGraceT = 0;
     this.slideEndPending = false;
@@ -3780,6 +3786,7 @@ export class Player {
       if (this.groundHit.crumbleId !== undefined) level.touchCrumble(this.groundHit.crumbleId);
     }
     level.playerPos.copy(this.pos); // the boulder chase reads this
+    if (this.iceSlideCarry && (this.state !== 'ride' || this.freeSkate || this.isBailing)) this.iceSlideCarry = false;
     if (this.stepDeathOnly(dt, input, level)) return;
     this.returnPortalCoolT = Math.max(0, this.returnPortalCoolT - dt);
     this.trickGateHintT = Math.max(0, this.trickGateHintT - dt);
@@ -3805,12 +3812,13 @@ export class Player {
       // picks themselves off the ground for a moment, controls dead, so slides
       // can't be chained for constant free travel. A fast SKATE-slide keeps its
       // momentum (you're on the board, not sprawled) and a slide JUMP launches
-      // straight out — both exempt.
+      // straight out — both exempt. An ice exit keeps its on-foot coast too.
       if (this.slideGraceT <= 0 && this.slideEndPending) {
         this.slideEndPending = false;
         if (
           this.state === 'ride' &&
           this.grounded &&
+          !this.iceSlideCarry && !this.groundHit?.slippy &&
           !this.crawling && // flowed into the crawl instead (Circle held out of the slide) — no get-up beat
           Math.abs(this.speed) <= TUNING.walkSpeed + 0.5
         )
@@ -4116,13 +4124,13 @@ export class Player {
     }
     input = ctl;
 
-    // GET-UP BEAT: a plain slide leaves the skater sprawled on the ground.
+    // GET-UP BEAT: a plain dry-ground slide leaves the skater sprawled on the ground.
     // While the recover timer runs (and they're back on their feet, not
     // airborne) the controls are dead — no running, no fresh slide/crawl, and
     // any leftover speed is bled to a stop — so a slide can't be chained into
     // constant free speed. It clears the instant they go airborne (a slide
     // JUMP launches straight out and never arms this).
-    if (this.slideRecoverT > 0 && this.state === 'ride' && this.grounded) {
+    if (this.slideRecoverT > 0 && this.state === 'ride' && this.grounded && !this.groundHit?.slippy) {
       input = { ...input, moveX: 0, moveY: 0, grabPressed: false, grabHeld: false } as Input;
       this.speed = 0;
       this.charging = false;
@@ -4449,8 +4457,10 @@ export class Player {
     // speed from the previous step, so clamp it too or the skate-entry gate
     // reads it and takes over anyway.
     if (this.slideFromWalk && this.slideTimer <= 0 && this.state === 'ride' && this.grounded) {
-      this.speed = THREE.MathUtils.clamp(this.speed, -TUNING.walkSpeed, TUNING.walkSpeed);
-      this.lastPlanar = Math.min(this.lastPlanar, TUNING.walkSpeed);
+      if (!this.iceSlideCarry) {
+        this.speed = THREE.MathUtils.clamp(this.speed, -TUNING.walkSpeed, TUNING.walkSpeed);
+        this.lastPlanar = Math.min(this.lastPlanar, TUNING.walkSpeed);
+      }
       this.slideFromWalk = false;
     }
 
@@ -4536,6 +4546,8 @@ export class Player {
         TUNING.downhillMax,
       );
       this.slideDistanceLeft = Math.max(0, TUNING.slideDistance);
+      this.slideBaseDeceleration = this.slideDistanceLeft > 0 ? this.slideSpd * this.slideSpd / (2 * this.slideDistanceLeft) : 0;
+      this.iceSlideCarry = false;
       this.slideGraceHold = false;
       // A constant-deceleration stop satisfies t = 2d/v. The timer remains a
       // useful pose/spin-cancel channel, while distance is the authority.
@@ -6070,11 +6082,15 @@ export class Player {
     // moving instead of triggering the get-up beat. But Circle held out of a
     // BRAKE (oBrakeHold) does NOT crouch until you release it — the classic
     // lock-til-release, separate from the timed run lock.
+    if (this.iceSlideCarry && !this.slideEndPending &&
+        (this.walkVelocity.length() < TUNING.slideMinSpeed ||
+          (!this.groundHit?.slippy && this.walkVelocity.length() <= TUNING.walkSpeed + .5))) this.iceSlideCarry = false;
     const wasCrouching = this.crawling;
     if (
       !slamFlat && !this.parkControls &&
       input.grabHeld &&
       !this.oBrakeHold &&
+      !this.iceSlideCarry && // holding Circle cannot plant a crawl during an ice coast
       (this.crawling ||
         (this.slideCrawlChain && this.slideTimer <= 0) ||
         (Math.abs(this.speed) < TUNING.slideMinSpeed && this.slideTimer <= 0))
@@ -6161,7 +6177,7 @@ export class Player {
     // A thrown deck is never recovered by proximity or carried speed. Only
     // the normal hold-X + direction commitment recalls it; until that point
     // steep ground and bailout momentum remain genuinely on foot.
-    const boardAvailable = (!looseDeck && !this.boardRunCarry) || pushingOff;
+    const boardAvailable = (!looseDeck && !this.boardRunCarry && !this.iceSlideCarry) || pushingOff;
     // On steep ground the board only pops out when it's a RIDER (charge/
     // momentum/rollout) — a walker (footPlant OR footSlip) stays on foot and
     // obeys footGrip. Standing still on a bank no longer flashes the board.
@@ -6184,6 +6200,7 @@ export class Player {
       !this.crawling &&
       this.skateBlockT <= 0;
     if (free && !this.freeSkate) {
+      this.iceSlideCarry = false;
       this.boardRunCarry = false;
       this.rollLandingT = -1;
       this.skateMountT = 0;
@@ -6402,10 +6419,9 @@ export class Player {
       let braking = false; // set by either brake, so the downhill boost yields to it
       if (this.slideTimer > 0) {
         this.slideContactLatch = true;
-        // Exact-distance slide. From the invariant v^2 = 2ad, solve the
-        // deceleration from the CURRENT speed and remaining distance each
-        // fixed step. This reaches a genuine zero on the exact five-metre mark
-        // even when the final sample is only a partial tick.
+        // The attack covers its authored distance. Dry ground brakes to a
+        // stop there; ice applies its grip to the launch deceleration and
+        // hands any remaining velocity back to ordinary on-foot ice movement.
         const remaining = Math.max(0, this.slideDistanceLeft);
         const current = Math.max(0, this.slideSpd);
         if (remaining <= 1e-6 || current <= 1e-6) {
@@ -6416,7 +6432,10 @@ export class Player {
           this.slideGraceHold = true;
           this.speed = 0;
         } else {
-          const deceleration = (current * current) / (2 * remaining);
+          const dryDeceleration = (current * current) / (2 * remaining);
+          const icySlide = !!this.groundHit?.slippy;
+          const deceleration = icySlide && this.slideBaseDeceleration > 0
+            ? Math.min(dryDeceleration, this.slideBaseDeceleration * iceGrip) : dryDeceleration;
           const stopSeconds = current / deceleration;
           const distance =
             dt >= stopSeconds
@@ -6426,16 +6445,28 @@ export class Player {
                   0,
                   remaining,
                 );
-          const nextSpeed = dt >= stopSeconds ? 0 : Math.max(0, current - deceleration * dt);
+          const nextSpeed = icySlide
+            ? Math.sqrt(Math.max(0, current * current - 2 * deceleration * distance))
+            : dt >= stopSeconds ? 0 : Math.max(0, current - deceleration * dt);
           const nextDistance = Math.max(0, remaining - distance);
           slideStepDistance = distance;
-          this.slideSpd = nextDistance <= 1e-6 ? 0 : nextSpeed;
+          this.slideSpd = nextDistance <= 1e-6 && !icySlide ? 0 : nextSpeed;
           this.slideDistanceLeft = nextDistance <= 1e-6 ? 0 : nextDistance;
-          if (this.slideDistanceLeft === 0) this.slideGraceHold = true;
-          this.slideTimer =
-            this.slideDistanceLeft > 0 && this.slideSpd > 0
-              ? (2 * this.slideDistanceLeft) / this.slideSpd
-              : 0;
+          if (this.slideDistanceLeft === 0) {
+            this.slideGraceHold = true;
+            if (icySlide && nextSpeed > .01) {
+              this.iceSlideCarry = true;
+              this.walkVelocity.copy(this.slideVec).multiplyScalar(nextSpeed);
+              this.slideCrawlChain = false;
+              // Finish the partial tick as a coast, so the handoff cannot
+              // insert a frame of lost movement at the attack-distance mark.
+              const usedTime = 2 * distance / (current + nextSpeed);
+              slideStepDistance += nextSpeed * Math.max(0, dt - usedTime);
+            } else this.slideSpd = 0;
+          }
+          const exitSpeed = Math.sqrt(Math.max(0, this.slideSpd * this.slideSpd - 2 * deceleration * this.slideDistanceLeft));
+          this.slideTimer = this.slideDistanceLeft > 0 && this.slideSpd > 0
+            ? 2 * this.slideDistanceLeft / (this.slideSpd + exitSpeed) : 0;
           this.speed =
             this.slideSpd * (this.slideVec.x * this.axisF.x + this.slideVec.z * this.axisF.z);
         }
