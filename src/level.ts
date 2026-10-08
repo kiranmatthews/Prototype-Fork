@@ -865,6 +865,7 @@ export const DECOR_KINDS = [
   "log",
   "block", // plain textured box, visual only: earth banks, backdrops, massing
   "coastalhouse", // batched Coastal Street facade module; visual only
+  "braidedrope", // static decorative rope: s = diameter X/Y and length Z, p = centre
   "roadarrow", // graded three-piece route arrow; visual only
   "meshycourtyard", // owner-supplied Ancient Stone Courtyard mesh; visual only
   // THE LIBRARY FAMILIES. Six kinds backed by fifty-six external meshes (see
@@ -902,6 +903,7 @@ export const DECOR_LABELS: Record<DecorKind, string> = {
   block: "scenery block",
   coastalhouse: "coastal house",
   roadarrow: "road arrow",
+  braidedrope: "braided support rope",
   meshycourtyard: "Meshy stone courtyard",
   tree: "tree (library)",
   plants: "plant (library)",
@@ -931,6 +933,7 @@ export const TEX_KINDS = [
   "coast-timber",
   "creek-raft",
   "bridge-timber",
+  "bridge-ice",
   "ice",
   "coast-moss",
   "coast-stone",
@@ -3152,12 +3155,12 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       if (supportProbeCount * supportOverlapTriangles > MAX_TERRAIN_SUPPORT_TRIANGLE_TESTS ||
           supportProbeCount * supportGroundTriangles > MAX_TERRAIN_SUPPORT_RAW_TRIANGLES) return null;
     }
-    if((['coast-timber','creek-raft','bridge-timber'].includes(component.tex??'')||
+    if((['coast-timber','creek-raft','bridge-timber','bridge-ice'].includes(component.tex??'')||
       (component.t==='crumble'&&(!component.tex||component.tex==='wood'||component.tex==='plank')))&&
       ['platform','crumble','mover'].includes(component.t)&&!component.pts){
       const depth=component.s?.[2]??(component.t==='platform'?8:component.t==='mover'?6:3);
       if(depth>MAX_PATH_LENGTH)return null;
-      aggregateSamples+=estimateCarlisleTimberWork(depth,component.t!=='platform'||component.tex==='bridge-timber');
+      aggregateSamples+=estimateCarlisleTimberWork(depth,component.t!=='platform'||component.tex==='bridge-timber'||component.tex==='bridge-ice')*(component.tex==='bridge-ice'?2:1);
     }
     if (aggregateSamples > MAX_GENERATED_SAMPLES) return null;
     // Polygon walls and spun slabs use the complete scanline collider below.
@@ -3344,6 +3347,12 @@ function normalizeLevelDataFields(value: unknown, migrate = true): CustomLevelDa
       case "camnode":
         if ((component.radius ?? 0) < 0) return null;
         break;
+    }
+    if (component.t === 'decor' && component.dkind === 'braidedrope') {
+      const size=component.s??[.24,.24,8];
+      if(size[0]<.02||size[0]>4||size[1]<.02||size[1]>4||size[2]<.1||size[2]>2000)return null;
+      aggregateSamples+=(Math.min(96,Math.max(24,Math.ceil(size[2]*2)))+1)*9;
+      if(aggregateSamples>MAX_GENERATED_SAMPLES)return null;
     }
     if (component.t === "decor" && component.dkind === "vines") {
       const strands = component.n ?? 3;
@@ -3557,16 +3566,17 @@ export function isOriginalCustardCreek(entry: LevelEntry): boolean {
 // Only exact previously published snapshots follow the new source. Any
 // authored geometry, metadata or name change keeps the player's local copy.
 export function isOriginalSkyBridge(entry: LevelEntry): boolean {
-  if (entry.id !== 'sky' || entry.name !== 'Sky Bridge' || entry.data?.components.length !== 48) return false;
+  if (entry.id !== 'sky' || entry.name !== 'Sky Bridge' || ![48,211].includes(entry.data?.components.length ?? 0)) return false;
   const json = JSON.stringify(entry.data);
-  if (json.length !== 3560 && json.length !== 3602) return false;
+  if (![3560,3602,295314].includes(json.length)) return false;
   let a = 2166136261, b = 2246822519;
   for (let i=0; i<json.length; i++) {
     a = Math.imul(a ^ json.charCodeAt(i), 16777619);
     b = Math.imul(b ^ json.charCodeAt(i), 3266489917);
   }
   return (json.length === 3560 && (a >>> 0) === 2625946987 && (b >>> 0) === 4006427273) ||
-    (json.length === 3602 && (a >>> 0) === 3548812583 && (b >>> 0) === 3344214389);
+    (json.length === 3602 && (a >>> 0) === 3548812583 && (b >>> 0) === 3344214389) ||
+    (json.length === 295314 && (a >>> 0) === 2571905729 && (b >>> 0) === 1013289071);
 }
 
 /**
@@ -4299,7 +4309,7 @@ export class Level {
       this.surfTexCache.set(kind, texture);
       return texture;
     }
-    if(['coast-timber','creek-raft','bridge-timber'].includes(kind))return this.surfaceTexture('wood');
+    if(['coast-timber','creek-raft','bridge-timber','bridge-ice'].includes(kind))return this.surfaceTexture('wood');
     if(kind==='coast-terrain')return this.surfaceTexture('coast-bedrock');
     if(kind==='coast-turf'||kind==='coast-bedrock'){
       const file=kind==='coast-turf'?'turf':'sandstone';
@@ -6662,7 +6672,10 @@ export class Level {
       const groundBefore = this.groundMeshes.length;
       fn();
       const surface = data.components[idx];
-      if (surface.slip || (surface.tex === 'ice' && !surface.materialStyle)) for (let g = groundBefore; g < this.groundMeshes.length; g++) {
+      const frozenDeck = surface.tex === 'bridge-ice' && ['platform','crumble','mover'].includes(surface.t) && !surface.pts;
+      if (frozenDeck) for (let g=groundBefore;g<this.groundMeshes.length;g++)
+        dressCarlisleTimberDeck(this.groundMeshes[g],surface,true);
+      if (surface.slip || ((surface.tex === 'ice' || surface.tex === 'bridge-ice') && !surface.materialStyle)) for (let g = groundBefore; g < this.groundMeshes.length; g++) {
         const mesh = this.groundMeshes[g];
         if (surface.slip) {
           mesh.userData.slippy = true;
@@ -6672,7 +6685,7 @@ export class Level {
         const old = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
         // Ice is the default appearance. An explicit alternate material can
         // describe oil or another slick without changing the shared physics.
-        if (surface.tex === undefined || surface.tex === 'ice') {
+        if (surface.tex === undefined || surface.tex === 'ice' || (surface.tex === 'bridge-ice' && !frozenDeck)) {
           mesh.geometry.computeBoundingBox();
           mesh.material = createIceMaterial(old[0], mesh.geometry.boundingBox ?? undefined);
           this.replacedSurfaceMaterials.push(...old);
@@ -6821,6 +6834,12 @@ export class Level {
                   bevelEnabled: false,
                 });
             if (!c.shoreProfile) geo.rotateX(-Math.PI / 2);
+            // Extruded polygon UVs are in metres; patterned() supplies the
+            // width/depth repeat. Normalize once so masonry is not tiled twice.
+            if (c.tex === 'coast-stone' && !c.shoreProfile) {
+              const uv = geo.getAttribute('uv');
+              for(let i=0;i<uv.count;i++)uv.setXY(i,uv.getX(i)/pw,uv.getY(i)/pd);
+            }
             const mesh = new THREE.Mesh(
               geo,
               this.patterned(tinted(deck), pw, pd, c.tex ?? "checker"),
@@ -7511,7 +7530,7 @@ export class Level {
               c.travelSign ?? 1,
             );
             if(c.dkind==="citydeck")this.dressCityMovingDeck(this.movers[this.movers.length-1].mesh,c,s[1]);
-            if(!c.slip&&['coast-timber','creek-raft','bridge-timber'].includes(c.tex??''))dressCarlisleTimberDeck(this.movers[this.movers.length-1].mesh,c,true);
+            if(!c.slip&&['coast-timber','creek-raft','bridge-timber','bridge-ice'].includes(c.tex??''))dressCarlisleTimberDeck(this.movers[this.movers.length-1].mesh,c,true);
             if(c.dkind==='ghostcart'){const cabin=this.ghostKit().cart(this.movers[this.movers.length-1].mesh,c,s[1]);this.groundMeshes.push(...cabin.support);this.walls.push(...cabin.walls);}
           } else if (c.t === "torch") {
             this.torch(c.p[0], c.p[1], c.p[2], c.rise ?? 2.2, c.w ?? 1);
@@ -14562,6 +14581,8 @@ export class Level {
   }
 
   // Sky-bridge side rope: a grindable, saggable, breakable rope running along Z.
+  private ropePostKeys = new Set<string>();
+
   private skyRope(
     x0: number,
     z0: number,
@@ -14597,12 +14618,22 @@ export class Level {
       [x0, z0],
       [x1, z1],
     ]) {
+      const key = `${px.toFixed(4)}:${y.toFixed(4)}:${pz.toFixed(4)}`;
+      if (this.ropePostKeys.has(key)) continue;
+      this.ropePostKeys.add(key);
       const post = new THREE.Mesh(
         new THREE.CylinderGeometry(0.24, 0.3, 1.8, 7),
         postMat,
       );
       post.position.set(px, y - 0.5, pz);
+      post.name = "Rope anchor post";
       group.add(post);
+      const fitting = new THREE.MeshLambertMaterial({color:0x645742});
+      const socket = new THREE.Mesh(new THREE.CylinderGeometry(.34,.36,.2,8),fitting);
+      socket.name = 'Rope post socket on landing';socket.position.set(px,y-1.3,pz);group.add(socket);
+      const binding = new THREE.Mesh(new THREE.TorusGeometry(.278,.03,5,14),fitting);
+      binding.name = 'Hand-rope binding at post';binding.rotation.x=Math.PI/2;
+      binding.position.set(px,y,pz);group.add(binding);
     }
     this.root.add(group);
     const rope: SkyRope = {
@@ -14907,7 +14938,7 @@ export class Level {
     mesh.rotation.y = THREE.MathUtils.degToRad(yawDeg); // stand-detection is the ground raycast: free spin is fine
     mesh.name = "crumble pad";
     mesh.userData.crumbleId = this.crumbles.length;
-    dressFallAwaySurface(mesh);
+    dressFallAwaySurface(mesh, tex !== 'bridge-timber');
     this.root.add(mesh);
     this.groundMeshes.push(mesh);
     const c: Crumble = {
@@ -15909,6 +15940,19 @@ export class Level {
   }
 
   private buildDecorProp(c: CustomComponent): void {
+    if(c.dkind==='braidedrope') {
+      const size=c.s??[.24,.24,8];
+      const length=THREE.MathUtils.clamp(size[2],.1,2000),width=THREE.MathUtils.clamp(size[0],.02,4);
+      // BraidedRope renders at 90% of its nominal radius. Match the authored
+      // envelope so its crest actually touches the board undersides.
+      const rope=new BraidedRope(length,width/1.8,false);
+      rope.update((d,out)=>out.set(0,0,length/2-d));
+      rope.root.position.set(...c.p);rope.root.rotation.y=THREE.MathUtils.degToRad(c.yaw??0);
+      rope.root.scale.y=THREE.MathUtils.clamp(size[1],.02,4)/width;
+      rope.root.name=c.nm??'Static braided support rope';rope.root.userData.visualOnly=true;
+      rope.root.userData.supportRope=true;rope.mesh.userData.visualOnly=true;rope.mesh.userData.edgeGrinding=false;
+      this.root.add(rope.root);this.noteDecor('braidedrope',...c.p,{s:size,yaw:c.yaw});return;
+    }
     if(GHOST_DECOR_KINDS.includes(c.dkind as typeof GHOST_DECOR_KINDS[number])) {this.noteDecor(c.dkind!,...c.p,{s:c.s,w:c.w,yaw:c.yaw,len:c.len,to:c.to,color:c.color,amp:c.amp,rise:c.rise,vr:c.vr,phase:c.phase,n:c.n});this.ghostKit().decorate(c);return;}
     if (isJungleAsset(c.dkind)) return this.jungleAsset(c);
     const [x, y, z] = c.p;

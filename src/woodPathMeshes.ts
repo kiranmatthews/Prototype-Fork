@@ -26,6 +26,10 @@ type Member = WoodPathPlankPiece | WoodPathPolePiece;
 // A level owns only instance buffers; its disposal never invalidates peers.
 const templates = new Map<ModelName, THREE.BufferGeometry>();
 let material: THREE.MeshLambertMaterial | null = null;
+export const BRIDGE_AGED_PALETTE = 'bridge-aged-planks';
+export const BRIDGE_FROZEN_PALETTE = 'bridge-frozen-planks';
+const paintedMaterials = new Set<THREE.MeshLambertMaterial>();
+const treatments = new Map<string, THREE.MeshLambertMaterial>();
 export const woodPathMeshPaint = { status: "idle" as "idle" | "loading" | "ready" | "fallback" };
 
 function meshMaterial(): THREE.MeshLambertMaterial {
@@ -34,6 +38,7 @@ function meshMaterial(): THREE.MeshLambertMaterial {
   owned.name = "Rustic Meshy boardwalk · clay paint";
   owned.userData.shared = true;
   material = owned;
+  paintedMaterials.add(owned);
   // Native geometry and sampled paint are available synchronously, including
   // headless/editor use. A single local image adds the finer grain in-browser.
   if (typeof document !== "undefined" && !import.meta.env.SSR) {
@@ -45,9 +50,9 @@ function meshMaterial(): THREE.MeshLambertMaterial {
         paint.colorSpace = THREE.SRGBColorSpace;
         paint.anisotropy = 4;
         paint.needsUpdate = true;
-        owned.map = paint;
-        owned.vertexColors = false;
-        owned.needsUpdate = true;
+        for (const surface of paintedMaterials) {
+          surface.map = paint; surface.vertexColors = false; surface.needsUpdate = true;
+        }
         woodPathMeshPaint.status = "ready";
       },
       undefined,
@@ -56,6 +61,28 @@ function meshMaterial(): THREE.MeshLambertMaterial {
     texture.userData.shared = true;
   }
   return owned;
+}
+
+/** Three borrowed atlas materials, not one texture upload per board. Age is
+ * applied to the actual split/chipped model palette, preserving its grain. */
+function partMaterial(palette: string): THREE.MeshLambertMaterial {
+  const base = meshMaterial();
+  if (palette !== BRIDGE_AGED_PALETTE && palette !== BRIDGE_FROZEN_PALETTE) return base;
+  const existing = treatments.get(palette); if (existing) return existing;
+  const aged = palette === BRIDGE_AGED_PALETTE;
+  const result = base.clone(); result.userData.shared = true;
+  result.name = aged ? 'Rotten bridge boards · silver grain and damp ends' : 'Timber beneath frozen glaze';
+  result.onBeforeCompile = shader => {
+    shader.fragmentShader = shader.fragmentShader.replace('#include <color_fragment>', `
+      #include <color_fragment>
+      float timberGrey = dot(diffuseColor.rgb,vec3(.299,.587,.114));
+      diffuseColor.rgb = mix(diffuseColor.rgb,vec3(timberGrey),${aged ? '.82' : '.6'});
+      diffuseColor.rgb *= ${aged ? 'vec3(.51,.54,.45)' : 'vec3(.65,.8,.87)'};
+    `);
+  };
+  result.customProgramCacheKey = () => palette + '-v1';
+  treatments.set(palette,result); paintedMaterials.add(result);
+  return result;
 }
 
 function meshGeometry(name: ModelName): THREE.BufferGeometry {
@@ -144,7 +171,7 @@ function partGroup(layout: WoodPathLayout, members: Member[], kind: "plank" | "p
     buckets.get(key)!.members.push(member);
   }
   for (const [key, bucket] of buckets) {
-    const mesh = new THREE.InstancedMesh(meshGeometry(bucket.name), meshMaterial(), bucket.members.length);
+    const mesh = new THREE.InstancedMesh(meshGeometry(bucket.name), partMaterial(palette), bucket.members.length);
     mesh.name = `woodpath mesh · ${key}`;
     mesh.userData.woodPathMeshFamily = bucket.family;
     mesh.userData.woodPathModel = bucket.name;

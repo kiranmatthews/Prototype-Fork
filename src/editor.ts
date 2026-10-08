@@ -358,6 +358,11 @@ const DECOR_ICONS: Record<DecorKind, (x: CanvasRenderingContext2D) => void> = {
     x.fillStyle = "#ffc754";
     x.fillRect(3, 13, 2, 4);
   },
+  braidedrope: (x) => {
+    x.strokeStyle='#bca178';x.lineWidth=3;x.beginPath();x.moveTo(3,15);x.lineTo(15,3);x.stroke();
+    x.strokeStyle='#66523b';x.lineWidth=1;
+    for(let i=4;i<15;i+=3){x.beginPath();x.moveTo(i-1,17-i);x.lineTo(i+2,15-i);x.stroke();}
+  },
   roadarrow: (x) => {
     x.fillStyle = "#ffb314";
     x.fillRect(8, 7, 2, 10);
@@ -534,6 +539,7 @@ const DECOR_DEFAULTS: Record<DecorKind, Partial<CustomComponent>> = {
   block: { s: [10, 8, 10], yaw: 0, color: "#6b5232", tex: "dirt" },
   coastalhouse: { s: [11.5, 10, 39], tn: 0, vr: 0 },
   roadarrow: { amp: 0, yaw: 0 },
+  braidedrope: { s: [.24,.24,8], yaw: 0 },
   meshycourtyard: { w: 11.52, yaw: 90, amp: 6 },
   // The library families arrive with NOTHING chosen on purpose: leave vr/tn
   // off and every copy rolls its own model, colour, size, spin and lean from
@@ -9334,6 +9340,13 @@ export class Editor {
         sizeRow(0, "width"); sizeRow(1, "height"); sizeRow(2, "depth");
         num("district colour", () => c.tn ?? 0, v => { c.tn = THREE.MathUtils.clamp(Math.round(v), 0, 6); }, 1);
         num("roof variation", () => c.vr ?? 0, v => { c.vr = Math.max(0, Math.round(v)); }, 1);
+      }
+      if (dk === 'braidedrope') {
+        for(const [axis,label] of ['rope width','rope height','rope length'].entries())
+          num(label,()=>c.s?.[axis]??[.24,.24,8][axis],v=>{
+            c.s??=[.24,.24,8];c.s[axis]=THREE.MathUtils.clamp(v,axis===2?.1:.02,axis===2?2000:4);
+          },axis===2?.5:.02);
+        num('yaw °',()=>c.yaw??0,v=>{c.yaw=v;},15);
       }
       if (dk === "roadarrow") {
         num("yaw °", () => c.yaw ?? 0, v => { c.yaw = v; }, 15);

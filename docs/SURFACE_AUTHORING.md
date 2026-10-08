@@ -66,3 +66,30 @@ Use `node tools/sync-sky-bridge.mjs --write` after changing Sky Bridge; without
 uses real gameplay input and separately tests collapse, checkpoint respawn,
 sliding, and the full renderer. Source restoration upgrades only the exact
 previously published Sky Bridge snapshot; modified local copies remain intact.
+
+
+## Suspended and frozen timber
+
+Sky Bridge's `bridge-timber` skin is a set of transverse 18 cm boards with rope
+lashings and no pier legs. A crumble using this skin selects the actual split
+and chipped board models and the shared damp, silvered wood treatment. The
+ordinary wood, Carlisle pier, and creek raft skins keep their own structure.
+
+Use `bridge-ice` with `slip:true` for water frozen over timber. Put the contact
+top 10 cm above the dry board plane and use a 28 cm collider; the renderer fits
+18 cm of visible timber plus 10 cm of translucent ice. The support remains one
+collider, and the normal ice grip contract applies. The `ice` material remains
+available for freestanding solid ice.
+
+Lower bearers are `decor` components with `dkind:'braidedrope'`, centred at
+`p`, with `s:[diameterX,diameterY,lengthZ]` and optional yaw. They share the
+existing filtered hemp-rope renderer and do not create a hidden grind or floor.
+For a dry board top at zero, a 24 cm bearer centred at Y=-0.3 touches its
+underside at -0.18. Upper hand ropes remain ordinary snap-capable `rope`
+components; anchor their posts on supported landings.
+
+Run `npm run check:sky-bridge` for the construction, complete traversal,
+board-mounted ollie/grind route, TNT stomp/escape, Nitro contact, and Mossback
+stomp. `tools/sky-bridge-construction-browser.mjs` replays the board and TNT
+takes in real Chrome. The normal Sky Bridge browser review tests the full
+course and the checkpoint/respawn/rendering paths.

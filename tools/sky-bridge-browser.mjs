@@ -19,13 +19,22 @@ page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
 const ready=()=>page.waitForFunction(()=>window.__game&&!window.__game.gameFlow.blocksGameplay);
 const place=async(x,z)=>{
   await page.evaluate(({x,z})=>{const g=window.__game,p=g.player,l=g.getLevel();
-    p.respawn(l,true,false,{position:p.pos.clone().set(x,.07,z),heading:p.pos.clone().set(0,0,-1)});
+    p.respawn(l,true,false,{position:p.pos.clone().set(x,[-27,-122,-189].some((v,i)=>Math.abs(v-z)<[7,8,7.5][i])?.17:.07,z),heading:p.pos.clone().set(0,0,-1)});
     p.commitRenderStep(l);},{x,z});
   await page.waitForFunction(()=>window.__game.player.grounded);
 };
 try{
   await page.goto(`${base}/?playtest&level=sky&lite`);await ready();
   assert.equal(await page.evaluate(()=>window.__game.player.grounded),true,'supported spawn');
+  report.construction=await page.evaluate(()=>{
+    const l=window.__game.getLevel(),data=l.captureData(),skins=l.groundMeshes.flatMap(m=>m.children.filter(c=>c.userData.suspensionDeck).map(c=>c.userData.suspensionDeck));
+    let postSockets=0;l.root.traverse(o=>{if(o.name==='Rope post socket on landing')postSockets++;});
+    return {postSockets,components:data.components.length,bearers:data.components.filter(c=>c.dkind==='braidedrope').length,
+      decks:skins.length,rotten:skins.filter(s=>s.rotten).length,frozen:skins.filter(s=>s.frozen).length,
+      enemies:l.enemies.length,tnt:l.crates.filter(c=>c.tnt).length,nitro:l.crates.filter(c=>c.nitro).length};
+  });
+  assert.deepEqual({...report.construction,components:undefined},{postSockets:32,components:undefined,bearers:16,decks:14,rotten:7,frozen:3,enemies:4,tnt:4,nitro:4},'new construction release must be loaded');
+
   // Only normal device samples throughout this uninterrupted spawn-to-gate run.
   await page.evaluate(()=>{
     const g=window.__game,p=g.player,l=g.getLevel(),surfaces=l.captureData().components.filter(c=>c.t==='platform'||c.t==='crumble');
@@ -45,9 +54,15 @@ try{
       if(contact?.slippy&&id!==undefined&&!e.ice.includes(id))e.ice.push(id);
       if(contact?.crumbleId!==undefined&&!e.falling.includes(contact.crumbleId))e.falling.push(contact.crumbleId);
       if(e.frames%30===0)e.trace.push({p:p.pos.toArray(),state:p.state,grounded:p.grounded});
-      spin++;const jump=hold>0,attack=spin%50<8;
+      spin++;const lane=p.pos.z<-106&&p.pos.z>-132?.95:((p.pos.z<-12&&p.pos.z>-36)||(p.pos.z<-177&&p.pos.z>-198))?-.95:0;
+      const dx=lane-p.pos.x;
+      const lateral=p.groundHit?.slippy?Math.max(-.22,Math.min(.22,dx*.2-p.walkVelocity.x*.18)):Math.max(-.65,Math.min(.65,dx*1.1));
+      const enemy=l.enemies.some(e=>e.alive&&Math.hypot(e.group.position.x-p.pos.x,e.group.position.z-p.pos.z)<3.2);
+      const bomb=l.crates.some(c=>c.alive&&(c.tnt||c.nitro)&&c.mesh.position.distanceTo(p.pos)<3);
+      const wantsSpin=enemy&&!bomb||l.checkpoints.some(c=>!c.active&&Math.abs(c.spawnPos.z-p.pos.z)<2);
+      const jump=hold>0,attack=wantsSpin;
       return {id:'Sky Bridge normal-input route',mapping:'standard',connected:true,index:0,
-        axes:[0,e.finish||e.dead?0:-1,0,0],buttons:Array.from({length:18},(_,i)=>{
+        axes:[e.finish||e.dead?0:lateral,e.finish||e.dead?0:-1,0,0],buttons:Array.from({length:18},(_,i)=>{
           const pressed=(i===0&&jump)||(i===2&&attack);return {pressed,value:pressed?1:0};})};
     };
   });
@@ -83,9 +98,9 @@ try{
   await place(0,-64.8);await page.keyboard.down('ArrowUp');await page.keyboard.down('KeyF');
   await page.waitForFunction(()=>window.__game.getLevel().checkpoints[0].active);
   await page.keyboard.up('ArrowUp');await page.keyboard.up('KeyF');
-  await page.keyboard.down('ArrowRight');await page.waitForTimeout(500);
+  await page.keyboard.down('ArrowRight');await page.keyboard.down('ArrowUp');await page.waitForTimeout(500);
   await page.keyboard.press('Space',{delay:100});
-  await page.waitForFunction(()=>window.__game.player.state==='dead');await page.keyboard.up('ArrowRight');
+  await page.waitForFunction(()=>window.__game.player.state==='dead');await page.keyboard.up('ArrowRight');await page.keyboard.up('ArrowUp');
   await page.waitForFunction(()=>window.__game.player.grounded&&window.__game.player.state==='ride');
   report.checkpoint=await page.evaluate(()=>({position:window.__game.player.pos.toArray(),active:window.__game.getLevel().checkpoints[0].active}));
   assert.equal(report.checkpoint.active,true);assert.ok(Math.abs(report.checkpoint.position[2]+67)<4);
@@ -110,7 +125,7 @@ try{
   assert.equal(report.full.sky,'clouds');assert.match(report.full.stamp,/Codex\/sol fork/);
   await page.screenshot({path:output+'/full-spawn.png'});
   await place(0,-23);await page.waitForTimeout(500);await page.screenshot({path:output+'/full-ice.png'});
-  await place(0,-40);await page.waitForTimeout(500);await page.screenshot({path:output+'/full-falling.png'});
+  await place(0,-38);await page.waitForTimeout(500);await page.screenshot({path:output+'/full-falling.png'});
   await page.setViewportSize({width:390,height:844});await page.waitForTimeout(500);
   await page.screenshot({path:output+'/portrait.png'});
   await page.setViewportSize({width:1280,height:720});await place(0,5);await page.waitForTimeout(500);

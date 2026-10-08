@@ -1,0 +1,864 @@
+{
+  "controller": [
+    {
+      "name": "construction",
+      "pass": true,
+      "boards": 14,
+      "plankCount": 200,
+      "aged": 7,
+      "frozen": 3,
+      "ropeSpans": 16,
+      "deepShafts": 9,
+      "enemies": 4,
+      "tnt": 4,
+      "nitro": 4
+    },
+    {
+      "name": "continuous-route",
+      "pass": true,
+      "frames": 1706,
+      "jumps": 22,
+      "ice": 3,
+      "falling": 7,
+      "cratesBroken": 5,
+      "enemyDefeats": 3,
+      "final": {
+        "frame": 1706,
+        "time": 28.433333333333334,
+        "position": [
+          -0.0037709310660053413,
+          0.7266666691501935,
+          -237.3885085655101
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "state": "finished",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "warp plinth rim",
+          "y": 0.7266666691501935,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 1,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "charged-ollie-rope-bypass",
+      "pass": true,
+      "charged": {
+        "speed": 10.550000000000013,
+        "board": true
+      },
+      "frames": 309,
+      "final": {
+        "frame": 309,
+        "time": 5.15,
+        "position": [
+          -2.65,
+          -4.768371586472142e-08,
+          -39.12299563894487
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 6.25991277889746,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -4.768371586472142e-08,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 1,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": true,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "TNT-stomp-and-escape",
+      "pass": true,
+      "fuse": 2.9833333333333334,
+      "frames": 341,
+      "final": {
+        "frame": 341,
+        "time": 5.683333333333334,
+        "position": [
+          1.7499999999999993,
+          -4.768371586472142e-08,
+          -108.9599999999999
+        ],
+        "heading": [
+          0,
+          0,
+          -1
+        ],
+        "state": "ride",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "bailing": false,
+        "deaths": 0,
+        "mover": null,
+        "ground": {
+          "name": "platform",
+          "y": -4.768371586472142e-08,
+          "normal": [
+            0,
+            1,
+            0
+          ],
+          "slippy": false,
+          "iceGrip": null
+        },
+        "rail": null,
+        "railDistance": null,
+        "balance": 0,
+        "input": {
+          "moveX": 0,
+          "moveY": 0,
+          "jumpHeld": false,
+          "grindHeld": false,
+          "spinHeld": false,
+          "grabHeld": false,
+          "transferHeld": false,
+          "jumpPressed": false,
+          "jumpReleased": false,
+          "grindPressed": false,
+          "spinPressed": false,
+          "grabPressed": false,
+          "transferPressed": false,
+          "restartPressed": false
+        }
+      }
+    },
+    {
+      "name": "Nitro-contact",
+      "pass": true,
+      "frames": 79,
+      "deaths": 1
+    },
+    {
+      "name": "Mossback-stomp",
+      "pass": true,
+      "frames": 74,
+      "state": "air"
+    }
+  ],
+  "browser": {
+    "base": "http://127.0.0.1:5209",
+    "errors": [],
+    "construction": {
+      "postSockets": 32,
+      "components": 304,
+      "bearers": 16,
+      "decks": 14,
+      "rotten": 7,
+      "frozen": 3,
+      "enemies": 4,
+      "tnt": 4,
+      "nitro": 4
+    },
+    "route": {
+      "frames": 1703,
+      "jumps": 22,
+      "ice": [
+        11,
+        17,
+        22
+      ],
+      "falling": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "states": [
+        "ride",
+        "air",
+        "finished"
+      ],
+      "finish": true,
+      "dead": false,
+      "trace": [
+        {
+          "p": [
+            0,
+            0.7366666187594333,
+            3.550000000000001
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            0,
+            -4.768371586472142e-08,
+            -0.5499999999999987
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            0,
+            2.186111063427394,
+            -5.05
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            0,
+            0.5658333369096119,
+            -9.55000000000001
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            -0.6692765683930674,
+            0.37277778135405365,
+            -13.299606654282988
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            -0.9455963735464616,
+            1.3144444480207227,
+            -17.687996047951824
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            -0.9455963735464616,
+            0.10000000059604644,
+            -22.18799604795178
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            -0.9455963735464616,
+            0.10000000059604644,
+            -26.68799604795174
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            -0.9455963735464616,
+            0.10000000059604644,
+            -31.187996047951696
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            -0.9455963735464616,
+            2.1644444450404894,
+            -35.53799604795166
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            0.0020771644662758437,
+            -4.768371586472142e-08,
+            -40.07774945521633
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            0.0020771644662758437,
+            1.3255555078718393,
+            -44.427749455216286
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            0.0020771644662758437,
+            -0.012499996423721307,
+            -48.927749455216244
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            0.0020771644662758437,
+            1.6808333369096111,
+            -53.4277494552162
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            0.0020771644662758437,
+            -0.02916666309038797,
+            -57.92774945521616
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            0.0020771644662758437,
+            1.9125000035762774,
+            -62.427749455216116
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            0.0020771644662758437,
+            -4.768371586472142e-08,
+            -66.92774945521622
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            0.0020771644662758437,
+            -4.768371586472142e-08,
+            -71.42774945521639
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            0.0020771644662758437,
+            1.7683332856496166,
+            -75.92774945521656
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            0.0020771644662758437,
+            -4.768371586472142e-08,
+            -80.42774945521673
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            0.0020771644662758437,
+            1.3255555078718393,
+            -84.9277494552169
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            0.0020771644662758437,
+            -0.012499996423721307,
+            -89.42774945521707
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            0.0020771644662758437,
+            0.780555559131834,
+            -93.92774945521724
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            0.0020771644662758437,
+            3.5762786898541066e-09,
+            -98.42774945521741
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            0.0020771644662758437,
+            0.2697222257985008,
+            -102.92774945521758
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            0.5090727265770305,
+            0.5905555591318316,
+            -106.88597250611396
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            0.9461681810065348,
+            -4.768371586472142e-08,
+            -111.243012657378
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            0.9461681810065348,
+            1.2769443967607264,
+            -115.74301265737817
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            0.9461681810065348,
+            0.10000000059604644,
+            -120.24301265737834
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            0.9461681810065348,
+            0.10000000059604644,
+            -124.74301265737851
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            0.9461681810065348,
+            0.10000000059604644,
+            -129.24301265737867
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            0.3511378246380547,
+            1.3769444450404884,
+            -133.0942758595389
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            0.003220779386421004,
+            -4.768371586472142e-08,
+            -137.33971076147802
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            0.003220779386421004,
+            -4.768371586472142e-08,
+            -141.8397107614782
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            0.003220779386421004,
+            2.228333285649616,
+            -146.33971076147836
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            0.003220779386421004,
+            0.19777778135405644,
+            -150.83971076147853
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            0.003220779386421004,
+            1.0086111146873873,
+            -155.3397107614787
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            0.003220779386421004,
+            1.3255555591318338,
+            -159.83971076147887
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            0.003220779386421004,
+            -0.012499996423721307,
+            -164.33971076147904
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            0.003220779386421004,
+            1.2213888924651672,
+            -168.8397107614792
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            0.003220779386421004,
+            -4.768371586472142e-08,
+            -173.33971076147938
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            -0.15657890606497682,
+            -4.768371586472142e-08,
+            -177.79236270653095
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            -0.9060122257346988,
+            1.7144443967607266,
+            -180.90768556817872
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            -1.0077934895274077,
+            0.10000000059604644,
+            -184.17716123881536
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            -1.0762758836331463,
+            0.10000000059604644,
+            -187.67665547632822
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            -1.0978602914374693,
+            0.10000000059604644,
+            -191.36625992332836
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            -1.0891287842612318,
+            0.10000000059604644,
+            -195.20985095803724
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            -0.7690055625264116,
+            1.9836111117071553,
+            -198.4381530469806
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            -0.0069841345016021725,
+            -4.768371586472142e-08,
+            -202.43612988585235
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            -0.003984134501602173,
+            -4.768371586472142e-08,
+            -206.93612988585252
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            -0.003984134501602173,
+            2.1574999523162828,
+            -211.4361298858527
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            -0.003984134501602173,
+            -0.05416666309038798,
+            -215.93612988585286
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            -0.003984134501602173,
+            2.0533333369096107,
+            -220.43612988585303
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            -0.003984134501602173,
+            -0.05416666309038798,
+            -224.9361298858532
+          ],
+          "state": "ride",
+          "grounded": true
+        },
+        {
+          "p": [
+            -0.003984134501602173,
+            1.8875000035762775,
+            -229.43612988585338
+          ],
+          "state": "air",
+          "grounded": false
+        },
+        {
+          "p": [
+            -0.003984134501602173,
+            -4.768371586472142e-08,
+            -233.93612988585355
+          ],
+          "state": "ride",
+          "grounded": true
+        }
+      ],
+      "position": [
+        -0.003984134501602173,
+        0.7266666691501935,
+        -237.38612988585368
+      ],
+      "checkpoints": [
+        true,
+        true,
+        true
+      ]
+    },
+    "collapse": {
+      "state": "fall",
+      "grounded": false,
+      "warning": true,
+      "respawn": {
+        "position": [
+          0,
+          0.7366666187594333,
+          5
+        ],
+        "allRestored": true
+      }
+    },
+    "checkpoint": {
+      "position": [
+        0,
+        0.09999995231628414,
+        -67
+      ],
+      "active": true
+    },
+    "iceRelease": {
+      "before": {
+        "z": -22.34632891769521,
+        "speed": 1.153214355053379
+      },
+      "after": {
+        "z": -23.014219367405087,
+        "speed": 0.8707229261730737,
+        "ice": true
+      },
+      "carry": 0.6678904497098763
+    },
+    "full": {
+      "sky": "clouds",
+      "stamp": "Codex/sol fork \u00b7 build 10-08 08:34 UTC",
+      "calls": 466,
+      "triangles": 943518,
+      "textures": 78,
+      "geometries": 213,
+      "fog": {
+        "near": 12,
+        "far": 64,
+        "color": "eef4f6"
+      }
+    }
+  },
+  "mechanicsBrowser": {
+    "base": "http://127.0.0.1:5209",
+    "results": [
+      {
+        "frames": 309,
+        "tailFrames": 0,
+        "tail": false,
+        "boardFrames": 276,
+        "boardAirFrames": 52,
+        "grindFrames": 186,
+        "deaths": 0,
+        "bails": 0,
+        "tntLit": false,
+        "tntGone": false,
+        "final": {
+          "position": [
+            -2.65,
+            -4.768371586472142e-08,
+            -39.6675187128498
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 6.475355470178716
+        },
+        "stamp": "Codex/sol fork \u00b7 build 10-08 08:06 UTC",
+        "name": "skate"
+      },
+      {
+        "frames": 341,
+        "tailFrames": 0,
+        "tail": false,
+        "boardFrames": 0,
+        "boardAirFrames": 0,
+        "grindFrames": 0,
+        "deaths": 0,
+        "bails": 0,
+        "tntLit": true,
+        "tntGone": true,
+        "final": {
+          "position": [
+            1.7499999999999993,
+            -4.768371586472142e-08,
+            -108.9599999999999
+          ],
+          "state": "ride",
+          "grounded": true,
+          "speed": 0
+        },
+        "stamp": "Codex/sol fork \u00b7 build 10-08 08:06 UTC",
+        "name": "tnt"
+      }
+    ],
+    "errors": []
+  },
+  "fullSuiteRun": false
+}

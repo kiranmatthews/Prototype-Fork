@@ -20,7 +20,7 @@ export function icePlatform(p: [number, number, number], s: [number, number, num
   return { ...options, t: 'platform', p: [p[0], p[1] - s[1] / 2, p[2]], s,
     pts: options.pts ?? [[-x+chip,z],[x-chip,z],[x,z-chip],[x,-z+chip],
       [x-chip,-z],[-x+chip,-z],[-x,-z+chip],[-x,z-chip]],
-    slip: true, iceGrip: options.iceGrip ?? ICE_SURFACE.grip, tex: 'ice',
+    slip: true, iceGrip: options.iceGrip ?? ICE_SURFACE.grip, tex: options.tex ?? 'ice',
     color: options.color ?? ICE_SURFACE.color, edgeGrinding: false };
 }
 

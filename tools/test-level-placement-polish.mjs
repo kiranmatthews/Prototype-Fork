@@ -28,7 +28,7 @@ await withBlockworksRuntime(async({server,Level,THREE})=>{
         assert.ok(level.cameraRig?.camDist>=16,`${label} upper goals need a wide authored view`);
         const clock=level.clockPickup;
         assert.ok(clock&&clock.box.max.x<level.spawnPos.x-.53,`${label} trial clock blocks normal play`);
-        supported([clock.group.position.x,level.spawnPos.y,clock.group.position.z]);
+        supported([clock.group.position.x,clock.group.userData.baseY-1.35,clock.group.position.z]);
         const sideWalls=entry.data.components.filter(c=>c.nm==='Bonus alcove side boundary');
         assert.equal(sideWalls.length,2);
         assert.ok(sideWalls.every(c=>c.p[2]-c.s[2]/2>.6),`${label} bonus wall snags the straight route`);

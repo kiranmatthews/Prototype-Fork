@@ -1,3 +1,4 @@
+import {gunzipSync} from 'node:zlib';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {withSkateRuntime,makeInput} from './jungle-cup-harness.mjs';
@@ -108,8 +109,9 @@ await withSkateRuntime(async({THREE,server,Level,Player,CONST})=>{
       assert.ok(ray.intersectObjects(sky.groundMeshes,false).some(h=>Math.abs(h.point.y)<.001),'checkpoint recovery unsupported');
     }
   }finally{sky.dispose();}
-  for(const file of ['sky-bridge-legacy.json','sky-bridge-placement-legacy.json']){
-  const previous=JSON.parse(await readFile(new URL('./fixtures/'+file,import.meta.url),'utf8'));
+  for(const file of ['sky-bridge-legacy.json','sky-bridge-placement-legacy.json','sky-bridge-cloud-v1.json.gz']){
+  const bytes=await readFile(new URL('./fixtures/'+file,import.meta.url));
+  const previous=JSON.parse(file.endsWith('.gz')?gunzipSync(bytes).toString():bytes.toString());
   assert.equal(isOriginalSkyBridge(previous),true);
   setUserLevels([previous]);assert.equal(findLevel('sky').data.components.length,SKY_BRIDGE_LEVEL.components.length,'pristine cached course did not upgrade');
   const edited=structuredClone(previous);edited.data.components[0].p[0]+=.1;

@@ -69,7 +69,7 @@ const warnings = new WeakMap<THREE.Mesh, THREE.MeshBasicMaterial>();
 
 /** A single child mesh follows the REAL falling support. No static decoration
  * survives its fall, and no visible seam adds a second collision surface. */
-export function dressFallAwaySurface(mesh: THREE.Mesh): void {
+export function dressFallAwaySurface(mesh: THREE.Mesh, paintedSplit = true): void {
   if (warnings.has(mesh)) return;
   mesh.geometry.computeBoundingBox();
   const box = mesh.geometry.boundingBox!;
@@ -86,7 +86,7 @@ export function dressFallAwaySurface(mesh: THREE.Mesh): void {
     strip(-w/2+.1,z,w/2-.1,z,.085);
   }
   const points = [[-.48,-.26],[-.24,-.1],[-.11,-.15],[.09,.07],[.23,.02],[.48,.24]];
-  for(let i=1;i<points.length;i++)strip(points[i-1][0]*w,points[i-1][1]*d,points[i][0]*w,points[i][1]*d,.045);
+  if(paintedSplit)for(let i=1;i<points.length;i++)strip(points[i-1][0]*w,points[i-1][1]*d,points[i][0]*w,points[i][1]*d,.045);
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));
   geometry.computeVertexNormals();

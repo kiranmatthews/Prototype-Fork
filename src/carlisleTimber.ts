@@ -4,7 +4,8 @@ import {
   buildWoodPathLayout, UNITY_BEACH_BOARDWALK_PROFILE,
   type WoodPathLayout, type WoodPathProfile,
 } from './woodPathKit';
-import { buildWoodPathMeshes, WOOD_PATH_PLANK_WEIGHTS, WOOD_PATH_POLE_WEIGHTS } from './woodPathMeshes';
+import { buildWoodPathMeshes, WOOD_PATH_PLANK_WEIGHTS, WOOD_PATH_POLE_WEIGHTS, BRIDGE_AGED_PALETTE, BRIDGE_FROZEN_PALETTE } from './woodPathMeshes';
+import { createIceMaterial } from './surfacePresentation';
 
 export interface CarlisleTimberDeck {
   root: THREE.Group;
@@ -12,6 +13,54 @@ export interface CarlisleTimberDeck {
   dispose(): void;
 }
 const owners = new WeakMap<THREE.Mesh, CarlisleTimberDeck>();
+export const SUSPENSION_BOARD_THICKNESS = .18;
+export const SUSPENSION_BEARER_X = 1.72;
+export const SUSPENSION_BEARER_Y = -.3;
+export const SUSPENSION_BEARER_RADIUS = .12;
+export const FROZEN_BOARD_GLAZE = .1;
+let lashingGeometry: THREE.TorusGeometry | null = null;
+let lashingMaterial: THREE.MeshLambertMaterial | null = null;
+let frozenMaterial: THREE.MeshPhongMaterial | null = null;
+
+function addSuspensionLashings(root: THREE.Group, layout: WoodPathLayout, top: number): void {
+  lashingGeometry ??= new THREE.TorusGeometry(1,.13,4,12);
+  lashingGeometry.userData.shared = true;
+  lashingMaterial ??= new THREE.MeshLambertMaterial({color:0x736047});
+  lashingMaterial.userData.shared = true;
+  const boards = layout.planks.filter((_,i)=>i%2===0);
+  const mesh = new THREE.InstancedMesh(lashingGeometry,lashingMaterial,boards.length*2);
+  mesh.name = 'Rope lashings around transverse boards and lower bearers';
+  mesh.userData.visualOnly = true; mesh.userData.suspensionLashings = true;
+  let i=0;
+  for(const board of boards)for(const side of [-1,1]) {
+    const matrix = new THREE.Matrix4().compose(new THREE.Vector3(side*SUSPENSION_BEARER_X,top-.19,board.center[2]),
+      new THREE.Quaternion(),new THREE.Vector3(.15,.22,.12));
+    mesh.setMatrixAt(i++,matrix);
+  }
+  mesh.computeBoundingBox(); mesh.computeBoundingSphere(); root.add(mesh);
+}
+
+function freezeBoardFaces(root: THREE.Group, planks: THREE.Group): void {
+  if (!frozenMaterial) {
+    frozenMaterial=createIceMaterial(); frozenMaterial.color.set('#c4e8f0');
+    frozenMaterial.opacity=.66; frozenMaterial.transparent=true; frozenMaterial.depthWrite=false;
+    frozenMaterial.userData.shared=true; frozenMaterial.name='Frozen water over visible timber boards';
+  }
+  const matrix=new THREE.Matrix4(),position=new THREE.Vector3(),rotation=new THREE.Quaternion(),scale=new THREE.Vector3();
+  for(const child of planks.children) {
+    const boards=child as THREE.InstancedMesh;
+    if(!boards.isInstancedMesh)continue;
+    const glaze=new THREE.InstancedMesh(boards.geometry,frozenMaterial,boards.count);
+    glaze.name='Frozen board faces · translucent glaze';glaze.userData.visualOnly=true;glaze.userData.frozenBoardGlaze=true;
+    for(let i=0;i<boards.count;i++) {
+      boards.getMatrixAt(i,matrix);matrix.decompose(position,rotation,scale);
+      position.y+=(SUSPENSION_BOARD_THICKNESS+FROZEN_BOARD_GLAZE)/2;
+      scale.y=FROZEN_BOARD_GLAZE;
+      matrix.compose(position,rotation,scale);glaze.setMatrixAt(i,matrix);
+    }
+    glaze.computeBoundingBox();glaze.computeBoundingSphere();root.add(glaze);
+  }
+}
 export const MAX_CARLISLE_TIMBER_LENGTH = 20_000;
 const sampling = (length: number, moving: boolean) => ({
   plankSpacing: Math.max(.67, length / 320),
@@ -46,14 +95,20 @@ export function dressCarlisleTimberDeck(mesh: THREE.Mesh, component: CustomCompo
   const rawSeed = index || Math.round(component.p[0] * 17 + component.p[2] * 31);
   const seed = Number.isFinite(rawSeed) ? Math.trunc(rawSeed) : 7319;
   const height = box.max.y - box.min.y;
-  const top = box.max.y, centerX = (box.max.x + box.min.x) / 2;
+  const suspended = component.tex === 'bridge-timber' || component.tex === 'bridge-ice';
+  const frozen = component.tex === 'bridge-ice';
+  const rotten = suspended && component.t === 'crumble';
+  const top = box.max.y - (frozen ? FROZEN_BOARD_GLAZE : 0), centerX = (box.max.x + box.min.x) / 2;
   const pierDepth = moving ? Math.max(.7, Math.min(1.3, height + .28)) : 9 + ((Math.abs(seed) % 3) * 1.5);
   const spacing = sampling(length, moving);
   const profile: WoodPathProfile = {
     ...UNITY_BEACH_BOARDWALK_PROFILE,
-    deckThickness: .145, plankThickness: .145, plankSpacing: spacing.plankSpacing, plankGap: .02,
-    plankSideOverhang: .045, plankYawJitterDegrees: 1.65,
-    plankScaleJitter: .038, plankVerticalJitter: 0,
+    deckThickness: suspended ? SUSPENSION_BOARD_THICKNESS : .145,
+    plankThickness: suspended ? SUSPENSION_BOARD_THICKNESS : .145,
+    plankSpacing: suspended ? Math.max(.58,length/320) : spacing.plankSpacing,
+    plankGap: rotten ? .045 : .024,
+    plankSideOverhang: suspended ? 0 : .045, plankYawJitterDegrees: suspended ? (rotten ? 1.5 : .35) : 1.65,
+    plankScaleJitter: suspended ? (rotten ? .025 : .01) : .038, plankVerticalJitter: 0,
     bentSpacing: spacing.bentSpacing,
     deckSideInset: Math.min(.30, width * .14), crossbeamOverhang: .11,
     postRadius: moving ? .11 : .17, crossbeamRadius: .105,
@@ -69,8 +124,9 @@ export function dressCarlisleTimberDeck(mesh: THREE.Mesh, component: CustomCompo
     }),
   }, {
     profile, plankSeed: seed + 7319, poleSeed: seed + 19411,
-    plankVariantWeights: WOOD_PATH_PLANK_WEIGHTS, poleVariantWeights: WOOD_PATH_POLE_WEIGHTS,
-    fallbackBaseY: top - pierDepth, includeSupports: true, includeHandrails: false,
+    plankVariantWeights: suspended ? (rotten ? [8,0,3] : [0,5,1]) : WOOD_PATH_PLANK_WEIGHTS,
+    poleVariantWeights: WOOD_PATH_POLE_WEIGHTS,
+    fallbackBaseY: top - pierDepth, includeSupports: !suspended, includeHandrails: false,
   });
   if(moving&&component.tex==='creek-raft'){
     // Three hewn floats and transverse ties make a ferry hull from the same
@@ -86,13 +142,21 @@ export function dressCarlisleTimberDeck(mesh: THREE.Mesh, component: CustomCompo
     for(const t of [-.36,0,.36])member([box.min.x+.03,top-.24,(box.min.z+box.max.z)/2+length*t],
       [box.max.x-.03,top-.24,(box.min.z+box.max.z)/2+length*t],.17,'crossbeam',1);
   }
-  const [planks, beams] = buildWoodPathMeshes(layout, seed + 7319);
+  const [planks, beams] = buildWoodPathMeshes(layout, seed + 7319,
+    rotten ? BRIDGE_AGED_PALETTE : frozen ? BRIDGE_FROZEN_PALETTE : undefined);
   const root = new THREE.Group();
   root.name = moving ? 'Carlisle worn moving timber deck' : 'Carlisle worn timber pier bridge';
   root.userData.carlisleTimberDressing = true;
   if(component.tex==='creek-raft')root.userData.timberRaft=true;
   root.userData.visualOnly = true;
   root.add(planks, beams);
+  if (suspended) {
+    root.name = frozen ? 'Frozen boards on lower ropes' : rotten ? 'Rotten split boards on lower ropes' : 'Transverse boards on lower ropes';
+    root.userData.suspensionDeck = {rotten,frozen,boardTop:top,boardThickness:SUSPENSION_BOARD_THICKNESS,
+      bearerX:SUSPENSION_BEARER_X,bearerY:top+SUSPENSION_BEARER_Y};
+    addSuspensionLashings(root,layout,top);
+    if(frozen)freezeBoardFaces(root,planks);
+  }
   root.traverse(object => {
     const child = object as THREE.Mesh;
     if (!child.isMesh) return;
