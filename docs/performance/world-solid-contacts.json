@@ -382,6 +382,9 @@
     "node tools/test-wood-path-meshes.mjs",
     "node tools/test-beachside-merge.mjs",
     "node tools/test-beachfront-cliff.mjs",
-    "node tools/test-ice-slide-carry.mjs"
+    "node tools/test-ice-slide-carry.mjs",
+    "node tools/test-crate-hit-forgiveness.mjs",
+    "npm run check:crate-jump",
+    "npm run check:crate-types"
   ]
 }

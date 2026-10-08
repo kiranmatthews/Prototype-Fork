@@ -11,7 +11,7 @@ await withSkateRuntime(({ THREE, Level, Player, TUNING }) => {
         { t: 'platform', p: [0, -.5, 0], s: [24, 1, 24] },
         { t: 'crate', p: [0, 0, 0], kind },
         ...components,
-        { t: 'gate', p: [0, 0, -9] },
+        { t: 'gate', p: [10, 0, -10] },
       ],
     };
     const level = new Level(scene, { id: 'crate-hit-forgiveness', name: data.name, data });
@@ -22,6 +22,9 @@ await withSkateRuntime(({ THREE, Level, Player, TUNING }) => {
     fixtures.push(level);
     return { level, player, crate: level.crates[0] };
   };
+  // These fixtures place the body directly, without a simulated approach.
+  // Seed the swept-contact origin from their authored previous position.
+  const collide = f => { f.player.worldStepOrigin.copy(f.player.prevPos); f.player.collide(f.level); };
   const prepare = (player, { spin = false, air = false, y = .02, previousY = y, vVel = 0 } = {}) => {
     player.state = air ? 'air' : 'ride';
     player.grounded = !air;
@@ -58,31 +61,31 @@ await withSkateRuntime(({ THREE, Level, Player, TUNING }) => {
     for (const axis of ['x', 'z']) for (const sign of [-1, 1]) {
       const spin = create();
       spinNear(spin, axis, sign, .34);
-      spin.player.collide(spin.level);
+      collide(spin);
       assert.equal(spin.crate.alive, false, `active spin missed ${sign}${axis} silhouette margin`);
 
       const idle = create();
       spinNear(idle, axis, sign, .3, false);
       const untouched = idle.player.pos.clone();
-      idle.player.collide(idle.level);
+      collide(idle);
       assert.equal(idle.crate.alive, true, `inactive spin enlarged ${sign}${axis} body contact`);
       assert.deepEqual(idle.player.pos.toArray(), untouched.toArray(), 'near miss pushed the non-spinning body');
 
       const far = create();
       spinNear(far, axis, sign, .36);
-      far.player.collide(far.level);
+      collide(far);
       assert.equal(far.crate.alive, true, `spin reached beyond .35 m on ${sign}${axis}`);
 
       const stomp = create();
       stompEdge(stomp, axis, sign, .349);
-      stomp.player.collide(stomp.level);
+      collide(stomp);
       assert.equal(stomp.crate.alive, false, `descending stomp missed ${sign}${axis} lid margin`);
       assert.equal(stomp.player.vVel, TUNING.crateBounce, 'edge stomp did not bounce');
       assert.ok(Math.abs(stomp.player.pos.y - (stomp.crate.box.max.y + .02)) < 1e-9, 'edge stomp did not seat on the authored lid');
 
       const wide = create();
       stompEdge(wide, axis, sign, .36);
-      wide.player.collide(wide.level);
+      collide(wide);
       assert.equal(wide.crate.alive, true, `stomp reached beyond .35 m on ${sign}${axis}`);
       assert.ok(wide.player.vVel <= 0, 'outside-lid contact became a bounce');
     }
@@ -92,7 +95,7 @@ await withSkateRuntime(({ THREE, Level, Player, TUNING }) => {
     const rise = high.crate.box.max.y + .01 - high.player.characterBounds.min.y;
     high.player.pos.y += rise;
     high.player.prevPos.copy(high.player.pos);
-    high.player.collide(high.level);
+    collide(high);
     assert.equal(high.crate.alive, true, 'spin margin grew vertically');
 
     for (const [label, overrides] of [
@@ -101,7 +104,7 @@ await withSkateRuntime(({ THREE, Level, Player, TUNING }) => {
     ]) {
       const scrape = create();
       stompEdge(scrape, 'x', 1, .15, overrides);
-      scrape.player.collide(scrape.level);
+      collide(scrape);
       assert.equal(scrape.crate.alive, true, `${label} was treated as a stomp`);
       assert.ok(scrape.player.vVel !== TUNING.crateBounce, `${label} awarded a stomp bounce`);
     }
@@ -109,7 +112,7 @@ await withSkateRuntime(({ THREE, Level, Player, TUNING }) => {
     for (const kind of ['metal', 'metalbounce', 'bang', 'nitrobang', 'tnt']) {
       const typed = create(kind);
       stompEdge(typed, 'x', 1, .15);
-      typed.player.collide(typed.level);
+      collide(typed);
       assert.ok(typed.player.vVel <= 0, `${kind} received destructible-lid forgiveness`);
       assert.equal(typed.crate.fuse, undefined, `${kind} edge scrape lit a fuse`);
       assert.ok(!typed.crate.bangUsed, `${kind} edge scrape fired a switch`);
@@ -117,23 +120,23 @@ await withSkateRuntime(({ THREE, Level, Player, TUNING }) => {
 
     const nitro = create('nitro');
     spinNear(nitro, 'x', 1, .3);
-    nitro.player.collide(nitro.level);
+    collide(nitro);
     assert.equal(nitro.crate.alive, true, 'nitro inherited expanded spin body contact');
     assert.notEqual(nitro.player.state, 'dead', 'nitro near miss killed player');
     const tnt = create('tnt');
     spinNear(tnt, 'z', -1, .3);
-    tnt.player.collide(tnt.level);
+    collide(tnt);
     assert.equal(tnt.crate.alive, false, 'TNT spin stopped detonating');
     assert.equal(tnt.level.explosions[0]?.safe, false, 'TNT spin became safe');
 
     const arrow = create('bouncy');
     stompEdge(arrow, 'z', -1, .15);
-    arrow.player.collide(arrow.level);
+    collide(arrow);
     assert.equal(arrow.crate.alive, true, 'edge landing smashed the arrow crate');
     assert.equal(arrow.player.vVel, TUNING.arrowBounce, 'edge arrow landing missed its typed bounce');
     const multihit = create('multihit');
     stompEdge(multihit, 'x', -1, .15);
-    multihit.player.collide(multihit.level);
+    collide(multihit);
     assert.equal(multihit.crate.alive, true, 'one edge stomp force-smashed multi-hit wood');
     assert.equal(multihit.crate.hitsRemaining, 4, 'edge stomp did not consume exactly one multi-hit');
 
@@ -148,7 +151,7 @@ await withSkateRuntime(({ THREE, Level, Player, TUNING }) => {
       prepare(replay.player, { air: true, vVel: sample.vVel });
       replay.player.pos.fromArray(sample.pos).sub(sourceCenter);
       replay.player.prevPos.fromArray(sample.prev).sub(sourceCenter);
-      replay.player.collide(replay.level);
+      collide(replay);
       assert.equal(replay.crate.alive, false, `Ghost Train frame ${sample.frame} still missed its crate`);
       assert.equal(replay.player.vVel, TUNING.crateBounce, `Ghost Train frame ${sample.frame} did not bounce`);
     }
@@ -158,7 +161,7 @@ await withSkateRuntime(({ THREE, Level, Player, TUNING }) => {
     const stack = create('wood', [{ t: 'crate', p: [0, .96, 0], kind: 'wood' }]);
     const upper = stack.level.crates[1];
     stompEdge({ ...stack, crate: upper }, 'x', 1, .15);
-    stack.player.collide(stack.level);
+    collide(stack);
     assert.equal(upper.alive, false, 'stack edge landing missed the highest crate');
     assert.equal(stack.crate.alive, true, 'stack edge landing cleared the lower layer');
     assert.ok(Math.abs(stack.player.pos.y - (upper.box.max.y + .02)) < 1e-9, 'stack landing snapped to lower lid');
