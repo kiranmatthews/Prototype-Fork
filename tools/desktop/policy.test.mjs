@@ -8,6 +8,7 @@ import path from 'node:path';
 import policy from '../../desktop/policy.cjs';
 import { assetHandler } from '../../desktop/protocol.cjs';
 import { keepAsset } from './assets.mjs';
+import afterExtract from '../../desktop/after-extract.cjs';
 
 test('only the bundle origin and local generated resources are allowed', () => {
   for (const url of ['boneman://game/', 'boneman://game/assets/a.js', 'data:image/png;base64,AA==', 'blob:boneman://game/123'])
@@ -78,4 +79,18 @@ test('cross-architecture checksum manifests can coexist in a release', async () 
     const expected = createHash('sha256').update(payload).digest('hex') + '  BONEMAN-test.zip\n';
     for (const name of names) assert.equal(await readFile(path.join(artifacts, name), 'utf8'), expected);
   } finally { await rm(root, {recursive:true, force:true}); }
+});
+
+
+test('Mac runtime notices survive removal of the distribution-root copies', async () => {
+  const root = await mkdtemp(path.join(tmpdir(), 'boneman-notices-'));
+  try {
+    const notices = [['LICENSE','Electron-LICENSE.txt','electron notice'],['LICENSES.chromium.html','Chromium-LICENSES.html','chromium notice']];
+    for (const [source,,contents] of notices) await writeFile(path.join(root, source), contents);
+    await afterExtract({appOutDir:root,electronPlatformName:'darwin',packager:{config:{}}});
+    for (const [source,target,contents] of notices) {
+      await rm(path.join(root, source));
+      assert.equal(await readFile(path.join(root,'Electron.app','Contents','Resources','licenses',target),'utf8'),contents);
+    }
+  } finally { await rm(root, {recursive:true,force:true}); }
 });

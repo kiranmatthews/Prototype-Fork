@@ -69,6 +69,7 @@
       "category": "Game",
       "maintainer": "Prototype Fork contributors",
       "executableName": "boneman"
-    }
+    },
+    "afterExtract": "./after-extract.cjs"
   }
 }

@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import path from 'node:path';
+import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
@@ -16,9 +17,14 @@ for (const file of manifest.files) {
 }
 const names = listPackage(paths.archive).map(name => name.replaceAll('\\', '/'));
 assert(!names.some(name => /node_modules|\.env|\.map$|vite\.config|test-results|package-lock/.test(name)), 'Development material entered the app');
+const noticeRoot = process.platform === 'darwin' ? path.join(paths.root, 'Contents', 'Resources', 'licenses') : paths.root;
+const noticeNames = process.platform === 'darwin' ? ['Electron-LICENSE.txt','Chromium-LICENSES.html'] : ['LICENSE.electron.txt','LICENSES.chromium.html'];
+const notices = await Promise.all(noticeNames.map(name => readFile(path.join(noticeRoot, name), 'utf8')));
+assert(/Permission is hereby granted/i.test(notices[0]), 'Electron notice is missing');
+assert(notices[1].length > 10000 && /<html[\s>]/i.test(notices[1]) && /chromium/i.test(notices[1]), 'Chromium notices are missing');
 const wire = await getCurrentFuseWire(paths.fuses);
 for (const fuse of [FuseV1Options.RunAsNode, FuseV1Options.EnableNodeOptionsEnvironmentVariable, FuseV1Options.EnableNodeCliInspectArguments])
   assert.equal(wire[fuse], FuseState.DISABLE);
 assert.equal(wire[FuseV1Options.OnlyLoadAppFromAsar], FuseState.ENABLE);
 if (process.platform !== 'linux') assert.equal(wire[FuseV1Options.EnableEmbeddedAsarIntegrityValidation], FuseState.ENABLE);
-console.log(JSON.stringify({ status:'passed', archive:paths.archive, contentId:manifest.contentId, files:manifest.files.length, fuses:wire }));
+console.log(JSON.stringify({ status:'passed', archive:paths.archive, contentId:manifest.contentId, files:manifest.files.length, runtimeNotices:noticeNames, fuses:wire }));
