@@ -941,6 +941,8 @@ export const TEX_KINDS = [
   "treehouse-timber",
   "treehouse-stone",
   "treehouse-loam",
+  "treehouse-beach",
+  "treehouse-canvas",
   "plank",
   "pavement",
   "asphalt",
@@ -4343,6 +4345,14 @@ export class Level {
       const texture=Level.finishTex(new THREE.TextureLoader().load(import.meta.env.BASE_URL+`carlisle-coast/${file}-albedo.webp`));
       this.surfTexCache.set(kind,texture);return texture;
     }
+    if(kind==='treehouse-canvas'){
+      const texture=Level.finishTex(this.surfaceImage('treehouse-trials-v4/sail-canvas.webp'));
+      this.surfTexCache.set(kind,texture);return texture;
+    }
+    if(kind==='treehouse-beach'){
+      const texture=Level.finishTex(this.surfaceImage('treehouse-trials-v4/beach-sand.webp'));
+      this.surfTexCache.set(kind,texture);return texture;
+    }
     if(kind==='treehouse-loam'){
       const texture=Level.finishTex(this.surfaceImage('treehouse-trials-v2/loam-albedo.webp'));
       this.surfTexCache.set(kind,texture);return texture;
@@ -4737,6 +4747,8 @@ export class Level {
     "treehouse-timber": { spec: 0x1e1c18, shine: 10 },
     "treehouse-stone": { spec: 0x202620, shine: 8 },
     "treehouse-loam": { spec: 0x0d100e, shine: 3 },
+    "treehouse-beach": { spec: 0x141410, shine: 4 },
+    "treehouse-canvas": { spec: 0x101010, shine: 3 },
     sand: { spec: 0x141414, shine: 4 },
     sunsoil: { spec: 0x10100b, shine: 3 },
     dirt: { spec: 0x121212, shine: 3 },
@@ -5671,8 +5683,18 @@ export class Level {
       geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
     }
     if (c.colors) geometry.setAttribute("color", new THREE.Float32BufferAttribute(c.colors, 3));
+    const canvasCloth=c.tex==='treehouse-canvas'&&this.jungleStyle==='painterly';
+    if(canvasCloth){
+      const uv=geometry.attributes.uv,flex=new Float32Array(uv.count);
+      for(let i=0;i<uv.count;i++){
+        const u=uv.getX(i),v=uv.getY(i);
+        flex[i]=Math.max(0,Math.sin(Math.PI*u)*Math.sin(Math.PI*v))*Math.min(1,Math.abs(u-.5)*5);
+      }
+      geometry.setAttribute('aJungleFlex',new THREE.BufferAttribute(flex,1));
+    }
     geometry.computeBoundingBox();
     geometry.computeBoundingSphere();
+    if(canvasCloth){geometry.boundingBox?.expandByScalar(.3);if(geometry.boundingSphere)geometry.boundingSphere.radius+=.3;}
     let material: THREE.MeshLambertMaterial | THREE.MeshStandardMaterial | THREE.MeshPhongMaterial | THREE.MeshBasicMaterial;
     const standingWater=isStandingWater(c);
     const jungleStream=c.materialStyle==='jungle-stream';
@@ -5742,12 +5764,29 @@ export class Level {
     material.userData.texKind = c.materialStyle === "unity-sand" ? "sand" : c.tex ?? "checker";
     if(this.jungleStyle==='painterly'&&!standingWater&&!jungleStream&&!material.userData.jungleDapple){
       material.userData.junglePainterly=true;material.userData.jungleDapple=true;
-      addJungleDapple(material,this.jungleTime);
+      addJungleDapple(material,this.jungleTime,canvasCloth,canvasCloth);
+    }
+    if(c.tex==='treehouse-beach'&&this.jungleStyle==='painterly'){
+      const previous=material.onBeforeCompile,key=material.customProgramCacheKey.bind(material);
+      const forestLoam=this.surfaceTexture('treehouse-loam');
+      material.onBeforeCompile=(shader,renderer)=>{
+        previous.call(material,shader,renderer);
+        shader.uniforms.uTreehouseForestLoam={value:forestLoam};
+        shader.fragmentShader='uniform sampler2D uTreehouseForestLoam;\n'+shader.fragmentShader;
+        shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`
+          #ifdef USE_MAP
+            vec4 beachColor=texture2D(map,vMapUv);
+            vec4 forestColor=texture2D(uTreehouseForestLoam,vJungleWorld.xz/6.5);
+            diffuseColor*=mix(forestColor,beachColor,smoothstep(-16.0,4.0,vJungleWorld.z));
+          #endif
+        `);
+      };
+      material.customProgramCacheKey=()=>key()+'|treehouse-beach-transition-v1';
     }
     if(c.tex==='coast-terrain')addCarlisleTerrainLook(material,this.surfaceTexture('coast-turf'));
     // These remain separate authoring components. Runtime-only visual pieces
     // can share one draw per material/cell instead of one draw per rope/post.
-    if(!EDITOR_BUILD&&this.batchDecor&&c.solid===false&&!c.invisible&&!c.materialStyle&&!standingWater&&
+    if(!EDITOR_BUILD&&this.batchDecor&&!canvasCloth&&c.solid===false&&!c.invisible&&!c.materialStyle&&!standingWater&&
       !c.colors&&!c.depthBias&&!c.cameraCutaway&&c.castShadow===undefined&&(c.s??[1,1,1]).every(scale=>scale>0)&&
       c.fog===undefined&&c.vert===undefined&&(c.opacity??1)===1){
       const key=JSON.stringify([c.color??'#ffffff',c.emissive??'#000000',c.tex??'checker',!!c.doubleSided]);
@@ -5764,6 +5803,13 @@ export class Level {
     mesh.rotation.y = THREE.MathUtils.degToRad(c.yaw ?? 0);
     mesh.scale.set(...(c.s ?? [1, 1, 1]));
     mesh.name = c.nm ?? "triangle surface";
+    if(canvasCloth){
+      const depth=new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking,side:material.side});
+      depth.userData.junglePainterly=true;
+      addJungleDapple(depth,this.jungleTime,true,true);
+      mesh.customDepthMaterial=depth;
+      (material as THREE.Material).addEventListener('dispose',()=>depth.dispose());
+    }
     if(c.castShadow!==undefined)mesh.userData.castShadow=c.castShadow;
     if(standingWater||jungleStream)mesh.userData.noWaterShore=true;
     if(jungleStream){mesh.userData.castShadow=false;mesh.userData.receiveShadow=true;}

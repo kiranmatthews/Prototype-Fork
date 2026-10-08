@@ -1,0 +1,13 @@
+# Reference opening, 8 October 2026
+
+The user's `image 21.png` is the authority for this opening. The complete course still follows the nine-image sequence; the standalone Inside Your Room level and existing Moa encounters are preserved.
+
+The source-owned composition is `src/levels/treehouse-reference-opening.ts`. A beach spawn looks inland toward the raised rectangular plank cabin, compact three-flight staircase, striped sail roof, one quarterpipe, moss rock and right-hand path. Large right-side trunks, overlapping animated crowns, vine loops, layered forest mattes, shoreline boulders, driftwood and a leaning wooden surfboard frame it. The reference is a painterly target; hidden cabin faces and the playable scale are inferred.
+
+Built-in ImageGen produced six images: four isolated Meshy concept references and two deployed material textures. `tools/treehouse-trials-v4/prompts.json` stores the exact prompts; `references/` preserves the original pixels. Runtime images are 1024px WebP sand and woven sailcloth. The roof has 1,519 vertices; its ridge and perimeter are pinned, its interior billows by the shared cloth shader, and its shadow uses identical deformation. The moving foliage reuses the existing compressed Meshy kit and LOD/streaming system.
+
+Meshy rejected the first image-to-3D submission with HTTP 402: task creation is disabled on the account's free plan. The displayed balance was 311 credits. There was no task ID, model or credit spend. Remaining planned jobs were not submitted; the intended batch is preserved in `meshy-planned-specs.json` for provenance. Native bounded meshes supply the cabin, roof, quarterpipe boards and surfboard. No missing model URLs or placeholders are registered.
+
+Validation was deliberately focused. The exact `check:levels` commands and TypeScript/Vite production build passed using the bundled Node executable (npm was unavailable). The local test fixtures emit mocked asset-load warnings; real Chrome views have no console or asset errors. A 19-waypoint native-controller walk climbs and descends all landings, then follows the first forest bend with zero deaths. Full-render desktop/portrait reviews load both textures, retain both Moas and the 25m bridge rope, verify pinned cloth/shadow data and inspect the cavern under the adjusted sunlight. The 180-frame samples have median/p95 16.7ms on this host. These are desktop-browser measurements, including an emulated portrait viewport, not physical-phone benchmarks.
+
+`desktop-opening.jpg` and `portrait-opening.jpg` show the actual game view. `approach.jpg`, `forest.jpg` and `cavern.jpg` record the surrounding composition. JSON evidence records the native walk, six local viewpoints and production checks. No full test suite was run.

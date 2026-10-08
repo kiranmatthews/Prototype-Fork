@@ -1,9 +1,10 @@
+import {referenceTreehouseOpening, TREEHOUSE_BEACH_SPAWN} from './treehouse-reference-opening';
 import {encloseTreehouseWorld} from './treehouse-enclosure';
 import * as THREE from "three";
 import {repairTreehouseWorld} from "./treehouse-scenic-repairs";
 import { treehouseTrialPoint, densifyTreehouseRoute, treehouseTrialContinuity, TREEHOUSE_TRIALS_OPENING_OCEAN } from "./treehouse-trials-continuity";
 import type { CustomComponent, CustomLevelData } from "../level";
-import { TREEHOUSE_OPENING_COMPONENTS, TREEHOUSE_STAIR_LANDINGS, TREEHOUSE_CLEARING_ROUTE, openingHousePoint } from "./treehouse-opening";
+import { TREEHOUSE_OPENING_COMPONENTS, TREEHOUSE_CLEARING_ROUTE } from "./treehouse-opening";
 import { TREEHOUSE_TRIALS_ART_COMPONENTS } from "./treehouse-trials-art";
 import { TREEHOUSE_TRIALS_SCENES_V2, TREEHOUSE_TRIALS_SCENE_GROUPS_V2, TREEHOUSE_TRIALS_PIPE_V2, TREEHOUSE_TRIALS_CAVE_EXTENSION_V2 } from "./treehouse-trials-scenes-v2";
 
@@ -310,7 +311,6 @@ add({ t: "wallpath", p: [0, -27, 0], w: 1, rise: 48, closed: true,
 
 // Every change in ground height and every set piece follows one ordered lane.
 // The opening uses its existing view frame; the route itself stays forward.
-const balconySpawn = openingHousePoint([-16, 8.55, -0.5]);
 const authoredTrailRoute: Point[] = [
   [X, 0, -16], [X, 0, -28], [X, -3, -42], [X, -2.2, -46], [X, -5.1, -50],
   [X, -6.7, -67], [X, -5.9, -71], [X, -9.0, -75], [X, -10.6, -94], [X, -9.8, -98], [X, -13, -102],
@@ -323,22 +323,20 @@ const authoredTrailRoute: Point[] = [
 const sourceTrailRoute: readonly Point[] = authoredTrailRoute.map(([x,y,z]) =>
   [x,y,z <= -248 ? z - TREEHOUSE_TRIALS_CAVE_EXTENSION_V2 : z] as Point);
 export const TREEHOUSE_TRAIL_ROUTE: readonly Point[] = densifyTreehouseRoute(sourceTrailRoute).map(treehouseTrialPoint);
-for (const p of [balconySpawn, ...[...TREEHOUSE_STAIR_LANDINGS].reverse()])
-  add({ t: "camnode", p: [...p], radius: 0, grp: GROUP.camera });
-for (const p of TREEHOUSE_CLEARING_ROUTE.slice(1))
+for (const p of TREEHOUSE_CLEARING_ROUTE)
   add({ t: "camnode", p: [...p], radius: 2, grp: GROUP.camera });
 for (const p of densifyTreehouseRoute(sourceTrailRoute).slice(1))
   add({ t: "camnode", p: [...p], radius: 0, grp: GROUP.camera });
 
 
 export const TREEHOUSE_TRAIL_LEVEL: CustomLevelData = {
-  v: 1, name: "Treehouse Trials", spawn: balconySpawn, killY: -30,
+  v: 1, name: "Treehouse Trials", spawn: TREEHOUSE_BEACH_SPAWN, killY: -30,
   sky: "day", ocean: TREEHOUSE_TRIALS_OPENING_OCEAN, cameraAirLift: .7, cameraLookAhead: 9, cameraRig: {camDist:10.2,camHeight:4.9,camPitch:16.5,camFov:49}, jungleAtmosphere: true, jungleDepthFade: false, jungleStyle: "painterly", keepPlayFog: true,
   medalTimes: { gold: 88, silver: 125, bronze: 180 },
   atmosphere: { fallbackRidges:false, fallbackTop:"#348dcc", fallbackBottom:"#b6dce6", fallbackFog:"#b6dce6", fogEnabled: true, fogNear: 62, fogFar: 185, fogColor: "#618e7d",
-    ambientSky: "#9fc5c4", ambientGround: "#6c6044", ambientIntensity: 0.98,
-    sunColor: "#ffe0a6", sunIntensity: 1.72, fillColor: "#bdd2ca", fillIntensity: 0.42,
+    ambientSky: "#9fc5c4", ambientGround: "#6c6044", ambientIntensity: 1.10,
+    sunDirection: [-.45,.7,.55], sunColor: "#fff0cf", sunIntensity: 1.85, fillColor: "#bdd2ca", fillIntensity: 0.42,
     shadowStrength: 0.85, drawDistance: 320 },
-  components: encloseTreehouseWorld(repairTreehouseWorld(treehouseTrialContinuity(components))),
+  components: referenceTreehouseOpening(encloseTreehouseWorld(repairTreehouseWorld(treehouseTrialContinuity(components)))),
   groups: [...Object.entries(GROUP).map(([nm, id]) => ({ id, nm })), ...TREEHOUSE_TRIALS_SCENE_GROUPS_V2],
 };

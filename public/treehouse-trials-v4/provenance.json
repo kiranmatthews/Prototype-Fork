@@ -1,0 +1,29 @@
+{
+  "title": "Treehouse reference opening",
+  "reference": "User-provided image 21.png",
+  "generationMode": "built-in ImageGen",
+  "runtimeTextures": {
+    "beach-sand.webp": {
+      "source": "tools/treehouse-trials-v4/references/sand.png",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    "sail-canvas.webp": {
+      "source": "tools/treehouse-trials-v4/references/sail-canvas.png",
+      "size": [
+        1024,
+        1024
+      ]
+    }
+  },
+  "prompts": "tools/treehouse-trials-v4/prompts.json",
+  "meshy": {
+    "status": "HTTP402 account-plan rejection; no task created",
+    "balanceBefore": 311,
+    "creditsSpent": 0
+  },
+  "geometry": "Source-owned native CustomComponent meshes plus the existing Meshy scenery kit",
+  "review": "docs/treehouse-reference-opening/README.md"
+}

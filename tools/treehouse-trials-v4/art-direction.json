@@ -1,0 +1,117 @@
+{
+  "reference": "references/opening-reference.png",
+  "scope": "Playable scene composition and native scene props; inferred hidden sides.",
+  "skillApplicability": "img2threejs intake rejects whole scenes as object targets. Its visual decomposition informed the props. Native CustomComponent geometry is used; no generated factory or automated visual score is claimed.",
+  "qualityContract": [
+    "Ocean visible across the bottom of the opening frame",
+    "Rectangular plank cabin high left with a sagging red and cream sail roof",
+    "Compact attached stairs with continuous supported landings",
+    "One timber quarterpipe left of the winding path",
+    "Right foreground tree arches over scene with layered animated foliage",
+    "Pale beach rocks, leaning surfboard and driftwood have ground contact",
+    "Native playable collision and continuous camera handoff; no changes to movement tuning"
+  ],
+  "camera": {
+    "fov": 44,
+    "followDistance": 17,
+    "targetHeight": 4.3,
+    "direction": [
+      0,
+      -0.6,
+      17
+    ]
+  },
+  "components": [
+    {
+      "id": "cabin",
+      "topology": "compound hard surface",
+      "bounds": [
+        11.8,
+        4.9,
+        8.2
+      ],
+      "localFeatures": [
+        "uneven vertical planks",
+        "thick corner posts",
+        "horizontal battens",
+        "recessed rectangular doorway",
+        "warm inner doorway"
+      ],
+      "material": "existing painted timber texture; per-board tint variation",
+      "attachment": "base at balcony height8.4; posts and braces into existing tree"
+    },
+    {
+      "id": "roof",
+      "topology": "continuous cloth shell",
+      "bounds": [
+        14.3,
+        3.2,
+        10.7
+      ],
+      "localFeatures": [
+        "raised ridge",
+        "sag between ridge and eaves",
+        "shallow fabric wrinkles",
+        "stitched edge rope",
+        "four taut corner ties"
+      ],
+      "material": "new ImageGen de-lit stripe canvas albedo; rough diffuse finish",
+      "attachment": "ridge poles, rafters and four corner posts"
+    },
+    {
+      "id": "quarterpipe",
+      "topology": "continuous native quarter-circle collision with fitted visual boards",
+      "localFeatures": [
+        "curved longitudinal planks",
+        "vertical rear boarding",
+        "side enclosure following arc",
+        "rope top rail",
+        "rounded timber coping"
+      ],
+      "bounds": [
+        7.44,
+        5.04,
+        10.8
+      ],
+      "attachment": "Native collision, visual boarding and ropes uniformly scaled together by1.2; flat on clearing"
+    },
+    {
+      "id": "surfboard",
+      "topology": "continuous tapered convex shell",
+      "bounds": [
+        1.76,
+        4.8,
+        0.28
+      ],
+      "localFeatures": [
+        "pointed nose",
+        "narrow rounded tail",
+        "wood grain",
+        "pale centre inlay"
+      ],
+      "attachment": "lean into shoreline rock; buried lower edge"
+    }
+  ],
+  "materials": {
+    "timber": {
+      "albedo": "existing treehouse-timber",
+      "roughnessIntent": 0.86
+    },
+    "canvas": {
+      "albedo": "new generated woven stripes",
+      "roughnessIntent": 0.95
+    },
+    "sand": {
+      "albedo": "new generated beach sand",
+      "roughnessIntent": 0.96
+    }
+  },
+  "reviewViews": [
+    "beach composition",
+    "clearing approach",
+    "quarterpipe side",
+    "stairs and balcony",
+    "forest handoff"
+  ],
+  "validationPolicy": "User requested focus on visual effort rather than a large test suite. Use actual in-game screenshots, targeted support/traversal checks, check:levels, production build and deployed smoke."
+}

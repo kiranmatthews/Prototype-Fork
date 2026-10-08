@@ -76,8 +76,8 @@ const vertices: number[] = [], colors: number[] = [], uvs: number[] = [], indice
 const nx = 80, nz = 40, x0 = -35, z0 = -28, dx = 1.25, dz = 1.5;
 // Shared rounded clearing route: the dirt, lane and tree clearance all follow it.
 export const TREEHOUSE_CLEARING_ROUTE: Point[] = [
-  openingHousePoint([-2, 0, 9]), [1, 0, 9], [8, 0, 7], [20, 0, 7],
-  [26, 0, 6], [31, 0, 2], [34, 0, -4], [35, 0, -10], [35, 0, -16],
+  [2, -.50, 21.5], [4, 0, 12], [9, 0, 4], [14, 0, -6],
+  [21, 0, -14], [29, 0, -18], [35, 0, -16],
 ];
 const trail = new THREE.CatmullRomCurve3(TREEHOUSE_CLEARING_ROUTE.map(p => new THREE.Vector3(...p)))
   .getPoints(100).map(p => [p.x, p.z]);
@@ -129,47 +129,47 @@ add({ t: "platform", p: [-1, -2.25, 0], s: [74, 2, 80], invisible: true,
   edgeGrinding: false, nm: "Opening safety foundation", grp: G.ground });
 
 const houseStart = C.length;
-const landings: readonly Point[] = [[-2, .12, 9], [-9, 2.8, 9], [-9, 5.6, 2], [-16, 8.4, 2]];
+const landings: readonly Point[] = [[-5.08,.12,7.24],[-10.54,2.8,7.24],[-10.54,5.6,1.78],[-16,8.4,1.78]];
 export const TREEHOUSE_STAIR_LANDINGS = landings.map(openingHousePoint);
 for (let i = 0; i < landings.length; i++) {
-  const [x, top, z] = landings[i], depth = i === 3 ? 2 : 3;
-  add({ t: "platform", p: [x, top - 0.025, z], s: [3.04, 0.05, depth + 0.04], invisible: true,
+  const [x, top, z] = landings[i], depth = i === 3 ? 1.56 : 2.34;
+  add({ t: "platform", p: [x, top - 0.025, z], s: [2.3712, 0.05, depth + 0.0312], invisible: true,
     edgeGrinding: false, nm: "Treehouse landing support", grp: G.house });
-  add({ t: "decor", dkind: "treehouselanding", p: [x, top - 0.32, z], s: [3, 0.32, depth],
+  add({ t: "decor", dkind: "treehouselanding", p: [x, top - 0.32, z], s: [2.34, 0.32, depth],
     nm: "Separate fitted Meshy landing", grp: G.house });
 }
 const flights = [
-  { p: [-5.5, .12, 9] as Point, yaw: 90, rise:2.68 },
-  { p: [-9, 2.8, 5.5] as Point, yaw: 0, rise:2.8 },
-  { p: [-12.5, 5.6, 2] as Point, yaw: 90, rise:2.8 },
+  { p: [-7.81, .12, 7.24] as Point, yaw: 90, rise:2.68 },
+  { p: [-10.54, 2.8, 4.51] as Point, yaw: 0, rise:2.8 },
+  { p: [-13.27, 5.6, 1.78] as Point, yaw: 90, rise:2.8 },
 ];
 for (const { p, yaw, rise } of flights) {
-  add({ t: "ramp", p, len: 4, rise, w: 2.4, yaw, invisible: true,
+  add({ t: "ramp", p, len: 3.12, rise, w: 1.872, yaw, invisible: true,
     edgeGrinding: false, nm: "Treehouse stair flight support", grp: G.house });
-  add({ t: "decor", dkind: "treehousestairs", p: [...p], s: [2.4, rise, 4], yaw,
+  add({ t: "decor", dkind: "treehousestairs", p: [...p], s: [1.872, rise, 3.12], yaw,
     nm: "Meshy stair flight wrapping around the trunk", grp: G.house });
   const angle = THREE.MathUtils.degToRad(yaw), across = new THREE.Vector3(Math.cos(angle), 0, -Math.sin(angle));
   const forward = new THREE.Vector3(-Math.sin(angle), 0, -Math.cos(angle));
   for (const side of [-1, 1]) {
-    const base = new THREE.Vector3(...p).addScaledVector(across, side * 1.27);
-    const points = [-2, 0, 2].map(t => {
-      const q = base.clone().addScaledVector(forward, t); q.y += (t + 2) / 4 * rise;
+    const base = new THREE.Vector3(...p).addScaledVector(across, side * .9906);
+    const points = [-1.56, 0, 1.56].map(t => {
+      const q = base.clone().addScaledVector(forward, t); q.y += (t + 1.56) / 3.12 * rise;
       return q.toArray() as Point;
     });
     railing(points, "Stair rope handrail");
-    const a=base.clone().addScaledVector(forward,-2);a.y-=.24;
-    const b=base.clone().addScaledVector(forward,2);b.y+=rise-.24;
+    const a=base.clone().addScaledVector(forward,-1.56);a.y-=.24;
+    const b=base.clone().addScaledVector(forward,1.56);b.y+=rise-.24;
     timber(a.toArray() as Point,b.toArray() as Point,.26,.34,'Continuous stair stringer');
   }
 }
 
 // Complete the exposed landing perimeters, leaving only the actual stair
 // and balcony connections open.
-railing([[-3.5,.12,7.58],[-.6,.12,7.58]],'Bottom landing north rail');
-railing([[-3.5,.12,10.42],[-.6,.12,10.42]],'Bottom landing south rail');
-railing([[-10.42,2.8,7.5],[-10.42,2.8,10.42],[-7.5,2.8,10.42]],'First landing outer balustrade');
-railing([[-10.5,5.6,.58],[-7.58,5.6,.58],[-7.58,5.6,3.5]],'Second landing outer balustrade');
-railing([[-17.42,8.4,1],[-17.42,8.4,2.92],[-14.5,8.4,2.92]],'Top landing outer balustrade');
+railing([[-6.25,.12,6.1324],[-3.988,.12,6.1324]],'Bottom landing north rail');
+railing([[-6.25,.12,8.3476],[-3.988,.12,8.3476]],'Bottom landing south rail');
+railing([[-11.6476,2.8,6.07],[-11.6476,2.8,8.3476],[-9.37,2.8,8.3476]],'First landing outer balustrade');
+railing([[-11.71,5.6,.6724],[-9.4324,5.6,.6724],[-9.4324,5.6,2.95]],'Second landing outer balustrade');
+railing([[-17.1076,8.4,1],[-17.1076,8.4,2.4976],[-14.83,8.4,2.4976]],'Top landing outer balustrade');
 
 add({ t: "decor", dkind: "treehousehost", p: treeCenter, s: [15.5, 15, 10],
   nm: "Rooted forked tree physically supporting the cabin", grp: G.house });
@@ -189,8 +189,8 @@ add({ t: "decor", dkind: "treehousebalconydeck", p: [-17, 8.05, -0.5], s: [14.5,
 add({ t: "platform", p: [-17, 8.375, -0.5], s: [14.5, 0.05, 3], invisible: true,
   edgeGrinding: false, nm: "Treehouse balcony support", grp: G.house });
 // Front railing leaves a real entrance matching the final stair landing.
-railing([[-24.05, 8.4, 0.9], [-20.85, 8.4, 0.9], [-17.6, 8.4, 0.9]], "Balcony outer edge");
-railing([[-14.4, 8.4, 0.9], [-11.8, 8.4, 0.9], [-9.95, 8.4, 0.9]], "Balcony outer edge");
+railing([[-24.05, 8.4, 0.9], [-20.85, 8.4, 0.9], [-17.1076, 8.4, 0.9]], "Balcony outer edge");
+railing([[-14.83, 8.4, 0.9], [-11.8, 8.4, 0.9], [-9.95, 8.4, 0.9]], "Balcony outer edge");
 railing([[-24.05, 8.4, -1.9], [-24.05, 8.4, 0.9]], "Balcony left return");
 railing([[-9.95, 8.4, -1.9], [-9.95, 8.4, 0.9]], "Balcony right return");
 railing([[-24.05,8.4,-1.9],[-21.8,8.4,-1.9]],'Balcony rear left guard');
@@ -200,7 +200,7 @@ for (const x of [-23.2, -18.5, -14, -10.8]) {
   timber([-17, 4.8, -6], [x, 7.95, 0.4], 0.3, 0.38, "Angled timber brace tied into the trunk");
 }
 for (const [x, top, z] of landings.slice(1)) {
-  timber([x - 1.2, 0, z - 1.1], [x - 1.2, top - 0.12, z - 1.1], 0.3, 0.32, "Landing support post");
+  timber([x - .936, 0, z - .858], [x - .936, top - 0.12, z - .858], 0.3, 0.32, "Landing support post");
   timber([-17, Math.max(0.6, top - 2.2), -6], [x, top - 0.25, z], 0.22, 0.28, "Landing brace into tree");
 }
 // Visible load paths: grounded posts, continuous bearers and diagonal
@@ -217,8 +217,8 @@ for(const [a,b] of [
   [[-22.7,1.2,-8.2],[-22.7,7.55,-.7]],[[-11.3,1.2,-8.2],[-11.3,7.55,-.7]],
 ] as [Point,Point][])timber(a,b,.27,.32,'Diagonal structural bracing beneath treehouse');
 for(const [x,top,z] of landings.slice(1)){
-  timber([x+1.2,.15,z+1.1],[x+1.2,top-.17,z+1.1],.29,.31,'Second grounded landing post');
-  timber([x-1.2,Math.max(.3,top-2.1),z-1.1],[x+1.2,top-.27,z+1.1],.2,.24,'Landing cross brace');
+  timber([x+.936,.15,z+.858],[x+.936,top-.17,z+.858],.29,.31,'Second grounded landing post');
+  timber([x-.936,Math.max(.3,top-2.1),z-.858],[x+.936,top-.27,z+.858],.2,.24,'Landing cross brace');
 }
 // A small hanging lantern replaces the exposed fire plume.
 for (const [x, y, z] of [[-12.8, 9.7, -1.2], [-14.8, 4.6, 0.8]] as const) {

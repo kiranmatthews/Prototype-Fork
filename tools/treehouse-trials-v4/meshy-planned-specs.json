@@ -1,0 +1,49 @@
+{
+  "cabin": {
+    "triangles": 8000,
+    "size": [
+      11.8,
+      5.2,
+      8.2
+    ],
+    "kind": "trialsv4cabin",
+    "hero": true,
+    "wind": false
+  },
+  "canvas-roof": {
+    "triangles": 5000,
+    "size": [
+      13.9,
+      3.3,
+      10.4
+    ],
+    "kind": "trialsv4roof",
+    "hero": true,
+    "wind": true,
+    "cloth": true,
+    "ridgeCloth": true
+  },
+  "framing-tree": {
+    "triangles": 14000,
+    "size": [
+      32,
+      27,
+      18
+    ],
+    "kind": "trialsv4tree",
+    "hero": true,
+    "wind": true,
+    "windWeight": 0.45
+  },
+  "surfboard": {
+    "triangles": 1600,
+    "size": [
+      1.4,
+      4.2,
+      0.26
+    ],
+    "kind": "trialsv4board",
+    "hero": false,
+    "wind": false
+  }
+}
