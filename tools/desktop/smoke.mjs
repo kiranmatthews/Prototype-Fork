@@ -149,7 +149,7 @@ try {
   await page.locator('#back').click();
   await page.waitForFunction(() => !!window.__game, null, {timeout:120000});
   await page.evaluate(() => localStorage.setItem('solProtoDesktopPersistenceTest', 'kept'));
-  await app.close(); app = null;
+  assert.equal(await app.close(), true, 'The native Quit action must finish cleanly before checking saved data'); app = null;
   app = await launchSource(profile);
   const reopened = app.page;
   await reopened.waitForFunction(() => location.protocol === 'boneman:' && document.readyState === 'complete');

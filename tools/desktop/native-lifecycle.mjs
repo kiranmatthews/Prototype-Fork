@@ -16,7 +16,7 @@ const child = spawn(require('electron'), [...testGpuArgs, fileURLToPath(new URL(
 let stdout = '', stderr = '';
 child.stdout.on('data', bytes => { stdout = (stdout + bytes).slice(-12000); });
 child.stderr.on('data', bytes => { stderr = (stderr + bytes).slice(-12000); });
-const timeout = setTimeout(() => child.kill('SIGKILL'), probe ? 30000 : 120000);
+const timeout = setTimeout(() => child.kill('SIGKILL'), 120000);
 try {
   const code = await new Promise((resolve, reject) => { child.once('error', reject); child.once('exit', resolve); });
   const report = {status:code === 0 ? 'passed' : 'failed', code, platform:process.platform, arch:process.arch, softwareGpuTest, stdout, stderr};

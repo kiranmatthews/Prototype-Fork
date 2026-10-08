@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 export function bundlePaths() {
   const release = fileURLToPath(new URL('../../desktop/release/', import.meta.url));
   if (process.platform === 'darwin') {
-    const app = path.join(release, process.arch === 'arm64' ? 'mac-arm64' : 'mac', 'BONEMAN.app');
+    const app = path.join(release, (process.env.BONEMAN_TARGET_ARCH || process.arch) === 'arm64' ? 'mac-arm64' : 'mac', 'BONEMAN.app');
     return { root:app, binary:path.join(app, 'Contents/MacOS/BONEMAN'), archive:path.join(app, 'Contents/Resources/app.asar'), fuses:app };
   }
   const root = path.join(release, process.platform === 'win32' ? 'win-unpacked' : 'linux-unpacked');
