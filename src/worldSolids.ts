@@ -158,6 +158,20 @@ export class WorldSolids {
     for(const surface of this.large)this.candidates.add(surface);
     for(const surface of this.moving){this.readMatrix(surface);this.candidates.add(surface);}
   }
+  /** Share the spatial index with scenery's existing ground-ray contract.
+   * Actual intersections still come from each proxy mesh, preserving normals,
+   * material metadata and support identity for riding/ledge/debris callers. */
+  collectRaySurfaces(ray:THREE.Raycaster,result:Set<SolidSurface>):void{
+    result.clear();
+    const add=(surface:SolidSurface)=>{if(ray.ray.intersectsBox(surface.bounds))result.add(surface);};
+    if(!Number.isFinite(ray.far)){for(const surface of this.surfaces)add(surface);return;}
+    ray.ray.at(Math.max(0,ray.near),this.fromA);ray.ray.at(ray.far,this.toA);
+    this.localBox.makeEmpty().expandByPoint(this.fromA).expandByPoint(this.toA);
+    const b=this.localBox,s=this.size,x0=Math.floor(b.min.x/s),x1=Math.floor(b.max.x/s),z0=Math.floor(b.min.z/s),z1=Math.floor(b.max.z/s);
+    if((x1-x0+1)*(z1-z0+1)>4096){for(const surface of this.surfaces)add(surface);return;}
+    for(let x=x0;x<=x1;x++)for(let z=z0;z<=z1;z++)for(const surface of this.cells.get(`${x}:${z}`)??[])add(surface);
+    for(const surface of this.large)add(surface);for(const surface of this.moving)add(surface);
+  }
   private closest():number{
     this.tri.getPlane(this.plane);
     const crossing=this.plane.intersectLine(this.segment,this.axisPoint);

@@ -1,0 +1,387 @@
+{
+  "date": "2026-10-09",
+  "scope": "Shared hard scenery collision across playable levels",
+  "referenceReplay": "tools/fixtures/custard-solid-wall-replay.json",
+  "recordedApproach": {
+    "method": "Original browser replay, preceding physics retained through frame 6299 to isolate the reported final approach. Shared contacts enabled at frame 6300.",
+    "contact": {
+      "frame": 6348,
+      "name": "Custard spillway outer stone mass",
+      "point": [
+        301.66343928030096,
+        18.614678074697938,
+        -202.20926825717146
+      ],
+      "normal": [
+        0.1620573770032908,
+        0,
+        -0.9867813367503528
+      ],
+      "incoming": [
+        4.347503243402571,
+        -13.113564932943799,
+        22.579691637654946
+      ],
+      "outgoing": [
+        7.551144014875458,
+        3.6,
+        -5.756915600406167
+      ],
+      "impact": 21.57667332547679,
+      "bailing": true
+    },
+    "outwardSpeed": 6.9045354641525725,
+    "consoleErrors": []
+  },
+  "productionReplay": {
+    "method": "Shared contacts enabled from frame zero. Earlier newly-solid contacts change the recorded route; this is not an exact final-approach reproduction.",
+    "endFrame": 3462,
+    "endState": "gameover",
+    "impacts": [
+      {
+        "frame": 348,
+        "name": "warp plinth rim",
+        "point": [
+          0.7014454007148743,
+          0.7266666691501935,
+          1.456566333770752
+        ],
+        "normal": [
+          -0.45595392097864545,
+          0.5626765969392774,
+          0.6895658555939622
+        ],
+        "incoming": [
+          -2.3688544971182326,
+          -22.10000000000001,
+          -8.68265675766828
+        ],
+        "outgoing": [
+          -10.276156916656396,
+          -12.341877936161396,
+          3.276020440820847
+        ],
+        "impact": 17.342327932099305,
+        "bailing": false
+      },
+      {
+        "frame": 2172,
+        "name": "Lockyard towpath",
+        "point": [
+          -11.51392412185669,
+          -0.28999999165534973,
+          -52.91335487365723
+        ],
+        "normal": [
+          0.5832878758953359,
+          0.311438104397977,
+          0.7501876838248559
+        ],
+        "incoming": [
+          -6.5302076384407215,
+          -5.329331410897745,
+          -22.07109419499318
+        ],
+        "outgoing": [
+          -3.880385213978601,
+          7.229288780044429,
+          -13.115103272739264
+        ],
+        "impact": 22.026210848522332,
+        "bailing": true
+      },
+      {
+        "frame": 2202,
+        "name": "Lockyard towpath",
+        "point": [
+          -12.63005279970987,
+          -0.22860671827110363,
+          -56.95076470237389
+        ],
+        "normal": [
+          0.8584029110027188,
+          0.44988047782273644,
+          -0.2464792041046157
+        ],
+        "incoming": [
+          -0.4766082821058859,
+          -8.920073856847825,
+          -8.372096570101206
+        ],
+        "outgoing": [
+          2.119658846663552,
+          -5.998744055988843,
+          -7.585970109821421
+        ],
+        "impact": 2.3585413264149673,
+        "bailing": true
+      }
+    ],
+    "consoleErrors": []
+  },
+  "renderedScenes": [
+    {
+      "id": "custard-creek",
+      "world": {
+        "boundMeshes": 467,
+        "sceneryFloors": 293,
+        "wallBoxes": 0,
+        "prepared": true,
+        "surfaces": 788,
+        "geometries": 250,
+        "gridCells": 348,
+        "dynamic": 439,
+        "queries": 146,
+        "triangleTests": 12335,
+        "lastTriangles": 112,
+        "lastCandidates": 2
+      },
+      "sampledHardFaces": 52,
+      "allSampledFacesSolid": true,
+      "fixedStepCpuMilliseconds": {
+        "count": 90,
+        "median": 3.899999976158142,
+        "p95": 4.600000023841858
+      },
+      "supportedPlayer": {
+        "state": "ride",
+        "grounded": true,
+        "position": [
+          0,
+          0.7366666664431492,
+          0
+        ]
+      },
+      "buildStamp": "Codex/sol fork \u00b7 build 10-08 08:57 UTC"
+    },
+    {
+      "id": "treehouse-trail",
+      "world": {
+        "boundMeshes": 310,
+        "sceneryFloors": 235,
+        "wallBoxes": 106,
+        "prepared": true,
+        "surfaces": 434,
+        "geometries": 204,
+        "gridCells": 155,
+        "dynamic": 0,
+        "queries": 154,
+        "triangleTests": 17014,
+        "lastTriangles": 167,
+        "lastCandidates": 5
+      },
+      "sampledHardFaces": 60,
+      "allSampledFacesSolid": true,
+      "fixedStepCpuMilliseconds": {
+        "count": 90,
+        "median": 3,
+        "p95": 3.399999976158142
+      },
+      "supportedPlayer": {
+        "state": "ride",
+        "grounded": true,
+        "position": [
+          2.033812316483205,
+          -0.049598733303660936,
+          21.277661992454508
+        ]
+      },
+      "buildStamp": "Codex/sol fork \u00b7 build 10-08 08:57 UTC"
+    },
+    {
+      "id": "beachfront",
+      "world": {
+        "boundMeshes": 213,
+        "sceneryFloors": 2890,
+        "wallBoxes": 185,
+        "prepared": true,
+        "surfaces": 3090,
+        "geometries": 24,
+        "gridCells": 96,
+        "dynamic": 0,
+        "queries": 148,
+        "triangleTests": 13907,
+        "lastTriangles": 112,
+        "lastCandidates": 3
+      },
+      "sampledHardFaces": 53,
+      "allSampledFacesSolid": true,
+      "fixedStepCpuMilliseconds": {
+        "count": 92,
+        "median": 4.900000035762787,
+        "p95": 5.399999976158142
+      },
+      "supportedPlayer": {
+        "state": "ride",
+        "grounded": true,
+        "position": [
+          2.739928687671754,
+          1.1450772405813892,
+          8
+        ]
+      },
+      "buildStamp": "Codex/sol fork \u00b7 build 10-08 08:57 UTC"
+    },
+    {
+      "id": "nightworks-after-hours",
+      "world": {
+        "boundMeshes": 176,
+        "sceneryFloors": 35,
+        "wallBoxes": 0,
+        "prepared": true,
+        "surfaces": 178,
+        "geometries": 142,
+        "gridCells": 61,
+        "dynamic": 114,
+        "queries": 134,
+        "triangleTests": 12392,
+        "lastTriangles": 112,
+        "lastCandidates": 2
+      },
+      "sampledHardFaces": 41,
+      "allSampledFacesSolid": true,
+      "fixedStepCpuMilliseconds": {
+        "count": 91,
+        "median": 2.800000011920929,
+        "p95": 3.199999988079071
+      },
+      "supportedPlayer": {
+        "state": "ride",
+        "grounded": true,
+        "position": [
+          0,
+          10.73666666644315,
+          10
+        ]
+      },
+      "buildStamp": "Codex/sol fork \u00b7 build 10-08 08:57 UTC"
+    },
+    {
+      "id": "ghost-train",
+      "world": {
+        "boundMeshes": 1660,
+        "sceneryFloors": 2008,
+        "wallBoxes": 1650,
+        "prepared": true,
+        "surfaces": 3845,
+        "geometries": 1241,
+        "gridCells": 146,
+        "dynamic": 115,
+        "queries": 154,
+        "triangleTests": 31342,
+        "lastTriangles": 320,
+        "lastCandidates": 8
+      },
+      "sampledHardFaces": 60,
+      "allSampledFacesSolid": true,
+      "fixedStepCpuMilliseconds": {
+        "count": 90,
+        "median": 4.699999988079071,
+        "p95": 5.300000011920929
+      },
+      "supportedPlayer": {
+        "state": "ride",
+        "grounded": true,
+        "position": [
+          0,
+          0.7366666664431492,
+          16
+        ]
+      },
+      "buildStamp": "Codex/sol fork \u00b7 build 10-08 08:57 UTC"
+    },
+    {
+      "id": "jungle",
+      "world": {
+        "boundMeshes": 323,
+        "sceneryFloors": 2103,
+        "wallBoxes": 31,
+        "prepared": true,
+        "surfaces": 2157,
+        "geometries": 76,
+        "gridCells": 180,
+        "dynamic": 0,
+        "queries": 152,
+        "triangleTests": 12931,
+        "lastTriangles": 112,
+        "lastCandidates": 2
+      },
+      "sampledHardFaces": 60,
+      "allSampledFacesSolid": true,
+      "fixedStepCpuMilliseconds": {
+        "count": 92,
+        "median": 3.100000023841858,
+        "p95": 3.800000011920929
+      },
+      "supportedPlayer": {
+        "state": "ride",
+        "grounded": true,
+        "position": [
+          3.7290679770243798,
+          2.515234033494967,
+          6
+        ]
+      },
+      "buildStamp": "Codex/sol fork \u00b7 build 10-08 08:57 UTC"
+    }
+  ],
+  "performance": {
+    "method": "Headless Chrome, 1280x720; 90+ fixed-step samples per scene. Host measurements, not a device-independent FPS guarantee.",
+    "floorQueryBefore": {
+      "jungleMedianMs": 4.0,
+      "ghostTrainMedianMs": 5.9
+    },
+    "floorQueryAfter": {
+      "jungleMedianMs": 3.1,
+      "ghostTrainMedianMs": 4.7
+    },
+    "spatialStress": {
+      "surfaces": 5000,
+      "sharedGeometries": 1,
+      "candidatesPerNearQuery": 1,
+      "trianglesPerNearQuery": 12,
+      "meanQueryMs": 0.0196
+    }
+  },
+  "traversal": {
+    "custardContinuousChapter": {
+      "seconds": 39.43333333333333,
+      "crates": 42,
+      "bails": 0,
+      "deaths": 0,
+      "states": [
+        "ride",
+        "air",
+        "grind"
+      ]
+    },
+    "jungleBoundaryProbes": 112,
+    "movingCarriageLedgeCases": 12,
+    "sceneryCaptureChecks": 316
+  },
+  "preExistingFailures": {
+    "verifiedOnUnmodifiedMain": "751d93e",
+    "checks": [
+      "validate-editor-roundtrip: Sky fog leaked to a user-level id",
+      "validate-ledge-traversal: historical replay is riding rather than hanging at frame 4351",
+      "test-rail-air-transfer: Boardslide 1 -1 torso faced opposite input"
+    ]
+  },
+  "validationCommands": [
+    "npm run check:world-solids",
+    "npm run check:levels",
+    "npm run build",
+    "node tools/test-custard-traversal.mjs continuous-chapter",
+    "node tools/test-ghost-cart-ledges.mjs",
+    "node tools/test-loop-ride.mjs",
+    "node tools/test-break-apart.mjs",
+    "node tools/test-discarded-boards.mjs",
+    "node tools/test-legacy-scenery-capture.mjs",
+    "node tools/test-world-map-locomotion.mjs",
+    "node tools/test-wood-path-level.mjs",
+    "node tools/test-wood-path-meshes.mjs",
+    "node tools/test-beachside-merge.mjs",
+    "node tools/test-beachfront-cliff.mjs",
+    "node tools/test-ice-slide-carry.mjs"
+  ]
+}

@@ -3932,6 +3932,7 @@ export class Level {
   private readonly worldWallSources=new WeakMap<THREE.Box3,CustomComponent|THREE.Mesh>();
   private worldSurfaceBinding:WorldSurfaceBinding|null=null;
   prepareWorldSolids():void{this.worldSurfaceBinding?.prepare();}
+  raycastGround(ray:THREE.Raycaster):THREE.Intersection[]{return this.worldSurfaceBinding?.raycastGround(ray)??ray.intersectObjects(this.groundMeshes,false);}
   get worldSolidDiagnostics(){return this.worldSurfaceBinding?.diagnostics??null;}
   readonly loopMeshes: THREE.Mesh[] = []; // explicit analytic contacts; empty on ordinary courses
   private obstacleEdgeMeshes: THREE.Mesh[] = [];
@@ -5042,11 +5043,11 @@ export class Level {
     this.installGroundAcceleration(this.groundMeshes);
     if(!this.isCampaignMap){
       this.worldSurfaceBinding=new WorldSurfaceBinding(this.root,this.worldSolids,{
-        ground:()=>this.groundMeshes,walls:()=>this.walls,wallPath:box=>this.wallPathForBox(box),wallSource:box=>this.worldWallSources.get(box),
+        ground:()=>this.groundMeshes,active:mesh=>{const c=this.crumbles[mesh.userData.crumbleId];return !c||c.state!=='fall'&&c.state!=='gone';},walls:()=>this.walls,wallPath:box=>this.wallPathForBox(box),wallSource:box=>this.worldWallSources.get(box),
         component:object=>{for(let at:THREE.Object3D|null=object;at&&at!==this.root;at=at.parent){if(at.userData.assetBatchRoot)return undefined;const index=at.userData.editorIdx;if(Number.isInteger(index))return this.builtFromData?.components[index];}return undefined;},
       });
       this.worldSurfaceBinding.prepare();
-    }
+    }else this.worldSolids.enabled=false;
     if (this.water && !this.campaignWorldMap) {
       const shorelineMeshes:THREE.Mesh[]=[];
       this.root.traverse(object=>{

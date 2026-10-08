@@ -1,4 +1,4 @@
-import {meshScenerySolid} from './worldSurfaceBinding';
+import {meshScenerySolid,decorScenerySolid} from './worldSurfaceBinding';
 import { ICE_SURFACE, FALL_AWAY_SURFACE, SLIPPERY_COMPONENT_TYPES } from './surfaceBehavior';
 // LEVEL EDITOR: an in-game mode over source-owned level data. The editor keeps
 // a transactional working copy and rebuilds the live preview from that exact
@@ -9338,7 +9338,7 @@ export class Editor {
         if (dk === "carvedlog" || dk === "thornroots")
           boolRow(dk === "thornroots" ? "hazard collision" : "solid collision", () => c.solid ?? dk === "carvedlog", value => { c.solid = value;c.scenerySolid=value; });
       }
-      if(!isCityAsset(dk)&&!isJungleAsset(dk))boolRow("solid scenery",()=>c.scenerySolid??!['fern','broadleaf','flowers','toadstool','toadstools','vines','plants','roadarrow'].includes(dk),value=>{c.scenerySolid=value;});
+      if(!isCityAsset(dk)&&!isJungleAsset(dk))boolRow("solid scenery",()=>c.scenerySolid??decorScenerySolid(dk),value=>{c.scenerySolid=value;});
       if(isCityAsset(dk)){if(CITY_ASSETS[dk].ground||dk==="cityfence")num("rise along tile (m)",()=>c.amp??0,v=>{c.amp=v;},.1);num("yaw °",()=>c.yaw??0,v=>{c.yaw=v;},15);sizeRow(0,"width");sizeRow(1,"height");sizeRow(2,"depth");boolRow("solid collision",()=>c.scenerySolid??true,v=>{c.solid=v;c.scenerySolid=v;});}
       if (dk === "coastalhouse") {
         sizeRow(0, "width"); sizeRow(1, "height"); sizeRow(2, "depth");

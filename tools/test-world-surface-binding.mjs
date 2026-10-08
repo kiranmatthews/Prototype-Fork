@@ -4,10 +4,10 @@ import {createServer} from 'vite';
 const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true,hmr:false,ws:false}});
 try {
   const {WorldSolids,solidContact}=await server.ssrLoadModule('/src/worldSolids.ts');
-  const {WorldSurfaceBinding,meshScenerySolid}=await server.ssrLoadModule('/src/worldSurfaceBinding.ts');
+  const {WorldSurfaceBinding,meshScenerySolid,decorScenerySolid}=await server.ssrLoadModule('/src/worldSurfaceBinding.ts');
   const {jungleSolidRole}=await server.ssrLoadModule('/src/jungleAssets.ts');
   const root=new THREE.Group(),world=new WorldSolids(),ground=[],walls=[],owners=new WeakMap(),components=new WeakMap();
-  const binding=new WorldSurfaceBinding(root,world,{ground:()=>ground,walls:()=>walls,wallSource:b=>owners.get(b),component:m=>components.get(m)});
+  const binding=new WorldSurfaceBinding(root,world,{ground:()=>ground,active:m=>m.userData.testActive!==false,walls:()=>walls,wallSource:b=>owners.get(b),component:m=>components.get(m)});
   const q={low:.4,high:1.4,radius:.4,ignoreGround:true},hit=solidContact(),v=(...a)=>new THREE.Vector3(...a);
   const cross=(x=0)=>world.cast(v(x,0,3),v(x,0,-3),q,hit);
   const mesh=(x=0)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(4,3,.1));m.position.set(x,1.5,0);return m;};
@@ -16,7 +16,7 @@ try {
   const wall=mesh();wall.userData.solidSurface='mesh';root.add(wall);binding.prepare();
   assert.ok(cross(),'asynchronously attached hard geometry is solid');
   wall.visible=false;assert.ok(cross(),'distance/camera hiding never removes collision');
-  const ray=new THREE.Raycaster(v(0,8,0),v(0,-1,0));
+  const ray=new THREE.Raycaster(v(0,8,0),v(0,-1,0),0,20);
   assert.ok(ray.intersectObjects(ground,false).length,'hard scenery also supplies its real top');
   wall.removeFromParent();binding.prepare();assert.equal(cross(),false);assert.equal(ground.length,0);checks+=4;
 
@@ -36,18 +36,37 @@ try {
   ground.length=0;binding.prepare();assert.equal(cross(),false,'inactive phase support cannot be a ghost wall');
   ground.push(phase);binding.prepare();assert.ok(cross());root.remove(phase);ground.length=0;binding.prepare();checks+=3;
 
+  const crumble=mesh();components.set(crumble,{t:'crumble',p:[0,0,0]});root.add(crumble);ground.push(crumble);binding.prepare();assert.ok(cross());crumble.userData.testActive=false;assert.equal(cross(),false,'falling/gone support is inactive even while retained in the ground array');root.remove(crumble);ground.length=0;binding.prepare();checks++;
+
   const bridge=mesh();components.set(bridge,{t:'spinbridge',p:[0,0,0]});root.add(bridge);ground.push(bridge);binding.prepare();
   ground.length=0;binding.prepare();assert.ok(cross(),'bridge body stays solid when its standing surface is inactive');root.remove(bridge);binding.prepare();checks++;
 
   for(const kind of ['treehousecavewall','treehousecavearch','treehouseporchhut','treehousebalcony','treehousehost','trialsv2earthbanka','coastv2ledge','templewall'])assert.equal(jungleSolidRole(kind),'mesh',kind);
   for(const kind of ['treehousecanopy','treehousebush','junglefern','trialsv2awning','treehousetrialscavematte'])assert.equal(jungleSolidRole(kind),'none',kind);
   assert.equal(jungleSolidRole('trialsv2treea'),'trunk');checks+=14;
+  for(const kind of ['fern','monstera','ghoststeam','roadarrow'])assert.equal(decorScenerySolid(kind),false);
+  assert.equal(decorScenerySolid('ghostclockwork'),true);checks+=5;
   const arrow={t:'mesh',p:[0,0,0],solid:false,vertices:[-1,0,1,1,0,1,0,0,-1],indices:[0,1,2]};
+  assert.equal(meshScenerySolid({...arrow,tex:'treehouse-canvas',vertices:[-1,0,1,1,1,1,0,0,-1]}),false);checks++;
   assert.equal(meshScenerySolid(arrow),false);assert.equal(meshScenerySolid({...arrow,scenerySolid:true}),true);checks+=2;
 
   const flex=mesh();flex.userData.solidSurface='trunk';const position=flex.geometry.attributes.position;
   flex.geometry.setAttribute('aJungleFlex',new THREE.Float32BufferAttribute(Array.from({length:position.count},(_,i)=>(position.getY(i)+1.5)/3),1));
   root.add(flex);binding.prepare();assert.ok([...world.surfaces][0].geometry.attributes.position.count>0,'clipping preserves triangles crossing the rooted wind region');root.remove(flex);binding.prepare();checks++;
+  const movingFloor=mesh();movingFloor.userData.solidSurface='mesh';components.set(movingFloor,{t:'mover',p:[0,0,0]});root.add(movingFloor);binding.prepare();
+  assert.ok(ray.intersectObjects(ground,false).length);binding.beginStep();movingFloor.position.x=40;binding.prepare();
+  assert.equal(ray.intersectObjects(ground,false).length,0,'same ray must forget a moved support');ray.ray.origin.x=40;
+  assert.ok(ray.intersectObjects(ground,false).length,'a changed ray uses the new spatial cell');checks+=3;
+  // The indexed path must retain every original hit, including finite angled
+  // rays, nearer clipping, support identity, moving meshes and empty space.
+  for(let i=0;i<120;i++){
+    ray.ray.origin.set(i%3===0?40:((i*17)%97)-48,4+(i%5),((i*23)%11)-5);
+    ray.ray.direction.set((i%5-2)*.08,-1,(i%7-3)*.09).normalize();ray.near=i%4*.1;ray.far=2+(i%9)*4;
+    const direct=ray.intersectObjects(ground,false),indexed=binding.raycastGround(ray);
+    assert.equal(indexed.length,direct.length,'indexed ray changed its hit count');
+    for(let j=0;j<direct.length;j++){assert.equal(indexed[j].object,direct[j].object);assert.ok(indexed[j].point.distanceTo(direct[j].point)<1e-9);}
+  }
+  checks++;
   binding.dispose();assert.equal(world.surfaces.size,0);assert.equal(ground.length,0);
   root.add(mesh());assert.equal(world.surfaces.size,0,'disposed binding cannot accept late assets');checks++;
 

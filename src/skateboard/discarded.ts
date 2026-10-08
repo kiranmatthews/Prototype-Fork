@@ -3,6 +3,7 @@ import {solidContact,type WorldSolids}from'../worldSolids';
 import { RenderInterpolator } from '../renderInterpolation';
 import { BoardFractures } from './fracture';
 export interface BoardDebrisWorld {
+    raycastGround?:(ray:THREE.Raycaster)=>THREE.Intersection[];
     worldSolids?:WorldSolids;
     groundMeshes: THREE.Mesh[];
     killY: number;
@@ -235,7 +236,7 @@ export class DiscardedBoards {
         this.point.y = Math.max(previousY, root.position.y) + 2.5;
         this.ray.set(this.point, DOWN);
         this.ray.far = Math.max(12, previousY - root.position.y + 4);
-        const hits = this.ray.intersectObjects(world.groundMeshes, false);
+        const hits = (world.raycastGround?.(this.ray)??this.ray.intersectObjects(world.groundMeshes, false));
         let floor: number | null = null;
         for (const hit of hits) {
             const crumble = world.crumbles[hit.object.userData.crumbleId];

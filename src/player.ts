@@ -7522,7 +7522,7 @@ export class Player {
       VERT_RAY_D.copy(this.vertNormal).negate();
       this.raycaster.set(VERT_RAY_O, VERT_RAY_D);
       this.raycaster.far = SKATE_PARK.breakProbeLength;
-      if (this.raycaster.intersectObjects(level.groundMeshes, false).length > 0) return;
+      if ((level.raycastGround?.(this.raycaster)??this.raycaster.intersectObjects(level.groundMeshes, false)).length > 0) return;
 
       const outward = Math.hypot(this.vVel, this.vertLatVel) * SKATE_PARK.breakOutScale;
       this.parkVelocity.set(-this.vertNormal.z * this.vertLatVel - this.vertNormal.x * outward,
@@ -7548,7 +7548,7 @@ export class Player {
       VERT_RAY_D.copy(oldNormal).negate();
       this.raycaster.set(VERT_RAY_O, VERT_RAY_D);
       this.raycaster.far = SKATE_PARK.trackReach * 2;
-      const contact = this.raycaster.intersectObjects(level.groundMeshes, false).find(h =>
+      const contact = (level.raycastGround?.(this.raycaster)??this.raycaster.intersectObjects(level.groundMeshes, false)).find(h =>
         h.face && h.object.userData.vert === true &&
         (!this.hangPipe || h.object.userData.halfpipe === this.hangPipe));
       if (!contact?.face) continue;
@@ -8784,7 +8784,7 @@ export class Player {
       VERT_RAY_D.set(-n.x, 0, -n.z);
       this.raycaster.set(VERT_RAY_O, VERT_RAY_D);
       this.raycaster.far = 5.2;
-      const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
+      const hits = (level.raycastGround?.(this.raycaster)??this.raycaster.intersectObjects(level.groundMeshes, false));
       const h = hits[0];
       if (!h || !h.face) continue;
       if (h.object.userData.halfpipe) continue; // analytic pipes keep their own hang rules
@@ -11214,7 +11214,7 @@ export class Player {
     VERT_RAY_D.set(-side.x, 0, -side.z);
     this.raycaster.set(VERT_RAY_O, VERT_RAY_D);
     this.raycaster.far = 0.8;
-    for (const contact of this.raycaster.intersectObjects(level.groundMeshes, false)) {
+    for (const contact of (level.raycastGround?.(this.raycaster)??this.raycaster.intersectObjects(level.groundMeshes, false))) {
       const mesh = contact.object;
       const hp = mesh.userData.halfpipe as Halfpipe | undefined;
       if (!contact.face || mesh.userData.vert !== true || (!hp && !mesh.userData.vertRampMesh)) continue;
@@ -12806,7 +12806,7 @@ export class Player {
               this.tryLedgeGrab(w, level)
             )
               break;
-            if(level.worldSolids?.enabled)continue;
+            if(level.worldSolids?.enabled&&!this.hubMode)continue;
             const bx = this.pos.x;
             const bz = this.pos.z;
             const bs = this.speed;
@@ -12816,7 +12816,7 @@ export class Player {
             break; // one logical path resolves once, never once per broadphase slice
           }
           if (this.tryLedgeGrab(w, level)) break; // caught its lip — hanging
-          if(level.worldSolids?.enabled)continue;
+          if(level.worldSolids?.enabled&&!this.hubMode)continue;
           const bx = this.pos.x;
           const bz = this.pos.z;
           const bs = this.speed; // pushOutOf full-stops; keep the crash speed
@@ -14594,7 +14594,7 @@ export class Player {
     this.raycaster.set(LEDGE_RAY_ORIGIN.set(x, rayTop, z), LEDGE_DOWN);
     this.raycaster.near = 0;
     this.raycaster.far = Math.max(0.05, rayTop - rayBottom);
-    const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
+    const hits = (level.raycastGround?.(this.raycaster)??this.raycaster.intersectObjects(level.groundMeshes, false));
     for (const hit of hits) {
       const data = hit.object.userData as { halfpipe?: unknown; vert?: boolean; ledgeGrab?: boolean; ledgeReceiverDrop?: number };
       if (data.halfpipe || data.vert === true || !hit.face || (!landingReceiver && data.ledgeGrab === false)) continue;
@@ -15934,7 +15934,7 @@ export class Player {
     VERT_RAY_D.multiplyScalar(1 / distance);
     this.raycaster.set(VERT_RAY_O, VERT_RAY_D);
     this.raycaster.far = distance + 0.015;
-    for (const hit of this.raycaster.intersectObjects(level.groundMeshes, false)) {
+    for (const hit of (level.raycastGround?.(this.raycaster)??this.raycaster.intersectObjects(level.groundMeshes, false))) {
       if (!hit.face || !hit.object.userData.vertRampMesh || hit.object.userData.vert !== true) continue;
       const normal = hit.face.normal.clone().transformDirection(hit.object.matrixWorld);
       if (normal.y < 0 || normal.dot(VERT_RAY_D) >= -1e-4) continue;
@@ -15979,7 +15979,7 @@ export class Player {
       crateContact = null;
     this.raycaster.set(new THREE.Vector3(cx, this.pos.y + 2.5, cz), DOWN);
     this.raycaster.far = 12;
-    const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
+    const hits = (level.raycastGround?.(this.raycaster)??this.raycaster.intersectObjects(level.groundMeshes, false));
     // A box standing on nothing (a level with no floor under it) is still a
     // floor: answer with the lid rather than falling through it.
     if (hits.length === 0) {
@@ -16170,7 +16170,7 @@ export class Player {
   private queryShadowGround(level: Level, includeCrates = false): number | null {
     this.raycaster.set(new THREE.Vector3(this.pos.x, this.pos.y + 2.5, this.pos.z), DOWN);
     this.raycaster.far = 120;
-    const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
+    const hits = (level.raycastGround?.(this.raycaster)??this.raycaster.intersectObjects(level.groundMeshes, false));
     let groundY: number | null = null;
     let fatal = false;
     for (const hit of hits) {
