@@ -11,6 +11,8 @@ const replay = JSON.parse(await readFile(new URL('./fixtures/slipstream-camera/r
 const source = await readFile(new URL('./fixtures/slipstream-camera/original-course.ts', import.meta.url), 'utf8');
 const js = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.ESNext } }).outputText;
 const { SLIPSTREAM_2_LEVEL: data, SLIPSTREAM_2_GAPS: gaps, slipstream2Point: point, slipstream2Progress: progress } = await import('data:text/javascript;base64,' + Buffer.from(js).toString('base64'));
+// A named archival fixture bypasses the exact-published-snapshot upgrade.
+data.name = 'Original Slipstream replay fixture';
 const browser = await chromium.launch({ headless: true, channel: 'chrome' });
 const errors = [], reports = [];
 try {

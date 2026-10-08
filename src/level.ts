@@ -3579,6 +3579,26 @@ export function isOriginalSkyBridge(entry: LevelEntry): boolean {
     (json.length === 295314 && (a >>> 0) === 2571905729 && (b >>> 0) === 1013289071);
 }
 
+const SLIPSTREAM_2_SNAPSHOT_CACHE = new WeakMap<object, boolean>();
+/** Upgrade only the two exact published aqueducts. An edited coordinate,
+ * component, name or camera keeps its local level; no save data is rewritten. */
+export function isOriginalSlipstream2(entry: LevelEntry): boolean {
+  if (entry.id !== 'slipstream-2' || entry.name !== 'Slipstream 2' || entry.data?.components.length !== 1111) return false;
+  const cacheable = CANONICAL_USER_DATA.has(entry.data);
+  const cached = cacheable ? SLIPSTREAM_2_SNAPSHOT_CACHE.get(entry.data) : undefined;
+  if (cached !== undefined) return cached;
+  const json = JSON.stringify(entry.data);
+  let a = 2166136261, b = 2246822519;
+  if (json.length === 1295216 || json.length === 1273965) for (let i = 0; i < json.length; i++) {
+    a = Math.imul(a ^ json.charCodeAt(i), 16777619);
+    b = Math.imul(b ^ json.charCodeAt(i), 3266489917);
+  }
+  const pristine = (json.length === 1295216 && (a >>> 0) === 0xaf335444 && (b >>> 0) === 0x2718e184) ||
+    (json.length === 1273965 && (a >>> 0) === 0x19c71aae && (b >>> 0) === 0x8ac5679a);
+  if (cacheable) SLIPSTREAM_2_SNAPSHOT_CACHE.set(entry.data, pristine);
+  return pristine;
+}
+
 /**
  * Built-ins first (in their fixed order), then user levels in the order they
  * were added. A built-in that has been EDITED is stored under its own id, and
@@ -3591,7 +3611,7 @@ export function levelList(): LevelEntry[] {
   const edited = new Map(user.map((l) => [l.id, l]));
   const out = BUILTIN_LEVELS.map((builtin) => {
     const override = edited.get(builtin.id);
-    if (!override || isOriginalTestCourse(override) || isOriginalCustardCreek(override) || isOriginalSkyBridge(override)) return builtin;
+    if (!override || isOriginalTestCourse(override) || isOriginalCustardCreek(override) || isOriginalSkyBridge(override) || isOriginalSlipstream2(override)) return builtin;
     // Early published copies mislabeled these campaign courses as bonuses.
     // Repair their presentation while retaining all locally edited geometry.
     if (override.data?.hudMode === "bonus" && PUZZLE_LEVELS.some(level => level.id === builtin.id))
@@ -3616,7 +3636,7 @@ export function levelList(): LevelEntry[] {
 /** True when this built-in has been edited and is building from data. */
 export function isOverridden(id: string): boolean {
   return isBuiltin(id) && getUserLevels().some((l) => l.id === id &&
-    !isOriginalTestCourse(l) && !isOriginalCustardCreek(l));
+    !isOriginalTestCourse(l) && !isOriginalCustardCreek(l) && !isOriginalSlipstream2(l));
 }
 
 export function findLevel(id: string): LevelEntry | null {
