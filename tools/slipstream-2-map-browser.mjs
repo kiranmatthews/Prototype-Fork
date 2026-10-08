@@ -40,7 +40,7 @@ try {
       await g.getLevel().prepareJungleAssets();
       g.gameFlow.showPause({ levelName: 'Slipstream 2', inWarpRoom: false });
       const camera = new THREE.PerspectiveCamera(58, 16 / 9, .1, 1600);
-      camera.position.set(70, 233, 72); camera.lookAt(0, 170, -85);
+      camera.position.set(66, 104, 30); camera.lookAt(4, 51, -112);
       camera.updateMatrixWorld(true); g.scene.updateMatrixWorld(true);
       const render = g.renderer, old = render.getRenderTarget(), face = render.getActiveCubeFace(), mip = render.getActiveMipmapLevel();
       const view = render.getViewport(new THREE.Vector4()), scissor = render.getScissor(new THREE.Vector4()), test = render.getScissorTest();

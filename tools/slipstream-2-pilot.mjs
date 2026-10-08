@@ -3,10 +3,11 @@
 export function createSlipstream2Pilot(source, options = {}) {
   const { SLIPSTREAM_2_LEVEL: data, SLIPSTREAM_2_GAPS: gaps, SLIPSTREAM_2_END: end,
     slipstream2Point: point, slipstream2Progress: progress } = source;
+  const line = source.slipstream2Line ?? point;
   const ordered = data.components.filter(c => c.t === 'camnode' && !c.cameraView).map(c => c.p);
   const start = point(0), startIndex = ordered.findIndex(p => p.every((v, i) => Math.abs(v - start[i]) < .001));
   const temple = ordered.slice(1, startIndex);
-  const evidence = { temple: [], jumps: [], checkpoints: [], mountedFrames: 0, maxSpeed: 0 };
+  const evidence = { temple: [], jumps: [], checkpoints: [], mountedFrames: 0, maxSpeed: 0, highRailFrames: 0, crystal: false };
   let index = 0, counter = 0, phase = 'temple settle', activeGap = null, airSeen = false, frame = 0;
   const targetMover = l => {
     const q = temple[index];
@@ -47,7 +48,7 @@ export function createSlipstream2Pilot(source, options = {}) {
           if (++counter <= 27) return { jumpHeld: true };
           const mover = targetMover(l);
           const futureZ = mover ? mover.base.z + Math.sin((l.time + .52) * mover.speed + mover.phase) * mover.amp : q[2];
-          if (Math.hypot(q[0] - p.pos.x, futureZ - p.pos.z) > 5.05 || d > 5.2) return { jumpHeld: true };
+          if (Math.hypot(q[0] - p.pos.x, futureZ - p.pos.z) > 5.25 || d > 5.4) return { jumpHeld: true };
           if (mover && Math.cos((l.time + .52) * mover.speed + mover.phase) < .25) return { jumpHeld: true };
           counter = 0; phase = 'temple air'; airSeen = false;
           return { ...direction(p, l, q), jumpReleased: true };
@@ -66,6 +67,12 @@ export function createSlipstream2Pilot(source, options = {}) {
         if (phase === 'temple air') return direction(p, l, q, Math.min(1, d / .8));
       }
       const s = progress(p.pos);
+      if (options.highRoute && s > 246 && s < 374) {
+        phase = 'high route';
+        if (p.state === 'grind') return { jumpHeld: true, grindHeld: true, moveX: Math.max(-1, Math.min(1, -p.balance * 5 - p.balanceVel * .7)) };
+        const q = Math.min(374, s + 6), fork = q > 258 && q < 374 ? 8 * Math.sin(Math.PI * (q - 258) / 116) ** 2 : 0;
+        return { ...direction(p, l, point(q, -2 * fork, fork * .4)), jumpHeld: true, grindHeld: s > 272 && s < 346 };
+      }
       if (activeGap) {
         if (!p.grounded) return {};
         if (s > activeGap.b) {
@@ -80,10 +87,12 @@ export function createSlipstream2Pilot(source, options = {}) {
         phase = next.name + ' flight'; return { jumpReleased: true };
       }
       phase = next ? next.name + ' approach' : 'finish';
-      return { ...direction(p, l, point(Math.min(end, s + 9))), jumpHeld: true };
+      return { ...direction(p, l, line(Math.min(end, s + 7))), jumpHeld: true };
     },
     observe(p, l) {
       frame++; evidence.maxSpeed = Math.max(evidence.maxSpeed, Math.abs(p.speed));
+      if (phase === 'high route' && p.state === 'grind') evidence.highRailFrames++;
+      evidence.crystal ||= p.hasCrystal;
       if (p.freeSkate) evidence.mountedFrames++;
       if (phase === 'temple air') {
         if (!p.grounded) airSeen = true;

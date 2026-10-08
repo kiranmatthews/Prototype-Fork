@@ -2025,7 +2025,7 @@ const loopCameraFraming2 = new LoopCameraFraming();
 const cameraOverlayHeroFraming2 = new CameraHeroFraming();
 function updateCamera2(dt: number): void {
   if (!p2) return;
-  if (cameraFallHold2.shouldHold(p2, level.killY)) return;
+  if (cameraFallHold2.shouldHold(p2, level.killY, () => p2!.cameraLandingAhead(level))) return;
   const framingSnap = cam2RenderSnapVersion !== p2.renderSnapVersion;
   chiefCamera2.restore(camera2);
   authoredSkateCamera2.restore(camera2);
@@ -4426,7 +4426,7 @@ const cameraHeroFraming = new CameraHeroFraming();
 const loopCameraFraming = new LoopCameraFraming();
 const cameraOverlayHeroFraming = new CameraHeroFraming();
 function updateCamera(dt: number): void {
-  if (cameraFallHold.shouldHold(player, level.killY)) return;
+  if (cameraFallHold.shouldHold(player, level.killY, () => player.cameraLandingAhead(level))) return;
   const framingSnap = cameraRenderSnapVersion !== player.renderSnapVersion;
   chiefCamera.restore(camera);
   authoredSkateCamera.restore(camera);

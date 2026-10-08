@@ -8,8 +8,9 @@ const base = (process.argv.find(value => /^https?:/.test(value)) || 'http://127.
 const modes = process.argv.includes('--full-only') ? ['full'] : process.argv.includes('--lite-only') ? ['lite'] : ['lite', 'full'];
 const respawnOnly = process.argv.includes('--respawn-only'), skipRespawn = process.argv.includes('--skip-respawn');
 const live = process.argv.includes('--live');
-const capturePrefix = live ? 'live-' : '';
-const output = '/private/tmp/slipstream-2-browser'; await mkdir(output, { recursive: true });
+const highRoute = process.argv.includes('--high-route');
+const capturePrefix = (live ? 'live-' : '') + (highRoute ? 'high-' : '');
+const output = process.env.SLIPSTREAM_REVIEW_OUTPUT || '/private/tmp/slipstream-rebuild-browser'; await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ headless: true, channel: 'chrome' });
 const context = await browser.newContext({ viewport: { width: 1280, height: 720 }, serviceWorkers: 'block' });
 const page = await context.newPage();
@@ -30,11 +31,11 @@ const errors = [], reports = [];
 page.on('pageerror', error => errors.push(error.message));
 page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
 const ready = () => page.waitForFunction(() => window.__game?.getCurrentLevel().id === 'slipstream-2' && !window.__game.gameFlow.blocksGameplay, null, { timeout: 120000 });
-const install = async ({ respawn }) => {
+const install = async ({ respawn, highRoute }) => {
   const g = window.__game, p = g.player, l = g.getLevel();
   const source = await import('/src/levels/slipstream-2.ts');
   const { createSlipstream2Pilot } = await import('/tools/slipstream-2-pilot.mjs');
-  const pilot = createSlipstream2Pilot(source);
+  const pilot = createSlipstream2Pilot(source, { highRoute });
   const report = window.slipstream2Review = { frame: 0, done: false, failed: null, phase: pilot.phase, evidence: pilot.evidence, deathEvents: [], end: null, tuning: JSON.stringify(g.TUNING), collision: {}, respawn, driveStage: 'pilot' };
   const snap = () => ({ frame: report.frame, phase: report.phase, position: p.pos.toArray(), speed: p.speed, verticalSpeed: p.vVel, grounded: p.grounded, state: p.state, board: p.boardRolling, bailing: p.isBailing, deaths: p.totalDeaths, station: source.slipstream2Progress(p.pos), temple: pilot.evidence.temple.length, jumps: pilot.evidence.jumps.length, ground: p.groundHit ? { height: p.groundHit.y, mover: p.groundHit.moverId !== undefined, gravityTrack: !!p.groundHit.gravityTrack } : null });
   l.root.updateMatrixWorld(true);
@@ -88,7 +89,7 @@ const install = async ({ respawn }) => {
     try {
       if (report.driveStage === 'pilot') {
         pilot.observe(p, l); report.phase = pilot.phase;
-        if (respawn && l.checkpoints[3].active) { report.checkpoint = { index: 3, position: l.currentSpawn.toArray(), contact: snap() }; report.driveStage = 'brake'; }
+        if (respawn && l.checkpoints[1].active) { report.checkpoint = { index: 1, position: l.currentSpawn.toArray(), contact: snap() }; report.driveStage = 'brake'; }
       } else report.phase = report.driveStage;
       report.end = snap();
       if (!respawn && (p.isBailing || report.deathEvents.length || ['dead', 'gameover'].includes(p.state))) throw Error('The actual gameplay journey bailed or died');
@@ -109,7 +110,7 @@ try {
       await page.waitForTimeout(300);
       const spawn = await page.evaluate(() => ({ position: window.__game.player.pos.toArray(), grounded: window.__game.player.grounded, stamp: document.querySelector('.hud-build')?.textContent, dropBailDistance: window.__game.TUNING.hugeDropDistance, dropBailImpact: window.__game.TUNING.hugeDropImpact }));
       assert.equal(spawn.grounded, true); assert.match(spawn.stamp, /Codex\/sol fork/);
-      await page.evaluate(install, { respawn });
+      await page.evaluate(install, { respawn, highRoute });
       const shots = new Set(); let state, lastPhase = '', lastLogFrame = -900, deadline = Date.now() + 600000;
       while (Date.now() < deadline) {
         await page.waitForTimeout(100);
@@ -117,7 +118,7 @@ try {
         const interestingPhase = !state.phase.startsWith('temple') || (state.phase === 'temple settle' && state.temple % 8 === 0);
         if ((state.phase !== lastPhase && interestingPhase) || state.frame - lastLogFrame >= 900 || state.done) { console.log(JSON.stringify({ mode, respawn, ...state })); lastLogFrame = state.frame; }
         lastPhase = state.phase;
-        const shot = !respawn && state.phase === 'temple charge' && state.temple >= 3 && state.temple < 6 ? 'temple-tier-1' : !respawn && state.phase === 'temple charge' && state.temple >= 11 && state.temple < 14 ? 'temple-tier-2' : !respawn && state.phase === 'temple charge' && state.temple >= 19 && state.temple < 22 ? 'temple-tier-3' : !respawn && !state.grounded && state.phase === 'Sun Gate flight' ? 'first-leap' : !respawn && !state.grounded && state.phase === 'Twin Spires II flight' ? 'middle-leap' : !respawn && !state.grounded && state.phase === 'Last Flight II flight' ? 'final-leap' : respawn && state.phase === 'slow flight' && !state.grounded ? 'failed-slow-leap' : null;
+        const shot = !respawn && state.phase === 'Broken sluice approach' && state.position[2] < -310 && state.position[2] > -385 ? 'fork-low-road' : !respawn && state.position[2] < -590 && state.position[2] > -635 ? 'colonnade-slalom' : !respawn && state.phase === 'temple charge' && state.temple >= 3 && state.temple < 6 ? 'temple-tier-1' : !respawn && state.phase === 'temple charge' && state.temple >= 11 && state.temple < 14 ? 'temple-tier-2' : !respawn && state.phase === 'temple charge' && state.temple >= 19 && state.temple < 22 ? 'temple-tier-3' : !respawn && !state.grounded && state.phase === 'Reservoir breach flight' ? 'first-leap' : !respawn && !state.grounded && state.phase === 'Broken sluice flight' ? 'middle-leap' : !respawn && !state.grounded && state.phase === 'Ocean flight' ? 'final-leap' : respawn && state.phase === 'slow flight' && !state.grounded ? 'failed-slow-leap' : null;
         if (shot && !shots.has(shot)) { await page.screenshot({ path: `${output}/${capturePrefix}${shot}-${mode}.png` }); shots.add(shot); }
         if (state.done) break;
       }
@@ -128,8 +129,8 @@ try {
       assert.equal(report.done, true, 'Actual browser fixture timed out'); assert.equal(report.failed, null, JSON.stringify(report.failed)); assert.equal(report.tuning, report.finalTuning);
       assert.ok(report.collision.spawn.length); assert.ok(report.collision.roads.every(road => road.hits.length)); assert.ok(report.collision.gaps.every(gap => gap.hits.length === 0));
       if (respawn) { assert.equal(report.deathEvents.length, 1); assert.ok(report.slowTakeoff.grounded && !report.slowTakeoff.board && report.slowTakeoff.speed < 8); assert.ok(report.deathEvents[0].pit >= 0, 'The slow leap must touch a real pit'); assert.ok(report.recovered.grounded && report.recovered.support.length); assert.ok(report.recovered.checkpointDistance < .75); assert.deepEqual(report.recovered.checkpoint, report.checkpoint.position); }
-      else { assert.equal(report.end.state, 'finished'); assert.equal(report.evidence.temple.length, 24); assert.equal(report.evidence.jumps.length, 12); assert.ok(report.evidence.jumps.every(jump => jump.airSeen && jump.takeoff.speed > 18)); assert.equal(report.evidence.temple.filter(landing => landing.moving).length, 6); assert.equal(report.evidence.checkpoints.length, 16); assert.deepEqual(report.deathEvents, []); }
-      assert.deepEqual(errors, []); console.log(`PASS ${mode} ${respawn ? 'real slow pit death and supported checkpoint respawn' : 'temple, twelve real jumps and finish gate'}`);
+      else { assert.equal(report.end.state, 'finished'); assert.equal(report.evidence.temple.length, 9); assert.equal(report.evidence.jumps.length, 3); assert.ok(report.evidence.jumps.every(jump => jump.airSeen && jump.takeoff.speed > 18)); assert.equal(report.evidence.temple.filter(landing => landing.moving).length, 1); assert.equal(report.evidence.checkpoints.length, 7); if (highRoute) { assert.ok(report.evidence.highRailFrames > 60); assert.equal(report.evidence.crystal, true); } assert.deepEqual(report.deathEvents, []); }
+      assert.deepEqual(errors, []); console.log(`PASS ${mode} ${respawn ? 'real slow pit death and supported checkpoint respawn' : 'temple, split low road, slalom, three real jumps and finish gate'}`);
     }
   }
-} finally { await writeFile(`${output}/${live ? 'live-' : ''}summary.json`, JSON.stringify({ base, live, fixture, reports, errors }, null, 2)); await browser.close(); }
+} finally { await writeFile(`${output}/${capturePrefix}summary.json`, JSON.stringify({ base, live, fixture, reports, errors }, null, 2)); await browser.close(); }

@@ -1807,6 +1807,82 @@ export class Player {
   /** A visible floor can still sit inside a pit or be a reset-only surface. */
   get groundBelowIsFatal(): boolean { return this.shadowGroundIsFatal; }
 
+  private readonly fallCameraRay = new THREE.Raycaster();
+  private readonly fallCameraFrom = new THREE.Vector3();
+  private readonly fallCameraTo = new THREE.Vector3();
+  private readonly fallCameraNormal = new THREE.Vector3();
+  private readonly fallCameraHit = new THREE.Vector3();
+  private fallCameraProbeValid = false;
+  private fallCameraProbeSnap = -1;
+  private fallCameraLandingY: number | null = null;
+
+  /** Presentation-only forecast for a descending gap jump. Sweep a short arc
+   * through actual live collision, so thin/lower catches count before the
+   * shadow reaches them. Never use the camera lane or nearby scenery as floor.
+   * Only the fall-hold candidate calls this; cache between fixed steps. */
+  cameraLandingAhead(level: Level): number | null {
+    if (this.vVel >= 0 || this.grounded) return null;
+    if (this.fallCameraProbeValid && this.fallCameraProbeSnap === this.renderSnapVersion)
+      return this.fallCameraLandingY;
+    this.fallCameraProbeValid = true;
+    this.fallCameraProbeSnap = this.renderSnapVersion;
+    this.fallCameraLandingY = null;
+    const board = this.airGrav === 'board';
+    const flatG = board ? (this.parkControls ? TUNING.boardRiseGravity
+      : this.floatAir ? TUNING.rampFallGravity : TUNING.boardFallGravity) : TUNING.fallGravity;
+    const gravity = this.vertAir || this.pipeHang ? TUNING.pipeAirGravity : flatG;
+    const from = this.fallCameraFrom.copy(this.pos), to = this.fallCameraTo;
+    // A small sole/contact allowance; the forecast never grants physical support.
+    from.y += .12;
+    let vy = this.vVel;
+    const safe = (q: THREE.Vector3) => q.y > level.killY && !level.pitBoxes.some(pit =>
+      pit.max.y >= q.y && pit.min.y <= this.pos.y && q.x >= pit.min.x && q.x <= pit.max.x &&
+      q.z >= pit.min.z && q.z <= pit.max.z && !level.pitMissesPoly(pit, q.x, q.z));
+    // 0.6 s is a landing forecast, not a search across the level. Segment
+    // raycasts catch narrow platforms without ten vertical footprint guesses.
+    for (let i = 0; i < 10; i++) {
+      vy = Math.max(-CONST.maxFallSpeed, vy - gravity * .06);
+      to.set(from.x + this.lastVelX * .06, from.y + vy * .06, from.z + this.lastVelZ * .06);
+      const ray = this.fallCameraRay;
+      ray.ray.origin.copy(from); ray.ray.direction.copy(to).sub(from);
+      ray.near = 0; ray.far = ray.ray.direction.length(); ray.ray.direction.normalize();
+      const surface = ray.intersectObjects(level.groundMeshes, false)[0];
+      let distance = surface?.distance ?? Infinity;
+      let catchable = false;
+      if (surface) {
+        const normal = this.fallCameraNormal.copy(surface.face?.normal ?? VERT_UP).transformDirection(surface.object.matrixWorld);
+        catchable = normal.y >= .3 && !surface.object.userData.lethal && !surface.object.userData.outOfBounds;
+        this.fallCameraHit.copy(surface.point);
+      }
+      for (const crate of level.crates) {
+        if (!crate.alive || crate.pending || crate.nitro) continue;
+        const hit = ray.ray.intersectBox(crate.box, this.fallCameraNormal);
+        const d = hit?.distanceTo(from) ?? Infinity;
+        if (hit && d <= ray.far && d < distance) {
+          distance = d; catchable = Math.abs(hit.y - crate.box.max.y) < .01;
+          this.fallCameraHit.copy(hit);
+        }
+      }
+      // A pit crossed before the catch is not a viable landing trajectory.
+      for (const pit of level.pitBoxes) {
+        const hit = ray.ray.intersectBox(pit, this.fallCameraNormal);
+        if (hit && hit.distanceTo(from) <= Math.min(ray.far, distance) && !level.pitMissesPoly(pit, hit.x, hit.z)) return null;
+      }
+      for (const wall of level.walls) {
+        const hit = ray.ray.intersectBox(wall, this.fallCameraNormal);
+        if (hit && hit.distanceTo(from) < Math.min(ray.far, distance) - .01) return null;
+      }
+      if (Number.isFinite(distance)) {
+        if (!catchable || !safe(this.fallCameraHit)) return null;
+        this.fallCameraLandingY = this.fallCameraHit.y;
+        return this.fallCameraLandingY;
+      }
+      from.copy(to);
+      if (from.y <= level.killY) break;
+    }
+    return null;
+  }
+
   // CHASE CAM: is the current travel a real heading — flat-ish ground or a
   // grind — rather than cross-pipe oscillation or an air the camera should
   // coast through? Transition walls and pipe troughs never steer the chase
@@ -2909,6 +2985,7 @@ export class Player {
   }
 
   commitRenderStep(level: Level): void {
+    this.fallCameraProbeValid = false;
     // PVP separation/kicks run after Player.step() authored the pose. Fold that
     // final root correction into the snapshot and carry player-attached world
     // effects with it; the loose board/fruit/sparks have their own trajectories.

@@ -481,7 +481,7 @@ export const CAMPAIGN_MAP_HUBS: readonly CampaignLevelDefinition[] = [
   // Append the identity to preserve every published editor/map point index.
   { progressKey: "custard-creek", levelId: "custard-creek", name: "Custard Creek", relicTime: 180,
     islandId: "island-1", mapPath: "lower-branch", mapPosition: [-111, 2.4, 46], unlockAfter: ["test-course"] },
-  { progressKey: "slipstream-2", levelId: "slipstream-2", name: "Slipstream 2", relicTime: 155,
+  { progressKey: "slipstream-2", levelId: "slipstream-2", name: "Slipstream 2", relicTime: 72,
     islandId: "island-1", mapPath: "upper-branch", mapPosition: [-47, 11, -1], unlockAfter: ["slipstream"] },
 ] as const;
 

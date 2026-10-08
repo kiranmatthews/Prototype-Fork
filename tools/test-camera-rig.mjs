@@ -63,6 +63,10 @@ try {
   Object.assign(rider, { grounded: false, state: 'air', groundBelowY: null, vVel: -8 });
   rider.renderPosition.y = 39;
   assert.equal(fall.shouldHold(rider, -30), true, 'respawn retained the previous level height');
+  assert.equal(fall.shouldHold(rider, -30, () => 35), false, 'lower landing ahead froze a viable jump');
+  assert.equal(fall.shouldHold(rider, -30, () => null), true, 'steering away from the predicted catch kept camera live');
+  assert.equal(fall.shouldHold(rider, -30, () => -31), true, 'forecast below kill plane released hold');
+  assert.equal(fall.shouldHold(rider, -30, () => NaN), true, 'invalid forecast released hold');
   const camera = new THREE.PerspectiveCamera(49, 16 / 9, 0.1, 400);
   const aim = new THREE.Vector3();
   const forward = new THREE.Vector3(0.6, 0, -0.8);

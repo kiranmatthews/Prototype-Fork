@@ -11,13 +11,14 @@ interface FallCameraSubject {
 
 /** Keep the complete last shot once a missed landing falls below the course.
  * Runs before any camera layer restores or reframes, so chase/loop/authored
- * shots cannot pull the eye or aim underground. Reuse the player's existing
- * support probe; this is presentation only and adds no collision queries. */
+ * shots cannot pull the eye or aim underground. A missing vertical shadow
+ * probe is not proof of a missed jump: a lower deck can still catch the rider
+ * ahead. Ask for that bounded trajectory probe only when a hold is imminent. */
 export class CameraFallHold {
   private snapVersion = -1;
   private edgeY = 0;
 
-  shouldHold(subject: FallCameraSubject, killY: number): boolean {
+  shouldHold(subject: FallCameraSubject, killY: number, landingAhead?: () => number | null): boolean {
     if (subject.state === 'dead' || subject.state === 'gameover') return true;
     const y = subject.renderPosition.y;
     const floor = subject.groundBelowY;
@@ -35,6 +36,12 @@ export class CameraFallHold {
     if (landing) {
       this.edgeY = Math.min(y, floor);
       return false;
+    }
+    if (y < this.edgeY - .2) {
+      const ahead = landingAhead?.();
+      if (ahead != null && Number.isFinite(ahead) && ahead > killY) {
+        return false;
+      }
     }
     // A rescue jump below the lip must not pull the camera underground either;
     // resume once the rider regains the course height or a real landing.
