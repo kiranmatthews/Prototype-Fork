@@ -35,7 +35,8 @@ export function createWaterparkPilot(source,options={}) {
    if(giantPhase==='catch')return {...toward(p,l,[24,70,108]),jumpHeld:true};
    const path=source.WATERPARK_GIANT_EXIT;let best=Infinity;
    for(let i=giantExitIndex;i<path.length;i++){const d=distance(p,path[i]);if(d<best){best=d;giantExitIndex=i;}}
-   return {...toward(p,l,giantExitIndex>76?[0,60,-30]:path[Math.min(path.length-1,giantExitIndex+3)]),jumpHeld:true};
+   return {...toward(p,l,giantExitIndex>76?[0,60,-30]:path[Math.min(path.length-1,giantExitIndex+3)]),jumpHeld:true,
+     grabHeld:p.pos.z<30&&p.speed>6};
   }
   if(p.loopStatus.active){phaseTo('loop',p);return {moveY:1,jumpHeld:true};}
   if(p.loopStatus.completed>=loops.length){phaseTo('finish',p);return {...toward(p,l,source.WATERPARK_FINISH),jumpHeld:true};}
@@ -43,6 +44,11 @@ export function createWaterparkPilot(source,options={}) {
   phaseTo(z>-24?'tower descent':z>-160?'wave pools':z>-278?'downhill connector':z>-400?'coaster pools':z>-466?'upper flume descent':z>-538?'dry flume':z>-578?'loop summit':p.loopStatus.completed===0?'first gravity drop':p.loopStatus.completed===1?'second gravity drop':z>-798?'ravine launch':z>-920?'final loop gap':'third gravity drop',p);
   const targetX=p.loopStatus.completed>0?loops[p.loopStatus.completed-1].exit[0]:0;
   let input=toward(p,l,[targetX,p.pos.y,z-14]),jumpHeld=true,spinHeld=false;
+  // Slow for the raised ceramic entry coping, then let each pool's descent
+  // rebuild speed. Circle braking is an ordinary mounted input.
+  const entryCoping=p.grounded&&(z>-25||z<-258&&z>-279);
+  const entrySpeed=z<-258&&z>-270?14:6;
+  if(entryCoping)evidence.entryCopingApproach={position:position(p),speed:p.speed};
   if(!p.grounded&&p.vertAir&&p.pipeHang){
    // Fresh press/release after the coping launch commits each forward spine.
    jumpHeld=options.holdThroughLanding&&p.vertBoardRelease.stage===2||
@@ -64,7 +70,7 @@ export function createWaterparkPilot(source,options={}) {
     jump++;jumpHeld=false;
    }
   }
-  return {...input,jumpHeld,spinHeld};
+  return {...input,jumpHeld,spinHeld,grabHeld:entryCoping&&p.speed>entrySpeed};
  }
  function observe(p,l){
   const pipe=l.halfpipes.indexOf(p.groundHit?.halfpipe??p.hangPipe),stage=p.vertBoardRelease.stage;

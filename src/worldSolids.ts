@@ -43,6 +43,9 @@ export interface SolidQuery {
   supportRadius?:(normal:THREE.Vector3)=>number;
   /** Ordinary ground contact remains owned by the established ride solver. */
   ignoreGround?:boolean;
+  /** Native floor-follow step allowance in world Y (zero in air). Walkable
+   * triangle edges must not become walls before the foot ray reaches them. */
+  groundStep?:number;
   /** Coping below a mounted board is not an obstruction to the rider. */
   soleClearance?:number;
   ignore?:(surface:SolidSurface)=>boolean;
@@ -181,6 +184,18 @@ export class WorldSolids {
   private triangle(from:THREE.Vector3,to:THREE.Vector3,surface:SolidSurface,q:SolidQuery,result:SolidContact):void{
     this.lastTriangles++;this.tri.needsUpdate=true;
     if(this.tri.getArea()<1e-10)return;
+    if(q.ignoreGround&&q.groundStep!==undefined){
+      this.tri.getNormal(this.normal);
+      const n=this.normal,a=this.tri.a;
+      if(n.y>.65&&n.dot(q.supportNormal??UP)>.65){
+        const fromHeight=(n.x*(this.rootFrom.x-a.x)+n.y*(this.rootFrom.y-a.y)+n.z*(this.rootFrom.z-a.z))/n.y;
+        const toHeight=(n.x*(this.rootTo.x-a.x)+n.y*(this.rootTo.y-a.y)+n.z*(this.rootTo.z-a.z))/n.y;
+        // Airborne queries use the starting feet: rising through a thin
+        // floor from below must still hit its underside. Grounded movement
+        // may step onto a floor within its existing endpoint allowance.
+        if((q.groundStep>0?Math.max(fromHeight,toHeight):fromHeight)>=-q.groundStep-.004)return;
+      }
+    }
     const top=Math.max(this.tri.a.y,this.tri.b.y,this.tri.c.y);
     if(q.soleClearance!==undefined&&top<=Math.min(from.y,to.y)+q.soleClearance)return;
     let t=0;

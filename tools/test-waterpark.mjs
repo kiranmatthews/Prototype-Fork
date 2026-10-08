@@ -5,7 +5,9 @@ import { createWaterparkPilot } from './waterpark-pilot.mjs';
 
 for(const fastLine of [false,true])await withWaterparkRuntime(async r=>{
  const {p,l,source,trace}=r,before=JSON.stringify(r.TUNING);
- const pilot=createWaterparkPilot(source,{fastLine,releaseDistance:fastLine?.5:1.4});
+ // Both lines release before the physical bowl rim. The direct line skips
+ // the first optional checkpoint; it does not jump through the rim's side.
+ const pilot=createWaterparkPilot(source,{fastLine,releaseDistance:1.4});
  assert.equal(l.halfpipes.length,7,'Seven differently sized analytic pools must remain');
  assert.ok(new Set(source.WATERPARK_POOLS.map(pool=>pool.radius)).size>=4);
  assert.ok(source.WATERPARK_POOLS.every(pool=>pool.yaw===90&&pool.dir[0]===0&&pool.dir[2]===-1),'Every main-route pool must progress forward down the same line');
@@ -59,7 +61,7 @@ for(const fastLine of [false,true])await withWaterparkRuntime(async r=>{
  }
  assert.ok(biggest<3,`Unexpected large physics step ${biggest}: ${JSON.stringify(worstStep)}`);
  if(process.env.WATERPARK_TRACE)await writeFile(`${process.env.WATERPARK_TRACE}${fastLine?'.late':''}`,JSON.stringify({evidence:e,trace}));
- console.log(`Downhill Deadwater ${fastLine?'late-release line':'checkpoint line'}: 5 downhill spines, 4 gravity jumps and triple loop; ${(trace.length*r.CONST.fixedStep).toFixed(2)} s, largest step ${biggest.toFixed(3)} m.`);
+ console.log(`Downhill Deadwater ${fastLine?'checkpoint-bypass line':'checkpoint line'}: 5 downhill spines, 4 gravity jumps and triple loop; ${(trace.length*r.CONST.fixedStep).toFixed(2)} s, largest step ${biggest.toFixed(3)} m.`);
 });
 
 await withWaterparkRuntime(({p,l,tick,directionInput})=>{

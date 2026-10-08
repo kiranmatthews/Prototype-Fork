@@ -1,0 +1,2226 @@
+{
+  "schema": 1,
+  "date": "2026-10-09",
+  "baseCommit": "142a40b",
+  "scope": "Airborne momentum ownership and native floor contact; unchanged tuning, level geometry, graphics and cameras.",
+  "momentum": {
+    "roundtrips": 2000,
+    "contacts": [
+      {
+        "mode": "vert",
+        "displacement": true,
+        "legacy": true,
+        "incoming": [
+          8,
+          -5,
+          0
+        ],
+        "expected": [
+          8.00000000000001,
+          -3.199999999999905,
+          2.4000000000000097
+        ],
+        "stored": [
+          16.00000000000001,
+          -3.199999999999905,
+          2.4000000000000097
+        ],
+        "normal": [
+          3.635980405647344e-15,
+          0.6000000000000186,
+          0.7999999999999861
+        ]
+      },
+      {
+        "mode": "vert",
+        "displacement": true,
+        "legacy": false,
+        "incoming": [
+          8,
+          -5,
+          0
+        ],
+        "expected": [
+          8.00000000000001,
+          -3.199999999999905,
+          2.4000000000000097
+        ],
+        "stored": [
+          8.00000000000001,
+          -3.199999999999905,
+          2.4000000000000097
+        ],
+        "normal": [
+          3.635980405647344e-15,
+          0.6000000000000186,
+          0.7999999999999861
+        ]
+      },
+      {
+        "mode": "vert",
+        "displacement": false,
+        "legacy": true,
+        "incoming": [
+          8,
+          -5,
+          0
+        ],
+        "expected": [
+          8.00000000000001,
+          -3.199999999999905,
+          2.4000000000000097
+        ],
+        "stored": [
+          16.00000000000001,
+          -3.199999999999905,
+          2.4000000000000097
+        ],
+        "normal": [
+          3.635980405647344e-15,
+          0.6000000000000186,
+          0.7999999999999861
+        ]
+      },
+      {
+        "mode": "vert",
+        "displacement": false,
+        "legacy": false,
+        "incoming": [
+          8,
+          -5,
+          0
+        ],
+        "expected": [
+          8.00000000000001,
+          -3.199999999999905,
+          2.4000000000000097
+        ],
+        "stored": [
+          8.00000000000001,
+          -3.199999999999905,
+          2.4000000000000097
+        ],
+        "normal": [
+          3.635980405647344e-15,
+          0.6000000000000186,
+          0.7999999999999861
+        ]
+      },
+      {
+        "mode": "grind",
+        "displacement": true,
+        "legacy": true,
+        "incoming": [
+          8,
+          -5,
+          0
+        ],
+        "expected": [
+          8.00000000000001,
+          -3.199999999999905,
+          2.4000000000000097
+        ],
+        "stored": [
+          10.298783084530779,
+          -3.199999999999905,
+          -5.2626102817692
+        ],
+        "normal": [
+          3.635980405647344e-15,
+          0.6000000000000186,
+          0.7999999999999861
+        ]
+      },
+      {
+        "mode": "grind",
+        "displacement": true,
+        "legacy": false,
+        "incoming": [
+          8,
+          -5,
+          0
+        ],
+        "expected": [
+          8.00000000000001,
+          -3.199999999999905,
+          2.4000000000000097
+        ],
+        "stored": [
+          8.00000000000001,
+          -3.199999999999905,
+          2.4000000000000097
+        ],
+        "normal": [
+          3.635980405647344e-15,
+          0.6000000000000186,
+          0.7999999999999861
+        ]
+      },
+      {
+        "mode": "grind",
+        "displacement": false,
+        "legacy": true,
+        "incoming": [
+          8,
+          -5,
+          0
+        ],
+        "expected": [
+          8.00000000000001,
+          -3.199999999999905,
+          2.4000000000000097
+        ],
+        "stored": [
+          10.298783084530779,
+          -3.199999999999905,
+          -5.2626102817692
+        ],
+        "normal": [
+          3.635980405647344e-15,
+          0.6000000000000186,
+          0.7999999999999861
+        ]
+      },
+      {
+        "mode": "grind",
+        "displacement": false,
+        "legacy": false,
+        "incoming": [
+          8,
+          -5,
+          0
+        ],
+        "expected": [
+          8.00000000000001,
+          -3.199999999999905,
+          2.4000000000000097
+        ],
+        "stored": [
+          8.00000000000001,
+          -3.199999999999905,
+          2.4000000000000097
+        ],
+        "normal": [
+          3.635980405647344e-15,
+          0.6000000000000186,
+          0.7999999999999861
+        ]
+      },
+      {
+        "mode": "slide",
+        "displacement": true,
+        "legacy": true,
+        "incoming": [
+          8,
+          -5,
+          0
+        ],
+        "expected": [
+          8.00000000000001,
+          -3.199999999999905,
+          2.4000000000000097
+        ],
+        "stored": [
+          10.298783084530779,
+          -3.199999999999905,
+          -5.2626102817692
+        ],
+        "normal": [
+          3.635980405647344e-15,
+          0.6000000000000186,
+          0.7999999999999861
+        ]
+      },
+      {
+        "mode": "slide",
+        "displacement": true,
+        "legacy": false,
+        "incoming": [
+          8,
+          -5,
+          0
+        ],
+        "expected": [
+          8.00000000000001,
+          -3.199999999999905,
+          2.4000000000000097
+        ],
+        "stored": [
+          8.00000000000001,
+          -3.199999999999905,
+          2.4000000000000097
+        ],
+        "normal": [
+          3.635980405647344e-15,
+          0.6000000000000186,
+          0.7999999999999861
+        ]
+      },
+      {
+        "mode": "slide",
+        "displacement": false,
+        "legacy": true,
+        "incoming": [
+          8,
+          -5,
+          0
+        ],
+        "expected": [
+          8.00000000000001,
+          -3.199999999999905,
+          2.4000000000000097
+        ],
+        "stored": [
+          10.298783084530779,
+          -3.199999999999905,
+          -5.2626102817692
+        ],
+        "normal": [
+          3.635980405647344e-15,
+          0.6000000000000186,
+          0.7999999999999861
+        ]
+      },
+      {
+        "mode": "slide",
+        "displacement": false,
+        "legacy": false,
+        "incoming": [
+          8,
+          -5,
+          0
+        ],
+        "expected": [
+          8.00000000000001,
+          -3.199999999999905,
+          2.4000000000000097
+        ],
+        "stored": [
+          8.00000000000001,
+          -3.199999999999905,
+          2.4000000000000097
+        ],
+        "normal": [
+          3.635980405647344e-15,
+          0.6000000000000186,
+          0.7999999999999861
+        ]
+      }
+    ]
+  },
+  "floorSeamChecks": 44,
+  "deadwaterHeadless": [
+    {
+      "line": "checkpoint",
+      "frames": 5339,
+      "seconds": 88.98333333333333,
+      "end": {
+        "frame": 5339,
+        "position": [
+          60.025261578695,
+          -164.2693333308498,
+          -1058.0308354306483
+        ],
+        "state": "finished",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "pipe": -1,
+        "vertAir": false,
+        "pipeHang": false,
+        "releaseStage": 0,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      "maximumAbsoluteSpeed": 75.56135746432142,
+      "largestStep": 1.698380423718333,
+      "transfers": 5,
+      "jumps": 4,
+      "checkpoints": [
+        0,
+        1
+      ],
+      "inversions": [
+        0,
+        1,
+        2
+      ],
+      "giant": {
+        "air": true,
+        "landedRight": true,
+        "exited": true,
+        "peak": 121.04540138866803,
+        "landing": [
+          10.923719611076113,
+          79.03689934105823,
+          77.71943298174098
+        ]
+      },
+      "downhills": {
+        "Giant vert left entry drop": {
+          "frames": 108,
+          "entry": [
+            -18,
+            129.976121982355,
+            154.63599999205272
+          ],
+          "exit": [
+            -18,
+            70.04843386240447,
+            108.73833882311231
+          ],
+          "minSpeed": 22.97630455461394,
+          "maxSpeed": 63.44241056525467,
+          "mounted": true
+        },
+        "Downhill park connector": {
+          "frames": 175,
+          "entry": [
+            -2.7297728546542164,
+            47.95661103963804,
+            -190.247936916354
+          ],
+          "exit": [
+            -0.06491266976578484,
+            34.04974441587679,
+            -269.7157461949897
+          ],
+          "minSpeed": 23,
+          "maxSpeed": 30.5,
+          "mounted": true
+        },
+        "Upper flume approach": {
+          "frames": 92,
+          "entry": [
+            -0.06491266976640775,
+            29.89451360968829,
+            -424.36920236609103
+          ],
+          "exit": [
+            -0.06491266976640775,
+            18.073881025638478,
+            -465.7414164102654
+          ],
+          "minSpeed": 23,
+          "maxSpeed": 30.5,
+          "mounted": true
+        },
+        "Dry flume descent": {
+          "frames": 75,
+          "entry": [
+            -0.06491266976640775,
+            17.910481245247446,
+            -466.23019108364946
+          ],
+          "exit": [
+            -0.06491266976640876,
+            4.170038382312702,
+            -501.5627584454816
+          ],
+          "minSpeed": 30.5,
+          "maxSpeed": 30.796861645875637,
+          "mounted": true
+        }
+      }
+    },
+    {
+      "line": "checkpoint-bypass",
+      "frames": 5350,
+      "seconds": 89.16666666666667,
+      "end": {
+        "frame": 5350,
+        "position": [
+          60.029915219650455,
+          -164.2693333308498,
+          -1058.0308315712307
+        ],
+        "state": "finished",
+        "grounded": true,
+        "speed": 0,
+        "verticalSpeed": 0,
+        "pipe": -1,
+        "vertAir": false,
+        "pipeHang": false,
+        "releaseStage": 0,
+        "bailing": false,
+        "deaths": 0,
+        "freeSkate": true,
+        "rail": null
+      },
+      "maximumAbsoluteSpeed": 75.56131574552269,
+      "largestStep": 1.7472157850772159,
+      "transfers": 5,
+      "jumps": 4,
+      "checkpoints": [
+        1
+      ],
+      "inversions": [
+        0,
+        1,
+        2
+      ],
+      "giant": {
+        "air": true,
+        "landedRight": true,
+        "exited": true,
+        "peak": 121.04540138866803,
+        "landing": [
+          10.923719611076113,
+          79.03689934105823,
+          77.71943298174098
+        ]
+      },
+      "downhills": {
+        "Giant vert left entry drop": {
+          "frames": 108,
+          "entry": [
+            -18,
+            129.976121982355,
+            154.63599999205272
+          ],
+          "exit": [
+            -18,
+            70.04843386240447,
+            108.73833882311231
+          ],
+          "minSpeed": 22.97630455461394,
+          "maxSpeed": 63.44241056525467,
+          "mounted": true
+        },
+        "Downhill park connector": {
+          "frames": 175,
+          "entry": [
+            0.06910679497979777,
+            47.96169996678489,
+            -190.2188573326577
+          ],
+          "exit": [
+            0.06910679497979777,
+            34.02220511388289,
+            -269.87311363495485
+          ],
+          "minSpeed": 23,
+          "maxSpeed": 30.5,
+          "mounted": true
+        },
+        "Upper flume approach": {
+          "frames": 93,
+          "entry": [
+            0.06910679497804899,
+            29.970100510411765,
+            -424.10464821355885
+          ],
+          "exit": [
+            0.06910679497804899,
+            18.00981801968078,
+            -465.9656369311173
+          ],
+          "minSpeed": 23,
+          "maxSpeed": 30.5,
+          "mounted": true
+        },
+        "Dry flume descent": {
+          "frames": 75,
+          "entry": [
+            0.06910679497804899,
+            17.823284376027274,
+            -466.45441160450133
+          ],
+          "exit": [
+            0.06910679497804798,
+            4.082841513092547,
+            -501.7869789663335
+          ],
+          "minSpeed": 30.5,
+          "maxSpeed": 30.796861645875637,
+          "mounted": true
+        }
+      }
+    }
+  ],
+  "deadwaterBrowser": [
+    {
+      "mode": "lite",
+      "frames": 5338,
+      "end": {
+        "frame": 5338,
+        "position": [
+          60.02745585791468,
+          -164.2693333308498,
+          -1058.0746461316014
+        ],
+        "speed": 0,
+        "verticalSpeed": 0,
+        "state": "finished",
+        "grounded": true,
+        "bailing": false,
+        "loop": {
+          "active": false,
+          "progress": 0,
+          "pressure": 0,
+          "completed": 3
+        },
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "phase": "finish"
+      },
+      "transfers": 5,
+      "jumps": 4,
+      "checkpoints": [
+        0,
+        1
+      ],
+      "inversions": [
+        0,
+        1,
+        2
+      ],
+      "tuningUnchanged": true,
+      "airSamples": 174,
+      "airVerticalBounds": [
+        -0.8373306250858601,
+        0.9975149446823331
+      ],
+      "loopSamples": 92,
+      "rampSamples": 118,
+      "errors": []
+    },
+    {
+      "mode": "full",
+      "frames": 5338,
+      "end": {
+        "frame": 5338,
+        "position": [
+          60.02745585791468,
+          -164.2693333308498,
+          -1058.0746461316014
+        ],
+        "speed": 0,
+        "verticalSpeed": 0,
+        "state": "finished",
+        "grounded": true,
+        "bailing": false,
+        "loop": {
+          "active": false,
+          "progress": 0,
+          "pressure": 0,
+          "completed": 3
+        },
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "phase": "finish"
+      },
+      "transfers": 5,
+      "jumps": 4,
+      "checkpoints": [
+        0,
+        1
+      ],
+      "inversions": [
+        0,
+        1,
+        2
+      ],
+      "tuningUnchanged": true,
+      "airSamples": 174,
+      "airVerticalBounds": [
+        -0.8374283451272254,
+        0.9974753823254591
+      ],
+      "loopSamples": 92,
+      "rampSamples": 118,
+      "errors": []
+    }
+  ],
+  "browserFixtureNote": "The first production run passed gameplay, camera and console assertions, then failed an incorrect #build-stamp selector. The tool now reads .hud-build; deployment verification uses the corrected tool.",
+  "crabChief": [
+    {
+      "mode": "lite",
+      "stamp": "Codex/sol fork \u00b7 build 10-08 19:11 UTC",
+      "frames": 5078,
+      "hits": 9,
+      "playerHits": 0,
+      "phases": [
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3
+      ],
+      "retry": {
+        "phase": 1,
+        "health": 9,
+        "lives": 3,
+        "masks": 2,
+        "pos": [
+          0,
+          0.12,
+          17
+        ],
+        "ramp": false,
+        "tongue": false
+      },
+      "earlyJump": {
+        "strike": {
+          "time": 2.799999999999995,
+          "phase": 3,
+          "speed": 14.627545622099362,
+          "skating": true,
+          "grinding": false,
+          "charged": true,
+          "kind": "sand-spin",
+          "tongueMetres": 0,
+          "rampSpeed": 14.735656830778122
+        },
+        "pos": [
+          -0.0005060095927772743,
+          6.030672129608308,
+          -20.801055272929787
+        ]
+      },
+      "keyboardDisplacement": [
+        3.943842426955964,
+        -0.49936628312482734,
+        -0.1224198898541502
+      ],
+      "errors": []
+    },
+    {
+      "mode": "full",
+      "stamp": "Codex/sol fork \u00b7 build 10-08 19:11 UTC",
+      "frames": 5078,
+      "hits": 9,
+      "playerHits": 0,
+      "phases": [
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3
+      ],
+      "retry": {
+        "phase": 1,
+        "health": 9,
+        "lives": 3,
+        "masks": 2,
+        "pos": [
+          0,
+          0,
+          17
+        ],
+        "ramp": false,
+        "tongue": false
+      },
+      "earlyJump": {
+        "strike": {
+          "time": 2.8499999999999948,
+          "phase": 3,
+          "speed": 14.6084676447777,
+          "skating": true,
+          "grinding": false,
+          "charged": true,
+          "kind": "sand-spin",
+          "tongueMetres": 0,
+          "rampSpeed": 14.716762136765738
+        },
+        "pos": [
+          -0.0002480378258704871,
+          6.155828833283446,
+          -20.37204928682709
+        ]
+      },
+      "keyboardDisplacement": [
+        3.794296042012785,
+        -0.49731132779489773,
+        -0.10932976863613675
+      ],
+      "errors": []
+    }
+  ],
+  "afterHours": {
+    "passed": true,
+    "seconds": 70.7,
+    "chapters": 8
+  },
+  "catalog": {
+    "mode": "full",
+    "levels": 55,
+    "checkpoints": 145,
+    "errors": [],
+    "rows": [
+      {
+        "id": "treehouse-trail",
+        "name": "Treehouse Trials",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.6333333333333347,
+          "position": [
+            2.033807663756741,
+            -0.049598733303660936,
+            20.644328659138264
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 5,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "inside-your-room",
+        "name": "Inside Your Room",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.6333333333333332,
+          "position": [
+            -0.40000465272646424,
+            0.035999998450279236,
+            -0.9833333333162427
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 1,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "jungle",
+        "name": "Jungle Ruins",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.6333333325515461,
+          "position": [
+            3.6611922762252833,
+            2.515234033494967,
+            5.370314364653378
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 4,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "jungle-terraces",
+        "name": "Temple Terraces",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.5699999999999932,
+          "position": [
+            1.25,
+            0.7716666665921608,
+            83.43
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 3,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "jungle-skyline",
+        "name": "Temple Skyline",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.6333333333333258,
+          "position": [
+            1.25,
+            0.7716666665921608,
+            93.36666666666667
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 5,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "flats",
+        "name": "Flats & Pipes",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.7000000000000028,
+          "position": [
+            0,
+            90.73666666644314,
+            39.3
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 2,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "sky",
+        "name": "Sky Bridge",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.5699999999999994,
+          "position": [
+            0,
+            0.7366666187594333,
+            4.430000000000001
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 3,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "slip",
+        "name": "The Slipstream",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.5700000000000038,
+          "position": [
+            0,
+            150.73666666644314,
+            17.429999999999996
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 2,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "slipstream-2",
+        "name": "Slipstream 2",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.57,
+          "position": [
+            15.999995812546182,
+            54.73666664260129,
+            -0.5699999999846186
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 7,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "test",
+        "name": "Carlisle Coast",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.57,
+          "position": [
+            0,
+            0.7366666664431492,
+            -0.57
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 14,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "custard-creek",
+        "name": "Custard Creek",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.6333333294417033,
+          "position": [
+            -0.16720118871176806,
+            0.7366666664431492,
+            -0.6108640345241195
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 11,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "dark",
+        "name": "The Nightworks",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.6333333333333334,
+          "position": [
+            -4.652726464207604e-06,
+            0.7366665710757179,
+            3.366666666683757
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 11,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "nightworks-after-hours",
+        "name": "Nightworks: After Hours",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.6999999999999972,
+          "position": [
+            -5.14248714465051e-06,
+            10.73666666644315,
+            9.300000000018892
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 7,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "warproom",
+        "name": "Island World Map",
+        "supportedSpawn": true,
+        "nativeMovement": null,
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "descent",
+        "name": "The Descent",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.6398834633898411,
+          "position": [
+            10.722024835477354,
+            428.51707304065167,
+            -5.860488451855255
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 4,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "beachfront",
+        "name": "Beachside Run",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.6244444442077551,
+          "position": [
+            2.8777890289191475,
+            1.1450772405813892,
+            7.390963555923716
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 4,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "bonus-level",
+        "name": "Bonus Level",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.7000000000000028,
+          "position": [
+            -23.299999999999997,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "coastal-street-run",
+        "name": "Coastal Street Run",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.6333333333333329,
+          "position": [
+            0,
+            12.736666678364077,
+            14.366666666666667
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 6,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "island-hopper",
+        "name": "Island Hopper",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.6333333322928929,
+          "position": [
+            0.06837601218465326,
+            1.7866666187594324,
+            13.366933311593945
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 3,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "jungle-gate-run",
+        "name": "Jungle Gate Run",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.5700000000000038,
+          "position": [
+            -19.429999999999996,
+            2.384185793236071e-08,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 3,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "meshylook-thorns",
+        "name": "MeshyLook Thorn Courtyards",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.6368219117775437,
+          "position": [
+            -2.9052518666666667,
+            1.2069301918255113,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "drowned-crown",
+        "name": "The Drowned Crown",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.6333333333333329,
+          "position": [
+            -48,
+            0.7366666664431492,
+            45.36666666666667
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 4,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "bonus-easy",
+        "name": "Bonus: Easy Street",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.6733333333333338,
+          "position": [
+            -11.326666666666666,
+            0,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "bonus-treehouse-trail",
+        "name": "Bonus: Canopy Cache",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.5699999999999993,
+          "position": [
+            -5.430000000015382,
+            0,
+            -4.187453817786844e-06
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "bonus-jungle",
+        "name": "Bonus: Fern Reliquary",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.5699999999999993,
+          "position": [
+            -5.430000000015382,
+            0,
+            -4.187453817786844e-06
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "bonus-test-course",
+        "name": "Bonus: Quayside Cargo",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.6999999999999998,
+          "position": [
+            -5.30000000001889,
+            0,
+            -5.14248714465051e-06
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "bonus-sky-bridge",
+        "name": "Bonus: Cloudtop Lockers",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.633333333333333,
+          "position": [
+            -5.3666666666837575,
+            0,
+            -4.652726464207604e-06
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "bonus-slipstream",
+        "name": "Bonus: Slipstream Airlocks",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.6999999999999998,
+          "position": [
+            -5.30000000001889,
+            0,
+            -5.14248714465051e-06
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "bonus-nightworks",
+        "name": "Bonus: Nightworks Fuse Store",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.5699999999999993,
+          "position": [
+            -5.430000000015382,
+            0,
+            -4.187453817786844e-06
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "bonus-beachside-run",
+        "name": "Bonus: Lifeguard Lockup",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.633333333333333,
+          "position": [
+            -5.3666666666837575,
+            0,
+            -4.652726464207604e-06
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "bonus-coastal",
+        "name": "Bonus: Rooftop Deliveries",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.6911111111111103,
+          "position": [
+            -5.308888888907539,
+            0,
+            -5.077185720591455e-06
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "bonus-island-hopper",
+        "name": "Bonus: Lagoon Relay",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.5611111111111108,
+          "position": [
+            -5.438888888904031,
+            0,
+            -4.12215239372779e-06
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "bonus-codex-switchback",
+        "name": "Bonus: Blockworks Reassembly",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.633333333333333,
+          "position": [
+            -5.3666666666837575,
+            0,
+            -4.652726464207604e-06
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "bonus-chimeworks",
+        "name": "Bonus: Belfry Counterweights",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.6999999999999998,
+          "position": [
+            -5.30000000001889,
+            0,
+            -5.14248714465051e-06
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "bonus-waterpark",
+        "name": "Bonus: Deadwater Valve House",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.5699999999999993,
+          "position": [
+            -5.430000000015382,
+            0,
+            -4.187453817786844e-06
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "bonus-nightworks-after-hours",
+        "name": "Bonus: After Hours Dispatch",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.633333333333333,
+          "position": [
+            -5.3666666666837575,
+            0,
+            -4.652726464207604e-06
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "bonus-crate-primer",
+        "name": "Bonus: Apprentice Storehouse",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.633333333333333,
+          "position": [
+            -5.3666666666837575,
+            0,
+            -4.652726464207604e-06
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "bonus-switchyard",
+        "name": "Bonus: Signal Cabin",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.5699999999999993,
+          "position": [
+            -5.430000000015382,
+            0,
+            -4.187453817786844e-06
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "bonus-clockwork-gauntlet",
+        "name": "Bonus: Furnace Reserve",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.633333333333333,
+          "position": [
+            -5.3666666666837575,
+            0,
+            -4.652726464207604e-06
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "bonus-jungle-terraces",
+        "name": "Bonus: Jade Reservoir",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.633333333333333,
+          "position": [
+            -5.3666666666837575,
+            0,
+            -4.652726464207604e-06
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "bonus-jungle-skyline",
+        "name": "Bonus: Sun-Crown Treasury",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.633333333333333,
+          "position": [
+            -5.3666666666837575,
+            0,
+            -4.652726464207604e-06
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "bonus-drowned-crown",
+        "name": "Bonus: The Captain\u2019s Last Ledger",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.633333333333333,
+          "position": [
+            -5.3666666666837575,
+            0,
+            -4.652726464207604e-06
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "bonus-bone-yard",
+        "name": "Bonus: Ivory Salvage",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.633333333333333,
+          "position": [
+            -5.3666666666837575,
+            0,
+            -4.652726464207604e-06
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "crate-primer",
+        "name": "Crate Primer",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.5699999999999994,
+          "position": [
+            -4.430000000000001,
+            0.7366666664431492,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 2,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "switchyard",
+        "name": "Switchyard",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.5699999999999994,
+          "position": [
+            -4.430000000000001,
+            0.7366666664431492,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 2,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "clockwork-gauntlet",
+        "name": "Clockwork Gauntlet",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.5699999999999994,
+          "position": [
+            -4.430000000000001,
+            0.7366666664431492,
+            0
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowRight"
+        },
+        "checkpoints": 4,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "crab-chief",
+        "name": "Tidebreak \u00b7 Crab Chief",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.570000000000002,
+          "position": [
+            -4.187453817786844e-06,
+            0,
+            16.43000000001538
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "ghost-train",
+        "name": "Haunted Castle \u00b7 Ghost Train",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.6911111111111086,
+          "position": [
+            -5.077185720591455e-06,
+            0.7366666664431492,
+            15.308888888907541
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 23,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "codex-lab",
+        "name": "Blockworks \u00b7 Greybox",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.6333333333333374,
+          "position": [
+            0.7458431046652497,
+            0.7366666664431492,
+            17.39119645144397
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 6,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "jungle-cup",
+        "name": "Jungle Cup",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.5277373790223674,
+          "position": [
+            0,
+            0,
+            13.472262620977633
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "bone-yard",
+        "name": "Bone Yard \u00b7 Wipeout Playground",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.6333333333333333,
+          "position": [
+            0,
+            0,
+            3.3666666666666667
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 2,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "waterpark",
+        "name": "Deadwater Park",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.6999999999999886,
+          "position": [
+            -18,
+            130.736666690285,
+            183.3
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 2,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "waterpark-cup",
+        "name": "Deadwater Cup",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.4720702989728309,
+          "position": [
+            18,
+            12,
+            -12.472070298972831
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 0,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "astra-chimeworks",
+        "name": "The Chimeworks \u2014 Astra",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.5700000000000038,
+          "position": [
+            0,
+            48.736666690285006,
+            16.429999999999996
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 4,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      },
+      {
+        "id": "backport-lab",
+        "name": "Backport Mechanics Lab",
+        "supportedSpawn": true,
+        "nativeMovement": {
+          "distance": 0.5700000000000003,
+          "position": [
+            0,
+            0,
+            15.43
+          ],
+          "state": "ride",
+          "grounded": true,
+          "key": "ArrowUp"
+        },
+        "checkpoints": 1,
+        "allCheckpointsSupported": true,
+        "failedAssets": []
+      }
+    ]
+  },
+  "limits": [
+    "The 55 catalog probes check entry, native movement and checkpoint support; they are not complete traversal proofs.",
+    "The old park-halfpipe replay fails at frame 1259 on both 1ae0c10 and this patch.",
+    "Skyline continuous pilot fails at frame 4120; baseline 1ae0c10 fails earlier at 2646. Terraces remains incomplete.",
+    "The prior 0.5 m Deadwater vault release touches the physical bowl rim. Both passing lines release 1.4 m before it."
+  ],
+  "slipstream2Browser": [
+    {
+      "route": "main",
+      "frames": 3880,
+      "end": {
+        "frame": 3880,
+        "phase": "finish",
+        "position": [
+          -18.026626277912918,
+          1.2142222247057477,
+          -913.8695151123117
+        ],
+        "speed": 0,
+        "verticalSpeed": 0,
+        "grounded": true,
+        "state": "finished",
+        "board": true,
+        "bailing": false,
+        "deaths": 0,
+        "station": 881.8695151123117,
+        "temple": 9,
+        "jumps": 3,
+        "ground": {
+          "height": 1.2102222247057477,
+          "mover": false,
+          "gravityTrack": false
+        }
+      },
+      "evidence": {
+        "temple": [
+          {
+            "index": 0,
+            "moving": false,
+            "landing": [
+              11.84050000011225,
+              55.599999976158145,
+              3.0557393254534004e-05
+            ],
+            "frame": 86
+          },
+          {
+            "index": 1,
+            "moving": true,
+            "landing": [
+              8.682639519431037,
+              57.19999999403954,
+              -1.7267010033724244
+            ],
+            "frame": 403
+          },
+          {
+            "index": 2,
+            "moving": false,
+            "landing": [
+              3.9702440587540044,
+              58.79999997615814,
+              0.14724774751407352
+            ],
+            "frame": 541
+          },
+          {
+            "index": 3,
+            "moving": false,
+            "landing": [
+              -1.4199162578362916,
+              60.39999997615814,
+              0.003085481975274792
+            ],
+            "frame": 676
+          },
+          {
+            "index": 4,
+            "moving": false,
+            "landing": [
+              -6.233582924373056,
+              61.99999997615814,
+              0.0031208451452061753
+            ],
+            "frame": 787
+          },
+          {
+            "index": 5,
+            "moving": false,
+            "landing": [
+              -10.855416257581663,
+              63.599999976158145,
+              0.0031547990287795835
+            ],
+            "frame": 871
+          },
+          {
+            "index": 6,
+            "moving": false,
+            "landing": [
+              -14.99,
+              65.19999997615814,
+              0.00319829834801442
+            ],
+            "frame": 960
+          },
+          {
+            "index": 7,
+            "moving": false,
+            "landing": [
+              -15.994453699561346,
+              65.19999997615814,
+              -11.84379344861992
+            ],
+            "frame": 1244
+          },
+          {
+            "index": 8,
+            "moving": false,
+            "landing": [
+              -15.994358919441831,
+              65.19999997615814,
+              -24.826237892714186
+            ],
+            "frame": 1493
+          }
+        ],
+        "jumps": [
+          {
+            "name": "Reservoir breach",
+            "width": 18,
+            "takeoff": {
+              "position": [
+                41.9702350688266,
+                53.60033205233532,
+                -192.4275695864949
+              ],
+              "speed": 29.838891503505153,
+              "station": 160.4275695864949,
+              "frame": 2007
+            },
+            "landing": [
+              41.97048198097294,
+              50.33610950494202,
+              -226.02578849100746
+            ],
+            "landingSpeed": 29.650612259943685,
+            "airSeen": true
+          },
+          {
+            "name": "Broken sluice",
+            "width": 24,
+            "takeoff": {
+              "position": [
+                -27.983261826177525,
+                35.92401641385034,
+                -442.69108265684355
+              ],
+              "speed": 29.644063962304298,
+              "station": 410.69108265684355,
+              "frame": 2662
+            },
+            "landing": [
+              -27.99962206573963,
+              30.57541775759172,
+              -482.81338256234255
+            ],
+            "landingSpeed": 29.370878138614103,
+            "airSeen": true
+          },
+          {
+            "name": "Ocean flight",
+            "width": 29,
+            "takeoff": {
+              "position": [
+                -17.988502213430785,
+                9.475869335451524,
+                -784.2882853022854
+              ],
+              "speed": 34.64124422327301,
+              "station": 752.2882853022854,
+              "frame": 3620
+            },
+            "landing": [
+              -18.027208061513345,
+              2.941329264912387,
+              -834.6766053705499
+            ],
+            "landingSpeed": 33.983505979432586,
+            "airSeen": true
+          }
+        ],
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "mountedFrames": 2353,
+        "maxSpeed": 38.0564854857496,
+        "highRailFrames": 0,
+        "crystal": false
+      },
+      "errors": [],
+      "fixture": {
+        "sourceHash": "e6fdc36c916d426f8b4ce4503e4ec92dcc6a4f79df95c620b32488a72dcb8a72",
+        "pilotHash": "48a2c97b8d0bd40f4b7e7f1e1e32e3700c7ecd6631c99e7e972c8df85f4166f4",
+        "sourceRequests": 1,
+        "pilotRequests": 1
+      }
+    },
+    {
+      "route": "high",
+      "frames": 3719,
+      "end": {
+        "frame": 3719,
+        "phase": "finish",
+        "position": [
+          -17.968561233930803,
+          1.214222224705748,
+          -914.1129612303002
+        ],
+        "speed": 0,
+        "verticalSpeed": 0,
+        "grounded": true,
+        "state": "finished",
+        "board": true,
+        "bailing": false,
+        "deaths": 0,
+        "station": 882.1129612303002,
+        "temple": 9,
+        "jumps": 3,
+        "ground": {
+          "height": 1.210222224705748,
+          "mover": false,
+          "gravityTrack": false
+        }
+      },
+      "evidence": {
+        "temple": [
+          {
+            "index": 0,
+            "moving": false,
+            "landing": [
+              11.84050000011225,
+              55.599999976158145,
+              3.0557393254534004e-05
+            ],
+            "frame": 86
+          },
+          {
+            "index": 1,
+            "moving": true,
+            "landing": [
+              8.682639519431037,
+              57.19999999403954,
+              -1.7267010033724244
+            ],
+            "frame": 403
+          },
+          {
+            "index": 2,
+            "moving": false,
+            "landing": [
+              3.9702440587540044,
+              58.79999997615814,
+              0.14724774751407352
+            ],
+            "frame": 541
+          },
+          {
+            "index": 3,
+            "moving": false,
+            "landing": [
+              -1.4199162578362916,
+              60.39999997615814,
+              0.003085481975274792
+            ],
+            "frame": 676
+          },
+          {
+            "index": 4,
+            "moving": false,
+            "landing": [
+              -6.233582924373056,
+              61.99999997615814,
+              0.0031208451452061753
+            ],
+            "frame": 787
+          },
+          {
+            "index": 5,
+            "moving": false,
+            "landing": [
+              -10.855416257581663,
+              63.599999976158145,
+              0.0031547990287795835
+            ],
+            "frame": 871
+          },
+          {
+            "index": 6,
+            "moving": false,
+            "landing": [
+              -14.99,
+              65.19999997615814,
+              0.00319829834801442
+            ],
+            "frame": 960
+          },
+          {
+            "index": 7,
+            "moving": false,
+            "landing": [
+              -15.995246300384377,
+              65.19999997615814,
+              -11.843795313873489
+            ],
+            "frame": 1244
+          },
+          {
+            "index": 8,
+            "moving": false,
+            "landing": [
+              -15.99787561936706,
+              65.19999997615814,
+              -24.826347966671808
+            ],
+            "frame": 1493
+          }
+        ],
+        "jumps": [
+          {
+            "name": "Reservoir breach",
+            "width": 18,
+            "takeoff": {
+              "position": [
+                41.96873250439443,
+                53.600344287954655,
+                -192.4276485450572
+              ],
+              "speed": 29.838898287944577,
+              "station": 160.4276485450572,
+              "frame": 2007
+            },
+            "landing": [
+              41.968485592192025,
+              50.336106887449375,
+              -226.02587509918874
+            ],
+            "landingSpeed": 29.65061901077272,
+            "airSeen": true
+          },
+          {
+            "name": "Broken sluice",
+            "width": 24,
+            "takeoff": {
+              "position": [
+                -28.020709004016805,
+                35.954819754777795,
+                -442.80171909402446
+              ],
+              "speed": 42.15542866623984,
+              "station": 410.80171909402446,
+              "frame": 2604
+            },
+            "landing": [
+              -27.51008866936554,
+              29.805900888347455,
+              -508.275337984781
+            ],
+            "landingSpeed": 41.80900485896471,
+            "airSeen": true
+          },
+          {
+            "name": "Ocean flight",
+            "width": 29,
+            "takeoff": {
+              "position": [
+                -18.005142374496224,
+                9.588193382375875,
+                -784.6917198644883
+              ],
+              "speed": 33.97810897416894,
+              "station": 752.6917198644883,
+              "frame": 3454
+            },
+            "landing": [
+              -17.846740218645362,
+              2.9740363116231276,
+              -833.5943868509722
+            ],
+            "landingSpeed": 33.3567035835382,
+            "airSeen": true
+          }
+        ],
+        "checkpoints": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "mountedFrames": 2192,
+        "maxSpeed": 48,
+        "highRailFrames": 175,
+        "crystal": true
+      },
+      "errors": [],
+      "fixture": {
+        "sourceHash": "e6fdc36c916d426f8b4ce4503e4ec92dcc6a4f79df95c620b32488a72dcb8a72",
+        "pilotHash": "48a2c97b8d0bd40f4b7e7f1e1e32e3700c7ecd6631c99e7e972c8df85f4166f4",
+        "sourceRequests": 1,
+        "pilotRequests": 1
+      }
+    }
+  ]
+}

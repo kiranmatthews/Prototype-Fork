@@ -1,11 +1,23 @@
 import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {createServer} from 'vite';
+import {createWaterparkPilot} from './waterpark-pilot.mjs';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=process.argv.find(a=>/^https?:/.test(a))||'http://127.0.0.1:5201';
 const full=process.argv.includes('--full'),checkpoints=process.argv.includes('--checkpoints');
 const holdThroughLanding=process.argv.includes('--hold-charge');
-const output=process.env.WATERPARK_BROWSER_OUTPUT||'/private/tmp/waterpark-browser';
+const output=process.env.WATERPARK_BROWSER_OUTPUT||join(tmpdir(),'waterpark-browser');
 await mkdir(output,{recursive:true});
+// Load only the authored route data locally, so the same input pilot can
+// verify a production bundle or Pages without importing development modules.
+const server=await createServer({appType:'custom',logLevel:'silent',server:{middlewareMode:true,hmr:false}});
+let source;
+try{
+ const route=await server.ssrLoadModule('/src/levels/waterpark-route.ts');
+ source=Object.fromEntries(['GIANT','GIANT_EXIT','LOOPS','FINISH','CHECKPOINTS','JUMPS','DOWNHILL','COASTER_RAMPS'].map(key=>[`WATERPARK_${key}`,route[`WATERPARK_${key}`]]));
+}finally{await server.close();}
 const browser=await chromium.launch({headless:true,channel:'chrome'});
 const page=await browser.newPage({viewport:{width:1440,height:900}}),errors=[];
 page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
@@ -13,12 +25,12 @@ try{
  await page.goto(new URL('?playtest&level=waterpark'+(full?'':'&lite'),base).href);
  await page.waitForFunction(()=>window.__game&&!window.__game.gameFlow.blocksGameplay,null,{timeout:90000});
  await page.screenshot({path:`${output}/entrance-${full?'full':'lite'}.png`});
- await page.evaluate(async ({checkpoints,holdThroughLanding})=>{
+ await page.addScriptTag({content:`window.createWaterparkPilot=${createWaterparkPilot.toString()};`});
+ await page.evaluate(({checkpoints,holdThroughLanding,source})=>{
   const g=window.__game,l=g.getLevel(),p=g.player;
-  const source=await import('/src/levels/waterpark.ts'),{createWaterparkPilot}=await import('/tools/waterpark-pilot.mjs');
   p.respawn(l,true);
-  const pilot=createWaterparkPilot(source,{fastLine:!checkpoints,holdThroughLanding});
-  const report=window.waterparkReview={frame:0,done:false,failed:null,phase:pilot.phase,peak:0,evidence:null,end:null,tuning:{...g.TUNING},loopFrames:0,loopFraming:[],airFraming:[],rampFraming:[]};
+  const pilot=window.createWaterparkPilot(source,{fastLine:!checkpoints,holdThroughLanding});
+  const report=window.waterparkReview={frame:0,done:false,failed:null,phase:pilot.phase,peak:0,evidence:pilot.evidence,end:null,buildStamp:document.querySelector('.hud-build')?.textContent,tuning:{...g.TUNING},loopFrames:0,loopFraming:[],airFraming:[],rampFraming:[]};
   const render=g.renderer.render.bind(g.renderer),projected=p.pos.clone(),vertex=p.pos.clone(),instance=g.camera.matrixWorld.clone(),world=g.camera.matrixWorld.clone();
   let lastAirFrame=-10,lastLoopFrame=-10,lastRampFrame=-10;
   const sightRay=new p.raycaster.constructor(),sightTarget=p.pos.clone(),sightDirection=p.pos.clone();
@@ -82,7 +94,7 @@ try{
    if(p.state==='finished'){report.done=true;report.evidence=pilot.evidence;report.finalTuning={...g.TUNING};}
    if(report.frame>9000){report.failed={message:'Adaptive pilot exhausted its frame budget',snapshot:snapshot()};report.done=true;}
   };
- },{checkpoints,holdThroughLanding});
+ },{checkpoints,holdThroughLanding,source});
  const captured=new Set();
  for(let i=0;i<1200;i++){
   await page.waitForTimeout(250);
@@ -116,5 +128,6 @@ try{
  assert.equal(cropped.length,0,`The full rider cropped in ordinary giant airs: ${JSON.stringify(cropped.slice(0,5))}`);
  assert.deepEqual(report.finalTuning,report.tuning,'The pilot must never alter movement/camera tuning');
  assert.deepEqual(errors,[],'Browser errors during actual waterpark traversal');
+ assert.match(report.buildStamp,/Codex\/sol fork/,'Review the fork build');
  console.log(JSON.stringify({mode:full?'full':'lite',frame:report.frame,peak:report.peak,downhills:report.evidence.downhills,transfers:report.evidence.transfers.length,jumps:report.evidence.jumps.length,checkpoints:report.evidence.checkpoints,loopCameraDistance:[Math.min(...report.loopFraming.map(f=>f.distance)),Math.max(...report.loopFraming.map(f=>f.distance))],ordinaryAirBounds:{samples:report.airFraming.length,minY:Math.min(...report.airFraming.map(f=>f.minY)),maxY:Math.max(...report.airFraming.map(f=>f.maxY))},screenshots:[...captured],errors}));
 }finally{await browser.close();}

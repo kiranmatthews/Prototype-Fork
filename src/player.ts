@@ -7098,20 +7098,31 @@ export class Player {
     }
     if (!hit && this.freeSkate && this.groundHit?.vert === true && this.groundHit.mesh?.userData.vertRampMesh) {
       const mesh = this.groundHit.mesh;
-      // Follow the face along its normal. A world-down feeler becomes
-      // parallel to vert and was sampling the foundation THROUGH the ramp.
-      VERT_RAY_O.copy(this.pos).addScaledVector(this.rideNormal, 0.7);
-      VERT_RAY_D.copy(this.rideNormal).negate();
-      this.raycaster.set(VERT_RAY_O, VERT_RAY_D);
-      this.raycaster.far = 1.5;
-      const contact = this.raycaster.intersectObject(mesh, false).find(h => h.face &&
-        h.face.normal.clone().transformDirection(mesh.matrixWorld).dot(this.rideNormal) > 0.25);
-      if (contact?.face) {
-        const normal = contact.face.normal.clone().transformDirection(mesh.matrixWorld);
-        if (normal.y >= 0 && contact.point.distanceTo(this.pos) < 0.7) {
-          this.pos.copy(contact.point);
-          hit = { y: contact.point.y, normal, name: mesh.name, vert: mesh.userData.vert, gravityTrack:mesh.userData.gravityTrack===true, skateCamera:mesh.userData.skateCamera===true, mesh };
-          this.rideNormal.copy(normal);
+      // Authored quarter surfaces need the same floor handoff as analytic
+      // bowls. Do not project back underneath a reachable exit ribbon.
+      const floor = this.rideNormal.y >= CONST.steepSnapNormal ? this.queryGround(level) : null;
+      if (floor && floor.mesh !== mesh && floor.vert === false && floor.normal.y >= CONST.steepSnapNormal &&
+          floor.y <= Math.max(this.pos.y, this.prevPos.y) + 0.8 && floor.y >= this.pos.y - 1.4) {
+        hit = floor;
+        this.pos.y = floor.y;
+        this.rideNormal.copy(floor.normal);
+      }
+      if (!hit) {
+        // Follow the face along its normal. A world-down feeler becomes
+        // parallel to vert and was sampling the foundation THROUGH the ramp.
+        VERT_RAY_O.copy(this.pos).addScaledVector(this.rideNormal, 0.7);
+        VERT_RAY_D.copy(this.rideNormal).negate();
+        this.raycaster.set(VERT_RAY_O, VERT_RAY_D);
+        this.raycaster.far = 1.5;
+        const contact = this.raycaster.intersectObject(mesh, false).find(h => h.face &&
+          h.face.normal.clone().transformDirection(mesh.matrixWorld).dot(this.rideNormal) > 0.25);
+        if (contact?.face) {
+          const normal = contact.face.normal.clone().transformDirection(mesh.matrixWorld);
+          if (normal.y >= 0 && contact.point.distanceTo(this.pos) < 0.7) {
+            this.pos.copy(contact.point);
+            hit = { y: contact.point.y, normal, name: mesh.name, vert: mesh.userData.vert, gravityTrack:mesh.userData.gravityTrack===true, skateCamera:mesh.userData.skateCamera===true, mesh };
+            this.rideNormal.copy(normal);
+          }
         }
       }
     }
@@ -14053,6 +14064,17 @@ export class Player {
       THREE.MathUtils.lerp(lo, hi, this.simRand());
   }
 
+  private setCollisionPlanarVelocity(velocity:THREE.Vector3):void{
+    // The response is the complete world velocity. Consume the secondary
+    // channels it already contains before putting it into speed/heading;
+    // otherwise the next air tick adds their momentum a second time.
+    if(this.vertAir&&!this.parkControls)this.vertLatVel=0;
+    if(this.grindExitAir&&this.airFromSkate)this.grindAirLat=0;
+    this.slideAirLat=0;
+    const speed=Math.hypot(velocity.x,velocity.z);
+    if(speed>.0001){const sign=velocity.x*this.axisF.x+velocity.z*this.axisF.z<0?-1:1;this.speed=speed*sign;this.axisF.set(velocity.x/this.speed,0,velocity.z/this.speed);this.axisL.set(this.axisF.z,0,-this.axisF.x);}else this.speed=0;
+  }
+
   /** One physical boundary for native triangles, structural props and moving
    * geometry. Only ordinary floor acceptance stays with the ride solver. */
   private resolveWorldContact(level:Level,displacementVelocity=true):void{
@@ -14067,9 +14089,18 @@ export class Player {
     if(displacementVelocity)this.worldVelocity.copy(this.pos).sub(this.worldStepOrigin).multiplyScalar(1/CONST.fixedStep);
     else if(this.freeSkate||this.isBailing||this.state==='air'||this.state==='grind')this.worldVelocity.copy(this.axisF).multiplyScalar(this.speed);
     else this.worldVelocity.copy(this.walkVelocity);
+    if(!displacementVelocity){
+      if(this.vertAir&&!this.parkControls){
+        this.worldVelocity.x-=this.vertNormal.z*this.vertLatVel;
+        this.worldVelocity.z+=this.vertNormal.x*this.vertLatVel;
+      }
+      if(this.grindExitAir&&this.airFromSkate&&!this.isBailing)this.worldVelocity.addScaledVector(this.axisL,this.grindAirLat);
+      if(this.slideAirLat!==0)this.worldVelocity.addScaledVector(this.axisL,this.slideAirLat);
+    }
     this.worldVelocity.y=this.vVel;
     const entrySpeed=this.speed;
     const query={low:down?.8:radius,high:Math.max(down?.9:radius,height-radius),radius,axis:this.worldAxis,supportNormal:this.worldAxis,ignoreGround:true,
+      groundStep:down?undefined:!this.grounded?0:this.rideNormal.y>=CONST.steepSnapNormal?.8:undefined,
       soleClearance:this.state==='grind'?.32:this.grounded&&!down?.08:undefined,
       ignore:this.state==='grind'&&!down?this.isCurrentGrindSupport:undefined};
     if(!level.worldSolids.resolve(this.worldStepOrigin,this.pos,query,this.worldContact))return;
@@ -14117,8 +14148,7 @@ export class Player {
       this.worldVelocity.addScaledVector(n,into).multiplyScalar(bouncing?.82:1).addScaledVector(n,into*restitution).add(this.worldSurfaceVelocity);
       if(crash&&n.y>-.3)this.worldVelocity.y=Math.max(this.worldVelocity.y,3.6);
       this.vVel=this.worldVelocity.y;
-      const speed=Math.hypot(this.worldVelocity.x,this.worldVelocity.z);
-      if(speed>.0001){const sign=this.worldVelocity.x*this.axisF.x+this.worldVelocity.z*this.axisF.z<0?-1:1;this.speed=speed*sign;this.axisF.set(this.worldVelocity.x/this.speed,0,this.worldVelocity.z/this.speed);this.axisL.set(this.axisF.z,0,-this.axisF.x);}else this.speed=0;
+      this.setCollisionPlanarVelocity(this.worldVelocity);
       this.walkVelocity.copy(this.worldVelocity).setY(0);if(this.swimming)this.swimVelocity.copy(this.worldVelocity);
       if(this.isBailing){this.bailVelocity.copy(this.worldVelocity).setY(0);this.ragAngVel.multiplyScalar(.78);}
       if(bouncing&&into>2){sfx.play('crunch',Math.min(.9,.35+into*.02),.75);this.emitSparks(6,0xffd166,1.7);this.emitDust(2);}
