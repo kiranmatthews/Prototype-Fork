@@ -174,6 +174,8 @@ function partGroup(layout: WoodPathLayout, members: Member[], kind: "plank" | "p
     const mesh = new THREE.InstancedMesh(meshGeometry(bucket.name), partMaterial(palette), bucket.members.length);
     mesh.name = `woodpath mesh · ${key}`;
     mesh.userData.woodPathMeshFamily = bucket.family;
+    // The continuous deck owns plank seams; posts and rails use their actual geometry.
+    mesh.userData.solidSurface=kind==='plank'?'none':'mesh';
     mesh.userData.woodPathModel = bucket.name;
     mesh.userData.woodPathMemberIndices = bucket.members.map(member => member.index);
     mesh.userData.woodPathRoles = bucket.members.map(member => member.kind === "plank" ? "plank" : member.role);

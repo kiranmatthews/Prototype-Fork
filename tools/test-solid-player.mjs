@@ -25,7 +25,7 @@ await withBlockworksRuntime(async r=>{
   if(kind==='mesh'){const g=new THREE.BoxGeometry(6,3,.12);component={t:'mesh',p:[0,1.5,0],vertices:Array.from(g.attributes.position.array),indices:Array.from(g.index.array),solid:false,tex:'stone'};g.dispose();}
   const level=fixture([component]),p=new Player(new THREE.Scene());p.enterLevel('hard-world-fixture');p.respawn(level,true,false,{position:new THREE.Vector3(0,.02,1),heading:new THREE.Vector3(0,0,-1)});p.freeSkate=true;p.speed=23;
   const take=[];for(let i=0;i<12;i++){p.step(CONST.fixedStep,makeInput({jumpHeld:true,moveY:1}),level);level.update(CONST.fixedStep);take.push({z:p.pos.z,bail:p.isBailing,speed:p.speed,impact:p.worldImpactDiagnostics});}
-  console.log(JSON.stringify({kind,world:level.worldSolidDiagnostics,take}));await writeFile('/private/tmp/solid-player-proof.json',JSON.stringify(report,null,2));assert.ok(take.some(v=>v.bail),kind+' frontal crash must ragdoll');assert.ok(take.every(v=>v.z>0),kind+' body cannot pass through the wall');report.cases.push({kind,take});level.dispose();
+await writeFile('/private/tmp/solid-player-proof.json',JSON.stringify(report,null,2));assert.ok(take.some(v=>v.bail),kind+' frontal crash must ragdoll');assert.ok(take.every(v=>v.z>0),kind+' body cannot pass through the wall');report.cases.push({kind,take});level.dispose();
  }
  await writeFile('/private/tmp/solid-player-proof.json',JSON.stringify(report,null,2));console.log(JSON.stringify({pass:true,replay:hit,cases:report.cases.map(v=>v.kind)}));
 },{modulePath:'/src/levels/custard-creek.ts',levelId:'custard-creek',source:m=>m.CUSTARD_CREEK_LEVEL});

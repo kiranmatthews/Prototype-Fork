@@ -202,7 +202,7 @@ for (const [levelIndex, level] of (payload.levels ?? []).entries()) {
       "rails",
       "terrainSupports",
       "airOnly",
-      "solid",
+      "solid", "scenerySolid",
       "edgeGrinding",
     ]) {
       if (component[key] !== undefined && typeof component[key] !== "boolean")

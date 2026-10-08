@@ -8,7 +8,15 @@ import { enemyElasticPulse } from './enemies/elasticity';
 import { createGhostClockwork, type GhostClockwork } from './ghostClockwork';
 import { GhostAtmosphere, GHOST_EFFECT_KINDS, ghostFlicker, ghostGlow } from './ghostAtmosphere';
 
-/** Presentation skins only. Movement, contacts and pendulum timing stay native. */
+function solidMachine(root:THREE.Object3D,c:CustomComponent):void {
+  root.traverse(object=>{const mesh=object as THREE.Mesh;if(!mesh.isMesh)return;
+    const materials=Array.isArray(mesh.material)?mesh.material:[mesh.material];
+    mesh.userData.solidSurface=c.scenerySolid===false||materials.some(m=>m.transparent&&m.opacity<.98)?'none':'mesh';
+    mesh.userData.solidDynamic=true;
+  });
+}
+
+/** Actor timing stays native; hard scenery participates in shared contact. */
 export const GHOST_STATIC_KINDS=['ghostwallbay','ghostbanquettable','ghostchandelier','ghosttrestle','ghostmonsterportal','ghostflagstone','ghostbathwall','ghostbatharch','ghostjunk','ghostboiler'] as const;
 type GhostStaticKind=typeof GHOST_STATIC_KINDS[number];
 export const GHOST_DECOR_KINDS = ['ghostcart','ghostaxe','ghostknight','ghostfood','ghostcake','ghostarch','ghostshowlight','ghostclockwork',...GHOST_STATIC_KINDS,...GHOST_EFFECT_KINDS] as const;
@@ -255,10 +263,10 @@ export class GhostTrainAssetKit {
         if(this.released)return;batch.status=a?'ready':'error';if(!a)return;batch.asset=a;
         if(!this.instanced){for(const item of batch.rows){const model=a.scene.clone(true),{scale,anchor,center,rotation}=placementMetrics(a,item.c,GHOST_STATIC_SIZES[kind]);
           item.root!.quaternion.copy(rotation);item.root!.scale.setScalar(scale);model.position.set(-center.x,-anchor,-center.z);item.root!.add(model);item.root!.userData.assetReady=true;}return;}
-        const cells=new Map<string,CustomComponent[]>();for(const item of batch.rows){const key=`${Math.floor(item.c.p[0]/40)}:${Math.floor(item.c.p[2]/40)}`,list=cells.get(key)??[];list.push(item.c);cells.set(key,list);}
+        const cells=new Map<string,CustomComponent[]>();for(const item of batch.rows){const key=`${Math.floor(item.c.p[0]/40)}:${Math.floor(item.c.p[2]/40)}:${item.c.scenerySolid}`,list=cells.get(key)??[];list.push(item.c);cells.set(key,list);}
         for(const [cell,rows]of cells){const [x,z]=cell.split(':').map(Number),origin=new THREE.Vector3(x*40,0,z*40),root=new THREE.Group();root.position.copy(origin);root.name=`${GHOST_DECOR_LABELS[kind]} · shared cell`;
           root.userData.ghostStaticAsset={kind,instances:rows.length,url:GHOST_ASSETS[kind],uniform:true};this.levelRoot.add(root);this.roots.add(root);
-          a.scene.traverse(object=>{const source=object as THREE.Mesh;if(!source.isMesh)return;const mesh=new THREE.InstancedMesh(source.geometry,source.material,rows.length);mesh.name=GHOST_DECOR_LABELS[kind];mesh.castShadow=true;mesh.receiveShadow=true;
+          a.scene.traverse(object=>{const source=object as THREE.Mesh;if(!source.isMesh)return;const mesh=new THREE.InstancedMesh(source.geometry,source.material,rows.length);mesh.name=GHOST_DECOR_LABELS[kind];mesh.userData.solidSurface=rows[0].scenerySolid===false?'none':'mesh';mesh.castShadow=true;mesh.receiveShadow=true;
             const tinted=rows.some(row=>row.color!==undefined);
             for(let i=0;i<rows.length;i++){const transform=new THREE.Matrix4().makeTranslation(-origin.x,0,-origin.z).multiply(assetPlacement(a,rows[i],GHOST_STATIC_SIZES[kind])).multiply(source.matrixWorld);mesh.setMatrixAt(i,transform);if(tinted)mesh.setColorAt(i,new THREE.Color(rows[i].color??'#ffffff'));}
             mesh.instanceMatrix.needsUpdate=true;mesh.computeBoundingSphere();mesh.computeBoundingBox();root.add(mesh);this.instanceMeshes.add(mesh);
@@ -333,7 +341,7 @@ export class GhostTrainAssetKit {
       const visual=createGhostClockwork(c.s??[6,7,3],c.yaw??0),merged:THREE.BufferGeometry[]=[];
       for(const child of visual.group.children)if((child as THREE.Group).isGroup)merged.push(...mergeRigidParts(child as THREE.Group));
       visual.group.position.fromArray(c.p);visual.group.userData.ghostSkin='ghostclockwork';visual.group.userData.ghostHeight=c.s?.[1]??7;
-      const record={visual,merged};this.levelRoot.add(visual.group);this.machines.push(record);
+      solidMachine(visual.group,c);const record={visual,merged};this.levelRoot.add(visual.group);this.machines.push(record);
       this.pending.push(asset('ghostclockwork').promise.then(a=>{if(this.released||!a)return;
         for(const geometry of record.merged)geometry.dispose();record.merged=[];visual.dispose();
         const root=new THREE.Group(),model=a.scene.clone(true),metrics=placementMetrics(a,c,[6,7,3]);root.name='Meshy castle clockwork';root.position.fromArray(c.p);root.quaternion.copy(metrics.rotation);root.scale.setScalar(metrics.scale);
@@ -350,7 +358,7 @@ export class GhostTrainAssetKit {
           for(const b of bindings)if(b.name==='ClockCounterweight'){const phase=(time/7.6+.17)%1,lift=phase<.22?ease(phase/.22):phase<.53?1:phase<.76?1-ease((phase-.53)/.23):0;b.root.position.copy(b.point).addScaledVector(b.axis,lift*.14);}
           else b.root.quaternion.setFromAxisAngle(b.axis,b.name==='ClockMainWheel'?-turn:turn*(b.name==='ClockUpperPulley'?1.8:-1.8));};
         root.userData.assetReady=true;root.userData.ghostMeshyClockwork=true;root.userData.ghostSkin='ghostclockwork';root.userData.ghostHeight=a.bounds.getSize(new THREE.Vector3()).y*metrics.scale;
-        root.userData.ghostClockworkRig={parts:bindings.map(b=>b.name),sourceTriangles:4478,originalUVsPreserved:true};this.levelRoot.add(root);this.roots.add(root);update(this.time);
+        root.userData.ghostClockworkRig={parts:bindings.map(b=>b.name),sourceTriangles:4478,originalUVsPreserved:true};solidMachine(root,c);this.levelRoot.add(root);this.roots.add(root);update(this.time);
         record.visual={group:root,update,dispose:()=>root.removeFromParent()};
       }));return;
     }

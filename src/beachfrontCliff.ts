@@ -298,6 +298,7 @@ function addInstances(
   mesh.computeBoundingBox();
   mesh.computeBoundingSphere();
   mesh.userData.visualOnly = true;
+  mesh.userData.solidSurface = 'mesh';
   mesh.userData.backing = backing;
   mesh.userData.sourceInstanceCount = transforms.length;
   parent.add(mesh);

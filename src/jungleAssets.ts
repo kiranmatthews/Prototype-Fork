@@ -126,7 +126,7 @@ export function isJungleAsset(kind:string|undefined):kind is JungleAssetKind {re
 export function jungleSolidRole(kind:string):'mesh'|'trunk'|'none'{
   const spec=(JUNGLE_ASSETS as Readonly<Record<string,JungleAssetSpec>>)[kind];
   if(spec?.matte||spec?.shaft||spec?.cloth||kind==='junglebackdrop')return'none';
-  if(/tree|palm/i.test(kind)||kind==='junglecanopy')return'trunk';
+  if(/^(trialsv2tree[ab]|treehousetree|junglepalmtree|junglecanopy)$/.test(kind))return'trunk';
   if(/grass|fern|foliage|leaf|crown|canopy|carpet|bush|vine|flower|cane|thorn/i.test(kind))return'none';
   if(spec?.wind&&!/earthbank|rootbank|rock|stone|beam|wall/i.test(kind))return'none';
   return spec||kind==='joint'||kind==='earth'?'mesh':'none';

@@ -4,16 +4,32 @@ import type {CustomComponent} from './level';
 import {jungleSolidRole} from './jungleAssets';
 import {WorldSolids,type SolidSurface} from './worldSolids';
 
+/** Legacy mesh artists used solid:false for both masonry and painted decals.
+ * A zero-thickness horizontal mark has no structural body; explicit policy
+ * remains available for thin physical shelves and deliberately soft props. */
+export function meshScenerySolid(c:CustomComponent):boolean {
+  if(c.scenerySolid!==undefined)return c.scenerySolid;
+  if(c.materialStyle==='water'||c.materialStyle==='jungle-stream'||(c.opacity??1)<.98||c.nm==='Palm frond')return false;
+  if(c.solid===false&&c.vertices?.length){
+    const y=c.vertices[1];let horizontal=true;
+    for(let i=4;i<c.vertices.length;i+=3)if(Math.abs(c.vertices[i]-y)>1e-5){horizontal=false;break;}
+    if(horizontal)return false;
+  }
+  return true;
+}
+
 type Role='mesh'|'trunk'|'none';
 interface SceneSources {
   ground:()=>THREE.Mesh[];
   walls:()=>THREE.Box3[];
   wallPath?:(box:THREE.Box3)=>unknown;
+  wallSource?:(box:THREE.Box3)=>CustomComponent|THREE.Mesh|undefined;
   component:(object:THREE.Object3D)=>CustomComponent|undefined;
 }
-interface BoundMesh {surfaces:SolidSurface[];proxies:THREE.Mesh[];native:boolean;}
+interface BoundMesh {surfaces:SolidSurface[];proxies:THREE.Mesh[];native:boolean;keys:unknown[];}
 const ACTORS=new Set(['crate','metal','enemy','stone','crusher','pendulum','checkpoint','gate','clock','wumpa','crystal','comboorb','bonusplatform','worldmap','pit','tumblezone','trickgate','returnportal','orb']);
-const CHANGING=new Set(['mover','crumble','spinbridge','phasepad','rail','trickrail']);
+const HARD_DECOR=new Set(['meshycourtyard','coastalhouse','block','ruinblock','idol','ghostarch','ghostcart','ghostwallbay','ghostbanquettable','ghostchandelier','ghosttrestle','ghostmonsterportal','ghostflagstone','ghostbathwall','ghostbatharch','ghostjunk','ghostboiler']);
+const CHANGING=new Set(['mover','crumble','spinbridge','phasepad']);
 
 /** Binds actual scene geometry once, including asynchronous asset arrivals.
  * Camera visibility and render LOD do not revoke contact. Soft foliage,
@@ -22,6 +38,7 @@ export class WorldSurfaceBinding {
   private pending=new Set<THREE.Object3D>();
   private watched=new Set<THREE.Object3D>();
   private bound=new Map<THREE.Mesh,BoundMesh>();
+  private owners=new Map<unknown,number>();
   private proxyMeshes=new Set<THREE.Mesh>();
   private proxySources=new Map<THREE.Mesh,SolidSurface>();
   private trunks=new Map<THREE.BufferGeometry,THREE.BufferGeometry>();
@@ -50,11 +67,13 @@ export class WorldSurfaceBinding {
     const mesh=object as THREE.Mesh,record=this.bound.get(mesh);if(!record)return;
     for(const surface of record.surfaces)this.solids.remove(surface);
     for(const proxy of record.proxies){this.proxyMeshes.delete(proxy);this.proxySources.delete(proxy);const list=this.sources.ground(),i=list.indexOf(proxy);if(i>=0)list.splice(i,1);}
+    for(const key of record.keys){const count=this.owners.get(key)!-1;if(count)this.owners.set(key,count);else this.owners.delete(key);}
     this.bound.delete(mesh);
   }
   private role(mesh:THREE.Mesh,c:CustomComponent|undefined,native:boolean):Role{
     if(mesh.userData.metalCrate||c&&['crate','metal','enemy','stone','crusher'].includes(c.t))return'none';
     if(native)return'mesh';
+    if(mesh.userData.editorGhost||c?.invisible)return'none';
     if(c?.scenerySolid===false||mesh.userData.solidSurface==='none'||mesh.userData.sceneryLod===1)return'none';
     if(c&&ACTORS.has(c.t))return'none';
     if(c?.scenerySolid===true)return'mesh';
@@ -67,12 +86,9 @@ export class WorldSurfaceBinding {
     if(c?.containment)return'none';
     if(c&&['wall','wallpath','platform','ramp','rock','terrain','vertramp','woodpath','spinbridge'].includes(c.t))return'mesh';
     if(c?.invisible)return'none';
-    if(c?.t==='mesh'){
-      // Old published waterpark fronds predate the explicit scenery policy.
-      if(c.nm==='Palm frond'||(c.opacity??1)<.98)return'none';
-      return'mesh';
-    }
-    if(mesh.userData.wallPathComp)return'mesh';
+    if(c?.t==='mesh')return meshScenerySolid(c)?'mesh':'none';
+    if(mesh.userData.wallPathComp||mesh.userData.wallSpec)return'mesh';
+    if(c?.t==='decor'&&HARD_DECOR.has(c.dkind??'')&&materials.every(m=>!m.transparent||m.opacity>=.98))return'mesh';
     return'none';
   }
   private trunk(geometry:THREE.BufferGeometry):THREE.BufferGeometry{
@@ -91,12 +107,14 @@ export class WorldSurfaceBinding {
   }
   private bind(mesh:THREE.Mesh):void{
     if(this.bound.has(mesh)||mesh.userData.worldSolidProxy||!mesh.geometry?.getAttribute('position'))return;
-    const c=this.sources.component(mesh),native=this.groundSet.has(mesh)||mesh.userData.outlinedSurface===true||c?.t==='phasepad'||c?.t==='crumble',role=this.role(mesh,c,native);
+    const c=this.sources.component(mesh),native=this.groundSet.has(mesh)||mesh.userData.outlinedSurface===true||c?.t==='phasepad'||c?.t==='crumble'||c?.t==='spinbridge',role=this.role(mesh,c,native);
     if(role==='none')return;
     const geometry=role==='trunk'?this.trunk(mesh.geometry):mesh.geometry;if(geometry.getAttribute('position').count<3)return;
-    const dynamic=!!c&&CHANGING.has(c.t)||mesh.userData.moverId!==undefined||mesh.userData.crumbleId!==undefined||mesh.userData.phasePadId!==undefined;
-    const active=native?()=>this.groundSet.has(mesh):()=>this.watched.has(mesh);
-    const record:BoundMesh={surfaces:[],proxies:[],native};this.bound.set(mesh,record);
+    const dynamic=mesh.userData.solidDynamic===true||!!c&&CHANGING.has(c.t)||mesh.userData.moverId!==undefined||mesh.userData.crumbleId!==undefined||mesh.userData.phasePadId!==undefined;
+    const active=native&&c?.t!=='spinbridge'?()=>this.groundSet.has(mesh):()=>this.watched.has(mesh);
+    const keys=[mesh,...(c?[c]:[]),...(mesh.userData.cityAsset?[mesh.userData.cityAsset]:[])];
+    const record:BoundMesh={surfaces:[],proxies:[],native,keys};this.bound.set(mesh,record);
+    for(const key of keys)this.owners.set(key,(this.owners.get(key)??0)+1);
     const instances=(mesh as THREE.InstancedMesh).isInstancedMesh?(mesh as THREE.InstancedMesh).count:1;
     for(let instance=0;instance<instances;instance++){
       const surface=this.solids.add(mesh,{geometry,instance:(mesh as THREE.InstancedMesh).isInstancedMesh?instance:undefined,dynamic,active,name:c?.nm??mesh.name,owner:c});record.surfaces.push(surface);
@@ -105,7 +123,7 @@ export class WorldSurfaceBinding {
         proxy.userData={worldSolidProxy:true,decorComponent:true,edgeGrinding:false,vert:false,...(c?.slip?{slippy:true,iceGrip:c.iceGrip}:{} )};
         // Dense scenery shares the same local BVH for contact and standing.
         const raycast=geometry.boundsTree?acceleratedRaycast:THREE.Mesh.prototype.raycast;
-        proxy.raycast=(ray,hits)=>{if(this.solids.enabled&&active())raycast.call(proxy,ray,hits);};
+        proxy.raycast=(ray,hits)=>{if(this.solids.enabled&&active()&&ray.ray.intersectsBox(surface.bounds))raycast.call(proxy,ray,hits);};
         this.proxyMeshes.add(proxy);this.proxySources.set(proxy,surface);record.proxies.push(proxy);this.sources.ground().push(proxy);
       }
     }
@@ -117,15 +135,19 @@ export class WorldSurfaceBinding {
     for(const object of this.pending)object.traverse(child=>{if((child as THREE.Mesh).isMesh)this.bind(child as THREE.Mesh);});this.pending.clear();
     // Some native support proxies are deliberately outside the render tree.
     for(const mesh of this.sources.ground())if(!mesh.userData.worldSolidProxy&&!this.bound.has(mesh))this.bind(mesh);
-    for(const [proxy,surface]of this.proxySources)if(surface.dynamic){surface.mesh.updateWorldMatrix(true,false);proxy.matrixWorld.copy(surface.mesh.matrixWorld);proxy.matrix.copy(proxy.matrixWorld);}
+    for(const [proxy,surface]of this.proxySources)if(surface.dynamic){surface.mesh.updateWorldMatrix(true,false);proxy.matrixWorld.copy(surface.mesh.matrixWorld);if(surface.instance!==undefined){(surface.mesh as THREE.InstancedMesh).getMatrixAt(surface.instance,proxy.matrix);proxy.matrixWorld.multiply(proxy.matrix);}proxy.matrix.copy(proxy.matrixWorld);surface.bounds.copy(surface.geometry.boundingBox!).applyMatrix4(proxy.matrixWorld);}
     // Existing authored barriers retain their exact Box3 support contract;
     // continuous queries add protection when a tick crosses the whole slab.
-    for(const box of this.sources.walls())if(!this.sources.wallPath?.(box)&&!this.wallBoxes.has(box)){
+    const hasGeometry=(box:THREE.Box3)=>{
+      const owner=this.sources.wallSource?.(box);
+      return this.sources.wallPath?.(box)||owner&&(this.owners.has(owner)||'dkind' in owner&&this.owners.has(owner.dkind));
+    };
+    for(const box of this.sources.walls())if(!hasGeometry(box)&&!this.wallBoxes.has(box)){
       const mesh=new THREE.Mesh(this.boxGeometry,this.material);box.getCenter(mesh.position);box.getSize(mesh.scale);mesh.updateMatrixWorld();
       const surface=this.solids.add(mesh,{active:()=>this.wallSet.has(box),name:'Authored solid wall',owner:box});this.wallBoxes.set(box,{mesh,surface,previous:box.clone()});
     }
     for(const [box,record]of this.wallBoxes){
-      if(!this.wallSet.has(box)){this.solids.remove(record.surface);this.wallBoxes.delete(box);continue;}
+      if(!this.wallSet.has(box)||hasGeometry(box)){this.solids.remove(record.surface);this.wallBoxes.delete(box);continue;}
       if(!record.previous.equals(box)){this.solids.makeDynamic(record.surface);box.getCenter(record.mesh.position);box.getSize(record.mesh.scale);record.mesh.updateMatrixWorld();record.previous.copy(box);}
     }
     this.prepared=true;

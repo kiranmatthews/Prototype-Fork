@@ -204,7 +204,7 @@ try {
         const play = build(sampleData([component]));
         api.setEditorBuild(true);
         try {
-          check(`${quality}: ${name} remains pickable without phantom ground or grind collision`, () => {
+          check(`${quality}: ${name} remains pickable with its authored hard/soft surface and no auto-grind edges`, () => {
             const object = allMeshes(isolated).find(mesh=>mesh.userData.editorIdx===0 && mesh.name===name);
             assert.ok(object);
             const corners = triangles([object]);
@@ -217,8 +217,8 @@ try {
             assert.ok(point, "scenery contains no pickable triangle");
             const ray=new THREE.Raycaster(point.clone().addScaledVector(normal,2),normal.clone().negate());
             assert.ok(ray.intersectObject(object,false).length,"editor cannot pick the moved scenery");
-            assert.equal(ray.intersectObjects(isolated.groundMeshes,false).length,0,"a visual-only mesh catches gameplay ground rays");
-            assert.equal(isolated.groundMeshes.length,baseline.groundMeshes.length);
+            assert.equal(ray.intersectObjects(isolated.groundMeshes,false).length>0,component.scenerySolid===true,"captured hard/soft surface policy changed");
+            assert.equal(isolated.groundMeshes.length,baseline.groundMeshes.length+(component.scenerySolid===true?1:0));
             assert.equal(isolated.walls.length,baseline.walls.length);
             assert.equal(isolated.rails.length,baseline.rails.length);
           });
@@ -234,7 +234,7 @@ try {
               assertMaterial(mesh.material, editable.material, name);
               assert.ok(!play.groundMeshes.includes(mesh), "play scenery became standable");
             }
-            assert.equal(play.groundMeshes.length,baseline.groundMeshes.length);
+            assert.equal(play.groundMeshes.length,baseline.groundMeshes.length+(component.scenerySolid===true?1:0));
             assert.equal(play.walls.length,baseline.walls.length);
             assert.equal(play.rails.length,baseline.rails.length);
             assert.deepEqual(play.captureData(), isolated.captureData(), "play batching changed authored data");

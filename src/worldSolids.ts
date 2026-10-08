@@ -65,6 +65,18 @@ export class WorldSolids {
   private readonly localBox=new THREE.Box3();
   private readonly matrix=new THREE.Matrix4();
   private readonly motion=new THREE.Matrix4();
+  private readonly sampleMatrix=new THREE.Matrix4();
+  private readonly previousPosition=new THREE.Vector3();
+  private readonly currentPosition=new THREE.Vector3();
+  private readonly previousRotation=new THREE.Quaternion();
+  private readonly currentRotation=new THREE.Quaternion();
+  private readonly sampleRotation=new THREE.Quaternion();
+  private readonly previousScale=new THREE.Vector3();
+  private readonly currentScale=new THREE.Vector3();
+  private readonly sampleScale=new THREE.Vector3();
+  private readonly samplePosition=new THREE.Vector3();
+  private readonly rootTo=new THREE.Vector3();
+  private readonly segmentHit=solidContact();
   private readonly segment=new THREE.Line3();
   private readonly plane=new THREE.Plane();
   private readonly tri=new ExtendedTriangle();
@@ -178,7 +190,7 @@ export class WorldSolids {
         if(Math.abs(t-result.fraction)<1e-8&&result.surface&&depth<=result.depth)return;
         result.surface=surface;result.fraction=t;result.depth=depth;result.top=top;
         result.normal.copy(this.normal);result.point.copy(this.trianglePoint);
-        result.position.lerpVectors(this.rootFrom,to,t);
+        result.position.lerpVectors(this.rootFrom,this.rootTo,t);
         result.surfaceDelta.copy(this.trianglePoint).applyMatrix4(surface.inverse).applyMatrix4(surface.previous).sub(this.trianglePoint).negate();
         return;
       }
@@ -190,7 +202,7 @@ export class WorldSolids {
     }
     // Conservative advancement never crosses a contact. In a pathological
     // near-tangent case, retaining the last safe position prevents tunnelling.
-    if(t<result.fraction){result.surface=surface;result.fraction=t;result.depth=0;result.top=top;result.normal.copy(this.normal);result.point.copy(this.trianglePoint);result.position.lerpVectors(this.rootFrom,to,t);result.surfaceDelta.set(0,0,0);}
+    if(t<result.fraction){result.surface=surface;result.fraction=t;result.depth=0;result.top=top;result.normal.copy(this.normal);result.point.copy(this.trianglePoint);result.position.lerpVectors(this.rootFrom,this.rootTo,t);result.surfaceDelta.set(0,0,0);}
   }
   cast(from:THREE.Vector3,to:THREE.Vector3,q:SolidQuery,result:SolidContact,moving=true):boolean{
     result.surface=null;result.fraction=1;result.depth=0;result.surfaceDelta.set(0,0,0);
@@ -200,22 +212,61 @@ export class WorldSolids {
     for(const surface of this.candidates){
       if(q.ignore?.(surface)||Math.abs(surface.matrix.determinant())<1e-12)continue;
       this.localBox.copy(surface.bounds);
-      if(surface.dynamic)this.localBox.union(surface.previousBounds).expandByScalar(surface.bounds.getSize(this.normal).length()*.1);
-      if(!this.sweep.intersectsBox(this.localBox)||surface.active&&!surface.active())continue;this.lastCandidates++;
-      this.fromA.copy(from).addScaledVector(q.axis??UP,q.low);this.fromB.copy(from).addScaledVector(q.axis??UP,q.high);
-      this.rootFrom.copy(from);
-      if(moving&&surface.dynamic&&Math.abs(surface.previous.determinant())>1e-12){this.motion.copy(surface.previous).invert().premultiply(surface.matrix);this.fromA.applyMatrix4(this.motion);this.fromB.applyMatrix4(this.motion);this.rootFrom.applyMatrix4(this.motion);}
-      this.toA.copy(to).addScaledVector(q.axis??UP,q.low);this.toB.copy(to).addScaledVector(q.axis??UP,q.high);
-      this.deltaA.copy(this.toA).sub(this.fromA);this.deltaB.copy(this.toB).sub(this.fromB);
-      this.localBox.makeEmpty().expandByPoint(this.fromA).expandByPoint(this.fromB).expandByPoint(this.toA).expandByPoint(this.toB).expandByScalar(q.radius+.01).applyMatrix4(surface.inverse);
-      const tree=this.trees.get(surface.geometry)!.tree;
-      if(tree)tree.shapecast({intersectsBounds:box=>box.intersectsBox(this.localBox),intersectsTriangle:triangle=>{
-        this.tri.a.copy(triangle.a).applyMatrix4(surface.matrix);this.tri.b.copy(triangle.b).applyMatrix4(surface.matrix);this.tri.c.copy(triangle.c).applyMatrix4(surface.matrix);
-        this.triangle(from,to,surface,q,result);return false;
-      }});
-      else{
-        const position=surface.geometry.getAttribute('position'),index=surface.geometry.getIndex(),count=index?.count??position.count;
-        for(let i=0;i<count;i+=3){this.tri.a.fromBufferAttribute(position,index?index.getX(i):i).applyMatrix4(surface.matrix);this.tri.b.fromBufferAttribute(position,index?index.getX(i+1):i+1).applyMatrix4(surface.matrix);this.tri.c.fromBufferAttribute(position,index?index.getX(i+2):i+2).applyMatrix4(surface.matrix);this.triangle(from,to,surface,q,result);}
+      let slices=1,rotation=0;
+      const relative=moving&&surface.dynamic&&Math.abs(surface.previous.determinant())>1e-12;
+      if(relative){
+        surface.previous.decompose(this.previousPosition,this.previousRotation,this.previousScale);
+        surface.matrix.decompose(this.currentPosition,this.currentRotation,this.currentScale);
+        rotation=this.previousRotation.angleTo(this.currentRotation);
+        slices=Math.max(1,Math.ceil(rotation/(Math.PI/90)));
+        this.localBox.union(surface.previousBounds);
+        if(rotation>1e-5){
+          // Enclose the whole rotation about the mesh origin, not just the
+          // two endpoint AABBs (a long rotating arm may pass outside both).
+          const bounds=surface.geometry.boundingBox!;
+          const radius=bounds.getSize(this.normal).length()*.5+bounds.getCenter(this.normal).length();
+          const scale=Math.max(...this.previousScale.toArray().map(Math.abs),...this.currentScale.toArray().map(Math.abs));
+          this.localBox.makeEmpty().expandByPoint(this.previousPosition).expandByPoint(this.currentPosition).expandByScalar(radius*scale);
+        }
+      }
+      if(!this.sweep.intersectsBox(this.localBox)||surface.active&&!surface.active())continue;
+      this.lastCandidates++;
+      const relativeSample=(t:number,root:THREE.Vector3,a:THREE.Vector3,b:THREE.Vector3)=>{
+        root.lerpVectors(from,to,t);a.copy(root).addScaledVector(q.axis??UP,q.low);b.copy(root).addScaledVector(q.axis??UP,q.high);
+        if(relative){
+          this.samplePosition.lerpVectors(this.previousPosition,this.currentPosition,t);
+          this.sampleScale.lerpVectors(this.previousScale,this.currentScale,t);
+          this.sampleRotation.slerpQuaternions(this.previousRotation,this.currentRotation,t);
+          this.sampleMatrix.compose(this.samplePosition,this.sampleRotation,this.sampleScale);
+          this.motion.copy(this.sampleMatrix).invert().premultiply(surface.matrix);
+          root.applyMatrix4(this.motion);a.applyMatrix4(this.motion);b.applyMatrix4(this.motion);
+        }
+      };
+      for(let slice=0;slice<slices&&slice/slices<=result.fraction;slice++){
+        const start=slice/slices,end=(slice+1)/slices;
+        relativeSample(start,this.rootFrom,this.fromA,this.fromB);
+        relativeSample(end,this.rootTo,this.toA,this.toB);
+        this.deltaA.copy(this.toA).sub(this.fromA);this.deltaB.copy(this.toB).sub(this.fromB);
+        // Bound the arc/chord error of relative rotation. Translation stays
+        // exact; rotating contacts remain conservative between sample poses.
+        const error=rotation?(Math.max(this.fromA.distanceTo(this.currentPosition),this.fromB.distanceTo(this.currentPosition),this.toA.distanceTo(this.currentPosition),this.toB.distanceTo(this.currentPosition))+q.radius)*(1-Math.cos(rotation/(2*slices))):0;
+        const query=error?{...q,radius:q.radius+error,supportRadius:q.supportRadius?(n:THREE.Vector3)=>q.supportRadius!(n)+error:undefined}:q;
+        this.localBox.makeEmpty().expandByPoint(this.fromA).expandByPoint(this.fromB).expandByPoint(this.toA).expandByPoint(this.toB).expandByScalar(query.radius+.01).applyMatrix4(surface.inverse);
+        const hit=this.segmentHit;hit.surface=null;hit.fraction=Math.min(1,(result.fraction-start)*slices);hit.depth=0;
+        const visit=(a:THREE.Vector3,b:THREE.Vector3,c:THREE.Vector3)=>{
+          this.tri.a.copy(a).applyMatrix4(surface.matrix);this.tri.b.copy(b).applyMatrix4(surface.matrix);this.tri.c.copy(c).applyMatrix4(surface.matrix);
+          this.triangle(from,to,surface,query,hit);
+        };
+        const tree=this.trees.get(surface.geometry)!.tree;
+        if(tree)tree.shapecast({intersectsBounds:box=>box.intersectsBox(this.localBox),intersectsTriangle:triangle=>{visit(triangle.a,triangle.b,triangle.c);return false;}});
+        else{
+          const position=surface.geometry.getAttribute('position'),index=surface.geometry.getIndex(),count=index?.count??position.count;
+          for(let i=0;i<count;i+=3){
+            this.tri.a.fromBufferAttribute(position,index?index.getX(i):i).applyMatrix4(surface.matrix);this.tri.b.fromBufferAttribute(position,index?index.getX(i+1):i+1).applyMatrix4(surface.matrix);this.tri.c.fromBufferAttribute(position,index?index.getX(i+2):i+2).applyMatrix4(surface.matrix);
+            this.triangle(from,to,surface,query,hit);
+          }
+        }
+        if(hit.surface){hit.fraction=start+hit.fraction/slices;this.copyContact(result,hit);break;}
       }
     }
     this.triangleTests+=this.lastTriangles;return result.surface!==null;

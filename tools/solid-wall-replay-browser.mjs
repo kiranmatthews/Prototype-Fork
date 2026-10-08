@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
-const {chromium}=await import('/Users/kiki/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs');
+const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const data=JSON.parse(await readFile(new URL('fixtures/custard-solid-wall-replay.json',import.meta.url),'utf8'));
 const base=process.argv.find(v=>/^https?:/.test(v))??'http://127.0.0.1:5260';
 const prefix=process.argv.includes('--legacy-prefix')?6300:0;
-const out=process.env.SOLID_REPLAY_OUTPUT??'/private/tmp/solid-wall-browser-before';await mkdir(out,{recursive:true});
+const out=process.env.SOLID_REPLAY_OUTPUT??'/private/tmp/solid-wall-browser';await mkdir(out,{recursive:true});
 const report={base,errors:[],frames:[],snapshots:[]};
 const browser=await chromium.launch({channel:'chrome',headless:true});
 try{
@@ -20,11 +20,14 @@ try{
  },{data,prefix});
  await page.waitForFunction(()=>window.__game.replayer.active);
  for(const frame of [6290,6330,6347,6350,6360,6370,6400,6450,6660]){
-  await page.waitForFunction(frame=>window.__game.replayer.frame>=frame||!window.__game.replayer.active,frame);
+  await page.waitForFunction(frame=>window.__game.replayer.frame>=frame||!window.__game.replayer.active||window.__game.player.state==='gameover',frame);
   report.snapshots.push(await page.evaluate(()=>{const g=window.__game,p=g.player;return{frame:g.replayer.frame,p:p.pos.toArray(),state:p.state,bailing:p.isBailing,ground:p.groundHit?.name,speed:p.speed,vy:p.vVel,impact:p.worldImpactDiagnostics,body:{height:p.characterProportionDiagnostics.hitboxHeight,renderBounds:[p.characterBounds.min.toArray(),p.characterBounds.max.toArray()],scale:p.bodyGroup.scale.toArray()}};}));
   await page.screenshot({path:out+`/frame-${frame}.png`});
+  if(report.snapshots.at(-1).state==='gameover')break;
  }
- await page.waitForFunction(()=>!window.__game.replayer.active);
+ await page.waitForFunction(()=>!window.__game.replayer.active||window.__game.player.state==='gameover');
  report.frames=await page.evaluate(()=>{window.__restoreSolidReplay();return window.__solidReplayTrace;});
- console.log(JSON.stringify({snapshots:report.snapshots,errors:report.errors}));assert.deepEqual(report.errors,[]);
+ const impacts=report.frames.filter((f,i,a)=>f.impact?.count>(a[i-1]?.impact?.count??0)).map(f=>({frame:f.f,...f.impact.last}));report.impacts=impacts;
+ if(prefix)assert.ok(impacts.some(h=>h.name==='Custard spillway outer stone mass'&&h.bailing&&h.outgoing.reduce((dot,v,i)=>dot+v*h.normal[i],0)>0),'recorded stone approach must rebound and ragdoll');
+ assert.ok(report.frames.every(f=>f.p.every(Number.isFinite)));console.log(JSON.stringify({last:report.snapshots.at(-1),impacts,errors:report.errors}));assert.deepEqual(report.errors,[]);
 }finally{await writeFile(out+'/report.json',JSON.stringify(report,null,2));await browser.close();}

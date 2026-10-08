@@ -56,7 +56,7 @@ import {
 } from "./warpPad";
 import { CONST, TUNING } from "./tuning";
 import {WorldSolids} from "./worldSolids";
-import {WorldSurfaceBinding} from "./worldSurfaceBinding";
+import {WorldSurfaceBinding,meshScenerySolid} from "./worldSurfaceBinding";
 import { sfx } from "./audio";
 import { rooReady, rooLoaded } from "./roofont"; // crate stencils are set in Roo
 import { puffs, PUFF_PRESETS } from "./puffs";
@@ -867,11 +867,11 @@ export const DECOR_KINDS = [
   "junglecup",
   "ruinblock",
   "log",
-  "block", // plain textured box, visual only: earth banks, backdrops, massing
-  "coastalhouse", // batched Coastal Street facade module; visual only
+  "block", // plain textured hard massing; scenerySolid:false for painted backdrops
+  "coastalhouse", // batched Coastal Street facade module
   "braidedrope", // static decorative rope: s = diameter X/Y and length Z, p = centre
   "roadarrow", // graded three-piece route arrow; visual only
-  "meshycourtyard", // owner-supplied Ancient Stone Courtyard mesh; visual only
+  "meshycourtyard", // owner-supplied Ancient Stone Courtyard mesh
   // THE LIBRARY FAMILIES. Six kinds backed by fifty-six external meshes (see
   // props.ts). Each one is a whole species rather than a single shape: pick a
   // model, a tint, a size, a spin and a lean and no two placings match.
@@ -3929,6 +3929,7 @@ export class Level {
   boss: CrabChiefEncounter | null = null;
   groundMeshes: THREE.Mesh[] = [];
   readonly worldSolids=new WorldSolids();
+  private readonly worldWallSources=new WeakMap<THREE.Box3,CustomComponent|THREE.Mesh>();
   private worldSurfaceBinding:WorldSurfaceBinding|null=null;
   prepareWorldSolids():void{this.worldSurfaceBinding?.prepare();}
   get worldSolidDiagnostics(){return this.worldSurfaceBinding?.diagnostics??null;}
@@ -5041,7 +5042,7 @@ export class Level {
     this.installGroundAcceleration(this.groundMeshes);
     if(!this.isCampaignMap){
       this.worldSurfaceBinding=new WorldSurfaceBinding(this.root,this.worldSolids,{
-        ground:()=>this.groundMeshes,walls:()=>this.walls,wallPath:box=>this.wallPathForBox(box),
+        ground:()=>this.groundMeshes,walls:()=>this.walls,wallPath:box=>this.wallPathForBox(box),wallSource:box=>this.worldWallSources.get(box),
         component:object=>{for(let at:THREE.Object3D|null=object;at&&at!==this.root;at=at.parent){if(at.userData.assetBatchRoot)return undefined;const index=at.userData.editorIdx;if(Number.isInteger(index))return this.builtFromData?.components[index];}return undefined;},
       });
       this.worldSurfaceBinding.prepare();
@@ -5808,7 +5809,7 @@ export class Level {
       if(shared)material.dispose();else{shared=material;this.staticSurfaceMaterials.set(key,shared);}
       const matrix=new THREE.Matrix4().compose(new THREE.Vector3(...c.p),
         new THREE.Quaternion().setFromAxisAngle(THREE.Object3D.DEFAULT_UP,THREE.MathUtils.degToRad(c.yaw??0)),new THREE.Vector3(...(c.s??[1,1,1])));
-      this.putDecor(`static surface ${key}:${Math.floor(c.p[0]/16)}:${Math.floor(c.p[2]/16)}`,geometry,shared,matrix,undefined,false,undefined,c.scenerySolid===false?'none':'mesh');
+      this.putDecor(`static surface ${key}:${Math.floor(c.p[0]/16)}:${Math.floor(c.p[2]/16)}`,geometry,shared,matrix,undefined,false,undefined,meshScenerySolid(c)?'mesh':'none');
       return;
     }
     if(c.outline&&c.materialStyle==='unity-sand')material=material.clone();
@@ -6027,11 +6028,11 @@ export class Level {
         C.push(...chunks);
       }
     }
-    // Native visual meshes retain their exact triangles and material values,
-    // but never become phantom support surfaces or grind edges after capture.
+    // Native scenery retains exact triangles, appearance and hard/soft policy.
+    // Its cosmetic edges never become automatic grind rails after capture.
     for (const mesh of this.capturedSceneryMeshes) {
       const style = matInfo(mesh);
-      const chunks = this.captureSurfaceMesh(mesh, { ...style, tex: style.tex ?? "solid", solid: false, edgeGrinding: false });
+      const chunks = this.captureSurfaceMesh(mesh, { ...style, tex: style.tex ?? "solid", solid: false, ...(mesh.userData.solidSurface?{scenerySolid:mesh.userData.solidSurface!=='none'}:{}), edgeGrinding: false });
       const authored = mesh.userData.captureGroup as number | undefined;
       const id = authored !== undefined && groups.some(group => group.id === authored) ? authored : nextCaptureGroup++;
       if (!groups.some(group => group.id === id)) groups.push({ id, nm: (mesh.name || "scenery").slice(0, 100), editorOnly: true });
@@ -6766,6 +6767,7 @@ export class Level {
       const sceneryPolicy=this.decorScenerySolid;this.decorScenerySolid=data.components[idx].scenerySolid;
       try{fn();}finally{this.decorScenerySolid=sceneryPolicy;}
       const surface = data.components[idx];
+      if(!surface.invisible)for(let w=wallBefore;w<this.walls.length;w++)this.worldWallSources.set(this.walls[w],surface);
       if(surface.t==='decor'&&surface.scenerySolid===false){this.groundMeshes.splice(groundBefore);this.walls.splice(wallBefore);}
       const frozenDeck = surface.tex === 'bridge-ice' && ['platform','crumble','mover'].includes(surface.t) && !surface.pts;
       if (frozenDeck) for (let g=groundBefore;g<this.groundMeshes.length;g++)
@@ -10716,7 +10718,7 @@ export class Level {
       if (ground) mesh.userData.edgeGrinding = false;
       this.root.add(mesh);
       if (ground) this.groundMeshes.push(mesh);
-      else this.capturedSceneryMeshes.push(mesh);
+      else {mesh.userData.solidSurface=/^(centre line|edge line)$/.test(name)?'none':'mesh';this.capturedSceneryMeshes.push(mesh);}
     };
     const chunks = (cb: (s0: number, s1: number) => void): void => {
       for (let s0 = 0; s0 < road.len; s0 += CHUNK)
@@ -10976,7 +10978,7 @@ export class Level {
       const c = lateral(tt, d);
       const isle = new THREE.Mesh(new THREE.ConeGeometry(r, h, 7), isleMat);
       isle.position.set(c.x, h / 2 - 6, c.z);
-      isle.name = "bay island";
+      isle.name = "bay island";isle.userData.solidSurface='mesh';
       this.root.add(isle);
       this.capturedSceneryMeshes.push(isle);
     }
@@ -13397,6 +13399,7 @@ export class Level {
    * underside and ledge geometry, so a fast board never catches a plank seam.
    */
   private buildWoodPath(c: CustomComponent): void {
+    const wallBefore=this.walls.length;
     const raw = c.pts && c.pts.length >= 2 ? c.pts : [[0, 0], [0, -24]];
     const knots = raw.map(
       (q) =>
@@ -13712,6 +13715,7 @@ export class Level {
             .expandByScalar(pole.radius + 0.015),
         );
     }
+    for(let i=wallBefore;i<this.walls.length;i++)this.worldWallSources.set(this.walls[i],deck);
   }
 
   private buildMechanicPad(
@@ -16205,8 +16209,7 @@ export class Level {
     solidSurface?: 'mesh'|'none',
   ): void {
     if(this.decorScenerySolid!==undefined)solidSurface=this.decorScenerySolid?'mesh':'none';
-    solidSurface??=/block:|trunk|stone|rock|boulder|wall|beam|pillar|bark|sawn|kerb|curb|barrier|fence|scaffold|building|facade|column|pier|post|masonry|concrete|brick|roof|deck|step|plank|floor|bridge|bench|ledge|platform|pole/i.test(key)&&!/leaf|frond|crown|grass|fern|glow|shadow|foam/i.test(key)?'mesh':'none';
-    if(this.liteDecor&&solidSurface==='none')return;
+    solidSurface??=/block:|trunk|stone|rock|boulder|wall|beam|pillar|bark|sawn|kerb|curb|barrier|fence|scaffold|building|house|facade|column|pier|post|masonry|concrete|brick|roof|deck|step|plank|floor|bridge|bench|ledge|platform|pole/i.test(key)&&!/leaf|frond|crown|grass|fern|glow|shadow|foam/i.test(key)?'mesh':'none';
     if (!this.batchDecor) {
       // Unbatched (the editor's pickable-mesh mode): the shared geometry has
       // no room for this copy's tint, so give this one its own colour attribute
@@ -16244,7 +16247,8 @@ export class Level {
     for (const [key, b] of this.decorParts) {
       if (b.parts.length === 0) continue;
       const mesh = new THREE.Mesh(Level.mergeGeos(b.parts), b.mat);mesh.userData.solidSurface=b.solidSurface;
-      mesh.name = b.captureGroup === undefined ? key : key.replace(/ \d+$/, "");
+      const label=key.replace(/ physical:(mesh|none)$/, "");
+      mesh.name = b.captureGroup === undefined ? label : label.replace(/ \d+$/, "");
       if (b.captureGroup !== undefined) mesh.userData.captureGroup = b.captureGroup;
       this.root.add(mesh);
       if (b.captureScenery) this.capturedSceneryMeshes.push(mesh);
@@ -16437,12 +16441,11 @@ export class Level {
   private static potGeo: THREE.CylinderGeometry | null = null;
   private planter(x: number, y: number, z: number): void {
     this.noteDecor("planter", x, y, z);
-    if (this.liteDecor) return;
     this.decorQuiet = true; // the fern spilling out is part of the pot
     if (!Level.potGeo)
       Level.potGeo = new THREE.CylinderGeometry(0.52, 0.38, 0.6, 9);
     const pot = new THREE.Mesh(Level.potGeo, this.decorMat("pot", 0xc86a42));
-    pot.position.set(x, y + 0.3, z);
+    pot.position.set(x, y + 0.3, z);pot.userData.solidSurface=this.decorScenerySolid===false?'none':'mesh';
     this.root.add(pot);
     this.fern(x, y + 0.55, z, 0.9);
     this.decorQuiet = false;
@@ -16899,6 +16902,7 @@ export class Level {
         new THREE.Vector3(w, h, d),
       ),
     );
+    this.worldWallSources.set(this.walls[this.walls.length-1],mesh);
     if (this.jungleAtmosphere && !this.builtFromData) {
       this.hideJungleSupport(mesh);
       this.cladJungleWall(cx, baseY, cz, w, visH, d, jungleFacing);

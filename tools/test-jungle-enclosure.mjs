@@ -79,6 +79,11 @@ try {
     assert.ok(Number.isFinite(floor(player.pos.x,player.pos.z)),`unsupported boundary landing at ${z}/${side}: ${player.pos.toArray()}`);
     probes++;
   }
+  if(process.argv.includes('--corner')){
+    // Rail trips used to reposition the ragdoll behind the adjacent wall,
+    // after contact had already run; the following tick pushed it below the terrace.
+    for(const side of [-1,1])for(const air of [0,8])probe(-442,side,1,air,true);
+  }else{
   for(const z of [4,-22,-52,-74,-120,-150,-254,-277,-308,-326,-390,-417,-453,-468,-510,-540,-590,-633,-681,-705])
     for(const side of [-1,1]){probe(z,side);probe(z,side,0,7);}
   for(const side of [-1,1])for(const air of [0,8]){
@@ -86,6 +91,7 @@ try {
     probe(-442,side,1,air);probe(-675,side,1,air);
     probe(12,side,-1,air,true);probe(-712,side,1,air,true);
     probe(-442,side,1,air,true);probe(-675,side,1,air,true);
+  }
   }
   console.log(`PASS Jungle enclosure: ${cliffs} low-poly cliff placements, ${trees} far-mesh canopies, ${probes} real-Player side/air/corner/end probes, closed perimeter and capture/rebuild.`);
   level.dispose();

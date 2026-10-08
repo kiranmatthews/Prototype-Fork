@@ -877,7 +877,11 @@ export class Player {
   private bailExitSpeed = 0; // capped run-out target when direction is held
   private worldStandingHeight=1.6;
   private readonly worldStepOrigin=new THREE.Vector3();
+  private readonly worldLateOrigin=new THREE.Vector3();
   private readonly worldContact=solidContact();
+  private readonly worldStepContact=solidContact();
+  private readonly worldRaisedFrom=new THREE.Vector3();
+  private readonly worldRaisedTo=new THREE.Vector3();
   private readonly worldVelocity=new THREE.Vector3();
   private readonly worldNormal=new THREE.Vector3();
   private readonly worldAxis=new THREE.Vector3(0,1,0);
@@ -3710,7 +3714,7 @@ export class Player {
     this.lastTy = 0;
     this.rideNormal.set(0, 1, 0);
     this.prevPos.copy(this.pos);
-    this.worldStepOrigin.copy(this.pos);level.prepareWorldSolids?.();level.worldSolids?.resetMotion();
+    this.worldTripT=0;this.worldStepOrigin.copy(this.pos);level.prepareWorldSolids?.();level.worldSolids?.resetMotion();
     this.snapRenderInterpolation();
     for (const s of this.sparks) {
       s.life = 0;
@@ -11941,6 +11945,7 @@ export class Player {
       }
     }
     this.resolveWorldContact(level);
+    this.worldLateOrigin.copy(this.pos);
     const half = this.hitboxHalf;
     if (!ledgeOnly && this.state !== 'grind' && !this.wallriding) {
       const coastHit = level.resolveCoastBoundary(
@@ -12979,6 +12984,15 @@ export class Player {
       this.points += CONST.ptsCrystal;
       sfx.play('crystalGet', 1.0);
       this.onComboRunWin();
+    }
+
+    // Legacy crate/rail reactions may reposition a body after the first
+    // sweep. Constrain that move too; a rail trip must not place a ragdoll
+    // behind a neighbouring stone wall before its next physics tick.
+    if(level.worldSolids?.enabled&&this.state!=='hang'&&!this.pos.equals(this.worldLateOrigin)){
+      this.translateCollisionBoxes(this.pos.x-(this.feetBox.min.x+this.feetBox.max.x)*.5,
+        this.pos.y-this.feetBox.min.y,this.pos.z-(this.feetBox.min.z+this.feetBox.max.z)*.5);
+      this.worldStepOrigin.copy(this.worldLateOrigin);this.resolveWorldContact(level,false);
     }
 
     // Resolve adjacent safety faces together, so a side contact cannot skip
@@ -14031,21 +14045,41 @@ export class Player {
 
   /** One physical boundary for native triangles, structural props and moving
    * geometry. Only ordinary floor acceptance stays with the ride solver. */
-  private resolveWorldContact(level:Level):void{
+  private resolveWorldContact(level:Level,displacementVelocity=true):void{
     if(this.hubMode||!level.worldSolids?.enabled||this.state==='hang')return;
     const half=this.hitboxHalf,down=this.isBailing||this.state==='dead';
-    const height=Math.max(half.y*2,this.worldStandingHeight*(this.crawling?.6:this.sliding?.55:1-.14*this.chargePose));
+    const height=Math.max(half.y*2,this.worldStandingHeight*(down?.58:this.crawling?.6:this.sliding?.55:1-.14*this.chargePose));
     const radius=Math.min(height*.49,down?Math.max(.55,half.x,half.z):Math.max(half.x,half.z));
     this.worldAxis.copy(this.grounded&&!down?this.rideNormal:VERT_UP).normalize();
     this.worldProposed.copy(this.pos);
     // Displacement includes a moving support's carry. Vertical speed remains
     // physical, so a floor snap cannot manufacture a violent ceiling impact.
-    this.worldVelocity.copy(this.pos).sub(this.worldStepOrigin).multiplyScalar(1/CONST.fixedStep);this.worldVelocity.y=this.vVel;
+    if(displacementVelocity)this.worldVelocity.copy(this.pos).sub(this.worldStepOrigin).multiplyScalar(1/CONST.fixedStep);
+    else if(this.freeSkate||this.isBailing||this.state==='air'||this.state==='grind')this.worldVelocity.copy(this.axisF).multiplyScalar(this.speed);
+    else this.worldVelocity.copy(this.walkVelocity);
+    this.worldVelocity.y=this.vVel;
     const entrySpeed=this.speed;
     const query={low:down?.8:radius,high:Math.max(down?.9:radius,height-radius),radius,axis:this.worldAxis,supportNormal:this.worldAxis,ignoreGround:true,
-      soleClearance:this.state==='grind'?.32:undefined};
+      soleClearance:this.state==='grind'?.32:this.grounded&&!down?.08:undefined};
     if(!level.worldSolids.resolve(this.worldStepOrigin,this.pos,query,this.worldContact))return;
     const hit=this.worldContact,n=this.worldNormal.copy(hit.normal);
+    // Retain the ride solver's existing 0.8 m step window. Probe over the
+    // contacted edge and sweep both the lift and the raised body, so a low
+    // plinth is walkable without allowing a step through an overhang.
+    if(this.grounded&&!down&&Math.abs(n.y)<.65&&
+        (!this.freeSkate||Math.abs(entrySpeed)<TUNING.wallBailSpeed||hit.surface?.mesh.userData.finishPad)){
+      const support=this.queryGround(level,-n.x*(radius+.08),-n.z*(radius+.08),this.worldStepOrigin.y+.8);
+      const lift=support?support.y-this.worldStepOrigin.y:0;
+      if(support&&!support.lethal&&!support.outOfBounds&&support.normal.y>=CONST.steepSnapNormal&&lift>.02&&lift<=.8){
+        this.worldRaisedFrom.copy(this.worldStepOrigin);this.worldRaisedFrom.y=support.y+.004;
+        this.worldRaisedTo.copy(this.worldProposed);this.worldRaisedTo.y=support.y+.004;
+        if(!level.worldSolids.cast(this.worldStepOrigin,this.worldRaisedFrom,query,this.worldStepContact)&&
+           !level.worldSolids.cast(this.worldRaisedFrom,this.worldRaisedTo,query,this.worldStepContact)){
+          this.pos.copy(this.worldRaisedTo);this.translateCollisionBoxes(this.pos.x-this.worldProposed.x,this.pos.y-this.worldProposed.y,this.pos.z-this.worldProposed.z);
+          this.groundHit=support;this.rideNormal.copy(support.normal);return;
+        }
+      }
+    }
     const shiftX=this.pos.x-this.worldProposed.x,shiftY=this.pos.y-this.worldProposed.y,shiftZ=this.pos.z-this.worldProposed.z;
     this.translateCollisionBoxes(shiftX,shiftY,shiftZ);
     if(hit.fraction===0&&hit.depth>.035)this.prevPos.addScaledVector(n,hit.depth+.004);

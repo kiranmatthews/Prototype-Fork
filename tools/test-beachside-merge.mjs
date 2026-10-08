@@ -313,7 +313,7 @@ const presentationSource = readFileSync(
 );
 assert.match(presentationSource, /from "\.\/beachfrontCourse"/);
 assert.match(presentationSource, /createBeachfrontCliffVisual\(\)/);
-assert.match(presentationSource, /cliff\.visible = false/);
+assert.match(presentationSource, /cliff\.removeFromParent\(\)/);
 
 console.log(
   "Validated exact shared Beachfront course sampling and seven continuous sand-to-sand Beachside boardwalk sequences.",

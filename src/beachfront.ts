@@ -354,6 +354,7 @@ export function createUnityBeachfrontReference(): UnityBeachfrontReference {
   const cliff = new THREE.Mesh(buildCliffGeometry(sandFrames), cliffMaterial);
   cliff.name = "LandwardCliffVisual";
   cliff.userData.visualOnly = true;
+  cliff.userData.solidSurface = 'mesh';
   cliff.userData.noShadow = true;
   const stonecliff = createBeachfrontCliffVisual();
   stonecliff.name = "Stonecliff Bastion source presentation";
@@ -368,7 +369,7 @@ export function createUnityBeachfrontReference(): UnityBeachfrontReference {
   let disposed = false;
   void beachfrontCliffReady.then(() => {
     if (!disposed && stonecliff.userData.assetReady === true)
-      cliff.visible = false;
+      cliff.removeFromParent();
   });
 
   const shore = buildShore(sandFrames);
