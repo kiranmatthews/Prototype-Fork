@@ -54,11 +54,13 @@ For local visual review, open `menu-review.html?playtest&level=codex-lab&lite`, 
 The Jungle Cup running clock uses the teal/blue Roo PNG atlas (`bonus` palette), through the shared DOM decorator and pre-CRT competition painter. Its live time remains semantic text; the run label keeps the existing secondary type.
 
 
-Cup gameplay clocks sit at the upper left as compact, unboxed text: 28px time
-on desktop and 24px on touch/narrow screens, with a smaller run label. Touch
-placement clears the 48px Pause button and safe-area inset in both orientations.
+Cup gameplay clocks sit at the upper left as unboxed text. Landscape screens at
+least 1000×600 use a viewport-scaled time (54px at 720p, 81px at 1080p, capped at
+120px), with proportionate run and final-combo labels, including large touch
+displays. Smaller layouts retain 28px time, or 24px on touch/narrow screens.
+Touch placement clears the 48px Pause button and safe-area inset in both orientations.
 The DOM and pre-CRT painter have no clock panel, border or rectangular shadow;
-text shadows retain contrast. Final-combo and urgent states keep the same compact
+text shadows retain contrast. Final-combo and urgent states keep the same responsive
 footprint. `tools/test-competition-clock-mobile.mjs` reviews both Cups in phone
 portrait/landscape, lite/full rendering and desktop, including actual Pause taps.
 

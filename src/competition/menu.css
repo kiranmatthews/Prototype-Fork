@@ -109,6 +109,13 @@ body.tc-on .comp-run-hud > strong { font-size:24px; min-width:54px; }
   .comp-run-hud small { font-size:9px; }
   .comp-run-hud > strong { font-size:24px; min-width:54px; }
 }
+/* Match the TV layout on large screens, including touch-capable displays. */
+@media(min-width:1000px) and (min-height:600px) and (min-aspect-ratio:1/1) {
+  body .competition-host .comp-run-hud { gap:clamp(12px,1.6vh,24px); }
+  body .competition-host .comp-run-hud > strong { font-size:clamp(44px,7.5vh,120px); min-width:2.25em; }
+  body .competition-host .comp-run-hud > span { font-size:clamp(16px,2.5vh,36px); }
+  body .competition-host .comp-run-hud small { font-size:clamp(12px,1.9vh,28px); }
+}
 
 .competition-host .comp-card { color:#fff0d0; }
 .comp-final .comp-content { display:grid; grid-template-columns:minmax(0,.32fr) minmax(0,1fr); grid-template-rows:auto minmax(0,1fr) auto; gap:1vh 2vw; }
