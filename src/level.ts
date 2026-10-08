@@ -1,6 +1,7 @@
 import { SKY_BRIDGE_LEVEL } from './levels/sky-bridge';
 import { ICE_SURFACE, FALL_AWAY_SURFACE, SLIPPERY_COMPONENT_TYPES } from './surfaceBehavior';
 import { createIceMaterial, dressFallAwaySurface, updateFallAwayWarning } from './surfacePresentation';
+import { addMasonryLook, isMasonryTexture } from './masonryMaterial';
 import { CARLISLE_COAST_LEVEL } from "./levels/carlisle-coast";
 import { CUSTARD_CREEK_LEVEL } from "./levels/custard-creek";
 import { isOriginalTestCourse } from "./levels/carlisleLegacy";
@@ -4814,6 +4815,7 @@ export class Level {
     tex.needsUpdate = true;
     m.map = tex;
     m.userData.texKind = kind; // capture: editing a copy of a level reads this back
+    addMasonryLook(m, kind);
     if (this.jungleAtmosphere && (kind === "dirt" || kind === "sunsoil")) {
       m.userData.jungleDapple = true;
       m.userData.jungleDirt = true;
@@ -4824,8 +4826,8 @@ export class Level {
 
   // Shared structural materials — one per role per level (walls, blocks,
   // curbs, logs, rocks...), fixed texture repeat. Box UVs run 0..1 per face,
-  // so texel size breathes with mesh size: very PS1, very cheap. kind '' = no
-  // map (flat painted accents). Builders re-tint via the *Tint fields below
+  // so most textures follow the authored repeats; masonry uses metric projection.
+  // kind '' = no map (flat painted accents). Builders re-tint via *Tint fields
   // BEFORE placing geometry.
   private baseMats = new Map<string, THREE.MeshPhongMaterial>();
   private baseMat(
@@ -4851,6 +4853,7 @@ export class Level {
       m.map = tex;
       m.userData.texKind = kind; // capture reads this back
     }
+    addMasonryLook(m, kind);
     this.baseMats.set(key, m);
     if (this.jungleAtmosphere && (kind === "dirt" || kind === "sunsoil")) {
       m.userData.jungleDapple = true;
@@ -5719,13 +5722,22 @@ export class Level {
       });
     } else if(isCastleTexture(c.tex))material=createCastleMaterial(c);
     else if(c.tex==='ice')material=createIceMaterial();
-    else material = new THREE.MeshLambertMaterial({
-      color: c.color ?? "#ffffff", vertexColors: !!c.colors,
-      emissive: c.emissive ?? "#000000", opacity: c.opacity ?? 1,
-      transparent: (c.opacity ?? 1) < 1, fog: c.fog !== false,
-      side: c.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
-      map: c.tex === "solid" ? null : this.surfaceTexture(c.tex ?? "checker"),
-    });
+    else {
+      const SurfaceMaterial = isMasonryTexture(c.tex) ? THREE.MeshPhongMaterial : THREE.MeshLambertMaterial;
+      material = new SurfaceMaterial({
+        color: c.color ?? "#ffffff", vertexColors: !!c.colors,
+        emissive: c.emissive ?? "#000000", opacity: c.opacity ?? 1,
+        transparent: (c.opacity ?? 1) < 1, fog: c.fog !== false,
+        side: c.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
+        map: c.tex === "solid" ? null : this.surfaceTexture(c.tex ?? "checker"),
+      });
+      if (material instanceof THREE.MeshPhongMaterial) {
+        const sheen = Level.SHEEN[c.tex!]!;
+        material.specular.setHex(sheen.spec);
+        material.shininess = sheen.shine;
+        addMasonryLook(material, c.tex!);
+      }
+    }
     material.userData.texKind = c.materialStyle === "unity-sand" ? "sand" : c.tex ?? "checker";
     if(this.jungleStyle==='painterly'&&!standingWater&&!jungleStream&&!material.userData.jungleDapple){
       material.userData.junglePainterly=true;material.userData.jungleDapple=true;
@@ -7055,14 +7067,19 @@ export class Level {
             const rockColor = c.color
               ? new THREE.Color(c.color).getHex()
               : 0x8d8678;
-            const mesh = new THREE.Mesh(
-              geo,
-              new THREE.MeshLambertMaterial({
-                color: rockColor,
-                emissive: c.emissive ?? "#000000",
-                map: c.tex === "solid" ? null : this.surfaceTexture(c.tex ?? "stone"),
-              }),
-            );
+            const rockKind = c.tex ?? "stone";
+            const RockMaterial = isMasonryTexture(rockKind) ? THREE.MeshPhongMaterial : THREE.MeshLambertMaterial;
+            const rockMaterial = new RockMaterial({
+              color: rockColor, emissive: c.emissive ?? "#000000",
+              map: rockKind === "solid" ? null : this.surfaceTexture(rockKind),
+            });
+            rockMaterial.userData.texKind = rockKind;
+            if (rockMaterial instanceof THREE.MeshPhongMaterial) {
+              rockMaterial.specular.setHex(Level.SHEEN[rockKind]!.spec);
+              rockMaterial.shininess = Level.SHEEN[rockKind]!.shine;
+              addMasonryLook(rockMaterial, rockKind);
+            }
+            const mesh = new THREE.Mesh(geo, rockMaterial);
             mesh.position.set(c.p[0], c.p[1], c.p[2]);
             mesh.name = "rock";
             this.root.add(mesh);
@@ -15741,11 +15758,13 @@ export class Level {
   // that makes one tree olive and the next one emerald rides in as a vertex
   // attribute. Fifty-six models across six tint palettes still costs five
   // draw calls a section.
-  private propMats = new Map<string, THREE.MeshLambertMaterial>();
-  private propMat(role: PropRoleName): THREE.MeshLambertMaterial {
+  private propMats = new Map<string, THREE.MeshLambertMaterial | THREE.MeshPhongMaterial>();
+  private propMat(role: PropRoleName): THREE.MeshLambertMaterial | THREE.MeshPhongMaterial {
     let m = this.propMats.get(role);
     if (m) return m;
-    m = new THREE.MeshLambertMaterial({ color: 0xffffff, vertexColors: true });
+    m = role === "stone"
+      ? new THREE.MeshPhongMaterial({ color: 0xffffff, vertexColors: true, specular: Level.SHEEN.stone!.spec, shininess: Level.SHEEN.stone!.shine })
+      : new THREE.MeshLambertMaterial({ color: 0xffffff, vertexColors: true });
     const kind =
       role === "leaf"
         ? "leaf"
@@ -15758,9 +15777,10 @@ export class Level {
               : "dirt";
     const tex =
       role === "leaf" ? this.decorTexture("leaf") : this.surfaceTexture(kind);
-    // the box projection in props.ts already put the UVs in world scale, so
-    // the shared texture is used at repeat 1 and never cloned
+    // Keep the prop library's UVs for organic surfaces; repeatable masonry
+    // uses the same metric projection as the level's decks and walls.
     m.map = tex;
+    if (m instanceof THREE.MeshPhongMaterial) addMasonryLook(m, kind);
     // fronds and blade planes are single-sided in the source meshes
     if (role === "leaf") m.side = THREE.DoubleSide;
     this.propMats.set(role, m);
