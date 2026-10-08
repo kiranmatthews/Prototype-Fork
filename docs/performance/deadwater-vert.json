@@ -1,0 +1,770 @@
+{
+  "base": "http://127.0.0.1:5273",
+  "stamps": [
+    "Codex/sol fork · build 10-08 09:54 UTC",
+    "Codex/sol fork · build 10-08 09:54 UTC"
+  ],
+  "results": [
+    {
+      "lite": true,
+      "recorded": {
+        "normal": [
+          0,
+          0,
+          0.9999999999999999
+        ],
+        "pipe": 2,
+        "vert": true
+      }
+    },
+    {
+      "lite": true,
+      "index": 2,
+      "side": -1,
+      "release": false,
+      "launch": {
+        "pos": [
+          -48,
+          12.022808131580016,
+          -61.928888693859435
+        ],
+        "speed": 0,
+        "vy": 19.192496927087312,
+        "vert": true,
+        "grounded": false,
+        "tracked": true,
+        "normal": [
+          0,
+          0,
+          0.9999999999999999
+        ],
+        "pipe": 2,
+        "contact": 2,
+        "bail": false
+      },
+      "landed": {
+        "pos": [
+          -48,
+          10.634422751545147,
+          -61.90632115260264
+        ],
+        "speed": 23.332212355590453,
+        "vy": 0,
+        "vert": true,
+        "grounded": true,
+        "tracked": true,
+        "normal": [
+          0,
+          0,
+          0.9999999999999999
+        ],
+        "pipe": 2,
+        "contact": 2,
+        "bail": false
+      }
+    },
+    {
+      "lite": true,
+      "index": 2,
+      "side": -1,
+      "release": true,
+      "launch": {
+        "pos": [
+          -48,
+          11.048750703235587,
+          -61.87845342316874
+        ],
+        "speed": 0,
+        "vy": 26.473596499338825,
+        "vert": true,
+        "grounded": false,
+        "tracked": true,
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "pipe": 2,
+        "contact": 2,
+        "bail": false
+      },
+      "landed": {
+        "pos": [
+          -48,
+          10.56680680948961,
+          -61.896764990575186
+        ],
+        "speed": 26.760442134319614,
+        "vy": 0,
+        "vert": true,
+        "grounded": true,
+        "tracked": true,
+        "normal": [
+          0,
+          0,
+          0.9999999999999999
+        ],
+        "pipe": 2,
+        "contact": 2,
+        "bail": false
+      }
+    },
+    {
+      "lite": true,
+      "index": 2,
+      "side": 1,
+      "release": false,
+      "launch": {
+        "pos": [
+          -48,
+          12.022808131580016,
+          -34.071111306140565
+        ],
+        "speed": 0,
+        "vy": 19.192496927087312,
+        "vert": true,
+        "grounded": false,
+        "tracked": true,
+        "normal": [
+          0,
+          0,
+          -0.9999999999999999
+        ],
+        "pipe": 2,
+        "contact": 2,
+        "bail": false
+      },
+      "landed": {
+        "pos": [
+          -48,
+          10.634422751545147,
+          -34.09367884739736
+        ],
+        "speed": 23.332212355590453,
+        "vy": 0,
+        "vert": true,
+        "grounded": true,
+        "tracked": true,
+        "normal": [
+          0,
+          0,
+          -0.9999999999999999
+        ],
+        "pipe": 2,
+        "contact": 2,
+        "bail": false
+      }
+    },
+    {
+      "lite": true,
+      "index": 2,
+      "side": 1,
+      "release": true,
+      "launch": {
+        "pos": [
+          -48,
+          11.048750703235587,
+          -34.12154657683126
+        ],
+        "speed": 0,
+        "vy": 26.473596499338825,
+        "vert": true,
+        "grounded": false,
+        "tracked": true,
+        "normal": [
+          0,
+          0,
+          -1
+        ],
+        "pipe": 2,
+        "contact": 2,
+        "bail": false
+      },
+      "landed": {
+        "pos": [
+          -48,
+          10.56680680948961,
+          -34.103235009424814
+        ],
+        "speed": 26.760442134319614,
+        "vy": 0,
+        "vert": true,
+        "grounded": true,
+        "tracked": true,
+        "normal": [
+          0,
+          0,
+          -0.9999999999999999
+        ],
+        "pipe": 2,
+        "contact": 2,
+        "bail": false
+      }
+    },
+    {
+      "lite": true,
+      "index": 5,
+      "side": -1,
+      "release": false,
+      "launch": {
+        "pos": [
+          34.07455009698258,
+          18.14666253069511,
+          -160
+        ],
+        "speed": 0,
+        "vy": 16.355863166768053,
+        "vert": true,
+        "grounded": false,
+        "tracked": true,
+        "normal": [
+          0.9999999999999999,
+          0,
+          0
+        ],
+        "pipe": 5,
+        "contact": 5,
+        "bail": false
+      },
+      "landed": {
+        "pos": [
+          34.0859478795459,
+          16.343816100950665,
+          -160
+        ],
+        "speed": 21.588063039197063,
+        "vy": 0,
+        "vert": true,
+        "grounded": true,
+        "tracked": true,
+        "normal": [
+          1,
+          0,
+          0
+        ],
+        "pipe": 5,
+        "contact": 5,
+        "bail": false
+      }
+    },
+    {
+      "lite": true,
+      "index": 5,
+      "side": -1,
+      "release": true,
+      "launch": {
+        "pos": [
+          34.22229966022242,
+          15.842723008883603,
+          -160
+        ],
+        "speed": 0,
+        "vy": 25.367575798512952,
+        "vert": true,
+        "grounded": false,
+        "tracked": true,
+        "normal": [
+          0.9999999999999999,
+          0,
+          0
+        ],
+        "pipe": 5,
+        "contact": 5,
+        "bail": false
+      },
+      "landed": {
+        "pos": [
+          34.076532328242244,
+          16.525909788420694,
+          -160
+        ],
+        "speed": 24.391555675624062,
+        "vy": 0,
+        "vert": true,
+        "grounded": true,
+        "tracked": true,
+        "normal": [
+          1,
+          0,
+          0
+        ],
+        "pipe": 5,
+        "contact": 5,
+        "bail": false
+      }
+    },
+    {
+      "lite": true,
+      "index": 5,
+      "side": 1,
+      "release": false,
+      "launch": {
+        "pos": [
+          73.92544990301742,
+          18.146662530695107,
+          -160
+        ],
+        "speed": 0,
+        "vy": 16.355863166768057,
+        "vert": true,
+        "grounded": false,
+        "tracked": true,
+        "normal": [
+          -0.9999999999999999,
+          0,
+          0
+        ],
+        "pipe": 5,
+        "contact": 5,
+        "bail": false
+      },
+      "landed": {
+        "pos": [
+          73.91405212177929,
+          16.343816113684152,
+          -160
+        ],
+        "speed": 21.58806304081153,
+        "vy": 0,
+        "vert": true,
+        "grounded": true,
+        "tracked": true,
+        "normal": [
+          -1,
+          0,
+          0
+        ],
+        "pipe": 5,
+        "contact": 5,
+        "bail": false
+      }
+    },
+    {
+      "lite": true,
+      "index": 5,
+      "side": 1,
+      "release": true,
+      "launch": {
+        "pos": [
+          73.77770033977758,
+          15.842723008883599,
+          -160
+        ],
+        "speed": 0,
+        "vy": 25.36757579851294,
+        "vert": true,
+        "grounded": false,
+        "tracked": true,
+        "normal": [
+          -0.9999999999999999,
+          0,
+          0
+        ],
+        "pipe": 5,
+        "contact": 5,
+        "bail": false
+      },
+      "landed": {
+        "pos": [
+          73.92346770285425,
+          16.52588499025235,
+          -160
+        ],
+        "speed": 24.39155572325766,
+        "vy": 0,
+        "vert": true,
+        "grounded": true,
+        "tracked": true,
+        "normal": [
+          -1,
+          0,
+          0
+        ],
+        "pipe": 5,
+        "contact": 5,
+        "bail": false
+      }
+    },
+    {
+      "lite": false,
+      "recorded": {
+        "normal": [
+          0,
+          0,
+          0.9999999999999999
+        ],
+        "pipe": 2,
+        "vert": true
+      }
+    },
+    {
+      "lite": false,
+      "index": 2,
+      "side": -1,
+      "release": false,
+      "launch": {
+        "pos": [
+          -48,
+          12.022808131580016,
+          -61.928888693859435
+        ],
+        "speed": 0,
+        "vy": 19.192496927087312,
+        "vert": true,
+        "grounded": false,
+        "tracked": true,
+        "normal": [
+          0,
+          0,
+          0.9999999999999999
+        ],
+        "pipe": 2,
+        "contact": 2,
+        "bail": false
+      },
+      "landed": {
+        "pos": [
+          -48,
+          10.634422751545147,
+          -61.90632115260264
+        ],
+        "speed": 23.332212355590453,
+        "vy": 0,
+        "vert": true,
+        "grounded": true,
+        "tracked": true,
+        "normal": [
+          0,
+          0,
+          0.9999999999999999
+        ],
+        "pipe": 2,
+        "contact": 2,
+        "bail": false
+      }
+    },
+    {
+      "lite": false,
+      "index": 2,
+      "side": -1,
+      "release": true,
+      "launch": {
+        "pos": [
+          -48,
+          11.048750703235587,
+          -61.87845342316874
+        ],
+        "speed": 0,
+        "vy": 26.473596499338825,
+        "vert": true,
+        "grounded": false,
+        "tracked": true,
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "pipe": 2,
+        "contact": 2,
+        "bail": false
+      },
+      "landed": {
+        "pos": [
+          -48,
+          10.56680680948961,
+          -61.896764990575186
+        ],
+        "speed": 26.760442134319614,
+        "vy": 0,
+        "vert": true,
+        "grounded": true,
+        "tracked": true,
+        "normal": [
+          0,
+          0,
+          0.9999999999999999
+        ],
+        "pipe": 2,
+        "contact": 2,
+        "bail": false
+      }
+    },
+    {
+      "lite": false,
+      "index": 2,
+      "side": 1,
+      "release": false,
+      "launch": {
+        "pos": [
+          -48,
+          12.022808131580016,
+          -34.071111306140565
+        ],
+        "speed": 0,
+        "vy": 19.192496927087312,
+        "vert": true,
+        "grounded": false,
+        "tracked": true,
+        "normal": [
+          0,
+          0,
+          -0.9999999999999999
+        ],
+        "pipe": 2,
+        "contact": 2,
+        "bail": false
+      },
+      "landed": {
+        "pos": [
+          -48,
+          10.634422751545147,
+          -34.09367884739736
+        ],
+        "speed": 23.332212355590453,
+        "vy": 0,
+        "vert": true,
+        "grounded": true,
+        "tracked": true,
+        "normal": [
+          0,
+          0,
+          -0.9999999999999999
+        ],
+        "pipe": 2,
+        "contact": 2,
+        "bail": false
+      }
+    },
+    {
+      "lite": false,
+      "index": 2,
+      "side": 1,
+      "release": true,
+      "launch": {
+        "pos": [
+          -48,
+          11.048750703235587,
+          -34.12154657683126
+        ],
+        "speed": 0,
+        "vy": 26.473596499338825,
+        "vert": true,
+        "grounded": false,
+        "tracked": true,
+        "normal": [
+          0,
+          0,
+          -1
+        ],
+        "pipe": 2,
+        "contact": 2,
+        "bail": false
+      },
+      "landed": {
+        "pos": [
+          -48,
+          10.56680680948961,
+          -34.103235009424814
+        ],
+        "speed": 26.760442134319614,
+        "vy": 0,
+        "vert": true,
+        "grounded": true,
+        "tracked": true,
+        "normal": [
+          0,
+          0,
+          -0.9999999999999999
+        ],
+        "pipe": 2,
+        "contact": 2,
+        "bail": false
+      }
+    },
+    {
+      "lite": false,
+      "index": 5,
+      "side": -1,
+      "release": false,
+      "launch": {
+        "pos": [
+          34.07455009698258,
+          18.14666253069511,
+          -160
+        ],
+        "speed": 0,
+        "vy": 16.355863166768053,
+        "vert": true,
+        "grounded": false,
+        "tracked": true,
+        "normal": [
+          0.9999999999999999,
+          0,
+          0
+        ],
+        "pipe": 5,
+        "contact": 5,
+        "bail": false
+      },
+      "landed": {
+        "pos": [
+          34.0859478795459,
+          16.343816100950665,
+          -160
+        ],
+        "speed": 21.588063039197063,
+        "vy": 0,
+        "vert": true,
+        "grounded": true,
+        "tracked": true,
+        "normal": [
+          1,
+          0,
+          0
+        ],
+        "pipe": 5,
+        "contact": 5,
+        "bail": false
+      }
+    },
+    {
+      "lite": false,
+      "index": 5,
+      "side": -1,
+      "release": true,
+      "launch": {
+        "pos": [
+          34.22229966022242,
+          15.842723008883603,
+          -160
+        ],
+        "speed": 0,
+        "vy": 25.367575798512952,
+        "vert": true,
+        "grounded": false,
+        "tracked": true,
+        "normal": [
+          0.9999999999999999,
+          0,
+          0
+        ],
+        "pipe": 5,
+        "contact": 5,
+        "bail": false
+      },
+      "landed": {
+        "pos": [
+          34.076532328242244,
+          16.525909788420694,
+          -160
+        ],
+        "speed": 24.391555675624062,
+        "vy": 0,
+        "vert": true,
+        "grounded": true,
+        "tracked": true,
+        "normal": [
+          1,
+          0,
+          0
+        ],
+        "pipe": 5,
+        "contact": 5,
+        "bail": false
+      }
+    },
+    {
+      "lite": false,
+      "index": 5,
+      "side": 1,
+      "release": false,
+      "launch": {
+        "pos": [
+          73.92544990301742,
+          18.146662530695107,
+          -160
+        ],
+        "speed": 0,
+        "vy": 16.355863166768057,
+        "vert": true,
+        "grounded": false,
+        "tracked": true,
+        "normal": [
+          -0.9999999999999999,
+          0,
+          0
+        ],
+        "pipe": 5,
+        "contact": 5,
+        "bail": false
+      },
+      "landed": {
+        "pos": [
+          73.91405212177929,
+          16.343816113684152,
+          -160
+        ],
+        "speed": 21.58806304081153,
+        "vy": 0,
+        "vert": true,
+        "grounded": true,
+        "tracked": true,
+        "normal": [
+          -1,
+          0,
+          0
+        ],
+        "pipe": 5,
+        "contact": 5,
+        "bail": false
+      }
+    },
+    {
+      "lite": false,
+      "index": 5,
+      "side": 1,
+      "release": true,
+      "launch": {
+        "pos": [
+          73.77770033977758,
+          15.842723008883599,
+          -160
+        ],
+        "speed": 0,
+        "vy": 25.36757579851294,
+        "vert": true,
+        "grounded": false,
+        "tracked": true,
+        "normal": [
+          -0.9999999999999999,
+          0,
+          0
+        ],
+        "pipe": 5,
+        "contact": 5,
+        "bail": false
+      },
+      "landed": {
+        "pos": [
+          73.92346770285425,
+          16.52588499025235,
+          -160
+        ],
+        "speed": 24.39155572325766,
+        "vy": 0,
+        "vert": true,
+        "grounded": true,
+        "tracked": true,
+        "normal": [
+          -1,
+          0,
+          0
+        ],
+        "pipe": 5,
+        "contact": 5,
+        "bail": false
+      }
+    }
+  ],
+  "errors": []
+}

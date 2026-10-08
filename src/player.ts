@@ -6958,6 +6958,7 @@ export class Player {
             normal: ridingPipe.normalAt(pr.u, new THREE.Vector3()),
             name: 'halfpipe',
             halfpipe: ridingPipe,
+            vert: ridingPipe.walls[0]?.userData.vert !== false,
             gravityTrack: ridingPipe.object.userData.gravityTrack === true,
             skateCamera: ridingPipe.object.userData.skateCamera === true,
           };
@@ -7028,7 +7029,10 @@ export class Player {
     const parkLipExit = this.parkControls && this.freeSkate && !this.isBailing &&
       previousGroundHit?.vert === true && previousRideNormal.y < 0.2 &&
       this.parkVelocity.y > 0.1 &&
-      (!hit || hit.normal.y > 0.5 || hit.y < this.pos.y - 0.4);
+      (!hit || hit.normal.y > 0.5 || hit.y < this.pos.y - 0.4 ||
+        // Shared copings overlap: leave our own mouth before the down-ray
+        // can adopt the opposite face of the neighbouring pipe.
+        (ridingPipe && this.pos.y >= ridingPipe.lipY - 0.02));
     if (parkLipExit) {
       this.rideNormal.copy(previousRideNormal);
       this.groundHit = previousGroundHit;
@@ -7359,7 +7363,7 @@ export class Player {
     this.vVel = velocity.y;
     this.vertAir = vert;
     this.pipeHang = vert;
-    this.hangPipe = null;
+    this.hangPipe = vert ? this.groundHit?.halfpipe ?? null : null;
     this.vertTracked = vert;
     this.vertLossT = 0;
     this.parkFlightGravity = vert ? SKATE_PARK.vertGravity : SKATE_PARK.airGravity;
@@ -7437,9 +7441,15 @@ export class Player {
       this.raycaster.set(VERT_RAY_O, VERT_RAY_D);
       this.raycaster.far = SKATE_PARK.trackReach * 2;
       const contact = this.raycaster.intersectObjects(level.groundMeshes, false).find(h =>
-        h.face && h.object.userData.vert === true);
+        h.face && h.object.userData.vert === true &&
+        (!this.hangPipe || h.object.userData.halfpipe === this.hangPipe));
       if (!contact?.face) continue;
-      const normal = contact.face.normal.clone().transformDirection(contact.object.matrixWorld);
+      // Halfpipe ribbons render both sides and do not guarantee inward
+      // triangle winding. Use the same analytic normal as ground contact.
+      const pipe = contact.object.userData.halfpipe as Halfpipe | undefined;
+      const normal = pipe
+        ? pipe.normalAt(pipe.pointToU(contact.point.x, contact.point.z), new THREE.Vector3())
+        : contact.face.normal.clone().transformDirection(contact.object.matrixWorld);
       if (normal.y > 0.5 || normal.dot(oldNormal) < 0.5) continue;
       const nextNormal = normal.clone().setY(0).normalize();
       const direction = skateSurfaceDirection(new THREE.Vector3(), this.axisF, oldNormal);
@@ -15651,6 +15661,9 @@ export class Player {
         normal,
         name: 'halfpipe',
         halfpipe: hp,
+        vert: hp.walls[0]?.userData.vert !== false,
+        gravityTrack: hp.object.userData.gravityTrack === true,
+        skateCamera: hp.object.userData.skateCamera === true,
         // the exact surface point to land at (cross axis resolved below)
         pipeCross: now.cross,
       };
