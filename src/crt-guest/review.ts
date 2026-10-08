@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
-import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
+import { CrtGuestOutputPass } from './output';
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { loadCrtGuestLuts } from "./luts";
 import { CrtGuestPass } from "./pass";
@@ -73,11 +73,11 @@ const settings = new CrtGuestSettings({
   loadStored: false,
   persistChanges: false,
 });
-const crtPass = new CrtGuestPass(renderer, settings);
+const crtPass = new CrtGuestPass(renderer, settings, { deferOutput: true, deferDeconvergence: true });
 const composer = new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene, camera));
 composer.addPass(crtPass);
-composer.addPass(new OutputPass());
+composer.addPass(new CrtGuestOutputPass(() => crtPass.deferredOutput, () => crtPass.deferredDeconvergence));
 
 const panel = createCrtGuestTuningPanel({
   settings,

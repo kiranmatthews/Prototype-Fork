@@ -1,0 +1,1908 @@
+{
+  "date": "2026-10-08",
+  "referenceCommit": "c906367489b089c6e1d0e016358ff853d4cb713c",
+  "referencePolicy": "Fresh legacy graph per preset; candidate reuses one graph through every preset/size transition.",
+  "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+  "gpuTimer": true,
+  "samplesPerCase": 7,
+  "framesPerSample": 24,
+  "warmupFrames": 16,
+  "referenceHashes": {
+    "pass.ts": "4b7fd5c1dd29b8fc3eb5f9de11cab05af6d0192cc8a01cd626ed22620b6b7666",
+    "output.ts": "2498c08f837744539ccfbe460fb8f52bbaaba77aec842abd3911adc5cc9c712e",
+    "settings.ts": "00e6033a9b73e3ed0bd7af83776aeed91643d68902a4dbd90a883ab017ddd7a2"
+  },
+  "cases": [
+    {
+      "name": "startup-hd",
+      "spec": {
+        "name": "startup-hd",
+        "variant": "hd",
+        "startup": true
+      },
+      "output": [
+        960,
+        540
+      ],
+      "before": {
+        "gpuMedianMs": 1.5337117916666667,
+        "gpuSamples": [
+          1.5038332916666668,
+          1.5120364583333332,
+          1.5319131666666665,
+          1.5337117916666667,
+          1.5338280833333335,
+          1.5465832916666666,
+          2.232447875
+        ],
+        "draws": 11,
+        "targetBytes": 14592000
+      },
+      "after": {
+        "gpuMedianMs": 1.0511388750000001,
+        "gpuSamples": [
+          0.51896525,
+          0.8838697916666667,
+          1.009857625,
+          1.0511388750000001,
+          1.0658332916666666,
+          1.1558367916666665,
+          2.36862325
+        ],
+        "draws": 6,
+        "targetBytes": 6681600,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.0003523662551440329,
+        "rmse": 0.01877142123399379,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "startup-advanced",
+      "spec": {
+        "name": "startup-advanced",
+        "variant": "advanced",
+        "startup": true
+      },
+      "output": [
+        960,
+        540
+      ],
+      "before": {
+        "gpuMedianMs": 2.501262125,
+        "gpuSamples": [
+          2.4624843750000003,
+          2.470543375,
+          2.480828125,
+          2.501262125,
+          2.7774947500000002,
+          3.115230875,
+          5.2462951250000005
+        ],
+        "draws": 11,
+        "targetBytes": 15360000
+      },
+      "after": {
+        "gpuMedianMs": 1.9763506666666668,
+        "gpuSamples": [
+          1.8454045,
+          1.9607412916666667,
+          1.9694062499999998,
+          1.9763506666666668,
+          1.993262125,
+          2.0924947916666667,
+          4.055609333333334
+        ],
+        "draws": 7,
+        "targetBytes": 10291200,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": true,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": false,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.00025848765432098764,
+        "rmse": 0.016077551253875312,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "hd-defaults",
+      "spec": {
+        "name": "hd-defaults",
+        "variant": "hd"
+      },
+      "output": [
+        960,
+        540
+      ],
+      "before": {
+        "gpuMedianMs": 3.054689208333333,
+        "gpuSamples": [
+          2.669640625,
+          2.916513875,
+          3.0489339999999996,
+          3.054689208333333,
+          3.2804704583333333,
+          3.8684860833333334,
+          4.223833291666667
+        ],
+        "draws": 11,
+        "targetBytes": 14592000
+      },
+      "after": {
+        "gpuMedianMs": 1.7580815833333334,
+        "gpuSamples": [
+          1.5809947500000001,
+          1.6463020416666667,
+          1.693390625,
+          1.7580815833333334,
+          1.8898089999999999,
+          2.0792586666666666,
+          3.2692604166666666
+        ],
+        "draws": 8,
+        "targetBytes": 11673600,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": true,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.0004327417695473251,
+        "rmse": 0.0208024462395009,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "hd-effects",
+      "spec": {
+        "name": "hd-effects",
+        "variant": "hd",
+        "patch": {
+          "bloom": 0.8,
+          "halation": 0.5,
+          "mask_bloom": 0.4,
+          "glow": 0.25,
+          "vigstr": 0.4
+        }
+      },
+      "output": [
+        960,
+        540
+      ],
+      "before": {
+        "gpuMedianMs": 1.9261770833333334,
+        "gpuSamples": [
+          1.9205381666666668,
+          1.9230902499999998,
+          1.923184,
+          1.9261770833333334,
+          1.9268854166666667,
+          1.956732625,
+          4.1147933750000005
+        ],
+        "draws": 11,
+        "targetBytes": 14592000
+      },
+      "after": {
+        "gpuMedianMs": 1.342670125,
+        "gpuSamples": [
+          1.3272760000000001,
+          1.3321284583333333,
+          1.3385259999999999,
+          1.342670125,
+          1.3915468750000002,
+          1.3990155833333333,
+          2.1313003333333334
+        ],
+        "draws": 11,
+        "targetBytes": 14592000,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": true,
+          "bloom": true,
+          "fusePre": false,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.001955375514403292,
+        "rmse": 0.04421962815767781,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "hd-magic",
+      "spec": {
+        "name": "hd-magic",
+        "variant": "hd",
+        "patch": {
+          "glow": 0.7,
+          "m_glow": 2,
+          "m_glow_cutoff": 0.15,
+          "FINE_GLOW": 0,
+          "SIZEH": 25,
+          "SIZEV": 25,
+          "SIGMA_H": 2.5,
+          "SIGMA_V": 2.5
+        }
+      },
+      "output": [
+        960,
+        540
+      ],
+      "before": {
+        "gpuMedianMs": 3.2295034583333333,
+        "gpuSamples": [
+          3.2223819166666665,
+          3.22352775,
+          3.22368575,
+          3.2295034583333333,
+          3.2420399166666667,
+          3.52103125,
+          5.540598916666667
+        ],
+        "draws": 11,
+        "targetBytes": 14592000
+      },
+      "after": {
+        "gpuMedianMs": 2.479625,
+        "gpuSamples": [
+          2.2894010000000002,
+          2.330809,
+          2.3381631666666665,
+          2.479625,
+          2.5418975416666667,
+          2.6691579583333334,
+          3.3460520833333334
+        ],
+        "draws": 8,
+        "targetBytes": 11673600,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": true,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.0019238683127572017,
+        "rmse": 0.04386192326787782,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "hd-negative",
+      "spec": {
+        "name": "hd-negative",
+        "variant": "hd",
+        "patch": {
+          "glow": -0.2,
+          "bloom": -0.5,
+          "halation": -0.3,
+          "AS": 0,
+          "BP": -15
+        }
+      },
+      "output": [
+        960,
+        540
+      ],
+      "before": {
+        "gpuMedianMs": 2.867467,
+        "gpuSamples": [
+          2.215526,
+          2.3337847083333334,
+          2.44321875,
+          2.867467,
+          2.877140583333333,
+          2.920059,
+          3.067697916666667
+        ],
+        "draws": 11,
+        "targetBytes": 14592000
+      },
+      "after": {
+        "gpuMedianMs": 1.2785416666666667,
+        "gpuSamples": [
+          1.2025104166666667,
+          1.2164131666666667,
+          1.2181735833333334,
+          1.2785416666666667,
+          1.3360850416666665,
+          1.4207135,
+          1.8111927083333335
+        ],
+        "draws": 8,
+        "targetBytes": 13670400,
+        "graph": {
+          "afterglow": false,
+          "average": false,
+          "edges": false,
+          "glow": true,
+          "bloom": true,
+          "fusePre": true,
+          "fuseInput": true,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.0015522119341563785,
+        "rmse": 0.0393981209470246,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "hd-wide",
+      "spec": {
+        "name": "hd-wide",
+        "variant": "hd",
+        "patch": {
+          "glow": 0.4,
+          "bloom": 0.7,
+          "SIZEH": 50,
+          "SIZEV": 50,
+          "SIZEHB": 50,
+          "SIZEVB": 50,
+          "SIGMA_H": 5,
+          "SIGMA_V": 5,
+          "SIGMA_HB": 4,
+          "SIGMA_VB": 4
+        }
+      },
+      "output": [
+        960,
+        540
+      ],
+      "before": {
+        "gpuMedianMs": 6.499045124999999,
+        "gpuSamples": [
+          6.483223916666667,
+          6.496171875000001,
+          6.498545125,
+          6.499045124999999,
+          6.527361083333333,
+          6.532142333333333,
+          7.294713541666667
+        ],
+        "draws": 11,
+        "targetBytes": 14592000
+      },
+      "after": {
+        "gpuMedianMs": 2.510456583333333,
+        "gpuSamples": [
+          2.49556075,
+          2.4972708333333333,
+          2.4995867916666668,
+          2.510456583333333,
+          2.5224999583333334,
+          2.5459964999999998,
+          5.455260375000001
+        ],
+        "draws": 10,
+        "targetBytes": 14361600,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": true,
+          "bloom": true,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.001880787037037037,
+        "rmse": 0.043368041655544434,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "hd-off",
+      "spec": {
+        "name": "hd-off",
+        "variant": "hd",
+        "patch": {
+          "glow": 0,
+          "bloom": 0,
+          "AS": 0,
+          "BP": 0,
+          "CP": -1,
+          "shadowMask": -1
+        }
+      },
+      "output": [
+        960,
+        540
+      ],
+      "before": {
+        "gpuMedianMs": 1.6427082916666667,
+        "gpuSamples": [
+          1.6115625,
+          1.6268923333333334,
+          1.640171875,
+          1.6427082916666667,
+          1.6476267083333334,
+          1.698888875,
+          1.9148385
+        ],
+        "draws": 11,
+        "targetBytes": 14592000
+      },
+      "after": {
+        "gpuMedianMs": 0.7563003333333334,
+        "gpuSamples": [
+          0.5396961666666666,
+          0.601887125,
+          0.6175694166666666,
+          0.7563003333333334,
+          0.79790625,
+          0.822013875,
+          0.921967
+        ],
+        "draws": 4,
+        "targetBytes": 5990400,
+        "graph": {
+          "afterglow": false,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": true,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.00020640432098765433,
+        "rmse": 0.014366778378873056,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "hd-interlace",
+      "spec": {
+        "name": "hd-interlace",
+        "variant": "hd",
+        "height": 401,
+        "patch": {
+          "interm": 1,
+          "intres": 0,
+          "iscan": 0.7,
+          "dctypex": 0.5,
+          "deconrr": 4,
+          "deconrb": -3,
+          "addnoised": 0.2
+        }
+      },
+      "output": [
+        960,
+        540
+      ],
+      "before": {
+        "gpuMedianMs": 2.5085364583333334,
+        "gpuSamples": [
+          2.5023454583333335,
+          2.504262125,
+          2.5059964999999997,
+          2.5085364583333334,
+          2.6620659583333333,
+          2.841934,
+          3.98074825
+        ],
+        "draws": 11,
+        "targetBytes": 20815360
+      },
+      "after": {
+        "gpuMedianMs": 1.4885884999999999,
+        "gpuSamples": [
+          1.4328280833333331,
+          1.4339583333333332,
+          1.4347291666666668,
+          1.4885884999999999,
+          1.5146787916666666,
+          1.5824704583333336,
+          2.1887239583333336
+        ],
+        "draws": 9,
+        "targetBytes": 16712960,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": true,
+          "bloom": false,
+          "fusePre": false,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.0017637602880658436,
+        "rmse": 0.04199714618954297,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "advanced-defaults",
+      "spec": {
+        "name": "advanced-defaults",
+        "variant": "advanced"
+      },
+      "output": [
+        960,
+        540
+      ],
+      "before": {
+        "gpuMedianMs": 2.5478020833333335,
+        "gpuSamples": [
+          2.473024291666667,
+          2.474022541666667,
+          2.5263662916666667,
+          2.5478020833333335,
+          2.837730875,
+          3.313161458333333,
+          4.569814208333333
+        ],
+        "draws": 11,
+        "targetBytes": 15360000
+      },
+      "after": {
+        "gpuMedianMs": 1.8216041666666667,
+        "gpuSamples": [
+          1.646512125,
+          1.6912795,
+          1.7736562083333334,
+          1.8216041666666667,
+          2.0615329583333333,
+          2.2345138749999998,
+          2.746940958333333
+        ],
+        "draws": 7,
+        "targetBytes": 10291200,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": true,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": false,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.00025848765432098764,
+        "rmse": 0.016077551253875312,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "advanced-effects",
+      "spec": {
+        "name": "advanced-effects",
+        "variant": "advanced",
+        "patch": {
+          "bloom": 0.8,
+          "halation": 0.5,
+          "mask_bloom": 0.4,
+          "glow": 0.25,
+          "vigstr": 0.4
+        }
+      },
+      "output": [
+        960,
+        540
+      ],
+      "before": {
+        "gpuMedianMs": 2.6862464999999998,
+        "gpuSamples": [
+          2.644357625,
+          2.6507378333333333,
+          2.669678791666667,
+          2.6862464999999998,
+          2.9068541666666667,
+          3.36293575,
+          4.476355875
+        ],
+        "draws": 11,
+        "targetBytes": 15360000
+      },
+      "after": {
+        "gpuMedianMs": 2.2997152499999998,
+        "gpuSamples": [
+          1.8213472083333333,
+          2.010210041666667,
+          2.185272541666667,
+          2.2997152499999998,
+          2.3200833333333333,
+          2.33190275,
+          2.819597208333333
+        ],
+        "draws": 10,
+        "targetBytes": 14822400,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": true,
+          "bloom": true,
+          "fusePre": false,
+          "fuseInput": false,
+          "reconstruction": false,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.0014834104938271605,
+        "rmse": 0.0385150683996168,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "advanced-magic",
+      "spec": {
+        "name": "advanced-magic",
+        "variant": "advanced",
+        "patch": {
+          "glow": 0.7,
+          "m_glow": 2,
+          "m_glow_cutoff": 0.15,
+          "FINE_GLOW": 0,
+          "SIZEH": 25,
+          "SIZEV": 25,
+          "SIGMA_H": 2.5,
+          "SIGMA_V": 2.5
+        }
+      },
+      "output": [
+        960,
+        540
+      ],
+      "before": {
+        "gpuMedianMs": 3.853432291666667,
+        "gpuSamples": [
+          3.8383107499999998,
+          3.8463437500000004,
+          3.8509878333333334,
+          3.853432291666667,
+          3.8538298333333336,
+          3.858052041666667,
+          4.454350666666667
+        ],
+        "draws": 11,
+        "targetBytes": 15360000
+      },
+      "after": {
+        "gpuMedianMs": 1.7358576250000002,
+        "gpuSamples": [
+          1.7129131666666666,
+          1.7208715,
+          1.7220520416666665,
+          1.7358576250000002,
+          1.7799305416666666,
+          1.8122082916666666,
+          2.213326375
+        ],
+        "draws": 7,
+        "targetBytes": 10291200,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": true,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": false,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.0003967335390946502,
+        "rmse": 0.019918171078054586,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "advanced-negative",
+      "spec": {
+        "name": "advanced-negative",
+        "variant": "advanced",
+        "patch": {
+          "glow": -0.2,
+          "bloom": -0.5,
+          "halation": -0.3,
+          "AS": 0,
+          "BP": -15
+        }
+      },
+      "output": [
+        960,
+        540
+      ],
+      "before": {
+        "gpuMedianMs": 2.7914392083333333,
+        "gpuSamples": [
+          2.5711614583333335,
+          2.5733229166666667,
+          2.574203125,
+          2.7914392083333333,
+          3.0140503333333335,
+          3.0490815833333333,
+          3.8196492916666664
+        ],
+        "draws": 11,
+        "targetBytes": 15360000
+      },
+      "after": {
+        "gpuMedianMs": 2.0061839999999997,
+        "gpuSamples": [
+          1.7684166250000002,
+          1.803342,
+          1.838604125,
+          2.0061839999999997,
+          2.1036006666666665,
+          2.1373472083333334,
+          2.7615190833333334
+        ],
+        "draws": 7,
+        "targetBytes": 13900800,
+        "graph": {
+          "afterglow": false,
+          "average": false,
+          "edges": false,
+          "glow": true,
+          "bloom": true,
+          "fusePre": true,
+          "fuseInput": true,
+          "reconstruction": false,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.0011580504115226338,
+        "rmse": 0.03403013975173528,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "advanced-wide",
+      "spec": {
+        "name": "advanced-wide",
+        "variant": "advanced",
+        "patch": {
+          "glow": 0.4,
+          "bloom": 0.7,
+          "SIZEH": 50,
+          "SIZEV": 50,
+          "SIZEHB": 50,
+          "SIZEVB": 50,
+          "SIGMA_H": 5,
+          "SIGMA_V": 5,
+          "SIGMA_HB": 4,
+          "SIGMA_VB": 4
+        }
+      },
+      "output": [
+        960,
+        540
+      ],
+      "before": {
+        "gpuMedianMs": 8.77927775,
+        "gpuSamples": [
+          8.766326375,
+          8.774368041666667,
+          8.778953125,
+          8.77927775,
+          8.781581583333333,
+          8.783102416666667,
+          9.478545125
+        ],
+        "draws": 11,
+        "targetBytes": 15360000
+      },
+      "after": {
+        "gpuMedianMs": 4.402598916666666,
+        "gpuSamples": [
+          4.396550333333333,
+          4.3965850416666665,
+          4.397539916666667,
+          4.402598916666666,
+          4.406923583333334,
+          4.407788166666667,
+          5.073164916666667
+        ],
+        "draws": 9,
+        "targetBytes": 14592000,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": true,
+          "bloom": true,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": false,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.0013670267489711934,
+        "rmse": 0.03697332482981742,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "advanced-off",
+      "spec": {
+        "name": "advanced-off",
+        "variant": "advanced",
+        "patch": {
+          "glow": 0,
+          "bloom": 0,
+          "AS": 0,
+          "BP": 0,
+          "CP": -1,
+          "shadowMask": -1
+        }
+      },
+      "output": [
+        960,
+        540
+      ],
+      "before": {
+        "gpuMedianMs": 2.3836510416666665,
+        "gpuSamples": [
+          2.3714131666666667,
+          2.376947875,
+          2.382854125,
+          2.3836510416666665,
+          2.38812325,
+          2.3902031249999998,
+          2.6647881666666664
+        ],
+        "draws": 11,
+        "targetBytes": 15360000
+      },
+      "after": {
+        "gpuMedianMs": 1.2433784583333334,
+        "gpuSamples": [
+          0.9755902500000001,
+          1.0593315833333332,
+          1.0865832916666667,
+          1.2433784583333334,
+          1.4162239583333334,
+          1.4664513750000001,
+          1.4825572916666667
+        ],
+        "draws": 3,
+        "targetBytes": 4608000,
+        "graph": {
+          "afterglow": false,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": true,
+          "reconstruction": false,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 1.54320987654321e-05,
+        "rmse": 0.003928371006591931,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "advanced-interlace",
+      "spec": {
+        "name": "advanced-interlace",
+        "variant": "advanced",
+        "height": 401,
+        "patch": {
+          "interm": 1,
+          "intres": 0,
+          "iscan": 0.7,
+          "dctypex": 0.5,
+          "deconrr": 4,
+          "deconrb": -3,
+          "addnoised": 0.2
+        }
+      },
+      "output": [
+        960,
+        540
+      ],
+      "before": {
+        "gpuMedianMs": 2.594854125,
+        "gpuSamples": [
+          2.4871944166666666,
+          2.4882378333333333,
+          2.4893367916666667,
+          2.594854125,
+          2.6212378333333333,
+          2.8418541666666663,
+          4.582887125
+        ],
+        "draws": 11,
+        "targetBytes": 19697494
+      },
+      "after": {
+        "gpuMedianMs": 1.983543375,
+        "gpuSamples": [
+          1.4413315833333333,
+          1.6886336666666668,
+          1.8714704583333335,
+          1.983543375,
+          2.0350520833333334,
+          2.1660329583333335,
+          2.276440958333333
+        ],
+        "draws": 8,
+        "targetBytes": 13633280,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": true,
+          "bloom": false,
+          "fusePre": false,
+          "fuseInput": false,
+          "reconstruction": false,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.008518518518518519,
+        "rmse": 0.09229582069908972,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "advanced-raster",
+      "spec": {
+        "name": "advanced-raster",
+        "variant": "advanced",
+        "patch": {
+          "BLOOM": 12,
+          "smart_ei": 0
+        }
+      },
+      "output": [
+        960,
+        540
+      ],
+      "before": {
+        "gpuMedianMs": 2.5595086666666664,
+        "gpuSamples": [
+          2.4707222083333336,
+          2.471039916666667,
+          2.4819964999999997,
+          2.5595086666666664,
+          2.5615642083333334,
+          2.7984218333333337,
+          3.8748767083333333
+        ],
+        "draws": 11,
+        "targetBytes": 15360000
+      },
+      "after": {
+        "gpuMedianMs": 2.3091961666666667,
+        "gpuSamples": [
+          2.0421475416666666,
+          2.147157958333333,
+          2.2166961666666665,
+          2.3091961666666667,
+          2.3925850416666665,
+          2.436809,
+          3.554100666666667
+        ],
+        "draws": 9,
+        "targetBytes": 10598408,
+        "graph": {
+          "afterglow": true,
+          "average": true,
+          "edges": false,
+          "glow": true,
+          "bloom": false,
+          "fusePre": false,
+          "fuseInput": false,
+          "reconstruction": false,
+          "mipmaps": true,
+          "scalarAverage": true
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.0009651491769547325,
+        "rmse": 0.031066850129273366,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "advanced-edges",
+      "spec": {
+        "name": "advanced-edges",
+        "variant": "advanced",
+        "patch": {
+          "BLOOM": 0,
+          "smart_ei": 0.5
+        }
+      },
+      "output": [
+        960,
+        540
+      ],
+      "before": {
+        "gpuMedianMs": 3.048980875,
+        "gpuSamples": [
+          2.667763875,
+          2.8967082916666667,
+          3.023784708333333,
+          3.048980875,
+          3.4022933749999997,
+          3.467923583333333,
+          3.571480875
+        ],
+        "draws": 11,
+        "targetBytes": 15360000
+      },
+      "after": {
+        "gpuMedianMs": 2.221637125,
+        "gpuSamples": [
+          2.10165625,
+          2.2006545,
+          2.2207239583333336,
+          2.221637125,
+          2.2528628333333334,
+          2.3272065833333335,
+          4.31896525
+        ],
+        "draws": 9,
+        "targetBytes": 10752000,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": true,
+          "glow": true,
+          "bloom": false,
+          "fusePre": false,
+          "fuseInput": false,
+          "reconstruction": false,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.00020511831275720166,
+        "rmse": 0.014321952128016685,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "advanced-raster-transition",
+      "spec": {
+        "name": "advanced-raster-transition",
+        "variant": "advanced",
+        "patch": {
+          "BLOOM": 12,
+          "smart_ei": 0.5
+        }
+      },
+      "output": [
+        960,
+        540
+      ],
+      "before": {
+        "gpuMedianMs": 2.494694416666667,
+        "gpuSamples": [
+          2.482177083333333,
+          2.4913957916666667,
+          2.4922291666666667,
+          2.494694416666667,
+          2.49971525,
+          2.5051944166666664,
+          4.560920125
+        ],
+        "draws": 11,
+        "targetBytes": 15360000
+      },
+      "after": {
+        "gpuMedianMs": 2.2588333333333335,
+        "gpuSamples": [
+          1.7416110833333331,
+          1.9701892083333332,
+          1.9912812500000001,
+          2.2588333333333335,
+          2.3100885416666666,
+          2.4789843333333335,
+          3.6262968333333334
+        ],
+        "draws": 10,
+        "targetBytes": 10828808,
+        "graph": {
+          "afterglow": true,
+          "average": true,
+          "edges": true,
+          "glow": true,
+          "bloom": false,
+          "fusePre": false,
+          "fuseInput": false,
+          "reconstruction": false,
+          "mipmaps": true,
+          "scalarAverage": true
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.0014011059670781894,
+        "rmse": 0.03743135005684659,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "hd-auto",
+      "spec": {
+        "name": "hd-auto",
+        "variant": "hd",
+        "width": 643,
+        "height": 243,
+        "patch": {
+          "auto_res": 1,
+          "glow": 0.2,
+          "bloom": 0.5,
+          "internal_res": 1.5
+        }
+      },
+      "output": [
+        960,
+        540
+      ],
+      "before": {
+        "gpuMedianMs": 2.5760833333333335,
+        "gpuSamples": [
+          2.56274475,
+          2.575491291666667,
+          2.5757829583333334,
+          2.5760833333333335,
+          2.579043375,
+          2.5802256666666668,
+          3.095013875
+        ],
+        "draws": 11,
+        "targetBytes": 19800216
+      },
+      "after": {
+        "gpuMedianMs": 2.4747725416666664,
+        "gpuSamples": [
+          1.9814461666666665,
+          2.3360642083333336,
+          2.3973367916666666,
+          2.4747725416666664,
+          2.4776249583333336,
+          2.517980875,
+          3.5226805416666664
+        ],
+        "draws": 10,
+        "targetBytes": 19175220,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": true,
+          "bloom": true,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.0006095679012345679,
+        "rmse": 0.024689428936987747,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "startup-native-1080",
+      "spec": {
+        "name": "startup-native-1080",
+        "variant": "hd",
+        "startup": true,
+        "width": 1920,
+        "height": 1080,
+        "ow": 1920,
+        "oh": 1080
+      },
+      "output": [
+        1920,
+        1080
+      ],
+      "before": {
+        "gpuMedianMs": 11.728829833333334,
+        "gpuSamples": [
+          11.420135375000001,
+          11.485579833333333,
+          11.722024291666665,
+          11.728829833333334,
+          11.746579833333334,
+          11.775878458333333,
+          11.884373250000001
+        ],
+        "draws": 11,
+        "targetBytes": 109824000
+      },
+      "after": {
+        "gpuMedianMs": 3.9172395833333336,
+        "gpuSamples": [
+          3.7380642083333337,
+          3.8351979166666665,
+          3.894644083333333,
+          3.9172395833333336,
+          3.9472985833333336,
+          4.004937458333333,
+          4.1147760416666666
+        ],
+        "draws": 5,
+        "targetBytes": 58060800,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": false,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.003605002572016461,
+        "rmse": 0.060041673627710124,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "startup-fixed-1080",
+      "spec": {
+        "name": "startup-fixed-1080",
+        "variant": "hd",
+        "startup": true,
+        "width": 640,
+        "height": 360,
+        "ow": 1920,
+        "oh": 1080
+      },
+      "output": [
+        1920,
+        1080
+      ],
+      "before": {
+        "gpuMedianMs": 5.678581583333333,
+        "gpuSamples": [
+          5.670689208333333,
+          5.674133666666666,
+          5.675680541666666,
+          5.678581583333333,
+          5.684255208333333,
+          5.6852847083333335,
+          6.268338541666666
+        ],
+        "draws": 11,
+        "targetBytes": 39168000
+      },
+      "after": {
+        "gpuMedianMs": 2.6767065833333334,
+        "gpuSamples": [
+          2.6757881666666665,
+          2.6764582916666666,
+          2.6766319166666666,
+          2.6767065833333334,
+          2.680434,
+          2.6809774166666664,
+          3.186232625
+        ],
+        "draws": 6,
+        "targetBytes": 26726400,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": false,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.00046312371399176953,
+        "rmse": 0.021520309337734193,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "hd-effects-1080",
+      "spec": {
+        "name": "hd-effects-1080",
+        "variant": "hd",
+        "width": 640,
+        "height": 360,
+        "ow": 1920,
+        "oh": 1080,
+        "patch": {
+          "glow": 0.4,
+          "bloom": 0.5,
+          "halation": 0.5,
+          "mask_bloom": 0.25
+        }
+      },
+      "output": [
+        1920,
+        1080
+      ],
+      "before": {
+        "gpuMedianMs": 5.927376708333333,
+        "gpuSamples": [
+          5.909675333333333,
+          5.918010416666667,
+          5.925387125,
+          5.927376708333333,
+          5.931390583333333,
+          5.933503458333334,
+          6.506932249999999
+        ],
+        "draws": 11,
+        "targetBytes": 39168000
+      },
+      "after": {
+        "gpuMedianMs": 4.13687325,
+        "gpuSamples": [
+          4.135710041666667,
+          4.135762125,
+          4.136543375,
+          4.13687325,
+          4.138190958333333,
+          4.141579833333333,
+          4.5858402499999995
+        ],
+        "draws": 10,
+        "targetBytes": 38246400,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": true,
+          "bloom": true,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.005137120627572016,
+        "rmse": 0.07167370945871307,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "hd-wide-sigma",
+      "spec": {
+        "name": "hd-wide-sigma",
+        "variant": "hd",
+        "width": 127,
+        "height": 73,
+        "ow": 387,
+        "oh": 213,
+        "patch": {
+          "glow": 0.4,
+          "bloom": -0.5,
+          "SIZEH": 50,
+          "SIZEV": 50,
+          "SIZEHB": 50,
+          "SIZEVB": 50,
+          "SIGMA_H": 15,
+          "SIGMA_V": 15,
+          "SIGMA_HB": 15,
+          "SIGMA_VB": 15
+        }
+      },
+      "output": [
+        387,
+        213
+      ],
+      "before": {
+        "gpuMedianMs": 4.1710468333333335,
+        "gpuSamples": [
+          4.16461975,
+          4.169078083333333,
+          4.169256916666667,
+          4.1710468333333335,
+          4.207949625,
+          4.242269083333333,
+          4.533656208333333
+        ],
+        "draws": 11,
+        "targetBytes": 6491960
+      },
+      "after": {
+        "gpuMedianMs": 2.3297673333333333,
+        "gpuSamples": [
+          2.3118124583333333,
+          2.3203003333333334,
+          2.3245295,
+          2.3297673333333333,
+          2.3362795000000003,
+          2.3607152499999997,
+          2.651911458333333
+        ],
+        "draws": 10,
+        "targetBytes": 6454876,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": true,
+          "bloom": true,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.000869414014953921,
+        "rmse": 0.029485827357459735,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "hd-odd",
+      "spec": {
+        "name": "hd-odd",
+        "variant": "hd",
+        "width": 127,
+        "height": 73,
+        "ow": 387,
+        "oh": 213,
+        "patch": {
+          "glow": 0.3,
+          "bloom": 0.5,
+          "FINE_GLOW": 5,
+          "FINE_BLOOM": -1,
+          "TNTC": 2,
+          "vigstr": 0.5,
+          "warpX": 0.1,
+          "addnoised": 0.2,
+          "HSHARPNESS": 1.5,
+          "internal_res": 1.2
+        }
+      },
+      "output": [
+        387,
+        213
+      ],
+      "before": {
+        "gpuMedianMs": 0.41338366666666665,
+        "gpuSamples": [
+          0.4103593333333333,
+          0.4117742916666667,
+          0.4128610833333333,
+          0.41338366666666665,
+          0.41560933333333333,
+          0.41605204166666665,
+          0.41664408333333336
+        ],
+        "draws": 11,
+        "targetBytes": 6491960
+      },
+      "after": {
+        "gpuMedianMs": 0.39957808333333333,
+        "gpuSamples": [
+          0.3908367916666667,
+          0.392640625,
+          0.3962065833333333,
+          0.39957808333333333,
+          0.40559375,
+          0.41567879166666666,
+          0.4215017083333333
+        ],
+        "draws": 11,
+        "targetBytes": 6491960,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": true,
+          "bloom": true,
+          "fusePre": false,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.00044077268665105766,
+        "rmse": 0.020994587079794107,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "advanced-colour",
+      "spec": {
+        "name": "advanced-colour",
+        "variant": "advanced",
+        "width": 127,
+        "height": 73,
+        "ow": 387,
+        "oh": 213,
+        "patch": {
+          "CP": 3,
+          "CS": 2,
+          "TNTC": 4,
+          "WP": 35,
+          "wp_saturation": 1.3,
+          "contr": 0.2,
+          "pre_gc": 0.8
+        }
+      },
+      "output": [
+        387,
+        213
+      ],
+      "before": {
+        "gpuMedianMs": 1.470322875,
+        "gpuSamples": [
+          1.2305399166666666,
+          1.322559,
+          1.3980920000000001,
+          1.470322875,
+          1.5484218333333333,
+          1.5694652500000001,
+          1.5778992916666665
+        ],
+        "draws": 11,
+        "targetBytes": 9189850
+      },
+      "after": {
+        "gpuMedianMs": 0.8133176666666667,
+        "gpuSamples": [
+          0.743309,
+          0.7542968333333334,
+          0.8074478749999999,
+          0.8133176666666667,
+          0.8362847083333333,
+          0.9164340000000001,
+          1.02787325
+        ],
+        "draws": 7,
+        "targetBytes": 5152068,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": true,
+          "bloom": false,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": false,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.0005539986979008707,
+        "rmse": 0.023537176931417894,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "hd-apple-tv",
+      "spec": {
+        "name": "hd-apple-tv",
+        "variant": "hd",
+        "quality": "apple-tv",
+        "patch": {
+          "glow": 0.5,
+          "bloom": 0.5,
+          "m_glow": 1,
+          "FINE_GLOW": 2
+        }
+      },
+      "output": [
+        960,
+        540
+      ],
+      "before": {
+        "gpuMedianMs": 1.5067447916666667,
+        "gpuSamples": [
+          1.4737135,
+          1.4761475416666665,
+          1.4774826250000002,
+          1.5067447916666667,
+          1.629763875,
+          1.6681944166666665,
+          2.2061892083333334
+        ],
+        "draws": 11,
+        "targetBytes": 9792000
+      },
+      "after": {
+        "gpuMedianMs": 0.47286283333333334,
+        "gpuSamples": [
+          0.458434,
+          0.4619583333333333,
+          0.46910241666666663,
+          0.47286283333333334,
+          0.4746545,
+          0.496513875,
+          1.6363836666666665
+        ],
+        "draws": 10,
+        "targetBytes": 9561600,
+        "graph": {
+          "afterglow": true,
+          "average": false,
+          "edges": false,
+          "glow": true,
+          "bloom": true,
+          "fusePre": true,
+          "fuseInput": false,
+          "reconstruction": true,
+          "mipmaps": false,
+          "scalarAverage": false
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.0004430298353909465,
+        "rmse": 0.021048273929017234,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    },
+    {
+      "name": "advanced-balanced",
+      "spec": {
+        "name": "advanced-balanced",
+        "variant": "advanced",
+        "quality": "balanced",
+        "patch": {
+          "BLOOM": 10,
+          "smart_ei": 0.2,
+          "glow": 0.1,
+          "bloom": 0.3
+        }
+      },
+      "output": [
+        960,
+        540
+      ],
+      "before": {
+        "gpuMedianMs": 3.2712586666666668,
+        "gpuSamples": [
+          2.25855725,
+          2.567322875,
+          2.9661128333333333,
+          3.2712586666666668,
+          3.3026492916666665,
+          3.4410763749999997,
+          4.470038166666667
+        ],
+        "draws": 11,
+        "targetBytes": 11712000
+      },
+      "after": {
+        "gpuMedianMs": 2.4075798333333336,
+        "gpuSamples": [
+          2.1040537916666664,
+          2.227326375,
+          2.3860850416666666,
+          2.4075798333333336,
+          2.4319600416666667,
+          2.571104125,
+          2.8684964999999996
+        ],
+        "draws": 12,
+        "targetBytes": 11481608,
+        "graph": {
+          "afterglow": true,
+          "average": true,
+          "edges": true,
+          "glow": true,
+          "bloom": true,
+          "fusePre": false,
+          "fuseInput": false,
+          "reconstruction": false,
+          "mipmaps": true,
+          "scalarAverage": true
+        },
+        "glError": 0
+      },
+      "difference": {
+        "max": 1,
+        "mean": 0.0012191358024691357,
+        "rmse": 0.034916125249934815,
+        "fractionOver2": 0,
+        "alpha": 0,
+        "locations": []
+      }
+    }
+  ],
+  "errors": [],
+  "texturesAfterDispose": 0
+}

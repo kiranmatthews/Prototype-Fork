@@ -2,7 +2,6 @@ import {
   CRT_GUEST_DEFAULT_FILE_NAME,
   CRT_GUEST_PARAMETER_GROUPS,
   CRT_GUEST_QUALITIES,
-  CRT_GUEST_SOURCE_COMMIT,
   CRT_GUEST_VARIANTS,
   CrtGuestSettings,
   CrtGuestSettingsChange,
@@ -13,6 +12,7 @@ import {
   type CrtGuestParameterDefinition,
   type CrtGuestQuality,
 } from "./settings";
+import { hasCrtKernelControls, isCrtControlRelevant, subscribeCrtControlContext } from './controls';
 
 export type CrtGuestPanelToggleBinder = (
   toggle: () => void,
@@ -30,6 +30,7 @@ export interface CrtGuestTuningPanelOptions {
 }
 
 interface ParameterControls {
+  readonly row: HTMLElement;
   readonly parameter: CrtGuestParameterDefinition;
   readonly variant: CrtGuestVariant;
   readonly slider: HTMLInputElement;
@@ -43,6 +44,7 @@ const PANEL_CSS = [
   "  font: 12px/1.25 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;",
   "}",
   "*, *::before, *::after { box-sizing: border-box; border-radius: 0 !important; }",
+  "[hidden] { display: none !important; }",
   "button, input { font: inherit; }",
   ".launcher {",
   "  position: fixed; top: 28%; right: 0; z-index: 2; pointer-events: auto;",
@@ -138,6 +140,7 @@ export class CrtGuestTuningPanel {
   private readonly expandedGroups = new Set<string>(["afterglow", "scanlines"]);
   private readonly onOpenChange?: (open: boolean) => void;
   private readonly unsubscribeSettings: () => void;
+  private readonly unsubscribeContext: () => void;
   private readonly unbindToggle: (() => void) | null;
   private openState = false;
   private disposed = false;
@@ -196,7 +199,7 @@ export class CrtGuestTuningPanel {
       this.make(
         "div",
         "meta",
-        "Presentation only · source " + CRT_GUEST_SOURCE_COMMIT,
+        "Controls follow the active effects and screen resolution.",
       ),
     );
 
@@ -220,6 +223,7 @@ export class CrtGuestTuningPanel {
     controls.appendChild(variantLine);
 
     const qualityLine = this.make("div", "line");
+    qualityLine.dataset.kernelQuality = '';
     qualityLine.appendChild(this.make("span", "line-label", "Quality"));
     for (const quality of CRT_GUEST_QUALITIES) {
       const label =
@@ -281,6 +285,7 @@ export class CrtGuestTuningPanel {
     this.unsubscribeSettings = this.settings.subscribe((change) => {
       this.handleSettingsChange(change);
     });
+    this.unsubscribeContext = subscribeCrtControlContext(this.settings, () => this.syncRelevance());
     const maybeUnbind = options.bindToggle?.(() => this.toggle());
     this.unbindToggle = typeof maybeUnbind === "function" ? maybeUnbind : null;
 
@@ -311,6 +316,7 @@ export class CrtGuestTuningPanel {
     this.element.toggleAttribute("data-open", open);
     this.panel.setAttribute("aria-hidden", open ? "false" : "true");
     this.launcher.setAttribute("aria-expanded", open ? "true" : "false");
+    if (!open) (this.shadow.activeElement as HTMLElement | null)?.blur();
     this.onOpenChange?.(open);
     if (open) this.closeButton.focus({ preventScroll: true });
   }
@@ -416,6 +422,7 @@ export class CrtGuestTuningPanel {
     if (this.disposed) return;
     this.disposed = true;
     this.unsubscribeSettings();
+    this.unsubscribeContext();
     this.unbindToggle?.();
     this.element.remove();
     this.parameterControls.clear();
@@ -439,6 +446,7 @@ export class CrtGuestTuningPanel {
       if (controls && controls.variant === change.variant) {
         this.syncParameter(controls);
       }
+      this.syncRelevance();
     }
   }
 
@@ -494,6 +502,20 @@ export class CrtGuestTuningPanel {
       }
       this.groups.appendChild(details);
     }
+    this.syncRelevance();
+  }
+
+  private syncRelevance(): void {
+    for (const [id, controls] of this.parameterControls)
+      controls.row.hidden = !isCrtControlRelevant(id, this.settings);
+    for (const details of this.groups.querySelectorAll('details')) {
+      const count = Array.from(details.querySelectorAll<HTMLElement>('.parameter')).filter(row=>!row.hidden).length;
+      details.hidden = count === 0;
+      const label = details.querySelector('.count');
+      if (label) label.textContent = String(count);
+    }
+    const quality = this.panel.querySelector<HTMLElement>('[data-kernel-quality]');
+    if (quality) quality.hidden = !hasCrtKernelControls(this.settings);
   }
 
   private makeParameter(
@@ -505,6 +527,7 @@ export class CrtGuestTuningPanel {
     const presentation = getCrtGuestParameterPresentation(parameter, variant);
 
     const row = this.make("div", "parameter");
+    row.dataset.parameter = parameter.id;
     const labelCell = this.make("div", "parameter-label");
     const label = this.make("label", "", presentation.label);
     const labelId = "crt-label-" + variant + "-" + parameter.index;
@@ -533,6 +556,7 @@ export class CrtGuestTuningPanel {
       label.htmlFor = fixed.id;
       actionCell.appendChild(this.make("span", "locked", "locked"));
       row.append(labelCell, fixed, actionCell);
+      row.hidden = !isCrtControlRelevant(parameter.id, this.settings);
       return row;
     }
 
@@ -586,6 +610,7 @@ export class CrtGuestTuningPanel {
     }
 
     const controls: ParameterControls = {
+      row,
       parameter,
       variant,
       slider,

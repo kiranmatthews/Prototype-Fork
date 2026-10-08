@@ -13,7 +13,7 @@ for (const contract of [
   "setOutputSize(width: number, height: number)",
   "setResolution(\n    sourceWidth: number",
   "resizeTarget(targets.main, this.outputWidth, this.outputHeight)",
-  "this.outputWidth,\n          this.height,\n          THREE.HalfFloatType",
+  "this.plan.reconstruction,this.outputWidth,this.height,false,'Reconstruction'",
   "sourceWidth: this.width",
   "outputWidth: this.outputWidth",
 ]) {

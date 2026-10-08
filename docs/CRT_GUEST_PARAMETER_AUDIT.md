@@ -1,5 +1,10 @@
 # CRT Guest parameter audit
 
+The counts below describe the retained preset/source schema. Since the October
+2026 performance rewrite, the panel shows only currently effective controls;
+hidden values still round-trip through existing presets. See
+[CRT performance](CRT_PERFORMANCE.md) for runtime dependencies and verification.
+
 ## Result
 
 The Fork control catalog is an exact match for its selected Libretro snapshot,

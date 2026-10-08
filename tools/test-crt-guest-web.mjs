@@ -97,7 +97,7 @@ assert.match(main, /crt-diagnostics/);
 assert.doesNotMatch(main, /crt-overlay/);
 assert.doesNotMatch(html, /crt-overlay/);
 const review = await text("src/crt-guest/review.ts");
-assert.match(review, /new CrtGuestPass\(renderer, settings\)/);
+assert.match(review, /new CrtGuestPass\(renderer, settings, \{ deferOutput: true, deferDeconvergence: true \}\)/);
 assert.match(review, /__crtReview/);
 assert.match(await text("crt-review.html"), /src\/crt-guest\/review\.ts/);
 

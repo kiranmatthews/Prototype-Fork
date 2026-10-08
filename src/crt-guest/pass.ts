@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import { planCrt, specializeCrt, fusePreLinear, optimizePreColour, optimizeHdFilter, gaussianShader, CRT_AFTERGLOW_SHADER, type CrtPlan } from "./optimize";
+import { setCrtControlSourceHeight } from './controls';
 import {
   FullScreenQuad,
   Pass,
@@ -70,6 +72,7 @@ export type CrtGuestDebugTarget =
   | "pre"
   | "average-read"
   | "average-write"
+  | "edges"
   | "linear"
   | "glow-horizontal"
   | "glow"
@@ -118,6 +121,7 @@ export interface CrtGuestPassDiagnostics {
   settingsRevision: number | null;
   historyRevision: number | null;
   estimatedTargetBytes: number;
+  graph: CrtPlan;
   targets: Partial<Record<CrtGuestDebugTarget, CrtGuestTargetDiagnostic>>;
 }
 
@@ -136,6 +140,7 @@ interface CrtGuestShaderSet {
 }
 
 interface CrtGuestMaterialSet {
+  readonly edges: THREE.RawShaderMaterial;
   readonly afterglow: THREE.RawShaderMaterial;
   readonly pre: THREE.RawShaderMaterial;
   readonly variant4: THREE.RawShaderMaterial;
@@ -150,24 +155,25 @@ interface CrtGuestMaterialSet {
 }
 
 interface CrtGuestTargets {
-  readonly stock: THREE.WebGLRenderTarget;
-  readonly pre: THREE.WebGLRenderTarget;
+  stock: THREE.WebGLRenderTarget | null;
+  pre: THREE.WebGLRenderTarget | null;
   readonly linear: THREE.WebGLRenderTarget;
-  readonly glowHorizontal: THREE.WebGLRenderTarget;
-  readonly glow: THREE.WebGLRenderTarget;
-  readonly bloomHorizontal: THREE.WebGLRenderTarget;
-  readonly bloom: THREE.WebGLRenderTarget;
+  glowHorizontal: THREE.WebGLRenderTarget | null;
+  glow: THREE.WebGLRenderTarget | null;
+  bloomHorizontal: THREE.WebGLRenderTarget | null;
+  bloom: THREE.WebGLRenderTarget | null;
   reconstruction: THREE.WebGLRenderTarget | null;
   readonly main: THREE.WebGLRenderTarget;
   readonly deconvergence: THREE.WebGLRenderTarget | null;
-  readonly afterglow: readonly [
+  afterglow: readonly [
     THREE.WebGLRenderTarget,
     THREE.WebGLRenderTarget,
-  ];
+  ] | null;
   average: readonly [
     THREE.WebGLRenderTarget,
     THREE.WebGLRenderTarget,
   ] | null;
+  edges: THREE.WebGLRenderTarget | null;
 }
 
 const SHADER_LIBRARY = CRT_GUEST_SHADERS as unknown as Record<
@@ -216,16 +222,9 @@ const COPY_FRAGMENT = /* glsl */ `
   }
 `;
 
-/**
- * Literal WebGL2 execution of the Unity CRT Guest RenderGraph feature.
- *
- * The original fourteen fullscreen draws included two identical point-copy
- * stock stages. Encode directly into the opaque stock target: same-size point
- * copies cannot change RGB, and OriginalHistory0 reads only RGB. Execution
- * needs twelve draws: input/stock, afterglow, pre, two variant stages, four glow/bloom stages,
- * main, deconvergence and output conversion. It belongs after the authored
- * Unity post stage and before Three's OutputPass.
- */
+/** Dependency-driven CRT Guest graph. The old graph needs twelve draws even
+ * with inactive effects. This executes only contributing stages, specializes
+ * neutral shader paths and fuses source-pixel colour preparation where safe. */
 export class CrtGuestPass extends Pass {
   private readonly renderer: THREE.WebGLRenderer;
   private settings: CrtGuestSettingsLike;
@@ -245,6 +244,13 @@ export class CrtGuestPass extends Pass {
   private readonly copyMaterial: THREE.RawShaderMaterial;
   private readonly fsQuad: FullScreenQuad;
   private targets: CrtGuestTargets | null = null;
+  private plan: CrtPlan;
+  private planKey = "";
+  private shaderRevision: number | null = null;
+  private shaderSizeKey = "";
+  private commandsDirty = true;
+  private drawCommands: { material: THREE.RawShaderMaterial; target: THREE.WebGLRenderTarget | readonly [THREE.WebGLRenderTarget, THREE.WebGLRenderTarget] }[] = [];
+  private frameUniforms: THREE.IUniform[] = [];
 
   private readonly capabilitySupported: boolean;
   private readonly capabilityFailure: string | null;
@@ -285,6 +291,7 @@ export class CrtGuestPass extends Pass {
     super();
     this.renderer = renderer;
     this.settings = settings;
+    this.plan = planCrt(settings, options.sourceHeight ?? options.height ?? 1);
     this.luts = options.luts ?? null;
     this.disposeLutsOnDispose = options.disposeLutsOnDispose ?? false;
     this.deferOutput = options.deferOutput ?? false;
@@ -294,6 +301,7 @@ export class CrtGuestPass extends Pass {
     const legacyHeight = validDimension(options.height ?? 1);
     this.width = validDimension(options.sourceWidth ?? legacyWidth);
     this.height = validDimension(options.sourceHeight ?? legacyHeight);
+    setCrtControlSourceHeight(settings, this.height);
     this.outputWidth = validDimension(options.outputWidth ?? legacyWidth);
     this.outputHeight = validDimension(options.outputHeight ?? legacyHeight);
     this.variant = validVariant(settings.variant);
@@ -393,6 +401,7 @@ export class CrtGuestPass extends Pass {
         (sum, target) => sum + (target?.estimatedBytes ?? 0),
         0,
       ),
+      graph: { ...this.plan },
       targets,
     };
   }
@@ -400,6 +409,8 @@ export class CrtGuestPass extends Pass {
   setSettings(settings: CrtGuestSettingsLike): void {
     if (this.settings === settings) return;
     this.settings = settings;
+    this.shaderRevision = null;
+    setCrtControlSourceHeight(settings, this.height);
     this.appliedSettingsRevision.advanced = null;
     this.appliedSettingsRevision.hd = null;
     this.lastHistoryRevision = finiteRevision(settings.historyRevision);
@@ -433,6 +444,7 @@ export class CrtGuestPass extends Pass {
 
   /** Force parameter upload and clear both temporal feedback pairs. */
   notifyPresetChanged(): void {
+    this.shaderRevision = null;
     this.appliedSettingsRevision.advanced = null;
     this.appliedSettingsRevision.hd = null;
     this.resetHistory("preset changed");
@@ -478,6 +490,7 @@ export class CrtGuestPass extends Pass {
     if (nextWidth === this.width && nextHeight === this.height) return;
     this.width = nextWidth;
     this.height = nextHeight;
+    setCrtControlSourceHeight(this.settings, this.height);
     this.deferredOutputTexture = null;
     this.deferredDeconvergenceStage = null;
     if (this.targets) this.resizeTargets(this.targets);
@@ -518,6 +531,7 @@ export class CrtGuestPass extends Pass {
     if (!sourceChanged && !outputChanged) return;
     this.width = nextSourceWidth;
     this.height = nextSourceHeight;
+    setCrtControlSourceHeight(this.settings, this.height);
     this.outputWidth = nextOutputWidth;
     this.outputHeight = nextOutputHeight;
     this.deferredOutputTexture = null;
@@ -536,29 +550,31 @@ export class CrtGuestPass extends Pass {
       case "stock0":
         // Legacy RGB review aliases for the now-fused encoding/stock stages.
         // Their downstream consumers never used the encoded source alpha.
-        return targets.stock.texture;
+        return targets.stock?.texture ?? null;
       case "stock":
-        return targets.stock.texture;
+        return targets.stock?.texture ?? null;
       case "afterglow-read":
-        return targets.afterglow[read].texture;
+        return targets.afterglow?.[read].texture ?? null;
       case "afterglow-write":
-        return targets.afterglow[write].texture;
+        return targets.afterglow?.[write].texture ?? null;
       case "pre":
-        return targets.pre.texture;
+        return targets.pre?.texture ?? null;
       case "average-read":
         return targets.average?.[read].texture ?? null;
       case "average-write":
         return targets.average?.[write].texture ?? null;
+      case "edges":
+        return targets.edges?.texture ?? null;
       case "linear":
         return targets.linear.texture;
       case "glow-horizontal":
-        return targets.glowHorizontal.texture;
+        return targets.glowHorizontal?.texture ?? null;
       case "glow":
-        return targets.glow.texture;
+        return targets.glow?.texture ?? null;
       case "bloom-horizontal":
-        return targets.bloomHorizontal.texture;
+        return targets.bloomHorizontal?.texture ?? null;
       case "bloom":
-        return targets.bloom.texture;
+        return targets.bloom?.texture ?? null;
       case "reconstruction":
         return targets.reconstruction?.texture ?? null;
       case "main":
@@ -619,6 +635,7 @@ export class CrtGuestPass extends Pass {
     renderer.autoClear = false;
 
     try {
+      this.prepareGraph();
       const targets = this.ensureTargets();
       if (this.historyClearPending) this.clearHistory(renderer, targets);
       this.applySettings(this.variant);
@@ -680,302 +697,160 @@ export class CrtGuestPass extends Pass {
     readBuffer: THREE.WebGLRenderTarget,
     targets: CrtGuestTargets,
   ): number {
+    const m = this.materialSets[this.variant];
+    if (this.commandsDirty) this.configureGraph(targets);
+    const read = this.historyPing ? 1 : 0, write = 1 - read;
+    const linear = this.variant === "hd" ? m.variant4 : m.variant5;
+    bindTexture(this.plan.fuseInput ? linear : this.inputMaterial, "Source", readBuffer.texture);
+    for (const uniform of this.frameUniforms) uniform.value = this.frameIndex;
+    if (targets.afterglow) {
+      bindTexture(m.afterglow, "AfterglowPassFeedback", targets.afterglow[read].texture);
+      bindTexture(this.plan.fusePre ? linear : m.pre, "AfterglowPass", targets.afterglow[write].texture);
+    }
+    if (targets.average) {
+      bindTexture(m.variant4, "AvgLumPassFeedback", targets.average[read].texture);
+      bindTexture(m.main, "RasterLumPass", targets.average[write].texture);
+      bindTexture(m.deconvergence, "RasterLumPass", targets.average[write].texture);
+    }
+    for (const command of this.drawCommands)
+      this.draw(renderer, 'width' in command.target ? command.target : command.target[write], command.material);
+    const draws = this.drawCommands.length;
+    if (this.deferDeconvergence || this.deferOutput) return draws;
+    bindTexture(this.outputMaterial, "Source", targets.deconvergence!.texture);
+    this.draw(renderer, this.renderToScreen ? null : writeBuffer, this.outputMaterial, this.clear);
+    return draws + 1;
+  }
+
+  /** Static dimensions, sampler bindings and draw order change only with the
+   * graph. The hot path updates input/history/frame uniforms and issues draws. */
+  private configureGraph(t: CrtGuestTargets): void {
+    const m = this.materialSets[this.variant];
+    this.drawCommands = [];
+    const stage = (material: THREE.RawShaderMaterial,
+      target: THREE.WebGLRenderTarget | readonly [THREE.WebGLRenderTarget, THREE.WebGLRenderTarget],
+      source: THREE.WebGLRenderTarget | null, textures: Record<string, THREE.Texture | null> = {}) => {
+      const output = 'width' in target ? target : target[0];
+      configureStage(material, source?.width ?? this.width, source?.height ?? this.height,
+        output.width, output.height, this.width, this.height, this.frameIndex);
+      bindTexture(material, "Source", source?.texture ?? null);
+      for (const name in textures) bindTexture(material, name, textures[name]);
+      this.drawCommands.push({ material, target });
+    };
+    if (t.stock) stage(this.inputMaterial, t.stock, null);
+    if (t.afterglow) stage(m.afterglow, t.afterglow, t.stock, { OriginalHistory0: t.stock!.texture });
+    const linear = this.variant === 'hd' ? m.variant4 : m.variant5;
+    const preTextures = { StockPass: t.stock?.texture ?? null, AfterglowPass: t.stock?.texture ?? null };
+    if (this.plan.fusePre) stage(linear,t.linear,t.stock,preTextures);
+    else {
+      stage(m.pre,t.pre!,t.stock,preTextures);
+      if (t.average) stage(m.variant4,t.average,t.pre);
+      if (t.edges) stage(m.edges,t.edges,t.pre);
+      stage(linear,t.linear,t.pre,{ PrePass:t.pre!.texture });
+    }
+    if (t.reconstruction) stage(m.variant5,t.reconstruction,t.linear,{ LinearizePass:t.linear.texture });
+    if (t.glowHorizontal && t.glow) {
+      stage(m.gaussianHorizontal,t.glowHorizontal,t.linear,{ LinearizePass:t.linear.texture });
+      stage(m.gaussianVertical,t.glow,t.glowHorizontal);
+    }
+    if (t.bloomHorizontal && t.bloom) {
+      stage(m.bloomHorizontal,t.bloomHorizontal,t.linear,{ LinearizePass:t.linear.texture });
+      stage(m.bloomVertical,t.bloom,t.bloomHorizontal);
+    }
+    const common = {
+      LinearizePass:t.linear.texture, PrePass:t.pre?.texture ?? t.stock?.texture ?? null,
+      AvgLumPass:t.edges?.texture ?? null, RasterLumPass:null, BloomPass:t.bloom?.texture ?? null,
+      GlowPass:t.glow?.texture ?? null, StockPass:t.stock?.texture ?? null,
+    };
+    const mainSource = t.reconstruction ?? t.linear;
+    stage(m.main,t.main,mainSource,{...common,Pass1:mainSource.texture});
+    configureStage(m.deconvergence,this.outputWidth,this.outputHeight,this.outputWidth,this.outputHeight,
+      this.width,this.height,this.frameIndex);
+    bindTexture(m.deconvergence,'Source',t.main.texture);
+    for (const name in common) bindTexture(m.deconvergence,name,common[name as keyof typeof common]);
+    if (!this.deferDeconvergence) this.drawCommands.push({ material:m.deconvergence,target:t.deconvergence! });
+    this.frameUniforms = [];
+    for (const material of [...this.drawCommands.map(command=>command.material),m.deconvergence]) {
+      for (const name of ['uParams_FrameCount','uGlobal_FrameCount']) {
+        const uniform = material.uniforms[name];
+        if (uniform && !this.frameUniforms.includes(uniform)) this.frameUniforms.push(uniform);
+      }
+    }
+    this.commandsDirty = false;
+  }
+
+  private prepareGraph(): void {
+    const revision = finiteRevision(this.settings.revision);
+    const sizeKey = `${this.variant}/${this.width}/${this.height}/${this.outputWidth}/${this.outputHeight}/${this.quality}`;
+    if (revision !== null && revision === this.shaderRevision && sizeKey === this.shaderSizeKey) return;
+    const previousPlan = this.plan;
+    this.plan = planCrt(this.settings, this.height, this.width, this.outputWidth);
+    const key = JSON.stringify(this.plan);
+    if (key !== this.planKey) {
+      this.planKey = key;
+      if (this.targets) this.resizeTargets(this.targets);
+      if (previousPlan.afterglow !== this.plan.afterglow || previousPlan.average !== this.plan.average ||
+          previousPlan.scalarAverage !== this.plan.scalarAverage || previousPlan.mipmaps !== this.plan.mipmaps)
+        this.resetHistory("temporal dependencies changed");
+    }
+    const v = (id: string) => this.settings.getValue(id, this.variant);
+    const shaders = { ...SHADER_LIBRARY[this.variant], edges: SHADER_LIBRARY.advanced.variant4 };
+    shaders.pre = optimizePreColour(shaders.pre, this.settings);
     const materials = this.materialSets[this.variant];
-    const readIndex = this.historyPing ? 1 : 0;
-    const writeIndex = this.historyPing ? 0 : 1;
-    const afterglowRead = targets.afterglow[readIndex];
-    const afterglowWrite = targets.afterglow[writeIndex];
-    const averageRead = targets.average?.[readIndex];
-    const averageWrite = targets.average?.[writeIndex];
-    const [kernelWidth, kernelHeight] = kernelDimensions(this.quality);
-    const bloomHorizontalHeight =
-      this.variant === "advanced" ? kernelHeight : this.height;
-    const bloomHeight =
-      this.variant === "advanced" ? this.height : kernelHeight;
-    let draws = 0;
-
-    bindTexture(this.inputMaterial, "Source", readBuffer.texture);
-    // Preserve the canonical stock alpha while writing exactly the same
-    // quantized RGB that both old stock copies and history input consumed.
-    this.draw(renderer, targets.stock, this.inputMaterial);
-    draws += 1;
-
-    configureStage(
-      materials.afterglow,
-      this.width,
-      this.height,
-      this.width,
-      this.height,
-      this.width,
-      this.height,
-      this.frameIndex,
-    );
-    bindTexture(materials.afterglow, "Source", targets.stock.texture);
-    bindTexture(
-      materials.afterglow,
-      "OriginalHistory0",
-      targets.stock.texture,
-    );
-    bindTexture(
-      materials.afterglow,
-      "AfterglowPassFeedback",
-      afterglowRead.texture,
-    );
-    this.draw(renderer, afterglowWrite, materials.afterglow);
-    draws += 1;
-
-    configureStage(
-      materials.pre,
-      this.width,
-      this.height,
-      this.width,
-      this.height,
-      this.width,
-      this.height,
-      this.frameIndex,
-    );
-    bindTexture(materials.pre, "Source", afterglowWrite.texture);
-    bindTexture(materials.pre, "StockPass", targets.stock.texture);
-    bindTexture(materials.pre, "AfterglowPass", afterglowWrite.texture);
-    this.draw(renderer, targets.pre, materials.pre);
-    draws += 1;
-
-    if (this.variant === "advanced") {
-      if (!averageRead || !averageWrite) {
-        throw new Error("Advanced luminance history was not allocated");
+    for (const name of Object.keys(shaders) as (keyof typeof shaders)[]) {
+      if (name === "stock") continue;
+      if (name === 'edges' && this.variant !== 'advanced') continue;
+      let fragment = shaders[name];
+      if (name === 'afterglow') fragment = CRT_AFTERGLOW_SHADER;
+      const isLinear = name === (this.variant === "hd" ? "variant4" : "variant5");
+      if (isLinear && this.plan.fusePre) fragment = fusePreLinear(shaders.pre, fragment, this.plan.fuseInput);
+      if (name === 'pre' || (isLinear && this.plan.fusePre))
+        fragment = fragment.replace(/(?:pre_)?crtGuestSamplePointBorder\((StockPass|AfterglowPass), vTexCoord, 0\.0\)/g,
+          'texelFetch($1, ivec2(gl_FragCoord.xy), 0)');
+      if (name === "deconvergence" && this.plan.fusePre) {
+        // With vigstr=0 every pre alpha is exactly 1, including clamped borders.
+        fragment = fragment.replace(/crtGuestSampleLinearBorder\(PrePass,.*?\)\.w/g, '1.0');
       }
-      configureStage(
-        materials.variant4,
-        this.width,
-        this.height,
-        this.width,
-        this.height,
-        this.width,
-        this.height,
-        this.frameIndex,
-      );
-      bindTexture(materials.variant4, "Source", targets.pre.texture);
-      bindTexture(
-        materials.variant4,
-        "AvgLumPassFeedback",
-        averageRead.texture,
-      );
-      this.draw(renderer, averageWrite, materials.variant4);
-      draws += 1;
-
-      configureStage(
-        materials.variant5,
-        this.width,
-        this.height,
-        this.width,
-        this.height,
-        this.width,
-        this.height,
-        this.frameIndex,
-      );
-      bindTexture(materials.variant5, "Source", targets.pre.texture);
-      bindTexture(materials.variant5, "PrePass", targets.pre.texture);
-      this.draw(renderer, targets.linear, materials.variant5);
-      draws += 1;
-    } else {
-      configureStage(
-        materials.variant4,
-        this.width,
-        this.height,
-        this.width,
-        this.height,
-        this.width,
-        this.height,
-        this.frameIndex,
-      );
-      bindTexture(materials.variant4, "Source", targets.pre.texture);
-      this.draw(renderer, targets.linear, materials.variant4);
-      draws += 1;
-
-      const reconstruction = targets.reconstruction;
-      if (!reconstruction) {
-        throw new Error("HD reconstruction target was not allocated");
+      if (name === "variant4" && this.variant === "advanced")
+        fragment = fragment.replace('vec4(c1, c2, c3, ltotal)', 'vec4(0.0, 0.0, 0.0, ltotal)');
+      if (name === 'edges') fragment = fragment.replace('vec4(c1, c2, c3, ltotal)', 'vec4(c1, c2, c3, 1.0)');
+      if (this.variant === 'advanced' && (name === 'main' || name === 'deconvergence')) {
+        fragment = fragment.replace('uniform highp sampler2D AvgLumPass;',
+          'uniform highp sampler2D AvgLumPass;\nuniform highp sampler2D RasterLumPass;');
+        fragment = fragment.replace(/crtGuestSampleLinearBorder\(AvgLumPass, vec2\(0\.5\), 0\.0\)\.w/g,
+          'crtGuestSampleLinearBorder(RasterLumPass, vec2(0.5), 0.0).w');
       }
-      configureStage(
-        materials.variant5,
-        this.width,
-        this.height,
-        this.outputWidth,
-        this.height,
-        this.width,
-        this.height,
-        this.frameIndex,
-      );
-      bindTexture(materials.variant5, "Source", targets.linear.texture);
-      bindTexture(
-        materials.variant5,
-        "LinearizePass",
-        targets.linear.texture,
-      );
-      this.draw(renderer, reconstruction, materials.variant5);
-      draws += 1;
+      if (/^(gaussian|bloom)(Horizontal|Vertical)$/.test(name)) {
+        const horizontal = name.endsWith("Horizontal"), bloom = name.startsWith("bloom");
+        const fineValue = v(bloom ? 'FINE_BLOOM' : 'FINE_GLOW');
+        const fine = fineValue > .5 ? fineValue : .75 + .25 * fineValue;
+        const auto = this.variant === 'hd' && horizontal && this.height < 375
+          ? 1 + Math.max(0, Math.min(1, v('auto_res') * Math.round(this.width / 300) - 1)) : 1;
+        const sourceHeight = bloom && this.variant === 'advanced' ? kernelDimensions(this.quality)[1] : this.height;
+        fragment = gaussianShader({ horizontal, bloom,
+          radius: v(bloom ? (horizontal ? 'SIZEHB' : 'SIZEVB') : (horizontal ? 'SIZEH' : 'SIZEV')),
+          sigma: v(bloom ? (horizontal ? 'SIGMA_HB' : 'SIGMA_VB') : (horizontal ? 'SIGMA_H' : 'SIGMA_V')),
+          fine, auto, magic: !bloom && horizontal && v('m_glow') > .5,
+          pair: !bloom && fine === 1 && (!horizontal || v('m_glow') < .5) && (horizontal || sourceHeight === this.height),
+        });
+      }
+      if (this.variant === 'hd' && (name === 'variant5' || name === 'main'))
+        fragment = optimizeHdFilter(fragment, name === 'variant5', this.settings, this.width, this.height);
+      fragment = withoutVersionDirective(specializeCrt(fragment, this.settings, this.variant));
+      const material = materials[name];
+      if (material.fragmentShader !== fragment) {
+        // Dispose superseded GPU programs instead of retaining every slider state.
+        material.dispose();
+        material.fragmentShader = fragment;
+        const discovered = discoverUniforms(fragment);
+        for (const uniform in discovered) material.uniforms[uniform] ??= discovered[uniform];
+        material.needsUpdate = true;
+        this.appliedSettingsRevision[this.variant] = null;
+      }
     }
-
-    configureStage(
-      materials.gaussianHorizontal,
-      this.width,
-      this.height,
-      kernelWidth,
-      this.height,
-      this.width,
-      this.height,
-      this.frameIndex,
-    );
-    bindTexture(
-      materials.gaussianHorizontal,
-      "Source",
-      targets.linear.texture,
-    );
-    bindTexture(
-      materials.gaussianHorizontal,
-      "LinearizePass",
-      targets.linear.texture,
-    );
-    this.draw(renderer, targets.glowHorizontal, materials.gaussianHorizontal);
-    draws += 1;
-
-    configureStage(
-      materials.gaussianVertical,
-      kernelWidth,
-      this.height,
-      kernelWidth,
-      kernelHeight,
-      this.width,
-      this.height,
-      this.frameIndex,
-    );
-    bindTexture(
-      materials.gaussianVertical,
-      "Source",
-      targets.glowHorizontal.texture,
-    );
-    this.draw(renderer, targets.glow, materials.gaussianVertical);
-    draws += 1;
-
-    configureStage(
-      materials.bloomHorizontal,
-      this.width,
-      this.height,
-      kernelWidth,
-      bloomHorizontalHeight,
-      this.width,
-      this.height,
-      this.frameIndex,
-    );
-    bindTexture(
-      materials.bloomHorizontal,
-      "Source",
-      targets.linear.texture,
-    );
-    bindTexture(
-      materials.bloomHorizontal,
-      "LinearizePass",
-      targets.linear.texture,
-    );
-    this.draw(renderer, targets.bloomHorizontal, materials.bloomHorizontal);
-    draws += 1;
-
-    configureStage(
-      materials.bloomVertical,
-      kernelWidth,
-      bloomHorizontalHeight,
-      this.width,
-      bloomHeight,
-      this.width,
-      this.height,
-      this.frameIndex,
-    );
-    bindTexture(
-      materials.bloomVertical,
-      "Source",
-      targets.bloomHorizontal.texture,
-    );
-    this.draw(renderer, targets.bloom, materials.bloomVertical);
-    draws += 1;
-
-    const mainSource =
-      this.variant === "advanced"
-        ? targets.linear
-        : targets.reconstruction;
-    if (!mainSource) throw new Error("CRT Guest main source is unavailable");
-    configureStage(
-      materials.main,
-      mainSource.width,
-      mainSource.height,
-      this.outputWidth,
-      this.outputHeight,
-      this.width,
-      this.height,
-      this.frameIndex,
-    );
-    bindTexture(materials.main, "Source", mainSource.texture);
-    bindTexture(materials.main, "LinearizePass", targets.linear.texture);
-    bindTexture(materials.main, "PrePass", targets.pre.texture);
-    bindTexture(materials.main, "BloomPass", targets.bloom.texture);
-    if (this.variant === "advanced") {
-      bindTexture(materials.main, "AvgLumPass", averageWrite!.texture);
-    } else {
-      bindTexture(materials.main, "Pass1", mainSource.texture);
-    }
-    this.draw(renderer, targets.main, materials.main);
-    draws += 1;
-
-    configureStage(
-      materials.deconvergence,
-      this.outputWidth,
-      this.outputHeight,
-      this.outputWidth,
-      this.outputHeight,
-      this.width,
-      this.height,
-      this.frameIndex,
-    );
-    bindTexture(materials.deconvergence, "Source", targets.main.texture);
-    bindTexture(materials.deconvergence, "StockPass", targets.stock.texture);
-    bindTexture(
-      materials.deconvergence,
-      "LinearizePass",
-      targets.linear.texture,
-    );
-    bindTexture(materials.deconvergence, "PrePass", targets.pre.texture);
-    bindTexture(materials.deconvergence, "GlowPass", targets.glow.texture);
-    bindTexture(materials.deconvergence, "BloomPass", targets.bloom.texture);
-    if (this.variant === "advanced") {
-      bindTexture(
-        materials.deconvergence,
-        "AvgLumPass",
-        averageWrite!.texture,
-      );
-    }
-    // A same-size presentation can execute this configured stage together
-    // with decode/display, avoiding its full-output RGBA16F surface.
-    if (this.deferDeconvergence) return draws;
-    const deconvergence = targets.deconvergence;
-    if (!deconvergence) throw new Error("CRT deconvergence target is unavailable");
-    this.draw(renderer, deconvergence, materials.deconvergence);
-    draws += 1;
-
-    // The presentation owner can combine decode and final display transfer,
-    // avoiding a full-output intermediate surface and its extra quantization.
-    if (this.deferOutput) return draws;
-    bindTexture(
-      this.outputMaterial,
-      "Source",
-      deconvergence.texture,
-    );
-    this.draw(
-      renderer,
-      this.renderToScreen ? null : writeBuffer,
-      this.outputMaterial,
-      this.clear,
-    );
-    draws += 1;
-    return draws;
+    this.bindLuts();
+    this.commandsDirty = true;
+    this.shaderRevision = revision;
+    this.shaderSizeKey = sizeKey;
   }
 
   private draw(
@@ -1016,26 +891,13 @@ export class CrtGuestPass extends Pass {
 
   private ensureTargets(): CrtGuestTargets {
     if (this.targets) return this.targets;
-    const rgba8 = (name: string): THREE.WebGLRenderTarget =>
-      makeTarget(1, 1, THREE.UnsignedByteType, name);
-    const rgba16f = (name: string): THREE.WebGLRenderTarget =>
-      makeTarget(1, 1, THREE.HalfFloatType, name);
+    const rgba16f = (name: string) => makeTarget(1, 1, THREE.HalfFloatType, `CRTGuest.${name}.RGBA16F`);
     this.targets = {
-      stock: rgba8("CRTGuest.Stock.RGBA8"),
-      pre: rgba8("CRTGuest.Pre.RGBA8"),
-      linear: rgba16f("CRTGuest.Linear.RGBA16F"),
-      glowHorizontal: rgba16f("CRTGuest.GlowHorizontal.RGBA16F"),
-      glow: rgba16f("CRTGuest.Glow.RGBA16F"),
-      bloomHorizontal: rgba16f("CRTGuest.BloomHorizontal.RGBA16F"),
-      bloom: rgba16f("CRTGuest.Bloom.RGBA16F"),
-      reconstruction: null,
-      main: rgba16f("CRTGuest.Main.RGBA16F"),
-      deconvergence: this.deferDeconvergence ? null : rgba16f("CRTGuest.Deconvergence.RGBA16F"),
-      afterglow: [
-        rgba8("CRTGuest.AfterglowA.RGBA8"),
-        rgba8("CRTGuest.AfterglowB.RGBA8"),
-      ],
-      average: null,
+      stock: null, pre: null, linear: rgba16f("Linear"),
+      glowHorizontal: null, glow: null, bloomHorizontal: null, bloom: null,
+      reconstruction: null, main: rgba16f("Main"),
+      deconvergence: this.deferDeconvergence ? null : rgba16f("Deconvergence"),
+      afterglow: null, average: null, edges: null,
     };
     this.resizeTargets(this.targets);
     this.resetHistory("targets allocated");
@@ -1043,69 +905,35 @@ export class CrtGuestPass extends Pass {
   }
 
   private resizeTargets(targets: CrtGuestTargets): void {
-    const [kernelWidth, kernelHeight] = kernelDimensions(this.quality);
-    const bloomHorizontalHeight =
-      this.variant === "advanced" ? kernelHeight : this.height;
-    const bloomHeight =
-      this.variant === "advanced" ? this.height : kernelHeight;
-
-    // Only Advanced reads luminance history. HD must not allocate or clear
-    // those two full-source textures; a return to Advanced starts fresh history.
-    if (this.variant === "advanced") {
-      targets.average ??= [
-        makeTarget(this.width, this.height, THREE.UnsignedByteType, "CRTGuest.AverageA.RGBA8"),
-        makeTarget(this.width, this.height, THREE.UnsignedByteType, "CRTGuest.AverageB.RGBA8"),
-      ];
-    } else if (targets.average) {
-      for (const target of targets.average) target.dispose();
-      targets.average = null;
-      bindTexture(this.materialSets.advanced.variant4, "AvgLumPassFeedback", null);
-      bindTexture(this.materialSets.advanced.main, "AvgLumPass", null);
-      bindTexture(this.materialSets.advanced.deconvergence, "AvgLumPass", null);
-    }
-
-    for (const target of [
-      targets.stock,
-      targets.pre,
-      targets.linear,
-      ...targets.afterglow,
-      ...(targets.average ?? []),
-    ]) {
-      resizeTarget(target, this.width, this.height);
-    }
+    this.commandsDirty = true;
+    this.plan = planCrt(this.settings, this.height, this.width, this.outputWidth);
+    const [kw, kh] = kernelDimensions(this.quality);
+    const reconcile = (target: THREE.WebGLRenderTarget | null, needed: boolean,
+      width: number, height: number, byte: boolean, name: string) => {
+      if (!needed) { target?.dispose(); return null; }
+      target ??= makeTarget(width, height, byte ? THREE.UnsignedByteType : THREE.HalfFloatType, `CRTGuest.${name}`);
+      resizeTarget(target, width, height); return target;
+    };
+    targets.stock = reconcile(targets.stock, !this.plan.fuseInput, this.width, this.height, true, 'Stock');
+    targets.pre = reconcile(targets.pre, !this.plan.fusePre, this.width, this.height, true, 'Pre');
+    if (targets.pre) configurePreMipmaps(targets.pre, this.plan.mipmaps);
+    if (this.plan.afterglow) {
+      targets.afterglow ??= [makeTarget(1,1,THREE.UnsignedByteType,'CRTGuest.AfterglowA'), makeTarget(1,1,THREE.UnsignedByteType,'CRTGuest.AfterglowB')];
+      for (const t of targets.afterglow) resizeTarget(t,this.width,this.height);
+    } else if (targets.afterglow) { for (const t of targets.afterglow) t.dispose(); targets.afterglow = null; }
+    if (this.plan.average) {
+      targets.average ??= [makeTarget(1,1,THREE.UnsignedByteType,'CRTGuest.AverageA'), makeTarget(1,1,THREE.UnsignedByteType,'CRTGuest.AverageB')];
+      for (const t of targets.average) resizeTarget(t,1,1);
+    } else if (targets.average) { for (const t of targets.average) t.dispose(); targets.average = null; }
+    targets.edges = reconcile(targets.edges,this.plan.edges,this.width,this.height,true,'Edges');
+    resizeTarget(targets.linear,this.width,this.height);
     resizeTarget(targets.main, this.outputWidth, this.outputHeight);
-    if (targets.deconvergence) {
-      resizeTarget(targets.deconvergence, this.outputWidth, this.outputHeight);
-    }
-    configurePreMipmaps(targets.pre, this.variant === "advanced");
-    resizeTarget(targets.glowHorizontal, kernelWidth, this.height);
-    resizeTarget(targets.glow, kernelWidth, kernelHeight);
-    resizeTarget(
-      targets.bloomHorizontal,
-      kernelWidth,
-      bloomHorizontalHeight,
-    );
-    resizeTarget(targets.bloom, this.width, bloomHeight);
-
-    if (this.variant === "hd") {
-      if (!targets.reconstruction) {
-        targets.reconstruction = makeTarget(
-          this.outputWidth,
-          this.height,
-          THREE.HalfFloatType,
-          "CRTGuest.Reconstruction.RGBA16F",
-        );
-      } else {
-        resizeTarget(
-          targets.reconstruction,
-          this.outputWidth,
-          this.height,
-        );
-      }
-    } else if (targets.reconstruction) {
-      targets.reconstruction.dispose();
-      targets.reconstruction = null;
-    }
+    if (targets.deconvergence) resizeTarget(targets.deconvergence,this.outputWidth,this.outputHeight);
+    targets.glowHorizontal = reconcile(targets.glowHorizontal,this.plan.glow,kw,this.height,false,'GlowHorizontal');
+    targets.glow = reconcile(targets.glow,this.plan.glow,kw,kh,false,'Glow');
+    targets.bloomHorizontal = reconcile(targets.bloomHorizontal,this.plan.bloom,kw,this.variant === 'advanced' ? kh : this.height,false,'BloomHorizontal');
+    targets.bloom = reconcile(targets.bloom,this.plan.bloom,this.width,this.variant === 'advanced' ? this.height : kh,false,'Bloom');
+    targets.reconstruction = reconcile(targets.reconstruction,this.plan.reconstruction,this.outputWidth,this.height,false,'Reconstruction');
   }
 
   private clearHistory(
@@ -1116,7 +944,7 @@ export class CrtGuestPass extends Pass {
     const previousAlpha = renderer.getClearAlpha();
     renderer.setClearColor(0x000000, 1);
     try {
-      for (const target of [...targets.afterglow, ...(targets.average ?? [])]) {
+      for (const target of [...(targets.afterglow ?? []), ...(targets.average ?? [])]) {
         renderer.setRenderTarget(target);
         renderer.clear(true, false, false);
       }
@@ -1226,13 +1054,17 @@ export class CrtGuestPass extends Pass {
   }
 
   private disposeTargets(): void {
+    this.commandsDirty = true;
+    this.drawCommands = [];
+    this.frameUniforms = [];
     this.deferredOutputTexture = null;
     this.deferredDeconvergenceStage = null;
     if (!this.targets) return;
     const targets = this.targets;
-    const all = new Set<THREE.WebGLRenderTarget>([
+    const all = new Set<THREE.WebGLRenderTarget | null>([
       targets.stock,
       targets.pre,
+      targets.edges,
       targets.linear,
       targets.glowHorizontal,
       targets.glow,
@@ -1240,11 +1072,11 @@ export class CrtGuestPass extends Pass {
       targets.bloom,
       targets.main,
       ...(targets.deconvergence ? [targets.deconvergence] : []),
-      ...targets.afterglow,
+      ...(targets.afterglow ?? []),
       ...(targets.average ?? []),
     ]);
     if (targets.reconstruction) all.add(targets.reconstruction);
-    for (const target of all) target.dispose();
+    for (const target of all) target?.dispose();
     this.targets = null;
   }
 
@@ -1255,32 +1087,19 @@ export class CrtGuestPass extends Pass {
     if (!targets) return {};
     const read = this.historyPing ? 1 : 0;
     const write = this.historyPing ? 0 : 1;
-    const diagnostic: Partial<
-      Record<CrtGuestDebugTarget, CrtGuestTargetDiagnostic>
-    > = {
-      stock: targetDiagnostic(targets.stock, 4),
-      "afterglow-read": targetDiagnostic(targets.afterglow[read], 4),
-      "afterglow-write": targetDiagnostic(targets.afterglow[write], 4),
-      pre: targetDiagnostic(
-        targets.pre,
-        4,
-        this.variant === "advanced" ? 4 / 3 : 1,
-      ),
-      linear: targetDiagnostic(targets.linear, 8),
-      "glow-horizontal": targetDiagnostic(targets.glowHorizontal, 8),
-      glow: targetDiagnostic(targets.glow, 8),
-      "bloom-horizontal": targetDiagnostic(targets.bloomHorizontal, 8),
-      bloom: targetDiagnostic(targets.bloom, 8),
-      main: targetDiagnostic(targets.main, 8),
-      ...(targets.deconvergence ? { deconvergence: targetDiagnostic(targets.deconvergence, 8) } : {}),
-    };
-    if (targets.average) {
-      diagnostic["average-read"] = targetDiagnostic(targets.average[read], 4);
-      diagnostic["average-write"] = targetDiagnostic(targets.average[write], 4);
-    }
-    if (targets.reconstruction) {
-      diagnostic.reconstruction = targetDiagnostic(targets.reconstruction, 8);
-    }
+    const diagnostic: Partial<Record<CrtGuestDebugTarget, CrtGuestTargetDiagnostic>> = {};
+    const entries: [CrtGuestDebugTarget, THREE.WebGLRenderTarget | null | undefined][] = [
+      ['stock', targets.stock], ['pre', targets.pre], ['linear', targets.linear],
+      ['edges', targets.edges],
+      ['glow-horizontal',targets.glowHorizontal], ['glow',targets.glow],
+      ['bloom-horizontal',targets.bloomHorizontal], ['bloom',targets.bloom],
+      ['main',targets.main], ['deconvergence',targets.deconvergence], ['reconstruction',targets.reconstruction],
+      ['afterglow-read',targets.afterglow?.[read]], ['afterglow-write',targets.afterglow?.[write]],
+      ['average-read',targets.average?.[read]], ['average-write',targets.average?.[write]],
+    ];
+    for (const [name,target] of entries) if (target) diagnostic[name] = targetDiagnostic(target,
+      target.texture.type === THREE.UnsignedByteType ? 4 : 8,
+      target.texture.generateMipmaps ? 4/3 : 1);
     return diagnostic;
   }
 }
@@ -1292,6 +1111,7 @@ function makeMaterialSet(
   const make = (stage: keyof CrtGuestShaderSet): THREE.RawShaderMaterial =>
     makeMaterial(`CRTGuest.${variant}.${stage}`, shaders[stage]);
   const set = {
+    edges: makeMaterial(`CRTGuest.${variant}.edges`, SHADER_LIBRARY.advanced.variant4),
     afterglow: make("afterglow"),
     pre: make("pre"),
     variant4: make("variant4"),
@@ -1369,16 +1189,18 @@ function configureStage(
   linearHeight: number,
   frameIndex: number,
 ): void {
-  const sourceSize = sizeVector(sourceWidth, sourceHeight);
-  const outputSize = sizeVector(outputWidth, outputHeight);
-  const originalSize = sizeVector(linearWidth, linearHeight);
-  const linearSize = sizeVector(linearWidth, linearHeight);
-  for (const prefix of ["uParams_", "uGlobal_", "params_", "global_"]) {
-    setVectorUniform(material, `${prefix}SourceSize`, sourceSize);
-    setVectorUniform(material, `${prefix}OutputSize`, outputSize);
-    setVectorUniform(material, `${prefix}OriginalSize`, originalSize);
-    setVectorUniform(material, `${prefix}LinearizePassSize`, linearSize);
-    setNumberUniform(material, `${prefix}FrameCount`, frameIndex);
+  const uniforms = material.uniforms;
+  for (const prefix of ["uParams_", "uGlobal_"]) {
+    const set = (name: string, w: number, h: number) => {
+      const uniform = uniforms[prefix + name];
+      if (uniform) (uniform.value as THREE.Vector4).set(w, h, 1/w, 1/h);
+    };
+    set("SourceSize", sourceWidth, sourceHeight);
+    set("OutputSize", outputWidth, outputHeight);
+    set("OriginalSize", linearWidth, linearHeight);
+    set("LinearizePassSize", linearWidth, linearHeight);
+    const frame = uniforms[prefix + "FrameCount"];
+    if (frame) frame.value = frameIndex;
   }
 }
 
@@ -1389,33 +1211,6 @@ function bindTexture(
 ): void {
   const uniform = material.uniforms[name];
   if (uniform) uniform.value = texture;
-}
-
-function setVectorUniform(
-  material: THREE.RawShaderMaterial,
-  name: string,
-  source: THREE.Vector4,
-): void {
-  const uniform = material.uniforms[name];
-  if (!uniform) return;
-  if (uniform.value instanceof THREE.Vector4) {
-    uniform.value.copy(source);
-  } else {
-    uniform.value = source.clone();
-  }
-}
-
-function setNumberUniform(
-  material: THREE.RawShaderMaterial,
-  name: string,
-  value: number,
-): void {
-  const uniform = material.uniforms[name];
-  if (uniform) uniform.value = value;
-}
-
-function sizeVector(width: number, height: number): THREE.Vector4 {
-  return new THREE.Vector4(width, height, 1 / width, 1 / height);
 }
 
 function settingIdForUniform(uniformName: string): string | null {
@@ -1472,6 +1267,9 @@ function configurePreMipmaps(
   ) {
     return;
   }
+  // WebGL2 immutable texture storage fixes the mip count at allocation. Merely
+  // setting needsUpdate on an existing render target doesn't add mip levels.
+  target.dispose();
   texture.generateMipmaps = enabled;
   texture.minFilter = minFilter;
   texture.magFilter = THREE.LinearFilter;

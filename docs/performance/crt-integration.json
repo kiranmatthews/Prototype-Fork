@@ -1,0 +1,554 @@
+{
+  "environment": "Integrated production preview at /Prototype-Fork/",
+  "commitSource": "da32e19fe723f60e744644940cd1930e5c41c704",
+  "scenarios": [
+    {
+      "lite": true,
+      "stamp": "Codex/sol fork \u00b7 build 10-08 04:40 UTC",
+      "initial": {
+        "pos": [
+          0.5712883843718615,
+          0,
+          18
+        ],
+        "state": "ride",
+        "grounded": true,
+        "crt": {
+          "supported": true,
+          "capabilityReason": null,
+          "active": false,
+          "bypassReason": "Pass.enabled is false",
+          "forcedDisabled": true,
+          "lutsReady": true,
+          "runtimeFailure": null,
+          "variant": "hd",
+          "quality": "exact",
+          "width": 640,
+          "height": 360,
+          "sourceWidth": 640,
+          "sourceHeight": 360,
+          "outputWidth": 640,
+          "outputHeight": 360,
+          "kernelWidth": 800,
+          "kernelHeight": 600,
+          "frameIndex": 0,
+          "renderCount": 0,
+          "bypassCount": 0,
+          "failureCount": 0,
+          "lastDrawCount": 0,
+          "outputDeferred": true,
+          "deconvergenceDeferred": true,
+          "historyClearPending": true,
+          "historyResetCount": 6,
+          "lastHistoryResetReason": "gameplay presentation resumed",
+          "settingsRevision": 3,
+          "historyRevision": 3,
+          "estimatedTargetBytes": 0,
+          "graph": {
+            "afterglow": true,
+            "average": false,
+            "edges": false,
+            "glow": false,
+            "bloom": false,
+            "fusePre": true,
+            "fuseInput": false,
+            "reconstruction": true,
+            "mipmaps": false,
+            "scalarAverage": false
+          },
+          "targets": {}
+        }
+      },
+      "moved": [
+        2.1430414091072896,
+        0,
+        12.520986333438145
+      ],
+      "checkpoint": {
+        "warped": true,
+        "pos": [
+          -66.12787406345001,
+          7.2999511718750005,
+          -402.77397664781984
+        ],
+        "spawn": [
+          -66.12787406345001,
+          7.2999511718750005,
+          -402.77397664781984
+        ]
+      },
+      "respawn": [
+        -66.12787406345001,
+        7.199951171875,
+        -402.77397664781984
+      ],
+      "controls": {
+        "before": {
+          "glow": true,
+          "sigma": false,
+          "esrc": false,
+          "lutSize": false
+        },
+        "after": {
+          "sigma": true,
+          "magic": false,
+          "magicEnabled": true,
+          "persistenceHidden": true
+        },
+        "count": 93
+      },
+      "menu": {
+        "blocked": true,
+        "crt": {
+          "supported": true,
+          "capabilityReason": null,
+          "active": false,
+          "bypassReason": "Pass.enabled is false",
+          "forcedDisabled": true,
+          "lutsReady": true,
+          "runtimeFailure": null,
+          "variant": "hd",
+          "quality": "exact",
+          "width": 640,
+          "height": 360,
+          "sourceWidth": 640,
+          "sourceHeight": 360,
+          "outputWidth": 640,
+          "outputHeight": 360,
+          "kernelWidth": 800,
+          "kernelHeight": 600,
+          "frameIndex": 0,
+          "renderCount": 0,
+          "bypassCount": 0,
+          "failureCount": 0,
+          "lastDrawCount": 0,
+          "outputDeferred": true,
+          "deconvergenceDeferred": true,
+          "historyClearPending": true,
+          "historyResetCount": 6,
+          "lastHistoryResetReason": "gameplay presentation resumed",
+          "settingsRevision": 8,
+          "historyRevision": 5,
+          "estimatedTargetBytes": 0,
+          "graph": {
+            "afterglow": true,
+            "average": false,
+            "edges": false,
+            "glow": false,
+            "bloom": false,
+            "fusePre": true,
+            "fuseInput": false,
+            "reconstruction": true,
+            "mipmaps": false,
+            "scalarAverage": false
+          },
+          "targets": {}
+        },
+        "surface": {
+          "active": true,
+          "resident": true,
+          "dirty": false,
+          "width": 640,
+          "height": 360,
+          "screen": "pause",
+          "revision": 300,
+          "paintedRevision": 300,
+          "canvasFrames": 23,
+          "textureUploads": 23,
+          "textureReallocations": 1,
+          "compositeDraws": 23,
+          "primitiveCount": 29,
+          "releaseCount": 0,
+          "lastCanvasMs": 1,
+          "disposed": false,
+          "composited": true
+        }
+      },
+      "errors": []
+    },
+    {
+      "lite": false,
+      "stamp": "Codex/sol fork \u00b7 build 10-08 04:40 UTC",
+      "initial": {
+        "pos": [
+          0.5712883843718615,
+          0,
+          18
+        ],
+        "state": "ride",
+        "grounded": true,
+        "crt": {
+          "supported": true,
+          "capabilityReason": null,
+          "active": true,
+          "bypassReason": null,
+          "forcedDisabled": false,
+          "lutsReady": true,
+          "runtimeFailure": null,
+          "variant": "hd",
+          "quality": "exact",
+          "width": 1280,
+          "height": 720,
+          "sourceWidth": 1280,
+          "sourceHeight": 720,
+          "outputWidth": 1280,
+          "outputHeight": 720,
+          "kernelWidth": 800,
+          "kernelHeight": 600,
+          "frameIndex": 2,
+          "renderCount": 2,
+          "bypassCount": 0,
+          "failureCount": 0,
+          "lastDrawCount": 4,
+          "outputDeferred": true,
+          "deconvergenceDeferred": true,
+          "historyClearPending": false,
+          "historyResetCount": 8,
+          "lastHistoryResetReason": "targets allocated",
+          "settingsRevision": 3,
+          "historyRevision": 3,
+          "estimatedTargetBytes": 25804800,
+          "graph": {
+            "afterglow": true,
+            "average": false,
+            "edges": false,
+            "glow": false,
+            "bloom": false,
+            "fusePre": true,
+            "fuseInput": false,
+            "reconstruction": false,
+            "mipmaps": false,
+            "scalarAverage": false
+          },
+          "targets": {
+            "stock": {
+              "width": 1280,
+              "height": 720,
+              "bytesPerPixel": 4,
+              "estimatedBytes": 3686400
+            },
+            "linear": {
+              "width": 1280,
+              "height": 720,
+              "bytesPerPixel": 8,
+              "estimatedBytes": 7372800
+            },
+            "main": {
+              "width": 1280,
+              "height": 720,
+              "bytesPerPixel": 8,
+              "estimatedBytes": 7372800
+            },
+            "afterglow-read": {
+              "width": 1280,
+              "height": 720,
+              "bytesPerPixel": 4,
+              "estimatedBytes": 3686400
+            },
+            "afterglow-write": {
+              "width": 1280,
+              "height": 720,
+              "bytesPerPixel": 4,
+              "estimatedBytes": 3686400
+            }
+          }
+        }
+      },
+      "moved": [
+        2.1430414091072896,
+        0,
+        12.520986333438145
+      ],
+      "checkpoint": {
+        "warped": true,
+        "pos": [
+          -66.12787406345001,
+          7.2999511718750005,
+          -402.77397664781984
+        ],
+        "spawn": [
+          -66.12787406345001,
+          7.2999511718750005,
+          -402.77397664781984
+        ]
+      },
+      "respawn": [
+        -66.12787406345001,
+        7.199951171875,
+        -402.77397664781984
+      ],
+      "controls": {
+        "before": {
+          "glow": true,
+          "sigma": false,
+          "esrc": false,
+          "lutSize": false
+        },
+        "after": {
+          "sigma": true,
+          "magic": false,
+          "magicEnabled": true,
+          "persistenceHidden": true
+        },
+        "count": 83
+      },
+      "menu": {
+        "blocked": true,
+        "crt": {
+          "supported": true,
+          "capabilityReason": null,
+          "active": true,
+          "bypassReason": null,
+          "forcedDisabled": false,
+          "lutsReady": true,
+          "runtimeFailure": null,
+          "variant": "hd",
+          "quality": "exact",
+          "width": 1280,
+          "height": 720,
+          "sourceWidth": 1280,
+          "sourceHeight": 720,
+          "outputWidth": 1280,
+          "outputHeight": 720,
+          "kernelWidth": 800,
+          "kernelHeight": 600,
+          "frameIndex": 323,
+          "renderCount": 323,
+          "bypassCount": 0,
+          "failureCount": 0,
+          "lastDrawCount": 4,
+          "outputDeferred": true,
+          "deconvergenceDeferred": true,
+          "historyClearPending": false,
+          "historyResetCount": 11,
+          "lastHistoryResetReason": "temporal dependencies changed",
+          "settingsRevision": 8,
+          "historyRevision": 5,
+          "estimatedTargetBytes": 25804800,
+          "graph": {
+            "afterglow": true,
+            "average": false,
+            "edges": false,
+            "glow": false,
+            "bloom": false,
+            "fusePre": true,
+            "fuseInput": false,
+            "reconstruction": false,
+            "mipmaps": false,
+            "scalarAverage": false
+          },
+          "targets": {
+            "stock": {
+              "width": 1280,
+              "height": 720,
+              "bytesPerPixel": 4,
+              "estimatedBytes": 3686400
+            },
+            "linear": {
+              "width": 1280,
+              "height": 720,
+              "bytesPerPixel": 8,
+              "estimatedBytes": 7372800
+            },
+            "main": {
+              "width": 1280,
+              "height": 720,
+              "bytesPerPixel": 8,
+              "estimatedBytes": 7372800
+            },
+            "afterglow-read": {
+              "width": 1280,
+              "height": 720,
+              "bytesPerPixel": 4,
+              "estimatedBytes": 3686400
+            },
+            "afterglow-write": {
+              "width": 1280,
+              "height": 720,
+              "bytesPerPixel": 4,
+              "estimatedBytes": 3686400
+            }
+          }
+        },
+        "surface": {
+          "active": true,
+          "resident": true,
+          "dirty": false,
+          "width": 1280,
+          "height": 720,
+          "screen": "pause",
+          "revision": 84,
+          "paintedRevision": 84,
+          "canvasFrames": 22,
+          "textureUploads": 22,
+          "textureReallocations": 1,
+          "compositeDraws": 22,
+          "primitiveCount": 29,
+          "releaseCount": 0,
+          "lastCanvasMs": 0.9000000357627869,
+          "disposed": false,
+          "composited": true
+        },
+        "upscaled": {
+          "supported": true,
+          "capabilityReason": null,
+          "active": true,
+          "bypassReason": null,
+          "forcedDisabled": false,
+          "lutsReady": true,
+          "runtimeFailure": null,
+          "variant": "hd",
+          "quality": "exact",
+          "width": 2560,
+          "height": 1440,
+          "sourceWidth": 1280,
+          "sourceHeight": 720,
+          "outputWidth": 2560,
+          "outputHeight": 1440,
+          "kernelWidth": 800,
+          "kernelHeight": 600,
+          "frameIndex": 387,
+          "renderCount": 387,
+          "bypassCount": 0,
+          "failureCount": 0,
+          "lastDrawCount": 5,
+          "outputDeferred": true,
+          "deconvergenceDeferred": true,
+          "historyClearPending": false,
+          "historyResetCount": 13,
+          "lastHistoryResetReason": "source size changed",
+          "settingsRevision": 8,
+          "historyRevision": 5,
+          "estimatedTargetBytes": 62668800,
+          "graph": {
+            "afterglow": true,
+            "average": false,
+            "edges": false,
+            "glow": false,
+            "bloom": false,
+            "fusePre": true,
+            "fuseInput": false,
+            "reconstruction": true,
+            "mipmaps": false,
+            "scalarAverage": false
+          },
+          "targets": {
+            "stock": {
+              "width": 1280,
+              "height": 720,
+              "bytesPerPixel": 4,
+              "estimatedBytes": 3686400
+            },
+            "linear": {
+              "width": 1280,
+              "height": 720,
+              "bytesPerPixel": 8,
+              "estimatedBytes": 7372800
+            },
+            "main": {
+              "width": 2560,
+              "height": 1440,
+              "bytesPerPixel": 8,
+              "estimatedBytes": 29491200
+            },
+            "reconstruction": {
+              "width": 2560,
+              "height": 720,
+              "bytesPerPixel": 8,
+              "estimatedBytes": 14745600
+            },
+            "afterglow-read": {
+              "width": 1280,
+              "height": 720,
+              "bytesPerPixel": 4,
+              "estimatedBytes": 3686400
+            },
+            "afterglow-write": {
+              "width": 1280,
+              "height": 720,
+              "bytesPerPixel": 4,
+              "estimatedBytes": 3686400
+            }
+          }
+        },
+        "native": {
+          "supported": true,
+          "capabilityReason": null,
+          "active": true,
+          "bypassReason": null,
+          "forcedDisabled": false,
+          "lutsReady": true,
+          "runtimeFailure": null,
+          "variant": "hd",
+          "quality": "exact",
+          "width": 1920,
+          "height": 1080,
+          "sourceWidth": 1920,
+          "sourceHeight": 1080,
+          "outputWidth": 1920,
+          "outputHeight": 1080,
+          "kernelWidth": 800,
+          "kernelHeight": 600,
+          "frameIndex": 393,
+          "renderCount": 393,
+          "bypassCount": 0,
+          "failureCount": 0,
+          "lastDrawCount": 4,
+          "outputDeferred": true,
+          "deconvergenceDeferred": true,
+          "historyClearPending": false,
+          "historyResetCount": 15,
+          "lastHistoryResetReason": "source size changed",
+          "settingsRevision": 8,
+          "historyRevision": 5,
+          "estimatedTargetBytes": 58060800,
+          "graph": {
+            "afterglow": true,
+            "average": false,
+            "edges": false,
+            "glow": false,
+            "bloom": false,
+            "fusePre": true,
+            "fuseInput": false,
+            "reconstruction": false,
+            "mipmaps": false,
+            "scalarAverage": false
+          },
+          "targets": {
+            "stock": {
+              "width": 1920,
+              "height": 1080,
+              "bytesPerPixel": 4,
+              "estimatedBytes": 8294400
+            },
+            "linear": {
+              "width": 1920,
+              "height": 1080,
+              "bytesPerPixel": 8,
+              "estimatedBytes": 16588800
+            },
+            "main": {
+              "width": 1920,
+              "height": 1080,
+              "bytesPerPixel": 8,
+              "estimatedBytes": 16588800
+            },
+            "afterglow-read": {
+              "width": 1920,
+              "height": 1080,
+              "bytesPerPixel": 4,
+              "estimatedBytes": 8294400
+            },
+            "afterglow-write": {
+              "width": 1920,
+              "height": 1080,
+              "bytesPerPixel": 4,
+              "estimatedBytes": 8294400
+            }
+          }
+        }
+      },
+      "errors": []
+    }
+  ]
+}
