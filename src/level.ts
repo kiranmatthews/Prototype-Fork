@@ -3567,9 +3567,9 @@ export function isOriginalCustardCreek(entry: LevelEntry): boolean {
 // Only exact previously published snapshots follow the new source. Any
 // authored geometry, metadata or name change keeps the player's local copy.
 export function isOriginalSkyBridge(entry: LevelEntry): boolean {
-  if (entry.id !== 'sky' || entry.name !== 'Sky Bridge' || ![48,211].includes(entry.data?.components.length ?? 0)) return false;
+  if (entry.id !== 'sky' || entry.name !== 'Sky Bridge' || ![48,211,304].includes(entry.data?.components.length ?? 0)) return false;
   const json = JSON.stringify(entry.data);
-  if (![3560,3602,295314].includes(json.length)) return false;
+  if (![3560,3602,295314,212031].includes(json.length)) return false;
   let a = 2166136261, b = 2246822519;
   for (let i=0; i<json.length; i++) {
     a = Math.imul(a ^ json.charCodeAt(i), 16777619);
@@ -3577,7 +3577,8 @@ export function isOriginalSkyBridge(entry: LevelEntry): boolean {
   }
   return (json.length === 3560 && (a >>> 0) === 2625946987 && (b >>> 0) === 4006427273) ||
     (json.length === 3602 && (a >>> 0) === 3548812583 && (b >>> 0) === 3344214389) ||
-    (json.length === 295314 && (a >>> 0) === 2571905729 && (b >>> 0) === 1013289071);
+    (json.length === 295314 && (a >>> 0) === 2571905729 && (b >>> 0) === 1013289071) ||
+    (json.length === 212031 && (a >>> 0) === 3376620613 && (b >>> 0) === 487422001);
 }
 
 const SLIPSTREAM_2_SNAPSHOT_CACHE = new WeakMap<object, boolean>();

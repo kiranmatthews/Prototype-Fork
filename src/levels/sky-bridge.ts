@@ -57,7 +57,7 @@ add({t:'clock',p:[-2.7,0,5]});
 // The bonus remains outside both the ground route and the loaded grind rope.
 add({t:'platform',p:[5.1,-.65,-139],s:[4.2,1.3,6],tex:'coast-stone',color:'#d6cfb8',
   edgeGrinding:false,nm:'Cloudtop Lockers side landing',grp:3});
-add({t:'bonusplatform',p:[5.2,0,-139],to:[1.9,.05,-134],grp:3});
+add({t:'bonusplatform',p:[5.2,0,-138],to:[1.9,.05,-134],grp:3});
 
 // Readable encounters alternate with recovery space. Explosives sit away
 // from checkpoint respawns; the fruit line teaches the safe ice approach.
@@ -70,7 +70,7 @@ for(const z of [-23,-28,-32])fruit(z,-.95);
 for(const z of [-117,-122,-127])fruit(z,.95);
 for(const z of [-184,-189,-193])fruit(z,-.95);
 for(const z of [-70,-140,-204,-237]){crate(z,-2.1);crate(z,2.1);}
-crate(5.2,-4.2);crate(5.2,4.2);crate(7,5,'mystery');crate(-69,3.6,'bouncy');crate(-142,-3.6,'life');
+crate(5.2,-4.2);crate(5.2,4.2);crate(7,5,'mystery');crate(-69,3.6,'bouncy');crate(-139,-3.6,'life');
 crate(-110.5,2.6,'multihit');crate(-37.8,-2.9,'mask');crate(-230.9,4.9,'mystery');
 crate(-27,1.15,'nitro','Keep left across the first frozen span');
 crate(-123,-1.15,'nitro','Anticipate right before the second frozen span');
@@ -130,7 +130,8 @@ for(const [i,island] of SKY_BRIDGE_ISLANDS.entries()) {
   if(island.arch){
     // A single fitted gate replaces pillars pierced by diagonal timber. Its
     // opening is over 7 m wide; its feet sit on the masonry, outside the ropes.
-    const at=z+(z===3?-2.1:z===-138?3.5:1.7);
+    // Cloudtop's portal sits behind the bonus, clear of its approach sightline.
+    const at=z+(z===3?-2.1:z===-138?-4:1.7);
     add({t:'decor',dkind:'coastarch',p:[0,0,at],s:[12.4,8.6,3.5],color:'#e4d8bd',solid:false,
       nm:'Intact temple portal on masonry',grp:7});
     for(const side of [-1,1])add({t:'wall',p:[side*5.11,0,at+(side<0?.49:-.05)],s:[2.18,8.0,side<0?2.55:3.4],invisible:true,

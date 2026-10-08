@@ -109,7 +109,7 @@ await withSkateRuntime(async({THREE,server,Level,Player,CONST})=>{
       assert.ok(ray.intersectObjects(sky.groundMeshes,false).some(h=>Math.abs(h.point.y)<.001),'checkpoint recovery unsupported');
     }
   }finally{sky.dispose();}
-  for(const file of ['sky-bridge-legacy.json','sky-bridge-placement-legacy.json','sky-bridge-cloud-v1.json.gz']){
+  for(const file of ['sky-bridge-legacy.json','sky-bridge-placement-legacy.json','sky-bridge-cloud-v1.json.gz','sky-bridge-construction-v1.json.gz']){
   const bytes=await readFile(new URL('./fixtures/'+file,import.meta.url));
   const previous=JSON.parse(file.endsWith('.gz')?gunzipSync(bytes).toString():bytes.toString());
   assert.equal(isOriginalSkyBridge(previous),true);
