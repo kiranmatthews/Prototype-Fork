@@ -1,3 +1,5 @@
+import { testTimeout, slowTest, translatedTest } from './test-timing.mjs';
+import { waitForNativeStartup } from './native-startup.mjs';
 import { moveOnSupportedGround } from './input-smoke.mjs';
 import { testGpuArgs, softwareGpuTest } from './test-gpu.mjs';
 import assert from 'node:assert/strict';
@@ -13,11 +15,11 @@ const output = fileURLToPath(new URL('../../desktop/test-results/', import.meta.
 await mkdir(output, { recursive:true });
 const { binary } = bundlePaths();
 const processHandle = spawn(binary, [...testGpuArgs, '--remote-debugging-port=0'], { env:{...process.env, BONEMAN_USER_DATA:profile}, stdio:['ignore','pipe','pipe'] });
-const watchdog = setTimeout(() => processHandle.kill('SIGKILL'), 300000);
+const watchdog = setTimeout(() => processHandle.kill('SIGKILL'), slowTest ? 1800000 : 300000);
 let browser, page;
 const errors = [], failed = [], requests = [];
 const emulatedFocus = process.argv.includes('--emulated-focus');
-const report = { binary, platform:process.platform, arch:process.arch, softwareGpuTest, emulatedFocus, stderr:'' };
+const report = { binary, platform:process.platform, arch:process.env.BONEMAN_TARGET_ARCH || process.arch, hostArch:process.arch, softwareGpuTest, translatedTest, emulatedFocus, stderr:'' };
 processHandle.stderr.on('data', bytes => { report.stderr = (report.stderr + bytes).slice(-12000); });
 try {
   const endpoint = await new Promise((resolve,reject) => {
@@ -31,17 +33,25 @@ try {
       if (match) { clearTimeout(timer); resolve(match[1]); }
     });
   });
-  browser = await chromium.connectOverCDP(endpoint, { noDefaults:!emulatedFocus });
+  console.log('Waiting for native packaged startup');
+  await waitForNativeStartup(endpoint);
+  console.log('Native packaged startup ready');
+  browser = await chromium.connectOverCDP(endpoint, { noDefaults:!emulatedFocus, timeout:testTimeout });
   const context = browser.contexts()[0];
-  page = context.pages()[0] ?? await context.waitForEvent('page');
+  page = context.pages()[0] ?? await context.waitForEvent('page', {timeout:testTimeout});
+  page.setDefaultTimeout(testTimeout); page.setDefaultNavigationTimeout(testTimeout);
   page.on('pageerror', error => errors.push(String(error)));
   page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
   page.on('request', request => requests.push(request.url()));
   page.on('response', r => { if (r.status() >= 400) failed.push(r.url()); });
-  await page.waitForFunction(() => !!window.__game && document.readyState === 'complete', null, {timeout:120000});
+  await page.waitForFunction(() => !!window.__game && document.readyState === 'complete', null, {timeout:testTimeout});
+  const startupErrors = await page.evaluate(() =>
+    (JSON.parse(localStorage.getItem('solProtoStabilityV1') || '{}').sessions || [])
+      .flatMap(session => session.events || []).filter(event => ['javascript-error','promise-error'].includes(event.stage)));
+  assert.deepEqual(startupErrors, [], 'Packaged startup error ledger must be clean');
   await context.setOffline(true);
-  await page.goto('boneman://game/?playtest&level=codex-lab', {timeout:120000});
-  await page.waitForFunction(() => window.__game && !window.__game.gameFlow.blocksGameplay && window.__game.player.grounded, null, {timeout:120000});
+  await page.goto('boneman://game/?playtest&level=codex-lab', {timeout:testTimeout});
+  await page.waitForFunction(() => window.__game && !window.__game.gameFlow.blocksGameplay && window.__game.player.grounded, null, {timeout:testTimeout});
   await page.evaluate(() => { const s = window.__game.crtGuestSettings; s.applyStartupPreset(); s.setEnabled(true); });
   await page.waitForFunction(() => window.__game.getCrtDiagnostics()?.active, null, {timeout:30000});
   assert.match(await page.locator('.hud-build').textContent(), /Codex\/sol fork.*Offline desktop/);

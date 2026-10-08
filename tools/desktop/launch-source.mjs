@@ -1,3 +1,5 @@
+import { testTimeout } from './test-timing.mjs';
+import { waitForNativeStartup } from './native-startup.mjs';
 import { spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
@@ -34,7 +36,7 @@ export async function launchSource(profile) {
   }
   try {
     const endpoint = await new Promise((resolve,reject) => {
-      const timer = setTimeout(() => reject(new Error('Desktop startup timeout: ' + stderr)), 120000);
+      const timer = setTimeout(() => reject(new Error('Desktop startup timeout: ' + stderr)), testTimeout);
       child.once('error', error => { clearTimeout(timer); reject(error); });
       child.once('exit', code => { clearTimeout(timer); reject(new Error('Desktop exited: ' + code + '\n' + stderr)); });
       child.stderr.on('data', () => {
@@ -42,9 +44,10 @@ export async function launchSource(profile) {
         if (match) {clearTimeout(timer);resolve(match[1]);}
       });
     });
-    browser = await chromium.connectOverCDP(endpoint);
+    await waitForNativeStartup(endpoint);
+    browser = await chromium.connectOverCDP(endpoint, {timeout:testTimeout});
     const context = browser.contexts()[0];
-    const page = context.pages()[0] ?? await context.waitForEvent('page');
+    const page = context.pages()[0] ?? await context.waitForEvent('page', {timeout:testTimeout});
     return {page, context, close, diagnostics:() => stderr};
   } catch (error) { await close(); throw error; }
 }

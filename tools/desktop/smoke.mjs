@@ -1,3 +1,4 @@
+import { testTimeout, slowTest, translatedTest } from './test-timing.mjs';
 import { moveOnSupportedGround } from './input-smoke.mjs';
 import { softwareGpuTest } from './test-gpu.mjs';
 import assert from 'node:assert/strict';
@@ -12,27 +13,31 @@ const desktop = path.resolve(fileURLToPath(new URL('../../desktop/', import.meta
 const output = path.join(desktop, 'test-results');
 await mkdir(output, { recursive:true });
 const profile = await mkdtemp(path.join(tmpdir(), 'boneman-smoke-'));
-const report = { timestamp:new Date().toISOString(), platform:platform(), arch:arch(), softwareGpuTest, modes:[] };
+const report = { timestamp:new Date().toISOString(), platform:platform(), arch:arch(), softwareGpuTest, translatedTest, modes:[] };
 const errors = [], requests = [], failed = [];
 let app;
 try {
   app = await launchSource(profile);
   const page = app.page;
+  page.setDefaultTimeout(testTimeout); page.setDefaultNavigationTimeout(testTimeout);
   page.on('pageerror', e => errors.push(String(e)));
   page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
   page.on('request', r => requests.push(r.url()));
   page.on('response', r => { if (r.status() >= 400) failed.push({ url:r.url(), status:r.status() }); });
-  await page.waitForFunction(() => document.readyState === 'complete' && window.__game && (!window.__game.gameFlow.blocksGameplay || window.__game.gameFlow.currentScreen === 'launch'), null, { timeout:120000 });
+  await page.waitForFunction(() => document.readyState === 'complete' && window.__game && (!window.__game.gameFlow.blocksGameplay || window.__game.gameFlow.currentScreen === 'launch'), null, { timeout:testTimeout });
   // The first run above has a fresh profile: no PWA/HTTP cache can make this pass.
   const startup = await page.evaluate(async () => ({
     node:typeof window.require, process:typeof window.process,
     secure:window.isSecureContext, origin:location.origin,
     serviceWorkers: 'serviceWorker' in navigator ? await navigator.serviceWorker.getRegistrations().then(r => r.length, e => e.name) : 'disabled',
     caches:await caches.keys(),
+    startupErrors:(JSON.parse(localStorage.getItem('solProtoStabilityV1') || '{}').sessions || [])
+      .flatMap(session => session.events || []).filter(event => ['javascript-error','promise-error'].includes(event.stage)),
   }));
   assert.equal(startup.node, 'undefined'); assert.equal(startup.process, 'undefined');
   assert.equal(startup.secure, true); assert.equal(startup.origin, 'boneman://game');
   assert([0, 'disabled', 'InvalidStateError'].includes(startup.serviceWorkers)); assert.deepEqual(startup.caches, []);
+  assert.deepEqual(startup.startupErrors, [], 'Native startup must not hide an early JavaScript error');
   report.startup = startup;
   report.runtime = await page.evaluate(() => {
     const gl = window.__game.renderer.getContext(), extension = gl.getExtension('WEBGL_debug_renderer_info');
@@ -41,8 +46,9 @@ try {
   // A disconnected browser must still load every byte from the app protocol.
   await page.context().setOffline(true);
   for (const lite of [true, false]) {
+    console.log('Checking', lite ? 'lite' : 'full', 'offline gameplay');
     await page.goto('boneman://game/?playtest&level=codex-lab' + (lite ? '&lite' : ''));
-    await page.waitForFunction(() => window.__game && !window.__game.gameFlow.blocksGameplay && window.__game.player.grounded, null, { timeout:120000 });
+    await page.waitForFunction(() => window.__game && !window.__game.gameFlow.blocksGameplay && window.__game.player.grounded, null, { timeout:testTimeout });
     if (!lite) {
       await page.evaluate(() => { const s = window.__game.crtGuestSettings; s.applyStartupPreset(); s.setEnabled(true); });
       await page.waitForFunction(() => window.__game.getCrtDiagnostics()?.active, null, {timeout:30000});
@@ -81,7 +87,7 @@ try {
       intervals.sort((a,b) => a - b);
       return { samples:intervals.length, p50:intervals[Math.floor(intervals.length*.5)], p95:intervals[Math.floor(intervals.length*.95)],
         p99:intervals[Math.floor(intervals.length*.99)], crt:window.__game.getCrtDiagnostics(), quality:window.__game.renderQualitySettings.snapshot() };
-    }, softwareGpuTest ? 30 : 240);
+    }, slowTest ? 30 : 240);
     await page.evaluate(() => { const g = window.__game; g.getLevel().finishGlow.getCenter(g.player.pos); g.player.speed = 0; });
     await page.waitForFunction(() => window.__game.player.state === 'finished' || window.__game.gameFlow.blocksGameplay, null, { timeout:15000 });
     if (!lite) {
@@ -96,11 +102,12 @@ try {
   }
   report.assetFamilies = [];
   for (const level of ['treehouse-trail', 'jungle', 'dark', 'crab-chief']) {
+    console.log('Loading bundled asset family:', level);
     await page.goto('boneman://game/?playtest&level=' + level);
     await page.waitForFunction(id => {
       const g = window.__game;
       return g?.getCurrentLevel().id === id && !g.gameFlow.blocksGameplay && g.getLoadingDiagnostics().pending.length === 0;
-    }, level, {timeout:softwareGpuTest ? 600000 : 120000});
+    }, level, {timeout:testTimeout});
     const loaded = await page.evaluate(() => ({
       level:window.__game.getCurrentLevel().id, assets:window.__game.getLoadingDiagnostics(),
       decoder:window.__game.getSceneryDecoderDiagnostics(), memory:{...window.__game.renderer.info.memory},
@@ -147,7 +154,7 @@ try {
   await page.waitForURL('boneman://game/reset-local-data.html');
   assert.equal(await page.locator('#status').textContent(), 'Nothing has been reset.');
   await page.locator('#back').click();
-  await page.waitForFunction(() => !!window.__game, null, {timeout:120000});
+  await page.waitForFunction(() => !!window.__game, null, {timeout:testTimeout});
   await page.evaluate(() => localStorage.setItem('solProtoDesktopPersistenceTest', 'kept'));
   assert.equal(await app.close(), true, 'The native Quit action must finish cleanly before checking saved data'); app = null;
   app = await launchSource(profile);

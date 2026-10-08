@@ -75,7 +75,7 @@ For unsigned/ad-hoc candidates from main:
 gh workflow run desktop.yml --ref main -f release=false
 ```
 
-Download the `boneman-installer-*` and `boneman-evidence-*` artifacts from that run. CI checks correctness; virtual-runner frame times do not certify minimum-hardware performance. Linux CI explicitly uses a software GPU test backend because its hosted Mesa context cannot initialize this Chromium build. Test launchers alone honor BONEMAN_TEST_SOFTWARE_GPU=1; no software-GPU flags or relaxed graphics settings are added to the distributed app. The software test gets a longer shader warm-up timeout while retaining the same full-render scene and resolution.
+Download the `boneman-installer-*` and `boneman-evidence-*` artifacts from that run. CI checks correctness; virtual-runner frame times do not certify minimum-hardware performance. Linux CI explicitly uses a software GPU test backend because its hosted Mesa context cannot initialize this Chromium build. Test launchers alone honor BONEMAN_TEST_SOFTWARE_GPU=1; no software-GPU flags or relaxed graphics settings are added to the distributed app. Software GPU and Rosetta tests get longer functional-test deadlines while retaining the same full-render scenes and resolution. Initial readiness is observed through a minimal CDP connection before the full harness attaches; the game's persisted startup-error ledger is checked too. Connection loss and timeouts fail the test rather than leaving an indefinite wait.
 
 For public distribution, configure these repository/environment secrets in GitHub, never in game source or the bundle:
 
