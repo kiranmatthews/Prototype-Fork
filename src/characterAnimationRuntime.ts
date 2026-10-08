@@ -1,6 +1,7 @@
 import type { Player, PlayerAnimationClipHint } from './player';
 import { JUMP_CHARGE_CLIP_ID } from './animation/jumpCharge';
 import { ICE_WALK_CLIP_ID } from './animation/iceWalk';
+import { ROLL_LANDING_CLIP_ID, ROLL_RUN_BLEND_START } from './animation/rollLanding';
 import { RUN_STOP_CLIP_ID, RUN_MOVE_INTENT_INPUT, RUN_STOP_COAST_FRACTION } from './animation/runStop';
 import {
   RigBinding,
@@ -42,6 +43,7 @@ export const ACTION_PROGRESS_TIMELINE_CLIP_IDS = [
   'player.double-jump',
   'player.slide-jump',
   'player.fall',
+  ROLL_LANDING_CLIP_ID,
   'player.rope-climb',
   'player.rope-release',
   'player.slam',
@@ -151,6 +153,8 @@ const AIRBORNE_CLIP_IDS = new Set<ClipId>([
 
 function authoredSwitchBlendDuration(from: ClipId | null, to: ClipId): number {
   if (!from) return 0;
+  if (to === ROLL_LANDING_CLIP_ID) return .045;
+  if (from === ROLL_LANDING_CLIP_ID) return to === 'player.run' ? 0 : .12;
   if (to === ICE_WALK_CLIP_ID) return .18;
   if (from === ICE_WALK_CLIP_ID) return .16;
   if (from === JUMP_CHARGE_CLIP_ID || to === JUMP_CHARGE_CLIP_ID) return .10;
@@ -504,7 +508,7 @@ export class CharacterAnimationRuntime {
       }
       // On-foot landing has first refusal on the exact contact frame. The
       // mounted board's procedural spring owns its own contact/rebound.
-      if (justLanded && !this.currentClipId?.startsWith('player.swim') && hint !== 'player.bail' && hint !== 'player.death' && hint !== 'player.slam' && hint !== 'player.skate') {
+      if (justLanded && !this.currentClipId?.startsWith('player.swim') && hint !== ROLL_LANDING_CLIP_ID && hint !== 'player.bail' && hint !== 'player.death' && hint !== 'player.slam' && hint !== 'player.skate') {
         this.resetLandingRunBlend();
         this.transient = this.makeTransient('landing', LAND_CLIP_ID);
       } else if (this.transient?.kind === 'landing') {
@@ -584,7 +588,7 @@ export class CharacterAnimationRuntime {
         ? this.closestLocomotionOffset(clip, this.lastSampledPose, intent.motion) : null;
       const runHandoffOffset =
         this.manualClipId === null &&
-        previousClipId === LAND_CLIP_ID && clip.id === 'player.run'
+        (previousClipId === LAND_CLIP_ID || previousClipId === ROLL_LANDING_CLIP_ID) && clip.id === 'player.run'
           ? this.pendingRunHandoffOffset
           : null;
       const idleHandoffOffset = this.manualClipId === null && clip.id === 'player.idle' &&
@@ -733,6 +737,25 @@ export class CharacterAnimationRuntime {
       }
     } else {
       this.pendingRunHandoffOffset = null;
+    }
+    // The revolution is complete before this live gait blend begins. Carry
+    // the sampled run phase into the next state so the planted foot cannot
+    // jump back to frame zero when the roll clock retires.
+    if (this.manualClipId === null && clip.id === ROLL_LANDING_CLIP_ID) {
+      const run = this.findPlayableClip('player.run');
+      if (run) {
+        const phase = motion.actionProgress;
+        const runSeconds = Math.max(0, phase - ROLL_RUN_BLEND_START) * clip.duration;
+        const strike = run.markers.find(marker => marker.id.endsWith(':left-strike'))?.time ?? run.range.start;
+        const runTime = clipTimeAt(run, runSeconds, { offset: strike - run.range.start });
+        const runPose = this.samplePoseAt(run, runTime, motion, true);
+        pose = blendPoses(
+          withControlDefaults(canonicalizePose(pose, this.binding), this.controlDefaults),
+          withControlDefaults(canonicalizePose(runPose, this.binding), this.controlDefaults),
+          smoothstep01((phase - ROLL_RUN_BLEND_START) / (.96 - ROLL_RUN_BLEND_START)),
+        );
+        this.pendingRunHandoffOffset = runTime - run.range.start;
+      }
     }
     // Return the limbs DURING the rebound/settle, not in a second fade once
     // the landing or skid has already finished. Root compression remains its
@@ -1110,6 +1133,7 @@ export function createCharacterAnimationRuntime(
 
 /** The gameplay-owned routes, useful for diagnostics and completeness tests. */
 export const PLAYER_STATE_CLIP_IDS: readonly PlayerAnimationClipHint[] = [
+  ROLL_LANDING_CLIP_ID,
   JUMP_CHARGE_CLIP_ID,
   ICE_WALK_CLIP_ID,
   'player.swim',

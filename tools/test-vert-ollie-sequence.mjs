@@ -508,14 +508,14 @@ try {
   assert.ok(integrationPlayer.flyBoard?.visible, 'abandoned board enters loose-board simulation');
   assert.ok(
     Math.abs(
-      Math.hypot(integrationPlayer.flyBoardVel.x, integrationPlayer.flyBoardVel.z) -
+      integrationPlayer.flyBoardVel.dot(integrationPlayer.axisF) -
       abandonPlanar
     ) < 1e-6,
-    'loose board inherits coping-tangent momentum',
+    'loose board keeps its forward momentum while clearing the rolling rider sideways',
   );
   assert.ok(
-    Math.abs(Math.abs(integrationPlayer.speed) - abandonPlanar * 0.82) < 1e-6,
-    'rider retains the authored share of coping-tangent momentum',
+    Math.abs(Math.abs(integrationPlayer.speed) - abandonPlanar) < 1e-6,
+    'rider retains the full coping-tangent momentum',
   );
 
   // If another move stows the deck after vert-wall loss, it cancels the old

@@ -141,6 +141,7 @@ import { withSpinArmPose, SPIN_ELBOW_BEND_DEGREES } from './spin-effects/armPose
 import { SPIN_SMEAR_POSE_REVISION } from './spin-effects/storageKeys';
 import { CharacterBreakApart } from './character/breakApart';
 import { selectWipeoutStyle, type WipeoutCause } from './character/wipeoutPolicy';
+import { ROLL_LANDING_CLIP_ID, ROLL_LANDING_DURATION } from './animation/rollLanding';
 import {
   BASE_CHARACTER_HITBOX_HEIGHT,
   characterCollisionHeight,
@@ -314,6 +315,7 @@ export type PlayerAnimationClipHint =
   | 'player.slide-jump'
   | 'player.jump-charge'
   | 'player.fall'
+  | 'player.roll-land'
   | 'player.crouch'
   | 'player.crawl'
   | 'player.slide'
@@ -1018,13 +1020,19 @@ export class Player {
   private airMomentum = false;
   // An ordinary board ollie may be abandoned once with a second charged X
   // press/release. The deck keeps flying independently; the rider takes a
-  // foot-gravity escape whose first landing is deterministically judged.
+  // foot-gravity escape whose first supported landing rolls into running.
   private boardOllieAir = false;
   private emergencyEjectChargeT = 0;
   private emergencyEjectCharging = false;
   private emergencyEjectUsed = false;
   private emergencyEjectLandingPending = false;
-  private emergencyEjectLandingWillBail = false;
+  private rollLandingT = -1;
+  private rollLandingDuration = ROLL_LANDING_DURATION;
+  private boardRunCarry = false;
+  private readonly rollPalmTarget = new THREE.Vector3();
+  private readonly rollFootTarget = new THREE.Vector3();
+  private rollPalmPlanted = false;
+  private rollFootPlanted = false;
   // Vert jump input is a release-counted transaction: the launch owns release
   // one, the next fresh press/release spends the one spine-transfer attempt,
   // and the third release abandons the board. A held press never advances it.
@@ -1953,6 +1961,8 @@ export class Player {
   get animationClipHint(): PlayerAnimationClipHint {
     if (this.state === 'dead' || this.state === 'gameover') return 'player.death';
     if (this.isBailing) return 'player.bail';
+    if (this.rollLandingT >= 0 && this.state === 'ride' && this.grounded && !this.freeSkate &&
+        !this.sliding && !this.crawling && !this.slamActive && this.spinTimer <= 0) return ROLL_LANDING_CLIP_ID;
     if (this.swimming) return this.swimVelocity.length() > .35 ? 'player.swim' : 'player.swim-idle';
     if (this.state === 'rope') {
       return this.ropeClimbDirection === 0
@@ -2075,7 +2085,9 @@ export class Player {
       : 0;
     const forwardRoll = this.forwardRollPresentation();
     let actionProgress = 0;
-    if (clipId === JUMP_CHARGE_CLIP_ID) {
+    if (clipId === ROLL_LANDING_CLIP_ID) {
+      actionProgress = this.rollLandingT / this.rollLandingDuration;
+    } else if (clipId === JUMP_CHARGE_CLIP_ID) {
       actionProgress = this.chargePose;
     } else if (clipId === 'player.idle' || clipId === 'player.run' || clipId === 'player.crawl' || clipId === 'player.skate') {
       actionProgress = gaitPhase;
@@ -3510,6 +3522,8 @@ export class Player {
     this.walkTarget.set(0, 0, 0);
     this.walkTurnaround = false;
     this.walkIntent.set(0, 0, 0);
+    this.rollLandingT = -1;
+    this.boardRunCarry = false;
     this.crawling = false;
     this.slamActive = false;
     this.slamHangT = 0;
@@ -3546,7 +3560,6 @@ export class Player {
     this.emergencyEjectCharging = false;
     this.emergencyEjectUsed = false;
     this.emergencyEjectLandingPending = false;
-    this.emergencyEjectLandingWillBail = false;
     resetVertBoardRelease(this.vertBoardRelease);
     this.jumpReleaseRearmRequired = false;
     this.stepOff = false;
@@ -4415,6 +4428,16 @@ export class Player {
       this.slipClamp = false;
     }
     this.teetering = false; // stepRide re-detects it each tick
+    if (this.rollLandingT >= 0) {
+      if (this.state !== 'ride' || !this.grounded || this.isBailing || this.freeSkate ||
+          this.sliding || this.crawling || this.slamActive || this.spinTimer > 0) this.rollLandingT = -1;
+      else {
+        this.rollLandingT += dt;
+        if (this.rollLandingT >= this.rollLandingDuration) this.rollLandingT = -1;
+      }
+    }
+    if (this.freeSkate || this.isBailing || this.state !== 'ride' || this.swimming)
+      this.boardRunCarry = false;
 
     // A slide taken from your feet ends back on your feet — the burst never
     // launches you into skating. lastPlanar still holds the slide's burst
@@ -5172,7 +5195,6 @@ export class Player {
     this.emergencyEjectCharging = false;
     this.emergencyEjectUsed = false;
     this.emergencyEjectLandingPending = false;
-    this.emergencyEjectLandingWillBail = false;
     this.deckTricksThisAir.clear();
     this.grindAirTrickCompleted = false;
     const t = Math.min(1, this.chargeTimer / (this.parkControls ? SKATE_PARK.chargeSeconds : TUNING.jumpChargeTime));
@@ -5654,13 +5676,20 @@ export class Player {
       .multiplyScalar(moveY)
       .addScaledVector(BAIL_CONTROL_L, moveX);
     if (BAIL_TARGET.lengthSq() <= 1e-8) return true;
-    BAIL_TARGET.normalize().multiplyScalar(TUNING.walkSpeed * intent);
+    const carrySpeed = Math.abs(this.speed);
+    BAIL_TARGET.normalize().multiplyScalar(this.emergencyEjectLandingPending && !this.isBailing
+      ? Math.max(carrySpeed, TUNING.walkSpeed * intent) : TUNING.walkSpeed * intent);
 
     BAIL_V.copy(this.axisF).multiplyScalar(this.speed);
-    BAIL_V.lerp(
-      BAIL_TARGET,
-      1 - Math.exp(-AIR_RESCUE_CONTROL_RESPONSE * Math.max(0, dt)),
-    );
+    const response = 1 - Math.exp(-AIR_RESCUE_CONTROL_RESPONSE * Math.max(0, dt));
+    if (this.emergencyEjectLandingPending && !this.isBailing && carrySpeed > 1e-5) {
+      // Turn the heading itself: normalizing a lerped velocity both loses
+      // speed on corners and cannot turn through an exact 180° reversal.
+      const angle = Math.atan2(BAIL_V.x * BAIL_TARGET.z - BAIL_V.z * BAIL_TARGET.x, BAIL_V.dot(BAIL_TARGET)) * response;
+      const x = BAIL_V.x, z = BAIL_V.z;
+      BAIL_V.set(x * Math.cos(angle) - z * Math.sin(angle), 0,
+        x * Math.sin(angle) + z * Math.cos(angle));
+    } else BAIL_V.lerp(BAIL_TARGET, response);
     const velocity = BAIL_V.length();
     if (velocity > 1e-4) {
       this.axisF.copy(BAIL_V).multiplyScalar(1 / velocity);
@@ -6124,7 +6153,7 @@ export class Player {
     // A thrown deck is never recovered by proximity or carried speed. Only
     // the normal hold-X + direction commitment recalls it; until that point
     // steep ground and bailout momentum remain genuinely on foot.
-    const boardAvailable = !looseDeck || pushingOff;
+    const boardAvailable = (!looseDeck && !this.boardRunCarry) || pushingOff;
     // On steep ground the board only pops out when it's a RIDER (charge/
     // momentum/rollout) — a walker (footPlant OR footSlip) stays on foot and
     // obeys footGrip. Standing still on a bank no longer flashes the board.
@@ -6147,6 +6176,8 @@ export class Player {
       !this.crawling &&
       this.skateBlockT <= 0;
     if (free && !this.freeSkate) {
+      this.boardRunCarry = false;
+      this.rollLandingT = -1;
       this.skateMountT = 0;
       if (pushingOff && this.flyBoard?.visible) {
         this.releaseDiscardedBoard();
@@ -6289,7 +6320,28 @@ export class Player {
         .multiplyScalar(targetForward)
         .addScaledVector(this.axisL, targetLateral);
 
-      if (planted) {
+      if (this.boardRunCarry && !planted) {
+        const carry = this.walkVelocity.length();
+        const target = this.walkTarget.length();
+        const facing = carry > 1e-6 && target > 1e-6
+          ? this.walkVelocity.dot(this.walkTarget) / (carry * target) : 1;
+        if (input.grabHeld || facing < -.15 || (!walkDir && this.rollLandingT < 0)) {
+          // Explicit braking/reversal and released running use foot friction;
+          // touchdown and the forward roll take no momentum away.
+          const brake = TUNING.walkSpeed * dt / Math.max(.08, TUNING.walkSlowdownTime);
+          this.walkVelocity.setLength(Math.max(0, carry - brake * (facing < -.15 ? 2 : 1)));
+        } else if (target > 1e-6 && carry > 1e-6) {
+          const angle = Math.atan2(this.walkVelocity.x * this.walkTarget.z - this.walkVelocity.z * this.walkTarget.x,
+            this.walkVelocity.dot(this.walkTarget));
+          const turn = THREE.MathUtils.clamp(angle, -4 * dt, 4 * dt);
+          const x = this.walkVelocity.x, z = this.walkVelocity.z;
+          this.walkVelocity.set(x * Math.cos(turn) - z * Math.sin(turn), 0,
+            x * Math.sin(turn) + z * Math.cos(turn));
+        }
+        this.walkTurnaround = false;
+        this.walkIntent.set(0, 0, 0);
+        if (this.rollLandingT < 0 && this.walkVelocity.length() <= TUNING.walkSpeed) this.boardRunCarry = false;
+      } else if (planted) {
         this.walkVelocity.set(0, 0, 0);
         this.walkTurnaround = false;
         this.walkIntent.set(0, 0, 0);
@@ -7528,10 +7580,11 @@ export class Player {
         this.speed = 0;
       }
     }
-    // Capture and launch the real deck before handing its velocity back to the
-    // rider at the reduced retention rate.
+    // Both rider and discarded deck retain the complete departure momentum.
     this.throwBoard(true);
-    this.speed *= 0.82;
+    // The trailing foot flicks the loose deck sideways out of the palm/roll
+    // path. Its forward carry is intact; the rider receives no counter-impulse.
+    if (this.looseBoard) this.flyBoardVel.addScaledVector(this.axisL, 1.8 * this.stance);
     this.vVel = THREE.MathUtils.lerp(10.5, 15, charge);
     this.launchVy = this.vVel;
     this.airborneT = 0;
@@ -7544,7 +7597,7 @@ export class Player {
     this.airMomentum = true;
     this.freeSkate = false;
     this.stepOff = true;
-    this.slideFromWalk = true; // first touchdown stays on foot; no speed-remount
+    this.slideFromWalk = false; // the roll owns its momentum-preserving foot landing
     if (fromVert) {
       this.vertAir = false;
       this.vertTracked = false;
@@ -7558,7 +7611,6 @@ export class Player {
     this.emergencyEjectChargeT = 0;
     this.emergencyEjectUsed = true;
     this.emergencyEjectLandingPending = true;
-    this.emergencyEjectLandingWillBail = this.simRand() >= 0.1;
     this.charging = false;
     this.chargeTimer = 0;
     this.jumpBufferT = 0;
@@ -7571,19 +7623,16 @@ export class Player {
     sfx.play('woosh2', 0.6);
   }
 
-  // Consume first-contact evidence exactly once. The caller decides whether a
-  // sampled failure should start a new bail; an already-bailing contact merely
-  // clears the now-obsolete eject judgment after its ragdoll response wins.
+  // Consume first-contact ownership once. Actual wipeouts and huge drops
+  // still win; an ordinary supported contact earns the running roll.
   private consumeEmergencyEjectLanding(): boolean | null {
     if (!this.emergencyEjectLandingPending) return null;
-    const shouldBail = this.emergencyEjectLandingWillBail;
     this.emergencyEjectLandingPending = false;
-    this.emergencyEjectLandingWillBail = false;
     this.emergencyEjectUsed = false;
     this.boardOllieAir = false;
     this.deckTricksThisAir.clear();
     this.grindAirTrickCompleted = false;
-    return shouldBail;
+    return true;
   }
 
   private stepAir(
@@ -8062,6 +8111,7 @@ export class Player {
           (this.prevPos.y >= reachable.y - 0.05 || this.pos.y >= reachable.y - landGive);
       }
     }
+    let rollLanding = false;
     if (landNow && hit) {
       if(hit.outOfBounds){this.returnFromOutOfBounds(level);return;}
       if(hit.lethal){this.pos.y=hit.y;this.groundHit=hit;this.grounded=true;this.die();return;}
@@ -8073,26 +8123,7 @@ export class Player {
         this.consumeEmergencyEjectLanding();
         if (rebounded) return;
       } else {
-        // Emergency eject is judged exactly once on its first contact, ahead
-        // of any surface-authored response. A sampled failure rebounds as a
-        // bail; a sampled clean scramble may continue through normal landing
-        // arbitration (including a genuine huge-drop check).
-        const ejectShouldBail = this.consumeEmergencyEjectLanding();
-        if (ejectShouldBail === true) {
-          this.pos.y = hit.y;
-          this.surfaceName = hit.name;
-          this.rideNormal.copy(hit.normal);
-          this.bail();
-          this.startRagdoll('air');
-          this.noteRagdollGroundImpact();
-          this.vVel = 3.4 + Math.min(2.2, Math.abs(this.speed) * 0.12);
-          this.state = 'air';
-          this.grounded = false;
-          this.airFromSkate = false;
-          this.airGrav = 'foot';
-          this.airMomentum = true;
-          return;
-        }
+        rollLanding = this.consumeEmergencyEjectLanding() === true;
 
         // Huge-drop damage is a contact outcome, not a clean landing effect.
         // If it starts a bail, feed this same surface into the deterministic
@@ -8478,17 +8509,21 @@ export class Player {
         }
       }
       // A trampoline is a clean grounded-ride effect, deliberately last in
-      // contact arbitration. Existing/new bails, emergency-eject failures,
+      // contact arbitration. Existing/new bails,
       // huge drops, slams, and failed trick landings have all returned above.
       if (this.launchFromTrampoline(hit, input)) {
         this.landingScoring = false;
         return;
       }
 
+      if (rollLanding && !this.isBailing && !this.slamActive) {
+        this.beginRollLanding(incomingPlanarX, incomingPlanarZ);
+      }
+
       // A pipe drop-in doesn't announce itself — the wheels just meet the
       // transition and roll (THPS: the landing IS the flow). Ordinary fast
       // landings keep the transition sound.
-      if (!wasPipeHang && Math.abs(this.speed) > TUNING.boardSpeed) sfx.play('skateTransition', 0.5);
+      if (!rollLanding && !wasPipeHang && Math.abs(this.speed) > TUNING.boardSpeed) sfx.play('skateTransition', 0.5);
       // LAND INTO A MANUAL: the flick finished moments before touchdown — come
       // down balanced on two wheels and the combo string STAYS ALIVE (no bank).
       if (this.manualing !== 0) {
@@ -8506,6 +8541,31 @@ export class Player {
     }
     // No assisted rail snap here on purpose: THPS2 rules — you have to be
     // holding/pressing Triangle to start a grind.
+  }
+
+  private beginRollLanding(vx: number, vz: number): void {
+    this.walkVelocity.set(vx, 0, vz);
+    this.speed = this.walkVelocity.length();
+    if (this.speed > 1e-5) {
+      this.axisF.copy(this.walkVelocity).multiplyScalar(1 / this.speed);
+      this.axisL.set(this.axisF.z, 0, -this.axisF.x);
+    }
+    this.walkRamp = 1;
+    this.walkTurnaround = false;
+    this.walkIntent.set(0, 0, 0);
+    this.freeSkate = false;
+    this.slideFromWalk = this.slideLandClamp = false;
+    this.boardRunCarry = true;
+    this.rollLandingT = 0;
+    this.rollPalmPlanted = this.rollFootPlanted = false;
+    this.rollLandingDuration = THREE.MathUtils.clamp(ROLL_LANDING_DURATION * 18 / Math.max(12, this.speed), .60, .90);
+    this.flipTimer = this.starTimer = 0;
+    this.pipeEndFly = false;
+    this.rollOffT = 0;
+    this.skateBlockT = this.rollLandingDuration;
+    this.lastJumpType = 'Roll Landing';
+    sfx.play('footstep2', .65, .85);
+    this.emitDust(3);
   }
 
   private integrateRagdollRotation(dt: number): void {
@@ -8874,7 +8934,6 @@ export class Player {
       this.emergencyEjectChargeT = 0;
       this.emergencyEjectUsed = false;
       this.emergencyEjectLandingPending = false;
-      this.emergencyEjectLandingWillBail = false;
       this.skateCharge = 0;
       this.brakeT = 0;
       this.brakeLockT = 0;
@@ -9636,6 +9695,8 @@ export class Player {
     this.walkVelocity.set(0, 0, 0);
     this.walkTurnaround = false;
     this.walkIntent.set(0, 0, 0);
+    this.rollLandingT = -1;
+    this.boardRunCarry = false;
     this.vertAir = false;
     this.pipeHang = false;
     this.vertLatVel = 0;
@@ -9978,7 +10039,6 @@ export class Player {
     this.emergencyEjectChargeT = 0;
     this.emergencyEjectUsed = false;
     this.emergencyEjectLandingPending = false;
-    this.emergencyEjectLandingWillBail = false;
     this.deckTricksThisAir.clear();
     this.grindAirTrickCompleted = false;
     this.slamActive = false;
@@ -12978,7 +13038,6 @@ export class Player {
     this.emergencyEjectChargeT = 0;
     this.emergencyEjectUsed = false;
     this.emergencyEjectLandingPending = false;
-    this.emergencyEjectLandingWillBail = false;
     this.boardOllieAir = false;
     this.deckTricksThisAir.clear();
     this.grindAirTrickCompleted = false;
@@ -15618,7 +15677,6 @@ export class Player {
     this.emergencyEjectCharging = false;
     this.emergencyEjectChargeT = 0;
     this.emergencyEjectLandingPending = false;
-    this.emergencyEjectLandingWillBail = false;
     this.airGrabShown = null;
     this.onDeath();
   }
@@ -16402,7 +16460,7 @@ export class Player {
       if (this.grounded && !this.deathRagdoll && this.deathElapsed >= 1.35)
         this.deathPoseFrozen = true;
     } else {
-      const supportedBail = this.isBailing && !this.breakApart?.active && this.grounded &&
+      const supportedBail = (this.isBailing || this.animationClipHint === ROLL_LANDING_CLIP_ID) && !this.breakApart?.active && this.grounded &&
         this.groundHit !== null && this.groundHit.normal.y >= .3;
       // Exact silhouette and support share one current hierarchy. Seating is
       // a world-up translation of the entire rider, so translate the measured
@@ -16410,6 +16468,11 @@ export class Player {
       if (supportedBail) this.group.updateMatrixWorld(true);
       this.refreshCharacterBounds(supportedBail);
       this.seatBailOnGround(dt, supportedBail);
+      if (this.animationClipHint === ROLL_LANDING_CLIP_ID) {
+        this.plantRollContacts();
+        this.interactionVersion++;
+        this.refreshCharacterBounds();
+      }
     }
     this.meshyBoolieRooHead?.blink?.update(dt,
       this.characterHeadStyleValue === 'alternate' && this.group.visible);
@@ -16421,7 +16484,8 @@ export class Player {
    * Collision, the discarded deck, and segment elasticity stay authoritative. */
   private seatBailOnGround(dt: number, measured = false): void {
     const support = this.groundHit;
-    if (!this.isBailing || this.state === 'dead' || this.breakApart?.active || !this.grounded || !support ||
+    const rolling = this.animationClipHint === ROLL_LANDING_CLIP_ID;
+    if ((!this.isBailing && !rolling) || this.state === 'dead' || this.breakApart?.active || !this.grounded || !support ||
       support.normal.y < 0.3 || !this.riderG || !this.bodyGroup.parent) {
       this.bailSupportOffset = 0;
       return;
@@ -16430,11 +16494,12 @@ export class Player {
     const distance = this.interactionMeasure.sampledPlaneDistance(this.riderG, support.normal,
       REACH_C.set(this.pos.x, support.y, this.pos.z), undefined, undefined, measured);
     if (!Number.isFinite(distance)) return;
-    const target = (.025 - distance) / support.normal.y;
+    const rollWeight = rolling ? 1 - THREE.MathUtils.smoothstep(this.rollLandingT / this.rollLandingDuration, .72, .96) : 1;
+    const target = (.025 - distance) / support.normal.y * rollWeight;
     // Lift immediately to prevent penetration, release downward with a short
     // settle. Rebuilt poses make this an absolute correction, never an
     // accumulated push that could launch or walk the character uphill.
-    this.bailSupportOffset = target >= this.bailSupportOffset ? target :
+    this.bailSupportOffset = rolling || target >= this.bailSupportOffset ? target :
       THREE.MathUtils.lerp(this.bailSupportOffset, target, 1 - Math.exp(-24 * dt));
     if (Math.abs(this.bailSupportOffset) < 1e-5) return;
     this.bodyGroup.parent.updateWorldMatrix(true, false);
@@ -16443,6 +16508,51 @@ export class Player {
     _plantC.set(0, this.bailSupportOffset, 0).applyMatrix4(_plantInv).sub(_plantO);
     this.bodyGroup.position.add(_plantC);
     if (measured) this.characterBounds.translate(this.interactionShift.set(0, this.bailSupportOffset, 0));
+  }
+
+  /** Short planted contacts carry the rolling body past a fixed palm and
+   * then a fixed sole. Solve after elastic lengths and support correction;
+   * gameplay position and velocity are never moved by these IK contacts. */
+  private plantRollContacts(): void {
+    const hit = this.groundHit;
+    if (!hit || !this.grounded) return;
+    const p = this.rollLandingT / this.rollLandingDuration;
+    const plant = (from: number, to: number, target: THREE.Vector3, captured: boolean,
+      root: THREE.Object3D | null, mid: THREE.Object3D | null, end: THREE.Object3D | null,
+      effector: THREE.Object3D | undefined, side: number): boolean => {
+      if (p < from || p > to || !root || !mid || !end || !effector) return false;
+      this.group.updateMatrixWorld(true);
+      if (!captured) {
+        effector.getWorldPosition(target);
+        target.y = hit.y - (hit.normal.x * (target.x - this.pos.x) + hit.normal.z * (target.z - this.pos.z)) /
+          Math.max(.3, hit.normal.y) + .025;
+      }
+      const weight = THREE.MathUtils.smoothstep(p, from, from + .025) *
+        (1 - THREE.MathUtils.smoothstep(p, to - .025, to));
+      root.getWorldPosition(CRAWL_POLE);
+      CRAWL_POLE.addScaledVector(this.axisL, side * .4).addScaledVector(this.axisF, .2);
+      solveTwoBoneIk({ root, mid, end, effector, target, pole: CRAWL_POLE,
+        weight, accountForParentScale: true, tolerance: .002 });
+      return true;
+    };
+    this.rollPalmPlanted = plant(.14, .25, this.rollPalmTarget, this.rollPalmPlanted,
+      this.armR, this.elbowR, this.wristR, this.gloveLeft?.gripSocket, 1);
+    this.rollFootPlanted = plant(.62, .76, this.rollFootTarget, this.rollFootPlanted,
+      this.legL, this.kneeL, this.ankleL, this.ankleL?.getObjectByName('socket-foot-left'), -1);
+    this.group.updateMatrixWorld(true);
+    // A contact solve rotates a thick glove/shoe beyond its socket. Keep the
+    // actual surface above the support after that last rotation as well.
+    if (this.riderG && this.bodyGroup.parent) {
+      const clearance = this.interactionMeasure.sampledPlaneDistance(this.riderG, hit.normal,
+        REACH_C.set(this.pos.x, hit.y, this.pos.z));
+      if (Number.isFinite(clearance) && clearance < .006) {
+        _plantInv.copy(this.bodyGroup.parent.matrixWorld).invert();
+        _plantO.set(0, 0, 0).applyMatrix4(_plantInv);
+        _plantC.set(0, (.006 - clearance) / Math.max(.3, hit.normal.y), 0)
+          .applyMatrix4(_plantInv).sub(_plantO);
+        this.bodyGroup.position.add(_plantC);
+      }
+    }
   }
 
   private seatDeathOnGround(): void {

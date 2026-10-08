@@ -254,7 +254,6 @@ try {
     player.bailVelocity.copy(player.axisF).multiplyScalar(player.speed);
     player.emergencyEjectUsed = eject;
     player.emergencyEjectLandingPending = eject;
-    player.emergencyEjectLandingWillBail = eject;
     player.rawInput = makeInput();
   };
 
@@ -346,7 +345,6 @@ try {
     player.ragImpacts = bail ? 2 : 0;
     player.emergencyEjectUsed = eject;
     player.emergencyEjectLandingPending = eject;
-    player.emergencyEjectLandingWillBail = eject;
     player.invulnTimer = bail ? 2 : 0;
     player.rawInput = makeInput();
   };
@@ -361,7 +359,6 @@ try {
     assert.equal(player.bailRecoverT, -1, `${label} left recovery armed`);
     assert.equal(player.bailRecoveryPose, 0, `${label} left recovery pose active`);
     assert.equal(player.emergencyEjectLandingPending, false, `${label} left eject judgment pending`);
-    assert.equal(player.emergencyEjectLandingWillBail, false, `${label} retained a future bail result`);
     assert.equal(player.emergencyEjectUsed, false, `${label} retained eject ownership`);
     assert.equal(player.airFromSkate, false, `${label} retained board-air ownership`);
     assert.equal(player.airGrav, "foot", `${label} retained board gravity`);
@@ -386,7 +383,7 @@ try {
   }
 
   // The same contact is a deterministic save for a pending board abandon,
-  // even before the randomized first-landing judgment has begun a bail.
+  // before its supported roll landing has begun.
   {
     const f = create({ t: "crate", p: [0, 0, 0], kind: "wood" });
     const crate = f.level.crates[0];
