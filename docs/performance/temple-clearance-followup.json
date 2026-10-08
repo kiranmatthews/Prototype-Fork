@@ -1,0 +1,274 @@
+{
+  "schema": 1,
+  "date": "2026-10-09",
+  "baseCommit": "a624c01",
+  "defect": {
+    "level": "jungle-terraces",
+    "riderStation": 281.0347032876543,
+    "bankStations": [
+      304,
+      306
+    ],
+    "contact": [
+      116.65125611092519,
+      23.707741310771432,
+      -66.5970058244856
+    ],
+    "feet": [
+      116.26515796875204,
+      22.53499984741211,
+      -66.2700885135403
+    ],
+    "priorStationExemption": 24
+  },
+  "scope": "Generated bank clearance on folded courses; unchanged runtime physics, tuning, camera and rendering quality.",
+  "dataParity": [
+    {
+      "id": "jungle-terraces",
+      "unchangedScenery": 1537,
+      "beforePatches": 129,
+      "afterPatches": 126,
+      "allRetainedVerticesUvsColorsExact": true,
+      "removed": [
+        {
+          "station": 284,
+          "side": 1
+        },
+        {
+          "station": 292,
+          "side": 1
+        },
+        {
+          "station": 300,
+          "side": 1
+        }
+      ]
+    },
+    {
+      "id": "jungle-skyline",
+      "unchangedScenery": 2552,
+      "beforePatches": 204,
+      "afterPatches": 196,
+      "allRetainedVerticesUvsColorsExact": true,
+      "removed": [
+        {
+          "station": 452,
+          "side": 1
+        },
+        {
+          "station": 459.99999999999994,
+          "side": 1
+        },
+        {
+          "station": 468,
+          "side": 1
+        },
+        {
+          "station": 684,
+          "side": -1
+        },
+        {
+          "station": 692,
+          "side": -1
+        },
+        {
+          "station": 372,
+          "side": 1
+        },
+        {
+          "station": 380,
+          "side": 1
+        },
+        {
+          "station": 388,
+          "side": 1
+        }
+      ]
+    }
+  ],
+  "nativeSweeps": 121,
+  "recordedObstructionControl": true,
+  "headless": [
+    {
+      "id": "jungle-terraces",
+      "frames": 3439,
+      "seconds": 57.31666666666666,
+      "deaths": 0,
+      "finalOllie": {
+        "frame": 3331,
+        "position": [
+          116.01968412012316,
+          34.53499984741211,
+          48.91162933854912
+        ],
+        "speed": 10.840942248065483,
+        "verticalSpeed": 11
+      },
+      "finish": [
+        87.52262270768203,
+        35.23066666915019,
+        48.76939429048204
+      ],
+      "highest": 36.35030310530748,
+      "minPipeContact": [
+        {
+          "name": "Jade teaching halfpipe",
+          "lowest": 6
+        },
+        {
+          "name": "High sanctuary halfpipe",
+          "lowest": 30
+        }
+      ],
+      "maxSpeed": 23
+    },
+    {
+      "id": "jungle-skyline",
+      "frames": 4659,
+      "seconds": 77.65,
+      "deaths": 0,
+      "finalOllie": {
+        "frame": 4075,
+        "position": [
+          83.14672759492954,
+          57.53499984741211,
+          -58.42062973906069
+        ],
+        "speed": 12.881914164750603,
+        "verticalSpeed": 11
+      },
+      "finish": [
+        24.006741911258175,
+        69.7306666691502,
+        -0.2698528047754151
+      ],
+      "highest": 69.7306666691502,
+      "minPipeContact": [
+        {
+          "name": "Cloud aqueduct halfpipe",
+          "lowest": 11.25
+        },
+        {
+          "name": "Sun crown halfpipe",
+          "lowest": 27.5
+        },
+        {
+          "name": "Giant jade halfpipe",
+          "lowest": 37
+        }
+      ],
+      "maxSpeed": 28.955378596578385
+    }
+  ],
+  "browser": [
+    {
+      "id": "jungle-terraces",
+      "mode": "lite",
+      "frames": 3416,
+      "seconds": 56.93333333333333,
+      "result": {
+        "state": "finished",
+        "deaths": 0,
+        "position": [
+          87.59668941778223,
+          35.23066666915019,
+          48.730263247618346
+        ]
+      },
+      "checkpoints": null,
+      "tuningUnchanged": null,
+      "stamp": null,
+      "errors": []
+    },
+    {
+      "id": "jungle-skyline",
+      "mode": "lite",
+      "frames": 5646,
+      "seconds": 94.1,
+      "result": {
+        "state": "finished",
+        "deaths": 0,
+        "position": [
+          23.91059119628822,
+          69.7306666691502,
+          -0.17460448168336257
+        ]
+      },
+      "checkpoints": null,
+      "tuningUnchanged": null,
+      "stamp": null,
+      "errors": []
+    },
+    {
+      "id": "jungle-terraces",
+      "mode": "full",
+      "frames": 3416,
+      "seconds": 56.93333333333333,
+      "result": {
+        "state": "finished",
+        "deaths": 0,
+        "position": [
+          87.59668941778223,
+          35.23066666915019,
+          48.730263247618346
+        ]
+      },
+      "checkpoints": [
+        true,
+        true,
+        true
+      ],
+      "tuningUnchanged": true,
+      "stamp": "Codex/sol fork \u00b7 build 10-08 20:22 UTC",
+      "errors": []
+    },
+    {
+      "id": "jungle-skyline",
+      "mode": "full",
+      "frames": 5646,
+      "seconds": 94.1,
+      "result": {
+        "state": "finished",
+        "deaths": 0,
+        "position": [
+          23.91059119628822,
+          69.7306666691502,
+          -0.17460448168336257
+        ]
+      },
+      "checkpoints": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "tuningUnchanged": true,
+      "stamp": "Codex/sol fork \u00b7 build 10-08 20:22 UTC",
+      "errors": []
+    }
+  ],
+  "validation": {
+    "checkLevels": "All seven package-script commands passed",
+    "typecheck": true,
+    "productionBuild": true,
+    "templeLifecycle": {
+      "terracesGroundProbes": 762,
+      "skylineGroundProbes": 1278,
+      "checkpoints": 8,
+      "realChasmDeathsAndRespawns": true
+    },
+    "fullSuiteRun": false
+  },
+  "pilotCorrections": [
+    "Spin reachable slow-approach checkpoint and ordinary crates, retaining bounce-crate and explosive rules.",
+    "Approach Terraces tight raised junctions below the native trip threshold.",
+    "Release the final flat-apron ollie 0.35 m before the edge to retain approach acceleration."
+  ],
+  "limits": [
+    "These are main-route clears, not complete optional upper-reward collection.",
+    "Other continuous courses, first-use GPU work, repeated-return residency and touch/graphics recovery remain under the active goal."
+  ],
+  "integratedCommit": "402be3f",
+  "integrationNote": "Intervening commits change desktop validation and documentation only; browser-game sources are unchanged."
+}

@@ -24,8 +24,8 @@ export function jungleSequelArt(r: TempleLandscape): CustomComponent[] {
   const samples = Array.from({length:Math.ceil((r.end+40)/3)},(_,i)=>{
     const s=-20+i*3,f=r.frame(s);return {s,x:f.x,z:f.z,y:r.height(s)};
   });
-  const clear = (s:number,p:P,radius:number,height:number) => !samples.some(q =>
-    Math.abs(s-q.s)>24 && q.y+5>p[1] && q.y<p[1]+height && Math.hypot(q.x-p[0],q.z-p[2])<radius+5);
+  const clear = (s:number,p:P,radius:number,height:number,stationGap=24) => !samples.some(q =>
+    Math.abs(s-q.s)>stationGap && q.y+5>p[1] && q.y<p[1]+height && Math.hypot(q.x-p[0],q.z-p[2])<radius+5);
   const add = (dkind:JungleAssetKind,p:P,s:P,nm:string,color='#ffffff',yaw=0,grp=91) =>
     out.push({t:'decor',dkind,p,s,nm,color,yaw,solid:false,grp});
   const plant = (kind:JungleAssetKind,station:number,side:number,size:P,name:string,tint='#ffffff') => {
@@ -37,7 +37,9 @@ export function jungleSequelArt(r: TempleLandscape): CustomComponent[] {
   // patches stop at other routes and retain independent renderer culling.
   for(let a=-20;a<r.end+6;a+=8)for(const side of [-1,1]){
     const b=Math.min(a+8,r.end+6),mid=(a+b)/2;
-    if(!clear(mid,r.point(mid,bankY(mid),side*(inner(mid,side)+4)),3,2))continue;
+    // Nearby stations can already be a different arm of a folded turn.
+    // A bank must clear that road too; its centre is outside its own lane.
+    if(!clear(mid,r.point(mid,bankY(mid),side*(inner(mid,side)+4)),3,2,0))continue;
     const vertices:number[]=[],indices:number[]=[],uvs:number[]=[],colors:number[]=[];
     const rows=5,offsets=[-.9,0,1,3.5,7,12],heights=[-.18,.4,1.05,.9,.45,-1.1];
     for(let row=0;row<rows;row++){

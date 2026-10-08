@@ -36,7 +36,7 @@ At the first pass, two existing Nightworks checks failed identically on unchange
 
 ## Remaining goal work
 
-The collision follow-up repeats all 55 full-render catalog checks and all 145 supported checkpoints on the combined `142a40b` build plus the momentum/floor fixes. It also completes Deadwater and Crab Chief browser journeys; see `TRAVERSAL_PERFORMANCE_FOLLOWUP.md` and `performance/deadwater-contact-followup.json` for route evidence and preserved limitations.
+The collision follow-up repeats all 55 full-render catalog checks and all 145 supported checkpoints on the combined `142a40b` build plus the momentum/floor fixes. It also completes Deadwater, Crab Chief and both Slipstream 2 browser routes. The subsequent temple clearance fix completes Terraces and Skyline in lite/full rendering and repeats their ground/chasm/checkpoint checks. See `TRAVERSAL_PERFORMANCE_FOLLOWUP.md`, `performance/deadwater-contact-followup.json` and `performance/temple-clearance-followup.json` for route evidence and preserved limitations.
 
 The goal remains active. Entry/checkpoint/lifecycle probes do **not** prove a complete intended traversal of every course; see the continuous follow-up for current route coverage. The paired browser trace also identifies pre-existing first-play shader/buffer allocations in both Nightworks courses, identical before and after the loading change. The owner trace locates phase-rock wireframe buffers on the first update, transparent effect materials, fruit material variants and the HUD composite texture. Remove avoidable first-use work without changing when these objects appear. Repeated level-return residency, touch/portrait and graphics-recovery checks remain part of the broader smoothness audit.
 
