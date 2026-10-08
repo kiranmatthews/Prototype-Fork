@@ -153,14 +153,18 @@ try{
         level.atmosphere={fogEnabled:value,fallbackStars:value};const result=renderLevel(level,entry,false);
         assert.equal(!!result.fog,value);assert.equal(result.fallback.stars,value);
       });
-      for(const value of ['sky','fog'])check(`${kind}: final backdrop ${value}`,()=>{
-        level.atmosphere={backdrop:value};assert.equal(renderLevel(level,entry).skyVisible,value==='sky');
+      for(const value of ['sky','painted sky','fog'])check(`${kind}: final backdrop ${value}`,()=>{
+        level.atmosphere={backdrop:value};assert.equal(renderLevel(level,entry).skyVisible,value!=='fog');
       });
       check(`${kind}: null fallback sun hides its disc`,()=>{
         level.atmosphere={fallbackSunColor:null};assert.equal(renderLevel(level,entry,false).fallback.sunColorHex,'');
       });
     }finally{level.dispose();}
   }
+  for(const painted of [true,false])check(`authored sunset painting in painterly world / loaded=${painted}`,()=>{
+    const data={...dataFor('jungle','sunset'),jungleStyle:'painterly',atmosphere:{backdrop:'painted sky',drawDistance:230}},entry={id:'painted-jungle',name:'Painted jungle',data},level=build(data,entry.id);
+    try{const result=renderLevel(level,entry,painted);assert.ok(result.skyVisible);assert.equal(result.fallback===null,painted,'explicit painting wins when ready, with a usable fallback on failure');assert.equal(level.captureData().atmosphere.backdrop,'painted sky');assert.ok(api.normalizeCustomLevelData(level.captureData()));}finally{level.dispose();}
+  });
   // Legacy data-backed Sky Bridge copies/export bypassed native capture.
   for(const extra of [{},{keepPlayFog:false,atmosphere:{backdrop:'sky',fogNear:10,fogFar:40}},
     {keepPlayFog:true,atmosphere:{backdrop:'fog',fogEnabled:false}}]){

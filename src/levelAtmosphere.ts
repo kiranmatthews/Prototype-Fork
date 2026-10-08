@@ -21,7 +21,7 @@ export interface CustomAtmosphereData {
   fillIntensity?: number;
   shadowStrength?: number;
   drawDistance?: number;
-  backdrop?: "sky" | "fog";
+  backdrop?: "sky" | "painted sky" | "fog";
   fallbackTop?: AtmosphereColor;
   fallbackBottom?: AtmosphereColor;
   fallbackFog?: AtmosphereColor;
@@ -70,7 +70,7 @@ export function validAtmosphere(value: unknown): value is CustomAtmosphereData {
     if (data[key] !== undefined && !(key === "fallbackSunColor" && data[key] === null) && !validColor(data[key])) return false;
   for (const key of ["fogEnabled", "fallbackStars", "fallbackRidges"])
     if (data[key] !== undefined && typeof data[key] !== "boolean") return false;
-  if (data.backdrop !== undefined && data.backdrop !== "sky" && data.backdrop !== "fog") return false;
+  if (data.backdrop !== undefined && data.backdrop !== "sky" && data.backdrop !== "painted sky" && data.backdrop !== "fog") return false;
   return data.fogNear === undefined || data.fogFar === undefined || (data.fogNear as number) < (data.fogFar as number);
 }
 export function atmosphereColor(value: AtmosphereColor): THREE.Color {

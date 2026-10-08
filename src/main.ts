@@ -272,6 +272,11 @@ scene.add(fill);
 // fill rate and slow frames desync its wall-clock input scripting.
 const LITE = window.location.search.includes("lite");
 
+// A painted horizon shares the world's haze so fogged silhouettes dissolve
+// into the same colour instead of cutting beige holes in the distant painting.
+const skyHazeColor={value:new THREE.Color()};
+const skyHazeStrength={value:0};
+const skyOpaqueBackdrop={value:0};
 // Sky dome: a big inward-facing sphere that follows the camera, painted with
 // each level's gradient + sun + stars. Sits behind everything, ignores fog.
 const sky = new THREE.Mesh(
@@ -282,6 +287,18 @@ const sky = new THREE.Mesh(
     depthWrite: false,
   }),
 );
+sky.material.onBeforeCompile=shader=>{
+  shader.uniforms.uSkyHazeColor=skyHazeColor;shader.uniforms.uSkyHazeStrength=skyHazeStrength;shader.uniforms.uSkyOpaqueBackdrop=skyOpaqueBackdrop;
+  shader.vertexShader='varying float vSkyHeight;\n'+shader.vertexShader;
+  shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvSkyHeight=normalize(position).y;');
+  shader.fragmentShader='varying float vSkyHeight; uniform vec3 uSkyHazeColor; uniform float uSkyHazeStrength; uniform float uSkyOpaqueBackdrop;\n'+shader.fragmentShader;
+  shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
+    float horizonAir=smoothstep(0.01,0.26,vSkyHeight);
+    diffuseColor.rgb=mix(diffuseColor.rgb,uSkyHazeColor,(1.0-horizonAir)*uSkyHazeStrength);
+    if(uSkyOpaqueBackdrop>0.5){diffuseColor.rgb=mix(uSkyHazeColor,diffuseColor.rgb,diffuseColor.a);diffuseColor.a=1.0;}
+  `);
+};
+sky.material.customProgramCacheKey=()=> 'painted-sky-haze-v1';
 sky.renderOrder = -1;
 sky.frustumCulled = false;
 sky.visible = !LITE;
@@ -806,6 +823,9 @@ function applyTheme(): void {
   // The resolver applies authored values after preset, map and jungle
   // defaults. The editor keeps its temporary fog-free inspection lens.
   const sceneFogColor = atmosphereColor(atmosphere.fogColor);
+  skyHazeColor.value.copy(sceneFogColor);
+  skyHazeStrength.value=atmosphere.backdrop==='painted sky'&&atmosphere.fogEnabled?1:0;
+  skyOpaqueBackdrop.value=atmosphere.backdrop==='painted sky'?1:0;
   scene.fog = editorViewActive || !atmosphere.fogEnabled ? null :
     new THREE.Fog(sceneFogColor, atmosphere.fogNear, atmosphere.fogFar);
   scene.background = sceneFogColor.clone();
@@ -842,9 +862,17 @@ function applyTheme(): void {
   const mistMat = skyMist.material as THREE.MeshBasicMaterial;
   // Painterly jungle references have an open blue sky, without the stock
   // floating-island cloud sea. Their world layers own the distant canopy.
-  const layers = level.jungleStyle === 'painterly' ? undefined : skyCache.get(activeSky);
+  // An explicit painted sky is independent of the foliage/material style.
+  const layers = level.jungleStyle === 'painterly' && atmosphere.backdrop !== 'painted sky' ? undefined : skyCache.get(activeSky);
   if (layers) {
-    mat.transparent = true;
+    // Explicit paintings render as a real background before the opaque world.
+    // Precompose their alpha over the fog colour in the shader, so the small
+    // camera-centred dome cannot cover distant editor or gameplay geometry.
+    const transparent=atmosphere.backdrop!=='painted sky';
+    if(mat.transparent!==transparent)mat.needsUpdate=true;
+    mat.transparent = transparent;
+    mat.depthTest = mat.transparent;
+    mat.userData.skyArtwork='painted';
     if (mat.map !== layers.bg) {
       mat.map = layers.bg;
       mat.needsUpdate = true;
@@ -866,7 +894,7 @@ function applyTheme(): void {
     }
     return;
   }
-  mat.transparent = false;
+  mat.transparent = false;mat.depthTest=false;mat.userData.skyArtwork='procedural';
   skyMist.visible = false; // no painting, no cloud sea to hang in front
   const gradientTheme = {
     ...t,

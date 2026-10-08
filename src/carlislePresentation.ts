@@ -66,23 +66,3 @@ export function addCarlisleTerrainLook(material:Material,turf:Texture):void{
  };
  material.customProgramCacheKey=()=>key()+'|carlisle-geological-terrain-v1';
 }
-
-/** Fine opaque blades retain their authored olive light response. World-space
- * shrink fades subpixel distant hairs into the turf without alpha overdraw. */
-export function addCarlisleGrassLook(material:Material):void{
- const previous=material.onBeforeCompile,key=material.customProgramCacheKey.bind(material);
- material.onBeforeCompile=(shader,renderer)=>{
-  previous.call(material,shader,renderer);
-  shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',`
-   vec4 grassRoot=vec4(0.0,0.0,0.0,1.0);
-   #ifdef USE_INSTANCING
-    grassRoot=instanceMatrix*grassRoot;
-   #endif
-   grassRoot=modelMatrix*grassRoot;
-   float grassDistance=length(cameraPosition-grassRoot.xyz);
-   transformed*=1.0-smoothstep(20.0,48.0,grassDistance);
-   #include <project_vertex>
-  `);
- };
- material.customProgramCacheKey=()=>key()+'|carlisle-fine-grass-v1';
-}

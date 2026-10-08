@@ -256,7 +256,32 @@ try{
  assert.deepEqual(streamed.errors,[]);streamed.dispose();await streamed.ready();
  assert.equal(streamed.root.children.length,0);
 
+ // Single-LOD rocks must keep their sole visible representation, even beyond
+ // the high-detail range. Real paired LODs transition only in the fog band.
+ const horizon=new JungleAssetKit(true,false,false,true,'painterly');
+ horizon.add({dkind:'coastbeachrock',p:[0,0,-220],s:[10,5.56,5.49]});
+ horizon.add({dkind:'coastv2grass',p:[0,0,-90],s:[1.15,.32,1.15]});
+ horizon.add({dkind:'coastv2buttress',p:[0,0,-305],s:[10,10,10]});
+ horizon.flush();horizon.setView(new THREE.Vector3(),190);await horizon.ready();
+ assert.equal(horizon.diagnostics.ready,3,'incoming cells are ready more than 100 m beyond the visible horizon');
+ const rock=horizon.root.children.filter(m=>m.userData.jungleAsset==='coastbeachrock');
+ assert.equal(rock.length,1);assert.equal(rock[0].visible,true,'a single mesh is retained at 220 m');
+ const shaderFor=material=>{const shader={uniforms:{},vertexShader:THREE.ShaderLib.standard.vertexShader,fragmentShader:THREE.ShaderLib.standard.fragmentShader};material.onBeforeCompile(shader,{});return shader;};
+ assert.doesNotMatch(shaderFor(rock[0].material).fragmentShader,/sceneryDither/,'one-mesh rock never dither-fades into empty space');
+ const grass=horizon.root.children.filter(m=>m.userData.jungleAsset==='coastv2grass'),nearGrass=grass.find(m=>m.visible);
+ assert.ok(nearGrass);const grassShader=shaderFor(nearGrass.material);
+ assert.doesNotMatch(grassShader.vertexShader,/grassDistance|transformed\s*\*=\s*1\.0-smoothstep/,'plant dimensions do not change with camera distance');
+ assert.deepEqual(grassShader.uniforms.uJungleLodRange.value.toArray(),[152,180.5],'paired detail changes occur at the authored atmospheric horizon');
+ horizon.setView(new THREE.Vector3(0,0,1000),190);await horizon.ready();assert.equal(horizon.diagnostics.ready,0,'prefetch still releases distant instance buffers');
+ horizon.dispose();
  const {Level,setEditorBuild,normalizeCustomLevelData,parseCustomLevelJson}=await server.ssrLoadModule('/src/level.ts');
+ const horizonLevel=new Level(new THREE.Scene(),{id:'horizon-fog-probe',name:'Horizon fog probe',data:{v:1,name:'Horizon fog probe',spawn:[0,.1,0],killY:-20,jungleAtmosphere:true,keepPlayFog:true,atmosphere:{fogFar:280},components:[{t:'gate',p:[0,0,0]}]}});
+ const requested=[];horizonLevel.jungleAssets={setView:(_position,distance)=>requested.push(distance),dispose(){}};
+ const viewCamera=new THREE.PerspectiveCamera();viewCamera.far=360;
+ horizonLevel.updateSceneryView(viewCamera);assert.equal(requested.at(-1),280,'prefetch follows authored fog instead of inherited jungle fog');
+ horizonLevel.atmosphere.fogEnabled=false;horizonLevel.updateSceneryView(viewCamera);assert.equal(requested.at(-1),360,'disabled fog retains all camera-visible scenery');
+ horizonLevel.atmosphere.fogEnabled=true;horizonLevel.updateSceneryView(viewCamera,undefined,true);assert.equal(requested.at(-1),360,'editor inspection honors its full clear lens');horizonLevel.dispose();
+
  for(const depthFade of [undefined,true,false]){
   const data={v:1,name:'Low jungle floor',spawn:[0,-13.45,0],killY:-30,sky:'day',jungleAtmosphere:true,
    ...(depthFade!==undefined?{jungleDepthFade:depthFade}:{}),components:[

@@ -3517,6 +3517,10 @@ const CUSTARD_CARVING_SNAPSHOTS = [
   { length: 1508766, a: 0x83f4c9bc, b: 0x440d0304 },
   { length: 6077529, a: 0x474a5f5c, b: 0x690291e6 },
   { length: 6216783, a: 0x7b132118, b: 0x929a7a02 },
+  // Exact Chrome captures differ only at three V8 atan2 rounding boundaries.
+  { length: 6216783, a: 0x54f4953a, b: 0x9b8e3468 },
+  { length: 6216791, a: 0xcdaeb9d, b: 0x950b14ed },
+  { length: 6216791, a: 0xebc32513, b: 0x962c7dc7 },
 ] as const;
 const CUSTARD_SNAPSHOT_CACHE = new WeakMap<object, boolean>();
 export function isOriginalCustardCreek(entry: LevelEntry): boolean {
@@ -15741,7 +15745,11 @@ export class Level {
   }
   updateSceneryView(camera:THREE.Camera,secondary?:THREE.Camera,clearInspectionView=false):void {
     const far=(camera as THREE.PerspectiveCamera).far??400;
-    this.jungleAssets?.setView(camera.position,this.keepPlayFog&&!clearInspectionView?Math.min(far,this.theme.fogFar):far,secondary?.position);
+    // Use the authored fog horizon; the theme's inherited 150 m jungle limit
+    // can be much closer than the actual atmosphere rendered by the camera.
+    const fogFar=this.atmosphere?.fogFar??this.theme.fogFar;
+    const fogLimited=this.keepPlayFog&&!clearInspectionView&&this.atmosphere?.fogEnabled!==false;
+    this.jungleAssets?.setView(camera.position,fogLimited?Math.min(far,fogFar):far,secondary?.position);
   }
   async prepareJungleAssets(): Promise<void> { await Promise.all([this.boss?.prepareAssets(),this.jungleAssets?.ready(),this.jungleStreamReflections?.ready(),this.cityAssets?.ready(),this.nightworksRocks?.ready(),this.ghostTrainAssets?.ready(),this.ghostTrainAssets?prepareCastleTextures():undefined,this.campaignWorldMap?.prepareAssets(), ...this.crates.flatMap(crate => [crate.woodCrate?.ready,crate.explosiveBundle?.ready]), ...this.enemies.map(enemy => enemy.visual.ready)]); }
   async prepareGhostTrainAssets():Promise<void> {await Promise.all([this.ghostTrainAssets?.ready(),prepareCastleTextures(),...this.enemies.filter(e=>e.group.userData.ghostSkin).map(e=>e.visual.ready)]);}

@@ -17,7 +17,7 @@ export function atmosphereRenderer(mainSource, atmosphereModule) {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
   }).outputText;
   return new Function('level', 'current', 'settings', 'THREE', 'atmosphereModule', `
-    const DEFAULT_SKY='sunset', LITE=settings.lite??false, NO_COAST_POST=true, shellBypass=true;
+    const SUN_SHADOW_MAP_SIZE=4096, DEFAULT_SKY='sunset', LITE=settings.lite??false, NO_COAST_POST=true, shellBypass=true;
     const editorViewActive=settings.editor??false;
     const competition=settings.competition??null,isCompetitionLevel=settings.isCompetitionLevel??(()=>false);
     const scene=new THREE.Scene(), camera=new THREE.PerspectiveCamera(), camera2=new THREE.PerspectiveCamera();
@@ -25,6 +25,7 @@ export function atmosphereRenderer(mainSource, atmosphereModule) {
     const hemi=new THREE.HemisphereLight(),sun=new THREE.DirectionalLight(),fill=new THREE.DirectionalLight();
     const sky=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshBasicMaterial());
     const skyMist=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshBasicMaterial());
+    const skyHazeColor={value:new THREE.Color()},skyHazeStrength={value:0},skyOpaqueBackdrop={value:0};
     const skyCache=new Map(settings.painted===false?[]:['day','sunset','night','coast'].map(k=>[k,{bg:new THREE.Texture(),mist:new THREE.Texture()}]));
     const releaseBonusParallax=()=>{},retainOnlyActiveSky=()=>{},loadSky=()=>{},configureCoastPost=()=>{};
     const visualTreatmentActivity=()=>({any:false}),visualTreatmentSettings={value:{}};

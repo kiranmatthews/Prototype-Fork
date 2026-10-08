@@ -14,9 +14,13 @@ try {
     ['73aedc4 v2','custard-creek-coast-v2.ts',859],
     ['ba562b6 v3','custard-creek-independent-v3.ts',1132],
     ['5ac0b01 v4','custard-creek-sunset-v4.json.gz',4409],
+    ['2439305 v5','custard-creek-ledges-v5.json.gz',3574],
   ]) {
     const oldData=fixture.endsWith('.gz')?JSON.parse(gunzipSync(await readFile(new URL('fixtures/'+fixture,import.meta.url)))):(await server.ssrLoadModule('/tools/fixtures/'+fixture)).CUSTARD_CREEK_LEVEL;
     const raw={id:'custard-creek',name:'Custard Creek',data:oldData};
+    if(version.includes('v5')){const chrome=structuredClone(raw);for(const [i,yaw]of [[239,-75.03369056605325],[241,-72.02960731980816],[378,-151.20242573524274]])chrome.data.components[i].yaw=yaw;
+      assert.ok(isOriginalCustardCreek(chrome),'exact measured Chrome v5 copy follows the new sky');chrome.data.components[239].yaw+=.000001;assert.equal(isOriginalCustardCreek(chrome),false,'recognition does not use a floating-point tolerance');}
+
     assert.ok(isOriginalCustardCreek(raw),version+': the exact published source is pristine');
     const pristine=normalizeUserLevelEntries([raw])?.[0];
     assert.ok(pristine,'the historical course remains importable');
@@ -53,7 +57,9 @@ try {
   }
   const current=BUILTIN_LEVELS.find(entry=>entry.id==='custard-creek');
   assert.ok(isOriginalCustardCreek(current),'current detailed source snapshot follows the builtin');
+  const currentChrome=structuredClone(current);for(const [i,yaw]of [[239,-75.03369056605325],[241,-72.02960731980816],[378,-151.20242573524274]])currentChrome.data.components[i].yaw=yaw;
+  assert.ok(isOriginalCustardCreek(currentChrome),'current exact Chrome snapshot also follows the builtin');
   const edited=structuredClone(current);edited.data.components[0].p[0]+=.01;
   assert.equal(isOriginalCustardCreek(edited),false,'current sculpted edits remain authored');
-  console.log('PASS Custard cache: exact raw/normalized v1, v2, v3, v4 and current published snapshots follow source; geometry, spawn, metadata, names and mutable edits remain local.');
+  console.log('PASS Custard cache: exact raw/normalized v1, v2, v3, v4, v5 and current published snapshots follow source; geometry, spawn, metadata, names and mutable edits remain local.');
 } finally {await server.close();}

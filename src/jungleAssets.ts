@@ -3,7 +3,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader.js";
 import { sceneryTextureLoader } from './sceneryTextureLoader';
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
-import { addCarlisleMaterialLook,addCarlisleGrassLook } from "./carlislePresentation";
+import { addCarlisleMaterialLook } from "./carlislePresentation";
 import { CARLISLE_ASSETS } from "./carlisleAssets";
 import { JUNGLE_MODULES } from "./jungleModules";
 import { MAP_MODULES } from "./mapModules";
@@ -427,20 +427,20 @@ export function addJungleDapple(material: THREE.Material, time: { value: number 
 
 function sceneryLodFragment(far:boolean):string {
   return `
-    float sceneryLod = smoothstep(72.0, 96.0, distance(vJungleWorld, uJungleView));
+    float sceneryLod = smoothstep(uJungleLodRange.x, uJungleLodRange.y, distance(vJungleWorld, uJungleView));
     float sceneryDither = fract(dot(floor(gl_FragCoord.xy), vec2(0.754877666,0.569840296)));
     if (${far?'sceneryLod <= sceneryDither':'sceneryLod > sceneryDither'}) discard;
   `;
 }
-function addSceneryLodFade(material:THREE.Material,view:THREE.Vector3,far:boolean):void {
+function addSceneryLodFade(material:THREE.Material,view:THREE.Vector3,range:THREE.Vector2,far:boolean):void {
   const compile=material.onBeforeCompile,key=material.customProgramCacheKey.bind(material);
   material.onBeforeCompile=(shader,renderer)=>{
-    compile.call(material,shader,renderer);shader.uniforms.uJungleView={value:view};
-    shader.fragmentShader='uniform vec3 uJungleView;\n'+shader.fragmentShader;
+    compile.call(material,shader,renderer);shader.uniforms.uJungleView={value:view};shader.uniforms.uJungleLodRange={value:range};
+    shader.fragmentShader='uniform vec3 uJungleView; uniform vec2 uJungleLodRange;\n'+shader.fragmentShader;
     shader.fragmentShader=shader.fragmentShader.replace('#include <alphatest_fragment>',
       '#include <alphatest_fragment>\n'+sceneryLodFragment(far));
   };
-  material.customProgramCacheKey=()=>key()+`|scenery-lod-fade-v1-${far}`;
+  material.customProgramCacheKey=()=>key()+`|scenery-lod-fade-v2-${far}`;
 }
 interface Bucket {nearVisible?:boolean;farVisible?:boolean;retryCount?:number;castShadow?:boolean;cameraCutaway?:boolean;far?:boolean;farMesh?:THREE.InstancedMesh;kind:RenderKind;transforms:THREE.Matrix4[];colors:THREE.Color[];bounds:THREE.Box3;mesh?:THREE.InstancedMesh;assets?:ReturnType<typeof createJungleAssetScope>;}
 export class JungleAssetKit {
@@ -450,6 +450,7 @@ export class JungleAssetKit {
   private materials=new Map<RenderKind,THREE.MeshStandardMaterial|THREE.MeshLambertMaterial|THREE.MeshBasicMaterial>();
   private farMaterials=new Map<RenderKind,THREE.MeshStandardMaterial|THREE.MeshLambertMaterial|THREE.MeshBasicMaterial>();
   private readonly viewPosition=new THREE.Vector3();
+  private readonly lodRange=new THREE.Vector2(72,96);
   private depths=new Map<RenderKind,THREE.MeshDepthMaterial>();
   private loose=new Set<THREE.Group>();private disposed=false;
   private sourceCount=0;private count=0;private readyCount=0;private skipped=0;
@@ -520,13 +521,14 @@ export class JungleAssetKit {
       };
       m.customProgramCacheKey=()=>key()+'|amber-window-v2';
     }
-    if(kind.startsWith("coastv2grass"))addCarlisleGrassLook(m);
-    else if(kind.startsWith("coast"))addCarlisleMaterialLook(m);
+    // Grass keeps its authored dimensions; distance never grows it from the soil.
+    if(kind.startsWith("coast")&&!kind.startsWith("coastv2grass"))addCarlisleMaterialLook(m);
     if(this.depthFade)addJungleDepthFade(m);
-    if(this.streamed&&spec.distanceLod)addSceneryLodFade(m,this.viewPosition,far);
+    // A one-mesh asset must never fade into a nonexistent far representation.
+    if(this.streamed&&spec.distanceLod&&template.lodGeometry)addSceneryLodFade(m,this.viewPosition,this.lodRange,far);
     cache.set(kind,m);return m;
   }
-  private configure(mesh:THREE.Mesh,kind:RenderKind):void {
+  private configure(mesh:THREE.Mesh,kind:RenderKind,hasLod=false):void {
     const spec=renderSpec(kind);mesh.name=spec.label;mesh.userData.jungleAsset=kind;
     if(spec.matte||spec.shaft){mesh.castShadow=false;mesh.receiveShadow=false;return;}
     mesh.castShadow=!this.lite&&!spec.backdrop&&kind!=="joint"&&kind!=="earth"&&kind!=="coastcarpet"&&kind!=="coastfern"&&kind!=="coastfoliage"&&kind!=="coastv2grass"&&kind!=="coastv2grassb";
@@ -540,15 +542,15 @@ export class JungleAssetKit {
         shader.uniforms.uJungleWindScale={value:this.style==='painterly'?1.65:1};shader.uniforms.uJungleWindFrequency={value:this.style==='painterly'?.72:1.15};
         shader.vertexShader='uniform float uJungleTime;\nuniform float uJungleWindScale;\nuniform float uJungleWindFrequency;\nattribute float aJungleFlex;\n'+shader.vertexShader;
         shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\n'+(spec.cloth?CLOTH_WIND:WIND));
-        if(this.streamed&&spec.distanceLod){
-          shader.uniforms.uJungleView={value:this.viewPosition};
+        if(this.streamed&&spec.distanceLod&&hasLod){
+          shader.uniforms.uJungleView={value:this.viewPosition};shader.uniforms.uJungleLodRange={value:this.lodRange};
           shader.vertexShader='varying vec3 vJungleWorld;\n'+shader.vertexShader;
           shader.vertexShader=shader.vertexShader.replace('#include <project_vertex>',WORLD+'\n#include <project_vertex>');
-          shader.fragmentShader='varying vec3 vJungleWorld; uniform vec3 uJungleView;\n'+shader.fragmentShader;
+          shader.fragmentShader='varying vec3 vJungleWorld; uniform vec3 uJungleView; uniform vec2 uJungleLodRange;\n'+shader.fragmentShader;
           shader.fragmentShader=shader.fragmentShader.replace('#include <alphatest_fragment>','#include <alphatest_fragment>\n'+sceneryLodFragment(false));
         }
       };
-      depth.customProgramCacheKey=()=>`jungle-wind-depth-v5-${this.streamed&&spec.distanceLod}-${this.style??'native'}-${spec.cloth===true}`;this.depths.set(kind,depth);
+      depth.customProgramCacheKey=()=>`jungle-wind-depth-v6-${this.streamed&&spec.distanceLod&&hasLod}-${this.style??'native'}-${spec.cloth===true}`;this.depths.set(kind,depth);
     }
     mesh.customDepthMaterial=depth;
   }
@@ -614,7 +616,7 @@ export class JungleAssetKit {
           const mesh=new THREE.InstancedMesh(geometry,drawMaterial,bucket.transforms.length);
           bucket.transforms.forEach((matrix,i)=>{mesh.setMatrixAt(i,inverse.clone().multiply(matrix));mesh.setColorAt(i,bucket.colors[i]);});
           mesh.instanceMatrix.needsUpdate=true;if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;
-          mesh.computeBoundingBox();mesh.computeBoundingSphere();this.configure(mesh,bucket.kind);
+          mesh.computeBoundingBox();mesh.computeBoundingSphere();this.configure(mesh,bucket.kind,!!template.lodGeometry);
           if(bucket.castShadow===false){mesh.castShadow=false;mesh.userData.castShadow=false;}return mesh;
         };
         // Keep the authored mesh at every distance. Cell bounds still allow
@@ -662,7 +664,7 @@ export class JungleAssetKit {
   }
   private showBucket(bucket:Bucket):void{
     const show=!(this.cutaway&&bucket.cameraCutaway);
-    if(bucket.mesh)bucket.mesh.visible=show&&(bucket.nearVisible??true);
+    if(bucket.mesh)bucket.mesh.visible=show&&(!bucket.farMesh||(bucket.nearVisible??true));
     if(bucket.farMesh)bucket.farMesh.visible=show&&(bucket.farVisible??false);
   }
   setCutaway(value:boolean):void{
@@ -674,7 +676,10 @@ export class JungleAssetKit {
   setView(position:THREE.Vector3,visibleDistance:number,secondary?:THREE.Vector3):void {
     if(!this.streamed||this.disposed)return;
     this.viewPosition.copy(position);
-    const radius=Math.max(96,visibleDistance)+64;
+    // LOD changes happen in the distant atmospheric band. Preload another
+    // 128 m beyond visible scenery, leaving several seconds at skating speed.
+    this.lodRange.set(Math.max(72,Math.min(160,visibleDistance*.8)),Math.max(96,Math.min(200,visibleDistance*.95)));
+    const radius=Math.max(96,visibleDistance)+128;
     this.viewSet=true;
     const views=secondary?[position,secondary]:[position];
     if(views.length===this.lastViews.length&&views.every((p,i)=>this.lastViews[i].distanceToSquared(p)<16)&&this.lastRadius===radius)return;
@@ -683,12 +688,12 @@ export class JungleAssetKit {
     for(const cell of this.cells){
       const spec=renderSpec(cell.kind),distance=distanceTo(cell);
       if(spec.distanceLod){
-        // The material cross-fades individual pixels through a 24m band.
+        // The material cross-fades individual pixels in the distant fog band.
         // Conservative bounds keep both meshes available until the entire
         // cell is outside that band, eliminating a whole-tree switch.
         const center=cell.bounds.getCenter(new THREE.Vector3()),radius=cell.bounds.getSize(new THREE.Vector3()).length()*.5;
         const furthest=Math.max(...views.map(p=>p.distanceTo(center)+radius));
-        cell.nearVisible=distance<98;cell.farVisible=furthest>70;
+        cell.nearVisible=distance<this.lodRange.y+2;cell.farVisible=furthest>this.lodRange.x-2;
         this.showBucket(cell);
       }
       if(spec.backdrop||spec.matte||distance<=radius)this.activate(cell);

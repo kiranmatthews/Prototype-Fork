@@ -27,6 +27,8 @@ const report={base,variant,started:new Date().toISOString(),sceneCount:scenes.le
 const browser=await chromium.launch({channel:'chrome',headless:true});
 try{
  const page=await browser.newPage({viewport:portrait?{width:390,height:844}:{width:1280,height:720}});
+ // Keep static fixtures and keyboard smoke independent of connected host pads.
+ await page.addInitScript(()=>{Object.defineProperty(navigator,'getGamepads',{value:()=>[]});});
  page.setDefaultTimeout(180000);page.setDefaultNavigationTimeout(180000);
  page.on('pageerror',e=>report.errors.push(e.message));page.on('console',v=>{if(v.type()==='error')report.errors.push(v.text());});
  await page.goto(`${base}/?playtest&level=custard-creek&frameprobe&renderdiag${lite?'&lite':''}`,{waitUntil:'domcontentloaded'});
@@ -42,7 +44,7 @@ try{
  for(const scene of selected?scenes.filter(s=>selected.includes(s.name)):scenes){
   await page.evaluate(({position,heading})=>{const g=window.__game,p=g.player,l=g.getLevel();g.campaign.startEphemeral();p.respawn(l,true,false,{position:p.pos.clone().fromArray(position),heading:p.axisF.clone().fromArray(heading)});p.lives=30;p.invulnTimer=120;p.invulnSilent=true;p.commitRenderStep(l);},scene);
   await page.waitForTimeout(500);await page.evaluate(async()=>window.__game.getLevel().prepareJungleAssets());await page.waitForTimeout(200);
-  await measure(30);const state=await snapshot();assert.ok(state.grounded,`${scene.name} supported camera fixture`);assert.ok(state.position.every(Number.isFinite));
+  await measure(30);const state=await snapshot();assert.ok(state.grounded,`${scene.name} supported camera fixture: ${JSON.stringify(state)}`);assert.ok(state.position.every(Number.isFinite));
   assert.deepEqual(state.assets?.errors??[],[],`${scene.name} streamed assets`);assert.equal(state.assets?.pendingCells??0,0);
   const timing=await measure(frames);report.scenes.push({...scene,...state,timing});
   await page.screenshot({path:`${out}/${scene.name}.png`});

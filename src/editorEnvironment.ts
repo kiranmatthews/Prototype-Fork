@@ -137,7 +137,7 @@ export class EditorEnvironment {
       const setAtmosphere = <K extends keyof CustomAtmosphereData>(key: K, value: CustomAtmosphereData[K]): void => {
         (data().atmosphere ??= {})[key] = value;
       };
-      choice("backdrop", ["sky", "fog"], () => resolved().backdrop, value => setAtmosphere("backdrop", value as "sky" | "fog"));
+      choice("backdrop", ["sky", "painted sky", "fog"], () => resolved().backdrop, value => setAtmosphere("backdrop", value as CustomAtmosphereData["backdrop"]));
       choice("scene fog", ["on", "off"], () => resolved().fogEnabled ? "on" : "off", value => setAtmosphere("fogEnabled", value === "on"));
       const color = (key: keyof typeof ATMOSPHERE_COLORS): void => {
         const row = document.createElement("label"); row.className = "ed-row";

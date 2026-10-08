@@ -228,6 +228,6 @@ export const CUSTARD_CREEK_LEVEL:CustomLevelData={v:1,name:'Custard Creek',sky:'
  atmosphere:{fogEnabled:true,fogNear:55,fogFar:190,fogColor:'#c19f91',
   ambientSky:'#c5c4d7',ambientGround:'#80684c',ambientIntensity:1.12,
   sunColor:'#ffca85',sunIntensity:1.9,fillColor:'#b2bdcf',fillIntensity:.40,shadowStrength:.80,
-  sunDirection:[-.72,.30,-.63],drawDistance:230,backdrop:'sky',fallbackTop:'#6f798f',fallbackBottom:'#ebbb91',fallbackFog:'#b9a29a',
+  sunDirection:[-.72,.30,-.63],drawDistance:230,backdrop:'painted sky',fallbackTop:'#6f798f',fallbackBottom:'#ebbb91',fallbackFog:'#b9a29a',
   fallbackSunColor:'#ffe3a4',fallbackSunU:.64,fallbackSunV:.38,fallbackStars:false,fallbackRidges:true},
  medalTimes:{gold:180,silver:210,bronze:255},groups:[...groups,...CUSTARD_ART_GROUPS],components:C};

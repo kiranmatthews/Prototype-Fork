@@ -1,0 +1,1683 @@
+{
+  "base": "http://127.0.0.1:5253",
+  "started": "2026-10-08T01:05:55.631Z",
+  "errors": [],
+  "requests": [
+    "canyon-buttress.glb",
+    "earthbank-b.glb",
+    "cavewall-b.glb",
+    "tree-b.glb",
+    "crown-b.glb",
+    "fern-a.glb",
+    "stonecliff-bastion.glb",
+    "grass-tuft-b.glb",
+    "grass-tuft-a.glb",
+    "ledge-root.glb",
+    "porchhut.glb",
+    "canyon-buttress.glb",
+    "earthbank-b.glb",
+    "cavewall-b.glb",
+    "tree-b.glb",
+    "crown-b.glb",
+    "fern-a.glb",
+    "stonecliff-bastion.glb",
+    "grass-tuft-b.glb",
+    "grass-tuft-a.glb",
+    "ledge-root.glb",
+    "porchhut.glb",
+    "beam.glb"
+  ],
+  "sky": {
+    "visible": true,
+    "painted": true,
+    "backgroundFirst": true,
+    "radius": 216.19999999999996,
+    "far": 230,
+    "backdrop": "painted sky",
+    "stamp": "Codex/sol fork · build 10-08 01:04 UTC"
+  },
+  "pixelProof": [
+    {
+      "kind": "coastv2grass",
+      "samples": [
+        {
+          "distance": 20,
+          "coverage": 340181
+        },
+        {
+          "distance": 35,
+          "coverage": 337867
+        },
+        {
+          "distance": 48,
+          "coverage": 336921
+        },
+        {
+          "distance": 65,
+          "coverage": 336365
+        },
+        {
+          "distance": 100,
+          "coverage": 335606
+        }
+      ]
+    },
+    {
+      "kind": "coastbeachrock",
+      "samples": [
+        {
+          "distance": 20,
+          "coverage": 649986
+        },
+        {
+          "distance": 110,
+          "coverage": 639404
+        },
+        {
+          "distance": 220,
+          "coverage": 638424
+        }
+      ]
+    }
+  ],
+  "run": {
+    "frames": 2366,
+    "deaths": 0,
+    "bails": 0,
+    "samples": 2352,
+    "missingVisible": [],
+    "newCells": 484,
+    "minReadyLead": 123.207616396064,
+    "maxResident": 1028,
+    "maxTextures": 41.33,
+    "timings": [
+      16.600000023841858,
+      16.600000023841858,
+      16.5,
+      16.600000023841858,
+      99.39999997615814,
+      16.69999998807907,
+      16.69999998807907,
+      16.600000023841858,
+      17.80000001192093,
+      16.69999998807907,
+      16.599999964237213,
+      16.69999998807907,
+      16.69999998807907,
+      16.600000023841858,
+      16.69999998807907,
+      16.69999998807907,
+      16.599999964237213,
+      16.69999998807907,
+      16.69999998807907,
+      16.599999964237213,
+      16.69999998807907,
+      16.80000001192093,
+      16.69999998807907,
+      16.69999998807907,
+      16.69999998807907,
+      16.600000023841858,
+      16.400000035762787,
+      16.600000023841858,
+      16.69999998807907,
+      16.69999998807907,
+      16.600000023841858,
+      16.69999998807907,
+      16.69999998807907,
+      16.600000023841858,
+      16.69999998807907,
+      18.399999976158142,
+      16.69999998807907,
+      16.69999998807907,
+      16.5,
+      16.600000023841858,
+      16.69999998807907,
+      16.600000023841858,
+      16.69999998807907,
+      16.69999998807907,
+      16.69999998807907,
+      16.69999998807907,
+      16.69999998807907,
+      16.69999998807907,
+      16.600000023841858,
+      16.69999998807907,
+      16.69999998807907,
+      16.69999998807907,
+      16.69999998807907,
+      16.600000023841858,
+      16.69999998807907,
+      16.600000023841858,
+      16.69999998807907,
+      16.69999998807907,
+      16.799999952316284,
+      16.599999964237213,
+      16.69999998807907,
+      16.899999976158142,
+      16.69999998807907,
+      16.599999964237213,
+      16.69999998807907,
+      16.69999998807907,
+      16.599999964237213,
+      16.599999964237213,
+      16.599999964237213,
+      16.69999998807907,
+      16.69999998807907,
+      16.599999964237213,
+      16.69999998807907,
+      16.69999998807907,
+      16.69999998807907,
+      16.69999998807907,
+      16.599999964237213,
+      16.80000001192093,
+      16.799999952316284,
+      16.69999998807907,
+      16.80000001192093,
+      16.69999998807907,
+      16.600000023841858,
+      16.5,
+      16.599999964237213,
+      16.69999998807907,
+      16.69999998807907,
+      16.69999998807907,
+      16.5,
+      16.599999964237213,
+      16.69999998807907,
+      16.599999964237213,
+      16.69999998807907,
+      16.5,
+      16.600000023841858,
+      25.100000023841858,
+      16.5,
+      16.600000023841858,
+      16.69999998807907,
+      16.600000023841858,
+      16.599999964237213,
+      16.600000023841858,
+      16.69999998807907,
+      16.69999998807907,
+      16.69999998807907,
+      16.600000023841858,
+      16.69999998807907,
+      16.69999998807907,
+      16.69999998807907,
+      16.5,
+      16.600000023841858,
+      16.69999998807907,
+      16.600000023841858,
+      16.899999976158142,
+      16.69999998807907,
+      16.600000023841858,
+      16.69999998807907,
+      16.69999998807907,
+      16.69999998807907,
+      16.399999976158142,
+      16.69999998807907,
+      16.600000023841858,
+      16.600000023841858,
+      16.69999998807907,
+      16.69999998807907,
+      16.80000001192093,
+      16.799999952316284,
+      16.69999998807907,
+      16.69999998807907,
+      16.69999998807907,
+      16.600000023841858,
+      16.600000023841858,
+      16.69999998807907,
+      16.69999998807907,
+      16.600000023841858,
+      16.599999964237213,
+      16.69999998807907,
+      16.5,
+      16.69999998807907,
+      16.600000023841858,
+      16.399999976158142,
+      16.69999998807907,
+      16.69999998807907,
+      16.69999998807907,
+      16.599999964237213,
+      16.69999998807907,
+      16.69999998807907,
+      16.69999998807907,
+      16.80000001192093,
+      16.600000023841858,
+      16.69999998807907,
+      16.599999964237213,
+      16.599999964237213,
+      14.199999988079071,
+      16.80000001192093,
+      16.69999998807907,
+      16.69999998807907,
+      16.599999964237213,
+      16.80000001192093,
+      16.600000023841858,
+      16.600000023841858,
+      16.700000047683716,
+      16.69999998807907,
+      16.600000023841858,
+      16.30000001192093,
+      16.600000023841858,
+      16.700000047683716,
+      16.600000023841858,
+      16.700000047683716,
+      16.700000047683716,
+      16.600000023841858,
+      16.80000001192093,
+      16.600000023841858,
+      16.700000047683716,
+      16.69999998807907,
+      16.80000001192093,
+      16.700000047683716,
+      16.600000023841858,
+      16.69999998807907,
+      16.600000023841858,
+      16.5,
+      16.600000023841858,
+      16.80000001192093,
+      16.600000023841858,
+      16.30000001192093,
+      16.700000047683716,
+      16.600000023841858,
+      16.700000047683716,
+      16.69999998807907,
+      16.80000001192093,
+      16.30000001192093,
+      16.69999998807907,
+      16.600000023841858,
+      16.600000023841858,
+      16.69999998807907,
+      16.600000023841858
+    ],
+    "renders": [
+      {
+        "frame": 3642,
+        "calls": 262,
+        "triangles": 798394,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 3726,
+        "calls": 262,
+        "triangles": 798394,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 3810,
+        "calls": 262,
+        "triangles": 798394,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 3894,
+        "calls": 334,
+        "triangles": 1327419,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 3978,
+        "calls": 288,
+        "triangles": 815074,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 4062,
+        "calls": 291,
+        "triangles": 815704,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 4146,
+        "calls": 287,
+        "triangles": 814444,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 4230,
+        "calls": 281,
+        "triangles": 813454,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 4314,
+        "calls": 278,
+        "triangles": 808142,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 4398,
+        "calls": 271,
+        "triangles": 801412,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 4482,
+        "calls": 273,
+        "triangles": 806470,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 4566,
+        "calls": 276,
+        "triangles": 809758,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 4650,
+        "calls": 269,
+        "triangles": 797761,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 4734,
+        "calls": 269,
+        "triangles": 800995,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 4821,
+        "calls": 273,
+        "triangles": 810438,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 4918,
+        "calls": 269,
+        "triangles": 816229,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 5020,
+        "calls": 264,
+        "triangles": 800588,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 5127,
+        "calls": 267,
+        "triangles": 767964,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 5225,
+        "calls": 264,
+        "triangles": 767997,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 5329,
+        "calls": 266,
+        "triangles": 770207,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 5431,
+        "calls": 265,
+        "triangles": 768797,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 5539,
+        "calls": 263,
+        "triangles": 768021,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 5643,
+        "calls": 255,
+        "triangles": 768591,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 5743,
+        "calls": 257,
+        "triangles": 762365,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 5848,
+        "calls": 248,
+        "triangles": 762175,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 5945,
+        "calls": 247,
+        "triangles": 764411,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 6053,
+        "calls": 240,
+        "triangles": 765136,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 6151,
+        "calls": 237,
+        "triangles": 759481,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 6247,
+        "calls": 237,
+        "triangles": 748320,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 6343,
+        "calls": 233,
+        "triangles": 736725,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 6439,
+        "calls": 228,
+        "triangles": 717962,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 6541,
+        "calls": 225,
+        "triangles": 724017,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 6642,
+        "calls": 225,
+        "triangles": 719012,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 6744,
+        "calls": 225,
+        "triangles": 711058,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 6847,
+        "calls": 223,
+        "triangles": 708274,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 6946,
+        "calls": 226,
+        "triangles": 710770,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 7053,
+        "calls": 219,
+        "triangles": 713635,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 7158,
+        "calls": 214,
+        "triangles": 704812,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 7265,
+        "calls": 220,
+        "triangles": 716856,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 7362,
+        "calls": 212,
+        "triangles": 710713,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 7466,
+        "calls": 210,
+        "triangles": 707053,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 7566,
+        "calls": 210,
+        "triangles": 688716,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 7669,
+        "calls": 220,
+        "triangles": 703117,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 7773,
+        "calls": 214,
+        "triangles": 691863,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 7872,
+        "calls": 219,
+        "triangles": 706600,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 7977,
+        "calls": 212,
+        "triangles": 707030,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 8073,
+        "calls": 212,
+        "triangles": 714032,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 8169,
+        "calls": 214,
+        "triangles": 709370,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 8265,
+        "calls": 218,
+        "triangles": 728959,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 8361,
+        "calls": 222,
+        "triangles": 731390,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 8457,
+        "calls": 219,
+        "triangles": 727809,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 8553,
+        "calls": 227,
+        "triangles": 752474,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 8649,
+        "calls": 234,
+        "triangles": 768481,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 8752,
+        "calls": 236,
+        "triangles": 764797,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 8853,
+        "calls": 232,
+        "triangles": 741824,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 8949,
+        "calls": 238,
+        "triangles": 743953,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 9045,
+        "calls": 241,
+        "triangles": 766618,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 9141,
+        "calls": 240,
+        "triangles": 781263,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 9237,
+        "calls": 237,
+        "triangles": 767470,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 9343,
+        "calls": 235,
+        "triangles": 760854,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 9441,
+        "calls": 235,
+        "triangles": 765866,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 9537,
+        "calls": 240,
+        "triangles": 773913,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 9633,
+        "calls": 236,
+        "triangles": 755021,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 9729,
+        "calls": 233,
+        "triangles": 747959,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 9836,
+        "calls": 233,
+        "triangles": 741939,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 9932,
+        "calls": 228,
+        "triangles": 728081,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 10028,
+        "calls": 229,
+        "triangles": 737131,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 10124,
+        "calls": 229,
+        "triangles": 735736,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 10220,
+        "calls": 228,
+        "triangles": 732359,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 10316,
+        "calls": 230,
+        "triangles": 729639,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 10412,
+        "calls": 235,
+        "triangles": 738251,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 10508,
+        "calls": 233,
+        "triangles": 740727,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 10604,
+        "calls": 232,
+        "triangles": 737433,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 10700,
+        "calls": 236,
+        "triangles": 742243,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 10789,
+        "calls": 233,
+        "triangles": 744454,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 10885,
+        "calls": 227,
+        "triangles": 725375,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 10979,
+        "calls": 230,
+        "triangles": 713794,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 11075,
+        "calls": 233,
+        "triangles": 706011,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 11171,
+        "calls": 234,
+        "triangles": 712356,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 11267,
+        "calls": 234,
+        "triangles": 704560,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 11373,
+        "calls": 237,
+        "triangles": 715607,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 11481,
+        "calls": 235,
+        "triangles": 724737,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 11577,
+        "calls": 240,
+        "triangles": 718252,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 11682,
+        "calls": 242,
+        "triangles": 726869,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 11781,
+        "calls": 241,
+        "triangles": 713518,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 11885,
+        "calls": 247,
+        "triangles": 717358,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 11985,
+        "calls": 247,
+        "triangles": 714363,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 12085,
+        "calls": 253,
+        "triangles": 727731,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 12188,
+        "calls": 250,
+        "triangles": 729099,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 12285,
+        "calls": 252,
+        "triangles": 721885,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 12391,
+        "calls": 248,
+        "triangles": 706647,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 12497,
+        "calls": 247,
+        "triangles": 697850,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 12605,
+        "calls": 249,
+        "triangles": 711118,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 12702,
+        "calls": 244,
+        "triangles": 710795,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 12798,
+        "calls": 250,
+        "triangles": 729327,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 12896,
+        "calls": 254,
+        "triangles": 728905,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 13002,
+        "calls": 252,
+        "triangles": 720725,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 13098,
+        "calls": 257,
+        "triangles": 750998,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 13194,
+        "calls": 263,
+        "triangles": 770319,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 13290,
+        "calls": 263,
+        "triangles": 773611,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 13386,
+        "calls": 265,
+        "triangles": 772369,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 13482,
+        "calls": 271,
+        "triangles": 784855,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 13578,
+        "calls": 277,
+        "triangles": 801496,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 13674,
+        "calls": 280,
+        "triangles": 795519,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 13770,
+        "calls": 288,
+        "triangles": 801097,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 13866,
+        "calls": 293,
+        "triangles": 819657,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 13951,
+        "calls": 293,
+        "triangles": 817530,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 14035,
+        "calls": 299,
+        "triangles": 849618,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 14119,
+        "calls": 311,
+        "triangles": 857400,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 14203,
+        "calls": 320,
+        "triangles": 855949,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 14287,
+        "calls": 327,
+        "triangles": 878211,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 14371,
+        "calls": 328,
+        "triangles": 875290,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 14455,
+        "calls": 335,
+        "triangles": 874307,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 14539,
+        "calls": 341,
+        "triangles": 881566,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 14623,
+        "calls": 345,
+        "triangles": 893645,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 14707,
+        "calls": 346,
+        "triangles": 885778,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 14795,
+        "calls": 346,
+        "triangles": 862244,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 14889,
+        "calls": 341,
+        "triangles": 858561,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 14985,
+        "calls": 340,
+        "triangles": 855716,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 15081,
+        "calls": 344,
+        "triangles": 857633,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 15177,
+        "calls": 342,
+        "triangles": 855420,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 15273,
+        "calls": 332,
+        "triangles": 835526,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 15381,
+        "calls": 332,
+        "triangles": 836539,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 15477,
+        "calls": 334,
+        "triangles": 825874,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 15577,
+        "calls": 328,
+        "triangles": 811865,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 15683,
+        "calls": 314,
+        "triangles": 800029,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 15780,
+        "calls": 317,
+        "triangles": 801604,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 15888,
+        "calls": 313,
+        "triangles": 791855,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 15984,
+        "calls": 309,
+        "triangles": 790021,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 16091,
+        "calls": 313,
+        "triangles": 789533,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 16187,
+        "calls": 309,
+        "triangles": 784563,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 16291,
+        "calls": 310,
+        "triangles": 790087,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 16390,
+        "calls": 304,
+        "triangles": 775139,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 16492,
+        "calls": 309,
+        "triangles": 793985,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 16595,
+        "calls": 294,
+        "triangles": 754694,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 16691,
+        "calls": 287,
+        "triangles": 729866,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 16787,
+        "calls": 284,
+        "triangles": 736567,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 16883,
+        "calls": 276,
+        "triangles": 726283,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 16979,
+        "calls": 270,
+        "triangles": 701606,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 17075,
+        "calls": 262,
+        "triangles": 687972,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 17171,
+        "calls": 258,
+        "triangles": 687550,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 17267,
+        "calls": 254,
+        "triangles": 670220,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 17363,
+        "calls": 251,
+        "triangles": 661875,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 17456,
+        "calls": 243,
+        "triangles": 637596,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 17540,
+        "calls": 241,
+        "triangles": 629914,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 17624,
+        "calls": 239,
+        "triangles": 623597,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 17708,
+        "calls": 239,
+        "triangles": 617595,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 17792,
+        "calls": 241,
+        "triangles": 625436,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 17884,
+        "calls": 236,
+        "triangles": 612377,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 17979,
+        "calls": 232,
+        "triangles": 622045,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 18081,
+        "calls": 239,
+        "triangles": 632744,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 18184,
+        "calls": 237,
+        "triangles": 642517,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 18284,
+        "calls": 247,
+        "triangles": 667251,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 18389,
+        "calls": 263,
+        "triangles": 674984,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 18486,
+        "calls": 263,
+        "triangles": 681416,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 18594,
+        "calls": 279,
+        "triangles": 699316,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 18691,
+        "calls": 293,
+        "triangles": 707875,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 18799,
+        "calls": 305,
+        "triangles": 745380,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 18897,
+        "calls": 304,
+        "triangles": 727567,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 18993,
+        "calls": 304,
+        "triangles": 726939,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 19089,
+        "calls": 311,
+        "triangles": 765104,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 19193,
+        "calls": 304,
+        "triangles": 770251,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 19295,
+        "calls": 286,
+        "triangles": 709434,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 19396,
+        "calls": 283,
+        "triangles": 725922,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 19501,
+        "calls": 283,
+        "triangles": 694877,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 19599,
+        "calls": 289,
+        "triangles": 702263,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 19706,
+        "calls": 275,
+        "triangles": 686511,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 19802,
+        "calls": 285,
+        "triangles": 696712,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 19910,
+        "calls": 283,
+        "triangles": 699656,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 20007,
+        "calls": 275,
+        "triangles": 695244,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 20112,
+        "calls": 284,
+        "triangles": 694077,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 20212,
+        "calls": 282,
+        "triangles": 693073,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 20315,
+        "calls": 275,
+        "triangles": 689012,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 20417,
+        "calls": 275,
+        "triangles": 709185,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 20518,
+        "calls": 268,
+        "triangles": 683732,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 20623,
+        "calls": 259,
+        "triangles": 704331,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 20722,
+        "calls": 244,
+        "triangles": 687876,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 20829,
+        "calls": 230,
+        "triangles": 639912,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 20926,
+        "calls": 242,
+        "triangles": 662459,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 21034,
+        "calls": 252,
+        "triangles": 680848,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 21131,
+        "calls": 250,
+        "triangles": 669258,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 21238,
+        "calls": 244,
+        "triangles": 701381,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 21337,
+        "calls": 248,
+        "triangles": 729752,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 21442,
+        "calls": 255,
+        "triangles": 754643,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 21544,
+        "calls": 255,
+        "triangles": 774457,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 21646,
+        "calls": 258,
+        "triangles": 786968,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 21750,
+        "calls": 251,
+        "triangles": 778132,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 21846,
+        "calls": 248,
+        "triangles": 786825,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 21942,
+        "calls": 249,
+        "triangles": 786194,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 22038,
+        "calls": 246,
+        "triangles": 783908,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 22134,
+        "calls": 240,
+        "triangles": 758485,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 22230,
+        "calls": 238,
+        "triangles": 763623,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 22332,
+        "calls": 236,
+        "triangles": 758714,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 22433,
+        "calls": 232,
+        "triangles": 754415,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 22529,
+        "calls": 235,
+        "triangles": 755222,
+        "points": 0,
+        "lines": 0
+      },
+      {
+        "frame": 22625,
+        "calls": 234,
+        "triangles": 759410,
+        "points": 0,
+        "lines": 0
+      }
+    ],
+    "states": [
+      "ride",
+      "air",
+      "grind"
+    ],
+    "final": {
+      "position": [
+        104.04501601377724,
+        4,
+        51.39379710653224
+      ],
+      "grounded": true,
+      "state": "ride",
+      "crates": 42
+    }
+  },
+  "pass": true,
+  "finished": "2026-10-08T01:06:56.735Z"
+}

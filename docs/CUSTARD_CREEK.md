@@ -5,6 +5,63 @@ gameplay chapters. The course climbs through the lockyard, split millrace and
 high mill, descends around the return spillway, crosses the sluices and ferry
 basin, and finishes through the quarry and backwater crown.
 
+## Sky and scenery visibility · 8 October 2026
+
+Custard explicitly selects the existing **painted sunset sky**, independently
+of its painterly terrain shading. The camera-centred dome stays inside its
+230 m far plane. An angular haze blend joins the painting to the world's fog,
+avoiding hard silhouettes against the distant mountains. The painting renders
+before the opaque world, so its dome cannot cover distant editor geometry. The new backdrop
+choice survives editing, capture and import and keeps its procedural fallback.
+Lite still intentionally omits the dome. Camera, movement tuning and playable
+geometry are unchanged; no new Meshy assets or credits were needed.
+
+Single-LOD Stonecliff rocks were receiving a fragment fade and visibility
+cutoff despite having no distant model. They now retain their only visible
+representation. Fine grass was scaled to zero between 20 and 48 m; that shader
+is removed. Plants retain their authored size and wind, with genuine paired-LOD
+changes moved into the distant atmospheric band.
+
+Streaming uses the authored fog horizon instead of the inherited jungle fog.
+Here, visibility ends at 190 m, paired detail blends from 152 to 180.5 m, and
+residency begins at 318 m: **128 m before visibility**. The existing retirement
+margin and shared-template ownership keep residency bounded.
+
+Independent GPU coverage checks at equal projected scale retain grass at
+20/35/48/65/100 m and single-mesh rock at 20/110/220 m. Desktop and portrait
+production runs each traverse 940 m using 2,366 native input frames without
+corrections, bails or deaths. Model downloads are delayed by 650 ms. Across
+484 fresh cell activations, readiness leads visibility by at least **123.20 m**,
+with **zero missing visible cells** and clean consoles. The checkpoint,
+river-death, grounded-respawn and finish smoke also passes.
+
+| Moving profile | Median / p95 | Peak complete-frame calls / triangles |
+| --- | --- | --- |
+| Desktop full, 1280 × 720 | 16.7 / 18.2 ms | 573 / 1,729,467 |
+| Portrait, 720 × 1558 render | 16.7 / 16.8 ms | 346 / 1,327,419 |
+
+Chrome 154 on Apple M1 Pro; the portrait viewport is 390 × 844, not a physical-phone
+benchmark. Streamed textures peak at 41.33 MiB and resident cells at 1,028. Frame
+samples are taken after rendering. Earlier static ledge-release numbers below
+are historical comparisons.
+
+Required level checks and production build pass, alongside 454 atmosphere
+runtime/security/history cases, actual asset ownership and exact cache
+migration through v5/current. The measured Chrome rounding variant is pinned
+by its full fingerprint; edited copies are still preserved exactly. Only
+Custard's backdrop field changes in the shared pack.
+
+Evidence: `performance/custard-horizon-{full,portrait,smoke}.json`,
+`custard-scenery-moving.jpg` and `custard-sunset-horizon.jpg`. The horizon image
+is an in-level inspection from the player's camera position; the moving image
+uses the normal gameplay camera and HUD.
+
+```sh
+CUSTARD_TRAVERSAL_OUTPUT=/private/tmp/custard-horizon-traversal node tools/test-custard-traversal.mjs continuous-chapter
+node tools/custard-horizon-browser.mjs http://127.0.0.1:5253
+node tools/custard-horizon-browser.mjs http://127.0.0.1:5253 --portrait
+```
+
 ## Sculpted banks and measured contact
 
 `src/levels/custard-ledge-profile.ts` applies Carlisle's broad eroded bays,
@@ -58,7 +115,7 @@ closed backing stays below the actual curved surface. The ferry's three
 timber floats follow its existing moving parent and meet the raised basin.
 River resets follow visible water. None intersects the 3,294 dry-body probes.
 
-## Verification
+## Geometry and earlier ledge-release verification
 
 - 58 native and 125 scenic closed stone volumes pass welded edge closure,
   outward orientation and unit-normal checks; 684 spillway clearance samples
@@ -82,7 +139,7 @@ River resets follow visible water. None intersects the 3,294 dry-body probes.
   type-check/build pass. The full suite was not requested or run.
 
 Current source: **3,574 components**, **63,586 mesh vertices / 91,470 triangles**,
-**6,217,097 UTF-8 bytes**. The exact cap contacts account for 12,236 triangles
+**6,217,105 UTF-8 bytes**. The exact cap contacts account for 12,236 triangles
 and are invisible to the renderer. Author-time planting uses a spatial grid;
 there is no additional per-frame planting work.
 
@@ -107,7 +164,7 @@ The 390 × 844 portrait viewport uses the same desktop GPU.
 The keyboard smoke earns a checkpoint, naturally falls into water at
 Y = 2.683 m (visible water Y = 2.956 m), loses one life, respawns grounded at
 the earned checkpoint and reaches the finish. The complete latest-main pack
-is **16,081,074 bytes**, below the existing 16 MiB limit.
+is **16,081,082 bytes**, below the existing 16 MiB limit.
 
 Reproduction:
 
