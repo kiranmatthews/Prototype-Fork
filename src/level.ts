@@ -7867,6 +7867,15 @@ export class Level {
     const preservedMaterials = new Set<THREE.Material>();
     const preservedTextures = new Set<THREE.Texture>();
     if (preserveResourcesFrom) {
+      const preserveMaterial=(material:THREE.Material):void=>{
+        preservedMaterials.add(material);
+        const grass=material.userData.jungleGrassTexture as THREE.Texture|undefined;
+        if(grass?.isTexture)preservedTextures.add(grass);
+        for(const value of Object.values(material)){
+          const texture=value as THREE.Texture|null;
+          if(texture?.isTexture)preservedTextures.add(texture);
+        }
+      };
       preserveResourcesFrom.root.traverse((object) => {
         const mesh = object as THREE.Mesh;
         if (mesh.geometry) preservedGeometry.add(mesh.geometry);
@@ -7875,16 +7884,9 @@ export class Level {
           : mesh.material
             ? [mesh.material]
             : [];
-        for (const material of materials) {
-          preservedMaterials.add(material);
-          const grass=material.userData.jungleGrassTexture as THREE.Texture|undefined;
-          if(grass?.isTexture)preservedTextures.add(grass);
-          for (const value of Object.values(material)) {
-            const texture = value as THREE.Texture | null;
-            if (texture?.isTexture) preservedTextures.add(texture);
-          }
-        }
+        materials.forEach(preserveMaterial);
       });
+      for(const pad of preserveResourcesFrom.phasePads){preserveMaterial(pad.litMat);preserveMaterial(pad.ghostMat);}
     }
     if (this.water) {
       this.root.remove(this.water.group);
@@ -7945,6 +7947,9 @@ export class Level {
     };
     this.replacedSurfaceMaterials.forEach(disposeMat);
     this.replacedSurfaceMaterials.length = 0;
+    // Both states own programs once prepared or used, even when only one is
+    // attached to the scene. The shared disposal set prevents double release.
+    for(const pad of this.phasePads){disposeMat(pad.litMat);disposeMat(pad.ghostMat);}
     this.root.traverse((o) => {
       if((o as THREE.Mesh).isMesh)disposeCarlisleTimberDeck(o as THREE.Mesh);
     });

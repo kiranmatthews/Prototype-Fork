@@ -34,11 +34,23 @@ The construction reductions are **63%** for Nightworks and **27%** for After Hou
 
 At the first pass, two existing Nightworks checks failed identically on unchanged `bdc5370` and the optimized tree. `test-nightworks.mjs` expects the old zero-height spawn floor, before the raised arrival pad. The After Hours pilot missed the second counterweight at fixed tick **2,096**, ending at `[90.66642352087555, -35.55261672061277, -373.16020697348523]`. The complete before/after failure report was identical. These were retained as open findings; the continuous follow-up below records the subsequent pilot and collision repairs.
 
+## GPU preparation and particle uploads
+
+The next rendering pass fixes two avoidable costs without changing particle output or visual settings. Phase-pad ghost materials now prepare their surface/shadow programs and wireframe indices while the loader covers the destination. The existing 24-object batches, 4 ms budget and GPU fences remain. Hidden proxy-material slots are reused; materials, camera/light layers, culling and renderer state are restored before yielding and on exceptions/context loss. Phase clocks and collision membership are untouched.
+
+Three consumes each `BufferAttribute.updateRanges` array after uploading it. The puff renderer previously updated only the old range objects, so later frames silently uploaded the complete pool buffers. Reinsert the same range objects into the existing arrays each active frame, and avoid dirtying empty batches. No particle counts, geometry, colours, indices, presets, deformation or blend order change. Exact seeded comparisons cover all three quality presets; tests use Three's real upload implementation, skipped draws and context recreation.
+
+The real Chrome dust workload drops from about **20.0 MB to 1.35 MB** of buffer submissions, approximately **93% less**, with zero whole-buffer updates after allocation. Phase wireframe allocations during the first 1.6 seconds fall from **3 to 0** in Nightworks and **4 to 0** in After Hours. Initial phase state and 576 sampled phase updates match the unchanged bundle. Loading remains around **5.2 / 4.8 seconds** for the two courses; this is a transfer/preparation improvement, not a claimed FPS multiplier.
+
+The lifecycle check exposed an existing missing disposal: a pad's unselected material was not visited by the root traversal. Dispose both phase materials once and preserve both materials/textures when a successor owns them. Twelve real level returns keep the settled Sky residency at **214 geometries, 78 textures and 181 shader references**. All retired phase materials release their renderer programs. Three actual WebGL loss/restoration cycles recover with frozen simulation during loss and no GL errors. Twenty collectible disposal cycles preserve the survivor's pixels exactly and grow no GPU geometry or textures.
+
+The final build repeats the full-render catalog checks for all 55 levels and all 145 checkpoints. After Hours's complete eight-chapter browser route also passes in 4,241 ticks. Native Chrome touch checks pass at six portrait/landscape sizes; emulated phone, tablet and 4K presentation, font selection, decoder retirement and repeated returns pass. These host/emulation checks do not claim physical-device FPS. The local touch review fixture now declares the same empty favicon as the game, removing its genuine 404 instead of filtering console errors. Evidence: `performance/gpu-preparation-followup.json`.
+
 ## Remaining goal work
 
 The collision follow-up repeats all 55 full-render catalog checks and all 145 supported checkpoints on the combined `142a40b` build plus the momentum/floor fixes. It also completes Deadwater, Crab Chief and both Slipstream 2 browser routes. The subsequent temple clearance fix completes Terraces and Skyline in lite/full rendering and repeats their ground/chasm/checkpoint checks. See `TRAVERSAL_PERFORMANCE_FOLLOWUP.md`, `performance/deadwater-contact-followup.json` and `performance/temple-clearance-followup.json` for route evidence and preserved limitations.
 
-The goal remains active. Entry/checkpoint/lifecycle probes do **not** prove a complete intended traversal of every course; see the continuous follow-up for current route coverage. The paired browser trace also identifies pre-existing first-play shader/buffer allocations in both Nightworks courses, identical before and after the loading change. The owner trace locates phase-rock wireframe buffers on the first update, transparent effect materials, fruit material variants and the HUD composite texture. Remove avoidable first-use work without changing when these objects appear. Repeated level-return residency, touch/portrait and graphics-recovery checks remain part of the broader smoothness audit.
+The goal remains active. Entry/checkpoint/lifecycle probes do **not** prove a complete intended traversal of every course; see the continuous follow-up for current route coverage. Phase-rock wireframe preparation and particle uploads are resolved. The trace still finds first-play shader creation for the lazy particle batch and fruit variants, plus a HUD composite texture allocation. Those owners need further preparation work without changing when objects appear or their blend order. The residency, touch/portrait and graphics-recovery checks above cover the exercised scenarios; remaining course-specific validation continues.
 
 ## Individual level coverage
 
@@ -104,4 +116,4 @@ Full-render combined production build (`1ae0c10` plus the performance patch). Th
 
 ## Continuous follow-up
 
-See [TRAVERSAL_PERFORMANCE_FOLLOWUP.md](TRAVERSAL_PERFORMANCE_FOLLOWUP.md) for the next pass: full bonus and puzzle journeys, After Hours completion, two collision lifecycle fixes, and explicitly unresolved Deadwater/Temple and camera-test findings. The full goal remains active.
+See [TRAVERSAL_PERFORMANCE_FOLLOWUP.md](TRAVERSAL_PERFORMANCE_FOLLOWUP.md) for complete bonus, puzzle, After Hours, Deadwater, boss, Slipstream 2 and temple journeys, plus the preserved camera/replay findings and remaining course coverage. The full goal remains active.

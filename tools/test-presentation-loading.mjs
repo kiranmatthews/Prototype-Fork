@@ -61,6 +61,52 @@ try {
       delete globalThis.requestAnimationFrame;meshes.forEach(mesh=>{mesh.geometry.dispose();mesh.material.dispose();});
     }
   }
+  for(const outcome of ['complete','throw','lost']){
+    const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(60,1,.1,100);camera.position.z=10;
+    const meshes=Array.from({length:30},()=>new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshBasicMaterial()));
+    meshes.at(-1).position.x=200;scene.add(...meshes);
+    const hidden=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshBasicMaterial());hidden.visible=false;scene.add(hidden);
+    const otherLayer=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshBasicMaterial());otherLayer.layers.set(2);scene.add(otherLayer);
+    const all=[...meshes,hidden,otherLayer],originals=all.map(m=>m.material),children=[...scene.children];
+    originals[0].visible=false;
+    const ghost=new THREE.MeshBasicMaterial({transparent:true,opacity:.16,wireframe:true}),second=new THREE.MeshBasicMaterial({color:0xffcc00});
+    const variants=meshes.map(mesh=>({mesh,material:ghost}));variants.splice(1,0,{mesh:meshes[0],material:second});
+    variants.push({mesh:meshes.at(-1),material:originals[29]});
+    variants.push({mesh:hidden,material:ghost},{mesh:otherLayer,material:ghost});
+    let lost=false,target=null,scissor=true,alternates=0;const initial={};target=initial;
+    const warmed=new Set(),counts=new Map(),gl={SYNC_GPU_COMMANDS_COMPLETE:1,ALREADY_SIGNALED:2,CONDITION_SATISFIED:3,WAIT_FAILED:4,
+      isContextLost:()=>lost,fenceSync:()=>({}),flush(){},clientWaitSync:()=>2,deleteSync(){}};
+    const restored=()=>{
+      assert.equal(camera.layers.mask,1);assert.deepEqual(scene.children,children);
+      all.forEach((mesh,i)=>{assert.equal(mesh.material,originals[i]);assert.equal(mesh.frustumCulled,true);});
+      assert.ok(meshes.every(mesh=>mesh.layers.mask===1));assert.equal(hidden.visible,false);assert.equal(otherLayer.layers.mask,4);
+      assert.equal(target,initial);assert.equal(scissor,true);assert.equal(renderer.autoClear,false);
+    };
+    globalThis.requestAnimationFrame=callback=>{queueMicrotask(()=>{restored();callback(0);});return 1;};
+    const renderer={autoClear:false,shadowMap:{autoUpdate:false,needsUpdate:false},getContext:()=>gl,getRenderTarget:()=>target,setRenderTarget:v=>target=v,
+      getViewport:v=>v.set(0,0,1280,720),getScissor:v=>v.set(0,0,1280,720),getScissorTest:()=>scissor,setViewport(){},setScissor(){},setScissorTest:v=>scissor=v,
+      render(){
+        assert.equal(renderer.shadowMap.needsUpdate,true,'alternate depth programs need a fresh shadow pass');
+        const active=[];scene.traverseVisible(mesh=>{if(mesh.isMesh&&mesh.layers.test(camera.layers))active.push(mesh);});
+        assert.ok(active.length<=24);assert.ok(!active.includes(hidden)&&!active.includes(otherLayer));
+        for(const mesh of active){assert.equal(mesh.frustumCulled,false);if(!mesh.material.visible)continue;const key=`${mesh.id}/${mesh.material.id}`;warmed.add(key);counts.set(key,(counts.get(key)??0)+1);}
+        if(active.some(mesh=>mesh.material===ghost||mesh.material===second)){
+          alternates++;
+          if(outcome==='throw')throw Error('variant render failed');
+          if(outcome==='lost')lost=true;
+        }
+      }};
+    try{
+      if(outcome==='throw')await assert.rejects(warmPresentationScene(renderer,scene,camera,variants),/variant render failed/);
+      else await warmPresentationScene(renderer,scene,camera,variants);
+      restored();assert.ok(alternates>0);assert.equal(renderer.shadowMap.autoUpdate,false);
+      if(outcome==='complete'){
+        meshes.forEach((mesh,i)=>{assert.ok(warmed.has(`${mesh.id}/${ghost.id}`));if(i>0&&i<29)assert.ok(warmed.has(`${mesh.id}/${originals[i].id}`));});
+        assert.ok(warmed.has(`${meshes[0].id}/${second.id}`),'multiple alternatives of one mesh must each render');
+        assert.equal(counts.get(`${meshes.at(-1).id}/${originals[29].id}`),1,'an explicitly requested out-of-view current material warms once');
+      }
+    }finally{delete globalThis.requestAnimationFrame;all.forEach(mesh=>{mesh.geometry.dispose();mesh.material.dispose();});ghost.dispose();second.dispose();}
+  }
   for (const reduced of [false, true]) for (const loadMs of [0, 800, 6200]) {
     let clock = 0, loadAt = 0, assetsReadyAt = 0;
     const phases = [];

@@ -28,6 +28,8 @@ The runtime patch changes no movement constants, authored geometry, animation de
 
 The bonus browser run used the first-pass production bundle. These levels contain neither affected rail support bodies nor spin bridges, and their pilots never request a grind; this patch leaves their exercised runtime paths unchanged. After Hours and the main puzzle browser runs use the patched source.
 
+The GPU preparation follow-up rechecks the complete After Hours browser journey in **4,241 ticks**, continuously mounted with all eight chapters and a clean console. It also repeats all 55 full-render catalog checks and 145 checkpoint landings, then verifies repeated-return residency, native touch layouts and graphics recovery. Detailed scope and remaining first-use work are recorded in `GAMEPLAY_PERFORMANCE_AUDIT.md` and `performance/gpu-preparation-followup.json`.
+
 ## Pilot and fixture corrections
 
 The traversal drivers must follow current controls instead of quietly changing the game to satisfy old recordings. After Hours now commits lateral direction before releasing a rail jump, releases and re-presses Grind for the next catch, waits through ordinary mounted circuits for reachable moving-rail alignments, and uses neutral airborne input when it intends no trick. It begins on the first normal simulation tick, while startup still owns loading, rather than spending uncontrolled ticks importing the pilot. No clock is reset or advanced to obtain a phase window.
@@ -45,6 +47,6 @@ Deadwater's controller now uses ordinary Circle braking before each raised ceram
 - The full browser puzzle tools still fail their final upper-target-preview assertion. The journeys, crate totals, rider framing and console checks succeed; 78 / 141 / 246 sampled upper targets fall outside that assertion’s viewport bounds. The current close camera is preserved. Do not report the entire legacy camera test as green.
 - `test-grind-catch-buffer.mjs` still fails its older recorded approach at line 26 (`ride` versus `grind`), identically on the unchanged `1ae0c10` shared-collision baseline. The newly added support cases and the complete After Hours browser route pass. Do not suppress that existing replay mismatch.
 - `test-park-halfpipe-vert.mjs` retains a pre-existing fixed-frame replay mismatch at tick 1,259 (`vertAir` false instead of true), reproduced on unchanged `1ae0c10` and this patch. The completed campaign Deadwater course does not stand in for a complete competition-vert review.
-- Remaining named courses still need complete traversal coverage. First-use GPU work, repeated-return residency, touch/portrait and graphics recovery remain under the active goal. The initial 55-level checks do not stand in for this work.
+- Remaining named courses still need complete traversal coverage. Further first-use GPU work remains under the active goal; the documented residency, touch/portrait and graphics-recovery scenarios now pass. The catalog checks do not stand in for remaining full-course runs.
 
 Compact route results and failure evidence are in `docs/performance/traversal-followup.json`, `docs/performance/deadwater-contact-followup.json` and `docs/performance/temple-clearance-followup.json`. The earlier per-level loading records remain in `docs/performance/all-level-*.json`.

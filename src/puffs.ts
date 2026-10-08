@@ -800,11 +800,6 @@ class Batch {
     this.mesh.renderOrder = 10; // after the world, before the HUD passes
     this.mesh.matrixAutoUpdate = false; // vertices are already in world space
     this.mesh.userData.shared = true; // Level.dispose() must not free this
-    // Point the attributes at the range objects ONCE. From here on `end()`
-    // only edits the counts, so a frame costs no allocation at all.
-    (this.geo.getAttribute('position') as THREE.BufferAttribute).updateRanges = [this.rp];
-    (this.geo.getAttribute('color') as THREE.BufferAttribute).updateRanges = [this.rc];
-    (this.geo.getIndex() as THREE.BufferAttribute).updateRanges = [this.ri];
   }
 
   begin(): void {
@@ -814,16 +809,23 @@ class Batch {
 
   end(): void {
     this.geo.setDrawRange(0, this.iCount);
+    this.mesh.visible = this.iCount > 0;
     const p = this.geo.getAttribute('position') as THREE.BufferAttribute;
     const c = this.geo.getAttribute('color') as THREE.BufferAttribute;
     const i = this.geo.getIndex() as THREE.BufferAttribute;
     this.rp.count = this.vCount * 3;
     this.rc.count = this.vCount * 4;
     this.ri.count = this.iCount;
+    if(this.iCount===0)return;
+    // Three consumes and clears these arrays after each upload. Restore the
+    // same range objects, so later frames still send only the live prefixes
+    // without allocating new range objects or arrays every frame.
+    p.updateRanges[0]=this.rp;p.updateRanges.length=1;
+    c.updateRanges[0]=this.rc;c.updateRanges.length=1;
+    i.updateRanges[0]=this.ri;i.updateRanges.length=1;
     p.needsUpdate = true;
     c.needsUpdate = true;
     i.needsUpdate = true;
-    this.mesh.visible = this.iCount > 0;
   }
 }
 

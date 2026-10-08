@@ -1,0 +1,2412 @@
+{
+  "schema": 1,
+  "date": "2026-10-09",
+  "baseline": "35f6705",
+  "integratedDesktopCommit": "57269a8",
+  "environment": {
+    "agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+    "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+    "canvas": [
+      1280,
+      720
+    ],
+    "quality": {
+      "enabled": true,
+      "baseHeight": 720,
+      "outputMultiplier": 1,
+      "fixed60": true
+    }
+  },
+  "medians": {
+    "loadMs": {
+      "dark": [
+        5138.199999988079,
+        5141.300000011921
+      ],
+      "nightworks-after-hours": [
+        4820.299999952316,
+        4833.699999988079
+      ]
+    },
+    "particleBytes": [
+      19987200,
+      1355736
+    ],
+    "particleReductionPercent": 93.21697886647455
+  },
+  "paired": [
+    {
+      "round": 0,
+      "order": [
+        "before",
+        "after"
+      ],
+      "levels": [
+        {
+          "id": "dark",
+          "loadMs": [
+            5123.099999964237,
+            5141.800000011921
+          ],
+          "firstPlay": [
+            {
+              "createBuffer": 6,
+              "compileShader": 4,
+              "linkProgram": 2,
+              "createTexture": 0
+            },
+            {
+              "createBuffer": 3,
+              "compileShader": 4,
+              "linkProgram": 2,
+              "createTexture": 0
+            }
+          ],
+          "wireframeBuffers": [
+            3,
+            0
+          ],
+          "phaseSamples": 96,
+          "exactPhaseStates": true,
+          "phaseHash": "ec6ad04a96e549f4e199602bfba4b47733b444f2313206fdf44e541518db39a4"
+        },
+        {
+          "id": "nightworks-after-hours",
+          "loadMs": [
+            4829.900000035763,
+            4771.5
+          ],
+          "firstPlay": [
+            {
+              "createBuffer": 4,
+              "compileShader": 6,
+              "linkProgram": 3,
+              "createTexture": 1
+            },
+            {
+              "createBuffer": 0,
+              "compileShader": 6,
+              "linkProgram": 3,
+              "createTexture": 1
+            }
+          ],
+          "wireframeBuffers": [
+            4,
+            0
+          ],
+          "phaseSamples": 96,
+          "exactPhaseStates": true,
+          "phaseHash": "4b9dd292740ffa117cd6fafae9284f5f0cf091adfc26ecb3bd634914ffffe93f"
+        }
+      ],
+      "particleBytes": [
+        19987200,
+        1361334
+      ],
+      "fullBufferUpdates": [
+        270,
+        0
+      ],
+      "renderFrames": 90
+    },
+    {
+      "round": 1,
+      "order": [
+        "after",
+        "before"
+      ],
+      "levels": [
+        {
+          "id": "dark",
+          "loadMs": [
+            5138.199999988079,
+            5141.300000011921
+          ],
+          "firstPlay": [
+            {
+              "createBuffer": 6,
+              "compileShader": 4,
+              "linkProgram": 2,
+              "createTexture": 0
+            },
+            {
+              "createBuffer": 3,
+              "compileShader": 4,
+              "linkProgram": 2,
+              "createTexture": 0
+            }
+          ],
+          "wireframeBuffers": [
+            3,
+            0
+          ],
+          "phaseSamples": 96,
+          "exactPhaseStates": true,
+          "phaseHash": "ec6ad04a96e549f4e199602bfba4b47733b444f2313206fdf44e541518db39a4"
+        },
+        {
+          "id": "nightworks-after-hours",
+          "loadMs": [
+            4781.5,
+            4833.699999988079
+          ],
+          "firstPlay": [
+            {
+              "createBuffer": 4,
+              "compileShader": 6,
+              "linkProgram": 3,
+              "createTexture": 1
+            },
+            {
+              "createBuffer": 0,
+              "compileShader": 6,
+              "linkProgram": 3,
+              "createTexture": 1
+            }
+          ],
+          "wireframeBuffers": [
+            4,
+            0
+          ],
+          "phaseSamples": 96,
+          "exactPhaseStates": true,
+          "phaseHash": "4b9dd292740ffa117cd6fafae9284f5f0cf091adfc26ecb3bd634914ffffe93f"
+        }
+      ],
+      "particleBytes": [
+        19987200,
+        1355736
+      ],
+      "fullBufferUpdates": [
+        270,
+        0
+      ],
+      "renderFrames": 90
+    },
+    {
+      "round": 2,
+      "order": [
+        "before",
+        "after"
+      ],
+      "levels": [
+        {
+          "id": "dark",
+          "loadMs": [
+            5139.399999976158,
+            5139.100000023842
+          ],
+          "firstPlay": [
+            {
+              "createBuffer": 6,
+              "compileShader": 4,
+              "linkProgram": 2,
+              "createTexture": 0
+            },
+            {
+              "createBuffer": 3,
+              "compileShader": 4,
+              "linkProgram": 2,
+              "createTexture": 0
+            }
+          ],
+          "wireframeBuffers": [
+            3,
+            0
+          ],
+          "phaseSamples": 96,
+          "exactPhaseStates": true,
+          "phaseHash": "ec6ad04a96e549f4e199602bfba4b47733b444f2313206fdf44e541518db39a4"
+        },
+        {
+          "id": "nightworks-after-hours",
+          "loadMs": [
+            4820.299999952316,
+            4847
+          ],
+          "firstPlay": [
+            {
+              "createBuffer": 4,
+              "compileShader": 6,
+              "linkProgram": 3,
+              "createTexture": 1
+            },
+            {
+              "createBuffer": 0,
+              "compileShader": 6,
+              "linkProgram": 3,
+              "createTexture": 1
+            }
+          ],
+          "wireframeBuffers": [
+            4,
+            0
+          ],
+          "phaseSamples": 96,
+          "exactPhaseStates": true,
+          "phaseHash": "4b9dd292740ffa117cd6fafae9284f5f0cf091adfc26ecb3bd634914ffffe93f"
+        }
+      ],
+      "particleBytes": [
+        19987200,
+        1332628
+      ],
+      "fullBufferUpdates": [
+        270,
+        0
+      ],
+      "renderFrames": 90
+    }
+  ],
+  "particleByteParity": [
+    {
+      "quality": "high",
+      "drawn": 912,
+      "hash": "66c0ec476f2c97d72b09cdb0bdafd8fc5685527816bb1e40712f7c590ada92cd",
+      "exact": true
+    },
+    {
+      "quality": "medium",
+      "drawn": 912,
+      "hash": "a67974e81197c50c4d4bb1aeac543cd9025f42feb121b0a8639f73c18bfd55b6",
+      "exact": true
+    },
+    {
+      "quality": "low",
+      "drawn": 912,
+      "hash": "f88e98afd81979682ba6177e629b39238b9ac2cbd9695e94eb241813d4e9c4d7",
+      "exact": true
+    }
+  ],
+  "uploadRegression": {
+    "pass": true,
+    "reports": [
+      {
+        "quality": "high",
+        "updates": 2304,
+        "allocations": 24,
+        "bytes": 827722,
+        "fullEquivalent": 34111488,
+        "geometryHash": "1c74edfbe074c61d6bd3ab9771e71d1cb4fdf87d5246fabae2a4fb979b59a235"
+      },
+      {
+        "quality": "medium",
+        "updates": 2304,
+        "allocations": 24,
+        "bytes": 827722,
+        "fullEquivalent": 34111488,
+        "geometryHash": "dc588fcc643e077b334060a68909da657e46497ce0232d5e3fd7dd9375451b96"
+      },
+      {
+        "quality": "low",
+        "updates": 2304,
+        "allocations": 24,
+        "bytes": 701514,
+        "fullEquivalent": 34111488,
+        "geometryHash": "d1c9eb3e3cf1fa21c83f7e77a6adbb6174d995bf174115e32a6b1f7550188a1f"
+      }
+    ]
+  },
+  "materialOwnership": {
+    "oldUnusedMaterialDisposals": 0,
+    "fixedDisposalsPerMaterial": 1,
+    "preservesUnusedSuccessorMaterialAndTexture": true
+  },
+  "resourceReturns": [
+    {
+      "id": "dark",
+      "memory": {
+        "geometries": 178,
+        "textures": 58
+      },
+      "programs": 65,
+      "programReferences": 205,
+      "preparedGhosts": 14,
+      "phasePads": 14,
+      "retiredMaterials": 0,
+      "allRetiredOnce": true
+    },
+    {
+      "id": "sky",
+      "memory": {
+        "geometries": 214,
+        "textures": 78
+      },
+      "programs": 73,
+      "programReferences": 177,
+      "preparedGhosts": 0,
+      "phasePads": 0,
+      "retiredMaterials": 28,
+      "allRetiredOnce": true
+    },
+    {
+      "id": "nightworks-after-hours",
+      "memory": {
+        "geometries": 134,
+        "textures": 57
+      },
+      "programs": 71,
+      "programReferences": 167,
+      "preparedGhosts": 9,
+      "phasePads": 9,
+      "retiredMaterials": 0,
+      "allRetiredOnce": true
+    },
+    {
+      "id": "sky",
+      "memory": {
+        "geometries": 214,
+        "textures": 78
+      },
+      "programs": 77,
+      "programReferences": 181,
+      "preparedGhosts": 0,
+      "phasePads": 0,
+      "retiredMaterials": 18,
+      "allRetiredOnce": true
+    },
+    {
+      "id": "dark",
+      "memory": {
+        "geometries": 178,
+        "textures": 58
+      },
+      "programs": 69,
+      "programReferences": 209,
+      "preparedGhosts": 14,
+      "phasePads": 14,
+      "retiredMaterials": 0,
+      "allRetiredOnce": true
+    },
+    {
+      "id": "sky",
+      "memory": {
+        "geometries": 214,
+        "textures": 78
+      },
+      "programs": 77,
+      "programReferences": 181,
+      "preparedGhosts": 0,
+      "phasePads": 0,
+      "retiredMaterials": 28,
+      "allRetiredOnce": true
+    },
+    {
+      "id": "nightworks-after-hours",
+      "memory": {
+        "geometries": 134,
+        "textures": 57
+      },
+      "programs": 71,
+      "programReferences": 167,
+      "preparedGhosts": 9,
+      "phasePads": 9,
+      "retiredMaterials": 0,
+      "allRetiredOnce": true
+    },
+    {
+      "id": "sky",
+      "memory": {
+        "geometries": 214,
+        "textures": 78
+      },
+      "programs": 77,
+      "programReferences": 181,
+      "preparedGhosts": 0,
+      "phasePads": 0,
+      "retiredMaterials": 18,
+      "allRetiredOnce": true
+    },
+    {
+      "id": "dark",
+      "memory": {
+        "geometries": 178,
+        "textures": 58
+      },
+      "programs": 69,
+      "programReferences": 209,
+      "preparedGhosts": 14,
+      "phasePads": 14,
+      "retiredMaterials": 0,
+      "allRetiredOnce": true
+    },
+    {
+      "id": "sky",
+      "memory": {
+        "geometries": 214,
+        "textures": 78
+      },
+      "programs": 77,
+      "programReferences": 181,
+      "preparedGhosts": 0,
+      "phasePads": 0,
+      "retiredMaterials": 28,
+      "allRetiredOnce": true
+    },
+    {
+      "id": "nightworks-after-hours",
+      "memory": {
+        "geometries": 134,
+        "textures": 57
+      },
+      "programs": 71,
+      "programReferences": 167,
+      "preparedGhosts": 9,
+      "phasePads": 9,
+      "retiredMaterials": 0,
+      "allRetiredOnce": true
+    },
+    {
+      "id": "sky",
+      "memory": {
+        "geometries": 214,
+        "textures": 78
+      },
+      "programs": 77,
+      "programReferences": 181,
+      "preparedGhosts": 0,
+      "phasePads": 0,
+      "retiredMaterials": 18,
+      "allRetiredOnce": true
+    }
+  ],
+  "graphicsRecoveries": [
+    {
+      "held": 1295,
+      "after": 1295,
+      "glError": 0
+    },
+    {
+      "held": 1334,
+      "after": 1334,
+      "glError": 0
+    },
+    {
+      "held": 1372,
+      "after": 1372,
+      "glError": 0
+    }
+  ],
+  "collectibleLifetime": {
+    "base": "http://127.0.0.1:5345/",
+    "level": "sky",
+    "start": {
+      "geometries": 215,
+      "textures": 78,
+      "programs": 54
+    },
+    "samples": [
+      {
+        "cycle": 5,
+        "geometries": 215,
+        "textures": 78,
+        "programs": 54
+      },
+      {
+        "cycle": 10,
+        "geometries": 215,
+        "textures": 78,
+        "programs": 54
+      },
+      {
+        "cycle": 15,
+        "geometries": 215,
+        "textures": 78,
+        "programs": 54
+      },
+      {
+        "cycle": 20,
+        "geometries": 215,
+        "textures": 78,
+        "programs": 54
+      }
+    ],
+    "end": {
+      "geometries": 215,
+      "textures": 78,
+      "programs": 54
+    },
+    "geometryGrowth": 0,
+    "textureGrowth": 0,
+    "sharedDisposals": {
+      "haloTexture": 0,
+      "spriteGeometry": 0
+    },
+    "survivorPixelDifferences": 0,
+    "contextLost": false,
+    "glError": 0,
+    "failedAssets": [],
+    "errors": []
+  },
+  "touch": {
+    "checks": [
+      {
+        "width": 320,
+        "height": 568,
+        "engine": "chromium",
+        "targets": 11,
+        "sequence": {
+          "held": [
+            1,
+            true,
+            true
+          ],
+          "partial": [
+            1,
+            false,
+            true
+          ],
+          "neutral": [
+            0,
+            0,
+            false,
+            false
+          ],
+          "menu": [
+            0,
+            0,
+            false,
+            false,
+            false,
+            false
+          ],
+          "stale": [
+            0,
+            0,
+            false,
+            false,
+            false,
+            false
+          ],
+          "blur": [
+            0,
+            0,
+            false,
+            false,
+            false,
+            false
+          ],
+          "gesturePrevented": true,
+          "contextPrevented": true
+        }
+      },
+      {
+        "width": 568,
+        "height": 320,
+        "engine": "chromium",
+        "targets": 11,
+        "sequence": {
+          "held": [
+            1,
+            true,
+            true
+          ],
+          "partial": [
+            1,
+            false,
+            true
+          ],
+          "neutral": [
+            0,
+            0,
+            false,
+            false
+          ],
+          "menu": [
+            0,
+            0,
+            false,
+            false,
+            false,
+            false
+          ],
+          "stale": [
+            0,
+            0,
+            false,
+            false,
+            false,
+            false
+          ],
+          "blur": [
+            0,
+            0,
+            false,
+            false,
+            false,
+            false
+          ],
+          "gesturePrevented": true,
+          "contextPrevented": true
+        }
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "engine": "chromium",
+        "targets": 11,
+        "sequence": {
+          "held": [
+            1,
+            true,
+            true
+          ],
+          "partial": [
+            1,
+            false,
+            true
+          ],
+          "neutral": [
+            0,
+            0,
+            false,
+            false
+          ],
+          "menu": [
+            0,
+            0,
+            false,
+            false,
+            false,
+            false
+          ],
+          "stale": [
+            0,
+            0,
+            false,
+            false,
+            false,
+            false
+          ],
+          "blur": [
+            0,
+            0,
+            false,
+            false,
+            false,
+            false
+          ],
+          "gesturePrevented": true,
+          "contextPrevented": true
+        }
+      },
+      {
+        "width": 844,
+        "height": 390,
+        "engine": "chromium",
+        "targets": 11,
+        "sequence": {
+          "held": [
+            1,
+            true,
+            true
+          ],
+          "partial": [
+            1,
+            false,
+            true
+          ],
+          "neutral": [
+            0,
+            0,
+            false,
+            false
+          ],
+          "menu": [
+            0,
+            0,
+            false,
+            false,
+            false,
+            false
+          ],
+          "stale": [
+            0,
+            0,
+            false,
+            false,
+            false,
+            false
+          ],
+          "blur": [
+            0,
+            0,
+            false,
+            false,
+            false,
+            false
+          ],
+          "gesturePrevented": true,
+          "contextPrevented": true
+        }
+      },
+      {
+        "width": 768,
+        "height": 1024,
+        "engine": "chromium",
+        "targets": 11,
+        "sequence": {
+          "held": [
+            1,
+            true,
+            true
+          ],
+          "partial": [
+            1,
+            false,
+            true
+          ],
+          "neutral": [
+            0,
+            0,
+            false,
+            false
+          ],
+          "menu": [
+            0,
+            0,
+            false,
+            false,
+            false,
+            false
+          ],
+          "stale": [
+            0,
+            0,
+            false,
+            false,
+            false,
+            false
+          ],
+          "blur": [
+            0,
+            0,
+            false,
+            false,
+            false,
+            false
+          ],
+          "gesturePrevented": true,
+          "contextPrevented": true
+        }
+      },
+      {
+        "width": 1024,
+        "height": 768,
+        "engine": "chromium",
+        "targets": 11,
+        "sequence": {
+          "held": [
+            1,
+            true,
+            true
+          ],
+          "partial": [
+            1,
+            false,
+            true
+          ],
+          "neutral": [
+            0,
+            0,
+            false,
+            false
+          ],
+          "menu": [
+            0,
+            0,
+            false,
+            false,
+            false,
+            false
+          ],
+          "stale": [
+            0,
+            0,
+            false,
+            false,
+            false,
+            false
+          ],
+          "blur": [
+            0,
+            0,
+            false,
+            false,
+            false,
+            false
+          ],
+          "gesturePrevented": true,
+          "contextPrevented": true
+        }
+      }
+    ],
+    "errors": []
+  },
+  "mobileProfiles": [
+    {
+      "id": "treehouse-trail",
+      "levelMsPerTick": 0.5527472561532325,
+      "ticks": 91,
+      "font": {
+        "cap": 128,
+        "revision": 1,
+        "ready": true,
+        "degraded": false,
+        "decodedBytes": 12435456
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "workers": {
+        "live": 0,
+        "peak": 1
+      },
+      "memory": {
+        "geometries": 242,
+        "textures": 120
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 584
+      },
+      "contextLost": false,
+      "heap": {
+        "usedSize": 161193984,
+        "totalSize": 176635904,
+        "embedderHeapUsedSize": 10537016,
+        "backingStorageSize": 159720788
+      }
+    },
+    {
+      "id": "jungle",
+      "levelMsPerTick": 1.205494504053514,
+      "ticks": 91,
+      "font": {
+        "cap": 128,
+        "revision": 1,
+        "ready": true,
+        "degraded": false,
+        "decodedBytes": 12435456
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "workers": {
+        "live": 0,
+        "peak": 1
+      },
+      "memory": {
+        "geometries": 153,
+        "textures": 163
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 962
+      },
+      "contextLost": false,
+      "heap": {
+        "usedSize": 164515620,
+        "totalSize": 183091200,
+        "embedderHeapUsedSize": 12291712,
+        "backingStorageSize": 141720065
+      }
+    },
+    {
+      "id": "jungle-cup",
+      "levelMsPerTick": 0,
+      "ticks": 0,
+      "font": {
+        "cap": 128,
+        "revision": 1,
+        "ready": true,
+        "degraded": false,
+        "decodedBytes": 12435456
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "workers": {
+        "live": 0,
+        "peak": 1
+      },
+      "memory": {
+        "geometries": 139,
+        "textures": 100
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1136
+      },
+      "contextLost": false,
+      "heap": {
+        "usedSize": 139653468,
+        "totalSize": 146128896,
+        "embedderHeapUsedSize": 23917384,
+        "backingStorageSize": 127135619
+      }
+    },
+    {
+      "id": "sky",
+      "levelMsPerTick": 0.4086956498415574,
+      "ticks": 92,
+      "font": {
+        "cap": 128,
+        "revision": 1,
+        "ready": true,
+        "degraded": false,
+        "decodedBytes": 12435456
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "workers": {
+        "live": 0,
+        "peak": 1
+      },
+      "memory": {
+        "geometries": 219,
+        "textures": 84
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1222
+      },
+      "contextLost": false,
+      "heap": {
+        "usedSize": 145135116,
+        "totalSize": 164315136,
+        "embedderHeapUsedSize": 10682080,
+        "backingStorageSize": 59132001
+      }
+    },
+    {
+      "id": "test",
+      "levelMsPerTick": 1.6838709635119284,
+      "ticks": 93,
+      "font": {
+        "cap": 128,
+        "revision": 1,
+        "ready": true,
+        "degraded": false,
+        "decodedBytes": 12435456
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "workers": {
+        "live": 0,
+        "peak": 1
+      },
+      "memory": {
+        "geometries": 94,
+        "textures": 132
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1358
+      },
+      "contextLost": false,
+      "heap": {
+        "usedSize": 165032228,
+        "totalSize": 183713792,
+        "embedderHeapUsedSize": 10889704,
+        "backingStorageSize": 77065209
+      }
+    },
+    {
+      "id": "warproom",
+      "levelMsPerTick": 0.0450549446619474,
+      "ticks": 91,
+      "font": {
+        "cap": 128,
+        "revision": 1,
+        "ready": true,
+        "degraded": false,
+        "decodedBytes": 12435456
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "workers": {
+        "live": 0,
+        "peak": 1
+      },
+      "memory": {
+        "geometries": 134,
+        "textures": 60
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1382
+      },
+      "contextLost": false,
+      "heap": {
+        "usedSize": 149798316,
+        "totalSize": 163168256,
+        "embedderHeapUsedSize": 14291640,
+        "backingStorageSize": 61698225
+      }
+    },
+    {
+      "id": "treehouse-trail",
+      "levelMsPerTick": 0.5750000023323557,
+      "ticks": 92,
+      "font": {
+        "cap": 128,
+        "revision": 1,
+        "ready": true,
+        "degraded": false,
+        "decodedBytes": 12435456
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "workers": {
+        "live": 0,
+        "peak": 1
+      },
+      "memory": {
+        "geometries": 259,
+        "textures": 137
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1630
+      },
+      "contextLost": false,
+      "heap": {
+        "usedSize": 162208128,
+        "totalSize": 181354496,
+        "embedderHeapUsedSize": 12128360,
+        "backingStorageSize": 162154732
+      }
+    },
+    {
+      "id": "sky",
+      "levelMsPerTick": 0.47173912887987884,
+      "ticks": 92,
+      "font": {
+        "cap": 128,
+        "revision": 1,
+        "ready": true,
+        "degraded": false,
+        "decodedBytes": 12435456
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "workers": {
+        "live": 0,
+        "peak": 1
+      },
+      "memory": {
+        "geometries": 223,
+        "textures": 89
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 1780
+      },
+      "contextLost": false,
+      "heap": {
+        "usedSize": 152760036,
+        "totalSize": 165888000,
+        "embedderHeapUsedSize": 10791640,
+        "backingStorageSize": 60642362
+      }
+    },
+    {
+      "id": "treehouse-trail",
+      "levelMsPerTick": 0.5869565204433773,
+      "ticks": 92,
+      "font": {
+        "cap": 128,
+        "revision": 1,
+        "ready": true,
+        "degraded": false,
+        "decodedBytes": 12435456
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "workers": {
+        "live": 0,
+        "peak": 1
+      },
+      "memory": {
+        "geometries": 259,
+        "textures": 137
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2028
+      },
+      "contextLost": false,
+      "heap": {
+        "usedSize": 164545712,
+        "totalSize": 182927360,
+        "embedderHeapUsedSize": 12136328,
+        "backingStorageSize": 162154777
+      }
+    },
+    {
+      "id": "sky",
+      "levelMsPerTick": 0.4494505518085354,
+      "ticks": 91,
+      "font": {
+        "cap": 128,
+        "revision": 1,
+        "ready": true,
+        "degraded": false,
+        "decodedBytes": 12435456
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "workers": {
+        "live": 0,
+        "peak": 1
+      },
+      "memory": {
+        "geometries": 223,
+        "textures": 89
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2178
+      },
+      "contextLost": false,
+      "heap": {
+        "usedSize": 150554772,
+        "totalSize": 166150144,
+        "embedderHeapUsedSize": 10710384,
+        "backingStorageSize": 60642580
+      }
+    },
+    {
+      "id": "treehouse-trail",
+      "levelMsPerTick": 0.5670329679499616,
+      "ticks": 91,
+      "font": {
+        "cap": 128,
+        "revision": 1,
+        "ready": true,
+        "degraded": false,
+        "decodedBytes": 12435456
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "workers": {
+        "live": 0,
+        "peak": 1
+      },
+      "memory": {
+        "geometries": 259,
+        "textures": 137
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2426
+      },
+      "contextLost": false,
+      "heap": {
+        "usedSize": 162934304,
+        "totalSize": 182140928,
+        "embedderHeapUsedSize": 12030888,
+        "backingStorageSize": 162154618
+      }
+    },
+    {
+      "id": "sky",
+      "levelMsPerTick": 0.448888889948527,
+      "ticks": 90,
+      "font": {
+        "cap": 128,
+        "revision": 1,
+        "ready": true,
+        "degraded": false,
+        "decodedBytes": 12435456
+      },
+      "decoder": {
+        "workers": 0,
+        "limit": 1
+      },
+      "workers": {
+        "live": 0,
+        "peak": 1
+      },
+      "memory": {
+        "geometries": 223,
+        "textures": 89
+      },
+      "loading": {
+        "phase": null,
+        "pending": [],
+        "failed": [],
+        "revision": 2576
+      },
+      "contextLost": false,
+      "heap": {
+        "usedSize": 148300708,
+        "totalSize": 167460864,
+        "embedderHeapUsedSize": 10799984,
+        "backingStorageSize": 60641309
+      }
+    },
+    {
+      "display": "ipad",
+      "font": {
+        "cap": 256,
+        "revision": 1,
+        "ready": true,
+        "degraded": false,
+        "decodedBytes": 49717248
+      }
+    },
+    {
+      "display": "tv4k",
+      "font": {
+        "cap": 512,
+        "revision": 1,
+        "ready": true,
+        "degraded": false,
+        "decodedBytes": 198868992
+      }
+    }
+  ],
+  "catalog": [
+    {
+      "id": "treehouse-trail",
+      "name": "Treehouse Trials",
+      "nativeMovement": {
+        "distance": 0.7000000000000025,
+        "position": [
+          2.0338071739960606,
+          -0.049598733303660936,
+          20.577661992473395
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 5,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "inside-your-room",
+      "name": "Inside Your Room",
+      "nativeMovement": {
+        "distance": 0.6333333333333332,
+        "position": [
+          -0.40000465272646424,
+          0.035999998450279236,
+          -0.9833333333162427
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 1,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "jungle",
+      "name": "Jungle Ruins",
+      "nativeMovement": {
+        "distance": 0.5699999994670447,
+        "position": [
+          3.6679851416659077,
+          2.515234033494967,
+          5.433282357238633
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 4,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "jungle-terraces",
+      "name": "Temple Terraces",
+      "nativeMovement": {
+        "distance": 0.5099999999999909,
+        "position": [
+          1.25,
+          0.7716666665921608,
+          83.49000000000001
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 3,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "jungle-skyline",
+      "name": "Temple Skyline",
+      "nativeMovement": {
+        "distance": 0.6333333333333258,
+        "position": [
+          1.25,
+          0.7716666665921608,
+          93.36666666666667
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 5,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "flats",
+      "name": "Flats & Pipes",
+      "nativeMovement": {
+        "distance": 0.6333333333333329,
+        "position": [
+          0,
+          90.73666666644314,
+          39.36666666666667
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 2,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "sky",
+      "name": "Sky Bridge",
+      "nativeMovement": {
+        "distance": 0.6333333333333329,
+        "position": [
+          0,
+          0.7366666187594333,
+          4.366666666666667
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 3,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "slip",
+      "name": "The Slipstream",
+      "nativeMovement": {
+        "distance": 0.5100000000000051,
+        "position": [
+          0,
+          150.73666666644314,
+          17.489999999999995
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 2,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "slipstream-2",
+      "name": "Slipstream 2",
+      "nativeMovement": {
+        "distance": 0.6333333333333333,
+        "position": [
+          15.999995347273535,
+          54.73666664260129,
+          -0.6333333333162429
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 7,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "test",
+      "name": "Carlisle Coast",
+      "nativeMovement": {
+        "distance": 0.7,
+        "position": [
+          0,
+          0.7366666664431492,
+          -0.7
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 14,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "custard-creek",
+      "name": "Custard Creek",
+      "nativeMovement": {
+        "distance": 0.5699999973470249,
+        "position": [
+          -0.15046960857501204,
+          0.7366666664431492,
+          -0.5497807689169303
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 11,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "dark",
+      "name": "The Nightworks",
+      "nativeMovement": {
+        "distance": 0.6333333333333334,
+        "position": [
+          -4.652726464207604e-06,
+          0.7366665710757179,
+          3.366666666683757
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 11,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "nightworks-after-hours",
+      "name": "Nightworks: After Hours",
+      "nativeMovement": {
+        "distance": 0.6244444444444426,
+        "position": [
+          -4.587425040148551e-06,
+          10.73666666644315,
+          9.375555555572408
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 7,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "warproom",
+      "name": "Island World Map",
+      "nativeMovement": null,
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "descent",
+      "name": "The Descent",
+      "nativeMovement": {
+        "distance": 0.6398834633898351,
+        "position": [
+          10.72202483547879,
+          428.5170730406517,
+          -5.8604884518543
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 4,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "beachfront",
+      "name": "Beachside Run",
+      "nativeMovement": {
+        "distance": 0.6333333330518195,
+        "position": [
+          2.879750289458865,
+          1.1450772405813892,
+          7.382293734507886
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 4,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "bonus-level",
+      "name": "Bonus Level",
+      "nativeMovement": {
+        "distance": 0.6333333333333364,
+        "position": [
+          -23.366666666666664,
+          0,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "coastal-street-run",
+      "name": "Coastal Street Run",
+      "nativeMovement": {
+        "distance": 0.6333333333333329,
+        "position": [
+          0,
+          12.736666678364077,
+          14.366666666666667
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 6,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "island-hopper",
+      "name": "Island Hopper",
+      "nativeMovement": {
+        "distance": 0.6333333322928929,
+        "position": [
+          0.06837601218465326,
+          1.7866666187594324,
+          13.366933311593945
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 3,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "jungle-gate-run",
+      "name": "Jungle Gate Run",
+      "nativeMovement": {
+        "distance": 0.5700000000000038,
+        "position": [
+          -19.429999999999996,
+          2.384185793236071e-08,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 3,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "meshylook-thorns",
+      "name": "MeshyLook Thorn Courtyards",
+      "nativeMovement": {
+        "distance": 0.6368219117775437,
+        "position": [
+          -2.9052518666666667,
+          1.2069301918255113,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "drowned-crown",
+      "name": "The Drowned Crown",
+      "nativeMovement": {
+        "distance": 0.5700000000000003,
+        "position": [
+          -48,
+          0.7366666664431492,
+          45.43
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 4,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "bonus-easy",
+      "name": "Bonus: Easy Street",
+      "nativeMovement": {
+        "distance": 0.5700000000000003,
+        "position": [
+          -11.43,
+          0,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "bonus-treehouse-trail",
+      "name": "Bonus: Canopy Cache",
+      "nativeMovement": {
+        "distance": 0.5699999999999993,
+        "position": [
+          -5.430000000015382,
+          0,
+          -4.187453817786844e-06
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "bonus-jungle",
+      "name": "Bonus: Fern Reliquary",
+      "nativeMovement": {
+        "distance": 0.5699999999999993,
+        "position": [
+          -5.430000000015382,
+          0,
+          -4.187453817786844e-06
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "bonus-test-course",
+      "name": "Bonus: Quayside Cargo",
+      "nativeMovement": {
+        "distance": 0.633333333333333,
+        "position": [
+          -5.3666666666837575,
+          0,
+          -4.652726464207604e-06
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "bonus-sky-bridge",
+      "name": "Bonus: Cloudtop Lockers",
+      "nativeMovement": {
+        "distance": 0.633333333333333,
+        "position": [
+          -5.3666666666837575,
+          0,
+          -4.652726464207604e-06
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "bonus-slipstream",
+      "name": "Bonus: Slipstream Airlocks",
+      "nativeMovement": {
+        "distance": 0.633333333333333,
+        "position": [
+          -5.3666666666837575,
+          0,
+          -4.652726464207604e-06
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "bonus-nightworks",
+      "name": "Bonus: Nightworks Fuse Store",
+      "nativeMovement": {
+        "distance": 0.633333333333333,
+        "position": [
+          -5.3666666666837575,
+          0,
+          -4.652726464207604e-06
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "bonus-beachside-run",
+      "name": "Bonus: Lifeguard Lockup",
+      "nativeMovement": {
+        "distance": 0.5699999999999993,
+        "position": [
+          -5.430000000015382,
+          0,
+          -4.187453817786844e-06
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "bonus-coastal",
+      "name": "Bonus: Rooftop Deliveries",
+      "nativeMovement": {
+        "distance": 0.633333333333333,
+        "position": [
+          -5.3666666666837575,
+          0,
+          -4.652726464207604e-06
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "bonus-island-hopper",
+      "name": "Bonus: Lagoon Relay",
+      "nativeMovement": {
+        "distance": 0.5699999999999993,
+        "position": [
+          -5.430000000015382,
+          0,
+          -4.187453817786844e-06
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "bonus-codex-switchback",
+      "name": "Bonus: Blockworks Reassembly",
+      "nativeMovement": {
+        "distance": 0.5699999999999993,
+        "position": [
+          -5.430000000015382,
+          0,
+          -4.187453817786844e-06
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "bonus-chimeworks",
+      "name": "Bonus: Belfry Counterweights",
+      "nativeMovement": {
+        "distance": 0.5699999999999993,
+        "position": [
+          -5.430000000015382,
+          0,
+          -4.187453817786844e-06
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "bonus-waterpark",
+      "name": "Bonus: Deadwater Valve House",
+      "nativeMovement": {
+        "distance": 0.633333333333333,
+        "position": [
+          -5.3666666666837575,
+          0,
+          -4.652726464207604e-06
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "bonus-nightworks-after-hours",
+      "name": "Bonus: After Hours Dispatch",
+      "nativeMovement": {
+        "distance": 0.5699999999999993,
+        "position": [
+          -5.430000000015382,
+          0,
+          -4.187453817786844e-06
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "bonus-crate-primer",
+      "name": "Bonus: Apprentice Storehouse",
+      "nativeMovement": {
+        "distance": 0.633333333333333,
+        "position": [
+          -5.3666666666837575,
+          0,
+          -4.652726464207604e-06
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "bonus-switchyard",
+      "name": "Bonus: Signal Cabin",
+      "nativeMovement": {
+        "distance": 0.5699999999999993,
+        "position": [
+          -5.430000000015382,
+          0,
+          -4.187453817786844e-06
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "bonus-clockwork-gauntlet",
+      "name": "Bonus: Furnace Reserve",
+      "nativeMovement": {
+        "distance": 0.5699999999999993,
+        "position": [
+          -5.430000000015382,
+          0,
+          -4.187453817786844e-06
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "bonus-jungle-terraces",
+      "name": "Bonus: Jade Reservoir",
+      "nativeMovement": {
+        "distance": 0.6999999999999998,
+        "position": [
+          -5.30000000001889,
+          0,
+          -5.14248714465051e-06
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "bonus-jungle-skyline",
+      "name": "Bonus: Sun-Crown Treasury",
+      "nativeMovement": {
+        "distance": 0.6999999999999998,
+        "position": [
+          -5.30000000001889,
+          0,
+          -5.14248714465051e-06
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "bonus-drowned-crown",
+      "name": "Bonus: The Captain\u2019s Last Ledger",
+      "nativeMovement": {
+        "distance": 0.6999999999999998,
+        "position": [
+          -5.30000000001889,
+          0,
+          -5.14248714465051e-06
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "bonus-bone-yard",
+      "name": "Bonus: Ivory Salvage",
+      "nativeMovement": {
+        "distance": 0.5699999999999993,
+        "position": [
+          -5.430000000015382,
+          0,
+          -4.187453817786844e-06
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "crate-primer",
+      "name": "Crate Primer",
+      "nativeMovement": {
+        "distance": 0.5699999999999994,
+        "position": [
+          -4.430000000000001,
+          0.7366666664431492,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 2,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "switchyard",
+      "name": "Switchyard",
+      "nativeMovement": {
+        "distance": 0.5699999999999994,
+        "position": [
+          -4.430000000000001,
+          0.7366666664431492,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 2,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "clockwork-gauntlet",
+      "name": "Clockwork Gauntlet",
+      "nativeMovement": {
+        "distance": 0.5699999999999994,
+        "position": [
+          -4.430000000000001,
+          0.7366666664431492,
+          0
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowRight"
+      },
+      "checkpoints": 4,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "crab-chief",
+      "name": "Tidebreak \u00b7 Crab Chief",
+      "nativeMovement": {
+        "distance": 0.7000000000000025,
+        "position": [
+          -5.14248714465051e-06,
+          0,
+          16.300000000018887
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "ghost-train",
+      "name": "Haunted Castle \u00b7 Ghost Train",
+      "nativeMovement": {
+        "distance": 0.3833333333333315,
+        "position": [
+          -2.8161239125467093e-06,
+          0.7366666664431492,
+          15.616666666677013
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 23,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "codex-lab",
+      "name": "Blockworks \u00b7 Greybox",
+      "nativeMovement": {
+        "distance": 0.5700000000000046,
+        "position": [
+          0.7283876326359109,
+          0.7366666664431492,
+          17.452076806299573
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 6,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "jungle-cup",
+      "name": "Jungle Cup",
+      "nativeMovement": {
+        "distance": 0.48538000517572194,
+        "position": [
+          0,
+          0,
+          13.525032896481889
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "bone-yard",
+      "name": "Bone Yard \u00b7 Wipeout Playground",
+      "nativeMovement": {
+        "distance": 0.5699999999999998,
+        "position": [
+          0,
+          0,
+          3.43
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 2,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "waterpark",
+      "name": "Deadwater Park",
+      "nativeMovement": {
+        "distance": 0.6333333333333258,
+        "position": [
+          -18,
+          130.736666690285,
+          183.36666666666667
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 2,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "waterpark-cup",
+      "name": "Deadwater Cup",
+      "nativeMovement": {
+        "distance": 0.5277373790223674,
+        "position": [
+          18,
+          12,
+          -12.527737379022367
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 0,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "astra-chimeworks",
+      "name": "The Chimeworks \u2014 Astra",
+      "nativeMovement": {
+        "distance": 0.6333333333333364,
+        "position": [
+          0,
+          48.736666690285006,
+          16.366666666666664
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 4,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    },
+    {
+      "id": "backport-lab",
+      "name": "Backport Mechanics Lab",
+      "nativeMovement": {
+        "distance": 0.6333333333333329,
+        "position": [
+          0,
+          0,
+          15.366666666666667
+        ],
+        "state": "ride",
+        "grounded": true,
+        "key": "ArrowUp"
+      },
+      "checkpoints": 1,
+      "allSupported": true,
+      "failedAssets": [],
+      "errors": []
+    }
+  ],
+  "afterHours": {
+    "frames": 4241,
+    "end": {
+      "frame": 4241,
+      "worldTime": 70.68333333333061,
+      "chapter": "last-shift",
+      "input": {
+        "moveX": 0.14,
+        "moveY": 0.99,
+        "jumpHeld": false,
+        "grindHeld": false,
+        "spinHeld": false,
+        "grabHeld": false,
+        "transferHeld": false,
+        "jumpPressed": false,
+        "jumpReleased": false,
+        "jumpCancelled": false,
+        "grindPressed": false,
+        "spinPressed": false,
+        "grabPressed": false,
+        "transferPressed": false,
+        "restartPressed": false
+      },
+      "position": [
+        131.76617732623257,
+        36.73066666915019,
+        -682.279703844972
+      ],
+      "heading": [
+        0.14001373068511108,
+        0,
+        -0.9901495620458746
+      ],
+      "state": "finished",
+      "grounded": true,
+      "speed": 0,
+      "verticalSpeed": 0,
+      "boardRolling": true,
+      "bailing": false,
+      "deaths": 0,
+      "impact": null,
+      "supportComponent": 167,
+      "railComponent": null,
+      "cameraPosition": [
+        131.72527722046075,
+        41.46517235987042,
+        -677.2293522814251
+      ],
+      "cameraDirection": [
+        -7.346410206643587e-06,
+        0,
+        -0.9999999999730151
+      ]
+    },
+    "footFrames": 0,
+    "finished": true,
+    "errors": []
+  },
+  "limits": [
+    "GPU upload counts and byte submissions are measured; this is not a 93% FPS claim.",
+    "Desktop Chrome device emulation is not physical-phone performance certification.",
+    "Lazy particle-batch shaders, fruit variants and HUD texture creation still appear after loading; broader preparation and remaining course traversal continue."
+  ]
+}

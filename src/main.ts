@@ -1363,7 +1363,8 @@ async function warmDestinationPresentation(): Promise<void> {
     recordPresentationStage('destination:texture-upload');
     await warmPresentationTextures(renderer,scene);
     recordPresentationStage('destination:scene-warmup');
-    await warmPresentationScene(renderer,scene,camera);
+    await warmPresentationScene(renderer,scene,camera,
+      level.phasePads.map(pad=>({mesh:pad.mesh,material:pad.ghostMat})));
   }
 }
 
