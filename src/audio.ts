@@ -127,7 +127,9 @@ class SfxEngine {
         this.preparation = this.init();
         return;
       }
-      if (this.ctx.state === 'suspended') void this.ctx.resume();
+      // Device availability can reject asynchronously. Keep play alive; a
+      // later gesture/frame can retry without throwing an unhandled rejection.
+      if (this.ctx.state === 'suspended') void this.ctx.resume().catch(() => {});
     } catch {
       /* no audio — fine */
     }
@@ -162,7 +164,7 @@ class SfxEngine {
         this.musicBus.connect(this.master);
         this.master.connect(this.ctx.destination);
       }
-      if (this.ctx.state === 'suspended') void this.ctx.resume();
+      if (this.ctx.state === 'suspended') void this.ctx.resume().catch(() => {});
       if (this.loading) return;
       this.loading = true;
       const controller=this.loadController=new AbortController();

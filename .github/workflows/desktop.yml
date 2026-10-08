@@ -68,6 +68,7 @@ jobs:
         run: |
           npm run check:desktop
           npm run check:offline
+          node tools/test-audio-loops.mjs
           node tools/test-game-update.mjs
           npm run check:renderer
       - run: npm run build:desktop

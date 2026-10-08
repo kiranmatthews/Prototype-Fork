@@ -50,6 +50,7 @@ Separate native Mac artifacts avoid Rosetta and avoid shipping two Chromium arch
 - Service workers are not enabled for the protocol. There is no full-game CacheStorage copy, cache warm-up, stale PWA version or online fallback. Hashed code can retain Chromium's code cache; mutable asset URLs are not cached across app releases.
 - Saves and preferences use the stable BONEMAN profile outside the read-only bundle. On macOS this is `~/Library/Application Support/BONEMAN`; Windows uses `%APPDATA%\\BONEMAN`; Linux uses its application config directory. Replacing the app preserves this profile and the existing `solProto*` keys. The app does not silently import a browser's separate profile.
 - Normal shutdown flushes browser storage. Disk-full and invalid-save handling remain in the shared game storage layer. Save exports/backups are still needed before a release that changes the save schema; an OS crash can lose the last unflushed write.
+- Audio output-device resume failures are handled asynchronously; decoded sounds remain available and later unlocks retry when the device returns.
 - The existing game stops simulation while hidden, clears held input/time accumulation on return, and handles WebGL loss/restoration. A killed or unresponsive renderer gets a native Reload/Quit prompt instead of an automatic restart loop.
 - Production binaries disable RunAsNode, NODE_OPTIONS and Node inspector arguments and load only the ASAR application. macOS/Windows also validate ASAR integrity. The package verifier checks these fuses after packaging. It also requires the Electron and Chromium notices; the Mac extraction hook preserves the target runtime’s notices inside the app before the packager removes its distribution-root copies.
 
@@ -117,7 +118,7 @@ The smoke scripts are short automated regression checks. They are not a full-cou
 
 ## Verified local result
 
-The initial macOS arm64 candidate contains **861 manifest-tracked game files / 408.3 MiB**, omitting **438.5 MiB** of web/authoring material from the public asset inventory. The app with its browser runtime occupies approximately **696 MiB** on this host; compressed candidate installers are approximately **487 MiB**. This is a size reduction, not an FPS claim.
+The validated macOS arm64 candidate contains **861 manifest-tracked game files / 408.3 MiB**, omitting **438.5 MiB** of web/authoring material from the public asset inventory. The app with its browser runtime occupies approximately **716 MiB** on this host; compressed candidate installers are approximately **489 MiB**. This is a size reduction, not an FPS claim.
 
 Fresh-profile disconnected startup, lite/full gameplay with CRT enabled, checkpoint/pit/finish, persistent saves, actual WebGL loss/restoration, and first-use Treehouse/Jungle/Nightworks/boss asset loading pass. Deliberate fetch/image/WebSocket/worker requests and a native-session request produce **zero hits** on the probe server. The packaged app passes full rendering without focus emulation. A separate native test verifies stopped frame advancement and movement while hidden, resumed simulation on show, and enabled sandboxing. macOS/Windows also exercise native minimize/restore; Linux CI uses hide/show because Xvfb has no window manager. Details and bundle identity are in [the local evidence](performance/offline-desktop.json).
 

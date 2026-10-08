@@ -4,7 +4,7 @@ import ts from 'typescript';
 
 const source = await readFile(new URL('../src/audio.ts', import.meta.url), 'utf8');
 const code = ts.transpileModule(source, {compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.ES2020}}).outputText;
-const sources=[],tones=[];let decoding=0,peakDecoding=0;
+const sources=[],tones=[];let decoding=0,peakDecoding=0,rejectResume=false,initialState='running';
 class BufferSource {
   playbackRate={value:1}; loop=false; loopStart=0; loopEnd=0;
   starts=0; stops=0;
@@ -16,9 +16,9 @@ class BufferSource {
 const listeners=new Map();globalThis.window={addEventListener(type,fn){const list=listeners.get(type)??[];list.push(fn);listeners.set(type,list);}};
 Object.defineProperty(globalThis,'navigator',{configurable:true,value:{}});
 globalThis.AudioContext=class {
-  state='running'; currentTime=1; destination={};
+  state=initialState; currentTime=1; destination={};
   async suspend(){this.state='suspended'}
-  async resume(){this.state='running'}
+  async resume(){if(rejectResume)throw Error('audio output unavailable');this.state='running'}
   createGain(){return{gain:{value:1,setValueAtTime(v){this.value=v},linearRampToValueAtTime(v){this.value=v},exponentialRampToValueAtTime(v){this.value=v}},connect(node){this.output=node},disconnect(){this.disconnected=true}}}
   createOscillator(){const tone={frequency:{setValueAtTime(v){this.value=v}},connect(node){this.output=node},start(at){this.started=at},stop(at){this.stopped=at},disconnect(){this.disconnected=true}};tones.push(tone);return tone}
   createBufferSource(){const node=new BufferSource();sources.push(node);return node}
@@ -75,4 +75,19 @@ globalThis.fetch=async()=>({arrayBuffer:async()=>new ArrayBuffer(0)});
 for(const listener of listeners.get('pageshow'))listener({persisted:true});await interrupted.prepare();assert.ok(interrupted.buffers.size>30,'back-forward restoration resumes missing sounds');
 interrupted.ctx.suspend=()=>new Promise(()=>{});
 assert.equal(await Promise.race([interrupted.prepareToLeave().then(()=>true),new Promise(resolve=>setTimeout(()=>resolve(false),100))]),true,'gesture-blocked Safari audio suspension must not block navigation');
-console.log('Validated safe decoded-sample loop boundaries, stable long grinds, rate/gain updates, stop/restart and untouched one-shots.');
+const resumeRejections=[];
+const onRejected=error=>resumeRejections.push(error.message);
+process.on('unhandledRejection',onRejected);
+try {
+  initialState='suspended';rejectResume=true;
+  const unavailable=new sfx.constructor();await unavailable.prepare();
+  await new Promise(resolve=>setImmediate(resolve));
+  unavailable.unlock();await new Promise(resolve=>setImmediate(resolve));
+  assert.deepEqual(resumeRejections,[],'device failures in startup and gesture resume must be handled');
+  assert.equal(unavailable.ctx.state,'suspended');
+  rejectResume=false;unavailable.unlock();await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(unavailable.ctx.state,'running','a later unlock retries after the device returns');
+  const count=sources.length;unavailable.play('railLand',.7,1,0);
+  assert.equal(sources.length,count+1,'recovery must retain decoded sound buffers');
+} finally {process.off('unhandledRejection',onRejected);initialState='running';rejectResume=false;}
+console.log('Validated audio loops, bounded decoding, navigation, asynchronous device failure handling and successful retry.');
