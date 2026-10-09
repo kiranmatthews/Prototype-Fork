@@ -55,7 +55,7 @@ jobs:
       - name: Enemy presentation and update regression
         run: node tools/test-enemy-catalog.mjs && node tools/test-game-update.mjs && node tools/test-update-game.mjs
       - name: Mobile resource regression
-        run: node tools/test-mobile-residency.mjs && node tools/test-idle-rope.mjs && node tools/test-audio-loops.mjs && node tools/test-stability-report.mjs && node tools/test-jungle-cup-ui.mjs
+        run: node tools/test-mobile-residency.mjs && node tools/test-idle-rope.mjs && npm run check:audio && node tools/test-stability-report.mjs && node tools/test-jungle-cup-ui.mjs
       - run: npm run build
       - uses: actions/configure-pages@v5
         with:

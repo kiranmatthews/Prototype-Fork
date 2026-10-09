@@ -3075,6 +3075,20 @@ export class Player {
     return this.freeSkate;
   }
 
+  // Sound alone bridges tiny native floor-contact gaps. Otherwise overlapping
+  // supports can restart the wheel loop and fire a landing clack every other
+  // tick. A real jump, fall, grind or dismount still ends the rolling sound.
+  private get skateSoundContact(): boolean {
+    return (this.state === 'ride' && this.grounded) ||
+      (this.state === 'air' && this.coyoteTimer > 0 &&
+        this.airborneT <= 0.08 && Math.abs(this.vVel) < 2);
+  }
+
+  get skateSoundRolling(): boolean {
+    return this.freeSkate && !this.sliding && !this.isBailing &&
+      Math.abs(this.speed) > 0.3 && this.skateSoundContact;
+  }
+
   /** Deterministic board-owned speed consumed only by camera presentation. */
   get cameraSkateSpeed(): number {
     return resolveCameraSkateSpeed({
@@ -8169,6 +8183,7 @@ export class Player {
     }
 
     if (landNow && hit) {
+      const audibleSkateLanding = !this.skateSoundContact;
       const vertPressStillHeld =
         input.jumpHeld &&
         this.vertBoardRelease.pressArmed;
@@ -8557,7 +8572,7 @@ export class Player {
       // A pipe drop-in doesn't announce itself — the wheels just meet the
       // transition and roll (THPS: the landing IS the flow). Ordinary fast
       // landings keep the transition sound.
-      if (!rollLanding && !wasPipeHang && Math.abs(this.speed) > TUNING.boardSpeed) sfx.play('skateTransition', 0.5);
+      if (audibleSkateLanding && !rollLanding && !wasPipeHang && Math.abs(this.speed) > TUNING.boardSpeed) sfx.play('skateTransition', 0.5);
       // LAND INTO A MANUAL: the flick finished moments before touchdown — come
       // down balanced on two wheels and the combo string STAYS ALIVE (no bank).
       if (this.manualing !== 0) {

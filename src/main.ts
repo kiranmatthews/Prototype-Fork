@@ -4819,17 +4819,9 @@ function allowRenderFrame(nowMs: number): boolean {
 function updateAudio(dt: number): void {
   const speedAbs = Math.abs(player.speed);
   const onGround = player.state === "ride" && player.grounded;
-  // Board rolling loop: above the boardSpeed slider, or any real momentum-
-  // skate roll (slow carves up a transition still sound like wheels).
-  // Slides are body slides — no board, no board noise.
-  // Tied to the skating STATE: wheels roll for as long as the board is out
-  // and actually moving — all the way down the roll-out, no speed cutoff.
-  // No speed door here either: wheels roll when the board is out and moving,
-  // and stay silent when it is stowed. The old `speedAbs > boardSpeed` term
-  // meant a fast run on foot rolled wheels that were not under you — and now
-  // that the deck itself is state-driven, it would have been rolling wheels
-  // that were not even on screen.
-  const skatingNow = onGround && !player.sliding && player.boardRolling && speedAbs > 0.3;
+  // Use the fixed-step audio contact policy: tiny floor-contact gaps must not
+  // restart the loop, while actual jumps, stops and stowed boards stay silent.
+  const skatingNow = player.skateSoundRolling;
   sfx.setLoop(
     "skate",
     "skateLoop",
