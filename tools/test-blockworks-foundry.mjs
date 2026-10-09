@@ -128,7 +128,14 @@ export function runFoundry(r,{exerciseReward=true,verifyRespawn=true}={}) {
   }
   spinKey('stairs',f.stairsKey);
   assert.ok(metal(f.groups.stairs).every(c=>!c.pending)&&metal(f.groups.bridge).every(c=>c.pending),'left key should build only access to the upper key');
-  bankHop(stairs[0],bankEdge-.65,3.6,8,true,'upper stair first pier');
+  const access=m.BLOCKWORKS_SKATE_RAMPS.find(w=>w.name==='Switch stair wedge 1');
+  assert.ok(access,'the switch-built stair approach is missing');
+  const direction=new THREE.Vector3(...access.high).sub(new THREE.Vector3(...access.low)).setY(0).normalize();
+  walk(new THREE.Vector3(...access.low).addScaledVector(direction,-1.2).toArray(),'align with the built stair ramp');
+  walk(access.low,'enter the built stair ramp');
+  walk(new THREE.Vector3(...access.high).addScaledVector(direction,.8).toArray(),'walk the built first stair wedge');
+  assert.ok(Math.abs(p.pos.y-stairs[0].q[1])<.12,'the built ramp must reach the first pier');
+  evidence.push({action:'walk the built first stair wedge',landing:position()});
   for(let i=1;i<stairs.length;i++)hopFrom(stairs[i-1],stairs[i],`upper stair ${i+1}`);
   hopFrom(stairs.at(-1),tower,'upper switch tower');
   spinKey('bridge',f.bridgeKey);

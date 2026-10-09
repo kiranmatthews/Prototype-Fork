@@ -50,6 +50,8 @@ The final build repeats the full-render catalog checks for all 55 levels and all
 
 The collision follow-up repeats all 55 full-render catalog checks and all 145 supported checkpoints on the combined `142a40b` build plus the momentum/floor fixes. It also completes Deadwater, Crab Chief and both Slipstream 2 browser routes. The subsequent temple clearance fix completes Terraces and Skyline in lite/full rendering and repeats their ground/chasm/checkpoint checks. See `TRAVERSAL_PERFORMANCE_FOLLOWUP.md`, `performance/deadwater-contact-followup.json` and `performance/temple-clearance-followup.json` for route evidence and preserved limitations.
 
+Blockworks now also completes all eight districts in headless, lite-browser and production full-render runs: 20,519 ticks, six checkpoints, the optional crystal and no deaths. Two shared vert fixes preserve authored launch velocity and restore held pumping on curved vert meshes. Geometric sweeps, independent walls, immediate release ownership, tuning and visual settings are preserved. See `performance/blockworks-vert-followup.json` and the continuous follow-up for the focused regressions and remaining isolated vert findings.
+
 The goal remains active. Entry/checkpoint/lifecycle probes do **not** prove a complete intended traversal of every course; see the continuous follow-up for current route coverage. Phase-rock wireframe preparation and particle uploads are resolved. The trace still finds first-play shader creation for the lazy particle batch and fruit variants, plus a HUD composite texture allocation. Those owners need further preparation work without changing when objects appear or their blend order. The residency, touch/portrait and graphics-recovery checks above cover the exercised scenarios; remaining course-specific validation continues.
 
 ## Individual level coverage
@@ -116,4 +118,4 @@ Full-render combined production build (`1ae0c10` plus the performance patch). Th
 
 ## Continuous follow-up
 
-See [TRAVERSAL_PERFORMANCE_FOLLOWUP.md](TRAVERSAL_PERFORMANCE_FOLLOWUP.md) for complete bonus, puzzle, After Hours, Deadwater, boss, Slipstream 2 and temple journeys, plus the preserved camera/replay findings and remaining course coverage. The full goal remains active.
+See [TRAVERSAL_PERFORMANCE_FOLLOWUP.md](TRAVERSAL_PERFORMANCE_FOLLOWUP.md) for complete bonus, puzzle, After Hours, Deadwater, boss, Slipstream 2, temple and Blockworks journeys, plus the preserved camera/replay findings and remaining course coverage. The full goal remains active.

@@ -71,10 +71,24 @@ export async function runAqueduct(f){
   until(()=>s()>=945,{moveY:1,grindHeld:true},{label:'seat and carry the launch-rail catch',maxFrames:30});
   assert.ok(s()>=944&&p.speed>12,'the launch rail must be caught beyond the bowl with real approach momentum');
   stage='charge and pop from rising rail';
-  until(()=>s()>=974.5,()=>({moveY:1,moveX:Math.max(-1,Math.min(1,-p.balance*5-p.balanceVel*.7)),grindHeld:true,jumpHeld:s()>962}),{label:stage,maxFrames:600});
-  tick({moveY:1,grindHeld:true,jumpReleased:true});popped=p.state==='air';
+  until(()=>launchRail.totalLength-p.grindT<=3,()=>({moveY:1,moveX:Math.max(-1,Math.min(1,-p.balance*5-p.balanceVel*.7)),grindHeld:true,jumpHeld:s()>962}),{label:stage,maxFrames:600});
+  const transferAim=()=>{
+   const horizon=.6,tangent=launchRail.tangentAt(p.grindT).multiplyScalar(p.grindDir).setY(0).normalize();
+   const side={x:-tangent.z,z:tangent.x},futureS=Math.max(982,Math.min(1010,s()-tangent.z*p.speed*horizon));
+   const target=m.routePoint(futureS,4.4,.8*(1012-futureS)/30);
+   const dx=target[0]-p.pos.x-tangent.x*p.speed*horizon,dz=target[2]-p.pos.z-tangent.z*p.speed*horizon;
+   const amount=Math.max(-1,Math.min(1,(dx*side.x+dz*side.z)/(f.TUNING.grindTransferSpeed*horizon)));
+   return f.worldDirectionInput({x:side.x*Math.sign(amount),z:side.z*Math.sign(amount)},Math.abs(amount));
+  };
+  // Commit the lateral hop before release, then re-press Grind in air.
+  // Airborne stick changes perform tricks; they do not steer the flight.
+  for(let i=0;i<3;i++)tick({...transferAim(),grindHeld:true,jumpHeld:true});
+  assert.equal(p.grindRail,launchRail,'the committed hop must release before the physical rail endpoint');
+  tick({...transferAim(),grindHeld:true,jumpReleased:true});popped=p.state==='air'&&p.grindOllieAir;
+  assert.ok(popped,'the rail transfer must use a charged ollie, not a natural roll-off');
+  tick({});
   stage='catch lower receiver';
-  until(()=>p.state==='grind'&&p.grindRail!==launchRail,()=>({...aim(7,Math.max(0,.8*(1012-s())/30)),grindHeld:true}),{label:stage,maxFrames:180});
+  until(()=>p.state==='grind'&&p.grindRail!==launchRail,{grindHeld:true},{label:stage,maxFrames:180});
   receiver=true;stage='exit to checkpoint';
   until(()=>s()>=1023&&p.grounded&&p.state==='ride',()=>({moveY:1,moveX:p.state==='grind'?Math.max(-1,Math.min(1,-p.balance*5-p.balanceVel*.7)):0,grindHeld:true}),{label:stage,maxFrames:900});
   stage='bank aqueduct checkpoint';

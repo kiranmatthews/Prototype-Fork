@@ -3919,8 +3919,9 @@ export class Player {
       // The old air press cannot become a fresh ollie, but a mounted landing
       // in a pipe must still let a HELD X pump the transition. Keep the release
       // edge consumed while restoring the continuous motor/crouch immediately.
+      const pipeSupport=!!this.groundHit?.halfpipe||this.groundHit?.vert===true&&this.groundHit.mesh?.userData.vertRampMesh===true;
       const pumpHeld = input.jumpHeld && this.state==='ride' && this.grounded &&
-        this.freeSkate && (!!this.groundHit?.halfpipe || this.charging&&this.chargeTimer>0) && !this.isBailing;
+        this.freeSkate && (pipeSupport || this.charging&&this.chargeTimer>0) && !this.isBailing;
       if(!pumpHeld){this.charging=false;this.chargeTimer=0;}
       // A full, newly earned ground load is now an intentional next ollie.
       // Only an immediate landing release remains owned by the preceding air.
@@ -14086,10 +14087,15 @@ export class Player {
     this.worldProposed.copy(this.pos);
     // Displacement includes a moving support's carry. Vertical speed remains
     // physical, so a floor snap cannot manufacture a violent ceiling impact.
-    if(displacementVelocity)this.worldVelocity.copy(this.pos).sub(this.worldStepOrigin).multiplyScalar(1/CONST.fixedStep);
+    // A vert takeoff shares a tick with the preceding climb. Its launch has
+    // already removed wall-normal carry; the earlier ground displacement
+    // must not put that outward speed back into the subsequent flight.
+    const lockedVertAir=this.state==='air'&&!this.grounded&&this.vertAir&&this.pipeHang&&!this.parkControls;
+    const fromDisplacement=displacementVelocity&&!lockedVertAir;
+    if(fromDisplacement)this.worldVelocity.copy(this.pos).sub(this.worldStepOrigin).multiplyScalar(1/CONST.fixedStep);
     else if(this.freeSkate||this.isBailing||this.state==='air'||this.state==='grind')this.worldVelocity.copy(this.axisF).multiplyScalar(this.speed);
     else this.worldVelocity.copy(this.walkVelocity);
-    if(!displacementVelocity){
+    if(!fromDisplacement){
       if(this.vertAir&&!this.parkControls){
         this.worldVelocity.x-=this.vertNormal.z*this.vertLatVel;
         this.worldVelocity.z+=this.vertNormal.x*this.vertLatVel;

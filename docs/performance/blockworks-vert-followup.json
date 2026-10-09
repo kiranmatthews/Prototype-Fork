@@ -1,0 +1,410 @@
+{
+  "schema": 1,
+  "date": "2026-10-09",
+  "baseCommit": "a6df5d6",
+  "integratedCommit": "f43594b",
+  "scope": [
+    "Use current airborne velocity for locked legacy vert contacts; retain the identical geometric sweep and independent solid walls.",
+    "Recognize supported curved vert meshes when restoring a held ground pump; retain immediate release ownership and full-charge rearming.",
+    "Correct adaptive Blockworks pilots for current enemies, wedges, checkpoints and charged rail transfers; share decisions with a normal-loop browser journey."
+  ],
+  "unchanged": [
+    "movement constants",
+    "authored level geometry",
+    "camera settings",
+    "render quality"
+  ],
+  "oldTakeoffContact": {
+    "frame": 903,
+    "impact": {
+      "name": "Vert vault \u00b7 clear wall-to-wall riding",
+      "point": [
+        72.58290881011452,
+        3.294400610169417,
+        -805.1733503600028
+      ],
+      "normal": [
+        -0.9440056961176342,
+        0.09799935181617457,
+        -0.3150386845152048
+      ],
+      "incoming": [
+        2.4432293252939985,
+        16.16423633112114,
+        1.1038706528233888
+      ],
+      "outgoing": [
+        1.4330491364101305,
+        16.26910540567789,
+        0.7667478588210551
+      ],
+      "impact": 1.0700996752862681,
+      "bailing": false
+    },
+    "after": {
+      "position": [
+        72.11624557166779,
+        3.0760575909597314,
+        -805.324279230097
+      ],
+      "axis": [
+        0.8817249597499958,
+        0,
+        0.47176381310340887
+      ],
+      "speed": 1.625279085687284,
+      "vVel": 16.26910540567789,
+      "vertNormal": [
+        -0.9485716531726582,
+        0,
+        -0.3165625037765685
+      ],
+      "vertLat": 0
+    }
+  },
+  "headless": {
+    "stage": "complete",
+    "seconds": 341.98333333333335,
+    "frames": 20519,
+    "distance": 3456.1869984206805,
+    "largestStep": 0.8159702837488649,
+    "checkpoints": [
+      {
+        "s": 422,
+        "frame": 2527
+      },
+      {
+        "s": 750,
+        "frame": 3420
+      },
+      {
+        "s": 1030,
+        "frame": 8399
+      },
+      {
+        "s": 1280,
+        "frame": 16449
+      },
+      {
+        "s": 1550,
+        "frame": 18454
+      },
+      {
+        "s": 1910,
+        "frame": 19527
+      }
+    ],
+    "finalPosition": [
+      62.40577582213834,
+      13.930666669150192,
+      -2114.147049362274
+    ]
+  },
+  "sourceSha256": "248a78bbc5db9f4aa87fcbc192dc96dfd812325458432a18842cdee4d8dc5cfc",
+  "browser": [
+    {
+      "mode": "lite",
+      "frames": 20519,
+      "seconds": 341.98333333335097,
+      "state": "finished",
+      "deaths": 0,
+      "checkpoints": [
+        {
+          "frame": 2527,
+          "index": 0
+        },
+        {
+          "frame": 3420,
+          "index": 1
+        },
+        {
+          "frame": 8399,
+          "index": 2
+        },
+        {
+          "frame": 16449,
+          "index": 3
+        },
+        {
+          "frame": 18454,
+          "index": 4
+        },
+        {
+          "frame": 19527,
+          "index": 5
+        }
+      ],
+      "tuningUnchanged": true,
+      "stamp": "Codex/sol fork \u00b7 build 10-08 13:10 UTC",
+      "errors": []
+    },
+    {
+      "mode": "full",
+      "frames": 20519,
+      "seconds": 341.98333333335097,
+      "state": "finished",
+      "deaths": 0,
+      "checkpoints": [
+        {
+          "frame": 2527,
+          "index": 0
+        },
+        {
+          "frame": 3420,
+          "index": 1
+        },
+        {
+          "frame": 8399,
+          "index": 2
+        },
+        {
+          "frame": 16449,
+          "index": 3
+        },
+        {
+          "frame": 18454,
+          "index": 4
+        },
+        {
+          "frame": 19527,
+          "index": 5
+        }
+      ],
+      "tuningUnchanged": true,
+      "stamp": "Codex/sol fork \u00b7 build 10-09 00:32 UTC",
+      "errors": []
+    }
+  ],
+  "aqueduct": {
+    "frames": 4993,
+    "receiver": true,
+    "rows": [
+      {
+        "focus": 826,
+        "peaks": [
+          6.344351395926773,
+          14.24077934864342,
+          15.801367654848777,
+          17.477218067299034,
+          17.77482314716977,
+          17.763940266008966,
+          17.771743911862792,
+          17.7722090153323
+        ],
+        "airCount": 8,
+        "broken": [
+          "Right high-air crate 2"
+        ]
+      },
+      {
+        "focus": 874,
+        "peaks": [
+          6.375437823013946,
+          13.974473474358202,
+          15.80221583564126,
+          19.225,
+          17.291145249391978,
+          17.2654790950788,
+          17.745864407794837,
+          17.799261408792773
+        ],
+        "airCount": 8,
+        "broken": [
+          "Left high-air crate 2"
+        ]
+      }
+    ]
+  },
+  "vertCases": [
+    {
+      "focus": 790,
+      "firstSide": -1,
+      "held": false,
+      "along": 0,
+      "peaks": [
+        6.371144228000976,
+        13.886814675769974,
+        15.44947524884551,
+        16.922269895156322
+      ]
+    },
+    {
+      "focus": 790,
+      "firstSide": 1,
+      "held": false,
+      "along": 0,
+      "peaks": [
+        6.371062170221994,
+        13.886677485658907,
+        15.449963457691833,
+        16.921904666995246
+      ]
+    },
+    {
+      "focus": 826,
+      "firstSide": -1,
+      "held": false,
+      "along": 0,
+      "peaks": [
+        6.369489806807437,
+        13.887732602850809,
+        15.450205716263072,
+        16.921822963155996
+      ]
+    },
+    {
+      "focus": 826,
+      "firstSide": 1,
+      "held": false,
+      "along": 0,
+      "peaks": [
+        6.372640046720346,
+        13.886903724157646,
+        18.425000000000004,
+        17.794994487093636
+      ]
+    },
+    {
+      "focus": 874,
+      "firstSide": -1,
+      "held": false,
+      "along": 0,
+      "peaks": [
+        6.367447794458169,
+        13.888298724862786,
+        15.449826203079724,
+        16.922824851039366
+      ]
+    },
+    {
+      "focus": 874,
+      "firstSide": 1,
+      "held": false,
+      "along": 0,
+      "peaks": [
+        6.335368362676491,
+        13.896976452160784,
+        15.33210957062452,
+        19.225
+      ]
+    },
+    {
+      "focus": 900,
+      "firstSide": -1,
+      "held": false,
+      "along": 0,
+      "peaks": [
+        6.36909796323132,
+        13.885083977419548,
+        15.452251166820327,
+        16.913557788354648
+      ]
+    },
+    {
+      "focus": 900,
+      "firstSide": 1,
+      "held": false,
+      "along": 0,
+      "peaks": [
+        6.332739525883293,
+        14.244200880459363,
+        15.79573797926855,
+        17.05112208566538
+      ]
+    },
+    {
+      "focus": 826,
+      "firstSide": -1,
+      "held": true,
+      "along": 0,
+      "peaks": [
+        5.313543135430665,
+        12.084648515724616,
+        15.656619203742464,
+        18.425000000000004
+      ]
+    },
+    {
+      "focus": 826,
+      "firstSide": 1,
+      "held": true,
+      "along": 0,
+      "peaks": [
+        5.316697037384562,
+        12.083912842355675,
+        18.425000000000004,
+        18.5717341662888
+      ]
+    },
+    {
+      "focus": 874,
+      "firstSide": -1,
+      "held": false,
+      "along": 0.2,
+      "peaks": [
+        5.48232896546715,
+        12.110530811923029,
+        9.90519358163362,
+        14.139835374922212
+      ]
+    },
+    {
+      "focus": 874,
+      "firstSide": 1,
+      "held": false,
+      "along": 0.2,
+      "peaks": [
+        5.652684397249087,
+        8.710400881172525,
+        14.910898575199393,
+        10.934221173336917
+      ]
+    }
+  ],
+  "movers": {
+    "carriedFrames": {
+      "0": 73,
+      "1": 51
+    },
+    "maximumCarryError": 1.9113599591946695e-12
+  },
+  "foundryRecovery": {
+    "frames": 8222,
+    "seconds": 137.03333333333333,
+    "deaths": 1,
+    "builtSteel": 700,
+    "verifyRespawn": true
+  },
+  "deadwaterFull": {
+    "frames": 5328,
+    "state": "finished",
+    "checkpoints": [
+      0,
+      1
+    ],
+    "transfers": 5,
+    "jumps": 4,
+    "loopFrames": 542,
+    "tuningUnchanged": true,
+    "stamp": "Codex/sol fork \u00b7 build 10-09 00:32 UTC",
+    "errors": []
+  },
+  "validation": {
+    "newRegressionPasses": true,
+    "newRegressionFailsUnchangedParent": true,
+    "vertAirCases": 48,
+    "velocityRoundTrips": 2000,
+    "realMomentumContacts": 12,
+    "floorSeamCases": 44,
+    "jumpCancellationReplay": true,
+    "solidPlayer": true,
+    "typecheck": true,
+    "productionBuild": true,
+    "fullSuiteRun": false
+  },
+  "limits": [
+    "Complete Blockworks route includes its optional crystal and central high-air rewards, but does not claim every optional crate.",
+    "Existing waterpark held-pump, waterpark return-distance, competition fixed-frame and stowed-air slam assertions remain open; see TRAVERSAL_PERFORMANCE_FOLLOWUP.md.",
+    "The wider goal remains active for other full-course journeys and first-use GPU preparation."
+  ]
+}

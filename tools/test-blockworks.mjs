@@ -22,7 +22,8 @@ export function runOpeningAndTerrace(r) {
     const { routePoint, BLOCKWORKS_CLIMBS } = r.sourceModule;
     const at = (s, y = 0, u = 0) => routePoint(s, y, u);
     const progress = () => station(p);
-    const entryOffset = s => s > 112 && s < 145 ? 2.2 * Math.sin(Math.PI * (s - 112) / 33) : 0;
+    const entryOffset = s => s > 32 && s < 66 ? 3.2 * Math.sin(Math.PI * (s - 32) / 34)
+      : s > 112 && s < 145 ? 2.2 * Math.sin(Math.PI * (s - 112) / 33) : 0;
     r.skateAlong(s => at(s, 0, entryOffset(s)), { to: 164.7, progress, lookAhead: 9,
       label: 'charge and carve from the authored spawn' });
     const takeoff = r.snapshot();
@@ -56,9 +57,12 @@ export function runOpeningAndTerrace(r) {
 
     // Ride the entire return curve and leave its authored endpoint naturally.
     // Held charge stays held; the pilot never manufactures a rail-exit ollie.
-    r.until(() => p.state === 'grind', () => ({
-      ...r.steerToward(at(Math.min(374,progress()+5),7.2,2.8)), jumpHeld:true,grindHeld:true,
-    }), { maxFrames: 900, label: 'mount and catch the curved outer parapet' });
+    let railBrake=false;
+    r.until(() => p.state === 'grind', () => {
+      if(p.speed>12)railBrake=true;else if(p.speed<9)railBrake=false;
+      return {...r.steerToward(at(Math.min(374,progress()+5),7.2,2.8)),
+        jumpHeld:true,grindHeld:true,grabHeld:railBrake};
+    }, { maxFrames: 900, label: 'mount and catch the curved outer parapet' });
     const railEntry = r.snapshot();
     r.grindUntil(() => p.state !== 'grind', { buttons:{jumpHeld:true}, maxFrames:1800,
       label:'balance through the parapet return and natural rail end' });
@@ -71,8 +75,12 @@ export function runOpeningAndTerrace(r) {
       { maxFrames:180,label:'natural parapet exit lands on the roof'});
     assert.ok(progress()>416 && Math.abs(p.pos.y-7.2)<.1,'natural parapet exit missed the roof');
     const railLanding=r.snapshot();
-    r.skateAlong(s=>at(s,7.2,2.4), {to:426,progress,lookAhead:6,
-      buttons:{spinHeld:true},label:'collect the first well-spaced checkpoint'});
+    const firstCheckpoint=r.sourceModule.BLOCKWORKS_CHECKPOINTS.find(cp=>cp.s===422);
+    assert.ok(firstCheckpoint,'the first checkpoint metadata is missing');
+    r.until(()=>l.checkpoints[0].active,()=>({
+      ...r.steerToward(firstCheckpoint.p,{pace:.6}),jumpHeld:true,
+      spinHeld:r.distanceTo(firstCheckpoint.p)<4&&(p.spinning||!r.lastInput.spinHeld),
+    }),{maxFrames:600,label:'carve to and spin the actual roof checkpoint'});
     r.skateAlong(s=>at(s,0), {to:510,progress,lookAhead:9,label:'spend roof height through the descending curve'});
     assert.equal(p.totalDeaths,0,'positive run respawned between districts');
     assert.ok(l.checkpoints[0].active,'positive run never activated the first checkpoint');
