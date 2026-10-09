@@ -1,9 +1,11 @@
 // Actual recorded inputs plus native keyboard launches on the authored pools.
 import assert from 'node:assert/strict';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const base = (process.argv[2] || 'http://127.0.0.1:5273').replace(/\/$/, '');
-const output = process.env.VERT_REVIEW_OUTPUT || '/private/tmp/deadwater-vert-review';
+const output = process.env.VERT_REVIEW_OUTPUT || join(tmpdir(),'deadwater-vert-review');
 const recording = JSON.parse(await readFile(new URL('./fixtures/deadwater-vert-replay.json', import.meta.url), 'utf8'));
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
@@ -36,15 +38,17 @@ try {
     await page.waitForFunction(() => window.__game.getCompetition()?.phase === 'running', null, { timeout: 20000 });
     const recorded = await page.evaluate(() => {
       const g = window.__game, p = g.player, l = g.getLevel(), q = window.__vertReview;
-      let launch;
-      while (g.replayer.frame < 550) {
+      let launch,transition;
+      while (g.replayer.frame < 1260) {
         q.feed(g.input, p.camDir); q.step(1 / 60, g.input, l); l.update(1 / 60);
         p.flushLevelCrateRewards(l); p.commitRenderStep(l); q.consume();
         if (g.replayer.frame === 510) launch = { normal: p.vertNormal.toArray(), pipe: l.halfpipes.indexOf(p.hangPipe), vert: p.vertAir };
+        if (g.replayer.frame === 1260) transition = { pipe: l.halfpipes.indexOf(p.hangPipe), vert:p.vertAir,speed:p.speed };
       }
-      return launch;
+      return {...launch,transition};
     });
     assert.equal(recorded.vert, true); assert.equal(recorded.pipe, 2); assert.ok(recorded.normal[2] > .99);
+    assert.equal(recorded.transition.vert,true);assert.equal(recorded.transition.pipe,4);assert.equal(recorded.transition.speed,0);
     await page.screenshot({ path: `${output}/replay-${lite ? 'lite' : 'full'}.png` });
     results.push({ lite, recorded });
     await page.evaluate(() => {

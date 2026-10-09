@@ -1,4 +1,3 @@
-import {solidContact, type SolidSurface} from './worldSolids';
 import { surfaceGrip } from './surfaceBehavior';
 import type { LoopCameraFrame, LoopFallCameraFrame } from './loopCamera';
 import { LOOP_TURN, loopContactPressure, sampleLoop, stepLoopMotion, type LoopShape } from './loopRide';
@@ -146,7 +145,6 @@ import { ROLL_LANDING_CLIP_ID, ROLL_LANDING_DURATION, ROLL_LANDING_CONTROL_SECON
 import {
   BASE_CHARACTER_HITBOX_HEIGHT,
   characterCollisionHeight,
-  characterDesignHeight,
 } from './character/collisionDimensions';
 import {
   characterProportionSettings,
@@ -875,35 +873,6 @@ export class Player {
   private bailRecoveryPose = 0; // 0..1 fixed-step roll/kneel/rise phase
   private bailGroundT = 0; // uninterrupted stable support before roll-up may start
   private bailExitSpeed = 0; // capped run-out target when direction is held
-  private worldStandingHeight=1.6;
-  private readonly isCurrentGrindSupport=(surface:SolidSurface):boolean=>{
-    if(this.state!=='grind'||this.isBailing||!this.grindRail)return false;
-    const index=this.grindRail.object.userData.editorIdx;
-    const owner=surface.owner as {t?:string}|undefined;
-    // An accepted catch eases the feet up onto the crest. Its own hanging
-    // rail body is support during that move, not a new wall impact. Keep
-    // other components solid, and restore this body's collisions on release.
-    return Number.isInteger(index)&&surface.mesh.userData.editorIdx===index&&
-      (owner?.t==='rail'||owner?.t==='trickrail');
-  };
-  private readonly worldStepOrigin=new THREE.Vector3();
-  private readonly worldLateOrigin=new THREE.Vector3();
-  private readonly worldContact=solidContact();
-  private readonly worldStepContact=solidContact();
-  private readonly worldRaisedFrom=new THREE.Vector3();
-  private readonly worldRaisedTo=new THREE.Vector3();
-  private readonly worldVelocity=new THREE.Vector3();
-  private readonly worldNormal=new THREE.Vector3();
-  private readonly worldAxis=new THREE.Vector3(0,1,0);
-  private readonly worldSurfaceVelocity=new THREE.Vector3();
-  private readonly worldProposed=new THREE.Vector3();
-  private worldContactCount=0;
-  private worldLastImpact:{name:string;point:number[];normal:number[];incoming:number[];outgoing:number[];impact:number;bailing:boolean}|null=null;
-  private worldTripT=0;
-  private readonly worldTripNormal=new THREE.Vector3();
-  private worldTripPlane=0;
-  private worldTripTop=0;
-  get worldImpactDiagnostics(){return{count:this.worldContactCount,last:this.worldLastImpact};}
   private readonly bailVelocity = new THREE.Vector3(); // world-space recovery carry
   private readonly bailRecoverySample = sampleBailRecovery(0);
   private bailSupportOffset = 0;
@@ -2585,9 +2554,6 @@ export class Player {
 
   private syncCharacterHitboxDimensions(): void {
     this.interactionVersion++;
-    // Hard world contact follows the actual authored stature. The smaller
-    // legacy interaction box remains responsible for forgiving crate/enemy play.
-    this.worldStandingHeight=1.36*characterDesignHeight(characterProportionSettings.value,characterProportionSettings.activeHeadProfile);
     this.hitboxHalf.y =
       characterCollisionHeight(
         characterProportionSettings.value,
@@ -3724,7 +3690,6 @@ export class Player {
     this.lastTy = 0;
     this.rideNormal.set(0, 1, 0);
     this.prevPos.copy(this.pos);
-    this.worldTripT=0;this.worldStepOrigin.copy(this.pos);level.prepareWorldSolids?.();level.worldSolids?.resetMotion();
     this.snapRenderInterpolation();
     for (const s of this.sparks) {
       s.life = 0;
@@ -3774,8 +3739,6 @@ export class Player {
 
   // One deterministic fixed step.
   step(dt: number, input: Input, level: Level): void {
-    level.prepareWorldSolids?.();this.worldStepOrigin.copy(this.pos);
-    this.worldTripT=Math.max(0,this.worldTripT-dt);
     // Detached sockets are a final presentation layer. Never let them enter
     // the authored-pose baseline, interaction bounds or movement simulation.
     this.breakApart?.restore();
@@ -3919,9 +3882,8 @@ export class Player {
       // The old air press cannot become a fresh ollie, but a mounted landing
       // in a pipe must still let a HELD X pump the transition. Keep the release
       // edge consumed while restoring the continuous motor/crouch immediately.
-      const pipeSupport=!!this.groundHit?.halfpipe||this.groundHit?.vert===true&&this.groundHit.mesh?.userData.vertRampMesh===true;
       const pumpHeld = input.jumpHeld && this.state==='ride' && this.grounded &&
-        this.freeSkate && (pipeSupport || this.charging&&this.chargeTimer>0) && !this.isBailing;
+        this.freeSkate && (!!this.groundHit?.halfpipe || this.charging&&this.chargeTimer>0) && !this.isBailing;
       if(!pumpHeld){this.charging=false;this.chargeTimer=0;}
       // A full, newly earned ground load is now an intentional next ollie.
       // Only an immediate landing release remains owned by the preceding air.
@@ -3976,7 +3938,6 @@ export class Player {
         return;
       }
       this.stepRope(dt, input, level);
-      this.resolveWorldContact(level);
       this.stepBossEncounter(dt, level);
       this.blastCheck(level); // a bomb under the rope/ledge still gets you
       this.updateSpin(dt, input); // Square spins on the rope: mid-air smash
@@ -7099,37 +7060,26 @@ export class Player {
     }
     if (!hit && this.freeSkate && this.groundHit?.vert === true && this.groundHit.mesh?.userData.vertRampMesh) {
       const mesh = this.groundHit.mesh;
-      // Authored quarter surfaces need the same floor handoff as analytic
-      // bowls. Do not project back underneath a reachable exit ribbon.
-      const floor = this.rideNormal.y >= CONST.steepSnapNormal ? this.queryGround(level) : null;
-      if (floor && floor.mesh !== mesh && floor.vert === false && floor.normal.y >= CONST.steepSnapNormal &&
-          floor.y <= Math.max(this.pos.y, this.prevPos.y) + 0.8 && floor.y >= this.pos.y - 1.4) {
-        hit = floor;
-        this.pos.y = floor.y;
-        this.rideNormal.copy(floor.normal);
-      }
-      if (!hit) {
-        // Follow the face along its normal. A world-down feeler becomes
-        // parallel to vert and was sampling the foundation THROUGH the ramp.
-        VERT_RAY_O.copy(this.pos).addScaledVector(this.rideNormal, 0.7);
-        VERT_RAY_D.copy(this.rideNormal).negate();
-        this.raycaster.set(VERT_RAY_O, VERT_RAY_D);
-        this.raycaster.far = 1.5;
-        const contact = this.raycaster.intersectObject(mesh, false).find(h => h.face &&
-          h.face.normal.clone().transformDirection(mesh.matrixWorld).dot(this.rideNormal) > 0.25);
-        if (contact?.face) {
-          const normal = contact.face.normal.clone().transformDirection(mesh.matrixWorld);
-          if (normal.y >= 0 && contact.point.distanceTo(this.pos) < 0.7) {
-            this.pos.copy(contact.point);
-            hit = { y: contact.point.y, normal, name: mesh.name, vert: mesh.userData.vert, gravityTrack:mesh.userData.gravityTrack===true, skateCamera:mesh.userData.skateCamera===true, mesh };
-            this.rideNormal.copy(normal);
-          }
+      // Follow the face along its normal. A world-down feeler becomes
+      // parallel to vert and was sampling the foundation THROUGH the ramp.
+      VERT_RAY_O.copy(this.pos).addScaledVector(this.rideNormal, 0.7);
+      VERT_RAY_D.copy(this.rideNormal).negate();
+      this.raycaster.set(VERT_RAY_O, VERT_RAY_D);
+      this.raycaster.far = 1.5;
+      const contact = this.raycaster.intersectObject(mesh, false).find(h => h.face &&
+        h.face.normal.clone().transformDirection(mesh.matrixWorld).dot(this.rideNormal) > 0.25);
+      if (contact?.face) {
+        const normal = contact.face.normal.clone().transformDirection(mesh.matrixWorld);
+        if (normal.y >= 0 && contact.point.distanceTo(this.pos) < 0.7) {
+          this.pos.copy(contact.point);
+          hit = { y: contact.point.y, normal, name: mesh.name, vert: mesh.userData.vert, gravityTrack:mesh.userData.gravityTrack===true, skateCamera:mesh.userData.skateCamera===true, mesh };
+          this.rideNormal.copy(normal);
         }
       }
     }
     if (!hit) hit = this.queryGround(level);
     const steepHit = hit !== null && hit.normal.y < CONST.steepSnapNormal;
-    const upWindow = (this.freeSkate || this.relicKey==='treehouse-trail') && steepHit ? TUNING.wallStick : 0.8;
+    const upWindow = steepHit ? TUNING.wallStick : 0.8;
     const downWindow = steepHit ? TUNING.wallStick : 1.4;
     if(hit?.outOfBounds&&hit.y>=this.pos.y-downWindow&&hit.y<=this.pos.y+upWindow){this.returnFromOutOfBounds(level);return;}
     if(hit?.lethal&&hit.y>=this.pos.y-downWindow&&hit.y<=this.pos.y+upWindow){
@@ -7544,7 +7494,7 @@ export class Player {
       VERT_RAY_D.copy(this.vertNormal).negate();
       this.raycaster.set(VERT_RAY_O, VERT_RAY_D);
       this.raycaster.far = SKATE_PARK.breakProbeLength;
-      if ((level.raycastGround?.(this.raycaster)??this.raycaster.intersectObjects(level.groundMeshes, false)).length > 0) return;
+      if (this.raycaster.intersectObjects(level.groundMeshes, false).length > 0) return;
 
       const outward = Math.hypot(this.vVel, this.vertLatVel) * SKATE_PARK.breakOutScale;
       this.parkVelocity.set(-this.vertNormal.z * this.vertLatVel - this.vertNormal.x * outward,
@@ -7570,7 +7520,7 @@ export class Player {
       VERT_RAY_D.copy(oldNormal).negate();
       this.raycaster.set(VERT_RAY_O, VERT_RAY_D);
       this.raycaster.far = SKATE_PARK.trackReach * 2;
-      const contact = (level.raycastGround?.(this.raycaster)??this.raycaster.intersectObjects(level.groundMeshes, false)).find(h =>
+      const contact = this.raycaster.intersectObjects(level.groundMeshes, false).find(h =>
         h.face && h.object.userData.vert === true &&
         (!this.hangPipe || h.object.userData.halfpipe === this.hangPipe));
       if (!contact?.face) continue;
@@ -8806,7 +8756,7 @@ export class Player {
       VERT_RAY_D.set(-n.x, 0, -n.z);
       this.raycaster.set(VERT_RAY_O, VERT_RAY_D);
       this.raycaster.far = 5.2;
-      const hits = (level.raycastGround?.(this.raycaster)??this.raycaster.intersectObjects(level.groundMeshes, false));
+      const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
       const h = hits[0];
       if (!h || !h.face) continue;
       if (h.object.userData.halfpipe) continue; // analytic pipes keep their own hang rules
@@ -11236,7 +11186,7 @@ export class Player {
     VERT_RAY_D.set(-side.x, 0, -side.z);
     this.raycaster.set(VERT_RAY_O, VERT_RAY_D);
     this.raycaster.far = 0.8;
-    for (const contact of (level.raycastGround?.(this.raycaster)??this.raycaster.intersectObjects(level.groundMeshes, false))) {
+    for (const contact of this.raycaster.intersectObjects(level.groundMeshes, false)) {
       const mesh = contact.object;
       const hp = mesh.userData.halfpipe as Halfpipe | undefined;
       if (!contact.face || mesh.userData.vert !== true || (!hp && !mesh.userData.vertRampMesh)) continue;
@@ -11960,14 +11910,11 @@ export class Player {
         this.airFromSkate = portalBoard;
         this.airMomentum = portalBoard;
         this.laneCursor.s = -1; this.viewInput.reset();this.chiefInput.reset();
-        this.worldStepOrigin.copy(this.pos);
         this.returnPortalCoolT = 0.35;
         this.emitSparks(12, 0x9f72ff, 2);
         sfx.play('woosh2', 0.85, 1.2);
       }
     }
-    this.resolveWorldContact(level);
-    this.worldLateOrigin.copy(this.pos);
     const half = this.hitboxHalf;
     if (!ledgeOnly && this.state !== 'grind' && !this.wallriding) {
       const coastHit = level.resolveCoastBoundary(
@@ -12828,7 +12775,6 @@ export class Player {
               this.tryLedgeGrab(w, level)
             )
               break;
-            if(level.worldSolids?.enabled&&!this.hubMode&&this.relicKey!=='treehouse-trail')continue;
             const bx = this.pos.x;
             const bz = this.pos.z;
             const bs = this.speed;
@@ -12838,7 +12784,6 @@ export class Player {
             break; // one logical path resolves once, never once per broadphase slice
           }
           if (this.tryLedgeGrab(w, level)) break; // caught its lip — hanging
-          if(level.worldSolids?.enabled&&!this.hubMode&&this.relicKey!=='treehouse-trail')continue;
           const bx = this.pos.x;
           const bz = this.pos.z;
           const bs = this.speed; // pushOutOf full-stops; keep the crash speed
@@ -13006,15 +12951,6 @@ export class Player {
       this.points += CONST.ptsCrystal;
       sfx.play('crystalGet', 1.0);
       this.onComboRunWin();
-    }
-
-    // Legacy crate/rail reactions may reposition a body after the first
-    // sweep. Constrain that move too; a rail trip must not place a ragdoll
-    // behind a neighbouring stone wall before its next physics tick.
-    if(level.worldSolids?.enabled&&this.state!=='hang'&&!this.pos.equals(this.worldLateOrigin)){
-      this.translateCollisionBoxes(this.pos.x-(this.feetBox.min.x+this.feetBox.max.x)*.5,
-        this.pos.y-this.feetBox.min.y,this.pos.z-(this.feetBox.min.z+this.feetBox.max.z)*.5);
-      this.worldStepOrigin.copy(this.worldLateOrigin);this.resolveWorldContact(level,false);
     }
 
     // Resolve adjacent safety faces together, so a side contact cannot skip
@@ -14065,107 +14001,6 @@ export class Player {
       THREE.MathUtils.lerp(lo, hi, this.simRand());
   }
 
-  private setCollisionPlanarVelocity(velocity:THREE.Vector3):void{
-    // The response is the complete world velocity. Consume the secondary
-    // channels it already contains before putting it into speed/heading;
-    // otherwise the next air tick adds their momentum a second time.
-    if(this.vertAir&&!this.parkControls)this.vertLatVel=0;
-    if(this.grindExitAir&&this.airFromSkate)this.grindAirLat=0;
-    this.slideAirLat=0;
-    const speed=Math.hypot(velocity.x,velocity.z);
-    if(speed>.0001){const sign=velocity.x*this.axisF.x+velocity.z*this.axisF.z<0?-1:1;this.speed=speed*sign;this.axisF.set(velocity.x/this.speed,0,velocity.z/this.speed);this.axisL.set(this.axisF.z,0,-this.axisF.x);}else this.speed=0;
-  }
-
-  /** One physical boundary for native triangles, structural props and moving
-   * geometry. Only ordinary floor acceptance stays with the ride solver. */
-  private resolveWorldContact(level:Level,displacementVelocity=true):void{
-    // Restore Treehouse's authored floor/pipe and wall collision path. The
-    // added body sweep blocks its fitted low rocks before the feet can climb.
-    if(this.hubMode||!level.worldSolids?.enabled||this.state==='hang'||this.relicKey==='treehouse-trail')return;
-    const half=this.hitboxHalf,down=this.isBailing||this.state==='dead';
-    const height=Math.max(half.y*2,this.worldStandingHeight*(down?.58:this.crawling?.6:this.sliding?.55:1-.14*this.chargePose));
-    const radius=Math.min(height*.49,down?Math.max(.55,half.x,half.z):Math.max(half.x,half.z));
-    this.worldAxis.copy(this.grounded&&!down?this.rideNormal:VERT_UP).normalize();
-    this.worldProposed.copy(this.pos);
-    // Displacement includes a moving support's carry. Vertical speed remains
-    // physical, so a floor snap cannot manufacture a violent ceiling impact.
-    // A vert takeoff shares a tick with the preceding climb. Its launch has
-    // already removed wall-normal carry; the earlier ground displacement
-    // must not put that outward speed back into the subsequent flight.
-    const lockedVertAir=this.state==='air'&&!this.grounded&&this.vertAir&&this.pipeHang&&!this.parkControls;
-    const fromDisplacement=displacementVelocity&&!lockedVertAir;
-    if(fromDisplacement)this.worldVelocity.copy(this.pos).sub(this.worldStepOrigin).multiplyScalar(1/CONST.fixedStep);
-    else if(this.freeSkate||this.isBailing||this.state==='air'||this.state==='grind')this.worldVelocity.copy(this.axisF).multiplyScalar(this.speed);
-    else this.worldVelocity.copy(this.walkVelocity);
-    if(!fromDisplacement){
-      if(this.vertAir&&!this.parkControls){
-        this.worldVelocity.x-=this.vertNormal.z*this.vertLatVel;
-        this.worldVelocity.z+=this.vertNormal.x*this.vertLatVel;
-      }
-      if(this.grindExitAir&&this.airFromSkate&&!this.isBailing)this.worldVelocity.addScaledVector(this.axisL,this.grindAirLat);
-      if(this.slideAirLat!==0)this.worldVelocity.addScaledVector(this.axisL,this.slideAirLat);
-    }
-    this.worldVelocity.y=this.vVel;
-    const entrySpeed=this.speed;
-    const query={low:down?.8:radius,high:Math.max(down?.9:radius,height-radius),radius,axis:this.worldAxis,supportNormal:this.worldAxis,ignoreGround:true,
-      groundStep:down?undefined:!this.grounded?0:this.rideNormal.y>=CONST.steepSnapNormal?.8:undefined,
-      soleClearance:this.state==='grind'?.32:this.grounded&&!down?.08:undefined,
-      ignore:this.state==='grind'&&!down?this.isCurrentGrindSupport:undefined};
-    if(!level.worldSolids.resolve(this.worldStepOrigin,this.pos,query,this.worldContact))return;
-    const hit=this.worldContact,n=this.worldNormal.copy(hit.normal);
-    // Retain the ride solver's existing 0.8 m step window. Probe over the
-    // contacted edge and sweep both the lift and the raised body, so a low
-    // plinth is walkable without allowing a step through an overhang.
-    if(this.grounded&&!down&&Math.abs(n.y)<.65&&
-        (!this.freeSkate||Math.abs(entrySpeed)<TUNING.wallBailSpeed||hit.surface?.mesh.userData.finishPad)){
-      const support=this.queryGround(level,-n.x*(radius+.08),-n.z*(radius+.08),this.worldStepOrigin.y+.8);
-      const lift=support?support.y-this.worldStepOrigin.y:0;
-      if(support&&!support.lethal&&!support.outOfBounds&&support.normal.y>=CONST.steepSnapNormal&&lift>.02&&lift<=.8){
-        this.worldRaisedFrom.copy(this.worldStepOrigin);this.worldRaisedFrom.y=support.y+.004;
-        this.worldRaisedTo.copy(this.worldProposed);this.worldRaisedTo.y=support.y+.004;
-        if(!level.worldSolids.cast(this.worldStepOrigin,this.worldRaisedFrom,query,this.worldStepContact)&&
-           !level.worldSolids.cast(this.worldRaisedFrom,this.worldRaisedTo,query,this.worldStepContact)){
-          this.pos.copy(this.worldRaisedTo);this.translateCollisionBoxes(this.pos.x-this.worldProposed.x,this.pos.y-this.worldProposed.y,this.pos.z-this.worldProposed.z);
-          this.groundHit=support;this.rideNormal.copy(support.normal);return;
-        }
-      }
-    }
-    const shiftX=this.pos.x-this.worldProposed.x,shiftY=this.pos.y-this.worldProposed.y,shiftZ=this.pos.z-this.worldProposed.z;
-    this.translateCollisionBoxes(shiftX,shiftY,shiftZ);
-    if(hit.fraction===0&&hit.depth>.035)this.prevPos.addScaledVector(n,hit.depth+.004);
-    this.worldSurfaceVelocity.copy(hit.surfaceDelta).multiplyScalar(1/CONST.fixedStep);
-    this.worldVelocity.sub(this.worldSurfaceVelocity);
-    const into=-this.worldVelocity.dot(n);if(into<=.03)return;
-    const incoming=this.worldVelocity.clone().add(this.worldSurfaceVelocity).toArray();
-    const planar=Math.hypot(this.worldVelocity.x,this.worldVelocity.z),normalPlanar=Math.hypot(n.x,n.z);
-    const frontal=normalPlanar>.7?-(n.x*this.worldVelocity.x+n.z*this.worldVelocity.z)/Math.max(.001,normalPlanar*planar):into/Math.max(.001,this.worldVelocity.length());
-    const fatal=this.state==='dead'||this.state==='gameover';
-    const crash=!fatal&&!this.isBailing&&into>=TUNING.wallBailSpeed&&frontal>=TUNING.wallBailFrontal;
-    const trip=crash&&Math.abs(n.y)<.55&&hit.top<this.pos.y+TUNING.tripMaxHeight;
-    if(trip){
-      const launch=this.lowObstacleTripLaunch(entrySpeed);
-      this.bail(false,entrySpeed,'trip',into);this.startRagdoll('forward');this.vVel=Math.max(this.vVel,launch);this.speed=this.lowObstacleTripCarry(entrySpeed);
-      this.state='air';this.grounded=false;this.airFromSkate=false;this.airGrav='board';this.airMomentum=true;
-      this.worldTripT=.45;this.worldTripNormal.copy(n);this.worldTripPlane=n.dot(hit.point);this.worldTripTop=hit.top;
-    }else{
-      const sameTrip=this.worldTripT>0&&this.vVel>0&&this.worldTripNormal.dot(n)>.95&&Math.abs(this.worldTripNormal.dot(hit.point)-this.worldTripPlane)<.06&&hit.top<=this.worldTripTop+.08;
-      if(sameTrip)return; // remain physically blocked while the trip lifts the core over the lip
-      if(crash){this.bail(false,entrySpeed,'wall',into);this.startRagdoll('back');this.wallriding=false;this.state='air';this.grounded=false;this.airFromSkate=false;this.airGrav='foot';this.airMomentum=true;}
-      if(!crash&&!this.isBailing&&!fatal&&Math.abs(n.y)<.4&&this.softSkateImpact(n.x,n.z,entrySpeed))return;
-      const bouncing=crash||this.isBailing||fatal,restitution=crash?.32:bouncing?THREE.MathUtils.clamp(TUNING.ragBounce,0,.8):0;
-      this.worldVelocity.addScaledVector(n,into).multiplyScalar(bouncing?.82:1).addScaledVector(n,into*restitution).add(this.worldSurfaceVelocity);
-      if(crash&&n.y>-.3)this.worldVelocity.y=Math.max(this.worldVelocity.y,3.6);
-      this.vVel=this.worldVelocity.y;
-      this.setCollisionPlanarVelocity(this.worldVelocity);
-      this.walkVelocity.copy(this.worldVelocity).setY(0);if(this.swimming)this.swimVelocity.copy(this.worldVelocity);
-      if(this.isBailing){this.bailVelocity.copy(this.worldVelocity).setY(0);this.ragAngVel.multiplyScalar(.78);}
-      if(bouncing&&into>2){sfx.play('crunch',Math.min(.9,.35+into*.02),.75);this.emitSparks(6,0xffd166,1.7);this.emitDust(2);}
-    }
-    this.worldContactCount++;
-    this.worldLastImpact={name:hit.surface?.name??'Solid surface',point:hit.point.toArray(),normal:n.toArray(),incoming,
-      outgoing:[this.axisF.x*this.speed,this.vVel,this.axisF.z*this.speed],impact:into,bailing:this.isBailing};
-  }
-
   private softSkateImpact(nx: number, nz: number, entrySpeed: number, threshold = TUNING.wallBailSpeed): boolean {
     if (this.hubMode || !this.freeSkate || !this.grounded || this.state !== 'ride' ||
         this.isBailing || this.sliding || Math.abs(entrySpeed) >= threshold) return false;
@@ -14643,7 +14478,7 @@ export class Player {
     this.raycaster.set(LEDGE_RAY_ORIGIN.set(x, rayTop, z), LEDGE_DOWN);
     this.raycaster.near = 0;
     this.raycaster.far = Math.max(0.05, rayTop - rayBottom);
-    const hits = (level.raycastGround?.(this.raycaster)??this.raycaster.intersectObjects(level.groundMeshes, false));
+    const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
     for (const hit of hits) {
       const data = hit.object.userData as { halfpipe?: unknown; vert?: boolean; ledgeGrab?: boolean; ledgeReceiverDrop?: number };
       if (data.halfpipe || data.vert === true || !hit.face || (!landingReceiver && data.ledgeGrab === false)) continue;
@@ -15761,8 +15596,7 @@ export class Player {
     this.pos.addScaledVector(this.axisF, this.speed * dt);
     this.vVel = Math.max(-CONST.maxFallSpeed, this.vVel - TUNING.fallGravity * dt);
     this.pos.y += this.vVel * dt;
-    this.resolveWorldContact(level);
-    for (const wall of level.worldSolids?.enabled&&this.relicKey!=='treehouse-trail'?[]:level.walls) {
+    for (const wall of level.walls) {
       if (this.pos.y > wall.max.y || this.pos.y + this.hitboxHalf.y * 2 < wall.min.y) continue;
       const hx = CONST.playerHalf.x + 0.02;
       const hz = CONST.playerHalf.z + 0.02;
@@ -15983,7 +15817,7 @@ export class Player {
     VERT_RAY_D.multiplyScalar(1 / distance);
     this.raycaster.set(VERT_RAY_O, VERT_RAY_D);
     this.raycaster.far = distance + 0.015;
-    for (const hit of (level.raycastGround?.(this.raycaster)??this.raycaster.intersectObjects(level.groundMeshes, false))) {
+    for (const hit of this.raycaster.intersectObjects(level.groundMeshes, false)) {
       if (!hit.face || !hit.object.userData.vertRampMesh || hit.object.userData.vert !== true) continue;
       const normal = hit.face.normal.clone().transformDirection(hit.object.matrixWorld);
       if (normal.y < 0 || normal.dot(VERT_RAY_D) >= -1e-4) continue;
@@ -16000,10 +15834,6 @@ export class Player {
     oz = 0,
     maximumSurfaceY = Number.POSITIVE_INFINITY,
   ): GroundHit | null {
-    // The wide wall-stick window belongs to the board. A runner/crawler
-    // must keep the reachable lower floor when a rope or ceiling is above it.
-    const walkingSupport=this.relicKey!=='treehouse-trail'&&this.state==='ride'&&this.grounded&&!this.freeSkate&&!this.isBailing;
-    if(walkingSupport)maximumSurfaceY=Math.min(maximumSurfaceY,this.pos.y+.8);
     const cx = this.pos.x + ox;
     const cz = this.pos.z + oz;
     let crateContact = this.crateFloorAt(level, cx, cz);
@@ -16032,7 +15862,7 @@ export class Player {
       crateContact = null;
     this.raycaster.set(new THREE.Vector3(cx, this.pos.y + 2.5, cz), DOWN);
     this.raycaster.far = 12;
-    const hits = (level.raycastGround?.(this.raycaster)??this.raycaster.intersectObjects(level.groundMeshes, false));
+    const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
     // A box standing on nothing (a level with no floor under it) is still a
     // floor: answer with the lid rather than falling through it.
     if (hits.length === 0) {
@@ -16051,12 +15881,6 @@ export class Player {
     let hit = null as (typeof hits)[number] | null;
     for (const h of hits) {
       if (h.point.y > maximumSurfaceY) continue;
-      // Native floors define an underside. Imported scenery retains its
-      // established two-sided support convention.
-      if(walkingSupport&&h.face&&!h.object.userData.worldSolidProxy){
-        const n=h.face.normal,e=h.object.matrixWorld.elements;
-        if(n.x*e[1]+n.y*e[5]+n.z*e[9]<=0)continue;
-      }
       if (h.object.userData.loopRadius && h.face &&
           h.face.normal.clone().transformDirection(h.object.matrixWorld).y <= 0.05) continue;
       const candidatePipe = h.object.userData.halfpipe as Halfpipe | undefined;
@@ -16229,7 +16053,7 @@ export class Player {
   private queryShadowGround(level: Level, includeCrates = false): number | null {
     this.raycaster.set(new THREE.Vector3(this.pos.x, this.pos.y + 2.5, this.pos.z), DOWN);
     this.raycaster.far = 120;
-    const hits = (level.raycastGround?.(this.raycaster)??this.raycaster.intersectObjects(level.groundMeshes, false));
+    const hits = this.raycaster.intersectObjects(level.groundMeshes, false);
     let groundY: number | null = null;
     let fatal = false;
     for (const hit of hits) {

@@ -5044,9 +5044,10 @@ export class Level {
     this.installGroundAcceleration(this.groundMeshes);
     if(!this.isCampaignMap){
       this.worldSurfaceBinding=new WorldSurfaceBinding(this.root,this.worldSolids,{
-        // Treehouse already has fitted native support for its riding boards,
-        // rocks and stream. Extra scenery floors compete with those surfaces.
-        sceneryGround:entry.id!=='treehouse-trail',
+        // Keep the pre-session player support set globally. Shared scenery
+        // geometry remains available to debris, without becoming new floors
+        // that compete with authored walking and skating surfaces.
+        sceneryGround:false,
         ground:()=>this.groundMeshes,active:mesh=>{
           // Spin activation already retires the authored upright wall. The
           // swinging leaf becomes physical support only after it settles.

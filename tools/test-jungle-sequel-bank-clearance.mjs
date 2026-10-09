@@ -6,8 +6,11 @@ for(const [id,station] of [['jungle-terraces',281.0347032876543],['jungle-skylin
  await withBlockworksRuntime(async r=>{
   const {JUNGLE_SEQUEL_ROUTES}=await r.server.ssrLoadModule('/src/levels/jungle-sequels.ts');
   const {WorldSolids,solidContact}=await r.server.ssrLoadModule('/src/worldSolids.ts');
+  const {characterDesignHeight}=await r.server.ssrLoadModule('/src/character/collisionDimensions.ts');
+  const {characterProportionSettings}=await r.server.ssrLoadModule('/src/character/settings.ts');
   const route=JUNGLE_SEQUEL_ROUTES.find(route=>route.id===id),up=new r.THREE.Vector3(0,1,0);
-  const query={low:.5,high:r.p.worldStandingHeight-.5,radius:.5,axis:up,supportNormal:up,
+  const height=1.36*characterDesignHeight(characterProportionSettings.value,characterProportionSettings.activeHeadProfile);
+  const query={low:.5,high:height-.5,radius:.5,axis:up,supportNormal:up,
    ignoreGround:true,groundStep:.8,soleClearance:.08,ignore:surface=>!surface.name.startsWith('Planted earth bank')};
   const feet=(s,side)=>new r.THREE.Vector3(...route.toWorld(s,route.groundAt(s)+.035,side));
   r.l.prepareWorldSolids();

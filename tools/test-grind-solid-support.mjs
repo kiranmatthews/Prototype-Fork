@@ -33,16 +33,20 @@ await withSkateRuntime(async({THREE,Level,Player,CONST,server})=>{
    if(p.isBailing)break;
   }
   assert.ok(caught,`${yaw}/${dir}: ordinary held Triangle must catch the rail`);
-  if(wall){assert.ok(p.isBailing,'an unrelated wall remains solid during a grind');assert.equal(p.worldImpactDiagnostics.last.name,'Independent wall');}
+  if(wall){
+   assert.ok(!p.isBailing&&p.state==='grind','the pre-session native grind ignores visual-only scenery');
+   const centre=obstacle.position.clone();
+   assert.ok(l.worldSolids.cast(centre.clone().addScaledVector(heading,-2),centre.clone().addScaledVector(heading,2),{low:0,high:0,radius:.1,ignore:s=>s.mesh!==obstacle},solidContact()),'the independent scenery wall remains solid for debris');
+  }
   else{
    assert.equal(p.isBailing,false,`${yaw}/${dir}: own rail body interrupted the catch`);
    assert.equal(p.state,'grind',JSON.stringify({yaw,dir,frames,position:p.pos.toArray(),grindT:p.grindT,grindDir:p.grindDir,grindVel:p.grindVel,length:rail.totalLength,balance:p.balance,speed:p.speed}));assert.equal(p.grindRail,rail);
    const support=[...l.worldSolids.surfaces].find(s=>s.mesh.userData.editorIdx===1&&s.owner?.t==='rail');assert.ok(support);
-   assert.equal(p.isCurrentGrindSupport(support),true);
-   p.state='air';assert.equal(p.isCurrentGrindSupport(support),false,'release restores the rail body');
+   assert.equal(l.groundMeshes.some(mesh=>mesh.userData.worldSolidProxy),false,'the native rail catch must not acquire scenery floor proxies');
+   p.state='air';
    const probe=p.pos.clone().copy(support.bounds.getCenter(new THREE.Vector3()));
    const cast=l.worldSolids.cast(probe.clone().addScaledVector(heading,-24),probe,{low:.3,high:1,radius:.3},solidContact());
-   assert.ok(cast,'the same rail remains physical for airborne/unattached actors');
+   assert.ok(cast,'the same rail remains physical for shared debris contacts');
   }
   results.push({yaw,dir,wall,frames,caught,bail:p.isBailing,position:p.pos.toArray()});
   l.dispose();if(obstacle){obstacle.geometry.dispose();obstacle.material.dispose();}
@@ -51,4 +55,4 @@ await withSkateRuntime(async({THREE,Level,Player,CONST,server})=>{
 const output=process.env.GRIND_SOLID_OUTPUT||join(tmpdir(),'grind-solid-support.json');
 await mkdir(dirname(output),{recursive:true});
 await writeFile(output,JSON.stringify(results,null,2));
-console.log(`PASS ${results.length} moving-rock rail approaches: accepted catch support, both directions/yaws, independent walls and restored airborne collision.`);
+console.log(`PASS ${results.length} moving-rock rail approaches: native catch support, both directions/yaws, independent walls and retained debris collision.`);

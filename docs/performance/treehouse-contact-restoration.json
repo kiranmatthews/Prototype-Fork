@@ -1,5 +1,5 @@
 {
-  "scope": "Treehouse Trails only; shared vert rollback remains pending automatic-approval confirmation.",
+  "scope": "Historical Treehouse-only release 88c3ad3; superseded by the user-approved global restoration.",
   "preSessionBaseline": "bdc5370",
   "regressedBuild": "6565656",
   "finding": "The added player body sweep blocks fitted stream stones and shelving banks before the native foot support reaches them. Added scenery floor proxies compete with native pipe and rock support.",
@@ -262,7 +262,6 @@
   },
   "vertAuditCorrection": "The original Deadwater replay and 51 halfpipe cases pass against the actual pre-session bdc5370 controller. Earlier claims that the replay failure was pre-existing used an intermediate in-session collision build, not the requested pre-session baseline.",
   "retainedLimitations": [
-    "The broader vert restoration is not applied by this Treehouse-only correction.",
     "The current waterpark whole-course pilot and stowed-air slam fixture also fail on bdc5370; neither is claimed as restored passing coverage."
   ],
   "checks": {
@@ -273,5 +272,6 @@
     "fullSuite": "not run",
     "treehouseBoundaryProbes": 8,
     "unaffectedJungleBoundaryProbes": 112
-  }
+  },
+  "supersededBy": "global-native-restoration.json"
 }

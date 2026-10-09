@@ -1,0 +1,88 @@
+{
+  "scope": "Global restoration approved by the user; no per-level player or support exception remains.",
+  "baseline": "bdc5370",
+  "supersedes": "88c3ad3 Treehouse-only restoration",
+  "player": {
+    "byteIdenticalToBaseline": true,
+    "sha256": "23b175d69a6f131ccfefa3e08590f7335141b56f02ff8b4b8c0433a0d352d67f"
+  },
+  "runtimeChanges": [
+    "Restore the complete shared player implementation to the actual pre-session version.",
+    "Use only the authored native ground/support set for every level. Scenery remains available to the separate debris collision service.",
+    "Remove the Treehouse-only collision and walking-support exceptions."
+  ],
+  "unchanged": [
+    "Movement tuning and halfpipe physics source",
+    "Level geometry and cameras",
+    "Loading and GPU preparation improvements"
+  ],
+  "verification": {
+    "vertNative": {
+      "originalReplayFrames": 1260,
+      "halfpipeCases": 51,
+      "ballisticAirFrames": 4344
+    },
+    "vertBrowser": {
+      "renderModes": [
+        "lite",
+        "full"
+      ],
+      "recordedLaunchesPerMode": [
+        510,
+        1260
+      ],
+      "keyboardAirsAndLandings": 16,
+      "errors": [],
+      "stamps": [
+        "Codex/sol fork \u00b7 build 10-08 13:10 UTC",
+        "Codex/sol fork \u00b7 build 10-08 13:10 UTC"
+      ]
+    },
+    "grindCatch": {
+      "originalRecordedCatches": 3,
+      "nativeControllerCases": 44
+    },
+    "treehouse": {
+      "nativeCases": 16,
+      "exactBaselineFields": [
+        "below",
+        "bailed",
+        "minY",
+        "maxY",
+        "furthest",
+        "reached",
+        "position"
+      ],
+      "fullBrowserCases": 16,
+      "boundaryProbes": 8,
+      "errors": [],
+      "stamp": "Codex/sol fork \u00b7 build 10-09 10:04 UTC"
+    },
+    "catalog": {
+      "levels": 55,
+      "checkpointLandings": 145,
+      "errors": [],
+      "scope": "Loading, supported spawns, initial native input and checkpoint landings; not full-course traversal."
+    },
+    "other": [
+      "Native spin bridge activation, deployment, crossing, death/checkpoint recovery and reset",
+      "Walking/crawling, step and native mesh support; preserved debris geometry",
+      "Ragdoll/corpse native walls; discarded-board and detached-head mesh rebound",
+      "Crate attack margins and typed crate behavior",
+      "121 authored bank clearance probes"
+    ],
+    "typecheck": "passed",
+    "productionBuild": "passed",
+    "fullSuite": "not run",
+    "nativeSurfaces": {
+      "supportCasesAcrossThreeLevelIds": 6,
+      "rotatedNativeWalls": 12
+    },
+    "movingRailSupport": {
+      "cases": 16,
+      "sharedDebrisWallsRetained": true
+    }
+  },
+  "testMaintenance": "Retain existing test files and CI entrypoints. Replace references to removed experimental Player methods with the pre-session replay, native halfpipe, support and wall contracts. User explicitly approved all previously declined changes.",
+  "approvalToFirstBrowserVerifiedVertMinutes": 4.3
+}

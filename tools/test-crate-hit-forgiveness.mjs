@@ -22,9 +22,7 @@ await withSkateRuntime(({ THREE, Level, Player, TUNING }) => {
     fixtures.push(level);
     return { level, player, crate: level.crates[0] };
   };
-  // These fixtures place the body directly, without a simulated approach.
-  // Seed the swept-contact origin from their authored previous position.
-  const collide = f => { f.player.worldStepOrigin.copy(f.player.prevPos); f.player.collide(f.level); };
+  const collide = f => f.player.collide(f.level);
   const prepare = (player, { spin = false, air = false, y = .02, previousY = y, vVel = 0 } = {}) => {
     player.state = air ? 'air' : 'ride';
     player.grounded = !air;
