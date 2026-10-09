@@ -58,6 +58,8 @@ The collision follow-up repeats all 55 full-render catalog checks and all 145 su
 
 Blockworks now also completes all eight districts in headless, lite-browser and production full-render runs: 20,519 ticks, six checkpoints, the optional crystal and no deaths. Two shared vert fixes preserve authored launch velocity and restore held pumping on curved vert meshes. Geometric sweeps, independent walls, immediate release ownership, tuning and visual settings are preserved. See `performance/blockworks-vert-followup.json` and the continuous follow-up for the focused regressions and remaining isolated vert findings.
 
+The Drowned Crown now completes its main route through the boarding ramp, hold, bow hatch and treasure vault. Source-owned openings remove hull/deck/cave triangles that crossed the existing passages; aligned decorative boards no longer compete with their solid ramp supports. A shared walking-support fix prevents overhead ropes and native floor undersides from pulling an on-foot rider upward, while preserving downward following and imported-scenery conventions. Native and real-browser journeys, all four checkpoints, two jumps, two crawl sections and six separate recovery/optional-room cases pass. The combined full-render catalog again passes all 55 entries and 145 checkpoint landings. See `performance/drowned-clearance-followup.json` for exact scope and evidence.
+
 The goal remains active. Entry/checkpoint/lifecycle probes do **not** prove a complete intended traversal of every course; see the continuous follow-up for current route coverage. Phase-rock wireframe preparation, common particle programs and particle uploads are resolved in the exercised paths. The After Hours trace still finds six shader compilations for three fruit variants, plus a cropped HUD composite texture allocation in full rendering. Those owners need further preparation work without changing when objects appear, their blend order or the HUD's cropped-upload efficiency. The residency, touch/portrait and graphics-recovery checks above cover the exercised scenarios; remaining course-specific validation continues.
 
 ## Individual level coverage
@@ -124,4 +126,4 @@ Full-render combined production build (`1ae0c10` plus the performance patch). Th
 
 ## Continuous follow-up
 
-See [TRAVERSAL_PERFORMANCE_FOLLOWUP.md](TRAVERSAL_PERFORMANCE_FOLLOWUP.md) for complete bonus, puzzle, After Hours, Deadwater, boss, Slipstream 2, temple and Blockworks journeys, plus the preserved camera/replay findings and remaining course coverage. The full goal remains active.
+See [TRAVERSAL_PERFORMANCE_FOLLOWUP.md](TRAVERSAL_PERFORMANCE_FOLLOWUP.md) for complete bonus, puzzle, After Hours, Deadwater, boss, Slipstream 2, temple, Blockworks and Drowned Crown journeys, plus the preserved camera/replay findings and remaining course coverage. The full goal remains active.

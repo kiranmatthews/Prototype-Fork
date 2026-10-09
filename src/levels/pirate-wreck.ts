@@ -1,6 +1,7 @@
 import type { CustomComponent, CustomGroup, CustomLevelData } from '../level';
 import { PIRATE_PROPS } from './pirate-props.generated';
 import { pirateMeshes, SEA, type P } from './pirate-meshes';
+import { cutPiratePassage } from './pirate-clearance';
 
 const C:CustomComponent[]=[],M=pirateMeshes(C);
 const groups:CustomGroup[]=['Smugglers tunnels','Moonpool cavern','The Drowned Crown · hull','Broken upper decks','Flooded cargo hold','Captains quarterdeck','Treasure passage'].map((nm,i)=>({id:i+1,nm,editorOnly:true}));
@@ -19,9 +20,20 @@ function floor(name:string,a:P,b:P,width:number,color:string=SEA.stone,thickness
 }
 function planks(name:string,a:P,b:P,width:number,spacing=1.7){
  floor(name,a,b,width,SEA.timber,.65);
- const d=Math.hypot(b[0]-a[0],b[2]-a[2]),yaw=Math.atan2(a[0]-b[0],a[2]-b[2]),count=Math.floor(d/spacing);
+ const d=Math.hypot(b[0]-a[0],b[2]-a[2]),yaw=Math.atan2(a[0]-b[0],a[2]-b[2]),pitch=Math.atan2(b[1]-a[1],d),count=Math.floor(d/spacing);
  for(let i=0;i<=count;i++){const t=i/count,p=a.map((n,k)=>n+(b[k]-n)*t) as P;p[1]+=.015;
-  M.box('Individual weathered deck plank',p,[width,.045,spacing*.86],i%3===0?SEA.honey:i%3===1?'#906140':'#a27249',[0,yaw,0]);}
+  let boardLength=spacing*.86;
+  if(pitch!==0&&(i===0||i===count)){
+   const shift=boardLength*.25/Math.hypot(d,b[1]-a[1])*(i===0?1:-1);
+   for(let k=0;k<3;k++)p[k]+=(b[k]-a[k])*shift;
+   boardLength*=.5;
+  }
+  const first=C.length;
+  M.box('Individual weathered deck plank',p,[width,.045,boardLength],i%3===0?SEA.honey:i%3===1?'#906140':'#a27249',[pitch,yaw,0]);
+  // The closed deck/ramp above owns support. These thin drawn boards must
+  // not add competing end-cap normals to the same walking surface.
+  for(let j=first;j<C.length;j++)C[j].scenerySolid=false;
+ }
 }
 function fruit(a:P,b:P,count=5){for(let i=0;i<count;i++){const t=i/(count-1);add({t:'wumpa',p:a.map((v,k)=>v+(b[k]-v)*t+(k===1?.9:0)) as P});}}
 function checkpoint(p:P,nm:string){add({t:'checkpoint',p,nm});M.lantern([p[0]+3,p[1],p[2]]);}
@@ -53,7 +65,8 @@ for(let i=1;i<6;i++){const a=PIRATE_ROUTE[i-1],b=PIRATE_ROUTE[i];
  tunnel(a,b);fruit(a,b,4);}
 // Tidal fissure is a real missing floor: both banks meet the existing trail.
 // Side passage offers a raised crystal grotto and rejoins before the ship.
-floor('Grotto branch',[ -35,-5,-31],[-58,-4,-40],7);tunnel([-35,-5,-31],[-58,-4,-40],9,12);
+export const PIRATE_GROTTO_ROUTE:P[]=[[-35,-5,-31],[-58,-4,-40]];
+floor('Grotto branch',PIRATE_GROTTO_ROUTE[0],PIRATE_GROTTO_ROUTE[1],7);tunnel(PIRATE_GROTTO_ROUTE[0],PIRATE_GROTTO_ROUTE[1],9,12);
 floor('Hidden crystal alcove',[-58,-4,-40],[-58,-4,-54],13);tunnel([-58,-4,-40],[-58,-4,-54],16,15);
 add({t:'crate',p:[-58,-4,-50],kind:'life',nm:'Lost expedition cache'});
 for(let i=0;i<10;i++)M.rock('Turquoise crystal cluster',[-58+Math.cos(i)*5,-2,-49+Math.sin(i)*4],[.7,2.6+i%3,.8],i,'#60aaa3');
@@ -232,6 +245,24 @@ add({t:'crate',p:[36,12,-310],kind:'multihit',nm:'The last hoard'});
 add({t:'gate',p:[32,12,-319],yaw:0,w:12,nm:'Daylight through the treasure vault'});
 // Explicit ordered nodes preserve control direction through the winding caves.
 for(const p of PIRATE_ROUTE)add({t:'camnode',p,radius:5,grp:1,nm:'Authored treasure trail camera'});
+// Keep the authored boarding/bow ramps, but open the hull, frames and deck
+// where those passages cross them. Art and collision retain the same opening.
+export const PIRATE_HATCH_PASSAGES=[
+ {a:PIRATE_ROUTE[5],b:PIRATE_ROUTE[6],width:7,height:3.4},
+ {a:PIRATE_ROUTE[12],b:PIRATE_ROUTE[13],width:7,height:3.4},
+ {a:PIRATE_ROUTE[13],b:PIRATE_ROUTE[14],width:7,height:3.4},
+];
+export const PIRATE_GROTTO_PASSAGE={a:PIRATE_GROTTO_ROUTE[0],b:PIRATE_GROTTO_ROUTE[1],width:7,height:3.4};
+const grottoPassages=[PIRATE_GROTTO_PASSAGE];
+const passageObstacles=new Set(['Hand-shaped broken galleon hull planking','Hull oak frame','Afterdeck',
+ 'Forecastle port deck','Forecastle starboard lip','Bow hatch receiving deck','Individual weathered deck plank']);
+for(let i=C.length-1;i>=0;i--){
+ const c=C[i];
+ const passages=c.nm==='Faceted underground tunnel shell'?grottoPassages:passageObstacles.has(c.nm??'')?PIRATE_HATCH_PASSAGES:null;
+ if(!passages)continue;
+ let cut=c;for(const passage of passages)cut=cutPiratePassage(cut,passage.a,passage.b,passage.width,passage.height);
+ if(cut.indices?.length===0)C.splice(i,1);else C[i]=cut;
+}
 export const PIRATE_WRECK_LEVEL:CustomLevelData={
  v:1,name:'The Drowned Crown',spawn:[-48,.12,46],killY:-18,sky:'night',keepPlayFog:true,cameraAirLift:.35,
  medalTimes:{gold:150,silver:210,bronze:300},

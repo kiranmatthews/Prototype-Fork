@@ -43,7 +43,7 @@ jobs:
       - name: Renderer frame graph regression
         run: npm run check:renderer
       - name: Loading and traversal collision regression
-        run: node tools/test-presentation-loading.mjs && node tools/test-puff-upload-ranges.mjs && node tools/test-puff-preparation.mjs && node tools/test-phase-material-lifetime.mjs && node tools/test-nightworks-collision-cache.mjs && node tools/test-grind-solid-support.mjs && node tools/test-spinbridge.mjs && node tools/test-world-vert-momentum.mjs && node tools/test-vert-launch-continuity.mjs && node tools/test-world-floor-seams.mjs && node tools/test-jungle-sequel-bank-clearance.mjs
+        run: node tools/test-presentation-loading.mjs && node tools/test-puff-upload-ranges.mjs && node tools/test-puff-preparation.mjs && node tools/test-phase-material-lifetime.mjs && node tools/test-nightworks-collision-cache.mjs && node tools/test-grind-solid-support.mjs && node tools/test-spinbridge.mjs && node tools/test-world-vert-momentum.mjs && node tools/test-vert-launch-continuity.mjs && node tools/test-world-floor-seams.mjs && node tools/test-walking-support.mjs && node tools/test-pirate-clearance.mjs && node tools/test-jungle-sequel-bank-clearance.mjs
       - name: Crate attack targeting regression
         run: node tools/test-crate-hit-forgiveness.mjs && npm run check:crate-jump && npm run check:crate-types
       - name: Touch ownership and responsive layout regression

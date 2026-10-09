@@ -32,7 +32,12 @@ await withBlockworksRuntime(r=>{
  assert.ok(Math.abs(r.p.pos.y-14)<.2);results.push({case:'captains cabin climb',position:r.p.pos.toArray()});
 },{...opts,start:[10,8.1,-126]});
 await withBlockworksRuntime(r=>{
- r.stepFor(30);r.walkTo([-57,-4,-40],{pace:.3,arrivalTolerance:.5});r.walkTo([-57,-4,-49],{pace:.3,arrivalTolerance:.5});
- assert.ok(r.p.grounded);results.push({case:'secret mine grotto',position:r.p.pos.toArray()});
+ r.stepFor(30);r.walkTo([-57,-4,-40],{pace:.3,arrivalTolerance:.5});
+ r.walkTo([-57,-4,-49],{pace:.3,arrivalTolerance:.5,buttons:{grabHeld:true}});
+ assert.ok(r.p.grounded&&r.p.crawling,'use the native crawl below the retained crystal tips');
+ const cache=r.l.crates.find(c=>Math.hypot(c.mesh.position.x+58,c.mesh.position.z+50)<.1);assert.ok(cache?.alive);
+ r.tick({grabHeld:true,spinHeld:true});r.stepFor(30,{grabHeld:true});assert.equal(cache.alive,false,'the grotto life cache must be reachable');
+ r.walkTo([-57,-4,-40],{pace:.3,arrivalTolerance:.5,buttons:{grabHeld:true}});
+ results.push({case:'secret mine grotto, cache and return',position:r.p.pos.toArray(),cacheBroken:!cache.alive});
 },{...opts,start:[-35,-4.9,-31]});
 console.log(JSON.stringify(results,null,2));

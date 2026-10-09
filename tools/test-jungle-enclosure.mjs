@@ -24,6 +24,9 @@ try {
   const {junglePathHalfWidth}=await server.ssrLoadModule('/src/levels/jungle-ruins-bounds.ts');
   const scene=new THREE.Scene(),level=new Level(scene,{id:'jungle',name:'Jungle Ruins'});
   await level.prepareJungleAssets();level.root.updateMatrixWorld(true);
+  // Include structural scenery from the first probe, rather than letting
+  // lazy roof bindings change the placement surfaces midway through the run.
+  level.prepareWorldSolids();
   const data=level.captureData(),perimeter=data.components.find(c=>c.containment);
   assert.ok(perimeter?.closed && perimeter.invisible);
   assert.ok(normalizeCustomLevelData(data),'boundary survives the shared-file validator');

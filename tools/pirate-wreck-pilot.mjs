@@ -9,11 +9,12 @@ export function* pirateJourney(r) {
   return n<.06?{}:{moveX:(dx*-fz+dz*fx)/n*pace,moveY:(dx*fx+dz*fz)/n*pace};
  };
  function* wait(n,sample={}){for(let i=0;i<n;i++)yield sample;}
- function* walk(q,name){
+ function* walk(q,name,buttons={}){
   report.stage=name;let i=0;
-  while(distance(q)>.16&&i++<4200){yield input(q,Math.min(.85,.15+distance(q)*.12));live();}
-  check(i<4200,`${name} timed out`);yield* wait(18);check(distance(q)<.45,`${name} stopping distance`);
-  check(p.grounded,`${name} unsupported`);report.evidence.push({name,position:p.pos.toArray(),ground:p.groundHit?.name});
+  while(distance(q)>.16&&i++<4200){yield {...input(q,Math.min(.85,.15+distance(q)*.12)),...buttons};live();}
+  check(i<4200,`${name} timed out`);yield* wait(18,buttons);check(distance(q)<.45,`${name} stopping distance`);
+  if(buttons.grabHeld)check(p.crawling,`${name} did not use the native crawl`);
+  check(p.grounded,`${name} unsupported`);report.evidence.push({name,position:p.pos.toArray(),ground:p.groundHit?.name,crawled:p.crawling});
  }
  function* hop(q,name){
   report.stage=name;yield* wait(26,{jumpHeld:true});yield {jumpReleased:true};check(p.state==='air','Jump did not start');
@@ -31,8 +32,11 @@ export function* pirateJourney(r) {
  yield* walk([-8,8,-133],'Enter broken hatch');yield* walk([-8,-4,-162],'Descend into the hull');
  yield* walk([-8,-4,-181],'Across the broken keel');yield* walk([1,-4,-190],'Through the cargo hold');
  yield* cp([3,-4,-201],'Cargo checkpoint');yield* walk([8,-4,-204],'Bow hatch ramp');
- yield* walk([8,8,-239],'Climb out of the hold');yield* walk([0,8,-245],'Figurehead lookout');
- yield* walk([6,8.4,-252],'Escape bridge');yield* walk([15,9,-259.2],'Broken bridge takeoff');
+ yield* walk([8,8,-239],'Climb out of the hold');
+ // The low stays are real rigging. Crawl beneath them and stay beside the
+ // bowsprit, then stand once the escape bridge is clear overhead.
+ yield* walk([3,8,-245],'Crawl beneath the bow rigging',{grabHeld:true});
+ yield* walk([6,8.4,-252],'Crawl onto the escape bridge',{grabHeld:true});yield* walk([15,9,-259.2],'Broken bridge takeoff');
  yield* hop([20,9.35,-263.2],'Broken bridge jump');yield* walk([30,10,-270],'Treasure tunnel');
  yield* cp([32,10,-279],'Treasure checkpoint');yield* walk([32,10,-294],'Enter the hoard');
  yield* walk([32,12,-307],'Climb the treasure dais');report.stage='Cross the finish gate';

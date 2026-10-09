@@ -7129,7 +7129,7 @@ export class Player {
     }
     if (!hit) hit = this.queryGround(level);
     const steepHit = hit !== null && hit.normal.y < CONST.steepSnapNormal;
-    const upWindow = steepHit ? TUNING.wallStick : 0.8;
+    const upWindow = this.freeSkate && steepHit ? TUNING.wallStick : 0.8;
     const downWindow = steepHit ? TUNING.wallStick : 1.4;
     if(hit?.outOfBounds&&hit.y>=this.pos.y-downWindow&&hit.y<=this.pos.y+upWindow){this.returnFromOutOfBounds(level);return;}
     if(hit?.lethal&&hit.y>=this.pos.y-downWindow&&hit.y<=this.pos.y+upWindow){
@@ -15998,6 +15998,10 @@ export class Player {
     oz = 0,
     maximumSurfaceY = Number.POSITIVE_INFINITY,
   ): GroundHit | null {
+    // The wide wall-stick window belongs to the board. A runner/crawler
+    // must keep the reachable lower floor when a rope or ceiling is above it.
+    const walkingSupport=this.state==='ride'&&this.grounded&&!this.freeSkate&&!this.isBailing;
+    if(walkingSupport)maximumSurfaceY=Math.min(maximumSurfaceY,this.pos.y+.8);
     const cx = this.pos.x + ox;
     const cz = this.pos.z + oz;
     let crateContact = this.crateFloorAt(level, cx, cz);
@@ -16045,6 +16049,12 @@ export class Player {
     let hit = null as (typeof hits)[number] | null;
     for (const h of hits) {
       if (h.point.y > maximumSurfaceY) continue;
+      // Native floors define an underside. Imported scenery retains its
+      // established two-sided support convention.
+      if(walkingSupport&&h.face&&!h.object.userData.worldSolidProxy){
+        const n=h.face.normal,e=h.object.matrixWorld.elements;
+        if(n.x*e[1]+n.y*e[5]+n.z*e[9]<=0)continue;
+      }
       if (h.object.userData.loopRadius && h.face &&
           h.face.normal.clone().transformDirection(h.object.matrixWorld).y <= 0.05) continue;
       const candidatePipe = h.object.userData.halfpipe as Halfpipe | undefined;

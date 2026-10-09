@@ -1,0 +1,460 @@
+{
+  "schema": 1,
+  "date": "2026-10-09",
+  "baseCommit": "1d51aa8d97665692f8992efd8cf854fd1a5cb6ae",
+  "scope": [
+    "Cut only structural triangles that overlap the existing boarding, bow and grotto passages.",
+    "Align inclined visual slats, trim their unsupported ends, and retain the closed deck/ramp meshes as the physical supports.",
+    "Limit grounded on-foot support acquisition to the existing 0.8 m upward step reach; retain downward following, board/air ranges and imported-scenery conventions."
+  ],
+  "sourceSha256": {
+    "src/player.ts": "238b2122802bba520820185aab907616b35836ec9d16ddfe1ddb33b5f0266276",
+    "src/levels/pirate-wreck.ts": "02f6181123ce1f6a7aebd7554172f249bbe9479bbac1346197cfd207f12b5088",
+    "src/levels/pirate-clearance.ts": "86c0c7a0adc6b02bf1df430b9d3a45c8174d4ec8649287d1962d8d8d15d394eb"
+  },
+  "before": {
+    "boardingFailureFrame": 1873,
+    "boardingFailurePosition": [
+      -14.159514225697082,
+      -10.469575323450321,
+      -76.51347900255514
+    ],
+    "overheadSupportLargestStep": 2.2197081762338167
+  },
+  "headless": {
+    "frames": 5922,
+    "seconds": 98.7,
+    "largestStep": 0.7381725959469374,
+    "tuningUnchanged": true,
+    "components": 1640,
+    "result": {
+      "state": "finished",
+      "deaths": 0,
+      "checkpoints": 4,
+      "position": [
+        32.005030326844626,
+        12.730666669150192,
+        -316.9691734668346
+      ]
+    }
+  },
+  "browser": [
+    {
+      "mode": "lite",
+      "frames": 5893,
+      "seconds": 98.21666666666667,
+      "largestStep": 0.7381725959469375,
+      "tuningUnchanged": true,
+      "stamp": "Codex/sol fork \u00b7 build 10-09 03:12 UTC",
+      "errors": [],
+      "result": {
+        "state": "finished",
+        "deaths": 0,
+        "checkpoints": 4,
+        "position": [
+          32.004493100336504,
+          12.730666669150192,
+          -316.96924674907876
+        ]
+      },
+      "nativeCrawls": [
+        "Crawl beneath the bow rigging",
+        "Crawl onto the escape bridge"
+      ]
+    },
+    {
+      "mode": "full",
+      "frames": 5893,
+      "seconds": 98.21666666666667,
+      "largestStep": 0.7381725959469375,
+      "tuningUnchanged": true,
+      "stamp": "Codex/sol fork \u00b7 build 10-09 03:52 UTC",
+      "errors": [],
+      "result": {
+        "state": "finished",
+        "deaths": 0,
+        "checkpoints": 4,
+        "position": [
+          32.004475609420794,
+          12.730666669150192,
+          -316.9692148503331
+        ]
+      },
+      "nativeCrawls": [
+        "Crawl beneath the bow rigging",
+        "Crawl onto the escape bridge"
+      ]
+    }
+  ],
+  "geometry": {
+    "pass": true,
+    "bodySweeps": 24,
+    "parity": {
+      "before": 1640,
+      "after": 1640,
+      "identical": 1296,
+      "visualIdentical": 1491,
+      "changedOrRemoved": 344,
+      "changedOrAdded": 344
+    }
+  },
+  "safety": [
+    {
+      "case": "moonpool pit death and automatic respawn",
+      "position": [
+        -48,
+        0.8533333333333333,
+        46
+      ],
+      "deaths": 1
+    },
+    {
+      "case": "banked checkpoint death and respawn",
+      "position": [
+        -6,
+        8.1,
+        -129
+      ],
+      "deaths": 1
+    },
+    {
+      "case": "solid mast collision",
+      "position": [
+        1.2239719130218407,
+        8,
+        -113.9612113856318
+      ]
+    },
+    {
+      "case": "powder room crystal and return",
+      "crystal": true,
+      "position": [
+        -9.78011009363023,
+        -4,
+        -198.00157339825097
+      ]
+    },
+    {
+      "case": "captains cabin climb",
+      "position": [
+        2.9051571350485177,
+        14,
+        -104.00322993664267
+      ]
+    },
+    {
+      "case": "secret mine grotto, cache and return",
+      "position": [
+        -57.00092602455381,
+        -4,
+        -40.097742234304334
+      ],
+      "cacheBroken": true
+    }
+  ],
+  "catalog": {
+    "mode": "full",
+    "levels": 55,
+    "checkpoints": 145,
+    "errors": [],
+    "rows": [
+      {
+        "id": "treehouse-trail",
+        "checkpoints": 5,
+        "passed": true
+      },
+      {
+        "id": "inside-your-room",
+        "checkpoints": 1,
+        "passed": true
+      },
+      {
+        "id": "jungle",
+        "checkpoints": 4,
+        "passed": true
+      },
+      {
+        "id": "jungle-terraces",
+        "checkpoints": 3,
+        "passed": true
+      },
+      {
+        "id": "jungle-skyline",
+        "checkpoints": 5,
+        "passed": true
+      },
+      {
+        "id": "flats",
+        "checkpoints": 2,
+        "passed": true
+      },
+      {
+        "id": "sky",
+        "checkpoints": 3,
+        "passed": true
+      },
+      {
+        "id": "slip",
+        "checkpoints": 2,
+        "passed": true
+      },
+      {
+        "id": "slipstream-2",
+        "checkpoints": 7,
+        "passed": true
+      },
+      {
+        "id": "test",
+        "checkpoints": 14,
+        "passed": true
+      },
+      {
+        "id": "custard-creek",
+        "checkpoints": 11,
+        "passed": true
+      },
+      {
+        "id": "dark",
+        "checkpoints": 11,
+        "passed": true
+      },
+      {
+        "id": "nightworks-after-hours",
+        "checkpoints": 7,
+        "passed": true
+      },
+      {
+        "id": "warproom",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "descent",
+        "checkpoints": 4,
+        "passed": true
+      },
+      {
+        "id": "beachfront",
+        "checkpoints": 4,
+        "passed": true
+      },
+      {
+        "id": "bonus-level",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "coastal-street-run",
+        "checkpoints": 6,
+        "passed": true
+      },
+      {
+        "id": "island-hopper",
+        "checkpoints": 3,
+        "passed": true
+      },
+      {
+        "id": "jungle-gate-run",
+        "checkpoints": 3,
+        "passed": true
+      },
+      {
+        "id": "meshylook-thorns",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "drowned-crown",
+        "checkpoints": 4,
+        "passed": true
+      },
+      {
+        "id": "bonus-easy",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-treehouse-trail",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-jungle",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-test-course",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-sky-bridge",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-slipstream",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-nightworks",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-beachside-run",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-coastal",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-island-hopper",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-codex-switchback",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-chimeworks",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-waterpark",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-nightworks-after-hours",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-crate-primer",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-switchyard",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-clockwork-gauntlet",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-jungle-terraces",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-jungle-skyline",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-drowned-crown",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-bone-yard",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "crate-primer",
+        "checkpoints": 2,
+        "passed": true
+      },
+      {
+        "id": "switchyard",
+        "checkpoints": 2,
+        "passed": true
+      },
+      {
+        "id": "clockwork-gauntlet",
+        "checkpoints": 4,
+        "passed": true
+      },
+      {
+        "id": "crab-chief",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "ghost-train",
+        "checkpoints": 23,
+        "passed": true
+      },
+      {
+        "id": "codex-lab",
+        "checkpoints": 6,
+        "passed": true
+      },
+      {
+        "id": "jungle-cup",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bone-yard",
+        "checkpoints": 2,
+        "passed": true
+      },
+      {
+        "id": "waterpark",
+        "checkpoints": 2,
+        "passed": true
+      },
+      {
+        "id": "waterpark-cup",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "astra-chimeworks",
+        "checkpoints": 4,
+        "passed": true
+      },
+      {
+        "id": "backport-lab",
+        "checkpoints": 1,
+        "passed": true
+      }
+    ]
+  },
+  "validation": {
+    "walkingRegressionPasses": true,
+    "walkingRegressionFailsUnchangedParent": true,
+    "solidPlayer": true,
+    "floorSeamCases": 44,
+    "vertLaunchContinuity": true,
+    "crateJumpParity": true,
+    "ledgeCrates": true,
+    "ragdollSparseProbes": 1967,
+    "enclosureProbes": 112,
+    "enclosureParentAndPatchedPass": true,
+    "enclosureIncludesSceneryRoofs": true,
+    "checkLevelsCommands": 7,
+    "typecheck": true,
+    "productionBuild": true,
+    "fullSuiteRun": false,
+    "blockworksContinuousFrames": 20519
+  },
+  "limits": [
+    "The main route and optional-room fixtures are separate runs; this is not a combined all-collectibles or time-medal claim.",
+    "Other complete routes, the retained isolated vert findings, fruit shader variants and cropped-HUD first use remain under the active goal."
+  ]
+}
