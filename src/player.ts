@@ -7129,7 +7129,7 @@ export class Player {
     }
     if (!hit) hit = this.queryGround(level);
     const steepHit = hit !== null && hit.normal.y < CONST.steepSnapNormal;
-    const upWindow = this.freeSkate && steepHit ? TUNING.wallStick : 0.8;
+    const upWindow = (this.freeSkate || this.relicKey==='treehouse-trail') && steepHit ? TUNING.wallStick : 0.8;
     const downWindow = steepHit ? TUNING.wallStick : 1.4;
     if(hit?.outOfBounds&&hit.y>=this.pos.y-downWindow&&hit.y<=this.pos.y+upWindow){this.returnFromOutOfBounds(level);return;}
     if(hit?.lethal&&hit.y>=this.pos.y-downWindow&&hit.y<=this.pos.y+upWindow){
@@ -12828,7 +12828,7 @@ export class Player {
               this.tryLedgeGrab(w, level)
             )
               break;
-            if(level.worldSolids?.enabled&&!this.hubMode)continue;
+            if(level.worldSolids?.enabled&&!this.hubMode&&this.relicKey!=='treehouse-trail')continue;
             const bx = this.pos.x;
             const bz = this.pos.z;
             const bs = this.speed;
@@ -12838,7 +12838,7 @@ export class Player {
             break; // one logical path resolves once, never once per broadphase slice
           }
           if (this.tryLedgeGrab(w, level)) break; // caught its lip — hanging
-          if(level.worldSolids?.enabled&&!this.hubMode)continue;
+          if(level.worldSolids?.enabled&&!this.hubMode&&this.relicKey!=='treehouse-trail')continue;
           const bx = this.pos.x;
           const bz = this.pos.z;
           const bs = this.speed; // pushOutOf full-stops; keep the crash speed
@@ -14079,7 +14079,9 @@ export class Player {
   /** One physical boundary for native triangles, structural props and moving
    * geometry. Only ordinary floor acceptance stays with the ride solver. */
   private resolveWorldContact(level:Level,displacementVelocity=true):void{
-    if(this.hubMode||!level.worldSolids?.enabled||this.state==='hang')return;
+    // Restore Treehouse's authored floor/pipe and wall collision path. The
+    // added body sweep blocks its fitted low rocks before the feet can climb.
+    if(this.hubMode||!level.worldSolids?.enabled||this.state==='hang'||this.relicKey==='treehouse-trail')return;
     const half=this.hitboxHalf,down=this.isBailing||this.state==='dead';
     const height=Math.max(half.y*2,this.worldStandingHeight*(down?.58:this.crawling?.6:this.sliding?.55:1-.14*this.chargePose));
     const radius=Math.min(height*.49,down?Math.max(.55,half.x,half.z):Math.max(half.x,half.z));
@@ -15760,7 +15762,7 @@ export class Player {
     this.vVel = Math.max(-CONST.maxFallSpeed, this.vVel - TUNING.fallGravity * dt);
     this.pos.y += this.vVel * dt;
     this.resolveWorldContact(level);
-    for (const wall of level.worldSolids?.enabled?[]:level.walls) {
+    for (const wall of level.worldSolids?.enabled&&this.relicKey!=='treehouse-trail'?[]:level.walls) {
       if (this.pos.y > wall.max.y || this.pos.y + this.hitboxHalf.y * 2 < wall.min.y) continue;
       const hx = CONST.playerHalf.x + 0.02;
       const hz = CONST.playerHalf.z + 0.02;
@@ -16000,7 +16002,7 @@ export class Player {
   ): GroundHit | null {
     // The wide wall-stick window belongs to the board. A runner/crawler
     // must keep the reachable lower floor when a rope or ceiling is above it.
-    const walkingSupport=this.state==='ride'&&this.grounded&&!this.freeSkate&&!this.isBailing;
+    const walkingSupport=this.relicKey!=='treehouse-trail'&&this.state==='ride'&&this.grounded&&!this.freeSkate&&!this.isBailing;
     if(walkingSupport)maximumSurfaceY=Math.min(maximumSurfaceY,this.pos.y+.8);
     const cx = this.pos.x + ox;
     const cz = this.pos.z + oz;

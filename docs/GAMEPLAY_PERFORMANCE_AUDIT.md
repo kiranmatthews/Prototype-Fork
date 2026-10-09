@@ -1,5 +1,7 @@
 # Gameplay and loading audit — 9 October 2026
 
+**User-reported regression correction:** The pre-session baseline is `bdc5370`, not an intermediate collision build integrated during this audit. Its recorded Deadwater vert replay and all 51 halfpipe cases pass. The earlier characterization of that replay failure as pre-existing was incorrect relative to the start of the session. Treehouse Trails' player contact/support restoration is tracked in `performance/treehouse-contact-restoration.json`; the broader shared vert rollback remains pending confirmation after automatic approval review rejected its global scope. Do not treat this audit's earlier coverage as proof that the current shared vert behavior matches the pre-session version.
+
 The ongoing goal is lossless gameplay/loading performance and smoothness across the game, checking every level individually. The initial baseline is `bdc5370`: **55 levels**, including all bonus rooms, the map, the boss and both competitions. During the audit, shared collision updates landed through `1ae0c10`; these were integrated and all 55 levels were checked again in the combined production build. Work is isolated from the original checkout's unrelated edits.
 
 ## Validated changes

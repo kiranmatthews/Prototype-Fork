@@ -1,5 +1,7 @@
 # Continuous traversal audit — 9 October 2026
 
+**Correction after user regression report:** `bdc5370`, the actual pre-session baseline, passes the original Deadwater vert replay and all 51 halfpipe cases. Comparisons with intermediate in-session collision builds do not establish that its later failure was pre-existing. Treehouse Trails now restores its original native floor, pipe and wall contact path; 16 focused native cases match pre-session results exactly. The shared vert rollback has not yet been applied because automatic approval review blocked its global scope. See `performance/treehouse-contact-restoration.json` for the narrower verified correction and remaining limits.
+
 This continues the full goal in `GAMEPLAY_PERFORMANCE_AUDIT.md`. The first release covered loading, native input, spawns, 145 checkpoint landings and lifecycle checks for all 55 entries. This pass drives complete routes with ordinary device samples, keeping world time, movement tuning, position, inventory and hazards under the game’s control.
 
 ## Reproduced collision bugs

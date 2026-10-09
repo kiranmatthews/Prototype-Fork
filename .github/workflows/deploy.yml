@@ -46,6 +46,8 @@ jobs:
         run: node tools/test-presentation-loading.mjs && node tools/test-puff-upload-ranges.mjs && node tools/test-puff-preparation.mjs && node tools/test-phase-material-lifetime.mjs && node tools/test-nightworks-collision-cache.mjs && node tools/test-grind-solid-support.mjs && node tools/test-spinbridge.mjs && node tools/test-world-vert-momentum.mjs && node tools/test-vert-launch-continuity.mjs && node tools/test-world-floor-seams.mjs && node tools/test-walking-support.mjs && node tools/test-pirate-clearance.mjs && node tools/test-jungle-sequel-bank-clearance.mjs
       - name: Crate attack targeting regression
         run: node tools/test-crate-hit-forgiveness.mjs && npm run check:crate-jump && npm run check:crate-types
+      - name: Treehouse authored support regression
+        run: node tools/test-treehouse-surface-restoration.mjs
       - name: Touch ownership and responsive layout regression
         run: node tools/test-touch-release.mjs && node tools/test-touch-screen-awake.mjs && node tools/test-jump-cancellation-replay.mjs && node tools/test-mobile-ui-layout.mjs && node tools/test-camera-portrait.mjs
       - name: Offline cache regression

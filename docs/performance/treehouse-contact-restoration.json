@@ -1,0 +1,277 @@
+{
+  "scope": "Treehouse Trails only; shared vert rollback remains pending automatic-approval confirmation.",
+  "preSessionBaseline": "bdc5370",
+  "regressedBuild": "6565656",
+  "finding": "The added player body sweep blocks fitted stream stones and shelving banks before the native foot support reaches them. Added scenery floor proxies compete with native pipe and rock support.",
+  "change": "Restore Treehouse native player floor/pipe/wall contact and its original walking support windows; keep shared world geometry for debris and retain current collision elsewhere. No tuning or level geometry changes.",
+  "native": {
+    "cases": 16,
+    "exactBaselineFields": [
+      "below",
+      "bailed",
+      "minY",
+      "maxY",
+      "furthest",
+      "reached",
+      "position"
+    ],
+    "results": [
+      {
+        "name": "river -3 walk",
+        "below": false,
+        "bailed": false,
+        "minY": -14.650000011920929,
+        "maxY": -13.839871752238821,
+        "furthest": 16.559999999995853,
+        "reached": true,
+        "position": [
+          32,
+          -14,
+          -374.55999999999585
+        ]
+      },
+      {
+        "name": "river -3 board",
+        "below": false,
+        "bailed": false,
+        "minY": -14.650000011920929,
+        "maxY": -13.840888082898815,
+        "furthest": 16.64755979058208,
+        "reached": true,
+        "position": [
+          38.44671512918313,
+          -14,
+          -374.6475597905821
+        ]
+      },
+      {
+        "name": "river 0 walk",
+        "below": false,
+        "bailed": false,
+        "minY": -14.650000011920929,
+        "maxY": -13.800000019073487,
+        "furthest": 16.559999999995853,
+        "reached": true,
+        "position": [
+          35,
+          -14,
+          -374.55999999999585
+        ]
+      },
+      {
+        "name": "river 0 board",
+        "below": false,
+        "bailed": false,
+        "minY": -14.650000011920929,
+        "maxY": -13.800000019073487,
+        "furthest": 16.539432746127204,
+        "reached": true,
+        "position": [
+          34.98800954483087,
+          -14,
+          -374.5394327461272
+        ]
+      },
+      {
+        "name": "river 3 walk",
+        "below": false,
+        "bailed": false,
+        "minY": -14.650000011920929,
+        "maxY": -13.800000019073487,
+        "furthest": 16.559999999995853,
+        "reached": true,
+        "position": [
+          38,
+          -14,
+          -374.55999999999585
+        ]
+      },
+      {
+        "name": "river 3 board",
+        "below": false,
+        "bailed": false,
+        "minY": -14.650000011920929,
+        "maxY": -13.800000019073487,
+        "furthest": 16.51118350792001,
+        "reached": true,
+        "position": [
+          38.0229026684484,
+          -14,
+          -374.51118350792
+        ]
+      },
+      {
+        "name": "quarterpipe -2 walk",
+        "below": false,
+        "bailed": false,
+        "minY": 0,
+        "maxY": 4.279547343585012,
+        "furthest": 8.051406615822996,
+        "reached": true,
+        "position": [
+          -4.33185343465649,
+          3.6837710528972245,
+          -7.55397128084075
+        ]
+      },
+      {
+        "name": "quarterpipe -2 board",
+        "below": false,
+        "bailed": false,
+        "minY": 0,
+        "maxY": 5.305935962008975,
+        "furthest": 8.025896743802264,
+        "reached": true,
+        "position": [
+          -4.222615055549358,
+          5.305935962008975,
+          -7.611723282929419
+        ]
+      },
+      {
+        "name": "quarterpipe 0 walk",
+        "below": false,
+        "bailed": false,
+        "minY": 0,
+        "maxY": 4.2795468882305725,
+        "furthest": 8.051406615822993,
+        "reached": true,
+        "position": [
+          -2.6935537668968967,
+          3.6837440206423118,
+          -6.406812288852099
+        ]
+      },
+      {
+        "name": "quarterpipe 0 board",
+        "below": false,
+        "bailed": false,
+        "minY": 0,
+        "maxY": 5.305935876392978,
+        "furthest": 8.02589674244636,
+        "reached": true,
+        "position": [
+          -2.584310981207337,
+          5.305935876392978,
+          -6.464570418540203
+        ]
+      },
+      {
+        "name": "quarterpipe 2 walk",
+        "below": false,
+        "bailed": false,
+        "minY": 0,
+        "maxY": 4.279546470864242,
+        "furthest": 8.051406615822989,
+        "reached": true,
+        "position": [
+          -1.0552491702829938,
+          3.6837480051179194,
+          -5.2596603241357744
+        ]
+      },
+      {
+        "name": "quarterpipe 2 board",
+        "below": false,
+        "bailed": false,
+        "minY": 0,
+        "maxY": 5.305936335473484,
+        "furthest": 8.025896764836311,
+        "reached": true,
+        "position": [
+          -0.9460068834914885,
+          5.305936335473484,
+          -5.317417566772793
+        ]
+      },
+      {
+        "name": "cavern pipe -1 walk",
+        "below": false,
+        "bailed": false,
+        "minY": -7.2,
+        "maxY": -7.199999809265137,
+        "furthest": 50.58000000001459,
+        "reached": true,
+        "position": [
+          57,
+          -7.2,
+          -556.5800000000146
+        ]
+      },
+      {
+        "name": "cavern pipe -1 board",
+        "below": false,
+        "bailed": false,
+        "minY": -7.2,
+        "maxY": -7.199999809265137,
+        "furthest": 50.51694417231863,
+        "reached": true,
+        "position": [
+          57,
+          -7.2,
+          -556.5169441723186
+        ]
+      },
+      {
+        "name": "cavern pipe 1 walk",
+        "below": false,
+        "bailed": false,
+        "minY": -7.2,
+        "maxY": -7.199999809265137,
+        "furthest": 50.580000000012774,
+        "reached": true,
+        "position": [
+          57,
+          -7.2,
+          -505.4199999999872
+        ]
+      },
+      {
+        "name": "cavern pipe 1 board",
+        "below": false,
+        "bailed": false,
+        "minY": -7.2,
+        "maxY": -7.199999809265137,
+        "furthest": 50.51694417231846,
+        "reached": true,
+        "position": [
+          57,
+          -7.2,
+          -505.48305582768154
+        ]
+      }
+    ]
+  },
+  "negativeControl": {
+    "failedRiverCrossings": 6,
+    "reportedCases": 12
+  },
+  "browser": {
+    "lite": {
+      "cases": 16,
+      "errors": [],
+      "tuningUnchanged": true,
+      "stamp": "Codex/sol fork \u00b7 build 10-08 13:10 UTC"
+    },
+    "full": {
+      "cases": 16,
+      "errors": [],
+      "tuningUnchanged": true,
+      "stamp": "Codex/sol fork \u00b7 build 10-09 06:18 UTC"
+    }
+  },
+  "vertAuditCorrection": "The original Deadwater replay and 51 halfpipe cases pass against the actual pre-session bdc5370 controller. Earlier claims that the replay failure was pre-existing used an intermediate in-session collision build, not the requested pre-session baseline.",
+  "retainedLimitations": [
+    "The broader vert restoration is not applied by this Treehouse-only correction.",
+    "The current waterpark whole-course pilot and stowed-air slam fixture also fail on bdc5370; neither is claimed as restored passing coverage."
+  ],
+  "checks": {
+    "typecheck": "passed",
+    "build": "passed",
+    "unaffectedWorldSurfaceBinding": 47,
+    "unaffectedSolidPlayerContacts": "passed",
+    "fullSuite": "not run",
+    "treehouseBoundaryProbes": 8,
+    "unaffectedJungleBoundaryProbes": 112
+  }
+}

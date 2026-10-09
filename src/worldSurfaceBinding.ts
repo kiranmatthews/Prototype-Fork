@@ -21,6 +21,7 @@ export function meshScenerySolid(c:CustomComponent):boolean {
 type Role='mesh'|'trunk'|'none';
 interface SceneSources {
   ground:()=>THREE.Mesh[];
+  sceneryGround?:boolean;
   active?:(mesh:THREE.Mesh)=>boolean;
   walls:()=>THREE.Box3[];
   wallPath?:(box:THREE.Box3)=>unknown;
@@ -132,7 +133,7 @@ export class WorldSurfaceBinding {
     const instances=(mesh as THREE.InstancedMesh).isInstancedMesh?(mesh as THREE.InstancedMesh).count:1;
     for(let instance=0;instance<instances;instance++){
       const surface=this.solids.add(mesh,{geometry,instance:(mesh as THREE.InstancedMesh).isInstancedMesh?instance:undefined,dynamic,active,name:c?.nm??mesh.name,owner:c});record.surfaces.push(surface);
-      if(!native&&!c?.invisible&&!mesh.userData.editorGhost){
+      if(this.sources.sceneryGround!==false&&!native&&!c?.invisible&&!mesh.userData.editorGhost){
         const proxy=new THREE.Mesh(geometry,this.material);proxy.name=c?.nm??mesh.name;proxy.matrixAutoUpdate=false;proxy.matrixWorldAutoUpdate=false;proxy.matrix.copy(surface.matrix);proxy.matrixWorld.copy(surface.matrix);
         proxy.userData={worldSolidProxy:true,decorComponent:true,edgeGrinding:false,vert:false,...(c?.slip?{slippy:true,iceGrip:c.iceGrip}:{} )};
         // Dense scenery shares the same local BVH for contact and standing.
