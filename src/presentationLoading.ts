@@ -50,7 +50,7 @@ export interface PresentationMaterialVariant {
 /** Exercise real surface AND shadow programs/buffers in small covered batches.
  * compile() alone misses depth variants and first-use vertex uploads. */
 export async function warmPresentationScene(renderer:THREE.WebGLRenderer,scene:THREE.Scene,camera:THREE.Camera,
-  variants:readonly PresentationMaterialVariant[]=[]):Promise<void> {
+  variants:readonly PresentationMaterialVariant[]=[],screenObjects:readonly THREE.Object3D[]=[]):Promise<void> {
   const meshes:THREE.Object3D[]=[],lights:THREE.Light[]=[];
   const eligible=new Set<THREE.Object3D>();
   scene.updateMatrixWorld(true);camera.updateMatrixWorld(true);
@@ -75,6 +75,7 @@ export async function warmPresentationScene(renderer:THREE.WebGLRenderer,scene:T
   const batches:{objects:THREE.Object3D[];variants:PresentationMaterialVariant[]}[]=[];
   for(let start=0;start<meshes.length;start+=24)batches.push({objects:meshes.slice(start,start+24),variants:[]});
   const normallyWarmed=new Set(variants.length?meshes:undefined);
+  const screenPrograms=new Set(screenObjects);
   let alternate:typeof batches[number]|undefined;
   for(const variant of variants){
     if(!eligible.has(variant.mesh)||(variant.mesh.material===variant.material&&normallyWarmed.has(variant.mesh)))continue;
@@ -114,6 +115,15 @@ export async function warmPresentationScene(renderer:THREE.WebGLRenderer,scene:T
         renderer.autoClear=true;renderer.setRenderTarget(target);renderer.setScissorTest(false);
         renderer.shadowMap.needsUpdate=true;
         renderer.render(scene,camera);
+        if(batch.objects.some(object=>screenPrograms.has(object))){
+          // Direct-to-screen shaders have different colour/tone-mapping
+          // defines. An empty scissor prepares them without touching the
+          // visible loader, including scenes with an automatic background.
+          for(const object of batch.objects)object.layers.mask=screenPrograms.has(object)?layer:0;
+          renderer.setRenderTarget(null);renderer.autoClear=false;
+          renderer.setScissor(0,0,0,0);renderer.setScissorTest(true);
+          renderer.render(scene,camera);
+        }
       }finally{
         batch.variants.forEach((v,i)=>v.mesh.material=materials[i]);
         camera.layers.mask=cameraMask;

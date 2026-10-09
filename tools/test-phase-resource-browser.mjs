@@ -26,8 +26,9 @@ try{
   },id);
   assert.ok(retired.every(m=>m.calls===1&&m.programsRetired),'every retired phase material releases its renderer programs once');
   await page.waitForTimeout(1800);
-  const row=await page.evaluate(()=>{const g=window.__game;return{id:g.getCurrentLevel().id,memory:{...g.renderer.info.memory},programs:g.renderer.info.programs.length,programReferences:g.renderer.info.programs.reduce((n,p)=>n+p.usedTimes,0),preparedGhosts:g.getLevel().phasePads.filter(p=>g.renderer.properties.get(p.ghostMat).programs?.size>0).length,phasePads:g.getLevel().phasePads.length,failedAssets:g.getLoadingDiagnostics().failed,stamp:document.querySelector('.hud-build')?.textContent};});
+  const row=await page.evaluate(()=>{const g=window.__game;return{id:g.getCurrentLevel().id,memory:{...g.renderer.info.memory},programs:g.renderer.info.programs.length,programReferences:g.renderer.info.programs.reduce((n,p)=>n+p.usedTimes,0),preparedGhosts:g.getLevel().phasePads.filter(p=>g.renderer.properties.get(p.ghostMat).programs?.size>0).length,phasePads:g.getLevel().phasePads.length,strandedPuffProxies:g.scene.children.filter(o=>/^Puff .* preparation$/.test(o.name)).length,failedAssets:g.getLoadingDiagnostics().failed,stamp:document.querySelector('.hud-build')?.textContent};});
   row.retired=retired;rows.push(row);assert.equal(row.preparedGhosts,row.phasePads);assert.deepEqual(row.failedAssets,[]);
+  assert.equal(row.strandedPuffProxies,0,'covered particle draws must not remain in the live scene');
   console.log(JSON.stringify({id:row.id,memory:row.memory,programs:row.programs,references:row.programReferences,retired:retired.length}));
  }
  const returns=rows.filter(r=>r.id==='sky').slice(-3);

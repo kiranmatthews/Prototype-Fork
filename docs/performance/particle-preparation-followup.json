@@ -1,0 +1,662 @@
+{
+  "schema": 1,
+  "date": "2026-10-09",
+  "baseCommit": "214e92ef255da00f5ffcdce95cc90013f8bdd287",
+  "scope": "Prepare alpha dust and additive spark buffers/programs under loading; preserve first-use live mesh order and bounds. Other blend styles remain lazy.",
+  "environment": {
+    "agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+    "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+    "canvas": [
+      1280,
+      720
+    ],
+    "quality": {
+      "enabled": true,
+      "baseHeight": 720,
+      "outputMultiplier": 1,
+      "fixed60": true
+    }
+  },
+  "measurementNote": "API work counts, not an FPS or controlled loading-time benchmark. Timings retained as observations only.",
+  "beforeFull": [
+    {
+      "id": "dark",
+      "loadMs": 6420.600000023842,
+      "buffers": 3,
+      "shaderCompilations": 4,
+      "programLinks": 2,
+      "particleShaderCompilations": 4,
+      "textureAllocations": 0,
+      "proxies": [],
+      "screenPreparations": [],
+      "stamp": "Codex/sol fork \u00b7 build 10-09 00:47 UTC"
+    },
+    {
+      "id": "nightworks-after-hours",
+      "loadMs": 4747.5,
+      "buffers": 0,
+      "shaderCompilations": 6,
+      "programLinks": 3,
+      "particleShaderCompilations": 0,
+      "textureAllocations": 1,
+      "proxies": [],
+      "screenPreparations": [],
+      "stamp": "Codex/sol fork \u00b7 build 10-09 00:47 UTC"
+    }
+  ],
+  "afterFull": [
+    {
+      "id": "dark",
+      "loadMs": 5178.600000023842,
+      "buffers": 0,
+      "shaderCompilations": 0,
+      "programLinks": 0,
+      "particleShaderCompilations": 0,
+      "textureAllocations": 0,
+      "proxies": [
+        {
+          "style": "alpha",
+          "boundsPreserved": true,
+          "removed": true,
+          "programs": 4,
+          "geometry": 7937
+        },
+        {
+          "style": "add",
+          "boundsPreserved": true,
+          "removed": true,
+          "programs": 4,
+          "geometry": 7938
+        }
+      ],
+      "screenPreparations": [],
+      "stamp": "Codex/sol fork \u00b7 build 10-09 01:10 UTC"
+    },
+    {
+      "id": "nightworks-after-hours",
+      "loadMs": 4789.5,
+      "buffers": 0,
+      "shaderCompilations": 6,
+      "programLinks": 3,
+      "particleShaderCompilations": 0,
+      "textureAllocations": 1,
+      "proxies": [
+        {
+          "style": "alpha",
+          "boundsPreserved": true,
+          "removed": true,
+          "programs": 4,
+          "geometry": 7937
+        },
+        {
+          "style": "add",
+          "boundsPreserved": true,
+          "removed": true,
+          "programs": 4,
+          "geometry": 7938
+        }
+      ],
+      "screenPreparations": [],
+      "stamp": "Codex/sol fork \u00b7 build 10-09 01:10 UTC"
+    }
+  ],
+  "afterLite": [
+    {
+      "id": "dark",
+      "loadMs": 5297.300000011921,
+      "buffers": 0,
+      "shaderCompilations": 0,
+      "programLinks": 0,
+      "particleShaderCompilations": 0,
+      "textureAllocations": 0,
+      "proxies": [
+        {
+          "style": "alpha",
+          "boundsPreserved": true,
+          "removed": true,
+          "programs": 8,
+          "geometry": 7937
+        },
+        {
+          "style": "add",
+          "boundsPreserved": true,
+          "removed": true,
+          "programs": 8,
+          "geometry": 7938
+        }
+      ],
+      "screenPreparations": [
+        {
+          "scissor": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "enabled": true
+        },
+        {
+          "scissor": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "enabled": true
+        },
+        {
+          "scissor": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "enabled": true
+        },
+        {
+          "scissor": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "enabled": true
+        }
+      ],
+      "stamp": "Codex/sol fork \u00b7 build 10-09 01:10 UTC"
+    },
+    {
+      "id": "nightworks-after-hours",
+      "loadMs": 4804.899999976158,
+      "buffers": 0,
+      "shaderCompilations": 6,
+      "programLinks": 3,
+      "particleShaderCompilations": 0,
+      "textureAllocations": 0,
+      "proxies": [
+        {
+          "style": "alpha",
+          "boundsPreserved": true,
+          "removed": true,
+          "programs": 8,
+          "geometry": 7937
+        },
+        {
+          "style": "add",
+          "boundsPreserved": true,
+          "removed": true,
+          "programs": 8,
+          "geometry": 7938
+        }
+      ],
+      "screenPreparations": [
+        {
+          "scissor": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "enabled": true
+        },
+        {
+          "scissor": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "enabled": true
+        },
+        {
+          "scissor": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "enabled": true
+        },
+        {
+          "scissor": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "enabled": true
+        }
+      ],
+      "stamp": "Codex/sol fork \u00b7 build 10-09 01:10 UTC"
+    }
+  ],
+  "exactParticleParity": [
+    {
+      "quality": "high",
+      "samples": 888,
+      "hash": "b38d21cab2aae18a4608563a35148c68a32eaba72e6bf44548226aac17fd9d46"
+    },
+    {
+      "quality": "medium",
+      "samples": 888,
+      "hash": "43354a44f4e5dc22e45384a7b3bd064935d7379be9881db14f314f68c98c9e19"
+    },
+    {
+      "quality": "low",
+      "samples": 888,
+      "hash": "e79a96f4b6574cd86de2624373907a95336bb7e66e805d6c3b52cd0671526bb0"
+    }
+  ],
+  "defaultBatchBufferBytes": {
+    "position": 72960,
+    "color": 97280,
+    "index": 51840,
+    "total": 222080
+  },
+  "controlledDust": {
+    "frames": 90,
+    "bytes": 1356116,
+    "wholePoolEquivalent": 19987200,
+    "wholeUploads": 0,
+    "firstUseEvents": [
+      {
+        "key": "createTexture",
+        "time": 2.449999999999996,
+        "owner": {
+          "name": "",
+          "material": "GameplayHUD.PreCRT.Composite",
+          "type": "MeshBasicMaterial",
+          "wireframe": false,
+          "particle": false,
+          "geometry": 6719,
+          "blending": 1,
+          "fog": true
+        }
+      }
+    ]
+  },
+  "residency": {
+    "transitions": 12,
+    "settledSky": [
+      {
+        "memory": {
+          "geometries": 215,
+          "textures": 78
+        },
+        "programReferences": 187,
+        "strandedPuffProxies": 0
+      },
+      {
+        "memory": {
+          "geometries": 215,
+          "textures": 78
+        },
+        "programReferences": 187,
+        "strandedPuffProxies": 0
+      },
+      {
+        "memory": {
+          "geometries": 215,
+          "textures": 78
+        },
+        "programReferences": 187,
+        "strandedPuffProxies": 0
+      }
+    ],
+    "graphicsRecoveries": [
+      {
+        "held": 1293,
+        "after": 1293,
+        "glError": 0
+      },
+      {
+        "held": 1331,
+        "after": 1331,
+        "glError": 0
+      },
+      {
+        "held": 1369,
+        "after": 1369,
+        "glError": 0
+      }
+    ],
+    "errors": []
+  },
+  "validation": {
+    "typecheck": true,
+    "productionBuild": true,
+    "loadingNormalExceptionContextLoss": true,
+    "worldRenderFrame": true,
+    "puffUploadRanges": true,
+    "fullConsoleErrors": [],
+    "liteConsoleErrors": [],
+    "fullSuiteRun": false
+  },
+  "previousReleasePublicVerification": {
+    "commit": "214e92ef255da00f5ffcdce95cc90013f8bdd287",
+    "workflow": 37866201764,
+    "status": "success",
+    "public": "https://kiranmatthews.github.io/Prototype-Fork/",
+    "stamp": "Codex/sol fork \u00b7 build 10-09 00:47 UTC",
+    "frames": 20519,
+    "checkpoints": [
+      {
+        "frame": 2527,
+        "index": 0
+      },
+      {
+        "frame": 3420,
+        "index": 1
+      },
+      {
+        "frame": 8399,
+        "index": 2
+      },
+      {
+        "frame": 16449,
+        "index": 3
+      },
+      {
+        "frame": 18454,
+        "index": 4
+      },
+      {
+        "frame": 19527,
+        "index": 5
+      }
+    ],
+    "tuningUnchanged": true,
+    "state": "finished",
+    "deaths": 0,
+    "errors": []
+  },
+  "limits": [
+    "The After Hours fruit variants still create six shaders/three programs; full-render cropped HUD still allocates one texture in the measured interval.",
+    "Preparation does not retune effects, movement or rendering quality; this does not claim every rare particle blend is eagerly prepared.",
+    "Other full-course journeys and existing isolated vert findings remain under the active goal."
+  ],
+  "catalogValidation": {
+    "mode": "full",
+    "levels": 55,
+    "checkpoints": 145,
+    "errors": [],
+    "completed": "2026-10-09T01:25:41.697Z",
+    "rows": [
+      {
+        "id": "treehouse-trail",
+        "checkpoints": 5,
+        "passed": true
+      },
+      {
+        "id": "inside-your-room",
+        "checkpoints": 1,
+        "passed": true
+      },
+      {
+        "id": "jungle",
+        "checkpoints": 4,
+        "passed": true
+      },
+      {
+        "id": "jungle-terraces",
+        "checkpoints": 3,
+        "passed": true
+      },
+      {
+        "id": "jungle-skyline",
+        "checkpoints": 5,
+        "passed": true
+      },
+      {
+        "id": "flats",
+        "checkpoints": 2,
+        "passed": true
+      },
+      {
+        "id": "sky",
+        "checkpoints": 3,
+        "passed": true
+      },
+      {
+        "id": "slip",
+        "checkpoints": 2,
+        "passed": true
+      },
+      {
+        "id": "slipstream-2",
+        "checkpoints": 7,
+        "passed": true
+      },
+      {
+        "id": "test",
+        "checkpoints": 14,
+        "passed": true
+      },
+      {
+        "id": "custard-creek",
+        "checkpoints": 11,
+        "passed": true
+      },
+      {
+        "id": "dark",
+        "checkpoints": 11,
+        "passed": true
+      },
+      {
+        "id": "nightworks-after-hours",
+        "checkpoints": 7,
+        "passed": true
+      },
+      {
+        "id": "warproom",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "descent",
+        "checkpoints": 4,
+        "passed": true
+      },
+      {
+        "id": "beachfront",
+        "checkpoints": 4,
+        "passed": true
+      },
+      {
+        "id": "bonus-level",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "coastal-street-run",
+        "checkpoints": 6,
+        "passed": true
+      },
+      {
+        "id": "island-hopper",
+        "checkpoints": 3,
+        "passed": true
+      },
+      {
+        "id": "jungle-gate-run",
+        "checkpoints": 3,
+        "passed": true
+      },
+      {
+        "id": "meshylook-thorns",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "drowned-crown",
+        "checkpoints": 4,
+        "passed": true
+      },
+      {
+        "id": "bonus-easy",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-treehouse-trail",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-jungle",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-test-course",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-sky-bridge",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-slipstream",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-nightworks",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-beachside-run",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-coastal",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-island-hopper",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-codex-switchback",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-chimeworks",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-waterpark",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-nightworks-after-hours",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-crate-primer",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-switchyard",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-clockwork-gauntlet",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-jungle-terraces",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-jungle-skyline",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-drowned-crown",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bonus-bone-yard",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "crate-primer",
+        "checkpoints": 2,
+        "passed": true
+      },
+      {
+        "id": "switchyard",
+        "checkpoints": 2,
+        "passed": true
+      },
+      {
+        "id": "clockwork-gauntlet",
+        "checkpoints": 4,
+        "passed": true
+      },
+      {
+        "id": "crab-chief",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "ghost-train",
+        "checkpoints": 23,
+        "passed": true
+      },
+      {
+        "id": "codex-lab",
+        "checkpoints": 6,
+        "passed": true
+      },
+      {
+        "id": "jungle-cup",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "bone-yard",
+        "checkpoints": 2,
+        "passed": true
+      },
+      {
+        "id": "waterpark",
+        "checkpoints": 2,
+        "passed": true
+      },
+      {
+        "id": "waterpark-cup",
+        "checkpoints": 0,
+        "passed": true
+      },
+      {
+        "id": "astra-chimeworks",
+        "checkpoints": 4,
+        "passed": true
+      },
+      {
+        "id": "backport-lab",
+        "checkpoints": 1,
+        "passed": true
+      }
+    ]
+  }
+}

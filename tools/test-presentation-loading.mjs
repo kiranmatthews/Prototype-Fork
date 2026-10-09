@@ -34,6 +34,24 @@ try {
     meshes.forEach(mesh=>{mesh.geometry.dispose();mesh.material.dispose();});
     delete globalThis.requestAnimationFrame;
   }
+  for(const outcome of ['complete','throw','lost']){
+    const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(60,1,.1,100);camera.position.z=10;
+    const meshes=Array.from({length:3},()=>new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshBasicMaterial()));scene.add(...meshes);
+    const screen=meshes.slice(1),initial={},viewport=new THREE.Vector4(3,4,960,540),scissor=new THREE.Vector4(8,9,400,300);
+    let target=initial,scissorTest=false,lost=false,screenDraws=0;
+    const restored=()=>{assert.equal(target,initial);assert.equal(scissorTest,false);assert.deepEqual(viewport.toArray(),[3,4,960,540]);assert.deepEqual(scissor.toArray(),[8,9,400,300]);assert.equal(camera.layers.mask,1);assert.ok(meshes.every(m=>m.layers.mask===1&&m.frustumCulled));};
+    globalThis.requestAnimationFrame=callback=>{queueMicrotask(()=>{restored();callback(0);});return 1;};
+    const gl={SYNC_GPU_COMMANDS_COMPLETE:1,ALREADY_SIGNALED:2,CONDITION_SATISFIED:3,WAIT_FAILED:4,isContextLost:()=>lost,fenceSync:()=>({}),flush(){},clientWaitSync:()=>2,deleteSync(){}};
+    const assign=(vector,args)=>args[0]?.isVector4?vector.copy(args[0]):vector.set(...args);
+    const renderer={autoClear:true,shadowMap:{needsUpdate:false},getContext:()=>gl,getRenderTarget:()=>target,setRenderTarget:v=>target=v,
+      getViewport:v=>v.copy(viewport),getScissor:v=>v.copy(scissor),getScissorTest:()=>scissorTest,setViewport:(...a)=>assign(viewport,a),setScissor:(...a)=>assign(scissor,a),setScissorTest:v=>scissorTest=v,
+      render(){if(target!==null)return;screenDraws++;assert.equal(renderer.autoClear,false);assert.equal(scissorTest,true);assert.deepEqual(scissor.toArray(),[0,0,0,0]);assert.deepEqual(meshes.filter(m=>m.layers.test(camera.layers)),screen,'only requested direct-screen programs may draw');if(outcome==='throw')throw Error('screen preparation failed');if(outcome==='lost')lost=true;}};
+    try{
+      if(outcome==='throw')await assert.rejects(warmPresentationScene(renderer,scene,camera,[],screen),/screen preparation failed/);
+      else await warmPresentationScene(renderer,scene,camera,[],screen);
+      assert.equal(screenDraws,1);restored();assert.equal(renderer.autoClear,true);
+    }finally{delete globalThis.requestAnimationFrame;meshes.forEach(m=>{m.geometry.dispose();m.material.dispose();});}
+  }
   assert.equal(MINIMUM_VORTEX_MS, 2000);
   for(const cost of [.5,5]){
     const descriptor=Object.getOwnPropertyDescriptor(performance,'now');

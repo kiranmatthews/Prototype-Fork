@@ -728,10 +728,11 @@ function blankPuff(): Puff {
   };
 }
 
-/** One dynamic buffer + mesh per blend style. Built on first use, never freed. */
+/** One dynamic buffer + mesh per blend style. Live meshes keep first-use order. */
 class Batch {
   geo = new THREE.BufferGeometry();
-  mesh: THREE.Mesh;
+  mesh!: THREE.Mesh;
+  readonly material: THREE.MeshBasicMaterial;
   pos: Float32Array;
   col: Float32Array;
   idx: Uint16Array;
@@ -748,7 +749,7 @@ class Batch {
   private rc = { start: 0, count: 0 };
   private ri = { start: 0, count: 0 };
 
-  constructor(style: BlendStyle, cap: number) {
+  constructor(style: BlendStyle, cap: number, deferMesh = false) {
     this.premul = style === 'softAdd';
     this.pos = new Float32Array(cap * VERTS_MAX * 3);
     this.col = new Float32Array(cap * VERTS_MAX * 4); // rgba — the rim's fade
@@ -761,7 +762,7 @@ class Batch {
     ia.setUsage(THREE.DynamicDrawUsage);
     this.geo.setIndex(ia);
 
-    const mat = new THREE.MeshBasicMaterial({
+    const mat = this.material = new THREE.MeshBasicMaterial({
       vertexColors: true,
       transparent: true,
       depthWrite: false, // soft stuff never occludes; PS1 did the same
@@ -795,7 +796,12 @@ class Batch {
       mat.blendSrc = THREE.SrcAlphaFactor;
       mat.blendDst = THREE.OneFactor;
     }
-    this.mesh = new THREE.Mesh(this.geo, mat);
+    if (deferMesh) this.geo.setDrawRange(0, 0);
+    else this.activate();
+  }
+
+  activate(): void {
+    this.mesh = new THREE.Mesh(this.geo, this.material);
     this.mesh.frustumCulled = false; // the buffer moves every frame; a stale bound would pop
     this.mesh.renderOrder = 10; // after the world, before the HUD passes
     this.mesh.matrixAutoUpdate = false; // vertices are already in world space
@@ -845,6 +851,7 @@ const ANG = new Float32Array(RING_MAX);
 export class PuffSystem {
   private pool: Puff[] = [];
   private batches = new Map<BlendStyle, Batch>();
+  private preparedBatches = new Map<BlendStyle, Batch>();
   private root: THREE.Object3D | null = null;
   private seedCounter = 1;
 
@@ -872,6 +879,27 @@ export class PuffSystem {
     this.quality = q;
   }
 
+  /** A temporary loading draw shares the eventual buffers/material without
+   * creating the live mesh early: its creation order controls alpha blending.
+   * Remove the proxy after preparation; its resources belong to this system. */
+  createPresentationProxy(style: BlendStyle): THREE.Mesh {
+    let batch = this.batches.get(style) ?? this.preparedBatches.get(style);
+    if (!batch) {
+      batch = new Batch(style, this.cap, true);
+      this.preparedBatches.set(style, batch);
+    }
+    // Transparent sorting must not cache a sphere from these still-empty
+    // buffers. The live mesh earns its original bounds on its first draw.
+    const proxy = Object.assign(new THREE.Mesh(batch.geo, batch.material), {
+      boundingSphere: new THREE.Sphere(),
+    });
+    proxy.name = `Puff ${style} preparation`;
+    proxy.frustumCulled = false;
+    proxy.matrixAutoUpdate = false;
+    proxy.userData.shared = true;
+    return proxy;
+  }
+
   /** Kill everything instantly — level change, respawn, hard reset. */
   clear(): void {
     for (const p of this.pool) p.live = false;
@@ -886,7 +914,11 @@ export class PuffSystem {
     let b = this.batches.get(style);
     if (!b) {
       // Lazily: a level that never uses soot should not pay for a soot buffer.
-      b = new Batch(style, this.cap);
+      b = this.preparedBatches.get(style);
+      if (b) {
+        this.preparedBatches.delete(style);
+        b.activate();
+      } else b = new Batch(style, this.cap);
       this.batches.set(style, b);
       if (this.root) this.root.add(b.mesh);
     }

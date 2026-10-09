@@ -1363,8 +1363,13 @@ async function warmDestinationPresentation(): Promise<void> {
     recordPresentationStage('destination:texture-upload');
     await warmPresentationTextures(renderer,scene);
     recordPresentationStage('destination:scene-warmup');
-    await warmPresentationScene(renderer,scene,camera,
-      level.phasePads.map(pad=>({mesh:pad.mesh,material:pad.ghostMat})));
+    const puffPreparation = (['alpha','add'] as const).map(style=>puffs.createPresentationProxy(style));
+    scene.add(...puffPreparation);
+    try {
+      await warmPresentationScene(renderer,scene,camera,
+        level.phasePads.map(pad=>({mesh:pad.mesh,material:pad.ghostMat})),
+        LITE_RENDER||split2p||!coastPost?.active?puffPreparation:[]);
+    } finally { for(const proxy of puffPreparation)proxy.removeFromParent(); }
   }
 }
 
