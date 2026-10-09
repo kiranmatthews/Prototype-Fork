@@ -9,44 +9,48 @@ interface FallCameraSubject {
   state: string;
 }
 
-/** Keep the complete last shot once a missed landing falls below the course.
- * Runs before any camera layer restores or reframes, so chase/loop/authored
- * shots cannot pull the eye or aim underground. A missing vertical shadow
- * probe is not proof of a missed jump: a lower deck can still catch the rider
- * ahead. Ask for that bounded trajectory probe only when a hold is imminent. */
+/** Hold the last shot below the last supported course height. A shadow is
+ * only a possible receiver; it must never move the departure height down a
+ * pit. Once held, require a real recovery or a catchable trajectory before
+ * resuming, so a fleeting floor/overhead ledge cannot restart the dive. */
 export class CameraFallHold {
   private snapVersion = -1;
   private edgeY = 0;
+  private held = false;
 
   shouldHold(subject: FallCameraSubject, killY: number, landingAhead?: () => number | null): boolean {
     if (subject.state === 'dead' || subject.state === 'gameover') return true;
     const y = subject.renderPosition.y;
     const floor = subject.groundBelowY;
-    // A floor below the death plane cannot catch this fall.
-    const landing = floor !== null && Number.isFinite(floor) && floor > killY && !subject.groundBelowIsFatal;
+    // The shadow ray starts above the feet. An overhead surface cannot catch
+    // a descending player, even though that same ray can still see it.
+    const landing = floor !== null && Number.isFinite(floor) && floor > killY &&
+      floor <= y + .2 && !subject.groundBelowIsFatal;
     if (subject.renderSnapVersion !== this.snapVersion) {
       this.snapVersion = subject.renderSnapVersion;
-      this.edgeY = landing ? Math.min(y, floor) : y;
+      this.edgeY = y;
+      this.held = false;
       return false;
     }
     if ((subject.grounded && !subject.groundBelowIsFatal) || ['grind', 'rope', 'hang', 'swim', 'finished'].includes(subject.state)) {
       this.edgeY = y;
+      this.held = false;
       return false;
     }
-    if (landing) {
-      this.edgeY = Math.min(y, floor);
+    if (y >= this.edgeY - .2) {
+      this.held = false;
       return false;
     }
-    if (y < this.edgeY - .2) {
-      const ahead = landingAhead?.();
-      if (ahead != null && Number.isFinite(ahead) && ahead > killY) {
-        return false;
-      }
+    // A live descent onto a lower shelf stays live. A held shot needs the
+    // trajectory, not just a vertical projection, to prove that recovery.
+    if (landing && (!this.held || !landingAhead)) return false;
+    const ahead = landingAhead?.();
+    if (ahead != null && Number.isFinite(ahead) && ahead > killY) {
+      this.held = false;
+      return false;
     }
-    // A rescue jump below the lip must not pull the camera underground either;
-    // resume once the rider regains the course height or a real landing.
-    // The sole-height tolerance ignores interpolation/contact noise at a lip.
-    return y < this.edgeY - .2;
+    this.held = true;
+    return true;
   }
 }
 

@@ -81,6 +81,38 @@ await withSkateRuntime(async ({THREE, server, Level, Player, CONST}) => {
     assert.equal(player.state,'swim','water edge lost buoyancy');
     assert.ok(player.pos.x>b[0]&&player.pos.x<b[2]&&player.pos.z<b[3],'escaped swimming boundary');
   }
+  // The user's backward board entry used to leave the course frame exactly
+  // opposite its target. Normalized lerp could never turn it around.
+  const {readFile}=await import('node:fs/promises');
+  const {Replayer}=await server.ssrLoadModule('/src/replay.ts');
+  const replay=JSON.parse(await readFile(new URL('./fixtures/jungle-controller-camera-replay.json',import.meta.url),'utf8'));
+  player.respawn(level,true);player.endlessDeaths=true;
+  const take=new Replayer(),device=makeInput();take.begin(replay);
+  let waterEntry=-1;
+  try {
+    for(let frame=0;frame<400;frame++){
+      take.feed(device,player.camDir);player.step(CONST.fixedStep,device,level);level.update(CONST.fixedStep);player.commitRenderStep(level);
+      if(player.swimming){
+        waterEntry=frame;
+        const lane=level.laneDirAt(player.pos.x,player.pos.y,player.pos.z);
+        assert.ok(player.axisF.x*lane.x+player.axisF.z*lane.z>.999,'backward board entry inverted swimming');
+        break;
+      }
+    }
+  } finally {take.end();}
+  assert.equal(waterEntry,281,'supplied replay no longer reaches its original backward water entry');
+  // All prior board headings must relinquish control to the course on entry.
+  // Test every cardinal/diagonal device direction, then the real shore exit.
+  for(const yaw of [0,Math.PI/2,Math.PI,3*Math.PI/2])for(const [mx,my] of [[0,1],[1,0],[0,-1],[-1,0],[.71,.71],[-.71,-.71]]){
+    player.respawn(level,true);player.pos.set(8,-1.6,52);player.prevPos.copy(player.pos);
+    player.axisF.set(Math.sin(yaw),0,Math.cos(yaw));player.axisL.set(Math.cos(yaw),0,-Math.sin(yaw));
+    player.freeSkate=true;player.state='air';player.grounded=false;player.speed=12;player.vVel=0;
+    for(let i=0;i<90;i++){player.step(CONST.fixedStep,makeInput({moveX:mx,moveY:my}),level);level.update(CONST.fixedStep);}
+    assert.equal(player.state,'swim');
+    const lane=level.laneDirAt(player.pos.x,player.pos.y,player.pos.z),v=player.swimVelocity;
+    const wx=lane.x*my-lane.z*mx,wz=lane.z*my+lane.x*mx;
+    assert.ok((v.x*wx+v.z*wz)/(v.length()*Math.hypot(wx,wz))>.999,'swim intent depends on prior board heading');
+  }
   player.respawn(level,true);assert.equal(player.swimming,false);assert.equal(player.swimVelocity.length(),0);
   console.log('PASS animated-wave swimming, source loops/migration, 30/60/120 Hz buoyancy/drag, spawn → wade → swim → idle → shore, hard-fall recovery, reset, five fast edge approaches and ocean capture.');
   console.log('Water/head range', level.water.seaLevel, headYs.length? [Math.min(...headYs),Math.max(...headYs)]:[]);

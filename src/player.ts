@@ -4030,7 +4030,13 @@ export class Player {
         (!level.boss || this.grounded && this.state === 'ride' && this.slideTimer <= 0 && !this.isBailing && !this.wallriding)) {
       // The chief camera may orbit through 180 degrees during a jump. Input
       // changes its screen frame, never the physical launch/board heading.
-      const k = level.boss || level.cameraViews.length && !chaseMode ? 1 : Math.min(1, 6 * dt);
+      // Supported walking/swimming owns a control frame, not the board's
+      // previous travel heading. Normalized vector easing cannot turn an
+      // exactly opposite heading: it stays reversed indefinitely after a
+      // backward skate enters water. The lane is already spatially blended.
+      // Keep airborne easing/launch momentum under its existing rules.
+      const k = this.grounded || this.swimming || level.boss || level.cameraViews.length && !chaseMode
+        ? 1 : Math.min(1, 6 * dt);
       this.axisF.x += (laneDir.x - this.axisF.x) * k;
       this.axisF.z += (laneDir.z - this.axisF.z) * k;
       this.axisF.y = 0;

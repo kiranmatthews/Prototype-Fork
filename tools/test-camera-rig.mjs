@@ -47,7 +47,7 @@ try {
   rider.groundBelowIsFatal = false;
   assert.equal(fall.shouldHold(rider, -30), false, 'reachable lower landing was held');
   rider.groundBelowY = -30;
-  assert.equal(fall.shouldHold(rider, -30), false, 'shot should follow until the last real landing height');
+  assert.equal(fall.shouldHold(rider, -30), true, 'a projected lower floor cannot replace the departure height');
   rider.renderPosition.y = -26;
   assert.equal(fall.shouldHold(rider, -30), true, 'floor at the death plane counted as a landing');
   rider.groundBelowY = -40;
@@ -67,6 +67,26 @@ try {
   assert.equal(fall.shouldHold(rider, -30, () => null), true, 'steering away from the predicted catch kept camera live');
   assert.equal(fall.shouldHold(rider, -30, () => -31), true, 'forecast below kill plane released hold');
   assert.equal(fall.shouldHold(rider, -30, () => NaN), true, 'invalid forecast released hold');
+  // Looking down onto lower scenery is not standing on it. Leaving that
+  // footprint must hold at the original lip, not at the lower shadow plane.
+  const projected = new CameraFallHold();
+  Object.assign(rider, { state: 'ride', grounded: true, groundBelowY: 12 });
+  rider.renderPosition.y = 12;
+  projected.shouldHold(rider, -30);
+  Object.assign(rider, { state: 'air', grounded: false, groundBelowY: 0 });
+  rider.renderPosition.y = 11;
+  assert.equal(projected.shouldHold(rider, -30, () => 0), false, 'viable lower landing must remain live');
+  rider.groundBelowY = null; rider.renderPosition.y = 10;
+  assert.equal(projected.shouldHold(rider, -30, () => null), true, 'lower shadow reset the original ledge');
+  rider.groundBelowY = 11;
+  assert.equal(projected.shouldHold(rider, -30, () => null), true, 'overhead ledge released the shot');
+  rider.groundBelowY = 0;
+  assert.equal(projected.shouldHold(rider, -30, () => null), true, 'uncatchable floor flicker released the shot');
+  assert.equal(projected.shouldHold(rider, -30, () => 0), false, 'real recovery did not release the shot');
+  rider.grounded = true; rider.state = 'ride'; rider.renderPosition.y = 0;
+  assert.equal(projected.shouldHold(rider, -30), false, 'lower touchdown did not establish new support');
+  rider.grounded = false; rider.state = 'air'; rider.groundBelowY = null; rider.renderPosition.y = -.3;
+  assert.equal(projected.shouldHold(rider, -30, () => null), true, 'next fall reused the previous upper ledge');
   const camera = new THREE.PerspectiveCamera(49, 16 / 9, 0.1, 400);
   const aim = new THREE.Vector3();
   const forward = new THREE.Vector3(0.6, 0, -0.8);
