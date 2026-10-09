@@ -116,7 +116,9 @@ For each supported platform, record the immutable commit/content ID, Electron/Ch
 
 The smoke scripts are short automated regression checks. They are not a full-course playthrough, a sustained hardware benchmark, a physical controller test or a substitute for the final disconnected installer review.
 
-## Verified local result
+## Verified candidate
+
+The complete [four-platform candidate matrix](https://github.com/kiranmatthews/Prototype-Fork/actions/runs/37862180287) passes at commit `f43594b`, with installers, evidence and checksums retained for each target. Both local Mac architectures also pass hardened full-render gameplay and pause checks with clean consoles.
 
 The validated macOS arm64 candidate contains **861 manifest-tracked game files / 408.3 MiB**, omitting **438.5 MiB** of web/authoring material from the public asset inventory. The app with its browser runtime occupies approximately **716 MiB** on this host; compressed candidate installers are approximately **489 MiB**. This is a size reduction, not an FPS claim.
 

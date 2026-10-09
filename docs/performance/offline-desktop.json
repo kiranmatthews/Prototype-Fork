@@ -1,38 +1,41 @@
 {
-  "validatedAt": "2026-10-08T18:37:28.753Z",
-  "sourceBase": "cb9c230",
+  "validatedAt": "2026-10-09T01:24:03.936755+00:00",
+  "sourceCommit": "f43594bf71638089783ddcd2317df914d97c7eb0",
   "platform": "darwin",
   "arch": "arm64",
   "runtime": {
     "electron": "44.7.0",
     "chromium": "152.0.7977.130",
-    "gpu": {
-      "2d_canvas": "enabled",
-      "direct_rendering_display_compositor": "disabled_off_ok",
-      "gpu_compositing": "enabled",
-      "multiple_raster_threads": "enabled_on",
-      "opengl": "enabled_on",
-      "rasterization": "enabled",
-      "raw_draw": "disabled_off_ok",
-      "skia_graphite": "enabled_on",
-      "trees_in_viz": "disabled_off",
-      "video_decode": "enabled",
-      "video_encode": "enabled",
-      "webgl": "enabled",
-      "webgpu": "enabled",
-      "webnn": "disabled_off"
-    }
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) BONEMAN/44.7.0 Chrome/152.0.7977.130 Electron/44.7.0 Safari/537.36",
+    "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)"
   },
   "payload": {
     "files": 861,
-    "bytes": 428082774,
-    "contentId": "fea31608c5b3f2d82feea8cef545ca535349e7d7791925df4b1c085c301b5a02"
+    "bytes": 428085000,
+    "contentId": "6c66a6e7e141e010fad754bd72c078ff6ad13e28d8acc11ab34ffb6c6e380cfd"
   },
   "tests": {
     "sourceSmoke": "passed",
     "packagedSmoke": "passed",
     "packagedFocusEmulated": false,
-    "nativeLifecycle": "passed",
+    "nativeLifecycle": {
+      "status": "passed",
+      "scope": "mac-arm64 CI at f43594b",
+      "url": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/37862180287",
+      "hiddenFrames": {
+        "before": 4,
+        "after": 4,
+        "resumed": true
+      },
+      "minimizedFrames": {
+        "before": 38,
+        "after": 38,
+        "resumed": true
+      },
+      "sandbox": true,
+      "nativeNetworkDenied": true,
+      "networkHits": 0
+    },
     "graphicsRecovery": {
       "lost": false,
       "losses": 1,
@@ -45,9 +48,10 @@
         "socket": true,
         "worker": true
       },
-      "nativeDenied": true,
       "networkHits": 0,
-      "gameRequests": 993
+      "gameRequests": 525,
+      "nativePolicy": "verified separately by native-lifecycle.mjs",
+      "nativeDenied": true
     },
     "savePersistence": true,
     "assetFamilies": [
@@ -55,15 +59,271 @@
       "jungle",
       "dark",
       "crab-chief"
-    ]
+    ],
+    "publishedWeb": [
+      {
+        "lite": true,
+        "stamp": "Codex/sol fork \u00b7 build 10-08 23:58 UTC",
+        "errors": []
+      },
+      {
+        "lite": false,
+        "stamp": "Codex/sol fork \u00b7 build 10-08 23:58 UTC",
+        "errors": []
+      }
+    ],
+    "assetFamilyEntry": "First-use loading through the real in-game selector in one session; fresh startup and save/restart remain separate checks.",
+    "nativeLifecycleWindows": {
+      "status": "passed",
+      "scope": "win-x64 CI at f43594b",
+      "url": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/37862180287",
+      "hiddenFrames": {
+        "before": 1,
+        "after": 1,
+        "resumed": true
+      },
+      "minimizedFrames": {
+        "before": 3,
+        "after": 3,
+        "resumed": true
+      },
+      "sandbox": true,
+      "nativeNetworkDenied": true,
+      "networkHits": 0
+    },
+    "runtimeNotices": {
+      "status": "passed",
+      "files": [
+        "Electron-LICENSE.txt",
+        "Chromium-LICENSES.html"
+      ],
+      "verification": "Mac copies match the pinned Electron distribution byte-for-byte; package and signature verification pass."
+    },
+    "localX64Packaged": {
+      "status": "passed",
+      "arch": "x64",
+      "hostArch": "arm64",
+      "translatedTest": true,
+      "emulatedFocus": false,
+      "networkOffline": true,
+      "fullRender": true,
+      "errors": [],
+      "failed": []
+    },
+    "audioDeviceRecovery": {
+      "status": "passed",
+      "test": "tools/test-audio-loops.mjs",
+      "scope": "Startup and gesture resume rejections are handled; subsequent retry resumes the context and plays retained decoded buffers. The x64 packaged rerun has a clean console."
+    },
+    "localInstallerChecksums": "verified against final files"
   },
   "measurementScope": "Short functional smoke only; RAF samples are display callback cadence, not presented-game FPS or GPU timings. No sustained minimum-hardware certification.",
   "artifacts": {
     "type": "local ad-hoc macOS candidate, not Developer ID signed or notarized",
+    "bytes": {
+      "BONEMAN-0.1.0-mac-arm64.dmg": 512381198,
+      "BONEMAN-0.1.0-mac-arm64.zip": 511669195
+    },
     "checksums": [
-      "702ec44d965a471147b6a27a7e01a0070ad666ad45daa5b8b9b0e66196b73445  BONEMAN-0.1.0-mac-arm64.dmg",
-      "65a69663375a2c2780eb43e82486dc54b5c98d645af16ce564700c0885e63348  BONEMAN-0.1.0-mac-arm64.zip"
+      "e735b20b04519dca8cdbdb93af653d08b95d8fb7c8b9187f158a114ac1e4d20c  BONEMAN-0.1.0-mac-arm64.dmg",
+      "c923764cf343ad184e8523b1d338db0ce6ce42cc224295f57c7548296effeb86  BONEMAN-0.1.0-mac-arm64.zip"
+    ],
+    "appAllocatedKiB": 733028
+  },
+  "crossPlatformValidation": {
+    "status": "passed",
+    "sourceCommit": "f43594bf71638089783ddcd2317df914d97c7eb0",
+    "run": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/37862180287",
+    "platforms": [
+      {
+        "platform": "linux-x64",
+        "status": "passed",
+        "arch": "x64",
+        "hostArch": "x64",
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "contentId": "6c66a6e7e141e010fad754bd72c078ff6ad13e28d8acc11ab34ffb6c6e380cfd",
+        "source": "passed",
+        "packaged": "passed",
+        "networkHits": 0,
+        "persistentSave": true,
+        "graphicsRestores": 1,
+        "sandbox": true,
+        "hiddenFrames": {
+          "before": 1,
+          "after": 1,
+          "resumed": true
+        },
+        "minimizedFrames": null,
+        "families": [
+          "treehouse-trail",
+          "jungle",
+          "dark",
+          "crab-chief"
+        ]
+      },
+      {
+        "platform": "mac-arm64",
+        "status": "passed",
+        "arch": "arm64",
+        "hostArch": "arm64",
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)",
+        "contentId": "6c66a6e7e141e010fad754bd72c078ff6ad13e28d8acc11ab34ffb6c6e380cfd",
+        "source": "passed",
+        "packaged": "passed",
+        "networkHits": 0,
+        "persistentSave": true,
+        "graphicsRestores": 1,
+        "sandbox": true,
+        "hiddenFrames": {
+          "before": 4,
+          "after": 4,
+          "resumed": true
+        },
+        "minimizedFrames": {
+          "before": 38,
+          "after": 38,
+          "resumed": true
+        },
+        "families": [
+          "treehouse-trail",
+          "jungle",
+          "dark",
+          "crab-chief"
+        ]
+      },
+      {
+        "platform": "mac-x64",
+        "status": "passed",
+        "arch": "x64",
+        "hostArch": "arm64",
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)",
+        "contentId": "6c66a6e7e141e010fad754bd72c078ff6ad13e28d8acc11ab34ffb6c6e380cfd",
+        "source": "passed",
+        "packaged": "passed",
+        "networkHits": 0,
+        "persistentSave": true,
+        "graphicsRestores": 1,
+        "sandbox": true,
+        "hiddenFrames": {
+          "before": 1,
+          "after": 1,
+          "resumed": true
+        },
+        "minimizedFrames": {
+          "before": 4,
+          "after": 4,
+          "resumed": true
+        },
+        "families": [
+          "treehouse-trail",
+          "jungle",
+          "dark",
+          "crab-chief"
+        ]
+      },
+      {
+        "platform": "win-x64",
+        "status": "passed",
+        "arch": "x64",
+        "hostArch": "x64",
+        "renderer": "ANGLE (Microsoft, Microsoft Basic Render Driver (0x0000008C) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "contentId": "b318a2be233215907896768c4e8408ecb944d4106a43c4fbfdcdcae42e6e0180",
+        "source": "passed",
+        "packaged": "passed",
+        "networkHits": 0,
+        "persistentSave": true,
+        "graphicsRestores": 1,
+        "sandbox": true,
+        "hiddenFrames": {
+          "before": 1,
+          "after": 1,
+          "resumed": true
+        },
+        "minimizedFrames": {
+          "before": 3,
+          "after": 3,
+          "resumed": true
+        },
+        "families": [
+          "treehouse-trail",
+          "jungle",
+          "dark",
+          "crab-chief"
+        ]
+      }
+    ],
+    "artifacts": [
+      {
+        "digest": "sha256:608827d8d0bf8cf6dce3372504b10505788b99efea3275ccf9a32379c537e0ad",
+        "expired": false,
+        "id": 11589846465,
+        "name": "boneman-evidence-mac-x64",
+        "size_in_bytes": 3084075,
+        "url": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/37862180287/artifacts/11589846465"
+      },
+      {
+        "digest": "sha256:56bd95657c6018ed87f6966d7183adcff5365677fb2e09b8a6e54385d3875643",
+        "expired": false,
+        "id": 11589697352,
+        "name": "boneman-installer-mac-x64",
+        "size_in_bytes": 1037710850,
+        "url": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/37862180287/artifacts/11589697352"
+      },
+      {
+        "digest": "sha256:6258bb51a8f93be9f089d25698f32834a6f5117b4d57a93ad631caa3e1493e27",
+        "expired": false,
+        "id": 11588745575,
+        "name": "boneman-evidence-linux-x64",
+        "size_in_bytes": 4087196,
+        "url": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/37862180287/artifacts/11588745575"
+      },
+      {
+        "digest": "sha256:6a76a2c1c8fc06e9872d8841a5ed413be82accbc508a222f9d7e84ab8e854781",
+        "expired": false,
+        "id": 11588145067,
+        "name": "boneman-evidence-win-x64",
+        "size_in_bytes": 3020174,
+        "url": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/37862180287/artifacts/11588145067"
+      },
+      {
+        "digest": "sha256:3299ddf504acde26a148a65808e6e473b62443fe4c16345a89edd1053942c81e",
+        "expired": false,
+        "id": 11588057425,
+        "name": "boneman-installer-linux-x64",
+        "size_in_bytes": 1008074244,
+        "url": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/37862180287/artifacts/11588057425"
+      },
+      {
+        "digest": "sha256:f559cba50bbcd378f2ef2acdb2f3ce3b893466959061ab62e4a7042751e4a291",
+        "expired": false,
+        "id": 11587793081,
+        "name": "boneman-installer-win-x64",
+        "size_in_bytes": 486270502,
+        "url": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/37862180287/artifacts/11587793081"
+      },
+      {
+        "digest": "sha256:8715d03aef906b73e03c3f7609f73082e992801b8f08a294d5fd194462ebc177",
+        "expired": false,
+        "id": 11587723578,
+        "name": "boneman-evidence-mac-arm64",
+        "size_in_bytes": 3095925,
+        "url": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/37862180287/artifacts/11587723578"
+      },
+      {
+        "digest": "sha256:291b82540849b4ea943659b87b7c499d5f6809c90832a6f794be2834da614d09",
+        "expired": false,
+        "id": 11587579074,
+        "name": "boneman-installer-mac-arm64",
+        "size_in_bytes": 1026525921,
+        "url": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/37862180287/artifacts/11587579074"
+      }
     ]
   },
-  "verificationUpdate": "Rebuilt after safe startup-navigation handling; source smoke, packaged smoke and native lifecycle/network checks pass."
+  "verificationUpdate": "All four complete f43594b candidate jobs pass: source smoke, production packaging, manifest/fuse/runtime-notice checks, native window/network checks, hardened packaged smoke and checksums. Both local Mac packages and deployed Pages also pass. Public signing/notarization and hardware acceptance remain release gates.",
+  "testRevision": "f43594bf71638089783ddcd2317df914d97c7eb0",
+  "priorFullMatrix": {
+    "status": "passed",
+    "sourceCommit": "57269a8420dbbf8adb2ce517071526f466c1cb0e",
+    "run": "https://github.com/kiranmatthews/Prototype-Fork/actions/runs/37857406423"
+  }
 }
