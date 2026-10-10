@@ -5395,16 +5395,9 @@ export class Player {
       this.floatAir = (rampClimb > 0.5 || this.rideNormal.y < 0.985) && descent >= -0.5;
       sfx.play('ollie', 0.7);
     } else if (spd > TUNING.walkSpeed * 0.45) {
-      // On foot with real run speed. The Crash rule from the reference: a
-      // direction HELD into the jump (flipHoldTime slider) is a committed
-      // running leap — full forward somersault. A neutral jump that's only
-      // steered after takeoff stays a plain jump, no roll.
-      if (CONST.frontFlip && this.dirHoldT >= TUNING.flipHoldTime && this.starTimer <= 0) {
-        this.lastJumpType = 'Forward Flip';
-        this.flipTimer = CONST.flipDuration;
-      } else {
-        this.lastJumpType = 'Running Jump';
-      }
+      // Platform jumps keep the upright jump/fall pose at every run-up speed.
+      this.flipTimer = 0;
+      this.lastJumpType = 'Running Jump';
       sfx.play('footstep2', 0.55, 1.5);
     } else {
       // (near-)standing: plain vertical Crash hop

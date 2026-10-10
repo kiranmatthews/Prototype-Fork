@@ -47,7 +47,7 @@ export const TUNING = {
   ollieMinVelocity: 6.5, // quick-tap board ollie. NOTE this no longer clears a crate on its own: measured, a tap now peaks at 0.559 against a 0.96 crate (it was 8.25, tuned to peak at exactly 0.962 for that reason). Clearing a crate on the board is a CHARGED ollie now — hold X and the full pop peaks at 1.679. The ramp climb still stacks on top (see chargedJump), so a lip pays out instead of robbing you
   ollieDownCouple: 0.65, // DOWNHILL OLLIES ONLY: fraction of the slope's descent rate folded back into the pop, so the arc hugs the hill instead of hanging over it. 0 = old floaty behavior, 1 = airtime matches a flat-ground ollie
   jumpChargeTime: 0.4, // hold this long for full power
-  flipHoldTime: 0.18, // direction held at least this long AT the jump = forward somersault; steering only after takeoff never rolls
+  flipHoldTime: 0.18, // legacy saved-tuning/replay key; platform jumps no longer trigger a somersault
   doubleJump: 1, // 1 = a fresh X press mid-air pops a second, smaller jump (one per air)
   doubleJumpWindow: 0.7, // how LATE into the air the double can still fire (seconds since takeoff)
   doubleJumpVelocity: 11, // vertical speed of the second on-foot pop
@@ -533,13 +533,13 @@ export const TUNING_INFO: Record<TuningKey, string> = {
     'DOWNHILL SKATE OLLIES ONLY. Ollieing on a descending road, the ground falls away under the arc — a flat pop up there buys near-double the airtime and feels floaty. This folds a fraction of the descent rate (slope times speed) back into the pop so the arc follows the hill down. 0 keeps the old float; 1 makes downhill airtime match flat ground. Uphill ollies, kickers, and vert launches are untouched.',
   jumpChargeTime: 'How long X must be held for a full-power jump; charge scales linearly up to it.',
   flipHoldTime:
-    'The roll-jump gate: a direction held at least this long GOING INTO an on-foot jump triggers the forward somersault (Crash rules). Jumping neutral and only steering mid-air never rolls. 0 = every moving jump rolls; raise it to demand a longer committed run-up.',
+    'Legacy saved-tuning value. Platform jumps stay upright regardless of the run-up duration.',
   doubleJump:
     'DOUBLE JUMP: a fresh X press mid-air pops a second, smaller jump (quick-tap height) — one per air, re-armed by any ground or rail contact. Hangs, slams, and grabs own their airs and never double-jump.',
   doubleJumpWindow:
     'How LATE into the air the double jump can still fire — seconds since takeoff for a FULL-CHARGE jump. The window scales with each air\'s launch power: bigger pops (arrow crates, crate bounces) earn proportionally more time, quick taps less, and a plain walk-off fall keeps the base value so ledge saves still work. Short = a right-after-takeoff skill window; long = last-moment saves.',
   doubleJumpVelocity:
-    'Vertical launch speed of the second on-foot jump. It replaces the current rise speed and cancels any running somersault.',
+    'Vertical launch speed of the second on-foot jump. It replaces the current rise speed.',
   doubleJumpHorizontalScale:
     'Fraction of on-foot horizontal traversal retained after a double jump. 0 stops horizontal travel; 1 keeps the original air movement.',
   chargeBoost:
@@ -817,7 +817,7 @@ export const TUNING_SECTIONS: { title: string; keys: TuningKey[] }[] = [
   { title: 'WALKING', keys: ['walkSpeed', 'walkRampTime', 'walkSlowdownTime', 'crawlSpeed'] },
   {
     title: 'JUMPS & AIR',
-    keys: ['jumpVelocity', 'jumpMinVelocity', 'ollieVelocity', 'ollieMinVelocity', 'ollieDownCouple', 'jumpChargeTime', 'flipHoldTime', 'doubleJump', 'doubleJumpWindow', 'doubleJumpVelocity', 'doubleJumpHorizontalScale', 'riseGravity', 'fallGravity', 'boardRiseGravity', 'boardFallGravity', 'rampFallGravity', 'boardApexFloat', 'boardApexBand', 'airControl'],
+    keys: ['jumpVelocity', 'jumpMinVelocity', 'ollieVelocity', 'ollieMinVelocity', 'ollieDownCouple', 'jumpChargeTime', 'doubleJump', 'doubleJumpWindow', 'doubleJumpVelocity', 'doubleJumpHorizontalScale', 'riseGravity', 'fallGravity', 'boardRiseGravity', 'boardFallGravity', 'rampFallGravity', 'boardApexFloat', 'boardApexBand', 'airControl'],
   },
   {
     title: 'SKATING',
@@ -965,7 +965,7 @@ export const CONST = {
   liftMemory: 0.12, // how long a kicker's climb is remembered for the takeoff. The ground ray flattens a frame or two before the wheels actually leave a lip, and without this the launch converts the flat instead of the ramp
   grabGrace: 0.62, // landing this soon after COMPLETING a grab still pays out. Raised from 0.45 with the board-air split: the paying release window is [airtime - grabGrace, airtime - grabRelease], so a LONGER board air was silently pushing an early grab-and-release out of the payout with no bail and no tell. 0.62 keeps a press-at-launch release paying across the WHOLE boardFallGravity slider, down to a fully symmetric 0.75s air
   grabSnapRate: 15, // rad/s the rotation eases back on-axis after release
-  frontFlip: true, // running-jump somersault animation (triggered by TUNING.flipHoldTime)
+  frontFlip: true, // deliberate board-abandon somersault animation
   flipDuration: 0.75, // full somersault clock — matches the reference full-hold jump arc; rotation lives in the 15..80% window (visual only)
   slideCooldown: 0.25,
   slideSpinCancel: 0.2, // spin inside the slide's last beat (or its grace/get-up) cancels the cool-off — slide-spin-slide chains

@@ -684,7 +684,8 @@ try {
   assert.equal(slowMounted.flipTimer, 0, "mounted ollie inherited a body flip");
 
   const fastDeckless = jumpFixture(false, TUNING.walkSpeed + 4);
-  assert.equal(fastDeckless.lastJumpType, "Forward Flip");
+  assert.equal(fastDeckless.lastJumpType, "Running Jump");
+  assert.equal(fastDeckless.flipTimer, 0, "running platform jump started a forward flip");
   assert.equal(fastDeckless.boardOllieAir, false);
   assert.equal(fastDeckless.airFromSkate, false);
   assert.equal(fastDeckless.airGrav, "foot");
