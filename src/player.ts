@@ -598,6 +598,7 @@ export class Player {
   grounded = false;
   surfaceName = '-';
   runTime = 0;
+  private runLevel: Level | null = null;
   cratesBroken = 0;
   bonusCrates = 0; // parent-level tally banked from its linked bonus stage
   fruit = 0; // wumpa collected
@@ -3445,6 +3446,7 @@ export class Player {
   // warp that skipped any of this would arrive still grinding a rail that is
   // now four hundred units behind you.
   private settle(level: Level, facing?: THREE.Vector3): void {
+    this.runLevel = level;
     this.breakApart?.reset();
     this.competitionFinishT = -1;
     this.competitionParkedBoard?.removeFromParent();
@@ -3754,6 +3756,7 @@ export class Player {
 
   // One deterministic fixed step.
   step(dt: number, input: Input, level: Level): void {
+    this.runLevel = level;
     // Detached sockets are a final presentation layer. Never let them enter
     // the authored-pose baseline, interaction bounds or movement simulation.
     this.breakApart?.restore();
@@ -5148,6 +5151,7 @@ export class Player {
   // held; the THIRD triggers temporary invincibility (uber) — auto-smash on
   // touch, perfect rail balance, immune to everything except the pit.
   private gainMask(): void {
+    this.runLevel?.lockTrialClock();
     if (this.masks >= 2 || this.uberTimer > 0) {
       this.uberTimer = CONST.uberTime;
       this.emitSparks(14, 0xffd700, 2.5);
@@ -12937,7 +12941,7 @@ export class Player {
 
     // The trial stopwatch: touch it and the clock starts NOW.
     const ck = level.clockPickup;
-    if (level.runModesOn && ck && !ck.collected && !this.ttActive && !this.comboRun && this.playerBox.intersectsBox(ck.box)) {
+    if (level.runModesOn && !level.clockLocked && ck && !ck.collected && !this.ttActive && !this.comboRun && this.playerBox.intersectsBox(ck.box)) {
       level.collectClock();
       level.setTimeTrial(true);
       this.ttActive = true;
@@ -13337,6 +13341,7 @@ export class Player {
   }
 
   private gainLife(): void {
+    this.runLevel?.lockTrialClock();
     if (this.endlessDeaths) this.totalDeaths = Math.max(0, this.totalDeaths - 1);
     else this.lives++;
     sfx.play('lifeGet', 1.0);
@@ -13345,6 +13350,7 @@ export class Player {
 
   // Central wumpa collection: 100 fruit converts into a life, Crash rules.
   private collectFruit(): void {
+    this.runLevel?.lockTrialClock();
     this.fruitCollectionRevision++;
     if (this.endlessDeaths) {
       // Modern keeps its face-value score while also building toward a
@@ -13529,6 +13535,8 @@ export class Player {
   // the flight starts exactly where the world body was and the swap between
   // layers is invisible.
   private beginFruitFlight(f: (typeof this.fruits)[number], pos: THREE.Vector3): void {
+    // Collection happens at contact, before the delayed HUD counter credit.
+    this.runLevel?.lockTrialClock();
     f.payoutFlight = undefined;
     f.phase = 'fly';
     f.t = 0;
@@ -15565,6 +15573,7 @@ export class Player {
         this.ttDied = false;
         this.comboDied = false;
         this.respawn(level, true, true);
+        level.lockTrialClock(); // automatic retry is still the same playthrough
       } else if (this.bonusMode) {
         this.state = 'gameover';
         this.onBonusDeath();
@@ -15669,6 +15678,7 @@ export class Player {
     // live after the mask visual and player agency were already gone.
     this.uberTimer = 0;
     this.state = 'dead';
+    this.runLevel?.lockTrialClock();
     this.gameOverPending = false;
     if (this.competitionMode) this.totalDeaths++;
     else if (this.ttActive) this.ttDied = true; // trials never cost a life — the restart is the price

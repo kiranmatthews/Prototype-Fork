@@ -3100,6 +3100,7 @@ function returnFromBonus(completed: boolean): void {
   if (!session || bonusDeparture || gameFlow.loadingPhase) return;
   const bonusLevel = level;
   if (completed) player.bankFlyingFruit();
+  if (bonusLevel.clockLocked) session.parentLevel.lockTrialClock();
   const bonusBoxes = completed ? Math.min(bonusLevel.totalCrates, player.cratesBroken) : 0;
   const bonusLives = completed ? Math.max(0, player.lives) : 0;
   const bonusFruit = completed ? Math.max(0, player.fruit) : 0;

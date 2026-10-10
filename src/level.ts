@@ -4168,6 +4168,7 @@ export class Level {
     box: THREE.Box3;
     collected: boolean;
   } | null = null;
+  clockLocked = false; // death or a pickup prevents starting a trial until a fresh run
   timeTrial = false; // trial live: checkpoints/fruit dormant, time crates active
   // COMBO RUN: the green orb near spawn — touch it and the green gem appears
   // at the finish gate; reach it in ONE combo and it's yours.
@@ -10003,6 +10004,7 @@ export class Level {
     // Hard reset restores the committed crystal baseline and clears any
     // materialized run-local gem; a soft death keeps current-run pickups.
     if (hard) {
+      this.clockLocked = false;
       if (this.crystalPickup) {
         // A fresh run restores the durable campaign baseline. An uncommitted
         // crystal comes back; one already banked in a previous run remains
@@ -17981,7 +17983,8 @@ export class Level {
 
   collectCrystal(): void {
     const c = this.crystalPickup;
-    if (!c) return;
+    if (!c || c.collected) return;
+    this.lockTrialClock();
     c.collected = true;
     c.group.visible = false;
     this.glimmerBurst(c.group.position, 0xc83af0);
@@ -18122,14 +18125,20 @@ export class Level {
   setRunModesEnabled(on: boolean): void {
     this.runModesOn = on;
     if (this.clockPickup)
-      this.clockPickup.group.visible = on && !this.clockPickup.collected;
+      this.clockPickup.group.visible = on && !this.clockLocked && !this.clockPickup.collected;
     if (this.comboOrb)
       this.comboOrb.group.visible = on && !this.comboOrb.collected;
   }
 
+  /** A playthrough stays ineligible through checkpoints, bonus visits and deaths. */
+  lockTrialClock(): void {
+    this.clockLocked = true;
+    if (this.clockPickup) this.clockPickup.group.visible = false;
+  }
+
   collectClock(): void {
     const c = this.clockPickup;
-    if (!c) return;
+    if (!c || this.clockLocked || !this.runModesOn || c.collected) return;
     c.collected = true;
     c.group.visible = false;
     this.glimmerBurst(c.group.position, 0xffd75e);
@@ -18180,7 +18189,8 @@ export class Level {
 
   collectComboOrb(): void {
     const o = this.comboOrb;
-    if (!o) return;
+    if (!o || o.collected) return;
+    this.lockTrialClock();
     o.collected = true;
     o.group.visible = false;
     this.glimmerBurst(o.group.position, 0x46e882);
@@ -18455,7 +18465,8 @@ export class Level {
 
   /** Touched the materialized gem: it's yours. */
   collectGem(): void {
-    if (!this.gemPickup) return;
+    if (!this.gemPickup || this.gemPickup.collected) return;
+    this.lockTrialClock();
     this.gemPickup.collected = true;
     this.gemPickup.group.visible = false;
     this.glimmerBurst(this.gemPickup.group.position, 0xaee6ff);
