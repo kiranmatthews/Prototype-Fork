@@ -1,12 +1,14 @@
 import assert from 'node:assert/strict';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE||'playwright');
 const base=(process.argv.find(a=>/^https?:/.test(a))||'http://127.0.0.1:5354').replace(/\/$/,'');
 const metadata=JSON.parse(await readFile(new URL('../src/edgeGrindingSnapshots.json',import.meta.url),'utf8'));
 const selected=process.env.EDGE_BROWSER_LEVELS?.split(',');
 const ids=selected??[...Object.keys(metadata.sources),'jungle','flats','slip','dark','descent','beachfront','meshylook-thorns','astra-chimeworks','backport-lab'];
 const full=new Set(['treehouse-trail','test','custard-creek','dark','ghost-train','waterpark-cup','island-hopper','bonus-easy']);
-const output=process.env.EDGE_REVIEW_OUTPUT||'/private/tmp/course-edges-browser';await mkdir(output,{recursive:true});
+const output=process.env.EDGE_REVIEW_OUTPUT||join(tmpdir(),'course-edges-browser');await mkdir(output,{recursive:true});
 const browser=await chromium.launch({headless:true,channel:'chrome'}),context=await browser.newContext({viewport:{width:1280,height:800}});
 await context.addInitScript(()=>{navigator.getGamepads=()=>[];});
 const results=[],errors=[],cacheResults=[];

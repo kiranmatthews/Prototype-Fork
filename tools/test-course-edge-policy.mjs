@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
-import { readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { dirname, join } from 'node:path';
 import { createServer } from 'vite';
 import * as THREE from 'three';
 import { makeInput } from './jungle-cup-harness.mjs';
@@ -93,7 +95,9 @@ try{
       console.log(`${entry.id}: ${report.meshes} surfaces / ${report.boundaries} boundaries / ${report.catches} catches / ${report.uncaught.length} needs review (${report.buildMs}ms)`);
     }finally{level.dispose();}
   }
-  await writeFile(process.env.COURSE_EDGE_REPORT||'/private/tmp/course-edge-policy.json',JSON.stringify({reports,failures},null,2));
+  const output=process.env.COURSE_EDGE_REPORT||join(tmpdir(),'course-edge-policy.json');
+  await mkdir(dirname(output),{recursive:true});
+  await writeFile(output,JSON.stringify({reports,failures},null,2));
   assert.deepEqual(failures,[],'ordinary surface policy/coverage failures');
   if(!process.argv.includes('--inspect'))assert.equal(reports.reduce((n,r)=>n+r.uncaught.length,0),0,'review uncaught physical edges');
   console.log(`PASS ${reports.length} course inventories; ${reports.reduce((n,r)=>n+r.boundaries,0)} boundary checks; ${reports.reduce((n,r)=>n+r.catches,0)} real catches.`);
